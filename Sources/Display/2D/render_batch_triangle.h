@@ -87,9 +87,11 @@ private:
 
 	PrimitivesArray prim_array[RenderBatchBuffer::num_vertex_buffers];
 
-	Texture2D current_textures[64];
+	static const int max_number_of_texture_coords = 32;
+
+	Texture2D current_textures[max_number_of_texture_coords];
 	int num_current_textures;
-	Sizef tex_sizes[4];
+	Sizef tex_sizes[max_number_of_texture_coords];
 	bool use_glyph_program;
 	Colorf constant_color;
 	BlendState glyph_blend;

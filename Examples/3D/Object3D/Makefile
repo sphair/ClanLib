@@ -1,8 +1,6 @@
 EXAMPLE_BIN=object3d
-OBJF = ./Sources/example.o \
-./Sources/program.o \
-./Sources/shader.o \
-./Sources/precomp.o
+SOURCES = $(wildcard ./Sources/*.cpp)
+OBJF = $(patsubst %.cpp,%.o,$(SOURCES))
 
 LIBS=clanApp clanDisplay clanCore clanGL
 EXTRA_LIBS=-lassimp

@@ -14,34 +14,31 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="giflib\dev2gif.c">
+    <ClCompile Include="giflib\dgif_lib.cpp">
       <Filter>giflib</Filter>
     </ClCompile>
-    <ClCompile Include="giflib\dgif_lib.c">
+    <ClCompile Include="giflib\egif_lib.cpp">
       <Filter>giflib</Filter>
     </ClCompile>
-    <ClCompile Include="giflib\egif_lib.c">
+    <ClCompile Include="giflib\getarg.cpp">
       <Filter>giflib</Filter>
     </ClCompile>
-    <ClCompile Include="giflib\getarg.c">
+    <ClCompile Include="giflib\gif_err.cpp">
       <Filter>giflib</Filter>
     </ClCompile>
-    <ClCompile Include="giflib\gif_err.c">
+    <ClCompile Include="giflib\gif_font.cpp">
       <Filter>giflib</Filter>
     </ClCompile>
-    <ClCompile Include="giflib\gif_font.c">
+    <ClCompile Include="giflib\gif_hash.cpp">
       <Filter>giflib</Filter>
     </ClCompile>
-    <ClCompile Include="giflib\gif_hash.c">
+    <ClCompile Include="giflib\gifalloc.cpp">
       <Filter>giflib</Filter>
     </ClCompile>
-    <ClCompile Include="giflib\gifalloc.c">
+    <ClCompile Include="giflib\qprintf.cpp">
       <Filter>giflib</Filter>
     </ClCompile>
-    <ClCompile Include="giflib\qprintf.c">
-      <Filter>giflib</Filter>
-    </ClCompile>
-    <ClCompile Include="giflib\quantize.c">
+    <ClCompile Include="giflib\quantize.cpp">
       <Filter>giflib</Filter>
     </ClCompile>
     <ClCompile Include="css_browser.cpp" />

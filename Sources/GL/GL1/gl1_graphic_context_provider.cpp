@@ -87,6 +87,9 @@ GL1GraphicContextProvider::GL1GraphicContextProvider(OpenGLWindowProvider * rend
 {
 	check_opengl_version();
 	max_texture_coords = get_max_texture_coords();
+	// Limit the internal texture coords, to avoid situations where the opengl driver says there are unlimited texture coords
+	if (max_texture_coords > 32)
+		max_texture_coords = 32;
 	// Hack, so the sprite render batcher does not exceed the allowed number of textures
 	if (max_texture_coords < RenderBatchTriangle::max_textures)
 	{
@@ -99,9 +102,6 @@ GL1GraphicContextProvider::GL1GraphicContextProvider(OpenGLWindowProvider * rend
 			RenderBatchTriangle::max_textures = 1;
 		}
 	}
-	// Limit the internal texture coords, to avoid situations where the opengl driver says there are unlimited texture coords
-	if (max_texture_coords > 255)
-		max_texture_coords = 255;
 
 	selected_textures.resize(max_texture_coords);
 

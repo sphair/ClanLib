@@ -32,6 +32,10 @@
 
 ColorWheel::ColorWheel(clan::Canvas &canvas, clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComponent(&gui, clan::GUITopLevelDescription("ColorWheel", gui_position, false))
 {
+	clan::CSSValueBackgroundColor color;
+	color.color = clan::Colorf::black;
+	set_style(color, true);	// We want a black background
+
 	saturation_outer = 1.0f;
 	saturation_inner = 0.0f;
 	value_outer = 1.0f;

@@ -118,7 +118,7 @@ std::string HTMLPage::load_css(std::string csstext, const std::string &base_url)
 	return pagecss;
 }
 
-Image HTMLPage::load_image(GraphicContext &gc, const std::string &image_url)
+Image HTMLPage::load_image(clan::Canvas &canvas, const std::string &image_url)
 {
 	HTMLUrl url(image_url, pageurl);
 	std::string initial_url = url.to_string();
@@ -168,17 +168,17 @@ Image HTMLPage::load_image(GraphicContext &gc, const std::string &image_url)
 	if (content_type == "image/png")
 	{
 		PixelBuffer pb = PNGProvider::load(device);
-		return Image(gc, pb, pb.get_size());
+		return Image(canvas, pb, pb.get_size());
 	}
 	else if (content_type == "image/jpeg")
 	{
 		PixelBuffer pb = JPEGProvider::load(device);
-		return Image(gc, pb, pb.get_size());
+		return Image(canvas, pb, pb.get_size());
 	}
 	else if (content_type == "image/gif")
 	{
 		PixelBuffer pb = GIFProvider::load(device);
-		return Image(gc, pb, pb.get_size());
+		return Image(canvas, pb, pb.get_size());
 	}
 	else
 	{

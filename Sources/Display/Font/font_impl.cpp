@@ -87,7 +87,7 @@ void Font_Impl::free_font()
 	}
 }
 
-void Font_Impl::load_font( GraphicContext &context, const FontDescription &desc, const std::string &filename)
+void Font_Impl::load_font( GraphicContext &context, const FontDescription &desc, const std::string &filename )
 {
 	free_font();
 
@@ -103,9 +103,11 @@ void Font_Impl::load_font( GraphicContext &context, const FontDescription &desc,
 	}
 
 #ifdef WIN32
-	font_engine = new FontEngine_Win32(desc, filename);
+	std::string path = PathHelp::get_fullpath(filename, PathHelp::path_type_file);
+	std::string new_filename = PathHelp::get_filename(filename, PathHelp::path_type_file);
+	FileSystem vfs(path);
+	font_engine = new FontEngine_Win32(desc, new_filename, vfs);
 	glyph_cache.font_metrics = font_engine->get_metrics();
-    
 #elif defined(__APPLE__)
     
     font_engine = new FontEngine_Cocoa(desc, filename);
@@ -124,6 +126,49 @@ void Font_Impl::load_font( GraphicContext &context, const FontDescription &desc,
 	std::string new_filename = PathHelp::get_filename(font_file_path, PathHelp::path_type_file);
 	FileSystem vfs(path);
 	IODevice io_dev = vfs.open_file(new_filename);
+
+	int average_width = desc.get_average_width();
+	int height = desc.get_height();
+
+	// Ensure width and height are positive
+	if (average_width < 0) average_width =-average_width;
+	if (height < 0) height =-height;
+
+	font_engine = new FontEngine_Freetype(io_dev, average_width, height);
+
+	glyph_cache.font_metrics = font_engine->get_metrics();
+
+#endif
+}
+
+
+
+void Font_Impl::load_font( GraphicContext &context, const FontDescription &desc, const std::string &filename, FileSystem &fs)
+{
+	free_font();
+
+	if (desc.get_subpixel())
+	{
+		glyph_cache.enable_subpixel = true;
+		glyph_cache.anti_alias = true;	// Implies anti_alias is set
+	}
+	else
+	{
+		glyph_cache.enable_subpixel = false;
+		glyph_cache.anti_alias = desc.get_anti_alias();
+	}
+
+#ifdef WIN32
+	font_engine = new FontEngine_Win32(desc, filename, fs);
+	glyph_cache.font_metrics = font_engine->get_metrics();
+    
+#elif defined(__APPLE__)
+    
+    font_engine = new FontEngine_Cocoa(desc, filename);
+    glyph_cache.font_metrics = font_engine->get_metrics();
+
+#else
+	IODevice io_dev = fs.open_file(filename);
 
 	int average_width = desc.get_average_width();
 	int height = desc.get_height();

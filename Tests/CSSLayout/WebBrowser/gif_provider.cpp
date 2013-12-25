@@ -1,14 +1,19 @@
 
 #include "precomp.h"
 #include "gif_provider.h"
+#ifdef WIN32
 #include "giflib/gif_lib.h"
+#else
+#include "gif_lib.h"
+#endif
 
 using namespace clan;
 
 PixelBuffer GIFProvider::load(IODevice &device)
 {
 	int result;
-	GifFileType *handle = DGifOpen(&device, &GIFProvider::on_read_input);
+	int error;
+	GifFileType *handle = DGifOpen(&device, &GIFProvider::on_read_input, &error);
 	if (handle == 0)
 		throw Exception("DGifOpen failed");
 

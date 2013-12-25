@@ -1,136 +1,121 @@
 /***************************************************************************
- * Routines to grab the parameters from the command line:
- * All the routines except the main one, starts with GA (Get Arguments) to
- * prevent from names conflicts.
- * It is assumed in these routine that any pointer, for any type has the
- * same length (i.e. length of int pointer is equal to char pointer etc.)
- *
- * The following routines are available in this module:
- * 1. int GAGetArgs(argc, argv, CtrlStr, Variables...)
- * where argc, argv as received on entry.
- * CtrlStr is the contrl string (see below)
- * Variables are all the variables to be set according to CtrlStr.
- * Note that all the variables MUST be transfered by address.
- * return 0 on correct parsing, otherwise error number (see GetArg.h).
- * 2. GAPrintHowTo(CtrlStr)
- * Print the control string to stderr, in the correct format needed.
- * This feature is very useful in case of error during GetArgs parsing.
- * Chars equal to SPACE_CHAR are not printed (regular spaces are NOT
- * allowed, and so using SPACE_CHAR you can create space in PrintHowTo).
- * 3. GAPrintErrMsg(Error)
- * Print the error to stderr, according to Error (usually returned by
- * GAGetArgs).
- *
- * CtrlStr format:
- * The control string passed to GetArgs controls the way argv (argc) are
- * parsed. Each entry in this string must not have any spaces in it. The
- * First Entry is the name of the program which is usually ignored except
- * when GAPrintHowTo is called. All the other entries (except the last one
- * which we will come back to it later) must have the following format:
- * 1. One letter which sets the option letter.
- * 2. '!' or '%' to determines if this option is really optional ('%') or
- * it must exists ('!')...
- * 3. '-' allways.
- * 4. Alpha numeric string, usually ignored, but used by GAPrintHowTo to
- * print the meaning of this input.
- * 5. Sequences starts with '!' or '%'. Again if '!' then this sequence
- * must exists (only if its option flag is given of course), and if '%'
- * it is optional. Each sequence will continue with one or two
- * characters which defines the kind of the input:
- * a. d, x, o, u - integer is expected (decimal, hex, octal base or
- * unsigned).
- * b. D, X, O, U - long integer is expected (same as above).
- * c. f - float number is expected.
- * d. F - double number is expected.
- * e. s - string is expected.
- * f. *? - any number of '?' kind (d, x, o, u, D, X, O, U, f, F, s)
- * will match this one. If '?' is numeric, it scans until
- * none numeric input is given. If '?' is 's' then it scans
- * up to the next option or end of argv.
- *
- * If the last parameter given in the CtrlStr, is not an option (i.e. the
- * second char is not in ['!', '%'] and the third one is not '-'), all what
- * remained from argv is linked to it.
- *
- * The variables passed to GAGetArgs (starting from 4th parameter) MUST
- * match the order of the CtrlStr:
- * For each option, one integer address must be passed. This integer must
- * initialized by 0. If that option is given in the command line, it will
- * be set to one.
- * In addition, the sequences that might follow an option require the
- * following parameters to pass:
- * 1. d, x, o, u - pointer to integer (int *).
- * 2. D, X, O, U - pointer to long (long *).
- * 3. f - pointer to float (float *).
- * 4. F - pointer to double (double *).
- * 5. s - pointer to char (char *). NO allocation is needed!
- * 6. *? - TWO variables are passed for each wild request. the first
- * one is (address of) integer, and it will return number of
- * parameters actually matched this sequence, and the second
- * one is a pointer to pointer to ? (? **), and will return an
- * address to a block of pointers to ? kind, terminated with
- * NULL pointer. NO pre-allocation is needed.
- * note that these two variables are pretty like the argv/argc
- * pair...
- *
- * Examples:
- *
- * "Example1 i%-OneInteger!d s%-Strings!*s j%- k!-Float!f Files"
- * Will match: Example1 -i 77 -s String1 String2 String3 -k 88.2 File1 File2
- * or match: Example1 -s String1 -k 88.3 -i 999 -j
- * but not: Example1 -i 77 78 (option i expects one integer, k must be).
- * Note the option k must exists, and that the order of the options is not
- * not important. In the first examples File1 & File2 will match the Files
- * in the command line.
- * A call to GAPrintHowTo with this CtrlStr will print to stderr:
- * Example1 [-i OneIngeter] [-s Strings...] [-j] -k Float Files...
- *
- * Notes:
- *
- * 1. This module assumes that all the pointers to all kind of data types
- * have the same length and format, i.e. sizeof(int *) == sizeof(char *).
- *
- * Gershon Elber Ver 0.2 Mar 88
- ***************************************************************************
- * History:
- * 11 Mar 88 - Version 1.0 by Gershon Elber.
- **************************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
+getarg.c - routines to grab the parameters from the command line:
+
+Names of all the routines except the main one start with GA (Get
+Arguments) to prevent conflicts.
+
+The following routines are available in this module:
+
+1. int GAGetArgs(argc, argv, CtrlStr, Variables...)
+where argc, argv are received on entry.
+CtrlStr is the contrl string (see below)
+Variables are all the variables to be set according to CtrlStr.
+Note that all the variables MUST be transfered by address.
+Return 0 on correct parsing, otherwise error number (see GetArg.h).
+
+2. GAPrintHowTo(CtrlStr)
+Print the control string to stderr, in the correct format.
+This feature is very useful in case of an error during GetArgs parsing.
+Chars equal to SPACE_CHAR are not printed (regular spaces are NOT
+allowed, and so using SPACE_CHAR you can create space in PrintHowTo).
+
+3. GAPrintErrMsg(Error)
+Describe the error to stderr, according to Error (usually returned by
+GAGetArgs).
+
+CtrlStr format:
+
+The control string passed to GetArgs controls the way argv (argc) are
+parsed. Each entry in this string must not have any spaces in it. The
+First Entry is the name of the program, which is usually ignored except
+when GAPrintHowTo is called. All the other entries (except the last one
+which we will come back to later) must have the following format:
+
+1. One letter which sets the option letter.
+2. '!' or '%' to determines if this option is really optional ('%') or
+   required ('!')...
+3. '-' must always be given.
+4. Alphanumeric string, usually ignored, but used by GAPrintHowTo to
+   print the meaning of this option.
+5. Sequences starts with '!' or '%'. Again if '!' then this sequence
+   must exist (only if its option flag is given of course), and if '%'
+   it is optional. Each sequence will continue with one or two
+   characters which defines the kind of the input:
+a: d, x, o, u - integer is expected (decimal, hex, octal base or unsigned).
+b: D, X, O, U - long integer is expected (same as above).
+c: f - float number is expected.
+d: F - double number is expected.
+e: s - string is expected.
+f: *? - any number of '?' kind (d, x, o, u, D, X, O, U, f, F, s)
+   will match this one. If '?' is numeric, it scans until
+   non-numeric input is given. If '?' is 's' then it scans
+   up to the next option or end of argv.
+
+If the last parameter given in the CtrlStr, is not an option (i.e. the
+second char is not in ['!', '%'] and the third one is not '-'), all what
+remained from argv is linked to it.
+
+The variables passed to GAGetArgs (starting from 4th parameter) MUST
+match the order of the CtrlStr:
+
+For each option, one integer address must be passed. This integer must
+be initialized with 0. If that option is given in the command line, it will
+be set.
+
+In addition, the sequences that might follow an option require the
+following parameters to pass:
+
+1. d, x, o, u - pointer to integer (int *).
+2. D, X, O, U - pointer to long (long *).
+3. f - pointer to float (float *).
+4. F - pointer to double (double *).
+5. s - pointer to char (char *). NO allocation is needed!
+6. *? - TWO variables are passed for each wild request. the first
+   one is (address of) integer, and it will return number of
+   parameters actually matched this sequence, and the second
+   one is a pointer to pointer to ? (? **), and will return an
+   address to a block of pointers to ? kind, terminated with
+   NULL pointer. NO pre-allocation is required.
+
+Note that these two variables are pretty like the argv/argc pair...
+
+Examples:
+
+"Example1 i%-OneInteger!d s%-Strings!*s j%- k!-Float!f Files"
+
+Will match: Example1 -i 77 -s String1 String2 String3 -k 88.2 File1 File2
+or: Example1 -s String1 -k 88.3 -i 999 -j
+but not: Example1 -i 77 78 (option i expects one integer, k must be).
+
+Note the option k must exist, and that the order of the options is not
+important. In the first examples File1 & File2 will match the Files
+in the command line.
+
+A call to GAPrintHowTo with this CtrlStr will print to stderr:
+Example1 [-i OneIngeter] [-s Strings...] [-j] -k Float Files...
+
+Notes:
+
+1. This module assumes that all the pointers to all kind of data types
+have the same length and format, i.e. sizeof(int *) == sizeof(char *).
+
+**************************************************************************/
 
 #include <stdlib.h>
- 
-#ifdef __MSDOS__
-#include <alloc.h>
-#endif /* __MSDOS__ */
-
-#ifdef HAVE_STDARG_H
-#include <stdarg.h>
-#elif defined(HAVE_VARARGS_H)
-#include <varargs.h>
-#endif
-
 #include <stdio.h>
 #include <string.h>
+//#include <stdbool.h>
+#include <stdarg.h>
+ 
 #include "getarg.h"
-
-#ifndef MYMALLOC
-#define MYMALLOC    /* If no "MyMalloc" routine elsewhere define this. */
-#endif
 
 #define MAX_PARAM           100    /* maximum number of parameters allowed. */
 #define CTRL_STR_MAX_LEN    1024
 
 #define SPACE_CHAR '|'  /* The character not to print using HowTo. */
 
-#ifndef TRUE
-#define TRUE 1
-#define FALSE 0
-#endif /* TRUE */
-
-#define ARG_OK 0
+#define ARG_OK false
 
 #define ISSPACE(x) ((x) <= ' ') /* Not conventional - but works fine! */
 
@@ -141,7 +126,7 @@ static char *GAErrorToken;  /* On error, ErrorToken is set to point to it. */
 static int GATestAllSatis(char *CtrlStrCopy, char *CtrlStr, int *argc,
                           char ***argv, int *Parameters[MAX_PARAM],
                           int *ParamCount);
-static int GAUpdateParameters(int *Parameters[], int *ParamCount,
+static bool GAUpdateParameters(int *Parameters[], int *ParamCount,
                               char *Option, char *CtrlStrCopy, char *CtrlStr,
                               int *argc, char ***argv);
 static int GAGetParmeters(int *Parameters[], int *ParamCount,
@@ -150,58 +135,44 @@ static int GAGetParmeters(int *Parameters[], int *ParamCount,
 static int GAGetMultiParmeters(int *Parameters[], int *ParamCount,
                                char *CtrlStrCopy, int *argc, char ***argv);
 static void GASetParamCount(char *CtrlStr, int Max, int *ParamCount);
-static void GAByteCopy(char *Dst, char *Src, unsigned n);
-static int GAOptionExists(int argc, char **argv);
-#ifdef MYMALLOC
-static char *MyMalloc(unsigned size);
-#endif /* MYMALLOC */
+static bool GAOptionExists(int argc, char **argv);
 
 /***************************************************************************
- * Routine to access the    command    line argument and interpret them:       
- * Return ARG_OK (0) is case of succesfull parsing, error code else...       
- **************************************************************************/
-#ifdef HAVE_STDARG_H
-int
+ Allocate or die
+***************************************************************************/
+static char *
+xmalloc(unsigned size) {
+
+    char *p;
+
+    if ((p = (char *)malloc(size)) != NULL)
+        return p;
+
+    fprintf(stderr, "Not enough memory, exit.\n");
+    exit(2);
+
+    return NULL;    /* Makes warning silent. */
+}
+/***************************************************************************
+ Routine to access the command line argument and interpret them:       
+ Return ARG_OK (0) is case of successful parsing, error code else...       
+***************************************************************************/
+bool
 GAGetArgs(int argc,
         char **argv,
         char *CtrlStr, ...) {
 
-    int i, Error = FALSE, ParamCount = 0;
+    int i, ParamCount = 0;
+    bool Error = false;
     int *Parameters[MAX_PARAM];     /* Save here parameter addresses. */
     char *Option, CtrlStrCopy[CTRL_STR_MAX_LEN];
     va_list ap;
 
-    strcpy(CtrlStrCopy, CtrlStr);
+    strncpy(CtrlStrCopy, CtrlStr, sizeof(CtrlStrCopy)-1);
     va_start(ap, CtrlStr);
     for (i = 1; i <= MAX_PARAM; i++)
         Parameters[i - 1] = va_arg(ap, int *);
     va_end(ap);
-
-#elif defined(HAVE_VARARGS_H)
-int GAGetArgs(va_alist)
-    va_dcl
-{
-    va_list ap;
-    int argc, i, Error = FALSE, ParamCount = 0;
-    int *Parameters[MAX_PARAM];     /* Save here parameter addresses. */
-    char **argv, *CtrlStr, *Option, CtrlStrCopy[CTRL_STR_MAX_LEN];
-
-    va_start(ap);
-
-    argc = va_arg(ap, int);
-    argv = va_arg(ap, char **);
-    CtrlStr = va_arg(ap, char *);
-
-    va_end(ap);
-
-    strcpy(CtrlStrCopy, CtrlStr);
-
-    /* Using base address of parameters we access other parameters addr:
-     * Note that me (for sure!) samples data beyond the current function
-     * frame, but we accesson these set address only by demand. */
-    for (i = 1; i <= MAX_PARAM; i++)
-        Parameters[i - 1] = va_arg(ap, int *);
-#endif /* HAVE_STDARG_H */
 
     --argc;
     argv++;    /* Skip the program name (first in argv/c list). */
@@ -212,21 +183,21 @@ int GAGetArgs(va_alist)
         Option = *argv++;
         if ((Error = GAUpdateParameters(Parameters, &ParamCount, Option,
                                         CtrlStrCopy, CtrlStr, &argc,
-                                        &argv)) != FALSE)
+                                        &argv)) != false)
             return Error;
     }
     /* Check for results and update trail of command line: */
     return GATestAllSatis(CtrlStrCopy, CtrlStr, &argc, &argv, Parameters,
-                          &ParamCount);
+                          &ParamCount) != ARG_OK;
 }
 
 /***************************************************************************
- * Routine to search for unsatisfied flags - simply scan the list for !- 
- * sequence. Before this scan, this routine updates the rest of the command
- * line into the last two parameters if it is requested by the CtrlStr 
- * (last item in CtrlStr is NOT an option). 
- * Return ARG_OK if all satisfied, CMD_ERR_AllSatis error else. 
- **************************************************************************/
+ Routine to search for unsatisfied flags - simply scan the list for !- 
+ sequence. Before this scan, this routine updates the rest of the command
+ line into the last two parameters if it is requested by the CtrlStr 
+ (last item in CtrlStr is NOT an option). 
+ Return ARG_OK if all satisfied, CMD_ERR_AllSatis error else. 
+***************************************************************************/
 static int
 GATestAllSatis(char *CtrlStrCopy,
                char *CtrlStr,
@@ -253,7 +224,7 @@ GATestAllSatis(char *CtrlStrCopy,
     if (!ISCTRLCHAR(CtrlStr[i + 2])) {
         GASetParamCount(CtrlStr, i, ParamCount); /* Point in correct param. */
         *Parameters[(*ParamCount)++] = *argc;
-        GAByteCopy((char *)Parameters[(*ParamCount)++], (char *)argv,
+        memcpy((char *)Parameters[(*ParamCount)++], (char *)argv,
                    sizeof(char *));
     }
 
@@ -269,9 +240,9 @@ GATestAllSatis(char *CtrlStrCopy,
 }
 
 /***************************************************************************
- * Routine to update the parameters according to the given Option:
+ Routine to update the parameters according to the given Option:
  **************************************************************************/
-static int
+static bool
 GAUpdateParameters(int *Parameters[],
                    int *ParamCount,
                    char *Option,
@@ -280,7 +251,8 @@ GAUpdateParameters(int *Parameters[],
                    int *argc,
                    char ***argv) {
 
-    int i, BooleanTrue = Option[2] != '-';
+    int i;
+    bool BooleanTrue = Option[2] != '-';
 
     if (Option[0] != '-') {
         GAErrorToken = Option;
@@ -319,8 +291,8 @@ GAUpdateParameters(int *Parameters[],
 }
 
 /***************************************************************************
- * Routine to get parameters according to the CtrlStr given from argv/c :
- **************************************************************************/
+ Routine to get parameters according to the CtrlStr given from argv/argc
+***************************************************************************/
 static int
 GAGetParmeters(int *Parameters[],
                int *ParamCount,
@@ -334,47 +306,58 @@ GAGetParmeters(int *Parameters[],
     while (!(ISSPACE(CtrlStrCopy[i]))) {
         switch (CtrlStrCopy[i + 1]) {
           case 'd':    /* Get signed integers. */
+	      // cppcheck-suppress invalidscanf 
               ScanRes = sscanf(*((*argv)++), "%d",
                                (int *)Parameters[(*ParamCount)++]);
               break;
           case 'u':    /* Get unsigned integers. */
+	      // cppcheck-suppress invalidscanf 
               ScanRes = sscanf(*((*argv)++), "%u",
                                (unsigned *)Parameters[(*ParamCount)++]);
               break;
           case 'x':    /* Get hex integers. */
+	      // cppcheck-suppress invalidscanf 
               ScanRes = sscanf(*((*argv)++), "%x",
                                (unsigned int *)Parameters[(*ParamCount)++]);
               break;
           case 'o':    /* Get octal integers. */
+	      // cppcheck-suppress invalidscanf 
               ScanRes = sscanf(*((*argv)++), "%o",
                                (unsigned int *)Parameters[(*ParamCount)++]);
               break;
           case 'D':    /* Get signed long integers. */
+	      // cppcheck-suppress invalidscanf 
               ScanRes = sscanf(*((*argv)++), "%ld",
                                (long *)Parameters[(*ParamCount)++]);
               break;
           case 'U':    /* Get unsigned long integers. */
+	      // cppcheck-suppress invalidscanf 
               ScanRes = sscanf(*((*argv)++), "%lu",
                                (unsigned long *)Parameters[(*ParamCount)++]);
               break;
           case 'X':    /* Get hex long integers. */
+	      // cppcheck-suppress invalidscanf 
               ScanRes = sscanf(*((*argv)++), "%lx",
                                (unsigned long *)Parameters[(*ParamCount)++]);
               break;
           case 'O':    /* Get octal long integers. */
+	      // cppcheck-suppress invalidscanf 
               ScanRes = sscanf(*((*argv)++), "%lo",
                                (unsigned long *)Parameters[(*ParamCount)++]);
               break;
           case 'f':    /* Get float number. */
+	      // cppcheck-suppress invalidscanf 
               ScanRes = sscanf(*((*argv)++), "%f",
                                (float *)Parameters[(*ParamCount)++]);
+	      /*@fallthrough@*/
           case 'F':    /* Get double float number. */
+	      // cppcheck-suppress invalidscanf 
               ScanRes = sscanf(*((*argv)++), "%lf",
                                (double *)Parameters[(*ParamCount)++]);
               break;
           case 's':    /* It as a string. */
               ScanRes = 1;    /* Allways O.K. */
-              GAByteCopy((char *)Parameters[(*ParamCount)++],
+              memcpy((char *)Parameters[(*ParamCount)++],
                          (char *)((*argv)++), sizeof(char *));
               break;
           case '*':    /* Get few parameters into one: */
@@ -404,12 +387,12 @@ GAGetParmeters(int *Parameters[],
 }
 
 /***************************************************************************
- * Routine to get few parameters into one pointer such that the returned
- * pointer actually points on a block of pointers to the parameters...
- * For example *F means a pointer to pointers on floats.
- * Returns number of parameters actually read.
- * This routine assumes that all pointers (on any kind of scalar) has the
- * same size (and the union below is totally ovelapped bteween dif. arrays)
+ Routine to get a few parameters into one pointer such that the returned
+ pointer actually points on a block of pointers to the parameters...
+ For example *F means a pointer to pointers on floats.
+ Returns number of parameters actually read.
+ This routine assumes that all pointers (on any kind of scalar) has the
+ same size (and the union below is totally ovelapped bteween dif. arrays)
 ***************************************************************************/
 static int
 GAGetMultiParmeters(int *Parameters[],
@@ -430,56 +413,66 @@ GAGetMultiParmeters(int *Parameters[],
     do {
         switch (CtrlStrCopy[2]) { /* CtrlStr == '!*?' or '%*?' where ? is. */
           case 'd':    /* Format to read the parameters: */
-              TmpArray.IntArray[NumOfPrm] = (int *)MyMalloc(sizeof(int));
+              TmpArray.IntArray[NumOfPrm] = (int *)xmalloc(sizeof(int));
+	      // cppcheck-suppress invalidscanf 
               ScanRes = sscanf(*((*argv)++), "%d",
                                (int *)TmpArray.IntArray[NumOfPrm++]);
               break;
           case 'u':
-              TmpArray.IntArray[NumOfPrm] = (int *)MyMalloc(sizeof(int));
+              TmpArray.IntArray[NumOfPrm] = (int *)xmalloc(sizeof(int));
+	      // cppcheck-suppress invalidscanf 
               ScanRes = sscanf(*((*argv)++), "%u",
                                (unsigned int *)TmpArray.IntArray[NumOfPrm++]);
               break;
           case 'o':
-              TmpArray.IntArray[NumOfPrm] = (int *)MyMalloc(sizeof(int));
+              TmpArray.IntArray[NumOfPrm] = (int *)xmalloc(sizeof(int));
+	      // cppcheck-suppress invalidscanf 
               ScanRes = sscanf(*((*argv)++), "%o",
                                (unsigned int *)TmpArray.IntArray[NumOfPrm++]);
               break;
           case 'x':
-              TmpArray.IntArray[NumOfPrm] = (int *)MyMalloc(sizeof(int));
+              TmpArray.IntArray[NumOfPrm] = (int *)xmalloc(sizeof(int));
+	      // cppcheck-suppress invalidscanf 
               ScanRes = sscanf(*((*argv)++), "%x",
                                (unsigned int *)TmpArray.IntArray[NumOfPrm++]);
               break;
           case 'D':
-              TmpArray.LngArray[NumOfPrm] = (long *)MyMalloc(sizeof(long));
+              TmpArray.LngArray[NumOfPrm] = (long *)xmalloc(sizeof(long));
+	      // cppcheck-suppress invalidscanf 
               ScanRes = sscanf(*((*argv)++), "%ld",
                                (long *)TmpArray.IntArray[NumOfPrm++]);
               break;
           case 'U':
-              TmpArray.LngArray[NumOfPrm] = (long *)MyMalloc(sizeof(long));
+              TmpArray.LngArray[NumOfPrm] = (long *)xmalloc(sizeof(long));
+	      // cppcheck-suppress invalidscanf 
               ScanRes = sscanf(*((*argv)++), "%lu",
                                (unsigned long *)TmpArray.
                                IntArray[NumOfPrm++]);
               break;
           case 'O':
-              TmpArray.LngArray[NumOfPrm] = (long *)MyMalloc(sizeof(long));
+              TmpArray.LngArray[NumOfPrm] = (long *)xmalloc(sizeof(long));
+	      // cppcheck-suppress invalidscanf 
               ScanRes = sscanf(*((*argv)++), "%lo",
                                (unsigned long *)TmpArray.
                                IntArray[NumOfPrm++]);
               break;
           case 'X':
-              TmpArray.LngArray[NumOfPrm] = (long *)MyMalloc(sizeof(long));
+              TmpArray.LngArray[NumOfPrm] = (long *)xmalloc(sizeof(long));
+	      // cppcheck-suppress invalidscanf 
               ScanRes = sscanf(*((*argv)++), "%lx",
                                (unsigned long *)TmpArray.
                                IntArray[NumOfPrm++]);
               break;
           case 'f':
-              TmpArray.FltArray[NumOfPrm] = (float *)MyMalloc(sizeof(float));
+              TmpArray.FltArray[NumOfPrm] = (float *)xmalloc(sizeof(float));
+	      // cppcheck-suppress invalidscanf 
               ScanRes = sscanf(*((*argv)++), "%f",
                                (float *)TmpArray.LngArray[NumOfPrm++]);
               break;
           case 'F':
               TmpArray.DblArray[NumOfPrm] =
-                 (double *)MyMalloc(sizeof(double));
+                 (double *)xmalloc(sizeof(double));
+	      // cppcheck-suppress invalidscanf 
               ScanRes = sscanf(*((*argv)++), "%lf",
                                (double *)TmpArray.LngArray[NumOfPrm++]);
               break;
@@ -504,7 +497,7 @@ GAGetMultiParmeters(int *Parameters[],
 
     /* Now allocate the block with the exact size, and set it: */
     Ptemp = Pmain =
-       (int **)MyMalloc((unsigned)(NumOfPrm + 1) * sizeof(int *));
+       (int **)xmalloc((unsigned)(NumOfPrm + 1) * sizeof(int *));
     /* And here we use the assumption that all pointers are the same: */
     for (i = 0; i < NumOfPrm; i++)
         *Ptemp++ = TmpArray.IntArray[i];
@@ -513,20 +506,21 @@ GAGetMultiParmeters(int *Parameters[],
     /* That it save the number of parameters read as first parameter to
      * return and the pointer to the block as second, and return: */
     *Parameters[(*ParamCount)++] = NumOfPrm;
-    GAByteCopy((char *)Parameters[(*ParamCount)++], (char *)&Pmain,
+    memcpy((char *)Parameters[(*ParamCount)++], (char *)&Pmain,
                sizeof(char *));
+    free(Pmain);
     return NumOfPrm;
 }
 
 /***************************************************************************
- * Routine to scan the CtrlStr, upto Max and count the number of parameters
- * to that point:
- * 1. Each option is counted as one parameter - boolean variable (int)
- * 2. Within an option, each %? or !? is counted once - pointer to something
- * 3. Within an option, %*? or !*? is counted twice - one for item count
- * and one for pointer to block pointers.
- * Note ALL variables are passed by address and so of fixed size (address).
- **************************************************************************/
+ Routine to scan the CtrlStr, up to Max and count the number of parameters
+ to that point:
+ 1. Each option is counted as one parameter - boolean variable (int)
+ 2. Within an option, each %? or !? is counted once - pointer to something
+ 3. Within an option, %*? or !*? is counted twice - one for item count
+ and one for pointer to block pointers.
+ Note ALL variables are passed by address and so of fixed size (address).
+***************************************************************************/
 static void
 GASetParamCount(char *CtrlStr,
                 int Max,
@@ -544,35 +538,22 @@ GASetParamCount(char *CtrlStr,
 }
 
 /***************************************************************************
- * Routine to copy exactly n bytes from Src to Dst. Note system library
- * routine strncpy should do the same, but it stops on NULL char !
- **************************************************************************/
-static void
-GAByteCopy(char *Dst,
-           char *Src,
-           unsigned n) {
-
-    while (n--)
-        *(Dst++) = *(Src++);
-}
-
-/***************************************************************************
- * Routine to check if more option (i.e. first char == '-') exists in the
- * given list argc, argv:
- **************************************************************************/
-static int
+ Routine to check if more option (i.e. first char == '-') exists in the
+ given list argc, argv:
+***************************************************************************/
+static bool
 GAOptionExists(int argc,
                char **argv) {
 
     while (argc--)
         if ((*argv++)[0] == '-')
-            return TRUE;
-    return FALSE;
+            return true;
+    return false;
 }
 
 /***************************************************************************
- * Routine to print some error messages, for this module:
- **************************************************************************/
+ Routine to print some error messages, for this module:
+***************************************************************************/
 void
 GAPrintErrMsg(int Error) {
 
@@ -601,12 +582,13 @@ GAPrintErrMsg(int Error) {
 }
 
 /***************************************************************************
- * Routine to print correct format of command line allowed:
- **************************************************************************/
+ Routine to print correct format of command line allowed:
+***************************************************************************/
 void
 GAPrintHowTo(char *CtrlStr) {
 
-    int i = 0, SpaceFlag;
+    int i = 0;
+    bool SpaceFlag;
 
     fprintf(stderr, "Usage: ");
     /* Print program name - first word in ctrl. str. (optional): */
@@ -620,7 +602,7 @@ GAPrintHowTo(char *CtrlStr) {
           case '%':
               fprintf(stderr, " [-%c", CtrlStr[i++]);
               i += 2;    /* Skip the '%-' or '!- after the char! */
-              SpaceFlag = TRUE;
+              SpaceFlag = true;
               while (!ISCTRLCHAR(CtrlStr[i]) && (i < (int)strlen(CtrlStr)) &&
                      (!ISSPACE(CtrlStr[i])))
                   if (SpaceFlag) {
@@ -628,7 +610,7 @@ GAPrintHowTo(char *CtrlStr) {
                           fprintf(stderr, " ");
                       else
                           fprintf(stderr, " %c", CtrlStr[i - 1]);
-                      SpaceFlag = FALSE;
+                      SpaceFlag = false;
                   } else if (CtrlStr[i++] == SPACE_CHAR)
                       fprintf(stderr, " ");
                   else
@@ -643,7 +625,7 @@ GAPrintHowTo(char *CtrlStr) {
           case '!':
               fprintf(stderr, " -%c", CtrlStr[i++]);
               i += 2;    /* Skip the '%-' or '!- after the char! */
-              SpaceFlag = TRUE;
+              SpaceFlag = true;
               while (!ISCTRLCHAR(CtrlStr[i]) && (i < (int)strlen(CtrlStr)) &&
                      (!ISSPACE(CtrlStr[i])))
                   if (SpaceFlag) {
@@ -651,7 +633,7 @@ GAPrintHowTo(char *CtrlStr) {
                           fprintf(stderr, " ");
                       else
                           fprintf(stderr, " %c", CtrlStr[i - 1]);
-                      SpaceFlag = FALSE;
+                      SpaceFlag = false;
                   } else if (CtrlStr[i++] == SPACE_CHAR)
                       fprintf(stderr, " ");
                   else
@@ -674,24 +656,4 @@ GAPrintHowTo(char *CtrlStr) {
     fprintf(stderr, "\n");
 }
 
-#ifdef MYMALLOC
-
-/***************************************************************************
- * My Routine to allocate dynamic memory. All program requests must call
- * this routine (no direct call to malloc). Dies if no memory.
- **************************************************************************/
-static char *
-MyMalloc(unsigned size) {
-
-    char *p;
-
-    if ((p = (char *)malloc(size)) != NULL)
-        return p;
-
-    fprintf(stderr, "Not enough memory, exit.\n");
-    exit(2);
-
-    return NULL;    /* Makes warning silent. */
-}
-
-#endif /* MYMALLOC */
+/* end */

@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include <Math.h>
+#include <cmath>
 #include <ClanLib/core.h>
 #include <ClanLib/application.h>
 #include <ClanLib/display.h>
