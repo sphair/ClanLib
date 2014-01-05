@@ -55,13 +55,19 @@ public:
 	Vec3f get_position() const;
 	Quaternionf get_orientation() const;
 
+	bool is_static() const;
 	bool is_kinematic() const;
+	bool is_character_object() const;
+	bool is_debug_drawn() const;
 
 	void set_position(const Vec3f &position);
 	void set_orientation(const Quaternionf &orientation);
 	void set_transform(const Vec3f &position, const Quaternionf &orientation);
 
+	void set_static(bool enable);
 	void set_kinematic(bool enable);
+	void set_character_object(bool enable);
+	void set_debug_drawn(bool enable);
 
 	template<typename T>
 	void set_data(const std::shared_ptr<T> &data)

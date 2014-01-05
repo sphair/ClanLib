@@ -74,9 +74,24 @@ Quaternionf Physics3DObject::get_orientation() const
 	return Quaternionf(rotation.getW(), rotation.getX(), rotation.getY(), rotation.getZ());
 }
 
+bool Physics3DObject::is_static() const
+{
+	return (impl->object->getCollisionFlags() & btCollisionObject::CF_STATIC_OBJECT) == btCollisionObject::CF_STATIC_OBJECT;
+}
+
 bool Physics3DObject::is_kinematic() const
 {
 	return (impl->object->getCollisionFlags() & btCollisionObject::CF_KINEMATIC_OBJECT) == btCollisionObject::CF_KINEMATIC_OBJECT;
+}
+
+bool Physics3DObject::is_character_object() const
+{
+	return (impl->object->getCollisionFlags() & btCollisionObject::CF_CHARACTER_OBJECT) == btCollisionObject::CF_CHARACTER_OBJECT;
+}
+
+bool Physics3DObject::is_debug_drawn() const
+{
+	return (impl->object->getCollisionFlags() & btCollisionObject::CF_DISABLE_VISUALIZE_OBJECT) != btCollisionObject::CF_DISABLE_VISUALIZE_OBJECT;
 }
 
 void Physics3DObject::set_position(const Vec3f &position)
@@ -99,12 +114,36 @@ void Physics3DObject::set_transform(const Vec3f &position, const Quaternionf &or
 	impl->object->setWorldTransform(transform);
 }
 
+void Physics3DObject::set_static(bool enable)
+{
+	if (enable)
+		impl->object->setCollisionFlags(impl->object->getCollisionFlags() | btCollisionObject::CF_STATIC_OBJECT);
+	else
+		impl->object->setCollisionFlags(impl->object->getCollisionFlags() & (~btCollisionObject::CF_STATIC_OBJECT));
+}
+
 void Physics3DObject::set_kinematic(bool enable)
 {
 	if (enable)
 		impl->object->setCollisionFlags(impl->object->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
 	else
 		impl->object->setCollisionFlags(impl->object->getCollisionFlags() & (~btCollisionObject::CF_KINEMATIC_OBJECT));
+}
+
+void Physics3DObject::set_character_object(bool enable)
+{
+	if (enable)
+		impl->object->setCollisionFlags(impl->object->getCollisionFlags() | btCollisionObject::CF_CHARACTER_OBJECT);
+	else
+		impl->object->setCollisionFlags(impl->object->getCollisionFlags() & (~btCollisionObject::CF_CHARACTER_OBJECT));
+}
+
+void Physics3DObject::set_debug_drawn(bool enable)
+{
+	if (!enable)
+		impl->object->setCollisionFlags(impl->object->getCollisionFlags() | btCollisionObject::CF_DISABLE_VISUALIZE_OBJECT);
+	else
+		impl->object->setCollisionFlags(impl->object->getCollisionFlags() & (~btCollisionObject::CF_DISABLE_VISUALIZE_OBJECT));
 }
 
 UserDataOwner *Physics3DObject::get_userdata_owner()
