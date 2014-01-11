@@ -66,6 +66,9 @@ void ParticleEmitterPass::run(GraphicContext &gc, Scene_Impl *scene)
 	size_t total_particle_count = 0;
 	for (size_t i = 0; i < active_emitters.size(); i++)
 	{
+		if (active_emitters[i]->cpu_particles.empty() && active_emitters[i]->emitter)
+			continue;
+
 		float depth_fade_distance = 1.0f;
 		ParticleUniforms uniforms;
 		uniforms.eye_to_projection = eye_to_projection;
@@ -80,7 +83,7 @@ void ParticleEmitterPass::run(GraphicContext &gc, Scene_Impl *scene)
 	if (total_particle_count == 0)
 		return;
 
-	if (instance_texture.is_null() || instance_texture.get_width() < (int)total_particle_count)
+	if (instance_texture.is_null() || instance_texture.get_width() < (int)total_particle_count * vectors_per_particle)
 	{
 		instance_texture = Texture2D(gc, total_particle_count * vectors_per_particle, 1, tf_rgba32f);
 		instance_transfer = TransferTexture(gc, total_particle_count * vectors_per_particle, 1, data_to_gpu, tf_rgba32f, 0, usage_stream_draw);
@@ -91,6 +94,9 @@ void ParticleEmitterPass::run(GraphicContext &gc, Scene_Impl *scene)
 	size_t vector_offset = 0;
 	for (size_t j = 0; j < active_emitters.size(); j++)
 	{
+		if (active_emitters[j]->cpu_particles.empty() && active_emitters[j]->emitter)
+			continue;
+
 		Vec3f eye_pos = scene->get_camera().get_position();
 		std::vector<ParticleOrderIndex> sorted_particles;
 		sorted_particles.reserve(active_emitters[j]->cpu_particles.size());
@@ -129,6 +135,9 @@ void ParticleEmitterPass::run(GraphicContext &gc, Scene_Impl *scene)
 
 	for (size_t i = 0; i < active_emitters.size(); i++)
 	{
+		if (active_emitters[i]->cpu_particles.empty() && active_emitters[i]->emitter)
+			continue;
+
 		gc.set_uniform_buffer(0, active_emitters[i]->gpu_uniforms);
 		gc.set_texture(2, active_emitters[i]->particle_animation.get());
 		gc.set_texture(3, active_emitters[i]->life_color_gradient.get());
