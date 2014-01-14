@@ -46,18 +46,37 @@ Physics3DObject::Physics3DObject(std::shared_ptr<Physics3DObject_Impl> impl)
 {
 }
 
-Physics3DObject::Physics3DObject(Physics3DWorld &world, const Physics3DShape &shape, const Vec3f &position, const Quaternionf &orientation)
-	: impl(new Physics3DObject_Impl(world.impl.get()))
+Physics3DObject Physics3DObject::collision_body(Physics3DWorld &world, const Physics3DShape &shape, const Vec3f &position, const Quaternionf &orientation)
 {
+	Physics3DObject instance(std::make_shared<Physics3DObject_Impl>(world.impl.get()));
+
 	btTransform transform(btQuaternion(orientation.x, orientation.y, orientation.z, orientation.w), btVector3(position.x, position.y, position.z));
 
-	impl->shape = shape;
-	impl->object.reset(new btCollisionObject());
-	impl->object->setUserPointer(impl.get());
-	impl->object->setCollisionShape(shape.impl->shape.get());
-	impl->object->setWorldTransform(transform);
+	instance.impl->shape = shape;
+	instance.impl->object.reset(new btCollisionObject());
+	instance.impl->object->setUserPointer(instance.impl.get());
+	instance.impl->object->setCollisionShape(shape.impl->shape.get());
+	instance.impl->object->setWorldTransform(transform);
 
-	world.impl->dynamics_world->addCollisionObject(impl->object.get());
+	world.impl->dynamics_world->addCollisionObject(instance.impl->object.get());
+
+	return instance;
+}
+
+Physics3DObject Physics3DObject::rigid_body(Physics3DWorld &world, const Physics3DShape &shape, float mass, const Vec3f &position, const Quaternionf &orientation, const Vec3f &local_inertia)
+{
+	Physics3DObject instance(std::make_shared<Physics3DObject_Impl>(world.impl.get()));
+
+	btTransform transform(btQuaternion(orientation.x, orientation.y, orientation.z, orientation.w), btVector3(position.x, position.y, position.z));
+
+	instance.impl->shape = shape;
+	instance.impl->object.reset(new btRigidBody(mass, 0, shape.impl->shape.get(), btVector3(local_inertia.x, local_inertia.y, local_inertia.z)));
+	instance.impl->object->setUserPointer(instance.impl.get());
+	instance.impl->object->setWorldTransform(transform);
+
+	world.impl->dynamics_world->addRigidBody(btRigidBody::upcast(instance.impl->object.get()));
+
+	return instance;
 }
 
 Vec3f Physics3DObject::get_position() const
@@ -149,6 +168,83 @@ void Physics3DObject::set_debug_drawn(bool enable)
 UserDataOwner *Physics3DObject::get_userdata_owner()
 {
 	return &impl->userdata_owner;
+}
+
+void Physics3DObject::set_mass(float mass, const Vec3f &local_inertia)
+{
+	btRigidBody *body = btRigidBody::upcast(impl->object.get());
+	if (body)
+		body->setMassProps(mass, btVector3(local_inertia.x, local_inertia.y, local_inertia.z));
+}
+
+void Physics3DObject::set_sleeping_thresholds(float linear, float angular)
+{
+	btRigidBody *body = btRigidBody::upcast(impl->object.get());
+	if (body)
+		body->setSleepingThresholds(linear, angular);
+}
+
+void Physics3DObject::apply_central_force(const Vec3f &force)
+{
+	btRigidBody *body = btRigidBody::upcast(impl->object.get());
+	if (body)
+		body->applyCentralForce(btVector3(force.x, force.y, force.z));
+}
+
+void Physics3DObject::apply_torque(const Vec3f &torque)
+{
+	btRigidBody *body = btRigidBody::upcast(impl->object.get());
+	if (body)
+		body->applyTorque(btVector3(torque.x, torque.y, torque.z));
+}
+
+void Physics3DObject::apply_force(const Vec3f &force, const Vec3f &relative_pos)
+{
+	btRigidBody *body = btRigidBody::upcast(impl->object.get());
+	if (body)
+		body->applyForce(btVector3(force.x, force.y, force.z), btVector3(relative_pos.x, relative_pos.y, relative_pos.z));
+}
+
+void Physics3DObject::apply_central_impulse(const Vec3f &force)
+{
+	btRigidBody *body = btRigidBody::upcast(impl->object.get());
+	if (body)
+		body->applyCentralImpulse(btVector3(force.x, force.y, force.z));
+}
+
+void Physics3DObject::apply_torque_impulse(const Vec3f &torque)
+{
+	btRigidBody *body = btRigidBody::upcast(impl->object.get());
+	if (body)
+		body->applyTorqueImpulse(btVector3(torque.x, torque.y, torque.z));
+}
+
+void Physics3DObject::apply_impulse(const Vec3f &impulse, const Vec3f &relative_pos)
+{
+	btRigidBody *body = btRigidBody::upcast(impl->object.get());
+	if (body)
+		body->applyImpulse(btVector3(impulse.x, impulse.y, impulse.z), btVector3(relative_pos.x, relative_pos.y, relative_pos.z));
+}
+
+void Physics3DObject::clear_forces()
+{
+	btRigidBody *body = btRigidBody::upcast(impl->object.get());
+	if (body)
+		body->clearForces();
+}
+
+void Physics3DObject::add_constraint(const Physics3DConstraint &constraint)
+{
+	//btRigidBody *body = btRigidBody::upcast(impl->object.get());
+	//if (body)
+	//	body->addConstraintRef(constraint.impl->constraint);
+}
+
+void Physics3DObject::remove_constraint(const Physics3DConstraint &constraint)
+{
+	//btRigidBody *body = btRigidBody::upcast(impl->object.get());
+	//if (body)
+	//	body->removeConstraintRef(constraint.impl->constraint);
 }
 
 ///////////////////////////////////////////////////////////////////////////
