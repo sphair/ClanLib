@@ -61,17 +61,43 @@ public:
 
 	std::vector<SweepHit> hits;
 
+	class AnyHitConvexResultCallback : public btCollisionWorld::ConvexResultCallback
+	{
+	public:
+		AnyHitConvexResultCallback(const btVector3 &convexFromWorld, const btVector3 &convexToWorld)
+			: m_convexFromWorld(convexFromWorld), m_hitFraction(btScalar(1.)), m_convexToWorld(convexToWorld), m_hitCollisionObject(0)
+		{
+		}
+
+		btVector3 m_convexFromWorld;
+		btVector3 m_convexToWorld;
+		btScalar m_hitFraction;
+		btVector3 m_hitNormalWorld;
+		btVector3 m_hitPointWorld;
+		const btCollisionObject *m_hitCollisionObject;
+
+		virtual	btScalar addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
+		{
+			m_hitFraction = convexResult.m_hitFraction;
+			m_hitCollisionObject = convexResult.m_hitCollisionObject;
+			if (normalInWorldSpace)
+				m_hitNormalWorld = convexResult.m_hitNormalLocal;
+			else
+				m_hitNormalWorld = m_hitCollisionObject->getWorldTransform().getBasis()*convexResult.m_hitNormalLocal;
+			m_hitPointWorld = convexResult.m_hitPointLocal;
+
+			// Stop any further searching:
+			m_closestHitFraction = btScalar(0.);
+			return btScalar(0.);
+		}
+	};
+
 	class AllHitsConvexResultCallback : public btCollisionWorld::ConvexResultCallback
 	{
 	public:
 		AllHitsConvexResultCallback(Physics3DSweepTest_Impl *impl) : impl(impl)
 		{
 		}
-
-		btAlignedObjectArray<btVector3>	m_hitNormalWorld;
-		btAlignedObjectArray<btVector3>	m_hitPointWorld;
-		btAlignedObjectArray<const btCollisionObject*> m_hitCollisionObjects;
-		btAlignedObjectArray<btScalar> m_hitFractions;
 
 		virtual	btScalar addSingleResult(btCollisionWorld::LocalConvexResult& convexResult,bool normalInWorldSpace)
 		{
