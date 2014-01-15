@@ -113,6 +113,11 @@ public:
 	void set_mass(float mass, const Vec3f &local_inertia);
 	void set_sleeping_thresholds(float linear, float angular);
 
+	void set_ccd_swept_sphere_radius(float radius);
+	void set_ccd_motion_threshold(float motion_threshold);
+
+	void activate(bool force_activation = false);
+
 	void apply_central_force(const Vec3f &force);
 	void apply_torque(const Vec3f &torque);
 	void apply_force(const Vec3f &force, const Vec3f &relative_pos);

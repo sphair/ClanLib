@@ -69,8 +69,16 @@ Physics3DObject Physics3DObject::rigid_body(Physics3DWorld &world, const Physics
 
 	btTransform transform(btQuaternion(orientation.x, orientation.y, orientation.z, orientation.w), btVector3(position.x, position.y, position.z));
 
+	Vec3f inertia = local_inertia;
+	if (mass != 0.0f && inertia == Vec3f())
+	{
+		btVector3 bt_inertia;
+		shape.impl->shape.get()->calculateLocalInertia(mass, bt_inertia);
+		inertia = Vec3f(bt_inertia.x(), bt_inertia.y(), bt_inertia.z());
+	}
+
 	instance.impl->shape = shape;
-	instance.impl->object.reset(new btRigidBody(mass, 0, shape.impl->shape.get(), btVector3(local_inertia.x, local_inertia.y, local_inertia.z)));
+	instance.impl->object.reset(new btRigidBody(mass, 0, shape.impl->shape.get(), btVector3(inertia.x, inertia.y, inertia.z)));
 	instance.impl->object->setUserPointer(instance.impl.get());
 	instance.impl->object->setWorldTransform(transform);
 
@@ -184,46 +192,85 @@ void Physics3DObject::set_sleeping_thresholds(float linear, float angular)
 		body->setSleepingThresholds(linear, angular);
 }
 
+void Physics3DObject::set_ccd_swept_sphere_radius(float radius)
+{
+	btRigidBody *body = btRigidBody::upcast(impl->object.get());
+	if (body)
+		body->setCcdSweptSphereRadius(radius);
+}
+
+void Physics3DObject::set_ccd_motion_threshold(float motion_threshold)
+{
+	btRigidBody *body = btRigidBody::upcast(impl->object.get());
+	if (body)
+		body->setCcdMotionThreshold(motion_threshold);
+}
+
+void Physics3DObject::activate(bool force_activation)
+{
+	btRigidBody *body = btRigidBody::upcast(impl->object.get());
+	if (body)
+		body->activate(force_activation);
+}
+
 void Physics3DObject::apply_central_force(const Vec3f &force)
 {
 	btRigidBody *body = btRigidBody::upcast(impl->object.get());
 	if (body)
+	{
+		body->activate();
 		body->applyCentralForce(btVector3(force.x, force.y, force.z));
+	}
 }
 
 void Physics3DObject::apply_torque(const Vec3f &torque)
 {
 	btRigidBody *body = btRigidBody::upcast(impl->object.get());
 	if (body)
+	{
+		body->activate();
 		body->applyTorque(btVector3(torque.x, torque.y, torque.z));
+	}
 }
 
 void Physics3DObject::apply_force(const Vec3f &force, const Vec3f &relative_pos)
 {
 	btRigidBody *body = btRigidBody::upcast(impl->object.get());
 	if (body)
+	{
+		body->activate();
 		body->applyForce(btVector3(force.x, force.y, force.z), btVector3(relative_pos.x, relative_pos.y, relative_pos.z));
+	}
 }
 
 void Physics3DObject::apply_central_impulse(const Vec3f &force)
 {
 	btRigidBody *body = btRigidBody::upcast(impl->object.get());
 	if (body)
+	{
+		body->activate();
 		body->applyCentralImpulse(btVector3(force.x, force.y, force.z));
+	}
 }
 
 void Physics3DObject::apply_torque_impulse(const Vec3f &torque)
 {
 	btRigidBody *body = btRigidBody::upcast(impl->object.get());
 	if (body)
+	{
+		body->activate();
 		body->applyTorqueImpulse(btVector3(torque.x, torque.y, torque.z));
+	}
 }
 
 void Physics3DObject::apply_impulse(const Vec3f &impulse, const Vec3f &relative_pos)
 {
 	btRigidBody *body = btRigidBody::upcast(impl->object.get());
 	if (body)
+	{
+		body->activate();
 		body->applyImpulse(btVector3(impulse.x, impulse.y, impulse.z), btVector3(relative_pos.x, relative_pos.y, relative_pos.z));
+	}
 }
 
 void Physics3DObject::clear_forces()
