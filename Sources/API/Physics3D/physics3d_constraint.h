@@ -52,14 +52,14 @@ public:
 
 	bool is_null() const;
 
-	static Physics3DConstraint point_to_point(const Physics3DObject &body_a, const Vec3f &pivot_in_a);
-	static Physics3DConstraint point_to_point(const Physics3DObject &body_a, const Physics3DObject &body_b, const Vec3f &pivot_in_a, const Vec3f &pivot_in_b);
-	static Physics3DConstraint hinge(const Physics3DObject &body_a, const Vec3f &pivot_in_a, const Quaternionf &axis_in_a, bool use_reference_frame_a = false);
-	static Physics3DConstraint hinge(const Physics3DObject &body_a, const Physics3DObject &body_b, const Vec3f &pivot_in_a, const Vec3f &pivot_in_b, const Quaternionf &axis_in_a, const Quaternionf &axis_in_b, bool use_reference_frame_a = false);
-	static Physics3DConstraint slider(const Physics3DObject &body_a, const Physics3DObject &body_b, const Vec3f &pivot_in_a, const Vec3f &pivot_in_b, const Quaternionf &axis_in_a, const Quaternionf &axis_in_b, bool use_reference_frame_a = false);
-	static Physics3DConstraint cone_twist(const Physics3DObject &body_a, const Vec3f &pivot_in_a, const Quaternionf &axis_in_a);
-	static Physics3DConstraint cone_twist(const Physics3DObject &body_a, const Physics3DObject &body_b, const Vec3f &pivot_in_a, const Vec3f &pivot_in_b, const Quaternionf &axis_in_a, const Quaternionf &axis_in_b);
-	static Physics3DConstraint six_degrees_of_freedom(const Physics3DObject &body_a, const Physics3DObject &body_b, const Vec3f &pivot_in_a, const Vec3f &pivot_in_b, const Quaternionf &axis_in_a, const Quaternionf &axis_in_b, bool use_reference_frame_a = false);
+	static Physics3DConstraint point_to_point(Physics3DWorld &world, const Physics3DObject &body_a, const Vec3f &pivot_in_a);
+	static Physics3DConstraint point_to_point(Physics3DWorld &world, const Physics3DObject &body_a, const Physics3DObject &body_b, const Vec3f &pivot_in_a, const Vec3f &pivot_in_b);
+	static Physics3DConstraint hinge(Physics3DWorld &world, const Physics3DObject &body_a, const Vec3f &pivot_in_a, const Quaternionf &axis_in_a, bool use_reference_frame_a = false);
+	static Physics3DConstraint hinge(Physics3DWorld &world, const Physics3DObject &body_a, const Physics3DObject &body_b, const Vec3f &pivot_in_a, const Vec3f &pivot_in_b, const Quaternionf &axis_in_a, const Quaternionf &axis_in_b, bool use_reference_frame_a = false);
+	static Physics3DConstraint slider(Physics3DWorld &world, const Physics3DObject &body_a, const Physics3DObject &body_b, const Vec3f &pivot_in_a, const Vec3f &pivot_in_b, const Quaternionf &axis_in_a, const Quaternionf &axis_in_b, bool use_reference_frame_a = false);
+	static Physics3DConstraint cone_twist(Physics3DWorld &world, const Physics3DObject &body_a, const Vec3f &pivot_in_a, const Quaternionf &axis_in_a);
+	static Physics3DConstraint cone_twist(Physics3DWorld &world, const Physics3DObject &body_a, const Physics3DObject &body_b, const Vec3f &pivot_in_a, const Vec3f &pivot_in_b, const Quaternionf &axis_in_a, const Quaternionf &axis_in_b);
+	static Physics3DConstraint six_degrees_of_freedom(Physics3DWorld &world, const Physics3DObject &body_a, const Physics3DObject &body_b, const Vec3f &pivot_in_a, const Vec3f &pivot_in_b, const Quaternionf &axis_in_a, const Quaternionf &axis_in_b, bool use_reference_frame_a = false);
 
 	// Six degrees of freedom only:
 	void set_linear_lower_limit(const Vec3f &limit);

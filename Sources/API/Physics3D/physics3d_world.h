@@ -61,6 +61,7 @@ private:
 	friend class Physics3DSweepTest;
 	friend class Physics3DContactTest;
 	friend class Physics3DContactPairTest;
+	friend class Physics3DConstraint;
 };
 
 }

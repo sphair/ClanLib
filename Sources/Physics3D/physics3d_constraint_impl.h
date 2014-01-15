@@ -39,9 +39,10 @@ namespace clan
 class Physics3DConstraint_Impl
 {
 public:
-	Physics3DConstraint_Impl();
+	Physics3DConstraint_Impl(Physics3DWorld_Impl *world);
 	~Physics3DConstraint_Impl();
 
+	Physics3DWorld_Impl *world;
 	std::unique_ptr<btTypedConstraint> constraint;
 };
 
