@@ -29,9 +29,11 @@
 #include "Physics3D/precomp.h"
 #include "API/Physics3D/physics3d_object.h"
 #include "API/Physics3D/physics3d_shape.h"
+#include "API/Physics3D/physics3d_constraint.h"
 #include "API/Physics3D/physics3d_world.h"
 #include "physics3d_object_impl.h"
 #include "physics3d_shape_impl.h"
+#include "physics3d_constraint_impl.h"
 #include "physics3d_world_impl.h"
 
 namespace clan
@@ -282,16 +284,16 @@ void Physics3DObject::clear_forces()
 
 void Physics3DObject::add_constraint(const Physics3DConstraint &constraint)
 {
-	//btRigidBody *body = btRigidBody::upcast(impl->object.get());
-	//if (body)
-	//	body->addConstraintRef(constraint.impl->constraint);
+	btRigidBody *body = btRigidBody::upcast(impl->object.get());
+	if (body)
+		body->addConstraintRef(constraint.impl->constraint.get());
 }
 
 void Physics3DObject::remove_constraint(const Physics3DConstraint &constraint)
 {
-	//btRigidBody *body = btRigidBody::upcast(impl->object.get());
-	//if (body)
-	//	body->removeConstraintRef(constraint.impl->constraint);
+	btRigidBody *body = btRigidBody::upcast(impl->object.get());
+	if (body)
+		body->removeConstraintRef(constraint.impl->constraint.get());
 }
 
 ///////////////////////////////////////////////////////////////////////////
