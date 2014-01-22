@@ -71,6 +71,7 @@ class CL_API_PHYSICS3D Physics3DObject
 {
 public:
 	static Physics3DObject collision_body(Physics3DWorld &world, const Physics3DShape &shape, const Vec3f &position = Vec3f(0.0f), const Quaternionf &orientation = Quaternionf());
+	static Physics3DObject ghost_body(Physics3DWorld &world, const Physics3DShape &shape, const Vec3f &position = Vec3f(0.0f), const Quaternionf &orientation = Quaternionf());
 	static Physics3DObject rigid_body(Physics3DWorld &world, const Physics3DShape &shape, float mass = 0.0f, const Vec3f &position = Vec3f(0.0f), const Quaternionf &orientation = Quaternionf(), const Vec3f &local_inertia = Vec3f());
 	//static Physics3DObject rigid_body(Physics3DWorld &world, const Physics3DRigidBodyDescription &desc);
 	//static Physics3DObject soft_body(Physics3DWorld &world, const Physics3DShape &shape, const Vec3f &position = Vec3f(0.0f), const Quaternionf &orientation = Quaternionf());

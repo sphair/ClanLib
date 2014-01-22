@@ -31,6 +31,7 @@
 
 #include "api_physics3d.h"
 #include "../Core/Math/vec3.h"
+#include "../Core/Math/quaternion.h"
 #include <memory>
 
 namespace clan
@@ -40,6 +41,7 @@ namespace clan
 
 class Physics3DWorld;
 class Physics3DObject;
+class Physics3DShape;
 class Physics3DContactTest_Impl;
 
 class CL_API_PHYSICS3D Physics3DContactTest
@@ -51,9 +53,13 @@ public:
 	bool is_null() const;
 
 	bool test(const Physics3DObject &object);
+	bool test(const Physics3DShape &shape, const Vec3f &position, const Quaternionf &orientation);
 
 	int get_hit_count() const;
 	Physics3DObject get_hit_object(int index) const;
+	Vec3f get_hit_position(int index) const;
+	Vec3f get_hit_normal(int index) const;
+	float get_hit_distance(int index) const;
 
 private:
 	std::shared_ptr<Physics3DContactTest_Impl> impl;

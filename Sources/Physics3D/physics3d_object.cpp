@@ -65,6 +65,23 @@ Physics3DObject Physics3DObject::collision_body(Physics3DWorld &world, const Phy
 	return instance;
 }
 
+Physics3DObject Physics3DObject::ghost_body(Physics3DWorld &world, const Physics3DShape &shape, const Vec3f &position, const Quaternionf &orientation)
+{
+	Physics3DObject instance(std::make_shared<Physics3DObject_Impl>(world.impl.get()));
+
+	btTransform transform(btQuaternion(orientation.x, orientation.y, orientation.z, orientation.w), btVector3(position.x, position.y, position.z));
+
+	instance.impl->shape = shape;
+	instance.impl->object.reset(new btGhostObject());
+	instance.impl->object->setUserPointer(instance.impl.get());
+	instance.impl->object->setCollisionShape(shape.impl->shape.get());
+	instance.impl->object->setWorldTransform(transform);
+
+	world.impl->dynamics_world->addCollisionObject(instance.impl->object.get());
+
+	return instance;
+}
+
 Physics3DObject Physics3DObject::rigid_body(Physics3DWorld &world, const Physics3DShape &shape, float mass, const Vec3f &position, const Quaternionf &orientation, const Vec3f &local_inertia)
 {
 	Physics3DObject instance(std::make_shared<Physics3DObject_Impl>(world.impl.get()));
@@ -307,7 +324,11 @@ Physics3DObject_Impl::~Physics3DObject_Impl()
 {
 	if (object != 0)
 	{
-		world->dynamics_world->removeCollisionObject(object.get());
+		btRigidBody *rigidBody = btRigidBody::upcast(object.get());
+		if (rigidBody)
+			world->dynamics_world->removeRigidBody(rigidBody);
+		else
+			world->dynamics_world->removeCollisionObject(object.get());
 	}
 }
 

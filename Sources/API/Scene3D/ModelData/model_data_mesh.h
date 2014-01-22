@@ -63,43 +63,52 @@ inline void ModelDataMesh::calculate_tangents()
 		tan2.resize(vertices.size());
 		for (size_t i = 0; i + 2 < elements.size(); i += 3)
 		{
-			unsigned int i1 = elements[i + 0];
-			unsigned int i2 = elements[i + 1];
-			unsigned int i3 = elements[i + 2];
-        
+			unsigned int i0 = elements[i + 0];
+			unsigned int i1 = elements[i + 1];
+			unsigned int i2 = elements[i + 2];
+
+			const Vec3f& v0 = vertices[i0];
 			const Vec3f& v1 = vertices[i1];
 			const Vec3f& v2 = vertices[i2];
-			const Vec3f& v3 = vertices[i3];
-        
+
+			const Vec2f& w0 = channels[0][i0];
 			const Vec2f& w1 = channels[0][i1];
 			const Vec2f& w2 = channels[0][i2];
-			const Vec2f& w3 = channels[0][i3];
-        
-			float x1 = v2.x - v1.x;
-			float x2 = v3.x - v1.x;
-			float y1 = v2.y - v1.y;
-			float y2 = v3.y - v1.y;
-			float z1 = v2.z - v1.z;
-			float z2 = v3.z - v1.z;
-        
-			float s1 = w2.x - w1.x;
-			float s2 = w3.x - w1.x;
-			float t1 = w2.y - w1.y;
-			float t2 = w3.y - w1.y;
-        
-			float r = 1.0f / (s1 * t2 - s2 * t1);
-			Vec3f sdir((t2 * x1 - t1 * x2) * r, (t2 * y1 - t1 * y2) * r, (t2 * z1 - t1 * z2) * r);
-			Vec3f tdir((s1 * x2 - s2 * x1) * r, (s1 * y2 - s2 * y1) * r, (s1 * z2 - s2 * z1) * r);
-        
-			tan1[i1] += sdir;
-			tan1[i2] += sdir;
-			tan1[i3] += sdir;
-        
-			tan2[i1] += tdir;
-			tan2[i2] += tdir;
-			tan2[i3] += tdir;
+
+			const Vec3f edge1 = v1 - v0;
+			const Vec3f edge2 = v2 - v0;
+
+			const Vec2f delta1 = w1 - w0;
+			const Vec2f delta2 = w2 - w0;
+
+			float f = 1.0f / (delta1.x * delta2.y - delta2.x * delta1.y);
+
+			Vec3f tangent = f * (delta2.y * edge1 - delta1.y * edge2);
+			Vec3f bitangent = f * (-delta2.x * edge1 - delta1.x * edge2);
+
+			tangent.normalize();
+			bitangent.normalize();
+
+			tangents[i0] = tangent;
+			tangents[i1] = tangent;
+			tangents[i2] = tangent;
+
+			bitangents[i0] = bitangent;
+			bitangents[i1] = bitangent;
+			bitangents[i2] = bitangent;
+
+			/*
+			tan1[i0] += tangent;
+			tan1[i1] += tangent;
+			tan1[i2] += tangent;
+
+			tan2[i0] += bitangent;
+			tan2[i1] += bitangent;
+			tan2[i2] += bitangent;
+			*/
 		}
 
+		/*
 		for (size_t i = 0; i < vertices.size(); i++)
 		{
 			const Vec3f &n = normals[i];
@@ -111,8 +120,11 @@ inline void ModelDataMesh::calculate_tangents()
 			// Calculate handedness
 			float handedness = (Vec3f::dot(Vec3f::cross(n, t), tan2[i]) < 0.0f) ? -1.0f : 1.0f;
 
-			bitangents[i] = handedness * Vec3f::cross(n, t);
+			bitangents[i] = handedness * Vec3f::cross(n, tangents[i]);
 		}
+		*/
+
+		// Note: the remarked code only works within the same smoothing group, which can't be determined here.
 	}
 }
 
