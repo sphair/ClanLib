@@ -1,6 +1,7 @@
 
 #include "precomp.h"
 #include "fbx_model_loader.h"
+#include <algorithm>
 
 using namespace clan;
 
@@ -508,12 +509,14 @@ void FBXModelLoader::convert_skins(FbxNode *node, FbxMesh *mesh, VertexMappingVe
 			{
 				for (VertexMapping *mapping = vertices[indices[i]]; mapping != nullptr; mapping = mapping->next)
 				{
+					unsigned char *bone_selectors = reinterpret_cast<unsigned char*>(&mapping->bone_selectors);
+					unsigned char *bone_weights = reinterpret_cast<unsigned char*>(&mapping->bone_weights);
 					for (unsigned int j = 0; j < 4; j++)
 					{
-						if (mapping->bone_selectors[j] == 255)
+						if (bone_selectors[j] == 255)
 						{
-							mapping->bone_selectors[j] = bone_selector;
-							mapping->bone_weights[j] = clamp((int)(weights[i] * 255 + 0.5), 0, 255);
+							bone_selectors[j] = bone_selector;
+							bone_weights[j] = clamp((int)(weights[i] * 255 + 0.5), 0, 255);
 							break;
 						}
 					}
@@ -529,23 +532,25 @@ void FBXModelLoader::convert_skins(FbxNode *node, FbxMesh *mesh, VertexMappingVe
 			int weight_sum = 0;
 			unsigned int max_sum = 0;
 			unsigned int max_index = 0;
+			unsigned char *bone_selectors = reinterpret_cast<unsigned char*>(&mapping->bone_selectors);
+			unsigned char *bone_weights = reinterpret_cast<unsigned char*>(&mapping->bone_weights);
 			for (unsigned int j = 0; j < 4; j++)
 			{
-				if (mapping->bone_selectors[j] == 255)
+				if (bone_selectors[j] == 255)
 				{
-					mapping->bone_selectors[j] = 0;
+					bone_selectors[j] = 0;
 				}
 
-				if (mapping->bone_weights[j] > max_sum)
+				if (bone_weights[j] > max_sum)
 				{
-					max_sum = mapping->bone_weights[j];
+					max_sum = bone_weights[j];
 					max_index = j;
 				}
 
-				weight_sum += mapping->bone_weights[j];
+				weight_sum += bone_weights[j];
 			}
 			if (weight_sum != 255)
-				mapping->bone_weights[max_index] = mapping->bone_weights[max_index] + (255 - weight_sum);
+				bone_weights[max_index] = bone_weights[max_index] + (255 - weight_sum);
 		}
 	}
 }
@@ -752,7 +757,7 @@ void FBXModelLoader::convert_bones()
 	float start_time = (float)timespan.GetStart().GetSecondDouble();
 	float stop_time = (float)timespan.GetStop().GetSecondDouble();
 
-	FbxAnimEvaluator *scene_evaluator = scene->GetEvaluator();
+	FbxAnimEvaluator *scene_evaluator = scene->GetAnimationEvaluator();
 
 	ModelDataAnimation animation;
 	animation.name = "default";
