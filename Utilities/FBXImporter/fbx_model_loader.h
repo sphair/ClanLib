@@ -23,7 +23,7 @@ private:
 	void convert_camera(FbxNode *node);
 	void convert_light(FbxNode *node);
 
-	void convert_polygons(FbxMesh *mesh, VertexMappingVector &vertices, std::vector<VertexMapping *> &elements);
+	void convert_polygons(FbxMesh *mesh, VertexMappingVector &vertices, std::vector<VertexMapping *> &elements, const clan::Mat4f &mesh_to_world, const clan::Mat3f &normal_mesh_to_world);
 	void convert_skins(FbxNode *node, FbxMesh *mesh, VertexMappingVector &vertices);
 	void convert_bones();
 

@@ -178,7 +178,7 @@ void FBXModelLoader::convert_mesh(FbxNode *node)
 	VertexMappingVector vertices(mesh->GetControlPointsCount());
 	std::vector<VertexMapping *> elements;
 
-	convert_polygons(mesh, vertices, elements);
+	convert_polygons(mesh, vertices, elements, mesh_to_world, normal_mesh_to_world);
 	convert_skins(node, mesh, vertices);
 
 	if (model_data->meshes.empty())
@@ -194,9 +194,9 @@ void FBXModelLoader::convert_mesh(FbxNode *node)
 		{
 			mapping->vertex_index = model_mesh.vertices.size();
 
-			model_mesh.vertices.push_back(Vec3f(mesh_to_world * Vec4f(mapping->position, 1.0f)));
+			model_mesh.vertices.push_back(mapping->position);
 			model_mesh.colors.push_back(mapping->color);
-			model_mesh.normals.push_back(normal_mesh_to_world * mapping->normal);
+			model_mesh.normals.push_back(mapping->normal);
 			model_mesh.tangents.push_back(mapping->tangent);
 			model_mesh.bitangents.push_back(mapping->bitangent);
 			model_mesh.bone_weights.push_back(mapping->bone_weights);
@@ -367,8 +367,10 @@ ModelDataDrawRange FBXModelLoader::create_draw_range(size_t start_element, size_
 	return range;
 }
 
-void FBXModelLoader::convert_polygons(FbxMesh *mesh, VertexMappingVector &vertices, std::vector<VertexMapping *> &face_vertices)
+void FBXModelLoader::convert_polygons(FbxMesh *mesh, VertexMappingVector &vertices, std::vector<VertexMapping *> &face_vertices, const Mat4f &mesh_to_world, const Mat3f &normal_mesh_to_world)
 {
+	mesh->GenerateNormals();
+
 	FbxVector4 *control_points = mesh->GetControlPoints();
 
 	int num_polygons = mesh->GetPolygonCount();
@@ -382,18 +384,31 @@ void FBXModelLoader::convert_polygons(FbxMesh *mesh, VertexMappingVector &vertic
 		if (num_points != 3)
 			throw Exception("FBX loader can only handle triangle faces");
 
-		for (int point = 0; point < num_points; point++, vertex_index++)
+		Vec3f points[3] = {
+			Vec3f(mesh_to_world * Vec4f(Vec3f(to_vec4f(control_points[mesh->GetPolygonVertex(poly, 0)])), 1.0f)),
+			Vec3f(mesh_to_world * Vec4f(Vec3f(to_vec4f(control_points[mesh->GetPolygonVertex(poly, 1)])), 1.0f)),
+			Vec3f(mesh_to_world * Vec4f(Vec3f(to_vec4f(control_points[mesh->GetPolygonVertex(poly, 2)])), 1.0f))
+		};
+
+		bool ccw = Vec3f::dot(
+			Vec3f::cross(points[1] - points[0], points[2] - points[0]),
+			normal_mesh_to_world * get_normal(mesh, poly, 0, mesh->GetPolygonVertex(poly, 0), vertex_index))
+			>= 0.0f;
+
+		for (int point = 0; point < num_points; point++)
 		{
-			int control_index = mesh->GetPolygonVertex(poly, point);
+			int ccw_point = ccw ? point : num_points - point - 1;
+			int control_index = mesh->GetPolygonVertex(poly, ccw_point);
 
-			Vec3f position = Vec3f(to_vec4f(control_points[control_index]));
-			Vec4ub color = get_color(mesh, poly, point, control_index, vertex_index);
-			Vec3f normal = get_normal(mesh, poly, point, control_index, vertex_index);
-			Vec3f tangent = get_tangent(mesh, poly, point, control_index, vertex_index);
-			Vec3f bitangent = get_bitangent(mesh, poly, point, control_index, vertex_index);
-			Vec2f diffuse_uv = get_uv(mesh, poly, point, control_index, vertex_index, 0);
+			Vec3f position = Vec3f(mesh_to_world * Vec4f(Vec3f(to_vec4f(control_points[control_index])), 1.0f));
+			Vec4ub color = get_color(mesh, poly, ccw_point, control_index, vertex_index + ccw_point);
+			Vec3f normal = normal_mesh_to_world * get_normal(mesh, poly, ccw_point, control_index, vertex_index + ccw_point);
+			Vec3f tangent = get_tangent(mesh, poly, ccw_point, control_index, vertex_index + ccw_point);
+			Vec3f bitangent = get_bitangent(mesh, poly, ccw_point, control_index, vertex_index + ccw_point);
+			Vec2f diffuse_uv = get_uv(mesh, poly, ccw_point, control_index, vertex_index + ccw_point, 0);
 
-			diffuse_uv = Vec2f(1.0f) - diffuse_uv; // Seems to be needed for Blender
+			//diffuse_uv = Vec2f(1.0f) - diffuse_uv; // Seems to be needed for Blender
+			diffuse_uv.y = 1.0f - diffuse_uv.y; // Seems to be needed for Max
 
 			if (vertices[control_index] == nullptr)
 			{
@@ -434,6 +449,8 @@ void FBXModelLoader::convert_polygons(FbxMesh *mesh, VertexMappingVector &vertic
 				face_vertices.push_back(mapping);
 			}
 		}
+
+		vertex_index += num_points;
 	}
 }
 
