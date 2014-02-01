@@ -392,7 +392,7 @@ void FBXModelLoader::convert_polygons(FbxMesh *mesh, VertexMappingVector &vertic
 
 		bool ccw = Vec3f::dot(
 			Vec3f::cross(points[1] - points[0], points[2] - points[0]),
-			normal_mesh_to_world * get_normal(mesh, poly, 0, mesh->GetPolygonVertex(poly, 0), vertex_index))
+			normal_mesh_to_world * get_normal(mesh, mesh->GetPolygonVertex(poly, 0), vertex_index))
 			>= 0.0f;
 
 		for (int point = 0; point < num_points; point++)
@@ -401,11 +401,11 @@ void FBXModelLoader::convert_polygons(FbxMesh *mesh, VertexMappingVector &vertic
 			int control_index = mesh->GetPolygonVertex(poly, ccw_point);
 
 			Vec3f position = Vec3f(mesh_to_world * Vec4f(Vec3f(to_vec4f(control_points[control_index])), 1.0f));
-			Vec4ub color = get_color(mesh, poly, ccw_point, control_index, vertex_index + ccw_point);
-			Vec3f normal = normal_mesh_to_world * get_normal(mesh, poly, ccw_point, control_index, vertex_index + ccw_point);
-			Vec3f tangent = get_tangent(mesh, poly, ccw_point, control_index, vertex_index + ccw_point);
-			Vec3f bitangent = get_bitangent(mesh, poly, ccw_point, control_index, vertex_index + ccw_point);
-			Vec2f diffuse_uv = get_uv(mesh, poly, ccw_point, control_index, vertex_index + ccw_point, 0);
+			Vec4ub color = get_color(mesh, control_index, vertex_index + ccw_point);
+			Vec3f normal = normal_mesh_to_world * get_normal(mesh, control_index, vertex_index + ccw_point);
+			Vec3f tangent = get_tangent(mesh, control_index, vertex_index + ccw_point);
+			Vec3f bitangent = get_bitangent(mesh, control_index, vertex_index + ccw_point);
+			Vec2f diffuse_uv = get_uv(mesh, control_index, vertex_index + ccw_point, 0);
 
 			//diffuse_uv = Vec2f(1.0f) - diffuse_uv; // Seems to be needed for Blender
 			diffuse_uv.y = 1.0f - diffuse_uv.y; // Seems to be needed for Max
@@ -572,7 +572,7 @@ void FBXModelLoader::convert_skins(FbxNode *node, FbxMesh *mesh, VertexMappingVe
 	}
 }
 
-Vec4ub FBXModelLoader::get_color(FbxMesh *mesh, int polygon, int point, int control_index, int vertex_index)
+Vec4ub FBXModelLoader::get_color(FbxMesh *mesh, int control_index, int vertex_index)
 {
 	FbxGeometryElementVertexColor *element = mesh->GetElementVertexColor(0);
 	if (element)
@@ -605,7 +605,7 @@ Vec4ub FBXModelLoader::get_color(FbxMesh *mesh, int polygon, int point, int cont
 	return Vec4ub();
 }
 
-Vec3f FBXModelLoader::get_normal(FbxMesh *mesh, int polygon, int point, int control_index, int vertex_index)
+Vec3f FBXModelLoader::get_normal(FbxMesh *mesh, int control_index, int vertex_index)
 {
 	FbxGeometryElementNormal *element = mesh->GetElementNormal(0);
 	if (element)
@@ -642,7 +642,7 @@ Vec3f FBXModelLoader::get_normal(FbxMesh *mesh, int polygon, int point, int cont
 	return Vec3f();
 }
 
-Vec3f FBXModelLoader::get_tangent(FbxMesh *mesh, int polygon, int point, int control_index, int vertex_index)
+Vec3f FBXModelLoader::get_tangent(FbxMesh *mesh, int control_index, int vertex_index)
 {
 	FbxGeometryElementTangent *element = mesh->GetElementTangent(0);
 	if (element)
@@ -667,7 +667,7 @@ Vec3f FBXModelLoader::get_tangent(FbxMesh *mesh, int polygon, int point, int con
 	return Vec3f();
 }
 
-Vec3f FBXModelLoader::get_bitangent(FbxMesh *mesh, int polygon, int point, int control_index, int vertex_index)
+Vec3f FBXModelLoader::get_bitangent(FbxMesh *mesh, int control_index, int vertex_index)
 {
 	FbxGeometryElementBinormal *element = mesh->GetElementBinormal(0);
 	if (element)
@@ -692,7 +692,7 @@ Vec3f FBXModelLoader::get_bitangent(FbxMesh *mesh, int polygon, int point, int c
 	return Vec3f();
 }
 
-Vec2f FBXModelLoader::get_uv(FbxMesh *mesh, int polygon, int point, int control_index, int vertex_index, int uv_channel_index)
+Vec2f FBXModelLoader::get_uv(FbxMesh *mesh, int control_index, int vertex_index, int uv_channel_index)
 {
 	FbxGeometryElementUV *element = mesh->GetElementUV(uv_channel_index);
 	if (element)
@@ -878,4 +878,10 @@ int get_group(FbxMesh *mesh, int polygon)
 	}
 	return -1;
 }
+*/
+
+/*
+	// Get 3ds max user properties:
+	FbxProperty p = m_node->FindProperty("UDP3DSMAX");
+	if (p.IsValid()) FbxString str = s.Get<FbxString>();
 */
