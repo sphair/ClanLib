@@ -31,4 +31,5 @@
 
 #include "callback.h"
 
+#warning "This file should not be included anymore. Use callback.h instead"
 //the next step is to remove this file
