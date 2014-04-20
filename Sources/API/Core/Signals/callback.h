@@ -103,12 +103,13 @@ namespace clan
 
         template<class Instance>
         Callback(Instance *instance, Res(Instance::*function)(Params...))
-        : Callback([=](const Params & ... params){ return (instance->*function)(params...); }) { return; }
+        : impl(new Callback_impl_without<Res, Params...>(
+            [=](const Params & ... params){ return (instance->*function)(params...); })) { return; }
 
         template<class Instance, class UserData>
         Callback(Instance *instance, Res(Instance::*function)(Params..., UserData), const UserData &userdata)
-        : Callback([=](const Params & ... params, const UserData &userdata)
-                   { return (instance->*function)(params..., userdata); },userdata) { return; }
+        : impl(new Callback_impl_with<Res, UserData, Params...>([=](const Params & ... params, const UserData &userdata)
+               { return (instance->*function)(params..., userdata); }, userdata)) { return; }
 
         Res invoke(const Params & ... params) const
         {
