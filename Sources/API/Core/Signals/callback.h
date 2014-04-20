@@ -33,8 +33,12 @@
 
 namespace clan
 {
+    /// \addtogroup clanCore_Signals clanCore Signals
+    /// \{
+
     namespace
     {
+        /// (Internal ClanLib Class)
         template<class Res, class... Params>
         class Callback_impl
         {
@@ -57,6 +61,7 @@ namespace clan
             const std::function<Res(Params...)> func;
         };
 
+        /// (Internal ClanLib Class)
         template<class Res, class UserData, class... Params>
         class Callback_impl_with : public Callback_impl<Res, Params...>
         {
@@ -74,9 +79,11 @@ namespace clan
         };
     }
 
+    /// (Internal ClanLib Class)
     template<class... Args>
     class Callback;
 
+    /// \brief Callback
     template<class Res, class... Params>
     class Callback<Res(Params...)>
     {
@@ -100,7 +107,8 @@ namespace clan
 
         template<class Instance, class UserData>
         Callback(Instance *instance, Res(Instance::*function)(Params..., UserData), const UserData &userdata)
-        : Callback([=](const Params & ... params, const UserData &userdata){ return (instance->*function)(params..., userdata); }, userdata) { return; }
+        : Callback([=](const Params & ... params, const UserData &userdata)
+                   { return (instance->*function)(params..., userdata); },userdata) { return; }
 
         Res invoke(const Params & ... params) const
         {
@@ -127,7 +135,8 @@ namespace clan
         template<class Instance, class UserData>
         void set(Instance *instance, Res(Instance::*function)(Params..., UserData), const UserData &userdata)
         {
-            set<UserData>([instance, function](const Params & ... params, const UserData &ud){ return (instance->*function)(params..., ud); }, userdata);
+            set<UserData>([instance, function](const Params & ... params, const UserData &ud)
+                          { return (instance->*function)(params..., ud); }, userdata);
         }
 
         void clear() const
@@ -161,7 +170,7 @@ namespace clan
 
     template<class Res, class A, class B, class C, class D, class E> using Callback_5 = Callback<Res(A, B, C, D, E)>;
     template<class A, class B, class C, class D, class E> using Callback_v5 = Callback_5<void, A, B, C, D, E>;
-    
+
     template<class Res, class A, class B, class C, class D, class E, class F> using Callback_6 = Callback<Res(A, B, C, D, E, F)>;
     template<class A, class B, class C, class D, class E, class F> using Callback_v6 = Callback_6<void, A, B, C, D, E, F>;
 }
