@@ -55,7 +55,7 @@ public:
     /// \name Operations
     /// \{
 
-    void connect(const Callback<void(Params...)> &callback) //todo remove slot, just void!
+    void connect(const Callback<void(Params...)> &callback)
     {
         impl->push_back(callback);
     }
@@ -68,7 +68,7 @@ public:
     void invoke(Params & ... params) const
     {
         for(auto &cb : *impl)
-            if(!cb.is_null)
+            if(!cb.is_null())
                 cb.invoke(params...);
     }
 
@@ -82,7 +82,7 @@ private:
 };
 
 
-using Signal_v0 = Signal<void()>;
+using Signal_v0 = Signal<>;
 template<class A> using Signal_v1 = Signal<A>;
 template<class A, class B> using Signal_v2 = Signal<A, B>;
 template<class A, class B, class C> using Signal_v3 = Signal<A, B, C>;
