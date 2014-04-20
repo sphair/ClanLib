@@ -40,7 +40,7 @@ namespace clan
 
 /// \brief Signal
 template<class... Params>
-class CL_API_CORE Signal
+class Signal
 {
 public:
     /// \name Construction
@@ -65,7 +65,7 @@ public:
         impl->erase(std::remove(impl->begin(), impl->end(), callback), impl->end());
     }
 
-    void invoke(Params & ... params) const
+    void invoke(const Params & ... params) const
     {
         for(auto &cb : *impl)
             if(!cb.is_null())
