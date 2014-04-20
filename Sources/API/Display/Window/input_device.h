@@ -31,7 +31,7 @@
 #pragma once
 
 #include "../api_display.h"
-#include "../../Core/Signals/signal_v1.h"
+#include "../../Core/Signals/signal.h"
 #include "../../Core/Math/point.h"
 #include <memory>
 

@@ -31,7 +31,7 @@
 
 #include "api_gui.h"
 #include <memory>
-#include "../Core/Signals/callback_v2.h"
+#include "../Core/Signals/callback.h"
 #include "../GUI/gui_message.h"
 #include "../GUI/gui_message_input.h"
 #include <vector>

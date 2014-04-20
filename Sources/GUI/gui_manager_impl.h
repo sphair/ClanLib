@@ -30,8 +30,8 @@
 
 #pragma once
 
-#include "API/Core/Signals/callback_1.h"
-#include "API/Core/Signals/callback_v2.h"
+#include "API/Core/Signals/callback.h"
+#include "API/Core/Signals/callback.h"
 #include "API/Core/Resources/xml_resource_document.h"
 #include "API/Core/Resources/resource_manager.h"
 #include "API/CSSLayout/CSSDocument/css_document.h"

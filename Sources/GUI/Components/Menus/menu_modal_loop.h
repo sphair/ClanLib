@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "API/Core/Signals/callback_1.h"
+#include "API/Core/Signals/callback.h"
 
 namespace clan
 {

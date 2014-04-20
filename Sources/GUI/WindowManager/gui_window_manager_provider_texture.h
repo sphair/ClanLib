@@ -32,8 +32,8 @@
 
 #pragma once
 
-#include "API/Core/Signals/callback_v0.h"
-#include "API/Core/Signals/callback_v2.h"
+#include "API/Core/Signals/callback.h"
+#include "API/Core/Signals/callback.h"
 #include "API/Display/Window/display_window.h"
 #include "API/Display/Render/texture_2d.h"
 #include "API/Display/Render/frame_buffer.h"

@@ -33,9 +33,9 @@
 
 #include "api_gui.h"
 #include "gui_component.h"
-#include "../Core/Signals/signal_v1.h"
-#include "../Core/Signals/signal_v2.h"
-#include "../Core/Signals/signal_v3.h"
+#include "../Core/Signals/signal.h"
+#include "../Core/Signals/signal.h"
+#include "../Core/Signals/signal.h"
 #include <vector>
 
 namespace clan

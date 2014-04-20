@@ -32,7 +32,7 @@
 #include "../api_network.h"
 #include "event.h"
 #include <map>
-#include "../../Core/Signals/callback_v2.h"
+#include "../../Core/Signals/callback.h"
 
 namespace clan
 {

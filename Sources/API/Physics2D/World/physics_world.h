@@ -30,8 +30,8 @@
 #pragma once
 
 #include "../api_physics2d.h"
-#include "../../Core/Signals/signal_v0.h"
-#include "../../Core/Signals/signal_v1.h"
+#include "../../Core/Signals/signal.h"
+#include "../../Core/Signals/signal.h"
 #include <memory>
 
 namespace clan

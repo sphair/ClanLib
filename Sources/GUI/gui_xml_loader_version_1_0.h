@@ -30,7 +30,7 @@
 
 #include "API/Core/Resources/xml_resource_document.h"
 #include "API/GUI/gui_component.h"
-#include "API/Core/Signals/callback_2.h"
+#include "API/Core/Signals/callback.h"
 #include <vector>
 #include <map>
 

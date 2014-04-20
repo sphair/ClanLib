@@ -30,8 +30,8 @@
 
 #include "../Box2D/Box2D.h"
 #include <memory>
-#include "API/Core/Signals/signal_v0.h"
-#include "API/Core/Signals/signal_v1.h"
+#include "API/Core/Signals/signal.h"
+#include "API/Core/Signals/signal.h"
 
 namespace clan
 {
