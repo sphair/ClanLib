@@ -45,7 +45,7 @@ SolutionExplorer::SolutionExplorer(FileItemTypeFactory &factory, UIController *c
 {
 	set_title("Solution Explorer");
 	set_dockable_window_geometry(Rect(Point(50, 50), Size(300, 400)));
-	slots.connect(solution_model().sig_model_updated, this, &SolutionExplorer::populate);
+	solution_model().sig_model_updated.connect({this, &SolutionExplorer::populate});
 
 //	controller->component<UIRibbonPushButton>("view.solution-explorer").func_clicked(0).set(this, &SolutionExplorer::on_item_show_solution_explorer);
 

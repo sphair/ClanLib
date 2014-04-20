@@ -42,7 +42,7 @@ public:
 	InputDevice_Impl()
 	: provider(0)
 	{
-		slot_provider_event = sig_provider_event.connect(this, &InputDevice_Impl::on_provider_event);
+		sig_provider_event.connect({this, &InputDevice_Impl::on_provider_event});
 	}
 
 	~InputDevice_Impl()
@@ -71,8 +71,6 @@ public:
 	InputDeviceProvider *provider;
 
 	Signal_v1<const InputEvent &> sig_provider_event;
-
-	Slot slot_provider_event;
 
 	Signal_v1<const InputEvent &> sig_key_down;
 

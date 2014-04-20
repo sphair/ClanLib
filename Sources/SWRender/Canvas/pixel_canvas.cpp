@@ -127,7 +127,7 @@ void PixelCanvas::set_framebuffer(const FrameBuffer &buffer)
 	framebuffer_set = true;
 	framebuffer = buffer;
 
-	slot_framebuffer_modified = swr_framebuffer->get_sig_changed_event().connect(this, &PixelCanvas::modified_framebuffer);
+	swr_framebuffer->get_sig_changed_event().connect({this, &PixelCanvas::modified_framebuffer});
 
 	colorbuffer0.set(swr_framebuffer->get_colorbuffer0());
 	pipeline->queue(new(pipeline.get()) PixelCommandSetFrameBuffer(colorbuffer0));
@@ -144,7 +144,6 @@ void PixelCanvas::reset_framebuffer()
 	pipeline->wait_for_workers();
 
 	framebuffer_set = false;
-	slot_framebuffer_modified = Slot();
 	colorbuffer0.set(primary_colorbuffer0);
 	pipeline->queue(new(pipeline.get()) PixelCommandSetFrameBuffer(colorbuffer0));
 

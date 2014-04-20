@@ -32,7 +32,6 @@
 
 #pragma once
 
-#include "API/Core/Signals/slot_container.h"
 #include "API/Core/Signals/callback_v0.h"
 #include "API/Core/Signals/callback_v2.h"
 #include "API/Display/Window/display_window.h"
@@ -108,7 +107,6 @@ public:
 	GUITopLevelWindow *capture_mouse_window;
 	DisplayWindow display_window;
 	Canvas canvas_window;
-	SlotContainer slots;
 	TextureGroup texture_group;
 	FrameBuffer frame_buffer;
 	bool frame_buffer_initial_setup;

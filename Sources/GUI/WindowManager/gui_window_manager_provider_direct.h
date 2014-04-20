@@ -29,7 +29,6 @@
 #pragma once
 
 #include <map>
-#include "API/Core/Signals/slot_container.h"
 #include "API/Core/Signals/callback_v0.h"
 #include "API/Display/Window/display_window.h"
 #include "API/GUI/Providers/gui_window_manager_provider.h"
@@ -76,7 +75,6 @@ public:
 	GUITopLevelWindow *capture_mouse_window;
 	DisplayWindow display_window;
 	Canvas window_canvas;
-	SlotContainer slots;
 
 public:
 	void on_displaywindow_window_close();

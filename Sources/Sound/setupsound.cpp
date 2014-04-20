@@ -33,7 +33,6 @@
 #include "API/Sound/SoundProviders/soundprovider_vorbis.h"
 #include "API/Sound/SoundProviders/soundprovider_type_register.h"
 #include "API/Core/Resources/xml_resource_document.h"
-#include "API/Core/Signals/slot.h"
 #include "API/Core/Resources/resource_manager.h"
 #include "API/Core/Resources/xml_resource_manager.h"
 #include "Sound/Resources/xml_sound_cache.h"
@@ -58,14 +57,12 @@ public:
 	static void add_cache_factory(ResourceManager &manager, const XMLResourceDocument &doc);
 
 	static int ref_count;
-	static Slot slot_resource_added;
 	static SoundProviderType *providertype_wave;
 	static SoundProviderType *providertype_ogg;
 
 };
 
 int SetupSound_Impl::ref_count = 0;
-Slot SetupSound_Impl::slot_resource_added;
 SoundProviderType *SetupSound_Impl::providertype_wave = 0;
 SoundProviderType *SetupSound_Impl::providertype_ogg = 0;
 

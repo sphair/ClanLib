@@ -54,23 +54,23 @@ GUIWindowManagerProvider_Texture::GUIWindowManagerProvider_Texture(DisplayWindow
 	: site(0), activated_window(0), capture_mouse_window(NULL), display_window(display_window), canvas_window(display_window),
   frame_buffer_initial_setup(false), frame_buffer_stencil_attached(false), frame_buffer_depth_attached(false)
 {
-	slots.connect(display_window.sig_window_close(), this, &GUIWindowManagerProvider_Texture::on_displaywindow_window_close);
+	display_window.sig_window_close().connect({this, &GUIWindowManagerProvider_Texture::on_displaywindow_window_close});
 
 	InputContext ic = display_window.get_ic();
-	slots.connect(ic.get_mouse().sig_key_up(), this, &GUIWindowManagerProvider_Texture::on_input_mouse_up);
-	slots.connect(ic.get_mouse().sig_key_down(), this, &GUIWindowManagerProvider_Texture::on_input_mouse_down);
-	slots.connect(ic.get_mouse().sig_key_dblclk(), this, &GUIWindowManagerProvider_Texture::on_input_mouse_down);
-	slots.connect(ic.get_mouse().sig_pointer_move(), this, &GUIWindowManagerProvider_Texture::on_input_mouse_move);
+	ic.get_mouse().sig_key_up().connect({this, &GUIWindowManagerProvider_Texture::on_input_mouse_up});
+    ic.get_mouse().sig_key_down().connect({this, &GUIWindowManagerProvider_Texture::on_input_mouse_down});
+    ic.get_mouse().sig_key_dblclk().connect({this, &GUIWindowManagerProvider_Texture::on_input_mouse_down});
+    ic.get_mouse().sig_pointer_move().connect({this, &GUIWindowManagerProvider_Texture::on_input_mouse_move});
 
-	slots.connect(ic.get_keyboard().sig_key_up(), this, &GUIWindowManagerProvider_Texture::on_input);
-	slots.connect(ic.get_keyboard().sig_key_down(), this, &GUIWindowManagerProvider_Texture::on_input);
+    ic.get_keyboard().sig_key_up().connect({this, &GUIWindowManagerProvider_Texture::on_input});
+    ic.get_keyboard().sig_key_down().connect({this, &GUIWindowManagerProvider_Texture::on_input});
 
 	for (int tc = 0; tc < ic.get_tablet_count(); ++tc)
 	{
-		slots.connect(ic.get_tablet(tc).sig_axis_move(), this, &GUIWindowManagerProvider_Texture::on_input_mouse_move);
-		slots.connect(ic.get_tablet(tc).sig_key_down(), this, &GUIWindowManagerProvider_Texture::on_input_mouse_down);
-		slots.connect(ic.get_tablet(tc).sig_key_dblclk(), this, &GUIWindowManagerProvider_Texture::on_input_mouse_down);
-		slots.connect(ic.get_tablet(tc).sig_key_up(), this, &GUIWindowManagerProvider_Texture::on_input);
+        ic.get_tablet(tc).sig_axis_move().connect({this, &GUIWindowManagerProvider_Texture::on_input_mouse_move});
+        ic.get_tablet(tc).sig_key_down().connect({this, &GUIWindowManagerProvider_Texture::on_input_mouse_down});
+        ic.get_tablet(tc).sig_key_dblclk().connect({this, &GUIWindowManagerProvider_Texture::on_input_mouse_down});
+        ic.get_tablet(tc).sig_key_up().connect({this, &GUIWindowManagerProvider_Texture::on_input});
 	}
 
 	frame_buffer = FrameBuffer(canvas_window);
