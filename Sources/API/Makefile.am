@@ -143,6 +143,7 @@ clanSound_includes = \
 clanCore_includes = \
 	core.h \
 	Core/Signals/callback.h \
+	Core/Signals/signal.h \
 	Core/Signals/callback_0.h \
 	Core/Signals/callback_1.h \
 	Core/Signals/callback_2.h \
