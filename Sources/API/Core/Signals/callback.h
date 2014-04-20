@@ -148,6 +148,16 @@ namespace clan
         {
             return !impl;
         }
+
+        bool operator==(const Callback<Res(Params...)> &other) const
+        {
+            return impl == other.impl;
+        }
+        
+        bool operator!=(const Callback<Res(Params...)> &other) const
+        {
+            return !(*this == other);
+        }
     private:
         std::shared_ptr<Callback_impl<Res, Params...>> impl;
     };
