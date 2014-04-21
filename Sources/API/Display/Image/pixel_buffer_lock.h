@@ -30,6 +30,7 @@
 #pragma once
 
 #include "../api_display.h"
+#include <exception>
 #include <memory>
 #include "../../Core/Math/vec2.h"
 #include "../../Core/Math/vec3.h"
@@ -116,7 +117,7 @@ public:
 		if (!pixel_buffer.is_null())
 		{
 			if (pixel_buffer.is_gpu())
-				throw Exception("Incorrect PixelBufferLock constructor called with a GPU pixelbuffer");
+				throw std::Exception("Incorrect PixelBufferLock constructor called with a GPU pixelbuffer");
 
 			// lock() does not do anything on system pixel buffers, so we do not call it
 
