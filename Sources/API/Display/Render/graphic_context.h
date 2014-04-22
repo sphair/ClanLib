@@ -37,7 +37,7 @@
 #include <memory>
 #include "../../Core/Math/mat4.h"
 #include "../../Core/Math/rect.h"
-#include "../../Core/Signals/signal_v0.h"
+#include "../../Core/Signals/signal.h"
 #include "primitives_array.h"
 #include "frame_buffer.h"
 #include "element_array_vector.h"

@@ -29,8 +29,7 @@
 
 #pragma once
 
-#include "API/Core/Signals/callback_1.h"
-#include "API/Core/Signals/slot.h"
+#include "API/Core/Signals/callback.h"
 
 namespace clan
 {
@@ -77,7 +76,6 @@ private:
 	std::vector<PopupMenuWindow *> popup_windows;
 	bool running;
 	bool ignore_menubar_mouse_up;
-	Slot slot_filter;
 
 	bool popup;
 };

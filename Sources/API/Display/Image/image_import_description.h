@@ -31,7 +31,7 @@
 
 #include "../api_display.h"
 #include <memory>
-#include "../../Core/Signals/callback_1.h"
+#include "../../Core/Signals/callback.h"
 
 namespace clan
 {

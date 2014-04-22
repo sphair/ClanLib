@@ -34,7 +34,7 @@
 #include "../Window/input_device.h"
 #include "../../Core/System/disposable_object.h"
 #include <memory>
-#include "../../Core/Signals/signal_v1.h"
+#include "../../Core/Signals/signal.h"
 
 namespace clan
 {

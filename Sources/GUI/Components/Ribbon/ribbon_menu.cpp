@@ -51,7 +51,7 @@ RibbonMenu::RibbonMenu(GUIComponent *owner)
 	impl->part_menu_item_separator = GUIThemePart(this, "menu-item");
 	impl->part_menu_item_separator.set_pseudo_class("separator", true);
 
-	impl->slot_filter = owner->get_gui_manager().sig_filter_message().connect(impl.get(), &RibbonMenu_Impl::on_filter_message);
+    owner->get_gui_manager().sig_filter_message().connect({impl.get(), &RibbonMenu_Impl::on_filter_message});
 }
 
 Callback_v0 &RibbonMenu::add_item(Image image, std::string text)

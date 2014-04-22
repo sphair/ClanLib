@@ -102,7 +102,6 @@ private:
 	Mat4f canvas_projection;
 	MapMode canvas_map_mode;
 	Size canvas_size;
-	Slot slot_window_resized;
 
 	DisplayWindow current_window;
 
@@ -110,8 +109,6 @@ private:
 
 	Mat4f user_projection;
 	ClipZRange gc_clip_z_range;
-
-	Slot slot_window_flip;
 };
 
 }

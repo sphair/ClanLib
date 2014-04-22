@@ -30,9 +30,9 @@
 
 
 #include "../api_core.h"
-#include "../Signals/callback_0.h"
-#include "../Signals/callback_v1.h"
-#include "../Signals/callback_2.h"
+#include "../Signals/callback.h"
+#include "../Signals/callback.h"
+#include "../Signals/callback.h"
 
 namespace clan
 {

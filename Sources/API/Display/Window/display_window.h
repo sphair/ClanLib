@@ -32,12 +32,12 @@
 #pragma once
 
 #include "../api_display.h"
-#include "../../Core/Signals/signal_v0.h"
-#include "../../Core/Signals/signal_v1.h"
-#include "../../Core/Signals/signal_v2.h"
-#include "../../Core/Signals/callback_v1.h"
-#include "../../Core/Signals/callback_0.h"
-#include "../../Core/Signals/callback_4.h"
+#include "../../Core/Signals/signal.h"
+#include "../../Core/Signals/signal.h"
+#include "../../Core/Signals/signal.h"
+#include "../../Core/Signals/callback.h"
+#include "../../Core/Signals/callback.h"
+#include "../../Core/Signals/callback.h"
 #include "../display_target.h"
 #include <memory>
 

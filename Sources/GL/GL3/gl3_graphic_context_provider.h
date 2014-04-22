@@ -34,7 +34,7 @@
 #include "API/Display/TargetProviders/graphic_context_provider.h"
 #include "API/GL/opengl.h"
 #include "API/Core/Math/mat4.h"
-#include "API/Core/Signals/signal_v0.h"
+#include "API/Core/Signals/signal.h"
 #include "API/Display/Render/program_object.h"
 #include "API/Display/Render/rasterizer_state_description.h"
 #include "API/Display/Render/blend_state_description.h"

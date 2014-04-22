@@ -61,8 +61,6 @@ public:
 	ToolTip *tooltip;
 	Timer timer_show_delayed;
 	std::string text;
-
-	Slot slot_filter_message;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -77,7 +75,7 @@ ToolTip::ToolTip(GUIManager manager)
 	func_render().set(impl.get(), &ToolTip_Impl::on_render);
 
 	impl->timer_show_delayed.func_expired().set(impl.get(), &ToolTip_Impl::on_show_delayed);
-	impl->slot_filter_message = get_gui_manager().sig_filter_message().connect(impl.get(), &ToolTip_Impl::on_filter_message);
+    get_gui_manager().sig_filter_message().connect({impl.get(), &ToolTip_Impl::on_filter_message});
 }
 
 ToolTip::~ToolTip()

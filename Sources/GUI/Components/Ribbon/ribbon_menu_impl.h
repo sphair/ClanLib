@@ -59,9 +59,6 @@ public:
 	GUIThemePart part_menu_item_separator;
 
 	bool running;
-	Slot slot_filter;
-
-
 };
 
 }

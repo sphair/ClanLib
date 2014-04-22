@@ -33,8 +33,8 @@
 
 #include "connection_site.h"	// TODO: Remove
 #include "../../Core/System/event.h"
-#include "../../Core/Signals/signal_v1.h"
-#include "../../Core/Signals/signal_v2.h"
+#include "../../Core/Signals/signal.h"
+#include "../../Core/Signals/signal.h"
 
 namespace clan
 {

@@ -94,7 +94,6 @@ private:
 	DragDropOperation *drag_drop;
 	std::map<std::string, int> extension_to_icon;
 	PopupMenu popup;
-	SlotContainer slots;
 
 	friend class DragDropOperation;
 };

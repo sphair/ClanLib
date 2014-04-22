@@ -37,19 +37,18 @@ namespace clan
 GraphicContext_Impl::GraphicContext_Impl(GraphicContextProvider *provider)
 : graphic_screen(new GraphicScreen(provider))
 {
-	slot_window_resized = graphic_screen->get_provider()->sig_window_resized().connect(this, &GraphicContext_Impl::on_window_resized);
+    graphic_screen->get_provider()->sig_window_resized().connect({this, &GraphicContext_Impl::on_window_resized});
 	set_viewport(-1, graphic_screen->get_provider()->get_display_window_size());
 }
 
 GraphicContext_Impl::GraphicContext_Impl(const GraphicContext_Impl *from_gc, bool clone)
 : graphic_screen(from_gc->graphic_screen)
 {
-
 	default_rasterizer_state = from_gc->default_rasterizer_state;
 	default_blend_state = from_gc->default_blend_state;
 	default_depth_stencil_state = from_gc->default_depth_stencil_state;
 
-	slot_window_resized = graphic_screen->get_provider()->sig_window_resized().connect(this, &GraphicContext_Impl::on_window_resized);
+    graphic_screen->get_provider()->sig_window_resized().connect({this, &GraphicContext_Impl::on_window_resized});
 	set_viewport(-1, from_gc->viewport[0]);
 
 	if (clone)

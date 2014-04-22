@@ -36,7 +36,7 @@
 #include "../Render/primitives_array.h"
 #include "../Render/texture.h"
 #include "../../Core/Math/mat4.h"
-#include "../../Core/Signals/signal_v1.h"
+#include "../../Core/Signals/signal.h"
 
 namespace clan
 {

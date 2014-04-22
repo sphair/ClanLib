@@ -29,8 +29,8 @@
 
 #pragma once
 
-#include "API/Core/Signals/callback_2.h"
-#include "API/Core/Signals/signal_v1.h"
+#include "API/Core/Signals/callback.h"
+#include "API/Core/Signals/signal.h"
 #include "API/Core/Math/rect.h"
 #include "API/GUI/gui_component.h"
 #include "API/CSSLayout/ComputedValues/css_computed_values.h"

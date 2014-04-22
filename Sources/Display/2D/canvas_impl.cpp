@@ -69,7 +69,7 @@ void Canvas_Impl::setup(GraphicContext &new_gc)
 
 	if (!current_window.is_null())
 	{
-		slot_window_flip = current_window.sig_window_flip().connect(this, &Canvas_Impl::on_window_flip);
+		current_window.sig_window_flip().connect({this, &Canvas_Impl::on_window_flip});
 	}
 
 	gc_clip_z_range = gc.get_provider()->get_clip_z_range();
@@ -78,7 +78,7 @@ void Canvas_Impl::setup(GraphicContext &new_gc)
 	if (gc.get_write_frame_buffer().is_null())	// No framebuffer attached to canvas
 	{
 		canvas_y_axis = y_axis_top_down;
-		slot_window_resized = gc.get_provider()->sig_window_resized().connect(this, &Canvas_Impl::on_window_resized);
+		gc.get_provider()->sig_window_resized().connect({this, &Canvas_Impl::on_window_resized});
 	}
 	else
 	{

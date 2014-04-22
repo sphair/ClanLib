@@ -42,7 +42,7 @@
 #include "API/Display/Render/depth_stencil_state_description.h"
 #include "API/GL/opengl.h"
 #include "API/Core/Math/mat4.h"
-#include "API/Core/Signals/signal_v0.h"
+#include "API/Core/Signals/signal.h"
 #include "GL/opengl_graphic_context_provider.h"
 #include "API/Core/System/disposable_object.h"
 #include "../State/opengl_blend_state.h"

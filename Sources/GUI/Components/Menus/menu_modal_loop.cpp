@@ -49,7 +49,7 @@ namespace clan
 MenuModalLoop::MenuModalLoop(GUIManager manager)
 : owner(0), menubar(0), running(false), ignore_menubar_mouse_up(true), popup(false)
 {
-	slot_filter = manager.sig_filter_message().connect(this, &MenuModalLoop::on_filter_message);
+    manager.sig_filter_message().connect({this, &MenuModalLoop::on_filter_message});
 }
 
 MenuModalLoop::~MenuModalLoop()

@@ -34,7 +34,7 @@
 #include "API/Core/System/mutex.h"
 #include "API/Core/System/event.h"
 #include "API/Core/System/system.h"
-#include "API/Core/Signals/callback_v0.h"
+#include "API/Core/Signals/callback.h"
 #include <map>
 
 namespace clan

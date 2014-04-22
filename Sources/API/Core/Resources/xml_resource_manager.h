@@ -30,7 +30,7 @@
 #pragma once
 
 #include "../api_core.h"
-#include "../Signals/callback_v2.h"
+#include "../Signals/callback.h"
 #include <string>
 #include <memory>
 

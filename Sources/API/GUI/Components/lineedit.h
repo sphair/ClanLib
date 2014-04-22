@@ -33,9 +33,9 @@
 #include "../api_gui.h"
 #include "../gui_component.h"
 #include "../../Display/Window/input_event.h"
-#include "../../Core/Signals/callback_v0.h"
-#include "../../Core/Signals/callback_v1.h"
-#include "../../Core/Signals/callback_1.h"
+#include "../../Core/Signals/callback.h"
+#include "../../Core/Signals/callback.h"
+#include "../../Core/Signals/callback.h"
 
 namespace clan
 {

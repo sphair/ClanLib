@@ -35,8 +35,8 @@
 #include "API/Physics2D/World/physics_world_description.h"
 #include "API/Physics2D/World/physics_context.h"
 #include "API/Physics2D/World/physics_query_assistant.h"
-#include "API/Core/Signals/signal_v0.h"
-#include "API/Core/Signals/signal_v1.h"
+#include "API/Core/Signals/signal.h"
+#include "API/Core/Signals/signal.h"
 
 namespace clan
 {

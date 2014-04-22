@@ -30,12 +30,12 @@
 
 #include "../api_core.h"
 #include <memory>
+#include "../Signals/callback.h"
 
 namespace clan
 {
 
 class Timer_Impl;
-class Callback_v0;
 
 /// \brief Timer class that invokes a callback on a specified interval
 class CL_API_CORE Timer

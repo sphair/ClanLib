@@ -32,10 +32,10 @@
 #pragma once
 
 #include "api_gui.h"
-#include "../Core/Signals/callback_0.h"
-#include "../Core/Signals/callback_1.h"
-#include "../Core/Signals/callback_2.h"
-#include "../Core/Signals/signal_v1.h"
+#include "../Core/Signals/callback.h"
+#include "../Core/Signals/callback.h"
+#include "../Core/Signals/callback.h"
+#include "../Core/Signals/signal.h"
 #include "../Core/Math/point.h"
 #include "accelerator_table.h"
 #include <memory>

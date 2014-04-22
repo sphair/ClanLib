@@ -41,8 +41,8 @@
 #include "API/Display/Window/cursor.h"
 #include "API/Core/Math/point.h"
 #include "API/Core/Math/rect.h"
-#include "API/Core/Signals/callback_v0.h"
-#include "API/Core/Signals/callback_1.h"
+#include "API/Core/Signals/callback.h"
+#include "API/Core/Signals/callback.h"
 #include "clipboard_x11.h"
 
 #include <X11/Xlib.h>

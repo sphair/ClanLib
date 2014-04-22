@@ -33,7 +33,7 @@
 
 #include "../api_gui.h"
 #include "../gui_component.h"
-#include "../../Core/Signals/callback_v0.h"
+#include "../../Core/Signals/callback.h"
 
 namespace clan
 {
