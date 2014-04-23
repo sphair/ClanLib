@@ -52,12 +52,12 @@ public:
     }
     virtual ~AutoDisconnectorT()
     {
-        //NEVER (!!!) call virtual function in c'tor or d'tor
         signal.disconnect(callback);
+        callback.clear();
     }
 private:
-    Signal<Args...> &signal;
-    const Callback<void(Args...)> &callback;
+    Signal<Args...> signal;
+    Callback<void(Args...)> callback;
 };
 
 }

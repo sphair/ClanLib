@@ -67,7 +67,7 @@ public:
 
     void invoke(const Params & ... params) const
     {
-        for(auto &cb : *impl)
+        for(auto &cb : std::vector<Callback<void(Params...)>>(*impl))
             if(!cb.is_null())
                 cb.invoke(params...);
     }
