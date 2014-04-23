@@ -46,7 +46,7 @@ public:
     /// \name Construction
     /// \{
     Signal()
-    : impl(new std::vector<Callback<void(Params...)>>) { return; }
+    : impl(new std::vector<Callback<void(Params...)>>()) { return; }
 
     Signal(const Signal &copy)
     : impl(copy.impl) { return; }
@@ -80,15 +80,6 @@ private:
     std::shared_ptr<std::vector<Callback<void(Params...)>>> impl;
 /// \}
 };
-
-
-using Signal_v0 = Signal<>;
-template<class A> using Signal_v1 = Signal<A>;
-template<class A, class B> using Signal_v2 = Signal<A, B>;
-template<class A, class B, class C> using Signal_v3 = Signal<A, B, C>;
-template<class A, class B, class C, class D> using Signal_v4 = Signal<A, B, C, D>;
-template<class A, class B, class C, class D, class E> using Signal_v5 = Signal<A, B, C, D, E>;
-template<class A, class B, class C, class D, class E, class F> using Signal_v6 = Signal<A, B, C, D, E, F>;
 
 }
 /// \}

@@ -94,6 +94,9 @@ namespace clan
         Callback(const Callback& other)
         : impl(other.impl) { return; }
 
+        Callback(Callback&& other)
+        : impl(std::move(other.impl)) { return; }
+
         Callback(const std::function<Res(Params...)> &function)
         : impl(new Callback_impl_without<Res, Params...>(function)) { return; }
 
@@ -110,6 +113,8 @@ namespace clan
         Callback(Instance *instance, Res(Instance::*function)(Params..., UserData), const UserData &userdata)
         : impl(new Callback_impl_with<Res, UserData, Params...>([=](const Params & ... params, const UserData &userdata)
                { return (instance->*function)(params..., userdata); }, userdata)) { return; }
+
+        ~Callback() { return; }
 
         Res invoke(const Params & ... params) const
         {
@@ -142,7 +147,7 @@ namespace clan
 
         void clear() const
         {
-            impl = nullptr;
+            impl = std::shared_ptr<Callback_impl<Res, Params...>>(nullptr);
         }
 
         bool is_null() const
@@ -150,11 +155,26 @@ namespace clan
             return !impl;
         }
 
+        Callback &operator=(const Callback<Res(Params...)> &other)
+        {
+            if (this != &other)
+            {
+                impl = other.impl;
+            }
+            return *this;
+        }
+
+        Callback &operator=(Callback<Res(Params...)> &&other)
+        {
+            impl = std::move(other.impl);
+            return *this;
+        }
+
         bool operator==(const Callback<Res(Params...)> &other) const
         {
             return impl == other.impl;
         }
-        
+
         bool operator!=(const Callback<Res(Params...)> &other) const
         {
             return !(*this == other);
@@ -162,26 +182,4 @@ namespace clan
     private:
         std::shared_ptr<Callback_impl<Res, Params...>> impl;
     };
-
-
-    template<class Res> using Callback_0 = Callback<Res()>;
-    using Callback_v0 = Callback_0<void>;
-
-    template<class Res, class A> using Callback_1 = Callback<Res(A)>;
-    template<class A> using Callback_v1 = Callback_1<void, A>;
-
-    template<class Res, class A, class B> using Callback_2 = Callback<Res(A, B)>;
-    template<class A, class B> using Callback_v2 = Callback_2<void, A, B>;
-
-    template<class Res, class A, class B, class C> using Callback_3 = Callback<Res(A, B, C)>;
-    template<class A, class B, class C> using Callback_v3 = Callback_3<void, A, B, C>;
-
-    template<class Res, class A, class B, class C, class D> using Callback_4 = Callback<Res(A, B, C, D)>;
-    template<class A, class B, class C, class D> using Callback_v4 = Callback_4<void, A, B, C, D>;
-
-    template<class Res, class A, class B, class C, class D, class E> using Callback_5 = Callback<Res(A, B, C, D, E)>;
-    template<class A, class B, class C, class D, class E> using Callback_v5 = Callback_5<void, A, B, C, D, E>;
-
-    template<class Res, class A, class B, class C, class D, class E, class F> using Callback_6 = Callback<Res(A, B, C, D, E, F)>;
-    template<class A, class B, class C, class D, class E, class F> using Callback_v6 = Callback_6<void, A, B, C, D, E, F>;
 }
