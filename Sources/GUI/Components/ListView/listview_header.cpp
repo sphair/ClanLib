@@ -82,9 +82,9 @@ public:
 	Rect current_mouse_in_rect;
 	std::shared_ptr<ListViewColumnHeader_Impl> first_column;
 	std::weak_ptr<ListViewColumnHeader_Impl> last_column;
-	Callback_v1<ListViewColumnHeader> func_column_added;
-	Callback_v1<ListViewColumnHeader> func_column_removed;
-	Callback_v1<ListViewColumnHeader> func_column_size_changed;
+	Callback<void(ListViewColumnHeader)> func_column_added;
+	Callback<void(ListViewColumnHeader)> func_column_removed;
+	Callback<void(ListViewColumnHeader)> func_column_size_changed;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -210,17 +210,17 @@ void ListViewHeader::set_display_mode(ListViewDisplayMode mode)
 /////////////////////////////////////////////////////////////////////////////
 // ListViewHeader Events:
 
-Callback_v1<ListViewColumnHeader> &ListViewHeader::func_column_added()
+Callback<void(ListViewColumnHeader)> &ListViewHeader::func_column_added()
 {
 	return impl->func_column_added; 
 }
 
-Callback_v1<ListViewColumnHeader> &ListViewHeader::func_column_removed()
+Callback<void(ListViewColumnHeader)> &ListViewHeader::func_column_removed()
 {
 	return impl->func_column_removed;
 }
 
-Callback_v1<ListViewColumnHeader> &ListViewHeader::func_column_size_changed()
+Callback<void(ListViewColumnHeader)> &ListViewHeader::func_column_size_changed()
 {
 	return impl->func_column_size_changed;
 }

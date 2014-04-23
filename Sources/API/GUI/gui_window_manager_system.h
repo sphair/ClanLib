@@ -69,9 +69,9 @@ public:
 /// \name Events
 /// \{
 public:
-	Signal_v1<DisplayWindow> &sig_toplevel_window_created();
+	Signal<DisplayWindow> &sig_toplevel_window_created();
 
-	Signal_v1<DisplayWindow> &sig_toplevel_window_destroyed();
+	Signal<DisplayWindow> &sig_toplevel_window_destroyed();
 
 /// \}
 

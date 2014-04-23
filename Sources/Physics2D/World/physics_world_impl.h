@@ -107,8 +107,8 @@ private:
 //																						_____________
 //																						S I G N A L S
 public:
-	Signal_v1<float> sig_world_step;
-	Signal_v0 sig_world_destroyed;
+	Signal<float> sig_world_step;
+	Signal<> sig_world_destroyed;
 //																						___________________________
 //																						I M P L E M E N T A T I O N
 /// \}

@@ -67,7 +67,7 @@ public:
 public:
 	void load(DomDocument &doc);
 
-	void set_create_custom_callback(Callback_2<GUIComponent*, GUIComponent*, std::string> *callback);
+	void set_create_custom_callback(Callback<GUIComponent*(GUIComponent*, std::string)> *callback);
 
 
 /// \}
@@ -80,7 +80,7 @@ private:
 	GUIComponent *component;
 	GUILayout layout;
 
-	Callback_2<GUIComponent*, GUIComponent*, std::string> *create_custom_callback;
+	Callback<GUIComponent*(GUIComponent*, std::string)> *create_custom_callback;
 
 	int dialog_width;
 	int dialog_height;

@@ -77,7 +77,7 @@ public:
 	Size get_minimum_size(bool client_area) const;
 	Size get_maximum_size(bool client_area) const;
 	std::string get_title() const;
-	Callback_v0 &func_on_resized() { return callback_on_resized; }
+	Callback<void()> &func_on_resized() { return callback_on_resized; }
 	InputContext get_ic() { return ic; }		// Important, do not return by reference, so the shared pointer exists if this window is destroyed
 	const InputContext get_ic() const { return ic; }		// Important, do not return by reference, so the shared pointer exists if this window is destroyed
 	bool is_clipboard_text_available() const;
@@ -194,7 +194,7 @@ private:
 	std::vector<InputDevice> joysticks;
 	Point mouse_pos;
 	std::map<int,int> repeat_count;
-	Callback_v0 callback_on_resized;
+	Callback<void()> callback_on_resized;
 	InputContext ic;
 	PAINTSTRUCT paintstruct;
 	Size minimum_size;

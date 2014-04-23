@@ -136,7 +136,7 @@ public:
 /// \name Signals and callbacks
 /// \{
 public:
-	Signal_v0 sig_style_changed;
+	Signal<> sig_style_changed;
 
 /// \}
 

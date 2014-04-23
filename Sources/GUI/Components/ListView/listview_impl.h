@@ -130,19 +130,19 @@ public:
 	ListViewItem document_item;
 	ListViewHeader *header;
 
-	Callback_v1<ListViewSelection> func_selection_changed;
-	Callback_v1<const ListViewItem &> func_item_doubleclick;
+	Callback<void(ListViewSelection)> func_selection_changed;
+	Callback<void(const ListViewItem &)> func_item_doubleclick;
 
-	Callback_2<bool, ListViewItem, std::string &> func_item_edited;
+	Callback<bool(ListViewItem, std::string &)> func_item_edited;
 
-	Callback_v1<InputEvent&> func_key_pressed;
-	Callback_v1<InputEvent&> func_key_released;
+	Callback<void(InputEvent&)> func_key_pressed;
+	Callback<void(InputEvent&)> func_key_released;
 
-	Callback_v1<Point> func_mouse_right_up;
+	Callback<void(Point)> func_mouse_right_up;
 
-	Callback_v1<const ListViewItem &> func_item_opened;
-	Callback_v1<const ListViewItem &> func_item_closed;
-	Callback_v0 func_begin_drag;
+	Callback<void(const ListViewItem &)> func_item_opened;
+	Callback<void(const ListViewItem &)> func_item_closed;
+	Callback<void()> func_begin_drag;
 
 	ListViewSelection selection;
 	ListViewIconList icon_list;

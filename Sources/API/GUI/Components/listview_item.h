@@ -225,7 +225,7 @@ public:
 /// \{
 
 public:
-	Callback_v1<Rect> &func_render_icon();
+	Callback<void(Rect)> &func_render_icon();
 
 /// \}
 /// \name Implementation

@@ -111,7 +111,7 @@ public:
 	/// Note, the output maybe different to the input, if desired\n
 	/// \n
 	/// PixelBuffer func_process(PixelBuffer &input)
-	Callback_1<PixelBuffer, PixelBuffer &> &func_process();
+	Callback<PixelBuffer(PixelBuffer &)> &func_process();
 
 /// \}
 /// \name Implementation

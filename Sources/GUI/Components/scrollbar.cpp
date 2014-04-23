@@ -211,52 +211,52 @@ void ScrollBar::set_position(int pos)
 /////////////////////////////////////////////////////////////////////////////
 // ScrollBar Events:
 
-Callback_v0 &ScrollBar::func_scroll()
+Callback<void()> &ScrollBar::func_scroll()
 {
 	return impl->func_scroll;
 }
 
-Callback_v0 &ScrollBar::func_scroll_min()
+Callback<void()> &ScrollBar::func_scroll_min()
 {
 	return impl->func_scroll_min;
 }
 
-Callback_v0 &ScrollBar::func_scroll_max()
+Callback<void()> &ScrollBar::func_scroll_max()
 {
 	return impl->func_scroll_max;
 }
 
-Callback_v0 &ScrollBar::func_scroll_line_decrement()
+Callback<void()> &ScrollBar::func_scroll_line_decrement()
 {
 	return impl->func_scroll_line_decrement;
 }
 
-Callback_v0 &ScrollBar::func_scroll_line_increment()
+Callback<void()> &ScrollBar::func_scroll_line_increment()
 {
 	return impl->func_scroll_line_increment;
 }
 
-Callback_v0 &ScrollBar::func_scroll_page_decrement()
+Callback<void()> &ScrollBar::func_scroll_page_decrement()
 {
 	return impl->func_scroll_page_decrement;
 }
 
-Callback_v0 &ScrollBar::func_scroll_page_increment()
+Callback<void()> &ScrollBar::func_scroll_page_increment()
 {
 	return impl->func_scroll_page_increment;
 }
 
-Callback_v0 &ScrollBar::func_scroll_thumb_release()
+Callback<void()> &ScrollBar::func_scroll_thumb_release()
 {
 	return impl->func_scroll_thumb_release;
 }
 
-Callback_v0 &ScrollBar::func_scroll_thumb_track()
+Callback<void()> &ScrollBar::func_scroll_thumb_track()
 {
 	return impl->func_scroll_thumb_track;
 }
 
-Callback_v0 &ScrollBar::func_scroll_end()
+Callback<void()> &ScrollBar::func_scroll_end()
 {
 	return impl->func_scroll_end;
 }

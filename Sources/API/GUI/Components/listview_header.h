@@ -141,11 +141,11 @@ public:
 /// \{
 
 public:
-	Callback_v1<ListViewColumnHeader> &func_column_added();
+	Callback<void(ListViewColumnHeader)> &func_column_added();
 
-	Callback_v1<ListViewColumnHeader> &func_column_removed();
+	Callback<void(ListViewColumnHeader)> &func_column_removed();
 
-	Callback_v1<ListViewColumnHeader> &func_column_size_changed();
+	Callback<void(ListViewColumnHeader)> &func_column_size_changed();
 
 /// \}
 /// \name Implementation

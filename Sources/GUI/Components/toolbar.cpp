@@ -97,10 +97,10 @@ public:
 	Size size_icon;
 	enum Layout {layout_left, layout_center} layout;
 
-	Callback_v1<ToolBarItem> func_item_clicked;
-	Callback_v1<ToolBarItem> func_item_selected;
-	Callback_v1<ToolBarItem> func_item_unselected;
-	Callback_v2<Point, int> func_mouse_right_up; // click position, clicked item index.
+	Callback<void(ToolBarItem)> func_item_clicked;
+	Callback<void(ToolBarItem)> func_item_selected;
+	Callback<void(ToolBarItem)> func_item_unselected;
+	Callback<void(Point, int)> func_mouse_right_up; // click position, clicked item index.
 
 	int next_id;
 };
@@ -216,22 +216,22 @@ void ToolBar::clear_selection()
 /////////////////////////////////////////////////////////////////////////////
 // ToolBar Events:
 
-Callback_v1<ToolBarItem> & ToolBar::func_item_clicked()
+Callback<void(ToolBarItem)> & ToolBar::func_item_clicked()
 {
 	return impl->func_item_clicked;
 }
 
-Callback_v1<ToolBarItem> & ToolBar::func_item_selected()
+Callback<void(ToolBarItem)> & ToolBar::func_item_selected()
 {
 	return impl->func_item_selected;
 }
 
-Callback_v1<ToolBarItem> & ToolBar::func_item_unselected()
+Callback<void(ToolBarItem)> & ToolBar::func_item_unselected()
 {
 	return impl->func_item_unselected;
 }
 
-Callback_v2<Point, int> & ToolBar::func_mouse_right_up()
+Callback<void(Point, int)> & ToolBar::func_mouse_right_up()
 {
 	return impl->func_mouse_right_up;
 }

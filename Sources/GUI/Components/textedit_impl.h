@@ -78,12 +78,12 @@ public:
 	void move_vertical_scroll();
 	int  get_total_line_height();
 
-	Callback_v1<InputEvent &> func_before_edit_changed;
-	Callback_v1<InputEvent &> func_after_edit_changed;
-	Callback_v0 func_selection_changed;
-	Callback_v0 func_focus_gained;
-	Callback_v0 func_focus_lost;
-	Callback_v0 func_enter_pressed;
+	Callback<void(InputEvent &)> func_before_edit_changed;
+	Callback<void(InputEvent &)> func_after_edit_changed;
+	Callback<void()> func_selection_changed;
+	Callback<void()> func_focus_gained;
+	Callback<void()> func_focus_lost;
+	Callback<void()> func_enter_pressed;
 
 	struct Line
 	{

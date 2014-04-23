@@ -199,31 +199,31 @@ public:
 
 public:
 	/// \brief Selected items are returned as children of the returned item.
-	Callback_v1<ListViewSelection> &func_selection_changed();
+	Callback<void(ListViewSelection)> &func_selection_changed();
 
 	/// \brief Invoked on double clicking a listview item.
-	Callback_v1<const ListViewItem &> &func_item_doubleclick();
+	Callback<void(const ListViewItem &)> &func_item_doubleclick();
 
 	/// \brief Invoked when enter is pressed in the ListViews built-in LineEdit control.
 	/// The caller may change the passed string. Returning false from the callback cancels the edit.
-	Callback_2<bool, ListViewItem, std::string &> &func_item_edited();
+	Callback<bool(ListViewItem, std::string &)> &func_item_edited();
 
-	Callback_v1<InputEvent&> &func_key_pressed();
+	Callback<void(InputEvent&)> &func_key_pressed();
 
-	Callback_v1<InputEvent&> &func_key_released();
+	Callback<void(InputEvent&)> &func_key_released();
 
 	/// \brief Callback called when the right mouse button is released (a click).
 	/// Use this callback for listview context menus. Click position sent as parameter.
-	Callback_v1<Point> &func_mouse_right_up();
+	Callback<void(Point)> &func_mouse_right_up();
 
 	/// \brief Callback called when an item node is opened
-	Callback_v1<const ListViewItem &> &func_item_opened();
+	Callback<void(const ListViewItem &)> &func_item_opened();
 
 	/// \brief Callback called when an item node is closed
-	Callback_v1<const ListViewItem &> &func_item_closed();
+	Callback<void(const ListViewItem &)> &func_item_closed();
 
 	/// \brief Callback called when the user begins a drag'n'drop action
-	Callback_v0 &func_begin_drag();
+	Callback<void()> &func_begin_drag();
 
 /// \}
 /// \name Implementation

@@ -60,7 +60,7 @@ public:
 //																						_____________
 //																						S I G N A L S
 
-	Signal_v0 sig_joint_deletion;
+	Signal<> sig_joint_deletion;
 
 //	
 //																						___________________________

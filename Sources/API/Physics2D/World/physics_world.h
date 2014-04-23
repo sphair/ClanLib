@@ -70,10 +70,10 @@ public:
 public:
 
 	/// \brief Signal emitted when world's step is called.
-	Signal_v1<float> &sig_world_step();
+	Signal<float> &sig_world_step();
 
 	/// \brief Signal emitted when world's destroyed.
-	Signal_v0 &sig_world_destroyed();
+	Signal<> &sig_world_destroyed();
 
 	/// \brief Returns true if this object is invalid.
 	bool is_null() const { return !impl; }

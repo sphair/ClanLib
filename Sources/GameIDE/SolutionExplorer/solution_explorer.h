@@ -28,6 +28,7 @@
 
 #pragma once
 
+#include "API/Core/Signals/callbackcontainer.h"
 #include "API/GameIDE/Workspace/dockable_component.h"
 #include "API/GameIDE/FileItemType/file_item_type_factory.h"
 #include "API/GameIDE/SolutionModel/Project/project.h"
@@ -94,6 +95,7 @@ private:
 	DragDropOperation *drag_drop;
 	std::map<std::string, int> extension_to_icon;
 	PopupMenu popup;
+    CallbackContainer cc;
 
 	friend class DragDropOperation;
 };

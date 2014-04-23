@@ -69,7 +69,7 @@ void Canvas_Impl::setup(GraphicContext &new_gc)
 
 	if (!current_window.is_null())
 	{
-		current_window.sig_window_flip().connect({this, &Canvas_Impl::on_window_flip});
+		cc.connect(current_window.sig_window_flip(), {this, &Canvas_Impl::on_window_flip});
 	}
 
 	gc_clip_z_range = gc.get_provider()->get_clip_z_range();
@@ -78,7 +78,7 @@ void Canvas_Impl::setup(GraphicContext &new_gc)
 	if (gc.get_write_frame_buffer().is_null())	// No framebuffer attached to canvas
 	{
 		canvas_y_axis = y_axis_top_down;
-		gc.get_provider()->sig_window_resized().connect({this, &Canvas_Impl::on_window_resized});
+		cc.connect(gc.get_provider()->sig_window_resized(), {this, &Canvas_Impl::on_window_resized});
 	}
 	else
 	{
@@ -359,11 +359,11 @@ void Canvas_Impl::get_gradient_colors(const Vec2f *triangles, int num_vertex, co
 				(gradient.bottom_right.a * point.x) + (gradient.bottom_left.a * (1.0f - point.x)) );
 
 			Colorf color(
-				(bottom_color.r * point.y) + (top_color.r * (1.0f - point.y)), 
-				(bottom_color.g * point.y) + (top_color.g * (1.0f - point.y)), 
-				(bottom_color.b * point.y) + (top_color.b * (1.0f - point.y)), 
+				(bottom_color.r * point.y) + (top_color.r * (1.0f - point.y)),
+				(bottom_color.g * point.y) + (top_color.g * (1.0f - point.y)),
+				(bottom_color.b * point.y) + (top_color.b * (1.0f - point.y)),
 				(bottom_color.a * point.y) + (top_color.a * (1.0f - point.y)) );
-				
+
 			out_colors.push_back(color);
 		}
 	}

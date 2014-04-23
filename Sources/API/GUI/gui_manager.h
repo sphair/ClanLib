@@ -137,10 +137,10 @@ public:
 /// \{
 public:
 	/// \brief bool func_filter_message(std::shared_ptr<GUIMessage> &message)
-	Signal_v1<std::shared_ptr<GUIMessage> &> &sig_filter_message();
+	Signal<std::shared_ptr<GUIMessage> &> &sig_filter_message();
 
 	/// \brief int func_exec_handler()
-	Callback_0<int> &func_exec_handler();
+	Callback<int()> &func_exec_handler();
 
 /// \}
 /// \name Operations

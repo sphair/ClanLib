@@ -358,32 +358,32 @@ void LineEdit::resize_to_fit(int max_width)
 /////////////////////////////////////////////////////////////////////////////
 // LineEdit Events:
 
-Callback_v1<InputEvent &> &LineEdit::func_before_edit_changed()
+Callback<void(InputEvent &)> &LineEdit::func_before_edit_changed()
 {
 	return impl->func_before_edit_changed;
 }
 
-Callback_v1<InputEvent &> &LineEdit::func_after_edit_changed()
+Callback<void(InputEvent &)> &LineEdit::func_after_edit_changed()
 {
 	return impl->func_after_edit_changed;
 }
 
-Callback_v0 &LineEdit::func_selection_changed()
+Callback<void()> &LineEdit::func_selection_changed()
 {
 	return impl->func_selection_changed;
 }
 
-Callback_v0 &LineEdit::func_focus_gained()
+Callback<void()> &LineEdit::func_focus_gained()
 {
 	return impl->func_focus_gained;
 }
 
-Callback_v0 & LineEdit::func_focus_lost()
+Callback<void()> & LineEdit::func_focus_lost()
 {
 	return impl->func_focus_lost;
 }
 
-Callback_v0 &LineEdit::func_enter_pressed()
+Callback<void()> &LineEdit::func_enter_pressed()
 {
 	return impl->func_enter_pressed;
 }

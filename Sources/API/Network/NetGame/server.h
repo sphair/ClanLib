@@ -74,9 +74,9 @@ public:
 	/// \param game_event = Net Game Event
 	void send_event(const NetGameEvent &game_event);
 
-	Signal_v1<NetGameConnection *> &sig_client_connected();
-	Signal_v2<NetGameConnection *, const std::string &> &sig_client_disconnected();
-	Signal_v2<NetGameConnection *, const NetGameEvent &> &sig_event_received();
+	Signal<NetGameConnection *> &sig_client_connected();
+	Signal<NetGameConnection *, const std::string &> &sig_client_disconnected();
+	Signal<NetGameConnection *, const NetGameEvent &> &sig_event_received();
 
 private:
 

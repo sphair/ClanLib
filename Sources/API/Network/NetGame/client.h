@@ -68,17 +68,17 @@ public:
 	///
 	/// \param game_event = Net Game Event
 	void send_event(const NetGameEvent &game_event);
-	Signal_v1<const NetGameEvent &> &sig_event_received();
+	Signal<const NetGameEvent &> &sig_event_received();
 
 	/// \brief Sig connected
 	///
-	/// \return Signal_v0
-	Signal_v0 &sig_connected();
+	/// \return Signal<>
+	Signal<> &sig_connected();
 
 	/// \brief Sig disconnected
 	///
-	/// \return Signal_v0
-	Signal_v0 &sig_disconnected();
+	/// \return Signal<>
+	Signal<> &sig_disconnected();
 
 private:
 

@@ -64,7 +64,7 @@ public:
 
 	std::vector<TabPage*> pages;
 
-	Callback_v1<TabPage*> func_page_selected;
+	Callback<void(TabPage*)> func_page_selected;
 
 	TabHeader *tab_header;
 };
@@ -147,7 +147,7 @@ int Tab::get_current_page_id() const
 /////////////////////////////////////////////////////////////////////////////
 // Tab Callbacks:
 
-Callback_v1<TabPage*> &Tab::func_page_selected()
+Callback<void(TabPage*)> &Tab::func_page_selected()
 {
 	return impl->func_page_selected;
 }

@@ -44,7 +44,7 @@ template<typename ContextParam1, typename ContextParam2, typename ContextParam3>
 class CL_API_NETWORK NetGameEventDispatcher_v3
 {
 public:
-	typedef Callback_v4<const NetGameEvent &, ContextParam1, ContextParam2, ContextParam3> CallbackClass;
+	typedef Callback<void(const NetGameEvent &, ContextParam1, ContextParam2, ContextParam3)> CallbackClass;
 
 	CallbackClass &func_event(const std::string &name) { return event_handlers[name]; }
 

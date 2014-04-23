@@ -81,7 +81,7 @@ public:
 /// \{
 
 public:
-	Callback_v1<TabPage*> &func_page_selected();
+	Callback<void(TabPage*)> &func_page_selected();
 
 
 /// \}

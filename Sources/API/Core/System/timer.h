@@ -60,7 +60,7 @@ public:
 /// \{
 public:
 	/// \brief Callback invoked every time the timer interval occurs
-	Callback_v0 &func_expired();
+	Callback<void()> &func_expired();
 /// \}
 
 /// \name Operations

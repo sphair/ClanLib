@@ -87,12 +87,12 @@ PhysicsQueryAssistant &PhysicsWorld::get_qa()
 //																											_____________																							
 //																											S I G N A L S
 
-Signal_v1<float> &PhysicsWorld::sig_world_step()
+Signal<float> &PhysicsWorld::sig_world_step()
 {
 	return impl->sig_world_step;
 }
 
-Signal_v0 &PhysicsWorld::sig_world_destroyed()
+Signal<> &PhysicsWorld::sig_world_destroyed()
 {
 	return impl->sig_world_destroyed;
 }

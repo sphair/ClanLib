@@ -88,7 +88,7 @@ Resource<Font> Font::resource(Canvas &canvas, const FontDescription &desc, const
 }
 
 
-Font Font_Impl::load(Canvas &canvas, const FontDescription &reference_desc, const std::string &id, const XMLResourceDocument &doc, Callback_2<Resource<Sprite>, Canvas &, const std::string &> cb_get_sprite)
+Font Font_Impl::load(Canvas &canvas, const FontDescription &reference_desc, const std::string &id, const XMLResourceDocument &doc, Callback<Resource<Sprite>(Canvas &, const std::string &)> cb_get_sprite)
 {
 	XMLResourceNode resource = doc.get_resource(id);
 	std::string type = resource.get_element().get_tag_name();

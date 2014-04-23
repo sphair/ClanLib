@@ -83,7 +83,7 @@ void SetupSound_Impl::init()
 		return;
 	providertype_wave = new SoundProviderType_Register<SoundProvider_Wave>("wav");
 	providertype_ogg = new SoundProviderType_Register<SoundProvider_Vorbis>("ogg");
-	XMLResourceManager::add_cache_factory(Callback_v2<ResourceManager &, const XMLResourceDocument &>(&SetupSound_Impl::add_cache_factory));
+	XMLResourceManager::add_cache_factory(Callback<void(ResourceManager &, const XMLResourceDocument &)>(&SetupSound_Impl::add_cache_factory));
 }
 
 void SetupSound_Impl::deinit()

@@ -33,6 +33,7 @@
 
 #include <map>
 #include "API/Core/Signals/callback.h"
+#include "API/Core/Signals/callbackcontainer.h"
 #include "API/Display/Window/display_window.h"
 #include "API/GUI/Providers/gui_window_manager_provider.h"
 #include "API/Display/2D/canvas.h"
@@ -151,9 +152,9 @@ public:
 /// \name Events
 /// \{
 public:
-	Signal_v1<DisplayWindow> sig_toplevel_window_created;
+	Signal<DisplayWindow> sig_toplevel_window_created;
 
-	Signal_v1<DisplayWindow> sig_toplevel_window_destroyed;
+	Signal<DisplayWindow> sig_toplevel_window_destroyed;
 
 /// \}
 
@@ -162,6 +163,7 @@ public:
 
 private:
 	void maintain_window_cache(GUITopLevelWindow *top_level_window);
+    CallbackContainer cc;
 
 /// \}
 };

@@ -29,6 +29,7 @@
 
 #pragma once
 
+#include "API/Core/Signals/callbackcontainer.h"
 #include "API/Core/Signals/callback.h"
 
 namespace clan
@@ -69,6 +70,7 @@ private:
 	void close_all_popup_windows();
 	void close_last_popup_window();
 
+    CallbackContainer cc;
 	PopupMenuWindow *find_popup_at(const Point &pos);
 	bool is_above_menubar(const Point &pos);
 	GUIComponent *owner;

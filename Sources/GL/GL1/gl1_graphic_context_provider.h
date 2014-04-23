@@ -106,7 +106,7 @@ public:
 	void get_opengl_version(int &version_major, int &version_minor) const { int version_release = 0; get_opengl_version(version_major, version_minor, version_release); }
 	void get_opengl_version(int &version_major, int &version_minor, int &version_release) const;
 
-	Signal_v1<const Size &> &sig_window_resized() { return window_resized_signal; }
+	Signal<const Size &> &sig_window_resized() { return window_resized_signal; }
 
 	ProgramObject get_program_object(StandardProgram standard_program) const;
 
@@ -220,7 +220,7 @@ private:
 	std::vector<float> transformed_coords;
 	std::vector<DisposableObject *> disposable_objects;
 
-	Signal_v1<const Size &> window_resized_signal;
+	Signal<const Size &> window_resized_signal;
 
 	ProgramObject internal_program;
 	GL1ProgramObjectProvider *internal_program_provider;		// Pointer is owned by "internal_program"

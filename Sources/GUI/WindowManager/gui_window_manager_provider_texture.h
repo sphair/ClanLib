@@ -33,7 +33,7 @@
 #pragma once
 
 #include "API/Core/Signals/callback.h"
-#include "API/Core/Signals/callback.h"
+#include "API/Core/Signals/callbackcontainer.h"
 #include "API/Display/Window/display_window.h"
 #include "API/Display/Render/texture_2d.h"
 #include "API/Display/Render/frame_buffer.h"
@@ -100,9 +100,9 @@ public:
 	GUIWindowManagerSite *site;
 	std::map<GUITopLevelWindow *, GUITopLevelWindowTexture *> window_map;
 	std::vector<GUITopLevelWindowTexture *> root_window_z_order;	// Beginning is at the top
-	Callback_v0 func_repaint;
-	Callback_v1<FrameBuffer &> func_setup_framebuffer;
-	Callback_v1<InputEvent &> func_input_intercept;
+	Callback<void()> func_repaint;
+	Callback<void(FrameBuffer &)> func_setup_framebuffer;
+	Callback<void(InputEvent &)> func_input_intercept;
 	GUITopLevelWindow *activated_window;
 	GUITopLevelWindow *capture_mouse_window;
 	DisplayWindow display_window;
@@ -190,6 +190,7 @@ private:
 	BlendState default_blend;
 	BlendState opaque_blend;
 	BlendState premultiplied_alpha_blend;
+    CallbackContainer cc;
 /// \}
 };
 
