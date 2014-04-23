@@ -145,7 +145,7 @@ namespace clan
                           { return (instance->*function)(params..., ud); }, userdata);
         }
 
-        void clear() const
+        void clear()
         {
             impl = std::shared_ptr<Callback_impl<Res, Params...>>(nullptr);
         }
