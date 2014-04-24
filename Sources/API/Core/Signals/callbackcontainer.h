@@ -46,9 +46,10 @@ template<class... Args>
 class AutoDisconnectorT : public AutoDisconnector
 {
 public:
-    AutoDisconnectorT(Signal<Args...> &signal, const Callback<void(Args...)> &callback) :
+    AutoDisconnectorT(const Signal<Args...> &signal, const Callback<void(Args...)> &callback) :
         signal(signal), callback(callback)
     {
+        this->signal.connect(callback);
     }
     virtual ~AutoDisconnectorT()
     {
@@ -68,9 +69,8 @@ public:
     CallbackContainer() : callbacks() {}
 
     template<class... Args>
-    void connect(Signal<Args...> &signal, const Callback<void(Args...)> &callback)
+    void connect(const Signal<Args...> &signal, const Callback<void(Args...)> &callback)
     {
-        signal.connect(callback);
         callbacks.emplace_back(new AutoDisconnectorT<Args...>(signal, callback));
     }
 
