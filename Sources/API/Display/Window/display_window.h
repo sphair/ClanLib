@@ -32,12 +32,8 @@
 #pragma once
 
 #include "../api_display.h"
-#include "../../Core/Signals/signal_v0.h"
-#include "../../Core/Signals/signal_v1.h"
-#include "../../Core/Signals/signal_v2.h"
-#include "../../Core/Signals/callback_v1.h"
-#include "../../Core/Signals/callback_0.h"
-#include "../../Core/Signals/callback_4.h"
+#include "../../Core/Signals/signal.h"
+#include "../../Core/Signals/callback.h"
 #include "../display_target.h"
 #include <memory>
 
@@ -144,47 +140,47 @@ public:
 	InputContext get_ic() const;
 
 	/// \brief Signal emitted when window lost focus.
-	Signal_v0 &sig_lost_focus();
+	Signal<> &sig_lost_focus();
 
 	/// \brief Signal emitted when window gain focus.
-	Signal_v0 &sig_got_focus();
+	Signal<> &sig_got_focus();
 
 	/// \brief Signal emitted when window is resized.
-	Signal_v2<int, int> &sig_resize();
+	Signal<int, int> &sig_resize();
 
 	/// \brief Signal emitted when an area of the window is invalidated.
-	Signal_v1<const Rect &> &sig_paint();
+	Signal<const Rect &> &sig_paint();
 
 	/// \brief Signal emitted when window is closed.
-	Signal_v0 &sig_window_close();
+	Signal<> &sig_window_close();
 
 	/// \brief Signal emitted when window is destroyed.
-	Signal_v0 &sig_window_destroy();
+	Signal<> &sig_window_destroy();
 
 	/// \brief Signal emitted when window is minimized.
-	Signal_v0 &sig_window_minimized();
+	Signal<> &sig_window_minimized();
 
 	/// \brief Signal emitted when window is maximized.
-	Signal_v0 &sig_window_maximized();
+	Signal<> &sig_window_maximized();
 
 	/// \brief Signal emitted when window is restored.
-	Signal_v0 &sig_window_restored();
+	Signal<> &sig_window_restored();
 
 	/// \brief Signal emitted after a window has been moved.
-	Signal_v0 &sig_window_moved();
+	Signal<> &sig_window_moved();
 
 	/// \brief Signal emitted when window flip() was called
-	Signal_v0 &sig_window_flip();
+	Signal<> &sig_window_flip();
 
 	/// \brief Callback called when a window is being resized.
-	Callback_v1<Rect &> &func_window_resize();
+	Callback<void(Rect &)> &func_window_resize();
 
 	/// \brief Callback called when a window is asked to minimize itself.
-	Callback_0<bool> &func_minimize_clicked();
+	Callback<bool()> &func_minimize_clicked();
 
 #ifdef WIN32
 	/// \brief Callback called when a windows messages is received.
-	Callback_4<bool, HWND, UINT, WPARAM, LPARAM> &func_window_message();
+	Callback<bool(HWND, UINT, WPARAM, LPARAM)> &func_window_message();
 #endif
 
 	/// \brief Returns true if this object is invalid.
@@ -214,7 +210,7 @@ public:
 	/// \brief Returns the text stored in the clipboard.
 	std::string get_clipboard_text() const;
 
-	/// \brief Returns an image stored in the clipboard. 
+	/// \brief Returns an image stored in the clipboard.
 	/// <p>Returns a null pixelbuffer if no image is available.</p>
 	PixelBuffer get_clipboard_image() const;
 

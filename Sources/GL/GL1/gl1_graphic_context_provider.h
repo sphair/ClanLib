@@ -42,7 +42,7 @@
 #include "API/Display/Render/depth_stencil_state_description.h"
 #include "API/GL/opengl.h"
 #include "API/Core/Math/mat4.h"
-#include "API/Core/Signals/signal_v0.h"
+#include "API/Core/Signals/signal.h"
 #include "GL/opengl_graphic_context_provider.h"
 #include "API/Core/System/disposable_object.h"
 #include "../State/opengl_blend_state.h"
@@ -106,7 +106,7 @@ public:
 	void get_opengl_version(int &version_major, int &version_minor) const { int version_release = 0; get_opengl_version(version_major, version_minor, version_release); }
 	void get_opengl_version(int &version_major, int &version_minor, int &version_release) const;
 
-	Signal_v1<const Size &> &sig_window_resized() { return window_resized_signal; }
+	Signal<const Size &> &sig_window_resized() { return window_resized_signal; }
 
 	ProgramObject get_program_object(StandardProgram standard_program) const;
 
@@ -220,7 +220,7 @@ private:
 	std::vector<float> transformed_coords;
 	std::vector<DisposableObject *> disposable_objects;
 
-	Signal_v1<const Size &> window_resized_signal;
+	Signal<const Size &> window_resized_signal;
 
 	ProgramObject internal_program;
 	GL1ProgramObjectProvider *internal_program_provider;		// Pointer is owned by "internal_program"

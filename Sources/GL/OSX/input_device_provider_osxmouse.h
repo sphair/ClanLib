@@ -97,7 +97,7 @@ public:
 public:
 	/// \brief Initialize input device provider.
 	/** <p>The device field of InputEvent should not be set when emitting events.</p>*/
-	void init(Signal_v1<const InputEvent &> *new_sig_provider_event)
+	void init(Signal<const InputEvent &> *new_sig_provider_event)
 	{
 		sig_provider_event = new_sig_provider_event;
 	}
@@ -114,7 +114,7 @@ private:
     // A work around the for the inability to directly query the mouse state through Cocoa.
     bool mouse_down_map[clan::mouse_count];
     clan::Point mouse_position;
-    Signal_v1<const InputEvent &> *sig_provider_event;
+    Signal<const InputEvent &> *sig_provider_event;
     
     void on_dispose();
     void on_mouse_event(const clan::InputCode& keycode, const clan::InputEvent::Type& type,

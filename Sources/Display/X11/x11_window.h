@@ -41,8 +41,8 @@
 #include "API/Display/Window/cursor.h"
 #include "API/Core/Math/point.h"
 #include "API/Core/Math/rect.h"
-#include "API/Core/Signals/callback_v0.h"
-#include "API/Core/Signals/callback_1.h"
+#include "API/Core/Signals/callback.h"
+#include "API/Core/Signals/callback.h"
 #include "clipboard_x11.h"
 
 #include <X11/Xlib.h>
@@ -94,8 +94,8 @@ public:
 	::Display *get_display() const { return display; }
 	::Window get_window() const { return window; }
 	InputContext get_ic() { return ic; }		// Important, do not return by reference, so the shared pointer exists if this window is destroyed
-	Callback_v0 &func_on_resized() { return callback_on_resized; }
-	Callback_1<bool, XButtonEvent &> &func_on_clicked() { return callback_on_clicked; }
+	Callback<void()> &func_on_resized() { return callback_on_resized; }
+	Callback<bool(XButtonEvent &)> &func_on_clicked() { return callback_on_clicked; }
 	bool is_clipboard_text_available() const;
 	bool is_clipboard_image_available() const;
 	std::string get_clipboard_text() const;
@@ -180,8 +180,8 @@ private:
 	InputDevice keyboard, mouse;
 	std::vector<InputDevice> joysticks;
 	DisplayWindowSite *site;
-	Callback_v0 callback_on_resized;
-	Callback_1<bool, XButtonEvent &> callback_on_clicked;
+	Callback<void()> callback_on_resized;
+	Callback<bool(XButtonEvent &)> callback_on_clicked;
 	Size minimum_size;
 	Size maximum_size;
 	std::string window_title;

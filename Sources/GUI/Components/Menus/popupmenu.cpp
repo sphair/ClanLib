@@ -105,7 +105,7 @@ std::string PopupMenu::get_class() const
 /////////////////////////////////////////////////////////////////////////////
 // PopupMenu Events:
 
-Callback_v0 &PopupMenu::func_close()
+Callback<void()> &PopupMenu::func_close()
 {
 	return impl->func_close;
 }

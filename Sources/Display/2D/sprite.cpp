@@ -933,7 +933,7 @@ CollisionOutline Sprite::create_collision_outline(Canvas &canvas, int alpha_limi
 /////////////////////////////////////////////////////////////////////////////
 // Sprite signals:
 
-Signal_v0 &Sprite::sig_animation_finished()
+Signal<> &Sprite::sig_animation_finished()
 {
 	return impl->sig_animation_finished;
 }

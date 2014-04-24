@@ -32,8 +32,8 @@
 #include "body_description.h"
 #include <memory>
 #include "../../Core/Math/vec2.h"
-#include "../../Core/Signals/signal_v0.h"
-#include "../../Core/Signals/signal_v1.h"
+#include "../../Core/Signals/signal.h"
+#include "../../Core/Signals/signal.h"
 
 namespace clan
 {
@@ -222,18 +222,18 @@ public:
 public:
 	/// \brief Signal emitted when a collision with other body occurs
 	///
-	/// \return Signal_v1<Body>
-	Signal_v1<Body> &sig_begin_collision();
+	/// \return Signal<Body>
+	Signal<Body> &sig_begin_collision();
 
 	/// \brief Signal emitted when a collision with other body ends
 	///
-	/// \return Signal_v1<Body>
-	Signal_v1<Body> &sig_end_collision();
+	/// \return Signal<Body>
+	Signal<Body> &sig_end_collision();
 
 	/// \brief Signal emitted when the body is deleted.
 	///
-	/// \return Signal_v0
-	Signal_v0 &sig_body_deletion();
+	/// \return Signal<>
+	Signal<> &sig_body_deletion();
 
 /// \}
 /// \name Implementation

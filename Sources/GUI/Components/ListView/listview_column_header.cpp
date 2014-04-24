@@ -140,7 +140,7 @@ void ListViewColumnHeader::set_rect(const Rect &rect)
 /////////////////////////////////////////////////////////////////////////////
 // ListViewColumnHeader Events:
 
-Callback_v1<ListViewColumnHeader> &ListViewColumnHeader::func_size_changed()
+Callback<void(ListViewColumnHeader)> &ListViewColumnHeader::func_size_changed()
 {
 	return impl->func_size_changed;
 }

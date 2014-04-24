@@ -32,7 +32,7 @@
 #include "../api_network.h"
 #include "event.h"
 #include <map>
-#include "../../Core/Signals/callback_v3.h"
+#include "../../Core/Signals/callback.h"
 
 namespace clan
 {
@@ -44,7 +44,7 @@ template<typename ContextParam1, typename ContextParam2>
 class CL_API_NETWORK NetGameEventDispatcher_v2
 {
 public:
-	typedef Callback_v3<const NetGameEvent &, ContextParam1, ContextParam2> CallbackClass;
+	typedef Callback<void(const NetGameEvent &, ContextParam1, ContextParam2)> CallbackClass;
 
 	CallbackClass &func_event(const std::string &name) { return event_handlers[name]; }
 

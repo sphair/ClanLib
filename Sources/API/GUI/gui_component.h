@@ -32,14 +32,14 @@
 
 #include "api_gui.h"
 #include <memory>
-#include "../Core/Signals/callback_0.h"
-#include "../Core/Signals/callback_1.h"
-#include "../Core/Signals/callback_v0.h"
-#include "../Core/Signals/callback_v1.h"
-#include "../Core/Signals/callback_v2.h"
-#include "../Core/Signals/callback_v3.h"
-#include "../Core/Signals/callback_2.h"
-#include "../Core/Signals/signal_v1.h"
+#include "../Core/Signals/callback.h"
+#include "../Core/Signals/callback.h"
+#include "../Core/Signals/callback.h"
+#include "../Core/Signals/callback.h"
+#include "../Core/Signals/callback.h"
+#include "../Core/Signals/callback.h"
+#include "../Core/Signals/callback.h"
+#include "../Core/Signals/signal.h"
 #include "../Core/IOData/file_system.h"
 #include "../Display/Window/display_window_description.h"
 #include "../Display/Window/display_window.h"
@@ -366,70 +366,70 @@ public:
 /// \{
 public:
 	/// \brief void func_render(Canvas &canvas, const Rect &clip_rect)
-	Callback_v2<Canvas &, const Rect &> &func_render();
+	Callback<void(Canvas &, const Rect &)> &func_render();
 
 	/// \brief void func_process_message(std::shared_ptr<GUIMessage> &message)
-	Callback_v1<std::shared_ptr<GUIMessage> &> &func_process_message();
+	Callback<void(std::shared_ptr<GUIMessage> &)> &func_process_message();
 
 	/// \brief bool func_close()
-	Callback_0<bool> &func_close();
+	Callback<bool()> &func_close();
 
 	/// \brief bool func_activated()
-	Callback_0<bool> &func_activated();
+	Callback<bool()> &func_activated();
 
 	/// \brief bool func_deactivated()
-	Callback_0<bool> &func_deactivated();
+	Callback<bool()> &func_deactivated();
 
 	/// \brief bool func_focus_lost()
-	Callback_0<bool> &func_focus_lost();
+	Callback<bool()> &func_focus_lost();
 
 	/// \brief bool func_focus_gained()
-	Callback_0<bool> &func_focus_gained();
+	Callback<bool()> &func_focus_gained();
 
 	/// \brief bool func_pointer_enter()
-	Callback_0<bool> &func_pointer_enter();
+	Callback<bool()> &func_pointer_enter();
 
 	/// \brief bool func_pointer_exit()
-	Callback_0<bool> &func_pointer_exit();
+	Callback<bool()> &func_pointer_exit();
 
 	/// \brief Lets a component filter the messages intended for another component. Consumed messages will not reach the original target component.
-	Callback_v1<std::shared_ptr<GUIMessage> &> &func_filter_message();
+	Callback<void(std::shared_ptr<GUIMessage> &)> &func_filter_message();
 
 	/// \brief bool func_input(const InputEvent &input_event)
-	Callback_1<bool, const InputEvent &> &func_input();
+	Callback<bool(const InputEvent &)> &func_input();
 
 	/// \brief bool func_input_pressed(const InputEvent &input_event)
-	Callback_1<bool, const InputEvent &> &func_input_pressed();
+	Callback<bool(const InputEvent &)> &func_input_pressed();
 
 	/// \brief bool func_input_released(const InputEvent &input_event)
-	Callback_1<bool, const InputEvent &> &func_input_released();
+	Callback<bool(const InputEvent &)> &func_input_released();
 
 	/// \brief bool func_input_doubleclick(const InputEvent &input_event)
-	Callback_1<bool, const InputEvent &> &func_input_doubleclick();
+	Callback<bool(const InputEvent &)> &func_input_doubleclick();
 
 	/// \brief bool func_input_pointer_moved(const InputEvent &input_event)
-	Callback_1<bool, const InputEvent &> &func_input_pointer_moved();
+	Callback<bool(const InputEvent &)> &func_input_pointer_moved();
 
 	/// \brief bool func_visibility_change()
-	Callback_v1<bool> &func_visibility_change();
+	Callback<void(bool)> &func_visibility_change();
 
 	/// \brief void sig_style_changed()
-	Signal_v0 &sig_style_changed();
+	Signal<> &sig_style_changed();
 
 	/// \brief void func_enablemode_changed()
-	Callback_v0 &func_enablemode_changed();
+	Callback<void()> &func_enablemode_changed();
 
 	/// \brief Callback invoked when the component is resized, i.e. when set_geometry is called.
-	Callback_v0 &func_resized();
+	Callback<void()> &func_resized();
 
 	/// \brief void func_constrain_resize(Rect &geometry)
-	Callback_v1<Rect &> &func_constrain_resize();
+	Callback<void(Rect &)> &func_constrain_resize();
 
 	/// \brief Callback invoked when loading a custom component from XML.
 	/** The type of the component to create is passed as a parameter to the function.
 	    The callback function should create the desired component and return it, or return 0, if no component is created.
 	    Example definition: GUIComponent *Foo::on_create_custom_component(GUIComponent *parent, std::string type);*/
-	virtual Callback_2<GUIComponent*, GUIComponent*, std::string> &func_create_custom_component();
+	virtual Callback<GUIComponent*(GUIComponent*, std::string)> &func_create_custom_component();
 
 /// \}
 /// \name Operations

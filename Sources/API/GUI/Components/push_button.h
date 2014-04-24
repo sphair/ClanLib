@@ -33,7 +33,7 @@
 
 #include "../api_gui.h"
 #include "../gui_component.h"
-#include "../../Core/Signals/callback_v0.h"
+#include "../../Core/Signals/callback.h"
 #include "../../Display/Render/graphic_context.h"
 
 namespace clan
@@ -148,8 +148,8 @@ public:
 
 	/// \brief Func clicked
 	///
-	/// \return Callback_v0
-	Callback_v0 &func_clicked();
+	/// \return Callback<void()>
+	Callback<void()> &func_clicked();
 
 /// \}
 /// \name Implementation

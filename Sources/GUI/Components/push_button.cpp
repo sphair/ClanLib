@@ -67,7 +67,7 @@ public:
 	PushButton *button;
 	Label *label;
 	ImageView *icon;
-	Callback_v0 func_clicked;
+	Callback<void()> func_clicked;
 	PushButton::IconPosition icon_position;
 	bool toggle_mode;
 	GUIThemePart part_focus;
@@ -208,7 +208,7 @@ void PushButton::set_text(const std::string &text)
 /////////////////////////////////////////////////////////////////////////////
 // PushButton Events:
 
-Callback_v0 &PushButton::func_clicked()
+Callback<void()> &PushButton::func_clicked()
 {
 	return impl->func_clicked;
 }

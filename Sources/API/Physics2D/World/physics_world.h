@@ -30,8 +30,8 @@
 #pragma once
 
 #include "../api_physics2d.h"
-#include "../../Core/Signals/signal_v0.h"
-#include "../../Core/Signals/signal_v1.h"
+#include "../../Core/Signals/signal.h"
+#include "../../Core/Signals/signal.h"
 #include <memory>
 
 namespace clan
@@ -70,10 +70,10 @@ public:
 public:
 
 	/// \brief Signal emitted when world's step is called.
-	Signal_v1<float> &sig_world_step();
+	Signal<float> &sig_world_step();
 
 	/// \brief Signal emitted when world's destroyed.
-	Signal_v0 &sig_world_destroyed();
+	Signal<> &sig_world_destroyed();
 
 	/// \brief Returns true if this object is invalid.
 	bool is_null() const { return !impl; }

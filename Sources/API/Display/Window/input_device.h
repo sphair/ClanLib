@@ -31,7 +31,7 @@
 #pragma once
 
 #include "../api_display.h"
-#include "../../Core/Signals/signal_v1.h"
+#include "../../Core/Signals/signal.h"
 #include "../../Core/Math/point.h"
 #include <memory>
 
@@ -162,22 +162,22 @@ public:
 
 public:
 	/// \brief Signal emitted when key is pressed.
-	Signal_v1<const InputEvent &> &sig_key_down();
+	Signal<const InputEvent &> &sig_key_down();
 
 	/// \brief Signal emitted when key is released.
-	Signal_v1<const InputEvent &> &sig_key_up();
+	Signal<const InputEvent &> &sig_key_up();
 
 	/// \brief Signal emitted when pointer is moved (absolute movement).
-	Signal_v1<const InputEvent &> &sig_pointer_move();
+	Signal<const InputEvent &> &sig_pointer_move();
 
 	/// \brief Signal emitted when axis is moved.
-	Signal_v1<const InputEvent &> &sig_axis_move();
+	Signal<const InputEvent &> &sig_axis_move();
 
 	/// \brief Signal emitted when the mouse is double-clicked.
-	Signal_v1<const InputEvent &> &sig_key_dblclk();
+	Signal<const InputEvent &> &sig_key_dblclk();
 
 	/// \brief Signal emitted when proximity is entered or exited
-	Signal_v1<const InputEvent &> &sig_proximity_change();
+	Signal<const InputEvent &> &sig_proximity_change();
 
 /// \}
 /// \name Implementation

@@ -142,30 +142,9 @@ clanSound_includes = \
 
 clanCore_includes = \
 	core.h \
-	Core/Signals/callback_1.h \
-	Core/Signals/callback_2.h \
-	Core/Signals/callback_3.h \
-	Core/Signals/callback_0.h \
-	Core/Signals/slot.h \
-	Core/Signals/slot_container.h \
-	Core/Signals/signal_v2.h \
-	Core/Signals/callback_v3.h \
-	Core/Signals/callback_v1.h \
-	Core/Signals/callback_v4.h \
-	Core/Signals/callback_v5.h \
-	Core/Signals/callback_5.h \
-	Core/Signals/signal_v6.h \
-	Core/Signals/callback_v0.h \
-	Core/Signals/callback_v6.h \
-	Core/Signals/callback_v2.h \
-	Core/Signals/signal_v5.h \
-	Core/Signals/signal_v3.h \
-	Core/Signals/callback_4.h \
-	Core/Signals/signal_v0.h \
-	Core/Signals/signals_impl.h \
-	Core/Signals/signal_v1.h \
-	Core/Signals/callback_6.h \
-	Core/Signals/signal_v4.h \
+	Core/Signals/callback.h \
+	Core/Signals/signal.h \
+	Core/Signals/callbackcontainer.h \
 	Core/Text/utf8_reader.h \
 	Core/Text/logger.h \
 	Core/Text/string_help.h \
@@ -589,6 +568,7 @@ clanScene3D_includes = \
 
 clanPhysics3D_includes = \
 	physics3d.h \
+	Physics3D/physics3d_constraint.h
 	Physics3D/physics3d_contact_pair_test.h \
 	Physics3D/physics3d_object.h \
 	Physics3D/physics3d_ray_test.h \

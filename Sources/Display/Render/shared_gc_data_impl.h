@@ -54,7 +54,7 @@ public:
 
 private:
 
-	Signal_v0 sig_destruction_imminent;
+	Signal<> sig_destruction_imminent;
 
 	std::vector<GraphicContextProvider*> graphic_context_providers;
 	std::vector<DisposableObject*> disposable_objects;

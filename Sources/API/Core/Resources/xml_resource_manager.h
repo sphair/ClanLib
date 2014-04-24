@@ -30,7 +30,7 @@
 #pragma once
 
 #include "../api_core.h"
-#include "../Signals/callback_v2.h"
+#include "../Signals/callback.h"
 #include <string>
 #include <memory>
 
@@ -52,7 +52,7 @@ public:
 	/// \brief Adds a cache factory callback
 	///
 	/// Each factory callback is invoked every time a resource manager is created.
-	static void add_cache_factory(Callback_v2<ResourceManager &, const XMLResourceDocument &> factory_callback);
+	static void add_cache_factory(Callback<void(ResourceManager &, const XMLResourceDocument &)> factory_callback);
 
 	/// \brief Gets the XML resource document used by a resource manager.
 	static XMLResourceDocument &get_doc(const ResourceManager &manager);

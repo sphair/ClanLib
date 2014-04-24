@@ -33,7 +33,7 @@
 
 #include "../api_gui.h"
 #include "../gui_component.h"
-#include "../../Core/Signals/callback_v0.h"
+#include "../../Core/Signals/callback.h"
 
 namespace clan
 {
@@ -168,34 +168,34 @@ public:
 /// \{
 public:
 	/// \brief Called for every type of scrollbar scrolling.
-	Callback_v0 &func_scroll();
+	Callback<void()> &func_scroll();
 
 	/// \brief Called when scrolled to minimum position.
-	Callback_v0 &func_scroll_min();
+	Callback<void()> &func_scroll_min();
 
 	/// \brief Called when scrolled to maximum position.
-	Callback_v0 &func_scroll_max();
+	Callback<void()> &func_scroll_max();
 
 	/// \brief Called when decrement button is clicked.
-	Callback_v0 &func_scroll_line_decrement();
+	Callback<void()> &func_scroll_line_decrement();
 
 	/// \brief Called when increment button is clicked.
-	Callback_v0 &func_scroll_line_increment();
+	Callback<void()> &func_scroll_line_increment();
 
 	/// \brief Called when decrement track is clicked.
-	Callback_v0 &func_scroll_page_decrement();
+	Callback<void()> &func_scroll_page_decrement();
 
 	/// \brief Called when increment track is clicked.
-	Callback_v0 &func_scroll_page_increment();
+	Callback<void()> &func_scroll_page_increment();
 
 	/// \brief Called when user released scroll thumb.
-	Callback_v0 &func_scroll_thumb_release();
+	Callback<void()> &func_scroll_thumb_release();
 
 	/// \brief Called as user moves the scroll thumb.
-	Callback_v0 &func_scroll_thumb_track();
+	Callback<void()> &func_scroll_thumb_track();
 
 	/// \brief Called when user releases the mouse after scrolling.
-	Callback_v0 &func_scroll_end();
+	Callback<void()> &func_scroll_end();
 
 /// \}
 /// \name Implementation

@@ -32,8 +32,8 @@
 #include "../World/physics_world.h"
 #include "../../Core/Math/vec2.h"
 #include <memory>
-#include "../../Core/Signals/signal_v0.h"
-#include "../../Core/Signals/signal_v1.h"
+#include "../../Core/Signals/signal.h"
+#include "../../Core/Signals/signal.h"
 
 namespace clan
 {
@@ -106,18 +106,18 @@ public:
 public:
 	/// \brief Signal emitted when a collision with other fixture occurs
 	///
-	/// \return Signal_v1<Fixture>
-	Signal_v1<Fixture> &sig_begin_collision();
+	/// \return Signal<Fixture>
+	Signal<Fixture> &sig_begin_collision();
 
 	/// \brief Signal emitted when a collision with other fixture ends
 	///
-	/// \return Signal_v1<Fixture>
-	Signal_v1<Fixture> &sig_end_collision();
+	/// \return Signal<Fixture>
+	Signal<Fixture> &sig_end_collision();
 
 	/// \brief Signal emitted when the fixture is deleted.
 	///
-	/// \return Signal_v0
-	Signal_v0 &sig_fixture_deletion();
+	/// \return Signal<>
+	Signal<> &sig_fixture_deletion();
 
 /// \}
 /// \name Implementation

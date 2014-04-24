@@ -619,102 +619,102 @@ bool GUIComponent::get_constant_repaint() const
 /////////////////////////////////////////////////////////////////////////////
 // GUIComponent Events:
 
-Callback_v2<Canvas &, const Rect &> &GUIComponent::func_render()
+Callback<void(Canvas &, const Rect &)> &GUIComponent::func_render()
 {
 	return impl->func_render;
 }
 
-Callback_v1<std::shared_ptr<GUIMessage> &> &GUIComponent::func_process_message()
+Callback<void(std::shared_ptr<GUIMessage> &)> &GUIComponent::func_process_message()
 {
 	return impl->func_process_message;
 }
 
-Callback_0<bool> &GUIComponent::func_close()
+Callback<bool()> &GUIComponent::func_close()
 {
 	return impl->func_close;
 }
 
-Callback_0<bool> &GUIComponent::func_activated()
+Callback<bool()> &GUIComponent::func_activated()
 {
 	return impl->func_activated;
 }
 
-Callback_0<bool> &GUIComponent::func_deactivated()
+Callback<bool()> &GUIComponent::func_deactivated()
 {
 	return impl->func_deactivated;
 }
 
-Callback_0<bool> &GUIComponent::func_focus_lost()
+Callback<bool()> &GUIComponent::func_focus_lost()
 {
 	return impl->func_focus_lost;
 }
 
-Callback_v1<std::shared_ptr<GUIMessage> &> &GUIComponent::func_filter_message()
+Callback<void(std::shared_ptr<GUIMessage> &)> &GUIComponent::func_filter_message()
 {
 	return impl->func_filter_message;
 }
 
-Callback_0<bool> &GUIComponent::func_focus_gained()
+Callback<bool()> &GUIComponent::func_focus_gained()
 {
 	return impl->func_focus_gained;
 }
 
-Callback_0<bool> &GUIComponent::func_pointer_enter()
+Callback<bool()> &GUIComponent::func_pointer_enter()
 {
 	return impl->func_pointer_enter;
 }
 
-Callback_0<bool> &GUIComponent::func_pointer_exit()
+Callback<bool()> &GUIComponent::func_pointer_exit()
 {
 	return impl->func_pointer_exit;
 }
 
-Callback_1<bool, const InputEvent &> &GUIComponent::func_input()
+Callback<bool(const InputEvent &)> &GUIComponent::func_input()
 {
 	return impl->func_input;
 }
 
-Callback_1<bool, const InputEvent &> &GUIComponent::func_input_pressed()
+Callback<bool(const InputEvent &)> &GUIComponent::func_input_pressed()
 {
 	return impl->func_input_pressed;
 }
 
-Callback_1<bool, const InputEvent &> &GUIComponent::func_input_released()
+Callback<bool(const InputEvent &)> &GUIComponent::func_input_released()
 {
 	return impl->func_input_released;
 }
 
-Callback_1<bool, const InputEvent &> &GUIComponent::func_input_doubleclick()
+Callback<bool(const InputEvent &)> &GUIComponent::func_input_doubleclick()
 {
 	return impl->func_input_doubleclick;
 }
 
-Callback_1<bool, const InputEvent &> &GUIComponent::func_input_pointer_moved()
+Callback<bool(const InputEvent &)> &GUIComponent::func_input_pointer_moved()
 {
 	return impl->func_input_pointer_moved;
 }
 
-Callback_v1<bool> &GUIComponent::func_visibility_change()
+Callback<void(bool)> &GUIComponent::func_visibility_change()
 {
 	return impl->func_visibility_change;
 }
 
-Signal_v0 &GUIComponent::sig_style_changed()
+Signal<> &GUIComponent::sig_style_changed()
 {
 	return impl->element.sig_style_changed;
 }
 
-Callback_v0 &GUIComponent::func_enablemode_changed()
+Callback<void()> &GUIComponent::func_enablemode_changed()
 {
 	return impl->func_enablemode_changed;
 }
 
-Callback_v0 &GUIComponent::func_resized()
+Callback<void()> &GUIComponent::func_resized()
 {
 	return impl->func_resized;
 }
 
-Callback_2<GUIComponent*,GUIComponent*, std::string> &GUIComponent::func_create_custom_component()
+Callback<GUIComponent*(GUIComponent*, std::string)> &GUIComponent::func_create_custom_component()
 {
 	return impl->func_create_custom_component;
 }

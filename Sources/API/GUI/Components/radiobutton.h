@@ -32,7 +32,7 @@
 
 #include "../api_gui.h"
 #include "../gui_component.h"
-#include "../../Core/Signals/callback_v0.h"
+#include "../../Core/Signals/callback.h"
 
 namespace clan
 {
@@ -129,17 +129,17 @@ public:
 
 	/// \brief Func selected
 	///
-	/// \return Callback_v0
-	Callback_v0 &func_selected();
+	/// \return Callback<void()>
+	Callback<void()> &func_selected();
 
 	/// \brief Func unselected
 	///
-	/// \return Callback_v0
-	Callback_v0 &func_unselected();
+	/// \return Callback<void()>
+	Callback<void()> &func_unselected();
 
 	/// \brief Callback invoked when any of the radio buttons in the group is selected.
 	/** The newly selected radio button is passed as parameter to the callback.*/
-	Callback_v1<RadioButton*> &func_group_selection_changed();
+	Callback<void(RadioButton*)> &func_group_selection_changed();
 /// \}
 /// \name Implementation
 /// \{

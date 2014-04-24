@@ -47,23 +47,23 @@ namespace clan
 GUIWindowManagerProvider_Direct::GUIWindowManagerProvider_Direct(DisplayWindow &display_window, Canvas &canvas)
 : site(0), activated_window(0), capture_mouse_window(NULL), display_window(display_window), window_canvas(canvas)
 {
-	slots.connect(display_window.sig_window_close(), this, &GUIWindowManagerProvider_Direct::on_displaywindow_window_close);
+	cc.connect(display_window.sig_window_close(), {this, &GUIWindowManagerProvider_Direct::on_displaywindow_window_close});
 
 	InputContext ic = display_window.get_ic();
-	slots.connect(ic.get_mouse().sig_key_up(), this, &GUIWindowManagerProvider_Direct::on_input_mouse_up);
-	slots.connect(ic.get_mouse().sig_key_down(), this, &GUIWindowManagerProvider_Direct::on_input_mouse_down);
-	slots.connect(ic.get_mouse().sig_key_dblclk(), this, &GUIWindowManagerProvider_Direct::on_input_mouse_down);
-	slots.connect(ic.get_mouse().sig_pointer_move(), this, &GUIWindowManagerProvider_Direct::on_input_mouse_move);
+	cc.connect(ic.get_mouse().sig_key_up(), {this, &GUIWindowManagerProvider_Direct::on_input_mouse_up});
+    cc.connect(ic.get_mouse().sig_key_down(), {this, &GUIWindowManagerProvider_Direct::on_input_mouse_down});
+    cc.connect(ic.get_mouse().sig_key_dblclk(), {this, &GUIWindowManagerProvider_Direct::on_input_mouse_down});
+    cc.connect(ic.get_mouse().sig_pointer_move(), {this, &GUIWindowManagerProvider_Direct::on_input_mouse_move});
 
-	slots.connect(ic.get_keyboard().sig_key_up(), this, &GUIWindowManagerProvider_Direct::on_input);
-	slots.connect(ic.get_keyboard().sig_key_down(), this, &GUIWindowManagerProvider_Direct::on_input);
+    cc.connect(ic.get_keyboard().sig_key_up(), {this, &GUIWindowManagerProvider_Direct::on_input});
+    cc.connect(ic.get_keyboard().sig_key_down(), {this, &GUIWindowManagerProvider_Direct::on_input});
 
 	for (int tc = 0; tc < ic.get_tablet_count(); ++tc)
 	{
-		slots.connect(ic.get_tablet(tc).sig_axis_move(), this, &GUIWindowManagerProvider_Direct::on_input_mouse_move);
-		slots.connect(ic.get_tablet(tc).sig_key_dblclk(), this, &GUIWindowManagerProvider_Direct::on_input_mouse_down);
-		slots.connect(ic.get_tablet(tc).sig_key_down(), this, &GUIWindowManagerProvider_Direct::on_input_mouse_down);
-		slots.connect(ic.get_tablet(tc).sig_key_up(), this, &GUIWindowManagerProvider_Direct::on_input);
+        cc.connect(ic.get_tablet(tc).sig_axis_move(), {this, &GUIWindowManagerProvider_Direct::on_input_mouse_move});
+        cc.connect(ic.get_tablet(tc).sig_key_dblclk(), {this, &GUIWindowManagerProvider_Direct::on_input_mouse_down});
+        cc.connect(ic.get_tablet(tc).sig_key_down(), {this, &GUIWindowManagerProvider_Direct::on_input_mouse_down});
+        cc.connect(ic.get_tablet(tc).sig_key_up(), {this, &GUIWindowManagerProvider_Direct::on_input});
 	}
 
 }
@@ -95,7 +95,7 @@ void GUIWindowManagerProvider_Direct::on_input(const InputEvent &input_event)
 {
 	if (activated_window == 0)
 		return;
-	
+
 	InputEvent new_input_event = input_event;
 
 	if (!func_input_intercept.is_null())

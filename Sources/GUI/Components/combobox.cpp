@@ -73,14 +73,14 @@ public:
 	void on_enablemode_changed();
 	void create_components();
 
-	Callback_v0 func_dropdown_opened;
-	Callback_v0 func_dropdown_closed;
-	Callback_v0 func_before_edit_changed;
-	Callback_v0 func_after_edit_changed;
-	Callback_v0 func_enter_pressed;
-	Callback_v1<int> func_item_selected;
-	Callback_v1<int> func_selection_changed;
-	Callback_1<bool, InputEvent> func_lineedit_unhandled_event;
+	Callback<void()> func_dropdown_opened;
+	Callback<void()> func_dropdown_closed;
+	Callback<void()> func_before_edit_changed;
+	Callback<void()> func_after_edit_changed;
+	Callback<void()> func_enter_pressed;
+	Callback<void(int)> func_item_selected;
+	Callback<void(int)> func_selection_changed;
+	Callback<bool(InputEvent)> func_lineedit_unhandled_event;
 
 	ComboBox *component;
 	LineEdit *lineedit;
@@ -222,37 +222,37 @@ void ComboBox::set_dropdown_minimum_width(int min_width)
 /////////////////////////////////////////////////////////////////////////////
 // ComboBox Events:
 
-Callback_v0 &ComboBox::func_dropdown_opened()
+Callback<void()> &ComboBox::func_dropdown_opened()
 {
 	return impl->func_dropdown_opened;
 }
 
-Callback_v0 &ComboBox::func_dropdown_closed()
+Callback<void()> &ComboBox::func_dropdown_closed()
 {
 	return impl->func_dropdown_closed;
 }
 
-Callback_v0 &ComboBox::func_enter_pressed()
+Callback<void()> &ComboBox::func_enter_pressed()
 {
 	return impl->func_enter_pressed;
 }
 
-Callback_v0 &ComboBox::func_before_edit_changed()
+Callback<void()> &ComboBox::func_before_edit_changed()
 {
 	return impl->func_before_edit_changed;
 }
 
-Callback_v0 &ComboBox::func_after_edit_changed()
+Callback<void()> &ComboBox::func_after_edit_changed()
 {
 	return impl->func_after_edit_changed;
 }
 
-Callback_v1<int> &ComboBox::func_selection_changed()
+Callback<void(int)> &ComboBox::func_selection_changed()
 {
 	return impl->func_selection_changed;
 }
 
-Callback_v1<int> & ComboBox::func_item_selected()
+Callback<void(int)> & ComboBox::func_item_selected()
 {
 	return impl->func_item_selected;
 }
