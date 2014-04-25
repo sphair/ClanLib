@@ -87,8 +87,9 @@ Enemy::Enemy(Game &game_)
 	//Origin origin;
 	//enemy->get_alignment(origin,x,y);
 
-	draw_slot = game_.get_draw_sig().connect(this,&Enemy::draw);
-	update_slot = game_.get_update_sig().connect(this,&Enemy::update);
+	update_callback = {std::bind(&Enemy::update, this, std::placeholders::_1)};
+	cc.connect(game_.get_draw_sig(), {this,&Enemy::draw});
+    cc.connect(game_.get_update_sig(), update_callback);
 
 //__________________________________________________________________________
 //															   P H Y S I C S
@@ -152,7 +153,7 @@ void Enemy::update(int time_elapsed_ms)
 	{
 		remove_enemy(this);
 		game->add_for_deletion(this);
-		update_slot.disable();
+		update_callback.clear();
 	}
 }
 void Enemy::draw(Canvas &canvas)

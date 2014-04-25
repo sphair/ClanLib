@@ -99,8 +99,7 @@ private:
 	MissileDesc::MissileType mType;
 	Game *game;
 
-	Slot draw_slot;
-	Slot update_slot;
+    CallbackContainer cc;
 
 	Sprite bullet;
 	Vec2f pos;
