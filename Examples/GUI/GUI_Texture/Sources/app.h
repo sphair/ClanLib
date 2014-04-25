@@ -44,8 +44,6 @@ private:
 	void create_window();
 private:
 	bool quit;
-	clan::Slot slot_quit;
-	clan::Slot slot_input_up;
 	clan::DisplayWindow window;
 	clan::DisplayWindow *window_ptr;
 };
