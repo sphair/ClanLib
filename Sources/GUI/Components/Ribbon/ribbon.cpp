@@ -37,8 +37,6 @@
 #include "API/Display/Window/input_event.h"
 #include "API/Display/Window/keys.h"
 #include "API/Display/2D/canvas.h"
-#include "API/CSSLayout/ComputedValues/css_computed_values.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 #include "../../gui_css_strings.h"
 #include "API/GUI/gui_manager.h"
 #include "API/GUI/gui_window_manager.h"

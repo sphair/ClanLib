@@ -38,7 +38,6 @@
 #include "API/Display/2D/image.h"
 #include "API/Core/Text/string_format.h"
 #include "../gui_css_strings.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {

@@ -37,8 +37,6 @@
 #include "API/Display/Window/input_event.h"
 #include "API/Display/Window/keys.h"
 #include "API/Display/2D/canvas.h"
-#include "API/CSSLayout/ComputedValues/css_computed_values.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 #include "ribbon_impl.h"
 #include "ribbon_page_impl.h"
 #include "ribbon_menu_impl.h"

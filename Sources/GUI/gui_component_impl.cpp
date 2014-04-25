@@ -41,6 +41,7 @@
 #include "API/Display/2D/span_layout.h"
 #include "../CSSLayout/Layout/LayoutTree/css_used_value.h"
 #include "API/Display/Font/font_metrics.h"
+#include "API/CSSLayout/CSSTokenizer/css_token.h"
 
 namespace clan
 {

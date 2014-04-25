@@ -35,7 +35,6 @@
 #include "API/Core/Resources/xml_resource_document.h"
 #include "API/Core/Resources/resource_manager.h"
 #include "API/CSSLayout/CSSDocument/css_document.h"
-#include "API/CSSLayout/CSSDocument/css_property.h"
 #include "API/Core/System/timer.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/Font/font_description.h"

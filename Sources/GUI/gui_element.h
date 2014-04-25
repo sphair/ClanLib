@@ -31,7 +31,6 @@
 
 #include <memory>
 #include "API/CSSLayout/ComputedValues/css_computed_values.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 #include "API/Core/Signals/callback_v1.h"
 #include "API/Core/Signals/signal_v0.h"
 #include "API/Display/Font/font.h"
