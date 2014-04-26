@@ -49,10 +49,10 @@ int Joints::start(const std::vector<std::string> &args)
 	DisplayWindow window(desc);
 	
 	// Connect the Window close event
-	Slot slot_quit = window.sig_window_close().connect(this, &Joints::on_window_close);
+	window.sig_window_close().connect({this, &Joints::on_window_close});
 
 	// Connect a keyboard handler to on_key_up()
-	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &Joints::on_input_up);
+	window.get_ic().get_keyboard().sig_key_up().connect({this, &Joints::on_input_up});
 
 	// Create the canvas
 	Canvas canvas(window);
