@@ -3,8 +3,10 @@
 #include <ClanLib/core.h>
 using namespace clan;
 
-class clan::NetGameConnection;
-class clan::NetGameEvent;
+namespace clan {
+class NetGameConnection;
+class NetGameEvent;
+}
 
 class ServerUser
 {
