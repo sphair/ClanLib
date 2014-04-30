@@ -132,7 +132,7 @@ public:
 /// \{
 
 public:
-	Callback_v1<ListViewColumnHeader> &func_size_changed();
+	Callback<void(ListViewColumnHeader)> &func_size_changed();
 
 /// \}
 /// \name Implementation

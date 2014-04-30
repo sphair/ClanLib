@@ -157,8 +157,8 @@ public:
 
 	/// \brief Func value changed
 	///
-	/// \return Callback_v0
-	Callback_v0 &func_value_changed();
+	/// \return Callback<void()>
+	Callback<void()> &func_value_changed();
 
 /// \}
 /// \name Implementation

@@ -64,7 +64,7 @@ public:
 	Rect create_rect(const Rect content_rect, int start, int end);
 
 private:
-	void invoke_scroll_event(Callback_v0 *event_ptr);
+	void invoke_scroll_event(Callback<void()> *event_ptr);
 
 public:
 	bool vertical;
@@ -103,17 +103,17 @@ public:
 
 	ScrollBar *scrollbar;
 
-	Callback_v0 func_scroll;
-	Callback_v0 func_scroll_min;
-	Callback_v0 func_scroll_max;
-	Callback_v0 func_scroll_line_decrement;
-	Callback_v0 func_scroll_line_increment;
-	Callback_v0 func_scroll_page_decrement;
-	Callback_v0 func_scroll_page_increment;
-	Callback_v0 func_scroll_thumb_release;
-	Callback_v0 func_scroll_thumb_track;
-	Callback_v0 func_scroll_end;
-	Callback_v0 *func_scroll_on_mouse_down;
+	Callback<void()> func_scroll;
+	Callback<void()> func_scroll_min;
+	Callback<void()> func_scroll_max;
+	Callback<void()> func_scroll_line_decrement;
+	Callback<void()> func_scroll_line_increment;
+	Callback<void()> func_scroll_page_decrement;
+	Callback<void()> func_scroll_page_increment;
+	Callback<void()> func_scroll_thumb_release;
+	Callback<void()> func_scroll_thumb_track;
+	Callback<void()> func_scroll_end;
+	Callback<void()> *func_scroll_on_mouse_down;
 
 };
 

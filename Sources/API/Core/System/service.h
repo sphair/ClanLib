@@ -32,7 +32,7 @@
 
 #include "../api_core.h"
 #include <memory>
-#include "../Signals/signal_v1.h"
+#include "../Signals/signal.h"
 
 namespace clan
 {

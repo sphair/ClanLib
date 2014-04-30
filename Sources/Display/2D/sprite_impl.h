@@ -161,7 +161,7 @@ public:
 		(rotation_hotspot_y + (px-rotation_hotspot_x) * rotate_x_y + (py-rotation_hotspot_y) * rotate_y_y)
 
 public:
-	Signal_v0 sig_animation_finished;
+	Signal<> sig_animation_finished;
 
 };
 

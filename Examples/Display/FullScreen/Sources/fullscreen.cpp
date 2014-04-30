@@ -153,7 +153,7 @@ void FullScreen::create_window()
 
 	window = DisplayWindow(window_description);
 
-	slot_quit = window.sig_window_close().connect(this, &FullScreen::on_window_close);
-	slot_input_up = window.get_ic().get_keyboard().sig_key_down().connect(this, &FullScreen::on_input_down);
+	cc.connect(window.sig_window_close(), {this, &FullScreen::on_window_close});
+	cc.connect(window.get_ic().get_keyboard().sig_key_down(), {this, &FullScreen::on_input_down});
 }
 

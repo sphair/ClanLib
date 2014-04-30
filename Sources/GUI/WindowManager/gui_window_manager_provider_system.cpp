@@ -160,28 +160,28 @@ void GUIWindowManagerProvider_System::create_window(
 
 	top_level_window->canvas.set_map_mode(map_2d_upper_left);
 
-	top_level_window->slots.connect(top_level_window->window.sig_lost_focus(), this, &GUIWindowManagerProvider_System::on_displaywindow_lost_focus, handle);
-	top_level_window->slots.connect(top_level_window->window.sig_got_focus(), this, &GUIWindowManagerProvider_System::on_displaywindow_got_focus, handle);
-	top_level_window->slots.connect(top_level_window->window.sig_resize(), this, &GUIWindowManagerProvider_System::on_displaywindow_resize, handle);
-	top_level_window->slots.connect(top_level_window->window.sig_paint(), this, &GUIWindowManagerProvider_System::on_displaywindow_paint, handle);
-	top_level_window->slots.connect(top_level_window->window.sig_window_close(), this, &GUIWindowManagerProvider_System::on_displaywindow_window_close, handle);
-	top_level_window->slots.connect(top_level_window->window.sig_window_destroy(), this, &GUIWindowManagerProvider_System::on_displaywindow_window_destroy, handle);
+    cc.connect(top_level_window->window.sig_lost_focus(), {this, &GUIWindowManagerProvider_System::on_displaywindow_lost_focus, handle});
+    cc.connect(top_level_window->window.sig_got_focus(), {this, &GUIWindowManagerProvider_System::on_displaywindow_got_focus, handle});
+    cc.connect(top_level_window->window.sig_resize(), {this, &GUIWindowManagerProvider_System::on_displaywindow_resize, handle});
+    cc.connect(top_level_window->window.sig_paint(), {this, &GUIWindowManagerProvider_System::on_displaywindow_paint, handle});
+    cc.connect(top_level_window->window.sig_window_close(), {this, &GUIWindowManagerProvider_System::on_displaywindow_window_close, handle});
+    cc.connect(top_level_window->window.sig_window_destroy(), {this, &GUIWindowManagerProvider_System::on_displaywindow_window_destroy, handle});
 
 	InputContext ic = top_level_window->window.get_ic();
-	top_level_window->slots.connect(ic.get_mouse().sig_key_up(), this, &GUIWindowManagerProvider_System::on_input, handle);
-	top_level_window->slots.connect(ic.get_mouse().sig_key_down(), this, &GUIWindowManagerProvider_System::on_input, handle);
-	top_level_window->slots.connect(ic.get_mouse().sig_key_dblclk(), this, &GUIWindowManagerProvider_System::on_input, handle);
-	top_level_window->slots.connect(ic.get_mouse().sig_pointer_move(), this, &GUIWindowManagerProvider_System::on_input, handle);
-	top_level_window->slots.connect(ic.get_keyboard().sig_key_up(), this, &GUIWindowManagerProvider_System::on_input, handle);
-	top_level_window->slots.connect(ic.get_keyboard().sig_key_down(), this, &GUIWindowManagerProvider_System::on_input, handle);
+    cc.connect(ic.get_mouse().sig_key_up(), {this, &GUIWindowManagerProvider_System::on_input, handle});
+    cc.connect(ic.get_mouse().sig_key_down(), {this, &GUIWindowManagerProvider_System::on_input, handle});
+    cc.connect(ic.get_mouse().sig_key_dblclk(), {this, &GUIWindowManagerProvider_System::on_input, handle});
+    cc.connect(ic.get_mouse().sig_pointer_move(), {this, &GUIWindowManagerProvider_System::on_input, handle});
+    cc.connect(ic.get_keyboard().sig_key_up(), {this, &GUIWindowManagerProvider_System::on_input, handle});
+    cc.connect(ic.get_keyboard().sig_key_down(), {this, &GUIWindowManagerProvider_System::on_input, handle});
 
 	for (int i = 0; i < ic.get_tablet_count(); ++i)
 	{
-		top_level_window->slots.connect(ic.get_tablet(i).sig_axis_move(), this, &GUIWindowManagerProvider_System::on_input, handle);
-		top_level_window->slots.connect(ic.get_tablet(i).sig_key_down(), this, &GUIWindowManagerProvider_System::on_input, handle);
-		top_level_window->slots.connect(ic.get_tablet(i).sig_key_dblclk(), this, &GUIWindowManagerProvider_System::on_input, handle);
-		top_level_window->slots.connect(ic.get_tablet(i).sig_key_up(), this, &GUIWindowManagerProvider_System::on_input, handle);
-		top_level_window->slots.connect(ic.get_tablet(i).sig_proximity_change(), this, &GUIWindowManagerProvider_System::on_input, handle);
+        cc.connect(ic.get_tablet(i).sig_axis_move(), {this, &GUIWindowManagerProvider_System::on_input, handle});
+        cc.connect(ic.get_tablet(i).sig_key_down(), {this, &GUIWindowManagerProvider_System::on_input, handle});
+        cc.connect(ic.get_tablet(i).sig_key_dblclk(), {this, &GUIWindowManagerProvider_System::on_input, handle});
+        cc.connect(ic.get_tablet(i).sig_key_up(), {this, &GUIWindowManagerProvider_System::on_input, handle});
+        cc.connect(ic.get_tablet(i).sig_proximity_change(), {this, &GUIWindowManagerProvider_System::on_input, handle});
 	}
 
 	window_map[handle] = top_level_window;

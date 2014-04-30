@@ -101,7 +101,7 @@ public:
 public:
 	/// \brief Initialize input device provider.
 	/** <p>The device field of InputEvent should not be set when emitting events.</p>*/
-	void init(Signal_v1<const InputEvent &> *new_sig_provider_event)
+	void init(Signal<const InputEvent &> *new_sig_provider_event)
 	{
 		sig_provider_event = new_sig_provider_event;
 	}
@@ -132,7 +132,7 @@ private:
 	Hid hid;
 	HANDLE rawinput_device;
 
-	Signal_v1<const InputEvent &> *sig_provider_event;
+	Signal<const InputEvent &> *sig_provider_event;
 
 	std::string product_name;
 	std::string manufacturer_name;

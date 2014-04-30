@@ -33,7 +33,7 @@
 #include <memory>
 #include "../api_display.h"
 #include "../../Core/Math/origin.h"
-#include "../../Core/Signals/signal_v0.h"
+#include "../../Core/Signals/signal.h"
 #include "../../Core/IOData/file_system.h"
 #include "../../Core/Resources/resource.h"
 #include "../Render/graphic_context.h"
@@ -448,8 +448,8 @@ public:
 public:
 	/// \brief Sig animation finished
 	///
-	/// \return Signal_v0
-	Signal_v0 &sig_animation_finished();
+	/// \return Signal<>
+	Signal<> &sig_animation_finished();
 /// \}
 
 /// \name Implementation

@@ -60,7 +60,7 @@ public:
 	GUIComponent *component;
 	bool visible;
 	Rect position;
-	Callback_v0 func_double_clicked;
+	Callback<void()> func_double_clicked;
 };
 
 class StatusBar_Impl
@@ -122,7 +122,7 @@ StatusBar *StatusBar::get_named_item(GUIComponent *reference_component, const st
 	return object;
 }
 
-Callback_v0 &StatusBar::func_part_double_clicked(int id)
+Callback<void()> &StatusBar::func_part_double_clicked(int id)
 {
 	unsigned int index = impl->find_part(id);
 	return impl->statusbar_parts[index].func_double_clicked;

@@ -65,10 +65,10 @@ public:
 
 	CheckBox *checkbox;
 
-	Callback_v0 func_checked;
-	Callback_v0 func_unchecked;
-	Callback_v0 func_indeterminated;
-	Callback_v0 func_state_changed;
+	Callback<void()> func_checked;
+	Callback<void()> func_unchecked;
+	Callback<void()> func_indeterminated;
+	Callback<void()> func_state_changed;
 
 	bool three_state;
 
@@ -165,22 +165,22 @@ void CheckBox::set_text(const std::string &text)
 /////////////////////////////////////////////////////////////////////////////
 // CheckBox Events:
 
-Callback_v0 &CheckBox::func_checked()
+Callback<void()> &CheckBox::func_checked()
 {
 	return impl->func_checked;
 }
 
-Callback_v0 &CheckBox::func_unchecked()
+Callback<void()> &CheckBox::func_unchecked()
 {
 	return impl->func_unchecked;
 }
 
-Callback_v0 &CheckBox::func_indeterminated()
+Callback<void()> &CheckBox::func_indeterminated()
 {
 	return impl->func_indeterminated;
 }
 
-Callback_v0 &CheckBox::func_state_changed()
+Callback<void()> &CheckBox::func_state_changed()
 {
 	return impl->func_state_changed;
 }

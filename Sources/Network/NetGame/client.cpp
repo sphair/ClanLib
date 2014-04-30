@@ -72,17 +72,17 @@ void NetGameClient::send_event(const NetGameEvent &game_event)
 		impl->connection->send_event(game_event);
 }
 
-Signal_v1<const NetGameEvent &> &NetGameClient::sig_event_received()
+Signal<const NetGameEvent &> &NetGameClient::sig_event_received()
 {
 	return impl->sig_game_event_received;
 }
 
-Signal_v0 &NetGameClient::sig_connected()
+Signal<> &NetGameClient::sig_connected()
 {
 	return impl->sig_game_connected;
 }
 
-Signal_v0 &NetGameClient::sig_disconnected()
+Signal<> &NetGameClient::sig_disconnected()
 {
 	return impl->sig_game_disconnected;
 }

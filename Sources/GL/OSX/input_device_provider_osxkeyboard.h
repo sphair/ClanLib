@@ -97,7 +97,7 @@ public:
 public:
 	/// \brief Initialize input device provider.
 	/** <p>The device field of InputEvent should not be set when emitting events.</p>*/
-	void init(Signal_v1<const InputEvent &> *new_sig_provider_event)
+	void init(Signal<const InputEvent &> *new_sig_provider_event)
 	{
 		sig_provider_event = new_sig_provider_event;
 	}
@@ -113,7 +113,7 @@ private:
     // Virtual Keyboard State.
     // A work around the for the inability to directly query the keyboard state through Cocoa.
     bool key_down_map[clan::keycode_count];
-    Signal_v1<const InputEvent &> *sig_provider_event;
+    Signal<const InputEvent &> *sig_provider_event;
     
     void on_dispose();
     void on_key_event(const clan::InputCode& keycode, const clan::InputEvent::Type& type);

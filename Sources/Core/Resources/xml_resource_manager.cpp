@@ -35,7 +35,7 @@ namespace clan
 {
 	namespace
 	{
-		std::vector<Callback_v2<ResourceManager &, const XMLResourceDocument &> > xml_cache_factories;
+		std::vector<Callback<void(ResourceManager &, const XMLResourceDocument &)>> xml_cache_factories;
 	}
 
 ResourceManager XMLResourceManager::create(const XMLResourceDocument &doc)
@@ -49,7 +49,7 @@ ResourceManager XMLResourceManager::create(const XMLResourceDocument &doc)
 	return manager;
 }
 
-void XMLResourceManager::add_cache_factory(Callback_v2<ResourceManager &, const XMLResourceDocument &> factory_callback)
+void XMLResourceManager::add_cache_factory(Callback<void(ResourceManager &, const XMLResourceDocument &)> factory_callback)
 {
 	xml_cache_factories.push_back(factory_callback);
 }

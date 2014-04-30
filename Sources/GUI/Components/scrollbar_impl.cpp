@@ -425,7 +425,7 @@ void ScrollBar_Impl::on_enablemode_changed()
 	scrollbar->request_repaint();
 }
 
-void ScrollBar_Impl::invoke_scroll_event(Callback_v0 *event_ptr)
+void ScrollBar_Impl::invoke_scroll_event(Callback<void()> *event_ptr)
 {
 	if (position == scroll_max-1)
 	{

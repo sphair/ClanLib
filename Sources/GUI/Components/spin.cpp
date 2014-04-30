@@ -109,7 +109,7 @@ public:
 	float max_value_d;
 	float step_size_d;
 
-	Callback_v0 func_value_changed;
+	Callback<void()> func_value_changed;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -234,7 +234,7 @@ void Spin::set_step_size_float(float step_size)
 /////////////////////////////////////////////////////////////////////////////
 // Spin Events:
 
-Callback_v0 &Spin::func_value_changed()
+Callback<void()> &Spin::func_value_changed()
 {
 	return impl->func_value_changed;
 }

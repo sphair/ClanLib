@@ -29,8 +29,8 @@
 #pragma once
 
 #include <map>
-#include "API/Core/Signals/slot_container.h"
-#include "API/Core/Signals/callback_v0.h"
+#include "API/Core/Signals/callbackcontainer.h"
+#include "API/Core/Signals/callback.h"
 #include "API/Display/Window/display_window.h"
 #include "API/GUI/Providers/gui_window_manager_provider.h"
 #include "API/Display/2D/canvas.h"
@@ -71,12 +71,11 @@ public:
 	GUIWindowManagerSite *site;
 	std::map<GUITopLevelWindow *, GUITopLevelWindowDirect *> window_map;
 	std::vector<GUITopLevelWindowDirect *> root_window_z_order;	// Beginning is at the top
-	Callback_v1<InputEvent &> func_input_intercept;
+	Callback<void(InputEvent &)> func_input_intercept;
 	GUITopLevelWindow *activated_window;
 	GUITopLevelWindow *capture_mouse_window;
 	DisplayWindow display_window;
 	Canvas window_canvas;
-	SlotContainer slots;
 
 public:
 	void on_displaywindow_window_close();
@@ -85,7 +84,7 @@ public:
 	void on_input_mouse_up(const InputEvent &event);
 	void on_input_mouse_down(const InputEvent &event);
 	void on_input_mouse_move(const InputEvent &event);
-	
+
 	void set_site(GUIWindowManagerSite *site);
 	void create_window(
 		GUITopLevelWindow *handle,
@@ -133,6 +132,7 @@ private:
 	GUITopLevelWindowDirect *get_direct_window(GUITopLevelWindow *handle);
 	void invoke_input_received(GUITopLevelWindow *window, const InputEvent &input_event);
 	bool is_constant_repaint_enabled(GUIComponent *component) const;
+    CallbackContainer cc;
 
 };
 

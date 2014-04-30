@@ -34,7 +34,7 @@
 #include "API/Core/System/mutex.h"
 #include "API/Core/System/event.h"
 #include "API/Core/System/system.h"
-#include "API/Core/Signals/callback_v0.h"
+#include "API/Core/Signals/callback.h"
 #include <map>
 
 namespace clan
@@ -49,7 +49,7 @@ public:
 	ubyte64 end_time;
 	unsigned int timeout;
 	bool repeating;
-	Callback_v0 func_expired;
+	Callback<void()> func_expired;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -153,7 +153,7 @@ public:
 		}
 	}
 
-	Callback_v0 &get_func_expired(int timer_id)
+	Callback<void()> &get_func_expired(int timer_id)
 	{
 		MutexSection mutex_lock(&mutex);
 		return get_timer_object(timer_id).func_expired;
@@ -277,7 +277,7 @@ public:
 	bool is_repeating() const { return repeating; }
 	unsigned int get_timeout() const { return timeout; }
 
-	Callback_v0 &func_expired()
+	Callback<void()> &func_expired()
 	{
 		MutexSection mutex_lock(&timer_thread_mutex);
 		return timer_thread->get_func_expired(id);
@@ -324,7 +324,7 @@ unsigned int Timer::get_timeout() const
 /////////////////////////////////////////////////////////////////////////////
 // Timer Events:
 
-Callback_v0 &Timer::func_expired()
+Callback<void()> &Timer::func_expired()
 {
 	return impl->func_expired();
 }

@@ -18,12 +18,13 @@ detection for particles.
 
 int DemoUserCollision::run(clan::DisplayWindow &window)
 {
+    clan::CallbackContainer cc;
 	window.set_title("LinearParticle Example - UserCollision ");
 
-	clan::Slot slot_quit = window.sig_window_close().connect(this, &DemoUserCollision::on_window_close);
+	cc.connect(window.sig_window_close(), {this, &DemoUserCollision::on_window_close});
 	clan::Canvas canvas(window);
 
-	clan::Slot slot_key_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &DemoUserCollision::on_key_up);
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), {this, &DemoUserCollision::on_key_up});
 
 	// initialize LinearParticle
 	srand(clan::System::get_time());

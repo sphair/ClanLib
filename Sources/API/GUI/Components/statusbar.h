@@ -73,8 +73,8 @@ public:
 	///
 	/// \param id = value
 	///
-	/// \return Callback_v0
-	Callback_v0 &func_part_double_clicked(int id);
+	/// \return Callback<void()>
+	Callback<void()> &func_part_double_clicked(int id);
 
 /// \}
 /// \name Operations

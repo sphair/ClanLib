@@ -35,6 +35,8 @@ int Basic2D::start(const std::vector<std::string> &args)
 {
 	quit = false;
 
+    clan::CallbackContainer cc;
+
 	// Set the window
 	clan::DisplayWindowDescription desc;
 	desc.set_title("ClanLib Basic2D Example");
@@ -45,10 +47,10 @@ int Basic2D::start(const std::vector<std::string> &args)
 	clan::Canvas canvas(window);
 
 	// Connect the Window close event
-	clan::Slot slot_quit = window.sig_window_close().connect(this, &Basic2D::on_window_close);
+	cc.connect(window.sig_window_close(), {this, &Basic2D::on_window_close});
 
 	// Connect a keyboard handler to on_key_up()
-	clan::Slot slot_input_up = window.get_ic().get_keyboard().sig_key_up().connect(this, &Basic2D::on_input_up);
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), {this, &Basic2D::on_input_up});
 
 	// Load a sprite from a png-file
 	clan::Image spr_logo(canvas, "Resources/logo.png");

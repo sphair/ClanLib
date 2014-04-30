@@ -57,11 +57,11 @@ public:
 	int get_axis_count() const { return 0; }
 	int get_button_count() const { return 1; }
 	bool in_proximity() const { return false; }
-	void init(Signal_v1<const InputEvent &> *new_sig_provider_event) { sig_provider_event = new_sig_provider_event; }
+	void init(Signal<const InputEvent &> *new_sig_provider_event) { sig_provider_event = new_sig_provider_event; }
 	void set_position(int x, int y) { }
 	bool poll(bool peek_only) { return false; }
     
-    Signal_v1<const InputEvent &> *sig_provider_event;
+    Signal<const InputEvent &> *sig_provider_event;
     
     std::vector<Vec2f> touches;
     bool down;

@@ -104,7 +104,7 @@ void GUIXMLLoaderVersion_1_0::load(DomDocument &doc)
 	}
 }
 
-void GUIXMLLoaderVersion_1_0::set_create_custom_callback(Callback_2<GUIComponent*, GUIComponent*, std::string> *callback)
+void GUIXMLLoaderVersion_1_0::set_create_custom_callback(Callback<GUIComponent*(GUIComponent*, std::string)> *callback)
 {
 	create_custom_callback = callback;
 }

@@ -162,74 +162,74 @@ InputContext DisplayWindow::get_ic() const
 	return impl->provider->get_ic();
 }
 
-Signal_v0 &DisplayWindow::sig_lost_focus()
+Signal<> &DisplayWindow::sig_lost_focus()
 {
 	return impl->sig_lost_focus;
 }
 
-Signal_v0 &DisplayWindow::sig_got_focus()
+Signal<> &DisplayWindow::sig_got_focus()
 {
 	return impl->sig_got_focus;
 }
 
-Signal_v2<int, int> &DisplayWindow::sig_resize()
+Signal<int, int> &DisplayWindow::sig_resize()
 {
 	return impl->sig_resize;
 }
 
-Signal_v1<const Rect &> &DisplayWindow::sig_paint()
+Signal<const Rect &> &DisplayWindow::sig_paint()
 {
 	return impl->sig_paint;
 }
 
-Signal_v0 &DisplayWindow::sig_window_close()
+Signal<> &DisplayWindow::sig_window_close()
 {
 	return impl->sig_window_close;
 }
 
-Signal_v0 &DisplayWindow::sig_window_destroy()
+Signal<> &DisplayWindow::sig_window_destroy()
 {
 	return impl->sig_window_destroy;
 }
 
-Signal_v0 &DisplayWindow::sig_window_minimized()
+Signal<> &DisplayWindow::sig_window_minimized()
 {
 	return impl->sig_window_minimized;
 }
 
-Signal_v0 &DisplayWindow::sig_window_maximized()
+Signal<> &DisplayWindow::sig_window_maximized()
 {
 	return impl->sig_window_maximized;
 }
 
-Signal_v0 &DisplayWindow::sig_window_restored()
+Signal<> &DisplayWindow::sig_window_restored()
 {
 	return impl->sig_window_restored;
 }
 
-Callback_v1<Rect &> &DisplayWindow::func_window_resize()
+Callback<void(Rect &)> &DisplayWindow::func_window_resize()
 {
 	return impl->func_window_resize;
 }
 
-Callback_0<bool> &DisplayWindow::func_minimize_clicked()
+Callback<bool()> &DisplayWindow::func_minimize_clicked()
 {
 	return impl->func_minimize_clicked;
 }
 
 #ifdef WIN32
-Callback_4<bool, HWND, UINT, WPARAM, LPARAM> &DisplayWindow::func_window_message()
+Callback<bool(HWND, UINT, WPARAM, LPARAM)> &DisplayWindow::func_window_message()
 {
 	return impl->func_window_message;
 }
 #endif
 
-Signal_v0 &DisplayWindow::sig_window_moved()
+Signal<> &DisplayWindow::sig_window_moved()
 {
 	return impl->sig_window_moved;
 }
 
-Signal_v0 &DisplayWindow::sig_window_flip()
+Signal<> &DisplayWindow::sig_window_flip()
 {
 	return impl->sig_window_flip;
 }

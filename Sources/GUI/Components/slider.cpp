@@ -126,10 +126,10 @@ public:
 
 	Point mouse_drag_start_pos;
 
-	Callback_v0 func_value_changed;
-	Callback_v0 func_slider_decrement;
-	Callback_v0 func_slider_increment;
-	Callback_v0 func_slider_moved;
+	Callback<void()> func_value_changed;
+	Callback<void()> func_slider_decrement;
+	Callback<void()> func_slider_increment;
+	Callback<void()> func_slider_moved;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -287,22 +287,22 @@ void Slider::set_lock_to_ticks(bool value)
 /////////////////////////////////////////////////////////////////////////////
 // Slider Callbacks:
 
-Callback_v0 &Slider::func_value_changed()
+Callback<void()> &Slider::func_value_changed()
 {
 	return impl->func_value_changed;
 }
 
-Callback_v0 &Slider::func_value_decremented()
+Callback<void()> &Slider::func_value_decremented()
 {
 	return impl->func_slider_decrement;
 }
 
-Callback_v0 &Slider::func_value_incremented()
+Callback<void()> &Slider::func_value_incremented()
 {
 	return impl->func_slider_increment;
 }
 
-Callback_v0 &Slider::func_slider_moved()
+Callback<void()> &Slider::func_slider_moved()
 {
 	return impl->func_slider_moved;
 }

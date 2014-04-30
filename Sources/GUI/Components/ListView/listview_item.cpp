@@ -369,7 +369,7 @@ void ListViewItem::set_userdata(std::shared_ptr<ListViewItemUserData> ptr)
 	impl->userdata = ptr;
 }
 
-Callback_v1<Rect> &ListViewItem::func_render_icon()
+Callback<void(Rect)> &ListViewItem::func_render_icon()
 {
 	return impl->func_render_icon;
 }

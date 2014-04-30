@@ -19,9 +19,10 @@ circular light trail.
 int DemoCircle::run(clan::DisplayWindow &window)
 {
 	window.set_title("LinearParticle Example - Circle ");
-	clan::Slot slot_quit = window.sig_window_close().connect(this, &DemoCircle::on_window_close);
+    clan::CallbackContainer cc;
+	cc.connect(window.sig_window_close(), {this, &DemoCircle::on_window_close});
 	clan::Canvas canvas(window);
-	clan::Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &DemoCircle::on_key_up);
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), {this, &DemoCircle::on_key_up});
 
 	// initialize LinearParticle
 	L_ParticleSystem::init();

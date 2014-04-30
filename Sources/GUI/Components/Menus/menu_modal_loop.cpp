@@ -49,7 +49,7 @@ namespace clan
 MenuModalLoop::MenuModalLoop(GUIManager manager)
 : owner(0), menubar(0), running(false), ignore_menubar_mouse_up(true), popup(false)
 {
-	slot_filter = manager.sig_filter_message().connect(this, &MenuModalLoop::on_filter_message);
+    cc.connect(manager.sig_filter_message(), {this, &MenuModalLoop::on_filter_message});
 }
 
 MenuModalLoop::~MenuModalLoop()
@@ -186,7 +186,7 @@ void MenuModalLoop::close_last_popup_window()
 void MenuModalLoop::on_popup_mouse_input(PopupMenuWindow *popup, InputEvent e)
 {
 	e.mouse_pos = popup->screen_to_component_coords(e.mouse_pos);
-	
+
 	if (e.type == InputEvent::released)
 	{
 		PopupMenuItem pmi = popup->get_selected_item();
@@ -262,7 +262,7 @@ void MenuModalLoop::on_keyboard_input(InputEvent e)
 			PopupMenuWindow *window = popup_windows.back();
 			popup_windows.pop_back();
 			delete window;
-			
+
 			if (popup_windows.empty())
 			{
 				menubar->impl->select_previous();

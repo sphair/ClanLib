@@ -40,7 +40,7 @@ public:
 
 	Scene_Impl *scene_impl;
 	const std::string name;
-	Callback_v1<GraphicContext &> cb_run;
+	Callback<void(GraphicContext &)> cb_run;
 };
 
 }

@@ -50,13 +50,15 @@ int Example::start(const std::vector<std::string> &args)
 	clan::DisplayWindow window_1(desc_window_1);
 	clan::DisplayWindow window_2(desc_window_2);
 
+    clan::CallbackContainer cc;
+
 	// Connect the Window close event - to both windows
-	clan::Slot slot_quit_window_1 = window_1.sig_window_close().connect(this, &Example::on_window_close, &window_1);
-	clan::Slot slot_quit_window_2 = window_2.sig_window_close().connect(this, &Example::on_window_close, &window_2);
+	cc.connect(window_1.sig_window_close(), {this, &Example::on_window_close, &window_1});
+	cc.connect(window_2.sig_window_close(), {this, &Example::on_window_close, &window_2});
 
 	// Connect a keyboard handler to on_key_up() - to both windows
-	clan::Slot slot_input_up_window_1 = (window_1.get_ic().get_keyboard()).sig_key_up().connect(this, &Example::on_input_up, 1);
-	clan::Slot slot_input_up_window_2 = (window_2.get_ic().get_keyboard()).sig_key_up().connect(this, &Example::on_input_up, 2);
+	cc.connect(window_1.get_ic().get_keyboard().sig_key_up(), {this, &Example::on_input_up, 1});
+	cc.connect(window_2.get_ic().get_keyboard().sig_key_up(), {this, &Example::on_input_up, 2});
 
 	// Get the canvas - for both windows
 	clan::Canvas canvas_1(window_1);
