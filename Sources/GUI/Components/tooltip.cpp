@@ -77,7 +77,7 @@ ToolTip::ToolTip(GUIManager manager)
 	func_render().set(impl.get(), &ToolTip_Impl::on_render);
 
 	impl->timer_show_delayed.func_expired().set(impl.get(), &ToolTip_Impl::on_show_delayed);
-    impl->cc.connect(get_gui_manager().sig_filter_message(), {impl.get(), &ToolTip_Impl::on_filter_message});
+    impl->cc.connect(get_gui_manager().sig_filter_message(), Callback<void(std::shared_ptr<GUIMessage> &message)>(impl.get(), &ToolTip_Impl::on_filter_message));
 }
 
 ToolTip::~ToolTip()

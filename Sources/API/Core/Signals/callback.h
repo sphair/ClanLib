@@ -43,6 +43,7 @@ namespace clan
         class Callback_impl
         {
         public:
+            virtual ~Callback_impl() { return; }
             virtual Res invoke(const Params & ... params) const = 0;
         };
 

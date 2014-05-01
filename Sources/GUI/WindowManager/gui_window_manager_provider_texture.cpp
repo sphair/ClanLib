@@ -54,23 +54,23 @@ GUIWindowManagerProvider_Texture::GUIWindowManagerProvider_Texture(DisplayWindow
 	: site(0), activated_window(0), capture_mouse_window(NULL), display_window(display_window), canvas_window(display_window),
   frame_buffer_initial_setup(false), frame_buffer_stencil_attached(false), frame_buffer_depth_attached(false)
 {
-	cc.connect(display_window.sig_window_close(), {this, &GUIWindowManagerProvider_Texture::on_displaywindow_window_close});
+	cc.connect(display_window.sig_window_close(), Callback<void()>(this, &GUIWindowManagerProvider_Texture::on_displaywindow_window_close));
 
 	InputContext ic = display_window.get_ic();
-    cc.connect(ic.get_mouse().sig_key_up(), {this, &GUIWindowManagerProvider_Texture::on_input_mouse_up});
-    cc.connect(ic.get_mouse().sig_key_down(), {this, &GUIWindowManagerProvider_Texture::on_input_mouse_down});
-    cc.connect(ic.get_mouse().sig_key_dblclk(), {this, &GUIWindowManagerProvider_Texture::on_input_mouse_down});
-    cc.connect(ic.get_mouse().sig_pointer_move(), {this, &GUIWindowManagerProvider_Texture::on_input_mouse_move});
+    cc.connect(ic.get_mouse().sig_key_up(), Callback<void(const InputEvent&)>(this, &GUIWindowManagerProvider_Texture::on_input_mouse_up));
+    cc.connect(ic.get_mouse().sig_key_down(), Callback<void(const InputEvent&)>(this, &GUIWindowManagerProvider_Texture::on_input_mouse_down));
+    cc.connect(ic.get_mouse().sig_key_dblclk(), Callback<void(const InputEvent&)>(this, &GUIWindowManagerProvider_Texture::on_input_mouse_down));
+    cc.connect(ic.get_mouse().sig_pointer_move(), Callback<void(const InputEvent&)>(this, &GUIWindowManagerProvider_Texture::on_input_mouse_move));
 
-    cc.connect(ic.get_keyboard().sig_key_up(), {this, &GUIWindowManagerProvider_Texture::on_input});
-    cc.connect(ic.get_keyboard().sig_key_down(), {this, &GUIWindowManagerProvider_Texture::on_input});
+    cc.connect(ic.get_keyboard().sig_key_up(), Callback<void(const InputEvent&)>(this, &GUIWindowManagerProvider_Texture::on_input));
+    cc.connect(ic.get_keyboard().sig_key_down(), Callback<void(const InputEvent&)>(this, &GUIWindowManagerProvider_Texture::on_input));
 
 	for (int tc = 0; tc < ic.get_tablet_count(); ++tc)
 	{
-        cc.connect(ic.get_tablet(tc).sig_axis_move(), {this, &GUIWindowManagerProvider_Texture::on_input_mouse_move});
-        cc.connect(ic.get_tablet(tc).sig_key_down(), {this, &GUIWindowManagerProvider_Texture::on_input_mouse_down});
-        cc.connect(ic.get_tablet(tc).sig_key_dblclk(), {this, &GUIWindowManagerProvider_Texture::on_input_mouse_down});
-        cc.connect(ic.get_tablet(tc).sig_key_up(), {this, &GUIWindowManagerProvider_Texture::on_input});
+        cc.connect(ic.get_tablet(tc).sig_axis_move(), Callback<void(const InputEvent&)>(this, &GUIWindowManagerProvider_Texture::on_input_mouse_move));
+        cc.connect(ic.get_tablet(tc).sig_key_down(), Callback<void(const InputEvent&)>(this, &GUIWindowManagerProvider_Texture::on_input_mouse_down));
+        cc.connect(ic.get_tablet(tc).sig_key_dblclk(), Callback<void(const InputEvent&)>(this, &GUIWindowManagerProvider_Texture::on_input_mouse_down));
+        cc.connect(ic.get_tablet(tc).sig_key_up(), Callback<void(const InputEvent&)>(this, &GUIWindowManagerProvider_Texture::on_input));
 	}
 
 	frame_buffer = FrameBuffer(canvas_window);
