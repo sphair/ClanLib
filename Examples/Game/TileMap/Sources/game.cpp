@@ -42,8 +42,8 @@ void Game::run()
 	DisplayWindow window(desc);
     CallbackContainer cc;
 
-	cc.connect(window.sig_window_close(), Callback<void()>(this, &Game::on_window_close));
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), Callback<void()>(this, &Game::on_input_up));
+	cc.connect(window.sig_window_close(), clan::Callback<void()>(this, &Game::on_window_close));
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::Callback<void(const clan::InputEvent&)>(this, &Game::on_input_up));
 
 	Canvas canvas(window);
 

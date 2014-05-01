@@ -153,7 +153,7 @@ void FullScreen::create_window()
 
 	window = DisplayWindow(window_description);
 
-	cc.connect(window.sig_window_close(), Callback<void()>(this, &FullScreen::on_window_close));
-	cc.connect(window.get_ic().get_keyboard().sig_key_down(), Callback<void()>(this, &FullScreen::on_input_down));
+	cc.connect(window.sig_window_close(), clan::Callback<void()>(this, &FullScreen::on_window_close));
+	cc.connect(window.get_ic().get_keyboard().sig_key_down(), clan::Callback<void(const clan::InputEvent&)>(this, &FullScreen::on_input_down));
 }
 

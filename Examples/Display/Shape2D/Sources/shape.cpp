@@ -46,10 +46,10 @@ int ShapeApp::start(const std::vector<std::string> &args)
     clan::CallbackContainer cc;
 
 	// Connect the Window close event
-	cc.connect(window.sig_window_close(), Callback<void()>(this, &ShapeApp::on_window_close));
+	cc.connect(window.sig_window_close(), clan::Callback<void()>(this, &ShapeApp::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), Callback<void()>(this, &ShapeApp::on_input_up));
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::Callback<void(const clan::InputEvent&)>(this, &ShapeApp::on_input_up));
 
 	clan::Shape2D rounded_rect_shape;
 	rounded_rect_shape.add_rounded_rect(clan::Pointf(32.0f, 32.0f), clan::Sizef(256.0f, 256.0f), 64, false );

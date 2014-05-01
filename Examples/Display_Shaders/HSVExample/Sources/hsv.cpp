@@ -39,8 +39,8 @@ int HSV::start(const std::vector<std::string> &args)
 {
     clan::CallbackContainer cc;
 	DisplayWindow window("ClanLib HSV Example", 1024, 768);
-	cc.connect(window.sig_window_close(), Callback<void()>(this, &HSV::on_close));
-    cc.connect(window.get_ic().get_keyboard().sig_key_up(), Callback<void()>(this, &HSV::on_input_up));
+	cc.connect(window.sig_window_close(), clan::Callback<void()>(this, &HSV::on_close));
+    cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::Callback<void(const clan::InputEvent&)>(this, &HSV::on_input_up));
 
 	Canvas canvas(window);
 	InputContext ic = window.get_ic();

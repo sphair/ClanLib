@@ -41,8 +41,8 @@ int App::start(const std::vector<std::string> &args)
 	win_desc.set_size(Size( 1000, 700 ), false);
 
 	DisplayWindow window(win_desc);
-    cc.connect(window.sig_window_close(), Callback<void()>(this, &App::on_window_close));
-    cc.connect(window.get_ic().get_keyboard().sig_key_up(), Callback<void()>(this, &App::on_input_up));
+    cc.connect(window.sig_window_close(), clan::Callback<void()>(this, &App::on_window_close));
+    cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::Callback<void(const clan::InputEvent&)>(this, &App::on_input_up));
 
 	resources = clan::XMLResourceManager::create(clan::XMLResourceDocument("Resources/resources.xml"));
 
