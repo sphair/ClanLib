@@ -1,6 +1,6 @@
-lib_LTLIBRARIES = libclan30Compute.la
+lib_LTLIBRARIES = libclan31Compute.la
 
-libclan30Compute_la_SOURCES = \
+libclan31Compute_la_SOURCES = \
 compute_program_impl.cpp \
 compute_sampler.cpp \
 compute_event_impl.cpp \
@@ -21,7 +21,7 @@ compute_buffer.cpp \
 compute_program.cpp \
 setup_compute.cpp
 
-libclan30Compute_la_LDFLAGS = \
+libclan31Compute_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
   $(extra_LIBS_Compute)
 

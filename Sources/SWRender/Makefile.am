@@ -1,14 +1,14 @@
-lib_LTLIBRARIES = libclan30SWRender.la
+lib_LTLIBRARIES = libclan31SWRender.la
 
-libclan30SWRender_la_SOURCES = precomp.cpp
+libclan31SWRender_la_SOURCES = precomp.cpp
 if DISABLE_SSE2
-libclan30SWRender_la_SOURCES += \
+libclan31SWRender_la_SOURCES += \
 X11/Stub/setup_swrender.cpp \
 X11/Stub/swr_program_object.cpp \
 X11/Stub/swr_graphic_context.cpp \
 X11/Stub/swr_target.cpp
 else
-libclan30SWRender_la_SOURCES += \
+libclan31SWRender_la_SOURCES += \
 swr_pixel_buffer_provider.cpp \
 swr_transfer_buffer_provider.cpp \
 swr_vertex_array_buffer_provider.cpp \
@@ -50,11 +50,11 @@ swr_texture_provider.cpp
 
 endif
 
-libclan30SWRender_la_LDFLAGS = \
+libclan31SWRender_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
   $(extra_LIBS_SWRender)
 
-libclan30SWRender_la_CXXFLAGS=$(SWRender_CXXFLAGS) $(extra_CFLAGS_SWRender)
+libclan31SWRender_la_CXXFLAGS=$(SWRender_CXXFLAGS) $(extra_CFLAGS_SWRender)
 
 # EOF #
 

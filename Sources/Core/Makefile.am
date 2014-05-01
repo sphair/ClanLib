@@ -1,8 +1,8 @@
 AUTOMAKE_OPTIONS = subdir-objects
 
-lib_LTLIBRARIES = libclan30Core.la
+lib_LTLIBRARIES = libclan31Core.la
 
-libclan30Core_la_SOURCES = \
+libclan31Core_la_SOURCES = \
 Text/console_logger.cpp \
 Text/utf8_reader.cpp \
 Text/string_format.cpp \
@@ -178,7 +178,7 @@ JSON/json_value.cpp \
 System/datetime.cpp
 
 if WIN32
-libclan30Core_la_SOURCES += \
+libclan31Core_la_SOURCES += \
 System/Win32/service_win32.cpp \
 System/Win32/init_win32.cpp \
 System/Win32/event_provider_win32.cpp \
@@ -186,7 +186,7 @@ System/Win32/thread_win32.cpp \
 IOData/Win32/directory_scanner_win32.cpp
 
 else
-libclan30Core_la_SOURCES += \
+libclan31Core_la_SOURCES += \
 IOData/Unix/directory_scanner_unix.cpp \
 System/Unix/init_linux.cpp \
 System/Unix/service_unix.cpp \
@@ -195,12 +195,12 @@ System/Unix/thread_unix.cpp
 
 endif
 
-libclan30Core_la_LIBADD = @LIBPTHREAD@
+libclan31Core_la_LIBADD = @LIBPTHREAD@
 
-libclan30Core_la_LDFLAGS = \
+libclan31Core_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
   $(extra_LIBS_clanCore)
 
-libclan30Core_la_CXXFLAGS=$(clanCore_CXXFLAGS) $(extra_CFLAGS_clanCore)
+libclan31Core_la_CXXFLAGS=$(clanCore_CXXFLAGS) $(extra_CFLAGS_clanCore)
 
 # EOF #

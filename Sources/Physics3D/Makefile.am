@@ -1,6 +1,6 @@
-lib_LTLIBRARIES = libclan30Physics3D.la
+lib_LTLIBRARIES = libclan31Physics3D.la
 
-libclan30Physics3D_la_SOURCES = \
+libclan31Physics3D_la_SOURCES = \
 physics3d_object.cpp \
 physics3d_world.cpp \
 Bullet/BulletSoftBody/btDefaultSoftBodySolver.cpp \
@@ -137,10 +137,10 @@ physics3d_sweep_test.cpp \
 physics3d_ray_test.cpp \
 physics3d_contact_test.cpp
 
-libclan30Physics3D_la_LDFLAGS = \
+libclan31Physics3D_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
   $(extra_LIBS_clanPhysics3D)
 
-libclan30Physics3D_la_CXXFLAGS=$(clanPhysics3D_CXXFLAGS) $(extra_CFLAGS_clanPhysics3D)
+libclan31Physics3D_la_CXXFLAGS=$(clanPhysics3D_CXXFLAGS) $(extra_CFLAGS_clanPhysics3D)
 # EOF #
 
