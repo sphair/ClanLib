@@ -10,6 +10,8 @@ DIST_SUBDIRS = \
   GUI            \
   CSSLayout      \
   SWRender       \
+  Physics2D \
+  Physics2D \
   GameIDE \
   Compute \
   Network        \
