@@ -51,12 +51,12 @@ World::World(clan::DisplayWindow &display_window) : window(display_window), quit
 	background = clan::Image::resource(canvas, "background", resources);
 	
 	// Receive mouse clicks
-	cc.connect(window.get_ic().get_keyboard().sig_key_down(), Callback<void()>(this, &World::onKeyDown));
-	cc.connect(window.get_ic().get_mouse().sig_key_down(), Callback<void()>(this, &World::onMouseDown));
-	cc.connect(window.get_ic().get_mouse().sig_key_dblclk(), Callback<void()>(this, &World::onMouseDown));
+	cc.connect(window.get_ic().get_keyboard().sig_key_down(), clan::Callback<void(const clan::InputEvent&)>(this, &World::onKeyDown));
+	cc.connect(window.get_ic().get_mouse().sig_key_down(), clan::Callback<void(const clan::InputEvent&)>(this, &World::onMouseDown));
+	cc.connect(window.get_ic().get_mouse().sig_key_dblclk(), clan::Callback<void(const clan::InputEvent&)>(this, &World::onMouseDown));
 
-	cc.connect(window.get_ic().get_mouse().sig_key_up(), Callback<void()>(this, &World::onMouseUp));
-	cc.connect(window.get_ic().get_mouse().sig_pointer_move(), Callback<void()>(this, &World::onMouseMove));
+	cc.connect(window.get_ic().get_mouse().sig_key_up(), clan::Callback<void(const clan::InputEvent&)>(this, &World::onMouseUp));
+	cc.connect(window.get_ic().get_mouse().sig_pointer_move(), clan::Callback<void(const clan::InputEvent&)>(this, &World::onMouseMove));
 
 	dragging = mouseDown = false;
 	

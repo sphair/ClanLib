@@ -4,9 +4,9 @@
 Client::Client()
 {
 	// Connect essential signals - connecting, disconnecting and receiving events
-	cc.connect(network_client.sig_event_received(), Callback<void()>(this, &Client::on_event_received));
-	cc.connect(network_client.sig_connected(), Callback<void()>(this, &Client::on_connected));
-	cc.connect(network_client.sig_disconnected(), Callback<void()>(this, &Client::on_disconnected));
+	cc.connect(network_client.sig_event_received(), clan::Callback<void(const NetGameEvent&)>(this, &Client::on_event_received));
+	cc.connect(network_client.sig_connected(), clan::Callback<void()>(this, &Client::on_connected));
+	cc.connect(network_client.sig_disconnected(), clan::Callback<void()>(this, &Client::on_disconnected));
 
 	// Set up event dispatchers to route incoming events to functions
 	login_events.func_event("Login-Success").set(this, &Client::on_event_login_success);

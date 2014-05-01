@@ -130,10 +130,10 @@ int App::start(const std::vector<std::string> &args)
 
 	// Setup the slots
     clan::CallbackContainer cc;
-	cc.connect(window_center.sig_window_close(), Callback<void()>(this, &App::on_window_close, &window_center));
-	cc.connect(window_center.get_ic().get_mouse().sig_key_down(), Callback<void()>(this, &App::on_mouse_down));
-	cc.connect(window_center.get_ic().get_mouse().sig_key_dblclk(), Callback<void()>(this, &App::on_mouse_down));
-	cc.connect(window_center.get_ic().get_keyboard().sig_key_up(), Callback<void()>(this, &App::on_input_up));
+	cc.connect(window_center.sig_window_close(), clan::Callback<void()>(this, &App::on_window_close, &window_center));
+	cc.connect(window_center.get_ic().get_mouse().sig_key_down(), clan::Callback<void(const clan::InputEvent&)>(this, &App::on_mouse_down));
+	cc.connect(window_center.get_ic().get_mouse().sig_key_dblclk(), clan::Callback<void(const clan::InputEvent&)>(this, &App::on_mouse_down));
+	cc.connect(window_center.get_ic().get_keyboard().sig_key_up(), clan::Callback<void(const clan::InputEvent&)>(this, &App::on_input_up));
 
 	// Get the canvas
 	clan::Canvas canvas_center(window_center);
