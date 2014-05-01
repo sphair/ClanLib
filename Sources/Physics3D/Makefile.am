@@ -130,11 +130,11 @@ Bullet/LinearMath/btQuickprof.cpp \
 Bullet/LinearMath/btGeometryUtil.cpp \
 Bullet/LinearMath/btAlignedAllocator.cpp \
 Bullet/LinearMath/btPolarDecomposition.cpp \
-precomp.cpp \
 physics3d_shape.cpp \
 physics3d_contact_pair_test.cpp \
 physics3d_sweep_test.cpp \
 physics3d_ray_test.cpp \
+physics3d_constraint.cpp \
 physics3d_contact_test.cpp
 
 libclan31Physics3D_la_LDFLAGS = \
