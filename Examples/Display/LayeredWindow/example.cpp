@@ -99,13 +99,13 @@ int App::start(const std::vector<std::string> &args)
 	// Open the windows
     clan::CallbackContainer cc;
 	clan::DisplayWindow window(desc_window);
-	cc.connect(window.sig_window_close(), {this, &App::on_window_close, &window});
-	cc.connect(window.get_ic().get_mouse().sig_key_down(), {this, &App::on_mouse_down});
-	cc.connect(window.get_ic().get_mouse().sig_key_dblclk(), {this, &App::on_mouse_down});
-	cc.connect(window.get_ic().get_mouse().sig_key_up(), {this, &App::on_mouse_up});
-	cc.connect(window.get_ic().get_mouse().sig_pointer_move(), {this, &App::on_mouse_move, &window});
-	cc.connect(window.sig_lost_focus(), {this, &App::on_lost_focus});
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), {this, &App::on_input_up});
+	cc.connect(window.sig_window_close(), clan::Callback<void()>(this, &App::on_window_close, &window));
+	cc.connect(window.get_ic().get_mouse().sig_key_down(), clan::Callback<void(const clan::InputEvent&)>(this, &App::on_mouse_down));
+	cc.connect(window.get_ic().get_mouse().sig_key_dblclk(), clan::Callback<void(const clan::InputEvent&)>(this, &App::on_mouse_down));
+	cc.connect(window.get_ic().get_mouse().sig_key_up(), clan::Callback<void(const clan::InputEvent&)>(this, &App::on_mouse_up));
+	cc.connect(window.get_ic().get_mouse().sig_pointer_move(), clan::Callback<void(const clan::InputEvent&)>(this, &App::on_mouse_move, &window));
+	cc.connect(window.sig_lost_focus(), clan::Callback<void()>(this, &App::on_lost_focus));
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::Callback<void(const clan::InputEvent&)>(this, &App::on_input_up));
 
 	clan::Canvas canvas(window);
 

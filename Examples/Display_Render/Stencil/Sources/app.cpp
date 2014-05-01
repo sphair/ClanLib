@@ -48,8 +48,8 @@ int App::start(const std::vector<std::string> &args)
 
 	clan::DisplayWindow window(win_desc);
     clan::CallbackContainer cc;
-	cc.connect(window.sig_window_close(), {this, &App::on_window_close});
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), {this, &App::on_input_up});
+	cc.connect(window.sig_window_close(), clan::Callback<void()>(this, &App::on_window_close));
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::Callback<void(const clan::InputEvent&)>(this, &App::on_input_up));
 
 	std::string theme;
 	if (clan::FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))

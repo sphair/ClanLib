@@ -30,10 +30,10 @@ int DemoSimple::run(clan::DisplayWindow &window)
 
     clan::CallbackContainer cc;
 	// Connect the Window close event
-	cc.connect(window.sig_window_close(), {this, &DemoSimple::on_window_close});
+	cc.connect(window.sig_window_close(), clan::Callback<void()>(this, &DemoSimple::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), {this, &DemoSimple::on_input_up});
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::Callback<void(const clan::InputEvent&)>(this, &DemoSimple::on_input_up));
 
 	// Get the graphic context
 	clan::Canvas canvas(window);

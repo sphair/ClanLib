@@ -39,7 +39,7 @@ int App::start(const std::vector<std::string> &args)
 	clan::Canvas canvas(window);
     clan::CallbackContainer cc;
 
-	cc.connect(window.sig_window_close(), {this, &App::window_close});
+	cc.connect(window.sig_window_close(), clan::Callback<void()>(this, &App::window_close));
 
 	// Create offscreen texture
 	clan::Texture2D texture_offscreen(canvas, canvas.get_width(), canvas.get_height());

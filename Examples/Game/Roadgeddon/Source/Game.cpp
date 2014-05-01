@@ -60,12 +60,12 @@ void Game::run()
 	DisplayWindow window(desc);
     CallbackContainer cc;
 	
-	cc.connect(window.sig_window_close(), {this,&Game::on_quit});
-	cc.connect(window.get_ic().get_keyboard().sig_key_down(), {this,&Game::on_key_down});
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), {this,&Game::on_key_up});
-	cc.connect(window.get_ic().get_mouse().sig_pointer_move(), {this,&Game::on_pointer_move});
-	cc.connect(window.get_ic().get_mouse().sig_key_down(), {this,&Game::on_pointer_down});
-	cc.connect(window.get_ic().get_mouse().sig_key_up(), {this,&Game::on_pointer_up});
+	cc.connect(window.sig_window_close(), clan::Callback<void()>(this, &Game::on_quit));
+	cc.connect(window.get_ic().get_keyboard().sig_key_down(), clan::Callback<void(const clan::InputEvent&)>(this, &Game::on_key_down));
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::Callback<void(const clan::InputEvent&)>(this, &Game::on_key_up));
+	cc.connect(window.get_ic().get_mouse().sig_pointer_move(), clan::Callback<void(const clan::InputEvent&)>(this, &Game::on_pointer_move));
+	cc.connect(window.get_ic().get_mouse().sig_key_down(), clan::Callback<void(const clan::InputEvent&)>(this, &Game::on_pointer_down));
+	cc.connect(window.get_ic().get_mouse().sig_key_up(), clan::Callback<void(const clan::InputEvent&)>(this, &Game::on_pointer_up));
 	
 	canvas = Canvas(window);
 	

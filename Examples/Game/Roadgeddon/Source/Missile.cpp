@@ -155,8 +155,8 @@ Missile::Missile(MissileDesc &desc)
 	//___________________________________________________________________
 	//													          C O R E
 
-	cc.connect(game->get_update_sig(), {this,&Missile::update}); 
-	cc.connect(game->get_draw_sig(), {this,&Missile::draw}); 
+	cc.connect(game->get_update_sig(), clan::Callback<void(int)>(this,&Missile::update)); 
+	cc.connect(game->get_draw_sig(), clan::Callback<void(Canvas&)>(this,&Missile::draw)); 
 	should_die = false;
 }
 
