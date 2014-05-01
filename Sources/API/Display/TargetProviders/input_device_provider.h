@@ -34,7 +34,7 @@
 #include "../Window/input_device.h"
 #include "../../Core/System/disposable_object.h"
 #include <memory>
-#include "../../Core/Signals/signal_v1.h"
+#include "../../Core/Signals/signal.h"
 
 namespace clan
 {
@@ -116,7 +116,7 @@ public:
 	/// \brief Initialize input device provider.
 	/** <p>The device field of InputEvent should not be set when emitting events.</p>
 	    <p>Invoking sig_provider_event is thread safe.</p>*/
-	virtual void init(Signal_v1<const InputEvent &> *sig_provider_event) = 0;
+	virtual void init(Signal<const InputEvent &> *sig_provider_event) = 0;
 
 	/// \brief Sets the position of the device.
 	virtual void set_position(int x, int y) = 0;

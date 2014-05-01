@@ -35,6 +35,7 @@
 #include "Display/2D/render_batch_line.h"
 #include "Display/2D/render_batch_line_texture.h"
 #include "Display/2D/render_batch_point.h"
+#include "API/Core/Signals/callbackcontainer.h"
 #include "API/Display/2D/canvas.h"
 #include "API/Display/Window/display_window.h"
 #include "canvas_batcher.h"
@@ -96,13 +97,12 @@ private:
 	void on_window_flip();
 
 	GraphicContext gc;
-
+    CallbackContainer cc;
 
 	std::vector<Mat4f> canvas_modelviews;
 	Mat4f canvas_projection;
 	MapMode canvas_map_mode;
 	Size canvas_size;
-	Slot slot_window_resized;
 
 	DisplayWindow current_window;
 
@@ -110,8 +110,6 @@ private:
 
 	Mat4f user_projection;
 	ClipZRange gc_clip_z_range;
-
-	Slot slot_window_flip;
 };
 
 }

@@ -50,7 +50,7 @@
 #endif
 
 #ifdef WIN32
-#include <windows.h> 
+#include <windows.h>
 #endif
 
 #include <string>
@@ -93,29 +93,9 @@
 #include "Core/ErrorReporting/crash_reporter.h"
 #include "Core/ErrorReporting/detect_hang.h"
 #include "Core/ErrorReporting/exception_dialog.h"
-#include "Core/Signals/callback_0.h"
-#include "Core/Signals/callback_1.h"
-#include "Core/Signals/callback_2.h"
-#include "Core/Signals/callback_3.h"
-#include "Core/Signals/callback_4.h"
-#include "Core/Signals/callback_5.h"
-#include "Core/Signals/callback_6.h"
-#include "Core/Signals/callback_v0.h"
-#include "Core/Signals/callback_v1.h"
-#include "Core/Signals/callback_v2.h"
-#include "Core/Signals/callback_v3.h"
-#include "Core/Signals/callback_v4.h"
-#include "Core/Signals/callback_v5.h"
-#include "Core/Signals/callback_v6.h"
-#include "Core/Signals/signal_v0.h"
-#include "Core/Signals/signal_v1.h"
-#include "Core/Signals/signal_v2.h"
-#include "Core/Signals/signal_v3.h"
-#include "Core/Signals/signal_v4.h"
-#include "Core/Signals/signal_v5.h"
-#include "Core/Signals/signal_v6.h"
-#include "Core/Signals/slot.h"
-#include "Core/Signals/slot_container.h"
+#include "Core/Signals/callback.h"
+#include "Core/Signals/callbackcontainer.h"
+#include "Core/Signals/signal.h"
 #include "Core/Resources/resource.h"
 #include "Core/Resources/resource_container.h"
 #include "Core/Resources/resource_object.h"

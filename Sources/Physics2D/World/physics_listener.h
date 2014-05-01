@@ -29,7 +29,7 @@
 #pragma once
 
 #include "../Box2D/Box2D.h"
-#include "API/Core/Signals/signal_v1.h"
+#include "API/Core/Signals/signal.h"
 #include <list>
 
 namespace clan

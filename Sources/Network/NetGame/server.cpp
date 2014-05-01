@@ -113,19 +113,19 @@ void NetGameServer::listen_thread_main()
 	}
 }
 
-Signal_v1<NetGameConnection *> &NetGameServer::sig_client_connected()
+Signal<NetGameConnection *> &NetGameServer::sig_client_connected()
 {
-	return impl->sig_game_client_connected; 
+	return impl->sig_game_client_connected;
 }
 
-Signal_v2<NetGameConnection *, const std::string &> &NetGameServer::sig_client_disconnected() 
-{ 
-	return impl->sig_game_client_disconnected; 
+Signal<NetGameConnection *, const std::string &> &NetGameServer::sig_client_disconnected()
+{
+	return impl->sig_game_client_disconnected;
 }
 
-Signal_v2<NetGameConnection *, const NetGameEvent &> &NetGameServer::sig_event_received()
-{ 
-	return impl->sig_game_event_received; 
+Signal<NetGameConnection *, const NetGameEvent &> &NetGameServer::sig_event_received()
+{
+	return impl->sig_game_event_received;
 }
 
 void NetGameServer_Impl::process()

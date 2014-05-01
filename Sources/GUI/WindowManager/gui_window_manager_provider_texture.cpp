@@ -54,23 +54,23 @@ GUIWindowManagerProvider_Texture::GUIWindowManagerProvider_Texture(DisplayWindow
 	: site(0), activated_window(0), capture_mouse_window(NULL), display_window(display_window), canvas_window(display_window),
   frame_buffer_initial_setup(false), frame_buffer_stencil_attached(false), frame_buffer_depth_attached(false)
 {
-	slots.connect(display_window.sig_window_close(), this, &GUIWindowManagerProvider_Texture::on_displaywindow_window_close);
+	cc.connect(display_window.sig_window_close(), Callback<void()>(this, &GUIWindowManagerProvider_Texture::on_displaywindow_window_close));
 
 	InputContext ic = display_window.get_ic();
-	slots.connect(ic.get_mouse().sig_key_up(), this, &GUIWindowManagerProvider_Texture::on_input_mouse_up);
-	slots.connect(ic.get_mouse().sig_key_down(), this, &GUIWindowManagerProvider_Texture::on_input_mouse_down);
-	slots.connect(ic.get_mouse().sig_key_dblclk(), this, &GUIWindowManagerProvider_Texture::on_input_mouse_down);
-	slots.connect(ic.get_mouse().sig_pointer_move(), this, &GUIWindowManagerProvider_Texture::on_input_mouse_move);
+    cc.connect(ic.get_mouse().sig_key_up(), Callback<void(const InputEvent&)>(this, &GUIWindowManagerProvider_Texture::on_input_mouse_up));
+    cc.connect(ic.get_mouse().sig_key_down(), Callback<void(const InputEvent&)>(this, &GUIWindowManagerProvider_Texture::on_input_mouse_down));
+    cc.connect(ic.get_mouse().sig_key_dblclk(), Callback<void(const InputEvent&)>(this, &GUIWindowManagerProvider_Texture::on_input_mouse_down));
+    cc.connect(ic.get_mouse().sig_pointer_move(), Callback<void(const InputEvent&)>(this, &GUIWindowManagerProvider_Texture::on_input_mouse_move));
 
-	slots.connect(ic.get_keyboard().sig_key_up(), this, &GUIWindowManagerProvider_Texture::on_input);
-	slots.connect(ic.get_keyboard().sig_key_down(), this, &GUIWindowManagerProvider_Texture::on_input);
+    cc.connect(ic.get_keyboard().sig_key_up(), Callback<void(const InputEvent&)>(this, &GUIWindowManagerProvider_Texture::on_input));
+    cc.connect(ic.get_keyboard().sig_key_down(), Callback<void(const InputEvent&)>(this, &GUIWindowManagerProvider_Texture::on_input));
 
 	for (int tc = 0; tc < ic.get_tablet_count(); ++tc)
 	{
-		slots.connect(ic.get_tablet(tc).sig_axis_move(), this, &GUIWindowManagerProvider_Texture::on_input_mouse_move);
-		slots.connect(ic.get_tablet(tc).sig_key_down(), this, &GUIWindowManagerProvider_Texture::on_input_mouse_down);
-		slots.connect(ic.get_tablet(tc).sig_key_dblclk(), this, &GUIWindowManagerProvider_Texture::on_input_mouse_down);
-		slots.connect(ic.get_tablet(tc).sig_key_up(), this, &GUIWindowManagerProvider_Texture::on_input);
+        cc.connect(ic.get_tablet(tc).sig_axis_move(), Callback<void(const InputEvent&)>(this, &GUIWindowManagerProvider_Texture::on_input_mouse_move));
+        cc.connect(ic.get_tablet(tc).sig_key_down(), Callback<void(const InputEvent&)>(this, &GUIWindowManagerProvider_Texture::on_input_mouse_down));
+        cc.connect(ic.get_tablet(tc).sig_key_dblclk(), Callback<void(const InputEvent&)>(this, &GUIWindowManagerProvider_Texture::on_input_mouse_down));
+        cc.connect(ic.get_tablet(tc).sig_key_up(), Callback<void(const InputEvent&)>(this, &GUIWindowManagerProvider_Texture::on_input));
 	}
 
 	frame_buffer = FrameBuffer(canvas_window);
@@ -167,7 +167,7 @@ void GUIWindowManagerProvider_Texture::on_input_mouse_move(const InputEvent &inp
 	bool capture_mouse_flag = false;
 	if (capture_mouse_window)
 	{
-		// Only capture when left mouse is pressed 
+		// Only capture when left mouse is pressed
 		//(see win32 mouse capture for behaviour http://msdn.microsoft.com/en-us/library/ms646262.aspx )
 // ** Disabled - It seems multiple windows in the same app act differently to microsoft docs **
 //		if (get_display_window(capture_mouse_window).get_ic().get_mouse().get_keycode(mouse_left))
@@ -181,7 +181,7 @@ void GUIWindowManagerProvider_Texture::on_input_mouse_move(const InputEvent &inp
 	if (capture_mouse_flag)
 	{
 		// From MSDN:
-		//   "Only the foreground window can capture the mouse. 
+		//   "Only the foreground window can capture the mouse.
 		//    When a background window attempts to do so, the window receives messages
 		//    only for mouse events that occur when the cursor hot spot is within
 		//    the visible portion of the window."

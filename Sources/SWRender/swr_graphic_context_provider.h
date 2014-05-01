@@ -88,7 +88,7 @@ public:
 	Size get_display_window_size() const;
 	PixelCanvas *get_canvas() const { return canvas.get(); }
 
-	Signal_v1<const Size &> &sig_window_resized() { return window_resized_signal; }
+	Signal<const Size &> &sig_window_resized() { return window_resized_signal; }
 	ProgramObject get_program_object(StandardProgram standard_program) const;
 
 /// \}
@@ -190,7 +190,7 @@ private:
 	VertexAttributeFetcherPtr attribute_fetchers[num_attribute_fetchers];
 	SoftwareProgram_Standard cl_software_program_standard;
 	ProgramObject_SWRender program_object_standard;
-	Signal_v1<const Size &> window_resized_signal;
+	Signal<const Size &> window_resized_signal;
 	std::map<RasterizerStateDescription, std::shared_ptr<RasterizerStateProvider> > rasterizer_states;
 	std::map<BlendStateDescription, std::shared_ptr<BlendStateProvider> > blend_states;
 	std::map<DepthStencilStateDescription, std::shared_ptr<DepthStencilStateProvider> > depth_stencil_states;

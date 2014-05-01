@@ -53,8 +53,8 @@ public:
 	PhysicsContext &get_pc();
 	ResourceManager &get_resources();
 
-	Signal_v1<Canvas &>  get_draw_sig() { return draw_signal; }
-	Signal_v1<int> get_update_sig() { return update_signal; }
+	Signal<Canvas &>  get_draw_sig() { return draw_signal; }
+	Signal<int> get_update_sig() { return update_signal; }
 
 //_________________________________________________________________________________
 //																O P E R A T I O N S
@@ -82,8 +82,8 @@ private:
 	Player *playerP;
 	Map *mapP;
 
-	Signal_v1<Canvas &> draw_signal;
-	Signal_v1<int> update_signal;
+	Signal<Canvas &> draw_signal;
+	Signal<int> update_signal;
 
 	PhysicsContext pc;
 	Canvas canvas;

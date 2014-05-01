@@ -49,7 +49,8 @@ World::World(ResourceManager &resources, DisplayWindow &window) :
 	// requirement, but prevents game from loading them when object is
 	// first time created.
 
-	fnt_clansoft = clan::Font::resource(canvas, FontDescription("Game/fnt_clansoft"), resources);
+	window.get_ic().get_keyboard().sig_key_down().connect({this, &World::on_key_down});
+    fnt_clansoft = clan::Font::resource(canvas, FontDescription("Game/fnt_clansoft"), resources);
 
 	map = new Map(resources, canvas);
 }
@@ -77,8 +78,7 @@ void World::run(DisplayWindow &window)
 	game_display_window = window;
 
 	quit = false;
-	Slot slot_key_down = window.get_ic().get_keyboard().sig_key_down().connect(this, &World::on_key_down);
-
+	
 	// Create map:
 	map->generate_level(51, 51, 20);
 

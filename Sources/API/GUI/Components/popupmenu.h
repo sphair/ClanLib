@@ -109,7 +109,7 @@ public:
 /// \{
 public:
 	/// \brief bool func_close()
-	Callback_v0 &func_close();
+	Callback<void()> &func_close();
 
 /// \}
 /// \name Operations

@@ -305,49 +305,49 @@ ListViewItem ListView::find(int id, bool recursive)
 /////////////////////////////////////////////////////////////////////////////
 // ListView Events:
 
-Callback_v1<ListViewSelection> &ListView::func_selection_changed()
+Callback<void(ListViewSelection)> &ListView::func_selection_changed()
 {
 	impl->cancel_edit();
 
 	return impl->func_selection_changed;
 }
 
-Callback_v1<const ListViewItem &> &ListView::func_item_doubleclick()
+Callback<void(const ListViewItem &)> &ListView::func_item_doubleclick()
 {
 	return impl->func_item_doubleclick;
 }
 
-Callback_2<bool, ListViewItem, std::string &> &ListView::func_item_edited()
+Callback<bool(ListViewItem, std::string &)> &ListView::func_item_edited()
 {
 	return impl->func_item_edited;
 }
 
-Callback_v1<InputEvent&> &ListView::func_key_pressed()
+Callback<void(InputEvent&)> &ListView::func_key_pressed()
 {
 	return impl->func_key_pressed;
 }
 
-Callback_v1<InputEvent&> &ListView::func_key_released()
+Callback<void(InputEvent&)> &ListView::func_key_released()
 {
 	return impl->func_key_released;
 }
 
-Callback_v1<Point> & ListView::func_mouse_right_up()
+Callback<void(Point)> & ListView::func_mouse_right_up()
 {
 	return impl->func_mouse_right_up;
 }
 
-Callback_v1<const ListViewItem &> &ListView::func_item_opened()
+Callback<void(const ListViewItem &)> &ListView::func_item_opened()
 {
 	return impl->func_item_opened;
 }
 
-Callback_v1<const ListViewItem &> &ListView::func_item_closed()
+Callback<void(const ListViewItem &)> &ListView::func_item_closed()
 {
 	return impl->func_item_closed;
 }
 
-Callback_v0 &ListView::func_begin_drag()
+Callback<void()> &ListView::func_begin_drag()
 {
 	return impl->func_begin_drag;
 }

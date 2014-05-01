@@ -74,17 +74,17 @@ std::vector<GUIWindowManagerTextureWindow> GUIWindowManagerTexture::get_windows(
 /////////////////////////////////////////////////////////////////////////////
 // GUIWindowManagerTexture Events:
 
-Callback_v0 &GUIWindowManagerTexture::func_repaint()
+Callback<void()> &GUIWindowManagerTexture::func_repaint()
 {
 	return get_provider()->func_repaint;
 }
 
-Callback_v1<FrameBuffer &> &GUIWindowManagerTexture::func_setup_framebuffer()
+Callback<void(FrameBuffer &)> &GUIWindowManagerTexture::func_setup_framebuffer()
 {
 	return get_provider()->func_setup_framebuffer;
 }
 
-Callback_v1<InputEvent &> &GUIWindowManagerTexture::func_input_intercept()
+Callback<void(InputEvent &)> &GUIWindowManagerTexture::func_input_intercept()
 {
 	return get_provider()->func_input_intercept;
 }

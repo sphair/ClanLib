@@ -60,7 +60,7 @@ public:
 
 	std::weak_ptr<ListViewColumnHeader_Impl> prev_sibling;
 
-	Callback_v1<ListViewColumnHeader> func_size_changed;
+	Callback<void(ListViewColumnHeader)> func_size_changed;
 
 	int width;
 };

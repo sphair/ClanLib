@@ -145,12 +145,12 @@ std::string GUIManager::get_clipboard_text() const
 /////////////////////////////////////////////////////////////////////////////
 // GUIManager Events:
 
-Signal_v1<std::shared_ptr<GUIMessage> &> &GUIManager::sig_filter_message()
+Signal<std::shared_ptr<GUIMessage> &> &GUIManager::sig_filter_message()
 {
 	return impl->sig_filter_message;
 }
 
-Callback_0<int> &GUIManager::func_exec_handler()
+Callback<int()> &GUIManager::func_exec_handler()
 {
 	return impl->func_exec_handler;
 }

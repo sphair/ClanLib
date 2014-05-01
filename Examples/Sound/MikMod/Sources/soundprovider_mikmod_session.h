@@ -4,8 +4,10 @@
 #include "soundprovider_mikmod.h"
 #include "module_reader.h"
 
+namespace clan{
+class IODevice;
+}
 class SoundProvider_MikMod_Impl;
-class clan::IODevice;
 
 class SoundProvider_MikMod_Session : public clan::SoundProvider_Session
 {

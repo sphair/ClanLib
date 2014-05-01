@@ -28,6 +28,7 @@
 */
 
 #include "GUI/precomp.h"
+#include "API/Core/Signals/callbackcontainer.h"
 #include "API/Core/Text/string_format.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_manager.h"
@@ -60,8 +61,7 @@ public:
 	ToolTip *tooltip;
 	Timer timer_show_delayed;
 	std::string text;
-
-	Slot slot_filter_message;
+    CallbackContainer cc;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -76,7 +76,7 @@ ToolTip::ToolTip(GUIManager manager)
 	func_render().set(impl.get(), &ToolTip_Impl::on_render);
 
 	impl->timer_show_delayed.func_expired().set(impl.get(), &ToolTip_Impl::on_show_delayed);
-	impl->slot_filter_message = get_gui_manager().sig_filter_message().connect(impl.get(), &ToolTip_Impl::on_filter_message);
+    impl->cc.connect(get_gui_manager().sig_filter_message(), Callback<void(std::shared_ptr<GUIMessage> &message)>(impl.get(), &ToolTip_Impl::on_filter_message));
 }
 
 ToolTip::~ToolTip()

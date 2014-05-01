@@ -97,14 +97,15 @@ int App::start(const std::vector<std::string> &args)
 	desc_window.set_size(clan::Size(600, 600), false);
 
 	// Open the windows
+    clan::CallbackContainer cc;
 	clan::DisplayWindow window(desc_window);
-	clan::Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close, &window);
-	clan::Slot slot_mouse_down = (window.get_ic().get_mouse()).sig_key_down().connect(this, &App::on_mouse_down);
-	clan::Slot slot_mouse_dblclk = (window.get_ic().get_mouse()).sig_key_dblclk().connect(this, &App::on_mouse_down);
-	clan::Slot slot_mouse_up = (window.get_ic().get_mouse()).sig_key_up().connect(this, &App::on_mouse_up);
-	clan::Slot slot_mouse_move = (window.get_ic().get_mouse()).sig_pointer_move().connect(this, &App::on_mouse_move, &window);
-	clan::Slot slot_lost_focus = window.sig_lost_focus().connect(this, &App::on_lost_focus);
-	clan::Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
+	cc.connect(window.sig_window_close(), {this, &App::on_window_close, &window});
+	cc.connect(window.get_ic().get_mouse().sig_key_down(), {this, &App::on_mouse_down});
+	cc.connect(window.get_ic().get_mouse().sig_key_dblclk(), {this, &App::on_mouse_down});
+	cc.connect(window.get_ic().get_mouse().sig_key_up(), {this, &App::on_mouse_up});
+	cc.connect(window.get_ic().get_mouse().sig_pointer_move(), {this, &App::on_mouse_move, &window});
+	cc.connect(window.sig_lost_focus(), {this, &App::on_lost_focus});
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), {this, &App::on_input_up});
 
 	clan::Canvas canvas(window);
 

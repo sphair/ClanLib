@@ -69,12 +69,8 @@ private:
 	void onMouseMove(const clan::InputEvent &key);
 	void on_window_close();
 
-	clan::Slot slotMouseDown;
-	clan::Slot slotMouseUp;
-	clan::Slot slotMouseDblClick;
-	clan::Slot slotMouseMove;
-	clan::Slot slotKeyDown;
-	
+    clan::CallbackContainer cc;
+
 	clan::Image background;
 	
 	bool dragging;

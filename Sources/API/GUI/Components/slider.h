@@ -177,18 +177,18 @@ public:
 
 public:
 	/// \brief Emitted while the slider is being moved.
-	Callback_v0 &func_value_changed();
+	Callback<void()> &func_value_changed();
 
 	/// \brief Emitted when the slider value is decremented (while moving or when clicking the track).
 	/** Invoked while moving or when clicking the track.*/
-	Callback_v0 &func_value_decremented();
+	Callback<void()> &func_value_decremented();
 
 	/// \brief Emitted when the slider value is incremented.
 	/** Invoked while moving or when clicking the track.*/
-	Callback_v0 &func_value_incremented();
+	Callback<void()> &func_value_incremented();
 
 	/// \brief Emitted after the slider has been moved.
-	Callback_v0 &func_slider_moved();
+	Callback<void()> &func_slider_moved();
 
 /// \}
 /// \name Implementation

@@ -108,7 +108,7 @@ PixelBuffer ImageImportDescription::process(PixelBuffer &image) const
 /////////////////////////////////////////////////////////////////////////////
 // ImageImportDescription callbacks:
 
-Callback_1<PixelBuffer, PixelBuffer &> &ImageImportDescription::func_process()
+Callback<PixelBuffer(PixelBuffer &)> &ImageImportDescription::func_process()
 {
 	return impl->func_process;
 }

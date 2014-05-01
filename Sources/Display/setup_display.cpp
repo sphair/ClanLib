@@ -97,7 +97,7 @@ void SetupDisplay_Impl::init()
 	targa_provider = new ProviderType_Register<TargaProvider>("targa");
 	tga_provider   = new ProviderType_Register<TargaProvider>("tga");
 
-	XMLResourceManager::add_cache_factory(Callback_v2<ResourceManager &, const XMLResourceDocument &>(&SetupDisplay_Impl::add_cache_factory));
+	XMLResourceManager::add_cache_factory(Callback<void(ResourceManager &, const XMLResourceDocument &)>(&SetupDisplay_Impl::add_cache_factory));
 }
 
 void SetupDisplay_Impl::deinit()

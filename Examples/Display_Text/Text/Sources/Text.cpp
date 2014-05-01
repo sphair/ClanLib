@@ -70,12 +70,13 @@ int ExampleText::start(const std::vector<std::string> &args)
 	desc.set_title("ClanLib SpanLayout Example");
 	desc.set_size(clan::Size(800, 600), true);
 	clan::DisplayWindow window(desc);
+    clan::CallbackContainer cc;
 
 	// Connect the Window close event
-	clan::Slot slot_quit = window.sig_window_close().connect(this, &ExampleText::on_window_close);
+	cc.connect(window.sig_window_close(), {this, &ExampleText::on_window_close});
 
 	// Connect a keyboard handler to on_key_up()
-	clan::Slot slot_keyboard_up = window.get_ic().get_keyboard().sig_key_up().connect(this, &ExampleText::on_keyboard_up);
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), {this, &ExampleText::on_keyboard_up});
 
 	clan::Canvas canvas(window);
 

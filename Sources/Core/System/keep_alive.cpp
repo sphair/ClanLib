@@ -45,9 +45,9 @@ public:
 void cl_alloc_tls_keep_alive_slot();
 void cl_set_keep_alive_vector(std::vector<KeepAliveObject *> *v);
 std::vector<KeepAliveObject *> *cl_get_keep_alive_vector();
-Callback_2<int /*retval*/, const std::vector<Event> &/*events*/, int /*timeout */ > cl_keepalive_func_event_wait;
-Callback_0<void *> cl_keepalive_func_thread_id;
-Callback_v1<void *> cl_keepalive_func_awake_thread;
+Callback<int /*retval*/(const std::vector<Event> &/*events*/, int /*timeout */)> cl_keepalive_func_event_wait;
+Callback<void *()> cl_keepalive_func_thread_id;
+Callback<void(void *)> cl_keepalive_func_awake_thread;
 
 void KeepAlive::process(int timeout)
 {
@@ -100,17 +100,17 @@ void KeepAlive::process(int timeout)
 	}
 }
 
-Callback_2<int /*retval*/, const std::vector<Event> &/*events*/, int /*timeout */ > &KeepAlive::func_event_wait()
+Callback<int /*retval*/(const std::vector<Event> &/*events*/, int /*timeout */)> &KeepAlive::func_event_wait()
 {
 	return cl_keepalive_func_event_wait;
 }
 
-Callback_0<void *> &KeepAlive::func_thread_id()
+Callback<void *()> &KeepAlive::func_thread_id()
 {
     return cl_keepalive_func_thread_id;
 }
 
-Callback_v1<void *> &KeepAlive::func_awake_thread()
+Callback<void(void *)> &KeepAlive::func_awake_thread()
 {
     return cl_keepalive_func_awake_thread;
 }

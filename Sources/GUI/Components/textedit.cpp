@@ -324,32 +324,32 @@ void TextEdit::set_cursor_pos(int pos)
 /////////////////////////////////////////////////////////////////////////////
 // TextEdit Events:
 
-Callback_v1<InputEvent &> &TextEdit::func_before_edit_changed()
+Callback<void(InputEvent &)> &TextEdit::func_before_edit_changed()
 {
 	return impl->func_before_edit_changed;
 }
 
-Callback_v1<InputEvent &> &TextEdit::func_after_edit_changed()
+Callback<void(InputEvent &)> &TextEdit::func_after_edit_changed()
 {
 	return impl->func_after_edit_changed;
 }
 
-Callback_v0 &TextEdit::func_selection_changed()
+Callback<void()> &TextEdit::func_selection_changed()
 {
 	return impl->func_selection_changed;
 }
 
-Callback_v0 &TextEdit::func_focus_gained()
+Callback<void()> &TextEdit::func_focus_gained()
 {
 	return impl->func_focus_gained;
 }
 
-Callback_v0 & TextEdit::func_focus_lost()
+Callback<void()> & TextEdit::func_focus_lost()
 {
 	return impl->func_focus_lost;
 }
 
-Callback_v0 &TextEdit::func_enter_pressed()
+Callback<void()> &TextEdit::func_enter_pressed()
 {
 	return impl->func_enter_pressed;
 }

@@ -54,7 +54,7 @@ public:
 	bool srgb;
 	bool cached;
 
-	Callback_1<PixelBuffer, PixelBuffer &> func_process;
+	Callback<PixelBuffer(PixelBuffer &)> func_process;
 
 /// \}
 };

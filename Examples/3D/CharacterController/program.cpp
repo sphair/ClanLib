@@ -23,10 +23,12 @@ int Program::main(const std::vector<std::string> &args)
 
 	DisplayWindow window("Scene3D Example", 1600, 900, false, true);
 
+    CallbackContainer cc;
 	GraphicContext gc = window.get_gc();
 
 	bool exit = false;
-	Slot slot_close = window.sig_window_close().connect_functor([&exit]() { exit = true; });
+
+    cc.connect(window.sig_window_close(), {[&exit]() { exit = true; }});
 
 	ResourceManager resources;
 	SceneCache::set(resources, std::shared_ptr<SceneCache>(new ExampleSceneCache()));

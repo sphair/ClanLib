@@ -37,10 +37,9 @@
 	<h2>Signals and callbacks</h2>
 
 	<ul>
-		<li>clan::Signal_v0, clan::Signal_v1, clan::Signal_v2, clan::Signal_v3, clan::Signal_v4, clan::Signal_v5, clan::Signal_v6</li>
-		<li>clan::Slot, clan::SlotContainer</li>
-		<li>clan::Callback_v0, clan::Callback_v1, clan::Callback_v2, clan::Callback_v3, clan::Callback_v4, clan::Callback_v5, clan::Callback_v6</li>
-		<li>clan::Callback_0, clan::Callback_1, clan::Callback_2, clan::Callback_3, clan::Callback_4, clan::Callback_5, clan::Callback_6</li>
+		<li>clan::Callback</li>
+		<li>clan::Signal</li>
+		<li>clan::CallbackContainer</li>
 	</ul>
 
 	<h2>Math</h2>

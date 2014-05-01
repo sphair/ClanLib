@@ -23,67 +23,63 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
+**    Marcel Hellwig
 */
-
 
 #pragma once
 
-#include "../api_core.h"
-#include "signals_impl.h"
+#include <algorithm>
+#include <memory>
+#include <vector>
+#include "callback.h"
 
 namespace clan
 {
 /// \addtogroup clanCore_Signals clanCore Signals
 /// \{
 
-/// \brief Slot
-class CL_API_CORE Slot
+/// \brief Signal
+template<class... Params>
+class Signal
 {
-/// \name Construction
-/// \{
-
 public:
-	Slot()
-	{ return; }
+    /// \name Construction
+    /// \{
+    Signal()
+    : impl(new std::vector<Callback<void(Params...)>>()) { return; }
 
-	Slot(const std::shared_ptr<SlotCallback> &callback)
-	: impl(new Slot_Impl) { impl->callback = callback; }
+    Signal(const Signal &copy)
+    : impl(copy.impl) { return; }
 
+    /// \}
+    /// \name Operations
+    /// \{
 
-/// \}
-/// \name Operations
-/// \{
+    void connect(const Callback<void(Params...)> &callback)
+    {
+        impl->push_back(callback);
+    }
 
-public:
-	void destroy()
-	{
-		if (impl && impl->callback)
-			impl->callback->valid = false;
-	}
+    void disconnect(const Callback<void(Params...)> &callback)
+    {
+        impl->erase(std::remove(impl->begin(), impl->end(), callback), impl->end());
+    }
 
-	void enable()
-	{
-		if (impl && impl->callback)
-			impl->callback->enabled = true;
-	}
+    void invoke(const Params & ... params) const
+    {
+        for(auto &cb : std::vector<Callback<void(Params...)>>(*impl))
+            if(!cb.is_null())
+                cb.invoke(params...);
+    }
 
-	void disable()
-	{
-		if (impl && impl->callback)
-			impl->callback->enabled = false;
-	}
+    /// \}
+    /// \name Implementation
+    /// \{
 
-
-/// \}
-/// \name Implementation
-/// \{
-
-public:
-	std::shared_ptr<Slot_Impl> impl;
+private:
+    std::shared_ptr<std::vector<Callback<void(Params...)>>> impl;
 /// \}
 };
 
 }
-
 /// \}

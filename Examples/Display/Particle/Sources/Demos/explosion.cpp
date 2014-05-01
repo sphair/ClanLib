@@ -18,14 +18,15 @@ explosion effects.
 
 int DemoExplosion::run(clan::DisplayWindow &window)
 {
+    clan::CallbackContainer cc;
 	window.set_title("LinearParticle Example - Explosion ");
 
-	clan::Slot slot_quit = window.sig_window_close().connect(this, &DemoExplosion::on_window_close);
+	cc.connect(window.sig_window_close(), {this, &DemoExplosion::on_window_close});
 	clan::Canvas canvas(window);
 
-	clan::Slot slot_key_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &DemoExplosion::on_key_up);
-	clan::Slot slot_mouse_up = (window.get_ic().get_mouse()).sig_key_down().connect(this, &DemoExplosion::on_mouse_down);
-	clan::Slot slot_mouse_dblclk = (window.get_ic().get_mouse()).sig_key_dblclk().connect(this, &DemoExplosion::on_mouse_down);
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), {this, &DemoExplosion::on_key_up});
+	cc.connect(window.get_ic().get_mouse().sig_key_down(), {this, &DemoExplosion::on_mouse_down});
+	cc.connect(window.get_ic().get_mouse().sig_key_dblclk(), {this, &DemoExplosion::on_mouse_down});
 
 	window.hide_cursor();
 

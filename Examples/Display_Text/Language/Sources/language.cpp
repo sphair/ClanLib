@@ -58,10 +58,11 @@ int Language::start(const std::vector<std::string> &args)
 	clan::DisplayWindow window(desc);
 
 	// Connect the Window close event
-	clan::Slot slot_quit = window.sig_window_close().connect(this, &Language::on_window_close);
+    clan::CallbackContainer cc;
+	cc.connect(window.sig_window_close(), {this, &Language::on_window_close});
 
 	// Connect a keyboard handler to on_key_up()
-	clan::Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &Language::on_input_up);
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), {this, &Language::on_input_up});
 
 	// Get the graphic context
 	clan::Canvas canvas(window);
@@ -72,16 +73,16 @@ int Language::start(const std::vector<std::string> &args)
 	if (document_element.is_null())
 		throw clan::Exception("Cannot obtain the document element");
 
-	clan::Font font_english(canvas, "arial", 32);
+	clan::Font font_english(canvas, "dejavu", 32);
 
 	clan::FontDescription desc_chinese;
-	desc_chinese.set_typeface_name("simsun");
+	desc_chinese.set_typeface_name("dejavu");
 	desc_chinese.set_height(48);
 	desc_chinese.set_charset(clan::FontDescription::charset_chinesebig5);
 	clan::Font font_chinese(canvas, desc_chinese);
 
 	clan::FontDescription desc_arabic;
-	desc_arabic.set_typeface_name("arial");
+	desc_arabic.set_typeface_name("dejavu");
 	desc_arabic.set_height(48);
 	desc_arabic.set_charset(clan::FontDescription::charset_arabic);
 	clan::Font font_arabic(canvas, desc_arabic);

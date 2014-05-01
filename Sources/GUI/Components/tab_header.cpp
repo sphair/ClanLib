@@ -71,7 +71,7 @@ public:
 
 	GUIThemePart part_focus;
 	std::vector<Handle> tabs;
-	Callback_v1<TabPage*> func_page_selected;
+	Callback<void(TabPage*)> func_page_selected;
 	TabHeader *component;
 	Colorf text_color;
 	int first_tab_x_offset;
@@ -198,7 +198,7 @@ void TabHeader::select_page(int index)
 /////////////////////////////////////////////////////////////////////////////
 // TabHeader Callbacks:
 
-Callback_v1<TabPage*> &TabHeader::func_page_selected()
+Callback<void(TabPage*)> &TabHeader::func_page_selected()
 {
 	return impl->func_page_selected;
 }
