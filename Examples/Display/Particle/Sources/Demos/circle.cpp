@@ -20,9 +20,9 @@ int DemoCircle::run(clan::DisplayWindow &window)
 {
 	window.set_title("LinearParticle Example - Circle ");
     clan::CallbackContainer cc;
-	cc.connect(window.sig_window_close(), {this, &DemoCircle::on_window_close});
+	cc.connect(window.sig_window_close(), Callback<void()>(this, &DemoCircle::on_window_close));
 	clan::Canvas canvas(window);
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), {this, &DemoCircle::on_key_up});
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), Callback<void()>(this, &DemoCircle::on_key_up));
 
 	// initialize LinearParticle
 	L_ParticleSystem::init();

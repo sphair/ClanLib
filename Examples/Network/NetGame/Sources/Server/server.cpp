@@ -6,9 +6,9 @@ Server::Server()
 : next_user_id(1)
 {
 	// Connect essential signals - connecting, disconnecting and receiving events
-	cc.connect(network_server.sig_client_connected(), {this, &Server::on_client_connected});
-	cc.connect(network_server.sig_client_disconnected(), {this, &Server::on_client_disconnected});
-	cc.connect(network_server.sig_event_received(), {this, &Server::on_event_received});
+	cc.connect(network_server.sig_client_connected(), Callback<void()>(this, &Server::on_client_connected));
+	cc.connect(network_server.sig_client_disconnected(), Callback<void()>(this, &Server::on_client_disconnected));
+	cc.connect(network_server.sig_event_received(), Callback<void()>(this, &Server::on_event_received));
 
 	// Set up event dispatchers to route incoming events to functions
 	login_events.func_event("Login").set(this, &Server::on_event_login);

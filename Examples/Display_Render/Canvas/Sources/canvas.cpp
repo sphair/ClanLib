@@ -42,14 +42,14 @@ int ExampleCanvas::start(const std::vector<std::string> &args)
 	DisplayWindow window(desc);
     clan::CallbackContainer cc;
 	// Connect the Window close event
-	cc.connect(window.sig_window_close(), {this, &ExampleCanvas::on_window_close});
+	cc.connect(window.sig_window_close(), Callback<void()>(this, &ExampleCanvas::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), {this, &ExampleCanvas::on_keyboard_up});
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), Callback<void()>(this, &ExampleCanvas::on_keyboard_up));
 
 	// Connect a mouse handler to on_key_down()
-    cc.connect(window.get_ic().get_mouse().sig_key_up(), {this, &ExampleCanvas::on_mouse_down});
-	cc.connect(window.get_ic().get_mouse().sig_pointer_move(), {this, &ExampleCanvas::on_mouse_move});
+    cc.connect(window.get_ic().get_mouse().sig_key_up(), Callback<void()>(this, &ExampleCanvas::on_mouse_down));
+	cc.connect(window.get_ic().get_mouse().sig_pointer_move(), Callback<void()>(this, &ExampleCanvas::on_mouse_move));
 
 	canvas_window = Canvas(window);
 

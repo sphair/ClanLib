@@ -46,10 +46,10 @@ int SineScroll::start(const std::vector<std::string> &args)
     clan::CallbackContainer cc;
 
 	// Connect the Window close event
-	cc.connect(window.sig_window_close(), {this, &SineScroll::on_window_close});
+	cc.connect(window.sig_window_close(), Callback<void()>(this, &SineScroll::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), {this, &SineScroll::on_input_up});
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), Callback<void()>(this, &SineScroll::on_input_up));
 
 	clan::Canvas canvas(window);
 
