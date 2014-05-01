@@ -49,7 +49,7 @@ namespace clan
 MenuModalLoop::MenuModalLoop(GUIManager manager)
 : owner(0), menubar(0), running(false), ignore_menubar_mouse_up(true), popup(false)
 {
-    cc.connect(manager.sig_filter_message(), {this, &MenuModalLoop::on_filter_message});
+    cc.connect(manager.sig_filter_message(), Callback<void(std::shared_ptr<GUIMessage> &message)>(this, &MenuModalLoop::on_filter_message));
 }
 
 MenuModalLoop::~MenuModalLoop()
