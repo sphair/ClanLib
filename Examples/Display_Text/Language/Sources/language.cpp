@@ -59,10 +59,10 @@ int Language::start(const std::vector<std::string> &args)
 
 	// Connect the Window close event
     clan::CallbackContainer cc;
-	cc.connect(window.sig_window_close(), {this, &Language::on_window_close});
+	cc.connect(window.sig_window_close(), Callback<void()>(this, &Language::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), {this, &Language::on_input_up});
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), Callback<void()>(this, &Language::on_input_up));
 
 	// Get the graphic context
 	clan::Canvas canvas(window);

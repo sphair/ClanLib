@@ -47,10 +47,10 @@ int ExampleCanvas::start(const std::vector<std::string> &args)
 
 	// Connect Slots
     clan::CallbackContainer cc;
-	cc.connect(window.sig_window_close(), {this, &ExampleCanvas::on_window_close});
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), {this, &ExampleCanvas::on_keyboard_up});
-	cc.connect(window.get_ic().get_mouse().sig_key_up(), {this, &ExampleCanvas::on_mouse_up});
-	cc.connect(window.get_ic().get_mouse().sig_pointer_move(), {this, &ExampleCanvas::on_mouse_move});
+	cc.connect(window.sig_window_close(), Callback<void()>(this, &ExampleCanvas::on_window_close));
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), Callback<void()>(this, &ExampleCanvas::on_keyboard_up));
+	cc.connect(window.get_ic().get_mouse().sig_key_up(), Callback<void()>(this, &ExampleCanvas::on_mouse_up));
+	cc.connect(window.get_ic().get_mouse().sig_pointer_move(), Callback<void()>(this, &ExampleCanvas::on_mouse_move));
 
 	// Load the surfaces
 	// -- This is our ground texture.

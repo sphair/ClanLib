@@ -73,10 +73,10 @@ int App::start(const std::vector<std::string> &args)
     CallbackContainer cc;
 
 	// Connect the Window close event
-	cc.connect(window.sig_window_close(), {this, &App::on_window_close});
+	cc.connect(window.sig_window_close(), Callback<void()>(this, &App::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), {this, &App::on_input_up});
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), Callback<void()>(this, &App::on_input_up));
 
 	// Set up GUI
 	std::string theme;

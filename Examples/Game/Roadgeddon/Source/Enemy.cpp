@@ -88,7 +88,7 @@ Enemy::Enemy(Game &game_)
 	//enemy->get_alignment(origin,x,y);
 
 	update_callback = {std::bind(&Enemy::update, this, std::placeholders::_1)};
-	cc.connect(game_.get_draw_sig(), {this,&Enemy::draw});
+	cc.connect(game_.get_draw_sig(), Callback<void()>(this,&Enemy::draw));
     cc.connect(game_.get_update_sig(), update_callback);
 
 //__________________________________________________________________________
