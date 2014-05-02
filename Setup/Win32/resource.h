@@ -45,16 +45,16 @@
 #define IDC_CHECK_INCLUDE_MTDLL         1022
 #define IDC_CHECK3                      1023
 #define IDC_CHECK_INCLUDE_DLL           1024
-#define IDC_RADIO_VC90                  1025
+//#define IDC_RADIO_VC90                  1025
 #define IDC_CHECK_INCLUDE_NONUNICODE    1026
 #define IDC_CHECK_INCLUDE_X64           1027
-#define IDC_RADIO_VC100                 1028
+//#define IDC_RADIO_VC100                 1028
 #define IDC_CHECK_INCLUDE_SSE2          1029
 #define IDC_CHECK_INCLUDE_INTRINSICS    1030
 #define IDC_CHECK_DEBUG_OPTIMIZE        1031
 #define IDC_CHECK_WHOLE_PROGRAM_OPTIMIZE 1032
-#define IDC_RADIO_VC110                 1033
-#define IDC_RADIO_VC12                  1034
+//#define IDC_RADIO_VC110                 1033
+//#define IDC_RADIO_VC12                  1034
 #define IDC_RADIO_VC120                 1034
 
 // Next default values for new objects
