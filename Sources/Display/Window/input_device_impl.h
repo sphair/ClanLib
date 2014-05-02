@@ -43,7 +43,7 @@ public:
 	InputDevice_Impl()
 	: provider(0)
 	{
-		cc.connect(sig_provider_event, {this, &InputDevice_Impl::on_provider_event});
+		cc.connect(sig_provider_event, Callback<void(const InputEvent &)>{ this, &InputDevice_Impl::on_provider_event });
 	}
 
 	~InputDevice_Impl()

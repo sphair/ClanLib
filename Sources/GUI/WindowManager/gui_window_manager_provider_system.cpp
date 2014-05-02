@@ -138,7 +138,6 @@ void GUIWindowManagerProvider_System::create_window(
         if (used_cached_windows <= cached_windows.size())
         {
             top_level_window = cached_windows[used_cached_windows-1];
-            top_level_window->cc = CallbackContainer();
             cache_window_handles[handle] = top_level_window->window.get_hwnd();
         }
         else
