@@ -65,7 +65,6 @@ private:
 	std::string detail_text;
 	
 	GUIThemePart part_icon;
-	GUIComponent *component;
 	PushButton *button_ok;
 	PushButton *button_cancel;
 	PushButton *button_yes;
