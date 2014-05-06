@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C++ Express 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tls", "tls-vc2013.vcxproj", "{E413D9A0-1CEB-4EA7-A7DF-7D796A554331}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E413D9A0-1CEB-4EA7-A7DF-7D796A554331}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E413D9A0-1CEB-4EA7-A7DF-7D796A554331}.Debug|Win32.Build.0 = Debug|Win32
+		{E413D9A0-1CEB-4EA7-A7DF-7D796A554331}.Release|Win32.ActiveCfg = Release|Win32
+		{E413D9A0-1CEB-4EA7-A7DF-7D796A554331}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
