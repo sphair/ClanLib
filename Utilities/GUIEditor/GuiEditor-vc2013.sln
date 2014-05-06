@@ -1,5 +1,5 @@
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual C++ Express 2013
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GuiEditorApp", "GuiEditor-vc2013.vcxproj", "{5C1AAF8C-7FF0-447E-B01D-AED0A0B2849F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GuiEditorLib", "GuiEditorLib-vc2013.vcxproj", "{043694A3-5F8F-4BE1-AEF7-CBB8DE5F7BB2}"

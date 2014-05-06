@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C++ Express 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual C++ Express 2013
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HSVExample", "HSVExample-vc2013.vcxproj", "{F9064476-6989-4521-9E0A-2D758FB584DE}"
 EndProject
 Global

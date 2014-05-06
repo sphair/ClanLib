@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C++ Express 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual C++ Express 2013
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Text", "Text-vc2013.vcxproj", "{903374C5-87EA-4010-BD44-95D54D95D234}"
 EndProject
 Global
