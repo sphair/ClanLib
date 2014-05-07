@@ -34,7 +34,8 @@
 
 namespace clan {
 
-namespace {
+// Disabled below to stop the Suse Linux warning: 'clan::Callback<void()>' has a field 'clan::Callback<void()>::impl' whose type uses the anonymous namespace [enabled by default]
+//namespace {
 
 class AutoDisconnector
 {
@@ -61,7 +62,7 @@ private:
     Callback<void(Args...)> callback;
 };
 
-}
+//}
 
 class CallbackContainer
 {
