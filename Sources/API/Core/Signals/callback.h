@@ -36,8 +36,9 @@ namespace clan
     /// \addtogroup clanCore_Signals clanCore Signals
     /// \{
 
-    namespace
-    {
+// Disabled below to stop the Suse Linux warning: 'clan::Callback<void()>' has a field 'clan::Callback<void()>::impl' whose type uses the anonymous namespace [enabled by default]
+	//namespace {
+
         /// (Internal ClanLib Class)
         template<class Res, class... Params>
         class Callback_impl
@@ -78,7 +79,7 @@ namespace clan
             const std::function<Res(Params..., UserData)> func;
             const UserData userdata;
         };
-    }
+   // }
 
     /// (Internal ClanLib Class)
     template<class... Args>
