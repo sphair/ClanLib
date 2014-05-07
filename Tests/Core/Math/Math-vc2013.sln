@@ -1,5 +1,5 @@
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C++ Express 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual C++ Express 2013
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Math", "Math-vc2013.vcxproj", "{DD0EC1F8-78BC-4FAE-9870-BC48245C3B0C}"
 EndProject
 Global

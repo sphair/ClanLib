@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C++ Express 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual C++ Express 2013
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tls", "tls-vc2013.vcxproj", "{E413D9A0-1CEB-4EA7-A7DF-7D796A554331}"
 EndProject
 Global
