@@ -524,7 +524,7 @@ inline void XMLTokenizer_Impl::unescape(std::string &text, const std::string &se
 
 		std::string::size_type copy_size = length - (next_match + search_length);
 		if (copy_size > 0)
-			memcpy(&text[next_match + 1], &text[next_match + search_length], copy_size * sizeof(std::string::value_type));
+			memmove(&text[next_match + 1], &text[next_match + search_length], copy_size * sizeof(std::string::value_type));
 		text[next_match] = replace;
 		length -= search_length - 1;
 		read_pos = next_match + 1;
