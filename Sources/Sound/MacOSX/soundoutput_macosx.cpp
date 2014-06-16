@@ -34,6 +34,22 @@
 namespace clan
 {
 
+inline UInt32 CalculateLPCMFlags (
+                                  UInt32 inValidBitsPerChannel,
+                                  UInt32 inTotalBitsPerChannel,
+                                  bool inIsFloat,
+                                  bool inIsBigEndian,
+                                  bool inIsNonInterleaved = false
+                                  ) {
+    return
+    (inIsFloat ? kAudioFormatFlagIsFloat : kAudioFormatFlagIsSignedInteger) |
+    (inIsBigEndian ? ((UInt32)kAudioFormatFlagIsBigEndian) : 0)             |
+    ((!inIsFloat && (inValidBitsPerChannel == inTotalBitsPerChannel)) ?
+     kAudioFormatFlagIsPacked : kAudioFormatFlagIsAlignedHigh)           |
+    (inIsNonInterleaved ? ((UInt32)kAudioFormatFlagIsNonInterleaved) : 0);
+}
+    
+    
 SoundOutput_MacOSX::SoundOutput_MacOSX(int frequency, int latency)
 : SoundOutput_Impl(frequency, latency), frequency(frequency), latency(latency), fragment_size(0), next_fragment(0), read_cursor(0), fragments_available(0)
 {
@@ -41,7 +57,8 @@ SoundOutput_MacOSX::SoundOutput_MacOSX(int frequency, int latency)
     fragment_size = (fragment_size + 3) & ~3; // Force to be a multiple of 4
     fragments_available = fragment_buffer_count;
     fragment_data = DataBuffer(fragment_size * sizeof(short) * 2 * fragment_buffer_count);
-        
+    
+    audio_format = {0};
     start_mixer_thread();
 }
 
@@ -54,12 +71,12 @@ void SoundOutput_MacOSX::mixer_thread_starting()
 {
     audio_format.mSampleRate = frequency;
     audio_format.mFormatID = kAudioFormatLinearPCM;
-    audio_format.mFormatFlags = kAudioFormatFlagsCanonical;
+    audio_format.mFormatFlags = CalculateLPCMFlags(8*sizeof(short),8*sizeof(short),false,false,false);
     audio_format.mBytesPerPacket = 2 * sizeof(short);
     audio_format.mFramesPerPacket = 1;
     audio_format.mBytesPerFrame = 2 * sizeof(short);
     audio_format.mChannelsPerFrame = 2;
-    audio_format.mBitsPerChannel = sizeof(short) * 8;
+    audio_format.mBitsPerChannel = 8 * sizeof (short);
     audio_format.mReserved = 0;
 
     OSStatus result = AudioQueueNewOutput(&audio_format, &SoundOutput_MacOSX::static_audio_queue_callback, this, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode, 0, &audio_queue);
@@ -73,7 +90,9 @@ void SoundOutput_MacOSX::mixer_thread_starting()
             throw Exception("AudioQueueAllocateBuffer failed");
         audio_queue_callback(audio_queue, audio_buffers[i]);
     }
-    
+    result = AudioQueuePrime(audio_queue,0,NULL);
+    if (result != 0)
+        throw Exception("AudioQueuePrime failed");
     result = AudioQueueStart(audio_queue, 0);
     if (result != 0)
         throw Exception("AudioQueueStart failed");

@@ -487,6 +487,13 @@ void OpenGLWindowProvider_Impl::on_keyboard_event(NSEvent *theEvent)
     clan::Point mouse_pos(mouse_location.x, bounds.size.height - mouse_location.y);
     key.mouse_pos = mouse_pos;
 
+    // Handle modifier flags
+    NSUInteger flags = [NSEvent modifierFlags];
+
+    key.alt = flags & NSAlternateKeyMask;
+    key.shift = flags &  NSShiftKeyMask;
+    key.ctrl = flags & NSControlKeyMask;		
+
     // TODO: Finish implementing.
     // Map the Cocoa key code to the appropriate ClanLib key code.
     switch ([theEvent keyCode])
@@ -497,7 +504,18 @@ void OpenGLWindowProvider_Impl::on_keyboard_event(NSEvent *theEvent)
         case 0x31: key.id = keycode_space; break;
         case 0x33: key.id = keycode_delete; break;
         case 0x35: key.id = keycode_escape; break;
-
+        case 0x73: key.id = keycode_home; break;
+        case 0x77: key.id = keycode_end; break;
+        case 0x18: key.id = keycode_add; break;
+        case 0x1B: key.id = keycode_subtract; break;
+        case 0x2C: key.id = keycode_divide; break;
+        case 0x2F: key.id = keycode_decimal; break;
+        
+        case 0x37: key.id = keycode_control; break;
+        case 0x38: key.id = keycode_shift; break;
+        case 0x3C: key.id = keycode_rshift; break;
+        case 0x3E: key.id = keycode_rcontrol; break;
+            
         // Arrow keys.
         case 0x7B: key.id = keycode_left; break;
         case 0x7C: key.id = keycode_right; break;
@@ -559,16 +577,31 @@ void OpenGLWindowProvider_Impl::on_keyboard_event(NSEvent *theEvent)
         default: key.id = keycode_unknown; break;
     }
 
+    static InputEvent prevInput;
     key.repeat_count = 0;  // TODO: Implement.
-
-    NSString* text = [theEvent characters];
-    key.str = [text UTF8String];
+    if(type == NSKeyDown || type == NSKeyUp){ // Can only call this on NSKeyUp or NSKeyDown type events
+        NSString* text = [theEvent charactersIgnoringModifiers];
+        key.str = [text UTF8String];
+        // Emit message:
+        self->get_keyboard()->sig_provider_event->invoke(key);
+    }else if(type == NSFlagsChanged){
+        // Translate flag changes of shift and ctrl into keypresses / releases
+        if(prevInput.shift != key.shift){
+            key.id = keycode_shift;
+            key.type = key.shift?clan::InputEvent::pressed:clan::InputEvent::released;
+            self->get_keyboard()->sig_provider_event->invoke(key);
+        }
+        if(prevInput.ctrl != key.ctrl){
+            key.id = keycode_control;
+            key.type = key.ctrl?clan::InputEvent::pressed:clan::InputEvent::released;
+            self->get_keyboard()->sig_provider_event->invoke(key);
+        }
+    }
 
     // Update our internal keyboard state
     self->get_keyboard()->on_key_event(key.id, key.type);
-
-    // Emit message:
-    self->get_keyboard()->sig_provider_event->invoke(key);
+    
+    prevInput = key;
 }
     
 void OpenGLWindowProvider_Impl::on_mouse_event(NSEvent *theEvent)

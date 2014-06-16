@@ -44,7 +44,8 @@ class DataBuffer;
 class FontEngine_Cocoa : public FontEngine
 {
 public:
-	FontEngine_Cocoa(const FontDescription &description, const std::string &filename);
+	FontEngine_Cocoa(const FontDescription &description, const std::string &filename);    
+	FontEngine_Cocoa(const FontDescription &description, const std::string &filename, FileSystem& vfs);
 	~FontEngine_Cocoa();
 
 	FontMetrics get_metrics();
@@ -52,10 +53,13 @@ public:
 	FontPixelBuffer get_font_glyph_subpixel(int glyph);
 	Shape2D load_glyph_outline(int c, int &out_advance_x);
 private:
+    void load_font(const FontDescription& desc, const std::string& filename, IODevice& file);
 	FontPixelBuffer get_font_glyph_lcd(int glyph);
 	FontPixelBuffer get_empty_font_glyph(int glyph);
 
 	CTFontRef handle;
+    float avg_glyph_width;
+    float max_glyph_height;
 };
 
 }
