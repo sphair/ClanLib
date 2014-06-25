@@ -345,7 +345,7 @@ public:
 	/// \brief Returns the provider for this graphic context.
 	GraphicContextProvider *get_provider();
 
-	const GraphicContextProvider * const get_provider() const;
+	const GraphicContextProvider * get_provider() const;
 
 /// \}
 /// \name Operations
