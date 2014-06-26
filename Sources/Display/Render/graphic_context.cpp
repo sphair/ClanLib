@@ -192,7 +192,7 @@ GraphicContextProvider *GraphicContext::get_provider()
 		return 0;
 }
 
-const GraphicContextProvider * const GraphicContext::get_provider() const
+const GraphicContextProvider * GraphicContext::get_provider() const
 {
 	if (impl)
 		return impl->graphic_screen->get_provider();
