@@ -179,7 +179,7 @@ void NetGameEventValue::throw_if_not_complex() const
 		throw Exception("NetGameEventValue is not a complex type");
 }
 
-unsigned int NetGameEventValue::to_uinteger() const
+unsigned int NetGameEventValue::get_uinteger() const
 {
 	if (is_uinteger())
 		return value_uint;
@@ -187,7 +187,7 @@ unsigned int NetGameEventValue::to_uinteger() const
 		throw Exception("NetGameEventValue is not an unsigned integer");
 }
 
-int NetGameEventValue::to_integer() const
+int NetGameEventValue::get_integer() const
 {
 	if (is_integer())
 		return value_int;
@@ -195,7 +195,7 @@ int NetGameEventValue::to_integer() const
 		throw Exception("NetGameEventValue is not an integer");
 }
 
-unsigned int NetGameEventValue::to_ucharacter() const
+unsigned int NetGameEventValue::get_ucharacter() const
 {
 	if (is_ucharacter())
 		return value_uchar;
@@ -203,7 +203,7 @@ unsigned int NetGameEventValue::to_ucharacter() const
 		throw Exception("NetGameEventValue is not an unsigned character");
 }
 
-int NetGameEventValue::to_character() const
+int NetGameEventValue::get_character() const
 {
 	if (is_character())
 		return value_char;
@@ -211,7 +211,7 @@ int NetGameEventValue::to_character() const
 		throw Exception("NetGameEventValue is not a character");
 }
 
-float NetGameEventValue::to_number() const
+float NetGameEventValue::get_number() const
 {
 	if (is_number())
 		return value_float;
@@ -219,7 +219,7 @@ float NetGameEventValue::to_number() const
 		throw Exception("NetGameEventValue is not a floating point number");
 }
 
-std::string NetGameEventValue::to_string() const
+std::string NetGameEventValue::get_string() const
 {
 	if (is_string())
 		return value_string;
@@ -227,7 +227,7 @@ std::string NetGameEventValue::to_string() const
 		throw Exception("NetGameEventValue is not a string");
 }
 
-bool NetGameEventValue::to_boolean() const
+bool NetGameEventValue::get_boolean() const
 {
 	if (is_boolean())
 		return value_bool;
@@ -235,12 +235,50 @@ bool NetGameEventValue::to_boolean() const
 		throw Exception("NetGameEventValue is not a boolean");
 }
 
-DataBuffer NetGameEventValue::to_binary() const
+DataBuffer NetGameEventValue::get_binary() const
 {
 	if (is_binary())
 		return value_binary;
 	else
 		throw Exception("NetGameEventValue is not a binary");
+}
+
+std::string NetGameEventValue::to_string(const NetGameEventValue &v)
+{
+	switch (v.get_type())
+	{
+	case NetGameEventValue::null:
+		return "null";
+	case NetGameEventValue::integer:
+		return StringHelp::int_to_text(v.get_integer());
+	case NetGameEventValue::uinteger:
+		return StringHelp::uint_to_text(v.get_uinteger());
+	case NetGameEventValue::character:
+		return StringHelp::int_to_text(static_cast<int>(v.get_character()));
+	case NetGameEventValue::ucharacter:
+		return StringHelp::uint_to_text(static_cast<unsigned int>(v.get_ucharacter()));
+	case NetGameEventValue::string:
+		return "\"" + v.get_string() + "\"";
+	case NetGameEventValue::boolean:
+		return v.get_boolean() ? "true" : "false";
+	case NetGameEventValue::number:
+		return StringHelp::float_to_text(v.get_number());
+	case NetGameEventValue::complex:
+		{
+			std::string str;
+			str += "[";
+			for (unsigned int j = 0; j < v.get_member_count(); j++)
+			{
+				if(j > 0)
+					str += ",";
+				str += to_string(v.get_member(j));
+			}
+			str += "]";
+			return str;
+		}
+	default:
+		return "??" + StringHelp::int_to_text(v.get_type());
+	}
 }
 
 }

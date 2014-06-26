@@ -16,30 +16,27 @@ clanApp_includes = \
 
 clanNetwork_includes = \
 	network.h \
-	Network/Web/web_response.h \
-	Network/Web/web_request.h \
-	Network/Web/http_request_handler_provider.h \
-	Network/Web/http_request_handler.h \
-	Network/Web/http_server_connection.h \
-	Network/Web/http_server.h \
 	Network/api_network.h \
-	Network/NetGame/event_value.h \
+	Network/Web/http_server.h \
+	Network/Web/http_server_connection.h \
+	Network/Web/http_request_handler.h \
+	Network/Web/http_request_handler_provider.h \
+	Network/Web/web_request.h \
+	Network/Web/web_response.h \
 	Network/NetGame/client.h \
-	Network/NetGame/event_dispatcher_v2.h \
-	Network/NetGame/event_dispatcher_v3.h \
-	Network/NetGame/event_dispatcher_v0.h \
-	Network/NetGame/event_dispatcher_v1.h \
 	Network/NetGame/connection.h \
-	Network/NetGame/server.h \
-	Network/NetGame/event.h \
 	Network/NetGame/connection_site.h \
-	Network/Socket/tcp_listen.h \
-	Network/Socket/udp_socket.h \
+	Network/NetGame/event.h \
+	Network/NetGame/event_dispatcher.h \
+	Network/NetGame/event_value.h \
+	Network/NetGame/server.h \
 	Network/Socket/dns_packet.h \
-	Network/Socket/tcp_connection.h \
+	Network/Socket/dns_resolver.h \
 	Network/Socket/dns_resource_record.h \
 	Network/Socket/socket_name.h \
-	Network/Socket/dns_resolver.h \
+	Network/Socket/tcp_connection.h \
+	Network/Socket/tcp_listen.h \
+	Network/Socket/udp_socket.h \
 	Network/TLS/tls_connection.h \
 	Network/setupnetwork.h
 

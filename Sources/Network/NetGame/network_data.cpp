@@ -220,22 +220,22 @@ unsigned int NetGameNetworkData::encode_value(unsigned char *d, const NetGameEve
 		return 1;
 	case NetGameEventValue::uinteger:
 		*d = 2;
-		*reinterpret_cast<unsigned int*>(d + 1) = value.to_uinteger();
+		*reinterpret_cast<unsigned int*>(d + 1) = value.get_uinteger();
 		return 5;
 	case NetGameEventValue::integer:
 		*d = 3;
-		*reinterpret_cast<int*>(d + 1) = value.to_integer();
+		*reinterpret_cast<int*>(d + 1) = value.get_integer();
 		return 5;
 	case NetGameEventValue::number:
 		*d = 4;
-		*reinterpret_cast<float*>(d + 1) = value.to_number();
+		*reinterpret_cast<float*>(d + 1) = value.get_number();
 		return 5;
 	case NetGameEventValue::boolean:
-		*d = value.to_boolean() ? 6 : 5;
+		*d = value.get_boolean() ? 6 : 5;
 		return 1;
 	case NetGameEventValue::string:
 		{
-			std::string s = value.to_string();
+			std::string s = value.get_string();
 			*d = 7;
 			*reinterpret_cast<unsigned short*>(d + 1) = s.length();
 			memcpy(d + 3, s.data(), s.length());
@@ -253,15 +253,15 @@ unsigned int NetGameNetworkData::encode_value(unsigned char *d, const NetGameEve
 		}
 	case NetGameEventValue::ucharacter:
 		*d = 9;
-		*reinterpret_cast<unsigned char*>(d + 1) = value.to_ucharacter();
+		*reinterpret_cast<unsigned char*>(d + 1) = value.get_ucharacter();
 		return 2;
 	case NetGameEventValue::character:
 		*d = 10;
-		*reinterpret_cast<char*>(d + 1) = value.to_character();
+		*reinterpret_cast<char*>(d + 1) = value.get_character();
 		return 2;
 	case NetGameEventValue::binary:
 		{
-			DataBuffer s = value.to_binary();
+			DataBuffer s = value.get_binary();
 			*d = 11;
 			*reinterpret_cast<unsigned short*>(d + 1) = s.get_size();
 			memcpy(d + 3, s.get_data(), s.get_size());
@@ -287,9 +287,9 @@ unsigned int NetGameNetworkData::get_encoded_length(const NetGameEventValue &val
 	case NetGameEventValue::number:
 		return 5;
 	case NetGameEventValue::string:
-		return 1 + 2 + value.to_string().length();
+		return 1 + 2 + value.get_string().length();
 	case NetGameEventValue::binary:
-		return 1 + 2 + value.to_binary().get_size();
+		return 1 + 2 + value.get_binary().get_size();
 	case NetGameEventValue::complex:
 		{
 			unsigned l = 2;
