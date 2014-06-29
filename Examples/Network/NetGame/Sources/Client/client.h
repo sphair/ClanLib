@@ -29,8 +29,8 @@ private:
 	NetGameClient network_client;
 	CallbackContainer cc;
 
-	NetGameEventDispatcher_v0 login_events;
-	NetGameEventDispatcher_v0 game_events;
+	NetGameEventDispatcher<> login_events;
+	NetGameEventDispatcher<> game_events;
 
 	bool quit;
 

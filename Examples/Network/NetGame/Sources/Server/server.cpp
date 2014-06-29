@@ -98,7 +98,7 @@ void Server::on_event_login(const NetGameEvent &e, ServerUser *user)
 
 	if(user_name.length() == 0)
 	{
-		user->send_event(NetGameEvent("Login-Fail", "Missing user name"));
+        user->send_event(NetGameEvent("Login-Fail", { "Missing user name" }));
 	}
 	else
 	{
