@@ -139,9 +139,8 @@ clanSound_includes = \
 
 clanCore_includes = \
 	core.h \
-	Core/Signals/callback.h \
+	Core/Signals/bind_member.h \
 	Core/Signals/signal.h \
-	Core/Signals/callbackcontainer.h \
 	Core/Text/utf8_reader.h \
 	Core/Text/logger.h \
 	Core/Text/string_help.h \
