@@ -162,22 +162,22 @@ public:
 
 public:
 	/// \brief Signal emitted when key is pressed.
-	Signal<const InputEvent &> &sig_key_down();
+	Signal<void(const InputEvent &)> &sig_key_down();
 
 	/// \brief Signal emitted when key is released.
-	Signal<const InputEvent &> &sig_key_up();
+	Signal<void(const InputEvent &)> &sig_key_up();
 
 	/// \brief Signal emitted when pointer is moved (absolute movement).
-	Signal<const InputEvent &> &sig_pointer_move();
+	Signal<void(const InputEvent &)> &sig_pointer_move();
 
 	/// \brief Signal emitted when axis is moved.
-	Signal<const InputEvent &> &sig_axis_move();
+	Signal<void(const InputEvent &)> &sig_axis_move();
 
 	/// \brief Signal emitted when the mouse is double-clicked.
-	Signal<const InputEvent &> &sig_key_dblclk();
+	Signal<void(const InputEvent &)> &sig_key_dblclk();
 
 	/// \brief Signal emitted when proximity is entered or exited
-	Signal<const InputEvent &> &sig_proximity_change();
+	Signal<void(const InputEvent &)> &sig_proximity_change();
 
 /// \}
 /// \name Implementation

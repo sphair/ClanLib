@@ -180,8 +180,8 @@ void RibbonMenu_Impl::on_filter_input_message(std::shared_ptr<GUIMessage_Input> 
 			if (message->input_event.type == InputEvent::released && current_item != -1)
 			{
 				end();
-				if (!items[current_item].func_clicked.is_null())
-					items[current_item].func_clicked.invoke();
+				if (items[current_item].func_clicked)
+					items[current_item].func_clicked();
 			}
 
 			message->consumed = true;

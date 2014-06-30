@@ -27,7 +27,7 @@ private:
 
 private:
 	NetGameClient network_client;
-	CallbackContainer cc;
+	SlotContainer cc;
 
 	NetGameEventDispatcher<> login_events;
 	NetGameEventDispatcher<> game_events;

@@ -30,8 +30,6 @@
 #pragma once
 
 #include "../gui_component.h"
-#include "../../Core/Signals/callback.h"
-#include "../../Core/Signals/callback.h"
 #include "../gui_theme_part.h"
 namespace clan
 {

@@ -375,9 +375,9 @@ LRESULT Win32Window::static_window_proc(
 
 LRESULT Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
-	if (!site->func_window_message->is_null())
+	if (*site->func_window_message)
 	{
-		if (site->func_window_message->invoke(wnd, msg, wparam, lparam))
+		if ((*site->func_window_message)(wnd, msg, wparam, lparam))
 			return TRUE;
 	}
 
@@ -433,7 +433,7 @@ LRESULT Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lpara
 			get_tablet()->check_monitor_changed();
 		if (site)
 		{
-			site->sig_window_moved->invoke();
+			(*site->sig_window_moved)();
 		}
 		break;
 
@@ -468,8 +468,8 @@ LRESULT Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lpara
 				win_rect->right-wi.cxWindowBorders,
 				win_rect->bottom-wi.cyWindowBorders);
 
-			if (!site->func_window_resize->is_null())
-				site->func_window_resize->invoke(client_rect);
+			if (*site->func_window_resize)
+				(*site->func_window_resize)(client_rect);
 			win_rect->left = client_rect.left - wi.cxWindowBorders;
 			win_rect->right = client_rect.right + wi.cxWindowBorders;
 			win_rect->top = client_rect.top - wi.cyWindowBorders - (ti.rcTitleBar.bottom-ti.rcTitleBar.top);
@@ -479,8 +479,8 @@ LRESULT Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lpara
 		break;
 
 	case WM_SIZE:
-		if (!callback_on_resized.is_null())
-			callback_on_resized.invoke();
+		if (callback_on_resized)
+			callback_on_resized();
 
 		switch(wparam)
 		{
@@ -495,7 +495,7 @@ LRESULT Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lpara
 		// The window has been maximized.
 		case SIZE_MAXIMIZED:
 			if (site)
-				site->sig_window_maximized->invoke();
+				(*site->sig_window_maximized)();
 			minimized = false;
 			maximized = true;
 			break;
@@ -503,7 +503,7 @@ LRESULT Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lpara
 		// The window has been minimized.
 		case SIZE_MINIMIZED:
 			if (site)
-				site->sig_window_minimized->invoke();
+				(*site->sig_window_minimized)();
 			minimized = true;
 			maximized = false;
 			break;
@@ -513,7 +513,7 @@ LRESULT Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lpara
 			if (minimized || maximized)
 			{
 				if (site)
-					site->sig_window_restored->invoke();
+					(*site->sig_window_restored)();
 				minimized = false;
 				maximized = false;
 			}
@@ -521,7 +521,7 @@ LRESULT Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lpara
 		}
 
 		if (site)
-			site->sig_resize->invoke(LOWORD(lparam), HIWORD(lparam));
+			(*site->sig_resize)(LOWORD(lparam), HIWORD(lparam));
 
 		return 0;
 
@@ -530,13 +530,13 @@ LRESULT Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lpara
 		{
 			if (LOWORD(wparam) == WA_INACTIVE)
 			{
-				site->sig_lost_focus->invoke();
+				(*site->sig_lost_focus)();
 				if (get_tablet() && get_tablet()->device_present())
 					get_tablet()->set_context_on_top(false);
 			}
 			else
 			{
-				site->sig_got_focus->invoke();
+				(*site->sig_got_focus)();
 				if (get_tablet() && get_tablet()->device_present())
 					get_tablet()->set_context_on_top(true);
 			}
@@ -545,12 +545,12 @@ LRESULT Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lpara
 
 	case WM_CLOSE:
 		if (site)
-			site->sig_window_close->invoke();
+			(*site->sig_window_close)();
 		return 0;
 
 	case WM_DESTROY:
 		if (site)
-			site->sig_window_destroy->invoke();
+			(*site->sig_window_destroy)();
 		return 0;
 
 	case WM_PAINT:
@@ -571,7 +571,7 @@ LRESULT Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lpara
 					// log_event(string_format("Dirty %1", has_drop_shadow ? " Pop" : ""), string_format("Rect: l: %1  t: %2  r: %3  b: %4", cl_rect.left, cl_rect.top, cl_rect.right, cl_rect.bottom));
 
 					if (site)
-						site->sig_paint->invoke(cl_rect);
+						(*site->sig_paint)(cl_rect);
 
 					EndPaint(hwnd, &paintstruct);
 					memset(&paintstruct, 0, sizeof(PAINTSTRUCT));
@@ -600,9 +600,9 @@ LRESULT Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lpara
 		switch (wparam)
 		{
 		case SC_MINIMIZE:
-			if (site && !site->func_minimize_clicked->is_null())
+			if (site && (*site->func_minimize_clicked))
 			{
-				if (site->func_minimize_clicked->invoke())
+				if ((*site->func_minimize_clicked)())
 					return 0;
 			}
 			break;
@@ -807,7 +807,7 @@ void Win32Window::received_keyboard_input(UINT msg, WPARAM wparam, LPARAM lparam
 	set_modifier_keys(key);
 
 	// Emit message:
-	get_keyboard()->sig_provider_event->invoke(key);
+	(*get_keyboard()->sig_provider_event)(key);
 }
 
 void Win32Window::received_mouse_input(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -850,7 +850,7 @@ void Win32Window::received_mouse_input(UINT msg, WPARAM wparam, LPARAM lparam)
 		if (id >= 0 && id < 32)
 			get_mouse()->key_states[id] = true;
 
-		get_mouse()->sig_provider_event->invoke(key);
+		(*get_mouse()->sig_provider_event)(key);
 	}
 
 	if (down)
@@ -861,7 +861,7 @@ void Win32Window::received_mouse_input(UINT msg, WPARAM wparam, LPARAM lparam)
 		if (id >= 0 && id < 32)
 			get_mouse()->key_states[id] = true;
 
-		get_mouse()->sig_provider_event->invoke(key);
+		(*get_mouse()->sig_provider_event)(key);
 	}
 
 	// It is possible for 2 events to be called when the wheelmouse is used
@@ -873,7 +873,7 @@ void Win32Window::received_mouse_input(UINT msg, WPARAM wparam, LPARAM lparam)
 		if (id >= 0 && id < 32)
 			get_mouse()->key_states[id] = false;
 
-		get_mouse()->sig_provider_event->invoke(key);	
+		(*get_mouse()->sig_provider_event)(key);	
 	}
 }
 
@@ -900,7 +900,7 @@ void Win32Window::received_mouse_move(UINT msg, WPARAM wparam, LPARAM lparam)
 		set_modifier_keys(key);
 
 		// Fire off signal
-		get_mouse()->sig_provider_event->invoke(key);
+		(*get_mouse()->sig_provider_event)(key);
 	}
 
 	if (!cursor_set && !cursor_hidden)

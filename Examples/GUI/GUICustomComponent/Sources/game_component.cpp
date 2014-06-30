@@ -35,8 +35,8 @@ GameComponent::GameComponent(const Rect &position, GUIManager* gui_manager)
 {
 	set_constant_repaint(true);
 
-	func_render().set(this, &GameComponent::on_render);
-	func_process_message().set(this, &GameComponent::on_message);
+	func_render() = bind_member(this, &GameComponent::on_render);
+	func_process_message() = bind_member(this, &GameComponent::on_message);
 
 	Canvas canvas = get_canvas();
 	background = Image(canvas, "Resources/Images/background.jpg");

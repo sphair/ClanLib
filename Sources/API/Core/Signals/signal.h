@@ -23,63 +23,136 @@
 **
 **  File Author(s):
 **
-**    Marcel Hellwig
+**    Magnus Norddahl
 */
 
 #pragma once
 
-#include <algorithm>
+#include "bind_member.h"
 #include <memory>
+#include <functional>
 #include <vector>
-#include "callback.h"
 
 namespace clan
 {
-/// \addtogroup clanCore_Signals clanCore Signals
-/// \{
+	/// \addtogroup clanCore_Signals clanCore Signals
+	/// \{
 
-/// \brief Signal
-template<class... Params>
-class Signal
-{
-public:
-    /// \name Construction
-    /// \{
-    Signal()
-    : impl(new std::vector<Callback<void(Params...)>>()) { return; }
+	class SlotImpl;
 
-    Signal(const Signal &copy)
-    : impl(copy.impl) { return; }
+	class Slot
+	{
+	public:
+		Slot() { }
 
-    /// \}
-    /// \name Operations
-    /// \{
+		operator bool() const { return static_cast<bool>(impl); }
 
-    void connect(const Callback<void(Params...)> &callback)
-    {
-        impl->push_back(callback);
-    }
+		template<typename T>
+		explicit Slot(T impl) : impl(impl) { }
 
-    void disconnect(const Callback<void(Params...)> &callback)
-    {
-        impl->erase(std::remove(impl->begin(), impl->end(), callback), impl->end());
-    }
+	private:
+		std::shared_ptr<SlotImpl> impl;
+	};
 
-    void invoke(const Params & ... params) const
-    {
-        for(auto &cb : std::vector<Callback<void(Params...)>>(*impl))
-            if(!cb.is_null())
-                cb.invoke(params...);
-    }
+	class SlotImpl
+	{
+	public:
+		SlotImpl() { }
+		SlotImpl(const SlotImpl &) = delete;
+		SlotImpl &operator=(const SlotImpl &) = delete;
+		virtual ~SlotImpl() { }
+	};
 
-    /// \}
-    /// \name Implementation
-    /// \{
+	template<typename SlotImplType>
+	class SignalImpl
+	{
+	public:
+		std::vector<std::weak_ptr<SlotImplType>> slots;
+	};
 
-private:
-    std::shared_ptr<std::vector<Callback<void(Params...)>>> impl;
-/// \}
-};
+	template<typename FuncType>
+	class SlotImplT : public SlotImpl
+	{
+	public:
+		SlotImplT(const std::weak_ptr<SignalImpl<SlotImplT>> &signal, const std::function<FuncType> &callback) : signal(signal), callback(callback)
+		{
+		}
+
+		~SlotImplT()
+		{
+			std::shared_ptr<SignalImpl<SlotImplT>> sig = signal.lock();
+			if (sig)
+			{
+				for (auto it = sig->slots.begin(); it != sig->slots.end(); ++it)
+				{
+					if (it->lock().get() == this)
+					{
+						sig->slots.erase(it);
+						break;
+					}
+				}
+			}
+		}
+
+		std::weak_ptr<SignalImpl<SlotImplT>> signal;
+		std::function<FuncType> callback;
+	};
+
+	template<typename FuncType>
+	class Signal
+	{
+	public:
+		Signal() : impl(std::make_shared<SignalImpl<SlotImplT<FuncType>>>()) { }
+
+		template<typename... Args>
+		void operator()(Args... args)
+		{
+			std::vector<std::weak_ptr<SlotImplT<FuncType>>> slots = impl->slots;
+			for (std::weak_ptr<SlotImplT<FuncType>> &weak_slot : slots)
+			{
+				std::shared_ptr<SlotImplT<FuncType>> slot = weak_slot.lock();
+				if (slot)
+				{
+					slot->callback(args...);
+				}
+			}
+		}
+
+		Slot connect(const std::function<FuncType> &func)
+		{
+			auto slot_impl = std::make_shared<SlotImplT<FuncType>>(impl, func);
+			impl->slots.push_back(slot_impl);
+			return Slot(slot_impl);
+		}
+
+		template<typename InstanceType, typename MemberFuncType>
+		Slot connect(InstanceType instance, MemberFuncType func)
+		{
+			return connect(bind_member(instance, func));
+		}
+
+	private:
+		std::shared_ptr<SignalImpl<SlotImplT<FuncType>>> impl;
+	};
+
+	class SlotContainer
+	{
+	public:
+		template<typename FuncType, typename InstanceType, typename MemberFuncType>
+		void connect(Signal<FuncType> &signal, InstanceType instance, MemberFuncType func)
+		{
+			slots.push_back(signal.connect(instance, func));
+		}
+
+		template<typename FuncType, typename CallbackType>
+		void connect(Signal<FuncType> &signal, CallbackType func)
+		{
+			slots.push_back(signal.connect(func));
+		}
+
+	private:
+		std::vector<Slot> slots;
+	};
 
 }
 /// \}

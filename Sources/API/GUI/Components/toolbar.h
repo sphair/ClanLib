@@ -32,7 +32,6 @@
 
 #include "../api_gui.h"
 #include "../gui_component.h"
-#include "../../Core/Signals/callback.h"
 
 namespace clan
 {
@@ -154,15 +153,15 @@ public:
 /// \{
 
 public:
-	Callback<void(ToolBarItem)> &func_item_clicked();
+	std::function<void(ToolBarItem)> &func_item_clicked();
 
-	Callback<void(ToolBarItem)> &func_item_selected();
+	std::function<void(ToolBarItem)> &func_item_selected();
 
-	Callback<void(ToolBarItem)> &func_item_unselected();
+	std::function<void(ToolBarItem)> &func_item_unselected();
 
 	/// \brief Signal invoked when the toolbar is right-clicked.
 	/// The parameters are click position and clicked item index.
-	Callback<void(Point, int)> &func_mouse_right_up();
+	std::function<void(Point, int)> &func_mouse_right_up();
 
 /// \}
 /// \name Implementation

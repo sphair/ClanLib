@@ -99,7 +99,7 @@ private:
 	//: Sound effect of pacman dieing.
 	//SoundBuffer sfx_dead;
 
-	CallbackContainer cc;
+	SlotContainer cc;
 };
 
 #endif

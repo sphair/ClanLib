@@ -33,7 +33,6 @@
 
 #include "../api_display.h"
 #include "../../Core/Signals/signal.h"
-#include "../../Core/Signals/callback.h"
 #include "../display_target.h"
 #include <memory>
 
@@ -140,47 +139,47 @@ public:
 	InputContext get_ic() const;
 
 	/// \brief Signal emitted when window lost focus.
-	Signal<> &sig_lost_focus();
+	Signal<void()> &sig_lost_focus();
 
 	/// \brief Signal emitted when window gain focus.
-	Signal<> &sig_got_focus();
+	Signal<void()> &sig_got_focus();
 
 	/// \brief Signal emitted when window is resized.
-	Signal<int, int> &sig_resize();
+	Signal<void(int, int)> &sig_resize();
 
 	/// \brief Signal emitted when an area of the window is invalidated.
-	Signal<const Rect &> &sig_paint();
+	Signal<void(const Rect &)> &sig_paint();
 
 	/// \brief Signal emitted when window is closed.
-	Signal<> &sig_window_close();
+	Signal<void()> &sig_window_close();
 
 	/// \brief Signal emitted when window is destroyed.
-	Signal<> &sig_window_destroy();
+	Signal<void()> &sig_window_destroy();
 
 	/// \brief Signal emitted when window is minimized.
-	Signal<> &sig_window_minimized();
+	Signal<void()> &sig_window_minimized();
 
 	/// \brief Signal emitted when window is maximized.
-	Signal<> &sig_window_maximized();
+	Signal<void()> &sig_window_maximized();
 
 	/// \brief Signal emitted when window is restored.
-	Signal<> &sig_window_restored();
+	Signal<void()> &sig_window_restored();
 
 	/// \brief Signal emitted after a window has been moved.
-	Signal<> &sig_window_moved();
+	Signal<void()> &sig_window_moved();
 
 	/// \brief Signal emitted when window flip() was called
-	Signal<> &sig_window_flip();
+	Signal<void()> &sig_window_flip();
 
 	/// \brief Callback called when a window is being resized.
-	Callback<void(Rect &)> &func_window_resize();
+	std::function<void(Rect &)> &func_window_resize();
 
 	/// \brief Callback called when a window is asked to minimize itself.
-	Callback<bool()> &func_minimize_clicked();
+	std::function<bool()> &func_minimize_clicked();
 
 #ifdef WIN32
 	/// \brief Callback called when a windows messages is received.
-	Callback<bool(HWND, UINT, WPARAM, LPARAM)> &func_window_message();
+	std::function<bool(HWND, UINT, WPARAM, LPARAM)> &func_window_message();
 #endif
 
 	/// \brief Returns true if this object is invalid.

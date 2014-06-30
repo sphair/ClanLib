@@ -65,57 +65,57 @@ void App::spin_value_modified(Spin *spin)
 void App::prepare_gui(GUIComponent &window)
 {
 	btn_update_soundoutput = PushButton::get_named_item(&window, "btn_update_soundoutput");
-	btn_update_soundoutput->func_clicked().set(this, &App::on_btn_update_soundoutput);
+	btn_update_soundoutput->func_clicked() = bind_member(this, &App::on_btn_update_soundoutput);
 	btn_update_soundoutput->set_enabled(false);
 
 	btn_set_soundoutput_filters = PushButton::get_named_item(&window, "btn_set_soundoutput_filters");
-	btn_set_soundoutput_filters->func_clicked().set(this, &App::on_btn_set_soundoutput_filters);
+	btn_set_soundoutput_filters->func_clicked() = bind_member(this, &App::on_btn_set_soundoutput_filters);
 	btn_set_soundoutput_filters->set_enabled(false);
 
 	btn_play = PushButton::get_named_item(&window, "btn_play");
-	btn_play->func_clicked().set(this, &App::on_btn_play);
+	btn_play->func_clicked() = bind_member(this, &App::on_btn_play);
 
 	btn_prepare = PushButton::get_named_item(&window, "btn_prepare");
-	btn_prepare->func_clicked().set(this, &App::on_btn_prepare);
+	btn_prepare->func_clicked() = bind_member(this, &App::on_btn_prepare);
 
 	btn_set_fade_filter = PushButton::get_named_item(&window, "btn_set_fade_filter");
-	btn_set_fade_filter->func_clicked().set(this, &App::on_btn_set_fade_filter);
+	btn_set_fade_filter->func_clicked() = bind_member(this, &App::on_btn_set_fade_filter);
 	btn_set_fade_filter->set_enabled(false);
 
 	btn_sess_play = PushButton::get_named_item(&window, "btn_sess_play");
-	btn_sess_play->func_clicked().set(this, &App::on_btn_sess_play);
+	btn_sess_play->func_clicked() = bind_member(this, &App::on_btn_sess_play);
 	btn_sess_play->set_enabled(false);
 
 	btn_sess_stop = PushButton::get_named_item(&window, "btn_sess_stop");
-	btn_sess_stop->func_clicked().set(this, &App::on_btn_sess_stop);
+	btn_sess_stop->func_clicked() = bind_member(this, &App::on_btn_sess_stop);
 	btn_sess_stop->set_enabled(false);
 
 	btn_sess_destroy = PushButton::get_named_item(&window, "btn_sess_destroy");
-	btn_sess_destroy->func_clicked().set(this, &App::on_btn_sess_destroy);
+	btn_sess_destroy->func_clicked() = bind_member(this, &App::on_btn_sess_destroy);
 	btn_sess_destroy->set_enabled(false);
 
 	chk_echo_filter = CheckBox::get_named_item(&window, "chk_echo_filter");
-	chk_echo_filter->func_checked().set(this, &App::on_echo_filter_checked);
-	chk_echo_filter->func_unchecked().set(this, &App::on_echo_filter_unchecked);
+	chk_echo_filter->func_checked() = bind_member(this, &App::on_echo_filter_checked);
+	chk_echo_filter->func_unchecked() = bind_member(this, &App::on_echo_filter_unchecked);
 
 	chk_fade_filter = CheckBox::get_named_item(&window, "chk_fade_filter");
-	chk_fade_filter->func_checked().set(this, &App::on_fade_filter_checked);
-	chk_fade_filter->func_unchecked().set(this, &App::on_fade_filter_unchecked);
+	chk_fade_filter->func_checked() = bind_member(this, &App::on_fade_filter_checked);
+	chk_fade_filter->func_unchecked() = bind_member(this, &App::on_fade_filter_unchecked);
 
 	chk_inverse_echo = CheckBox::get_named_item(&window, "chk_inverse_echo");
-	chk_inverse_echo->func_checked().set(this, &App::on_inverse_echo_filter_checked);
-	chk_inverse_echo->func_unchecked().set(this, &App::on_inverse_echo_filter_unchecked);
+	chk_inverse_echo->func_checked() = bind_member(this, &App::on_inverse_echo_filter_checked);
+	chk_inverse_echo->func_unchecked() = bind_member(this, &App::on_inverse_echo_filter_unchecked);
 
 	chk_apply_session = CheckBox::get_named_item(&window, "chk_apply_session");
 
 	chk_looping = CheckBox::get_named_item(&window, "chk_looping");
 	chk_looping->set_enabled(false);
-	chk_looping->func_checked().set(this, &App::on_looping_checked);
-	chk_looping->func_unchecked().set(this, &App::on_looping_unchecked);
+	chk_looping->func_checked() = bind_member(this, &App::on_looping_checked);
+	chk_looping->func_unchecked() = bind_member(this, &App::on_looping_unchecked);
 
 	cbox_session = ComboBox::get_named_item(&window, "cbox_session");
 	cbox_session->set_enabled(false);
-	cbox_session->func_item_selected().set(this, &App::on_cbox_session_selected);
+	cbox_session->func_item_selected() = bind_member(this, &App::on_cbox_session_selected);
 
 	PopupMenu menu;
 	menu.insert_item("Pacman Start Sample(.wav)");
@@ -204,7 +204,7 @@ Spin *App::set_slide_and_spin(GUIComponent &window, const char *slider_name, con
 	spin->set_ranges(min, max);
 	spin->set_value(start);
 	spin->set_step_size(1);
-	spin->func_value_changed().set(this, &App::on_spin_changed_integer, spin);
+	spin->func_value_changed() = bind_member(this, &App::on_spin_changed_integer, spin);
 
 	slider->set_min(0);
 	slider->set_max(10000);
@@ -212,7 +212,7 @@ Spin *App::set_slide_and_spin(GUIComponent &window, const char *slider_name, con
 	slider->set_page_step(1000);
 	slider->set_position(50);
 	slider->set_lock_to_ticks(false);
-	slider->func_value_changed().set(this, &App::on_slider_changed_integer, spin);
+	slider->func_value_changed() = bind_member(this, &App::on_slider_changed_integer, spin);
 
 	set_slider_to_spin_integer(slider, spin);
 
@@ -241,7 +241,7 @@ Spin *App::set_slide_and_spin(GUIComponent &window, const char *slider_name, con
 	spin->set_ranges_float(min, max);
 	spin->set_value_float(start);
 	spin->set_step_size_float(1.0f);
-	spin->func_value_changed().set(this, &App::on_spin_changed_float, spin);
+	spin->func_value_changed() = bind_member(this, &App::on_spin_changed_float, spin);
 
 	slider->set_min(0);
 	slider->set_max(10000);
@@ -249,7 +249,7 @@ Spin *App::set_slide_and_spin(GUIComponent &window, const char *slider_name, con
 	slider->set_page_step(1000);
 	slider->set_position(50);
 	slider->set_lock_to_ticks(false);
-	slider->func_value_changed().set(this, &App::on_slider_changed_float, spin);
+	slider->func_value_changed() = bind_member(this, &App::on_slider_changed_float, spin);
 
 	set_slider_to_spin_float(slider, spin);
 

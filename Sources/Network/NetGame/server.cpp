@@ -113,17 +113,17 @@ void NetGameServer::listen_thread_main()
 	}
 }
 
-Signal<NetGameConnection *> &NetGameServer::sig_client_connected()
+Signal<void(NetGameConnection *)> &NetGameServer::sig_client_connected()
 {
 	return impl->sig_game_client_connected;
 }
 
-Signal<NetGameConnection *, const std::string &> &NetGameServer::sig_client_disconnected()
+Signal<void(NetGameConnection *, const std::string &)> &NetGameServer::sig_client_disconnected()
 {
 	return impl->sig_game_client_disconnected;
 }
 
-Signal<NetGameConnection *, const NetGameEvent &> &NetGameServer::sig_event_received()
+Signal<void(NetGameConnection *, const NetGameEvent &)> &NetGameServer::sig_event_received()
 {
 	return impl->sig_game_event_received;
 }
@@ -140,15 +140,15 @@ void NetGameServer_Impl::process()
 		switch (new_events[i].type)
 		{
 		case NetGameNetworkEvent::client_connected:
-			sig_game_client_connected.invoke(new_events[i].connection);
+			sig_game_client_connected(new_events[i].connection);
 			break;
 		case NetGameNetworkEvent::event_received:
-			sig_game_event_received.invoke(new_events[i].connection, new_events[i].game_event);
+			sig_game_event_received(new_events[i].connection, new_events[i].game_event);
 			break;
 		case NetGameNetworkEvent::client_disconnected:
 			{
 				std::string reason = new_events[i].game_event.get_name();
-				sig_game_client_disconnected.invoke(new_events[i].connection, reason);
+				sig_game_client_disconnected(new_events[i].connection, reason);
 			}
 
 			// Destroy connection object

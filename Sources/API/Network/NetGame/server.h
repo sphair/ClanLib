@@ -34,7 +34,6 @@
 #include "connection_site.h"	// TODO: Remove
 #include "../../Core/System/event.h"
 #include "../../Core/Signals/signal.h"
-#include "../../Core/Signals/signal.h"
 
 namespace clan
 {
@@ -74,9 +73,9 @@ public:
 	/// \param game_event = Net Game Event
 	void send_event(const NetGameEvent &game_event);
 
-	Signal<NetGameConnection *> &sig_client_connected();
-	Signal<NetGameConnection *, const std::string &> &sig_client_disconnected();
-	Signal<NetGameConnection *, const NetGameEvent &> &sig_event_received();
+	Signal<void(NetGameConnection *)> &sig_client_connected();
+	Signal<void(NetGameConnection *, const std::string &)> &sig_client_disconnected();
+	Signal<void(NetGameConnection *, const NetGameEvent &)> &sig_event_received();
 
 private:
 

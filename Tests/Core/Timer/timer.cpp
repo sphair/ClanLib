@@ -59,12 +59,12 @@ void TestApp::test_timer(void)
 
 	clan::ubyte64 start_time = System::get_time();
 
-	timer_1.func_expired().set(this, &TestApp::funx_timer_1);
-	timer_2.func_expired().set(this, &TestApp::funx_timer_2);
-	timer_3.func_expired().set(this, &TestApp::funx_timer_3);
-	timer_4.func_expired().set(this, &TestApp::funx_timer_4);
-	timer_5.func_expired().set(this, &TestApp::funx_timer_5);
-	timer_6.func_expired().set(this, &TestApp::funx_timer_6);
+	timer_1.func_expired() = bind_member(this, &TestApp::funx_timer_1);
+	timer_2.func_expired() = bind_member(this, &TestApp::funx_timer_2);
+	timer_3.func_expired() = bind_member(this, &TestApp::funx_timer_3);
+	timer_4.func_expired() = bind_member(this, &TestApp::funx_timer_4);
+	timer_5.func_expired() = bind_member(this, &TestApp::funx_timer_5);
+	timer_6.func_expired() = bind_member(this, &TestApp::funx_timer_6);
 
 	timer_1.start(500, false);
 	timer_2.start(1000, false);

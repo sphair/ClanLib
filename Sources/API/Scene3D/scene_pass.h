@@ -50,7 +50,7 @@ public:
 
 	bool is_null() const;
 
-	Callback<void(GraphicContext &)> &func_run();
+	std::function<void(GraphicContext &)> &func_run();
 
 	const std::string &get_name() const;
 

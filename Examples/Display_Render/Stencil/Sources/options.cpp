@@ -49,7 +49,7 @@ Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComp
 	slider_ypos += 8;
 	slider_numballs->set_max(9);
 	slider_numballs->set_position(num_balls);
-	slider_numballs->func_value_changed().set(this, &Options::slider_numballs_changed);
+	slider_numballs->func_value_changed() = bind_member(this, &Options::slider_numballs_changed);
 	slider_ypos += 8;
 	label_numballs = create_slider_label(slider_numballs);
 
@@ -58,7 +58,7 @@ Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComp
 	slider_ypos += 8;
 	slider_compare_reference->set_max(16);
 	slider_compare_reference->set_position(compare_reference);
-	slider_compare_reference->func_value_changed().set(this, &Options::slider_compare_reference_changed);
+	slider_compare_reference->func_value_changed() = bind_member(this, &Options::slider_compare_reference_changed);
 	slider_ypos += 8;
 	label_compare_reference = create_slider_label(slider_compare_reference);
 
@@ -66,10 +66,10 @@ Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComp
 	int checkbox_ypos = slider_ypos;
 	int checkbox_gap = 24;
 	checkbox_moveballs = create_checkbox(checkbox_xpos, checkbox_ypos, "Moving Balls", is_moveballs_set);
-	checkbox_moveballs->func_state_changed().set(this, &Options::checkbox_moveballs_changed);
+	checkbox_moveballs->func_state_changed() = bind_member(this, &Options::checkbox_moveballs_changed);
 	checkbox_ypos += checkbox_gap + 8;
 	checkbox_circle = create_checkbox(checkbox_xpos, checkbox_ypos, "Draw Stencil Circle (Without selected stencil options)", is_circle_set);
-	checkbox_circle->func_state_changed().set(this, &Options::checkbox_circle_changed);
+	checkbox_circle->func_state_changed() = bind_member(this, &Options::checkbox_circle_changed);
 	checkbox_ypos += checkbox_gap + 8;
 
 	make_compare_menu(combo_compare_menu);
@@ -86,7 +86,7 @@ Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComp
 
 	update_all_slider_text();
 
-	func_render().set(this, &Options::on_render);
+	func_render() = bind_member(this, &Options::on_render);
 }
 
 Options::~Options()
@@ -256,7 +256,7 @@ clan::ComboBox *Options::create_compare_combo_box(int xpos, int ypos, clan::Popu
 	combo->set_dropdown_minimum_width(64);
 	combo->set_popup_menu(menu);
 	combo->set_selected_item(selected_item);
-	combo->func_item_selected().set(this, &Options::on_compare_selected, combo);
+	combo->func_item_selected() = bind_member(this, &Options::on_compare_selected, combo);
 
 	return combo;
 }
@@ -270,7 +270,7 @@ clan::ComboBox *Options::create_passfail_combo_box(int xpos, int ypos, clan::Pop
 	combo->set_dropdown_minimum_width(64);
 	combo->set_popup_menu(menu);
 	combo->set_selected_item(selected_item);
-	combo->func_item_selected().set(this, &Options::on_passfail_selected, combo);
+	combo->func_item_selected() = bind_member(this, &Options::on_passfail_selected, combo);
 
 	return combo;
 }

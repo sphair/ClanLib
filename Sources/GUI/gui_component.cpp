@@ -614,102 +614,102 @@ bool GUIComponent::get_constant_repaint() const
 /////////////////////////////////////////////////////////////////////////////
 // GUIComponent Events:
 
-Callback<void(Canvas &, const Rect &)> &GUIComponent::func_render()
+std::function<void(Canvas &, const Rect &)> &GUIComponent::func_render()
 {
 	return impl->func_render;
 }
 
-Callback<void(std::shared_ptr<GUIMessage> &)> &GUIComponent::func_process_message()
+std::function<void(std::shared_ptr<GUIMessage> &)> &GUIComponent::func_process_message()
 {
 	return impl->func_process_message;
 }
 
-Callback<bool()> &GUIComponent::func_close()
+std::function<bool()> &GUIComponent::func_close()
 {
 	return impl->func_close;
 }
 
-Callback<bool()> &GUIComponent::func_activated()
+std::function<bool()> &GUIComponent::func_activated()
 {
 	return impl->func_activated;
 }
 
-Callback<bool()> &GUIComponent::func_deactivated()
+std::function<bool()> &GUIComponent::func_deactivated()
 {
 	return impl->func_deactivated;
 }
 
-Callback<bool()> &GUIComponent::func_focus_lost()
+std::function<bool()> &GUIComponent::func_focus_lost()
 {
 	return impl->func_focus_lost;
 }
 
-Callback<void(std::shared_ptr<GUIMessage> &)> &GUIComponent::func_filter_message()
+std::function<void(std::shared_ptr<GUIMessage> &)> &GUIComponent::func_filter_message()
 {
 	return impl->func_filter_message;
 }
 
-Callback<bool()> &GUIComponent::func_focus_gained()
+std::function<bool()> &GUIComponent::func_focus_gained()
 {
 	return impl->func_focus_gained;
 }
 
-Callback<bool()> &GUIComponent::func_pointer_enter()
+std::function<bool()> &GUIComponent::func_pointer_enter()
 {
 	return impl->func_pointer_enter;
 }
 
-Callback<bool()> &GUIComponent::func_pointer_exit()
+std::function<bool()> &GUIComponent::func_pointer_exit()
 {
 	return impl->func_pointer_exit;
 }
 
-Callback<bool(const InputEvent &)> &GUIComponent::func_input()
+std::function<bool(const InputEvent &)> &GUIComponent::func_input()
 {
 	return impl->func_input;
 }
 
-Callback<bool(const InputEvent &)> &GUIComponent::func_input_pressed()
+std::function<bool(const InputEvent &)> &GUIComponent::func_input_pressed()
 {
 	return impl->func_input_pressed;
 }
 
-Callback<bool(const InputEvent &)> &GUIComponent::func_input_released()
+std::function<bool(const InputEvent &)> &GUIComponent::func_input_released()
 {
 	return impl->func_input_released;
 }
 
-Callback<bool(const InputEvent &)> &GUIComponent::func_input_doubleclick()
+std::function<bool(const InputEvent &)> &GUIComponent::func_input_doubleclick()
 {
 	return impl->func_input_doubleclick;
 }
 
-Callback<bool(const InputEvent &)> &GUIComponent::func_input_pointer_moved()
+std::function<bool(const InputEvent &)> &GUIComponent::func_input_pointer_moved()
 {
 	return impl->func_input_pointer_moved;
 }
 
-Callback<void(bool)> &GUIComponent::func_visibility_change()
+std::function<void(bool)> &GUIComponent::func_visibility_change()
 {
 	return impl->func_visibility_change;
 }
 
-Signal<> &GUIComponent::sig_style_changed()
+Signal<void()> &GUIComponent::sig_style_changed()
 {
 	return impl->element.sig_style_changed;
 }
 
-Callback<void()> &GUIComponent::func_enablemode_changed()
+std::function<void()> &GUIComponent::func_enablemode_changed()
 {
 	return impl->func_enablemode_changed;
 }
 
-Callback<void()> &GUIComponent::func_resized()
+std::function<void()> &GUIComponent::func_resized()
 {
 	return impl->func_resized;
 }
 
-Callback<GUIComponent*(GUIComponent*, std::string)> &GUIComponent::func_create_custom_component()
+std::function<GUIComponent*(GUIComponent*, std::string)> &GUIComponent::func_create_custom_component()
 {
 	return impl->func_create_custom_component;
 }
@@ -763,15 +763,9 @@ void GUIComponent::render(Canvas &canvas, const Rect &clip_rect, bool include_ch
 	border.set_border_values(impl->css_used_values.border.left, impl->css_used_values.border.top, impl->css_used_values.border.right, impl->css_used_values.border.bottom);
 	border.render();
 
-	if (impl->func_render.is_null() == false)
+	if (impl->func_render)
 	{
-		impl->func_render.invoke(canvas, clip_rect);
-	}
-	else
-	{
-		//GUIThemePart part(this);
-		//Rect geometry = get_size();
-		//part.render_box(canvas, RectPS(0, 0, geometry.get_width(), geometry.get_height()), clip_rect);
+		impl->func_render(canvas, clip_rect);
 	}
 
 	if (include_children)
@@ -954,8 +948,8 @@ void GUIComponent::set_visible(bool visible, bool activate_root_win)
 	if (visibility_changed)
 	{
 		request_repaint();
-		if (!impl->func_visibility_change.is_null())
-			impl->func_visibility_change.invoke(visible);
+		if (impl->func_visibility_change)
+			impl->func_visibility_change(visible);
 	}
 
 	impl->visible = visible;

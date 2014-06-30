@@ -61,7 +61,7 @@ OpenGLWindowProvider::OpenGLWindowProvider(OpenGLWindowDescription &opengl_desc)
   opengl_context(0), device_context(0), hwnd(0), shadow_window(false), dwm_layered(false), site(0), fullscreen(false),
   wglSwapIntervalEXT(0), swap_interval(-1), opengl_desc(opengl_desc), using_gl3(true), double_buffered(true)
 {
-	win32_window.func_on_resized().set(this, &OpenGLWindowProvider::on_window_resized);
+	win32_window.func_on_resized() = bind_member(this, &OpenGLWindowProvider::on_window_resized);
 }
 
 OpenGLWindowProvider::~OpenGLWindowProvider()

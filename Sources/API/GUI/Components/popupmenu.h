@@ -109,7 +109,7 @@ public:
 /// \{
 public:
 	/// \brief bool func_close()
-	Callback<void()> &func_close();
+	std::function<void()> &func_close();
 
 /// \}
 /// \name Operations

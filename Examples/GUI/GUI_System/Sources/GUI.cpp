@@ -54,11 +54,11 @@ int App::start(const std::vector<std::string> &args)
 	win_desc.set_title("PushButton #1");
 	win_desc.set_position(clan::Rect(200, 200, clan::Size(340, 240)), false);
 	clan::GUIComponent *window = new clan::GUIComponent(&gui, win_desc, "Window");
-	window->func_close().set(this, &App::on_close, window);
+	window->func_close() = bind_member(this, &App::on_close, window);
 
 	clan::PushButton *button = new clan::PushButton(window);
 	button->set_geometry(clan::Rect(10, 10, clan::Size(160, 40)));
-	button->func_clicked().set(this, &App::on_button_clicked, button);
+	button->func_clicked() = bind_member(this, &App::on_button_clicked, button);
 	button->set_text("Button #1");
 
 	label = new clan::Label(window);
@@ -70,11 +70,11 @@ int App::start(const std::vector<std::string> &args)
 	win_desc.set_title("PushButton #2");
 	win_desc.set_position(clan::Rect(600, 200, clan::Size(340, 240)), false);
 	clan::GUIComponent *window2 = new clan::GUIComponent(&gui, win_desc, "Window");
-	window2->func_close().set(this, &App::on_close, window2);
+	window2->func_close() = bind_member(this, &App::on_close, window2);
 
 	clan::PushButton *button2 = new clan::PushButton(window2);
 	button2->set_geometry(clan::Rect(10, 10, clan::Size(160, 40)));
-	button2->func_clicked().set(this, &App::on_button_clicked, button2);
+	button2->func_clicked() = bind_member(this, &App::on_button_clicked, button2);
 	button2->set_text("Button #2");
 
 	gui.exec();

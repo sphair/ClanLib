@@ -102,7 +102,7 @@ public:
 /// \{
 public:
 	/// \brief void func_page_selected(Page *tab_page)
-	Callback<void(TabPage*)> &func_page_selected();
+	std::function<void(TabPage*)> &func_page_selected();
 
 /// \}
 /// \name Operations

@@ -33,7 +33,7 @@ Spin::Spin(clan::GUIManager &manager) :
 	clan::Window(&manager, clan::GUITopLevelDescription("Spin", clan::Rect(256*3 + 32, 256 + 16, clan::Size(256, 180)), false))
 {
 
-	func_close().set(this, &Spin::on_close);
+	func_close() = bind_member(this, &Spin::on_close);
 
 	clan::Rect client_area = get_client_area();
 
@@ -44,7 +44,7 @@ Spin::Spin(clan::GUIManager &manager) :
 	spin1->set_step_size(50);
 	spin1->set_ranges(200, 2000);
 	spin1->set_floating_point_mode(false);
-	spin1->func_value_changed().set(this, &Spin::on_value_changed, spin1);
+	spin1->func_value_changed() = bind_member(this, &Spin::on_value_changed, spin1);
 
 	int xoffset = client_area.left + 16;
 	int yoffset = client_area.top + 40;
@@ -65,7 +65,7 @@ Spin::Spin(clan::GUIManager &manager) :
 	lineedit_value->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, lineedit_size));
 	lineedit_value->set_text("500");
 	lineedit_value->set_numeric_mode(true);
-	lineedit_value->func_enter_pressed().set(this, &Spin::on_value_enter_pressed, lineedit_value);
+	lineedit_value->func_enter_pressed() = bind_member(this, &Spin::on_value_enter_pressed, lineedit_value);
 
 	lineedit_label_value = new clan::Label(this);
 	lineedit_label_value->set_geometry(clan::Rect(label_xpos, lineedit_ypos, label_size));
@@ -76,7 +76,7 @@ Spin::Spin(clan::GUIManager &manager) :
 	lineedit_decimal_places->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, lineedit_size));
 	lineedit_decimal_places->set_text("2");
 	lineedit_decimal_places->set_numeric_mode(true, true);
-	lineedit_decimal_places->func_enter_pressed().set(this, &Spin::on_decimal_places_enter_pressed, lineedit_decimal_places);
+	lineedit_decimal_places->func_enter_pressed() = bind_member(this, &Spin::on_decimal_places_enter_pressed, lineedit_decimal_places);
 
 	lineedit_label_decimal_places = new clan::Label(this);
 	lineedit_label_decimal_places->set_geometry(clan::Rect(label_xpos, lineedit_ypos, label_size));
@@ -92,7 +92,7 @@ Spin::Spin(clan::GUIManager &manager) :
 	lineedit_min->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, lineedit_size));
 	lineedit_min->set_text("200");
 	lineedit_min->set_numeric_mode(true, true);
-	lineedit_min->func_enter_pressed().set(this, &Spin::on_min_enter_pressed, lineedit_min);
+	lineedit_min->func_enter_pressed() = bind_member(this, &Spin::on_min_enter_pressed, lineedit_min);
 
 	lineedit_label_min = new clan::Label(this);
 	lineedit_label_min->set_geometry(clan::Rect(label_xpos, lineedit_ypos, label_size));
@@ -103,7 +103,7 @@ Spin::Spin(clan::GUIManager &manager) :
 	lineedit_max->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, lineedit_size));
 	lineedit_max->set_text("2000");
 	lineedit_max->set_numeric_mode(true, true);
-	lineedit_max->func_enter_pressed().set(this, &Spin::on_max_enter_pressed, lineedit_max);
+	lineedit_max->func_enter_pressed() = bind_member(this, &Spin::on_max_enter_pressed, lineedit_max);
 
 	lineedit_label_max = new clan::Label(this);
 	lineedit_label_max->set_geometry(clan::Rect(label_xpos, lineedit_ypos, label_size));
@@ -114,7 +114,7 @@ Spin::Spin(clan::GUIManager &manager) :
 	lineedit_step->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, lineedit_size));
 	lineedit_step->set_text("50");
 	lineedit_step->set_numeric_mode(true, true);
-	lineedit_step->func_enter_pressed().set(this, &Spin::on_step_enter_pressed, lineedit_step);
+	lineedit_step->func_enter_pressed() = bind_member(this, &Spin::on_step_enter_pressed, lineedit_step);
 
 	lineedit_label_step = new clan::Label(this);
 	lineedit_label_step->set_geometry(clan::Rect(label_xpos, lineedit_ypos, label_size));
@@ -124,23 +124,23 @@ Spin::Spin(clan::GUIManager &manager) :
 	pushbutton_apply = new clan::PushButton(this);
 	pushbutton_apply->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, clan::Size(48, 20)));
 	pushbutton_apply->set_text("Apply");
-	pushbutton_apply->func_clicked().set(this, &Spin::on_apply_clicked, pushbutton_apply);
+	pushbutton_apply->func_clicked() = bind_member(this, &Spin::on_apply_clicked, pushbutton_apply);
 
 	xoffset = client_area.left + 1;
 	yoffset = client_area.top + 126 - gap;
 
 	checkbox_fp_mode = new clan::CheckBox(this);
 	checkbox_fp_mode->set_geometry(clan::Rect(xoffset, yoffset, clan::Size(100, 15)));
-	checkbox_fp_mode->func_checked().set(this, &Spin::on_checked_fp_mode, checkbox_fp_mode);
-	checkbox_fp_mode->func_unchecked().set(this, &Spin::on_unchecked_fp_mode, checkbox_fp_mode);
+	checkbox_fp_mode->func_checked() = bind_member(this, &Spin::on_checked_fp_mode, checkbox_fp_mode);
+	checkbox_fp_mode->func_unchecked() = bind_member(this, &Spin::on_unchecked_fp_mode, checkbox_fp_mode);
 	checkbox_fp_mode->set_text("Floating Point Mode");
 
 	yoffset += gap;
 
 	checkbox_disable = new clan::CheckBox(this);
 	checkbox_disable->set_geometry(clan::Rect(xoffset, yoffset, clan::Size(100, 15)));
-	checkbox_disable->func_checked().set(this, &Spin::on_checked_disable, checkbox_disable);
-	checkbox_disable->func_unchecked().set(this, &Spin::on_unchecked_disable, checkbox_disable);
+	checkbox_disable->func_checked() = bind_member(this, &Spin::on_checked_disable, checkbox_disable);
+	checkbox_disable->func_unchecked() = bind_member(this, &Spin::on_unchecked_disable, checkbox_disable);
 	checkbox_disable->set_text("Disable");
 }
 

@@ -38,7 +38,7 @@ App::App() : quit(false)
 // The start of the Application
 int App::start(const std::vector<std::string> &args)
 {
-    CallbackContainer cc; 
+    SlotContainer cc; 
 	DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("Vertex Buffer Object Example");
@@ -47,8 +47,8 @@ int App::start(const std::vector<std::string> &args)
 	win_desc.set_size(Size( 800, 600 ), false);
 
 	DisplayWindow window(win_desc);
-    cc.connect(window.sig_window_close(), clan::Callback<void()>(this, &App::on_window_close));
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::Callback<void(const clan::InputEvent&)>(this, &App::on_input_up));
+    cc.connect(window.sig_window_close(), std::function<void()>(this, &App::on_window_close));
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), std::function<void(const clan::InputEvent&)>(this, &App::on_input_up));
 
 	Canvas canvas(window);
 

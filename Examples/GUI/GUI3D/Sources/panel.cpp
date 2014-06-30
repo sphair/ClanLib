@@ -34,7 +34,7 @@
 
 Panel::Panel(GUI &gui, clan::Rect gui_position) : GUIComponent(&gui.get_gui_manager(), clan::GUITopLevelDescription("Panel", gui_position, false))
 {
-	func_render().set(this, &Panel::on_render);
+	func_render() = bind_member(this, &Panel::on_render);
 }
 
 Panel::~Panel()

@@ -43,7 +43,7 @@ Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComp
 	slider_ypos += 8;
 	slider_num_particles->set_max(1000);
 	slider_num_particles->set_position(num_particles);
-	slider_num_particles->func_value_changed().set(this, &Options::slider_num_particles_changed);
+	slider_num_particles->func_value_changed() = bind_member(this, &Options::slider_num_particles_changed);
 	slider_ypos += 8;
 	label_num_particles = create_slider_label(slider_num_particles);
 
@@ -51,13 +51,13 @@ Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComp
 	slider_ypos += 8;
 	slider_point_size->set_max(256);
 	slider_point_size->set_position(point_size);
-	slider_point_size->func_value_changed().set(this, &Options::slider_point_size_changed);
+	slider_point_size->func_value_changed() = bind_member(this, &Options::slider_point_size_changed);
 	slider_ypos += 8;
 	label_point_size = create_slider_label(slider_point_size);
 
 	update_all_slider_text();
 
-	func_render().set(this, &Options::on_render);
+	func_render() = bind_member(this, &Options::on_render);
 }
 
 Options::~Options()

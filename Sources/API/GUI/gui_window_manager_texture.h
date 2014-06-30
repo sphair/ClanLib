@@ -81,13 +81,13 @@ public:
 /// \{
 public:
 	/// \brief void func_repaint()
-	Callback<void()> &func_repaint();
+	std::function<void()> &func_repaint();
 
 	/// \brief void func_setup_framebuffer(FrameBuffer &fb)
-	Callback<void(FrameBuffer &)> &func_setup_framebuffer();
+	std::function<void(FrameBuffer &)> &func_setup_framebuffer();
 
 	/// \brief void func_input_intercept(InputEvent &input_event)
-	Callback<void(InputEvent &)> &func_input_intercept();
+	std::function<void(InputEvent &)> &func_input_intercept();
 /// \}
 
 /// \name Operations

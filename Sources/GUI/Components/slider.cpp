@@ -126,10 +126,10 @@ public:
 
 	Point mouse_drag_start_pos;
 
-	Callback<void()> func_value_changed;
-	Callback<void()> func_slider_decrement;
-	Callback<void()> func_slider_increment;
-	Callback<void()> func_slider_moved;
+	std::function<void()> func_value_changed;
+	std::function<void()> func_slider_decrement;
+	std::function<void()> func_slider_increment;
+	std::function<void()> func_slider_moved;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -142,10 +142,10 @@ Slider::Slider(GUIComponent *parent)
 	impl->slider = this;
 	impl->vertical = false;
 	impl->position = 0;
-	func_process_message().set(impl.get(), &Slider_Impl::on_process_message);
-	func_render().set(impl.get(), &Slider_Impl::on_render);
-	func_resized().set(impl.get(), &Slider_Impl::on_resized);
-	func_enablemode_changed().set(impl.get(), &Slider_Impl::on_enablemode_changed);
+	func_process_message() = bind_member(impl.get(), &Slider_Impl::on_process_message);
+	func_render() = bind_member(impl.get(), &Slider_Impl::on_render);
+	func_resized() = bind_member(impl.get(), &Slider_Impl::on_resized);
+	func_enablemode_changed() = bind_member(impl.get(), &Slider_Impl::on_enablemode_changed);
 	impl->create_parts();
 }
 
@@ -287,22 +287,22 @@ void Slider::set_lock_to_ticks(bool value)
 /////////////////////////////////////////////////////////////////////////////
 // Slider Callbacks:
 
-Callback<void()> &Slider::func_value_changed()
+std::function<void()> &Slider::func_value_changed()
 {
 	return impl->func_value_changed;
 }
 
-Callback<void()> &Slider::func_value_decremented()
+std::function<void()> &Slider::func_value_decremented()
 {
 	return impl->func_slider_decrement;
 }
 
-Callback<void()> &Slider::func_value_incremented()
+std::function<void()> &Slider::func_value_incremented()
 {
 	return impl->func_slider_increment;
 }
 
-Callback<void()> &Slider::func_slider_moved()
+std::function<void()> &Slider::func_slider_moved()
 {
 	return impl->func_slider_moved;
 }
@@ -340,12 +340,12 @@ void Slider_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 
 			if (old_position != position)
 			{
-				if (!func_value_changed.is_null())
-					func_value_changed.invoke();
-				if (!func_slider_decrement.is_null())
-					func_slider_decrement.invoke();
-				if (!func_slider_moved.is_null())
-					func_slider_moved.invoke();
+				if (func_value_changed)
+					func_value_changed();
+				if (func_slider_decrement)
+					func_slider_decrement();
+				if (func_slider_moved)
+					func_slider_moved();
 			}
 
 			input_msg->consumed = true;
@@ -357,12 +357,12 @@ void Slider_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 
 			if (old_position != position)
 			{
-				if (!func_value_changed.is_null())
-					func_value_changed.invoke();
-				if (!func_slider_increment.is_null())
-					func_slider_increment.invoke();
-				if (!func_slider_moved.is_null())
-					func_slider_moved.invoke();
+				if (func_value_changed)
+					func_value_changed();
+				if (func_slider_increment)
+					func_slider_increment();
+				if (func_slider_moved)
+					func_slider_moved();
 			}
 
 			input_msg->consumed = true;
@@ -441,8 +441,8 @@ void Slider_Impl::on_mouse_move(std::shared_ptr<GUIMessage_Input> &input, InputE
 
 	if (position != original_slider_position)
 	{
-		if (!func_value_changed.is_null())
-			func_value_changed.invoke();
+		if (func_value_changed)
+			func_value_changed();
 	}
 }
 
@@ -466,8 +466,8 @@ void Slider_Impl::on_mouse_lbutton_down(std::shared_ptr<GUIMessage_Input> &input
 		last_step_size = -page_step;
 		if (position < slider_min) position = slider_min;
 		if (position > slider_max) position = slider_max;
-		if (!func_slider_decrement.is_null())
-			func_slider_decrement.invoke();
+		if (func_slider_decrement)
+			func_slider_decrement();
 	}
 	else if (rect_track_increment.contains(pos))
 	{
@@ -477,8 +477,8 @@ void Slider_Impl::on_mouse_lbutton_down(std::shared_ptr<GUIMessage_Input> &input
 		last_step_size = page_step;
 		if (position < slider_min) position = slider_min;
 		if (position > slider_max) position = slider_max;
-		if (!func_slider_increment.is_null())
-			func_slider_increment.invoke();
+		if (func_slider_increment)
+			func_slider_increment();
 	}
 
 	slider->request_repaint();
@@ -486,16 +486,16 @@ void Slider_Impl::on_mouse_lbutton_down(std::shared_ptr<GUIMessage_Input> &input
 
 	if (position != original_position)
 	{
-		if (!func_value_changed.is_null())
-			func_value_changed.invoke();
+		if (func_value_changed)
+			func_value_changed();
 	}
 }
 
 void Slider_Impl::on_mouse_lbutton_up(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event)
 {
 	if ((mouse_down_mode == mouse_down_thumb_drag) && (mouse_drag_start_value != position))
-		if (!func_slider_moved.is_null())
-			func_slider_moved.invoke();
+		if (func_slider_moved)
+			func_slider_moved();
 
 	mouse_down_mode = mouse_down_none;
 

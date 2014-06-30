@@ -448,8 +448,8 @@ public:
 public:
 	/// \brief Sig animation finished
 	///
-	/// \return Signal<>
-	Signal<> &sig_animation_finished();
+	/// \return Signal<void()>
+	Signal<void()> &sig_animation_finished();
 /// \}
 
 /// \name Implementation

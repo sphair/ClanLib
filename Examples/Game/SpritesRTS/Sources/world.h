@@ -69,7 +69,7 @@ private:
 	void onMouseMove(const clan::InputEvent &key);
 	void on_window_close();
 
-    clan::CallbackContainer cc;
+    clan::SlotContainer cc;
 
 	clan::Image background;
 	

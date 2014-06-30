@@ -32,7 +32,7 @@
 ScrollBar::ScrollBar(clan::GUIManager &manager) : 
 	clan::Window(&manager, clan::GUITopLevelDescription("Scrollbar", clan::Rect(8, 8, clan::Size(256, 256)), false))
 {
-	func_close().set(this, &ScrollBar::on_close);
+	func_close() = bind_member(this, &ScrollBar::on_close);
 
 	clan::Rect client_area = get_client_area();
 
@@ -44,15 +44,15 @@ ScrollBar::ScrollBar(clan::GUIManager &manager) :
 	scrollbar_vertical->set_line_step(1);
 	scrollbar_vertical->set_page_step(40);
 	scrollbar_vertical->set_position(50);
-	scrollbar_vertical->func_scroll().set(this, &ScrollBar::on_scroll, scrollbar_vertical);
-	scrollbar_vertical->func_scroll_min().set(this, &ScrollBar::on_scroll_min, scrollbar_vertical);
-	scrollbar_vertical->func_scroll_max().set(this, &ScrollBar::on_scroll_max, scrollbar_vertical);
-	scrollbar_vertical->func_scroll_line_decrement().set(this, &ScrollBar::on_scroll_line_decrement, scrollbar_vertical);
-	scrollbar_vertical->func_scroll_line_increment().set(this, &ScrollBar::on_scroll_line_increment, scrollbar_vertical);
-	scrollbar_vertical->func_scroll_page_decrement().set(this, &ScrollBar::on_scroll_page_decrement, scrollbar_vertical);
-	scrollbar_vertical->func_scroll_page_increment().set(this, &ScrollBar::on_scroll_page_increment, scrollbar_vertical);
-	scrollbar_vertical->func_scroll_thumb_release().set(this, &ScrollBar::on_scroll_thumb_release, scrollbar_vertical);
-	scrollbar_vertical->func_scroll_thumb_track().set(this, &ScrollBar::on_scroll_thumb_track, scrollbar_vertical);
+	scrollbar_vertical->func_scroll() = bind_member(this, &ScrollBar::on_scroll, scrollbar_vertical);
+	scrollbar_vertical->func_scroll_min() = bind_member(this, &ScrollBar::on_scroll_min, scrollbar_vertical);
+	scrollbar_vertical->func_scroll_max() = bind_member(this, &ScrollBar::on_scroll_max, scrollbar_vertical);
+	scrollbar_vertical->func_scroll_line_decrement() = bind_member(this, &ScrollBar::on_scroll_line_decrement, scrollbar_vertical);
+	scrollbar_vertical->func_scroll_line_increment() = bind_member(this, &ScrollBar::on_scroll_line_increment, scrollbar_vertical);
+	scrollbar_vertical->func_scroll_page_decrement() = bind_member(this, &ScrollBar::on_scroll_page_decrement, scrollbar_vertical);
+	scrollbar_vertical->func_scroll_page_increment() = bind_member(this, &ScrollBar::on_scroll_page_increment, scrollbar_vertical);
+	scrollbar_vertical->func_scroll_thumb_release() = bind_member(this, &ScrollBar::on_scroll_thumb_release, scrollbar_vertical);
+	scrollbar_vertical->func_scroll_thumb_track() = bind_member(this, &ScrollBar::on_scroll_thumb_track, scrollbar_vertical);
 
 	scrollbar_horizontal = new clan::ScrollBar(this);
 	scrollbar_horizontal->set_geometry(clan::Rect(client_area.left + 26, client_area.top + 10, clan::Size(200, 17)));
@@ -62,15 +62,15 @@ ScrollBar::ScrollBar(clan::GUIManager &manager) :
 	scrollbar_horizontal->set_line_step(1);
 	scrollbar_horizontal->set_page_step(40);
 	scrollbar_horizontal->set_position(50);
-	scrollbar_horizontal->func_scroll().set(this, &ScrollBar::on_scroll, scrollbar_horizontal);
-	scrollbar_horizontal->func_scroll_min().set(this, &ScrollBar::on_scroll_min, scrollbar_horizontal);
-	scrollbar_horizontal->func_scroll_max().set(this, &ScrollBar::on_scroll_max, scrollbar_horizontal);
-	scrollbar_horizontal->func_scroll_line_decrement().set(this, &ScrollBar::on_scroll_line_decrement, scrollbar_horizontal);
-	scrollbar_horizontal->func_scroll_line_increment().set(this, &ScrollBar::on_scroll_line_increment, scrollbar_horizontal);
-	scrollbar_horizontal->func_scroll_page_decrement().set(this, &ScrollBar::on_scroll_page_decrement, scrollbar_horizontal);
-	scrollbar_horizontal->func_scroll_page_increment().set(this, &ScrollBar::on_scroll_page_increment, scrollbar_horizontal);
-	scrollbar_horizontal->func_scroll_thumb_release().set(this, &ScrollBar::on_scroll_thumb_release, scrollbar_horizontal);
-	scrollbar_horizontal->func_scroll_thumb_track().set(this, &ScrollBar::on_scroll_thumb_track, scrollbar_horizontal);
+	scrollbar_horizontal->func_scroll() = bind_member(this, &ScrollBar::on_scroll, scrollbar_horizontal);
+	scrollbar_horizontal->func_scroll_min() = bind_member(this, &ScrollBar::on_scroll_min, scrollbar_horizontal);
+	scrollbar_horizontal->func_scroll_max() = bind_member(this, &ScrollBar::on_scroll_max, scrollbar_horizontal);
+	scrollbar_horizontal->func_scroll_line_decrement() = bind_member(this, &ScrollBar::on_scroll_line_decrement, scrollbar_horizontal);
+	scrollbar_horizontal->func_scroll_line_increment() = bind_member(this, &ScrollBar::on_scroll_line_increment, scrollbar_horizontal);
+	scrollbar_horizontal->func_scroll_page_decrement() = bind_member(this, &ScrollBar::on_scroll_page_decrement, scrollbar_horizontal);
+	scrollbar_horizontal->func_scroll_page_increment() = bind_member(this, &ScrollBar::on_scroll_page_increment, scrollbar_horizontal);
+	scrollbar_horizontal->func_scroll_thumb_release() = bind_member(this, &ScrollBar::on_scroll_thumb_release, scrollbar_horizontal);
+	scrollbar_horizontal->func_scroll_thumb_track() = bind_member(this, &ScrollBar::on_scroll_thumb_track, scrollbar_horizontal);
 
 	clan::Size lineedit_size(42, 20);
 	clan::Size label_size(50, 15);
@@ -84,7 +84,7 @@ ScrollBar::ScrollBar(clan::GUIManager &manager) :
 	lineedit_min->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, lineedit_size));
 	lineedit_min->set_text("0");
 	lineedit_min->set_numeric_mode(true);
-	lineedit_min->func_enter_pressed().set(this, &ScrollBar::on_min_enter_pressed, lineedit_min);
+	lineedit_min->func_enter_pressed() = bind_member(this, &ScrollBar::on_min_enter_pressed, lineedit_min);
 
 	lineedit_label_min = new clan::Label(this);
 	lineedit_label_min->set_geometry(clan::Rect(label_xpos, lineedit_ypos, label_size));
@@ -95,7 +95,7 @@ ScrollBar::ScrollBar(clan::GUIManager &manager) :
 	lineedit_max->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, lineedit_size));
 	lineedit_max->set_text("100");
 	lineedit_max->set_numeric_mode(true);
-	lineedit_max->func_enter_pressed().set(this, &ScrollBar::on_max_enter_pressed, lineedit_max);
+	lineedit_max->func_enter_pressed() = bind_member(this, &ScrollBar::on_max_enter_pressed, lineedit_max);
 
 	lineedit_label_max = new clan::Label(this);
 	lineedit_label_max->set_geometry(clan::Rect(label_xpos, lineedit_ypos, label_size));
@@ -105,7 +105,7 @@ ScrollBar::ScrollBar(clan::GUIManager &manager) :
 	lineedit_line_step = new clan::LineEdit(this);
 	lineedit_line_step->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, lineedit_size));
 	lineedit_line_step->set_text("1");
-	lineedit_line_step->func_enter_pressed().set(this, &ScrollBar::on_line_step_enter_pressed, lineedit_line_step);
+	lineedit_line_step->func_enter_pressed() = bind_member(this, &ScrollBar::on_line_step_enter_pressed, lineedit_line_step);
 
 	lineedit_label_line_step = new clan::Label(this);
 	lineedit_label_line_step->set_geometry(clan::Rect(label_xpos, lineedit_ypos, label_size));
@@ -115,7 +115,7 @@ ScrollBar::ScrollBar(clan::GUIManager &manager) :
 	lineedit_page_step = new clan::LineEdit(this);
 	lineedit_page_step->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, lineedit_size));
 	lineedit_page_step->set_text("40");
-	lineedit_page_step->func_enter_pressed().set(this, &ScrollBar::on_page_step_enter_pressed, lineedit_page_step);
+	lineedit_page_step->func_enter_pressed() = bind_member(this, &ScrollBar::on_page_step_enter_pressed, lineedit_page_step);
 
 	lineedit_label_page_step = new clan::Label(this);
 	lineedit_label_page_step->set_geometry(clan::Rect(label_xpos, lineedit_ypos, label_size));
@@ -125,7 +125,7 @@ ScrollBar::ScrollBar(clan::GUIManager &manager) :
 	lineedit_position_vert = new clan::LineEdit(this);
 	lineedit_position_vert->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, lineedit_size));
 	lineedit_position_vert->set_text("50");
-	lineedit_position_vert->func_enter_pressed().set(this, &ScrollBar::on_position_enter_pressed_vert, lineedit_position_vert);
+	lineedit_position_vert->func_enter_pressed() = bind_member(this, &ScrollBar::on_position_enter_pressed_vert, lineedit_position_vert);
 
 	lineedit_label_position_vert = new clan::Label(this);
 	lineedit_label_position_vert->set_geometry(clan::Rect(label_xpos, lineedit_ypos, label_size));
@@ -135,7 +135,7 @@ ScrollBar::ScrollBar(clan::GUIManager &manager) :
 	lineedit_position_horiz = new clan::LineEdit(this);
 	lineedit_position_horiz->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, lineedit_size));
 	lineedit_position_horiz->set_text("50");
-	lineedit_position_horiz->func_enter_pressed().set(this, &ScrollBar::on_position_enter_pressed_horiz, lineedit_position_horiz);
+	lineedit_position_horiz->func_enter_pressed() = bind_member(this, &ScrollBar::on_position_enter_pressed_horiz, lineedit_position_horiz);
 
 	lineedit_label_position_horiz = new clan::Label(this);
 	lineedit_label_position_horiz->set_geometry(clan::Rect(label_xpos, lineedit_ypos, label_size));
@@ -145,7 +145,7 @@ ScrollBar::ScrollBar(clan::GUIManager &manager) :
 	pushbutton_apply = new clan::PushButton(this);
 	pushbutton_apply->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, clan::Size(48, 20)));
 	pushbutton_apply->set_text("Apply");
-	pushbutton_apply->func_clicked().set(this, &ScrollBar::on_apply_clicked, pushbutton_apply);
+	pushbutton_apply->func_clicked() = bind_member(this, &ScrollBar::on_apply_clicked, pushbutton_apply);
 
 	int xoffset = client_area.left + 21;
 	int yoffset = client_area.top + 35;
@@ -184,8 +184,8 @@ ScrollBar::ScrollBar(clan::GUIManager &manager) :
 
 	checkbox_disable = new clan::CheckBox(this);
 	checkbox_disable->set_geometry(clan::Rect(xoffset, yoffset, clan::Size(100, 15)));
-	checkbox_disable->func_checked().set(this, &ScrollBar::on_checked_disable, checkbox_disable);
-	checkbox_disable->func_unchecked().set(this, &ScrollBar::on_unchecked_disable, checkbox_disable);
+	checkbox_disable->func_checked() = bind_member(this, &ScrollBar::on_checked_disable, checkbox_disable);
+	checkbox_disable->func_unchecked() = bind_member(this, &ScrollBar::on_unchecked_disable, checkbox_disable);
 	checkbox_disable->set_text("Disable");
 }
 

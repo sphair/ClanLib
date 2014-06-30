@@ -109,7 +109,7 @@ public:
 	float max_value_d;
 	float step_size_d;
 
-	Callback<void()> func_value_changed;
+	std::function<void()> func_value_changed;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -120,10 +120,10 @@ Spin::Spin(GUIComponent *parent)
 {
 	impl->component = this;
 	set_double_click_enabled(false);
-	func_process_message().set(impl.get(), &Spin_Impl::on_process_message);
-	func_render().set(impl.get(), &Spin_Impl::on_render);
-	func_resized().set(impl.get(), &Spin_Impl::on_resized);
-	func_enablemode_changed().set(impl.get(), &Spin_Impl::on_enablemode_changed);
+	func_process_message() = bind_member(impl.get(), &Spin_Impl::on_process_message);
+	func_render() = bind_member(impl.get(), &Spin_Impl::on_render);
+	func_resized() = bind_member(impl.get(), &Spin_Impl::on_resized);
+	func_enablemode_changed() = bind_member(impl.get(), &Spin_Impl::on_enablemode_changed);
 
 	impl->create_components();
 }
@@ -234,7 +234,7 @@ void Spin::set_step_size_float(float step_size)
 /////////////////////////////////////////////////////////////////////////////
 // Spin Events:
 
-Callback<void()> &Spin::func_value_changed()
+std::function<void()> &Spin::func_value_changed()
 {
 	return impl->func_value_changed;
 }
@@ -279,8 +279,8 @@ void Spin_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 					else if (down_pressed)
 						decrement_value();
 
-					if (!func_value_changed.is_null())
-						func_value_changed.invoke();
+					if (func_value_changed)
+						func_value_changed();
 					component->request_repaint();
 				}
 				input_msg->consumed = true;
@@ -373,7 +373,7 @@ void Spin_Impl::create_components()
 {
 	lineedit = new LineEdit(component);
 	//FIXME: lineedit->set_class_name("spin");
-	lineedit->func_after_edit_changed().set(this, &Spin_Impl::on_lineedit_modified);
+	lineedit->func_after_edit_changed() = bind_member(this, &Spin_Impl::on_lineedit_modified);
 	lineedit->set_numeric_mode(true);
 
 	part_button_down = GUIThemePart(component, CssStr::Spin::part_button_down);
@@ -435,8 +435,8 @@ void Spin_Impl::on_lineedit_modified(InputEvent &event)
 			if (clamp_value())
 				update_lineedit();
 
-			if (!func_value_changed.is_null())
-				func_value_changed.invoke();
+			if (func_value_changed)
+				func_value_changed();
 		}
 	}
 	else
@@ -448,8 +448,8 @@ void Spin_Impl::on_lineedit_modified(InputEvent &event)
 			if (clamp_value())
 				update_lineedit();
 
-			if (!func_value_changed.is_null())
-				func_value_changed.invoke();
+			if (func_value_changed)
+				func_value_changed();
 		}
 	}
 }

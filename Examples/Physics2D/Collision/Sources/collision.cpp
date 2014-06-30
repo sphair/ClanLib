@@ -49,10 +49,10 @@ int Collision::start(const std::vector<std::string> &args)
 	DisplayWindow window(desc);
 	
 	// Connect the Window close event
-	window.sig_window_close().connect({this, &Collision::on_window_close});
+	window.sig_window_close().connect(this, &Collision::on_window_close);
 
 	// Connect a keyboard handler to on_key_up()
-	window.get_ic().get_keyboard().sig_key_up().connect({this, &Collision::on_input_up});
+	window.get_ic().get_keyboard().sig_key_up().connect(this, &Collision::on_input_up);
 
 	// Create the canvas
 	Canvas canvas(window);

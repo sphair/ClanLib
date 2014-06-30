@@ -70,7 +70,7 @@ public:
 /// \{
 public:
 	/// \brief void func_input_intercept(InputEvent &input_event)
-	Callback<void(InputEvent &)> &func_input_intercept();
+	std::function<void(InputEvent &)> &func_input_intercept();
 /// \}
 
 /// \name Implementation

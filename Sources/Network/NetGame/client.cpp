@@ -72,17 +72,17 @@ void NetGameClient::send_event(const NetGameEvent &game_event)
 		impl->connection->send_event(game_event);
 }
 
-Signal<const NetGameEvent &> &NetGameClient::sig_event_received()
+Signal<void(const NetGameEvent &)> &NetGameClient::sig_event_received()
 {
 	return impl->sig_game_event_received;
 }
 
-Signal<> &NetGameClient::sig_connected()
+Signal<void()> &NetGameClient::sig_connected()
 {
 	return impl->sig_game_connected;
 }
 
-Signal<> &NetGameClient::sig_disconnected()
+Signal<void()> &NetGameClient::sig_disconnected()
 {
 	return impl->sig_game_disconnected;
 }
@@ -105,13 +105,13 @@ void NetGameClient_Impl::process()
 		switch (new_events[i].type)
 		{
 		case NetGameNetworkEvent::client_connected:
-			sig_game_connected.invoke();
+			sig_game_connected();
 			break;
 		case NetGameNetworkEvent::event_received:
-			sig_game_event_received.invoke(new_events[i].game_event);
+			sig_game_event_received(new_events[i].game_event);
 			break;
 		case NetGameNetworkEvent::client_disconnected:
-			sig_game_disconnected.invoke();
+			sig_game_disconnected();
 			connection.reset();
 			break;
 		default:

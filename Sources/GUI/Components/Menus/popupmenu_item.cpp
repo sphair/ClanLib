@@ -59,7 +59,7 @@ public:
 	bool separator;
 	bool checkable;
 	bool is_checked;
-	Callback<void()> func_clicked;
+	std::function<void()> func_clicked;
 };
 
 
@@ -142,7 +142,7 @@ PixelBuffer PopupMenuItem::get_icon() const
 /////////////////////////////////////////////////////////////////////////////
 // PopupMenuItem Events:
 
-Callback<void()> & PopupMenuItem::func_clicked()
+std::function<void()> & PopupMenuItem::func_clicked()
 {	
 	return impl->func_clicked;
 }

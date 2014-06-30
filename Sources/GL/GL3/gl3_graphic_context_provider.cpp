@@ -771,7 +771,7 @@ void GL3GraphicContextProvider::clear_depth(float value)
 
 void GL3GraphicContextProvider::on_window_resized()
 {
-	window_resized_signal.invoke(render_window->get_viewport().get_size());
+	window_resized_signal(render_window->get_viewport().get_size());
 }
 
 void GL3GraphicContextProvider::set_viewport(const Rectf &viewport)

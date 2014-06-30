@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "API/Core/Signals/callback.h"
 #include "API/Core/Signals/signal.h"
 #include "API/Core/Math/rect.h"
 #include "API/GUI/gui_component.h"
@@ -73,26 +72,26 @@ public:
 	GUIComponent *last_child;
 	GUIComponent::FocusPolicy focus_policy;
 	GUILayout layout;
-	Callback<void(Canvas &, const Rect &)> func_render;
-	Callback<void(std::shared_ptr<GUIMessage> &)> func_process_message;
-	Callback<bool()> func_close;
-	Callback<bool()> func_activated;
-	Callback<bool()> func_deactivated;
-	Callback<bool()> func_focus_lost;
-	Callback<bool()> func_focus_gained;
-	Callback<bool()> func_pointer_enter;
-	Callback<bool()> func_pointer_exit;
+	std::function<void(Canvas &, const Rect &)> func_render;
+	std::function<void(std::shared_ptr<GUIMessage> &)> func_process_message;
+	std::function<bool()> func_close;
+	std::function<bool()> func_activated;
+	std::function<bool()> func_deactivated;
+	std::function<bool()> func_focus_lost;
+	std::function<bool()> func_focus_gained;
+	std::function<bool()> func_pointer_enter;
+	std::function<bool()> func_pointer_exit;
 	
-	Callback<bool(const InputEvent &)> func_input;
-	Callback<bool(const InputEvent &)> func_input_pressed;
-	Callback<bool(const InputEvent &)> func_input_released;
-	Callback<bool(const InputEvent &)> func_input_doubleclick;
-	Callback<bool(const InputEvent &)> func_input_pointer_moved;
-	Callback<void()> func_enablemode_changed;
-	Callback<void()> func_resized;
-	Callback<void(std::shared_ptr<GUIMessage> &)> func_filter_message;
-	Callback<GUIComponent*(GUIComponent*, std::string)> func_create_custom_component;
-	Callback<void(bool)> func_visibility_change;
+	std::function<bool(const InputEvent &)> func_input;
+	std::function<bool(const InputEvent &)> func_input_pressed;
+	std::function<bool(const InputEvent &)> func_input_released;
+	std::function<bool(const InputEvent &)> func_input_doubleclick;
+	std::function<bool(const InputEvent &)> func_input_pointer_moved;
+	std::function<void()> func_enablemode_changed;
+	std::function<void()> func_resized;
+	std::function<void(std::shared_ptr<GUIMessage> &)> func_filter_message;
+	std::function<GUIComponent*(GUIComponent*, std::string)> func_create_custom_component;
+	std::function<void(bool)> func_visibility_change;
 	bool allow_resize;
 	bool clip_children;
 	Rect clip_children_rect;

@@ -32,8 +32,6 @@
 
 #include "../api_gui.h"
 #include "../gui_component.h"
-#include "../../Core/Signals/callback.h"
-#include "../../Core/Signals/callback.h"
 #include "listview.h"
 
 namespace clan
@@ -141,11 +139,11 @@ public:
 /// \{
 
 public:
-	Callback<void(ListViewColumnHeader)> &func_column_added();
+	std::function<void(ListViewColumnHeader)> &func_column_added();
 
-	Callback<void(ListViewColumnHeader)> &func_column_removed();
+	std::function<void(ListViewColumnHeader)> &func_column_removed();
 
-	Callback<void(ListViewColumnHeader)> &func_column_size_changed();
+	std::function<void(ListViewColumnHeader)> &func_column_size_changed();
 
 /// \}
 /// \name Implementation

@@ -7,13 +7,13 @@ using namespace clan;
 CSSView::CSSView(GUIComponent *parent)
 : GUIComponent(parent, "cssview"), scrollbar(0)
 {
-	func_resized().set(this, &CSSView::on_resized);
-	func_render().set(this, &CSSView::on_render);
+	func_resized() = bind_member(this, &CSSView::on_resized);
+	func_render() = bind_member(this, &CSSView::on_render);
 
 	scrollbar = new ScrollBar(this);
 	scrollbar->set_vertical();
 	scrollbar->set_ranges(0, 30000, 12, 800);
-	scrollbar->func_scroll().set(this, &CSSView::on_scroll);
+	scrollbar->func_scroll() = bind_member(this, &CSSView::on_scroll);
 
 	on_resized();
 }
@@ -95,7 +95,7 @@ Image CSSView::on_layout_get_image(Canvas &canvas, const std::string &uri)
 void CSSView::reset()
 {
 	layout = CSSLayout();
-	layout.func_get_image().set(this, &CSSView::on_layout_get_image);
+	layout.func_get_image() = bind_member(this, &CSSView::on_layout_get_image);
 	css_document = CSSDocument();
 	for (size_t i = 0; i < replaced_objects.size(); i++)
 		delete replaced_objects[i];

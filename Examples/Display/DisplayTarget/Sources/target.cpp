@@ -75,7 +75,7 @@ int Target::start(const std::vector<std::string> &args)
 
 bool Target::run_demo()
 {
-    clan::CallbackContainer cc;
+    clan::SlotContainer cc;
 	clan::DisplayWindowDescription desc;
 	desc.set_title("Target Display (with resizable window)");
 	desc.set_size(clan::Size(800, 600), true);
@@ -83,10 +83,10 @@ bool Target::run_demo()
 	clan::DisplayWindow window(desc);
 
 	// Connect the Window close event
-	cc.connect(window.sig_window_close(), clan::Callback<void()>(this, &Target::on_window_close));
+	cc.connect(window.sig_window_close(), std::function<void()>(this, &Target::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::Callback<void(const clan::InputEvent&)>(this, &Target::on_input_up));
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), std::function<void(const clan::InputEvent&)>(this, &Target::on_input_up));
 
 	clan::Canvas canvas(window);
 

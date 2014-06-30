@@ -81,7 +81,7 @@ public:
 /// \{
 
 public:
-	Callback<void(TabPage*)> &func_page_selected();
+	std::function<void(TabPage*)> &func_page_selected();
 
 
 /// \}

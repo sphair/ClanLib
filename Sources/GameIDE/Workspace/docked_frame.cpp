@@ -37,8 +37,8 @@ namespace clan
 DockedFrame::DockedFrame(GUIComponent *parent, DockableComponent *dockable)
 : GUIComponent(parent, "docked-frame"), dockable(dockable)
 {
-	func_resized().set(this, &DockedFrame::on_resized);
-	func_render().set(this, &DockedFrame::on_render);
+	func_resized() = bind_member(this, &DockedFrame::on_resized);
+	func_render() = bind_member(this, &DockedFrame::on_render);
 	dockable->set_parent_component(this);
 	dockable->set_visible(true, false);
 	set_visible(false, false);

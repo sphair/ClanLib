@@ -69,9 +69,9 @@ public:
 /// \name Events
 /// \{
 public:
-	Signal<DisplayWindow> &sig_toplevel_window_created();
+	Signal<void(DisplayWindow)> &sig_toplevel_window_created();
 
-	Signal<DisplayWindow> &sig_toplevel_window_destroyed();
+	Signal<void(DisplayWindow)> &sig_toplevel_window_destroyed();
 
 /// \}
 

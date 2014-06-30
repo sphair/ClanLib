@@ -33,7 +33,7 @@ Theme::Theme(clan::GUIManager &manager, gui_theme default_theme) : current_theme
 	clan::Window(&manager, clan::GUITopLevelDescription("Window Theme", clan::Rect(256*3 + 32, 256 + 180 + 24, clan::Size(256, 180)), false))
 {
 
-	func_close().set(this, &Theme::on_close);
+	func_close() = bind_member(this, &Theme::on_close);
 
 	clan::Rect client_area = get_client_area();
 
@@ -49,7 +49,7 @@ Theme::Theme(clan::GUIManager &manager, gui_theme default_theme) : current_theme
 	radiobutton_aero->set_text("Aero");
 	radiobutton_aero->set_selected(default_theme == theme_aero);
 	radiobutton_aero->set_group_name("Theme");
-	radiobutton_aero->func_selected().set(this, &Theme::on_theme_selected, radiobutton_aero);
+	radiobutton_aero->func_selected() = bind_member(this, &Theme::on_theme_selected, radiobutton_aero);
 	yoffset += ygap;
 
 	radiobutton_aero_packed = new clan::RadioButton(this);
@@ -57,7 +57,7 @@ Theme::Theme(clan::GUIManager &manager, gui_theme default_theme) : current_theme
 	radiobutton_aero_packed->set_text("Aero Packed");
 	radiobutton_aero_packed->set_selected(default_theme == theme_aero_packed);
 	radiobutton_aero_packed->set_group_name("Theme");
-	radiobutton_aero_packed->func_selected().set(this, &Theme::on_theme_selected, radiobutton_aero_packed);
+	radiobutton_aero_packed->func_selected() = bind_member(this, &Theme::on_theme_selected, radiobutton_aero_packed);
 	yoffset += ygap;
 
 	radiobutton_basic = new clan::RadioButton(this);
@@ -65,7 +65,7 @@ Theme::Theme(clan::GUIManager &manager, gui_theme default_theme) : current_theme
 	radiobutton_basic->set_text("Basic");
 	radiobutton_basic->set_selected(default_theme == theme_basic);
 	radiobutton_basic->set_group_name("Theme");
-	radiobutton_basic->func_selected().set(this, &Theme::on_theme_selected, radiobutton_basic);
+	radiobutton_basic->func_selected() = bind_member(this, &Theme::on_theme_selected, radiobutton_basic);
 	yoffset += ygap;
 
 	radiobutton_basic_packed = new clan::RadioButton(this);
@@ -73,7 +73,7 @@ Theme::Theme(clan::GUIManager &manager, gui_theme default_theme) : current_theme
 	radiobutton_basic_packed->set_text("Basic Packed");
 	radiobutton_basic_packed->set_selected(default_theme == theme_basic_packed);
 	radiobutton_basic_packed->set_group_name("Theme");
-	radiobutton_basic_packed->func_selected().set(this, &Theme::on_theme_selected, radiobutton_basic_packed);
+	radiobutton_basic_packed->func_selected() = bind_member(this, &Theme::on_theme_selected, radiobutton_basic_packed);
 	yoffset += ygap;
 
 	if (!clan::FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))

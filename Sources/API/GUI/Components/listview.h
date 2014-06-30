@@ -199,31 +199,31 @@ public:
 
 public:
 	/// \brief Selected items are returned as children of the returned item.
-	Callback<void(ListViewSelection)> &func_selection_changed();
+	std::function<void(ListViewSelection)> &func_selection_changed();
 
 	/// \brief Invoked on double clicking a listview item.
-	Callback<void(const ListViewItem &)> &func_item_doubleclick();
+	std::function<void(const ListViewItem &)> &func_item_doubleclick();
 
 	/// \brief Invoked when enter is pressed in the ListViews built-in LineEdit control.
 	/// The caller may change the passed string. Returning false from the callback cancels the edit.
-	Callback<bool(ListViewItem, std::string &)> &func_item_edited();
+	std::function<bool(ListViewItem, std::string &)> &func_item_edited();
 
-	Callback<void(InputEvent&)> &func_key_pressed();
+	std::function<void(InputEvent&)> &func_key_pressed();
 
-	Callback<void(InputEvent&)> &func_key_released();
+	std::function<void(InputEvent&)> &func_key_released();
 
 	/// \brief Callback called when the right mouse button is released (a click).
 	/// Use this callback for listview context menus. Click position sent as parameter.
-	Callback<void(Point)> &func_mouse_right_up();
+	std::function<void(Point)> &func_mouse_right_up();
 
 	/// \brief Callback called when an item node is opened
-	Callback<void(const ListViewItem &)> &func_item_opened();
+	std::function<void(const ListViewItem &)> &func_item_opened();
 
 	/// \brief Callback called when an item node is closed
-	Callback<void(const ListViewItem &)> &func_item_closed();
+	std::function<void(const ListViewItem &)> &func_item_closed();
 
 	/// \brief Callback called when the user begins a drag'n'drop action
-	Callback<void()> &func_begin_drag();
+	std::function<void()> &func_begin_drag();
 
 /// \}
 /// \name Implementation

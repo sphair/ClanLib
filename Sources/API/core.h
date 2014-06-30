@@ -93,8 +93,6 @@
 #include "Core/ErrorReporting/crash_reporter.h"
 #include "Core/ErrorReporting/detect_hang.h"
 #include "Core/ErrorReporting/exception_dialog.h"
-#include "Core/Signals/callback.h"
-#include "Core/Signals/callbackcontainer.h"
 #include "Core/Signals/signal.h"
 #include "Core/Resources/resource.h"
 #include "Core/Resources/resource_container.h"

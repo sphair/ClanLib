@@ -31,7 +31,6 @@
 
 #include "api_gui.h"
 #include <memory>
-#include "../Core/Signals/callback.h"
 #include "../GUI/gui_message.h"
 #include "../GUI/gui_message_input.h"
 #include <vector>
@@ -68,7 +67,7 @@ public:
 /// \{
 
 public:
-	Callback<void(std::shared_ptr<GUIMessage> &, AcceleratorKey)> &func_pressed();
+	std::function<void(std::shared_ptr<GUIMessage> &, AcceleratorKey)> &func_pressed();
 
 	/// \brief Get Shift
 	///

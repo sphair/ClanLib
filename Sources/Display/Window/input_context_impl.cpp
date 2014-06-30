@@ -30,6 +30,7 @@
 #include "Display/precomp.h"
 #include "input_context_impl.h"
 #include "input_device_impl.h"
+#include "API/Display/Window/input_event.h"
 
 namespace clan
 {
@@ -126,22 +127,22 @@ void InputContext_Impl::process_messages()
 		switch (event.type)
 		{
 		case InputEvent::pressed:
-			event.device.sig_key_down().invoke(event);
+			event.device.sig_key_down()(event);
 			break;
 		case InputEvent::released:
-			event.device.sig_key_up().invoke(event);
+			event.device.sig_key_up()(event);
 			break;
 		case InputEvent::doubleclick:
-			event.device.sig_key_dblclk().invoke(event);
+			event.device.sig_key_dblclk()(event);
 			break;
 		case InputEvent::pointer_moved:
-			event.device.sig_pointer_move().invoke(event);
+			event.device.sig_pointer_move()(event);
 			break;
 		case InputEvent::axis_moved:
-			event.device.sig_axis_move().invoke(event);
+			event.device.sig_axis_move()(event);
 			break;
 		case InputEvent::proximity_change:
-			event.device.sig_proximity_change().invoke(event);
+			event.device.sig_proximity_change()(event);
 			break;
 		default:	// Added to stop the compiler warning about "no_key" not handled in switch
 			break;
@@ -173,3 +174,4 @@ void InputContext_Impl::on_dispose()
 }
 
 }
+

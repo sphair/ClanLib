@@ -105,8 +105,8 @@ void AcceleratorTable::process_message(std::shared_ptr<GUIMessage> &msg)
 		{
 			if ((*it).get_id() == input_msg->input_event.id && (*it).get_shift() == input_msg->input_event.shift && (*it).get_alt() == input_msg->input_event.alt && (*it).get_ctrl() == input_msg->input_event.ctrl)
 			{
-				if (input_msg->input_event.type == InputEvent::pressed && !(*it).func_pressed().is_null())
-					(*it).func_pressed().invoke(msg, (*it));
+				if (input_msg->input_event.type == InputEvent::pressed && (*it).func_pressed())
+					(*it).func_pressed()(msg, (*it));
 				msg->consumed = true;
 				return;
 			}

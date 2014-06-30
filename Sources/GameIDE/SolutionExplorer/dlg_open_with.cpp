@@ -51,11 +51,11 @@ DlgOpenWith::DlgOpenWith(GUIComponent *owner, std::vector<DocumentEditorType *> 
 	list_items->get_header()->set_class("hidden", true);
 
 
-	func_resized().set(this, &DlgOpenWith::on_resized);
-	func_close().set(this, &DlgOpenWith::on_close);
-	button_ok->func_clicked().set(this, &DlgOpenWith::on_button_ok_clicked);
-	button_cancel->func_clicked().set(this, &DlgOpenWith::on_button_cancel_clicked);
-	list_items->func_item_doubleclick().set(this, &DlgOpenWith::on_item_doubleclick);
+	func_resized() = bind_member(this, &DlgOpenWith::on_resized);
+	func_close() = bind_member(this, &DlgOpenWith::on_close);
+	button_ok->func_clicked() = bind_member(this, &DlgOpenWith::on_button_ok_clicked);
+	button_cancel->func_clicked() = bind_member(this, &DlgOpenWith::on_button_cancel_clicked);
+	list_items->func_item_doubleclick() = bind_member(this, &DlgOpenWith::on_item_doubleclick);
 
 	populate(editors);
 	list_items->set_focus();

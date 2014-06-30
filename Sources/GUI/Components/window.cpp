@@ -120,8 +120,8 @@ void Window_Impl::init(Window *this_component)
 {
 	window = this_component;
 
-	this_component->func_process_message().set(this, &Window_Impl::on_process_message);
-	this_component->func_render().set(this, &Window_Impl::on_render);
+	this_component->func_process_message() = bind_member(this, &Window_Impl::on_process_message);
+	this_component->func_render() = bind_member(this, &Window_Impl::on_render);
 	
 	create_parts();
 }
@@ -251,7 +251,7 @@ void Window_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 			if(part_buttonclose.set_pseudo_class(CssStr::pressed, false))
 			{
 				window->request_repaint();
-				if (!window->func_close().is_null() && window->func_close().invoke())
+				if (window->func_close() && window->func_close()())
 					msg->consumed = true;
 			}
 		}

@@ -30,8 +30,6 @@
 
 #pragma once
 
-#include "API/Core/Signals/callback.h"
-#include "API/Core/Signals/callback.h"
 #include "API/Core/Resources/xml_resource_document.h"
 #include "API/Core/Resources/resource_manager.h"
 #include "API/CSSLayout/CSSDocument/css_document.h"
@@ -118,8 +116,8 @@ public:
 	GUIComponent *get_default_component(GUIComponent *comp=0);
 
 	std::vector<GUITopLevelWindow *> root_components;
-	Signal<std::shared_ptr<GUIMessage> &> sig_filter_message;
-	Callback<int()> func_exec_handler;
+	Signal<void(std::shared_ptr<GUIMessage> &)> sig_filter_message;
+	std::function<int()> func_exec_handler;
 	mutable CSSDocument css_document;
 
 	ResourceManager resources;
@@ -131,13 +129,13 @@ public:
 	int exit_code;
 	AcceleratorTable accel_table;
 	GUIWindowManagerSite wm_site;
-	Callback<void(GUITopLevelWindow *)> func_focus_lost;
-	Callback<void(GUITopLevelWindow *)> func_focus_gained;
-	Callback<void(GUITopLevelWindow *, const Size &)> func_resize;
-	Callback<void(GUITopLevelWindow *, const Rect &)> func_paint;
-	Callback<void(GUITopLevelWindow *)> func_close;
-	Callback<void(GUITopLevelWindow *)> func_destroy;
-	Callback<void(GUITopLevelWindow *, const InputEvent &)> func_input_received;
+	std::function<void(GUITopLevelWindow *)> func_focus_lost;
+	std::function<void(GUITopLevelWindow *)> func_focus_gained;
+	std::function<void(GUITopLevelWindow *, const Size &)> func_resize;
+	std::function<void(GUITopLevelWindow *, const Rect &)> func_paint;
+	std::function<void(GUITopLevelWindow *)> func_close;
+	std::function<void(GUITopLevelWindow *)> func_destroy;
+	std::function<void(GUITopLevelWindow *, const InputEvent &)> func_input_received;
 
 /// \}
 /// \name Operations

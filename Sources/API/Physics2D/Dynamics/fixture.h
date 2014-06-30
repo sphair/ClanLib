@@ -33,7 +33,6 @@
 #include "../../Core/Math/vec2.h"
 #include <memory>
 #include "../../Core/Signals/signal.h"
-#include "../../Core/Signals/signal.h"
 
 namespace clan
 {
@@ -106,18 +105,18 @@ public:
 public:
 	/// \brief Signal emitted when a collision with other fixture occurs
 	///
-	/// \return Signal<Fixture>
-	Signal<Fixture> &sig_begin_collision();
+	/// \return Signal<void(Fixture)>
+	Signal<void(Fixture)> &sig_begin_collision();
 
 	/// \brief Signal emitted when a collision with other fixture ends
 	///
-	/// \return Signal<Fixture>
-	Signal<Fixture> &sig_end_collision();
+	/// \return Signal<void(Fixture)>
+	Signal<void(Fixture)> &sig_end_collision();
 
 	/// \brief Signal emitted when the fixture is deleted.
 	///
-	/// \return Signal<>
-	Signal<> &sig_fixture_deletion();
+	/// \return Signal<void()>
+	Signal<void()> &sig_fixture_deletion();
 
 /// \}
 /// \name Implementation

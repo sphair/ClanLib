@@ -58,7 +58,7 @@ public:
 	std::vector<ProjectPtr> projects;
 	UserOptions user_options;
 
-	Signal<> sig_model_updated;
+	Signal<void()> sig_model_updated;
 };
 
 }

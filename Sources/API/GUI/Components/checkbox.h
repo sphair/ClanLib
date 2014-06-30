@@ -32,7 +32,6 @@
 
 #include "../api_gui.h"
 #include "../gui_component.h"
-#include "../../Core/Signals/callback.h"
 
 namespace clan
 {
@@ -113,23 +112,23 @@ public:
 
 	/// \brief Func checked
 	///
-	/// \return Callback<void()>
-	Callback<void()> &func_checked();
+	/// \return std::function<void()>
+	std::function<void()> &func_checked();
 
 	/// \brief Func unchecked
 	///
-	/// \return Callback<void()>
-	Callback<void()> &func_unchecked();
+	/// \return std::function<void()>
+	std::function<void()> &func_unchecked();
 
 	/// \brief Func indeterminated
 	///
-	/// \return Callback<void()>
-	Callback<void()> &func_indeterminated();
+	/// \return std::function<void()>
+	std::function<void()> &func_indeterminated();
 
 	/// \brief Func state changed
 	///
-	/// \return Callback<void()>
-	Callback<void()> &func_state_changed();
+	/// \return std::function<void()>
+	std::function<void()> &func_state_changed();
 
 /// \}
 /// \name Implementation

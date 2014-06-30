@@ -90,7 +90,7 @@ void SWRenderFrameBufferProvider::attach_color(int attachment_index, const Rende
 		colorbuffer0_type = type_render;
 		colorbuffer0_render = render_buffer;
 		colorbuffer0_texture = Texture2D();
-		sig_changed_event.invoke();
+		sig_changed_event();
 	}
 }
 void SWRenderFrameBufferProvider::attach_color(int attachment_index, const Texture1D &texture, int level) {}
@@ -102,7 +102,7 @@ void SWRenderFrameBufferProvider::attach_color(int attachment_index, const Textu
 		colorbuffer0_type = type_texture;
 		colorbuffer0_render = RenderBuffer();
 		colorbuffer0_texture = texture;
-		sig_changed_event.invoke();
+		sig_changed_event();
 	}
 }
 void SWRenderFrameBufferProvider::attach_color(int attachment_index, const Texture2DArray &texture, int array_index, int level) {}

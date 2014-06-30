@@ -96,10 +96,10 @@ public:
 	Size size_icon;
 	enum Layout {layout_left, layout_center} layout;
 
-	Callback<void(ToolBarItem)> func_item_clicked;
-	Callback<void(ToolBarItem)> func_item_selected;
-	Callback<void(ToolBarItem)> func_item_unselected;
-	Callback<void(Point, int)> func_mouse_right_up; // click position, clicked item index.
+	std::function<void(ToolBarItem)> func_item_clicked;
+	std::function<void(ToolBarItem)> func_item_selected;
+	std::function<void(ToolBarItem)> func_item_unselected;
+	std::function<void(Point, int)> func_mouse_right_up; // click position, clicked item index.
 
 	int next_id;
 };
@@ -112,9 +112,9 @@ ToolBar::ToolBar(GUIComponent *parent)
 {
 	set_class("horizontal", true);
 	impl->toolbar = this;
-	func_process_message().set(impl.get(), &ToolBar_Impl::on_process_message);
-	func_render().set(impl.get(), &ToolBar_Impl::on_render);
-	func_resized().set(impl.get(), &ToolBar_Impl::on_resized);
+	func_process_message() = bind_member(impl.get(), &ToolBar_Impl::on_process_message);
+	func_render() = bind_member(impl.get(), &ToolBar_Impl::on_render);
+	func_resized() = bind_member(impl.get(), &ToolBar_Impl::on_resized);
 	impl->create_parts();
 }
 
@@ -215,22 +215,22 @@ void ToolBar::clear_selection()
 /////////////////////////////////////////////////////////////////////////////
 // ToolBar Events:
 
-Callback<void(ToolBarItem)> & ToolBar::func_item_clicked()
+std::function<void(ToolBarItem)> & ToolBar::func_item_clicked()
 {
 	return impl->func_item_clicked;
 }
 
-Callback<void(ToolBarItem)> & ToolBar::func_item_selected()
+std::function<void(ToolBarItem)> & ToolBar::func_item_selected()
 {
 	return impl->func_item_selected;
 }
 
-Callback<void(ToolBarItem)> & ToolBar::func_item_unselected()
+std::function<void(ToolBarItem)> & ToolBar::func_item_unselected()
 {
 	return impl->func_item_unselected;
 }
 
-Callback<void(Point, int)> & ToolBar::func_mouse_right_up()
+std::function<void(Point, int)> & ToolBar::func_mouse_right_up()
 {
 	return impl->func_mouse_right_up;
 }
@@ -259,8 +259,8 @@ void ToolBar_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 		if (e.type == InputEvent::released && e.id == mouse_right)
 		{
 			int index = find_item_at(e.mouse_pos);
-			if (!func_mouse_right_up.is_null())
-				func_mouse_right_up.invoke(e.mouse_pos, index);
+			if (func_mouse_right_up)
+				func_mouse_right_up(e.mouse_pos, index);
 		}
 		else if (mouse_mode == mouse_mode_normal)
 		{
@@ -314,15 +314,15 @@ void ToolBar_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 
 				if (perform_click)
 				{
-					if (!func_item_clicked.is_null())
-						func_item_clicked.invoke(items[index]);
+					if (func_item_clicked)
+						func_item_clicked(items[index]);
 
 					if (items[index].is_toggling() && single_select_mode)
 					{
 						unselect_all(items[index].impl.get());
 
-						if (!func_item_selected.is_null())
-							func_item_selected.invoke(items[index]);
+						if (func_item_selected)
+							func_item_selected(items[index]);
 					}
 				}
 			}
@@ -424,9 +424,9 @@ void ToolBar_Impl::unselect_all(ToolBarItem_Impl *ignore)
 		if (item.is_pressed())
 		{
 			item.impl->pressed = false;
-			if (!func_item_unselected.is_null())
+			if (func_item_unselected)
 			{
-				func_item_unselected.invoke(item);
+				func_item_unselected(item);
 			}
 		}
 	}

@@ -57,12 +57,12 @@ DlgAddNewProject::DlgAddNewProject(GUIComponent *owner, SolutionModel &model)
 	button_cancel->set_text("Cancel");
 	button_cancel->set_cancel(true);
 
-	func_resized().set(this, &DlgAddNewProject::on_resized);
-	func_close().set(this, &DlgAddNewProject::on_close);
-	button_ok->func_clicked().set(this, &DlgAddNewProject::on_button_ok_clicked);
-	button_cancel->func_clicked().set(this, &DlgAddNewProject::on_button_cancel_clicked);
-	button_browse_location->func_clicked().set(this, &DlgAddNewProject::on_button_browse_location_clicked);
-	check_create_solution_directory->func_state_changed().set(this, &DlgAddNewProject::on_check_create_solution_directory_state_changed);
+	func_resized() = bind_member(this, &DlgAddNewProject::on_resized);
+	func_close() = bind_member(this, &DlgAddNewProject::on_close);
+	button_ok->func_clicked() = bind_member(this, &DlgAddNewProject::on_button_ok_clicked);
+	button_cancel->func_clicked() = bind_member(this, &DlgAddNewProject::on_button_cancel_clicked);
+	button_browse_location->func_clicked() = bind_member(this, &DlgAddNewProject::on_button_browse_location_clicked);
+	check_create_solution_directory->func_state_changed() = bind_member(this, &DlgAddNewProject::on_check_create_solution_directory_state_changed);
 
 	on_check_create_solution_directory_state_changed();
 	on_resized();

@@ -57,7 +57,7 @@ public:
 
 	PixelBuffer get_colorbuffer0() const;
 
-	Signal<> &get_sig_changed_event() {return sig_changed_event;}
+	Signal<void()> &get_sig_changed_event() {return sig_changed_event;}
 
 	FrameBufferBindTarget get_bind_target() const;
 
@@ -101,7 +101,7 @@ private:
 	Type colorbuffer0_type;
 	RenderBuffer colorbuffer0_render;
 	Texture2D colorbuffer0_texture;
-	Signal<> sig_changed_event;
+	Signal<void()> sig_changed_event;
 	mutable std::vector<int> attachment_indexes;
 /// \}
 };

@@ -30,8 +30,6 @@
 
 #pragma once
 
-#include "API/Core/Signals/callbackcontainer.h"
-
 namespace clan
 {
 
@@ -59,7 +57,7 @@ public:
 	GUIThemePart part_menu_item;
 	GUIThemePart part_menu_item_selected;
 	GUIThemePart part_menu_item_separator;
-    CallbackContainer cc;
+    SlotContainer sc;
 
 	bool running;
 };

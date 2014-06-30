@@ -159,7 +159,7 @@ int DisplayMessageQueue_Win32::wait(const std::vector<Event> &events, int timeou
 void DisplayMessageQueue_Win32::add_client(Win32Window *window)
 {
 	// (Always set the message queue, because the display target may have changed)
-	KeepAlive::func_event_wait().set(&message_queue, &DisplayMessageQueue_Win32::wait);
+	KeepAlive::func_event_wait() = bind_member(&message_queue, &DisplayMessageQueue_Win32::wait);
 
 	std::shared_ptr<ThreadData> thread_data = get_thread_data();
 

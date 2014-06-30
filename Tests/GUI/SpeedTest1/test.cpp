@@ -12,8 +12,8 @@ public:
 	: Label(parent), frames_rendered(0)
 	{
 		cb_label_render = func_render();
-		func_render().set(this, &FPSLabel::on_render);
-		timer.func_expired().set(this, &FPSLabel::on_5secs_passed);
+		func_render() = bind_member(this, &FPSLabel::on_render);
+		timer.func_expired() = bind_member(this, &FPSLabel::on_5secs_passed);
 		timer.start(5000);
 	}
 
@@ -60,7 +60,7 @@ public:
 		window_desc.set_size(Size(600, 600), false);
 		Window window(&gui, window_desc);
 //			window.set_id_name("mainmenu");
-		window.func_close().set(this, &App::on_close, &window);
+		window.func_close() = bind_member(this, &App::on_close, &window);
 
 		GUILayoutCorners layout;
 		window.set_layout(layout);

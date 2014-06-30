@@ -83,7 +83,7 @@ void DragBox_Impl::init(DragBox *this_component)
 	this_component->set_focus_policy(GUIComponent::focus_local);
 	this_component->set_double_click_enabled(false);
 
-	this_component->func_process_message().set(this, &DragBox_Impl::on_process_message);
+	this_component->func_process_message() = bind_member(this, &DragBox_Impl::on_process_message);
 
 	this_component->set_pseudo_class(CssStr::disabled, !this_component->is_enabled());
 }

@@ -46,8 +46,8 @@ int Particle::start(const std::vector<std::string> &args)
 	clan::DisplayWindow window("LinearParticle Example - Main Menu", 640, 480, false);
 
 	// Connect the Window close event
-    clan::CallbackContainer cc;
-	cc.connect(window.sig_window_close(), clan::Callback<void()>(this, &Particle::on_window_close));
+    clan::SlotContainer cc;
+	cc.connect(window.sig_window_close(), std::function<void()>(this, &Particle::on_window_close));
 
 	// Get the graphic context
 	clan::Canvas canvas(window);

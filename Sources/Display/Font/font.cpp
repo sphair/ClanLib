@@ -88,7 +88,7 @@ Resource<Font> Font::resource(Canvas &canvas, const FontDescription &desc, const
 }
 
 
-Font Font_Impl::load(Canvas &canvas, const FontDescription &reference_desc, const std::string &id, const XMLResourceDocument &doc, Callback<Resource<Sprite>(Canvas &, const std::string &)> cb_get_sprite)
+Font Font_Impl::load(Canvas &canvas, const FontDescription &reference_desc, const std::string &id, const XMLResourceDocument &doc, std::function<Resource<Sprite>(Canvas &, const std::string &)> cb_get_sprite)
 {
 	XMLResourceNode resource = doc.get_resource(id);
 	std::string type = resource.get_element().get_tag_name();
@@ -108,7 +108,7 @@ Font Font_Impl::load(Canvas &canvas, const FontDescription &reference_desc, cons
 		if (!sprite_element.has_attribute("letters")) 
 			throw Exception(string_format("Font resource %1 has no 'letters' attribute.", resource.get_name()));
 
-		Resource<Sprite> spr_glyphs = cb_get_sprite.invoke(canvas, sprite_element.get_attribute("glyphs"));
+		Resource<Sprite> spr_glyphs = cb_get_sprite(canvas, sprite_element.get_attribute("glyphs"));
 
 		const std::string &letters = sprite_element.get_attribute("letters");
 

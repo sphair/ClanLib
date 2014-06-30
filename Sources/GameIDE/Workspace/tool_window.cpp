@@ -39,15 +39,15 @@ ToolWindow::ToolWindow(DockableComponent *dockable, Rect window_geometry)
 {
 	part_header = GUIThemePart(this, "header");
 	part_button_area = GUIThemePart(this, "button-area");
-	func_close().set(this, &ToolWindow::on_close);
-	func_resized().set(this, &ToolWindow::on_resized);
-	func_render().set(this, &ToolWindow::on_render);
-	func_input_pressed().set(this, &ToolWindow::on_input_pressed);
-	func_input_released().set(this, &ToolWindow::on_input_released);
-	func_input_doubleclick().set(this, &ToolWindow::on_input_doubleclick);
-	func_input_pointer_moved().set(this, &ToolWindow::on_input_pointer_moved);
+	func_close() = bind_member(this, &ToolWindow::on_close);
+	func_resized() = bind_member(this, &ToolWindow::on_resized);
+	func_render() = bind_member(this, &ToolWindow::on_render);
+	func_input_pressed() = bind_member(this, &ToolWindow::on_input_pressed);
+	func_input_released() = bind_member(this, &ToolWindow::on_input_released);
+	func_input_doubleclick() = bind_member(this, &ToolWindow::on_input_doubleclick);
+	func_input_pointer_moved() = bind_member(this, &ToolWindow::on_input_pointer_moved);
 	button_close = new PushButton(this);
-	button_close->func_clicked().set(this, &ToolWindow::on_button_close_clicked);
+	button_close->func_clicked() = bind_member(this, &ToolWindow::on_button_close_clicked);
 	dockable->set_parent_component(this);
 	dockable->set_visible(true, false);
 	set_visible(true, false);

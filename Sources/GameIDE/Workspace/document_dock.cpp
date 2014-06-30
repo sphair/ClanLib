@@ -78,8 +78,8 @@ void DocumentDock::dock(DockableComponent *dockable)
 		TabButton *button = new TabButton(tab_button_row);
 		button->label->set_text(dockable->get_title());
 
-		button->func_input_pressed().set(this, &DocumentDock::on_input_pressed, dockable);
-		button->button_close->func_clicked().set(this, &DocumentDock::on_button_close_clicked, dockable);
+		button->func_input_pressed() = [=](const InputEvent &input_event){return on_input_pressed(input_event, dockable); };
+		button->button_close->func_clicked() = [=]() {on_button_close_clicked(dockable); };
 
 		tab_buttons.push_back(button);
 

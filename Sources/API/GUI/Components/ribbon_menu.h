@@ -49,13 +49,13 @@ public:
 	bool separator;
 	Image image;
 	std::string text;
-	Callback<void()> func_clicked;
+	std::function<void()> func_clicked;
 };
 
 class RibbonMenu : public GUIComponent
 {
 public:
-	Callback<void()> &add_item(Image image, std::string text);
+	std::function<void()> &add_item(Image image, std::string text);
 	void add_separator();
 
 private:

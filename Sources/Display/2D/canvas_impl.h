@@ -35,7 +35,6 @@
 #include "Display/2D/render_batch_line.h"
 #include "Display/2D/render_batch_line_texture.h"
 #include "Display/2D/render_batch_point.h"
-#include "API/Core/Signals/callbackcontainer.h"
 #include "API/Display/2D/canvas.h"
 #include "API/Display/Window/display_window.h"
 #include "canvas_batcher.h"
@@ -97,7 +96,7 @@ private:
 	void on_window_flip();
 
 	GraphicContext gc;
-    CallbackContainer cc;
+    SlotContainer sc;
 
 	std::vector<Mat4f> canvas_modelviews;
 	Mat4f canvas_projection;

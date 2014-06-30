@@ -24,7 +24,7 @@ public:
 		window_desc.set_allow_resize(true);
 		window_desc.set_size(Size(500, 600), false);
 		Window window(&gui, window_desc);
-		window.func_close().set(this, &App::on_close, &window);
+		window.func_close() = bind_member(this, &App::on_close, &window);
 
 		GUILayoutCorners layout;
 		window.set_layout(layout);

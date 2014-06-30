@@ -60,13 +60,13 @@ GUIManager_Impl::GUIManager_Impl()
 {
 	resources = XMLResourceManager::create(XMLResourceDocument());
 
-	func_focus_lost.set(this, &GUIManager_Impl::on_focus_lost);
-	func_focus_gained.set(this, &GUIManager_Impl::on_focus_gained);
-	func_resize.set(this, &GUIManager_Impl::on_resize);
-	func_paint.set(this, &GUIManager_Impl::on_paint);
-	func_close.set(this, &GUIManager_Impl::on_close);
-	func_destroy.set(this, &GUIManager_Impl::on_destroy);
-	func_input_received.set(this, &GUIManager_Impl::on_input_received);
+	func_focus_lost = bind_member(this, &GUIManager_Impl::on_focus_lost);
+	func_focus_gained = bind_member(this, &GUIManager_Impl::on_focus_gained);
+	func_resize = bind_member(this, &GUIManager_Impl::on_resize);
+	func_paint = bind_member(this, &GUIManager_Impl::on_paint);
+	func_close = bind_member(this, &GUIManager_Impl::on_close);
+	func_destroy = bind_member(this, &GUIManager_Impl::on_destroy);
+	func_input_received = bind_member(this, &GUIManager_Impl::on_input_received);
 
 	wm_site.func_focus_lost = &func_focus_lost;
 	wm_site.func_focus_gained = &func_focus_gained;
@@ -77,7 +77,7 @@ GUIManager_Impl::GUIManager_Impl()
 	wm_site.func_input_received = &func_input_received;
 
 
-	resource_cache.cb_get_image.set(this, &GUIManager_Impl::on_resource_cache_get_image);
+	resource_cache.cb_get_image = bind_member(this, &GUIManager_Impl::on_resource_cache_get_image);
 }
 
 GUIManager_Impl::~GUIManager_Impl()
@@ -334,7 +334,7 @@ const GUIComponent *GUIManager_Impl::get_owner_component(const GUIComponent *com
 
 void GUIManager_Impl::deliver_message(std::shared_ptr<GUIMessage> &m)
 {
-	sig_filter_message.invoke(m);
+	sig_filter_message(m);
 
 	if (!m->consumed)
 	{
@@ -352,9 +352,9 @@ void GUIManager_Impl::deliver_message(std::shared_ptr<GUIMessage> &m)
 				}
 			}
 
-			if (!target->func_filter_message().is_null())
+			if (target->func_filter_message())
 			{
-				target->func_filter_message().invoke(m);
+				target->func_filter_message()(m);
 			}
 
 			// Since we use a callback on func_process_message, we just call process_message directly on guicomponent here 
@@ -364,8 +364,8 @@ void GUIManager_Impl::deliver_message(std::shared_ptr<GUIMessage> &m)
 
 			if (!m->consumed)
 			{
-				if (!target->func_process_message().is_null())
-					target->func_process_message().invoke(m);
+				if (target->func_process_message())
+					target->func_process_message()(m);
 			}
 
 			if (!m->consumed)
@@ -376,18 +376,18 @@ void GUIManager_Impl::deliver_message(std::shared_ptr<GUIMessage> &m)
 					switch (m_activation->activation_type)
 					{
 					case GUIMessage_ActivationChange::activation_lost:
-						if (!target->func_deactivated().is_null() && target->func_deactivated().invoke())
+						if (target->func_deactivated() && target->func_deactivated()())
 							m->consumed = true;
 						break;
 					case GUIMessage_ActivationChange::activation_gained:
-						if (!target->func_activated().is_null() && target->func_activated().invoke())
+						if (target->func_activated() && target->func_activated()())
 							m->consumed = true;
 						break;
 					}
 				}
 				else if (std::dynamic_pointer_cast<GUIMessage_Close>(m))
 				{
-					if (!target->func_close().is_null() && target->func_close().invoke())
+					if (target->func_close() && target->func_close()())
 						m->consumed = true;
 				}
 				else if (std::dynamic_pointer_cast<GUIMessage_FocusChange>(m))
@@ -395,11 +395,11 @@ void GUIManager_Impl::deliver_message(std::shared_ptr<GUIMessage> &m)
 					switch (std::dynamic_pointer_cast<GUIMessage_FocusChange>(m)->focus_type)
 					{
 					case GUIMessage_FocusChange::losing_focus:
-						if (!target->func_focus_lost().is_null() && target->func_focus_lost().invoke())
+						if (target->func_focus_lost() && target->func_focus_lost()())
 							m->consumed = true;
 						break;
 					case GUIMessage_FocusChange::gained_focus:
-						if (!target->func_focus_gained().is_null() && target->func_focus_gained().invoke())
+						if (target->func_focus_gained() && target->func_focus_gained()())
 							m->consumed = true;
 						break;
 					}
@@ -409,25 +409,25 @@ void GUIManager_Impl::deliver_message(std::shared_ptr<GUIMessage> &m)
 					std::shared_ptr<GUIMessage_Input> m_input = std::dynamic_pointer_cast<GUIMessage_Input>(m);
 					InputEvent &e = m_input->input_event;
 
-					if (!target->func_input().is_null() && target->func_input().invoke(e))
+					if (target->func_input() && target->func_input()(e))
 						m->consumed = true;
 
 					switch (e.type)
 					{
 					case InputEvent::pressed:
-						if (!target->func_input_pressed().is_null() && target->func_input_pressed().invoke(e))
+						if (target->func_input_pressed() && target->func_input_pressed()(e))
 							m->consumed = true;
 						break;
 					case InputEvent::released:
-						if (!target->func_input_released().is_null() && target->func_input_released().invoke(e))
+						if (target->func_input_released() && target->func_input_released()(e))
 							m->consumed = true;
 						break;
 					case InputEvent::doubleclick:
-						if (!target->func_input_doubleclick().is_null() && target->func_input_doubleclick().invoke(e))
+						if (target->func_input_doubleclick() && target->func_input_doubleclick()(e))
 							m->consumed = true;
 						break;
 					case InputEvent::pointer_moved:
-						if (!target->func_input_pointer_moved().is_null() && target->func_input_pointer_moved().invoke(e))
+						if (target->func_input_pointer_moved() && target->func_input_pointer_moved()(e))
 							m->consumed = true;
 						break;
 					default:
@@ -439,11 +439,11 @@ void GUIManager_Impl::deliver_message(std::shared_ptr<GUIMessage> &m)
 					switch (std::dynamic_pointer_cast<GUIMessage_Pointer>(m)->pointer_type)
 					{
 					case GUIMessage_Pointer::pointer_enter:
-						if (!target->func_pointer_enter().is_null() && target->func_pointer_enter().invoke())
+						if (target->func_pointer_enter() && target->func_pointer_enter()())
 							m->consumed = true;
 						break;
 					case GUIMessage_Pointer::pointer_leave:
-						if (!target->func_pointer_exit().is_null() && target->func_pointer_exit().invoke())
+						if (target->func_pointer_exit() && target->func_pointer_exit()())
 							m->consumed = true;
 						break;
 					}

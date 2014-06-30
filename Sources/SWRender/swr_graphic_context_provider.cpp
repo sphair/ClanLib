@@ -468,7 +468,7 @@ void SWRenderGraphicContextProvider::set_viewport(const Rectf &viewport)
 
 void SWRenderGraphicContextProvider::on_window_resized()
 {
-	window_resized_signal.invoke(window->get_viewport().get_size());
+	window_resized_signal(window->get_viewport().get_size());
 
 }
 

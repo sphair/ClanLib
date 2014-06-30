@@ -30,7 +30,7 @@
 
 #include "../api_core.h"
 #include <memory>
-#include "../Signals/callback.h"
+#include <functional>
 
 namespace clan
 {
@@ -60,7 +60,7 @@ public:
 /// \{
 public:
 	/// \brief Callback invoked every time the timer interval occurs
-	Callback<void()> &func_expired();
+	std::function<void()> &func_expired();
 /// \}
 
 /// \name Operations

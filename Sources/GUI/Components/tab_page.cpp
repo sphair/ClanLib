@@ -47,9 +47,9 @@ TabPage::TabPage(GUIComponent *parent)
 : GUIComponent(parent, CssStr::TabPage::type_name), impl(new TabPage_Impl)
 {
 	impl->component = this;
-	func_process_message().set(impl.get(), &TabPage_Impl::on_process_message);
-	func_render().set(impl.get(), &TabPage_Impl::on_render);
-	func_resized().set(impl.get(), &TabPage_Impl::on_resized);
+	func_process_message() = bind_member(impl.get(), &TabPage_Impl::on_process_message);
+	func_render() = bind_member(impl.get(), &TabPage_Impl::on_render);
+	func_resized() = bind_member(impl.get(), &TabPage_Impl::on_resized);
 }
 
 TabPage::~TabPage()

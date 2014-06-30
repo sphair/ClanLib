@@ -109,7 +109,7 @@ public:
 	virtual Size get_display_window_size() const = 0;
 
 	/// \brief Get the window resized signal
-	virtual Signal<const Size &> &sig_window_resized() = 0;
+	virtual Signal<void(const Size &)> &sig_window_resized() = 0;
 
 	/// \brief Get a program object from the standard program specified
 	virtual ProgramObject get_program_object(StandardProgram standard_program) const = 0;

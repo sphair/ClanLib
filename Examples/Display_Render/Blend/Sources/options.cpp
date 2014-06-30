@@ -56,24 +56,24 @@ Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComp
 	slider_ypos += 8;
 	slider_numballs->set_max(9);
 	slider_numballs->set_position(4);
-	slider_numballs->func_value_changed().set(this, &Options::slider_numballs_changed);
+	slider_numballs->func_value_changed() = bind_member(this, &Options::slider_numballs_changed);
 	slider_primary_red = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
-	slider_primary_red->func_value_changed().set(this, &Options::slider_primary_red_changed);
+	slider_primary_red->func_value_changed() = bind_member(this, &Options::slider_primary_red_changed);
 	slider_primary_green = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
-	slider_primary_green->func_value_changed().set(this, &Options::slider_primary_green_changed);
+	slider_primary_green->func_value_changed() = bind_member(this, &Options::slider_primary_green_changed);
 	slider_primary_blue = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
-	slider_primary_blue->func_value_changed().set(this, &Options::slider_primary_blue_changed);
+	slider_primary_blue->func_value_changed() = bind_member(this, &Options::slider_primary_blue_changed);
 	slider_primary_alpha = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
-	slider_primary_alpha->func_value_changed().set(this, &Options::slider_primary_alpha_changed);
+	slider_primary_alpha->func_value_changed() = bind_member(this, &Options::slider_primary_alpha_changed);
 	slider_ypos += 8;
 	slider_blend_red = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
-	slider_blend_red->func_value_changed().set(this, &Options::slider_blend_red_changed);
+	slider_blend_red->func_value_changed() = bind_member(this, &Options::slider_blend_red_changed);
 	slider_blend_green = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
-	slider_blend_green->func_value_changed().set(this, &Options::slider_blend_green_changed);
+	slider_blend_green->func_value_changed() = bind_member(this, &Options::slider_blend_green_changed);
 	slider_blend_blue = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
-	slider_blend_blue->func_value_changed().set(this, &Options::slider_blend_blue_changed);
+	slider_blend_blue->func_value_changed() = bind_member(this, &Options::slider_blend_blue_changed);
 	slider_blend_alpha = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
-	slider_blend_alpha->func_value_changed().set(this, &Options::slider_blend_alpha_changed);
+	slider_blend_alpha->func_value_changed() = bind_member(this, &Options::slider_blend_alpha_changed);
 	slider_ypos += 8;
 	label_numballs = create_slider_label(slider_numballs);
 	label_primary_red = create_slider_label(slider_primary_red);
@@ -89,11 +89,11 @@ Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComp
 	int checkbox_ypos = slider_ypos;
 	int checkbox_gap = 24;
 	checkbox_moveballs = create_checkbox(checkbox_xpos, checkbox_ypos, "Moving Balls", is_moveballs_set);
-	checkbox_moveballs->func_state_changed().set(this, &Options::checkbox_moveballs_changed);
+	checkbox_moveballs->func_state_changed() = bind_member(this, &Options::checkbox_moveballs_changed);
 	checkbox_blending = create_checkbox(checkbox_xpos + 150, checkbox_ypos, "Enable Blending", is_blending_set);
-	checkbox_blending->func_state_changed().set(this, &Options::checkbox_blending_changed);
+	checkbox_blending->func_state_changed() = bind_member(this, &Options::checkbox_blending_changed);
 	checkbox_premult_alpha = create_checkbox(checkbox_xpos + 300, checkbox_ypos, "Use Premultipied Alpha", is_premult_alpha_set);
-	checkbox_premult_alpha->func_state_changed().set(this, &Options::checkbox_premult_alpha_changed);
+	checkbox_premult_alpha->func_state_changed() = bind_member(this, &Options::checkbox_premult_alpha_changed);
 	checkbox_ypos += checkbox_gap + 8;
 
 	make_equation_menu(combo_color_equation_menu);
@@ -122,7 +122,7 @@ Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComp
 
 	update_all_slider_text();
 
-	func_render().set(this, &Options::on_render);
+	func_render() = bind_member(this, &Options::on_render);
 }
 
 Options::~Options()
@@ -426,7 +426,7 @@ clan::ComboBox *Options::create_equation_combo_box(int xpos, int ypos, clan::Pop
 	combo->set_dropdown_minimum_width(64);
 	combo->set_popup_menu(menu);
 	combo->set_selected_item(selected_item);
-	combo->func_item_selected().set(this, &Options::on_equation_selected, combo);
+	combo->func_item_selected() = bind_member(this, &Options::on_equation_selected, combo);
 
 	return combo;
 }
@@ -440,7 +440,7 @@ clan::ComboBox *Options::create_blend_combo_box(int xpos, int ypos, clan::PopupM
 	combo->set_dropdown_minimum_width(64);
 	combo->set_popup_menu(menu);
 	combo->set_selected_item(selected_item);
-	combo->func_item_selected().set(this, &Options::on_blend_selected, combo);
+	combo->func_item_selected() = bind_member(this, &Options::on_blend_selected, combo);
 
 	return combo;
 }
@@ -454,7 +454,7 @@ clan::ComboBox *Options::create_logic_combo_box(int xpos, int ypos, clan::PopupM
 	combo->set_dropdown_minimum_width(64);
 	combo->set_popup_menu(menu);
 	combo->set_selected_item(selected_item);
-	combo->func_item_selected().set(this, &Options::on_logic_selected, combo);
+	combo->func_item_selected() = bind_member(this, &Options::on_logic_selected, combo);
 
 	return combo;
 }

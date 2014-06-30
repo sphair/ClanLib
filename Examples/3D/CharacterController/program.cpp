@@ -23,7 +23,7 @@ int Program::main(const std::vector<std::string> &args)
 
 	DisplayWindow window("Scene3D Example", 1600, 900, false, true);
 
-    CallbackContainer cc;
+    SlotContainer cc;
 	GraphicContext gc = window.get_gc();
 
 	bool exit = false;

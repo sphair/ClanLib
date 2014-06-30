@@ -32,7 +32,7 @@
 LineEdit::LineEdit(clan::GUIManager &manager) :
 	clan::Window(&manager, clan::GUITopLevelDescription("Line Edit", clan::Rect(512 + 24, 8, clan::Size(256, 256)), false))
 {
-	func_close().set(this, &LineEdit::on_close);
+	func_close() = bind_member(this, &LineEdit::on_close);
 
 
 	clan::Rect client_area = get_client_area();
@@ -41,12 +41,12 @@ LineEdit::LineEdit(clan::GUIManager &manager) :
 	lineedit1->set_geometry(clan::Rect(client_area.left + 11, client_area.top + 10, clan::Size(128, 21)));
 	lineedit1->set_text("Line Edit");
 
-	lineedit1->func_before_edit_changed().set(this, &LineEdit::on_before_edit_changed, lineedit1);
-	lineedit1->func_after_edit_changed().set(this, &LineEdit::on_after_edit_changed, lineedit1);
-	lineedit1->func_selection_changed().set(this, &LineEdit::on_selection_changed, lineedit1);
-	lineedit1->func_focus_gained().set(this, &LineEdit::on_focus_gained, lineedit1);
-	lineedit1->func_focus_lost().set(this, &LineEdit::on_focus_lost, lineedit1);
-	lineedit1->func_enter_pressed().set(this, &LineEdit::on_enter_pressed, lineedit1);
+	lineedit1->func_before_edit_changed() = bind_member(this, &LineEdit::on_before_edit_changed, lineedit1);
+	lineedit1->func_after_edit_changed() = bind_member(this, &LineEdit::on_after_edit_changed, lineedit1);
+	lineedit1->func_selection_changed() = bind_member(this, &LineEdit::on_selection_changed, lineedit1);
+	lineedit1->func_focus_gained() = bind_member(this, &LineEdit::on_focus_gained, lineedit1);
+	lineedit1->func_focus_lost() = bind_member(this, &LineEdit::on_focus_lost, lineedit1);
+	lineedit1->func_enter_pressed() = bind_member(this, &LineEdit::on_enter_pressed, lineedit1);
 
 	int xoffset = client_area.left + 96;
 	int yoffset = client_area.top + 40;
@@ -77,50 +77,50 @@ LineEdit::LineEdit(clan::GUIManager &manager) :
 
 	checkbox_mask_hex = new clan::CheckBox(this);
 	checkbox_mask_hex->set_geometry(clan::Rect(xoffset, yoffset, clan::Size(100, 15)));
-	checkbox_mask_hex->func_checked().set(this, &LineEdit::on_checked_mask_hex, checkbox_mask_hex);
-	checkbox_mask_hex->func_unchecked().set(this, &LineEdit::on_unchecked_mask_hex, checkbox_mask_hex);
+	checkbox_mask_hex->func_checked() = bind_member(this, &LineEdit::on_checked_mask_hex, checkbox_mask_hex);
+	checkbox_mask_hex->func_unchecked() = bind_member(this, &LineEdit::on_unchecked_mask_hex, checkbox_mask_hex);
 	checkbox_mask_hex->set_text("Hex Mask");
 
 	yoffset+=gap;
 	checkbox_read_only = new clan::CheckBox(this);
 	checkbox_read_only->set_geometry(clan::Rect(xoffset, yoffset, clan::Size(100, 15)));
-	checkbox_read_only->func_checked().set(this, &LineEdit::on_checked_read_only, checkbox_read_only);
-	checkbox_read_only->func_unchecked().set(this, &LineEdit::on_unchecked_read_only, checkbox_read_only);
+	checkbox_read_only->func_checked() = bind_member(this, &LineEdit::on_checked_read_only, checkbox_read_only);
+	checkbox_read_only->func_unchecked() = bind_member(this, &LineEdit::on_unchecked_read_only, checkbox_read_only);
 	checkbox_read_only->set_text("Read Only");
 
 	yoffset+=gap;
 	checkbox_lowercase = new clan::CheckBox(this);
 	checkbox_lowercase->set_geometry(clan::Rect(xoffset, yoffset, clan::Size(100, 15)));
-	checkbox_lowercase->func_checked().set(this, &LineEdit::on_checked_lowercase, checkbox_lowercase);
-	checkbox_lowercase->func_unchecked().set(this, &LineEdit::on_unchecked_lowercase, checkbox_lowercase);
+	checkbox_lowercase->func_checked() = bind_member(this, &LineEdit::on_checked_lowercase, checkbox_lowercase);
+	checkbox_lowercase->func_unchecked() = bind_member(this, &LineEdit::on_unchecked_lowercase, checkbox_lowercase);
 	checkbox_lowercase->set_text("Lowercase");
 
 	yoffset+=gap;
 	checkbox_uppercase = new clan::CheckBox(this);
 	checkbox_uppercase->set_geometry(clan::Rect(xoffset, yoffset, clan::Size(100, 15)));
-	checkbox_uppercase->func_checked().set(this, &LineEdit::on_checked_uppercase, checkbox_uppercase);
-	checkbox_uppercase->func_unchecked().set(this, &LineEdit::on_unchecked_uppercase, checkbox_uppercase);
+	checkbox_uppercase->func_checked() = bind_member(this, &LineEdit::on_checked_uppercase, checkbox_uppercase);
+	checkbox_uppercase->func_unchecked() = bind_member(this, &LineEdit::on_unchecked_uppercase, checkbox_uppercase);
 	checkbox_uppercase->set_text("Uppercase");
 
 	yoffset+=gap;
 	checkbox_password_mode = new clan::CheckBox(this);
 	checkbox_password_mode->set_geometry(clan::Rect(xoffset, yoffset, clan::Size(100, 15)));
-	checkbox_password_mode->func_checked().set(this, &LineEdit::on_checked_password_mode, checkbox_password_mode);
-	checkbox_password_mode->func_unchecked().set(this, &LineEdit::on_unchecked_password_mode, checkbox_password_mode);
+	checkbox_password_mode->func_checked() = bind_member(this, &LineEdit::on_checked_password_mode, checkbox_password_mode);
+	checkbox_password_mode->func_unchecked() = bind_member(this, &LineEdit::on_unchecked_password_mode, checkbox_password_mode);
 	checkbox_password_mode->set_text("Password Mode");
 
 	yoffset+=gap;
 	checkbox_numeric_mode = new clan::CheckBox(this);
 	checkbox_numeric_mode->set_geometry(clan::Rect(xoffset, yoffset, clan::Size(100, 15)));
-	checkbox_numeric_mode->func_checked().set(this, &LineEdit::on_checked_numeric_mode, checkbox_numeric_mode);
-	checkbox_numeric_mode->func_unchecked().set(this, &LineEdit::on_unchecked_numeric_mode, checkbox_numeric_mode);
+	checkbox_numeric_mode->func_checked() = bind_member(this, &LineEdit::on_checked_numeric_mode, checkbox_numeric_mode);
+	checkbox_numeric_mode->func_unchecked() = bind_member(this, &LineEdit::on_unchecked_numeric_mode, checkbox_numeric_mode);
 	checkbox_numeric_mode->set_text("Numeric Mode");
 
 	yoffset+=gap;
 	checkbox_numeric_mode_decimals = new clan::CheckBox(this);
 	checkbox_numeric_mode_decimals->set_geometry(clan::Rect(xoffset, yoffset, clan::Size(100, 15)));
-	checkbox_numeric_mode_decimals->func_checked().set(this, &LineEdit::on_checked_numeric_mode_decimals, checkbox_numeric_mode_decimals);
-	checkbox_numeric_mode_decimals->func_unchecked().set(this, &LineEdit::on_unchecked_numeric_mode_decimals, checkbox_numeric_mode_decimals);
+	checkbox_numeric_mode_decimals->func_checked() = bind_member(this, &LineEdit::on_checked_numeric_mode_decimals, checkbox_numeric_mode_decimals);
+	checkbox_numeric_mode_decimals->func_unchecked() = bind_member(this, &LineEdit::on_unchecked_numeric_mode_decimals, checkbox_numeric_mode_decimals);
 	checkbox_numeric_mode_decimals->set_text("Numeric Mode Decimals");
 	checkbox_numeric_mode_decimals->set_enabled(false);
 
@@ -128,13 +128,13 @@ LineEdit::LineEdit(clan::GUIManager &manager) :
 	pushbutton_resize = new clan::PushButton(this);
 	pushbutton_resize->set_geometry(clan::Rect(xoffset, yoffset, clan::Size(64, 20)));
 	pushbutton_resize->set_text("Resize");
-	pushbutton_resize->func_clicked().set(this, &LineEdit::on_resize_clicked, pushbutton_resize);
+	pushbutton_resize->func_clicked() = bind_member(this, &LineEdit::on_resize_clicked, pushbutton_resize);
 
 	yoffset+=gap+4;
 	checkbox_disable = new clan::CheckBox(this);
 	checkbox_disable->set_geometry(clan::Rect(xoffset, yoffset, clan::Size(100, 15)));
-	checkbox_disable->func_checked().set(this, &LineEdit::on_checked_disable, checkbox_disable);
-	checkbox_disable->func_unchecked().set(this, &LineEdit::on_unchecked_disable, checkbox_disable);
+	checkbox_disable->func_checked() = bind_member(this, &LineEdit::on_checked_disable, checkbox_disable);
+	checkbox_disable->func_unchecked() = bind_member(this, &LineEdit::on_unchecked_disable, checkbox_disable);
 	checkbox_disable->set_text("Disable");
 
 	xoffset = client_area.left + 101;
@@ -157,7 +157,7 @@ LineEdit::LineEdit(clan::GUIManager &manager) :
 	combo_settext->set_dropdown_minimum_width(64);
 	combo_settext->set_popup_menu(menu_settext);
 	combo_settext->set_selected_item(0);
-	combo_settext->func_item_selected().set(this, &LineEdit::on_settext_selected, combo_settext);
+	combo_settext->func_item_selected() = bind_member(this, &LineEdit::on_settext_selected, combo_settext);
 }
 
 void LineEdit::on_before_edit_changed(clan::InputEvent &input_event, clan::LineEdit *lineedit)

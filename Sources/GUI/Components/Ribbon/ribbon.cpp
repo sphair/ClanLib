@@ -56,7 +56,7 @@ Ribbon::Ribbon(GUIComponent *container)
 
 	impl->menu_button = new PushButton(impl->tab_row);
 	impl->menu_button->set_class("menu", true);
-	impl->menu_button->func_clicked().set(impl.get(), &Ribbon_Impl::on_menu_button_clicked);
+	impl->menu_button->func_clicked() = bind_member(impl.get(), &Ribbon_Impl::on_menu_button_clicked);
 
 	impl->page_area = new GUIComponent(this, "ribbon-page-area");
 

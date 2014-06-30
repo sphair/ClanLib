@@ -48,9 +48,9 @@ public:
 	std::vector<NetGameConnection *> connections;
 	std::vector<NetGameNetworkEvent> events;
 
-	Signal<NetGameConnection *> sig_game_client_connected;
-	Signal<NetGameConnection *, const std::string &> sig_game_client_disconnected;
-	Signal<NetGameConnection *, const NetGameEvent &> sig_game_event_received;
+	Signal<void(NetGameConnection *)> sig_game_client_connected;
+	Signal<void(NetGameConnection *, const std::string &)> sig_game_client_disconnected;
+	Signal<void(NetGameConnection *, const NetGameEvent &)> sig_game_event_received;
 };
 
 }

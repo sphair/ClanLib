@@ -55,7 +55,7 @@ SWRenderDisplayWindowProvider::SWRenderDisplayWindowProvider()
 #ifdef WIN32
 	window.set_allow_drop_shadow(true);
 #endif
-	window.func_on_resized().set(this, &SWRenderDisplayWindowProvider::on_window_resized);
+	window.func_on_resized() = bind_member(this, &SWRenderDisplayWindowProvider::on_window_resized);
 }
 
 SWRenderDisplayWindowProvider::~SWRenderDisplayWindowProvider()

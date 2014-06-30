@@ -486,32 +486,32 @@ void InputDevice::set_position(int x, int y)
 /////////////////////////////////////////////////////////////////////////////
 // InputDevice Signals:
 
-Signal<const InputEvent &> &InputDevice::sig_key_down()
+Signal<void(const InputEvent &)> &InputDevice::sig_key_down()
 {
 	return impl->sig_key_down;
 }
 
-Signal<const InputEvent &> &InputDevice::sig_key_up()
+Signal<void(const InputEvent &)> &InputDevice::sig_key_up()
 {
 	return impl->sig_key_up;
 }
 
-Signal<const InputEvent &> &InputDevice::sig_pointer_move()
+Signal<void(const InputEvent &)> &InputDevice::sig_pointer_move()
 {
 	return impl->sig_pointer_move;
 }
 
-Signal<const InputEvent &> &InputDevice::sig_axis_move()
+Signal<void(const InputEvent &)> &InputDevice::sig_axis_move()
 {
 	return impl->sig_axis_move;
 }
 
-Signal<const InputEvent &> &InputDevice::sig_key_dblclk()
+Signal<void(const InputEvent &)> &InputDevice::sig_key_dblclk()
 {
 	return impl->sig_key_dblclk;
 }
 
-Signal<const InputEvent &> & InputDevice::sig_proximity_change()
+Signal<void(const InputEvent &)> & InputDevice::sig_proximity_change()
 {
 	return impl->sig_proximity_change;
 }

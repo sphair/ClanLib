@@ -134,8 +134,8 @@ public:
 
 	/// \brief Func clicked
 	///
-	/// \return Callback<void()>
-	Callback<void()> &func_clicked();
+	/// \return std::function<void()>
+	std::function<void()> &func_clicked();
 
 /// \}
 /// \name Operations

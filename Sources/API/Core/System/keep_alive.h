@@ -30,9 +30,8 @@
 
 
 #include "../api_core.h"
-#include "../Signals/callback.h"
-#include "../Signals/callback.h"
-#include "../Signals/callback.h"
+#include <memory>
+#include <functional>
 
 namespace clan
 {
@@ -59,17 +58,17 @@ public:
 	/// \return The event that triggered an event.\n
 	///         -1 = Timeout
 	///			events.size() = An external event was triggered
-	static Callback<int /*retval*/(const std::vector<Event> &/*events*/, int /*timeout */)> &func_event_wait();
+	static std::function<int /*retval*/(const std::vector<Event> &/*events*/, int /*timeout */)> &func_event_wait();
     
 	/// \brief Function that gets called when KeepAliveObject objects are created.
     ///
     /// This callback is used to provide a thread identifier for the func_awake_thread callback.
-    static Callback<void *()> &func_thread_id();
+    static std::function<void *()> &func_thread_id();
     
 	/// \brief Function that gets called when KeepAliveObject::set_wakeup_event is called.
     ///
     /// This callback is used to provide a way to awaken a thread that needs to process keep alive events.
-    static Callback<void(void *)> &func_awake_thread();
+    static std::function<void(void *)> &func_awake_thread();
 
 	/// \brief Returns all the current keep alive objects available for this thread
 	static std::vector<KeepAliveObject *> get_objects();

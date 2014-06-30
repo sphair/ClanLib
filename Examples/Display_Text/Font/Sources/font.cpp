@@ -34,15 +34,15 @@ int App::start(const std::vector<std::string> &args)
 {
 	quit = false;
 
-    clan::CallbackContainer cc;
+    clan::SlotContainer cc;
 	DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("Font Example Application");
 	win_desc.set_size(Size( 1000, 700 ), false);
 
 	DisplayWindow window(win_desc);
-    cc.connect(window.sig_window_close(), clan::Callback<void()>(this, &App::on_window_close));
-    cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::Callback<void(const clan::InputEvent&)>(this, &App::on_input_up));
+    cc.connect(window.sig_window_close(), std::function<void()>(this, &App::on_window_close));
+    cc.connect(window.get_ic().get_keyboard().sig_key_up(), std::function<void(const clan::InputEvent&)>(this, &App::on_input_up));
 
 	resources = clan::XMLResourceManager::create(clan::XMLResourceDocument("Resources/resources.xml"));
 
@@ -72,92 +72,92 @@ int App::start(const std::vector<std::string> &args)
 
 	PushButton button_class_system(&gui_window);
 	button_class_system.set_geometry(Rect(offset_x, offset_y, offset_x + width, offset_y + height));
-	button_class_system.func_clicked().set(this, &App::on_button_clicked_class_system, &button_class_system);
+	button_class_system.func_clicked() = bind_member(this, &App::on_button_clicked_class_system, &button_class_system);
 	button_class_system.set_text("Class: System");
 	offset_y += gap;
 
 	PushButton button_class_sprite(&gui_window);
 	button_class_sprite.set_geometry(Rect(offset_x, offset_y, offset_x + width, offset_y + height));
-	button_class_sprite.func_clicked().set(this, &App::on_button_clicked_class_sprite, &button_class_sprite);
+	button_class_sprite.func_clicked() = bind_member(this, &App::on_button_clicked_class_sprite, &button_class_sprite);
 	button_class_sprite.set_text("Class: Sprite");
 	offset_y += gap;
 
 	PushButton button_typeface_tahoma(&gui_window);
 	button_typeface_tahoma_ptr = &button_typeface_tahoma;
 	button_typeface_tahoma.set_geometry(Rect(offset_x, offset_y, offset_x + width, offset_y + height));
-	button_typeface_tahoma.func_clicked().set(this, &App::on_button_clicked_typeface_tahoma, &button_typeface_tahoma);
+	button_typeface_tahoma.func_clicked() = bind_member(this, &App::on_button_clicked_typeface_tahoma, &button_typeface_tahoma);
 	button_typeface_tahoma.set_text("Typeface: Tahoma");
 	offset_y += gap;
 
 	PushButton button_typeface_sans(&gui_window);
 	button_typeface_sans_ptr = &button_typeface_sans;
 	button_typeface_sans.set_geometry(Rect(offset_x, offset_y, offset_x + width, offset_y + height));
-	button_typeface_sans.func_clicked().set(this, &App::on_button_clicked_typeface_sans, &button_typeface_sans);
+	button_typeface_sans.func_clicked() = bind_member(this, &App::on_button_clicked_typeface_sans, &button_typeface_sans);
 	button_typeface_sans.set_text("Typeface: Microsoft Sans Serif");
 	offset_y += gap;
 
 	PushButton button_typeface_bitstream(&gui_window);
 	button_typeface_bitstream_ptr = &button_typeface_bitstream;
 	button_typeface_bitstream.set_geometry(Rect(offset_x, offset_y, offset_x + width, offset_y + height));
-	button_typeface_bitstream.func_clicked().set(this, &App::on_button_clicked_typeface_bitstream, &button_typeface_bitstream);
+	button_typeface_bitstream.func_clicked() = bind_member(this, &App::on_button_clicked_typeface_bitstream, &button_typeface_bitstream);
 	button_typeface_bitstream.set_text("Typeface: Bitstream Vera Sans");
 	offset_y += gap;
 
 	CheckBox checkbox1(&gui_window);
 	checkbox1.set_geometry(Rect(offset_x, offset_y, offset_x + 80, offset_y + height));
-	checkbox1.func_state_changed().set(this, &App::on_checkbox_state_underline, &checkbox1);
+	checkbox1.func_state_changed() = bind_member(this, &App::on_checkbox_state_underline, &checkbox1);
 	checkbox1.set_text("Underline");
 
 	CheckBox checkbox2(&gui_window);
 	checkbox2.set_geometry(Rect(offset_x+100, offset_y, offset_x + 180, offset_y + height));
-	checkbox2.func_state_changed().set(this, &App::on_checkbox_state_strikeout, &checkbox2);
+	checkbox2.func_state_changed() = bind_member(this, &App::on_checkbox_state_strikeout, &checkbox2);
 	checkbox2.set_text("Strikeout");
 	offset_y += gap;
 
 	CheckBox checkbox3(&gui_window);
 	checkbox3.set_geometry(Rect(offset_x, offset_y, offset_x + 80, offset_y + height));
-	checkbox3.func_state_changed().set(this, &App::on_checkbox_state_italic, &checkbox3);
+	checkbox3.func_state_changed() = bind_member(this, &App::on_checkbox_state_italic, &checkbox3);
 	checkbox3.set_text("Italic");
 
 	CheckBox checkbox4(&gui_window);
 	checkbox4.set_checked(true);
 	checkbox4.set_geometry(Rect(offset_x+100, offset_y, offset_x + 180, offset_y + height));
-	checkbox4.func_state_changed().set(this, &App::on_checkbox_state_antialias, &checkbox4);
+	checkbox4.func_state_changed() = bind_member(this, &App::on_checkbox_state_antialias, &checkbox4);
 	checkbox4.set_text("Anti Alias");
 	offset_y += gap;
 
 	CheckBox checkbox5(&gui_window);
 	checkbox5.set_checked(true);
 	checkbox5.set_geometry(Rect(offset_x, offset_y, offset_x + 120, offset_y + height));
-	checkbox5.func_state_changed().set(this, &App::on_checkbox_state_subpixel, &checkbox5);
+	checkbox5.func_state_changed() = bind_member(this, &App::on_checkbox_state_subpixel, &checkbox5);
 	checkbox5.set_text("SubPixel Rendering");
 	offset_y += gap;
 
 	PushButton button_weight_light(&gui_window);
 	button_weight_light.set_geometry(Rect(offset_x, offset_y, offset_x + 60, offset_y + height));
-	button_weight_light.func_clicked().set(this, &App::on_button_clicked_weight_light, &button_weight_light);
+	button_weight_light.func_clicked() = bind_member(this, &App::on_button_clicked_weight_light, &button_weight_light);
 	button_weight_light.set_text("Light");
 	PushButton button_weight_normal(&gui_window);
 	button_weight_normal.set_geometry(Rect(offset_x+70, offset_y, offset_x + 130, offset_y + height));
-	button_weight_normal.func_clicked().set(this, &App::on_button_clicked_weight_normal, &button_weight_normal);
+	button_weight_normal.func_clicked() = bind_member(this, &App::on_button_clicked_weight_normal, &button_weight_normal);
 	button_weight_normal.set_text("Normal");
 	PushButton button_weight_bold(&gui_window);
 	button_weight_bold.set_geometry(Rect(offset_x+140, offset_y, offset_x + 200, offset_y + height));
-	button_weight_bold.func_clicked().set(this, &App::on_button_clicked_weight_bold, &button_weight_bold);
+	button_weight_bold.func_clicked() = bind_member(this, &App::on_button_clicked_weight_bold, &button_weight_bold);
 	button_weight_bold.set_text("Bold");
 	offset_y += gap;
 
 	PushButton button_size_16(&gui_window);
 	button_size_16.set_geometry(Rect(offset_x, offset_y, offset_x + 60, offset_y + height));
-	button_size_16.func_clicked().set(this, &App::on_button_clicked_size_16, &button_size_16);
+	button_size_16.func_clicked() = bind_member(this, &App::on_button_clicked_size_16, &button_size_16);
 	button_size_16.set_text("Size 16");
 	PushButton button_size_32(&gui_window);
 	button_size_32.set_geometry(Rect(offset_x+70, offset_y, offset_x + 130, offset_y + height));
-	button_size_32.func_clicked().set(this, &App::on_button_clicked_size_32, &button_size_32);
+	button_size_32.func_clicked() = bind_member(this, &App::on_button_clicked_size_32, &button_size_32);
 	button_size_32.set_text("Size 32");
 	PushButton button_size_64(&gui_window);
 	button_size_64.set_geometry(Rect(offset_x+140, offset_y, offset_x + 200, offset_y + height));
-	button_size_64.func_clicked().set(this, &App::on_button_clicked_size_64, &button_size_64);
+	button_size_64.func_clicked() = bind_member(this, &App::on_button_clicked_size_64, &button_size_64);
 	button_size_64.set_text("Size 64");
 	offset_y += gap;
 
@@ -167,7 +167,7 @@ int App::start(const std::vector<std::string> &args)
 	lineedit_text_ptr = &lineedit1;
 	lineedit1.set_geometry(Rect(offset_x, offset_y, offset_x + width, offset_y + 30));
 	lineedit1.set_text(font_text); 
-	lineedit1.func_after_edit_changed().set(this, &App::on_lineedit_changed);
+	lineedit1.func_after_edit_changed() = bind_member(this, &App::on_lineedit_changed);
 
 	last_fps = 0.0f;
 	selected_fontclass = font_ttf;

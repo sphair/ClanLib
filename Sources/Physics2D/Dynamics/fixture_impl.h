@@ -31,7 +31,6 @@
 #include "../Box2D/Box2D.h"
 #include <memory>
 #include "API/Core/Signals/signal.h"
-#include "API/Core/Signals/signal.h"
 
 namespace clan
 {
@@ -63,9 +62,9 @@ public:
 //																						_____________
 //																						S I G N A L S
 
-	Signal<Fixture> sig_begin_collision;
-	Signal<Fixture> sig_end_collision;
-	Signal<> sig_fixture_deletion;
+	Signal<void(Fixture)> sig_begin_collision;
+	Signal<void(Fixture)> sig_end_collision;
+	Signal<void()> sig_fixture_deletion;
 
 //																						___________________________
 //																						I M P L E M E N T A T I O N

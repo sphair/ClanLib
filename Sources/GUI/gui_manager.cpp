@@ -145,12 +145,12 @@ std::string GUIManager::get_clipboard_text() const
 /////////////////////////////////////////////////////////////////////////////
 // GUIManager Events:
 
-Signal<std::shared_ptr<GUIMessage> &> &GUIManager::sig_filter_message()
+Signal<void(std::shared_ptr<GUIMessage> &)> &GUIManager::sig_filter_message()
 {
 	return impl->sig_filter_message;
 }
 
-Callback<int()> &GUIManager::func_exec_handler()
+std::function<int()> &GUIManager::func_exec_handler()
 {
 	return impl->func_exec_handler;
 }
@@ -259,15 +259,15 @@ void GUIManager::process_messages(int timeout)
 
 int GUIManager::exec()
 {
-	if (!impl->func_exec_handler.is_null())
-		return impl->func_exec_handler.invoke();
+	if (impl->func_exec_handler)
+		return impl->func_exec_handler();
 
 	while (!impl->exit_flag)
 	{
 		impl->exit_code = 0;
 
-		if (!impl->func_exec_handler.is_null())
-			impl->func_exec_handler.invoke();
+		if (impl->func_exec_handler)
+			impl->func_exec_handler();
 
 		int timeout = -1;
 		if (impl->is_constant_repaint_enabled())

@@ -45,16 +45,16 @@ SolutionExplorer::SolutionExplorer(FileItemTypeFactory &factory, UIController *c
 {
 	set_title("Solution Explorer");
 	set_dockable_window_geometry(Rect(Point(50, 50), Size(300, 400)));
-	cc.connect(solution_model().sig_model_updated, Callback<void()>(this, &SolutionExplorer::populate));
+	sc.connect(solution_model().sig_model_updated, bind_member(this, &SolutionExplorer::populate));
 
 //	controller->component<UIRibbonPushButton>("view.solution-explorer").func_clicked(0).set(this, &SolutionExplorer::on_item_show_solution_explorer);
 
 	listview = new ListView(this);
-	listview->func_mouse_right_up().set(this, &SolutionExplorer::on_listview_mouse_right_up);
-	listview->func_item_doubleclick().set(this, &SolutionExplorer::on_listview_item_doubleclick);
-	listview->func_item_opened().set(this, &SolutionExplorer::on_listview_item_opened);
-	listview->func_item_closed().set(this, &SolutionExplorer::on_listview_item_closed);
-	listview->func_begin_drag().set(this, &SolutionExplorer::on_listview_begin_drag);
+	listview->func_mouse_right_up() = bind_member(this, &SolutionExplorer::on_listview_mouse_right_up);
+	listview->func_item_doubleclick() = bind_member(this, &SolutionExplorer::on_listview_item_doubleclick);
+	listview->func_item_opened() = bind_member(this, &SolutionExplorer::on_listview_item_opened);
+	listview->func_item_closed() = bind_member(this, &SolutionExplorer::on_listview_item_closed);
+	listview->func_begin_drag() = bind_member(this, &SolutionExplorer::on_listview_begin_drag);
 	listview->set_class("borderless", true);
 	listview->get_header()->set_class("hidden", true);
 	listview->get_header()->append(listview->get_header()->create_column("name", "Name")).set_width(110);
@@ -144,20 +144,20 @@ void SolutionExplorer::on_listview_mouse_right_up(Point pos)
 			popup = PopupMenu();
 			if (dynamic_cast<ProjectFileItem*>(item_data->project_item))
 			{
-				popup.insert_item("Open").func_clicked().set(this, &SolutionExplorer::on_open);
-				popup.insert_item("Open With...").func_clicked().set(this, &SolutionExplorer::on_open_with);
+				popup.insert_item("Open").func_clicked() = bind_member(this, &SolutionExplorer::on_open);
+				popup.insert_item("Open With...").func_clicked() = bind_member(this, &SolutionExplorer::on_open_with);
 			}
 			else
 			{
-				popup.insert_item("Add New Item...").func_clicked().set(this, &SolutionExplorer::on_add_new_item);
-				popup.insert_item("Add Existing Item...").func_clicked().set(this, &SolutionExplorer::on_add_existing_item);
-				popup.insert_item("New Folder").func_clicked().set(this, &SolutionExplorer::on_new_folder);
+				popup.insert_item("Add New Item...").func_clicked() = bind_member(this, &SolutionExplorer::on_add_new_item);
+				popup.insert_item("Add Existing Item...").func_clicked() = bind_member(this, &SolutionExplorer::on_add_existing_item);
+				popup.insert_item("New Folder").func_clicked() = bind_member(this, &SolutionExplorer::on_new_folder);
 				popup.insert_item("New Filter").set_enabled(false);
 			}
 			popup.insert_separator();
 			popup.insert_item("Cut").set_enabled(false);
 			popup.insert_item("Copy").set_enabled(false);
-			popup.insert_item("Remove").func_clicked().set(this, &SolutionExplorer::on_remove);
+			popup.insert_item("Remove").func_clicked() = bind_member(this, &SolutionExplorer::on_remove);
 			popup.insert_item("Rename").set_enabled(false);
 			popup.insert_separator();
 			popup.insert_item("Open Folder in Windows Explorer").set_enabled(false);

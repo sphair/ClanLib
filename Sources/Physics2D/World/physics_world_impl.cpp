@@ -112,7 +112,7 @@ void PhysicsWorld_Impl::step()
 	world.Step(timestep,velocity_iterations,position_iterations);
 	listener.emit_collision_signals();
 
-	sig_world_step.invoke(timestep);
+	sig_world_step(timestep);
 
 
 }
@@ -125,7 +125,7 @@ void PhysicsWorld_Impl::step(float timestep, int velocity_iterations, int positi
 	world.Step(timestep,velocity_iterations,position_iterations);
 	listener.emit_collision_signals();
 
-	sig_world_step.invoke(timestep);
+	sig_world_step(timestep);
 }
 
 void PhysicsWorld_Impl::create_joint(std::shared_ptr<Joint_Impl> &joint, const b2JointDef &description)

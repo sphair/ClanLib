@@ -132,7 +132,7 @@ public:
 /// \{
 
 public:
-	Callback<void(ListViewColumnHeader)> &func_size_changed();
+	std::function<void(ListViewColumnHeader)> &func_size_changed();
 
 /// \}
 /// \name Implementation

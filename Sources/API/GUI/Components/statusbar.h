@@ -73,8 +73,8 @@ public:
 	///
 	/// \param id = value
 	///
-	/// \return Callback<void()>
-	Callback<void()> &func_part_double_clicked(int id);
+	/// \return std::function<void()>
+	std::function<void()> &func_part_double_clicked(int id);
 
 /// \}
 /// \name Operations

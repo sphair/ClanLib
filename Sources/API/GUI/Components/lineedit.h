@@ -33,9 +33,6 @@
 #include "../api_gui.h"
 #include "../gui_component.h"
 #include "../../Display/Window/input_event.h"
-#include "../../Core/Signals/callback.h"
-#include "../../Core/Signals/callback.h"
-#include "../../Core/Signals/callback.h"
 
 namespace clan
 {
@@ -257,25 +254,25 @@ public:
 /// \{
 
 public:
-	Callback<void(InputEvent &)> &func_before_edit_changed();
+	std::function<void(InputEvent &)> &func_before_edit_changed();
 
-	Callback<void(InputEvent &)> &func_after_edit_changed();
+	std::function<void(InputEvent &)> &func_after_edit_changed();
 
 	/// \brief Func selection changed
 	///
-	/// \return Callback<void()>
-	Callback<void()> &func_selection_changed();
+	/// \return std::function<void()>
+	std::function<void()> &func_selection_changed();
 
 	/// \brief Callback invoked after the lineedit gained focus.
-	Callback<void()> &func_focus_gained();
+	std::function<void()> &func_focus_gained();
 
 	/// \brief Callback invoked when the lineedit is about to lose focus.
-	Callback<void()> &func_focus_lost();
+	std::function<void()> &func_focus_lost();
 
 	/// \brief Func enter pressed
 	///
-	/// \return Callback<void()>
-	Callback<void()> &func_enter_pressed();
+	/// \return std::function<void()>
+	std::function<void()> &func_enter_pressed();
 
 /// \}
 /// \name Implementation

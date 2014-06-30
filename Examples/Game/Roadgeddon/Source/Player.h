@@ -93,7 +93,7 @@ private:
 	Game *game;
 
     Callback<void(Canvas&)> draw_callback;
-    CallbackContainer cc;
+    SlotContainer cc;
 
 	float wobble_timer;
 	float max_life;

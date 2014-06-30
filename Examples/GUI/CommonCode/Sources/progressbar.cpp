@@ -33,7 +33,7 @@ ProgressBar::ProgressBar(clan::GUIManager &manager) :
 	clan::Window(&manager, clan::GUITopLevelDescription("Progress Bar", clan::Rect(24 + 256*2, 256*1 + 180*2 + 32, clan::Size(256, 180)), false))
 {
 
-	func_close().set(this, &ProgressBar::on_close);
+	func_close() = bind_member(this, &ProgressBar::on_close);
 
 	clan::Rect client_area = get_client_area();
 
@@ -57,7 +57,7 @@ ProgressBar::ProgressBar(clan::GUIManager &manager) :
 	lineedit_min->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, lineedit_size));
 	lineedit_min->set_text("0");
 	lineedit_min->set_numeric_mode(true);
-	lineedit_min->func_enter_pressed().set(this, &ProgressBar::on_min_enter_pressed, lineedit_min);
+	lineedit_min->func_enter_pressed() = bind_member(this, &ProgressBar::on_min_enter_pressed, lineedit_min);
 
 	lineedit_label_min = new clan::Label(this);
 	lineedit_label_min->set_geometry(clan::Rect(label_xpos, lineedit_ypos, label_size));
@@ -68,7 +68,7 @@ ProgressBar::ProgressBar(clan::GUIManager &manager) :
 	lineedit_max->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, lineedit_size));
 	lineedit_max->set_text("100");
 	lineedit_max->set_numeric_mode(true);
-	lineedit_max->func_enter_pressed().set(this, &ProgressBar::on_max_enter_pressed, lineedit_max);
+	lineedit_max->func_enter_pressed() = bind_member(this, &ProgressBar::on_max_enter_pressed, lineedit_max);
 
 	lineedit_label_max = new clan::Label(this);
 	lineedit_label_max->set_geometry(clan::Rect(label_xpos, lineedit_ypos, label_size));
@@ -79,7 +79,7 @@ ProgressBar::ProgressBar(clan::GUIManager &manager) :
 	lineedit_step_size = new clan::LineEdit(this);
 	lineedit_step_size->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, lineedit_size));
 	lineedit_step_size->set_text("10");
-	lineedit_step_size->func_enter_pressed().set(this, &ProgressBar::on_step_size_enter_pressed, lineedit_step_size);
+	lineedit_step_size->func_enter_pressed() = bind_member(this, &ProgressBar::on_step_size_enter_pressed, lineedit_step_size);
 
 	lineedit_label_step_size = new clan::Label(this);
 	lineedit_label_step_size->set_geometry(clan::Rect(label_xpos, lineedit_ypos, label_size));
@@ -89,7 +89,7 @@ ProgressBar::ProgressBar(clan::GUIManager &manager) :
 	lineedit_position = new clan::LineEdit(this);
 	lineedit_position->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, lineedit_size));
 	lineedit_position->set_text("20");
-	lineedit_position->func_enter_pressed().set(this, &ProgressBar::on_position_enter_pressed, lineedit_position);
+	lineedit_position->func_enter_pressed() = bind_member(this, &ProgressBar::on_position_enter_pressed, lineedit_position);
 
 	lineedit_label_position = new clan::Label(this);
 	lineedit_label_position->set_geometry(clan::Rect(label_xpos, lineedit_ypos, label_size));
@@ -103,8 +103,8 @@ ProgressBar::ProgressBar(clan::GUIManager &manager) :
 
 	checkbox_marquee_mode = new clan::CheckBox(this);
 	checkbox_marquee_mode->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, clan::Size(100, 15)));
-	checkbox_marquee_mode->func_checked().set(this, &ProgressBar::on_checked_marquee_mode, checkbox_marquee_mode);
-	checkbox_marquee_mode->func_unchecked().set(this, &ProgressBar::on_unchecked_marquee_mode, checkbox_marquee_mode);
+	checkbox_marquee_mode->func_checked() = bind_member(this, &ProgressBar::on_checked_marquee_mode, checkbox_marquee_mode);
+	checkbox_marquee_mode->func_unchecked() = bind_member(this, &ProgressBar::on_unchecked_marquee_mode, checkbox_marquee_mode);
 	checkbox_marquee_mode->set_text("Marquee Mode");
 
 	lineedit_ypos += lineedit_gap;
@@ -112,7 +112,7 @@ ProgressBar::ProgressBar(clan::GUIManager &manager) :
 	lineedit_marquee_speed = new clan::LineEdit(this);
 	lineedit_marquee_speed->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, lineedit_size));
 	lineedit_marquee_speed->set_text("1000");
-	lineedit_marquee_speed->func_enter_pressed().set(this, &ProgressBar::on_marquee_speed_enter_pressed, lineedit_marquee_speed);
+	lineedit_marquee_speed->func_enter_pressed() = bind_member(this, &ProgressBar::on_marquee_speed_enter_pressed, lineedit_marquee_speed);
 
 	lineedit_label_marquee_speed = new clan::Label(this);
 	lineedit_label_marquee_speed->set_geometry(clan::Rect(label_xpos, lineedit_ypos, label_size));
@@ -123,14 +123,14 @@ ProgressBar::ProgressBar(clan::GUIManager &manager) :
 	pushbutton_apply = new clan::PushButton(this);
 	pushbutton_apply->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, clan::Size(48, 20)));
 	pushbutton_apply->set_text("Apply");
-	pushbutton_apply->func_clicked().set(this, &ProgressBar::on_apply_clicked, pushbutton_apply);
+	pushbutton_apply->func_clicked() = bind_member(this, &ProgressBar::on_apply_clicked, pushbutton_apply);
 
 	lineedit_ypos += lineedit_gap;
 
 	pushbutton_step_position = new clan::PushButton(this);
 	pushbutton_step_position->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, clan::Size(92, 20)));
 	pushbutton_step_position->set_text("Step Position");
-	pushbutton_step_position->func_clicked().set(this, &ProgressBar::on_step_position_clicked, pushbutton_step_position);
+	pushbutton_step_position->func_clicked() = bind_member(this, &ProgressBar::on_step_position_clicked, pushbutton_step_position);
 
 }
 

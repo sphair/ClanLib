@@ -25,7 +25,7 @@ int Program::main(const std::vector<std::string> &args)
 	clan::InputContext ic = window.get_ic();
 	
 	bool exit = false;
-	window.sig_window_close().connect({[&exit] { exit = true; }});
+	window.sig_window_close().connect([&exit] { exit = true; });
 
 	GameWorld game_world;
 	AgeAscii age_ascii(canvas, &game_world);

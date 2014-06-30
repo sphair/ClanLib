@@ -35,7 +35,6 @@
 #include "API/Physics2D/Dynamics/body.h"
 #include "API/Physics2D/Dynamics/body_description.h"
 #include "API/Core/Signals/signal.h"
-#include "API/Core/Signals/signal.h"
 namespace clan
 {
 
@@ -69,9 +68,9 @@ public:
 //																						_____________
 //																						S I G N A L S
 
-	Signal<Body> sig_begin_collision;
-	Signal<Body> sig_end_collision;
-	Signal<> sig_body_deletion;
+	Signal<void(Body)> sig_begin_collision;
+	Signal<void(Body)> sig_end_collision;
+	Signal<void()> sig_body_deletion;
 	//Maybe fixture attachment signal?
 
 //																						___________________________

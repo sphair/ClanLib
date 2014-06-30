@@ -34,7 +34,6 @@
 #include "../Render/graphic_context.h"
 #include "../Image/pixel_buffer.h"
 #include "../2D/sprite.h"
-#include "../../Core/Signals/callback.h"
 #include "font_description.h"
 
 namespace clan

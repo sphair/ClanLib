@@ -33,9 +33,6 @@
 
 #include "../api_gui.h"
 #include "../gui_component.h"
-#include "../../Core/Signals/callback.h"
-#include "../../Core/Signals/callback.h"
-#include "../../Core/Signals/callback.h"
 
 namespace clan
 {
@@ -137,38 +134,38 @@ public:
 public:
 	/// \brief Func dropdown opened
 	///
-	/// \return Callback<void()>
-	Callback<void()> &func_dropdown_opened();
+	/// \return std::function<void()>
+	std::function<void()> &func_dropdown_opened();
 
 	/// \brief Func dropdown closed
 	///
-	/// \return Callback<void()>
-	Callback<void()> &func_dropdown_closed();
+	/// \return std::function<void()>
+	std::function<void()> &func_dropdown_closed();
 
 	/// \brief Func enter pressed
 	///
-	/// \return Callback<void()>
-	Callback<void()> &func_enter_pressed();
+	/// \return std::function<void()>
+	std::function<void()> &func_enter_pressed();
 
 	/// \brief Func before edit changed
 	///
-	/// \return Callback<void()>
-	Callback<void()> &func_before_edit_changed();
+	/// \return std::function<void()>
+	std::function<void()> &func_before_edit_changed();
 
 	/// \brief Func after edit changed
 	///
-	/// \return Callback<void()>
-	Callback<void()> &func_after_edit_changed();
+	/// \return std::function<void()>
+	std::function<void()> &func_after_edit_changed();
 
 	/// \brief Func after item selected
 	///
-	/// \return Callback<void(int)>
-	Callback<void(int)> &func_item_selected();
+	/// \return std::function<void(int)>
+	std::function<void(int)> &func_item_selected();
 
 	/// \brief Func after selection changed
 	///
-	/// \return Callback<void(int)>
-	Callback<void(int)> &func_selection_changed();
+	/// \return std::function<void(int)>
+	std::function<void(int)> &func_selection_changed();
 
 /// \}
 /// \name Implementation

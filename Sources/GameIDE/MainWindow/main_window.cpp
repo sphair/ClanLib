@@ -82,8 +82,8 @@ void EditorMainWindow_Impl::setup(EditorMainWindow *source_component)
 	dispwindow.set_large_icon(PNGProvider::load("Resources/GameIDE/Icons/gameide-48.png"));
 	dispwindow.set_small_icon(PNGProvider::load("Resources/GameIDE/Icons/gameide-16.png"));
 
-	component->func_close().set(this, &EditorMainWindow_Impl::on_close);
-	component->func_resized().set(this, &EditorMainWindow_Impl::on_resized);
+	component->func_close() = bind_member(this, &EditorMainWindow_Impl::on_close);
+	component->func_resized() = bind_member(this, &EditorMainWindow_Impl::on_resized);
 
 	ribbon = new Ribbon(component);
 	workspace = new Workspace(component);
@@ -93,14 +93,14 @@ void EditorMainWindow_Impl::setup(EditorMainWindow *source_component)
 	Canvas canvas = component->get_canvas();
 	ResourceManager resources = component->get_resources();
 
-	ribbon->get_menu()->add_item(Image::resource(canvas, "IconNew24", resources), "New").set(this, &EditorMainWindow_Impl::on_item_new);
-	ribbon->get_menu()->add_item(Image::resource(canvas, "IconOpen24", resources), "Open").set(this, &EditorMainWindow_Impl::on_item_open);
-	ribbon->get_menu()->add_item(Image::resource(canvas, "IconSave24", resources), "Save").set(this, &EditorMainWindow_Impl::on_item_save);
-	ribbon->get_menu()->add_item(Image::resource(canvas, "IconSaveAs24", resources), "Save As..").set(this, &EditorMainWindow_Impl::on_item_save_as);
+	ribbon->get_menu()->add_item(Image::resource(canvas, "IconNew24", resources), "New") = bind_member(this, &EditorMainWindow_Impl::on_item_new);
+	ribbon->get_menu()->add_item(Image::resource(canvas, "IconOpen24", resources), "Open") = bind_member(this, &EditorMainWindow_Impl::on_item_open);
+	ribbon->get_menu()->add_item(Image::resource(canvas, "IconSave24", resources), "Save") = bind_member(this, &EditorMainWindow_Impl::on_item_save);
+	ribbon->get_menu()->add_item(Image::resource(canvas, "IconSaveAs24", resources), "Save As..") = bind_member(this, &EditorMainWindow_Impl::on_item_save_as);
 	ribbon->get_menu()->add_separator();
-	ribbon->get_menu()->add_item(Image::resource(canvas, "IconAbout24", resources), "About Game IDE").set(this, &EditorMainWindow_Impl::on_item_about);
+	ribbon->get_menu()->add_item(Image::resource(canvas, "IconAbout24", resources), "About Game IDE") = bind_member(this, &EditorMainWindow_Impl::on_item_about);
 	ribbon->get_menu()->add_separator();
-	ribbon->get_menu()->add_item(Image::resource(canvas, "IconExit24", resources), "Exit").set(this, &EditorMainWindow_Impl::on_item_exit);
+	ribbon->get_menu()->add_item(Image::resource(canvas, "IconExit24", resources), "Exit") = bind_member(this, &EditorMainWindow_Impl::on_item_exit);
 
 	//ui_controller->register_ribbon_setup("RibbonSetupEditorMainWindow");
 

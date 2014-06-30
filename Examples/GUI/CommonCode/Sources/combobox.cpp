@@ -32,7 +32,7 @@
 ComboBox::ComboBox(clan::GUIManager &manager) :
 	clan::Window(&manager, clan::GUITopLevelDescription("ComboBox", clan::Rect(256*3 + 32, 8, clan::Size(256, 256)), false))
 {
-	func_close().set(this, &ComboBox::on_close);
+	func_close() = bind_member(this, &ComboBox::on_close);
 
 
 	clan::Rect client_area = get_client_area();
@@ -51,12 +51,12 @@ ComboBox::ComboBox(clan::GUIManager &manager) :
 	combobox1->set_popup_menu(menu);
 	combobox1->set_selected_item(0);
 
-	combobox1->func_dropdown_opened().set(this, &ComboBox::on_dropdown_opened, combobox1);
-	combobox1->func_dropdown_closed().set(this, &ComboBox::on_dropdown_closed, combobox1);
-	combobox1->func_before_edit_changed().set(this, &ComboBox::on_before_edit_changed, combobox1);
-	combobox1->func_after_edit_changed().set(this, &ComboBox::on_after_edit_changed, combobox1);
-	combobox1->func_item_selected().set(this, &ComboBox::on_item_selected, combobox1);
-	combobox1->func_selection_changed().set(this, &ComboBox::on_selection_changed, combobox1);
+	combobox1->func_dropdown_opened() = bind_member(this, &ComboBox::on_dropdown_opened, combobox1);
+	combobox1->func_dropdown_closed() = bind_member(this, &ComboBox::on_dropdown_closed, combobox1);
+	combobox1->func_before_edit_changed() = bind_member(this, &ComboBox::on_before_edit_changed, combobox1);
+	combobox1->func_after_edit_changed() = bind_member(this, &ComboBox::on_after_edit_changed, combobox1);
+	combobox1->func_item_selected() = bind_member(this, &ComboBox::on_item_selected, combobox1);
+	combobox1->func_selection_changed() = bind_member(this, &ComboBox::on_selection_changed, combobox1);
 
 	int xoffset = client_area.left + 36;
 	int yoffset = client_area.top + 40;
@@ -87,16 +87,16 @@ ComboBox::ComboBox(clan::GUIManager &manager) :
 
 	checkbox_editable = new clan::CheckBox(this);
 	checkbox_editable->set_geometry(clan::Rect(xoffset, yoffset, clan::Size(100, 15)));
-	checkbox_editable->func_checked().set(this, &ComboBox::on_checked_editable, checkbox_editable);
-	checkbox_editable->func_unchecked().set(this, &ComboBox::on_unchecked_editable, checkbox_editable);
+	checkbox_editable->func_checked() = bind_member(this, &ComboBox::on_checked_editable, checkbox_editable);
+	checkbox_editable->func_unchecked() = bind_member(this, &ComboBox::on_unchecked_editable, checkbox_editable);
 	checkbox_editable->set_text("Editable");
 
 	yoffset += gap;
 
 	checkbox_disable = new clan::CheckBox(this);
 	checkbox_disable->set_geometry(clan::Rect(xoffset, yoffset, clan::Size(100, 15)));
-	checkbox_disable->func_checked().set(this, &ComboBox::on_checked_disable, checkbox_disable);
-	checkbox_disable->func_unchecked().set(this, &ComboBox::on_unchecked_disable, checkbox_disable);
+	checkbox_disable->func_checked() = bind_member(this, &ComboBox::on_checked_disable, checkbox_disable);
+	checkbox_disable->func_unchecked() = bind_member(this, &ComboBox::on_unchecked_disable, checkbox_disable);
 	checkbox_disable->set_text("Disable");
 }
 

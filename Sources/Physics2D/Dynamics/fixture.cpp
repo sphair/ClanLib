@@ -130,17 +130,17 @@ void Fixture::kill()
 //																											_____________																										
 //																											S I G N A L S
 
-Signal<Fixture> &Fixture::sig_begin_collision()
+Signal<void(Fixture)> &Fixture::sig_begin_collision()
 {
 	return impl->sig_begin_collision;
 }
 
-Signal<Fixture> &Fixture::sig_end_collision()
+Signal<void(Fixture)> &Fixture::sig_end_collision()
 {
 	return impl->sig_end_collision;
 }
 
-Signal<> &Fixture::sig_fixture_deletion()
+Signal<void()> &Fixture::sig_fixture_deletion()
 {
 	return impl->sig_fixture_deletion;
 }

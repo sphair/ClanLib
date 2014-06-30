@@ -37,11 +37,11 @@ int App::start(const std::vector<std::string> &args)
 	clan::DisplayWindow window(description);
 	clan::InputDevice keyboard = window.get_ic().get_keyboard();
 	clan::Canvas canvas(window);
-    clan::CallbackContainer cc;
+    clan::SlotContainer cc;
 
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::Callback<void(const clan::InputEvent&)>(this, &App::on_input_up));
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), std::function<void(const clan::InputEvent&)>(this, &App::on_input_up));
 
-	cc.connect(window.sig_window_close(), clan::Callback<void()>(this, &App::window_close));
+	cc.connect(window.sig_window_close(), std::function<void()>(this, &App::window_close));
 
 	// Create offscreen texture
 	clan::Texture2D texture_offscreen(canvas, canvas.get_width(), canvas.get_height());

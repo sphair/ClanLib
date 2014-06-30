@@ -57,7 +57,7 @@ Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComp
 	label_format = create_combobox_label(combo_format, "Pixel Format");
 
 	checkbox_normals = create_checkbox(640, 35, "Draw Normals (rgb only)", is_normals_set);
-	checkbox_normals->func_state_changed().set(this, &Options::checkbox_normals_changed);
+	checkbox_normals->func_state_changed() = bind_member(this, &Options::checkbox_normals_changed);
 
 	make_dimension_menu(combo_dimension_menu);
 	combo_dimension = create_dimension_combo_box(450, 80, combo_dimension_menu, 0);
@@ -73,7 +73,7 @@ Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComp
 	slider_width->set_min(32);
 	slider_width->set_max(382);
 	slider_width->set_position(width);
-	slider_width->func_value_changed().set(this, &Options::slider_width_changed);
+	slider_width->func_value_changed() = bind_member(this, &Options::slider_width_changed);
 	slider_ypos += 8;
 	label_width = create_slider_label(slider_width);
 
@@ -82,7 +82,7 @@ Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComp
 	slider_height->set_min(32);
 	slider_height->set_max(382);
 	slider_height->set_position(height);
-	slider_height->func_value_changed().set(this, &Options::slider_height_changed);
+	slider_height->func_value_changed() = bind_member(this, &Options::slider_height_changed);
 	slider_ypos += 8;
 	label_height = create_slider_label(slider_height);
 
@@ -92,63 +92,63 @@ Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComp
 	slider_octaves->set_max(9);
 	slider_octaves->set_page_step(1);
 	slider_octaves->set_position(octaves);
-	slider_octaves->func_value_changed().set(this, &Options::slider_octaves_changed);
+	slider_octaves->func_value_changed() = bind_member(this, &Options::slider_octaves_changed);
 	slider_ypos += 8;
 	label_octaves = create_slider_label(slider_octaves);
 
 	slider_amplitude = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
 	slider_ypos += 8;
 	set_value(slider_amplitude, amplitude, MAX_AMPLITUDE);
-	slider_amplitude->func_value_changed().set(this, &Options::slider_amplitude_changed);
+	slider_amplitude->func_value_changed() = bind_member(this, &Options::slider_amplitude_changed);
 	slider_ypos += 8;
 	label_amplitude = create_slider_label(slider_amplitude);
 
 	slider_start_x = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
 	slider_ypos += 8;
 	set_value(slider_start_x, start_x, MAX_POSITION);
-	slider_start_x->func_value_changed().set(this, &Options::slider_start_x_changed);
+	slider_start_x->func_value_changed() = bind_member(this, &Options::slider_start_x_changed);
 	slider_ypos += 8;
 	label_start_x = create_slider_label(slider_start_x);
 
 	slider_length_x = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
 	slider_ypos += 8;
 	set_value(slider_length_x, length_x, MAX_LENGTH);
-	slider_length_x->func_value_changed().set(this, &Options::slider_length_x_changed);
+	slider_length_x->func_value_changed() = bind_member(this, &Options::slider_length_x_changed);
 	slider_ypos += 8;
 	label_length_x = create_slider_label(slider_length_x);
 
 	slider_start_y = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
 	slider_ypos += 8;
 	set_value(slider_start_y, start_y, MAX_POSITION);
-	slider_start_y->func_value_changed().set(this, &Options::slider_start_y_changed);
+	slider_start_y->func_value_changed() = bind_member(this, &Options::slider_start_y_changed);
 	slider_ypos += 8;
 	label_start_y = create_slider_label(slider_start_y);
 
 	slider_length_y = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
 	slider_ypos += 8;
 	set_value(slider_length_y, length_y, MAX_LENGTH);
-	slider_length_y->func_value_changed().set(this, &Options::slider_length_y_changed);
+	slider_length_y->func_value_changed() = bind_member(this, &Options::slider_length_y_changed);
 	slider_ypos += 8;
 	label_length_y = create_slider_label(slider_length_y);
 
 	slider_position_z = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
 	slider_ypos += 8;
 	set_value(slider_position_z, position_z, MAX_POSITION);
-	slider_position_z->func_value_changed().set(this, &Options::slider_position_z_changed);
+	slider_position_z->func_value_changed() = bind_member(this, &Options::slider_position_z_changed);
 	slider_ypos += 8;
 	label_position_z = create_slider_label(slider_position_z);
 
 	slider_position_w = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
 	slider_ypos += 8;
 	set_value(slider_position_w, position_w, MAX_POSITION);
-	slider_position_w->func_value_changed().set(this, &Options::slider_position_w_changed);
+	slider_position_w->func_value_changed() = bind_member(this, &Options::slider_position_w_changed);
 	slider_ypos += 8;
 	label_position_w = create_slider_label(slider_position_w);
 
 
 	update_all_slider_text();
 
-	func_render().set(this, &Options::on_render);
+	func_render() = bind_member(this, &Options::on_render);
 }
 
 Options::~Options()
@@ -338,7 +338,7 @@ clan::ComboBox *Options::create_format_combo_box(int xpos, int ypos, clan::Popup
 	combo->set_dropdown_minimum_width(64);
 	combo->set_popup_menu(menu);
 	combo->set_selected_item(selected_item);
-	combo->func_item_selected().set(this, &Options::on_format_selected, combo);
+	combo->func_item_selected() = bind_member(this, &Options::on_format_selected, combo);
 
 	return combo;
 }
@@ -360,7 +360,7 @@ clan::ComboBox *Options::create_dimension_combo_box(int xpos, int ypos, clan::Po
 	combo->set_dropdown_minimum_width(64);
 	combo->set_popup_menu(menu);
 	combo->set_selected_item(selected_item);
-	combo->func_item_selected().set(this, &Options::on_dimension_selected, combo);
+	combo->func_item_selected() = bind_member(this, &Options::on_dimension_selected, combo);
 
 	return combo;
 }

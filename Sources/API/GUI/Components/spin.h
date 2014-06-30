@@ -157,8 +157,8 @@ public:
 
 	/// \brief Func value changed
 	///
-	/// \return Callback<void()>
-	Callback<void()> &func_value_changed();
+	/// \return std::function<void()>
+	std::function<void()> &func_value_changed();
 
 /// \}
 /// \name Implementation

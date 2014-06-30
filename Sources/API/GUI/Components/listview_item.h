@@ -225,7 +225,7 @@ public:
 /// \{
 
 public:
-	Callback<void(Rect)> &func_render_icon();
+	std::function<void(Rect)> &func_render_icon();
 
 /// \}
 /// \name Implementation

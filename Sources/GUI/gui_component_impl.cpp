@@ -179,8 +179,8 @@ void GUIComponent_Impl::geometry_updated(bool geometry_was_resized)
 
 	if (geometry_was_resized)
 	{
-		if (!func_resized.is_null())
-			func_resized.invoke();
+		if (func_resized)
+			func_resized();
 	}
 
 	component->request_repaint();
@@ -188,8 +188,8 @@ void GUIComponent_Impl::geometry_updated(bool geometry_was_resized)
 
 void GUIComponent_Impl::invoke_enablemode_changed()
 {
-	if (!func_enablemode_changed.is_null())
-		func_enablemode_changed.invoke();
+	if (func_enablemode_changed)
+		func_enablemode_changed();
 
 	GUIComponent *cur = first_child;
 	while (cur)

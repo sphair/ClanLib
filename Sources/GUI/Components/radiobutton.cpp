@@ -62,9 +62,9 @@ public:
 	void create_parts();
 
 	RadioButton *radio;
-	Callback<void()> func_selected;
-	Callback<void()> func_unselected;
-	Callback<void(RadioButton*)> func_group_selection_changed;
+	std::function<void()> func_selected;
+	std::function<void()> func_unselected;
+	std::function<void(RadioButton*)> func_group_selection_changed;
 	std::string text;
 	int id;
 
@@ -73,7 +73,7 @@ public:
 	GUIThemePart part_focus;
 
 	// Returns the group changed callback, if it is set on one radio button in the group.
-	Callback<void(RadioButton*)> uncheck_radio_buttons(GUIComponent *parent);
+	std::function<void(RadioButton*)> uncheck_radio_buttons(GUIComponent *parent);
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -88,9 +88,9 @@ RadioButton::RadioButton(GUIComponent *parent)
 
 	impl->create_parts();
 
-	func_process_message().set(impl.get(), &RadioButton_Impl::on_process_message);
-	func_render().set(impl.get(), &RadioButton_Impl::on_render);
-	func_enablemode_changed().set(impl.get(), &RadioButton_Impl::on_enablemode_changed);
+	func_process_message() = bind_member(impl.get(), &RadioButton_Impl::on_process_message);
+	func_render() = bind_member(impl.get(), &RadioButton_Impl::on_render);
+	func_enablemode_changed() = bind_member(impl.get(), &RadioButton_Impl::on_enablemode_changed);
 }
 
 RadioButton::~RadioButton()
@@ -177,17 +177,17 @@ void RadioButton::set_group_name(const std::string &name)
 /////////////////////////////////////////////////////////////////////////////
 // RadioButton Events:
 
-Callback<void()> &RadioButton::func_selected()
+std::function<void()> &RadioButton::func_selected()
 {
 	return impl->func_selected;
 }
 
-Callback<void()> &RadioButton::func_unselected()
+std::function<void()> &RadioButton::func_unselected()
 {
 	return impl->func_unselected;
 }
 
-Callback<void(RadioButton*)> &RadioButton::func_group_selection_changed()
+std::function<void(RadioButton*)> &RadioButton::func_group_selection_changed()
 {
 	return impl->func_group_selection_changed;
 }
@@ -216,15 +216,15 @@ void RadioButton_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 		{
 			if ((part_checker.get_pseudo_class(CssStr::checked) == false))
 			{
-				Callback<void(RadioButton*)> cb = uncheck_radio_buttons(radio->get_parent_component());
+				std::function<void(RadioButton*)> cb = uncheck_radio_buttons(radio->get_parent_component());
 
 				part_checker.set_pseudo_class(CssStr::pressed, false);
 				radio->set_selected(true);
 
-				if (!cb.is_null())
-					cb.invoke(radio);
-				if (!func_selected.is_null())
-					func_selected.invoke();
+				if (cb)
+					cb(radio);
+				if (func_selected)
+					func_selected();
 			}
 			else
 			{
@@ -251,12 +251,12 @@ void RadioButton_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 					RadioButton *focus_comp = dynamic_cast<RadioButton*>(comp);
 					if (focus_comp)
 					{
-						Callback<void(RadioButton*)> cb = uncheck_radio_buttons(radio->get_parent_component());
+						std::function<void(RadioButton*)> cb = uncheck_radio_buttons(radio->get_parent_component());
 						focus_comp->set_selected(true);
-						if (!cb.is_null())
-							cb.invoke(focus_comp);
-						if (!focus_comp->func_selected().is_null())
-							focus_comp->func_selected().invoke();
+						if (cb)
+							cb(focus_comp);
+						if (focus_comp->func_selected())
+							focus_comp->func_selected()();
 						focus_comp->set_focus();
 						break;
 					}
@@ -289,12 +289,12 @@ void RadioButton_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 					RadioButton *focus_comp = dynamic_cast<RadioButton*>(comp);
 					if (focus_comp)
 					{
-						Callback<void(RadioButton*)> cb = uncheck_radio_buttons(radio->get_parent_component());
+						std::function<void(RadioButton*)> cb = uncheck_radio_buttons(radio->get_parent_component());
 						focus_comp->set_selected(true);
-						if (!cb.is_null())
-							cb.invoke(focus_comp);
-						if (!focus_comp->func_selected().is_null())
-							focus_comp->func_selected().invoke();
+						if (cb)
+							cb(focus_comp);
+						if (focus_comp->func_selected())
+							focus_comp->func_selected()();
 						focus_comp->set_focus();
 						break;
 					}
@@ -336,12 +336,12 @@ void RadioButton_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 			radio->set_pseudo_class(CssStr::focused, true);
 			if (!radio->is_selected())
 			{
-				Callback<void(RadioButton*)> cb = uncheck_radio_buttons(radio->get_parent_component());
+				std::function<void(RadioButton*)> cb = uncheck_radio_buttons(radio->get_parent_component());
 				radio->set_selected(true);
-				if (!cb.is_null())
-					cb.invoke(radio);
-				if (!func_selected.is_null())
-					func_selected.invoke();
+				if (cb)
+					cb(radio);
+				if (func_selected)
+					func_selected();
 			}
 			radio->request_repaint();
 		}
@@ -376,9 +376,9 @@ void RadioButton_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	}
 }
 
-Callback<void(RadioButton*)> RadioButton_Impl::uncheck_radio_buttons(GUIComponent *parent)
+std::function<void(RadioButton*)> RadioButton_Impl::uncheck_radio_buttons(GUIComponent *parent)
 {
-	Callback<void(RadioButton*)> callback;
+	std::function<void(RadioButton*)> callback;
 
 	std::vector<GUIComponent*> group = parent->get_child_component_group(radio->get_group_name());
 
@@ -389,15 +389,15 @@ Callback<void(RadioButton*)> RadioButton_Impl::uncheck_radio_buttons(GUIComponen
 
 		if (rb && rb->get_group_name() == radio->get_group_name())
 		{
-			if (callback.is_null() && !rb->func_group_selection_changed().is_null())
+			if (callback && rb->func_group_selection_changed())
 			{
 				callback = rb->func_group_selection_changed();
 			}
 
 			if (rb->impl->part_checker.get_pseudo_class(CssStr::checked))
 			{
-				if (!rb->impl->func_unselected.is_null())
-					rb->impl->func_unselected.invoke();
+				if (rb->impl->func_unselected)
+					rb->impl->func_unselected();
 
 				rb->impl->part_checker.set_pseudo_class(CssStr::checked, false);
 				rb->impl->part_checker.set_pseudo_class(CssStr::unchecked, true);

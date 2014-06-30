@@ -54,23 +54,23 @@ GUIWindowManagerProvider_Texture::GUIWindowManagerProvider_Texture(DisplayWindow
 	: site(0), activated_window(0), capture_mouse_window(NULL), display_window(display_window), canvas_window(display_window),
   frame_buffer_initial_setup(false), frame_buffer_stencil_attached(false), frame_buffer_depth_attached(false)
 {
-	cc.connect(display_window.sig_window_close(), Callback<void()>(this, &GUIWindowManagerProvider_Texture::on_displaywindow_window_close));
+	sc.connect(display_window.sig_window_close(), bind_member(this, &GUIWindowManagerProvider_Texture::on_displaywindow_window_close));
 
 	InputContext ic = display_window.get_ic();
-    cc.connect(ic.get_mouse().sig_key_up(), Callback<void(const InputEvent&)>(this, &GUIWindowManagerProvider_Texture::on_input_mouse_up));
-    cc.connect(ic.get_mouse().sig_key_down(), Callback<void(const InputEvent&)>(this, &GUIWindowManagerProvider_Texture::on_input_mouse_down));
-    cc.connect(ic.get_mouse().sig_key_dblclk(), Callback<void(const InputEvent&)>(this, &GUIWindowManagerProvider_Texture::on_input_mouse_down));
-    cc.connect(ic.get_mouse().sig_pointer_move(), Callback<void(const InputEvent&)>(this, &GUIWindowManagerProvider_Texture::on_input_mouse_move));
+	sc.connect(ic.get_mouse().sig_key_up(), bind_member(this, &GUIWindowManagerProvider_Texture::on_input_mouse_up));
+	sc.connect(ic.get_mouse().sig_key_down(), bind_member(this, &GUIWindowManagerProvider_Texture::on_input_mouse_down));
+	sc.connect(ic.get_mouse().sig_key_dblclk(), bind_member(this, &GUIWindowManagerProvider_Texture::on_input_mouse_down));
+	sc.connect(ic.get_mouse().sig_pointer_move(), bind_member(this, &GUIWindowManagerProvider_Texture::on_input_mouse_move));
 
-    cc.connect(ic.get_keyboard().sig_key_up(), Callback<void(const InputEvent&)>(this, &GUIWindowManagerProvider_Texture::on_input));
-    cc.connect(ic.get_keyboard().sig_key_down(), Callback<void(const InputEvent&)>(this, &GUIWindowManagerProvider_Texture::on_input));
+	sc.connect(ic.get_keyboard().sig_key_up(), bind_member(this, &GUIWindowManagerProvider_Texture::on_input));
+	sc.connect(ic.get_keyboard().sig_key_down(), bind_member(this, &GUIWindowManagerProvider_Texture::on_input));
 
 	for (int tc = 0; tc < ic.get_tablet_count(); ++tc)
 	{
-        cc.connect(ic.get_tablet(tc).sig_axis_move(), Callback<void(const InputEvent&)>(this, &GUIWindowManagerProvider_Texture::on_input_mouse_move));
-        cc.connect(ic.get_tablet(tc).sig_key_down(), Callback<void(const InputEvent&)>(this, &GUIWindowManagerProvider_Texture::on_input_mouse_down));
-        cc.connect(ic.get_tablet(tc).sig_key_dblclk(), Callback<void(const InputEvent&)>(this, &GUIWindowManagerProvider_Texture::on_input_mouse_down));
-        cc.connect(ic.get_tablet(tc).sig_key_up(), Callback<void(const InputEvent&)>(this, &GUIWindowManagerProvider_Texture::on_input));
+		sc.connect(ic.get_tablet(tc).sig_axis_move(), bind_member(this, &GUIWindowManagerProvider_Texture::on_input_mouse_move));
+		sc.connect(ic.get_tablet(tc).sig_key_down(), bind_member(this, &GUIWindowManagerProvider_Texture::on_input_mouse_down));
+		sc.connect(ic.get_tablet(tc).sig_key_dblclk(), bind_member(this, &GUIWindowManagerProvider_Texture::on_input_mouse_down));
+		sc.connect(ic.get_tablet(tc).sig_key_up(), bind_member(this, &GUIWindowManagerProvider_Texture::on_input));
 	}
 
 	frame_buffer = FrameBuffer(canvas_window);
@@ -122,7 +122,7 @@ void GUIWindowManagerProvider_Texture::update_paint()
 			std::vector<Rect>::size_type size = update_region_list.size();
 			for (int i = 0; i < size; i++)
 			{
-				site->func_paint->invoke(it->first, update_region_list[i]);
+				(*site->func_paint)(it->first, update_region_list[i]);
 			}
 		}
 	}
@@ -141,7 +141,7 @@ void GUIWindowManagerProvider_Texture::on_displaywindow_window_close()
 		return;
 
 	// this isn't really right, but it will allow us to close our test GUI applications.
-	site->func_close->invoke(activated_window);
+	(*site->func_close)(activated_window);
 }
 
 void GUIWindowManagerProvider_Texture::on_input(const InputEvent &input_event)
@@ -151,8 +151,8 @@ void GUIWindowManagerProvider_Texture::on_input(const InputEvent &input_event)
 
 	InputEvent new_input_event = input_event;
 
-	if (!func_input_intercept.is_null())
-		func_input_intercept.invoke(new_input_event);
+	if (func_input_intercept)
+		func_input_intercept(new_input_event);
 
 	invoke_input_received(activated_window, new_input_event);
 }
@@ -161,8 +161,8 @@ void GUIWindowManagerProvider_Texture::on_input_mouse_move(const InputEvent &inp
 {
 	InputEvent new_input_event = input_event;
 
-	if (!func_input_intercept.is_null())
-				func_input_intercept.invoke(new_input_event);
+	if (func_input_intercept)
+				func_input_intercept(new_input_event);
 
 	bool capture_mouse_flag = false;
 	if (capture_mouse_window)
@@ -210,8 +210,8 @@ void GUIWindowManagerProvider_Texture::on_input_mouse_up(const InputEvent &input
 
 	InputEvent new_input_event = input_event;
 
-	if (!func_input_intercept.is_null())
-		func_input_intercept.invoke(new_input_event);
+	if (func_input_intercept)
+		func_input_intercept(new_input_event);
 
 	invoke_input_received(capture_mouse_window, new_input_event);
 }
@@ -220,8 +220,8 @@ void GUIWindowManagerProvider_Texture::on_input_mouse_down(const InputEvent &inp
 {
 	InputEvent new_input_event = input_event;
 
-	if (!func_input_intercept.is_null())
-		func_input_intercept.invoke(new_input_event);
+	if (func_input_intercept)
+		func_input_intercept(new_input_event);
 
 	// It seems multiple windows in the same app act differently for window SetCapture()
 	if (capture_mouse_window)
@@ -248,7 +248,7 @@ void GUIWindowManagerProvider_Texture::on_input_mouse_down(const InputEvent &inp
 			{
 				GUITopLevelWindow_Alive toplevel_window_alive(toplevel_window);
 
-				site->func_focus_lost->invoke(activated_window);
+				(*site->func_focus_lost)(activated_window);
 
 				if (toplevel_window_alive.is_null())
 					toplevel_window = get_window_at_point(new_input_event.mouse_pos);
@@ -263,7 +263,7 @@ void GUIWindowManagerProvider_Texture::on_input_mouse_down(const InputEvent &inp
 		{
 			activated_window = toplevel_window;
 			GUITopLevelWindow_Alive toplevel_window_alive(toplevel_window);
-			site->func_focus_gained->invoke(activated_window);
+			(*site->func_focus_gained)(activated_window);
 			if (toplevel_window_alive.is_null())
 				toplevel_window = get_window_at_point(new_input_event.mouse_pos);
 		}
@@ -424,8 +424,8 @@ void GUIWindowManagerProvider_Texture::create_window(
 	if (!frame_buffer_initial_setup)
 	{
 		frame_buffer_initial_setup = true;
-		if (!func_setup_framebuffer.is_null())
-			func_setup_framebuffer.invoke(frame_buffer);
+		if (func_setup_framebuffer)
+			func_setup_framebuffer(frame_buffer);
 	}
 
 	// to-to: report focus change.
@@ -662,9 +662,9 @@ void GUIWindowManagerProvider_Texture::update()
 {
 	update_paint();
 
-	if (!func_repaint.is_null())
+	if (func_repaint)
 	{
-		func_repaint.invoke();
+		func_repaint();
 	}
 	else
 	{
@@ -798,7 +798,7 @@ void GUIWindowManagerProvider_Texture::invoke_input_received(GUITopLevelWindow *
 	InputEvent inp_event = input_event;
 	inp_event.mouse_pos.x -= texture_window->geometry.left;
 	inp_event.mouse_pos.y -= texture_window->geometry.top;
-	site->func_input_received->invoke(window, inp_event);
+	(*site->func_input_received)(window, inp_event);
 }
 
 GUITopLevelWindowTexture *GUIWindowManagerProvider_Texture::get_window_texture(GUITopLevelWindow *handle)

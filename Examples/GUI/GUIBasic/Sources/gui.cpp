@@ -45,18 +45,18 @@ int App::start(const std::vector<std::string> &args)
 	win_desc.set_title("BasicGUI Test Application");
 	win_desc.set_position(clan::Rect(200, 200, 540, 440), false);
 	clan::GUIComponent window(&gui, win_desc, "Window");
-	window.func_close().set(this, &App::on_close, &window);
+	window.func_close() = bind_member(this, &App::on_close, &window);
 
 	clan::Rect client_area = window.get_content_box();
 
 	clan::PushButton button(&window);
 	button.set_geometry(clan::Rect(client_area.left + 10, client_area.top + 10, clan::Size(160, 40)));
-	button.func_clicked().set(this, &App::on_button_clicked, &button);
+	button.func_clicked() = bind_member(this, &App::on_button_clicked, &button);
 	button.set_text("Button");
 
 	clan::PushButton button_disabled(&window);
 	button_disabled.set_geometry(clan::Rect(client_area.left + 10, client_area.top + 60, clan::Size(160, 40)));
-	button_disabled.func_clicked().set(this, &App::on_button_clicked, &button_disabled);
+	button_disabled.func_clicked() = bind_member(this, &App::on_button_clicked, &button_disabled);
 	button_disabled.set_text("Button Disabled");
 	button_disabled.set_enabled(false);
 

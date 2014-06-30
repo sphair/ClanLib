@@ -49,7 +49,7 @@ TabDock::TabDock(DockingGroup *parent, int id)
 
 	tab_button_row = new GUIComponent(this, "tab-button-row");
 
-	button_close->func_clicked().set(this, &TabDock::on_button_close_clicked);
+	button_close->func_clicked() = bind_member(this, &TabDock::on_button_close_clicked);
 }
 
 void TabDock::on_button_close_clicked()
@@ -101,8 +101,8 @@ void TabDock::dock(DockableComponent *dockable)
 		//button->icon->set_image(dockable->get_icon());
 		button->label->set_text(dockable->get_title());
 
-		button->func_input_pressed().set(this, &TabDock::on_input_pressed, dockable);
-		button->func_input_doubleclick().set(this, &TabDock::on_input_doubleclick, dockable);
+		button->func_input_pressed() = [=](const InputEvent &input_event){return on_input_pressed(input_event, dockable); };
+		button->func_input_doubleclick() = [=](const InputEvent &input_event) {return on_input_doubleclick(input_event, dockable); };
 
 		tab_buttons.push_back(button);
 

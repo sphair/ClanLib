@@ -56,9 +56,9 @@ DocumentEditorRibbon::DocumentEditorRibbon(UIController *controller)
 	button_cut->set_text("Cut");
 	button_copy->set_text("Copy");
 
-	button_paste->func_clicked().set(this, &DocumentEditorRibbon::on_button_paste_clicked);
-	button_cut->func_clicked().set(this, &DocumentEditorRibbon::on_button_cut_clicked);
-	button_copy->func_clicked().set(this, &DocumentEditorRibbon::on_button_copy_clicked);
+	button_paste->func_clicked() = bind_member(this, &DocumentEditorRibbon::on_button_paste_clicked);
+	button_cut->func_clicked() = bind_member(this, &DocumentEditorRibbon::on_button_cut_clicked);
+	button_copy->func_clicked() = bind_member(this, &DocumentEditorRibbon::on_button_copy_clicked);
 
 	edit_section = new UIRibbonSection(controller, "Home", "Edit");
 
@@ -79,9 +79,9 @@ DocumentEditorRibbon::DocumentEditorRibbon(UIController *controller)
 	button_save->set_icon(Image::resource(canvas, "IconSave24", resources));
 	button_save->set_icon_position(PushButton::icon_top);
 
-	button_undo->func_clicked().set(this, &DocumentEditorRibbon::on_button_undo_clicked);
-	button_redo->func_clicked().set(this, &DocumentEditorRibbon::on_button_redo_clicked);
-	button_save->func_clicked().set(this, &DocumentEditorRibbon::on_button_save_clicked);
+	button_undo->func_clicked() = bind_member(this, &DocumentEditorRibbon::on_button_undo_clicked);
+	button_redo->func_clicked() = bind_member(this, &DocumentEditorRibbon::on_button_redo_clicked);
+	button_save->func_clicked() = bind_member(this, &DocumentEditorRibbon::on_button_save_clicked);
 
 	// Always show the clipboard and save buttons
 	clipboard_section->show_section(true);

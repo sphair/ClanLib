@@ -31,9 +31,9 @@
 RadialMenu::RadialMenu(GUIComponent *parent)
 : GUIComponent(parent, "radialmenu")
 {
-	func_render().set(this, &RadialMenu::on_render);
-	func_resized().set(this, &RadialMenu::on_resized);
-	func_process_message().set(this, &RadialMenu::on_process_message);
+	func_render() = bind_member(this, &RadialMenu::on_render);
+	func_resized() = bind_member(this, &RadialMenu::on_resized);
+	func_process_message() = bind_member(this, &RadialMenu::on_process_message);
 
 	create_parts();
 	

@@ -42,7 +42,7 @@ private:
 
 private:
 	DisplayWindow window;
-    CallbackContainer cc;
+    SlotContainer cc;
 	bool quit;
 	bool fullscreen_requested;
 	bool is_fullscreen;

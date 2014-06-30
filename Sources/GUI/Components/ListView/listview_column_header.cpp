@@ -113,8 +113,8 @@ ListViewColumnHeader ListViewColumnHeader::get_prev_sibling()
 void ListViewColumnHeader::set_width(int width)
 {
 	impl->width = width;
-	if (!impl->func_size_changed.is_null())
-		impl->func_size_changed.invoke(*this);
+	if (impl->func_size_changed)
+		impl->func_size_changed(*this);
 }
 
 void ListViewColumnHeader::set_caption(const std::string &str)
@@ -140,7 +140,7 @@ void ListViewColumnHeader::set_rect(const Rect &rect)
 /////////////////////////////////////////////////////////////////////////////
 // ListViewColumnHeader Events:
 
-Callback<void(ListViewColumnHeader)> &ListViewColumnHeader::func_size_changed()
+std::function<void(ListViewColumnHeader)> &ListViewColumnHeader::func_size_changed()
 {
 	return impl->func_size_changed;
 }

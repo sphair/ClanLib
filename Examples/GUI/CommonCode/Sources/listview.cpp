@@ -33,7 +33,7 @@ ListView::ListView(clan::GUIManager &manager) :
 	clan::Window(&manager, clan::GUITopLevelDescription("List View & Toolbar", clan::Rect(8, 256*1 + 180*1 + 24, clan::Size(256*2, 180*2)), false))
 {
 
-	func_close().set(this, &ListView::on_close);
+	func_close() = bind_member(this, &ListView::on_close);
 
 	clan::Rect client_area = get_client_area();
 
@@ -60,11 +60,11 @@ ListView::ListView(clan::GUIManager &manager) :
 	listview1->set_geometry(clan::Rect(client_area.left + 100, client_area.top + 10, clan::Size(360, 180)));
 	listview1->set_display_mode(clan::listview_mode_details);
 
-	listview1->func_selection_changed().set(this, &ListView::on_selection_changed, listview1);
-	listview1->func_item_edited().set(this, &ListView::on_item_edited, listview1);
-	listview1->func_key_pressed().set(this, &ListView::on_key_pressed, listview1);
-	listview1->func_key_released().set(this, &ListView::on_key_released, listview1);
-	listview1->func_mouse_right_up().set(this, &ListView::on_mouse_right_up, listview1);
+	listview1->func_selection_changed() = bind_member(this, &ListView::on_selection_changed, listview1);
+	listview1->func_item_edited() = bind_member(this, &ListView::on_item_edited, listview1);
+	listview1->func_key_pressed() = bind_member(this, &ListView::on_key_pressed, listview1);
+	listview1->func_key_released() = bind_member(this, &ListView::on_key_released, listview1);
+	listview1->func_mouse_right_up() = bind_member(this, &ListView::on_mouse_right_up, listview1);
 	clan::ListViewItem doc_item = listview1->get_document_item(); 
 
 	clan::ListViewHeader *lv_header = listview1->get_header();  

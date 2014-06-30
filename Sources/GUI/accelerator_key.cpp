@@ -50,7 +50,7 @@ public:
 
 //! Attributes:
 public:
-	Callback<void(std::shared_ptr<GUIMessage> &, AcceleratorKey)> func_pressed;
+	std::function<void(std::shared_ptr<GUIMessage> &, AcceleratorKey)> func_pressed;
 	int id;
 	bool shift, alt, ctrl;
 };
@@ -82,7 +82,7 @@ AcceleratorKey::~AcceleratorKey()
 /////////////////////////////////////////////////////////////////////////////
 // AcceleratorKey Attributes:
 
-Callback<void(std::shared_ptr<GUIMessage> &, AcceleratorKey)> &AcceleratorKey::func_pressed()
+std::function<void(std::shared_ptr<GUIMessage> &, AcceleratorKey)> &AcceleratorKey::func_pressed()
 {
 	return impl->func_pressed;
 }

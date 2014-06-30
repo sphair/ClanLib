@@ -31,7 +31,7 @@
 
 #include "../api_display.h"
 #include <memory>
-#include "../../Core/Signals/callback.h"
+#include <functional>
 
 namespace clan
 {
@@ -111,7 +111,7 @@ public:
 	/// Note, the output maybe different to the input, if desired\n
 	/// \n
 	/// PixelBuffer func_process(PixelBuffer &input)
-	Callback<PixelBuffer(PixelBuffer &)> &func_process();
+	std::function<PixelBuffer(PixelBuffer &)> &func_process();
 
 /// \}
 /// \name Implementation

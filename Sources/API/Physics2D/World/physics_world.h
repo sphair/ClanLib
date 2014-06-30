@@ -31,7 +31,6 @@
 
 #include "../api_physics2d.h"
 #include "../../Core/Signals/signal.h"
-#include "../../Core/Signals/signal.h"
 #include <memory>
 
 namespace clan
@@ -70,10 +69,10 @@ public:
 public:
 
 	/// \brief Signal emitted when world's step is called.
-	Signal<float> &sig_world_step();
+	Signal<void(float)> &sig_world_step();
 
 	/// \brief Signal emitted when world's destroyed.
-	Signal<> &sig_world_destroyed();
+	Signal<void()> &sig_world_destroyed();
 
 	/// \brief Returns true if this object is invalid.
 	bool is_null() const { return !impl; }

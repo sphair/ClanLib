@@ -44,8 +44,8 @@ int App::start(const std::vector<std::string> &args)
 
 	clan::DisplayWindow window(win_desc);
 
-	window.sig_window_close().connect({this, &App::on_window_close});
-    window.get_ic().get_keyboard().sig_key_up().connect({this, &App::on_input_up});
+	window.sig_window_close().connect(this, &App::on_window_close);
+    window.get_ic().get_keyboard().sig_key_up().connect(this, &App::on_input_up);
 
 	clan::Canvas canvas(window);
 	Balls balls;
@@ -68,12 +68,12 @@ int App::start(const std::vector<std::string> &args)
 
 	clan::PushButton *button = new clan::PushButton(window_component);
 	button->set_geometry(clan::Rect(10, 10, clan::Size(160, 40)));
-	button->func_clicked().set(this, &App::on_button_clicked, button);
+	button->func_clicked() = bind_member(this, &App::on_button_clicked, button);
 	button->set_text("Button #1");
 
 	clan::PushButton *button2 = new clan::PushButton(window_component);
 	button2->set_geometry(clan::Rect(200, 10, clan::Size(160, 40)));
-	button2->func_clicked().set(this, &App::on_button_clicked, button2);
+	button2->func_clicked() = bind_member(this, &App::on_button_clicked, button2);
 	button2->set_text("Button #2");
 
 	label = new clan::Label(window_component);

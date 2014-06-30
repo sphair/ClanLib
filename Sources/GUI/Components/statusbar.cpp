@@ -60,7 +60,7 @@ public:
 	GUIComponent *component;
 	bool visible;
 	Rect position;
-	Callback<void()> func_double_clicked;
+	std::function<void()> func_double_clicked;
 };
 
 class StatusBar_Impl
@@ -96,9 +96,9 @@ StatusBar::StatusBar(GUIComponent *parent)
 {
 	impl->statusbar = this;
 
-	func_resized().set(impl.get(), &StatusBar_Impl::on_resized);
-	func_render().set(impl.get(), &StatusBar_Impl::on_render);
-	func_input_doubleclick().set(impl.get(), &StatusBar_Impl::on_input_doubleclick);
+	func_resized() = bind_member(impl.get(), &StatusBar_Impl::on_resized);
+	func_render() = bind_member(impl.get(), &StatusBar_Impl::on_render);
+	func_input_doubleclick() = bind_member(impl.get(), &StatusBar_Impl::on_input_doubleclick);
 
 	impl->create_parts();
 }
@@ -122,7 +122,7 @@ StatusBar *StatusBar::get_named_item(GUIComponent *reference_component, const st
 	return object;
 }
 
-Callback<void()> &StatusBar::func_part_double_clicked(int id)
+std::function<void()> &StatusBar::func_part_double_clicked(int id)
 {
 	unsigned int index = impl->find_part(id);
 	return impl->statusbar_parts[index].func_double_clicked;
@@ -203,8 +203,8 @@ bool StatusBar_Impl::on_input_doubleclick(const InputEvent &input_event)
 			StatusBar_Part &statusbar_part = statusbar_parts[index];
 			if (statusbar_part.position.contains(input_event.mouse_pos))
 			{
-				if (!statusbar_part.func_double_clicked.is_null())
-					statusbar_part.func_double_clicked.invoke();
+				if (statusbar_part.func_double_clicked)
+					statusbar_part.func_double_clicked();
 				return true;
 			}
 		}

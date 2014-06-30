@@ -31,8 +31,8 @@
 Toolbar::Toolbar(const Rect &position, GUIComponent* owner)
 : GUIComponent(owner, get_toplevel_description(position), "toolbar"), selected_index(-1), clicked_index(-1)
 {
-	func_render().set(this, &Toolbar::on_render);
-	func_process_message().set(this, &Toolbar::on_process_message);
+	func_render() = bind_member(this, &Toolbar::on_render);
+	func_process_message() = bind_member(this, &Toolbar::on_process_message);
 
 	create_parts();
 }

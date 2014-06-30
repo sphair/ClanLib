@@ -43,7 +43,7 @@ public:
 	void build(SolutionModel *model);
 	void stop_build();
 
-	Signal<std::string> sig_log_text_added;
+	Signal<void(std::string)> sig_log_text_added;
 
 private:
 	std::shared_ptr<BuildOperation> build_operation;

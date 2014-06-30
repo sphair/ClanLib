@@ -78,12 +78,12 @@ public:
 	void move_vertical_scroll();
 	int  get_total_line_height();
 
-	Callback<void(InputEvent &)> func_before_edit_changed;
-	Callback<void(InputEvent &)> func_after_edit_changed;
-	Callback<void()> func_selection_changed;
-	Callback<void()> func_focus_gained;
-	Callback<void()> func_focus_lost;
-	Callback<void()> func_enter_pressed;
+	std::function<void(InputEvent &)> func_before_edit_changed;
+	std::function<void(InputEvent &)> func_after_edit_changed;
+	std::function<void()> func_selection_changed;
+	std::function<void()> func_focus_gained;
+	std::function<void()> func_focus_lost;
+	std::function<void()> func_enter_pressed;
 
 	struct Line
 	{

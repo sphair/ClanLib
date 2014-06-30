@@ -127,7 +127,7 @@ void PixelCanvas::set_framebuffer(const FrameBuffer &buffer)
 	framebuffer_set = true;
 	framebuffer = buffer;
 
-	cc.connect(swr_framebuffer->get_sig_changed_event(), Callback<void()>(this, &PixelCanvas::modified_framebuffer));
+	sc.connect(swr_framebuffer->get_sig_changed_event(), bind_member(this, &PixelCanvas::modified_framebuffer));
 
 	colorbuffer0.set(swr_framebuffer->get_colorbuffer0());
 	pipeline->queue(new(pipeline.get()) PixelCommandSetFrameBuffer(colorbuffer0));

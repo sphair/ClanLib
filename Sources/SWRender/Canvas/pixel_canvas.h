@@ -31,7 +31,6 @@
 #include "API/SWRender/pixel_buffer_data.h"
 #include "API/Core/Math/vec3.h"
 #include "API/Core/Math/mat4.h"
-#include "API/Core/Signals/callbackcontainer.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/Render/frame_buffer.h"
 #include "API/Display/Render/blend_state.h"
@@ -89,7 +88,7 @@ private:
 	BlendFunc cur_blend_src_alpha;
 	BlendFunc cur_blend_dest_alpha;
 	Colorf cur_blend_color;
-    CallbackContainer cc;
+    SlotContainer sc;
 
 	std::unique_ptr<PixelPipeline> pipeline;
 };

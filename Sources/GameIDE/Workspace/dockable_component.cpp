@@ -37,8 +37,8 @@ namespace clan
 DockableComponent::DockableComponent()
 : GUIComponent(Workspace::instance(), "dockable"), dock(0), last_docked_id(0), visibility(state_hidden), title(title), last_visibility(state_hidden)
 {
-	func_resized().set(this, &DockableComponent::on_resized);
-	func_render().set(this, &DockableComponent::on_render);
+	func_resized() = bind_member(this, &DockableComponent::on_resized);
+	func_render() = bind_member(this, &DockableComponent::on_render);
 	Workspace::instance()->register_dockable(this);
 	Workspace::instance()->hide(this);
 }

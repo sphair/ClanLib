@@ -76,24 +76,24 @@ public:
 	}
 
 	DisplayWindowProvider *provider;
-	Signal<> sig_lost_focus;
-	Signal<> sig_got_focus;
-	Signal<int, int> sig_resize;
-	Signal<const Rect &> sig_paint;
-	Signal<> sig_window_close;
-	Signal<> sig_window_destroy;
-	Signal<> sig_window_minimized;
-	Signal<> sig_window_maximized;
-	Signal<> sig_window_restored;
-	Signal<> sig_window_moved;
-	Signal<> sig_window_flip;
-	Callback<void(Rect &)> func_window_resize;
-	Callback<bool()> func_minimize_clicked;
+	Signal<void()> sig_lost_focus;
+	Signal<void()> sig_got_focus;
+	Signal<void(int, int)> sig_resize;
+	Signal<void(const Rect &)> sig_paint;
+	Signal<void()> sig_window_close;
+	Signal<void()> sig_window_destroy;
+	Signal<void()> sig_window_minimized;
+	Signal<void()> sig_window_maximized;
+	Signal<void()> sig_window_restored;
+	Signal<void()> sig_window_moved;
+	Signal<void()> sig_window_flip;
+	std::function<void(Rect &)> func_window_resize;
+	std::function<bool()> func_minimize_clicked;
 	DisplayWindowSite site;
 	Cursor current_cursor;
 
 #ifdef WIN32
-	Callback<bool(HWND, UINT, WPARAM, LPARAM)> func_window_message;
+	std::function<bool(HWND, UINT, WPARAM, LPARAM)> func_window_message;
 #endif
 
 };

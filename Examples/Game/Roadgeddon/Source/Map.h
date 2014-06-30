@@ -47,7 +47,7 @@ public:
 private:
 	Game *game;
 	
-    CallbackContainer cc;
+    SlotContainer cc;
 
 	Sprite title1;
 	Sprite background1;

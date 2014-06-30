@@ -219,7 +219,7 @@ CSSLayoutElement CSSLayout::find_element(const std::string &name)
 	}
 }
 
-Callback<Image(Canvas &, const std::string &)> &CSSLayout::func_get_image()
+std::function<Image(Canvas &, const std::string &)> &CSSLayout::func_get_image()
 {
 	return impl->resource_cache.cb_get_image;
 }

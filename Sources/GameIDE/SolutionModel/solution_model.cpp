@@ -38,7 +38,7 @@ void SolutionModel::create_solution(std::string folder, std::string name)
 	Project::create(folder, name);
 	solution.create(folder, name);
 	user_options.clear();
-	sig_model_updated.invoke();
+	sig_model_updated();
 }
 
 void SolutionModel::open_solution(std::string filename)
@@ -49,7 +49,7 @@ void SolutionModel::open_solution(std::string filename)
 	user_options.load(UserOptions::filename_from_solution(filename));
 	for (size_t i = 0; i < solution.projects.size(); i++)
 		get_project(solution.projects[i]); // Load all project now, if possible
-	sig_model_updated.invoke();
+	sig_model_updated();
 }
 
 void SolutionModel::close_solution()
@@ -57,7 +57,7 @@ void SolutionModel::close_solution()
 	projects.clear();
 	solution.close();
 	user_options.clear();
-	sig_model_updated.invoke();
+	sig_model_updated();
 }
 
 ProjectPtr SolutionModel::get_project(ProjectReference reference)
@@ -88,7 +88,7 @@ void SolutionModel::add_file(ProjectItem *parent, std::string filename)
 {
 	std::string relative_path = PathHelp::make_relative(parent->get_filename(), filename);
 	parent->add(new ProjectFileItem(relative_path));
-	sig_model_updated.invoke();
+	sig_model_updated();
 
 	save_all(); // To do: this shouldn't be here since the app should ask for saving when you exit, but that's not coded yet
 }
@@ -97,7 +97,7 @@ void SolutionModel::add_folder(ProjectItem *parent, std::string filename)
 {
 	std::string relative_path = PathHelp::make_relative(parent->get_filename(), filename);
 	parent->add(new ProjectFolderItem(relative_path));
-	sig_model_updated.invoke();
+	sig_model_updated();
 
 	save_all(); // To do: this shouldn't be here since the app should ask for saving when you exit, but that's not coded yet
 }
@@ -112,7 +112,7 @@ void SolutionModel::remove_item(ProjectItem *item)
 		if (item->parent()->children()[index] == item)
 		{
 			delete item->parent()->remove(index);
-			sig_model_updated.invoke();
+			sig_model_updated();
 			save_all(); // To do: this shouldn't be here since the app should ask for saving when you exit, but that's not coded yet
 			break;
 		}

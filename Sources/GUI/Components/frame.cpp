@@ -69,7 +69,7 @@ Frame::Frame(GUIComponent *parent)
 : GUIComponent(parent, CssStr::Frame::type_name), impl(new Frame_Impl)
 {
 	impl->frame = this;
-	func_render().set(impl.get(), &Frame_Impl::on_render);
+	func_render() = bind_member(impl.get(), &Frame_Impl::on_render);
 
 	impl->create_parts();
 }

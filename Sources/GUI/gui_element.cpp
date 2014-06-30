@@ -269,7 +269,7 @@ void GUIElement::set_style_needs_update()
 		child = child->get_next_sibling();
 	}
 
-	sig_style_changed.invoke();
+	sig_style_changed();
 }
 
 void GUIElement::update_style()

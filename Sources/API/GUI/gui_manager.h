@@ -32,9 +32,6 @@
 #pragma once
 
 #include "api_gui.h"
-#include "../Core/Signals/callback.h"
-#include "../Core/Signals/callback.h"
-#include "../Core/Signals/callback.h"
 #include "../Core/Signals/signal.h"
 #include "../Core/Math/point.h"
 #include "accelerator_table.h"
@@ -137,10 +134,10 @@ public:
 /// \{
 public:
 	/// \brief bool func_filter_message(std::shared_ptr<GUIMessage> &message)
-	Signal<std::shared_ptr<GUIMessage> &> &sig_filter_message();
+	Signal<void(std::shared_ptr<GUIMessage> &)> &sig_filter_message();
 
 	/// \brief int func_exec_handler()
-	Callback<int()> &func_exec_handler();
+	std::function<int()> &func_exec_handler();
 
 /// \}
 /// \name Operations

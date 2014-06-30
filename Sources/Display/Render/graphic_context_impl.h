@@ -31,8 +31,6 @@
 #include "API/Display/TargetProviders/graphic_context_provider.h"
 #include "API/Display/Font/font.h"
 #include "API/Core/Math/mat4.h"
-#include "API/Core/Signals/callback.h"
-#include "API/Core/Signals/callbackcontainer.h"
 #include "graphic_screen.h"
 
 namespace clan
@@ -81,7 +79,7 @@ private:
 	std::shared_ptr<GraphicScreen> graphic_screen;
 
 	Size display_window_size;
-    CallbackContainer cc;
+    SlotContainer sc;
 
 	RasterizerState default_rasterizer_state;
 	BlendState default_blend_state;

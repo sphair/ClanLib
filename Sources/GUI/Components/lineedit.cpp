@@ -67,15 +67,15 @@ LineEdit::LineEdit(GUIComponent *parent)
 {
 	set_focus_policy(focus_local);
 
-	func_render().set(impl.get(), &LineEdit_Impl::on_render);
-	func_process_message().set(impl.get(), &LineEdit_Impl::on_process_message);
-	func_resized().set(impl.get(), &LineEdit_Impl::on_resized);
-	func_enablemode_changed().set(impl.get(), &LineEdit_Impl::on_enable_changed);
+	func_render() = bind_member(impl.get(), &LineEdit_Impl::on_render);
+	func_process_message() = bind_member(impl.get(), &LineEdit_Impl::on_process_message);
+	func_resized() = bind_member(impl.get(), &LineEdit_Impl::on_resized);
+	func_enablemode_changed() = bind_member(impl.get(), &LineEdit_Impl::on_enable_changed);
 
 	impl->lineedit = this;
-	impl->timer.func_expired().set(impl.get(), &LineEdit_Impl::on_timer_expired);
+	impl->timer.func_expired() = bind_member(impl.get(), &LineEdit_Impl::on_timer_expired);
 
-	impl->scroll_timer.func_expired().set(impl.get(), &LineEdit_Impl::on_scroll_timer_expired);
+	impl->scroll_timer.func_expired() = bind_member(impl.get(), &LineEdit_Impl::on_scroll_timer_expired);
 	impl->create_parts();
 }
 
@@ -250,11 +250,11 @@ void LineEdit::set_max_length(int length)
 		if ((int)impl->text.length() > length)
 		{
 			InputEvent no_event;
-			if (!impl->func_before_edit_changed.is_null())
-				impl->func_before_edit_changed.invoke(no_event);
+			if (impl->func_before_edit_changed)
+				impl->func_before_edit_changed(no_event);
 			impl->text = impl->text.substr(0, length);
-			if (!impl->func_after_edit_changed.is_null())
-				impl->func_after_edit_changed.invoke(no_event);
+			if (impl->func_after_edit_changed)
+				impl->func_after_edit_changed(no_event);
 		}
 		request_repaint();
 	}
@@ -358,32 +358,32 @@ void LineEdit::resize_to_fit(int max_width)
 /////////////////////////////////////////////////////////////////////////////
 // LineEdit Events:
 
-Callback<void(InputEvent &)> &LineEdit::func_before_edit_changed()
+std::function<void(InputEvent &)> &LineEdit::func_before_edit_changed()
 {
 	return impl->func_before_edit_changed;
 }
 
-Callback<void(InputEvent &)> &LineEdit::func_after_edit_changed()
+std::function<void(InputEvent &)> &LineEdit::func_after_edit_changed()
 {
 	return impl->func_after_edit_changed;
 }
 
-Callback<void()> &LineEdit::func_selection_changed()
+std::function<void()> &LineEdit::func_selection_changed()
 {
 	return impl->func_selection_changed;
 }
 
-Callback<void()> &LineEdit::func_focus_gained()
+std::function<void()> &LineEdit::func_focus_gained()
 {
 	return impl->func_focus_gained;
 }
 
-Callback<void()> & LineEdit::func_focus_lost()
+std::function<void()> & LineEdit::func_focus_lost()
 {
 	return impl->func_focus_lost;
 }
 
-Callback<void()> &LineEdit::func_enter_pressed()
+std::function<void()> &LineEdit::func_enter_pressed()
 {
 	return impl->func_enter_pressed;
 }
@@ -433,18 +433,18 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 
 		if (e.device.get_type() == InputDevice::keyboard)
 		{
-			if (!func_enter_pressed.is_null() && 
+			if (func_enter_pressed && 
 				e.type == InputEvent::pressed &&
 				(e.id == keycode_enter || e.id == keycode_return || e.id == keycode_numpad_enter))
 			{
-				func_enter_pressed.invoke();
+				func_enter_pressed();
 				msg->consumed = true;
 				return;
 			}
 
-			if (!func_before_edit_changed.is_null())
+			if (func_before_edit_changed)
 			{
-				func_before_edit_changed.invoke(e);
+				func_before_edit_changed(e);
 				if (e.type == InputEvent::no_key)
 				{
 					// If the 'func_before_edit_changed' callback sets e.type to 'no_key',
@@ -683,9 +683,9 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 				}
 			}
 
-			if (e.type == InputEvent::pressed && !func_after_edit_changed.is_null())
+			if (e.type == InputEvent::pressed && func_after_edit_changed)
 			{
-				func_after_edit_changed.invoke(e);
+				func_after_edit_changed(e);
 			}
 
 		}
@@ -775,8 +775,8 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 
 			lineedit->request_repaint();
 
-			if (!func_focus_gained.is_null())
-				func_focus_gained.invoke();
+			if (func_focus_gained)
+				func_focus_gained();
 		}
 		else if (focus_change_msg->focus_type == GUIMessage_FocusChange::losing_focus)
 		{
@@ -786,8 +786,8 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 
 			lineedit->request_repaint();
 
-			if (!func_focus_lost.is_null())
-				func_focus_lost.invoke();
+			if (func_focus_lost)
+				func_focus_lost();
 		}
 	}
 	std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
@@ -1225,24 +1225,24 @@ std::string LineEdit_Impl::get_visible_selected_text()
 
 void LineEdit_Impl::set_selection_start(int start)
 {
-	if(!func_selection_changed.is_null() && selection_length && selection_start != start)
-		func_selection_changed.invoke();
+	if(func_selection_changed && selection_length && selection_start != start)
+		func_selection_changed();
 
 	selection_start = start;
 }
 
 void LineEdit_Impl::set_selection_length(int length)
 {
-	if(!func_selection_changed.is_null() && selection_length != length)
-		func_selection_changed.invoke();
+	if(func_selection_changed && selection_length != length)
+		func_selection_changed();
 
 	selection_length = length;
 }
 
 void LineEdit_Impl::set_text_selection(int start, int length)
 {
-	if(!func_selection_changed.is_null() && (selection_length != length || (selection_length && selection_start != start)))
-		func_selection_changed.invoke();
+	if(func_selection_changed && (selection_length != length || (selection_length && selection_start != start)))
+		func_selection_changed();
 	
 	selection_start = start;
 	selection_length = length;

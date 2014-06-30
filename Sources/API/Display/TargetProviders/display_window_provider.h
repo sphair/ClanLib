@@ -33,9 +33,6 @@
 
 #include "../api_display.h"
 #include "../../Core/Signals/signal.h"
-#include "../../Core/Signals/signal.h"
-#include "../../Core/Signals/signal.h"
-#include "../../Core/Signals/callback.h"
 #include "../Window/display_window.h"
 #include <memory>
 
@@ -62,43 +59,43 @@ class CL_API_DISPLAY DisplayWindowSite
 /// \{
 public:
 	/// \brief Pointer to lost focus signal.
-	Signal<> *sig_lost_focus;
+	Signal<void()> *sig_lost_focus;
 
 	/// \brief Pointer to got focus signal.
-	Signal<> *sig_got_focus;
+	Signal<void()> *sig_got_focus;
 
 	/// \brief Pointer to resize signal.
-	Signal<int, int> *sig_resize;
+	Signal<void(int, int)> *sig_resize;
 
 	/// \brief Pointer to paint signal.
-	Signal<const Rect &> *sig_paint;
+	Signal<void(const Rect &)> *sig_paint;
 
 	/// \brief Pointer to window close signal.
-	Signal<> *sig_window_close;
+	Signal<void()> *sig_window_close;
 
 	/// \brief Pointer to window destroy signal.
-	Signal<> *sig_window_destroy;
+	Signal<void()> *sig_window_destroy;
 
 	/// \brief Pointer to window minimized signal.
-	Signal<> *sig_window_minimized;
+	Signal<void()> *sig_window_minimized;
 
 	/// \brief Pointer to window maximized signal.
-	Signal<> *sig_window_maximized;
+	Signal<void()> *sig_window_maximized;
 
 	/// \brief Pointer to window restored signal.
-	Signal<> *sig_window_restored;
+	Signal<void()> *sig_window_restored;
 
 	/// \brief Pointer to window resize callback function.
-	Callback<void(Rect &)> *func_window_resize;
+	std::function<void(Rect &)> *func_window_resize;
 
 	/// \brief Pointer to minimized clicked callback function.
-	Callback<bool()> *func_minimize_clicked;
+	std::function<bool()> *func_minimize_clicked;
 
 	/// \brief Pointer to window moved signal.
-	Signal<> *sig_window_moved;
+	Signal<void()> *sig_window_moved;
 
 #ifdef WIN32
-	Callback<bool(HWND, UINT, WPARAM, LPARAM)> *func_window_message;
+	std::function<bool(HWND, UINT, WPARAM, LPARAM)> *func_window_message;
 #endif
 
 /// \}

@@ -44,7 +44,7 @@ GUI::GUI(App *app) : app(app), window(app->get_window()), wm(window), canvas(app
 
 	gui = clan::GUIManager(wm, theme);
 
-	wm.func_input_intercept().set(this, &GUI::wm_input_intercept);
+	wm.func_input_intercept() = bind_member(this, &GUI::wm_input_intercept);
 }
 
 GUI::~GUI()

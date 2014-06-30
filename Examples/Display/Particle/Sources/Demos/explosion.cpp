@@ -18,15 +18,15 @@ explosion effects.
 
 int DemoExplosion::run(clan::DisplayWindow &window)
 {
-    clan::CallbackContainer cc;
+    clan::SlotContainer cc;
 	window.set_title("LinearParticle Example - Explosion ");
 
-	cc.connect(window.sig_window_close(), clan::Callback<void()>(this, &DemoExplosion::on_window_close));
+	cc.connect(window.sig_window_close(), std::function<void()>(this, &DemoExplosion::on_window_close));
 	clan::Canvas canvas(window);
 
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::Callback<void(const clan::InputEvent&)>(this, &DemoExplosion::on_key_up));
-	cc.connect(window.get_ic().get_mouse().sig_key_down(), clan::Callback<void(const clan::InputEvent&)>(this, &DemoExplosion::on_mouse_down));
-	cc.connect(window.get_ic().get_mouse().sig_key_dblclk(), clan::Callback<void(const clan::InputEvent&)>(this, &DemoExplosion::on_mouse_down));
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), std::function<void(const clan::InputEvent&)>(this, &DemoExplosion::on_key_up));
+	cc.connect(window.get_ic().get_mouse().sig_key_down(), std::function<void(const clan::InputEvent&)>(this, &DemoExplosion::on_mouse_down));
+	cc.connect(window.get_ic().get_mouse().sig_key_dblclk(), std::function<void(const clan::InputEvent&)>(this, &DemoExplosion::on_mouse_down));
 
 	window.hide_cursor();
 

@@ -30,7 +30,6 @@
 
 #include "API/Core/System/mutex.h"
 #include "API/Core/Signals/signal.h"
-#include "API/Core/Signals/callbackcontainer.h"
 #include "API/Display/TargetProviders/input_device_provider.h"
 #include "input_context_impl.h"
 
@@ -43,7 +42,7 @@ public:
 	InputDevice_Impl()
 	: provider(0)
 	{
-		cc.connect(sig_provider_event, Callback<void(const InputEvent &)>{ this, &InputDevice_Impl::on_provider_event });
+		sc.connect(sig_provider_event, bind_member(this, &InputDevice_Impl::on_provider_event));
 	}
 
 	~InputDevice_Impl()
@@ -51,7 +50,7 @@ public:
 		if (provider)
 			delete provider;
 	}
-
+	
 	void on_provider_event(const InputEvent &e)
 	{
 		MutexSection mutex_lock(&InputContext_Impl::mutex);
@@ -71,14 +70,15 @@ public:
 
 	InputDeviceProvider *provider;
 
-    CallbackContainer cc;
-	Signal<const InputEvent &> sig_provider_event;
-	Signal<const InputEvent &> sig_key_down;
-	Signal<const InputEvent &> sig_key_up;
-	Signal<const InputEvent &> sig_pointer_move;
-	Signal<const InputEvent &> sig_axis_move;
-	Signal<const InputEvent &> sig_key_dblclk;
-	Signal<const InputEvent &> sig_proximity_change;
+    SlotContainer sc;
+	Signal<void(const InputEvent &)> sig_provider_event;
+	Signal<void(const InputEvent &)> sig_key_down;
+	Signal<void(const InputEvent &)> sig_key_up;
+	Signal<void(const InputEvent &)> sig_pointer_move;
+	Signal<void(const InputEvent &)> sig_axis_move;
+	Signal<void(const InputEvent &)> sig_key_dblclk;
+	Signal<void(const InputEvent &)> sig_proximity_change;
+
 };
 
 }

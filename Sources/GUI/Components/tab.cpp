@@ -64,7 +64,7 @@ public:
 
 	std::vector<TabPage*> pages;
 
-	Callback<void(TabPage*)> func_page_selected;
+	std::function<void(TabPage*)> func_page_selected;
 
 	TabHeader *tab_header;
 };
@@ -76,13 +76,13 @@ Tab::Tab(GUIComponent *parent)
 : GUIComponent(parent, CssStr::Tab::type_name), impl(new Tab_Impl)
 {
 	impl->tab = this;
-	func_process_message().set(impl.get(), &Tab_Impl::on_process_message);
-	func_render().set(impl.get(), &Tab_Impl::on_render);
-	func_resized().set(impl.get(), &Tab_Impl::on_resized);
+	func_process_message() = bind_member(impl.get(), &Tab_Impl::on_process_message);
+	func_render() = bind_member(impl.get(), &Tab_Impl::on_render);
+	func_resized() = bind_member(impl.get(), &Tab_Impl::on_resized);
 
 	impl->tab_header = new TabHeader(this);
 
-	impl->tab_header->func_page_selected().set(impl.get(), &Tab_Impl::on_header_page_selected);
+	impl->tab_header->func_page_selected() = bind_member(impl.get(), &Tab_Impl::on_header_page_selected);
 
 }
 
@@ -147,7 +147,7 @@ int Tab::get_current_page_id() const
 /////////////////////////////////////////////////////////////////////////////
 // Tab Callbacks:
 
-Callback<void(TabPage*)> &Tab::func_page_selected()
+std::function<void(TabPage*)> &Tab::func_page_selected()
 {
 	return impl->func_page_selected;
 }
@@ -310,8 +310,8 @@ void Tab_Impl::on_header_page_selected(TabPage *tab_page)
 			(*it)->set_visible(true);
 	}
 
-	if (!func_page_selected.is_null())
-		func_page_selected.invoke(tab_page);
+	if (func_page_selected)
+		func_page_selected(tab_page);
 
 	tab->request_repaint();
 }

@@ -832,7 +832,7 @@ void Sprite::finish()
 	else
 		impl->current_frame = impl->frames.size() - 1;
 
-	impl->sig_animation_finished.invoke();
+	impl->sig_animation_finished();
 }
 
 void Sprite::restart()
@@ -933,7 +933,7 @@ CollisionOutline Sprite::create_collision_outline(Canvas &canvas, int alpha_limi
 /////////////////////////////////////////////////////////////////////////////
 // Sprite signals:
 
-Signal<> &Sprite::sig_animation_finished()
+Signal<void()> &Sprite::sig_animation_finished()
 {
 	return impl->sig_animation_finished;
 }

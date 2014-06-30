@@ -162,8 +162,8 @@ Image &CSSResourceCache::get_image(Canvas &canvas, const std::string &url)
 	if (it == image_cache.end())
 	{
 		Image image;
-		if (!cb_get_image.is_null())
-			image = cb_get_image.invoke(canvas, url);
+		if (cb_get_image)
+			image = cb_get_image(canvas, url);
 
 		image_cache[url] = image;
 		return image_cache[url];

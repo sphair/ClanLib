@@ -51,7 +51,7 @@ public:
 	int maximum_height;
 	std::string class_name;
 	int joiner_width;
-	Callback<void()> func_close;
+	std::function<void()> func_close;
 
 	std::unique_ptr<MenuModalLoop> menu_ptr;
 };
