@@ -42,42 +42,42 @@ RadioButton::RadioButton(clan::GUIManager &manager) :
 	radiobutton_g1b1->set_text("Button 1");
 	radiobutton_g1b1->set_selected(true);
 	radiobutton_g1b1->set_group_name("Main Group");
-	radiobutton_g1b1->func_selected() = bind_member(this, &RadioButton::on_selected, radiobutton_g1b1);
-	radiobutton_g1b1->func_unselected() = bind_member(this, &RadioButton::on_unselected, radiobutton_g1b1);
-	radiobutton_g1b1->func_group_selection_changed() = bind_member(this, &RadioButton::on_group_selection_changed, radiobutton_g1b1);
+	radiobutton_g1b1->func_selected() = [=](){on_selected(radiobutton_g1b1); };
+	radiobutton_g1b1->func_unselected() = [=](){on_unselected(radiobutton_g1b1); };
+	radiobutton_g1b1->func_group_selection_changed() = [=](clan::RadioButton *radiobutton_group){on_group_selection_changed(radiobutton_group, radiobutton_g1b1); };
 
 	radiobutton_g1b2 = new clan::RadioButton(this);
 	radiobutton_g1b2->set_geometry(clan::Rect(client_area.left + 91, client_area.top + 0, clan::Size(64, 32)));
 	radiobutton_g1b2->set_text("Button 2");
 	radiobutton_g1b2->set_group_name("Main Group");
-	radiobutton_g1b2->func_selected() = bind_member(this, &RadioButton::on_selected, radiobutton_g1b2);
-	radiobutton_g1b2->func_unselected() = bind_member(this, &RadioButton::on_unselected, radiobutton_g1b2);
-	radiobutton_g1b2->func_group_selection_changed() = bind_member(this, &RadioButton::on_group_selection_changed, radiobutton_g1b2);
+	radiobutton_g1b2->func_selected() = [=](){on_selected(radiobutton_g1b2); };
+	radiobutton_g1b2->func_unselected() = [=](){on_unselected(radiobutton_g1b2); };
+	radiobutton_g1b2->func_group_selection_changed() = [=](clan::RadioButton *radiobutton_group){on_group_selection_changed(radiobutton_group, radiobutton_g1b2); };
 
 	radiobutton_g1b3 = new clan::RadioButton(this);
 	radiobutton_g1b3->set_geometry(clan::Rect(client_area.left + 176, client_area.top + 0, clan::Size(64, 32)));
 	radiobutton_g1b3->set_text("Button 3");
 	radiobutton_g1b3->set_group_name("Main Group");
-	radiobutton_g1b3->func_selected() = bind_member(this, &RadioButton::on_selected, radiobutton_g1b3);
-	radiobutton_g1b3->func_unselected() = bind_member(this, &RadioButton::on_unselected, radiobutton_g1b3);
-	radiobutton_g1b3->func_group_selection_changed() = bind_member(this, &RadioButton::on_group_selection_changed, radiobutton_g1b3);
+	radiobutton_g1b3->func_selected() = [=](){on_selected(radiobutton_g1b3); };
+	radiobutton_g1b3->func_unselected() = [=](){on_unselected(radiobutton_g1b3); };
+	radiobutton_g1b3->func_group_selection_changed() = [=](clan::RadioButton *radiobutton_group){on_group_selection_changed(radiobutton_group, radiobutton_g1b3); };
 
 	radiobutton_g2b1 = new clan::RadioButton(this);
 	radiobutton_g2b1->set_geometry(clan::Rect(client_area.left + 11, client_area.top + 30, clan::Size(64, 32)));
 	radiobutton_g2b1->set_text("Button A");
 	radiobutton_g2b1->set_selected(true);
 	radiobutton_g2b1->set_group_name("Second Group");
-	radiobutton_g2b1->func_selected() = bind_member(this, &RadioButton::on_selected, radiobutton_g2b1);
-	radiobutton_g2b1->func_unselected() = bind_member(this, &RadioButton::on_unselected, radiobutton_g2b1);
-	radiobutton_g2b1->func_group_selection_changed() = bind_member(this, &RadioButton::on_group_selection_changed, radiobutton_g2b1);
+	radiobutton_g2b1->func_selected() = [=](){on_selected(radiobutton_g2b1); };
+	radiobutton_g2b1->func_unselected() = [=](){on_unselected(radiobutton_g2b1); };
+	radiobutton_g2b1->func_group_selection_changed() = [=](clan::RadioButton *radiobutton_group){on_group_selection_changed(radiobutton_group, radiobutton_g2b1); };
 
 	radiobutton_g2b2 = new clan::RadioButton(this);
 	radiobutton_g2b2->set_geometry(clan::Rect(client_area.left + 91, client_area.top + 30, clan::Size(64, 32)));
 	radiobutton_g2b2->set_text("Button B");
 	radiobutton_g2b2->set_group_name("Second Group");
-	radiobutton_g2b2->func_selected() = bind_member(this, &RadioButton::on_selected, radiobutton_g2b2);
-	radiobutton_g2b2->func_unselected() = bind_member(this, &RadioButton::on_unselected, radiobutton_g2b2);
-	radiobutton_g2b2->func_group_selection_changed() = bind_member(this, &RadioButton::on_group_selection_changed, radiobutton_g2b2);
+	radiobutton_g2b2->func_selected() = [=](){on_selected(radiobutton_g2b2); };
+	radiobutton_g2b2->func_unselected() = [=](){on_unselected(radiobutton_g2b2); };
+	radiobutton_g2b2->func_group_selection_changed() = [=](clan::RadioButton *radiobutton_group){on_group_selection_changed(radiobutton_group, radiobutton_g2b2); };
 
 	int xoffset = client_area.left + 5;
 	int yoffset = client_area.top + 70;
@@ -99,8 +99,8 @@ RadioButton::RadioButton(clan::GUIManager &manager) :
 
 	checkbox_disable = new clan::CheckBox(this);
 	checkbox_disable->set_geometry(clan::Rect(xoffset, yoffset, clan::Size(159, 15)));
-	checkbox_disable->func_checked() = bind_member(this, &RadioButton::on_checked_disable, checkbox_disable);
-	checkbox_disable->func_unchecked() = bind_member(this, &RadioButton::on_unchecked_disable, checkbox_disable);
+	checkbox_disable->func_checked() = bind_member(this, &RadioButton::on_checked_disable);
+	checkbox_disable->func_unchecked() = bind_member(this, &RadioButton::on_unchecked_disable);
 	checkbox_disable->set_text("Disable Button 2");
 }
 
@@ -141,12 +141,12 @@ std::string RadioButton::decode_button(clan::RadioButton *radiobutton)
 	return " (unknown)";
 }
 
-void RadioButton::on_checked_disable(clan::CheckBox *checkbox)
+void RadioButton::on_checked_disable()
 {
 	radiobutton_g1b2->set_enabled(false);
 }
 
-void RadioButton::on_unchecked_disable(clan::CheckBox *checkbox)
+void RadioButton::on_unchecked_disable()
 {
 	radiobutton_g1b2->set_enabled(true);
 }

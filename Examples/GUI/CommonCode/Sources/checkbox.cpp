@@ -37,10 +37,10 @@ CheckBox::CheckBox(clan::GUIManager &manager) :
 
 	checkbox1 = new clan::CheckBox(this);
 	checkbox1->set_geometry(clan::Rect(client_area.left + 11, client_area.top + 10, clan::Size(100, 15)));
-	checkbox1->func_checked() = bind_member(this, &CheckBox::on_checked, checkbox1);
-	checkbox1->func_unchecked() = bind_member(this, &CheckBox::on_unchecked, checkbox1);
-	checkbox1->func_indeterminated() = bind_member(this, &CheckBox::on_indeterminated, checkbox1);
-	checkbox1->func_state_changed() = bind_member(this, &CheckBox::on_state_changed, checkbox1);
+	checkbox1->func_checked() = bind_member(this, &CheckBox::on_checked);
+	checkbox1->func_unchecked() = bind_member(this, &CheckBox::on_unchecked);
+	checkbox1->func_indeterminated() = bind_member(this, &CheckBox::on_indeterminated);
+	checkbox1->func_state_changed() = bind_member(this, &CheckBox::on_state_changed);
 	checkbox1->set_text("Checkbox");
 
 	int xoffset = client_area.left + 36;
@@ -67,55 +67,55 @@ CheckBox::CheckBox(clan::GUIManager &manager) :
 
 	checkbox_3state = new clan::CheckBox(this);
 	checkbox_3state->set_geometry(clan::Rect(xoffset, yoffset, clan::Size(100, 15)));
-	checkbox_3state->func_checked() = bind_member(this, &CheckBox::on_checked_3state, checkbox_3state);
-	checkbox_3state->func_unchecked() = bind_member(this, &CheckBox::on_unchecked_3state, checkbox_3state);
+	checkbox_3state->func_checked() = bind_member(this, &CheckBox::on_checked_3state);
+	checkbox_3state->func_unchecked() = bind_member(this, &CheckBox::on_unchecked_3state);
 	checkbox_3state->set_text("3 State");
 
 	yoffset += gap;
 
 	checkbox_disable = new clan::CheckBox(this);
 	checkbox_disable->set_geometry(clan::Rect(xoffset, yoffset, clan::Size(100, 15)));
-	checkbox_disable->func_checked() = bind_member(this, &CheckBox::on_checked_disable, checkbox_disable);
-	checkbox_disable->func_unchecked() = bind_member(this, &CheckBox::on_unchecked_disable, checkbox_disable);
+	checkbox_disable->func_checked() = bind_member(this, &CheckBox::on_checked_disable);
+	checkbox_disable->func_unchecked() = bind_member(this, &CheckBox::on_unchecked_disable);
 	checkbox_disable->set_text("Disable");
 }
 
-void CheckBox::on_checked(clan::CheckBox *checkbox)
+void CheckBox::on_checked()
 {
 	info_checked->activate();
 }
 
-void CheckBox::on_unchecked(clan::CheckBox *checkbox)
+void CheckBox::on_unchecked()
 {
 	info_unchecked->activate();
 }
 
-void CheckBox::on_indeterminated(clan::CheckBox *checkbox)
+void CheckBox::on_indeterminated()
 {
 	info_indeterminated->activate();
 }
 
-void CheckBox::on_state_changed(clan::CheckBox *checkbox)
+void CheckBox::on_state_changed()
 {
 	info_state_changed->activate();
 }
 
-void CheckBox::on_checked_disable(clan::CheckBox *checkbox)
+void CheckBox::on_checked_disable()
 {
 	checkbox1->set_enabled(false);
 }
 
-void CheckBox::on_unchecked_disable(clan::CheckBox *checkbox)
+void CheckBox::on_unchecked_disable()
 {
 	checkbox1->set_enabled(true);
 }
 
-void CheckBox::on_checked_3state(clan::CheckBox *checkbox)
+void CheckBox::on_checked_3state()
 {
 	checkbox1->set_3state(true);
 }
 
-void CheckBox::on_unchecked_3state(clan::CheckBox *checkbox)
+void CheckBox::on_unchecked_3state()
 {
 	checkbox1->set_3state(false);
 }

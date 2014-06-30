@@ -39,18 +39,18 @@ private:
 	bool on_close();
 	void on_item_selected();
 
-	void on_clicked(clan::PushButton *pushbutton);
-	void on_checked_status_size_grip(clan::CheckBox *checkbox);
-	void on_unchecked_status_size_grip(clan::CheckBox *checkbox);
-	void on_checked_status_text(clan::CheckBox *checkbox);
-	void on_unchecked_status_text(clan::CheckBox *checkbox);
-	void on_checked_show_clantest(clan::CheckBox *checkbox);
-	void on_unchecked_show_clantest(clan::CheckBox *checkbox);
-	void on_checked_remove_clantest(clan::CheckBox *checkbox);
-	void on_unchecked_remove_clantest(clan::CheckBox *checkbox);
-	void on_part_double_clicked_0(clan::StatusBar *statusbar);
-	void on_part_double_clicked_1(clan::StatusBar *statusbar);
-	void on_part_double_clicked_2(clan::StatusBar *statusbar);
+	void on_clicked();
+	void on_checked_status_size_grip();
+	void on_unchecked_status_size_grip();
+	void on_checked_status_text();
+	void on_unchecked_status_text();
+	void on_checked_show_clantest();
+	void on_unchecked_show_clantest();
+	void on_checked_remove_clantest();
+	void on_unchecked_remove_clantest();
+	void on_part_double_clicked_0();
+	void on_part_double_clicked_1();
+	void on_part_double_clicked_2();
 
 private:
 	clan::MenuBar *menubar1;

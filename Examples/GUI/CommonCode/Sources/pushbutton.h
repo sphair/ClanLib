@@ -39,14 +39,14 @@ public:
 
 private:
 	bool on_close();
-	void on_clicked(clan::PushButton *pushbutton);
-	void on_checked_disable(clan::CheckBox *checkbox);
-	void on_unchecked_disable(clan::CheckBox *checkbox);
-	void on_checked_icon(clan::CheckBox *checkbox);
-	void on_unchecked_icon(clan::CheckBox *checkbox);
-	void on_checked_toggle(clan::CheckBox *checkbox);
-	void on_unchecked_toggle(clan::CheckBox *checkbox);
-	void on_unchecked_flat(clan::CheckBox *checkbox);
+	void on_clicked();
+	void on_checked_disable();
+	void on_unchecked_disable();
+	void on_checked_icon();
+	void on_unchecked_icon();
+	void on_checked_toggle();
+	void on_unchecked_toggle();
+	void on_unchecked_flat();
 
 private:
 	clan::PushButton *pushbutton1;

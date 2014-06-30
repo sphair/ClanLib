@@ -44,7 +44,7 @@ Spin::Spin(clan::GUIManager &manager) :
 	spin1->set_step_size(50);
 	spin1->set_ranges(200, 2000);
 	spin1->set_floating_point_mode(false);
-	spin1->func_value_changed() = bind_member(this, &Spin::on_value_changed, spin1);
+	spin1->func_value_changed() = bind_member(this, &Spin::on_value_changed);
 
 	int xoffset = client_area.left + 16;
 	int yoffset = client_area.top + 40;
@@ -65,7 +65,7 @@ Spin::Spin(clan::GUIManager &manager) :
 	lineedit_value->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, lineedit_size));
 	lineedit_value->set_text("500");
 	lineedit_value->set_numeric_mode(true);
-	lineedit_value->func_enter_pressed() = bind_member(this, &Spin::on_value_enter_pressed, lineedit_value);
+	lineedit_value->func_enter_pressed() = bind_member(this, &Spin::on_value_enter_pressed);
 
 	lineedit_label_value = new clan::Label(this);
 	lineedit_label_value->set_geometry(clan::Rect(label_xpos, lineedit_ypos, label_size));
@@ -76,7 +76,7 @@ Spin::Spin(clan::GUIManager &manager) :
 	lineedit_decimal_places->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, lineedit_size));
 	lineedit_decimal_places->set_text("2");
 	lineedit_decimal_places->set_numeric_mode(true, true);
-	lineedit_decimal_places->func_enter_pressed() = bind_member(this, &Spin::on_decimal_places_enter_pressed, lineedit_decimal_places);
+	lineedit_decimal_places->func_enter_pressed() = bind_member(this, &Spin::on_decimal_places_enter_pressed);
 
 	lineedit_label_decimal_places = new clan::Label(this);
 	lineedit_label_decimal_places->set_geometry(clan::Rect(label_xpos, lineedit_ypos, label_size));
@@ -92,7 +92,7 @@ Spin::Spin(clan::GUIManager &manager) :
 	lineedit_min->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, lineedit_size));
 	lineedit_min->set_text("200");
 	lineedit_min->set_numeric_mode(true, true);
-	lineedit_min->func_enter_pressed() = bind_member(this, &Spin::on_min_enter_pressed, lineedit_min);
+	lineedit_min->func_enter_pressed() = bind_member(this, &Spin::on_min_enter_pressed);
 
 	lineedit_label_min = new clan::Label(this);
 	lineedit_label_min->set_geometry(clan::Rect(label_xpos, lineedit_ypos, label_size));
@@ -103,7 +103,7 @@ Spin::Spin(clan::GUIManager &manager) :
 	lineedit_max->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, lineedit_size));
 	lineedit_max->set_text("2000");
 	lineedit_max->set_numeric_mode(true, true);
-	lineedit_max->func_enter_pressed() = bind_member(this, &Spin::on_max_enter_pressed, lineedit_max);
+	lineedit_max->func_enter_pressed() = bind_member(this, &Spin::on_max_enter_pressed);
 
 	lineedit_label_max = new clan::Label(this);
 	lineedit_label_max->set_geometry(clan::Rect(label_xpos, lineedit_ypos, label_size));
@@ -114,7 +114,7 @@ Spin::Spin(clan::GUIManager &manager) :
 	lineedit_step->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, lineedit_size));
 	lineedit_step->set_text("50");
 	lineedit_step->set_numeric_mode(true, true);
-	lineedit_step->func_enter_pressed() = bind_member(this, &Spin::on_step_enter_pressed, lineedit_step);
+	lineedit_step->func_enter_pressed() = bind_member(this, &Spin::on_step_enter_pressed);
 
 	lineedit_label_step = new clan::Label(this);
 	lineedit_label_step->set_geometry(clan::Rect(label_xpos, lineedit_ypos, label_size));
@@ -124,27 +124,27 @@ Spin::Spin(clan::GUIManager &manager) :
 	pushbutton_apply = new clan::PushButton(this);
 	pushbutton_apply->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, clan::Size(48, 20)));
 	pushbutton_apply->set_text("Apply");
-	pushbutton_apply->func_clicked() = bind_member(this, &Spin::on_apply_clicked, pushbutton_apply);
+	pushbutton_apply->func_clicked() = bind_member(this, &Spin::on_apply_clicked);
 
 	xoffset = client_area.left + 1;
 	yoffset = client_area.top + 126 - gap;
 
 	checkbox_fp_mode = new clan::CheckBox(this);
 	checkbox_fp_mode->set_geometry(clan::Rect(xoffset, yoffset, clan::Size(100, 15)));
-	checkbox_fp_mode->func_checked() = bind_member(this, &Spin::on_checked_fp_mode, checkbox_fp_mode);
-	checkbox_fp_mode->func_unchecked() = bind_member(this, &Spin::on_unchecked_fp_mode, checkbox_fp_mode);
+	checkbox_fp_mode->func_checked() = bind_member(this, &Spin::on_checked_fp_mode);
+	checkbox_fp_mode->func_unchecked() = bind_member(this, &Spin::on_unchecked_fp_mode);
 	checkbox_fp_mode->set_text("Floating Point Mode");
 
 	yoffset += gap;
 
 	checkbox_disable = new clan::CheckBox(this);
 	checkbox_disable->set_geometry(clan::Rect(xoffset, yoffset, clan::Size(100, 15)));
-	checkbox_disable->func_checked() = bind_member(this, &Spin::on_checked_disable, checkbox_disable);
-	checkbox_disable->func_unchecked() = bind_member(this, &Spin::on_unchecked_disable, checkbox_disable);
+	checkbox_disable->func_checked() = bind_member(this, &Spin::on_checked_disable);
+	checkbox_disable->func_unchecked() = bind_member(this, &Spin::on_unchecked_disable);
 	checkbox_disable->set_text("Disable");
 }
 
-void Spin::on_value_changed(clan::Spin *spin)
+void Spin::on_value_changed()
 {
 	if (spin1->get_floating_point_mode())
 	{
@@ -157,99 +157,99 @@ void Spin::on_value_changed(clan::Spin *spin)
 	info_value_changed->activate();
 }
 
-void Spin::on_checked_disable(clan::CheckBox *checkbox)
+void Spin::on_checked_disable()
 {
 	spin1->set_enabled(false);
 }
 
-void Spin::on_unchecked_disable(clan::CheckBox *checkbox)
+void Spin::on_unchecked_disable()
 {
 	spin1->set_enabled(true);
 }
 
-void Spin::on_checked_fp_mode(clan::CheckBox *checkbox)
+void Spin::on_checked_fp_mode()
 {
 	spin1->set_floating_point_mode(true);
 	lineedit_decimal_places->set_enabled(true);
-	on_apply_clicked(pushbutton_apply);
+	on_apply_clicked();
 }
 
-void Spin::on_unchecked_fp_mode(clan::CheckBox *checkbox)
+void Spin::on_unchecked_fp_mode()
 {
 	spin1->set_floating_point_mode(false);
 	lineedit_decimal_places->set_enabled(false);
-	on_apply_clicked(pushbutton_apply);
+	on_apply_clicked();
 }
 
-void Spin::on_value_enter_pressed(clan::LineEdit *lineedit)
+void Spin::on_value_enter_pressed()
 {
 	if (spin1->get_floating_point_mode())
 	{
-		float value = clan::StringHelp::text_to_float(lineedit->get_text());
+		float value = clan::StringHelp::text_to_float(lineedit_value->get_text());
 		spin1->set_value_float(value);
 	}
 	else
 	{
-		int value = clan::StringHelp::text_to_int(lineedit->get_text());
+		int value = clan::StringHelp::text_to_int(lineedit_value->get_text());
 		spin1->set_value(value);
 	}
 }
 
-void Spin::on_min_enter_pressed(clan::LineEdit *lineedit)
+void Spin::on_min_enter_pressed()
 {
 	if (spin1->get_floating_point_mode())
 	{
-		float min = clan::StringHelp::text_to_float(lineedit->get_text());
+		float min = clan::StringHelp::text_to_float(lineedit_min->get_text());
 		spin1->set_ranges_float(min, spin1->get_max_float());
 	}
 	else
 	{
-		int min = clan::StringHelp::text_to_int(lineedit->get_text());
+		int min = clan::StringHelp::text_to_int(lineedit_min->get_text());
 		spin1->set_ranges(min, spin1->get_max());
 	}
 }
 
-void Spin::on_max_enter_pressed(clan::LineEdit *lineedit)
+void Spin::on_max_enter_pressed()
 {
 	if (spin1->get_floating_point_mode())
 	{
-		float max = clan::StringHelp::text_to_float(lineedit->get_text());
+		float max = clan::StringHelp::text_to_float(lineedit_max->get_text());
 		spin1->set_ranges_float(spin1->get_min_float(), max);
 	}
 	else
 	{
-		int max = clan::StringHelp::text_to_int(lineedit->get_text());
+		int max = clan::StringHelp::text_to_int(lineedit_max->get_text());
 		spin1->set_ranges(spin1->get_min(), max);
 	}
 }
 
-void Spin::on_step_enter_pressed(clan::LineEdit *lineedit)
+void Spin::on_step_enter_pressed()
 {
 	if (spin1->get_floating_point_mode())
 	{
-		float step = clan::StringHelp::text_to_float(lineedit->get_text());
+		float step = clan::StringHelp::text_to_float(lineedit_step->get_text());
 		spin1->set_step_size_float(step);
 	}
 	else
 	{
-		int step = clan::StringHelp::text_to_int(lineedit->get_text());
+		int step = clan::StringHelp::text_to_int(lineedit_step->get_text());
 		spin1->set_step_size(step);
 	}
 }
 
-void Spin::on_decimal_places_enter_pressed(clan::LineEdit *lineedit)
+void Spin::on_decimal_places_enter_pressed()
 {
-	int decimal_places = clan::StringHelp::text_to_int(lineedit->get_text());
+	int decimal_places = clan::StringHelp::text_to_int(lineedit_decimal_places->get_text());
 	spin1->set_number_of_decimal_places(decimal_places);
 }
 
-void Spin::on_apply_clicked(clan::PushButton *pushbutton)
+void Spin::on_apply_clicked()
 {
-	on_value_enter_pressed(lineedit_value);
-	on_min_enter_pressed(lineedit_min);
-	on_max_enter_pressed(lineedit_max);
-	on_step_enter_pressed(lineedit_step);
-	on_decimal_places_enter_pressed(lineedit_decimal_places);
+	on_value_enter_pressed();
+	on_min_enter_pressed();
+	on_max_enter_pressed();
+	on_step_enter_pressed();
+	on_decimal_places_enter_pressed();
 }
 
 bool Spin::on_close()

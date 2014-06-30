@@ -37,17 +37,17 @@ public:
 
 private:
 	bool on_close();
-	void on_dropdown_opened(clan::ComboBox *combobox);
-	void on_dropdown_closed(clan::ComboBox *combobox);
-	void on_before_edit_changed(clan::ComboBox *combobox);
-	void on_after_edit_changed(clan::ComboBox *combobox);
-	void on_item_selected(int value, clan::ComboBox *combobox);
-	void on_selection_changed(int value, clan::ComboBox *combobox);
+	void on_dropdown_opened();
+	void on_dropdown_closed();
+	void on_before_edit_changed();
+	void on_after_edit_changed();
+	void on_item_selected(int value);
+	void on_selection_changed(int value);
 
-	void on_checked_disable(clan::CheckBox *checkbox);
-	void on_unchecked_disable(clan::CheckBox *checkbox);
-	void on_checked_editable(clan::CheckBox *checkbox);
-	void on_unchecked_editable(clan::CheckBox *checkbox);
+	void on_checked_disable();
+	void on_unchecked_disable();
+	void on_checked_editable();
+	void on_unchecked_editable();
 
 private:
 	clan::ComboBox *combobox1;

@@ -60,11 +60,11 @@ ListView::ListView(clan::GUIManager &manager) :
 	listview1->set_geometry(clan::Rect(client_area.left + 100, client_area.top + 10, clan::Size(360, 180)));
 	listview1->set_display_mode(clan::listview_mode_details);
 
-	listview1->func_selection_changed() = bind_member(this, &ListView::on_selection_changed, listview1);
-	listview1->func_item_edited() = bind_member(this, &ListView::on_item_edited, listview1);
-	listview1->func_key_pressed() = bind_member(this, &ListView::on_key_pressed, listview1);
-	listview1->func_key_released() = bind_member(this, &ListView::on_key_released, listview1);
-	listview1->func_mouse_right_up() = bind_member(this, &ListView::on_mouse_right_up, listview1);
+	listview1->func_selection_changed() = bind_member(this, &ListView::on_selection_changed);
+	listview1->func_item_edited() = bind_member(this, &ListView::on_item_edited);
+	listview1->func_key_pressed() = bind_member(this, &ListView::on_key_pressed);
+	listview1->func_key_released() = bind_member(this, &ListView::on_key_released);
+	listview1->func_mouse_right_up() = bind_member(this, &ListView::on_mouse_right_up);
 	clan::ListViewItem doc_item = listview1->get_document_item(); 
 
 	clan::ListViewHeader *lv_header = listview1->get_header();  
@@ -182,12 +182,12 @@ ListView::ListView(clan::GUIManager &manager) :
 	info_mouse_right_up->set(xoffset, yoffset, "Mouse Right Up");
 }
 
-void ListView::on_selection_changed(clan::ListViewSelection selection, clan::ListView *listview)
+void ListView::on_selection_changed(clan::ListViewSelection selection)
 {
 	info_selection_changed->activate();
 }
 
-bool ListView::on_item_edited(clan::ListViewItem item, std::string &string, clan::ListView *listview)
+bool ListView::on_item_edited(clan::ListViewItem item, std::string &string)
 {
 	std::string new_string = clan::string_format(" (%1)", string);
 
@@ -196,17 +196,17 @@ bool ListView::on_item_edited(clan::ListViewItem item, std::string &string, clan
 	return false;
 }
 
-void ListView::on_key_pressed(clan::InputEvent &input_event, clan::ListView *listview)
+void ListView::on_key_pressed(clan::InputEvent &input_event)
 {
 	info_key_pressed->activate();
 }
 
-void ListView::on_key_released(clan::InputEvent &input_event, clan::ListView *listview)
+void ListView::on_key_released(clan::InputEvent &input_event)
 {
 	info_key_released->activate();
 }
 
-void ListView::on_mouse_right_up(clan::Point point, clan::ListView *listview)
+void ListView::on_mouse_right_up(clan::Point point)
 {
 	std::string string = clan::string_format(" (%1,%2)", point.x, point.y);
 	info_mouse_right_up->set_comment( string );

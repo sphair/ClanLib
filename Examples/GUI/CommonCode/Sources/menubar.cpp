@@ -115,19 +115,19 @@ MenuBar::MenuBar(clan::GUIManager &manager, clan::ResourceManager &application_r
 
 	pushbutton1 = new clan::PushButton(statusbar1);
 	pushbutton1->set_icon(tux_head);
-	pushbutton1->func_clicked() = bind_member(this, &MenuBar::on_clicked, pushbutton1);
+	pushbutton1->func_clicked() = bind_member(this, &MenuBar::on_clicked);
 	statusbar1->add_part(0, 48, pushbutton1);
-	statusbar1->func_part_double_clicked(0).set(this, &MenuBar::on_part_double_clicked_0, statusbar1);
+	statusbar1->func_part_double_clicked(0) = bind_member(this, &MenuBar::on_part_double_clicked_0);
 
 	component1 = new clan::GUIComponent(statusbar1, "A");
 	statusbar1->add_part(1, 48, component1);
 	statusbar1->set_part_text(1, "ClanTest");
-	statusbar1->func_part_double_clicked(1).set(this, &MenuBar::on_part_double_clicked_1, statusbar1);
+	statusbar1->func_part_double_clicked(1) = bind_member(this, &MenuBar::on_part_double_clicked_1);
 
 	clan::GUIComponent *component2 = (new clan::GUIComponent(statusbar1, "B"));
 	statusbar1->add_part(2, 48, component2);
 	statusbar1->set_part_text(2, tux_head, "");
-	statusbar1->func_part_double_clicked(2).set(this, &MenuBar::on_part_double_clicked_2, statusbar1);
+	statusbar1->func_part_double_clicked(2) = bind_member(this, &MenuBar::on_part_double_clicked_2);
 
 	xoffset = client_area.left + 5;
 	yoffset = client_area.top + 40;
@@ -139,32 +139,32 @@ MenuBar::MenuBar(clan::GUIManager &manager, clan::ResourceManager &application_r
 
 	checkbox_status_size_grip = new clan::CheckBox(this);
 	checkbox_status_size_grip->set_geometry(clan::Rect(xoffset, yoffset, clan::Size(150, 15)));
-	checkbox_status_size_grip->func_checked() = bind_member(this, &MenuBar::on_checked_status_size_grip, checkbox_status_size_grip);
-	checkbox_status_size_grip->func_unchecked() = bind_member(this, &MenuBar::on_unchecked_status_size_grip, checkbox_status_size_grip);
+	checkbox_status_size_grip->func_checked() = bind_member(this, &MenuBar::on_checked_status_size_grip);
+	checkbox_status_size_grip->func_unchecked() = bind_member(this, &MenuBar::on_unchecked_status_size_grip);
 	checkbox_status_size_grip->set_text("Show Size Grip");
 	checkbox_status_size_grip->set_checked(true);
 	yoffset += gap;
 
 	checkbox_status_text = new clan::CheckBox(this);
 	checkbox_status_text->set_geometry(clan::Rect(xoffset, yoffset, clan::Size(150, 15)));
-	checkbox_status_text->func_checked() = bind_member(this, &MenuBar::on_checked_status_text, checkbox_status_text);
-	checkbox_status_text->func_unchecked() = bind_member(this, &MenuBar::on_unchecked_status_text, checkbox_status_text);
+	checkbox_status_text->func_checked() = bind_member(this, &MenuBar::on_checked_status_text);
+	checkbox_status_text->func_unchecked() = bind_member(this, &MenuBar::on_unchecked_status_text);
 	checkbox_status_text->set_text("Change Status Text");
 	checkbox_status_text->set_checked(true);
 	yoffset += gap;
 
 	checkbox_status_show_clantest = new clan::CheckBox(this);
 	checkbox_status_show_clantest->set_geometry(clan::Rect(xoffset, yoffset, clan::Size(150, 15)));
-	checkbox_status_show_clantest->func_checked() = bind_member(this, &MenuBar::on_checked_show_clantest, checkbox_status_show_clantest);
-	checkbox_status_show_clantest->func_unchecked() = bind_member(this, &MenuBar::on_unchecked_show_clantest, checkbox_status_show_clantest);
+	checkbox_status_show_clantest->func_checked() = bind_member(this, &MenuBar::on_checked_show_clantest);
+	checkbox_status_show_clantest->func_unchecked() = bind_member(this, &MenuBar::on_unchecked_show_clantest);
 	checkbox_status_show_clantest->set_text("Show ClanTest");
 	checkbox_status_show_clantest->set_checked(true);
 	yoffset += gap;
 
 	checkbox_status_remove_clantest = new clan::CheckBox(this);
 	checkbox_status_remove_clantest->set_geometry(clan::Rect(xoffset, yoffset, clan::Size(150, 15)));
-	checkbox_status_remove_clantest->func_checked() = bind_member(this, &MenuBar::on_checked_remove_clantest, checkbox_status_remove_clantest);
-	checkbox_status_remove_clantest->func_unchecked() = bind_member(this, &MenuBar::on_unchecked_remove_clantest, checkbox_status_remove_clantest);
+	checkbox_status_remove_clantest->func_checked() = bind_member(this, &MenuBar::on_checked_remove_clantest);
+	checkbox_status_remove_clantest->func_unchecked() = bind_member(this, &MenuBar::on_unchecked_remove_clantest);
 	checkbox_status_remove_clantest->set_text("Remove ClanTest");
 	checkbox_status_remove_clantest->set_checked(false);
 	yoffset += gap;
@@ -187,43 +187,43 @@ void MenuBar::on_item_selected()
 	info_item_selected->activate();
 }
 
-void MenuBar::on_checked_status_size_grip(clan::CheckBox *checkbox)
+void MenuBar::on_checked_status_size_grip()
 {
 	statusbar1->show_size_grip(true);
 }
 
-void MenuBar::on_unchecked_status_size_grip(clan::CheckBox *checkbox)
+void MenuBar::on_unchecked_status_size_grip()
 {
 	statusbar1->show_size_grip(false);
 }
 
-void MenuBar::on_checked_status_text(clan::CheckBox *checkbox)
+void MenuBar::on_checked_status_text()
 {
 	statusbar1->set_status_text("This Status");
 }
 
-void MenuBar::on_unchecked_status_text(clan::CheckBox *checkbox)
+void MenuBar::on_unchecked_status_text()
 {
 	statusbar1->set_status_text("Alternate Status");
 }
 
-void MenuBar::on_checked_show_clantest(clan::CheckBox *checkbox)
+void MenuBar::on_checked_show_clantest()
 {
 	statusbar1->show_part(1, true);
 }
 
-void MenuBar::on_unchecked_show_clantest(clan::CheckBox *checkbox)
+void MenuBar::on_unchecked_show_clantest()
 {
 	statusbar1->show_part(1, false);
 }
 
-void MenuBar::on_checked_remove_clantest(clan::CheckBox *checkbox)
+void MenuBar::on_checked_remove_clantest()
 {
 	statusbar1->remove_part(1);
 	checkbox_status_show_clantest->set_enabled(false);
 }
 
-void MenuBar::on_unchecked_remove_clantest(clan::CheckBox *checkbox)
+void MenuBar::on_unchecked_remove_clantest()
 {
 	statusbar1->add_part(1, 48, component1);
 	statusbar1->set_part_text(1, "ClanTest");
@@ -231,24 +231,24 @@ void MenuBar::on_unchecked_remove_clantest(clan::CheckBox *checkbox)
 	checkbox_status_show_clantest->set_checked(true);
 }
 
-void MenuBar::on_clicked(clan::PushButton *pushbutton)
+void MenuBar::on_clicked()
 {
 	info_clicked->activate();
 }
 
-void MenuBar::on_part_double_clicked_0( clan::StatusBar *statusbar)
+void MenuBar::on_part_double_clicked_0( )
 {
 	std::string value="0";
 	info_part_clicked->set_comment(value);
 	info_part_clicked->activate();
 }
-void MenuBar::on_part_double_clicked_1( clan::StatusBar *statusbar)
+void MenuBar::on_part_double_clicked_1( )
 {
 	std::string value="1";
 	info_part_clicked->set_comment(value);
 	info_part_clicked->activate();
 }
-void MenuBar::on_part_double_clicked_2( clan::StatusBar *statusbar)
+void MenuBar::on_part_double_clicked_2( )
 {
 	std::string value="2";
 	info_part_clicked->set_comment(value);

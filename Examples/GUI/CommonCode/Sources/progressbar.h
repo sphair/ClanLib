@@ -37,16 +37,16 @@ public:
 
 private:
 	bool on_close();
-	void on_checked_marquee_mode(clan::CheckBox *checkbox);
-	void on_unchecked_marquee_mode(clan::CheckBox *checkbox);
+	void on_checked_marquee_mode();
+	void on_unchecked_marquee_mode();
 
-	void on_min_enter_pressed(clan::LineEdit *lineedit);
-	void on_max_enter_pressed(clan::LineEdit *lineedit);
-	void on_step_size_enter_pressed(clan::LineEdit *lineedit);
-	void on_position_enter_pressed(clan::LineEdit *lineedit);
-	void on_marquee_speed_enter_pressed(clan::LineEdit *lineedit);
-	void on_apply_clicked(clan::PushButton *pushbutton);
-	void on_step_position_clicked(clan::PushButton *pushbutton);
+	void on_min_enter_pressed();
+	void on_max_enter_pressed();
+	void on_step_size_enter_pressed();
+	void on_position_enter_pressed();
+	void on_marquee_speed_enter_pressed();
+	void on_apply_clicked();
+	void on_step_position_clicked();
 
 private:
 	clan::ProgressBar *progressbar1;

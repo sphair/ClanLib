@@ -41,8 +41,8 @@ private:
 	void on_unselected(clan::RadioButton *radiobutton);
 	void on_group_selection_changed(clan::RadioButton *radiobutton_group, clan::RadioButton *radiobutton);
 	std::string decode_button(clan::RadioButton *radiobutton);
-	void on_checked_disable(clan::CheckBox *checkbox);
-	void on_unchecked_disable(clan::CheckBox *checkbox);
+	void on_checked_disable();
+	void on_unchecked_disable();
 
 private:
 	clan::RadioButton *radiobutton_g1b1;

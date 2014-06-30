@@ -51,12 +51,12 @@ ComboBox::ComboBox(clan::GUIManager &manager) :
 	combobox1->set_popup_menu(menu);
 	combobox1->set_selected_item(0);
 
-	combobox1->func_dropdown_opened() = bind_member(this, &ComboBox::on_dropdown_opened, combobox1);
-	combobox1->func_dropdown_closed() = bind_member(this, &ComboBox::on_dropdown_closed, combobox1);
-	combobox1->func_before_edit_changed() = bind_member(this, &ComboBox::on_before_edit_changed, combobox1);
-	combobox1->func_after_edit_changed() = bind_member(this, &ComboBox::on_after_edit_changed, combobox1);
-	combobox1->func_item_selected() = bind_member(this, &ComboBox::on_item_selected, combobox1);
-	combobox1->func_selection_changed() = bind_member(this, &ComboBox::on_selection_changed, combobox1);
+	combobox1->func_dropdown_opened() = bind_member(this, &ComboBox::on_dropdown_opened);
+	combobox1->func_dropdown_closed() = bind_member(this, &ComboBox::on_dropdown_closed);
+	combobox1->func_before_edit_changed() = bind_member(this, &ComboBox::on_before_edit_changed);
+	combobox1->func_after_edit_changed() = bind_member(this, &ComboBox::on_after_edit_changed);
+	combobox1->func_item_selected() = bind_member(this, &ComboBox::on_item_selected);
+	combobox1->func_selection_changed() = bind_member(this, &ComboBox::on_selection_changed);
 
 	int xoffset = client_area.left + 36;
 	int yoffset = client_area.top + 40;
@@ -87,40 +87,40 @@ ComboBox::ComboBox(clan::GUIManager &manager) :
 
 	checkbox_editable = new clan::CheckBox(this);
 	checkbox_editable->set_geometry(clan::Rect(xoffset, yoffset, clan::Size(100, 15)));
-	checkbox_editable->func_checked() = bind_member(this, &ComboBox::on_checked_editable, checkbox_editable);
-	checkbox_editable->func_unchecked() = bind_member(this, &ComboBox::on_unchecked_editable, checkbox_editable);
+	checkbox_editable->func_checked() = bind_member(this, &ComboBox::on_checked_editable);
+	checkbox_editable->func_unchecked() = bind_member(this, &ComboBox::on_unchecked_editable);
 	checkbox_editable->set_text("Editable");
 
 	yoffset += gap;
 
 	checkbox_disable = new clan::CheckBox(this);
 	checkbox_disable->set_geometry(clan::Rect(xoffset, yoffset, clan::Size(100, 15)));
-	checkbox_disable->func_checked() = bind_member(this, &ComboBox::on_checked_disable, checkbox_disable);
-	checkbox_disable->func_unchecked() = bind_member(this, &ComboBox::on_unchecked_disable, checkbox_disable);
+	checkbox_disable->func_checked() = bind_member(this, &ComboBox::on_checked_disable);
+	checkbox_disable->func_unchecked() = bind_member(this, &ComboBox::on_unchecked_disable);
 	checkbox_disable->set_text("Disable");
 }
 
-void ComboBox::on_dropdown_opened(clan::ComboBox *combobox)
+void ComboBox::on_dropdown_opened()
 {
 	info_dropdown_opened->activate();
 }
 
-void ComboBox::on_dropdown_closed(clan::ComboBox *combobox)
+void ComboBox::on_dropdown_closed()
 {
 	info_dropdown_closed->activate();
 }
 
-void ComboBox::on_before_edit_changed(clan::ComboBox *combobox)
+void ComboBox::on_before_edit_changed()
 {
 	info_before_edit_changed->activate();
 }
 
-void ComboBox::on_after_edit_changed(clan::ComboBox *combobox)
+void ComboBox::on_after_edit_changed()
 {
 	info_after_edit_changed->activate();
 }
 
-void ComboBox::on_item_selected(int value, clan::ComboBox *combobox)
+void ComboBox::on_item_selected(int value)
 {
 	std::string string = clan::string_format(" (%1)", value);
 	info_item_selected->set_comment( string );
@@ -128,7 +128,7 @@ void ComboBox::on_item_selected(int value, clan::ComboBox *combobox)
 	info_item_selected->activate();
 }
 
-void ComboBox::on_selection_changed(int value, clan::ComboBox *combobox)
+void ComboBox::on_selection_changed(int value)
 {
 	std::string string = clan::string_format(" (%1)", value);
 	info_selection_changed->set_comment( string );
@@ -136,22 +136,22 @@ void ComboBox::on_selection_changed(int value, clan::ComboBox *combobox)
 	info_selection_changed->activate();
 }
 
-void ComboBox::on_checked_disable(clan::CheckBox *checkbox)
+void ComboBox::on_checked_disable()
 {
 	combobox1->set_enabled(false);
 }
 
-void ComboBox::on_unchecked_disable(clan::CheckBox *checkbox)
+void ComboBox::on_unchecked_disable()
 {
 	combobox1->set_enabled(true);
 }
 
-void ComboBox::on_checked_editable(clan::CheckBox *checkbox)
+void ComboBox::on_checked_editable()
 {
 	combobox1->set_editable(true);
 }
 
-void ComboBox::on_unchecked_editable(clan::CheckBox *checkbox)
+void ComboBox::on_unchecked_editable()
 {
 	combobox1->set_editable(false);
 }

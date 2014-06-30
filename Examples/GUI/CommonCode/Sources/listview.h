@@ -37,11 +37,11 @@ public:
 
 private:
 	bool on_close();
-	void on_selection_changed(clan::ListViewSelection selection, clan::ListView *listview);
-	bool on_item_edited(clan::ListViewItem item, std::string &string, clan::ListView *listview);
-	void on_key_pressed(clan::InputEvent &input_event, clan::ListView *listview);
-	void on_key_released(clan::InputEvent &input_event, clan::ListView *listview);
-	void on_mouse_right_up(clan::Point point, clan::ListView *listview);
+	void on_selection_changed(clan::ListViewSelection selection);
+	bool on_item_edited(clan::ListViewItem item, std::string &string);
+	void on_key_pressed(clan::InputEvent &input_event);
+	void on_key_released(clan::InputEvent &input_event);
+	void on_mouse_right_up(clan::Point point);
 
 private:
 	clan::ListView *listview1;

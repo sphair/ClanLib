@@ -38,21 +38,21 @@ public:
 private:
 	bool on_close();
 	void on_value_changed(clan::Slider *slider);
-	void on_value_decremented(clan::Slider *slider);
-	void on_value_incremented(clan::Slider *slider);
-	void on_slider_moved(clan::Slider *slider);
-	void on_checked_disable(clan::CheckBox *checkbox);
-	void on_unchecked_disable(clan::CheckBox *checkbox);
-	void on_checked_lock_to_ticks(clan::CheckBox *checkbox);
-	void on_unchecked_lock_to_ticks(clan::CheckBox *checkbox);
+	void on_value_decremented();
+	void on_value_incremented();
+	void on_slider_moved();
+	void on_checked_disable();
+	void on_unchecked_disable();
+	void on_checked_lock_to_ticks();
+	void on_unchecked_lock_to_ticks();
 
-	void on_min_enter_pressed(clan::LineEdit *lineedit);
-	void on_max_enter_pressed(clan::LineEdit *lineedit);
-	void on_tick_count_enter_pressed(clan::LineEdit *lineedit);
-	void on_page_step_enter_pressed(clan::LineEdit *lineedit);
-	void on_position_enter_pressed_horiz(clan::LineEdit *lineedit);
-	void on_position_enter_pressed_vert(clan::LineEdit *lineedit);
-	void on_apply_clicked(clan::PushButton *pushbutton);
+	void on_min_enter_pressed();
+	void on_max_enter_pressed();
+	void on_tick_count_enter_pressed();
+	void on_page_step_enter_pressed();
+	void on_position_enter_pressed_horiz();
+	void on_position_enter_pressed_vert();
+	void on_apply_clicked();
 
 private:
 	clan::Slider *slider_vertical;
