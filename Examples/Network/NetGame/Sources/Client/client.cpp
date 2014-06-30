@@ -53,10 +53,10 @@ void Client::on_connected()
 	log_event("network", "Connected to server");
 
 	// For demonstration purposes, lets fail a login
-	network_client.send_event(NetGameEvent("Login", "")); // We will receive an error event for this, as we don't send a proper user name
+	network_client.send_event(NetGameEvent("Login", { "" })); // We will receive an error event for this, as we don't send a proper user name
 
 	// Properly login
-	network_client.send_event(NetGameEvent("Login", "my user name"));
+	network_client.send_event(NetGameEvent("Login", { "my user name" }));
 }
 
 // Disconnected from server

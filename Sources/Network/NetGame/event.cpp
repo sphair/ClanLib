@@ -29,54 +29,14 @@
 #include "Network/precomp.h"
 #include "API/Network/NetGame/event.h"
 #include "API/Core/Text/string_format.h"
-#include "API/Core/Text/string_help.h"
 
 namespace clan
 {
 
-NetGameEvent::NetGameEvent(const std::string &name)
+NetGameEvent::NetGameEvent(const std::string &name, std::vector<NetGameEventValue> arg)
 : name(name)
+, arguments(arg)
 {
-}
-
-NetGameEvent::NetGameEvent(const std::string &name, const NetGameEventValue &arg1)
-: name(name)
-{
-	add_argument(arg1);
-}
-
-NetGameEvent::NetGameEvent(const std::string &name, const NetGameEventValue &arg1, const NetGameEventValue &arg2)
-: name(name)
-{
-	add_argument(arg1);
-	add_argument(arg2);
-}
-
-NetGameEvent::NetGameEvent(const std::string &name, const NetGameEventValue &arg1, const NetGameEventValue &arg2, const NetGameEventValue &arg3)
-: name(name)
-{
-	add_argument(arg1);
-	add_argument(arg2);
-	add_argument(arg3);
-}
-
-NetGameEvent::NetGameEvent(const std::string &name, const NetGameEventValue &arg1, const NetGameEventValue &arg2, const NetGameEventValue &arg3, const NetGameEventValue &arg4)
-: name(name)
-{
-	add_argument(arg1);
-	add_argument(arg2);
-	add_argument(arg3);
-	add_argument(arg4);
-}
-
-NetGameEvent::NetGameEvent(const std::string &name, const NetGameEventValue &arg1, const NetGameEventValue &arg2, const NetGameEventValue &arg3, const NetGameEventValue &arg4, const NetGameEventValue &arg5)
-: name(name)
-{
-	add_argument(arg1);
-	add_argument(arg2);
-	add_argument(arg3);
-	add_argument(arg4);
-	add_argument(arg5);
 }
 
 unsigned int NetGameEvent::get_argument_count() const
@@ -105,50 +65,12 @@ std::string NetGameEvent::to_string() const
 		if(i > 0)
 			event_info += ",";
 
-		event_info += to_string(arguments[i]);
+		event_info += NetGameEventValue::to_string(arguments[i]);
 	}
 
 	event_info += ")";
 
 	return event_info;
-}
-
-std::string NetGameEvent::to_string(const NetGameEventValue &v) const
-{
-	switch (v.get_type())
-	{
-	case NetGameEventValue::null:
-		return "null";
-	case NetGameEventValue::integer:
-		return StringHelp::int_to_text(v.to_integer());
-	case NetGameEventValue::uinteger:
-		return StringHelp::uint_to_text(v.to_uinteger());
-	case NetGameEventValue::character:
-		return StringHelp::int_to_text(static_cast<int>(v.to_character()));
-	case NetGameEventValue::ucharacter:
-		return StringHelp::uint_to_text(static_cast<unsigned int>(v.to_ucharacter()));
-	case NetGameEventValue::string:
-		return "\"" + v.to_string() + "\"";
-	case NetGameEventValue::boolean:
-		return v.to_boolean() ? "true" : "false";
-	case NetGameEventValue::number:
-		return StringHelp::float_to_text(v.to_number());
-	case NetGameEventValue::complex:
-		{
-			std::string str;
-			str += "[";
-			for (unsigned int j = 0; j < v.get_member_count(); j++)
-			{
-				if(j > 0)
-					str += ",";
-				str += to_string(v.get_member(j));
-			}
-			str += "]";
-			return str;
-		}
-	default:
-		return "??" + StringHelp::int_to_text(v.get_type());
-	}
 }
 
 }
