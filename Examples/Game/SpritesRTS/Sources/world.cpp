@@ -51,12 +51,12 @@ World::World(clan::DisplayWindow &display_window) : window(display_window), quit
 	background = clan::Image::resource(canvas, "background", resources);
 	
 	// Receive mouse clicks
-	cc.connect(window.get_ic().get_keyboard().sig_key_down(), std::function<void(const clan::InputEvent&)>(this, &World::onKeyDown));
-	cc.connect(window.get_ic().get_mouse().sig_key_down(), std::function<void(const clan::InputEvent&)>(this, &World::onMouseDown));
-	cc.connect(window.get_ic().get_mouse().sig_key_dblclk(), std::function<void(const clan::InputEvent&)>(this, &World::onMouseDown));
+	cc.connect(window.get_ic().get_keyboard().sig_key_down(), clan::bind_member(this, &World::onKeyDown));
+	cc.connect(window.get_ic().get_mouse().sig_key_down(), clan::bind_member(this, &World::onMouseDown));
+	cc.connect(window.get_ic().get_mouse().sig_key_dblclk(), clan::bind_member(this, &World::onMouseDown));
 
-	cc.connect(window.get_ic().get_mouse().sig_key_up(), std::function<void(const clan::InputEvent&)>(this, &World::onMouseUp));
-	cc.connect(window.get_ic().get_mouse().sig_pointer_move(), std::function<void(const clan::InputEvent&)>(this, &World::onMouseMove));
+	cc.connect(window.get_ic().get_mouse().sig_key_up(), clan::bind_member(this, &World::onMouseUp));
+	cc.connect(window.get_ic().get_mouse().sig_pointer_move(), clan::bind_member(this, &World::onMouseMove));
 
 	dragging = mouseDown = false;
 	

@@ -40,8 +40,8 @@ int HSV::start(const std::vector<std::string> &args)
 {
     clan::SlotContainer cc;
 	DisplayWindow window("ClanLib HSV Sprite", 1024, 768);
-	cc.connect(window.sig_window_close(), std::function<void()>(this, &HSV::on_close));
-    cc.connect(window.get_ic().get_keyboard().sig_key_up(), std::function<void(const clan::InputEvent&)>(this, &HSV::on_input_up));
+	cc.connect(window.sig_window_close(), clan::bind_member(this, &HSV::on_close));
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &HSV::on_input_up));
 	Canvas canvas(window);
 	InputContext ic = window.get_ic();
 

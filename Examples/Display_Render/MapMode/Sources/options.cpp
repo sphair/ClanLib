@@ -118,7 +118,7 @@ clan::CheckBox *Options::create_checkbox(int xpos, int ypos, const char *name, b
 }
 
 
-void Options::on_mapmode_selected(int value, clan::ComboBox *combo)
+void Options::on_mapmode_selected(int value)
 {
 	switch (value)
 	{
@@ -177,7 +177,7 @@ clan::ComboBox *Options::create_mapmode_combo_box(int xpos, int ypos, clan::Popu
 	combo->set_dropdown_minimum_width(64);
 	combo->set_popup_menu(menu);
 	combo->set_selected_item(selected_item);
-	combo->func_item_selected() = bind_member(this, &Options::on_mapmode_selected, combo);
+	combo->func_item_selected() = bind_member(this, &Options::on_mapmode_selected);
 
 	return combo;
 }

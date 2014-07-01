@@ -92,7 +92,7 @@ private:
 	Sprite vehicle;
 	Game *game;
 
-    Callback<void(Canvas&)> draw_callback;
+    std::function<void(Canvas&)> draw_callback;
     SlotContainer cc;
 
 	float wobble_timer;

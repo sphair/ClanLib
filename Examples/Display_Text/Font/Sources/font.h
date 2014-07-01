@@ -41,22 +41,22 @@ public:
 	int start(const std::vector<std::string> &args);
 
 private:
-	void on_button_clicked_class_system(PushButton *button);
-	void on_button_clicked_class_sprite(PushButton *button);
-	void on_button_clicked_typeface_tahoma(PushButton *button);
-	void on_button_clicked_typeface_sans(PushButton *button);
-	void on_button_clicked_typeface_bitstream(PushButton *button);
-	void on_checkbox_state_underline(CheckBox *checkbox);
-	void on_checkbox_state_italic(CheckBox *checkbox);
-	void on_checkbox_state_subpixel(CheckBox *checkbox);
-	void on_checkbox_state_strikeout(CheckBox *checkbox);
-	void on_checkbox_state_antialias(CheckBox *checkbox);
-	void on_button_clicked_weight_light(PushButton *button);
-	void on_button_clicked_weight_normal(PushButton *button);
-	void on_button_clicked_weight_bold(PushButton *button);
-	void on_button_clicked_size_16(PushButton *button);
-	void on_button_clicked_size_32(PushButton *button);
-	void on_button_clicked_size_64(PushButton *button);
+	void on_button_clicked_class_system();
+	void on_button_clicked_class_sprite();
+	void on_button_clicked_typeface_tahoma();
+	void on_button_clicked_typeface_sans();
+	void on_button_clicked_typeface_bitstream();
+	void on_checkbox_state_underline();
+	void on_checkbox_state_italic();
+	void on_checkbox_state_subpixel();
+	void on_checkbox_state_strikeout();
+	void on_checkbox_state_antialias();
+	void on_button_clicked_weight_light();
+	void on_button_clicked_weight_normal();
+	void on_button_clicked_weight_bold();
+	void on_button_clicked_size_16();
+	void on_button_clicked_size_32();
+	void on_button_clicked_size_64();
 
 	void on_input_up(const InputEvent &key);
 	void on_window_close();

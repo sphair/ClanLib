@@ -78,7 +78,7 @@ Player::Player(Game &game_)
 	
     draw_callback = {std::bind(&Player::draw, this, std::placeholders::_1)};
 	cc.connect(game_.get_draw_sig(), draw_callback);
-	cc.connect(game_.get_update_sig(), std::function<void(int)>(this, &Player::update));
+	cc.connect(game_.get_update_sig(), clan::bind_member(this, &Player::update));
 	
 	//________________________________________________________________________
 	//															 P H Y S I C S

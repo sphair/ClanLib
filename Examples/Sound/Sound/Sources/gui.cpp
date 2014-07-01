@@ -204,7 +204,7 @@ Spin *App::set_slide_and_spin(GUIComponent &window, const char *slider_name, con
 	spin->set_ranges(min, max);
 	spin->set_value(start);
 	spin->set_step_size(1);
-	spin->func_value_changed() = bind_member(this, &App::on_spin_changed_integer, spin);
+	spin->func_value_changed() = [=](){on_spin_changed_integer(spin); };
 
 	slider->set_min(0);
 	slider->set_max(10000);
@@ -212,7 +212,7 @@ Spin *App::set_slide_and_spin(GUIComponent &window, const char *slider_name, con
 	slider->set_page_step(1000);
 	slider->set_position(50);
 	slider->set_lock_to_ticks(false);
-	slider->func_value_changed() = bind_member(this, &App::on_slider_changed_integer, spin);
+	slider->func_value_changed() = [=](){on_slider_changed_integer(spin); };
 
 	set_slider_to_spin_integer(slider, spin);
 
@@ -241,7 +241,7 @@ Spin *App::set_slide_and_spin(GUIComponent &window, const char *slider_name, con
 	spin->set_ranges_float(min, max);
 	spin->set_value_float(start);
 	spin->set_step_size_float(1.0f);
-	spin->func_value_changed() = bind_member(this, &App::on_spin_changed_float, spin);
+	spin->func_value_changed() = [=](){on_spin_changed_float(spin); };
 
 	slider->set_min(0);
 	slider->set_max(10000);
@@ -249,7 +249,7 @@ Spin *App::set_slide_and_spin(GUIComponent &window, const char *slider_name, con
 	slider->set_page_step(1000);
 	slider->set_position(50);
 	slider->set_lock_to_ticks(false);
-	slider->func_value_changed() = bind_member(this, &App::on_slider_changed_float, spin);
+	slider->func_value_changed() = [=](){on_slider_changed_float(spin); };
 
 	set_slider_to_spin_float(slider, spin);
 

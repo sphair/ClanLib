@@ -49,8 +49,8 @@ int App::start(const std::vector<std::string> &args)
 
 	// Connect the slots that we require
     clan::SlotContainer cc;
-	cc.connect(window.sig_window_close(), std::function<void()>(this, &App::on_window_close));
-	cc.connect(window.get_ic().get_keyboard().sig_key_down(), std::function<void(const clan::InputEvent&)>(this, &App::on_input_down));
+	cc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
+	cc.connect(window.get_ic().get_keyboard().sig_key_down(), clan::bind_member(this, &App::on_input_down));
 
 	canvas = clan::Canvas(window);
 

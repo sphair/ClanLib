@@ -87,7 +87,7 @@ private:
 
 	Sprite enemy;
 
-    Callback<void(int)> update_callback;
+    std::function<void(int)> update_callback;
     SlotContainer cc;
 
 	Vec2f pos;

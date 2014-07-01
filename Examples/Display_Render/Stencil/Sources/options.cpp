@@ -256,7 +256,7 @@ clan::ComboBox *Options::create_compare_combo_box(int xpos, int ypos, clan::Popu
 	combo->set_dropdown_minimum_width(64);
 	combo->set_popup_menu(menu);
 	combo->set_selected_item(selected_item);
-	combo->func_item_selected() = bind_member(this, &Options::on_compare_selected, combo);
+	combo->func_item_selected() = [=](int value){on_compare_selected(value, combo); };
 
 	return combo;
 }
@@ -270,7 +270,7 @@ clan::ComboBox *Options::create_passfail_combo_box(int xpos, int ypos, clan::Pop
 	combo->set_dropdown_minimum_width(64);
 	combo->set_popup_menu(menu);
 	combo->set_selected_item(selected_item);
-	combo->func_item_selected() = bind_member(this, &Options::on_passfail_selected, combo);
+	combo->func_item_selected() = [=](int value){on_passfail_selected(value, combo); };
 
 	return combo;
 }

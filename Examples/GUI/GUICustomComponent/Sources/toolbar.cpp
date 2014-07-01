@@ -94,8 +94,8 @@ void Toolbar::on_mouse_lbutton_down(InputEvent &input_event)
 void Toolbar::on_mouse_lbutton_up(InputEvent &input_event)
 {
 	if(clicked_index != -1)
-		if (!func_selected.is_null())
-			func_selected.invoke(clicked_index);
+		if (func_selected)
+			func_selected(clicked_index);
 
 	clicked_index = -1;
 	request_repaint();

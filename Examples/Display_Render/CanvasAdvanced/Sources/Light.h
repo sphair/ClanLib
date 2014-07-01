@@ -102,7 +102,7 @@ public:
 
 	void set_life(unsigned int time)
 	{
-		life.func_expired() = bind_member(this, &Light::life_expired);
+		life.func_expired() = clan::bind_member(this, &Light::life_expired);
 		life.start(time,false);
 	};
 

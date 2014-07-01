@@ -24,10 +24,10 @@ int DemoCMotion::run(clan::DisplayWindow &window)
 {
     clan::SlotContainer cc;
 	window.set_title("LinearParticle Example - CMotion ");
-	cc.connect(window.sig_window_close(), std::function<void()>(this, &DemoCMotion::on_window_close));
+	cc.connect(window.sig_window_close(), clan::bind_member(this, &DemoCMotion::on_window_close));
 	clan::Canvas canvas(window);
 
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), std::function<void(const clan::InputEvent&)>(this, &DemoCMotion::on_key_up,canvas));
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &DemoCMotion::on_key_up, canvas));
 
 	// initialize LinearParticle
 	L_ParticleSystem::init();

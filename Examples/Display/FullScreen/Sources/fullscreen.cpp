@@ -153,7 +153,7 @@ void FullScreen::create_window()
 
 	window = DisplayWindow(window_description);
 
-	cc.connect(window.sig_window_close(), std::function<void()>(this, &FullScreen::on_window_close));
-	cc.connect(window.get_ic().get_keyboard().sig_key_down(), std::function<void(const clan::InputEvent&)>(this, &FullScreen::on_input_down));
+	cc.connect(window.sig_window_close(), clan::bind_member(this, &FullScreen::on_window_close));
+	cc.connect(window.get_ic().get_keyboard().sig_key_down(), clan::bind_member(this, &FullScreen::on_input_down));
 }
 

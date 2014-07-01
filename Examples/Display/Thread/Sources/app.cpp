@@ -40,9 +40,9 @@ int App::start(const std::vector<std::string> &args)
 	clan::Canvas canvas(window);
     clan::SlotContainer cc;
 
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), std::function<void(const clan::InputEvent&)>(this, &App::on_input_up));
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 
-    cc.connect(window.sig_window_close(), std::function<void()>(this, &App::window_close));
+	cc.connect(window.sig_window_close(), clan::bind_member(this, &App::window_close));
 
 	// Load the font
 	clan::Font font(canvas, "tahoma", 32);

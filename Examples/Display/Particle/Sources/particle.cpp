@@ -47,7 +47,7 @@ int Particle::start(const std::vector<std::string> &args)
 
 	// Connect the Window close event
     clan::SlotContainer cc;
-	cc.connect(window.sig_window_close(), std::function<void()>(this, &Particle::on_window_close));
+	cc.connect(window.sig_window_close(), clan::bind_member(this, &Particle::on_window_close));
 
 	// Get the graphic context
 	clan::Canvas canvas(window);

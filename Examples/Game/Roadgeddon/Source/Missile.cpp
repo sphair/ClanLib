@@ -155,8 +155,8 @@ Missile::Missile(MissileDesc &desc)
 	//___________________________________________________________________
 	//													          C O R E
 
-	cc.connect(game->get_update_sig(), std::function<void(int)>(this,&Missile::update)); 
-	cc.connect(game->get_draw_sig(), std::function<void(Canvas&)>(this,&Missile::draw)); 
+	cc.connect(game->get_update_sig(), clan::bind_member(this, &Missile::update));
+	cc.connect(game->get_draw_sig(), clan::bind_member(this, &Missile::draw));
 	should_die = false;
 }
 

@@ -47,10 +47,10 @@ int ExampleCanvas::start(const std::vector<std::string> &args)
 
 	// Connect Slots
     clan::SlotContainer cc;
-	cc.connect(window.sig_window_close(), std::function<void()>(this, &ExampleCanvas::on_window_close));
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), std::function<void(const clan::InputEvent&)>(this, &ExampleCanvas::on_keyboard_up));
-	cc.connect(window.get_ic().get_mouse().sig_key_up(), std::function<void(const clan::InputEvent&)>(this, &ExampleCanvas::on_mouse_up));
-	cc.connect(window.get_ic().get_mouse().sig_pointer_move(), std::function<void(const clan::InputEvent&)>(this, &ExampleCanvas::on_mouse_move));
+	cc.connect(window.sig_window_close(), clan::bind_member(this, &ExampleCanvas::on_window_close));
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &ExampleCanvas::on_keyboard_up));
+	cc.connect(window.get_ic().get_mouse().sig_key_up(), clan::bind_member(this, &ExampleCanvas::on_mouse_up));
+	cc.connect(window.get_ic().get_mouse().sig_pointer_move(), clan::bind_member(this, &ExampleCanvas::on_mouse_move));
 
 	// Load the surfaces
 	// -- This is our ground texture.

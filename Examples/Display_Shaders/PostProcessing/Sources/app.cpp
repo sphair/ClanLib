@@ -39,7 +39,7 @@ int App::start(const std::vector<std::string> &args)
 	clan::Canvas canvas(window);
     clan::SlotContainer cc;
 
-	cc.connect(window.sig_window_close(), std::function<void()>(this, &App::window_close));
+	cc.connect(window.sig_window_close(), clan::bind_member(this, &App::window_close));
 
 	// Create offscreen texture
 	clan::Texture2D texture_offscreen(canvas, canvas.get_width(), canvas.get_height());

@@ -46,7 +46,7 @@ private:
 	void slider_numballs_changed();
 	void slider_grid_angle_changed();
 	clan::Label *create_slider_label(clan::Slider *slider);
-	void on_mapmode_selected(int value, clan::ComboBox *combo);
+	void on_mapmode_selected(int value);
 	clan::CheckBox *create_checkbox(int xpos, int ypos, const char *name, bool state);
 	void on_render(clan::Canvas &canvas, const clan::Rect &update_rect);
 	clan::Slider *create_slider(int xpos, int ypos);

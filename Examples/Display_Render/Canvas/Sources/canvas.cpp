@@ -42,14 +42,14 @@ int ExampleCanvas::start(const std::vector<std::string> &args)
 	DisplayWindow window(desc);
     clan::SlotContainer cc;
 	// Connect the Window close event
-	cc.connect(window.sig_window_close(), std::function<void()>(this, &ExampleCanvas::on_window_close));
+	cc.connect(window.sig_window_close(), clan::bind_member(this, &ExampleCanvas::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), std::function<void(const clan::InputEvent&)>(this, &ExampleCanvas::on_keyboard_up));
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &ExampleCanvas::on_keyboard_up));
 
 	// Connect a mouse handler to on_key_down()
-    cc.connect(window.get_ic().get_mouse().sig_key_up(), std::function<void(const clan::InputEvent&)>(this, &ExampleCanvas::on_mouse_down));
-	cc.connect(window.get_ic().get_mouse().sig_pointer_move(), std::function<void(const clan::InputEvent&)>(this, &ExampleCanvas::on_mouse_move));
+	cc.connect(window.get_ic().get_mouse().sig_key_up(), clan::bind_member(this, &ExampleCanvas::on_mouse_down));
+	cc.connect(window.get_ic().get_mouse().sig_pointer_move(), clan::bind_member(this, &ExampleCanvas::on_mouse_move));
 
 	canvas_window = Canvas(window);
 

@@ -73,10 +73,10 @@ int ExampleText::start(const std::vector<std::string> &args)
     clan::SlotContainer cc;
 
 	// Connect the Window close event
-	cc.connect(window.sig_window_close(), std::function<void()>(this, &ExampleText::on_window_close));
+	cc.connect(window.sig_window_close(), clan::bind_member(this, &ExampleText::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), std::function<void(const clan::InputEvent&)>(this, &ExampleText::on_keyboard_up));
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &ExampleText::on_keyboard_up));
 
 	clan::Canvas canvas(window);
 

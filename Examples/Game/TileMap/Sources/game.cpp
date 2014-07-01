@@ -42,8 +42,8 @@ void Game::run()
 	DisplayWindow window(desc);
     SlotContainer cc;
 
-	cc.connect(window.sig_window_close(), std::function<void()>(this, &Game::on_window_close));
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), std::function<void(const clan::InputEvent&)>(this, &Game::on_input_up));
+	cc.connect(window.sig_window_close(), clan::bind_member(this, &Game::on_window_close));
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &Game::on_input_up));
 
 	Canvas canvas(window);
 
