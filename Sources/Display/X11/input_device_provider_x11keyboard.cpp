@@ -28,11 +28,11 @@
 */
 
 #include "Display/precomp.h"
+#include "x11_window.h"
 #include "input_device_provider_x11keyboard.h"
 #include "API/Display/Window/input_event.h"
 #include "API/Display/Window/keys.h"
 #include "API/Core/Text/string_help.h"
-#include "x11_window.h"
 #include <cstdio>
 #include <X11/XKBlib.h>
 
@@ -276,7 +276,7 @@ void InputDeviceProvider_X11Keyboard::received_keyboard_input(XKeyEvent &event)
 	key.str = StringHelp::local8_to_text(std::string(buff, result));
 
 	// Emit message:
-	sig_provider_event->invoke(key);
+	(*sig_provider_event)(key);
 }
 
 /////////////////////////////////////////////////////////////////////////////

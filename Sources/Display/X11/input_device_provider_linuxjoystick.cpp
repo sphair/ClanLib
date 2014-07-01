@@ -183,7 +183,7 @@ void InputDeviceProvider_LinuxJoystick::process_event(js_event event) const
 
 			input_event.id = (InputCode)event.number;
 
-			sig_provider_event->invoke(input_event);
+			(*sig_provider_event)(input_event);
 		}
 	}
 	else if (event.type & JS_EVENT_AXIS) 
@@ -203,7 +203,7 @@ void InputDeviceProvider_LinuxJoystick::process_event(js_event event) const
 			input_event.id = (InputCode)event.number;
 			input_event.axis_pos = value;
 
-			sig_provider_event->invoke(input_event);
+			(*sig_provider_event)(input_event);
 		}
 	}
 }

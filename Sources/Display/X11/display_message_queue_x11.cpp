@@ -169,7 +169,7 @@ int DisplayMessageQueue_X11::wait(const std::vector<Event> &events, int timeout)
 void DisplayMessageQueue_X11::add_client(X11Window *window)
 {
 	// (Always set the message queue, because the display target may have changed)
-	KeepAlive::func_event_wait().set(&message_queue, &DisplayMessageQueue_X11::wait);
+	KeepAlive::func_event_wait() = bind_member(&message_queue, &DisplayMessageQueue_X11::wait);
 
 	 std::shared_ptr<ThreadData> thread_data = get_thread_data();
 	thread_data->windows.push_back(window);

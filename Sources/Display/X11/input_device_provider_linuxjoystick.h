@@ -101,7 +101,7 @@ public:
 public:
 	/// \brief Initialize input device provider.
 	/** <p>The device field of InputEvent should not be set when emitting events.</p>*/
-	void init(Signal<const InputEvent &> *new_sig_provider_event)
+	void init(Signal<void(const InputEvent &)> *new_sig_provider_event)
 	{
 		sig_provider_event = new_sig_provider_event;
 	}
@@ -126,7 +126,7 @@ private:
 	void process_event(js_event event) const;
 	void update_states() const;
 
-	Signal<const InputEvent &> *sig_provider_event;
+	Signal<void(const InputEvent &)> *sig_provider_event;
 
 	X11Window *window;
 

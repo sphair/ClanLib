@@ -155,7 +155,7 @@ OpenGLWindowProvider::OpenGLWindowProvider(OpenGLWindowDescription &opengl_desc)
 		throw Exception("Cannot obtain required OpenGL GLX functions");
 	}
 
-	x11_window.func_on_resized().set(this, &OpenGLWindowProvider::on_window_resized);
+	x11_window.func_on_resized() = bind_member(this, &OpenGLWindowProvider::on_window_resized);
 }
 
 OpenGLWindowProvider::~OpenGLWindowProvider()
