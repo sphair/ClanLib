@@ -47,7 +47,7 @@ int Basic2D::start(const std::vector<std::string> &args)
 	clan::Canvas canvas(window);
 
 	// Connect the Window close event
-	sc.connect(window.sig_window_close(), clan::bind_member(this, &Basic2D::on_window_close));
+	sc.connect(window.sig_window_close(), [&](){quit = true; });
 
 	// Connect a keyboard handler to on_key_up()
 	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &Basic2D::on_input_up));
@@ -122,12 +122,6 @@ void Basic2D::on_input_up(const clan::InputEvent &key)
 	{
 		quit = true;
 	}
-}
-
-// The window was closed
-void Basic2D::on_window_close()
-{
-	quit = true;
 }
 
 
