@@ -372,7 +372,7 @@ void OpenGLWindowProvider::create_glx_1_3(DisplayWindowSite *new_site, const Dis
 		}
 		if (use_layered)
 		{
-			x11_window.func_on_clicked().set(this, &OpenGLWindowProvider::on_clicked);
+			x11_window.func_on_clicked() = bind_member(this, &OpenGLWindowProvider::on_clicked);
 		}
 	}
 #endif
