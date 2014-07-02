@@ -103,7 +103,7 @@ void CL_GL_RenderWindowProvider_AGL::set_default_frame_buffer()
 OpenGLWindowProvider::OpenGLWindowProvider()
 : cocoa_window(), opengl_context(0), swap_interval(-1), default_framebuffer_handle(0), default_colorbuffer_handle(0), default_depthbuffer_handle(0)
 {
-	cocoa_window.func_on_resized().set(this, &OpenGLWindowProvider::on_window_resized);
+	cocoa_window.func_on_resized() = bind_member(this, &OpenGLWindowProvider::on_window_resized);
 }
 
 OpenGLWindowProvider::~OpenGLWindowProvider()
