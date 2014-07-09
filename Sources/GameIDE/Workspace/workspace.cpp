@@ -220,6 +220,8 @@ bool Workspace::try_delete_key(std::string registry_path)
 	{
 		return false;
 	}
+#else
+	return false;
 #endif
 }
 

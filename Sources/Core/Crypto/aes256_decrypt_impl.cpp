@@ -154,7 +154,7 @@ bool AES256_Decrypt_Impl::calculate()
 				else
 				{
 					pad_byte += 1;	// Include the pad length
-					if ((current_size - pad_byte) < 0)
+					if (current_size < pad_byte)
 					{
 						return_code = false;	// Not enough data available
 					}

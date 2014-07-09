@@ -81,7 +81,7 @@ void AES128_Encrypt_Impl::set_padding(bool value, bool use_pkcs7, unsigned int n
 	padding_enabled = value;
 	padding_pkcs7 = use_pkcs7;
 	padding_num_additional_padded_blocks = num_additional_padded_blocks;
-	if ((padding_num_additional_padded_blocks < 0) || (padding_num_additional_padded_blocks > 15))
+	if (padding_num_additional_padded_blocks > 15)
 		throw Exception("Number of additional blocks in padding must be 0 to 15");
 }
 

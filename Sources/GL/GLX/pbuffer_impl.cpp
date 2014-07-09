@@ -123,7 +123,7 @@ void PBuffer_GL1_Impl::create(OpenGLWindowProvider &gl_window_provider, const Si
 
 	scrnum = DefaultScreen(disp );
 
-	if ((gl_window_provider.glx.glXCreateContext == NULL))
+	if (gl_window_provider.glx.glXCreateContext == NULL)
 	{
 		throw Exception("internal error, cannot locate glxCreateContext");
 	}
