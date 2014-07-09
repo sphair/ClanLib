@@ -61,10 +61,6 @@
 #endif
 #endif
 
-#ifdef __BORLANDC__
-#include <dir.h>
-#endif
-
 #include <sys/stat.h>
 #include <sys/types.h>
 

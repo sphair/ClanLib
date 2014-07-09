@@ -41,10 +41,6 @@
 #pragma warning( disable : 4786)
 #endif
 
-#ifdef __BORLANDC__
-#define BORLAND
-#endif
-
 #ifdef __cplusplus_cli
 #pragma managed(push, off)
 #endif

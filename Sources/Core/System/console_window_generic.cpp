@@ -94,16 +94,12 @@ void ConsoleWindow_Impl::wait_for_key()
 #ifdef WIN32
 	// If your application crashes here, you are linking with a single threaded
 	// libc in your application! -- mbn 13. Jan 2001.
-	#ifdef __BORLANDC__
-		std::string foo;
-		cin >> foo;
+	#ifdef _CRT_INSECURE_DEPRECATE
+		while (!_kbhit()) Sleep(250);
 	#else
-		#ifdef _CRT_INSECURE_DEPRECATE
-			while (!_kbhit()) Sleep(250);
-		#else
-			while (!kbhit()) Sleep(250);
-		#endif
+		while (!kbhit()) Sleep(250);
 	#endif
+
 #endif
 }
 
