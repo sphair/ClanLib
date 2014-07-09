@@ -30,7 +30,6 @@
 #pragma once
 
 #include <memory>
-#include "../api_display.h"
 #include "storage_buffer.h"
 
 namespace clan
@@ -41,7 +40,7 @@ namespace clan
 /// \brief Storage Buffer Vector
 ///
 template<typename Type>
-class CL_API_DISPLAY StorageVector : public StorageBuffer
+class StorageVector : public StorageBuffer
 {
 /// \name Construction
 /// \{

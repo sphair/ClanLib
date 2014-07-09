@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include <memory>
 
 namespace clan
@@ -38,7 +37,7 @@ namespace clan
 /// \{
 
 /// \brief Occlusion query provider.
-class CL_API_DISPLAY OcclusionQueryProvider
+class OcclusionQueryProvider
 {
 /// \name Construction
 /// \{

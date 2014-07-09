@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include <memory>
 
 namespace clan
@@ -43,7 +42,7 @@ class Texture2D;
 class Subtexture_Impl;
 
 /// \brief Sub-texture description.
-class CL_API_DISPLAY Subtexture
+class Subtexture
 {
 /// \name Construction
 /// \{

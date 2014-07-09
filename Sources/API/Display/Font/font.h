@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include <memory>
 #include "../Render/graphic_context.h"
 #include "../Image/pixel_buffer.h"
@@ -48,7 +47,7 @@ class Font_Impl;
 /// \brief Font class
 ///
 /// A Font is a collection of images that can be used to represent text on a screen.
-class CL_API_DISPLAY Font
+class Font
 {
 /// \name Construction
 /// \{

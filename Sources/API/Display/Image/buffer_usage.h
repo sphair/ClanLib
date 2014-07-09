@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 
 namespace clan
 {

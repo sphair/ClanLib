@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include <memory>
 #include "../../Core/Math/origin.h"
 #include "../../Core/Resources/resource.h"
@@ -57,7 +56,7 @@ class Canvas;
 class Quadf;
 
 /// \brief Image class.
-class CL_API_DISPLAY Image
+class Image
 {
 /// \name Construction
 /// \{

@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "../System/userdata.h"
 #include <string>
 #include <memory>
@@ -42,7 +41,7 @@ namespace clan
 class ResourceManager_Impl;
 
 /// \brief Resource manager.
-class CL_API_CORE ResourceManager
+class ResourceManager
 {
 /// \name Construction
 /// \{

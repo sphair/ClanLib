@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_swrender.h"
 #include "../Display/display_target.h"
 
 namespace clan
@@ -38,7 +37,7 @@ namespace clan
 /// \{
 
 /// \brief Display target for clanDisplay.
-class API_SWRender SWRenderTarget : public DisplayTarget
+class SWRenderTarget : public DisplayTarget
 {
 /// \name Construction
 /// \{

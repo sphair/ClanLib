@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "dom_node.h"
 
 namespace clan
@@ -49,7 +48,7 @@ namespace clan
 ///    Entity node representing the referenced entity; but if such an Entity exists, then the child list
 ///    of the EntityReference node is the same as that of the Entity node. As with the Entity node, all
 ///    descendants of the EntityReference are readonly.</p> 
-class CL_API_CORE DomEntityReference : public DomNode
+class DomEntityReference : public DomNode
 {
 /// \name Construction
 /// \{

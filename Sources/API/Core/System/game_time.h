@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "../System/cl_platform.h"
 #include <memory>
 
@@ -42,7 +41,7 @@ namespace clan
 class GameTime_Impl;
 
 /// \brief Tracks time elapsed in various forms useful for games
-class CL_API_CORE GameTime
+class GameTime
 {
 /// \name Construction
 /// \{

@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_physics2d.h"
 
 namespace clan
 {
@@ -41,7 +40,7 @@ namespace clan
 ///
 /// A physics object is a pure virtual class that should be a base for all the game object classes
 /// that want to work with collisions.
-class CL_API_PHYSICS PhysicsObject
+class PhysicsObject
 {
 
 /// \name Construction

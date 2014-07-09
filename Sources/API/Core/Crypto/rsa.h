@@ -47,7 +47,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 
 namespace clan
 {
@@ -61,7 +60,7 @@ class DataBuffer;
 /// \brief RSA class
 ///
 /// Important: This class has NOT been tested thoroughly by a cryptography expert.
-class CL_API_CORE RSA
+class RSA
 {
 /// \name Attributes
 /// \{

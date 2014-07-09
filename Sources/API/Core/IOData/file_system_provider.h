@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 #include "file.h"
 
@@ -43,7 +42,7 @@ class IODevice;
 class DirectoryListingEntry;
 
 /// \brief Virtual File System (VFS) file source.
-class CL_API_CORE FileSystemProvider
+class FileSystemProvider
 {
 /// \name Construction
 /// \{

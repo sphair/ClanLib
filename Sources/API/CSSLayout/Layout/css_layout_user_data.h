@@ -28,14 +28,13 @@
 
 #pragma once
 
-#include "../api_csslayout.h"
 
 namespace clan
 {
 /// \addtogroup clanCSSLayout_Layout clanCSSLayout Layout
 /// \{
 
-class CL_API_CSSLAYOUT CSSLayoutUserData
+class CSSLayoutUserData
 {
 public:
 	virtual ~CSSLayoutUserData() { }

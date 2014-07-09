@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_gl.h"
 #include <memory>
 #include "../Display/Render/graphic_context.h"
 
@@ -41,7 +40,7 @@ namespace clan
 class GraphicContext_GL_Impl;
 
 /// \brief GL Graphic Context
-class CL_API_GL GraphicContext_GL : public GraphicContext
+class GraphicContext_GL : public GraphicContext
 {
 //!Construction
 public:

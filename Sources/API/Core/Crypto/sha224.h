@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 
 namespace clan
@@ -42,7 +41,7 @@ class DataBuffer;
 class SHA256_Impl;
 
 /// \brief SHA-224 hash function class.
-class CL_API_CORE SHA224
+class SHA224
 {
 /// \name Construction
 /// \{

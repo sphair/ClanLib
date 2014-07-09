@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include "../../Core/Signals/signal.h"
 #include "../../Core/Math/point.h"
 #include <memory>
@@ -45,7 +44,7 @@ class InputDeviceProvider;
 class InputDevice_Impl;
 
 /// \brief InputDevice
-class CL_API_DISPLAY InputDevice
+class InputDevice
 {
 public:
 	/// \brief Input device types.

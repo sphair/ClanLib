@@ -30,7 +30,6 @@
 #pragma once
 
 #include "../../Core/IOData/file_system.h"
-#include "../api_sound.h"
 
 namespace clan
 {
@@ -42,7 +41,7 @@ class InputSourceProvider;
 class FileSystem;
 
 /// \brief Sound provider type
-class CL_API_SOUND SoundProviderType
+class SoundProviderType
 {
 /// \name Construction
 /// \{

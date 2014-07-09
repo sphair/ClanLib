@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "runnable.h"
 #include "exception.h"
 #include <memory>
@@ -42,7 +41,7 @@ namespace clan
 class Thread_Impl;
 
 /// \brief Thread class.
-class CL_API_CORE Thread
+class Thread
 {
 /// \name Construction
 /// \{

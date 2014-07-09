@@ -33,7 +33,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include <memory>
 #include "../../Core/Math/vec3.h"
 #include "../2D/color.h"

@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "api_gui.h"
 #include "gui_component.h"
 #include "../Core/Signals/signal.h"
 #include <vector>
@@ -50,7 +49,7 @@ class GUIWindowManagerProvider;
 class GUIWindowManager_Impl;
 
 /// \brief GUI window manager site.
-class CL_API_DISPLAY GUIWindowManagerSite
+class GUIWindowManagerSite
 {
 /// \name Attributes
 /// \{
@@ -80,7 +79,7 @@ public:
 };
 
 /// \brief GUI window manager interface.
-class CL_API_GUI GUIWindowManager
+class GUIWindowManager
 {
 /// \name Enumerations
 /// \{

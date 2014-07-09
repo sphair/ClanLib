@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_component.h"
 
 namespace clan
@@ -41,7 +40,7 @@ namespace clan
 class Slider_Impl;
 
 /// \brief Track bar component.
-class CL_API_GUI Slider : public GUIComponent
+class Slider : public GUIComponent
 {
 /// \name Construction
 /// \{

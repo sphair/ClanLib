@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_network.h"
 
 #include "connection_site.h"	// TODO: Remove
 #include "../../Core/System/event.h"
@@ -45,7 +44,7 @@ class NetGameConnection;
 class NetGameClient_Impl;
 
 /// \brief NetGameClient
-class CL_API_NETWORK NetGameClient : NetGameConnectionSite
+class NetGameClient : NetGameConnectionSite
 {
 public:
 	NetGameClient();

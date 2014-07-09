@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <vector>
 
 namespace clan
@@ -38,7 +37,7 @@ namespace clan
 /// \{
 
 /// \brief String formatting class.
-class CL_API_CORE StringFormat
+class StringFormat
 {
 /// \name Construction
 /// \{

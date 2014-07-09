@@ -30,7 +30,6 @@
 #pragma once
 
 #include <vector>
-#include "../api_network.h"
 #include <string>
 #include "event.h"
 #include "../Socket/tcp_connection.h" // TODO: Remove
@@ -47,7 +46,7 @@ class NetGameConnectionSite;
 class NetGameConnection_Impl;
 
 /// \brief NetGameConnection
-class CL_API_NETWORK NetGameConnection
+class NetGameConnection
 {
 public:
 

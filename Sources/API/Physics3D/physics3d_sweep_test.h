@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_physics3d.h"
 #include "../Core/Math/vec3.h"
 #include "../Core/Math/quaternion.h"
 #include <memory>
@@ -44,7 +43,7 @@ class Physics3DShape;
 class Physics3DObject;
 class Physics3DSweepTest_Impl;
 
-class CL_API_PHYSICS3D Physics3DSweepTest
+class Physics3DSweepTest
 {
 public:
 	Physics3DSweepTest();

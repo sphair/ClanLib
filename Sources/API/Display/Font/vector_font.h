@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include "font.h"
 
 namespace clan
@@ -44,7 +43,7 @@ class FileSystem;
 class VectorFont_Impl;
 
 /// \brief Vector font drawing class.
-class CL_API_DISPLAY VectorFont
+class VectorFont
 {
 /// \name Construction
 /// \{

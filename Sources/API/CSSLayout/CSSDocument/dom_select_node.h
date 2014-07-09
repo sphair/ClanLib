@@ -35,7 +35,7 @@ namespace clan
 /// \addtogroup clanCSSLayout_Document clanCSSLayout Document
 /// \{
 
-class CL_API_CSSLAYOUT DomSelectNode : public CSSSelectNode
+class DomSelectNode : public CSSSelectNode
 {
 public:
 	DomSelectNode(const DomElement &element);

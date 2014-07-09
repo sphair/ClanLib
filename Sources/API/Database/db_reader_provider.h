@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_database.h"
 
 namespace clan
 {
@@ -40,7 +39,7 @@ class DateTime;
 class DataBuffer;
 
 /// \brief Database reader provider.
-class CL_API_DATABASE DBReaderProvider
+class DBReaderProvider
 {
 /// \name Construction
 /// \{

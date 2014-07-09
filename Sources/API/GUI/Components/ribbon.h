@@ -41,7 +41,7 @@ class PushButton;
 class Ribbon_Impl;
 
 /// \brief Ribbon component.
-class CL_API_GUI Ribbon : public GUIComponent
+class Ribbon : public GUIComponent
 {
 /// \name Construction
 /// \{

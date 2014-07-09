@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_component.h"
 
 namespace clan
@@ -42,7 +41,7 @@ class Sprite;
 class Frame_Impl;
 
 /// \brief Frame component.
-class CL_API_GUI Frame : public GUIComponent
+class Frame : public GUIComponent
 {
 /// \name Construction
 /// \{

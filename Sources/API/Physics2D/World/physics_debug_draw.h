@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_physics2d.h"
 #include <memory>
 
 namespace clan
@@ -62,7 +61,7 @@ enum DebugFlags
 };
    
 /// \brief PhysicsDebugDraw class.
-class CL_API_PHYSICS PhysicsDebugDraw
+class PhysicsDebugDraw
 {
 /// \name Construction
 /// \{

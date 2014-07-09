@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_component.h"
 #include "../../Display/Render/graphic_context.h"
 
@@ -44,7 +43,7 @@ class Image;
 class PushButton_Impl;
 
 /// \brief Push button component.
-class CL_API_GUI PushButton : public GUIComponent
+class PushButton : public GUIComponent
 {
 /// \name Construction
 /// \{

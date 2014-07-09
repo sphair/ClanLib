@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include "../../Core/Signals/signal.h"
 #include "../display_target.h"
 #include <memory>
@@ -77,7 +76,7 @@ enum StandardCursor
 };
 
 /// \brief Top-level window class.
-class CL_API_DISPLAY DisplayWindow
+class DisplayWindow
 {
 /// \name Construction
 /// \{

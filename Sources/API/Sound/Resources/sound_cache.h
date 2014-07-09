@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_sound.h"
 #include "../../Core/Resources/resource.h"
 #include <memory>
 
@@ -42,7 +41,7 @@ namespace clan
 class ResourceManager;
 class SoundBuffer;
 
-class CL_API_SOUND SoundCache
+class SoundCache
 {
 public:
 	virtual ~SoundCache() { }

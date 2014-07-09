@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include <memory>
 #include <functional>
 
@@ -46,7 +45,7 @@ class PixelBuffer;
 /// \brief Image Import Description Class.
 ///
 /// This class allows you to setup a more advanced description when importing images.
-class CL_API_DISPLAY ImageImportDescription
+class ImageImportDescription
 {
 /// \name Construction
 /// \{

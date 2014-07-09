@@ -43,7 +43,6 @@ enum ListViewDisplayMode
 };
 }
 
-#include "../api_gui.h"
 #include "../gui_component.h"
 #include "listview_item.h"
 #include "listview_selected_item.h"
@@ -61,7 +60,7 @@ class ListViewIconList;
 class InputEvent;
 
 /// \brief List view component.
-class CL_API_GUI ListView : public GUIComponent
+class ListView : public GUIComponent
 {
 /// \name Construction
 /// \{

@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_csslayout.h"
 #include "css_layout_node.h"
 #include "../../Core/Math/rect.h"
 
@@ -37,7 +36,7 @@ namespace clan
 /// \addtogroup clanCSSLayout_Layout clanCSSLayout Layout
 /// \{
 
-class CL_API_CSSLAYOUT CSSLayoutText : public CSSLayoutNode
+class CSSLayoutText : public CSSLayoutNode
 {
 public:
 	CSSLayoutText();

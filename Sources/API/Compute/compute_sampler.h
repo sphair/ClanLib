@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_compute.h"
 #include <memory>
 
 namespace clan
@@ -56,7 +55,7 @@ class ComputeContext;
 class ComputeSampler_Impl;
 
 /// \brief Compute sampler object
-class CL_API_COMPUTE ComputeSampler
+class ComputeSampler
 {
 /// \name Construction
 /// \{

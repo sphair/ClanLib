@@ -37,7 +37,7 @@ namespace clan
 /// \{
 
 /// \brief Storage Buffer provider.
-class CL_API_DISPLAY StorageBufferProvider
+class StorageBufferProvider
 {
 /// \name Construction
 /// \{

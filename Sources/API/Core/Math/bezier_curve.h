@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 #include <vector>
 
@@ -44,7 +43,7 @@ class Pointf;
 class Angle;
 
 /// \brief Bezier curve generator.
-class CL_API_CORE BezierCurve
+class BezierCurve
 {
 /// \name Construction
 /// \{

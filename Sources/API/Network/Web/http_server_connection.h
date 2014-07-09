@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_network.h"
 #include <memory>
 #include "../../Core/IOData/iodevice.h"
 
@@ -42,7 +41,7 @@ class DataBuffer;
 class HTTPServerConnection_Impl;
 
 /// \brief HTTP server connection.
-class CL_API_NETWORK HTTPServerConnection : public IODevice
+class HTTPServerConnection : public IODevice
 {
 /// \name Construction
 /// \{

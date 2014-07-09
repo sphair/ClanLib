@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_component.h"
 
 namespace clan
@@ -43,7 +42,7 @@ class ToolBarItem;
 class ToolBar_Impl;
 
 /// \brief Tool bar component.
-class CL_API_GUI ToolBar : public GUIComponent
+class ToolBar : public GUIComponent
 {
 /// \name Construction
 /// \{

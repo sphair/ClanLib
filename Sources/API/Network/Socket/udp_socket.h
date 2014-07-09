@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_network.h"
 #include <memory>
 
 namespace clan
@@ -42,7 +41,7 @@ class SocketName;
 class UDPSocket_Impl;
 
 /// \brief UDP socket.
-class CL_API_NETWORK UDPSocket
+class UDPSocket
 {
 /// \name Construction
 /// \{

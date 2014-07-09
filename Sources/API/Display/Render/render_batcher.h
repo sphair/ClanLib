@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include "../../Core/Math/mat4.h"
 
 namespace clan
@@ -41,7 +40,7 @@ class GraphicContext;
 class Canvas;
 
 /// \brief Render batching abstraction
-class CL_API_DISPLAY RenderBatcher
+class RenderBatcher
 {
 /// \name Operations
 /// \{

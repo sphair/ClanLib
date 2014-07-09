@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_sound.h"
 #include <memory>
 #include <vector>
 
@@ -43,7 +42,7 @@ class CDDrive_Impl;
 /// \brief CD drive audio interface.
 ///
 /// Use this class to control the CDROM drive in your computer.
-class CL_API_SOUND CDDrive
+class CDDrive
 {
 /// \name Construction
 /// \{

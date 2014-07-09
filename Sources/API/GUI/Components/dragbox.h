@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_component.h"
 #include "../../Display/Render/graphic_context.h"
 
@@ -41,7 +40,7 @@ namespace clan
 class DragBox_Impl;
 
 /// \brief Drag box component.
-class CL_API_GUI DragBox : public GUIComponent
+class DragBox : public GUIComponent
 {
 /// \name Construction
 /// \{

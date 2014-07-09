@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include <memory>
 
 namespace clan
@@ -46,7 +45,7 @@ class TextureGroup_Impl;
 class GraphicContext;
 
 /// \brief Texture grouping class.
-class CL_API_DISPLAY TextureGroup
+class TextureGroup
 {
 /// \name Enumerations
 /// \{

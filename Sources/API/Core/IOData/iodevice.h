@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "../System/cl_platform.h"
 #include <memory>
 #include <string>
@@ -48,7 +47,7 @@ class IODevice_Impl;
 /// This class can store basic datatypes and retain portability (using the specified endian mode)\n
 ///    The supported datatypes are: byte64, byte32, byte16 and byte8\n
 ///    The std::string datatype is supported - Using Size(byte32), Charactor Data (std::string characters) 
-class CL_API_CORE IODevice
+class IODevice
 {
 /// \name Enumerations
 /// \{

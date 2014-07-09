@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 
 namespace clan
 {

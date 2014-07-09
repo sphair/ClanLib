@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_display.h"
 #include <memory>
 #include <vector>
 
@@ -42,7 +41,7 @@ class ScreenInfo_Impl;
 class Rect;
 
 /// \brief Screen Information class.
-class CL_API_DISPLAY ScreenInfo
+class ScreenInfo
 {
 /// \name Construction
 /// \{

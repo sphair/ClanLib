@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 
 namespace clan
 {
@@ -37,7 +36,7 @@ namespace clan
 /// \{
 
 /// \brief Directory utility class
-class CL_API_CORE Directory
+class Directory
 {
 /// \name Operations
 /// \{

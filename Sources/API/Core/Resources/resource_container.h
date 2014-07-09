@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "resource_object.h"
 #include <memory>
 #include <map>

@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 #include "../System/cl_platform.h"
 
@@ -41,7 +40,7 @@ namespace clan
 class ZipFileEntry_Impl;
 
 /// \brief File entry in zip file.
-class CL_API_CORE ZipFileEntry
+class ZipFileEntry
 {
 /// \name Construction
 /// \{

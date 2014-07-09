@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <vector>
 
 #ifdef __cplusplus_cli
@@ -43,7 +42,7 @@ namespace clan
 /// \{
 
 /// \brief String helper functions.
-class CL_API_CORE StringHelp
+class StringHelp
 {
 /// \name Operations
 /// \{

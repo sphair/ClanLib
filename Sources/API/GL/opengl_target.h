@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "api_gl.h"
 #include "../Display/display_target.h"
 #include <memory>
 
@@ -44,7 +43,7 @@ class OpenGLTarget_Impl;
 class OpenGLWindowDescription;
 
 /// \brief Display target for clanDisplay.
-class CL_API_GL OpenGLTarget : public DisplayTarget
+class OpenGLTarget : public DisplayTarget
 {
 /// \name Construction
 /// \{

@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include <memory>
 #include "pixel_buffer.h"
 
@@ -41,7 +40,7 @@ namespace clan
 class PerlinNoise_Impl;
 
 /// \brief Perlin Noise Generator class
-class CL_API_DISPLAY PerlinNoise
+class PerlinNoise
 {
 
 /// \name Construction

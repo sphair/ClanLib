@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_physics2d.h"
 #include "../../Core/Signals/signal.h"
 #include <memory>
 
@@ -48,7 +47,7 @@ class PhysicsQueryAssistant;
 ///
 /// The world class manages all physics entities, dynamic simulation, and asynchronous queries.
 /// The world also contains efficient memory management facilities. 
-class CL_API_PHYSICS PhysicsWorld
+class PhysicsWorld
 {
 /// \name Construction
 /// \{

@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 
 namespace clan
@@ -42,7 +41,7 @@ class DataBuffer;
 class MD5_Impl;
 
 /// \brief MD5 hash function class.
-class CL_API_CORE MD5
+class MD5
 {
 /// \name Construction
 /// \{

@@ -29,7 +29,6 @@
 #pragma once
 
 
-#include "../api_core.h"
 #include <memory>
 
 namespace clan
@@ -40,7 +39,7 @@ namespace clan
 class UTF8_Reader_Impl;
 
 /// \brief UTF8 reader helper functions.
-class CL_API_CORE UTF8_Reader
+class UTF8_Reader
 {
 public:
 /// \name Construction

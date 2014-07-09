@@ -40,7 +40,7 @@ namespace clan
 /// \{
 
 /// \brief ASN1 class.
-class CL_API_CORE ASN1
+class ASN1
 {
 /// \name Construction
 /// \{

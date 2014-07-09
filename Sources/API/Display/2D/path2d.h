@@ -30,7 +30,6 @@
 #pragma once
 
 
-#include "../api_display.h"
 #include <vector>
 #include "../../Core/Math/point.h"
 #include "../../Core/Math/ear_clip_triangulator.h"
@@ -43,7 +42,7 @@ namespace clan
 class BezierCurve;
 class Path2D_Impl;
 
-class CL_API_DISPLAY Path2D
+class Path2D
 {
 /// \name Construction
 /// \{

@@ -27,8 +27,6 @@
 */
 
 #pragma once
-
-#include "../../api_physics2d.h"
 #include "../../../Core/Math/vec2.h"
 #include "../../Collision/Shapes/shape.h"
 
@@ -45,7 +43,7 @@ class EdgeShape_Impl;
 ///
 /// A line segment (edge) shape. These can be connected in chains or loops to other edge shapes.
 /// The connectivity information is used to ensure correct contact normals. 
-class CL_API_PHYSICS EdgeShape : public Shape
+class EdgeShape : public Shape
 {
 /// \name Construction
 /// \{

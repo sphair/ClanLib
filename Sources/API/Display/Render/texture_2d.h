@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include "texture.h"
 
 namespace clan
@@ -39,7 +38,7 @@ namespace clan
 /// \{
 
 /// \brief 2D texture object class.
-class CL_API_DISPLAY Texture2D : public Texture
+class Texture2D : public Texture
 {
 /// \name Construction
 /// \{

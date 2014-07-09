@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../../api_physics2d.h"
 #include "../../../Core/Math/vec2.h"
 #include <memory>
 
@@ -44,7 +43,7 @@ namespace clan
 	class RevoluteJointDescription_Impl;
 
 /// \brief RevoluteJointDescription class.
-class CL_API_PHYSICS RevoluteJointDescription
+class RevoluteJointDescription
 {
 
 /// \name Construction

@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "iodevice.h"
 #include "../System/databuffer.h"
 
@@ -39,7 +38,7 @@ namespace clan
 /// \{
 
 /// \brief File I/O device.
-class CL_API_CORE File : public IODevice
+class File : public IODevice
 {
 /// \name Static helper functions
 /// \{

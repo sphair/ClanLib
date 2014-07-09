@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_network.h"
 #include <memory>
 #include <vector>
 
@@ -43,7 +42,7 @@ class DNSPacket;
 class DNSResolver_Impl;
 
 /// \brief DNS resolver.
-class CL_API_NETWORK DNSResolver
+class DNSResolver
 {
 /// \name Construction
 /// \{

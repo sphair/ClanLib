@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 
 namespace clan
 {
@@ -40,7 +39,7 @@ namespace clan
 class ListViewColumnData_Impl;
 
 /// \brief ListView column data.
-class CL_API_GUI ListViewColumnData
+class ListViewColumnData
 {
 /// \name Construction
 /// \{

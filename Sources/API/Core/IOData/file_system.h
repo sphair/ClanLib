@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 #include "file.h"
 
@@ -45,7 +44,7 @@ class FileSystemProvider;
 class DirectoryListing;
 
 /// \brief Virtual File System (VFS).
-class CL_API_CORE FileSystem
+class FileSystem
 {
 /// \name Construction
 /// \{

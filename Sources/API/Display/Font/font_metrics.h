@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include <memory>
 
 namespace clan
@@ -44,7 +43,7 @@ class FontMetrics_Impl;
 /// \brief Font metrics class.
 ///
 /// <img src="../../img/FontMetrics.png">
-class CL_API_DISPLAY FontMetrics
+class FontMetrics
 {
 /// \name Construction
 /// \{

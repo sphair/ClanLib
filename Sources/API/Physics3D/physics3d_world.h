@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_physics3d.h"
 #include "../Core/Math/vec3.h"
 #include <memory>
 
@@ -40,7 +39,7 @@ namespace clan
 
 class Physics3DWorld_Impl;
 
-class CL_API_PHYSICS3D Physics3DWorld
+class Physics3DWorld
 {
 public:
 	Physics3DWorld();

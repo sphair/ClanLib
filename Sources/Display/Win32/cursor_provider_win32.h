@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "API/Display/api_display.h"
 #include "API/Display/TargetProviders/cursor_provider.h"
 #include "API/Core/System/databuffer.h"
 #include <vector>
@@ -42,7 +41,7 @@ class Rect;
 class DataBuffer;
 class CursorDescription;
 
-class CL_API_DISPLAY CursorProvider_Win32 : public CursorProvider
+class CursorProvider_Win32 : public CursorProvider
 {
 /// \name Construction
 /// \{

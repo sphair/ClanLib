@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "api_swrender.h"
 #include "../Core/Math/vec2.h"
 #include "../Core/Math/vec4.h"
 #include "../Core/Math/mat4.h"

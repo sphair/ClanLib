@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_physics3d.h"
 #include "../Core/Math/vec3.h"
 #include "../Core/Math/quaternion.h"
 #include "../Core/System/userdata.h"
@@ -45,7 +44,7 @@ class Physics3DShape;
 class Physics3DConstraint;
 class Physics3DObject_Impl;
 /*
-class CL_API_PHYSICS3D Physics3DRigidBodyDescription
+class Physics3DRigidBodyDescription
 {
 public:
 	Physics3DShape shape;
@@ -67,7 +66,7 @@ public:
 	float additional_angular_damping_factor;
 };
 */
-class CL_API_PHYSICS3D Physics3DObject
+class Physics3DObject
 {
 public:
 	static Physics3DObject collision_body(Physics3DWorld &world, const Physics3DShape &shape, const Vec3f &position = Vec3f(0.0f), const Quaternionf &orientation = Quaternionf());

@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_network.h"
 #include <memory>
 
 namespace clan
@@ -42,7 +41,7 @@ class DNSResourceRecord;
 class DNSPacket_Impl;
 
 /// \brief DNS packet.
-class CL_API_NETWORK DNSPacket
+class DNSPacket
 {
 /// \name Construction
 /// \{

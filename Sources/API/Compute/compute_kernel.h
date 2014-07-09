@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_compute.h"
 #include <memory>
 #include "../Core/Math/vec4.h"
 
@@ -44,7 +43,7 @@ class ComputeSampler;
 class ComputeKernel_Impl;
 
 /// \brief Compute program kernel object
-class CL_API_COMPUTE ComputeKernel
+class ComputeKernel
 {
 /// \name Construction
 /// \{

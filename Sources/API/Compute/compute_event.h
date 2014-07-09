@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_compute.h"
 #include <memory>
 
 namespace clan
@@ -40,7 +39,7 @@ namespace clan
 class ComputeEvent_Impl;
 
 /// \brief Compute event object
-class CL_API_COMPUTE ComputeEvent
+class ComputeEvent
 {
 /// \name Construction
 /// \{

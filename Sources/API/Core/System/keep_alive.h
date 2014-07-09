@@ -29,7 +29,6 @@
 #pragma once
 
 
-#include "../api_core.h"
 #include <memory>
 #include <functional>
 
@@ -41,7 +40,7 @@ class KeepAliveObject;
 class KeepAliveObject_Impl;
 
 /// \brief KeepAlive application loop helper
-class CL_API_CORE KeepAlive
+class KeepAlive
 {
 public:
 	/// \brief Processes and dispatches keep alive events until the specified timeout period has passed
@@ -75,7 +74,7 @@ public:
 };
 
 /// \brief Interface for objects participating in the thread keep-alive processing loop
-class CL_API_CORE KeepAliveObject
+class KeepAliveObject
 {
 public:
 	/// \brief Registers a keep alive object

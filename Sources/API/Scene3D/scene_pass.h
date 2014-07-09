@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_scene3d.h"
 #include <memory>
 #include <string>
 
@@ -42,7 +41,7 @@ class GraphicContext;
 class Scene;
 class ScenePass_Impl;
 
-class CL_API_SCENE ScenePass
+class ScenePass
 {
 public:
 	ScenePass();

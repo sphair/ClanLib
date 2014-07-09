@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include "../Render/frame_buffer.h"
 #include <vector>
 
@@ -43,7 +42,7 @@ class RenderBuffer;
 class Texture2D;
 
 /// \brief Interface for implementing a FrameBuffer target.
-class CL_API_DISPLAY FrameBufferProvider
+class FrameBufferProvider
 {
 /// \name Construction
 /// \{

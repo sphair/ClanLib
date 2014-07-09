@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "dom_node.h"
 
 namespace clan
@@ -43,7 +42,7 @@ namespace clan
 ///    XML document. Note that this models the entity itself not the entity
 ///    declaration. Entity declaration modeling has been left for a later Level
 ///    of the DOM specification.</p>
-class CL_API_CORE DomEntity : public DomNode
+class DomEntity : public DomNode
 {
 /// \name Construction
 /// \{

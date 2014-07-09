@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_window_manager.h"
 
 namespace clan
@@ -47,7 +46,7 @@ class DisplayWindow;
 class GUITopLevelWindow;
 
 /// \brief GUI window manager interface.
-class CL_API_GUI GUIWindowManagerProvider
+class GUIWindowManagerProvider
 {
 /// \name Construction
 /// \{

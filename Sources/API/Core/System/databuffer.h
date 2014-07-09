@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 
 namespace clan
@@ -40,7 +39,7 @@ namespace clan
 class DataBuffer_Impl;
 
 /// \brief General purpose data buffer.
-class CL_API_CORE DataBuffer
+class DataBuffer
 {
 /// \name Construction
 /// \{

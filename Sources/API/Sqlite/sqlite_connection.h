@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_sqlite.h"
 #include "../Database/db_connection.h"
 
 namespace clan
@@ -38,7 +37,7 @@ namespace clan
 /// \{
 
 /// \brief Sqlite database connection.
-class CL_API_SQLITE SqliteConnection : public DBConnection
+class SqliteConnection : public DBConnection
 {
 /// \name Construction
 /// \{

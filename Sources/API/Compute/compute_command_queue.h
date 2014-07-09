@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_compute.h"
 #include <memory>
 #include "../Display/Image/buffer_usage.h"
 #include "compute_event.h"
@@ -47,7 +46,7 @@ class ComputeMemoryMap;
 class ComputeCommandQueue_Impl;
 
 /// \brief Compute command queue
-class CL_API_COMPUTE ComputeCommandQueue
+class ComputeCommandQueue
 {
 /// \name Construction
 /// \{

@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "dom_character_data.h"
 
 namespace clan
@@ -52,7 +51,7 @@ namespace clan
 ///    method on Element merges any such adjacent Text objects into a single node for each
 ///    block of text; this is recommended before employing operations that depend on a
 ///    particular document structure, such as navigation with XPointers.</p>
-class CL_API_CORE DomText : public DomCharacterData
+class DomText : public DomCharacterData
 {
 /// \name Construction
 /// \{

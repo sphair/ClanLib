@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include <memory>
 #include "../../Core/Math/rect.h"
 #include "texture_format.h"
@@ -66,7 +65,7 @@ enum PixelBufferDirection
 };
 
 /// \brief Pixel data container.
-class CL_API_DISPLAY PixelBuffer
+class PixelBuffer
 {
 /// \name Construction
 /// \{

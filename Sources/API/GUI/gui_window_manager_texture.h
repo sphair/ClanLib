@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "api_gui.h"
 #include "gui_window_manager.h"
 
 namespace clan
@@ -47,7 +46,7 @@ class GUIWindowManagerProvider_Texture;
 class GUIWindowManagerTextureWindow;
 
 /// \brief Texture window manager.
-class CL_API_GUI GUIWindowManagerTexture : public GUIWindowManager
+class GUIWindowManagerTexture : public GUIWindowManager
 {
 /// \name Construction
 /// \{

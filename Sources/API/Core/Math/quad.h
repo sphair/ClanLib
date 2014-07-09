@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "rect.h"
 #include "size.h"
 #include "point.h"
@@ -46,7 +45,7 @@ namespace clan
 /// These quads templates are defined for: int (Quad), float (Quadf), double (Quadd)
 ///
 template<typename Type>
-class CL_API_CORE Quadx
+class Quadx
 {
 /// \name Construction
 /// \{

@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "../System/cl_platform.h"
 #include <vector>
 
@@ -43,7 +42,7 @@ namespace clan
 class Mutex;
 
 /// \brief General system helper functions.
-class CL_API_CORE System
+class System
 {
 /// \name Attributes
 /// \{

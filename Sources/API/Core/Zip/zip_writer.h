@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 #include "../System/cl_platform.h"
 #include <vector>
@@ -43,7 +42,7 @@ class IODevice;
 class ZipWriter_Impl;
 
 /// \brief Zip file writer.
-class CL_API_CORE ZipWriter
+class ZipWriter
 {
 /// \name Construction
 /// \{

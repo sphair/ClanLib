@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include "graphic_context.h"
 
 namespace clan
@@ -40,7 +39,7 @@ namespace clan
 class RasterizerStateDescription_Impl;
 
 /// \brief Rasterizer state description.
-class CL_API_DISPLAY RasterizerStateDescription
+class RasterizerStateDescription
 {
 /// \name Construction
 /// \{

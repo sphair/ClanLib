@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 
 namespace clan
@@ -57,7 +56,7 @@ public:
 class ThreadLocalStorage_Impl;
 
 /// \brief Thread class.
-class CL_API_CORE ThreadLocalStorage
+class ThreadLocalStorage
 {
 /// \name Construction
 /// \{

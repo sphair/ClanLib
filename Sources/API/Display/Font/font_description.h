@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include <memory>
 
 namespace clan
@@ -44,7 +43,7 @@ class FontDescription_Impl;
 /// \brief Font description class.
 ///
 ///  This class allows you to setup a more advanced description when creating a font.
-class CL_API_DISPLAY FontDescription
+class FontDescription
 {
 /// \name Construction
 /// \{

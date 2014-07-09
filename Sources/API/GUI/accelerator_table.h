@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_gui.h"
 #include <memory>
 #include "../GUI/gui_message.h"
 #include <vector>
@@ -44,7 +43,7 @@ class AcceleratorKey_Impl;
 class AcceleratorKey;
 
 /// \brief GUI Accelerator Table.
-class CL_API_GUI AcceleratorTable
+class AcceleratorTable
 {
 /// \name Construction
 /// \{

@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <string>
 #include <memory>
 #include <functional>
@@ -43,7 +42,7 @@ class ResourceManager;
 class XMLResourceDocument;
 
 /// \brief Resource manager loading from XMLResourceDocument
-class CL_API_CORE XMLResourceManager
+class XMLResourceManager
 {
 public:
 	/// \brief Creates a resource manager

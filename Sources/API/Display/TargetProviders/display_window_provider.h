@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include "../../Core/Signals/signal.h"
 #include "../Window/display_window.h"
 #include <memory>
@@ -53,7 +52,7 @@ class CursorProvider;
 class CursorDescription;
 
 /// \brief Display Window site.
-class CL_API_DISPLAY DisplayWindowSite
+class DisplayWindowSite
 {
 /// \name Attributes
 /// \{
@@ -102,7 +101,7 @@ public:
 };
 
 /// \brief Interface for implementing a DisplayWindow target.
-class CL_API_DISPLAY DisplayWindowProvider
+class DisplayWindowProvider
 {
 /// \name Construction
 /// \{

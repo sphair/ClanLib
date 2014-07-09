@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_sound.h"
 
 namespace clan
 {
@@ -37,7 +36,7 @@ namespace clan
 /// \{
 
 /// \brief ClanSound initialization functions.
-class CL_API_SOUND SetupSound
+class SetupSound
 {
 /// \name Construction
 /// \{

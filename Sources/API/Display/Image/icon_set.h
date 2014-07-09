@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include <memory>
 
 namespace clan
@@ -42,7 +41,7 @@ class PixelBuffer;
 class IconSet_Impl;
 
 /// \brief Icon set class.
-class CL_API_DISPLAY IconSet
+class IconSet
 {
 /// \name Construction
 /// \{

@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_physics3d.h"
 #include "../Core/Math/vec3.h"
 #include "../Core/Math/mat4.h"
 #include <string>
@@ -45,7 +44,7 @@ class TerrainData;
 class Physics3DWorld;
 class Physics3DShape_Impl;
 
-class CL_API_PHYSICS3D Physics3DShape
+class Physics3DShape
 {
 public:
 	Physics3DShape();

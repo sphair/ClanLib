@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 
 namespace clan
 {
@@ -47,7 +46,7 @@ public:
 };
 
 /// \brief ListView item.
-class CL_API_GUI ListViewItem
+class ListViewItem
 {
 /// \name Construction
 /// \{

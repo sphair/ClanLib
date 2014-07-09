@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 
 namespace clan
@@ -42,7 +41,7 @@ class XMLToken;
 class XMLWriter_Impl;
 
 /// \brief The XML Writer writes a XML file based on XML tokens.
-class CL_API_CORE XMLWriter
+class XMLWriter
 {
 /// \name Construction
 /// \{

@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include <memory>
 #include "graphic_context.h"
 
@@ -43,7 +42,7 @@ class GraphicContext;
 class OcclusionQueryProvider;
 
 /// \brief Graphics occlusion query class.
-class CL_API_DISPLAY OcclusionQuery
+class OcclusionQuery
 {
 /// \name Construction
 /// \{

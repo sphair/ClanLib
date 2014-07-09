@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_compute.h"
 #include <memory>
 
 namespace clan
@@ -41,7 +40,7 @@ class GraphicContext;
 class ComputeContext_Impl;
 
 /// \brief Interface to compute operations.
-class CL_API_COMPUTE ComputeContext
+class ComputeContext
 {
 /// \name Construction
 /// \{

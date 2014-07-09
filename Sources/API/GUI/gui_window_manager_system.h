@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "api_gui.h"
 #include "gui_window_manager.h"
 
 namespace clan
@@ -43,7 +42,7 @@ class GUIWindowManagerSystem_Impl;
 class GUIWindowManagerProvider_System;
 
 /// \brief System (OS) window manager.
-class CL_API_GUI GUIWindowManagerSystem : public GUIWindowManager
+class GUIWindowManagerSystem : public GUIWindowManager
 {
 /// \name Construction
 /// \{

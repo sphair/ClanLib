@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_network.h"
 #include "event_value.h"
 
 namespace clan
@@ -38,7 +37,7 @@ namespace clan
 /// \{
 
 /// \brief NetGameEvent
-class CL_API_NETWORK NetGameEvent
+class NetGameEvent
 {
 public:
 	/// Constructs a NetGameEvent

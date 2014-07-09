@@ -30,7 +30,6 @@
 #pragma once
 
 #include <memory>
-#include "../api_display.h"
 #include "uniform_buffer.h"
 
 namespace clan
@@ -41,7 +40,7 @@ namespace clan
 /// \brief Uniform Buffer Vector
 ///
 template<typename Type>
-class CL_API_DISPLAY UniformVector : public UniformBuffer
+class UniformVector : public UniformBuffer
 {
 /// \name Construction
 /// \{

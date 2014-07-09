@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <vector>
 #include <utility>
 
@@ -39,7 +38,7 @@ namespace clan
 /// \{
 
 /// \brief XML token in a XML file.
-class CL_API_CORE XMLToken
+class XMLToken
 {
 /// \name Construction
 /// \{

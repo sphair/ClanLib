@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_sound.h"
 #include <memory>
 #include "../soundformat.h"
 
@@ -43,7 +42,7 @@ class SoundProvider_Session_Impl;
 /// \brief Sound provider playback session.
 ///
 ///  <p>Interface used by ClanLib during playback of sound providers.</p>
-class CL_API_SOUND SoundProvider_Session
+class SoundProvider_Session
 {
 /// \name Construction
 /// \{

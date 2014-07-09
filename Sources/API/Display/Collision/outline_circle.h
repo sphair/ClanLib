@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include "../../Core/Math/point.h"
 
 namespace clan

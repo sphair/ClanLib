@@ -28,13 +28,12 @@
 
 #pragma once
 
-#include "API/Display/api_display.h"
 
 namespace clan
 {
 
 /// \brief Input events interface.
-class CL_API_DISPLAY FontMetrics_Impl
+class FontMetrics_Impl
 {
 /// \name Construction
 /// \{

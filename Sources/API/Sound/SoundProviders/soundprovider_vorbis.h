@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_sound.h"
 #include "soundprovider.h"
 #include "../../Core/IOData/file_system.h"
 
@@ -42,7 +41,7 @@ class InputSourceProvider;
 class SoundProvider_Vorbis_Impl;
 
 /// \brief Ogg Vorbis format sound provider.
-class CL_API_SOUND SoundProvider_Vorbis : public SoundProvider
+class SoundProvider_Vorbis : public SoundProvider
 {
 /// \name Construction
 /// \{

@@ -29,14 +29,13 @@
 
 #pragma once
 
-#include "../api_network.h"
 #include "event.h"
 
 namespace clan
 {
 
 template<class... Params>
-class CL_API_NETWORK NetGameEventDispatcher
+class NetGameEventDispatcher
 {
 public:
 	typedef std::function< void (const NetGameEvent &, Params... ) > CallbackClass;

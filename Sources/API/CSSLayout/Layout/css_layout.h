@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_csslayout.h"
 #include <memory>
 
 namespace clan
@@ -51,7 +50,7 @@ class Image;
 class Rect;
 class Canvas;
 
-class CL_API_CSSLAYOUT CSSLayout
+class CSSLayout
 {
 public:
 	CSSLayout();

@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_swrender.h"
 
 namespace clan
 {
@@ -37,7 +36,7 @@ namespace clan
 /// \{
 
 /// \brief ClanSWRender initialization functions.
-class API_SWRender SetupSWRender
+class SetupSWRender
 {
 /// \name Construction
 /// \{

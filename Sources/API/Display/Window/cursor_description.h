@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include "../Render/graphic_context.h"
 #include "../Render/texture_2d.h"
 #include "../Image/pixel_buffer.h"
@@ -68,7 +67,7 @@ public:
 ///    creating a cursor, individual frames can come from different image
 ///    sources, or be cut out from an image source using various different
 ///    techniques.</p>
-class CL_API_DISPLAY CursorDescription
+class CursorDescription
 {
 /// \name Construction
 /// \{

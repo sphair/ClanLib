@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include "texture.h"
 
 namespace clan
@@ -50,7 +49,7 @@ enum TextureCubeDirection
 };
 
 /// \brief 2D texture cube object class.
-class CL_API_DISPLAY TextureCube : public Texture
+class TextureCube : public Texture
 {
 /// \name Construction
 /// \{

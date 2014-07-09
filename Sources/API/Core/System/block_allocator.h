@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "system.h"
 #include <memory>
 
@@ -51,7 +50,7 @@ class BlockAllocator_Impl;
 ///    <p>The allocator allocates memory from the heap in blocks. Each time the
 ///    allocated block is exhausted, the allocator will double the block size
 ///    and allocate more memory.</p>
-class CL_API_CORE BlockAllocator
+class BlockAllocator
 {
 /// \name Construction
 /// \{

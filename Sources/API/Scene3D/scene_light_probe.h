@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_scene3d.h"
 #include <memory>
 
 namespace clan
@@ -40,7 +39,7 @@ namespace clan
 class Scene;
 class SceneLightProbe_Impl;
 
-class CL_API_SCENE SceneLightProbe
+class SceneLightProbe
 {
 public:
 	SceneLightProbe();

@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_sound.h"
 #include <string>
 #include "audio_definition.h"
 #include "../../Core/Math/vec3.h"
@@ -40,7 +39,7 @@ class SoundBuffer;
 class AudioWorld;
 class AudioObject_Impl;
 
-class CL_API_SOUND AudioObject
+class AudioObject
 {
 public:
 	AudioObject();

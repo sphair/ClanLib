@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include "../Render/texture.h"
 
 namespace clan
@@ -41,7 +40,7 @@ namespace clan
 enum TextureFormat;
 
 /// \brief Interface for implementing a RenderBuffer target.
-class CL_API_DISPLAY RenderBufferProvider
+class RenderBufferProvider
 {
 /// \name Construction
 /// \{

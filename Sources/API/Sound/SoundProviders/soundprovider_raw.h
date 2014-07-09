@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_sound.h"
 #include "soundprovider.h"
 
 namespace clan
@@ -40,7 +39,7 @@ namespace clan
 class SoundProvider_Raw_Impl;
 
 /// \brief Sound provider in a raw PCM format (no header in file).
-class CL_API_SOUND SoundProvider_Raw : public SoundProvider
+class SoundProvider_Raw : public SoundProvider
 {
 /// \name Construction
 /// \{

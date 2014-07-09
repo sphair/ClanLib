@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_csslayout.h"
 #include "../PropertyValues/css_value_align_content.h"
 #include "../PropertyValues/css_value_align_items.h"
 #include "../PropertyValues/css_value_align_self.h"
@@ -47,7 +46,7 @@ namespace clan
 
 class CSSComputedValues;
 
-class CL_API_CSSLAYOUT CSSComputedFlex
+class CSSComputedFlex
 {
 public:
 	CSSValueFlexDirection flex_direction;

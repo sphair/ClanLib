@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_component.h"
 
 namespace clan
@@ -42,7 +41,7 @@ namespace clan
 class Spin_Impl;
 
 /// \brief Spin component.
-class CL_API_GUI Spin : public GUIComponent
+class Spin : public GUIComponent
 {
 /// \name Construction
 /// \{

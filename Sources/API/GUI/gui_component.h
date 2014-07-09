@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "api_gui.h"
 #include <memory>
 #include "../Core/Signals/signal.h"
 #include "../Core/IOData/file_system.h"
@@ -71,7 +70,7 @@ struct VerticalTextPosition
 };
 
 /// \brief GUI base component class.
-class CL_API_GUI GUIComponent
+class GUIComponent
 {
 /// \name Construction
 /// \{

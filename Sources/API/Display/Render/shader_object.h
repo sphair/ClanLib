@@ -34,7 +34,6 @@
 #include <memory>
 #include "../../Core/IOData/file_system.h"
 #include "graphic_context.h"
-#include "../api_display.h"
 #include <vector>
 
 namespace clan
@@ -66,7 +65,7 @@ enum ShaderType
 ///    objects. Shader objects are attached to a program objects to form a
 ///    programmable setup. ShaderObject is ClanLib's C++ interface to OpenGL
 ///    shader objects.</p> 
-class CL_API_DISPLAY ShaderObject
+class ShaderObject
 {
 /// \name Construction
 /// \{

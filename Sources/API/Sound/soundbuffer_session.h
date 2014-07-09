@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_sound.h"
 #include <memory>
 
 namespace clan
@@ -49,7 +48,7 @@ class SoundOutput;
 ///    class, which can be used to control the sound (its volume, pitch,
 ///    pan, position). It can also be used to retrigger the sound
 ///    or to stop it.</p> 
-class CL_API_SOUND SoundBuffer_Session
+class SoundBuffer_Session
 {
 /// \name Construction
 /// \{

@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "api_gui.h"
 #include "gui_window_manager.h"
 #include <memory>
 

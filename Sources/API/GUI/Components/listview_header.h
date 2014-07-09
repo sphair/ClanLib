@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_component.h"
 #include "listview.h"
 
@@ -43,7 +42,7 @@ class ListViewColumnHeader;
 class ListViewHeader_Impl;
 
 /// \brief ListViewHeader component.
-class CL_API_GUI ListViewHeader : public GUIComponent
+class ListViewHeader : public GUIComponent
 {
 /// \name Construction
 /// \{

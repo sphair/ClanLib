@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 #include <functional>
 
@@ -38,7 +37,7 @@ namespace clan
 class Timer_Impl;
 
 /// \brief Timer class that invokes a callback on a specified interval
-class CL_API_CORE Timer
+class Timer
 {
 /// \name Construction
 /// \{

@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_gl.h"
 
 namespace clan
 {
@@ -37,7 +36,7 @@ namespace clan
 /// \{
 
 /// \brief ClanGL initialization functions.
-class CL_API_GL SetupGL
+class SetupGL
 {
 /// \name Construction
 /// \{

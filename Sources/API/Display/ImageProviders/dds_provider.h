@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include "../Image/pixel_buffer_set.h"
 #include "../../Core/IOData/file_system.h"
 
@@ -41,7 +40,7 @@ namespace clan
 class FileSystem;
 
 /// \brief Image provider that can load Direct3D texture (.dds) files.
-class CL_API_DISPLAY DDSProvider
+class DDSProvider
 {
 /// \name Construction
 /// \{

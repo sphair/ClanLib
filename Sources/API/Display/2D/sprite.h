@@ -31,7 +31,6 @@
 #pragma once
 
 #include <memory>
-#include "../api_display.h"
 #include "../../Core/Math/origin.h"
 #include "../../Core/Signals/signal.h"
 #include "../../Core/IOData/file_system.h"
@@ -54,7 +53,7 @@ class Font_Impl;
 class Subtexture;
 
 /// \brief Sprite class.
-class CL_API_DISPLAY Sprite
+class Sprite
 {
 /// \name Enums
 /// \{

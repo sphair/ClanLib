@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 
 namespace clan
@@ -42,7 +41,7 @@ class DataBuffer;
 class AES192_Encrypt_Impl;
 
 /// \brief AES-192 encryption class (running in Cipher Block Chaining mode)
-class CL_API_CORE AES192_Encrypt
+class AES192_Encrypt
 {
 /// \name Construction
 /// \{

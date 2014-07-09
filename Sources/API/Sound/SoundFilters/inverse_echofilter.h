@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_sound.h"
 #include "../soundfilter.h"
 
 namespace clan
@@ -41,7 +40,7 @@ namespace clan
 class InverseEchoFilterProvider;
 
 /// \brief Inverse Echo Filter Class
-class CL_API_SOUND InverseEchoFilter : public SoundFilter
+class InverseEchoFilter : public SoundFilter
 {
 /// \name Construction
 /// \{

@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_csslayout.h"
 #include "../PropertyValues/css_value_counter_increment.h"
 #include "../PropertyValues/css_value_counter_reset.h"
 
@@ -39,7 +38,7 @@ namespace clan
 
 class CSSComputedValues;
 
-class CL_API_CSSLAYOUT CSSComputedCounter
+class CSSComputedCounter
 {
 public:
 	CSSValueCounterIncrement counter_increment;

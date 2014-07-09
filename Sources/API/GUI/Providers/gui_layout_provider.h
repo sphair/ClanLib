@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 
 namespace clan
 {
@@ -42,7 +41,7 @@ class Rect;
 class GUILayout_Impl;
 
 /// \brief Layout management interface.
-class CL_API_GUI GUILayoutProvider
+class GUILayoutProvider
 {
 /// \name Construction
 /// \{

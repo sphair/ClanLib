@@ -36,7 +36,6 @@
 #pragma warning(disable: 4996)
 #endif
 
-#include "../api_core.h"
 #include "string_format.h"
 #include "string_help.h"
 #ifdef WIN32

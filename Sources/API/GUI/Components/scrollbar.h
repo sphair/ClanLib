@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_component.h"
 
 namespace clan
@@ -42,7 +41,7 @@ namespace clan
 class ScrollBar_Impl;
 
 /// \brief Scroll bar component.
-class CL_API_GUI ScrollBar : public GUIComponent
+class ScrollBar : public GUIComponent
 {
 /// \name Construction
 /// \{

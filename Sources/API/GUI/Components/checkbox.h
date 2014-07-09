@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_component.h"
 
 namespace clan
@@ -41,7 +40,7 @@ namespace clan
 class CheckBox_Impl;
 
 /// \brief Check box component.
-class CL_API_GUI CheckBox : public GUIComponent
+class CheckBox : public GUIComponent
 {
 /// \name Construction
 /// \{

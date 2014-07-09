@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "../System/cl_platform.h"
 #include "mat3.h"
 #include "mat4.h"

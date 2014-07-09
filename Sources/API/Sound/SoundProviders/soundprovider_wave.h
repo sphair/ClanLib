@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_sound.h"
 #include "soundprovider.h"
 #include "../../Core/IOData/file_system.h"
 
@@ -42,7 +41,7 @@ class InputSourceProvider;
 class SoundProvider_Wave_Impl;
 
 /// \brief Windows WAVE sample format (.wav) sound provider.
-class CL_API_SOUND SoundProvider_Wave : public SoundProvider
+class SoundProvider_Wave : public SoundProvider
 {
 /// \name Construction
 /// \{

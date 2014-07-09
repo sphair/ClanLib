@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_gui.h"
 #include <memory>
 #include "gui_message.h"
 
@@ -39,7 +38,7 @@ namespace clan
 /// \{
 
 /// \brief GUI mouse pointer change notification message.
-class CL_API_GUI GUIMessage_Pointer : public GUIMessage
+class GUIMessage_Pointer : public GUIMessage
 {
 /// \name Construction
 /// \{

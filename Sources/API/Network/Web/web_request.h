@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include "../api_network.h"
 #include <memory>
 
 namespace clan
@@ -13,7 +12,7 @@ class WebResponse;
 class WebRequest_Impl;
 
 /// \brief HTTP web request class.
-class CL_API_NETWORK WebRequest
+class WebRequest
 {
 public:
 	WebRequest();

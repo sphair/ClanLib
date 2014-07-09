@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_gl.h"
 #include "opengl_defines.h"
 #include <utility>
 #include "../Display/Render/texture.h"
@@ -61,7 +60,7 @@ typedef struct
 } TextureFormat_GL;
 
 /// \brief OpenGL utility class.
-class CL_API_GL OpenGL
+class OpenGL
 {
 /// \name Attributes
 /// \{

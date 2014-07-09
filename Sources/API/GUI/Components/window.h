@@ -33,7 +33,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_component.h"
 #include "../../Display/Render/graphic_context.h"
 
@@ -47,7 +46,7 @@ class Window_Impl;
 /// \brief Window component.
 ///
 /// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
-class CL_API_GUI Window : public GUIComponent
+class Window : public GUIComponent
 {
 /// \name Construction
 /// \{

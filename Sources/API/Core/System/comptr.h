@@ -28,14 +28,13 @@
 
 #pragma once
 
-#include "../api_core.h"
 
 namespace clan
 {
 
 template <typename Type>
 /// \brief ComPtr
-class CL_API_CORE ComPtr
+class ComPtr
 {
 public:
 	ComPtr() : ptr(0) { }

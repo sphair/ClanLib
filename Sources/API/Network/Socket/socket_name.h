@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_network.h"
 #include <memory>
 
 struct sockaddr;
@@ -42,7 +41,7 @@ namespace clan
 class SocketName_Impl;
 
 /// \brief Socket name; container class for an IP address and port.
-class CL_API_NETWORK SocketName
+class SocketName
 {
 /// \name Construction
 /// \{

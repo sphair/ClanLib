@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_database.h"
 
 namespace clan
 {
@@ -43,7 +42,7 @@ class DBCommandProvider;
 class DBCommand_Impl;
 
 /// \brief Database command.
-class CL_API_DATABASE DBCommand
+class DBCommand
 {
 /// \name Construction
 /// \{

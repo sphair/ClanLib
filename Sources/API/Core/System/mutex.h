@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 
 #ifdef WIN32
 #include <windows.h>
@@ -47,7 +46,7 @@ namespace clan
 /// \{
 
 /// \brief Mutex class.
-class CL_API_CORE Mutex
+class Mutex
 {
 /// \name Construction
 /// \{
@@ -95,7 +94,7 @@ private:
 };
 
 /// \brief Mutex locking helper.
-class CL_API_CORE MutexSection
+class MutexSection
 {
 /// \name Construction
 /// \{

@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../../api_physics2d.h"
 #include "../../../Core/Math/vec2.h"
 #include <memory>
 
@@ -44,7 +43,7 @@ namespace clan
 	class MouseJointDescription_Impl;
 
 /// \brief MouseJointDescription class.
-class CL_API_PHYSICS MouseJointDescription
+class MouseJointDescription
 {
 
 /// \name Construction

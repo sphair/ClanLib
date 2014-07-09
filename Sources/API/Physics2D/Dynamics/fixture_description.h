@@ -37,7 +37,7 @@ class FixtureDescription_Impl;
 class Shape;
 
 /// \brief FixtureDescription class
-class CL_API_PHYSICS FixtureDescription
+class FixtureDescription
 {
 /// \name Construction
 /// \{

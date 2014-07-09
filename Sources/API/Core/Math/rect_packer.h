@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 #include "rect.h"
 
@@ -42,7 +41,7 @@ class Size;
 class RectPacker_Impl;
 
 /// \brief Generic rect packer class. Implements an algorithm to pack rects into groups efficiently.
-class CL_API_CORE RectPacker
+class RectPacker
 {
 /// \name Enumerations and structs
 /// \{

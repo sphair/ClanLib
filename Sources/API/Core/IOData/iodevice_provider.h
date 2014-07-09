@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "iodevice.h"
 
 namespace clan
@@ -38,7 +37,7 @@ namespace clan
 /// \{
 
 /// \brief I/O device provider interface.
-class CL_API_CORE IODeviceProvider
+class IODeviceProvider
 {
 /// \name Construction
 /// \{

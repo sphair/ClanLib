@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_component.h"
 #include "../../Display/Window/input_event.h"
 
@@ -42,7 +41,7 @@ namespace clan
 class LineEdit_Impl;
 
 /// \brief Single line edit component.
-class CL_API_GUI LineEdit : public GUIComponent
+class LineEdit : public GUIComponent
 {
 /// \name Construction
 /// \{

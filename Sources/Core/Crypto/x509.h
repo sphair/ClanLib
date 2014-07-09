@@ -42,7 +42,7 @@ class Secret;
 class DataBuffer;
 
 /// \brief X509 certificate class.
-class CL_API_CORE X509
+class X509
 {
 /// \name Construction
 /// \{

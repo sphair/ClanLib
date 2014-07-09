@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include <memory>
 #include "../../Core/Math/vec4.h"
 #include "texture_format.h"
@@ -43,7 +42,7 @@ namespace clan
 class PixelConverter_Impl;
 
 /// \brief Low level pixel format converter class.
-class CL_API_DISPLAY PixelConverter
+class PixelConverter
 {
 /// \name Construction
 /// \{

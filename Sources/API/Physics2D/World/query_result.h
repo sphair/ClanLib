@@ -31,7 +31,6 @@
 
 #include <memory>
 
-#include "../api_physics2d.h"
 #include "../../Core/Math/vec2.h"
 
 namespace clan
@@ -54,7 +53,7 @@ enum QueryResultType
 ///
 /// Used by physics query assistant.
 
-class CL_API_PHYSICS QueryResult
+class QueryResult
 {
 public:
 

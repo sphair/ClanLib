@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_swrender.h"
 
 #if defined(__GNUC__) && !defined(__SSE2__)
 // Do not attempt to compile SSE2 code if the compiler does not support it

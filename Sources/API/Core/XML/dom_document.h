@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "dom_node.h"
 #include <vector>
 
@@ -62,7 +61,7 @@ class DomDocument_Impl;
 ///    also contains the factory methods needed to create these objects. The
 ///    Node objects created have a ownerDocument attribute which associates
 ///    them with the Document within whose context they were created.</p>
-class CL_API_CORE DomDocument : public DomNode
+class DomDocument : public DomNode
 {
 /// \name Construction
 /// \{

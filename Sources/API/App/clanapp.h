@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_app.h"
 #include <vector>
 #include <string>
 
@@ -54,7 +53,7 @@ namespace clan
 /// \endcode
 /// If you do not want exceptions to be automatically caught, pass "false" to the optional catch_exceptions parameter in Application\n
 /// Your program does not have to use this class.\n
-class CL_API_APP Application
+class Application
 {
 /// \name Construction
 /// \{

@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_compute.h"
 #include <memory>
 
 namespace clan
@@ -41,7 +40,7 @@ class ComputeEvent;
 class ComputeMemoryMap_Impl;
 
 /// \brief Compute memory mapping
-class CL_API_COMPUTE ComputeMemoryMap
+class ComputeMemoryMap
 {
 /// \name Construction
 /// \{

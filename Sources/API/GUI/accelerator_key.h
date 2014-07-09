@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_gui.h"
 #include <memory>
 #include "../GUI/gui_message.h"
 #include "../GUI/gui_message_input.h"

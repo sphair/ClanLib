@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_sound.h"
 #include <memory>
 
 namespace clan
@@ -46,7 +45,7 @@ class SoundOutput_Impl;
 ///
 ///   <p>SoundOutput is the interface to a sound output device. It is used to
 ///    control the main mixer volume and other global settings.</p>
-class CL_API_SOUND SoundOutput
+class SoundOutput
 {
 /// \name Construction
 /// \{

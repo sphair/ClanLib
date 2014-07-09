@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include "../Window/input_device.h"
 #include "../../Core/System/disposable_object.h"
 #include <memory>
@@ -42,7 +41,7 @@ namespace clan
 /// \{
 
 /// \brief Interface for implementing a InputDevice source.
-class CL_API_DISPLAY InputDeviceProvider : public DisposableObject
+class InputDeviceProvider : public DisposableObject
 {
 /// \name Construction
 /// \{

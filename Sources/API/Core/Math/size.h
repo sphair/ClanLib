@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "vec2.h"
 
 namespace clan
@@ -52,7 +51,7 @@ class Vec4;
 /// These line templates are defined for: int (Size), float (Sizef), double (Sized)
 ///
 template<typename Type>
-class CL_API_CORE Sizex
+class Sizex
 {
 /// \name Construction
 /// \{

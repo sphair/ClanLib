@@ -30,7 +30,6 @@
 #pragma once
 
 
-#include "../api_display.h"
 #include "path2d.h"
 #include <vector>
 #include "../Render/primitives_array.h"
@@ -46,7 +45,7 @@ class Canvas;
 class Shape2D_Impl;
 class Rectf;
 
-class CL_API_DISPLAY Shape2D
+class Shape2D
 {
 /// \name Construction
 /// \{

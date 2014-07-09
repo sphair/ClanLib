@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../../Display/2D/sprite.h"
 #include "listview_icon.h"
 
@@ -42,7 +41,7 @@ class ListViewIconList_Impl;
 class ListViewIcon_Impl;
 
 /// \brief ListView icon list.
-class CL_API_GUI ListViewIconList
+class ListViewIconList
 {
 /// \name Construction
 /// \{

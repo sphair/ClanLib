@@ -28,14 +28,13 @@
 
 #pragma once
 
-#include "../api_csslayout.h"
 
 namespace clan
 {
 /// \addtogroup clanCSSLayout_Document clanCSSLayout Document
 /// \{
 
-class CL_API_CSSLAYOUT CSSSelectNode
+class CSSSelectNode
 {
 public:
 	virtual ~CSSSelectNode() { }

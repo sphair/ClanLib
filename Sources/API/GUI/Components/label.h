@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_component.h"
 
 namespace clan
@@ -42,7 +41,7 @@ class SpanLayout;
 class Label_Impl;
 
 /// \brief Check box component.
-class CL_API_GUI Label : public GUIComponent
+class Label : public GUIComponent
 {
 /// \name Construction
 /// \{

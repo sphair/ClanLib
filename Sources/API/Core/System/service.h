@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 #include "../Signals/signal.h"
 
@@ -43,7 +42,7 @@ class Event;
 class Service_Impl;
 
 /// \brief Service/daemon class.
-class CL_API_CORE Service
+class Service
 {
 /// \name Construction
 /// \{

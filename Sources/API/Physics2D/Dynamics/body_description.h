@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_physics2d.h"
 #include <memory>
 #include "../../Core/Math/vec2.h"
 
@@ -52,7 +51,7 @@ class XMLResourceDocument;
 		body_dynamic	= 2
 	};
 /// \brief BodyDescription class
-class CL_API_PHYSICS BodyDescription
+class BodyDescription
 {
 public:
 

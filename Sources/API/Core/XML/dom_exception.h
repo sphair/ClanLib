@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "../System/exception.h"
 
 namespace clan
@@ -38,7 +37,7 @@ namespace clan
 /// \{
 
 /// \brief DOM Exception class.
-class CL_API_CORE DomException : public Exception
+class DomException : public Exception
 {
 /// \name Construction
 /// \{

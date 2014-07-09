@@ -37,7 +37,7 @@ namespace clan
 /// \{
 
 /// \brief Uniform Buffer provider.
-class CL_API_DISPLAY UniformBufferProvider
+class UniformBufferProvider
 {
 /// \name Construction
 /// \{

@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_physics2d.h"
 #include "../World/physics_world.h"
 #include "../../Core/Math/vec2.h"
 #include <memory>
@@ -44,7 +43,7 @@ class FixtureDescription;
 class Fixture_Impl;
 
 /// \brief Fixture class
-class CL_API_PHYSICS Fixture
+class Fixture
 {
 public:
 	/// \brief Constructs a null instance.

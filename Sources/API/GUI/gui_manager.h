@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "api_gui.h"
 #include "../Core/Signals/signal.h"
 #include "../Core/Math/point.h"
 #include "accelerator_table.h"
@@ -58,7 +57,7 @@ class ResourceManager;
 class XMLResourceDocument;
 
 /// \brief GUI manager.
-class CL_API_GUI GUIManager
+class GUIManager
 {
 /// \name Construction
 /// \{

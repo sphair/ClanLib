@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_scene3d.h"
 #include "../../Core/Resources/resource.h"
 #include "../../Display/Render/texture.h"
 #include "../ModelData/model_data.h"
@@ -44,7 +43,7 @@ namespace clan
 class ModelData;
 class GraphicContext;
 
-class CL_API_SCENE SceneCache
+class SceneCache
 {
 public:
 	virtual ~SceneCache() { }

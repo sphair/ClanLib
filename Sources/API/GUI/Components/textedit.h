@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_component.h"
 
 namespace clan
@@ -41,7 +40,7 @@ namespace clan
 class TextEdit_Impl;
 
 /// \brief Text edit component.
-class CL_API_GUI TextEdit : public GUIComponent
+class TextEdit : public GUIComponent
 {
 /// \name Construction
 /// \{

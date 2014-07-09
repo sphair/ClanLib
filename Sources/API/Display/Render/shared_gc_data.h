@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include "../../Core/Signals/signal.h"
 #include "texture.h"
 #include "../Image/image_import_description.h"

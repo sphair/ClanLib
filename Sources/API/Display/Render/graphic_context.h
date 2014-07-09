@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include "../2D/color.h"
 #include "../Image/texture_format.h"
 #include <memory>
@@ -254,7 +253,7 @@ enum ShaderLanguage
 };
 
 /// \brief Interface to drawing graphics.
-class CL_API_DISPLAY GraphicContext
+class GraphicContext
 {
 /// \name Construction
 /// \{

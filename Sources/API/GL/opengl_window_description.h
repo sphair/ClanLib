@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_gl.h"
 #include <memory>
 
 namespace clan
@@ -49,7 +48,7 @@ class OpenGLWindowDescription_Impl;
 ///    desc.set_stencil_size(4);
 ///    OpenGLWindow window(desc);
 ///    </pre> 
-class CL_API_GL OpenGLWindowDescription
+class OpenGLWindowDescription
 {
 /// \name Construction
 /// \{

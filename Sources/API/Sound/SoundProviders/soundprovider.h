@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_sound.h"
 #include <memory>
 
 namespace clan
@@ -43,7 +42,7 @@ class SoundProvider_Impl;
 /// \brief Sound provider.
 ///
 /// Interface to sound sources. Used by the SoundBuffer class to start and stop playback.
-class CL_API_SOUND SoundProvider
+class SoundProvider
 {
 /// \name Construction
 /// \{

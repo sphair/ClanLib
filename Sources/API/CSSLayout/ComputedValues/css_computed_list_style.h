@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_csslayout.h"
 #include "../PropertyValues/css_value_list_style_image.h"
 #include "../PropertyValues/css_value_list_style_position.h"
 #include "../PropertyValues/css_value_list_style_type.h"
@@ -40,7 +39,7 @@ namespace clan
 
 class CSSComputedValues;
 
-class CL_API_CSSLAYOUT CSSComputedListStyle
+class CSSComputedListStyle
 {
 public:
 	CSSValueListStyleType list_style_type; // inherited

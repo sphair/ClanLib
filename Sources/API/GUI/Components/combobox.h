@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_component.h"
 
 namespace clan
@@ -44,7 +43,7 @@ class ComboBox_Impl;
 class PopupMenu;
 
 /// \brief Combo box component.
-class CL_API_GUI ComboBox : public GUIComponent
+class ComboBox : public GUIComponent
 {
 /// \name Construction
 /// \{

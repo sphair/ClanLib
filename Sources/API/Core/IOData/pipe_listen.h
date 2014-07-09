@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 
 namespace clan
@@ -42,7 +41,7 @@ class PipeConnection;
 class PipeListen_Impl;
 
 /// \brief Pipe listen class.
-class CL_API_CORE PipeListen
+class PipeListen
 {
 /// \name Construction
 /// \{

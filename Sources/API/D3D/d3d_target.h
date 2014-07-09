@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_d3d.h"
 #include "../Display/display_target.h"
 #include <memory>
 #include <d3d11.h>
@@ -48,7 +47,7 @@ class UniformBuffer;
 class GraphicContext;
 
 /// \brief Display target for clanDisplay.
-class CL_API_D3D D3DTarget : public DisplayTarget
+class D3DTarget : public DisplayTarget
 {
 /// \name Construction
 /// \{

@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_network.h"
 #include "../../Core/System/databuffer.h"
 
 namespace clan
@@ -38,7 +37,7 @@ namespace clan
 /// \{
 
 /// \brief NetGameEventValue
-class CL_API_NETWORK NetGameEventValue
+class NetGameEventValue
 {
 public:
 	enum Type

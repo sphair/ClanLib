@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include <memory>
 #include "../Render/graphic_context.h"
 #include "../Render/primitives_array.h"
@@ -84,7 +83,7 @@ public:
 };
 
 /// \brief Interface for implementing a GraphicContext target.
-class CL_API_DISPLAY GraphicContextProvider
+class GraphicContextProvider
 {
 /// \name Construction
 /// \{

@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_physics2d.h"
 #include "body_description.h"
 #include <memory>
 #include "../../Core/Math/vec2.h"
@@ -48,7 +47,7 @@ class PhysicsContext;
 class PhysicsObject;
 
 /// \brief Body class
-class CL_API_PHYSICS Body
+class Body
 {
 
 /// \name Construction

@@ -28,13 +28,12 @@
 
 #pragma once
 
-#include "../api_core.h"
 
 namespace clan
 {
 
 /// \brief Class for handling HTML urls.
-class CL_API_CORE HTMLUrl
+class HTMLUrl
 {
 public:
 	HTMLUrl();

@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "dom_node.h"
 
 namespace clan
@@ -64,7 +63,7 @@ namespace clan
 ///    nodes of the Attr node provide a representation in which entity references are not
 ///    expanded. These child nodes may be either Text or EntityReference nodes. Because the
 ///    attribute type may be unknown, there are no tokenized attribute values.</p>
-class CL_API_CORE DomAttr : public DomNode
+class DomAttr : public DomNode
 {
 /// \name Construction
 /// \{

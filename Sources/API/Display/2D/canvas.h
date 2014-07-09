@@ -32,7 +32,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include "../Render/graphic_context.h"
 
 namespace clan
@@ -67,7 +66,7 @@ enum MapMode
 };
 
 /// \brief 2D Graphics Canvas
-class CL_API_DISPLAY Canvas
+class Canvas
 {
 /// \name Construction
 /// \{

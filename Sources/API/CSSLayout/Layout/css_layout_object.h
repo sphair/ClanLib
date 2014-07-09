@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_csslayout.h"
 #include "css_layout_element.h"
 #include "css_replaced_component.h"
 
@@ -37,7 +36,7 @@ namespace clan
 /// \addtogroup clanCSSLayout_Layout clanCSSLayout Layout
 /// \{
 
-class CL_API_CSSLAYOUT CSSLayoutObject : public CSSLayoutElement
+class CSSLayoutObject : public CSSLayoutElement
 {
 public:
 	CSSLayoutObject();

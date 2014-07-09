@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_gui.h"
 #include <memory>
 #include "gui_message.h"
 
@@ -42,7 +41,7 @@ class Size;
 class Rect;
 
 /// \brief GUI resize message.
-class CL_API_GUI GUIMessage_Resize : public GUIMessage
+class GUIMessage_Resize : public GUIMessage
 {
 /// \name Construction
 /// \{

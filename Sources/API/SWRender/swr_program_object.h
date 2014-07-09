@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_swrender.h"
 
 #include "../Display/Render/graphic_context.h"
 #include "../Display/Render/program_object.h"
@@ -43,7 +42,7 @@ namespace clan
 class SWRenderProgramObjectProvider;
 
 /// \brief SWRender Graphic Context
-class API_SWRender ProgramObject_SWRender : public ProgramObject
+class ProgramObject_SWRender : public ProgramObject
 {
 //!Construction
 public:

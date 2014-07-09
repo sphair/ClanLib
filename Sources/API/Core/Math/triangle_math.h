@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "vec3.h"
 
 namespace clan

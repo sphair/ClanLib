@@ -32,7 +32,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include <vector>
 #include "contour.h"
 #include "outline_accuracy.h"
@@ -111,7 +110,7 @@ struct CollidingContours
 /// \brief Collision detection outline.
 ///
 /// <p>A collision outline is used in collision detection</p> 
-class CL_API_DISPLAY CollisionOutline
+class CollisionOutline
 {
 /// \name Construction
 /// \{

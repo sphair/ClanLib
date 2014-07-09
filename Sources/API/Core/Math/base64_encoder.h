@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 
 namespace clan
@@ -41,7 +40,7 @@ class DataBuffer;
 class Base64Encoder_Impl;
 
 /// \brief Base64 encoder class.
-class CL_API_CORE Base64Encoder
+class Base64Encoder
 {
 /// \name Construction
 /// \{

@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_sound.h"
 #include <memory>
 
 namespace clan
@@ -36,7 +35,7 @@ namespace clan
 
 class AudioDefinition_Impl;
 
-class CL_API_SOUND AudioDefinition
+class AudioDefinition
 {
 public:
 	AudioDefinition();
