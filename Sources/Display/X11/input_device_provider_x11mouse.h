@@ -51,7 +51,6 @@ public:
 
 	void destroy() { delete this; }
 
-
 /// \}
 /// \name Attributes
 /// \{

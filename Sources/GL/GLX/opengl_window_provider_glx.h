@@ -29,7 +29,6 @@
 
 #pragma once
 
-
 #include "API/Display/TargetProviders/display_window_provider.h"
 #include "API/Display/Render/graphic_context.h"
 #include "API/Display/Window/input_context.h"
@@ -49,7 +48,6 @@
 
 namespace clan
 {
-
 
 typedef int (*ptr_glXSwapIntervalSGI)(int interval);
 typedef int (*ptr_glXSwapIntervalMESA)(int interval);
@@ -113,7 +111,6 @@ public:
 		unsigned int height,
 		int *attrib_list);
 
-
 public:
 	ptr_glXChooseVisual glXChooseVisual;
 	ptr_glXCopyContext glXCopyContext;
@@ -157,7 +154,7 @@ public:
 	ptr_glXGetProcAddressARB glXGetProcAddressARB;
 	ptr_glXCreatePbufferSGIX glXCreatePbufferSGIX;
 	ptr_glXDestroyPbuffer glXDestroyPbufferSGIX;
-	ptr_glXChooseFBConfig glXChooseFBConfigSGIX; 
+	ptr_glXChooseFBConfig glXChooseFBConfigSGIX;
 	ptr_glXGetVisualFromFBConfig glXGetVisualFromFBConfigSGIX;
 
 };
@@ -171,7 +168,6 @@ public:
 	OpenGLWindowProvider(OpenGLWindowDescription &opengl_desc);
 
 	~OpenGLWindowProvider();
-
 
 /// \}
 /// \name Attributes
@@ -350,6 +346,4 @@ private:
 };
 
 }
-
-
 

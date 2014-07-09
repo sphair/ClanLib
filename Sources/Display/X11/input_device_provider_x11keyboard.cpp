@@ -57,7 +57,6 @@ void InputDeviceProvider_X11Keyboard::on_dispose()
 {
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 // InputDeviceProvider_X11Keyboard attributes:
 
@@ -120,7 +119,6 @@ void InputDeviceProvider_X11Keyboard::get_keyboard_modifiers(bool &key_shift, bo
 	key_ctrl = ctrl_down;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 // InputDeviceProvider_X11Keyboard operations:
 
@@ -132,7 +130,6 @@ void InputDeviceProvider_X11Keyboard::received_keyboard_input(XKeyEvent &event)
 	{
 		keydown = true;
 	}else	keydown = false;
-
 
 	InputCode key_code = (InputCode)event.keycode;
 

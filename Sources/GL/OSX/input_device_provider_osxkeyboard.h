@@ -38,7 +38,7 @@ namespace clan
 {
 
 class OpenGLWindowProvider;
-    
+
 class InputDeviceProvider_OSXKeyboard : public InputDeviceProvider
 {
 /// \name Construction
@@ -114,7 +114,7 @@ private:
     // A work around the for the inability to directly query the keyboard state through Cocoa.
     bool key_down_map[clan::keycode_count];
     Signal<const InputEvent &> *sig_provider_event;
-    
+
     void on_dispose();
     void on_key_event(const clan::InputCode& keycode, const clan::InputEvent::Type& type);
 

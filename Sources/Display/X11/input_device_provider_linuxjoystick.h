@@ -51,7 +51,6 @@ public:
 
 	void destroy() { delete this; }
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -115,7 +114,6 @@ public:
 	///
 	/// \return true when the device event has occurred
 	bool poll(bool peek_only);
-
 
 /// \}
 /// \name Implementation

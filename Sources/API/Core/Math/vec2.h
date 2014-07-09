@@ -28,7 +28,6 @@
 **    Harry Storbacka
 */
 
-
 #pragma once
 
 #include <cmath>
@@ -181,7 +180,7 @@ public:
 	///
 	/// \param vector = Second vector used to calculate angle.
 	///
-	/// \return The angle between the two vectors 
+	/// \return The angle between the two vectors
 	Angle angle_normed(const Vec2<Type>& vector) const;
 
 	/// \brief Calculate the angle of the line joining this point and other point

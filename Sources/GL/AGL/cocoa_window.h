@@ -80,7 +80,7 @@ public:
 	const InputContext get_ic() const { return ic; }
 	bool is_clipboard_text_available() const;
 	bool is_clipboard_image_available() const;
-    
+
     CAEAGLLayer *get_drawable();
 
 public:
@@ -121,7 +121,7 @@ public:
 	void set_clipboard_image(const PixelBuffer &image);
 	void request_repaint(const Rect &rect);
 	void set_modifier_keys(InputEvent &key);
-    
+
     void on_touches_began(const std::vector<Vec2f> &touches);
     void on_touches_moved(const std::vector<Vec2f> &touches);
     void on_touches_ended(const std::vector<Vec2f> &touches);
@@ -129,7 +129,7 @@ public:
 
 private:
     CocoaMouseInputDeviceProvider *get_mouse();
-    
+
 	DisplayWindowSite *site;
 	InputDevice keyboard, mouse;
 	Point mouse_pos;

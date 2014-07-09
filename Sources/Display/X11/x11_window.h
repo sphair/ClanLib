@@ -30,7 +30,6 @@
 
 #pragma once
 
-
 #include <list>
 #include <map>
 #include "API/Core/Signals/signal.h"
@@ -73,7 +72,6 @@ public:
 	X11Window();
 
 	~X11Window();
-
 
 /// \}
 /// \name Attributes

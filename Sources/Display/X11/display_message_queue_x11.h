@@ -85,7 +85,7 @@ public:
 	// The library will be opened / closed by this class
 	// Returns 0 if the library could not be found
 	// Currently, only supports a single library
-	void *dlopen_opengl(const char *filename, int flag); 
+	void *dlopen_opengl(const char *filename, int flag);
 /// \}
 /// \name Implementation
 /// \{

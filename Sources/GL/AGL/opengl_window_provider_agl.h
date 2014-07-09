@@ -37,7 +37,7 @@
 namespace clan
 {
 class OpenGLWindowProvider;
-    
+
 void cl_agl_make_none_current();
 DisplayWindowProvider *cl_alloc_display_window_agl();
 void cl_set_default_frame_buffer(DisplayWindowProvider *provider);
@@ -64,7 +64,7 @@ public:
 	OpenGLWindowProvider();
 	~OpenGLWindowProvider();
 /// \}
-    
+
 /// \name Attributes
 /// \{
 public:
@@ -152,7 +152,7 @@ private:
 	int swap_interval;
 /// \}
 };
-    
+
 }
 
 #endif

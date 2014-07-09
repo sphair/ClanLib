@@ -26,7 +26,6 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include <memory>
@@ -91,9 +90,7 @@ public:
 	/// \param id = id
 	static Resource<Font> resource(Canvas &canvas, const FontDescription &desc, const ResourceManager &resources);
 
-
 /// \}
-
 
 /// \name Attributes
 /// \{

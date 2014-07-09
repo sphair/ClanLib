@@ -157,7 +157,6 @@ void InputDeviceProvider_X11Mouse::set_position(int x, int y)
 	XWarpPointer(window->get_display(), None, window->get_window(), 0,0, 0,0, x,y);
 }
 
-
 void InputDeviceProvider_X11Mouse::received_mouse_input(XButtonEvent &event)
 {
 

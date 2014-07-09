@@ -26,7 +26,6 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include <vector>

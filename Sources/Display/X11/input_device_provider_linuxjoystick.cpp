@@ -160,7 +160,7 @@ void InputDeviceProvider_LinuxJoystick::process_event(js_event event) const
 	input_event.repeat_count = 0;
 
 	// We don't threat JS_EVENT_INIT special, so this should do
-	if (event.type & JS_EVENT_BUTTON) 
+	if (event.type & JS_EVENT_BUTTON)
 	{
 		// Validate event
 		if (event.number >=  button_states.size())
@@ -186,7 +186,7 @@ void InputDeviceProvider_LinuxJoystick::process_event(js_event event) const
 			(*sig_provider_event)(input_event);
 		}
 	}
-	else if (event.type & JS_EVENT_AXIS) 
+	else if (event.type & JS_EVENT_AXIS)
 	{
 		// Validate event
 		if (event.number >=  axis_states.size())

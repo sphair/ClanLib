@@ -54,7 +54,7 @@
 #define GL_OPENGL_LIBRARY "libGL.so.1"
 #include <dlfcn.h>
 #endif
-		
+
 #ifdef GL_USE_DLOPEN
 #define GL_LOAD_GLFUNC(x) dlsym(opengl_lib_handle, # x)
 #else
@@ -184,7 +184,7 @@ OpenGLWindowProvider::~OpenGLWindowProvider()
 					gl_provider->dispose();
 			}
 		}
-	
+
 		// Delete the context
 
 		::Display *disp = x11_window.get_display();
@@ -206,10 +206,8 @@ OpenGLWindowProvider::~OpenGLWindowProvider()
 /////////////////////////////////////////////////////////////////////////////
 // OpenGLWindowProvider Attributes:
 
-
 /////////////////////////////////////////////////////////////////////////////
 // OpenGLWindowProvider Operations:
-
 
 ProcAddress *OpenGLWindowProvider::get_proc_address(const std::string& function_name) const
 {
@@ -239,7 +237,7 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 	{
 		// FBConfigs were added in GLX version 1.3.
 		int glx_major, glx_minor;
-		if ( !glx.glXQueryVersion( disp, &glx_major, &glx_minor ) || 
+		if ( !glx.glXQueryVersion( disp, &glx_major, &glx_minor ) ||
 			( ( glx_major == 1 ) && ( glx_minor < 3 ) ) || ( glx_major < 1 ) )
 		{
 			glx_1_3 = false;
@@ -334,7 +332,7 @@ void OpenGLWindowProvider::get_opengl_version(int &version_major, int &version_m
 
 	version_major = 0;
 	version_minor = 0;
-    
+
 	std::vector<std::string> split_version = StringHelp::split_text(version, ".");
 	if(split_version.size() > 0)
 		version_major = StringHelp::text_to_int(split_version[0]);
@@ -455,7 +453,6 @@ void OpenGLWindowProvider::create_glx_1_3(DisplayWindowSite *new_site, const Dis
 			}
 #endif
 
-
 			int samp_buf, samples;
 			glx.glXGetFBConfigAttrib( disp, fbc[i], GLX_SAMPLE_BUFFERS, &samp_buf );
 			glx.glXGetFBConfigAttrib( disp, fbc[i], GLX_SAMPLES       , &samples  );
@@ -498,7 +495,6 @@ void OpenGLWindowProvider::create_glx_1_3(DisplayWindowSite *new_site, const Dis
 	opengl_context = create_context(desc);
 }
 
-
 void OpenGLWindowProvider::create_glx_1_2(DisplayWindowSite *new_site, const DisplayWindowDescription &desc, ::Display *disp)
 {
 	// Setup OpenGL:
@@ -520,7 +516,7 @@ void OpenGLWindowProvider::create_glx_1_2(DisplayWindowSite *new_site, const Dis
 	gl_attribs[i++] = GLX_DOUBLEBUFFER;
 	gl_attribs[i++] = GLX_BUFFER_SIZE;
 	gl_attribs[i++] = 24;
-	gl_attribs[i++] = GLX_RED_SIZE; 
+	gl_attribs[i++] = GLX_RED_SIZE;
 	gl_attribs[i++] = 4;
 	gl_attribs[i++] = GLX_GREEN_SIZE;
 	gl_attribs[i++] = 4;
@@ -574,14 +570,14 @@ bool OpenGLWindowProvider::is_glx_extension_supported(const char *ext_name)
 	{
 		const char *start;
 		const char *where, *terminator;
-		
+
 		// Extension names should not have spaces.
 		where = strchr(ext_name, ' ');
 		if ( where || *ext_name == '\0' )
 			return false;
 
 		int ext_len = strlen(ext_name);
-		
+
 		// It takes a bit of care to be fool-proof about parsing the OpenGL extensions string. Don't be fooled by sub-strings, etc.
 		for ( start = ext_string; ; )
 		{
@@ -703,7 +699,7 @@ GLXContext OpenGLWindowProvider::create_context_glx_1_3_helper(GLXContext shared
 	if (opengl_desc.get_debug())
 		flags |= 0x1;	// GLX_CONTEXT_DEBUG_BIT_ARB
 	if (opengl_desc.get_forward_compatible())	// GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB
-		flags |= 0x2;	
+		flags |= 0x2;
 	int_attributes.push_back(flags);
 
 	int_attributes.push_back(0x9126);	// GLX_CONTEXT_PROFILE_MASK_ARB
@@ -711,11 +707,11 @@ GLXContext OpenGLWindowProvider::create_context_glx_1_3_helper(GLXContext shared
 	if (opengl_desc.get_core_profile())
 		flags |= 0x1;	// GLX_CONTEXT_CORE_PROFILE_BIT_ARB
 	if (opengl_desc.get_compatibility_profile())	// GLX_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB
-		flags |= 0x2;	
+		flags |= 0x2;
 	int_attributes.push_back(flags);
 
 	int_attributes.push_back(None);
-	
+
 	cl_ctxErrorOccurred = false;
 
 	GLXContext context_gl3 = glXCreateContextAttribs(x11_window.get_display(), fbconfig, shared_context, True, &int_attributes[0]);
@@ -738,7 +734,7 @@ GLXContext OpenGLWindowProvider::create_context_glx_1_3(const DisplayWindowDescr
 	context = glx.glXCreateNewContext(x11_window.get_display(), fbconfig, GLX_RGBA_TYPE, shared_context, True);
 	if(context == NULL)
 		throw Exception("glXCreateContext failed");
-	
+
 	ptr_glXCreateContextAttribs glXCreateContextAttribs = NULL;
 
 	if (is_glx_extension_supported("GLX_ARB_create_context"))
@@ -749,7 +745,6 @@ GLXContext OpenGLWindowProvider::create_context_glx_1_3(const DisplayWindowDescr
 			glXCreateContextAttribs = (ptr_glXCreateContextAttribs) glx.glXGetProcAddress((GLubyte*) "glXCreateContextAttribsARB");
 	}
 
-
 	if (glXCreateContextAttribs)
 	{
 		// Install an X error handler so the application won't exit if GL 3.0 context allocation fails.
@@ -758,7 +753,7 @@ GLXContext OpenGLWindowProvider::create_context_glx_1_3(const DisplayWindowDescr
 		// of a process use the same error handler, so be sure to guard against other
 		// threads issuing X commands while this code is running.
 		int (*oldHandler)(::Display*, XErrorEvent*) = XSetErrorHandler(&cl_ctxErrorHandler);
-	  
+
 		GLXContext context_gl3 = 0;
 
 		int gl_major = opengl_desc.get_version_major();
@@ -766,13 +761,13 @@ GLXContext OpenGLWindowProvider::create_context_glx_1_3(const DisplayWindowDescr
 		if (opengl_desc.get_allow_lower_versions() == false)
 		{
 			context_gl3 = create_context_glx_1_3_helper(shared_context, gl_major, gl_minor, desc, glXCreateContextAttribs);
-	
+
 			if (!context_gl3)
 				throw Exception(string_format("This application requires OpenGL %1.%2 or above. Try updating your drivers, or upgrade to a newer graphics card.",  gl_major, gl_minor));
 		}
 		else
 		{
-			static const char opengl_version_list[] = 
+			static const char opengl_version_list[] =
 			{
 				// Clanlib supported version pairs
 				4,4,
@@ -793,7 +788,7 @@ GLXContext OpenGLWindowProvider::create_context_glx_1_3(const DisplayWindowDescr
 				int major = *(opengl_version_list_ptr++);
 				if (major == 0)
 					break;
-					
+
 				int minor = *(opengl_version_list_ptr++);
 
 				// Find the appropriate version in the list
@@ -803,17 +798,17 @@ GLXContext OpenGLWindowProvider::create_context_glx_1_3(const DisplayWindowDescr
 				if (major == gl_major)
 				{
 					if (minor > gl_minor)
-						continue;	
+						continue;
 				}
 
 				context_gl3 = create_context_glx_1_3_helper(shared_context, gl_major, gl_minor, desc, glXCreateContextAttribs);
 
 			}while(!context_gl3);
 		}
-		
+
 		// Restore the original error handler
-		XSetErrorHandler( oldHandler );		
-		
+		XSetErrorHandler( oldHandler );
+
 		if (context_gl3)
 		{
 			glx.glXDestroyContext(x11_window.get_display(), context);
@@ -932,7 +927,7 @@ void OpenGLWindowProvider::update_helper(const Rect &_rect)
 		glReadBuffer(GL_BACK);
 		glDrawBuffer(GL_FRONT);
 
-		glBlitFramebuffer( 
+		glBlitFramebuffer(
 			rect.left, height - rect.bottom,
 			rect.right, height - rect.top,
 			rect.left, height - rect.bottom,
@@ -950,10 +945,8 @@ void OpenGLWindowProvider::update_helper(const Rect &_rect)
 
 		glFlush();
 
-
 	}
 }
-
 
 CursorProvider *OpenGLWindowProvider::create_cursor(const CursorDescription &cursor_description, const Point &hotspot)
 {
@@ -987,7 +980,6 @@ void OpenGLWindowProvider::extend_frame_into_client_area(int height)
 
 /////////////////////////////////////////////////////////////////////////////
 // OpenGLWindowProvider Implementation:
-
 
 bool OpenGLWindowProvider::on_clicked(XButtonEvent &event)
 {
@@ -1023,6 +1015,4 @@ bool OpenGLWindowProvider::on_clicked(XButtonEvent &event)
 }
 
 }
-
-
 

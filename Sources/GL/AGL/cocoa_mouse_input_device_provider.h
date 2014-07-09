@@ -39,7 +39,7 @@ class CocoaMouseInputDeviceProvider : public InputDeviceProvider
 public:
 	CocoaMouseInputDeviceProvider();
 	~CocoaMouseInputDeviceProvider();
-    
+
 	void on_dispose() { }
 	void destroy() { delete this; }
 	std::string get_name() const { return "Mouse"; }
@@ -60,13 +60,13 @@ public:
 	void init(Signal<const InputEvent &> *new_sig_provider_event) { sig_provider_event = new_sig_provider_event; }
 	void set_position(int x, int y) { }
 	bool poll(bool peek_only) { return false; }
-    
+
     Signal<const InputEvent &> *sig_provider_event;
-    
+
     std::vector<Vec2f> touches;
     bool down;
-    
+
 private:
 };
-    
+
 }

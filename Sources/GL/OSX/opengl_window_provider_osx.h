@@ -53,7 +53,7 @@ public:
 	OpenGLWindowProvider(OpenGLWindowDescription &opengl_desc);
 	~OpenGLWindowProvider();
 /// \}
-	
+
 /// \name Attributes
 /// \{
 public:
@@ -75,7 +75,7 @@ public:
 	PixelBuffer get_clipboard_image() const;
     bool is_double_buffered() const;
 /// \}
-	
+
 /// \name Operations
 /// \{
 public:
@@ -115,15 +115,15 @@ public:
 
 	ProcAddress *get_proc_address(const std::string& function_name) const;
 /// \}
-	
+
 /// \name Implementation
 /// \{
 private:
     InputDevice keyboard, mouse;
-    
+
     InputDeviceProvider_OSXKeyboard *get_keyboard();
     InputDeviceProvider_OSXMouse *get_mouse();
-    
+
 	std::unique_ptr<OpenGLWindowProvider_Impl> impl;
 	friend class OpenGLWindowProvider_Impl;
 /// \}

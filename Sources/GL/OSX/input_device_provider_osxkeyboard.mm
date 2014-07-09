@@ -65,16 +65,16 @@ InputDeviceProvider_OSXKeyboard::~InputDeviceProvider_OSXKeyboard()
 bool InputDeviceProvider_OSXKeyboard::get_keycode(int keycode) const
 {
     throw_if_disposed();
-    
+
     bool result = false;
-    
+
     // Sanity.
     assert(keycode < clan::keycode_count);
     if (keycode < clan::keycode_count)
     {
         result = key_down_map[keycode];
     }
-    
+
     return result;
 }
 
@@ -127,7 +127,7 @@ int InputDeviceProvider_OSXKeyboard::get_button_count() const
 void InputDeviceProvider_OSXKeyboard::on_dispose()
 {
 }
-    
+
 void InputDeviceProvider_OSXKeyboard::on_key_event(const clan::InputCode& keycode, const clan::InputEvent::Type& type)
 {
     // Sanity.

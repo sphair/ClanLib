@@ -89,7 +89,6 @@ public:
 	/// \brief Returns true if a tablet stylus is in proximity (hovering close enough over the tablet surface).
 	bool in_proximity() const { return false; }
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -115,11 +114,11 @@ private:
     bool mouse_down_map[clan::mouse_count];
     clan::Point mouse_position;
     Signal<const InputEvent &> *sig_provider_event;
-    
+
     void on_dispose();
     void on_mouse_event(const clan::InputCode& keycode, const clan::InputEvent::Type& type,
                         const clan::Point& position);
-    
+
     OpenGLWindowProvider *window;
     friend class OpenGLWindowProvider_Impl;
 /// \}

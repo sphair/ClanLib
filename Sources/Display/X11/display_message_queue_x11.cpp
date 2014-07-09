@@ -66,7 +66,6 @@ DisplayMessageQueue_X11::~DisplayMessageQueue_X11()
 /////////////////////////////////////////////////////////////////////////////
 // DisplayMessageQueue_X11 attributes:
 
-
 /////////////////////////////////////////////////////////////////////////////
 // DisplayMessageQueue_X11 operations:
 
@@ -129,7 +128,7 @@ int DisplayMessageQueue_X11::wait(const std::vector<Event> &events, int timeout)
 					throw Exception("EventProvider is a null pointer!");
 
 				SocketMessage_X11 msg;
-				
+
 				msg.handle = provider->get_event_handle(i);
 				msg.type = provider->get_event_type(i);
 				handles.push_back(msg);
@@ -300,7 +299,6 @@ int DisplayMessageQueue_X11::msg_wait_for_multiple_objects(std::vector<SocketMes
 	FD_ZERO(&wfds);
 	FD_ZERO(&efds);
 
-
 	for (message_index=0; message_index < num_messages; ++message_index)
 	{
 		int handle = all_events[message_index].handle;
@@ -375,8 +373,8 @@ int DisplayMessageQueue_X11::msg_wait_for_multiple_objects(std::vector<SocketMes
 			if (object_id < 0)	// Not set yet
 			{
 				object_id = event_handles.size();	// A new (unknown) message available
-			}		
-		} 
+			}
+		}
 	}
 
 	if (object_id < 0)
