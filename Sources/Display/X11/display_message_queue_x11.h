@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "API/Display/api_display.h"
 #include "API/Core/System/event_provider.h"
 #include <vector>
 #include <X11/Xlib.h>
