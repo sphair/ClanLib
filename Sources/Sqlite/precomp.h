@@ -49,10 +49,3 @@
 #define DEBUG
 #endif
 
-#ifdef WIN32
-#define BREAKPOINT
-#else
-#define BREAKPOINT asm("int $03");
-#endif
-
-
