@@ -290,7 +290,7 @@ void GL1TextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, 
 
 	PixelBuffer image = ximage;
 
-	if (src_rect.left < 0 || src_rect.top < 0 || src_rect.right > image.get_width(), src_rect.bottom > image.get_height())
+	if (src_rect.left < 0 || src_rect.top < 0 || src_rect.right > image.get_width() || src_rect.bottom > image.get_height())
 		throw Exception("Rectangle out of bounds");
 
 	throw_if_disposed();

@@ -790,9 +790,7 @@ void Sprite::set_rotation_hotspot(Origin origin, int x, int y)
 
 void Sprite::set_frame(unsigned int frame)
 {
-	if(frame < 0)
-		impl->current_frame = 0;
-	else if(frame >= impl->frames.size())
+	if(frame >= impl->frames.size())
 		impl->current_frame = impl->frames.size() - 1;
 	else
 		impl->current_frame = frame;

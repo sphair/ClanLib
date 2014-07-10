@@ -33,7 +33,6 @@
 #include <list>
 #include <map>
 #include "API/Core/Signals/signal.h"
-#include "API/Display/api_display.h"
 #include "API/Display/Window/input_context.h"
 #include "API/Display/Window/input_device.h"
 #include "API/Display/TargetProviders/input_device_provider.h"

@@ -48,7 +48,7 @@ public:
 
 	struct Contact
 	{
-		Contact(Physics3DObject_Impl *object, const btVector3 &hit_point, const btVector3 &hit_normal, float hit_distance) : object(object), hit_position(hit_position), hit_normal(hit_normal), hit_distance(hit_distance) { }
+		Contact(Physics3DObject_Impl *object, const btVector3 &hit_point, const btVector3 &hit_normal, float hit_distance) : object(object), hit_position(hit_point), hit_normal(hit_normal), hit_distance(hit_distance) { }
 
 		Physics3DObject_Impl *object;
 		btVector3 hit_position;
