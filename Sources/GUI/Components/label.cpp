@@ -68,7 +68,7 @@ public:
 // Label Construction:
 
 Label::Label(GUIComponent *parent)
-: GUIComponent(parent, CssStr::Label::type_name), impl(new Label_Impl)
+: GUIComponent(parent, CssStr::Label::type_name), impl(std::make_shared<Label_Impl>())
 {
 	impl->label = this;
 	func_render() = bind_member(impl.get(), &Label_Impl::on_render);

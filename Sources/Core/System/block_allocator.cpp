@@ -50,7 +50,7 @@ public:
 // BlockAllocator construction:
 
 BlockAllocator::BlockAllocator()
-: impl(new BlockAllocator_Impl)
+: impl(std::make_shared<BlockAllocator_Impl>())
 {
 	impl->block_pos = 0;
 }

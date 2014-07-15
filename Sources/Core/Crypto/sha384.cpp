@@ -39,7 +39,7 @@ namespace clan
 // SHA384 Construction:
 
 SHA384::SHA384()
-: impl(new SHA512_Impl(cl_sha_384))
+: impl(std::make_shared<SHA512_Impl>(cl_sha_384))
 {
 }
 

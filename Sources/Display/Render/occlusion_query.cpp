@@ -57,7 +57,7 @@ public:
 // OcclusionQuery Construction:
 
 OcclusionQuery::OcclusionQuery(GraphicContext &context)
-: impl(new OcclusionQuery_Impl)
+: impl(std::make_shared<OcclusionQuery_Impl>())
 {
 	GraphicContextProvider *gc_provider = context.get_provider();
 	impl->provider = gc_provider->alloc_occlusion_query();

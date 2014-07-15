@@ -72,23 +72,23 @@ SoundOutput::SoundOutput(const SoundOutput_Description &desc)
 #ifdef WIN32
 	try
 	{
-		std::shared_ptr<SoundOutput_Impl> soundoutput_impl(new SoundOutput_Win32(desc.get_mixing_frequency(), desc.get_mixing_latency()));
+		std::shared_ptr<SoundOutput_Impl> soundoutput_impl(std::make_shared<SoundOutput_Win32>(desc.get_mixing_frequency(), desc.get_mixing_latency()));
 		impl = soundoutput_impl;
 	}
 	catch (...)
 	{
-		std::shared_ptr<SoundOutput_Impl> soundoutput_impl(new SoundOutput_DirectSound(desc.get_mixing_frequency(), desc.get_mixing_latency()));
+		std::shared_ptr<SoundOutput_Impl> soundoutput_impl(std::make_shared<SoundOutput_DirectSound>(desc.get_mixing_frequency(), desc.get_mixing_latency()));
 		impl = soundoutput_impl;
 	}
 #else
 #ifdef __APPLE__
-	std::shared_ptr<SoundOutput_Impl> soundoutput_impl(new SoundOutput_MacOSX(desc.get_mixing_frequency(), desc.get_mixing_latency()));
+	std::shared_ptr<SoundOutput_Impl> soundoutput_impl(std::make_shared<SoundOutput_MacOSX>(desc.get_mixing_frequency(), desc.get_mixing_latency()));
 	impl = soundoutput_impl;
 #else
 #if defined(__linux__) && defined(HAVE_ALSA_ASOUNDLIB_H)
 	// Try building ALSA
 
-	std::shared_ptr<SoundOutput_Impl> alsa_impl(new SoundOutput_alsa(desc.get_mixing_frequency(), desc.get_mixing_latency()));
+	std::shared_ptr<SoundOutput_Impl> alsa_impl(std::make_shared<SoundOutput_alsa>(desc.get_mixing_frequency(), desc.get_mixing_latency()));
 	if ( ( (SoundOutput_alsa *) (alsa_impl.get()))->handle)
 	{
 		impl = alsa_impl;
@@ -100,11 +100,11 @@ SoundOutput::SoundOutput(const SoundOutput_Description &desc)
 
 	if (!impl)
 	{
-		std::shared_ptr<SoundOutput_Impl> soundoutput_impl(new SoundOutput_OSS(desc.get_mixing_frequency(), desc.get_mixing_latency()));
+		std::shared_ptr<SoundOutput_Impl> soundoutput_impl(std::make_shared<SoundOutput_OSS>(desc.get_mixing_frequency(), desc.get_mixing_latency()));
 		impl = soundoutput_impl;
 	}
 #else
-    std::shared_ptr<SoundOutput_Impl> soundoutput_impl(new SoundOutput_OSS(desc.get_mixing_frequency(), desc.get_mixing_latency()));
+    std::shared_ptr<SoundOutput_Impl> soundoutput_impl(std::make_shared<SoundOutput_OSS>(desc.get_mixing_frequency(), desc.get_mixing_latency()));
     impl = soundoutput_impl;
 #endif
 #endif

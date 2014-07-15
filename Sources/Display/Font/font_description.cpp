@@ -39,11 +39,11 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // FontDescription construction:
 
-FontDescription::FontDescription() : impl(new FontDescription_Impl)
+FontDescription::FontDescription() : impl(std::make_shared<FontDescription_Impl>())
 {
 }
 
-FontDescription::FontDescription(const std::string &typeface_name) : impl(new FontDescription_Impl)
+FontDescription::FontDescription(const std::string &typeface_name) : impl(std::make_shared<FontDescription_Impl>())
 {
 	set_typeface_name(typeface_name);
 }

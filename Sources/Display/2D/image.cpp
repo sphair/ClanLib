@@ -117,7 +117,7 @@ Image::Image()
 }
 
 Image::Image(Canvas &canvas, const PixelBuffer &pb, const Rect &rect)
-: impl(new Image_Impl())
+: impl(std::make_shared<Image_Impl>())
 {
 	impl->texture = Texture2D(canvas, pb.get_width(), pb.get_height(), pb.get_format());
 	impl->texture.set_subimage(canvas, 0, 0, pb, rect);
@@ -125,28 +125,28 @@ Image::Image(Canvas &canvas, const PixelBuffer &pb, const Rect &rect)
 }
 
 Image::Image(Texture2D texture, const Rect &rect)
-: impl(new Image_Impl())
+: impl(std::make_shared<Image_Impl>())
 {
 	impl->texture = texture;
 	impl->texture_rect = rect;
 }
 
 Image::Image(Subtexture &sub_texture)
-: impl(new Image_Impl())
+: impl(std::make_shared<Image_Impl>())
 {
 	impl->texture = sub_texture.get_texture();
 	impl->texture_rect = sub_texture.get_geometry();
 }
 
 Image::Image(Canvas &canvas, const std::string &filename, FileSystem &fs, const ImageImportDescription &import_desc)
-: impl(new Image_Impl())
+: impl(std::make_shared<Image_Impl>())
 {
 	impl->texture = Texture2D(canvas, filename, fs, import_desc);
 	impl->texture_rect = impl->texture.get_size();
 }
 
 Image::Image(Canvas &canvas, const std::string &fullname, const ImageImportDescription &import_desc)
-: impl(new Image_Impl())
+: impl(std::make_shared<Image_Impl>())
 {
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);

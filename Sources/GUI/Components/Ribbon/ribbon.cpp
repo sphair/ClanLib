@@ -46,7 +46,7 @@ namespace clan
 {
 
 Ribbon::Ribbon(GUIComponent *container)
-: GUIComponent(container, "ribbon"), impl(new Ribbon_Impl)
+: GUIComponent(container, "ribbon"), impl(std::make_shared<Ribbon_Impl>())
 {
 	impl->component = this;
 

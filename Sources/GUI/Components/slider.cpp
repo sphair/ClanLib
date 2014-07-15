@@ -136,7 +136,7 @@ public:
 // Slider Construction:
 
 Slider::Slider(GUIComponent *parent)
-: GUIComponent(parent, CssStr::Slider::type_name), impl(new Slider_Impl)
+: GUIComponent(parent, CssStr::Slider::type_name), impl(std::make_shared<Slider_Impl>())
 {
 	set_focus_policy(focus_local);
 	impl->slider = this;

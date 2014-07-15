@@ -46,14 +46,14 @@ PolygonShape::PolygonShape()
 }
 
 PolygonShape::PolygonShape(const PhysicsWorld &pw)
-: impl(new PolygonShape_Impl(pw.impl.get()))
+: impl(std::make_shared<PolygonShape_Impl>(pw.impl.get()))
 {
 	shape_impl->shape_type = shape_polygon;
 	shape_impl->shape = dynamic_cast<b2Shape*> (&impl->shape);
 }
 
 PolygonShape::PolygonShape(const PhysicsContext &pc)
-: impl(new PolygonShape_Impl(pc.impl->get_owner()))
+: impl(std::make_shared<PolygonShape_Impl>(pc.impl->get_owner()))
 {
 	shape_impl->shape_type = shape_polygon;
 	shape_impl->shape = dynamic_cast<b2Shape*> (&impl->shape);

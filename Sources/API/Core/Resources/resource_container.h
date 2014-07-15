@@ -47,7 +47,7 @@ public:
 class ResourceContainer
 {
 public:
-	ResourceContainer() : impl(new ResourceContainer_Impl())
+	ResourceContainer() : impl(std::make_shared<ResourceContainer_Impl>())
 	{
 	}
 

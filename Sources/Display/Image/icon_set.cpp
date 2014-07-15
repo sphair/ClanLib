@@ -101,7 +101,7 @@ public:
 };
 
 IconSet::IconSet()
-: impl(new IconSet_Impl)
+: impl(std::make_shared<IconSet_Impl>())
 {
 }
 

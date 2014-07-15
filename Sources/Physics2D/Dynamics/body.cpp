@@ -51,7 +51,7 @@ Body::Body()
 }
 
 Body::Body(PhysicsContext &pc, const BodyDescription &description)
-: impl(new Body_Impl(pc.impl->get_owner()))
+: impl(std::make_shared<Body_Impl>(pc.impl->get_owner()))
 {
 	if(impl->owner_world)
 	{
@@ -62,7 +62,7 @@ Body::Body(PhysicsContext &pc, const BodyDescription &description)
 }
 
 Body::Body(PhysicsContext &pc, const std::string &resource_id, const XMLResourceDocument &resources)
-: impl(new Body_Impl(pc.impl->get_owner()))
+: impl(std::make_shared<Body_Impl>(pc.impl->get_owner()))
 {
 	if(impl->owner_world)
 	{

@@ -70,7 +70,7 @@ ShaderObject::ShaderObject()
 }
 
 ShaderObject::ShaderObject(GraphicContext &gc, ShaderType type, const void *source, int source_size)
-: impl(new ShaderObject_Impl)
+: impl(std::make_shared<ShaderObject_Impl>())
 {
 	GraphicContextProvider *gc_provider = gc.get_provider();
 	impl->provider = gc_provider->alloc_shader_object();
@@ -78,7 +78,7 @@ ShaderObject::ShaderObject(GraphicContext &gc, ShaderType type, const void *sour
 }
 
 ShaderObject::ShaderObject(GraphicContext &gc, ShaderType type, const std::string &source)
-: impl(new ShaderObject_Impl)
+: impl(std::make_shared<ShaderObject_Impl>())
 {
 	GraphicContextProvider *gc_provider = gc.get_provider();
 	impl->provider = gc_provider->alloc_shader_object();
@@ -87,7 +87,7 @@ ShaderObject::ShaderObject(GraphicContext &gc, ShaderType type, const std::strin
 
 
 ShaderObject::ShaderObject(GraphicContext &gc, ShaderType type, const std::vector<std::string> &sources)
-: impl(new ShaderObject_Impl)
+: impl(std::make_shared<ShaderObject_Impl>())
 {
 	GraphicContextProvider *gc_provider = gc.get_provider();
 	impl->provider = gc_provider->alloc_shader_object();
@@ -95,14 +95,14 @@ ShaderObject::ShaderObject(GraphicContext &gc, ShaderType type, const std::vecto
 }
 
 ShaderObject::ShaderObject(GraphicContextProvider *gc_provider, ShaderType type, const std::string &source)
-: impl(new ShaderObject_Impl)
+: impl(std::make_shared<ShaderObject_Impl>())
 {
 	impl->provider = gc_provider->alloc_shader_object();
 	impl->provider->create(type, source);
 }
 
 ShaderObject::ShaderObject(GraphicContextProvider *gc_provider, ShaderType type, const std::vector<std::string> &sources)
-: impl(new ShaderObject_Impl)
+: impl(std::make_shared<ShaderObject_Impl>())
 {
 	impl->provider = gc_provider->alloc_shader_object();
 	impl->provider->create(type, sources);

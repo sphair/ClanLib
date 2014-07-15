@@ -104,7 +104,7 @@ DisplayWindow::DisplayWindow(
 }
 
 DisplayWindow::DisplayWindow(DisplayWindowProvider *provider)
-: impl(new DisplayWindow_Impl)
+: impl(std::make_shared<DisplayWindow_Impl>())
 {
 	impl->provider = provider;
 }

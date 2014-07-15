@@ -38,7 +38,7 @@ namespace clan
 {
 
 RibbonSection::RibbonSection(RibbonPage *parent, const std::string &text)
-: GUIComponent(parent, "ribbon-section"), impl(new RibbonSection_Impl(text))
+: GUIComponent(parent, "ribbon-section"), impl(std::make_shared<RibbonSection_Impl>(text))
 {
 	impl->component = this;
 	parent->impl->add_section(this);

@@ -65,7 +65,7 @@ public:
 // ScreenInfo Construction:
 
 ScreenInfo::ScreenInfo()
-: impl(new ScreenInfo_Impl)
+: impl(std::make_shared<ScreenInfo_Impl>())
 {
 }
 

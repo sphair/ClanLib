@@ -82,7 +82,7 @@ public:
 // TabHeader Construction:
 
 TabHeader::TabHeader(GUIComponent *parent)
-: GUIComponent(parent, CssStr::Tab::Header::type_name), impl(new TabHeader_Impl)
+: GUIComponent(parent, CssStr::Tab::Header::type_name), impl(std::make_shared<TabHeader_Impl>())
 {
 	set_focus_policy(focus_local);
 	impl->component = this;

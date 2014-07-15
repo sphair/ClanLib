@@ -64,13 +64,13 @@ public:
 // DragBox Construction:
 
 DragBox::DragBox(GUIComponent *parent)
-: GUIComponent(parent, CssStr::DragBox::type_name), impl(new DragBox_Impl)
+: GUIComponent(parent, CssStr::DragBox::type_name), impl(std::make_shared<DragBox_Impl>())
 {
 	impl->init(this);
 }
 
 DragBox::DragBox(GUIManager *manager, const GUITopLevelDescription &description)
-	: GUIComponent(manager, description, CssStr::DragBox::type_name), impl(new DragBox_Impl)
+	: GUIComponent(manager, description, CssStr::DragBox::type_name), impl(std::make_shared<DragBox_Impl>())
 {
 	impl->init(this);
 }

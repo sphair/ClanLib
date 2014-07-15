@@ -37,7 +37,7 @@ namespace clan
 // HTTPServer Construction:
 
 HTTPServer::HTTPServer()
-: impl(new HTTPServer_Impl)
+: impl(std::make_shared<HTTPServer_Impl>())
 {
 }
 

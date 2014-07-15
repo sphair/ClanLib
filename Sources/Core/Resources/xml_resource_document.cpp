@@ -46,7 +46,7 @@ namespace clan
 // XMLResourceDocument Construction:
 
 XMLResourceDocument::XMLResourceDocument()
-: impl(new XMLResourceDocument_Impl)
+: impl(std::make_shared<XMLResourceDocument_Impl>())
 {
 	impl->ns_resources = "http://clanlib.org/xmlns/resources-1.0";
 	DomElement document_element = impl->document.create_element_ns(
@@ -60,19 +60,19 @@ XMLResourceDocument::XMLResourceDocument()
 }
 
 XMLResourceDocument::XMLResourceDocument(const std::string &filename)
-: impl(new XMLResourceDocument_Impl)
+: impl(std::make_shared<XMLResourceDocument_Impl>())
 {
 	load(filename);
 }
 
 XMLResourceDocument::XMLResourceDocument(const std::string &filename, FileSystem fs)
-: impl(new XMLResourceDocument_Impl)
+: impl(std::make_shared<XMLResourceDocument_Impl>())
 {
 	load(filename, fs);
 }
 
 XMLResourceDocument::XMLResourceDocument(IODevice file, const std::string &base_path, FileSystem fs)
-: impl(new XMLResourceDocument_Impl)
+: impl(std::make_shared<XMLResourceDocument_Impl>())
 {
 	load(file, base_path, fs);
 }

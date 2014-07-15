@@ -57,7 +57,7 @@ GUIWindowManagerTextureWindow::GUIWindowManagerTextureWindow()
 }
 
 GUIWindowManagerTextureWindow::GUIWindowManagerTextureWindow(GUITopLevelWindow *window, const Subtexture &subtexture, const Rect &geometry)
-: impl(new GUIWindowManagerTextureWindow_Impl)
+: impl(std::make_shared<GUIWindowManagerTextureWindow_Impl>())
 {
 	impl->texture = subtexture;
 	impl->geometry = geometry;

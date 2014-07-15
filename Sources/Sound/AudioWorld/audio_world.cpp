@@ -11,7 +11,7 @@ namespace clan
 {
 
 AudioWorld::AudioWorld(const ResourceManager &resources)
-: impl(new AudioWorld_Impl(resources))
+: impl(std::make_shared<AudioWorld_Impl>(resources))
 {
 }
 

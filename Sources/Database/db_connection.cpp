@@ -48,7 +48,7 @@ DBConnection::DBConnection()
 }
 
 DBConnection::DBConnection(DBConnectionProvider *provider)
-: impl(new DBConnection_Impl(provider))
+: impl(std::make_shared<DBConnection_Impl>(provider))
 {
 }
 
@@ -65,19 +65,19 @@ DBConnection::~DBConnection()
 
 DBCommand DBConnection::create_command(const std::string &text, DBCommand::Type type)
 {
-	std::shared_ptr<DBCommand_Impl> cmd_impl(new DBCommand_Impl(impl->provider->create_command(text, type)));
+	std::shared_ptr<DBCommand_Impl> cmd_impl(std::make_shared<DBCommand_Impl>(impl->provider->create_command(text, type)));
 	return DBCommand(cmd_impl);
 }
 
 DBTransaction DBConnection::begin_transaction(DBTransaction::Type type)
 {
-	std::shared_ptr<DBTransaction_Impl> transaction_impl(new DBTransaction_Impl(impl->provider->begin_transaction(type)));
+	std::shared_ptr<DBTransaction_Impl> transaction_impl(std::make_shared<DBTransaction_Impl>(impl->provider->begin_transaction(type)));
 	return DBTransaction(transaction_impl);
 }
 
 DBReader DBConnection::execute_reader(DBCommand &command)
 {
-	std::shared_ptr<DBReader_Impl> reader_impl(new DBReader_Impl(impl->provider->execute_reader(command.get_provider())));
+	std::shared_ptr<DBReader_Impl> reader_impl(std::make_shared<DBReader_Impl>(impl->provider->execute_reader(command.get_provider())));
 	return DBReader(reader_impl);
 }
 

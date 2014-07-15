@@ -64,7 +64,7 @@ AcceleratorKey::AcceleratorKey()
 }
 
 AcceleratorKey::AcceleratorKey(int id, int mod1, int mod2, int mod3)
-: impl(new AcceleratorKey_Impl)
+: impl(std::make_shared<AcceleratorKey_Impl>())
 {
 	impl->id = id;
 	if (mod1 == keycode_shift || mod2 == keycode_shift || mod3 == keycode_shift)

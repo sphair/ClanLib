@@ -52,13 +52,13 @@ Canvas::Canvas()
 {
 }
 
-Canvas::Canvas(DisplayWindow &window) : impl(new Canvas_Impl)
+Canvas::Canvas(DisplayWindow &window) : impl(std::make_shared<Canvas_Impl>())
 {
 	impl->init(window);
 	set_map_mode(map_2d_upper_left);
 }
 
-Canvas::Canvas(Canvas &canvas, FrameBuffer &framebuffer) : impl(new Canvas_Impl)
+Canvas::Canvas(Canvas &canvas, FrameBuffer &framebuffer) : impl(std::make_shared<Canvas_Impl>())
 {
 	impl->init(canvas.impl.get(), framebuffer);
 	set_map_mode(map_2d_upper_left);

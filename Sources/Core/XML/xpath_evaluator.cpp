@@ -41,7 +41,7 @@ namespace clan
 // XPathEvaluator Construction:
 
 XPathEvaluator::XPathEvaluator()
-: impl(new XPathEvaluator_Impl)
+: impl(std::make_shared<XPathEvaluator_Impl>())
 {
 }
 

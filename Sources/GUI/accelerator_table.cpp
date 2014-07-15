@@ -57,7 +57,7 @@ public:
 // AcceleratorTable Construction:
 
 AcceleratorTable::AcceleratorTable()
-: impl(new AcceleratorTable_Impl)
+: impl(std::make_shared<AcceleratorTable_Impl>())
 {
 }
 

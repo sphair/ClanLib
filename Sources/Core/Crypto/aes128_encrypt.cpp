@@ -39,7 +39,7 @@ namespace clan
 // AES128_Encrypt Construction:
 
 AES128_Encrypt::AES128_Encrypt()
-: impl(new AES128_Encrypt_Impl())
+: impl(std::make_shared<AES128_Encrypt_Impl>())
 {
 }
 

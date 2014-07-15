@@ -38,7 +38,7 @@ namespace clan
 // SHA1 Construction:
 
 SHA1::SHA1()
-: impl(new SHA1_Impl)
+: impl(std::make_shared<SHA1_Impl>())
 {
 }
 

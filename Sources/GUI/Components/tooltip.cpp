@@ -67,7 +67,7 @@ public:
 // ToolTip Construction:
 
 ToolTip::ToolTip(GUIManager manager)
-: GUIComponent(&manager, ToolTip_Impl::create_description(), CssStr::ToolTip::type_name), impl(new ToolTip_Impl)
+: GUIComponent(&manager, ToolTip_Impl::create_description(), CssStr::ToolTip::type_name), impl(std::make_shared<ToolTip_Impl>())
 {
 	impl->tooltip = this;
 

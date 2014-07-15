@@ -92,7 +92,7 @@ public:
 // StatusBar Construction:
 
 StatusBar::StatusBar(GUIComponent *parent)
-: GUIComponent(parent, CssStr::StatusBar::type_name), impl(new StatusBar_Impl)
+: GUIComponent(parent, CssStr::StatusBar::type_name), impl(std::make_shared<StatusBar_Impl>())
 {
 	impl->statusbar = this;
 

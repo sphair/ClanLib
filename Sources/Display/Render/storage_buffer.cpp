@@ -57,7 +57,7 @@ StorageBuffer::StorageBuffer()
 }
 
 StorageBuffer::StorageBuffer(GraphicContext &gc, int size, int stride, BufferUsage usage)
-: impl(new StorageBuffer_Impl)
+: impl(std::make_shared<StorageBuffer_Impl>())
 {
 	GraphicContextProvider *gc_provider = gc.get_provider();
 	impl->provider = gc_provider->alloc_storage_buffer();
@@ -65,7 +65,7 @@ StorageBuffer::StorageBuffer(GraphicContext &gc, int size, int stride, BufferUsa
 }
 
 StorageBuffer::StorageBuffer(GraphicContext &gc, const void *data, int size, int stride, BufferUsage usage)
-: impl(new StorageBuffer_Impl)
+: impl(std::make_shared<StorageBuffer_Impl>())
 {
 	GraphicContextProvider *gc_provider = gc.get_provider();
 	impl->provider = gc_provider->alloc_storage_buffer();

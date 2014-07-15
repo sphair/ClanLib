@@ -57,7 +57,7 @@ TransferBuffer::TransferBuffer()
 }
 
 TransferBuffer::TransferBuffer(GraphicContext &gc, int size, BufferUsage usage)
-: impl(new TransferBuffer_Impl)
+: impl(std::make_shared<TransferBuffer_Impl>())
 {
 	GraphicContextProvider *gc_provider = gc.get_provider();
 	impl->provider = gc_provider->alloc_transfer_buffer();
@@ -65,7 +65,7 @@ TransferBuffer::TransferBuffer(GraphicContext &gc, int size, BufferUsage usage)
 }
 
 TransferBuffer::TransferBuffer(GraphicContext &gc, const void *data, int size, BufferUsage usage)
-: impl(new TransferBuffer_Impl)
+: impl(std::make_shared<TransferBuffer_Impl>())
 {
 	GraphicContextProvider *gc_provider = gc.get_provider();
 	impl->provider = gc_provider->alloc_transfer_buffer();

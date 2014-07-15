@@ -107,7 +107,7 @@ public:
 // ComboBox Construction:
 
 ComboBox::ComboBox(GUIComponent *parent)
-: GUIComponent(parent, CssStr::ComboBox::type_name), impl(new ComboBox_Impl)
+: GUIComponent(parent, CssStr::ComboBox::type_name), impl(std::make_shared<ComboBox_Impl>())
 {
 	set_focus_policy(focus_local);
 	impl->component = this;

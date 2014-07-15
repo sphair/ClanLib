@@ -35,7 +35,7 @@ namespace clan
 {
 
 GameTime::GameTime(int ticks_per_second, int max_updates_per_second)
-	: impl(new GameTime_Impl(ticks_per_second, max_updates_per_second))
+	: impl(std::make_shared<GameTime_Impl>(ticks_per_second, max_updates_per_second))
 {
 	reset();
 }

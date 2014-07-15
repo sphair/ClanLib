@@ -73,7 +73,7 @@ public:
 // Tab Construction:
 
 Tab::Tab(GUIComponent *parent)
-: GUIComponent(parent, CssStr::Tab::type_name), impl(new Tab_Impl)
+: GUIComponent(parent, CssStr::Tab::type_name), impl(std::make_shared<Tab_Impl>())
 {
 	impl->tab = this;
 	func_process_message() = bind_member(impl.get(), &Tab_Impl::on_process_message);

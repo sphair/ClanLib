@@ -67,21 +67,21 @@ Sprite::Sprite(Canvas &canvas, const std::string &fullname, const ImageImportDes
 }
 
 Sprite::Sprite(Canvas &canvas, const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc)
-: impl(new Sprite_Impl())
+: impl(std::make_shared<Sprite_Impl>())
 {
 	add_frame(canvas, filename, fs, import_desc );
 	restart();
 }
 
 Sprite::Sprite(Canvas &canvas, IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc )
-: impl(new Sprite_Impl())
+: impl(std::make_shared<Sprite_Impl>())
 {
 	add_frame(canvas, file, image_type, import_desc );
 	restart();
 }
 
 Sprite::Sprite(Canvas &canvas)
-: impl(new Sprite_Impl())
+: impl(std::make_shared<Sprite_Impl>())
 {
 }
 

@@ -61,7 +61,7 @@ FrameBuffer::FrameBuffer()
 }
 
 FrameBuffer::FrameBuffer(GraphicContext &context)
-: impl(new FrameBuffer_Impl)
+: impl(std::make_shared<FrameBuffer_Impl>())
 {
 	GraphicContextProvider *gc_provider = context.get_provider();
 	impl->provider = gc_provider->alloc_frame_buffer();

@@ -89,7 +89,7 @@ private:
 };
 
 WorkQueue::WorkQueue(bool serial_queue)
-	: impl(new WorkQueue_Impl(serial_queue))
+	: impl(std::make_shared<WorkQueue_Impl>(serial_queue))
 {
 }
 

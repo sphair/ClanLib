@@ -63,7 +63,7 @@ public:
 // EarClipResult Construction:
 
 EarClipResult::EarClipResult(int num_triangles)
-: impl(new EarClipResult_Impl(num_triangles))
+: impl(std::make_shared<EarClipResult_Impl>(num_triangles))
 {
 }
 

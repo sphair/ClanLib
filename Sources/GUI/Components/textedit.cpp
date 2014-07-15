@@ -62,7 +62,7 @@ namespace clan
 // TextEdit Construction:
 
 TextEdit::TextEdit(GUIComponent *parent)
-: GUIComponent(parent, CssStr::TextEdit::type_name), impl(new TextEdit_Impl)
+: GUIComponent(parent, CssStr::TextEdit::type_name), impl(std::make_shared<TextEdit_Impl>())
 {
 	set_focus_policy(focus_local);
 

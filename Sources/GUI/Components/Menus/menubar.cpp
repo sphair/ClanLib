@@ -53,7 +53,7 @@ namespace clan
 // MenuBar Construction:
 
 MenuBar::MenuBar( GUIComponent *parent)
-: GUIComponent(parent, CssStr::MenuBar::type_name), impl(new MenuBar_Impl)
+: GUIComponent(parent, CssStr::MenuBar::type_name), impl(std::make_shared<MenuBar_Impl>())
 {
 	impl->menubar = this;
 	func_process_message() = bind_member(impl.get(), &MenuBar_Impl::on_process_message);

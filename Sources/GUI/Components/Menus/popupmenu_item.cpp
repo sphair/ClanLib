@@ -71,7 +71,7 @@ PopupMenuItem::PopupMenuItem()
 }
 
 PopupMenuItem::PopupMenuItem(int id)
-: impl(new PopupMenuItem_Impl)
+: impl(std::make_shared<PopupMenuItem_Impl>())
 {
 	impl->id = id;
 }

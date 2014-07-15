@@ -39,7 +39,7 @@ namespace clan
 // SHA512_256 Construction:
 
 SHA512_256::SHA512_256()
-: impl(new SHA512_Impl(cl_sha_512_256))
+: impl(std::make_shared<SHA512_Impl>(cl_sha_512_256))
 {
 }
 

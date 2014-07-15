@@ -40,7 +40,7 @@ namespace clan
 {
 
 RibbonMenu::RibbonMenu(GUIComponent *owner)
-: GUIComponent(owner, RibbonMenu_Impl::create_toplevel_description(), "ribbon-menu"), impl(new RibbonMenu_Impl)
+: GUIComponent(owner, RibbonMenu_Impl::create_toplevel_description(), "ribbon-menu"), impl(std::make_shared<RibbonMenu_Impl>())
 {
 	impl->component = this;
 	func_render() = bind_member(impl.get(), &RibbonMenu_Impl::on_render);

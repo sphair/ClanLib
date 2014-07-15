@@ -57,7 +57,7 @@ public:
 // GraphicContext_GL Construction:
 
 GraphicContext_GL::GraphicContext_GL(GraphicContext &gc) : GraphicContext(gc),
- impl(new GraphicContext_GL_Impl)
+ impl(std::make_shared<GraphicContext_GL_Impl>())
 {
 	impl->provider = dynamic_cast <OpenGLGraphicContextProvider *> (GraphicContext::get_provider());
 	if (!impl->provider)

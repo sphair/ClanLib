@@ -58,7 +58,7 @@ GraphicContext::GraphicContext()
 }
 
 GraphicContext::GraphicContext(GraphicContextProvider *provider)
-: impl(new GraphicContext_Impl(provider))
+: impl(std::make_shared<GraphicContext_Impl>(provider))
 {
 	impl->default_rasterizer_state = RasterizerState(*this, RasterizerStateDescription());
 	impl->default_blend_state = BlendState(*this, BlendStateDescription());

@@ -53,35 +53,35 @@ namespace clan
 // GUIManager Construction:
 
 GUIManager::GUIManager()
-: impl(new GUIManager_Impl)
+: impl(std::make_shared<GUIManager_Impl>())
 {
 	GUIWindowManagerSystem window_manager;
 	set_window_manager(window_manager);
 }
 
 GUIManager::GUIManager(const DisplayWindow &display_window)
-	: impl(new GUIManager_Impl)
+	: impl(std::make_shared<GUIManager_Impl>())
 {
 	GUIWindowManagerTexture window_manager(display_window);
 	set_window_manager(window_manager);
 }
 
 GUIManager::GUIManager(const std::string &path_to_css_and_resources)
-	: impl(new GUIManager_Impl)
+	: impl(std::make_shared<GUIManager_Impl>())
 {
 	GUIWindowManagerSystem window_manager;
 	initialize(window_manager, path_to_css_and_resources);
 }
 
 GUIManager::GUIManager(const DisplayWindow &display_window, const std::string &path_to_css_and_resources)
-: impl(new GUIManager_Impl)
+: impl(std::make_shared<GUIManager_Impl>())
 {
 	GUIWindowManagerTexture window_manager(display_window);
 	initialize(window_manager, path_to_css_and_resources);
 }
 
 GUIManager::GUIManager(GUIWindowManager &window_manager, const std::string &path_to_css_and_resources)
-: impl(new GUIManager_Impl)
+: impl(std::make_shared<GUIManager_Impl>())
 {
 	initialize(window_manager, path_to_css_and_resources);
 }

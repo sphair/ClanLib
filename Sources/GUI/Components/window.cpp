@@ -94,20 +94,20 @@ public:
 // Window Construction:
 
 Window::Window(GUIComponent *owner, const GUITopLevelDescription &description)
-: GUIComponent(owner, description, CssStr::Window::type_name), impl(new Window_Impl)
+: GUIComponent(owner, description, CssStr::Window::type_name), impl(std::make_shared<Window_Impl>())
 {
 	impl->init(this);
 	impl->title = description.get_title();
 }
 
 Window::Window(GUIComponent *parent)
-: GUIComponent(parent, CssStr::Window::type_name), impl(new Window_Impl)
+: GUIComponent(parent, CssStr::Window::type_name), impl(std::make_shared<Window_Impl>())
 {
 	impl->init(this);
 }
 
 Window::Window(GUIManager *manager, const GUITopLevelDescription &description)
-: GUIComponent(manager, description, CssStr::Window::type_name), impl(new Window_Impl)
+: GUIComponent(manager, description, CssStr::Window::type_name), impl(std::make_shared<Window_Impl>())
 {
 	if (manager->get_window_manager().get_window_manager_type() == GUIWindowManager::cl_wm_type_system)
 		impl->has_frame = false;

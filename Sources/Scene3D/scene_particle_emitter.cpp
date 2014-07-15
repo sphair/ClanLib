@@ -42,7 +42,7 @@ SceneParticleEmitter::SceneParticleEmitter()
 }
 
 SceneParticleEmitter::SceneParticleEmitter(Scene &scene)
-	: impl(new SceneParticleEmitter_Impl(scene.impl.get()))
+	: impl(std::make_shared<SceneParticleEmitter_Impl>(scene.impl.get()))
 {
 	impl->cull_proxy = impl->scene->cull_provider->create_proxy(impl.get(), impl->get_aabb());
 }

@@ -38,7 +38,7 @@ namespace clan
 // ImageImportDescription construction:
 
 ImageImportDescription::ImageImportDescription() 
-: impl(new ImageImportDescription_Impl)
+: impl(std::make_shared<ImageImportDescription_Impl>())
 {
 }
 

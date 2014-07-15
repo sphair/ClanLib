@@ -302,7 +302,7 @@ int Timer_Impl::timer_thread_max_id = 0;
 // Timer Construction:
 
 Timer::Timer()
-: impl(new Timer_Impl)
+: impl(std::make_shared<Timer_Impl>())
 {
 }
 

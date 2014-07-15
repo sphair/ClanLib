@@ -41,7 +41,7 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // Path2D Construction:
 
-Path2D::Path2D() : impl(new Path2D_Impl())
+Path2D::Path2D() : impl(std::make_shared<Path2D_Impl>())
 {
 }
 

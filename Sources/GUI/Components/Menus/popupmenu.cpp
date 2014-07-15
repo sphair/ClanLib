@@ -42,7 +42,7 @@ namespace clan
 // PopupMenu Construction:
 
 PopupMenu::PopupMenu()
-: impl(new PopupMenu_Impl)
+: impl(std::make_shared<PopupMenu_Impl>())
 {
 }
 

@@ -154,7 +154,7 @@ ShadowMapEntry::ShadowMapEntry()
 }
 
 ShadowMapEntry::ShadowMapEntry(ShadowMaps *shadow_maps)
-: impl(new ShadowMapEntry_Impl(shadow_maps))
+: impl(std::make_shared<ShadowMapEntry_Impl>(shadow_maps))
 {
 }
 

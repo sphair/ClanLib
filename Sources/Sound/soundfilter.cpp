@@ -55,7 +55,7 @@ public:
 // SoundFilter construction:
 
 SoundFilter::SoundFilter(SoundFilterProvider *provider)
-: impl(new SoundFilter_Impl)
+: impl(std::make_shared<SoundFilter_Impl>())
 {
 	impl->provider = provider;
 }

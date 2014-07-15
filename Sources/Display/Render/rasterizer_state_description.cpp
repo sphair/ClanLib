@@ -135,7 +135,7 @@ public:
 };
 
 RasterizerStateDescription::RasterizerStateDescription()
-: impl(new RasterizerStateDescription_Impl())
+: impl(std::make_shared<RasterizerStateDescription_Impl>())
 {
 }
 

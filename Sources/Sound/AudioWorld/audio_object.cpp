@@ -12,12 +12,12 @@ AudioObject::AudioObject()
 }
 
 AudioObject::AudioObject(AudioWorld &world)
-	: impl(new AudioObject_Impl(world.impl.get()))
+	: impl(std::make_shared<AudioObject_Impl>(world.impl.get()))
 {
 }
 
 AudioObject::AudioObject(AudioWorld &world, AudioDefinition definition)
-: impl(new AudioObject_Impl(world.impl.get()))
+: impl(std::make_shared<AudioObject_Impl>(world.impl.get()))
 {
 	set_attenuation_begin(definition.get_attenuation_begin());
 	set_attenuation_end(definition.get_attenuation_end());

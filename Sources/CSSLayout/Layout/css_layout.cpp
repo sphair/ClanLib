@@ -44,7 +44,7 @@ namespace clan
 {
 
 CSSLayout::CSSLayout()
-: impl(new CSSLayout_Impl())
+: impl(std::make_shared<CSSLayout_Impl>())
 {
 	impl->self = impl;
 }

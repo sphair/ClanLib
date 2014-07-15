@@ -237,7 +237,7 @@ private:
 
 };
 
-PerlinNoise::PerlinNoise() : impl(new PerlinNoise_Impl)
+PerlinNoise::PerlinNoise() : impl(std::make_shared<PerlinNoise_Impl>())
 {
 }
 

@@ -47,7 +47,7 @@ public:
 /////////////////////////////////////////////////////////////////////////////
 
 CSSProperty::CSSProperty()
-: impl(new CSSProperty_Impl())
+: impl(std::make_shared<CSSProperty_Impl>())
 {
 }
 

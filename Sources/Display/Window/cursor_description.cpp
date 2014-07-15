@@ -46,7 +46,7 @@ namespace clan
 // CursorDescription construction:
 
 CursorDescription::CursorDescription(GraphicContext &gc, const std::string &resource_id, const XMLResourceDocument &resources, const ImageImportDescription &import_desc)
-: impl(new CursorDescription_Impl)
+: impl(std::make_shared<CursorDescription_Impl>())
 {
 	XMLResourceNode resource = resources.get_resource(resource_id);
 	if (resource.get_type() != "cursor" && resource.get_type() != "cursor_description" && resource.get_type() != "image")
@@ -234,7 +234,7 @@ CursorDescription::CursorDescription(GraphicContext &gc, const std::string &reso
 }
 
 CursorDescription::CursorDescription()
-: impl(new CursorDescription_Impl)
+: impl(std::make_shared<CursorDescription_Impl>())
 {
 }
 

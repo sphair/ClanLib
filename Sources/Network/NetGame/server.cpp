@@ -38,7 +38,7 @@ namespace clan
 {
 
 NetGameServer::NetGameServer()
-: impl(new NetGameServer_Impl)
+: impl(std::make_shared<NetGameServer_Impl>())
 {
 }
 

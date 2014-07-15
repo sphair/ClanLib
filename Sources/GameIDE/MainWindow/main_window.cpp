@@ -69,7 +69,7 @@ public:
 
 
 EditorMainWindow::EditorMainWindow(GUIManager *manager, const FileItemTypeFactory &new_file_item_type_factory)
-: impl(new EditorMainWindow_Impl(new_file_item_type_factory)), GUIComponent(manager, EditorMainWindow_Impl::get_top_level_description(), "editor-main-window")
+: impl(std::make_shared<EditorMainWindow_Impl>(new_file_item_type_factory)), GUIComponent(manager, EditorMainWindow_Impl::get_top_level_description(), "editor-main-window")
 {
 	impl->setup(this);
 }

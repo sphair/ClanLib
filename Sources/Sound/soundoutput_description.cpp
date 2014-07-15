@@ -47,7 +47,7 @@ public:
 /////////////////////////////////////////////////////////////////////////////
 // SoundOutput_Description construction:
 
-SoundOutput_Description::SoundOutput_Description() : impl(new SoundOutput_Description_Impl)
+SoundOutput_Description::SoundOutput_Description() : impl(std::make_shared<SoundOutput_Description_Impl>())
 {
 	impl->mixing_frequency = 44100;
 	impl->mixing_latency = 50;

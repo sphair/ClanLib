@@ -37,13 +37,13 @@ namespace clan
 {
 
 NetGameConnection::NetGameConnection(NetGameConnectionSite *site, const TCPConnection &connection)
-: impl(new NetGameConnection_Impl())
+: impl(new NetGameConnection_Impl)
 {
 	impl->start(this, site, connection);
 }
 
 NetGameConnection::NetGameConnection(NetGameConnectionSite *site, const SocketName &socket_name)
-: impl(new NetGameConnection_Impl())
+: impl(new NetGameConnection_Impl)
 {
 	impl->start(this, site, socket_name);
 }

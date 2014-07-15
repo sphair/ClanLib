@@ -116,7 +116,7 @@ public:
 // Spin Construction:
 
 Spin::Spin(GUIComponent *parent)
-: GUIComponent(parent, CssStr::Spin::type_name), impl(new Spin_Impl)
+: GUIComponent(parent, CssStr::Spin::type_name), impl(std::make_shared<Spin_Impl>())
 {
 	impl->component = this;
 	set_double_click_enabled(false);

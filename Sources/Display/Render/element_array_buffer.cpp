@@ -57,7 +57,7 @@ ElementArrayBuffer::ElementArrayBuffer()
 }
 
 ElementArrayBuffer::ElementArrayBuffer(GraphicContext &gc, int size, BufferUsage usage)
-: impl(new ElementArrayBuffer_Impl)
+: impl(std::make_shared<ElementArrayBuffer_Impl>())
 {
 	GraphicContextProvider *gc_provider = gc.get_provider();
 	impl->provider = gc_provider->alloc_element_array_buffer();
@@ -65,7 +65,7 @@ ElementArrayBuffer::ElementArrayBuffer(GraphicContext &gc, int size, BufferUsage
 }
 
 ElementArrayBuffer::ElementArrayBuffer(GraphicContext &gc, const void *data, int size, BufferUsage usage)
-: impl(new ElementArrayBuffer_Impl)
+: impl(std::make_shared<ElementArrayBuffer_Impl>())
 {
 	GraphicContextProvider *gc_provider = gc.get_provider();
 	impl->provider = gc_provider->alloc_element_array_buffer();

@@ -48,7 +48,7 @@ InputDevice::InputDevice()
 }
 
 InputDevice::InputDevice(InputDeviceProvider *provider)
-: impl(new InputDevice_Impl)
+: impl(std::make_shared<InputDevice_Impl>())
 {
 	impl->input_device = impl;
 	impl->provider = provider;

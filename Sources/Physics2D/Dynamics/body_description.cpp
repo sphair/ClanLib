@@ -51,19 +51,19 @@ BodyDescription::BodyDescription()
 
 }
 BodyDescription::BodyDescription(const PhysicsWorld &pw)
-: impl(new BodyDescription_Impl(pw.impl.get()))
+: impl(std::make_shared<BodyDescription_Impl>(pw.impl.get()))
 {
 
 }
 
 BodyDescription::BodyDescription(const PhysicsContext &pc)
-: impl(new BodyDescription_Impl(pc.impl->get_owner()))
+: impl(std::make_shared<BodyDescription_Impl>(pc.impl->get_owner()))
 {
 
 }
 
 BodyDescription::BodyDescription(const PhysicsContext &pc, const std::string &resource_id, const XMLResourceDocument &resources)
-: impl(new BodyDescription_Impl(pc.impl->get_owner()))
+: impl(std::make_shared<BodyDescription_Impl>(pc.impl->get_owner()))
 {
 	/* example resource entry with all parameters:
 	

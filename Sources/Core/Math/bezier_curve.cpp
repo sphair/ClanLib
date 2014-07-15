@@ -39,7 +39,7 @@ namespace clan
 // BezierCurve Construction:
 
 BezierCurve::BezierCurve()
-: impl(new BezierCurve_Impl)
+: impl(std::make_shared<BezierCurve_Impl>())
 {
 }
 

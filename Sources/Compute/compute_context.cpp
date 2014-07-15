@@ -38,7 +38,7 @@ ComputeContext::ComputeContext()
 }
 
 ComputeContext::ComputeContext(GraphicContext &gc)
-: impl(new ComputeContext_Impl(gc))
+: impl(std::make_shared<ComputeContext_Impl>(gc))
 {
 }
 

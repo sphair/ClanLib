@@ -80,7 +80,7 @@ public:
 // CheckBox Construction:
 
 CheckBox::CheckBox(GUIComponent *parent)
-: GUIComponent(parent, CssStr::CheckBox::type_name), impl(new CheckBox_Impl)
+: GUIComponent(parent, CssStr::CheckBox::type_name), impl(std::make_shared<CheckBox_Impl>())
 {
 	impl->checkbox = this;
 

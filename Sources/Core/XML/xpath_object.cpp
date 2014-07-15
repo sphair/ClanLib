@@ -56,37 +56,37 @@ public:
 // XPathObject Constuction:
 
 XPathObject::XPathObject()
-: impl(new XPathObject_Impl)
+: impl(std::make_shared<XPathObject_Impl>())
 {
 	impl->type = XPathObject::type_null;
 }
 
 XPathObject::XPathObject(bool value)
-: impl(new XPathObject_Impl)
+: impl(std::make_shared<XPathObject_Impl>())
 {
 	set_boolean(value);
 }
 
 XPathObject::XPathObject(double value)
-: impl(new XPathObject_Impl)
+: impl(std::make_shared<XPathObject_Impl>())
 {
 	set_number(value);
 }
 
 XPathObject::XPathObject(size_t value)
-: impl(new XPathObject_Impl)
+: impl(std::make_shared<XPathObject_Impl>())
 {
 	set_number(value);
 }
 
 XPathObject::XPathObject(const std::string &value)
-: impl(new XPathObject_Impl)
+: impl(std::make_shared<XPathObject_Impl>())
 {
 	set_string(value);
 }
 
 XPathObject::XPathObject(const std::vector<DomNode> &value)
-: impl(new XPathObject_Impl)
+: impl(std::make_shared<XPathObject_Impl>())
 {
 	set_node_set(value);
 }

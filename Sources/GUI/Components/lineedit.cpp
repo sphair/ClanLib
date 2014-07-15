@@ -63,7 +63,7 @@ const std::string LineEdit_Impl::numeric_mode_characters = "0123456789";
 
 LineEdit::LineEdit(GUIComponent *parent)
 : GUIComponent(parent, CssStr::LineEdit::type_name),
-  impl(new LineEdit_Impl)
+  impl(std::make_shared<LineEdit_Impl>())
 {
 	set_focus_policy(focus_local);
 

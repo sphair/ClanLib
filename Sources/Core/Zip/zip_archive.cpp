@@ -53,12 +53,12 @@ namespace clan
 // ZipArchive construction:
 
 ZipArchive::ZipArchive()
-: impl(new ZipArchive_Impl)
+: impl(std::make_shared<ZipArchive_Impl>())
 {
 }
 	
 ZipArchive::ZipArchive(const std::string &filename)
-: impl(new ZipArchive_Impl)
+: impl(std::make_shared<ZipArchive_Impl>())
 {
 	IODevice input = File(filename);
 	impl->input = input;
@@ -66,7 +66,7 @@ ZipArchive::ZipArchive(const std::string &filename)
 }
 
 ZipArchive::ZipArchive(IODevice &input)
-: impl(new ZipArchive_Impl)
+: impl(std::make_shared<ZipArchive_Impl>())
 {
 	load(input);
 }

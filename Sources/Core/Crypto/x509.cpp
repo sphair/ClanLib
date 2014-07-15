@@ -43,7 +43,7 @@ X509::X509()
 }
 
 X509::X509(unsigned char *base_ptr, unsigned int length)
-: impl(new X509_Impl)
+: impl(std::make_shared<X509_Impl>())
 {
 	impl->parse(base_ptr, length);
 }

@@ -43,7 +43,7 @@ PhysicsWorld::PhysicsWorld()
 }
 
 PhysicsWorld::PhysicsWorld(const PhysicsWorldDescription &description)
-: impl(new PhysicsWorld_Impl)
+: impl(std::make_shared<PhysicsWorld_Impl>())
 {
 	impl->pc = PhysicsContext(*this);
 	impl->assistant = PhysicsQueryAssistant(*this);

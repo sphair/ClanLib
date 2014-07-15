@@ -35,7 +35,7 @@ namespace clan
 {
 
 ShaderEffectDescription::ShaderEffectDescription()
-	: impl(new ShaderEffectDescription_Impl())
+	: impl(std::make_shared<ShaderEffectDescription_Impl>())
 {
 }
 

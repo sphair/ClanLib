@@ -68,7 +68,7 @@ public:
 // ZipReader Construction:
 
 ZipReader::ZipReader(IODevice &input)
-: impl(new ZipReader_Impl(input))
+: impl(std::make_shared<ZipReader_Impl>(input))
 {
 }
 

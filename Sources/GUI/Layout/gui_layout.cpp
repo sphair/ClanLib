@@ -60,7 +60,7 @@ GUILayout::GUILayout()
 }
 
 GUILayout::GUILayout(GUILayoutProvider *provider)
-: impl(new GUILayout_Impl)
+: impl(std::make_shared<GUILayout_Impl>())
 {
 	impl->provider = provider;
 }

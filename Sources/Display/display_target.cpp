@@ -43,7 +43,7 @@ DisplayTarget::DisplayTarget()
 }
 
 DisplayTarget::DisplayTarget(DisplayTargetProvider *provider)
-: impl(new DisplayTarget_Impl)
+: impl(std::make_shared<DisplayTarget_Impl>())
 {
 	impl->set_provider(provider, impl);
 }

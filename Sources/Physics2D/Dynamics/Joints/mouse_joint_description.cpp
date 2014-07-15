@@ -43,7 +43,7 @@ MouseJointDescription::MouseJointDescription()
 }
 
 MouseJointDescription::MouseJointDescription(const PhysicsWorld &pw)
-: impl(new MouseJointDescription_Impl(*pw.impl))
+: impl(std::make_shared<MouseJointDescription_Impl>(*pw.impl))
 {
 
 }

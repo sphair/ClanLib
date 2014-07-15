@@ -34,7 +34,7 @@ namespace clan
 {
 
 Shape::Shape()
-: shape_impl(new Shape_Impl)
+: shape_impl(std::make_shared<Shape_Impl>())
 {
 
 }

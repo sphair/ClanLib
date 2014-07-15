@@ -45,7 +45,7 @@ Physics3DContactTest::Physics3DContactTest()
 }
 
 Physics3DContactTest::Physics3DContactTest(Physics3DWorld &world)
-	: impl(new Physics3DContactTest_Impl(world.impl.get()))
+	: impl(std::make_shared<Physics3DContactTest_Impl>(world.impl.get()))
 {
 }
 

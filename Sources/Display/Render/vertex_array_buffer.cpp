@@ -57,7 +57,7 @@ VertexArrayBuffer::VertexArrayBuffer()
 }
 
 VertexArrayBuffer::VertexArrayBuffer(GraphicContext &gc, int size, BufferUsage usage)
-: impl(new VertexArrayBuffer_Impl)
+: impl(std::make_shared<VertexArrayBuffer_Impl>())
 {
 	GraphicContextProvider *gc_provider = gc.get_provider();
 	impl->provider = gc_provider->alloc_vertex_array_buffer();
@@ -65,7 +65,7 @@ VertexArrayBuffer::VertexArrayBuffer(GraphicContext &gc, int size, BufferUsage u
 }
 
 VertexArrayBuffer::VertexArrayBuffer(GraphicContext &gc, const void *data, int size, BufferUsage usage)
-: impl(new VertexArrayBuffer_Impl)
+: impl(std::make_shared<VertexArrayBuffer_Impl>())
 {
 	GraphicContextProvider *gc_provider = gc.get_provider();
 	impl->provider = gc_provider->alloc_vertex_array_buffer();

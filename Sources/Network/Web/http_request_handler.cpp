@@ -42,7 +42,7 @@ HTTPRequestHandler::HTTPRequestHandler()
 }
 
 HTTPRequestHandler::HTTPRequestHandler(HTTPRequestHandlerProvider *provider)
-: impl(new HTTPRequestHandler_Impl)
+: impl(std::make_shared<HTTPRequestHandler_Impl>())
 {
 	impl->provider = provider;
 }

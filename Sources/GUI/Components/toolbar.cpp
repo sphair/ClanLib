@@ -108,7 +108,7 @@ public:
 // ToolBar Construction:
 
 ToolBar::ToolBar(GUIComponent *parent)
-: GUIComponent(parent, CssStr::ToolBar::type_name), impl(new ToolBar_Impl)
+: GUIComponent(parent, CssStr::ToolBar::type_name), impl(std::make_shared<ToolBar_Impl>())
 {
 	set_class("horizontal", true);
 	impl->toolbar = this;

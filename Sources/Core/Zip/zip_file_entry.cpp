@@ -37,7 +37,7 @@ namespace clan
 // ZipFileEntry construction:
 
 ZipFileEntry::ZipFileEntry()
-: impl(new ZipFileEntry_Impl)
+: impl(std::make_shared<ZipFileEntry_Impl>())
 {
 	impl->type = ZipFileEntry_Impl::type_file;
 	impl->is_directory = false;

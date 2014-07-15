@@ -63,18 +63,18 @@ Font::Font( Canvas &canvas, const FontDescription &desc)
 	*this = Font(canvas, desc, "");
 }
 
-  Font::Font( Canvas &canvas, const FontDescription &desc, const std::string &ttf_filename) : impl(new Font_Impl)
+  Font::Font( Canvas &canvas, const FontDescription &desc, const std::string &ttf_filename) : impl(std::make_shared<Font_Impl>())
 {
   impl->load_font( canvas, desc, ttf_filename );
 }
 
-  Font::Font( Canvas &canvas, const FontDescription &desc, const std::string &ttf_filename, FileSystem fs) : impl(new Font_Impl)
+  Font::Font( Canvas &canvas, const FontDescription &desc, const std::string &ttf_filename, FileSystem fs) : impl(std::make_shared<Font_Impl>())
 {
   impl->load_font( canvas, desc, ttf_filename, fs );
 }
 
 
-Font::Font( Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics) : impl(new Font_Impl)
+Font::Font( Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics) : impl(std::make_shared<Font_Impl>())
 {
 	impl->load_font(canvas, sprite, glyph_list, spacelen, monospace, metrics);
 }

@@ -71,7 +71,7 @@ public:
 		  context_menu(PopupMenu::create_null_object()), just_launched_lineedit(false),
 		  show_detail_icon(true), show_detail_opener(true)
 	{
-		std::shared_ptr<ListViewItem_Impl> item_impl(new ListViewItem_Impl());
+		std::shared_ptr<ListViewItem_Impl> item_impl(std::make_shared<ListViewItem_Impl>());
 		document_item = ListViewItem(item_impl);
 		edit_timer.func_expired() = bind_member(this, &ListView_Impl::on_drag_or_edit_timeout);
 	}

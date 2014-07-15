@@ -41,7 +41,7 @@ RectPacker::RectPacker()
 }
 
 RectPacker::RectPacker(const Size &max_group_size, AllocationPolicy policy)
-: impl(new RectPacker_Impl(max_group_size))
+: impl(std::make_shared<RectPacker_Impl>(max_group_size))
 {
 	set_allocation_policy(policy);
 }

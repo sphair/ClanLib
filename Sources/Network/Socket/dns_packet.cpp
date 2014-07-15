@@ -41,12 +41,12 @@ namespace clan
 // DNSPacket Construction:
 
 DNSPacket::DNSPacket()
-: impl(new DNSPacket_Impl)
+: impl(std::make_shared<DNSPacket_Impl>())
 {
 }
 
 DNSPacket::DNSPacket(const DataBuffer &data)
-: impl(new DNSPacket_Impl)
+: impl(std::make_shared<DNSPacket_Impl>())
 {
 	set_data(data);
 }
@@ -58,7 +58,7 @@ DNSPacket::DNSPacket(
 	const std::string &_question_name,
 	int question_type,
 	int question_class)
-: impl(new DNSPacket_Impl)
+: impl(std::make_shared<DNSPacket_Impl>())
 {
 	std::string question_name = _question_name;
 

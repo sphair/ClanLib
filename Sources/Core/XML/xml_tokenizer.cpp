@@ -50,7 +50,7 @@ XMLTokenizer::XMLTokenizer(const XMLTokenizer &copy) : impl(copy.impl)
 {
 }
 
-XMLTokenizer::XMLTokenizer(IODevice &input) : impl(new XMLTokenizer_Impl)
+XMLTokenizer::XMLTokenizer(IODevice &input) : impl(std::make_shared<XMLTokenizer_Impl>())
 {
 	impl->input = input;
 	impl->size = input.get_size();

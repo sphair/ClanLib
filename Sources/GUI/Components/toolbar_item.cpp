@@ -43,7 +43,7 @@ ToolBarItem::ToolBarItem()
 }
 
 ToolBarItem::ToolBarItem(int id)
-: impl(new ToolBarItem_Impl)
+: impl(std::make_shared<ToolBarItem_Impl>())
 {
 	impl->id = id;
 }

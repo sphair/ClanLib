@@ -88,7 +88,7 @@ public:
 // PNGOutputDescription construction:
 
 PNGOutputDescription::PNGOutputDescription( int bit_depth, PNGColorType color_type)
-: impl(new PNGOutputDescription_Impl)
+: impl(std::make_shared<PNGOutputDescription_Impl>())
 {
 	impl->bit_depth = bit_depth;
 	impl->color_type = color_type;

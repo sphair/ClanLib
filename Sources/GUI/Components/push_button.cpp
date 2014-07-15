@@ -77,7 +77,7 @@ public:
 // PushButton Construction:
 
 PushButton::PushButton(GUIComponent *parent)
-: GUIComponent(parent, CssStr::PushButton::type_name), impl(new PushButton_Impl)
+: GUIComponent(parent, CssStr::PushButton::type_name), impl(std::make_shared<PushButton_Impl>())
 {
 	set_blocks_default_action(true);
 	set_focus_policy(focus_local);

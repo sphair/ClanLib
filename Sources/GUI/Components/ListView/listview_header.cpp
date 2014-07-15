@@ -91,7 +91,7 @@ public:
 // ListViewHeader Construction:
 
 ListViewHeader::ListViewHeader(GUIComponent *parent)
-: GUIComponent(parent, CssStr::ListView::Header::type_name), impl(new ListViewHeader_Impl)
+: GUIComponent(parent, CssStr::ListView::Header::type_name), impl(std::make_shared<ListViewHeader_Impl>())
 {
 	impl->listview_header = this;
 	func_process_message() = bind_member(impl.get(), &ListViewHeader_Impl::on_process_message);
@@ -399,7 +399,7 @@ void ListViewHeader_Impl::update_geometry(const Rect &parent_content_rect)
 
 ListViewColumnHeader ListViewHeader_Impl::create_column(const std::string &column_id, const std::string &caption)
 {
-	std::shared_ptr<ListViewColumnHeader_Impl> col_impl(new ListViewColumnHeader_Impl());
+	std::shared_ptr<ListViewColumnHeader_Impl> col_impl(std::make_shared<ListViewColumnHeader_Impl>());
 	col_impl->part = GUIThemePart(listview_header, "columnheader");
 	col_impl->part.set_pseudo_class(CssStr::normal, true);
 	ListViewColumnHeader new_column = ListViewColumnHeader(col_impl);

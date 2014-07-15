@@ -63,7 +63,7 @@ GUIWindowManager::GUIWindowManager()
 }
 
 GUIWindowManager::GUIWindowManager(GUIWindowManagerProvider *provider)
-: impl(new GUIWindowManager_Impl)
+: impl(std::make_shared<GUIWindowManager_Impl>())
 {
 	impl->provider = provider;
 }

@@ -39,18 +39,18 @@ namespace clan
 // DisplayWindowDescription construction:
 
 DisplayWindowDescription::DisplayWindowDescription() 
-: impl(new DisplayWindowDescription_Impl)
+: impl(std::make_shared<DisplayWindowDescription_Impl>())
 {
 }
 
 DisplayWindowDescription::DisplayWindowDescription(const std::string &title) 
-: impl(new DisplayWindowDescription_Impl)
+: impl(std::make_shared<DisplayWindowDescription_Impl>())
 {
 	impl->title = title;
 }
 
 DisplayWindowDescription::DisplayWindowDescription(const std::string &title, const Rect &position, bool client_area)
-: impl(new DisplayWindowDescription_Impl)
+: impl(std::make_shared<DisplayWindowDescription_Impl>())
 {
 	impl->title = title;
 	impl->position = position;
@@ -58,7 +58,7 @@ DisplayWindowDescription::DisplayWindowDescription(const std::string &title, con
 }
 
 DisplayWindowDescription::DisplayWindowDescription(const std::string &title, const Size &size, bool client_area)
-	: impl(new DisplayWindowDescription_Impl)
+	: impl(std::make_shared<DisplayWindowDescription_Impl>())
 {
 	impl->title = title;
 	impl->position.set_size(size);
@@ -66,7 +66,7 @@ DisplayWindowDescription::DisplayWindowDescription(const std::string &title, con
 }
 
 DisplayWindowDescription::DisplayWindowDescription(const Rect &position, bool client_area)
-: impl(new DisplayWindowDescription_Impl)
+: impl(std::make_shared<DisplayWindowDescription_Impl>())
 {
 	impl->position = position;
 	impl->position_client_area = client_area;

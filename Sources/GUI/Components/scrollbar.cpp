@@ -45,7 +45,7 @@ namespace clan
 // ScrollBar Construction:
 
 ScrollBar::ScrollBar(GUIComponent *parent)
-: GUIComponent(parent, CssStr::ScrollBar::type_name), impl(new ScrollBar_Impl)
+: GUIComponent(parent, CssStr::ScrollBar::type_name), impl(std::make_shared<ScrollBar_Impl>())
 {
 	impl->scrollbar = this;
 

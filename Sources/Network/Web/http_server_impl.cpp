@@ -216,7 +216,7 @@ void HTTPServer_Impl::connection_thread_main(TCPConnection connection)
 					write_line(connection, "");
 				}
 
-				std::shared_ptr<HTTPServerConnection_Impl> connection_impl(new HTTPServerConnection_Impl);
+				std::shared_ptr<HTTPServerConnection_Impl> connection_impl(std::make_shared<HTTPServerConnection_Impl>());
 				connection_impl->connection = connection;
 				connection_impl->request_type = command;
 				connection_impl->request_url = url;

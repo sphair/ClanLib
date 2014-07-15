@@ -41,14 +41,14 @@ SceneModel::SceneModel()
 }
 
 SceneModel::SceneModel(GraphicContext &gc, Scene &scene, const std::string &model_name)
-: impl(new SceneModel_Impl())
+: impl(std::make_shared<SceneModel_Impl>())
 {
 	impl->scene = scene.impl.get();
 	impl->model = impl->scene->model_cache->get_model(gc, model_name);
 }
 
 SceneModel::SceneModel(GraphicContext &gc, Scene &scene, std::shared_ptr<ModelData> model_data)
-: impl(new SceneModel_Impl())
+: impl(std::make_shared<SceneModel_Impl>())
 {
 	impl->scene = scene.impl.get();
 	impl->model = std::shared_ptr<Model>(new Model(gc, *impl->scene->material_cache, *impl->scene->model_shader_cache, model_data, impl->scene->instances_buffer.new_offset_index()));

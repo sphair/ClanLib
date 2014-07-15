@@ -153,7 +153,7 @@ public:
 };
 
 DepthStencilStateDescription::DepthStencilStateDescription()
-: impl(new DepthStencilStateDescription_Impl())
+: impl(std::make_shared<DepthStencilStateDescription_Impl>())
 {
 }
 

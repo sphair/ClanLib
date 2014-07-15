@@ -46,7 +46,7 @@ PrimitivesArray::PrimitivesArray()
 }
 
 PrimitivesArray::PrimitivesArray(GraphicContext &gc)
-: impl(new PrimitivesArray_Impl())
+: impl(std::make_shared<PrimitivesArray_Impl>())
 {
 	impl->provider = gc.get_provider()->alloc_primitives_array();
 }

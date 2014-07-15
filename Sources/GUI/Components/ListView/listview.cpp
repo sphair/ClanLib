@@ -66,7 +66,7 @@ namespace clan
 // ListView Construction:
 
 ListView::ListView(GUIComponent *parent)
-: GUIComponent(parent, CssStr::ListView::type_name), impl(new ListView_Impl)
+: GUIComponent(parent, CssStr::ListView::type_name), impl(std::make_shared<ListView_Impl>())
 {
 	set_focus_policy(focus_local);
 	impl->listview = this;
@@ -173,7 +173,7 @@ ListViewItem ListView::create_item()
 {
 	impl->cancel_edit();
 
-	std::shared_ptr<ListViewItem_Impl> item_impl(new ListViewItem_Impl());
+	std::shared_ptr<ListViewItem_Impl> item_impl(std::make_shared<ListViewItem_Impl>());
 	ListViewItem new_item = ListViewItem(item_impl);
 	return new_item;
 }

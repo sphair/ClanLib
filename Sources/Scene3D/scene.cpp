@@ -47,7 +47,7 @@ Scene::Scene()
 }
 
 Scene::Scene(GraphicContext &gc, const ResourceManager &resources, const std::string &shader_path)
-: impl(new Scene_Impl(gc, resources, shader_path))
+: impl(std::make_shared<Scene_Impl>(gc, resources, shader_path))
 {
 	impl->set_camera(SceneCamera(*this));
 }

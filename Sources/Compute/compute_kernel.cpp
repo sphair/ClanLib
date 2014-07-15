@@ -42,7 +42,7 @@ ComputeKernel::ComputeKernel()
 }
 
 ComputeKernel::ComputeKernel(ComputeProgram &program, const std::string &kernel_name)
-: impl(new ComputeKernel_Impl(program, kernel_name))
+: impl(std::make_shared<ComputeKernel_Impl>(program, kernel_name))
 {
 }
 

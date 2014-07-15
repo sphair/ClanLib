@@ -54,7 +54,7 @@ FontMetrics::FontMetrics(
 	bool underline,
 	bool struck_out,
 	bool fixed_pitch )
-	: impl( new FontMetrics_Impl(
+	: impl(std::make_shared<FontMetrics_Impl>(
 		height, ascent, descent,
 		internal_leading, external_leading, average_character_width,
 		max_character_width, weight, overhang,

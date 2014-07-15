@@ -43,9 +43,9 @@ namespace clan
 
 Thread::Thread()
 #ifdef WIN32
-: impl(new Thread_Win32)
+: impl(std::make_shared<Thread_Win32>())
 #else
-: impl(new Thread_Unix)
+: impl(std::make_shared<Thread_Unix>())
 #endif
 {
 }

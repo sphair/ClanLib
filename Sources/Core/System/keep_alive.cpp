@@ -125,7 +125,7 @@ std::vector<KeepAliveObject *> KeepAlive::get_objects()
 }
 
 KeepAliveObject::KeepAliveObject()
-: impl(new KeepAliveObject_Impl())
+: impl(std::make_shared<KeepAliveObject_Impl>())
 {
     if (KeepAlive::func_thread_id())
         impl->thread_id = KeepAlive::func_thread_id()();

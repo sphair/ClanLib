@@ -38,7 +38,7 @@ ComputeSampler::ComputeSampler()
 }
 
 ComputeSampler::ComputeSampler(ComputeContext &context, bool normalized_coords, SamplerAddressingMode addressing_mode, SamplerFilterMode filter_mode)
-: impl(new ComputeSampler_Impl(context, normalized_coords, addressing_mode, filter_mode))
+: impl(std::make_shared<ComputeSampler_Impl>(context, normalized_coords, addressing_mode, filter_mode))
 {
 }
 

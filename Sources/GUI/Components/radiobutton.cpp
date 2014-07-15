@@ -80,7 +80,7 @@ public:
 // RadioButton Construction:
 
 RadioButton::RadioButton(GUIComponent *parent)
-: GUIComponent(parent, CssStr::RadioButton::type_name), impl(new RadioButton_Impl)
+: GUIComponent(parent, CssStr::RadioButton::type_name), impl(std::make_shared<RadioButton_Impl>())
 {
 	set_focus_policy(focus_group);
 

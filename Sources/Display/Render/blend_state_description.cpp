@@ -109,7 +109,7 @@ public:
 };
 
 BlendStateDescription::BlendStateDescription()
-: impl(new BlendStateDescription_Impl())
+: impl(std::make_shared<BlendStateDescription_Impl>())
 {
 }
 

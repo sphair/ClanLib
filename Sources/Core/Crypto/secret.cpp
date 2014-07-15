@@ -39,12 +39,12 @@ namespace clan
 // Secret Construction:
 
 Secret::Secret()
-: impl(new Secret_Impl())
+: impl(std::make_shared<Secret_Impl>())
 {
 }
 
 Secret::Secret(unsigned int new_key_length)
-: impl(new Secret_Impl())
+: impl(std::make_shared<Secret_Impl>())
 {
 	impl->create(new_key_length);
 }

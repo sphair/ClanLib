@@ -67,7 +67,7 @@ public:
 // FileSystem Construction:
 
 FileSystem::FileSystem()
-: impl(new FileSystem_Impl)
+: impl(std::make_shared<FileSystem_Impl>())
 {
 }
 
@@ -76,13 +76,13 @@ FileSystem::FileSystem(FileSystem::NullVFS null_fs)
 }
 
 FileSystem::FileSystem(FileSystemProvider *provider)
-: impl(new FileSystem_Impl)
+: impl(std::make_shared<FileSystem_Impl>())
 {
 	impl->provider = provider;
 }
 
 FileSystem::FileSystem(const std::string &path, bool is_zip_file)
-: impl(new FileSystem_Impl)
+: impl(std::make_shared<FileSystem_Impl>())
 {
 	if (is_zip_file)
 		impl->provider = new FileSystemProvider_Zip(ZipArchive(path));

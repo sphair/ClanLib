@@ -47,14 +47,14 @@ ChainShape::ChainShape()
 }
 
 ChainShape::ChainShape(const PhysicsWorld &pw)
-: impl(new ChainShape_Impl(pw.impl.get()))
+: impl(std::make_shared<ChainShape_Impl>(pw.impl.get()))
 {
 	shape_impl->shape_type = shape_chain;
 	shape_impl->shape = dynamic_cast<b2Shape*> (&impl->shape);
 }
 
 ChainShape::ChainShape(const PhysicsContext &pc)
-: impl(new ChainShape_Impl(pc.impl->get_owner()))
+: impl(std::make_shared<ChainShape_Impl>(pc.impl->get_owner()))
 {
 	shape_impl->shape_type = shape_chain;
 	shape_impl->shape = dynamic_cast<b2Shape*> (&impl->shape);

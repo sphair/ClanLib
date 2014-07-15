@@ -66,7 +66,7 @@ public:
 // Frame Construction:
 
 Frame::Frame(GUIComponent *parent)
-: GUIComponent(parent, CssStr::Frame::type_name), impl(new Frame_Impl)
+: GUIComponent(parent, CssStr::Frame::type_name), impl(std::make_shared<Frame_Impl>())
 {
 	impl->frame = this;
 	func_render() = bind_member(impl.get(), &Frame_Impl::on_render);

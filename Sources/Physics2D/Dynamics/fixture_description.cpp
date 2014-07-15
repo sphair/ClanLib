@@ -44,13 +44,13 @@ FixtureDescription::FixtureDescription()
 }
 
 FixtureDescription::FixtureDescription(const PhysicsWorld &pw)
-: impl(new FixtureDescription_Impl(pw.impl.get()))
+: impl(std::make_shared<FixtureDescription_Impl>(pw.impl.get()))
 {
 
 }
 
 FixtureDescription::FixtureDescription(const PhysicsContext &pc)
-:impl(new FixtureDescription_Impl(pc.impl->get_owner()))
+:impl(std::make_shared<FixtureDescription_Impl>(pc.impl->get_owner()))
 {
 
 }

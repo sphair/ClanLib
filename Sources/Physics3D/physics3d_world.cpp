@@ -35,7 +35,7 @@ namespace clan
 {
 
 Physics3DWorld::Physics3DWorld()
-	: impl(new Physics3DWorld_Impl())
+	: impl(std::make_shared<Physics3DWorld_Impl>())
 {
 }
 

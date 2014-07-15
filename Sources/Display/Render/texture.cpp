@@ -150,7 +150,7 @@ Texture::Texture(GraphicContext &gc, PixelBufferSet pixelbuffer_set)
 }
 
 Texture::Texture(TextureProvider *provider)
-: impl(new Texture_Impl)
+: impl(std::make_shared<Texture_Impl>())
 {
 	impl->provider = provider;
 }

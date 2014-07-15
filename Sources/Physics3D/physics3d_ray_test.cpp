@@ -43,7 +43,7 @@ Physics3DRayTest::Physics3DRayTest()
 }
 
 Physics3DRayTest::Physics3DRayTest(Physics3DWorld &world)
-	: impl(new Physics3DRayTest_Impl(world.impl.get()))
+	: impl(std::make_shared<Physics3DRayTest_Impl>(world.impl.get()))
 {
 }
 

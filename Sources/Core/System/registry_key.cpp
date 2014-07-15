@@ -112,7 +112,7 @@ RegistryKey::RegistryKey(PredefinedKey key, const std::string &subkey, unsigned 
 }
 
 RegistryKey::RegistryKey(HKEY key)
-: impl(new RegistryKey_Impl(key))
+: impl(std::make_shared<RegistryKey_Impl>(key))
 {
 }
 

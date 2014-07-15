@@ -39,7 +39,7 @@ namespace clan
 // MD5 Construction:
 
 MD5::MD5()
-: impl(new MD5_Impl)
+: impl(std::make_shared<MD5_Impl>())
 {
 }
 

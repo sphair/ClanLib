@@ -44,7 +44,7 @@ namespace clan
 // TabPage Construction:
 
 TabPage::TabPage(GUIComponent *parent)
-: GUIComponent(parent, CssStr::TabPage::type_name), impl(new TabPage_Impl)
+: GUIComponent(parent, CssStr::TabPage::type_name), impl(std::make_shared<TabPage_Impl>())
 {
 	impl->component = this;
 	func_process_message() = bind_member(impl.get(), &TabPage_Impl::on_process_message);

@@ -47,7 +47,7 @@ namespace clan
 SoundProvider_Wave::SoundProvider_Wave(
 	const std::string &filename,
 	const FileSystem &fs,
-	bool stream) : impl(new SoundProvider_Wave_Impl)
+	bool stream) : impl(std::make_shared<SoundProvider_Wave_Impl>())
 {
 	IODevice source = fs.open_file(filename, File::open_existing, File::access_read, File::share_read);
 	impl->load(source);
@@ -55,7 +55,7 @@ SoundProvider_Wave::SoundProvider_Wave(
 
 SoundProvider_Wave::SoundProvider_Wave(
 	const std::string &fullname, bool stream)
-: impl(new SoundProvider_Wave_Impl)
+: impl(std::make_shared<SoundProvider_Wave_Impl>())
 {
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
@@ -66,7 +66,7 @@ SoundProvider_Wave::SoundProvider_Wave(
 
 SoundProvider_Wave::SoundProvider_Wave(
 	IODevice &file, bool stream)
-: impl(new SoundProvider_Wave_Impl)
+: impl(std::make_shared<SoundProvider_Wave_Impl>())
 {
 	impl->load(file);
 }

@@ -37,7 +37,7 @@ JointDescription_Impl::JointDescription_Impl()
 }
 
 JointDescription::JointDescription()
-: impl(new JointDescription_Impl)
+: impl(std::make_shared<JointDescription_Impl>())
 {
 
 }

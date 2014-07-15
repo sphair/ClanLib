@@ -43,7 +43,7 @@ PhysicsQueryAssistant::PhysicsQueryAssistant()
 }
 
 PhysicsQueryAssistant::PhysicsQueryAssistant(PhysicsWorld &pw)
-: impl(new PhysicsQueryAssistant_Impl(pw))
+: impl(std::make_shared<PhysicsQueryAssistant_Impl>(pw))
 {
 
 }

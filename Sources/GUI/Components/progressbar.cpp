@@ -83,7 +83,7 @@ public:
 // ProgressBar Construction:
 
 ProgressBar::ProgressBar(GUIComponent *parent)
-: GUIComponent(parent, CssStr::ProgressBar::type_name), impl(new ProgressBar_Impl)
+: GUIComponent(parent, CssStr::ProgressBar::type_name), impl(std::make_shared<ProgressBar_Impl>())
 {
 	impl->progressbar = this;
 	impl->part_progress = GUIThemePart(this, "progress");

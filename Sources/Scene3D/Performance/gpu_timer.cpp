@@ -59,7 +59,7 @@ public:
 
 
 GPUTimer::GPUTimer()
-	: impl(new GPUTimer_Impl())
+	: impl(std::make_shared<GPUTimer_Impl>())
 {
 }
 

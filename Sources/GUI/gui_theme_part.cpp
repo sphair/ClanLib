@@ -48,7 +48,7 @@ GUIThemePart::GUIThemePart()
 }
 
 GUIThemePart::GUIThemePart(GUIComponent *parent, const std::string &tag_name)
-: impl(new GUIThemePart_Impl(parent))
+: impl(std::make_shared<GUIThemePart_Impl>(parent))
 {
 	impl->element.set_component(parent);
 	impl->element.set_parent(&parent->impl->element);

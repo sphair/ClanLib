@@ -85,7 +85,7 @@ public:
 // Base64Encoder Construction:
 
 Base64Encoder::Base64Encoder()
-: impl(new Base64Encoder_Impl)
+: impl(std::make_shared<Base64Encoder_Impl>())
 {
 }
 

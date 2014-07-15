@@ -35,7 +35,7 @@ namespace clan
 {
 
 HTMLParser::HTMLParser()
-	: impl(new HTMLParser_Impl())
+	: impl(std::make_shared<HTMLParser_Impl>())
 {
 }
 
