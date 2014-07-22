@@ -28,7 +28,7 @@ int Program::main(const std::vector<std::string> &args)
 
 	bool exit = false;
 
-    cc.connect(window.sig_window_close(), {[&exit]() { exit = true; }});
+    cc.connect(window.sig_window_close(), [&exit]() { exit = true; });
 
 	ResourceManager resources;
 	SceneCache::set(resources, std::shared_ptr<SceneCache>(new ExampleSceneCache()));
