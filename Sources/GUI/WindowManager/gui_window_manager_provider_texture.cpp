@@ -565,7 +565,7 @@ Canvas GUIWindowManagerProvider_Texture::begin_paint(GUITopLevelWindow *handle, 
 	//canvas.clear(Colorf::transparent);
 
 	// Translate model view matrix to the texture position
-	canvas.mult_translate(subtexture_geometry.left, subtexture_geometry.top, 0);
+	canvas.mult_transform(Mat4f::translate(subtexture_geometry.left, subtexture_geometry.top, 0));
 	return canvas;
 }
 

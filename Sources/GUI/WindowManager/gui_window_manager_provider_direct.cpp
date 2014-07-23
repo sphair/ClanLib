@@ -375,7 +375,7 @@ Canvas GUIWindowManagerProvider_Direct::begin_paint(GUITopLevelWindow *handle, c
 	canvas.set_cliprect(clip_rect);
 
 	// Translate model view matrix to the window position
-	canvas.mult_translate(toplevel_window->geometry.left, toplevel_window->geometry.top, 0);
+	canvas.mult_transform(Mat4f::translate(toplevel_window->geometry.left, toplevel_window->geometry.top, 0));
 	return canvas;
 }
 

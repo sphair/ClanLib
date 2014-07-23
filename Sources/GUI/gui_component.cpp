@@ -786,9 +786,10 @@ void GUIComponent::render(Canvas &canvas, const Rect &clip_rect, bool include_ch
 			{
 				Rect child_dirty_rect = cur->window_to_component_coords(update_rect);
 
-				canvas.push_translate((float)cur_geometry.left, (float)cur_geometry.top);
+				const Mat4f original_transform = canvas.get_transform();
+				canvas.mult_transform(Mat4f::translate((float)cur_geometry.left, (float)cur_geometry.top, 0.0f));
 				cur->render(canvas, child_dirty_rect, true);
-				canvas.pop_modelview();
+				canvas.set_transform(original_transform);
 			}
 			cur = cur->impl->next_sibling;
 		}
