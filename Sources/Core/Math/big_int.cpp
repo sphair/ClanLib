@@ -47,32 +47,33 @@
 
 #include "Core/precomp.h"
 #include "API/Core/Math/big_int.h"
+#include "API/Core/Math/cl_math.h"
 #include "big_int_impl.h"
 #include <cstdlib>
 
 namespace clan
 {
 
-BigInt::BigInt() : impl(std::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
+BigInt::BigInt() : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
 {
 }
 
-BigInt::BigInt(ubyte32 value) : impl(std::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
-{
-	set(value);
-}
-
-BigInt::BigInt(byte32 value) : impl(std::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
+BigInt::BigInt(ubyte32 value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
 {
 	set(value);
 }
 
-BigInt::BigInt(ubyte64 value) : impl(std::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
+BigInt::BigInt(byte32 value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
 {
 	set(value);
 }
 
-BigInt::BigInt(byte64 value) : impl(std::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
+BigInt::BigInt(ubyte64 value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
+{
+	set(value);
+}
+
+BigInt::BigInt(byte64 value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
 {
 	set(value);
 }
