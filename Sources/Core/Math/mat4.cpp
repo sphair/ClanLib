@@ -307,17 +307,17 @@ Mat4<Type> Mat4<Type>::rotate(const Angle &angle_x, const Angle &angle_y, const 
 	switch (order)
 	{
 		case order_XYZ:
-			return rotation_matrix_x * rotation_matrix_y * rotation_matrix_z;
-		case order_XZY:
-			return rotation_matrix_x * rotation_matrix_z * rotation_matrix_y;
-		case order_YZX:
-			return rotation_matrix_y * rotation_matrix_z * rotation_matrix_x;
-		case order_YXZ:
-			return rotation_matrix_y * rotation_matrix_x * rotation_matrix_z;
-		case order_ZXY:
-			return rotation_matrix_z * rotation_matrix_x * rotation_matrix_y;
-		case order_ZYX:
 			return rotation_matrix_z * rotation_matrix_y * rotation_matrix_x;
+		case order_XZY:
+			return rotation_matrix_y * rotation_matrix_z * rotation_matrix_x;
+		case order_YZX:
+			return rotation_matrix_x * rotation_matrix_z * rotation_matrix_y;
+		case order_YXZ:
+			return rotation_matrix_z * rotation_matrix_x * rotation_matrix_y;
+		case order_ZXY:
+			return rotation_matrix_y * rotation_matrix_x * rotation_matrix_z;
+		case order_ZYX:
+			return rotation_matrix_x * rotation_matrix_y * rotation_matrix_z;
 		default:
 			throw Exception("Unknown euler order");
 	}
@@ -337,32 +337,33 @@ Vec3<Type> Mat4<Type>::get_euler(EulerOrder order) const
 	switch (order)
 	{
 		case order_XYZ:
-			pos_i = 0; pos_j = 1; pos_k = 2; break;
-		case order_XZY:
-			pos_i = 0; pos_j = 2; pos_k = 1; break;
-		case order_YZX:
-			pos_i = 2; pos_j = 0; pos_k = 1; break;
-		case order_YXZ:
-			pos_i = 1; pos_j = 0; pos_k = 2; break;
-		case order_ZXY:
-			pos_i = 1; pos_j = 2; pos_k = 0; break;
-		case order_ZYX:
 			pos_i = 2; pos_j = 1; pos_k = 0; break;
+		case order_XZY:
+			pos_i = 1; pos_j = 2; pos_k = 0; break;
+		case order_YZX:
+			pos_i = 0; pos_j = 2; pos_k = 1; break;
+		case order_YXZ:
+			pos_i = 2; pos_j = 0; pos_k = 1; break;
+		case order_ZXY:
+			pos_i = 1; pos_j = 0; pos_k = 2; break;
+		case order_ZYX:
+			pos_i = 0; pos_j = 1; pos_k = 2; break;
 		default:
 			throw Exception("Unknown euler order");
 	}
 
-	Type cy = sqrt(matrix[ (4*pos_i) + pos_i ]*matrix[ (4*pos_i) + pos_i ] + matrix[ (4*pos_j) + pos_i ]*matrix[ (4*pos_j) + pos_i ]);
+
+	Type cy = sqrt(matrix[(4 * pos_i) + pos_i] * matrix[(4 * pos_i) + pos_i] + matrix[(4 * pos_j) + pos_i] * matrix[(4 * pos_j) + pos_i]);
 	if (cy > (Type) 16.0*FLT_EPSILON)
 	{
-		angles.x = atan2(matrix[ (4*pos_k) + pos_j ], matrix[ (4*pos_k) + pos_k ]);
-		angles.y = atan2(-matrix[ (4*pos_k) + pos_i ], cy);
-		angles.z = atan2(matrix[ (4*pos_j) + pos_i ], matrix[ (4*pos_i) + pos_i ]);
+		angles.x = atan2(matrix[(4 * pos_k) + pos_j], matrix[(4 * pos_k) + pos_k]);
+		angles.y = atan2(-matrix[(4 * pos_k) + pos_i], cy);
+		angles.z = atan2(matrix[(4 * pos_j) + pos_i], matrix[(4 * pos_i) + pos_i]);
 	}
 	else
 	{
-		angles.x = atan2(-matrix[ (4*pos_j) + pos_k ], matrix[ (4*pos_j) + pos_j ]);
-		angles.y = atan2(-matrix[ (4*pos_k) + pos_i ], cy);
+		angles.x = atan2(-matrix[(4 * pos_j) + pos_k], matrix[(4 * pos_j) + pos_j]);
+		angles.y = atan2(-matrix[(4 * pos_k) + pos_i], cy);
 		angles.z = 0;
 	}
 
@@ -370,21 +371,22 @@ Vec3<Type> Mat4<Type>::get_euler(EulerOrder order) const
 	switch (order)
 	{
 		case order_XYZ:
+			angles = Vec3<Type>(angles.z, angles.y, angles.x);
 			break;
 		case order_XZY:
-			angles = Vec3<Type>(angles.x, angles.z, angles.y);
+			angles = Vec3<Type>(-angles.z, -angles.x, -angles.y);
 			break;
 		case order_YZX:
-			angles = Vec3<Type>(angles.y, angles.z, angles.x);
+			angles = Vec3<Type>(angles.x, angles.z, angles.y);
 			break;
 		case order_YXZ:
-			angles = Vec3<Type>(angles.y, angles.x, angles.z);
+			angles = Vec3<Type>(-angles.y, -angles.z, -angles.x);
 			break;
 		case order_ZXY:
-			angles = Vec3<Type>(angles.z, angles.x, angles.y);
+			angles = Vec3<Type>(angles.y, angles.x, angles.z);
 			break;
 		case order_ZYX:
-			angles = Vec3<Type>(angles.z, angles.y, angles.x);
+			angles = Vec3<Type>(-angles.x, -angles.y, -angles.z);
 			break;
 	}
 

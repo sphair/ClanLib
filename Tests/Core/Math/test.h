@@ -93,6 +93,7 @@ private:
 	void test_matrix_mat4();
 	void test_rect();
 	void test_bigint();
+	void test_rotate_and_get_euler(clan::EulerOrder order);
 	void fail();
 
 };
