@@ -53,6 +53,8 @@
 namespace clan
 {
 
+const int BigInt_Impl::default_allocated_precision = 64;
+
 std::vector<ubyte32> BigInt_Impl::prime_tab;
 
 BigInt_Impl::BigInt_Impl(unsigned int prec) : digits_negative(false), digits_alloc(0), digits_used(0), digits(NULL)
