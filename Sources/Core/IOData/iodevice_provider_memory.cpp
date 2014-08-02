@@ -78,7 +78,7 @@ int IODeviceProvider_Memory::send(const void *send_data, int len, bool send_all)
 	validate_position();
 	int size_needed = position + len;
 	if (size_needed > data.get_size())
-		data.set_size(size_needed);
+		data.set_size(max(size_needed + min(size_needed, 16*1024*1024), 16*1024));
 	memcpy(data.get_data() + position, send_data, len);
 	position += len;
 	return len;
