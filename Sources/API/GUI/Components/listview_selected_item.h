@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "listview_item.h"
 
 namespace clan
@@ -41,7 +40,7 @@ class ListViewSelectedItem_Impl;
 class ListViewSelection_Impl;
 
 /// \brief ListView selected item.
-class CL_API_GUI ListViewSelectedItem
+class ListViewSelectedItem
 {
 /// \name Construction
 /// \{
@@ -111,7 +110,7 @@ private:
 };
 
 /// \brief ListView selection.
-class CL_API_GUI ListViewSelection
+class ListViewSelection
 {
 /// \name Construction
 /// \{

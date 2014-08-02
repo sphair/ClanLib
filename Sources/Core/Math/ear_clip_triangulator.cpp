@@ -40,7 +40,7 @@ namespace clan
 // EarClipTriangulator Construction:
 
 EarClipTriangulator::EarClipTriangulator()
-: impl(new EarClipTriangulator_Impl)
+: impl(std::make_shared<EarClipTriangulator_Impl>())
 {
 }
 

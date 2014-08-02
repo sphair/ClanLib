@@ -57,17 +57,17 @@ ColorWheel::ColorWheel(clan::Canvas &canvas, clan::GUIManager &gui, clan::Rect g
 	radiobutton_HSV->set_text("         ");		// ** I'm got lazy to set the text color to white, so I draw it elsewhere
 	radiobutton_HSV->set_selected(true);
 	radiobutton_HSV->set_group_name("Main Group");
-	radiobutton_HSV->func_selected().set(this, &ColorWheel::on_selected, radiobutton_HSV);
+	radiobutton_HSV->func_selected() = bind_member(this, &ColorWheel::on_selected, radiobutton_HSV);
 
 	radiobutton_HSL = new clan::RadioButton(this);
 	radiobutton_HSL->set_geometry(clan::Rect(100, 0, clan::Size(64, 16)));
 	radiobutton_HSL->set_text("         ");
 	radiobutton_HSL->set_group_name("Main Group");
-	radiobutton_HSL->func_selected().set(this, &ColorWheel::on_selected, radiobutton_HSL);
+	radiobutton_HSL->func_selected() = bind_member(this, &ColorWheel::on_selected, radiobutton_HSL);
 
 	radiobutton_HSV->set_selected(true);
 
-	func_render().set(this, &ColorWheel::on_render);
+	func_render() = bind_member(this, &ColorWheel::on_render);
 
 	font = clan::Font(canvas, "tahoma", 16);
 
@@ -211,7 +211,7 @@ clan::Slider *ColorWheel::create_slider(int xpos, int ypos)
 	component->set_position(0);
 	component->set_lock_to_ticks(false);
 
-	component->func_value_changed().set(this, &ColorWheel::option_changed);
+	component->func_value_changed() = bind_member(this, &ColorWheel::option_changed);
 
 	return component;
 

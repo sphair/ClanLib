@@ -60,12 +60,12 @@ GUIWindowManagerProvider_System *GUIWindowManagerSystem::get_provider() const
 /////////////////////////////////////////////////////////////////////////////
 // GUIWindowManagerSystem Events:
 
-Signal_v1<DisplayWindow> & GUIWindowManagerSystem::sig_toplevel_window_created()
+Signal<void(DisplayWindow)> & GUIWindowManagerSystem::sig_toplevel_window_created()
 {
 	return get_provider()->sig_toplevel_window_created;
 }
 
-Signal_v1<DisplayWindow> & GUIWindowManagerSystem::sig_toplevel_window_destroyed()
+Signal<void(DisplayWindow)> & GUIWindowManagerSystem::sig_toplevel_window_destroyed()
 {
 	return get_provider()->sig_toplevel_window_destroyed;
 }

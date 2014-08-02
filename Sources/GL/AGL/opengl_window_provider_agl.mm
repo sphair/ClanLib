@@ -48,7 +48,7 @@ namespace clan
 
 void cl_agl_make_none_current()
 {
-    [EAGLContext setCurrentContext:nil];    
+    [EAGLContext setCurrentContext:nil];
 }
 
 OpenGLWindowProvider *cl_alloc_display_window_agl()
@@ -103,7 +103,7 @@ void CL_GL_RenderWindowProvider_AGL::set_default_frame_buffer()
 OpenGLWindowProvider::OpenGLWindowProvider()
 : cocoa_window(), opengl_context(0), swap_interval(-1), default_framebuffer_handle(0), default_colorbuffer_handle(0), default_depthbuffer_handle(0)
 {
-	cocoa_window.func_on_resized().set(this, &OpenGLWindowProvider::on_window_resized);
+	cocoa_window.func_on_resized() = bind_member(this, &OpenGLWindowProvider::on_window_resized);
 }
 
 OpenGLWindowProvider::~OpenGLWindowProvider()
@@ -127,7 +127,6 @@ OpenGLWindowProvider::~OpenGLWindowProvider()
 
 /////////////////////////////////////////////////////////////////////////////
 // OpenGLWindowProvider Attributes:
-
 
 /////////////////////////////////////////////////////////////////////////////
 // OpenGLWindowProvider Operations:
@@ -184,7 +183,7 @@ EAGLContext *OpenGLWindowProvider::create_context()
 				shared_context = render_window_agl->get_context();
 		}
 	}
-    
+
     EAGLContext *context;
     if (shared_context)
     {
@@ -194,47 +193,46 @@ EAGLContext *OpenGLWindowProvider::create_context()
     {
         context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2 sharegroup:nil];
     }
-    
+
     return context;
 }
 
 void OpenGLWindowProvider::setup_default_framebuffer()
-{    
+{
     //[EAGLContext setCurrentContext:context];
 	OpenGL::set_active(gc);
-    
+
     if (default_framebuffer_handle == 0)
         glGenFramebuffers(1, &default_framebuffer_handle);
     if (default_colorbuffer_handle == 0)
         glGenRenderbuffers(1, &default_colorbuffer_handle);
     if (default_depthbuffer_handle == 0)
         glGenRenderbuffers(1, &default_depthbuffer_handle);
-    
+
     glBindFramebuffer(GL_FRAMEBUFFER, default_framebuffer_handle);
 
     glBindRenderbuffer(GL_RENDERBUFFER, default_depthbuffer_handle);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, get_viewport().get_width(), get_viewport().get_height());
-    
+
     glBindRenderbuffer(GL_RENDERBUFFER, default_colorbuffer_handle);
     BOOL result = [opengl_context renderbufferStorage:GL_RENDERBUFFER fromDrawable:cocoa_window.get_drawable()];
     if (!result)
     {
         throw Exception("EAGLContext.renderbufferStorage failed");
     }
-    
+
     GLint width = 0, height = 0;
     glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &width);
     glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &height);
-    
-    
+
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, default_colorbuffer_handle);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, default_depthbuffer_handle);
-    
+
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
     {
         throw Exception("glCheckFramebufferStatus failed");
     }
-    
+
     glViewport(0, 0, width, height);
 }
 
@@ -262,7 +260,7 @@ void OpenGLWindowProvider::flip(int interval)
 			glXSwapIntervalMESA(swap_interval);
 		}
 	}
-*/ 
+*/
     [opengl_context presentRenderbuffer:GL_RENDERBUFFER];
 
 	OpenGL::check_error();
@@ -304,7 +302,7 @@ void OpenGLWindowProvider::update(const Rect &_rect)
 		glReadBuffer(GL_BACK);
 		glDrawBuffer(GL_FRONT);
 
-		glBlitFramebuffer( 
+		glBlitFramebuffer(
 			rect.left, height - rect.bottom,
 			rect.right, height - rect.top,
 			rect.left, height - rect.bottom,
@@ -324,7 +322,6 @@ void OpenGLWindowProvider::update(const Rect &_rect)
 	}
 	OpenGL::check_error();
 }
-
 
 CursorProvider *OpenGLWindowProvider::create_cursor(const SpriteDescription &sprite_description, const Point &hotspot)
 {
@@ -356,7 +353,6 @@ void OpenGLWindowProvider::extend_frame_into_client_area(int height)
 {
 	// Implement me, if possible
 }
-
 
 ProcAddress *OpenGLWindowProvider::get_proc_address(const std::string& function_name) const
 {

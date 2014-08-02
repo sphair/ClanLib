@@ -29,7 +29,6 @@
 #pragma once
 
 
-#include "API/Display/api_display.h"
 #include "API/Core/System/event.h"
 #include "API/Core/System/thread_local_storage.h"
 #include <vector>
@@ -40,7 +39,7 @@ namespace clan
 
 class Win32Window;
 
-class CL_API_DISPLAY DisplayMessageQueue_Win32
+class DisplayMessageQueue_Win32
 {
 /// \name Construction
 /// \{

@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 
 namespace clan
@@ -52,7 +51,7 @@ public:
 };
 
 /// \brief Helper class to store any shared_ptr as user data on an object.
-class CL_API_CORE UserDataOwner
+class UserDataOwner
 {
 public:
 	UserDataOwner()

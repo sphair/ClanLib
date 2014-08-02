@@ -30,9 +30,7 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_component.h"
-#include "../../Core/Signals/callback_v0.h"
 
 namespace clan
 {
@@ -42,7 +40,7 @@ namespace clan
 class RadioButton_Impl;
 
 /// \brief Radio button component.
-class CL_API_GUI RadioButton : public GUIComponent
+class RadioButton : public GUIComponent
 {
 /// \name Construction
 /// \{
@@ -129,17 +127,17 @@ public:
 
 	/// \brief Func selected
 	///
-	/// \return Callback_v0
-	Callback_v0 &func_selected();
+	/// \return std::function<void()>
+	std::function<void()> &func_selected();
 
 	/// \brief Func unselected
 	///
-	/// \return Callback_v0
-	Callback_v0 &func_unselected();
+	/// \return std::function<void()>
+	std::function<void()> &func_unselected();
 
 	/// \brief Callback invoked when any of the radio buttons in the group is selected.
 	/** The newly selected radio button is passed as parameter to the callback.*/
-	Callback_v1<RadioButton*> &func_group_selection_changed();
+	std::function<void(RadioButton*)> &func_group_selection_changed();
 /// \}
 /// \name Implementation
 /// \{

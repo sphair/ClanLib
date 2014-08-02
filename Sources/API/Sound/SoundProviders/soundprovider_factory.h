@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_sound.h"
 #include <map>
 
 namespace clan
@@ -44,7 +43,7 @@ class FileSystem;
 class IODevice;
 
 /// \brief Sound Provider Factor class.
-class CL_API_SOUND SoundProviderFactory
+class SoundProviderFactory
 {
 /// \name Attributes
 /// \{

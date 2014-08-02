@@ -50,7 +50,7 @@ public:
 	std::vector<OutlineCircle> sub_circles;
 };
 
-Contour::Contour() : impl(new Contour_Impl()) {};
+Contour::Contour() : impl(std::make_shared<Contour_Impl>()) {};
 
 Contour::~Contour() {};
 

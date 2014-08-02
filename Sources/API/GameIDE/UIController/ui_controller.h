@@ -58,8 +58,8 @@ public:
 	void add_dockable(DockableComponent *dockable) { dockables.push_back(dockable); }
 	const std::vector<DockableComponent *> &get_dockables() const { return dockables; }
 
-	Signal_v1<DocumentEditor *> sig_editor_activated;
-	Signal_v1<DocumentEditor *> sig_editor_destroyed;
+	Signal<void(DocumentEditor *)> sig_editor_activated;
+	Signal<void(DocumentEditor *)> sig_editor_destroyed;
 
 	SolutionModel &get_solution_model() { return solution_model; }
 

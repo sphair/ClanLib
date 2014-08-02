@@ -32,7 +32,6 @@
 
 #include <memory>
 #include "../Render/graphic_context.h"
-#include "../api_display.h"
 
 namespace clan
 {
@@ -43,7 +42,7 @@ class ShaderEffect_Impl;
 class ShaderEffectDescription;
 
 /// \brief Shader Feffect
-class CL_API_DISPLAY ShaderEffect
+class ShaderEffect
 {
 /// \name Construction
 /// \{

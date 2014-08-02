@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "api_gui.h"
 #include <memory>
 
 #include "gui_component.h"
@@ -51,7 +50,7 @@ class Point;
 class CSSPropertyValue;
 
 /// \brief A GUI theme part represents a pseudo element in CSS.
-class CL_API_GUI GUIThemePart
+class GUIThemePart
 {
 /// \name Construction
 /// \{

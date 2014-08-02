@@ -42,7 +42,7 @@ TextureGroup::TextureGroup()
 }
 
 TextureGroup::TextureGroup(const Size &texture_sizes)
-: impl(new TextureGroup_Impl(texture_sizes))
+: impl(std::make_shared<TextureGroup_Impl>(texture_sizes))
 {
 	set_texture_allocation_policy(create_new_texture);
 }

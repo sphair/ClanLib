@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "dom_node.h"
 
 namespace clan
@@ -44,7 +43,7 @@ namespace clan
 ///    rather than on each object that uses these attributes and methods. No DOM objects
 ///    correspond directly to CharacterData, though Text and others do inherit the
 ///    interface from it.</p> 
-class CL_API_CORE DomCharacterData : public DomNode
+class DomCharacterData : public DomNode
 {
 /// \name Construction
 /// \{

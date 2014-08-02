@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include "pixel_buffer.h"
 
 namespace clan
@@ -38,7 +37,7 @@ namespace clan
 /// \{
 
 /// \brief Pixel data helper class
-class CL_API_DISPLAY PixelBufferHelp
+class PixelBufferHelp
 {
 /// \name Operations
 /// \{

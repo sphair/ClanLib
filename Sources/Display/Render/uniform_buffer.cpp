@@ -58,7 +58,7 @@ UniformBuffer::UniformBuffer()
 }
 
 UniformBuffer::UniformBuffer(GraphicContext &gc, int size, BufferUsage usage)
-: impl(new UniformBuffer_Impl)
+: impl(std::make_shared<UniformBuffer_Impl>())
 {
 	GraphicContextProvider *gc_provider = gc.get_provider();
 	impl->provider = gc_provider->alloc_uniform_buffer();
@@ -66,7 +66,7 @@ UniformBuffer::UniformBuffer(GraphicContext &gc, int size, BufferUsage usage)
 }
 
 UniformBuffer::UniformBuffer(GraphicContext &gc, const void *data, int size, BufferUsage usage)
-: impl(new UniformBuffer_Impl)
+: impl(std::make_shared<UniformBuffer_Impl>())
 {
 	GraphicContextProvider *gc_provider = gc.get_provider();
 	impl->provider = gc_provider->alloc_uniform_buffer();
@@ -74,7 +74,7 @@ UniformBuffer::UniformBuffer(GraphicContext &gc, const void *data, int size, Buf
 }
 
 UniformBuffer::UniformBuffer(GraphicContext &gc, ProgramObject &program, const std::string &name, int num_blocks, BufferUsage usage)
-: impl(new UniformBuffer_Impl)
+: impl(std::make_shared<UniformBuffer_Impl>())
 {
 	GraphicContextProvider *gc_provider = gc.get_provider();
 	impl->provider = gc_provider->alloc_uniform_buffer();

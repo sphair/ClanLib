@@ -55,7 +55,7 @@ public:
 // GraphicContext_SWRender Construction:
 
 GraphicContext_SWRender::GraphicContext_SWRender(GraphicContext &gc) : GraphicContext(gc),
- impl(new GraphicContext_SWRender_Impl)
+ impl(std::make_shared<GraphicContext_SWRender_Impl>())
 {
 	impl->provider = dynamic_cast <SWRenderGraphicContextProvider *> (GraphicContext::get_provider());
 	if (!impl->provider)

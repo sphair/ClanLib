@@ -31,7 +31,6 @@
 #pragma once
 
 #include "../Render/texture.h"
-#include "../api_display.h"
 #include <memory>
 
 namespace clan
@@ -48,7 +47,7 @@ class PixelFormat;
 class GraphicContextProvider;
 
 /// \brief Interface for implementing a Texture target.
-class CL_API_DISPLAY TextureProvider
+class TextureProvider
 {
 /// \name Construction
 /// \{

@@ -43,7 +43,7 @@ namespace clan
 // Construction
 
 RibbonPage::RibbonPage(Ribbon *parent, const std::string &text)
-: GUIComponent(parent->impl->page_area, "ribbon-page"), impl(new RibbonPage_Impl(parent->impl.get(), text))
+: GUIComponent(parent->impl->page_area, "ribbon-page"), impl(std::make_shared<RibbonPage_Impl>(parent->impl.get(), text))
 {
 	impl->component = this;
 	parent->impl->add_page(this);

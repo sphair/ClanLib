@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_scene3d.h"
 #include "../Core/Math/vec3.h"
 #include "../Core/Math/mat4.h"
 #include <vector>
@@ -53,7 +52,7 @@ class AxisAlignedBoundingBox;
 class FrustumPlanes;
 
 /// \brief Interface for finding the potential visible set (PVS) for a set of objects
-class CL_API_SCENE SceneCullProvider
+class SceneCullProvider
 {
 public:
 	virtual ~SceneCullProvider() { }

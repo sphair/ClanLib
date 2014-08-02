@@ -1,6 +1,6 @@
-lib_LTLIBRARIES = libclan30GL.la
+lib_LTLIBRARIES = libclan31GL.la
 
-libclan30GL_la_SOURCES = \
+libclan31GL_la_SOURCES = \
 setup_gl.cpp \
 State/opengl_blend_state.cpp \
 State/opengl_depth_stencil_state.cpp \
@@ -39,19 +39,19 @@ opengl_graphic_context.cpp \
 opengl_window_description.cpp
 
 if WIN32
-libclan30GL_la_SOURCES += \
+libclan31GL_la_SOURCES += \
 WGL/opengl_creation_helper.cpp \
 WGL/opengl_window_provider_wgl.cpp \
 WGL/pbuffer_impl.cpp
 else
-libclan30GL_la_SOURCES += \
+libclan31GL_la_SOURCES += \
 GLX/opengl_window_provider_glx.cpp \
 GLX/pbuffer_impl.cpp
 endif
-libclan30GL_la_LDFLAGS = \
+libclan31GL_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
   $(extra_LIBS_clanGL)
 
-libclan30GL_la_CXXFLAGS=$(clanGL_CXXFLAGS) $(extra_CFLAGS_clanGL)
+libclan31GL_la_CXXFLAGS=$(clanGL_CXXFLAGS) $(extra_CFLAGS_clanGL)
 
 # EOF #

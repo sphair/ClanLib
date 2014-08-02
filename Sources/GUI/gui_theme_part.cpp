@@ -29,7 +29,6 @@
 #include "GUI/precomp.h"
 #include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_manager.h"
-#include "API/CSSLayout/CSSDocument/css_property_value.h"
 #include "gui_theme_part_impl.h"
 #include "gui_component_select_node.h"
 #include "gui_component_impl.h"
@@ -40,7 +39,6 @@
 #include "CSSLayout/Layout/LayoutTree/css_border_renderer.h"
 #include "CSSLayout/Layout/LayoutTree/css_layout_graphics.h"
 #include "API/Display/2D/span_layout.h"
-#include "API/CSSLayout/CSSTokenizer/css_token.h"
 
 namespace clan
 {
@@ -50,7 +48,7 @@ GUIThemePart::GUIThemePart()
 }
 
 GUIThemePart::GUIThemePart(GUIComponent *parent, const std::string &tag_name)
-: impl(new GUIThemePart_Impl(parent))
+: impl(std::make_shared<GUIThemePart_Impl>(parent))
 {
 	impl->element.set_component(parent);
 	impl->element.set_parent(&parent->impl->element);

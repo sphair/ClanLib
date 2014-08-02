@@ -1,6 +1,6 @@
-lib_LTLIBRARIES = libclan30CSSLayout.la
+lib_LTLIBRARIES = libclan31CSSLayout.la
 
-libclan30CSSLayout_la_SOURCES = \
+libclan31CSSLayout_la_SOURCES = \
 CSSDocument/css_select_result.cpp \
 CSSDocument/dom_select_node.cpp \
 CSSDocument/css_document_impl.cpp \
@@ -272,10 +272,10 @@ Layout/css_layout_node.cpp \
 Layout/css_layout.cpp \
 Layout/css_layout_text.cpp
 
-libclan30CSSLayout_la_LDFLAGS = \
+libclan31CSSLayout_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
   $(extra_LIBS_clanCSSLayout)
 
-libclan30CSSLayout_la_CXXFLAGS=$(clanCSSLayout_CXXFLAGS) $(extra_CFLAGS_clanCSSLayout)
+libclan31CSSLayout_la_CXXFLAGS=$(clanCSSLayout_CXXFLAGS) $(extra_CFLAGS_clanCSSLayout)
 # EOF #
 

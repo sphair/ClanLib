@@ -51,7 +51,7 @@ namespace clan
 {
 
 PixelConverter::PixelConverter()
-: impl(new PixelConverter_Impl())
+: impl(std::make_shared<PixelConverter_Impl>())
 {
 }
 

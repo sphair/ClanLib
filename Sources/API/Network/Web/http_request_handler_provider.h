@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_network.h"
 
 namespace clan
 {
@@ -39,7 +38,7 @@ namespace clan
 class HTTPServerConnection;
 
 /// \brief HTTP request handler provider interface.
-class CL_API_NETWORK HTTPRequestHandlerProvider
+class HTTPRequestHandlerProvider
 {
 /// \name Construction
 /// \{

@@ -44,7 +44,7 @@ SoundBuffer_Session::SoundBuffer_Session()
 }
 
 SoundBuffer_Session::SoundBuffer_Session(SoundBuffer &soundbuffer, bool looping, SoundOutput &output)
-: impl(new SoundBuffer_Session_Impl(soundbuffer, looping, output))
+: impl(std::make_shared<SoundBuffer_Session_Impl>(soundbuffer, looping, output))
 {
 }
 

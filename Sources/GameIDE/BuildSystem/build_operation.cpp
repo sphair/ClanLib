@@ -42,7 +42,7 @@ public:
 	std::string info_log;
 };
 
-BuildOperation::BuildOperation(SolutionModel *solution) : impl(new BuildOperation_Impl)
+BuildOperation::BuildOperation(SolutionModel *solution) : impl(std::make_shared<BuildOperation_Impl>())
 {
 }
 

@@ -38,7 +38,7 @@
 namespace clan
 {
 
-class CL_API_DISPLAY GL3FrameBufferProvider : public FrameBufferProvider, DisposableObject
+class GL3FrameBufferProvider : public FrameBufferProvider, DisposableObject
 {
 /// \name Construction
 /// \{

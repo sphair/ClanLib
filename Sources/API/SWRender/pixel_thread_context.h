@@ -29,11 +29,9 @@
 
 #pragma once
 
-#include "api_swrender.h"
 #include "pixel_buffer_data.h"
 #include "../Display/Render/blend_state.h"
 #include "../Display/2D/color.h"
-#include "api_swrender.h"
 
 namespace clan
 {
@@ -41,7 +39,7 @@ namespace clan
 /// \{
 
 /// \brief Thread specific rendering data for pixel commands
-class API_SWRender PixelThreadContext
+class PixelThreadContext
 {
 //!Construction
 public:

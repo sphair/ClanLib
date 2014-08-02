@@ -45,7 +45,7 @@ SceneObject::SceneObject()
 }
 
 SceneObject::SceneObject(Scene &scene, const SceneModel &model, const Vec3f &position, const Quaternionf &orientation, const Vec3f &scale)
-	: impl(new SceneObject_Impl(scene.impl.get()))
+	: impl(std::make_shared<SceneObject_Impl>(scene.impl.get()))
 {
 	impl->position = position;
 	impl->orientation = orientation;

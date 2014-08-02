@@ -46,7 +46,7 @@ int App::start(const std::vector<std::string> &args)
 	win_desc.set_position(clan::Rect(200, 200, 540, 440), false);
 	win_desc.set_visible(false);
 	clan::Window window(&gui, win_desc);
-	window.func_close().set(this, &App::on_close, &window);
+	window.func_close() = bind_member(this, &App::on_close, &window);
 
 	clan::GUILayoutCorners layout;
 	window.set_layout(layout);
@@ -54,7 +54,7 @@ int App::start(const std::vector<std::string> &args)
 	window.create_components("Resources/layout.xml");
 
 	clan::PushButton *button = clan::PushButton::get_named_item(&window, "MyButton");
-	button->func_clicked().set(this, &App::on_button_clicked, button);
+	button->func_clicked() = bind_member(this, &App::on_button_clicked, button);
 
 	label = clan::Label::get_named_item(&window, "MyLabel");
 

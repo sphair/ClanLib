@@ -34,12 +34,12 @@
 namespace clan
 {
 
-CSSStyleProperties::CSSStyleProperties() : impl(new CSSStyleProperties_Impl())
+CSSStyleProperties::CSSStyleProperties() : impl(std::make_shared<CSSStyleProperties_Impl>())
 {
 }
 
 CSSStyleProperties::CSSStyleProperties(const std::string &style_string, const std::string &base_uri)
-: impl(new CSSStyleProperties_Impl())
+: impl(std::make_shared<CSSStyleProperties_Impl>())
 {
 	static CSSPropertyParsers parsers; // To do: this isn't a very nice way of doing it!
 

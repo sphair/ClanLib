@@ -214,9 +214,11 @@ void VectorFont_Impl::draw_glyphs(
 	float offset_x=0;
 	float offset_y=0;
 
+	const Mat4f original_transform = canvas.get_transform();
+
 	for( int i=0; i<length; i++ )
 	{
-		canvas.push_translate(x+offset_x, y+offset_y);
+		canvas.set_transform(original_transform * Mat4f::translate(x + offset_x, y + offset_y, 0));
 
 		if( filled )
 		{
@@ -234,8 +236,6 @@ void VectorFont_Impl::draw_glyphs(
 			}
 		}
 		
-		canvas.pop_modelview();
-		
 		offset_x += interspacing_x[i];
 		if( glyphs[i] == '\n' )
 		{
@@ -243,6 +243,8 @@ void VectorFont_Impl::draw_glyphs(
 			y += metrics.get_height();
 		}
 	}
+	canvas.set_transform(original_transform);
+
 }
 
 void VectorFont_Impl::set_filled(bool enable)

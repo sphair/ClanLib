@@ -29,9 +29,7 @@
 
 #pragma once
 
-#include "../api_physics2d.h"
-#include "../../Core/Signals/signal_v0.h"
-#include "../../Core/Signals/signal_v1.h"
+#include "../../Core/Signals/signal.h"
 #include <memory>
 
 namespace clan
@@ -49,7 +47,7 @@ class PhysicsQueryAssistant;
 ///
 /// The world class manages all physics entities, dynamic simulation, and asynchronous queries.
 /// The world also contains efficient memory management facilities. 
-class CL_API_PHYSICS PhysicsWorld
+class PhysicsWorld
 {
 /// \name Construction
 /// \{
@@ -70,10 +68,10 @@ public:
 public:
 
 	/// \brief Signal emitted when world's step is called.
-	Signal_v1<float> &sig_world_step();
+	Signal<void(float)> &sig_world_step();
 
 	/// \brief Signal emitted when world's destroyed.
-	Signal_v0 &sig_world_destroyed();
+	Signal<void()> &sig_world_destroyed();
 
 	/// \brief Returns true if this object is invalid.
 	bool is_null() const { return !impl; }

@@ -41,7 +41,7 @@ namespace clan
 Mutex SharedGCData_Impl::cl_sharedgc_mutex;
 SharedGCData *SharedGCData_Impl::cl_sharedgc = 0;
 
-SharedGCData::SharedGCData(): impl(new SharedGCData_Impl)
+SharedGCData::SharedGCData(): impl(std::make_shared<SharedGCData_Impl>())
 {
 }
 

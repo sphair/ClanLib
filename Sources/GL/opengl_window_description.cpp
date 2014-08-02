@@ -37,7 +37,7 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // OpenGLWindowDescription construction:
 
-OpenGLWindowDescription::OpenGLWindowDescription() : impl(new OpenGLWindowDescription_Impl)
+OpenGLWindowDescription::OpenGLWindowDescription() : impl(std::make_shared<OpenGLWindowDescription_Impl>())
 {
 }
 

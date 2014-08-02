@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "string_format.h"
 #include "string_help.h"
 #include "../System/mutex.h"
@@ -40,7 +39,7 @@ namespace clan
 /// \{
 
 /// \brief Logger interface.
-class CL_API_CORE Logger
+class Logger
 {
 /// \name Construction
 /// \{
@@ -86,7 +85,7 @@ private:
 
 /// \brief Log text to logger.
 ///
-CL_API_CORE void log_event(const std::string &type, const std::string &text);
+void log_event(const std::string &type, const std::string &text);
 
 template <class Arg1>
 void log_event(const std::string &type, const std::string &format, Arg1 arg1)

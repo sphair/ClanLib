@@ -34,7 +34,7 @@ namespace clan
 {
 
 SpanLayout::SpanLayout()
-: impl(new SpanLayout_Impl)
+: impl(std::make_shared<SpanLayout_Impl>())
 {
 }
 

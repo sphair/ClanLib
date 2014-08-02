@@ -29,7 +29,6 @@
 
 
 #pragma once
-#include "api_gl.h"
 
 #include "../Core/System/cl_platform.h"
 

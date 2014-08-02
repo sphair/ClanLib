@@ -82,8 +82,8 @@ void App::create_window()
 	clan::DisplayWindow new_window = clan::DisplayWindow(win_desc);	// Don't destroy the window first, so the shared canvas data is not lost
 	window = new_window;
 	window_ptr = &window;
-	slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
-	slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
+	window.sig_window_close().connect(this, &App::on_window_close);
+    window.get_ic().get_keyboard().sig_key_up().connect(this, &App::on_input_up);
 
 	canvas = clan::Canvas(window);
 

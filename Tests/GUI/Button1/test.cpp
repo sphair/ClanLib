@@ -24,16 +24,16 @@ public:
 		win_desc.set_position(Rect(200, 200, 540, 440), false);
 
 		Window window(&gui, win_desc);
-		window.func_close().set(this, &App::on_close, &window);
+		window.func_close() = bind_member(this, &App::on_close, &window);
 
 		PushButton button(&window);
 		button.set_geometry(Rect(10, 10, 160, 50));
-		button.func_clicked().set(this, &App::on_button_clicked, &button);
+		button.func_clicked() = bind_member(this, &App::on_button_clicked, &button);
 		button.set_text("Button Normal");
 
 		PushButton button_disabled(&window);
 		button_disabled.set_geometry(Rect(10, 60, 160, 100));
-		button_disabled.func_clicked().set(this, &App::on_button_clicked, &button_disabled);
+		button_disabled.func_clicked() = bind_member(this, &App::on_button_clicked, &button_disabled);
 		button_disabled.set_text("Button Disabled");
 		button_disabled.set_enabled(false);
 

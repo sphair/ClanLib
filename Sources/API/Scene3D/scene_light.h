@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_scene3d.h"
 #include <memory>
 
 namespace clan
@@ -43,7 +42,7 @@ class OctTreeObject;
 class AxisAlignedBoundingBox;
 class VSMShadowMapPassLightData;
 
-class CL_API_SCENE SceneLight
+class SceneLight
 {
 public:
 	SceneLight();

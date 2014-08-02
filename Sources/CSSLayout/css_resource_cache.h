@@ -57,7 +57,7 @@ public:
 
 	void set_dpi(float dpi);
 
-	Callback_2<Image, Canvas &, const std::string &> cb_get_image;
+	std::function<Image(Canvas &, const std::string &)> cb_get_image;
 
 	CSSLength compute_length(const CSSLength &length, float em_size, float ex_size);
 	std::vector<std::string> get_default_quotes();

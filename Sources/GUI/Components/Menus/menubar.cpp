@@ -45,7 +45,6 @@
 #include "popupmenu_impl.h"
 #include "../../gui_css_strings.h"
 #include "API/CSSLayout/ComputedValues/css_computed_values.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -54,11 +53,11 @@ namespace clan
 // MenuBar Construction:
 
 MenuBar::MenuBar( GUIComponent *parent)
-: GUIComponent(parent, CssStr::MenuBar::type_name), impl(new MenuBar_Impl)
+: GUIComponent(parent, CssStr::MenuBar::type_name), impl(std::make_shared<MenuBar_Impl>())
 {
 	impl->menubar = this;
-	func_process_message().set(impl.get(), &MenuBar_Impl::on_process_message);
-	func_render().set(impl.get(), &MenuBar_Impl::on_render);
+	func_process_message() = bind_member(impl.get(), &MenuBar_Impl::on_process_message);
+	func_render() = bind_member(impl.get(), &MenuBar_Impl::on_render);
 	
 	impl->create_parts();
 }

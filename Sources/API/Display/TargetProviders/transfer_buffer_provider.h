@@ -39,7 +39,7 @@ namespace clan
 class GraphicContext;
 
 /// \brief Transfer Buffer provider.
-class CL_API_DISPLAY TransferBufferProvider
+class TransferBufferProvider
 {
 /// \name Construction
 /// \{

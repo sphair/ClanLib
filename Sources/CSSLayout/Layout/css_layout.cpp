@@ -44,7 +44,7 @@ namespace clan
 {
 
 CSSLayout::CSSLayout()
-: impl(new CSSLayout_Impl())
+: impl(std::make_shared<CSSLayout_Impl>())
 {
 	impl->self = impl;
 }
@@ -219,7 +219,7 @@ CSSLayoutElement CSSLayout::find_element(const std::string &name)
 	}
 }
 
-Callback_2<Image, Canvas &, const std::string &> &CSSLayout::func_get_image()
+std::function<Image(Canvas &, const std::string &)> &CSSLayout::func_get_image()
 {
 	return impl->resource_cache.cb_get_image;
 }

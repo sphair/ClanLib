@@ -65,10 +65,10 @@ public:
 
 	CheckBox *checkbox;
 
-	Callback_v0 func_checked;
-	Callback_v0 func_unchecked;
-	Callback_v0 func_indeterminated;
-	Callback_v0 func_state_changed;
+	std::function<void()> func_checked;
+	std::function<void()> func_unchecked;
+	std::function<void()> func_indeterminated;
+	std::function<void()> func_state_changed;
 
 	bool three_state;
 
@@ -80,7 +80,7 @@ public:
 // CheckBox Construction:
 
 CheckBox::CheckBox(GUIComponent *parent)
-: GUIComponent(parent, CssStr::CheckBox::type_name), impl(new CheckBox_Impl)
+: GUIComponent(parent, CssStr::CheckBox::type_name), impl(std::make_shared<CheckBox_Impl>())
 {
 	impl->checkbox = this;
 
@@ -90,8 +90,8 @@ CheckBox::CheckBox(GUIComponent *parent)
 	set_focus_policy(focus_local);
 	set_double_click_enabled(false);
 
-	func_process_message().set(impl.get(), &CheckBox_Impl::on_process_message);
-	func_enablemode_changed().set(impl.get(), &CheckBox_Impl::on_enablemode_changed);
+	func_process_message() = bind_member(impl.get(), &CheckBox_Impl::on_process_message);
+	func_enablemode_changed() = bind_member(impl.get(), &CheckBox_Impl::on_enablemode_changed);
 
 	impl->update_classes();
 }
@@ -165,22 +165,22 @@ void CheckBox::set_text(const std::string &text)
 /////////////////////////////////////////////////////////////////////////////
 // CheckBox Events:
 
-Callback_v0 &CheckBox::func_checked()
+std::function<void()> &CheckBox::func_checked()
 {
 	return impl->func_checked;
 }
 
-Callback_v0 &CheckBox::func_unchecked()
+std::function<void()> &CheckBox::func_unchecked()
 {
 	return impl->func_unchecked;
 }
 
-Callback_v0 &CheckBox::func_indeterminated()
+std::function<void()> &CheckBox::func_indeterminated()
 {
 	return impl->func_indeterminated;
 }
 
-Callback_v0 &CheckBox::func_state_changed()
+std::function<void()> &CheckBox::func_state_changed()
 {
 	return impl->func_state_changed;
 }
@@ -236,21 +236,21 @@ void CheckBox_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 
 			if (checker->get_pseudo_class(CssStr::checked))
 			{
-				if (!func_checked.is_null())
-					func_checked.invoke();
+				if (func_checked)
+					func_checked();
 			}
 			else if (checker->get_pseudo_class(CssStr::indeterminated))
 			{
-				if (!func_indeterminated.is_null())
-					func_indeterminated.invoke();
+				if (func_indeterminated)
+					func_indeterminated();
 			}
 			else 
 			{
-				if (!func_unchecked.is_null())
-					func_unchecked.invoke();
+				if (func_unchecked)
+					func_unchecked();
 			}
-			if (!func_state_changed.is_null())
-				func_state_changed.invoke();
+			if (func_state_changed)
+				func_state_changed();
 
 			msg->consumed = true;
 		}

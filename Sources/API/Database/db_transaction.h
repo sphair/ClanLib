@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_database.h"
 
 namespace clan
 {
@@ -41,7 +40,7 @@ class DBTransactionProvider;
 class DBTransaction_Impl;
 
 /// \brief Database transaction.
-class CL_API_DATABASE DBTransaction
+class DBTransaction
 {
 /// \name Construction
 /// \{

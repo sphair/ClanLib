@@ -28,11 +28,11 @@
 */
 
 #include "Display/precomp.h"
+#include "x11_window.h"
 #include "input_device_provider_x11keyboard.h"
 #include "API/Display/Window/input_event.h"
 #include "API/Display/Window/keys.h"
 #include "API/Core/Text/string_help.h"
-#include "x11_window.h"
 #include <cstdio>
 #include <X11/XKBlib.h>
 
@@ -56,7 +56,6 @@ InputDeviceProvider_X11Keyboard::~InputDeviceProvider_X11Keyboard()
 void InputDeviceProvider_X11Keyboard::on_dispose()
 {
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 // InputDeviceProvider_X11Keyboard attributes:
@@ -120,7 +119,6 @@ void InputDeviceProvider_X11Keyboard::get_keyboard_modifiers(bool &key_shift, bo
 	key_ctrl = ctrl_down;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 // InputDeviceProvider_X11Keyboard operations:
 
@@ -132,7 +130,6 @@ void InputDeviceProvider_X11Keyboard::received_keyboard_input(XKeyEvent &event)
 	{
 		keydown = true;
 	}else	keydown = false;
-
 
 	InputCode key_code = (InputCode)event.keycode;
 
@@ -276,7 +273,7 @@ void InputDeviceProvider_X11Keyboard::received_keyboard_input(XKeyEvent &event)
 	key.str = StringHelp::local8_to_text(std::string(buff, result));
 
 	// Emit message:
-	sig_provider_event->invoke(key);
+	(*sig_provider_event)(key);
 }
 
 /////////////////////////////////////////////////////////////////////////////

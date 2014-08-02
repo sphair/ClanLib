@@ -31,13 +31,12 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include "../2D/color.h"
 #include "../Image/texture_format.h"
 #include <memory>
 #include "../../Core/Math/mat4.h"
 #include "../../Core/Math/rect.h"
-#include "../../Core/Signals/signal_v0.h"
+#include "../../Core/Signals/signal.h"
 #include "primitives_array.h"
 #include "frame_buffer.h"
 #include "element_array_vector.h"
@@ -254,7 +253,7 @@ enum ShaderLanguage
 };
 
 /// \brief Interface to drawing graphics.
-class CL_API_DISPLAY GraphicContext
+class GraphicContext
 {
 /// \name Construction
 /// \{
@@ -345,7 +344,7 @@ public:
 	/// \brief Returns the provider for this graphic context.
 	GraphicContextProvider *get_provider();
 
-	const GraphicContextProvider * const get_provider() const;
+	const GraphicContextProvider * get_provider() const;
 
 /// \}
 /// \name Operations

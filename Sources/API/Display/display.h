@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_display.h"
 
 namespace clan
 {
@@ -47,7 +46,7 @@ class DisplayTargetProvider;
 ///    equalent functions in DisplayWindow, GraphicContext and such.</p>
 ///    <p>The entire point of this is to allow applications with only one
 ///    window to not pass around a pointer to the display window.</p>
-class CL_API_DISPLAY Display
+class Display
 {
 /// \name Attributes
 /// \{

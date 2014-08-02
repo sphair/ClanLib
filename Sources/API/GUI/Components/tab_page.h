@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_component.h"
 
 namespace clan
@@ -40,7 +39,7 @@ namespace clan
 class TabPage_Impl;
 
 /// \brief Tab component.
-class CL_API_GUI TabPage : public GUIComponent
+class TabPage : public GUIComponent
 {
 /// \name Construction
 /// \{

@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include "input_device.h"
 #include "keys.h"
 #include "../../Core/Math/point.h"
@@ -41,7 +40,7 @@ namespace clan
 /// \{
 
 /// \brief Input event class.
-class CL_API_DISPLAY InputEvent
+class InputEvent
 {
 public:
 	/// \brief Event types.

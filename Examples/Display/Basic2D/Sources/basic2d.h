@@ -37,7 +37,6 @@ public:
 
 private:
 	void on_input_up(const clan::InputEvent &key);
-	void on_window_close();
 
 private:
 	bool quit;

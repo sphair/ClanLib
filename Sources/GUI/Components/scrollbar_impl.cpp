@@ -246,8 +246,8 @@ void ScrollBar_Impl::on_mouse_lbutton_up(std::shared_ptr<GUIMessage> &msg, Input
 
 	if (mouse_down_mode == mouse_down_thumb_drag)
 	{
-		if (!func_scroll_thumb_release.is_null())
-			func_scroll_thumb_release.invoke();
+		if (func_scroll_thumb_release)
+			func_scroll_thumb_release();
 	}
 
 	mouse_down_mode = mouse_down_none;
@@ -425,25 +425,25 @@ void ScrollBar_Impl::on_enablemode_changed()
 	scrollbar->request_repaint();
 }
 
-void ScrollBar_Impl::invoke_scroll_event(Callback_v0 *event_ptr)
+void ScrollBar_Impl::invoke_scroll_event(std::function<void()> *event_ptr)
 {
 	if (position == scroll_max-1)
 	{
-		if (!func_scroll_max.is_null())
-			func_scroll_max.invoke();
+		if (func_scroll_max)
+			func_scroll_max();
 	}
 
 	if (position == scroll_min)
 	{
-		if (!func_scroll_min.is_null())
-			func_scroll_min.invoke();
+		if (func_scroll_min)
+			func_scroll_min();
 	}
 
-	if (!func_scroll.is_null())
-		func_scroll.invoke();
+	if (func_scroll)
+		func_scroll();
 
-	if (!event_ptr->is_null())
-		event_ptr->invoke();
+	if (event_ptr)
+		(*event_ptr)();
 }
 
 }

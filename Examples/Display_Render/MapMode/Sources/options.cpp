@@ -45,7 +45,7 @@ Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComp
 	slider_ypos += 8;
 	slider_numballs->set_max(9);
 	slider_numballs->set_position(num_balls);
-	slider_numballs->func_value_changed().set(this, &Options::slider_numballs_changed);
+	slider_numballs->func_value_changed() = bind_member(this, &Options::slider_numballs_changed);
 	slider_ypos += 8;
 	label_numballs = create_slider_label(slider_numballs);
 
@@ -54,7 +54,7 @@ Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComp
 	slider_grid_angle->set_min(-45);
 	slider_grid_angle->set_max(90);
 	slider_grid_angle->set_position(grid_angle);
-	slider_grid_angle->func_value_changed().set(this, &Options::slider_grid_angle_changed);
+	slider_grid_angle->func_value_changed() = bind_member(this, &Options::slider_grid_angle_changed);
 	slider_ypos += 8;
 	label_grid_angle = create_slider_label(slider_grid_angle);
 
@@ -62,7 +62,7 @@ Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComp
 	int checkbox_ypos = slider_ypos;
 	int checkbox_gap = 24;
 	checkbox_moveballs = create_checkbox(checkbox_xpos, checkbox_ypos, "Moving Balls", is_moveballs_set);
-	checkbox_moveballs->func_state_changed().set(this, &Options::checkbox_moveballs_changed);
+	checkbox_moveballs->func_state_changed() = bind_member(this, &Options::checkbox_moveballs_changed);
 
 	make_mapmode_menu(combo_mapmode_menu);
 	combo_mapmode = create_mapmode_combo_box(450, 40, combo_mapmode_menu, 0);
@@ -70,7 +70,7 @@ Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComp
 
 	update_all_slider_text();
 
-	func_render().set(this, &Options::on_render);
+	func_render() = bind_member(this, &Options::on_render);
 }
 
 Options::~Options()
@@ -118,7 +118,7 @@ clan::CheckBox *Options::create_checkbox(int xpos, int ypos, const char *name, b
 }
 
 
-void Options::on_mapmode_selected(int value, clan::ComboBox *combo)
+void Options::on_mapmode_selected(int value)
 {
 	switch (value)
 	{
@@ -177,7 +177,7 @@ clan::ComboBox *Options::create_mapmode_combo_box(int xpos, int ypos, clan::Popu
 	combo->set_dropdown_minimum_width(64);
 	combo->set_popup_menu(menu);
 	combo->set_selected_item(selected_item);
-	combo->func_item_selected().set(this, &Options::on_mapmode_selected, combo);
+	combo->func_item_selected() = bind_member(this, &Options::on_mapmode_selected);
 
 	return combo;
 }

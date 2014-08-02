@@ -43,12 +43,13 @@ int Scroller::start(const std::vector<std::string> &args)
 	desc.set_allow_resize(true);
 
 	clan::DisplayWindow window(desc);
+    clan::SlotContainer cc;
 
 	// Connect the Window close event
-	clan::Slot slot_quit = window.sig_window_close().connect(this, &Scroller::on_window_close);
+	cc.connect(window.sig_window_close(), clan::bind_member(this, &Scroller::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	clan::Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &Scroller::on_input_up);
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &Scroller::on_input_up));
 
 	// Get the canvas
 	clan::Canvas canvas(window);

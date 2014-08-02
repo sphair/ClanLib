@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_gui.h"
 #include <memory>
 #include "gui_message.h"
 
@@ -39,7 +38,7 @@ namespace clan
 /// \{
 
 /// \brief GUI activation change notification message.
-class CL_API_GUI GUIMessage_ActivationChange : public GUIMessage
+class GUIMessage_ActivationChange : public GUIMessage
 {
 /// \name Construction
 /// \{

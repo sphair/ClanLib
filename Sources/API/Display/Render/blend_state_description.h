@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include "graphic_context.h"
 
 namespace clan
@@ -40,7 +39,7 @@ namespace clan
 class BlendStateDescription_Impl;
 
 /// \brief Blend state description.
-class CL_API_DISPLAY BlendStateDescription
+class BlendStateDescription
 {
 /// \name Construction
 /// \{

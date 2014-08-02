@@ -9,12 +9,12 @@ CSSBrowser::CSSBrowser(GUIManager *gui)
 : GUIComponent/*Window*/(gui, get_window_description()), label(0), combobox(0), view(0)
 {
 	view = new CSSView(this);
-	func_close().set(this, &CSSBrowser::on_close);
-	func_resized().set(this, &CSSBrowser::on_resized);
+	func_close() = bind_member(this, &CSSBrowser::on_close);
+	func_resized() = bind_member(this, &CSSBrowser::on_resized);
 	label = new Label(this);
 	combobox = new ComboBox(this);
-	combobox->func_item_selected().set(this, &CSSBrowser::on_combobox_item_selected);
-	combobox->func_enter_pressed().set(this, &CSSBrowser::on_combobox_enter_pressed);
+	combobox->func_item_selected() = bind_member(this, &CSSBrowser::on_combobox_item_selected);
+	combobox->func_enter_pressed() = bind_member(this, &CSSBrowser::on_combobox_enter_pressed);
 	PopupMenu popup;
 	popup.insert_item("http://clanlib.org/");
 	popup.insert_item("http://clanlib.org/documentation.html");

@@ -31,7 +31,6 @@
 
 #include <vector>
 #include "API/Display/Window/input_device.h"
-#include "API/Display/Window/input_event.h"
 #include "API/Core/System/disposable_object.h"
 #include "API/Core/System/mutex.h"
 
@@ -50,7 +49,6 @@ public:
 	InputContext_Impl();
 
 	~InputContext_Impl();
-
 
 /// \}
 /// \name Attributes

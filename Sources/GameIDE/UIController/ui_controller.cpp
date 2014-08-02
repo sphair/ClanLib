@@ -139,7 +139,7 @@ void UIController::set_active(DocumentEditor *editor)
 		listeners[i]->set_active(editor);
 	}
 
-	sig_editor_activated.invoke(editor);
+	sig_editor_activated(editor);
 }
 
 void UIController::editor_destroyed(DocumentEditor *editor)

@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 #include <vector>
 
@@ -42,7 +41,7 @@ class EarClipResult_Impl;
 class EarClipTriangulator_Triangle;
 
 /// \brief Ear clipping triangulation result structure.
-class CL_API_CORE EarClipResult
+class EarClipResult
 {
 /// \name Construction
 /// \{

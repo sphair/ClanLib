@@ -44,17 +44,17 @@ class Size;
 class Sizef;
 class Sized;
 
-CL_API_CORE std::ostream& operator<<(std::ostream& s, const Rect& rect);
-CL_API_CORE std::ostream& operator<<(std::ostream& s, const Rectf& rect);
-CL_API_CORE std::ostream& operator<<(std::ostream& s, const Rectd& rect);
-CL_API_CORE std::ostream& operator<<(std::ostream& s, const Point& point);
-CL_API_CORE std::ostream& operator<<(std::ostream& s, const Pointf& point);
-CL_API_CORE std::ostream& operator<<(std::ostream& s, const Pointd& point);
-CL_API_CORE std::ostream& operator<<(std::ostream& s, const Size& size);
-CL_API_CORE std::ostream& operator<<(std::ostream& s, const Sizef& size);
+std::ostream& operator<<(std::ostream& s, const Rect& rect);
+std::ostream& operator<<(std::ostream& s, const Rectf& rect);
+std::ostream& operator<<(std::ostream& s, const Rectd& rect);
+std::ostream& operator<<(std::ostream& s, const Point& point);
+std::ostream& operator<<(std::ostream& s, const Pointf& point);
+std::ostream& operator<<(std::ostream& s, const Pointd& point);
+std::ostream& operator<<(std::ostream& s, const Size& size);
+std::ostream& operator<<(std::ostream& s, const Sizef& size);
 
 template<typename T>
-CL_API_CORE std::ostream& operator<<(std::ostream& s, const Vec2<T>& vec)
+std::ostream& operator<<(std::ostream& s, const Vec2<T>& vec)
 {
 	s << "["
 	  << vec.x   << ", "
@@ -63,7 +63,7 @@ CL_API_CORE std::ostream& operator<<(std::ostream& s, const Vec2<T>& vec)
 }
 
 template<typename T>
-CL_API_CORE std::ostream& operator<<(std::ostream& s, const Vec3<T>& vec)
+std::ostream& operator<<(std::ostream& s, const Vec3<T>& vec)
 {
 	s << "["
 	  << vec.x << ", "
@@ -73,7 +73,7 @@ CL_API_CORE std::ostream& operator<<(std::ostream& s, const Vec3<T>& vec)
 }
 
 template<typename T>
-CL_API_CORE std::ostream& operator<<(std::ostream& s, const Vec4<T>& vec)
+std::ostream& operator<<(std::ostream& s, const Vec4<T>& vec)
 {
 	s << "["
 	  << vec.x << ", "

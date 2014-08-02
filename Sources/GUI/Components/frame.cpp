@@ -36,7 +36,6 @@
 #include "API/Display/2D/sprite.h"
 #include "../gui_css_strings.h"
 #include "API/Display/2D/canvas.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -67,10 +66,10 @@ public:
 // Frame Construction:
 
 Frame::Frame(GUIComponent *parent)
-: GUIComponent(parent, CssStr::Frame::type_name), impl(new Frame_Impl)
+: GUIComponent(parent, CssStr::Frame::type_name), impl(std::make_shared<Frame_Impl>())
 {
 	impl->frame = this;
-	func_render().set(impl.get(), &Frame_Impl::on_render);
+	func_render() = bind_member(impl.get(), &Frame_Impl::on_render);
 
 	impl->create_parts();
 }

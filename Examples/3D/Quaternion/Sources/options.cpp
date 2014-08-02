@@ -50,11 +50,11 @@ Options::Options(GUIManager &gui, Rect gui_position) : GUIComponent(&gui, GUITop
 	int slider_ypos = 8;
 	int slider_gap = 24;
 	slider_rotation_y = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
-	slider_rotation_y->func_value_changed().set(this, &Options::slider_rotation_y_changed);
+	slider_rotation_y->func_value_changed() = bind_member(this, &Options::slider_rotation_y_changed);
 	slider_rotation_x = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
-	slider_rotation_x->func_value_changed().set(this, &Options::slider_rotation_x_changed);
+	slider_rotation_x->func_value_changed() = bind_member(this, &Options::slider_rotation_x_changed);
 	slider_rotation_z = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
-	slider_rotation_z->func_value_changed().set(this, &Options::slider_rotation_z_changed);
+	slider_rotation_z->func_value_changed() = bind_member(this, &Options::slider_rotation_z_changed);
 	label_rotation_y = create_slider_label(slider_rotation_y);
 	label_rotation_x = create_slider_label(slider_rotation_x);
 	label_rotation_z = create_slider_label(slider_rotation_z);
@@ -63,26 +63,26 @@ Options::Options(GUIManager &gui, Rect gui_position) : GUIComponent(&gui, GUITop
 	slider_ypos = 8;
 
 	slider_quaternion_w = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
-	slider_quaternion_w->func_value_changed().set(this, &Options::slider_quaternion_w_changed);
+	slider_quaternion_w->func_value_changed() = bind_member(this, &Options::slider_quaternion_w_changed);
 	label_quaternion_w = create_slider_label(slider_quaternion_w);
 	slider_quaternion_i = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
-	slider_quaternion_i->func_value_changed().set(this, &Options::slider_quaternion_i_changed);
+	slider_quaternion_i->func_value_changed() = bind_member(this, &Options::slider_quaternion_i_changed);
 	label_quaternion_i = create_slider_label(slider_quaternion_i);
 	slider_quaternion_j = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
-	slider_quaternion_j->func_value_changed().set(this, &Options::slider_quaternion_j_changed);
+	slider_quaternion_j->func_value_changed() = bind_member(this, &Options::slider_quaternion_j_changed);
 	label_quaternion_j = create_slider_label(slider_quaternion_j);
 	slider_quaternion_k = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
-	slider_quaternion_k->func_value_changed().set(this, &Options::slider_quaternion_k_changed);
+	slider_quaternion_k->func_value_changed() = bind_member(this, &Options::slider_quaternion_k_changed);
 	label_quaternion_k = create_slider_label(slider_quaternion_k);
 
 	slider_xpos = 600;
 	slider_ypos = 8;
 	slider_target_y = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
-	slider_target_y->func_value_changed().set(this, &Options::slider_target_y_changed);
+	slider_target_y->func_value_changed() = bind_member(this, &Options::slider_target_y_changed);
 	slider_target_x = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
-	slider_target_x->func_value_changed().set(this, &Options::slider_target_x_changed);
+	slider_target_x->func_value_changed() = bind_member(this, &Options::slider_target_x_changed);
 	slider_target_z = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
-	slider_target_z->func_value_changed().set(this, &Options::slider_target_z_changed);
+	slider_target_z->func_value_changed() = bind_member(this, &Options::slider_target_z_changed);
 	label_target_y = create_slider_label(slider_target_y);
 	label_target_x = create_slider_label(slider_target_x);
 	label_target_z = create_slider_label(slider_target_z);
@@ -93,23 +93,23 @@ Options::Options(GUIManager &gui, Rect gui_position) : GUIComponent(&gui, GUITop
 	button_lerp = new PushButton(this);
 	button_lerp->set_geometry(Rect(slider_xpos, slider_ypos, Size(256, 30)));
 	button_lerp->set_text("Linear Quaternion Interpolation (lerp)");
-	button_lerp->func_clicked().set(this, &Options::on_clicked_button_lerp);
+	button_lerp->func_clicked() = bind_member(this, &Options::on_clicked_button_lerp);
 	slider_xpos += 300;
 
 	button_slerp = new PushButton(this);
 	button_slerp->set_geometry(Rect(slider_xpos, slider_ypos, Size(256, 30)));
 	button_slerp->set_text("Spherical Linear Interpolation (slerp)");
-	button_slerp->func_clicked().set(this, &Options::on_clicked_button_slerp);
+	button_slerp->func_clicked() = bind_member(this, &Options::on_clicked_button_slerp);
 	slider_xpos += 300;
 
 	button_rotate = new PushButton(this);
 	button_rotate->set_geometry(Rect(slider_xpos, slider_ypos, Size(256, 30)));
 	button_rotate->set_text("Rotate : q.multiply(target)");
-	button_rotate->func_clicked().set(this, &Options::on_clicked_button_rotate);
+	button_rotate->func_clicked() = bind_member(this, &Options::on_clicked_button_rotate);
 
 	set_all_sliders();
 
-	func_render().set(this, &Options::on_render);
+	func_render() = bind_member(this, &Options::on_render);
 }
 
 Options::~Options()

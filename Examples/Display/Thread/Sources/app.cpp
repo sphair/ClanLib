@@ -38,10 +38,11 @@ int App::start(const std::vector<std::string> &args)
 	clan::DisplayWindow window(description);
 	clan::InputDevice keyboard = window.get_ic().get_keyboard();
 	clan::Canvas canvas(window);
+    clan::SlotContainer cc;
 
-	clan::Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 
-	clan::Slot slot_window_close = window.sig_window_close().connect(this, &App::window_close);
+	cc.connect(window.sig_window_close(), clan::bind_member(this, &App::window_close));
 
 	// Load the font
 	clan::Font font(canvas, "tahoma", 32);

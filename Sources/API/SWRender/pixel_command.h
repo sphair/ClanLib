@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_swrender.h"
 
 namespace clan
 {
@@ -40,7 +39,7 @@ class PixelThreadContext;
 class PixelPipeline;
 
 /// \brief Interface for commands participating in the rendering pipeline
-class API_SWRender PixelCommand
+class PixelCommand
 {
 //!Operations
 public:

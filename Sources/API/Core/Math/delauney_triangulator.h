@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 #include <vector>
 
@@ -39,7 +38,7 @@ namespace clan
 /// \{
 
 /// \brief Vertex in the delauney triangulation.
-class CL_API_CORE DelauneyTriangulator_Vertex
+class DelauneyTriangulator_Vertex
 {
 /// \name Attributes
 /// \{

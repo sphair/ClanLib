@@ -31,11 +31,7 @@
 
 #pragma once
 
-#include "../api_display.h"
-#include "../../Core/Signals/signal_v0.h"
-#include "../../Core/Signals/signal_v1.h"
-#include "../../Core/Signals/signal_v2.h"
-#include "../../Core/Signals/callback_v1.h"
+#include "../../Core/Signals/signal.h"
 #include "../Window/display_window.h"
 #include <memory>
 
@@ -56,56 +52,56 @@ class CursorProvider;
 class CursorDescription;
 
 /// \brief Display Window site.
-class CL_API_DISPLAY DisplayWindowSite
+class DisplayWindowSite
 {
 /// \name Attributes
 /// \{
 public:
 	/// \brief Pointer to lost focus signal.
-	Signal_v0 *sig_lost_focus;
+	Signal<void()> *sig_lost_focus;
 
 	/// \brief Pointer to got focus signal.
-	Signal_v0 *sig_got_focus;
+	Signal<void()> *sig_got_focus;
 
 	/// \brief Pointer to resize signal.
-	Signal_v2<int, int> *sig_resize;
+	Signal<void(int, int)> *sig_resize;
 
 	/// \brief Pointer to paint signal.
-	Signal_v1<const Rect &> *sig_paint;
+	Signal<void(const Rect &)> *sig_paint;
 
 	/// \brief Pointer to window close signal.
-	Signal_v0 *sig_window_close;
+	Signal<void()> *sig_window_close;
 
 	/// \brief Pointer to window destroy signal.
-	Signal_v0 *sig_window_destroy;
+	Signal<void()> *sig_window_destroy;
 
 	/// \brief Pointer to window minimized signal.
-	Signal_v0 *sig_window_minimized;
+	Signal<void()> *sig_window_minimized;
 
 	/// \brief Pointer to window maximized signal.
-	Signal_v0 *sig_window_maximized;
+	Signal<void()> *sig_window_maximized;
 
 	/// \brief Pointer to window restored signal.
-	Signal_v0 *sig_window_restored;
+	Signal<void()> *sig_window_restored;
 
 	/// \brief Pointer to window resize callback function.
-	Callback_v1<Rect &> *func_window_resize;
+	std::function<void(Rect &)> *func_window_resize;
 
 	/// \brief Pointer to minimized clicked callback function.
-	Callback_0<bool> *func_minimize_clicked;
+	std::function<bool()> *func_minimize_clicked;
 
 	/// \brief Pointer to window moved signal.
-	Signal_v0 *sig_window_moved;
+	Signal<void()> *sig_window_moved;
 
 #ifdef WIN32
-	Callback_4<bool, HWND, UINT, WPARAM, LPARAM> *func_window_message;
+	std::function<bool(HWND, UINT, WPARAM, LPARAM)> *func_window_message;
 #endif
 
 /// \}
 };
 
 /// \brief Interface for implementing a DisplayWindow target.
-class CL_API_DISPLAY DisplayWindowProvider
+class DisplayWindowProvider
 {
 /// \name Construction
 /// \{

@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_component.h"
 
 namespace clan
@@ -40,7 +39,7 @@ namespace clan
 class BrowseFolderDialog_Impl;
 
 /// \brief BrowseFolderDialog component.
-class CL_API_GUI BrowseFolderDialog
+class BrowseFolderDialog
 {
 /// \name Construction
 /// \{

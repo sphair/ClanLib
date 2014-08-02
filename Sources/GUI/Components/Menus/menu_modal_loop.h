@@ -29,8 +29,8 @@
 
 #pragma once
 
-#include "API/Core/Signals/callback_1.h"
-#include "API/Core/Signals/slot.h"
+#include <memory>
+#include "API/Core/Signals/signal.h"
 
 namespace clan
 {
@@ -70,6 +70,7 @@ private:
 	void close_all_popup_windows();
 	void close_last_popup_window();
 
+    SlotContainer sc;
 	PopupMenuWindow *find_popup_at(const Point &pos);
 	bool is_above_menubar(const Point &pos);
 	GUIComponent *owner;
@@ -77,7 +78,6 @@ private:
 	std::vector<PopupMenuWindow *> popup_windows;
 	bool running;
 	bool ignore_menubar_mouse_up;
-	Slot slot_filter;
 
 	bool popup;
 };

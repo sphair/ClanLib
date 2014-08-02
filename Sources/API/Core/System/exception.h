@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <vector>
 #include <stdexcept>
 #include <string>
@@ -40,7 +39,7 @@ namespace clan
 /// \{
 
 /// \brief Top-level exception class.
-class CL_API_CORE Exception : public std::exception
+class Exception : public std::exception
 {
 /// \name Construction
 /// \{

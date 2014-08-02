@@ -37,17 +37,17 @@ public:
 
 private:
 	bool on_close();
-	void on_value_changed(clan::Spin *spin);
-	void on_checked_disable(clan::CheckBox *checkbox);
-	void on_unchecked_disable(clan::CheckBox *checkbox);
-	void on_checked_fp_mode(clan::CheckBox *checkbox);
-	void on_unchecked_fp_mode(clan::CheckBox *checkbox);
-	void on_apply_clicked(clan::PushButton *pushbutton);
-	void on_value_enter_pressed(clan::LineEdit *lineedit);
-	void on_min_enter_pressed(clan::LineEdit *lineedit);
-	void on_max_enter_pressed(clan::LineEdit *lineedit);
-	void on_step_enter_pressed(clan::LineEdit *lineedit);
-	void on_decimal_places_enter_pressed(clan::LineEdit *lineedit);
+	void on_value_changed();
+	void on_checked_disable();
+	void on_unchecked_disable();
+	void on_checked_fp_mode();
+	void on_unchecked_fp_mode();
+	void on_apply_clicked();
+	void on_value_enter_pressed();
+	void on_min_enter_pressed();
+	void on_max_enter_pressed();
+	void on_step_enter_pressed();
+	void on_decimal_places_enter_pressed();
 
 private:
 	clan::Spin *spin1;

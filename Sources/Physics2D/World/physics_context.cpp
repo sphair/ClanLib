@@ -44,7 +44,7 @@ PhysicsContext::PhysicsContext()
 }
 
 PhysicsContext::PhysicsContext(PhysicsWorld &pw)
-: impl(new PhysicsContext_Impl(pw.impl.get()))
+: impl(std::make_shared<PhysicsContext_Impl>(pw.impl.get()))
 {
 
 }

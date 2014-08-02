@@ -104,7 +104,7 @@ void GUIXMLLoaderVersion_1_0::load(DomDocument &doc)
 	}
 }
 
-void GUIXMLLoaderVersion_1_0::set_create_custom_callback(Callback_2<GUIComponent*, GUIComponent*, std::string> *callback)
+void GUIXMLLoaderVersion_1_0::set_create_custom_callback(std::function<GUIComponent*(GUIComponent*, std::string)> *callback)
 {
 	create_custom_callback = callback;
 }
@@ -280,9 +280,9 @@ void GUIXMLLoaderVersion_1_0::load(DomElement &element, GUIComponent *parent)
 		else // unknown tag... try create a custom_component
 		{
 			GUIComponent *co = 0;
-			if (create_custom_callback && !create_custom_callback->is_null())
+			if (create_custom_callback && *create_custom_callback)
 			{
-				co = create_custom_callback->invoke(parent, tag);
+				co = (*create_custom_callback)(parent, tag);
 			}
 			new_comp = co;
 		}

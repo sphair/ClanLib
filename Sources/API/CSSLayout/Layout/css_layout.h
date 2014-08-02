@@ -28,8 +28,6 @@
 
 #pragma once
 
-#include "../api_csslayout.h"
-#include "../../Core/Signals/callback_2.h"
 #include <memory>
 
 namespace clan
@@ -52,7 +50,7 @@ class Image;
 class Rect;
 class Canvas;
 
-class CL_API_CSSLAYOUT CSSLayout
+class CSSLayout
 {
 public:
 	CSSLayout();
@@ -84,7 +82,7 @@ public:
 	CSSLayoutElement find_element(const std::string &name);
 
 	// Image on_get_image(Canvas &canvas, const std::string &uri);
-	Callback_2<Image, Canvas &, const std::string &> &func_get_image();
+	std::function<Image(Canvas &, const std::string &)> &func_get_image();
 
 	class ClipWrapper
 	{

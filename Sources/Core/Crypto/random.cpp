@@ -38,7 +38,7 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // Random Construction:
 
-Random::Random(int cache_size) : impl(new Random_Impl(cache_size))
+Random::Random(int cache_size) : impl(std::make_shared<Random_Impl>(cache_size))
 {
 }
 

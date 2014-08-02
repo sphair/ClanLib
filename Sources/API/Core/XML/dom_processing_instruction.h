@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "dom_node.h"
 
 namespace clan
@@ -41,7 +40,7 @@ namespace clan
 ///
 ///    <p>The ProcessingInstruction interface represents a "processing instruction", used in
 ///    XML as a way to keep processor-specific information in the text of the document.</p> 
-class CL_API_CORE DomProcessingInstruction : public DomNode
+class DomProcessingInstruction : public DomNode
 {
 /// \name Construction
 /// \{

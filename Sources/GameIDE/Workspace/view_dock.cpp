@@ -36,7 +36,7 @@ namespace clan
 ViewDock::ViewDock(DockingGroup *parent, int id)
 : Dock(parent, id)
 {
-	func_resized().set(this, &ViewDock::on_resized);
+	func_resized() = bind_member(this, &ViewDock::on_resized);
 }
 
 void ViewDock::update_layout()

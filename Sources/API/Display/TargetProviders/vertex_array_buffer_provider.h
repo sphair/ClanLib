@@ -39,7 +39,7 @@ namespace clan
 class GraphicContext;
 
 /// \brief Vertex Array Buffer provider.
-class CL_API_DISPLAY VertexArrayBufferProvider
+class VertexArrayBufferProvider
 {
 /// \name Construction
 /// \{

@@ -63,7 +63,7 @@ public:
 // ListViewColumnData Construction:
 
 ListViewColumnData::ListViewColumnData()
-: impl(new ListViewColumnData_Impl)
+: impl(std::make_shared<ListViewColumnData_Impl>())
 {
 }
 

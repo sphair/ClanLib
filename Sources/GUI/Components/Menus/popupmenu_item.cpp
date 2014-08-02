@@ -59,7 +59,7 @@ public:
 	bool separator;
 	bool checkable;
 	bool is_checked;
-	Callback_v0 func_clicked;
+	std::function<void()> func_clicked;
 };
 
 
@@ -71,7 +71,7 @@ PopupMenuItem::PopupMenuItem()
 }
 
 PopupMenuItem::PopupMenuItem(int id)
-: impl(new PopupMenuItem_Impl)
+: impl(std::make_shared<PopupMenuItem_Impl>())
 {
 	impl->id = id;
 }
@@ -142,7 +142,7 @@ PixelBuffer PopupMenuItem::get_icon() const
 /////////////////////////////////////////////////////////////////////////////
 // PopupMenuItem Events:
 
-Callback_v0 & PopupMenuItem::func_clicked()
+std::function<void()> & PopupMenuItem::func_clicked()
 {	
 	return impl->func_clicked;
 }

@@ -35,12 +35,12 @@ namespace clan
 {
 
 CSSTokenizer::CSSTokenizer(IODevice &device)
-: impl(new CSSTokenizer_Impl(device))
+: impl(std::make_shared<CSSTokenizer_Impl>(device))
 {
 }
 
 CSSTokenizer::CSSTokenizer(const std::string &text)
-: impl(new CSSTokenizer_Impl(text))
+: impl(std::make_shared<CSSTokenizer_Impl>(text))
 {
 }
 

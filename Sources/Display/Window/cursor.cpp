@@ -55,7 +55,7 @@ Cursor::Cursor()
 }
 
 Cursor::Cursor(const DisplayWindow &window, const CursorDescription &cursor_description, const Point &hotspot)
-: impl(new Cursor_Impl)
+: impl(std::make_shared<Cursor_Impl>())
 {
 	impl->provider = window.get_provider()->create_cursor(cursor_description, hotspot);
 }

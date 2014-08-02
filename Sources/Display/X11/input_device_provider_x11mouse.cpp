@@ -157,7 +157,6 @@ void InputDeviceProvider_X11Mouse::set_position(int x, int y)
 	XWarpPointer(window->get_display(), None, window->get_window(), 0,0, 0,0, x,y);
 }
 
-
 void InputDeviceProvider_X11Mouse::received_mouse_input(XButtonEvent &event)
 {
 
@@ -228,7 +227,7 @@ void InputDeviceProvider_X11Mouse::received_mouse_input(XButtonEvent &event)
 	window->get_keyboard_modifiers(key.shift, key.alt, key.ctrl);
 
 	// Emit message:
-	sig_provider_event->invoke(key);
+	(*sig_provider_event)(key);
 }
 
 void InputDeviceProvider_X11Mouse::received_mouse_move(XMotionEvent &event)
@@ -249,7 +248,7 @@ void InputDeviceProvider_X11Mouse::received_mouse_move(XMotionEvent &event)
 		window->get_keyboard_modifiers(key.shift, key.alt, key.ctrl);
 
 		// Fire off signal
-		sig_provider_event->invoke(key);
+		(*sig_provider_event)(key);
 	}
 }
 

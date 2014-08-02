@@ -51,18 +51,18 @@ namespace clan
 
 #ifdef WIN32
 Event::Event(bool manual_reset, bool initial_state)
-: impl(new Event_Impl(new EventProvider_Win32(manual_reset, initial_state)))
+: impl(std::make_shared<Event_Impl>(new EventProvider_Win32(manual_reset, initial_state)))
 {
 }
 #else
 Event::Event(bool manual_reset, bool initial_state)
-: impl(new Event_Impl(new EventProvider_Socketpair(manual_reset, initial_state)))
+: impl(std::make_shared<Event_Impl>(new EventProvider_Socketpair(manual_reset, initial_state)))
 {
 }
 #endif
 
 Event::Event(EventProvider *event_provider)
-: impl(new Event_Impl(event_provider))
+: impl(std::make_shared<Event_Impl>(event_provider))
 {
 }
 

@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include "../api_network.h"
 #include <memory>
 
 namespace clan
@@ -12,7 +11,7 @@ class IODevice;
 class WebResponse_Impl;
 
 /// \brief HTTP web response class.
-class CL_API_NETWORK WebResponse
+class WebResponse
 {
 public:
 	WebResponse();

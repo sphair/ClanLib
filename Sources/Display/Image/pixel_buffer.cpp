@@ -58,12 +58,12 @@ PixelBuffer::PixelBuffer()
 }
 
 PixelBuffer::PixelBuffer(PixelBufferProvider *provider)
-: impl(new PixelBuffer_Impl(provider))
+: impl(std::make_shared<PixelBuffer_Impl>(provider))
 {
 }
 
 PixelBuffer::PixelBuffer(int width, int height, TextureFormat texture_format, const void *data, bool only_reference_data)
-: impl(new PixelBuffer_Impl(width, height, texture_format, data, only_reference_data))
+: impl(std::make_shared<PixelBuffer_Impl>(width, height, texture_format, data, only_reference_data))
 {
 }
 

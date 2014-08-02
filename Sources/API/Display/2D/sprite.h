@@ -27,13 +27,11 @@
 **    Mark Page
 */
 
-
 #pragma once
 
 #include <memory>
-#include "../api_display.h"
 #include "../../Core/Math/origin.h"
-#include "../../Core/Signals/signal_v0.h"
+#include "../../Core/Signals/signal.h"
 #include "../../Core/IOData/file_system.h"
 #include "../../Core/Resources/resource.h"
 #include "../Render/graphic_context.h"
@@ -54,7 +52,7 @@ class Font_Impl;
 class Subtexture;
 
 /// \brief Sprite class.
-class CL_API_DISPLAY Sprite
+class Sprite
 {
 /// \name Enums
 /// \{
@@ -240,7 +238,7 @@ public:
 		return impl < other.impl;
 	}
 /// \}
-	
+
 /// \name Operations
 /// \{
 public:
@@ -328,7 +326,7 @@ public:
 	/// \param delay_ms = Delay in milliseconds
 	void set_delay(int delay_ms);
 
-	/// \brief Sets the delay of a specific frame. 
+	/// \brief Sets the delay of a specific frame.
 	///
 	/// \param frame = Frame number. 0 is first frame.
 	/// \param delay_ms = Delay in milliseconds
@@ -404,7 +402,7 @@ public:
 	    \param xarray, yarray Number of columns and rows in grid.
 	    \param array_skipframes Number of frames to skip at last gridline.
 	    \param xspacing, yspacing Pixel interspacing between grid frames.*/
-	void add_gridclipped_frames(Canvas &canvas, 
+	void add_gridclipped_frames(Canvas &canvas,
 		const Texture2D &texture,
 		int xpos, int ypos,
 		int width, int height,
@@ -422,7 +420,7 @@ public:
 	    \param texture Image source.
 	    \param xpos, ypos Upper left position where alpha cutting should begin.
 	    \param trans_limit Amount of non-transparent alpha allowed before a pixel is not considered transparent.*/
-	void add_alphaclipped_frames(Canvas &canvas, 
+	void add_alphaclipped_frames(Canvas &canvas,
 		const Texture2D &texture,
 		int xpos = 0, int ypos = 0,
 		float trans_limit = 0.05f);
@@ -436,7 +434,7 @@ public:
 	    \param texture Image source.
 	    \param xpos, ypos Upper left position where alpha cutting should begin.
 	    \param trans_limit Amount of non-transparent alpha allowed before a pixel is not considered transparent.*/
-	void add_alphaclipped_frames_free(Canvas &canvas, 
+	void add_alphaclipped_frames_free(Canvas &canvas,
 		const Texture2D &texture,
 		int xpos = 0, int ypos = 0,
 		float trans_limit = 0.05f);
@@ -448,8 +446,8 @@ public:
 public:
 	/// \brief Sig animation finished
 	///
-	/// \return Signal_v0
-	Signal_v0 &sig_animation_finished();
+	/// \return Signal<void()>
+	Signal<void()> &sig_animation_finished();
 /// \}
 
 /// \name Implementation

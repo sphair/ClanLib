@@ -32,7 +32,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_component.h"
 
 namespace clan
@@ -45,7 +44,7 @@ class PixelBuffer;
 class ImageView_Impl;
 
 /// \brief Frame component.
-class CL_API_GUI ImageView : public GUIComponent
+class ImageView : public GUIComponent
 {
 /// \name Construction
 /// \{

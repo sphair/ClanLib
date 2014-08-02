@@ -30,8 +30,6 @@
 #pragma once
 
 #include "../gui_component.h"
-#include "../../Core/Signals/callback_v0.h"
-#include "../../Core/Signals/callback_1.h"
 #include "../gui_theme_part.h"
 namespace clan
 {
@@ -43,7 +41,7 @@ class PushButton;
 class Ribbon_Impl;
 
 /// \brief Ribbon component.
-class CL_API_GUI Ribbon : public GUIComponent
+class Ribbon : public GUIComponent
 {
 /// \name Construction
 /// \{

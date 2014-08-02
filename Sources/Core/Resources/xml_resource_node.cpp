@@ -60,7 +60,7 @@ XMLResourceNode::XMLResourceNode()
 }
 
 XMLResourceNode::XMLResourceNode(DomElement element, XMLResourceDocument &resource_document)
-: impl(new XMLResourceNode_Impl)
+: impl(std::make_shared<XMLResourceNode_Impl>())
 {
 	impl->element = element;
 	impl->resource_document = std::weak_ptr<XMLResourceDocument_Impl>(resource_document.impl);

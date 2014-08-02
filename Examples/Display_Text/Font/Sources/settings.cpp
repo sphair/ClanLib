@@ -180,7 +180,7 @@ void App::on_lineedit_changed(InputEvent &e)
 	font_size = selected_font.get_text_size(canvas, font_text);
 }
 
-void App::on_button_clicked_class_sprite(PushButton *button)
+void App::on_button_clicked_class_sprite()
 {
 	selected_fontclass = font_sprite;
 	font_typeface = "ClanFont";
@@ -190,7 +190,7 @@ void App::on_button_clicked_class_sprite(PushButton *button)
 	button_typeface_bitstream_ptr->set_enabled(false);
 	select_font();
 }
-void App::on_button_clicked_class_system(PushButton *button)
+void App::on_button_clicked_class_system()
 {
 	selected_fontclass = font_ttf;
 	button_typeface_tahoma_ptr->set_enabled();
@@ -199,88 +199,88 @@ void App::on_button_clicked_class_system(PushButton *button)
 	on_button_clicked_typeface_tahoma(button_typeface_tahoma_ptr);
 }
 
-void App::on_button_clicked_typeface_tahoma(PushButton *button)
+void App::on_button_clicked_typeface_tahoma()
 {
 	font_typeface = "Tahoma";
 	font_filename = "";
 	select_font();
 }
 
-void App::on_button_clicked_typeface_sans(PushButton *button)
+void App::on_button_clicked_typeface_sans()
 {
 	font_typeface = "Microsoft Sans Serif";
 	font_filename = "";
 	select_font();
 }
 
-void App::on_button_clicked_typeface_bitstream(PushButton *button)
+void App::on_button_clicked_typeface_bitstream()
 {
 	font_typeface = "Bitstream Vera Sans";
 	font_filename = "../../Display_Text/Font/Resources/bitstream_vera_sans/VeraBd.ttf";
 	select_font();
 }
 
-void App::on_checkbox_state_underline(CheckBox *checkbox)
+void App::on_checkbox_state_underline()
 {
 	font_desc.set_underline(checkbox->is_checked());
 	select_font();
 }
 
-void App::on_checkbox_state_italic(CheckBox *checkbox)
+void App::on_checkbox_state_italic()
 {
 	font_desc.set_italic(checkbox->is_checked());
 	select_font();
 }
 
-void App::on_checkbox_state_subpixel(CheckBox *checkbox)
+void App::on_checkbox_state_subpixel()
 {
 	font_desc.set_subpixel(checkbox->is_checked());
 	select_font();
 }
 
-void App::on_checkbox_state_strikeout(CheckBox *checkbox)
+void App::on_checkbox_state_strikeout()
 {
 	font_desc.set_strikeout(checkbox->is_checked());
 	select_font();
 }
 
-void App::on_checkbox_state_antialias(CheckBox *checkbox)
+void App::on_checkbox_state_antialias()
 {
 	font_desc.set_anti_alias(checkbox->is_checked());
 	select_font();
 }
 
-void App::on_button_clicked_weight_light(PushButton *button)
+void App::on_button_clicked_weight_light()
 {
 	font_desc.set_weight(300);
 	select_font();
 }
 
-void App::on_button_clicked_weight_normal(PushButton *button)
+void App::on_button_clicked_weight_normal()
 {
 	font_desc.set_weight(400);
 	select_font();
 }
 
-void App::on_button_clicked_weight_bold(PushButton *button)
+void App::on_button_clicked_weight_bold()
 {
 	font_desc.set_weight(700);
 	select_font();
 }
 
-void App::on_button_clicked_size_16(PushButton *button)
+void App::on_button_clicked_size_16()
 {
 	font_desc.set_height(16);
 	select_font();
 }
 
-void App::on_button_clicked_size_32(PushButton *button)
+void App::on_button_clicked_size_32()
 {
 	font_desc.set_height(32);
 	select_font();
 }
 
-void App::on_button_clicked_size_64(PushButton *button)
+void App::on_button_clicked_size_64()
 {
 	font_desc.set_height(64);
 	select_font();

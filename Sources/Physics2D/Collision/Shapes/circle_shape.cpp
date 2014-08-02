@@ -46,14 +46,14 @@ CircleShape::CircleShape()
 }
 
 CircleShape::CircleShape(const PhysicsWorld &pw)
-: impl(new CircleShape_Impl(pw.impl.get()))
+: impl(std::make_shared<CircleShape_Impl>(pw.impl.get()))
 {
 	shape_impl->shape_type = shape_circle;
 	shape_impl->shape = dynamic_cast<b2Shape*> (&impl->shape);
 }
 
 CircleShape::CircleShape(const PhysicsContext &pc)
-: impl(new CircleShape_Impl(pc.impl->get_owner()))
+: impl(std::make_shared<CircleShape_Impl>(pc.impl->get_owner()))
 {
 	shape_impl->shape_type = shape_circle;
 	shape_impl->shape = dynamic_cast<b2Shape*> (&impl->shape);

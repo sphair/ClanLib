@@ -51,7 +51,7 @@ Joint_Impl::~Joint_Impl()
 {
 	if(joint_occupied)
 	{
-		sig_joint_deletion.invoke();
+		sig_joint_deletion();
 		owner_world->safe_destroy_joint(joint, id);
 	}
 
@@ -69,7 +69,7 @@ void Joint_Impl::create_joint(b2JointDef &joint_def)
 	if(joint_occupied)
 	{
 		owner_world->destroy_joint(impl);
-		sig_joint_deletion.invoke();
+		sig_joint_deletion();
 	}
 	else
 	{
@@ -87,7 +87,7 @@ void  Joint_Impl::remove_joint()
 		owner_world->destroy_joint(impl);
 		//owner_world->world.DestroyJoint(joint);
 		joint_occupied = false;
-		sig_joint_deletion.invoke();
+		sig_joint_deletion();
 	}
 }
 

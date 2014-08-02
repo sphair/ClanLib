@@ -29,8 +29,6 @@
 
 
 #pragma once
-
-#include "../../api_physics2d.h"
 #include "../../../Core/Math/vec2.h"
 #include <memory>
 
@@ -60,7 +58,7 @@ enum JointType
 };
 
 /// \brief Joint class.
-class CL_API_PHYSICS Joint
+class Joint
 {
 
 /// \name Construction

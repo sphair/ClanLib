@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_physics3d.h"
 #include "../Core/Math/vec3.h"
 #include "../Core/Math/mat4.h"
 #include "../Core/Math/quaternion.h"
@@ -45,7 +44,7 @@ class Physics3DWorld;
 class Physics3DObject;
 class Physics3DConstraint_Impl;
 
-class CL_API_PHYSICS3D Physics3DConstraint
+class Physics3DConstraint
 {
 public:
 	Physics3DConstraint();

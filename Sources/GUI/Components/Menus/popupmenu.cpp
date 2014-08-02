@@ -42,7 +42,7 @@ namespace clan
 // PopupMenu Construction:
 
 PopupMenu::PopupMenu()
-: impl(new PopupMenu_Impl)
+: impl(std::make_shared<PopupMenu_Impl>())
 {
 }
 
@@ -105,7 +105,7 @@ std::string PopupMenu::get_class() const
 /////////////////////////////////////////////////////////////////////////////
 // PopupMenu Events:
 
-Callback_v0 &PopupMenu::func_close()
+std::function<void()> &PopupMenu::func_close()
 {
 	return impl->func_close;
 }

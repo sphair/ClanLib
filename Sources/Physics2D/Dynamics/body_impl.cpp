@@ -55,7 +55,7 @@ Body_Impl::~Body_Impl()
 { 
 	if(body_occupied)
 	{
-		sig_body_deletion.invoke();
+		sig_body_deletion();
 		owner_world->safe_destroy_body(body, id);
 
 		remove_fixtures();
@@ -80,7 +80,7 @@ void Body_Impl::create_body(const BodyDescription &description)
 	std::shared_ptr<Body_Impl> impl = shared_from_this();
 	if(body_occupied)	//Add proper handling of Physics World in a case of a deletion
 	{
-		sig_body_deletion.invoke();
+		sig_body_deletion();
 
 		owner_world->destroy_body(impl);
 
@@ -98,7 +98,7 @@ void Body_Impl::remove_body()
 {
 	if(body_occupied)
 	{
-		sig_body_deletion.invoke(); //Might move this to the physics world when the bodies are deleted for real.
+		sig_body_deletion(); //Might move this to the physics world when the bodies are deleted for real.
 
 		std::shared_ptr<Body_Impl> impl = shared_from_this();
 		owner_world->destroy_body(impl);
@@ -115,7 +115,7 @@ void Body_Impl::remove_body_safetly()
 {
 	if(body_occupied)
 	{
-		sig_body_deletion.invoke(); //Might move this to the physics world when the bodies are deleted for real.
+		sig_body_deletion(); //Might move this to the physics world when the bodies are deleted for real.
 
 		owner_world->safe_destroy_body(body, id);
 
@@ -132,7 +132,7 @@ void Body_Impl::on_begin_collision(Body_Impl &body)
 	Body collision_body;
 	collision_body.impl = shared_from_this();
 
-	sig_begin_collision.invoke(collision_body); //Send the body that this body collided with.
+	sig_begin_collision(collision_body); //Send the body that this body collided with.
 }
 
 void Body_Impl::on_end_collision(Body_Impl &body)
@@ -140,7 +140,7 @@ void Body_Impl::on_end_collision(Body_Impl &body)
 	Body collision_body;
 	collision_body.impl = shared_from_this();
 
-	sig_end_collision.invoke(collision_body); //Send the body that this body collided with.
+	sig_end_collision(collision_body); //Send the body that this body collided with.
 }
 
 void Body_Impl::add_fixture(Fixture &fixture)

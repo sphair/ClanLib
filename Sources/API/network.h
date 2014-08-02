@@ -60,10 +60,7 @@
 #include "Network/NetGame/client.h"
 #include "Network/NetGame/connection.h"
 #include "Network/NetGame/event.h"
-#include "Network/NetGame/event_dispatcher_v0.h"
-#include "Network/NetGame/event_dispatcher_v1.h"
-#include "Network/NetGame/event_dispatcher_v2.h"
-#include "Network/NetGame/event_dispatcher_v3.h"
+#include "Network/NetGame/event_dispatcher.h"
 #include "Network/NetGame/event_value.h"
 #include "Network/NetGame/server.h"
 

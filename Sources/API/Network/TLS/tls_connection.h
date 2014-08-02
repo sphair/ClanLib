@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_network.h"
 #include "../Socket/tcp_connection.h"
 
 namespace clan
@@ -41,7 +40,7 @@ class SocketName;
 class Event;
 
 /// \brief TLS connection over an I/O device.
-class CL_API_NETWORK TLSConnection : public IODevice
+class TLSConnection : public IODevice
 {
 /// \name Construction
 /// \{

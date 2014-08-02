@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include <memory>
 
 namespace clan
@@ -70,7 +69,7 @@ enum FrameBufferBindTarget
 };
 
 /// \brief Frame-buffer object class.
-class CL_API_DISPLAY FrameBuffer
+class FrameBuffer
 {
 /// \name Construction
 /// \{

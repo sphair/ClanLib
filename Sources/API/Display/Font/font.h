@@ -26,15 +26,12 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
-#include "../api_display.h"
 #include <memory>
 #include "../Render/graphic_context.h"
 #include "../Image/pixel_buffer.h"
 #include "../2D/sprite.h"
-#include "../../Core/Signals/callback_2.h"
 #include "font_description.h"
 
 namespace clan
@@ -49,7 +46,7 @@ class Font_Impl;
 /// \brief Font class
 ///
 /// A Font is a collection of images that can be used to represent text on a screen.
-class CL_API_DISPLAY Font
+class Font
 {
 /// \name Construction
 /// \{
@@ -93,9 +90,7 @@ public:
 	/// \param id = id
 	static Resource<Font> resource(Canvas &canvas, const FontDescription &desc, const ResourceManager &resources);
 
-
 /// \}
-
 
 /// \name Attributes
 /// \{

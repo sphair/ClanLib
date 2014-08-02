@@ -7,7 +7,7 @@ namespace clan
 {
 
 AudioDefinition::AudioDefinition()
-: impl(new AudioDefinition_Impl())
+: impl(std::make_shared<AudioDefinition_Impl>())
 {
 }
 

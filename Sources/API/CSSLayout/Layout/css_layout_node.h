@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_csslayout.h"
 #include "css_layout_user_data.h"
 #include <memory>
 
@@ -42,7 +41,7 @@ class CSSLayoutElement;
 class CSSLayoutObject;
 class CSSLayoutNode_Impl;
 
-class CL_API_CSSLAYOUT CSSLayoutNode
+class CSSLayoutNode
 {
 public:
 	CSSLayoutNode();

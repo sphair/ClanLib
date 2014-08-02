@@ -47,8 +47,7 @@ public:
 private:
 	Game *game;
 	
-	Slot update_slot;
-	Slot draw_slot;
+    SlotContainer cc;
 
 	Sprite title1;
 	Sprite background1;

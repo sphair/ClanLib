@@ -38,14 +38,142 @@
 namespace clan
 {
 
-FontEngine_Cocoa::FontEngine_Cocoa(const FontDescription &desc, const std::string &filename)
-: handle(0)
+void fontProviderReleaseData (
+                                void *info,
+                                const void *data,
+                                size_t size
+                              )
 {
-    CFStringRef name = CFStringCreateWithCString(kCFAllocatorDefault, desc.get_typeface_name().c_str(), kCFStringEncodingUTF8);
-    handle = CTFontCreateWithName(name, desc.get_height(), 0);
-    CFRelease(name);
+    char* rawbytes = (char*)info;
+    delete[] rawbytes;
+}
+
+CGFloat getLineHeightForFont(CTFontRef iFont)
+{
+    CGFloat lineHeight = 0.0;
+    
+   
+    // Get the ascent from the font, already scaled for the font's size
+    lineHeight += CTFontGetAscent(iFont);
+    
+    // Get the descent from the font, already scaled for the font's size
+    lineHeight += CTFontGetDescent(iFont);
+    
+    // Get the leading from the font, already scaled for the font's size
+    lineHeight += CTFontGetLeading(iFont);
+    
+    return lineHeight;
+}
+    
+    
+// Creates a CTFont with the given CGFont and pixel size. Ownership is
+// transferred to the caller.
+//
+// Note: This code makes use of pixel sizes (rather than view coordinate sizes)
+CTFontRef CreateCTFontWithPixelSize(CGFontRef cgFont,
+                                    const int target_pixel_size) {
+    // Epsilon value used for comparing font sizes.
+    const CGFloat kEpsilon = 0.001;
+    // The observed pixel to points ratio for Lucida Grande on 10.6. Other fonts
+    // have other ratios and the documentation doesn't provide a guarantee that
+    // the relation is linear. So this ratio is used as a first try before
+    // falling back to the bisection method.
+    const CGFloat kPixelsToPointsRatio = 0.849088;
+    
+ 
+    
+    // First, try using |kPixelsToPointsRatio|.
+    CGFloat point_size = target_pixel_size * kPixelsToPointsRatio;
+    CTFontRef ct_font(CTFontCreateWithGraphicsFont(cgFont, point_size, NULL,NULL));
+    CGFloat actual_pixel_size = getLineHeightForFont(ct_font);
+    if (std::fabs(actual_pixel_size - target_pixel_size) < kEpsilon){
+        return ct_font;
+    }
+    
+    // |kPixelsToPointsRatio| wasn't correct. Use the bisection method to find the
+    // right size.
+    
+    // First, find the initial bisection range, so that the point size that
+    // corresponds to |target_pixel_size| is between |lo| and |hi|.
+    CGFloat lo = 0;
+    CGFloat hi = point_size;
+    while (actual_pixel_size < target_pixel_size) {
+        lo = hi;
+        hi *= 2;
+        CFRelease(ct_font);
+        ct_font = CTFontCreateWithGraphicsFont(cgFont, hi, NULL,NULL);
+        actual_pixel_size = getLineHeightForFont(ct_font);
+    }
+    
+    // Now, bisect to find the right size.
+    while (lo < hi) {
+        point_size = (hi - lo) * 0.5 + lo;
+        CFRelease(ct_font);
+        ct_font  = CTFontCreateWithGraphicsFont(cgFont, point_size, NULL,NULL);
+        actual_pixel_size = getLineHeightForFont(ct_font);
+        if (std::fabs(actual_pixel_size - target_pixel_size) < kEpsilon)
+            break;
+        if (target_pixel_size > actual_pixel_size)
+            lo = point_size;
+        else
+            hi = point_size;
+    }
+    
+    return ct_font;
+}
+    
+    
+    
+FontEngine_Cocoa::FontEngine_Cocoa(const FontDescription &desc, const std::string &filename)
+    : handle(0)
+{
+        
+    // First load our file into memory
+    File file(filename);
+    load_font(desc,filename,file);
+}
+    
+void FontEngine_Cocoa::load_font(const FontDescription& desc, const std::string& filename, IODevice& file){
+    char * rawBytes = new char[file.get_size()]; // TODO: A better version would use CGDataProviderCreateDirect and give it callbacks to load from vfs itself.
+    file.read(rawBytes,file.get_size());
+    // Then, create a data provider
+    CGDataProviderRef dataProvider =  CGDataProviderCreateWithData (
+                                                                    rawBytes,
+                                                                    rawBytes,
+                                                                    file.get_size(),
+                                                                    fontProviderReleaseData
+                                                                    );
+    // Now use our data provider to load a CGFont
+    CGFontRef theCGFont = CGFontCreateWithDataProvider(dataProvider);
+    
+#if APPROX_FONT_SIZE
+    //The real way to do this unfortunately involves a lot of
+    // creating and destroying the font and narrowing in on the right
+    // pixel size. So I cheat and approximate.
+    const CGFloat ptSize = float(desc.get_height()) * 0.7f; // The 0.7f is rough.
+    handle = CTFontCreateWithGraphicsFont(theCGFont, ptSize, NULL,NULL);
+#else
+    handle = CreateCTFontWithPixelSize(theCGFont,desc.get_height());
+#endif
+    
+    CGRect bbox = CTFontGetBoundingBox(handle);
+    avg_glyph_width = bbox.size.width / CTFontGetGlyphCount(handle);
+
+    CFRelease(dataProvider);
+    CFRelease(theCGFont);
+    //delete[] rawBytes;
     if (handle == 0)
         throw Exception(string_format("Unable to create font %1", desc.get_typeface_name()));
+    
+}
+    
+FontEngine_Cocoa::FontEngine_Cocoa(const FontDescription &desc, const std::string &filename, FileSystem& vfs)
+: handle(0)
+{
+
+    // First load our file into memory
+    IODevice file = vfs.open_file(filename);
+    load_font(desc,filename,file);
 }
 
 FontEngine_Cocoa::~FontEngine_Cocoa()
@@ -57,12 +185,12 @@ FontEngine_Cocoa::~FontEngine_Cocoa()
 FontMetrics FontEngine_Cocoa::get_metrics()
 {
 	return FontMetrics(
-		CTFontGetSize(handle),
+		getLineHeightForFont(handle),
 		CTFontGetAscent(handle),
 		CTFontGetDescent(handle), 
 		CTFontGetLeading(handle),
-		0.0f /* CTFontGetExternalLeading(handle)*/,
-		0.0f/*CTFontGetAverageCharWidth(handle)*/,
+		0.0f/* CTFontGetExternalLeading(handle)*/,
+		avg_glyph_width,
 		0.0f /*CTFontGetMaxCharWidth(handle)*/,
 		400 /* weight */,
 		0 /* overhang */, 

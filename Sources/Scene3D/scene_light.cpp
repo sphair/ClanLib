@@ -42,7 +42,7 @@ SceneLight::SceneLight()
 }
 
 SceneLight::SceneLight(Scene &scene)
-	: impl(new SceneLight_Impl(scene.impl.get()))
+	: impl(std::make_shared<SceneLight_Impl>(scene.impl.get()))
 {
 	impl->cull_proxy = impl->scene->cull_provider->create_proxy(impl.get(), impl->get_aabb());
 }

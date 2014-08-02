@@ -30,11 +30,10 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include "../Window/input_device.h"
 #include "../../Core/System/disposable_object.h"
 #include <memory>
-#include "../../Core/Signals/signal_v1.h"
+#include "../../Core/Signals/signal.h"
 
 namespace clan
 {
@@ -42,7 +41,7 @@ namespace clan
 /// \{
 
 /// \brief Interface for implementing a InputDevice source.
-class CL_API_DISPLAY InputDeviceProvider : public DisposableObject
+class InputDeviceProvider : public DisposableObject
 {
 /// \name Construction
 /// \{
@@ -116,7 +115,7 @@ public:
 	/// \brief Initialize input device provider.
 	/** <p>The device field of InputEvent should not be set when emitting events.</p>
 	    <p>Invoking sig_provider_event is thread safe.</p>*/
-	virtual void init(Signal_v1<const InputEvent &> *sig_provider_event) = 0;
+	virtual void init(Signal<void(const InputEvent &)> *sig_provider_event) = 0;
 
 	/// \brief Sets the position of the device.
 	virtual void set_position(int x, int y) = 0;

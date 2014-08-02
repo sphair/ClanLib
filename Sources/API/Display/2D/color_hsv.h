@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 
 namespace clan
 {
@@ -43,7 +42,7 @@ class Colorf;
 ///
 /// These templates are defined for: int (ColorHSVi), float (ColorHSVf), double (ColorHSVd)
 template<typename Type, typename ColorType>
-class CL_API_DISPLAY ColorHSVx
+class ColorHSVx
 {
 /// \name Construction
 /// \{

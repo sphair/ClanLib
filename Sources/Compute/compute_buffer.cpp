@@ -56,7 +56,7 @@ ComputeBuffer::ComputeBuffer()
 }
 
 ComputeBuffer::ComputeBuffer(ComputeContext &context, int size, BufferAccess access, bool alloc_host_pointer)
-: impl(new ComputeBuffer_Impl(context, size, access, alloc_host_pointer))
+: impl(std::make_shared<ComputeBuffer_Impl>(context, size, access, alloc_host_pointer))
 {
 }
 

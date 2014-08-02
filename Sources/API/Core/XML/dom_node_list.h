@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 #include "dom_string.h"
 #include <vector>
@@ -48,7 +47,7 @@ class DomDocument;
 ///
 ///    <p>The NodeList interface provides the abstraction of an ordered collection of nodes,
 ///    without defining or constraining how this collection is implemented.</p> 
-class CL_API_CORE DomNodeList
+class DomNodeList
 {
 /// \name Construction
 /// \{

@@ -42,8 +42,7 @@ private:
 
 private:
 	DisplayWindow window;
-	Slot slot_quit;
-	Slot slot_input_up;
+    SlotContainer cc;
 	bool quit;
 	bool fullscreen_requested;
 	bool is_fullscreen;

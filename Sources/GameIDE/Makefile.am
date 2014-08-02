@@ -1,6 +1,6 @@
-lib_LTLIBRARIES = libclan30GameIDE.la
+lib_LTLIBRARIES = libclan31GameIDE.la
 
-libclan30GameIDE_la_SOURCES = \
+libclan31GameIDE_la_SOURCES = \
 FileItemType/file_item_type_factory.cpp \
 SolutionExplorer/solution_explorer.cpp \
 SolutionExplorer/dlg_open_with.cpp \
@@ -36,7 +36,7 @@ BuildSystem/build_operation.cpp \
 BuildSystem/build_system_ribbon.cpp
 
 if WIN32
-libclan30GameIDE_la_SOURCES += \
+libclan31GameIDE_la_SOURCES += \
 TextEditor/scintilla_editor.cpp \
 TextEditor/text_editor_ribbon.cpp \
 TextEditor/scintilla_editor_impl.cpp \
@@ -157,10 +157,10 @@ TextEditor/Scintilla/lexlib/LexerBase.cxx \
 TextEditor/Scintilla/lexlib/LexerModule.cxx
 endif
 
-libclan30GameIDE_la_LDFLAGS = \
+libclan31GameIDE_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
   $(extra_LIBS_clanGameIDE)
 
-libclan30GameIDE_la_CXXFLAGS=$(clanGameIDE_CXXFLAGS) $(extra_CFLAGS_clanGameIDE)
+libclan31GameIDE_la_CXXFLAGS=$(clanGameIDE_CXXFLAGS) $(extra_CFLAGS_clanGameIDE)
 # EOF #
 

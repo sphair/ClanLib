@@ -31,9 +31,7 @@
 
 #include <memory>
 #include "API/CSSLayout/ComputedValues/css_computed_values.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
-#include "API/Core/Signals/callback_v1.h"
-#include "API/Core/Signals/signal_v0.h"
+#include "API/Core/Signals/signal.h"
 #include "API/Display/Font/font.h"
 #include "API/CSSLayout/CSSDocument/css_style_properties.h"
 
@@ -136,7 +134,7 @@ public:
 /// \name Signals and callbacks
 /// \{
 public:
-	Signal_v0 sig_style_changed;
+	Signal<void()> sig_style_changed;
 
 /// \}
 

@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../../api_physics2d.h"
 #include "joint.h"
 #include <memory>
 
@@ -44,7 +43,7 @@ namespace clan
 	class PhysicsContext;
 
 /// \brief DistanceJoint class.
-class CL_API_PHYSICS DistanceJoint : public Joint
+class DistanceJoint : public Joint
 {
 
 /// \name Construction

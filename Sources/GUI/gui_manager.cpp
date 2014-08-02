@@ -29,7 +29,6 @@
 */
 
 #include "GUI/precomp.h"
-#include "API/CSSLayout/CSSDocument/css_document.h"
 #include "API/Core/IOData/path_help.h"
 #include "API/Core/IOData/file_system.h"
 #include "API/GUI/accelerator_table.h"
@@ -54,35 +53,35 @@ namespace clan
 // GUIManager Construction:
 
 GUIManager::GUIManager()
-: impl(new GUIManager_Impl)
+: impl(std::make_shared<GUIManager_Impl>())
 {
 	GUIWindowManagerSystem window_manager;
 	set_window_manager(window_manager);
 }
 
 GUIManager::GUIManager(const DisplayWindow &display_window)
-	: impl(new GUIManager_Impl)
+	: impl(std::make_shared<GUIManager_Impl>())
 {
 	GUIWindowManagerTexture window_manager(display_window);
 	set_window_manager(window_manager);
 }
 
 GUIManager::GUIManager(const std::string &path_to_css_and_resources)
-	: impl(new GUIManager_Impl)
+	: impl(std::make_shared<GUIManager_Impl>())
 {
 	GUIWindowManagerSystem window_manager;
 	initialize(window_manager, path_to_css_and_resources);
 }
 
 GUIManager::GUIManager(const DisplayWindow &display_window, const std::string &path_to_css_and_resources)
-: impl(new GUIManager_Impl)
+: impl(std::make_shared<GUIManager_Impl>())
 {
 	GUIWindowManagerTexture window_manager(display_window);
 	initialize(window_manager, path_to_css_and_resources);
 }
 
 GUIManager::GUIManager(GUIWindowManager &window_manager, const std::string &path_to_css_and_resources)
-: impl(new GUIManager_Impl)
+: impl(std::make_shared<GUIManager_Impl>())
 {
 	initialize(window_manager, path_to_css_and_resources);
 }
@@ -146,12 +145,12 @@ std::string GUIManager::get_clipboard_text() const
 /////////////////////////////////////////////////////////////////////////////
 // GUIManager Events:
 
-Signal_v1<std::shared_ptr<GUIMessage> &> &GUIManager::sig_filter_message()
+Signal<void(std::shared_ptr<GUIMessage> &)> &GUIManager::sig_filter_message()
 {
 	return impl->sig_filter_message;
 }
 
-Callback_0<int> &GUIManager::func_exec_handler()
+std::function<int()> &GUIManager::func_exec_handler()
 {
 	return impl->func_exec_handler;
 }
@@ -260,15 +259,15 @@ void GUIManager::process_messages(int timeout)
 
 int GUIManager::exec()
 {
-	if (!impl->func_exec_handler.is_null())
-		return impl->func_exec_handler.invoke();
+	if (impl->func_exec_handler)
+		return impl->func_exec_handler();
 
 	while (!impl->exit_flag)
 	{
 		impl->exit_code = 0;
 
-		if (!impl->func_exec_handler.is_null())
-			impl->func_exec_handler.invoke();
+		if (impl->func_exec_handler)
+			impl->func_exec_handler();
 
 		int timeout = -1;
 		if (impl->is_constant_repaint_enabled())

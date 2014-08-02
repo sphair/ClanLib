@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_component.h"
 
 namespace clan
@@ -42,7 +41,7 @@ class Image;
 class StatusBar_Impl;
 
 /// \brief Status bar component.
-class CL_API_GUI StatusBar : public GUIComponent
+class StatusBar : public GUIComponent
 {
 /// \name Construction
 /// \{
@@ -73,8 +72,8 @@ public:
 	///
 	/// \param id = value
 	///
-	/// \return Callback_v0
-	Callback_v0 &func_part_double_clicked(int id);
+	/// \return std::function<void()>
+	std::function<void()> &func_part_double_clicked(int id);
 
 /// \}
 /// \name Operations

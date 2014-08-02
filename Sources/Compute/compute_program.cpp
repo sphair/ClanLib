@@ -41,7 +41,7 @@ ComputeProgram::ComputeProgram()
 }
 
 ComputeProgram::ComputeProgram(ComputeContext &cc, const std::string &source_code)
-: impl(new ComputeProgram_Impl(cc, source_code))
+: impl(std::make_shared<ComputeProgram_Impl>(cc, source_code))
 {
 }
 

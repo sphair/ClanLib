@@ -43,7 +43,7 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // Shape2D Construction:
 
-Shape2D::Shape2D() : impl(new Shape2D_Impl())
+Shape2D::Shape2D() : impl(std::make_shared<Shape2D_Impl>())
 {
 }
 

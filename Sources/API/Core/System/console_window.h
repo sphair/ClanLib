@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 
 namespace clan
 {
@@ -41,7 +40,7 @@ class ConsoleWindow_Impl;
 /// \brief Text console window.
 ///
 ///  Note: This class has no effect under Linux.
-class CL_API_CORE ConsoleWindow
+class ConsoleWindow
 {
 /// \name Construction
 /// \{

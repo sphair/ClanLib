@@ -32,7 +32,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include "../Render/graphic_context.h"
 
 namespace clan
@@ -67,7 +66,7 @@ enum MapMode
 };
 
 /// \brief 2D Graphics Canvas
-class CL_API_DISPLAY Canvas
+class Canvas
 {
 /// \name Construction
 /// \{
@@ -102,8 +101,8 @@ public:
 	/// \return Graphic Context
 	GraphicContext& get_gc() const;
 
-	/// \brief Returns the current effective modelview matrix.
-	const Mat4f &get_modelview() const;
+	/// \brief Returns the current effective transform matrix.
+	const Mat4f &get_transform() const;
 
 	/// \brief Returns the current effective projection matrix.
 	const Mat4f &get_projection() const;
@@ -196,79 +195,11 @@ public:
 	/// is currently active, it is flushed before the new batcher is made active.
 	void set_batcher(RenderBatcher *batcher);
 
-	/// \brief Sets the model view matrix to a new matrix.
-	void set_modelview(const Mat4f &matrix);
+	/// \brief Sets the transform matrix to a new matrix.
+	void set_transform(const Mat4f &matrix);
 
-	/// \brief Multiplies the passed matrix onto the model view matrix.
-	void mult_modelview(const Mat4f &matrix);
-
-	/// \brief Pushes current model view matrix onto the model view stack.
-	void push_modelview();
-
-	/// \brief Sets a translate offset matrix, ignoring any earlier model view settings.
-	/** <p> This offset will affect any subsequent display operations on the current
-	    displaycard, by translating the position of the display operation with the offset.</p>*/
-	void set_translate(float x, float y, float z = 0.0);
-	void set_translate(const Vec2f &vec) { set_translate(vec.x, vec.y, 0.0f); }
-	void set_translate(const Vec3f &vec) { set_translate(vec.x, vec.y, vec.z); }
-	void set_translate(int x, int y, int z = 0) { set_translate((float) x, (float) y, (float) z); }
-
-	/// \brief Adds the translate offset.
-	/** <p> This offset will affect any subsequent display operations on the current
-	    displaycard, by translating the position of the display operation with the offset.
-	    The offset will be offset by any previous offsets pushed onto the stack,
-	    eg. it inherits the previous offset. </p>*/
-	void mult_translate(float x, float y, float z = 0.0);
-	void mult_translate(const Vec2f &vec) { mult_translate(vec.x, vec.y, 0.0f); }
-	void mult_translate(const Vec3f &vec) { mult_translate(vec.x, vec.y, vec.z); }
-	void mult_translate(int x, int y, int z = 0) { mult_translate((float) x, (float) y, (float) z); }
-
-	/// \brief Push translation offset onto model view stack.
-	/** <p>This function is a convenience function for calling push_modelview, then mult_translate.</p>
-	    <p> This offset will affect any subsequent display operations on the current
-	    displaycard, by translating the position of the display operation with the offset.
-	    The offset will be offset by any previous offsets pushed onto the stack,
-	    eg. it inherits the previous offset. </p>*/
-	void push_translate(float x, float y, float z = 0.0);
-	void push_translate(const Vec2f &vec) { push_translate(vec.x, vec.y, 0.0f); }
-	void push_translate(const Vec3f &vec) { push_translate(vec.x, vec.y, vec.z); }
-	void push_translate(int x, int y, int z = 0) { push_translate((float) x, (float) y, (float) z); }
-
-	/// \brief Sets a rotation matrix, ignoring any earlier model view settings.
-	void set_rotate(const Angle &angle, float x = 0.0, float y = 0.0, float z = 1.0, bool normalize = true);
-	void set_rotate(const Angle &angle, const Vec2f &vec, bool normalize = true) { set_rotate(angle, vec.x, vec.y, 1.0f, normalize); }
-	void set_rotate(const Angle &angle, const Vec3f &vec, bool normalize = true) { set_rotate(angle, vec.x, vec.y, vec.z, normalize); }
-
-	/// \brief Adds a rotation matrix to existing model view.
-	void mult_rotate(const Angle &angle, float x = 0.0, float y = 0.0, float z = 1.0, bool normalize = true);
-	void mult_rotate(const Angle &angle, const Vec2f &vec, bool normalize = true) { mult_rotate(angle, vec.x, vec.y, 1.0f, normalize); }
-	void mult_rotate(const Angle &angle, const Vec3f &vec, bool normalize = true) { mult_rotate(angle, vec.x, vec.y, vec.z, normalize); }
-
-	/// \brief Pushes a rotation matrix onto model view stack.
-	void push_rotate(const Angle &angle, float x = 0.0, float y = 0.0, float z = 1.0);
-	void push_rotate(const Angle &angle, const Vec2f &vec) { push_rotate(angle, vec.x, vec.y, 1.0f); }
-	void push_rotate(const Angle &angle, const Vec3f &vec) { push_rotate(angle, vec.x, vec.y, vec.z); }
-
-	/// \brief Sets a scale matrix, ignoring any earlier model view settings.
-	void set_scale(float x, float y, float z = 1.0);
-	void set_scale(const Vec2f &vec) { set_scale(vec.x, vec.y, 1.0f); }
-	void set_scale(const Vec3f &vec) { set_scale(vec.x, vec.y, vec.z); }
-	void set_scale(int x, int y, int z = 1) { set_scale((float) x, (float) y, (float) z); }
-
-	/// \brief Adds a scale matrix to existing model view.
-	void mult_scale(float x, float y, float z = 1.0);
-	void mult_scale(const Vec2f &vec) { mult_scale(vec.x, vec.y, 1.0f); }
-	void mult_scale(const Vec3f &vec) { mult_scale(vec.x, vec.y, vec.z); }
-	void mult_scale(int x, int y, int z = 1) { mult_scale((float) x, (float) y, (float) z); }
-
-	/// \brief Pushes a scale matrix onto model view stack.
-	void push_scale(float x, float y, float z = 1.0);
-	void push_scale(const Vec2f &vec) { push_scale(vec.x, vec.y, 1.0f); }
-	void push_scale(const Vec3f &vec) { push_scale(vec.x, vec.y, vec.z); }
-	void push_scale(int x, int y, int z = 1) { push_scale((float) x, (float) y, (float) z); }
-
-	/// \brief Pops last pushed model view matrix off the stack and makes it the active one.
-	void pop_modelview();
+	/// \brief Multiplies the passed matrix onto the transform matrix.
+	void mult_transform(const Mat4f &matrix);
 
 	/// \brief Flushes the render batcher currently active.
 	void flush();

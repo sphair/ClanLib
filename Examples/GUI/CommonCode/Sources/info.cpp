@@ -33,7 +33,7 @@ Info::Info(clan::GUIComponent *parent): clan::GUIComponent(parent, "Info")
 {
 	activated_time = 0;
 	activated_flag = false;
-	func_render().set(this, &Info::on_render);
+	func_render() = bind_member(this, &Info::on_render);
 }
 
 Info::~Info()

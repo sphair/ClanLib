@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include <memory>
 #include "graphic_context.h"
 #include "../Image/image_import_description.h"
@@ -52,7 +51,7 @@ class TransferTexture_Impl;
 class SharedGCData_Impl;
 
 /// \brief Texture Transfer class.
-class CL_API_DISPLAY TransferTexture : public PixelBuffer
+class TransferTexture : public PixelBuffer
 {
 /// \name Construction
 /// \{

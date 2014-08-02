@@ -81,7 +81,7 @@ void CharacterController::move_forward(clan::Vec3f target)
 			if (iterations + 1 == max_iterations)
 			{
 				Vec3f delta = sweep_test.get_hit_position(0) - position;
-				float length = std::max(delta.length() - margin, 0.0f);
+				float length = clan::max(delta.length() - margin, 0.0f);
 
 				position = position + direction * length;
 			}
@@ -117,7 +117,7 @@ bool CharacterController::move_vertical(clan::Vec3f target)
 			if (iterations + 1 == max_iterations || is_to_steep_to_stand_on)
 			{
 				Vec3f delta = sweep_test.get_hit_position(0) - position;
-				float length = std::max(delta.length() - margin, 0.0f);
+				float length = clan::max(delta.length() - margin, 0.0f);
 
 				position = position + direction * length;
 				return true;

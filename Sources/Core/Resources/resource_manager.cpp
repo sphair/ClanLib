@@ -35,7 +35,7 @@ namespace clan
 {
 
 ResourceManager::ResourceManager()
-	: impl(new ResourceManager_Impl())
+	: impl(std::make_shared<ResourceManager_Impl>())
 {
 }
 

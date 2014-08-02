@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_component.h"
 
 namespace clan
@@ -42,7 +41,7 @@ namespace clan
 class ProgressBar_Impl;
 
 /// \brief Progress bar component.
-class CL_API_GUI ProgressBar : public GUIComponent
+class ProgressBar : public GUIComponent
 {
 /// \name Construction
 /// \{

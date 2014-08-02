@@ -40,7 +40,7 @@ QueryResult::QueryResult()
 }
 
 QueryResult::QueryResult(Fixture &fixture)
-: impl(new QueryResult_Impl)
+: impl(std::make_shared<QueryResult_Impl>())
 {
 	impl->fixture = fixture;
 	impl->point = Pointf(0.0f, 0.0f);
@@ -50,7 +50,7 @@ QueryResult::QueryResult(Fixture &fixture)
 }
 
 QueryResult::QueryResult(Fixture &fixture, Pointf &point, Vec2f &normal, float fraction)
-: impl(new QueryResult_Impl)
+: impl(std::make_shared<QueryResult_Impl>())
 {
 	impl->fixture = fixture;
 	impl->point = point;

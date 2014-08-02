@@ -58,25 +58,25 @@ public:
 // DataBuffer Construction:
 
 DataBuffer::DataBuffer()
-: impl(new DataBuffer_Impl())
+: impl(std::make_shared<DataBuffer_Impl>())
 {
 }
 
 DataBuffer::DataBuffer(unsigned int new_size)
-: impl(new DataBuffer_Impl())
+: impl(std::make_shared<DataBuffer_Impl>())
 {
 	set_size(new_size);
 }
 
 DataBuffer::DataBuffer(const void *new_data, unsigned int new_size)
-: impl(new DataBuffer_Impl())
+: impl(std::make_shared<DataBuffer_Impl>())
 {
 	set_size(new_size);
 	memcpy(impl->data, new_data, new_size);
 }
 
 DataBuffer::DataBuffer(const DataBuffer &new_data, unsigned int pos, unsigned int size)
-: impl(new DataBuffer_Impl())
+: impl(std::make_shared<DataBuffer_Impl>())
 {
 	set_size(size);
 	memcpy(impl->data, new_data.get_data() + pos, size);

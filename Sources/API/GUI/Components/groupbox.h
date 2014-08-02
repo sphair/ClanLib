@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_component.h"
 #include "../../Display/Render/graphic_context.h"
 
@@ -43,7 +42,7 @@ namespace clan
 class GroupBox_Impl;
 
 /// \brief Group box component.
-class CL_API_GUI GroupBox : public GUIComponent
+class GroupBox : public GUIComponent
 {
 /// \name Construction
 /// \{

@@ -73,14 +73,14 @@ public:
 	void on_enablemode_changed();
 	void create_components();
 
-	Callback_v0 func_dropdown_opened;
-	Callback_v0 func_dropdown_closed;
-	Callback_v0 func_before_edit_changed;
-	Callback_v0 func_after_edit_changed;
-	Callback_v0 func_enter_pressed;
-	Callback_v1<int> func_item_selected;
-	Callback_v1<int> func_selection_changed;
-	Callback_1<bool, InputEvent> func_lineedit_unhandled_event;
+	std::function<void()> func_dropdown_opened;
+	std::function<void()> func_dropdown_closed;
+	std::function<void()> func_before_edit_changed;
+	std::function<void()> func_after_edit_changed;
+	std::function<void()> func_enter_pressed;
+	std::function<void(int)> func_item_selected;
+	std::function<void(int)> func_selection_changed;
+	std::function<bool(InputEvent)> func_lineedit_unhandled_event;
 
 	ComboBox *component;
 	LineEdit *lineedit;
@@ -107,15 +107,15 @@ public:
 // ComboBox Construction:
 
 ComboBox::ComboBox(GUIComponent *parent)
-: GUIComponent(parent, CssStr::ComboBox::type_name), impl(new ComboBox_Impl)
+: GUIComponent(parent, CssStr::ComboBox::type_name), impl(std::make_shared<ComboBox_Impl>())
 {
 	set_focus_policy(focus_local);
 	impl->component = this;
-	func_process_message().set(impl.get(), &ComboBox_Impl::on_process_message);
-	func_render().set(impl.get(), &ComboBox_Impl::on_render);
-	func_resized().set(impl.get(), &ComboBox_Impl::on_resized);
+	func_process_message() = bind_member(impl.get(), &ComboBox_Impl::on_process_message);
+	func_render() = bind_member(impl.get(), &ComboBox_Impl::on_render);
+	func_resized() = bind_member(impl.get(), &ComboBox_Impl::on_resized);
 	// todo: enablemode
-	func_enablemode_changed().set(impl.get(), &ComboBox_Impl::on_enablemode_changed);
+	func_enablemode_changed() = bind_member(impl.get(), &ComboBox_Impl::on_enablemode_changed);
 
 	impl->create_components();
 }
@@ -200,7 +200,7 @@ void ComboBox::set_popup_menu(PopupMenu &menu)
 {
 	impl->popup_menu = menu;
 
-	menu.func_close().set(impl.get(), &ComboBox_Impl::on_popup_menu_closed);
+	menu.func_close() = bind_member(impl.get(), &ComboBox_Impl::on_popup_menu_closed);
 
 	// Assumes the popup menu only has one level. If you want submenu's, feel free to extend this function :)
 	int max = menu.get_item_count();
@@ -209,7 +209,7 @@ void ComboBox::set_popup_menu(PopupMenu &menu)
 		PopupMenuItem item = menu.get_item_at(cnt);
 		if (!item.is_null())
 		{
-			item.func_clicked().set(impl.get(), &ComboBox_Impl::on_popup_item_selected, item);
+			item.func_clicked() = [=]() { impl->on_popup_item_selected(item); };
 		}
 	}
 }
@@ -222,37 +222,37 @@ void ComboBox::set_dropdown_minimum_width(int min_width)
 /////////////////////////////////////////////////////////////////////////////
 // ComboBox Events:
 
-Callback_v0 &ComboBox::func_dropdown_opened()
+std::function<void()> &ComboBox::func_dropdown_opened()
 {
 	return impl->func_dropdown_opened;
 }
 
-Callback_v0 &ComboBox::func_dropdown_closed()
+std::function<void()> &ComboBox::func_dropdown_closed()
 {
 	return impl->func_dropdown_closed;
 }
 
-Callback_v0 &ComboBox::func_enter_pressed()
+std::function<void()> &ComboBox::func_enter_pressed()
 {
 	return impl->func_enter_pressed;
 }
 
-Callback_v0 &ComboBox::func_before_edit_changed()
+std::function<void()> &ComboBox::func_before_edit_changed()
 {
 	return impl->func_before_edit_changed;
 }
 
-Callback_v0 &ComboBox::func_after_edit_changed()
+std::function<void()> &ComboBox::func_after_edit_changed()
 {
 	return impl->func_after_edit_changed;
 }
 
-Callback_v1<int> &ComboBox::func_selection_changed()
+std::function<void(int)> &ComboBox::func_selection_changed()
 {
 	return impl->func_selection_changed;
 }
 
-Callback_v1<int> & ComboBox::func_item_selected()
+std::function<void(int)> & ComboBox::func_item_selected()
 {
 	return impl->func_item_selected;
 }
@@ -309,7 +309,7 @@ void ComboBox_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 				if (selected_item != old_selected_item)
 				{
 					component->set_selected_item(selected_item);
-					func_item_selected.invoke(selected_item);
+					func_item_selected(selected_item);
 				}
 				msg->consumed = true;
 			}
@@ -322,14 +322,14 @@ void ComboBox_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 				if (selected_item != old_selected_item)
 				{
 					component->set_selected_item(selected_item);
-					func_item_selected.invoke(selected_item);
+					func_item_selected(selected_item);
 				}
 				msg->consumed = true;
 			}
 			else if (e.id == keycode_enter || e.id == keycode_return || e.id == keycode_numpad_enter)
 			{
-				if (!func_enter_pressed.is_null())
-					func_enter_pressed.invoke();
+				if (func_enter_pressed)
+					func_enter_pressed();
 				msg->consumed = true;
 			}
 
@@ -438,9 +438,9 @@ void ComboBox_Impl::create_components()
 	lineedit = new LineEdit(component);
 	lineedit->set_focus_policy(GUIComponent::focus_parent);
 	
-	lineedit->func_after_edit_changed().set(this, &ComboBox_Impl::on_lineedit_text_edited);
-	lineedit->func_enter_pressed().set(this, &ComboBox_Impl::on_lineedit_enter_pressed);
-	lineedit->func_filter_message().set(this, &ComboBox_Impl::on_lineedit_message);
+	lineedit->func_after_edit_changed() = bind_member(this, &ComboBox_Impl::on_lineedit_text_edited);
+	lineedit->func_enter_pressed() = bind_member(this, &ComboBox_Impl::on_lineedit_enter_pressed);
+	lineedit->func_filter_message() = bind_member(this, &ComboBox_Impl::on_lineedit_message);
 }
 
 void ComboBox_Impl::on_btn_arrow_clicked()
@@ -457,14 +457,14 @@ void ComboBox_Impl::on_btn_arrow_clicked()
 
 void ComboBox_Impl::on_lineedit_enter_pressed()
 {
-	if (!func_enter_pressed.is_null())
-		func_enter_pressed.invoke();
+	if (func_enter_pressed)
+		func_enter_pressed();
 }
 
 void ComboBox_Impl::on_lineedit_text_edited(InputEvent &event)
 {
-	if (!func_after_edit_changed.is_null())
-		func_after_edit_changed.invoke();
+	if (func_after_edit_changed)
+		func_after_edit_changed();
 }
 
 void ComboBox_Impl::on_popup_menu_closed()
@@ -489,8 +489,8 @@ void ComboBox_Impl::on_popup_item_selected(PopupMenuItem item)
 		part_opener.set_pseudo_class(CssStr::pressed, false);
 		part_opener_glyph.set_pseudo_class(CssStr::pressed, false);
 
-		if (!func_item_selected.is_null())
-			func_item_selected.invoke(selected_item);
+		if (func_item_selected)
+			func_item_selected(selected_item);
 	}
 }
 

@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include "../../Core/Resources/resource.h"
 #include <memory>
 
@@ -48,7 +47,7 @@ class Font;
 class FontDescription;
 class CollisionOutline;
 
-class CL_API_DISPLAY DisplayCache
+class DisplayCache
 {
 public:
 	virtual ~DisplayCache() { }

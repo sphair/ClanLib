@@ -207,7 +207,7 @@ void Clipboard_X11::set_clipboard_text(const std::string &text)
 	// **** README ****
 	// The clipboard only works while the message queue is being processed as get_message() processes clipboard (selection) events
 
-	if ( ( atom_CLIPBOARD == None ) )
+	if ( atom_CLIPBOARD == None )
 	{
 		// X Server does not have clipboard support
 		return;

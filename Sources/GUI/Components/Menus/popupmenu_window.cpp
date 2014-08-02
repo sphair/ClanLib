@@ -76,7 +76,7 @@ PopupMenuWindow::PopupMenuWindow(const PopupMenu &menu, const Point &screen_posi
 	set_window_geometry(rect_pos);
 	set_visible(true, false);
 
-	func_close().set(this, &PopupMenuWindow::on_close);
+	func_close() = bind_member(this, &PopupMenuWindow::on_close);
 }
 
 PopupMenuWindow::~PopupMenuWindow()
@@ -181,8 +181,8 @@ void PopupMenuWindow::set_item_pressed(bool pressed)
 
 bool PopupMenuWindow::on_close()
 {
-	if(!menu.func_close().is_null())
-		menu.func_close().invoke();
+	if(menu.func_close())
+		menu.func_close()();
 	return true;
 }
 
@@ -400,7 +400,7 @@ void PopupMenuWindow::create_parts()
 	icon_size = part_item_icon.get_css_size();
 	check_size = part_item_check.get_css_size();
 
-	func_render().set(this, &PopupMenuWindow::on_render);
+	func_render() = bind_member(this, &PopupMenuWindow::on_render);
 }
 
 }

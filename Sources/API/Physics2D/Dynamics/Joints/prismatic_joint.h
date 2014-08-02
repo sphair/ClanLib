@@ -29,8 +29,6 @@
 
 
 #pragma once
-
-#include "../../api_physics2d.h"
 #include "joint.h"
 #include <memory>
 
@@ -44,7 +42,7 @@ namespace clan
 	class PhysicsContext;
 
 /// \brief PrismaticJoint class.
-class CL_API_PHYSICS PrismaticJoint : public Joint
+class PrismaticJoint : public Joint
 {
 
 /// \name Construction

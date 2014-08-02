@@ -84,7 +84,7 @@ public:
 // ZipWriter Construction:
 
 ZipWriter::ZipWriter(IODevice &output, bool storeFilenamesAsUTF8)
-: impl(new ZipWriter_Impl(output, storeFilenamesAsUTF8))
+: impl(std::make_shared<ZipWriter_Impl>(output, storeFilenamesAsUTF8))
 {
 }
 

@@ -29,10 +29,8 @@
 **    Emanuel Greisen
 */
 
-
 #pragma once
 
-#include "../api_display.h"
 #include <vector>
 #include "contour.h"
 #include "outline_accuracy.h"
@@ -59,7 +57,7 @@ class Canvas;
 
 /// \brief Collision point information structure.
 ///
-///  <p>Structure used for returning information about collisions</p> 
+///  <p>Structure used for returning information about collisions</p>
 struct CollisionPoint
 {
 	/// \brief Coordinates of the point where the contours intersected.
@@ -77,7 +75,7 @@ struct CollisionPoint
 
 /// \brief Strurcture containing information about contours that collided.
 ///
-/// <p>Structure used for returning information about collisions</p> 
+/// <p>Structure used for returning information about collisions</p>
 struct CollidingContours
 {
 	const Contour *contour1;
@@ -110,8 +108,8 @@ struct CollidingContours
 
 /// \brief Collision detection outline.
 ///
-/// <p>A collision outline is used in collision detection</p> 
-class CL_API_DISPLAY CollisionOutline
+/// <p>A collision outline is used in collision detection</p>
+class CollisionOutline
 {
 /// \name Construction
 /// \{
@@ -237,7 +235,7 @@ public:
 	///
 	/// Actual rendering position depends on the anchor and the alignment mode.
 	///
-	/// \param x = Anchor position of where to render sprite. 
+	/// \param x = Anchor position of where to render sprite.
 	/// \param y = Anchor y position
 	/// \param color = The color
 	/// \param gc = Graphic context on which to render upon.

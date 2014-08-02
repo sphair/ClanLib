@@ -37,7 +37,7 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // Delauney_Triangulator construction:
 
-DelauneyTriangulator::DelauneyTriangulator() : impl(new DelauneyTriangulator_Impl)
+DelauneyTriangulator::DelauneyTriangulator() : impl(std::make_shared<DelauneyTriangulator_Impl>())
 {
 }
 

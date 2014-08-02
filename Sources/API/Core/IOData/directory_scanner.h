@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 
 namespace clan
@@ -55,7 +54,7 @@ class DirectoryScanner_Impl;
 ///    		}
 ///    }
 ///    </pre> 
-class CL_API_CORE DirectoryScanner
+class DirectoryScanner
 {
 /// \name Construction
 /// \{

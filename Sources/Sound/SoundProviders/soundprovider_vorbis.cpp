@@ -45,7 +45,7 @@ SoundProvider_Vorbis::SoundProvider_Vorbis(
 	const std::string &filename,
 	const FileSystem &fs,
 	bool stream)
-: impl(new SoundProvider_Vorbis_Impl)
+: impl(std::make_shared<SoundProvider_Vorbis_Impl>())
 {
 	IODevice input = fs.open_file(filename, File::open_existing, File::access_read, File::share_all);
 	impl->load(input);
@@ -53,7 +53,7 @@ SoundProvider_Vorbis::SoundProvider_Vorbis(
 
 SoundProvider_Vorbis::SoundProvider_Vorbis(
 	const std::string &fullname, bool stream)
-: impl(new SoundProvider_Vorbis_Impl)
+: impl(std::make_shared<SoundProvider_Vorbis_Impl>())
 {
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
@@ -64,7 +64,7 @@ SoundProvider_Vorbis::SoundProvider_Vorbis(
 
 SoundProvider_Vorbis::SoundProvider_Vorbis(
 	IODevice &file, bool stream)
-: impl(new SoundProvider_Vorbis_Impl)
+: impl(std::make_shared<SoundProvider_Vorbis_Impl>())
 {
 	impl->load(file);
 }

@@ -39,7 +39,7 @@ namespace clan
 {
 
 CSSDocument::CSSDocument()
-: impl(new CSSDocument_Impl())
+: impl(std::make_shared<CSSDocument_Impl>())
 {
 }
 

@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include <memory>
 #include "../../Core/Math/rect.h"
 #include "../Render/texture.h"

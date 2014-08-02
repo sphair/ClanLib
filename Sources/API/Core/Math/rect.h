@@ -32,7 +32,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "vec2.h"
 #include "size.h"
 #include "point.h"
@@ -49,7 +48,7 @@ namespace clan
 /// These line templates are defined for: int (Rect), float (Rectf), double (Rectd)
 ///
 template<typename Type>
-class CL_API_CORE Rectx
+class Rectx
 {
 /// \name Construction
 /// \{

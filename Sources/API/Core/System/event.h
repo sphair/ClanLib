@@ -31,7 +31,6 @@
 #pragma once
 
 
-#include "../api_core.h"
 #include "mutex.h"
 #include <vector>
 #include <memory>
@@ -45,7 +44,7 @@ class EventProvider;
 class Event_Impl;
 
 /// \brief OS level event.
-class CL_API_CORE Event
+class Event
 {
 /// \name Construction
 /// \{

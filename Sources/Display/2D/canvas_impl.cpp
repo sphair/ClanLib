@@ -69,16 +69,16 @@ void Canvas_Impl::setup(GraphicContext &new_gc)
 
 	if (!current_window.is_null())
 	{
-		slot_window_flip = current_window.sig_window_flip().connect(this, &Canvas_Impl::on_window_flip);
+		sc.connect(current_window.sig_window_flip(), bind_member(this, &Canvas_Impl::on_window_flip));
 	}
 
 	gc_clip_z_range = gc.get_provider()->get_clip_z_range();
-	canvas_modelviews.push_back(Mat4f::identity());
+	canvas_transform = Mat4f::identity();
 
 	if (gc.get_write_frame_buffer().is_null())	// No framebuffer attached to canvas
 	{
 		canvas_y_axis = y_axis_top_down;
-		slot_window_resized = gc.get_provider()->sig_window_resized().connect(this, &Canvas_Impl::on_window_resized);
+		sc.connect(gc.get_provider()->sig_window_resized(), bind_member(this, &Canvas_Impl::on_window_resized));
 	}
 	else
 	{
@@ -114,7 +114,7 @@ void Canvas_Impl::flush()
 
 void Canvas_Impl::update_batcher_matrix()
 {
-	batcher.update_batcher_matrix(gc, canvas_modelviews.back(), canvas_projection);
+	batcher.update_batcher_matrix(gc, canvas_transform, canvas_projection);
 }
 
 void Canvas_Impl::set_batcher(Canvas &canvas, RenderBatcher *new_batcher)
@@ -160,31 +160,15 @@ MapMode Canvas_Impl::get_top_down_map_mode() const
 	}
 }
 
-void Canvas_Impl::set_modelview(const Mat4f &modelview)
+void Canvas_Impl::set_transform(const Mat4f &matrix)
 {
-	canvas_modelviews.back() = modelview;
+	canvas_transform = matrix;
 	update_batcher_matrix();
 }
 
-void Canvas_Impl::push_modelview(const Mat4f &modelview)
+const Mat4f &Canvas_Impl::get_transform() const
 {
-	canvas_modelviews.push_back(modelview);
-	update_batcher_matrix();
-}
-
-void Canvas_Impl::pop_modelview()
-{
-	canvas_modelviews.pop_back();
-
-	if (canvas_modelviews.empty())
-		throw Exception("Popped modelview too many times");
-
-	update_batcher_matrix();
-}
-
-const Mat4f &Canvas_Impl::get_modelview() const
-{
-	return canvas_modelviews.back();
+	return canvas_transform;
 }
 
 const Mat4f &Canvas_Impl::get_projection() const
@@ -359,11 +343,11 @@ void Canvas_Impl::get_gradient_colors(const Vec2f *triangles, int num_vertex, co
 				(gradient.bottom_right.a * point.x) + (gradient.bottom_left.a * (1.0f - point.x)) );
 
 			Colorf color(
-				(bottom_color.r * point.y) + (top_color.r * (1.0f - point.y)), 
-				(bottom_color.g * point.y) + (top_color.g * (1.0f - point.y)), 
-				(bottom_color.b * point.y) + (top_color.b * (1.0f - point.y)), 
+				(bottom_color.r * point.y) + (top_color.r * (1.0f - point.y)),
+				(bottom_color.g * point.y) + (top_color.g * (1.0f - point.y)),
+				(bottom_color.b * point.y) + (top_color.b * (1.0f - point.y)),
 				(bottom_color.a * point.y) + (top_color.a * (1.0f - point.y)) );
-				
+
 			out_colors.push_back(color);
 		}
 	}

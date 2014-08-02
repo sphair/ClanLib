@@ -155,102 +155,102 @@ Point CocoaWindow::screen_to_client(const Point &screen)
 
 void CocoaWindow::show_system_cursor()
 {
-    
+
 }
 
 void CocoaWindow::set_cursor(CursorProvider_Cocoa *cursor)
 {
-    
+
 }
 
 void CocoaWindow::set_cursor(enum StandardCursor type)
 {
-    
+
 }
 
 void CocoaWindow::hide_system_cursor()
 {
-    
+
 }
 
 void CocoaWindow::set_large_icon(const PixelBuffer &image)
 {
-    
+
 }
 
 void CocoaWindow::set_small_icon(const PixelBuffer &image)
 {
-    
+
 }
 
 void CocoaWindow::set_title(const std::string &new_title)
 {
-    
+
 }
 
 void CocoaWindow::set_enabled(bool enable)
 {
-    
+
 }
 
 void CocoaWindow::set_position(const Rect &pos, bool client_area)
 {
-    
+
 }
 
 void CocoaWindow::set_size(int width, int height, bool client_area)
 {
-    
+
 }
 
 void CocoaWindow::set_minimum_size(int width, int height, bool client_area)
 {
-    
+
 }
 
 void CocoaWindow::set_maximum_size(int width, int height, bool client_area)
 {
-    
+
 }
 
 void CocoaWindow::minimize()
 {
-    
+
 }
 
 void CocoaWindow::restore()
 {
-    
+
 }
 
 void CocoaWindow::maximize()
 {
-    
+
 }
 
 void CocoaWindow::show(bool activate)
 {
-    
+
 }
 
 void CocoaWindow::hide()
 {
-    
+
 }
 
 void CocoaWindow::bring_to_front()
 {
-    
+
 }
 
 void CocoaWindow::capture_mouse(bool capture)
 {
-    
+
 }
 
 void CocoaWindow::set_clipboard_text(const std::string &text)
 {
-    
+
 }
 
 std::string CocoaWindow::get_clipboard_text() const
@@ -265,7 +265,7 @@ PixelBuffer CocoaWindow::get_clipboard_image() const
 
 void CocoaWindow::set_clipboard_image(const PixelBuffer &image)
 {
-    
+
 }
 
 void CocoaWindow::request_repaint(const Rect &rect)
@@ -280,14 +280,14 @@ void CocoaWindow::request_repaint(const Rect &rect)
 
 void CocoaWindow::set_modifier_keys(InputEvent &key)
 {
-    
+
 }
 
 void CocoaWindow::on_touches_began(const std::vector<Vec2f> &touches)
 {
     get_mouse()->touches = touches;
     get_mouse()->down = true;
-    
+
     InputEvent e;
     e.type = InputEvent::pressed;
     e.id = GL_MOUSE_LEFT;
@@ -300,7 +300,7 @@ void CocoaWindow::on_touches_began(const std::vector<Vec2f> &touches)
 void CocoaWindow::on_touches_moved(const std::vector<Vec2f> &touches)
 {
     get_mouse()->touches = touches;
-    
+
     InputEvent e;
     e.type = InputEvent::pointer_moved;
     e.mouse_pos = Point(touches[0]);
@@ -313,7 +313,7 @@ void CocoaWindow::on_touches_ended(const std::vector<Vec2f> &touches)
 {
     get_mouse()->touches = touches;
     get_mouse()->down = false;
-    
+
     InputEvent e;
     e.type = InputEvent::released;
     e.id = GL_MOUSE_LEFT;
@@ -327,7 +327,7 @@ void CocoaWindow::on_touches_cancelled(const std::vector<Vec2f> &touches)
 {
     get_mouse()->touches = touches;
     get_mouse()->down = false;
-    
+
     InputEvent e;
     e.type = InputEvent::released;
     e.id = GL_MOUSE_LEFT;

@@ -104,7 +104,7 @@ DisplayWindow::DisplayWindow(
 }
 
 DisplayWindow::DisplayWindow(DisplayWindowProvider *provider)
-: impl(new DisplayWindow_Impl)
+: impl(std::make_shared<DisplayWindow_Impl>())
 {
 	impl->provider = provider;
 }
@@ -162,74 +162,74 @@ InputContext DisplayWindow::get_ic() const
 	return impl->provider->get_ic();
 }
 
-Signal_v0 &DisplayWindow::sig_lost_focus()
+Signal<void()> &DisplayWindow::sig_lost_focus()
 {
 	return impl->sig_lost_focus;
 }
 
-Signal_v0 &DisplayWindow::sig_got_focus()
+Signal<void()> &DisplayWindow::sig_got_focus()
 {
 	return impl->sig_got_focus;
 }
 
-Signal_v2<int, int> &DisplayWindow::sig_resize()
+Signal<void(int, int)> &DisplayWindow::sig_resize()
 {
 	return impl->sig_resize;
 }
 
-Signal_v1<const Rect &> &DisplayWindow::sig_paint()
+Signal<void(const Rect &)> &DisplayWindow::sig_paint()
 {
 	return impl->sig_paint;
 }
 
-Signal_v0 &DisplayWindow::sig_window_close()
+Signal<void()> &DisplayWindow::sig_window_close()
 {
 	return impl->sig_window_close;
 }
 
-Signal_v0 &DisplayWindow::sig_window_destroy()
+Signal<void()> &DisplayWindow::sig_window_destroy()
 {
 	return impl->sig_window_destroy;
 }
 
-Signal_v0 &DisplayWindow::sig_window_minimized()
+Signal<void()> &DisplayWindow::sig_window_minimized()
 {
 	return impl->sig_window_minimized;
 }
 
-Signal_v0 &DisplayWindow::sig_window_maximized()
+Signal<void()> &DisplayWindow::sig_window_maximized()
 {
 	return impl->sig_window_maximized;
 }
 
-Signal_v0 &DisplayWindow::sig_window_restored()
+Signal<void()> &DisplayWindow::sig_window_restored()
 {
 	return impl->sig_window_restored;
 }
 
-Callback_v1<Rect &> &DisplayWindow::func_window_resize()
+std::function<void(Rect &)> &DisplayWindow::func_window_resize()
 {
 	return impl->func_window_resize;
 }
 
-Callback_0<bool> &DisplayWindow::func_minimize_clicked()
+std::function<bool()> &DisplayWindow::func_minimize_clicked()
 {
 	return impl->func_minimize_clicked;
 }
 
 #ifdef WIN32
-Callback_4<bool, HWND, UINT, WPARAM, LPARAM> &DisplayWindow::func_window_message()
+std::function<bool(HWND, UINT, WPARAM, LPARAM)> &DisplayWindow::func_window_message()
 {
 	return impl->func_window_message;
 }
 #endif
 
-Signal_v0 &DisplayWindow::sig_window_moved()
+Signal<void()> &DisplayWindow::sig_window_moved()
 {
 	return impl->sig_window_moved;
 }
 
-Signal_v0 &DisplayWindow::sig_window_flip()
+Signal<void()> &DisplayWindow::sig_window_flip()
 {
 	return impl->sig_window_flip;
 }
@@ -412,7 +412,7 @@ void DisplayWindow::update(const Rect &rect)
 
 void DisplayWindow::flip(int interval)
 {
-	impl->sig_window_flip.invoke();
+	impl->sig_window_flip();
 	impl->provider->flip(interval);
 }
 

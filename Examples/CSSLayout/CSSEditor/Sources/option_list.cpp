@@ -50,7 +50,7 @@ void OptionList::setup(clan::GUIComponent *base_component, const std::string &na
 	xpos += width;
 	checkbox->set_text(name);
 	checkbox->set_checked(false);
-	checkbox->func_state_changed().set(this, &OptionList::checkbox_changed);
+	checkbox->func_state_changed() = bind_member(this, &OptionList::checkbox_changed);
 
 	for (unsigned int cnt = 0; cnt<list.size(); cnt++)
 	{
@@ -66,7 +66,7 @@ void OptionList::setup(clan::GUIComponent *base_component, const std::string &na
 	combobox->set_dropdown_minimum_width(32);
 	combobox->set_popup_menu(popupmenu);
 	combobox->set_selected_item(0);
-	combobox->func_item_selected().set(this, &OptionList::combobox_changed);
+	combobox->func_item_selected() = bind_member(this, &OptionList::combobox_changed);
 
 	combobox_changed(0);
 	checkbox_changed();

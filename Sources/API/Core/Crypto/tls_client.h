@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 
 namespace clan
@@ -43,7 +42,7 @@ class DataBuffer;
 class TLSClient_Impl;
 
 /// \brief Transport Layer Security (TLS) client class
-class CL_API_CORE TLSClient
+class TLSClient
 {
 /// \name Construction
 /// \{

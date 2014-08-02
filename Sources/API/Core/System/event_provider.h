@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 
 namespace clan
 {
@@ -38,7 +37,7 @@ namespace clan
 /// \{
 
 /// \brief OS level event provider.
-class CL_API_CORE EventProvider
+class EventProvider
 {
 /// \name Construction
 /// \{

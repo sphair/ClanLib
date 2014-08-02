@@ -44,7 +44,7 @@ public:
 };
 
 UIRibbonSection::UIRibbonSection(UIController *ui_controller, const std::string &page_name, const std::string &section_name)
-	: GUIComponent(ui_controller->get_ribbon_section(page_name, section_name)), impl(new UIRibbonSection_Impl())
+	: GUIComponent(ui_controller->get_ribbon_section(page_name, section_name)), impl(std::make_shared<UIRibbonSection_Impl>())
 {
 	impl->ui_controller = ui_controller;
 	impl->page_name = page_name;

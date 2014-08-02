@@ -31,8 +31,8 @@
 Toolbar::Toolbar(const Rect &position, GUIComponent* owner)
 : GUIComponent(owner, get_toplevel_description(position), "toolbar"), selected_index(-1), clicked_index(-1)
 {
-	func_render().set(this, &Toolbar::on_render);
-	func_process_message().set(this, &Toolbar::on_process_message);
+	func_render() = bind_member(this, &Toolbar::on_render);
+	func_process_message() = bind_member(this, &Toolbar::on_process_message);
 
 	create_parts();
 }
@@ -94,8 +94,8 @@ void Toolbar::on_mouse_lbutton_down(InputEvent &input_event)
 void Toolbar::on_mouse_lbutton_up(InputEvent &input_event)
 {
 	if(clicked_index != -1)
-		if (!func_selected.is_null())
-			func_selected.invoke(clicked_index);
+		if (func_selected)
+			func_selected(clicked_index);
 
 	clicked_index = -1;
 	request_repaint();

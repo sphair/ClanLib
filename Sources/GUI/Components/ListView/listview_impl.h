@@ -71,9 +71,9 @@ public:
 		  context_menu(PopupMenu::create_null_object()), just_launched_lineedit(false),
 		  show_detail_icon(true), show_detail_opener(true)
 	{
-		std::shared_ptr<ListViewItem_Impl> item_impl(new ListViewItem_Impl());
+		std::shared_ptr<ListViewItem_Impl> item_impl(std::make_shared<ListViewItem_Impl>());
 		document_item = ListViewItem(item_impl);
-		edit_timer.func_expired().set(this, &ListView_Impl::on_drag_or_edit_timeout);
+		edit_timer.func_expired() = bind_member(this, &ListView_Impl::on_drag_or_edit_timeout);
 	}
 
 	~ListView_Impl()
@@ -130,19 +130,19 @@ public:
 	ListViewItem document_item;
 	ListViewHeader *header;
 
-	Callback_v1<ListViewSelection> func_selection_changed;
-	Callback_v1<const ListViewItem &> func_item_doubleclick;
+	std::function<void(ListViewSelection)> func_selection_changed;
+	std::function<void(const ListViewItem &)> func_item_doubleclick;
 
-	Callback_2<bool, ListViewItem, std::string &> func_item_edited;
+	std::function<bool(ListViewItem, std::string &)> func_item_edited;
 
-	Callback_v1<InputEvent&> func_key_pressed;
-	Callback_v1<InputEvent&> func_key_released;
+	std::function<void(InputEvent&)> func_key_pressed;
+	std::function<void(InputEvent&)> func_key_released;
 
-	Callback_v1<Point> func_mouse_right_up;
+	std::function<void(Point)> func_mouse_right_up;
 
-	Callback_v1<const ListViewItem &> func_item_opened;
-	Callback_v1<const ListViewItem &> func_item_closed;
-	Callback_v0 func_begin_drag;
+	std::function<void(const ListViewItem &)> func_item_opened;
+	std::function<void(const ListViewItem &)> func_item_closed;
+	std::function<void()> func_begin_drag;
 
 	ListViewSelection selection;
 	ListViewIconList icon_list;

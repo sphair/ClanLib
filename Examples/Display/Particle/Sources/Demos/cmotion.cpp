@@ -22,12 +22,12 @@ DemoCMotion::DemoCMotion() : fontColor(255.0f,255.0f,255.0f), blendingMode(L_ADD
 
 int DemoCMotion::run(clan::DisplayWindow &window)
 {
-
+    clan::SlotContainer cc;
 	window.set_title("LinearParticle Example - CMotion ");
-	clan::Slot slot_quit = window.sig_window_close().connect(this, &DemoCMotion::on_window_close);
+	cc.connect(window.sig_window_close(), clan::bind_member(this, &DemoCMotion::on_window_close));
 	clan::Canvas canvas(window);
 
-	clan::Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &DemoCMotion::on_key_up,canvas);
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &DemoCMotion::on_key_up, canvas));
 
 	// initialize LinearParticle
 	L_ParticleSystem::init();

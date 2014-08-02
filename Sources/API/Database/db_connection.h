@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_database.h"
 #include "db_command.h"
 #include "db_transaction.h"
 
@@ -44,7 +43,7 @@ class DBConnectionProvider;
 class DBConnection_Impl;
 
 /// \brief Database connection.
-class CL_API_DATABASE DBConnection
+class DBConnection
 {
 /// \name Construction
 /// \{

@@ -31,9 +31,7 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_component.h"
-#include "../../Core/Signals/callback_v0.h"
 #include "../../Display/Render/graphic_context.h"
 
 namespace clan
@@ -45,7 +43,7 @@ class Image;
 class PushButton_Impl;
 
 /// \brief Push button component.
-class CL_API_GUI PushButton : public GUIComponent
+class PushButton : public GUIComponent
 {
 /// \name Construction
 /// \{
@@ -148,8 +146,8 @@ public:
 
 	/// \brief Func clicked
 	///
-	/// \return Callback_v0
-	Callback_v0 &func_clicked();
+	/// \return std::function<void()>
+	std::function<void()> &func_clicked();
 
 /// \}
 /// \name Implementation

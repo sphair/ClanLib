@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_compute.h"
 #include <memory>
 
 namespace clan
@@ -41,7 +40,7 @@ class ComputeContext;
 class ComputeProgram_Impl;
 
 /// \brief Compute program object
-class CL_API_COMPUTE ComputeProgram
+class ComputeProgram
 {
 /// \name Construction
 /// \{

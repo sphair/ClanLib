@@ -66,7 +66,7 @@ namespace clan
 // ListView Construction:
 
 ListView::ListView(GUIComponent *parent)
-: GUIComponent(parent, CssStr::ListView::type_name), impl(new ListView_Impl)
+: GUIComponent(parent, CssStr::ListView::type_name), impl(std::make_shared<ListView_Impl>())
 {
 	set_focus_policy(focus_local);
 	impl->listview = this;
@@ -77,13 +77,13 @@ ListView::ListView(GUIComponent *parent)
 
 	impl->create_components();
 
-	func_process_message().set(impl.get(), &ListView_Impl::on_process_message);
-	func_render().set(impl.get(), &ListView_Impl::on_render);
-	func_resized().set(impl.get(), &ListView_Impl::on_resized);
+	func_process_message() = bind_member(impl.get(), &ListView_Impl::on_process_message);
+	func_render() = bind_member(impl.get(), &ListView_Impl::on_render);
+	func_resized() = bind_member(impl.get(), &ListView_Impl::on_resized);
 
-	impl->document_item.impl->func_item_added.set(impl.get(), &ListView_Impl::on_item_added);
-	impl->document_item.impl->func_item_modified.set(impl.get(), &ListView_Impl::on_item_modified);
-	impl->document_item.impl->func_item_deleted.set(impl.get(), &ListView_Impl::on_item_deleted);
+	impl->document_item.impl->func_item_added = bind_member(impl.get(), &ListView_Impl::on_item_added);
+	impl->document_item.impl->func_item_modified = bind_member(impl.get(), &ListView_Impl::on_item_modified);
+	impl->document_item.impl->func_item_deleted = bind_member(impl.get(), &ListView_Impl::on_item_deleted);
 	impl->create_parts();
 
 	set_display_mode(listview_mode_details);
@@ -173,7 +173,7 @@ ListViewItem ListView::create_item()
 {
 	impl->cancel_edit();
 
-	std::shared_ptr<ListViewItem_Impl> item_impl(new ListViewItem_Impl());
+	std::shared_ptr<ListViewItem_Impl> item_impl(std::make_shared<ListViewItem_Impl>());
 	ListViewItem new_item = ListViewItem(item_impl);
 	return new_item;
 }
@@ -278,8 +278,8 @@ void ListView::set_selected(ListViewItem &item, bool selected)
 	else
 		impl->selection.remove(item);
 
-	if (!impl->func_selection_changed.is_null())
-		impl->func_selection_changed.invoke(impl->selection);
+	if (impl->func_selection_changed)
+		impl->func_selection_changed(impl->selection);
 
 	request_repaint();
 }
@@ -305,49 +305,49 @@ ListViewItem ListView::find(int id, bool recursive)
 /////////////////////////////////////////////////////////////////////////////
 // ListView Events:
 
-Callback_v1<ListViewSelection> &ListView::func_selection_changed()
+std::function<void(ListViewSelection)> &ListView::func_selection_changed()
 {
 	impl->cancel_edit();
 
 	return impl->func_selection_changed;
 }
 
-Callback_v1<const ListViewItem &> &ListView::func_item_doubleclick()
+std::function<void(const ListViewItem &)> &ListView::func_item_doubleclick()
 {
 	return impl->func_item_doubleclick;
 }
 
-Callback_2<bool, ListViewItem, std::string &> &ListView::func_item_edited()
+std::function<bool(ListViewItem, std::string &)> &ListView::func_item_edited()
 {
 	return impl->func_item_edited;
 }
 
-Callback_v1<InputEvent&> &ListView::func_key_pressed()
+std::function<void(InputEvent&)> &ListView::func_key_pressed()
 {
 	return impl->func_key_pressed;
 }
 
-Callback_v1<InputEvent&> &ListView::func_key_released()
+std::function<void(InputEvent&)> &ListView::func_key_released()
 {
 	return impl->func_key_released;
 }
 
-Callback_v1<Point> & ListView::func_mouse_right_up()
+std::function<void(Point)> & ListView::func_mouse_right_up()
 {
 	return impl->func_mouse_right_up;
 }
 
-Callback_v1<const ListViewItem &> &ListView::func_item_opened()
+std::function<void(const ListViewItem &)> &ListView::func_item_opened()
 {
 	return impl->func_item_opened;
 }
 
-Callback_v1<const ListViewItem &> &ListView::func_item_closed()
+std::function<void(const ListViewItem &)> &ListView::func_item_closed()
 {
 	return impl->func_item_closed;
 }
 
-Callback_v0 &ListView::func_begin_drag()
+std::function<void()> &ListView::func_begin_drag()
 {
 	return impl->func_begin_drag;
 }
@@ -477,8 +477,8 @@ bool ListView_Impl::on_keyboard_pressed(InputEvent &event)
 					layout->invalidate();
 					update_scrollbar();
 					new_selected_item = sel_item;
-					if (!func_item_closed.is_null())
-						func_item_closed.invoke(sel_item);
+					if (func_item_closed)
+						func_item_closed(sel_item);
 				}
 				else
 				{
@@ -500,8 +500,8 @@ bool ListView_Impl::on_keyboard_pressed(InputEvent &event)
 					layout->invalidate();
 					update_scrollbar();
 					new_selected_item = sel_item;
-					if (!func_item_opened.is_null())
-						func_item_opened.invoke(sel_item);
+					if (func_item_opened)
+						func_item_opened(sel_item);
 				}
 				else
 				{
@@ -620,8 +620,8 @@ bool ListView_Impl::on_keyboard_pressed(InputEvent &event)
 	}
 	else
 	{
-		if (!func_key_pressed.is_null())
-			func_key_pressed.invoke(event);
+		if (func_key_pressed)
+			func_key_pressed(event);
 	}
 
 	return event_consumed;
@@ -645,8 +645,8 @@ bool ListView_Impl::on_keyboard_released(InputEvent &event)
 	}
 	else
 	{
-		if (!func_key_released.is_null())
-			func_key_released.invoke(event);
+		if (func_key_released)
+			func_key_released(event);
 	}
 
 	return event_consumed;
@@ -687,13 +687,13 @@ void ListView_Impl::on_mouse_button_down(std::shared_ptr<GUIMessage> &msg, Input
 		update_scrollbar();
 		if (si.item.is_open())
 		{
-			if (!func_item_opened.is_null())
-				func_item_opened.invoke(si.item);
+			if (func_item_opened)
+				func_item_opened(si.item);
 		}
 		else
 		{
-			if (!func_item_closed.is_null())
-				func_item_closed.invoke(si.item);
+			if (func_item_closed)
+				func_item_closed(si.item);
 		}
 	}
 
@@ -710,8 +710,8 @@ void ListView_Impl::on_mouse_button_down(std::shared_ptr<GUIMessage> &msg, Input
 			{
 				si.item.impl->selected = true;
 				selection.append(si.item);
-				if (!func_selection_changed.is_null())
-					func_selection_changed.invoke(selection);
+				if (func_selection_changed)
+					func_selection_changed(selection);
 			}
 			else
 			{
@@ -720,8 +720,8 @@ void ListView_Impl::on_mouse_button_down(std::shared_ptr<GUIMessage> &msg, Input
 					selection.clear();
 					si.item.impl->selected = true;
 					selection.append(si.item);
-					if (!func_selection_changed.is_null())
-						func_selection_changed.invoke(selection);
+					if (func_selection_changed)
+						func_selection_changed(selection);
 				}
 			}
 
@@ -731,8 +731,8 @@ void ListView_Impl::on_mouse_button_down(std::shared_ptr<GUIMessage> &msg, Input
 				layout->invalidate();
 				update_scrollbar();
 
-				if (!func_item_opened.is_null())
-					func_item_opened.invoke(si.item);
+				if (func_item_opened)
+					func_item_opened(si.item);
 			}
 		}
 		listview->request_repaint();
@@ -761,8 +761,8 @@ void ListView_Impl::on_mouse_lbutton_up(std::shared_ptr<GUIMessage> &msg, InputE
 void ListView_Impl::on_mouse_lbutton_doubleclick(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event)
 {
 	if(!selection.get_first().is_null())
-		if (!func_item_doubleclick.is_null())
-			func_item_doubleclick.invoke(selection.get_first().get_item());
+		if (func_item_doubleclick)
+			func_item_doubleclick(selection.get_first().get_item());
 }
 
 void ListView_Impl::on_mouse_rbutton_down(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event)
@@ -774,8 +774,8 @@ void ListView_Impl::on_mouse_rbutton_down(std::shared_ptr<GUIMessage> &msg, Inpu
 void ListView_Impl::on_mouse_rbutton_up(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event)
 {
 	drag_or_edit_started = false;
-	if (!func_mouse_right_up.is_null())
-		func_mouse_right_up.invoke(input_event.mouse_pos);
+	if (func_mouse_right_up)
+		func_mouse_right_up(input_event.mouse_pos);
 }
 
 void ListView_Impl::on_mouse_move(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event)
@@ -784,8 +784,8 @@ void ListView_Impl::on_mouse_move(std::shared_ptr<GUIMessage> &msg, InputEvent &
 	{
 		drag_or_edit_started = false;
 		edit_timer.stop();
-		if (!func_begin_drag.is_null())
-			func_begin_drag.invoke();
+		if (func_begin_drag)
+			func_begin_drag();
 		return;
 	}
 
@@ -858,17 +858,17 @@ void ListView_Impl::create_components()
 {
 	lineedit = new LineEdit(listview);
 	lineedit->set_visible(false);
-	lineedit->func_before_edit_changed().set(this, &ListView_Impl::on_before_edit_item);
-	lineedit->func_after_edit_changed().set(this, &ListView_Impl::on_after_edit_item);
-	lineedit->func_focus_lost().set(this, &ListView_Impl::on_lineedit_focus_lost);
+	lineedit->func_before_edit_changed() = bind_member(this, &ListView_Impl::on_before_edit_item);
+	lineedit->func_after_edit_changed() = bind_member(this, &ListView_Impl::on_after_edit_item);
+	lineedit->func_focus_lost() = bind_member(this, &ListView_Impl::on_lineedit_focus_lost);
 
 	header = new ListViewHeader(listview); // geometry updated later.
-	header->func_column_added().set(this, &ListView_Impl::on_column_added);
-	header->func_column_size_changed().set(this, &ListView_Impl::on_column_added);
+	header->func_column_added() = bind_member(this, &ListView_Impl::on_column_added);
+	header->func_column_size_changed() = bind_member(this, &ListView_Impl::on_column_added);
 	header->set_display_mode(display_mode);
 
 	scrollbar = new ScrollBar(listview);
-	scrollbar->func_scroll().set(this, &ListView_Impl::on_scroll);
+	scrollbar->func_scroll() = bind_member(this, &ListView_Impl::on_scroll);
 	scrollbar->set_visible(false);
 	scrollbar->set_vertical();
 
@@ -1092,9 +1092,9 @@ void ListView_Impl::on_before_edit_item(InputEvent &e)
 			std::string new_text = lineedit->get_text();
 
 			bool apply_change = true;
-			if (!func_item_edited.is_null())
+			if (func_item_edited)
 			{
-				apply_change = func_item_edited.invoke(edited_item, new_text);
+				apply_change = func_item_edited(edited_item, new_text);
 			}
 
 			if (apply_change)

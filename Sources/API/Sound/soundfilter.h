@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "api_sound.h"
 #include <memory>
 
 namespace clan
@@ -42,7 +41,7 @@ class SoundFilter_Impl;
 class SoundFilterProvider;
 
 /// \brief Sound Filter Class
-class CL_API_SOUND SoundFilter
+class SoundFilter
 {
 /// \name Construction
 /// \{

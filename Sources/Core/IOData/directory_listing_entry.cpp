@@ -115,7 +115,7 @@ private:
 // DirectoryListingEntry Construction:
 
 DirectoryListingEntry::DirectoryListingEntry()
-: impl(new DirectoryListingEntry_Impl)
+: impl(std::make_shared<DirectoryListingEntry_Impl>())
 {
 }
 

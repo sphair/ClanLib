@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "iodevice.h"
 
 namespace clan
@@ -40,7 +39,7 @@ namespace clan
 class DataBuffer;
 
 /// \brief Memory I/O device.
-class CL_API_CORE IODevice_Memory : public IODevice
+class IODevice_Memory : public IODevice
 {
 /// \name Construction
 /// \{

@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../../api_physics2d.h"
 #include "joint.h"
 #include <memory>
 
@@ -45,7 +44,7 @@ namespace clan
 	class Pointf;
 
 /// \brief MouseJoint class.
-class CL_API_PHYSICS MouseJoint : public Joint
+class MouseJoint : public Joint
 {
 
 /// \name Construction

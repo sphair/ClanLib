@@ -47,23 +47,23 @@ namespace clan
 GUIWindowManagerProvider_Direct::GUIWindowManagerProvider_Direct(DisplayWindow &display_window, Canvas &canvas)
 : site(0), activated_window(0), capture_mouse_window(NULL), display_window(display_window), window_canvas(canvas)
 {
-	slots.connect(display_window.sig_window_close(), this, &GUIWindowManagerProvider_Direct::on_displaywindow_window_close);
+	sc.connect(display_window.sig_window_close(), bind_member(this, &GUIWindowManagerProvider_Direct::on_displaywindow_window_close));
 
 	InputContext ic = display_window.get_ic();
-	slots.connect(ic.get_mouse().sig_key_up(), this, &GUIWindowManagerProvider_Direct::on_input_mouse_up);
-	slots.connect(ic.get_mouse().sig_key_down(), this, &GUIWindowManagerProvider_Direct::on_input_mouse_down);
-	slots.connect(ic.get_mouse().sig_key_dblclk(), this, &GUIWindowManagerProvider_Direct::on_input_mouse_down);
-	slots.connect(ic.get_mouse().sig_pointer_move(), this, &GUIWindowManagerProvider_Direct::on_input_mouse_move);
+	sc.connect(ic.get_mouse().sig_key_up(), bind_member(this, &GUIWindowManagerProvider_Direct::on_input_mouse_up));
+	sc.connect(ic.get_mouse().sig_key_down(), bind_member(this, &GUIWindowManagerProvider_Direct::on_input_mouse_down));
+	sc.connect(ic.get_mouse().sig_key_dblclk(), bind_member(this, &GUIWindowManagerProvider_Direct::on_input_mouse_down));
+	sc.connect(ic.get_mouse().sig_pointer_move(), bind_member(this, &GUIWindowManagerProvider_Direct::on_input_mouse_move));
 
-	slots.connect(ic.get_keyboard().sig_key_up(), this, &GUIWindowManagerProvider_Direct::on_input);
-	slots.connect(ic.get_keyboard().sig_key_down(), this, &GUIWindowManagerProvider_Direct::on_input);
+	sc.connect(ic.get_keyboard().sig_key_up(), bind_member(this, &GUIWindowManagerProvider_Direct::on_input));
+	sc.connect(ic.get_keyboard().sig_key_down(), bind_member(this, &GUIWindowManagerProvider_Direct::on_input));
 
 	for (int tc = 0; tc < ic.get_tablet_count(); ++tc)
 	{
-		slots.connect(ic.get_tablet(tc).sig_axis_move(), this, &GUIWindowManagerProvider_Direct::on_input_mouse_move);
-		slots.connect(ic.get_tablet(tc).sig_key_dblclk(), this, &GUIWindowManagerProvider_Direct::on_input_mouse_down);
-		slots.connect(ic.get_tablet(tc).sig_key_down(), this, &GUIWindowManagerProvider_Direct::on_input_mouse_down);
-		slots.connect(ic.get_tablet(tc).sig_key_up(), this, &GUIWindowManagerProvider_Direct::on_input);
+		sc.connect(ic.get_tablet(tc).sig_axis_move(), bind_member(this, &GUIWindowManagerProvider_Direct::on_input_mouse_move));
+		sc.connect(ic.get_tablet(tc).sig_key_dblclk(), bind_member(this, &GUIWindowManagerProvider_Direct::on_input_mouse_down));
+		sc.connect(ic.get_tablet(tc).sig_key_down(), bind_member(this, &GUIWindowManagerProvider_Direct::on_input_mouse_down));
+		sc.connect(ic.get_tablet(tc).sig_key_up(), bind_member(this, &GUIWindowManagerProvider_Direct::on_input));
 	}
 
 }
@@ -88,18 +88,18 @@ void GUIWindowManagerProvider_Direct::on_displaywindow_window_close()
 	if (activated_window == 0)
 		return;
 
-	site->func_close->invoke(activated_window);
+	(*site->func_close)(activated_window);
 }
 
 void GUIWindowManagerProvider_Direct::on_input(const InputEvent &input_event)
 {
 	if (activated_window == 0)
 		return;
-	
+
 	InputEvent new_input_event = input_event;
 
-	if (!func_input_intercept.is_null())
-		func_input_intercept.invoke(new_input_event);
+	if (func_input_intercept)
+		func_input_intercept(new_input_event);
 
 	invoke_input_received(activated_window, new_input_event);
 }
@@ -108,8 +108,8 @@ void GUIWindowManagerProvider_Direct::on_input_mouse_move(const InputEvent &inpu
 {
 	InputEvent new_input_event = input_event;
 
-	if (!func_input_intercept.is_null())
-		func_input_intercept.invoke(new_input_event);
+	if (func_input_intercept)
+		func_input_intercept(new_input_event);
 
 	bool capture_mouse_flag = false;
 	if (capture_mouse_window)
@@ -143,8 +143,8 @@ void GUIWindowManagerProvider_Direct::on_input_mouse_up(const InputEvent &input_
 
 	InputEvent new_input_event = input_event;
 
-	if (!func_input_intercept.is_null())
-		func_input_intercept.invoke(new_input_event);
+	if (func_input_intercept)
+		func_input_intercept(new_input_event);
 
 	invoke_input_received(capture_mouse_window, new_input_event);
 }
@@ -152,8 +152,8 @@ void GUIWindowManagerProvider_Direct::on_input_mouse_down(const InputEvent &inpu
 {
 	InputEvent new_input_event = input_event;
 
-	if (!func_input_intercept.is_null())
-		func_input_intercept.invoke(new_input_event);
+	if (func_input_intercept)
+		func_input_intercept(new_input_event);
 
 	// It seems multiple windows in the same app act differently for window SetCapture()
 	if (capture_mouse_window)
@@ -178,7 +178,7 @@ void GUIWindowManagerProvider_Direct::on_input_mouse_down(const InputEvent &inpu
 
 			if (activated_window)
 			{
-				site->func_focus_lost->invoke(activated_window);
+				(*site->func_focus_lost)(activated_window);
 				toplevel_window = get_window_at_point(new_input_event.mouse_pos);
 			}
 		}
@@ -190,7 +190,7 @@ void GUIWindowManagerProvider_Direct::on_input_mouse_down(const InputEvent &inpu
 		if (toplevel_window != activated_window)
 		{
 			activated_window = toplevel_window;
-			site->func_focus_gained->invoke(activated_window);
+			(*site->func_focus_gained)(activated_window);
 			toplevel_window = get_window_at_point(new_input_event.mouse_pos);
 		}
 	}
@@ -375,7 +375,7 @@ Canvas GUIWindowManagerProvider_Direct::begin_paint(GUITopLevelWindow *handle, c
 	canvas.set_cliprect(clip_rect);
 
 	// Translate model view matrix to the window position
-	canvas.mult_translate(toplevel_window->geometry.left, toplevel_window->geometry.top, 0);
+	canvas.mult_transform(Mat4f::translate(toplevel_window->geometry.left, toplevel_window->geometry.top, 0));
 	return canvas;
 }
 
@@ -514,7 +514,7 @@ void GUIWindowManagerProvider_Direct::invoke_input_received(GUITopLevelWindow *w
 	InputEvent inp_event = input_event;
 	inp_event.mouse_pos.x -= gui_direct_window->geometry.left;
 	inp_event.mouse_pos.y -= gui_direct_window->geometry.top;
-	site->func_input_received->invoke(window, inp_event);
+	(*site->func_input_received)(window, inp_event);
 }
 
 GUITopLevelWindowDirect *GUIWindowManagerProvider_Direct::get_direct_window(GUITopLevelWindow *handle)

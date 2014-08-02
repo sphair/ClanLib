@@ -28,8 +28,6 @@
 
 #pragma once
 
-#include "../../api_physics2d.h"
-
 namespace clan
 {
 /// \addtogroup clanPhysics_Collision clanPhysics Collision
@@ -46,7 +44,7 @@ enum ShapeType
 };
 
 /// \brief Shape class.
-class CL_API_PHYSICS Shape
+class Shape
 {
 
 /// \name Construction

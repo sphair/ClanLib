@@ -76,8 +76,9 @@ Player::Player(Game &game_)
 	//________________________________________________________________________
 	//															   R E N D E R
 	
-	draw_slot = game_.get_draw_sig().connect(this,&Player::draw);
-	update_slot = game_.get_update_sig().connect(this,&Player::update);
+    draw_callback = {std::bind(&Player::draw, this, std::placeholders::_1)};
+	cc.connect(game_.get_draw_sig(), draw_callback);
+	cc.connect(game_.get_update_sig(), clan::bind_member(this, &Player::update));
 	
 	//________________________________________________________________________
 	//															 P H Y S I C S
@@ -311,7 +312,7 @@ void Player::hurt(float damage)
 	{
 		game->play_sample(1);
 		is_dead= true;
-		draw_slot.disable();
+		draw_callback.clear();
 
 		body.kill();
 	}

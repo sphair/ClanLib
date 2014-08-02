@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_csslayout.h"
 #include "css_computed_background.h"
 #include "css_computed_border.h"
 #include "css_computed_box.h"
@@ -49,7 +48,7 @@ namespace clan
 /// \addtogroup clanCSSLayout_ComputedValues clanCSSLayout Computed Values
 /// \{
 
-class CL_API_CSSLAYOUT CSSComputedValuesUpdater
+class CSSComputedValuesUpdater
 {
 public:
 	virtual CSSComputedBox &get_box() = 0;

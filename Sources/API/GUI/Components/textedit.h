@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_component.h"
 
 namespace clan
@@ -41,7 +40,7 @@ namespace clan
 class TextEdit_Impl;
 
 /// \brief Text edit component.
-class CL_API_GUI TextEdit : public GUIComponent
+class TextEdit : public GUIComponent
 {
 /// \name Construction
 /// \{
@@ -197,25 +196,25 @@ public:
 /// \{
 
 public:
-	Callback_v1<InputEvent &> &func_before_edit_changed();
+	std::function<void(InputEvent &)> &func_before_edit_changed();
 
-	Callback_v1<InputEvent &> &func_after_edit_changed();
+	std::function<void(InputEvent &)> &func_after_edit_changed();
 
 	/// \brief Func selection changed
 	///
-	/// \return Callback_v0
-	Callback_v0 &func_selection_changed();
+	/// \return std::function<void()>
+	std::function<void()> &func_selection_changed();
 
 	/// \brief Callback invoked after the lineedit gained focus.
-	Callback_v0 &func_focus_gained();
+	std::function<void()> &func_focus_gained();
 
 	/// \brief Callback invoked when the lineedit is about to lose focus.
-	Callback_v0 &func_focus_lost();
+	std::function<void()> &func_focus_lost();
 
 	/// \brief Func enter pressed
 	///
-	/// \return Callback_v0
-	Callback_v0 &func_enter_pressed();
+	/// \return std::function<void()>
+	std::function<void()> &func_enter_pressed();
 
 /// \}
 /// \name Implementation

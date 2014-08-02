@@ -52,18 +52,18 @@ namespace clan
 // SocketName construction:
 
 SocketName::SocketName()
-: impl(new SocketName_Impl)
+: impl(std::make_shared<SocketName_Impl>())
 {
 }
 
 SocketName::SocketName(const std::string &port)
-: impl(new SocketName_Impl)
+: impl(std::make_shared<SocketName_Impl>())
 {
 	impl->port = port;
 }
 
 SocketName::SocketName(const std::string &address, const std::string &port)
-: impl(new SocketName_Impl)
+: impl(std::make_shared<SocketName_Impl>())
 {
 	impl->address = address;
 	impl->port = port;

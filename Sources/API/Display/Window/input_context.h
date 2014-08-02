@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include <memory>
 
 namespace clan
@@ -42,7 +41,7 @@ class InputDevice;
 class InputContext_Impl;
 
 /// \brief InputContext
-class CL_API_DISPLAY InputContext
+class InputContext
 {
 /// \name Construction
 /// \{

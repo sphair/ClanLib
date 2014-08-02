@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_csslayout.h"
 #include "../PropertyValues/css_value_text_align.h"
 #include "../PropertyValues/css_value_text_decoration.h"
 #include "../PropertyValues/css_value_text_indent.h"
@@ -47,7 +46,7 @@ namespace clan
 
 class CSSComputedValues;
 
-class CL_API_CSSLAYOUT CSSComputedTextReset
+class CSSComputedTextReset
 {
 public:
 	CSSValueTextDecoration text_decoration; // complex
@@ -58,7 +57,7 @@ public:
 	void compute(const CSSComputedValues &parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValueLineHeight &computed_line_height);
 };
 
-class CL_API_CSSLAYOUT CSSComputedTextInherit
+class CSSComputedTextInherit
 {
 public:
 	CSSValueWhiteSpace white_space; // inherited

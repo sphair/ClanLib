@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "dom_text.h"
 
 namespace clan
@@ -52,7 +51,7 @@ namespace clan
 ///    <p>The CDATASection interface inherits the CharacterData interface through the Text
 ///    interface. Adjacent CDATASections nodes are not merged by use of the Element.normalize()
 ///    method.</p> 
-class CL_API_CORE DomCDATASection : public DomText
+class DomCDATASection : public DomText
 {
 /// \name Construction
 /// \{

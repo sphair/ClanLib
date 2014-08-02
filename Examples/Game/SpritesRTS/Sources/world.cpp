@@ -33,7 +33,7 @@
 
 World::World(clan::DisplayWindow &display_window) : window(display_window), quit(false)
 {
-	clan::Slot slot_quit = window.sig_window_close().connect(this, &World::on_window_close);
+	window.sig_window_close().connect(this, &World::on_window_close);
 
 	canvas = clan::Canvas(window);
 
@@ -51,12 +51,12 @@ World::World(clan::DisplayWindow &display_window) : window(display_window), quit
 	background = clan::Image::resource(canvas, "background", resources);
 	
 	// Receive mouse clicks
-	slotKeyDown = window.get_ic().get_keyboard().sig_key_down().connect(this, &World::onKeyDown);
-	slotMouseDown = window.get_ic().get_mouse().sig_key_down().connect(this, &World::onMouseDown);
-	slotMouseDblClick = window.get_ic().get_mouse().sig_key_dblclk().connect(this, &World::onMouseDown);
+	cc.connect(window.get_ic().get_keyboard().sig_key_down(), clan::bind_member(this, &World::onKeyDown));
+	cc.connect(window.get_ic().get_mouse().sig_key_down(), clan::bind_member(this, &World::onMouseDown));
+	cc.connect(window.get_ic().get_mouse().sig_key_dblclk(), clan::bind_member(this, &World::onMouseDown));
 
-	slotMouseUp = window.get_ic().get_mouse().sig_key_up().connect(this, &World::onMouseUp);
-	slotMouseMove = window.get_ic().get_mouse().sig_pointer_move().connect(this, &World::onMouseMove);
+	cc.connect(window.get_ic().get_mouse().sig_key_up(), clan::bind_member(this, &World::onMouseUp));
+	cc.connect(window.get_ic().get_mouse().sig_pointer_move(), clan::bind_member(this, &World::onMouseMove));
 
 	dragging = mouseDown = false;
 	

@@ -113,7 +113,7 @@ typedef struct
 X11Window::X11Window()
 : window(0), color_map(0), display(0), system_cursor(0), hidden_cursor(0), cursor_bitmap(0), size_hints(NULL),
   minimized(false), maximized(false), restore_to_maximized(false), fullscreen(false),
-  wm_protocols(None), wm_delete_window(None), wm_state(None), motif_wm_hints(None), net_wm_state(None), net_wm_state_maximized_vert(None), 
+  wm_protocols(None), wm_delete_window(None), wm_state(None), motif_wm_hints(None), net_wm_state(None), net_wm_state_maximized_vert(None),
   net_wm_state_maximized_horz(None), net_wm_state_hidden(None), net_wm_state_fullscreen(None), kwm_win_decoration(None), win_hints(None),
   net_wm_ping(None), net_frame_extents(None),
   is_window_mapped(false),
@@ -151,7 +151,7 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 	site = new_site;
 
 	close_window();		// Reset all variables
-	
+
 	current_screen = visual->screen;
 	color_map = XCreateColormap( display, RootWindow(display,  visual->screen), visual->visual, AllocNone);
 
@@ -218,11 +218,11 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 	int win_height = desc.get_size().height;
 
 	// Check for valid width and height
-	if ( win_width <=0 ) 
-		win_width = 128; 
+	if ( win_width <=0 )
+		win_width = 128;
 
-	if ( win_height <=0 ) 
-		win_height = 128; 
+	if ( win_height <=0 )
+		win_height = 128;
 
 	if (desc.is_fullscreen())
 	{
@@ -304,7 +304,7 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 				window_has_thin_frame = true;
 			}
 			else
-			{	
+			{
 				window_is_frameless = true;
 			}
 		}
@@ -361,7 +361,7 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 
 				if (desc.has_caption())
 					decor |= MWM_DECOR_TITLE | MWM_DECOR_MENU;
-				
+
 				if (desc.has_maximize_button())
 					decor |= MWM_DECOR_MAXIMIZE;
 
@@ -456,7 +456,7 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 		Atom atom1 = net_wm_state_fullscreen;
 		XChangeProperty(display, window, net_wm_state, XA_ATOM, 32, PropModeReplace, (unsigned char *)&atom1, 1);
 	}
-	
+
 	// Guess the initial position (until the window is mapped)
 	requested_size_contains_frame = !desc.get_position_client_area();
 	requested_current_window_client_area = Rect(win_x, win_y, Size(win_width, win_height));
@@ -689,13 +689,13 @@ void X11Window::set_cursor(StandardCursor type)
 		case cursor_cross:
 			index = XC_cross;
 			break;
-		case cursor_hand:	
+		case cursor_hand:
 			index = XC_hand2;
 			break;
 		case cursor_ibeam:
 			index = XC_xterm;
 			break;
-		case cursor_size_all:	
+		case cursor_size_all:
 			index = XC_fleur;
 			break;
 		case cursor_size_ns:
@@ -768,7 +768,6 @@ void X11Window::set_position(const Rect &pos, bool client_area)
 		XMoveResizeWindow(display, window, pos.left, pos.top, width, height);
 	}
 
-
 	if (!resize_enabled)	// resize has been temporary enabled
 	{
 		size_hints->min_width   = width;
@@ -801,7 +800,7 @@ void X11Window::set_size(int width, int height, bool client_area)
 
 	if (client_area)
 	{
-		requested_current_window_client_area = Rect(requested_current_window_client_area.left, requested_current_window_client_area.top, Size(width, height));  
+		requested_current_window_client_area = Rect(requested_current_window_client_area.left, requested_current_window_client_area.top, Size(width, height));
 
 		XResizeWindow(display, window, width, height);
 	}
@@ -814,7 +813,7 @@ void X11Window::set_size(int width, int height, bool client_area)
 		if (height < 1)
 			height = 1;
 
-		requested_current_window_client_area = Rect(requested_current_window_client_area.left, requested_current_window_client_area.top, Size(width, height));  
+		requested_current_window_client_area = Rect(requested_current_window_client_area.left, requested_current_window_client_area.top, Size(width, height));
 
 		XResizeWindow(display, window, width, height);
 	}
@@ -833,7 +832,7 @@ void X11Window::set_size(int width, int height, bool client_area)
 
 void X11Window::set_enabled(bool enable)
 {
-	// Window's version of set_enabled() calls EnableWindow() which tells the windows API that the window can have input focus if desired. 
+	// Window's version of set_enabled() calls EnableWindow() which tells the windows API that the window can have input focus if desired.
 	// If you do require it for linux, changing the masks: KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask might work
 }
 
@@ -872,7 +871,7 @@ void X11Window::map_window()
 		int result = XMapWindow(display, window);
 		if ( (result == BadValue) || (result == BadWindow) )
 		{
-			throw Exception("Failed to map window");		
+			throw Exception("Failed to map window");
 		}
 		else
 		{
@@ -915,7 +914,7 @@ void X11Window::unmap_window()
 		int result = XUnmapWindow(display, window);
 		if ( (result == BadValue) || (result == BadWindow) )
 		{
-			throw Exception("Failed to unmap window");		
+			throw Exception("Failed to unmap window");
 		}
 		else
 		{
@@ -1075,7 +1074,6 @@ Rect X11Window::get_screen_position() const
 //	return Rect(newx, newy, Size(width, height));
 //}
 
-
 void X11Window::process_window_resize(const Rect &new_rect)
 {
 	Rect rect = current_window_client_area;
@@ -1085,21 +1083,21 @@ void X11Window::process_window_resize(const Rect &new_rect)
 	{
 		if ( (rect.left != current_window_client_area.left) || (rect.top != current_window_client_area.top) || always_send_window_position_changed_event )
 		{
-			site->sig_window_moved->invoke();
+			(*site->sig_window_moved)();
 		}
 
 		if ( (rect.get_width() != current_window_client_area.get_width()) || (rect.get_height() != current_window_client_area.get_height()) || always_send_window_size_changed_event )
 		{
-			if (!site->func_window_resize->is_null())
+			if (*(site->func_window_resize))
 			{
-				site->func_window_resize->invoke(rect);
+				(*site->func_window_resize)(rect);
 				// TODO: If rect output is different, update this window rect. Maybe use a  XConfigureRequestEvent?
 			}
 
-			if (!callback_on_resized.is_null())
-				callback_on_resized.invoke();
+			if (callback_on_resized)
+				callback_on_resized();
 
-			site->sig_resize->invoke(rect.get_width(), rect.get_height());
+			(*site->sig_resize)(rect.get_width(), rect.get_height());
 		}
 	}
 	always_send_window_position_changed_event = false;
@@ -1124,7 +1122,7 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 			if (event.xany.send_event != 0)
 			{
 				int bw = event.xconfigure.border_width;
-				rect = Rect( 
+				rect = Rect(
 					event.xconfigure.x + bw,
 					event.xconfigure.y + bw,
 					event.xconfigure.x + bw + event.xconfigure.width,
@@ -1136,7 +1134,7 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 				rect = get_screen_position();
 			}
 			process_window_resize(rect);
-	
+
 			break;
 		}
 		case ClientMessage:
@@ -1150,7 +1148,7 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 						if (event.xclient.data.l[0] == wm_delete_window)
 						{
 							if (site)
-								site->sig_window_close->invoke();
+								(*site->sig_window_close)();
 						}
 					}
 					if (net_wm_ping)
@@ -1183,7 +1181,7 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 
 			if (exposed_rects.size() < max_allowable_expose_events)
 			{
-				rect = Rect(event.xexpose.x, event.xexpose.y, 
+				rect = Rect(event.xexpose.x, event.xexpose.y,
 					event.xexpose.x + event.xexpose.width, event.xexpose.y + event.xexpose.height);
 
 				exposed_rects.push_back(rect);
@@ -1197,7 +1195,7 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 			break;
 		case FocusIn:
 			if (site)
-				site->sig_got_focus->invoke();
+				(*site->sig_got_focus)();
 
 			break;
 		case FocusOut:
@@ -1205,7 +1203,7 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 			{
 				if (!has_focus())	// For an unknown reason, FocusOut is called when clicking on title bar of window
 				{
-					site->sig_lost_focus->invoke();
+					(*site->sig_lost_focus)();
 				}
 			}
 			break;
@@ -1217,24 +1215,24 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 					if (is_minimized())
 					{
 						if (!minimized && site != NULL)
-							site->sig_window_minimized->invoke();
+							(*site->sig_window_minimized)();
 						minimized = true;
 						maximized = false;
 					}
 					else if (is_maximized())
 					{
 						if (!maximized && site != NULL)
-							site->sig_window_maximized->invoke();
+							(*site->sig_window_maximized)();
 						if (minimized && site != NULL)
 						{
 							// generate resize events for minimized -> maximized transition
 							Rect rect = get_geometry();
-							site->sig_window_moved->invoke();
-							if (!site->func_window_resize->is_null())
-								site->func_window_resize->invoke(rect);
-							if (!callback_on_resized.is_null())
-								callback_on_resized.invoke();
-							site->sig_resize->invoke(rect.get_width(), rect.get_height());
+							(*site->sig_window_moved)();
+							if (*(site->func_window_resize))
+								(*site->func_window_resize)(rect);
+							if (callback_on_resized)
+								callback_on_resized();
+							(*site->sig_resize)(rect.get_width(), rect.get_height());
 						}
 						minimized = false;
 						maximized = true;
@@ -1242,7 +1240,7 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 					else
 					{
 						if ((minimized || maximized) && site != NULL)
-							site->sig_window_restored->invoke();
+							(*site->sig_window_restored)();
 						minimized = false;
 						maximized = false;
 					}
@@ -1255,13 +1253,13 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 					if (is_minimized())
 					{
 						if (!minimized && site != NULL)
-							site->sig_window_minimized->invoke();
+							(*site->sig_window_minimized)();
 						minimized = true;
 					}
 					else
 					{
 						if (minimized && site != NULL)
-							site->sig_window_restored->invoke();
+							(*site->sig_window_restored)();
 						minimized = false;
 					}
 				}
@@ -1279,10 +1277,10 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 		case ButtonRelease:
 			if (mouse_capture_window->get_mouse() && event.xany.send_event==0)
 			{
-				if (!callback_on_clicked.is_null())
+				if (callback_on_clicked)
 				{
 					// This callback is required for GL layered windows
-					if (!callback_on_clicked.invoke(event.xbutton))
+					if (!callback_on_clicked(event.xbutton))
 						break;
 				}
 
@@ -1294,11 +1292,11 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 				{
 					Rect this_scr = current_window_client_area;
 					Rect capture_scr = mouse_capture_window->current_window_client_area;
-	
+
 					event.xbutton.x += this_scr.left - capture_scr.left;
 					event.xbutton.y += this_scr.top - capture_scr.top;
 				}
-					
+
 				mouse_capture_window->get_mouse()->received_mouse_input(event.xbutton);
 				process_input_context = true;
 			}
@@ -1313,7 +1311,7 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 				{
 					Rect this_scr = current_window_client_area;
 					Rect capture_scr = mouse_capture_window->current_window_client_area;
-	
+
 					event.xmotion.x += this_scr.left - capture_scr.left;
 					event.xmotion.y += this_scr.top - capture_scr.top;
 				}
@@ -1355,17 +1353,17 @@ void X11Window::process_message_complete()
 
 	if (max==1)	// Simple case, a single rect
 	{
-		site->sig_paint->invoke(largest_exposed_rect);
+		(*site->sig_paint)(largest_exposed_rect);
 	}
 	else if (max >= max_allowable_expose_events)
 	{
 		Rect window_rect = get_viewport();
-		site->sig_paint->invoke(window_rect);
+		(*site->sig_paint)(window_rect);
 	}
 	else if (max > 1)
 	{
 		// Send the largest rect first
-		site->sig_paint->invoke(largest_exposed_rect);
+		(*site->sig_paint)(largest_exposed_rect);
 		for (unsigned int cnt=0; cnt < max; cnt++)
 		{
 			Rect &rect = exposed_rects[cnt];
@@ -1389,7 +1387,7 @@ void X11Window::process_message_complete()
 
 			if (!inner_flag)
 			{
-				site->sig_paint->invoke(rect);
+				(*site->sig_paint)(rect);
 			}
 		}
 	}
@@ -1533,7 +1531,7 @@ void X11Window::process_queued_events()
 		event.xexpose.display = display;
 		event.xexpose.window = window;
 		event.xexpose.x = rect.left;
-		event.xexpose.y = rect.top;	
+		event.xexpose.y = rect.top;
 		event.xexpose.width = rect.get_width();
 		event.xexpose.height = rect.get_height();
 		event.xexpose.count = (max -1) - cnt;

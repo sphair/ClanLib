@@ -288,7 +288,6 @@ void InputDeviceProvider_Win32Tablet::init_axis()
 	old_axis = axis;
 }
 
-
 BOOL InputDeviceProvider_Win32Tablet::process_packet(WPARAM wParam, LPARAM lParam)
 {	 
 	WINDOWINFO winfo; // todo: updating this info could probably be connected to some window move signal
@@ -330,7 +329,7 @@ BOOL InputDeviceProvider_Win32Tablet::process_packet(WPARAM wParam, LPARAM lPara
 				e.axis_pos     = 0;
 				e.repeat_count = 0;
 				window->set_modifier_keys(e);
-				sig_provider_event->invoke(e);
+				(*sig_provider_event)(e);
 				return TRUE;
 			}
 			else if (HIWORD(pkt.pkButtons) == TBN_UP)
@@ -346,7 +345,7 @@ BOOL InputDeviceProvider_Win32Tablet::process_packet(WPARAM wParam, LPARAM lPara
 				e.axis_pos     = 0;
 				e.repeat_count = 0;
 				window->set_modifier_keys(e);
-				sig_provider_event->invoke(e);
+				(*sig_provider_event)(e);
 				return TRUE;
 			}
 			else
@@ -359,7 +358,7 @@ BOOL InputDeviceProvider_Win32Tablet::process_packet(WPARAM wParam, LPARAM lPara
 				e.axis_pos     = get_axis(2);
 				e.repeat_count = 0;
 				window->set_modifier_keys(e);
-				sig_provider_event->invoke(e);
+				(*sig_provider_event)(e);
 				return TRUE;
 			}
 		}
@@ -390,7 +389,7 @@ BOOL InputDeviceProvider_Win32Tablet::process_proximity( WPARAM wParam, LPARAM l
 		styuls_in_proximity = true;
 	}
 
-	sig_provider_event->invoke(e);
+	(*sig_provider_event)(e);
 
 	return TRUE;
 }

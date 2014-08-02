@@ -73,7 +73,7 @@ public:
 	HDC get_drawable() const;
 #endif
 
-	Signal_v1<const Size &> &sig_window_resized() { return window_resized_signal; }
+	Signal<void(const Size &)> &sig_window_resized() { return window_resized_signal; }
 	ProgramObject get_program_object(StandardProgram standard_program) const;
 
 	StandardPrograms standard_programs;
@@ -175,7 +175,7 @@ private:
 	D3DUnitMap unit_map;
 	bool shader_bound[shadertype_num_types];
 
-	Signal_v1<const Size &> window_resized_signal;
+	Signal<void(const Size &)> window_resized_signal;
 
 	std::map<RasterizerStateDescription, std::shared_ptr<RasterizerStateProvider> > rasterizer_states;
 	std::map<BlendStateDescription, std::shared_ptr<BlendStateProvider> > blend_states;

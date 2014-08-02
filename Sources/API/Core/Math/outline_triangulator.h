@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 
 namespace clan
@@ -42,7 +41,7 @@ class OutlineTriangulator_Impl;
 /// \brief Polygon Tesselator.
 ///
 /// This class uses constrained delauney triangulation to convert polygon outlines into triangles.
-class CL_API_CORE OutlineTriangulator
+class OutlineTriangulator
 {
 /// \name Construction
 /// \{

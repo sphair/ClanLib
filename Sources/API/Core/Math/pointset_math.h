@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <vector>
 #include "point.h"
 #include "circle.h"
@@ -42,7 +41,7 @@ namespace clan
 /// \{
 
 /// \brief Math operations related to point sets.
-class CL_API_CORE PointSetMath
+class PointSetMath
 {
 /// \name Operations
 /// \{

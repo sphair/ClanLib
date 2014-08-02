@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_csslayout.h"
 #include <memory>
 
 namespace clan
@@ -44,7 +43,7 @@ class CSSTokenizer_Impl;
 /// \brief Tokenizer class that breaks CSS text into tokens
 ///
 /// !group=Core/CSS! !header=core.h!
-class CL_API_CSSLAYOUT CSSTokenizer
+class CSSTokenizer
 {
 /// \name Construction
 /// \{

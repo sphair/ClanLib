@@ -49,7 +49,7 @@ bool ScenePass::is_null() const
 	return !impl;
 }
 
-Callback_v1<GraphicContext &> &ScenePass::func_run()
+std::function<void(GraphicContext &)> &ScenePass::func_run()
 {
 	return impl->cb_run;
 }

@@ -94,20 +94,20 @@ public:
 // Window Construction:
 
 Window::Window(GUIComponent *owner, const GUITopLevelDescription &description)
-: GUIComponent(owner, description, CssStr::Window::type_name), impl(new Window_Impl)
+: GUIComponent(owner, description, CssStr::Window::type_name), impl(std::make_shared<Window_Impl>())
 {
 	impl->init(this);
 	impl->title = description.get_title();
 }
 
 Window::Window(GUIComponent *parent)
-: GUIComponent(parent, CssStr::Window::type_name), impl(new Window_Impl)
+: GUIComponent(parent, CssStr::Window::type_name), impl(std::make_shared<Window_Impl>())
 {
 	impl->init(this);
 }
 
 Window::Window(GUIManager *manager, const GUITopLevelDescription &description)
-: GUIComponent(manager, description, CssStr::Window::type_name), impl(new Window_Impl)
+: GUIComponent(manager, description, CssStr::Window::type_name), impl(std::make_shared<Window_Impl>())
 {
 	if (manager->get_window_manager().get_window_manager_type() == GUIWindowManager::cl_wm_type_system)
 		impl->has_frame = false;
@@ -120,8 +120,8 @@ void Window_Impl::init(Window *this_component)
 {
 	window = this_component;
 
-	this_component->func_process_message().set(this, &Window_Impl::on_process_message);
-	this_component->func_render().set(this, &Window_Impl::on_render);
+	this_component->func_process_message() = bind_member(this, &Window_Impl::on_process_message);
+	this_component->func_render() = bind_member(this, &Window_Impl::on_render);
 	
 	create_parts();
 }
@@ -251,7 +251,7 @@ void Window_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 			if(part_buttonclose.set_pseudo_class(CssStr::pressed, false))
 			{
 				window->request_repaint();
-				if (!window->func_close().is_null() && window->func_close().invoke())
+				if (window->func_close() && window->func_close()())
 					msg->consumed = true;
 			}
 		}

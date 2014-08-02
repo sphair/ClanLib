@@ -71,7 +71,7 @@ public:
 
 	GUIThemePart part_focus;
 	std::vector<Handle> tabs;
-	Callback_v1<TabPage*> func_page_selected;
+	std::function<void(TabPage*)> func_page_selected;
 	TabHeader *component;
 	Colorf text_color;
 	int first_tab_x_offset;
@@ -82,12 +82,12 @@ public:
 // TabHeader Construction:
 
 TabHeader::TabHeader(GUIComponent *parent)
-: GUIComponent(parent, CssStr::Tab::Header::type_name), impl(new TabHeader_Impl)
+: GUIComponent(parent, CssStr::Tab::Header::type_name), impl(std::make_shared<TabHeader_Impl>())
 {
 	set_focus_policy(focus_local);
 	impl->component = this;
-	func_process_message().set(impl.get(), &TabHeader_Impl::on_process_message);
-	func_render().set(impl.get(), &TabHeader_Impl::on_render);
+	func_process_message() = bind_member(impl.get(), &TabHeader_Impl::on_process_message);
+	func_render() = bind_member(impl.get(), &TabHeader_Impl::on_render);
 	// todo: enablemode, resize
 
 	impl->part_focus = GUIThemePart(this, CssStr::Tab::Header::part_focus);
@@ -198,7 +198,7 @@ void TabHeader::select_page(int index)
 /////////////////////////////////////////////////////////////////////////////
 // TabHeader Callbacks:
 
-Callback_v1<TabPage*> &TabHeader::func_page_selected()
+std::function<void(TabPage*)> &TabHeader::func_page_selected()
 {
 	return impl->func_page_selected;
 }
@@ -230,8 +230,8 @@ void TabHeader_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 						(*it).part.set_pseudo_class(CssStr::normal, false);
 
 						component->request_repaint();
-						if (!func_page_selected.is_null())
-							func_page_selected.invoke((*it).tab_page);
+						if (func_page_selected)
+							func_page_selected((*it).tab_page);
 					}
 				}
 				msg->consumed = true;
@@ -269,8 +269,8 @@ void TabHeader_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 				unselect_all();
 				select_page(next_page);
 
-				if (!func_page_selected.is_null())
-					func_page_selected.invoke(tabs[next_page].tab_page);
+				if (func_page_selected)
+					func_page_selected(tabs[next_page].tab_page);
 
 				component->select_page(next_page);
 				msg->consumed = true;
@@ -284,8 +284,8 @@ void TabHeader_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 				unselect_all();
 				select_page(next_page);
 
-				if (!func_page_selected.is_null())
-					func_page_selected.invoke(tabs[next_page].tab_page);
+				if (func_page_selected)
+					func_page_selected(tabs[next_page].tab_page);
 
 				component->request_repaint();
 				msg->consumed = true;

@@ -43,7 +43,7 @@ PhysicsDebugDraw::PhysicsDebugDraw()
 }
 
 PhysicsDebugDraw::PhysicsDebugDraw(const PhysicsWorld &pw)
-: impl(new PhysicsDebugDraw_Impl(*pw.impl))
+: impl(std::make_shared<PhysicsDebugDraw_Impl>(*pw.impl))
 {
 	
 }

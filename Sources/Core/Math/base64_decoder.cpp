@@ -105,7 +105,7 @@ public:
 // Base64Decoder Construction:
 
 Base64Decoder::Base64Decoder()
-: impl(new Base64Decoder_Impl)
+: impl(std::make_shared<Base64Decoder_Impl>())
 {
 }
 

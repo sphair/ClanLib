@@ -33,7 +33,7 @@ TabPage::TabPage(clan::GUIManager &manager) :
 	clan::Window(&manager, clan::GUITopLevelDescription("Tab Page", clan::Rect(32 + 256*3, 256*1 + 180*2 + 32, clan::Size(256, 180)), false))
 {
 
-	func_close().set(this, &TabPage::on_close);
+	func_close() = bind_member(this, &TabPage::on_close);
 
 	clan::Rect client_area = get_client_area();
 

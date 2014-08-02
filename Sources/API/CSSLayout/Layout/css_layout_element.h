@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_csslayout.h"
 #include "css_layout_node.h"
 
 namespace clan
@@ -39,7 +38,7 @@ namespace clan
 class CSSPropertyValue;
 class Rect;
 
-class CL_API_CSSLAYOUT CSSLayoutElement : public CSSLayoutNode
+class CSSLayoutElement : public CSSLayoutNode
 {
 public:
 	CSSLayoutElement();

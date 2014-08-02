@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_csslayout.h"
 #include "../PropertyValues/css_value_background_attachment.h"
 #include "../PropertyValues/css_value_background_color.h"
 #include "../PropertyValues/css_value_background_image.h"
@@ -45,7 +44,7 @@ namespace clan
 
 class CSSComputedValues;
 
-class CL_API_CSSLAYOUT CSSComputedBackground
+class CSSComputedBackground
 {
 public:
 	CSSValueBackgroundAttachment background_attachment;

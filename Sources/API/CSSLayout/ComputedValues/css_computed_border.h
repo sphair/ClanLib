@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_csslayout.h"
 #include "../PropertyValues/css_value_border_color.h"
 #include "../PropertyValues/css_value_border_style.h"
 #include "../PropertyValues/css_value_border_width.h"
@@ -46,7 +45,7 @@ namespace clan
 
 class CSSComputedValues;
 
-class CL_API_CSSLAYOUT CSSComputedBorder
+class CSSComputedBorder
 {
 public:
 	CSSValueBorderColor border_color_left;

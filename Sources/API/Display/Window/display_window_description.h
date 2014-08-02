@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include <memory>
 #ifdef WIN32
 #include <windows.h>
@@ -50,7 +49,7 @@ class DisplayWindowDescription_Impl;
 /// \brief Display window description class.
 ///
 /// This class allows you to setup a more advanced description when creating a display window.
-class CL_API_DISPLAY DisplayWindowDescription
+class DisplayWindowDescription
 {
 /// \name Construction
 /// \{

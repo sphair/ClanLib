@@ -31,7 +31,6 @@
 
 #if defined(WIN32) || defined(DOXYGEN)
 
-#include "../api_core.h"
 #include "databuffer.h"
 #include <vector>
 
@@ -45,7 +44,7 @@ class RegistryKey_Impl;
 /// \brief Registry key class.
 /** <p>This class is only available on Windows.<p>
     !group=Core/System! !header=core.h!*/
-class CL_API_CORE RegistryKey
+class RegistryKey
 {
 /// \name Construction
 /// \{

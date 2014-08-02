@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_physics3d.h"
 #include "../Core/Math/vec3.h"
 #include <memory>
 
@@ -42,7 +41,7 @@ class Physics3DWorld;
 class Physics3DObject;
 class Physics3DContactPairTest_Impl;
 
-class CL_API_PHYSICS3D Physics3DContactPairTest
+class Physics3DContactPairTest
 {
 public:
 	Physics3DContactPairTest();

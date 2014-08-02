@@ -85,7 +85,7 @@ public:
 // ListViewSelection Construction:
 
 ListViewSelection::ListViewSelection()
-: impl(new ListViewSelection_Impl())
+: impl(std::make_shared<ListViewSelection_Impl>())
 {
 }
 
@@ -171,7 +171,7 @@ ListViewSelectedItem::ListViewSelectedItem()
 }
 
 ListViewSelectedItem::ListViewSelectedItem(const ListViewItem &item) 
-: impl(new ListViewSelectedItem_Impl())
+: impl(std::make_shared<ListViewSelectedItem_Impl>())
 {
 	impl->item = item;
 }

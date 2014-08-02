@@ -3,7 +3,9 @@
 
 #include <string>
 
-class clan::InputSourceProvider;
+namespace clan {
+class InputSourceProvider;
+}
 class SoundProvider_MikMod_Impl;
 
 /// \brief Module format (.mod, .s3m, .xm, etc) sound provider.

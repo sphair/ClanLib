@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "logger.h"
 
 namespace clan
@@ -38,7 +37,7 @@ namespace clan
 /// \{
 
 /// \brief Console logger.
-class CL_API_CORE ConsoleLogger : public Logger
+class ConsoleLogger : public Logger
 {
 /// \name Construction
 /// \{

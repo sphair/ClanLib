@@ -43,7 +43,7 @@ PhysicsWorld::PhysicsWorld()
 }
 
 PhysicsWorld::PhysicsWorld(const PhysicsWorldDescription &description)
-: impl(new PhysicsWorld_Impl)
+: impl(std::make_shared<PhysicsWorld_Impl>())
 {
 	impl->pc = PhysicsContext(*this);
 	impl->assistant = PhysicsQueryAssistant(*this);
@@ -55,7 +55,7 @@ PhysicsWorld::PhysicsWorld(const PhysicsWorldDescription &description)
 
 PhysicsWorld::~PhysicsWorld()
 {
-	impl->sig_world_destroyed.invoke();
+	impl->sig_world_destroyed();
 }
 
 //																											___________________																											
@@ -87,12 +87,12 @@ PhysicsQueryAssistant &PhysicsWorld::get_qa()
 //																											_____________																							
 //																											S I G N A L S
 
-Signal_v1<float> &PhysicsWorld::sig_world_step()
+Signal<void(float)> &PhysicsWorld::sig_world_step()
 {
 	return impl->sig_world_step;
 }
 
-Signal_v0 &PhysicsWorld::sig_world_destroyed()
+Signal<void()> &PhysicsWorld::sig_world_destroyed()
 {
 	return impl->sig_world_destroyed;
 }

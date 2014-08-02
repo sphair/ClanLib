@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_sound.h"
 
 namespace clan
 {
@@ -37,7 +36,7 @@ namespace clan
 /// \{
 
 /// \brief Sound related functions implemented as SIMD using SSE
-class CL_API_SOUND SoundSSE
+class SoundSSE
 {
 /// \name Operations
 /// \{

@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include "color.h"
 
 namespace clan
@@ -39,7 +38,7 @@ namespace clan
 /// \{
 
 /// \brief Colorgradient description class.
-class CL_API_DISPLAY Gradient
+class Gradient
 {
 /// \name Construction
 /// \{

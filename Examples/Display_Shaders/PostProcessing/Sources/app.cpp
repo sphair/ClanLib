@@ -37,8 +37,9 @@ int App::start(const std::vector<std::string> &args)
 	clan::DisplayWindow window(description);
 	clan::InputDevice keyboard = window.get_ic().get_keyboard();
 	clan::Canvas canvas(window);
+    clan::SlotContainer cc;
 
-	clan::Slot slot_window_close = window.sig_window_close().connect(this, &App::window_close);
+	cc.connect(window.sig_window_close(), clan::bind_member(this, &App::window_close));
 
 	// Create offscreen texture
 	clan::Texture2D texture_offscreen(canvas, canvas.get_width(), canvas.get_height());

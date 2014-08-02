@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_compute.h"
 #include "compute_event.h"
 
 namespace clan
@@ -38,7 +37,7 @@ namespace clan
 /// \{
 
 /// \brief List of events that must have completed before a new operation is executed
-class CL_API_COMPUTE ComputeWaitList : public std::vector<ComputeEvent>
+class ComputeWaitList : public std::vector<ComputeEvent>
 {
 /// \name Construction
 /// \{

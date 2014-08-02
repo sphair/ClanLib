@@ -25,10 +25,10 @@ private:
 
 private:
 	NetGameServer network_server;
-	SlotContainer slots;
+	SlotContainer cc;
 
-	NetGameEventDispatcher_v1<ServerUser*> login_events;
-	NetGameEventDispatcher_v1<ServerUser*> game_events;
+	NetGameEventDispatcher<ServerUser*> login_events;
+	NetGameEventDispatcher<ServerUser*> game_events;
 
 	int next_user_id;
 	bool game_running;

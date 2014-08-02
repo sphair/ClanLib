@@ -47,14 +47,14 @@ ChainShape::ChainShape()
 }
 
 ChainShape::ChainShape(const PhysicsWorld &pw)
-: impl(new ChainShape_Impl(pw.impl.get()))
+: impl(std::make_shared<ChainShape_Impl>(pw.impl.get()))
 {
 	shape_impl->shape_type = shape_chain;
 	shape_impl->shape = dynamic_cast<b2Shape*> (&impl->shape);
 }
 
 ChainShape::ChainShape(const PhysicsContext &pc)
-: impl(new ChainShape_Impl(pc.impl->get_owner()))
+: impl(std::make_shared<ChainShape_Impl>(pc.impl->get_owner()))
 {
 	shape_impl->shape_type = shape_chain;
 	shape_impl->shape = dynamic_cast<b2Shape*> (&impl->shape);
@@ -94,7 +94,7 @@ void 	ChainShape::create_loop (const Vec2f *vertices,const int count)
 	
 	impl->shape.CreateLoop(b2_vertices,count);
 
-	delete b2_vertices; // delete id 1
+	delete[] b2_vertices; // delete id 1
 }
 
 void 	ChainShape::create_loop (const CollisionOutline &outline)
@@ -119,7 +119,7 @@ void 	ChainShape::create_loop (const CollisionOutline &outline)
 
 		impl->shape.CreateLoop(b2_vertices,point_count);
 
-		delete b2_vertices; // delete id 4
+		delete[] b2_vertices; // delete id 4
 	}
 	else
 	throw Exception("ChainShape loop couldn't be created due to CollisionOutline having no contours.");
@@ -140,7 +140,7 @@ void 	ChainShape::create_chain (const Vec2f *vertices,const int count)
 
 	impl->shape.CreateChain(b2_vertices,count);
 
-	delete b2_vertices; // delete id 3
+	delete[] b2_vertices; // delete id 3
 }
 
 void ChainShape::set_prev_vertex (const Vec2f &prev_vertex)

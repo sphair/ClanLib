@@ -52,14 +52,13 @@ public:
 	FT_Library library;
 };
 
-
 FontEngine_Freetype_Library::FontEngine_Freetype_Library()
 {
 	FT_Error error = FT_Init_FreeType( &library );
 	if ( error )
 	{
 		throw Exception("FontEngine_Freetype_Library: Initializing FreeType library failed.");
-	} 
+	}
 
 	FT_Library_SetLcdFilter(library, FT_LCD_FILTER_DEFAULT);
 }
@@ -70,7 +69,7 @@ FontEngine_Freetype_Library::~FontEngine_Freetype_Library()
 	if ( error )
 	{
 		throw Exception("FontEngine_Freetype_Library: Denitializing FreeType library failed.");
-	} 
+	}
 }
 
 FontEngine_Freetype_Library &FontEngine_Freetype_Library::instance()
@@ -84,7 +83,6 @@ FontEngine_Freetype_Library &FontEngine_Freetype_Library::instance()
 
 FontEngine_Freetype::FontEngine_Freetype(IODevice &io_dev, int average_width, int height) : face(0)
 {
-
 
 	data_buffer = DataBuffer(io_dev.get_size());
 	io_dev.read(data_buffer.get_data(), data_buffer.get_size());
@@ -137,7 +135,6 @@ FontMetrics FontEngine_Freetype::get_metrics()
 	if ( error )
 	throw Exception("freetype: error loading glyph");
 
-
 	float ascent = face->size->metrics.ascender / 64.0f;
 	float descent = -face->size->metrics.descender / 64.0f;
 	float height = ascent + descent;
@@ -167,17 +164,17 @@ FontMetrics FontEngine_Freetype::get_metrics()
 float FontEngine_Freetype::get_kerning(const std::string::value_type &lchar, const std::string::value_type &rchar)
 {
 	FT_Vector kerning;
-	
+
 	FT_UInt left_ch_index  = FT_Get_Char_Index( face, FT_ULong(lchar) );
 	FT_UInt right_ch_index = FT_Get_Char_Index( face, FT_ULong(rchar) );
-	
+
 	int error = FT_Get_Kerning( face, left_ch_index, right_ch_index, FT_KERNING_UNFITTED, &kerning );
 
 	if ( error )
 	{
 		throw Exception("FreeTypeFont: error retrieving kerning info");
 	}
-	
+
 	return float(kerning.x) / 64.0f;
 }
 
@@ -253,16 +250,16 @@ Shape2D FontEngine_Freetype::load_glyph_outline(int c, int &out_advance_x)
 	for( int cont = 0; cont < ft_outline.n_contours; cont++ )
 	{
 //		cl_write_console_line(string_format("Num points in contour %1: %2", cont, ft_outline.contours[0]+1));
-		
+
 		Path2D contour;
-		
+
 		// debug: dump contents of points array to terminal
 //		for( int i = 0; i <= ft_outline.contours[cont]; ++i )
 //		{
 //			FT_Vector pos = ft_outline.points[i];
 //			cl_write_console_line(string_format("dump points[%1]: (%2,%3) \t type: %4", i, pos.x, pos.y, ft_outline.tags[i]));
 //		}
-		
+
 		std::vector<TaggedPoint> points = get_contour_points(cont, &ft_outline);
 		points.push_back(points.front()); // just to simplify, it's removed later.
 
@@ -291,7 +288,7 @@ Shape2D FontEngine_Freetype::load_glyph_outline(int c, int &out_advance_x)
 				curve.add_control_point( tp.pos );
 				curve.add_control_point( points[i+1].pos );
 				contour.add_curve(curve);
-			}			
+			}
 		}
 
 		outline.add_path(contour);
@@ -320,14 +317,14 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph_standard(int glyph, bool ant
 	{
 		error = FT_Load_Glyph(face, glyph_index, FT_LOAD_TARGET_LIGHT );
 		if (error) return font_buffer;
-	
+
 		error = FT_Render_Glyph( face->glyph, FT_RENDER_MODE_NORMAL);
 	}
 	else
 	{
 		error = FT_Load_Glyph(face, glyph_index, FT_LOAD_TARGET_MONO);
 		if (error) return font_buffer;
-				
+
 		error = FT_Render_Glyph( face->glyph, FT_RENDER_MODE_MONO);
 	}
 
@@ -335,7 +332,7 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph_standard(int glyph, bool ant
 	// Set Increment pen position
 	font_buffer.increment.x = (slot->advance.x+32) >> 6;
 	font_buffer.increment.y = (slot->advance.y+32) >> 6;
- 
+
 	if (error || slot->bitmap.rows == 0 || slot->bitmap.width == 0)
 		return font_buffer;
 
@@ -432,7 +429,7 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph_subpixel(int glyph)
 	// Set Increment pen position
 	font_buffer.increment.x = (slot->advance.x+32) >> 6;
 	font_buffer.increment.y = (slot->advance.y+32) >> 6;
- 
+
 	if (error || slot->bitmap.rows == 0 || slot->bitmap.width == 0)
 		return font_buffer;
 
@@ -494,7 +491,7 @@ TagStruct FontEngine_Freetype::get_tag_struct(int cont, int index, FT_Outline *f
 	int next_index = get_index_of_next_contour_point(cont, index, ft_outline);
 
 	tags.previous = FT_CURVE_TAG(ft_outline->tags[prev_index]);
-	tags.next = FT_CURVE_TAG(ft_outline->tags[next_index]);	
+	tags.next = FT_CURVE_TAG(ft_outline->tags[next_index]);
 	tags.current = FT_CURVE_TAG(ft_outline->tags[index]);
 
 	return tags;
@@ -549,7 +546,7 @@ std::vector<TaggedPoint> FontEngine_Freetype::get_contour_points(int cont, FT_Ou
 	for( int i = start; i <= ft_outline->contours[cont]; i++ )
 	{
 		TagStruct tags = get_tag_struct(cont, i, ft_outline);
-		
+
 		TaggedPoint tp;
 		tp.pos = FT_Vector_to_Pointf(ft_outline->points[i]);
 		tp.tag = tags.current;

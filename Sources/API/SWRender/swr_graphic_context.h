@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_swrender.h"
 
 
 #include "../Display/Render/graphic_context.h"
@@ -44,7 +43,7 @@ class PixelPipeline;
 class GraphicContext_SWRender_Impl;
 
 /// \brief SWRender Graphic Context
-class API_SWRender GraphicContext_SWRender : public GraphicContext
+class GraphicContext_SWRender : public GraphicContext
 {
 //!Construction
 public:

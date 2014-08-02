@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <cmath>
 #include "vec2.h"
 #include "vec3.h"

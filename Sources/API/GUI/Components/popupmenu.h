@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_component.h"
 #include "../../Display/Window/input_event.h"
 #include "popupmenu_item.h"
@@ -46,7 +45,7 @@ class PopupMenu;
 class PopupMenu_Impl;
 
 /// \brief Pop-up menu.
-class CL_API_GUI PopupMenu
+class PopupMenu
 {
 /// \name Construction
 /// \{
@@ -109,7 +108,7 @@ public:
 /// \{
 public:
 	/// \brief bool func_close()
-	Callback_v0 &func_close();
+	std::function<void()> &func_close();
 
 /// \}
 /// \name Operations

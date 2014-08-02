@@ -46,7 +46,7 @@ Fixture::Fixture()
 }
 
 Fixture::Fixture(PhysicsContext &pc, Body &body, const FixtureDescription &description)
-: impl(new Fixture_Impl(pc.impl->get_owner()))
+: impl(std::make_shared<Fixture_Impl>(pc.impl->get_owner()))
 {
 	if(!body.is_null())
 	{
@@ -130,17 +130,17 @@ void Fixture::kill()
 //																											_____________																										
 //																											S I G N A L S
 
-Signal_v1<Fixture> &Fixture::sig_begin_collision()
+Signal<void(Fixture)> &Fixture::sig_begin_collision()
 {
 	return impl->sig_begin_collision;
 }
 
-Signal_v1<Fixture> &Fixture::sig_end_collision()
+Signal<void(Fixture)> &Fixture::sig_end_collision()
 {
 	return impl->sig_end_collision;
 }
 
-Signal_v0 &Fixture::sig_fixture_deletion()
+Signal<void()> &Fixture::sig_fixture_deletion()
 {
 	return impl->sig_fixture_deletion;
 }

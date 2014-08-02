@@ -235,8 +235,8 @@ ListViewItem ListViewItem::append_child(ListViewItem &item)
 			impl->last_child = item.impl;		
 		}
 
-		if (!impl->get_root_parent()->func_item_added.is_null())
-			impl->get_root_parent()->func_item_added.invoke();
+		if (impl->get_root_parent()->func_item_added)
+			impl->get_root_parent()->func_item_added();
 
 		return item;
 	}
@@ -283,8 +283,8 @@ ListViewItem ListViewItem::remove()
 
 	ListViewItem document_item = get_document_item();
 
-	if (!document_item.impl->func_item_deleted.is_null())
-		document_item.impl->func_item_deleted.invoke(*this);
+	if (document_item.impl->func_item_deleted)
+		document_item.impl->func_item_deleted(*this);
 	
 	return *this;
 }
@@ -295,8 +295,8 @@ void ListViewItem::remove_children()
 	impl->first_child = null_impl;
 	impl->last_child = null_impl;
 
-	if (!impl->func_item_deleted.is_null())
-		impl->func_item_deleted.invoke(ListViewItem());
+	if (impl->func_item_deleted)
+		impl->func_item_deleted(ListViewItem());
 }
 
 void ListViewItem::set_column_text(const std::string &column_id, const std::string &text)
@@ -309,8 +309,8 @@ void ListViewItem::set_column_text(const std::string &column_id, const std::stri
 		if ((*it).get_column_id() == column_id)
 		{
 			(*it).set_text(text);
-			if (!document_item.impl->func_item_modified.is_null())
-				document_item.impl->func_item_modified.invoke(*this);
+			if (document_item.impl->func_item_modified)
+				document_item.impl->func_item_modified(*this);
 			return;
 		}
 	}
@@ -320,8 +320,8 @@ void ListViewItem::set_column_text(const std::string &column_id, const std::stri
 	cd.set_text(text);
 	impl->column_data.push_back(cd);
 
-	if (!document_item.impl->func_item_modified.is_null())
-		document_item.impl->func_item_modified.invoke(*this);
+	if (document_item.impl->func_item_modified)
+		document_item.impl->func_item_modified(*this);
 }
 
 void ListViewItem::set_open(bool open)
@@ -369,7 +369,7 @@ void ListViewItem::set_userdata(std::shared_ptr<ListViewItemUserData> ptr)
 	impl->userdata = ptr;
 }
 
-Callback_v1<Rect> &ListViewItem::func_render_icon()
+std::function<void(Rect)> &ListViewItem::func_render_icon()
 {
 	return impl->func_render_icon;
 }

@@ -67,7 +67,7 @@ public:
 	PushButton *button;
 	Label *label;
 	ImageView *icon;
-	Callback_v0 func_clicked;
+	std::function<void()> func_clicked;
 	PushButton::IconPosition icon_position;
 	bool toggle_mode;
 	GUIThemePart part_focus;
@@ -77,15 +77,15 @@ public:
 // PushButton Construction:
 
 PushButton::PushButton(GUIComponent *parent)
-: GUIComponent(parent, CssStr::PushButton::type_name), impl(new PushButton_Impl)
+: GUIComponent(parent, CssStr::PushButton::type_name), impl(std::make_shared<PushButton_Impl>())
 {
 	set_blocks_default_action(true);
 	set_focus_policy(focus_local);
 	set_double_click_enabled(false);
 
-	func_process_message().set(impl.get(), &PushButton_Impl::on_process_message);
-	func_render().set(impl.get(), &PushButton_Impl::on_render);
-	func_enablemode_changed().set(impl.get(), &PushButton_Impl::on_enablemode_changed);
+	func_process_message() = bind_member(impl.get(), &PushButton_Impl::on_process_message);
+	func_render() = bind_member(impl.get(), &PushButton_Impl::on_render);
+	func_enablemode_changed() = bind_member(impl.get(), &PushButton_Impl::on_enablemode_changed);
 
 	impl->button = this;
 	impl->icon = new ImageView(this);
@@ -208,7 +208,7 @@ void PushButton::set_text(const std::string &text)
 /////////////////////////////////////////////////////////////////////////////
 // PushButton Events:
 
-Callback_v0 &PushButton::func_clicked()
+std::function<void()> &PushButton::func_clicked()
 {
 	return impl->func_clicked;
 }
@@ -262,8 +262,8 @@ void PushButton_Impl::on_input_message(std::shared_ptr<GUIMessage_Input> input_m
 			button->set_pseudo_class(CssStr::toggled, !button->get_pseudo_class("toggled"));
 			input_msg->consumed = true;
 				
-			if (!func_clicked.is_null())
-				func_clicked.invoke();
+			if (func_clicked)
+				func_clicked();
 		}
 	}
 	else
@@ -281,8 +281,8 @@ void PushButton_Impl::on_input_message(std::shared_ptr<GUIMessage_Input> input_m
 			button->set_pseudo_class(CssStr::pressed, false);
 			input_msg->consumed = true;
 				
-			if (!func_clicked.is_null())
-				func_clicked.invoke();
+			if (func_clicked)
+				func_clicked();
 		}
 	}
 	if (input_msg->input_event.type == InputEvent::pressed && (input_msg->input_event.id == keycode_left || input_msg->input_event.id == keycode_up))

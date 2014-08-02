@@ -39,7 +39,7 @@ namespace clan
 // SHA256 Construction:
 
 SHA256::SHA256()
-: impl(new SHA256_Impl(cl_sha_256))
+: impl(std::make_shared<SHA256_Impl>(cl_sha_256))
 {
 }
 

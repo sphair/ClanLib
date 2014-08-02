@@ -39,17 +39,17 @@ namespace clan
 // UDPSocket Construction:
 
 UDPSocket::UDPSocket()
-: impl(new UDPSocket_Impl)
+: impl(std::make_shared<UDPSocket_Impl>())
 {
 }
 
 UDPSocket::UDPSocket(const SocketName &local_name, bool force_bind)
-: impl(new UDPSocket_Impl(local_name, force_bind))
+: impl(std::make_shared<UDPSocket_Impl>(local_name, force_bind))
 {
 }
 
 UDPSocket::UDPSocket(int socket, bool close_socket)
-: impl(new UDPSocket_Impl(socket, close_socket))
+: impl(std::make_shared<UDPSocket_Impl>(socket, close_socket))
 {
 }
 

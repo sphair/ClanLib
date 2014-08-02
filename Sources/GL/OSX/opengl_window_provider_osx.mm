@@ -40,11 +40,10 @@
 namespace clan
 {
 
-
 OpenGLWindowProvider::OpenGLWindowProvider(OpenGLWindowDescription &opengl_desc)
 {
 	impl.reset(new OpenGLWindowProvider_Impl(this, opengl_desc));
-    
+
     keyboard = InputDevice(new InputDeviceProvider_OSXKeyboard(this));
     mouse = InputDevice(new InputDeviceProvider_OSXMouse(this));
 }
@@ -65,7 +64,7 @@ ProcAddress *OpenGLWindowProvider::get_proc_address(const std::string& function_
 		if (bundle == 0)
 			throw Exception("Unable to find com.apple.opengl bundle");
 	}
-	
+
 	return (ProcAddress *)CFBundleGetFunctionPointerForName(bundle, CFStringCreateWithCStringNoCopy(0, function_name.c_str(), CFStringGetSystemEncoding(), 0));
 }
 
@@ -120,12 +119,12 @@ GraphicContext& OpenGLWindowProvider::get_gc()
 {
 	return impl->gc;
 }
-	
+
 InputContext OpenGLWindowProvider::get_ic()
 {
 	return impl->ic;
 }
-	
+
 std::string OpenGLWindowProvider::get_title() const
 {
 	return [impl->window.title UTF8String];
@@ -167,12 +166,12 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 		throw Exception("Could not create the window.");
 
 	[impl->window setTitle:[NSString stringWithUTF8String:desc.get_title().c_str()]];
-	
+
 	std::vector<NSOpenGLPixelFormatAttribute> attributes;
-	
+
 	attributes.push_back(NSOpenGLPFAOpenGLProfile);
 	attributes.push_back(NSOpenGLProfileVersion3_2Core);
-	
+
 	attributes.push_back(NSOpenGLPFADoubleBuffer);
 	attributes.push_back(NSOpenGLPFAColorSize);
 	attributes.push_back(24);
@@ -194,23 +193,23 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 		attributes.push_back(desc.get_multisampling());
 	}
 	attributes.push_back(0);
-	
+
 	NSOpenGLPixelFormat *pixel_format = [[NSOpenGLPixelFormat alloc] initWithAttributes:&attributes[0]];
 	if (pixel_format == nil)
 		throw Exception("Could not create the requested OpenGL pixel format");
-	
+
 	impl->opengl_context = [[NSOpenGLContext alloc] initWithFormat:pixel_format shareContext:impl->get_share_context()];
 	if (impl->opengl_context == nil)
 		throw Exception("Could not create OpenGL context");
-	
+
     [impl->opengl_context setView:impl->window.contentView];
-	
+
 	impl->gc = GraphicContext(new GL3GraphicContextProvider(this));
-	
+
 	impl->ic.clear();
 	impl->ic.add_keyboard(keyboard);
 	impl->ic.add_mouse(mouse);
-	
+
     [impl->window setDelegate:impl->window];
 	[impl->window makeKeyAndOrderFront:NSApp];
     [impl->window makeMainWindow];
@@ -245,10 +244,10 @@ void OpenGLWindowProvider::set_title(const std::string &new_title)
 void OpenGLWindowProvider::set_position(const Rect &pos, bool client_area)
 {
 	NSRect frame = NSMakeRect(pos.left, pos.top, pos.get_width(), pos.get_height());
-	
+
 	if (client_area)
 		frame = [impl->window frameRectForContentRect:frame];
-	
+
 	[impl->window setFrame:frame display:NO animate:NO];
 }
 
@@ -256,7 +255,7 @@ void OpenGLWindowProvider::set_size(int width, int height, bool client_area)
 {
 	NSRect old_frame = impl->window.frame;
 	NSRect frame = NSMakeRect(old_frame.origin.x, old_frame.origin.y, width, height);
-	
+
 	if (client_area)
 		frame = [impl->window frameRectForContentRect:frame];
 
@@ -322,17 +321,17 @@ void OpenGLWindowProvider::flip(int interval)
 {
 	OpenGL::set_active(get_gc());
 	OpenGL::check_error();
-	
+
     [impl->opengl_context flushBuffer];
 }
 
 void OpenGLWindowProvider::update(const Rect &_rect)
 {
 	OpenGL::set_active(get_gc());
-	
+
 	// To do: copy rect from back to front buffer
 	glFlush();
-	
+
 	OpenGL::check_error();
 }
 
@@ -378,7 +377,7 @@ PixelBuffer OpenGLWindowProvider::get_clipboard_image() const
 {
 	return PixelBuffer();
 }
-    
+
 bool OpenGLWindowProvider::is_double_buffered() const
 {
     // The OpenGL attributes are hard coded for double buffering at the moment.
@@ -390,14 +389,14 @@ InputDeviceProvider_OSXKeyboard *OpenGLWindowProvider::get_keyboard()
 {
     return static_cast<InputDeviceProvider_OSXKeyboard*>(keyboard.get_provider());
 }
-    
+
 InputDeviceProvider_OSXMouse *OpenGLWindowProvider::get_mouse()
 {
     return static_cast<InputDeviceProvider_OSXMouse*>(mouse.get_provider());
 }
-    
+
 /////////////////////////////////////////////////////////////////////
-	
+
 OpenGLWindowProvider_Impl::OpenGLWindowProvider_Impl(OpenGLWindowProvider *self, OpenGLWindowDescription &opengl_desc)
 : self(self), site(0), opengl_desc(opengl_desc)
 {
@@ -422,7 +421,7 @@ NSOpenGLContext *OpenGLWindowProvider_Impl::get_share_context()
 
 	return share_context;
 }
-	
+
 void OpenGLWindowProvider_Impl::on_input_event(NSEvent *theEvent)
 {
 	NSEventType type = [theEvent type];
@@ -434,13 +433,13 @@ void OpenGLWindowProvider_Impl::on_input_event(NSEvent *theEvent)
 		case NSFlagsChanged:
             on_keyboard_event(theEvent);
 			break;
-			
+
 		// Mouse movement events:
 		case NSMouseEntered: // see: NSTrackingArea
         case NSMouseMoved: // requires setAcceptsMouseMovedEvents: to be called first
             // TODO:
             break;
-        
+
         // Mouse events:
 		case NSLeftMouseDown:
 		case NSLeftMouseUp:
@@ -451,11 +450,11 @@ void OpenGLWindowProvider_Impl::on_input_event(NSEvent *theEvent)
 		case NSScrollWheel:
             on_mouse_event(theEvent);
 			break;
-            
+
         default:
             break;
 	}
-    
+
     // TODO: Seems like a hack.
     ic.process_messages();
 }
@@ -463,7 +462,7 @@ void OpenGLWindowProvider_Impl::on_input_event(NSEvent *theEvent)
 void OpenGLWindowProvider_Impl::on_keyboard_event(NSEvent *theEvent)
 {
     NSEventType type = [theEvent type];
-    
+
     // Is the message a down or up event?
     bool keydown = false;
     if (type == NSKeyDown)
@@ -487,6 +486,13 @@ void OpenGLWindowProvider_Impl::on_keyboard_event(NSEvent *theEvent)
     clan::Point mouse_pos(mouse_location.x, bounds.size.height - mouse_location.y);
     key.mouse_pos = mouse_pos;
 
+    // Handle modifier flags
+    NSUInteger flags = [NSEvent modifierFlags];
+
+    key.alt = flags & NSAlternateKeyMask;
+    key.shift = flags &  NSShiftKeyMask;
+    key.ctrl = flags & NSControlKeyMask;
+
     // TODO: Finish implementing.
     // Map the Cocoa key code to the appropriate ClanLib key code.
     switch ([theEvent keyCode])
@@ -497,6 +503,17 @@ void OpenGLWindowProvider_Impl::on_keyboard_event(NSEvent *theEvent)
         case 0x31: key.id = keycode_space; break;
         case 0x33: key.id = keycode_delete; break;
         case 0x35: key.id = keycode_escape; break;
+        case 0x73: key.id = keycode_home; break;
+        case 0x77: key.id = keycode_end; break;
+        case 0x18: key.id = keycode_add; break;
+        case 0x1B: key.id = keycode_subtract; break;
+        case 0x2C: key.id = keycode_divide; break;
+        case 0x2F: key.id = keycode_decimal; break;
+
+        case 0x37: key.id = keycode_control; break;
+        case 0x38: key.id = keycode_shift; break;
+        case 0x3C: key.id = keycode_rshift; break;
+        case 0x3E: key.id = keycode_rcontrol; break;
 
         // Arrow keys.
         case 0x7B: key.id = keycode_left; break;
@@ -515,7 +532,7 @@ void OpenGLWindowProvider_Impl::on_keyboard_event(NSEvent *theEvent)
         case 0x1A: key.id = keycode_7; break;
         case 0x1C: key.id = keycode_8; break;
         case 0x19: key.id = keycode_9; break;
-            
+
         // Function keys.
         case 0x7A: key.id = keycode_f1; break;
         case 0x78: key.id = keycode_f2; break;
@@ -527,7 +544,7 @@ void OpenGLWindowProvider_Impl::on_keyboard_event(NSEvent *theEvent)
         case 0x64: key.id = keycode_f8; break;
         case 0x65: key.id = keycode_f9; break;
         case 0x6D: key.id = keycode_f10; break;
-            
+
         // Character keys.
         case 0x00: key.id = keycode_a; break;
         case 0x0B: key.id = keycode_b; break;
@@ -555,37 +572,52 @@ void OpenGLWindowProvider_Impl::on_keyboard_event(NSEvent *theEvent)
         case 0x07: key.id = keycode_x; break;
         case 0x10: key.id = keycode_y; break;
         case 0x06: key.id = keycode_z; break;
-            
+
         default: key.id = keycode_unknown; break;
     }
 
+    static InputEvent prevInput;
     key.repeat_count = 0;  // TODO: Implement.
-
-    NSString* text = [theEvent characters];
-    key.str = [text UTF8String];
+    if(type == NSKeyDown || type == NSKeyUp){ // Can only call this on NSKeyUp or NSKeyDown type events
+        NSString* text = [theEvent charactersIgnoringModifiers];
+        key.str = [text UTF8String];
+        // Emit message:
+        self->get_keyboard()->sig_provider_event->invoke(key);
+    }else if(type == NSFlagsChanged){
+        // Translate flag changes of shift and ctrl into keypresses / releases
+        if(prevInput.shift != key.shift){
+            key.id = keycode_shift;
+            key.type = key.shift?clan::InputEvent::pressed:clan::InputEvent::released;
+            self->get_keyboard()->sig_provider_event->invoke(key);
+        }
+        if(prevInput.ctrl != key.ctrl){
+            key.id = keycode_control;
+            key.type = key.ctrl?clan::InputEvent::pressed:clan::InputEvent::released;
+            self->get_keyboard()->sig_provider_event->invoke(key);
+        }
+    }
 
     // Update our internal keyboard state
     self->get_keyboard()->on_key_event(key.id, key.type);
 
-    // Emit message:
-    self->get_keyboard()->sig_provider_event->invoke(key);
+    prevInput = key;
 }
-    
+
 void OpenGLWindowProvider_Impl::on_mouse_event(NSEvent *theEvent)
 {
     NSEventType type = [theEvent type];
-    
+
 	InputCode id;
 	bool up = false;
 	bool down = false;
-    
+
 	bool dblclk = false;
     int click_count = [theEvent clickCount];
     if (click_count >= 2)
     {
         dblclk = true;
     }
-    
+
 	switch (type)
 	{
         case NSLeftMouseDown: id = mouse_left; down = true; break;
@@ -598,49 +630,49 @@ void OpenGLWindowProvider_Impl::on_mouse_event(NSEvent *theEvent)
         default:
             return;
 	}
-    
+
     NSPoint mouse_location = [window convertScreenToBase:[NSEvent mouseLocation]];
     NSRect bounds = [window.contentView bounds];
     clan::Point mouse_pos(mouse_location.x, bounds.size.height - mouse_location.y);
-    
+
 	// Prepare event to be emitted:
 	InputEvent key;
 	key.mouse_pos = mouse_pos;
     key.id = id;
-    
+
     if (dblclk)
     {
         key.type = InputEvent::doubleclick;
-        
+
         // Update our internal mouse state
         self->get_mouse()->on_mouse_event(key.id, key.type, key.mouse_pos);
-        
+
         // Emit message.
         self->get_mouse()->sig_provider_event->invoke(key);
     }
-    
+
     if (down)
     {
         key.type = InputEvent::pressed;
-        
+
 		// Update our internal mouse state
         self->get_mouse()->on_mouse_event(key.id, key.type, key.mouse_pos);
-        
+
         // Emit message.
         self->get_mouse()->sig_provider_event->invoke(key);
     }
-    
+
 	// It is possible for 2 events to be called when the wheelmouse is used.
     if (up)
     {
         key.type = InputEvent::released;
-        
+
 		// Update our internal mouse state
         self->get_mouse()->on_mouse_event(key.id, key.type, key.mouse_pos);
-        
+
         // Emit message.
         self->get_mouse()->sig_provider_event->invoke(key);
     }
 }
-    
+
 }

@@ -40,16 +40,16 @@ int ExampleCanvas::start(const std::vector<std::string> &args)
 	desc.set_title("ClanLib Draw To Texture Example");
 	desc.set_size(Size(1024, 256), true);
 	DisplayWindow window(desc);
-
+    clan::SlotContainer cc;
 	// Connect the Window close event
-	Slot slot_quit = window.sig_window_close().connect(this, &ExampleCanvas::on_window_close);
+	cc.connect(window.sig_window_close(), clan::bind_member(this, &ExampleCanvas::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	Slot slot_keyboard_up = window.get_ic().get_keyboard().sig_key_up().connect(this, &ExampleCanvas::on_keyboard_up);
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &ExampleCanvas::on_keyboard_up));
 
 	// Connect a mouse handler to on_key_down()
-	Slot slot_mouse_down = window.get_ic().get_mouse().sig_key_up().connect(this, &ExampleCanvas::on_mouse_down);
-	Slot slot_mouse_move = window.get_ic().get_mouse().sig_pointer_move().connect(this, &ExampleCanvas::on_mouse_move);
+	cc.connect(window.get_ic().get_mouse().sig_key_up(), clan::bind_member(this, &ExampleCanvas::on_mouse_down));
+	cc.connect(window.get_ic().get_mouse().sig_pointer_move(), clan::bind_member(this, &ExampleCanvas::on_mouse_move));
 
 	canvas_window = Canvas(window);
 

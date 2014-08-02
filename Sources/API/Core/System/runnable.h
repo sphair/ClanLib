@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <typeinfo>
 
 namespace clan
@@ -39,7 +38,7 @@ namespace clan
 /// \{
 
 /// \brief Thread runnable object.
-class CL_API_CORE Runnable
+class Runnable
 {
 /// \name Construction
 /// \{

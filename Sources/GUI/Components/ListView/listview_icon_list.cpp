@@ -59,7 +59,7 @@ public:
 // ListViewIconList Construction:
 
 ListViewIconList::ListViewIconList()
-: impl(new ListViewIconList_Impl)
+: impl(std::make_shared<ListViewIconList_Impl>())
 {
 }
 

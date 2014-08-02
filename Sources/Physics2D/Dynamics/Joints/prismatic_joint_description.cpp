@@ -44,7 +44,7 @@ PrismaticJointDescription::PrismaticJointDescription()
 }
 
 PrismaticJointDescription::PrismaticJointDescription(const PhysicsWorld &pw)
-: impl(new PrismaticJointDescription_Impl(*pw.impl))
+: impl(std::make_shared<PrismaticJointDescription_Impl>(*pw.impl))
 {
 
 }

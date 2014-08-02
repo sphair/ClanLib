@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_network.h"
 
 namespace clan
 {
@@ -37,7 +36,7 @@ namespace clan
 /// \{
 
 /// \brief Initialization class for clanNetwork.
-class CL_API_NETWORK SetupNetwork
+class SetupNetwork
 {
 /// \name Construction
 /// \{

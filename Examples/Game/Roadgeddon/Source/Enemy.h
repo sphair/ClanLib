@@ -87,8 +87,8 @@ private:
 
 	Sprite enemy;
 
-	Slot draw_slot;
-	Slot update_slot;
+    std::function<void(int)> update_callback;
+    SlotContainer cc;
 
 	Vec2f pos;
 	Angle turret_angle;

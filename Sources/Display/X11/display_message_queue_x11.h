@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "API/Display/api_display.h"
 #include "API/Core/System/event_provider.h"
 #include <vector>
 #include <X11/Xlib.h>
@@ -85,7 +84,7 @@ public:
 	// The library will be opened / closed by this class
 	// Returns 0 if the library could not be found
 	// Currently, only supports a single library
-	void *dlopen_opengl(const char *filename, int flag); 
+	void *dlopen_opengl(const char *filename, int flag);
 /// \}
 /// \name Implementation
 /// \{

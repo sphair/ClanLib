@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "API/Core/Signals/signal_v1.h"
+#include "API/Core/Signals/signal.h"
 
 namespace clan
 {

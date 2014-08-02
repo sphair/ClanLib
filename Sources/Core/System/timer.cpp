@@ -34,7 +34,6 @@
 #include "API/Core/System/mutex.h"
 #include "API/Core/System/event.h"
 #include "API/Core/System/system.h"
-#include "API/Core/Signals/callback_v0.h"
 #include <map>
 
 namespace clan
@@ -49,7 +48,7 @@ public:
 	ubyte64 end_time;
 	unsigned int timeout;
 	bool repeating;
-	Callback_v0 func_expired;
+	std::function<void()> func_expired;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -146,14 +145,14 @@ public:
 						object.stopped = true;
 					}
 
-					if (!object.func_expired.is_null())
-						object.func_expired.invoke();
+					if (object.func_expired)
+						object.func_expired();
 				}
 			}
 		}
 	}
 
-	Callback_v0 &get_func_expired(int timer_id)
+	std::function<void()> &get_func_expired(int timer_id)
 	{
 		MutexSection mutex_lock(&mutex);
 		return get_timer_object(timer_id).func_expired;
@@ -277,7 +276,7 @@ public:
 	bool is_repeating() const { return repeating; }
 	unsigned int get_timeout() const { return timeout; }
 
-	Callback_v0 &func_expired()
+	std::function<void()> &func_expired()
 	{
 		MutexSection mutex_lock(&timer_thread_mutex);
 		return timer_thread->get_func_expired(id);
@@ -303,7 +302,7 @@ int Timer_Impl::timer_thread_max_id = 0;
 // Timer Construction:
 
 Timer::Timer()
-: impl(new Timer_Impl)
+: impl(std::make_shared<Timer_Impl>())
 {
 }
 
@@ -324,7 +323,7 @@ unsigned int Timer::get_timeout() const
 /////////////////////////////////////////////////////////////////////////////
 // Timer Events:
 
-Callback_v0 &Timer::func_expired()
+std::function<void()> &Timer::func_expired()
 {
 	return impl->func_expired();
 }

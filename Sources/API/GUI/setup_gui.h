@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_gui.h"
 
 namespace clan
 {
@@ -37,7 +36,7 @@ namespace clan
 /// \{
 
 /// \brief ClanGUI initialization functions.
-class CL_API_GUI SetupGUI
+class SetupGUI
 {
 /// \name Construction
 /// \{

@@ -38,7 +38,7 @@ namespace clan
 // PipeListen Construction:
 
 PipeListen::PipeListen(const std::string &name)
-: impl(new PipeListen_Impl(name))
+: impl(std::make_shared<PipeListen_Impl>(name))
 {
 }
 

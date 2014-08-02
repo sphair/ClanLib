@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "../Resources/xml_resource_node.h"
 #include "../IOData/file_system.h"
 #include <vector>
@@ -46,7 +45,7 @@ class FileSystem;
 class XMLResourceDocument_Impl;
 
 /// \brief XML Resource Document.
-class CL_API_CORE XMLResourceDocument
+class XMLResourceDocument
 {
 /// \name Construction
 /// \{

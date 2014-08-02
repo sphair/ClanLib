@@ -34,15 +34,11 @@
 #pragma once
 
 #define CLANLIB_VERSION(x,y,z)	( (x << 16) | (y << 8) | (z) )
-#define CLANLIB_CURRENT_VERSION	CLANLIB_VERSION(3,0,2)
-#define CLANLIB_VERSION_STRING "3.0.2"
+#define CLANLIB_CURRENT_VERSION	CLANLIB_VERSION(3,1,0)
+#define CLANLIB_VERSION_STRING "3.1.0"
 
 #ifdef _MSC_VER
 #pragma warning( disable : 4786)
-#endif
-
-#ifdef __BORLANDC__
-#define BORLAND
 #endif
 
 #ifdef __cplusplus_cli
@@ -50,7 +46,7 @@
 #endif
 
 #ifdef WIN32
-#include <windows.h> 
+#include <windows.h>
 #endif
 
 #include <string>
@@ -93,29 +89,7 @@
 #include "Core/ErrorReporting/crash_reporter.h"
 #include "Core/ErrorReporting/detect_hang.h"
 #include "Core/ErrorReporting/exception_dialog.h"
-#include "Core/Signals/callback_0.h"
-#include "Core/Signals/callback_1.h"
-#include "Core/Signals/callback_2.h"
-#include "Core/Signals/callback_3.h"
-#include "Core/Signals/callback_4.h"
-#include "Core/Signals/callback_5.h"
-#include "Core/Signals/callback_6.h"
-#include "Core/Signals/callback_v0.h"
-#include "Core/Signals/callback_v1.h"
-#include "Core/Signals/callback_v2.h"
-#include "Core/Signals/callback_v3.h"
-#include "Core/Signals/callback_v4.h"
-#include "Core/Signals/callback_v5.h"
-#include "Core/Signals/callback_v6.h"
-#include "Core/Signals/signal_v0.h"
-#include "Core/Signals/signal_v1.h"
-#include "Core/Signals/signal_v2.h"
-#include "Core/Signals/signal_v3.h"
-#include "Core/Signals/signal_v4.h"
-#include "Core/Signals/signal_v5.h"
-#include "Core/Signals/signal_v6.h"
-#include "Core/Signals/slot.h"
-#include "Core/Signals/slot_container.h"
+#include "Core/Signals/signal.h"
 #include "Core/Resources/resource.h"
 #include "Core/Resources/resource_container.h"
 #include "Core/Resources/resource_object.h"

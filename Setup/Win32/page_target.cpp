@@ -35,7 +35,7 @@ typedef HRESULT (WINAPI *FolderPathFunc)(HWND, LPTSTR, int, BOOL);
 
 PageTarget::PageTarget()
 {
-	target_version = 1000;
+	target_version = 1200;
 	include_unicode = false;
 	include_sse2 = true;
 	include_intrinsics = true;
@@ -146,13 +146,13 @@ INT_PTR CALLBACK PageTarget::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			switch (self->target_version)
 			{
 			case 1200:
-				CheckRadioButton(hWnd, IDC_RADIO_VC100, IDC_RADIO_VC120, IDC_RADIO_VC120);
+				CheckRadioButton(hWnd, IDC_RADIO_VC120, IDC_RADIO_VC120, IDC_RADIO_VC120);
 				break;
-			case 1100:
-				CheckRadioButton(hWnd, IDC_RADIO_VC100, IDC_RADIO_VC120, IDC_RADIO_VC110);
-				break;
+			//case 1100:
+			//	CheckRadioButton(hWnd, IDC_RADIO_VC100, IDC_RADIO_VC120, IDC_RADIO_VC110);
+			//	break;
 			default:
-				CheckRadioButton(hWnd, IDC_RADIO_VC100, IDC_RADIO_VC120, IDC_RADIO_VC100);
+				CheckRadioButton(hWnd, IDC_RADIO_VC120, IDC_RADIO_VC120, IDC_RADIO_VC120);
 				break;
 			}
 
@@ -202,11 +202,11 @@ INT_PTR PageTarget::on_notify(HWND hWnd, NMHDR *header)
 		return TRUE;
 	case PSN_WIZBACK:
 	case PSN_WIZNEXT:
-		if (IsDlgButtonChecked(hWnd, IDC_RADIO_VC100) == BST_CHECKED)
-			target_version = 1000;
-		else if (IsDlgButtonChecked(hWnd, IDC_RADIO_VC110) == BST_CHECKED)
-			target_version = 1100;
-		else if (IsDlgButtonChecked(hWnd, IDC_RADIO_VC120) == BST_CHECKED)
+		//if (IsDlgButtonChecked(hWnd, IDC_RADIO_VC100) == BST_CHECKED)
+		//	target_version = 1000;
+		//else if (IsDlgButtonChecked(hWnd, IDC_RADIO_VC110) == BST_CHECKED)
+		//	target_version = 1100;
+		if (IsDlgButtonChecked(hWnd, IDC_RADIO_VC120) == BST_CHECKED)
 			target_version = 1200;
 		include_unicode = (SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_UNICODE), BM_GETCHECK, 0, 0) == BST_CHECKED);
 		include_x64 = (SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_X64), BM_GETCHECK, 0, 0) == BST_CHECKED);

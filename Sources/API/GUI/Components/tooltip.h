@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_component.h"
 
 namespace clan
@@ -42,7 +41,7 @@ class GUIManager;
 class ToolTip_Impl;
 
 /// \brief Tool tip component.
-class CL_API_GUI ToolTip : public GUIComponent
+class ToolTip : public GUIComponent
 {
 /// \name Construction
 /// \{

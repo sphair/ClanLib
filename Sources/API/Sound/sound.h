@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_sound.h"
 
 namespace clan
 {
@@ -44,7 +43,7 @@ class SoundOutput;
 //    same functionality. The only difference is, that the ones Sound
 //    operate on a selected sound output. This saves the trouble of passing around
 //    a pointer to the sound output, when only a single one is used anyway.</p>
-class CL_API_SOUND Sound
+class Sound
 {
 /// \name Selected SoundOutput accessors
 /// \{

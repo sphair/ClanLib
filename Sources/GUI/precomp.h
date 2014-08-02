@@ -29,7 +29,6 @@
 
 #pragma once
 
-
 #ifdef WIN32
 #ifdef _MSC_VER
 # pragma warning (disable:4786)
@@ -42,11 +41,4 @@
 #if defined(_DEBUG) && !defined(DEBUG)
 #define DEBUG
 #endif
-
-#ifdef WIN32
-#define BREAKPOINT
-#else
-#define BREAKPOINT asm("int $03");
-#endif
-
 

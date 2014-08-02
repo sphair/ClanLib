@@ -61,10 +61,10 @@ public:
 	int id;
 	std::vector<int> overlay_icons;
 	ListViewItem_Impl *get_root_parent();
-	Callback_v0 func_item_added;
-	Callback_v1<ListViewItem> func_item_modified;
-	Callback_v1<ListViewItem> func_item_deleted;
-	Callback_v1<Rect> func_render_icon;
+	std::function<void()> func_item_added;
+	std::function<void(ListViewItem)> func_item_modified;
+	std::function<void(ListViewItem)> func_item_deleted;
+	std::function<void(Rect)> func_render_icon;
 	std::shared_ptr<ListViewItemUserData> userdata;
 };
 

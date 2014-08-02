@@ -30,7 +30,6 @@
 #pragma once
 
 #include <memory>
-#include "../api_display.h"
 #include "../Image/buffer_usage.h"
 
 namespace clan
@@ -45,7 +44,7 @@ class UniformBuffer_Impl;
 class ProgramObject;
 
 /// \brief Uniform Buffer
-class CL_API_DISPLAY UniformBuffer
+class UniformBuffer
 {
 /// \name Construction
 /// \{

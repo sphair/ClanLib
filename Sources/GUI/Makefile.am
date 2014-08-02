@@ -1,6 +1,6 @@
-lib_LTLIBRARIES = libclan30GUI.la
+lib_LTLIBRARIES = libclan31GUI.la
 
-libclan30GUI_la_SOURCES = \
+libclan31GUI_la_SOURCES = \
 accelerator_table.cpp \
 gui_xml_loader_version_1_0.cpp \
 precomp.cpp \
@@ -87,10 +87,10 @@ Layout/gui_layout_normal_flow.cpp \
 Layout/gui_find_preferred_height.cpp \
 Layout/gui_layout.cpp
 
-libclan30GUI_la_LDFLAGS = \
+libclan31GUI_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
   $(extra_LIBS_clanGUI)
 
-libclan30GUI_la_CXXFLAGS=$(clanGUI_CXXFLAGS) $(extra_CFLAGS_clanGUI)
+libclan31GUI_la_CXXFLAGS=$(clanGUI_CXXFLAGS) $(extra_CFLAGS_clanGUI)
 
 # EOF #

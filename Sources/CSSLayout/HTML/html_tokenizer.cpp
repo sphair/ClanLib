@@ -41,7 +41,7 @@ namespace clan
 {
 
 HTMLTokenizer::HTMLTokenizer()
-	: impl(new HTMLTokenizer_Impl())
+	: impl(std::make_shared<HTMLTokenizer_Impl>())
 {
 }
 

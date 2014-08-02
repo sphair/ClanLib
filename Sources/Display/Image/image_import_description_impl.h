@@ -54,7 +54,7 @@ public:
 	bool srgb;
 	bool cached;
 
-	Callback_1<PixelBuffer, PixelBuffer &> func_process;
+	std::function<PixelBuffer(PixelBuffer &)> func_process;
 
 /// \}
 };

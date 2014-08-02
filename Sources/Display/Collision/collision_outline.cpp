@@ -59,12 +59,12 @@ namespace clan
 // CollisionOutline Construction:
 
 CollisionOutline::CollisionOutline()
- : impl(new CollisionOutline_Impl())
+ : impl(std::make_shared<CollisionOutline_Impl>())
 {
 }
 
 CollisionOutline::CollisionOutline(const std::vector<Contour> &contours, const Size &size, OutlineAccuracy accuracy)
- : impl(new CollisionOutline_Impl(contours, size, accuracy))
+ : impl(std::make_shared<CollisionOutline_Impl>(contours, size, accuracy))
 {
 }
 
@@ -119,7 +119,7 @@ CollisionOutline::CollisionOutline(
 	const PixelBuffer &pbuf,
 	int alpha_limit,
 	OutlineAccuracy accuracy)
- : impl(new CollisionOutline_Impl())
+ : impl(std::make_shared<CollisionOutline_Impl>())
 {
 	if( pbuf.get_format() == tf_rgba8 )
 	{

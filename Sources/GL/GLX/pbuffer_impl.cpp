@@ -123,7 +123,7 @@ void PBuffer_GL1_Impl::create(OpenGLWindowProvider &gl_window_provider, const Si
 
 	scrnum = DefaultScreen(disp );
 
-	if ((gl_window_provider.glx.glXCreateContext == NULL))
+	if (gl_window_provider.glx.glXCreateContext == NULL)
 	{
 		throw Exception("internal error, cannot locate glxCreateContext");
 	}
@@ -158,7 +158,7 @@ void PBuffer_GL1_Impl::create(OpenGLWindowProvider &gl_window_provider, const Si
 	{
 		if ((gl_window_provider.glx.glXCreatePbufferSGIX == NULL) || (gl_window_provider.glx.glXChooseFBConfigSGIX == NULL) || (gl_window_provider.glx.glXGetVisualFromFBConfigSGIX == NULL))
 			throw Exception("pbuffer support is not available. Try updating your graphic card driver.");
-	
+
 		fbconfig = gl_window_provider.glx.glXChooseFBConfigSGIX(disp, scrnum, attrib, &nitems);
 		if (fbconfig == NULL)
 		{
@@ -175,8 +175,8 @@ void PBuffer_GL1_Impl::create(OpenGLWindowProvider &gl_window_provider, const Si
 		pbuffer = gl_window_provider.glx.glXCreatePbufferSGIX(disp, fbconfig[0], size.width, size.height, pbufAttrib2);
 
 		// Restore the original error handler
-		XSetErrorHandler( oldHandler );		
-		
+		XSetErrorHandler( oldHandler );
+
 		if (cl1_ctxErrorOccurred)
 		{
 			XFree(fbconfig);
@@ -189,7 +189,7 @@ void PBuffer_GL1_Impl::create(OpenGLWindowProvider &gl_window_provider, const Si
 			throw Exception("Error: couldn't create pbuffer");
 		}
 
-		visinfo = gl_window_provider.glx.glXGetVisualFromFBConfigSGIX(disp, fbconfig[0]);	
+		visinfo = gl_window_provider.glx.glXGetVisualFromFBConfigSGIX(disp, fbconfig[0]);
 		if (!visinfo)
 		{
 			XFree(fbconfig);
@@ -234,7 +234,7 @@ void PBuffer_GL1_Impl::get_opengl_version(int &version_major, int &version_minor
 {
 	gc_provider->get_opengl_version(version_major, version_minor, version_release);
 }
-	
+
 ProcAddress *PBuffer_GL1_Impl::get_proc_address(const std::string& function_name) const
 {
 	if (window_provider->glx.glXGetProcAddressARB)

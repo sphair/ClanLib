@@ -38,10 +38,10 @@ namespace clan
 DockingGroup::DockingGroup(GUIComponent *parent)
 : GUIComponent(parent, "docking-group"), center(0), sizing_mode(not_sizing), sizing_group(0)
 {
-	func_resized().set(this, &DockingGroup::on_resized);
-	func_input_pressed().set(this, &DockingGroup::on_input_pressed);
-	func_input_released().set(this, &DockingGroup::on_input_released);
-	func_input_pointer_moved().set(this, &DockingGroup::on_input_pointer_moved);
+	func_resized() = bind_member(this, &DockingGroup::on_resized);
+	func_input_pressed() = bind_member(this, &DockingGroup::on_input_pressed);
+	func_input_released() = bind_member(this, &DockingGroup::on_input_released);
+	func_input_pointer_moved() = bind_member(this, &DockingGroup::on_input_pointer_moved);
 }
 
 void DockingGroup::set_center(Dock *new_center)

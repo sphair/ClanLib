@@ -92,8 +92,8 @@ private:
 	Sprite vehicle;
 	Game *game;
 
-	Slot draw_slot;
-	Slot update_slot;
+    std::function<void(Canvas&)> draw_callback;
+    SlotContainer cc;
 
 	float wobble_timer;
 	float max_life;

@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_csslayout.h"
 #include "../PropertyValues/css_value_bottom.h"
 #include "../PropertyValues/css_value_clear.h"
 #include "../PropertyValues/css_value_display.h"
@@ -52,7 +51,7 @@ namespace clan
 
 class CSSComputedValues;
 
-class CL_API_CSSLAYOUT CSSComputedBox
+class CSSComputedBox
 {
 public:
 	CSSValueDisplay display;

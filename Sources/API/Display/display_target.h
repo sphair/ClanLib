@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_display.h"
 #include <memory>
 
 namespace clan
@@ -41,7 +40,7 @@ class DisplayTargetProvider;
 class DisplayTarget_Impl;
 
 /// \brief Display target for clanDisplay.
-class CL_API_DISPLAY DisplayTarget
+class DisplayTarget
 {
 /// \name Construction
 /// \{

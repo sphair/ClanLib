@@ -38,7 +38,7 @@ int App::main(const std::vector<std::string> &args)
 
 	GUIManager gui(display_window, "Resources");
 
-	Slot slot_window_close = display_window.sig_window_close().connect(this, &App::on_window_close, &gui);
+	display_window.sig_window_close().connect(this, &App::on_window_close, &gui);
 
 	//  Note - If you are using the GL1 target, you will get a perfomance increase by enabling these 2 lines
 	//   It reduces the number of internal FrameBuffer swaps. The GL1 target (OpenGL 1.3), performs this slowly

@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 #include "zip_file_entry.h"
 #include <vector>
@@ -44,7 +43,7 @@ class IODevice;
 class ZipArchive_Impl;
 
 /// \brief Zip archive.
-class CL_API_CORE ZipArchive
+class ZipArchive
 {
 /// \name Construction
 /// \{

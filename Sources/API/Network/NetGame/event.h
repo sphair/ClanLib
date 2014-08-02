@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_network.h"
 #include "event_value.h"
 
 namespace clan
@@ -38,88 +37,31 @@ namespace clan
 /// \{
 
 /// \brief NetGameEvent
-class CL_API_NETWORK NetGameEvent
+class NetGameEvent
 {
 public:
+	/// Constructs a NetGameEvent
+	NetGameEvent(const std::string &name, std::vector<NetGameEventValue> arg = {});
 
-	/// \brief Constructs a NetGameEvent
-	///
-	/// \param name = String
-	NetGameEvent(const std::string &name);
-
-	/// \brief Constructs a NetGameEvent
-	///
-	/// \param name = String
-	/// \param arg1 = Net Game Event Value
-	NetGameEvent(const std::string &name, const NetGameEventValue &arg1);
-
-	/// \brief Constructs a NetGameEvent
-	///
-	/// \param name = String
-	/// \param arg1 = Net Game Event Value
-	/// \param arg2 = Net Game Event Value
-	NetGameEvent(const std::string &name, const NetGameEventValue &arg1, const NetGameEventValue &arg2);
-
-	/// \brief Constructs a NetGameEvent
-	///
-	/// \param name = String
-	/// \param arg1 = Net Game Event Value
-	/// \param arg2 = Net Game Event Value
-	/// \param arg3 = Net Game Event Value
-	NetGameEvent(const std::string &name, const NetGameEventValue &arg1, const NetGameEventValue &arg2, const NetGameEventValue &arg3);
-
-	/// \brief Constructs a NetGameEvent
-	///
-	/// \param name = String
-	/// \param arg1 = Net Game Event Value
-	/// \param arg2 = Net Game Event Value
-	/// \param arg3 = Net Game Event Value
-	/// \param arg4 = Net Game Event Value
-	NetGameEvent(const std::string &name, const NetGameEventValue &arg1, const NetGameEventValue &arg2, const NetGameEventValue &arg3, const NetGameEventValue &arg4);
-
-	/// \brief Constructs a NetGameEvent
-	///
-	/// \param name = String
-	/// \param arg1 = Net Game Event Value
-	/// \param arg2 = Net Game Event Value
-	/// \param arg3 = Net Game Event Value
-	/// \param arg4 = Net Game Event Value
-	/// \param arg5 = Net Game Event Value
-	NetGameEvent(const std::string &name, const NetGameEventValue &arg1, const NetGameEventValue &arg2, const NetGameEventValue &arg3, const NetGameEventValue &arg4, const NetGameEventValue &arg5);
-
-	/// \brief Get Name
-	///
-	/// \return name
+	/// \return The name of this event.
 	std::string get_name() const { return name; };
 
+	/// \return The number of arguments stored in this event.
 	unsigned int get_argument_count() const;
 
-	/// \brief Get argument
-	///
-	/// \param index = value
-	///
-	/// \return Net Game Event Value
+	/// Retrieves an argument in this event.
+	/// \param index Index number of the argument to retrieve.
+	/// \return A NetGameEventValue object containing the argument value.
 	NetGameEventValue get_argument(unsigned int index) const;
 
-	/// \brief Add argument
-	///
-	/// \param value = Net Game Event Value
+	/// Adds an argument into this event.
+	/// \param value The argument to store inside this event.
 	void add_argument(const NetGameEventValue &value);
 
-	/// \brief To string
-	///
-	/// \return String
+	/// \return A string representation of this event, including all of its arguments.
 	std::string to_string() const;
 
 private:
-
-	/// \brief To string
-	///
-	/// \param v = Net Game Event Value
-	///
-	/// \return String
-	std::string to_string(const NetGameEventValue &v) const;
-
 	std::string name;
 	std::vector<NetGameEventValue> arguments;
 };

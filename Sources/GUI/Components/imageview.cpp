@@ -70,11 +70,11 @@ public:
 // ImageView Construction:
 
 ImageView::ImageView(GUIComponent *parent)
-: GUIComponent(parent, CssStr::ImageView::type_name), impl(new ImageView_Impl)
+: GUIComponent(parent, CssStr::ImageView::type_name), impl(std::make_shared<ImageView_Impl>())
 {
 	impl->image_view = this;
-	func_process_message().set(impl.get(), &ImageView_Impl::on_process_message);
-	func_render().set(impl.get(), &ImageView_Impl::on_render);
+	func_process_message() = bind_member(impl.get(), &ImageView_Impl::on_process_message);
+	func_render() = bind_member(impl.get(), &ImageView_Impl::on_render);
 }
 
 ImageView::~ImageView()

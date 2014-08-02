@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../../api_physics2d.h"
 #include "joint.h"
 #include <memory>
 
@@ -44,7 +43,7 @@ namespace clan
 	class PhysicsContext;
 
 /// \brief RevoluteJoint class.
-class CL_API_PHYSICS RevoluteJoint : public Joint
+class RevoluteJoint : public Joint
 {
 
 /// \name Construction

@@ -580,7 +580,7 @@ void GL3GraphicContextProvider::reset_frame_buffer()
 	// To do: move this to OpenGLWindowProvider abstraction (some targets doesn't have a default frame buffer)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-
+    
 	if (render_window->is_double_buffered())
 	{
 		glDrawBuffer(GL_BACK);
@@ -771,7 +771,7 @@ void GL3GraphicContextProvider::clear_depth(float value)
 
 void GL3GraphicContextProvider::on_window_resized()
 {
-	window_resized_signal.invoke(render_window->get_viewport().get_size());
+	window_resized_signal(render_window->get_viewport().get_size());
 }
 
 void GL3GraphicContextProvider::set_viewport(const Rectf &viewport)

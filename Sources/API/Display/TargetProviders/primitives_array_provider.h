@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include "../Render/primitives_array.h"
 
 namespace clan
@@ -38,7 +37,7 @@ namespace clan
 /// \{
 
 /// \brief Interface for implementing a PrimitivesArray target.
-class CL_API_DISPLAY PrimitivesArrayProvider
+class PrimitivesArrayProvider
 {
 /// \name Construction
 /// \{

@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "API/Physics2D/api_physics2d.h"
 #include "../../Box2D/Box2D.h"
 #include <memory>
 
@@ -40,7 +39,7 @@ namespace clan
 
 class JointDescription_Impl;
 /// \brief JointDescription class.
-class CL_API_PHYSICS JointDescription
+class JointDescription
 {
 
 /// \name Construction

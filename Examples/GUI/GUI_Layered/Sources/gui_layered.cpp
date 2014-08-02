@@ -35,7 +35,7 @@ GUI_Layered::GUI_Layered(GUI *gui) : gui(gui), canvas(gui->get_app()->get_canvas
 {
 	gui_manager = clan::GUIManager(wm, gui->get_theme_location());
 
-	wm.func_input_intercept().set(this, &GUI_Layered::wm_input_intercept);
+	wm.func_input_intercept() = bind_member(this, &GUI_Layered::wm_input_intercept);
 
 	// Use a texture group to store all the gui textures
 	clan::TextureGroup texture_group(clan::Size(1024, 1024));

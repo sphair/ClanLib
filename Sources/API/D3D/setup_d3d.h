@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_d3d.h"
 
 namespace clan
 {
@@ -37,7 +36,7 @@ namespace clan
 /// \{
 
 /// \brief ClanD3D initialization functions.
-class CL_API_D3D SetupD3D
+class SetupD3D
 {
 /// \name Construction
 /// \{

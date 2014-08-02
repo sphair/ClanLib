@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_csslayout.h"
 #include "css_computed_background.h"
 #include "css_computed_border.h"
 #include "css_computed_box.h"
@@ -55,7 +54,7 @@ class CSSPropertyValue;
 class CSSComputedValues_Impl;
 class CSSResourceCache;
 
-class CL_API_CSSLAYOUT CSSComputedValues
+class CSSComputedValues
 {
 public:
 	CSSComputedValues();

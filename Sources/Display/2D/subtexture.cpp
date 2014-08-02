@@ -61,7 +61,7 @@ Subtexture::Subtexture()
 }
 
 Subtexture::Subtexture(Texture2D texture, const Rect &geometry)
-: impl(new Subtexture_Impl)
+: impl(std::make_shared<Subtexture_Impl>())
 {
 	impl->texture = texture;
 	impl->geometry = geometry;

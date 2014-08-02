@@ -31,7 +31,6 @@
 #pragma once
 
 #include <memory>
-#include "../api_display.h"
 #include "../Render/graphic_context.h"
 #include "../Render/rasterizer_state_description.h"
 #include "../Render/blend_state_description.h"
@@ -52,7 +51,7 @@ class ShaderEffectDescription_Impl;
 /// \brief Shader Effect Description
 ///
 ///    <p>...</p> 
-class CL_API_DISPLAY ShaderEffectDescription
+class ShaderEffectDescription
 {
 /// \name Construction
 /// \{

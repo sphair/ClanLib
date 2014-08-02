@@ -52,7 +52,7 @@ public:
 // GroupBox Construction:
 
 GroupBox::GroupBox(GUIComponent *parent)
-: GUIComponent(parent, CssStr::GroupBox::type_name), impl(new GroupBox_Impl)
+: GUIComponent(parent, CssStr::GroupBox::type_name), impl(std::make_shared<GroupBox_Impl>())
 {
 	impl->groupbox = this;
 }

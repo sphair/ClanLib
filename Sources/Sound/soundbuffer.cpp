@@ -54,7 +54,7 @@ SoundBuffer::SoundBuffer()
 
 SoundBuffer::SoundBuffer(
 	SoundProvider *provider)
-: impl(new SoundBuffer_Impl)
+: impl(std::make_shared<SoundBuffer_Impl>())
 {
 	impl->provider = provider;
 }
@@ -63,7 +63,7 @@ SoundBuffer::SoundBuffer(
 	const std::string &fullname,
 	bool streamed,
 	const std::string &sound_format)
-: impl(new SoundBuffer_Impl)
+: impl(std::make_shared<SoundBuffer_Impl>())
 {
 	impl->provider = SoundProviderFactory::load(fullname, streamed, sound_format);
 }
@@ -73,7 +73,7 @@ SoundBuffer::SoundBuffer(
 		bool streamed,
 		const FileSystem &fs,
 		const std::string &type)
-: impl(new SoundBuffer_Impl)
+: impl(std::make_shared<SoundBuffer_Impl>())
 {
 	impl->provider = SoundProviderFactory::load(filename, streamed, fs, type);
 }
@@ -82,7 +82,7 @@ SoundBuffer::SoundBuffer(
 		IODevice &file,
 		bool streamed,
 		const std::string &type)
-: impl(new SoundBuffer_Impl)
+: impl(std::make_shared<SoundBuffer_Impl>())
 {
 	impl->provider = SoundProviderFactory::load(file, streamed, type);
 }

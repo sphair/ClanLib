@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_network.h"
 #include "../../Core/System/databuffer.h"
 
 namespace clan
@@ -38,7 +37,7 @@ namespace clan
 /// \{
 
 /// \brief NetGameEventValue
-class CL_API_NETWORK NetGameEventValue
+class NetGameEventValue
 {
 public:
 	enum Type
@@ -184,53 +183,55 @@ public:
 	/// \brief To unsigned integer
 	///
 	/// \return unsigned int
-	unsigned int to_uinteger() const;
+	unsigned int get_uinteger() const;
 
 	/// \brief To integer
 	///
 	/// \return int
-	int to_integer() const;
+	int get_integer() const;
 
 	/// \brief To unsigned character
 	///
 	/// \return unsigned char
-	unsigned int to_ucharacter() const;
+	unsigned int get_ucharacter() const;
 
 	/// \brief To character
 	///
 	/// \return char
-	int to_character() const;
+	int get_character() const;
 
 	/// \brief To number
 	///
 	/// \return float
-	float to_number() const;
+	float get_number() const;
 
 	/// \brief To string
 	///
 	/// \return String
-	std::string to_string() const;
+	std::string get_string() const;
 
 	/// \brief To boolean
 	///
 	/// \return bool
-	bool to_boolean() const;
+	bool get_boolean() const;
 
 	/// \brief To binary
 	///
 	/// \return binary
-	DataBuffer to_binary() const;
+	DataBuffer get_binary() const;
 
-	inline operator unsigned int() const { return to_uinteger(); }
-	inline operator int() const { return to_integer(); }
-	inline operator unsigned char() const { return to_ucharacter(); }
-	inline operator float() const { return to_number(); }
-	inline operator std::string() const { return to_string(); }
-	inline operator bool() const { return to_boolean(); }
-	inline operator DataBuffer() const { return to_binary(); }
+	inline operator unsigned int() const { return get_uinteger(); }
+	inline operator int() const { return get_integer(); }
+	inline operator unsigned char() const { return get_ucharacter(); }
+	inline operator float() const { return get_number(); }
+	inline operator std::string() const { return get_string(); }
+	inline operator bool() const { return get_boolean(); }
+	inline operator DataBuffer() const { return get_binary(); }
+
+	/// Helper function to obtain a string representation of an EventValue object.
+	static std::string to_string(const NetGameEventValue &);
 
 private:
-
 	/// \brief Throw if not complex
 	void throw_if_not_complex() const;
 

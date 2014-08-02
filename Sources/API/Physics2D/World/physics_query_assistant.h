@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_physics2d.h"
 #include "query_result.h"
 #include "../../Core/Math/rect.h"
 
@@ -42,7 +41,7 @@ namespace clan
 	class PhysicsQueryAssistant_Impl;
 	class Pointf;
 
-class CL_API_PHYSICS PhysicsQueryAssistant
+class PhysicsQueryAssistant
 {
 /// \name Construction
 /// \{

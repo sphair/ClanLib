@@ -30,7 +30,7 @@ public:
 			win_desc.set_title("Button WM System Test Application");
 			win_desc.set_position(Rect(200, 200, 940, 640), false);
 			Window window(&gui, win_desc);
-			window.func_close().set(this, &App::on_close, &window);
+			window.func_close() = bind_member(this, &App::on_close, &window);
 
 			Canvas canvas = window.get_canvas();
 
@@ -41,7 +41,7 @@ public:
 
 			PushButton button(&window);
 			button.set_geometry(Rect(10, 10, 400, 100));
-			button.func_clicked().set(this, &App::on_button_clicked, &button);
+			button.func_clicked() = bind_member(this, &App::on_button_clicked, &button);
 			button.set_class("redtext", true);
 			button.set_text("Button Normal");
 

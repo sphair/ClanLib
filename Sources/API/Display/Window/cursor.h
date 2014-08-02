@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include <memory>
 #include "../display_target.h"
 
@@ -45,7 +44,7 @@ class Point;
 class Cursor_Impl;
 
 /// \brief Mouse cursor class.
-class CL_API_DISPLAY Cursor
+class Cursor
 {
 /// \name Construction
 /// \{

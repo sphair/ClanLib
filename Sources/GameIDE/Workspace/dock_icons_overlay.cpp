@@ -41,7 +41,7 @@ DockIconsOverlay::DockIconsOverlay()
 {
 	set_geometry(Rect(Point(0,0), Workspace::instance()->get_size()));
 
-	func_render().set(this, &DockIconsOverlay::on_render);
+	func_render() = bind_member(this, &DockIconsOverlay::on_render);
 	part_dock_up = GUIThemePart(this, "up");
 	part_dock_down = GUIThemePart(this, "down");
 	part_dock_left = GUIThemePart(this, "left");

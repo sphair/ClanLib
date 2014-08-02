@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include "../Image/pixel_buffer.h"
 #include "../../Core/IOData/file_system.h"
 
@@ -42,7 +41,7 @@ namespace clan
 class FileSystem;
 
 /// \brief Image provider that can load JPEG (.jpg) files.
-class CL_API_DISPLAY JPEGProvider
+class JPEGProvider
 {
 /// \name Construction
 /// \{

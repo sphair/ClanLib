@@ -39,7 +39,7 @@ namespace clan
 /// \{
 
 /// \brief Element Array Buffer provider.
-class CL_API_DISPLAY PixelBufferProvider
+class PixelBufferProvider
 {
 /// \name Construction
 /// \{

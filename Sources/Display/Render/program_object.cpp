@@ -71,7 +71,7 @@ ProgramObject::ProgramObject()
 }
 
 ProgramObject::ProgramObject(GraphicContext &gc)
-: impl(new ProgramObject_Impl)
+: impl(std::make_shared<ProgramObject_Impl>())
 {
 	GraphicContextProvider *gc_provider = gc.get_provider();
 
@@ -79,13 +79,13 @@ ProgramObject::ProgramObject(GraphicContext &gc)
 }
 
 ProgramObject::ProgramObject(GraphicContextProvider *gc_provider)
-: impl(new ProgramObject_Impl)
+: impl(std::make_shared<ProgramObject_Impl>())
 {
 	impl->provider = gc_provider->alloc_program_object();
 }
 
 ProgramObject::ProgramObject(ProgramObjectProvider *provider)
-: impl(new ProgramObject_Impl)
+: impl(std::make_shared<ProgramObject_Impl>())
 {
 	impl->provider = provider;
 }

@@ -50,7 +50,7 @@ void OptionValue::setup(clan::GUIComponent *base_component, const std::string &n
 	xpos += width;
 	checkbox->set_text(name);
 	checkbox->set_checked(false);
-	checkbox->func_state_changed().set(this, &OptionValue::checkbox_changed);
+	checkbox->func_state_changed() = bind_member(this, &OptionValue::checkbox_changed);
 
 	slider = new clan::Slider(base_component);
 	width = 150;
@@ -64,14 +64,14 @@ void OptionValue::setup(clan::GUIComponent *base_component, const std::string &n
 	slider->set_page_step(100);
 	slider->set_lock_to_ticks(false);
 	slider->set_position(0);
-	slider->func_value_changed().set(this, &OptionValue::slider_changed);
+	slider->func_value_changed() = bind_member(this, &OptionValue::slider_changed);
 
 	spin = new clan::Spin(base_component);
 	width = 64;
 	spin->set_geometry(clan::Rect(xpos, ypos - 3, clan::Size(width, 21)));
 	xpos += width + 4;
 	spin->set_ranges_float(0.0f, 200.0f);
-	spin->func_value_changed().set(this, &OptionValue::spin_changed);
+	spin->func_value_changed() = bind_member(this, &OptionValue::spin_changed);
 
 	popupmenu.insert_item("px");
 	popupmenu.insert_item("em");
@@ -90,7 +90,7 @@ void OptionValue::setup(clan::GUIComponent *base_component, const std::string &n
 	combobox->set_dropdown_minimum_width(32);
 	combobox->set_popup_menu(popupmenu);
 	combobox->set_selected_item(0);
-	combobox->func_item_selected().set(this, &OptionValue::combobox_changed);
+	combobox->func_item_selected() = bind_member(this, &OptionValue::combobox_changed);
 
 	combobox_changed(0);
 	update_spin();

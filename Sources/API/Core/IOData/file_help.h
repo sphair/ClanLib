@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 
 namespace clan
 {
@@ -38,7 +37,7 @@ namespace clan
 /// \{
 
 /// \brief File operation helpers.
-class CL_API_CORE FileHelp
+class FileHelp
 {
 /// \name Operations
 /// \{

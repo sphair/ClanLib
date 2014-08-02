@@ -28,12 +28,10 @@
 
 #pragma once
 
-#include "../api_physics2d.h"
 #include "../World/physics_world.h"
 #include "../../Core/Math/vec2.h"
 #include <memory>
-#include "../../Core/Signals/signal_v0.h"
-#include "../../Core/Signals/signal_v1.h"
+#include "../../Core/Signals/signal.h"
 
 namespace clan
 {
@@ -45,7 +43,7 @@ class FixtureDescription;
 class Fixture_Impl;
 
 /// \brief Fixture class
-class CL_API_PHYSICS Fixture
+class Fixture
 {
 public:
 	/// \brief Constructs a null instance.
@@ -106,18 +104,18 @@ public:
 public:
 	/// \brief Signal emitted when a collision with other fixture occurs
 	///
-	/// \return Signal_v1<Fixture>
-	Signal_v1<Fixture> &sig_begin_collision();
+	/// \return Signal<void(Fixture)>
+	Signal<void(Fixture)> &sig_begin_collision();
 
 	/// \brief Signal emitted when a collision with other fixture ends
 	///
-	/// \return Signal_v1<Fixture>
-	Signal_v1<Fixture> &sig_end_collision();
+	/// \return Signal<void(Fixture)>
+	Signal<void(Fixture)> &sig_end_collision();
 
 	/// \brief Signal emitted when the fixture is deleted.
 	///
-	/// \return Signal_v0
-	Signal_v0 &sig_fixture_deletion();
+	/// \return Signal<void()>
+	Signal<void()> &sig_fixture_deletion();
 
 /// \}
 /// \name Implementation

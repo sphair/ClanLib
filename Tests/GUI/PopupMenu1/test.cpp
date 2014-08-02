@@ -23,7 +23,7 @@ public:
 		win_desc.set_drop_shadow(false);
 		win_desc.set_size(Size(600,600), false);
 		Window root(&gui, win_desc);			
-		root.func_close().set(this, &App::on_close, &root); 
+		root.func_close() = bind_member(this, &App::on_close, &root); 
 
 		MenuBar menubar(&root);
 		menubar.set_geometry(Rect(0,0,400,24));
@@ -61,7 +61,7 @@ public:
 		button1.set_geometry(Rect(20, 100, 200, 125));
 		button1.set_text("Click for pop-up menu");
 
-		button1.func_clicked().set(this, &App::on_button1_clicked, &button1);
+		button1.func_clicked() = bind_member(this, &App::on_button1_clicked, &button1);
 
 		ComboBox combobox1(&root);
 		combobox1.set_geometry(Rect(20, 140, 200, 162));

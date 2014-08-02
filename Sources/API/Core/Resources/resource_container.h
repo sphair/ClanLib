@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "resource_object.h"
 #include <memory>
 #include <map>
@@ -48,7 +47,7 @@ public:
 class ResourceContainer
 {
 public:
-	ResourceContainer() : impl(new ResourceContainer_Impl())
+	ResourceContainer() : impl(std::make_shared<ResourceContainer_Impl>())
 	{
 	}
 

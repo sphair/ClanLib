@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_physics2d.h"
 #include "../../Core/Math/vec2.h"
 #include <memory>
 
@@ -52,7 +51,7 @@ public:
 /// \brief Physics World description class.
 ///
 /// This class allows you to setup a more advanced description when creating a Physics World.
-class CL_API_PHYSICS PhysicsWorldDescription
+class PhysicsWorldDescription
 {
 /// \name Construction
 /// \{

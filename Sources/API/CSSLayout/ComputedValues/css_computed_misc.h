@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_csslayout.h"
 #include "../PropertyValues/css_value_decoration_break.h"
 #include "../PropertyValues/css_value_shadow.h"
 #include "../PropertyValues/css_value_clip.h"
@@ -51,7 +50,7 @@ namespace clan
 
 class CSSComputedValues;
 
-class CL_API_CSSLAYOUT CSSComputedMiscReset
+class CSSComputedMiscReset
 {
 public:
 	CSSValueDecorationBreak decoration_break;
@@ -69,7 +68,7 @@ public:
 	void compute(const CSSComputedValues &parent, CSSResourceCache *layout, float em_size, float ex_size, bool is_before_or_after_pseudo_element);
 };
 
-class CL_API_CSSLAYOUT CSSComputedMiscInherit
+class CSSComputedMiscInherit
 {
 public:
 	CSSValueDirection direction; // inherited

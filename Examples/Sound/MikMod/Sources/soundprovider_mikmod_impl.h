@@ -3,8 +3,10 @@
 
 #include <cstring>
 
-class clan::InputSourceProvider;
-class clan::IODevice;
+namespace clan {
+class InputSourceProvider;
+class IODevice;
+}
 
 class SoundProvider_MikMod_Impl
 {

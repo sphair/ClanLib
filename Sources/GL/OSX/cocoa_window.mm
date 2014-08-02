@@ -51,7 +51,7 @@
 {
 	NSRect frame = NSMakeRect(0, 0, desc.get_size().width, desc.get_size().height);
 	NSUInteger styles = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask;
-	
+
 	self = [self initWithContentRect:frame styleMask:styles backing:NSBackingStoreBuffered defer:NO];
 	if (self)
 	{
@@ -71,7 +71,7 @@
 		case NSFlagsChanged:
             window_provider->on_input_event(theEvent);
             break;
-			
+
 		// Mouse events:
 		case NSMouseEntered: // see: NSTrackingArea
 		case NSLeftMouseDown:
@@ -85,7 +85,7 @@
 			window_provider->on_input_event(theEvent);
             [super sendEvent:theEvent];
 			break;
-			
+
 		default:
             [super sendEvent:theEvent];
             break;
@@ -107,9 +107,9 @@
 - (void) windowDidResize:(NSNotification *)notification
 {
     NSLog(@"-windowDidResize:");
-    
+
     NSRect rect = [window_provider->window.contentView bounds];
-    
+
     // TODO: Can't actually call this because of the threading issue.  However, this seems pretty close
     //       to where you would actually call something like this.  I am trying to resize the openGL rendering
     //       area when the user manually resizes the window.

@@ -109,8 +109,10 @@ void Font_Impl::load_font( GraphicContext &context, const FontDescription &desc,
 	font_engine = new FontEngine_Win32(desc, new_filename, vfs);
 	glyph_cache.font_metrics = font_engine->get_metrics();
 #elif defined(__APPLE__)
-    
-    font_engine = new FontEngine_Cocoa(desc, filename);
+	std::string path = PathHelp::get_fullpath(filename, PathHelp::path_type_file);
+	std::string new_filename = PathHelp::get_filename(filename, PathHelp::path_type_file);
+	FileSystem vfs(path);
+    font_engine = new FontEngine_Cocoa(desc, new_filename, vfs);
     glyph_cache.font_metrics = font_engine->get_metrics();
 
 #else
@@ -164,7 +166,7 @@ void Font_Impl::load_font( GraphicContext &context, const FontDescription &desc,
     
 #elif defined(__APPLE__)
     
-    font_engine = new FontEngine_Cocoa(desc, filename);
+    font_engine = new FontEngine_Cocoa(desc, filename, fs);
     glyph_cache.font_metrics = font_engine->get_metrics();
 
 #else

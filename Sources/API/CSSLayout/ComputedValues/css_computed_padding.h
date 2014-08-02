@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_csslayout.h"
 #include "../PropertyValues/css_value_padding_width.h"
 
 namespace clan
@@ -38,7 +37,7 @@ namespace clan
 
 class CSSComputedValues;
 
-class CL_API_CSSLAYOUT CSSComputedPadding
+class CSSComputedPadding
 {
 public:
 	CSSValuePaddingWidth padding_width_left;

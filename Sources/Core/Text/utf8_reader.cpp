@@ -52,7 +52,7 @@ public:
 };
 
 
-UTF8_Reader::UTF8_Reader(const std::string::value_type *text, std::string::size_type length) : impl(new UTF8_Reader_Impl(text, length))
+UTF8_Reader::UTF8_Reader(const std::string::value_type *text, std::string::size_type length) : impl(std::make_shared<UTF8_Reader_Impl>(text, length))
 {
 }
 

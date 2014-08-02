@@ -52,7 +52,7 @@ ComputeCommandQueue::ComputeCommandQueue()
 }
 
 ComputeCommandQueue::ComputeCommandQueue(ComputeContext &context, bool enable_out_of_order_execute, bool enable_profiling)
-: impl(new ComputeCommandQueue_Impl(context, enable_out_of_order_execute, enable_profiling))
+: impl(std::make_shared<ComputeCommandQueue_Impl>(context, enable_out_of_order_execute, enable_profiling))
 {
 }
 

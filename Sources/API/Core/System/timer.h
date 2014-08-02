@@ -28,17 +28,16 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
+#include <functional>
 
 namespace clan
 {
 
 class Timer_Impl;
-class Callback_v0;
 
 /// \brief Timer class that invokes a callback on a specified interval
-class CL_API_CORE Timer
+class Timer
 {
 /// \name Construction
 /// \{
@@ -60,7 +59,7 @@ public:
 /// \{
 public:
 	/// \brief Callback invoked every time the timer interval occurs
-	Callback_v0 &func_expired();
+	std::function<void()> &func_expired();
 /// \}
 
 /// \name Operations

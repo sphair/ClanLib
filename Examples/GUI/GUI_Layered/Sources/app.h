@@ -46,8 +46,6 @@ private:
 
 private:
 	bool quit;
-	clan::Slot slot_quit;
-	clan::Slot slot_input_up;
 	clan::DisplayWindow window;
 	clan::DisplayWindow *window_ptr;
 	clan::Canvas canvas;

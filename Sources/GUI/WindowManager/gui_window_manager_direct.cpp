@@ -64,7 +64,7 @@ GUIWindowManagerProvider_Direct *GUIWindowManagerDirect::get_provider() const
 
 /////////////////////////////////////////////////////////////////////////////
 // GUIWindowManagerTexture Events:
-Callback_v1<InputEvent &> &GUIWindowManagerDirect::func_input_intercept()
+std::function<void(InputEvent &)> &GUIWindowManagerDirect::func_input_intercept()
 {
 	return get_provider()->func_input_intercept;
 }

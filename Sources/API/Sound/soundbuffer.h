@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_sound.h"
 #include <memory>
 #include "soundbuffer_session.h"
 #include "../Core/Resources/resource.h"
@@ -54,7 +53,7 @@ class ResourceManager;
 ///    <p>The SoundBuffer class represents a sample in ClanLib. It can
 ///    either be static or streamed. The soundbuffer gets its sample data from
 ///    a soundprovider, that is passed during construction.</p>
-class CL_API_SOUND SoundBuffer
+class SoundBuffer
 {
 /// \name Construction
 /// \{

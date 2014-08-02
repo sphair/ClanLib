@@ -26,7 +26,6 @@
 **    Kevin Bluck
 */
 
-
 #pragma once
 
 #ifndef __APPLE__

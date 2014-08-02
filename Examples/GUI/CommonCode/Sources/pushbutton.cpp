@@ -32,7 +32,7 @@
 PushButton::PushButton(clan::GUIManager &manager, clan::ResourceManager &application_resources) : 
 	clan::Window(&manager, clan::GUITopLevelDescription("PushButton", clan::Rect(256 + 16, 256 + 16, clan::Size(256, 180)), false))
 {
-	func_close().set(this, &PushButton::on_close);
+	func_close() = bind_member(this, &PushButton::on_close);
 	clan::Canvas canvas = get_canvas();
 	test_image = clan::Image::resource(canvas, "tux", application_resources);
 
@@ -41,7 +41,7 @@ PushButton::PushButton(clan::GUIManager &manager, clan::ResourceManager &applica
 	pushbutton1 = new clan::PushButton(this);
 	pushbutton1->set_geometry(clan::Rect(client_area.left + 11, client_area.top + 10, clan::Size(128, 40)));
 	pushbutton1->set_text("Push Button");
-	pushbutton1->func_clicked().set(this, &PushButton::on_clicked, pushbutton1);
+	pushbutton1->func_clicked() = bind_member(this, &PushButton::on_clicked);
 
 	int label_xpos = client_area.left + 31;
 	int yoffset = client_area.top + 80;
@@ -50,22 +50,22 @@ PushButton::PushButton(clan::GUIManager &manager, clan::ResourceManager &applica
 
 	checkbox_icon = new clan::CheckBox(this);
 	checkbox_icon->set_geometry(clan::Rect(client_area.left + 11, yoffset, clan::Size(100, 15)));
-	checkbox_icon->func_checked().set(this, &PushButton::on_checked_icon, checkbox_icon);
-	checkbox_icon->func_unchecked().set(this, &PushButton::on_unchecked_icon, checkbox_icon);
+	checkbox_icon->func_checked() = bind_member(this, &PushButton::on_checked_icon);
+	checkbox_icon->func_unchecked() = bind_member(this, &PushButton::on_unchecked_icon);
 	checkbox_icon->set_text("Icon");
 
 	yoffset+=gap;
 	checkbox_toggle = new clan::CheckBox(this);
 	checkbox_toggle->set_geometry(clan::Rect(client_area.left + 11, yoffset, clan::Size(100, 15)));
-	checkbox_toggle->func_checked().set(this, &PushButton::on_checked_toggle, checkbox_toggle);
-	checkbox_toggle->func_unchecked().set(this, &PushButton::on_unchecked_toggle, checkbox_toggle);
+	checkbox_toggle->func_checked() = bind_member(this, &PushButton::on_checked_toggle);
+	checkbox_toggle->func_unchecked() = bind_member(this, &PushButton::on_unchecked_toggle);
 	checkbox_toggle->set_text("Enable Toggle");
 
 	yoffset+=gap;
 	checkbox_disable = new clan::CheckBox(this);
 	checkbox_disable->set_geometry(clan::Rect(client_area.left + 11, yoffset, clan::Size(100, 15)));
-	checkbox_disable->func_checked().set(this, &PushButton::on_checked_disable, checkbox_disable);
-	checkbox_disable->func_unchecked().set(this, &PushButton::on_unchecked_disable, checkbox_disable);
+	checkbox_disable->func_checked() = bind_member(this, &PushButton::on_checked_disable);
+	checkbox_disable->func_unchecked() = bind_member(this, &PushButton::on_unchecked_disable);
 	checkbox_disable->set_text("Disable");
 
 	int xoffset = client_area.left + 36;
@@ -80,37 +80,37 @@ PushButton::~PushButton()
 }
 
 
-void PushButton::on_clicked(clan::PushButton *pushbutton)
+void PushButton::on_clicked()
 {
 	info_clicked->activate();
 }
 
-void PushButton::on_checked_disable(clan::CheckBox *checkbox)
+void PushButton::on_checked_disable()
 {
 	pushbutton1->set_enabled(false);
 }
 
-void PushButton::on_unchecked_disable(clan::CheckBox *checkbox)
+void PushButton::on_unchecked_disable()
 {
 	pushbutton1->set_enabled(true);
 }
 
-void PushButton::on_checked_icon(clan::CheckBox *checkbox)
+void PushButton::on_checked_icon()
 {
 	pushbutton1->set_icon(test_image);
 }
 
-void PushButton::on_unchecked_icon(clan::CheckBox *checkbox)
+void PushButton::on_unchecked_icon()
 {
 	pushbutton1->set_icon(clan::Image());
 }
 
-void PushButton::on_checked_toggle(clan::CheckBox *checkbox)
+void PushButton::on_checked_toggle()
 {
 	pushbutton1->set_toggle(true);
 }
 
-void PushButton::on_unchecked_toggle(clan::CheckBox *checkbox)
+void PushButton::on_unchecked_toggle()
 {
 	pushbutton1->set_toggle(false);
 }

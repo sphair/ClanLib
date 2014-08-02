@@ -29,8 +29,6 @@
 
 
 #pragma once
-
-#include "../../api_physics2d.h"
 #include "../../../Core/Math/vec2.h"
 #include <memory>
 
@@ -44,7 +42,7 @@ namespace clan
 	class PrismaticJointDescription_Impl;
 
 /// \brief PrismaticJointDescription class.
-class CL_API_PHYSICS PrismaticJointDescription
+class PrismaticJointDescription
 {
 
 /// \name Construction

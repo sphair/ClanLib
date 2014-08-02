@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "../System/cl_platform.h"
 #include "../Crypto/sha1.h"
 #include "../Crypto/md5.h"
@@ -47,7 +46,7 @@ namespace clan
 /// \{
 
 /// \brief A Collection of checksum functions.
-class CL_API_CORE HashFunctions
+class HashFunctions
 {
 /// \name Construction
 /// \{

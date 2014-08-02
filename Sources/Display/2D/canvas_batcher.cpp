@@ -75,7 +75,7 @@ CanvasBatcher::CanvasBatcher()
 {
 }
 
-CanvasBatcher::CanvasBatcher(GraphicContext &gc) : impl(new CanvasBatcher_Impl(gc))
+CanvasBatcher::CanvasBatcher(GraphicContext &gc) : impl(std::make_shared<CanvasBatcher_Impl>(gc))
 {
 }
 

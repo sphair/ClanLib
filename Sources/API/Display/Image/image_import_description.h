@@ -29,9 +29,8 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include <memory>
-#include "../../Core/Signals/callback_1.h"
+#include <functional>
 
 namespace clan
 {
@@ -46,7 +45,7 @@ class PixelBuffer;
 /// \brief Image Import Description Class.
 ///
 /// This class allows you to setup a more advanced description when importing images.
-class CL_API_DISPLAY ImageImportDescription
+class ImageImportDescription
 {
 /// \name Construction
 /// \{
@@ -111,7 +110,7 @@ public:
 	/// Note, the output maybe different to the input, if desired\n
 	/// \n
 	/// PixelBuffer func_process(PixelBuffer &input)
-	Callback_1<PixelBuffer, PixelBuffer &> &func_process();
+	std::function<PixelBuffer(PixelBuffer &)> &func_process();
 
 /// \}
 /// \name Implementation

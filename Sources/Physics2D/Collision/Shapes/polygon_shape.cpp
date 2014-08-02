@@ -38,34 +38,33 @@
 
 namespace clan
 {
-//																											_______________________																											
+//																											_______________________
 //																											C O N S T R U C T O R S
 PolygonShape::PolygonShape()
 {
-	
+
 }
 
 PolygonShape::PolygonShape(const PhysicsWorld &pw)
-: impl(new PolygonShape_Impl(pw.impl.get()))
+: impl(std::make_shared<PolygonShape_Impl>(pw.impl.get()))
 {
 	shape_impl->shape_type = shape_polygon;
 	shape_impl->shape = dynamic_cast<b2Shape*> (&impl->shape);
 }
 
 PolygonShape::PolygonShape(const PhysicsContext &pc)
-: impl(new PolygonShape_Impl(pc.impl->get_owner()))
+: impl(std::make_shared<PolygonShape_Impl>(pc.impl->get_owner()))
 {
 	shape_impl->shape_type = shape_polygon;
 	shape_impl->shape = dynamic_cast<b2Shape*> (&impl->shape);
 }
-
 
 PolygonShape::~PolygonShape()
 {
 
 }
 
-//																											___________________																											
+//																											___________________
 //																											A T T R I B U T E S
 void PolygonShape::throw_if_null() const
 {
@@ -73,7 +72,7 @@ void PolygonShape::throw_if_null() const
 		throw Exception("PolygonShape is null");
 }
 
-//																											___________________																											
+//																											___________________
 //																											O P E R A T I O N S
 PolygonShape &PolygonShape::operator =(const PolygonShape &copy)
 {
@@ -94,6 +93,5 @@ void 	PolygonShape::set_as_box (float width, float height, const Vec2f &center, 
 						b2Vec2(center.x/scale, center.y/scale),
 						angle.to_radians());
 }
-
 
 }

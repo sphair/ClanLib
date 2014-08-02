@@ -124,7 +124,7 @@ private:
 // DirectoryListing Construction:
 
 DirectoryListing::DirectoryListing(FileSystemProvider *provider, const std::string &path)
-: impl(new DirectoryListing_Impl(provider, path))
+: impl(std::make_shared<DirectoryListing_Impl>(provider, path))
 {
 }
 

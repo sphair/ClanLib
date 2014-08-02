@@ -40,21 +40,21 @@ namespace clan
 {
 
 RibbonMenu::RibbonMenu(GUIComponent *owner)
-: GUIComponent(owner, RibbonMenu_Impl::create_toplevel_description(), "ribbon-menu"), impl(new RibbonMenu_Impl)
+: GUIComponent(owner, RibbonMenu_Impl::create_toplevel_description(), "ribbon-menu"), impl(std::make_shared<RibbonMenu_Impl>())
 {
 	impl->component = this;
-	func_render().set(impl.get(), &RibbonMenu_Impl::on_render);
-	func_resized().set(impl.get(), &RibbonMenu_Impl::on_resized);
+	func_render() = bind_member(impl.get(), &RibbonMenu_Impl::on_render);
+	func_resized() = bind_member(impl.get(), &RibbonMenu_Impl::on_resized);
 	impl->part_menu_item = GUIThemePart(this, "menu-item");
 	impl->part_menu_item_selected = GUIThemePart(this, "menu-item");
 	impl->part_menu_item_selected.set_pseudo_class("selected", true);
 	impl->part_menu_item_separator = GUIThemePart(this, "menu-item");
 	impl->part_menu_item_separator.set_pseudo_class("separator", true);
 
-	impl->slot_filter = owner->get_gui_manager().sig_filter_message().connect(impl.get(), &RibbonMenu_Impl::on_filter_message);
+	impl->sc.connect(owner->get_gui_manager().sig_filter_message(), bind_member(impl.get(), &RibbonMenu_Impl::on_filter_message));
 }
 
-Callback_v0 &RibbonMenu::add_item(Image image, std::string text)
+std::function<void()> &RibbonMenu::add_item(Image image, std::string text)
 {
 	impl->items.push_back(RibbonMenuItem(image, text));
 	return impl->items.back().func_clicked;

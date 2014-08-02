@@ -47,7 +47,7 @@ Scene::Scene()
 }
 
 Scene::Scene(GraphicContext &gc, const ResourceManager &resources, const std::string &shader_path)
-: impl(new Scene_Impl(gc, resources, shader_path))
+: impl(std::make_shared<Scene_Impl>(gc, resources, shader_path))
 {
 	impl->set_camera(SceneCamera(*this));
 }
@@ -244,18 +244,18 @@ Scene_Impl::Scene_Impl(GraphicContext &gc, const ResourceManager &resources, con
 		lightsource_simple_pass = std::unique_ptr<LightsourceSimplePass>(new LightsourceSimplePass(gc, shader_path, inout_data));
 	}
 
-	add_pass("gbuffer").func_run().set(gbuffer_pass.get(), &GBufferPass::run, this);
-	add_pass("skybox").func_run().set(skybox_pass.get(), &SkyboxPass::run, this);
-	add_pass("vsm").func_run().set(vsm_shadow_map_pass.get(), &VSMShadowMapPass::run, this);
+	add_pass("gbuffer").func_run() = [=](clan::GraphicContext &gc){gbuffer_pass->run(gc, this);};
+	add_pass("skybox").func_run() = [=](clan::GraphicContext &gc){skybox_pass->run(gc, this); };
+	add_pass("vsm").func_run() = [=](clan::GraphicContext &gc){vsm_shadow_map_pass->run(gc, this); };
 	if (lightsource_pass)
-		add_pass("light").func_run().set(lightsource_pass.get(), &LightsourcePass::run, this);
+		add_pass("light").func_run() = [=](clan::GraphicContext &gc){lightsource_pass->run(gc, this); };
 	else
-		add_pass("light").func_run().set(lightsource_simple_pass.get(), &LightsourceSimplePass::run, this);
-	add_pass("transparency").func_run().set(transparency_pass.get(), &TransparencyPass::run, this);
-	add_pass("particles").func_run().set(particle_emitter_pass.get(), &ParticleEmitterPass::run, this);
-	add_pass("bloom").func_run().set(bloom_pass.get(), &BloomPass::run);
-	//add_pass("ssao").func_run().set(ssao_pass.get(), &SSAOPass::run);
-	add_pass("final").func_run().set(final_pass.get(), &FinalPass::run);
+		add_pass("light").func_run() = [=](clan::GraphicContext &gc){lightsource_simple_pass->run(gc, this); };
+	add_pass("transparency").func_run() = [=](clan::GraphicContext &gc){transparency_pass->run(gc, this); };
+	add_pass("particles").func_run() = [=](clan::GraphicContext &gc){particle_emitter_pass->run(gc, this); };
+	add_pass("bloom").func_run() = [=](clan::GraphicContext &gc){bloom_pass->run(gc); };
+	//add_pass("ssao").func_run() = [=](clan::GraphicContext &gc){ssao_pass->run(gc);};
+	add_pass("final").func_run() = [=](clan::GraphicContext &gc){final_pass->run(gc); };
 }
 
 ScenePass Scene_Impl::add_pass(const std::string &name, const std::string &insert_before)
@@ -307,10 +307,10 @@ void Scene_Impl::render(GraphicContext &gc)
 
 	for (size_t i = 0; i < passes.size(); i++)
 	{
-		if (!passes[i].func_run().is_null())
+		if (passes[i].func_run())
 		{
 			gpu_timer.begin_time(gc, passes[i].get_name());
-			passes[i].func_run().invoke(gc);
+			passes[i].func_run()(gc);
 			gpu_timer.end_time(gc);
 		}
 	}

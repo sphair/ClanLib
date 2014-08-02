@@ -32,9 +32,6 @@
 
 #pragma once
 
-#include "API/Core/Signals/slot_container.h"
-#include "API/Core/Signals/callback_v0.h"
-#include "API/Core/Signals/callback_v2.h"
 #include "API/Display/Window/display_window.h"
 #include "API/Display/Render/texture_2d.h"
 #include "API/Display/Render/frame_buffer.h"
@@ -101,14 +98,13 @@ public:
 	GUIWindowManagerSite *site;
 	std::map<GUITopLevelWindow *, GUITopLevelWindowTexture *> window_map;
 	std::vector<GUITopLevelWindowTexture *> root_window_z_order;	// Beginning is at the top
-	Callback_v0 func_repaint;
-	Callback_v1<FrameBuffer &> func_setup_framebuffer;
-	Callback_v1<InputEvent &> func_input_intercept;
+	std::function<void()> func_repaint;
+	std::function<void(FrameBuffer &)> func_setup_framebuffer;
+	std::function<void(InputEvent &)> func_input_intercept;
 	GUITopLevelWindow *activated_window;
 	GUITopLevelWindow *capture_mouse_window;
 	DisplayWindow display_window;
 	Canvas canvas_window;
-	SlotContainer slots;
 	TextureGroup texture_group;
 	FrameBuffer frame_buffer;
 	bool frame_buffer_initial_setup;
@@ -192,6 +188,7 @@ private:
 	BlendState default_blend;
 	BlendState opaque_blend;
 	BlendState premultiplied_alpha_blend;
+    SlotContainer sc;
 /// \}
 };
 

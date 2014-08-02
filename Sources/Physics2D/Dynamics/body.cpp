@@ -51,7 +51,7 @@ Body::Body()
 }
 
 Body::Body(PhysicsContext &pc, const BodyDescription &description)
-: impl(new Body_Impl(pc.impl->get_owner()))
+: impl(std::make_shared<Body_Impl>(pc.impl->get_owner()))
 {
 	if(impl->owner_world)
 	{
@@ -62,7 +62,7 @@ Body::Body(PhysicsContext &pc, const BodyDescription &description)
 }
 
 Body::Body(PhysicsContext &pc, const std::string &resource_id, const XMLResourceDocument &resources)
-: impl(new Body_Impl(pc.impl->get_owner()))
+: impl(std::make_shared<Body_Impl>(pc.impl->get_owner()))
 {
 	if(impl->owner_world)
 	{
@@ -354,17 +354,17 @@ void Body::set_data(PhysicsObject *data)
 //																											_____________																										
 //																											S I G N A L S
 
-Signal_v1<Body> &Body::sig_begin_collision()
+Signal<void(Body)> &Body::sig_begin_collision()
 {
 	return impl->sig_begin_collision;
 }
 
-Signal_v1<Body> &Body::sig_end_collision()
+Signal<void(Body)> &Body::sig_end_collision()
 {
 	return impl->sig_end_collision;
 }
 
-Signal_v0 &Body::sig_body_deletion()
+Signal<void()> &Body::sig_body_deletion()
 {
 	return impl->sig_body_deletion;
 }

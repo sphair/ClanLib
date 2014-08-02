@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 #include "dom_string.h"
 
@@ -46,7 +45,7 @@ class DomDocumentType;
 ///
 ///    <p>The DOM Implementation interface provides a number of methods for performing
 ///    operations that are independent of any particular instance of the document object model.</p>
-class CL_API_CORE DomImplementation
+class DomImplementation
 {
 /// \name Construction
 /// \{

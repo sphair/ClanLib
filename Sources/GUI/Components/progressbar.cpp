@@ -51,7 +51,7 @@ public:
 	: progress_min(0), progress_max(100), step_size(1), position(0), marquee_mode(false),
 	  marquee_animation_speed(100), marquee_box_width(10), marquee_position(0), marquee_step_size(2)
 	{
-		marquee_timer.func_expired().set(this, &ProgressBar_Impl::on_marquee_progress);
+		marquee_timer.func_expired() = bind_member(this, &ProgressBar_Impl::on_marquee_progress);
 	}
 
 	void check_range();
@@ -83,7 +83,7 @@ public:
 // ProgressBar Construction:
 
 ProgressBar::ProgressBar(GUIComponent *parent)
-: GUIComponent(parent, CssStr::ProgressBar::type_name), impl(new ProgressBar_Impl)
+: GUIComponent(parent, CssStr::ProgressBar::type_name), impl(std::make_shared<ProgressBar_Impl>())
 {
 	impl->progressbar = this;
 	impl->part_progress = GUIThemePart(this, "progress");
@@ -91,8 +91,8 @@ ProgressBar::ProgressBar(GUIComponent *parent)
 
 	impl->progressbar->set_pseudo_class(CssStr::normal, true);
 
-	func_process_message().set(impl.get(), &ProgressBar_Impl::on_process_message);
-	func_render().set(impl.get(), &ProgressBar_Impl::on_render);
+	func_process_message() = bind_member(impl.get(), &ProgressBar_Impl::on_process_message);
+	func_render() = bind_member(impl.get(), &ProgressBar_Impl::on_render);
 }
 
 ProgressBar::~ProgressBar()

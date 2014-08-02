@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_component.h"
 
 namespace clan
@@ -41,7 +40,7 @@ namespace clan
 class Slider_Impl;
 
 /// \brief Track bar component.
-class CL_API_GUI Slider : public GUIComponent
+class Slider : public GUIComponent
 {
 /// \name Construction
 /// \{
@@ -177,18 +176,18 @@ public:
 
 public:
 	/// \brief Emitted while the slider is being moved.
-	Callback_v0 &func_value_changed();
+	std::function<void()> &func_value_changed();
 
 	/// \brief Emitted when the slider value is decremented (while moving or when clicking the track).
 	/** Invoked while moving or when clicking the track.*/
-	Callback_v0 &func_value_decremented();
+	std::function<void()> &func_value_decremented();
 
 	/// \brief Emitted when the slider value is incremented.
 	/** Invoked while moving or when clicking the track.*/
-	Callback_v0 &func_value_incremented();
+	std::function<void()> &func_value_incremented();
 
 	/// \brief Emitted after the slider has been moved.
-	Callback_v0 &func_slider_moved();
+	std::function<void()> &func_slider_moved();
 
 /// \}
 /// \name Implementation

@@ -67,21 +67,21 @@ Sprite::Sprite(Canvas &canvas, const std::string &fullname, const ImageImportDes
 }
 
 Sprite::Sprite(Canvas &canvas, const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc)
-: impl(new Sprite_Impl())
+: impl(std::make_shared<Sprite_Impl>())
 {
 	add_frame(canvas, filename, fs, import_desc );
 	restart();
 }
 
 Sprite::Sprite(Canvas &canvas, IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc )
-: impl(new Sprite_Impl())
+: impl(std::make_shared<Sprite_Impl>())
 {
 	add_frame(canvas, file, image_type, import_desc );
 	restart();
 }
 
 Sprite::Sprite(Canvas &canvas)
-: impl(new Sprite_Impl())
+: impl(std::make_shared<Sprite_Impl>())
 {
 }
 
@@ -790,9 +790,7 @@ void Sprite::set_rotation_hotspot(Origin origin, int x, int y)
 
 void Sprite::set_frame(unsigned int frame)
 {
-	if(frame < 0)
-		impl->current_frame = 0;
-	else if(frame >= impl->frames.size())
+	if(frame >= impl->frames.size())
 		impl->current_frame = impl->frames.size() - 1;
 	else
 		impl->current_frame = frame;
@@ -832,7 +830,7 @@ void Sprite::finish()
 	else
 		impl->current_frame = impl->frames.size() - 1;
 
-	impl->sig_animation_finished.invoke();
+	impl->sig_animation_finished();
 }
 
 void Sprite::restart()
@@ -933,7 +931,7 @@ CollisionOutline Sprite::create_collision_outline(Canvas &canvas, int alpha_limi
 /////////////////////////////////////////////////////////////////////////////
 // Sprite signals:
 
-Signal_v0 &Sprite::sig_animation_finished()
+Signal<void()> &Sprite::sig_animation_finished()
 {
 	return impl->sig_animation_finished;
 }

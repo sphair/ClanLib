@@ -39,7 +39,7 @@ namespace clan
 // InputContext Construction:
 
 InputContext::InputContext()
-: impl(new InputContext_Impl)
+: impl(std::make_shared<InputContext_Impl>())
 {
 	impl->input_context = impl;
 }

@@ -37,8 +37,8 @@ namespace clan
 DragDropOperation::DragDropOperation(SolutionExplorer *solution_explorer)
 : GUIComponent(solution_explorer, "drag-drop")
 {
-	func_input_pointer_moved().set(this, &DragDropOperation::on_input_pointer_moved);
-	func_input_released().set(this, &DragDropOperation::on_input_released);
+	func_input_pointer_moved() = bind_member(this, &DragDropOperation::on_input_pointer_moved);
+	func_input_released() = bind_member(this, &DragDropOperation::on_input_released);
 	set_visible(false, false);
 }
 

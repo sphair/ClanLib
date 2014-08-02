@@ -31,11 +31,8 @@
 
 #pragma once
 
-#include "api_gui.h"
 #include "gui_component.h"
-#include "../Core/Signals/signal_v1.h"
-#include "../Core/Signals/signal_v2.h"
-#include "../Core/Signals/signal_v3.h"
+#include "../Core/Signals/signal.h"
 #include <vector>
 
 namespace clan
@@ -52,37 +49,37 @@ class GUIWindowManagerProvider;
 class GUIWindowManager_Impl;
 
 /// \brief GUI window manager site.
-class CL_API_DISPLAY GUIWindowManagerSite
+class GUIWindowManagerSite
 {
 /// \name Attributes
 /// \{
 
 public:
 	/// \brief Pointer to focus lost notification callback function.
-	Callback_v1<GUITopLevelWindow *> *func_focus_lost;
+	std::function<void(GUITopLevelWindow *)> *func_focus_lost;
 
 	/// \brief Pointer to focus gained notification callback function.
-	Callback_v1<GUITopLevelWindow *> *func_focus_gained;
+	std::function<void(GUITopLevelWindow *)> *func_focus_gained;
 
 	/// \brief Pointer to focus gained notification callback function.
-	Callback_v2<GUITopLevelWindow *, const Size &> *func_resize;
+	std::function<void(GUITopLevelWindow *, const Size &)> *func_resize;
 
 	/// \brief Pointer to paint notification callback function.
-	Callback_v2<GUITopLevelWindow *, const Rect &> *func_paint;
+	std::function<void(GUITopLevelWindow *, const Rect &)> *func_paint;
 
 	/// \brief Pointer to close notification callback function.
-	Callback_v1<GUITopLevelWindow *> *func_close;
+	std::function<void(GUITopLevelWindow *)> *func_close;
 
 	/// \brief Pointer to destroy notification callback function.
-	Callback_v1<GUITopLevelWindow *> *func_destroy;
+	std::function<void(GUITopLevelWindow *)> *func_destroy;
 
 	/// \brief Pointer to close notification callback function.
-	Callback_v2<GUITopLevelWindow *, const InputEvent &> *func_input_received;
+	std::function<void(GUITopLevelWindow *, const InputEvent &)> *func_input_received;
 /// \}
 };
 
 /// \brief GUI window manager interface.
-class CL_API_GUI GUIWindowManager
+class GUIWindowManager
 {
 /// \name Enumerations
 /// \{

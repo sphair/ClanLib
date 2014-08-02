@@ -32,7 +32,7 @@
 Panel3D::Panel3D(clan::GUIManager &manager) : 
 	clan::Window(&manager, clan::GUITopLevelDescription("3D Controls", clan::Rect(128, 300, clan::Size(320, 448)), false))
 {
-	func_close().set(this, &Panel3D::on_close);
+	func_close() = bind_member(this, &Panel3D::on_close);
 	clan::Rect client_area = get_client_area();
 
 	int xoffset = client_area.left + 10;
@@ -93,7 +93,7 @@ void Panel3D::set_control_group(int xoffset, int yoffset, clan::Slider *&slider,
 	slider->set_page_step(100);
 	slider->set_position(50);
 	slider->set_lock_to_ticks(false);
-	slider->func_value_changed().set(this, &Panel3D::on_slider_changed, slider);
+	slider->func_value_changed() = bind_member(this, &Panel3D::on_slider_changed, slider);
 
 	spin = new clan::Spin(this);
 	spin->set_geometry(clan::Rect(xoffset+115, yoffset, clan::Size(64, 21)));
@@ -102,7 +102,7 @@ void Panel3D::set_control_group(int xoffset, int yoffset, clan::Slider *&slider,
 	spin->set_value_float(initial_value);
 	spin->set_step_size_float(step_value);
 	spin->set_ranges_float(min_value, max_value);
-	spin->func_value_changed().set(this, &Panel3D::on_spin_changed, spin);
+	spin->func_value_changed() = bind_member(this, &Panel3D::on_spin_changed, spin);
 
 	label = new clan::Label(this);
 	label->set_geometry(clan::Rect(xoffset+185, yoffset, label_size));

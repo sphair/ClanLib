@@ -37,8 +37,6 @@
 #include "API/Display/Window/input_event.h"
 #include "API/Display/Window/keys.h"
 #include "API/Display/2D/canvas.h"
-#include "API/CSSLayout/ComputedValues/css_computed_values.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 #include "ribbon_impl.h"
 #include "ribbon_page_impl.h"
 #include "ribbon_menu_impl.h"
@@ -62,7 +60,7 @@ void Ribbon_Impl::add_page(RibbonPage *page)
 	PushButton *tab_button = new PushButton(tab_row);
 	tab_button->set_class("tab", true);
 	tab_button->set_text(page->impl->text);
-	tab_button->func_clicked().set(this, &Ribbon_Impl::on_tab_clicked, page);
+	tab_button->func_clicked() = [=]() {on_tab_clicked(page); };
 
 	tab_buttons.push_back(tab_button);
 	pages.push_back(page);

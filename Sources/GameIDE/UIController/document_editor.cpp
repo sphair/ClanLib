@@ -36,7 +36,7 @@ namespace clan
 DocumentEditor::DocumentEditor(UIController *controller, std::string filename)
 : controller(controller), filename(filename)
 {
-	func_visibility_change().set(this, &DocumentEditor::on_visibility_change);
+	func_visibility_change() = bind_member(this, &DocumentEditor::on_visibility_change);
 }
 
 void DocumentEditor::on_visibility_change(bool new_state)

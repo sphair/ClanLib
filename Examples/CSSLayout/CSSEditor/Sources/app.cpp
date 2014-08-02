@@ -43,9 +43,10 @@ int App::start(const std::vector<std::string> &args)
 	win_desc.set_title("CSS Editor");
 	win_desc.set_size(clan::Size( 1000, 800 ), false);
 
+    clan::SlotContainer cc;
 	clan::DisplayWindow window(win_desc);
-	clan::Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
-	clan::Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
+	cc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 
 	std::string theme;
 	if (clan::FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))
@@ -118,7 +119,7 @@ int App::start(const std::vector<std::string> &args)
 		css.add_sheet(clan::author_sheet_origin, iodevice_memory, "");
 
 		clan::CSSLayout layout;
-		layout.func_get_image().set(this, &App::get_image);
+		layout.func_get_image() = bind_member(this, &App::get_image);
 		clan::CSSLayoutElement element_html = layout.create_element("html");
 		clan::CSSLayoutElement element_body = element_html.create_element("body");
 		clan::CSSLayoutElement element_div = element_body.create_element("div");

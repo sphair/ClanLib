@@ -37,15 +37,15 @@ public:
 
 private:
 	bool on_close();
-	void on_checked(clan::CheckBox *checkbox);
-	void on_unchecked(clan::CheckBox *checkbox);
-	void on_indeterminated(clan::CheckBox *checkbox);
-	void on_state_changed(clan::CheckBox *checkbox);
+	void on_checked();
+	void on_unchecked();
+	void on_indeterminated();
+	void on_state_changed();
 
-	void on_checked_disable(clan::CheckBox *checkbox);
-	void on_unchecked_disable(clan::CheckBox *checkbox);
-	void on_checked_3state(clan::CheckBox *checkbox);
-	void on_unchecked_3state(clan::CheckBox *checkbox);
+	void on_checked_disable();
+	void on_unchecked_disable();
+	void on_checked_3state();
+	void on_unchecked_3state();
 
 private:
 	clan::CheckBox *checkbox1;

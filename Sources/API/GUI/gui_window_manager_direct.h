@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_gui.h"
 #include "gui_window_manager.h"
 
 namespace clan
@@ -41,7 +40,7 @@ class GUIWindowManagerProvider_Direct;
 class GUIWindowManagerDirectWindow;
 
 /// \brief Direct window manager.
-class CL_API_GUI GUIWindowManagerDirect : public GUIWindowManager
+class GUIWindowManagerDirect : public GUIWindowManager
 {
 /// \name Construction
 /// \{
@@ -70,7 +69,7 @@ public:
 /// \{
 public:
 	/// \brief void func_input_intercept(InputEvent &input_event)
-	Callback_v1<InputEvent &> &func_input_intercept();
+	std::function<void(InputEvent &)> &func_input_intercept();
 /// \}
 
 /// \name Implementation

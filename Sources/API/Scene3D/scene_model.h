@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_scene3d.h"
 #include <string>
 #include <memory>
 
@@ -42,7 +41,7 @@ class Scene;
 class ModelData;
 class SceneModel_Impl;
 
-class CL_API_SCENE SceneModel
+class SceneModel
 {
 public:
 	SceneModel();

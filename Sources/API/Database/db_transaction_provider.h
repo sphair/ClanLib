@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_database.h"
 
 namespace clan
 {
@@ -37,7 +36,7 @@ namespace clan
 /// \{
 
 /// \brief Database transaction provider.
-class CL_API_DATABASE DBTransactionProvider
+class DBTransactionProvider
 {
 /// \name Construction
 /// \{

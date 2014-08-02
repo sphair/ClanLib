@@ -38,7 +38,7 @@ CSSComputedValues::CSSComputedValues()
 }
 
 CSSComputedValues::CSSComputedValues(CSSResourceCache *resource_cache)
-: impl(new CSSComputedValues_Impl(resource_cache))
+: impl(std::make_shared<CSSComputedValues_Impl>(resource_cache))
 {
 }
 

@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "system.h"
 
 #ifdef WIN32

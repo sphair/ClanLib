@@ -150,9 +150,9 @@ void ListViewRenderer::render(
 						icon.draw(canvas, si.rect_icon, display_mode, color);
 					}
 				}
-				else if (!si.item.func_render_icon().is_null())
+				else if (si.item.func_render_icon())
 				{
-					si.item.func_render_icon().invoke(si.rect_icon);
+					si.item.func_render_icon()(si.rect_icon);
 				}
 
 				if (si.item.is_selected())

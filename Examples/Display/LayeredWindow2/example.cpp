@@ -129,10 +129,11 @@ int App::start(const std::vector<std::string> &args)
 	clan::DisplayWindow window_right(desc_window);
 
 	// Setup the slots
-	clan::Slot slot_quit = window_center.sig_window_close().connect(this, &App::on_window_close, &window_center);
-	clan::Slot slot_mouse_down = (window_center.get_ic().get_mouse()).sig_key_down().connect(this, &App::on_mouse_down);
-	clan::Slot slot_mouse_dblclk = (window_center.get_ic().get_mouse()).sig_key_dblclk().connect(this, &App::on_mouse_down);
-	clan::Slot slot_input_up = (window_center.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
+    clan::SlotContainer cc;
+	cc.connect(window_center.sig_window_close(), clan::bind_member(this, &App::on_window_close, &window_center));
+	cc.connect(window_center.get_ic().get_mouse().sig_key_down(), clan::bind_member(this, &App::on_mouse_down));
+	cc.connect(window_center.get_ic().get_mouse().sig_key_dblclk(), clan::bind_member(this, &App::on_mouse_down));
+	cc.connect(window_center.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 
 	// Get the canvas
 	clan::Canvas canvas_center(window_center);

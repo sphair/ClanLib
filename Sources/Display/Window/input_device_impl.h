@@ -29,7 +29,7 @@
 #pragma once
 
 #include "API/Core/System/mutex.h"
-#include "API/Core/Signals/signal_v1.h"
+#include "API/Core/Signals/signal.h"
 #include "API/Display/TargetProviders/input_device_provider.h"
 #include "input_context_impl.h"
 
@@ -42,7 +42,7 @@ public:
 	InputDevice_Impl()
 	: provider(0)
 	{
-		slot_provider_event = sig_provider_event.connect(this, &InputDevice_Impl::on_provider_event);
+		sc.connect(sig_provider_event, bind_member(this, &InputDevice_Impl::on_provider_event));
 	}
 
 	~InputDevice_Impl()
@@ -50,7 +50,7 @@ public:
 		if (provider)
 			delete provider;
 	}
-
+	
 	void on_provider_event(const InputEvent &e)
 	{
 		MutexSection mutex_lock(&InputContext_Impl::mutex);
@@ -70,21 +70,15 @@ public:
 
 	InputDeviceProvider *provider;
 
-	Signal_v1<const InputEvent &> sig_provider_event;
+    SlotContainer sc;
+	Signal<void(const InputEvent &)> sig_provider_event;
+	Signal<void(const InputEvent &)> sig_key_down;
+	Signal<void(const InputEvent &)> sig_key_up;
+	Signal<void(const InputEvent &)> sig_pointer_move;
+	Signal<void(const InputEvent &)> sig_axis_move;
+	Signal<void(const InputEvent &)> sig_key_dblclk;
+	Signal<void(const InputEvent &)> sig_proximity_change;
 
-	Slot slot_provider_event;
-
-	Signal_v1<const InputEvent &> sig_key_down;
-
-	Signal_v1<const InputEvent &> sig_key_up;
-
-	Signal_v1<const InputEvent &> sig_pointer_move;
-
-	Signal_v1<const InputEvent &> sig_axis_move;
-
-	Signal_v1<const InputEvent &> sig_key_dblclk;
-
-	Signal_v1<const InputEvent &> sig_proximity_change;
 };
 
 }

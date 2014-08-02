@@ -701,7 +701,7 @@ void D3DGraphicContextProvider::set_depth_range(int index, float n, float f)
 void D3DGraphicContextProvider::on_window_resized()
 {
 	Size new_size = window->get_viewport().get_size();
-	window_resized_signal.invoke(new_size);
+	window_resized_signal(new_size);
 }
 
 int D3DGraphicContextProvider::get_major_version() const

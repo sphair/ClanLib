@@ -184,20 +184,61 @@ void TestApp::test_matrix_mat4()
 		if (result != result2) fail();
 	}
 
-	Console::write_line("   Function: rotate (using euler angles) and get_euler");
+	Console::write_line("   Function: rotate (using euler angles)");
 	{
-		Angle angle_x(20, angle_degrees);
-		Angle angle_y(30, angle_degrees);
-		Angle angle_z(40, angle_degrees);
+		Mat4f mv = Mat4f::identity();
+		mv = mv * Mat4f::rotate(Angle(30.0f, angle_degrees), 0.0f, 0.0f, 1.0f, false);
+		mv = mv * Mat4f::rotate(Angle(10.0f, angle_degrees), 1.0f, 0.0f, 0.0f, false);
+		mv = mv * Mat4f::rotate(Angle(20.0f, angle_degrees), 0.0f, 1.0f, 0.0f, false);
 
 		Mat4f test_matrix;
-		test_matrix = Mat4f::rotate(angle_x, angle_y, angle_z, order_YXZ);
+		test_matrix = Mat4f::rotate(Angle(10.0f, angle_degrees), Angle(20.0f, angle_degrees), Angle(30.0f, angle_degrees), order_YXZ);
+		if (!test_matrix.is_equal(mv, 0.00001f))
+			fail();
 
-		Vec3f angles = test_matrix.get_euler(order_YXZ);
+	}
 
-		check_float(angles.x, angle_x.to_radians());
-		check_float(angles.y, angle_y.to_radians());
-		check_float(angles.z, angle_z.to_radians());
+	Console::write_line("   Function: rotate (using euler angles) and get_euler");
+	{
+		test_rotate_and_get_euler(order_XYZ);
+		test_rotate_and_get_euler(order_XZY);
+		test_rotate_and_get_euler(order_YZX);
+		test_rotate_and_get_euler(order_YXZ);
+		test_rotate_and_get_euler(order_ZXY);
+		test_rotate_and_get_euler(order_ZYX);
+	}
+
+}
+
+void TestApp::test_rotate_and_get_euler(clan::EulerOrder order)
+{
+	for (int ax = 0; ax < 360; ax += 10)
+	{
+		for (int ay = 0; ay < 360; ay += 10)
+		{
+			for (int az = 0; az < 360; az += 10)
+			{
+				Angle angle_x(ax, angle_degrees);
+				Angle angle_y(ay, angle_degrees);
+				Angle angle_z(az, angle_degrees);
+
+				Mat4f test_matrix;
+				test_matrix = Mat4f::rotate(angle_x, angle_y, angle_z, order);
+
+				Vec3f angles = test_matrix.get_euler(order);
+
+				Mat4f test_matrix2;
+				test_matrix2 = Mat4f::rotate(Angle(angles.x, angle_radians), Angle(angles.y, angle_radians), Angle(angles.z, angle_radians), order);
+
+				// Note, since euler angles can have alternative forms, we compare by recreating as a rotation matrix
+				if (!test_matrix.is_equal(test_matrix2, 0.00001f))
+					fail();
+
+				//check_float(angles.x, angle_x.to_radians());
+				//check_float(angles.y, angle_y.to_radians());
+				//check_float(angles.z, angle_z.to_radians());
+			}
+		}
 	}
 }
 

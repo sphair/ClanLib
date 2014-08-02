@@ -6,40 +6,34 @@ clanGL_includes = \
 	GL/opengl.h \
 	GL/opengl_defines.h \
 	GL/opengl_window_description.h \
-	GL/opengl_target.h \
-	GL/api_gl.h
+	GL/opengl_target.h
 
 clanApp_includes = \
 	application.h \
-	App/api_app.h \
 	App/clanapp.h
 
 clanNetwork_includes = \
 	network.h \
-	Network/Web/web_response.h \
-	Network/Web/web_request.h \
-	Network/Web/http_request_handler_provider.h \
-	Network/Web/http_request_handler.h \
-	Network/Web/http_server_connection.h \
 	Network/Web/http_server.h \
-	Network/api_network.h \
-	Network/NetGame/event_value.h \
+	Network/Web/http_server_connection.h \
+	Network/Web/http_request_handler.h \
+	Network/Web/http_request_handler_provider.h \
+	Network/Web/web_request.h \
+	Network/Web/web_response.h \
 	Network/NetGame/client.h \
-	Network/NetGame/event_dispatcher_v2.h \
-	Network/NetGame/event_dispatcher_v3.h \
-	Network/NetGame/event_dispatcher_v0.h \
-	Network/NetGame/event_dispatcher_v1.h \
 	Network/NetGame/connection.h \
-	Network/NetGame/server.h \
-	Network/NetGame/event.h \
 	Network/NetGame/connection_site.h \
-	Network/Socket/tcp_listen.h \
-	Network/Socket/udp_socket.h \
+	Network/NetGame/event.h \
+	Network/NetGame/event_dispatcher.h \
+	Network/NetGame/event_value.h \
+	Network/NetGame/server.h \
 	Network/Socket/dns_packet.h \
-	Network/Socket/tcp_connection.h \
+	Network/Socket/dns_resolver.h \
 	Network/Socket/dns_resource_record.h \
 	Network/Socket/socket_name.h \
-	Network/Socket/dns_resolver.h \
+	Network/Socket/tcp_connection.h \
+	Network/Socket/tcp_listen.h \
+	Network/Socket/udp_socket.h \
 	Network/TLS/tls_connection.h \
 	Network/setupnetwork.h
 
@@ -57,7 +51,6 @@ clanGUI_includes = \
 	GUI/gui_component.h \
 	GUI/gui_message_input.h \
 	GUI/gui_layout.h \
-	GUI/api_gui.h \
 	GUI/gui_window_manager_direct.h \
 	GUI/gui_message_focus_change.h \
 	GUI/gui_message.h \
@@ -128,7 +121,6 @@ clanSound_includes = \
 	Sound/SoundProviders/soundprovider_wave.h \
 	Sound/Resources/sound_cache.h \
 	Sound/soundbuffer_session.h \
-	Sound/api_sound.h \
 	Sound/SoundFilters/inverse_echofilter.h \
 	Sound/SoundFilters/fadefilter.h \
 	Sound/SoundFilters/echofilter.h \
@@ -142,30 +134,8 @@ clanSound_includes = \
 
 clanCore_includes = \
 	core.h \
-	Core/Signals/callback_1.h \
-	Core/Signals/callback_2.h \
-	Core/Signals/callback_3.h \
-	Core/Signals/callback_0.h \
-	Core/Signals/slot.h \
-	Core/Signals/slot_container.h \
-	Core/Signals/signal_v2.h \
-	Core/Signals/callback_v3.h \
-	Core/Signals/callback_v1.h \
-	Core/Signals/callback_v4.h \
-	Core/Signals/callback_v5.h \
-	Core/Signals/callback_5.h \
-	Core/Signals/signal_v6.h \
-	Core/Signals/callback_v0.h \
-	Core/Signals/callback_v6.h \
-	Core/Signals/callback_v2.h \
-	Core/Signals/signal_v5.h \
-	Core/Signals/signal_v3.h \
-	Core/Signals/callback_4.h \
-	Core/Signals/signal_v0.h \
-	Core/Signals/signals_impl.h \
-	Core/Signals/signal_v1.h \
-	Core/Signals/callback_6.h \
-	Core/Signals/signal_v4.h \
+	Core/Signals/bind_member.h \
+	Core/Signals/signal.h \
 	Core/Text/utf8_reader.h \
 	Core/Text/logger.h \
 	Core/Text/string_help.h \
@@ -285,7 +255,6 @@ clanCore_includes = \
 	Core/Math/line_segment.h \
 	Core/Math/vec2.h \
 	Core/core_iostream.h \
-	Core/api_core.h \
 	Core/System/runnable.h \
 	Core/System/service.h \
 	Core/System/keep_alive.h \
@@ -379,7 +348,6 @@ clanDisplay_includes = \
 	Display/Collision/outline_circle.h \
 	Display/Collision/outline_math.h \
 	Display/Collision/collision_outline.h \
-	Display/api_display.h \
 	Display/Font/font.h \
 	Display/Font/font_metrics.h \
 	Display/Font/vector_font.h \
@@ -452,7 +420,6 @@ clanCSSLayout_includes = \
 	CSSLayout/ComputedValues/css_computed_font.h \
 	CSSLayout/ComputedValues/css_computed_flex.h \
 	CSSLayout/ComputedValues/css_computed_list_style.h \
-	CSSLayout/api_csslayout.h \
 	CSSLayout/CSSTokenizer/css_token.h \
 	CSSLayout/CSSTokenizer/css_tokenizer.h \
 	CSSLayout/PropertyValues/css_value_align_content.h \
@@ -577,7 +544,6 @@ clanScene3D_includes = \
 	Scene3D/ModelData/model_data_draw_range.h \
 	Scene3D/ModelData/model_data_texture.h \
 	Scene3D/ModelData/model_data_bone.h \
-	Scene3D/api_scene3d.h \
 	Scene3D/Resources/scene_cache.h \
 	Scene3D/LevelData/level_data_object.h \
 	Scene3D/LevelData/level_data.h \
@@ -589,10 +555,10 @@ clanScene3D_includes = \
 
 clanPhysics3D_includes = \
 	physics3d.h \
+	Physics3D/physics3d_constraint.h
 	Physics3D/physics3d_contact_pair_test.h \
 	Physics3D/physics3d_object.h \
 	Physics3D/physics3d_ray_test.h \
-	Physics3D/api_physics3d.h \
 	Physics3D/physics3d_sweep_test.h \
 	Physics3D/physics3d_shape.h \
 	Physics3D/physics3d_contact_test.h \
@@ -600,7 +566,6 @@ clanPhysics3D_includes = \
 
 clanPhysics2D_includes = \
 	physics2d.h \
-	Physics2D/api_physics2d.h \
 	Physics2D/Dynamics/body_description.h \
 	Physics2D/Dynamics/fixture.h \
 	Physics2D/Dynamics/fixture_description.h \
@@ -659,13 +624,11 @@ clanDatabase_includes = \
 	Database/db_connection.h \
 	Database/db_reader_provider.h \
 	Database/db_value.h \
-	Database/api_database.h \
 	Database/db_transaction_provider.h \
 	Database/db_transaction.h
 
 clanSqlite_includes = \
 	sqlite.h \
-	Sqlite/api_sqlite.h \
 	Sqlite/sqlite_connection.h
 
 clanSWRender_includes = \
@@ -677,7 +640,6 @@ clanSWRender_includes = \
 	SWRender/swr_program_object.h \
 	SWRender/pixel_buffer_data.h \
 	SWRender/setup_swrender.h \
-	SWRender/api_swrender.h \
 	SWRender/swr_target.h \
 	SWRender/blit_argb8_sse.h
 
@@ -692,7 +654,6 @@ clanCompute_includes = \
 	Compute/compute_command_queue.h \
 	Compute/compute_context.h \
 	Compute/compute_wait_list.h \
-	Compute/api_compute.h \
 	Compute/compute_program.h \
 	Compute/compute_kernel.h
 

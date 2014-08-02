@@ -82,20 +82,20 @@ public:
 	Rect current_mouse_in_rect;
 	std::shared_ptr<ListViewColumnHeader_Impl> first_column;
 	std::weak_ptr<ListViewColumnHeader_Impl> last_column;
-	Callback_v1<ListViewColumnHeader> func_column_added;
-	Callback_v1<ListViewColumnHeader> func_column_removed;
-	Callback_v1<ListViewColumnHeader> func_column_size_changed;
+	std::function<void(ListViewColumnHeader)> func_column_added;
+	std::function<void(ListViewColumnHeader)> func_column_removed;
+	std::function<void(ListViewColumnHeader)> func_column_size_changed;
 };
 
 /////////////////////////////////////////////////////////////////////////////
 // ListViewHeader Construction:
 
 ListViewHeader::ListViewHeader(GUIComponent *parent)
-: GUIComponent(parent, CssStr::ListView::Header::type_name), impl(new ListViewHeader_Impl)
+: GUIComponent(parent, CssStr::ListView::Header::type_name), impl(std::make_shared<ListViewHeader_Impl>())
 {
 	impl->listview_header = this;
-	func_process_message().set(impl.get(), &ListViewHeader_Impl::on_process_message);
-	func_render().set(impl.get(), &ListViewHeader_Impl::on_render);
+	func_process_message() = bind_member(impl.get(), &ListViewHeader_Impl::on_process_message);
+	func_render() = bind_member(impl.get(), &ListViewHeader_Impl::on_render);
 	// todo: resize (?)
 	// todo: disabled
 }
@@ -158,8 +158,8 @@ ListViewColumnHeader ListViewHeader::append(ListViewColumnHeader column)
 		impl->last_column = column.impl;
 	}
 
-	if (!impl->func_column_added.is_null())
-		impl->func_column_added.invoke(ListViewColumnHeader(impl->last_column.lock()));
+	if (impl->func_column_added)
+		impl->func_column_added(ListViewColumnHeader(impl->last_column.lock()));
 
 	return ListViewColumnHeader(impl->last_column.lock());
 }
@@ -172,8 +172,8 @@ ListViewColumnHeader ListViewHeader::remove(const std::string &column_id)
 		if (cur->column_id == column_id)
 		{
 			ListViewColumnHeader column(cur);
-			if (!impl->func_column_removed.is_null())
-				impl->func_column_removed.invoke(column);
+			if (impl->func_column_removed)
+				impl->func_column_removed(column);
 			if (!cur->prev_sibling.expired())
 				cur->prev_sibling.lock()->next_sibling = cur->next_sibling;
 			if (cur->next_sibling)
@@ -210,17 +210,17 @@ void ListViewHeader::set_display_mode(ListViewDisplayMode mode)
 /////////////////////////////////////////////////////////////////////////////
 // ListViewHeader Events:
 
-Callback_v1<ListViewColumnHeader> &ListViewHeader::func_column_added()
+std::function<void(ListViewColumnHeader)> &ListViewHeader::func_column_added()
 {
 	return impl->func_column_added; 
 }
 
-Callback_v1<ListViewColumnHeader> &ListViewHeader::func_column_removed()
+std::function<void(ListViewColumnHeader)> &ListViewHeader::func_column_removed()
 {
 	return impl->func_column_removed;
 }
 
-Callback_v1<ListViewColumnHeader> &ListViewHeader::func_column_size_changed()
+std::function<void(ListViewColumnHeader)> &ListViewHeader::func_column_size_changed()
 {
 	return impl->func_column_size_changed;
 }
@@ -399,22 +399,22 @@ void ListViewHeader_Impl::update_geometry(const Rect &parent_content_rect)
 
 ListViewColumnHeader ListViewHeader_Impl::create_column(const std::string &column_id, const std::string &caption)
 {
-	std::shared_ptr<ListViewColumnHeader_Impl> col_impl(new ListViewColumnHeader_Impl());
+	std::shared_ptr<ListViewColumnHeader_Impl> col_impl(std::make_shared<ListViewColumnHeader_Impl>());
 	col_impl->part = GUIThemePart(listview_header, "columnheader");
 	col_impl->part.set_pseudo_class(CssStr::normal, true);
 	ListViewColumnHeader new_column = ListViewColumnHeader(col_impl);
 	new_column.set_caption(caption);
 	new_column.set_column_id(column_id);
 	new_column.set_alignment(ListViewColumnHeader::align_left);
-	new_column.func_size_changed().set(this, &ListViewHeader_Impl::on_column_size_changed);
+	new_column.func_size_changed() = bind_member(this, &ListViewHeader_Impl::on_column_size_changed);
 
 	return new_column;
 }
 
 void ListViewHeader_Impl::on_column_size_changed(ListViewColumnHeader col)
 {
-	if (!func_column_size_changed.is_null())
-		func_column_size_changed.invoke(col);
+	if (func_column_size_changed)
+		func_column_size_changed(col);
 }
 
 }

@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <vector>
 
 namespace clan
@@ -40,7 +39,7 @@ namespace clan
 /// \{
 
 /// \brief Library initializer class.
-class CL_API_CORE SetupCore
+class SetupCore
 {
 /// \name Construction
 /// \{

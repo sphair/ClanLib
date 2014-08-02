@@ -56,19 +56,19 @@ class OpenGLWindowProvider_Impl
 {
 public:
 	OpenGLWindowProvider_Impl(OpenGLWindowProvider *self, OpenGLWindowDescription &opengl_desc);
-	
+
 	NSOpenGLContext *get_share_context();
 	void on_input_event(NSEvent *theEvent);
-	
+
 	OpenGLWindowProvider *self;
 	GraphicContext gc;
 	InputContext ic;
 	DisplayWindowSite *site;
 	OpenGLWindowDescription opengl_desc;
-	
+
 	CocoaWindow *window;
     NSOpenGLContext *opengl_context;
-    
+
 private:
     void on_keyboard_event(NSEvent *theEvent);
     void on_mouse_event(NSEvent *theEvent);

@@ -41,7 +41,6 @@
 #include "API/Core/System/timer.h"
 #include "../gui_css_strings.h"
 #include "API/Display/2D/canvas.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -61,23 +60,22 @@ public:
 	ToolTip *tooltip;
 	Timer timer_show_delayed;
 	std::string text;
-
-	Slot slot_filter_message;
+    SlotContainer sc;
 };
 
 /////////////////////////////////////////////////////////////////////////////
 // ToolTip Construction:
 
 ToolTip::ToolTip(GUIManager manager)
-: GUIComponent(&manager, ToolTip_Impl::create_description(), CssStr::ToolTip::type_name), impl(new ToolTip_Impl)
+: GUIComponent(&manager, ToolTip_Impl::create_description(), CssStr::ToolTip::type_name), impl(std::make_shared<ToolTip_Impl>())
 {
 	impl->tooltip = this;
 
-	func_process_message().set(impl.get(), &ToolTip_Impl::on_process_message);
-	func_render().set(impl.get(), &ToolTip_Impl::on_render);
+	func_process_message() = bind_member(impl.get(), &ToolTip_Impl::on_process_message);
+	func_render() = bind_member(impl.get(), &ToolTip_Impl::on_render);
 
-	impl->timer_show_delayed.func_expired().set(impl.get(), &ToolTip_Impl::on_show_delayed);
-	impl->slot_filter_message = get_gui_manager().sig_filter_message().connect(impl.get(), &ToolTip_Impl::on_filter_message);
+	impl->timer_show_delayed.func_expired() = bind_member(impl.get(), &ToolTip_Impl::on_show_delayed);
+	impl->sc.connect(get_gui_manager().sig_filter_message(), bind_member(impl.get(), &ToolTip_Impl::on_filter_message));
 }
 
 ToolTip::~ToolTip()

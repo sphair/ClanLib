@@ -48,7 +48,7 @@ InputDevice::InputDevice()
 }
 
 InputDevice::InputDevice(InputDeviceProvider *provider)
-: impl(new InputDevice_Impl)
+: impl(std::make_shared<InputDevice_Impl>())
 {
 	impl->input_device = impl;
 	impl->provider = provider;
@@ -486,32 +486,32 @@ void InputDevice::set_position(int x, int y)
 /////////////////////////////////////////////////////////////////////////////
 // InputDevice Signals:
 
-Signal_v1<const InputEvent &> &InputDevice::sig_key_down()
+Signal<void(const InputEvent &)> &InputDevice::sig_key_down()
 {
 	return impl->sig_key_down;
 }
 
-Signal_v1<const InputEvent &> &InputDevice::sig_key_up()
+Signal<void(const InputEvent &)> &InputDevice::sig_key_up()
 {
 	return impl->sig_key_up;
 }
 
-Signal_v1<const InputEvent &> &InputDevice::sig_pointer_move()
+Signal<void(const InputEvent &)> &InputDevice::sig_pointer_move()
 {
 	return impl->sig_pointer_move;
 }
 
-Signal_v1<const InputEvent &> &InputDevice::sig_axis_move()
+Signal<void(const InputEvent &)> &InputDevice::sig_axis_move()
 {
 	return impl->sig_axis_move;
 }
 
-Signal_v1<const InputEvent &> &InputDevice::sig_key_dblclk()
+Signal<void(const InputEvent &)> &InputDevice::sig_key_dblclk()
 {
 	return impl->sig_key_dblclk;
 }
 
-Signal_v1<const InputEvent &> & InputDevice::sig_proximity_change()
+Signal<void(const InputEvent &)> & InputDevice::sig_proximity_change()
 {
 	return impl->sig_proximity_change;
 }

@@ -55,7 +55,7 @@ public:
 StandardPrograms::StandardPrograms()
 {
 }
-StandardPrograms::StandardPrograms(GraphicContext &gc) : impl(new StandardPrograms_Impl())
+StandardPrograms::StandardPrograms(GraphicContext &gc) : impl(std::make_shared<StandardPrograms_Impl>())
 {
 	ProgramObject color_only_program;
 	ProgramObject single_texture_program;

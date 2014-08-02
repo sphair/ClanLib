@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../../Display/2D/sprite.h"
 
 #include "listview.h"	// Required for the "enum ListViewDisplayMode", as gcc does not like the incomplete type: "enum ListViewDisplayMode;"
@@ -43,7 +42,7 @@ class ListViewIconList_Impl;
 class ListViewIcon_Impl;
 
 /// \brief ListView icon.
-class CL_API_GUI ListViewIcon
+class ListViewIcon
 {
 /// \name Construction
 /// \{

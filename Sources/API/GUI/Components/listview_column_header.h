@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 
 namespace clan
 {
@@ -41,7 +40,7 @@ class ListViewColumnHeader_Impl;
 class GUIThemePart;
 
 /// \brief ListView column header class.
-class CL_API_GUI ListViewColumnHeader
+class ListViewColumnHeader
 {
 /// \name Construction
 /// \{
@@ -132,7 +131,7 @@ public:
 /// \{
 
 public:
-	Callback_v1<ListViewColumnHeader> &func_size_changed();
+	std::function<void(ListViewColumnHeader)> &func_size_changed();
 
 /// \}
 /// \name Implementation

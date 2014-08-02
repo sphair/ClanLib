@@ -39,7 +39,7 @@ namespace clan
 // AES192_Decrypt Construction:
 
 AES192_Decrypt::AES192_Decrypt()
-: impl(new AES192_Decrypt_Impl())
+: impl(std::make_shared<AES192_Decrypt_Impl>())
 {
 }
 

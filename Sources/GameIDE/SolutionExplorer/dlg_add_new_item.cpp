@@ -65,13 +65,13 @@ DlgAddNewItem::DlgAddNewItem(GUIComponent *owner, FileItemTypeFactory &factory, 
 	//	list_items->get_header()->set_visible(false);
 	list_items->get_header()->set_class("hidden", true);
 
-	func_resized().set(this, &DlgAddNewItem::on_resized);
-	func_close().set(this, &DlgAddNewItem::on_close);
-	button_ok->func_clicked().set(this, &DlgAddNewItem::on_button_ok_clicked);
-	button_cancel->func_clicked().set(this, &DlgAddNewItem::on_button_cancel_clicked);
-	button_browse_location->func_clicked().set(this, &DlgAddNewItem::on_button_browse_location_clicked);
+	func_resized() = bind_member(this, &DlgAddNewItem::on_resized);
+	func_close() = bind_member(this, &DlgAddNewItem::on_close);
+	button_ok->func_clicked() = bind_member(this, &DlgAddNewItem::on_button_ok_clicked);
+	button_cancel->func_clicked() = bind_member(this, &DlgAddNewItem::on_button_cancel_clicked);
+	button_browse_location->func_clicked() = bind_member(this, &DlgAddNewItem::on_button_browse_location_clicked);
 
-	list_items->func_selection_changed().set(this, &DlgAddNewItem::on_list_items_selection_changed);
+	list_items->func_selection_changed() = bind_member(this, &DlgAddNewItem::on_list_items_selection_changed);
 
 	on_resized();
 

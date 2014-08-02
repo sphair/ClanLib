@@ -47,7 +47,7 @@ Workspace::Workspace(GUIComponent *main_window)
 {
 	part_empty = GUIThemePart(this, "empty-center");
 	_instance = this;
-	func_render().set(this, &Workspace::on_render);
+	func_render() = bind_member(this, &Workspace::on_render);
 
 	root_docking_group = new DockingGroup(this);
 }
@@ -220,6 +220,8 @@ bool Workspace::try_delete_key(std::string registry_path)
 	{
 		return false;
 	}
+#else
+	return false;
 #endif
 }
 

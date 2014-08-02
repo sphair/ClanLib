@@ -31,9 +31,7 @@
 #include "gui_element.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_manager.h"
-#include "API/CSSLayout/CSSDocument/css_property_value.h"
 #include "API/CSSLayout/CSSDocument/css_document.h"
-#include "API/CSSLayout/CSSDocument/css_style_properties.h"
 #include "API/CSSLayout/CSSTokenizer/css_token.h"
 #include "gui_component_select_node.h"
 #include "API/Display/2D/span_layout.h"
@@ -271,7 +269,7 @@ void GUIElement::set_style_needs_update()
 		child = child->get_next_sibling();
 	}
 
-	sig_style_changed.invoke();
+	sig_style_changed();
 }
 
 void GUIElement::update_style()

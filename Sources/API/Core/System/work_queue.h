@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 #include <functional>
 
@@ -39,7 +38,7 @@ namespace clan
 /// \{
 
 /// \brief Interface for executing work on a worker thread
-class CL_API_CORE WorkItem
+class WorkItem
 {
 public:
 	virtual ~WorkItem() { }
@@ -54,7 +53,7 @@ public:
 class WorkQueue_Impl;
 
 /// \brief Thread pool for worker threads
-class CL_API_CORE WorkQueue
+class WorkQueue
 {
 public:
 	/// \brief Constructs a work queue

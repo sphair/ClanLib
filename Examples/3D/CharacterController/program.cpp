@@ -23,10 +23,12 @@ int Program::main(const std::vector<std::string> &args)
 
 	DisplayWindow window("Scene3D Example", 1600, 900, false, true);
 
+    SlotContainer cc;
 	GraphicContext gc = window.get_gc();
 
 	bool exit = false;
-	Slot slot_close = window.sig_window_close().connect_functor([&exit]() { exit = true; });
+
+    cc.connect(window.sig_window_close(), [&exit]() { exit = true; });
 
 	ResourceManager resources;
 	SceneCache::set(resources, std::shared_ptr<SceneCache>(new ExampleSceneCache()));
@@ -95,12 +97,12 @@ int Program::main(const std::vector<std::string> &args)
 	Physics3DShape plane_shape = Physics3DShape::box(Vec3f(75.0f, 1.0f, 75.0f));
 	Physics3DShape sphere_shape = Physics3DShape::sphere(2.0f);
 
-	Physics3DObject phys_object(physics_world, plane_shape, Vec3f(0.0f, -0.5f, 0.0f));
+	Physics3DObject phys_object = Physics3DObject::collision_body(physics_world, plane_shape, Vec3f(0.0f, -0.5f, 0.0f));
 
-	Physics3DObject phys_box0(physics_world, box_shape, Vec3f(20.0f, 5.0f, 0.0f), Quaternionf(0.0f, 20.0f, 0.0f, angle_degrees, order_YXZ));
-	Physics3DObject phys_box1(physics_world, box_shape, Vec3f(-20.0f, 5.0f, 0.0f), Quaternionf(0.0f, 50.0f, 0.0f, angle_degrees, order_YXZ));
-	Physics3DObject phys_box2(physics_world, box_shape, Vec3f(0.0f, 5.0f, 20.0f), Quaternionf(0.0f, 80.0f, 0.0f, angle_degrees, order_YXZ));
-	Physics3DObject phys_box3(physics_world, box_shape, Vec3f(0.0f, 5.0f, -20.0f), Quaternionf(0.0f, 100.0f, 0.0f, angle_degrees, order_YXZ));
+	Physics3DObject phys_box0 = Physics3DObject::collision_body(physics_world, box_shape, Vec3f(20.0f, 5.0f, 0.0f), Quaternionf(0.0f, 20.0f, 0.0f, angle_degrees, order_YXZ));
+	Physics3DObject phys_box1 = Physics3DObject::collision_body(physics_world, box_shape, Vec3f(-20.0f, 5.0f, 0.0f), Quaternionf(0.0f, 50.0f, 0.0f, angle_degrees, order_YXZ));
+	Physics3DObject phys_box2 = Physics3DObject::collision_body(physics_world, box_shape, Vec3f(0.0f, 5.0f, 20.0f), Quaternionf(0.0f, 80.0f, 0.0f, angle_degrees, order_YXZ));
+	Physics3DObject phys_box3 = Physics3DObject::collision_body(physics_world, box_shape, Vec3f(0.0f, 5.0f, -20.0f), Quaternionf(0.0f, 100.0f, 0.0f, angle_degrees, order_YXZ));
 
 	Physics3DSweepTest sweep_test(physics_world);
 

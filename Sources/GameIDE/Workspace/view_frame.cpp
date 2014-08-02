@@ -38,9 +38,9 @@ ViewFrame::ViewFrame(GUIComponent *parent, DockableComponent *dockable)
 : GUIComponent(parent, "view-frame"), dockable(dockable)
 {
 	part_header = GUIThemePart(this, "header");
-	func_resized().set(this, &ViewFrame::on_resized);
-	func_render().set(this, &ViewFrame::on_render);
-	func_input_doubleclick().set(this, &ViewFrame::on_input_doubleclick);
+	func_resized() = bind_member(this, &ViewFrame::on_resized);
+	func_render() = bind_member(this, &ViewFrame::on_render);
+	func_input_doubleclick() = bind_member(this, &ViewFrame::on_input_doubleclick);
 	dockable->set_parent_component(this);
 	dockable->set_visible(true, false);
 	set_visible(true, false);

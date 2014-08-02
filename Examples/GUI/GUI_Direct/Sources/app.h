@@ -44,7 +44,5 @@ private:
 
 private:
 	bool quit;
-	clan::Slot slot_quit;
-	clan::Slot slot_input_up;
 	clan::Label *label;
 };

@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "api_gui.h"
 #include <memory>
 
 namespace clan
@@ -41,7 +40,7 @@ namespace clan
 class GUIComponent;
 
 /// \brief GUI message.
-class CL_API_GUI GUIMessage
+class GUIMessage
 {
 /// \name Construction
 /// \{

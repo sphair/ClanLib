@@ -108,7 +108,7 @@ bool GameObject_Pacman::hit_check(float hit_x, float hit_y)
 
 void GameObject_Pacman::AttachKeyboard(DisplayWindow &window)
 {
-	slots.connect(window.get_ic().get_keyboard().sig_key_down(), this, &GameObject_Pacman::on_key_down);
+	cc.connect(window.get_ic().get_keyboard().sig_key_down(), clan::bind_member(this, &GameObject_Pacman::on_key_down));
 }
 
 /////////////////////////////////////////////////////////////////////////////

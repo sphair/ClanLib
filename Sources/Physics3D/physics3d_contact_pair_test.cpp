@@ -42,7 +42,7 @@ Physics3DContactPairTest::Physics3DContactPairTest()
 }
 
 Physics3DContactPairTest::Physics3DContactPairTest(Physics3DWorld &world)
-	: impl(new Physics3DContactPairTest_Impl(world.impl.get()))
+	: impl(std::make_shared<Physics3DContactPairTest_Impl>(world.impl.get()))
 {
 }
 

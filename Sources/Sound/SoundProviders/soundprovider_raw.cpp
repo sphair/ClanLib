@@ -42,7 +42,7 @@ SoundProvider_Raw::SoundProvider_Raw(
 	int num_samples,
 	int bytes_per_sample,
 	bool stereo,
-	int frequency) : impl(new SoundProvider_Raw_Impl)
+	int frequency) : impl(std::make_shared<SoundProvider_Raw_Impl>())
 {
 	int data_size = num_samples * bytes_per_sample;
 	if (stereo) data_size *= 2;

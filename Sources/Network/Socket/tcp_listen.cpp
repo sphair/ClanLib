@@ -40,7 +40,7 @@ namespace clan
 // TCPListen Construction:
 
 TCPListen::TCPListen(const SocketName &name, int queue_size, bool force_bind)
-: impl(new TCPListen_Impl(name, queue_size, force_bind))
+: impl(std::make_shared<TCPListen_Impl>(name, queue_size, force_bind))
 {
 }
 

@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_csslayout.h"
 
 namespace clan
 {
@@ -38,7 +37,7 @@ namespace clan
 class CSSToken;
 class CSSProperty_Impl;
 
-class CL_API_CSSLAYOUT CSSProperty
+class CSSProperty
 {
 public:
 	CSSProperty();

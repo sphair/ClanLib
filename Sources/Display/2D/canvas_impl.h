@@ -69,10 +69,8 @@ public:
 	GraphicContext get_gc() const {return gc;}
 	GraphicContext& get_gc() {return gc;}
 
-	void set_modelview(const Mat4f &modelview);
-	void push_modelview(const Mat4f &modelview);
-	void pop_modelview();
-	const Mat4f &get_modelview() const;
+	void set_transform(const Mat4f &matrix);
+	const Mat4f &get_transform() const;
 	const Mat4f &get_projection() const;
 
 	void set_map_mode(MapMode map_mode);
@@ -96,13 +94,12 @@ private:
 	void on_window_flip();
 
 	GraphicContext gc;
+    SlotContainer sc;
 
-
-	std::vector<Mat4f> canvas_modelviews;
+	Mat4f canvas_transform;
 	Mat4f canvas_projection;
 	MapMode canvas_map_mode;
 	Size canvas_size;
-	Slot slot_window_resized;
 
 	DisplayWindow current_window;
 
@@ -110,8 +107,6 @@ private:
 
 	Mat4f user_projection;
 	ClipZRange gc_clip_z_range;
-
-	Slot slot_window_flip;
 };
 
 }

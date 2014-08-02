@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_scene3d.h"
 #include "../Display/Render/graphic_context.h"
 #include "Performance/gpu_timer.h"
 #include <memory>
@@ -47,7 +46,7 @@ class SceneObject;
 class SceneCamera;
 class ScenePass;
 
-class CL_API_SCENE Scene
+class Scene
 {
 public:
 	Scene();

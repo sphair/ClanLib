@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_component.h"
 
 namespace clan
@@ -134,8 +133,8 @@ public:
 
 	/// \brief Func clicked
 	///
-	/// \return Callback_v0
-	Callback_v0 &func_clicked();
+	/// \return std::function<void()>
+	std::function<void()> &func_clicked();
 
 /// \}
 /// \name Operations

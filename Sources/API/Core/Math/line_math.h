@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "point.h"
 
 namespace clan
@@ -42,7 +41,7 @@ namespace clan
 /// \brief Math operations on 2D lines.
 ///
 /// Obsolete - Use Line, LineRay, LineSegment
-class CL_API_CORE LineMath
+class LineMath
 {
 public:
 // Operations:

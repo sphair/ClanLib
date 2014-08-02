@@ -30,9 +30,7 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_component.h"
-#include "../../Core/Signals/callback_v0.h"
 
 namespace clan
 {
@@ -42,7 +40,7 @@ namespace clan
 class CheckBox_Impl;
 
 /// \brief Check box component.
-class CL_API_GUI CheckBox : public GUIComponent
+class CheckBox : public GUIComponent
 {
 /// \name Construction
 /// \{
@@ -113,23 +111,23 @@ public:
 
 	/// \brief Func checked
 	///
-	/// \return Callback_v0
-	Callback_v0 &func_checked();
+	/// \return std::function<void()>
+	std::function<void()> &func_checked();
 
 	/// \brief Func unchecked
 	///
-	/// \return Callback_v0
-	Callback_v0 &func_unchecked();
+	/// \return std::function<void()>
+	std::function<void()> &func_unchecked();
 
 	/// \brief Func indeterminated
 	///
-	/// \return Callback_v0
-	Callback_v0 &func_indeterminated();
+	/// \return std::function<void()>
+	std::function<void()> &func_indeterminated();
 
 	/// \brief Func state changed
 	///
-	/// \return Callback_v0
-	Callback_v0 &func_state_changed();
+	/// \return std::function<void()>
+	std::function<void()> &func_state_changed();
 
 /// \}
 /// \name Implementation

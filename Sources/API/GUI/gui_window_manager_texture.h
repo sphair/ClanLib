@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "api_gui.h"
 #include "gui_window_manager.h"
 
 namespace clan
@@ -47,7 +46,7 @@ class GUIWindowManagerProvider_Texture;
 class GUIWindowManagerTextureWindow;
 
 /// \brief Texture window manager.
-class CL_API_GUI GUIWindowManagerTexture : public GUIWindowManager
+class GUIWindowManagerTexture : public GUIWindowManager
 {
 /// \name Construction
 /// \{
@@ -81,13 +80,13 @@ public:
 /// \{
 public:
 	/// \brief void func_repaint()
-	Callback_v0 &func_repaint();
+	std::function<void()> &func_repaint();
 
 	/// \brief void func_setup_framebuffer(FrameBuffer &fb)
-	Callback_v1<FrameBuffer &> &func_setup_framebuffer();
+	std::function<void(FrameBuffer &)> &func_setup_framebuffer();
 
 	/// \brief void func_input_intercept(InputEvent &input_event)
-	Callback_v1<InputEvent &> &func_input_intercept();
+	std::function<void(InputEvent &)> &func_input_intercept();
 /// \}
 
 /// \name Operations

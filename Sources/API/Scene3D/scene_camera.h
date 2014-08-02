@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_scene3d.h"
 #include "../Core/Math/vec3.h"
 #include "../Core/Math/quaternion.h"
 #include <memory>
@@ -42,7 +41,7 @@ namespace clan
 class Scene;
 class SceneCamera_Impl;
 
-class CL_API_SCENE SceneCamera
+class SceneCamera
 {
 public:
 	SceneCamera();

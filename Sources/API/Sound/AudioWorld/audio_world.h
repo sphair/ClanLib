@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_sound.h"
 #include <list>
 #include "../../Core/Math/vec3.h"
 #include "../../Core/Math/quaternion.h"
@@ -40,7 +39,7 @@ class ResourceManager;
 class SoundBuffer;
 class AudioWorld_Impl;
 
-class CL_API_SOUND AudioWorld
+class AudioWorld
 {
 public:
 	AudioWorld(const ResourceManager &resources);

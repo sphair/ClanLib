@@ -39,7 +39,7 @@ Map::Map(Game &game_)
 	background1 = Sprite::resource(canvas, "Background1", resources);
 	background2 = Sprite::resource(canvas, "Background2", resources);
 
-	update_slot = game_.get_update_sig().connect(this,&Map::update);
+	cc.connect(game_.get_update_sig(), clan::bind_member(this, &Map::update));
 
 	pos_x= 0;
 	pos_y= 0;

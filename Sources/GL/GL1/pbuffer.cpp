@@ -44,7 +44,7 @@ PBuffer_GL1::PBuffer_GL1()
 {
 }
 
-PBuffer_GL1::PBuffer_GL1(GL1GraphicContextProvider *gc_provider) : impl(new PBuffer_GL1_Impl(gc_provider))
+PBuffer_GL1::PBuffer_GL1(GL1GraphicContextProvider *gc_provider) : impl(std::make_shared<PBuffer_GL1_Impl>(gc_provider))
 {
 }
 

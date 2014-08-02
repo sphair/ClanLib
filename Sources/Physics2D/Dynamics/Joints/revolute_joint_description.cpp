@@ -44,7 +44,7 @@ RevoluteJointDescription::RevoluteJointDescription()
 }
 
 RevoluteJointDescription::RevoluteJointDescription(const PhysicsWorld &pw)
-: impl(new RevoluteJointDescription_Impl(*pw.impl))
+: impl(std::make_shared<RevoluteJointDescription_Impl>(*pw.impl))
 {
 
 }

@@ -4,15 +4,15 @@
 Client::Client()
 {
 	// Connect essential signals - connecting, disconnecting and receiving events
-	slots.connect(network_client.sig_event_received(), this, &Client::on_event_received);
-	slots.connect(network_client.sig_connected(), this, &Client::on_connected);
-	slots.connect(network_client.sig_disconnected(), this, &Client::on_disconnected);
+	cc.connect(network_client.sig_event_received(), clan::bind_member(this, &Client::on_event_received));
+	cc.connect(network_client.sig_connected(), clan::bind_member(this, &Client::on_connected));
+	cc.connect(network_client.sig_disconnected(), clan::bind_member(this, &Client::on_disconnected));
 
 	// Set up event dispatchers to route incoming events to functions
-	login_events.func_event("Login-Success").set(this, &Client::on_event_login_success);
-	login_events.func_event("Login-Fail").set(this, &Client::on_event_login_fail);
-	game_events.func_event("Game-LoadMap").set(this, &Client::on_event_game_loadmap);
-	game_events.func_event("Game-Start").set(this, &Client::on_event_game_startgame);
+	login_events.func_event("Login-Success") = clan::bind_member(this, &Client::on_event_login_success);
+	login_events.func_event("Login-Fail") = clan::bind_member(this, &Client::on_event_login_fail);
+	game_events.func_event("Game-LoadMap") = clan::bind_member(this, &Client::on_event_game_loadmap);
+	game_events.func_event("Game-Start") = clan::bind_member(this, &Client::on_event_game_startgame);
 
 	quit = false;
 	logged_in = false;
@@ -53,10 +53,10 @@ void Client::on_connected()
 	log_event("network", "Connected to server");
 
 	// For demonstration purposes, lets fail a login
-	network_client.send_event(NetGameEvent("Login", "")); // We will receive an error event for this, as we don't send a proper user name
+	network_client.send_event(NetGameEvent("Login", { "" })); // We will receive an error event for this, as we don't send a proper user name
 
 	// Properly login
-	network_client.send_event(NetGameEvent("Login", "my user name"));
+	network_client.send_event(NetGameEvent("Login", { "my user name" }));
 }
 
 // Disconnected from server

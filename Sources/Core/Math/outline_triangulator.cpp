@@ -37,7 +37,7 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // OutlineTriangulator construction:
 
-OutlineTriangulator::OutlineTriangulator() : impl(new OutlineTriangulator_Impl)
+OutlineTriangulator::OutlineTriangulator() : impl(std::make_shared<OutlineTriangulator_Impl>())
 {
 }
 

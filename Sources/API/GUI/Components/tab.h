@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_component.h"
 
 namespace clan
@@ -44,7 +43,7 @@ class TabPage;
 class DomElement;
 
 /// \brief Tab component.
-class CL_API_GUI Tab : public GUIComponent
+class Tab : public GUIComponent
 {
 /// \name Construction
 /// \{
@@ -102,7 +101,7 @@ public:
 /// \{
 public:
 	/// \brief void func_page_selected(Page *tab_page)
-	Callback_v1<TabPage*> &func_page_selected();
+	std::function<void(TabPage*)> &func_page_selected();
 
 /// \}
 /// \name Operations

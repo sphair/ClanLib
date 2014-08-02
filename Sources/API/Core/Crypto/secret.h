@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 
 namespace clan
@@ -43,7 +42,7 @@ class Secret_Impl;
 /// \brief Key class
 ///
 /// This class zero's the key from memory when the class is destroyed
-class CL_API_CORE Secret
+class Secret
 {
 /// \name Construction
 /// \{

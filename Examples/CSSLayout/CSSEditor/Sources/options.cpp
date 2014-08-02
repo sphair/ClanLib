@@ -82,10 +82,10 @@ Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComp
 	pushbutton_export = new clan::PushButton(this);
 	pushbutton_export->set_geometry(clan::Rect(base_xpos, base_ypos, clan::Size(128, 20)));
 	pushbutton_export->set_text("Launch in Browser");
-	pushbutton_export->func_clicked().set(this, &Options::export_clicked);
+	pushbutton_export->func_clicked() = bind_member(this, &Options::export_clicked);
 
 
-	func_render().set(this, &Options::on_render);
+	func_render() = bind_member(this, &Options::on_render);
 
 }
 

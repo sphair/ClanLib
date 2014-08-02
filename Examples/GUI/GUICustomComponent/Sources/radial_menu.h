@@ -53,7 +53,7 @@ public:
 
 // Signals and callbacks:
 public:
-	Callback_v1<int> func_selected;
+	std::function<void(int)> func_selected;
 
 // Implementation:
 private:

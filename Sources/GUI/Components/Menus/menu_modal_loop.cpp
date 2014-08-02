@@ -49,7 +49,7 @@ namespace clan
 MenuModalLoop::MenuModalLoop(GUIManager manager)
 : owner(0), menubar(0), running(false), ignore_menubar_mouse_up(true), popup(false)
 {
-	slot_filter = manager.sig_filter_message().connect(this, &MenuModalLoop::on_filter_message);
+	sc.connect(manager.sig_filter_message(), bind_member(this, &MenuModalLoop::on_filter_message));
 }
 
 MenuModalLoop::~MenuModalLoop()
@@ -162,8 +162,8 @@ void MenuModalLoop::close_all_popup_windows()
 	while (!popup_windows.empty())
 	{
 		PopupMenuWindow *window = popup_windows.back();
-		if(!window->func_close().is_null())
-			window->func_close().invoke();
+		if(window->func_close())
+			window->func_close()();
 
 		popup_windows.pop_back();
 		delete window;
@@ -175,8 +175,8 @@ void MenuModalLoop::close_last_popup_window()
 	if (!popup_windows.empty())
 	{
 		PopupMenuWindow *window = popup_windows.back();
-		if(!window->func_close().is_null())
-			window->func_close().invoke();
+		if(window->func_close())
+			window->func_close()();
 
 		popup_windows.pop_back();
 		delete window;
@@ -186,7 +186,7 @@ void MenuModalLoop::close_last_popup_window()
 void MenuModalLoop::on_popup_mouse_input(PopupMenuWindow *popup, InputEvent e)
 {
 	e.mouse_pos = popup->screen_to_component_coords(e.mouse_pos);
-	
+
 	if (e.type == InputEvent::released)
 	{
 		PopupMenuItem pmi = popup->get_selected_item();
@@ -198,8 +198,8 @@ void MenuModalLoop::on_popup_mouse_input(PopupMenuWindow *popup, InputEvent e)
 				if (pmi.is_checkable())
 					pmi.set_checked(!pmi.is_checked());
 
-				if (!pmi.func_clicked().is_null())
-					pmi.func_clicked().invoke();
+				if (pmi.func_clicked())
+					pmi.func_clicked()();
 			}
 		}
 	}
@@ -262,7 +262,7 @@ void MenuModalLoop::on_keyboard_input(InputEvent e)
 			PopupMenuWindow *window = popup_windows.back();
 			popup_windows.pop_back();
 			delete window;
-			
+
 			if (popup_windows.empty())
 			{
 				menubar->impl->select_previous();
@@ -303,8 +303,8 @@ void MenuModalLoop::on_keyboard_input(InputEvent e)
 		{
 			PopupMenuItem pmi = window->get_selected_item();
 			end();
-			if (!pmi.func_clicked().is_null())
-				pmi.func_clicked().invoke();
+			if (pmi.func_clicked())
+				pmi.func_clicked()();
 		}
 		else if (e.id == keycode_escape)
 		{

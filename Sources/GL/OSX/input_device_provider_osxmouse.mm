@@ -77,16 +77,16 @@ int InputDeviceProvider_OSXMouse::get_y() const
 bool InputDeviceProvider_OSXMouse::get_keycode(int keycode) const
 {
     throw_if_disposed();
-    
+
     bool result = false;
-    
+
     // Sanity.
     assert(keycode < clan::mouse_count);
     if (keycode < clan::mouse_count)
     {
         result = mouse_down_map[keycode];
     }
-    
+
     return result;
 }
 
@@ -144,7 +144,7 @@ void InputDeviceProvider_OSXMouse::set_position(int x, int y)
     //
     // TODO: Reimplement.
     //
-    
+
     throw_if_disposed();
 }
 
@@ -154,7 +154,7 @@ void InputDeviceProvider_OSXMouse::set_position(int x, int y)
 void InputDeviceProvider_OSXMouse::on_dispose()
 {
 }
-    
+
 void InputDeviceProvider_OSXMouse::on_mouse_event(const clan::InputCode& keycode, const clan::InputEvent::Type& type,
                                                   const clan::Point& position)
 {

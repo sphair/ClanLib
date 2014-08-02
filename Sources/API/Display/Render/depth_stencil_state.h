@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include <memory>
 
 namespace clan
@@ -42,7 +41,7 @@ class DepthStencilStateDescription;
 class DepthStencilStateProvider;
 
 /// \brief DepthStencil state setup.
-class CL_API_DISPLAY DepthStencilState
+class DepthStencilState
 {
 /// \name Construction
 /// \{

@@ -47,7 +47,7 @@ Physics3DSweepTest::Physics3DSweepTest()
 }
 
 Physics3DSweepTest::Physics3DSweepTest(Physics3DWorld &world)
-	: impl(new Physics3DSweepTest_Impl(world.impl.get()))
+	: impl(std::make_shared<Physics3DSweepTest_Impl>(world.impl.get()))
 {
 }
 

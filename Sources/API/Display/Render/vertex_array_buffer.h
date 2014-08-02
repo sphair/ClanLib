@@ -30,7 +30,6 @@
 #pragma once
 
 #include <memory>
-#include "../api_display.h"
 #include "../Image/buffer_usage.h"
 
 namespace clan
@@ -44,7 +43,7 @@ class VertexArrayBufferProvider;
 class VertexArrayBuffer_Impl;
 
 /// \brief Vertex Array Buffer
-class CL_API_DISPLAY VertexArrayBuffer
+class VertexArrayBuffer
 {
 /// \name Construction
 /// \{

@@ -38,31 +38,31 @@ public:
 
 private:
 	bool on_close();
-	void on_before_edit_changed(clan::InputEvent &input_event, clan::LineEdit *lineedit);
-	void on_after_edit_changed(clan::InputEvent &input_event, clan::LineEdit *lineedit);
-	void on_selection_changed(clan::LineEdit *lineedit);
-	void on_focus_gained(clan::LineEdit *lineedit);
-	void on_focus_lost(clan::LineEdit *lineedit);
-	void on_enter_pressed(clan::LineEdit *lineedit);
-	void on_checked_disable(clan::CheckBox *checkbox);
-	void on_unchecked_disable(clan::CheckBox *checkbox);
+	void on_before_edit_changed(clan::InputEvent &input_event);
+	void on_after_edit_changed(clan::InputEvent &input_event);
+	void on_selection_changed();
+	void on_focus_gained();
+	void on_focus_lost();
+	void on_enter_pressed();
+	void on_checked_disable();
+	void on_unchecked_disable();
 
-	void on_checked_mask_hex(clan::CheckBox *checkbox);
-	void on_unchecked_mask_hex(clan::CheckBox *checkbox);
-	void on_checked_read_only(clan::CheckBox *checkbox);
-	void on_unchecked_read_only(clan::CheckBox *checkbox);
-	void on_checked_lowercase(clan::CheckBox *checkbox);
-	void on_unchecked_lowercase(clan::CheckBox *checkbox);
-	void on_checked_uppercase(clan::CheckBox *checkbox);
-	void on_unchecked_uppercase(clan::CheckBox *checkbox);
-	void on_checked_password_mode(clan::CheckBox *checkbox);
-	void on_unchecked_password_mode(clan::CheckBox *checkbox);
-	void on_checked_numeric_mode(clan::CheckBox *checkbox);
-	void on_unchecked_numeric_mode(clan::CheckBox *checkbox);
-	void on_checked_numeric_mode_decimals(clan::CheckBox *checkbox);
-	void on_unchecked_numeric_mode_decimals(clan::CheckBox *checkbox);
-	void on_settext_selected(int value, clan::ComboBox *combobox);
-	void on_resize_clicked(clan::PushButton *pushbutton);
+	void on_checked_mask_hex();
+	void on_unchecked_mask_hex();
+	void on_checked_read_only();
+	void on_unchecked_read_only();
+	void on_checked_lowercase();
+	void on_unchecked_lowercase();
+	void on_checked_uppercase();
+	void on_unchecked_uppercase();
+	void on_checked_password_mode();
+	void on_unchecked_password_mode();
+	void on_checked_numeric_mode();
+	void on_unchecked_numeric_mode();
+	void on_checked_numeric_mode_decimals();
+	void on_unchecked_numeric_mode_decimals();
+	void on_settext_selected(int value);
+	void on_resize_clicked();
 
 private:
 	clan::LineEdit *lineedit1;

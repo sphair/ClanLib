@@ -32,7 +32,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "vec2.h"
 #include "angle.h"
 #include "origin.h"

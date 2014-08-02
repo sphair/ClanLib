@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_csslayout.h"
 #include "../PropertyValues/css_value_table_layout.h"
 #include "../PropertyValues/css_value_caption_side.h"
 #include "../PropertyValues/css_value_border_collapse.h"
@@ -42,7 +41,7 @@ namespace clan
 
 class CSSComputedValues;
 
-class CL_API_CSSLAYOUT CSSComputedTableReset
+class CSSComputedTableReset
 {
 public:
 	CSSValueTableLayout table_layout;
@@ -50,7 +49,7 @@ public:
 	void compute(const CSSComputedValues &parent, CSSResourceCache *layout, float em_size, float ex_size);
 };
 
-class CL_API_CSSLAYOUT CSSComputedTableInherit
+class CSSComputedTableInherit
 {
 public:
 	CSSValueCaptionSide caption_side; // inherited

@@ -40,9 +40,10 @@ void Game::run()
 	desc.set_allow_resize(false);
 
 	DisplayWindow window(desc);
+    SlotContainer cc;
 
-	Slot slot_quit = window.sig_window_close().connect(this, &Game::on_window_close);
-	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &Game::on_input_up);
+	cc.connect(window.sig_window_close(), clan::bind_member(this, &Game::on_window_close));
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &Game::on_input_up));
 
 	Canvas canvas(window);
 

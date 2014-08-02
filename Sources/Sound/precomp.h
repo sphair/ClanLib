@@ -37,27 +37,9 @@
 
 #include "API/Core/System/exception.h"
 
-#ifdef __BORLANDC__
-#define BAD_MATH
-#endif
-
-#ifdef BAD_MATH
-#define sqrtf sqrt
-#define acosf acos
-#define sinf sin
-#define cosf cos
-#endif
-
 #if defined(_DEBUG) && !defined(DEBUG)
 #define DEBUG
 #endif
-
-#ifdef WIN32
-#define BREAKPOINT
-#else
-#define BREAKPOINT asm("int $03");
-#endif
-
 
 #include <cstring>
 

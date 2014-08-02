@@ -65,7 +65,7 @@ MessageBoxComponent::MessageBoxComponent(
 	create_buttons();
 	create_parts();
 
-	func_render().set(this, &MessageBoxComponent::on_render);
+	func_render() = bind_member(this, &MessageBoxComponent::on_render);
 }
 
 MessageBoxComponent::~MessageBoxComponent()
@@ -82,25 +82,25 @@ Size MessageBoxComponent::layout_content()
 {
 	Size size(0,0);
 	Size icon_size = part_icon.get_css_size();
-	Rect border_space = component->get_content_shrink_box();
+	Rect border_space = get_content_shrink_box();
 
-	Size min_size = component->get_content_box().get_size();
+	Size min_size = get_content_box().get_size();
 	if (min_size == Size(0,0))
 	{
 		min_size = Size(300,80);
 	}
 
-	int button_area_height = component->get_property_int(CssStr::MessageBox::button_area_height, "40");
+	int button_area_height = get_property_int(CssStr::MessageBox::button_area_height, "40");
 
-	int icon_margin_right = component->get_property_int("icon_text_gap", "7");
+	int icon_margin_right = get_property_int("icon_text_gap", "7");
 
 	rect_icon = part_icon.get_border_box(icon_size).get_size();
 	rect_icon.translate(border_space.left, 0);
 
 
 	Canvas canvas = get_canvas();
-	Size text_size = component->get_render_text_box(canvas, detail_text).get_size();
-	rect_text = component->get_size();
+	Size text_size = get_render_text_box(canvas, detail_text).get_size();
+	rect_text = get_size();
 	rect_text.left = rect_icon.right + icon_margin_right;
 	rect_text.right = rect_text.left + text_size.width;
 
@@ -246,22 +246,22 @@ void MessageBoxComponent::create_buttons()
 	if (button_ok)
 	{
 		button_ok->set_text("OK");
-		button_ok->func_clicked().set(this, &MessageBoxComponent::on_button_clicked, mb_result_ok);
+		button_ok->func_clicked() = [=]() {on_button_clicked(mb_result_ok); };
 	}
 	if (button_yes)
 	{
 		button_yes->set_text("Yes");
-		button_yes->func_clicked().set(this, &MessageBoxComponent::on_button_clicked, mb_result_yes);
+		button_yes->func_clicked() = [=]() {on_button_clicked(mb_result_yes); };
 	}
 	if (button_no)
 	{
 		button_no->set_text("No");
-		button_no->func_clicked().set(this, &MessageBoxComponent::on_button_clicked, mb_result_no);
+		button_no->func_clicked() = [=]() {on_button_clicked(mb_result_no); };
 	}
 	if (button_cancel)
 	{
 		button_cancel->set_text("Cancel");
-		button_cancel->func_clicked().set(this, &MessageBoxComponent::on_button_clicked, mb_result_cancel);
+		button_cancel->func_clicked() = [=]() {on_button_clicked(mb_result_cancel); };
 	}
 }
 
@@ -289,7 +289,7 @@ void MessageBoxComponent::set_css_class()
 void MessageBoxComponent::on_render(Canvas &canvas, const Rect &dirty_rect)
 {
 	part_icon.render_box(canvas, rect_icon);
-	component->render_text(canvas, detail_text);
+	render_text(canvas, detail_text);
 }
 
 void MessageBoxComponent::create_parts()

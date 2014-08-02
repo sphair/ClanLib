@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_csslayout.h"
 #include "../PropertyValues/css_value_font_family.h"
 #include "../PropertyValues/css_value_font_size.h"
 #include "../PropertyValues/css_value_font_style.h"
@@ -43,7 +42,7 @@ namespace clan
 
 class CSSComputedValues;
 
-class CL_API_CSSLAYOUT CSSComputedFont
+class CSSComputedFont
 {
 public:
 	CSSValueFontFamily font_family; // inherited

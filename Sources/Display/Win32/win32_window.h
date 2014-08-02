@@ -32,7 +32,6 @@
 
 #include <list>
 #include <map>
-#include "API/Display/api_display.h"
 #include "API/Display/Window/input_context.h"
 #include "API/Display/Window/input_device.h"
 #include "API/Display/TargetProviders/input_device_provider.h"
@@ -40,7 +39,6 @@
 #include "API/Core/Math/point.h"
 #include "API/Core/Math/rect.h"
 #include "API/Core/System/cl_platform.h"
-#include "API/Core/Signals/callback_v0.h"
 #include "API/Core/System/thread.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include <memory>
@@ -60,7 +58,7 @@ class CursorProvider_Win32;
 class InputEvent;
 class Colorf;
 
-class CL_API_DISPLAY Win32Window
+class Win32Window
 {
 public:
 	Win32Window();
@@ -77,7 +75,7 @@ public:
 	Size get_minimum_size(bool client_area) const;
 	Size get_maximum_size(bool client_area) const;
 	std::string get_title() const;
-	Callback_v0 &func_on_resized() { return callback_on_resized; }
+	std::function<void()> &func_on_resized() { return callback_on_resized; }
 	InputContext get_ic() { return ic; }		// Important, do not return by reference, so the shared pointer exists if this window is destroyed
 	const InputContext get_ic() const { return ic; }		// Important, do not return by reference, so the shared pointer exists if this window is destroyed
 	bool is_clipboard_text_available() const;
@@ -194,7 +192,7 @@ private:
 	std::vector<InputDevice> joysticks;
 	Point mouse_pos;
 	std::map<int,int> repeat_count;
-	Callback_v0 callback_on_resized;
+	std::function<void()> callback_on_resized;
 	InputContext ic;
 	PAINTSTRUCT paintstruct;
 	Size minimum_size;

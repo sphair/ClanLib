@@ -38,7 +38,7 @@
 #include "API/GUI/gui_window_manager_system.h"
 #include "../gui_manager_impl.h"
 #include "API/Display/2D/canvas.h"
-
+#include "API/Core/Signals/bind_member.h"
 namespace clan
 {
 
@@ -71,33 +71,33 @@ GUIWindowManager::WindowManagerType GUIWindowManagerProvider_System::get_window_
 
 void GUIWindowManagerProvider_System::on_displaywindow_lost_focus(GUITopLevelWindow *top_level_window)
 {
-	site->func_focus_lost->invoke(top_level_window);
+	(*site->func_focus_lost)(top_level_window);
 }
 
 void GUIWindowManagerProvider_System::on_displaywindow_got_focus(GUITopLevelWindow *top_level_window)
 {
-	site->func_focus_gained->invoke(top_level_window);
+	(*site->func_focus_gained)(top_level_window);
 }
 
 void GUIWindowManagerProvider_System::on_displaywindow_resize(int width, int height, GUITopLevelWindow *top_level_window)
 {
-	site->func_resize->invoke(top_level_window, Size(width, height));
+	(*site->func_resize)(top_level_window, Size(width, height));
 }
 
 void GUIWindowManagerProvider_System::on_displaywindow_paint(const Rect &rect, GUITopLevelWindow *top_level_window)
 {
-	site->func_paint->invoke(top_level_window, rect);
+	(*site->func_paint)(top_level_window, rect);
 }
 
 void GUIWindowManagerProvider_System::on_displaywindow_window_close(GUITopLevelWindow *top_level_window)
 {
-	site->func_close->invoke(top_level_window);
+	(*site->func_close)(top_level_window);
 }
 
 void GUIWindowManagerProvider_System::on_displaywindow_window_destroy(GUITopLevelWindow *top_level_window)
 {
 	maintain_window_cache(top_level_window);
-	site->func_destroy->invoke(top_level_window);
+	(*site->func_destroy)(top_level_window);
 }
 
 void GUIWindowManagerProvider_System::on_input(const InputEvent &incoming_input_event, GUITopLevelWindow *top_level_window)
@@ -105,7 +105,7 @@ void GUIWindowManagerProvider_System::on_input(const InputEvent &incoming_input_
 	InputEvent input_event = incoming_input_event;
 	GUITopLevelWindow *target = top_level_window;
 
-	site->func_input_received->invoke(target, input_event);
+	(*site->func_input_received)(target, input_event);
 }
 
 void GUIWindowManagerProvider_System::set_site(GUIWindowManagerSite *new_site)
@@ -114,84 +114,83 @@ void GUIWindowManagerProvider_System::set_site(GUIWindowManagerSite *new_site)
 }
 
 void GUIWindowManagerProvider_System::create_window(
-	GUITopLevelWindow *handle,
-	GUITopLevelWindow *owner,
-	GUIComponent *component,
-	GUITopLevelDescription description)
+    GUITopLevelWindow *handle,
+    GUITopLevelWindow *owner,
+    GUIComponent *component,
+    GUITopLevelDescription description)
 {
-	description.set_update_supported(true);
+    description.set_update_supported(true);
 
-	GUITopLevelWindowSystem *owner_window = 0;
-	if (owner)
-	{
-		owner_window = window_map[owner];
-		description.set_owner_window(owner_window->window);
-	}
+    GUITopLevelWindowSystem *owner_window = 0;
+    if (owner)
+    {
+        owner_window = window_map[owner];
+        description.set_owner_window(owner_window->window);
+    }
 
-	GUITopLevelWindowSystem *top_level_window;
+    GUITopLevelWindowSystem *top_level_window;
 
 #ifdef WIN32	// Cached windows do not work on Linux
-	if (description.get_using_gui_window_cache())
-	{
-		used_cached_windows++;
+    if (description.get_using_gui_window_cache())
+    {
+        used_cached_windows++;
 
-		if (used_cached_windows <= cached_windows.size())
-		{
-			top_level_window = cached_windows[used_cached_windows-1];
-			top_level_window->slots = SlotContainer();
-			cache_window_handles[handle] = top_level_window->window.get_hwnd();
-		}
-		else
-		{
-			top_level_window = new GUITopLevelWindowSystem;
-			top_level_window->window = DisplayWindow(description);
-			top_level_window->canvas = Canvas(top_level_window->window);
-			cached_windows.push_back(top_level_window);
-			cache_window_handles[handle] = top_level_window->window.get_hwnd();
-		}
-	}
-	else
+        if (used_cached_windows <= cached_windows.size())
+        {
+            top_level_window = cached_windows[used_cached_windows-1];
+            cache_window_handles[handle] = top_level_window->window.get_hwnd();
+        }
+        else
+        {
+            top_level_window = new GUITopLevelWindowSystem;
+            top_level_window->window = DisplayWindow(description);
+            top_level_window->canvas = Canvas(top_level_window->window);
+            cached_windows.push_back(top_level_window);
+            cache_window_handles[handle] = top_level_window->window.get_hwnd();
+        }
+    }
+else
 #endif
-	{
-		top_level_window = new GUITopLevelWindowSystem;
-		top_level_window->window = DisplayWindow(description);
-		top_level_window->canvas = Canvas(top_level_window->window);
-	}
+    {
+        top_level_window = new GUITopLevelWindowSystem;
+        top_level_window->window = DisplayWindow(description);
+        top_level_window->canvas = Canvas(top_level_window->window);
+    }
 
-	top_level_window->canvas.set_map_mode(map_2d_upper_left);
+    top_level_window->canvas.set_map_mode(map_2d_upper_left);
 
-	top_level_window->slots.connect(top_level_window->window.sig_lost_focus(), this, &GUIWindowManagerProvider_System::on_displaywindow_lost_focus, handle);
-	top_level_window->slots.connect(top_level_window->window.sig_got_focus(), this, &GUIWindowManagerProvider_System::on_displaywindow_got_focus, handle);
-	top_level_window->slots.connect(top_level_window->window.sig_resize(), this, &GUIWindowManagerProvider_System::on_displaywindow_resize, handle);
-	top_level_window->slots.connect(top_level_window->window.sig_paint(), this, &GUIWindowManagerProvider_System::on_displaywindow_paint, handle);
-	top_level_window->slots.connect(top_level_window->window.sig_window_close(), this, &GUIWindowManagerProvider_System::on_displaywindow_window_close, handle);
-	top_level_window->slots.connect(top_level_window->window.sig_window_destroy(), this, &GUIWindowManagerProvider_System::on_displaywindow_window_destroy, handle);
+	sc.connect(top_level_window->window.sig_lost_focus(), [=](){on_displaywindow_lost_focus(handle); });
+	sc.connect(top_level_window->window.sig_got_focus(), [=](){on_displaywindow_got_focus(handle); });
+	sc.connect(top_level_window->window.sig_resize(), [=](int width, int height){on_displaywindow_resize(width, height, handle); });
+	sc.connect(top_level_window->window.sig_paint(), [=](const clan::Rect &rect){on_displaywindow_paint(rect, handle); });
+	sc.connect(top_level_window->window.sig_window_close(), [=](){on_displaywindow_window_close(handle); });
+	sc.connect(top_level_window->window.sig_window_destroy(), [=](){on_displaywindow_window_destroy(handle); });
 
-	InputContext ic = top_level_window->window.get_ic();
-	top_level_window->slots.connect(ic.get_mouse().sig_key_up(), this, &GUIWindowManagerProvider_System::on_input, handle);
-	top_level_window->slots.connect(ic.get_mouse().sig_key_down(), this, &GUIWindowManagerProvider_System::on_input, handle);
-	top_level_window->slots.connect(ic.get_mouse().sig_key_dblclk(), this, &GUIWindowManagerProvider_System::on_input, handle);
-	top_level_window->slots.connect(ic.get_mouse().sig_pointer_move(), this, &GUIWindowManagerProvider_System::on_input, handle);
-	top_level_window->slots.connect(ic.get_keyboard().sig_key_up(), this, &GUIWindowManagerProvider_System::on_input, handle);
-	top_level_window->slots.connect(ic.get_keyboard().sig_key_down(), this, &GUIWindowManagerProvider_System::on_input, handle);
+    InputContext ic = top_level_window->window.get_ic();
+	sc.connect(ic.get_mouse().sig_key_up(), [=](const InputEvent &input_event){on_input(input_event, handle); });
+	sc.connect(ic.get_mouse().sig_key_down(), [=](const InputEvent &input_event){on_input(input_event, handle); });
+	sc.connect(ic.get_mouse().sig_key_dblclk(), [=](const InputEvent &input_event){on_input(input_event, handle); });
+	sc.connect(ic.get_mouse().sig_pointer_move(), [=](const InputEvent &input_event){on_input(input_event, handle); });
+	sc.connect(ic.get_keyboard().sig_key_up(), [=](const InputEvent &input_event){on_input(input_event, handle); });
+	sc.connect(ic.get_keyboard().sig_key_down(), [=](const InputEvent &input_event){on_input(input_event, handle); });
 
-	for (int i = 0; i < ic.get_tablet_count(); ++i)
-	{
-		top_level_window->slots.connect(ic.get_tablet(i).sig_axis_move(), this, &GUIWindowManagerProvider_System::on_input, handle);
-		top_level_window->slots.connect(ic.get_tablet(i).sig_key_down(), this, &GUIWindowManagerProvider_System::on_input, handle);
-		top_level_window->slots.connect(ic.get_tablet(i).sig_key_dblclk(), this, &GUIWindowManagerProvider_System::on_input, handle);
-		top_level_window->slots.connect(ic.get_tablet(i).sig_key_up(), this, &GUIWindowManagerProvider_System::on_input, handle);
-		top_level_window->slots.connect(ic.get_tablet(i).sig_proximity_change(), this, &GUIWindowManagerProvider_System::on_input, handle);
-	}
+    for (int i = 0; i < ic.get_tablet_count(); ++i)
+    {
+		sc.connect(ic.get_tablet(i).sig_axis_move(), [=](const InputEvent &input_event){on_input(input_event, handle); });
+		sc.connect(ic.get_tablet(i).sig_key_down(), [=](const InputEvent &input_event){on_input(input_event, handle); });
+		sc.connect(ic.get_tablet(i).sig_key_dblclk(), [=](const InputEvent &input_event){on_input(input_event, handle); });
+		sc.connect(ic.get_tablet(i).sig_key_up(), [=](const InputEvent &input_event){on_input(input_event, handle); });
+		sc.connect(ic.get_tablet(i).sig_proximity_change(), [=](const InputEvent &input_event){on_input(input_event, handle); });
+    }
 
-	window_map[handle] = top_level_window;
+    window_map[handle] = top_level_window;
 
-	sig_toplevel_window_created.invoke(top_level_window->window);
+    sig_toplevel_window_created(top_level_window->window);
 }
 
 void GUIWindowManagerProvider_System::destroy_window(GUITopLevelWindow *handle)
 {
-	sig_toplevel_window_destroyed.invoke(window_map[handle]->window);
+	sig_toplevel_window_destroyed(window_map[handle]->window);
 
 	capture_mouse(handle, false);	// Ensure the destroyed window has not captured the mouse
 

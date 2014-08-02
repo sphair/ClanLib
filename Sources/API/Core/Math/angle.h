@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 
 namespace clan
@@ -60,7 +59,7 @@ enum EulerOrder
 
 
 /// \brief Angle class.
-class CL_API_CORE Angle
+class Angle
 {
 /// \name Construction
 /// \{

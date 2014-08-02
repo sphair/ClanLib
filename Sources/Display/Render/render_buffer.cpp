@@ -56,7 +56,7 @@ RenderBuffer::RenderBuffer()
 }
 
 RenderBuffer::RenderBuffer(GraphicContext &context, int width, int height, TextureFormat texture_format, int multisample_samples)
-: impl(new RenderBuffer_Impl)
+: impl(std::make_shared<RenderBuffer_Impl>())
 {
 	GraphicContextProvider *gc_provider = context.get_provider();
 	impl->provider = gc_provider->alloc_render_buffer();

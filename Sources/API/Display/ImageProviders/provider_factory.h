@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include <map>
 #include "../../Core/IOData/file_system.h"
 
@@ -44,7 +43,7 @@ class PixelBuffer;
 class ImageProviderType;
 
 /// \brief Image Provider factory
-class CL_API_DISPLAY ImageProviderFactory
+class ImageProviderFactory
 {
 /// \name Static Attributes
 /// \{

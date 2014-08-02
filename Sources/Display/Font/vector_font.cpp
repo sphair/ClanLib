@@ -58,7 +58,7 @@ VectorFont::VectorFont( Canvas &canvas, const std::string &typeface_name, int he
 	*this = VectorFont(canvas, desc, filename);
 }
 
-VectorFont::VectorFont( Canvas &canvas, const FontDescription &desc, const std::string &filename) : impl(new VectorFont_Impl)
+VectorFont::VectorFont( Canvas &canvas, const FontDescription &desc, const std::string &filename) : impl(std::make_shared<VectorFont_Impl>())
 {
 	impl->load_font(desc, filename);
 }

@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include "graphic_context.h"
 
 namespace clan
@@ -40,7 +39,7 @@ namespace clan
 class DepthStencilStateDescription_Impl;
 
 /// \brief DepthStencil state description.
-class CL_API_DISPLAY DepthStencilStateDescription
+class DepthStencilStateDescription
 {
 /// \name Construction
 /// \{

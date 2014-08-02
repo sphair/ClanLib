@@ -38,7 +38,7 @@ CSSSelectResult::CSSSelectResult()
 }
 
 CSSSelectResult::CSSSelectResult(const std::vector<CSSPropertyValue *> &values)
-: impl(new CSSSelectResult_Impl())
+: impl(std::make_shared<CSSSelectResult_Impl>())
 {
 	impl->values = values;
 }

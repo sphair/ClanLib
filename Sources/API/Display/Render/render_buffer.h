@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include <memory>
 #include "texture.h"
 
@@ -45,7 +44,7 @@ class RenderBufferProvider;
 class RenderBuffer_Impl;
 
 /// \brief Render-buffer object class.
-class CL_API_DISPLAY RenderBuffer
+class RenderBuffer
 {
 /// \name Construction
 /// \{

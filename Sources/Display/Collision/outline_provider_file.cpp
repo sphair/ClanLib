@@ -41,7 +41,7 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // OutlineProviderFile Construction:
 
-OutlineProviderFile::OutlineProviderFile(IODevice &file) : impl(new OutlineProviderFile_Impl( file ))
+OutlineProviderFile::OutlineProviderFile(IODevice &file) : impl(std::make_shared<OutlineProviderFile_Impl>( file ))
 {
 }
 

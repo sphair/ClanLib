@@ -37,7 +37,7 @@ namespace clan
 // OpenFileDialog Construction:
 
 OpenFileDialog::OpenFileDialog(GUIComponent *owner)
-: impl(new FileDialog_Impl)
+: impl(std::make_shared<FileDialog_Impl>())
 {
 	impl->owner = owner;
 }

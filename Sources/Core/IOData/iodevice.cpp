@@ -44,7 +44,7 @@ IODevice::IODevice()
 }
 
 IODevice::IODevice(IODeviceProvider *provider)
-: impl(new IODevice_Impl)
+: impl(std::make_shared<IODevice_Impl>())
 {
 	impl->provider = provider;
 }

@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_compute.h"
 #include <memory>
 #include "../Core/Math/vec4.h"
 #include "../Display/Image/buffer_usage.h"
@@ -49,7 +48,7 @@ class ComputeBuffer;
 class ComputeBuffer_Impl;
 
 /// \brief Compute buffer
-class CL_API_COMPUTE ComputeBuffer
+class ComputeBuffer
 {
 /// \name Construction
 /// \{

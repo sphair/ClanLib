@@ -57,11 +57,9 @@ public:
 	GUIThemePart part_menu_item;
 	GUIThemePart part_menu_item_selected;
 	GUIThemePart part_menu_item_separator;
+    SlotContainer sc;
 
 	bool running;
-	Slot slot_filter;
-
-
 };
 
 }

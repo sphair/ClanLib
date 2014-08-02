@@ -51,7 +51,7 @@ enum ComponentAnchorPoint
 };
 
 /// \brief GUI base component class.
-class CL_API_GUI GUILayoutCorners : public GUILayout
+class GUILayoutCorners : public GUILayout
 {
 /// \name Construction
 /// \{

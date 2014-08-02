@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_sound.h"
 #include <memory>
 
 namespace clan
@@ -40,7 +39,7 @@ namespace clan
 class SoundOutput_Description_Impl;
 
 /// \brief Sound output description class.
-class CL_API_SOUND SoundOutput_Description
+class SoundOutput_Description
 {
 /// \name Construction
 /// \{

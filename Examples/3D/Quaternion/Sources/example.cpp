@@ -70,12 +70,13 @@ int App::start(const std::vector<std::string> &args)
 	desc.set_depth_size(16);
 
 	DisplayWindow window(desc);
+    SlotContainer cc;
 
 	// Connect the Window close event
-	Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
+	cc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 
 	// Set up GUI
 	std::string theme;

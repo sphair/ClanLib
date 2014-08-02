@@ -29,10 +29,8 @@
 #pragma once
 
 
-#include "../api_core.h"
-#include "../Signals/callback_0.h"
-#include "../Signals/callback_v1.h"
-#include "../Signals/callback_2.h"
+#include <memory>
+#include <functional>
 
 namespace clan
 {
@@ -42,7 +40,7 @@ class KeepAliveObject;
 class KeepAliveObject_Impl;
 
 /// \brief KeepAlive application loop helper
-class CL_API_CORE KeepAlive
+class KeepAlive
 {
 public:
 	/// \brief Processes and dispatches keep alive events until the specified timeout period has passed
@@ -59,24 +57,24 @@ public:
 	/// \return The event that triggered an event.\n
 	///         -1 = Timeout
 	///			events.size() = An external event was triggered
-	static Callback_2<int /*retval*/, const std::vector<Event> &/*events*/, int /*timeout */ > &func_event_wait();
+	static std::function<int /*retval*/(const std::vector<Event> &/*events*/, int /*timeout */)> &func_event_wait();
     
 	/// \brief Function that gets called when KeepAliveObject objects are created.
     ///
     /// This callback is used to provide a thread identifier for the func_awake_thread callback.
-    static Callback_0<void *> &func_thread_id();
+    static std::function<void *()> &func_thread_id();
     
 	/// \brief Function that gets called when KeepAliveObject::set_wakeup_event is called.
     ///
     /// This callback is used to provide a way to awaken a thread that needs to process keep alive events.
-    static Callback_v1<void *> &func_awake_thread();
+    static std::function<void(void *)> &func_awake_thread();
 
 	/// \brief Returns all the current keep alive objects available for this thread
 	static std::vector<KeepAliveObject *> get_objects();
 };
 
 /// \brief Interface for objects participating in the thread keep-alive processing loop
-class CL_API_CORE KeepAliveObject
+class KeepAliveObject
 {
 public:
 	/// \brief Registers a keep alive object

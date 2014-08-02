@@ -34,7 +34,7 @@ namespace clan
 {
 
 TLSClient::TLSClient()
-	: impl(new TLSClient_Impl())
+	: impl(std::make_shared<TLSClient_Impl>())
 {
 }
 

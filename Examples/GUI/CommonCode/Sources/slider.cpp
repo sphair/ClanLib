@@ -33,7 +33,7 @@ Slider::Slider(clan::GUIManager &manager) :
 	clan::Window(&manager, clan::GUITopLevelDescription("Slider", clan::Rect(256 + 16, 8, clan::Size(256, 256)), false))
 {
 
-	func_close().set(this, &Slider::on_close);
+	func_close() = bind_member(this, &Slider::on_close);
 
 	clan::Rect client_area = get_client_area();
 
@@ -47,10 +47,10 @@ Slider::Slider(clan::GUIManager &manager) :
 	slider_vertical->set_page_step(40);
 	slider_vertical->set_position(50);
 	slider_vertical->set_lock_to_ticks(false);
-	slider_vertical->func_value_changed().set(this, &Slider::on_value_changed, slider_vertical);
-	slider_vertical->func_value_decremented().set(this, &Slider::on_value_decremented, slider_vertical);
-	slider_vertical->func_value_incremented().set(this, &Slider::on_value_incremented, slider_vertical);
-	slider_vertical->func_slider_moved().set(this, &Slider::on_slider_moved, slider_vertical);
+	slider_vertical->func_value_changed() = [=]() {on_value_changed(slider_vertical); };
+	slider_vertical->func_value_decremented() = bind_member(this, &Slider::on_value_decremented);
+	slider_vertical->func_value_incremented() = bind_member(this, &Slider::on_value_incremented);
+	slider_vertical->func_slider_moved() = bind_member(this, &Slider::on_slider_moved);
 
 	slider_horizontal = new clan::Slider(this);
 	slider_horizontal->set_geometry(clan::Rect(client_area.left + 36, client_area.top + 10, clan::Size(200, 17)));
@@ -62,10 +62,10 @@ Slider::Slider(clan::GUIManager &manager) :
 	slider_horizontal->set_page_step(40);
 	slider_horizontal->set_position(50);
 	slider_horizontal->set_lock_to_ticks(false);
-	slider_horizontal->func_value_changed().set(this, &Slider::on_value_changed, slider_horizontal);
-	slider_horizontal->func_value_decremented().set(this, &Slider::on_value_decremented, slider_horizontal);
-	slider_horizontal->func_value_incremented().set(this, &Slider::on_value_incremented, slider_horizontal);
-	slider_horizontal->func_slider_moved().set(this, &Slider::on_slider_moved, slider_horizontal);
+	slider_horizontal->func_value_changed() = [=]() {on_value_changed(slider_horizontal); };
+	slider_horizontal->func_value_decremented() = bind_member(this, &Slider::on_value_decremented);
+	slider_horizontal->func_value_incremented() = bind_member(this, &Slider::on_value_incremented);
+	slider_horizontal->func_slider_moved() = bind_member(this, &Slider::on_slider_moved);
 
 	clan::Size lineedit_size(42, 20);
 	clan::Size label_size(50, 15);
@@ -79,7 +79,7 @@ Slider::Slider(clan::GUIManager &manager) :
 	lineedit_min->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, lineedit_size));
 	lineedit_min->set_text("0");
 	lineedit_min->set_numeric_mode(true);
-	lineedit_min->func_enter_pressed().set(this, &Slider::on_min_enter_pressed, lineedit_min);
+	lineedit_min->func_enter_pressed() = bind_member(this, &Slider::on_min_enter_pressed);
 
 	lineedit_label_min = new clan::Label(this);
 	lineedit_label_min->set_geometry(clan::Rect(label_xpos, lineedit_ypos, label_size));
@@ -90,7 +90,7 @@ Slider::Slider(clan::GUIManager &manager) :
 	lineedit_max->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, lineedit_size));
 	lineedit_max->set_text("100");
 	lineedit_max->set_numeric_mode(true);
-	lineedit_max->func_enter_pressed().set(this, &Slider::on_max_enter_pressed, lineedit_max);
+	lineedit_max->func_enter_pressed() = bind_member(this, &Slider::on_max_enter_pressed);
 
 	lineedit_label_max = new clan::Label(this);
 	lineedit_label_max->set_geometry(clan::Rect(label_xpos, lineedit_ypos, label_size));
@@ -100,7 +100,7 @@ Slider::Slider(clan::GUIManager &manager) :
 	lineedit_tick_count = new clan::LineEdit(this);
 	lineedit_tick_count->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, lineedit_size));
 	lineedit_tick_count->set_text("10");
-	lineedit_tick_count->func_enter_pressed().set(this, &Slider::on_tick_count_enter_pressed, lineedit_tick_count);
+	lineedit_tick_count->func_enter_pressed() = bind_member(this, &Slider::on_tick_count_enter_pressed);
 
 	lineedit_label_tick_count = new clan::Label(this);
 	lineedit_label_tick_count->set_geometry(clan::Rect(label_xpos, lineedit_ypos, label_size));
@@ -110,7 +110,7 @@ Slider::Slider(clan::GUIManager &manager) :
 	lineedit_page_step = new clan::LineEdit(this);
 	lineedit_page_step->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, lineedit_size));
 	lineedit_page_step->set_text("40");
-	lineedit_page_step->func_enter_pressed().set(this, &Slider::on_page_step_enter_pressed, lineedit_page_step);
+	lineedit_page_step->func_enter_pressed() = bind_member(this, &Slider::on_page_step_enter_pressed);
 
 	lineedit_label_page_step = new clan::Label(this);
 	lineedit_label_page_step->set_geometry(clan::Rect(label_xpos, lineedit_ypos, label_size));
@@ -120,7 +120,7 @@ Slider::Slider(clan::GUIManager &manager) :
 	lineedit_position_vert = new clan::LineEdit(this);
 	lineedit_position_vert->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, lineedit_size));
 	lineedit_position_vert->set_text("50");
-	lineedit_position_vert->func_enter_pressed().set(this, &Slider::on_position_enter_pressed_vert, lineedit_position_vert);
+	lineedit_position_vert->func_enter_pressed() = bind_member(this, &Slider::on_position_enter_pressed_vert);
 
 	lineedit_label_position_vert = new clan::Label(this);
 	lineedit_label_position_vert->set_geometry(clan::Rect(label_xpos, lineedit_ypos, label_size));
@@ -130,7 +130,7 @@ Slider::Slider(clan::GUIManager &manager) :
 	lineedit_position_horiz = new clan::LineEdit(this);
 	lineedit_position_horiz->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, lineedit_size));
 	lineedit_position_horiz->set_text("50");
-	lineedit_position_horiz->func_enter_pressed().set(this, &Slider::on_position_enter_pressed_horiz, lineedit_position_horiz);
+	lineedit_position_horiz->func_enter_pressed() = bind_member(this, &Slider::on_position_enter_pressed_horiz);
 
 	lineedit_label_position_horiz = new clan::Label(this);
 	lineedit_label_position_horiz->set_geometry(clan::Rect(label_xpos, lineedit_ypos, label_size));
@@ -140,7 +140,7 @@ Slider::Slider(clan::GUIManager &manager) :
 	pushbutton_apply = new clan::PushButton(this);
 	pushbutton_apply->set_geometry(clan::Rect(lineedit_xpos, lineedit_ypos, clan::Size(48, 20)));
 	pushbutton_apply->set_text("Apply");
-	pushbutton_apply->func_clicked().set(this, &Slider::on_apply_clicked, pushbutton_apply);
+	pushbutton_apply->func_clicked() = bind_member(this, &Slider::on_apply_clicked);
 
 	int xoffset = client_area.left + 21;
 	int yoffset = client_area.top + 35;
@@ -167,16 +167,16 @@ Slider::Slider(clan::GUIManager &manager) :
 
 	checkbox_lock_to_ticks = new clan::CheckBox(this);
 	checkbox_lock_to_ticks->set_geometry(clan::Rect(xoffset, yoffset, clan::Size(100, 15)));
-	checkbox_lock_to_ticks->func_checked().set(this, &Slider::on_checked_lock_to_ticks, checkbox_lock_to_ticks);
-	checkbox_lock_to_ticks->func_unchecked().set(this, &Slider::on_unchecked_lock_to_ticks, checkbox_lock_to_ticks);
+	checkbox_lock_to_ticks->func_checked() = bind_member(this, &Slider::on_checked_lock_to_ticks);
+	checkbox_lock_to_ticks->func_unchecked() = bind_member(this, &Slider::on_unchecked_lock_to_ticks);
 	checkbox_lock_to_ticks->set_text("Lock to Ticks");
 
 	yoffset += gap;
 
 	checkbox_disable = new clan::CheckBox(this);
 	checkbox_disable->set_geometry(clan::Rect(xoffset, yoffset, clan::Size(100, 15)));
-	checkbox_disable->func_checked().set(this, &Slider::on_checked_disable, checkbox_disable);
-	checkbox_disable->func_unchecked().set(this, &Slider::on_unchecked_disable, checkbox_disable);
+	checkbox_disable->func_checked() = bind_member(this, &Slider::on_checked_disable);
+	checkbox_disable->func_unchecked() = bind_member(this, &Slider::on_unchecked_disable);
 	checkbox_disable->set_text("Disable");
 }
 
@@ -196,86 +196,86 @@ void Slider::on_value_changed(clan::Slider *slider)
 	}
 }
 
-void Slider::on_value_decremented(clan::Slider *slider)
+void Slider::on_value_decremented()
 {
 	info_value_decremented->activate();
 }
 
-void Slider::on_value_incremented(clan::Slider *slider)
+void Slider::on_value_incremented()
 {
 	info_value_incremented->activate();
 }
 
-void Slider::on_slider_moved(clan::Slider *slider)
+void Slider::on_slider_moved()
 {
 	info_slider_moved->activate();
 }
 
-void Slider::on_checked_disable(clan::CheckBox *checkbox)
+void Slider::on_checked_disable()
 {
 	slider_vertical->set_enabled(false);
 	slider_horizontal->set_enabled(false);
 }
 
-void Slider::on_unchecked_disable(clan::CheckBox *checkbox)
+void Slider::on_unchecked_disable()
 {
 	slider_vertical->set_enabled(true);
 	slider_horizontal->set_enabled(true);
 }
 
-void Slider::on_checked_lock_to_ticks(clan::CheckBox *checkbox)
+void Slider::on_checked_lock_to_ticks()
 {
 	slider_vertical->set_lock_to_ticks(true);
 	slider_horizontal->set_lock_to_ticks(true);
 }
 
-void Slider::on_unchecked_lock_to_ticks(clan::CheckBox *checkbox)
+void Slider::on_unchecked_lock_to_ticks()
 {
 	slider_vertical->set_lock_to_ticks(false);
 	slider_horizontal->set_lock_to_ticks(false);
 }
 
-void Slider::on_min_enter_pressed(clan::LineEdit *lineedit)
+void Slider::on_min_enter_pressed()
 {
-	int value = clan::StringHelp::text_to_int(lineedit->get_text());
+	int value = clan::StringHelp::text_to_int(lineedit_min->get_text());
 	slider_vertical->set_min(value);
 	slider_horizontal->set_min(value);
 }
 
-void Slider::on_max_enter_pressed(clan::LineEdit *lineedit)
+void Slider::on_max_enter_pressed()
 {
-	int value = clan::StringHelp::text_to_int(lineedit->get_text());
+	int value = clan::StringHelp::text_to_int(lineedit_max->get_text());
 	slider_vertical->set_max(value);
 	slider_horizontal->set_max(value);
 }
 
-void Slider::on_tick_count_enter_pressed(clan::LineEdit *lineedit)
+void Slider::on_tick_count_enter_pressed()
 {
-	int value = clan::StringHelp::text_to_int(lineedit->get_text());
+	int value = clan::StringHelp::text_to_int(lineedit_tick_count->get_text());
 	slider_vertical->set_tick_count(value);
 	slider_horizontal->set_tick_count(value);
 }
 
-void Slider::on_page_step_enter_pressed(clan::LineEdit *lineedit)
+void Slider::on_page_step_enter_pressed()
 {
-	int value = clan::StringHelp::text_to_int(lineedit->get_text());
+	int value = clan::StringHelp::text_to_int(lineedit_page_step->get_text());
 	slider_vertical->set_page_step(value);
 	slider_horizontal->set_page_step(value);
 }
 
-void Slider::on_position_enter_pressed_horiz(clan::LineEdit *lineedit)
+void Slider::on_position_enter_pressed_horiz()
 {
-	int value = clan::StringHelp::text_to_int(lineedit->get_text());
+	int value = clan::StringHelp::text_to_int(lineedit_position_horiz->get_text());
 	slider_horizontal->set_position(value);
 }
 
-void Slider::on_position_enter_pressed_vert(clan::LineEdit *lineedit)
+void Slider::on_position_enter_pressed_vert()
 {
-	int value = clan::StringHelp::text_to_int(lineedit->get_text());
+	int value = clan::StringHelp::text_to_int(lineedit_position_vert->get_text());
 	slider_vertical->set_position(value);
 }
 
-void Slider::on_apply_clicked(clan::PushButton *pushbutton)
+void Slider::on_apply_clicked()
 {
 	int value = clan::StringHelp::text_to_int(lineedit_position_vert->get_text());
 	slider_vertical->set_position(value);

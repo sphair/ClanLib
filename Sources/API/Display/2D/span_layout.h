@@ -26,7 +26,6 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include <memory>
@@ -140,7 +139,6 @@ public:
 	///
 	/// \return rect
 	std::vector<Rect> get_rect_by_id(int id) const;
-
 
 	/// \brief Hit test
 	///

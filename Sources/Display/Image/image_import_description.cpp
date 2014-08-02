@@ -38,7 +38,7 @@ namespace clan
 // ImageImportDescription construction:
 
 ImageImportDescription::ImageImportDescription() 
-: impl(new ImageImportDescription_Impl)
+: impl(std::make_shared<ImageImportDescription_Impl>())
 {
 }
 
@@ -99,8 +99,8 @@ PixelBuffer ImageImportDescription::process(PixelBuffer &image) const
 	if (impl->flip_vertical)
 		image.flip_vertical();
 
-	if (!impl->func_process.is_null())
-		image = impl->func_process.invoke(image);
+	if (impl->func_process)
+		image = impl->func_process(image);
 
 	return image;
 }
@@ -108,7 +108,7 @@ PixelBuffer ImageImportDescription::process(PixelBuffer &image) const
 /////////////////////////////////////////////////////////////////////////////
 // ImageImportDescription callbacks:
 
-Callback_1<PixelBuffer, PixelBuffer &> &ImageImportDescription::func_process()
+std::function<PixelBuffer(PixelBuffer &)> &ImageImportDescription::func_process()
 {
 	return impl->func_process;
 }

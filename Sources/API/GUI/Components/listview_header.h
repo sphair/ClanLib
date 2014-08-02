@@ -30,10 +30,7 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_component.h"
-#include "../../Core/Signals/callback_v0.h"
-#include "../../Core/Signals/callback_v1.h"
 #include "listview.h"
 
 namespace clan
@@ -45,7 +42,7 @@ class ListViewColumnHeader;
 class ListViewHeader_Impl;
 
 /// \brief ListViewHeader component.
-class CL_API_GUI ListViewHeader : public GUIComponent
+class ListViewHeader : public GUIComponent
 {
 /// \name Construction
 /// \{
@@ -141,11 +138,11 @@ public:
 /// \{
 
 public:
-	Callback_v1<ListViewColumnHeader> &func_column_added();
+	std::function<void(ListViewColumnHeader)> &func_column_added();
 
-	Callback_v1<ListViewColumnHeader> &func_column_removed();
+	std::function<void(ListViewColumnHeader)> &func_column_removed();
 
-	Callback_v1<ListViewColumnHeader> &func_column_size_changed();
+	std::function<void(ListViewColumnHeader)> &func_column_size_changed();
 
 /// \}
 /// \name Implementation

@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 
 namespace clan
 {
@@ -37,7 +36,7 @@ namespace clan
 /// \{
 
 /// \brief Interface for implementing a Cursor target.
-class CL_API_DISPLAY CursorProvider
+class CursorProvider
 {
 /// \name Construction
 /// \{

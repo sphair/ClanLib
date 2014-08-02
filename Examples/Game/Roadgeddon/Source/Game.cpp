@@ -58,13 +58,14 @@ void Game::run()
 	desc.set_allow_resize(false);
 
 	DisplayWindow window(desc);
+    SlotContainer cc;
 	
-	Slot slot_quit				= window.sig_window_close()							.connect(this,&Game::on_quit);
-	Slot slot_keyboard_key_down	= (window.get_ic().get_keyboard()).sig_key_down()	.connect(this,&Game::on_key_down);
-	Slot slot_keyboard_key_up	= (window.get_ic().get_keyboard()).sig_key_up()		.connect(this,&Game::on_key_up);
-	Slot slot_mouse_moved		= (window.get_ic().get_mouse()).sig_pointer_move()	.connect(this,&Game::on_pointer_move);
-	Slot slot_mouse_down			= (window.get_ic().get_mouse()).sig_key_down()		.connect(this,&Game::on_pointer_down);
-	Slot slot_mouse_up			= (window.get_ic().get_mouse()).sig_key_up()		.connect(this,&Game::on_pointer_up);
+	cc.connect(window.sig_window_close(), clan::bind_member(this, &Game::on_quit));
+	cc.connect(window.get_ic().get_keyboard().sig_key_down(), clan::bind_member(this, &Game::on_key_down));
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &Game::on_key_up));
+	cc.connect(window.get_ic().get_mouse().sig_pointer_move(), clan::bind_member(this, &Game::on_pointer_move));
+	cc.connect(window.get_ic().get_mouse().sig_key_down(), clan::bind_member(this, &Game::on_pointer_down));
+	cc.connect(window.get_ic().get_mouse().sig_key_up(), clan::bind_member(this, &Game::on_pointer_up));
 	
 	canvas = Canvas(window);
 	

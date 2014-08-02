@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_csslayout.h"
 #include "../../Core/Text/string_help.h"
 #include <string>
 #include <vector>
@@ -38,7 +37,7 @@ namespace clan
 /// \addtogroup clanCSSLayout_HTML clanCSSLayout HTML
 /// \{
 
-class CL_API_CSSLAYOUT HTMLAttribute
+class HTMLAttribute
 {
 public:
 	HTMLAttribute() { }
@@ -48,7 +47,7 @@ public:
 	std::string value;
 };
 
-class CL_API_CSSLAYOUT HTMLToken
+class HTMLToken
 {
 public:
 	enum Type

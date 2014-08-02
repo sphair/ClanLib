@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "dom_node.h"
 
 namespace clan
@@ -68,7 +67,7 @@ namespace clan
 ///    nodes that are siblings; the DocumentFragment acts as the parent of these
 ///    nodes so that the user can use the standard methods from the Node interface,
 ///    such as insertBefore() and appendChild().</p> 
-class CL_API_CORE DomDocumentFragment : public DomNode
+class DomDocumentFragment : public DomNode
 {
 /// \name Construction
 /// \{

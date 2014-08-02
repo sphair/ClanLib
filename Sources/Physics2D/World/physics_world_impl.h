@@ -35,8 +35,7 @@
 #include "API/Physics2D/World/physics_world_description.h"
 #include "API/Physics2D/World/physics_context.h"
 #include "API/Physics2D/World/physics_query_assistant.h"
-#include "API/Core/Signals/signal_v0.h"
-#include "API/Core/Signals/signal_v1.h"
+#include "API/Core/Signals/signal.h"
 
 namespace clan
 {
@@ -107,8 +106,8 @@ private:
 //																						_____________
 //																						S I G N A L S
 public:
-	Signal_v1<float> sig_world_step;
-	Signal_v0 sig_world_destroyed;
+	Signal<void(float)> sig_world_step;
+	Signal<void()> sig_world_destroyed;
 //																						___________________________
 //																						I M P L E M E N T A T I O N
 /// \}

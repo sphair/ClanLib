@@ -58,7 +58,8 @@ MessageBoxResult message_box_impl(
 	MessageBoxComponent mb(&window, detail_text, buttons, icon);
 	Size content_size = mb.layout_content();
 
-	window.func_close().set(&mb, &MessageBoxComponent::on_window_close, &window);
+	//window.func_close() = bind_member(&mb, &MessageBoxComponent::on_window_close, &window);
+	window.func_close() = [&]() {return mb.on_window_close(&window); };
 
 	DisplayWindow disp_win = window.get_display_window();
 

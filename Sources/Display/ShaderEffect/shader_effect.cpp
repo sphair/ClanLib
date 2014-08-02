@@ -91,7 +91,7 @@ ShaderEffect::ShaderEffect()
 }
 
 ShaderEffect::ShaderEffect(GraphicContext &gc, const ShaderEffectDescription &description)
-: impl(new ShaderEffect_Impl(gc))
+: impl(std::make_shared<ShaderEffect_Impl>(gc))
 {
 	impl->create_shaders(gc, description.impl.get());
 	impl->create_primitives_array(gc, description.impl.get());

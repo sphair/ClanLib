@@ -241,7 +241,7 @@ private:
 // BrowseFolderDialog Construction:
 
 BrowseFolderDialog::BrowseFolderDialog(GUIComponent *owner)
-: impl(new BrowseFolderDialog_Impl)
+: impl(std::make_shared<BrowseFolderDialog_Impl>())
 {
 	impl->owner = owner;
 }

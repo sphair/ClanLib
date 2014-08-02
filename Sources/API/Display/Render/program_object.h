@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include <memory>
 #include "../../Core/IOData/file_system.h"
 #include "graphic_context.h"
@@ -67,7 +66,7 @@ class ProgramObjectProvider;
 ///    <p>For more information about program objects, see the OpenGL 2.0
 ///    specification at <a href="http://www.opengl.org">www.opengl.org</a>. Documentation
 ///    about the OpenGL Shader Language (GLSL) is also available from www.opengl.org.</p>
-class CL_API_DISPLAY ProgramObject
+class ProgramObject
 {
 /// \name Construction
 /// \{

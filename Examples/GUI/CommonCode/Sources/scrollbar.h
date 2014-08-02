@@ -38,23 +38,23 @@ public:
 private:
 	bool on_close();
 	void on_scroll(clan::ScrollBar *scrollbar);
-	void on_scroll_min(clan::ScrollBar *scrollbar);
-	void on_scroll_max(clan::ScrollBar *scrollbar);
-	void on_scroll_line_increment(clan::ScrollBar *scrollbar);
-	void on_scroll_line_decrement(clan::ScrollBar *scrollbar);
-	void on_scroll_page_increment(clan::ScrollBar *scrollbar);
-	void on_scroll_page_decrement(clan::ScrollBar *scrollbar);
-	void on_scroll_thumb_release(clan::ScrollBar *scrollbar);
-	void on_scroll_thumb_track(clan::ScrollBar *scrollbar);
-	void on_min_enter_pressed(clan::LineEdit *lineedit);
-	void on_max_enter_pressed(clan::LineEdit *lineedit);
-	void on_line_step_enter_pressed(clan::LineEdit *lineedit);
-	void on_page_step_enter_pressed(clan::LineEdit *lineedit);
-	void on_position_enter_pressed_horiz(clan::LineEdit *lineedit);
-	void on_position_enter_pressed_vert(clan::LineEdit *lineedit);
-	void on_checked_disable(clan::CheckBox *checkbox);
-	void on_unchecked_disable(clan::CheckBox *checkbox);
-	void on_apply_clicked(clan::PushButton *pushbutton);
+	void on_scroll_min();
+	void on_scroll_max();
+	void on_scroll_line_increment();
+	void on_scroll_line_decrement();
+	void on_scroll_page_increment();
+	void on_scroll_page_decrement();
+	void on_scroll_thumb_release();
+	void on_scroll_thumb_track();
+	void on_min_enter_pressed();
+	void on_max_enter_pressed();
+	void on_line_step_enter_pressed();
+	void on_page_step_enter_pressed();
+	void on_position_enter_pressed_horiz();
+	void on_position_enter_pressed_vert();
+	void on_checked_disable();
+	void on_unchecked_disable();
+	void on_apply_clicked();
 
 private:
 	clan::ScrollBar *scrollbar_vertical;

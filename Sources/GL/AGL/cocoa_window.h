@@ -39,7 +39,7 @@
 #include "API/Core/Math/point.h"
 #include "API/Core/Math/rect.h"
 #include "API/Core/System/cl_platform.h"
-#include "API/Core/Signals/callback_v0.h"
+#include "API/Core/Signals/signal.h"
 #include "cocoa_controller.h"
 #include <QuartzCore/CAEAGLLayer.h>
 
@@ -75,12 +75,12 @@ public:
 	Size get_minimum_size(bool client_area) const;
 	Size get_maximum_size(bool client_area) const;
 	std::string get_title() const;
-	Callback_v0 &func_on_resized() { return callback_on_resized; }
+	std::function<void()> &func_on_resized() { return callback_on_resized; }
 	InputContext get_ic() { return ic; }
 	const InputContext get_ic() const { return ic; }
 	bool is_clipboard_text_available() const;
 	bool is_clipboard_image_available() const;
-    
+
     CAEAGLLayer *get_drawable();
 
 public:
@@ -121,7 +121,7 @@ public:
 	void set_clipboard_image(const PixelBuffer &image);
 	void request_repaint(const Rect &rect);
 	void set_modifier_keys(InputEvent &key);
-    
+
     void on_touches_began(const std::vector<Vec2f> &touches);
     void on_touches_moved(const std::vector<Vec2f> &touches);
     void on_touches_ended(const std::vector<Vec2f> &touches);
@@ -129,12 +129,12 @@ public:
 
 private:
     CocoaMouseInputDeviceProvider *get_mouse();
-    
+
 	DisplayWindowSite *site;
 	InputDevice keyboard, mouse;
 	Point mouse_pos;
 	std::map<int,int> repeat_count;
-	Callback_v0 callback_on_resized;
+	std::function<void()> callback_on_resized;
 	InputContext ic;
     UIWindow *window;
     CocoaController *controller;

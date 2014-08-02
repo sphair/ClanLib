@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_csslayout.h"
 #include "../PropertyValues/css_value_generic.h"
 #include <vector>
 
@@ -39,7 +38,7 @@ namespace clan
 
 class CSSPropertyValue;
 
-class CL_API_CSSLAYOUT CSSComputedGeneric
+class CSSComputedGeneric
 {
 public:
 	std::vector<CSSValueGeneric> generic_values;

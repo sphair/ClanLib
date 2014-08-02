@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include "../../Core/Math/vec4.h"
 #include <vector>
 
@@ -44,7 +43,7 @@ class PixelFormat;
 class Colorf;
 
 /// \brief Color description class.
-class CL_API_DISPLAY Color : public Vec4ub
+class Color : public Vec4ub
 {
 /// \name Construction
 /// \{

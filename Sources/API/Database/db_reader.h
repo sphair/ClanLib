@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_database.h"
 
 namespace clan
 {
@@ -44,7 +43,7 @@ class DBReaderProvider;
 class DBReader_Impl;
 
 /// \brief Database reader.
-class CL_API_DATABASE DBReader
+class DBReader
 {
 /// \name Construction
 /// \{

@@ -46,7 +46,7 @@ namespace clan
 // DNSResolver Construction:
 
 DNSResolver::DNSResolver()
-: impl(new DNSResolver_Impl)
+: impl(std::make_shared<DNSResolver_Impl>())
 {
 #ifdef WIN32
 	DataBuffer buffer(16*1024);

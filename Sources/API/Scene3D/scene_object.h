@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_scene3d.h"
 #include <memory>
 
 namespace clan
@@ -41,7 +40,7 @@ class Scene;
 class SceneModel;
 class SceneObject_Impl;
 
-class CL_API_SCENE SceneObject
+class SceneObject
 {
 public:
 	SceneObject();

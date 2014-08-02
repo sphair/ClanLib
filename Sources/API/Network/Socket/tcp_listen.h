@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_network.h"
 #include <memory>
 
 namespace clan
@@ -43,7 +42,7 @@ class TCPConnection;
 class TCPListen_Impl;
 
 /// \brief TCP listen socket.
-class CL_API_NETWORK TCPListen
+class TCPListen
 {
 /// \name Construction
 /// \{

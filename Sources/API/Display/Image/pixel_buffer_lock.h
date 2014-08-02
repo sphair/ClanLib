@@ -29,8 +29,8 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include <memory>
+#include "../../Core/System/exception.h"
 #include "../../Core/Math/vec2.h"
 #include "../../Core/Math/vec3.h"
 #include "../../Core/Math/vec4.h"
@@ -45,7 +45,7 @@ namespace clan
 /// \brief PixelBuffer locking helper.
 ///
 template<typename Type>
-class CL_API_DISPLAY PixelBufferLock
+class PixelBufferLock
 {
 /// \name Construction
 /// \{

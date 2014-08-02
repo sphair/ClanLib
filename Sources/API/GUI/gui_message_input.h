@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "api_gui.h"
 #include <memory>
 #include "gui_message.h"
 #include "../Display/Window/input_event.h"
@@ -40,7 +39,7 @@ namespace clan
 /// \{
 
 /// \brief GUI input message.
-class CL_API_GUI GUIMessage_Input : public GUIMessage
+class GUIMessage_Input : public GUIMessage
 {
 /// \name Construction
 /// \{

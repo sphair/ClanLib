@@ -48,7 +48,7 @@ FontConfig::FontConfig()
         if  (!fc_config)
 	{
 		throw Exception("CL_FontConfig: Initializing FontConfig library failed.");
-	} 
+	}
 }
 
 FontConfig::~FontConfig()
@@ -64,7 +64,6 @@ FontConfig &FontConfig::instance()
 	static FontConfig fc;
 	return fc;
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 // FontConfig Operations:

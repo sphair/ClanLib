@@ -47,7 +47,7 @@ XMLWriter::XMLWriter(const XMLWriter &copy) : impl(copy.impl)
 {
 }
 
-XMLWriter::XMLWriter(IODevice &output) : impl(new XMLWriter_Impl)
+XMLWriter::XMLWriter(IODevice &output) : impl(std::make_shared<XMLWriter_Impl>())
 {
 	impl->output = output;
 	impl->str.reserve(4096);

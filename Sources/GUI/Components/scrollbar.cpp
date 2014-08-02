@@ -45,19 +45,19 @@ namespace clan
 // ScrollBar Construction:
 
 ScrollBar::ScrollBar(GUIComponent *parent)
-: GUIComponent(parent, CssStr::ScrollBar::type_name), impl(new ScrollBar_Impl)
+: GUIComponent(parent, CssStr::ScrollBar::type_name), impl(std::make_shared<ScrollBar_Impl>())
 {
 	impl->scrollbar = this;
 
 	impl->create_parts();
 	impl->update_part_positions();
 
-	func_process_message().set(impl.get(), &ScrollBar_Impl::on_process_message);
-	func_render().set(impl.get(), &ScrollBar_Impl::on_render);
-	func_enablemode_changed().set(impl.get(), &ScrollBar_Impl::on_enablemode_changed);
-	func_resized().set(impl.get(), &ScrollBar_Impl::on_resized);
+	func_process_message() = bind_member(impl.get(), &ScrollBar_Impl::on_process_message);
+	func_render() = bind_member(impl.get(), &ScrollBar_Impl::on_render);
+	func_enablemode_changed() = bind_member(impl.get(), &ScrollBar_Impl::on_enablemode_changed);
+	func_resized() = bind_member(impl.get(), &ScrollBar_Impl::on_resized);
 
-	impl->mouse_down_timer.func_expired().set(impl.get(), &ScrollBar_Impl::on_timer_expired);
+	impl->mouse_down_timer.func_expired() = bind_member(impl.get(), &ScrollBar_Impl::on_timer_expired);
 }
 
 ScrollBar::~ScrollBar()
@@ -211,52 +211,52 @@ void ScrollBar::set_position(int pos)
 /////////////////////////////////////////////////////////////////////////////
 // ScrollBar Events:
 
-Callback_v0 &ScrollBar::func_scroll()
+std::function<void()> &ScrollBar::func_scroll()
 {
 	return impl->func_scroll;
 }
 
-Callback_v0 &ScrollBar::func_scroll_min()
+std::function<void()> &ScrollBar::func_scroll_min()
 {
 	return impl->func_scroll_min;
 }
 
-Callback_v0 &ScrollBar::func_scroll_max()
+std::function<void()> &ScrollBar::func_scroll_max()
 {
 	return impl->func_scroll_max;
 }
 
-Callback_v0 &ScrollBar::func_scroll_line_decrement()
+std::function<void()> &ScrollBar::func_scroll_line_decrement()
 {
 	return impl->func_scroll_line_decrement;
 }
 
-Callback_v0 &ScrollBar::func_scroll_line_increment()
+std::function<void()> &ScrollBar::func_scroll_line_increment()
 {
 	return impl->func_scroll_line_increment;
 }
 
-Callback_v0 &ScrollBar::func_scroll_page_decrement()
+std::function<void()> &ScrollBar::func_scroll_page_decrement()
 {
 	return impl->func_scroll_page_decrement;
 }
 
-Callback_v0 &ScrollBar::func_scroll_page_increment()
+std::function<void()> &ScrollBar::func_scroll_page_increment()
 {
 	return impl->func_scroll_page_increment;
 }
 
-Callback_v0 &ScrollBar::func_scroll_thumb_release()
+std::function<void()> &ScrollBar::func_scroll_thumb_release()
 {
 	return impl->func_scroll_thumb_release;
 }
 
-Callback_v0 &ScrollBar::func_scroll_thumb_track()
+std::function<void()> &ScrollBar::func_scroll_thumb_track()
 {
 	return impl->func_scroll_thumb_track;
 }
 
-Callback_v0 &ScrollBar::func_scroll_end()
+std::function<void()> &ScrollBar::func_scroll_end()
 {
 	return impl->func_scroll_end;
 }

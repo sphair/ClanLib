@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "iodevice.h"
 
 namespace clan
@@ -40,7 +39,7 @@ namespace clan
 class Event;
 
 /// \brief Pipe connection I/O device.
-class CL_API_CORE PipeConnection : public IODevice
+class PipeConnection : public IODevice
 {
 /// \name Construction
 /// \{

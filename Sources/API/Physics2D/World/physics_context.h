@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_physics2d.h"
 #include "../Dynamics/body.h"
 #include "../Dynamics/fixture.h"
 #include "../Dynamics/Joints/joint.h"
@@ -42,7 +41,7 @@ namespace clan
 	class PhysicsWorld;
 	class PhysicsContext_Impl;
 
-class CL_API_PHYSICS PhysicsContext
+class PhysicsContext
 {
 /// \name Construction
 /// \{

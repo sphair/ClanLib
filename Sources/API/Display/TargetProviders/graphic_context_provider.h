@@ -30,13 +30,12 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include <memory>
 #include "../Render/graphic_context.h"
 #include "../Render/primitives_array.h"
 #include "../Render/texture.h"
 #include "../../Core/Math/mat4.h"
-#include "../../Core/Signals/signal_v1.h"
+#include "../../Core/Signals/signal.h"
 
 namespace clan
 {
@@ -84,7 +83,7 @@ public:
 };
 
 /// \brief Interface for implementing a GraphicContext target.
-class CL_API_DISPLAY GraphicContextProvider
+class GraphicContextProvider
 {
 /// \name Construction
 /// \{
@@ -109,7 +108,7 @@ public:
 	virtual Size get_display_window_size() const = 0;
 
 	/// \brief Get the window resized signal
-	virtual Signal_v1<const Size &> &sig_window_resized() = 0;
+	virtual Signal<void(const Size &)> &sig_window_resized() = 0;
 
 	/// \brief Get a program object from the standard program specified
 	virtual ProgramObject get_program_object(StandardProgram standard_program) const = 0;

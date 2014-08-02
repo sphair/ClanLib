@@ -61,12 +61,12 @@ PixelBufferSet::PixelBufferSet()
 }
 
 PixelBufferSet::PixelBufferSet(TextureDimensions dimensions, TextureFormat format, int width, int height, int slices)
-	: impl(new PixelBufferSet_Impl(dimensions, format, width, height, slices))
+	: impl(std::make_shared<PixelBufferSet_Impl>(dimensions, format, width, height, slices))
 {
 }
 
 PixelBufferSet::PixelBufferSet(const PixelBuffer &image)
-	: impl(new PixelBufferSet_Impl(texture_2d, image.get_format(), image.get_width(), image.get_height(), 1))
+	: impl(std::make_shared<PixelBufferSet_Impl>(texture_2d, image.get_format(), image.get_width(), image.get_height(), 1))
 {
 	set_image(0, 0, image);
 }

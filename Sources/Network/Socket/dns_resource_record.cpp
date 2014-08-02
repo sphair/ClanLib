@@ -43,7 +43,7 @@ namespace clan
 // DNSResourceRecord Construction:
 
 DNSResourceRecord::DNSResourceRecord()
-: impl(new DNSResourceRecord_Impl)
+: impl(std::make_shared<DNSResourceRecord_Impl>())
 {
 }
 

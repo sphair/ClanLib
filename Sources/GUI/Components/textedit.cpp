@@ -62,19 +62,19 @@ namespace clan
 // TextEdit Construction:
 
 TextEdit::TextEdit(GUIComponent *parent)
-: GUIComponent(parent, CssStr::TextEdit::type_name), impl(new TextEdit_Impl)
+: GUIComponent(parent, CssStr::TextEdit::type_name), impl(std::make_shared<TextEdit_Impl>())
 {
 	set_focus_policy(focus_local);
 
-	func_render().set(impl.get(), &TextEdit_Impl::on_render);
-	func_process_message().set(impl.get(), &TextEdit_Impl::on_process_message);
-	func_resized().set(impl.get(), &TextEdit_Impl::on_resized);
-	func_enablemode_changed().set(impl.get(), &TextEdit_Impl::on_enable_changed);
+	func_render() = bind_member(impl.get(), &TextEdit_Impl::on_render);
+	func_process_message() = bind_member(impl.get(), &TextEdit_Impl::on_process_message);
+	func_resized() = bind_member(impl.get(), &TextEdit_Impl::on_resized);
+	func_enablemode_changed() = bind_member(impl.get(), &TextEdit_Impl::on_enable_changed);
 
 	impl->textedit = this;
-	impl->timer.func_expired().set(impl.get(), &TextEdit_Impl::on_timer_expired);
+	impl->timer.func_expired() = bind_member(impl.get(), &TextEdit_Impl::on_timer_expired);
 
-	impl->scroll_timer.func_expired().set(impl.get(), &TextEdit_Impl::on_scroll_timer_expired);
+	impl->scroll_timer.func_expired() = bind_member(impl.get(), &TextEdit_Impl::on_scroll_timer_expired);
 	impl->create_components();
 	impl->create_parts();
 }
@@ -231,12 +231,12 @@ void TextEdit::set_max_length(int length)
 		if ((int)size > length)
 		{
 			InputEvent no_event;
-			if (!impl->func_before_edit_changed.is_null())
-				impl->func_before_edit_changed.invoke(no_event);
+			if (impl->func_before_edit_changed)
+				impl->func_before_edit_changed(no_event);
 			set_selection(length, size - length);
 			delete_selected_text();
-			if (!impl->func_after_edit_changed.is_null())
-				impl->func_after_edit_changed.invoke(no_event);
+			if (impl->func_after_edit_changed)
+				impl->func_after_edit_changed(no_event);
 		}
 		request_repaint();
 	}
@@ -324,32 +324,32 @@ void TextEdit::set_cursor_pos(int pos)
 /////////////////////////////////////////////////////////////////////////////
 // TextEdit Events:
 
-Callback_v1<InputEvent &> &TextEdit::func_before_edit_changed()
+std::function<void(InputEvent &)> &TextEdit::func_before_edit_changed()
 {
 	return impl->func_before_edit_changed;
 }
 
-Callback_v1<InputEvent &> &TextEdit::func_after_edit_changed()
+std::function<void(InputEvent &)> &TextEdit::func_after_edit_changed()
 {
 	return impl->func_after_edit_changed;
 }
 
-Callback_v0 &TextEdit::func_selection_changed()
+std::function<void()> &TextEdit::func_selection_changed()
 {
 	return impl->func_selection_changed;
 }
 
-Callback_v0 &TextEdit::func_focus_gained()
+std::function<void()> &TextEdit::func_focus_gained()
 {
 	return impl->func_focus_gained;
 }
 
-Callback_v0 & TextEdit::func_focus_lost()
+std::function<void()> & TextEdit::func_focus_lost()
 {
 	return impl->func_focus_lost;
 }
 
-Callback_v0 &TextEdit::func_enter_pressed()
+std::function<void()> &TextEdit::func_enter_pressed()
 {
 	return impl->func_enter_pressed;
 }
@@ -391,9 +391,9 @@ void TextEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 			if (!readonly && e.type == InputEvent::pressed &&
 				(e.id == keycode_enter || e.id == keycode_return || e.id == keycode_numpad_enter))
 			{
-				if (!func_enter_pressed.is_null())
+				if (func_enter_pressed)
 				{
-					func_enter_pressed.invoke();
+					func_enter_pressed();
 				}
 				else
 				{
@@ -405,9 +405,9 @@ void TextEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 				return;
 			}
 
-			if (!func_before_edit_changed.is_null())
+			if (func_before_edit_changed)
 			{
-				func_before_edit_changed.invoke(e);
+				func_before_edit_changed(e);
 				if (e.type == InputEvent::no_key)
 				{
 					// If the 'func_before_edit_changed' callback sets e.type to 'no_key',
@@ -621,9 +621,9 @@ void TextEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 				}
 			}
 
-			if (e.type == InputEvent::pressed && !func_after_edit_changed.is_null())
+			if (e.type == InputEvent::pressed && func_after_edit_changed)
 			{
-				func_after_edit_changed.invoke(e);
+				func_after_edit_changed(e);
 			}
 
 		}
@@ -710,8 +710,8 @@ void TextEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 
 			textedit->request_repaint();
 
-			if (!func_focus_gained.is_null())
-				func_focus_gained.invoke();
+			if (func_focus_gained)
+				func_focus_gained();
 		}
 		else if (focus_change_msg->focus_type == GUIMessage_FocusChange::losing_focus)
 		{
@@ -721,8 +721,8 @@ void TextEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 
 			textedit->request_repaint();
 
-			if (!func_focus_lost.is_null())
-				func_focus_lost.invoke();
+			if (func_focus_lost)
+				func_focus_lost();
 		}
 	}
 	std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
@@ -763,7 +763,7 @@ void TextEdit_Impl::create_parts()
 void TextEdit_Impl::create_components()
 {
         vert_scrollbar = new ScrollBar(textedit);
-	vert_scrollbar->func_scroll().set(this, &TextEdit_Impl::on_vertical_scroll);
+	vert_scrollbar->func_scroll() = bind_member(this, &TextEdit_Impl::on_vertical_scroll);
 	vert_scrollbar->set_visible(false);
 	vert_scrollbar->set_vertical();
 }

@@ -35,7 +35,7 @@ namespace clan
 {
 
 CrashReporter::CrashReporter(const std::string &reports_directory, const std::string &uploader_executable)
-	: impl(new CrashReporter_Impl(reports_directory, uploader_executable))
+	: impl(std::make_shared<CrashReporter_Impl>(reports_directory, uploader_executable))
 {
 }
 

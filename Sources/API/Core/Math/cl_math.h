@@ -29,15 +29,22 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <cmath>
 #include "../System/cl_platform.h"
 #include "vec4.h"
+#include <memory>
 
 namespace clan
 {
 /// \addtogroup clanCore_Math clanCore Math
 /// \{
+
+template<typename T, typename ...Args>
+std::unique_ptr<T> make_unique(Args&& ...args)
+{
+	return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+}
+
 #undef pow2
 #undef min
 #undef max

@@ -40,7 +40,7 @@ SceneCamera::SceneCamera()
 }
 
 SceneCamera::SceneCamera(Scene &scene)
-: impl(new SceneCamera_Impl())
+: impl(std::make_shared<SceneCamera_Impl>())
 {
 	impl->scene = scene.impl.get();
 }

@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 
 namespace clan
@@ -42,7 +41,7 @@ class XMLToken;
 class XMLTokenizer_Impl;
 
 /// \brief The XML Tokenizer breaks a XML file into XML tokens.
-class CL_API_CORE XMLTokenizer
+class XMLTokenizer
 {
 /// \name Construction
 /// \{

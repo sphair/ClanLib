@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_network.h"
 #include "../../Core/IOData/iodevice.h"
 
 namespace clan
@@ -41,7 +40,7 @@ class SocketName;
 class Event;
 
 /// \brief TCP connection socket I/O device.
-class CL_API_NETWORK TCPConnection : public IODevice
+class TCPConnection : public IODevice
 {
 /// \name Construction
 /// \{

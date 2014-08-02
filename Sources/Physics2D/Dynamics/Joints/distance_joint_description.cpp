@@ -43,7 +43,7 @@ DistanceJointDescription::DistanceJointDescription()
 }
 
 DistanceJointDescription::DistanceJointDescription(const PhysicsWorld &pw)
-: impl(new DistanceJointDescription_Impl(*pw.impl))
+: impl(std::make_shared<DistanceJointDescription_Impl>(*pw.impl))
 {
 
 }

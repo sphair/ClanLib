@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../../api_physics2d.h"
 #include "../../../Core/Math/vec2.h"
 #include "../../Collision/Shapes/shape.h"
 
@@ -44,7 +43,7 @@ class CircleShape_Impl;
 /// \brief Circle Shape class.
 ///
 /// A circle shape.
-class CL_API_PHYSICS CircleShape : public Shape
+class CircleShape : public Shape
 {
 /// \name Construction
 /// \{

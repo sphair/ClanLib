@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 
 namespace clan
@@ -44,7 +43,7 @@ class Random;
 /// \brief Random class
 ///
 /// Uses the operating system cryptographically secure pseudorandom number generator
-class CL_API_CORE Random
+class Random
 {
 /// \name Construction
 /// \{

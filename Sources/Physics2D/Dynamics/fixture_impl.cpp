@@ -50,7 +50,7 @@ Fixture_Impl::~Fixture_Impl()
 {
 	if(fixture_occupied)
 	{
-		sig_fixture_deletion.invoke(); 
+		sig_fixture_deletion(); 
 		owner_world->safe_destroy_fixture(fixture, id);
 	}
 }
@@ -75,7 +75,7 @@ void Fixture_Impl::remove_fixture()
 {
 	if(fixture_occupied)
 	{
-		sig_fixture_deletion.invoke();
+		sig_fixture_deletion();
 
 		std::shared_ptr<Fixture_Impl> impl = shared_from_this();
 		owner_world->destroy_fixture(impl);
@@ -90,7 +90,7 @@ void Fixture_Impl::remove_fixture_safetly()
 {
 	if(fixture_occupied)
 	{
-		sig_fixture_deletion.invoke(); //Might move this to the physics world when the bodies are deleted for real.
+		sig_fixture_deletion(); //Might move this to the physics world when the bodies are deleted for real.
 
 		owner_world->safe_destroy_fixture(fixture, id);
 
@@ -104,7 +104,7 @@ void Fixture_Impl::on_begin_collision(Fixture_Impl &fixture)
 	Fixture collision_fixture;
 	collision_fixture.impl = shared_from_this();
 
-	sig_begin_collision.invoke(collision_fixture); //Send the fixute that this fixture collided with.
+	sig_begin_collision(collision_fixture); //Send the fixute that this fixture collided with.
 }
 
 void Fixture_Impl::on_end_collision(Fixture_Impl &fixture)
@@ -112,7 +112,7 @@ void Fixture_Impl::on_end_collision(Fixture_Impl &fixture)
 	Fixture collision_fixture;
 	collision_fixture.impl = shared_from_this();
 
-	sig_end_collision.invoke(collision_fixture); //Send the fixture that this fixture collided with.
+	sig_end_collision(collision_fixture); //Send the fixture that this fixture collided with.
 }
 
 }

@@ -50,12 +50,12 @@ void OptionRGB::setup(clan::GUIComponent *base_component, const std::string &nam
 	xpos += width;
 	checkbox->set_text(name);
 	checkbox->set_checked(false);
-	checkbox->func_state_changed().set(this, &OptionRGB::checkbox_changed);
+	checkbox->func_state_changed() = bind_member(this, &OptionRGB::checkbox_changed);
 
 	int slider_width = 64;
 	slider_red = create_slider(base_component, clan::Rect(xpos, ypos, clan::Size(slider_width, 17)));
 	xpos += slider_width + 4;
-	slider_red->func_value_changed().set(this, &OptionRGB::slider_red_changed);
+	slider_red->func_value_changed() = bind_member(this, &OptionRGB::slider_red_changed);
 
 	int spin_width = 40;
 
@@ -63,27 +63,27 @@ void OptionRGB::setup(clan::GUIComponent *base_component, const std::string &nam
 	spin_red->set_geometry(clan::Rect(xpos, ypos - 3, clan::Size(spin_width, 21)));
 	xpos += spin_width + 4;
 	spin_red->set_ranges(0, 255);
-	spin_red->func_value_changed().set(this, &OptionRGB::spin_red_changed);
+	spin_red->func_value_changed() = bind_member(this, &OptionRGB::spin_red_changed);
 
 	slider_green = create_slider(base_component, clan::Rect(xpos, ypos, clan::Size(slider_width, 17)));
 	xpos += slider_width + 4;
-	slider_green->func_value_changed().set(this, &OptionRGB::slider_green_changed);
+	slider_green->func_value_changed() = bind_member(this, &OptionRGB::slider_green_changed);
 
 	spin_green = new clan::Spin(base_component);
 	spin_green->set_geometry(clan::Rect(xpos, ypos - 3, clan::Size(spin_width, 21)));
 	xpos += spin_width + 4;
 	spin_green->set_ranges(0, 255);
-	spin_green->func_value_changed().set(this, &OptionRGB::spin_green_changed);
+	spin_green->func_value_changed() = bind_member(this, &OptionRGB::spin_green_changed);
 
 	slider_blue = create_slider(base_component, clan::Rect(xpos, ypos, clan::Size(slider_width, 17)));
 	xpos += slider_width + 4;
-	slider_blue->func_value_changed().set(this, &OptionRGB::slider_blue_changed);
+	slider_blue->func_value_changed() = bind_member(this, &OptionRGB::slider_blue_changed);
 
 	spin_blue = new clan::Spin(base_component);
 	spin_blue->set_geometry(clan::Rect(xpos, ypos - 3, clan::Size(spin_width, 21)));
 	xpos += spin_width + 4;
 	spin_blue->set_ranges(0, 255);
-	spin_blue->func_value_changed().set(this, &OptionRGB::spin_blue_changed);
+	spin_blue->func_value_changed() = bind_member(this, &OptionRGB::spin_blue_changed);
 
 	slider_red_changed();
 	slider_green_changed();

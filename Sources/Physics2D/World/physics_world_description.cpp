@@ -37,7 +37,7 @@ namespace clan
 //																											C O N S T R U C T O R S
 
 PhysicsWorldDescription::PhysicsWorldDescription() 
-: impl(new PhysicsWorldDescription_Impl)
+: impl(std::make_shared<PhysicsWorldDescription_Impl>())
 {
 }
 

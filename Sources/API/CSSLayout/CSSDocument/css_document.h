@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_csslayout.h"
 #include "../../Core/IOData/file_system.h"
 #include "css_select_result.h"
 #include <memory>
@@ -52,7 +51,7 @@ enum CSSSheetOrigin
 	author_sheet_origin = 2
 };
 
-class CL_API_CSSLAYOUT CSSDocument
+class CSSDocument
 {
 public:
 	CSSDocument();

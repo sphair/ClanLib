@@ -29,12 +29,10 @@
 
 #pragma once
 
-#include "../api_network.h"
 
 #include "connection_site.h"	// TODO: Remove
 #include "../../Core/System/event.h"
-#include "../../Core/Signals/signal_v1.h"
-#include "../../Core/Signals/signal_v2.h"
+#include "../../Core/Signals/signal.h"
 
 namespace clan
 {
@@ -46,7 +44,7 @@ class NetGameConnection;
 class NetGameServer_Impl;
 
 /// \brief NetGameServer
-class CL_API_NETWORK NetGameServer : NetGameConnectionSite
+class NetGameServer : NetGameConnectionSite
 {
 public:
 	NetGameServer();
@@ -74,9 +72,9 @@ public:
 	/// \param game_event = Net Game Event
 	void send_event(const NetGameEvent &game_event);
 
-	Signal_v1<NetGameConnection *> &sig_client_connected();
-	Signal_v2<NetGameConnection *, const std::string &> &sig_client_disconnected();
-	Signal_v2<NetGameConnection *, const NetGameEvent &> &sig_event_received();
+	Signal<void(NetGameConnection *)> &sig_client_connected();
+	Signal<void(NetGameConnection *, const std::string &)> &sig_client_disconnected();
+	Signal<void(NetGameConnection *, const NetGameEvent &)> &sig_event_received();
 
 private:
 

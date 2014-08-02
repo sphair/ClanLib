@@ -30,9 +30,7 @@
 
 #pragma once
 
-#include "../api_gui.h"
 #include "../gui_component.h"
-#include "../../Core/Signals/callback_v0.h"
 
 namespace clan
 {
@@ -44,7 +42,7 @@ class ToolBarItem;
 class ToolBar_Impl;
 
 /// \brief Tool bar component.
-class CL_API_GUI ToolBar : public GUIComponent
+class ToolBar : public GUIComponent
 {
 /// \name Construction
 /// \{
@@ -154,15 +152,15 @@ public:
 /// \{
 
 public:
-	Callback_v1<ToolBarItem> &func_item_clicked();
+	std::function<void(ToolBarItem)> &func_item_clicked();
 
-	Callback_v1<ToolBarItem> &func_item_selected();
+	std::function<void(ToolBarItem)> &func_item_selected();
 
-	Callback_v1<ToolBarItem> &func_item_unselected();
+	std::function<void(ToolBarItem)> &func_item_unselected();
 
 	/// \brief Signal invoked when the toolbar is right-clicked.
 	/// The parameters are click position and clicked item index.
-	Callback_v2<Point, int> &func_mouse_right_up();
+	std::function<void(Point, int)> &func_mouse_right_up();
 
 /// \}
 /// \name Implementation

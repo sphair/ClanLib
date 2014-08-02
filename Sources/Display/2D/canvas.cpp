@@ -52,13 +52,13 @@ Canvas::Canvas()
 {
 }
 
-Canvas::Canvas(DisplayWindow &window) : impl(new Canvas_Impl)
+Canvas::Canvas(DisplayWindow &window) : impl(std::make_shared<Canvas_Impl>())
 {
 	impl->init(window);
 	set_map_mode(map_2d_upper_left);
 }
 
-Canvas::Canvas(Canvas &canvas, FrameBuffer &framebuffer) : impl(new Canvas_Impl)
+Canvas::Canvas(Canvas &canvas, FrameBuffer &framebuffer) : impl(std::make_shared<Canvas_Impl>())
 {
 	impl->init(canvas.impl.get(), framebuffer);
 	set_map_mode(map_2d_upper_left);
@@ -91,9 +91,9 @@ GraphicContext &Canvas::get_gc() const
 	return impl->get_gc();
 }
 
-const Mat4f &Canvas::get_modelview() const
+const Mat4f &Canvas::get_transform() const
 {
-	return impl->get_modelview();
+	return impl->get_transform();
 }
 
 const Mat4f &Canvas::get_projection() const
@@ -235,74 +235,14 @@ void Canvas::flush()
 	impl->flush();
 }
 
-void Canvas::set_modelview(const Mat4f &matrix)
+void Canvas::set_transform(const Mat4f &matrix)
 {
-	impl->set_modelview(matrix);
+	impl->set_transform(matrix);
 }
 
-void Canvas::mult_modelview(const Mat4f &matrix)
+void Canvas::mult_transform(const Mat4f &matrix)
 {
-	impl->set_modelview(get_modelview() * matrix);
-}
-
-void Canvas::push_modelview()
-{
-	impl->push_modelview(impl->get_modelview());
-}
-
-void Canvas::set_translate(float x, float y, float z)
-{
-	set_modelview(Mat4f::translate(x, y, z));
-}
-
-void Canvas::mult_translate(float x, float y, float z)
-{
-	mult_modelview(Mat4f::translate(x, y, z));
-}
-
-void Canvas::push_translate(float x, float y, float z)
-{
-	push_modelview();
-	mult_translate(x, y, z);
-}
-
-void Canvas::set_rotate(const Angle &angle, float x, float y, float z, bool normalize)
-{
-	set_modelview(Mat4f::rotate(angle, x, y, z, normalize));
-}
-
-void Canvas::mult_rotate(const Angle &angle, float x, float y, float z, bool normalize)
-{
-	mult_modelview(Mat4f::rotate(angle, x, y, z, normalize));
-}
-
-void Canvas::push_rotate(const Angle &angle, float x, float y, float z)
-{
-	push_modelview();
-	mult_rotate(angle, x, y, z);
-}
-
-void Canvas::set_scale(float x, float y, float z)
-{
-	Mat4f matrix = Mat4f::scale(x, y, z);
-	set_modelview(matrix);
-}
-
-void Canvas::mult_scale(float x, float y, float z)
-{
-	Mat4f matrix = Mat4f::scale(x, y, z);
-	mult_modelview(matrix);
-}
-
-void Canvas::push_scale(float x, float y, float z)
-{
-	push_modelview();
-	mult_scale(x, y, z);
-}
-
-void Canvas::pop_modelview()
-{
-	impl->pop_modelview();
+	impl->set_transform(get_transform() * matrix);
 }
 
 void Canvas::draw_point(float x1, float y1, const Colorf &color)
@@ -707,10 +647,11 @@ void Canvas::fill_ellipse(const Pointf &center, float radius_x, float radius_y, 
 	if (max_radius == 0)
 		return;
 
-	push_translate(center);
-	mult_scale(radius_x/max_radius, radius_y/max_radius);
-	fill_circle(Pointf(0,0), max_radius, color);
-	pop_modelview();
+	const Mat4f original_transform = get_transform();
+	mult_transform(Mat4f::translate(center.x, center.y, 0));
+	mult_transform(Mat4f::scale(radius_x / max_radius, radius_y / max_radius, 1.0f));
+	fill_circle(Pointf(0, 0), max_radius, color);
+	set_transform(original_transform);
 }
 
 void Canvas::fill_ellipse(const Pointf &center, float radius_x, float radius_y, const Gradient &gradient)
@@ -719,10 +660,11 @@ void Canvas::fill_ellipse(const Pointf &center, float radius_x, float radius_y, 
 	if (max_radius == 0)
 		return;
 
-	push_translate(center);
-	mult_scale(radius_x/max_radius, radius_y/max_radius);
-	fill_circle( Pointf(0,0), max_radius, gradient);
-	pop_modelview();
+	const Mat4f original_transform = get_transform();
+	mult_transform(Mat4f::translate(center.x, center.y, 0));
+	mult_transform(Mat4f::scale(radius_x / max_radius, radius_y / max_radius, 1.0f));
+	fill_circle(Pointf(0, 0), max_radius, gradient);
+	set_transform(original_transform);
 }
 
 /////////////////////////////////////////////////////////////////////////////

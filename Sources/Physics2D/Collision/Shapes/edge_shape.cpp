@@ -46,14 +46,14 @@ EdgeShape::EdgeShape()
 }
 
 EdgeShape::EdgeShape(const PhysicsWorld &pw)
-: impl(new EdgeShape_Impl(pw.impl.get()))
+: impl(std::make_shared<EdgeShape_Impl>(pw.impl.get()))
 {
 	shape_impl->shape_type = shape_edge;
 	shape_impl->shape = dynamic_cast<b2Shape*> (&impl->shape);
 }
 
 EdgeShape::EdgeShape(const PhysicsContext &pc)
-: impl(new EdgeShape_Impl(pc.impl->get_owner()))
+: impl(std::make_shared<EdgeShape_Impl>(pc.impl->get_owner()))
 {
 	shape_impl->shape_type = shape_edge;
 	shape_impl->shape = dynamic_cast<b2Shape*> (&impl->shape);

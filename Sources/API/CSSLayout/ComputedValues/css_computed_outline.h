@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_csslayout.h"
 #include "../PropertyValues/css_value_outline_color.h"
 #include "../PropertyValues/css_value_outline_style.h"
 #include "../PropertyValues/css_value_outline_width.h"
@@ -40,7 +39,7 @@ namespace clan
 
 class CSSComputedValues;
 
-class CL_API_CSSLAYOUT CSSComputedOutline
+class CSSComputedOutline
 {
 public:
 	CSSValueOutlineColor outline_color;

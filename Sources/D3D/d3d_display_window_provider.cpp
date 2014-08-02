@@ -53,7 +53,7 @@ D3DDisplayWindowProvider::D3DDisplayWindowProvider()
 : site(0), use_fake_front_buffer(false), current_interval_setting(1)
 {
 	window.set_allow_drop_shadow(true);
-	window.func_on_resized().set(this, &D3DDisplayWindowProvider::on_window_resized);
+	window.func_on_resized() = bind_member(this, &D3DDisplayWindowProvider::on_window_resized);
 }
 
 D3DDisplayWindowProvider::~D3DDisplayWindowProvider()
