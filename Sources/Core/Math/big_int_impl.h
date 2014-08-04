@@ -108,7 +108,7 @@ public:
 	void to_unsigned_octets( unsigned char *output_str, unsigned int output_length) const;
 	int unsigned_octet_size() const;
 
-	static const int default_allocated_precision;
+	static const int default_allocated_precision = 64;
 
 private:
 	static const int num_bits_in_digit = (8*sizeof(ubyte32));
