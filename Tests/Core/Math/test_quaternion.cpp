@@ -43,6 +43,43 @@ void TestApp::test_quaternion_f()
 		check_float(q.w, 1.0f);
 
 	}
+
+	Console::write_line("   Function: set and to_matrix");
+	{
+		test_quaternion_euler(order_XYZ);
+		test_quaternion_euler(order_XZY);
+		test_quaternion_euler(order_YZX);
+		test_quaternion_euler(order_YXZ);
+		test_quaternion_euler(order_ZXY);
+		test_quaternion_euler(order_ZYX);
+
+	}
+}
+
+void TestApp::test_quaternion_euler(clan::EulerOrder order)
+{
+	for (int ax = 0; ax < 360; ax += 10)
+	{
+		for (int ay = 0; ay < 360; ay += 10)
+		{
+			for (int az = 0; az < 360; az += 10)
+			{
+				Quaternionf q;
+				q.set(ax, ay, az, angle_degrees, order);
+				clan::Mat4f test_matrix = q.to_matrix();
+
+				Vec3f angles = test_matrix.get_euler(order);
+
+				Mat4f test_matrix2;
+				test_matrix2 = Mat4f::rotate(Angle(angles.x, angle_radians), Angle(angles.y, angle_radians), Angle(angles.z, angle_radians), order);
+
+				// Note, since euler angles can have alternative forms, we compare by recreating as a rotation matrix
+				if (!test_matrix.is_equal(test_matrix2, 0.00001f))
+					fail();
+			}
+		}
+	}
+
 }
 
 void TestApp::test_quaternion_d()

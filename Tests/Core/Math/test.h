@@ -95,6 +95,7 @@ private:
 	void test_bigint();
 	void test_rotate_and_get_euler(clan::EulerOrder order);
 	void fail();
+	void test_quaternion_euler(clan::EulerOrder order);
 
 };
 
