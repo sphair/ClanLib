@@ -136,14 +136,14 @@ bool TextShooter::draw(Canvas &canvas, ubyte64 current_time)
 	font_color.a = font_alpha;
 
 	// Draw the text
-	canvas.push_translate(current_position.x, current_position.y, current_position.z);
-	canvas.push_scale( 2.0f / canvas.get_width(), -2.0f / canvas.get_height());
+	clan::Mat4f matrix = clan::Mat4f::translate(current_position.x, current_position.y, current_position.z);
+	matrix = matrix * clan::Mat4f::scale( 2.0f / canvas.get_width(), -2.0f / canvas.get_height(), 1.0f);
+	canvas.set_transform(matrix);
 
 	Size text_size = vector_font.get_text_size(canvas, text);
 
 	vector_font.draw_text(canvas, -text_size.width/2, text_size.height/4, text, font_color);
-	canvas.pop_modelview();
-	canvas.pop_modelview();
+	canvas.set_transform(clan::Mat4f::identity());
 
 	return true;
 }

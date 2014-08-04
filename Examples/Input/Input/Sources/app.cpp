@@ -44,10 +44,11 @@ int App::start(const std::vector<std::string> &args)
 	window = DisplayWindow(win_desc);
 
 	// Connect the slots that we require
-	window.sig_window_close().connect(this, &App::on_window_close);
-	window.get_ic().get_keyboard().sig_key_down().connect(this, &App::on_input_down);
-	window.get_ic().get_mouse().sig_key_down().connect(this, &App::on_mouse_down);
-	window.get_ic().get_mouse().sig_key_dblclk().connect(this, &App::on_mouse_down);
+	clan::SlotContainer sc;
+	sc.connect(window.sig_window_close(), this, &App::on_window_close);
+	sc.connect(window.get_ic().get_keyboard().sig_key_down(), this, &App::on_input_down);
+	sc.connect(window.get_ic().get_mouse().sig_key_down(), this, &App::on_mouse_down);
+	sc.connect(window.get_ic().get_mouse().sig_key_dblclk(), this, &App::on_mouse_down);
 
 	int max_joysticks = window.get_ic().get_joystick_count();
 	for (int joystick_number=0; joystick_number < max_joysticks; joystick_number++)
