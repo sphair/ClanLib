@@ -53,6 +53,8 @@
 namespace clan
 {
 
+const int BigInt_Impl::default_allocated_precision = 64;
+
 std::vector<ubyte32> BigInt_Impl::prime_tab;
 
 BigInt_Impl::BigInt_Impl(unsigned int prec) : digits_negative(false), digits_alloc(0), digits_used(0), digits(NULL)
@@ -137,7 +139,7 @@ void BigInt_Impl::internal_lshd(unsigned int p)
 	dp = digits;
 
 	// Shift all the significant figures over as needed
-	for(ix = pos - p; ix >= 0; ix--) 
+	for(ix = pos - p; ix >= 0; ix--)
 		dp[ix + p] = dp[ix];
 
 	// Fill the bottom digits with zeroes
@@ -286,7 +288,7 @@ int BigInt_Impl::internal_cmp_d(ubyte32 d) const
 	if(ua > 1)
 		return 1;
 
-	if(*ap < d) 
+	if(*ap < d)
 		return -1;
 
 	if(*ap > d)
@@ -483,7 +485,7 @@ void BigInt_Impl::div_d(ubyte32 d, BigInt_Impl *q, ubyte32 *r) const
 		return;
 	}
 
-	
+
 	//If the quotient is actually going to be returned, we'll try to
 	//avoid hitting the memory allocator by copying the dividend into it
 	//and doing the division there.  This can't be any _worse_ than
@@ -492,7 +494,7 @@ void BigInt_Impl::div_d(ubyte32 d, BigInt_Impl *q, ubyte32 *r) const
 
 	//If it's not going to be returned, we need to allocate a temporary
 	//to hold the quotient, which will just be discarded.
-	
+
 	if(q)
 	{
 		copy(q);
@@ -508,7 +510,7 @@ void BigInt_Impl::div_d(ubyte32 d, BigInt_Impl *q, ubyte32 *r) const
 		qp.internal_div_d(d, &rem);
 		if(qp.internal_cmp_d(0) == 0)
 			qp.digits_negative = false;
-	
+
 	}
 
 	if(r)
@@ -543,14 +545,14 @@ void BigInt_Impl::sieve(const ubyte32 *primes, unsigned int num_primes, std::vec
 {
 	// Algorithm from Mozilla NSS
 
-	// Produce table of composites from list of primes and trial value.  
+	// Produce table of composites from list of primes and trial value.
 	// trial must be odd. List of primes must not include 2.
-	// sieve should have dimension >= MAXPRIME/2, where MAXPRIME is largest 
+	// sieve should have dimension >= MAXPRIME/2, where MAXPRIME is largest
 	// prime in list of primes.  After this function is finished,
 	// if sieve[i] is non-zero, then (trial + 2*i) is composite.
 	// Each prime used in the sieve costs one division of trial, and eliminates
 	// one or more values from the search space. (3 eliminates 1/3 of the values
-	// alone!)  Each value left in the search space costs 1 or more modular 
+	// alone!)  Each value left in the search space costs 1 or more modular
 	// exponentations.  So, these divisions are a bargain!
 
 	//mp_err       res;
@@ -562,7 +564,7 @@ void BigInt_Impl::sieve(const ubyte32 *primes, unsigned int num_primes, std::vec
 
 	unsigned char *sieve_ptr = &sieve[0];
 	memset(sieve_ptr, 0, sieve_size);
-	
+
 	for(unsigned int ix = 0; ix < num_primes; ix++)
 	{
 		ubyte32 prime = primes[ix];
@@ -622,7 +624,7 @@ void BigInt_Impl::internal_sub_d(ubyte32 d)
 	unsigned int   ix = 1, used = digits_used;
 	ubyte32 *dp = digits;
 
-	// Compute initial subtraction 
+	// Compute initial subtraction
 	w = (digit_radix + dp[0]) - d;
 	b = internal_carryout(w) ? 0 : 1;
 	dp[0] = internal_accum(w);
@@ -780,7 +782,7 @@ int  BigInt_Impl::internal_ispow2() const
 		}
 
 		return ((uv - 1) * num_bits_in_digit) + extra;
-	} 
+	}
 
 	return -1;
 }
@@ -864,7 +866,7 @@ ubyte32 BigInt_Impl::internal_norm(BigInt_Impl *b)
 	// end of the division process).
 
 	// We multiply by the smallest power of 2 that gives us a leading digit
-	// at least half the radix.  By choosing a power of 2, we simplify the 
+	// at least half the radix.  By choosing a power of 2, we simplify the
 	// multiplication and division steps to simple shifts.
 
 
@@ -876,7 +878,7 @@ ubyte32 BigInt_Impl::internal_norm(BigInt_Impl *b)
 		t <<= 1;
 		++d;
 	}
-    
+
 	if(d != 0)
 	{
 		internal_mul_2d(d);
@@ -922,7 +924,7 @@ void BigInt_Impl::internal_mul_d(ubyte32 d)
 
 	if(k)
 	{
-		dp[max] = k; 
+		dp[max] = k;
 		digits_used = max + 1;
 	}
 
@@ -1016,8 +1018,8 @@ void BigInt_Impl::internal_div(BigInt_Impl *b)
 		}
 
 		// If we didn't find one, we're finished dividing
-		if(rem_impl.internal_cmp(b) < 0) 
-			break;    
+		if(rem_impl.internal_cmp(b) < 0)
+			break;
 
 		// Compute a guess for the next quotient digit
 		q = rem_impl.digits[rem_impl.digits_used - 1];
@@ -1044,7 +1046,7 @@ void BigInt_Impl::internal_div(BigInt_Impl *b)
 			t_impl.internal_sub(b);
 		}
 
-		// At this point, q should be the right next digit 
+		// At this point, q should be the right next digit
 		rem_impl.internal_sub(&t_impl);
 
 		// Include the digit in the quotient.  We allocated enough memory
@@ -1054,7 +1056,7 @@ void BigInt_Impl::internal_div(BigInt_Impl *b)
 	}
 
 	// Denormalize remainder
-	if(d != 0) 
+	if(d != 0)
 		rem_impl.internal_div_2d(d);
 
 	quot_impl.internal_clamp();
@@ -1062,7 +1064,7 @@ void BigInt_Impl::internal_div(BigInt_Impl *b)
 
 	// Copy quotient back to output
 	quot_impl.internal_exch(this);
- 
+
 	// Copy remainder back to output
 	rem_impl.internal_exch(b);
 }
@@ -1098,7 +1100,7 @@ void BigInt_Impl::div(const BigInt_Impl *b, BigInt_Impl *q, BigInt_Impl *r) cons
 			copy(r);
 		}
 
-		if(q) 
+		if(q)
 			q->zero();
 
 		return;
@@ -1146,7 +1148,7 @@ void BigInt_Impl::div(const BigInt_Impl *b, BigInt_Impl *q, BigInt_Impl *r) cons
 	if(q)
 		qtmp.internal_exch(q);
 
-	if(r) 
+	if(r)
 		rtmp.internal_exch(r);
 
 }
@@ -1156,9 +1158,9 @@ void BigInt_Impl::add(const BigInt_Impl *b, BigInt_Impl *c) const
 	int cmp;
 
 	if(digits_negative == b->digits_negative)	// same sign:  add values, keep sign
-	{ 
+	{
 		// Commutativity of addition lets us do this in either order,
-		// so we avoid having to use a temporary even if the result 
+		// so we avoid having to use a temporary even if the result
 		// is supposed to replace the output
 
 		if(c == b)
@@ -1176,7 +1178,7 @@ void BigInt_Impl::add(const BigInt_Impl *b, BigInt_Impl *c) const
 	} else if((cmp = internal_cmp(b)) > 0) // different sign: a > b
 	{
 		// If the output is going to be clobbered, we will use a temporary
-		// variable; otherwise, we'll do it without touching the memory 
+		// variable; otherwise, we'll do it without touching the memory
 		// allocator at all, if possible
 
 		if(c == b)
@@ -1251,7 +1253,7 @@ void BigInt_Impl::internal_add(const BigInt_Impl *b)
 		w = internal_carryout(w);
 	}
 
-	// If we run out of 'b' digits before we're actually done, make	sure the carries get propagated upward...  
+	// If we run out of 'b' digits before we're actually done, make	sure the carries get propagated upward...
 	used = digits_used;
 	while(w && ix < used)
 	{
@@ -1264,7 +1266,7 @@ void BigInt_Impl::internal_add(const BigInt_Impl *b)
 	// If there's an overall carry out, increase precision and include
 	// it.  We could have done this initially, but why touch the memory
 	// allocator unless we're sure we have to?
-	
+
 	if(w)
 	{
 		internal_pad(used+1);
@@ -1279,7 +1281,7 @@ void BigInt_Impl::mod(const BigInt_Impl *m, BigInt_Impl *c) const
 	if (m->digits_negative)
 		throw Exception("Cannot mod() using negative values");
 
-	// If |a| > m, we need to divide to get the remainder and take the absolute value.  
+	// If |a| > m, we need to divide to get the remainder and take the absolute value.
 	// If |a| < m, we don't need to do any division, just copy and adjust the sign (if a is negative).
 	// If |a| == m, we can simply set the result to zero.
 
@@ -1333,7 +1335,7 @@ void BigInt_Impl::internal_mul(const BigInt_Impl *b)
 	pb = b->digits;
 	for(ix = 0; ix < ub; ++ix, ++pb)
 	{
-		if(*pb == 0) 
+		if(*pb == 0)
 		continue;
 
 		// Inner product:  Digits of a
@@ -1462,7 +1464,7 @@ void BigInt_Impl::internal_reduce(const BigInt_Impl *m, BigInt_Impl *mu)
 
 	// This algorithm was derived from the _Handbook of Applied
 	// Cryptography_ by Menezes, Oorschot and VanStone, Ch. 14,
-	// pp. 603-604.  
+	// pp. 603-604.
 
 	unsigned int  um = m->digits_used;
 
@@ -1505,7 +1507,7 @@ void BigInt_Impl::internal_sqr()
 	// computation steps are redundant when squaring.  The inner product
 	// step is a bit more complicated, but we save a fair number of
 	// iterations of the multiplication loop.
- 
+
 	ubyte64  w, k = 0;
 	unsigned int  ix, jx, kx, used = digits_used;
 	ubyte32 *pa1, *pa2, *pt, *pbt;
@@ -1519,7 +1521,7 @@ void BigInt_Impl::internal_sqr()
 	pbt = tmp_impl.digits;
 
 	pa1 = digits;
-	for(ix = 0; ix < used; ++ix, ++pa1) 
+	for(ix = 0; ix < used; ++ix, ++pa1)
 	{
 		if(*pa1 == 0)
 			continue;
@@ -1540,7 +1542,7 @@ void BigInt_Impl::internal_sqr()
 		for(jx = ix + 1, pa2 = digits + jx; jx < used; ++jx, ++pa2)
 		{
 			ubyte64  u = 0, v;
-      
+
 			// Store this in a temporary to avoid indirections later
 			pt = pbt + ix + jx;
 
@@ -1560,7 +1562,7 @@ void BigInt_Impl::internal_sqr()
 			v = (ubyte64) *pt + k;
 
 			// If we do not already have an overflow carry, check to see
-			// if the addition will cause one, and set the carry out if so 
+			// if the addition will cause one, and set the carry out if so
 			u |= ((word_maximim_value - v) < w);
 
 			// Add in the rest, again ignoring overflow
@@ -1583,7 +1585,7 @@ void BigInt_Impl::internal_sqr()
 		// If we are carrying out, propagate the carry to the next digit
 		// in the output.  This may cascade, so we have to be somewhat
 		// circumspect -- but we will have enough precision in the output
-		// that we won't overflow 
+		// that we won't overflow
 
 		kx = 1;
 		while(k)
@@ -1618,7 +1620,7 @@ void BigInt_Impl::exptmod(const BigInt_Impl *b, const BigInt_Impl *m, BigInt_Imp
 	s.set(1);
 
 	// mu = b^2k / m
-	mu.internal_add_d(1); 
+	mu.internal_add_d(1);
 	mu.internal_lshd(2 * m->digits_used);
 	mu.div(m, &mu, NULL);
 
@@ -1676,7 +1678,7 @@ bool BigInt_Impl::fermat(ubyte32 w) const
 	return false;
 }
 
- 
+
 int BigInt_Impl::cmp_d(ubyte32 d) const
 {
 	if(digits_negative == true)
@@ -1691,7 +1693,7 @@ void BigInt_Impl::neg(BigInt_Impl *b) const
 
 	if(b->internal_cmp_d(0) == 0)
 		b->digits_negative = false;
-	else 
+	else
 		b->digits_negative = (b->digits_negative == true) ? false : true;
 }
 
@@ -1817,7 +1819,7 @@ bool BigInt_Impl::pprime(int nt) const
 	int iter;
 	unsigned int jx;
 	unsigned int b;
-	
+
 	BigInt_Impl amo(*this);	// "amo" = "a minus one"
 	BigInt_Impl x(*this);
 
@@ -1856,7 +1858,7 @@ bool BigInt_Impl::pprime(int nt) const
 			result = true;
 			continue;
 		}
- 
+
 		result = false;  // just in case the following for loop never executes.
 		for (jx = 1; jx < b; jx++)
 		{
@@ -1871,7 +1873,7 @@ bool BigInt_Impl::pprime(int nt) const
 			{
 				result = true;
 				break;
-			} 
+			}
 		}
 
 		// If the test passes, we will continue iterating, but a failed
@@ -1898,12 +1900,12 @@ void BigInt_Impl::mul(const BigInt_Impl *b, BigInt_Impl *c) const
 		copy(c);
 		c->internal_mul(b);
 	}
-  
+
 	if(is_negative == false || c->internal_cmp_d(0) == 0)
 		c->digits_negative = false;
 	else
 		c->digits_negative = is_negative;
- 
+
 }
 
 void BigInt_Impl::mul_d(ubyte32 d, BigInt_Impl *c) const
@@ -1913,7 +1915,7 @@ void BigInt_Impl::mul_d(ubyte32 d, BigInt_Impl *c) const
 	bool  is_negative = digits_negative;
 
 	c->internal_mul_d(d);
-  
+
 	if(is_negative == false || c->internal_cmp_d(0) == 0)
 		c->digits_negative = false;
 	else
@@ -2086,10 +2088,10 @@ void BigInt_Impl::xgcd(const BigInt_Impl *b, BigInt_Impl *g, BigInt_Impl *x, Big
 		{
 			if(x)
 				C.copy(x);
-	
+
 			if(y)
 				D.copy(y);
-     
+
 			if(g)
 				gx.mul(&v, g);
 
@@ -2207,7 +2209,7 @@ int BigInt_Impl::unsigned_octet_size() const
 	for(ix = digits_used - 1; ix >= 0; ix--)
 	{
 		d = digits[ix];
-		if (d) 
+		if (d)
 			break;
 		bytes -= sizeof(d);
 	}
@@ -2218,7 +2220,7 @@ int BigInt_Impl::unsigned_octet_size() const
 	for(ix = sizeof(ubyte32) - 1; ix >= 0; ix--)
 	{
 		unsigned char x = (unsigned char)(d >> (ix * 8));
-		if (x) 
+		if (x)
 			break;
 		--bytes;
 	}
