@@ -145,6 +145,45 @@ Mat3<int> Mat3<int>::rotate(const Angle &angle, int x, int y, int z, bool normal
 	return rotate_matrix;
 }
 
+template<typename Type>
+Mat3<Type> Mat3<Type>::rotate(const Angle &angle_x, const Angle &angle_y, const Angle &angle_z, EulerOrder order)
+{
+	float cx = cos(angle_x.to_radians());
+	float sx = sin(angle_x.to_radians());
+	float cy = cos(angle_y.to_radians());
+	float sy = sin(angle_y.to_radians());
+	float cz = cos(angle_z.to_radians());
+	float sz = sin(angle_z.to_radians());
+
+	Mat3<Type> rotation_matrix_x(1.0f, 0.0f, 0.0f, 0.0f, cx, sx, 0.0f, -sx, cx);
+	Mat3<Type> rotation_matrix_y(cy, 0.0f, -sy, 0.0f, 1.0f, 0.0f, sy, 0.0f, cy);
+	Mat3<Type> rotation_matrix_z(cz, sz, 0.0f, -sz, cz, 0.0f, 0.0f, 0.0f, 1.0f);
+
+	switch (order)
+	{
+	case order_XYZ:
+		return rotation_matrix_z * rotation_matrix_y * rotation_matrix_x;
+	case order_XZY:
+		return rotation_matrix_y * rotation_matrix_z * rotation_matrix_x;
+	case order_YZX:
+		return rotation_matrix_x * rotation_matrix_z * rotation_matrix_y;
+	case order_YXZ:
+		return rotation_matrix_z * rotation_matrix_x * rotation_matrix_y;
+	case order_ZXY:
+		return rotation_matrix_y * rotation_matrix_x * rotation_matrix_z;
+	case order_ZYX:
+		return rotation_matrix_x * rotation_matrix_y * rotation_matrix_z;
+	default:
+		throw Exception("Unknown euler order");
+	}
+
+}
+
+template<>
+Mat3<int> Mat3<int>::rotate(const Angle &angle_x, const Angle &angle_y, const Angle &angle_z, EulerOrder order)
+{
+	throw Exception("Not supported");
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // Mat3 attributes:

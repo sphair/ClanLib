@@ -35,6 +35,7 @@
 #include "mat4.h"
 #include "vec3.h"
 #include "../System/cl_platform.h"
+#include "angle.h"
 
 namespace clan
 {
@@ -154,6 +155,13 @@ public:
 	{
 		return rotate(angle, rotation.x, rotation.y, rotation.z, normalize);
 	}
+
+	/// \brief Create a rotation matrix using euler angles
+	///
+	/// Matrix is created in the Column-Major matrix format (opengl native)
+	///
+	/// \return The matrix (in column-major format)
+	static Mat3<Type> rotate(const Angle &angle_x, const Angle &angle_y, const Angle &angle_z, EulerOrder order);
 
 	/// \brief Multiply 2 matrices
 	///

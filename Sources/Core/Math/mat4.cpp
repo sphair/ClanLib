@@ -300,28 +300,7 @@ Mat4<Type> Mat4<Type>::rotate(const Angle &angle, Type x, Type y, Type z, bool n
 template<typename Type>
 Mat4<Type> Mat4<Type>::rotate(const Angle &angle_x, const Angle &angle_y, const Angle &angle_z, EulerOrder order)
 {
-	Mat4<Type> rotation_matrix_x = Mat4<Type>::rotate(angle_x, 1.0f, 0.0f, 0.0f, false);
-	Mat4<Type> rotation_matrix_y = Mat4<Type>::rotate(angle_y, 0.0f, 1.0f, 0.0f, false);
-	Mat4<Type> rotation_matrix_z = Mat4<Type>::rotate(angle_z, 0.0f, 0.0f, 1.0f, false);
-
-	switch (order)
-	{
-		case order_XYZ:
-			return rotation_matrix_z * rotation_matrix_y * rotation_matrix_x;
-		case order_XZY:
-			return rotation_matrix_y * rotation_matrix_z * rotation_matrix_x;
-		case order_YZX:
-			return rotation_matrix_x * rotation_matrix_z * rotation_matrix_y;
-		case order_YXZ:
-			return rotation_matrix_z * rotation_matrix_x * rotation_matrix_y;
-		case order_ZXY:
-			return rotation_matrix_y * rotation_matrix_x * rotation_matrix_z;
-		case order_ZYX:
-			return rotation_matrix_x * rotation_matrix_y * rotation_matrix_z;
-		default:
-			throw Exception("Unknown euler order");
-	}
-
+	return Mat4<Type>(Mat3<Type>::rotate(angle_x, angle_y, angle_z, order));
 }
 
 template<typename Type>
