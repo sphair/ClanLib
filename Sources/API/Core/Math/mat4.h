@@ -351,14 +351,8 @@ public:
 	/// The matrix (in column-major format)
 	Type matrix[16];
 
-	/// \brief Returns the x coordinate for the point (0,0,0) multiplied with this matrix.
-	Type get_origin_x() const { return matrix[12]; }
-
-	/// \brief Returns the y coordinate for the point (0,0,0) multiplied with this matrix.
-	Type get_origin_y() const { return matrix[13]; }
-
-	/// \brief Returns the z coordinate for the point (0,0,0) multiplied with this matrix.
-	Type get_origin_z() const { return matrix[14]; }
+	/// \brief Returns the translation coordinates for this matrix (in column-major format)
+	Vec3<Type> get_translate() const { return Vec3<Type>(matrix[12], matrix[13], matrix[14]); }
 
 	/// \brief Extract the euler angles (in radians) from a matrix (in column-major format)
 	///
@@ -416,6 +410,28 @@ public:
 	///
 	/// \return reference to this object
 	Mat4<Type> &translate_self(const Vec3<Type> &translation) { return translate_self(translation.x, translation.y, translation.z); }
+
+	/// \brief Set this matrix translation values
+	///
+	/// Matrix is assumed to be in the Column-Major matrix format (opengl native)\n
+	/// This does not translate the matrix, see translate_self() if this is desired
+	///
+	/// \param x = Translate X
+	/// \param y = Translate Y
+	/// \param z = Translate Z
+	///
+	/// \return reference to this object
+	Mat4<Type> &set_translate(Type x, Type y, Type z) {	matrix[3 * 4 + 0] = x; matrix[3 * 4 + 1] = y; matrix[3 * 4 + 2] = z; return *this;}
+
+	/// \brief Set this matrix translation values
+	///
+	/// Matrix is assumed to be in the Column-Major matrix format (opengl native)\n
+	/// This does not translate the matrix, see translate_self() if this is desired
+	///
+	/// \param translation = Translate XYZ
+	///
+	/// \return reference to this object
+	Mat4<Type> &set_translate(const Vec3<Type> &translation) { matrix[3 * 4 + 0] = translation.x; matrix[3 * 4 + 1] = translation.y; matrix[3 * 4 + 2] = translation.z; return *this; }
 
 	/// \brief Calculate the matrix determinant of this matrix
 	///
