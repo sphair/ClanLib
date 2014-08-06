@@ -646,24 +646,11 @@ Mat4<Type> &Mat4<Type>::scale_self(Type x, Type y, Type z)
 template<>
 Mat4<float> &Mat4<float>::scale_self(float x, float y, float z)
 {
-	/*
-	// FIXME
-	__m128 row0 = _mm_loadu_ps(matrix);
-	__m128 row1 = _mm_loadu_ps(matrix+4);
-	__m128 row2 = _mm_loadu_ps(matrix+8);
-	__m128 row3 = _mm_loadu_ps(matrix+12);
-	__m128 vec = _mm_set_ps(x, y, z, 1.0f);
-
-	row0 = _mm_mul_ps(row0, vec);
-	row1 = _mm_mul_ps(row1, vec);
-	row2 = _mm_mul_ps(row2, vec);
-	row3 = _mm_mul_ps(row3, vec);
-
-	_mm_storeu_ps(matrix, row0);
-	_mm_storeu_ps(matrix+4, row1);
-	_mm_storeu_ps(matrix+8, row2);
-	_mm_storeu_ps(matrix+12, row3);
-*/
+#if !defined DISABLE_SSE2
+	_mm_storeu_ps(matrix, _mm_mul_ps(_mm_loadu_ps(matrix), _mm_set_ps1(x)));
+	_mm_storeu_ps(matrix+4, _mm_mul_ps(_mm_loadu_ps(matrix+4), _mm_set_ps1(y)));
+	_mm_storeu_ps(matrix+8, _mm_mul_ps(_mm_loadu_ps(matrix+8), _mm_set_ps1(z)));
+#else
 	matrix[0+4*0] *= x;
 	matrix[0+4*1] *= y;
 	matrix[0+4*2] *= z;
@@ -679,6 +666,7 @@ Mat4<float> &Mat4<float>::scale_self(float x, float y, float z)
 	matrix[3+4*0] *= x;
 	matrix[3+4*1] *= y;
 	matrix[3+4*2] *= z;
+#endif
 	return *this;
 }
 

@@ -123,6 +123,28 @@ void TestApp::test_matrix_mat4()
 	Mat4i test_a(test_a_values);
 	Mat4i test_b(test_b_values);
 
+	Mat4f test_c(test_a);
+	Mat4f test_c_scaled(test_c);
+
+	{
+		float x = 2.0f;
+		float y = 3.0f;
+		float z = 4.0f;
+
+		test_c_scaled[0 + 4 * 0] *= x;
+		test_c_scaled[0 + 4 * 1] *= y;
+		test_c_scaled[0 + 4 * 2] *= z;
+		test_c_scaled[1 + 4 * 0] *= x;
+		test_c_scaled[1 + 4 * 1] *= y;
+		test_c_scaled[1 + 4 * 2] *= z;
+		test_c_scaled[2 + 4 * 0] *= x;
+		test_c_scaled[2 + 4 * 1] *= y;
+		test_c_scaled[2 + 4 * 2] *= z;
+		test_c_scaled[3 + 4 * 0] *= x;
+		test_c_scaled[3 + 4 * 1] *= y;
+		test_c_scaled[3 + 4 * 2] *= z;
+	}
+
 	Console::write_line("   Function: add() and operator");
 	{
 		int answer_values[] = {7, 8, 4, 9, 8, 11, 6, 11, 4, 7, 12, 16, 8, 7, 13, 4};
@@ -182,6 +204,14 @@ void TestApp::test_matrix_mat4()
 		result2.scale_self(2,3,4);
 
 		if (result != result2) fail();
+
+		Mat4f test = test_c;
+		test.scale_self(2.0f, 3.0f, 4.0f);
+
+		if (!test.is_equal(test_c_scaled, 0.00001f))
+			fail();
+
+
 	}
 
 	Console::write_line("   Function: rotate (using euler angles)");
