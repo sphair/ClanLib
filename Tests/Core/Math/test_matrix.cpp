@@ -224,8 +224,6 @@ void TestApp::test_matrix_mat4()
 
 		if (!test.is_equal(test_c_scaled, 0.00001f))
 			fail();
-
-
 	}
 
 	Console::write_line("   Function: rotate (using euler angles)");
@@ -252,6 +250,35 @@ void TestApp::test_matrix_mat4()
 		test_rotate_and_get_euler(order_ZYX);
 	}
 
+	Console::write_line("   Function: transpose() (float)");
+	{
+		Mat4f original(test_a);
+
+		Mat4f transposed_matrix;
+	
+		transposed_matrix[0] = original[0];
+		transposed_matrix[1] = original[4];
+		transposed_matrix[2] = original[8];
+		transposed_matrix[3] = original[12];
+		transposed_matrix[4] = original[1];
+		transposed_matrix[5] = original[5];
+		transposed_matrix[6] = original[9];
+		transposed_matrix[7] = original[13];
+		transposed_matrix[8] = original[2];
+		transposed_matrix[9] = original[6];
+		transposed_matrix[10] = original[10];
+		transposed_matrix[11] = original[14];
+		transposed_matrix[12] = original[3];
+		transposed_matrix[13] = original[7];
+		transposed_matrix[14] = original[11];
+		transposed_matrix[15] = original[15];
+
+		Mat4f test = original;
+		test.transpose();
+
+		if (!test.is_equal(transposed_matrix, 0.00001f))
+			fail();
+	}
 }
 
 void TestApp::test_rotate_and_get_euler(clan::EulerOrder order)

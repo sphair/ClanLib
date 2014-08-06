@@ -955,8 +955,48 @@ Mat4<Type> &Mat4<Type>::transpose()
 	matrix[12] = original[3];
 	matrix[13] = original[7];
 	matrix[14] = original[11];
-	matrix[15] = original[13];
+	matrix[15] = original[15];
 
+	return *this;
+}
+
+template<>
+Mat4<float> &Mat4<float>::transpose()
+{
+#if !defined DISABLE_SSE2
+	__m128 row0 = _mm_loadu_ps(matrix);
+	__m128 row1 = _mm_loadu_ps(matrix + 4);
+	__m128 row2 = _mm_loadu_ps(matrix + 8);
+	__m128 row3 = _mm_loadu_ps(matrix + 12);
+
+	_MM_TRANSPOSE4_PS(row0, row1, row2, row3);
+	
+	_mm_storeu_ps(matrix, row0);
+	_mm_storeu_ps(matrix + 4, row1);
+	_mm_storeu_ps(matrix + 8, row2);
+	_mm_storeu_ps(matrix + 12, row3);
+#else
+	Type original[16];
+	for (int cnt = 0; cnt<16; cnt++)
+		original[cnt] = matrix[cnt];
+
+	matrix[0] = original[0];
+	matrix[1] = original[4];
+	matrix[2] = original[8];
+	matrix[3] = original[12];
+	matrix[4] = original[1];
+	matrix[5] = original[5];
+	matrix[6] = original[9];
+	matrix[7] = original[13];
+	matrix[8] = original[2];
+	matrix[9] = original[6];
+	matrix[10] = original[10];
+	matrix[11] = original[14];
+	matrix[12] = original[3];
+	matrix[13] = original[7];
+	matrix[14] = original[11];
+	matrix[15] = original[15];
+#endif
 	return *this;
 }
 
