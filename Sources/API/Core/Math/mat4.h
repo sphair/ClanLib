@@ -224,7 +224,7 @@ public:
 	///
 	/// \param xyz = Scale XYZ
 	/// \return The matrix
-	static Mat4<Type> scale(Vec3<Type> xyz)
+	static Mat4<Type> scale(const Vec3<Type> &xyz)
 	{
 		return scale(xyz.x, xyz.y, xyz.z);
 	}
@@ -243,7 +243,7 @@ public:
 	/// Matrix is created in the Column-Major matrix format (opengl native)
 	/// \param xyz = Translate XYZ
 	/// \return The matrix (in column-major format)
-	static Mat4<Type> translate(Vec3<Type> xyz)
+	static Mat4<Type> translate(const Vec3<Type> &xyz)
 	{
 		return translate(xyz.x, xyz.y, xyz.z);
 	}
@@ -386,6 +386,15 @@ public:
 	/// \return reference to this object
 	Mat4<Type> &scale_self(Type x, Type y, Type z);
 
+	/// \brief Scale this matrix
+	///
+	/// This is faster than using: multiply(Mat4<Type>::scale(x,y,z) )
+	///
+	/// \param scale = Scale XYZ
+	///
+	/// \return reference to this object
+	Mat4<Type> &scale_self(const Vec3<Type> &scale) { return scale_self(scale.x, scale.y, scale.z); }
+
 	/// \brief Translate this matrix
 	///
 	/// Matrix is assumed to be in the Column-Major matrix format (opengl native)\n
@@ -397,6 +406,16 @@ public:
 	///
 	/// \return reference to this object
 	Mat4<Type> &translate_self(Type x, Type y, Type z);
+
+	/// \brief Translate this matrix
+	///
+	/// Matrix is assumed to be in the Column-Major matrix format (opengl native)\n
+	/// This is faster than using: multiply(Mat4<Type>::translate(x,y,z) )
+	///
+	/// \param translation = Translate XYZ
+	///
+	/// \return reference to this object
+	Mat4<Type> &translate_self(const Vec3<Type> &translation) { return translate_self(translation.x, translation.y, translation.z); }
 
 	/// \brief Calculate the matrix determinant of this matrix
 	///
