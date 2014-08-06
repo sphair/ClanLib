@@ -180,7 +180,7 @@ void TestApp::test_matrix_mat4()
 		if (result != answer) fail();
 	}
 
-	Console::write_line("   Function: translate_self()");
+	Console::write_line("   Function: translate_self() (int)");
 	{
 		Mat4i answer(test_a);
 
@@ -191,6 +191,20 @@ void TestApp::test_matrix_mat4()
 		result2.translate_self(2,3,4);
 
 		if (result != result2) fail();
+	}
+
+	Console::write_line("   Function: translate_self() (float)");
+	{
+		Mat4f answer(test_a);
+
+		Mat4f result(test_a);
+		result = result * Mat4f::translate(2, 3, 4);
+
+		Mat4f result2(test_a);
+		result2.translate_self(2, 3, 4);
+
+		if (!result.is_equal(result2, 0.00001f))
+			fail();
 	}
 
 	Console::write_line("   Function: scale_self()");

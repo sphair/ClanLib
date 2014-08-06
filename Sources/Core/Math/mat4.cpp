@@ -688,9 +688,7 @@ Mat4<Type> &Mat4<Type>::translate_self(Type x, Type y, Type z)
 template<>
 Mat4<float> &Mat4<float>::translate_self(float x, float y, float z)
 {
-	/*
-	// FIXME
-
+#if !defined DISABLE_SSE2
 	__m128 row0 = _mm_loadu_ps(matrix);
 	__m128 row1 = _mm_loadu_ps(matrix+4);
 	__m128 row2 = _mm_loadu_ps(matrix+8);
@@ -700,11 +698,9 @@ Mat4<float> &Mat4<float>::translate_self(float x, float y, float z)
 	row1 = _mm_mul_ps(row1, _mm_set1_ps(y));
 	row2 = _mm_mul_ps(row2, _mm_set1_ps(z));
 
-	_MM_TRANSPOSE4_PS(row0, row1, row2, row3);
-
 	__m128 result = _mm_add_ps(_mm_add_ps(_mm_add_ps(row0, row1), row2), row3);
 	_mm_storeu_ps(matrix+12, result);
-*/
+#else
 	float translate_value_1 = (matrix[0+4*0] * x) + (matrix[0+4*1] * y) + (matrix[0+4*2] * z) + matrix[0+4*3];
 	float translate_value_2 = (matrix[1+4*0] * x) + (matrix[1+4*1] * y) + (matrix[1+4*2] * z) + matrix[1+4*3];
 	float translate_value_3 = (matrix[2+4*0] * x) + (matrix[2+4*1] * y) + (matrix[2+4*2] * z) + matrix[2+4*3];
@@ -714,7 +710,7 @@ Mat4<float> &Mat4<float>::translate_self(float x, float y, float z)
 	matrix[1+4*3] = translate_value_2;
 	matrix[2+4*3] = translate_value_3;
 	matrix[3+4*3] = translate_value_4;
-
+#endif
 	return *this;
 }
 
