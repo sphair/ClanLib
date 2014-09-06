@@ -178,22 +178,6 @@ Workspace Wizard::create_workspace()
 		libs_list_release,
 		libs_list_debug);
 
-	Project clanDatabase(
-		"Database",
-		"clanDatabase",
-		"database.h",
-		libs_list_shared,
-		libs_list_release,
-		libs_list_debug);
-
-	Project clanSqlite(
-		"Sqlite",
-		"clanSqlite",
-		"sqlite.h",
-		libs_list_shared,
-		libs_list_release,
-		libs_list_debug);
-
 	Project clanApp(
 		"App",
 		"clanApp",
@@ -225,13 +209,7 @@ Workspace Wizard::create_workspace()
 		libs_list_shared,
 		libs_list_release,
 		libs_list_debug);
-	Project clanSWRender(
-		"SWRender",
-		"clanSWRender",
-		"swrender.h",
-		libs_list_shared,
-		libs_list_release,
-		libs_list_debug);
+
 	Project clanGL(
 		"GL",
 		"clanGL",
@@ -248,94 +226,14 @@ Workspace Wizard::create_workspace()
 		libs_list_release,
 		libs_list_debug);
 
-	Project clanScene3D(
-		"Scene3D",
-		"clanScene3D",
-		"scene3d.h",
-		libs_list_shared,
-		libs_list_release,
-		libs_list_debug);
-
-	//Project clanSWRender(
-	//	"SWRender",
-	//	"clanSWRender",
-	//	"swrender.h",
-	//	libs_list_shared,
-	//	libs_list_release,
-	//	libs_list_debug);
-
-	Project clanGUI(
-		"GUI",
-		"clanGUI",
-		"gui.h",
-		libs_list_shared,
-		libs_list_release,
-		libs_list_debug);
-
-	Project clanCSSLayout(
-		"CSSLayout",
-		"clanCSSLayout",
-		"csslayout.h",
-		libs_list_shared,
-		libs_list_release,
-		libs_list_debug);
-
-	Project clanCompute(
-		"Compute",
-		"clanCompute",
-		"compute.h",
-		libs_list_shared,
-		libs_list_release,
-		libs_list_debug);
-
-	Project clanPhysics2D(
-		"Physics2D",
-		"clanPhysics2D",
-		"physics2d.h",
-		libs_list_shared,
-		libs_list_release,
-		libs_list_debug);
-
-	Project clanPhysics3D(
-		"Physics3D",
-		"clanPhysics3D",
-		"physics3d.h",
-		libs_list_shared,
-		libs_list_release,
-		libs_list_debug);
-
-	Project clanGameIDE(
-		"GameIDE",
-		"clanGameIDE",
-		"gameide.h",
-		libs_list_shared,
-		libs_list_release,
-		libs_list_debug);
-
 	// Add projects to workspace:
 	workspace.projects.push_back(clanCore);
-	workspace.projects.push_back(clanDatabase);
-	workspace.projects.push_back(clanSqlite);
 	workspace.projects.push_back(clanApp);
 	workspace.projects.push_back(clanNetwork);
 	workspace.projects.push_back(clanDisplay);
 	workspace.projects.push_back(clanSound);
-	workspace.projects.push_back(clanSWRender);
 	workspace.projects.push_back(clanGL);
 	workspace.projects.push_back(clanD3D);
-	workspace.projects.push_back(clanScene3D);
-
-	//if (page_target.include_intrinsics)
-	//	workspace.projects.push_back(clanSWRender);
-
-	workspace.projects.push_back(clanCSSLayout);
-
-	workspace.projects.push_back(clanGUI);
-
-	workspace.projects.push_back(clanCompute);
-	workspace.projects.push_back(clanPhysics2D);
-	workspace.projects.push_back(clanPhysics3D);
-	workspace.projects.push_back(clanGameIDE);
 
 	return workspace;
 }

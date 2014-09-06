@@ -1,9 +1,0 @@
-<gui xmlns="http://clanlib.org/xmlns/gui-1.0">
-	<frame class="" id="frame1" text="Layout settings" anchor_tl="0" anchor_br="0" dist_tl_x="16" dist_tl_y="8" dist_br_x="280" dist_br_y="85" geom="16,8,280,85">
-		<checkbox class="" id="checkbox2" text="Show grid" anchor_tl="0" anchor_br="0" dist_tl_x="16" dist_tl_y="24" dist_br_x="96" dist_br_y="45" geom="16,24,96,45"/>
-		<checkbox class="" id="checkbox3" text="Snap to grid" anchor_tl="0" anchor_br="0" dist_tl_x="16" dist_tl_y="48" dist_br_x="96" dist_br_y="69" geom="16,48,96,69"/>
-	</frame>
-	<button class="" id="buttonOk" text="OK" anchor_tl="0" anchor_br="0" dist_tl_x="112" dist_tl_y="96" dist_br_x="192" dist_br_y="117" geom="112,96,192,117"/>
-	<button class="" id="buttonCancel" text="Cancel" anchor_tl="0" anchor_br="0" dist_tl_x="200" dist_tl_y="96" dist_br_x="280" dist_br_y="117" geom="200,96,280,117"/>
-	<dialog width="296" height="128"/>
-</gui>
