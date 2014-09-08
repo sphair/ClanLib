@@ -1358,7 +1358,8 @@ static int capture_pattern(vorb *f)
 
 static int start_page_no_capturepattern(vorb *f)
 {
-   uint32 loc0,loc1,n,i;
+    uint32 loc0,loc1,n;
+    int32 i;
    // stream structure version
    if (0 != get8(f)) return error(f, VORBIS_invalid_stream_structure_version);
    // header flag
@@ -1479,8 +1480,10 @@ static int next_segment(vorb *f)
 static int get8_packet_raw(vorb *f)
 {
    if (!f->bytes_in_seg)
+   {
       if (f->last_seg) return EOP;
       else if (!next_segment(f)) return EOP;
+   }
    assert(f->bytes_in_seg > 0);
    --f->bytes_in_seg;
    ++f->packet_bytes;
@@ -4485,10 +4488,12 @@ static uint32 vorbis_find_page(stb_vorbis *f, uint32 *end, uint32 *last)
                if (end)
                   *end = stb_vorbis_get_file_offset(f);
                if (last)
+               {
                   if (header[5] & 0x04)
                      *last = 1;
                   else
                      *last = 0;
+               }
                set_file_offset(f, retry_loc-1);
                return 1;
             }

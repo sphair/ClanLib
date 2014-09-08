@@ -582,18 +582,18 @@ void OpenGLWindowProvider_Impl::on_keyboard_event(NSEvent *theEvent)
         NSString* text = [theEvent charactersIgnoringModifiers];
         key.str = [text UTF8String];
         // Emit message:
-        self->get_keyboard()->sig_provider_event->invoke(key);
+        (*self->get_keyboard()->sig_provider_event)(key);
     }else if(type == NSFlagsChanged){
         // Translate flag changes of shift and ctrl into keypresses / releases
         if(prevInput.shift != key.shift){
             key.id = keycode_shift;
             key.type = key.shift?clan::InputEvent::pressed:clan::InputEvent::released;
-            self->get_keyboard()->sig_provider_event->invoke(key);
+            (*self->get_keyboard()->sig_provider_event)(key);
         }
         if(prevInput.ctrl != key.ctrl){
             key.id = keycode_control;
             key.type = key.ctrl?clan::InputEvent::pressed:clan::InputEvent::released;
-            self->get_keyboard()->sig_provider_event->invoke(key);
+            (*self->get_keyboard()->sig_provider_event)(key);
         }
     }
 
@@ -648,7 +648,7 @@ void OpenGLWindowProvider_Impl::on_mouse_event(NSEvent *theEvent)
         self->get_mouse()->on_mouse_event(key.id, key.type, key.mouse_pos);
 
         // Emit message.
-        self->get_mouse()->sig_provider_event->invoke(key);
+        (*self->get_mouse()->sig_provider_event)(key);
     }
 
     if (down)
@@ -659,7 +659,7 @@ void OpenGLWindowProvider_Impl::on_mouse_event(NSEvent *theEvent)
         self->get_mouse()->on_mouse_event(key.id, key.type, key.mouse_pos);
 
         // Emit message.
-        self->get_mouse()->sig_provider_event->invoke(key);
+        (*self->get_mouse()->sig_provider_event)(key);
     }
 
 	// It is possible for 2 events to be called when the wheelmouse is used.
@@ -671,7 +671,7 @@ void OpenGLWindowProvider_Impl::on_mouse_event(NSEvent *theEvent)
         self->get_mouse()->on_mouse_event(key.id, key.type, key.mouse_pos);
 
         // Emit message.
-        self->get_mouse()->sig_provider_event->invoke(key);
+        (*self->get_mouse()->sig_provider_event)(key);
     }
 }
 

@@ -111,15 +111,11 @@ void SpanLayout_Impl::draw_layout(Canvas &canvas)
 			LineSegment &segment = line.segments.back();
 			if (cursor_visible && segment.end <= cursor_pos)
 			{
-				switch(segment.type)
+				if (segment.type == object_text)
 				{
-				case object_text:
-					{
-						int cursor_x = x + segment.x_position + segment.font.get_text_size(canvas, text.substr(segment.start, segment.end - segment.start)).width;
-						int cursor_width = 1;
-						canvas.fill_rect(cursor_x, y + line.ascender-segment.ascender, cursor_x + cursor_width, y+line.ascender+segment.descender, cursor_color);
-					}
-					break;
+                    int cursor_x = x + segment.x_position + segment.font.get_text_size(canvas, text.substr(segment.start, segment.end - segment.start)).width;
+                    int cursor_width = 1;
+                    canvas.fill_rect(cursor_x, y + line.ascender-segment.ascender, cursor_x + cursor_width, y+line.ascender+segment.descender, cursor_color);
 				}
 			}
 		}
