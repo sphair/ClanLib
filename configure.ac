@@ -658,6 +658,7 @@ AC_CONFIG_FILES([
 		Examples/Makefile
 		Examples/Makefile.conf
 		Setup/Makefile
+		Sources/Database
 		Sources/API/Makefile
 		Sources/App/Makefile
 		Sources/Makefile
