@@ -30,6 +30,10 @@
 #include "../soundoutput_impl.h"
 #include <dsound.h>
 
+#ifdef __MINGW32__
+#define _Pre_null_
+#endif
+
 namespace clan
 {
 
