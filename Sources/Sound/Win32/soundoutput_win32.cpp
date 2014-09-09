@@ -190,7 +190,7 @@ void SoundOutput_Win32::wait()
 		if (buffer_available < buffer_needed)
 			ResetEvent(audio_buffer_ready_event);
 
-		UINT32 buffer_size = min(buffer_needed, buffer_available);
+		UINT32 buffer_size = std::min(buffer_needed, buffer_available);
 		if (buffer_size > 0)
 		{
 			BYTE *buffer = 0;
