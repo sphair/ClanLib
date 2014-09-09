@@ -132,8 +132,8 @@ ExceptionDialog_Impl::ExceptionDialog_Impl(Exception &e, HWND owner)
 	RECT owner_box = { 0,0,0,0 };
 	GetWindowRect(owner, &owner_box);
 
-	int width = min(rect.right, 800) + 50;
-	int height = min(rect.bottom, 600) + 100;
+	int width = std::min(rect.right, (long int)800) + 50;
+	int height = std::min(rect.bottom, (long int)600) + 100;
 	SetWindowPos(window_handle, 0, (owner_box.left + owner_box.right - width) / 2, (owner_box.top + owner_box.bottom - height) / 2, width, height, SWP_NOZORDER);
 
 	RECT client_box = { 0,0,0,0 };
