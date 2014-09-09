@@ -6,7 +6,7 @@ dnl Ensure that a recent enough version of Autoconv is being used
 AC_PREREQ(2.50)
 
 dnl Set the name of the package and its version. (This must be called first)
-AC_INIT(ClanLib, 3.1.0)
+AC_INIT(ClanLib, 4.0.0)
 
 AC_CONFIG_MACRO_DIR(m4)
 
@@ -24,8 +24,8 @@ dnl 1.5b -> Minimum Automake version
 dnl subdir-objects -> Objects places into the subdirectory of the build directory (eg subdir/file.c would be subdir/file.o)
 AM_INIT_AUTOMAKE( foreign dist-bzip2 dist-zip 1.5b subdir-objects )
 
-CLANLIB_MAJOR_VERSION=3
-CLANLIB_MINOR_VERSION=1
+CLANLIB_MAJOR_VERSION=4
+CLANLIB_MINOR_VERSION=0
 CLANLIB_MICRO_VERSION=0
 
 CLANLIB_VERSION=$CLANLIB_MAJOR_VERSION.$CLANLIB_MINOR_VERSION.$CLANLIB_MICRO_VERSION
@@ -140,7 +140,6 @@ if test "$WIN32" = "yes"; then
 		extra_LIBS_clanSound="-ldsound -ldxguid -lwinmm -lmsvcrt -lmingwex"
 		extra_LIBS_clanSqlite="-lsqlite3"
 		extra_LIBS_clanNetwork="-lws2_32"
-		extra_LIBS_clanSWRender="-lmsvcrt"
 		;;
 	*)
 	extra_CFLAGS_clanApp="-mwindows"
@@ -309,17 +308,7 @@ CLANLIB_ARG_ENABLE(docs,          auto, [Build Clanlib API documentation], [whet
 CLANLIB_ARG_ENABLE(clanDisplay,   auto, [Build clanDisplay module],        [whether we should try to build clanDisplay])
 CLANLIB_ARG_ENABLE(clanGL,        auto, [Build clanGL module],             [whether we should try to build clanGL])
 CLANLIB_ARG_ENABLE(clanSound,     auto, [Build clanSound module],          [whether we should try to build clanSound])
-CLANLIB_ARG_ENABLE(clanDatabase,  auto, [Build clanDatabase module],       [whether we should try to build clanDatabase])
-CLANLIB_ARG_ENABLE(clanSqlite,    auto, [Build clanSqlite module],         [whether we should try to build clanSqlite])
 CLANLIB_ARG_ENABLE(clanNetwork,   auto, [Build clanNetwork module],        [whether we should try to build clanNetwork])
-CLANLIB_ARG_ENABLE(clanGUI,       auto, [Build clanGUI module],            [whether we should try to build clanGUI])
-CLANLIB_ARG_ENABLE(clanCSSLayout, auto, [Build clanCSSLayout module],      [whether we should try to build clanCSSLayout])
-CLANLIB_ARG_ENABLE(clanScene3D,   auto, [Build clanScene3D module],        [whether we should try to build clanScene3D])
-CLANLIB_ARG_ENABLE(clanPhysics3D, auto, [Build clanPhysics3D module],      [whether we should try to build clanPhysics3D])
-CLANLIB_ARG_ENABLE(clanPhysics2D, auto, [Build clanPhysics2D module],      [whether we should try to build clanPhysics2D])
-CLANLIB_ARG_ENABLE(clanGameIDE,   auto, [Build clanGameIDE module],        [whether we should try to build clanGameIDE])
-CLANLIB_ARG_ENABLE(clanSWRender,  auto, [Build clanSWRender module],       [whether we should try to build clanSWRender])
-CLANLIB_ARG_ENABLE(clanCompute,   auto, [Build clanCompute module],        [whether we should try to build clanCompute])
 
 
 has_linux_joystick=no
@@ -416,106 +405,10 @@ if test "$enable_clanDisplay" != "no"; then
 		fi
 		echo ""
 	fi
-
-	if test "$enable_clanSWRender" != "no"; then
-		echo "Checking for clanSWRender stuff"
-		echo "=============================="
-
-		if test "$use_sse2" != "yes"; then
-		 	dnl CLANLIB_DISABLE_MODULE(clanSWRender, [ *** Requires SSE2 Support ] )
-			echo "Compiling using Stub. Required SSE2 Support"
-		fi
-
-		if test "$enable_clanSWRender" = "auto"; then
-			enable_clanSWRender=yes;
-		fi
-
-		echo ""
-
-	fi
 	
-	if test "$enable_clanCSSLayout" != "no"; then
-		echo "Checking for clanCSSLayout stuff"
-		echo "=============================="
-
-		if test "$enable_clanCSSLayout" = "auto"; then enable_clanCSSLayout=yes; fi
-		echo ""
-
-	fi
-
-	if test "$enable_clanCSSLayout" != "no"; then
-		if test "$enable_clanGUI" != "no"; then
-			echo "Checking for clanGUI stuff"	
-			echo "=============================="
-			if test "$enable_clanGUI" = "auto"; then
-				enable_clanGUI=yes;
-			fi
-
-dnl			CLANLIB_CHECK_LIB(gtk, [`cat $srcdir/Setup/Tests/gtk.cpp`], clanGUI, [ *** Cannot find gtk 3 (Try libgtk-3-dev or better) ], [`pkg-config gtk+-3.0 --libs` ], [ `pkg-config gtk+-3.0 --cflags`])
-
-			if test "$enable_clanGUI" = "auto"; then enable_clanGUI=yes; fi
-			echo ""
-		fi
-	else
-		CLANLIB_DISABLE_MODULE(clanGUI, [ *** clanGUI depends on clanCSSLayout])
-	fi
-
-	if test "$enable_clanScene3D" != "no"; then
-		echo "Checking for clanScene3D stuff"
-		echo "=============================="
-		if test "$enable_clanScene3D" = "auto"; then enable_clanScene3D=yes; fi
-		echo ""
-
-	fi
-
-	if test "$enable_clanPhysics3D" != "no"; then
-		echo "Checking for clanPhysics3D stuff"
-		echo "=============================="
-
-		if test "$enable_clanPhysics3D" = "auto"; then enable_clanPhysics3D=yes; fi
-		echo ""
-
-	fi
-
-	if test "$enable_clanPhysics2D" != "no"; then
-		echo "Checking for clanPhysics2D stuff"
-		echo "=============================="
-
-		if test "$enable_clanPhysics2D" = "auto"; then enable_clanPhysics2D=yes; fi
-		echo ""
-
-	fi
-
-	if test "$enable_clanGameIDE" != "no"; then
-		echo "Checking for clanGameIDE stuff"
-		echo "=============================="
-
-		if test "$enable_clanGameIDE" = "auto"; then enable_clanGameIDE=yes; fi
-
-		echo ""
-	fi
-
-	if test "$enable_clanCompute" != "no"; then
-		if test "$enable_clanGL" != "no"; then
-			echo "Checking for clanCompute stuff"
-			echo "=============================="
-
-			if test "$enable_clanCompute" = "auto"; then enable_clanCompute=yes; fi
-		else
-			CLANLIB_DISABLE_MODULE(clanCompute, [ *** clanCompute depends on clanGL])
-		fi
-		echo ""
-	fi
-
 	echo ""
 else
-	CLANLIB_DISABLE_MODULE(clanSWRender, [ *** clanSWRender depends on clanDisplay])
-	CLANLIB_DISABLE_MODULE(clanGUI, [ *** clanGUI depends on clanDisplay])
-	CLANLIB_DISABLE_MODULE(clanCSSLayout, [ *** clanCSSLayout depends on clanDisplay])
 	CLANLIB_DISABLE_MODULE(clanGL,  [ *** clanGL  depends on clanDisplay])
-	CLANLIB_DISABLE_MODULE(clanCompute,  [ *** clanCompute  depends on clanDisplay])
-	CLANLIB_DISABLE_MODULE(clanScene3D, [ *** clanScene3D depends on clanDisplay])
-	CLANLIB_DISABLE_MODULE(clanGameIDE, [ *** clanGameIDE depends on clanDisplay])
 
 fi
 
@@ -604,17 +497,7 @@ AC_SUBST(extra_CFLAGS_clanApp)
 AC_SUBST(extra_CFLAGS_clanCore)
 AC_SUBST(extra_CFLAGS_clanDisplay)
 AC_SUBST(extra_CFLAGS_clanGL)
-AC_SUBST(extra_CFLAGS_clanGUI)
-AC_SUBST(extra_CFLAGS_clanCSSLayout)
-AC_SUBST(extra_CFLAGS_clanSWRender)
-AC_SUBST(extra_CFLAGS_clanCompute)
-AC_SUBST(extra_CFLAGS_clanScene3D)
-AC_SUBST(extra_CFLAGS_clanPhysics3D)
-AC_SUBST(extra_CFLAGS_clanPhysics2D)
-AC_SUBST(extra_CFLAGS_clanGameIDE)
 AC_SUBST(extra_CFLAGS_clanSound)
-AC_SUBST(extra_CFLAGS_clanDatabase)
-AC_SUBST(extra_CFLAGS_clanSqlite)
 AC_SUBST(extra_CFLAGS_clanNetwork)
 
 AC_SUBST(clanGUI_CXXFLAGS)
@@ -627,17 +510,7 @@ AC_SUBST(extra_LIBS_clanApp)
 AC_SUBST(extra_LIBS_clanCore)
 AC_SUBST(extra_LIBS_clanDisplay)
 AC_SUBST(extra_LIBS_clanGL)
-AC_SUBST(extra_LIBS_clanGUI)
-AC_SUBST(extra_LIBS_clanCSSLayout)
-AC_SUBST(extra_LIBS_clanSWRender)
-AC_SUBST(extra_LIBS_clanCompute)
-AC_SUBST(extra_LIBS_clanScene3D)
-AC_SUBST(extra_LIBS_clanPhysics3D)
-AC_SUBST(extra_LIBS_clanPhysics2D)
-AC_SUBST(extra_LIBS_clanGameIDE)
 AC_SUBST(extra_LIBS_clanSound)
-AC_SUBST(extra_LIBS_clanDatabase)
-AC_SUBST(extra_LIBS_clanSqlite)
 AC_SUBST(extra_LIBS_clanNetwork)
 
 dnl ----------------------------------------------------
@@ -666,46 +539,8 @@ if test "$enable_clanSound" = "yes"; then
 	CLANLIB_ENABLE_MODULES(Sound)
 fi
 
-if test "$enable_clanDatabase" = "yes"; then
-	CLANLIB_ENABLE_MODULES(Database)
-fi
-
-if test "$enable_clanSqlite" = "yes"; then
-	CLANLIB_ENABLE_MODULES(Sqlite)
-fi
-
 if test "$enable_clanGL" = "yes"; then
 	CLANLIB_ENABLE_MODULES(GL)
-fi
-
-if test "$enable_clanGUI" = "yes"; then
-	CLANLIB_ENABLE_MODULES(GUI)
-fi
-
-if test "$enable_clanCSSLayout" = "yes"; then
-	CLANLIB_ENABLE_MODULES(CSSLayout)
-fi
-if test "$enable_clanSWRender" = "yes"; then
-	CLANLIB_ENABLE_MODULES(SWRender)
-fi
-if test "$enable_clanCompute" = "yes"; then
-	CLANLIB_ENABLE_MODULES(Compute)
-fi
-
-if test "$enable_clanScene3D" = "yes"; then
-	CLANLIB_ENABLE_MODULES(Scene3D)
-fi
-
-if test "$enable_clanPhysics3D" = "yes"; then
-	CLANLIB_ENABLE_MODULES(Physics3D)
-fi
-
-if test "$enable_clanPhysics2D" = "yes"; then
-	CLANLIB_ENABLE_MODULES(Physics2D)
-fi
-
-if test "$enable_clanGameIDE" = "yes"; then
-	CLANLIB_ENABLE_MODULES(GameIDE)
 fi
 
 if test "$enable_clanNetwork" = "yes"; then
@@ -867,24 +702,6 @@ fi
 
 echo "                     clanGL = $enable_clanGL$gl_options"
 echo "                    clanApp = yes"
-echo "               clanDatabase = $enable_clanDatabase"
-echo "                 clanSqlite = $enable_clanSqlite"
-echo "                    clanGUI = $enable_clanGUI"
-echo "                clanCompute = $enable_clanCompute"
-swrender_options=""
-if test "$enable_clanSWRender" != "no"; then
-	if test "$use_sse2" != "yes"; then
-		swrender_options="$swrender_options * Warning SSE2 Disabled - Using stub"
-	fi
-fi
-echo "               clanSWRender = $enable_clanSWRender $swrender_options"
-
-
-echo "              clanCSSLayout = $enable_clanCSSLayout"
-echo "                clanScene3D = $enable_clanScene3D"
-echo "              clanPhysics3D = $enable_clanPhysics3D"
-echo "              clanPhysics2D = $enable_clanPhysics2D"
-echo "                clanGameIDE = $enable_clanGameIDE"
 
 core_options=""
 if test "$use_sse2" != "no"; then
