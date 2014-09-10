@@ -39,10 +39,7 @@
 #include <ctime>
 #include <algorithm>
 #include "x509.h"
-
-#ifdef min
-#undef min
-#endif
+#include "API/Core/Math/cl_math.h"
 
 namespace clan
 {
@@ -90,7 +87,7 @@ int TLSClient_Impl::encrypt(const void *data, int size)
 
 	int insert_pos = send_in_data.get_size();
 	int buffer_space_available = desired_buffer_size - insert_pos;
-	int bytes_consumed = std::min(size, buffer_space_available);
+	int bytes_consumed = clan::min(size, buffer_space_available);
 
 	send_in_data.set_size(insert_pos + bytes_consumed);
 	memcpy(send_in_data.get_data() + insert_pos, data, bytes_consumed);
@@ -107,7 +104,7 @@ int TLSClient_Impl::decrypt(const void *data, int size)
 
 	int insert_pos = recv_in_data.get_size();
 	int buffer_space_available = desired_buffer_size - insert_pos;
-	int bytes_consumed = std::min(size, buffer_space_available);
+	int bytes_consumed = clan::min(size, buffer_space_available);
 
 	recv_in_data.set_size(insert_pos + bytes_consumed);
 	memcpy(recv_in_data.get_data() + insert_pos, data, bytes_consumed);
@@ -221,7 +218,7 @@ bool TLSClient_Impl::send_application_data()
 	int size = send_in_data.get_size() - send_in_data_read_pos;
 
 	unsigned int max_record_length_gcc_fix = max_record_length;
-	unsigned int data_in_record = std::min((unsigned int)size, max_record_length_gcc_fix);
+	unsigned int data_in_record = clan::min((unsigned int)size, max_record_length_gcc_fix);
 
 	int offset = 0;
 	int offset_tls_record = offset;					offset += sizeof(TLS_Record);

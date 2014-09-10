@@ -32,6 +32,7 @@
 #include "API/Core/Text/logger.h"
 #include "Core/System/Win32/init_win32.h"
 #include <mmreg.h>
+#include "API/Core/Math/cl_math.h"
 
 // KSDATAFORMAT_SUBTYPE_IEEE_FLOAT is not available on some old headers
 #ifndef KSDATAFORMAT_SUBTYPE_IEEE_FLOAT
@@ -190,7 +191,7 @@ void SoundOutput_Win32::wait()
 		if (buffer_available < buffer_needed)
 			ResetEvent(audio_buffer_ready_event);
 
-		UINT32 buffer_size = std::min(buffer_needed, buffer_available);
+		UINT32 buffer_size = clan::min(buffer_needed, buffer_available);
 		if (buffer_size > 0)
 		{
 			BYTE *buffer = 0;

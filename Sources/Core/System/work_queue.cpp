@@ -35,8 +35,7 @@
 #include "API/Core/System/system.h"
 #include "API/Core/System/interlocked_variable.h"
 #include <algorithm>
-
-#undef max
+#include "API/Core/Math/cl_math.h"
 
 namespace clan
 {
@@ -139,7 +138,7 @@ void WorkQueue_Impl::queue(WorkItem *item) // transfers ownership
 {
 	if (threads.empty())
 	{
-		int num_cores = serial_queue ? 1 : std::max(System::get_num_cores() - 1, 1);
+		int num_cores = serial_queue ? 1 : clan::max(System::get_num_cores() - 1, 1);
 		for (int i = 0; i < num_cores; i++)
 		{
 			Thread thread;

@@ -357,7 +357,7 @@ void InputDeviceProvider_Win32Hid::update_buttons(void *preparse_data, void *rep
 
 			ULONG usage_length = array_length;
 			hid.GetUsages(Hid::HidP_Input, button_caps[collection].UsagePage, button_caps[collection].LinkCollection, &usages[0], &usage_length, preparse_data, report, report_size);
-			usage_length = std::min(usage_length, array_length);
+			usage_length = clan::min(usage_length, array_length);
 
 			for (size_t i = 0; i < usage_length; i++)
 			{

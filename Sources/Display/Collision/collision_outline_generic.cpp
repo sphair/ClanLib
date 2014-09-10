@@ -848,7 +848,7 @@ void CollisionOutline_Impl::calculate_penetration_depth( std::vector< CollidingC
 			cc.penetration_depth = max(cc.penetration_depth, c2maxdepth - c1maxdepth);
 		}
 		
-		//NONO: maxpendepth = std::min(maxpendepth, 40.0f);
+		//NONO: maxpendepth = clan::min(maxpendepth, 40.0f);
 	}
 }
 

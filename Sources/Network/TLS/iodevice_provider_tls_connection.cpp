@@ -33,10 +33,7 @@
 #include "API/Core/System/databuffer.h"
 #include "API/Core/IOData/file.h"
 #include <algorithm>
-
-#ifdef min
-#undef min
-#endif
+#include "API/Core/Math/cl_math.h"
 
 namespace clan
 {
@@ -94,7 +91,7 @@ int IODeviceProvider_TLSConnection::receive(void *data, int len, bool receive_al
 	{
 		update_io_buffers(receive_all);
 
-		int bytes_available = std::min(tls_client.get_decrypted_data_available(), len);
+		int bytes_available = clan::min(tls_client.get_decrypted_data_available(), len);
 		memcpy(static_cast<char*>(data) + pos, tls_client.get_decrypted_data(), bytes_available);
 
 		update_io_buffers(receive_all);
