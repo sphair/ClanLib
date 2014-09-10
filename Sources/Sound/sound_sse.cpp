@@ -31,7 +31,7 @@
 #include <cstdlib>
 #include <cstring>
 
-#ifndef DISABLE_SSE2
+#ifndef CL_DISABLE_SSE2
 #include <emmintrin.h>
 #endif
 
@@ -78,7 +78,7 @@ void SoundSSE::aligned_free(void *ptr)
 
 void SoundSSE::unpack_16bit_stereo(short *input, int size, float *output[2])
 {
-#ifndef DISABLE_SSE2
+#ifndef CL_DISABLE_SSE2
 	int sse_size = (size/8)*8;
 
 	__m128i zero = _mm_setzero_si128();
@@ -111,7 +111,7 @@ void SoundSSE::unpack_16bit_stereo(short *input, int size, float *output[2])
 
 void SoundSSE::unpack_16bit_mono(short *input, int size, float *output)
 {
-#ifndef DISABLE_SSE2
+#ifndef CL_DISABLE_SSE2
 	int sse_size = (size/8)*8;
 
 	__m128i zero = _mm_setzero_si128();
@@ -139,7 +139,7 @@ void SoundSSE::unpack_16bit_mono(short *input, int size, float *output)
 
 void SoundSSE::unpack_8bit_stereo(unsigned char *input, int size, float *output[2])
 {
-#ifndef DISABLE_SSE2
+#ifndef CL_DISABLE_SSE2
 	int sse_size = (size/16)*16;
 
 	__m128i zero = _mm_setzero_si128();
@@ -186,7 +186,7 @@ void SoundSSE::unpack_8bit_stereo(unsigned char *input, int size, float *output[
 
 void SoundSSE::unpack_8bit_mono(unsigned char *input, int size, float *output)
 {
-#ifndef DISABLE_SSE2
+#ifndef CL_DISABLE_SSE2
 	int sse_size = (size/16)*16;
 
 	__m128i zero = _mm_setzero_si128();
@@ -223,7 +223,7 @@ void SoundSSE::unpack_8bit_mono(unsigned char *input, int size, float *output)
 
 void SoundSSE::pack_16bit_stereo(float *input[2], int size, short *output)
 {
-#ifndef DISABLE_SSE2
+#ifndef CL_DISABLE_SSE2
 	int sse_size = (size/4)*4;
 
 	__m128 constant1 = _mm_set1_ps(32767);
@@ -256,7 +256,7 @@ void SoundSSE::pack_16bit_stereo(float *input[2], int size, short *output)
 
 void SoundSSE::pack_float_stereo(float *input[2], int size, float *output)
 {
-#ifndef DISABLE_SSE2
+#ifndef CL_DISABLE_SSE2
 	int sse_size = (size/4)*4;
 
 	for (int i = 0; i < sse_size; i+=4)
@@ -284,7 +284,7 @@ void SoundSSE::pack_float_stereo(float *input[2], int size, float *output)
 
 void SoundSSE::copy_float(float *input, int size, float *output)
 {
-#ifndef DISABLE_SSE2
+#ifndef CL_DISABLE_SSE2
 	int sse_size = (size/4)*4;
 
 	for (int i = 0; i < sse_size; i+=4)
@@ -304,7 +304,7 @@ void SoundSSE::copy_float(float *input, int size, float *output)
 
 void SoundSSE::multiply_float(float *channel, int size, float volume)
 {
-#ifndef DISABLE_SSE2
+#ifndef CL_DISABLE_SSE2
 	int sse_size = (size/4)*4;
 
 	__m128 volume0 = _mm_set1_ps(volume);
@@ -324,7 +324,7 @@ void SoundSSE::multiply_float(float *channel, int size, float volume)
 
 void SoundSSE::set_float(float *channel, int size, float value)
 {
-#ifndef DISABLE_SSE2
+#ifndef CL_DISABLE_SSE2
 	int sse_size = (size/4)*4;
 
 	__m128 value0 = _mm_set1_ps(value);
@@ -342,7 +342,7 @@ void SoundSSE::set_float(float *channel, int size, float value)
 
 void SoundSSE::mix_one_to_one(float *input, int size, float *output, float volume)
 {
-#ifndef DISABLE_SSE2
+#ifndef CL_DISABLE_SSE2
 	int sse_size = (size/4)*4;
 	__m128 volume0 = _mm_set1_ps(volume);
 	for (int i = 0; i < sse_size; i+=4)
@@ -364,7 +364,7 @@ void SoundSSE::mix_one_to_one(float *input, int size, float *output, float volum
 
 void SoundSSE::mix_one_to_many(float *input, int size, float **output, float *volume, int channels)
 {
-#ifndef DISABLE_SSE2
+#ifndef CL_DISABLE_SSE2
 	int sse_size = (size/4)*4;
 	for (int i = 0; i < sse_size; i+=4)
 	{
@@ -393,7 +393,7 @@ void SoundSSE::mix_one_to_many(float *input, int size, float **output, float *vo
 
 void SoundSSE::mix_many_to_one(float **input, float *volume, int channels, int size, float *output)
 {
-#ifndef DISABLE_SSE2
+#ifndef CL_DISABLE_SSE2
 	int sse_size = (size/4)*4;
 	for (int i = 0; i < sse_size; i+=4)
 	{
@@ -424,7 +424,7 @@ void SoundSSE::mix_many_to_one(float **input, float *volume, int channels, int s
 
 void SoundSSE::unpack_float_stereo(float *input, int size, float *output[2])
 {
-#ifndef DISABLE_SSE2
+#ifndef CL_DISABLE_SSE2
 	int sse_size = (size/8)*8;
 
 	for (int i = 0; i < sse_size; i+=8)
@@ -452,7 +452,7 @@ void SoundSSE::unpack_float_stereo(float *input, int size, float *output[2])
 
 void SoundSSE::unpack_float_mono(float *input, int size, float *output)
 {
-#ifndef DISABLE_SSE2
+#ifndef CL_DISABLE_SSE2
 	int sse_size = (size/4)*4;
 
 	for (int i = 0; i < sse_size; i+=4)

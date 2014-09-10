@@ -32,7 +32,7 @@
 #include "jpeg_loader.h"
 #include "API/Core/System/system.h"
 
-#ifndef DISABLE_SSE2
+#ifndef CL_DISABLE_SSE2
 #ifndef ARM_PLATFORM
 #include <xmmintrin.h>
 #include <emmintrin.h>
@@ -79,7 +79,7 @@ void JPEGRGBDecoder::decode(JPEGMCUDecoder *mcu_decoder)
 		convert_monochrome();
 		break;
 	case JPEGLoader::colorspace_ycrcb:
-#ifndef DISABLE_SSE2
+#ifndef CL_DISABLE_SSE2
 		if (System::detect_cpu_extension(System::sse2))
 			convert_ycrcb_sse();
 		else
@@ -161,7 +161,7 @@ void JPEGRGBDecoder::convert_monochrome()
  *
  */
 
-#ifndef DISABLE_SSE2
+#ifndef CL_DISABLE_SSE2
 #ifndef ARM_PLATFORM
 void JPEGRGBDecoder::convert_ycrcb_sse()
 {
@@ -208,7 +208,7 @@ void JPEGRGBDecoder::convert_ycrcb_sse()
 	}
 }
 #endif
-#endif	//not DISABLE_SSE2
+#endif	//not CL_DISABLE_SSE2
 
 void JPEGRGBDecoder::convert_ycrcb_float()
 {

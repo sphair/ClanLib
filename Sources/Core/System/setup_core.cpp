@@ -63,7 +63,7 @@ SetupCore::~SetupCore()
 void SetupCore_Impl::init()
 {
 	ThreadLocalStorage::create_initial_instance();
-#ifndef DISABLE_SSE2
+#ifndef CL_DISABLE_SSE2
 	if (!System::detect_cpu_extension(System::sse2))
 	{
 		throw Exception("Sorry, ClanLib 3.0 and higher requires a processor capable of SSE2 instructions. (Update your CPU)");

@@ -34,7 +34,7 @@
 #include "API/Core/Math/quaternion.h"
 #include <limits>
 
-#ifndef DISABLE_SSE2
+#ifndef CL_DISABLE_SSE2
 //#include <mmintrin.h> /*Dont need it*/
 #include <emmintrin.h>/*it's included here*/
 #endif
@@ -52,7 +52,7 @@ namespace clan
 template<>
 Mat4<float> Mat4<float>::operator *(const Mat4<float> &mult) const
 {
-#if !defined DISABLE_SSE2 && !defined __MINGW32__ //MinGW's version is flawed.
+#if !defined CL_DISABLE_SSE2 && !defined __MINGW32__ //MinGW's version is flawed.
 	Mat4<float> result;
 	__m128 m1col0 = _mm_loadu_ps(matrix);
 	__m128 m1col1 = _mm_loadu_ps(matrix+4);
@@ -646,7 +646,7 @@ Mat4<Type> &Mat4<Type>::scale_self(Type x, Type y, Type z)
 template<>
 Mat4<float> &Mat4<float>::scale_self(float x, float y, float z)
 {
-#if !defined DISABLE_SSE2
+#if !defined CL_DISABLE_SSE2
 	_mm_storeu_ps(matrix, _mm_mul_ps(_mm_loadu_ps(matrix), _mm_set_ps1(x)));
 	_mm_storeu_ps(matrix+4, _mm_mul_ps(_mm_loadu_ps(matrix+4), _mm_set_ps1(y)));
 	_mm_storeu_ps(matrix+8, _mm_mul_ps(_mm_loadu_ps(matrix+8), _mm_set_ps1(z)));
@@ -688,7 +688,7 @@ Mat4<Type> &Mat4<Type>::translate_self(Type x, Type y, Type z)
 template<>
 Mat4<float> &Mat4<float>::translate_self(float x, float y, float z)
 {
-#if !defined DISABLE_SSE2
+#if !defined CL_DISABLE_SSE2
 	__m128 row0 = _mm_loadu_ps(matrix);
 	__m128 row1 = _mm_loadu_ps(matrix+4);
 	__m128 row2 = _mm_loadu_ps(matrix+8);
@@ -963,7 +963,7 @@ Mat4<Type> &Mat4<Type>::transpose()
 template<>
 Mat4<float> &Mat4<float>::transpose()
 {
-#if !defined DISABLE_SSE2
+#if !defined CL_DISABLE_SSE2
 	__m128 row0 = _mm_loadu_ps(matrix);
 	__m128 row1 = _mm_loadu_ps(matrix + 4);
 	__m128 row2 = _mm_loadu_ps(matrix + 8);
@@ -976,7 +976,7 @@ Mat4<float> &Mat4<float>::transpose()
 	_mm_storeu_ps(matrix + 8, row2);
 	_mm_storeu_ps(matrix + 12, row3);
 #else
-	Type original[16];
+	float original[16];
 	for (int cnt = 0; cnt<16; cnt++)
 		original[cnt] = matrix[cnt];
 
