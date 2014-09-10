@@ -216,7 +216,7 @@ AC_ARG_ENABLE(sse2, AC_HELP_STRING([--enable-sse2], [Enable SSE2 support]),
 	if test "$enable_sse2" != "no"; then
 		CLANLIB_CHECK_CPP([`cat $srcdir/Setup/Tests/sse2.cpp`], [ ], [ -msse2 ] )
 		if test "$CL_RESULT" != "yes"; then
-			 AC_MSG_ERROR([ *** Compliler does not support SSE2, run configure with the --disable-sse2 option ])
+			 AC_MSG_ERROR([ *** Compiler does not support SSE2, run configure with the --disable-sse2 option ])
 		fi
 		AC_MSG_RESULT([enabled])
 		use_sse2=yes
@@ -232,7 +232,7 @@ AC_ARG_ENABLE(sse2, AC_HELP_STRING([--enable-sse2], [Enable SSE2 support]),
 		AC_MSG_RESULT([enabled])
 		use_sse2=yes
 	else
-		AC_MSG_WARN( [ *** Compliler does not support SSE2 ])
+		AC_MSG_WARN( [ *** Compiler does not support SSE2 ])
 		AC_DEFINE(CL_DISABLE_SSE2)
 		AC_MSG_RESULT([disabled])
 	fi
