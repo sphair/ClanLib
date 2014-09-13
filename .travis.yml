@@ -1,0 +1,11 @@
+language: cpp
+before_install: sudo apt-get install libfreetype6-dev libjpeg-dev libmikmod2-dev libpng12-0-dev libvorbis-dev doxygen
+compiler:
+  - gcc
+  - clang
+
+script:
+  - ./autogen.sh
+  - ./configure --prefix=$PWD/install
+  - make -j4
+  - make install

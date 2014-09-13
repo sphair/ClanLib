@@ -30,7 +30,8 @@
 #include "win32_socket.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Network/Socket/socket_name.h"
-#include <Mstcpip.h>
+#include <in6addr.h>
+#include <mstcpip.h>
 
 namespace clan
 {
