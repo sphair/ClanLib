@@ -552,6 +552,8 @@ bool XPathEvaluator_Impl::compare(const std::string &value1, const std::string &
 {
 	switch(oper)
 	{
+    default:
+        break;
 	case XPathToken::operator_compare_equal:
 		if (value1.compare(value2) == 0)
 			return true;
@@ -585,6 +587,8 @@ bool XPathEvaluator_Impl::compare(const T &value1, const T &value2, Operator ope
 {
 	switch(oper)
 	{
+    default:
+        break;
 	case XPathToken::operator_compare_equal:
 		if (value1 == value2)
 			return true;
@@ -708,6 +712,8 @@ bool XPathEvaluator_Impl::compare_boolean(const Operand &a, const Operand &b, Op
 	{
 		switch (oper)
 		{
+            default:
+                break;
 			case XPathToken::operator_compare_equal:
 			case XPathToken::operator_compare_not_equal:
 				if (compare_node_set(b, a, oper))
@@ -757,6 +763,8 @@ bool XPathEvaluator_Impl::compare_number(const Operand &a, const Operand &b, Ope
 	{
 		switch (oper)
 		{
+        default:
+            break;
 		case XPathToken::operator_compare_equal:
 		case XPathToken::operator_compare_not_equal:
 			if (compare_node_set(b, a, oper))
@@ -813,6 +821,8 @@ bool XPathEvaluator_Impl::compare_string(const Operand &a, const Operand &b, Ope
 	{
 		switch (oper)
 		{
+        default:
+            break;
 		case XPathToken::operator_compare_equal:
 		case XPathToken::operator_compare_not_equal:
 			if (compare_node_set(b, a, oper))

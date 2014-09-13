@@ -149,8 +149,8 @@ int main(int argc, char **argv)
 	for (int i = 0; i < argc; i++)
 		main_args.push_back(argv[i]);
     
-    KeepAlive::func_thread_id().set(&cl_app_on_thread_id);
-    KeepAlive::func_awake_thread().set(&cl_app_on_awake_thread);
+    KeepAlive::func_thread_id() = cl_app_on_thread_id;
+    KeepAlive::func_awake_thread() = cl_app_on_awake_thread;
     
 	AppDelegate *appDelegate = [[AppDelegate alloc] init];
 	[NSApplication sharedApplication];

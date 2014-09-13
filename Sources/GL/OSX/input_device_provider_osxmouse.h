@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "API/Core/Signals/slot_container.h"
+#include "API/Core/Signals/signal.h"
 #include "API/Core/Math/point.h"
 #include "API/Display/TargetProviders/input_device_provider.h"
 #include "API/Display/Window/input_device.h"
@@ -96,7 +96,7 @@ public:
 public:
 	/// \brief Initialize input device provider.
 	/** <p>The device field of InputEvent should not be set when emitting events.</p>*/
-	void init(Signal<const InputEvent &> *new_sig_provider_event)
+	void init(Signal<void(const InputEvent &)> *new_sig_provider_event)
 	{
 		sig_provider_event = new_sig_provider_event;
 	}
@@ -113,7 +113,7 @@ private:
     // A work around the for the inability to directly query the mouse state through Cocoa.
     bool mouse_down_map[clan::mouse_count];
     clan::Point mouse_position;
-    Signal<const InputEvent &> *sig_provider_event;
+    Signal<void(const InputEvent &)> *sig_provider_event;
 
     void on_dispose();
     void on_mouse_event(const clan::InputCode& keycode, const clan::InputEvent::Type& type,
