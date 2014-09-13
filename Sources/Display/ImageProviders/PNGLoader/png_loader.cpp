@@ -179,11 +179,12 @@ void PNGLoader::decode_palette()
 
 		if (!trns.is_null())
 		{
-			if (trns.get_size() != num_entries)
+			int num_alpha_entries = trns.get_size();
+			if (num_alpha_entries > num_entries)
 				throw Exception("Invalid PNG image file");
 
 			unsigned char *alpha_entries = reinterpret_cast<unsigned char*>(trns.get_data());
-			for (int i = 0; i < num_entries; i++)
+			for (int i = 0; i < num_alpha_entries; i++)
 				palette[i].a = alpha_entries[i];
 		}
 	}
