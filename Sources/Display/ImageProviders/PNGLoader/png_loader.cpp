@@ -192,7 +192,7 @@ void PNGLoader::decode_palette()
 
 void PNGLoader::decode_colorkey()
 {
-	has_colorkey = !trns.is_null();
+	has_colorkey = !trns.is_null() && color_type != 3;
 	if (has_colorkey)
 	{
 		if (color_type == 0) // grayscale
