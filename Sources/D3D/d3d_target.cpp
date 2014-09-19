@@ -121,6 +121,12 @@ ID3D11Buffer *D3DTarget::get_buffer_handle(const GraphicContext &gc, const Unifo
 	return provider->get_buffer(static_cast<const D3DGraphicContextProvider *>(gc.get_provider())->get_window()->get_device());
 }
 
+ID3D11ShaderResourceView *D3DTarget::get_srv_handle(const GraphicContext &gc, const Texture &texture)
+{
+	D3DTextureProvider *provider = static_cast<D3DTextureProvider *>(texture.get_provider());
+	return provider->get_srv(static_cast<const D3DGraphicContextProvider *>(gc.get_provider())->get_window()->get_device());
+}
+
 ID3D11Device *D3DTarget::get_device_handle(const GraphicContext &gc)
 {
 	const D3DGraphicContextProvider *provider = static_cast<const D3DGraphicContextProvider *>(gc.get_provider());
@@ -131,6 +137,18 @@ ID3D11DeviceContext *D3DTarget::get_device_context_handle(const GraphicContext &
 {
 	const D3DGraphicContextProvider *provider = static_cast<const D3DGraphicContextProvider *>(gc.get_provider());
 	return provider->get_window()->get_device_context();
+}
+
+IDXGISwapChain *D3DTarget::get_swap_chain_handle(const GraphicContext &gc)
+{
+	const D3DGraphicContextProvider *provider = static_cast<const D3DGraphicContextProvider *>(gc.get_provider());
+	return provider->get_window()->get_swap_chain();
+}
+
+ID3D11RenderTargetView *D3DTarget::get_back_buffer_rtv_handle(const GraphicContext &gc)
+{
+	const D3DGraphicContextProvider *provider = static_cast<const D3DGraphicContextProvider *>(gc.get_provider());
+	return provider->get_window()->get_back_buffer_rtv();
 }
 
 void D3DTarget::throw_if_failed(const char *text, HRESULT result)
