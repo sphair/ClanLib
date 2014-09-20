@@ -58,7 +58,7 @@ public:
 		VertexData(VertexArrayBufferProvider *array_provider, VertexAttributeDataType type, size_t offset, int size, int stride) :
 		  array_provider(array_provider), type(type), offset(offset), size(size), stride(stride) {}
 
-		VertexData() {}
+		VertexData() : array_provider(), type(), offset(), size(), stride() {}
 
 		VertexArrayBufferProvider *array_provider;
 		VertexAttributeDataType type;
