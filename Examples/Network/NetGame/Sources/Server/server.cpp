@@ -11,8 +11,8 @@ Server::Server()
 	cc.connect(network_server.sig_event_received(), clan::bind_member(this, &Server::on_event_received));
 
 	// Set up event dispatchers to route incoming events to functions
-	login_events.func_event("Login").set(this, &Server::on_event_login);
-	game_events.func_event("Game-RequestStart").set(this, &Server::on_event_game_requeststart);
+	login_events.func_event("Login") = clan::bind_member(this, &Server::on_event_login);
+	game_events.func_event("Game-RequestStart") = clan::bind_member(this, &Server::on_event_game_requeststart);
 
 	game_running = false;
 }
