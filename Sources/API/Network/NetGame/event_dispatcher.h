@@ -49,7 +49,7 @@ public:
 	bool dispatch(const NetGameEvent &game_event, Params... params)
 	{
 		auto it = event_handlers.find(game_event.get_name());
-		if (it != event_handlers.end() && !it->second.is_null())
+		if (it != event_handlers.end() && (bool)it->second)
 		{
 			it->second(game_event, params...);
 			return true;
