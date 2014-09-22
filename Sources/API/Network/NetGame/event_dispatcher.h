@@ -30,6 +30,7 @@
 #pragma once
 
 #include "event.h"
+#include <map>
 
 namespace clan
 {
