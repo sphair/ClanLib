@@ -56,6 +56,9 @@ class Trianglef;
 class Triangle;
 class DisplayWindow;
 class DisplayWindowDescription;
+class Path;
+class Pen;
+class Brush;
 
 /// \brief Mapping modes.
 enum MapMode
@@ -395,6 +398,11 @@ public:
 
 	/// \brief Draw a gradient filled ellipse.
 	void fill_ellipse(const Pointf &center, float radius_x, float radius_y, const Gradient &gradient);
+
+	void stroke(const Path &path, const Pen &pen);
+	void fill(const Path &path, const Brush &brush);
+	void stroke_and_fill(const Path &path, const Pen &pen, const Brush &brush);
+
 
 /// \}
 /// \name Events

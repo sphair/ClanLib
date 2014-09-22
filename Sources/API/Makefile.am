@@ -265,6 +265,9 @@ clanDisplay_includes = \
 	Display/2D/color_hsv.h \
 	Display/2D/color_hsl.h \
 	Display/2D/shape2d.h \
+	Display/2D/path.h \
+	Display/2D/pen.h \
+	Display/2D/brush.h \
 	Display/screen_info.h \
 	Display/Image/pixel_buffer_lock.h \
 	Display/Image/pixel_buffer_help.h \

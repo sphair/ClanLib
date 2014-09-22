@@ -44,11 +44,13 @@ display_target.cpp \
 2D/render_batch_line_texture.cpp \
 2D/sprite.cpp \
 2D/render_batch_triangle.cpp \
+2D/render_batch_path.cpp \
 2D/path2d_impl.cpp \
 2D/texture_group.cpp \
 2D/sprite_impl.cpp \
 2D/color.cpp \
 2D/image.cpp \
+2D/path.cpp \
 2D/canvas_batcher.cpp \
 2D/shape2d_impl.cpp \
 2D/canvas_impl.cpp \
@@ -62,6 +64,7 @@ display_target.cpp \
 2D/shape2d.cpp \
 2D/render_batch_buffer.cpp \
 2D/canvas.cpp \
+2D/path_renderer.cpp \
 2D/color_hsl.cpp \
 setup_display.cpp \
 Image/icon_set.cpp \

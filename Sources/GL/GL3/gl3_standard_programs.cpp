@@ -205,6 +205,51 @@ const std::string::value_type *cl_glsl_fragment_sprite =
 	"} "
 	"void main() { gl_FragColor = Color*sampleTexture(TexIndex, TexCoord); } ";
 
+
+const std::string::value_type *cl_glsl15_vertex_path = R"shaderend(
+			#version 150
+			in vec4 Position;
+			in vec4 Color0;
+			in vec2 TexCoord0;
+			out vec4 Color;
+			out vec2 TexCoord;
+			void main()
+			{
+				gl_Position = Position;
+				Color = Color0;
+				TexCoord = TexCoord0;
+			}
+		)shaderend";
+
+const std::string::value_type *cl_glsl_vertex_path =
+"#version 130\n"
+"in vec4 Position, Color0; "
+"in vec2 TexCoord0; "
+"in int TexIndex0; "
+"out vec4 Color; "
+"out vec2 TexCoord; "
+"void main() { gl_Position = Position; Color = Color0; TexCoord = TexCoord0; }";
+
+const std::string::value_type *cl_glsl15_fragment_path = R"shaderend(
+			#version 150
+			uniform sampler2D Mask;
+			in vec4 Color;
+			in vec2 TexCoord;
+			out vec4 cl_FragColor;
+			void main()
+			{
+				float alpha = pow(texture(Mask, TexCoord).r, 2.2);
+				cl_FragColor = Color * alpha;
+			}
+		)shaderend";
+
+const std::string::value_type *cl_glsl_fragment_path =
+"#version 130\n"
+"uniform sampler2D Mask; "
+"in vec4 Color; "
+"in vec2 TexCoord; "
+"void main() { float alpha = pow(texture(Mask, TexCoord).r, 2.2); gl_FragColor = Color * alpha;} ";
+
 class GL3StandardPrograms_Impl
 {
 public:
@@ -214,6 +259,7 @@ public:
 	ProgramObject color_only_program;
 	ProgramObject single_texture_program;
 	ProgramObject sprite_program;
+	ProgramObject path_program;
 
 };
 
@@ -258,6 +304,14 @@ GL3StandardPrograms::GL3StandardPrograms(GL3GraphicContextProvider *provider) : 
 	ShaderObject fragment_sprite_shader(provider, shadertype_fragment, use_glsl_150 ? cl_glsl15_fragment_sprite : cl_glsl_fragment_sprite);
 	if(!fragment_sprite_shader.compile())
 		throw Exception("Unable to compile the standard shader program: 'fragment sprite' Error:" + fragment_sprite_shader.get_info_log());
+
+	ShaderObject vertex_path_shader(provider, shadertype_vertex, use_glsl_150 ? cl_glsl15_vertex_path : cl_glsl_vertex_path);
+	if (!vertex_path_shader.compile())
+		throw Exception("Unable to compile the standard shader program: 'vertex path' Error:" + vertex_path_shader.get_info_log());
+
+	ShaderObject fragment_path_shader(provider, shadertype_fragment, use_glsl_150 ? cl_glsl15_fragment_path : cl_glsl_fragment_path);
+	if (!fragment_path_shader.compile())
+		throw Exception("Unable to compile the standard shader program: 'fragment path' Error:" + fragment_path_shader.get_info_log());
 
 	ProgramObject color_only_program(provider);
 	color_only_program.attach(vertex_color_only_shader);
@@ -316,9 +370,24 @@ GL3StandardPrograms::GL3StandardPrograms(GL3GraphicContextProvider *provider) : 
 	sprite_program.set_uniform1i("Texture14", 14);
 	sprite_program.set_uniform1i("Texture15", 15);
 
+	ProgramObject path_program(provider);
+	path_program.attach(vertex_path_shader);
+	path_program.attach(fragment_path_shader);
+	path_program.bind_attribute_location(0, "Position");
+	path_program.bind_attribute_location(1, "Color0");
+	path_program.bind_attribute_location(2, "TexCoord0");
+
+	if (use_glsl_150)
+		path_program.bind_frag_data_location(0, "cl_FragColor");
+
+	if (!path_program.link())
+		throw Exception("Unable to link the standard shader program: 'path' Error:" + path_program.get_info_log());
+	path_program.set_uniform1i("Mask", 0);
+
 	impl->color_only_program = color_only_program;
 	impl->single_texture_program = single_texture_program;
 	impl->sprite_program = sprite_program;
+	impl->path_program = path_program;
 
 	RenderBatchTriangle::max_textures = 16; // Too many hacks..
 }
@@ -334,6 +403,7 @@ ProgramObject GL3StandardPrograms::get_program_object(StandardProgram standard_p
 	case program_color_only: return impl->color_only_program;
 	case program_single_texture: return impl->single_texture_program;
 	case program_sprite: return impl->sprite_program;
+	case program_path: return impl->path_program;
 	}
 	throw Exception("Unsupported standard program");
 }

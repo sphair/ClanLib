@@ -39,6 +39,8 @@ namespace clan
 #include "Shaders\single_texture_fragment.h"
 #include "Shaders\sprite_vertex.h"
 #include "Shaders\sprite_fragment.h"
+#include "Shaders\path_vertex.h"
+#include "Shaders\path_fragment.h"
 
 class StandardPrograms_Impl
 {
@@ -49,6 +51,7 @@ public:
 	ProgramObject color_only_program;
 	ProgramObject single_texture_program;
 	ProgramObject sprite_program;
+	ProgramObject path_program;
 
 };
 
@@ -60,6 +63,7 @@ StandardPrograms::StandardPrograms(GraphicContext &gc) : impl(std::make_shared<S
 	ProgramObject color_only_program;
 	ProgramObject single_texture_program;
 	ProgramObject sprite_program;
+	ProgramObject path_program;
 
 
 	color_only_program = compile(gc, color_only_vertex, sizeof(color_only_vertex), color_only_fragment, sizeof(color_only_fragment));
@@ -93,9 +97,19 @@ StandardPrograms::StandardPrograms(GraphicContext &gc) : impl(std::make_shared<S
 	sprite_program.set_uniform1i("Sampler2", 2);
 	sprite_program.set_uniform1i("Sampler3", 3);
 
+	path_program = compile(gc, path_vertex, sizeof(path_vertex), path_fragment, sizeof(path_fragment));
+	path_program.bind_attribute_location(0, "VertexPosition");
+	path_program.bind_attribute_location(1, "VertexColor");
+	path_program.bind_attribute_location(2, "VertexTexCoord");
+	link(path_program, "Unable to link path standard program");
+	path_program.set_uniform_buffer_index("Uniforms", 0);
+	path_program.set_uniform1i("Texture0", 0);
+	path_program.set_uniform1i("Sampler0", 0);
+
 	impl->color_only_program = color_only_program;
 	impl->single_texture_program = single_texture_program;
 	impl->sprite_program = sprite_program;
+	impl->path_program = path_program;
 }
 
 ProgramObject StandardPrograms::get_program_object(StandardProgram standard_program) const
@@ -105,6 +119,7 @@ ProgramObject StandardPrograms::get_program_object(StandardProgram standard_prog
 	case program_color_only: return impl->color_only_program;
 	case program_single_texture: return impl->single_texture_program;
 	case program_sprite: return impl->sprite_program;
+	case program_path: return impl->path_program;
 	}
 	throw Exception("Unsupported standard program");
 }

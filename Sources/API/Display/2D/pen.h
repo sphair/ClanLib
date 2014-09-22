@@ -29,45 +29,17 @@
 
 #pragma once
 
-#include "API/Display/Render/graphic_context.h"
-#include "Display/2D/render_batch_buffer.h"
-#include "Display/2D/render_batch_triangle.h"
-#include "Display/2D/render_batch_line.h"
-#include "Display/2D/render_batch_line_texture.h"
-#include "Display/2D/render_batch_point.h"
-#include "Display/2D/render_batch_path.h"
-#include "API/Display/2D/canvas.h"
-#include "API/Display/Window/display_window.h"
+#include "../../Display/2D/color.h"
 
 namespace clan
 {
+	class Pen
+	{
+	public:
+		Pen() {}
+		Pen(const Colorf &color, float width = 1.0f) : color(color), width(width) { }
 
-class CanvasBatcher_Impl;
-
-class CanvasBatcher
-{
-public:
-	CanvasBatcher();
-	CanvasBatcher(GraphicContext &gc);
-	~CanvasBatcher();
-
-	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return !impl; }
-
-	void flush();
-	bool set_batcher(GraphicContext &gc, RenderBatcher *batcher);
-	void update_batcher_matrix(GraphicContext &gc, const Mat4f &modelview, const Mat4f &projection);
-
-	RenderBatchTriangle *get_triangle_batcher();
-	RenderBatchLine *get_line_batcher();
-	RenderBatchLineTexture *get_line_texture_batcher();
-	RenderBatchPoint *get_point_batcher();
-	RenderBatchPath *get_path_batcher();
-
-private:
-
-	std::shared_ptr<CanvasBatcher_Impl> impl;
-
-};
-
+		Colorf color;
+		float width = 1.0f;
+	};
 }

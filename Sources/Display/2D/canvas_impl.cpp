@@ -375,4 +375,5 @@ void Canvas_Impl::on_window_flip()
 	flush();
 }
 
+
 }

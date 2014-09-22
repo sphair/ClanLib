@@ -106,6 +106,13 @@ int Basic2D::start(const std::vector<std::string> &args)
 
 		canvas.pop_cliprect();
 
+		canvas.set_transform(clan::Mat4f::translate(200.0f, -100.0f, 0.0f) * clan::Mat4f::rotate(clan::Angle(45.0f, clan::angle_degrees), 0.0f, 0.0f, 1.0f));
+
+		clan::Path path = clan::Path::rect(clan::Rectf(200, 200, 400, 400));
+		clan::Brush brush = clan::Brush::solid_rgb8(255, 255, 0);
+		canvas.fill(path, brush);
+		canvas.set_transform(clan::Mat4f::identity());
+
 		window.flip(1);
 
 		// This call processes user input and other events

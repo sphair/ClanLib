@@ -57,6 +57,8 @@ private:
 	static const BYTE single_texture_fragment[];
 	static const BYTE sprite_vertex[];
 	static const BYTE sprite_fragment[];
+	static const BYTE path_vertex[];
+	static const BYTE path_fragment[];
 };
 
 }

@@ -55,6 +55,7 @@ public:
 	RenderBatchLine render_batcher_line;
 	RenderBatchLineTexture render_batcher_line_texture;
 	RenderBatchPoint render_batcher_point;
+	RenderBatchPath render_batcher_path;
 };
 
 CanvasBatcher_Impl::CanvasBatcher_Impl(GraphicContext &gc) : active_batcher(0),
@@ -62,7 +63,8 @@ CanvasBatcher_Impl::CanvasBatcher_Impl(GraphicContext &gc) : active_batcher(0),
 	render_batcher_triangle(gc, &render_batcher_buffer),
 	render_batcher_line(gc, &render_batcher_buffer),
 	render_batcher_line_texture(gc, &render_batcher_buffer),
-	render_batcher_point(gc, &render_batcher_buffer)
+	render_batcher_point(gc, &render_batcher_buffer),
+	render_batcher_path(gc, &render_batcher_buffer)
 {
 
 }
@@ -86,6 +88,11 @@ CanvasBatcher::~CanvasBatcher()
 RenderBatchTriangle *CanvasBatcher::get_triangle_batcher()
 {
 	return &impl->render_batcher_triangle;
+}
+
+RenderBatchPath *CanvasBatcher::get_path_batcher()
+{
+	return &impl->render_batcher_path;
 }
 
 RenderBatchLine *CanvasBatcher::get_line_batcher()

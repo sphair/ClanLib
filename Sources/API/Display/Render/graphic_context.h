@@ -240,7 +240,8 @@ enum StandardProgram
 {
 	program_color_only,
 	program_single_texture,
-	program_sprite
+	program_sprite,
+	program_path
 };
 
 /// \brief Shader language used

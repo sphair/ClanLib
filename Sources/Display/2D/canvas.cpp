@@ -40,6 +40,7 @@
 #include "API/Core/Math/quad.h"
 #include "API/Core/Math/triangle_math.h"
 #include "render_batch_triangle.h"
+#include "render_batch_path.h"
 #include "canvas_impl.h"
 
 namespace clan
@@ -665,6 +666,24 @@ void Canvas::fill_ellipse(const Pointf &center, float radius_x, float radius_y, 
 	mult_transform(Mat4f::scale(radius_x / max_radius, radius_y / max_radius, 1.0f));
 	fill_circle(Pointf(0, 0), max_radius, gradient);
 	set_transform(original_transform);
+}
+
+void Canvas::stroke(const Path &path, const Pen &pen)
+{
+	RenderBatchPath *batcher = impl->batcher.get_path_batcher();
+	batcher->draw_path(*this, path, pen, Brush(), true, false);
+}
+
+void Canvas::fill(const Path &path, const Brush &brush)
+{
+	RenderBatchPath *batcher = impl->batcher.get_path_batcher();
+	batcher->draw_path(*this, path, Pen(), brush, false, true);
+}
+
+void Canvas::stroke_and_fill(const Path &path, const Pen &pen, const Brush &brush)
+{
+	RenderBatchPath *batcher = impl->batcher.get_path_batcher();
+	batcher->draw_path(*this, path, pen, brush, true, true);
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -29,45 +29,44 @@
 
 #pragma once
 
-#include "API/Display/Render/graphic_context.h"
-#include "Display/2D/render_batch_buffer.h"
-#include "Display/2D/render_batch_triangle.h"
-#include "Display/2D/render_batch_line.h"
-#include "Display/2D/render_batch_line_texture.h"
-#include "Display/2D/render_batch_point.h"
-#include "Display/2D/render_batch_path.h"
-#include "API/Display/2D/canvas.h"
-#include "API/Display/Window/display_window.h"
+#include <memory>
+#include "../../Core/Math/rect.h"
+#include "../../Display/2D/color.h"
 
 namespace clan
 {
+	class CanvasText;
+	class PathImpl;
 
-class CanvasBatcher_Impl;
+	enum class PathFillMode
+	{
+		alternate,
+		winding
+	};
 
-class CanvasBatcher
-{
-public:
-	CanvasBatcher();
-	CanvasBatcher(GraphicContext &gc);
-	~CanvasBatcher();
+	class Path
+	{
+	public:
+		Path();
 
-	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return !impl; }
+		void set_fill_mode(PathFillMode fill_mode);
 
-	void flush();
-	bool set_batcher(GraphicContext &gc, RenderBatcher *batcher);
-	void update_batcher_matrix(GraphicContext &gc, const Mat4f &modelview, const Mat4f &projection);
+		void move_to(const Pointf &point);
+		void line_to(const Pointf &point);
+		void bezier_to(const Pointf &control, const Pointf &point);
+		void bezier_to(const Pointf &control1, const Pointf &control2, const Pointf &point);
+		void close();
+		void text(const CanvasText &text);
 
-	RenderBatchTriangle *get_triangle_batcher();
-	RenderBatchLine *get_line_batcher();
-	RenderBatchLineTexture *get_line_texture_batcher();
-	RenderBatchPoint *get_point_batcher();
-	RenderBatchPath *get_path_batcher();
+		static Path rect(const Rectf &box);
+		static Path rect(float x, float y, float width, float height) { return Path::rect(Rectf(x, y, Sizef(width, height))); }
+		static Path line(const Pointf &start, const Pointf &end);
+		static Path line(float x1, float y1, float x2, float y2) { return Path::line(Pointf(x1, y1), Pointf(x2, y2)); }
 
-private:
+		std::shared_ptr<PathImpl> get_impl() const { return impl; }
 
-	std::shared_ptr<CanvasBatcher_Impl> impl;
-
-};
-
+	private:
+		std::shared_ptr<PathImpl> impl;
+		friend class CanvasImpl;
+	};
 }
