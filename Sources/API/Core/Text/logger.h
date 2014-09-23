@@ -73,13 +73,15 @@ public:
 	void disable();
 
 	/// \brief Log text.
-	virtual void log(const std::string &type, const std::string &text);
+	virtual void log(const std::string &type, const std::string &text) = 0;
 
 /// \}
 /// \name Implementation
 /// \{
 
-private:
+protected:
+	static StringFormat get_log_string(const std::string &type, const std::string &text);
+
 /// \}
 };
 

@@ -58,50 +58,7 @@ ConsoleLogger::~ConsoleLogger()
 
 void ConsoleLogger::log(const std::string &type, const std::string &text)
 {
-	std::string months[] =
-	{
-		"Jan",
-		"Feb",
-		"Mar",
-		"Apr",
-		"May",
-		"Jun",
-		"Jul",
-		"Aug",
-		"Sep",
-		"Oct",
-		"Nov",
-		"Dec"
-	};
-	
-	std::string days[] =
-	{
-		"Sun",
-		"Mon",
-		"Tue",
-		"Wed",
-		"Thu",
-		"Fri",
-		"Sat"
-	};
-
-	// Tue Nov 16 11:34:15 2004 UTC
-	DateTime cur_time = DateTime::get_current_utc_time();
-
-#ifdef WIN32
-	StringFormat format("%1 %2 %3 %4:%5:%6 %7 UTC [%8] %9\r\n");
-#else
-	StringFormat format("%1 %2 %3 %4:%5:%6 %7 UTC [%8] %9\n");
-#endif
-	format.set_arg(1, days[cur_time.get_day_of_week()]);
-	format.set_arg(2, months[cur_time.get_month() - 1]);
-	format.set_arg(3, cur_time.get_day());
-	format.set_arg(4, cur_time.get_hour(), 2);
-	format.set_arg(5, cur_time.get_minutes(), 2);
-	format.set_arg(6, cur_time.get_seconds(), 2);
-	format.set_arg(7, cur_time.get_year());
-	format.set_arg(8, type);
-	format.set_arg(9, text);
+	StringFormat format = get_log_string(type, text);
 
 #ifdef WIN32
 	std::wstring log_line = StringHelp::utf8_to_ucs2(format.get_result());
