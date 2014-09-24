@@ -52,7 +52,9 @@ namespace clan
 		void set_fill_mode(PathFillMode fill_mode);
 
 		void move_to(const Pointf &point);
+		void move_to(float x, float y) { move_to(Pointf(x, y)); }
 		void line_to(const Pointf &point);
+		void line_to(float x, float y) { line_to(Pointf(x, y)); }
 		void bezier_to(const Pointf &control, const Pointf &point);
 		void bezier_to(const Pointf &control1, const Pointf &control2, const Pointf &point);
 		void close();
@@ -62,6 +64,11 @@ namespace clan
 		static Path rect(float x, float y, float width, float height) { return Path::rect(Rectf(x, y, Sizef(width, height))); }
 		static Path line(const Pointf &start, const Pointf &end);
 		static Path line(float x1, float y1, float x2, float y2) { return Path::line(Pointf(x1, y1), Pointf(x2, y2)); }
+
+		static Path circle(float center_x, float center_y, float radius) { return Path::ellipse(Pointf(center_x, center_y), Sizef(radius, radius)); }
+		static Path ellipse(float center_x, float center_y, float radius_x, float radius_y) { return Path::ellipse(Pointf(center_x, center_y), Sizef(radius_x, radius_y)); }
+		static Path circle(const Pointf &center, float radius) { return Path::ellipse(center, Sizef(radius, radius)); }
+		static Path ellipse(const Pointf &center, const Sizef &radius);
 
 		std::shared_ptr<PathImpl> get_impl() const { return impl; }
 

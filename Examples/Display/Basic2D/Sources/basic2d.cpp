@@ -71,19 +71,25 @@ int Basic2D::start(const std::vector<std::string> &args)
 		// Clear the display in a dark blue nuance
 		canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
 
+		// Show the logo image.
+		clan::Size canvas_size = canvas.get_size();
+		spr_logo.draw(canvas, canvas_size.width-spr_logo.get_width(), canvas_size.height-spr_logo.get_height());
+
+		// Show ellipse
+		clan::Path path = clan::Path::ellipse(clan::Pointf(canvas.get_width() / 2.0f, canvas.get_height() / 2.0f), clan::Sizef(300.0f, 200.0f));
+		clan::Brush brush = clan::Brush::solid_rgba8(255, 0, 255, 64);
+		canvas.fill(path, brush);
+
 		std::string text("Welcome to the ClanLib SDK");
 		clan::Size text_size = font.get_text_size(canvas, text);
 		font.draw_text(canvas, ( ( canvas.get_width() - text_size.width) / 2), 32, text, clan::Colorf::white);
 
-		clan::Size canvas_size = canvas.get_size();
 
 		// Draw moving lines
 		float ypos = sin(sin_count)*60.0f + 120.0f;
 		canvas.draw_line(0, ypos-1.0f, (float) canvas_size.width, ypos-1.0f,clan::Colorf(0.5f, 0.0f, 0.0f));
 		canvas.draw_line(0, ypos+198.0f, (float) canvas_size.width, ypos+198.0f, clan::Colorf(0.5f, 0.0f, 0.0f));
 
-		// Show the logo image.
-		spr_logo.draw(canvas, canvas_size.width-spr_logo.get_width(), canvas_size.height-spr_logo.get_height());
 
 		// Add a clipping rect
 		canvas.push_cliprect(clan::Rect(0, (int)(ypos), canvas_size.width, (int)(ypos+198)));
@@ -105,13 +111,6 @@ int Basic2D::start(const std::vector<std::string> &args)
 		canvas.fill_rect(clan::Rectf( 320.0f + x -30.0f, 240 + y -30.0f,clan:: Sizef(30.0f, 30.0f)), clan::Colorf(1.0f, 1.0f, 0.0, 0.5f));
 
 		canvas.pop_cliprect();
-
-		canvas.set_transform(clan::Mat4f::translate(200.0f, -100.0f, 0.0f) * clan::Mat4f::rotate(clan::Angle(45.0f, clan::angle_degrees), 0.0f, 0.0f, 1.0f));
-
-		clan::Path path = clan::Path::rect(clan::Rectf(200, 200, 400, 400));
-		clan::Brush brush = clan::Brush::solid_rgb8(255, 255, 0);
-		canvas.fill(path, brush);
-		canvas.set_transform(clan::Mat4f::identity());
 
 		window.flip(1);
 

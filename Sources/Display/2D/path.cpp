@@ -103,4 +103,40 @@ namespace clan
 		path.line_to(end);
 		return path;
 	}
+
+	Path Path::ellipse(const Pointf &center, const Sizef &radius)
+	{
+		float offset_x = 0;
+		float offset_y = 0;
+
+		int max_radius = max(radius.width, radius.height);
+
+		int rotationcount = max(5, (max_radius - 3));
+		float halfpi = 1.5707963267948966192313216916398f;
+		float turn = halfpi / rotationcount;
+
+		offset_x = center.x;
+		offset_y = -center.y;
+
+		Path path;
+
+		path.move_to(center.x + radius.width, center.y);
+
+		rotationcount *= 4;
+
+		std::vector<Pointf> points;
+		points.resize(rotationcount-1);
+
+		for (int i = 1; i < rotationcount; i++)
+		{
+			float pos1 = radius.width * cos(i * turn);
+			float pos2 = radius.height * sin(i * turn);
+
+			path.line_to(center.x + pos1, center.y + pos2);
+		}
+
+		path.close();
+
+		return path;
+	}
 }
