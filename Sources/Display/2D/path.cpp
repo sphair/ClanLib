@@ -106,36 +106,26 @@ namespace clan
 
 	Path Path::ellipse(const Pointf &center, const Sizef &radius)
 	{
-		float offset_x = 0;
-		float offset_y = 0;
-
-		int max_radius = max(radius.width, radius.height);
-
-		int rotationcount = max(5, (max_radius - 3));
-		float halfpi = 1.5707963267948966192313216916398f;
-		float turn = halfpi / rotationcount;
-
-		offset_x = center.x;
-		offset_y = -center.y;
-
 		Path path;
 
-		path.move_to(center.x + radius.width, center.y);
+		clan::Sizef diameter = radius * 2.0f;
 
-		rotationcount *= 4;
+		float x = center.x - radius.width;
+		float y = center.y - radius.height;
 
-		std::vector<Pointf> points;
-		points.resize(rotationcount-1);
+		float kappa = 0.5522848f,
+		control_horiz = (diameter.width / 2) * kappa,
+		control_vert = (diameter.height / 2) * kappa,
+		x_end = x + diameter.width,
+		y_end = y + diameter.height,
+		x_middle = x + diameter.width / 2,
+		y_middle = y + diameter.height / 2;
 
-		for (int i = 1; i < rotationcount; i++)
-		{
-			float pos1 = radius.width * cos(i * turn);
-			float pos2 = radius.height * sin(i * turn);
-
-			path.line_to(center.x + pos1, center.y + pos2);
-		}
-
-		path.close();
+		path.move_to(x, y_middle);
+		path.bezier_to(Pointf(x, y_middle - control_vert), Pointf(x_middle - control_horiz, y), Pointf(x_middle, y));
+		path.bezier_to(Pointf(x_middle + control_horiz, y), Pointf(x_end, y_middle - control_vert), Pointf(x_end, y_middle));
+		path.bezier_to(Pointf(x_end, y_middle + control_vert), Pointf(x_middle + control_horiz, y_end), Pointf(x_middle, y_end));
+		path.bezier_to(Pointf(x_middle - control_horiz, y_end), Pointf(x, y_middle + control_vert), Pointf(x, y_middle));
 
 		return path;
 	}
