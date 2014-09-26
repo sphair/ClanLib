@@ -45,7 +45,7 @@ int App::main(const std::vector<std::string> &args)
 	World world(resources, window);
 
 	// Connect the Window close event
-    window.sig_window_close().connect(&world, &World::on_quit);
+    clan::Slot slot = window.sig_window_close().connect(&world, &World::on_quit);
 
 	// Enter the amazing pacman world
 	world.run(window);

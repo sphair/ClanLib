@@ -186,8 +186,11 @@ Image Image::load(Canvas &canvas, const std::string &id, const XMLResourceDocume
 	DomNode cur_node = resource.get_element().get_first_child();
 	while(!cur_node.is_null())
 	{
-		if (!cur_node.is_element()) 
+		if (!cur_node.is_element())
+		{
+			cur_node = cur_node.get_next_sibling();
 			continue;
+		}
 
 		DomElement cur_element = cur_node.to_element();
 		std::string tag_name = cur_element.get_tag_name();
@@ -248,7 +251,10 @@ Image Image::load(Canvas &canvas, const std::string &id, const XMLResourceDocume
 	while (!cur_node.is_null())
 	{
 		if (!cur_node.is_element())
+		{
+			cur_node = cur_node.get_next_sibling();
 			continue;
+		}
 
 		DomElement cur_element = cur_node.to_element();
 
