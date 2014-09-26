@@ -117,7 +117,10 @@ Sprite Sprite::load(Canvas &canvas, const std::string &id, const XMLResourceDocu
 	while (!cur_node.is_null())
 	{
 		if (!cur_node.is_element())
+		{
+			cur_node = cur_node.get_next_sibling();
 			continue;
+		}
 
 		DomElement cur_element = cur_node.to_element();
 
@@ -300,7 +303,10 @@ Sprite Sprite::load(Canvas &canvas, const std::string &id, const XMLResourceDocu
 	while (!cur_node.is_null())
 	{
 		if (!cur_node.is_element())
+		{
+			cur_node = cur_node.get_next_sibling();
 			continue;
+		}
 
 		DomElement cur_element = cur_node.to_element();
 

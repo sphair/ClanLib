@@ -56,8 +56,11 @@ CursorDescription::CursorDescription(GraphicContext &gc, const std::string &reso
 
 	while(!cur_node.is_null())
 	{
-		if (!cur_node.is_element()) 
+		if (!cur_node.is_element())
+		{
+			cur_node = cur_node.get_next_sibling();
 			continue;
+		}
 
 		DomElement cur_element = cur_node.to_element();
 		std::string tag_name = cur_element.get_tag_name();
