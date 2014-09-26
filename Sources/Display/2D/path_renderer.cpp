@@ -109,7 +109,7 @@ namespace clan
 		for (size_t y = 0; y < scanlines.size(); y++)
 		{
 			auto &scanline = scanlines[y];
-			std::sort(scanline.edges.begin(), scanline.edges.end(), [](PathScanlineEdge &a, PathScanlineEdge &b) { return a.x < b.x; });
+			std::sort(scanline.edges.begin(), scanline.edges.end(), [](const PathScanlineEdge &a, const PathScanlineEdge &b) { return a.x < b.x; });
 
 			unsigned char *line = mask.get_line_uint8(y / 2);
 
