@@ -113,13 +113,13 @@ namespace clan
 		float x = center.x - radius.width;
 		float y = center.y - radius.height;
 
-		float kappa = 0.5522848f,
-		control_horiz = (diameter.width / 2) * kappa,
-		control_vert = (diameter.height / 2) * kappa,
-		x_end = x + diameter.width,
-		y_end = y + diameter.height,
-		x_middle = x + diameter.width / 2,
-		y_middle = y + diameter.height / 2;
+		float kappa = 0.5522848f;		// Kappa is 4*((SqrRoot2) - 1) / 3
+		float control_horiz = (diameter.width / 2) * kappa;
+		float control_vert = (diameter.height / 2) * kappa;
+		float x_end = x + diameter.width;
+		float y_end = y + diameter.height;
+		float x_middle = x + diameter.width / 2;
+		float y_middle = y + diameter.height / 2;
 
 		path.move_to(x, y_middle);
 		path.bezier_to(Pointf(x, y_middle - control_vert), Pointf(x_middle - control_horiz, y), Pointf(x_middle, y));
