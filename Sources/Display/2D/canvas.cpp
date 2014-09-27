@@ -671,19 +671,20 @@ void Canvas::fill_ellipse(const Pointf &center, float radius_x, float radius_y, 
 void Canvas::stroke(const Path &path, const Pen &pen)
 {
 	RenderBatchPath *batcher = impl->batcher.get_path_batcher();
-	batcher->draw_path(*this, path, pen, Brush(), true, false);
+	batcher->stroke(*this, path, pen);
 }
 
 void Canvas::fill(const Path &path, const Brush &brush)
 {
 	RenderBatchPath *batcher = impl->batcher.get_path_batcher();
-	batcher->draw_path(*this, path, Pen(), brush, false, true);
+	batcher->fill(*this, path, brush);
 }
 
 void Canvas::stroke_and_fill(const Path &path, const Pen &pen, const Brush &brush)
 {
 	RenderBatchPath *batcher = impl->batcher.get_path_batcher();
-	batcher->draw_path(*this, path, pen, brush, true, true);
+	batcher->fill(*this, path, brush);
+	batcher->stroke(*this, path, pen);
 }
 
 /////////////////////////////////////////////////////////////////////////////

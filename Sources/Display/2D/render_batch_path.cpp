@@ -51,66 +51,64 @@ inline Pointf RenderBatchPath::to_position(const clan::Pointf &point) const
 		modelview_matrix.matrix[0 * 4 + 1] * point.x + modelview_matrix.matrix[1 * 4 + 1] * point.y + modelview_matrix.matrix[3 * 4 + 1]);
 }
 
-void RenderBatchPath::draw_path(Canvas &canvas, const Path &path, const Pen &pen, const Brush &brush, bool stroke, bool fill)
+void RenderBatchPath::fill(Canvas &canvas, const Path &path, const Brush &brush)
 {
 	canvas.flush();
 	canvas.set_batcher(this);
 
-	if (fill)
+	path_renderer->set_size(canvas.get_width(), canvas.get_height());
+	path_renderer->clear();
+
+	for (const auto &subpath : path.get_impl()->subpaths)
 	{
-		path_renderer->set_size(canvas.get_width(), canvas.get_height());
+		clan::Pointf previous_point = to_position(subpath.points[0]);
+		clan::Pointf next_point;
 
-		path_renderer->clear();
-
-		for (const auto &subpath : path.get_impl()->subpaths)
+		size_t i = 1;
+		for (PathCommand command : subpath.commands)
 		{
-			clan::Pointf previous_point = to_position(subpath.points[0]);
-			clan::Pointf next_point;
-
-			size_t i = 1;
-			for (PathCommand command : subpath.commands)
+			if (command == PathCommand::line)
 			{
-				if (command == PathCommand::line)
-				{
-					next_point = to_position(subpath.points[i]);
-					i++;
+				next_point = to_position(subpath.points[i]);
+				i++;
 
-					path_renderer->line(previous_point.x, previous_point.y, next_point.x, next_point.y);
-				}
-				else if (command == PathCommand::quadradic)
-				{
-					clan::Pointf control = to_position(subpath.points[i]);
-					next_point = to_position(subpath.points[i + 1]);
-					i += 2;
-
-					path_renderer->quadratic_bezier(previous_point.x, previous_point.y, control.x, control.y, next_point.x, next_point.y);
-				}
-				else if (command == PathCommand::cubic)
-				{
-					clan::Pointf control1 = to_position(subpath.points[i]);
-					clan::Pointf control2 = to_position(subpath.points[i + 1]);
-					next_point = to_position(subpath.points[i + 2]);
-					i += 3;
-
-					path_renderer->cubic_bezier(previous_point.x, previous_point.y, control1.x, control1.y, control2.x, control2.y, next_point.x, next_point.y);
-				}
-
-				previous_point = next_point;
-			}
-
-			if (subpath.closed)
-			{
-				next_point = to_position(subpath.points[0]);
 				path_renderer->line(previous_point.x, previous_point.y, next_point.x, next_point.y);
 			}
+			else if (command == PathCommand::quadradic)
+			{
+				clan::Pointf control = to_position(subpath.points[i]);
+				next_point = to_position(subpath.points[i + 1]);
+				i += 2;
+
+				path_renderer->quadratic_bezier(previous_point.x, previous_point.y, control.x, control.y, next_point.x, next_point.y);
+			}
+			else if (command == PathCommand::cubic)
+			{
+				clan::Pointf control1 = to_position(subpath.points[i]);
+				clan::Pointf control2 = to_position(subpath.points[i + 1]);
+				next_point = to_position(subpath.points[i + 2]);
+				i += 3;
+
+				path_renderer->cubic_bezier(previous_point.x, previous_point.y, control1.x, control1.y, control2.x, control2.y, next_point.x, next_point.y);
+			}
+
+			previous_point = next_point;
 		}
 
-		path_renderer->fill(batch_buffer, canvas, path.get_impl()->fill_mode, brush);
+		if (subpath.closed)
+		{
+			next_point = to_position(subpath.points[0]);
+			path_renderer->line(previous_point.x, previous_point.y, next_point.x, next_point.y);
+		}
 	}
 
-	// To do: add stroking
+	path_renderer->fill(batch_buffer, canvas, path.get_impl()->fill_mode, brush);
 }
 
+void RenderBatchPath::stroke(Canvas &canvas, const Path &path, const Pen &pen)
+{
+	// To do: add stroking
+}
 
 void RenderBatchPath::flush(GraphicContext &gc)
 {

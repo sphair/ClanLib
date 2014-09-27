@@ -49,8 +49,9 @@ class RenderBatchPath : public RenderBatcher
 {
 public:
 	RenderBatchPath(GraphicContext &gc, RenderBatchBuffer *batch_buffer);
-	void draw_path(Canvas &canvas, const Path &path, const Pen &pen, const Brush &brush, bool stroke, bool fill);
 
+	void fill(Canvas &canvas, const Path &path, const Brush &brush);
+	void stroke(Canvas &canvas, const Path &path, const Pen &pen);
 
 private:
 	int set_batcher_active(Canvas &canvas);
