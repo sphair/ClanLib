@@ -38,7 +38,8 @@
 #include "API/Display/2D/pen.h"
 #include "API/Display/2D/path.h"
 #include "API/Display/2D/brush.h"
-#include "path_renderer.h"
+#include "path_fill_renderer.h"
+#include "path_stroke_renderer.h"
 
 namespace clan
 {
@@ -54,6 +55,8 @@ public:
 	void stroke(Canvas &canvas, const Path &path, const Pen &pen);
 
 private:
+	void render(const Path &path, PathRenderer *renderer);
+
 	int set_batcher_active(Canvas &canvas);
 	void flush(GraphicContext &gc);
 	void matrix_changed(const Mat4f &modelview, const Mat4f &projection);
@@ -63,8 +66,8 @@ private:
 	Mat4f modelview_matrix;
 	RenderBatchBuffer *batch_buffer;
 
-	std::shared_ptr<PathRenderer> path_renderer;
-
+	PathFillRenderer fill_renderer;
+	PathStrokeRenderer stroke_renderer;
 };
 
 }

@@ -38,87 +38,85 @@
 
 namespace clan
 {
-
-RenderBatchPath::RenderBatchPath(GraphicContext &gc, RenderBatchBuffer *batch_buffer) : batch_buffer(batch_buffer)
-{
-	path_renderer = std::make_shared<PathRenderer>(gc);
-}
-
-inline Pointf RenderBatchPath::to_position(const clan::Pointf &point) const
-{
-	return Pointf(
-		modelview_matrix.matrix[0 * 4 + 0] * point.x + modelview_matrix.matrix[1 * 4 + 0] * point.y + modelview_matrix.matrix[3 * 4 + 0],
-		modelview_matrix.matrix[0 * 4 + 1] * point.x + modelview_matrix.matrix[1 * 4 + 1] * point.y + modelview_matrix.matrix[3 * 4 + 1]);
-}
-
-void RenderBatchPath::fill(Canvas &canvas, const Path &path, const Brush &brush)
-{
-	canvas.flush();
-	canvas.set_batcher(this);
-
-	path_renderer->set_size(canvas.get_width(), canvas.get_height());
-	path_renderer->clear();
-
-	for (const auto &subpath : path.get_impl()->subpaths)
+	RenderBatchPath::RenderBatchPath(GraphicContext &gc, RenderBatchBuffer *batch_buffer) : batch_buffer(batch_buffer), fill_renderer(gc), stroke_renderer(gc)
 	{
-		clan::Pointf previous_point = to_position(subpath.points[0]);
-		clan::Pointf next_point;
-
-		size_t i = 1;
-		for (PathCommand command : subpath.commands)
-		{
-			if (command == PathCommand::line)
-			{
-				next_point = to_position(subpath.points[i]);
-				i++;
-
-				path_renderer->line(previous_point.x, previous_point.y, next_point.x, next_point.y);
-			}
-			else if (command == PathCommand::quadradic)
-			{
-				clan::Pointf control = to_position(subpath.points[i]);
-				next_point = to_position(subpath.points[i + 1]);
-				i += 2;
-
-				path_renderer->quadratic_bezier(previous_point.x, previous_point.y, control.x, control.y, next_point.x, next_point.y);
-			}
-			else if (command == PathCommand::cubic)
-			{
-				clan::Pointf control1 = to_position(subpath.points[i]);
-				clan::Pointf control2 = to_position(subpath.points[i + 1]);
-				next_point = to_position(subpath.points[i + 2]);
-				i += 3;
-
-				path_renderer->cubic_bezier(previous_point.x, previous_point.y, control1.x, control1.y, control2.x, control2.y, next_point.x, next_point.y);
-			}
-
-			previous_point = next_point;
-		}
-
-		if (subpath.closed)
-		{
-			next_point = to_position(subpath.points[0]);
-			path_renderer->line(previous_point.x, previous_point.y, next_point.x, next_point.y);
-		}
 	}
 
-	path_renderer->fill(batch_buffer, canvas, path.get_impl()->fill_mode, brush);
-}
+	inline Pointf RenderBatchPath::to_position(const clan::Pointf &point) const
+	{
+		return Pointf(
+			modelview_matrix.matrix[0 * 4 + 0] * point.x + modelview_matrix.matrix[1 * 4 + 0] * point.y + modelview_matrix.matrix[3 * 4 + 0],
+			modelview_matrix.matrix[0 * 4 + 1] * point.x + modelview_matrix.matrix[1 * 4 + 1] * point.y + modelview_matrix.matrix[3 * 4 + 1]);
+	}
 
-void RenderBatchPath::stroke(Canvas &canvas, const Path &path, const Pen &pen)
-{
-	// To do: add stroking
-}
+	void RenderBatchPath::fill(Canvas &canvas, const Path &path, const Brush &brush)
+	{
+		canvas.flush();
+		canvas.set_batcher(this);
 
-void RenderBatchPath::flush(GraphicContext &gc)
-{
-	// Path does not support batching at the moment
-}
+		fill_renderer.set_size(canvas.get_width(), canvas.get_height());
+		fill_renderer.clear();
+		render(path, &fill_renderer);
+		fill_renderer.fill(batch_buffer, canvas, path.get_impl()->fill_mode, brush);
+	}
 
-void RenderBatchPath::matrix_changed(const Mat4f &new_modelview, const Mat4f &new_projection)
-{
-	// We ignore the projection
-	modelview_matrix = new_modelview;
-}
+	void RenderBatchPath::stroke(Canvas &canvas, const Path &path, const Pen &pen)
+	{
+		canvas.flush();
+		canvas.set_batcher(this);
 
+		stroke_renderer.set_pen(canvas, pen);
+		render(path, &stroke_renderer);
+	}
+
+	void RenderBatchPath::flush(GraphicContext &gc)
+	{
+		// Path does not support batching at the moment
+	}
+
+	void RenderBatchPath::matrix_changed(const Mat4f &new_modelview, const Mat4f &new_projection)
+	{
+		// We ignore the projection
+		modelview_matrix = new_modelview;
+	}
+
+	void RenderBatchPath::render(const Path &path, PathRenderer *path_renderer)
+	{
+		for (const auto &subpath : path.get_impl()->subpaths)
+		{
+			clan::Pointf start_point = to_position(subpath.points[0]);
+			path_renderer->begin(start_point.x, start_point.y);
+
+			size_t i = 1;
+			for (PathCommand command : subpath.commands)
+			{
+				if (command == PathCommand::line)
+				{
+					clan::Pointf next_point = to_position(subpath.points[i]);
+					i++;
+
+					path_renderer->line(next_point.x, next_point.y);
+				}
+				else if (command == PathCommand::quadradic)
+				{
+					clan::Pointf control = to_position(subpath.points[i]);
+					clan::Pointf next_point = to_position(subpath.points[i + 1]);
+					i += 2;
+
+					path_renderer->quadratic_bezier(control.x, control.y, next_point.x, next_point.y);
+				}
+				else if (command == PathCommand::cubic)
+				{
+					clan::Pointf control1 = to_position(subpath.points[i]);
+					clan::Pointf control2 = to_position(subpath.points[i + 1]);
+					clan::Pointf next_point = to_position(subpath.points[i + 2]);
+					i += 3;
+
+					path_renderer->cubic_bezier(control1.x, control1.y, control2.x, control2.y, next_point.x, next_point.y);
+				}
+			}
+
+			path_renderer->end(subpath.closed);
+		}
+	}
 }

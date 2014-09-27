@@ -27,32 +27,25 @@
 **    Mark Page
 */
 
-#pragma once
-
-#include "API/Core/Math/point.h"
+#include "Display/precomp.h"
+#include "path_stroke_renderer.h"
 
 namespace clan
 {
-	class PathRenderer
+	PathStrokeRenderer::PathStrokeRenderer(GraphicContext &gc)
 	{
-	public:
-		virtual ~PathRenderer() { }
+	}
 
-		virtual void begin(float x, float y);
-		virtual void line(float x, float y) = 0;
-		virtual void end(bool close);
+	void PathStrokeRenderer::set_pen(Canvas &canvas, const Pen &pen)
+	{
+	}
 
-		void quadratic_bezier(float cp1_x, float cp1_y, float cp2_x, float cp2_y);
-		void cubic_bezier(float cp1_x, float cp1_y, float cp2_x, float cp2_y, float cp3_x, float cp3_y);
+	void PathStrokeRenderer::line(float x, float y)
+	{
+		// https://www.mapbox.com/blog/drawing-antialiased-lines/
+	}
 
-	protected:
-		float start_x = 0.0f;
-		float start_y = 0.0f;
-		float last_x = 0.0f;
-		float last_y = 0.0f;
-
-	private:
-		void subdivide_bezier(int level, float cp0_x, float cp0_y, float cp1_x, float cp1_y, float cp2_x, float cp2_y, float cp3_x, float cp3_y, float t0, float t1);
-		static clan::Pointf point_on_bezier(float cp0_x, float cp0_y, float cp1_x, float cp1_y, float cp2_x, float cp2_y, float cp3_x, float cp3_y, float t);
-	};
+	void PathStrokeRenderer::end(bool close)
+	{
+	}
 }

@@ -29,30 +29,21 @@
 
 #pragma once
 
-#include "API/Core/Math/point.h"
+#include <vector>
+#include "API/Display/2D/canvas.h"
+#include "API/Display/2D/path.h"
+#include "API/Display/2D/pen.h"
+#include "path_renderer.h"
 
 namespace clan
 {
-	class PathRenderer
+	class PathStrokeRenderer : public PathRenderer
 	{
 	public:
-		virtual ~PathRenderer() { }
+		PathStrokeRenderer(GraphicContext &gc);
 
-		virtual void begin(float x, float y);
-		virtual void line(float x, float y) = 0;
-		virtual void end(bool close);
-
-		void quadratic_bezier(float cp1_x, float cp1_y, float cp2_x, float cp2_y);
-		void cubic_bezier(float cp1_x, float cp1_y, float cp2_x, float cp2_y, float cp3_x, float cp3_y);
-
-	protected:
-		float start_x = 0.0f;
-		float start_y = 0.0f;
-		float last_x = 0.0f;
-		float last_y = 0.0f;
-
-	private:
-		void subdivide_bezier(int level, float cp0_x, float cp0_y, float cp1_x, float cp1_y, float cp2_x, float cp2_y, float cp3_x, float cp3_y, float t0, float t1);
-		static clan::Pointf point_on_bezier(float cp0_x, float cp0_y, float cp1_x, float cp1_y, float cp2_x, float cp2_y, float cp3_x, float cp3_y, float t);
+		void set_pen(Canvas &canvas, const Pen &pen);
+		void line(float x, float y) override;
+		void end(bool close) override;
 	};
 }
