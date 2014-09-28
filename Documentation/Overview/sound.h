@@ -9,7 +9,6 @@
 		<li>clan::SoundBuffer - A sound that can be played</li>
 		<li>clan::SoundBuffer_Session - A sound being played</li>
 		<li>clan::SoundFilter - Filter effect applied to the mixing stream</li>
-		<li>clan::CDDrive - For the game that targets 1865 multimedia PCs using CD music playback</li>
 	</ul>
 
 	<h2>Sound Sources and Formats</h2>
