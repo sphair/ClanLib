@@ -1,6 +1,9 @@
 
 /*! \page Threading Threading
 
+Note: while all the following classes still exist in ClanLib they are deprecated. The standard library included with C++11 introduced std::thread and std::mutex that
+should be used instead for any new code.
+
 The following classes in ClanLib are related to threads: 
 
 <ul>
