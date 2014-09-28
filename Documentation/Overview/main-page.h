@@ -4,7 +4,6 @@
 <h2>Overviews</h2>
 <ul>
 	<li>\ref Intro "Getting started"</li>
-	<li>\ref Threading "Threading"</li>
 	<li>\ref TemplateCallbacks "Signals and callbacks"</li>
 	<li>\ref ResourceManagement "Resource management"</li>
 	<li>\ref Timing "Timing"</li>
