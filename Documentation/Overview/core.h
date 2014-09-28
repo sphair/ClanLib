@@ -34,12 +34,11 @@
 		<li>clan::Timer - Timer class that invokes a callback on a specified interval</li>
 	</ul>
 		
-	<h2>Signals and callbacks</h2>
+	<h2>Signals</h2>
 
 	<ul>
-		<li>clan::Callback</li>
 		<li>clan::Signal</li>
-		<li>clan::CallbackContainer</li>
+		<li>clan::SlotContainer</li>
 	</ul>
 
 	<h2>Math</h2>
