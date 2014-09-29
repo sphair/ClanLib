@@ -65,6 +65,8 @@ display_target.cpp \
 2D/render_batch_buffer.cpp \
 2D/canvas.cpp \
 2D/path_renderer.cpp \
+2D/path_fill_renderer.cpp \
+2D/path_stroke_renderer.cpp \
 2D/color_hsl.cpp \
 setup_display.cpp \
 Image/icon_set.cpp \
