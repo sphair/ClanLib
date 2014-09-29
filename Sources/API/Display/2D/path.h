@@ -31,6 +31,7 @@
 
 #include <memory>
 #include "../../Core/Math/rect.h"
+#include "../../Core/Math/mat4.h"
 #include "../../Display/2D/color.h"
 
 namespace clan
@@ -59,6 +60,7 @@ namespace clan
 		void bezier_to(const Pointf &control1, const Pointf &control2, const Pointf &point);
 		void close();
 		void text(const CanvasText &text);
+		void transform(const Mat3f &transform);
 
 		static Path rect(const Rectf &box);
 		static Path rect(float x, float y, float width, float height) { return Path::rect(Rectf(x, y, Sizef(width, height))); }
