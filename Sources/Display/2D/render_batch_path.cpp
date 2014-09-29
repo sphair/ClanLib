@@ -96,6 +96,7 @@ namespace clan
 					i++;
 
 					path_renderer->line(next_point.x, next_point.y);
+					path_renderer->next(next_point.x, next_point.y);
 				}
 				else if (command == PathCommand::quadradic)
 				{
@@ -104,6 +105,7 @@ namespace clan
 					i += 2;
 
 					path_renderer->quadratic_bezier(control.x, control.y, next_point.x, next_point.y);
+					path_renderer->next(next_point.x, next_point.y);
 				}
 				else if (command == PathCommand::cubic)
 				{
@@ -113,6 +115,7 @@ namespace clan
 					i += 3;
 
 					path_renderer->cubic_bezier(control1.x, control1.y, control2.x, control2.y, next_point.x, next_point.y);
+					path_renderer->next(next_point.x, next_point.y);
 				}
 			}
 

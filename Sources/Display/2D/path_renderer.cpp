@@ -37,8 +37,6 @@ namespace clan
 	{
 		start_x = x;
 		start_y = y;
-		last_x = x;
-		last_y = y;
 	}
 
 	void PathRenderer::end(bool close)
