@@ -130,6 +130,37 @@ namespace clan
 		return path;
 	}
 
+	Path Path::rect(const Rectf &box, const clan::Sizef &corner)
+	{
+		Path path;
+
+		float x = box.left;
+		float y = box.top;
+
+		float kappa = 0.5522848f;		// Kappa is 4*((SqrRoot2) - 1) / 3
+		float control_horiz = (corner.width) * kappa;
+		float control_vert = (corner.height) * kappa;
+
+		float x_middle_a = box.left + corner.width;
+		float y_middle_a = box.top + corner.height;
+
+		float x_middle_b = box.right - corner.width;
+		float y_middle_b = box.bottom - corner.height;
+
+		path.move_to( x, y_middle_a);
+
+		path.bezier_to(Pointf(x, y_middle_a - control_vert), Pointf(x_middle_a - control_horiz, y), Pointf(x_middle_a, y));
+		path.line_to(Pointf(x_middle_b, y));
+		path.bezier_to(Pointf(x_middle_b + control_horiz, y), Pointf(box.right, y_middle_a - control_vert), Pointf(box.right, y_middle_a));
+		path.line_to(Pointf(box.right, y_middle_b));
+		path.bezier_to(Pointf(box.right, y_middle_b + control_vert), Pointf(x_middle_b + control_horiz, box.bottom), Pointf(x_middle_b, box.bottom));
+		path.line_to(Pointf(x_middle_a, box.bottom));
+		path.bezier_to(Pointf(x_middle_a - control_horiz, box.bottom), Pointf(x, y_middle_b + control_vert), Pointf(x, y_middle_b));
+		path.close();
+
+		return path;
+	}
+
 	void Path::transform(const Mat3f &transform)
 	{
 		for (unsigned int subpaths_cnt = 0; subpaths_cnt < impl->subpaths.size(); subpaths_cnt++)

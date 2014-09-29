@@ -76,10 +76,14 @@ int Basic2D::start(const std::vector<std::string> &args)
 		spr_logo.draw(canvas, canvas_size.width-spr_logo.get_width(), canvas_size.height-spr_logo.get_height());
 
 		// Show ellipse
-		clan::Path path = clan::Path::ellipse(clan::Pointf(canvas.get_width() / 2.0f, canvas.get_height() / 2.0f), clan::Sizef(300.0f, 200.0f));
-		path.transform(clan::Mat3f::translate(-clan::Pointf(canvas.get_width() / 2.0f, canvas.get_height() / 2.0f)));
+		clan::Sizef shape_size(400.0f, 300.0f);
+		clan::Rectf shape_rect((canvas.get_width() - shape_size.width) / 2.0f, (canvas.get_height() - shape_size.height) / 2.0f, shape_size);
+
+		//clan::Path path = clan::Path::ellipse(clan::Pointf(canvas.get_width() / 2.0f, canvas.get_height() / 2.0f), clan::Sizef(300.0f, 200.0f));
+		clan::Path path = clan::Path::rect(shape_rect, clan::Sizef(32.0f, 32.0f));
+		path.transform(clan::Mat3f::translate(-shape_rect.get_center()));
 		path.transform(clan::Mat3f::rotate(clan::Angle(sin_count * 10.0f, clan::angle_degrees)));
-		path.transform(clan::Mat3f::translate(clan::Pointf(canvas.get_width() / 2.0f, canvas.get_height() / 2.0f)));
+		path.transform(clan::Mat3f::translate(shape_rect.get_center()));
 		clan::Brush brush = clan::Brush::solid_rgba8(255, 0, 255, 64);
 		canvas.fill(path, brush);
 

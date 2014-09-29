@@ -67,6 +67,8 @@ namespace clan
 		static Path line(const Pointf &start, const Pointf &end);
 		static Path line(float x1, float y1, float x2, float y2) { return Path::line(Pointf(x1, y1), Pointf(x2, y2)); }
 
+		static Path rect(const Rectf &box, const clan::Sizef &corner);
+
 		static Path circle(float center_x, float center_y, float radius) { return Path::ellipse(Pointf(center_x, center_y), Sizef(radius, radius)); }
 		static Path ellipse(float center_x, float center_y, float radius_x, float radius_y) { return Path::ellipse(Pointf(center_x, center_y), Sizef(radius_x, radius_y)); }
 		static Path circle(const Pointf &center, float radius) { return Path::ellipse(center, Sizef(radius, radius)); }
