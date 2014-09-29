@@ -185,6 +185,50 @@ Mat3<int> Mat3<int>::rotate(const Angle &angle_x, const Angle &angle_y, const An
 	throw Exception("Not supported");
 }
 
+template<typename Type>
+Mat3<Type> Mat3<Type>::rotate(const Angle &angle)
+{
+	Mat3<Type> rotate_matrix;
+	Type c = cos(angle.to_radians());
+	Type s = sin(angle.to_radians());
+	rotate_matrix.matrix[0 + 0 * 3] = c;
+	rotate_matrix.matrix[0 + 1 * 3] = -s;
+	rotate_matrix.matrix[0 + 2 * 3] = 0;
+	rotate_matrix.matrix[1 + 0 * 3] = s;
+	rotate_matrix.matrix[1 + 1 * 3] = c;
+	rotate_matrix.matrix[1 + 2 * 3] = 0;
+	rotate_matrix.matrix[2 + 0 * 3] = 0;
+	rotate_matrix.matrix[2 + 1 * 3] = 0;
+	rotate_matrix.matrix[2 + 2 * 3] = 1;
+	return rotate_matrix;
+}
+
+// For ints
+template<>
+Mat3<int> Mat3<int>::rotate(const Angle &angle)
+{
+	throw Exception("Not supported");
+}
+
+template<typename Type>
+Mat3<Type> Mat3<Type>::scale(Type x, Type y)
+{
+	Mat3<Type> scale_matrix = null();
+	scale_matrix.matrix[0 + 0 * 3] = x;
+	scale_matrix.matrix[1 + 1 * 3] = y;
+	scale_matrix.matrix[2 + 2 * 3] = 1;
+	return scale_matrix;
+}
+
+template<typename Type>
+Mat3<Type> Mat3<Type>::translate(Type x, Type y)
+{
+	Mat3<Type> translate_matrix = identity();
+	translate_matrix.matrix[0 + 2 * 3] = x;
+	translate_matrix.matrix[1 + 2 * 3] = y;
+	return translate_matrix;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // Mat3 attributes:
 

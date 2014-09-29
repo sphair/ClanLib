@@ -133,7 +133,7 @@ public:
 
 	static Mat3<Type> identity();
 
-	/// \brief Create a rotation matrix
+	/// \brief Create a 3d rotation matrix
 	///
 	/// Matrix is created in the Column-Major matrix format (opengl native)
 	/// \param angle = Angle to rotate by
@@ -144,7 +144,7 @@ public:
 	/// \return The matrix (in column-major format)
 	static Mat3<Type> rotate(const Angle &angle, Type x, Type y, Type z, bool normalize = true);
 
-	/// \brief Create a rotation matrix
+	/// \brief Create a 3d rotation matrix
 	///
 	/// Matrix is created in the Column-Major matrix format (opengl native)
 	/// \param angle = Angle to rotate by
@@ -156,12 +156,53 @@ public:
 		return rotate(angle, rotation.x, rotation.y, rotation.z, normalize);
 	}
 
-	/// \brief Create a rotation matrix using euler angles
+	/// \brief Create a 3d rotation matrix using euler angles
 	///
 	/// Matrix is created in the Column-Major matrix format (opengl native)
 	///
 	/// \return The matrix (in column-major format)
 	static Mat3<Type> rotate(const Angle &angle_x, const Angle &angle_y, const Angle &angle_z, EulerOrder order);
+
+	/// \brief Create a 2d rotation matrix
+	///
+	/// Matrix is created in the Column-Major matrix format (opengl native)
+	/// \param angle = Angle to rotate by
+	/// \return The matrix (in column-major format)
+	static Mat3<Type> rotate(const Angle &angle);
+
+	/// \brief Create a 2d scale matrix
+	///
+	/// \param x = Scale X
+	/// \param y = Scale Y
+	/// \return The matrix
+	static Mat3<Type> scale(Type x, Type y);
+
+	/// \brief Create a 2d scale matrix
+	///
+	/// \param xy = Scale XY
+	/// \return The matrix
+	static Mat3<Type> scale(const Vec3<Type> &xy)
+	{
+		return scale(xy.x, xy.y);
+	}
+
+	/// \brief Create a 2d translation matrix
+	///
+	/// Matrix is created in the Column-Major matrix format (opengl native)
+	/// \param x = Translate X
+	/// \param y = Translate Y
+	/// \return The matrix (in column-major format)
+	static Mat3<Type> translate(Type x, Type y);
+
+	/// \brief Create a 2d translation matrix
+	///
+	/// Matrix is created in the Column-Major matrix format (opengl native)
+	/// \param xy = Translate XY
+	/// \return The matrix (in column-major format)
+	static Mat3<Type> translate(const Vec2<Type> &xy)
+	{
+		return translate(xy.x, xy.y);
+	}
 
 	/// \brief Multiply 2 matrices
 	///

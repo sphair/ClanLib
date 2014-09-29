@@ -77,6 +77,9 @@ int Basic2D::start(const std::vector<std::string> &args)
 
 		// Show ellipse
 		clan::Path path = clan::Path::ellipse(clan::Pointf(canvas.get_width() / 2.0f, canvas.get_height() / 2.0f), clan::Sizef(300.0f, 200.0f));
+		path.transform(clan::Mat3f::translate(-clan::Pointf(canvas.get_width() / 2.0f, canvas.get_height() / 2.0f)));
+		path.transform(clan::Mat3f::rotate(clan::Angle(sin_count * 10.0f, clan::angle_degrees)));
+		path.transform(clan::Mat3f::translate(clan::Pointf(canvas.get_width() / 2.0f, canvas.get_height() / 2.0f)));
 		clan::Brush brush = clan::Brush::solid_rgba8(255, 0, 255, 64);
 		canvas.fill(path, brush);
 
@@ -84,12 +87,10 @@ int Basic2D::start(const std::vector<std::string> &args)
 		clan::Size text_size = font.get_text_size(canvas, text);
 		font.draw_text(canvas, ( ( canvas.get_width() - text_size.width) / 2), 32, text, clan::Colorf::white);
 
-
 		// Draw moving lines
 		float ypos = sin(sin_count)*60.0f + 120.0f;
 		canvas.draw_line(0, ypos-1.0f, (float) canvas_size.width, ypos-1.0f,clan::Colorf(0.5f, 0.0f, 0.0f));
 		canvas.draw_line(0, ypos+198.0f, (float) canvas_size.width, ypos+198.0f, clan::Colorf(0.5f, 0.0f, 0.0f));
-
 
 		// Add a clipping rect
 		canvas.push_cliprect(clan::Rect(0, (int)(ypos), canvas_size.width, (int)(ypos+198)));
