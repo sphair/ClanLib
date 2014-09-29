@@ -191,15 +191,13 @@ Mat3<Type> Mat3<Type>::rotate(const Angle &angle)
 	Mat3<Type> rotate_matrix;
 	Type c = cos(angle.to_radians());
 	Type s = sin(angle.to_radians());
-	rotate_matrix.matrix[0 + 0 * 3] = c;
-	rotate_matrix.matrix[0 + 1 * 3] = -s;
-	rotate_matrix.matrix[0 + 2 * 3] = 0;
-	rotate_matrix.matrix[1 + 0 * 3] = s;
-	rotate_matrix.matrix[1 + 1 * 3] = c;
-	rotate_matrix.matrix[1 + 2 * 3] = 0;
-	rotate_matrix.matrix[2 + 0 * 3] = 0;
-	rotate_matrix.matrix[2 + 1 * 3] = 0;
-	rotate_matrix.matrix[2 + 2 * 3] = 1;
+
+	rotate_matrix.matrix[0 * 3 + 0] = c;
+	rotate_matrix.matrix[0 * 3 + 1] = s;
+	rotate_matrix.matrix[1 * 3 + 0] = -s;
+	rotate_matrix.matrix[1 * 3 + 1] = c;
+	rotate_matrix.matrix[2 * 3 + 2] = 1;
+
 	return rotate_matrix;
 }
 
