@@ -110,6 +110,10 @@ public:
 	bool operator!=(const Rectx<Type> &r) const
 	{ return (left != r.left || top != r.top || right != r.right || bottom != r.bottom); }
 
+	static Rectx<Type> xywh(Type x, Type y, Type width, Type height) { return Rectx<Type>(x,y,x+width, y+height); }
+	static Rectx<Type> ltrb(Type left, Type top, Type right, Type bottom) { return Rectx<Type>(left, top, right, bottom); }
+
+
 /// \}
 /// \name Attributes
 /// \{
