@@ -81,7 +81,7 @@ class Mat4
 /// \{
 
 public:
-	/// \brief Constructs a 4x4 matrix (null)
+	/// \brief Constructs a 4x4 matrix (zero'ed)
 	Mat4()
 	{
 		for (int i=0; i<16; i++)

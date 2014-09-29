@@ -63,8 +63,12 @@ class Mat3
 /// \{
 
 public:
-	/// \brief Constructs a 3x3 matrix (uninitialised)
-	Mat3() { }
+	/// \brief Constructs a 3x3 matrix (zero'ed)
+	Mat3()
+	{
+		for (int i = 0; i < 9; i++)
+			matrix[i] = 0;
+	}
 
 	/// \brief Constructs a 3x3 matrix (copied)
 	Mat3(const Mat3<Type> &copy)
