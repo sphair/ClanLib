@@ -39,7 +39,6 @@ namespace clan
 		virtual ~PathRenderer() { }
 
 		virtual void begin(float x, float y);
-		void next(float x, float y)	{ last_x = x; last_y = y; }
 
 		virtual void line(float x, float y) = 0;
 		virtual void end(bool close);

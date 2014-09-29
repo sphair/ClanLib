@@ -78,6 +78,9 @@ namespace clan
 		float x0 = last_x;
 		float y0 = last_y;
 
+		last_x = x1;
+		last_y = y1;
+
 		x0 *= 2.0f;
 		x1 *= 2.0f;
 		y0 *= 2.0f;

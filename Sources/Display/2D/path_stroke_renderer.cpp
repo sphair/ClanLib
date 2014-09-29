@@ -42,6 +42,9 @@ namespace clan
 
 	void PathStrokeRenderer::line(float x, float y)
 	{
+		last_x = x;
+		last_y = y;
+
 		// https://www.mapbox.com/blog/drawing-antialiased-lines/
 	}
 
