@@ -302,6 +302,9 @@ public:
 	/// \brief Subtraction operator.
 	Mat3<Type> operator -(const Mat3<Type> &sub_matrix) const;
 
+	/// \brief Multiplication operator.
+	Vec2<Type> operator *(const Vec2<Type> &mult) const;
+
 	/// \brief Equality operator.
 	bool operator==(const Mat3<Type> &other) const
 	{
@@ -320,8 +323,6 @@ public:
 private:
 /// \}
 };
-
-
 
 template<typename Type>
 inline Mat3<Type> Mat3<Type>::multiply(const Mat3<Type> &matrix_1, const Mat3<Type> &matrix_2) { return matrix_1 * matrix_2; }

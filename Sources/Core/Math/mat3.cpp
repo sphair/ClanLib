@@ -226,6 +226,14 @@ Mat3<Type> &Mat3<Type>::operator =(const Mat2<Type> &copy)
 // Mat3 operations:
 
 template<typename Type>
+Vec2<Type> Mat3<Type>::operator*(const Vec2<Type> &b) const
+{
+	Type x = matrix[0 * 3 + 0] * b.x + matrix[1 * 3 + 0] * b.y + matrix[2 * 3 + 0];
+	Type y = matrix[0 * 3 + 1] * b.x + matrix[1 * 3 + 1] * b.y + matrix[2 * 3 + 1];
+	return Vec2<Type>(x, y);
+}
+
+template<typename Type>
 Mat3<Type> Mat3<Type>::operator *(const Mat3<Type> &mult) const
 {
 	Mat3<Type> result;
