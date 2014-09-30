@@ -35,8 +35,8 @@ namespace clan
 {
 	void PathRenderer::begin(float x, float y)
 	{
-		start_x = x;
-		start_y = y;
+		start_x = last_x = x;
+		start_y = last_y = y;
 	}
 
 	void PathRenderer::end(bool close)
