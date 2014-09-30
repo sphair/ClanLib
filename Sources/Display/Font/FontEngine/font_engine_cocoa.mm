@@ -34,6 +34,7 @@
 #include "API/Core/System/databuffer.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/Text/string_format.h"
+#include "API/Display/2D/path.h"
 
 namespace clan
 {
@@ -289,6 +290,11 @@ FontPixelBuffer FontEngine_Cocoa::get_empty_font_glyph(int glyph)
 }
 
 Shape2D FontEngine_Cocoa::load_glyph_outline(int c, GlyphMetrics &out_glyph_metrics)
+{
+	throw Exception("Implement Me");
+}
+
+Path FontEngine_Cocoa::load_glyph_path(int glyph_index)
 {
 	throw Exception("Implement Me");
 }

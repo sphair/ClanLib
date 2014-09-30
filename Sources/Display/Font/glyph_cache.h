@@ -47,6 +47,7 @@ class FontEngine;
 class Font_TextureGlyph;
 class Subtexture;
 class FontPixelBuffer;
+class Path;
 
 /// \brief Font texture format (holds a pixel buffer containing a glyph)
 class Font_TextureGlyph
@@ -93,6 +94,8 @@ public:
 
 	/// \brief Get a glyph. Returns NULL if the glyph was not found
 	Font_TextureGlyph *get_glyph(FontEngine *font_engine, GraphicContext &gc, unsigned int glyph);
+
+	Path get_glyph_path(FontEngine *font_engine, unsigned int glyph);
 
 /// \}
 /// \name Operations

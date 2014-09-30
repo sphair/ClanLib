@@ -96,6 +96,7 @@ public:
 
 public:
 	Shape2D load_glyph_outline(int glyph_index, GlyphMetrics &out_glyph_metrics);
+	Path load_glyph_path(int glyph_index);
 
 /// \}
 /// \name Implementation

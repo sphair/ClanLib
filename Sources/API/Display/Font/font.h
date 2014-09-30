@@ -228,6 +228,9 @@ public:
 
 private:
 	std::shared_ptr<Font_Impl> impl;
+
+	friend class Path;
+
 /// \}
 };
 

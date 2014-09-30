@@ -51,7 +51,9 @@ public:
 	FontMetrics get_metrics();
 	FontPixelBuffer get_font_glyph_standard(int glyph, bool anti_alias);
 	FontPixelBuffer get_font_glyph_subpixel(int glyph);
-	Shape2D load_glyph_outline(int c, int &out_advance_x);
+	Shape2D load_glyph_outline(int c, GlyphMetrics &out_glyph_metrics);
+	Path load_glyph_path(int glyph_index);
+
 private:
     void load_font(const FontDescription& desc, const std::string& filename, IODevice& file);
 	FontPixelBuffer get_font_glyph_lcd(int glyph);

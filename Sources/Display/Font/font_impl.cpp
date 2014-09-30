@@ -39,6 +39,7 @@
 #include "API/Core/Text/utf8_reader.h"
 #include "API/Core/XML/dom_element.h"
 #include "API/Display/2D/canvas.h"
+#include "API/Display/2D/path.h"
 #include "API/Display/Resources/display_cache.h"
 #include "API/Core/IOData/path_help.h"
 
@@ -66,6 +67,8 @@ public:
 	FontPixelBuffer get_font_glyph_standard(int glyph, bool anti_alias) { return FontPixelBuffer(); }
 	FontPixelBuffer get_font_glyph_subpixel(int glyph) { return FontPixelBuffer(); }
 	Shape2D load_glyph_outline(int glyph_index, GlyphMetrics &out_glyph_metrics) { return Shape2D(); }
+	Path load_glyph_path(int glyph_index) { return Path(); }
+
 };
 
 Font_Impl::Font_Impl() : font_engine(NULL)
