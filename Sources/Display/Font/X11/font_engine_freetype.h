@@ -75,7 +75,7 @@ public:
 public:
 	FontMetrics get_metrics();
 	float get_kerning(const std::string::value_type &ch1, const std::string::value_type &ch2);
-	float get_advance_x(const std::string::value_type &ch);
+	GlyphMetrics get_glyph_metrics(unsigned int glyph);
 
 	Size get_size(const std::string &text, int pos);
 
@@ -95,7 +95,7 @@ public:
 /// \{
 
 public:
-	Shape2D load_glyph_outline(int glyph_index, int &out_advance_x);
+	Shape2D load_glyph_outline(int glyph_index, GlyphMetrics &out_glyph_metrics);
 
 /// \}
 /// \name Implementation

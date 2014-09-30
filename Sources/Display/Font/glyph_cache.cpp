@@ -47,6 +47,7 @@
 #include "../Render/graphic_context_impl.h"
 #include "API/Display/2D/canvas.h"
 #include "../2D/canvas_impl.h"
+#include "API/Display/Font/glyph_metrics.h"
 
 namespace clan
 {
@@ -95,7 +96,7 @@ Size GlyphCache::get_text_size(FontEngine *font_engine, GraphicContext &gc, cons
 		reader.next();
 		Font_TextureGlyph *gptr = get_glyph(font_engine, gc, glyph);
 		if (gptr == NULL) continue;
-		width += gptr->increment.x;
+		width += gptr->metrics.advance.width;
 	}
 	int height;
 	if (width == 0)
@@ -137,6 +138,44 @@ Font_TextureGlyph *GlyphCache::get_glyph(FontEngine *font_engine, GraphicContext
 /////////////////////////////////////////////////////////////////////////////
 // GlyphCache Operations:
 
+void GlyphCache::draw_glyph(FontEngine *font_engine, Canvas &canvas, const Pointf &position, unsigned int glyph, const Colorf &color)
+{
+	RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
+	GraphicContext &gc = canvas.get_gc();
+
+	Font_TextureGlyph *gptr = get_glyph(font_engine, gc, glyph);
+	if (gptr)
+	{
+		if (!gptr->texture.is_null())
+		{
+			float xp = position.x + gptr->offset.x;
+			float yp = position.y + gptr->offset.y;
+
+			Rectf dest_size(xp, yp, Sizef(gptr->geometry.get_size()));
+			if (enable_subpixel)
+			{
+				batcher->draw_glyph_subpixel(canvas, gptr->geometry, dest_size, color, gptr->texture);
+			}
+			else
+			{
+				batcher->draw_image(canvas, gptr->geometry, dest_size, color, gptr->texture);
+			}
+		}
+	}
+}
+
+GlyphMetrics GlyphCache::get_glyph_metrics(FontEngine *font_engine, Canvas &canvas, unsigned int glyph)
+{
+	GraphicContext &gc = canvas.get_gc();
+
+	Font_TextureGlyph *gptr = get_glyph(font_engine, gc, glyph);
+	if (gptr)
+	{
+		return gptr->metrics;
+	}
+	return GlyphMetrics();
+}
+
 int GlyphCache::get_character_index(FontEngine *font_engine, GraphicContext &gc, const std::string &text, const Point &point)
 {
 	int dest_x = 0;
@@ -170,14 +209,14 @@ int GlyphCache::get_character_index(FontEngine *font_engine, GraphicContext &gc,
 			Font_TextureGlyph *gptr = get_glyph(font_engine, gc, glyph);
 			if (gptr == NULL) continue;
 
-			Rect position(xpos, ypos - font_ascent, Size(gptr->increment.x, gptr->increment.y + font_height + font_external_leading));
+			Rect position(xpos, ypos - font_ascent, Size(gptr->metrics.advance.width, gptr->metrics.advance.height + font_height + font_external_leading));
 			if (position.contains(point))
 			{
 				return glyph_pos + character_counter;
 			}
 		
-			xpos += gptr->increment.x;
-			ypos += gptr->increment.y;
+			xpos += gptr->metrics.advance.width;
+			ypos += gptr->metrics.advance.height;
 		}
 
 		dest_y += font_height + font_external_leading;
@@ -203,7 +242,7 @@ void GlyphCache::insert_glyph(GraphicContext &gc, FontPixelBuffer &pb)
 	glyph_list.push_back(font_glyph);
 	font_glyph->glyph = pb.glyph;
 	font_glyph->offset = pb.offset;
-	font_glyph->increment = pb.increment;
+	font_glyph->metrics = pb.metrics;
 
 	if (!pb.empty_buffer)
 	{
@@ -224,7 +263,7 @@ void GlyphCache::insert_glyph(FontEngine *font_engine, GraphicContext &gc, const
 	}
 }
 
-void GlyphCache::insert_glyph(GraphicContext &gc, unsigned int glyph, Subtexture &sub_texture, const Point &offset, const Point &increment)
+void GlyphCache::insert_glyph(GraphicContext &gc, unsigned int glyph, Subtexture &sub_texture, const Point &offset, const GlyphMetrics &glyph_metrics)
 {
 	// Search for duplicated glyph's, if found silently ignore them
 	std::vector< Font_TextureGlyph * >::size_type size = glyph_list.size();
@@ -239,7 +278,7 @@ void GlyphCache::insert_glyph(GraphicContext &gc, unsigned int glyph, Subtexture
 	glyph_list.push_back(font_glyph);
 	font_glyph->glyph = glyph;
 	font_glyph->offset = offset;
-	font_glyph->increment = increment;
+	font_glyph->metrics = glyph_metrics;
 
 	if ( (sub_texture.get_geometry().get_width() > 0 ) && (sub_texture.get_geometry().get_height() > 0) )
 	{
@@ -303,8 +342,8 @@ void GlyphCache::draw_text(FontEngine *font_engine, Canvas &canvas, float xpos, 
 				batcher->draw_image(canvas, gptr->geometry, dest_size, color, gptr->texture);
 			}
 		}
-		xpos += gptr->increment.x;
-		ypos += gptr->increment.y;
+		xpos += gptr->metrics.advance.width;
+		ypos += gptr->metrics.advance.height;
 	}
 }
 

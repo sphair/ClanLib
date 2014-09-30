@@ -121,6 +121,14 @@ Size VectorFont::get_glyph_size(Canvas &canvas, unsigned int glyph)
 	return Size();
 }
 
+
+GlyphMetrics VectorFont::get_glyph_metrics(Canvas &canvas, unsigned int glyph)
+{
+	if (impl)
+		return impl->get_glyph_metrics(canvas, glyph);
+	return GlyphMetrics();
+}
+
 FontMetrics VectorFont::get_font_metrics()
 {
 	if (impl)

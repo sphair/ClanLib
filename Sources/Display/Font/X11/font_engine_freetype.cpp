@@ -178,9 +178,9 @@ float FontEngine_Freetype::get_kerning(const std::string::value_type &lchar, con
 	return float(kerning.x) / 64.0f;
 }
 
-float FontEngine_Freetype::get_advance_x(const std::string::value_type &ch)
+GlyphMetrics FontEngine_Freetype::get_glyph_metrics(unsigned int glyph)
 {
-	FT_UInt glyph_index = FT_Get_Char_Index( face, FT_ULong(ch) );
+	FT_UInt glyph_index = FT_Get_Char_Index(face, FT_ULong(glyph));
 
 	int error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
 	if ( error )
@@ -188,7 +188,17 @@ float FontEngine_Freetype::get_advance_x(const std::string::value_type &ch)
 		throw Exception("freetype: error loading glyph");
 	}
 
-	return float(face->glyph->advance.x) / 64.0f;
+	FT_GlyphSlot slot = face->glyph;
+	GlyphMetrics metrics;
+	// Note, these values have not been checked
+	metrics.black_box.left = slot->matrics.horiBearingX / 64.0f;
+	metrics.black_box.top = slot->matrics.horiBearingY / 64.0f;
+	metrics.black_box.right = font_buffer.metrics.black_box.left + slot->matrics.width / 64.0f;
+	metrics.black_box.bottom = font_buffer.metrics.black_box.top + slot->matrics.height / 64.0f;
+	metrics.advance.width = slot->advance.x / 64.0f;
+	metrics.advance.height = slot->advance.y / 64.0f;
+
+	return metrics;
 }
 
 Size FontEngine_Freetype::get_size(const std::string &text, int pos)
@@ -217,7 +227,7 @@ Size FontEngine_Freetype::get_size(const std::string &text, int pos)
 /////////////////////////////////////////////////////////////////////////////
 // FontEngine_Freetype Operations:
 
-Shape2D FontEngine_Freetype::load_glyph_outline(int c, int &out_advance_x)
+Shape2D FontEngine_Freetype::load_glyph_outline(int c, GlyphMetrics &out_glyph_metrics)
 {
 	out_advance_x = 0;
 
@@ -296,7 +306,7 @@ Shape2D FontEngine_Freetype::load_glyph_outline(int c, int &out_advance_x)
 
 	FT_Done_Glyph(glyph);
 
-	out_advance_x = get_advance_x( c );
+	out_advance_x = get_glyph_metrics(c);
 
 	return outline;
 }
@@ -330,8 +340,13 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph_standard(int glyph, bool ant
 
 	font_buffer.glyph = glyph;
 	// Set Increment pen position
-	font_buffer.increment.x = (slot->advance.x+32) >> 6;
-	font_buffer.increment.y = (slot->advance.y+32) >> 6;
+	// Note, these values have not been checked
+	font_buffer.metrics.black_box.left = slot->matrics.horiBearingX / 64.0f;
+	font_buffer.metrics.black_box.top = slot->matrics.horiBearingY / 64.0f;
+	font_buffer.metrics.black_box.right = font_buffer.metrics.black_box.left + slot->matrics.width / 64.0f;
+	font_buffer.metrics.black_box.bottom = font_buffer.metrics.black_box.top + slot->matrics.height / 64.0f;
+	font_buffer.metrics.advance.width = slot->advance.x / 64.0f;
+	font_buffer.metrics.advance.height = slot->advance.y / 64.0f;
 
 	if (error || slot->bitmap.rows == 0 || slot->bitmap.width == 0)
 		return font_buffer;

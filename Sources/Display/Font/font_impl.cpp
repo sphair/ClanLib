@@ -65,7 +65,7 @@ public:
 	FontMetrics get_metrics() {return FontMetrics(); }
 	FontPixelBuffer get_font_glyph_standard(int glyph, bool anti_alias) { return FontPixelBuffer(); }
 	FontPixelBuffer get_font_glyph_subpixel(int glyph) { return FontPixelBuffer(); }
-	Shape2D load_glyph_outline(int glyph_index, int &out_advance_x) { return Shape2D(); }
+	Shape2D load_glyph_outline(int glyph_index, GlyphMetrics &out_glyph_metrics) { return Shape2D(); }
 };
 
 Font_Impl::Font_Impl() : font_engine(NULL)
@@ -196,6 +196,7 @@ Size Font_Impl::get_text_size(GraphicContext &gc, const std::string &text)
 	return glyph_cache.get_text_size(font_engine, gc, text);
 }
 
+
 FontMetrics Font_Impl::get_font_metrics()
 {
 	return glyph_cache.get_font_metrics();
@@ -298,7 +299,7 @@ void Font_Impl::load_font( Canvas &canvas, Sprite &sprite, const std::string &gl
 		Point offset(sprite_frame.offset);
 		offset.y -= glyph_cache.font_metrics.get_ascent();
 
-		glyph_cache.insert_glyph(canvas, glyph, sub_texture, offset, increment);
+		glyph_cache.insert_glyph(canvas, glyph, sub_texture, offset, GlyphMetrics(Rectf(offset.x, offset.y, Sizef(increment.x, increment.y)), Sizef(increment.x, increment.y)));
 
 		sprite_index++;
 	}
@@ -309,7 +310,8 @@ void Font_Impl::load_font( Canvas &canvas, Sprite &sprite, const std::string &gl
 	{
 		FontPixelBuffer pb;
 		pb.empty_buffer = true;
-		pb.increment.x = spacelen;
+		pb.metrics.advance.width = spacelen;
+		pb.metrics.black_box.right = spacelen;
 		pb.glyph = ' ';
 		glyph_cache.insert_glyph(canvas, pb);
 

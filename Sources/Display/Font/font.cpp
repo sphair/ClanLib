@@ -220,6 +220,19 @@ bool Font::is_null() const
 /////////////////////////////////////////////////////////////////////////////
 // Font Operations:
 
+void Font::draw_glyph(Canvas &canvas, const Pointf &position, unsigned int glyph, const Colorf &color)
+{
+	if (impl)
+		impl->glyph_cache.draw_glyph(impl->font_engine, canvas, position, glyph, color);
+}
+
+GlyphMetrics Font::get_glyph_metrics(Canvas &canvas, unsigned int glyph)
+{
+	if (impl)
+		return impl->glyph_cache.get_glyph_metrics(impl->font_engine, canvas, glyph);
+	return GlyphMetrics();
+}
+
 void Font::draw_text(Canvas &canvas, float dest_x, float dest_y, const std::string &text, const Colorf &color)
 {
 	if (impl)

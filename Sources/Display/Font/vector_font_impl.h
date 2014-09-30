@@ -31,6 +31,7 @@
 #pragma once
 
 #include "API/Display/Font/font_metrics.h"
+#include "API/Display/Font/glyph_metrics.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/2D/shape2d.h"
 #include "API/Display/Render/texture_2d.h"
@@ -68,6 +69,8 @@ public:
 
 	/// \brief Calculate size of text string.
 	Size get_text_size(GraphicContext &gc, const std::string &text);
+
+	GlyphMetrics get_glyph_metrics(Canvas &canvas, unsigned int glyph);
 
 	/// \brief Set to draw filled (default)
 	void set_filled(bool enable);
@@ -111,10 +114,7 @@ private:
 		Rectf calculated_bounding_rect;	// texture_positions calculated using this rect
 		Rectf calculated_texture_rect;	// texture_positions calculated using this rect
 
-		//Note advance_x is wrong.  For freetype, it should use...
-		//out_interspacing_x[i] = font_engine->get_advance_x( text[i] );
-		//out_interspacing_x[i] += font_engine->get_kerning( text[i], text[i+1] );
-		int advance_x;
+		GlyphMetrics glyph_metrics;
 	};
 	
 	void draw_prim_array(Canvas &canvas, vector_glyph &vg, const Colorf &color);

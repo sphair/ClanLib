@@ -264,8 +264,11 @@ FontPixelBuffer FontEngine_Cocoa::get_font_glyph_lcd(int glyph)
 	font_buffer.offset.x = bbox.origin.x;
 	font_buffer.offset.y = -bbox.origin.y - bbox.size.height;
 	font_buffer.empty_buffer = false;
-    font_buffer.increment.x = advance.width;
-    font_buffer.increment.y = advance.height;
+
+	font_buffer.metrics.advance.width = advance.width;
+	font_buffer.metrics.advance.height = advance.width;
+	//FIXME = font_buffer.metrics.black_box
+	
 	return font_buffer;
 }
 
@@ -278,13 +281,14 @@ FontPixelBuffer FontEngine_Cocoa::get_empty_font_glyph(int glyph)
     CGGlyph cgglyph = glyph;
     CGSize advance;
     CTFontGetAdvancesForGlyphs(handle, kCTFontDefaultOrientation, &cgglyph, &advance, 1);
-    font_buffer.increment.x = advance.width;
-    font_buffer.increment.y = advance.height;
+	font_buffer.metrics.advance.width = advance.width;
+	font_buffer.metrics.advance.height = advance.width;
+	//FIXME = font_buffer.metrics.black_box
     
 	return font_buffer;
 }
 
-Shape2D FontEngine_Cocoa::load_glyph_outline(int c, int &out_advance_x)
+Shape2D FontEngine_Cocoa::load_glyph_outline(int c, GlyphMetrics &out_glyph_metrics)
 {
 	throw Exception("Implement Me");
 }

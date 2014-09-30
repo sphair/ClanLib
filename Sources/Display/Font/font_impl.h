@@ -31,6 +31,7 @@
 #pragma once
 
 #include "API/Display/Font/font_metrics.h"
+#include "API/Display/Font/glyph_metrics.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/2D/shape2d.h"
 #include "API/Display/Render/texture_2d.h"
@@ -49,7 +50,6 @@ public:
 	Font_Impl();
 	~Font_Impl();
 	
-
 	void load_font( GraphicContext &context, const FontDescription &desc, const std::string &filename);
 	void load_font( GraphicContext &context, const FontDescription &desc, const std::string &filename, FileSystem& fs);
 	void load_font( Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics);
@@ -61,11 +61,12 @@ public:
 	/// \brief Loads a font from a XML resource definition
 	static Font load(Canvas &canvas, const FontDescription &reference_desc, const std::string &id, const XMLResourceDocument &doc, std::function<Resource<Sprite>(Canvas &, const std::string &)> cb_get_sprite);
 
+	GlyphCache glyph_cache;
+	FontEngine *font_engine;
+
 private:
 	void free_font();
 
-	FontEngine *font_engine;
-	GlyphCache glyph_cache;
 };
 
 }

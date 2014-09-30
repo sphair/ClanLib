@@ -287,6 +287,7 @@ clanDisplay_includes = \
 	Display/Collision/collision_outline.h \
 	Display/Font/font.h \
 	Display/Font/font_metrics.h \
+	Display/Font/glyph_metrics.h \
 	Display/Font/vector_font.h \
 	Display/Font/font_description.h \
 	Display/ShaderEffect/shader_effect_description.h \

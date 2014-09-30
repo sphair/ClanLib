@@ -108,6 +108,12 @@ public:
 	/// \brief Retrieves font metrics description for the selected font.
 	FontMetrics get_font_metrics();
 
+	/// \brief Gets the glyph metrics
+	///
+	/// \param glyph = The glyph to get
+	/// \return The glyph metrics
+	GlyphMetrics get_glyph_metrics(Canvas &canvas, unsigned int glyph);
+
 /// \}
 /// \name Operations
 /// \{

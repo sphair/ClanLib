@@ -29,6 +29,7 @@
 #pragma once
 
 #include "API/Display/Font/font.h"
+#include "API/Display/Font/glyph_metrics.h"
 #include "API/Display/Font/font_metrics.h"
 #include "API/Display/Render/texture.h"
 #include "API/Display/2D/texture_group.h"
@@ -70,11 +71,8 @@ public:
 	    y = pos_y + pixelbuffer.offset.y*/
 	Point offset;
 
-	/// \brief Increment to draw the next glyph
-	/** For example:
-	    pos_x += pixelbuffer.increment.x;
-	    pos_y += pixelbuffer.increment.y;*/
-	Point increment;
+	GlyphMetrics metrics;
+
 };
 
 class GlyphCache
@@ -100,7 +98,9 @@ public:
 /// \name Operations
 /// \{
 public:
-
+	GlyphMetrics get_glyph_metrics(FontEngine *font_engine, Canvas &canvas, unsigned int glyph);
+	void draw_glyph(FontEngine *font_engine, Canvas &canvas, const Pointf &position, unsigned int glyph, const Colorf &color);
+	
 	/// \brief Print text on gc.
 	void draw_text(FontEngine *font_engine,Canvas &canvas, float xpos, float ypos, const std::string &text, const Colorf &color);
 
@@ -114,7 +114,7 @@ public:
 
 	int get_character_index(FontEngine *font_engine, GraphicContext &gc, const std::string &text, const Point &point);
 
-	void insert_glyph(GraphicContext &gc, unsigned int glyph, Subtexture &sub_texture, const Point &offset, const Point &increment);
+	void insert_glyph(GraphicContext &gc, unsigned int glyph, Subtexture &sub_texture, const Point &offset, const GlyphMetrics &glyph_metrics);
 	void insert_glyph(FontEngine *font_engine, GraphicContext &gc, int glyph);
 	void insert_glyph(GraphicContext &gc, FontPixelBuffer &pb);
 	void insert_glyph(FontEngine *font_engine, GraphicContext &gc, const std::string &text);

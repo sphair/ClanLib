@@ -256,8 +256,12 @@ FontPixelBuffer FontEngine_Win32::get_font_glyph_lcd(int glyph)
 	font_buffer.offset.x = -cursor.x;
 	font_buffer.offset.y = -cursor.y;
 	font_buffer.empty_buffer = false;
-	font_buffer.increment.x = glyph_metrics.gmCellIncX;
-	font_buffer.increment.y = glyph_metrics.gmCellIncY;
+	font_buffer.metrics.advance.width = glyph_metrics.gmCellIncX;
+	font_buffer.metrics.advance.height = glyph_metrics.gmCellIncY;
+	font_buffer.metrics.black_box.left = glyph_metrics.gmptGlyphOrigin.x;
+	font_buffer.metrics.black_box.top = glyph_metrics.gmptGlyphOrigin.y;
+	font_buffer.metrics.black_box.right = font_buffer.metrics.black_box.left + glyph_metrics.gmBlackBoxX;
+	font_buffer.metrics.black_box.bottom = font_buffer.metrics.black_box.top + glyph_metrics.gmBlackBoxY;
 	return font_buffer;
 }
 
@@ -294,8 +298,12 @@ FontPixelBuffer FontEngine_Win32::get_font_glyph_gray8(int glyph)
 		font_buffer.offset.x = glyph_metrics.gmptGlyphOrigin.x;
 		font_buffer.offset.y = -glyph_metrics.gmptGlyphOrigin.y;
 		font_buffer.empty_buffer = false;
-		font_buffer.increment.x = glyph_metrics.gmCellIncX;
-		font_buffer.increment.y = glyph_metrics.gmCellIncY;
+		font_buffer.metrics.advance.width = glyph_metrics.gmCellIncX;
+		font_buffer.metrics.advance.height = glyph_metrics.gmCellIncY;
+		font_buffer.metrics.black_box.left = glyph_metrics.gmptGlyphOrigin.x;
+		font_buffer.metrics.black_box.top = glyph_metrics.gmptGlyphOrigin.y;
+		font_buffer.metrics.black_box.right = font_buffer.metrics.black_box.left + glyph_metrics.gmBlackBoxX;
+		font_buffer.metrics.black_box.bottom = font_buffer.metrics.black_box.top + glyph_metrics.gmBlackBoxY;
 		return font_buffer;
 	}
 	else
@@ -336,8 +344,12 @@ FontPixelBuffer FontEngine_Win32::get_font_glyph_mono(int glyph)
 		font_buffer.offset.x = glyph_metrics.gmptGlyphOrigin.x;
 		font_buffer.offset.y = -glyph_metrics.gmptGlyphOrigin.y;
 		font_buffer.empty_buffer = false;
-		font_buffer.increment.x = glyph_metrics.gmCellIncX;
-		font_buffer.increment.y = glyph_metrics.gmCellIncY;
+		font_buffer.metrics.advance.width = glyph_metrics.gmCellIncX;
+		font_buffer.metrics.advance.height = glyph_metrics.gmCellIncY;
+		font_buffer.metrics.black_box.left = glyph_metrics.gmptGlyphOrigin.x;
+		font_buffer.metrics.black_box.top = glyph_metrics.gmptGlyphOrigin.y;
+		font_buffer.metrics.black_box.right = font_buffer.metrics.black_box.left + glyph_metrics.gmBlackBoxX;
+		font_buffer.metrics.black_box.bottom = font_buffer.metrics.black_box.top + glyph_metrics.gmBlackBoxY;
 		return font_buffer;
 	}
 	else
@@ -385,13 +397,8 @@ FontPixelBuffer FontEngine_Win32::get_empty_font_glyph(int glyph)
 	ABC abc = { 0 };
 	if (GetCharABCWidths(dc, glyph, glyph, &abc))
 	{
-		font_buffer.increment.x = abc.abcA + abc.abcB + abc.abcC;
-		font_buffer.increment.y = 0;
-	}
-	else
-	{
-		font_buffer.increment.x = 0;
-		font_buffer.increment.y = 0;
+		font_buffer.metrics.advance.width = abc.abcA + abc.abcB + abc.abcC;
+		font_buffer.metrics.black_box.right = font_buffer.metrics.advance.width;
 	}
 
 	SelectObject(dc, old_font);
@@ -466,9 +473,10 @@ int FontEngine_Win32::decode_charset(FontDescription::Charset selected_charset)
 
 }
 
-Shape2D FontEngine_Win32::load_glyph_outline(int glyph, int &out_advance_x)
+Shape2D FontEngine_Win32::load_glyph_outline(int glyph, GlyphMetrics &out_glyph_metrics)
 {
-	out_advance_x = 0;
+	out_glyph_metrics = GlyphMetrics();
+
 	GLYPHMETRICS glyph_metrics = { 0 };
 	MAT2 matrix = { 0 };
 	matrix.eM11.value = 1;
@@ -504,7 +512,12 @@ Shape2D FontEngine_Win32::load_glyph_outline(int glyph, int &out_advance_x)
 
 	if (glyph_buffer.is_null())
 	{
-		out_advance_x = glyph_metrics.gmCellIncX;
+		out_glyph_metrics.advance.width = glyph_metrics.gmCellIncX;
+		out_glyph_metrics.advance.height = glyph_metrics.gmCellIncY;
+		out_glyph_metrics.black_box.left = glyph_metrics.gmptGlyphOrigin.x;
+		out_glyph_metrics.black_box.top = glyph_metrics.gmptGlyphOrigin.y;
+		out_glyph_metrics.black_box.right = out_glyph_metrics.black_box.left + glyph_metrics.gmBlackBoxX;
+		out_glyph_metrics.black_box.bottom = out_glyph_metrics.black_box.top + glyph_metrics.gmBlackBoxY;
 		return Shape2D();
 	}
 
@@ -599,7 +612,13 @@ Shape2D FontEngine_Win32::load_glyph_outline(int glyph, int &out_advance_x)
 		outline.add_path(contour);
 	}
 
-	out_advance_x = glyph_metrics.gmCellIncX;
+	out_glyph_metrics.advance.width = glyph_metrics.gmCellIncX;
+	out_glyph_metrics.advance.height = glyph_metrics.gmCellIncY;
+	out_glyph_metrics.black_box.left = glyph_metrics.gmptGlyphOrigin.x;
+	out_glyph_metrics.black_box.top = glyph_metrics.gmptGlyphOrigin.y;
+	out_glyph_metrics.black_box.right = out_glyph_metrics.black_box.left + glyph_metrics.gmBlackBoxX;
+	out_glyph_metrics.black_box.bottom = out_glyph_metrics.black_box.top + glyph_metrics.gmBlackBoxY;
+
 	return outline;
 }
 

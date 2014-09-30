@@ -27,57 +27,27 @@
 **    Mark Page
 */
 
+
 #pragma once
 
-#include <memory>
-#include "API/Display/Image/pixel_buffer.h"
-#include "API/Display/Font/glyph_metrics.h"
+#include "../../Core/Math/rect.h"
 
 namespace clan
 {
+/// \addtogroup clanDisplay_Font clanDisplay Font
+/// \{
 
-class FontMetrics;
-class FontPixelBuffer;
-class Colorf;
-class Shape2D;
-
-/// \brief Font pixel buffer format (holds a pixel buffer containing a glyph)
-class FontPixelBuffer
+/// \brief Glyph metrics class.
+class GlyphMetrics
 {
 public:
-	FontPixelBuffer() : glyph(0), empty_buffer(true) { };
-
-	/// \brief Glyph this pixel buffer refers to. 0 = Glyph if not valid
-	unsigned int glyph;
-
-	/// \brief True when the pixel buffer is empty
-	bool empty_buffer;
-
-	/// \brief The pixel buffer containing the glyph
-	PixelBuffer buffer;
-
-	/// \brief The rect containing the image inside "buffer"
-	Rect buffer_rect;
-
-	/// \brief Offset to draw the font to buffer
-	/** For example:
-	    x = pos_x + pixelbuffer.offset.x
-	    y = pos_y + pixelbuffer.offset.y*/
-	Point offset;
-
-	GlyphMetrics metrics;
-};
-
-class FontEngine
-{
-public:
-	virtual ~FontEngine() { }
-	virtual FontMetrics get_metrics() = 0;
-
-	virtual FontPixelBuffer get_font_glyph_standard(int glyph, bool anti_alias) = 0;
-	virtual FontPixelBuffer get_font_glyph_subpixel(int glyph) = 0;
-	virtual Shape2D load_glyph_outline(int glyph_index, GlyphMetrics &out_glyph_metrics) = 0;
-
+	GlyphMetrics() {};
+	GlyphMetrics(Rectf &black_box, Sizef &advance) : black_box(black_box), advance(advance) {}
+	Rectf black_box;	//!< The coordinates of the upper left corner and the size of the smallest rectangle that completely encloses the glyph
+	Sizef advance;		//!< The distance from the origin of the current character cell to the origin of the next character cell
 };
 
 }
+
+/// \}
+

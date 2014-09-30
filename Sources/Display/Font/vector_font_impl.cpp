@@ -121,6 +121,12 @@ FontMetrics VectorFont_Impl::get_font_metrics()
 /////////////////////////////////////////////////////////////////////////////
 // VectorFont_Impl Operations:
 
+GlyphMetrics VectorFont_Impl::get_glyph_metrics(Canvas &canvas, unsigned int glyph)
+{
+	store_in_char_cache(glyph);
+	return char_cache[glyph].glyph_metrics;
+}
+
 void VectorFont_Impl::draw_text(Canvas &canvas, float x, float y, const std::string &text, const Colorf &color)
 {
 	if (text.length() == 0)
@@ -178,12 +184,14 @@ void VectorFont_Impl::get_glyphs(
 	float *out_interspacing_x,
 	float *out_interspacing_y)
 {
+	//TODO: This function is totally unicode broken
+
 	for( unsigned int i=0; i<text.length(); i++ )
 	{
 		store_in_char_cache(text[i]);
 		
 		out_glyphs[i] = text[i];
-		out_interspacing_x[i] = char_cache[text[i]].advance_x;
+		out_interspacing_x[i] = char_cache[text[i]].glyph_metrics.advance.width;
 	}
 }
 
@@ -191,10 +199,10 @@ void VectorFont_Impl::store_in_char_cache(unsigned int glyph)
 {
 	if( char_cache.find(glyph) == char_cache.end() )
 	{
-		int out_advance_x;
-		Shape2D outline = font_engine->load_glyph_outline(glyph, out_advance_x);
+		GlyphMetrics glyph_metrics;
+		Shape2D outline = font_engine->load_glyph_outline(glyph, glyph_metrics);
 		vector_glyph &vg = char_cache[glyph];
-		vg.advance_x = out_advance_x;
+		vg.glyph_metrics = glyph_metrics;
 		outline.get_triangles(vg.primitives_array);
 		outline.get_outline(vg.primitives_array_outline);
 	}
