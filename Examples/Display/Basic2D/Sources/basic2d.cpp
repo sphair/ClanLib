@@ -78,14 +78,19 @@ int Basic2D::start(const std::vector<std::string> &args)
 		// Show ellipse
 		clan::Sizef shape_size(400.0f, 300.0f);
 		clan::Rectf shape_rect((canvas.get_width() - shape_size.width) / 2.0f, (canvas.get_height() - shape_size.height) / 2.0f, shape_size);
-
-		//clan::Path path = clan::Path::ellipse(clan::Pointf(canvas.get_width() / 2.0f, canvas.get_height() / 2.0f), clan::Sizef(300.0f, 200.0f));
 		clan::Path path = clan::Path::rect(shape_rect, clan::Sizef(32.0f, 32.0f));
 		path.transform(clan::Mat3f::translate(-shape_rect.get_center()));
 		path.transform(clan::Mat3f::rotate(clan::Angle(sin_count * 10.0f, clan::angle_degrees)));
 		path.transform(clan::Mat3f::translate(shape_rect.get_center()));
 		clan::Brush brush = clan::Brush::solid_rgba8(255, 0, 255, 64);
 		canvas.fill(path, brush);
+		path = clan::Path::glyph(font, 'G');
+		path.transform(clan::Mat3f::rotate(clan::Angle(-sin_count * 10.0f, clan::angle_degrees)));
+		path.transform(clan::Mat3f::scale(10.0f, 10.0f));
+		path.transform(clan::Mat3f::translate(200, 300));
+		brush = clan::Brush::solid_rgba8(0, 255, 0, 255);
+		canvas.fill(path, brush);
+
 
 		std::string text("Welcome to the ClanLib SDK");
 		clan::Size text_size = font.get_text_size(canvas, text);
@@ -102,7 +107,7 @@ int Basic2D::start(const std::vector<std::string> &args)
 		// Draw a rectangle in the center of the screen
 		// going from (240, 140) -> (440, 340) _not_ including the 
 		// pixels in the right-most column and bottom-most row (440, 340)
-		canvas.fill_rect(clan::Rectf(240.0f, 140.0f, 440.0f, 340.0f), clan::Colorf::white);
+		//canvas.fill_rect(clan::Rectf(240.0f, 140.0f, 440.0f, 340.0f), clan::Colorf::white);
 
 		// Frame the rectangle with red lines
 		canvas.draw_box(240.0f, 140.0f, 440.0f, 340.0f, clan::Colorf(1.0f, 0.0f, 0.0f));

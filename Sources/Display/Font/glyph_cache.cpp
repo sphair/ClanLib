@@ -176,6 +176,11 @@ GlyphMetrics GlyphCache::get_glyph_metrics(FontEngine *font_engine, Canvas &canv
 	return GlyphMetrics();
 }
 
+Path GlyphCache::get_glyph_path(FontEngine *font_engine, unsigned int glyph)
+{
+	return font_engine->load_glyph_path(glyph);
+}
+
 int GlyphCache::get_character_index(FontEngine *font_engine, GraphicContext &gc, const std::string &text, const Point &point)
 {
 	int dest_x = 0;

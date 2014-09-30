@@ -36,7 +36,7 @@
 
 namespace clan
 {
-	class CanvasText;
+	class Font;
 	class PathImpl;
 
 	enum class PathFillMode
@@ -59,7 +59,6 @@ namespace clan
 		void bezier_to(const Pointf &control, const Pointf &point);
 		void bezier_to(const Pointf &control1, const Pointf &control2, const Pointf &point);
 		void close();
-		void text(const CanvasText &text);
 		void transform(const Mat3f &transform);
 
 		static Path rect(const Rectf &box);
@@ -73,6 +72,9 @@ namespace clan
 		static Path ellipse(float center_x, float center_y, float radius_x, float radius_y) { return Path::ellipse(Pointf(center_x, center_y), Sizef(radius_x, radius_y)); }
 		static Path circle(const Pointf &center, float radius) { return Path::ellipse(center, Sizef(radius, radius)); }
 		static Path ellipse(const Pointf &center, const Sizef &radius);
+
+		// This function is to assist in debugging, it may be removed in the future. Don't use at the moment.
+		static Path glyph(Font &font, unsigned int glyph);
 
 		std::shared_ptr<PathImpl> get_impl() const { return impl; }
 

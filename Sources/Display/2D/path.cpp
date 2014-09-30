@@ -30,6 +30,7 @@
 #include "Display/precomp.h"
 #include "API/Display/2D/path.h"
 #include "path_impl.h"
+#include "..\Font\font_impl.h"
 
 namespace clan
 {
@@ -81,8 +82,11 @@ namespace clan
 		}
 	}
 
-	void Path::text(const CanvasText &text)
+	Path Path::glyph(Font &font, unsigned int glyph)
 	{
+		if (!font.impl)
+			return Path();
+		return font.impl->glyph_cache.get_glyph_path(font.impl->font_engine, glyph);
 	}
 
 	Path Path::rect(const Rectf &box)

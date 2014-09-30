@@ -35,6 +35,7 @@
 #include "API/Display/2D/color.h"
 #include "font_engine_freetype.h"
 #include "API/Core/IOData/iodevice.h"
+#include "API/Display/2D/path.h"
 
 namespace clan
 {
@@ -226,6 +227,12 @@ Size FontEngine_Freetype::get_size(const std::string &text, int pos)
 
 /////////////////////////////////////////////////////////////////////////////
 // FontEngine_Freetype Operations:
+
+Path FontEngine_Freetype::load_glyph_path(int glyph_index)
+{
+	throw Exception("Implement Me");
+}
+
 
 Shape2D FontEngine_Freetype::load_glyph_outline(int c, GlyphMetrics &out_glyph_metrics)
 {
