@@ -60,10 +60,10 @@ void SvgRenderer::line(clan::DomElement &e)
 {
 	SvgTransformScope transform(canvas, e);
 
-	float x0 = e.get_attribute_float("x0");
-	float y0 = e.get_attribute_float("y0");
-	float x1 = e.get_attribute_float("x1");
-	float y1 = e.get_attribute_float("y1");
+	float x0 = (float)SvgAttributeReader::single_length(e, "x0");
+	float y0 = (float)SvgAttributeReader::single_length(e, "y0");
+	float x1 = (float)SvgAttributeReader::single_length(e, "x1");
+	float y1 = (float)SvgAttributeReader::single_length(e, "y1");
 	render_path(clan::Path::line(x0, y0, x1, y1), e);
 }
 
@@ -76,32 +76,35 @@ void SvgRenderer::rect(clan::DomElement &e)
 {
 	SvgTransformScope transform(canvas, e);
 
-	float x = e.get_attribute_float("x");
-	float y = e.get_attribute_float("y");
-	float width = e.get_attribute_float("width");
-	float height = e.get_attribute_float("height");
-	render_path(clan::Path::rect(x, y, width, height), e);
+	float x = (float)SvgAttributeReader::single_length(e, "x");
+	float y = (float)SvgAttributeReader::single_length(e, "y");
+	float width = (float)SvgAttributeReader::single_length(e, "width");
+	float height = (float)SvgAttributeReader::single_length(e, "height");
+	if (width != 0.0f && height != 0.0f)
+		render_path(clan::Path::rect(x, y, width, height), e);
 }
 
 void SvgRenderer::circle(clan::DomElement &e)
 {
 	SvgTransformScope transform(canvas, e);
 
-	float cx = e.get_attribute_float("cx");
-	float cy = e.get_attribute_float("cy");
-	float r = e.get_attribute_float("r");
-	render_path(clan::Path::circle(cx, cy, r), e);
+	float cx = (float)SvgAttributeReader::single_length(e, "cx");
+	float cy = (float)SvgAttributeReader::single_length(e, "cy");
+	float r = (float)SvgAttributeReader::single_length(e, "r");
+	if (r != 0.0f)
+		render_path(clan::Path::circle(cx, cy, r), e);
 }
 
 void SvgRenderer::ellipse(clan::DomElement &e)
 {
 	SvgTransformScope transform(canvas, e);
 
-	float cx = e.get_attribute_float("cx");
-	float cy = e.get_attribute_float("cy");
-	float rx = e.get_attribute_float("rx");
-	float ry = e.get_attribute_float("ry");
-	render_path(clan::Path::ellipse(cx, cy, rx, ry), e);
+	float cx = (float)SvgAttributeReader::single_length(e, "cx");
+	float cy = (float)SvgAttributeReader::single_length(e, "cy");
+	float rx = (float)SvgAttributeReader::single_length(e, "rx");
+	float ry = (float)SvgAttributeReader::single_length(e, "ry");
+	if (rx != 0.0f && ry != 0.0f)
+		render_path(clan::Path::ellipse(cx, cy, rx, ry), e);
 }
 
 void SvgRenderer::polygon(clan::DomElement &e)
@@ -112,8 +115,222 @@ void SvgRenderer::polygon(clan::DomElement &e)
 void SvgRenderer::path(clan::DomElement &e)
 {
 	SvgTransformScope transform(canvas, e);
+	SvgAttributeReader data(e, "d");
 
-	std::string data = e.get_attribute("d");
+	clan::Path path;
+
+	try
+	{
+		double last_x = 0.0;
+		double last_y = 0.0;
+		double last_cp_x = 0.0f;
+		double last_cp_y = 0.0f;
+
+		while (!data.is_end())
+		{
+			char command = data.get_path_command();
+			bool absolute = (command >= 'A' && command <= 'Z');
+			if (command != 'Z' && command != 'z' && !data.is_number()) data.parse_error("unexpected path data");
+			switch (command)
+			{
+			case 'M': // Move to (abs)
+			case 'm': // Move to (rel)
+			{
+				double mx = data.get_sequence_number();
+				double my = data.get_sequence_number();
+				if (!absolute)
+				{
+					mx += last_x;
+					my += last_y;
+				}
+				path.move_to((float)mx, (float)my);
+				last_x = mx;
+				last_y = my;
+				last_cp_x = last_x;
+				last_cp_y = last_y;
+				while (data.is_sequence_number())
+				{
+					double lx = data.get_sequence_number();
+					double ly = data.get_sequence_number();
+					if (!absolute)
+					{
+						lx += last_x;
+						ly += last_y;
+					}
+					path.line_to((float)lx, (float)ly);
+					last_x = lx;
+					last_y = ly;
+					last_cp_x = last_x;
+					last_cp_y = last_y;
+				}
+				break;
+			}
+			case 'Z': // Close path
+			case 'z':
+				path.close();
+				break;
+			case 'L': // Line to (abs)
+			case 'l': // Line to (rel)
+				do
+				{
+					double x = data.get_sequence_number();
+					double y = data.get_sequence_number();
+					if (!absolute)
+					{
+						x += last_x;
+						y += last_y;
+					}
+					path.line_to((float)x, (float)y);
+					last_x = x;
+					last_y = y;
+					last_cp_x = last_x;
+					last_cp_y = last_y;
+				} while (data.is_sequence_number());
+				break;
+			case 'H': // Horizontal line to (abs)
+			case 'h': // Horizontal line to (rel)
+				do
+				{
+					double x = data.get_sequence_number();
+					if (!absolute)
+						x += last_x;
+					path.line_to((float)x, (float)last_y);
+					last_x = x;
+					last_cp_x = last_x;
+				} while (data.is_sequence_number());
+				break;
+			case 'V': // Vertical line to (abs)
+			case 'v': // Vertical line to (rel)
+				do
+				{
+					double y = data.get_number();
+					if (!absolute)
+						y += last_y;
+					path.line_to((float)last_x, (float)y);
+					last_y = y;
+					last_cp_y = last_y;
+				} while (data.is_sequence_number());
+				break;
+			case 'C': // Cubic curve to (abs)
+			case 'c': // Cubic curve to (rel)
+				do
+				{
+					double x1 = data.get_sequence_number();
+					double y1 = data.get_sequence_number();
+					double x2 = data.get_sequence_number();
+					double y2 = data.get_sequence_number();
+					double x = data.get_sequence_number();
+					double y = data.get_sequence_number();
+					if (!absolute)
+					{
+						x1 += last_x;
+						y1 += last_y;
+						x2 += last_x;
+						y2 += last_y;
+						x += last_x;
+						y += last_y;
+					}
+					path.bezier_to(clan::Pointf((float)x1, (float)y1), clan::Pointf((float)x2, (float)y2), clan::Pointf((float)x, (float)y));
+					last_x = x;
+					last_y = y;
+					last_cp_x = x2;
+					last_cp_y = y2;
+				} while (data.is_sequence_number());
+				break;
+			case 'S': // Shorthand/smooth cubic curve to (abs)
+			case 's': // Shorthand/smooth cubic curve to (rel)
+				do
+				{
+					double x2 = data.get_sequence_number();
+					double y2 = data.get_sequence_number();
+					double x = data.get_sequence_number();
+					double y = data.get_sequence_number();
+					if (!absolute)
+					{
+						x2 += last_x;
+						y2 += last_y;
+						x += last_x;
+						y += last_y;
+					}
+					double x1 = last_cp_x + x - last_x;
+					double y1 = last_cp_y + y - last_y;
+					path.bezier_to(clan::Pointf((float)x1, (float)y1), clan::Pointf((float)x2, (float)y2), clan::Pointf((float)x, (float)y));
+					last_x = x;
+					last_y = y;
+					last_cp_x = x2;
+					last_cp_y = y2;
+				} while (data.is_sequence_number());
+				break;
+			case 'Q': // Quadratic curve to (abs)
+			case 'q': // Quadratic curve to (rel)
+				do
+				{
+					double x1 = data.get_sequence_number();
+					double y1 = data.get_sequence_number();
+					double x = data.get_sequence_number();
+					double y = data.get_sequence_number();
+					if (!absolute)
+					{
+						x1 += last_x;
+						y1 += last_y;
+						x += last_x;
+						y += last_y;
+					}
+					path.bezier_to(clan::Pointf((float)x1, (float)y1), clan::Pointf((float)x, (float)y));
+					last_x = x;
+					last_y = y;
+					last_cp_x = x1;
+					last_cp_y = y1;
+				} while (data.is_sequence_number());
+				break;
+			case 'T': // Shorthand/smooth quadratic curve to (abs)
+			case 't': // Shorthand/smooth quadratic curve to (rel)
+				do
+				{
+					double x = data.get_sequence_number();
+					double y = data.get_sequence_number();
+					if (!absolute)
+					{
+						x += last_x;
+						y += last_y;
+					}
+					double x1 = last_cp_x + x - last_x;
+					double y1 = last_cp_y + y - last_y;
+					path.bezier_to(clan::Pointf((float)x1, (float)y1), clan::Pointf((float)x, (float)y));
+					last_x = x;
+					last_y = y;
+					last_cp_x = x1;
+					last_cp_y = y1;
+				} while (data.is_sequence_number());
+				break;
+			case 'A': // Elliptical arc (abs)
+			case 'a': // Elliptical arc (rel)
+				do
+				{
+					double rx = data.get_sequence_number();
+					double ry = data.get_sequence_number();
+					double x_axis_rotate = data.get_sequence_number();
+					double y_axis_rotate = data.get_sequence_number();
+					double large_arc_flag = data.get_sequence_number();
+					double sweep_flag = data.get_sequence_number();
+					double x = data.get_sequence_number();
+					double y = data.get_sequence_number();
+					last_x = x;
+					last_y = y;
+					last_cp_x = last_x;
+					last_cp_y = last_y;
+				} while (data.is_sequence_number());
+				break;
+			default:
+				break;
+			}
+		}
+	}
+	catch (clan::Exception &)
+	{
+	}
+
+	render_path(path, e);
 }
 
 void SvgRenderer::text(clan::DomElement &e)

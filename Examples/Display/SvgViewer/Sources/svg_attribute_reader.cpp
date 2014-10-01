@@ -29,9 +29,16 @@
 
 #include "precomp.h"
 #include "svg_attribute_reader.h"
+#include "svg.h"
 
 SvgAttributeReader::SvgAttributeReader(const std::string &attr) : attr(attr)
 {
+	eat_whitespace();
+}
+
+SvgAttributeReader::SvgAttributeReader(clan::DomElement &e, const std::string &attr_name)
+{
+	attr = e.get_attribute_ns(Svg::svg_ns, attr_name);
 	eat_whitespace();
 }
 
@@ -91,12 +98,17 @@ bool SvgAttributeReader::is_end() const
 bool SvgAttributeReader::is_number() const
 {
 	// To do: look for invalid suffixes, multiple dots and such
-	return !is_end() && !is_length() && ((attr[pos] >= '0' && attr[pos] <= '9') || attr[pos] == '-' || attr[pos] == '+');
+	return !is_end() && ((attr[pos] >= '0' && attr[pos] <= '9') || attr[pos] == '-' || attr[pos] == '+');
 }
 
 bool SvgAttributeReader::is_length() const
 {
-	return false; // To do: add support for 'px', 'pt', etc. (loot it from old clanCSS)
+	return is_number(); // To do: add support for 'px', 'pt', etc. (loot it from old clanCSS)
+}
+
+bool SvgAttributeReader::is_sequence_number() const
+{
+	return is_operator(",") || is_number();
 }
 
 std::string SvgAttributeReader::peek_keyword()
@@ -176,11 +188,64 @@ double SvgAttributeReader::get_number()
 
 double SvgAttributeReader::get_length()
 {
-	if (!is_length()) throw clan::Exception("Parse error; expected length");
-	return 0.0f; // To do: add support for 'px', 'pt', etc. (loot it from old clanCSS)
+	if (!is_length()) parse_error("expected length");
+	return get_number(); // To do: add support for 'px', 'pt', etc. (loot it from old clanCSS)
 }
 
 void SvgAttributeReader::parse_error(const std::string &reason)
 {
 	throw clan::Exception(reason);
+}
+
+double SvgAttributeReader::single_number(clan::DomElement &e, const std::string &attr_name, double default_value)
+{
+	std::string attr = e.get_attribute_ns(Svg::svg_ns, attr_name);
+
+	SvgAttributeReader reader(attr);
+	if (reader.is_number())
+	{
+		double len = reader.get_number();
+		return reader.is_end() ? len : default_value;
+	}
+	else
+	{
+		return default_value;
+	}
+}
+
+double SvgAttributeReader::single_length(clan::DomElement &e, const std::string &attr_name, double default_value)
+{
+	std::string attr = e.get_attribute_ns(Svg::svg_ns, attr_name);
+
+	SvgAttributeReader reader(attr);
+	if (reader.is_length())
+	{
+		double len = reader.get_length();
+		return reader.is_end() ? len : default_value;
+	}
+	else
+	{
+		return default_value;
+	}
+}
+
+char SvgAttributeReader::get_path_command()
+{
+	if (is_end()) parse_error("expected path command");
+
+	if ((attr[pos] >= 'a' && attr[pos] <= 'z') || (attr[pos] >= 'A' && attr[pos] <= 'Z'))
+	{
+		return attr[pos];
+	}
+	else
+	{
+		parse_error("expected path command");
+		return 0;
+	}
+}
+
+double SvgAttributeReader::get_sequence_number()
+{
+	if (is_operator(",")) get_operator(",");
+	return get_number();
 }

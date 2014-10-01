@@ -33,6 +33,7 @@ class SvgAttributeReader
 {
 public:
 	SvgAttributeReader(const std::string &attr);
+	SvgAttributeReader(clan::DomElement &e, const std::string &attr_name);
 
 	bool is_whitespace() const;
 	bool is_keyword(const std::string &keyword) const;
@@ -40,6 +41,7 @@ public:
 	bool is_end() const;
 	bool is_number() const;
 	bool is_length() const;
+	bool is_sequence_number() const;
 
 	std::string peek_keyword();
 	std::string peek_operator();
@@ -50,7 +52,13 @@ public:
 	double get_number();
 	double get_length();
 
+	char get_path_command();
+	double get_sequence_number();
+
 	void parse_error(const std::string &reason);
+
+	static double single_number(clan::DomElement &e, const std::string &attr_name, double default_value = 0.0);
+	static double single_length(clan::DomElement &e, const std::string &attr_name, double default_value = 0.0);
 
 private:
 	std::string attr;

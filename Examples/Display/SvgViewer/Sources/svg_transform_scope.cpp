@@ -37,7 +37,7 @@ SvgTransformScope::SvgTransformScope(clan::Canvas &canvas, clan::DomElement &e) 
 	{
 		clan::Mat4d mat = clan::Mat4d::identity();
 
-		SvgAttributeReader transform(e.get_attribute("transform"));
+		SvgAttributeReader transform(e, "transform");
 		while (!transform.is_end())
 		{
 			clan::Mat4d t;
