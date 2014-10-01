@@ -111,5 +111,6 @@ namespace clan
 		const PathScanline &scanline;
 		PathFillMode mode;
 		size_t i = 0;
+		int nonzero_rule = 0;
 	};
 }

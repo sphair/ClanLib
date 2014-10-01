@@ -205,42 +205,39 @@ namespace clan
 
 	void PathRasterRange::next()
 	{
+		if (i + 1 >= scanline.edges.size())
+		{
+			found = false;
+			return;
+		}
+
 		if (mode == PathFillMode::alternate)
 		{
-			if (i + 1 >= scanline.edges.size())
-			{
-				found = false;
-				return;
-			}
-
 			x0 = scanline.edges[i].x;
 			x1 = scanline.edges[i + 1].x;
 
 			i += 2;
+			found = true;
 		}
 		else
 		{
-			while (i < scanline.edges.size() && !scanline.edges[i].up_direction) i++;
-			if (i == scanline.edges.size())
-			{
-				found = false;
-				return;
-			}
-			size_t start = i;
+			x0 = scanline.edges[i].x;
+			nonzero_rule += scanline.edges[i].up_direction ? 1 : -1;
+			i++;
 
-			while (i < scanline.edges.size() && scanline.edges[i].up_direction) i++;
-			if (i == scanline.edges.size())
+			while (i < scanline.edges.size())
 			{
-				found = false;
-				return;
-			}
-			size_t end = i;
+				nonzero_rule += scanline.edges[i].up_direction ? 1 : -1;
+				x1 = scanline.edges[i].x;
+				i++;
 
-			x0 = scanline.edges[start].x;
-			x1 = scanline.edges[end].x;
+				if (nonzero_rule == 0)
+				{
+					found = true;
+					return;
+				}
+			}
+			found = false;
 		}
-
-		found = true;
-		return;
 	}
 }
