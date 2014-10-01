@@ -171,11 +171,22 @@ double SvgAttributeReader::get_number()
 {
 	if (!is_number()) parse_error("expected number");
 
-	size_t end_pos = pos;
+	size_t end_pos = pos + 1;
+	bool found_exponent = false;
 	while (end_pos < attr.length())
 	{
-		if (!(attr[pos] >= '0' && attr[pos] <= '9') && attr[pos] != '.' && attr[pos] != '+' && attr[pos] != '-' && attr[pos] != 'e' && attr[pos] != 'E') break;
-		end_pos++;
+		if (!found_exponent && (attr[end_pos] == 'e' || attr[end_pos] == 'E'))
+		{
+			found_exponent = true;
+			end_pos++;
+			if (end_pos < attr.length() && (attr[end_pos] == '+' || attr[end_pos] == '-'))
+				end_pos++;
+		}
+		else
+		{
+			if (!(attr[end_pos] >= '0' && attr[end_pos] <= '9') && attr[end_pos] != '.') break;
+			end_pos++;
+		}
 	}
 
 	double number = clan::StringHelp::text_to_double(attr.substr(pos, end_pos - pos));
@@ -235,7 +246,7 @@ char SvgAttributeReader::get_path_command()
 
 	if ((attr[pos] >= 'a' && attr[pos] <= 'z') || (attr[pos] >= 'A' && attr[pos] <= 'Z'))
 	{
-		return attr[pos];
+		return attr[pos++];
 	}
 	else
 	{

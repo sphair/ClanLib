@@ -35,84 +35,84 @@ public:
 	void visit(clan::DomElement &e);
 
 protected:
-	void a(clan::DomElement &e) { }
-	void altGlyph(clan::DomElement &e) { }
-	void altGlyphDef(clan::DomElement &e) { }
-	void altGlyphItem(clan::DomElement &e) { }
-	void animate(clan::DomElement &e) { }
-	void animateColor(clan::DomElement &e) { }
-	void animateMotion(clan::DomElement &e) { }
-	void animateTransform(clan::DomElement &e) { }
-	void circle(clan::DomElement &e) { }
-	void clipPath(clan::DomElement &e) { }
-	void color_profile(clan::DomElement &e) { }
-	void cursor(clan::DomElement &e) { }
-	void defs(clan::DomElement &e) { }
-	void desc(clan::DomElement &e) { }
-	void ellipse(clan::DomElement &e) { }
-	void feBlend(clan::DomElement &e) { }
-	void feColorMatrix(clan::DomElement &e) { }
-	void feComponentTransfer(clan::DomElement &e) { }
-	void feComposite(clan::DomElement &e) { }
-	void feConvolveMatrix(clan::DomElement &e) { }
-	void feDiffuseLighting(clan::DomElement &e) { }
-	void feDisplacementMap(clan::DomElement &e) { }
-	void feDistantLight(clan::DomElement &e) { }
-	void feFlood(clan::DomElement &e) { }
-	void feFuncA(clan::DomElement &e) { }
-	void feFuncB(clan::DomElement &e) { }
-	void feFuncG(clan::DomElement &e) { }
-	void feFuncR(clan::DomElement &e) { }
-	void feGaussianBlur(clan::DomElement &e) { }
-	void feImage(clan::DomElement &e) { }
-	void feMerge(clan::DomElement &e) { }
-	void feMergeNode(clan::DomElement &e) { }
-	void feMorphology(clan::DomElement &e) { }
-	void feOffset(clan::DomElement &e) { }
-	void fePointLight(clan::DomElement &e) { }
-	void feSpecularLighting(clan::DomElement &e) { }
-	void feSpotLight(clan::DomElement &e) { }
-	void feTile(clan::DomElement &e) { }
-	void feTurbulence(clan::DomElement &e) { }
-	void filter(clan::DomElement &e) { }
-	void font(clan::DomElement &e) { }
-	void font_face(clan::DomElement &e) { }
-	void font_face_format(clan::DomElement &e) { }
-	void font_face_name(clan::DomElement &e) { }
-	void font_face_src(clan::DomElement &e) { }
-	void font_face_uri(clan::DomElement &e) { }
-	void foreignObject(clan::DomElement &e) { }
-	void g(clan::DomElement &e) { }
-	void glyph(clan::DomElement &e) { }
-	void glyphRef(clan::DomElement &e) { }
-	void hkern(clan::DomElement &e) { }
-	void image(clan::DomElement &e) { }
-	void line(clan::DomElement &e) { }
-	void linearGradient(clan::DomElement &e) { }
-	void marker(clan::DomElement &e) { }
-	void mask(clan::DomElement &e) { }
-	void metadata(clan::DomElement &e) { }
-	void missing_glyph(clan::DomElement &e) { }
-	void mpath(clan::DomElement &e) { }
-	void path(clan::DomElement &e) { }
-	void pattern(clan::DomElement &e) { }
-	void polygon(clan::DomElement &e) { }
-	void polyline(clan::DomElement &e) { }
-	void radialGradient(clan::DomElement &e) { }
-	void rect(clan::DomElement &e) { }
-	void script(clan::DomElement &e) { }
-	void set(clan::DomElement &e) { }
-	void stop(clan::DomElement &e) { }
-	void style(clan::DomElement &e) { }
-	void svg(clan::DomElement &e) { }
-	void switch_(clan::DomElement &e) { }
-	void symbol(clan::DomElement &e) { }
-	void text(clan::DomElement &e) { }
-	void textPath(clan::DomElement &e) { }
-	void title(clan::DomElement &e) { }
-	void tref(clan::DomElement &e) { }
-	void tspan(clan::DomElement &e) { }
-	void use(clan::DomElement &e) { }
-	void view(clan::DomElement &e) { }
-	void vkern(clan::DomElement &e) { }
+	virtual void a(clan::DomElement &e) { }
+	virtual void altGlyph(clan::DomElement &e) { }
+	virtual void altGlyphDef(clan::DomElement &e) { }
+	virtual void altGlyphItem(clan::DomElement &e) { }
+	virtual void animate(clan::DomElement &e) { }
+	virtual void animateColor(clan::DomElement &e) { }
+	virtual void animateMotion(clan::DomElement &e) { }
+	virtual void animateTransform(clan::DomElement &e) { }
+	virtual void circle(clan::DomElement &e) { }
+	virtual void clipPath(clan::DomElement &e) { }
+	virtual void color_profile(clan::DomElement &e) { }
+	virtual void cursor(clan::DomElement &e) { }
+	virtual void defs(clan::DomElement &e) { }
+	virtual void desc(clan::DomElement &e) { }
+	virtual void ellipse(clan::DomElement &e) { }
+	virtual void feBlend(clan::DomElement &e) { }
+	virtual void feColorMatrix(clan::DomElement &e) { }
+	virtual void feComponentTransfer(clan::DomElement &e) { }
+	virtual void feComposite(clan::DomElement &e) { }
+	virtual void feConvolveMatrix(clan::DomElement &e) { }
+	virtual void feDiffuseLighting(clan::DomElement &e) { }
+	virtual void feDisplacementMap(clan::DomElement &e) { }
+	virtual void feDistantLight(clan::DomElement &e) { }
+	virtual void feFlood(clan::DomElement &e) { }
+	virtual void feFuncA(clan::DomElement &e) { }
+	virtual void feFuncB(clan::DomElement &e) { }
+	virtual void feFuncG(clan::DomElement &e) { }
+	virtual void feFuncR(clan::DomElement &e) { }
+	virtual void feGaussianBlur(clan::DomElement &e) { }
+	virtual void feImage(clan::DomElement &e) { }
+	virtual void feMerge(clan::DomElement &e) { }
+	virtual void feMergeNode(clan::DomElement &e) { }
+	virtual void feMorphology(clan::DomElement &e) { }
+	virtual void feOffset(clan::DomElement &e) { }
+	virtual void fePointLight(clan::DomElement &e) { }
+	virtual void feSpecularLighting(clan::DomElement &e) { }
+	virtual void feSpotLight(clan::DomElement &e) { }
+	virtual void feTile(clan::DomElement &e) { }
+	virtual void feTurbulence(clan::DomElement &e) { }
+	virtual void filter(clan::DomElement &e) { }
+	virtual void font(clan::DomElement &e) { }
+	virtual void font_face(clan::DomElement &e) { }
+	virtual void font_face_format(clan::DomElement &e) { }
+	virtual void font_face_name(clan::DomElement &e) { }
+	virtual void font_face_src(clan::DomElement &e) { }
+	virtual void font_face_uri(clan::DomElement &e) { }
+	virtual void foreignObject(clan::DomElement &e) { }
+	virtual void g(clan::DomElement &e) { }
+	virtual void glyph(clan::DomElement &e) { }
+	virtual void glyphRef(clan::DomElement &e) { }
+	virtual void hkern(clan::DomElement &e) { }
+	virtual void image(clan::DomElement &e) { }
+	virtual void line(clan::DomElement &e) { }
+	virtual void linearGradient(clan::DomElement &e) { }
+	virtual void marker(clan::DomElement &e) { }
+	virtual void mask(clan::DomElement &e) { }
+	virtual void metadata(clan::DomElement &e) { }
+	virtual void missing_glyph(clan::DomElement &e) { }
+	virtual void mpath(clan::DomElement &e) { }
+	virtual void path(clan::DomElement &e) { }
+	virtual void pattern(clan::DomElement &e) { }
+	virtual void polygon(clan::DomElement &e) { }
+	virtual void polyline(clan::DomElement &e) { }
+	virtual void radialGradient(clan::DomElement &e) { }
+	virtual void rect(clan::DomElement &e) { }
+	virtual void script(clan::DomElement &e) { }
+	virtual void set(clan::DomElement &e) { }
+	virtual void stop(clan::DomElement &e) { }
+	virtual void style(clan::DomElement &e) { }
+	virtual void svg(clan::DomElement &e) { }
+	virtual void switch_(clan::DomElement &e) { }
+	virtual void symbol(clan::DomElement &e) { }
+	virtual void text(clan::DomElement &e) { }
+	virtual void textPath(clan::DomElement &e) { }
+	virtual void title(clan::DomElement &e) { }
+	virtual void tref(clan::DomElement &e) { }
+	virtual void tspan(clan::DomElement &e) { }
+	virtual void use(clan::DomElement &e) { }
+	virtual void view(clan::DomElement &e) { }
+	virtual void vkern(clan::DomElement &e) { }
 };

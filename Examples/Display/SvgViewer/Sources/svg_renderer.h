@@ -46,16 +46,16 @@ public:
 	void render(clan::DomElement &svg_element);
 
 protected:
-	void g(clan::DomElement &e);
-	void line(clan::DomElement &e);
-	void polyline(clan::DomElement &e);
-	void rect(clan::DomElement &e);
-	void circle(clan::DomElement &e);
-	void ellipse(clan::DomElement &e);
-	void polygon(clan::DomElement &e);
-	void path(clan::DomElement &e);
-	void text(clan::DomElement &e);
-	void image(clan::DomElement &e);
+	void g(clan::DomElement &e) override;
+	void line(clan::DomElement &e) override;
+	void polyline(clan::DomElement &e) override;
+	void rect(clan::DomElement &e) override;
+	void circle(clan::DomElement &e) override;
+	void ellipse(clan::DomElement &e) override;
+	void polygon(clan::DomElement &e) override;
+	void path(clan::DomElement &e) override;
+	void text(clan::DomElement &e) override;
+	void image(clan::DomElement &e) override;
 
 private:
 	void render_path(const clan::Path &path, clan::DomElement &e);

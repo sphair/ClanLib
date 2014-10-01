@@ -356,6 +356,6 @@ SvgPaint SvgRenderer::get_paint(clan::DomElement &e)
 {
 	SvgPaint paint;
 	paint.fill = true;
-	paint.brush = clan::Brush::solid_rgb8(150, 240, 150);
+	paint.brush = clan::Brush::solid_rgb8(0, 0, 0);
 	return paint;
 }

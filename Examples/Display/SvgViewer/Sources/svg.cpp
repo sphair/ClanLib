@@ -33,6 +33,7 @@
 
 Svg::Svg(const std::string &filename)
 {
+	xml.load(clan::File(filename), false);
 }
 
 void Svg::render(clan::Canvas &canvas)

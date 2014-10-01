@@ -29,6 +29,7 @@
 
 #include "precomp.h"
 #include "svg_viewer.h"
+#include "svg.h"
 
 int SvgViewer::run(const std::vector<std::string> &args)
 {
@@ -36,7 +37,7 @@ int SvgViewer::run(const std::vector<std::string> &args)
     clan::SlotContainer sc;
 
 	clan::DisplayWindowDescription desc;
-	desc.set_title("ClanLib Basic2D Example");
+	desc.set_title("ClanLib SVG Viewer Example");
 	desc.set_size(clan::Size(640, 480), true);
 	desc.set_allow_resize(true);
 
@@ -52,11 +53,14 @@ int SvgViewer::run(const std::vector<std::string> &args)
 		}
 	});
 
-	clan::GameTime game_time;
+	Svg svg("Resources/like3.svg");
 
 	while (!quit)
 	{
-		game_time.update();
+		canvas.clear(clan::Colorf(0.9f, 0.9f, 0.9f));
+		canvas.set_transform(clan::Mat4f::translate(190.0f, 110.0f, 0.0f) * clan::Mat4f::scale(10.0f, 10.0f, 10.0f));
+		svg.render(canvas);
+		canvas.set_transform(clan::Mat4f::identity());
 
 		window.flip(1);
 		clan::KeepAlive::process(0);
