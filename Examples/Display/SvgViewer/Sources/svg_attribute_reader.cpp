@@ -246,7 +246,9 @@ char SvgAttributeReader::get_path_command()
 
 	if ((attr[pos] >= 'a' && attr[pos] <= 'z') || (attr[pos] >= 'A' && attr[pos] <= 'Z'))
 	{
-		return attr[pos++];
+		char command = attr[pos++];
+		eat_whitespace();
+		return command;
 	}
 	else
 	{
