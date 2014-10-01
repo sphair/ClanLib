@@ -35,6 +35,9 @@ public:
 	Svg(const std::string &filename);
 	void render(clan::Canvas &canvas);
 
+	static const std::string svg_ns;   // http://www.w3.org/2000/svg
+	static const std::string xlink_ns; // http://www.w3.org/1999/xlink
+
 private:
 	clan::DomDocument xml;
 };

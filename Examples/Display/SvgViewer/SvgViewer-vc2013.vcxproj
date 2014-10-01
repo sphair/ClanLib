@@ -147,15 +147,19 @@
     </ClCompile>
     <ClCompile Include="Sources\program.cpp" />
     <ClCompile Include="Sources\svg.cpp" />
+    <ClCompile Include="Sources\svg_attribute_reader.cpp" />
     <ClCompile Include="Sources\svg_element_visitor.cpp" />
     <ClCompile Include="Sources\svg_renderer.cpp" />
+    <ClCompile Include="Sources\svg_transform_scope.cpp" />
     <ClCompile Include="Sources\svg_viewer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\precomp.h" />
     <ClInclude Include="Sources\program.h" />
     <ClInclude Include="Sources\svg.h" />
+    <ClInclude Include="Sources\svg_attribute_reader.h" />
     <ClInclude Include="Sources\svg_renderer.h" />
+    <ClInclude Include="Sources\svg_transform_scope.h" />
     <ClInclude Include="Sources\svg_viewer.h" />
     <ClInclude Include="Sources\svg_element_visitor.h" />
   </ItemGroup>

@@ -27,19 +27,32 @@
 **    Mark Page
 */
 
-#include "precomp.h"
-#include "svg.h"
-#include "svg_renderer.h"
+#pragma once
 
-Svg::Svg(const std::string &filename)
+class SvgAttributeReader
 {
-}
+public:
+	SvgAttributeReader(const std::string &attr);
 
-void Svg::render(clan::Canvas &canvas)
-{
-	SvgRenderer renderer(canvas);
-	renderer.render(xml.get_document_element());
-}
+	bool is_whitespace() const;
+	bool is_keyword(const std::string &keyword) const;
+	bool is_operator(const std::string &op) const;
+	bool is_end() const;
+	bool is_number() const;
+	bool is_length() const;
 
-const std::string Svg::svg_ns = "http://www.w3.org/2000/svg";
-const std::string Svg::xlink_ns = "http://www.w3.org/1999/xlink";
+	std::string peek_keyword();
+	std::string peek_operator();
+
+	void eat_whitespace();
+	void get_keyword(const std::string &keyword);
+	void get_operator(const std::string &op);
+	double get_number();
+	double get_length();
+
+	void parse_error(const std::string &reason);
+
+private:
+	std::string attr;
+	size_t pos = 0;
+};

@@ -27,19 +27,17 @@
 **    Mark Page
 */
 
-#include "precomp.h"
-#include "svg.h"
-#include "svg_renderer.h"
+#pragma once
 
-Svg::Svg(const std::string &filename)
+// Applies to: 'a', 'circle', 'clipPath', 'defs', 'ellipse', 'foreignObject', 'g', 'image', 'line', 'path', 'polygon', 'polyline', 'rect', 'switch', 'text', 'use'
+class SvgTransformScope
 {
-}
+public:
+	SvgTransformScope(clan::Canvas &canvas, clan::DomElement &e);
+	~SvgTransformScope();
 
-void Svg::render(clan::Canvas &canvas)
-{
-	SvgRenderer renderer(canvas);
-	renderer.render(xml.get_document_element());
-}
-
-const std::string Svg::svg_ns = "http://www.w3.org/2000/svg";
-const std::string Svg::xlink_ns = "http://www.w3.org/1999/xlink";
+private:
+	clan::Canvas &canvas;
+	clan::Mat4f old_transform;
+	bool transform_active = false;
+};

@@ -29,6 +29,8 @@
 
 #include "precomp.h"
 #include "svg_renderer.h"
+#include "svg_attribute_reader.h"
+#include "svg_transform_scope.h"
 
 SvgRenderer::SvgRenderer(clan::Canvas &canvas) : canvas(canvas)
 {
@@ -46,19 +48,18 @@ void SvgRenderer::render(clan::DomElement &svg_element)
 
 void SvgRenderer::g(clan::DomElement &e)
 {
-	clan::Mat4f old_transform = canvas.get_transform();
-	canvas.mult_transform(get_transform(e));
+	SvgTransformScope transform(canvas, e);
 
 	for (auto child = e.get_first_child_element(); !child.is_null(); child = child.get_next_sibling_element())
 	{
 		visit(child);
 	}
-
-	canvas.set_transform(old_transform);
 }
 
 void SvgRenderer::line(clan::DomElement &e)
 {
+	SvgTransformScope transform(canvas, e);
+
 	float x0 = e.get_attribute_float("x0");
 	float y0 = e.get_attribute_float("y0");
 	float x1 = e.get_attribute_float("x1");
@@ -68,10 +69,13 @@ void SvgRenderer::line(clan::DomElement &e)
 
 void SvgRenderer::polyline(clan::DomElement &e)
 {
+	SvgTransformScope transform(canvas, e);
 }
 
 void SvgRenderer::rect(clan::DomElement &e)
 {
+	SvgTransformScope transform(canvas, e);
+
 	float x = e.get_attribute_float("x");
 	float y = e.get_attribute_float("y");
 	float width = e.get_attribute_float("width");
@@ -81,6 +85,8 @@ void SvgRenderer::rect(clan::DomElement &e)
 
 void SvgRenderer::circle(clan::DomElement &e)
 {
+	SvgTransformScope transform(canvas, e);
+
 	float cx = e.get_attribute_float("cx");
 	float cy = e.get_attribute_float("cy");
 	float r = e.get_attribute_float("r");
@@ -89,6 +95,8 @@ void SvgRenderer::circle(clan::DomElement &e)
 
 void SvgRenderer::ellipse(clan::DomElement &e)
 {
+	SvgTransformScope transform(canvas, e);
+
 	float cx = e.get_attribute_float("cx");
 	float cy = e.get_attribute_float("cy");
 	float rx = e.get_attribute_float("rx");
@@ -98,19 +106,24 @@ void SvgRenderer::ellipse(clan::DomElement &e)
 
 void SvgRenderer::polygon(clan::DomElement &e)
 {
+	SvgTransformScope transform(canvas, e);
 }
 
 void SvgRenderer::path(clan::DomElement &e)
 {
+	SvgTransformScope transform(canvas, e);
+
 	std::string data = e.get_attribute("d");
 }
 
 void SvgRenderer::text(clan::DomElement &e)
 {
+	SvgTransformScope transform(canvas, e);
 }
 
 void SvgRenderer::image(clan::DomElement &e)
 {
+	SvgTransformScope transform(canvas, e);
 }
 
 void SvgRenderer::render_path(const clan::Path &path, clan::DomElement &e)
@@ -122,14 +135,10 @@ void SvgRenderer::render_path(const clan::Path &path, clan::DomElement &e)
 		canvas.stroke(path, paint.pen);
 }
 
-clan::Mat4f SvgRenderer::get_transform(clan::DomElement &e)
-{
-	std::string transform = e.get_attribute("transform");
-	return clan::Mat4f::identity();
-}
-
 SvgPaint SvgRenderer::get_paint(clan::DomElement &e)
 {
 	SvgPaint paint;
+	paint.fill = true;
+	paint.brush = clan::Brush::solid_rgb8(150, 240, 150);
 	return paint;
 }
