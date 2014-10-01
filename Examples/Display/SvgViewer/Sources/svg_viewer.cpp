@@ -38,7 +38,7 @@ int SvgViewer::run(const std::vector<std::string> &args)
 
 	clan::DisplayWindowDescription desc;
 	desc.set_title("ClanLib SVG Viewer Example");
-	desc.set_size(clan::Size(640, 480), true);
+	desc.set_size(clan::Size(1000, 800), true);
 	desc.set_allow_resize(true);
 
 	clan::DisplayWindow window(desc);
@@ -53,7 +53,7 @@ int SvgViewer::run(const std::vector<std::string> &args)
 		}
 	});
 
-	Svg svg("Resources/like3.svg");
+	Svg svg("Resources/holidays.svg");
 
 	while (!quit)
 	{
