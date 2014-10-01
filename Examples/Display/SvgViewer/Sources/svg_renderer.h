@@ -58,10 +58,9 @@ protected:
 	void image(clan::DomElement &e) override;
 
 private:
-	void render_path(const clan::Path &path, clan::DomElement &e);
+	void render_path(clan::Path &path, clan::DomElement &e);
 
 	clan::Mat4f get_transform(clan::DomElement &e);
-	SvgPaint get_paint(clan::DomElement &e);
 
 	clan::Canvas &canvas;
 };

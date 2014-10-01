@@ -343,19 +343,50 @@ void SvgRenderer::image(clan::DomElement &e)
 	SvgTransformScope transform(canvas, e);
 }
 
-void SvgRenderer::render_path(const clan::Path &path, clan::DomElement &e)
+void SvgRenderer::render_path(clan::Path &path, clan::DomElement &e)
 {
-	SvgPaint paint = get_paint(e);
-	if (paint.fill)
-		canvas.fill(path, paint.brush);
-	if (paint.stroke)
-		canvas.stroke(path, paint.pen);
-}
+	/*
+	SvgAttributeReader clip_path(e, "clip-path");
+	SvgAttributeReader clip_rule(e, "clip-rule");
 
-SvgPaint SvgRenderer::get_paint(clan::DomElement &e)
-{
-	SvgPaint paint;
-	paint.fill = true;
-	paint.brush = clan::Brush::solid_rgb8(0, 0, 0);
-	return paint;
+	SvgAttributeReader mask(e, "mask");
+
+	SvgAttributeReader marker(e, "marker"); // shorthand
+	SvgAttributeReader marker_start(e, "marker-start");
+	SvgAttributeReader marker_mid(e, "marker-mid");
+	SvgAttributeReader marker_end(e, "marker-end");
+	*/
+
+	SvgAttributeReader opacity(e, "opacity");
+	SvgAttributeReader visibility(e, "visibility");
+
+	SvgAttributeReader fill(e, "fill");
+	SvgAttributeReader fill_opacity(e, "fill-opacity");
+	SvgAttributeReader fill_rule(e, "fill-rule");
+
+	SvgAttributeReader stroke(e, "stroke");
+	SvgAttributeReader stroke_dasharray(e, "stroke-dasharray");
+	SvgAttributeReader stroke_dashoffset(e, "stroke-dashoffset");
+	SvgAttributeReader stroke_linecap(e, "stroke-linecap");
+	SvgAttributeReader stroke_linejoin(e, "stroke-linejoin");
+	SvgAttributeReader stroke_miterlimit(e, "stroke-miterlimit");
+	SvgAttributeReader stroke_opacity(e, "stroke-opacity");
+	SvgAttributeReader stroke_width(e, "stroke-width");
+
+	if (fill_rule.is_keyword("evenodd"))
+		path.set_fill_mode(clan::PathFillMode::alternate);
+	else
+		path.set_fill_mode(clan::PathFillMode::winding);
+
+	if (!fill.is_keyword("none"))
+	{
+		canvas.fill(path, clan::Brush::solid_rgb8(0, 0, 0));
+	}
+	else if (!stroke.is_keyword("none"))
+	{
+		double width = 1.0;
+		if (stroke_width.is_length())
+			width = stroke_width.get_length();
+		canvas.stroke(path, clan::Pen(clan::Colorf::white, (float)width));
+	}
 }
