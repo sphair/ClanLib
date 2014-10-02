@@ -188,6 +188,7 @@ clanCore_includes = \
 	Core/Math/triangle_math.h \
 	Core/Math/line_segment.h \
 	Core/Math/vec2.h \
+	Core/Math/easing.h \
 	Core/core_iostream.h \
 	Core/System/runnable.h \
 	Core/System/service.h \

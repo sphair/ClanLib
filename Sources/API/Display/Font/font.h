@@ -209,6 +209,12 @@ public:
 	/// \return The glyph metrics
 	GlyphMetrics get_glyph_metrics(Canvas &canvas, unsigned int glyph);
 
+	/// \brief Gets the glyph metrics
+	///
+	/// \param glyph = The glyph to get
+	/// \return The glyph metrics
+	GlyphMetrics get_glyph_metrics(Canvas &canvas, const std::string &string);
+
 	/// \brief Retrieves font metrics description for the selected font.
 	FontMetrics get_font_metrics();
 
@@ -221,6 +227,12 @@ public:
 	/// \param point = The point
 	/// \return The character index. -1 = Not at specified point
 	int get_character_index(Canvas &canvas, const std::string &text, const Point &point);
+
+	// Finds the offset for the last visible character when clipping the head
+	size_t clip_from_left(Canvas &canvas, const std::string &text, float width);
+
+	// Finds the offset for the first visible character when clipping the tail
+	size_t clip_from_right(Canvas &canvas, const std::string &text, float width);
 
 /// \}
 /// \name Implementation

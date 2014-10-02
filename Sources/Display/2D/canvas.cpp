@@ -687,6 +687,16 @@ void Canvas::stroke_and_fill(const Path &path, const Pen &pen, const Brush &brus
 	batcher->stroke(*this, path, pen);
 }
 
+void text(const Font &font, const Pointf &position, const std::string &text, const Brush &brush)
+{
+	// STUB!
+}
+void text(const Font &font, float x, float y, const std::string &text, const Brush &brush)
+{
+	// STUB!
+
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // Canvas Implementation:
 

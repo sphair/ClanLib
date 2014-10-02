@@ -173,6 +173,7 @@
 #include "Core/Math/intersection_test.h"
 #include "Core/Math/aabb.h"
 #include "Core/Math/obb.h"
+#include "Core/Math/easing.h"
 #include "Core/Crypto/random.h"
 #include "Core/Crypto/secret.h"
 #include "Core/Crypto/sha1.h"

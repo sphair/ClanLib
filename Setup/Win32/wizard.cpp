@@ -218,6 +218,14 @@ Workspace Wizard::create_workspace()
 		libs_list_release,
 		libs_list_debug);
 
+	Project clanUI(
+		"UI",
+		"clanUI",
+		"ui.h",
+		libs_list_shared,
+		libs_list_release,
+		libs_list_debug);
+
 	Project clanD3D(
 		"D3D",
 		"clanD3D",
@@ -233,6 +241,7 @@ Workspace Wizard::create_workspace()
 	workspace.projects.push_back(clanDisplay);
 	workspace.projects.push_back(clanSound);
 	workspace.projects.push_back(clanGL);
+	workspace.projects.push_back(clanUI);
 	workspace.projects.push_back(clanD3D);
 
 	return workspace;

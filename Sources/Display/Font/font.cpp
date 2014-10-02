@@ -233,6 +233,73 @@ GlyphMetrics Font::get_glyph_metrics(Canvas &canvas, unsigned int glyph)
 	return GlyphMetrics();
 }
 
+GlyphMetrics Font::get_glyph_metrics(Canvas &canvas, const std::string &string)
+{
+	GlyphMetrics total_metrics;
+
+	if (!impl)
+		return total_metrics;
+
+	UTF8_Reader reader(string.data(), string.length());
+	while (!reader.is_end())
+	{
+		unsigned int glyph = reader.get_char();
+		reader.next();
+
+		GlyphMetrics metrics = impl->glyph_cache.get_glyph_metrics(impl->font_engine, canvas, glyph);
+
+		total_metrics.black_box.left = clan::min(total_metrics.black_box.left, metrics.black_box.left + total_metrics.advance.width);
+		total_metrics.black_box.top = clan::min(total_metrics.black_box.top, metrics.black_box.top + total_metrics.advance.height);
+		total_metrics.black_box.right = clan::max(total_metrics.black_box.right, metrics.black_box.right + total_metrics.advance.width);
+		total_metrics.black_box.bottom = clan::max(total_metrics.black_box.bottom, metrics.black_box.bottom + total_metrics.advance.height);
+		total_metrics.advance += metrics.advance;
+	}
+	return total_metrics;
+}
+
+size_t Font::clip_from_left(Canvas &canvas, const std::string &text, float width)
+{
+	float x = 0.0f;
+	UTF8_Reader reader(text.data(), text.length());
+	while (!reader.is_end())
+	{
+		unsigned int glyph = reader.get_char();
+		GlyphMetrics char_abc = get_glyph_metrics(canvas, glyph);
+
+		if (x + char_abc.advance.width > width)
+			return reader.get_position();
+
+		x += char_abc.advance.width;
+		reader.next();
+	}
+
+	return text.size();
+}
+
+size_t Font::clip_from_right(Canvas &canvas, const std::string &text, float width)
+{
+	float x = 0.0f;
+	UTF8_Reader reader(text.data(), text.length());
+	reader.set_position(text.length());
+	while (reader.get_position() != 0)
+	{
+		reader.prev();
+
+		unsigned int glyph = reader.get_char();
+		GlyphMetrics char_abc = get_glyph_metrics(canvas, glyph);
+
+		if (x + char_abc.advance.width > width)
+		{
+			reader.next();
+			return reader.get_position();
+		}
+
+		x += char_abc.advance.width;
+	}
+
+	return 0;
+}
+
 void Font::draw_text(Canvas &canvas, float dest_x, float dest_y, const std::string &text, const Colorf &color)
 {
 	if (impl)
