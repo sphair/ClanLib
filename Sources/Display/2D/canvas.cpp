@@ -42,7 +42,7 @@
 #include "render_batch_triangle.h"
 #include "render_batch_path.h"
 #include "canvas_impl.h"
-
+#include "API/Display/Font/font.h"
 namespace clan
 {
 
@@ -687,13 +687,17 @@ void Canvas::stroke_and_fill(const Path &path, const Pen &pen, const Brush &brus
 	batcher->stroke(*this, path, pen);
 }
 
-void text(const Font &font, const Pointf &position, const std::string &text, const Brush &brush)
+void Canvas::text(Font &font, const Pointf &position, const std::string &text, const Brush &brush)
 {
 	// STUB!
+	Canvas canvas = *this;
+	font.draw_text(canvas, position, text);
 }
-void text(const Font &font, float x, float y, const std::string &text, const Brush &brush)
+void Canvas::text(Font &font, float x, float y, const std::string &text, const Brush &brush)
 {
 	// STUB!
+	Canvas canvas = *this;
+	font.draw_text(canvas, x, y, text);
 
 }
 
