@@ -28,48 +28,48 @@
 
 #pragma once
 
-#include "../View/view.h"
 #include "API/Display/Window/display_window.h"
 
 namespace clan
 {
-	enum class WindowShowType
-	{
-		hide,
-		show,
-		show_no_activate,
-		normal,
-		maximized,
-		minimized,
-		maximize,
-		minimize,
-		minimize_no_activate,
-		restore,
-		show_default
-	};
 
-	enum InputCode;
-	class InputEvent;
-	class WindowView_Impl;
-
-	class WindowView : public View
+	class WindowView_Impl
 	{
 	public:
-		WindowView(const DisplayWindowDescription &desc);
+		WindowView_Impl(const DisplayWindowDescription &desc);
 
-		void show(WindowShowType type = WindowShowType::show);
-		void hide();
+		Signal<void()> sig_size_changed;
+		Signal<void(Canvas &)> sig_render;
+		Signal<void(KeyEvent &)> sig_key_event;
+		Signal<void(PointerEvent &)> sig_pointer_event;
+		Signal<void()> sig_close;
+		Signal<void()> sig_activated;
+		Signal<void()> sig_deactivated;
 
-		void set_needs_render() override;
+		DisplayWindow window;
+		SlotContainer slots;
 
-		void on_window_size_changed();
-		void on_window_render(Canvas &canvas);
-		void on_window_key_event(KeyEvent &e);
-		void on_window_pointer_event(PointerEvent &e);
-		void on_window_close();
-		void on_window_activated();
-		void on_window_deactivated();
-	private:
 		std::shared_ptr<WindowView_Impl> impl;
+
+		std::shared_ptr<View> captured_view;
+		int capture_down_counter = 0;
+
+		std::shared_ptr<View> hot_view;
+
+	private:
+
+		void on_lost_focus();
+		void on_got_focus();
+		void on_resize(int, int);
+		void on_paint(const clan::Rect &);
+		void on_window_close();
+		void on_key_down(const clan::InputEvent &);
+		void on_key_up(const clan::InputEvent &);
+		void on_mouse_down(const clan::InputEvent &);
+		void on_mouse_dblclk(const clan::InputEvent &);
+		void on_mouse_up(const clan::InputEvent &);
+		void on_mouse_move(const clan::InputEvent &);
+		PointerButton decode_id(clan::InputCode ic) const;
+
 	};
 }
