@@ -27,6 +27,7 @@
 */
 
 #pragma once
+#include "API/Display/Font/font_metrics.h"
 
 namespace clan
 {
@@ -35,7 +36,23 @@ namespace clan
 	public:
 		//LineMetrics() { }
 		//LineMetrics(float ascent, float descent, float leading_top, float text_height, float line_height) : ascent(ascent), descent(descent), leading_top(leading_top), text_height(text_height), line_height(line_height) { }
-		LineMetrics(Font &font) { /* FIXME */ }
+		LineMetrics(Font &font)
+		{
+			FontMetrics metrics = font.get_font_metrics();
+
+			float clan_ascent = metrics.get_ascent();
+			float clan_descent = metrics.get_descent();
+			float clan_cap_height = metrics.get_internal_leading();
+			float clan_line_gap = metrics.get_external_leading();
+			float clan_height = clan_ascent + clan_descent;
+
+			line_height = metrics.get_height();
+			float leading = line_height - clan_height;
+			float half_leading = std::round(leading * 0.5f);
+			ascent = clan_ascent + half_leading;
+			descent = line_height - ascent;
+			text_height = clan_height;
+		}
 
 		float ascent = 0.0f;
 		float descent = 0.0f;
