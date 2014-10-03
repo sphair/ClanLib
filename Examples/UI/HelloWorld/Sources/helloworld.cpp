@@ -82,17 +82,19 @@ int HelloWorld::start(const std::vector<std::string> &args)
 	std::shared_ptr<SpanLayoutView> span = std::make_shared<SpanLayoutView>();
 	font_desc.set_typeface_name("Segoe UI");
 	font_desc.set_height(13.0f);
-	//span->add_text("This is the UI core ", font_desc);
+	Canvas canvas = SharedGCData::get_resource_canvas();
+	span->add_text("This is the UI core ", Font(canvas, font_desc));
 	font_desc.set_typeface_name("Segoe UI");
 	font_desc.set_height(18.0f);
-	//span->add_text("Hello World!", font_desc);
+	span->add_text("Hello World!", Font(canvas, font_desc));
 	font_desc.set_typeface_name("Segoe UI");
 	font_desc.set_height(13.0f);
-	//span->add_text(" example! Here's a text field: ", font_desc);
+	span->add_text(" example! Here's a text field: ", Font(canvas, font_desc));
 	span->add_subview(edit);
 	font_desc.set_typeface_name("Segoe UI");
-	font_desc.set_height(13.0f);
-	//span->add_text(" units! sdfjghsdkfj hkjsdfhg jksdhfj gkshdfk gsjdkfghsjkdfh kgjshdfkg sjkdfh gjskhf gskjdfg hkjsdfh kgjsdhfkgjhsdkjfhgksjdfhg kjsdfhgjkshdfkhgskjdf ghkjsdfsg kdfhg skjdfhgjksdh fgsdfhg kjsdhfjkghsdkjfh gkjsdhfjkgsdhfkgjhsdkfj hgksj.", font_desc);
+	font_desc.set_height(16.0f);
+	font_desc.set_weight(800);
+	span->add_text(" units! sdfjghsdkfj hkjsdfhg jksdhfj gkshdfk gsjdkfghsjkdfh kgjshdfkg sjkdfh gjskhf gskjdfg hkjsdfh kgjsdhfkgjhsdkjfhgksjdfhg kjsdfhgjkshdfkhgskjdf ghkjsdfsg kdfhg skjdfhgjksdh fgsdfhg kjsdhfjkghsdkjfh gkjsdhfjkgsdhfkgjhsdkfj hgksj.", Font(canvas, font_desc));
 	root->add_subview(span);
 
 	// Make our window visible
