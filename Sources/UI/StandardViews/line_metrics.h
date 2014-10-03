@@ -24,49 +24,23 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    Harry Storbacka
-**    Mark Page
 */
 
 #pragma once
 
-#include "API/Display/2D/canvas.h"
-#include "API/Display/Window/display_window.h"
-
 namespace clan
 {
+	class LineMetrics
+	{
+	public:
+		//LineMetrics() { }
+		//LineMetrics(float ascent, float descent, float leading_top, float text_height, float line_height) : ascent(ascent), descent(descent), leading_top(leading_top), text_height(text_height), line_height(line_height) { }
+		LineMetrics(Font &font) { /* FIXME */ }
 
-class SharedGCData_Impl
-{
-public:
-	SharedGCData_Impl();
-	~SharedGCData_Impl();
-
-	void add_provider(GraphicContextProvider *provider);
-	void remove_provider(GraphicContextProvider *provider);
-	std::vector<GraphicContextProvider*> &get_gc_providers();
-	GraphicContextProvider *get_provider();
-
-	void dispose_objects();
-	void add_disposable(DisposableObject *disposable);
-	void remove_disposable(DisposableObject *disposable);
-
-	Canvas &get_resource_canvas();
-
-	int reference_count;
-	static Mutex cl_sharedgc_mutex;
-	static SharedGCData *cl_sharedgc;
-
-private:
-
-	Signal<void()> sig_destruction_imminent;
-
-	std::vector<GraphicContextProvider*> graphic_context_providers;
-	std::vector<DisposableObject*> disposable_objects;
-
-	DisplayWindow resource_window;
-	Canvas resource_canvas;
-
-};
-
+		float ascent = 0.0f;
+		float descent = 0.0f;
+		float leading_top = 0.0f;
+		float text_height = 0.0f;
+		float line_height = 0.0f;
+	};
 }

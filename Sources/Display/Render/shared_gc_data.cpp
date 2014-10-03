@@ -32,6 +32,7 @@
 #include "API/Core/System/mutex.h"
 #include "API/Core/System/disposable_object.h"
 #include "API/Display/Render/shared_gc_data.h"
+#include "API/Display/2D/canvas.h"
 #include <algorithm>
 #include "shared_gc_data_impl.h"
 
@@ -104,6 +105,14 @@ GraphicContextProvider *SharedGCData::get_provider(std::unique_ptr<MutexSection>
 	if (SharedGCData_Impl::cl_sharedgc)
 		return SharedGCData_Impl::cl_sharedgc->impl->get_provider();
 	return NULL;
+}
+
+Canvas SharedGCData::get_resource_canvas()
+{
+	MutexSection mutex_lock(&SharedGCData_Impl::cl_sharedgc_mutex);
+	if (!SharedGCData_Impl::cl_sharedgc)
+		throw Exception("Attempted to use an invalid SharedGCData");
+	return SharedGCData_Impl::cl_sharedgc->impl->get_resource_canvas();
 }
 
 void SharedGCData::add_disposable(DisposableObject *disposable)

@@ -95,6 +95,7 @@ namespace clan
 	private:
 		std::string _text;
 		Font _font;
+		FontDescription _font_desc;
 		Colorf _text_color;
 		TextAlignment _text_alignment = TextAlignment::left;
 		LineBreakMode _line_break_mode = LineBreakMode::truncating_tail;

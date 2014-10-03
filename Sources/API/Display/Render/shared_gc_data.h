@@ -46,6 +46,7 @@ class GraphicContext;
 class DisposableObject;
 class SharedGCData_Impl;
 class MutexSection;
+class Canvas;
 
 /// \brief Shared Graphic Context Data
 class SharedGCData
@@ -63,6 +64,11 @@ public:
 
 	/// \brief Remove a provider
 	static void remove_provider(GraphicContextProvider *provider);
+
+	/// \brief Get the resource canvas
+	///
+	/// This is linked to a hidden display window, that is always available
+	static Canvas get_resource_canvas();
 
 	/// \brief Get a provider
 	///
