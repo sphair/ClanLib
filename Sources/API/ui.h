@@ -39,7 +39,27 @@
 #pragma managed(push, off)
 #endif
 
-//#include "API/UI/blah blah blah.h"
+#include "UI/Events/activation_change_event.h"
+#include "UI/Events/close_event.h"
+#include "UI/Events/event.h"
+#include "UI/Events/focus_change_event.h"
+#include "UI/Events/key_event.h"
+#include "UI/Events/pointer_event.h"
+#include "UI/Events/resize_event.h"
+#include "UI/StandardViews/button_view.h"
+#include "UI/StandardViews/image_view.h"
+#include "UI/StandardViews/label_view.h"
+#include "UI/StandardViews/progress_view.h"
+#include "UI/StandardViews/scroll_view.h"
+#include "UI/StandardViews/span_layout_view.h"
+#include "UI/StandardViews/spinner_view.h"
+#include "UI/StandardViews/text_field_view.h"
+#include "UI/StandardViews/text_view.h"
+#include "UI/StandardViews/window_view.h"
+#include "UI/Style/style.h"
+#include "UI/View/focus_policy.h"
+#include "UI/View/view.h"
+#include "UI/View/view_geometry.h"
 
 #ifdef __cplusplus_cli
 #pragma managed(pop)

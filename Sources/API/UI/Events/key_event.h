@@ -29,7 +29,7 @@
 #pragma once
 
 #include "event.h"
-#include "API/Core/Math/point.h"
+#include "../../Core/Math/point.h"
 #include <string>
 
 namespace clan

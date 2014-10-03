@@ -29,8 +29,8 @@
 #pragma once
 
 #include "../View/view.h"
-#include "API/Display/Font/font.h"
-#include "API/Display/2D/color.h"
+#include "../../Display/Font/font.h"
+#include "../../Display/2D/color.h"
 
 namespace clan
 {

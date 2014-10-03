@@ -29,11 +29,11 @@
 #pragma once
 
 #include "../Style/style.h"
-#include "API/Core/Math/rect.h"
-#include "API/Core/Math/easing.h"
-#include "API/Core/Signals/signal.h"
-#include "API/Core/System/event.h"
-#include "API/UI/Events/event.h"
+#include "../../Core/Math/rect.h"
+#include "../../Core/Math/easing.h"
+#include "../../Core/Signals/signal.h"
+#include "../../Core/System/event.h"
+#include "../../UI/Events/event.h"
 #include "view_geometry.h"
 #include "focus_policy.h"
 #include <vector>
