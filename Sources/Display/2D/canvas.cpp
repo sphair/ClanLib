@@ -691,13 +691,13 @@ void Canvas::text(Font &font, const Pointf &position, const std::string &text, c
 {
 	// STUB!
 	Canvas canvas = *this;
-	font.draw_text(canvas, position, text);
+	font.draw_text(canvas, position, text, brush.color);
 }
 void Canvas::text(Font &font, float x, float y, const std::string &text, const Brush &brush)
 {
 	// STUB!
 	Canvas canvas = *this;
-	font.draw_text(canvas, x, y, text);
+	font.draw_text(canvas, x, y, text, brush.color);
 
 }
 

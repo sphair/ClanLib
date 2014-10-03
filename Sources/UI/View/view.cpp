@@ -155,7 +155,7 @@ namespace clan
 
 		Mat4f old_transform = canvas.get_transform();
 		Pointf translate = impl->_geometry.content.get_top_left();
-		canvas.set_transform(Mat4f::translate(translate.x, translate.y, 0));
+		canvas.set_transform(old_transform * Mat4f::translate(translate.x, translate.y, 0));
 
 		render_content(canvas);
 
