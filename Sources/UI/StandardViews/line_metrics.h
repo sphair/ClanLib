@@ -46,7 +46,7 @@ namespace clan
 			float clan_line_gap = metrics.get_external_leading();
 			float clan_height = clan_ascent + clan_descent;
 
-			line_height = metrics.get_height();
+			line_height = metrics.get_line_height();
 			float leading = line_height - clan_height;
 			float half_leading = std::round(leading * 0.5f);
 			ascent = clan_ascent + half_leading;
