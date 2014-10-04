@@ -38,6 +38,7 @@ int HelloWorld::start(const std::vector<std::string> &args)
 	// Create root view and window:
 	DisplayWindowDescription desc;
 	desc.set_title("UICore: Hello World");
+	desc.set_allow_resize(true);
 	std::shared_ptr<WindowView> root = std::make_shared<WindowView>(desc);
 
 	// Exit run loop when close is clicked.
@@ -56,6 +57,7 @@ int HelloWorld::start(const std::vector<std::string> &args)
 	std::shared_ptr<LabelView> label = std::make_shared<LabelView>();
 	FontDescription font_desc("Ravie");
 	font_desc.set_height(20.0f);
+	font_desc.set_line_height(20.0f);
 	label->set_font(font_desc);
 	label->set_text("Hello World!");
 	root->add_subview(label);
@@ -67,9 +69,11 @@ int HelloWorld::start(const std::vector<std::string> &args)
 
 	// Create a text field for our span layout
 	std::shared_ptr<TextFieldView> edit = std::make_shared<TextFieldView>();
-	font_desc.set_typeface_name("Ravie");
-	font_desc.set_height(11.0f);
-	edit->set_font(font_desc);
+	FontDescription font_desc6("Ravie");
+	font_desc6.set_typeface_name("Ravie");
+	font_desc6.set_height(11.0f);
+	font_desc6.set_line_height(20.0f);
+	edit->set_font(font_desc6);
 	edit->set_text("42");
 	edit->style.set_margin(0.0f, 5.0f);
 	edit->style.set_background(Colorf(255, 255, 255));
@@ -80,25 +84,29 @@ int HelloWorld::start(const std::vector<std::string> &args)
 
 	// Create a span layout view with some more complex inline formatting
 	std::shared_ptr<SpanLayoutView> span = std::make_shared<SpanLayoutView>();
-	font_desc.set_typeface_name("Segoe UI");
-	font_desc.set_height(13.0f);
-	font_desc.set_line_height(20.0f);
+	FontDescription font_desc2;
+	font_desc2.set_typeface_name("Segoe UI");
+	font_desc2.set_height(13.0f);
+	font_desc2.set_line_height(20.0f);
 	Canvas canvas = SharedGCData::get_resource_canvas();
-	span->add_text("This is the UI core ", Font(canvas, font_desc));
-	font_desc.set_typeface_name("Segoe UI");
-	font_desc.set_height(18.0f);
-	font_desc.set_line_height(20.0f);
-	span->add_text("Hello World!", Font(canvas, font_desc));
-	font_desc.set_typeface_name("Segoe UI");
-	font_desc.set_height(13.0f);
-	font_desc.set_line_height(20.0f);
-	span->add_text(" example! Here's a text field: ", Font(canvas, font_desc));
+	span->add_text("This is the UI core ", Font(canvas, font_desc2));
+	FontDescription font_desc3;
+	font_desc3.set_typeface_name("Segoe UI");
+	font_desc3.set_height(18.0f);
+	font_desc3.set_line_height(20.0f);
+	span->add_text("Hello World!", Font(canvas, font_desc3));
+	FontDescription font_desc4;
+	font_desc4.set_typeface_name("Segoe UI");
+	font_desc4.set_height(13.0f);
+	font_desc4.set_line_height(20.0f);
+	span->add_text(" example! Here's a text field: ", Font(canvas, font_desc4));
 	span->add_subview(edit);
-	font_desc.set_typeface_name("Segoe UI");
-	font_desc.set_height(16.0f);
-	font_desc.set_line_height(20.0f);
-	font_desc.set_weight(800);
-	span->add_text(" units! sdfjghsdkfj hkjsdfhg jksdhfj gkshdfk gsjdkfghsjkdfh kgjshdfkg sjkdfh gjskhf gskjdfg hkjsdfh kgjsdhfkgjhsdkjfhgksjdfhg kjsdfhgjkshdfkhgskjdf ghkjsdfsg kdfhg skjdfhgjksdh fgsdfhg kjsdhfjkghsdkjfh gkjsdhfjkgsdhfkgjhsdkfj hgksj.", Font(canvas, font_desc));
+	FontDescription font_desc5;
+	font_desc5.set_typeface_name("Segoe UI");
+	font_desc5.set_height(16.0f);
+	font_desc5.set_line_height(20.0f);
+	font_desc5.set_weight(800);
+	span->add_text(" units! sdfjghsdkfj hkjsdfhg jksdhfj gkshdfk gsjdkfghsjkdfh kgjshdfkg sjkdfh gjskhf gskjdfg hkjsdfh kgjsdhfkgjhsdkjfhgksjdfhg kjsdfhgjkshdfkhgskjdf ghkjsdfsg kdfhg skjdfhgjksdh fgsdfhg kjsdhfjkghsdkjfh gkjsdhfjkgsdhfkgjhsdkfj hgksj.", Font(canvas, font_desc5));
 	root->add_subview(span);
 
 	// Make our window visible
