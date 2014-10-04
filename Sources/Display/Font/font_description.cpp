@@ -214,6 +214,11 @@ void FontDescription::set_height(int value)
 	impl->height = value;
 }
 
+void FontDescription::set_line_height(float value)
+{
+	impl->line_height = value;
+}
+
 void FontDescription::set_average_width(int value)
 {
 	impl->average_width = value;
