@@ -507,7 +507,7 @@ void SpanLayout_Impl::layout_lines(Canvas &canvas, int max_width)
 	if (objects.empty())
 		return;
 
-	layout_cache.metrics = -1;
+	layout_cache.metrics = FontMetrics();
 	layout_cache.object_index = -1;
 
 	CurrentLine current_line;

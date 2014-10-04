@@ -40,7 +40,7 @@
 namespace clan
 {
 
-  FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, const std::string &filename)
+FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, const std::string &filename)
 : handle(0)
 {
 	if (!filename.empty())
@@ -49,6 +49,8 @@ namespace clan
 		if(fonts_added == 0)
 			throw Exception("Unable to register font " + filename);
 	}
+
+	line_height = desc.get_line_height();
 
 	// ClanLib now only supports negative font sizes. (To avoid confusion)
 	int height = desc.get_height();
@@ -87,7 +89,7 @@ namespace clan
 	}
 }
 
-  FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, const std::string &filename, FileSystem& fs)
+FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, const std::string &filename, FileSystem& fs)
 : handle(0)
 {
 	if (!filename.empty())
@@ -147,22 +149,18 @@ FontEngine_Win32::~FontEngine_Win32()
 
 FontMetrics FontEngine_Win32::get_metrics()
 {
+	if (line_height == 0.0f) // To do: maybe have a special 'auto' mode in the FontDescription?
+	{
+		line_height = metrics.tmHeight + metrics.tmExternalLeading;
+	}
+
 	return FontMetrics(
 		(float)metrics.tmHeight,
+		line_height,
 		(float)metrics.tmAscent, 
 		(float)metrics.tmDescent, 
 		(float)metrics.tmInternalLeading,
-		(float)metrics.tmExternalLeading,
-		(float)metrics.tmAveCharWidth,
-		(float)metrics.tmMaxCharWidth,
-		(float)metrics.tmWeight,
-		(float)metrics.tmOverhang, 
-		(float)metrics.tmDigitizedAspectX,
-		(float)metrics.tmDigitizedAspectY,
-		metrics.tmItalic != 0, 
-		metrics.tmUnderlined != 0, 
-		metrics.tmStruckOut != 0,
-		metrics.tmAveCharWidth == metrics.tmMaxCharWidth);
+		(float)metrics.tmExternalLeading);
 }
 
 FontPixelBuffer FontEngine_Win32::get_font_glyph_standard(int glyph, bool anti_alias)

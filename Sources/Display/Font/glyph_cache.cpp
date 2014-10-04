@@ -63,9 +63,7 @@ GlyphCache::GlyphCache()
 	texture_group = TextureGroup(Size(256,256));
 
 	// Set default font metrics
-	font_metrics = FontMetrics(
-		0,0, 0, 0,0,0,0,0, 0,0,
-		false, false, false, false);
+	font_metrics = FontMetrics();
 
 	anti_alias = true;
 	enable_subpixel = true;

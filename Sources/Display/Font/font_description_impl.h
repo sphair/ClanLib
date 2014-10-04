@@ -35,46 +35,27 @@ class FontDescription_Impl
 {
 /// \name Construction
 /// \{
-
 public:
-	FontDescription_Impl()
-	{
-		//typeface_name = "tahoma";
-		height = 0;
-		average_width = 0;
-		escapement = 0.0f;
-		orientation = 0.0f;
-		weight = 0;
-		italic = false;
-		underline = false;
-		strikeout = false;
-		fixed_pitch = false;
-		anti_alias = true;
-		subpixel = true;
-		charset = FontDescription::charset_default;
-	}
-
-	virtual ~FontDescription_Impl() { return; }
-
-
+	virtual ~FontDescription_Impl() { }
 /// \}
+
 /// \name Attributes
 /// \{
-
 public:
 	std::string typeface_name;
-	int height;
-	int average_width;
-	float escapement;
-	float orientation;
-	int weight;
-	bool italic;
-	bool underline;
-	bool strikeout;
-	bool fixed_pitch;
-	bool anti_alias;
-	bool subpixel;
-	FontDescription::Charset charset;
+	int height = 0;
+	float line_height = 0.0f;
+	int average_width = 0;
+	float escapement = 0.0f;
+	float orientation = 0.0f;
+	int weight = 0;
+	bool italic = false;
+	bool underline = false;
+	bool strikeout = false;
+	bool fixed_pitch = false;
+	bool anti_alias = true;
+	bool subpixel = true;
+	FontDescription::Charset charset = FontDescription::charset_default;
 /// \}
 };
 

@@ -73,8 +73,9 @@ private:
 	bool try_load_glyph_bitmap(int glyph, UINT format, MAT2 &matrix, DataBuffer &glyph_bitmap, GLYPHMETRICS &glyph_metrics);
 	FontPixelBuffer get_empty_font_glyph(int glyph);
 	int decode_charset(FontDescription::Charset selected_charset);
-	HFONT handle;
+	HFONT handle = 0;
 	TEXTMETRIC metrics;
+	float line_height = 0.0f;
 };
 
 }

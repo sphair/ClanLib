@@ -341,17 +341,16 @@ void Font_Impl::load_font( Canvas &canvas, Sprite &sprite, const std::string &gl
 			average_character_width /= length;
 
 	}
-	if (glyph_cache.font_metrics.get_max_character_width() == 0.0f)
-	{
-		glyph_cache.font_metrics.set_max_character_width(max_character_width);
-	}
-	if (glyph_cache.font_metrics.get_average_character_width() == 0.0f)
-	{
-		glyph_cache.font_metrics.set_average_character_width(average_character_width);
-	}
+
 	if (glyph_cache.font_metrics.get_height() == 0)
 	{
-		glyph_cache.font_metrics.set_height(height);
+		glyph_cache.font_metrics = FontMetrics(
+			height,
+			height + glyph_cache.font_metrics.get_line_height(),
+			glyph_cache.font_metrics.get_ascent(),
+			glyph_cache.font_metrics.get_descent(),
+			glyph_cache.font_metrics.get_internal_leading(),
+			glyph_cache.font_metrics.get_external_leading());
 	}
 }
 

@@ -28,81 +28,20 @@
 
 #pragma once
 
-
 namespace clan
 {
+	class FontMetrics_Impl
+	{
+	public:
+		FontMetrics_Impl();
+		FontMetrics_Impl(float height, float line_height, float ascent, float descent, float internal_leading, float external_leading);
+		~FontMetrics_Impl();
 
-/// \brief Input events interface.
-class FontMetrics_Impl
-{
-/// \name Construction
-/// \{
-
-public:
-	FontMetrics_Impl(
-		float height,
-		float ascent,
-		float descent,
-		float internal_leading,
-		float external_leading,
-		float average_character_width,
-		float max_character_width,
-		float weight,
-		float overhang,
-		float digitized_aspect_x,
-		float digitized_aspect_y,
-		bool italic=false,
-		bool underline=false,
-		bool struck_out=false,
-		bool fixed_pitch=false
-		);
-
-	~FontMetrics_Impl();
-
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-
-	std::string::value_type get_first_char() const;
-
-	std::string::value_type get_last_char() const;
-
-	std::string::value_type get_default_char() const;
-
-	std::string::value_type get_word_break_char() const;
-
-	float height;
-	float ascent;
-	float descent;
-	float internal_leading;
-	float external_leading;
-	float average_character_width;
-	float max_character_width;
-	float weight;
-	float overhang;
-	float digitized_aspect_x;
-	float digitized_aspect_y;
-	bool italic;
-	bool underlined;
-	bool struck_out;
-	bool fixed_pitch;
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-};
-
+		float height = 0.0f;
+		float line_height = 0.0f;
+		float ascent = 0.0f;
+		float descent = 0.0f;
+		float internal_leading = 0.0f;
+		float external_leading = 0.0f;
+	};
 }

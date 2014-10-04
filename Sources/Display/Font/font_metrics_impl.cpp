@@ -31,77 +31,15 @@
 
 namespace clan
 {
+	FontMetrics_Impl::FontMetrics_Impl()
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// FontMetrics_Impl Construction:
+	FontMetrics_Impl::FontMetrics_Impl(float height, float line_height, float ascent, float descent, float internal_leading, float external_leading) : height(height), line_height(line_height), ascent(ascent), descent(descent), internal_leading(internal_leading), external_leading(external_leading)
+	{
+	}
 
-FontMetrics_Impl::FontMetrics_Impl(
-	float height,
-	float ascent,
-	float descent,
-	float internal_leading,
-	float external_leading,
-	float average_character_width,
-	float max_character_width,
-	float weight,
-	float overhang,
-	float digitized_aspect_x,
-	float digitized_aspect_y,		
-	bool italic,
-	bool underlined,
-	bool struck_out,
-	bool fixed_pitch
-) :
-	height(height),
-	ascent(ascent),
-	descent(descent),
-	internal_leading(internal_leading),
-	external_leading(external_leading),
-	average_character_width(average_character_width),
-	max_character_width(max_character_width),
-	weight(weight),
-	overhang(overhang),
-	digitized_aspect_x(digitized_aspect_x),
-	digitized_aspect_y(digitized_aspect_y),		
-	italic(italic),
-	underlined(underlined),
-	struck_out(struck_out),
-	fixed_pitch(fixed_pitch)
-{
-}
-
-FontMetrics_Impl::~FontMetrics_Impl()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// FontMetrics_Impl Attributes:
-
-std::string::value_type FontMetrics_Impl::get_first_char() const
-{
-	return std::string::value_type('\0'); // todo
-}
-
-std::string::value_type FontMetrics_Impl::get_last_char() const
-{
-	return std::string::value_type('\0'); // todo	
-}
-
-std::string::value_type FontMetrics_Impl::get_default_char() const
-{
-	return std::string::value_type('?');
-}
-
-std::string::value_type FontMetrics_Impl::get_word_break_char() const
-{
-	return std::string::value_type(' ');
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// FontMetrics_Impl Operations:
-
-
-/////////////////////////////////////////////////////////////////////////////
-// FontMetrics_Impl Implementation:
-
+	FontMetrics_Impl::~FontMetrics_Impl()
+	{
+	}
 }

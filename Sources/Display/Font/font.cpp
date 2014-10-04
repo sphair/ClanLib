@@ -98,8 +98,6 @@ Font Font_Impl::load(Canvas &canvas, const FontDescription &reference_desc, cons
 
 	DomElement sprite_element = resource.get_element().named_item("sprite").to_element();
 
-	FontMetrics font_metrics;
-
 	if (!sprite_element.is_null())
 	{
 		if (!sprite_element.has_attribute("glyphs")) 
@@ -117,53 +115,32 @@ Font Font_Impl::load(Canvas &canvas, const FontDescription &reference_desc, cons
 
 		// Modify the default font metrics, if specified
 
+		float height = 0.0f;
+		float line_height = 0.0f;
+		float ascent = 0.0f;
+		float descent = 0.0f;
+		float internal_leading = 0.0f;
+		float external_leading = 0.0f;
+
 		if (sprite_element.has_attribute("height")) 
-			font_metrics.set_height(StringHelp::text_to_float(sprite_element.get_attribute("height", "0")));
+			height = StringHelp::text_to_float(sprite_element.get_attribute("height", "0"));
+
+		if (sprite_element.has_attribute("line_height"))
+			line_height = StringHelp::text_to_float(sprite_element.get_attribute("line_height", "0"));
 
 		if (sprite_element.has_attribute("ascent")) 
-			font_metrics.set_ascent(StringHelp::text_to_float(sprite_element.get_attribute("ascent", "0")));
+			ascent = StringHelp::text_to_float(sprite_element.get_attribute("ascent", "0"));
 
 		if (sprite_element.has_attribute("descent")) 
-			font_metrics.set_descent(StringHelp::text_to_float(sprite_element.get_attribute("descent", "0")));
+			descent = StringHelp::text_to_float(sprite_element.get_attribute("descent", "0"));
 
 		if (sprite_element.has_attribute("internal_leading")) 
-			font_metrics.set_internal_leading(StringHelp::text_to_float(sprite_element.get_attribute("internal_leading", "0")));
+			internal_leading = StringHelp::text_to_float(sprite_element.get_attribute("internal_leading", "0"));
 
 		if (sprite_element.has_attribute("external_leading")) 
-			font_metrics.set_external_leading(StringHelp::text_to_float(sprite_element.get_attribute("external_leading", "0")));
+			external_leading = StringHelp::text_to_float(sprite_element.get_attribute("external_leading", "0"));
 
-		if (sprite_element.has_attribute("average_character_width")) 
-			font_metrics.set_average_character_width(StringHelp::text_to_float(sprite_element.get_attribute("average_character_width", "0")));
-
-		if (sprite_element.has_attribute("max_character_width")) 
-			font_metrics.set_max_character_width(StringHelp::text_to_float(sprite_element.get_attribute("max_character_width", "0")));
-
-		font_metrics.set_weight(400.0f);
-		if (sprite_element.has_attribute("weight")) 
-			font_metrics.set_weight(StringHelp::text_to_float(sprite_element.get_attribute("weight", "0")));
-
-		if (sprite_element.has_attribute("overhang")) 
-			font_metrics.set_overhang(StringHelp::text_to_float(sprite_element.get_attribute("overhang", "0")));
-
-		font_metrics.set_digitized_aspect_x(96.0f);
-		if (sprite_element.has_attribute("digitized_aspect_x")) 
-			font_metrics.set_digitized_aspect_x(StringHelp::text_to_float(sprite_element.get_attribute("digitized_aspect_x", "0")));
-
-		font_metrics.set_digitized_aspect_y(96.0f);
-		if (sprite_element.has_attribute("digitized_aspect_y")) 
-			font_metrics.set_digitized_aspect_y(StringHelp::text_to_float(sprite_element.get_attribute("digitized_aspect_y", "0")));
-
-		if (sprite_element.has_attribute("italic")) 
-			font_metrics.set_italic(StringHelp::text_to_bool(sprite_element.get_attribute("italic", "0")));
-
-		if (sprite_element.has_attribute("underlined")) 
-			font_metrics.set_underlined(StringHelp::text_to_bool(sprite_element.get_attribute("underlined", "0")));
-
-		if (sprite_element.has_attribute("struck_out")) 
-			font_metrics.set_struck_out(StringHelp::text_to_bool(sprite_element.get_attribute("struck_out", "0")));
-
-		if (sprite_element.has_attribute("fixed_pitch")) 
-			font_metrics.set_fixed_pitch(StringHelp::text_to_bool(sprite_element.get_attribute("fixed_pitch", "0")));
+		FontMetrics font_metrics(height, line_height, ascent, descent, internal_leading, external_leading);
 
 		return Font(canvas, spr_glyphs.get(), letters, spacelen, monospace, font_metrics);
 	}

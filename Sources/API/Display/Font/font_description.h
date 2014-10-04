@@ -103,6 +103,9 @@ public:
 	/// \brief Returns the font height
 	int get_height() const;
 
+	/// \brief Returns the distance between each line
+	float get_line_height() const;
+
 	/// \brief Returns the font average width
 	int get_average_width() const;
 
@@ -172,6 +175,9 @@ public:
 
 	/// \brief Sets the font weight
 	void set_weight(int value);
+
+	/// \brief Sets the distance between each line
+	void set_line_height(float height);
 
 	/// \brief Sets the font italic setting
 	void set_italic(bool setting = true);

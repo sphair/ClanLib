@@ -79,6 +79,11 @@ int FontDescription::get_height() const
 	return impl->height;
 }
 
+float FontDescription::get_line_height() const
+{
+	return impl->height;
+}
+
 int FontDescription::get_average_width() const
 {
 	return impl->average_width;
