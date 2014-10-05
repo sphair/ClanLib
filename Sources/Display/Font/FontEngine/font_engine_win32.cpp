@@ -104,6 +104,8 @@ FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, const std::strin
 			throw Exception("Unable to register font " + filename);
 	}
 
+	line_height = desc.get_line_height();
+
 	// ClanLib now only supports negative font sizes. (To avoid confusion)
 	int height = desc.get_height();
 	if (height >0)

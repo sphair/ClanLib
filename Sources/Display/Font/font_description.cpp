@@ -81,7 +81,7 @@ int FontDescription::get_height() const
 
 float FontDescription::get_line_height() const
 {
-	return impl->height;
+	return impl->line_height;
 }
 
 int FontDescription::get_average_width() const
@@ -189,6 +189,7 @@ FontDescription FontDescription::clone() const
 	FontDescription copy;
 	copy.impl->typeface_name = impl->typeface_name;
 	copy.impl->height = impl->height;
+	copy.impl->line_height = impl->line_height;
 	copy.impl->average_width = impl->average_width;
 	copy.impl->escapement = impl->escapement;
 	copy.impl->orientation = impl->orientation;
