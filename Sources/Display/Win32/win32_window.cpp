@@ -347,6 +347,7 @@ LRESULT Win32Window::static_window_proc(
 		LPCREATESTRUCT create_struct = (LPCREATESTRUCT) lparam;
 		self = (Win32Window *) create_struct->lpCreateParams;
 		SetWindowLongPtr(wnd, GWLP_USERDATA, (LONG_PTR) self);
+		self->hwnd = wnd; 
 	}
 	else
 	{
@@ -390,6 +391,10 @@ LRESULT Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lpara
 		// with just the fill completed.
 		return 0;
 	case WM_DWMCOMPOSITIONCHANGED: return wm_dwm_composition_changed(wparam, lparam);
+	case WM_CREATE: return wm_create(wparam, lparam);
+
+	case WM_NCHITTEST: return wm_nc_hittest(wparam, lparam);
+	case WM_NCCALCSIZE: return wm_nc_calcsize(wparam, lparam);
 
 	case WM_KEYDOWN:
 	case WM_SYSKEYDOWN:
@@ -516,6 +521,7 @@ LRESULT Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lpara
 		return 0;
 
 	case WM_ACTIVATE:
+		update_dwm_settings();
 		if (site)
 		{
 			if (LOWORD(wparam) == WA_INACTIVE)
@@ -670,7 +676,7 @@ void Win32Window::create_new_window()
 		if (window_desc.is_topmost())
 			SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOACTIVATE|SWP_NOMOVE|SWP_NOSIZE);
 
-		update_dwm_settings();
+		//update_dwm_settings(); <-- set in WM_CREATE
 
 		if (window_desc.is_visible())
 			ShowWindow(hwnd, SW_SHOW);
@@ -1925,6 +1931,120 @@ void Win32Window::set_alpha_channel()
 void Win32Window::extend_frame_into_client_area(int left, int top, int right, int bottom)
 {
 	DwmFunctions::extend_frame_into_client_area(hwnd, left, top, right, bottom);
+}
+
+LRESULT Win32Window::wm_nc_hittest(WPARAM wparam, LPARAM lparam)
+{
+	if (window_desc.get_type() != WindowType::custom)
+		return DefWindowProc(hwnd, WM_NCHITTEST, wparam, lparam);
+
+	// Hit test handling for the resize + caption draggable area
+	POINT mousePos = { LOWORD(lparam), HIWORD(lparam) };
+
+	RECT window_box;
+	GetWindowRect(hwnd, &window_box);
+
+	int xGrid[6] = { window_box.left, window_box.left + 8, window_box.left + 16, window_box.right - 16, window_box.right - 8, window_box.right };
+	int yGrid[6] = { window_box.top, window_box.top + 4, window_box.top + 16, window_box.bottom - 16, window_box.bottom - 8, window_box.bottom };
+
+	int xIndex = 2;
+	for (int i = 0; i < 5; i++)
+	{
+		if (mousePos.x >= xGrid[i] && mousePos.x < xGrid[i + 1])
+		{
+			xIndex = i;
+			break;
+		}
+	}
+
+	int yIndex = 2;
+	for (int i = 0; i < 5; i++)
+	{
+		if (mousePos.y >= yGrid[i] && mousePos.y < yGrid[i + 1])
+		{
+			yIndex = i;
+			break;
+		}
+	}
+
+	long hit = HTNOWHERE;
+	switch (xIndex + yIndex * 5)
+	{
+	case 0: hit = HTTOPLEFT; break;
+	case 1: hit = HTTOPLEFT; break;
+	case 2: hit = HTTOP; break;
+	case 3: hit = HTTOPRIGHT; break;
+	case 4: hit = HTTOPRIGHT; break;
+	case 5: hit = HTTOPLEFT; break;
+	case 9: hit = HTTOPRIGHT; break;
+	case 10: hit = HTLEFT; break;
+	case 14: hit = HTRIGHT; break;
+	case 15: hit = HTBOTTOMLEFT; break;
+	case 19: hit = HTBOTTOMRIGHT; break;
+	case 20: hit = HTBOTTOMLEFT; break;
+	case 21: hit = HTBOTTOMLEFT; break;
+	case 22: hit = HTBOTTOM; break;
+	case 23: hit = HTBOTTOMRIGHT; break;
+	case 24: hit = HTBOTTOMRIGHT; break;
+	default: break;
+	}
+
+	if (hit == HTNOWHERE)
+	{
+		if (mousePos.y < window_box.top + TOPEXTENDWIDTH)
+		{
+			hit = HTCAPTION;
+		}
+		else
+		{
+			hit = HTCLIENT;
+		}
+	}
+
+	return hit;
+}
+
+LRESULT Win32Window::wm_nc_calcsize(WPARAM wparam, LPARAM lparam)
+{
+	if (wparam == FALSE)
+	{
+		NCCALCSIZE_PARAMS *params = reinterpret_cast<NCCALCSIZE_PARAMS*>(lparam);
+
+		RECT &window_box = params->rgrc[0]; // proposed new window coordinates
+		const RECT &old_window_box = params->rgrc[1];
+		const RECT &old_client_box = params->rgrc[2];
+
+		// Result indicates which part of the client area contains valid information or have to be redrawn
+		return WVR_HREDRAW | WVR_VREDRAW;
+	}
+	else
+	{
+		if (window_desc.get_type() == WindowType::normal)
+			return DefWindowProc(hwnd, WM_NCCALCSIZE, wparam, lparam);
+
+		// On entry, the structure contains the proposed window rectangle for the window.
+		RECT window_box = *reinterpret_cast<RECT*>(lparam);
+
+		RECT client_box = window_box;
+
+		// On exit, the structure should contain the screen coordinates of the corresponding window client area.
+		*reinterpret_cast<RECT*>(lparam) = client_box;
+
+		return 0; // must always be 0
+	}
+}
+
+LRESULT Win32Window::wm_create(WPARAM wparam, LPARAM lparam)
+{
+	update_dwm_settings();
+	resend_nccalcsize();
+	return DefWindowProc(hwnd, WM_CREATE, wparam, lparam);
+}
+void Win32Window::resend_nccalcsize()
+{
+	RECT box = { 0 };
+	GetWindowRect(hwnd, &box);
+	SetWindowPos(hwnd, 0, box.left, box.top, box.right - box.left, box.bottom - box.top, SWP_FRAMECHANGED);
 }
 
 }

@@ -145,6 +145,11 @@ private:
 	void update_dwm_settings();
 	void set_alpha_channel();
 
+	LRESULT wm_nc_hittest(WPARAM wparam, LPARAM lparam);
+	LRESULT wm_nc_calcsize(WPARAM wparam, LPARAM lparam);
+	LRESULT wm_create(WPARAM wparam, LPARAM lparam);
+	void resend_nccalcsize();
+
 	static LRESULT WINAPI static_window_proc(
 		HWND hWnd,
 		UINT uMsg,
@@ -201,6 +206,12 @@ private:
 	UINT png_clipboard_format;
 	std::string class_name;
 	bool allow_dropshadow;
+
+	// Default frame dimensions
+	static const int TOPEXTENDWIDTH = 27;
+	static const int LEFTEXTENDWIDTH = 8;
+	static const int RIGHTEXTENDWIDTH = 8;
+	static const int BOTTOMEXTENDWIDTH = 8;
 
 	DisplayWindowDescription window_desc;
 	Rect window_blur_rect;
