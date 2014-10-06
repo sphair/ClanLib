@@ -68,7 +68,7 @@ namespace clan
 
 Win32Window::Win32Window()
 : hwnd(0), destroy_hwnd(true), current_cursor(0), large_icon(0), small_icon(0), cursor_set(false), cursor_hidden(false), site(0),
-  minimum_size(0,0), maximum_size(0xffff, 0xffff), layered(false), allow_dropshadow(false), minimized(false), maximized(false),
+  minimum_size(0,0), maximum_size(0xffff, 0xffff), allow_dropshadow(false),
   update_window_worker_thread_started(false), update_window_region(0), update_window_max_region_rects(1024)
 {
 	memset(&paintstruct, 0, sizeof(PAINTSTRUCT));
@@ -172,11 +172,9 @@ std::string Win32Window::get_title() const
 
 void Win32Window::create(DisplayWindowSite *new_site, const DisplayWindowDescription &description)
 {
+	window_desc = description.clone();
 	site = new_site;
-	if (hwnd)
-		modify_window(description);
-	else
-		create_new_window(description);
+	create_new_window();
 }
 
 Point Win32Window::client_to_screen(const Point &client)
@@ -391,6 +389,7 @@ LRESULT Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lpara
 		// WM_PAINT is too slow and the DWM is forced to present the window prematurely
 		// with just the fill completed.
 		return 0;
+	case WM_DWMCOMPOSITIONCHANGED: return wm_dwm_composition_changed(wparam, lparam);
 
 	case WM_KEYDOWN:
 	case WM_SYSKEYDOWN:
@@ -496,27 +495,18 @@ LRESULT Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lpara
 		case SIZE_MAXIMIZED:
 			if (site)
 				(*site->sig_window_maximized)();
-			minimized = false;
-			maximized = true;
 			break;
 
 		// The window has been minimized.
 		case SIZE_MINIMIZED:
 			if (site)
 				(*site->sig_window_minimized)();
-			minimized = true;
-			maximized = false;
 			break;
 
 		// The window has been resized, but neither the SIZE_MINIMIZED nor SIZE_MAXIMIZED value applies.
 		case SIZE_RESTORED:
-			if (minimized || maximized)
-			{
-				if (site)
-					(*site->sig_window_restored)();
-				minimized = false;
-				maximized = false;
-			}
+			if (site)
+				(*site->sig_window_restored)();
 			break;
 		}
 
@@ -608,7 +598,7 @@ LRESULT Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lpara
 			break;
 
 		case SC_SCREENSAVE:
-			if (!allow_screensaver)
+			if (!window_desc.get_allow_screensaver())
 				return 0; 
 			break;
 
@@ -629,34 +619,36 @@ LRESULT Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lpara
 	return DefWindowProc(wnd, msg, wparam, lparam);
 }
 
-void Win32Window::create_new_window(const DisplayWindowDescription &desc)
+LRESULT Win32Window::wm_dwm_composition_changed(WPARAM wparam, LPARAM lparam)
 {
-	allow_screensaver = desc.get_allow_screensaver();
+	update_dwm_settings();
+	return DefWindowProc(hwnd, WM_DWMCOMPOSITIONCHANGED, wparam, lparam);
+}
 
-	if (desc.get_handle())
+void Win32Window::create_new_window()
+{
+	if (window_desc.get_handle())
 	{
-		hwnd = desc.get_handle();
+		hwnd = window_desc.get_handle();
 		destroy_hwnd = false;
-//		old_wndproc = (WNDPROC) GetWindowLongPtr(hwnd, GWLP_WNDPROC);
-//		SetWindowLongPtr(hwnd, GWLP_WNDPROC, (LONG_PTR) OpenGLWindowProvider_WGL::message_handler);
 	}
 	else
 	{
 		register_window_class();
 
 		DWORD style = 0, ex_style = 0;
-		get_styles_from_description(desc, style, ex_style);
+		get_styles_from_description(window_desc, style, ex_style);
 
-		RECT window_rect = get_window_geometry_from_description(desc, style, ex_style);
+		RECT window_rect = get_window_geometry_from_description(window_desc, style, ex_style);
 
 		HWND parent = 0;
-		if (!desc.get_owner().is_null())
-			parent = desc.get_owner().get_provider()->get_hwnd();
+		if (!window_desc.get_owner().is_null())
+			parent = window_desc.get_owner().get_provider()->get_hwnd();
 
 		hwnd = CreateWindowEx(
 			ex_style,
-			desc.has_drop_shadow() ? TEXT("ClanApplicationDS") : TEXT("ClanApplication"),
-			StringHelp::utf8_to_ucs2(desc.get_title()).c_str(),
+			window_desc.has_drop_shadow() ? TEXT("ClanApplicationDS") : TEXT("ClanApplication"),
+			StringHelp::utf8_to_ucs2(window_desc.get_title()).c_str(),
 			style,
 			window_rect.left,
 			window_rect.top,
@@ -670,74 +662,36 @@ void Win32Window::create_new_window(const DisplayWindowDescription &desc)
 		if (hwnd == 0)
 			throw Exception("Unable to create window");
 
-		if (desc.is_fullscreen())
+		if (window_desc.is_fullscreen())
 		{
 			SetWindowPos(hwnd, HWND_TOP, window_rect.left, window_rect.top, window_rect.right - window_rect.left, window_rect.bottom - window_rect.top, SWP_NOACTIVATE);
 		}
 
-		if (desc.is_topmost())
+		if (window_desc.is_topmost())
 			SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOACTIVATE|SWP_NOMOVE|SWP_NOSIZE);
 
-		if (DwmFunctions::is_composition_enabled())
-		{
-			extend_frame_into_client_area(
-				(int)std::round(desc.get_extend_frame_left()),
-				(int)std::round(desc.get_extend_frame_top()),
-				(int)std::round(desc.get_extend_frame_right()),
-				(int)std::round(desc.get_extend_frame_bottom()));
+		update_dwm_settings();
 
-			if (desc.get_type() != WindowType::normal)
-				enable_alpha_channel(Rect());
-		}
-
-		if (desc.is_visible())
+		if (window_desc.is_visible())
 			ShowWindow(hwnd, SW_SHOW);
-
-		if (layered)
-			enable_alpha_channel(Rect(-1, -1, -1, -1));
-
-		minimized = is_minimized();
-		maximized = is_maximized();
 	}
 
-	connect_window_input(desc);
+	connect_window_input(window_desc);
 }
 
-void Win32Window::modify_window(const DisplayWindowDescription &desc)
+void Win32Window::update_dwm_settings()
 {
-	DWORD style = 0, ex_style = 0;
-	get_styles_from_description(desc, style, ex_style);
-	RECT window_rect = get_window_geometry_from_description(desc, style, ex_style);
-
-	SetWindowText(hwnd, StringHelp::utf8_to_ucs2(desc.get_title()).c_str());
-
-	SetWindowLong(hwnd, GWL_STYLE, style);
-	SetWindowLong(hwnd, GWL_EXSTYLE, ex_style);
-
-	if (desc.is_fullscreen())
+	if (DwmFunctions::is_composition_enabled())
 	{
-		// Place the window above all topmost or non-topmost windows depending on the topmost setting
-		SetWindowPos(hwnd, desc.is_topmost() ? HWND_TOPMOST : HWND_TOP, window_rect.left, window_rect.top,
-			window_rect.right - window_rect.left, window_rect.bottom - window_rect.top, SWP_NOACTIVATE|SWP_FRAMECHANGED);
-	}
-	else
-	{
-		// Setup always on top flag; size as requested by description struct.
-		SetWindowPos(
-			hwnd,
-			desc.is_topmost() ? HWND_TOPMOST : HWND_NOTOPMOST,
-			window_rect.left,
-			window_rect.top,
-			window_rect.right-window_rect.left,
-			window_rect.bottom-window_rect.top,
-			SWP_NOACTIVATE|SWP_FRAMECHANGED);
-	}
+		extend_frame_into_client_area(
+			(int)std::round(window_desc.get_extend_frame_left()),
+			(int)std::round(window_desc.get_extend_frame_top()),
+			(int)std::round(window_desc.get_extend_frame_right()),
+			(int)std::round(window_desc.get_extend_frame_bottom()));
 
-	ShowWindow(hwnd, desc.is_visible() ? SW_SHOW : SW_HIDE);
-	RedrawWindow(0, 0, 0, RDW_ALLCHILDREN|RDW_INVALIDATE);
-
-	minimized = is_minimized();
-	maximized = is_maximized();
+		if ((window_desc.get_type() != WindowType::normal) || (window_desc.is_layered()))
+			set_alpha_channel();
+	}
 }
 
 void Win32Window::received_keyboard_input(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -1708,15 +1662,10 @@ void Win32Window::get_styles_from_description(const DisplayWindowDescription &de
 
 	if (desc.is_layered())
 	{
-		layered = true;
 		if (!DwmFunctions::is_composition_enabled())
 		{
 			ex_style |= WS_EX_LAYERED;
 		}
-	}
-	else
-	{
-		layered = false;
 	}
 
 	if (type == WindowType::tool)
@@ -1750,11 +1699,6 @@ RECT Win32Window::get_window_geometry_from_description(const DisplayWindowDescri
 		y = R.top;
 		width = R.get_width();
 		height = R.get_height();
-
-/*		x = 0;
-		y = 0;
-		width = GetSystemMetrics(SM_CXSCREEN);
-		height = GetSystemMetrics(SM_CYSCREEN);*/
 	}
 	else if (desc.get_position().left == -1 && desc.get_position().top == -1)
 	{
@@ -1959,16 +1903,21 @@ void Win32Window::update_layered_worker_thread_process()
 
 void Win32Window::enable_alpha_channel(const Rect &blur_rect)
 {
-	if (blur_rect.get_width() == 0)
+	window_blur_rect = blur_rect;
+	set_alpha_channel();
+}
+
+void Win32Window::set_alpha_channel()
+{
+	if (window_blur_rect.get_width() == 0)
 	{
 		DwmFunctions::enable_alpha_channel(hwnd, 0);
 	}
 	else
 	{
-		HRGN enable_alpha_region = ::CreateRectRgn(blur_rect.left, blur_rect.top, blur_rect.right, blur_rect.bottom);
+		HRGN enable_alpha_region = ::CreateRectRgn(window_blur_rect.left, window_blur_rect.top, window_blur_rect.right, window_blur_rect.bottom);
 		DwmFunctions::enable_alpha_channel(hwnd, enable_alpha_region);
 		DeleteObject(enable_alpha_region);
-
 	}
 
 }

@@ -35,6 +35,7 @@
 #include "API/Display/Window/input_context.h"
 #include "API/Display/Window/input_device.h"
 #include "API/Display/TargetProviders/input_device_provider.h"
+#include "API/Display/Window/display_window_description.h"
 #include "API/Core/System/event.h"
 #include "API/Core/Math/point.h"
 #include "API/Core/Math/rect.h"
@@ -82,7 +83,7 @@ public:
 	bool is_clipboard_image_available() const;
 	bool is_painting() const { return paintstruct.hdc != 0; }
 	const PAINTSTRUCT &get_paint_data() const { return paintstruct; }
-	bool is_layered() const { return layered; }
+	bool is_layered() const { return window_desc.is_layered(); }
 
 public:
 	void create(DisplayWindowSite *site, const DisplayWindowDescription &description);
@@ -141,6 +142,8 @@ private:
 	void update_layered_worker_thread();
 	void update_layered_worker_thread_process();
 	void update_layered_worker_thread_process_dwm();
+	void update_dwm_settings();
+	void set_alpha_channel();
 
 	static LRESULT WINAPI static_window_proc(
 		HWND hWnd,
@@ -150,15 +153,13 @@ private:
 	LRESULT window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
 	/// \brief Creates the initial window based on the window description.
-	void create_new_window(const DisplayWindowDescription &desc);
-
-	/// \brief Updates the already created window to new window description.
-	void modify_window(const DisplayWindowDescription &desc);
+	void create_new_window();
 
 	void get_styles_from_description( const DisplayWindowDescription &desc, DWORD &style, DWORD &ex_style  );
 	RECT get_window_geometry_from_description( const DisplayWindowDescription &desc, DWORD style, DWORD ex_style );
 	void connect_window_input( const DisplayWindowDescription &desc );
 	void register_window_class();
+	LRESULT wm_dwm_composition_changed(WPARAM wparam, LPARAM lparam);
 
 	void received_keyboard_input(UINT msg, WPARAM wparam, LPARAM lparam);
 	void received_mouse_input(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -197,13 +198,12 @@ private:
 	PAINTSTRUCT paintstruct;
 	Size minimum_size;
 	Size maximum_size;
-	bool layered;
 	UINT png_clipboard_format;
 	std::string class_name;
 	bool allow_dropshadow;
-	bool minimized;
-	bool maximized;
-	bool allow_screensaver;
+
+	DisplayWindowDescription window_desc;
+	Rect window_blur_rect;
 
 	Thread update_window_worker_thread;
 	bool update_window_worker_thread_started;
