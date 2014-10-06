@@ -80,6 +80,13 @@ DisplayWindowDescription::~DisplayWindowDescription()
 {
 }
 
+DisplayWindowDescription DisplayWindowDescription::clone() const
+{
+	DisplayWindowDescription copy;
+	*copy.impl = *impl;
+	return copy;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // DisplayWindowDescription attributes:
 
