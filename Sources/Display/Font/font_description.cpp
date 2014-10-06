@@ -187,20 +187,7 @@ FontDescription &FontDescription::operator =(const FontDescription &copy)
 FontDescription FontDescription::clone() const
 {
 	FontDescription copy;
-	copy.impl->typeface_name = impl->typeface_name;
-	copy.impl->height = impl->height;
-	copy.impl->line_height = impl->line_height;
-	copy.impl->average_width = impl->average_width;
-	copy.impl->escapement = impl->escapement;
-	copy.impl->orientation = impl->orientation;
-	copy.impl->weight = impl->weight;
-	copy.impl->italic = impl->italic;
-	copy.impl->underline = impl->underline;
-	copy.impl->strikeout = impl->strikeout;
-	copy.impl->fixed_pitch = impl->fixed_pitch;
-	copy.impl->anti_alias = impl->anti_alias;
-	copy.impl->subpixel = impl->subpixel;
-	copy.impl->charset = impl->charset;
+	*copy.impl = *impl;
 	return copy;
 }
 
