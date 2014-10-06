@@ -168,12 +168,16 @@ namespace clan
 		}
 
 		std::vector<Vertex> vertices;
-		vertices.push_back(Vertex(Vec4f(-1.0f, -1.0f, 0.0f, 1.0f), solid_color, Vec2f(0.0f, 1.0f)));
-		vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, 0.0f, 1.0f), solid_color, Vec2f(1.0f, 1.0f)));
-		vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 1.0f), solid_color, Vec2f(0.0f, 0.0f)));
-		vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, 0.0f, 1.0f), solid_color, Vec2f(1.0f, 1.0f)));
-		vertices.push_back(Vertex(Vec4f(1.0f, 1.0f, 0.0f, 1.0f), solid_color, Vec2f(1.0f, 0.0f)));
-		vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 1.0f), solid_color, Vec2f(0.0f, 0.0f)));
+		Vec4f brush_data1 = solid_color;
+		Vec4f brush_data2;
+		int draw_mode = 0;
+
+		vertices.push_back(Vertex(Vec4f(-1.0f, -1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(0.0f, 1.0f), draw_mode));
+		vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
+		vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
+		vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
+		vertices.push_back(Vertex(Vec4f(1.0f, 1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(1.0f, 0.0f), draw_mode));
+		vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
 
 		int gpu_index;
 		VertexArrayVector<Vertex> gpu_vertices(batch_buffer->get_vertex_buffer(gc, gpu_index));
@@ -181,9 +185,12 @@ namespace clan
 		if (prim_array[gpu_index].is_null())
 		{
 			prim_array[gpu_index] = PrimitivesArray(gc);
-			prim_array[gpu_index].set_attributes(0, gpu_vertices, cl_offsetof(Vertex, position));
-			prim_array[gpu_index].set_attributes(1, gpu_vertices, cl_offsetof(Vertex, color));
-			prim_array[gpu_index].set_attributes(2, gpu_vertices, cl_offsetof(Vertex, texcoord));
+			prim_array[gpu_index].set_attributes(0, gpu_vertices, cl_offsetof(Vertex, Position));
+			prim_array[gpu_index].set_attributes(1, gpu_vertices, cl_offsetof(Vertex, BrushData1));
+			prim_array[gpu_index].set_attributes(2, gpu_vertices, cl_offsetof(Vertex, BrushData2));
+			prim_array[gpu_index].set_attributes(3, gpu_vertices, cl_offsetof(Vertex, TexCoord0));
+			prim_array[gpu_index].set_attributes(4, gpu_vertices, cl_offsetof(Vertex, Mode));
+
 		}
 
 		gpu_vertices.upload_data(gc, 0, vertices);

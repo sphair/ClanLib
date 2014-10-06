@@ -206,21 +206,6 @@ const std::string::value_type *cl_glsl_fragment_sprite =
 	"void main() { gl_FragColor = Color*sampleTexture(TexIndex, TexCoord); } ";
 
 
-const std::string::value_type *cl_glsl15_vertex_path = R"shaderend(
-			#version 150
-			in vec4 Position;
-			in vec4 Color0;
-			in vec2 TexCoord0;
-			out vec4 Color;
-			out vec2 TexCoord;
-			void main()
-			{
-				gl_Position = Position;
-				Color = Color0;
-				TexCoord = TexCoord0;
-			}
-		)shaderend";
-
 const std::string::value_type *cl_glsl_vertex_path =
 "#version 130\n"
 "in vec4 Position, Color0; "
@@ -230,17 +215,107 @@ const std::string::value_type *cl_glsl_vertex_path =
 "out vec2 TexCoord; "
 "void main() { gl_Position = Position; Color = Color0; TexCoord = TexCoord0; }";
 
-const std::string::value_type *cl_glsl15_fragment_path = R"shaderend(
+
+const std::string::value_type *cl_glsl15_vertex_path = R"shaderend(
 			#version 150
-			uniform sampler2D Mask;
-			in vec4 Color;
-			in vec2 TexCoord;
-			out vec4 cl_FragColor;
+			in vec4 Position;
+			in vec4 BrushData1;
+			in vec4 BrushData2;
+			in vec2 TexCoord0;
+			in int Mode;
+			out vec4 brush_data1;
+			out vec4 brush_data2;
+			flat out int mode;
+			out vec4 position;
 			void main()
 			{
-				float alpha = pow(texture(Mask, TexCoord).r, 2.2);
-				cl_FragColor = Color * alpha;
+				gl_Position = Position;
+				position.xy = Position.xy;
+				position.zw = TexCoord0;
+				brush_data1 = BrushData1;
+				brush_data2 = BrushData2;
+				mode = Mode;
 			}
+		)shaderend";
+
+const std::string::value_type *cl_glsl15_fragment_path = R"shaderend(
+	#version 150
+
+	flat in int mode;
+	in vec4 position; // object xy + mask uv
+	in vec4 brush_data1;
+	in vec4 brush_data2;
+	out vec4 cl_FragColor;
+
+	uniform sampler1D gradient_texture;
+	uniform sampler2D image_texture;
+	uniform sampler2D mask_texture;
+
+	vec4 mask(vec4 color)
+	{
+		return color * texture(mask_texture, position.zw).r;
+	}
+
+	void solid_fill()
+	{
+		vec4 fill_color = brush_data1;
+		cl_FragColor = mask(fill_color);
+	}
+
+	vec4 gradient_color(int stop_start, int stop_end, float t)
+	{
+		vec4 color = texture(gradient_texture, stop_start * 2);
+		float last_stop_pos = texture(gradient_texture, stop_start * 2 + 1).x;
+		for (int i = stop_start + 1; i < stop_end; i++)
+		{
+			vec4 stop_color = texture(gradient_texture, i * 2);
+			float stop_pos = texture(gradient_texture, i * 2 + 1).x;
+			color = mix(color, stop_color, smoothstep(last_stop_pos, stop_pos, t));
+		}
+		return color;
+	}
+
+	void linear_gradient_fill()
+	{
+		vec2 grad_start = brush_data1.xy;
+		vec2 grad_dir = brush_data1.zw; // normalize(grad_end - grad_start)
+		float rcp_grad_length = brush_data2.x; // 1/length(grad_end - grad_start)
+		int stop_start = int(brush_data2.y);
+		int stop_end = int(brush_data2.z);
+
+		float t = dot(position.xy - grad_start, grad_dir) * rcp_grad_length;
+		cl_FragColor = mask(gradient_color(stop_start, stop_end, t));
+	}
+
+	void radial_gradient_fill()
+	{
+		vec2 grad_center = brush_data1.xy;
+		float rcp_grad_length = brush_data2.x; // 1/grad_radius
+		int stop_start = int(brush_data2.y);
+		int stop_end = int(brush_data2.z);
+
+		float t = length(position.xy - grad_center) * rcp_grad_length;
+		cl_FragColor = mask(gradient_color(stop_start, stop_end, t));
+	}
+
+	void image_fill()
+	{
+		vec2 uv = brush_data1.xy;
+		cl_FragColor = mask(texture(image_texture, uv));
+	}
+
+	void main()
+	{
+		switch (mode)
+		{
+		default:
+		case 0: solid_fill(); break;
+		case 1: linear_gradient_fill(); break;
+		case 2: radial_gradient_fill(); break;
+		case 3: image_fill(); break;
+		}
+	}
+
 		)shaderend";
 
 const std::string::value_type *cl_glsl_fragment_path =
@@ -374,15 +449,19 @@ GL3StandardPrograms::GL3StandardPrograms(GL3GraphicContextProvider *provider) : 
 	path_program.attach(vertex_path_shader);
 	path_program.attach(fragment_path_shader);
 	path_program.bind_attribute_location(0, "Position");
-	path_program.bind_attribute_location(1, "Color0");
-	path_program.bind_attribute_location(2, "TexCoord0");
+	path_program.bind_attribute_location(1, "BrushData1");
+	path_program.bind_attribute_location(2, "BrushData2");
+	path_program.bind_attribute_location(3, "TexCoord0");
+	path_program.bind_attribute_location(4, "Mode");
 
 	if (use_glsl_150)
 		path_program.bind_frag_data_location(0, "cl_FragColor");
 
 	if (!path_program.link())
 		throw Exception("Unable to link the standard shader program: 'path' Error:" + path_program.get_info_log());
-	path_program.set_uniform1i("Mask", 0);
+	path_program.set_uniform1i("mask_texture", 0);
+	path_program.set_uniform1i("gradient_texture", 1);
+	path_program.set_uniform1i("image_texture", 2);
 
 	impl->color_only_program = color_only_program;
 	impl->single_texture_program = single_texture_program;

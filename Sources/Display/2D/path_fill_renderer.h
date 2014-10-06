@@ -81,11 +81,14 @@ namespace clan
 		struct Vertex
 		{
 			Vertex() { }
-			Vertex(const Vec4f &position, const Vec4f &color, const Vec2f &texcoord) : position(position), color(color), texcoord(texcoord) { }
+			Vertex(const Vec4f &position, const Vec4f &brush_data1, const Vec4f &brush_data2, const Vec2f &texcoord, int mode) :
+				Position(position), BrushData1(brush_data1), BrushData2(brush_data2), TexCoord0(texcoord), Mode(mode) { }
 
-			Vec4f position;
-			Vec4f color;
-			Vec2f texcoord;
+			Vec4f Position;
+			Vec4f BrushData1;
+			Vec4f BrushData2;
+			Vec2f TexCoord0;
+			int Mode;
 		};
 
 		int width = 0;
