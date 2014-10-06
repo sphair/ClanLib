@@ -125,7 +125,7 @@ public:
 	void set_small_icon(const PixelBuffer &image);
 
 	void enable_alpha_channel(const Rect &blur_rect);
-	void extend_frame_into_client_area(int height);
+	void extend_frame_into_client_area(int left, int top, int right, int bottom);
 
 	void validate_context();
 /// \}

@@ -235,6 +235,27 @@ int DisplayWindowDescription::get_multisampling() const
 	return impl->multisampling;
 }
 
+float DisplayWindowDescription::get_extend_frame_left() const
+{
+	return impl->extend_frame_left;
+}
+
+float DisplayWindowDescription::get_extend_frame_top() const
+{
+	return impl->extend_frame_top;
+}
+
+float DisplayWindowDescription::get_extend_frame_right() const
+{
+	return impl->extend_frame_right;
+}
+
+float DisplayWindowDescription::get_extend_frame_bottom() const
+{
+	return impl->extend_frame_bottom;
+}
+
+
 /////////////////////////////////////////////////////////////////////////////
 // DisplayWindowDescription operations:
 
@@ -389,6 +410,13 @@ void DisplayWindowDescription::set_multisampling(int value)
 	impl->multisampling = value;
 }
 
+void DisplayWindowDescription::set_extend_frame(float left, float top, float right, float bottom)
+{
+	impl->extend_frame_left = left;
+	impl->extend_frame_top = top;
+	impl->extend_frame_right = right;
+	impl->extend_frame_bottom = bottom;
+}
 /////////////////////////////////////////////////////////////////////////////
 // DisplayWindowDescription implementation:
 

@@ -113,6 +113,12 @@ public:
 	bool allow_screensaver;
 	bool update_supported;
 	int multisampling;
+
+	float extend_frame_left = 0.0f;
+	float extend_frame_top = 0.0f;
+	float extend_frame_right = 0.0f;
+	float extend_frame_bottom = 0.0f;
+
 /// \}
 };
 

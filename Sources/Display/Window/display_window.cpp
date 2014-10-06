@@ -463,9 +463,9 @@ void DisplayWindow::enable_alpha_channel(const Rect &blur_rect)
 	impl->provider->enable_alpha_channel(blur_rect);
 }
 
-void DisplayWindow::extend_frame_into_client_area(int height)
+void DisplayWindow::extend_frame_into_client_area(int left, int top, int right, int bottom)
 {
-	impl->provider->extend_frame_into_client_area(height);
+	impl->provider->extend_frame_into_client_area(left, top, right, bottom);
 }
 
 

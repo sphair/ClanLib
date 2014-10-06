@@ -794,9 +794,9 @@ void OpenGLWindowProvider::enable_alpha_channel(const Rect &blur_rect)
 	win32_window.enable_alpha_channel(blur_rect);
 }
 
-void OpenGLWindowProvider::extend_frame_into_client_area(int height)
+void OpenGLWindowProvider::extend_frame_into_client_area(int left, int top, int right, int bottom)
 {
-	win32_window.extend_frame_into_client_area(height);
+	win32_window.extend_frame_into_client_area(left, top, right, bottom);
 }
 
 

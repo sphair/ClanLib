@@ -678,6 +678,15 @@ void Win32Window::create_new_window(const DisplayWindowDescription &desc)
 		if (desc.is_topmost())
 			SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOACTIVATE|SWP_NOMOVE|SWP_NOSIZE);
 
+		if (DwmFunctions::is_composition_enabled())
+		{
+			extend_frame_into_client_area(
+				(int)std::round(desc.get_extend_frame_left()),
+				(int)std::round(desc.get_extend_frame_top()),
+				(int)std::round(desc.get_extend_frame_right()),
+				(int)std::round(desc.get_extend_frame_bottom()));
+		}
+
 		if (desc.is_visible())
 			ShowWindow(hwnd, SW_SHOW);
 
@@ -1959,9 +1968,9 @@ void Win32Window::enable_alpha_channel(const Rect &blur_rect)
 
 }
 
-void Win32Window::extend_frame_into_client_area(int height)
+void Win32Window::extend_frame_into_client_area(int left, int top, int right, int bottom)
 {
-	DwmFunctions::extend_frame_into_client_area(hwnd, height);
+	DwmFunctions::extend_frame_into_client_area(hwnd, left, top, right, bottom);
 }
 
 }

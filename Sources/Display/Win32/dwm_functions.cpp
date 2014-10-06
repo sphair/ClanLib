@@ -62,13 +62,16 @@ void DwmFunctions::enable_alpha_channel(HWND hwnd, HRGN rgn)
 	}
 }
 
-void DwmFunctions::extend_frame_into_client_area(HWND hwnd, int height)
+void DwmFunctions::extend_frame_into_client_area(HWND hwnd, int left, int top, int right, int bottom)
 {
 	open_dll();
 	if (ExtendFrameIntoClientArea)
 	{
 		MARGINS margins = { 0 };
-		margins.cyTopHeight = height;
+		margins.cxLeftWidth = left;
+		margins.cxRightWidth = right;
+		margins.cyBottomHeight = bottom;
+		margins.cyTopHeight = top;
 		ExtendFrameIntoClientArea(hwnd, &margins);
 	}
 }

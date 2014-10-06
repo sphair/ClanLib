@@ -419,9 +419,9 @@ void D3DDisplayWindowProvider::enable_alpha_channel(const Rect &blur_rect)
 	window.enable_alpha_channel(blur_rect);
 }
 
-void D3DDisplayWindowProvider::extend_frame_into_client_area(int height)
+void D3DDisplayWindowProvider::extend_frame_into_client_area(int left, int top, int right, int bottom)
 {
-	window.extend_frame_into_client_area(height);
+	window.extend_frame_into_client_area(left, top, right, bottom);
 }
 
 void D3DDisplayWindowProvider::validate_context()

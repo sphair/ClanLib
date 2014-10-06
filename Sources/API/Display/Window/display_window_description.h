@@ -173,6 +173,11 @@ public:
 
 	/// \brief Returns the number of samples per pixel.
 	int get_multisampling() const;
+
+	float get_extend_frame_left() const;
+	float get_extend_frame_top() const;
+	float get_extend_frame_right() const;
+	float get_extend_frame_bottom() const;
 /// \}
 /// \name Operations
 /// \{
@@ -286,6 +291,9 @@ public:
 
 	/// \brief Sets the number of samples per pixel.
 	void set_multisampling(int value);
+
+	void set_extend_frame(float left, float top, float right, float bottom);
+
 
 /// \}
 /// \name Implementation

@@ -291,7 +291,7 @@ public:
 	/// \brief Exend the window frame into the client area
 	///
 	/// Only implemented on win32
-	virtual void extend_frame_into_client_area(int height) = 0;
+	virtual void extend_frame_into_client_area(int left, int top, int right, int bottom) = 0;
 
 
 /// \}
