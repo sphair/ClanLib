@@ -291,15 +291,16 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 	// Retrieve the frame size (emulating microsoft windows)
 	bool window_is_frameless = false;
 	bool window_has_thin_frame = false;
+	WindowType window_type = desc.get_type();
 	if (!desc.has_caption())
 	{
-		if (desc.is_tool_window())
+		if (window_type == WindowType::tool)
 		{
 			window_is_frameless = true;
 		}
 		else
 		{
-			if (desc.get_allow_resize() || desc.is_dialog())
+			if (desc.get_allow_resize() || window_type == WindowType::popup)
 			{
 				window_has_thin_frame = true;
 			}
@@ -313,11 +314,11 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 	if (net_wm_window_type != None)
 	{
 		Atom decor;
-		if (desc.is_dialog())
+		if (window_type == WindowType::popup)
 		{
 			decor = net_wm_window_type_dialog;
 		}
-		else if (desc.is_tool_window())
+		else if (window_type == WindowType::tool)
 		{
 			decor = net_wm_window_type_toolbar;
 		}

@@ -54,8 +54,6 @@ public:
 		maximize_button = true;
 		sysmenu = true;
 		drop_shadow = false;
-		tool_window = false;
-		dialog_window = false;
 		fullscreen = false;
 		fullscreen_monitor = 0;
 		flipping_buffers = 2;
@@ -92,8 +90,6 @@ public:
 	bool topmost;
 	bool visible;
 	bool drop_shadow;
-	bool tool_window;
-	bool dialog_window;
 	bool fullscreen;
 	int fullscreen_monitor;
 	bool allow_resize;
@@ -118,6 +114,8 @@ public:
 	float extend_frame_top = 0.0f;
 	float extend_frame_right = 0.0f;
 	float extend_frame_bottom = 0.0f;
+
+	WindowType type = WindowType::normal;
 
 /// \}
 };

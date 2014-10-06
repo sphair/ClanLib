@@ -170,16 +170,6 @@ bool DisplayWindowDescription::has_maximize_button() const
 	return impl->maximize_button;
 }
 
-bool DisplayWindowDescription::is_tool_window() const
-{
-	return impl->tool_window;
-}
-
-bool DisplayWindowDescription::is_dialog() const
-{
-	return impl->dialog_window;
-}
-
 bool DisplayWindowDescription::is_topmost() const
 {
 	return impl->topmost;
@@ -255,6 +245,11 @@ float DisplayWindowDescription::get_extend_frame_bottom() const
 	return impl->extend_frame_bottom;
 }
 
+WindowType DisplayWindowDescription::get_type() const
+{
+	return impl->type;
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 // DisplayWindowDescription operations:
@@ -293,16 +288,6 @@ void DisplayWindowDescription::set_topmost(bool value)
 void DisplayWindowDescription::set_visible(bool value)
 {
 	impl->visible = value;
-}
-
-void DisplayWindowDescription::set_tool_window(bool value)
-{
-	impl->tool_window = value;
-}
-
-void DisplayWindowDescription::set_dialog_window(bool value)
-{
-	impl->dialog_window = value;
 }
 
 void DisplayWindowDescription::set_drop_shadow(bool value)
@@ -417,6 +402,13 @@ void DisplayWindowDescription::set_extend_frame(float left, float top, float rig
 	impl->extend_frame_right = right;
 	impl->extend_frame_bottom = bottom;
 }
+
+void DisplayWindowDescription::set_type(WindowType type)
+{
+	impl->type = type;
+}
+
+
 /////////////////////////////////////////////////////////////////////////////
 // DisplayWindowDescription implementation:
 

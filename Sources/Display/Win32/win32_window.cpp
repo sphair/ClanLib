@@ -685,6 +685,9 @@ void Win32Window::create_new_window(const DisplayWindowDescription &desc)
 				(int)std::round(desc.get_extend_frame_top()),
 				(int)std::round(desc.get_extend_frame_right()),
 				(int)std::round(desc.get_extend_frame_bottom()));
+
+			if (desc.get_type() != WindowType::normal)
+				enable_alpha_channel(Rect());
 		}
 
 		if (desc.is_visible())
@@ -1678,10 +1681,12 @@ void Win32Window::get_styles_from_description(const DisplayWindowDescription &de
 	style = 0;
 	ex_style = 0;
 
-	if (desc.is_fullscreen() || desc.is_dialog() || !desc.has_caption())
+	WindowType type = desc.get_type();
+
+	if (desc.is_fullscreen() || type == WindowType::popup || !desc.has_caption())
 		style |= WS_POPUP;
 
-	if (desc.get_allow_resize() && !desc.is_fullscreen() && !desc.is_dialog())
+	if (desc.get_allow_resize() && !desc.is_fullscreen() && type != WindowType::popup)
 		style |= WS_SIZEBOX;
 
 	if (desc.has_caption())
@@ -1692,7 +1697,7 @@ void Win32Window::get_styles_from_description(const DisplayWindowDescription &de
 		{
 			style |= WS_SYSMENU;
 		}
-		if (!desc.is_dialog())
+		if (type != WindowType::popup)
 		{
 			if (desc.has_minimize_button())
 				style |= WS_MINIMIZEBOX;
@@ -1714,10 +1719,10 @@ void Win32Window::get_styles_from_description(const DisplayWindowDescription &de
 		layered = false;
 	}
 
-	if (desc.is_tool_window())
+	if (type == WindowType::tool)
 		ex_style |= WS_EX_TOOLWINDOW;
 
-	if (desc.is_dialog())
+	if (type == WindowType::popup)
 	{
 		ex_style |= WS_EX_DLGMODALFRAME;
 		ex_style |= WS_EX_WINDOWEDGE;

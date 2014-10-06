@@ -41,6 +41,18 @@ namespace clan
 /// \addtogroup clanDisplay_Window clanDisplay Window
 /// \{
 
+	enum class WindowType
+	{
+		// \brief Normal application window decorated by the windowing system
+		normal,
+		// \brief Popup window (not decorated)
+		popup,
+		// \brief Popup window registered as a tool window (not decorated)
+		tool,
+		// \brief Custom drawn application window
+		custom
+	};
+
 class Size;
 class Rect;
 class DisplayWindow;
@@ -130,12 +142,6 @@ public:
 
 	/// \brief Returns true if the window has a maximize button.
 	bool has_maximize_button() const;
-	
-	/// \brief Returns true if the window is a tool window.
-	bool is_tool_window() const;
-
-	/// \brief Returns true if the window is a dialog window.
-	bool is_dialog() const;
 
 	/// \brief Returns true if the window is initially visible.
 	bool is_visible() const;
@@ -178,6 +184,9 @@ public:
 	float get_extend_frame_top() const;
 	float get_extend_frame_right() const;
 	float get_extend_frame_bottom() const;
+
+	WindowType get_type() const;
+
 /// \}
 /// \name Operations
 /// \{
@@ -202,12 +211,6 @@ public:
 
 	/// \brief Sets if the window should be placed above all non-topmost windows.
 	void set_topmost(bool value = true);
-
-	/// \brief Flags the window to be a tool window to the windowing system.
-	void set_tool_window(bool value = true);
-
-	/// \brief Flags the window to be a dialog window to the windowing system.
-	void set_dialog_window(bool value = true);
 
 	/// \brief Enables a drop shadow effect on the window.
 	void set_drop_shadow(bool value = true);
@@ -293,6 +296,8 @@ public:
 	void set_multisampling(int value);
 
 	void set_extend_frame(float left, float top, float right, float bottom);
+
+	void set_type(WindowType type);
 
 
 /// \}

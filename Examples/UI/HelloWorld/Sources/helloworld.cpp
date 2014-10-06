@@ -39,6 +39,7 @@ int HelloWorld::start(const std::vector<std::string> &args)
 	DisplayWindowDescription desc;
 	desc.set_title("UICore: Hello World");
 	desc.set_allow_resize(true);
+	desc.set_type(WindowType::custom);
 	desc.set_extend_frame(16, 40, 16, 16);
 	std::shared_ptr<WindowView> root = std::make_shared<WindowView>(desc);
 
