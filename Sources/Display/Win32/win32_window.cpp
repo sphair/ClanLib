@@ -374,6 +374,17 @@ LRESULT Win32Window::static_window_proc(
 
 LRESULT Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
+	if (DwmFunctions::is_composition_enabled())
+	{
+		// Hit test handling for the Minimize + Maximize + Close buttons
+		if (DwmFunctions::Dwm_DefWindowProc)
+		{
+			LRESULT result = 0;
+			if (DwmFunctions::Dwm_DefWindowProc(wnd, msg, wparam, lparam, &result) == TRUE)
+				return result;
+		}
+	}
+
 	if (*site->func_window_message)
 	{
 		if ((*site->func_window_message)(wnd, msg, wparam, lparam))
@@ -633,6 +644,8 @@ LRESULT Win32Window::wm_dwm_composition_changed(WPARAM wparam, LPARAM lparam)
 
 void Win32Window::create_new_window()
 {
+	DwmFunctions::open_dll();
+
 	if (window_desc.get_handle())
 	{
 		hwnd = window_desc.get_handle();

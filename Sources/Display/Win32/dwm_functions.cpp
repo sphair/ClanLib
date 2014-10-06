@@ -34,7 +34,6 @@ namespace clan
 
 bool DwmFunctions::is_composition_enabled()
 {
-	open_dll();
 	if (IsCompositionEnabled)
 	{
 		BOOL is_enabled = FALSE;
@@ -49,7 +48,6 @@ bool DwmFunctions::is_composition_enabled()
 
 void DwmFunctions::enable_alpha_channel(HWND hwnd, HRGN rgn)
 {
-	open_dll();
 	if (EnableBlurBehindWindow)
 	{
 		DWM_BLURBEHIND blur_behind = { 0 };
@@ -64,7 +62,6 @@ void DwmFunctions::enable_alpha_channel(HWND hwnd, HRGN rgn)
 
 void DwmFunctions::extend_frame_into_client_area(HWND hwnd, int left, int top, int right, int bottom)
 {
-	open_dll();
 	if (ExtendFrameIntoClientArea)
 	{
 		MARGINS margins = { 0 };
@@ -95,6 +92,8 @@ void DwmFunctions::open_dll()
 			IsCompositionEnabled = (FuncDwmIsCompositionEnabled *)GetProcAddress(dll_handle, "DwmIsCompositionEnabled");
 			EnableBlurBehindWindow = (FuncDwmEnableBlurBehindWindow *)GetProcAddress(dll_handle, "DwmEnableBlurBehindWindow");
 			ExtendFrameIntoClientArea = (FuncDwmExtendFrameIntoClientArea *)GetProcAddress(dll_handle, "DwmExtendFrameIntoClientArea");
+			ExtendFrameIntoClientArea = (FuncDwmExtendFrameIntoClientArea *)GetProcAddress(dll_handle, "DwmExtendFrameIntoClientArea");
+			Dwm_DefWindowProc = (FuncDwmDefWindowProc *)GetProcAddress(dll_handle, "DwmDefWindowProc");
 		}
 	}
 }
@@ -103,5 +102,6 @@ HMODULE DwmFunctions::dll_handle = 0;
 DwmFunctions::FuncDwmIsCompositionEnabled *DwmFunctions::IsCompositionEnabled = 0;
 DwmFunctions::FuncDwmEnableBlurBehindWindow *DwmFunctions::EnableBlurBehindWindow = 0;
 DwmFunctions::FuncDwmExtendFrameIntoClientArea *DwmFunctions::ExtendFrameIntoClientArea = 0;
+DwmFunctions::FuncDwmDefWindowProc *DwmFunctions::Dwm_DefWindowProc = 0;
 
 }
