@@ -183,7 +183,7 @@ public:
 	/// \param color = The text color
 	void draw_glyph(Canvas &canvas, const Pointf &position, unsigned int glyph, const Colorf &color = Colorf::white);
 	void draw_glyph(Canvas &canvas, float x, float y, unsigned int glyph, const Colorf &color = Colorf::white) { draw_glyph(canvas, Pointf(x, y), glyph, color); }
-	void draw_glyph(Canvas &canvas, int x, int y, unsigned int glyph, const Colorf &color = Colorf::white) { draw_glyph(canvas, Pointf(x, y), glyph, color); }
+	void draw_glyph(Canvas &canvas, int x, int y, unsigned int glyph, const Colorf &color = Colorf::white) { draw_glyph(canvas, Pointf(static_cast<float>(x), static_cast<float>(y)), glyph, color); }
 
 	/// \brief Calculate size of text string.
 	///
