@@ -29,6 +29,7 @@
 
 #include "Display/precomp.h"
 #include "path_fill_renderer.h"
+#include "API/Display/Render/texture_1d.h"
 #include <algorithm>
 
 namespace clan
@@ -168,9 +169,43 @@ namespace clan
 		}
 
 		std::vector<Vertex> vertices;
-		Vec4f brush_data1 = solid_color;
+		Vec4f brush_data1;
 		Vec4f brush_data2;
-		int draw_mode = 0;
+		int draw_mode;
+
+		int num_stops = max(brush.stops.size(), 8);
+		PixelBuffer gradient_pixelbuffer(num_stops * 2, 1, tf_rgba32f);
+		Vec4f *gradient_ptr = gradient_pixelbuffer.get_data<Vec4f>();
+		for (unsigned int cnt = 0; cnt < brush.stops.size(); cnt++)
+		{
+			*(gradient_ptr++) = brush.stops[cnt].color;
+			*(gradient_ptr++) = Vec4f(brush.stops[cnt].position, 0.0f, 0.0f, 0.0f);
+		}
+
+		Texture1D gradient_texture(gc, gradient_pixelbuffer);
+		gradient_texture.set_min_filter(filter_nearest);
+		gradient_texture.set_mag_filter(filter_nearest);
+
+		if (brush.type == BrushType::linear)
+		{
+			draw_mode = 1;
+			Pointf end_point = brush.end_point;
+			Pointf start_point = brush.start_point;
+			Pointf dir = end_point - start_point;
+			Pointf dir_normed = Pointf::normalize(dir);
+			brush_data1.x = start_point.x;
+			brush_data1.y = start_point.y;
+			brush_data1.z = dir_normed.x;
+			brush_data1.w = dir_normed.y;
+			brush_data2.x = 1.0f / dir.length();
+			brush_data2.y = -10.0f;
+			brush_data2.z = 10.0f;
+		}
+		else
+		{
+			draw_mode = 0;
+			brush_data1 = solid_color;
+		}
 
 		vertices.push_back(Vertex(Vec4f(-1.0f, -1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(0.0f, 1.0f), draw_mode));
 		vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
@@ -198,7 +233,9 @@ namespace clan
 		gc.set_blend_state(blend_state);
 		gc.set_program_object(program_path);
 		gc.set_texture(0, texture);
+		gc.set_texture(1, gradient_texture);
 		gc.draw_primitives(type_triangles, 6, prim_array[gpu_index]);
+		gc.reset_texture(1);
 		gc.reset_texture(0);
 		gc.reset_program_object();
 		gc.reset_blend_state();

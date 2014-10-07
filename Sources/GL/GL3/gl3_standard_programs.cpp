@@ -264,12 +264,12 @@ const std::string::value_type *cl_glsl15_fragment_path = R"shaderend(
 
 	vec4 gradient_color(int stop_start, int stop_end, float t)
 	{
-		vec4 color = texture(gradient_texture, stop_start * 2);
-		float last_stop_pos = texture(gradient_texture, stop_start * 2 + 1).x;
+		vec4 color = texelFetch(gradient_texture, stop_start * 2, 0);
+		float last_stop_pos = texelFetch(gradient_texture, stop_start * 2 + 1, 0).x;
 		for (int i = stop_start + 1; i < stop_end; i++)
 		{
-			vec4 stop_color = texture(gradient_texture, i * 2);
-			float stop_pos = texture(gradient_texture, i * 2 + 1).x;
+			vec4 stop_color = texelFetch(gradient_texture, i * 2, 0);
+			float stop_pos = texelFetch(gradient_texture, i * 2 + 1, 0).x;
 			color = mix(color, stop_color, smoothstep(last_stop_pos, stop_pos, t));
 		}
 		return color;
