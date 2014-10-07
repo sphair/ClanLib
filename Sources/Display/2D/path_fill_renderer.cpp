@@ -198,8 +198,8 @@ namespace clan
 			brush_data1.z = dir_normed.x;
 			brush_data1.w = dir_normed.y;
 			brush_data2.x = 1.0f / dir.length();
-			brush_data2.y = -10.0f;
-			brush_data2.z = 10.0f;
+			brush_data2.y = 0.0f;
+			brush_data2.z = brush.stops.size();
 		}
 		else
 		{
