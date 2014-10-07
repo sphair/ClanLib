@@ -30,8 +30,6 @@
 #include <ClanLib/application.h>
 #include <ClanLib/display.h>
 #include <ClanLib/gl.h>
-#include <ClanLib/d3d.h>
-#include <ClanLib/swrender.h>
 #include <cmath>
 #include <cstdlib>
 
@@ -62,7 +60,7 @@ public:
 
 private:
 	void on_mouse_down(const clan::InputEvent &key);
-	void on_window_close(clan::DisplayWindow *window);
+	void on_window_close();
 	void on_lost_focus();
 	void on_input_up(const clan::InputEvent &key);
 private:
@@ -79,9 +77,7 @@ int App::main(const std::vector<std::string> &args)
 	clan::SetupDisplay setup_display;
 
 	// We support all display targets, in order listed here
-	//clan::SetupD3D setup_d3d;
 	clan::SetupGL setup_gl;
-	clan::SetupSWRender setup_swrender;
 
 	// Start the Application
 	App app;
@@ -130,7 +126,7 @@ int App::start(const std::vector<std::string> &args)
 
 	// Setup the slots
     clan::SlotContainer cc;
-	cc.connect(window_center.sig_window_close(), clan::bind_member(this, &App::on_window_close, &window_center));
+	cc.connect(window_center.sig_window_close(), clan::bind_member(this, &App::on_window_close));
 	cc.connect(window_center.get_ic().get_mouse().sig_key_down(), clan::bind_member(this, &App::on_mouse_down));
 	cc.connect(window_center.get_ic().get_mouse().sig_key_dblclk(), clan::bind_member(this, &App::on_mouse_down));
 	cc.connect(window_center.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
@@ -151,20 +147,13 @@ int App::start(const std::vector<std::string> &args)
 	clan::Sprite tux(canvas_center, "../LayeredWindow/round_tux.png");
 	clan::Image rock(canvas_center, "../LayeredWindow/rock.png");
 
-	// Translate the window matrix to position the graphics at the correct position
-	canvas_center.set_translate(-window_inner_offset, -window_inner_offset);
-	canvas_top.set_translate(0.0f, 0.0f);
-	canvas_left.set_translate(0, -window_inner_offset);
-	canvas_right.set_translate(-entire_window_size.width + window_inner_offset, -window_inner_offset);
-	canvas_bottom.set_translate(0, -entire_window_size.height + window_inner_offset);
-
-	// Scale the window matrix, so the rock fills it
-	clan::Mat4f matrix = clan::Mat4f::scale( (float) entire_window_size.width / rock.get_width(), (float) entire_window_size.height / rock.get_height(), 1.0f);
-	canvas_top.mult_modelview(matrix);
-	canvas_right.mult_modelview(matrix);
-	canvas_bottom.mult_modelview(matrix);
-	canvas_left.mult_modelview(matrix);
-	canvas_center.mult_modelview(matrix);
+	// Translate and scale the window matrix to position the graphics at the correct position
+	clan::Mat4f scale_matrix = clan::Mat4f::scale((float)entire_window_size.width / rock.get_width(), (float)entire_window_size.height / rock.get_height(), 1.0f);
+	canvas_center.set_transform(clan::Mat4f::translate(-window_inner_offset, -window_inner_offset, 0.0f) * scale_matrix);
+	canvas_top.set_transform(clan::Mat4f::translate(0.0f, 0.0f, 0.0f) * scale_matrix);
+	canvas_left.set_transform(clan::Mat4f::translate(0, -window_inner_offset, 0.0f) * scale_matrix);
+	canvas_right.set_transform(clan::Mat4f::translate(-entire_window_size.width + window_inner_offset, -window_inner_offset, 0.0f) * scale_matrix);
+	canvas_bottom.set_transform(clan::Mat4f::translate(0, -entire_window_size.height + window_inner_offset, 0.0f) * scale_matrix);
 
 	// Prepare the static image in the layered window
 	canvas_top.clear(clan::Colorf(0.0f,0.0f,0.0f, 0.0f));
@@ -232,7 +221,7 @@ void App::on_mouse_down(const clan::InputEvent &key)
 	quit = true;
 }
 
-void App::on_window_close(clan::DisplayWindow *window)
+void App::on_window_close()
 {
 	quit = true;
 }

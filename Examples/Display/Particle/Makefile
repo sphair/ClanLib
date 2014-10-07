@@ -23,7 +23,7 @@ Sources/particle.o \
 Sources/program.o \
 Sources/precomp.o
 
-LIBS=clanApp clanDisplay clanCore clanGL clanSWRender
+LIBS=clanApp clanDisplay clanCore clanGL
 
 CXXFLAGS += -I./ -I../ -I Sources
 

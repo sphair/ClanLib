@@ -187,14 +187,11 @@ int App::start(const std::vector<std::string> &args)
 			}
 
 			// Draw rotating mandelbrot
-			canvas.push_modelview();
-			canvas.mult_translate(canvas.get_width()/2, canvas.get_height()/2);
-			canvas.mult_rotate(clan::Angle(angle, clan::angle_degrees));
-			//canvas.mult_scale(2.0f, 2.0f);
+			canvas.set_transform(clan::Mat4f::translate(canvas.get_width()/2, canvas.get_height()/2, 0.0f) * clan::Mat4f::rotate(clan::Angle(angle, clan::angle_degrees), 0.0f, 0.0f, 1.0f));
 			clan::Image image(*texture_completed, clan::Size(texture_size, texture_size));
 			image.draw( canvas, -texture_size/2, -texture_size/2 );
 
-			canvas.pop_modelview();
+			canvas.set_transform(clan::Mat4f::identity());
 		
 			// Draw FPS
 			std::string fps;
