@@ -30,7 +30,6 @@
 #include <ClanLib/application.h>
 #include <ClanLib/display.h>
 #include <ClanLib/gl.h>
-#include <ClanLib/swrender.h>
 #include <ClanLib/d3d.h>
 
 #include <cmath>
@@ -45,8 +44,8 @@ public:
 private:
 	void on_mouse_down(const clan::InputEvent &key);
 	void on_mouse_up(const clan::InputEvent &key);
-	void on_mouse_move(const clan::InputEvent &key, clan::DisplayWindow *window);
-	void on_window_close(clan::DisplayWindow *window);
+	void on_mouse_move(const clan::InputEvent &key, clan::DisplayWindow &window);
+	void on_window_close();
 	void on_lost_focus();
 	void on_input_up(const clan::InputEvent &key);
 
@@ -70,7 +69,6 @@ int App::main(const std::vector<std::string> &args)
 	// We support all display targets, in order listed here
 	//clan::SetupD3D setup_d3d;
 	clan::SetupGL setup_gl;
-	clan::SetupSWRender setup_swrender;
 
 	// Start the Application
 	App app;
@@ -97,15 +95,15 @@ int App::start(const std::vector<std::string> &args)
 	desc_window.set_size(clan::Size(600, 600), false);
 
 	// Open the windows
-    clan::SlotContainer cc;
+    clan::SlotContainer sc;
 	clan::DisplayWindow window(desc_window);
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close, &window));
-	cc.connect(window.get_ic().get_mouse().sig_key_down(), clan::bind_member(this, &App::on_mouse_down));
-	cc.connect(window.get_ic().get_mouse().sig_key_dblclk(), clan::bind_member(this, &App::on_mouse_down));
-	cc.connect(window.get_ic().get_mouse().sig_key_up(), clan::bind_member(this, &App::on_mouse_up));
-	cc.connect(window.get_ic().get_mouse().sig_pointer_move(), clan::bind_member(this, &App::on_mouse_move, &window));
-	cc.connect(window.sig_lost_focus(), clan::bind_member(this, &App::on_lost_focus));
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	sc.connect(window.sig_window_close(), [=](){on_window_close(); });
+	sc.connect(window.get_ic().get_mouse().sig_key_down(), clan::bind_member(this, &App::on_mouse_down));
+	sc.connect(window.get_ic().get_mouse().sig_key_dblclk(), clan::bind_member(this, &App::on_mouse_down));
+	sc.connect(window.get_ic().get_mouse().sig_key_up(), clan::bind_member(this, &App::on_mouse_up));
+	sc.connect(window.get_ic().get_mouse().sig_pointer_move(), [&](const clan::InputEvent &input){on_mouse_move(input, window); });
+	sc.connect(window.sig_lost_focus(), clan::bind_member(this, &App::on_lost_focus));
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 
 	clan::Canvas canvas(window);
 
@@ -209,17 +207,17 @@ void App::on_lost_focus()
 	drag_start = false;
 }
 
-void App::on_mouse_move(const clan::InputEvent &key, clan::DisplayWindow *window)
+void App::on_mouse_move(const clan::InputEvent &key, clan::DisplayWindow &window)
 {
 	if (drag_start)
 	{
-			clan::Rect geometry = window->get_geometry();
+			clan::Rect geometry = window.get_geometry();
 			geometry.translate(key.mouse_pos.x - last_mouse_pos.x, key.mouse_pos.y - last_mouse_pos.y);
-			window->set_position(geometry.left, geometry.top);
+			window.set_position(geometry.left, geometry.top);
 	}
 }
 
-void App::on_window_close(clan::DisplayWindow *window)
+void App::on_window_close()
 {
 	quit = true;
 }

@@ -43,8 +43,7 @@ public:
 	{
 		legacy_gl,
 		opengl,
-		d3d,
-		swrender
+		d3d
 	};
 
 	Target();

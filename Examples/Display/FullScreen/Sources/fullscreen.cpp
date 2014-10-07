@@ -78,7 +78,7 @@ int FullScreen::start(const std::vector<std::string> &args)
 		canvas.clear(Colorf(0.0f,0.0f,0.2f));
 
 		// Note drawing scaled fonts looks bad, even with sub pixel aliasing off
-		canvas.set_modelview(Mat4f::identity());
+		canvas.set_transform(Mat4f::identity());
 		if (is_fullscreen)
 		{
 			font.draw_text(canvas, 16, 32, "Full Screen Mode. Press 'F' to switch to resizable window.");
@@ -90,7 +90,7 @@ int FullScreen::start(const std::vector<std::string> &args)
 
 		// Scale the drawing to the screen to a virtual screen size
 		Mat4f matrix = Mat4f::scale( (float) canvas.get_width() / virtual_screen_width, (float) canvas.get_height() /virtual_screen_height, 1.0f);
-		canvas.set_modelview(matrix);
+		canvas.set_transform(matrix);
 
 		spr_logo.draw(canvas, virtual_screen_width-spr_logo.get_width(), virtual_screen_height-spr_logo.get_height());
 

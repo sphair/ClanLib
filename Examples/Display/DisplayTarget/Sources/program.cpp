@@ -38,7 +38,6 @@ int Program::main(const std::vector<std::string> &args)
 	// We support all display targets
 	clan::SetupGL setup_gl;
 	clan::SetupD3D setup_d3d;
-	clan::SetupSWRender setup_swrender;
 
 	Target app;
 	int retval = app.start(args);
