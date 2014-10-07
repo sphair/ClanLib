@@ -138,7 +138,6 @@ if test "$WIN32" = "yes"; then
 		extra_LIBS_clanDisplay="-lwinmm -lmsvcrt -lmingwex -lddraw -ldinput8 -ldxguid -lmapi32 -lgdi32 -lole32 -lfreetype"
 		extra_LIBS_clanGL="-lopengl32"
 		extra_LIBS_clanSound="-ldsound -ldxguid -lwinmm -lmsvcrt -lmingwex"
-		extra_LIBS_clanSqlite="-lsqlite3"
 		extra_LIBS_clanNetwork="-lws2_32"
 		;;
 	*)
@@ -148,7 +147,6 @@ if test "$WIN32" = "yes"; then
 	extra_LIBS_clanGL="-lopengl32"
 	extra_LIBS_clanSound="-ldsound -ldxguid -lwinmm"
 	extra_LIBS_clanNetwork="-lws2_32"
-	extra_LIBS_clanSqlite="-lsqlite3"
 	;;
 esac
 fi
@@ -443,26 +441,6 @@ if test "$enable_clanSound" != "no"; then
 	if test "$enable_clanSound" = "auto"; then enable_clanSound=yes; fi
 	AM_CONDITIONAL(ALSA, test x$have_alsa = xyes)
 fi
-
-if test "$enable_clanDatabase" != "no"; then
-	echo "Checking for clanDatabase stuff"
-	echo "==============================="
-	enable_clanDatabase=yes
-	echo ""
-fi
-
-if test "$enable_clanSqlite" != "no"; then
-	echo "Checking for clanSqlite stuff"
-	echo "==============================="
-	CLANLIB_CHECK_LIB(sqlite, [`cat $srcdir/Setup/Tests/sqlite.cpp`], clanSqlite, [ *** Cannot find sqlite (See: http://www.sqlite.org/ ) (Try  libsqlite3-dev or better) ], [-lsqlite3 -ldl])
-	echo ""
-fi
-
-if test "$enable_clanSqlite" != "no"; then
-	enable_clanDatabase=yes
-	enable_clanSqlite=yes
-fi
-
 
 if test "$enable_clanNetwork" != "no"; then
 	echo "Checking for clanNetwork stuff"
