@@ -42,7 +42,7 @@ class GlyphMetrics
 {
 public:
 	GlyphMetrics() {};
-	GlyphMetrics(Rectf &black_box, Sizef &advance) : black_box(black_box), advance(advance) {}
+	GlyphMetrics(const Rectf &black_box, const Sizef &advance) : black_box(black_box), advance(advance) {}
 	Rectf black_box;	//!< The coordinates of the upper left corner and the size of the smallest rectangle that completely encloses the glyph
 	Sizef advance;		//!< The distance from the origin of the current character cell to the origin of the next character cell
 };

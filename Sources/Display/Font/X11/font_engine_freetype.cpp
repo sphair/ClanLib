@@ -142,24 +142,15 @@ FontMetrics FontEngine_Freetype::get_metrics()
 	float max_char_width = face->size->metrics.max_advance / 64.0f;
 	float avg_char_width = (max_char_width * 2.0f) / 3.0f;
 
+	float internal_leading = height - face->size->metrics.y_ppem;
+	float external_leading = (face->size->metrics.height / 64.0f) - height;
 	return FontMetrics(
 		height,
+		height + external_leading,
 		ascent,
 		descent,
-		height - face->size->metrics.y_ppem,		// internal_leading
-		(face->size->metrics.height / 64.0f) - height,	// external_leading
-		avg_char_width,	// average_character_width
-		max_char_width,	// max_character_width
-		face->style_flags & FT_STYLE_FLAG_BOLD ? 700.0f : 400.0f,	// weight
-		0,	// overhang
-		96,	// digitized_aspect_x
-		96,	// digitized_aspect_y
-		face->style_flags & FT_STYLE_FLAG_ITALIC ? true : false,	// italic
-		false,	//TODO (underline)
-		false,	//TODO (struck_out)
-		face->face_flags & FT_FACE_FLAG_FIXED_WIDTH ? true : false
-		);
-
+		internal_leading,
+		external_leading);
 }
 
 float FontEngine_Freetype::get_kerning(const std::string::value_type &lchar, const std::string::value_type &rchar)
@@ -192,10 +183,10 @@ GlyphMetrics FontEngine_Freetype::get_glyph_metrics(unsigned int glyph)
 	FT_GlyphSlot slot = face->glyph;
 	GlyphMetrics metrics;
 	// Note, these values have not been checked
-	metrics.black_box.left = slot->matrics.horiBearingX / 64.0f;
-	metrics.black_box.top = slot->matrics.horiBearingY / 64.0f;
-	metrics.black_box.right = font_buffer.metrics.black_box.left + slot->matrics.width / 64.0f;
-	metrics.black_box.bottom = font_buffer.metrics.black_box.top + slot->matrics.height / 64.0f;
+	metrics.black_box.left = slot->metrics.horiBearingX / 64.0f;
+	metrics.black_box.top = slot->metrics.horiBearingY / 64.0f;
+	metrics.black_box.right = metrics.black_box.left + slot->metrics.width / 64.0f;
+	metrics.black_box.bottom = metrics.black_box.top + slot->metrics.height / 64.0f;
 	metrics.advance.width = slot->advance.x / 64.0f;
 	metrics.advance.height = slot->advance.y / 64.0f;
 
@@ -236,8 +227,6 @@ Path FontEngine_Freetype::load_glyph_path(int glyph_index)
 
 Shape2D FontEngine_Freetype::load_glyph_outline(int c, GlyphMetrics &out_glyph_metrics)
 {
-	out_advance_x = 0;
-
 	FT_UInt glyph_index;
 
 	glyph_index = FT_Get_Char_Index( face, FT_ULong(c) );
@@ -313,7 +302,7 @@ Shape2D FontEngine_Freetype::load_glyph_outline(int c, GlyphMetrics &out_glyph_m
 
 	FT_Done_Glyph(glyph);
 
-	out_advance_x = get_glyph_metrics(c);
+	out_glyph_metrics = get_glyph_metrics(c);
 
 	return outline;
 }
@@ -348,10 +337,10 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph_standard(int glyph, bool ant
 	font_buffer.glyph = glyph;
 	// Set Increment pen position
 	// Note, these values have not been checked
-	font_buffer.metrics.black_box.left = slot->matrics.horiBearingX / 64.0f;
-	font_buffer.metrics.black_box.top = slot->matrics.horiBearingY / 64.0f;
-	font_buffer.metrics.black_box.right = font_buffer.metrics.black_box.left + slot->matrics.width / 64.0f;
-	font_buffer.metrics.black_box.bottom = font_buffer.metrics.black_box.top + slot->matrics.height / 64.0f;
+	font_buffer.metrics.black_box.left = slot->metrics.horiBearingX / 64.0f;
+	font_buffer.metrics.black_box.top = slot->metrics.horiBearingY / 64.0f;
+	font_buffer.metrics.black_box.right = font_buffer.metrics.black_box.left + slot->metrics.width / 64.0f;
+	font_buffer.metrics.black_box.bottom = font_buffer.metrics.black_box.top + slot->metrics.height / 64.0f;
 	font_buffer.metrics.advance.width = slot->advance.x / 64.0f;
 	font_buffer.metrics.advance.height = slot->advance.y / 64.0f;
 
@@ -449,8 +438,8 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph_subpixel(int glyph)
 
 	font_buffer.glyph = glyph;
 	// Set Increment pen position
-	font_buffer.increment.x = (slot->advance.x+32) >> 6;
-	font_buffer.increment.y = (slot->advance.y+32) >> 6;
+	font_buffer.metrics.advance.width = (slot->advance.x+32) >> 6;
+	font_buffer.metrics.advance.height = (slot->advance.y+32) >> 6;
 
 	if (error || slot->bitmap.rows == 0 || slot->bitmap.width == 0)
 		return font_buffer;

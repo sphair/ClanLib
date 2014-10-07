@@ -30,7 +30,7 @@
 #include "Display/precomp.h"
 #include "API/Display/2D/path.h"
 #include "path_impl.h"
-#include "..\Font\font_impl.h"
+#include "../Font/font_impl.h"
 
 namespace clan
 {
