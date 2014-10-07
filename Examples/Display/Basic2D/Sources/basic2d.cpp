@@ -84,12 +84,12 @@ int Basic2D::start(const std::vector<std::string> &args)
 		path.transform(clan::Mat3f::translate(shape_rect.get_center()));
 		clan::Brush brush = clan::Brush::solid_rgba8(255, 0, 255, 64);
 		brush.stops.push_back(clan::BrushGradientStop(clan::Colorf::green, 0.0f));
-		brush.stops.push_back(clan::BrushGradientStop(clan::Colorf::yellow, 1.0f));
+		brush.stops.push_back(clan::BrushGradientStop(clan::Colorf::yellow, 50.0f));
 
 		brush.type = clan::BrushType::linear;
 
 		brush.start_point = clan::Pointf(0.0f, 0.0f);
-		brush.end_point = clan::Pointf(100.0f, 0.0f);
+		brush.end_point = clan::Pointf(0.5f, 0.0f);
 		canvas.fill(path, brush);
 		//path = clan::Path::glyph(font, 'G');
 		//path.transform(clan::Mat3f::rotate(clan::Angle(-sin_count * 10.0f, clan::angle_degrees)));
