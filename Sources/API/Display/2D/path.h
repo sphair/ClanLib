@@ -59,7 +59,6 @@ namespace clan
 		void bezier_to(const Pointf &control, const Pointf &point);
 		void bezier_to(const Pointf &control1, const Pointf &control2, const Pointf &point);
 		void close();
-		void transform(const Mat3f &transform);
 
 		static Path rect(const Rectf &box);
 		static Path rect(float x, float y, float width, float height) { return Path::rect(Rectf(x, y, Sizef(width, height))); }
