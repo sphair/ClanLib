@@ -30,6 +30,7 @@
 #include "Display/precomp.h"
 #include "path_fill_renderer.h"
 #include "API/Display/Render/texture_1d.h"
+#include "API/Display/2D/subtexture.h"
 #include <algorithm>
 
 namespace clan
@@ -200,19 +201,66 @@ namespace clan
 			brush_data2.x = 1.0f / dir.length();
 			brush_data2.y = 0.0f;
 			brush_data2.z = brush.stops.size();
+			vertices.push_back(Vertex(Vec4f(-1.0f, -1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(0.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, 1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(1.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
+		}
+		else if (brush.type == BrushType::radial)
+		{
+			draw_mode = 2;
+			brush_data1.x = brush.center_point.x;
+			brush_data1.y = brush.center_point.y;
+			brush_data2.x = 1.0f / brush.radius_x;
+			brush_data2.y = 0.0f;
+			brush_data2.z = brush.stops.size();
+			vertices.push_back(Vertex(Vec4f(-1.0f, -1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(0.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, 1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(1.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
+		}
+		else if (brush.type == BrushType::image)
+		{
+			draw_mode = 3;
+			Subtexture subtexture = brush.image.get_texture();
+			if (subtexture.is_null())
+				return;
+			Texture2D image_texture = subtexture.get_texture();
+			if (image_texture.is_null())
+				return;
+
+			Rectf src = subtexture.get_geometry();
+			Sizef tex_size = Sizef((float)image_texture.get_width(), (float)image_texture.get_height());
+
+			float src_left = (src.left) / tex_size.width;
+			float src_top = (src.top) / tex_size.height;
+			float src_right = (src.right) / tex_size.width;
+			float src_bottom = (src.bottom) / tex_size.height;
+
+			gc.set_texture(2, image_texture);
+			vertices.push_back(Vertex(Vec4f(-1.0f, -1.0f, 0.0f, 1.0f), Vec4f(src_left, src_top, 0.0f, 0.0f), brush_data2, Vec2f(0.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, 0.0f, 1.0f), Vec4f(src_right, src_top, 0.0f, 0.0f), brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 1.0f), Vec4f(src_left, src_bottom, 0.0f, 0.0f), brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, 0.0f, 1.0f), Vec4f(src_right, src_top, 0.0f, 0.0f), brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, 1.0f, 0.0f, 1.0f), Vec4f(src_right, src_bottom, 0.0f, 0.0f), brush_data2, Vec2f(1.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 1.0f), Vec4f(src_left, src_bottom, 0.0f, 0.0f), brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
 		}
 		else
 		{
 			draw_mode = 0;
 			brush_data1 = solid_color;
+			vertices.push_back(Vertex(Vec4f(-1.0f, -1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(0.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, 1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(1.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
 		}
 
-		vertices.push_back(Vertex(Vec4f(-1.0f, -1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(0.0f, 1.0f), draw_mode));
-		vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
-		vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
-		vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
-		vertices.push_back(Vertex(Vec4f(1.0f, 1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(1.0f, 0.0f), draw_mode));
-		vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
 
 		int gpu_index;
 		VertexArrayVector<Vertex> gpu_vertices(batch_buffer->get_vertex_buffer(gc, gpu_index));
@@ -235,6 +283,7 @@ namespace clan
 		gc.set_texture(0, texture);
 		gc.set_texture(1, gradient_texture);
 		gc.draw_primitives(type_triangles, 6, prim_array[gpu_index]);
+		gc.reset_texture(2);
 		gc.reset_texture(1);
 		gc.reset_texture(0);
 		gc.reset_program_object();
