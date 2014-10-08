@@ -79,26 +79,26 @@ int Basic2D::start(const std::vector<std::string> &args)
 		clan::Sizef shape_size(400.0f, 300.0f);
 		clan::Rectf shape_rect((canvas.get_width() - shape_size.width) / 2.0f, (canvas.get_height() - shape_size.height) / 2.0f, shape_size);
 		clan::Path path = clan::Path::rect(shape_rect, clan::Sizef(32.0f, 32.0f));
-		path.transform(clan::Mat3f::translate(-shape_rect.get_center()));
-		path.transform(clan::Mat3f::rotate(clan::Angle(sin_count * 10.0f, clan::angle_degrees)));
-		path.transform(clan::Mat3f::translate(shape_rect.get_center()));
+
+		clan::Pointf shape_centre = shape_rect.get_center();
+		clan::Mat4f transform = clan::Mat4f::translate(shape_centre.x, shape_centre.y, 0.0f);
+		transform = transform * clan::Mat4f::rotate(clan::Angle(sin_count * 10.0f, clan::angle_degrees), 0.0f, 0.0f, 1.0f);
+		transform = transform * clan::Mat4f::translate(-shape_centre.x, -shape_centre.y, 0.0f);
+		canvas.set_transform(transform);
+
 		clan::Brush brush = clan::Brush::solid_rgba8(255, 0, 255, 64);
-		brush.stops.push_back(clan::BrushGradientStop(clan::Colorf::red, 0.0f));
-		brush.stops.push_back(clan::BrushGradientStop(clan::Colorf::white, 0.3f));
-		brush.stops.push_back(clan::BrushGradientStop(clan::Colorf::white, 0.6f));
-		brush.stops.push_back(clan::BrushGradientStop(clan::Colorf::green, 1.0f));
+		//brush.stops.push_back(clan::BrushGradientStop(clan::Colorf::red, 0.0f));
+		//brush.stops.push_back(clan::BrushGradientStop(clan::Colorf::white, 0.5f));
+		//brush.stops.push_back(clan::BrushGradientStop(clan::Colorf::green, 1.0f));
+		//brush.radius_x = 0.5f;
 
-		brush.type = clan::BrushType::linear;
+		brush.type = clan::BrushType::image;
+		brush.image = spr_logo;
 
-		brush.start_point = clan::Pointf(0.0, 0.0f);
-		brush.end_point = clan::Pointf(0.75f, 0.75f);
+		//brush.start_point = clan::Pointf(0.0, 0.0f);
+		//brush.end_point = clan::Pointf(0.75f, 0.75f);
 		canvas.fill(path, brush);
-		//path = clan::Path::glyph(font, 'G');
-		//path.transform(clan::Mat3f::rotate(clan::Angle(-sin_count * 10.0f, clan::angle_degrees)));
-		//path.transform(clan::Mat3f::scale(10.0f, 10.0f));
-		//path.transform(clan::Mat3f::translate(200, 300));
-		//brush = clan::Brush::solid_rgba8(0, 255, 0, 255);
-		//canvas.fill(path, brush);
+		canvas.set_transform(clan::Mat4f::identity());
 
 		std::string text("Welcome to the ClanLib SDK");
 		clan::Size text_size = font.get_text_size(canvas, text);
