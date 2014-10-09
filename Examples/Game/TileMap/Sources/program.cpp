@@ -38,7 +38,6 @@ int Program::main(const std::vector<std::string> &args)
 	// We support all display targets, in order listed here
 	SetupD3D setup_d3d;
 	SetupGL setup_gl;
-	SetupSWRender setup_swrender;
 
 	Game game;
 	game.run();

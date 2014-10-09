@@ -5,4 +5,3 @@
 #include <ClanLib/display.h>
 #include <ClanLib/d3d.h>
 #include <ClanLib/gl.h>
-#include <ClanLib/swrender.h>

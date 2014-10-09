@@ -9,7 +9,7 @@ OBJF=./Sources/world.o \
 ./Sources/missile.o
 
 
-LIBS=clanCore clanDisplay clanSound clanApp clanGL clanSWRender
+LIBS=clanCore clanDisplay clanSound clanApp clanGL
 
 include ../../Makefile.conf
 
