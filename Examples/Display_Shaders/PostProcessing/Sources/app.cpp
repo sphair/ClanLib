@@ -102,7 +102,7 @@ int App::start(const std::vector<std::string> &args)
 		gc.set_texture(0, texture_offscreen);
 		gc.set_program_object(shader);
 
-		uniforms.cl_ModelViewProjectionMatrix = canvas.get_projection() * canvas.get_modelview();
+		uniforms.cl_ModelViewProjectionMatrix = canvas.get_projection() * canvas.get_transform();
 		gpu_uniforms.upload_data(gc, &uniforms, 1);
 		gc.set_uniform_buffer(0, gpu_uniforms);
 

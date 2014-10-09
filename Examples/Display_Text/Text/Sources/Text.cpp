@@ -177,16 +177,13 @@ int ExampleText::start(const std::vector<std::string> &args)
 
 void ExampleText::draw_text(clan::Canvas &canvas, clan::Texture2D &texture, clan::Angle angle)
 {
-	canvas.push_modelview();
-
-	canvas.mult_translate(canvas.get_width()/2.0f, canvas.get_height()/2.0f);
-	canvas.mult_rotate(angle, 0.0f, 0.0f, 1.0f);
+	canvas.set_transform(clan::Mat4f::translate(canvas.get_width() / 2.0f, canvas.get_height() / 2.0f, 0.0f) * clan::Mat4f::rotate(angle, 0.0f, 0.0f, 1.0f));
 
 	clan::Image image(texture, texture.get_size());
 	image.set_alpha(0.7f);
 	image.draw(canvas, clan::Rectf(-300.0f, -300.0f, 300.0f, 300.0f));
 
-	canvas.pop_modelview();
+	canvas.set_transform(clan::Mat4f::identity());
 }
 
 void ExampleText::update_text(clan::Canvas &canvas, clan::FrameBuffer &fb_text, clan::Font &font, std::vector<clan::SpanLayout> &layout)

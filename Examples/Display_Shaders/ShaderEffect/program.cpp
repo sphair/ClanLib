@@ -35,7 +35,8 @@ int Program::main(const std::vector<std::string> &args)
 	try
 	{
 		DisplayWindow window("Hello ShaderEffect", 1024, 1024, false, true);
-		window.sig_window_close().connect({&Program::exit_func});
+		SlotContainer sc;
+		sc.connect(window.sig_window_close(), [](){exit_func(); });
 
 		GraphicContext gc = window.get_gc();
 		InputDevice mouse = window.get_ic().get_mouse();

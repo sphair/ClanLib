@@ -208,7 +208,7 @@ void App::render_gaussian_blur(clan::Canvas &canvas, float blur_amount, clan::Te
 	gc.set_texture(0, source_texture);
 	gc.set_program_object(program_object);
 
-	uniforms.cl_ModelViewProjectionMatrix = canvas.get_projection() * canvas.get_modelview();
+	uniforms.cl_ModelViewProjectionMatrix = canvas.get_projection() * canvas.get_transform();
 	gpu_uniforms.upload_data(gc, &uniforms, 1);
 	gc.set_uniform_buffer(0, gpu_uniforms);
 
@@ -345,7 +345,7 @@ void App::render_extract_highlights(clan::Canvas &canvas, clan::Texture2D &sourc
 	program_object.set_uniform1i(("SourceTexture"), 0);
 	program_object.set_uniform1f(("Threshold"), highlight_threshold);
 
-	program_object.set_uniform_matrix("cl_ModelViewProjectionMatrix", canvas.get_projection() * canvas.get_modelview());
+	program_object.set_uniform_matrix("cl_ModelViewProjectionMatrix", canvas.get_projection() * canvas.get_transform());
 
 	draw_texture(gc, clan::Rectf(0,0,canvas.get_width(),canvas.get_height()), clan::Rectf(0.0f, 0.0f, 1.0f, 1.0f));
 
@@ -372,7 +372,7 @@ void App::render_bloom_combine(clan::Canvas &canvas, clan::Texture2D &tex_base, 
 	program_object.set_uniform1f(("BloomIntensity"), bloom_intensity);
 	program_object.set_uniform1f(("BloomSaturation"), bloom_saturation);
 
-	program_object.set_uniform_matrix("cl_ModelViewProjectionMatrix", canvas.get_projection() * canvas.get_modelview());
+	program_object.set_uniform_matrix("cl_ModelViewProjectionMatrix", canvas.get_projection() * canvas.get_transform());
 
 	draw_texture(gc, clan::Rectf(0,0,canvas.get_width(),canvas.get_height()), clan::Rectf(0.0f, 0.0f, 1.0f, 1.0f));
 

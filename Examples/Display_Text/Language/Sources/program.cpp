@@ -30,23 +30,6 @@
 #include "program.h"
 #include "language.h"
 
-// Choose the target renderer
-//#define USE_OPENGL_2
-#define USE_OPENGL_1
-//#define USE_D3D
-
-#ifdef USE_D3D
-#include <ClanLib/d3d.h>
-#endif
-
-#ifdef USE_OPENGL_1
-
-#endif
-
-#ifdef USE_OPENGL_2
-#include <ClanLib/gl.h>
-#endif
-
 int Program::main(const std::vector<std::string> &args)
 {
 	// Initialize ClanLib base components
@@ -58,7 +41,6 @@ int Program::main(const std::vector<std::string> &args)
 	// We support all display targets, in order listed here
 	clan::SetupD3D setup_d3d;
 	clan::SetupGL setup_gl;
-	clan::SetupSWRender setup_swrender;
 
 	// Start the Application
 	Language app;
