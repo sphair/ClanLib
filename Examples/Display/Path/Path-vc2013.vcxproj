@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>Shape</ProjectName>
+    <ProjectName>Path</ProjectName>
     <ProjectGuid>{A3771A16-2845-4292-A5FB-C39625C386C8}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -146,12 +146,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Sources\program.cpp" />
-    <ClCompile Include="Sources\shape.cpp" />
+    <ClCompile Include="Sources\path.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\precomp.h" />
     <ClInclude Include="Sources\program.h" />
-    <ClInclude Include="Sources\shape.h" />
+    <ClInclude Include="Sources\path.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

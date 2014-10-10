@@ -1,4 +1,4 @@
-EXAMPLE_BIN=shape2d
+EXAMPLE_BIN=path
 OBJF = Sources/shape.o Sources/precomp.o Sources/program.o
 LIBS=clanApp clanDisplay clanCore clanGL
 
