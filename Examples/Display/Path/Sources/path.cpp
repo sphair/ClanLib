@@ -67,9 +67,10 @@ int PathApp::start(const std::vector<std::string> &args)
 	brush_linear.type = clan::BrushType::linear;
 	brush_linear.start_point = clan::Pointf(0.0f, 0.0f);
 	brush_linear.end_point = clan::Pointf(256.0f, 256.0f);
-	brush_linear.stops.push_back(clan::BrushGradientStop(clan::Colorf::black, 0.0f));
-	brush_linear.stops.push_back(clan::BrushGradientStop(clan::Colorf::white, 0.5f));
-	brush_linear.stops.push_back(clan::BrushGradientStop(clan::Colorf::black, 1.0f));
+	brush_linear.stops.push_back(clan::BrushGradientStop(clan::Colorf::aliceblue, 0.0f));
+	brush_linear.stops.push_back(clan::BrushGradientStop(clan::Colorf::orangered, 0.3f));
+	brush_linear.stops.push_back(clan::BrushGradientStop(clan::Colorf::greenyellow, 0.7f));
+	brush_linear.stops.push_back(clan::BrushGradientStop(clan::Colorf::aliceblue, 1.0f));
 
 	clan::Brush brush_radial;
 	brush_radial.type = clan::BrushType::radial;
@@ -78,7 +79,7 @@ int PathApp::start(const std::vector<std::string> &args)
 	brush_radial.radius_y = 128.0f;
 	brush_radial.stops.push_back(clan::BrushGradientStop(clan::Colorf::black, 0.0f));
 	brush_radial.stops.push_back(clan::BrushGradientStop(clan::Colorf::white, 0.5f));
-	brush_radial.stops.push_back(clan::BrushGradientStop(clan::Colorf::black, 1.0f));
+	brush_radial.stops.push_back(clan::BrushGradientStop(clan::Colorf::aliceblue, 1.0f));
 
 	clan::Font fps_font(canvas, "tahoma", 20);
 	clan::GameTime game_time;
