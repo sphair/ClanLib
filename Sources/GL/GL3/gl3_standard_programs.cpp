@@ -229,8 +229,8 @@ const std::string::value_type *cl_glsl15_vertex_path = R"shaderend(
 			out vec4 position;
 			void main()
 			{
-				gl_Position = Position;
-				position.xy = Position.xy;
+				gl_Position = vec4(Position.xy, 0, 1);
+				position.xy = Position.zw;
 				position.zw = TexCoord0;
 				brush_data1 = BrushData1;
 				brush_data2 = BrushData2;

@@ -57,7 +57,7 @@ namespace clan
 		fill_renderer.set_size(canvas.get_width(), canvas.get_height());
 		fill_renderer.clear();
 		render(path, &fill_renderer);
-		fill_renderer.fill(batch_buffer, canvas, path.get_impl()->fill_mode, brush);
+		fill_renderer.fill(batch_buffer, canvas, path.get_impl()->fill_mode, brush, modelview_matrix);
 	}
 
 	void RenderBatchPath::stroke(Canvas &canvas, const Path &path, const Pen &pen)

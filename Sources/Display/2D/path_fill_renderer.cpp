@@ -111,11 +111,14 @@ namespace clan
 		}
 	}
 
-	void PathFillRenderer::fill(RenderBatchBuffer *batch_buffer, Canvas &canvas, PathFillMode mode, const Brush &brush)
+	void PathFillRenderer::fill(RenderBatchBuffer *batch_buffer, Canvas &canvas, PathFillMode mode, const Brush &brush, const Mat4f &transform)
 	{
 		if (scanlines.empty()) return;
 
 		canvas.flush();
+
+		float canvas_width = (float)canvas.get_width();
+		float canvas_height = (float)canvas.get_height();
 
 		for (size_t y = 0; y < scanlines.size(); y++)
 		{
@@ -171,8 +174,8 @@ namespace clan
 		if (brush.type == BrushType::linear)
 		{
 			draw_mode = 1;
-			Pointf end_point = brush.end_point;
-			Pointf start_point = brush.start_point;
+			Pointf end_point = path_to_world(brush.end_point, brush, transform);
+			Pointf start_point = path_to_world(brush.start_point, brush, transform);
 			Pointf dir = end_point - start_point;
 			Pointf dir_normed = Pointf::normalize(dir);
 			brush_data1.x = start_point.x;
@@ -182,27 +185,32 @@ namespace clan
 			brush_data2.x = 1.0f / dir.length();
 			brush_data2.y = 0.0f;
 			brush_data2.z = brush.stops.size();
-			vertices.push_back(Vertex(Vec4f(-1.0f, -1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(0.0f, 1.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(1.0f, 1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(1.0f, 0.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
+
+			vertices.push_back(Vertex(Vec4f(-1.0f, -1.0f, 0.0f, 0.0f), brush_data1, brush_data2, Vec2f(0.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, canvas_width, 0.0f), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, canvas_height), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, canvas_width, 0.0f), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, 1.0f, canvas_width, canvas_height), brush_data1, brush_data2, Vec2f(1.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, canvas_height), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
 		}
 		else if (brush.type == BrushType::radial)
 		{
+			Pointf center_point = path_to_world(brush.center_point, brush, transform);
+			Pointf radius = path_to_world(Pointf(brush.radius_x, brush.radius_y), brush, transform) - path_to_world(Pointf(), brush, transform);
+
 			draw_mode = 2;
-			brush_data1.x = brush.center_point.x;
-			brush_data1.y = brush.center_point.y;
+			brush_data1.x = center_point.x;
+			brush_data1.y = center_point.y;
 			brush_data2.x = 1.0f / brush.radius_x;
 			brush_data2.y = 0.0f;
 			brush_data2.z = brush.stops.size();
-			vertices.push_back(Vertex(Vec4f(-1.0f, -1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(0.0f, 1.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(1.0f, 1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(1.0f, 0.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
+
+			vertices.push_back(Vertex(Vec4f(-1.0f, -1.0f, 0.0f, 0.0f), brush_data1, brush_data2, Vec2f(0.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, canvas_width, 0.0f), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, canvas_height), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, canvas_width, 0.0f), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, 1.0f, canvas_width, canvas_height), brush_data1, brush_data2, Vec2f(1.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, canvas_height), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
 		}
 		else if (brush.type == BrushType::image)
 		{
@@ -215,33 +223,44 @@ namespace clan
 				return;
 
 			Rectf src = subtexture.get_geometry();
-			Sizef tex_size = Sizef((float)image_texture.get_width(), (float)image_texture.get_height());
 
-			float src_left = (src.left) / tex_size.width;
-			float src_top = (src.top) / tex_size.height;
-			float src_right = (src.right) / tex_size.width;
-			float src_bottom = (src.bottom) / tex_size.height;
+			Pointf image_tl = path_to_world(Pointf(), brush, transform);
+			Pointf image_br = path_to_world(Pointf(src.get_width(), src.get_height()), brush, transform);
+
+			// Convert to subtexture coordinates and normalize
+			// To do: this has to be done in the shader for clamp/repeat/mirror to work with atlas
+
+			image_tl.x += src.left;
+			image_tl.y += src.top;
+			image_br.x += src.left;
+			image_br.y += src.top;
+
+			Sizef tex_size = Sizef((float)image_texture.get_width(), (float)image_texture.get_height());
+			float src_left = (image_tl.x) / tex_size.width;
+			float src_top = (image_tl.y) / tex_size.height;
+			float src_right = (image_br.x) / tex_size.width;
+			float src_bottom = (image_br.y) / tex_size.height;
 
 			gc.set_texture(2, image_texture);
-			vertices.push_back(Vertex(Vec4f(-1.0f, -1.0f, 0.0f, 1.0f), Vec4f(src_left, src_top, 0.0f, 0.0f), brush_data2, Vec2f(0.0f, 1.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, 0.0f, 1.0f), Vec4f(src_right, src_top, 0.0f, 0.0f), brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 1.0f), Vec4f(src_left, src_bottom, 0.0f, 0.0f), brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, 0.0f, 1.0f), Vec4f(src_right, src_top, 0.0f, 0.0f), brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(1.0f, 1.0f, 0.0f, 1.0f), Vec4f(src_right, src_bottom, 0.0f, 0.0f), brush_data2, Vec2f(1.0f, 0.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 1.0f), Vec4f(src_left, src_bottom, 0.0f, 0.0f), brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, -1.0f, 0.0f, 0.0f), Vec4f(src_left, src_top, 0.0f, 0.0f), brush_data2, Vec2f(0.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, canvas_width, 1.0f), Vec4f(src_right, src_top, 0.0f, 0.0f), brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, canvas_height), Vec4f(src_left, src_bottom, 0.0f, 0.0f), brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, canvas_width, 1.0f), Vec4f(src_right, src_top, 0.0f, 0.0f), brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, 1.0f, canvas_width, canvas_height), Vec4f(src_right, src_bottom, 0.0f, 0.0f), brush_data2, Vec2f(1.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, canvas_height), Vec4f(src_left, src_bottom, 0.0f, 0.0f), brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
 		}
 		else
 		{
 			draw_mode = 0;
 			brush_data1 = brush.color;
-			vertices.push_back(Vertex(Vec4f(-1.0f, -1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(0.0f, 1.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(1.0f, 1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(1.0f, 0.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
-		}
 
+			vertices.push_back(Vertex(Vec4f(-1.0f, -1.0f, 0.0f, 0.0f), brush_data1, brush_data2, Vec2f(0.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, canvas_width, 0.0f), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, canvas_height), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, canvas_width, 0.0f), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, 1.0f, canvas_width, canvas_height), brush_data1, brush_data2, Vec2f(1.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, canvas_height), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
+		}
 
 		int gpu_index;
 		VertexArrayVector<Vertex> gpu_vertices(batch_buffer->get_vertex_buffer(gc, gpu_index));
@@ -269,6 +288,17 @@ namespace clan
 		gc.reset_texture(0);
 		gc.reset_program_object();
 		gc.reset_blend_state();
+	}
+
+	inline Pointf PathFillRenderer::path_to_world(Pointf point, const Brush &brush, const Mat4f &transform) const
+	{
+		point = Pointf(
+			brush.transform.matrix[0 * 3 + 0] * point.x + brush.transform.matrix[1 * 3 + 0] * point.y + brush.transform.matrix[2 * 3 + 0],
+			brush.transform.matrix[0 * 3 + 1] * point.x + brush.transform.matrix[1 * 3 + 1] * point.y + brush.transform.matrix[2 * 3 + 1]);
+
+		return Pointf(
+			transform.matrix[0 * 4 + 0] * point.x + transform.matrix[1 * 4 + 0] * point.y + transform.matrix[3 * 4 + 0],
+			transform.matrix[0 * 4 + 1] * point.x + transform.matrix[1 * 4 + 1] * point.y + transform.matrix[3 * 4 + 1]);
 	}
 
 	/////////////////////////////////////////////////////////////////////////////

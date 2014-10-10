@@ -75,7 +75,7 @@ namespace clan
 		void line(float x, float y) override;
 		void end(bool close) override;
 
-		void fill(RenderBatchBuffer *batch_buffer, Canvas &canvas, PathFillMode mode, const Brush &brush);
+		void fill(RenderBatchBuffer *batch_buffer, Canvas &canvas, PathFillMode mode, const Brush &brush, const Mat4f &transform);
 
 	private:
 		struct Vertex
@@ -90,6 +90,8 @@ namespace clan
 			Vec2f TexCoord0;
 			int Mode;
 		};
+
+		Pointf path_to_world(Pointf point, const Brush &brush, const Mat4f &transform) const;
 
 		int width = 0;
 		int height = 0;
