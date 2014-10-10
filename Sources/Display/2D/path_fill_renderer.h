@@ -91,7 +91,7 @@ namespace clan
 			int Mode;
 		};
 
-		Pointf path_to_world(Pointf point, const Brush &brush, const Mat4f &transform) const;
+		Pointf transform_point(Pointf point, const Mat3f &brush_transform, const Mat4f &fill_transform) const;
 
 		int width = 0;
 		int height = 0;

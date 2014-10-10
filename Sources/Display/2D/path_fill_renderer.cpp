@@ -117,6 +117,9 @@ namespace clan
 
 		canvas.flush();
 
+		Mat3f inv_brush_transform = Mat3f::inverse(brush.transform);
+		Mat4f inv_transform = Mat4f::inverse(transform);
+
 		float canvas_width = (float)canvas.get_width();
 		float canvas_height = (float)canvas.get_height();
 
@@ -174,8 +177,8 @@ namespace clan
 		if (brush.type == BrushType::linear)
 		{
 			draw_mode = 1;
-			Pointf end_point = path_to_world(brush.end_point, brush, transform);
-			Pointf start_point = path_to_world(brush.start_point, brush, transform);
+			Pointf end_point = transform_point(brush.end_point, brush.transform, transform);
+			Pointf start_point = transform_point(brush.start_point, brush.transform, transform);
 			Pointf dir = end_point - start_point;
 			Pointf dir_normed = Pointf::normalize(dir);
 			brush_data1.x = start_point.x;
@@ -195,8 +198,8 @@ namespace clan
 		}
 		else if (brush.type == BrushType::radial)
 		{
-			Pointf center_point = path_to_world(brush.center_point, brush, transform);
-			Pointf radius = path_to_world(Pointf(brush.radius_x, brush.radius_y), brush, transform) - path_to_world(Pointf(), brush, transform);
+			Pointf center_point = transform_point(brush.center_point, brush.transform, transform);
+			Pointf radius = transform_point(Pointf(brush.radius_x, brush.radius_y), brush.transform, transform) - transform_point(Pointf(), brush.transform, transform);
 
 			draw_mode = 2;
 			brush_data1.x = center_point.x;
@@ -224,30 +227,24 @@ namespace clan
 
 			Rectf src = subtexture.get_geometry();
 
-			Pointf image_tl = path_to_world(Pointf(), brush, transform);
-			Pointf image_br = path_to_world(Pointf(src.get_width(), src.get_height()), brush, transform);
+			// Find transformed UV coordinates for image covering the entire mask texture:
+			Pointf image_tl = transform_point(Pointf(), inv_brush_transform, inv_transform);
+			Pointf image_br = transform_point(Pointf(canvas_width, canvas_height), inv_brush_transform, inv_transform);
 
-			// Convert to subtexture coordinates and normalize
-			// To do: this has to be done in the shader for clamp/repeat/mirror to work with atlas
-
-			image_tl.x += src.left;
-			image_tl.y += src.top;
-			image_br.x += src.left;
-			image_br.y += src.top;
-
+			// Convert to subtexture coordinates:
 			Sizef tex_size = Sizef((float)image_texture.get_width(), (float)image_texture.get_height());
-			float src_left = (image_tl.x) / tex_size.width;
-			float src_top = (image_tl.y) / tex_size.height;
-			float src_right = (image_br.x) / tex_size.width;
-			float src_bottom = (image_br.y) / tex_size.height;
+			float src_left = (src.left + image_tl.x) / tex_size.width;
+			float src_right = (src.left + image_br.x) / tex_size.width;
+			float src_top = (src.top + image_tl.y) / tex_size.height;
+			float src_bottom = (src.top + image_br.y) / tex_size.height;
 
 			gc.set_texture(2, image_texture);
-			vertices.push_back(Vertex(Vec4f(-1.0f, -1.0f, 0.0f, canvas_height), Vec4f(src_left, src_top, 0.0f, 0.0f), brush_data2, Vec2f(0.0f, 1.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, canvas_width, canvas_height), Vec4f(src_right, src_top, 0.0f, 0.0f), brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 0.0f), Vec4f(src_left, src_bottom, 0.0f, 0.0f), brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, canvas_width, canvas_height), Vec4f(src_right, src_top, 0.0f, 0.0f), brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(1.0f, 1.0f, canvas_width, 0.0f), Vec4f(src_right, src_bottom, 0.0f, 0.0f), brush_data2, Vec2f(1.0f, 0.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 0.0f), Vec4f(src_left, src_bottom, 0.0f, 0.0f), brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, -1.0f, 0.0f, canvas_height), Vec4f(src_left, src_bottom, 0.0f, 0.0f), brush_data2, Vec2f(0.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, canvas_width, canvas_height), Vec4f(src_right, src_bottom, 0.0f, 0.0f), brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 0.0f), Vec4f(src_left, src_top, 0.0f, 0.0f), brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, canvas_width, canvas_height), Vec4f(src_right, src_bottom, 0.0f, 0.0f), brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, 1.0f, canvas_width, 0.0f), Vec4f(src_right, src_top, 0.0f, 0.0f), brush_data2, Vec2f(1.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 0.0f), Vec4f(src_left, src_top, 0.0f, 0.0f), brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
 		}
 		else
 		{
@@ -290,11 +287,11 @@ namespace clan
 		gc.reset_blend_state();
 	}
 
-	inline Pointf PathFillRenderer::path_to_world(Pointf point, const Brush &brush, const Mat4f &transform) const
+	inline Pointf PathFillRenderer::transform_point(Pointf point, const Mat3f &brush_transform, const Mat4f &transform) const
 	{
 		point = Pointf(
-			brush.transform.matrix[0 * 3 + 0] * point.x + brush.transform.matrix[1 * 3 + 0] * point.y + brush.transform.matrix[2 * 3 + 0],
-			brush.transform.matrix[0 * 3 + 1] * point.x + brush.transform.matrix[1 * 3 + 1] * point.y + brush.transform.matrix[2 * 3 + 1]);
+			brush_transform.matrix[0 * 3 + 0] * point.x + brush_transform.matrix[1 * 3 + 0] * point.y + brush_transform.matrix[2 * 3 + 0],
+			brush_transform.matrix[0 * 3 + 1] * point.x + brush_transform.matrix[1 * 3 + 1] * point.y + brush_transform.matrix[2 * 3 + 1]);
 
 		return Pointf(
 			transform.matrix[0 * 4 + 0] * point.x + transform.matrix[1 * 4 + 0] * point.y + transform.matrix[3 * 4 + 0],

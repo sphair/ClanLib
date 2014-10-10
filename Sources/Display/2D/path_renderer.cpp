@@ -69,8 +69,8 @@ namespace clan
 			std::sqrt((cp1_x - cp0_x) * (cp1_x - cp0_x) + (cp1_y - cp0_y) * (cp1_y - cp0_y));
 
 		float min_segs = 10.0f;
-		float segs = estimated_length / 30.0f;
-		int steps = (int)std::ceil(std::sqrt(segs * segs * 0.6f + min_segs));
+		float segs = estimated_length / 5.0f;
+		int steps = (int)std::ceil(std::sqrt(segs * segs * 0.3f + min_segs));
 		for (int i = 0; i < steps; i++)
 		{
 			//clan::Pointf sp = point_on_bezier(cp0_x, cp0_y, cp1_x, cp1_y, cp2_x, cp2_y, cp3_x, cp3_y, i / (float)steps);

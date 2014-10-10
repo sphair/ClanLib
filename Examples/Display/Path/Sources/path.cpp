@@ -54,8 +54,8 @@ int PathApp::start(const std::vector<std::string> &args)
 	clan::Path rounded_rect_shape = clan::Path::rect(clan::Rectf(0.0f, 0.0f, clan::Sizef(256, 256)), clan::Sizef(64.0f, 64.0f));
 
 	clan::Font test_font(canvas, "tahoma", 20);
-	clan::Path complex_shape = clan::Path::circle(0.0f, 0.0f, 100.0f);
-	complex_shape += clan::Path::glyph(test_font, 'G').transform_self(clan::Mat3f::translate(-70.0f, 70.0f) * clan::Mat3f::scale(10.0f, 10.0f));
+	clan::Path complex_shape = clan::Path::circle(128.0f, 128.0f, 128.0f);
+	complex_shape += clan::Path::glyph(test_font, 'G').transform_self(clan::Mat3f::translate(58.0f, 198.0f) * clan::Mat3f::scale(10.0f, 10.0f));
 
 	clan::Brush brush_solid = clan::Brush::solid_rgba8(50, 200, 150, 255);
 	clan::Brush brush_image;
@@ -92,7 +92,7 @@ int PathApp::start(const std::vector<std::string> &args)
 
 		canvas.set_transform(clan::Mat4f::translate(50.0f, 10.0f, 0.0f));
 		canvas.fill(rounded_rect_shape, brush_solid);
-		canvas.set_transform(clan::Mat4f::translate(500.0f, 150.0f, 0.0f));
+		canvas.set_transform(clan::Mat4f::translate(380.0f, 10.0f, 0.0f));
 		canvas.fill(complex_shape, brush_image);
 
 		canvas.set_transform(clan::Mat4f::translate(50.0f, 300.0f, 0.0f));
