@@ -37,8 +37,8 @@ int ShapeApp::start(const std::vector<std::string> &args)
 
 	// Set the window
 	clan::DisplayWindowDescription desc;
-	desc.set_title("ClanLib Shape Example");
-	desc.set_size(clan::Size(800, 400), true);
+	desc.set_title("ClanLib Path Example");
+	desc.set_size(clan::Size(800, 600), true);
 	desc.set_allow_resize(true);
 
 	clan::DisplayWindow window(desc);
@@ -51,42 +51,29 @@ int ShapeApp::start(const std::vector<std::string> &args)
 	// Connect a keyboard handler to on_key_up()
 	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &ShapeApp::on_input_up));
 
-	clan::Shape2D rounded_rect_shape;
-	rounded_rect_shape.add_rounded_rect(clan::Pointf(32.0f, 32.0f), clan::Sizef(256.0f, 256.0f), 64, false );
+	clan::Path rounded_rect_shape = clan::Path::rect(clan::Rectf(32.0f, 32.0f, clan::Sizef(256.0f, 256.0f)), clan::Sizef(64.0f, 64.0f) );
 
-	clan::Shape2D complex_shape;
-	complex_shape.add_circle(400.0f, 200.0f, 100.0f, false);
-	complex_shape.add_circle(400.0f, 200.0f, 50.0f, true);
+	clan::Path complex_shape = clan::Path::circle(400.0f, 200.0f, 100.0f);
+	clan::Path complex_shape = clan::Path::circle(400.0f, 200.0f, 100.0f) + clan::Path::circle(400.0f, 200.0f, 50.0f);
 
-	std::vector<clan::Vec2f> rounded_rect_triangles;
-	std::vector< std::vector<clan::Vec2f> > rounded_rect_outlines;
-	rounded_rect_shape.get_triangles(rounded_rect_triangles);
-	rounded_rect_shape.get_outline(rounded_rect_outlines);
-
-	std::vector<clan::Vec2f> complex_triangles;
-	complex_shape.get_triangles(complex_triangles);
-
-	clan::Texture2D texture(canvas, "../../Display/Shape2D/Resources/lobby_background2.png");
+	clan::Brush brush = clan::Brush::solid_rgba8(50, 200, 150, 255);
+	clan::Image image(canvas, "../../Display/Path/Resources/lobby_background2.png");
+	clan::Font fps_font(canvas, "tahoma", 20);
+	clan::GameTime game_time;
 
 	// Run until someone presses escape
 	while (!quit)
 	{
-		canvas.clear(clan::Colorf(0.4f,0.4f,0.9f));
+		game_time.update();
+		canvas.clear(clan::Colorf(0.2f, 0.2f, 0.5f));
 
-		canvas.fill_triangles(rounded_rect_triangles, texture, clan::Rect(100, 100, 400, 400));
-		
-		for (unsigned int cnt=0; cnt<rounded_rect_outlines.size(); cnt++)
-		{
-			if (!rounded_rect_outlines[cnt].empty())
-				canvas.draw_line_strip(&rounded_rect_outlines[cnt][0], rounded_rect_outlines[cnt].size(), clan::Colorf::white);
-		}
+		canvas.fill(rounded_rect_shape, brush);
+		canvas.fill(complex_shape, brush);
 
-		canvas.fill_triangles(complex_triangles, clan::Colorf::red);
-		canvas.mult_translate(250, 0);
-		canvas.fill_triangles(complex_triangles, texture, clan::Rect(100, 100, 400, 400));
-		canvas.set_modelview(clan::Mat4f::identity());
+		std::string fps = clan::string_format("%1 fps", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1));
+		fps_font.draw_text(canvas, canvas.get_width() - 100, 30, fps);
 
-		window.flip(1);
+		window.flip(0);
 
 		// This call processes user input and other events
 		clan::KeepAlive::process(0);
