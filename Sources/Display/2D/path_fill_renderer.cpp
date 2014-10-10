@@ -150,25 +150,6 @@ namespace clan
 		texture.set_min_filter(filter_nearest);
 		texture.set_mag_filter(filter_nearest);
 
-		Vec4f solid_color;
-
-		if (brush.type == BrushType::solid)
-		{
-			solid_color = Vec4f(brush.color.r, brush.color.g, brush.color.b, brush.color.a);
-		}
-		else if (brush.type == BrushType::linear)
-		{
-			solid_color = Vec4f(brush.stops.front().color.r, brush.stops.front().color.g, brush.stops.front().color.b, brush.stops.front().color.a);
-		}
-		else if (brush.type == BrushType::radial)
-		{
-			solid_color = Vec4f(1.0f, 1.0f, 0.0f, 1.0f);
-		}
-		else if (brush.type == BrushType::image)
-		{
-			solid_color = Vec4f(1.0f, 0.0f, 0.0f, 1.0f);
-		}
-
 		std::vector<Vertex> vertices;
 		Vec4f brush_data1;
 		Vec4f brush_data2;
@@ -252,7 +233,7 @@ namespace clan
 		else
 		{
 			draw_mode = 0;
-			brush_data1 = solid_color;
+			brush_data1 = brush.color;
 			vertices.push_back(Vertex(Vec4f(-1.0f, -1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(0.0f, 1.0f), draw_mode));
 			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
 			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 1.0f), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));

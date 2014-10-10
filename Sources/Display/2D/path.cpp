@@ -164,4 +164,39 @@ namespace clan
 
 		return path;
 	}
+	void Path::operator += (const Path& path)
+	{
+		if (!path.impl->subpaths.empty())
+		{
+			impl->subpaths.reserve(impl->subpaths.size() + path.impl->subpaths.size());
+			impl->subpaths.insert(impl->subpaths.end(), path.impl->subpaths.begin(), path.impl->subpaths.end());
+		}
+	}
+
+	Path &Path::transform_self(const Mat3f &transform)
+	{
+		for (unsigned int subpaths_cnt = 0; subpaths_cnt < impl->subpaths.size(); subpaths_cnt++)
+		{
+			std::vector<Pointf> &points = impl->subpaths[subpaths_cnt].points;
+			for (unsigned int points_cnt = 0; points_cnt < points.size(); points_cnt++)
+			{
+				points[points_cnt] = transform * points[points_cnt];
+			}
+		}
+		return *this;
+	}
+	Path Path::clone() const
+	{
+		Path path;
+		*path.impl = *impl;
+		return path;
+	}
+
+	Path operator + (const Path& v1, const Path& v2)
+	{
+		Path path = v1.clone();
+		path += v2;
+		return path;
+	}
+
 }

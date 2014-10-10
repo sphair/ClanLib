@@ -60,6 +60,9 @@ namespace clan
 		void bezier_to(const Pointf &control1, const Pointf &control2, const Pointf &point);
 		void close();
 
+		// \brief Copy the entire description (not just the implementation)
+		Path clone() const;
+
 		static Path rect(const Rectf &box);
 		static Path rect(float x, float y, float width, float height) { return Path::rect(Rectf(x, y, Sizef(width, height))); }
 		static Path line(const Pointf &start, const Pointf &end);
@@ -77,8 +80,24 @@ namespace clan
 
 		std::shared_ptr<PathImpl> get_impl() const { return impl; }
 
+		/// \brief += operator to concatenate a path onto this path.
+		///
+		/// Useful when manually building complex paths from primitives
+		void operator += (const Path& path);
+
+		/// \brief Transform this path
+		///
+		/// Useful when manually building complex paths from primitives
+		///
+		/// \param transform = Transform matrix
+		///
+		/// \return reference to this object
+		Path &transform_self(const Mat3f &transform);
+
 	private:
 		std::shared_ptr<PathImpl> impl;
 		friend class CanvasImpl;
 	};
+	/// \brief + operator.
+	Path operator + (const Path& v1, const Path& v2);
 }
