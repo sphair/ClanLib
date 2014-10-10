@@ -73,8 +73,7 @@ int PathApp::start(const std::vector<std::string> &args)
 
 	clan::Brush brush_radial;
 	brush_radial.type = clan::BrushType::linear;
-	brush_radial.start_point = clan::Pointf(0.0f, 0.0f);
-	brush_radial.end_point = clan::Pointf(1.0f, 1.0f);
+	brush_radial.center_point = clan::Pointf(0.0f, 0.0f);
 	brush_radial.stops.push_back(clan::BrushGradientStop(clan::Colorf::black, 0.0f));
 	brush_radial.stops.push_back(clan::BrushGradientStop(clan::Colorf::white, 0.5f));
 	brush_radial.stops.push_back(clan::BrushGradientStop(clan::Colorf::black, 1.0f));
