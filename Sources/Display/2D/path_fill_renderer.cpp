@@ -186,12 +186,12 @@ namespace clan
 			brush_data2.y = 0.0f;
 			brush_data2.z = brush.stops.size();
 
-			vertices.push_back(Vertex(Vec4f(-1.0f, -1.0f, 0.0f, 0.0f), brush_data1, brush_data2, Vec2f(0.0f, 1.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, canvas_width, 0.0f), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, canvas_height), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, canvas_width, 0.0f), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(1.0f, 1.0f, canvas_width, canvas_height), brush_data1, brush_data2, Vec2f(1.0f, 0.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, canvas_height), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, -1.0f, 0.0f, canvas_height), brush_data1, brush_data2, Vec2f(0.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, canvas_width, canvas_height), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 0.0f), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, canvas_width, canvas_height), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, 1.0f, canvas_width, 0.0f), brush_data1, brush_data2, Vec2f(1.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 0.0f), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
 		}
 		else if (brush.type == BrushType::radial)
 		{
@@ -205,12 +205,12 @@ namespace clan
 			brush_data2.y = 0.0f;
 			brush_data2.z = brush.stops.size();
 
-			vertices.push_back(Vertex(Vec4f(-1.0f, -1.0f, 0.0f, 0.0f), brush_data1, brush_data2, Vec2f(0.0f, 1.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, canvas_width, 0.0f), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, canvas_height), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, canvas_width, 0.0f), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(1.0f, 1.0f, canvas_width, canvas_height), brush_data1, brush_data2, Vec2f(1.0f, 0.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, canvas_height), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, -1.0f, 0.0f, canvas_height), brush_data1, brush_data2, Vec2f(0.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, canvas_width, canvas_height), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 0.0f), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, canvas_width, canvas_height), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, 1.0f, canvas_width, 0.0f), brush_data1, brush_data2, Vec2f(1.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 0.0f), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
 		}
 		else if (brush.type == BrushType::image)
 		{
@@ -242,24 +242,24 @@ namespace clan
 			float src_bottom = (image_br.y) / tex_size.height;
 
 			gc.set_texture(2, image_texture);
-			vertices.push_back(Vertex(Vec4f(-1.0f, -1.0f, 0.0f, 0.0f), Vec4f(src_left, src_top, 0.0f, 0.0f), brush_data2, Vec2f(0.0f, 1.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, canvas_width, 1.0f), Vec4f(src_right, src_top, 0.0f, 0.0f), brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, canvas_height), Vec4f(src_left, src_bottom, 0.0f, 0.0f), brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, canvas_width, 1.0f), Vec4f(src_right, src_top, 0.0f, 0.0f), brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(1.0f, 1.0f, canvas_width, canvas_height), Vec4f(src_right, src_bottom, 0.0f, 0.0f), brush_data2, Vec2f(1.0f, 0.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, canvas_height), Vec4f(src_left, src_bottom, 0.0f, 0.0f), brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, -1.0f, 0.0f, canvas_height), Vec4f(src_left, src_top, 0.0f, 0.0f), brush_data2, Vec2f(0.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, canvas_width, canvas_height), Vec4f(src_right, src_top, 0.0f, 0.0f), brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 0.0f), Vec4f(src_left, src_bottom, 0.0f, 0.0f), brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, canvas_width, canvas_height), Vec4f(src_right, src_top, 0.0f, 0.0f), brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, 1.0f, canvas_width, 0.0f), Vec4f(src_right, src_bottom, 0.0f, 0.0f), brush_data2, Vec2f(1.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 0.0f), Vec4f(src_left, src_bottom, 0.0f, 0.0f), brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
 		}
 		else
 		{
 			draw_mode = 0;
 			brush_data1 = brush.color;
 
-			vertices.push_back(Vertex(Vec4f(-1.0f, -1.0f, 0.0f, 0.0f), brush_data1, brush_data2, Vec2f(0.0f, 1.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, canvas_width, 0.0f), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, canvas_height), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, canvas_width, 0.0f), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(1.0f, 1.0f, canvas_width, canvas_height), brush_data1, brush_data2, Vec2f(1.0f, 0.0f), draw_mode));
-			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, canvas_height), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, -1.0f, 0.0f, canvas_height), brush_data1, brush_data2, Vec2f(0.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, canvas_width, canvas_height), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 0.0f), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, -1.0f, canvas_width, canvas_height), brush_data1, brush_data2, Vec2f(1.0f, 1.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(1.0f, 1.0f, canvas_width, 0.0f), brush_data1, brush_data2, Vec2f(1.0f, 0.0f), draw_mode));
+			vertices.push_back(Vertex(Vec4f(-1.0f, 1.0f, 0.0f, 0.0f), brush_data1, brush_data2, Vec2f(0.0f, 0.0f), draw_mode));
 		}
 
 		int gpu_index;
