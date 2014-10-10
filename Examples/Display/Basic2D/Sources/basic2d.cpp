@@ -75,31 +75,6 @@ int Basic2D::start(const std::vector<std::string> &args)
 		clan::Size canvas_size = canvas.get_size();
 		spr_logo.draw(canvas, canvas_size.width-spr_logo.get_width(), canvas_size.height-spr_logo.get_height());
 
-		// Show ellipse
-		clan::Sizef shape_size(400.0f, 300.0f);
-		clan::Rectf shape_rect((canvas.get_width() - shape_size.width) / 2.0f, (canvas.get_height() - shape_size.height) / 2.0f, shape_size);
-		clan::Path path = clan::Path::rect(shape_rect, clan::Sizef(32.0f, 32.0f));
-
-		clan::Pointf shape_centre = shape_rect.get_center();
-		clan::Mat4f transform = clan::Mat4f::translate(shape_centre.x, shape_centre.y, 0.0f);
-		transform = transform * clan::Mat4f::rotate(clan::Angle(sin_count * 10.0f, clan::angle_degrees), 0.0f, 0.0f, 1.0f);
-		transform = transform * clan::Mat4f::translate(-shape_centre.x, -shape_centre.y, 0.0f);
-		canvas.set_transform(transform);
-
-		clan::Brush brush = clan::Brush::solid_rgba8(255, 0, 255, 64);
-		//brush.stops.push_back(clan::BrushGradientStop(clan::Colorf::red, 0.0f));
-		//brush.stops.push_back(clan::BrushGradientStop(clan::Colorf::white, 0.5f));
-		//brush.stops.push_back(clan::BrushGradientStop(clan::Colorf::green, 1.0f));
-		//brush.radius_x = 0.5f;
-
-		brush.type = clan::BrushType::image;
-		brush.image = spr_logo;
-
-		//brush.start_point = clan::Pointf(0.0, 0.0f);
-		//brush.end_point = clan::Pointf(0.75f, 0.75f);
-		canvas.fill(path, brush);
-		canvas.set_transform(clan::Mat4f::identity());
-
 		std::string text("Welcome to the ClanLib SDK");
 		clan::Size text_size = font.get_text_size(canvas, text);
 		font.draw_text(canvas, ( ( canvas.get_width() - text_size.width) / 2), 32, text, clan::Colorf::white);
@@ -115,7 +90,7 @@ int Basic2D::start(const std::vector<std::string> &args)
 		// Draw a rectangle in the center of the screen
 		// going from (240, 140) -> (440, 340) _not_ including the 
 		// pixels in the right-most column and bottom-most row (440, 340)
-		//canvas.fill_rect(clan::Rectf(240.0f, 140.0f, 440.0f, 340.0f), clan::Colorf::white);
+		canvas.fill_rect(clan::Rectf(240.0f, 140.0f, 440.0f, 340.0f), clan::Colorf::white);
 
 		// Frame the rectangle with red lines
 		canvas.draw_box(240.0f, 140.0f, 440.0f, 340.0f, clan::Colorf(1.0f, 0.0f, 0.0f));
