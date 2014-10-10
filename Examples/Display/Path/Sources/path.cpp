@@ -38,7 +38,7 @@ int PathApp::start(const std::vector<std::string> &args)
 	// Set the window
 	clan::DisplayWindowDescription desc;
 	desc.set_title("ClanLib Path Example");
-	desc.set_size(clan::Size(800, 600), true);
+	desc.set_size(clan::Size(1024, 768), true);
 	desc.set_allow_resize(true);
 
 	clan::DisplayWindow window(desc);
@@ -51,13 +51,34 @@ int PathApp::start(const std::vector<std::string> &args)
 	// Connect a keyboard handler to on_key_up()
 	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &PathApp::on_input_up));
 
-	clan::Path rounded_rect_shape = clan::Path::rect(clan::Rectf(32.0f, 32.0f, clan::Sizef(256.0f, 256.0f)), clan::Sizef(64.0f, 64.0f) );
+	clan::Path rounded_rect_shape = clan::Path::rect(clan::Rectf(0.0f, 0.0f, clan::Sizef(256, 256)), clan::Sizef(64.0f, 64.0f));
 
-	clan::Path complex_shape = clan::Path::circle(400.0f, 200.0f, 100.0f);
-	//clan::Path complex_shape = clan::Path::circle(400.0f, 200.0f, 100.0f) + clan::Path::circle(400.0f, 200.0f, 50.0f);
+	clan::Font test_font(canvas, "tahoma", 20);
+	clan::Path complex_shape = clan::Path::circle(0.0f, 0.0f, 100.0f);
+	complex_shape += clan::Path::glyph(test_font, 'G').transform_self(clan::Mat3f::translate(-70.0f, 70.0f) * clan::Mat3f::scale(10.0f, 10.0f));
 
-	clan::Brush brush = clan::Brush::solid_rgba8(50, 200, 150, 255);
+	clan::Brush brush_solid = clan::Brush::solid_rgba8(50, 200, 150, 255);
+	clan::Brush brush_image;
+	brush_image.type = clan::BrushType::image;
 	clan::Image image(canvas, "../../Display/Path/Resources/lobby_background2.png");
+	brush_image.image = image;
+
+	clan::Brush brush_linear;
+	brush_linear.type = clan::BrushType::linear;
+	brush_linear.start_point = clan::Pointf(0.0f, 0.0f);
+	brush_linear.end_point = clan::Pointf(1.0f, 1.0f);
+	brush_linear.stops.push_back(clan::BrushGradientStop(clan::Colorf::black, 0.0f));
+	brush_linear.stops.push_back(clan::BrushGradientStop(clan::Colorf::white, 0.5f));
+	brush_linear.stops.push_back(clan::BrushGradientStop(clan::Colorf::black, 1.0f));
+
+	clan::Brush brush_radial;
+	brush_radial.type = clan::BrushType::linear;
+	brush_radial.start_point = clan::Pointf(0.0f, 0.0f);
+	brush_radial.end_point = clan::Pointf(1.0f, 1.0f);
+	brush_radial.stops.push_back(clan::BrushGradientStop(clan::Colorf::black, 0.0f));
+	brush_radial.stops.push_back(clan::BrushGradientStop(clan::Colorf::white, 0.5f));
+	brush_radial.stops.push_back(clan::BrushGradientStop(clan::Colorf::black, 1.0f));
+
 	clan::Font fps_font(canvas, "tahoma", 20);
 	clan::GameTime game_time;
 
@@ -67,9 +88,18 @@ int PathApp::start(const std::vector<std::string> &args)
 		game_time.update();
 		canvas.clear(clan::Colorf(0.2f, 0.2f, 0.5f));
 
-		canvas.fill(rounded_rect_shape, brush);
-		canvas.fill(complex_shape, brush);
+		canvas.set_transform(clan::Mat4f::translate(50.0f, 10.0f, 0.0f));
+		canvas.fill(rounded_rect_shape, brush_solid);
+		canvas.set_transform(clan::Mat4f::translate(500.0f, 150.0f, 0.0f));
+		canvas.fill(complex_shape, brush_image);
 
+		canvas.set_transform(clan::Mat4f::translate(50.0f, 300.0f, 0.0f));
+		canvas.fill(rounded_rect_shape, brush_linear);
+
+		canvas.set_transform(clan::Mat4f::translate(380.0f, 300.0f, 0.0f));
+		canvas.fill(rounded_rect_shape, brush_radial);
+
+		canvas.set_transform(clan::Mat4f::identity());
 		std::string fps = clan::string_format("%1 fps", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1));
 		fps_font.draw_text(canvas, canvas.get_width() - 100, 30, fps);
 
