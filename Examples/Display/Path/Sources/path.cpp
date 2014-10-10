@@ -28,10 +28,10 @@
 */
 
 #include "precomp.h"
-#include "shape.h"
+#include "path.h"
 
 // The start of the Application
-int ShapeApp::start(const std::vector<std::string> &args)
+int PathApp::start(const std::vector<std::string> &args)
 {
 	quit = false;
 
@@ -46,15 +46,15 @@ int ShapeApp::start(const std::vector<std::string> &args)
     clan::SlotContainer cc;
 
 	// Connect the Window close event
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &ShapeApp::on_window_close));
+	cc.connect(window.sig_window_close(), clan::bind_member(this, &PathApp::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &ShapeApp::on_input_up));
+	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &PathApp::on_input_up));
 
 	clan::Path rounded_rect_shape = clan::Path::rect(clan::Rectf(32.0f, 32.0f, clan::Sizef(256.0f, 256.0f)), clan::Sizef(64.0f, 64.0f) );
 
 	clan::Path complex_shape = clan::Path::circle(400.0f, 200.0f, 100.0f);
-	clan::Path complex_shape = clan::Path::circle(400.0f, 200.0f, 100.0f) + clan::Path::circle(400.0f, 200.0f, 50.0f);
+	//clan::Path complex_shape = clan::Path::circle(400.0f, 200.0f, 100.0f) + clan::Path::circle(400.0f, 200.0f, 50.0f);
 
 	clan::Brush brush = clan::Brush::solid_rgba8(50, 200, 150, 255);
 	clan::Image image(canvas, "../../Display/Path/Resources/lobby_background2.png");
@@ -83,7 +83,7 @@ int ShapeApp::start(const std::vector<std::string> &args)
 }
 
 // A key was pressed
-void ShapeApp::on_input_up(const clan::InputEvent &key)
+void PathApp::on_input_up(const clan::InputEvent &key)
 {
 	if(key.id == clan::keycode_escape)
 	{
@@ -92,7 +92,7 @@ void ShapeApp::on_input_up(const clan::InputEvent &key)
 }
 
 // The window was closed
-void ShapeApp::on_window_close()
+void PathApp::on_window_close()
 {
 	quit = true;
 }

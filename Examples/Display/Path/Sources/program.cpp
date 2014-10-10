@@ -29,7 +29,7 @@
 
 #include "precomp.h"
 #include "program.h"
-#include "shape.h"
+#include "path.h"
 
 int Program::main(const std::vector<std::string> &args)
 {
@@ -45,7 +45,7 @@ int Program::main(const std::vector<std::string> &args)
 	clan::SetupD3D setup_d3d;
 
 	// Start the Application
-	ShapeApp app;
+	PathApp app;
 	int retval = app.start(args);
 	return retval;
 }
