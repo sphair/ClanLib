@@ -240,9 +240,6 @@ public:
 	/// \brief Uploads data to buffer.
 	void upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data);
 
-	/// \brief Return true if the PixelBuffer is valid and usable
-	operator bool () const;
-
 	/// \brief Copy source pixel buffer into this buffer, doing a format conversion if needed
 	///
 	/// \param source Source pixel buffer.

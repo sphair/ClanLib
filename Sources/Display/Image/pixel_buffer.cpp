@@ -346,16 +346,6 @@ PixelBuffer PixelBuffer::copy(const Rect &rect) const
 	return pbuf;
 }
 
-PixelBuffer::operator bool() const
-{
-	// Silly fix for gcc
-	if (impl)
-	{
-		return true;
-	}
-	return false;
-}
-
 void PixelBuffer::set_image(const PixelBuffer &source)
 {
 	set_subimage(source, Point(0,0), Rect(Point(0,0), source.get_size()));
