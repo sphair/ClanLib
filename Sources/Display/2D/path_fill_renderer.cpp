@@ -162,7 +162,7 @@ namespace clan
 		int draw_mode;
 
 		int num_stops = max(brush.stops.size(), 8);
-		PixelBuffer gradient_pixelbuffer(num_stops * 2 * 4, 1, tf_rgba32f);
+		PixelBuffer gradient_pixelbuffer(num_stops * 2, 1, tf_rgba32f);
 		Vec4f *gradient_ptr = gradient_pixelbuffer.get_data<Vec4f>();
 		for (unsigned int cnt = 0; cnt < brush.stops.size(); cnt++)
 		{
