@@ -86,4 +86,17 @@ void Texture1D::set_wrap_mode(TextureWrapMode wrap_s)
 	}
 }
 
+Texture1D::Texture1D(GraphicContext &context, const PixelBuffer &image, bool is_srgb)
+{
+	*this = Texture1D(context, image, 0, image.get_width(), is_srgb);
+}
+
+Texture1D::Texture1D(GraphicContext &context, const PixelBuffer &image, int src_x, int width, bool is_srgb)
+{
+	*this = Texture1D(context, width, is_srgb ? tf_srgb8_alpha8 : tf_rgba8);
+
+	set_subimage(context, 0, image, src_x, width, 0);
+	impl->provider->set_wrap_mode(impl->wrap_mode_s);
+}
+
 }
