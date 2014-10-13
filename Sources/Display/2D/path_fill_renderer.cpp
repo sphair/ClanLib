@@ -170,7 +170,7 @@ namespace clan
 			*(gradient_ptr++) = Vec4f(brush.stops[cnt].position, 0.0f, 0.0f, 0.0f);
 		}
 
-		Texture1D gradient_texture(gc, gradient_pixelbuffer);
+		Texture2D gradient_texture(gc, gradient_pixelbuffer);
 		gradient_texture.set_min_filter(filter_nearest);
 		gradient_texture.set_mag_filter(filter_nearest);
 
