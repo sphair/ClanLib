@@ -44,11 +44,13 @@ namespace clan
 	{
 	public:
 		ViewStyle();
-		ViewStyle(ViewStyle &&move);
-		ViewStyle(const ViewStyle &copy);
 		~ViewStyle();
 
-		ViewStyle &operator =(const ViewStyle &that);
+		/// \brief Copy assignment operator (does not copy the style, use clone() if you want that)
+		ViewStyle &operator =(const ViewStyle &copy);
+
+		// \brief Copy the entire style (not just the implementation)
+		ViewStyle clone() const;
 
 		void set_layout_none();
 		void set_layout_block();
@@ -148,6 +150,6 @@ namespace clan
 		void set_style_changed(const std::function<void()> &callback);
 
 	private:
-		std::unique_ptr<ViewStyleImpl> impl;
+		std::shared_ptr<ViewStyleImpl> impl;
 	};
 }

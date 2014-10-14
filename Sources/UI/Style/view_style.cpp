@@ -37,24 +37,24 @@ namespace clan
 	{
 	}
 
-	ViewStyle::ViewStyle(ViewStyle &&move) : impl(std::move(move.impl))
-	{
-	}
-
-	ViewStyle::ViewStyle(const ViewStyle &copy) : impl(new ViewStyleImpl())
-	{
-		*impl.get() = *copy.impl.get();
-	}
-
 	ViewStyle::~ViewStyle()
 	{
 	}
 
-	ViewStyle &ViewStyle::operator =(const ViewStyle &that)
+
+	ViewStyle &ViewStyle::operator =(const ViewStyle &copy)
 	{
-		*impl.get() = *that.impl.get();
+		impl = copy.impl;
 		return *this;
 	}
+
+	ViewStyle ViewStyle::clone() const
+	{
+		ViewStyle copy;
+		*copy.impl = *impl;
+		return copy;
+	}
+
 
 	void ViewStyle::set_layout_none()
 	{

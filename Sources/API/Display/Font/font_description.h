@@ -152,7 +152,7 @@ public:
 /// \{
 
 public:
-	/// \brief Copy assignment operator.
+	/// \brief Copy assignment operator (does not copy the description, use clone() if you want that)
 	FontDescription &operator =(const FontDescription &copy);
 
 	// \brief Copy the entire font description (not just the implementation)
