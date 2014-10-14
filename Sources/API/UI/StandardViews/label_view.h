@@ -53,9 +53,13 @@ namespace clan
 		truncating_middle
 	};
 
+	class LabelViewImpl;
+
 	class LabelView : public View
 	{
 	public:
+		LabelView();
+
 		std::string text() const;
 		void set_text(const std::string &value);
 
@@ -93,17 +97,7 @@ namespace clan
 		float get_last_baseline_offset(float width) override;
 
 	private:
-		std::string _text;
-		Font _font;
-		FontDescription _font_desc;
-		Colorf _text_color;
-		TextAlignment _text_alignment = TextAlignment::left;
-		LineBreakMode _line_break_mode = LineBreakMode::truncating_tail;
-		bool _enabled = true;
-		int _number_of_lines = 1;
-		Colorf _highlighted_color;
-		bool _highlighted = false;
-		Colorf _shadow_color = Colorf(0, 0, 0, 100);
+		std::shared_ptr<LabelViewImpl> impl;
 	};
 
 }

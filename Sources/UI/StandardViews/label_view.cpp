@@ -41,130 +41,151 @@
 
 namespace clan
 {
+	class LabelViewImpl
+	{
+	public:
+		std::string _text;
+		Font _font;
+		FontDescription _font_desc;
+		Colorf _text_color;
+		TextAlignment _text_alignment = TextAlignment::left;
+		LineBreakMode _line_break_mode = LineBreakMode::truncating_tail;
+		bool _enabled = true;
+		int _number_of_lines = 1;
+		Colorf _highlighted_color;
+		bool _highlighted = false;
+		Colorf _shadow_color = Colorf(0, 0, 0, 100);
+	};
+
+	LabelView::LabelView() : impl(new LabelViewImpl())
+	{
+	}
+
 	std::string LabelView::text() const
 	{
-		return _text;
+		return impl->_text;
 	}
 
 	void LabelView::set_text(const std::string &value)
 	{
-		_text = value;
+		impl->_text = value;
 		set_needs_layout();
 	}
 
 	FontDescription LabelView::font() const
 	{
-		return _font_desc;
+		return impl->_font_desc;
 	}
 
 	void LabelView::set_font(const FontDescription &value)
 	{
-		_font_desc = value.clone();
+		impl->_font_desc = value.clone();
 		Canvas canvas = SharedGCData::get_resource_canvas();
-		_font = Font(canvas, value);
+		impl->_font = Font(canvas, value);
 		set_needs_layout();
 	}
 
 	Colorf LabelView::text_color() const
 	{
-		return _text_color;
+		return impl->_text_color;
 	}
 
 	void LabelView::set_text_color(const Colorf &value)
 	{
-		_text_color = value;
+		impl->_text_color = value;
 		set_needs_layout();
 	}
 
 	TextAlignment LabelView::text_alignment() const
 	{
-		return _text_alignment;
+		return impl->_text_alignment;
 	}
 
 	void LabelView::set_text_alignment(TextAlignment value)
 	{
-		_text_alignment = value;
+		impl->_text_alignment = value;
 		set_needs_layout();
 	}
 
 	LineBreakMode LabelView::line_break_mode() const
 	{
-		return _line_break_mode;
+		return impl->_line_break_mode;
 	}
 
 	void LabelView::set_line_break_mode(LineBreakMode value)
 	{
-		_line_break_mode = value;
+		impl->_line_break_mode = value;
 		set_needs_layout();
 	}
 
 	bool LabelView::enabled() const
 	{
-		return _enabled;
+		return impl->_enabled;
 	}
 
 	void LabelView::set_enabled(bool value)
 	{
-		_enabled = value;
+		impl->_enabled = value;
 		set_needs_layout();
 	}
 
 	int LabelView::number_of_lines() const
 	{
-		return _number_of_lines;
+		return impl->_number_of_lines;
 	}
 
 	void LabelView::set_number_of_lines(int value)
 	{
-		_number_of_lines = value;
+		impl->_number_of_lines = value;
 		set_needs_layout();
 	}
 
 	Colorf LabelView::highlighted_color() const
 	{
-		return _highlighted_color;
+		return impl->_highlighted_color;
 	}
 
 	void LabelView::set_highlighted_color(const Colorf &value)
 	{
-		_highlighted_color = value;
+		impl->_highlighted_color = value;
 		set_needs_layout();
 	}
 
 	bool LabelView::highlighted() const
 	{
-		return _highlighted;
+		return impl->_highlighted;
 	}
 
 	void LabelView::set_highlighted(bool value)
 	{
-		_highlighted = value;
+		impl->_highlighted = value;
 		set_needs_layout();
 	}
 
 	Colorf LabelView::shadow_color() const
 	{
-		return _shadow_color;
+		return impl->_shadow_color;
 	}
 
 	void LabelView::set_shadow_color(const Colorf &value)
 	{
-		_shadow_color = value;
+		impl->_shadow_color = value;
 		set_needs_layout();
 	}
 
 	void LabelView::render_content(Canvas &canvas)
 	{
-		std::string clipped_text = _text;
+		Font _font = impl->_font;
+		std::string clipped_text = impl->_text;
 		LineMetrics line_metrics(_font);
 		GlyphMetrics advance = _font.get_glyph_metrics(canvas, clipped_text);
 
 		if (advance.advance.width > geometry().content.get_width())
 		{
 			std::string ellipsis = StringHelp::unicode_to_utf8(0x2026);
-			GlyphMetrics ellipsis_advance = _font.get_glyph_metrics(canvas, ellipsis);
+			GlyphMetrics ellipsis_advance = impl->_font.get_glyph_metrics(canvas, ellipsis);
 
-			switch (_line_break_mode)
+			switch (impl->_line_break_mode)
 			{
 			case LineBreakMode::clipping:
 				clipped_text = clipped_text.substr(0, _font.clip_from_left(canvas, clipped_text, geometry().content.get_width()));
@@ -192,19 +213,19 @@ namespace clan
 				return; // Still no room.  Draw nothing!
 		}
 
-		switch (_text_alignment)
+		switch (impl->_text_alignment)
 		{
 		default:
 		case TextAlignment::left:
-			canvas.text(_font, 0.0f, line_metrics.ascent, clipped_text, Brush(_text_color));
+			canvas.text(_font, 0.0f, line_metrics.ascent, clipped_text, Brush(impl->_text_color));
 			break;
 
 		case TextAlignment::right:
-			canvas.text(_font, geometry().content.get_width() - advance.advance.width, line_metrics.ascent, clipped_text, Brush(_text_color));
+			canvas.text(_font, geometry().content.get_width() - advance.advance.width, line_metrics.ascent, clipped_text, Brush(impl->_text_color));
 			break;
 
 		case TextAlignment::center:
-			canvas.text(_font, std::round((geometry().content.get_width() - advance.advance.width) * 0.5f), line_metrics.ascent, clipped_text, Brush(_text_color));
+			canvas.text(_font, std::round((geometry().content.get_width() - advance.advance.width) * 0.5f), line_metrics.ascent, clipped_text, Brush(impl->_text_color));
 			break;
 		}
 	}
@@ -214,7 +235,7 @@ namespace clan
 		if (style.is_width_auto())
 		{
 			Canvas canvas = SharedGCData::get_resource_canvas();
-			return _font.get_glyph_metrics(canvas, _text).advance.width;
+			return impl->_font.get_glyph_metrics(canvas, impl->_text).advance.width;
 		}
 		else
 			return style.width();
@@ -224,7 +245,7 @@ namespace clan
 	{
 		if (style.is_height_auto())
 		{
-			LineMetrics line_metrics(_font);
+			LineMetrics line_metrics(impl->_font);
 			return line_metrics.line_height;
 		}
 		else
@@ -233,7 +254,7 @@ namespace clan
 
 	float LabelView::get_first_baseline_offset(float width)
 	{
-		LineMetrics line_metrics(_font);
+		LineMetrics line_metrics(impl->_font);
 		return line_metrics.ascent;
 	}
 
