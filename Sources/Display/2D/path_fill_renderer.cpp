@@ -122,9 +122,6 @@ namespace clan
 
 		canvas.flush();
 
-		Mat3f inv_brush_transform = Mat3f::inverse(brush.transform);
-		Mat4f inv_transform = Mat4f::inverse(transform);
-
 		float canvas_width = (float)canvas.get_width();
 		float canvas_height = (float)canvas.get_height();
 
@@ -267,6 +264,8 @@ namespace clan
 			Rectf src = subtexture.get_geometry();
 
 			// Find transformed UV coordinates for image covering the entire mask texture:
+			Mat3f inv_brush_transform = Mat3f::inverse(brush.transform);
+			Mat4f inv_transform = Mat4f::inverse(transform);
 			Pointf image_tl = transform_point(canvas_extent.get_top_left(), inv_brush_transform, inv_transform);
 			Pointf image_br = transform_point(canvas_extent.get_bottom_right(), inv_brush_transform, inv_transform);
 
@@ -289,13 +288,6 @@ namespace clan
 			draw_mode = 0;
 			brush_data2 = brush.color;
 		}
-
-		//vertices.push_back(Vertex(Vec4f(canvas_extent_normalised.left, -canvas_extent_normalised.bottom, 0.0f, 1.0f), brush_data1_bottom_left, brush_data2, Vec2f(texture_extent_normalised.left, texture_extent_normalised.top), draw_mode));
-		//vertices.push_back(Vertex(Vec4f(canvas_extent_normalised.right, -canvas_extent_normalised.bottom, 0.0f, 1.0f), brush_data1_bottom_right, brush_data2, Vec2f(texture_extent_normalised.right, texture_extent_normalised.top), draw_mode));
-		//vertices.push_back(Vertex(Vec4f(canvas_extent_normalised.left, -canvas_extent_normalised.top, 0.0f, 1.0f), brush_data1_top_left, brush_data2, Vec2f(texture_extent_normalised.left, texture_extent_normalised.bottom), draw_mode));
-		//vertices.push_back(Vertex(Vec4f(canvas_extent_normalised.right, -canvas_extent_normalised.bottom, 0.0f, 1.0f), brush_data1_bottom_right, brush_data2, Vec2f(texture_extent_normalised.right, texture_extent_normalised.top), draw_mode));
-		//vertices.push_back(Vertex(Vec4f(canvas_extent_normalised.right, -canvas_extent_normalised.top, 0.0f, 1.0f), brush_data1_top_right, brush_data2, Vec2f(texture_extent_normalised.right, texture_extent_normalised.bottom), draw_mode));
-		//vertices.push_back(Vertex(Vec4f(canvas_extent_normalised.left, -canvas_extent_normalised.top, 0.0f, 1.0f), brush_data1_top_left, brush_data2, Vec2f(texture_extent_normalised.left, texture_extent_normalised.bottom), draw_mode));
 
 		vertices.push_back(Vertex(Vec4f(canvas_extent_normalised.left, -canvas_extent_normalised.top, 0.0f, 1.0f), brush_data1_top_left, brush_data2, Vec2f(texture_extent_normalised.left, texture_extent_normalised.top), draw_mode));
 		vertices.push_back(Vertex(Vec4f(canvas_extent_normalised.right, -canvas_extent_normalised.top, 0.0f, 1.0f), brush_data1_top_right, brush_data2, Vec2f(texture_extent_normalised.right, texture_extent_normalised.top), draw_mode));
