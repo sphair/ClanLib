@@ -37,6 +37,7 @@
 #include "API/Display/Render/blend_state.h"
 #include "API/Display/Render/shader_object.h"
 #include "API/Display/Render/texture_2d.h"
+#include "API/Display/Render/transfer_texture.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/Render/program_object.h"
 #include "render_batch_buffer.h"
@@ -69,7 +70,7 @@ namespace clan
 	public:
 		PathFillRenderer(GraphicContext &gc);
 
-		void set_size(int width, int height);
+		void set_size(Canvas &canvas, int width, int height);
 		void clear();
 
 		void line(float x, float y) override;
@@ -96,7 +97,8 @@ namespace clan
 		int width = 0;
 		int height = 0;
 		std::vector<PathScanline> scanlines;
-		PixelBuffer mask;
+		TransferTexture mask_buffer;
+		Texture2D mask_texture;
 		PrimitivesArray prim_array[RenderBatchBuffer::num_vertex_buffers];
 		BlendState blend_state;
 	};

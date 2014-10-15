@@ -226,12 +226,11 @@ const std::string::value_type *cl_glsl15_vertex_path = R"shaderend(
 			out vec4 brush_data1;
 			out vec4 brush_data2;
 			flat out int mode;
-			out vec4 position;
+			out vec2 mask_position;
 			void main()
 			{
-				gl_Position = vec4(Position.xy, 0, 1);
-				position.xy = Position.zw;
-				position.zw = TexCoord0;
+				gl_Position = Position;
+				mask_position = TexCoord0;
 				brush_data1 = BrushData1;
 				brush_data2 = BrushData2;
 				mode = Mode;
@@ -242,7 +241,7 @@ const std::string::value_type *cl_glsl15_fragment_path = R"shaderend(
 	#version 150
 
 	flat in int mode;
-	in vec4 position; // object xy + mask uv
+	in vec2 mask_position;
 	in vec4 brush_data1;
 	in vec4 brush_data2;
 	out vec4 cl_FragColor;
@@ -253,12 +252,12 @@ const std::string::value_type *cl_glsl15_fragment_path = R"shaderend(
 
 	vec4 mask(vec4 color)
 	{
-		return color * texture(mask_texture, position.zw).r;
+		return color * texture(mask_texture, mask_position).r;
 	}
 
 	void solid_fill()
 	{
-		vec4 fill_color = brush_data1;
+		vec4 fill_color = brush_data2;
 		cl_FragColor = mask(fill_color);
 	}
 
@@ -285,7 +284,7 @@ const std::string::value_type *cl_glsl15_fragment_path = R"shaderend(
 		int stop_start = int(brush_data2.y);
 		int stop_end = int(brush_data2.z);
 
-		float t = dot(position.xy - grad_start, grad_dir) * rcp_grad_length;
+		float t = dot(grad_start, grad_dir) * rcp_grad_length;
 		cl_FragColor = mask(gradient_color(stop_start, stop_end, t));
 	}
 
@@ -296,7 +295,7 @@ const std::string::value_type *cl_glsl15_fragment_path = R"shaderend(
 		int stop_start = int(brush_data2.y);
 		int stop_end = int(brush_data2.z);
 
-		float t = length(position.xy - grad_center) * rcp_grad_length;
+		float t = length(grad_center) * rcp_grad_length;
 		cl_FragColor = mask(gradient_color(stop_start, stop_end, t));
 	}
 

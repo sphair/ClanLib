@@ -51,10 +51,9 @@ namespace clan
 
 	void RenderBatchPath::fill(Canvas &canvas, const Path &path, const Brush &brush)
 	{
-		canvas.flush();
 		canvas.set_batcher(this);
 
-		fill_renderer.set_size(canvas.get_width(), canvas.get_height());
+		fill_renderer.set_size(canvas, canvas.get_width(), canvas.get_height());
 		fill_renderer.clear();
 		render(path, &fill_renderer);
 		fill_renderer.fill(batch_buffer, canvas, path.get_impl()->fill_mode, brush, modelview_matrix);
@@ -62,7 +61,6 @@ namespace clan
 
 	void RenderBatchPath::stroke(Canvas &canvas, const Path &path, const Pen &pen)
 	{
-		canvas.flush();
 		canvas.set_batcher(this);
 
 		stroke_renderer.set_pen(canvas, pen);
