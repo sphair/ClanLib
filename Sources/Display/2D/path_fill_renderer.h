@@ -96,7 +96,7 @@ namespace clan
 		Rectf sort_and_find_extents(float canvas_width, float canvas_height);
 		Pointf transform_point(Pointf point, const Mat3f &brush_transform, const Mat4f &fill_transform) const;
 		void build_upload_list(Canvas &canvas, const Rectf &mask_extent, PathFillMode mode);
-		void upload_and_draw(RenderBatchBuffer *batch_buffer, Canvas &canvas, const Brush &brush, const Mat4f &transform, const Rectf &mask_extent);
+		void upload_and_draw(RenderBatchBuffer *batch_buffer, Canvas &canvas, const Brush &brush, const Mat4f &transform);
 		void flush();
 
 		static const int antialias_level = 2;

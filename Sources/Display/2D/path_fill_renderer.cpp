@@ -129,7 +129,7 @@ namespace clan
 
 		Rectf mask_extent = sort_and_find_extents(canvas_width, canvas_height);
 		build_upload_list(canvas, mask_extent, mode);
-		upload_and_draw(batch_buffer, canvas, brush, transform, mask_extent);
+		upload_and_draw(batch_buffer, canvas, brush, transform);
 	}
 
 	Rectf PathFillRenderer::sort_and_find_extents(float canvas_width, float canvas_height)
@@ -264,7 +264,7 @@ namespace clan
 		upload_list.clear();
 	}
 
-	void PathFillRenderer::upload_and_draw(RenderBatchBuffer *batch_buffer, Canvas &canvas, const Brush &brush, const Mat4f &transform, const Rectf &mask_extent)
+	void PathFillRenderer::upload_and_draw(RenderBatchBuffer *batch_buffer, Canvas &canvas, const Brush &brush, const Mat4f &transform)
 	{
 		GraphicContext gc = canvas.get_gc();
 
@@ -273,9 +273,6 @@ namespace clan
 
 		size_t blocks_height = (upload_list.size() + mask_texture_size - 1) / mask_texture_size * mask_texture_size;
 		mask_texture.set_subimage(canvas, 0, 0, mask_buffer, Rect(Point(0, 0), Size(mask_texture_size, blocks_height)));
-
-		Rectf canvas_extent((int)(mask_extent.left / static_cast<float>(antialias_level)), (int)(mask_extent.top / static_cast<float>(antialias_level)), (int)(mask_extent.right / static_cast<float>(antialias_level)), (int)(mask_extent.bottom / static_cast<float>(antialias_level)));
-		canvas_extent.clip(clan::Sizef(width, height));
 
 		int num_stops = max(brush.stops.size(), 8);
 		PixelBuffer gradient_pixelbuffer(num_stops * 2, 1, tf_rgba32f);
