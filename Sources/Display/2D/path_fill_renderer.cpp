@@ -193,8 +193,8 @@ namespace clan
 
 			for (int xpos = mask_extent.left; xpos < mask_extent.right; xpos += scanline_block_size)
 			{
-				int block_x = next_block % mask_texture_size;
-				int block_y = next_block / mask_texture_size;
+				int block_x = next_block % mask_texture_size * mask_block_size;
+				int block_y = next_block / mask_texture_size * mask_block_size;
 
 				bool empty_block = true;
 				bool full_block = true;
