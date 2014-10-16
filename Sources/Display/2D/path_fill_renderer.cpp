@@ -272,7 +272,8 @@ namespace clan
 		float canvas_height = (float)canvas.get_height();
 
 		size_t blocks_height = (upload_list.size() + mask_texture_size - 1) / mask_texture_size * mask_texture_size;
-		mask_texture.set_subimage(canvas, 0, 0, mask_buffer, Rect(Point(0, 0), Size(mask_texture_size, blocks_height)));
+		int block_y = ((next_block * mask_block_size) / mask_texture_size)* mask_block_size;
+		mask_texture.set_subimage(canvas, 0, 0, mask_buffer, Rect(Point(0, 0), Size(mask_texture_size, min(block_y + mask_block_size, mask_texture_size))));
 
 		int num_stops = max(brush.stops.size(), 8);
 		PixelBuffer gradient_pixelbuffer(num_stops * 2, 1, tf_rgba32f);
