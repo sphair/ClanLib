@@ -277,19 +277,6 @@ namespace clan
 		Rectf canvas_extent((int)(mask_extent.left / static_cast<float>(antialias_level)), (int)(mask_extent.top / static_cast<float>(antialias_level)), (int)(mask_extent.right / static_cast<float>(antialias_level)), (int)(mask_extent.bottom / static_cast<float>(antialias_level)));
 		canvas_extent.clip(clan::Sizef(width, height));
 
-		Rectf canvas_extent_normalised(canvas_extent);
-		canvas_extent_normalised.left = (2.0f * canvas_extent_normalised.left / canvas_width) - 1.0f;
-		canvas_extent_normalised.right = (2.0f * canvas_extent_normalised.right / canvas_width) - 1.0f;
-		canvas_extent_normalised.top = (2.0f * canvas_extent_normalised.top / canvas_height) - 1.0f;
-		canvas_extent_normalised.bottom = (2.0f * canvas_extent_normalised.bottom / canvas_height) - 1.0f;
-
-		Rectf texture_extent_normalised(canvas_extent);
-		texture_extent_normalised.left = (texture_extent_normalised.left / width);
-		texture_extent_normalised.right = (texture_extent_normalised.right / width);
-		texture_extent_normalised.top = (texture_extent_normalised.top / height);
-		texture_extent_normalised.bottom = (texture_extent_normalised.bottom / height);
-
-
 		int num_stops = max(brush.stops.size(), 8);
 		PixelBuffer gradient_pixelbuffer(num_stops * 2, 1, tf_rgba32f);
 		Vec4f *gradient_ptr = gradient_pixelbuffer.get_data<Vec4f>();
@@ -304,6 +291,15 @@ namespace clan
 		gradient_texture.set_mag_filter(filter_nearest);
 
 		std::vector<Vertex> vertices;
+
+		Mat3f inv_brush_transform;
+		Mat4f inv_transform;
+		if (brush.type == BrushType::image)
+		{
+			inv_brush_transform = Mat3f::inverse(brush.transform);
+			inv_transform = Mat4f::inverse(transform);
+
+		}
 
 		for (unsigned int upload_index = 0; upload_index < upload_list.size(); upload_index++)
 		{
@@ -379,8 +375,6 @@ namespace clan
 				Rectf src = subtexture.get_geometry();
 
 				// Find transformed UV coordinates for image covering the entire mask texture:
-				Mat3f inv_brush_transform = Mat3f::inverse(brush.transform);
-				Mat4f inv_transform = Mat4f::inverse(transform);
 				Pointf image_tl = transform_point(canvas_extent.get_top_left(), inv_brush_transform, inv_transform);
 				Pointf image_br = transform_point(canvas_extent.get_bottom_right(), inv_brush_transform, inv_transform);
 
