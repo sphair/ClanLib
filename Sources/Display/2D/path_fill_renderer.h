@@ -97,10 +97,13 @@ namespace clan
 		Pointf transform_point(Pointf point, const Mat3f &brush_transform, const Mat4f &fill_transform) const;
 		void build_upload_list(Canvas &canvas, const Rectf &mask_extent, PathFillMode mode);
 		void upload_and_draw(RenderBatchBuffer *batch_buffer, Canvas &canvas, const Brush &brush, const Mat4f &transform, const Rectf &mask_extent);
+		void flush();
 
 		static const int antialias_level = 2;
 		static const int mask_block_size = 16;
 		static const int scanline_block_size = mask_block_size * antialias_level;
+		static const int mask_texture_size = 512;
+		static const int max_blocks = (mask_texture_size / mask_block_size) * (mask_texture_size / mask_block_size);
 
 		std::vector<PathRasterRange> range;
 
@@ -108,6 +111,7 @@ namespace clan
 		int height = 0;
 		std::vector<PathScanline> scanlines;
 		std::vector<Point> upload_list;
+		int next_block = 0;
 		TransferTexture mask_buffer;
 		Texture2D mask_texture;
 		PrimitivesArray prim_array[RenderBatchBuffer::num_vertex_buffers];

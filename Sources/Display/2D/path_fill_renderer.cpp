@@ -40,6 +40,11 @@ namespace clan
 		BlendStateDescription blend_desc;
 		blend_desc.set_blend_function(blend_one, blend_one_minus_src_alpha, blend_one, blend_one_minus_src_alpha);
 		blend_state = BlendState(gc, blend_desc);
+
+		mask_buffer = TransferTexture(gc, mask_texture_size, mask_texture_size, data_to_gpu, tf_r8);
+		mask_texture = Texture2D(gc, mask_texture_size, mask_texture_size, tf_r8);
+		mask_texture.set_min_filter(filter_nearest);
+		mask_texture.set_mag_filter(filter_nearest);
 	}
 
 	void PathFillRenderer::set_size(Canvas &canvas, int new_width, int new_height)
@@ -53,14 +58,6 @@ namespace clan
 			width = new_width;
 			height = new_height;
 			scanlines.resize(height * antialias_level);
-			if (width != 0 && height != 0)
-			{
-				GraphicContext gc = canvas.get_gc();
-				mask_buffer = TransferTexture(gc, width, height, data_to_gpu, tf_r8);
-				mask_texture = Texture2D(gc, width, height, tf_r8);
-				mask_texture.set_min_filter(filter_nearest);
-				mask_texture.set_mag_filter(filter_nearest);
-			}
 		}
 	}
 
@@ -170,12 +167,15 @@ namespace clan
 	{
 		GraphicContext gc = canvas.get_gc();
 
-		mask_buffer.lock(gc, access_read_write);
-		memset(mask_buffer.get_data(), 0, mask_buffer.get_height() * mask_buffer.get_pitch());
-
 		int empty_blocks = 0;
 		int full_blocks = 0;
+
+		// To do: remove the upload reset to allow batching across multiple path fills
 		upload_list.clear();
+		next_block = 0;
+
+		mask_buffer.lock(gc, access_read_write); // To do: maybe keep this locked?
+		memset(mask_buffer.get_data(), 0, mask_buffer.get_height() * mask_buffer.get_pitch()); // To do: this clear needs to be smarter - doesn't work with batching this way
 
 		range.clear();
 		range.reserve(scanline_block_size);
@@ -193,11 +193,14 @@ namespace clan
 
 			for (int xpos = mask_extent.left; xpos < mask_extent.right; xpos += scanline_block_size)
 			{
+				int block_x = next_block % mask_texture_size;
+				int block_y = next_block / mask_texture_size;
+
 				bool empty_block = true;
 				bool full_block = true;
 				for (unsigned int cnt = 0; cnt < scanline_block_size; cnt++)
 				{
-					unsigned char *line = mask_buffer.get_line_uint8((y + cnt) / antialias_level);
+					unsigned char *line = mask_buffer.get_line_uint8(block_y + cnt / antialias_level) + block_x;
 					if (range[cnt].found)
 					{
 						full_block = false;
@@ -221,7 +224,7 @@ namespace clan
 
 							x0 = max(x0, xpos);
 							x1 = min(x1, xpos + scanline_block_size);
-							for (int x = x0; x < x1; x++)
+							for (int x = x0 - xpos; x < x1 - xpos; x++)
 							{
 								int pixel = line[x / antialias_level];
 								pixel = min(pixel + (256 / (antialias_level*antialias_level)), 255);
@@ -234,6 +237,9 @@ namespace clan
 				if (!empty_block)
 				{
 					upload_list.push_back(Point(xpos / antialias_level, y / antialias_level));
+					next_block++;
+					if (next_block == max_blocks)
+						flush();
 				}
 				else
 				{
@@ -247,6 +253,15 @@ namespace clan
 		mask_buffer.unlock();
 	}
 
+	void PathFillRenderer::flush()
+	{
+		// To do: Texture mask buff is full. Render what we have.
+		//        This function is supposed to do what upload_and_draw is actually doing
+
+		next_block = 0;
+		upload_list.clear();
+	}
+
 	void PathFillRenderer::upload_and_draw(RenderBatchBuffer *batch_buffer, Canvas &canvas, const Brush &brush, const Mat4f &transform, const Rectf &mask_extent)
 	{
 		GraphicContext gc = canvas.get_gc();
@@ -254,10 +269,8 @@ namespace clan
 		float canvas_width = (float)canvas.get_width();
 		float canvas_height = (float)canvas.get_height();
 
-		for (unsigned int cnt = 0; cnt < upload_list.size(); cnt++)
-		{
-			mask_texture.set_subimage(canvas, upload_list[cnt].x, upload_list[cnt].y, mask_buffer, Rect(upload_list[cnt], Size(mask_block_size, mask_block_size)));
-		}
+		size_t blocks_height = (upload_list.size() + mask_texture_size - 1) / mask_texture_size * mask_texture_size;
+		mask_texture.set_subimage(canvas, 0, 0, mask_buffer, Rect(Point(0, 0), Size(mask_texture_size, blocks_height)));
 
 		Rectf canvas_extent((int)(mask_extent.left / static_cast<float>(antialias_level)), (int)(mask_extent.top / static_cast<float>(antialias_level)), (int)(mask_extent.right / static_cast<float>(antialias_level)), (int)(mask_extent.bottom / static_cast<float>(antialias_level)));
 		canvas_extent.clip(clan::Sizef(width, height));
