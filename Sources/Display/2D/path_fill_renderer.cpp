@@ -54,6 +54,10 @@ namespace clan
 
 		vertices = (Vertex *)batch_buffer->buffer;
 
+		mask_buffer.lock(gc, access_read_write);
+		memset(mask_buffer.get_data(), 0, mask_buffer.get_height() * mask_buffer.get_pitch());
+		instance_buffer.lock(gc, access_write_only);
+
 	}
 
 	void PathFillRenderer::set_size(Canvas &canvas, int new_width, int new_height)
@@ -179,9 +183,6 @@ namespace clan
 		next_block = 0;
 		found_filled_block = false;
 
-		mask_buffer.lock(gc, access_read_write); // To do: maybe keep this locked?
-		memset(mask_buffer.get_data(), 0, mask_buffer.get_height() * mask_buffer.get_pitch()); // To do: this clear needs to be smarter - doesn't work with batching this way
-
 		range.clear();
 		range.reserve(scanline_block_size);
 
@@ -276,13 +277,16 @@ namespace clan
 		}
 
 		//PNGProvider::save(mask_buffer, "c:\\development\\test.png");
-		mask_buffer.unlock();
 	}
 
 	void PathFillRenderer::flush(GraphicContext &gc)
 	{
 		if (position <= 0)		// Nothing to flush
 			return;
+
+		mask_buffer.unlock();
+		instance_buffer.unlock();
+
 
 		int gpu_index;
 		VertexArrayVector<Vertex> gpu_vertices(batch_buffer->get_vertex_buffer(gc, gpu_index));
@@ -300,11 +304,11 @@ namespace clan
 
 		gpu_vertices.upload_data(gc, 0, vertices, position);
 
+
 		size_t blocks_height = (upload_list.size() + mask_texture_size - 1) / mask_texture_size * mask_texture_size;
 		int block_y = ((next_block * mask_block_size) / mask_texture_size)* mask_block_size;
 		mask_texture.set_subimage(gc, 0, 0, mask_buffer, Rect(Point(0, 0), Size(mask_texture_size, block_y + mask_block_size)));
 
-		instance_buffer.unlock();
 		instance_texture.set_subimage(gc, 0, 0, instance_buffer, Rect(Point(0, 0), instance_buffer_used));
 
 		gc.set_blend_state(blend_state);
@@ -322,6 +326,12 @@ namespace clan
 		next_block = 0;
 		upload_list.clear();
 		instance_buffer_used = Size();
+
+		mask_buffer.lock(gc, access_read_write);
+		memset(mask_buffer.get_data(), 0, mask_buffer.get_height() * mask_buffer.get_pitch());	//TODO: Only clear used parts
+		instance_buffer.lock(gc, access_write_only);
+
+
 	}
 
 	void PathFillRenderer::upload_and_draw(Canvas &canvas, const Brush &brush, const Mat4f &transform)
@@ -456,14 +466,13 @@ namespace clan
 			 
 		}
 
-		instance_buffer.lock(gc, access_write_only);
 		Vec4f *instance_ptr = instance_buffer.get_data<Vec4f>();
 		for (unsigned int cnt = 0; cnt < brush.stops.size(); cnt++)
 		{
 			*(instance_ptr++) = brush.stops[cnt].color;
 			*(instance_ptr++) = Vec4f(brush.stops[cnt].position, 0.0f, 0.0f, 0.0f);
 		}
-		instance_buffer_used.width = brush.stops.size() * 2;	//TODO: Fixme
+		instance_buffer_used.width += brush.stops.size() * 2;	//TODO: Fixme
 		instance_buffer_used.height = 1;	//TODO: Fixme
 
 		flush(gc);	//TODO: Remove when all working
