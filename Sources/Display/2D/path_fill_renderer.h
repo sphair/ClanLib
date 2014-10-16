@@ -69,7 +69,7 @@ namespace clan
 	class PathFillRenderer : public PathRenderer
 	{
 	public:
-		PathFillRenderer(GraphicContext &gc);
+		PathFillRenderer(GraphicContext &gc, RenderBatchBuffer *batch_buffer);
 
 		void set_size(Canvas &canvas, int width, int height);
 		void clear();
@@ -77,7 +77,8 @@ namespace clan
 		void line(float x, float y) override;
 		void end(bool close) override;
 
-		void fill(RenderBatchBuffer *batch_buffer, Canvas &canvas, PathFillMode mode, const Brush &brush, const Mat4f &transform);
+		void fill(Canvas &canvas, PathFillMode mode, const Brush &brush, const Mat4f &transform);
+		void flush(GraphicContext &gc);
 
 	private:
 		struct Vertex
@@ -96,8 +97,7 @@ namespace clan
 		Rectf sort_and_find_extents(float canvas_width, float canvas_height);
 		Pointf transform_point(Pointf point, const Mat3f &brush_transform, const Mat4f &fill_transform) const;
 		void build_upload_list(Canvas &canvas, const Rectf &mask_extent, PathFillMode mode);
-		void upload_and_draw(RenderBatchBuffer *batch_buffer, Canvas &canvas, const Brush &brush, const Mat4f &transform);
-		void flush();
+		void upload_and_draw(Canvas &canvas, const Brush &brush, const Mat4f &transform);
 
 		static const int antialias_level = 2;
 		static const int mask_block_size = 16;
@@ -120,11 +120,16 @@ namespace clan
 			Point output_position;
 			int mask_index;
 		};
+		enum { max_vertices = RenderBatchBuffer::vertex_buffer_size / sizeof(Vertex) };
 
 		std::vector<Block> upload_list;
 		int next_block = 0;
 		bool found_filled_block;
 		int filled_block_index;
+
+		Vertex *vertices;
+		int position = 0;
+		RenderBatchBuffer *batch_buffer;
 
 		TransferTexture mask_buffer;
 		Texture2D mask_texture;

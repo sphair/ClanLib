@@ -38,7 +38,7 @@
 
 namespace clan
 {
-	RenderBatchPath::RenderBatchPath(GraphicContext &gc, RenderBatchBuffer *batch_buffer) : batch_buffer(batch_buffer), fill_renderer(gc), stroke_renderer(gc)
+	RenderBatchPath::RenderBatchPath(GraphicContext &gc, RenderBatchBuffer *batch_buffer) : batch_buffer(batch_buffer), fill_renderer(gc, batch_buffer), stroke_renderer(gc)
 	{
 	}
 
@@ -56,7 +56,7 @@ namespace clan
 		fill_renderer.set_size(canvas, canvas.get_width(), canvas.get_height());
 		fill_renderer.clear();
 		render(path, &fill_renderer);
-		fill_renderer.fill(batch_buffer, canvas, path.get_impl()->fill_mode, brush, modelview_matrix);
+		fill_renderer.fill(canvas, path.get_impl()->fill_mode, brush, modelview_matrix);
 	}
 
 	void RenderBatchPath::stroke(Canvas &canvas, const Path &path, const Pen &pen)
@@ -69,7 +69,7 @@ namespace clan
 
 	void RenderBatchPath::flush(GraphicContext &gc)
 	{
-		// Path does not support batching at the moment
+		fill_renderer.flush(gc);
 	}
 
 	void RenderBatchPath::matrix_changed(const Mat4f &new_modelview, const Mat4f &new_projection)

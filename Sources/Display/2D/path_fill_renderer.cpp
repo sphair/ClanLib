@@ -36,7 +36,7 @@
 
 namespace clan
 {
-	PathFillRenderer::PathFillRenderer(GraphicContext &gc)
+	PathFillRenderer::PathFillRenderer(GraphicContext &gc, RenderBatchBuffer *batch_buffer) : batch_buffer(batch_buffer)
 	{
 		BlendStateDescription blend_desc;
 		blend_desc.set_blend_function(blend_one, blend_one_minus_src_alpha, blend_one, blend_one_minus_src_alpha);
@@ -51,6 +51,8 @@ namespace clan
 		instance_texture = Texture2D(gc, instance_buffer_width, instance_buffer_height, tf_rgba32f);
 		instance_texture.set_min_filter(filter_nearest);
 		instance_texture.set_mag_filter(filter_nearest);
+
+		vertices = (Vertex *)batch_buffer->buffer;
 
 	}
 
@@ -124,18 +126,16 @@ namespace clan
 		}
 	}
 
-	void PathFillRenderer::fill(RenderBatchBuffer *batch_buffer, Canvas &canvas, PathFillMode mode, const Brush &brush, const Mat4f &transform)
+	void PathFillRenderer::fill(Canvas &canvas, PathFillMode mode, const Brush &brush, const Mat4f &transform)
 	{
 		if (scanlines.empty()) return;
-
-		canvas.flush();
 
 		float canvas_width = (float)canvas.get_width();
 		float canvas_height = (float)canvas.get_height();
 
 		Rectf mask_extent = sort_and_find_extents(canvas_width, canvas_height);
 		build_upload_list(canvas, mask_extent, mode);
-		upload_and_draw(batch_buffer, canvas, brush, transform);
+		upload_and_draw(canvas, brush, transform);
 	}
 
 	Rectf PathFillRenderer::sort_and_find_extents(float canvas_width, float canvas_height)
@@ -270,7 +270,7 @@ namespace clan
 					upload_list.push_back(Block(Point(xpos / antialias_level, y / antialias_level), next_block));
 					next_block++;
 					if (next_block == max_blocks)
-						flush();
+						flush(canvas);
 				}
 			}
 		}
@@ -279,41 +279,64 @@ namespace clan
 		mask_buffer.unlock();
 	}
 
-	void PathFillRenderer::flush()
+	void PathFillRenderer::flush(GraphicContext &gc)
 	{
-		// To do: Texture mask buff is full. Render what we have.
-		//        This function is supposed to do what upload_and_draw is actually doing
+		if (position <= 0)		// Nothing to flush
+			return;
+
+		int gpu_index;
+		VertexArrayVector<Vertex> gpu_vertices(batch_buffer->get_vertex_buffer(gc, gpu_index));
+
+		if (prim_array[gpu_index].is_null())
+		{
+			prim_array[gpu_index] = PrimitivesArray(gc);
+			prim_array[gpu_index].set_attributes(0, gpu_vertices, cl_offsetof(Vertex, Position));
+			prim_array[gpu_index].set_attributes(1, gpu_vertices, cl_offsetof(Vertex, BrushData1));
+			prim_array[gpu_index].set_attributes(2, gpu_vertices, cl_offsetof(Vertex, BrushData2));
+			prim_array[gpu_index].set_attributes(3, gpu_vertices, cl_offsetof(Vertex, TexCoord0));
+			prim_array[gpu_index].set_attributes(4, gpu_vertices, cl_offsetof(Vertex, Mode));
+
+		}
+
+		gpu_vertices.upload_data(gc, 0, vertices, position);
+
+		size_t blocks_height = (upload_list.size() + mask_texture_size - 1) / mask_texture_size * mask_texture_size;
+		int block_y = ((next_block * mask_block_size) / mask_texture_size)* mask_block_size;
+		mask_texture.set_subimage(gc, 0, 0, mask_buffer, Rect(Point(0, 0), Size(mask_texture_size, block_y + mask_block_size)));
+
+		instance_buffer.unlock();
+		instance_texture.set_subimage(gc, 0, 0, instance_buffer, Rect(Point(0, 0), instance_buffer_used));
+
+		gc.set_blend_state(blend_state);
+		gc.set_program_object(program_path);
+		gc.set_texture(0, mask_texture);
+		gc.set_texture(1, instance_texture);
+		gc.draw_primitives(type_triangles, position, prim_array[gpu_index]);
+		gc.reset_texture(2);
+		gc.reset_texture(1);
+		gc.reset_texture(0);
+		gc.reset_program_object();
+		gc.reset_blend_state();
+		position = 0;
 
 		next_block = 0;
 		upload_list.clear();
 		instance_buffer_used = Size();
 	}
 
-	void PathFillRenderer::upload_and_draw(RenderBatchBuffer *batch_buffer, Canvas &canvas, const Brush &brush, const Mat4f &transform)
+	void PathFillRenderer::upload_and_draw(Canvas &canvas, const Brush &brush, const Mat4f &transform)
 	{
+		int num_vertices = upload_list.size() * 6;
+		if (position + num_vertices > max_vertices)
+			canvas.flush();
+
+		if (num_vertices > max_vertices)
+			throw Exception("Too many vertices for PathFillRenderer");
+
 		GraphicContext gc = canvas.get_gc();
 
 		float canvas_width = (float)canvas.get_width();
 		float canvas_height = (float)canvas.get_height();
-
-		size_t blocks_height = (upload_list.size() + mask_texture_size - 1) / mask_texture_size * mask_texture_size;
-		int block_y = ((next_block * mask_block_size) / mask_texture_size)* mask_block_size;
-		mask_texture.set_subimage(canvas, 0, 0, mask_buffer, Rect(Point(0, 0), Size(mask_texture_size, block_y + mask_block_size)));
-
-		instance_buffer.lock(gc, access_write_only);
-		Vec4f *instance_ptr = instance_buffer.get_data<Vec4f>();
-		for (unsigned int cnt = 0; cnt < brush.stops.size(); cnt++)
-		{
-			*(instance_ptr++) = brush.stops[cnt].color;
-			*(instance_ptr++) = Vec4f(brush.stops[cnt].position, 0.0f, 0.0f, 0.0f);
-		}
-		instance_buffer_used.width = brush.stops.size() * 2;	//TODO: Fixme
-		instance_buffer_used.height = 1;	//TODO: Fixme
-
-		instance_buffer.unlock();
-		instance_texture.set_subimage(canvas, 0, 0, instance_buffer, Rect(Point(0, 0), instance_buffer_used));
-
-		std::vector<Vertex> vertices;
 
 		Mat3f inv_brush_transform;
 		Mat4f inv_transform;
@@ -423,40 +446,28 @@ namespace clan
 				brush_data2 = brush.color;
 			}
 
-			vertices.push_back(Vertex(Vec4f(upload_rect_normalised.left, -upload_rect_normalised.top, 0.0f, 1.0f), brush_data1_top_left, brush_data2, Vec2f(block_normalised.left, block_normalised.top), draw_mode));
-			vertices.push_back(Vertex(Vec4f(upload_rect_normalised.right, -upload_rect_normalised.top, 0.0f, 1.0f), brush_data1_top_right, brush_data2, Vec2f(block_normalised.right, block_normalised.top), draw_mode));
-			vertices.push_back(Vertex(Vec4f(upload_rect_normalised.left, -upload_rect_normalised.bottom, 0.0f, 1.0f), brush_data1_bottom_left, brush_data2, Vec2f(block_normalised.left, block_normalised.bottom), draw_mode));
-			vertices.push_back(Vertex(Vec4f(upload_rect_normalised.right, -upload_rect_normalised.top, 0.0f, 1.0f), brush_data1_top_right, brush_data2, Vec2f(block_normalised.right, block_normalised.top), draw_mode));
-			vertices.push_back(Vertex(Vec4f(upload_rect_normalised.right, -upload_rect_normalised.bottom, 0.0f, 1.0f), brush_data1_bottom_right, brush_data2, Vec2f(block_normalised.right, block_normalised.bottom), draw_mode));
-			vertices.push_back(Vertex(Vec4f(upload_rect_normalised.left, -upload_rect_normalised.bottom, 0.0f, 1.0f), brush_data1_bottom_left, brush_data2, Vec2f(block_normalised.left, block_normalised.bottom), draw_mode));
+			vertices[position + 0] = Vertex(Vec4f(upload_rect_normalised.left, -upload_rect_normalised.top, 0.0f, 1.0f), brush_data1_top_left, brush_data2, Vec2f(block_normalised.left, block_normalised.top), draw_mode);
+			vertices[position + 1] = Vertex(Vec4f(upload_rect_normalised.right, -upload_rect_normalised.top, 0.0f, 1.0f), brush_data1_top_right, brush_data2, Vec2f(block_normalised.right, block_normalised.top), draw_mode);
+			vertices[position + 2] = Vertex(Vec4f(upload_rect_normalised.left, -upload_rect_normalised.bottom, 0.0f, 1.0f), brush_data1_bottom_left, brush_data2, Vec2f(block_normalised.left, block_normalised.bottom), draw_mode);
+			vertices[position + 3] = Vertex(Vec4f(upload_rect_normalised.right, -upload_rect_normalised.top, 0.0f, 1.0f), brush_data1_top_right, brush_data2, Vec2f(block_normalised.right, block_normalised.top), draw_mode);
+			vertices[position + 4] = Vertex(Vec4f(upload_rect_normalised.right, -upload_rect_normalised.bottom, 0.0f, 1.0f), brush_data1_bottom_right, brush_data2, Vec2f(block_normalised.right, block_normalised.bottom), draw_mode);
+			vertices[position + 5] = Vertex(Vec4f(upload_rect_normalised.left, -upload_rect_normalised.bottom, 0.0f, 1.0f), brush_data1_bottom_left, brush_data2, Vec2f(block_normalised.left, block_normalised.bottom), draw_mode);
+			position += 6;
+			 
 		}
 
-		int gpu_index;
-		VertexArrayVector<Vertex> gpu_vertices(batch_buffer->get_vertex_buffer(gc, gpu_index));
-
-		if (prim_array[gpu_index].is_null())
+		instance_buffer.lock(gc, access_write_only);
+		Vec4f *instance_ptr = instance_buffer.get_data<Vec4f>();
+		for (unsigned int cnt = 0; cnt < brush.stops.size(); cnt++)
 		{
-			prim_array[gpu_index] = PrimitivesArray(gc);
-			prim_array[gpu_index].set_attributes(0, gpu_vertices, cl_offsetof(Vertex, Position));
-			prim_array[gpu_index].set_attributes(1, gpu_vertices, cl_offsetof(Vertex, BrushData1));
-			prim_array[gpu_index].set_attributes(2, gpu_vertices, cl_offsetof(Vertex, BrushData2));
-			prim_array[gpu_index].set_attributes(3, gpu_vertices, cl_offsetof(Vertex, TexCoord0));
-			prim_array[gpu_index].set_attributes(4, gpu_vertices, cl_offsetof(Vertex, Mode));
-
+			*(instance_ptr++) = brush.stops[cnt].color;
+			*(instance_ptr++) = Vec4f(brush.stops[cnt].position, 0.0f, 0.0f, 0.0f);
 		}
+		instance_buffer_used.width = brush.stops.size() * 2;	//TODO: Fixme
+		instance_buffer_used.height = 1;	//TODO: Fixme
 
-		gpu_vertices.upload_data(gc, 0, vertices);
+		flush(gc);	//TODO: Remove when all working
 
-		gc.set_blend_state(blend_state);
-		gc.set_program_object(program_path);
-		gc.set_texture(0, mask_texture);
-		gc.set_texture(1, instance_texture);
-		gc.draw_primitives(type_triangles, vertices.size(), prim_array[gpu_index]);
-		gc.reset_texture(2);
-		gc.reset_texture(1);
-		gc.reset_texture(0);
-		gc.reset_program_object();
-		gc.reset_blend_state();
 	}
 
 	inline Pointf PathFillRenderer::transform_point(Pointf point, const Mat3f &brush_transform, const Mat4f &transform) const
