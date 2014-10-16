@@ -46,6 +46,12 @@ namespace clan
 		mask_texture = Texture2D(gc, mask_texture_size, mask_texture_size, tf_r8);
 		mask_texture.set_min_filter(filter_nearest);
 		mask_texture.set_mag_filter(filter_nearest);
+
+		instance_buffer = TransferTexture(gc, instance_buffer_width, instance_buffer_height, data_to_gpu, tf_rgba32f);
+		instance_texture = Texture2D(gc, instance_buffer_width, instance_buffer_height, tf_rgba32f);
+		instance_texture.set_min_filter(filter_nearest);
+		instance_texture.set_mag_filter(filter_nearest);
+
 	}
 
 	void PathFillRenderer::set_size(Canvas &canvas, int new_width, int new_height)
@@ -159,7 +165,7 @@ namespace clan
 				mask_extent.right = scanline.edges[scanline.edges.size() - 1].x;
 		}
 
-		mask_extent.clip(Sizef(width * antialias_level, height * antialias_level));
+		mask_extent.clip(Sizef(canvas_width * antialias_level, canvas_height * antialias_level));
 
 		return mask_extent;
 	}
@@ -280,6 +286,7 @@ namespace clan
 
 		next_block = 0;
 		upload_list.clear();
+		instance_buffer_used = Size();
 	}
 
 	void PathFillRenderer::upload_and_draw(RenderBatchBuffer *batch_buffer, Canvas &canvas, const Brush &brush, const Mat4f &transform)
@@ -293,18 +300,18 @@ namespace clan
 		int block_y = ((next_block * mask_block_size) / mask_texture_size)* mask_block_size;
 		mask_texture.set_subimage(canvas, 0, 0, mask_buffer, Rect(Point(0, 0), Size(mask_texture_size, block_y + mask_block_size)));
 
-		int num_stops = max(brush.stops.size(), 8);
-		PixelBuffer gradient_pixelbuffer(num_stops * 2, 1, tf_rgba32f);
-		Vec4f *gradient_ptr = gradient_pixelbuffer.get_data<Vec4f>();
+		instance_buffer.lock(gc, access_write_only);
+		Vec4f *instance_ptr = instance_buffer.get_data<Vec4f>();
 		for (unsigned int cnt = 0; cnt < brush.stops.size(); cnt++)
 		{
-			*(gradient_ptr++) = brush.stops[cnt].color;
-			*(gradient_ptr++) = Vec4f(brush.stops[cnt].position, 0.0f, 0.0f, 0.0f);
+			*(instance_ptr++) = brush.stops[cnt].color;
+			*(instance_ptr++) = Vec4f(brush.stops[cnt].position, 0.0f, 0.0f, 0.0f);
 		}
+		instance_buffer_used.width = brush.stops.size() * 2;	//TODO: Fixme
+		instance_buffer_used.height = 1;	//TODO: Fixme
 
-		Texture2D gradient_texture(gc, gradient_pixelbuffer);
-		gradient_texture.set_min_filter(filter_nearest);
-		gradient_texture.set_mag_filter(filter_nearest);
+		instance_buffer.unlock();
+		instance_texture.set_subimage(canvas, 0, 0, instance_buffer, Rect(Point(0, 0), instance_buffer_used));
 
 		std::vector<Vertex> vertices;
 
@@ -443,7 +450,7 @@ namespace clan
 		gc.set_blend_state(blend_state);
 		gc.set_program_object(program_path);
 		gc.set_texture(0, mask_texture);
-		gc.set_texture(1, gradient_texture);
+		gc.set_texture(1, instance_texture);
 		gc.draw_primitives(type_triangles, vertices.size(), prim_array[gpu_index]);
 		gc.reset_texture(2);
 		gc.reset_texture(1);

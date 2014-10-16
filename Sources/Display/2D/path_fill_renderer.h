@@ -104,6 +104,8 @@ namespace clan
 		static const int scanline_block_size = mask_block_size * antialias_level;
 		static const int mask_texture_size = 512;
 		static const int max_blocks = (mask_texture_size / mask_block_size) * (mask_texture_size / mask_block_size);
+		static const int instance_buffer_width = 512;
+		static const int instance_buffer_height = 32;
 
 		std::vector<PathRasterRange> range;
 
@@ -126,6 +128,9 @@ namespace clan
 
 		TransferTexture mask_buffer;
 		Texture2D mask_texture;
+		TransferTexture instance_buffer;
+		Size instance_buffer_used;
+		Texture2D instance_texture;
 		PrimitivesArray prim_array[RenderBatchBuffer::num_vertex_buffers];
 		BlendState blend_state;
 	};
