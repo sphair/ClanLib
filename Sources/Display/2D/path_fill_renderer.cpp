@@ -178,9 +178,6 @@ namespace clan
 	{
 		GraphicContext gc = canvas.get_gc();
 
-		// To do: remove the upload reset to allow batching across multiple path fills
-		upload_list.clear();
-		next_block = 0;
 		found_filled_block = false;
 
 		range.clear();
