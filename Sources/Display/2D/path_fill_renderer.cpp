@@ -305,7 +305,8 @@ namespace clan
 		{
 			Point upload_point = upload_list[upload_index];
 
-			Rectf upload_rect_normalised(Pointf(upload_list[upload_index]), Sizef(mask_block_size, mask_block_size));
+			Rectf upload_rect(Pointf(upload_list[upload_index]), Sizef(mask_block_size, mask_block_size));
+			Rectf upload_rect_normalised(upload_rect);
 			upload_rect_normalised.left = (2.0f * upload_rect_normalised.left / canvas_width) - 1.0f;
 			upload_rect_normalised.right = (2.0f * upload_rect_normalised.right / canvas_width) - 1.0f;
 			upload_rect_normalised.top = (2.0f * upload_rect_normalised.top / canvas_height) - 1.0f;
@@ -342,10 +343,10 @@ namespace clan
 				brush_data2.y = 0.0f;
 				brush_data2.z = brush.stops.size();
 
-				brush_data1_bottom_left.set_xy(canvas_extent.get_bottom_left() - start_point);
-				brush_data1_bottom_right.set_xy(canvas_extent.get_bottom_right() - start_point);
-				brush_data1_top_left.set_xy(canvas_extent.get_top_left() - start_point);
-				brush_data1_top_right.set_xy(canvas_extent.get_top_right() - start_point);
+				brush_data1_bottom_left.set_xy(upload_rect.get_bottom_left() - start_point);
+				brush_data1_bottom_right.set_xy(upload_rect.get_bottom_right() - start_point);
+				brush_data1_top_left.set_xy(upload_rect.get_top_left() - start_point);
+				brush_data1_top_right.set_xy(upload_rect.get_top_right() - start_point);
 			}
 			else if (brush.type == BrushType::radial)
 			{
@@ -357,10 +358,10 @@ namespace clan
 				brush_data2.y = 0.0f;
 				brush_data2.z = brush.stops.size();
 
-				brush_data1_bottom_left.set_xy(canvas_extent.get_bottom_left() - center_point);
-				brush_data1_bottom_right.set_xy(canvas_extent.get_bottom_right() - center_point);
-				brush_data1_top_left.set_xy(canvas_extent.get_top_left() - center_point);
-				brush_data1_top_right.set_xy(canvas_extent.get_top_right() - center_point);
+				brush_data1_bottom_left.set_xy(upload_rect.get_bottom_left() - center_point);
+				brush_data1_bottom_right.set_xy(upload_rect.get_bottom_right() - center_point);
+				brush_data1_top_left.set_xy(upload_rect.get_top_left() - center_point);
+				brush_data1_top_right.set_xy(upload_rect.get_top_right() - center_point);
 			}
 			else if (brush.type == BrushType::image)
 			{
@@ -375,8 +376,8 @@ namespace clan
 				Rectf src = subtexture.get_geometry();
 
 				// Find transformed UV coordinates for image covering the entire mask texture:
-				Pointf image_tl = transform_point(canvas_extent.get_top_left(), inv_brush_transform, inv_transform);
-				Pointf image_br = transform_point(canvas_extent.get_bottom_right(), inv_brush_transform, inv_transform);
+				Pointf image_tl = transform_point(upload_rect.get_top_left(), inv_brush_transform, inv_transform);
+				Pointf image_br = transform_point(upload_rect.get_bottom_right(), inv_brush_transform, inv_transform);
 
 				// Convert to subtexture coordinates:
 				Sizef tex_size = Sizef((float)image_texture.get_width(), (float)image_texture.get_height());
