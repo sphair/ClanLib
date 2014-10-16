@@ -110,8 +110,20 @@ namespace clan
 		int width = 0;
 		int height = 0;
 		std::vector<PathScanline> scanlines;
-		std::vector<Point> upload_list;
+
+		class Block
+		{
+		public:
+			Block(const Point &output_position, int mask_index) : output_position(output_position), mask_index(mask_index) {}
+			Point output_position;
+			int mask_index;
+		};
+
+		std::vector<Block> upload_list;
 		int next_block = 0;
+		bool found_filled_block;
+		int filled_block_index;
+
 		TransferTexture mask_buffer;
 		Texture2D mask_texture;
 		PrimitivesArray prim_array[RenderBatchBuffer::num_vertex_buffers];

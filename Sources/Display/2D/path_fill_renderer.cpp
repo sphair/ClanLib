@@ -168,12 +168,10 @@ namespace clan
 	{
 		GraphicContext gc = canvas.get_gc();
 
-		int empty_blocks = 0;
-		int full_blocks = 0;
-
 		// To do: remove the upload reset to allow batching across multiple path fills
 		upload_list.clear();
 		next_block = 0;
+		found_filled_block = false;
 
 		mask_buffer.lock(gc, access_read_write); // To do: maybe keep this locked?
 		memset(mask_buffer.get_data(), 0, mask_buffer.get_height() * mask_buffer.get_pitch()); // To do: this clear needs to be smarter - doesn't work with batching this way
@@ -197,14 +195,43 @@ namespace clan
 				int block_x = (next_block * mask_block_size) % mask_texture_size;
 				int block_y = ((next_block * mask_block_size) / mask_texture_size)* mask_block_size;
 
-				bool empty_block = true;
+				// Identify filled blocks
 				bool full_block = true;
+				for (unsigned int filled_cnt = 0; filled_cnt < scanline_block_size; filled_cnt++)
+				{
+					if (!range[filled_cnt].found)
+					{
+						full_block = false;
+						break;
+					}
+					if ((range[filled_cnt].x0 > xpos) || (range[filled_cnt].x1 < (xpos + scanline_block_size)))
+					{
+						full_block = false;
+						break;
+					}
+				}
+
+				if (full_block)
+				{
+					if (!found_filled_block)
+					{
+						found_filled_block = true;
+						filled_block_index = next_block;
+					}
+					else
+					{
+						upload_list.push_back(Block(Point(xpos / antialias_level, y / antialias_level), filled_block_index));
+						continue;
+					}		
+				}
+
+
+				bool empty_block = true;
 				for (unsigned int cnt = 0; cnt < scanline_block_size; cnt++)
 				{
 					unsigned char *line = mask_buffer.get_line_uint8(block_y + cnt / antialias_level) + block_x;
 					if (range[cnt].found)
 					{
-						full_block = false;
 						empty_block = false;
 					}
 
@@ -220,9 +247,6 @@ namespace clan
 						}
 						else
 						{
-							if ((x0 > xpos) || (x1 < (xpos + scanline_block_size)))
-								full_block = false;
-
 							x0 = max(x0, xpos);
 							x1 = min(x1, xpos + scanline_block_size);
 							for (int x = x0 - xpos; x < x1 - xpos; x++)
@@ -237,17 +261,11 @@ namespace clan
 				}
 				if (!empty_block)
 				{
-					upload_list.push_back(Point(xpos / antialias_level, y / antialias_level));
+					upload_list.push_back(Block(Point(xpos / antialias_level, y / antialias_level), next_block));
 					next_block++;
 					if (next_block == max_blocks)
 						flush();
 				}
-				else
-				{
-					empty_blocks++;
-				}
-				if (full_block)
-					full_blocks++;
 			}
 		}
 
@@ -301,17 +319,18 @@ namespace clan
 
 		for (unsigned int upload_index = 0; upload_index < upload_list.size(); upload_index++)
 		{
-			Point upload_point = upload_list[upload_index];
+			Point upload_point = upload_list[upload_index].output_position;
 
-			Rectf upload_rect(Pointf(upload_list[upload_index]), Sizef(mask_block_size, mask_block_size));
+			Rectf upload_rect(Pointf(upload_point), Sizef(mask_block_size, mask_block_size));
 			Rectf upload_rect_normalised(upload_rect);
 			upload_rect_normalised.left = (2.0f * upload_rect_normalised.left / canvas_width) - 1.0f;
 			upload_rect_normalised.right = (2.0f * upload_rect_normalised.right / canvas_width) - 1.0f;
 			upload_rect_normalised.top = (2.0f * upload_rect_normalised.top / canvas_height) - 1.0f;
 			upload_rect_normalised.bottom = (2.0f * upload_rect_normalised.bottom / canvas_height) - 1.0f;
 
-			int block_x = (upload_index* mask_block_size) % mask_texture_size;
-			int block_y = ((upload_index* mask_block_size) / mask_texture_size) * mask_block_size;
+			int block_index = upload_list[upload_index].mask_index;
+			int block_x = (block_index* mask_block_size) % mask_texture_size;
+			int block_y = ((block_index* mask_block_size) / mask_texture_size) * mask_block_size;
 			Rectf block_normalised(Pointf(block_x, block_y), Sizef(mask_block_size, mask_block_size));
 			block_normalised.left = (block_normalised.left / mask_texture_size);
 			block_normalised.right = (block_normalised.right / mask_texture_size);
