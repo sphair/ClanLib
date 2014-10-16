@@ -47,6 +47,7 @@ namespace clan
 {
 	enum class PathFillMode;
 	class Brush;
+	class PathRasterRange;
 
 	class PathScanlineEdge
 	{
@@ -92,11 +93,21 @@ namespace clan
 			int Mode;
 		};
 
+		Rectf sort_and_find_extents(float canvas_width, float canvas_height);
 		Pointf transform_point(Pointf point, const Mat3f &brush_transform, const Mat4f &fill_transform) const;
+		void build_upload_list(Canvas &canvas, const Rectf &mask_extent, PathFillMode mode);
+		void upload_and_draw(RenderBatchBuffer *batch_buffer, Canvas &canvas, const Brush &brush, const Mat4f &transform, const Rectf &mask_extent);
+
+		static const int antialias_level = 2;
+		static const int mask_block_size = 16;
+		static const int scanline_block_size = mask_block_size * antialias_level;
+
+		std::vector<PathRasterRange> range;
 
 		int width = 0;
 		int height = 0;
 		std::vector<PathScanline> scanlines;
+		std::vector<Point> upload_list;
 		TransferTexture mask_buffer;
 		Texture2D mask_texture;
 		PrimitivesArray prim_array[RenderBatchBuffer::num_vertex_buffers];

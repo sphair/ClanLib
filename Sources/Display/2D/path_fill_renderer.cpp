@@ -44,11 +44,15 @@ namespace clan
 
 	void PathFillRenderer::set_size(Canvas &canvas, int new_width, int new_height)
 	{
+		// For simplicity of the code, ensure the mask is always a multiple of mask_block_size
+		new_width = mask_block_size * ((new_width + mask_block_size - 1) / mask_block_size);
+		new_height = mask_block_size * ((new_height + mask_block_size - 1) / mask_block_size);
+
 		if (width != new_width || height != new_height)
 		{
 			width = new_width;
 			height = new_height;
-			scanlines.resize(height * 2);
+			scanlines.resize(height * antialias_level);
 			if (width != 0 && height != 0)
 			{
 				GraphicContext gc = canvas.get_gc();
@@ -88,10 +92,10 @@ namespace clan
 		last_x = x1;
 		last_y = y1;
 
-		x0 *= 2.0f;
-		x1 *= 2.0f;
-		y0 *= 2.0f;
-		y1 *= 2.0f;
+		x0 *= static_cast<float>(antialias_level);
+		x1 *= static_cast<float>(antialias_level);
+		y0 *= static_cast<float>(antialias_level);
+		y1 *= static_cast<float>(antialias_level);
 
 		bool up_direction = y1 < y0;
 		float dy = y1 - y0;
@@ -103,7 +107,7 @@ namespace clan
 			int end_y = static_cast<int>(std::floor(max(y0, y1) - 0.5f)) + 1;
 
 			start_y = max(start_y, 0);
-			end_y = min(end_y, height * 2);
+			end_y = min(end_y, height * antialias_level);
 
 			float rcp_dy = 1.0f / dy;
 
@@ -125,12 +129,16 @@ namespace clan
 		float canvas_width = (float)canvas.get_width();
 		float canvas_height = (float)canvas.get_height();
 
-		Rectf mask_extent(canvas_width*2.0f, canvas_height * 2.0f, 0.0f, 0.0f);		// Dummy initial values
+		Rectf mask_extent = sort_and_find_extents(canvas_width, canvas_height);
+		build_upload_list(canvas, mask_extent, mode);
+		upload_and_draw(batch_buffer, canvas, brush, transform, mask_extent);
+	}
 
-		GraphicContext gc = canvas.get_gc();
-		mask_buffer.lock(gc, access_read_write);
-		memset(mask_buffer.get_data(), 0, mask_buffer.get_height() * mask_buffer.get_pitch());
+	Rectf PathFillRenderer::sort_and_find_extents(float canvas_width, float canvas_height)
+	{
+		Rectf mask_extent(canvas_width*static_cast<float>(antialias_level), canvas_height * static_cast<float>(antialias_level), 0.0f, 0.0f);		// Dummy initial values
 
+		// Precalculation to determine the extents
 		for (size_t y = 0; y < scanlines.size(); y++)
 		{
 			auto &scanline = scanlines[y];
@@ -144,43 +152,116 @@ namespace clan
 				mask_extent.top = y;
 
 			if (y > mask_extent.bottom)
-				mask_extent.bottom = y;	
-			
+				mask_extent.bottom = y;
+
 			if (scanline.edges[0].x < mask_extent.left)
 				mask_extent.left = scanline.edges[0].x;
 
-			if (scanline.edges[scanline.edges.size()-1].x > mask_extent.right)
+			if (scanline.edges[scanline.edges.size() - 1].x > mask_extent.right)
 				mask_extent.right = scanline.edges[scanline.edges.size() - 1].x;
+		}
 
-			unsigned char *line = mask_buffer.get_line_uint8(y / 2);
+		mask_extent.clip(Sizef(width * antialias_level, height * antialias_level));
 
-			PathRasterRange range(scanline, mode);
-			while (true)
+		return mask_extent;
+	}
+
+	void PathFillRenderer::build_upload_list(Canvas &canvas, const Rectf &mask_extent, PathFillMode mode)
+	{
+		GraphicContext gc = canvas.get_gc();
+
+		mask_buffer.lock(gc, access_read_write);
+		memset(mask_buffer.get_data(), 0, mask_buffer.get_height() * mask_buffer.get_pitch());
+
+		int empty_blocks = 0;
+		int full_blocks = 0;
+		upload_list.clear();
+
+		range.clear();
+		range.reserve(scanline_block_size);
+
+		for (size_t y = 0; y < scanlines.size(); y += scanline_block_size)
+		{
+			auto &scanline = scanlines[y];
+
+			range.clear();
+			for (unsigned int cnt = 0; cnt < scanline_block_size; cnt++)
 			{
-				range.next();
-				if (!range.found) break;
+				range.push_back(PathRasterRange(scanlines[y + cnt], mode));
+				range[cnt].next();
+			}
 
-				int x0 = static_cast<int>(range.x0 + 0.5f);
-				int x1 = static_cast<int>(range.x1 - 0.5f) + 1;
-
-				x0 = max(x0, 0);
-				x1 = min(x1, width * 2);
-
-				for (int x = x0; x < x1; x++)
+			for (int xpos = mask_extent.left; xpos < mask_extent.right; xpos += scanline_block_size)
+			{
+				bool empty_block = true;
+				bool full_block = true;
+				for (unsigned int cnt = 0; cnt < scanline_block_size; cnt++)
 				{
-					int pixel = line[x / 2];
-					pixel = min(pixel + 64, 255);
-					line[x / 2] = pixel;
+					unsigned char *line = mask_buffer.get_line_uint8((y + cnt) / antialias_level);
+					if (range[cnt].found)
+					{
+						full_block = false;
+						empty_block = false;
+					}
+
+					while (range[cnt].found)
+					{
+						int x0 = static_cast<int>(range[cnt].x0 + 0.5f);
+						if (x0 >= xpos + scanline_block_size)
+							break;
+						int x1 = static_cast<int>(range[cnt].x1 - 0.5f) + 1;
+						if (x0 == x1)	// Done segment
+						{
+							range[cnt].next();
+						}
+						else
+						{
+							if ((x0 > xpos) || (x1 < (xpos + scanline_block_size)))
+								full_block = false;
+
+							x0 = max(x0, xpos);
+							x1 = min(x1, xpos + scanline_block_size);
+							for (int x = x0; x < x1; x++)
+							{
+								int pixel = line[x / antialias_level];
+								pixel = min(pixel + (256 / (antialias_level*antialias_level)), 255);
+								line[x / antialias_level] = pixel;
+							}
+							range[cnt].x0 = x1;	// For next time
+						}
+					}
 				}
+				if (!empty_block)
+				{
+					upload_list.push_back(Point(xpos / antialias_level, y / antialias_level));
+				}
+				else
+				{
+					empty_blocks++;
+				}
+				if (full_block)
+					full_blocks++;
 			}
 		}
 
 		mask_buffer.unlock();
-		Rectf canvas_extent((int) (mask_extent.left / 2.0f), (int) ( mask_extent.top / 2.0f) , (int) (mask_extent.right / 2.0f), (int) (mask_extent.bottom / 2.0f));
+	}
+
+	void PathFillRenderer::upload_and_draw(RenderBatchBuffer *batch_buffer, Canvas &canvas, const Brush &brush, const Mat4f &transform, const Rectf &mask_extent)
+	{
+		GraphicContext gc = canvas.get_gc();
+
+		float canvas_width = (float)canvas.get_width();
+		float canvas_height = (float)canvas.get_height();
+
+		for (unsigned int cnt = 0; cnt < upload_list.size(); cnt++)
+		{
+			mask_texture.set_subimage(canvas, upload_list[cnt].x, upload_list[cnt].y, mask_buffer, Rect(upload_list[cnt], Size(mask_block_size, mask_block_size)));
+		}
+
+		Rectf canvas_extent((int)(mask_extent.left / static_cast<float>(antialias_level)), (int)(mask_extent.top / static_cast<float>(antialias_level)), (int)(mask_extent.right / static_cast<float>(antialias_level)), (int)(mask_extent.bottom / static_cast<float>(antialias_level)));
 		canvas_extent.clip(clan::Sizef(width, height));
-		if ((canvas_extent.get_width() > 0) && (canvas_extent.get_height() > 0) )
-			mask_texture.set_subimage(canvas, canvas_extent.left, canvas_extent.top, mask_buffer, canvas_extent);
-	
+
 		Rectf canvas_extent_normalised(canvas_extent);
 		canvas_extent_normalised.left = (2.0f * canvas_extent_normalised.left / canvas_width) - 1.0f;
 		canvas_extent_normalised.right = (2.0f * canvas_extent_normalised.right / canvas_width) - 1.0f;
@@ -189,7 +270,7 @@ namespace clan
 
 		Rectf texture_extent_normalised(canvas_extent);
 		texture_extent_normalised.left = (texture_extent_normalised.left / width);
-		texture_extent_normalised.right = (texture_extent_normalised.right /width);
+		texture_extent_normalised.right = (texture_extent_normalised.right / width);
 		texture_extent_normalised.top = (texture_extent_normalised.top / height);
 		texture_extent_normalised.bottom = (texture_extent_normalised.bottom / height);
 
