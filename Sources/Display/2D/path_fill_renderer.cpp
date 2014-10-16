@@ -31,6 +31,7 @@
 #include "path_fill_renderer.h"
 #include "API/Display/Render/texture_1d.h"
 #include "API/Display/2D/subtexture.h"
+#include "API/Display/ImageProviders/png_provider.h"
 #include <algorithm>
 
 namespace clan
@@ -193,8 +194,8 @@ namespace clan
 
 			for (int xpos = mask_extent.left; xpos < mask_extent.right; xpos += scanline_block_size)
 			{
-				int block_x = next_block % mask_texture_size * mask_block_size;
-				int block_y = next_block / mask_texture_size * mask_block_size;
+				int block_x = (next_block * mask_block_size) % mask_texture_size;
+				int block_y = ((next_block * mask_block_size) / mask_texture_size)* mask_block_size;
 
 				bool empty_block = true;
 				bool full_block = true;
@@ -250,6 +251,7 @@ namespace clan
 			}
 		}
 
+		//PNGProvider::save(mask_buffer, "c:\\development\\test.png");
 		mask_buffer.unlock();
 	}
 
@@ -287,9 +289,6 @@ namespace clan
 		texture_extent_normalised.top = (texture_extent_normalised.top / height);
 		texture_extent_normalised.bottom = (texture_extent_normalised.bottom / height);
 
-		std::vector<Vertex> vertices;
-		Vec4f brush_data2;
-		int draw_mode;
 
 		int num_stops = max(brush.stops.size(), 8);
 		PixelBuffer gradient_pixelbuffer(num_stops * 2, 1, tf_rgba32f);
@@ -304,91 +303,114 @@ namespace clan
 		gradient_texture.set_min_filter(filter_nearest);
 		gradient_texture.set_mag_filter(filter_nearest);
 
-		Vec4f brush_data1_bottom_left;
-		Vec4f brush_data1_bottom_right;
-		Vec4f brush_data1_top_left;
-		Vec4f brush_data1_top_right;
+		std::vector<Vertex> vertices;
 
-		if (brush.type == BrushType::linear)
+		for (unsigned int upload_index = 0; upload_index < upload_list.size(); upload_index++)
 		{
-			draw_mode = 1;
-			Pointf end_point = transform_point(brush.end_point, brush.transform, transform);
-			Pointf start_point = transform_point(brush.start_point, brush.transform, transform);
-			Pointf dir = end_point - start_point;
-			Pointf dir_normed = Pointf::normalize(dir);
-			brush_data1_bottom_left.set_zw(dir_normed);
-			brush_data1_bottom_right.set_zw(dir_normed);
-			brush_data1_top_left.set_zw(dir_normed);
-			brush_data1_top_right.set_zw(dir_normed);
+			Point upload_point = upload_list[upload_index];
 
-			brush_data2.x = 1.0f / dir.length();
-			brush_data2.y = 0.0f;
-			brush_data2.z = brush.stops.size();
+			Rectf upload_rect_normalised(Pointf(upload_list[upload_index]), Sizef(mask_block_size, mask_block_size));
+			upload_rect_normalised.left = (2.0f * upload_rect_normalised.left / canvas_width) - 1.0f;
+			upload_rect_normalised.right = (2.0f * upload_rect_normalised.right / canvas_width) - 1.0f;
+			upload_rect_normalised.top = (2.0f * upload_rect_normalised.top / canvas_height) - 1.0f;
+			upload_rect_normalised.bottom = (2.0f * upload_rect_normalised.bottom / canvas_height) - 1.0f;
 
-			brush_data1_bottom_left.set_xy(canvas_extent.get_bottom_left() - start_point);
-			brush_data1_bottom_right.set_xy(canvas_extent.get_bottom_right() - start_point);
-			brush_data1_top_left.set_xy(canvas_extent.get_top_left() - start_point);
-			brush_data1_top_right.set_xy(canvas_extent.get_top_right() - start_point);
+			int block_x = (upload_index* mask_block_size) % mask_texture_size;
+			int block_y = ((upload_index* mask_block_size) / mask_texture_size) * mask_block_size;
+			Rectf block_normalised(Pointf(block_x, block_y), Sizef(mask_block_size, mask_block_size));
+			block_normalised.left = (block_normalised.left / mask_texture_size);
+			block_normalised.right = (block_normalised.right / mask_texture_size);
+			block_normalised.top = (block_normalised.top / mask_texture_size);
+			block_normalised.bottom = (block_normalised.bottom / mask_texture_size);
+
+			Vec4f brush_data2;
+			int draw_mode;
+			Vec4f brush_data1_bottom_left;
+			Vec4f brush_data1_bottom_right;
+			Vec4f brush_data1_top_left;
+			Vec4f brush_data1_top_right;
+
+			if (brush.type == BrushType::linear)
+			{
+				draw_mode = 1;
+				Pointf end_point = transform_point(brush.end_point, brush.transform, transform);
+				Pointf start_point = transform_point(brush.start_point, brush.transform, transform);
+				Pointf dir = end_point - start_point;
+				Pointf dir_normed = Pointf::normalize(dir);
+				brush_data1_bottom_left.set_zw(dir_normed);
+				brush_data1_bottom_right.set_zw(dir_normed);
+				brush_data1_top_left.set_zw(dir_normed);
+				brush_data1_top_right.set_zw(dir_normed);
+
+				brush_data2.x = 1.0f / dir.length();
+				brush_data2.y = 0.0f;
+				brush_data2.z = brush.stops.size();
+
+				brush_data1_bottom_left.set_xy(canvas_extent.get_bottom_left() - start_point);
+				brush_data1_bottom_right.set_xy(canvas_extent.get_bottom_right() - start_point);
+				brush_data1_top_left.set_xy(canvas_extent.get_top_left() - start_point);
+				brush_data1_top_right.set_xy(canvas_extent.get_top_right() - start_point);
+			}
+			else if (brush.type == BrushType::radial)
+			{
+				Pointf center_point = transform_point(brush.center_point, brush.transform, transform);
+				Pointf radius = transform_point(Pointf(brush.radius_x, brush.radius_y), brush.transform, transform) - transform_point(Pointf(), brush.transform, transform);
+
+				draw_mode = 2;
+				brush_data2.x = 1.0f / brush.radius_x;
+				brush_data2.y = 0.0f;
+				brush_data2.z = brush.stops.size();
+
+				brush_data1_bottom_left.set_xy(canvas_extent.get_bottom_left() - center_point);
+				brush_data1_bottom_right.set_xy(canvas_extent.get_bottom_right() - center_point);
+				brush_data1_top_left.set_xy(canvas_extent.get_top_left() - center_point);
+				brush_data1_top_right.set_xy(canvas_extent.get_top_right() - center_point);
+			}
+			else if (brush.type == BrushType::image)
+			{
+				draw_mode = 3;
+				Subtexture subtexture = brush.image.get_texture();
+				if (subtexture.is_null())
+					return;
+				Texture2D image_texture = subtexture.get_texture();
+				if (image_texture.is_null())
+					return;
+
+				Rectf src = subtexture.get_geometry();
+
+				// Find transformed UV coordinates for image covering the entire mask texture:
+				Mat3f inv_brush_transform = Mat3f::inverse(brush.transform);
+				Mat4f inv_transform = Mat4f::inverse(transform);
+				Pointf image_tl = transform_point(canvas_extent.get_top_left(), inv_brush_transform, inv_transform);
+				Pointf image_br = transform_point(canvas_extent.get_bottom_right(), inv_brush_transform, inv_transform);
+
+				// Convert to subtexture coordinates:
+				Sizef tex_size = Sizef((float)image_texture.get_width(), (float)image_texture.get_height());
+				float src_left = (src.left + image_tl.x) / tex_size.width;
+				float src_right = (src.left + image_br.x) / tex_size.width;
+				float src_top = (src.top + image_tl.y) / tex_size.height;
+				float src_bottom = (src.top + image_br.y) / tex_size.height;
+
+				brush_data1_bottom_left.set_xy(Vec2f(src_left, src_bottom));
+				brush_data1_bottom_right.set_xy(Vec2f(src_right, src_bottom));
+				brush_data1_top_left.set_xy(Vec2f(src_left, src_top));
+				brush_data1_top_right.set_xy(Vec2f(src_right, src_top));
+
+				gc.set_texture(2, image_texture);
+			}
+			else
+			{
+				draw_mode = 0;
+				brush_data2 = brush.color;
+			}
+
+			vertices.push_back(Vertex(Vec4f(upload_rect_normalised.left, -upload_rect_normalised.top, 0.0f, 1.0f), brush_data1_top_left, brush_data2, Vec2f(block_normalised.left, block_normalised.top), draw_mode));
+			vertices.push_back(Vertex(Vec4f(upload_rect_normalised.right, -upload_rect_normalised.top, 0.0f, 1.0f), brush_data1_top_right, brush_data2, Vec2f(block_normalised.right, block_normalised.top), draw_mode));
+			vertices.push_back(Vertex(Vec4f(upload_rect_normalised.left, -upload_rect_normalised.bottom, 0.0f, 1.0f), brush_data1_bottom_left, brush_data2, Vec2f(block_normalised.left, block_normalised.bottom), draw_mode));
+			vertices.push_back(Vertex(Vec4f(upload_rect_normalised.right, -upload_rect_normalised.top, 0.0f, 1.0f), brush_data1_top_right, brush_data2, Vec2f(block_normalised.right, block_normalised.top), draw_mode));
+			vertices.push_back(Vertex(Vec4f(upload_rect_normalised.right, -upload_rect_normalised.bottom, 0.0f, 1.0f), brush_data1_bottom_right, brush_data2, Vec2f(block_normalised.right, block_normalised.bottom), draw_mode));
+			vertices.push_back(Vertex(Vec4f(upload_rect_normalised.left, -upload_rect_normalised.bottom, 0.0f, 1.0f), brush_data1_bottom_left, brush_data2, Vec2f(block_normalised.left, block_normalised.bottom), draw_mode));
 		}
-		else if (brush.type == BrushType::radial)
-		{
-			Pointf center_point = transform_point(brush.center_point, brush.transform, transform);
-			Pointf radius = transform_point(Pointf(brush.radius_x, brush.radius_y), brush.transform, transform) - transform_point(Pointf(), brush.transform, transform);
-
-			draw_mode = 2;
-			brush_data2.x = 1.0f / brush.radius_x;
-			brush_data2.y = 0.0f;
-			brush_data2.z = brush.stops.size();
-
-			brush_data1_bottom_left.set_xy(canvas_extent.get_bottom_left() - center_point);
-			brush_data1_bottom_right.set_xy(canvas_extent.get_bottom_right() - center_point);
-			brush_data1_top_left.set_xy(canvas_extent.get_top_left() - center_point);
-			brush_data1_top_right.set_xy(canvas_extent.get_top_right() - center_point);
-		}
-		else if (brush.type == BrushType::image)
-		{
-			draw_mode = 3;
-			Subtexture subtexture = brush.image.get_texture();
-			if (subtexture.is_null())
-				return;
-			Texture2D image_texture = subtexture.get_texture();
-			if (image_texture.is_null())
-				return;
-
-			Rectf src = subtexture.get_geometry();
-
-			// Find transformed UV coordinates for image covering the entire mask texture:
-			Mat3f inv_brush_transform = Mat3f::inverse(brush.transform);
-			Mat4f inv_transform = Mat4f::inverse(transform);
-			Pointf image_tl = transform_point(canvas_extent.get_top_left(), inv_brush_transform, inv_transform);
-			Pointf image_br = transform_point(canvas_extent.get_bottom_right(), inv_brush_transform, inv_transform);
-
-			// Convert to subtexture coordinates:
-			Sizef tex_size = Sizef((float)image_texture.get_width(), (float)image_texture.get_height());
-			float src_left = (src.left + image_tl.x) / tex_size.width;
-			float src_right = (src.left + image_br.x) / tex_size.width;
-			float src_top = (src.top + image_tl.y) / tex_size.height;
-			float src_bottom = (src.top + image_br.y) / tex_size.height;
-
-			brush_data1_bottom_left.set_xy(Vec2f(src_left, src_bottom));
-			brush_data1_bottom_right.set_xy(Vec2f(src_right, src_bottom));
-			brush_data1_top_left.set_xy(Vec2f(src_left, src_top));
-			brush_data1_top_right.set_xy(Vec2f(src_right, src_top));
-
-			gc.set_texture(2, image_texture);
-		}
-		else
-		{
-			draw_mode = 0;
-			brush_data2 = brush.color;
-		}
-
-		vertices.push_back(Vertex(Vec4f(canvas_extent_normalised.left, -canvas_extent_normalised.top, 0.0f, 1.0f), brush_data1_top_left, brush_data2, Vec2f(texture_extent_normalised.left, texture_extent_normalised.top), draw_mode));
-		vertices.push_back(Vertex(Vec4f(canvas_extent_normalised.right, -canvas_extent_normalised.top, 0.0f, 1.0f), brush_data1_top_right, brush_data2, Vec2f(texture_extent_normalised.right, texture_extent_normalised.top), draw_mode));
-		vertices.push_back(Vertex(Vec4f(canvas_extent_normalised.left, -canvas_extent_normalised.bottom, 0.0f, 1.0f), brush_data1_bottom_left, brush_data2, Vec2f(texture_extent_normalised.left, texture_extent_normalised.bottom), draw_mode));
-		vertices.push_back(Vertex(Vec4f(canvas_extent_normalised.right, -canvas_extent_normalised.top, 0.0f, 1.0f), brush_data1_top_right, brush_data2, Vec2f(texture_extent_normalised.right, texture_extent_normalised.top), draw_mode));
-		vertices.push_back(Vertex(Vec4f(canvas_extent_normalised.right, -canvas_extent_normalised.bottom, 0.0f, 1.0f), brush_data1_bottom_right, brush_data2, Vec2f(texture_extent_normalised.right, texture_extent_normalised.bottom), draw_mode));
-		vertices.push_back(Vertex(Vec4f(canvas_extent_normalised.left, -canvas_extent_normalised.bottom, 0.0f, 1.0f), brush_data1_bottom_left, brush_data2, Vec2f(texture_extent_normalised.left, texture_extent_normalised.bottom), draw_mode));
 
 		int gpu_index;
 		VertexArrayVector<Vertex> gpu_vertices(batch_buffer->get_vertex_buffer(gc, gpu_index));
@@ -410,7 +432,7 @@ namespace clan
 		gc.set_program_object(program_path);
 		gc.set_texture(0, mask_texture);
 		gc.set_texture(1, gradient_texture);
-		gc.draw_primitives(type_triangles, 6, prim_array[gpu_index]);
+		gc.draw_primitives(type_triangles, vertices.size(), prim_array[gpu_index]);
 		gc.reset_texture(2);
 		gc.reset_texture(1);
 		gc.reset_texture(0);
