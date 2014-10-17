@@ -305,7 +305,7 @@ namespace clan
 		int block_y = ((next_block * mask_block_size) / mask_texture_size)* mask_block_size;
 		mask_texture.set_subimage(gc, 0, 0, mask_buffer, Rect(Point(0, 0), Size(mask_texture_size, block_y + mask_block_size)));
 
-		instance_texture.set_subimage(gc, 0, 0, instance_buffer, Rect(Point(0, 0), instance_buffer_used));
+		instance_texture.set_subimage(gc, 0, 0, instance_buffer, Rect(Point(0, 0), Size(num_gradient_stops * instance_buffer_gradient_stop_size, 1)));
 
 		gc.set_blend_state(blend_state);
 		gc.set_program_object(program_path);
@@ -324,13 +324,13 @@ namespace clan
 		gc.reset_program_object();
 		gc.reset_blend_state();
 		position = 0;
+		num_gradient_stops = 0;
 
 		mask_buffer.lock(gc, access_read_write);
 		memset(mask_buffer.get_data(), 0, (block_y + mask_block_size) * mask_buffer.get_pitch());	// Clear mask, ready for next time
 
 		next_block = 0;
 		upload_list.clear();
-		instance_buffer_used = Size();
 		instance_buffer.lock(gc, access_write_only);
 	}
 
@@ -344,6 +344,14 @@ namespace clan
 			throw Exception("Too many vertices for PathFillRenderer");
 
 		GraphicContext gc = canvas.get_gc();
+
+		unsigned int num_stops = brush.stops.size();
+
+		if (num_stops > max_gradient_stops)
+			throw Exception("Too many gradient stops for PathFillRenderer");
+
+		if (num_gradient_stops + num_stops > max_gradient_stops)
+			canvas.flush();
 
 		float rcp_canvas_width_x2 = 2.0f / static_cast<float>(canvas.get_width());
 		float rcp_canvas_height_x2 = 2.0f / static_cast<float>(canvas.get_height());
@@ -486,14 +494,12 @@ namespace clan
 			 
 		}
 
-		Vec4f *instance_ptr = instance_buffer.get_data<Vec4f>();
-		for (unsigned int cnt = 0; cnt < brush.stops.size(); cnt++)
+		GradientStops *instance_ptr = instance_buffer.get_data<GradientStops>();
+		for (unsigned int cnt = 0; cnt < num_stops; cnt++)
 		{
-			*(instance_ptr++) = brush.stops[cnt].color;
-			*(instance_ptr++) = Vec4f(brush.stops[cnt].position, 0.0f, 0.0f, 0.0f);
+			*(instance_ptr++) = GradientStops(brush.stops[cnt].color, brush.stops[cnt].position);
 		}
-		instance_buffer_used.width += brush.stops.size() * 2;	//TODO: Fixme
-		instance_buffer_used.height = 1;	//TODO: Fixme
+		num_gradient_stops += num_stops;
 
 		flush(gc);	//TODO: Remove when all working
 

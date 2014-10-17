@@ -93,6 +93,16 @@ namespace clan
 			Vec2f TexCoord0;
 			int Mode;
 		};
+		struct GradientStops
+		{
+			GradientStops() { }
+			GradientStops(const Colorf &colour, float position) :Colour(colour), Parameter(Vec4f(position))
+				 { }
+
+			// all members must be a multiple of 4 floats
+			Colorf Colour;
+			Vec4f Parameter;
+		};
 
 		Rectf sort_and_find_extents(float canvas_width, float canvas_height);
 		Pointf transform_point(Pointf point, const Mat3f &brush_transform, const Mat4f &fill_transform) const;
@@ -104,8 +114,9 @@ namespace clan
 		static const int scanline_block_size = mask_block_size * antialias_level;
 		static const int mask_texture_size = 512;
 		static const int max_blocks = (mask_texture_size / mask_block_size) * (mask_texture_size / mask_block_size);
-		static const int instance_buffer_width = 512;
-		static const int instance_buffer_height = 32;
+		static const int instance_buffer_width = 512;	// In rgbaf blocks
+		static const int instance_buffer_height = 2;	// In rgbaf blocks
+		static const int instance_buffer_gradient_stop_size = sizeof(GradientStops) / sizeof(Vec4f);	// In rgbaf blocks
 
 		const float rcp_mask_texture_size = 1.0f / (float)mask_texture_size;
 
@@ -124,6 +135,9 @@ namespace clan
 		};
 		enum { max_vertices = RenderBatchBuffer::vertex_buffer_size / sizeof(Vertex) };
 
+
+		enum { max_gradient_stops = instance_buffer_width / instance_buffer_gradient_stop_size };
+
 		std::vector<Block> upload_list;
 		int next_block = 0;
 		bool found_filled_block;
@@ -136,7 +150,7 @@ namespace clan
 		TransferTexture mask_buffer;
 		Texture2D mask_texture;
 		TransferTexture instance_buffer;
-		Size instance_buffer_used;
+		int num_gradient_stops = 0;
 		Texture2D instance_texture;
 		PrimitivesArray prim_array[RenderBatchBuffer::num_vertex_buffers];
 		BlendState blend_state;
