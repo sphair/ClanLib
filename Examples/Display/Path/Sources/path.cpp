@@ -84,21 +84,28 @@ int PathApp::start(const std::vector<std::string> &args)
 	clan::Font fps_font(canvas, "tahoma", 20);
 	clan::GameTime game_time;
 
+	float angle = 0.0f;
+
 	// Run until someone presses escape
 	while (!quit)
 	{
 		game_time.update();
+
+		angle += game_time.get_time_elapsed() * 32.0f;
+		if (angle >= 360.0f) angle = -360.0f;
+		clan::Mat4f rotation = clan::Mat4f::translate(128.0f, 128.0f, 0.0f) * clan::Mat4f::rotate(clan::Angle(angle, clan::angle_degrees), 0.0f, 0.0f, 1.0f) * clan::Mat4f::translate(-128.0f, -128.0f, 0.0f);
+
 		canvas.clear(clan::Colorf(0.2f, 0.2f, 0.5f));
 
-		canvas.set_transform(clan::Mat4f::translate(50.0f, 10.0f, 0.0f));
+		canvas.set_transform(clan::Mat4f::translate(50.0f, 10.0f, 0.0f) * rotation);
 		canvas.fill(rounded_rect_shape, brush_solid);
-		canvas.set_transform(clan::Mat4f::translate(380.0f, 10.0f, 0.0f));
+		canvas.set_transform(clan::Mat4f::translate(380.0f, 10.0f, 0.0f) * rotation);
 		canvas.fill(complex_shape, brush_image);
 
-		canvas.set_transform(clan::Mat4f::translate(50.0f, 300.0f, 0.0f));
+		canvas.set_transform(clan::Mat4f::translate(50.0f, 300.0f, 0.0f) * rotation);
 		canvas.fill(rounded_rect_shape, brush_linear);
 
-		canvas.set_transform(clan::Mat4f::translate(380.0f, 300.0f, 0.0f));
+		canvas.set_transform(clan::Mat4f::translate(380.0f, 300.0f, 0.0f) * rotation );
 		canvas.fill(rounded_rect_shape, brush_radial);
 
 		canvas.set_transform(clan::Mat4f::identity());
