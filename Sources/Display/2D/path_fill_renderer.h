@@ -150,7 +150,7 @@ namespace clan
 		TransferTexture mask_buffer;
 		Texture2D mask_texture;
 		TransferTexture instance_buffer;
-		int num_gradient_stops = 0;
+		int current_gradient_position = 0;
 		Texture2D instance_texture;
 		PrimitivesArray prim_array[RenderBatchBuffer::num_vertex_buffers];
 		BlendState blend_state;

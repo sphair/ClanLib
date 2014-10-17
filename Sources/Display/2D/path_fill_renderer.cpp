@@ -179,6 +179,7 @@ namespace clan
 	{
 		found_filled_block = false;
 
+		upload_list.clear();
 		range.clear();
 
 		for (size_t y = 0; y < scanlines.size(); y += scanline_block_size)
@@ -305,7 +306,7 @@ namespace clan
 		int block_y = ((next_block * mask_block_size) / mask_texture_size)* mask_block_size;
 		mask_texture.set_subimage(gc, 0, 0, mask_buffer, Rect(Point(0, 0), Size(mask_texture_size, block_y + mask_block_size)));
 
-		instance_texture.set_subimage(gc, 0, 0, instance_buffer, Rect(Point(0, 0), Size(num_gradient_stops * instance_buffer_gradient_stop_size, 1)));
+		instance_texture.set_subimage(gc, 0, 0, instance_buffer, Rect(Point(0, 0), Size(current_gradient_position * instance_buffer_gradient_stop_size, 1)));
 
 		gc.set_blend_state(blend_state);
 		gc.set_program_object(program_path);
@@ -324,7 +325,7 @@ namespace clan
 		gc.reset_program_object();
 		gc.reset_blend_state();
 		position = 0;
-		num_gradient_stops = 0;
+		current_gradient_position = 0;
 
 		mask_buffer.lock(gc, access_read_write);
 		memset(mask_buffer.get_data(), 0, (block_y + mask_block_size) * mask_buffer.get_pitch());	// Clear mask, ready for next time
@@ -350,7 +351,7 @@ namespace clan
 		if (num_stops > max_gradient_stops)
 			throw Exception("Too many gradient stops for PathFillRenderer");
 
-		if (num_gradient_stops + num_stops > max_gradient_stops)
+		if (current_gradient_position + num_stops > max_gradient_stops)
 			canvas.flush();
 
 		float rcp_canvas_width_x2 = 2.0f / static_cast<float>(canvas.get_width());
@@ -382,8 +383,8 @@ namespace clan
 			brush_data1_top_right.set_zw(dir_normed);
 
 			brush_data2.x = 1.0f / dir.length();
-			brush_data2.y = 0.0f;
-			brush_data2.z = brush.stops.size();
+			brush_data2.y = current_gradient_position;
+			brush_data2.z = current_gradient_position + num_stops;
 		}
 		else if (brush.type == BrushType::radial)
 		{
@@ -392,8 +393,8 @@ namespace clan
 
 			draw_mode = 2;
 			brush_data2.x = 1.0f / brush.radius_x;
-			brush_data2.y = 0.0f;
-			brush_data2.z = brush.stops.size();
+			brush_data2.y = current_gradient_position;
+			brush_data2.z = current_gradient_position + num_stops;
 		}
 		else if (brush.type == BrushType::image)
 		{
@@ -491,17 +492,14 @@ namespace clan
 			vertices[position + 4] = Vertex(Vec4f(upload_rect_normalised.right, -upload_rect_normalised.bottom, 0.0f, 1.0f), brush_data1_bottom_right, brush_data2, Vec2f(block_normalised.right, block_normalised.bottom), draw_mode);
 			vertices[position + 5] = Vertex(Vec4f(upload_rect_normalised.left, -upload_rect_normalised.bottom, 0.0f, 1.0f), brush_data1_bottom_left, brush_data2, Vec2f(block_normalised.left, block_normalised.bottom), draw_mode);
 			position += 6;
-			 
 		}
 
-		GradientStops *instance_ptr = instance_buffer.get_data<GradientStops>();
+		GradientStops *instance_ptr = instance_buffer.get_data<GradientStops>() + current_gradient_position;
 		for (unsigned int cnt = 0; cnt < num_stops; cnt++)
 		{
 			*(instance_ptr++) = GradientStops(brush.stops[cnt].color, brush.stops[cnt].position);
 		}
-		num_gradient_stops += num_stops;
-
-		flush(gc);	//TODO: Remove when all working
+		current_gradient_position += num_stops;
 
 	}
 
