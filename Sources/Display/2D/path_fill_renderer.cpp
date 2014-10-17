@@ -345,8 +345,8 @@ namespace clan
 
 		GraphicContext gc = canvas.get_gc();
 
-		float canvas_width = (float)canvas.get_width();
-		float canvas_height = (float)canvas.get_height();
+		float rcp_canvas_width_x2 = 2.0f / static_cast<float>(canvas.get_width());
+		float rcp_canvas_height_x2 = 2.0f / static_cast<float>(canvas.get_height());
 
 		Mat3f inv_brush_transform;
 		Mat4f inv_transform;
@@ -462,10 +462,10 @@ namespace clan
 			}
 
 			Rectf upload_rect_normalised(upload_rect);
-			upload_rect_normalised.left = (2.0f * upload_rect_normalised.left / canvas_width) - 1.0f;
-			upload_rect_normalised.right = (2.0f * upload_rect_normalised.right / canvas_width) - 1.0f;
-			upload_rect_normalised.top = (2.0f * upload_rect_normalised.top / canvas_height) - 1.0f;
-			upload_rect_normalised.bottom = (2.0f * upload_rect_normalised.bottom / canvas_height) - 1.0f;
+			upload_rect_normalised.left = (upload_rect_normalised.left * rcp_canvas_width_x2) - 1.0f;
+			upload_rect_normalised.right = (upload_rect_normalised.right * rcp_canvas_width_x2) - 1.0f;
+			upload_rect_normalised.top = (upload_rect_normalised.top * rcp_canvas_height_x2) - 1.0f;
+			upload_rect_normalised.bottom = (upload_rect_normalised.bottom * rcp_canvas_height_x2) - 1.0f;
 
 			int block_index = upload_list[upload_index].mask_index;
 			int block_x = (block_index* mask_block_size) % mask_texture_size;
