@@ -315,7 +315,10 @@ namespace clan
 			gc.set_texture(2, current_texture);
 		gc.draw_primitives(type_triangles, position, prim_array[gpu_index]);
 		if (!current_texture.is_null())
+		{
 			gc.reset_texture(2);
+			current_texture = Texture2D();
+		}
 		gc.reset_texture(1);
 		gc.reset_texture(0);
 		gc.reset_program_object();
@@ -329,8 +332,6 @@ namespace clan
 		mask_buffer.lock(gc, access_read_write);
 		memset(mask_buffer.get_data(), 0, mask_buffer.get_height() * mask_buffer.get_pitch());	//TODO: Only clear used parts
 		instance_buffer.lock(gc, access_write_only);
-
-
 	}
 
 	void PathFillRenderer::upload_and_draw(Canvas &canvas, const Brush &brush, const Mat4f &transform)
@@ -392,6 +393,14 @@ namespace clan
 			Subtexture subtexture = brush.image.get_texture();
 			if (subtexture.is_null())
 				return;
+
+			if (!current_texture.is_null())		// Currently only support a single path texture
+			{
+				if (subtexture.get_texture() != current_texture)
+				{
+					flush(gc);
+				}
+			}
 
 			current_texture = subtexture.get_texture();
 			if (current_texture.is_null())
@@ -462,10 +471,10 @@ namespace clan
 			int block_x = (block_index* mask_block_size) % mask_texture_size;
 			int block_y = ((block_index* mask_block_size) / mask_texture_size) * mask_block_size;
 			Rectf block_normalised;
-			block_normalised.left = block_x / (float)mask_texture_size;
-			block_normalised.right = (block_x + mask_block_size) / (float)mask_texture_size;
-			block_normalised.top = block_y / (float)mask_texture_size;
-			block_normalised.bottom = (block_y + mask_block_size) / (float)mask_texture_size;
+			block_normalised.left = block_x * rcp_mask_texture_size;
+			block_normalised.right = (block_x + mask_block_size) * rcp_mask_texture_size;
+			block_normalised.top = block_y * rcp_mask_texture_size;
+			block_normalised.bottom = (block_y + mask_block_size) * rcp_mask_texture_size;
 
 			vertices[position + 0] = Vertex(Vec4f(upload_rect_normalised.left, -upload_rect_normalised.top, 0.0f, 1.0f), brush_data1_top_left, brush_data2, Vec2f(block_normalised.left, block_normalised.top), draw_mode);
 			vertices[position + 1] = Vertex(Vec4f(upload_rect_normalised.right, -upload_rect_normalised.top, 0.0f, 1.0f), brush_data1_top_right, brush_data2, Vec2f(block_normalised.right, block_normalised.top), draw_mode);

@@ -107,6 +107,8 @@ namespace clan
 		static const int instance_buffer_width = 512;
 		static const int instance_buffer_height = 32;
 
+		const float rcp_mask_texture_size = 1.0f / (float)mask_texture_size;
+
 		std::vector<PathRasterRange> range;
 
 		int width = 0;
