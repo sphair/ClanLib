@@ -139,48 +139,10 @@ namespace clan
 		float canvas_height = (float)canvas.get_height();
 
 		Rectf mask_extent = sort_and_find_extents(canvas_width, canvas_height);
-		build_upload_list(canvas, mask_extent, mode);
-		upload_and_draw(canvas, brush, transform);
-	}
-
-	Rectf PathFillRenderer::sort_and_find_extents(float canvas_width, float canvas_height)
-	{
-		Rectf mask_extent(canvas_width*static_cast<float>(antialias_level), canvas_height * static_cast<float>(antialias_level), 0.0f, 0.0f);		// Dummy initial values
-
-		// Precalculation to determine the extents
-		for (size_t y = 0; y < scanlines.size(); y++)
-		{
-			auto &scanline = scanlines[y];
-			if (scanline.edges.empty())
-				continue;
-
-			std::sort(scanline.edges.begin(), scanline.edges.end(), [](const PathScanlineEdge &a, const PathScanlineEdge &b) { return a.x < b.x; });
-
-			// Calculate mask extent
-			if (y < mask_extent.top)
-				mask_extent.top = y;
-
-			if (y > mask_extent.bottom)
-				mask_extent.bottom = y;
-
-			if (scanline.edges[0].x < mask_extent.left)
-				mask_extent.left = scanline.edges[0].x;
-
-			if (scanline.edges[scanline.edges.size() - 1].x > mask_extent.right)
-				mask_extent.right = scanline.edges[scanline.edges.size() - 1].x;
-		}
-
-		mask_extent.clip(Sizef(canvas_width * antialias_level, canvas_height * antialias_level));
-
-		return mask_extent;
-	}
-
-	void PathFillRenderer::build_upload_list(Canvas &canvas, const Rectf &mask_extent, PathFillMode mode)
-	{
+	
 		found_filled_block = false;
 
 		upload_list.clear();
-		range.clear();
 
 		for (size_t y = 0; y < scanlines.size(); y += scanline_block_size)
 		{
@@ -225,7 +187,7 @@ namespace clan
 					{
 						upload_list.push_back(Block(Point(xpos / antialias_level, y / antialias_level), filled_block_index));
 						continue;
-					}		
+					}
 				}
 
 
@@ -270,14 +232,49 @@ namespace clan
 					next_block++;
 					if (next_block == max_blocks)
 					{
+						store_vertices(canvas, brush, transform);
 						flush(canvas);
+						upload_list.clear();
 						found_filled_block = false;
 					}
 				}
 			}
 		}
-
 		//PNGProvider::save(mask_buffer, "c:\\development\\test.png");
+
+		store_vertices(canvas, brush, transform);
+	}
+
+	Rectf PathFillRenderer::sort_and_find_extents(float canvas_width, float canvas_height)
+	{
+		Rectf mask_extent(canvas_width*static_cast<float>(antialias_level), canvas_height * static_cast<float>(antialias_level), 0.0f, 0.0f);		// Dummy initial values
+
+		// Precalculation to determine the extents
+		for (size_t y = 0; y < scanlines.size(); y++)
+		{
+			auto &scanline = scanlines[y];
+			if (scanline.edges.empty())
+				continue;
+
+			std::sort(scanline.edges.begin(), scanline.edges.end(), [](const PathScanlineEdge &a, const PathScanlineEdge &b) { return a.x < b.x; });
+
+			// Calculate mask extent
+			if (y < mask_extent.top)
+				mask_extent.top = y;
+
+			if (y > mask_extent.bottom)
+				mask_extent.bottom = y;
+
+			if (scanline.edges[0].x < mask_extent.left)
+				mask_extent.left = scanline.edges[0].x;
+
+			if (scanline.edges[scanline.edges.size() - 1].x > mask_extent.right)
+				mask_extent.right = scanline.edges[scanline.edges.size() - 1].x;
+		}
+
+		mask_extent.clip(Sizef(canvas_width * antialias_level, canvas_height * antialias_level));
+
+		return mask_extent;
 	}
 
 	void PathFillRenderer::flush(GraphicContext &gc)
@@ -305,7 +302,7 @@ namespace clan
 		gpu_vertices.upload_data(gc, 0, vertices, position);
 
 		size_t blocks_height = (upload_list.size() + mask_texture_size - 1) / mask_texture_size * mask_texture_size;
-		int block_y = ((next_block * mask_block_size) / mask_texture_size)* mask_block_size;
+		int block_y = (((next_block-1) * mask_block_size) / mask_texture_size)* mask_block_size;
 		mask_texture.set_subimage(gc, 0, 0, mask_buffer, Rect(Point(0, 0), Size(mask_texture_size, block_y + mask_block_size)));
 
 		instance_texture.set_subimage(gc, 0, 0, instance_buffer, Rect(Point(0, 0), Size(current_gradient_position * instance_buffer_gradient_stop_size, 1)));
@@ -337,7 +334,7 @@ namespace clan
 		instance_buffer.lock(gc, access_write_only);
 	}
 
-	void PathFillRenderer::upload_and_draw(Canvas &canvas, const Brush &brush, const Mat4f &transform)
+	void PathFillRenderer::store_vertices(Canvas &canvas, const Brush &brush, const Mat4f &transform)
 	{
 		int num_vertices = upload_list.size() * 6;
 		if (position + num_vertices > max_vertices)
@@ -502,7 +499,6 @@ namespace clan
 			*(instance_ptr++) = GradientStops(brush.stops[cnt].color, brush.stops[cnt].position);
 		}
 		current_gradient_position += num_stops;
-
 	}
 
 	inline Pointf PathFillRenderer::transform_point(Pointf point, const Mat3f &brush_transform, const Mat4f &transform) const
