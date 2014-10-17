@@ -325,12 +325,12 @@ namespace clan
 		gc.reset_blend_state();
 		position = 0;
 
+		mask_buffer.lock(gc, access_read_write);
+		memset(mask_buffer.get_data(), 0, (block_y + mask_block_size) * mask_buffer.get_pitch());	// Clear mask, ready for next time
+
 		next_block = 0;
 		upload_list.clear();
 		instance_buffer_used = Size();
-
-		mask_buffer.lock(gc, access_read_write);
-		memset(mask_buffer.get_data(), 0, mask_buffer.get_height() * mask_buffer.get_pitch());	//TODO: Only clear used parts
 		instance_buffer.lock(gc, access_write_only);
 	}
 
