@@ -244,14 +244,16 @@ namespace clan
 						if (x0 >= xpos + scanline_block_size)
 							break;
 						int x1 = static_cast<int>(range[cnt].x1 - 0.5f) + 1;
-						if (x0 == x1)	// Done segment
+
+						x0 = max(x0, xpos);
+						x1 = min(x1, xpos + scanline_block_size);
+
+						if (x0 >= x1)	// Done segment
 						{
 							range[cnt].next();
 						}
 						else
 						{
-							x0 = max(x0, xpos);
-							x1 = min(x1, xpos + scanline_block_size);
 							for (int x = x0 - xpos; x < x1 - xpos; x++)
 							{
 								int pixel = line[x / antialias_level];
