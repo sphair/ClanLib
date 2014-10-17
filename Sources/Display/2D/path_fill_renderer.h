@@ -138,6 +138,7 @@ namespace clan
 		Texture2D instance_texture;
 		PrimitivesArray prim_array[RenderBatchBuffer::num_vertex_buffers];
 		BlendState blend_state;
+		Texture2D current_texture;
 	};
 
 	class PathRasterRange
