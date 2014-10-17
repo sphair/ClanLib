@@ -451,19 +451,17 @@ namespace clan
 
 				// Find transformed UV coordinates for image covering the entire mask texture:
 				Pointf image_tl = transform_point(upload_rect.get_top_left(), inv_brush_transform, inv_transform);
+				Pointf image_tr = transform_point(upload_rect.get_top_right(), inv_brush_transform, inv_transform);
+				Pointf image_bl = transform_point(upload_rect.get_bottom_left(), inv_brush_transform, inv_transform);
 				Pointf image_br = transform_point(upload_rect.get_bottom_right(), inv_brush_transform, inv_transform);
 
 				// Convert to subtexture coordinates:
 				Sizef tex_size = Sizef((float)current_texture.get_width(), (float)current_texture.get_height());
-				float src_left = (src.left + image_tl.x) / tex_size.width;
-				float src_right = (src.left + image_br.x) / tex_size.width;
-				float src_top = (src.top + image_tl.y) / tex_size.height;
-				float src_bottom = (src.top + image_br.y) / tex_size.height;
 
-				brush_data1_bottom_left.set_xy(Vec2f(src_left, src_bottom));
-				brush_data1_bottom_right.set_xy(Vec2f(src_right, src_bottom));
-				brush_data1_top_left.set_xy(Vec2f(src_left, src_top));
-				brush_data1_top_right.set_xy(Vec2f(src_right, src_top));
+				brush_data1_bottom_left.set_xy(Vec2f((src.left + image_bl.x) / tex_size.width, (src.top + image_bl.y) / tex_size.height));
+				brush_data1_bottom_right.set_xy(Vec2f((src.left + image_br.x) / tex_size.width, (src.top + image_br.y) / tex_size.height));
+				brush_data1_top_left.set_xy(Vec2f((src.left + image_tl.x) / tex_size.width, (src.top + image_tl.y) / tex_size.height));
+				brush_data1_top_right.set_xy(Vec2f((src.left + image_tr.x) / tex_size.width, (src.top + image_tr.y) / tex_size.height));
 			}
 			else
 			{
