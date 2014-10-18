@@ -138,9 +138,9 @@ clan::Colorf SvgAttributeReader::get_color()
 	unsigned int value = strtoul(hexstr.c_str(), 0, 16);
 	if (end_pos == pos + 4)
 	{
-		int red = (((value >> 8) & 0xf + 1) << 4) - 1;
-		int green = (((value >> 4) & 0xf + 1) << 4) - 1;
-		int blue = ((value & 0xf + 1) << 4) - 1;
+		int red = ((((value >> 8) & 0xf) + 1) << 4) - 1;
+		int green = ((((value >> 4) & 0xf) + 1) << 4) - 1;
+		int blue = (((value & 0xf) + 1) << 4) - 1;
 		color = clan::Colorf(red / 255.0f, green / 255.0f, blue / 255.0f);
 	}
 	else
