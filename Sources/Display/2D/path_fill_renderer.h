@@ -104,6 +104,7 @@ namespace clan
 			Vec4f Parameter;
 		};
 
+		void initialise_buffers(Canvas &canvas);
 		Rectf sort_and_find_extents(float canvas_width, float canvas_height);
 		Pointf transform_point(Pointf point, const Mat3f &brush_transform, const Mat4f &fill_transform) const;
 		void store_vertices(Canvas &canvas, const Brush &brush, const Mat4f &transform);
@@ -147,6 +148,7 @@ namespace clan
 		RenderBatchBuffer *batch_buffer;
 
 		TransferTexture mask_buffer;
+		int mask_buffer_id;	// Buffer index of the mask buffer
 		Texture2D mask_texture;
 		TransferTexture instance_buffer;
 		int current_gradient_position = 0;

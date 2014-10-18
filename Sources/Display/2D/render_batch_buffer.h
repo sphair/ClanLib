@@ -34,6 +34,7 @@
 #include "API/Display/Render/blend_state.h"
 #include "API/Display/Render/render_batcher.h"
 #include "API/Display/Render/texture_2d.h"
+#include "API/Display/Render/transfer_texture.h"
 
 namespace clan
 {
@@ -44,14 +45,41 @@ public:
 	RenderBatchBuffer(GraphicContext &gc);
 
 	VertexArrayBuffer get_vertex_buffer(GraphicContext &gc, int &out_index);
+	Texture2D get_texture_rgba32f(GraphicContext &gc);
+	Texture2D get_texture_r8(GraphicContext &gc);
+	TransferTexture get_transfer_rgba32f(GraphicContext &gc, BufferAccess buffer_access);
 
+	// Note, out_index should be saved to mark which scanlines have been written to (not zero)
+	TransferTexture get_transfer_r8(GraphicContext &gc, int &out_index, BufferAccess buffer_access);
+	void set_transfer_r8_used(int index, int scanlines){ dirty_scanlines_r8[index] = scanlines; }
 	static const int num_vertex_buffers = 4;
 	enum { vertex_buffer_size = 1024*1024 };
 	char buffer[vertex_buffer_size];
 
+	static const int rgba32f_width = 512;
+	static const int rgba32f_height = 2;
+	static const int r8_size = 512;
+	static const int num_rgba32f_buffers = 2;
+	static const int num_r8_buffers = 2;
+
+
 private:
+
 	VertexArrayBuffer vertex_buffers[num_vertex_buffers];
-	int current_vertex_buffer;
+	int current_vertex_buffer = 0;
+
+	Texture2D textures_rgba32f[num_rgba32f_buffers];
+	int current_rgba32f_texture = 0;
+
+	Texture2D textures_r8[num_r8_buffers];
+	int current_r8_texture = 0;
+
+	TransferTexture transfers_rgba32f[num_rgba32f_buffers];
+	int current_rgba32f_transfer = 0;
+	TransferTexture transfers_r8[num_r8_buffers];
+	int current_r8_transfer = 0;
+	int dirty_scanlines_r8[num_r8_buffers];
+
 
 };
 

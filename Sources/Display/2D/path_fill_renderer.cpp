@@ -41,23 +41,7 @@ namespace clan
 		BlendStateDescription blend_desc;
 		blend_desc.set_blend_function(blend_one, blend_one_minus_src_alpha, blend_one, blend_one_minus_src_alpha);
 		blend_state = BlendState(gc, blend_desc);
-
-		mask_buffer = TransferTexture(gc, mask_texture_size, mask_texture_size, data_to_gpu, tf_r8);
-		mask_texture = Texture2D(gc, mask_texture_size, mask_texture_size, tf_r8);
-		mask_texture.set_min_filter(filter_nearest);
-		mask_texture.set_mag_filter(filter_nearest);
-
-		instance_buffer = TransferTexture(gc, instance_buffer_width, instance_buffer_height, data_to_gpu, tf_rgba32f);
-		instance_texture = Texture2D(gc, instance_buffer_width, instance_buffer_height, tf_rgba32f);
-		instance_texture.set_min_filter(filter_nearest);
-		instance_texture.set_mag_filter(filter_nearest);
-
 		vertices = (Vertex *)batch_buffer->buffer;
-
-		mask_buffer.lock(gc, access_read_write);
-		memset(mask_buffer.get_data(), 0, mask_buffer.get_height() * mask_buffer.get_pitch());
-		instance_buffer.lock(gc, access_write_only);
-
 		range.reserve(scanline_block_size);
 	}
 
@@ -134,6 +118,8 @@ namespace clan
 	void PathFillRenderer::fill(Canvas &canvas, PathFillMode mode, const Brush &brush, const Mat4f &transform)
 	{
 		if (scanlines.empty()) return;
+
+		initialise_buffers(canvas);
 
 		float canvas_width = (float)canvas.get_width();
 		float canvas_height = (float)canvas.get_height();
@@ -230,13 +216,15 @@ namespace clan
 				{
 					upload_list.push_back(Block(Point(xpos / antialias_level, y / antialias_level), next_block));
 					next_block++;
-					if (next_block == max_blocks)
-					{
+				}
+				// Check for max vertices or full mask
+				if ((next_block == max_blocks) || (((upload_list.size() + 1) * 6) >= max_vertices))
+				{
 						store_vertices(canvas, brush, transform);
 						flush(canvas);
+						initialise_buffers(canvas);
 						upload_list.clear();
 						found_filled_block = false;
-					}
 				}
 			}
 		}
@@ -326,12 +314,15 @@ namespace clan
 		position = 0;
 		current_gradient_position = 0;
 
-		mask_buffer.lock(gc, access_read_write);
-		memset(mask_buffer.get_data(), 0, (block_y + mask_block_size) * mask_buffer.get_pitch());	// Clear mask, ready for next time
+		// Finishedwith the buffers
+		mask_buffer = TransferTexture();
+		mask_texture = Texture2D();
+		instance_buffer = TransferTexture();
+		instance_texture = Texture2D();
 
+		batch_buffer->set_transfer_r8_used(mask_buffer_id, block_y + mask_block_size);
 		next_block = 0;
 		upload_list.clear();
-		instance_buffer.lock(gc, access_write_only);
 	}
 
 	void PathFillRenderer::store_vertices(Canvas &canvas, const Brush &brush, const Mat4f &transform)
@@ -510,6 +501,18 @@ namespace clan
 			transform.matrix[0 * 4 + 1] * point.x + transform.matrix[1 * 4 + 1] * point.y + transform.matrix[3 * 4 + 1]);
 	}
 
+
+	void PathFillRenderer::initialise_buffers(Canvas &canvas)
+	{
+		if (mask_texture.is_null())
+		{
+			GraphicContext gc = canvas.get_gc();
+			mask_texture = batch_buffer->get_texture_r8(gc);
+			mask_buffer = batch_buffer->get_transfer_r8(gc, mask_buffer_id, access_read_write);
+			instance_texture = batch_buffer->get_texture_rgba32f(gc);
+			instance_buffer = batch_buffer->get_transfer_rgba32f(gc, access_write_only);
+		}
+	}
 	/////////////////////////////////////////////////////////////////////////////
 
 	PathRasterRange::PathRasterRange(const PathScanline &scanline, PathFillMode mode) : scanline(scanline), mode(mode)
@@ -553,4 +556,6 @@ namespace clan
 			found = false;
 		}
 	}
+
+
 }

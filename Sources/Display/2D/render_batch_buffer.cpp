@@ -36,7 +36,7 @@
 namespace clan
 {
 
-RenderBatchBuffer::RenderBatchBuffer(GraphicContext &gc) : current_vertex_buffer(0)
+RenderBatchBuffer::RenderBatchBuffer(GraphicContext &gc)
 {
 	for (int index=0; index < num_vertex_buffers; index++)
 	{
@@ -53,6 +53,75 @@ VertexArrayBuffer RenderBatchBuffer::get_vertex_buffer(GraphicContext &gc, int &
 		current_vertex_buffer = 0;
 
 	return vertex_buffers[out_index];
+}
+
+Texture2D RenderBatchBuffer::get_texture_rgba32f(GraphicContext &gc)
+{
+	current_rgba32f_texture++;
+	if (current_rgba32f_texture == num_r8_buffers)
+		current_rgba32f_texture = 0;
+
+	if (textures_rgba32f[current_rgba32f_texture].is_null())
+	{
+		textures_rgba32f[current_rgba32f_texture] = Texture2D(gc, rgba32f_width, rgba32f_height, tf_rgba32f);
+		textures_rgba32f[current_rgba32f_texture].set_min_filter(filter_nearest);
+		textures_rgba32f[current_rgba32f_texture].set_mag_filter(filter_nearest);
+
+	}
+
+	return textures_rgba32f[current_rgba32f_texture];
+}
+Texture2D RenderBatchBuffer::get_texture_r8(GraphicContext &gc)
+{
+	current_r8_texture++;
+	if (current_r8_texture == num_r8_buffers)
+		current_r8_texture = 0;
+
+	if (textures_r8[current_r8_texture].is_null())
+	{
+		textures_r8[current_r8_texture] = Texture2D(gc, r8_size, r8_size, tf_r8);
+		textures_r8[current_r8_texture].set_min_filter(filter_nearest);
+		textures_r8[current_r8_texture].set_mag_filter(filter_nearest);
+	}
+	return textures_r8[current_r8_texture];
+
+}
+
+TransferTexture RenderBatchBuffer::get_transfer_rgba32f(GraphicContext &gc, BufferAccess buffer_access)
+{
+	current_rgba32f_transfer++;
+	if (current_rgba32f_transfer == num_r8_buffers)
+		current_rgba32f_transfer = 0;
+
+	if (transfers_rgba32f[current_rgba32f_transfer].is_null())
+		transfers_rgba32f[current_rgba32f_transfer] = TransferTexture(gc, rgba32f_width, rgba32f_height, data_to_gpu, tf_rgba32f);
+
+	transfers_rgba32f[current_rgba32f_transfer].lock(gc, buffer_access);
+	return transfers_rgba32f[current_rgba32f_transfer];
+
+}
+
+TransferTexture RenderBatchBuffer::get_transfer_r8(GraphicContext &gc, int &out_index, BufferAccess buffer_access)
+{
+	current_r8_transfer++;
+	if (current_r8_transfer == num_r8_buffers)
+		current_r8_transfer = 0;
+
+	if (transfers_r8[current_r8_transfer].is_null())
+	{
+		transfers_r8[current_r8_transfer] = TransferTexture(gc, r8_size, r8_size, data_to_gpu, tf_r8);
+		dirty_scanlines_r8[current_r8_transfer] = transfers_r8[current_r8_transfer].get_height();
+	}
+	out_index = current_r8_transfer;
+
+	TransferTexture tex = transfers_r8[current_r8_transfer];
+	tex.lock(gc, buffer_access);
+	if (dirty_scanlines_r8[current_r8_transfer])
+		memset(tex.get_data(), 0, dirty_scanlines_r8[current_r8_transfer] * tex.get_pitch());
+	dirty_scanlines_r8[current_r8_transfer] = 0;
+
+	return tex;
+
 }
 
 }
