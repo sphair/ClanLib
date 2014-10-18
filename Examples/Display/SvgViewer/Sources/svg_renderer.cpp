@@ -360,7 +360,7 @@ void SvgRenderer::render_path(clan::Path &path, clan::DomElement &e)
 	SvgAttributeReader opacity(e, "opacity");
 	SvgAttributeReader visibility(e, "visibility");
 
-	SvgAttributeReader fill(e, "fill");
+	SvgAttributeReader fill(e, "fill", true);
 	SvgAttributeReader fill_opacity(e, "fill-opacity");
 	SvgAttributeReader fill_rule(e, "fill-rule");
 
@@ -380,7 +380,13 @@ void SvgRenderer::render_path(clan::Path &path, clan::DomElement &e)
 
 	if (!fill.is_keyword("none"))
 	{
-		canvas.fill(path, clan::Brush::solid_rgb8(0, 0, 0));
+		clan::Brush brush = clan::Brush::solid_rgb8(0, 0, 0);
+		if (fill.is_color())
+		{
+			brush.color = fill.get_color();
+		}
+
+		canvas.fill(path, brush);
 	}
 	else if (!stroke.is_keyword("none"))
 	{

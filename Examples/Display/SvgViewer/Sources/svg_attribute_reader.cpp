@@ -36,8 +36,11 @@ SvgAttributeReader::SvgAttributeReader(const std::string &attr) : attr(attr)
 	eat_whitespace();
 }
 
-SvgAttributeReader::SvgAttributeReader(clan::DomElement &e, const std::string &attr_name)
+SvgAttributeReader::SvgAttributeReader(clan::DomElement e, const std::string &attr_name, bool inherit)
 {
+	while (!e.is_null() && !e.has_attribute_ns(Svg::svg_ns, attr_name))
+		e = e.get_parent_node().to_element();
+
 	attr = e.get_attribute_ns(Svg::svg_ns, attr_name);
 	eat_whitespace();
 }
@@ -109,6 +112,46 @@ bool SvgAttributeReader::is_length() const
 bool SvgAttributeReader::is_sequence_number() const
 {
 	return is_operator(",") || is_number();
+}
+
+bool SvgAttributeReader::is_color() const
+{
+	return !is_end() && attr[pos] == '#'; // To do: support all the colors
+}
+
+clan::Colorf SvgAttributeReader::get_color()
+{
+	if (!is_color()) parse_error("expected color");
+
+	size_t end_pos = pos + 1;
+	while (end_pos < attr.length())
+	{
+		bool is_hex_char = (attr[end_pos] >= 'a' && attr[end_pos] <= 'f') || (attr[end_pos] >= 'A' && attr[end_pos] <= 'F') || (attr[end_pos] >= '0' && attr[end_pos] <= '9');
+		if (!is_hex_char) break;
+		end_pos++;
+	}
+
+	if (end_pos != pos + 4 && end_pos != pos + 7) parse_error("invalid color");
+
+	clan::Colorf color;
+	std::string hexstr = attr.substr(pos + 1, end_pos - pos - 1);
+	unsigned int value = strtoul(hexstr.c_str(), 0, 16);
+	if (end_pos == pos + 4)
+	{
+		int red = (((value >> 8) & 0xf + 1) << 4) - 1;
+		int green = (((value >> 4) & 0xf + 1) << 4) - 1;
+		int blue = ((value & 0xf + 1) << 4) - 1;
+		color = clan::Colorf(red / 255.0f, green / 255.0f, blue / 255.0f);
+	}
+	else
+	{
+		int red = (value >> 16) & 0xff;
+		int green = (value >> 8) & 0xff;
+		int blue = value & 0xff;
+		color = clan::Colorf(red / 255.0f, green / 255.0f, blue / 255.0f);
+	}
+	pos = end_pos;
+	return color;
 }
 
 std::string SvgAttributeReader::peek_keyword()
