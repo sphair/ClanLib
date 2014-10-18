@@ -56,12 +56,12 @@ int SvgViewer::run(const std::vector<std::string> &args)
 	clan::Font font(canvas, "Tahoma", 24);
 	clan::GameTime time;
 
-	Svg svg("Resources/holidays.svg");
+	Svg svg("Resources/tiger.svg");
 
 	while (!quit)
 	{
 		canvas.clear(clan::Colorf(0.9f, 0.9f, 0.9f));
-		canvas.set_transform(clan::Mat4f::translate(190.0f, 110.0f, 0.0f) * clan::Mat4f::scale(10.0f, 10.0f, 10.0f));
+		canvas.set_transform(clan::Mat4f::translate(380.0f, 275.0f, 0.0f) * clan::Mat4f::scale(1.2f, 1.2f, 1.2f));
 		svg.render(canvas);
 		canvas.set_transform(clan::Mat4f::identity());
 		font.draw_text(canvas, 17, 40, clan::string_format("%1 FPS", time.get_updates_per_second()), clan::Colorf::black);

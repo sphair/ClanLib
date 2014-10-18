@@ -182,3 +182,7 @@ doxyoutput
 *.mode1v3
 *.mode2v3
 xcuserdata
+*.opensdf
+/Projects/clanUI.vcxproj
+/Projects/clanUI.vcxproj.filters
+/Projects/install_clanUI.bat
