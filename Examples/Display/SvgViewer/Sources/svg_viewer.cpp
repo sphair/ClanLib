@@ -53,6 +53,9 @@ int SvgViewer::run(const std::vector<std::string> &args)
 		}
 	});
 
+	clan::Font font(canvas, "Tahoma", 24);
+	clan::GameTime time;
+
 	Svg svg("Resources/holidays.svg");
 
 	while (!quit)
@@ -61,9 +64,11 @@ int SvgViewer::run(const std::vector<std::string> &args)
 		canvas.set_transform(clan::Mat4f::translate(190.0f, 110.0f, 0.0f) * clan::Mat4f::scale(10.0f, 10.0f, 10.0f));
 		svg.render(canvas);
 		canvas.set_transform(clan::Mat4f::identity());
+		font.draw_text(canvas, 17, 40, clan::string_format("%1 FPS", time.get_updates_per_second()), clan::Colorf::black);
 
-		window.flip(1);
+		window.flip(0);
 		clan::KeepAlive::process(0);
+		time.update();
 	}
 
 	return 0;
