@@ -120,8 +120,6 @@ namespace clan
 
 		const float rcp_mask_texture_size = 1.0f / (float)mask_texture_size;
 
-		std::vector<PathRasterRange> range;
-
 		int width = 0;
 		int height = 0;
 		std::vector<PathScanline> scanlines;
@@ -161,8 +159,7 @@ namespace clan
 	class PathRasterRange
 	{
 	public:
-		PathRasterRange(const PathScanline &scanline, PathFillMode mode);
-
+		void begin(const PathScanline *scanline, PathFillMode mode);
 		void next();
 
 		bool found = false;
@@ -170,7 +167,7 @@ namespace clan
 		float x1 = 0.0f;
 
 	private:
-		const PathScanline &scanline;
+		const PathScanline *scanline = 0;
 		PathFillMode mode;
 		size_t i = 0;
 		int nonzero_rule = 0;

@@ -42,7 +42,6 @@ namespace clan
 		blend_desc.set_blend_function(blend_one, blend_one_minus_src_alpha, blend_one, blend_one_minus_src_alpha);
 		blend_state = BlendState(gc, blend_desc);
 		vertices = (Vertex *)batch_buffer->buffer;
-		range.reserve(scanline_block_size);
 	}
 
 	void PathFillRenderer::set_size(Canvas &canvas, int new_width, int new_height)
@@ -130,15 +129,18 @@ namespace clan
 
 		upload_list.clear();
 
+		unsigned char *mask_buffer_data = mask_buffer.get_data_uint8();
+		int mask_buffer_pitch = mask_buffer.get_pitch();
+
+		PathRasterRange range[scanline_block_size];
+
 		for (size_t y = 0; y < scanlines.size(); y += scanline_block_size)
 		{
 			auto &scanline = scanlines[y];
 
-			range.clear();
 			for (unsigned int cnt = 0; cnt < scanline_block_size; cnt++)
 			{
-				range.push_back(PathRasterRange(scanlines[y + cnt], mode));
-				range[cnt].next();
+				range[cnt].begin(&scanlines[y + cnt], mode);
 			}
 
 			for (int xpos = mask_extent.left; xpos < mask_extent.right; xpos += scanline_block_size)
@@ -180,7 +182,7 @@ namespace clan
 				bool empty_block = true;
 				for (unsigned int cnt = 0; cnt < scanline_block_size; cnt++)
 				{
-					unsigned char *line = mask_buffer.get_line_uint8(block_y + cnt / antialias_level) + block_x;
+					unsigned char *line = mask_buffer_data + mask_buffer_pitch * (block_y + cnt / antialias_level) + block_x;
 					if (range[cnt].found)
 					{
 						empty_block = false;
@@ -515,13 +517,22 @@ namespace clan
 	}
 	/////////////////////////////////////////////////////////////////////////////
 
-	PathRasterRange::PathRasterRange(const PathScanline &scanline, PathFillMode mode) : scanline(scanline), mode(mode)
+	void PathRasterRange::begin(const PathScanline *new_scanline, PathFillMode new_mode)
 	{
+		scanline = new_scanline;
+		mode = new_mode;
+		found = false;
+		x0 = 0.0f;
+		x1 = 0.0f;
+		i = 0;
+		nonzero_rule = 0;
+
+		next();
 	}
 
 	void PathRasterRange::next()
 	{
-		if (i + 1 >= scanline.edges.size())
+		if (i + 1 >= scanline->edges.size())
 		{
 			found = false;
 			return;
@@ -529,22 +540,22 @@ namespace clan
 
 		if (mode == PathFillMode::alternate)
 		{
-			x0 = scanline.edges[i].x;
-			x1 = scanline.edges[i + 1].x;
+			x0 = scanline->edges[i].x;
+			x1 = scanline->edges[i + 1].x;
 
 			i += 2;
 			found = true;
 		}
 		else
 		{
-			x0 = scanline.edges[i].x;
-			nonzero_rule += scanline.edges[i].up_direction ? 1 : -1;
+			x0 = scanline->edges[i].x;
+			nonzero_rule += scanline->edges[i].up_direction ? 1 : -1;
 			i++;
 
-			while (i < scanline.edges.size())
+			while (i < scanline->edges.size())
 			{
-				nonzero_rule += scanline.edges[i].up_direction ? 1 : -1;
-				x1 = scanline.edges[i].x;
+				nonzero_rule += scanline->edges[i].up_direction ? 1 : -1;
+				x1 = scanline->edges[i].x;
 				i++;
 
 				if (nonzero_rule == 0)
