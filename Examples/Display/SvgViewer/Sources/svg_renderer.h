@@ -31,14 +31,6 @@
 
 #include "svg_element_visitor.h"
 
-struct SvgPaint
-{
-	clan::Pen pen;
-	clan::Brush brush;
-	bool fill = false;
-	bool stroke = false;
-};
-
 class SvgRenderer : private SvgElementVisitor
 {
 public:

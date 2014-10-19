@@ -33,6 +33,26 @@
 
 SvgTransformScope::SvgTransformScope(clan::Canvas &canvas, clan::DomElement &e) : canvas(canvas)
 {
+	old_transform = canvas.get_transform();
+	canvas.mult_transform(parse_transform(e, transform_active));
+}
+
+SvgTransformScope::SvgTransformScope(clan::Canvas &canvas, clan::Mat4f &transform, bool transform_active) : canvas(canvas), transform_active(transform_active)
+{
+	old_transform = canvas.get_transform();
+	canvas.mult_transform(transform);
+}
+
+SvgTransformScope::~SvgTransformScope()
+{
+	if (transform_active)
+	{
+		canvas.set_transform(old_transform);
+	}
+}
+
+clan::Mat4f SvgTransformScope::parse_transform(clan::DomElement &e, bool &transform_active)
+{
 	try
 	{
 		clan::Mat4d mat = clan::Mat4d::identity();
@@ -126,19 +146,12 @@ SvgTransformScope::SvgTransformScope(clan::Canvas &canvas, clan::DomElement &e) 
 				transform.get_operator(",");
 		}
 
-		old_transform = canvas.get_transform();
-		canvas.mult_transform(clan::Mat4f(mat));
 		transform_active = true;
+		return clan::Mat4f(mat);
 	}
 	catch (clan::Exception &)
 	{
-	}
-}
-
-SvgTransformScope::~SvgTransformScope()
-{
-	if (transform_active)
-	{
-		canvas.set_transform(old_transform);
+		transform_active = false;
+		return clan::Mat4f::identity();
 	}
 }

@@ -151,6 +151,7 @@
     <ClCompile Include="Sources\svg_element_visitor.cpp" />
     <ClCompile Include="Sources\svg_renderer.cpp" />
     <ClCompile Include="Sources\svg_transform_scope.cpp" />
+    <ClCompile Include="Sources\svg_tree.cpp" />
     <ClCompile Include="Sources\svg_viewer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -160,6 +161,7 @@
     <ClInclude Include="Sources\svg_attribute_reader.h" />
     <ClInclude Include="Sources\svg_renderer.h" />
     <ClInclude Include="Sources\svg_transform_scope.h" />
+    <ClInclude Include="Sources\svg_tree.h" />
     <ClInclude Include="Sources\svg_viewer.h" />
     <ClInclude Include="Sources\svg_element_visitor.h" />
   </ItemGroup>

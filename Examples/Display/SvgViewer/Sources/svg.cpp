@@ -29,7 +29,7 @@
 
 #include "precomp.h"
 #include "svg.h"
-#include "svg_renderer.h"
+#include "svg_tree.h"
 
 Svg::Svg(const std::string &filename)
 {
@@ -38,8 +38,14 @@ Svg::Svg(const std::string &filename)
 
 void Svg::render(clan::Canvas &canvas)
 {
-	SvgRenderer renderer(canvas);
-	renderer.render(xml.get_document_element());
+	if (!root_node)
+	{
+		SvgTreeBuilder builder(canvas);
+		builder.build(xml.get_document_element());
+		root_node = builder.node;
+	}
+
+	root_node->render(canvas);
 }
 
 const std::string Svg::svg_ns = "http://www.w3.org/2000/svg";

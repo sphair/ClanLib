@@ -29,18 +29,51 @@
 
 #pragma once
 
-// Applies to: 'a', 'circle', 'clipPath', 'defs', 'ellipse', 'foreignObject', 'g', 'image', 'line', 'path', 'polygon', 'polyline', 'rect', 'switch', 'text', 'use'
-class SvgTransformScope
+#include "svg_element_visitor.h"
+
+class SvgNode;
+
+class SvgTreeBuilder : private SvgElementVisitor
 {
 public:
-	SvgTransformScope(clan::Canvas &canvas, clan::DomElement &e);
-	SvgTransformScope(clan::Canvas &canvas, clan::Mat4f &transform, bool transform_active);
-	~SvgTransformScope();
+	SvgTreeBuilder(clan::Canvas &canvas);
+	void build(clan::DomElement &svg_element);
 
-	static clan::Mat4f parse_transform(clan::DomElement &e, bool &transform_active);
+	std::shared_ptr<SvgNode> node;
+
+protected:
+	void g(clan::DomElement &e) override;
+	void line(clan::DomElement &e) override;
+	void polyline(clan::DomElement &e) override;
+	void rect(clan::DomElement &e) override;
+	void circle(clan::DomElement &e) override;
+	void ellipse(clan::DomElement &e) override;
+	void polygon(clan::DomElement &e) override;
+	void path(clan::DomElement &e) override;
+	void text(clan::DomElement &e) override;
+	void image(clan::DomElement &e) override;
 
 private:
+	void render_path(clan::Path &path, clan::DomElement &e);
+
+	clan::Mat4f get_transform(clan::DomElement &e);
+
 	clan::Canvas &canvas;
-	clan::Mat4f old_transform;
+};
+
+class SvgNode
+{
+public:
+	void render(clan::Canvas &canvas);
+
+	clan::Mat4f transform = clan::Mat4f::identity();
 	bool transform_active = false;
+
+	std::vector<std::shared_ptr<SvgNode>> nodes;
+
+	clan::Path path;
+	clan::Pen pen;
+	clan::Brush brush;
+	bool fill = false;
+	bool stroke = false;
 };

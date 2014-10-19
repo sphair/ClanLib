@@ -29,6 +29,8 @@
 
 #pragma once
 
+class SvgNode;
+
 class Svg
 {
 public:
@@ -40,5 +42,6 @@ public:
 
 private:
 	clan::DomDocument xml;
+	std::shared_ptr<SvgNode> root_node;
 };
 
