@@ -54,14 +54,38 @@ int SvgViewer::run(const std::vector<std::string> &args)
 	});
 
 	clan::Font font(canvas, "Tahoma", 24);
-	clan::GameTime time;
 
 	Svg svg("Resources/tiger.svg");
+	float angle = 0.0f;
+	float scale = 1.2f;
+	sc.connect(window.get_ic().get_mouse().sig_key_up(), [&](const clan::InputEvent &key)
+	{
+		if (key.id == clan::mouse_wheel_up)
+			scale += 0.1f;
+		if (key.id == clan::mouse_wheel_down)
+			scale -= 0.1f;
+	});
+
+	clan::GameTime time;
 
 	while (!quit)
 	{
 		canvas.clear(clan::Colorf(0.9f, 0.9f, 0.9f));
-		canvas.set_transform(clan::Mat4f::translate(380.0f, 275.0f, 0.0f) * clan::Mat4f::scale(1.2f, 1.2f, 1.2f));
+
+		if (window.get_ic().get_mouse().get_keycode(clan::mouse_left))
+		{
+			angle += time.get_time_elapsed() * 64.0f;
+			if (angle >= 360.0f) angle = -360.0f;
+		}
+		if (window.get_ic().get_mouse().get_keycode(clan::mouse_right))
+		{
+			angle -= time.get_time_elapsed() * 64.0f;
+			if (angle < 0.0f) angle += 360.0f;
+		}
+
+		clan::Mat4f rotation = clan::Mat4f::translate(128.0f, 128.0f, 0.0f) * clan::Mat4f::rotate(clan::Angle(angle, clan::angle_degrees), 0.0f, 0.0f, 1.0f) * clan::Mat4f::translate(-128.0f, -128.0f, 0.0f);
+
+		canvas.set_transform(clan::Mat4f::translate(380.0f, 275.0f, 0.0f) * clan::Mat4f::scale(scale, scale, scale) * rotation);
 		svg.render(canvas);
 		canvas.set_transform(clan::Mat4f::identity());
 		font.draw_text(canvas, 17, 40, clan::string_format("%1 FPS", time.get_updates_per_second()), clan::Colorf::black);
