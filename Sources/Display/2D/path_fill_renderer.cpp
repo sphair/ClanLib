@@ -225,6 +225,8 @@ namespace clan
 						store_vertices(canvas, brush, transform);
 						flush(canvas);
 						initialise_buffers(canvas);
+						mask_buffer_data = mask_buffer.get_data_uint8();
+						mask_buffer_pitch = mask_buffer.get_pitch();
 						upload_list.clear();
 						found_filled_block = false;
 				}
