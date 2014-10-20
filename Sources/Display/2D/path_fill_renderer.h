@@ -184,8 +184,8 @@ namespace clan
 		void next();
 
 		bool found = false;
-		float x0 = 0.0f;
-		float x1 = 0.0f;
+		int x0;
+		int x1;
 
 	private:
 		const PathScanline *scanline = 0;

@@ -201,10 +201,10 @@ namespace clan
 
 					while (range[cnt].found)
 					{
-						int x0 = static_cast<int>(range[cnt].x0 + 0.5f);
+						int x0 = range[cnt].x0;
 						if (x0 >= xpos + scanline_block_size)
 							break;
-						int x1 = static_cast<int>(range[cnt].x1 - 0.5f) + 1;
+						int x1 = range[cnt].x1;
 
 						x0 = max(x0, xpos);
 						x1 = min(x1, xpos + scanline_block_size);
@@ -506,11 +506,8 @@ namespace clan
 		scanline = new_scanline;
 		mode = new_mode;
 		found = false;
-		x0 = 0.0f;
-		x1 = 0.0f;
 		i = 0;
 		nonzero_rule = 0;
-
 		next();
 	}
 
@@ -524,22 +521,21 @@ namespace clan
 
 		if (mode == PathFillMode::alternate)
 		{
-			x0 = scanline->edges[i].x;
-			x1 = scanline->edges[i + 1].x;
-
+			x0 = static_cast<int>(scanline->edges[i].x + 0.5f);
+			x1 = static_cast<int>(scanline->edges[i + 1].x - 0.5f) + 1;
 			i += 2;
 			found = true;
 		}
 		else
 		{
-			x0 = scanline->edges[i].x;
+			x0 = static_cast<int>(scanline->edges[i].x + 0.5f);
 			nonzero_rule += scanline->edges[i].up_direction ? 1 : -1;
 			i++;
 
 			while (i < scanline->edges.size())
 			{
 				nonzero_rule += scanline->edges[i].up_direction ? 1 : -1;
-				x1 = scanline->edges[i].x;
+				x1 = static_cast<int>(scanline->edges[i].x - 0.5f) + 1;
 				i++;
 
 				if (nonzero_rule == 0)
