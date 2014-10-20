@@ -210,6 +210,52 @@ namespace clan
 						empty_block = false;
 					}
 
+#ifdef __SSE2__
+
+					__m128i pixels[mask_block_size / 16];
+
+					for (int sse_block = 0; sse_block < mask_block_size / 16; sse_block++)
+						pixels[sse_block] = _mm_loadu_si128((const __m128i*)(&line[16 * sse_block]));
+
+					while (range[cnt].found)
+					{
+						int x0 = range[cnt].x0;
+						if (x0 >= xpos + scanline_block_size)
+							break;
+						int x1 = range[cnt].x1;
+
+						x0 = max(x0, xpos);
+						x1 = min(x1, xpos + scanline_block_size);
+
+						if (x0 >= x1)	// Done segment
+						{
+							range[cnt].next();
+						}
+						else
+						{
+							for (int sse_block = 0; sse_block < mask_block_size / 16; sse_block++)
+							{
+								__m128i start = _mm_set1_epi8(x0 - xpos - 16 * sse_block);
+								__m128i end = _mm_set1_epi8(x1 - xpos - 16 * sse_block);
+
+								__m128i x = _mm_set_epi8(15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0);
+								__m128i left = _mm_cmplt_epi8(x, start);
+								__m128i right = _mm_cmplt_epi8(x, end);
+								__m128i mask = _mm_andnot_si128(left, right);
+
+								__m128i add_value = _mm_set1_epi8((256 / (antialias_level*antialias_level)));
+
+								pixels[sse_block] = _mm_adds_epu8(pixels[sse_block], _mm_and_si128(mask, add_value));
+							}
+
+							range[cnt].x0 = x1;	// For next time
+						}
+					}
+
+					for (int sse_block = 0; sse_block < mask_block_size / 16; sse_block++)
+						_mm_storeu_si128((__m128i*)(&line[16 * sse_block]), pixels[sse_block]);
+
+#else
 					while (range[cnt].found)
 					{
 						int x0 = range[cnt].x0;
@@ -235,6 +281,7 @@ namespace clan
 							range[cnt].x0 = x1;	// For next time
 						}
 					}
+#endif
 				}
 				if (!empty_block)
 				{
