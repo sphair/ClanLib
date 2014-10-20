@@ -270,7 +270,7 @@ namespace clan
 
 	void PathFillRenderer::flush(GraphicContext &gc)
 	{
-		if (instances.get_position() == 0 && vertices.get_position() == 0 && next_block < max_blocks) // Nothing to flush
+		if (instances.get_position() == 0 && vertices.get_position() == 0 && next_block == 0) // Nothing to flush
 			return;
 
 		// To do: fix that we lock in one file and unlocks in another (too ugly way of doing it)
