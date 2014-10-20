@@ -176,7 +176,6 @@ namespace clan
 						break;
 					}
 				}
-				/* FIXME
 				if (full_block)
 				{
 					if (!found_filled_block)
@@ -186,11 +185,10 @@ namespace clan
 					}
 					else
 					{
-						vertices.push(xpos / antialias_level, y / antialias_level, current_instance_offset, next_block++);
+						vertices.push(xpos / antialias_level, y / antialias_level, current_instance_offset, filled_block_index);
 						continue;
 					}
 				}
-				*/
 
 				bool empty_block = true;
 				for (unsigned int cnt = 0; cnt < scanline_block_size; cnt++)
