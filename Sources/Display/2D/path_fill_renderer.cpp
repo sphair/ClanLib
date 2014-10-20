@@ -146,7 +146,7 @@ namespace clan
 		PathRasterRange range[scanline_block_size];
 
 		int start_y = first_scanline / scanline_block_size * scanline_block_size;
-		int end_y = last_scanline / scanline_block_size * scanline_block_size + 1;
+		int end_y = (last_scanline + scanline_block_size - 1) / scanline_block_size * scanline_block_size;
 
 		for (size_t y = start_y; y < end_y; y += scanline_block_size)
 		{
