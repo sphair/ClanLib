@@ -104,8 +104,16 @@ namespace clan
 			Vec4f Parameter;
 		};
 
+		struct Extent
+		{
+			Extent() {}
+			Extent(float left, float right) : left(left), right(right) {}
+			float left;
+			float right;
+		};
+
 		void initialise_buffers(Canvas &canvas);
-		Rectf sort_and_find_extents(float canvas_width, float canvas_height);
+		Extent sort_and_find_extent(float canvas_width);
 		Pointf transform_point(Pointf point, const Mat3f &brush_transform, const Mat4f &fill_transform) const;
 		void store_vertices(Canvas &canvas, const Brush &brush, const Mat4f &transform);
 
