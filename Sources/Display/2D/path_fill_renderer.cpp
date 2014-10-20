@@ -133,8 +133,6 @@ namespace clan
 		for (size_t y = 0; y < scanlines.size(); y += scanline_block_size)
 		{
 			auto &scanline = scanlines[y];
-			if (scanline.edges.empty())
-				continue;
 
 			for (unsigned int cnt = 0; cnt < scanline_block_size; cnt++)
 			{
