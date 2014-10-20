@@ -144,6 +144,9 @@ namespace clan
 		void initialise_buffers(Canvas &canvas);
 		Rectf sort_and_find_extents(float canvas_width, float canvas_height);
 
+		int first_scanline = 0;
+		int last_scanline = 0;
+
 		int width = 0;
 		int height = 0;
 		std::vector<PathScanline> scanlines;

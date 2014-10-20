@@ -54,12 +54,14 @@ namespace clan
 			width = new_width;
 			height = new_height;
 			scanlines.resize(height * antialias_level);
+			first_scanline = scanlines.size();
+			last_scanline = 0;
 		}
 	}
 
 	void PathFillRenderer::clear()
 	{
-		for (size_t y = 0; y < scanlines.size(); y++)
+		for (size_t y = first_scanline; y < last_scanline; y++)
 		{
 			auto &scanline = scanlines[y];
 			if (!scanline.edges.empty())
@@ -67,6 +69,9 @@ namespace clan
 				scanline.edges.clear();
 			}
 		}
+
+		first_scanline = scanlines.size();
+		last_scanline = 0;
 	}
 
 	void PathFillRenderer::end(bool close)
@@ -104,6 +109,9 @@ namespace clan
 
 			float rcp_dy = 1.0f / dy;
 
+			first_scanline = std::min(first_scanline, start_y);
+			last_scanline = std::max(last_scanline, end_y);
+
 			for (int y = start_y; y < end_y; y++)
 			{
 				float ypos = y + 0.5f;
@@ -137,7 +145,10 @@ namespace clan
 
 		PathRasterRange range[scanline_block_size];
 
-		for (size_t y = 0; y < scanlines.size(); y += scanline_block_size)
+		int start_y = first_scanline / scanline_block_size * scanline_block_size;
+		int end_y = last_scanline / scanline_block_size * scanline_block_size + 1;
+
+		for (size_t y = start_y; y < end_y; y += scanline_block_size)
 		{
 			auto &scanline = scanlines[y];
 
@@ -239,7 +250,7 @@ namespace clan
 		Rectf mask_extent(canvas_width*static_cast<float>(antialias_level), canvas_height * static_cast<float>(antialias_level), 0.0f, 0.0f);		// Dummy initial values
 
 		// Precalculation to determine the extents
-		for (size_t y = 0; y < scanlines.size(); y++)
+		for (size_t y = first_scanline; y < last_scanline; y++)
 		{
 			auto &scanline = scanlines[y];
 			if (scanline.edges.empty())
