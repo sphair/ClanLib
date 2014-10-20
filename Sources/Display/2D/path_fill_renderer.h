@@ -131,12 +131,12 @@ namespace clan
 		void flush(GraphicContext &gc);
 
 		static const int antialias_level = 2;
-		static const int mask_block_size = 16;
+		static const int mask_block_size = 32;
 		static const int scanline_block_size = mask_block_size * antialias_level;
-		static const int mask_texture_size = 1024;
+		static const int mask_texture_size = RenderBatchBuffer::r8_size;
 		static const int max_blocks = (mask_texture_size / mask_block_size) * (mask_texture_size / mask_block_size);
-		static const int instance_buffer_width = 512;	// In rgbaf blocks
-		static const int instance_buffer_height = 2;	// In rgbaf blocks
+		static const int instance_buffer_width = RenderBatchBuffer::rgba32f_width;	// In rgbaf blocks
+		static const int instance_buffer_height = RenderBatchBuffer::rgba32f_height;	// In rgbaf blocks
 
 		const float rcp_mask_texture_size = 1.0f / (float)mask_texture_size;
 
