@@ -58,7 +58,7 @@ public:
 
 	static const int rgba32f_width = 512;
 	static const int rgba32f_height = 2;
-	static const int r8_size = 512;
+	static const int r8_size = 1024;
 	static const int num_rgba32f_buffers = 2;
 	static const int num_r8_buffers = 2;
 

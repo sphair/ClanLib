@@ -41,7 +41,6 @@ namespace clan
 		BlendStateDescription blend_desc;
 		blend_desc.set_blend_function(blend_one, blend_one_minus_src_alpha, blend_one, blend_one_minus_src_alpha);
 		blend_state = BlendState(gc, blend_desc);
-		vertices = (Vertex *)batch_buffer->buffer;
 	}
 
 	void PathFillRenderer::set_size(Canvas &canvas, int new_width, int new_height)
@@ -117,13 +116,21 @@ namespace clan
 	void PathFillRenderer::fill(Canvas &canvas, PathFillMode mode, const Brush &brush, const Mat4f &transform)
 	{
 		if (scanlines.empty()) return;
-		initialise_buffers(canvas);
 
-		Extent extent = sort_and_find_extent(static_cast<float>(canvas.get_width()));
+		initialise_buffers(canvas);
+		if (instances.is_full(brush))
+		{
+			flush(canvas);
+			initialise_buffers(canvas);
+		}
+		current_instance_offset = instances.push(canvas, brush, transform);
+
+		float canvas_width = (float)canvas.get_width();
+		float canvas_height = (float)canvas.get_height();
+
+		Rectf mask_extent = sort_and_find_extents(canvas_width, canvas_height);
 	
 		found_filled_block = false;
-
-		upload_list.clear();
 
 		unsigned char *mask_buffer_data = mask_buffer.get_data_uint8();
 		int mask_buffer_pitch = mask_buffer.get_pitch();
@@ -139,8 +146,16 @@ namespace clan
 				range[cnt].begin(&scanlines[y + cnt], mode);
 			}
 
-			for (int xpos = extent.left; xpos < extent.right; xpos += scanline_block_size)
+			for (int xpos = mask_extent.left; xpos < mask_extent.right; xpos += scanline_block_size)
 			{
+				if (vertices.is_full() || next_block == max_blocks)
+				{
+					flush(canvas);
+					initialise_buffers(canvas);
+					found_filled_block = false;
+					current_instance_offset = instances.push(canvas, brush, transform);
+				}
+
 				int block_x = (next_block * mask_block_size) % mask_texture_size;
 				int block_y = ((next_block * mask_block_size) / mask_texture_size)* mask_block_size;
 
@@ -169,7 +184,7 @@ namespace clan
 					}
 					else
 					{
-						upload_list.push_back(Block(Point(xpos / antialias_level, y / antialias_level), filled_block_index));
+						vertices.push(xpos / antialias_level, y / antialias_level, current_instance_offset, next_block++);
 						continue;
 					}
 				}
@@ -178,18 +193,18 @@ namespace clan
 				bool empty_block = true;
 				for (unsigned int cnt = 0; cnt < scanline_block_size; cnt++)
 				{
-					if (!range[cnt].found)
-						continue;
-
 					unsigned char *line = mask_buffer_data + mask_buffer_pitch * (block_y + cnt / antialias_level) + block_x;
-					empty_block = false;
+					if (range[cnt].found)
+					{
+						empty_block = false;
+					}
 
 					while (range[cnt].found)
 					{
-						int x0 = range[cnt].x0;
+						int x0 = static_cast<int>(range[cnt].x0 + 0.5f);
 						if (x0 >= xpos + scanline_block_size)
 							break;
-						int x1 = range[cnt].x1;
+						int x1 = static_cast<int>(range[cnt].x1 - 0.5f) + 1;
 
 						x0 = max(x0, xpos);
 						x1 = min(x1, xpos + scanline_block_size);
@@ -212,32 +227,16 @@ namespace clan
 				}
 				if (!empty_block)
 				{
-					upload_list.push_back(Block(Point(xpos / antialias_level, y / antialias_level), next_block));
-					next_block++;
-				}
-				// Check for max vertices or full mask
-				if ((next_block == max_blocks) || (((upload_list.size() + 1) * 6) >= max_vertices))
-				{
-						store_vertices(canvas, brush, transform);
-						flush(canvas);
-						initialise_buffers(canvas);
-						mask_buffer_data = mask_buffer.get_data_uint8();
-						mask_buffer_pitch = mask_buffer.get_pitch();
-						upload_list.clear();
-						found_filled_block = false;
+					vertices.push(xpos / antialias_level, y / antialias_level, current_instance_offset, next_block++);
 				}
 			}
 		}
 		//PNGProvider::save(mask_buffer, "c:\\development\\test.png");
-
-		store_vertices(canvas, brush, transform);
 	}
 
-	PathFillRenderer::Extent PathFillRenderer::sort_and_find_extent(float canvas_width)
+	Rectf PathFillRenderer::sort_and_find_extents(float canvas_width, float canvas_height)
 	{
-		float width = canvas_width*static_cast<float>(antialias_level);
-
-		Extent extent(width, 0.0f);		// Dummy initial values
+		Rectf mask_extent(canvas_width*static_cast<float>(antialias_level), canvas_height * static_cast<float>(antialias_level), 0.0f, 0.0f);		// Dummy initial values
 
 		// Precalculation to determine the extents
 		for (size_t y = 0; y < scanlines.size(); y++)
@@ -248,51 +247,49 @@ namespace clan
 
 			std::sort(scanline.edges.begin(), scanline.edges.end(), [](const PathScanlineEdge &a, const PathScanlineEdge &b) { return a.x < b.x; });
 
-			// Calculate extent
-			if (scanline.edges[0].x < extent.left)
-				extent.left = scanline.edges[0].x;
+			// Calculate mask extent
+			if (y < mask_extent.top)
+				mask_extent.top = y;
 
-			if (scanline.edges[scanline.edges.size() - 1].x > extent.right)
-				extent.right = scanline.edges[scanline.edges.size() - 1].x;
+			if (y > mask_extent.bottom)
+				mask_extent.bottom = y;
+
+			if (scanline.edges[0].x < mask_extent.left)
+				mask_extent.left = scanline.edges[0].x;
+
+			if (scanline.edges[scanline.edges.size() - 1].x > mask_extent.right)
+				mask_extent.right = scanline.edges[scanline.edges.size() - 1].x;
 		}
-		// Clip extents
-		if (extent.right > width)
-			extent.right = width;
-		if (extent.left < 0)
-			extent.left = 0;
 
-		return extent;
+		mask_extent.clip(Sizef(canvas_width * antialias_level, canvas_height * antialias_level));
+
+		return mask_extent;
 	}
 
 	void PathFillRenderer::flush(GraphicContext &gc)
 	{
-		if (position <= 0)		// Nothing to flush
+		if (instances.get_position() == 0 && vertices.get_position() == 0 && next_block < max_blocks) // Nothing to flush
 			return;
 
+		// To do: fix that we lock in one file and unlocks in another (too ugly way of doing it)
 		mask_buffer.unlock();
 		instance_buffer.unlock();
 
 		int gpu_index;
-		VertexArrayVector<Vertex> gpu_vertices(batch_buffer->get_vertex_buffer(gc, gpu_index));
+		VertexArrayVector<Vec4i> gpu_vertices(batch_buffer->get_vertex_buffer(gc, gpu_index));
 
 		if (prim_array[gpu_index].is_null())
 		{
 			prim_array[gpu_index] = PrimitivesArray(gc);
-			prim_array[gpu_index].set_attributes(0, gpu_vertices, cl_offsetof(Vertex, Position));
-			prim_array[gpu_index].set_attributes(1, gpu_vertices, cl_offsetof(Vertex, BrushData1));
-			prim_array[gpu_index].set_attributes(2, gpu_vertices, cl_offsetof(Vertex, BrushData2));
-			prim_array[gpu_index].set_attributes(3, gpu_vertices, cl_offsetof(Vertex, TexCoord0));
-			prim_array[gpu_index].set_attributes(4, gpu_vertices, cl_offsetof(Vertex, Mode));
-
+			prim_array[gpu_index].set_attributes(0, gpu_vertices);
 		}
 
-		gpu_vertices.upload_data(gc, 0, vertices, position);
+		gpu_vertices.upload_data(gc, 0, vertices.get_vertices(), vertices.get_position());
 
-		size_t blocks_height = (upload_list.size() + mask_texture_size - 1) / mask_texture_size * mask_texture_size;
 		int block_y = (((next_block-1) * mask_block_size) / mask_texture_size)* mask_block_size;
 		mask_texture.set_subimage(gc, 0, 0, mask_buffer, Rect(Point(0, 0), Size(mask_texture_size, block_y + mask_block_size)));
 
-		instance_texture.set_subimage(gc, 0, 0, instance_buffer, Rect(Point(0, 0), Size(current_gradient_position * instance_buffer_gradient_stop_size, 1)));
+		instance_texture.set_subimage(gc, 0, 0, instance_buffer, Rect(Point(0, 0), Size(instance_buffer_width, (instances.get_position() + instance_buffer_width - 1) / instance_buffer_width)));
 
 		gc.set_blend_state(blend_state);
 		gc.set_program_object(program_path);
@@ -300,7 +297,7 @@ namespace clan
 		gc.set_texture(1, instance_texture);
 		if (!current_texture.is_null())
 			gc.set_texture(2, current_texture);
-		gc.draw_primitives(type_triangles, position, prim_array[gpu_index]);
+		gc.draw_primitives(type_triangles, vertices.get_position(), prim_array[gpu_index]);
 		if (!current_texture.is_null())
 		{
 			gc.reset_texture(2);
@@ -310,8 +307,6 @@ namespace clan
 		gc.reset_texture(0);
 		gc.reset_program_object();
 		gc.reset_blend_state();
-		position = 0;
-		current_gradient_position = 0;
 
 		// Finishedwith the buffers
 		mask_buffer = TransferTexture();
@@ -321,9 +316,9 @@ namespace clan
 
 		batch_buffer->set_transfer_r8_used(mask_buffer_id, block_y + mask_block_size);
 		next_block = 0;
-		upload_list.clear();
 	}
 
+	/*
 	void PathFillRenderer::store_vertices(Canvas &canvas, const Brush &brush, const Mat4f &transform)
 	{
 		int num_vertices = upload_list.size() * 6;
@@ -488,18 +483,7 @@ namespace clan
 		}
 		current_gradient_position += num_stops;
 	}
-
-	inline Pointf PathFillRenderer::transform_point(Pointf point, const Mat3f &brush_transform, const Mat4f &transform) const
-	{
-		point = Pointf(
-			brush_transform.matrix[0 * 3 + 0] * point.x + brush_transform.matrix[1 * 3 + 0] * point.y + brush_transform.matrix[2 * 3 + 0],
-			brush_transform.matrix[0 * 3 + 1] * point.x + brush_transform.matrix[1 * 3 + 1] * point.y + brush_transform.matrix[2 * 3 + 1]);
-
-		return Pointf(
-			transform.matrix[0 * 4 + 0] * point.x + transform.matrix[1 * 4 + 0] * point.y + transform.matrix[3 * 4 + 0],
-			transform.matrix[0 * 4 + 1] * point.x + transform.matrix[1 * 4 + 1] * point.y + transform.matrix[3 * 4 + 1]);
-	}
-
+	*/
 
 	void PathFillRenderer::initialise_buffers(Canvas &canvas)
 	{
@@ -510,6 +494,9 @@ namespace clan
 			mask_buffer = batch_buffer->get_transfer_r8(gc, mask_buffer_id, access_read_write);
 			instance_texture = batch_buffer->get_texture_rgba32f(gc);
 			instance_buffer = batch_buffer->get_transfer_rgba32f(gc, access_write_only);
+
+			instances.reset(instance_buffer.get_data<Vec4f>(), instance_buffer_width * instance_buffer_height);
+			vertices.reset((Vec4i *)batch_buffer->buffer, max_vertices);
 		}
 	}
 	/////////////////////////////////////////////////////////////////////////////
@@ -519,8 +506,11 @@ namespace clan
 		scanline = new_scanline;
 		mode = new_mode;
 		found = false;
+		x0 = 0.0f;
+		x1 = 0.0f;
 		i = 0;
 		nonzero_rule = 0;
+
 		next();
 	}
 
@@ -534,21 +524,22 @@ namespace clan
 
 		if (mode == PathFillMode::alternate)
 		{
-			x0 = static_cast<int>(scanline->edges[i].x + 0.5f);
-			x1 = static_cast<int>(scanline->edges[i+1].x - 0.5f) + 1;
+			x0 = scanline->edges[i].x;
+			x1 = scanline->edges[i + 1].x;
+
 			i += 2;
 			found = true;
 		}
 		else
 		{
-			x0 = static_cast<int>(scanline->edges[i].x + 0.5f);
+			x0 = scanline->edges[i].x;
 			nonzero_rule += scanline->edges[i].up_direction ? 1 : -1;
 			i++;
 
 			while (i < scanline->edges.size())
 			{
 				nonzero_rule += scanline->edges[i].up_direction ? 1 : -1;
-				x1 = static_cast<int>(scanline->edges[i].x - 0.5f) + 1;
+				x1 = scanline->edges[i].x;
 				i++;
 
 				if (nonzero_rule == 0)
@@ -559,5 +550,147 @@ namespace clan
 			}
 			found = false;
 		}
+	}
+
+	/////////////////////////////////////////////////////////////////////////
+
+	//void PathMaskBuffer::foo()
+	//{
+	//}
+
+	/////////////////////////////////////////////////////////////////////////
+
+	void PathInstanceBuffer::reset(Vec4f *new_buffer, int new_max_entries)
+	{
+		buffer = new_buffer;
+		max_entries = new_max_entries;
+		position = 0;
+		current_texture = Texture2D();
+	}
+
+	bool PathInstanceBuffer::is_full(const Brush &brush) const
+	{
+		if (brush.type == BrushType::image) // Currently only support a single path texture
+		{
+			Subtexture subtexture = brush.image.get_texture();
+			if (!subtexture.is_null() && !current_texture.is_null() && subtexture.get_texture() != current_texture)
+				return true;
+		}
+
+		return position + brush.stops.size() * 2 + 2 > max_entries;
+	}
+
+	int PathInstanceBuffer::push(Canvas &canvas, const Brush &brush, const Mat4f &transform)
+	{
+		if (is_full(brush)) return 0;
+
+		int instance_pos = position;
+
+		Vec4f brush_data1;
+		Vec4f brush_data2;
+		int num_stops = brush.stops.size();
+
+		//float rcp_canvas_width_x2 = 2.0f / static_cast<float>(canvas.get_width());
+		//float rcp_canvas_height_x2 = 2.0f / static_cast<float>(canvas.get_height());
+
+		if (brush.type == BrushType::linear)
+		{
+			Pointf end_point = transform_point(brush.end_point, brush.transform, transform);
+			Pointf start_point = transform_point(brush.start_point, brush.transform, transform);
+			Pointf dir = end_point - start_point;
+			Pointf dir_normed = Pointf::normalize(dir);
+
+			brush_data1.x = (float)PathShaderDrawMode::linear;
+			brush_data1.set_zw(dir_normed);
+
+			brush_data2.x = 1.0f / dir.length();
+			brush_data2.y = position + 2;
+			brush_data2.z = position + 2 + num_stops;
+		}
+		else if (brush.type == BrushType::radial)
+		{
+			Pointf center_point = transform_point(brush.center_point, brush.transform, transform);
+			Pointf radius = transform_point(Pointf(brush.radius_x, brush.radius_y), brush.transform, transform) - transform_point(Pointf(), brush.transform, transform);
+
+			brush_data1.x = (float)PathShaderDrawMode::radial;
+			brush_data2.x = 1.0f / brush.radius_x;
+			brush_data2.y = position + 2;
+			brush_data2.z = position + 2 + num_stops;
+		}
+		else if (brush.type == BrushType::image)
+		{
+			Subtexture subtexture = brush.image.get_texture();
+			if (subtexture.is_null())
+				return 0;
+
+			current_texture = subtexture.get_texture();
+			if (current_texture.is_null())
+				throw Exception("BrushType::image used without a valid texture");
+
+			Mat3f inv_brush_transform = Mat3f::inverse(brush.transform);
+			Mat4f inv_transform = Mat4f::inverse(transform);
+
+			Rectf src = subtexture.get_geometry();
+
+			brush_data1.x = (float)PathShaderDrawMode::image;
+			brush_data2 = Vec4f(src.left, src.top, src.right, src.bottom);
+		}
+		else
+		{
+			brush_data1.x = (float)PathShaderDrawMode::solid;
+			brush_data2 = brush.color;
+		}
+
+		buffer[position] = brush_data1;
+		buffer[position + 1] = brush_data2;
+
+		for (unsigned int cnt = 0; cnt < num_stops; cnt++)
+		{
+			buffer[position + 2 + cnt * 2] = brush.stops[cnt].color;
+			buffer[position + 2 + cnt * 2 + 1] = Vec4f(brush.stops[cnt].position, 0.0f, 0.0f, 0.0f);
+		}
+
+		position += 2 + num_stops * 2;
+		return instance_pos;
+	}
+
+	inline Pointf PathInstanceBuffer::transform_point(Pointf point, const Mat3f &brush_transform, const Mat4f &transform)
+	{
+		point = Pointf(
+			brush_transform.matrix[0 * 3 + 0] * point.x + brush_transform.matrix[1 * 3 + 0] * point.y + brush_transform.matrix[2 * 3 + 0],
+			brush_transform.matrix[0 * 3 + 1] * point.x + brush_transform.matrix[1 * 3 + 1] * point.y + brush_transform.matrix[2 * 3 + 1]);
+
+		return Pointf(
+			transform.matrix[0 * 4 + 0] * point.x + transform.matrix[1 * 4 + 0] * point.y + transform.matrix[3 * 4 + 0],
+			transform.matrix[0 * 4 + 1] * point.x + transform.matrix[1 * 4 + 1] * point.y + transform.matrix[3 * 4 + 1]);
+	}
+
+	/////////////////////////////////////////////////////////////////////////
+
+	void PathVertexBuffer::reset(Vec4i *new_vertices, int new_max_vertices)
+	{
+		vertices = new_vertices;
+		max_vertices = new_max_vertices;
+		position = 0;
+	}
+
+	bool PathVertexBuffer::is_full() const
+	{
+		return position + 6 > max_vertices;
+	}
+
+	void PathVertexBuffer::push(int x, int y, int instance_offset, int mask_offset)
+	{
+		if (is_full()) return;
+
+		const int size = PathFillRenderer::mask_block_size;
+
+		vertices[position++] = Vec4i(x, y, instance_offset, mask_offset);
+		vertices[position++] = Vec4i(x + size, y, instance_offset, mask_offset);
+		vertices[position++] = Vec4i(x, y + size, instance_offset, mask_offset);
+
+		vertices[position++] = Vec4i(x + size, y, instance_offset, mask_offset);
+		vertices[position++] = Vec4i(x + size, y + size, instance_offset, mask_offset);
+		vertices[position++] = Vec4i(x, y + size, instance_offset, mask_offset);
 	}
 }

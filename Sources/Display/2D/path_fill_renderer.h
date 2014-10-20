@@ -66,6 +66,56 @@ namespace clan
 		std::vector<unsigned char> pixels;
 	};
 
+	class PathMaskBuffer
+	{
+	public:
+		// To do: move mask position tracking into here
+	};
+
+	class PathInstanceBuffer
+	{
+	public:
+		void reset(Vec4f *buffer, int max_entries);
+		bool is_full(const Brush &brush) const;
+		int push(Canvas &canvas, const Brush &brush, const Mat4f &transform);
+
+		Vec4f *get_buffer() const { return buffer; }
+		int get_position() const { return position; }
+
+	private:
+		static Pointf transform_point(Pointf point, const Mat3f &brush_transform, const Mat4f &fill_transform);
+
+		Vec4f *buffer = 0;
+		int max_entries = 0;
+		int position = 0;
+
+		Texture2D current_texture;
+	};
+
+	class PathVertexBuffer
+	{
+	public:
+		void reset(Vec4i *vertices, int max_vertices);
+		bool is_full() const;
+		void push(int x, int y, int instance_offset, int mask_offset);
+
+		Vec4i *get_vertices() const { return vertices; }
+		int get_position() const { return position; }
+
+	private:
+		Vec4i *vertices = 0;
+		int max_vertices = 0;
+		int position = 0;
+	};
+
+	enum class PathShaderDrawMode : int
+	{
+		solid = 0,
+		linear = 1,
+		radial = 2,
+		image = 3
+	};
+
 	class PathFillRenderer : public PathRenderer
 	{
 	public:
@@ -80,53 +130,19 @@ namespace clan
 		void fill(Canvas &canvas, PathFillMode mode, const Brush &brush, const Mat4f &transform);
 		void flush(GraphicContext &gc);
 
-	private:
-		struct Vertex
-		{
-			Vertex() { }
-			Vertex(const Vec4f &position, const Vec4f &brush_data1, const Vec4f &brush_data2, const Vec2f &texcoord, int mode) :
-				Position(position), BrushData1(brush_data1), BrushData2(brush_data2), TexCoord0(texcoord), Mode(mode) { }
-
-			Vec4f Position;
-			Vec4f BrushData1;
-			Vec4f BrushData2;
-			Vec2f TexCoord0;
-			int Mode;
-		};
-		struct GradientStops
-		{
-			GradientStops() { }
-			GradientStops(const Colorf &colour, float position) :Colour(colour), Parameter(Vec4f(position))
-				 { }
-
-			// all members must be a multiple of 4 floats
-			Colorf Colour;
-			Vec4f Parameter;
-		};
-
-		struct Extent
-		{
-			Extent() {}
-			Extent(float left, float right) : left(left), right(right) {}
-			float left;
-			float right;
-		};
-
-		void initialise_buffers(Canvas &canvas);
-		Extent sort_and_find_extent(float canvas_width);
-		Pointf transform_point(Pointf point, const Mat3f &brush_transform, const Mat4f &fill_transform) const;
-		void store_vertices(Canvas &canvas, const Brush &brush, const Mat4f &transform);
-
 		static const int antialias_level = 2;
 		static const int mask_block_size = 16;
 		static const int scanline_block_size = mask_block_size * antialias_level;
-		static const int mask_texture_size = 512;
+		static const int mask_texture_size = 1024;
 		static const int max_blocks = (mask_texture_size / mask_block_size) * (mask_texture_size / mask_block_size);
 		static const int instance_buffer_width = 512;	// In rgbaf blocks
 		static const int instance_buffer_height = 2;	// In rgbaf blocks
-		static const int instance_buffer_gradient_stop_size = sizeof(GradientStops) / sizeof(Vec4f);	// In rgbaf blocks
 
 		const float rcp_mask_texture_size = 1.0f / (float)mask_texture_size;
+
+	private:
+		void initialise_buffers(Canvas &canvas);
+		Rectf sort_and_find_extents(float canvas_width, float canvas_height);
 
 		int width = 0;
 		int height = 0;
@@ -139,25 +155,22 @@ namespace clan
 			Point output_position;
 			int mask_index;
 		};
-		enum { max_vertices = RenderBatchBuffer::vertex_buffer_size / sizeof(Vertex) };
+		enum { max_vertices = RenderBatchBuffer::vertex_buffer_size / sizeof(Vec4i) };
 
+		PathInstanceBuffer instances;
+		PathVertexBuffer vertices;
 
-		enum { max_gradient_stops = instance_buffer_width / instance_buffer_gradient_stop_size };
-
-		std::vector<Block> upload_list;
 		int next_block = 0;
-		bool found_filled_block;
-		int filled_block_index;
+		bool found_filled_block = false;
+		int filled_block_index = 0;
+		int current_instance_offset = 0;
 
-		Vertex *vertices;
-		int position = 0;
 		RenderBatchBuffer *batch_buffer;
 
 		TransferTexture mask_buffer;
 		int mask_buffer_id;	// Buffer index of the mask buffer
 		Texture2D mask_texture;
 		TransferTexture instance_buffer;
-		int current_gradient_position = 0;
 		Texture2D instance_texture;
 		PrimitivesArray prim_array[RenderBatchBuffer::num_vertex_buffers];
 		BlendState blend_state;
@@ -171,8 +184,8 @@ namespace clan
 		void next();
 
 		bool found = false;
-		int x0;
-		int x1;
+		float x0 = 0.0f;
+		float x1 = 0.0f;
 
 	private:
 		const PathScanline *scanline = 0;
