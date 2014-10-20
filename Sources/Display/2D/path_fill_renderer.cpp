@@ -605,7 +605,7 @@ namespace clan
 
 			brush_data2.x = 1.0f / dir.length();
 			brush_data2.y = position + 2;
-			brush_data2.z = position + 2 + num_stops;
+			brush_data2.z = position + 2 + num_stops*2;
 		}
 		else if (brush.type == BrushType::radial)
 		{
@@ -615,7 +615,7 @@ namespace clan
 			brush_data1.x = (float)PathShaderDrawMode::radial;
 			brush_data2.x = 1.0f / brush.radius_x;
 			brush_data2.y = position + 2;
-			brush_data2.z = position + 2 + num_stops;
+			brush_data2.z = position + 2 + num_stops*2;
 		}
 		else if (brush.type == BrushType::image)
 		{
