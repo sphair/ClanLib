@@ -218,22 +218,25 @@ const std::string::value_type *cl_glsl_vertex_path =
 
 const std::string::value_type *cl_glsl15_vertex_path = R"shaderend(
 			#version 150
-			in vec4 Position;
-			in vec4 BrushData1;
-			in vec4 BrushData2;
-			in vec2 TexCoord0;
-			in int Mode;
+			in ivec4 Vertex;
 			out vec4 brush_data1;
 			out vec4 brush_data2;
 			flat out int mode;
 			out vec2 mask_position;
+			uniform sampler2D instance_data;
+
 			void main()
 			{
-				gl_Position = Position;
-				mask_position = TexCoord0;
-				brush_data1 = BrushData1;
-				brush_data2 = BrushData2;
-				mode = Mode;
+				vec4 canvas_data = texelFetch(instance_data, ivec2(0, 0), 0);
+				ivec2 size = ivec2( (Vertex.z % 256), (Vertex.z / 256) );
+				gl_Position = vec4(((Vertex.x+size.x)*2.0 / canvas_data.x) - 1.0, ((Vertex.y+size.y)*-2.0 / canvas_data.y) + 1.0, 0.0, 1.0);
+				int mask_offset = Vertex.w % 65536;
+				mask_position = vec2(((mask_offset+size.x) * 16) % 1024, (((mask_offset+size.y)* 16) / 1024) * 16);
+				mask_position /= 1024.0;
+				int instance_offset = Vertex.w / 65536;
+				brush_data1 = texelFetch(instance_data, ivec2(instance_offset, 0), 0);
+				brush_data2 = texelFetch(instance_data, ivec2(instance_offset + 1, 0), 0);
+				mode = 0;	// FIXME
 			}
 		)shaderend";
 
@@ -246,7 +249,7 @@ const std::string::value_type *cl_glsl15_fragment_path = R"shaderend(
 	in vec4 brush_data2;
 	out vec4 cl_FragColor;
 
-	uniform sampler2D gradient_texture;
+	uniform sampler2D instance_data;
 	uniform sampler2D image_texture;
 	uniform sampler2D mask_texture;
 
@@ -263,12 +266,12 @@ const std::string::value_type *cl_glsl15_fragment_path = R"shaderend(
 
 	vec4 gradient_color(int stop_start, int stop_end, float t)
 	{
-		vec4 color = texelFetch(gradient_texture, ivec2(stop_start * 2, 0), 0);
-		float last_stop_pos = texelFetch(gradient_texture, ivec2(stop_start * 2 + 1, 0), 0).x;
+		vec4 color = texelFetch(instance_data, ivec2(stop_start * 2, 0), 0);
+		float last_stop_pos = texelFetch(instance_data, ivec2(stop_start * 2 + 1, 0), 0).x;
 		for (int i = stop_start + 1; i < stop_end; i++)
 		{
-			vec4 stop_color = texelFetch(gradient_texture, ivec2(i * 2, 0), 0);
-			float stop_pos = texelFetch(gradient_texture, ivec2(i * 2 + 1, 0), 0).x;
+			vec4 stop_color = texelFetch(instance_data, ivec2(i * 2, 0), 0);
+			float stop_pos = texelFetch(instance_data, ivec2(i * 2 + 1, 0), 0).x;
 			float tt = clamp((t - last_stop_pos)/(stop_pos - last_stop_pos), 0.0, 1.0);
 			color = mix(color, stop_color, tt);
 			last_stop_pos = stop_pos;
@@ -316,7 +319,6 @@ const std::string::value_type *cl_glsl15_fragment_path = R"shaderend(
 		case 3: image_fill(); break;
 		}
 	}
-
 		)shaderend";
 
 const std::string::value_type *cl_glsl_fragment_path =
@@ -449,11 +451,7 @@ GL3StandardPrograms::GL3StandardPrograms(GL3GraphicContextProvider *provider) : 
 	ProgramObject path_program(provider);
 	path_program.attach(vertex_path_shader);
 	path_program.attach(fragment_path_shader);
-	path_program.bind_attribute_location(0, "Position");
-	path_program.bind_attribute_location(1, "BrushData1");
-	path_program.bind_attribute_location(2, "BrushData2");
-	path_program.bind_attribute_location(3, "TexCoord0");
-	path_program.bind_attribute_location(4, "Mode");
+	path_program.bind_attribute_location(0, "Vertex");
 
 	if (use_glsl_150)
 		path_program.bind_frag_data_location(0, "cl_FragColor");
@@ -461,7 +459,7 @@ GL3StandardPrograms::GL3StandardPrograms(GL3GraphicContextProvider *provider) : 
 	if (!path_program.link())
 		throw Exception("Unable to link the standard shader program: 'path' Error:" + path_program.get_info_log());
 	path_program.set_uniform1i("mask_texture", 0);
-	path_program.set_uniform1i("gradient_texture", 1);
+	path_program.set_uniform1i("instance_data", 1);
 	path_program.set_uniform1i("image_texture", 2);
 
 	impl->color_only_program = color_only_program;

@@ -176,7 +176,7 @@ namespace clan
 						break;
 					}
 				}
-
+				/* FIXME
 				if (full_block)
 				{
 					if (!found_filled_block)
@@ -190,7 +190,7 @@ namespace clan
 						continue;
 					}
 				}
-
+				*/
 
 				bool empty_block = true;
 				for (unsigned int cnt = 0; cnt < scanline_block_size; cnt++)
@@ -497,7 +497,7 @@ namespace clan
 			instance_texture = batch_buffer->get_texture_rgba32f(gc);
 			instance_buffer = batch_buffer->get_transfer_rgba32f(gc, access_write_only);
 
-			instances.reset(instance_buffer.get_data<Vec4f>(), instance_buffer_width * instance_buffer_height);
+			instances.reset(gc, instance_buffer.get_data<Vec4f>(), instance_buffer_width * instance_buffer_height);
 			vertices.reset((Vec4i *)batch_buffer->buffer, max_vertices);
 		}
 	}
@@ -558,12 +558,14 @@ namespace clan
 
 	/////////////////////////////////////////////////////////////////////////
 
-	void PathInstanceBuffer::reset(Vec4f *new_buffer, int new_max_entries)
+	void PathInstanceBuffer::reset(GraphicContext &gc, Vec4f *new_buffer, int new_max_entries)
 	{
 		buffer = new_buffer;
 		max_entries = new_max_entries;
-		position = 0;
 		current_texture = Texture2D();
+
+		buffer[0] = Vec4f(gc.get_width(), gc.get_height(), 0, 0);
+		position = 1;
 	}
 
 	bool PathInstanceBuffer::is_full(const Brush &brush) const
@@ -683,12 +685,13 @@ namespace clan
 
 		const int size = PathFillRenderer::mask_block_size;
 
-		vertices[position++] = Vec4i(x, y, instance_offset, mask_offset);
-		vertices[position++] = Vec4i(x + size, y, instance_offset, mask_offset);
-		vertices[position++] = Vec4i(x, y + size, instance_offset, mask_offset);
+		int w = instance_offset * 65536 + mask_offset;
 
-		vertices[position++] = Vec4i(x + size, y, instance_offset, mask_offset);
-		vertices[position++] = Vec4i(x + size, y + size, instance_offset, mask_offset);
-		vertices[position++] = Vec4i(x, y + size, instance_offset, mask_offset);
+		vertices[position++] = Vec4i(x, y, (0 * size) + (0 * size * 256), w);
+		vertices[position++] = Vec4i(x, y, (1 * size) + (0 * size * 256), w);
+		vertices[position++] = Vec4i(x, y, (0 * size) + (1 * size * 256), w);
+		vertices[position++] = Vec4i(x, y, (1 * size) + (0 * size * 256), w);
+		vertices[position++] = Vec4i(x, y, (1 * size) + (1 * size * 256), w);
+		vertices[position++] = Vec4i(x, y, (0 * size) + (1 * size * 256), w);
 	}
 }

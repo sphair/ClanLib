@@ -107,7 +107,7 @@ int PathApp::start(const std::vector<std::string> &args)
 
 		canvas.set_transform(clan::Mat4f::translate(380.0f, 300.0f, 0.0f) * rotation );
 		canvas.fill(rounded_rect_shape, brush_radial);
-
+		
 		canvas.set_transform(clan::Mat4f::identity());
 		std::string fps = clan::string_format("%1 fps", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1));
 		fps_font.draw_text(canvas, canvas.get_width() - 100, 30, fps);

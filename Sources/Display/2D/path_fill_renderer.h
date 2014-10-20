@@ -75,7 +75,7 @@ namespace clan
 	class PathInstanceBuffer
 	{
 	public:
-		void reset(Vec4f *buffer, int max_entries);
+		void reset(GraphicContext &gc, Vec4f *buffer, int max_entries);
 		bool is_full(const Brush &brush) const;
 		int push(Canvas &canvas, const Brush &brush, const Mat4f &transform);
 
