@@ -116,7 +116,7 @@ namespace clan
 			{
 				float ypos = y + 0.5f;
 				float x = x0 + (x1 - x0) * (ypos - y0) * rcp_dy;
-				scanlines[y].edges.push_back(PathScanlineEdge(x, up_direction));
+				scanlines[y].insert_sorted(PathScanlineEdge(x, up_direction));
 			}
 		}
 	}
@@ -256,7 +256,7 @@ namespace clan
 			if (scanline.edges.empty())
 				continue;
 
-			std::sort(scanline.edges.begin(), scanline.edges.end(), [](const PathScanlineEdge &a, const PathScanlineEdge &b) { return a.x < b.x; });
+			//std::sort(scanline.edges.begin(), scanline.edges.end(), [](const PathScanlineEdge &a, const PathScanlineEdge &b) { return a.x < b.x; });
 
 			// Calculate mask extent
 			if (y < mask_extent.top)

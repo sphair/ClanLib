@@ -64,6 +64,18 @@ namespace clan
 	public:
 		std::vector<PathScanlineEdge> edges;
 		std::vector<unsigned char> pixels;
+
+		void insert_sorted(PathScanlineEdge edge)
+		{
+			edges.push_back(edge);
+
+			for (size_t pos = edges.size() - 1; pos > 0 && edges[pos - 1].x >= edge.x; pos--)
+			{
+				PathScanlineEdge temp = edges[pos - 1];
+				edges[pos - 1] = edges[pos];
+				edges[pos] = temp;
+			}
+		}
 	};
 
 	class PathMaskBuffer
@@ -141,6 +153,8 @@ namespace clan
 		const float rcp_mask_texture_size = 1.0f / (float)mask_texture_size;
 
 	private:
+		void insert_sorted(PathScanline &scanline, const PathScanlineEdge &edge);
+
 		void initialise_buffers(Canvas &canvas);
 		Rectf sort_and_find_extents(float canvas_width, float canvas_height);
 
