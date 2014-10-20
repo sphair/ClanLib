@@ -219,9 +219,8 @@ const std::string::value_type *cl_glsl_vertex_path =
 const std::string::value_type *cl_glsl15_vertex_path = R"shaderend(
 			#version 150
 			in ivec4 Vertex;
-			out vec4 brush_data1;
-			out vec4 brush_data2;
-			flat out int mode;
+			flat out vec4 brush_data1;
+			flat out vec4 brush_data2;
 			out vec2 mask_position;
 			uniform sampler2D instance_data;
 
@@ -237,17 +236,15 @@ const std::string::value_type *cl_glsl15_vertex_path = R"shaderend(
 				int instance_offset = Vertex.w / 65536;
 				brush_data1 = texelFetch(instance_data, ivec2(instance_offset, 0), 0);
 				brush_data2 = texelFetch(instance_data, ivec2(instance_offset + 1, 0), 0);
-				mode = 0;	// FIXME
 			}
 		)shaderend";
 
 const std::string::value_type *cl_glsl15_fragment_path = R"shaderend(
 	#version 150
 
-	flat in int mode;
 	in vec2 mask_position;
-	in vec4 brush_data1;
-	in vec4 brush_data2;
+	flat in vec4 brush_data1;
+	flat in vec4 brush_data2;
 	out vec4 cl_FragColor;
 
 	uniform sampler2D instance_data;
@@ -311,7 +308,7 @@ const std::string::value_type *cl_glsl15_fragment_path = R"shaderend(
 
 	void main()
 	{
-		switch (mode)
+		switch (int(brush_data1.x))
 		{
 		default:
 		case 0: solid_fill(); break;
