@@ -247,24 +247,23 @@ const std::string::value_type *cl_glsl15_vertex_path = R"shaderend(
 				// Calculate for texture coords
 				vary_data.z = (Vertex.x+size.x * block_size);
 				vary_data.w = (Vertex.y+size.y * block_size);
+
+				mat4 inv_transform = mat4(
+						texelFetch(instance_data, ivec2(instance_offset + 2, 0), 0), 
+						texelFetch(instance_data, ivec2(instance_offset + 3, 0), 0),
+						texelFetch(instance_data, ivec2(instance_offset + 4, 0), 0),
+						texelFetch(instance_data, ivec2(instance_offset + 5, 0), 0));
+				mat4 inv_brush_transform = mat4(
+						texelFetch(instance_data, ivec2(instance_offset + 6, 0), 0), 
+						texelFetch(instance_data, ivec2(instance_offset + 7, 0), 0),
+						texelFetch(instance_data, ivec2(instance_offset + 8, 0), 0),
+						texelFetch(instance_data, ivec2(instance_offset + 9, 0), 0));
+
+				vary_data.zw = (vec4(vary_data.zw, 0, 1) * inv_transform).xy;
+				vary_data.zw = (vec4(vary_data.zw, 0, 1) * inv_brush_transform).xy;
+
 				vary_data.z = (vary_data.z + brush_data1.x) / brush_data2.x;
 				vary_data.w = (vary_data.w + brush_data1.y) / brush_data2.y;
-
-				//// Find transformed UV coordinates for image covering the entire mask texture:
-				//Pointf image_tl = transform_point(upload_rect.get_top_left(), inv_brush_transform, inv_transform);
-				//Pointf image_tr = transform_point(upload_rect.get_top_right(), inv_brush_transform, inv_transform);
-				//Pointf image_bl = transform_point(upload_rect.get_bottom_left(), inv_brush_transform, inv_transform);
-				//Pointf image_br = transform_point(upload_rect.get_bottom_right(), inv_brush_transform, inv_transform);
-
-				//// Convert to subtexture coordinates:
-				//Sizef tex_size = Sizef((float)current_texture.get_width(), (float)current_texture.get_height());
-
-				//brush_data1_bottom_left.set_xy(Vec2f((src.left + image_bl.x) / tex_size.width, (src.top + image_bl.y) / tex_size.height));
-				//brush_data1_bottom_right.set_xy(Vec2f((src.left + image_br.x) / tex_size.width, (src.top + image_br.y) / tex_size.height));
-				//brush_data1_top_left.set_xy(Vec2f((src.left + image_tl.x) / tex_size.width, (src.top + image_tl.y) / tex_size.height));
-				//brush_data1_top_right.set_xy(Vec2f((src.left + image_tr.x) / tex_size.width, (src.top + image_tr.y) / tex_size.height));
-
-
 			}
 		)shaderend";
 
