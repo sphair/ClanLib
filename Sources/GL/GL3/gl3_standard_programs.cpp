@@ -221,21 +221,28 @@ const std::string::value_type *cl_glsl15_vertex_path = R"shaderend(
 			in ivec4 Vertex;
 			flat out vec4 brush_data1;
 			flat out vec4 brush_data2;
+			out vec4 vary_data;
 			out vec2 mask_position;
 			uniform sampler2D instance_data;
 
 			void main()
 			{
 				vec4 canvas_data = texelFetch(instance_data, ivec2(0, 0), 0);
-				ivec2 size = ivec2( (Vertex.z % 256), (Vertex.z / 256) );
-				gl_Position = vec4(((Vertex.x+size.x)*2.0 / canvas_data.x) - 1.0, ((Vertex.y+size.y)*-2.0 / canvas_data.y) + 1.0, 0.0, 1.0);
+				const int block_size = 16;
+				ivec2 size = ivec2( (Vertex.z % 2), (Vertex.z / 2) );
+				gl_Position = vec4(((Vertex.x+size.x * block_size)*2.0 / canvas_data.x) - 1.0, ((Vertex.y+size.y * block_size)*-2.0 / canvas_data.y) + 1.0, 0.0, 1.0);
 				int mask_offset = Vertex.w % 65536;
 				mask_position = vec2((mask_offset * 16) % 1024, ((mask_offset*16) / 1024) * 16);
-				mask_position += size;
+				mask_position += size * block_size;
 				mask_position /= 1024.0;
 				int instance_offset = Vertex.w / 65536;
 				brush_data1 = texelFetch(instance_data, ivec2(instance_offset, 0), 0);
 				brush_data2 = texelFetch(instance_data, ivec2(instance_offset + 1, 0), 0);
+				vec4 brush_data3 = texelFetch(instance_data, ivec2(instance_offset + 2, 0), 0);
+
+				// Calculate for linear gradient
+				vary_data.x = Vertex.x + size.x * block_size - brush_data3.x;
+				vary_data.y = Vertex.y + size.y * block_size - brush_data3.y;
 			}
 		)shaderend";
 
@@ -245,6 +252,7 @@ const std::string::value_type *cl_glsl15_fragment_path = R"shaderend(
 	in vec2 mask_position;
 	flat in vec4 brush_data1;
 	flat in vec4 brush_data2;
+	in vec4 vary_data;
 	out vec4 cl_FragColor;
 
 	uniform sampler2D instance_data;
@@ -266,7 +274,7 @@ const std::string::value_type *cl_glsl15_fragment_path = R"shaderend(
 	{
 		vec4 color = texelFetch(instance_data, ivec2(stop_start, 0), 0);
 		float last_stop_pos = texelFetch(instance_data, ivec2(stop_start + 1, 0), 0).x;
-		for (int i = stop_start + 1; i < stop_end; i+=2)
+		for (int i = stop_start; i < stop_end; i+=2)
 		{
 			vec4 stop_color = texelFetch(instance_data, ivec2(i, 0), 0);
 			float stop_pos = texelFetch(instance_data, ivec2(i + 1, 0), 0).x;
@@ -279,9 +287,9 @@ const std::string::value_type *cl_glsl15_fragment_path = R"shaderend(
 
 	void linear_gradient_fill()
 	{
-		vec2 grad_start = brush_data1.xy;
-		vec2 grad_dir = brush_data1.zw; // normalize(grad_end - grad_start)
-		float rcp_grad_length = brush_data2.x; // 1/length(grad_end - grad_start)
+		vec2 grad_start = vary_data.xy;
+		vec2 grad_dir = brush_data1.zw;
+		float rcp_grad_length = brush_data2.x;
 		int stop_start = int(brush_data2.y);
 		int stop_end = int(brush_data2.z);
 

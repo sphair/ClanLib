@@ -644,12 +644,7 @@ namespace clan
 
 		int instance_pos = position;
 
-		Vec4f brush_data1;
-		Vec4f brush_data2;
 		int num_stops = brush.stops.size();
-
-		//float rcp_canvas_width_x2 = 2.0f / static_cast<float>(canvas.get_width());
-		//float rcp_canvas_height_x2 = 2.0f / static_cast<float>(canvas.get_height());
 
 		if (brush.type == BrushType::linear)
 		{
@@ -658,22 +653,39 @@ namespace clan
 			Pointf dir = end_point - start_point;
 			Pointf dir_normed = Pointf::normalize(dir);
 
+			Vec4f brush_data1;
+			Vec4f brush_data2;
+			Vec4f brush_data3;
 			brush_data1.x = (float)PathShaderDrawMode::linear;
 			brush_data1.set_zw(dir_normed);
 
 			brush_data2.x = 1.0f / dir.length();
-			brush_data2.y = position + 2;
-			brush_data2.z = position + 2 + num_stops*2;
+			brush_data2.y = instance_pos + 3;
+			brush_data2.z = instance_pos + 3 + num_stops * 2;
+
+			brush_data3.set_xy(start_point);
+
+			buffer[position++] = brush_data1;
+			buffer[position++] = brush_data2;
+			buffer[position++] = brush_data3;
+
+
 		}
 		else if (brush.type == BrushType::radial)
 		{
 			Pointf center_point = transform_point(brush.center_point, brush.transform, transform);
 			Pointf radius = transform_point(Pointf(brush.radius_x, brush.radius_y), brush.transform, transform) - transform_point(Pointf(), brush.transform, transform);
 
+			Vec4f brush_data1;
+			Vec4f brush_data2;
 			brush_data1.x = (float)PathShaderDrawMode::radial;
 			brush_data2.x = 1.0f / brush.radius_x;
-			brush_data2.y = position + 2;
-			brush_data2.z = position + 2 + num_stops*2;
+			brush_data2.y = instance_pos + 2;
+			brush_data2.z = instance_pos + 2 + num_stops * 2;
+
+			buffer[position++] = brush_data1;
+			buffer[position++] = brush_data2;
+
 		}
 		else if (brush.type == BrushType::image)
 		{
@@ -690,25 +702,32 @@ namespace clan
 
 			Rectf src = subtexture.get_geometry();
 
+			Vec4f brush_data1;
+			Vec4f brush_data2;
 			brush_data1.x = (float)PathShaderDrawMode::image;
 			brush_data2 = Vec4f(src.left, src.top, src.right, src.bottom);
+			buffer[position++] = brush_data1;
+			buffer[position++] = brush_data2;
+
 		}
 		else
 		{
+			Vec4f brush_data1;
+			Vec4f brush_data2;
 			brush_data1.x = (float)PathShaderDrawMode::solid;
 			brush_data2 = brush.color;
+			buffer[position++] = brush_data1;
+			buffer[position++] = brush_data2;
+
 		}
 
-		buffer[position] = brush_data1;
-		buffer[position + 1] = brush_data2;
 
 		for (unsigned int cnt = 0; cnt < num_stops; cnt++)
 		{
-			buffer[position + 2 + cnt * 2] = brush.stops[cnt].color;
-			buffer[position + 2 + cnt * 2 + 1] = Vec4f(brush.stops[cnt].position, 0.0f, 0.0f, 0.0f);
+			buffer[position++] = brush.stops[cnt].color;
+			buffer[position++] = Vec4f(brush.stops[cnt].position, 0.0f, 0.0f, 0.0f);
 		}
 
-		position += 2 + num_stops * 2;
 		return instance_pos;
 	}
 
@@ -741,15 +760,13 @@ namespace clan
 	{
 		if (is_full()) return;
 
-		const int size = PathFillRenderer::mask_block_size;
-
 		int w = instance_offset * 65536 + mask_offset;
 
-		vertices[position++] = Vec4i(x, y, (0 * size) + (0 * size * 256), w);
-		vertices[position++] = Vec4i(x, y, (1 * size) + (0 * size * 256), w);
-		vertices[position++] = Vec4i(x, y, (0 * size) + (1 * size * 256), w);
-		vertices[position++] = Vec4i(x, y, (1 * size) + (0 * size * 256), w);
-		vertices[position++] = Vec4i(x, y, (1 * size) + (1 * size * 256), w);
-		vertices[position++] = Vec4i(x, y, (0 * size) + (1 * size * 256), w);
+		vertices[position++] = Vec4i(x, y, (0) + (0 * 2), w);
+		vertices[position++] = Vec4i(x, y, (1) + (0 * 2), w);
+		vertices[position++] = Vec4i(x, y, (0) + (1 * 2), w);
+		vertices[position++] = Vec4i(x, y, (1) + (0 * 2), w);
+		vertices[position++] = Vec4i(x, y, (1) + (1 * 2), w);
+		vertices[position++] = Vec4i(x, y, (0) + (1 * 2), w);
 	}
 }
