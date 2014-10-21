@@ -713,19 +713,13 @@ namespace clan
 			buffer[position++] = brush_data1;
 			buffer[position++] = brush_data2;
 
-			inv_transform.transpose();
-			inv_brush_transform.transpose();
-
-			buffer[position++] = Vec4f(inv_transform.matrix[0], inv_transform.matrix[1], inv_transform.matrix[2], inv_transform.matrix[3]);
-			buffer[position++] = Vec4f(inv_transform.matrix[4], inv_transform.matrix[5], inv_transform.matrix[6], inv_transform.matrix[7]);
-			buffer[position++] = Vec4f(inv_transform.matrix[8], inv_transform.matrix[9], inv_transform.matrix[10], inv_transform.matrix[11]);
-			buffer[position++] = Vec4f(inv_transform.matrix[12], inv_transform.matrix[13], inv_transform.matrix[14], inv_transform.matrix[15]);
-
-			buffer[position++] = Vec4f(inv_brush_transform.matrix[0], inv_brush_transform.matrix[1], inv_brush_transform.matrix[2], 0.0f);
-			buffer[position++] = Vec4f(inv_brush_transform.matrix[3], inv_brush_transform.matrix[4], inv_brush_transform.matrix[5], 0.0f);
-			buffer[position++] = Vec4f(inv_brush_transform.matrix[6], inv_brush_transform.matrix[7], inv_brush_transform.matrix[8], 0.0f);
-			buffer[position++] = Vec4f(inv_brush_transform.matrix[9], inv_brush_transform.matrix[10], inv_brush_transform.matrix[11], 1.0f);
-
+			Mat4f matrix = Mat4f(inv_brush_transform) * inv_transform;	//TODO: Is this the correct multication order
+			matrix.transpose();
+	
+			buffer[position++] = Vec4f(matrix.matrix[0], matrix.matrix[1], matrix.matrix[2], matrix.matrix[3]);
+			buffer[position++] = Vec4f(matrix.matrix[4], matrix.matrix[5], matrix.matrix[6], matrix.matrix[7]);
+			buffer[position++] = Vec4f(matrix.matrix[8], matrix.matrix[9], matrix.matrix[10], matrix.matrix[11]);
+			buffer[position++] = Vec4f(matrix.matrix[12], matrix.matrix[13], matrix.matrix[14], matrix.matrix[15]);
 		}
 		else
 		{
