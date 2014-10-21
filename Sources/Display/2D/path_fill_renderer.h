@@ -48,6 +48,7 @@ namespace clan
 	enum class PathFillMode;
 	class Brush;
 	class PathRasterRange;
+	class PathMaskBuffer;
 
 	class PathScanlineEdge
 	{
@@ -76,12 +77,6 @@ namespace clan
 				edges[pos] = temp;
 			}
 		}
-	};
-
-	class PathMaskBuffer
-	{
-	public:
-		// To do: move mask position tracking into here
 	};
 
 	class PathInstanceBuffer
@@ -130,6 +125,56 @@ namespace clan
 		image = 3
 	};
 
+	namespace PathConstants
+	{
+		static const int antialias_level = 2;
+		static const int mask_block_size = 16;
+		static const int scanline_block_size = mask_block_size * antialias_level;
+		static const int mask_texture_size = RenderBatchBuffer::r8_size;
+		static const int max_blocks = (mask_texture_size / mask_block_size) * (mask_texture_size / mask_block_size);
+		static const int instance_buffer_width = RenderBatchBuffer::rgba32f_width;   // In rgbaf blocks
+		static const int instance_buffer_height = RenderBatchBuffer::rgba32f_height; // In rgbaf blocks
+	};
+
+	class PathRasterRange
+	{
+	public:
+		void begin(const PathScanline *scanline, PathFillMode mode);
+		void next();
+
+		bool found = false;
+		int x0;
+		int x1;
+
+	private:
+		const PathScanline *scanline = 0;
+		PathFillMode mode;
+		size_t i = 0;
+		int nonzero_rule = 0;
+	};
+
+	class PathMaskBuffer
+	{
+	public:
+		void reset();
+		void begin_row(PathScanline *scanlines, PathFillMode mode, unsigned char *mask_buffer_data, int mask_buffer_pitch);
+		bool fill_block(int xpos);
+
+		int block_index = 0;
+		int next_block = 0;
+
+	private:
+		bool is_full_block(int xpos) const;
+
+		PathRasterRange range[PathConstants::scanline_block_size];
+
+		unsigned char *mask_buffer_data = 0;
+		int mask_buffer_pitch = 0;
+
+		bool found_filled_block = false;
+		int filled_block_index = 0;
+	};
+
 	class PathFillRenderer : public PathRenderer
 	{
 	public:
@@ -144,15 +189,7 @@ namespace clan
 		void fill(Canvas &canvas, PathFillMode mode, const Brush &brush, const Mat4f &transform);
 		void flush(GraphicContext &gc);
 
-		static const int antialias_level = 2;
-		static const int mask_block_size = 16;
-		static const int scanline_block_size = mask_block_size * antialias_level;
-		static const int mask_texture_size = RenderBatchBuffer::r8_size;
-		static const int max_blocks = (mask_texture_size / mask_block_size) * (mask_texture_size / mask_block_size);
-		static const int instance_buffer_width = RenderBatchBuffer::rgba32f_width;	// In rgbaf blocks
-		static const int instance_buffer_height = RenderBatchBuffer::rgba32f_height;	// In rgbaf blocks
-
-		const float rcp_mask_texture_size = 1.0f / (float)mask_texture_size;
+		const float rcp_mask_texture_size = 1.0f / (float)PathConstants::mask_texture_size;
 
 	private:
 		void insert_sorted(PathScanline &scanline, const PathScanlineEdge &edge);
@@ -178,10 +215,8 @@ namespace clan
 
 		PathInstanceBuffer instances;
 		PathVertexBuffer vertices;
+		PathMaskBuffer mask_blocks;
 
-		int next_block = 0;
-		bool found_filled_block = false;
-		int filled_block_index = 0;
 		int current_instance_offset = 0;
 
 		RenderBatchBuffer *batch_buffer;
@@ -193,22 +228,5 @@ namespace clan
 		Texture2D instance_texture;
 		PrimitivesArray prim_array[RenderBatchBuffer::num_vertex_buffers];
 		BlendState blend_state;
-	};
-
-	class PathRasterRange
-	{
-	public:
-		void begin(const PathScanline *scanline, PathFillMode mode);
-		void next();
-
-		bool found = false;
-		int x0;
-		int x1;
-
-	private:
-		const PathScanline *scanline = 0;
-		PathFillMode mode;
-		size_t i = 0;
-		int nonzero_rule = 0;
 	};
 }

@@ -34,6 +34,8 @@
 #include "API/Display/ImageProviders/png_provider.h"
 #include <algorithm>
 
+using namespace clan::PathConstants;
+
 namespace clan
 {
 	PathFillRenderer::PathFillRenderer(GraphicContext &gc, RenderBatchBuffer *batch_buffer) : batch_buffer(batch_buffer)
@@ -138,12 +140,8 @@ namespace clan
 
 		Rectf mask_extent = sort_and_find_extents(canvas_width, canvas_height);
 	
-		found_filled_block = false;
-
 		unsigned char *mask_buffer_data = mask_buffer.get_data_uint8();
 		int mask_buffer_pitch = mask_buffer.get_pitch();
-
-		PathRasterRange range[scanline_block_size];
 
 		int start_y = first_scanline / scanline_block_size * scanline_block_size;
 		int end_y = (last_scanline + scanline_block_size - 1) / scanline_block_size * scanline_block_size;
@@ -152,142 +150,22 @@ namespace clan
 		{
 			auto &scanline = scanlines[y];
 
-			for (unsigned int cnt = 0; cnt < scanline_block_size; cnt++)
-			{
-				range[cnt].begin(&scanlines[y + cnt], mode);
-			}
+			mask_blocks.begin_row(&scanlines[y], mode, mask_buffer_data, mask_buffer_pitch);
 
 			for (int xpos = mask_extent.left; xpos < mask_extent.right; xpos += scanline_block_size)
 			{
-				if (vertices.is_full() || next_block == max_blocks)
+				if (vertices.is_full() || mask_blocks.next_block == max_blocks)
 				{
 					flush(canvas);
 					initialise_buffers(canvas);
 					mask_buffer_data = mask_buffer.get_data_uint8();
 					mask_buffer_pitch = mask_buffer.get_pitch();
-					found_filled_block = false;
 					current_instance_offset = instances.push(canvas, brush, transform);
 				}
 
-				int block_x = (next_block * mask_block_size) % mask_texture_size;
-				int block_y = ((next_block * mask_block_size) / mask_texture_size)* mask_block_size;
-
-				// Identify filled blocks
-				bool full_block = true;
-				for (unsigned int filled_cnt = 0; filled_cnt < scanline_block_size; filled_cnt++)
+				if (mask_blocks.fill_block(xpos))
 				{
-					if (!range[filled_cnt].found)
-					{
-						full_block = false;
-						break;
-					}
-					if ((range[filled_cnt].x0 > xpos) || (range[filled_cnt].x1 < (xpos + scanline_block_size)))
-					{
-						full_block = false;
-						break;
-					}
-				}
-				if (full_block)
-				{
-					if (!found_filled_block)
-					{
-						found_filled_block = true;
-						filled_block_index = next_block;
-					}
-					else
-					{
-						vertices.push(xpos / antialias_level, y / antialias_level, current_instance_offset, filled_block_index);
-						continue;
-					}
-				}
-
-				bool empty_block = true;
-				for (unsigned int cnt = 0; cnt < scanline_block_size; cnt++)
-				{
-					unsigned char *line = mask_buffer_data + mask_buffer_pitch * (block_y + cnt / antialias_level) + block_x;
-					if (range[cnt].found)
-					{
-						empty_block = false;
-					}
-
-#ifdef __SSE2__
-
-					__m128i pixels[mask_block_size / 16];
-
-					for (int sse_block = 0; sse_block < mask_block_size / 16; sse_block++)
-						pixels[sse_block] = _mm_loadu_si128((const __m128i*)(&line[16 * sse_block]));
-
-					while (range[cnt].found)
-					{
-						int x0 = range[cnt].x0;
-						if (x0 >= xpos + scanline_block_size)
-							break;
-						int x1 = range[cnt].x1;
-
-						x0 = max(x0, xpos);
-						x1 = min(x1, xpos + scanline_block_size);
-
-						if (x0 >= x1)	// Done segment
-						{
-							range[cnt].next();
-						}
-						else
-						{
-							for (int sse_block = 0; sse_block < mask_block_size / 16; sse_block++)
-							{
-								for (int alias_cnt = 0; alias_cnt < (antialias_level); alias_cnt++)
-								{
-									__m128i start = _mm_set1_epi8((x0 + alias_cnt - xpos) / antialias_level - 16 * sse_block);
-									__m128i end = _mm_set1_epi8((x1 + alias_cnt - xpos) / antialias_level - 16 * sse_block);
-									__m128i x = _mm_set_epi8(15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0);
-
-									__m128i left = _mm_cmplt_epi8(x, start);
-									__m128i right = _mm_cmplt_epi8(x, end);
-									__m128i mask = _mm_andnot_si128(left, right);
-									__m128i add_value = _mm_set1_epi8(256 / (antialias_level*antialias_level));
-
-									pixels[sse_block] = _mm_adds_epu8(pixels[sse_block], _mm_and_si128(mask, add_value));
-								}
-							}
-
-							range[cnt].x0 = x1;	// For next time
-						}
-					}
-
-					for (int sse_block = 0; sse_block < mask_block_size / 16; sse_block++)
-						_mm_storeu_si128((__m128i*)(&line[16 * sse_block]), pixels[sse_block]);
-
-#else
-					while (range[cnt].found)
-					{
-						int x0 = range[cnt].x0;
-						if (x0 >= xpos + scanline_block_size)
-							break;
-						int x1 = range[cnt].x1;
-
-						x0 = max(x0, xpos);
-						x1 = min(x1, xpos + scanline_block_size);
-
-						if (x0 >= x1)	// Done segment
-						{
-							range[cnt].next();
-						}
-						else
-						{
-							for (int x = x0 - xpos; x < x1 - xpos; x++)
-							{
-								int pixel = line[x / antialias_level];
-								pixel = min(pixel + (256 / (antialias_level*antialias_level)), 255);
-								line[x / antialias_level] = pixel;
-							}
-							range[cnt].x0 = x1;	// For next time
-						}
-					}
-#endif
-				}
-				if (!empty_block)
-				{
-					vertices.push(xpos / antialias_level, y / antialias_level, current_instance_offset, next_block++);
+					vertices.push(xpos / antialias_level, y / antialias_level, current_instance_offset, mask_blocks.block_index);
 				}
 			}
 		}
@@ -328,7 +206,7 @@ namespace clan
 
 	void PathFillRenderer::flush(GraphicContext &gc)
 	{
-		if (instances.get_position() == 0 && vertices.get_position() == 0 && next_block == 0) // Nothing to flush
+		if (mask_blocks.next_block == 0) // Nothing to flush
 			return;
 
 		// To do: fix that we lock in one file and unlocks in another (too ugly way of doing it)
@@ -346,7 +224,7 @@ namespace clan
 
 		gpu_vertices.upload_data(gc, 0, vertices.get_vertices(), vertices.get_position());
 
-		int block_y = (((next_block-1) * mask_block_size) / mask_texture_size)* mask_block_size;
+		int block_y = (((mask_blocks.next_block-1) * mask_block_size) / mask_texture_size)* mask_block_size;
 		mask_texture.set_subimage(gc, 0, 0, mask_buffer, Rect(Point(0, 0), Size(mask_texture_size, block_y + mask_block_size)));
 
 		instance_texture.set_subimage(gc, 0, 0, instance_buffer, Rect(Point(0, 0), Size(instance_buffer_width, (instances.get_position() + instance_buffer_width - 1) / instance_buffer_width)));
@@ -377,7 +255,7 @@ namespace clan
 		instance_texture = Texture2D();
 
 		batch_buffer->set_transfer_r8_used(mask_buffer_id, block_y + mask_block_size);
-		next_block = 0;
+		mask_blocks.reset();
 	}
 
 	void PathFillRenderer::initialise_buffers(Canvas &canvas)
@@ -445,9 +323,152 @@ namespace clan
 
 	/////////////////////////////////////////////////////////////////////////
 
-	//void PathMaskBuffer::foo()
-	//{
-	//}
+	void PathMaskBuffer::reset()
+	{
+		found_filled_block = false;
+		filled_block_index = 0;
+		block_index = 0;
+		next_block = 0;
+	}
+
+	void PathMaskBuffer::begin_row(PathScanline *scanlines, PathFillMode mode, unsigned char *new_mask_buffer_data, int new_mask_buffer_pitch)
+	{
+		mask_buffer_data = new_mask_buffer_data;
+		mask_buffer_pitch = new_mask_buffer_pitch;
+
+		for (unsigned int cnt = 0; cnt < scanline_block_size; cnt++)
+		{
+			range[cnt].begin(&scanlines[cnt], mode);
+		}
+	}
+
+	bool PathMaskBuffer::is_full_block(int xpos) const
+	{
+		for (unsigned int filled_cnt = 0; filled_cnt < scanline_block_size; filled_cnt++)
+		{
+			if (!range[filled_cnt].found)
+			{
+				return false;
+			}
+			if ((range[filled_cnt].x0 > xpos) || (range[filled_cnt].x1 < (xpos + scanline_block_size - 1)))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+	bool PathMaskBuffer::fill_block(int xpos)
+	{
+		int block_x = (next_block * mask_block_size) % mask_texture_size;
+		int block_y = ((next_block * mask_block_size) / mask_texture_size)* mask_block_size;
+
+		if (is_full_block(xpos))
+		{
+			if (!found_filled_block)
+			{
+				for (unsigned int cnt = 0; cnt < mask_block_size; cnt++)
+				{
+					unsigned char *line = mask_buffer_data + mask_buffer_pitch * (block_y + cnt) + block_x;
+					for (unsigned int i = 0; i < mask_block_size; i++)
+						line[i] = 255;
+				}
+
+				found_filled_block = true;
+				filled_block_index = next_block++;
+			}
+
+			block_index = filled_block_index;
+			return true;
+		}
+
+		bool empty_block = true;
+		for (unsigned int cnt = 0; cnt < scanline_block_size; cnt++)
+		{
+			unsigned char *line = mask_buffer_data + mask_buffer_pitch * (block_y + cnt / antialias_level) + block_x;
+
+#ifdef __SSE2__
+
+			__m128i pixels[mask_block_size / 16];
+
+			for (int sse_block = 0; sse_block < mask_block_size / 16; sse_block++)
+				pixels[sse_block] = _mm_loadu_si128((const __m128i*)(&line[16 * sse_block]));
+
+			while (range[cnt].found)
+			{
+				int x0 = range[cnt].x0;
+				if (x0 >= xpos + scanline_block_size)
+					break;
+				int x1 = range[cnt].x1;
+
+				x0 = max(x0, xpos);
+				x1 = min(x1, xpos + scanline_block_size);
+
+				if (x0 >= x1)	// Done segment
+				{
+					range[cnt].next();
+				}
+				else
+				{
+					empty_block = false;
+
+					for (int sse_block = 0; sse_block < mask_block_size / 16; sse_block++)
+					{
+						for (int alias_cnt = 0; alias_cnt < (antialias_level); alias_cnt++)
+						{
+							__m128i start = _mm_set1_epi8((x0 + alias_cnt - xpos) / antialias_level - 16 * sse_block);
+							__m128i end = _mm_set1_epi8((x1 + alias_cnt - xpos) / antialias_level - 16 * sse_block);
+							__m128i x = _mm_set_epi8(15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0);
+
+							__m128i left = _mm_cmplt_epi8(x, start);
+							__m128i right = _mm_cmplt_epi8(x, end);
+							__m128i mask = _mm_andnot_si128(left, right);
+							__m128i add_value = _mm_set1_epi8(256 / (antialias_level*antialias_level));
+
+							pixels[sse_block] = _mm_adds_epu8(pixels[sse_block], _mm_and_si128(mask, add_value));
+						}
+					}
+
+					range[cnt].x0 = x1;	// For next time
+				}
+			}
+
+			for (int sse_block = 0; sse_block < mask_block_size / 16; sse_block++)
+				_mm_storeu_si128((__m128i*)(&line[16 * sse_block]), pixels[sse_block]);
+
+#else
+			while (range[cnt].found)
+			{
+				int x0 = range[cnt].x0;
+				if (x0 >= xpos + scanline_block_size)
+					break;
+				int x1 = range[cnt].x1;
+
+				x0 = max(x0, xpos);
+				x1 = min(x1, xpos + scanline_block_size);
+
+				if (x0 >= x1)	// Done segment
+				{
+					range[cnt].next();
+				}
+				else
+				{
+					for (int x = x0 - xpos; x < x1 - xpos; x++)
+					{
+						int pixel = line[x / antialias_level];
+						pixel = min(pixel + (256 / (antialias_level*antialias_level)), 255);
+						line[x / antialias_level] = pixel;
+					}
+					range[cnt].x0 = x1;	// For next time
+				}
+			}
+#endif
+		}
+
+		if (!empty_block)
+			block_index = next_block++;
+		return !empty_block;
+	}
 
 	/////////////////////////////////////////////////////////////////////////
 
