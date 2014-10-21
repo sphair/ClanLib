@@ -299,8 +299,8 @@ const std::string::value_type *cl_glsl15_fragment_path = R"shaderend(
 
 	void radial_gradient_fill()
 	{
-		vec2 grad_center = brush_data1.xy;
-		float rcp_grad_length = brush_data2.x; // 1/grad_radius
+		vec2 grad_center = vary_data.xy;
+		float rcp_grad_length = brush_data2.x;
 		int stop_start = int(brush_data2.y);
 		int stop_end = int(brush_data2.z);
 
