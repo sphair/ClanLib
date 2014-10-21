@@ -342,43 +342,7 @@ namespace clan
 		}
 	}
 
-	bool PathMaskBuffer::is_full_block(int xpos) const
-	{
-		for (unsigned int filled_cnt = 0; filled_cnt < scanline_block_size; filled_cnt++)
-		{
-			if (!range[filled_cnt].found)
-			{
-				return false;
-			}
-			if ((range[filled_cnt].x0 > xpos) || (range[filled_cnt].x1 < (xpos + scanline_block_size - 1)))
-			{
-				return false;
-			}
-		}
-		return true;
-	}
-
-	void PathMaskBuffer::fill_full_block()
-	{
-		if (!found_filled_block)
-		{
-			int block_x = (next_block * mask_block_size) % mask_texture_size;
-			int block_y = ((next_block * mask_block_size) / mask_texture_size)* mask_block_size;
-
-			for (unsigned int cnt = 0; cnt < mask_block_size; cnt++)
-			{
-				unsigned char *line = mask_buffer_data + mask_buffer_pitch * (block_y + cnt) + block_x;
-				for (unsigned int i = 0; i < mask_block_size; i++)
-					line[i] = 255;
-			}
-
-			found_filled_block = true;
-			filled_block_index = next_block++;
-		}
-
-		block_index = filled_block_index;
-	}
-
+#ifdef __SSE2__
 	bool PathMaskBuffer::fill_block(int xpos)
 	{
 		if (is_full_block(xpos))
@@ -394,8 +358,6 @@ namespace clan
 		for (unsigned int cnt = 0; cnt < scanline_block_size; cnt++)
 		{
 			unsigned char *line = mask_buffer_data + mask_buffer_pitch * (block_y + cnt / antialias_level) + block_x;
-
-#ifdef __SSE2__
 
 			__m128i pixels[mask_block_size / 16];
 
@@ -443,8 +405,28 @@ namespace clan
 
 			for (int sse_block = 0; sse_block < mask_block_size / 16; sse_block++)
 				_mm_storeu_si128((__m128i*)(&line[16 * sse_block]), pixels[sse_block]);
+		}
 
+		if (!empty_block)
+			block_index = next_block++;
+		return !empty_block;
+	}
 #else
+	bool PathMaskBuffer::fill_block(int xpos)
+	{
+		if (is_full_block(xpos))
+		{
+			fill_full_block();
+			return true;
+		}
+
+		int block_x = (next_block * mask_block_size) % mask_texture_size;
+		int block_y = ((next_block * mask_block_size) / mask_texture_size)* mask_block_size;
+
+		bool empty_block = true;
+		for (unsigned int cnt = 0; cnt < scanline_block_size; cnt++)
+		{
+			unsigned char *line = mask_buffer_data + mask_buffer_pitch * (block_y + cnt / antialias_level) + block_x;
 			while (range[cnt].found)
 			{
 				int x0 = range[cnt].x0;
@@ -461,6 +443,7 @@ namespace clan
 				}
 				else
 				{
+					empty_block = false;
 					for (int x = x0 - xpos; x < x1 - xpos; x++)
 					{
 						int pixel = line[x / antialias_level];
@@ -470,12 +453,49 @@ namespace clan
 					range[cnt].x0 = x1;	// For next time
 				}
 			}
-#endif
 		}
 
 		if (!empty_block)
 			block_index = next_block++;
 		return !empty_block;
+	}
+#endif
+
+	bool PathMaskBuffer::is_full_block(int xpos) const
+	{
+		for (unsigned int filled_cnt = 0; filled_cnt < scanline_block_size; filled_cnt++)
+		{
+			if (!range[filled_cnt].found)
+			{
+				return false;
+			}
+			if ((range[filled_cnt].x0 > xpos) || (range[filled_cnt].x1 < (xpos + scanline_block_size - 1)))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+	void PathMaskBuffer::fill_full_block()
+	{
+		if (!found_filled_block)
+		{
+			int block_x = (next_block * mask_block_size) % mask_texture_size;
+			int block_y = ((next_block * mask_block_size) / mask_texture_size)* mask_block_size;
+
+			for (unsigned int cnt = 0; cnt < mask_block_size; cnt++)
+			{
+				unsigned char *line = mask_buffer_data + mask_buffer_pitch * (block_y + cnt) + block_x;
+				for (unsigned int i = 0; i < mask_block_size; i++)
+					line[i] = 255;
+			}
+
+			found_filled_block = true;
+			filled_block_index = next_block++;
+		}
+
+		block_index = filled_block_index;
 	}
 
 	/////////////////////////////////////////////////////////////////////////
