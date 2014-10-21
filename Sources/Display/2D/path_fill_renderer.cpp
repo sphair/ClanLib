@@ -358,29 +358,37 @@ namespace clan
 		return true;
 	}
 
-	bool PathMaskBuffer::fill_block(int xpos)
+	void PathMaskBuffer::fill_full_block()
 	{
-		int block_x = (next_block * mask_block_size) % mask_texture_size;
-		int block_y = ((next_block * mask_block_size) / mask_texture_size)* mask_block_size;
-
-		if (is_full_block(xpos))
+		if (!found_filled_block)
 		{
-			if (!found_filled_block)
-			{
-				for (unsigned int cnt = 0; cnt < mask_block_size; cnt++)
-				{
-					unsigned char *line = mask_buffer_data + mask_buffer_pitch * (block_y + cnt) + block_x;
-					for (unsigned int i = 0; i < mask_block_size; i++)
-						line[i] = 255;
-				}
+			int block_x = (next_block * mask_block_size) % mask_texture_size;
+			int block_y = ((next_block * mask_block_size) / mask_texture_size)* mask_block_size;
 
-				found_filled_block = true;
-				filled_block_index = next_block++;
+			for (unsigned int cnt = 0; cnt < mask_block_size; cnt++)
+			{
+				unsigned char *line = mask_buffer_data + mask_buffer_pitch * (block_y + cnt) + block_x;
+				for (unsigned int i = 0; i < mask_block_size; i++)
+					line[i] = 255;
 			}
 
-			block_index = filled_block_index;
+			found_filled_block = true;
+			filled_block_index = next_block++;
+		}
+
+		block_index = filled_block_index;
+	}
+
+	bool PathMaskBuffer::fill_block(int xpos)
+	{
+		if (is_full_block(xpos))
+		{
+			fill_full_block();
 			return true;
 		}
+
+		int block_x = (next_block * mask_block_size) % mask_texture_size;
+		int block_y = ((next_block * mask_block_size) / mask_texture_size)* mask_block_size;
 
 		bool empty_block = true;
 		for (unsigned int cnt = 0; cnt < scanline_block_size; cnt++)

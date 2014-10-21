@@ -165,6 +165,7 @@ namespace clan
 
 	private:
 		bool is_full_block(int xpos) const;
+		void fill_full_block();
 
 		PathRasterRange range[PathConstants::scanline_block_size];
 
