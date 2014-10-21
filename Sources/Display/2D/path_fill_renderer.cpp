@@ -713,6 +713,9 @@ namespace clan
 			buffer[position++] = brush_data1;
 			buffer[position++] = brush_data2;
 
+			inv_transform.transpose();
+			inv_brush_transform.transpose();
+
 			buffer[position++] = Vec4f(inv_transform.matrix[0], inv_transform.matrix[1], inv_transform.matrix[2], inv_transform.matrix[3]);
 			buffer[position++] = Vec4f(inv_transform.matrix[4], inv_transform.matrix[5], inv_transform.matrix[6], inv_transform.matrix[7]);
 			buffer[position++] = Vec4f(inv_transform.matrix[8], inv_transform.matrix[9], inv_transform.matrix[10], inv_transform.matrix[11]);
