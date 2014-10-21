@@ -143,7 +143,7 @@ namespace clan
 		void flush(GraphicContext &gc);
 
 		static const int antialias_level = 2;
-		static const int mask_block_size = 32;
+		static const int mask_block_size = 16;
 		static const int scanline_block_size = mask_block_size * antialias_level;
 		static const int mask_texture_size = RenderBatchBuffer::r8_size;
 		static const int max_blocks = (mask_texture_size / mask_block_size) * (mask_texture_size / mask_block_size);

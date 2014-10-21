@@ -235,25 +235,19 @@ namespace clan
 						{
 							for (int sse_block = 0; sse_block < mask_block_size / 16; sse_block++)
 							{
-								__m128i start = _mm_set1_epi8(x0 - xpos - 16 * sse_block * antialias_level);
-								__m128i end = _mm_set1_epi8(x1 - xpos - 16 * sse_block * antialias_level);
+								for (int alias_cnt = 0; alias_cnt < (antialias_level); alias_cnt++)
+								{
+									__m128i start = _mm_set1_epi8((x0 + alias_cnt - xpos) / antialias_level - 16 * sse_block);
+									__m128i end = _mm_set1_epi8((x1 + alias_cnt - xpos) / antialias_level - 16 * sse_block);
+									__m128i x = _mm_set_epi8(15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0);
 
-								__m128i x = _mm_set_epi8(
-									15 * antialias_level, 14 * antialias_level,
-									13 * antialias_level, 12 * antialias_level,
-									11 * antialias_level, 10 * antialias_level,
-									9 * antialias_level, 8 * antialias_level,
-									7 * antialias_level, 6 * antialias_level,
-									5 * antialias_level, 4 * antialias_level,
-									3 * antialias_level, 2 * antialias_level,
-									1 * antialias_level, 0);
-								__m128i left = _mm_cmplt_epi8(x, start);
-								__m128i right = _mm_cmplt_epi8(x, end);
-								__m128i mask = _mm_andnot_si128(left, right);
+									__m128i left = _mm_cmplt_epi8(x, start);
+									__m128i right = _mm_cmplt_epi8(x, end);
+									__m128i mask = _mm_andnot_si128(left, right);
+									__m128i add_value = _mm_set1_epi8(256 / (antialias_level*antialias_level));
 
-								__m128i add_value = _mm_set1_epi8(256 / antialias_level);
-
-								pixels[sse_block] = _mm_adds_epu8(pixels[sse_block], _mm_and_si128(mask, add_value));
+									pixels[sse_block] = _mm_adds_epu8(pixels[sse_block], _mm_and_si128(mask, add_value));
+								}
 							}
 
 							range[cnt].x0 = x1;	// For next time
