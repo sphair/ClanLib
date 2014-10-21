@@ -355,13 +355,15 @@ namespace clan
 		gc.set_program_object(program_path);
 		gc.set_texture(0, mask_texture);
 		gc.set_texture(1, instance_texture);
+
+		Texture2D current_texture = instances.get_texture();
+
 		if (!current_texture.is_null())
 			gc.set_texture(2, current_texture);
 		gc.draw_primitives(type_triangles, vertices.get_position(), prim_array[gpu_index]);
 		if (!current_texture.is_null())
 		{
 			gc.reset_texture(2);
-			current_texture = Texture2D();
 		}
 		gc.reset_texture(1);
 		gc.reset_texture(0);
@@ -704,10 +706,10 @@ namespace clan
 
 			Rectf src = subtexture.get_geometry();
 
-			Vec4f brush_data1;
-			Vec4f brush_data2;
+			Vec4f brush_data1(src.left, src.top, src.right, src.bottom);
+			Vec4f brush_data2(current_texture.get_width(), current_texture.get_height(), 0, 0);
+
 			brush_data1.x = (float)PathShaderDrawMode::image;
-			brush_data2 = Vec4f(src.left, src.top, src.right, src.bottom);
 			buffer[position++] = brush_data1;
 			buffer[position++] = brush_data2;
 

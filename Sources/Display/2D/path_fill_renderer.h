@@ -94,6 +94,8 @@ namespace clan
 		Vec4f *get_buffer() const { return buffer; }
 		int get_position() const { return position; }
 
+		Texture2D get_texture() const { return current_texture; }
+
 	private:
 		static Pointf transform_point(Pointf point, const Mat3f &brush_transform, const Mat4f &fill_transform);
 
@@ -191,7 +193,6 @@ namespace clan
 		Texture2D instance_texture;
 		PrimitivesArray prim_array[RenderBatchBuffer::num_vertex_buffers];
 		BlendState blend_state;
-		Texture2D current_texture;
 	};
 
 	class PathRasterRange
