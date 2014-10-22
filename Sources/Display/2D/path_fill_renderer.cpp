@@ -140,9 +140,6 @@ namespace clan
 
 		Rectf mask_extent = sort_and_find_extents(canvas_width, canvas_height);
 	
-		unsigned char *mask_buffer_data = mask_buffer.get_data_uint8();
-		int mask_buffer_pitch = mask_buffer.get_pitch();
-
 		int start_y = first_scanline / scanline_block_size * scanline_block_size;
 		int end_y = (last_scanline + scanline_block_size - 1) / scanline_block_size * scanline_block_size;
 
@@ -150,7 +147,7 @@ namespace clan
 		{
 			auto &scanline = scanlines[y];
 
-			mask_blocks.begin_row(&scanlines[y], mode, mask_buffer_data, mask_buffer_pitch);
+			mask_blocks.begin_row(&scanlines[y], mode);
 
 			for (int xpos = mask_extent.left; xpos < mask_extent.right; xpos += scanline_block_size)
 			{
@@ -158,8 +155,6 @@ namespace clan
 				{
 					flush(canvas);
 					initialise_buffers(canvas);
-					mask_buffer_data = mask_buffer.get_data_uint8();
-					mask_buffer_pitch = mask_buffer.get_pitch();
 					current_instance_offset = instances.push(canvas, brush, transform);
 				}
 
@@ -255,7 +250,6 @@ namespace clan
 		instance_texture = Texture2D();
 
 		batch_buffer->set_transfer_r8_used(mask_buffer_id, block_y + mask_block_size);
-		mask_blocks.reset();
 	}
 
 	void PathFillRenderer::initialise_buffers(Canvas &canvas)
@@ -270,6 +264,8 @@ namespace clan
 
 			instances.reset(gc, instance_buffer.get_data<Vec4f>(), instance_buffer_width * instance_buffer_height);
 			vertices.reset((Vec4i *)batch_buffer->buffer, max_vertices);
+
+			mask_blocks.reset(mask_buffer.get_data_uint8(), mask_buffer.get_pitch());
 		}
 	}
 	/////////////////////////////////////////////////////////////////////////////
@@ -323,18 +319,18 @@ namespace clan
 
 	/////////////////////////////////////////////////////////////////////////
 
-	void PathMaskBuffer::reset()
+	void PathMaskBuffer::reset(unsigned char *new_mask_buffer_data, int new_mask_buffer_pitch)
 	{
 		found_filled_block = false;
 		filled_block_index = 0;
 		block_index = 0;
 		next_block = 0;
-	}
-
-	void PathMaskBuffer::begin_row(PathScanline *scanlines, PathFillMode mode, unsigned char *new_mask_buffer_data, int new_mask_buffer_pitch)
-	{
 		mask_buffer_data = new_mask_buffer_data;
 		mask_buffer_pitch = new_mask_buffer_pitch;
+	}
+
+	void PathMaskBuffer::begin_row(PathScanline *scanlines, PathFillMode mode)
+	{
 
 		for (unsigned int cnt = 0; cnt < scanline_block_size; cnt++)
 		{

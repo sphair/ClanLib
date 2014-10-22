@@ -156,8 +156,8 @@ namespace clan
 	class PathMaskBuffer
 	{
 	public:
-		void reset();
-		void begin_row(PathScanline *scanlines, PathFillMode mode, unsigned char *mask_buffer_data, int mask_buffer_pitch);
+		void reset(unsigned char *mask_buffer_data, int mask_buffer_pitch);
+		void begin_row(PathScanline *scanlines, PathFillMode mode);
 		bool fill_block(int xpos);
 
 		int block_index = 0;
