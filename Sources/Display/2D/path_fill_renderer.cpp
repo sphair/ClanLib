@@ -247,8 +247,6 @@ namespace clan
 		mask_texture = Texture2D();
 		instance_buffer = TransferTexture();
 		instance_texture = Texture2D();
-
-		batch_buffer->set_transfer_r8_used(mask_buffer_id, block_y + mask_block_size);
 	}
 
 	void PathFillRenderer::initialise_buffers(Canvas &canvas)
@@ -330,7 +328,6 @@ namespace clan
 
 	void PathMaskBuffer::begin_row(PathScanline *scanlines, PathFillMode mode)
 	{
-
 		for (unsigned int cnt = 0; cnt < scanline_block_size; cnt++)
 		{
 			range[cnt].begin(&scanlines[cnt], mode);
@@ -346,18 +343,15 @@ namespace clan
 			return true;
 		}
 
-		int block_x = (next_block * mask_block_size) % mask_texture_size;
-		int block_y = ((next_block * mask_block_size) / mask_texture_size)* mask_block_size;
+		const int block_size = mask_block_size / 16 * mask_block_size;
+		__m128i block[block_size];
 
-		bool empty_block = true;
+		for (int sse_block = 0; sse_block < block_size; sse_block++)
+			block[sse_block] = _mm_setzero_si128();
+
 		for (unsigned int cnt = 0; cnt < scanline_block_size; cnt++)
 		{
-			unsigned char *line = mask_buffer_data + mask_buffer_pitch * (block_y + cnt / antialias_level) + block_x;
-
-			__m128i pixels[mask_block_size / 16];
-
-			for (int sse_block = 0; sse_block < mask_block_size / 16; sse_block++)
-				pixels[sse_block] = _mm_loadu_si128((const __m128i*)(&line[16 * sse_block]));
+			__m128i *line = &block[mask_block_size / 16 * (cnt / antialias_level)];
 
 			while (range[cnt].found)
 			{
@@ -375,8 +369,6 @@ namespace clan
 				}
 				else
 				{
-					empty_block = false;
-
 					for (int sse_block = 0; sse_block < mask_block_size / 16; sse_block++)
 					{
 						for (int alias_cnt = 0; alias_cnt < (antialias_level); alias_cnt++)
@@ -388,23 +380,38 @@ namespace clan
 							__m128i left = _mm_cmplt_epi8(x, start);
 							__m128i right = _mm_cmplt_epi8(x, end);
 							__m128i mask = _mm_andnot_si128(left, right);
-							__m128i add_value = _mm_set1_epi8(256 / (antialias_level*antialias_level));
+							__m128i add_value = _mm_and_si128(mask, _mm_set1_epi8(256 / (antialias_level*antialias_level)));
 
-							pixels[sse_block] = _mm_adds_epu8(pixels[sse_block], _mm_and_si128(mask, add_value));
+							line[sse_block] = _mm_adds_epu8(line[sse_block], add_value);
 						}
 					}
 
 					range[cnt].x0 = x1;	// For next time
 				}
 			}
+		}
+
+		__m128i empty_status = _mm_setzero_si128();
+		for (int sse_block = 0; sse_block < block_size; sse_block++)
+			empty_status = _mm_or_si128(empty_status, block[sse_block]);
+
+		bool empty_block = _mm_movemask_epi8(_mm_cmpeq_epi32(empty_status, _mm_setzero_si128())) == 0xffff;
+		if (empty_block) return false;
+
+		int block_x = (next_block * mask_block_size) % mask_texture_size;
+		int block_y = ((next_block * mask_block_size) / mask_texture_size)* mask_block_size;
+
+		for (unsigned int cnt = 0; cnt < mask_block_size; cnt++)
+		{
+			__m128i *pixels = &block[mask_block_size / 16 * cnt];
+			unsigned char *line = mask_buffer_data + mask_buffer_pitch * (block_y + cnt) + block_x;
 
 			for (int sse_block = 0; sse_block < mask_block_size / 16; sse_block++)
 				_mm_storeu_si128((__m128i*)(&line[16 * sse_block]), pixels[sse_block]);
 		}
 
-		if (!empty_block)
-			block_index = next_block++;
-		return !empty_block;
+		block_index = next_block++;
+		return true;
 	}
 #else
 	bool PathMaskBuffer::fill_block(int xpos)

@@ -51,7 +51,6 @@ public:
 
 	// Note, out_index should be saved to mark which scanlines have been written to (not zero)
 	TransferTexture get_transfer_r8(GraphicContext &gc, int &out_index, BufferAccess buffer_access);
-	void set_transfer_r8_used(int index, int scanlines){ dirty_scanlines_r8[index] = scanlines; }
 	static const int num_vertex_buffers = 4;
 	enum { vertex_buffer_size = 1024*1024 };
 	char buffer[vertex_buffer_size];
@@ -78,7 +77,6 @@ private:
 	int current_rgba32f_transfer = 0;
 	TransferTexture transfers_r8[num_r8_buffers];
 	int current_r8_transfer = 0;
-	int dirty_scanlines_r8[num_r8_buffers];
 
 
 };

@@ -110,15 +110,11 @@ TransferTexture RenderBatchBuffer::get_transfer_r8(GraphicContext &gc, int &out_
 	if (transfers_r8[current_r8_transfer].is_null())
 	{
 		transfers_r8[current_r8_transfer] = TransferTexture(gc, r8_size, r8_size, data_to_gpu, tf_r8);
-		dirty_scanlines_r8[current_r8_transfer] = transfers_r8[current_r8_transfer].get_height();
 	}
 	out_index = current_r8_transfer;
 
 	TransferTexture tex = transfers_r8[current_r8_transfer];
 	tex.lock(gc, buffer_access);
-	if (dirty_scanlines_r8[current_r8_transfer])
-		memset(tex.get_data(), 0, dirty_scanlines_r8[current_r8_transfer] * tex.get_pitch());
-	dirty_scanlines_r8[current_r8_transfer] = 0;
 
 	return tex;
 
