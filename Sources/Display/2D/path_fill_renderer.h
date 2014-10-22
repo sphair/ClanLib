@@ -94,6 +94,11 @@ namespace clan
 	private:
 		static Pointf transform_point(Pointf point, const Mat3f &brush_transform, const Mat4f &fill_transform);
 
+		void store_solid(Canvas &canvas, const Brush &brush, const Mat4f &transform);
+		void store_linear(Canvas &canvas, const Brush &brush, const Mat4f &transform);
+		void store_radial(Canvas &canvas, const Brush &brush, const Mat4f &transform);
+		void store_image(Canvas &canvas, const Brush &brush, const Mat4f &transform);
+
 		Vec4f *buffer = 0;
 		int max_entries = 0;
 		int position = 0;

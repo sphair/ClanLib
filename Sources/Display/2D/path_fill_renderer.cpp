@@ -523,101 +523,121 @@ namespace clan
 		if (is_full(brush)) return 0;
 
 		int instance_pos = position;
+		switch (brush.type)
+		{
+		case BrushType::solid:
+			store_solid(canvas, brush, transform);
+			break;
+		case BrushType::linear:
+			store_linear(canvas, brush, transform);
+			break;
+		case BrushType::radial:
+			store_radial(canvas, brush, transform);
+			break;
+		case BrushType::image:
+			store_image(canvas, brush, transform);
+			break;
+		default:
+			break;
+		}
+		return instance_pos;
+	}
+
+	void PathInstanceBuffer::store_linear(Canvas &canvas, const Brush &brush, const Mat4f &transform)
+	{
+		Pointf end_point = transform_point(brush.end_point, brush.transform, transform);
+		Pointf start_point = transform_point(brush.start_point, brush.transform, transform);
+		Pointf dir = end_point - start_point;
+		Pointf dir_normed = Pointf::normalize(dir);
 
 		int num_stops = brush.stops.size();
+		Vec4f brush_data1;
+		Vec4f brush_data2;
+		Vec4f brush_data3;
+		brush_data1.x = (float)PathShaderDrawMode::linear;
+		brush_data1.set_zw(dir_normed);
 
-		if (brush.type == BrushType::linear)
-		{
-			Pointf end_point = transform_point(brush.end_point, brush.transform, transform);
-			Pointf start_point = transform_point(brush.start_point, brush.transform, transform);
-			Pointf dir = end_point - start_point;
-			Pointf dir_normed = Pointf::normalize(dir);
+		brush_data2.x = 1.0f / dir.length();
+		brush_data2.y = position + 3;
+		brush_data2.z = position + 3 + num_stops * 2;
 
-			Vec4f brush_data1;
-			Vec4f brush_data2;
-			Vec4f brush_data3;
-			brush_data1.x = (float)PathShaderDrawMode::linear;
-			brush_data1.set_zw(dir_normed);
+		brush_data3.set_xy(start_point);
 
-			brush_data2.x = 1.0f / dir.length();
-			brush_data2.y = instance_pos + 3;
-			brush_data2.z = instance_pos + 3 + num_stops * 2;
-
-			brush_data3.set_xy(start_point);
-
-			buffer[position++] = brush_data1;
-			buffer[position++] = brush_data2;
-			buffer[position++] = brush_data3;
-		}
-		else if (brush.type == BrushType::radial)
-		{
-			Pointf center_point = transform_point(brush.center_point, brush.transform, transform);
-			Pointf radius = transform_point(Pointf(brush.radius_x, brush.radius_y), brush.transform, transform) - transform_point(Pointf(), brush.transform, transform);
-
-			Vec4f brush_data1;
-			Vec4f brush_data2;
-			Vec4f brush_data3;
-			brush_data1.x = (float)PathShaderDrawMode::radial;
-			brush_data2.x = 1.0f / brush.radius_x;
-			brush_data2.y = instance_pos + 3;
-			brush_data2.z = instance_pos + 3 + num_stops * 2;
-
-			brush_data3.set_xy(center_point);
-
-			buffer[position++] = brush_data1;
-			buffer[position++] = brush_data2;
-			buffer[position++] = brush_data3;
-
-		}
-		else if (brush.type == BrushType::image)
-		{
-			Subtexture subtexture = brush.image.get_texture();
-			if (subtexture.is_null())
-				return 0;
-
-			current_texture = subtexture.get_texture();
-			if (current_texture.is_null())
-				throw Exception("BrushType::image used without a valid texture");
-
-			Mat3f inv_brush_transform = Mat3f::inverse(brush.transform);
-			Mat4f inv_transform = Mat4f::inverse(transform);
-
-			Rectf src = subtexture.get_geometry();
-
-			Vec4f brush_data1(src.left, src.top, src.right, src.bottom);
-			Vec4f brush_data2(current_texture.get_width(), current_texture.get_height(), 0, 0);
-
-			brush_data1.x = (float)PathShaderDrawMode::image;
-			buffer[position++] = brush_data1;
-			buffer[position++] = brush_data2;
-
-			Mat4f matrix = Mat4f(inv_brush_transform) * inv_transform;	//TODO: Is this the correct multication order
-			matrix.transpose();
-	
-			buffer[position++] = Vec4f(matrix.matrix[0], matrix.matrix[1], matrix.matrix[2], matrix.matrix[3]);
-			buffer[position++] = Vec4f(matrix.matrix[4], matrix.matrix[5], matrix.matrix[6], matrix.matrix[7]);
-			buffer[position++] = Vec4f(matrix.matrix[8], matrix.matrix[9], matrix.matrix[10], matrix.matrix[11]);
-			buffer[position++] = Vec4f(matrix.matrix[12], matrix.matrix[13], matrix.matrix[14], matrix.matrix[15]);
-		}
-		else
-		{
-			Vec4f brush_data1;
-			Vec4f brush_data2;
-			brush_data1.x = (float)PathShaderDrawMode::solid;
-			brush_data2 = brush.color;
-			buffer[position++] = brush_data1;
-			buffer[position++] = brush_data2;
-
-		}
-
-
+		buffer[position++] = brush_data1;
+		buffer[position++] = brush_data2;
+		buffer[position++] = brush_data3;
 		for (unsigned int cnt = 0; cnt < num_stops; cnt++)
 		{
 			buffer[position++] = brush.stops[cnt].color;
 			buffer[position++] = Vec4f(brush.stops[cnt].position, 0.0f, 0.0f, 0.0f);
 		}
+	}
 
-		return instance_pos;
+	void PathInstanceBuffer::store_radial(Canvas &canvas, const Brush &brush, const Mat4f &transform)
+	{
+		Pointf center_point = transform_point(brush.center_point, brush.transform, transform);
+		Pointf radius = transform_point(Pointf(brush.radius_x, brush.radius_y), brush.transform, transform) - transform_point(Pointf(), brush.transform, transform);
+
+		int num_stops = brush.stops.size();
+		Vec4f brush_data1;
+		Vec4f brush_data2;
+		Vec4f brush_data3;
+		brush_data1.x = (float)PathShaderDrawMode::radial;
+		brush_data2.x = 1.0f / brush.radius_x;
+		brush_data2.y = position + 3;
+		brush_data2.z = position + 3 + num_stops * 2;
+
+		brush_data3.set_xy(center_point);
+
+		buffer[position++] = brush_data1;
+		buffer[position++] = brush_data2;
+		buffer[position++] = brush_data3;
+		for (unsigned int cnt = 0; cnt < num_stops; cnt++)
+		{
+			buffer[position++] = brush.stops[cnt].color;
+			buffer[position++] = Vec4f(brush.stops[cnt].position, 0.0f, 0.0f, 0.0f);
+		}
+	}
+
+	void PathInstanceBuffer::store_image(Canvas &canvas, const Brush &brush, const Mat4f &transform)
+	{
+		Subtexture subtexture = brush.image.get_texture();
+		if (subtexture.is_null())
+			return;
+
+		current_texture = subtexture.get_texture();
+		if (current_texture.is_null())
+			throw Exception("BrushType::image used without a valid texture");
+
+		Mat3f inv_brush_transform = Mat3f::inverse(brush.transform);
+		Mat4f inv_transform = Mat4f::inverse(transform);
+
+		Rectf src = subtexture.get_geometry();
+
+		Vec4f brush_data1(src.left, src.top, src.right, src.bottom);
+		Vec4f brush_data2(current_texture.get_width(), current_texture.get_height(), 0, 0);
+
+		brush_data1.x = (float)PathShaderDrawMode::image;
+		buffer[position++] = brush_data1;
+		buffer[position++] = brush_data2;
+
+		Mat4f matrix = Mat4f(inv_brush_transform) * inv_transform;	//TODO: Is this the correct multication order
+		matrix.transpose();
+	
+		buffer[position++] = Vec4f(matrix.matrix[0], matrix.matrix[1], matrix.matrix[2], matrix.matrix[3]);
+		buffer[position++] = Vec4f(matrix.matrix[4], matrix.matrix[5], matrix.matrix[6], matrix.matrix[7]);
+		buffer[position++] = Vec4f(matrix.matrix[8], matrix.matrix[9], matrix.matrix[10], matrix.matrix[11]);
+		buffer[position++] = Vec4f(matrix.matrix[12], matrix.matrix[13], matrix.matrix[14], matrix.matrix[15]);
+	}
+
+	void PathInstanceBuffer::store_solid(Canvas &canvas, const Brush &brush, const Mat4f &transform)
+	{
+		Vec4f brush_data1;
+		Vec4f brush_data2;
+		brush_data1.x = (float)PathShaderDrawMode::solid;
+		brush_data2 = brush.color;
+		buffer[position++] = brush_data1;
+		buffer[position++] = brush_data2;
 	}
 
 	inline Pointf PathInstanceBuffer::transform_point(Pointf point, const Mat3f &brush_transform, const Mat4f &transform)
