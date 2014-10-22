@@ -128,17 +128,18 @@ namespace clan
 		if (scanlines.empty()) return;
 
 		initialise_buffers(canvas);
-		if (instances.is_full(brush))
+		current_instance_offset = instances.push(canvas, brush, transform);
+		if (!current_instance_offset)
 		{
 			flush(canvas);
 			initialise_buffers(canvas);
+			current_instance_offset = instances.push(canvas, brush, transform);
 		}
-		current_instance_offset = instances.push(canvas, brush, transform);
 
 		float canvas_width = (float)canvas.get_width();
 		float canvas_height = (float)canvas.get_height();
 
-		Rectf mask_extent = sort_and_find_extents(canvas_width, canvas_height);
+		Rectf mask_extent = find_extents(canvas_width, canvas_height);
 	
 		int start_y = first_scanline / scanline_block_size * scanline_block_size;
 		int end_y = (last_scanline + scanline_block_size - 1) / scanline_block_size * scanline_block_size;
@@ -167,7 +168,7 @@ namespace clan
 		//PNGProvider::save(mask_buffer, "c:\\development\\test.png");
 	}
 
-	Rectf PathFillRenderer::sort_and_find_extents(float canvas_width, float canvas_height)
+	Rectf PathFillRenderer::find_extents(float canvas_width, float canvas_height)
 	{
 		Rectf mask_extent(canvas_width*static_cast<float>(antialias_level), canvas_height * static_cast<float>(antialias_level), 0.0f, 0.0f);		// Dummy initial values
 
@@ -177,8 +178,6 @@ namespace clan
 			auto &scanline = scanlines[y];
 			if (scanline.edges.empty())
 				continue;
-
-			//std::sort(scanline.edges.begin(), scanline.edges.end(), [](const PathScanlineEdge &a, const PathScanlineEdge &b) { return a.x < b.x; });
 
 			// Calculate mask extent
 			if (y < mask_extent.top)
@@ -503,54 +502,57 @@ namespace clan
 		current_texture = Texture2D();
 
 		buffer[0] = Vec4f(gc.get_width(), gc.get_height(), 0, 0);
-		position = 1;
+		end_position = 1;
 	}
 
-	bool PathInstanceBuffer::is_full(const Brush &brush) const
-	{
-		if (brush.type == BrushType::image) // Currently only support a single path texture
-		{
-			Subtexture subtexture = brush.image.get_texture();
-			if (!subtexture.is_null() && !current_texture.is_null() && subtexture.get_texture() != current_texture)
-				return true;
-		}
-
-		return position + brush.stops.size() * 2 + 2 > max_entries;
-	}
-
+	// Return 0 when buffer is full or requires flushing, else it is the instance offset
 	int PathInstanceBuffer::push(Canvas &canvas, const Brush &brush, const Mat4f &transform)
 	{
-		if (is_full(brush)) return 0;
-
-		int instance_pos = position;
+		int instance_position;
 		switch (brush.type)
 		{
 		case BrushType::solid:
-			store_solid(canvas, brush, transform);
+			instance_position = store_solid(canvas, brush, transform);
 			break;
 		case BrushType::linear:
-			store_linear(canvas, brush, transform);
+			instance_position = store_linear(canvas, brush, transform);
 			break;
 		case BrushType::radial:
-			store_radial(canvas, brush, transform);
+			instance_position = store_radial(canvas, brush, transform);
 			break;
 		case BrushType::image:
-			store_image(canvas, brush, transform);
+			instance_position = store_image(canvas, brush, transform);
 			break;
 		default:
+			throw Exception("Unknown brush");
 			break;
 		}
-		return instance_pos;
+		return instance_position;
 	}
 
-	void PathInstanceBuffer::store_linear(Canvas &canvas, const Brush &brush, const Mat4f &transform)
+	int PathInstanceBuffer::next_position(int size)
 	{
+		if (end_position + size > max_entries)
+			return 0;		// Buffer exceeded, must flush
+
+		int instance_position = end_position;
+		end_position += size;
+		return instance_position;
+	}
+
+	int PathInstanceBuffer::store_linear(Canvas &canvas, const Brush &brush, const Mat4f &transform)
+	{
+		int num_stops = brush.stops.size();
+		int instance_position = next_position(num_stops * 2 + 3);
+		if (!instance_position)
+			return 0;
+		int position = instance_position;
+
 		Pointf end_point = transform_point(brush.end_point, brush.transform, transform);
 		Pointf start_point = transform_point(brush.start_point, brush.transform, transform);
 		Pointf dir = end_point - start_point;
 		Pointf dir_normed = Pointf::normalize(dir);
 
-		int num_stops = brush.stops.size();
 		Vec4f brush_data1;
 		Vec4f brush_data2;
 		Vec4f brush_data3;
@@ -571,14 +573,20 @@ namespace clan
 			buffer[position++] = brush.stops[cnt].color;
 			buffer[position++] = Vec4f(brush.stops[cnt].position, 0.0f, 0.0f, 0.0f);
 		}
+		return instance_position;
 	}
 
-	void PathInstanceBuffer::store_radial(Canvas &canvas, const Brush &brush, const Mat4f &transform)
+	int PathInstanceBuffer::store_radial(Canvas &canvas, const Brush &brush, const Mat4f &transform)
 	{
+		int num_stops = brush.stops.size();
+		int instance_position = next_position(num_stops * 2 + 3);
+		if (!instance_position)
+			return 0;
+		int position = instance_position;
+
 		Pointf center_point = transform_point(brush.center_point, brush.transform, transform);
 		Pointf radius = transform_point(Pointf(brush.radius_x, brush.radius_y), brush.transform, transform) - transform_point(Pointf(), brush.transform, transform);
 
-		int num_stops = brush.stops.size();
 		Vec4f brush_data1;
 		Vec4f brush_data2;
 		Vec4f brush_data3;
@@ -597,13 +605,23 @@ namespace clan
 			buffer[position++] = brush.stops[cnt].color;
 			buffer[position++] = Vec4f(brush.stops[cnt].position, 0.0f, 0.0f, 0.0f);
 		}
+		return instance_position;
 	}
 
-	void PathInstanceBuffer::store_image(Canvas &canvas, const Brush &brush, const Mat4f &transform)
+	int PathInstanceBuffer::store_image(Canvas &canvas, const Brush &brush, const Mat4f &transform)
 	{
 		Subtexture subtexture = brush.image.get_texture();
 		if (subtexture.is_null())
-			return;
+			throw Exception("BrushType::image used without a valid texture");
+
+		if (!current_texture.is_null() && subtexture.get_texture() != current_texture)
+			return 0;		// Change in texture, must flush now
+
+		int instance_position = next_position(6);
+		if (!instance_position)
+			return 0;
+		int position = instance_position;
+
 
 		current_texture = subtexture.get_texture();
 		if (current_texture.is_null())
@@ -628,16 +646,23 @@ namespace clan
 		buffer[position++] = Vec4f(matrix.matrix[4], matrix.matrix[5], matrix.matrix[6], matrix.matrix[7]);
 		buffer[position++] = Vec4f(matrix.matrix[8], matrix.matrix[9], matrix.matrix[10], matrix.matrix[11]);
 		buffer[position++] = Vec4f(matrix.matrix[12], matrix.matrix[13], matrix.matrix[14], matrix.matrix[15]);
+		return instance_position;
 	}
 
-	void PathInstanceBuffer::store_solid(Canvas &canvas, const Brush &brush, const Mat4f &transform)
+	int PathInstanceBuffer::store_solid(Canvas &canvas, const Brush &brush, const Mat4f &transform)
 	{
+		int instance_position = next_position(2);
+		if (!instance_position)
+			return 0;
+		int position = instance_position;
+
 		Vec4f brush_data1;
 		Vec4f brush_data2;
 		brush_data1.x = (float)PathShaderDrawMode::solid;
 		brush_data2 = brush.color;
 		buffer[position++] = brush_data1;
 		buffer[position++] = brush_data2;
+		return instance_position;
 	}
 
 	inline Pointf PathInstanceBuffer::transform_point(Pointf point, const Mat3f &brush_transform, const Mat4f &transform)

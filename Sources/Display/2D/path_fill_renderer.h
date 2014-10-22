@@ -83,25 +83,26 @@ namespace clan
 	{
 	public:
 		void reset(GraphicContext &gc, Vec4f *buffer, int max_entries);
-		bool is_full(const Brush &brush) const;
 		int push(Canvas &canvas, const Brush &brush, const Mat4f &transform);
 
 		Vec4f *get_buffer() const { return buffer; }
-		int get_position() const { return position; }
+		int get_position() const { return end_position; }
 
 		Texture2D get_texture() const { return current_texture; }
 
 	private:
 		static Pointf transform_point(Pointf point, const Mat3f &brush_transform, const Mat4f &fill_transform);
 
-		void store_solid(Canvas &canvas, const Brush &brush, const Mat4f &transform);
-		void store_linear(Canvas &canvas, const Brush &brush, const Mat4f &transform);
-		void store_radial(Canvas &canvas, const Brush &brush, const Mat4f &transform);
-		void store_image(Canvas &canvas, const Brush &brush, const Mat4f &transform);
+		int next_position(int size);
+
+		int store_solid(Canvas &canvas, const Brush &brush, const Mat4f &transform);
+		int store_linear(Canvas &canvas, const Brush &brush, const Mat4f &transform);
+		int store_radial(Canvas &canvas, const Brush &brush, const Mat4f &transform);
+		int store_image(Canvas &canvas, const Brush &brush, const Mat4f &transform);
 
 		Vec4f *buffer = 0;
 		int max_entries = 0;
-		int position = 0;
+		int end_position = 0;		// The next free position
 
 		Texture2D current_texture;
 	};
@@ -201,7 +202,7 @@ namespace clan
 		void insert_sorted(PathScanline &scanline, const PathScanlineEdge &edge);
 
 		void initialise_buffers(Canvas &canvas);
-		Rectf sort_and_find_extents(float canvas_width, float canvas_height);
+		Rectf find_extents(float canvas_width, float canvas_height);
 
 		int first_scanline = 0;
 		int last_scanline = 0;
