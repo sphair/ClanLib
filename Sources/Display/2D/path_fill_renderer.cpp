@@ -32,6 +32,7 @@
 #include "API/Display/Render/texture_1d.h"
 #include "API/Display/2D/subtexture.h"
 #include "API/Display/ImageProviders/png_provider.h"
+#include "API/Core/System/system.h"
 #include <algorithm>
 
 using namespace clan::PathConstants;
@@ -203,6 +204,8 @@ namespace clan
 		if (mask_blocks.next_block == 0) // Nothing to flush
 			return;
 
+		mask_blocks.flush();
+
 		// To do: fix that we lock in one file and unlocks in another (too ugly way of doing it)
 		mask_buffer.unlock();
 		instance_buffer.unlock();
@@ -316,6 +319,20 @@ namespace clan
 
 	/////////////////////////////////////////////////////////////////////////
 
+	PathMaskBuffer::PathMaskBuffer()
+	{
+#ifdef __SSE2__
+		mask_row_block_data = (unsigned char*)System::aligned_alloc(mask_texture_size * mask_block_size);
+#endif
+	}
+
+	PathMaskBuffer::~PathMaskBuffer()
+	{
+#ifdef __SSE2__
+		System::aligned_free(mask_row_block_data);
+#endif
+	}
+
 	void PathMaskBuffer::reset(unsigned char *new_mask_buffer_data, int new_mask_buffer_pitch)
 	{
 		found_filled_block = false;
@@ -324,6 +341,26 @@ namespace clan
 		next_block = 0;
 		mask_buffer_data = new_mask_buffer_data;
 		mask_buffer_pitch = new_mask_buffer_pitch;
+	}
+
+	void PathMaskBuffer::flush()
+	{
+#ifdef __SSE2__
+		int block_x = (next_block * mask_block_size) % mask_texture_size;
+		if (block_x != 0)
+		{
+			int block_y = ((next_block * mask_block_size) / mask_texture_size) * mask_block_size;
+			for (int y = 0; y < mask_block_size; y++)
+			{
+				__m128i *input = (__m128i*)(mask_row_block_data + mask_texture_size * y);
+				__m128i *output = (__m128i*)(mask_buffer_data + mask_buffer_pitch * (block_y + y));
+				for (int sse_x = 0; sse_x < mask_texture_size / 16; sse_x++)
+				{
+					_mm_stream_si128(&output[sse_x], _mm_load_si128(&input[sse_x]));
+				}
+			}
+		}
+#endif
 	}
 
 	void PathMaskBuffer::begin_row(PathScanline *scanlines, PathFillMode mode)
@@ -403,16 +440,42 @@ namespace clan
 
 		for (unsigned int cnt = 0; cnt < mask_block_size; cnt++)
 		{
-			__m128i *pixels = &block[mask_block_size / 16 * cnt];
-			unsigned char *line = mask_buffer_data + mask_buffer_pitch * (block_y + cnt) + block_x;
+			__m128i *input = &block[mask_block_size / 16 * cnt];
+			__m128i *output = (__m128i*)(mask_row_block_data + cnt * mask_texture_size + block_x);
 
 			for (int sse_block = 0; sse_block < mask_block_size / 16; sse_block++)
-				_mm_storeu_si128((__m128i*)(&line[16 * sse_block]), pixels[sse_block]);
+				_mm_store_si128(&output[sse_block], input[sse_block]);
 		}
 
+		if ((next_block + 1) % (mask_texture_size / mask_block_size) == 0) flush();
 		block_index = next_block++;
 		return true;
 	}
+
+	void PathMaskBuffer::fill_full_block()
+	{
+		if (!found_filled_block)
+		{
+			int block_x = (next_block * mask_block_size) % mask_texture_size;
+
+			for (unsigned int cnt = 0; cnt < mask_block_size; cnt++)
+			{
+				__m128i *line = (__m128i*)(mask_row_block_data + mask_texture_size * cnt + block_x);
+				for (int sse_block = 0; sse_block < mask_block_size / 16; sse_block++)
+				{
+					_mm_store_si128(&line[sse_block], _mm_set1_epi32(-1));
+				}
+			}
+
+			if ((next_block + 1) % mask_texture_size == 0) flush();
+
+			found_filled_block = true;
+			filled_block_index = next_block++;
+		}
+
+		block_index = filled_block_index;
+	}
+
 #else
 	bool PathMaskBuffer::fill_block(int xpos)
 	{
@@ -461,23 +524,6 @@ namespace clan
 			block_index = next_block++;
 		return !empty_block;
 	}
-#endif
-
-	bool PathMaskBuffer::is_full_block(int xpos) const
-	{
-		for (unsigned int filled_cnt = 0; filled_cnt < scanline_block_size; filled_cnt++)
-		{
-			if (!range[filled_cnt].found)
-			{
-				return false;
-			}
-			if ((range[filled_cnt].x0 > xpos) || (range[filled_cnt].x1 < (xpos + scanline_block_size - 1)))
-			{
-				return false;
-			}
-		}
-		return true;
-	}
 
 	void PathMaskBuffer::fill_full_block()
 	{
@@ -498,6 +544,23 @@ namespace clan
 		}
 
 		block_index = filled_block_index;
+	}
+#endif
+
+	bool PathMaskBuffer::is_full_block(int xpos) const
+	{
+		for (unsigned int filled_cnt = 0; filled_cnt < scanline_block_size; filled_cnt++)
+		{
+			if (!range[filled_cnt].found)
+			{
+				return false;
+			}
+			if ((range[filled_cnt].x0 > xpos) || (range[filled_cnt].x1 < (xpos + scanline_block_size - 1)))
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/////////////////////////////////////////////////////////////////////////

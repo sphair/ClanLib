@@ -162,7 +162,14 @@ namespace clan
 	class PathMaskBuffer
 	{
 	public:
+		PathMaskBuffer();
+		~PathMaskBuffer();
+		PathMaskBuffer(const PathMaskBuffer &) = delete;
+		PathMaskBuffer &operator=(const PathMaskBuffer&) = delete;
+
 		void reset(unsigned char *mask_buffer_data, int mask_buffer_pitch);
+		void flush();
+
 		void begin_row(PathScanline *scanlines, PathFillMode mode);
 		bool fill_block(int xpos);
 
@@ -177,6 +184,8 @@ namespace clan
 
 		unsigned char *mask_buffer_data = 0;
 		int mask_buffer_pitch = 0;
+
+		unsigned char *mask_row_block_data = 0;
 
 		bool found_filled_block = false;
 		int filled_block_index = 0;
