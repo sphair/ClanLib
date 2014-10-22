@@ -532,6 +532,15 @@ namespace clan
 
 	int PathInstanceBuffer::next_position(int size)
 	{
+		if (size > instance_buffer_width)
+			throw Exception("Brush too complex");		// If brush will not exist on a single row
+
+		// Ensure entire brush will fit in a horizontal row (to assist the pixel shader)
+		if (((end_position % instance_buffer_width) + size) > instance_buffer_width)
+		{
+			end_position = ((end_position / instance_buffer_width) + 1) * instance_buffer_width;	// Next line
+		}
+
 		if (end_position + size > max_entries)
 			return 0;		// Buffer exceeded, must flush
 
