@@ -47,10 +47,9 @@ public:
 	VertexArrayBuffer get_vertex_buffer(GraphicContext &gc, int &out_index);
 	Texture2D get_texture_rgba32f(GraphicContext &gc);
 	Texture2D get_texture_r8(GraphicContext &gc);
-	TransferTexture get_transfer_rgba32f(GraphicContext &gc, BufferAccess buffer_access);
+	TransferTexture get_transfer_rgba32f(GraphicContext &gc);
 
-	// Note, out_index should be saved to mark which scanlines have been written to (not zero)
-	TransferTexture get_transfer_r8(GraphicContext &gc, int &out_index, BufferAccess buffer_access);
+	TransferTexture get_transfer_r8(GraphicContext &gc, int &out_index);
 	static const int num_vertex_buffers = 4;
 	enum { vertex_buffer_size = 1024*1024 };
 	char buffer[vertex_buffer_size];
