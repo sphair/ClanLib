@@ -258,9 +258,9 @@ namespace clan
 		{
 			GraphicContext gc = canvas.get_gc();
 			mask_texture = batch_buffer->get_texture_r8(gc);
-			mask_buffer = batch_buffer->get_transfer_r8(gc, mask_buffer_id, access_read_write);
+			mask_buffer = batch_buffer->get_transfer_r8(gc, mask_buffer_id, access_write_discard);
 			instance_texture = batch_buffer->get_texture_rgba32f(gc);
-			instance_buffer = batch_buffer->get_transfer_rgba32f(gc, access_write_only);
+			instance_buffer = batch_buffer->get_transfer_rgba32f(gc, access_write_discard);
 
 			instances.reset(gc, instance_buffer.get_data<Vec4f>(), instance_buffer_width * instance_buffer_height);
 			vertices.reset((Vec4i *)batch_buffer->buffer, max_vertices);
