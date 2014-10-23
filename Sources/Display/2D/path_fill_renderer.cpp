@@ -337,7 +337,11 @@ namespace clan
 
 	bool PathMaskBuffer::is_full() const
 	{
+#ifdef __SSE2__
+		return ((next_block+1) % (mask_texture_size / mask_block_size) == 0);
+#else
 		return next_block == max_blocks;
+#endif
 	}
 
 	void PathMaskBuffer::reset(unsigned char *new_mask_buffer_data, int new_mask_buffer_pitch)
@@ -454,7 +458,6 @@ namespace clan
 				_mm_store_si128(&output[sse_block], input[sse_block]);
 		}
 
-		if ((next_block + 1) % (mask_texture_size / mask_block_size) == 0) flush();
 		block_index = next_block++;
 		return true;
 	}
@@ -473,10 +476,7 @@ namespace clan
 					_mm_store_si128(&line[sse_block], _mm_set1_epi32(-1));
 				}
 			}
-
-			if ((next_block + 1) % (mask_texture_size / mask_block_size) == 0)
-				flush();
-
+	
 			found_filled_block = true;
 			filled_block_index = next_block++;
 		}
