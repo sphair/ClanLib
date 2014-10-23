@@ -31,7 +31,6 @@
 #include "path_fill_renderer.h"
 #include "API/Display/Render/texture_1d.h"
 #include "API/Display/2D/subtexture.h"
-#include "API/Display/ImageProviders/png_provider.h"
 #include "API/Core/System/system.h"
 #include <algorithm>
 
@@ -149,11 +148,10 @@ namespace clan
 
 		for (size_t y = start_y; y < end_y; y += scanline_block_size)
 		{
-			auto &scanline = scanlines[y];
-
 			mask_blocks.begin_row(&scanlines[y], mode);
+			Extent extent = find_extent(&scanlines[y], canvas_width);
 
-			for (int xpos = mask_extent.left; xpos < mask_extent.right; xpos += scanline_block_size)
+			for (int xpos = extent.left; xpos < extent.right; xpos += scanline_block_size)
 			{
 				if (vertices.is_full() || mask_blocks.is_full())
 				{
@@ -168,7 +166,24 @@ namespace clan
 				}
 			}
 		}
-		//PNGProvider::save(mask_buffer, "c:\\development\\test.png");
+	}
+
+	PathFillRenderer::Extent PathFillRenderer::find_extent(const PathScanline *scanline, int canvas_width)
+	{
+		// Find scanline extents
+		Extent extent;
+		for (unsigned int cnt = 0; cnt < scanline_block_size; cnt++, scanline++)
+		{
+			if (scanline->edges.empty())
+				continue;
+
+			if (scanline->edges[0].x < extent.left)
+				extent.left = scanline->edges[0].x;
+
+			if (scanline->edges[scanline->edges.size() - 1].x > extent.right)
+				extent.right = scanline->edges[scanline->edges.size() - 1].x;
+		}
+		return extent;
 	}
 
 	Rectf PathFillRenderer::find_extents(float canvas_width, float canvas_height)

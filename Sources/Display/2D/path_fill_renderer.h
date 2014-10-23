@@ -215,6 +215,15 @@ namespace clan
 		void initialise_buffers(Canvas &canvas);
 		Rectf find_extents(float canvas_width, float canvas_height);
 
+		struct Extent
+		{
+			Extent() : left(INT_MAX), right(0){}
+			int left;
+			int right;
+		};
+
+		Extent find_extent(const PathScanline *scanline, int canvas_width);
+
 		int first_scanline = 0;
 		int last_scanline = 0;
 
