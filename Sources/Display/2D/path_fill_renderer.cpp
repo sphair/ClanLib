@@ -37,6 +37,8 @@
 
 using namespace clan::PathConstants;
 
+//#undef __SSE2__
+
 namespace clan
 {
 	PathFillRenderer::PathFillRenderer(GraphicContext &gc, RenderBatchBuffer *batch_buffer) : batch_buffer(batch_buffer)
@@ -496,6 +498,12 @@ namespace clan
 
 		int block_x = (next_block * mask_block_size) % mask_texture_size;
 		int block_y = ((next_block * mask_block_size) / mask_texture_size)* mask_block_size;
+
+		for (unsigned int cnt = 0; cnt < mask_block_size; cnt++)
+		{
+			unsigned char *line = mask_buffer_data + mask_buffer_pitch * (block_y + cnt) + block_x;
+			memset(line, 0, mask_block_size);
+		}
 
 		bool empty_block = true;
 		for (unsigned int cnt = 0; cnt < scanline_block_size; cnt++)
