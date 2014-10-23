@@ -469,7 +469,8 @@ namespace clan
 				}
 			}
 
-			if ((next_block + 1) % mask_texture_size == 0) flush();
+			if ((next_block + 1) % (mask_texture_size / mask_block_size) == 0)
+				flush();
 
 			found_filled_block = true;
 			filled_block_index = next_block++;
