@@ -170,7 +170,7 @@ namespace clan
 		bool is_full() const;
 
 		void reset(unsigned char *mask_buffer_data, int mask_buffer_pitch);
-		void flush();
+		void flush_block();
 
 		void begin_row(PathScanline *scanlines, PathFillMode mode);
 		bool fill_block(int xpos);

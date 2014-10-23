@@ -204,7 +204,7 @@ namespace clan
 		if (mask_blocks.next_block == 0) // Nothing to flush
 			return;
 
-		mask_blocks.flush();
+		mask_blocks.flush_block();
 
 		mask_buffer.unlock();
 		instance_buffer.unlock();
@@ -337,11 +337,7 @@ namespace clan
 
 	bool PathMaskBuffer::is_full() const
 	{
-#ifdef __SSE2__
-		return ((next_block+1) % (mask_texture_size / mask_block_size) == 0);
-#else
 		return next_block == max_blocks;
-#endif
 	}
 
 	void PathMaskBuffer::reset(unsigned char *new_mask_buffer_data, int new_mask_buffer_pitch)
@@ -354,7 +350,7 @@ namespace clan
 		mask_buffer_pitch = new_mask_buffer_pitch;
 	}
 
-	void PathMaskBuffer::flush()
+	void PathMaskBuffer::flush_block()
 	{
 #ifdef __SSE2__
 		int block_x = (next_block * mask_block_size) % mask_texture_size;
@@ -458,6 +454,9 @@ namespace clan
 				_mm_store_si128(&output[sse_block], input[sse_block]);
 		}
 
+		if (((next_block + 1) % (mask_texture_size / mask_block_size) == 0))
+			flush_block();
+
 		block_index = next_block++;
 		return true;
 	}
@@ -476,7 +475,9 @@ namespace clan
 					_mm_store_si128(&line[sse_block], _mm_set1_epi32(-1));
 				}
 			}
-	
+			if (((next_block + 1) % (mask_texture_size / mask_block_size) == 0))
+				flush_block();
+
 			found_filled_block = true;
 			filled_block_index = next_block++;
 		}
