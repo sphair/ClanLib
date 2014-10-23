@@ -134,7 +134,7 @@ namespace clan
 	namespace PathConstants
 	{
 		static const int antialias_level = 2;
-		static const int mask_block_size = 16;
+		static const int mask_block_size = 16;		// *** If changing this, remember to modify the path shaders ***
 		static const int scanline_block_size = mask_block_size * antialias_level;
 		static const int mask_texture_size = RenderBatchBuffer::r8_size;
 		static const int max_blocks = (mask_texture_size / mask_block_size) * (mask_texture_size / mask_block_size);

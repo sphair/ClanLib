@@ -54,7 +54,8 @@ public:
 	enum { vertex_buffer_size = 1024*1024 };
 	char buffer[vertex_buffer_size];
 
-	static const int rgba32f_width = 512;
+	
+	static const int rgba32f_width = 512;	// *** If changing this, remember to modify the path shaders ***
 	static const int rgba32f_height = 4;
 	static const int r8_size = 1024;
 	static const int num_rgba32f_buffers = 2;

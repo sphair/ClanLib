@@ -224,38 +224,40 @@ const std::string::value_type *cl_glsl15_vertex_path = R"shaderend(
 			out vec4 vary_data;
 			out vec2 mask_position;
 			uniform sampler2D instance_data;
+			flat out ivec2 instance_offset;
 
 			void main()
 			{
+				const int mask_block_size = 16;
+				const int instance_width = 512;
+
 				vec4 canvas_data = texelFetch(instance_data, ivec2(0, 0), 0);
-				const int block_size = 16;
 				ivec2 size = ivec2( (Vertex.z % 2), (Vertex.z / 2) );
-				gl_Position = vec4(((Vertex.x+size.x * block_size)*2.0 / canvas_data.x) - 1.0, ((Vertex.y+size.y * block_size)*-2.0 / canvas_data.y) + 1.0, 0.0, 1.0);
+				gl_Position = vec4(((Vertex.x+size.x * mask_block_size)*2.0 / canvas_data.x) - 1.0, ((Vertex.y+size.y * mask_block_size)*-2.0 / canvas_data.y) + 1.0, 0.0, 1.0);
 				int mask_offset = Vertex.w % 65536;
 				mask_position = vec2((mask_offset * 16) % 1024, ((mask_offset*16) / 1024) * 16);
-				mask_position += size * block_size;
+				mask_position += size * mask_block_size;
 				mask_position /= 1024.0;
-				int instance_offset = Vertex.w / 65536;
+				int instance_block = Vertex.w / 65536;
+				instance_offset = ivec2(instance_block % instance_width, instance_block / instance_width);
 
-				// TODO ... instance_offset could exist on multiple lines
-
-				brush_data1 = texelFetch(instance_data, ivec2(instance_offset, 0), 0);
-				brush_data2 = texelFetch(instance_data, ivec2(instance_offset + 1, 0), 0);
-				vec4 brush_data3 = texelFetch(instance_data, ivec2(instance_offset + 2, 0), 0);
+				brush_data1 = texelFetch(instance_data, instance_offset, 0);
+				brush_data2 = texelFetch(instance_data, ivec2(instance_offset.x + 1, instance_offset.y), 0);
+				vec4 brush_data3 = texelFetch(instance_data, ivec2(instance_offset.x + 2, instance_offset.y), 0);
 
 				// Calculate for linear and radial gradient
-				vary_data.x = Vertex.x + size.x * block_size - brush_data3.x;
-				vary_data.y = Vertex.y + size.y * block_size - brush_data3.y;
+				vary_data.x = Vertex.x + size.x * mask_block_size - brush_data3.x;
+				vary_data.y = Vertex.y + size.y * mask_block_size - brush_data3.y;
 
 				// Calculate for texture coords
-				vary_data.z = (Vertex.x+size.x * block_size);
-				vary_data.w = (Vertex.y+size.y * block_size);
+				vary_data.z = (Vertex.x+size.x * mask_block_size);
+				vary_data.w = (Vertex.y+size.y * mask_block_size);
 
 				mat4 inv_transform = mat4(
-						texelFetch(instance_data, ivec2(instance_offset + 2, 0), 0), 
-						texelFetch(instance_data, ivec2(instance_offset + 3, 0), 0),
-						texelFetch(instance_data, ivec2(instance_offset + 4, 0), 0),
-						texelFetch(instance_data, ivec2(instance_offset + 5, 0), 0));
+						texelFetch(instance_data, ivec2(instance_offset.x + 2, instance_offset.y), 0), 
+						texelFetch(instance_data, ivec2(instance_offset.x + 3, instance_offset.y), 0),
+						texelFetch(instance_data, ivec2(instance_offset.x + 4, instance_offset.y), 0),
+						texelFetch(instance_data, ivec2(instance_offset.x + 5, instance_offset.y), 0));
 				vary_data.zw = (vec4(vary_data.zw, 0, 1) * inv_transform).xy;
 
 				vary_data.z = (vary_data.z + brush_data1.x) / brush_data2.x;
@@ -271,6 +273,7 @@ const std::string::value_type *cl_glsl15_fragment_path = R"shaderend(
 	flat in vec4 brush_data2;
 	in vec4 vary_data;
 	out vec4 cl_FragColor;
+	flat in ivec2 instance_offset;
 
 	uniform sampler2D instance_data;
 	uniform sampler2D image_texture;
@@ -289,12 +292,12 @@ const std::string::value_type *cl_glsl15_fragment_path = R"shaderend(
 
 	vec4 gradient_color(int stop_start, int stop_end, float t)
 	{
-		vec4 color = texelFetch(instance_data, ivec2(stop_start, 0), 0);
-		float last_stop_pos = texelFetch(instance_data, ivec2(stop_start + 1, 0), 0).x;
+		vec4 color = texelFetch(instance_data, ivec2(instance_offset.x + stop_start, instance_offset.y), 0);
+		float last_stop_pos = texelFetch(instance_data, ivec2(instance_offset.x + stop_start + 1, instance_offset.y), 0).x;
 		for (int i = stop_start; i < stop_end; i+=2)
 		{
-			vec4 stop_color = texelFetch(instance_data, ivec2(i, 0), 0);
-			float stop_pos = texelFetch(instance_data, ivec2(i + 1, 0), 0).x;
+			vec4 stop_color = texelFetch(instance_data, ivec2(instance_offset.x + i, instance_offset.y), 0);
+			float stop_pos = texelFetch(instance_data, ivec2(instance_offset.x + i + 1, instance_offset.y), 0).x;
 			float tt = clamp((t - last_stop_pos)/(stop_pos - last_stop_pos), 0.0, 1.0);
 			color = mix(color, stop_color, tt);
 			last_stop_pos = stop_pos;

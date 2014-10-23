@@ -643,8 +643,8 @@ namespace clan
 		brush_data1.set_zw(dir_normed);
 
 		brush_data2.x = 1.0f / dir.length();
-		brush_data2.y = position + 3;
-		brush_data2.z = position + 3 + num_stops * 2;
+		brush_data2.y = 3;
+		brush_data2.z = 3 + num_stops * 2;
 
 		brush_data3.set_xy(start_point);
 
@@ -675,8 +675,8 @@ namespace clan
 		Vec4f brush_data3;
 		brush_data1.x = (float)PathShaderDrawMode::radial;
 		brush_data2.x = 1.0f / brush.radius_x;
-		brush_data2.y = position + 3;
-		brush_data2.z = position + 3 + num_stops * 2;
+		brush_data2.y = 3;
+		brush_data2.z = 3 + num_stops * 2;
 
 		brush_data3.set_xy(center_point);
 
