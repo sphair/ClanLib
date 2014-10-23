@@ -153,7 +153,7 @@ namespace clan
 
 			for (int xpos = mask_extent.left; xpos < mask_extent.right; xpos += scanline_block_size)
 			{
-				if (vertices.is_full() || mask_blocks.next_block == max_blocks)
+				if (vertices.is_full() || mask_blocks.is_full())
 				{
 					flush(canvas);
 					initialise_buffers(canvas);
@@ -333,6 +333,11 @@ namespace clan
 #ifdef __SSE2__
 		System::aligned_free(mask_row_block_data);
 #endif
+	}
+
+	bool PathMaskBuffer::is_full() const
+	{
+		return next_block == max_blocks;
 	}
 
 	void PathMaskBuffer::reset(unsigned char *new_mask_buffer_data, int new_mask_buffer_pitch)

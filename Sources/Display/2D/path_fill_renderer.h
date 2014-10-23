@@ -167,6 +167,8 @@ namespace clan
 		PathMaskBuffer(const PathMaskBuffer &) = delete;
 		PathMaskBuffer &operator=(const PathMaskBuffer&) = delete;
 
+		bool is_full() const;
+
 		void reset(unsigned char *mask_buffer_data, int mask_buffer_pitch);
 		void flush();
 
