@@ -138,18 +138,15 @@ namespace clan
 			current_instance_offset = instances.push(canvas, brush, transform);
 		}
 
-		float canvas_width = (float)canvas.get_width();
-		float canvas_height = (float)canvas.get_height();
+		int max_width = canvas.get_width() * antialias_level;;
 
-		Rectf mask_extent = find_extents(canvas_width, canvas_height);
-	
 		int start_y = first_scanline / scanline_block_size * scanline_block_size;
 		int end_y = (last_scanline + scanline_block_size - 1) / scanline_block_size * scanline_block_size;
 
 		for (size_t y = start_y; y < end_y; y += scanline_block_size)
 		{
 			mask_blocks.begin_row(&scanlines[y], mode);
-			Extent extent = find_extent(&scanlines[y], canvas_width);
+			Extent extent = find_extent(&scanlines[y], max_width);
 
 			for (int xpos = extent.left; xpos < extent.right; xpos += scanline_block_size)
 			{
@@ -168,7 +165,7 @@ namespace clan
 		}
 	}
 
-	PathFillRenderer::Extent PathFillRenderer::find_extent(const PathScanline *scanline, int canvas_width)
+	PathFillRenderer::Extent PathFillRenderer::find_extent(const PathScanline *scanline, int max_width)
 	{
 		// Find scanline extents
 		Extent extent;
@@ -183,37 +180,12 @@ namespace clan
 			if (scanline->edges[scanline->edges.size() - 1].x > extent.right)
 				extent.right = scanline->edges[scanline->edges.size() - 1].x;
 		}
+		if (extent.left < 0)
+			extent.left = 0;
+		if (extent.right > max_width)
+			extent.right = max_width;
+
 		return extent;
-	}
-
-	Rectf PathFillRenderer::find_extents(float canvas_width, float canvas_height)
-	{
-		Rectf mask_extent(canvas_width*static_cast<float>(antialias_level), canvas_height * static_cast<float>(antialias_level), 0.0f, 0.0f);		// Dummy initial values
-
-		// Precalculation to determine the extents
-		for (size_t y = first_scanline; y < last_scanline; y++)
-		{
-			auto &scanline = scanlines[y];
-			if (scanline.edges.empty())
-				continue;
-
-			// Calculate mask extent
-			if (y < mask_extent.top)
-				mask_extent.top = y;
-
-			if (y > mask_extent.bottom)
-				mask_extent.bottom = y;
-
-			if (scanline.edges[0].x < mask_extent.left)
-				mask_extent.left = scanline.edges[0].x;
-
-			if (scanline.edges[scanline.edges.size() - 1].x > mask_extent.right)
-				mask_extent.right = scanline.edges[scanline.edges.size() - 1].x;
-		}
-
-		mask_extent.clip(Sizef(canvas_width * antialias_level, canvas_height * antialias_level));
-
-		return mask_extent;
 	}
 
 	void PathFillRenderer::flush(GraphicContext &gc)

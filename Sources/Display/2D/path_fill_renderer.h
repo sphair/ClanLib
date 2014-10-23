@@ -213,7 +213,6 @@ namespace clan
 		void insert_sorted(PathScanline &scanline, const PathScanlineEdge &edge);
 
 		void initialise_buffers(Canvas &canvas);
-		Rectf find_extents(float canvas_width, float canvas_height);
 
 		struct Extent
 		{
@@ -222,7 +221,7 @@ namespace clan
 			int right;
 		};
 
-		Extent find_extent(const PathScanline *scanline, int canvas_width);
+		Extent find_extent(const PathScanline *scanline, int max_width);
 
 		int first_scanline = 0;
 		int last_scanline = 0;
