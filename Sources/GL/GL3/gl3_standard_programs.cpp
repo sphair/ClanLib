@@ -229,15 +229,16 @@ const std::string::value_type *cl_glsl15_vertex_path = R"shaderend(
 			void main()
 			{
 				const int mask_block_size = 16;
+				const int mask_width = 1024;
 				const int instance_width = 512;
 
 				vec4 canvas_data = texelFetch(instance_data, ivec2(0, 0), 0);
 				ivec2 size = ivec2( (Vertex.z % 2), (Vertex.z / 2) );
 				gl_Position = vec4(((Vertex.x+size.x * mask_block_size)*2.0 / canvas_data.x) - 1.0, ((Vertex.y+size.y * mask_block_size)*-2.0 / canvas_data.y) + 1.0, 0.0, 1.0);
 				int mask_offset = Vertex.w % 65536;
-				mask_position = vec2((mask_offset * 16) % 1024, ((mask_offset*16) / 1024) * 16);
+				mask_position = vec2((mask_offset * 16) % mask_width, ((mask_offset*16) / mask_width) * 16);
 				mask_position += size * mask_block_size;
-				mask_position /= 1024.0;
+				mask_position /= mask_width;
 				int instance_block = Vertex.w / 65536;
 				instance_offset = ivec2(instance_block % instance_width, instance_block / instance_width);
 
