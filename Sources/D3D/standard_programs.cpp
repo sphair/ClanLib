@@ -98,13 +98,14 @@ StandardPrograms::StandardPrograms(GraphicContext &gc) : impl(std::make_shared<S
 	sprite_program.set_uniform1i("Sampler3", 3);
 
 	path_program = compile(gc, path_vertex, sizeof(path_vertex), path_fragment, sizeof(path_fragment));
-	path_program.bind_attribute_location(0, "VertexPosition");
-	path_program.bind_attribute_location(1, "VertexColor");
-	path_program.bind_attribute_location(2, "VertexTexCoord");
+	path_program.bind_attribute_location(0, "Vertex");
 	link(path_program, "Unable to link path standard program");
 	path_program.set_uniform_buffer_index("Uniforms", 0);
-	path_program.set_uniform1i("Texture0", 0);
-	path_program.set_uniform1i("Sampler0", 0);
+	path_program.set_uniform1i("mask_texture", 0);
+	path_program.set_uniform1i("mask_sampler", 0);
+	path_program.set_uniform1i("instance_data", 1);
+	path_program.set_uniform1i("image_texture", 2);
+	path_program.set_uniform1i("image_sampler", 2);
 
 	impl->color_only_program = color_only_program;
 	impl->single_texture_program = single_texture_program;
