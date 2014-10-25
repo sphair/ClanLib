@@ -1,10 +1,11 @@
 
 struct PixelIn
 {
-	float2 mask_position : mask_position;
+	float4 screenpos : SV_Position;
 	float4 brush_data1 : brush_data1;
 	float4 brush_data2 : brush_data2;
 	float4 vary_data : vary_data;
+	float2 mask_position : mask_position;
 	uint2 instance_offset : instance_offset;
 };
 
