@@ -281,6 +281,10 @@ void Font::draw_text(Canvas &canvas, float dest_x, float dest_y, const std::stri
 {
 	if (impl)
 	{
+		Pointf pos = canvas.grid_fit(Pointf(dest_x, dest_y));
+		dest_x = pos.x;
+		dest_y = pos.y;
+
 		FontMetrics fm = get_font_metrics();
 		int line_spacing = fm.get_height() + fm.get_external_leading();
 		std::vector<std::string> lines = StringHelp::split_text(text, "\n", false);
@@ -306,6 +310,10 @@ void Font::draw_text_ellipsis(Canvas &canvas, float dest_x, float dest_y, Rectf 
 {
 	if (impl)
 	{
+		Pointf pos = canvas.grid_fit(Pointf(dest_x, dest_y));
+		dest_x = pos.x;
+		dest_y = pos.y;
+
 		FontMetrics fm = get_font_metrics();
 		int ascent = fm.get_ascent();
 		int descent = fm.get_descent();

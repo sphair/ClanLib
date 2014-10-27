@@ -680,12 +680,22 @@ void Canvas::fill(const Path &path, const Brush &brush)
 	batcher->fill(*this, path, brush);
 }
 
-void Canvas::stroke_and_fill(const Path &path, const Pen &pen, const Brush &brush)
+void Canvas::fill_and_stroke(const Path &path, const Pen &pen, const Brush &brush)
 {
 	RenderBatchPath *batcher = impl->batcher.get_path_batcher();
 	batcher->fill(*this, path, brush);
 	batcher->stroke(*this, path, pen);
 }
+
+Pointf Canvas::grid_fit(const Pointf &pos) const
+{
+	Vec4f world_pos = get_transform() * Vec4f(pos.x, pos.y, 0.0f, 1.0f);
+	world_pos.x = std::round(world_pos.x);
+	world_pos.y = std::round(world_pos.y);
+	Vec4f object_pos = Mat4f::inverse(get_transform()) * world_pos;
+	return Pointf(object_pos.x, object_pos.y);
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 // Canvas Implementation:
