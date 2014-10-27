@@ -131,7 +131,7 @@ namespace clan
 
 					GlyphMetrics advance = object.font.get_glyph_metrics(canvas, obj_text);
 
-					canvas.text(object.font, x, y + metrics.ascent + object.baseline_offset, obj_text, object.color);
+					object.font.draw_text(canvas, x, y + metrics.ascent + object.baseline_offset, obj_text, object.color);
 
 					x += advance.advance.width;
 				}

@@ -403,11 +403,6 @@ public:
 	void fill(const Path &path, const Brush &brush);
 	void stroke_and_fill(const Path &path, const Pen &pen, const Brush &brush);
 
-	// Simple text rendering
-	void text(Font &font, const Pointf &position, const std::string &text, const Brush &brush);
-	void text(Font &font, float x, float y, const std::string &text, const Brush &brush);
-
-
 /// \}
 /// \name Events
 /// \{

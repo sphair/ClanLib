@@ -348,9 +348,9 @@ namespace clan
 			canvas.fill(Path::rect(selection_rect), focus_view() == this ? Brush::solid_rgb8(51, 153, 255) : Brush::solid_rgb8(200, 200, 200));
 		}
 
-		canvas.text(impl->font, 0.0f, line_metrics.ascent, txt_before, Brush(impl->text_color));
-		canvas.text(impl->font, advance_before, line_metrics.ascent, txt_selected, focus_view() == this ? Brush::solid_rgb8(255, 255, 255) : Brush(impl->text_color));
-		canvas.text(impl->font, advance_before + advance_selected, line_metrics.ascent, txt_after, Brush(impl->text_color));
+		impl->font.draw_text(canvas, 0.0f, line_metrics.ascent, txt_before, impl->text_color);
+		impl->font.draw_text(canvas, advance_before, line_metrics.ascent, txt_selected, focus_view() == this ? Colorf(255, 255, 255) : impl->text_color);
+		impl->font.draw_text(canvas, advance_before + advance_selected, line_metrics.ascent, txt_after, impl->text_color);
 
 		float cursor_advance = std::round(impl->font.get_glyph_metrics(canvas, impl->text.substr(0, impl->cursor_pos)).advance.width);
 

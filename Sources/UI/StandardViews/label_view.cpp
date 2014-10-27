@@ -217,15 +217,15 @@ namespace clan
 		{
 		default:
 		case TextAlignment::left:
-			canvas.text(_font, 0.0f, line_metrics.ascent, clipped_text, Brush(impl->_text_color));
+			_font.draw_text(canvas, 0.0f, line_metrics.ascent, clipped_text, impl->_text_color);
 			break;
 
 		case TextAlignment::right:
-			canvas.text(_font, geometry().content.get_width() - advance.advance.width, line_metrics.ascent, clipped_text, Brush(impl->_text_color));
+			_font.draw_text(canvas, geometry().content.get_width() - advance.advance.width, line_metrics.ascent, clipped_text, impl->_text_color);
 			break;
 
 		case TextAlignment::center:
-			canvas.text(_font, std::round((geometry().content.get_width() - advance.advance.width) * 0.5f), line_metrics.ascent, clipped_text, Brush(impl->_text_color));
+			_font.draw_text(canvas, std::round((geometry().content.get_width() - advance.advance.width) * 0.5f), line_metrics.ascent, clipped_text, impl->_text_color);
 			break;
 		}
 	}
