@@ -507,6 +507,10 @@ void GraphicContext::set_draw_buffer(DrawBuffer buffer)
 	impl->set_draw_buffer(buffer);
 }
 
+void GraphicContext::flush()
+{
+	impl->flush();
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // GraphicContext Implementation:

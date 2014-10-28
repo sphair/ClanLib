@@ -179,6 +179,8 @@ public:
 
 	void make_current() const;
 
+	void flush();
+
 /// \}
 /// \name Implementation
 /// \{

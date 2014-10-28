@@ -121,6 +121,11 @@ void D3DGraphicContextProvider::end_resize_swap_chain()
 	set_default_dsv();
 }
 
+void D3DGraphicContextProvider::flush()
+{
+	window->get_device_context()->Flush();
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // D3DGraphicContextProvider Attributes:
 

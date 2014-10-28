@@ -834,6 +834,12 @@ void GL3GraphicContextProvider::make_current() const
 	render_window->make_current();
 }
 
+void GL3GraphicContextProvider::flush()
+{
+	OpenGL::set_active(this);
+	glFlush();
+}
+
 const DisplayWindowProvider & GL3GraphicContextProvider::get_render_window() const
 {
 	return *render_window;

@@ -72,6 +72,8 @@ public:
 	void set_depth_stencil_state(const DepthStencilState &state, int stencil_ref);
 
 	void set_draw_buffer(DrawBuffer buffer);
+	
+	void flush();
 
 private:
 	void on_window_resized(const Size &size);

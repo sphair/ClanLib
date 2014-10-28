@@ -190,6 +190,8 @@ public:
 	void remove_disposable(DisposableObject *disposable);
 	void make_current() const;
 
+	void flush();
+
 /// \}
 /// \name Implementation
 /// \{

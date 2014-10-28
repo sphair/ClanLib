@@ -264,4 +264,9 @@ void GraphicContext_Impl::set_draw_buffer(DrawBuffer buffer)
 	graphic_screen->on_draw_buffer_changed(this);
 }
 
+void GraphicContext_Impl::flush()
+{
+	graphic_screen->get_provider()->flush();
+}
+
 }

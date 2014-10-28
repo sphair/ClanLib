@@ -661,6 +661,9 @@ public:
 	/// \brief Set used draw buffer.
 	void set_draw_buffer(DrawBuffer buffer);
 
+	/// \brief Flush the command buffer
+	void flush();
+
 /// \}
 /// \name Events
 /// \{

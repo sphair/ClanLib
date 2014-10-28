@@ -345,6 +345,8 @@ public:
 	/// \brief Specifies the depth range for the specified viewport
 	virtual void set_depth_range(int viewport, float n, float f) = 0;
 
+	virtual void flush() = 0;
+
 /// \}
 /// \name Implementation
 /// \{

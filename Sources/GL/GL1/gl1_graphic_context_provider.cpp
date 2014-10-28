@@ -895,6 +895,12 @@ void GL1GraphicContextProvider::make_current() const
 	render_window->make_current();
 }
 
+void GL1GraphicContextProvider::flush()
+{
+	set_active();
+	glFlush();
+}
+
 const DisplayWindowProvider & GL1GraphicContextProvider::get_render_window() const
 {
 	return *render_window; 

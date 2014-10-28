@@ -153,6 +153,8 @@ public:
 	void begin_resize_swap_chain();
 	void end_resize_swap_chain();
 
+	void flush();
+
 /// \}
 
 /// \name Implementation
