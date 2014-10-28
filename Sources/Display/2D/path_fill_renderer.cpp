@@ -743,6 +743,9 @@ namespace clan
 		Vec4f brush_data2;
 		brush_data1.x = (float)PathShaderDrawMode::solid;
 		brush_data2 = brush.color;
+		brush_data2.r *= brush_data2.a;
+		brush_data2.g *= brush_data2.a;
+		brush_data2.b *= brush_data2.a;
 		buffer[position++] = brush_data1;
 		buffer[position++] = brush_data2;
 		return instance_position;

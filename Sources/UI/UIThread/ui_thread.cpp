@@ -44,6 +44,8 @@ namespace clan
 
 	UIThread::UIThread(ResourceManager manager) : impl(std::make_shared<UIThreadImpl>())
 	{
+		impl->resources = manager;
+
 		if (ui_thread_instance != 0) throw Exception("Only one UIThread is allowed");
 		ui_thread_instance = this;
 	}

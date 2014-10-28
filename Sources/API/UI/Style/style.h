@@ -79,6 +79,8 @@ namespace clan
 		void set_background(const Colorf &color);
 		void set_background_gradient_to_bottom(const Colorf &top, const Colorf &bottom);
 		void set_background_gradient_to_bottom(const Colorf &stop1, float t1, const Colorf &stop2, float t2, const Colorf &stop3, float t3, const Colorf &stop4, float t4);
+		void set_background_gradient_to_right(const Colorf &left, const Colorf &right);
+		void set_background_gradient_to_right(const Colorf &stop1, float t1, const Colorf &stop2, float t2, const Colorf &stop3, float t3, const Colorf &stop4, float t4);
 		void set_background_image(const std::string &url);
 		void set_background_size_contain();
 

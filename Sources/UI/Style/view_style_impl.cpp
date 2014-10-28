@@ -374,8 +374,16 @@ namespace clan
 
 				Brush brush;
 				brush.type = BrushType::linear;
-				brush.start_point = Pointf(padding_box.left, padding_box.top);
-				brush.end_point = Pointf(padding_box.left, padding_box.bottom);
+				if (background.angle == 0.0f)
+				{
+					brush.start_point = Pointf(padding_box.left, padding_box.top);
+					brush.end_point = Pointf(padding_box.right, padding_box.top);
+				}
+				else
+				{
+					brush.start_point = Pointf(padding_box.left, padding_box.top);
+					brush.end_point = Pointf(padding_box.left, padding_box.bottom);
+				}
 				for (const ViewGradientStop &stop : background.stops)
 					brush.stops.push_back(BrushGradientStop(stop.color, stop.position));
 

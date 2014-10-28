@@ -168,6 +168,26 @@ namespace clan
 		if (impl->style_changed) impl->style_changed();
 	}
 
+	void ViewStyle::set_background_gradient_to_right(const Colorf &left, const Colorf &right)
+	{
+		impl->background.stops.clear();
+		impl->background.stops.push_back(ViewGradientStop(left, 0.0f));
+		impl->background.stops.push_back(ViewGradientStop(right, 1.0f));
+		impl->background.angle = 0.0f;
+		if (impl->style_changed) impl->style_changed();
+	}
+
+	void ViewStyle::set_background_gradient_to_right(const Colorf &stop1, float t1, const Colorf &stop2, float t2, const Colorf &stop3, float t3, const Colorf &stop4, float t4)
+	{
+		impl->background.stops.clear();
+		impl->background.stops.push_back(ViewGradientStop(stop1, t1));
+		impl->background.stops.push_back(ViewGradientStop(stop2, t2));
+		impl->background.stops.push_back(ViewGradientStop(stop3, t3));
+		impl->background.stops.push_back(ViewGradientStop(stop4, t4));
+		impl->background.angle = 0.0f;
+		if (impl->style_changed) impl->style_changed();
+	}
+
 	void ViewStyle::set_background_image(const std::string &url)
 	{
 		impl->background.image = PixelBuffer(url);
