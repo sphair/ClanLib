@@ -94,16 +94,14 @@ namespace clan
 		set_needs_render();
 	}
 
-	FontDescription TextFieldView::font() const
+	Font TextFieldView::font() const
 	{
-		return impl->font_desc;
+		return impl->font;
 	}
 
-	void TextFieldView::set_font(const FontDescription &font)
+	void TextFieldView::set_font(const Font &font)
 	{
-		impl->font_desc = font.clone();
-		Canvas canvas = SharedGCData::get_resource_canvas();
-		impl->font = Font(canvas, font);
+		impl->font = font;
 		set_needs_render();
 	}
 

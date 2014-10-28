@@ -33,7 +33,7 @@
 
 namespace clan
 {
-	class FontDescription;
+	class Font;
 	class TextFieldViewImpl;
 
 	class TextFieldView : public View
@@ -48,8 +48,8 @@ namespace clan
 		std::string placeholder() const;
 		void set_placeholder(const std::string &value);
 
-		FontDescription font() const;
-		void set_font(const FontDescription &font);
+		Font font() const;
+		void set_font(const Font &font);
 
 		Colorf text_color() const;
 		void set_text_color(const Colorf &value);

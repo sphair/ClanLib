@@ -63,8 +63,8 @@ namespace clan
 		std::string text() const;
 		void set_text(const std::string &value);
 
-		FontDescription font() const;
-		void set_font(const FontDescription &value);
+		Font font() const;
+		void set_font(const Font &value);
 
 		Colorf text_color() const;
 		void set_text_color(const Colorf &value);

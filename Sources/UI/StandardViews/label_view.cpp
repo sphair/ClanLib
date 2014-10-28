@@ -28,8 +28,8 @@
 
 #include "UI/precomp.h"
 #include "API/UI/StandardViews/label_view.h"
+#include "API/UI/UIThread/ui_thread.h"
 #include "API/Display/2D/canvas.h"
-#include "API/Display/Render/shared_gc_data.h"
 #include "API/Display/2D/path.h"
 #include "API/Display/2D/pen.h"
 #include "API/Display/2D/brush.h"
@@ -46,7 +46,6 @@ namespace clan
 	public:
 		std::string _text;
 		Font _font;
-		FontDescription _font_desc;
 		Colorf _text_color;
 		TextAlignment _text_alignment = TextAlignment::left;
 		LineBreakMode _line_break_mode = LineBreakMode::truncating_tail;
@@ -72,16 +71,14 @@ namespace clan
 		set_needs_layout();
 	}
 
-	FontDescription LabelView::font() const
+	Font LabelView::font() const
 	{
-		return impl->_font_desc;
+		return impl->_font;
 	}
 
-	void LabelView::set_font(const FontDescription &value)
+	void LabelView::set_font(const Font &value)
 	{
-		impl->_font_desc = value.clone();
-		Canvas canvas = SharedGCData::get_resource_canvas();
-		impl->_font = Font(canvas, value);
+		impl->_font = value;
 		set_needs_layout();
 	}
 
@@ -234,7 +231,7 @@ namespace clan
 	{
 		if (style.is_width_auto())
 		{
-			Canvas canvas = SharedGCData::get_resource_canvas();
+			Canvas canvas = UIThread::get_resource_canvas();
 			return impl->_font.get_glyph_metrics(canvas, impl->_text).advance.width;
 		}
 		else

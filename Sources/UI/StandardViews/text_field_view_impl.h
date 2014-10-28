@@ -65,7 +65,6 @@ namespace clan
 
 		TextFieldView *textfield = 0;
 
-		FontDescription font_desc;
 		Font font;
 		Colorf text_color = Colorf(0, 0, 0);
 		TextAlignment alignment = TextAlignment::left;
