@@ -50,7 +50,7 @@ public:
  
 		DisplayWindow window("Hello World", 640, 480);
  
-		Canvas canvas(window.get_gc());
+		Canvas canvas(window);
 		InputDevice keyboard = window.get_ic().get_keyboard();
 		clan::Font font(canvas, "Tahoma", 30);	// The clan prefix is required on linux due to a namespace conflict
  
