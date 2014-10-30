@@ -73,7 +73,7 @@ namespace clan
 		float line_height = 0.0f;
 		FontStyle style = FontStyle::normal;
 		int weight = 400;
-		Colorf color;
+		Colorf color = Colorf::black;
 		TextShadow shadow;
 		TextAlign align = TextAlign::left;
 		TextTransform transform = TextTransform::none;

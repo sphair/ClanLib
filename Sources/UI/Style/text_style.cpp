@@ -55,9 +55,19 @@ namespace clan
 		impl->family = family;
 	}
 
+	std::string TextStyle::family() const
+	{
+		return impl->family;
+	}
+
 	void TextStyle::set_size(float size)
 	{
 		impl->size = size;
+	}
+
+	float TextStyle::size() const
+	{
+		return impl->size;
 	}
 
 	void TextStyle::set_line_height_normal()
@@ -68,6 +78,11 @@ namespace clan
 	void TextStyle::set_line_height(float height)
 	{
 		impl->line_height = height;
+	}
+
+	float TextStyle::line_height() const
+	{
+		return impl->line_height;
 	}
 
 	void TextStyle::set_weight_normal()
@@ -85,6 +100,11 @@ namespace clan
 		impl->weight = weight;
 	}
 
+	int TextStyle::weight() const
+	{
+		return impl->weight;
+	}
+
 	void TextStyle::set_style_normal()
 	{
 		impl->style = FontStyle::normal;
@@ -100,9 +120,29 @@ namespace clan
 		impl->style = FontStyle::oblique;
 	}
 
+	bool TextStyle::is_style_normal() const
+	{
+		return impl->style == FontStyle::normal;
+	}
+
+	bool TextStyle::is_style_italic() const
+	{
+		return impl->style == FontStyle::italic;
+	}
+
+	bool TextStyle::is_style_oblique() const
+	{
+		return impl->style == FontStyle::oblique;
+	}
+
 	void TextStyle::set_color(const Colorf &color)
 	{
 		impl->color = color;
+	}
+
+	Colorf TextStyle::color() const
+	{
+		return impl->color;
 	}
 
 	void TextStyle::set_shadow_none()
@@ -116,6 +156,31 @@ namespace clan
 		impl->shadow.vert_offset = vert_offset;
 		impl->shadow.blur_radius = blur_radius;
 		impl->shadow.color = color;
+	}
+
+	bool TextStyle::has_shadow() const
+	{
+		return impl->shadow.blur_radius > 0.0f && impl->shadow.color.a > 0.0f;
+	}
+
+	float TextStyle::shadow_horz_offset() const
+	{
+		return impl->shadow.horz_offset;
+	}
+
+	float TextStyle::shadow_vert_offset() const
+	{
+		return impl->shadow.vert_offset;
+	}
+
+	float TextStyle::shadow_blur_radius() const
+	{
+		return impl->shadow.blur_radius;
+	}
+
+	Colorf TextStyle::shadow_color() const
+	{
+		return impl->shadow.color;
 	}
 
 	void TextStyle::set_align_left()
@@ -138,6 +203,26 @@ namespace clan
 		impl->align = TextAlign::justify;
 	}
 
+	bool TextStyle::is_align_left() const
+	{
+		return impl->align == TextAlign::left;
+	}
+
+	bool TextStyle::is_align_right() const
+	{
+		return impl->align == TextAlign::right;
+	}
+
+	bool TextStyle::is_align_center() const
+	{
+		return impl->align == TextAlign::center;
+	}
+
+	bool TextStyle::is_align_justify() const
+	{
+		return impl->align == TextAlign::justify;
+	}
+
 	void TextStyle::set_transform_none()
 	{
 		impl->transform = TextTransform::none;
@@ -151,5 +236,20 @@ namespace clan
 	void TextStyle::set_transform_lowercase()
 	{
 		impl->transform = TextTransform::lowercase;
+	}
+
+	bool TextStyle::is_transform_none() const
+	{
+		return impl->transform == TextTransform::none;
+	}
+
+	bool TextStyle::is_transform_uppercase() const
+	{
+		return impl->transform == TextTransform::uppercase;
+	}
+
+	bool TextStyle::is_transform_lowercase() const
+	{
+		return impl->transform == TextTransform::lowercase;
 	}
 }
