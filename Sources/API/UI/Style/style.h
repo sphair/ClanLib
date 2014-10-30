@@ -38,19 +38,19 @@ namespace clan
 	class Canvas;
 	class Colorf;
 	class ViewGeometry;
-	class ViewStyleImpl;
+	class BoxStyleImpl;
 
-	class ViewStyle
+	class BoxStyle
 	{
 	public:
-		ViewStyle();
-		~ViewStyle();
+		BoxStyle();
+		~BoxStyle();
 
 		/// \brief Copy assignment operator (does not copy the style, use clone() if you want that)
-		ViewStyle &operator =(const ViewStyle &copy);
+		BoxStyle &operator =(const BoxStyle &copy);
 
 		// \brief Copy the entire style (not just the implementation)
-		ViewStyle clone() const;
+		BoxStyle clone() const;
 
 		void set_layout_none();
 		void set_layout_block();
@@ -152,6 +152,6 @@ namespace clan
 		void set_style_changed(const std::function<void()> &callback);
 
 	private:
-		std::shared_ptr<ViewStyleImpl> impl;
+		std::shared_ptr<BoxStyleImpl> impl;
 	};
 }

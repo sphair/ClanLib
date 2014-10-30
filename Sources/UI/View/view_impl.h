@@ -49,7 +49,7 @@ namespace clan
 		unsigned int tab_index = 0;
 		FocusPolicy focus_policy = FocusPolicy::reject;
 
-		ViewStyle _style;
+		BoxStyle _style;
 		ViewGeometry _geometry;
 		bool hidden = false;
 

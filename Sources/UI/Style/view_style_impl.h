@@ -43,10 +43,10 @@ namespace clan
 	class Canvas;
 	class ViewGeometry;
 
-	class ViewStyleImpl
+	class BoxStyleImpl
 	{
 	public:
-		ViewStyleImpl &operator =(const ViewStyleImpl &that)
+		BoxStyleImpl &operator =(const BoxStyleImpl &that)
 		{
 			layout = that.layout;
 			position = that.position;

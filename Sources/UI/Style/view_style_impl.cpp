@@ -36,7 +36,7 @@
 
 namespace clan
 {
-	void ViewStyleImpl::render(Canvas &canvas, const ViewGeometry &geometry) const
+	void BoxStyleImpl::render(Canvas &canvas, const ViewGeometry &geometry) const
 	{
 		if (background.color.a != 0.0f || !background.stops.empty() || !background.image.is_null())
 		{
@@ -407,7 +407,7 @@ namespace clan
 		}
 	}
 
-	float ViewStyleImpl::mix(float a, float b, float t)
+	float BoxStyleImpl::mix(float a, float b, float t)
 	{
 		return a * (1.0f - t) + b * t;
 	}

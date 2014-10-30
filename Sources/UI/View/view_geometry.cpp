@@ -32,7 +32,7 @@
 
 namespace clan
 {
-	ViewGeometry::ViewGeometry(const ViewStyle &style)
+	ViewGeometry::ViewGeometry(const BoxStyle &style)
 	{
 		margin_left = style.margin_left();
 		margin_top = style.margin_top();
@@ -50,7 +50,7 @@ namespace clan
 		padding_bottom = style.padding_bottom();
 	}
 
-	ViewGeometry ViewGeometry::from_margin_box(const ViewStyle &style, const Rectf &box)
+	ViewGeometry ViewGeometry::from_margin_box(const BoxStyle &style, const Rectf &box)
 	{
 		ViewGeometry geometry(style);
 
@@ -63,7 +63,7 @@ namespace clan
 		return geometry;
 	}
 
-	ViewGeometry ViewGeometry::from_border_box(const ViewStyle &style, const Rectf &box)
+	ViewGeometry ViewGeometry::from_border_box(const BoxStyle &style, const Rectf &box)
 	{
 		ViewGeometry geometry(style);
 
@@ -76,7 +76,7 @@ namespace clan
 		return geometry;
 	}
 
-	ViewGeometry ViewGeometry::from_padding_box(const ViewStyle &style, const Rectf &box)
+	ViewGeometry ViewGeometry::from_padding_box(const BoxStyle &style, const Rectf &box)
 	{
 		ViewGeometry geometry(style);
 
@@ -89,7 +89,7 @@ namespace clan
 		return geometry;
 	}
 
-	ViewGeometry ViewGeometry::from_content_box(const ViewStyle &style, const Rectf &box)
+	ViewGeometry ViewGeometry::from_content_box(const BoxStyle &style, const Rectf &box)
 	{
 		ViewGeometry geometry(style);
 		geometry.content = box;

@@ -57,7 +57,7 @@ namespace clan
 		View();
 		~View();
 
-		ViewStyle style;
+		BoxStyle style;
 		SlotContainer slots;
 
 		View *superview() const;
