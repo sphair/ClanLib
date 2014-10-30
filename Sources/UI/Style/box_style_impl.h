@@ -28,25 +28,51 @@
 
 #pragma once
 
+#include "box_layout.h"
+#include "box_position.h"
+#include "box_flex.h"
+#include "box_margin.h"
+#include "box_border.h"
+#include "box_padding.h"
+#include "box_content.h"
+#include "box_background.h"
+#include <functional>
+
 namespace clan
 {
-	class ViewFlexBasis
-	{
-	public:
-		enum Type
-		{
-			type_auto,
-			type_length
-		};
-		Type type = type_auto;
-		float value = 0.0f;
-	};
+	class Canvas;
+	class ViewGeometry;
 
-	class ViewFlex
+	class BoxStyleImpl
 	{
 	public:
-		float grow = 1.0f;
-		float shrink = 0.0f;
-		ViewFlexBasis basis;
+		BoxStyleImpl &operator =(const BoxStyleImpl &that)
+		{
+			layout = that.layout;
+			position = that.position;
+			flex = that.flex;
+			margin = that.margin;
+			border = that.border;
+			padding = that.padding;
+			content = that.content;
+			background = that.background;
+			if (style_changed) style_changed();
+			return *this;
+		}
+
+		BoxLayout layout = BoxLayout::block;
+		BoxPosition position;
+		BoxFlex flex;
+		BoxMargin margin;
+		BoxBorder border;
+		BoxPadding padding;
+		BoxContent content;
+		BoxBackground background;
+		std::function<void()> style_changed;
+
+		void render(Canvas &canvas, const ViewGeometry &geometry) const;
+
+	private:
+		static float mix(float a, float b, float t);
 	};
 }

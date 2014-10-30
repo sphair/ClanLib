@@ -27,9 +27,9 @@
 */
 
 #include "UI/precomp.h"
-#include "API/UI/Style/style.h"
+#include "API/UI/Style/box_style.h"
 #include "API/Core/Text/string_help.h"
-#include "view_style_impl.h"
+#include "box_style_impl.h"
 
 namespace clan
 {
@@ -58,31 +58,31 @@ namespace clan
 
 	void BoxStyle::set_layout_none()
 	{
-		impl->layout = ViewLayout::none;
+		impl->layout = BoxLayout::none;
 		if (impl->style_changed) impl->style_changed();
 	}
 
 	void BoxStyle::set_layout_block()
 	{
-		impl->layout = ViewLayout::block;
+		impl->layout = BoxLayout::block;
 		if (impl->style_changed) impl->style_changed();
 	}
 
 	void BoxStyle::set_layout_line()
 	{
-		impl->layout = ViewLayout::line;
+		impl->layout = BoxLayout::line;
 		if (impl->style_changed) impl->style_changed();
 	}
 
 	void BoxStyle::set_layout_vbox()
 	{
-		impl->layout = ViewLayout::vbox;
+		impl->layout = BoxLayout::vbox;
 		if (impl->style_changed) impl->style_changed();
 	}
 
 	void BoxStyle::set_layout_hbox()
 	{
-		impl->layout = ViewLayout::hbox;
+		impl->layout = BoxLayout::hbox;
 		if (impl->style_changed) impl->style_changed();
 	}
 
@@ -100,13 +100,13 @@ namespace clan
 
 	void BoxStyle::set_flex_basis_auto()
 	{
-		impl->flex.basis = ViewFlexBasis();
+		impl->flex.basis = BoxFlexBasis();
 		if (impl->style_changed) impl->style_changed();
 	}
 
 	void BoxStyle::set_flex_basis(float basis)
 	{
-		impl->flex.basis.type = ViewFlexBasis::type_length;
+		impl->flex.basis.type = BoxFlexBasis::type_length;
 		impl->flex.basis.value = basis;
 		if (impl->style_changed) impl->style_changed();
 	}
@@ -115,7 +115,7 @@ namespace clan
 	{
 		impl->flex.grow = grow;
 		impl->flex.shrink = shrink;
-		impl->flex.basis = ViewFlexBasis();
+		impl->flex.basis = BoxFlexBasis();
 		if (impl->style_changed) impl->style_changed();
 	}
 
@@ -123,7 +123,7 @@ namespace clan
 	{
 		impl->flex.grow = grow;
 		impl->flex.shrink = shrink;
-		impl->flex.basis.type = ViewFlexBasis::type_length;
+		impl->flex.basis.type = BoxFlexBasis::type_length;
 		impl->flex.basis.value = basis;
 		if (impl->style_changed) impl->style_changed();
 	}
@@ -132,13 +132,13 @@ namespace clan
 	{
 		impl->flex.grow = 0.0f;
 		impl->flex.shrink = 0.0f;
-		impl->flex.basis = ViewFlexBasis();
+		impl->flex.basis = BoxFlexBasis();
 		if (impl->style_changed) impl->style_changed();
 	}
 
 	void BoxStyle::set_background_none()
 	{
-		impl->background = ViewBackground();
+		impl->background = BoxBackground();
 		if (impl->style_changed) impl->style_changed();
 	}
 
@@ -151,8 +151,8 @@ namespace clan
 	void BoxStyle::set_background_gradient_to_bottom(const Colorf &top, const Colorf &bottom)
 	{
 		impl->background.stops.clear();
-		impl->background.stops.push_back(ViewGradientStop(top, 0.0f));
-		impl->background.stops.push_back(ViewGradientStop(bottom, 1.0f));
+		impl->background.stops.push_back(BoxGradientStop(top, 0.0f));
+		impl->background.stops.push_back(BoxGradientStop(bottom, 1.0f));
 		impl->background.angle = 180.0f;
 		if (impl->style_changed) impl->style_changed();
 	}
@@ -160,10 +160,10 @@ namespace clan
 	void BoxStyle::set_background_gradient_to_bottom(const Colorf &stop1, float t1, const Colorf &stop2, float t2, const Colorf &stop3, float t3, const Colorf &stop4, float t4)
 	{
 		impl->background.stops.clear();
-		impl->background.stops.push_back(ViewGradientStop(stop1, t1));
-		impl->background.stops.push_back(ViewGradientStop(stop2, t2));
-		impl->background.stops.push_back(ViewGradientStop(stop3, t3));
-		impl->background.stops.push_back(ViewGradientStop(stop4, t4));
+		impl->background.stops.push_back(BoxGradientStop(stop1, t1));
+		impl->background.stops.push_back(BoxGradientStop(stop2, t2));
+		impl->background.stops.push_back(BoxGradientStop(stop3, t3));
+		impl->background.stops.push_back(BoxGradientStop(stop4, t4));
 		impl->background.angle = 180.0f;
 		if (impl->style_changed) impl->style_changed();
 	}
@@ -171,8 +171,8 @@ namespace clan
 	void BoxStyle::set_background_gradient_to_right(const Colorf &left, const Colorf &right)
 	{
 		impl->background.stops.clear();
-		impl->background.stops.push_back(ViewGradientStop(left, 0.0f));
-		impl->background.stops.push_back(ViewGradientStop(right, 1.0f));
+		impl->background.stops.push_back(BoxGradientStop(left, 0.0f));
+		impl->background.stops.push_back(BoxGradientStop(right, 1.0f));
 		impl->background.angle = 0.0f;
 		if (impl->style_changed) impl->style_changed();
 	}
@@ -180,10 +180,10 @@ namespace clan
 	void BoxStyle::set_background_gradient_to_right(const Colorf &stop1, float t1, const Colorf &stop2, float t2, const Colorf &stop3, float t3, const Colorf &stop4, float t4)
 	{
 		impl->background.stops.clear();
-		impl->background.stops.push_back(ViewGradientStop(stop1, t1));
-		impl->background.stops.push_back(ViewGradientStop(stop2, t2));
-		impl->background.stops.push_back(ViewGradientStop(stop3, t3));
-		impl->background.stops.push_back(ViewGradientStop(stop4, t4));
+		impl->background.stops.push_back(BoxGradientStop(stop1, t1));
+		impl->background.stops.push_back(BoxGradientStop(stop2, t2));
+		impl->background.stops.push_back(BoxGradientStop(stop3, t3));
+		impl->background.stops.push_back(BoxGradientStop(stop4, t4));
 		impl->background.angle = 0.0f;
 		if (impl->style_changed) impl->style_changed();
 	}
@@ -201,13 +201,13 @@ namespace clan
 
 	void BoxStyle::set_margin(float left, float top, float right, float bottom)
 	{
-		impl->margin.left.type = ViewMarginValue::type_length;
+		impl->margin.left.type = BoxMarginValue::type_length;
 		impl->margin.left.value = left;
-		impl->margin.right.type = ViewMarginValue::type_length;
+		impl->margin.right.type = BoxMarginValue::type_length;
 		impl->margin.right.value = right;
-		impl->margin.top.type = ViewMarginValue::type_length;
+		impl->margin.top.type = BoxMarginValue::type_length;
 		impl->margin.top.value = top;
-		impl->margin.bottom.type = ViewMarginValue::type_length;
+		impl->margin.bottom.type = BoxMarginValue::type_length;
 		impl->margin.bottom.value = bottom;
 		if (impl->style_changed) impl->style_changed();
 	}
@@ -229,16 +229,16 @@ namespace clan
 
 	void BoxStyle::set_border(const Colorf &color, float left, float top, float right, float bottom)
 	{
-		impl->border.left.type = ViewBorderValue::type_solid;
+		impl->border.left.type = BoxBorderValue::type_solid;
 		impl->border.left.color = color;
 		impl->border.left.width = left;
-		impl->border.right.type = ViewBorderValue::type_solid;
+		impl->border.right.type = BoxBorderValue::type_solid;
 		impl->border.right.color = color;
 		impl->border.right.width = right;
-		impl->border.top.type = ViewBorderValue::type_solid;
+		impl->border.top.type = BoxBorderValue::type_solid;
 		impl->border.top.color = color;
 		impl->border.top.width = top;
-		impl->border.bottom.type = ViewBorderValue::type_solid;
+		impl->border.bottom.type = BoxBorderValue::type_solid;
 		impl->border.bottom.color = color;
 		impl->border.bottom.width = bottom;
 		if (impl->style_changed) impl->style_changed();
@@ -304,72 +304,72 @@ namespace clan
 
 	void BoxStyle::set_width(float width)
 	{
-		impl->content.width.type = ViewWidthValue::type_length;
+		impl->content.width.type = BoxWidthValue::type_length;
 		impl->content.width.value = width;
 		if (impl->style_changed) impl->style_changed();
 	}
 
 	void BoxStyle::set_height(float height)
 	{
-		impl->content.height.type = ViewWidthValue::type_length;
+		impl->content.height.type = BoxWidthValue::type_length;
 		impl->content.height.value = height;
 		if (impl->style_changed) impl->style_changed();
 	}
 
 	void BoxStyle::set_static()
 	{
-		impl->position.mode = ViewPositionMode::static_mode;
+		impl->position.mode = BoxPositionMode::static_mode;
 		if (impl->style_changed) impl->style_changed();
 	}
 
 	void BoxStyle::set_absolute()
 	{
-		impl->position.mode = ViewPositionMode::absolute;
+		impl->position.mode = BoxPositionMode::absolute;
 		if (impl->style_changed) impl->style_changed();
 	}
 
 	void BoxStyle::set_fixed()
 	{
-		impl->position.mode = ViewPositionMode::fixed;
+		impl->position.mode = BoxPositionMode::fixed;
 		if (impl->style_changed) impl->style_changed();
 	}
 
 	void BoxStyle::set_left(float value)
 	{
-		impl->position.left.type = ViewPositionValue::type_length;
+		impl->position.left.type = BoxPositionValue::type_length;
 		impl->position.left.value = value;
 		if (impl->style_changed) impl->style_changed();
 	}
 
 	void BoxStyle::set_top(float value)
 	{
-		impl->position.top.type = ViewPositionValue::type_length;
+		impl->position.top.type = BoxPositionValue::type_length;
 		impl->position.top.value = value;
 		if (impl->style_changed) impl->style_changed();
 	}
 
 	void BoxStyle::set_right(float value)
 	{
-		impl->position.right.type = ViewPositionValue::type_length;
+		impl->position.right.type = BoxPositionValue::type_length;
 		impl->position.right.value = value;
 		if (impl->style_changed) impl->style_changed();
 	}
 
 	void BoxStyle::set_bottom(float value)
 	{
-		impl->position.bottom.type = ViewPositionValue::type_length;
+		impl->position.bottom.type = BoxPositionValue::type_length;
 		impl->position.bottom.value = value;
 		if (impl->style_changed) impl->style_changed();
 	}
 
 	bool BoxStyle::is_width_auto() const
 	{
-		return impl->content.width.type == ViewWidthValue::type_auto;
+		return impl->content.width.type == BoxWidthValue::type_auto;
 	}
 
 	bool BoxStyle::is_height_auto() const
 	{
-		return impl->content.height.type == ViewWidthValue::type_auto;
+		return impl->content.height.type == BoxWidthValue::type_auto;
 	}
 
 	float BoxStyle::width() const
@@ -384,37 +384,37 @@ namespace clan
 
 	bool BoxStyle::is_static() const
 	{
-		return impl->position.mode == ViewPositionMode::static_mode;
+		return impl->position.mode == BoxPositionMode::static_mode;
 	}
 
 	bool BoxStyle::is_absolute() const
 	{
-		return impl->position.mode == ViewPositionMode::absolute;
+		return impl->position.mode == BoxPositionMode::absolute;
 	}
 
 	bool BoxStyle::is_fixed() const
 	{
-		return impl->position.mode == ViewPositionMode::fixed;
+		return impl->position.mode == BoxPositionMode::fixed;
 	}
 
 	bool BoxStyle::is_left_auto() const
 	{
-		return impl->position.left.type == ViewPositionValue::type_auto;
+		return impl->position.left.type == BoxPositionValue::type_auto;
 	}
 
 	bool BoxStyle::is_top_auto() const
 	{
-		return impl->position.top.type == ViewPositionValue::type_auto;
+		return impl->position.top.type == BoxPositionValue::type_auto;
 	}
 
 	bool BoxStyle::is_right_auto() const
 	{
-		return impl->position.right.type == ViewPositionValue::type_auto;
+		return impl->position.right.type == BoxPositionValue::type_auto;
 	}
 
 	bool BoxStyle::is_bottom_auto() const
 	{
-		return impl->position.bottom.type == ViewPositionValue::type_auto;
+		return impl->position.bottom.type == BoxPositionValue::type_auto;
 	}
 
 	float BoxStyle::left() const
@@ -439,22 +439,22 @@ namespace clan
 
 	bool BoxStyle::is_margin_left_auto() const
 	{
-		return impl->margin.left.type == ViewMarginValue::type_auto;
+		return impl->margin.left.type == BoxMarginValue::type_auto;
 	}
 
 	bool BoxStyle::is_margin_top_auto() const
 	{
-		return impl->margin.top.type == ViewMarginValue::type_auto;
+		return impl->margin.top.type == BoxMarginValue::type_auto;
 	}
 
 	bool BoxStyle::is_margin_right_auto() const
 	{
-		return impl->margin.right.type == ViewMarginValue::type_auto;
+		return impl->margin.right.type == BoxMarginValue::type_auto;
 	}
 
 	bool BoxStyle::is_margin_bottom_auto() const
 	{
-		return impl->margin.bottom.type == ViewMarginValue::type_auto;
+		return impl->margin.bottom.type == BoxMarginValue::type_auto;
 	}
 
 	float BoxStyle::margin_left() const
@@ -479,22 +479,22 @@ namespace clan
 
 	bool BoxStyle::is_border_left_solid() const
 	{
-		return impl->border.left.type == ViewBorderValue::type_solid;
+		return impl->border.left.type == BoxBorderValue::type_solid;
 	}
 
 	bool BoxStyle::is_border_top_solid() const
 	{
-		return impl->border.top.type == ViewBorderValue::type_solid;
+		return impl->border.top.type == BoxBorderValue::type_solid;
 	}
 
 	bool BoxStyle::is_border_right_solid() const
 	{
-		return impl->border.right.type == ViewBorderValue::type_solid;
+		return impl->border.right.type == BoxBorderValue::type_solid;
 	}
 
 	bool BoxStyle::is_border_bottom_solid() const
 	{
-		return impl->border.bottom.type == ViewBorderValue::type_solid;
+		return impl->border.bottom.type == BoxBorderValue::type_solid;
 	}
 
 	float BoxStyle::border_left() const
@@ -539,27 +539,27 @@ namespace clan
 
 	bool BoxStyle::is_layout_none() const
 	{
-		return impl->layout == ViewLayout::none;
+		return impl->layout == BoxLayout::none;
 	}
 
 	bool BoxStyle::is_layout_block() const
 	{
-		return impl->layout == ViewLayout::block;
+		return impl->layout == BoxLayout::block;
 	}
 
 	bool BoxStyle::is_layout_line() const
 	{
-		return impl->layout == ViewLayout::line;
+		return impl->layout == BoxLayout::line;
 	}
 
 	bool BoxStyle::is_layout_vbox() const
 	{
-		return impl->layout == ViewLayout::vbox;
+		return impl->layout == BoxLayout::vbox;
 	}
 
 	bool BoxStyle::is_layout_hbox() const
 	{
-		return impl->layout == ViewLayout::hbox;
+		return impl->layout == BoxLayout::hbox;
 	}
 
 	float BoxStyle::flex_grow() const
@@ -574,7 +574,7 @@ namespace clan
 
 	bool BoxStyle::is_flex_basis_auto() const
 	{
-		return impl->flex.basis.type == ViewFlexBasis::type_auto;
+		return impl->flex.basis.type == BoxFlexBasis::type_auto;
 	}
 
 	float BoxStyle::flex_basis() const

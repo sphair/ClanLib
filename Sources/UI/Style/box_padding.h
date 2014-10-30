@@ -30,7 +30,7 @@
 
 namespace clan
 {
-	class ViewPadding
+	class BoxPadding
 	{
 	public:
 		float left = 0.0f;

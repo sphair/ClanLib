@@ -30,22 +30,12 @@
 
 namespace clan
 {
-	class ViewWidthValue
+	enum class BoxLayout
 	{
-	public:
-		enum Type
-		{
-			type_length,
-			type_auto
-		};
-		Type type = type_auto;
-		float value = 0.0f;
-	};
-
-	class ViewContent
-	{
-	public:
-		ViewWidthValue width;
-		ViewWidthValue height;
+		none,
+		block,
+		line,
+		vbox,
+		hbox
 	};
 }

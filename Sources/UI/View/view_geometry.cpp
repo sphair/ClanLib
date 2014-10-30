@@ -28,7 +28,7 @@
 
 #include "UI/precomp.h"
 #include "API/UI/View/view_geometry.h"
-#include "API/UI/Style/style.h"
+#include "API/UI/Style/box_style.h"
 
 namespace clan
 {

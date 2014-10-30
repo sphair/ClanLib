@@ -28,26 +28,41 @@
 
 #pragma once
 
+#include "API/Display/2D/color.h"
+
 namespace clan
 {
-	class ViewMarginValue
+	class BoxBorderValue
 	{
 	public:
 		enum Type
 		{
-			type_length,
-			type_auto
+			type_none,
+			type_solid
 		};
-		Type type = type_length;
-		float value = 0.0f;
+		Type type = type_none;
+		float width = 0.0f;
+		Colorf color;
 	};
 
-	class ViewMargin
+	class BoxBorderRadiusCorner
 	{
 	public:
-		ViewMarginValue left;
-		ViewMarginValue top;
-		ViewMarginValue right;
-		ViewMarginValue bottom;
+		float x = 0.0f;
+		float y = 0.0f;
+	};
+
+	class BoxBorder
+	{
+	public:
+		BoxBorderValue left;
+		BoxBorderValue top;
+		BoxBorderValue right;
+		BoxBorderValue bottom;
+
+		BoxBorderRadiusCorner top_left_radius;
+		BoxBorderRadiusCorner top_right_radius;
+		BoxBorderRadiusCorner bottom_left_radius;
+		BoxBorderRadiusCorner bottom_right_radius;
 	};
 }

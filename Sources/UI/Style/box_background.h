@@ -29,40 +29,40 @@
 #pragma once
 
 #include "API/Display/2D/color.h"
+#include "API/Core/Math/point.h"
+#include "API/Display/Image/pixel_buffer.h"
+#include <vector>
 
 namespace clan
 {
-	class ViewBorderValue
+	class BoxGradientStop
 	{
 	public:
-		enum Type
-		{
-			type_none,
-			type_solid
-		};
-		Type type = type_none;
-		float width = 0.0f;
+		BoxGradientStop() {}
+		BoxGradientStop(const Colorf &color, float position) : color(color), position(position) { }
+
 		Colorf color;
+		float position = 0.0f;
 	};
 
-	class ViewBorderRadiusCorner
+	class BoxBackground
 	{
 	public:
-		float x = 0.0f;
-		float y = 0.0f;
-	};
+		// Solid color
+		Colorf color = Colorf(0.0f, 0.0f, 0.0f, 0.0f);
 
-	class ViewBorder
-	{
-	public:
-		ViewBorderValue left;
-		ViewBorderValue top;
-		ViewBorderValue right;
-		ViewBorderValue bottom;
+		// Linear gradient
+		std::vector<BoxGradientStop> stops;
+		float angle = 0.0f;
 
-		ViewBorderRadiusCorner top_left_radius;
-		ViewBorderRadiusCorner top_right_radius;
-		ViewBorderRadiusCorner bottom_left_radius;
-		ViewBorderRadiusCorner bottom_right_radius;
+		// Image
+		PixelBuffer image;
+
+		// Box shadow:
+		bool shadow_inset = false;
+		Pointf shadow_offset;
+		float shadow_blur_radius = 0.0f;
+		float shadow_spread_distance = 0.0f;
+		Colorf shadow_color;
 	};
 }

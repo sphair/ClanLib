@@ -40,7 +40,6 @@ namespace clan
 	{
 	public:
 		TextStyle();
-		~TextStyle();
 
 		void set_font(const std::string &family, float size);
 		void set_font(const std::string &family, float size, float line_height);

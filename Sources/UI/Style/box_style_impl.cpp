@@ -27,7 +27,7 @@
 */
 
 #include "UI/precomp.h"
-#include "view_style_impl.h"
+#include "box_style_impl.h"
 #include "API/UI/View/view_geometry.h"
 #include "API/Display/2D/canvas.h"
 #include "API/Display/2D/path.h"
@@ -384,7 +384,7 @@ namespace clan
 					brush.start_point = Pointf(padding_box.left, padding_box.top);
 					brush.end_point = Pointf(padding_box.left, padding_box.bottom);
 				}
-				for (const ViewGradientStop &stop : background.stops)
+				for (const BoxGradientStop &stop : background.stops)
 					brush.stops.push_back(BrushGradientStop(stop.color, stop.position));
 
 				canvas.fill(border_area_path, brush);
@@ -400,7 +400,7 @@ namespace clan
 			}
 
 
-			if (border.top.type == ViewBorderValue::type_solid)
+			if (border.top.type == BoxBorderValue::type_solid)
 			{
 				canvas.fill(border_path, Brush(border.top.color));
 			}

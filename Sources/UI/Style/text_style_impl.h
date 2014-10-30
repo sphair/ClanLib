@@ -28,41 +28,13 @@
 
 #pragma once
 
-#include "API/Display/2D/color.h"
-#include "API/Core/Math/point.h"
-#include "API/Display/Image/pixel_buffer.h"
-#include <vector>
+#include <functional>
 
 namespace clan
 {
-	class ViewGradientStop
+	class TextStyleImpl
 	{
 	public:
-		ViewGradientStop() {}
-		ViewGradientStop(const Colorf &color, float position) : color(color), position(position) { }
-
-		Colorf color;
-		float position = 0.0f;
-	};
-
-	class ViewBackground
-	{
-	public:
-		// Solid color
-		Colorf color = Colorf(0.0f, 0.0f, 0.0f, 0.0f);
-
-		// Linear gradient
-		std::vector<ViewGradientStop> stops;
-		float angle = 0.0f;
-
-		// Image
-		PixelBuffer image;
-
-		// Box shadow:
-		bool shadow_inset = false;
-		Pointf shadow_offset;
-		float shadow_blur_radius = 0.0f;
-		float shadow_spread_distance = 0.0f;
-		Colorf shadow_color;
+		void foobar();
 	};
 }

@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "../Style/style.h"
+#include "../Style/box_style.h"
 #include "../../Core/Math/rect.h"
 #include "../../Core/Math/easing.h"
 #include "../../Core/Signals/signal.h"

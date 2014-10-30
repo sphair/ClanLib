@@ -26,36 +26,14 @@
 **    Magnus Norddahl
 */
 
-#pragma once
+#include "UI/precomp.h"
+#include "API/UI/Style/text_style.h"
+#include "API/Core/Text/string_help.h"
+#include "text_style_impl.h"
 
 namespace clan
 {
-	class ViewPositionValue
+	TextStyle::TextStyle() : impl(new TextStyleImpl())
 	{
-	public:
-		enum Type
-		{
-			type_auto,
-			type_length
-		};
-		Type type = type_auto;
-		float value = 0.0f;
-	};
-
-	enum class ViewPositionMode
-	{
-		static_mode,
-		absolute,
-		fixed
-	};
-
-	class ViewPosition
-	{
-	public:
-		ViewPositionMode mode = ViewPositionMode::static_mode;
-		ViewPositionValue left;
-		ViewPositionValue top;
-		ViewPositionValue right;
-		ViewPositionValue bottom;
-	};
+	}
 }

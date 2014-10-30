@@ -30,12 +30,24 @@
 
 namespace clan
 {
-	enum class ViewLayout
+	class BoxMarginValue
 	{
-		none,
-		block,
-		line,
-		vbox,
-		hbox
+	public:
+		enum Type
+		{
+			type_length,
+			type_auto
+		};
+		Type type = type_length;
+		float value = 0.0f;
+	};
+
+	class BoxMargin
+	{
+	public:
+		BoxMarginValue left;
+		BoxMarginValue top;
+		BoxMarginValue right;
+		BoxMarginValue bottom;
 	};
 }
