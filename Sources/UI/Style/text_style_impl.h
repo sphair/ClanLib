@@ -28,13 +28,54 @@
 
 #pragma once
 
-#include <functional>
+#include "API/Display/2D/color.h"
 
 namespace clan
 {
+	enum class FontStyle
+	{
+		normal,
+		italic,
+		oblique
+	};
+
+	class TextShadow
+	{
+	public:
+		float horz_offset = 0.0f;
+		float vert_offset = 0.0f;
+		float blur_radius = 0.0f;
+		Colorf color = Colorf::transparent;
+	};
+
+	enum class TextAlign
+	{
+		left,
+		right,
+		center,
+		justify
+	};
+
+	enum class TextTransform
+	{
+		none,
+		uppercase,
+		lowercase
+	};
+
 	class TextStyleImpl
 	{
 	public:
-		void foobar();
+		TextStyleImpl();
+
+		std::string family;
+		float size = 11.0f;
+		float line_height = 0.0f;
+		FontStyle style = FontStyle::normal;
+		int weight = 400;
+		Colorf color;
+		TextShadow shadow;
+		TextAlign align = TextAlign::left;
+		TextTransform transform = TextTransform::none;
 	};
 }

@@ -31,7 +31,7 @@
 
 namespace clan
 {
-	void TextStyleImpl::foobar()
+	TextStyleImpl::TextStyleImpl()
 	{
 	}
 }

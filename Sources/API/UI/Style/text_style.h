@@ -52,7 +52,7 @@ namespace clan
 		void set_weight(int weight);
 		void set_style_normal();
 		void set_style_italic();
-		//void set_style_oblique();
+		void set_style_oblique();
 		//void set_variant_normal();
 		//void set_variant_small_caps();
 		void set_color(const Colorf &color);
