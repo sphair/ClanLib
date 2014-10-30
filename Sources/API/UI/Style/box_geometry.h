@@ -34,16 +34,16 @@ namespace clan
 {
 	class BoxStyle;
 
-	class ViewGeometry
+	class BoxGeometry
 	{
 	public:
-		ViewGeometry() { }
-		ViewGeometry(const BoxStyle &style);
+		BoxGeometry() { }
+		BoxGeometry(const BoxStyle &style);
 
-		static ViewGeometry from_margin_box(const BoxStyle &style, const Rectf &box);
-		static ViewGeometry from_border_box(const BoxStyle &style, const Rectf &box);
-		static ViewGeometry from_padding_box(const BoxStyle &style, const Rectf &box);
-		static ViewGeometry from_content_box(const BoxStyle &style, const Rectf &box);
+		static BoxGeometry from_margin_box(const BoxStyle &style, const Rectf &box);
+		static BoxGeometry from_border_box(const BoxStyle &style, const Rectf &box);
+		static BoxGeometry from_padding_box(const BoxStyle &style, const Rectf &box);
+		static BoxGeometry from_content_box(const BoxStyle &style, const Rectf &box);
 
 		Rectf margin_box() const;
 		Rectf border_box() const;

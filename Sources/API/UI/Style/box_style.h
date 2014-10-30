@@ -37,7 +37,7 @@ namespace clan
 {
 	class Canvas;
 	class Colorf;
-	class ViewGeometry;
+	class BoxGeometry;
 	class BoxStyleImpl;
 
 	class BoxStyle
@@ -147,7 +147,7 @@ namespace clan
 		float right() const;
 		float bottom() const;
 
-		void render(Canvas &canvas, const ViewGeometry &geometry) const;
+		void render(Canvas &canvas, const BoxGeometry &geometry) const;
 
 		void set_style_changed(const std::function<void()> &callback);
 

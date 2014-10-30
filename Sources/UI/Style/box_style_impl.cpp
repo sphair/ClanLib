@@ -28,7 +28,7 @@
 
 #include "UI/precomp.h"
 #include "box_style_impl.h"
-#include "API/UI/View/view_geometry.h"
+#include "API/UI/Style/box_geometry.h"
 #include "API/Display/2D/canvas.h"
 #include "API/Display/2D/path.h"
 #include "API/Display/2D/brush.h"
@@ -36,7 +36,7 @@
 
 namespace clan
 {
-	void BoxStyleImpl::render(Canvas &canvas, const ViewGeometry &geometry) const
+	void BoxStyleImpl::render(Canvas &canvas, const BoxGeometry &geometry) const
 	{
 		if (background.color.a != 0.0f || !background.stops.empty() || !background.image.is_null())
 		{

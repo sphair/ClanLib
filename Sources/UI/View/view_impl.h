@@ -50,7 +50,7 @@ namespace clan
 		FocusPolicy focus_policy = FocusPolicy::reject;
 
 		BoxStyle _style;
-		ViewGeometry _geometry;
+		BoxGeometry _geometry;
 		bool hidden = false;
 
 		bool _needs_layout = true;

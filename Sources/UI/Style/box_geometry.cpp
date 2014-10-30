@@ -27,12 +27,12 @@
 */
 
 #include "UI/precomp.h"
-#include "API/UI/View/view_geometry.h"
+#include "API/UI/Style/box_geometry.h"
 #include "API/UI/Style/box_style.h"
 
 namespace clan
 {
-	ViewGeometry::ViewGeometry(const BoxStyle &style)
+	BoxGeometry::BoxGeometry(const BoxStyle &style)
 	{
 		margin_left = style.margin_left();
 		margin_top = style.margin_top();
@@ -50,9 +50,9 @@ namespace clan
 		padding_bottom = style.padding_bottom();
 	}
 
-	ViewGeometry ViewGeometry::from_margin_box(const BoxStyle &style, const Rectf &box)
+	BoxGeometry BoxGeometry::from_margin_box(const BoxStyle &style, const Rectf &box)
 	{
-		ViewGeometry geometry(style);
+		BoxGeometry geometry(style);
 
 		geometry.content = Rectf::ltrb(
 			box.left + geometry.margin_left + geometry.border_left + geometry.padding_left,
@@ -63,9 +63,9 @@ namespace clan
 		return geometry;
 	}
 
-	ViewGeometry ViewGeometry::from_border_box(const BoxStyle &style, const Rectf &box)
+	BoxGeometry BoxGeometry::from_border_box(const BoxStyle &style, const Rectf &box)
 	{
-		ViewGeometry geometry(style);
+		BoxGeometry geometry(style);
 
 		geometry.content = Rectf::ltrb(
 			box.left + geometry.border_left + geometry.padding_left,
@@ -76,9 +76,9 @@ namespace clan
 		return geometry;
 	}
 
-	ViewGeometry ViewGeometry::from_padding_box(const BoxStyle &style, const Rectf &box)
+	BoxGeometry BoxGeometry::from_padding_box(const BoxStyle &style, const Rectf &box)
 	{
-		ViewGeometry geometry(style);
+		BoxGeometry geometry(style);
 
 		geometry.content = Rectf::ltrb(
 			box.left + geometry.padding_left,
@@ -89,14 +89,14 @@ namespace clan
 		return geometry;
 	}
 
-	ViewGeometry ViewGeometry::from_content_box(const BoxStyle &style, const Rectf &box)
+	BoxGeometry BoxGeometry::from_content_box(const BoxStyle &style, const Rectf &box)
 	{
-		ViewGeometry geometry(style);
+		BoxGeometry geometry(style);
 		geometry.content = box;
 		return geometry;
 	}
 
-	Rectf ViewGeometry::margin_box() const
+	Rectf BoxGeometry::margin_box() const
 	{
 		return Rectf::ltrb(
 			content.left - margin_left - border_left - padding_left,
@@ -105,7 +105,7 @@ namespace clan
 			content.bottom + margin_bottom + border_bottom + padding_bottom);
 	}
 
-	Rectf ViewGeometry::border_box() const
+	Rectf BoxGeometry::border_box() const
 	{
 		return Rectf::ltrb(
 			content.left - border_left - padding_left,
@@ -114,7 +114,7 @@ namespace clan
 			content.bottom + border_bottom + padding_bottom);
 	}
 
-	Rectf ViewGeometry::padding_box() const
+	Rectf BoxGeometry::padding_box() const
 	{
 		return Rectf::ltrb(
 			content.left - padding_left,
@@ -123,7 +123,7 @@ namespace clan
 			content.bottom + padding_bottom);
 	}
 
-	Rectf ViewGeometry::content_box() const
+	Rectf BoxGeometry::content_box() const
 	{
 		return content;
 	}

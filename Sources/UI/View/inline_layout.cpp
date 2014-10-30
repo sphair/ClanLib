@@ -172,7 +172,7 @@ namespace clan
 				content_y += subview->box_style.border_top();
 				content_y += subview->box_style.padding_top();
 
-				subview->set_geometry(ViewGeometry::from_content_box(subview->box_style, Rectf::xywh(x, content_y, subview_width, subview_height)));
+				subview->set_geometry(BoxGeometry::from_content_box(subview->box_style, Rectf::xywh(x, content_y, subview_width, subview_height)));
 
 				x += subview_width;
 				x += subview->box_style.padding_right();

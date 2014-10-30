@@ -34,7 +34,7 @@
 #include "../../Core/Signals/signal.h"
 #include "../../Core/System/event.h"
 #include "../../UI/Events/event.h"
-#include "view_geometry.h"
+#include "../Style/box_geometry.h"
 #include "focus_policy.h"
 #include <vector>
 #include <memory>
@@ -72,8 +72,8 @@ namespace clan
 		bool needs_layout() const;
 		void set_needs_layout();
 
-		const ViewGeometry &geometry() const;
-		void set_geometry(const ViewGeometry &geometry);
+		const BoxGeometry &geometry() const;
+		void set_geometry(const BoxGeometry &geometry);
 
 		virtual void set_needs_render();
 

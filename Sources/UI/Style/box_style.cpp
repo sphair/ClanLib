@@ -582,7 +582,7 @@ namespace clan
 		return !is_flex_basis_auto() ? impl->flex.basis.value : 0.0f;
 	}
 
-	void BoxStyle::render(Canvas &canvas, const ViewGeometry &geometry) const
+	void BoxStyle::render(Canvas &canvas, const BoxGeometry &geometry) const
 	{
 		impl->render(canvas, geometry);
 	}

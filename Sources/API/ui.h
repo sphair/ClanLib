@@ -57,10 +57,10 @@
 #include "UI/StandardViews/text_view.h"
 #include "UI/StandardViews/window_view.h"
 #include "UI/Style/box_style.h"
+#include "UI/Style/box_geometry.h"
 #include "UI/Style/text_style.h"
 #include "UI/View/focus_policy.h"
 #include "UI/View/view.h"
-#include "UI/View/view_geometry.h"
 #include "UI/UIThread/ui_thread.h"
 
 #ifdef __cplusplus_cli

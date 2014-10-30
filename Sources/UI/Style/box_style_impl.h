@@ -41,7 +41,7 @@
 namespace clan
 {
 	class Canvas;
-	class ViewGeometry;
+	class BoxGeometry;
 
 	class BoxStyleImpl
 	{
@@ -70,7 +70,7 @@ namespace clan
 		BoxBackground background;
 		std::function<void()> style_changed;
 
-		void render(Canvas &canvas, const ViewGeometry &geometry) const;
+		void render(Canvas &canvas, const BoxGeometry &geometry) const;
 
 	private:
 		static float mix(float a, float b, float t);

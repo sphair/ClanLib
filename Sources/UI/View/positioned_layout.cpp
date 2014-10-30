@@ -142,7 +142,7 @@ namespace clan
 			height = view->get_preferred_height(width);
 		}
 
-		view->set_geometry(ViewGeometry::from_content_box(view->box_style, Rectf::xywh(x, y, width, height)));
+		view->set_geometry(BoxGeometry::from_content_box(view->box_style, Rectf::xywh(x, y, width, height)));
 
 		view->layout_subviews();
 	}
