@@ -36,4 +36,88 @@ namespace clan
 	TextStyle::TextStyle() : impl(new TextStyleImpl())
 	{
 	}
+
+	void TextStyle::set_font(const std::string &family, float size)
+	{
+	}
+
+	void TextStyle::set_font(const std::string &family, float size, float line_height)
+	{
+	}
+
+	void TextStyle::set_font_family(const std::string &family)
+	{
+	}
+
+	void TextStyle::set_size(float size)
+	{
+	}
+
+	void TextStyle::set_line_height_normal()
+	{
+	}
+
+	void TextStyle::set_line_height(float height)
+	{
+	}
+
+	void TextStyle::set_weight_normal()
+	{
+	}
+
+	void TextStyle::set_weight_bold()
+	{
+	}
+
+	void TextStyle::set_weight(int weight)
+	{
+	}
+
+	void TextStyle::set_style_normal()
+	{
+	}
+
+	void TextStyle::set_style_italic()
+	{
+	}
+
+	void TextStyle::set_color(const Colorf &color)
+	{
+	}
+
+	void TextStyle::set_shadow_none()
+	{
+	}
+
+	void TextStyle::set_shadow(float horz_offset, float vert_offset, float blur_radius, const Colorf &color)
+	{
+	}
+
+	void TextStyle::set_align_left()
+	{
+	}
+
+	void TextStyle::set_align_right()
+	{
+	}
+
+	void TextStyle::set_align_center()
+	{
+	}
+
+	void TextStyle::set_align_justify()
+	{
+	}
+
+	void TextStyle::set_transform_none()
+	{
+	}
+
+	void TextStyle::set_transform_uppercase()
+	{
+	}
+
+	void TextStyle::set_transform_lowercase()
+	{
+	}
 }
