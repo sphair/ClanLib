@@ -723,7 +723,6 @@ namespace clan
 		buffer[position++] = brush_data2;
 
 		Mat4f matrix = Mat4f(inv_brush_transform) * inv_transform;	//TODO: Is this the correct multication order
-		matrix.transpose();
 	
 		buffer[position++] = Vec4f(matrix.matrix[0], matrix.matrix[1], matrix.matrix[2], matrix.matrix[3]);
 		buffer[position++] = Vec4f(matrix.matrix[4], matrix.matrix[5], matrix.matrix[6], matrix.matrix[7]);

@@ -263,7 +263,7 @@ const std::string::value_type *cl_glsl15_vertex_path = R"shaderend(
 						texelFetch(instance_data, ivec2(instance_offset.x + 3, instance_offset.y), 0),
 						texelFetch(instance_data, ivec2(instance_offset.x + 4, instance_offset.y), 0),
 						texelFetch(instance_data, ivec2(instance_offset.x + 5, instance_offset.y), 0));
-				vary_data.zw = (vec4(vary_data.zw, 0, 1) * inv_transform).xy;
+				vary_data.zw = (vec4(vary_data.zw, 0, 1) * transpose(inv_transform)).xy;
 
 				vary_data.z = (vary_data.z + brush_data1.x) / brush_data2.x;
 				vary_data.w = (vary_data.w + brush_data1.y) / brush_data2.y;
