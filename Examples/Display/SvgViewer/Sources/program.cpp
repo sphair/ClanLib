@@ -40,8 +40,8 @@ int Program::main(const std::vector<std::string> &args)
 	clan::SetupDisplay setup_display;
 
 	// We support all display targets, in order listed here
-//	clan::SetupD3D setup_d3d;
 	clan::SetupGL setup_gl;
+	clan::SetupD3D setup_d3d;
 
 	// Start the Application
 	SvgViewer app;

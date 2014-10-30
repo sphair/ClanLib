@@ -47,20 +47,23 @@ int HelloWorld::start(const std::vector<std::string> &args)
 	// We have to store the return Slot because if it is destroyed the lambda function is disconnected from the signal.
 	Slot slot_close = root->sig_close().connect([&](CloseEvent &e) { exit(); });
 
+	Canvas canvas = UIThread::get_resource_canvas();
+
 	// Style the root view to use rounded corners and a bit of drop shadow
-	root->style.set_background(Colorf(240, 240, 240, 255));
-	root->style.set_padding(11.0f);
-	root->style.set_border_radius(15.0f);
-	root->style.set_border(Colorf(0, 0, 0), 1.0f);
-	root->style.set_margin(10.0f, 35.0f, 10.0f, 10.0f);
-	root->style.set_box_shadow(Colorf(0, 0, 0, 50), 0.0f, 0.0f, 20.0f);
+	root->box_style.set_background(Colorf(240, 240, 240, 255));
+	root->box_style.set_padding(11.0f);
+	root->box_style.set_border_radius(15.0f);
+	root->box_style.set_border(Colorf(0, 0, 0), 1.0f);
+	root->box_style.set_margin(10.0f, 35.0f, 10.0f, 10.0f);
+	root->box_style.set_box_shadow(Colorf(0, 0, 0, 50), 0.0f, 0.0f, 20.0f);
 
 	// Create a label with some text to have some content
 	std::shared_ptr<LabelView> label = std::make_shared<LabelView>();
 	FontDescription font_desc("Ravie");
 	font_desc.set_height(20.0f);
 	font_desc.set_line_height(40.0f);
-	label->set_font(font_desc);
+
+	label->set_font(Font(canvas, font_desc));
 	label->set_text("Hello World!");
 	root->add_subview(label);
 
@@ -75,14 +78,14 @@ int HelloWorld::start(const std::vector<std::string> &args)
 	font_desc6.set_typeface_name("Ravie");
 	font_desc6.set_height(11.0f);
 	font_desc6.set_line_height(20.0f);
-	edit->set_font(font_desc6);
+	edit->set_font(Font(canvas, font_desc6));
 	edit->set_text("42");
-	edit->style.set_margin(0.0f, 5.0f);
-	edit->style.set_background(Colorf(255, 255, 255));
-	edit->style.set_border(Colorf(0.0f, 0.0f, 0.0f), 1.0f);
-	edit->style.set_border_radius(3.0f);
-	edit->style.set_padding(5.0f, 2.0f, 5.0f, 3.0f);
-	edit->style.set_width(35.0f);
+	edit->box_style.set_margin(0.0f, 5.0f);
+	edit->box_style.set_background(Colorf(255, 255, 255));
+	edit->box_style.set_border(Colorf(0.0f, 0.0f, 0.0f), 1.0f);
+	edit->box_style.set_border_radius(3.0f);
+	edit->box_style.set_padding(5.0f, 2.0f, 5.0f, 3.0f);
+	edit->box_style.set_width(35.0f);
 
 	// Create a span layout view with some more complex inline formatting
 	std::shared_ptr<SpanLayoutView> span = std::make_shared<SpanLayoutView>();
@@ -90,7 +93,6 @@ int HelloWorld::start(const std::vector<std::string> &args)
 	font_desc2.set_typeface_name("Segoe UI");
 	font_desc2.set_height(13.0f);
 	font_desc2.set_line_height(40.0f);
-	Canvas canvas = SharedGCData::get_resource_canvas();
 	span->add_text("This is the UI core ", Font(canvas, font_desc2));
 	FontDescription font_desc3;
 	font_desc3.set_typeface_name("Segoe UI");
