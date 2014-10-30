@@ -48,7 +48,7 @@ namespace clan
 {
 	View::View() : impl(new ViewImpl())
 	{
-		style.set_style_changed(bind_member(this, &View::set_needs_layout));
+		box_style.set_style_changed(bind_member(this, &View::set_needs_layout));
 	}
 
 	View::~View()
@@ -151,7 +151,7 @@ namespace clan
 
 	void View::render(Canvas &canvas)
 	{
-		style.render(canvas, geometry());
+		box_style.render(canvas, geometry());
 
 		Mat4f old_transform = canvas.get_transform();
 		Pointf translate = impl->_geometry.content.get_top_left();
@@ -170,41 +170,41 @@ namespace clan
 
 	float View::get_preferred_width()
 	{
-		if (style.is_layout_block())
+		if (box_style.is_layout_block())
 			return BlockLayout::get_preferred_width(this);
-		else if (style.is_layout_line())
+		else if (box_style.is_layout_line())
 			return InlineLayout::get_preferred_width(this);
-		else if (style.is_layout_vbox())
+		else if (box_style.is_layout_vbox())
 			return VBoxLayout::get_preferred_width(this);
-		else if (style.is_layout_hbox())
+		else if (box_style.is_layout_hbox())
 			return HBoxLayout::get_preferred_width(this);
 		else
-			return !style.is_width_auto() ? style.width() : 0.0f;
+			return !box_style.is_width_auto() ? box_style.width() : 0.0f;
 	}
 
 	float View::get_preferred_height(float width)
 	{
-		if (style.is_layout_block())
+		if (box_style.is_layout_block())
 			return BlockLayout::get_preferred_height(this, width);
-		else if (style.is_layout_line())
+		else if (box_style.is_layout_line())
 			return InlineLayout::get_preferred_height(this, width);
-		else if (style.is_layout_vbox())
+		else if (box_style.is_layout_vbox())
 			return VBoxLayout::get_preferred_height(this, width);
-		else if (style.is_layout_hbox())
+		else if (box_style.is_layout_hbox())
 			return HBoxLayout::get_preferred_height(this, width);
 		else
-			return !style.is_height_auto() ? style.height() : 0.0f;
+			return !box_style.is_height_auto() ? box_style.height() : 0.0f;
 	}
 
 	float View::get_first_baseline_offset(float width)
 	{
-		if (style.is_layout_block())
+		if (box_style.is_layout_block())
 			return BlockLayout::get_first_baseline_offset(this, width);
-		else if (style.is_layout_line())
+		else if (box_style.is_layout_line())
 			return InlineLayout::get_first_baseline_offset(this, width);
-		else if (style.is_layout_vbox())
+		else if (box_style.is_layout_vbox())
 			return VBoxLayout::get_first_baseline_offset(this, width);
-		else if (style.is_layout_hbox())
+		else if (box_style.is_layout_hbox())
 			return HBoxLayout::get_first_baseline_offset(this, width);
 		else
 			return 0.0f;
@@ -212,13 +212,13 @@ namespace clan
 
 	float View::get_last_baseline_offset(float width)
 	{
-		if (style.is_layout_block())
+		if (box_style.is_layout_block())
 			return BlockLayout::get_last_baseline_offset(this, width);
-		else if (style.is_layout_line())
+		else if (box_style.is_layout_line())
 			return InlineLayout::get_last_baseline_offset(this, width);
-		else if (style.is_layout_vbox())
+		else if (box_style.is_layout_vbox())
 			return VBoxLayout::get_last_baseline_offset(this, width);
-		else if (style.is_layout_hbox())
+		else if (box_style.is_layout_hbox())
 			return HBoxLayout::get_last_baseline_offset(this, width);
 		else
 			return 0.0f;
@@ -233,13 +233,13 @@ namespace clan
 
 	void View::layout_subviews()
 	{
-		if (style.is_layout_block())
+		if (box_style.is_layout_block())
 			BlockLayout::layout_subviews(this);
-		else if (style.is_layout_line())
+		else if (box_style.is_layout_line())
 			InlineLayout::layout_subviews(this);
-		else if (style.is_layout_vbox())
+		else if (box_style.is_layout_vbox())
 			VBoxLayout::layout_subviews(this);
-		else if (style.is_layout_hbox())
+		else if (box_style.is_layout_hbox())
 			HBoxLayout::layout_subviews(this);
 
 		PositionedLayout::layout_subviews(this);

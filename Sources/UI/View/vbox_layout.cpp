@@ -35,25 +35,25 @@ namespace clan
 {
 	float VBoxLayout::get_preferred_width(View *view)
 	{
-		if (!view->style.is_width_auto())
-			return view->style.width();
+		if (!view->box_style.is_width_auto())
+			return view->box_style.width();
 
 		float width = 0.0f;
 		for (const std::shared_ptr<View> &subview : view->subviews())
 		{
-			if (subview->style.is_static() && !subview->hidden())
+			if (subview->box_style.is_static() && !subview->hidden())
 			{
 				float margin_box_width = 0.0f;
-				margin_box_width += subview->style.margin_left();
-				margin_box_width += subview->style.border_left();
-				margin_box_width += subview->style.padding_left();
-				if (subview->style.is_flex_basis_auto())
+				margin_box_width += subview->box_style.margin_left();
+				margin_box_width += subview->box_style.border_left();
+				margin_box_width += subview->box_style.padding_left();
+				if (subview->box_style.is_flex_basis_auto())
 					margin_box_width += subview->get_preferred_width();
 				else
-					margin_box_width += subview->style.flex_basis();
-				margin_box_width += subview->style.padding_right();
-				margin_box_width += subview->style.border_right();
-				margin_box_width += subview->style.margin_right();
+					margin_box_width += subview->box_style.flex_basis();
+				margin_box_width += subview->box_style.padding_right();
+				margin_box_width += subview->box_style.border_right();
+				margin_box_width += subview->box_style.margin_right();
 				width = clan::max(width, margin_box_width);
 			}
 		}
@@ -62,23 +62,23 @@ namespace clan
 
 	float VBoxLayout::get_preferred_height(View *view, float width)
 	{
-		if (!view->style.is_height_auto())
-			return view->style.height();
+		if (!view->box_style.is_height_auto())
+			return view->box_style.height();
 
 		float height = 0.0f;
 		for (const std::shared_ptr<View> &subview : view->subviews())
 		{
-			if (subview->style.is_static() && !subview->hidden())
+			if (subview->box_style.is_static() && !subview->hidden())
 			{
 				float left_noncontent = 0.0f;
-				left_noncontent += subview->style.margin_left();
-				left_noncontent += subview->style.border_left();
-				left_noncontent += subview->style.padding_left();
+				left_noncontent += subview->box_style.margin_left();
+				left_noncontent += subview->box_style.border_left();
+				left_noncontent += subview->box_style.padding_left();
 
 				float right_noncontent = 0.0f;
-				right_noncontent += subview->style.margin_right();
-				right_noncontent += subview->style.border_right();
-				right_noncontent += subview->style.padding_right();
+				right_noncontent += subview->box_style.margin_right();
+				right_noncontent += subview->box_style.border_right();
+				right_noncontent += subview->box_style.padding_right();
 
 				float subview_width = width - left_noncontent - right_noncontent;
 				if (subview_width < 0.0f)
@@ -92,13 +92,13 @@ namespace clan
 					}
 				}
 
-				height += subview->style.margin_top();
-				height += subview->style.border_top();
-				height += subview->style.padding_top();
+				height += subview->box_style.margin_top();
+				height += subview->box_style.border_top();
+				height += subview->box_style.padding_top();
 				height += subview->get_preferred_height(subview_width);
-				height += subview->style.padding_bottom();
-				height += subview->style.border_bottom();
-				height += subview->style.margin_bottom();
+				height += subview->box_style.padding_bottom();
+				height += subview->box_style.border_bottom();
+				height += subview->box_style.margin_bottom();
 			}
 		}
 		return height;
@@ -136,22 +136,22 @@ namespace clan
 		float noncontent_height = 0.0f;
 		for (const std::shared_ptr<View> &subview : view->subviews())
 		{
-			if (subview->style.is_static() && !subview->hidden())
+			if (subview->box_style.is_static() && !subview->hidden())
 			{
-				noncontent_height += subview->style.margin_top();
-				noncontent_height += subview->style.border_top();
-				noncontent_height += subview->style.padding_top();
-				noncontent_height += subview->style.padding_bottom();
-				noncontent_height += subview->style.border_bottom();
-				noncontent_height += subview->style.margin_bottom();
+				noncontent_height += subview->box_style.margin_top();
+				noncontent_height += subview->box_style.border_top();
+				noncontent_height += subview->box_style.padding_top();
+				noncontent_height += subview->box_style.padding_bottom();
+				noncontent_height += subview->box_style.border_bottom();
+				noncontent_height += subview->box_style.margin_bottom();
 
-				total_grow_factor += subview->style.flex_grow();
-				total_shrink_factor += subview->style.flex_shrink();
+				total_grow_factor += subview->box_style.flex_grow();
+				total_shrink_factor += subview->box_style.flex_shrink();
 
-				if (subview->style.is_flex_basis_auto())
+				if (subview->box_style.is_flex_basis_auto())
 					basis_height += subview->get_preferred_height(view->geometry().content.get_width());
 				else
-					basis_height += subview->style.flex_basis();
+					basis_height += subview->box_style.flex_basis();
 			}
 		}
 
@@ -162,17 +162,17 @@ namespace clan
 		float y = 0.0f;
 		for (const std::shared_ptr<View> &subview : view->subviews())
 		{
-			if (subview->style.is_static() && !subview->hidden())
+			if (subview->box_style.is_static() && !subview->hidden())
 			{
 				float left_noncontent = 0.0f;
-				left_noncontent += subview->style.margin_left();
-				left_noncontent += subview->style.border_left();
-				left_noncontent += subview->style.padding_left();
+				left_noncontent += subview->box_style.margin_left();
+				left_noncontent += subview->box_style.border_left();
+				left_noncontent += subview->box_style.padding_left();
 
 				float right_noncontent = 0.0f;
-				right_noncontent += subview->style.margin_right();
-				right_noncontent += subview->style.border_right();
-				right_noncontent += subview->style.padding_right();
+				right_noncontent += subview->box_style.margin_right();
+				right_noncontent += subview->box_style.border_right();
+				right_noncontent += subview->box_style.padding_right();
 
 				float subview_width = view->geometry().content.get_width() - left_noncontent - right_noncontent;
 				if (subview_width < 0.0f)
@@ -186,27 +186,27 @@ namespace clan
 					}
 				}
 
-				float subview_height = subview->style.flex_basis();
-				if (subview->style.is_flex_basis_auto())
+				float subview_height = subview->box_style.flex_basis();
+				if (subview->box_style.is_flex_basis_auto())
 					subview_height = subview->get_preferred_height(subview_width);
 
 				if (free_space < 0.0f && total_shrink_factor != 0.0f)
-					subview_height += subview->style.flex_shrink() * free_space / total_shrink_factor;
+					subview_height += subview->box_style.flex_shrink() * free_space / total_shrink_factor;
 				else if (free_space > 0.0f && total_grow_factor != 0.0f)
-					subview_height += subview->style.flex_grow() * free_space / total_grow_factor;
+					subview_height += subview->box_style.flex_grow() * free_space / total_grow_factor;
 
 				subview_height = std::round(subview_height); // To do: this way of rounding may cause the total height to go beyond the available content height
 
-				y += subview->style.margin_top();
-				y += subview->style.border_top();
-				y += subview->style.padding_top();
+				y += subview->box_style.margin_top();
+				y += subview->box_style.border_top();
+				y += subview->box_style.padding_top();
 
-				subview->set_geometry(ViewGeometry::from_content_box(subview->style, Rectf::xywh(left_noncontent, y, subview_width, subview_height)));
+				subview->set_geometry(ViewGeometry::from_content_box(subview->box_style, Rectf::xywh(left_noncontent, y, subview_width, subview_height)));
 
 				y += subview_height;
-				y += subview->style.padding_bottom();
-				y += subview->style.border_bottom();
-				y += subview->style.margin_bottom();
+				y += subview->box_style.padding_bottom();
+				y += subview->box_style.border_bottom();
+				y += subview->box_style.margin_bottom();
 
 				subview->layout_subviews();
 			}

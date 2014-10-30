@@ -105,7 +105,7 @@ namespace clan
 
 	void WindowView::on_window_render(Canvas &canvas)
 	{
-		set_geometry(ViewGeometry::from_margin_box(style, impl->window.get_viewport()));
+		set_geometry(ViewGeometry::from_margin_box(box_style, impl->window.get_viewport()));
 		layout();
 		render(canvas);
 	}

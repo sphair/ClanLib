@@ -34,7 +34,7 @@ namespace clan
 {
 	SpanLayoutView::SpanLayoutView() : impl(new SpanLayoutViewImpl())
 	{
-		style.set_layout_none();
+		box_style.set_layout_none();
 	}
 
 	void SpanLayoutView::set_text_alignment(TextAlignment alignment)
@@ -83,18 +83,18 @@ namespace clan
 
 	float SpanLayoutView::get_preferred_width()
 	{
-		if (style.is_width_auto())
+		if (box_style.is_width_auto())
 			return impl->get_preferred_width();
 		else
-			return style.width();
+			return box_style.width();
 	}
 
 	float SpanLayoutView::get_preferred_height(float width)
 	{
-		if (style.is_height_auto())
+		if (box_style.is_height_auto())
 			return impl->get_preferred_height(width);
 		else
-			return style.height();
+			return box_style.height();
 	}
 
 	float SpanLayoutView::get_first_baseline_offset(float width)

@@ -370,24 +370,24 @@ namespace clan
 
 	float TextFieldView::get_preferred_width()
 	{
-		if (style.is_width_auto())
+		if (box_style.is_width_auto())
 		{
 			Canvas canvas = SharedGCData::get_resource_canvas();
 			return impl->font.get_glyph_metrics(canvas, impl->text).advance.width;
 		}
 		else
-			return style.width();
+			return box_style.width();
 	}
 
 	float TextFieldView::get_preferred_height(float width)
 	{
-		if (style.is_height_auto())
+		if (box_style.is_height_auto())
 		{
 			LineMetrics line_metrics(impl->font);
 			return line_metrics.line_height;
 		}
 		else
-			return style.height();
+			return box_style.height();
 	}
 
 	float TextFieldView::get_first_baseline_offset(float width)

@@ -195,27 +195,27 @@ namespace clan
 					if (obj_baseline_offset == 0.0f) // Hmm, do we need get_first_baseline_offset to be able to return that there is no baseline?
 						obj_baseline_offset = obj_height;
 
-					obj_width += object.view->style.margin_left();
-					obj_width += object.view->style.border_left();
-					obj_width += object.view->style.padding_left();
-					obj_width += object.view->style.margin_right();
-					obj_width += object.view->style.border_right();
-					obj_width += object.view->style.padding_right();
+					obj_width += object.view->box_style.margin_left();
+					obj_width += object.view->box_style.border_left();
+					obj_width += object.view->box_style.padding_left();
+					obj_width += object.view->box_style.margin_right();
+					obj_width += object.view->box_style.border_right();
+					obj_width += object.view->box_style.padding_right();
 
-					obj_height += object.view->style.margin_top();
-					obj_height += object.view->style.border_top();
-					obj_height += object.view->style.padding_top();
-					obj_height += object.view->style.margin_bottom();
-					obj_height += object.view->style.border_bottom();
-					obj_height += object.view->style.padding_bottom();
+					obj_height += object.view->box_style.margin_top();
+					obj_height += object.view->box_style.border_top();
+					obj_height += object.view->box_style.padding_top();
+					obj_height += object.view->box_style.margin_bottom();
+					obj_height += object.view->box_style.border_bottom();
+					obj_height += object.view->box_style.padding_bottom();
 
-					obj_baseline_offset += object.view->style.margin_top();
-					obj_baseline_offset += object.view->style.border_top();
-					obj_baseline_offset += object.view->style.padding_top();
+					obj_baseline_offset += object.view->box_style.margin_top();
+					obj_baseline_offset += object.view->box_style.border_top();
+					obj_baseline_offset += object.view->box_style.padding_top();
 
 					obj_y -= obj_baseline_offset;
 
-					object.view->set_geometry(ViewGeometry::from_margin_box(object.view->style, Rectf::xywh(obj_x, obj_y, obj_width, obj_height)));
+					object.view->set_geometry(ViewGeometry::from_margin_box(object.view->box_style, Rectf::xywh(obj_x, obj_y, obj_width, obj_height)));
 
 					x += obj_width;
 				}
@@ -356,23 +356,23 @@ namespace clan
 				if (obj_baseline_offset == 0.0f) // Hmm, do we need get_first_baseline_offset to be able to return that there is no baseline?
 					obj_baseline_offset = obj_height;
 
-				obj_width += object.view->style.margin_left();
-				obj_width += object.view->style.border_left();
-				obj_width += object.view->style.padding_left();
-				obj_width += object.view->style.margin_right();
-				obj_width += object.view->style.border_right();
-				obj_width += object.view->style.padding_right();
+				obj_width += object.view->box_style.margin_left();
+				obj_width += object.view->box_style.border_left();
+				obj_width += object.view->box_style.padding_left();
+				obj_width += object.view->box_style.margin_right();
+				obj_width += object.view->box_style.border_right();
+				obj_width += object.view->box_style.padding_right();
 
-				obj_height += object.view->style.margin_top();
-				obj_height += object.view->style.border_top();
-				obj_height += object.view->style.padding_top();
-				obj_height += object.view->style.margin_bottom();
-				obj_height += object.view->style.border_bottom();
-				obj_height += object.view->style.padding_bottom();
+				obj_height += object.view->box_style.margin_top();
+				obj_height += object.view->box_style.border_top();
+				obj_height += object.view->box_style.padding_top();
+				obj_height += object.view->box_style.margin_bottom();
+				obj_height += object.view->box_style.border_bottom();
+				obj_height += object.view->box_style.padding_bottom();
 
-				obj_baseline_offset += object.view->style.margin_top();
-				obj_baseline_offset += object.view->style.border_top();
-				obj_baseline_offset += object.view->style.padding_top();
+				obj_baseline_offset += object.view->box_style.margin_top();
+				obj_baseline_offset += object.view->box_style.border_top();
+				obj_baseline_offset += object.view->box_style.padding_top();
 
 				obj_ascent = obj_baseline_offset;
 				obj_descent = obj_height - obj_baseline_offset;

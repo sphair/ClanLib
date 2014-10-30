@@ -40,10 +40,10 @@ namespace clan
 
 	ButtonView::ButtonView() : impl(new ButtonViewImpl())
 	{
-		style.set_layout_hbox();
+		box_style.set_layout_hbox();
 
 		impl->label = std::make_shared<LabelView>();
-		impl->label->style.set_flex(1.0f, 1.0f);
+		impl->label->box_style.set_flex(1.0f, 1.0f);
 		add_subview(impl->label);
 
 		//impl->image_view = std::make_shared<ImageView>();

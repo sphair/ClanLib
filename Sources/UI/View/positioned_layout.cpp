@@ -38,12 +38,12 @@ namespace clan
 		{
 			if (subview->hidden()) continue;
 
-			if (subview->style.is_absolute())
+			if (subview->box_style.is_absolute())
 			{
 				// To do: decide how we determine the containing box used for absolute positioning. For now, use the parent content box.
 				layout_from_containing_box(subview.get(), view->geometry().content);
 			}
-			else if (subview->style.is_fixed())
+			else if (subview->box_style.is_fixed())
 			{
 				Rectf offset_initial_containing_box;
 				View *current = view->superview();
@@ -77,30 +77,30 @@ namespace clan
 		float x = 0.0f;
 		float width = 0.0f;
 
-		if (!view->style.is_left_auto() && !view->style.is_right_auto())
+		if (!view->box_style.is_left_auto() && !view->box_style.is_right_auto())
 		{
-			x = view->style.left();
-			width = clan::max(containing_box.get_width() - view->style.right() - x, 0.0f);
+			x = view->box_style.left();
+			width = clan::max(containing_box.get_width() - view->box_style.right() - x, 0.0f);
 		}
-		else if (!view->style.is_left_auto() && !view->style.is_width_auto())
+		else if (!view->box_style.is_left_auto() && !view->box_style.is_width_auto())
 		{
-			x = view->style.left();
-			width = view->style.width();
+			x = view->box_style.left();
+			width = view->box_style.width();
 		}
-		else if (!view->style.is_right_auto() && !view->style.is_width_auto())
+		else if (!view->box_style.is_right_auto() && !view->box_style.is_width_auto())
 		{
-			width = view->style.width();
-			x = containing_box.get_width() - view->style.right() - width;
+			width = view->box_style.width();
+			x = containing_box.get_width() - view->box_style.right() - width;
 		}
-		else if (!view->style.is_left_auto())
+		else if (!view->box_style.is_left_auto())
 		{
-			x = view->style.left();
+			x = view->box_style.left();
 			width = view->get_preferred_width();
 		}
-		else if (!view->style.is_right_auto())
+		else if (!view->box_style.is_right_auto())
 		{
 			width = view->get_preferred_width();
-			x = containing_box.get_width() - view->style.right() - width;
+			x = containing_box.get_width() - view->box_style.right() - width;
 		}
 		else
 		{
@@ -111,30 +111,30 @@ namespace clan
 		float y = 0.0f;
 		float height = 0.0f;
 
-		if (!view->style.is_top_auto() && !view->style.is_bottom_auto())
+		if (!view->box_style.is_top_auto() && !view->box_style.is_bottom_auto())
 		{
-			y = view->style.top();
-			height = clan::max(containing_box.get_height() - view->style.bottom() - y, 0.0f);
+			y = view->box_style.top();
+			height = clan::max(containing_box.get_height() - view->box_style.bottom() - y, 0.0f);
 		}
-		else if (!view->style.is_top_auto() && !view->style.is_height_auto())
+		else if (!view->box_style.is_top_auto() && !view->box_style.is_height_auto())
 		{
-			y = view->style.top();
-			height = view->style.height();
+			y = view->box_style.top();
+			height = view->box_style.height();
 		}
-		else if (!view->style.is_bottom_auto() && !view->style.is_height_auto())
+		else if (!view->box_style.is_bottom_auto() && !view->box_style.is_height_auto())
 		{
-			height = view->style.height();
-			y = containing_box.get_height() - view->style.bottom() - height;
+			height = view->box_style.height();
+			y = containing_box.get_height() - view->box_style.bottom() - height;
 		}
-		else if (!view->style.is_top_auto())
+		else if (!view->box_style.is_top_auto())
 		{
-			y = view->style.top();
+			y = view->box_style.top();
 			height = view->get_preferred_height(width);
 		}
-		else if (!view->style.is_bottom_auto())
+		else if (!view->box_style.is_bottom_auto())
 		{
 			height = view->get_preferred_height(width);
-			y = containing_box.get_height() - view->style.bottom() - height;
+			y = containing_box.get_height() - view->box_style.bottom() - height;
 		}
 		else
 		{
@@ -142,7 +142,7 @@ namespace clan
 			height = view->get_preferred_height(width);
 		}
 
-		view->set_geometry(ViewGeometry::from_content_box(view->style, Rectf::xywh(x, y, width, height)));
+		view->set_geometry(ViewGeometry::from_content_box(view->box_style, Rectf::xywh(x, y, width, height)));
 
 		view->layout_subviews();
 	}

@@ -34,21 +34,21 @@ namespace clan
 {
 	float InlineLayout::get_preferred_width(View *view)
 	{
-		if (!view->style.is_width_auto())
-			return view->style.width();
+		if (!view->box_style.is_width_auto())
+			return view->box_style.width();
 
 		float width = 0.0f;
 		for (const std::shared_ptr<View> &view : view->subviews())
 		{
-			if (view->style.is_static() && !view->hidden())
+			if (view->box_style.is_static() && !view->hidden())
 			{
-				width += view->style.margin_left();
-				width += view->style.border_left();
-				width += view->style.padding_left();
+				width += view->box_style.margin_left();
+				width += view->box_style.border_left();
+				width += view->box_style.padding_left();
 				width += view->get_preferred_width();
-				width += view->style.padding_right();
-				width += view->style.border_right();
-				width += view->style.margin_right();
+				width += view->box_style.padding_right();
+				width += view->box_style.border_right();
+				width += view->box_style.margin_right();
 			}
 		}
 		return width;
@@ -56,8 +56,8 @@ namespace clan
 
 	float InlineLayout::get_preferred_height(View *view, float width)
 	{
-		if (!view->style.is_height_auto())
-			return view->style.height();
+		if (!view->box_style.is_height_auto())
+			return view->box_style.height();
 
 		float x = 0.0f;
 		float y = 0.0f;
@@ -65,28 +65,28 @@ namespace clan
 
 		for (const std::shared_ptr<View> &subview : view->subviews())
 		{
-			if (subview->style.is_static() && !subview->hidden())
+			if (subview->box_style.is_static() && !subview->hidden())
 			{
 				float subview_width = subview->get_preferred_width();
 				float subview_height = subview->get_preferred_height(subview_width);
 
 				float margin_box_width = 0.0f;
-				margin_box_width += subview->style.margin_left();
-				margin_box_width += subview->style.border_left();
-				margin_box_width += subview->style.padding_left();
+				margin_box_width += subview->box_style.margin_left();
+				margin_box_width += subview->box_style.border_left();
+				margin_box_width += subview->box_style.padding_left();
 				margin_box_width += subview_width;
-				margin_box_width += subview->style.padding_right();
-				margin_box_width += subview->style.border_right();
-				margin_box_width += subview->style.margin_right();
+				margin_box_width += subview->box_style.padding_right();
+				margin_box_width += subview->box_style.border_right();
+				margin_box_width += subview->box_style.margin_right();
 
 				float margin_box_height = 0.0f;
-				margin_box_height += subview->style.margin_top();
-				margin_box_height += subview->style.border_top();
-				margin_box_height += subview->style.padding_top();
+				margin_box_height += subview->box_style.margin_top();
+				margin_box_height += subview->box_style.border_top();
+				margin_box_height += subview->box_style.padding_top();
 				margin_box_height += subview_height;
-				margin_box_height += subview->style.padding_bottom();
-				margin_box_height += subview->style.border_bottom();
-				margin_box_height += subview->style.margin_bottom();
+				margin_box_height += subview->box_style.padding_bottom();
+				margin_box_height += subview->box_style.border_bottom();
+				margin_box_height += subview->box_style.margin_bottom();
 
 				if (x != 0.0f && x + margin_box_width > width)
 				{
@@ -133,28 +133,28 @@ namespace clan
 
 		for (const std::shared_ptr<View> &subview : view->subviews())
 		{
-			if (subview->style.is_static() && !subview->hidden())
+			if (subview->box_style.is_static() && !subview->hidden())
 			{
 				float subview_width = subview->get_preferred_width();
 				float subview_height = subview->get_preferred_height(subview_width);
 
 				float margin_box_width = 0.0f;
-				margin_box_width += subview->style.margin_left();
-				margin_box_width += subview->style.border_left();
-				margin_box_width += subview->style.padding_left();
+				margin_box_width += subview->box_style.margin_left();
+				margin_box_width += subview->box_style.border_left();
+				margin_box_width += subview->box_style.padding_left();
 				margin_box_width += subview_width;
-				margin_box_width += subview->style.padding_right();
-				margin_box_width += subview->style.border_right();
-				margin_box_width += subview->style.margin_right();
+				margin_box_width += subview->box_style.padding_right();
+				margin_box_width += subview->box_style.border_right();
+				margin_box_width += subview->box_style.margin_right();
 
 				float margin_box_height = 0.0f;
-				margin_box_height += subview->style.margin_top();
-				margin_box_height += subview->style.border_top();
-				margin_box_height += subview->style.padding_top();
+				margin_box_height += subview->box_style.margin_top();
+				margin_box_height += subview->box_style.border_top();
+				margin_box_height += subview->box_style.padding_top();
 				margin_box_height += subview_height;
-				margin_box_height += subview->style.padding_bottom();
-				margin_box_height += subview->style.border_bottom();
-				margin_box_height += subview->style.margin_bottom();
+				margin_box_height += subview->box_style.padding_bottom();
+				margin_box_height += subview->box_style.border_bottom();
+				margin_box_height += subview->box_style.margin_bottom();
 
 				if (x != 0.0f && x + margin_box_width > view->geometry().content.get_width())
 				{
@@ -163,21 +163,21 @@ namespace clan
 					line_height = 0.0f;
 				}
 
-				x += subview->style.margin_left();
-				x += subview->style.border_left();
-				x += subview->style.padding_left();
+				x += subview->box_style.margin_left();
+				x += subview->box_style.border_left();
+				x += subview->box_style.padding_left();
 
 				float content_y = y;
-				content_y += subview->style.margin_top();
-				content_y += subview->style.border_top();
-				content_y += subview->style.padding_top();
+				content_y += subview->box_style.margin_top();
+				content_y += subview->box_style.border_top();
+				content_y += subview->box_style.padding_top();
 
-				subview->set_geometry(ViewGeometry::from_content_box(subview->style, Rectf::xywh(x, content_y, subview_width, subview_height)));
+				subview->set_geometry(ViewGeometry::from_content_box(subview->box_style, Rectf::xywh(x, content_y, subview_width, subview_height)));
 
 				x += subview_width;
-				x += subview->style.padding_right();
-				x += subview->style.border_right();
-				x += subview->style.margin_right();
+				x += subview->box_style.padding_right();
+				x += subview->box_style.border_right();
+				x += subview->box_style.margin_right();
 
 				line_height = clan::max(line_height, margin_box_height);
 
