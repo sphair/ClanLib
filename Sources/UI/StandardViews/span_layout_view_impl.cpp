@@ -53,14 +53,13 @@ namespace clan
 		text.clear();
 	}
 
-	void SpanLayoutViewImpl::add_text(const std::string &more_text, const Font &font, const Colorf &color, int id)
+	void SpanLayoutViewImpl::add_text(const std::string &more_text, const TextStyle &style, int id)
 	{
 		SpanObject object;
 		object.type = SpanObjectType::text;
 		object.start = text.length();
 		object.end = object.start + more_text.length();
-		object.font = font;
-		object.color = color;
+		object.style = style;
 		object.id = id;
 		objects.push_back(object);
 		text += more_text;
@@ -129,9 +128,9 @@ namespace clan
 
 					std::string obj_text = text.substr(obj_text_start, obj_text_length);
 
-					GlyphMetrics advance = object.font.get_glyph_metrics(canvas, obj_text);
+					GlyphMetrics advance = object.get_font(canvas).get_glyph_metrics(canvas, obj_text);
 
-					object.font.draw_text(canvas, x, y + metrics.ascent + object.baseline_offset, obj_text, object.color);
+					object.get_font(canvas).draw_text(canvas, x, y + metrics.ascent + object.baseline_offset, obj_text, object.style.color());
 
 					x += advance.advance.width;
 				}
@@ -179,7 +178,7 @@ namespace clan
 					size_t obj_text_end = obj_index == metrics.object_end ? metrics.text_end : object.end;
 					size_t obj_text_length = obj_text_end - obj_text_start;
 
-					GlyphMetrics advance = object.font.get_glyph_metrics(canvas, text.substr(obj_text_start, obj_text_length));
+					GlyphMetrics advance = object.get_font(canvas).get_glyph_metrics(canvas, text.substr(obj_text_start, obj_text_length));
 					x += advance.advance.width;
 				}
 				else if (object.type == SpanObjectType::view)
@@ -234,7 +233,7 @@ namespace clan
 		{
 			if (object.type == SpanObjectType::text)
 			{
-				GlyphMetrics advance = object.font.get_glyph_metrics(canvas, text.substr(object.start, object.end - object.start));
+				GlyphMetrics advance = object.get_font(canvas).get_glyph_metrics(canvas, text.substr(object.start, object.end - object.start));
 				x += advance.advance.width;
 			}
 			else if (object.type == SpanObjectType::view)
@@ -305,15 +304,15 @@ namespace clan
 			{
 				std::string obj_text = text.substr(obj_text_start, obj_text_length);
 
-				obj_advance_width = object.font.get_glyph_metrics(canvas, obj_text).advance.width;
+				obj_advance_width = object.get_font(canvas).get_glyph_metrics(canvas, obj_text).advance.width;
 
-				LineMetrics object_line(object.font);
+				LineMetrics object_line(object.get_font(canvas));
 				obj_ascent = object_line.ascent;
 				obj_descent = object_line.descent;
 
 				if (x + obj_advance_width > width)
 				{
-					size_t char_clip_pos = object.font.clip_from_left(canvas, obj_text, width - x);
+					size_t char_clip_pos = object.get_font(canvas).clip_from_left(canvas, obj_text, width - x);
 
 					size_t word_clip_pos = char_clip_pos;
 					if (word_clip_pos > 0)
@@ -330,7 +329,7 @@ namespace clan
 					if (x != 0.0f || word_clip_pos > 0)
 					{
 						obj_text_length = word_clip_pos;
-						obj_advance_width = object.font.get_glyph_metrics(canvas, text.substr(obj_text_start, obj_text_length)).advance.width;
+						obj_advance_width = object.get_font(canvas).get_glyph_metrics(canvas, text.substr(obj_text_start, obj_text_length)).advance.width;
 
 						obj_ascent = std::max(obj_ascent + object.baseline_offset, 0.0f);
 						obj_descent = std::max(obj_descent - object.baseline_offset, 0.0f);

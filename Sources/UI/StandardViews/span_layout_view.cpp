@@ -53,9 +53,9 @@ namespace clan
 			view->remove_from_super();
 	}
 
-	void SpanLayoutView::add_text(const std::string &text, const Font &font, const Colorf &color)
+	void SpanLayoutView::add_text(const std::string &text, const TextStyle &style)
 	{
-		impl->add_text(text, font, color);
+		impl->add_text(text, style);
 		set_needs_layout();
 		set_needs_render();
 	}

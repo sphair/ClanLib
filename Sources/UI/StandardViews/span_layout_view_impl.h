@@ -29,6 +29,7 @@
 #pragma once
 
 #include "API/UI/StandardViews/span_layout_view.h"
+#include "API/UI/Style/text_style.h"
 
 namespace clan
 {
@@ -50,8 +51,7 @@ namespace clan
 		SpanObjectType type = SpanObjectType::text;
 		SpanFloatType float_type = SpanFloatType::none;
 
-		Font font;
-		Colorf color;
+		TextStyle style;
 		size_t start = 0;
 		size_t end = 0;
 
@@ -59,6 +59,16 @@ namespace clan
 		float baseline_offset = 0.0f;
 
 		int id = -1;
+
+		Font &get_font(Canvas &canvas)
+		{
+			if (font.is_null())
+				font = style.get_font(canvas);
+			return font;
+		}
+
+	private:
+		Font font;
 	};
 
 	struct SpanLineMetrics
@@ -84,7 +94,7 @@ namespace clan
 		SpanLayoutViewImpl();
 
 		void clear();
-		void add_text(const std::string &text, const Font &font, const Colorf &color, int id = -1);
+		void add_text(const std::string &text, const TextStyle &style, int id = -1);
 		void add_subview(const std::shared_ptr<View> &view, float baseline_offset = 0.0f, int id = -1);
 		void set_last_baseline_offset(float baseline_offset);
 		void remove_subview(const std::shared_ptr<View> &view);
