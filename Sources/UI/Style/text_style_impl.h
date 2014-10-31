@@ -66,8 +66,6 @@ namespace clan
 	class TextStyleImpl
 	{
 	public:
-		TextStyleImpl();
-
 		std::string family;
 		float size = 11.0f;
 		float line_height = 0.0f;
