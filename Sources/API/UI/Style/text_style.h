@@ -179,6 +179,11 @@ namespace clan
 		//void set_overflow_wrap_normal();
 		//void set_overflow_wrap_break_word();
 
+		void set_target_opaque();
+		void set_target_transparent();
+		bool is_target_opaque() const;
+		bool is_target_transparent() const;
+
 		Font get_font(Canvas &canvas);
 
 	private:

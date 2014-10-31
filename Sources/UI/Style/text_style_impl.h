@@ -74,6 +74,7 @@ namespace clan
 		Colorf color = Colorf::black;
 		TextShadow shadow;
 		TextTransform transform = TextTransform::none;
+		bool subpixel = true;
 	};
 
 	class TextBlockStyleImpl
