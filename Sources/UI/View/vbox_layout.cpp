@@ -33,7 +33,7 @@
 
 namespace clan
 {
-	float VBoxLayout::get_preferred_width(View *view)
+	float VBoxLayout::get_preferred_width(Canvas &canvas, View *view)
 	{
 		if (!view->box_style.is_width_auto())
 			return view->box_style.width();
@@ -48,7 +48,7 @@ namespace clan
 				margin_box_width += subview->box_style.border_left();
 				margin_box_width += subview->box_style.padding_left();
 				if (subview->box_style.is_flex_basis_auto())
-					margin_box_width += subview->get_preferred_width();
+					margin_box_width += subview->get_preferred_width(canvas);
 				else
 					margin_box_width += subview->box_style.flex_basis();
 				margin_box_width += subview->box_style.padding_right();
@@ -60,7 +60,7 @@ namespace clan
 		return width;
 	}
 
-	float VBoxLayout::get_preferred_height(View *view, float width)
+	float VBoxLayout::get_preferred_height(Canvas &canvas, View *view, float width)
 	{
 		if (!view->box_style.is_height_auto())
 			return view->box_style.height();
@@ -95,7 +95,7 @@ namespace clan
 				height += subview->box_style.margin_top();
 				height += subview->box_style.border_top();
 				height += subview->box_style.padding_top();
-				height += subview->get_preferred_height(subview_width);
+				height += subview->get_preferred_height(canvas, subview_width);
 				height += subview->box_style.padding_bottom();
 				height += subview->box_style.border_bottom();
 				height += subview->box_style.margin_bottom();
@@ -104,29 +104,29 @@ namespace clan
 		return height;
 	}
 
-	float VBoxLayout::get_first_baseline_offset(View *view, float width)
+	float VBoxLayout::get_first_baseline_offset(Canvas &canvas, View *view, float width)
 	{
 		const auto &subviews = view->subviews();
 		for (auto it = subviews.begin(); it != subviews.end(); ++it)
 		{
 			if (!(*it)->hidden())
-				return (*it)->get_first_baseline_offset(width);
+				return (*it)->get_first_baseline_offset(canvas, width);
 		}
 		return 0.0f;
 	}
 
-	float VBoxLayout::get_last_baseline_offset(View *view, float width)
+	float VBoxLayout::get_last_baseline_offset(Canvas &canvas, View *view, float width)
 	{
 		const auto &subviews = view->subviews();
 		for (auto it = subviews.rbegin(); it != subviews.rend(); ++it)
 		{
 			if (!(*it)->hidden())
-				return (*it)->get_last_baseline_offset(width);
+				return (*it)->get_last_baseline_offset(canvas, width);
 		}
 		return 0.0f;
 	}
 
-	void VBoxLayout::layout_subviews(View *view)
+	void VBoxLayout::layout_subviews(Canvas &canvas, View *view)
 	{
 		// Calculate flex properties:
 
@@ -149,7 +149,7 @@ namespace clan
 				total_shrink_factor += subview->box_style.flex_shrink();
 
 				if (subview->box_style.is_flex_basis_auto())
-					basis_height += subview->get_preferred_height(view->geometry().content.get_width());
+					basis_height += subview->get_preferred_height(canvas, view->geometry().content.get_width());
 				else
 					basis_height += subview->box_style.flex_basis();
 			}
@@ -188,7 +188,7 @@ namespace clan
 
 				float subview_height = subview->box_style.flex_basis();
 				if (subview->box_style.is_flex_basis_auto())
-					subview_height = subview->get_preferred_height(subview_width);
+					subview_height = subview->get_preferred_height(canvas, subview_width);
 
 				if (free_space < 0.0f && total_shrink_factor != 0.0f)
 					subview_height += subview->box_style.flex_shrink() * free_space / total_shrink_factor;
@@ -208,7 +208,7 @@ namespace clan
 				y += subview->box_style.border_bottom();
 				y += subview->box_style.margin_bottom();
 
-				subview->layout_subviews();
+				subview->layout_subviews(canvas);
 			}
 		}
 	}

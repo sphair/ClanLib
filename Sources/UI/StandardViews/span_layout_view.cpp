@@ -81,35 +81,35 @@ namespace clan
 		return impl->render_content(canvas, geometry().content.get_width());
 	}
 
-	float SpanLayoutView::get_preferred_width()
+	float SpanLayoutView::get_preferred_width(Canvas &canvas)
 	{
 		if (box_style.is_width_auto())
-			return impl->get_preferred_width();
+			return impl->get_preferred_width(canvas);
 		else
 			return box_style.width();
 	}
 
-	float SpanLayoutView::get_preferred_height(float width)
+	float SpanLayoutView::get_preferred_height(Canvas &canvas, float width)
 	{
 		if (box_style.is_height_auto())
-			return impl->get_preferred_height(width);
+			return impl->get_preferred_height(canvas, width);
 		else
 			return box_style.height();
 	}
 
-	float SpanLayoutView::get_first_baseline_offset(float width)
+	float SpanLayoutView::get_first_baseline_offset(Canvas &canvas, float width)
 	{
-		return impl->get_first_baseline_offset(width);
+		return impl->get_first_baseline_offset(canvas, width);
 	}
 
-	float SpanLayoutView::get_last_baseline_offset(float width)
+	float SpanLayoutView::get_last_baseline_offset(Canvas &canvas, float width)
 	{
-		return impl->get_last_baseline_offset(width);
+		return impl->get_last_baseline_offset(canvas, width);
 	}
 
-	void SpanLayoutView::layout_subviews()
+	void SpanLayoutView::layout_subviews(Canvas &canvas)
 	{
-		View::layout_subviews();
-		impl->layout_views(geometry().content.get_width());
+		View::layout_subviews(canvas);
+		impl->layout_views(canvas, geometry().content.get_width());
 	}
 }

@@ -33,7 +33,7 @@
 
 namespace clan
 {
-	float HBoxLayout::get_preferred_width(View *view)
+	float HBoxLayout::get_preferred_width(Canvas &canvas, View *view)
 	{
 		if (!view->box_style.is_width_auto())
 			return view->box_style.width();
@@ -47,7 +47,7 @@ namespace clan
 				width += subview->box_style.border_left();
 				width += subview->box_style.padding_left();
 				if (subview->box_style.is_flex_basis_auto())
-					width += subview->get_preferred_width();
+					width += subview->get_preferred_width(canvas);
 				else
 					width += subview->box_style.flex_basis();
 				width += subview->box_style.padding_right();
@@ -58,7 +58,7 @@ namespace clan
 		return width;
 	}
 
-	float HBoxLayout::get_preferred_height(View *view, float width)
+	float HBoxLayout::get_preferred_height(Canvas &canvas, View *view, float width)
 	{
 		if (!view->box_style.is_height_auto())
 			return view->box_style.height();
@@ -84,7 +84,7 @@ namespace clan
 				total_shrink_factor += subview->box_style.flex_shrink();
 
 				if (subview->box_style.is_flex_basis_auto())
-					basis_width += subview->get_preferred_width();
+					basis_width += subview->get_preferred_width(canvas);
 				else
 					basis_width += subview->box_style.flex_basis();
 			}
@@ -101,7 +101,7 @@ namespace clan
 			{
 				float subview_width = subview->box_style.flex_basis();
 				if (subview->box_style.is_flex_basis_auto())
-					subview_width = subview->get_preferred_width();
+					subview_width = subview->get_preferred_width(canvas);
 
 				if (free_space < 0.0f && total_shrink_factor != 0.0f)
 					subview_width += subview->box_style.flex_shrink() * free_space / total_shrink_factor;
@@ -114,7 +114,7 @@ namespace clan
 				margin_box_height += subview->box_style.margin_top();
 				margin_box_height += subview->box_style.border_top();
 				margin_box_height += subview->box_style.padding_top();
-				margin_box_height += subview->get_preferred_height(subview_width);
+				margin_box_height += subview->get_preferred_height(canvas, subview_width);
 				margin_box_height += subview->box_style.padding_bottom();
 				margin_box_height += subview->box_style.border_bottom();
 				margin_box_height += subview->box_style.margin_bottom();
@@ -124,29 +124,29 @@ namespace clan
 		return height;
 	}
 
-	float HBoxLayout::get_first_baseline_offset(View *view, float width)
+	float HBoxLayout::get_first_baseline_offset(Canvas &canvas, View *view, float width)
 	{
 		const auto &subviews = view->subviews();
 		for (auto it = subviews.begin(); it != subviews.end(); ++it)
 		{
 			if (!(*it)->hidden())
-				return (*it)->get_first_baseline_offset(width);
+				return (*it)->get_first_baseline_offset(canvas, width);
 		}
 		return 0.0f;
 	}
 
-	float HBoxLayout::get_last_baseline_offset(View *view, float width)
+	float HBoxLayout::get_last_baseline_offset(Canvas &canvas, View *view, float width)
 	{
 		const auto &subviews = view->subviews();
 		for (auto it = subviews.rbegin(); it != subviews.rend(); ++it)
 		{
 			if (!(*it)->hidden())
-				return (*it)->get_last_baseline_offset(width);
+				return (*it)->get_last_baseline_offset(canvas, width);
 		}
 		return 0.0f;
 	}
 
-	void HBoxLayout::layout_subviews(View *view)
+	void HBoxLayout::layout_subviews(Canvas &canvas, View *view)
 	{
 		// Calculate flex properties:
 
@@ -169,7 +169,7 @@ namespace clan
 				total_shrink_factor += subview->box_style.flex_shrink();
 
 				if (subview->box_style.is_flex_basis_auto())
-					basis_width += subview->get_preferred_width();
+					basis_width += subview->get_preferred_width(canvas);
 				else
 					basis_width += subview->box_style.flex_basis();
 			}
@@ -208,7 +208,7 @@ namespace clan
 
 				float subview_width = subview->box_style.flex_basis();
 				if (subview->box_style.is_flex_basis_auto())
-					subview_width = subview->get_preferred_width();
+					subview_width = subview->get_preferred_width(canvas);
 
 				if (free_space < 0.0f && total_shrink_factor != 0.0f)
 					subview_width += subview->box_style.flex_shrink() * free_space / total_shrink_factor;
@@ -228,7 +228,7 @@ namespace clan
 				x += subview->box_style.border_right();
 				x += subview->box_style.margin_right();
 
-				subview->layout_subviews();
+				subview->layout_subviews(canvas);
 			}
 		}
 	}

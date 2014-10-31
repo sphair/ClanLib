@@ -32,7 +32,7 @@
 
 namespace clan
 {
-	float BlockLayout::get_preferred_width(View *view)
+	float BlockLayout::get_preferred_width(Canvas &canvas, View *view)
 	{
 		if (!view->box_style.is_width_auto())
 			return view->box_style.width();
@@ -46,7 +46,7 @@ namespace clan
 				margin_box_width += subview->box_style.margin_left();
 				margin_box_width += subview->box_style.border_left();
 				margin_box_width += subview->box_style.padding_left();
-				margin_box_width += subview->get_preferred_width();
+				margin_box_width += subview->get_preferred_width(canvas);
 				margin_box_width += subview->box_style.padding_right();
 				margin_box_width += subview->box_style.border_right();
 				margin_box_width += subview->box_style.margin_right();
@@ -56,7 +56,7 @@ namespace clan
 		return width;
 	}
 
-	float BlockLayout::get_preferred_height(View *view, float width)
+	float BlockLayout::get_preferred_height(Canvas &canvas, View *view, float width)
 	{
 		if (!view->box_style.is_height_auto())
 			return view->box_style.height();
@@ -69,7 +69,7 @@ namespace clan
 				height += subview->box_style.margin_top();
 				height += subview->box_style.border_top();
 				height += subview->box_style.padding_top();
-				height += subview->get_preferred_height(width);
+				height += subview->get_preferred_height(canvas, width);
 				height += subview->box_style.padding_bottom();
 				height += subview->box_style.border_bottom();
 				height += subview->box_style.margin_bottom();
@@ -78,29 +78,29 @@ namespace clan
 		return height;
 	}
 
-	float BlockLayout::get_first_baseline_offset(View *view, float width)
+	float BlockLayout::get_first_baseline_offset(Canvas &canvas, View *view, float width)
 	{
 		const auto &subviews = view->subviews();
 		for (auto it = subviews.begin(); it != subviews.end(); ++it)
 		{
 			if (!(*it)->hidden())
-				return (*it)->get_first_baseline_offset(width);
+				return (*it)->get_first_baseline_offset(canvas, width);
 		}
 		return 0.0f;
 	}
 
-	float BlockLayout::get_last_baseline_offset(View *view, float width)
+	float BlockLayout::get_last_baseline_offset(Canvas &canvas, View *view, float width)
 	{
 		const auto &subviews = view->subviews();
 		for (auto it = subviews.rbegin(); it != subviews.rend(); ++it)
 		{
 			if (!(*it)->hidden())
-				return (*it)->get_last_baseline_offset(width);
+				return (*it)->get_last_baseline_offset(canvas, width);
 		}
 		return 0.0f;
 	}
 
-	void BlockLayout::layout_subviews(View *view)
+	void BlockLayout::layout_subviews(Canvas &canvas, View *view)
 	{
 		float y = 0.0f;
 		for (const std::shared_ptr<View> &subview : view->subviews())
@@ -129,7 +129,7 @@ namespace clan
 					}
 				}
 
-				float subview_height = subview->get_preferred_height(subview_width);
+				float subview_height = subview->get_preferred_height(canvas, subview_width);
 
 				y += subview->box_style.margin_top();
 				y += subview->box_style.border_top();
@@ -142,7 +142,7 @@ namespace clan
 				y += subview->box_style.border_bottom();
 				y += subview->box_style.margin_bottom();
 
-				subview->layout_subviews();
+				subview->layout_subviews(canvas);
 			}
 		}
 	}

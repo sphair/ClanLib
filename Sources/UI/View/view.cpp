@@ -168,81 +168,81 @@ namespace clan
 		canvas.set_transform(old_transform);
 	}
 
-	float View::get_preferred_width()
+	float View::get_preferred_width(Canvas &canvas)
 	{
 		if (box_style.is_layout_block())
-			return BlockLayout::get_preferred_width(this);
+			return BlockLayout::get_preferred_width(canvas, this);
 		else if (box_style.is_layout_line())
-			return InlineLayout::get_preferred_width(this);
+			return InlineLayout::get_preferred_width(canvas, this);
 		else if (box_style.is_layout_vbox())
-			return VBoxLayout::get_preferred_width(this);
+			return VBoxLayout::get_preferred_width(canvas, this);
 		else if (box_style.is_layout_hbox())
-			return HBoxLayout::get_preferred_width(this);
+			return HBoxLayout::get_preferred_width(canvas, this);
 		else
 			return !box_style.is_width_auto() ? box_style.width() : 0.0f;
 	}
 
-	float View::get_preferred_height(float width)
+	float View::get_preferred_height(Canvas &canvas, float width)
 	{
 		if (box_style.is_layout_block())
-			return BlockLayout::get_preferred_height(this, width);
+			return BlockLayout::get_preferred_height(canvas, this, width);
 		else if (box_style.is_layout_line())
-			return InlineLayout::get_preferred_height(this, width);
+			return InlineLayout::get_preferred_height(canvas, this, width);
 		else if (box_style.is_layout_vbox())
-			return VBoxLayout::get_preferred_height(this, width);
+			return VBoxLayout::get_preferred_height(canvas, this, width);
 		else if (box_style.is_layout_hbox())
-			return HBoxLayout::get_preferred_height(this, width);
+			return HBoxLayout::get_preferred_height(canvas, this, width);
 		else
 			return !box_style.is_height_auto() ? box_style.height() : 0.0f;
 	}
 
-	float View::get_first_baseline_offset(float width)
+	float View::get_first_baseline_offset(Canvas &canvas, float width)
 	{
 		if (box_style.is_layout_block())
-			return BlockLayout::get_first_baseline_offset(this, width);
+			return BlockLayout::get_first_baseline_offset(canvas, this, width);
 		else if (box_style.is_layout_line())
-			return InlineLayout::get_first_baseline_offset(this, width);
+			return InlineLayout::get_first_baseline_offset(canvas, this, width);
 		else if (box_style.is_layout_vbox())
-			return VBoxLayout::get_first_baseline_offset(this, width);
+			return VBoxLayout::get_first_baseline_offset(canvas, this, width);
 		else if (box_style.is_layout_hbox())
-			return HBoxLayout::get_first_baseline_offset(this, width);
+			return HBoxLayout::get_first_baseline_offset(canvas, this, width);
 		else
 			return 0.0f;
 	}
 
-	float View::get_last_baseline_offset(float width)
+	float View::get_last_baseline_offset(Canvas &canvas, float width)
 	{
 		if (box_style.is_layout_block())
-			return BlockLayout::get_last_baseline_offset(this, width);
+			return BlockLayout::get_last_baseline_offset(canvas, this, width);
 		else if (box_style.is_layout_line())
-			return InlineLayout::get_last_baseline_offset(this, width);
+			return InlineLayout::get_last_baseline_offset(canvas, this, width);
 		else if (box_style.is_layout_vbox())
-			return VBoxLayout::get_last_baseline_offset(this, width);
+			return VBoxLayout::get_last_baseline_offset(canvas, this, width);
 		else if (box_style.is_layout_hbox())
-			return HBoxLayout::get_last_baseline_offset(this, width);
+			return HBoxLayout::get_last_baseline_offset(canvas, this, width);
 		else
 			return 0.0f;
 	}
 
-	void View::layout()
+	void View::layout(Canvas &canvas)
 	{
 		if (needs_layout())
-			layout_subviews();
+			layout_subviews(canvas);
 		impl->_needs_layout = false;
 	}
 
-	void View::layout_subviews()
+	void View::layout_subviews(Canvas &canvas)
 	{
 		if (box_style.is_layout_block())
-			BlockLayout::layout_subviews(this);
+			BlockLayout::layout_subviews(canvas, this);
 		else if (box_style.is_layout_line())
-			InlineLayout::layout_subviews(this);
+			InlineLayout::layout_subviews(canvas, this);
 		else if (box_style.is_layout_vbox())
-			VBoxLayout::layout_subviews(this);
+			VBoxLayout::layout_subviews(canvas, this);
 		else if (box_style.is_layout_hbox())
-			HBoxLayout::layout_subviews(this);
+			HBoxLayout::layout_subviews(canvas, this);
 
-		PositionedLayout::layout_subviews(this);
+		PositionedLayout::layout_subviews(canvas, this);
 	}
 
 	View *View::root_view()

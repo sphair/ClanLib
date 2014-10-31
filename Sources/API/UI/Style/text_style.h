@@ -33,8 +33,11 @@
 
 namespace clan
 {
+	class Font;
+	class Canvas;
 	class Colorf;
 	class TextStyleImpl;
+	class TextBlockStyleImpl;
 
 	class TextStyle
 	{
@@ -80,29 +83,6 @@ namespace clan
 		float shadow_blur_radius() const;
 		Colorf shadow_color() const;
 
-		//void set_unicode_bidi_normal();
-		//void set_unicode_bidi_embed();
-		//void set_unicode_bidi_override();
-		//void set_direction_ltr();
-		//void set_direction_rtl();
-
-		//void set_align_start();
-		//void set_align_end();
-		void set_align_left();
-		void set_align_right();
-		void set_align_center();
-		void set_align_justify();
-		//void set_align_last_start();
-		//void set_align_last_end();
-		//void set_align_last_left();
-		//void set_align_last_right();
-		//void set_align_last_center();
-		//void set_align_last_justify();
-		bool is_align_left() const;
-		bool is_align_right() const;
-		bool is_align_center() const;
-		bool is_align_justify() const;
-
 		//void set_justify_auto();
 		//void set_justify_none();
 		//void set_justify_inter_word();
@@ -144,8 +124,6 @@ namespace clan
 		//void set_emphasis_position_under_right();
 		//void set_emphasis_position_over_left();
 		//void set_emphasis_position_under_left();
-
-		//void set_indent(float indent, bool each_line, bool hanging);
 
 		//void set_hanging_none();
 		//void set_hanging(bool first, bool force_end, bool allow_end, bool last);
@@ -200,6 +178,8 @@ namespace clan
 
 		//void set_overflow_wrap_normal();
 		//void set_overflow_wrap_break_word();
+
+		Font get_font(Canvas &canvas);
 
 	private:
 		std::shared_ptr<TextStyleImpl> impl;

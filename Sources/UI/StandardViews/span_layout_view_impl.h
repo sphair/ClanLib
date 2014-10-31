@@ -90,17 +90,17 @@ namespace clan
 		void remove_subview(const std::shared_ptr<View> &view);
 
 		void render_content(Canvas &canvas, float width);
-		void layout_views(float width);
+		void layout_views(Canvas &canvas, float width);
 
-		float get_preferred_width();
-		float get_preferred_height(float width);
-		float get_first_baseline_offset(float width);
-		float get_last_baseline_offset(float width);
+		float get_preferred_width(Canvas &canvas);
+		float get_preferred_height(Canvas &canvas, float width);
+		float get_first_baseline_offset(Canvas &canvas, float width);
+		float get_last_baseline_offset(Canvas &canvas, float width);
 
 		void set_text_alignment(TextAlignment alignment);
 
 	private:
-		SpanLineMetrics find_line_metrics(size_t obj_start, size_t text_start, float width);
+		SpanLineMetrics find_line_metrics(Canvas &canvas, size_t obj_start, size_t text_start, float width);
 
 		std::string text;
 		std::vector<SpanObject> objects;

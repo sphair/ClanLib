@@ -94,25 +94,14 @@ namespace clan
 		set_needs_render();
 	}
 
-	Font TextFieldView::font() const
+	const TextStyle &TextFieldView::text_style() const
 	{
-		return impl->font;
+		return impl->text_style;
 	}
 
-	void TextFieldView::set_font(const Font &font)
+	TextStyle &TextFieldView::text_style()
 	{
-		impl->font = font;
-		set_needs_render();
-	}
-
-	Colorf TextFieldView::text_color() const
-	{
-		return impl->text_color;
-	}
-
-	void TextFieldView::set_text_color(const Colorf &value)
-	{
-		impl->text_color = value;
+		return impl->text_style;
 	}
 
 	TextAlignment TextFieldView::text_alignment() const
@@ -336,9 +325,10 @@ namespace clan
 			txt_after = impl->create_password(StringHelp::utf8_length(txt_after));
 		}
 
-		float advance_before = impl->font.get_glyph_metrics(canvas, txt_before).advance.width;
-		float advance_selected = impl->font.get_glyph_metrics(canvas, txt_selected).advance.width;
-		LineMetrics line_metrics(impl->font);
+		Font font = impl->get_font(canvas);
+		float advance_before = font.get_glyph_metrics(canvas, txt_before).advance.width;
+		float advance_selected = font.get_glyph_metrics(canvas, txt_selected).advance.width;
+		LineMetrics line_metrics(font);
 
 		if (!txt_selected.empty())
 		{
@@ -346,14 +336,14 @@ namespace clan
 			canvas.fill(Path::rect(selection_rect), focus_view() == this ? Brush::solid_rgb8(51, 153, 255) : Brush::solid_rgb8(200, 200, 200));
 		}
 
-		impl->font.draw_text(canvas, 0.0f, line_metrics.ascent, txt_before, impl->text_color);
-		impl->font.draw_text(canvas, advance_before, line_metrics.ascent, txt_selected, focus_view() == this ? Colorf(255, 255, 255) : impl->text_color);
-		impl->font.draw_text(canvas, advance_before + advance_selected, line_metrics.ascent, txt_after, impl->text_color);
+		font.draw_text(canvas, 0.0f, line_metrics.ascent, txt_before, impl->text_style.color());
+		font.draw_text(canvas, advance_before, line_metrics.ascent, txt_selected, focus_view() == this ? Colorf(255, 255, 255) : impl->text_style.color());
+		font.draw_text(canvas, advance_before + advance_selected, line_metrics.ascent, txt_after, impl->text_style.color());
 
-		float cursor_advance = std::round(impl->font.get_glyph_metrics(canvas, impl->text.substr(0, impl->cursor_pos)).advance.width);
+		float cursor_advance = std::round(font.get_glyph_metrics(canvas, impl->text.substr(0, impl->cursor_pos)).advance.width);
 
 		if (impl->cursor_blink_visible)
-			canvas.fill(Path::rect(cursor_advance, line_metrics.leading_top, 1.0f, line_metrics.text_height), Brush(impl->text_color));
+			canvas.fill(Path::rect(cursor_advance, line_metrics.leading_top, 1.0f, line_metrics.text_height), Brush(impl->text_style.color()));
 
 		// draw cursor
 		/*
@@ -368,40 +358,49 @@ namespace clan
 		*/
 	}
 
-	float TextFieldView::get_preferred_width()
+	float TextFieldView::get_preferred_width(Canvas &canvas)
 	{
 		if (box_style.is_width_auto())
 		{
-			Canvas canvas = SharedGCData::get_resource_canvas();
-			return impl->font.get_glyph_metrics(canvas, impl->text).advance.width;
+			Font font = impl->get_font(canvas);
+			return font.get_glyph_metrics(canvas, impl->text).advance.width;
 		}
 		else
 			return box_style.width();
 	}
 
-	float TextFieldView::get_preferred_height(float width)
+	float TextFieldView::get_preferred_height(Canvas &canvas, float width)
 	{
 		if (box_style.is_height_auto())
 		{
-			LineMetrics line_metrics(impl->font);
+			Font font = impl->get_font(canvas);
+			LineMetrics line_metrics(font);
 			return line_metrics.line_height;
 		}
 		else
 			return box_style.height();
 	}
 
-	float TextFieldView::get_first_baseline_offset(float width)
+	float TextFieldView::get_first_baseline_offset(Canvas &canvas, float width)
 	{
-		LineMetrics line_metrics(impl->font);
+		Font font = impl->get_font(canvas);
+		LineMetrics line_metrics(font);
 		return line_metrics.ascent;
 	}
 
-	float TextFieldView::get_last_baseline_offset(float width)
+	float TextFieldView::get_last_baseline_offset(Canvas &canvas, float width)
 	{
-		return get_first_baseline_offset(width);
+		return get_first_baseline_offset(canvas, width);
 	}
 
 	/////////////////////////////////////////////////////////////////////////
+
+	Font &TextFieldViewImpl::get_font(Canvas &canvas)
+	{
+		if (font.is_null())
+			font = text_style.get_font(canvas);
+		return font;
+	}
 
 	void TextFieldViewImpl::start_blink()
 	{

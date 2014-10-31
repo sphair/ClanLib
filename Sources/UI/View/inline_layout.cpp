@@ -32,7 +32,7 @@
 
 namespace clan
 {
-	float InlineLayout::get_preferred_width(View *view)
+	float InlineLayout::get_preferred_width(Canvas &canvas, View *view)
 	{
 		if (!view->box_style.is_width_auto())
 			return view->box_style.width();
@@ -45,7 +45,7 @@ namespace clan
 				width += view->box_style.margin_left();
 				width += view->box_style.border_left();
 				width += view->box_style.padding_left();
-				width += view->get_preferred_width();
+				width += view->get_preferred_width(canvas);
 				width += view->box_style.padding_right();
 				width += view->box_style.border_right();
 				width += view->box_style.margin_right();
@@ -54,7 +54,7 @@ namespace clan
 		return width;
 	}
 
-	float InlineLayout::get_preferred_height(View *view, float width)
+	float InlineLayout::get_preferred_height(Canvas &canvas, View *view, float width)
 	{
 		if (!view->box_style.is_height_auto())
 			return view->box_style.height();
@@ -67,8 +67,8 @@ namespace clan
 		{
 			if (subview->box_style.is_static() && !subview->hidden())
 			{
-				float subview_width = subview->get_preferred_width();
-				float subview_height = subview->get_preferred_height(subview_width);
+				float subview_width = subview->get_preferred_width(canvas);
+				float subview_height = subview->get_preferred_height(canvas, subview_width);
 
 				float margin_box_width = 0.0f;
 				margin_box_width += subview->box_style.margin_left();
@@ -103,29 +103,29 @@ namespace clan
 		return y + line_height;
 	}
 
-	float InlineLayout::get_first_baseline_offset(View *view, float width)
+	float InlineLayout::get_first_baseline_offset(Canvas &canvas, View *view, float width)
 	{
 		float offset = 0.0f;
 		for (const std::shared_ptr<View> &subview : view->subviews())
 		{
 			if (!subview->hidden())
-				offset = clan::min(offset, subview->get_first_baseline_offset(width));
+				offset = clan::min(offset, subview->get_first_baseline_offset(canvas, width));
 		}
 		return offset;
 	}
 
-	float InlineLayout::get_last_baseline_offset(View *view, float width)
+	float InlineLayout::get_last_baseline_offset(Canvas &canvas, View *view, float width)
 	{
 		float offset = 0.0f;
 		for (const std::shared_ptr<View> &subview : view->subviews())
 		{
 			if (!subview->hidden())
-				offset = clan::min(offset, subview->get_last_baseline_offset(width));
+				offset = clan::min(offset, subview->get_last_baseline_offset(canvas, width));
 		}
 		return offset;
 	}
 
-	void InlineLayout::layout_subviews(View *view)
+	void InlineLayout::layout_subviews(Canvas &canvas, View *view)
 	{
 		float x = 0.0f;
 		float y = 0.0f;
@@ -135,8 +135,8 @@ namespace clan
 		{
 			if (subview->box_style.is_static() && !subview->hidden())
 			{
-				float subview_width = subview->get_preferred_width();
-				float subview_height = subview->get_preferred_height(subview_width);
+				float subview_width = subview->get_preferred_width(canvas);
+				float subview_height = subview->get_preferred_height(canvas, subview_width);
 
 				float margin_box_width = 0.0f;
 				margin_box_width += subview->box_style.margin_left();
@@ -181,7 +181,7 @@ namespace clan
 
 				line_height = clan::max(line_height, margin_box_height);
 
-				subview->layout_subviews();
+				subview->layout_subviews(canvas);
 			}
 		}
 	}

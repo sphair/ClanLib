@@ -81,13 +81,13 @@ namespace clan
 
 		virtual void render_content(Canvas &canvas) { }
 
-		virtual float get_preferred_width();
-		virtual float get_preferred_height(float width);
-		virtual float get_first_baseline_offset(float width);
-		virtual float get_last_baseline_offset(float width);
+		virtual float get_preferred_width(Canvas &canvas);
+		virtual float get_preferred_height(Canvas &canvas, float width);
+		virtual float get_first_baseline_offset(Canvas &canvas, float width);
+		virtual float get_last_baseline_offset(Canvas &canvas, float width);
 
-		void layout();
-		virtual void layout_subviews();
+		void layout(Canvas &canvas);
+		virtual void layout_subviews(Canvas &canvas);
 
 		View *root_view();
 		View *owner_view();

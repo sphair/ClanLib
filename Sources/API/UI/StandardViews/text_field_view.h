@@ -48,14 +48,11 @@ namespace clan
 		std::string placeholder() const;
 		void set_placeholder(const std::string &value);
 
-		Font font() const;
-		void set_font(const Font &font);
-
-		Colorf text_color() const;
-		void set_text_color(const Colorf &value);
-
 		TextAlignment text_alignment() const;
 		void set_text_alignment(TextAlignment value);
+
+		const TextStyle &text_style() const;
+		TextStyle &text_style();
 
 		bool is_read_only() const;
 		void set_read_only(bool value = true);
@@ -101,10 +98,10 @@ namespace clan
 		Signal<void()> &sig_enter_pressed();
 
 		void render_content(Canvas &canvas) override;
-		float get_preferred_width() override;
-		float get_preferred_height(float width) override;
-		float get_first_baseline_offset(float width) override;
-		float get_last_baseline_offset(float width) override;
+		float get_preferred_width(Canvas &canvas) override;
+		float get_preferred_height(Canvas &canvas, float width) override;
+		float get_first_baseline_offset(Canvas &canvas, float width) override;
+		float get_last_baseline_offset(Canvas &canvas, float width) override;
 
 	private:
 		std::unique_ptr<TextFieldViewImpl> impl;

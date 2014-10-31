@@ -32,7 +32,7 @@
 
 namespace clan
 {
-	void PositionedLayout::layout_subviews(View *view)
+	void PositionedLayout::layout_subviews(Canvas &canvas, View *view)
 	{
 		for (const std::shared_ptr<View> &subview : view->subviews())
 		{
@@ -41,7 +41,7 @@ namespace clan
 			if (subview->box_style.is_absolute())
 			{
 				// To do: decide how we determine the containing box used for absolute positioning. For now, use the parent content box.
-				layout_from_containing_box(subview.get(), view->geometry().content);
+				layout_from_containing_box(canvas, subview.get(), view->geometry().content);
 			}
 			else if (subview->box_style.is_fixed())
 			{
@@ -67,12 +67,12 @@ namespace clan
 					offset_initial_containing_box = view->geometry().content;
 				}
 
-				layout_from_containing_box(subview.get(), offset_initial_containing_box);
+				layout_from_containing_box(canvas, subview.get(), offset_initial_containing_box);
 			}
 		}
 	}
 
-	void PositionedLayout::layout_from_containing_box(View *view, const Rectf &containing_box)
+	void PositionedLayout::layout_from_containing_box(Canvas &canvas, View *view, const Rectf &containing_box)
 	{
 		float x = 0.0f;
 		float width = 0.0f;
@@ -95,17 +95,17 @@ namespace clan
 		else if (!view->box_style.is_left_auto())
 		{
 			x = view->box_style.left();
-			width = view->get_preferred_width();
+			width = view->get_preferred_width(canvas);
 		}
 		else if (!view->box_style.is_right_auto())
 		{
-			width = view->get_preferred_width();
+			width = view->get_preferred_width(canvas);
 			x = containing_box.get_width() - view->box_style.right() - width;
 		}
 		else
 		{
 			x = 0.0f;
-			width = view->get_preferred_width();
+			width = view->get_preferred_width(canvas);
 		}
 
 		float y = 0.0f;
@@ -129,21 +129,21 @@ namespace clan
 		else if (!view->box_style.is_top_auto())
 		{
 			y = view->box_style.top();
-			height = view->get_preferred_height(width);
+			height = view->get_preferred_height(canvas, width);
 		}
 		else if (!view->box_style.is_bottom_auto())
 		{
-			height = view->get_preferred_height(width);
+			height = view->get_preferred_height(canvas, width);
 			y = containing_box.get_height() - view->box_style.bottom() - height;
 		}
 		else
 		{
 			y = 0.0f;
-			height = view->get_preferred_height(width);
+			height = view->get_preferred_height(canvas, width);
 		}
 
 		view->set_geometry(BoxGeometry::from_content_box(view->box_style, Rectf::xywh(x, y, width, height)));
 
-		view->layout_subviews();
+		view->layout_subviews(canvas);
 	}
 }

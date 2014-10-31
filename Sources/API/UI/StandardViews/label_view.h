@@ -37,10 +37,11 @@ namespace clan
 	enum class TextAlignment
 	{
 		left,
-		center,
 		right,
-		justified,
-		natural
+		center,
+		justify/*,
+		start,
+		end*/
 	};
 
 	enum class LineBreakMode
@@ -53,6 +54,7 @@ namespace clan
 		truncating_middle
 	};
 
+	class TextStyle;
 	class LabelViewImpl;
 
 	class LabelView : public View
@@ -63,38 +65,20 @@ namespace clan
 		std::string text() const;
 		void set_text(const std::string &value);
 
-		Font font() const;
-		void set_font(const Font &value);
-
-		Colorf text_color() const;
-		void set_text_color(const Colorf &value);
-
 		TextAlignment text_alignment() const;
-		void set_text_alignment(TextAlignment value);
+		void set_text_alignment(TextAlignment alignment);
+
+		const TextStyle &text_style() const;
+		TextStyle &text_style();
 
 		LineBreakMode line_break_mode() const;
 		void set_line_break_mode(LineBreakMode value);
 
-		bool enabled() const;
-		void set_enabled(bool value);
-
-		int number_of_lines() const;
-		void set_number_of_lines(int value);
-
-		Colorf highlighted_color() const;
-		void set_highlighted_color(const Colorf &value);
-
-		bool highlighted() const;
-		void set_highlighted(bool value);
-
-		Colorf shadow_color() const;
-		void set_shadow_color(const Colorf &value);
-
 		void render_content(Canvas &canvas) override;
-		float get_preferred_width() override;
-		float get_preferred_height(float width) override;
-		float get_first_baseline_offset(float width) override;
-		float get_last_baseline_offset(float width) override;
+		float get_preferred_width(Canvas &canvas) override;
+		float get_preferred_height(Canvas &canvas, float width) override;
+		float get_first_baseline_offset(Canvas &canvas, float width) override;
+		float get_last_baseline_offset(Canvas &canvas, float width) override;
 
 	private:
 		std::shared_ptr<LabelViewImpl> impl;

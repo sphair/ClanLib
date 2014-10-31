@@ -33,27 +33,27 @@
 
 namespace clan
 {
-	float GridLayout::get_preferred_width(View *view)
+	float GridLayout::get_preferred_width(Canvas &canvas, View *view)
 	{
 		return 100.0f;
 	}
 
-	float GridLayout::get_preferred_height(View *view, float width)
+	float GridLayout::get_preferred_height(Canvas &canvas, View *view, float width)
 	{
 		return width;
 	}
 
-	float GridLayout::get_first_baseline_offset(View *view, float width)
+	float GridLayout::get_first_baseline_offset(Canvas &canvas, View *view, float width)
 	{
 		return 0.0f;
 	}
 
-	float GridLayout::get_last_baseline_offset(View *view, float width)
+	float GridLayout::get_last_baseline_offset(Canvas &canvas, View *view, float width)
 	{
 		return 0.0f;
 	}
 
-	void GridLayout::layout_subviews(View *view)
+	void GridLayout::layout_subviews(Canvas &canvas, View *view)
 	{
 	}
 }

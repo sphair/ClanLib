@@ -103,7 +103,7 @@ namespace clan
 		size_t text_start = 0;
 		while (obj_start < objects.size())
 		{
-			SpanLineMetrics metrics = find_line_metrics(obj_start, text_start, width);
+			SpanLineMetrics metrics = find_line_metrics(canvas, obj_start, text_start, width);
 
 			float x = 0.0f;
 
@@ -148,15 +148,14 @@ namespace clan
 		}
 	}
 
-	void SpanLayoutViewImpl::layout_views(float width)
+	void SpanLayoutViewImpl::layout_views(Canvas &canvas, float width)
 	{
 		float y = 0.0f;
 		size_t obj_start = 0;
 		size_t text_start = 0;
-		Canvas canvas = SharedGCData::get_resource_canvas();
 		while (obj_start < objects.size())
 		{
-			SpanLineMetrics metrics = find_line_metrics(obj_start, text_start, width);
+			SpanLineMetrics metrics = find_line_metrics(canvas, obj_start, text_start, width);
 
 			float x = 0.0f;
 
@@ -188,9 +187,9 @@ namespace clan
 					float obj_x = x;
 					float obj_y = y + metrics.ascent + object.baseline_offset;
 
-					float obj_width = object.view->get_preferred_width();
-					float obj_height = object.view->get_preferred_height(obj_width);
-					float obj_baseline_offset = object.view->get_first_baseline_offset(obj_width);
+					float obj_width = object.view->get_preferred_width(canvas);
+					float obj_height = object.view->get_preferred_height(canvas, obj_width);
+					float obj_baseline_offset = object.view->get_first_baseline_offset(canvas, obj_width);
 
 					if (obj_baseline_offset == 0.0f) // Hmm, do we need get_first_baseline_offset to be able to return that there is no baseline?
 						obj_baseline_offset = obj_height;
@@ -228,10 +227,9 @@ namespace clan
 		}
 	}
 
-	float SpanLayoutViewImpl::get_preferred_width()
+	float SpanLayoutViewImpl::get_preferred_width(Canvas &canvas)
 	{
 		float x = 0.0f;
-		Canvas canvas = SharedGCData::get_resource_canvas();
 		for (SpanObject &object : objects)
 		{
 			if (object.type == SpanObjectType::text)
@@ -241,20 +239,20 @@ namespace clan
 			}
 			else if (object.type == SpanObjectType::view)
 			{
-				x += object.view->get_preferred_width();
+				x += object.view->get_preferred_width(canvas);
 			}
 		}
 		return x;
 	}
 
-	float SpanLayoutViewImpl::get_preferred_height(float width)
+	float SpanLayoutViewImpl::get_preferred_height(Canvas &canvas, float width)
 	{
 		float y = 0.0f;
 		size_t obj_start = 0;
 		size_t text_start = 0;
 		while (obj_start < objects.size())
 		{
-			SpanLineMetrics metrics = find_line_metrics(obj_start, text_start, width);
+			SpanLineMetrics metrics = find_line_metrics(canvas, obj_start, text_start, width);
 			y += metrics.ascent + metrics.descent;
 
 			obj_start = metrics.object_end;
@@ -263,19 +261,19 @@ namespace clan
 		return y;
 	}
 
-	float SpanLayoutViewImpl::get_first_baseline_offset(float width)
+	float SpanLayoutViewImpl::get_first_baseline_offset(Canvas &canvas, float width)
 	{
-		return find_line_metrics(0, 0, width).ascent;
+		return find_line_metrics(canvas, 0, 0, width).ascent;
 	}
 
-	float SpanLayoutViewImpl::get_last_baseline_offset(float width)
+	float SpanLayoutViewImpl::get_last_baseline_offset(Canvas &canvas, float width)
 	{
 		float y = 0.0f;
 		size_t obj_start = 0;
 		size_t text_start = 0;
 		while (true)
 		{
-			SpanLineMetrics metrics = find_line_metrics(obj_start, text_start, width);
+			SpanLineMetrics metrics = find_line_metrics(canvas, obj_start, text_start, width);
 
 			if (metrics.object_end == objects.size())
 				return y + metrics.ascent;
@@ -286,12 +284,11 @@ namespace clan
 		}
 	}
 
-	SpanLineMetrics SpanLayoutViewImpl::find_line_metrics(size_t obj_start, size_t text_start, float width)
+	SpanLineMetrics SpanLayoutViewImpl::find_line_metrics(Canvas &canvas, size_t obj_start, size_t text_start, float width)
 	{
 		float line_ascent = 0.0f;
 		float line_descent = 0.0f;
 		float x = 0.0f;
-		Canvas canvas = SharedGCData::get_resource_canvas();
 
 		for (size_t obj_index = obj_start; obj_index < objects.size(); obj_index++)
 		{
@@ -349,9 +346,9 @@ namespace clan
 			}
 			else if (object.type == SpanObjectType::view)
 			{
-				float obj_width = object.view->get_preferred_width();
-				float obj_height = object.view->get_preferred_height(obj_width);
-				float obj_baseline_offset = object.view->get_first_baseline_offset(obj_width);
+				float obj_width = object.view->get_preferred_width(canvas);
+				float obj_height = object.view->get_preferred_height(canvas, obj_width);
+				float obj_baseline_offset = object.view->get_first_baseline_offset(canvas, obj_width);
 
 				if (obj_baseline_offset == 0.0f) // Hmm, do we need get_first_baseline_offset to be able to return that there is no baseline?
 					obj_baseline_offset = obj_height;

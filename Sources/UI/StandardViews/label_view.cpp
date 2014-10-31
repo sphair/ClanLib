@@ -29,6 +29,7 @@
 #include "UI/precomp.h"
 #include "API/UI/StandardViews/label_view.h"
 #include "API/UI/UIThread/ui_thread.h"
+#include "API/UI/Style/text_style.h"
 #include "API/Display/2D/canvas.h"
 #include "API/Display/2D/path.h"
 #include "API/Display/2D/pen.h"
@@ -45,15 +46,17 @@ namespace clan
 	{
 	public:
 		std::string _text;
-		Font _font;
-		Colorf _text_color;
-		TextAlignment _text_alignment = TextAlignment::left;
+		TextAlignment text_alignment = TextAlignment::left;
+		TextStyle text_style;
+		Font font;
 		LineBreakMode _line_break_mode = LineBreakMode::truncating_tail;
-		bool _enabled = true;
-		int _number_of_lines = 1;
-		Colorf _highlighted_color;
-		bool _highlighted = false;
-		Colorf _shadow_color = Colorf(0, 0, 0, 100);
+
+		Font &get_font(Canvas &canvas)
+		{
+			if (font.is_null())
+				font = text_style.get_font(canvas);
+			return font;
+		}
 	};
 
 	LabelView::LabelView() : impl(new LabelViewImpl())
@@ -71,37 +74,24 @@ namespace clan
 		set_needs_layout();
 	}
 
-	Font LabelView::font() const
-	{
-		return impl->_font;
-	}
-
-	void LabelView::set_font(const Font &value)
-	{
-		impl->_font = value;
-		set_needs_layout();
-	}
-
-	Colorf LabelView::text_color() const
-	{
-		return impl->_text_color;
-	}
-
-	void LabelView::set_text_color(const Colorf &value)
-	{
-		impl->_text_color = value;
-		set_needs_layout();
-	}
-
 	TextAlignment LabelView::text_alignment() const
 	{
-		return impl->_text_alignment;
+		return impl->text_alignment;
 	}
 
-	void LabelView::set_text_alignment(TextAlignment value)
+	void LabelView::set_text_alignment(TextAlignment alignment)
 	{
-		impl->_text_alignment = value;
-		set_needs_layout();
+		impl->text_alignment = alignment;
+	}
+
+	const TextStyle &LabelView::text_style() const
+	{
+		return impl->text_style;
+	}
+
+	TextStyle &LabelView::text_style()
+	{
+		return impl->text_style;
 	}
 
 	LineBreakMode LabelView::line_break_mode() const
@@ -115,148 +105,92 @@ namespace clan
 		set_needs_layout();
 	}
 
-	bool LabelView::enabled() const
-	{
-		return impl->_enabled;
-	}
-
-	void LabelView::set_enabled(bool value)
-	{
-		impl->_enabled = value;
-		set_needs_layout();
-	}
-
-	int LabelView::number_of_lines() const
-	{
-		return impl->_number_of_lines;
-	}
-
-	void LabelView::set_number_of_lines(int value)
-	{
-		impl->_number_of_lines = value;
-		set_needs_layout();
-	}
-
-	Colorf LabelView::highlighted_color() const
-	{
-		return impl->_highlighted_color;
-	}
-
-	void LabelView::set_highlighted_color(const Colorf &value)
-	{
-		impl->_highlighted_color = value;
-		set_needs_layout();
-	}
-
-	bool LabelView::highlighted() const
-	{
-		return impl->_highlighted;
-	}
-
-	void LabelView::set_highlighted(bool value)
-	{
-		impl->_highlighted = value;
-		set_needs_layout();
-	}
-
-	Colorf LabelView::shadow_color() const
-	{
-		return impl->_shadow_color;
-	}
-
-	void LabelView::set_shadow_color(const Colorf &value)
-	{
-		impl->_shadow_color = value;
-		set_needs_layout();
-	}
-
 	void LabelView::render_content(Canvas &canvas)
 	{
-		Font _font = impl->_font;
+		Font font = impl->get_font(canvas);
 		std::string clipped_text = impl->_text;
-		LineMetrics line_metrics(_font);
-		GlyphMetrics advance = _font.get_glyph_metrics(canvas, clipped_text);
+		LineMetrics line_metrics(font);
+		GlyphMetrics advance = font.get_glyph_metrics(canvas, clipped_text);
 
 		if (advance.advance.width > geometry().content.get_width())
 		{
 			std::string ellipsis = StringHelp::unicode_to_utf8(0x2026);
-			GlyphMetrics ellipsis_advance = impl->_font.get_glyph_metrics(canvas, ellipsis);
+			GlyphMetrics ellipsis_advance = font.get_glyph_metrics(canvas, ellipsis);
 
 			switch (impl->_line_break_mode)
 			{
 			case LineBreakMode::clipping:
-				clipped_text = clipped_text.substr(0, _font.clip_from_left(canvas, clipped_text, geometry().content.get_width()));
+				clipped_text = clipped_text.substr(0, font.clip_from_left(canvas, clipped_text, geometry().content.get_width()));
 				break;
 			case LineBreakMode::truncating_head:
-				clipped_text = ellipsis + clipped_text.substr(_font.clip_from_right(canvas, clipped_text, geometry().content.get_width() - ellipsis_advance.advance.width));
+				clipped_text = ellipsis + clipped_text.substr(font.clip_from_right(canvas, clipped_text, geometry().content.get_width() - ellipsis_advance.advance.width));
 				break;
 			case LineBreakMode::truncating_middle:
 				{
-				std::string text_left = clipped_text.substr(0, _font.clip_from_left(canvas, clipped_text, geometry().content.get_width() * 0.5f - ellipsis_advance.advance.width));
-				std::string text_right = clipped_text.substr(_font.clip_from_right(canvas, clipped_text, geometry().content.get_width() * 0.5f - ellipsis_advance.advance.width));
+				std::string text_left = clipped_text.substr(0, font.clip_from_left(canvas, clipped_text, geometry().content.get_width() * 0.5f - ellipsis_advance.advance.width));
+				std::string text_right = clipped_text.substr(font.clip_from_right(canvas, clipped_text, geometry().content.get_width() * 0.5f - ellipsis_advance.advance.width));
 				clipped_text = text_left + ellipsis + text_right;
 				}
 				break;
 			case LineBreakMode::truncating_tail:
-				clipped_text = clipped_text.substr(0, _font.clip_from_left(canvas, clipped_text, geometry().content.get_width() - ellipsis_advance.advance.width)) + ellipsis;
+				clipped_text = clipped_text.substr(0, font.clip_from_left(canvas, clipped_text, geometry().content.get_width() - ellipsis_advance.advance.width)) + ellipsis;
 				break;
 			default:
 				break;
 			}
 
-			advance = _font.get_glyph_metrics(canvas, clipped_text);
+			advance = font.get_glyph_metrics(canvas, clipped_text);
 			
 			if (advance.advance.width > geometry().content.get_width())
 				return; // Still no room.  Draw nothing!
 		}
 
-		switch (impl->_text_alignment)
+		if (impl->text_alignment == TextAlignment::left)
 		{
-		default:
-		case TextAlignment::left:
-			_font.draw_text(canvas, 0.0f, line_metrics.ascent, clipped_text, impl->_text_color);
-			break;
-
-		case TextAlignment::right:
-			_font.draw_text(canvas, geometry().content.get_width() - advance.advance.width, line_metrics.ascent, clipped_text, impl->_text_color);
-			break;
-
-		case TextAlignment::center:
-			_font.draw_text(canvas, std::round((geometry().content.get_width() - advance.advance.width) * 0.5f), line_metrics.ascent, clipped_text, impl->_text_color);
-			break;
+			font.draw_text(canvas, 0.0f, line_metrics.ascent, clipped_text, impl->text_style.color());
+		}
+		else if (impl->text_alignment == TextAlignment::right)
+		{
+			font.draw_text(canvas, geometry().content.get_width() - advance.advance.width, line_metrics.ascent, clipped_text, impl->text_style.color());
+		}
+		else if (impl->text_alignment == TextAlignment::center)
+		{
+			font.draw_text(canvas, std::round((geometry().content.get_width() - advance.advance.width) * 0.5f), line_metrics.ascent, clipped_text, impl->text_style.color());
 		}
 	}
 
-	float LabelView::get_preferred_width()
+	float LabelView::get_preferred_width(Canvas &canvas)
 	{
 		if (box_style.is_width_auto())
 		{
-			Canvas canvas = UIThread::get_resource_canvas();
-			return impl->_font.get_glyph_metrics(canvas, impl->_text).advance.width;
+			Font font = impl->get_font(canvas);
+			return font.get_glyph_metrics(canvas, impl->_text).advance.width;
 		}
 		else
 			return box_style.width();
 	}
 
-	float LabelView::get_preferred_height(float width)
+	float LabelView::get_preferred_height(Canvas &canvas, float width)
 	{
 		if (box_style.is_height_auto())
 		{
-			LineMetrics line_metrics(impl->_font);
+			Font font = impl->get_font(canvas);
+			LineMetrics line_metrics(font);
 			return line_metrics.line_height;
 		}
 		else
 			return box_style.height();
 	}
 
-	float LabelView::get_first_baseline_offset(float width)
+	float LabelView::get_first_baseline_offset(Canvas &canvas, float width)
 	{
-		LineMetrics line_metrics(impl->_font);
+		Font font = impl->get_font(canvas);
+		LineMetrics line_metrics(font);
 		return line_metrics.ascent;
 	}
 
-	float LabelView::get_last_baseline_offset(float width)
+	float LabelView::get_last_baseline_offset(Canvas &canvas, float width)
 	{
-		return get_first_baseline_offset(width);
+		return get_first_baseline_offset(canvas, width);
 	}
 }

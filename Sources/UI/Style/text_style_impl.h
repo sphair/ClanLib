@@ -75,7 +75,12 @@ namespace clan
 		int weight = 400;
 		Colorf color = Colorf::black;
 		TextShadow shadow;
-		TextAlign align = TextAlign::left;
 		TextTransform transform = TextTransform::none;
+	};
+
+	class TextBlockStyleImpl
+	{
+	public:
+		TextAlign align = TextAlign::left;
 	};
 }

@@ -49,11 +49,11 @@ namespace clan
 		void add_subview(const std::shared_ptr<View> &view, float baseline_offset = 0.0f);
 
 		void render_content(Canvas &canvas) override;
-		float get_preferred_width() override;
-		float get_preferred_height(float width) override;
-		float get_first_baseline_offset(float width) override;
-		float get_last_baseline_offset(float width) override;
-		void layout_subviews() override;
+		float get_preferred_width(Canvas &canvas) override;
+		float get_preferred_height(Canvas &canvas, float width) override;
+		float get_first_baseline_offset(Canvas &canvas, float width) override;
+		float get_last_baseline_offset(Canvas &canvas, float width) override;
+		void layout_subviews(Canvas &canvas) override;
 
 	protected:
 		void subview_added(const std::shared_ptr<View> &view) override;

@@ -28,13 +28,16 @@
 
 #include "UI/precomp.h"
 #include "API/UI/Style/text_style.h"
+#include "API/UI/UIThread/ui_thread.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Display/2D/color.h"
+#include "API/Display/2D/canvas.h"
+#include "API/Display/Font/font.h"
 #include "text_style_impl.h"
 
 namespace clan
 {
-	TextStyle::TextStyle() : impl(new TextStyleImpl())
+	TextStyle::TextStyle() : impl(std::make_shared<TextStyleImpl>())
 	{
 	}
 
@@ -183,46 +186,6 @@ namespace clan
 		return impl->shadow.color;
 	}
 
-	void TextStyle::set_align_left()
-	{
-		impl->align = TextAlign::left;
-	}
-
-	void TextStyle::set_align_right()
-	{
-		impl->align = TextAlign::right;
-	}
-
-	void TextStyle::set_align_center()
-	{
-		impl->align = TextAlign::center;
-	}
-
-	void TextStyle::set_align_justify()
-	{
-		impl->align = TextAlign::justify;
-	}
-
-	bool TextStyle::is_align_left() const
-	{
-		return impl->align == TextAlign::left;
-	}
-
-	bool TextStyle::is_align_right() const
-	{
-		return impl->align == TextAlign::right;
-	}
-
-	bool TextStyle::is_align_center() const
-	{
-		return impl->align == TextAlign::center;
-	}
-
-	bool TextStyle::is_align_justify() const
-	{
-		return impl->align == TextAlign::justify;
-	}
-
 	void TextStyle::set_transform_none()
 	{
 		impl->transform = TextTransform::none;
@@ -251,5 +214,16 @@ namespace clan
 	bool TextStyle::is_transform_lowercase() const
 	{
 		return impl->transform == TextTransform::lowercase;
+	}
+
+	Font TextStyle::get_font(Canvas &canvas)
+	{
+		FontDescription font_desc;
+		font_desc.set_typeface_name(impl->family);
+		font_desc.set_height(impl->size);
+		font_desc.set_line_height(impl->line_height);
+		font_desc.set_weight(impl->weight);
+		font_desc.set_italic(is_style_italic() || is_style_oblique());
+		return Font::resource(canvas, font_desc, UIThread::get_resources());
 	}
 }
