@@ -32,9 +32,38 @@
 
 using namespace clan;
 
+class DisplayResources : public DisplayCache
+{
+public:
+	Resource<Sprite> get_sprite(Canvas &canvas, const std::string &id) override { throw Exception("No sprite resources"); }
+	Resource<Image> get_image(Canvas &canvas, const std::string &id) override { throw Exception("No image resources"); }
+	Resource<Texture> get_texture(GraphicContext &gc, const std::string &id) override { throw Exception("No texture resources"); }
+	Resource<CollisionOutline> get_collision(const std::string &id) override { throw Exception("No collision resources"); }
+
+	Resource<Font> get_font(Canvas &canvas, const FontDescription &desc)
+	{
+		std::string id = desc.get_unique_id();
+		if (loaded_fonts.find(id) == loaded_fonts.end())
+		{
+			loaded_fonts[id] = Font(canvas, desc);
+		}
+		return loaded_fonts[id];
+	}
+
+private:
+	std::map<std::string, Resource<Font>> loaded_fonts;
+};
+
 // The start of the Application
 int HelloWorld::start(const std::vector<std::string> &args)
 {
+	// Create a source for our resources
+	ResourceManager resources;
+	DisplayCache::set(resources, std::make_shared<DisplayResources>());
+
+	// Mark this thread as the UI thread
+	UIThread ui_thread(resources);
+
 	// Create root view and window:
 	DisplayWindowDescription desc;
 	desc.set_title("UICore: Hello World");
@@ -59,11 +88,7 @@ int HelloWorld::start(const std::vector<std::string> &args)
 
 	// Create a label with some text to have some content
 	std::shared_ptr<LabelView> label = std::make_shared<LabelView>();
-	FontDescription font_desc("Ravie");
-	font_desc.set_height(20.0f);
-	font_desc.set_line_height(40.0f);
-
-	label->set_font(Font(canvas, font_desc));
+	label->text_style().set_font("Ravie", 20.0f, 40.0f);
 	label->set_text("Hello World!");
 	root->add_subview(label);
 
@@ -74,11 +99,7 @@ int HelloWorld::start(const std::vector<std::string> &args)
 
 	// Create a text field for our span layout
 	std::shared_ptr<TextFieldView> edit = std::make_shared<TextFieldView>();
-	FontDescription font_desc6("Ravie");
-	font_desc6.set_typeface_name("Ravie");
-	font_desc6.set_height(11.0f);
-	font_desc6.set_line_height(20.0f);
-	edit->set_font(Font(canvas, font_desc6));
+	edit->text_style().set_font("Ravie", 11.0f, 20.0f);
 	edit->set_text("42");
 	edit->box_style.set_margin(0.0f, 5.0f);
 	edit->box_style.set_background(Colorf(255, 255, 255));
@@ -89,28 +110,28 @@ int HelloWorld::start(const std::vector<std::string> &args)
 
 	// Create a span layout view with some more complex inline formatting
 	std::shared_ptr<SpanLayoutView> span = std::make_shared<SpanLayoutView>();
-	FontDescription font_desc2;
-	font_desc2.set_typeface_name("Segoe UI");
-	font_desc2.set_height(13.0f);
+	TextStyle font_desc2;
+	font_desc2.set_font_family("Segoe UI");
+	font_desc2.set_size(13.0f);
 	font_desc2.set_line_height(40.0f);
-	span->add_text("This is the UI core ", Font(canvas, font_desc2));
-	FontDescription font_desc3;
-	font_desc3.set_typeface_name("Segoe UI");
-	font_desc3.set_height(18.0f);
+	span->add_text("This is the UI core ", font_desc2);
+	TextStyle font_desc3;
+	font_desc3.set_font_family("Segoe UI");
+	font_desc3.set_size(18.0f);
 	font_desc3.set_line_height(40.0f);
-	span->add_text("Hello World!", Font(canvas, font_desc3));
-	FontDescription font_desc4;
-	font_desc4.set_typeface_name("Segoe UI");
-	font_desc4.set_height(13.0f);
+	span->add_text("Hello World!", font_desc3);
+	TextStyle font_desc4;
+	font_desc4.set_font_family("Segoe UI");
+	font_desc4.set_size(13.0f);
 	font_desc4.set_line_height(40.0f);
-	span->add_text(" example! Here's a text field: ", Font(canvas, font_desc4));
+	span->add_text(" example! Here's a text field: ", font_desc4);
 	span->add_subview(edit);
-	FontDescription font_desc5;
-	font_desc5.set_typeface_name("Segoe UI");
-	font_desc5.set_height(16.0f);
+	TextStyle font_desc5;
+	font_desc5.set_font_family("Segoe UI");
+	font_desc5.set_size(16.0f);
 	font_desc5.set_line_height(40.0f);
 	font_desc5.set_weight(800);
-	span->add_text(" units! sdfjghsdkfj hkjsdfhg jksdhfj gkshdfk gsjdkfghsjkdfh kgjshdfkg sjkdfh gjskhf gskjdfg hkjsdfh kgjsdhfkgjhsdkjfhgksjdfhg kjsdfhgjkshdfkhgskjdf ghkjsdfsg kdfhg skjdfhgjksdh fgsdfhg kjsdhfjkghsdkjfh gkjsdhfjkgsdhfkgjhsdkfj hgksj.", Font(canvas, font_desc5));
+	span->add_text(" units! sdfjghsdkfj hkjsdfhg jksdhfj gkshdfk gsjdkfghsjkdfh kgjshdfkg sjkdfh gjskhf gskjdfg hkjsdfh kgjsdhfkgjhsdkjfhgksjdfhg kjsdfhgjkshdfkhgskjdf ghkjsdfsg kdfhg skjdfhgjksdh fgsdfhg kjsdhfjkghsdkjfh gkjsdhfjkgsdhfkgjhsdkfj hgksj.", font_desc5);
 	root->add_subview(span);
 
 	// Make our window visible
