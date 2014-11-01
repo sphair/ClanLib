@@ -3,7 +3,6 @@
 
 #include <list>
 
-class View;
 class IRCSession;
 class ChatLine;
 

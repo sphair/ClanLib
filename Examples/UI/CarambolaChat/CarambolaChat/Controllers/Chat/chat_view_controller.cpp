@@ -7,8 +7,44 @@
 #include "Models/IRCSession/irc_text.h"
 #include "Models/IRCSession/command.h"
 
+using namespace clan;
+
 ChatViewController::ChatViewController(IRCSession *session, const IRCEntity &filter) : session(session), filter(filter)
 {
+	auto chat_users_group = std::make_shared<View>();
+	chat_users_group->box_style.set_layout_hbox();
+	chat_users_group->box_style.set_flex(1.0f, 1.0f);
+
+	auto chat_log = std::make_shared<View>();
+	chat_log->box_style.set_flex(1.0f, 1.0f);
+	chat_users_group->add_subview(chat_log);
+
+	auto users_list = std::make_shared<View>();
+	users_list->box_style.set_background(Colorf(219, 234, 249));
+	users_list->box_style.set_width(200.0f);
+	users_list->box_style.set_flex(0.0f, 0.0f);
+	chat_users_group->add_subview(users_list);
+
+	auto input_bar = std::make_shared<View>();
+	input_bar->box_style.set_flex(0.0f, 0.0f);
+	input_bar->box_style.set_background_gradient_to_bottom(Colorf(235, 243, 252), Colorf(219, 234, 249));
+	input_bar->box_style.set_border(Colorf::gray60, 0.0f, 1.0f, 0.0f, 0.0f);
+	input_bar->box_style.set_padding(5.0f);
+	input_bar->box_style.set_layout_hbox();
+
+	auto input_text = std::make_shared<TextFieldView>();
+	input_text->box_style.set_border(Colorf::gray60, 1.0f);
+	input_text->box_style.set_border_radius(2.0f);
+	input_text->box_style.set_background(Colorf::white);
+	input_text->box_style.set_padding(5.0f, 2.0f);
+	input_text->text_style().set_font("Segoe UI", 12.0f, 20.0f);
+	input_text->set_text("This is the amazing text input field!");
+	input_bar->add_subview(input_text);
+
+	view->box_style.set_layout_vbox();
+	view->add_subview(chat_users_group);
+	view->add_subview(input_bar);
+
 	/*
 	set_type_name("chatview");
 	//set_class_name("black");
@@ -81,6 +117,10 @@ ChatViewController::ChatViewController(IRCSession *session, const IRCEntity &fil
 
 	on_resize();
 	*/
+}
+
+ChatViewController::~ChatViewController()
+{
 }
 
 /*
