@@ -81,6 +81,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Controllers\ChatWindow\chat_window_controller.cpp" />
+    <ClCompile Include="Controllers\Chat\chat_view_controller.cpp" />
     <ClCompile Include="Models\app_model.cpp" />
     <ClCompile Include="Models\DCCChat\dcc_chat_connection.cpp" />
     <ClCompile Include="Models\DCCFileTransfer\dcc_file_transfer_connection.cpp" />
@@ -107,6 +108,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Controllers\ChatWindow\chat_window_controller.h" />
+    <ClInclude Include="Controllers\Chat\chat_url.h" />
+    <ClInclude Include="Controllers\Chat\chat_view_controller.h" />
     <ClInclude Include="Models\app_model.h" />
     <ClInclude Include="Models\DCCChat\dcc_chat_connection.h" />
     <ClInclude Include="Models\DCCFileTransfer\dcc_file_transfer_connection.h" />
