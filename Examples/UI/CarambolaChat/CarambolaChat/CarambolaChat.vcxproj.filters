@@ -57,6 +57,9 @@
     <ClCompile Include="Controllers\ChatWindow\chat_window_controller.cpp">
       <Filter>Controllers\ChatWindow</Filter>
     </ClCompile>
+    <ClCompile Include="Views\Chat\chat_view.cpp">
+      <Filter>Views\Chat</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="precomp.h" />
@@ -122,6 +125,12 @@
     <ClInclude Include="Controllers\ChatWindow\chat_window_controller.h">
       <Filter>Controllers\ChatWindow</Filter>
     </ClInclude>
+    <ClInclude Include="Views\Chat\chat_line.h">
+      <Filter>Views\Chat</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\Chat\chat_view.h">
+      <Filter>Views\Chat</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -153,6 +162,9 @@
     </Filter>
     <Filter Include="Controllers\ChatWindow">
       <UniqueIdentifier>{c35a840b-292b-43d8-8587-b6efe63ae231}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Views\Chat">
+      <UniqueIdentifier>{1f2f6871-373e-4206-8a39-290b09ef0591}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -103,6 +103,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Views\Chat\chat_view.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Controllers\ChatWindow\chat_window_controller.h" />
@@ -128,6 +129,8 @@
     <ClInclude Include="program.h" />
     <ClInclude Include="precomp.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Views\Chat\chat_line.h" />
+    <ClInclude Include="Views\Chat\chat_view.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
