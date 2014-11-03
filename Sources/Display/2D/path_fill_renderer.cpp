@@ -653,7 +653,8 @@ namespace clan
 		buffer[position++] = brush_data3;
 		for (unsigned int cnt = 0; cnt < num_stops; cnt++)
 		{
-			buffer[position++] = brush.stops[cnt].color;
+			auto &color = brush.stops[cnt].color;
+			buffer[position++] = Vec4f(color.r * color.a, color.g * color.a, color.b * color.a, color.a);
 			buffer[position++] = Vec4f(brush.stops[cnt].position, 0.0f, 0.0f, 0.0f);
 		}
 		return instance_position;
@@ -685,7 +686,8 @@ namespace clan
 		buffer[position++] = brush_data3;
 		for (unsigned int cnt = 0; cnt < num_stops; cnt++)
 		{
-			buffer[position++] = brush.stops[cnt].color;
+			auto &color = brush.stops[cnt].color;
+			buffer[position++] = Vec4f(color.r * color.a, color.g * color.a, color.b * color.a, color.a);
 			buffer[position++] = Vec4f(brush.stops[cnt].position, 0.0f, 0.0f, 0.0f);
 		}
 		return instance_position;

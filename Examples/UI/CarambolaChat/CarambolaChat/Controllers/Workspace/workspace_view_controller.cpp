@@ -10,8 +10,8 @@ WorkspaceViewController::WorkspaceViewController()
 
 	labels_group = std::make_shared<View>();
 	labels_group->box_style.set_flex(0.0f, 0.0f);
-	labels_group->box_style.set_padding(7.0f, 14.0f, 8.0f, 0.0f);
-	labels_group->box_style.set_height(32.0f);
+	labels_group->box_style.set_padding(7.0f, 12.0f, 8.0f, 0.0f);
+	labels_group->box_style.set_height(30.0f);
 	labels_group->box_style.set_layout_hbox();
 
 	toolbar = std::make_shared<View>();
@@ -43,12 +43,23 @@ void WorkspaceViewController::add_page(const std::string &label_text, std::share
 	page.tab->box_style.set_margin(5.0f, 0.0f);
 
 	page.label = std::make_shared<LabelView>();
-	page.label->text_style().set_font("Segoe UI", 12.0f, 28.0f);
+	page.label->text_style().set_font("Segoe UI", 12.0f, 26.0f);
 	page.label->text_style().set_target_transparent();
 	page.label->set_text(label_text);
 	page.tab->add_subview(page.label);
 
 	page.page = controller;
+
+	auto on_click = [=](PointerEvent &e)
+	{
+		for (auto &tab : tabs)
+		{
+			set_selected(tab, tab.page == controller, true);
+		}
+	};
+
+	slots.connect(page.tab->sig_pointer_press(EventUIPhase::at_target), on_click);
+	slots.connect(page.tab->sig_pointer_press(EventUIPhase::bubbling), on_click);
 
 	labels_group->add_subview(page.tab);
 	tabs.push_back(page);
@@ -57,16 +68,42 @@ void WorkspaceViewController::add_page(const std::string &label_text, std::share
 	set_selected(tabs.back(), tabs.size() == 1);
 }
 
-void WorkspaceViewController::set_selected(TabPage &page, bool selected)
+void WorkspaceViewController::set_selected(TabPage &page, bool selected, bool animated)
 {
-	if (selected)
+	if (animated)
 	{
-		page.tab->box_style.set_background_gradient_to_bottom(Colorf::white, Colorf(235, 243, 252));
-		page.tab->box_style.set_border(Colorf::gray40, 1.0f, 1.0f, 1.0f, 0.0f);
+		if (selected == !page.page->view->hidden()) return;
+
+		float from = selected ? 0.0f : 1.0f;
+		float to = selected ? 1.0f : 0.0f;
+		auto tab = page.tab;
+
+		page.tab->animate(from, to, [=](float t)
+		{
+			if (t > 0.0f)
+			{
+				tab->box_style.set_background_gradient_to_bottom(Colorf(255, 255, 255, (int)(t * 255.0f)), Colorf(235, 243, 252, (int)(t * 255.0f)));
+				tab->box_style.set_border(Colorf(102, 102, 102, (int)(t * 255.0f)), 1.0f, 1.0f, 1.0f, 0.0f);
+			}
+			else
+			{
+				tab->box_style.set_background_none();
+				tab->box_style.set_border(Colorf::transparent, 1.0f, 1.0f, 1.0f, 0.0f);
+			}
+		});
 	}
 	else
 	{
-		page.tab->box_style.set_border(Colorf::transparent, 1.0f, 1.0f, 1.0f, 0.0f);
+		if (selected)
+		{
+			page.tab->box_style.set_background_gradient_to_bottom(Colorf::white, Colorf(235, 243, 252));
+			page.tab->box_style.set_border(Colorf::gray40, 1.0f, 1.0f, 1.0f, 0.0f);
+		}
+		else
+		{
+			page.tab->box_style.set_background_none();
+			page.tab->box_style.set_border(Colorf::transparent, 1.0f, 1.0f, 1.0f, 0.0f);
+		}
 	}
 
 	page.page->view->set_hidden(!selected);

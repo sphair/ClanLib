@@ -23,10 +23,12 @@ private:
 		std::shared_ptr<clan::ViewController> page;
 	};
 
-	void set_selected(TabPage &tab, bool selected);
+	void set_selected(TabPage &tab, bool selected, bool animated = false);
 
 	std::shared_ptr<clan::View> labels_group;
 	std::shared_ptr<clan::View> pages_group;
 
 	std::vector<TabPage> tabs;
+
+	clan::SlotContainer slots;
 };

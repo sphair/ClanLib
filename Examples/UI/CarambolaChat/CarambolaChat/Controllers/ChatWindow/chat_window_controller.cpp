@@ -13,7 +13,7 @@ ChatWindowViewController::ChatWindowViewController()
 	desc.set_allow_resize(true);
 	desc.set_size(Size(1536, 864), false);
 	desc.set_type(WindowType::custom);
-	desc.set_extend_frame(8, 46, 8, 8);
+	desc.set_extend_frame(8, 42, 8, 8);
 
 	view = std::make_shared<WindowView>(desc);
 	view->box_style.set_layout_vbox();
