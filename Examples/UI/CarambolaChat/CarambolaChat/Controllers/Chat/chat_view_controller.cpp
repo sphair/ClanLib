@@ -15,7 +15,7 @@ ChatViewController::ChatViewController(IRCSession *session, const IRCEntity &fil
 	chat_users_group->box_style.set_layout_hbox();
 	chat_users_group->box_style.set_flex(1.0f, 1.0f);
 
-	auto chat_log = std::make_shared<View>();
+	auto chat_log = std::make_shared<ChatView>();
 	chat_log->box_style.set_flex(1.0f, 1.0f);
 	chat_users_group->add_subview(chat_log);
 
@@ -44,6 +44,16 @@ ChatViewController::ChatViewController(IRCSession *session, const IRCEntity &fil
 	view->box_style.set_layout_vbox();
 	view->add_subview(chat_users_group);
 	view->add_subview(input_bar);
+
+	for (int i = 0; i < 5; i++)
+	{
+		SpanLayout text;
+		text.add_text(
+			"Integer posuere tellus eu nisi hendrerit lobortis. Nam quis tristique odio, eu mollis arcu. Vivamus mattis ullamcorper turpis, ac tincidunt nisl convallis sit amet. Maecenas eu scelerisque odio. Cras mattis urna vitae tortor lobortis varius. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam velit erat, tempus eu malesuada in, consectetur id ante.",
+			Font(UIThread::get_resource_canvas(), "Verdana", 13),
+			Colorf::black);
+		chat_log->add_line("VeryLongNickName", Colorf::orangered, text);
+	}
 
 	/*
 	set_type_name("chatview");

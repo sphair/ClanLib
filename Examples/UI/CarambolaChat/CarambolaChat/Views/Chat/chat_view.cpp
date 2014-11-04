@@ -9,11 +9,6 @@ using namespace clan;
 ChatView::ChatView()
 {
 	/*
-	font = Font(get_gc(), get_font_description());
-	font_url = Font(get_gc(), get_url_font_description());
-	font_fixed = Font(get_gc(), get_fixed_font_description());
-	baseline_offset1 = (int)(font.get_font_metrics().get_ascent()-font_fixed.get_font_metrics().get_ascent());
-
 	scroll = new ScrollBar(this);
 	scroll->set_vertical();
 
@@ -36,7 +31,7 @@ FontDescription ChatView::get_font_description()
 {
 	FontDescription desc;
 	desc.set_typeface_name("Verdana");
-	desc.set_height(-13);
+	desc.set_height(13);
 	return desc;
 }
 
@@ -44,7 +39,7 @@ FontDescription ChatView::get_fixed_font_description()
 {
 	FontDescription desc;
 	desc.set_typeface_name("Consolas");
-	desc.set_height(-13);
+	desc.set_height(13);
 	return desc;
 }
 
@@ -52,7 +47,7 @@ FontDescription ChatView::get_url_font_description()
 {
 	FontDescription desc;
 	desc.set_typeface_name("Verdana");
-	desc.set_height(-13);
+	desc.set_height(13);
 	desc.set_underline(true);
 	return desc;
 }
@@ -101,9 +96,18 @@ void ChatView::on_resize()
 */
 void ChatView::render_content(Canvas &canvas)
 {
+	if (font.is_null())
+	{
+		font = Font(canvas, get_font_description());
+		font_url = Font(canvas, get_url_font_description());
+		font_fixed = Font(canvas, get_fixed_font_description());
+		baseline_offset1 = (int)(font.get_font_metrics().get_ascent() - font_fixed.get_font_metrics().get_ascent());
+	}
+
 	canvas.fill(Path::rect(0.0f, 0.0f, (float)get_prefix_width(), geometry().content_box().get_height()), Brush::solid(0.94901f, 0.94901f, 0.94901f));
 
 	Rect content_box = geometry().content_box();
+	content_box.shrink(5);
 
 	int y = content_box.bottom;
 
