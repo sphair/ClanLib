@@ -66,6 +66,9 @@
     <ClCompile Include="Controllers\Workspace\workspace_view_controller.cpp">
       <Filter>Controllers\Workspace</Filter>
     </ClCompile>
+    <ClCompile Include="Views\UserList\user_list_view.cpp">
+      <Filter>Views\UserList</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="precomp.h" />
@@ -146,6 +149,9 @@
     <ClInclude Include="Controllers\Workspace\workspace_view_controller.h">
       <Filter>Controllers\Workspace</Filter>
     </ClInclude>
+    <ClInclude Include="Views\UserList\user_list_view.h">
+      <Filter>Views\UserList</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -186,6 +192,9 @@
     </Filter>
     <Filter Include="Controllers\Workspace">
       <UniqueIdentifier>{40667ac5-9bd7-47e8-be95-f42948681f3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Views\UserList">
+      <UniqueIdentifier>{7cf4915a-4466-4559-b55b-421508168569}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

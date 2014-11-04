@@ -2,6 +2,7 @@
 #include "precomp.h"
 #include "chat_view_controller.h"
 #include "Views/Chat/chat_view.h"
+#include "Views/UserList/user_list_view.h"
 #include "chat_url.h"
 #include "Models/IRCSession/irc_session.h"
 #include "Models/IRCSession/irc_text.h"
@@ -19,11 +20,10 @@ ChatViewController::ChatViewController(IRCSession *session, const IRCEntity &fil
 	chat_log->box_style.set_flex(1.0f, 1.0f);
 	chat_users_group->add_subview(chat_log);
 
-	auto users_list = std::make_shared<View>();
-	users_list->box_style.set_background(Colorf(219, 234, 249));
-	users_list->box_style.set_width(200.0f);
-	users_list->box_style.set_flex(0.0f, 0.0f);
-	chat_users_group->add_subview(users_list);
+	auto user_list = std::make_shared<UserListView>();
+	user_list->box_style.set_width(200.0f);
+	user_list->box_style.set_flex(0.0f, 0.0f);
+	chat_users_group->add_subview(user_list);
 
 	auto input_bar = std::make_shared<View>();
 	input_bar->box_style.set_flex(0.0f, 0.0f);
@@ -54,6 +54,13 @@ ChatViewController::ChatViewController(IRCSession *session, const IRCEntity &fil
 			Colorf::black);
 		chat_log->add_line("VeryLongNickName", Colorf::orangered, text);
 	}
+
+	user_list->add_user("user1", "VeryLongNickName");
+	user_list->add_user("user2", "ShortName");
+	user_list->add_user("user3", "SomeoneElse");
+	user_list->add_user("user4", "Foo");
+	user_list->add_user("user5", "Bar");
+	user_list->add_user("user6", "Foobar");
 
 	/*
 	set_type_name("chatview");
