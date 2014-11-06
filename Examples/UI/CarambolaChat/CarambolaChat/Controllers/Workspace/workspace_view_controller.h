@@ -20,6 +20,7 @@ private:
 	public:
 		std::shared_ptr<clan::View> tab;
 		std::shared_ptr<clan::LabelView> label;
+		std::shared_ptr<clan::ImageView> close;
 		std::shared_ptr<clan::ViewController> page;
 	};
 

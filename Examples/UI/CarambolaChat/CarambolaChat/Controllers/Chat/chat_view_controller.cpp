@@ -55,12 +55,12 @@ ChatViewController::ChatViewController(IRCSession *session, const IRCEntity &fil
 		chat_log->add_line("VeryLongNickName", Colorf::orangered, text);
 	}
 
-	user_list->add_user("user1", "VeryLongNickName");
-	user_list->add_user("user2", "ShortName");
-	user_list->add_user("user3", "SomeoneElse");
-	user_list->add_user("user4", "Foo");
-	user_list->add_user("user5", "Bar");
-	user_list->add_user("user6", "Foobar");
+	user_list->add_user("user1", "VeryLongNickName", "Icons/user_operator.png");
+	user_list->add_user("user2", "ShortName", "Icons/user_operator.png");
+	user_list->add_user("user3", "SomeoneElse", "Icons/user_voice.png");
+	user_list->add_user("user4", "Foo", "Icons/user_voice.png");
+	user_list->add_user("user5", "Bar", "Icons/user.png");
+	user_list->add_user("user6", "Foobar", "Icons/user.png");
 
 	/*
 	set_type_name("chatview");

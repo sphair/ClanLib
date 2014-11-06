@@ -39,14 +39,20 @@ void WorkspaceViewController::add_page(const std::string &label_text, std::share
 	page.tab = std::make_shared<View>();
 	page.tab->box_style.set_flex(0.0f, 1.0f);
 	page.tab->box_style.set_border_radius(6.0f, 6.0f, 0.0f, 0.0f);
-	page.tab->box_style.set_padding(10.0f, 2.0f);
+	page.tab->box_style.set_padding(10.0f, 2.0f, 7.0f, 2.0f);
 	page.tab->box_style.set_margin(5.0f, 0.0f);
+	page.tab->box_style.set_layout_line();
 
 	page.label = std::make_shared<LabelView>();
 	page.label->text_style().set_font("Segoe UI", 12.0f, 26.0f);
 	page.label->text_style().set_target_transparent();
 	page.label->set_text(label_text);
 	page.tab->add_subview(page.label);
+
+	page.close = std::make_shared<ImageView>();
+	page.close->set_image(ImageSource::from_resource("Icons/cross-small.png"));
+	page.close->box_style.set_margin(8.0f, 9.0f, 0.0f, 9.0f);
+	page.tab->add_subview(page.close);
 
 	page.page = controller;
 
