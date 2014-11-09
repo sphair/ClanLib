@@ -69,6 +69,9 @@
     <ClCompile Include="Views\UserList\user_list_view.cpp">
       <Filter>Views\UserList</Filter>
     </ClCompile>
+    <ClCompile Include="Views\Chat\chat_line.cpp">
+      <Filter>Views\Chat</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="precomp.h" />

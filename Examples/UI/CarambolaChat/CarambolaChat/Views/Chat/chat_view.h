@@ -25,8 +25,7 @@ public:
 		TextPosition start, end;
 	};
 
-	void add_line(const clan::SpanLayout &text);
-	void add_line(const std::string &nick, const clan::Colorf &nick_color, const clan::SpanLayout &text);
+	void add_line(ChatLine text);
 
 	//TextPosition hit_test(const clan::Point &pos);
 	void set_selection(const TextPosition &start, const TextPosition &end);
@@ -60,10 +59,10 @@ private:
 	//TextPosition hit_test_line_column(clan::GraphicContext &gc, int line, int column, clan::SpanLayout &span_layout, const clan::Point &pos);
 	static int offset_for_line_column(int line_index, int column, const TextPosition &pos);
 
-	void append_column_text(int line, int column, ChatLine * chatline, std::string prefix, std::string postfix, std::string &out_text);
+	void append_column_text(int line, int column, ChatLine &chatline, std::string prefix, std::string postfix, std::string &out_text);
 
 	std::string create_timestamp();
-	void layout_line(clan::Canvas &canvas, ChatLine *line, clan::Rect &client_area, int line_index);
+	void layout_line(clan::Canvas &canvas, ChatLine &line, clan::Rect &client_area, int line_index);
 	std::pair<int,int> get_selection_for_line(int line_index, int column);
 	int get_prefix_width() const;
 	void invalidate_lines(int start, int end);
@@ -73,7 +72,7 @@ private:
 	static clan::FontDescription get_url_font_description();
 
 	//clan::ScrollBar *scroll;
-	std::list<ChatLine *> lines;
+	std::list<ChatLine> lines;
 	clan::SlotContainer slots;
 	Selection selection;
 
