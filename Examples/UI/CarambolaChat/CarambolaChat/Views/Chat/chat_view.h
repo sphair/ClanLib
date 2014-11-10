@@ -5,6 +5,7 @@
 
 class IRCSession;
 class ChatLine;
+class ChatTextView;
 
 class ChatView : public clan::View
 {
@@ -46,10 +47,9 @@ public:
 
 	clan::Signal<void(int/* object_id*/)> cb_url_clicked;
 
-protected:
-	void render_content(clan::Canvas &canvas) override;
-
 private:
+	void render_text_content(ChatTextView *text_view, clan::Canvas &canvas);
+
 	void on_scroll();
 	//void on_resize();
 	//void on_process_message(clan::GUIMessage &msg);
@@ -71,7 +71,7 @@ private:
 	static clan::FontDescription get_fixed_font_description();
 	static clan::FontDescription get_url_font_description();
 
-	//clan::ScrollBar *scroll;
+	std::shared_ptr<clan::ScrollBarView> scroll;
 	std::list<ChatLine> lines;
 	clan::SlotContainer slots;
 	Selection selection;
@@ -82,4 +82,16 @@ private:
 
 	bool mouse_down = false;
 	TextPosition mouse_down_text_position;
+
+	friend class ChatTextView;
+};
+
+class ChatTextView : public clan::View
+{
+public:
+	ChatTextView(ChatView *chat_view) : chat_view(chat_view) { }
+	void render_content(clan::Canvas &canvas) override { chat_view->render_text_content(this, canvas); }
+
+private:
+	ChatView *chat_view;
 };

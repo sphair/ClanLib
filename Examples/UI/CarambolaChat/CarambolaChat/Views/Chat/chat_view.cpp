@@ -8,17 +8,24 @@ using namespace clan;
 
 ChatView::ChatView()
 {
-	/*
-	scroll = new ScrollBar(this);
+	box_style.set_layout_hbox();
+
+	auto text_view = std::make_shared<ChatTextView>(this);
+	text_view->box_style.set_flex(1.0f, 1.0f);
+
+	scroll = std::make_shared<ScrollBarView>();
 	scroll->set_vertical();
+	scroll->box_style.set_flex(0.0f, 0.0f);
+	scroll->box_style.set_background(Colorf::orangered);
+	scroll->button_increment()->box_style.set_background(Colorf::gray50);
+	scroll->button_decrement()->box_style.set_background(Colorf::gray50);
+	scroll->track()->box_style.set_background(Colorf::gray90);
+	scroll->thumb()->box_style.set_background(Colorf::gray70);
 
-	func_process_message().set(this, &ChatView::on_process_message);
-	func_render().set(this, &ChatView::on_render);
-	func_resized().set(this, &ChatView::on_resize);
-	scroll->func_scroll().set(this, &ChatView::on_scroll);
+	add_subview(text_view);
+	add_subview(scroll);
 
-	on_resize();
-	*/
+	slots.connect(scroll->sig_scroll(), this, &ChatView::on_scroll);
 }
 
 ChatView::~ChatView()
@@ -83,7 +90,16 @@ void ChatView::on_resize()
 	scroll->set_geometry(Rect(content_box.right-scroll->get_preferred_width(), content_box.top, content_box.right, content_box.bottom));
 }
 */
+/*
 void ChatView::render_content(Canvas &canvas)
+{
+	//FontMetrics font_metrics = font.get_font_metrics();
+	//int page_step = std::max(1, (int)geometry().content_box().get_height()/static_cast<int>(font_metrics.get_height() + font_metrics.get_external_leading()));
+	//if (scroll->get_page_step() != page_step)
+	//	scroll->set_ranges(0, lines.empty() ? 1 : lines.size(), 1, page_step);
+}
+*/
+void ChatView::render_text_content(ChatTextView *text_view, Canvas &canvas)
 {
 	if (font.is_null())
 	{
@@ -93,9 +109,10 @@ void ChatView::render_content(Canvas &canvas)
 		baseline_offset1 = (int)(font.get_font_metrics().get_ascent() - font_fixed.get_font_metrics().get_ascent());
 	}
 
-	canvas.fill(Path::rect(0.0f, 0.0f, (float)get_prefix_width(), geometry().content_box().get_height()), Brush::solid(0.94901f, 0.94901f, 0.94901f));
+	Rect content_box = text_view->geometry().content_box();
 
-	Rect content_box = geometry().content_box();
+	canvas.fill(Path::rect(0.0f, 0.0f, (float)get_prefix_width(), (float)content_box.get_height()), Brush::solid(0.94901f, 0.94901f, 0.94901f));
+
 	content_box.shrink(5);
 
 	int y = content_box.bottom;
@@ -116,23 +133,19 @@ void ChatView::render_content(Canvas &canvas)
 		}
 
 		ChatLine &line = *it;
-		layout_line(canvas, line, content_box, line_index-1);
+		layout_line(canvas, line, content_box, line_index - 1);
 
 		y -= std::max(line.column2.get_size().height, line.column3.get_size().height);
 
-		line.column1.set_position(Point(content_box.left, y+baseline_offset1));
+		line.column1.set_position(Point(content_box.left, y + baseline_offset1));
 		line.column1.draw_layout(canvas);
 		line.column2.set_position(Point(content_box.left, y));
 		line.column2.draw_layout(canvas);
-		line.column3.set_position(Point(content_box.left+get_prefix_width(), y));
+		line.column3.set_position(Point(content_box.left + get_prefix_width(), y));
 		line.column3.draw_layout(canvas);
 	}
-
-	//FontMetrics font_metrics = font.get_font_metrics();
-	//int page_step = std::max(1, (int)geometry().content_box().get_height()/static_cast<int>(font_metrics.get_height() + font_metrics.get_external_leading()));
-	//if (scroll->get_page_step() != page_step)
-	//	scroll->set_ranges(0, lines.empty() ? 1 : lines.size(), 1, page_step);
 }
+
 /*
 ChatView::TextPosition ChatView::hit_test(const Point &pos)
 {
