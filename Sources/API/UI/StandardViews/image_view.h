@@ -32,22 +32,37 @@
 
 namespace clan
 {
+	class Canvas;
 	class Image;
+	class ImageViewImpl;
+
+	class ImageSource
+	{
+	public:
+		virtual ~ImageSource() { }
+		virtual Image get_image(Canvas &canvas) = 0;
+
+		static std::shared_ptr<ImageSource> from_resource(const std::string &resource_name);
+		static std::shared_ptr<ImageSource> from_callback(const std::function<Image(Canvas &)> &get_image_callback);
+	};
 
 	class ImageView : public View
 	{
 	public:
-		Image image();
-		void set_image(Image image);
+		ImageView();
 
-		Image highlighted_image();
-		void set_highlighted_image(Image image);
+		std::shared_ptr<ImageSource> image();
+		void set_image(std::shared_ptr<ImageSource> image);
 
-		std::vector<Image> animation_images();
-		void set_animation_images(const std::vector<Image> &images);
+		std::shared_ptr<ImageSource> highlighted_image();
+		void set_highlighted_image(std::shared_ptr<ImageSource> image);
 
-		std::vector<Image> highlighted_animation_images();
-		void set_highlighted_animation_images(const std::vector<Image> &images);
+		/*
+		std::vector<std::shared_ptr<ImageSource>> animation_images();
+		void set_animation_images(const std::vector<std::shared_ptr<ImageSource>> &images);
+
+		std::vector<std::shared_ptr<ImageSource>> highlighted_animation_images();
+		void set_highlighted_animation_images(const std::vector<std::shared_ptr<ImageSource>> &images);
 
 		float animation_duration() const;
 		void set_animation_duration(float value);
@@ -58,5 +73,15 @@ namespace clan
 		void start_animating();
 		void stop_animating();
 		bool is_animating() const;
+		*/
+
+		void render_content(Canvas &canvas) override;
+		float get_preferred_width(Canvas &canvas) override;
+		float get_preferred_height(Canvas &canvas, float width) override;
+		float get_first_baseline_offset(Canvas &canvas, float width) override;
+		float get_last_baseline_offset(Canvas &canvas, float width) override;
+
+	private:
+		std::shared_ptr<ImageViewImpl> impl;
 	};
 }

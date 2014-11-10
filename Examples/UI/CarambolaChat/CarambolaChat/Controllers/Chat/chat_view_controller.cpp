@@ -2,6 +2,7 @@
 #include "precomp.h"
 #include "chat_view_controller.h"
 #include "Views/Chat/chat_view.h"
+#include "Views/Chat/chat_line.h"
 #include "Views/UserList/user_list_view.h"
 #include "chat_url.h"
 #include "Models/IRCSession/irc_session.h"
@@ -47,20 +48,20 @@ ChatViewController::ChatViewController(IRCSession *session, const IRCEntity &fil
 
 	for (int i = 0; i < 5; i++)
 	{
-		SpanLayout text;
-		text.add_text(
-			"Integer posuere tellus eu nisi hendrerit lobortis. Nam quis tristique odio, eu mollis arcu. Vivamus mattis ullamcorper turpis, ac tincidunt nisl convallis sit amet. Maecenas eu scelerisque odio. Cras mattis urna vitae tortor lobortis varius. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam velit erat, tempus eu malesuada in, consectetur id ante.",
-			Font(UIThread::get_resource_canvas(), "Verdana", 13),
-			Colorf::black);
-		chat_log->add_line("VeryLongNickName", Colorf::orangered, text);
+		TextStyle style;
+		style.set_color(Colorf::black);
+		style.set_font("Verdana", 13.0f);
+		ChatLine line("VeryLongNickName", Colorf::orangered);
+		line.add_text(style, "Integer posuere tellus eu nisi hendrerit lobortis. Nam quis tristique odio, eu mollis arcu. Vivamus mattis ullamcorper turpis, ac tincidunt nisl convallis sit amet. Maecenas eu scelerisque odio. Cras mattis urna vitae tortor lobortis varius. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam velit erat, tempus eu malesuada in, consectetur id ante.");
+		chat_log->add_line(line);
 	}
 
-	user_list->add_user("user1", "VeryLongNickName");
-	user_list->add_user("user2", "ShortName");
-	user_list->add_user("user3", "SomeoneElse");
-	user_list->add_user("user4", "Foo");
-	user_list->add_user("user5", "Bar");
-	user_list->add_user("user6", "Foobar");
+	user_list->add_user("user1", "VeryLongNickName", "Icons/user_operator.png");
+	user_list->add_user("user2", "ShortName", "Icons/user_operator.png");
+	user_list->add_user("user3", "SomeoneElse", "Icons/user_voice.png");
+	user_list->add_user("user4", "Foo", "Icons/user_voice.png");
+	user_list->add_user("user5", "Bar", "Icons/user.png");
+	user_list->add_user("user6", "Foobar", "Icons/user.png");
 
 	/*
 	set_type_name("chatview");

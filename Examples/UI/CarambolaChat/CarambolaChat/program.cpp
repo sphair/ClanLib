@@ -9,9 +9,17 @@ class DisplayResources : public DisplayCache
 {
 public:
 	Resource<Sprite> get_sprite(Canvas &canvas, const std::string &id) override { throw Exception("No sprite resources"); }
-	Resource<Image> get_image(Canvas &canvas, const std::string &id) override { throw Exception("No image resources"); }
 	Resource<Texture> get_texture(GraphicContext &gc, const std::string &id) override { throw Exception("No texture resources"); }
 	Resource<CollisionOutline> get_collision(const std::string &id) override { throw Exception("No collision resources"); }
+
+	Resource<Image> get_image(Canvas &canvas, const std::string &id) override
+	{
+		if (loaded_images.find(id) == loaded_images.end())
+		{
+			loaded_images[id] = Image(canvas, PathHelp::combine(resource_path, id));
+		}
+		return loaded_images[id];
+	}
 
 	Resource<Font> get_font(Canvas &canvas, const FontDescription &desc)
 	{
@@ -21,10 +29,12 @@ public:
 			loaded_fonts[id] = Font(canvas, desc);
 		}
 		return loaded_fonts[id];
-}
+	}
 
 private:
+	std::string resource_path = "Resources";
 	std::map<std::string, Resource<Font>> loaded_fonts;
+	std::map<std::string, Resource<Image>> loaded_images;
 };
 
 int Program::main(const std::vector<std::string> &args)
