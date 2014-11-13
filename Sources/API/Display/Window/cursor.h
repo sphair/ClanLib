@@ -58,7 +58,7 @@ public:
 	/// \param window = Display Window
 	/// \param cursor_description = Sprite Description
 	/// \param hotspot = Point
-	Cursor(const DisplayWindow &window, const CursorDescription &cursor_description, const Point &hotspot);
+	Cursor(const DisplayWindow &window, const CursorDescription &cursor_description);
 
 /// \}
 /// \name Attributes

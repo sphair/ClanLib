@@ -99,6 +99,9 @@ public:
 	/// \brief Returns a list over all available frames.
 	const std::vector<CursorDescriptionFrame> &get_frames() const;
 
+	/// \brief the offset of where the cursor is drawn relative to cursor image
+	Point get_hotspot() const;
+
 /// \}
 /// \name Operations
 /// \{
@@ -178,6 +181,9 @@ public:
 
 	/// \brief Sets the duration this frame is displayed, in seconds.
 	void set_frame_delay(int frame, double delay);
+
+	/// \brief Sets the offset of where the cursor is drawn relative to the cursor image
+	void set_hotspot(const Point &hotspot);
 
 /// \}
 /// \name Implementation

@@ -258,6 +258,11 @@ const std::vector<CursorDescriptionFrame> &CursorDescription::get_frames() const
 	return impl->frames;
 }
 
+Point CursorDescription::get_hotspot() const
+{
+	return impl->hotspot;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CursorDescription operations:
 
@@ -498,6 +503,11 @@ void CursorDescription::add_alphaclipped_frames_free(
 void CursorDescription::set_frame_delay(int frame, double delay)
 {
 	impl->frames[frame].delay = delay;
+}
+
+void CursorDescription::set_hotspot(const Point &hotspot)
+{
+	impl->hotspot = hotspot;
 }
 
 }

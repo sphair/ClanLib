@@ -43,10 +43,10 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // CursorProvider_Win32 Construction:
 
-CursorProvider_Win32::CursorProvider_Win32(const CursorDescription &cursor_description, const Point &hotspot)
+CursorProvider_Win32::CursorProvider_Win32(const CursorDescription &cursor_description)
 : handle(0)
 {
-	handle = create_cursor(cursor_description, hotspot);
+	handle = create_cursor(cursor_description);
 }
 
 CursorProvider_Win32::~CursorProvider_Win32()
@@ -64,11 +64,11 @@ CursorProvider_Win32::~CursorProvider_Win32()
 /////////////////////////////////////////////////////////////////////////////
 // CursorProvider_Win32 Implementation:
 
-HCURSOR CursorProvider_Win32::create_cursor(const CursorDescription &cursor_description, const Point &hotspot)
+HCURSOR CursorProvider_Win32::create_cursor(const CursorDescription &cursor_description)
 {
 	if (cursor_description.get_frames().empty())
 		throw Exception("Cannot create cursor with no image frames");
-	DataBuffer ani_file = create_ani_file(cursor_description, hotspot);
+	DataBuffer ani_file = create_ani_file(cursor_description);
 	int desired_width = cursor_description.get_frames().front().rect.get_width();
 	int desired_height = cursor_description.get_frames().front().rect.get_height();
 	HICON icon = CreateIconFromResourceEx((PBYTE) ani_file.get_data(), ani_file.get_size(), FALSE, 0x00030000, desired_width, desired_height, LR_DEFAULTCOLOR);
@@ -149,7 +149,7 @@ DataBuffer CursorProvider_Win32::create_ico_helper(const std::vector<PixelBuffer
 	return device.get_data();
 }
 
-DataBuffer CursorProvider_Win32::create_ani_file(const CursorDescription &cursor_description, const Point &hotspot)
+DataBuffer CursorProvider_Win32::create_ani_file(const CursorDescription &cursor_description)
 {
 /*
 	"RIFF" {Length of File}
@@ -175,7 +175,7 @@ DataBuffer CursorProvider_Win32::create_ani_file(const CursorDescription &cursor
 	const std::vector<CursorDescriptionFrame> &frames = cursor_description.get_frames();
 	for (std::vector<CursorDescriptionFrame>::size_type i = 0; i < frames.size(); i++)
 	{
-		DataBuffer ico_file = create_cur_file(frames[i].pixelbuffer, frames[i].rect, hotspot);
+		DataBuffer ico_file = create_cur_file(frames[i].pixelbuffer, frames[i].rect, cursor_description.get_hotspot());
 		ani_frames.icons.push_back(ico_file);
 		DWORD rate = static_cast<DWORD>(frames[i].delay * 60);
 		if (rate == 0)
@@ -193,8 +193,8 @@ DataBuffer CursorProvider_Win32::create_ani_file(const CursorDescription &cursor
 	ani_header.cPlanes = 1;
 	ani_header.cFrames = ani_frames.icons.size();
 	ani_header.cSteps = steps.size();
-	ani_header.cx = hotspot.x;
-	ani_header.cy = hotspot.y;
+	ani_header.cx = cursor_description.get_hotspot().x;
+	ani_header.cy = cursor_description.get_hotspot().y;
 
 	ANIInfo ani_info;
 	ani_info.author = "clanlib";

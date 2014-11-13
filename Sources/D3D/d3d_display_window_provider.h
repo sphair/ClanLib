@@ -90,7 +90,7 @@ public:
 	void create(DisplayWindowSite *site, const DisplayWindowDescription &description);
 
 	void show_system_cursor();
-	CursorProvider *create_cursor(const CursorDescription &cursor_description, const Point &hotspot);
+	CursorProvider *create_cursor(const CursorDescription &cursor_description);
 	void set_cursor(CursorProvider *cursor);
 	void set_cursor(StandardCursor type);
 	void set_cursor_handle(HCURSOR cursor);

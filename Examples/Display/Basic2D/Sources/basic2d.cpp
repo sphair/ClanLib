@@ -53,7 +53,7 @@ int Basic2D::start(const std::vector<std::string> &args)
 	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &Basic2D::on_input_up));
 
 	// Load a sprite from a png-file
-	clan::Image spr_logo(canvas, "Resources/logo.png");
+	clan::Image spr_logo(canvas, "Resources/actor3.png");
 	clan::Font font(canvas, "tahoma", 24);
 
 	float sin_count = 0.0f;

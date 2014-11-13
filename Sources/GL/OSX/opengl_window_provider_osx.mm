@@ -219,7 +219,7 @@ void OpenGLWindowProvider::show_system_cursor()
 {
 }
 
-CursorProvider *OpenGLWindowProvider::create_cursor(const CursorDescription &cursor_description, const Point &hotspot)
+CursorProvider *OpenGLWindowProvider::create_cursor(const CursorDescription &cursor_description)
 {
 	throw Exception("Custom cursors not supported yet by OS X target");
 }

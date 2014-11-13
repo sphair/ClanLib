@@ -33,23 +33,10 @@
 
 namespace clan
 {
-
-class CursorDescription_Impl
-{
-/// \name Construction
-/// \{
-
-public:
-	CursorDescription_Impl() { return; }
-
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	std::vector<CursorDescriptionFrame> frames;
-/// \}
-};
-
+	class CursorDescription_Impl
+	{
+	public:
+		std::vector<CursorDescriptionFrame> frames;
+		Point hotspot;
+	};
 }
