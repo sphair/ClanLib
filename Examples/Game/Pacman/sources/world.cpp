@@ -49,7 +49,7 @@ World::World(ResourceManager &resources, DisplayWindow &window) :
 	// requirement, but prevents game from loading them when object is
 	// first time created.
 
-	window.get_ic().get_keyboard().sig_key_down().connect(this, &World::on_key_down);
+	cc.connect(window.get_ic().get_keyboard().sig_key_down(), this, &World::on_key_down);
     fnt_clansoft = clan::Font::resource(canvas, FontDescription("Game/fnt_clansoft"), resources);
 
 	map = new Map(resources, canvas);

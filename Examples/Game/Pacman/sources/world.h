@@ -87,6 +87,7 @@ private:
 	
 	DisplayWindow game_display_window;
 
+	SlotContainer cc;
 	//SoundBuffer sample;
 };
 
