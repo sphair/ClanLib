@@ -39,6 +39,7 @@
 #include <algorithm>
 #include <cmath>
 #include "API/Display/Render/shared_gc_data.h"
+#include "API/UI/StandardViews/window_view.h"
 
 namespace clan
 {
@@ -733,18 +734,26 @@ namespace clan
 
 	void TextFieldViewImpl::copy()
 	{
-/*		if (!password_mode)
+		if (!password_mode)
 		{
-			if (selection_length > 0)
-				Clipboard::set_text(get_selected_text());
-			else
-				Clipboard::set_text(text);
-		}*/
+			WindowView *window_view = dynamic_cast<WindowView*>(textfield->root_view());
+			if (window_view)
+			{
+				if (selection_length > 0)
+					window_view->get_display_window().set_clipboard_text(get_selected_text());
+				else
+					window_view->get_display_window().set_clipboard_text(text);
+			}
+		}
 	}
 
 	void TextFieldViewImpl::paste()
 	{
-//		add(Clipboard::get_text());
+		WindowView *window_view = dynamic_cast<WindowView*>(textfield->root_view());
+		if (window_view)
+		{
+			add(window_view->get_display_window().get_clipboard_text());
+		}
 	}
 
 	void TextFieldViewImpl::undo()

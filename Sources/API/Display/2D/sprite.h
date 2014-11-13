@@ -285,8 +285,20 @@ public:
 	/// \brief Set absolute rotation angle.
 	void set_angle(Angle angle);
 
+	/// \brief Set absolute rotation pitch angle.
+	void set_angle_pitch(Angle angle);
+
+	/// \brief Set absolute rotation yaw angle.
+	void set_angle_yaw(Angle angle);
+
 	/// \brief Add angle in degrees to current angle.
 	void rotate(Angle angle);
+
+	/// \brief Add angle in degrees to current pitch angle.
+	void rotate_pitch(Angle angle);
+
+	/// \brief Add angle in degrees to current yaw angle.
+	void rotate_yaw(Angle angle);
 
 	/// \brief Sets the base angle in degrees - angle added to any rotation set with set_rotate() or rotate().
 	void set_base_angle(Angle angle);
