@@ -292,14 +292,6 @@ int ChatView::offset_for_line_column(int line_index, int column, const TextPosit
 }
 
 /*
-void ChatView::on_process_message(GUIMessage &msg)
-{
-	if (msg.is_type(GUIMessage_Input::get_type_name()))
-		on_input_message(GUIMessage_Input(msg));
-	else if (msg.is_type(GUIMessage_Pointer::get_type_name()))
-		on_pointer_message(GUIMessage_Pointer(msg));
-}
-
 void ChatView::on_input_message(const GUIMessage_Input &msg)
 {
 	InputEvent input_event = msg.get_event();
@@ -359,18 +351,6 @@ void ChatView::on_input_message(const GUIMessage_Input &msg)
 		}
 	}
 }
-
-void ChatView::on_pointer_message(const GUIMessage_Pointer &msg)
-{
-	if (msg.get_pointer_type() == GUIMessage_Pointer::pointer_enter)
-	{
-		set_cursor(cl_cursor_ibeam);
-	}
-	else
-	{
-		set_cursor(cl_cursor_arrow);
-	}
-}
 */
 
 void ChatView::set_selection(const TextPosition &start, const TextPosition &end)
@@ -426,8 +406,8 @@ void ChatView::copy_to_clipboard()
 	if (!text.empty())
 	{
 		WindowView *window_view = dynamic_cast<WindowView*>(root_view());
-		//if (window_view)
-		//	window_view->display_window().set_clipboard_text(text);
+		if (window_view)
+			window_view->get_display_window().set_clipboard_text(text);
 	}
 }
 
