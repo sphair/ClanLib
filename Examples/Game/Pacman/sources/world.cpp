@@ -194,13 +194,13 @@ void World::run(DisplayWindow &window)
 		{
 			std::string text1 = "Welcome to the Pacman Game";
 			Size size1 = fnt_clansoft.get_text_size(canvas, text1);
-			fnt_clansoft.draw_text(canvas, canvas.get_width()/2 - size1.width/2, canvas.get_height() - 20 - size1.height, text1, Colorf::lightgoldenrodyellow);
+			fnt_clansoft.draw_text(canvas, canvas.get_width()/2 - size1.width/2, canvas.get_height() - 32 - size1.height, text1, Colorf::lightgoldenrodyellow);
 		}
 		else if (welcome_shown == false && blowups.size() < 10)
 		{
 			const char *text1 = "Welcome to the Pacman Game";
 			Size size1 = fnt_clansoft.get_text_size(canvas, text1);
-			blowups.push_back(new FontBlowUp(canvas, text1, canvas.get_width()/2, canvas.get_height() - 20 - size1.height, fnt_clansoft, Colorf::lightgoldenrodyellow));
+			blowups.push_back(new FontBlowUp(canvas, text1, canvas.get_width()/2, canvas.get_height() - 32 - size1.height, fnt_clansoft, Colorf::lightgoldenrodyellow));
 			welcome_shown = true;
 		}
 
