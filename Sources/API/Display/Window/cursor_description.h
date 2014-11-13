@@ -102,6 +102,13 @@ public:
 	/// \brief the offset of where the cursor is drawn relative to cursor image
 	Point get_hotspot() const;
 
+	bool operator==(const CursorDescription &that) const { return impl == that.impl; }
+	bool operator!=(const CursorDescription &that) const { return impl != that.impl; }
+	bool operator<(const CursorDescription &that) const { return impl < that.impl; }
+	bool operator>(const CursorDescription &that) const { return impl > that.impl; }
+	bool operator<=(const CursorDescription &that) const { return impl <= that.impl; }
+	bool operator>=(const CursorDescription &that) const { return impl >= that.impl; }
+
 /// \}
 /// \name Operations
 /// \{

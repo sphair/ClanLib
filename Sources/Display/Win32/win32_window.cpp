@@ -216,19 +216,19 @@ void Win32Window::set_cursor(StandardCursor type)
 	HCURSOR cursor_handle = 0;
 	switch (type)
 	{
-	case cursor_arrow: cursor_handle = LoadCursor(0, IDC_ARROW); break;
-	case cursor_appstarting: cursor_handle = LoadCursor(0, IDC_APPSTARTING); break;
-	case cursor_cross: cursor_handle = LoadCursor(0, IDC_CROSS); break;
-	case cursor_hand: cursor_handle = LoadCursor(0, IDC_HAND); break;
-	case cursor_ibeam: cursor_handle = LoadCursor(0, IDC_IBEAM); break;
-	case cursor_no: cursor_handle = LoadCursor(0, IDC_NO); break;
-	case cursor_size_all: cursor_handle = LoadCursor(0, IDC_SIZEALL); break;
-	case cursor_size_nesw: cursor_handle = LoadCursor(0, IDC_SIZENESW); break;
-	case cursor_size_ns: cursor_handle = LoadCursor(0, IDC_SIZENS); break;
-	case cursor_size_nwse: cursor_handle = LoadCursor(0, IDC_SIZENWSE); break;
-	case cursor_size_we: cursor_handle = LoadCursor(0, IDC_SIZEWE); break;
-	case cursor_uparrow: cursor_handle = LoadCursor(0, IDC_UPARROW); break;
-	case cursor_wait: cursor_handle = LoadCursor(0, IDC_WAIT); break;
+	case StandardCursor::arrow: cursor_handle = LoadCursor(0, IDC_ARROW); break;
+	case StandardCursor::appstarting: cursor_handle = LoadCursor(0, IDC_APPSTARTING); break;
+	case StandardCursor::cross: cursor_handle = LoadCursor(0, IDC_CROSS); break;
+	case StandardCursor::hand: cursor_handle = LoadCursor(0, IDC_HAND); break;
+	case StandardCursor::ibeam: cursor_handle = LoadCursor(0, IDC_IBEAM); break;
+	case StandardCursor::no: cursor_handle = LoadCursor(0, IDC_NO); break;
+	case StandardCursor::size_all: cursor_handle = LoadCursor(0, IDC_SIZEALL); break;
+	case StandardCursor::size_nesw: cursor_handle = LoadCursor(0, IDC_SIZENESW); break;
+	case StandardCursor::size_ns: cursor_handle = LoadCursor(0, IDC_SIZENS); break;
+	case StandardCursor::size_nwse: cursor_handle = LoadCursor(0, IDC_SIZENWSE); break;
+	case StandardCursor::size_we: cursor_handle = LoadCursor(0, IDC_SIZEWE); break;
+	case StandardCursor::uparrow: cursor_handle = LoadCursor(0, IDC_UPARROW); break;
+	case StandardCursor::wait: cursor_handle = LoadCursor(0, IDC_WAIT); break;
 	default: throw Exception("Unknown standard cursor type");
 	}
 	SetCursor(cursor_handle);
@@ -891,7 +891,7 @@ void Win32Window::received_mouse_move(UINT msg, WPARAM wparam, LPARAM lparam)
 	if (!cursor_set && !cursor_hidden)
 	{
 		if (current_cursor == 0)
-			set_cursor(cursor_arrow);
+			set_cursor(StandardCursor::arrow);
 		else
 			SetCursor(current_cursor);
 	}

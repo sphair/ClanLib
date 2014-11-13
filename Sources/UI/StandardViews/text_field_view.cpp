@@ -48,6 +48,7 @@ namespace clan
 		impl->textfield = this;
 
 		set_focus_policy(FocusPolicy::accept);
+		set_cursor(StandardCursor::ibeam);
 
 		slots.connect(sig_key_press(), impl.get(), &TextFieldViewImpl::on_key_press);
 		slots.connect(sig_key_release(), impl.get(), &TextFieldViewImpl::on_key_release);

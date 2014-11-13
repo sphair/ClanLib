@@ -29,6 +29,7 @@
 #include "UI/precomp.h"
 #include "API/UI/View/view.h"
 #include "API/Display/2D/canvas.h"
+#include "API/Display/Window/display_window.h"
 #include "API/UI/Events/event.h"
 #include "API/UI/Events/activation_change_event.h"
 #include "API/UI/Events/close_event.h"
@@ -391,6 +392,64 @@ namespace clan
 	void View::stop_animations()
 	{
 		impl->animation_group.stop();
+	}
+
+	void View::set_cursor(const CursorDescription &cursor)
+	{
+		if (impl->is_cursor_inherited || impl->cursor_desc != cursor)
+		{
+			impl->cursor_desc = cursor;
+			impl->cursor = Cursor();
+			impl->is_custom_cursor = true;
+			impl->is_cursor_inherited = false;
+		}
+	}
+
+	void View::set_cursor(StandardCursor type)
+	{
+		if (impl->is_cursor_inherited || impl->is_custom_cursor || impl->cursor_type != type)
+		{
+			impl->cursor_type = type;
+			impl->cursor_desc = CursorDescription();
+			impl->cursor = Cursor();
+			impl->is_custom_cursor = false;
+			impl->is_cursor_inherited = false;
+		}
+	}
+
+	void View::set_inherit_cursor()
+	{
+		if (!impl->is_cursor_inherited)
+		{
+			impl->cursor_desc = CursorDescription();
+			impl->cursor = Cursor();
+			impl->is_custom_cursor = false;
+			impl->is_cursor_inherited = true;
+		}
+	}
+
+	void View::update_cursor(DisplayWindow &window)
+	{
+		if (impl->is_cursor_inherited)
+		{
+			View *super = superview();
+			if (super)
+				super->update_cursor(window);
+			else
+				window.set_cursor(StandardCursor::arrow);
+		}
+		else if (impl->is_custom_cursor)
+		{
+			if (impl->cursor.is_null())
+			{
+				impl->cursor = Cursor(window, impl->cursor_desc);
+			}
+			window.set_cursor(impl->cursor);
+		}
+		else
+		{
+			window.set_cursor(impl->cursor_type);
+		}
 	}
 
 	void View::dispatch_event(EventUI *e, bool no_propagation)

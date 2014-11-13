@@ -28,6 +28,8 @@
 
 #include "API/UI/View/view.h"
 #include "API/UI/View/focus_policy.h"
+#include "API/Display/Window/cursor.h"
+#include "API/Display/Window/cursor_description.h"
 #include "../Animation/animation_group.h"
 
 namespace clan
@@ -77,6 +79,12 @@ namespace clan
 		View *_proximity_view = 0;
 
 		AnimationGroup animation_group;
+
+		StandardCursor cursor_type = StandardCursor::arrow;
+		CursorDescription cursor_desc;
+		Cursor cursor;
+		bool is_custom_cursor = false;
+		bool is_cursor_inherited = true;
 
 	private:
 		unsigned int find_prev_tab_index_helper(unsigned int tab_index) const;

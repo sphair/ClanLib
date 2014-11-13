@@ -154,6 +154,8 @@ namespace clan
 			{
 				PointerEvent e_enter(PointerEventType::enter, PointerButton::none, e.pos(), e.alt_down(), e.shift_down(), e.ctrl_down(), e.cmd_down());
 				impl->hot_view->dispatch_event(&e_enter, true);
+
+				impl->hot_view->update_cursor(impl->window);
 			}
 		}
 

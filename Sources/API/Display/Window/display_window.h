@@ -58,21 +58,21 @@ class DisplayWindow_Impl;
 class PixelBuffer;
 
 /// \brief Standard Cursor
-enum StandardCursor
+enum class StandardCursor
 {
-	cursor_arrow,
-	cursor_appstarting,
-	cursor_cross,
-	cursor_hand,
-	cursor_ibeam,
-	cursor_no,
-	cursor_size_all,
-	cursor_size_nesw,
-	cursor_size_ns,
-	cursor_size_nwse,
-	cursor_size_we,
-	cursor_uparrow,
-	cursor_wait
+	arrow,
+	appstarting,
+	cross,
+	hand,
+	ibeam,
+	no,
+	size_all,
+	size_nesw,
+	size_ns,
+	size_nwse,
+	size_we,
+	uparrow,
+	wait
 };
 
 /// \brief Top-level window class.

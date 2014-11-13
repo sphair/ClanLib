@@ -50,6 +50,9 @@ namespace clan
 	class ResizeEvent;
 	class KeyEvent;
 	class ViewImpl;
+	class CursorDescription;
+	enum class StandardCursor;
+	class DisplayWindow;
 
 	class View : public std::enable_shared_from_this<View>
 	{
@@ -111,6 +114,10 @@ namespace clan
 		void animate(float from, float to, const std::function<void(float)> &setter, int duration_ms = 400, const std::function<float(float)> &easing = Easing::linear, std::function<void()> animation_end = std::function<void()>());
 		void stop_animations();
 
+		void set_cursor(const CursorDescription &cursor);
+		void set_cursor(StandardCursor type);
+		void set_inherit_cursor();
+
 		void dispatch_event(EventUI *e, bool no_propagation = false);
 
 		Signal<void(ActivationChangeEvent &)> &sig_activated(EventUIPhase phase = EventUIPhase::at_target);
@@ -128,6 +135,8 @@ namespace clan
 		Signal<void(PointerEvent &)> &sig_pointer_proximity_change(EventUIPhase phase = EventUIPhase::at_target);
 		Signal<void(KeyEvent &)> &sig_key_press(EventUIPhase phase = EventUIPhase::at_target);
 		Signal<void(KeyEvent &)> &sig_key_release(EventUIPhase phase = EventUIPhase::at_target);
+
+		void update_cursor(DisplayWindow &window);
 
 	protected:
 		virtual void subview_added(const std::shared_ptr<View> &view) { }

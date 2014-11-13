@@ -93,7 +93,7 @@ public:
 
 	void show_system_cursor();
 	void set_cursor(CursorProvider_Win32 *cursor);
-	void set_cursor(enum StandardCursor type);
+	void set_cursor(enum class StandardCursor type);
 	void hide_system_cursor();
 	void set_cursor_handle(HCURSOR cursor);
 
