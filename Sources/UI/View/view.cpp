@@ -227,7 +227,10 @@ namespace clan
 	void View::layout(Canvas &canvas)
 	{
 		if (needs_layout())
+		{
 			layout_subviews(canvas);
+			PositionedLayout::layout_subviews(canvas, this);
+		}
 		impl->_needs_layout = false;
 	}
 
@@ -241,8 +244,6 @@ namespace clan
 			VBoxLayout::layout_subviews(canvas, this);
 		else if (box_style.is_layout_hbox())
 			HBoxLayout::layout_subviews(canvas, this);
-
-		PositionedLayout::layout_subviews(canvas, this);
 	}
 
 	View *View::root_view()

@@ -69,6 +69,10 @@ namespace clan
 
 				layout_from_containing_box(canvas, subview.get(), offset_initial_containing_box);
 			}
+			else
+			{
+				layout_subviews(canvas, subview.get());
+			}
 		}
 	}
 
