@@ -60,6 +60,8 @@ namespace clan
 		void show(WindowShowType type = WindowShowType::show);
 		void hide();
 
+		DisplayWindow get_display_window();
+
 		void set_needs_render() override;
 
 		void on_window_size_changed();

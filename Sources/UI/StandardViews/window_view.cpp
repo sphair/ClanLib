@@ -49,6 +49,11 @@ namespace clan
 		slots.connect(impl->sig_deactivated, this, &WindowView::on_window_deactivated);
 	}
 
+	DisplayWindow WindowView::get_display_window()
+	{
+		return impl->window;
+	}
+
 	void WindowView::show(WindowShowType type)
 	{
 		switch (type)
