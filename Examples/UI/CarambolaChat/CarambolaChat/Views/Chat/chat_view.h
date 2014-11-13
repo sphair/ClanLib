@@ -47,6 +47,8 @@ public:
 
 	clan::Signal<void(int/* object_id*/)> cb_url_clicked;
 
+	void layout_subviews(clan::Canvas &canvas) override;
+
 private:
 	void render_text_content(ChatTextView *text_view, clan::Canvas &canvas);
 

@@ -17,10 +17,10 @@ ChatView::ChatView()
 	scroll->set_vertical();
 	scroll->box_style.set_flex(0.0f, 0.0f);
 	scroll->box_style.set_background(Colorf::orangered);
-	scroll->button_increment()->box_style.set_background(Colorf::gray50);
-	scroll->button_decrement()->box_style.set_background(Colorf::gray50);
+	scroll->button_increment()->box_style.set_background(Colorf::gray70);
+	scroll->button_decrement()->box_style.set_background(Colorf::gray70);
 	scroll->track()->box_style.set_background(Colorf::gray90);
-	scroll->thumb()->box_style.set_background(Colorf::gray70);
+	scroll->thumb()->box_style.set_background(Colorf::gray80);
 
 	add_subview(text_view);
 	add_subview(scroll);
@@ -62,12 +62,12 @@ void ChatView::add_line(ChatLine line)
 	line.timestamp = create_timestamp();
 	lines.push_back(line);
 
-	/*if (lines.size() >= 1)
+	if (lines.size() >= 1)
 	{
-		scroll->set_max(lines.size());
-		if (scroll->get_position() == scroll->get_max()-2)
-			scroll->set_position(scroll->get_max()-1);
-	}*/
+		scroll->set_max_position(lines.size());
+		if (scroll->position() == scroll->max_position() - 2.0)
+			scroll->set_position(scroll->max_position() - 1.0);
+	}
 	set_needs_render();
 }
 
@@ -83,24 +83,18 @@ std::string ChatView::create_timestamp()
 
 	return hour+":"+minute;
 }
-/*
-void ChatView::on_resize()
+
+void ChatView::layout_subviews(clan::Canvas &canvas)
 {
-	Rect content_box = part_background.get_content_box(get_size());
-	scroll->set_geometry(Rect(content_box.right-scroll->get_preferred_width(), content_box.top, content_box.right, content_box.bottom));
+	scroll->set_page_step(geometry().content_box().get_height() / 15.0f);
+	View::layout_subviews(canvas);
 }
-*/
-/*
-void ChatView::render_content(Canvas &canvas)
-{
-	//FontMetrics font_metrics = font.get_font_metrics();
-	//int page_step = std::max(1, (int)geometry().content_box().get_height()/static_cast<int>(font_metrics.get_height() + font_metrics.get_external_leading()));
-	//if (scroll->get_page_step() != page_step)
-	//	scroll->set_ranges(0, lines.empty() ? 1 : lines.size(), 1, page_step);
-}
-*/
+
 void ChatView::render_text_content(ChatTextView *text_view, Canvas &canvas)
 {
+	Vec4f clip_offset = canvas.get_transform() * Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+	canvas.push_cliprect(Rectf(Pointf(clip_offset.x, clip_offset.y), geometry().content_box().get_size()));
+
 	if (font.is_null())
 	{
 		font = Font(canvas, get_font_description());
@@ -117,7 +111,7 @@ void ChatView::render_text_content(ChatTextView *text_view, Canvas &canvas)
 
 	int y = content_box.bottom;
 
-	int skip_lines = 0; // scroll->get_max() - (scroll->get_position() + 1);
+	int skip_lines = (int)std::round(scroll->max_position() - (scroll->position() + 1));
 
 	std::list<ChatLine>::reverse_iterator it;
 	int line_index = lines.size();
@@ -144,6 +138,8 @@ void ChatView::render_text_content(ChatTextView *text_view, Canvas &canvas)
 		line.column3.set_position(Point(content_box.left + get_prefix_width(), y));
 		line.column3.draw_layout(canvas);
 	}
+
+	canvas.pop_cliprect();
 }
 
 /*
@@ -497,12 +493,12 @@ Colorf ChatView::get_color_url()
 
 void ChatView::scroll_page_up()
 {
-	//scroll->set_position(scroll->get_position() - scroll->get_page_step());
-	//on_scroll();
+	scroll->set_position(scroll->position() - scroll->page_step());
+	on_scroll();
 }
 
 void ChatView::scroll_page_down()
 {
-	//scroll->set_position(scroll->get_position() + scroll->get_page_step());
-	//on_scroll();
+	scroll->set_position(scroll->position() + scroll->page_step());
+	on_scroll();
 }

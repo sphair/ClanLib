@@ -55,7 +55,6 @@ namespace clan
 				min_pos = new_min;
 				max_pos = new_max;
 				pos = new_pos;
-				view->set_needs_render();
 				view->set_needs_layout();
 			}
 		}
@@ -222,10 +221,40 @@ namespace clan
 
 		auto track_geometry = impl->track->geometry();
 
-		impl->thumb->box_style.set_left(0.0f);
-		impl->thumb->box_style.set_top(0.0f);
-		impl->thumb->box_style.set_width(track_geometry.content.get_width());
-		impl->thumb->box_style.set_height(track_geometry.content.get_height());
+		if (impl->min_pos == impl->max_pos || impl->page_step == 0.0)
+		{
+			impl->thumb->box_style.set_left(0.0f);
+			impl->thumb->box_style.set_top(0.0f);
+			impl->thumb->box_style.set_width(track_geometry.content.get_width());
+			impl->thumb->box_style.set_height(track_geometry.content.get_height());
+		}
+		else
+		{
+			double content_size = impl->max_pos - impl->min_pos + impl->page_step;
+			double track_length = vertical() ? track_geometry.content_box().get_height() : track_geometry.content_box().get_width();
+			double thumb_length = impl->page_step / content_size * track_length;
+
+			thumb_length = std::min(std::max(thumb_length, 16.0), track_length);
+
+			double t = (impl->pos - impl->min_pos) / (impl->max_pos - impl->min_pos);
+			double thumb_pos = t * (track_length - thumb_length);
+
+			if (vertical())
+			{
+				impl->thumb->box_style.set_left(0.0f);
+				impl->thumb->box_style.set_top((float)thumb_pos);
+				impl->thumb->box_style.set_width(track_geometry.content.get_width());
+				impl->thumb->box_style.set_height((float)thumb_length);
+			}
+			else
+			{
+				impl->thumb->box_style.set_left((float)thumb_pos);
+				impl->thumb->box_style.set_top(0.0f);
+				impl->thumb->box_style.set_width((float)thumb_length);
+				impl->thumb->box_style.set_height(track_geometry.content.get_height());
+			}
+		}
+
 	}
 
 	Signal<void()> &ScrollBarView::sig_scroll()
