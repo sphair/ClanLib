@@ -50,6 +50,8 @@ namespace clan
 
 Sprite_Impl::Sprite_Impl() :
 	angle(Angle(0.0f, angle_radians)),
+	angle_pitch(Angle(0.0f, angle_radians)),
+	angle_yaw(Angle(0.0f, angle_radians)),
 	base_angle(Angle(0.0f, angle_radians)),
 	scale(1.0f, 1.0f),
 	color(1.0f, 1.0f, 1.0f, 1.0f),
@@ -100,6 +102,8 @@ Sprite_Impl::SpriteFrame *Sprite_Impl::get_frame(unsigned int index)
 Sprite_Impl &Sprite_Impl::operator =(const Sprite_Impl &copy)
 {
 	angle = copy.angle;
+	angle_pitch = copy.angle_pitch;
+	angle_yaw = copy.angle_yaw;
 	base_angle = copy.base_angle;
 	scale = copy.scale;
 	color = copy.color;
@@ -268,6 +272,24 @@ void Sprite_Impl::draw(Canvas &canvas, const Rect &p_src, const Pointf &p_dest, 
 		dest_position[3].y = calc_rotate_y(pixDestX+destWidth, pixDestY+destHeight, target_rotation_hotspot.x, target_rotation_hotspot.y, vect_rotate_x[1], vect_rotate_y[1]);
 	}
 
+	// Pitch
+	if (angle_pitch.to_radians() != 0.0f)
+	{
+		float pitch_rad = sin(PI / 2 + angle_pitch.to_radians());
+		dest_position[0].y = (dest_position[0].y - target_rotation_hotspot.y) * pitch_rad + target_rotation_hotspot.y;
+		dest_position[1].y = (dest_position[1].y - target_rotation_hotspot.y) * pitch_rad + target_rotation_hotspot.y;
+		dest_position[2].y = (dest_position[2].y - target_rotation_hotspot.y) * pitch_rad + target_rotation_hotspot.y;
+		dest_position[3].y = (dest_position[3].y - target_rotation_hotspot.y) * pitch_rad + target_rotation_hotspot.y;
+	}
+	// Yaw
+	if (angle_yaw.to_radians() != 0.0f)
+	{
+		float yaw_rad = cos(angle_yaw.to_radians());
+		dest_position[0].x = (dest_position[0].x - target_rotation_hotspot.x) * yaw_rad + target_rotation_hotspot.x;
+		dest_position[1].x = (dest_position[1].x - target_rotation_hotspot.x) * yaw_rad + target_rotation_hotspot.x;
+		dest_position[2].x = (dest_position[2].x - target_rotation_hotspot.x) * yaw_rad + target_rotation_hotspot.x;
+		dest_position[3].x = (dest_position[3].x - target_rotation_hotspot.x) * yaw_rad + target_rotation_hotspot.x;
+	}
 	RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
 	batcher->draw_sprite(canvas, texture_position, dest_position, frames[current_frame].texture, color);
 

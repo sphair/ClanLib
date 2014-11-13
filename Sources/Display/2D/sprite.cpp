@@ -620,6 +620,8 @@ Sprite Sprite::clone() const
 	copy.impl = std::shared_ptr<Sprite_Impl>(new Sprite_Impl());
 
 	copy.impl->angle = impl->angle;
+	copy.impl->angle_pitch = impl->angle_pitch;
+	copy.impl->angle_yaw = impl->angle_yaw;
 	copy.impl->base_angle = impl->base_angle;
 	copy.impl->scale = impl->scale;
 	copy.impl->color = impl->color;
@@ -727,6 +729,32 @@ void Sprite::set_angle(Angle angle)
 	impl->angle = Angle(degrees, angle_degrees);
 }
 
+void Sprite::set_angle_pitch(Angle angle)
+{
+	float degrees = angle.to_degrees();
+
+	if (degrees >= 0.0f)
+		degrees = fmod(degrees, 360.0f);
+	else
+		degrees = fmod(degrees, 360.0f) + 360.0f;
+
+	impl->angle_pitch = Angle(degrees, angle_degrees);
+}
+
+void Sprite::set_angle_yaw(Angle angle)
+{
+	float degrees = angle.to_degrees();
+
+	if (degrees >= 0.0f)
+		degrees = fmod(degrees, 360.0f);
+	else
+		degrees = fmod(degrees, 360.0f) + 360.0f;
+
+	impl->angle_yaw = Angle(degrees, angle_degrees);
+
+	impl->angle_yaw = angle;
+}
+
 void Sprite::rotate(Angle angle)
 {
 	float degrees = angle.to_degrees();
@@ -738,6 +766,32 @@ void Sprite::rotate(Angle angle)
 		degrees = fmod(degrees, 360.0f) + 360.0f;
 
 	impl->angle = Angle(degrees, angle_degrees);
+}
+
+void Sprite::rotate_pitch(Angle angle)
+{
+	float degrees = angle.to_degrees();
+	degrees += impl->angle_pitch.to_degrees();
+
+	if (degrees >= 0.0f)
+		degrees = fmod(degrees, 360.0f);
+	else
+		degrees = fmod(degrees, 360.0f) + 360.0f;
+
+	impl->angle_pitch = Angle(degrees, angle_degrees);
+}
+
+void Sprite::rotate_yaw(Angle angle)
+{
+	float degrees = angle.to_degrees();
+	degrees += impl->angle_yaw.to_degrees();
+
+	if (degrees >= 0.0f)
+		degrees = fmod(degrees, 360.0f);
+	else
+		degrees = fmod(degrees, 360.0f) + 360.0f;
+
+	impl->angle_yaw = Angle(degrees, angle_degrees);
 }
 
 void Sprite::set_base_angle(Angle angle)

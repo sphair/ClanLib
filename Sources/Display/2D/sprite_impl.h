@@ -76,7 +76,7 @@ public:
 	CollisionOutline create_collision_outline(Canvas &canvas, int alpha_limit, OutlineAccuracy accuracy) const;
 	std::vector<CollisionOutline> create_collision_outlines(Canvas &canvas, int alpha_limit, OutlineAccuracy accuracy) const;
 
-	Angle angle;
+	Angle angle, angle_pitch, angle_yaw;
 	Angle base_angle;
 	
 	Pointf scale;
