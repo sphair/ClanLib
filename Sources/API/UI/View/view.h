@@ -89,7 +89,10 @@ namespace clan
 		virtual float get_first_baseline_offset(Canvas &canvas, float width);
 		virtual float get_last_baseline_offset(Canvas &canvas, float width);
 
+		virtual bool local_root();
+
 		void layout(Canvas &canvas);
+		virtual void layout_local();
 		virtual void layout_subviews(Canvas &canvas);
 
 		View *root_view();
@@ -137,6 +140,9 @@ namespace clan
 		Signal<void(KeyEvent &)> &sig_key_release(EventUIPhase phase = EventUIPhase::at_target);
 
 		void update_cursor(DisplayWindow &window);
+
+		virtual Pointf to_screen_pos(const Pointf &pos);
+		virtual Pointf from_screen_pos(const Pointf &pos);
 
 	protected:
 		virtual void subview_added(const std::shared_ptr<View> &view) { }

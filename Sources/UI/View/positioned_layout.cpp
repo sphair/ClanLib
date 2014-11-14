@@ -38,7 +38,11 @@ namespace clan
 		{
 			if (subview->hidden()) continue;
 
-			if (subview->box_style.is_absolute())
+			if (subview->local_root())
+			{
+				subview->layout_local();
+			}
+			else if (subview->box_style.is_absolute())
 			{
 				// To do: decide how we determine the containing box used for absolute positioning. For now, use the parent content box.
 				layout_from_containing_box(canvas, subview.get(), view->geometry().content);
@@ -76,7 +80,7 @@ namespace clan
 		}
 	}
 
-	void PositionedLayout::layout_from_containing_box(Canvas &canvas, View *view, const Rectf &containing_box)
+	BoxGeometry PositionedLayout::get_geometry(Canvas &canvas, View *view, const Rectf &containing_box)
 	{
 		float x = 0.0f;
 		float width = 0.0f;
@@ -146,8 +150,12 @@ namespace clan
 			height = view->get_preferred_height(canvas, width);
 		}
 
-		view->set_geometry(BoxGeometry::from_content_box(view->box_style, Rectf::xywh(x, y, width, height)));
+		return BoxGeometry::from_content_box(view->box_style, Rectf::xywh(x, y, width, height));
+	}
 
+	void PositionedLayout::layout_from_containing_box(Canvas &canvas, View *view, const Rectf &containing_box)
+	{
+		view->set_geometry(get_geometry(canvas, view, containing_box));
 		view->layout_subviews(canvas);
 	}
 }

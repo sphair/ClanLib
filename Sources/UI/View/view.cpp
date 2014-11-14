@@ -162,7 +162,7 @@ namespace clan
 
 		for (std::shared_ptr<View> &view : impl->_subviews)
 		{
-			if (!view->hidden())
+			if (!view->hidden() && !view->local_root())
 				view->render(canvas);
 		}
 
@@ -225,6 +225,11 @@ namespace clan
 			return 0.0f;
 	}
 
+	bool View::local_root()
+	{
+		return false;
+	}
+
 	void View::layout(Canvas &canvas)
 	{
 		if (needs_layout())
@@ -233,6 +238,10 @@ namespace clan
 			PositionedLayout::layout_subviews(canvas, this);
 		}
 		impl->_needs_layout = false;
+	}
+
+	void View::layout_local()
+	{
 	}
 
 	void View::layout_subviews(Canvas &canvas)
@@ -450,6 +459,22 @@ namespace clan
 		{
 			window.set_cursor(impl->cursor_type);
 		}
+	}
+
+	Pointf View::to_screen_pos(const Pointf &pos)
+	{
+		if (superview())
+			return superview()->to_screen_pos(geometry().content_box().get_top_left() + pos);
+		else
+			return Pointf();
+	}
+
+	Pointf View::from_screen_pos(const Pointf &pos)
+	{
+		if (superview())
+			return superview()->from_screen_pos(pos) - geometry().content_box().get_top_left();
+		else
+			return Pointf();
 	}
 
 	void View::dispatch_event(EventUI *e, bool no_propagation)

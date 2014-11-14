@@ -35,6 +35,7 @@
 #include "API/Display/Window/input_event.h"
 #include "API/Display/Window/input_context.h"
 #include "API/Display/2D/canvas.h"
+#include "UI/View/positioned_layout.h"
 #include "window_view_impl.h"
 
 namespace clan
@@ -95,5 +96,35 @@ namespace clan
 	void WindowView::set_needs_render()
 	{
 		impl->window.request_repaint(impl->window.get_viewport());
+	}
+
+	bool WindowView::local_root()
+	{
+		return true;
+	}
+
+	void WindowView::layout_local()
+	{
+		Canvas canvas(impl->window);
+		Rectf containing_box = superview()->geometry().content;
+		BoxGeometry geometry = PositionedLayout::get_geometry(canvas, this, containing_box);
+		set_geometry(BoxGeometry::from_margin_box(box_style, impl->window.get_viewport()));
+		layout(canvas);
+
+		Pointf screen_pos = superview()->to_screen_pos(geometry.margin_box().get_top_left());
+		Sizef screen_size = geometry.margin_box().get_size();
+		impl->window.set_position(Rectf(screen_pos, screen_size), false);
+	}
+
+	Pointf WindowView::to_screen_pos(const Pointf &pos)
+	{
+		Point client_pos = geometry().content_box().get_top_left() + pos;
+		return impl->window.client_to_screen(client_pos);
+	}
+
+	Pointf WindowView::from_screen_pos(const Pointf &pos)
+	{
+		Point client_pos = impl->window.screen_to_client(Point(pos));
+		return Pointf(client_pos) - geometry().content_box().get_top_left();
 	}
 }

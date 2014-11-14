@@ -26,50 +26,26 @@
 **    Magnus Norddahl
 */
 
-#pragma once
-
-#include "../View/view.h"
-#include "../../Display/Window/display_window.h"
+#include "UI/precomp.h"
+#include "API/UI/StandardViews/popup_view.h"
+#include "API/Display/Window/display_window_description.h"
 
 namespace clan
 {
-	enum class WindowShowType
-	{
-		hide,
-		show,
-		show_no_activate,
-		normal,
-		maximized,
-		minimized,
-		maximize,
-		minimize,
-		minimize_no_activate,
-		restore,
-		show_default
-	};
-
-	enum InputCode;
-	class InputEvent;
-	class WindowView_Impl;
-
-	class WindowView : public View
+	class PopupViewImpl
 	{
 	public:
-		WindowView(const DisplayWindowDescription &desc);
-
-		void show(WindowShowType type = WindowShowType::show);
-		void hide();
-
-		DisplayWindow get_display_window();
-
-		void set_needs_render() override;
-		bool local_root() override;
-		void layout_local() override;
-
-		Pointf to_screen_pos(const Pointf &pos) override;
-		Pointf from_screen_pos(const Pointf &pos) override;
-
-	private:
-		std::shared_ptr<WindowView_Impl> impl;
+		static DisplayWindowDescription get_window_desc()
+		{
+			DisplayWindowDescription desc;
+			desc.set_type(WindowType::popup);
+			desc.set_visible(false);
+			desc.set_topmost(true);
+			return desc;
+		}
 	};
+
+	PopupView::PopupView() : WindowView(PopupViewImpl::get_window_desc())
+	{
+	}
 }

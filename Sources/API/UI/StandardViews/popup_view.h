@@ -28,48 +28,18 @@
 
 #pragma once
 
-#include "../View/view.h"
-#include "../../Display/Window/display_window.h"
+#include "window_view.h"
 
 namespace clan
 {
-	enum class WindowShowType
-	{
-		hide,
-		show,
-		show_no_activate,
-		normal,
-		maximized,
-		minimized,
-		maximize,
-		minimize,
-		minimize_no_activate,
-		restore,
-		show_default
-	};
+	class PopupView_Impl;
 
-	enum InputCode;
-	class InputEvent;
-	class WindowView_Impl;
-
-	class WindowView : public View
+	class PopupView : public WindowView
 	{
 	public:
-		WindowView(const DisplayWindowDescription &desc);
-
-		void show(WindowShowType type = WindowShowType::show);
-		void hide();
-
-		DisplayWindow get_display_window();
-
-		void set_needs_render() override;
-		bool local_root() override;
-		void layout_local() override;
-
-		Pointf to_screen_pos(const Pointf &pos) override;
-		Pointf from_screen_pos(const Pointf &pos) override;
+		PopupView();
 
 	private:
-		std::shared_ptr<WindowView_Impl> impl;
+		std::shared_ptr<PopupView_Impl> impl;
 	};
 }
