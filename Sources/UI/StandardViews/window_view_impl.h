@@ -32,24 +32,17 @@
 
 namespace clan
 {
+	class KeyEvent;
+	class PointerEvent;
 
 	class WindowView_Impl
 	{
 	public:
-		WindowView_Impl(const DisplayWindowDescription &desc);
+		WindowView_Impl(WindowView *view, const DisplayWindowDescription &desc);
 
-		Signal<void()> sig_size_changed;
-		Signal<void(Canvas &)> sig_render;
-		Signal<void(KeyEvent &)> sig_key_event;
-		Signal<void(PointerEvent &)> sig_pointer_event;
-		Signal<void()> sig_close;
-		Signal<void()> sig_activated;
-		Signal<void()> sig_deactivated;
-
+		WindowView *window_view;
 		DisplayWindow window;
 		SlotContainer slots;
-
-		std::shared_ptr<WindowView_Impl> impl;
 
 		std::shared_ptr<View> captured_view;
 		int capture_down_counter = 0;
@@ -57,12 +50,18 @@ namespace clan
 		std::shared_ptr<View> hot_view;
 
 	private:
+		void on_window_size_changed();
+		void on_window_render(Canvas &canvas);
+		void on_window_key_event(KeyEvent &e);
+		void on_window_pointer_event(PointerEvent &e);
+		void on_window_close();
+		void on_window_activated();
+		void on_window_deactivated();
 
 		void on_lost_focus();
 		void on_got_focus();
 		void on_resize(int, int);
 		void on_paint(const clan::Rect &);
-		void on_window_close();
 		void on_key_down(const clan::InputEvent &);
 		void on_key_up(const clan::InputEvent &);
 		void on_mouse_down(const clan::InputEvent &);

@@ -40,7 +40,7 @@
 namespace clan
 {
 
-	WindowView_Impl::WindowView_Impl(const DisplayWindowDescription &desc) : window(desc)
+	WindowView_Impl::WindowView_Impl(WindowView *view, const DisplayWindowDescription &desc) : window_view(view), window(desc)
 	{
 		slots.connect(window.sig_lost_focus(), clan::bind_member(this, &WindowView_Impl::on_lost_focus));
 		slots.connect(window.sig_got_focus(), clan::bind_member(this, &WindowView_Impl::on_got_focus));
@@ -53,22 +53,23 @@ namespace clan
 		slots.connect(window.get_ic().get_mouse().sig_key_dblclk(), clan::bind_member(this, &WindowView_Impl::on_mouse_dblclk));
 		slots.connect(window.get_ic().get_mouse().sig_key_up(), clan::bind_member(this, &WindowView_Impl::on_mouse_up));
 		slots.connect(window.get_ic().get_mouse().sig_pointer_move(), clan::bind_member(this, &WindowView_Impl::on_mouse_move));
-
 	}
 
 	void WindowView_Impl::on_lost_focus()
 	{
-		sig_deactivated();
+		ActivationChangeEvent e(ActivationChangeType::deactivated);
+		window_view->dispatch_event(&e);
 	}
 
 	void WindowView_Impl::on_got_focus()
 	{
-		sig_activated();
+		ActivationChangeEvent e(ActivationChangeType::activated);
+		window_view->dispatch_event(&e);
 	}
 
 	void WindowView_Impl::on_resize(int, int)
 	{
-		sig_size_changed();
+		window.request_repaint(window.get_viewport());
 	}
 
 	void WindowView_Impl::on_paint(const clan::Rect &box)
@@ -77,7 +78,9 @@ namespace clan
 
 		canvas.clear(clan::Colorf::transparent);
 
-		sig_render(canvas);
+		window_view->set_geometry(BoxGeometry::from_margin_box(window_view->box_style, window.get_viewport()));
+		window_view->layout(canvas);
+		window_view->render(canvas);
 
 		canvas.flush();
 		window.flip();
@@ -85,7 +88,77 @@ namespace clan
 
 	void WindowView_Impl::on_window_close()
 	{
-		sig_close();
+		CloseEvent e;
+		window_view->dispatch_event(&e);
+	}
+
+	void WindowView_Impl::on_window_key_event(KeyEvent &e)
+	{
+		View *view = window_view->focus_view();
+		if (view)
+		{
+			view->dispatch_event(&e);
+		}
+
+		if (!e.default_prevented() && e.type() == KeyEventType::press && e.shift_down() && e.key() == Key::tab)
+		{
+			window_view->root_view()->prev_focus();
+		}
+		else if (!e.default_prevented() && e.type() == KeyEventType::press && e.key() == Key::tab)
+		{
+			window_view->root_view()->next_focus();
+		}
+	}
+
+	void WindowView_Impl::on_window_pointer_event(PointerEvent &e_window)
+	{
+		PointerEvent e = e_window;
+		e.set_pos(e.pos() - window_view->geometry().content.get_top_left());
+
+		std::shared_ptr<View> view_above_cursor = window_view->find_view_at(e.pos());
+
+		if (view_above_cursor != hot_view)
+		{
+			if (hot_view)
+			{
+				PointerEvent e_exit(PointerEventType::leave, PointerButton::none, e.pos(), e.alt_down(), e.shift_down(), e.ctrl_down(), e.cmd_down());
+				hot_view->dispatch_event(&e_exit, true);
+			}
+
+			hot_view = view_above_cursor;
+
+			if (hot_view)
+			{
+				PointerEvent e_enter(PointerEventType::enter, PointerButton::none, e.pos(), e.alt_down(), e.shift_down(), e.ctrl_down(), e.cmd_down());
+				hot_view->dispatch_event(&e_enter, true);
+
+				hot_view->update_cursor(window);
+			}
+		}
+
+		if (e.type() == PointerEventType::enter || e.type() == PointerEventType::leave)
+			return;
+
+		if (e.type() == PointerEventType::press || e.type() == PointerEventType::double_click)
+		{
+			// To do: use flags for each mouse key rather than a counter - it is safer in case a release event is never sent
+			capture_down_counter++;
+			if (capture_down_counter == 1)
+				captured_view = view_above_cursor;
+		}
+
+		std::shared_ptr<View> view = captured_view ? captured_view : view_above_cursor;
+		if (view)
+			view->dispatch_event(&e);
+		else
+			window_view->dispatch_event(&e);
+
+		if (e.type() == PointerEventType::release)
+		{
+			capture_down_counter--;
+			if (capture_down_counter == 0)
+				captured_view.reset();
+		}
 	}
 
 	void WindowView_Impl::on_key_down(const clan::InputEvent &e)
@@ -100,7 +173,7 @@ namespace clan
 		bool ctrl_down = e.ctrl;
 		bool cmd_down = false;
 		KeyEvent key_event(type, key, repeat_count, text, pointer_pos, alt_down, shift_down, ctrl_down, cmd_down);
-		sig_key_event(key_event);
+		on_window_key_event(key_event);
 	}
 
 	void WindowView_Impl::on_key_up(const clan::InputEvent &e)
@@ -115,7 +188,7 @@ namespace clan
 		bool ctrl_down = e.ctrl;
 		bool cmd_down = false;
 		KeyEvent key_event(type, key, repeat_count, text, pointer_pos, alt_down, shift_down, ctrl_down, cmd_down);
-		sig_key_event(key_event);
+		on_window_key_event(key_event);
 	}
 
 	void WindowView_Impl::on_mouse_down(const clan::InputEvent &e)
@@ -128,7 +201,7 @@ namespace clan
 		bool ctrl_down = e.ctrl;
 		bool cmd_down = false;
 		PointerEvent pointer_event(type, button, pos, alt_down, shift_down, ctrl_down, cmd_down);
-		sig_pointer_event(pointer_event);
+		on_window_pointer_event(pointer_event);
 	}
 
 	void WindowView_Impl::on_mouse_dblclk(const clan::InputEvent &e)
@@ -141,7 +214,7 @@ namespace clan
 		bool ctrl_down = e.ctrl;
 		bool cmd_down = false;
 		PointerEvent pointer_event(type, button, pos, alt_down, shift_down, ctrl_down, cmd_down);
-		sig_pointer_event(pointer_event);
+		on_window_pointer_event(pointer_event);
 	}
 
 	void WindowView_Impl::on_mouse_up(const clan::InputEvent &e)
@@ -154,13 +227,13 @@ namespace clan
 		bool ctrl_down = e.ctrl;
 		bool cmd_down = false;
 		PointerEvent pointer_event(type, button, pos, alt_down, shift_down, ctrl_down, cmd_down);
-		sig_pointer_event(pointer_event);
+		on_window_pointer_event(pointer_event);
 	}
 
 	void WindowView_Impl::on_mouse_move(const clan::InputEvent &clan_event)
 	{
 		PointerEvent e(PointerEventType::move, PointerButton::none, Pointf((float)clan_event.mouse_pos.x, (float)clan_event.mouse_pos.y), clan_event.alt, clan_event.shift, clan_event.ctrl, false/*clan_event.cmd*/);
-		sig_pointer_event(e);
+		on_window_pointer_event(e);
 	}
 
 	PointerButton WindowView_Impl::decode_id(clan::InputCode ic) const

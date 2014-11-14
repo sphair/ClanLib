@@ -36,17 +36,11 @@
 #include "API/Display/Window/input_context.h"
 #include "API/Display/2D/canvas.h"
 #include "window_view_impl.h"
+
 namespace clan
 {
-	WindowView::WindowView(const DisplayWindowDescription &desc) : impl(std::make_shared<WindowView_Impl>(desc))
+	WindowView::WindowView(const DisplayWindowDescription &desc) : impl(std::make_shared<WindowView_Impl>(this, desc))
 	{
-		slots.connect(impl->sig_size_changed, this, &WindowView::on_window_size_changed);
-		slots.connect(impl->sig_render, this, &WindowView::on_window_render);
-		slots.connect(impl->sig_key_event, this, &WindowView::on_window_key_event);
-		slots.connect(impl->sig_pointer_event, this, &WindowView::on_window_pointer_event);
-		slots.connect(impl->sig_close, this, &WindowView::on_window_close);
-		slots.connect(impl->sig_activated, this, &WindowView::on_window_activated);
-		slots.connect(impl->sig_deactivated, this, &WindowView::on_window_deactivated);
 	}
 
 	DisplayWindow WindowView::get_display_window()
@@ -102,104 +96,4 @@ namespace clan
 	{
 		impl->window.request_repaint(impl->window.get_viewport());
 	}
-
-	void WindowView::on_window_size_changed()
-	{
-		impl->window.request_repaint(impl->window.get_viewport());
-	}
-
-	void WindowView::on_window_render(Canvas &canvas)
-	{
-		set_geometry(BoxGeometry::from_margin_box(box_style, impl->window.get_viewport()));
-		layout(canvas);
-		render(canvas);
-	}
-
-	void WindowView::on_window_key_event(KeyEvent &e)
-	{
-		View *view = focus_view();
-		if (view)
-		{
-			view->dispatch_event(&e);
-		}
-
-		if (!e.default_prevented() && e.type() == KeyEventType::press && e.shift_down() && e.key() == Key::tab)
-		{
-			root_view()->prev_focus();
-		}
-		else if (!e.default_prevented() && e.type() == KeyEventType::press && e.key() == Key::tab)
-		{
-			root_view()->next_focus();
-		}
-	}
-
-	void WindowView::on_window_pointer_event(PointerEvent &e_window)
-	{
-		PointerEvent e = e_window;
-		e.set_pos(e.pos() - geometry().content.get_top_left());
-
-		std::shared_ptr<View> view_above_cursor = find_view_at(e.pos());
-
-		if (view_above_cursor != impl->hot_view)
-		{
-			if (impl->hot_view)
-			{
-				PointerEvent e_exit(PointerEventType::leave, PointerButton::none, e.pos(), e.alt_down(), e.shift_down(), e.ctrl_down(), e.cmd_down());
-				impl->hot_view->dispatch_event(&e_exit, true);
-			}
-
-			impl->hot_view = view_above_cursor;
-
-			if (impl->hot_view)
-			{
-				PointerEvent e_enter(PointerEventType::enter, PointerButton::none, e.pos(), e.alt_down(), e.shift_down(), e.ctrl_down(), e.cmd_down());
-				impl->hot_view->dispatch_event(&e_enter, true);
-
-				impl->hot_view->update_cursor(impl->window);
-			}
-		}
-
-		if (e.type() == PointerEventType::enter || e.type() == PointerEventType::leave)
-			return;
-
-		if (e.type() == PointerEventType::press || e.type() == PointerEventType::double_click)
-		{
-			// To do: use flags for each mouse key rather than a counter - it is safer in case a release event is never sent
-			impl->capture_down_counter++;
-			if (impl->capture_down_counter == 1)
-				impl->captured_view = view_above_cursor;
-		}
-
-		std::shared_ptr<View> view = impl->captured_view ? impl->captured_view : view_above_cursor;
-		if (view)
-			view->dispatch_event(&e);
-		else
-			dispatch_event(&e);
-
-		if (e.type() == PointerEventType::release)
-		{
-			impl->capture_down_counter--;
-			if (impl->capture_down_counter == 0)
-				impl->captured_view.reset();
-		}
-	}
-
-	void WindowView::on_window_close()
-	{
-		CloseEvent e;
-		dispatch_event(&e);
-	}
-
-	void WindowView::on_window_activated()
-	{
-		ActivationChangeEvent e(ActivationChangeType::activated);
-		dispatch_event(&e);
-	}
-
-	void WindowView::on_window_deactivated()
-	{
-		ActivationChangeEvent e(ActivationChangeType::deactivated);
-		dispatch_event(&e);
-	}
-
 }
