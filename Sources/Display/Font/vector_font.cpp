@@ -233,7 +233,8 @@ void VectorFont::draw_text_ellipsis(Canvas &canvas, float dest_x, float dest_y, 
 						if (seek_center != utf8_reader.get_position())
 							utf8_reader.next();
 						seek_center = utf8_reader.get_position();
-
+						if (seek_center == seek_end)
+							 break;
 						utf8_reader.set_position(seek_start);
 						utf8_reader.next();
 						if (utf8_reader.get_position() == seek_end)
