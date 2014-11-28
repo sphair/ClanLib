@@ -48,27 +48,27 @@ class JsonValue
 {
 public:
 	/// \brief value type
-	enum Type
+	enum class Type
 	{
-		type_null,
-		type_object,
-		type_array,
-		type_string,
-		type_number,
-		type_boolean
+		null,
+		object,
+		array,
+		string,
+		number,
+		boolean
 	};
 
 /// \name Construction
 /// \{
 public:
 	/// \brief Create a object value
-	static JsonValue object() { return JsonValue(type_object); }
+	static JsonValue object() { return JsonValue(Type::object); }
 
 	/// \brief Create a array value
-	static JsonValue array() { return JsonValue(type_array); }
+	static JsonValue array() { return JsonValue(Type::array); }
 
 	/// \brief Create a null value
-	static JsonValue null() { return JsonValue(type_null); }
+	static JsonValue null() { return JsonValue(Type::null); }
 
 	/// \brief Create a string value
 	static JsonValue string(const std::string &value) { return JsonValue(value); }
@@ -84,20 +84,20 @@ public:
 	static JsonValue from_json(const std::string &json);
 
 	/// \brief Constructs a value
-	JsonValue() : type(type_null), value_number(), value_boolean() { }
+	JsonValue() : type(Type::null), value_number(), value_boolean() { }
 	JsonValue(Type type) : type(type), value_number(), value_boolean() { }
-	JsonValue(const std::string &value) : type(type_string), value_string(value), value_number(), value_boolean() { }
-	JsonValue(int value) : type(type_number), value_number((double)value), value_boolean() { }
-	JsonValue(double value) : type(type_number), value_number(value), value_boolean() { }
-	explicit JsonValue(bool value) : type(type_boolean), value_number(), value_boolean(value) { }
+	JsonValue(int value) : type(Type::number), value_number((double)value), value_boolean() { }
+	JsonValue(double value) : type(Type::number), value_number(value), value_boolean() { }
+	JsonValue(const std::string &value) : type(Type::string), value_string(value), value_number(), value_boolean() { }
+	explicit JsonValue(bool value) : type(Type::boolean), value_number(), value_boolean(value) { }
 /// \}
 
 /// \name Attributes
 /// \{
 public:
 	/// \brief Convert value to a different type
-	operator bool() const { return to_boolean(); }
-	operator std::string() const { return to_string(); }
+	explicit operator bool() const { return to_boolean(); }
+	explicit operator std::string() const { return to_string(); }
 	operator double() const { return to_double(); }
 	operator int() const { return to_int(); }
 
@@ -115,9 +115,9 @@ public:
 	{
 		switch (type)
 		{
-		case type_object: return members.size();
-		case type_array: return items.size();
-		case type_string: return value_string.size();
+		case Type::object: return members.size();
+		case Type::array: return items.size();
+		case Type::string: return value_string.size();
 		default: return 0;
 		}
 	}
@@ -131,54 +131,61 @@ public:
 	const std::vector<JsonValue> &get_items() const { return items; }
 
 	/// \brief Return true if value is null
-	bool is_null() const { return type == type_null; }
+	bool is_null() const { return type == Type::null; }
 
 	/// \brief Return true if value is an object
-	bool is_object() const { return type == type_object; }
+	bool is_object() const { return type == Type::object; }
 
 	/// \brief Return true if value is an array
-	bool is_array() const { return type == type_array; }
+	bool is_array() const { return type == Type::array; }
 
 	/// \brief Return true if value is a string
-	bool is_string() const { return type == type_string; }
+	bool is_string() const { return type == Type::string; }
 
 	/// \brief Return true if value is a number
-	bool is_number() const { return type == type_number; }
+	bool is_number() const { return type == Type::number; }
 
 	/// \brief Return true if value is a boolean
-	bool is_boolean() const { return type == type_boolean; }
+	bool is_boolean() const { return type == Type::boolean; }
 
 	/// \brief Convert value object to a string
-	std::string to_string() const { if (type != type_string) throw JsonException("JSON Value is not a string"); return value_string; }
+	std::string to_string() const { if (type != Type::string) throw JsonException("JSON Value is not a string"); return value_string; }
 
 	/// \brief Convert value object to an int
-	int to_int() const { if (type != type_number) throw JsonException("JSON Value is not a number"); return (int)value_number; }
+	int to_int() const { if (type != Type::number) throw JsonException("JSON Value is not a number"); return (int)value_number; }
 
 	/// \brief Convert value object to a float
-	float to_float() const { if (type != type_number) throw JsonException("JSON Value is not a number"); return (float)value_number; }
+	float to_float() const { if (type != Type::number) throw JsonException("JSON Value is not a number"); return (float)value_number; }
 
 	/// \brief Convert value object to a double
-	double to_double() const { if (type != type_number) throw JsonException("JSON Value is not a number"); return value_number; }
+	double to_double() const { if (type != Type::number) throw JsonException("JSON Value is not a number"); return value_number; }
 
 	/// \brief Convert value object to a boolean
-	bool to_boolean() const { if (type != type_boolean) throw JsonException("JSON Value is not a boolean"); return value_boolean; }
+	bool to_boolean() const { if (type != Type::boolean) throw JsonException("JSON Value is not a boolean"); return value_boolean; }
 /// \}
 
 /// \name Operations
 /// \{
 public:
 	/// \brief Assign a new value
-	JsonValue &operator =(const char *value) { *this = JsonValue(std::string(value)); return *this; }
-	JsonValue &operator =(const std::string &value) { *this = JsonValue(value); return *this; }
-	JsonValue &operator =(int value) { *this = JsonValue(value); return *this; }
-	JsonValue &operator =(double value) { *this = JsonValue(value); return *this; }
-	JsonValue &operator =(bool value) { *this = JsonValue(value); return *this; }
+	template<typename T>
+	JsonValue &operator =(const T &&value) { *this = JsonValue(value); return *this; }
+
+	JsonValue &operator =(const JsonValue &&value)
+	{
+		type = value.type;
+		members = value.members;
+		value_string = value.value_string;
+		value_number = value.value_number;
+		value_boolean = value.value_boolean;
+		return *this;
+	}
 
 	/// \brief Convert value object to a std::map with the template specified value type
 	template<typename Type>
 	std::map<std::string, Type> to_map() const
 	{
-		if (type != type_object)
+		if (type != Type::object)
 			throw JsonException("JSON Value is not an object");
 
 		std::map<std::string, Type> object;
@@ -192,7 +199,7 @@ public:
 	template<typename Type>
 	std::vector<Type> to_vector() const
 	{
-		if (type != type_array)
+		if (type != Type::array)
 			throw JsonException("JSON Value is not an array");
 
 		std::vector<Type> list;

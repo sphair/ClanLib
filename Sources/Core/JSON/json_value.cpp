@@ -28,6 +28,7 @@
 
 #include "Core/precomp.h"
 #include "API/Core/JSON/json_value.h"
+#include "API/Core/Text/string_help.h"
 
 namespace clan
 {
@@ -49,22 +50,22 @@ void JsonValue::write(std::string &json) const
 {
 	switch (type)
 	{
-	case type_null:
+	case Type::null:
 		json += "null";
 		break;
-	case type_object:
+	case Type::object:
 		write_object(json);
 		break;
-	case type_array:
+	case Type::array:
 		write_array(json);
 		break;
-	case type_string:
+	case Type::string:
 		write_string(value_string, json);
 		break;
-	case type_number:
+	case Type::number:
 		write_number(json);
 		break;
-	case type_boolean:
+	case Type::boolean:
 		json += value_boolean ? "true" : "false";
 		break;
 	}
@@ -99,9 +100,73 @@ void JsonValue::write_object(std::string &json) const
 
 void JsonValue::write_string(const std::string &str, std::string &json)
 {
-	json += "\"";
-	json += str; // To do: escape this
-	json += "\"";
+	json.push_back('"');
+
+	for (auto c : str)
+	{
+		if (c == '"' || c == '\\')
+		{
+			json.push_back('\\');
+			json.push_back(c);
+		}
+		else if (c == '\b')
+		{
+			json.push_back('\\');
+			json.push_back('b');
+		}
+		else if (c == '\f')
+		{
+			json.push_back('\\');
+			json.push_back('f');
+		}
+		else if (c == '\n')
+		{
+			json.push_back('\\');
+			json.push_back('n');
+		}
+		else if (c == '\r')
+		{
+			json.push_back('\\');
+			json.push_back('r');
+		}
+		else if (c == '\t')
+		{
+			json.push_back('\\');
+			json.push_back('t');
+		}
+		else if (c < 32)
+		{
+			json.push_back('\\');
+			json.push_back('u');
+			json.push_back('0');
+			json.push_back('0');
+
+			if (c >= 16)
+			{
+				json.push_back('1');
+				c -= 16;
+			}
+			else
+			{
+				json.push_back('0');
+			}
+
+			if (c < 10)
+			{
+				json.push_back('0' + c);
+			}
+			else
+			{
+				json.push_back('a' + (c - 10));
+			}
+		}
+		else
+		{
+			json.push_back(c);
+		}
+	}
+
+	json.push_back('"');
 }
 
 void JsonValue::write_number(std::string &json) const
@@ -171,7 +236,7 @@ JsonValue JsonValue::read(const std::string &json, size_t &pos)
 
 JsonValue JsonValue::read_object(const std::string &json, size_t &pos)
 {
-	JsonValue result(type_object);
+	JsonValue result(Type::object);
 
 	pos++;
 
@@ -223,7 +288,7 @@ JsonValue JsonValue::read_object(const std::string &json, size_t &pos)
 
 JsonValue JsonValue::read_array(const std::string &json, size_t &pos)
 {
-	JsonValue result(type_array);
+	JsonValue result(Type::array);
 
 	pos++;
 
@@ -283,6 +348,8 @@ std::string JsonValue::read_string(const std::string &json, size_t &pos)
 			pos++;
 			if (pos == json.length())
 				throw JsonException("Unexpected end of JSON data");
+
+			unsigned codepoint;
 			switch (json[pos])
 			{
 			case '"':
@@ -312,9 +379,33 @@ std::string JsonValue::read_string(const std::string &json, size_t &pos)
 			case 'u':
 				if (pos + 5 > json.length())
 					throw JsonException("Unexpected end of JSON data");
-				// To do: parse unicode
-				throw JsonException("Unicode escapes not supported yet in JSON data");
-				pos += 3;
+				
+				codepoint = 0;
+				for (int i = 0; i < 4; i++)
+				{
+					char c = json[pos + 1 + i];
+					if (c >= '0' && c <= '9')
+					{
+						codepoint <<= 4;
+						codepoint |= c - '0';
+					}
+					else if (c >= 'a' && c <= 'f')
+					{
+						codepoint <<= 4;
+						codepoint |= c - 'a' + 10;
+					}
+					else if (c >= 'A' && c <= 'F')
+					{
+						codepoint <<= 4;
+						codepoint |= c - 'A' + 10;
+					}
+					else
+					{
+						throw JsonException("Invalid unicode escape");
+					}
+				}
+				result += StringHelp::unicode_to_utf8(codepoint);
+				pos += 4;
 				break;
 			}
 			pos++;
