@@ -86,10 +86,11 @@ public:
 	/// \brief Constructs a value
 	JsonValue() : type(Type::null), value_number(), value_boolean() { }
 	JsonValue(Type type) : type(type), value_number(), value_boolean() { }
+	JsonValue(bool value) : type(Type::boolean), value_number(), value_boolean(value) { }
 	JsonValue(int value) : type(Type::number), value_number((double)value), value_boolean() { }
 	JsonValue(double value) : type(Type::number), value_number(value), value_boolean() { }
+	JsonValue(const char *value) : type(Type::string), value_string(value), value_number(), value_boolean() { }
 	JsonValue(const std::string &value) : type(Type::string), value_string(value), value_number(), value_boolean() { }
-	explicit JsonValue(bool value) : type(Type::boolean), value_number(), value_boolean(value) { }
 /// \}
 
 /// \name Attributes
@@ -97,7 +98,7 @@ public:
 public:
 	/// \brief Convert value to a different type
 	explicit operator bool() const { return to_boolean(); }
-	explicit operator std::string() const { return to_string(); }
+	operator std::string() const { return to_string(); }
 	operator double() const { return to_double(); }
 	operator int() const { return to_int(); }
 
@@ -169,9 +170,9 @@ public:
 public:
 	/// \brief Assign a new value
 	template<typename T>
-	JsonValue &operator =(const T &&value) { *this = JsonValue(value); return *this; }
+	JsonValue &operator =(const T &value) { *this = JsonValue(value); return *this; }
 
-	JsonValue &operator =(const JsonValue &&value)
+	JsonValue &operator =(const JsonValue &value)
 	{
 		type = value.type;
 		members = value.members;
