@@ -50,6 +50,7 @@ public:
 	/// \brief value type
 	enum class Type
 	{
+		undefined,
 		null,
 		object,
 		array,
@@ -84,7 +85,7 @@ public:
 	static JsonValue from_json(const std::string &json);
 
 	/// \brief Constructs a value
-	JsonValue() : type(Type::null), value_number(), value_boolean() { }
+	JsonValue() : type(Type::undefined), value_number(), value_boolean() { }
 	JsonValue(Type type) : type(type), value_number(), value_boolean() { }
 	JsonValue(bool value) : type(Type::boolean), value_number(), value_boolean(value) { }
 	JsonValue(int value) : type(Type::number), value_number((double)value), value_boolean() { }
@@ -99,12 +100,28 @@ public:
 	/// \brief Convert value to a different type
 	explicit operator bool() const { return to_boolean(); }
 	operator std::string() const { return to_string(); }
+	operator float() const { return to_float(); }
 	operator double() const { return to_double(); }
 	operator int() const { return to_int(); }
 
 	/// \brief Indexers for object members or array items
 	JsonValue &operator[](const char *key) { return members[key]; }
 	JsonValue &operator[](const std::string &key) { return members[key]; }
+	const JsonValue &operator[](const char *key) const
+	{
+		static JsonValue undefined;
+		auto it = members.find(key);
+		if (it == members.end()) return undefined;
+		else return it->second;
+	}
+	const JsonValue &operator[](const std::string &key) const
+	{
+		static JsonValue undefined;
+		auto it = members.find(key);
+		if (it == members.end()) return undefined;
+		else return it->second;
+	}
+
 	const JsonValue &operator[](int index) const { return items[index]; }
 	JsonValue &operator[](int index) { return items[index]; }
 
@@ -130,6 +147,9 @@ public:
 	/// \brief Get array items
 	std::vector<JsonValue> &get_items() { return items; }
 	const std::vector<JsonValue> &get_items() const { return items; }
+
+	/// \brief Return true if value is undefined
+	bool is_undefined() const { return type == Type::undefined; }
 
 	/// \brief Return true if value is null
 	bool is_null() const { return type == Type::null; }
