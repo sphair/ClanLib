@@ -196,6 +196,7 @@ public:
 	{
 		type = value.type;
 		members = value.members;
+		items = value.items;
 		value_string = value.value_string;
 		value_number = value.value_number;
 		value_boolean = value.value_boolean;
