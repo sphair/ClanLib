@@ -58,6 +58,8 @@ namespace clan
 	{
 		if (impl->needs_render)
 		{
+			impl->canvas.clear(clan::Colorf::transparent);
+
 			impl->needs_render = false;
 			set_geometry(BoxGeometry::from_margin_box(box_style, impl->canvas.get_size()));
 			layout(impl->canvas);

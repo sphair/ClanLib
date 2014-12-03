@@ -147,20 +147,6 @@ int GUI::start(const std::vector<std::string> &args)
 	span->add_text(" units! sdfjghsdkfj hkjsdfhg jksdhfj gkshdfk gsjdkfghsjkdfh kgjshdfkg sjkdfh gjskhf gskjdfg hkjsdfh kgjsdhfkgjhsdkjfhgksjdfhg kjsdfhgjkshdfkhgskjdf ghkjsdfsg kdfhg skjdfhgjksdh fgsdfhg kjsdhfjkghsdkjfh gkjsdhfjkgsdhfkgjhsdkfj hgksj.", font_desc5);
 	root->add_subview(span);
 
-	// Create a popup window placed where the edit field is at
-	std::shared_ptr<clan::PopupView> popup = std::make_shared<clan::PopupView>();
-	popup->box_style.set_background(clan::Colorf::lightyellow);
-	popup->box_style.set_margin(5.0f);
-	popup->box_style.set_box_shadow(clan::Colorf(0, 0, 0, 40), 2.0f, 2.0f, 3.0f);
-	popup->box_style.set_border_radius(2.0f);
-	popup->box_style.set_border(clan::Colorf::black, 1.0f);
-	popup->box_style.set_padding(5.0f, 2.0f);
-	popup->box_style.set_absolute();
-	popup->box_style.set_bottom(28.0f);
-	popup->box_style.set_left(0.0f);
-	popup->box_style.set_layout_vbox();
-	edit->add_subview(popup);
-
 	clan::GameTime game_time;
 
 	// Run until someone presses escape
@@ -170,6 +156,8 @@ int GUI::start(const std::vector<std::string> &args)
 
 		canvas.clear(clan::Colorf(0.3f,0.7f,0.2f));
 
+		root->set_needs_layout();
+		root->set_needs_render();
 		root->update();
 		gui_canvas.flush();
 
