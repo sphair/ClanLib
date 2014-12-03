@@ -46,7 +46,7 @@ namespace clan
 		bool local_root() override;
 		void layout_local() override;
 
-		void paint();
+		void update();
 
 		Pointf to_screen_pos(const Pointf &pos) override;
 		Pointf from_screen_pos(const Pointf &pos) override;

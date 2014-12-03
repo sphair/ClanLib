@@ -62,7 +62,7 @@ int GUI::start(const std::vector<std::string> &args)
 	// Set the window
 	clan::DisplayWindowDescription desc;
 	desc.set_title("ClanLib TextureView GUI Example");
-	desc.set_size(clan::Size(640, 480), true);
+	desc.set_size(clan::Size(640, 640), true);
 	desc.set_allow_resize(true);
 
 	clan::DisplayWindow window(desc);
@@ -74,8 +74,13 @@ int GUI::start(const std::vector<std::string> &args)
 	// Connect a keyboard handler to on_key_up()
 	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &GUI::on_input_up));
 
-	// Load a sprite from a png-file
 	clan::Font font(canvas, "tahoma", 24);
+
+	clan::Texture2D gui_texture = clan::Texture2D(canvas, 512, 512);
+	clan::Image gui_image(gui_texture, gui_texture.get_size());
+	clan::FrameBuffer gui_framebuffer = clan::FrameBuffer(canvas);
+	gui_framebuffer.attach_color(0, gui_texture);
+	clan::Canvas gui_canvas(canvas, gui_framebuffer);
 
 	// Create a source for our resources
 	clan::ResourceManager resources;
@@ -84,7 +89,7 @@ int GUI::start(const std::vector<std::string> &args)
 	// Mark this thread as the UI thread
 	clan::UIThread ui_thread(resources);
 
-	std::shared_ptr<clan::TextureView> root = std::make_shared<clan::TextureView>(canvas);
+	std::shared_ptr<clan::TextureView> root = std::make_shared<clan::TextureView>(gui_canvas);
 
 	// Style the root view to use rounded corners and a bit of drop shadow
 	root->box_style.set_background(clan::Colorf(240, 240, 240, 255));
@@ -156,7 +161,6 @@ int GUI::start(const std::vector<std::string> &args)
 	popup->box_style.set_layout_vbox();
 	edit->add_subview(popup);
 
-
 	clan::GameTime game_time;
 
 	// Run until someone presses escape
@@ -164,13 +168,15 @@ int GUI::start(const std::vector<std::string> &args)
 	{
 		game_time.update();
 
-		// Clear the display in a dark blue nuance
-		canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
+		canvas.clear(clan::Colorf(0.3f,0.7f,0.2f));
 
-		root->paint();
+		root->update();
+		gui_canvas.flush();
+
+		gui_image.draw(canvas, 64, 64);
 
 		std::string fps = clan::string_format("%1 fps", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1));
-		font.draw_text(canvas, canvas.get_width() - 100, 30, fps);
+		font.draw_text(canvas, canvas.get_width() - 200, 30, fps);
 
 		window.flip(0);
 

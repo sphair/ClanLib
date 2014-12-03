@@ -46,6 +46,7 @@ namespace clan
 
 	void TextureView::set_needs_render()
 	{
+		impl->needs_render = true;
 	}
 
 	bool TextureView::local_root()
@@ -53,11 +54,15 @@ namespace clan
 		return true;
 	}
 
-	void TextureView::paint()
+	void TextureView::update()
 	{
-		set_geometry(BoxGeometry::from_margin_box(box_style, impl->canvas.get_size()));
-		layout(impl->canvas);
-		render(impl->canvas);
+		if (impl->needs_render)
+		{
+			impl->needs_render = false;
+			set_geometry(BoxGeometry::from_margin_box(box_style, impl->canvas.get_size()));
+			layout(impl->canvas);
+			render(impl->canvas);
+		}
 	}
 
 

@@ -42,5 +42,8 @@ namespace clan
 
 		TextureView *window_view;
 		Canvas canvas;
+
+		bool needs_render = false;
+
 	};
 }
