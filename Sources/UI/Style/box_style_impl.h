@@ -42,6 +42,7 @@ namespace clan
 {
 	class Canvas;
 	class BoxGeometry;
+	class BrushGradientStop;
 
 	class BoxStyleImpl
 	{
@@ -73,6 +74,7 @@ namespace clan
 		void render(Canvas &canvas, const BoxGeometry &geometry) const;
 
 	private:
+		static std::vector<BrushGradientStop> shadow_blur_stops(const Colorf &shadow_color, float shadow_blur_radius, float start_t);
 		static float mix(float a, float b, float t);
 	};
 }

@@ -96,7 +96,7 @@ int GUI::start(const std::vector<std::string> &args)
 	root->box_style.set_padding(11.0f);
 	root->box_style.set_border_radius(15.0f);
 	root->box_style.set_border(clan::Colorf(0, 0, 0), 1.0f);
-	root->box_style.set_margin(10.0f, 35.0f, 10.0f, 10.0f);
+	root->box_style.set_margin(20.0f, 20.0f, 20.0f, 20.0f);
 	root->box_style.set_box_shadow(clan::Colorf(0, 0, 0, 50), 0.0f, 0.0f, 20.0f);
 
 	// Create a label with some text to have some content

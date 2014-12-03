@@ -280,32 +280,28 @@ namespace clan
 					brush_top_left.radius_x = shadow_blur_radius + border.top_left_radius.x;
 					brush_top_left.radius_y = shadow_blur_radius + border.top_left_radius.y;
 					brush_top_left.center_point = Pointf(border_box.left + border.top_left_radius.x, border_box.top + border.top_left_radius.y);
-					brush_top_left.stops.push_back(BrushGradientStop(shadow_color, border.top_left_radius.x / brush_top_left.radius_x));
-					brush_top_left.stops.push_back(BrushGradientStop(transparent, 1.0f));
+					brush_top_left.stops = shadow_blur_stops(shadow_color, shadow_blur_radius, border.top_left_radius.x / brush_top_left.radius_x);
 
 					Brush brush_top_right;
 					brush_top_right.type = BrushType::radial;
 					brush_top_right.radius_x = shadow_blur_radius + border.top_right_radius.x;
 					brush_top_right.radius_y = shadow_blur_radius + border.top_right_radius.y;
 					brush_top_right.center_point = Pointf(border_box.right - border.top_right_radius.x, border_box.top + border.top_right_radius.y);
-					brush_top_right.stops.push_back(BrushGradientStop(shadow_color, border.top_right_radius.x / brush_top_right.radius_x));
-					brush_top_right.stops.push_back(BrushGradientStop(transparent, 1.0f));
+					brush_top_right.stops = shadow_blur_stops(shadow_color, shadow_blur_radius, border.top_right_radius.x / brush_top_right.radius_x);
 
 					Brush brush_bottom_right;
 					brush_bottom_right.type = BrushType::radial;
 					brush_bottom_right.radius_x = shadow_blur_radius + border.bottom_right_radius.x;
 					brush_bottom_right.radius_y = shadow_blur_radius + border.bottom_right_radius.y;
 					brush_bottom_right.center_point = Pointf(border_box.right - border.bottom_right_radius.x, border_box.bottom - border.bottom_right_radius.y);
-					brush_bottom_right.stops.push_back(BrushGradientStop(shadow_color, border.bottom_right_radius.x / brush_bottom_right.radius_x));
-					brush_bottom_right.stops.push_back(BrushGradientStop(transparent, 1.0f));
+					brush_bottom_right.stops = shadow_blur_stops(shadow_color, shadow_blur_radius, border.bottom_right_radius.x / brush_bottom_right.radius_x);
 
 					Brush brush_bottom_left;
 					brush_bottom_left.type = BrushType::radial;
 					brush_bottom_left.radius_x = shadow_blur_radius + border.bottom_left_radius.x;
 					brush_bottom_left.radius_y = shadow_blur_radius + border.bottom_left_radius.y;
 					brush_bottom_left.center_point = Pointf(border_box.left + border.bottom_left_radius.x, border_box.bottom - border.bottom_left_radius.y);
-					brush_bottom_left.stops.push_back(BrushGradientStop(shadow_color, border.bottom_left_radius.x / brush_bottom_left.radius_x));
-					brush_bottom_left.stops.push_back(BrushGradientStop(transparent, 1.0f));
+					brush_bottom_left.stops = shadow_blur_stops(shadow_color, shadow_blur_radius, border.bottom_left_radius.x / brush_bottom_left.radius_x);
 
 					canvas.fill(top_left, brush_top_left);
 					canvas.fill(top_right, brush_top_right);
@@ -314,14 +310,7 @@ namespace clan
 
 					Brush brush_linear;
 					brush_linear.type = BrushType::linear;
-					brush_linear.stops.push_back(BrushGradientStop(shadow_color, 0.0f));
-					for (float step = 1.0f; step < shadow_blur_radius - 1.0f; step += 1.0f)
-					{
-						float t = step / shadow_blur_radius;
-						float a = (1.0f - t) * (1.0f - t);
-						brush_linear.stops.push_back(BrushGradientStop(Colorf(shadow_color.r, shadow_color.g, shadow_color.b, shadow_color.a * a), t));
-					}
-					brush_linear.stops.push_back(BrushGradientStop(Colorf(shadow_color.r, shadow_color.g, shadow_color.b, 0.0f), 1.0f));
+					brush_linear.stops = shadow_blur_stops(shadow_color, shadow_blur_radius, 0.0f);
 
 					Path top;
 					top.move_to(Pointf(border_points[0].x, border_points[0].y - shadow_blur_radius));
@@ -405,12 +394,26 @@ namespace clan
 				canvas.fill(border_area_path, brush);
 			}
 
-
 			if (border.top.type == BoxBorderValue::type_solid)
 			{
 				canvas.fill(border_path, Brush(border.top.color));
 			}
 		}
+	}
+
+	std::vector<BrushGradientStop> BoxStyleImpl::shadow_blur_stops(const Colorf &shadow_color, float shadow_blur_radius, float start_t)
+	{
+		std::vector<BrushGradientStop> stops;
+		stops.push_back(BrushGradientStop(shadow_color, start_t));
+		for (float step = 1.0f; step < shadow_blur_radius - 1.0f; step += 1.0f)
+		{
+			float t = step / shadow_blur_radius;
+			float a = (1.0f - t) * (1.0f - t);
+			float final_t = start_t + t * (1.0f - start_t);
+			stops.push_back(BrushGradientStop(Colorf(shadow_color.r, shadow_color.g, shadow_color.b, shadow_color.a * a), final_t));
+		}
+		stops.push_back(BrushGradientStop(Colorf(shadow_color.r, shadow_color.g, shadow_color.b, 0.0f), 1.0f));
+		return stops;
 	}
 
 	float BoxStyleImpl::mix(float a, float b, float t)
