@@ -315,7 +315,13 @@ namespace clan
 					Brush brush_linear;
 					brush_linear.type = BrushType::linear;
 					brush_linear.stops.push_back(BrushGradientStop(shadow_color, 0.0f));
-					brush_linear.stops.push_back(BrushGradientStop(transparent, 1.0f));
+					for (float step = 1.0f; step < shadow_blur_radius - 1.0f; step += 1.0f)
+					{
+						float t = step / shadow_blur_radius;
+						float a = (1.0f - t) * (1.0f - t);
+						brush_linear.stops.push_back(BrushGradientStop(Colorf(shadow_color.r, shadow_color.g, shadow_color.b, shadow_color.a * a), t));
+					}
+					brush_linear.stops.push_back(BrushGradientStop(Colorf(shadow_color.r, shadow_color.g, shadow_color.b, 0.0f), 1.0f));
 
 					Path top;
 					top.move_to(Pointf(border_points[0].x, border_points[0].y - shadow_blur_radius));
