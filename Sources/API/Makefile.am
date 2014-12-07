@@ -330,6 +330,39 @@ clanDisplay_includes = \
 	Display/TargetProviders/frame_buffer_provider.h \
 	Display/setup_display.h
 
+clanUI_includes = \
+	ui.h \
+	UI/UIThread/ui_thread.h \
+	UI/ViewController/view_controller.h \
+	UI/StandardViews/progress_view.h \
+	UI/StandardViews/text_field_view.h \
+	UI/StandardViews/text_view.h \
+	UI/StandardViews/spinner_view.h \
+	UI/StandardViews/button_view.h \
+	UI/StandardViews/window_view.h \
+	UI/StandardViews/label_view.h \
+	UI/StandardViews/popup_view.h \
+	UI/StandardViews/image_view.h \
+	UI/StandardViews/texture_view.h \
+	UI/StandardViews/span_layout_view.h \
+	UI/StandardViews/scrollbar_view.h \
+	UI/StandardViews/scroll_view.h \
+	UI/SystemDialogs/folder_browse_dialog.h \
+	UI/SystemDialogs/open_file_dialog.h \
+	UI/SystemDialogs/save_file_dialog.h \
+	UI/Events/activation_change_event.h \
+	UI/Events/pointer_event.h \
+	UI/Events/event.h \
+	UI/Events/resize_event.h \
+	UI/Events/key_event.h \
+	UI/Events/focus_change_event.h \
+	UI/Events/close_event.h \
+	UI/View/view.h \
+	UI/View/focus_policy.h \
+	UI/Style/text_style.h \
+	UI/Style/box_geometry.h \
+	UI/Style/box_style.h
+
 
 ClanLibincludedir=$(includedir)/ClanLib-@LT_RELEASE@/ClanLib
 nobase_ClanLibinclude_HEADERS = @ClanLib_API_Modules@
@@ -338,9 +371,10 @@ nobase_ClanLibinclude_HEADERS = @ClanLib_API_Modules@
 EXTRA_HEADERS = \
 	$(clanGL_includes) \
 	$(clanCore_includes) \
-        $(clanApp_includes) \
+	$(clanApp_includes) \
 	$(clanDisplay_includes) \
 	$(clanNetwork_includes) \
-	$(clanSound_includes)
+	$(clanSound_includes) \
+	$(clanUI_includes)
 # EOF #
 

@@ -206,7 +206,7 @@ public:
 	virtual void set_cursor(CursorProvider *cursor) = 0;
 
 	/// \brief Sets the current cursor icon.
-	virtual void set_cursor(enum class StandardCursor type) = 0;
+	virtual void set_cursor(StandardCursor type) = 0;
 
 #ifdef WIN32
 	/// \brief Sets the current cursor handle (win32 only)

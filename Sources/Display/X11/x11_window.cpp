@@ -681,41 +681,41 @@ void X11Window::set_cursor(StandardCursor type)
 	unsigned int index = XC_left_ptr;
 	switch (type)
 	{
-		case cursor_arrow:
+		case StandardCursor::arrow:
 			index = XC_left_ptr;
 			break;
-		case cursor_appstarting:
+		case StandardCursor::appstarting:
 			index = XC_watch;
 			break;
-		case cursor_cross:
+		case StandardCursor::cross:
 			index = XC_cross;
 			break;
-		case cursor_hand:
+		case StandardCursor::hand:
 			index = XC_hand2;
 			break;
-		case cursor_ibeam:
+		case StandardCursor::ibeam:
 			index = XC_xterm;
 			break;
-		case cursor_size_all:
+		case StandardCursor::size_all:
 			index = XC_fleur;
 			break;
-		case cursor_size_ns:
+		case StandardCursor::size_ns:
 			index = XC_double_arrow;
 			break;
-		case cursor_size_we:
+		case StandardCursor::size_we:
 			index = XC_sb_h_double_arrow;
 			break;
-		case cursor_uparrow:
+		case StandardCursor::uparrow:
 			index = XC_sb_up_arrow;
 			break;
-		case cursor_wait:
+		case StandardCursor::wait:
 			index = XC_watch;
 			break;
-		case cursor_no:
+		case StandardCursor::no:
 			index = XC_X_cursor;
 			break;
-		case cursor_size_nesw:
-		case cursor_size_nwse:
+		case StandardCursor::size_nesw:
+		case StandardCursor::size_nwse:
 		default:
 			break;
 	}

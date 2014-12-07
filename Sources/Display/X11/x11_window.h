@@ -86,7 +86,7 @@ public:
 	Size get_minimum_size(bool client_area) const;
 	Size get_maximum_size(bool client_area) const;
 	std::string get_title() const;
-	bool is_fullscreen() const {return fullscreen;}
+	bool is_fullscreen() const { return fullscreen; }
 	::Display *get_display() const { return display; }
 	::Window get_window() const { return window; }
 	InputContext get_ic() { return ic; }		// Important, do not return by reference, so the shared pointer exists if this window is destroyed

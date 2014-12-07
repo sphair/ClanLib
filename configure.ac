@@ -98,10 +98,7 @@ AC_HEADER_STDBOOL
 dnl Find absolute name to pkg-config
 AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
 
-dnl -----------------------------------------------------------------------
-dnl TODO: Is this the correct way to enable c++0x?
-dnl -----------------------------------------------------------------------
-CXXFLAGS="$CXXFLAGS -std=c++0x"
+CXXFLAGS="$CXXFLAGS -std=c++11 -Wall -Wextra"
 
 case $target in
 	*cygwin* )
@@ -307,6 +304,7 @@ CLANLIB_ARG_ENABLE(clanDisplay,   auto, [Build clanDisplay module],        [whet
 CLANLIB_ARG_ENABLE(clanGL,        auto, [Build clanGL module],             [whether we should try to build clanGL])
 CLANLIB_ARG_ENABLE(clanSound,     auto, [Build clanSound module],          [whether we should try to build clanSound])
 CLANLIB_ARG_ENABLE(clanNetwork,   auto, [Build clanNetwork module],        [whether we should try to build clanNetwork])
+CLANLIB_ARG_ENABLE(clanUI,        auto, [Build clanUI module],             [whether we should try to build clanUI])
 
 
 has_linux_joystick=no
@@ -467,6 +465,11 @@ if test "$enable_clanNetwork" != "no"; then
 	echo ""
 fi
 
+if test "$enable_clanUI" != "no"; then
+	enable_clanUI=yes
+	echo ""
+fi
+
 
 dnl -----------------------------------------------------------------------
 dnl Store cflags for Setup/pkgconfig/clan*.in pkg-config files
@@ -477,6 +480,7 @@ AC_SUBST(extra_CFLAGS_clanDisplay)
 AC_SUBST(extra_CFLAGS_clanGL)
 AC_SUBST(extra_CFLAGS_clanSound)
 AC_SUBST(extra_CFLAGS_clanNetwork)
+AC_SUBST(extra_CFLAGS_clanUI)
 
 AC_SUBST(clanGUI_CXXFLAGS)
 
@@ -490,6 +494,7 @@ AC_SUBST(extra_LIBS_clanDisplay)
 AC_SUBST(extra_LIBS_clanGL)
 AC_SUBST(extra_LIBS_clanSound)
 AC_SUBST(extra_LIBS_clanNetwork)
+AC_SUBST(extra_LIBS_clanUI)
 
 dnl ----------------------------------------------------
 dnl Which clan subprojects should be compiled?
@@ -523,6 +528,10 @@ fi
 
 if test "$enable_clanNetwork" = "yes"; then
 	CLANLIB_ENABLE_MODULES(Network)
+fi
+
+if test "$enable_clanUI" = "yes"; then
+	CLANLIB_ENABLE_MODULES(UI)
 fi
 
 dnl ----------------------------------------
@@ -705,6 +714,7 @@ fi
 
 echo "                  clanSound = $enable_clanSound$sound_options"
 echo "                clanNetwork = $enable_clanNetwork"
+echo "                     clanUI = $enable_clanUI"
 
 display_options=""
 if test "$enable_clanDisplay" != "no"; then

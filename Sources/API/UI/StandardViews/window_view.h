@@ -30,6 +30,7 @@
 
 #include "../View/view.h"
 #include "../../Display/Window/display_window.h"
+#include "../../Display/Window/keys.h"
 
 namespace clan
 {
@@ -48,7 +49,6 @@ namespace clan
 		show_default
 	};
 
-	enum InputCode;
 	class InputEvent;
 	class WindowView_Impl;
 
