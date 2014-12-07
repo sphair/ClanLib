@@ -63,9 +63,7 @@ public:
 		bpp = 0;
 		create_tablet_context = false;
 		layered = false;
-		#ifdef WIN32
 		handle = 0;
-		#endif
 		depth_size = 0;
 		stencil_size = 0;
 		use_cached_window = false;
@@ -101,9 +99,9 @@ public:
 	bool create_tablet_context;
 	bool use_cached_window;
 	bool layered;
-#ifdef WIN32
-	HWND handle;
-#endif
+
+	DisplayWindowHandle *handle;
+
 	int depth_size;
 	int stencil_size;
 	bool allow_screensaver;

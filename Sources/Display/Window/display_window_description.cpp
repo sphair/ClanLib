@@ -27,7 +27,7 @@
 **    Harry Storbacka
 **    Kenneth Gangstoe
 */
-	
+
 #include "Display/precomp.h"
 #include "API/Display/Window/display_window_description.h"
 #include "display_window_description_impl.h"
@@ -38,12 +38,12 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // DisplayWindowDescription construction:
 
-DisplayWindowDescription::DisplayWindowDescription() 
+DisplayWindowDescription::DisplayWindowDescription()
 : impl(std::make_shared<DisplayWindowDescription_Impl>())
 {
 }
 
-DisplayWindowDescription::DisplayWindowDescription(const std::string &title) 
+DisplayWindowDescription::DisplayWindowDescription(const std::string &title)
 : impl(std::make_shared<DisplayWindowDescription_Impl>())
 {
 	impl->title = title;
@@ -140,12 +140,10 @@ bool DisplayWindowDescription::is_layered() const
 	return impl->layered;
 }
 
-#ifdef WIN32
-HWND DisplayWindowDescription::get_handle() const
+DisplayWindowHandle const *DisplayWindowDescription::get_handle() const
 {
 	return impl->handle;
 }
-#endif
 
 int DisplayWindowDescription::get_bpp() const
 {
@@ -365,12 +363,10 @@ void DisplayWindowDescription::set_layered(bool layered)
 	impl->layered = layered;
 }
 
-#ifdef WIN32
-void DisplayWindowDescription::set_handle(HWND handle)
+void DisplayWindowDescription::set_handle(DisplayWindowHandle *handle)
 {
 	impl->handle = handle;
 }
-#endif
 
 void DisplayWindowDescription::set_depth_size(int value)
 {

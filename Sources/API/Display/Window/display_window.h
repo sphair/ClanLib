@@ -46,6 +46,7 @@ class Display;
 class GraphicContext;
 class DisplayWindowMode;
 class DisplayWindowDescription;
+class DisplayWindowHandle;
 class InputContext;
 class Point;
 class Cursor;
@@ -217,13 +218,10 @@ public:
 	/// \brief Returns the window title.
 	std::string get_title() const;
 
-#ifdef WIN32
-	/** Returns the Windows window handle object for the display window.
-	 *  \note This function only exists on Windows.
-	 *  \return `HWND` for use with the Windows API.
+	/** Returns an platform-specific internal display window handle object.
+	 *  \note This function is used internally by ClanLib.
 	 */
-	HWND get_hwnd() const;
-#endif
+	DisplayWindowHandle const *get_handle() const;
 
 /// \}
 /// \name Operations

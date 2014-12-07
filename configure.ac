@@ -98,7 +98,7 @@ AC_HEADER_STDBOOL
 dnl Find absolute name to pkg-config
 AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
 
-CXXFLAGS="$CXXFLAGS -std=c++11 -Wall -Wextra"
+CXXFLAGS="$CXXFLAGS -std=c++0x"
 
 case $target in
 	*cygwin* )
@@ -622,7 +622,7 @@ AC_MSG_CHECKING(for maintainer mode)
 AC_ARG_ENABLE(maintainer-mode, AC_HELP_STRING([--enable-maintainer-mode], [Enable maintainer mode]),, enable_maintainer_mode="no")
 
 if test "$enable_maintainer_mode" != "no"; then
-	CXXFLAGS="$CXXFLAGS -Werror"
+	CXXFLAGS="$CXXFLAGS -Wall -Wextra"
 	AC_MSG_RESULT([enabled])
 else
 	AC_MSG_RESULT([disabled])

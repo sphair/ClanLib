@@ -116,12 +116,10 @@ DisplayWindow::~DisplayWindow()
 /////////////////////////////////////////////////////////////////////////////
 // DisplayWindow Attributes:
 
-#ifdef WIN32
-HWND DisplayWindow::get_hwnd() const
+DisplayWindowHandle const * DisplayWindow::get_handle() const
 {
-	return impl->provider->get_hwnd();
+	return impl->provider->get_handle();
 }
-#endif
 
 Rect DisplayWindow::get_geometry() const
 {

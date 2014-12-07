@@ -41,22 +41,23 @@ namespace clan
 /// \addtogroup clanDisplay_Window clanDisplay Window
 /// \{
 
-	enum class WindowType
-	{
-		// \brief Normal application window decorated by the windowing system
-		normal,
-		// \brief Popup window (not decorated)
-		popup,
-		// \brief Popup window registered as a tool window (not decorated)
-		tool,
-		// \brief Custom drawn application window
-		custom
-	};
+enum class WindowType
+{
+	// \brief Normal application window decorated by the windowing system
+	normal,
+	// \brief Popup window (not decorated)
+	popup,
+	// \brief Popup window registered as a tool window (not decorated)
+	tool,
+	// \brief Custom drawn application window
+	custom
+};
 
 class Size;
 class Rect;
 class DisplayWindow;
 class DisplayWindowDescription_Impl;
+class DisplayWindowHandle;
 
 /// \brief Display window description class.
 ///
@@ -122,18 +123,18 @@ public:
 	/// \brief Returns the numbers of bytes per pixel in the window.
 	int get_bpp() const;
 
-	/// \brief Returns the refresh rate of the displaymode.
-	/** <p>Specifies the frequency, in hertz (cycles per second).
-	    This value is also known as the vertical refresh rate.</p> */
+	/** Returns the refresh rate of the DisplayMode in Hertz (cycles per
+	 *  second). This value is also known as the vertical refresh rate.
+	 */
 	int get_refresh_rate() const;
 
 	/// \brief Returns true if window is layered (black is transparent)
 	bool is_layered() const;
 
-#ifdef WIN32
-	/// \brief Windows only. Returns the window handle to be used for the window.
-	HWND get_handle() const;
-#endif
+	/** Returns an platform-specific internal display window handle object.
+	 *  \note This function is used internally by ClanLib.
+	 */
+	DisplayWindowHandle const *get_handle() const;
 
 	/// \brief Returns true if a title bar is shown.
 	bool has_caption() const;
@@ -209,7 +210,7 @@ public:
 
 	/// \brief Sets if the window has a maximize button.
 	void show_maximize_button(bool value = true);
-	
+
 	/// \brief Toggles whether the window is created as initially visible.
 	void set_visible(bool value = true);
 
@@ -253,18 +254,19 @@ public:
 	/// \brief Sets the number of bytes per pixel
 	void set_bpp(int bpp);
 
-	/// \brief Set the refresh rate of the displaymode.
-	/** <p>Specifies the frequency, in hertz (cycles per second).
-	    This value is also known as the vertical refresh rate.</p> */
+	/** Sets the refresh rate of the DisplayMode in Hertz (cycles per second).
+	 *  This value is also known as the vertical refresh rate.
+	 */
 	void set_refresh_rate(int refresh_rate);
 
 	/// \brief Sets to true if a tablet input context should be created for this window.
 	void set_tablet_context(bool create);
 
-	/// \brief Uses a window from the window cache (GUI Only). 
-	/** <p>Creating a window in Windows XP is slow (about 100 ms). Use cached 
-		windows for menus and dialogs to avoid sluggish operation in XP. 
-		This setting is ignored unless the GUI and GUIWindowManagerSystem are used.</p>*/
+	/** Set to use a window from the window cache (GUI Only).
+	 *  Creating a window in Windows XP is slow (~100 ms). Using cached windows
+	 *  for menus and dialogs may make things run faster on Windows XP.
+	 *  This setting is ignored unless the GUI and GUIWindowManagerSystem are used.
+	 */
 	void set_using_gui_window_cache(bool value);
 
 	/// \brief Creates a layered window (complex shaped window)
@@ -275,10 +277,10 @@ public:
 	/// \param allow_screensaver = Allow the allow_screensaver (default is true)
 	void set_allow_screensaver(bool allow_screensaver = true);
 
-#ifdef WIN32
-	/// \brief Windows only.  Use an existing window handle for the window.
-	void set_handle(HWND handle);
-#endif
+	/** Sets the platform-specific internal display window handle object.
+	 *  \note This function is used internally by ClanLib.
+	 */
+	void set_handle(DisplayWindowHandle *handle);
 
 	/// \brief Sets the minimum required depth buffer.
 	/** <p>If this value is zero, the smallest available depth buffer is preferred. Otherwise,

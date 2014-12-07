@@ -144,13 +144,10 @@ public:
 	/// \brief Return the input context for the window.
 	virtual InputContext get_ic() = 0;
 
-#ifdef WIN32
-	/** Returns the Windows window handle object for the display window.
-	 *  \note This function only exists on Windows.
-	 *  \return `HWND` for use with the Windows API.
+	/** Returns an platform-specific internal display window handle object.
+	 *  \note This function is used internally by ClanLib.
 	 */
-	virtual HWND get_hwnd() const = 0;
-#endif
+	virtual DisplayWindowHandle const *get_handle() const = 0;
 
 	/// \brief Returns true if text is available in the clipboard.
 	virtual bool is_clipboard_text_available() const = 0;
