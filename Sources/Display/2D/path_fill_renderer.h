@@ -29,6 +29,7 @@
 
 #pragma once
 
+#include <climits>
 #include <vector>
 #include "API/Display/2D/canvas.h"
 #include "API/Display/2D/path.h"

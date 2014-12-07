@@ -23,53 +23,41 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
+**    Chu Chin Kuan
 */
 
 #pragma once
 
-#include "../View/view.h"
-#include "../../Display/Window/display_window.h"
-#include "../../Display/Window/keys.h"
+#include "API/Display/Window/display_window_description.h"
+#include <X11/Xlib.h>
+
+#if defined(WIN32) || defined(__APPLE__)
+#error This file should only be included on Linux builds.
+#else
 
 namespace clan
 {
-	enum class WindowShowType
-	{
-		hide,
-		show,
-		show_no_activate,
-		normal,
-		maximized,
-		minimized,
-		maximize,
-		minimize,
-		minimize_no_activate,
-		restore,
-		show_default
-	};
 
-	class InputEvent;
-	class WindowView_Impl;
+/** Platform-specific display window handle container.
+ *  This is the implementation for X11 display windows.
+ */
+class DisplayWindowHandle
+{
+public:
+	::Display* display;
+	::Window window;
 
-	class WindowView : public View
-	{
-	public:
-		WindowView(const DisplayWindowDescription &desc);
+	DisplayWindowHandle() = delete;
+	DisplayWindowHandle(DisplayWindowHandle const &other) : DisplayWindowHandle(other.get_display(), other.get_window()) { }
+	DisplayWindowHandle(::Display* _display, ::Window _window) : display(_display), window(_window) { }
 
-		void show(WindowShowType type = WindowShowType::show);
-		void hide();
+	void set_display(::Display* _display) { display = _display; }
+	void set_window(::Window _window) { window = _window; }
 
-		DisplayWindow get_display_window();
+	::Display* get_display() const { return display; }
+	::Window get_window() const { return window; }
+};
 
-		void set_needs_render() override;
-		bool local_root() override;
-		void layout_local() override;
-
-		Pointf to_screen_pos(const Pointf &pos) override;
-		Pointf from_screen_pos(const Pointf &pos) override;
-
-	private:
-		std::shared_ptr<WindowView_Impl> impl;
-	};
 }
+
+#endif

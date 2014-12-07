@@ -648,7 +648,7 @@ void Win32Window::create_new_window()
 
 	if (window_desc.get_handle())
 	{
-		hwnd = window_desc.get_handle();
+		hwnd = window_desc.get_handle()->hwnd;
 		destroy_hwnd = false;
 	}
 	else
@@ -662,7 +662,7 @@ void Win32Window::create_new_window()
 
 		HWND parent = 0;
 		if (!window_desc.get_owner().is_null())
-			parent = window_desc.get_owner().get_provider()->get_hwnd();
+			parent = window_desc.get_owner().get_provider()->get_handle()->hwnd;
 
 		hwnd = CreateWindowEx(
 			ex_style,

@@ -23,53 +23,35 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
+**    Chu Chin Kuan
 */
 
 #pragma once
 
-#include "../View/view.h"
-#include "../../Display/Window/display_window.h"
-#include "../../Display/Window/keys.h"
+#include "API/Display/Window/display_window_description.h"
+
+#if !defined(WIN32)
+#error This file should only be included on Windows builds.
+#else
 
 namespace clan
 {
-	enum class WindowShowType
-	{
-		hide,
-		show,
-		show_no_activate,
-		normal,
-		maximized,
-		minimized,
-		maximize,
-		minimize,
-		minimize_no_activate,
-		restore,
-		show_default
-	};
 
-	class InputEvent;
-	class WindowView_Impl;
+/** Platform-specific display window handle container.
+ *  This is the implementation for Win32 display windows.
+ */
+class DisplayWindowHandle
+{
+public:
+	HWND hwnd;
 
-	class WindowView : public View
-	{
-	public:
-		WindowView(const DisplayWindowDescription &desc);
+	DisplayWindowHandle() = delete;
+	DisplayWindowHandle(DisplayWindowHandle const &other) : DisplayWindowHandle(other.hwnd) { }
+	DisplayWindowHandle(HWND _hwnd) : hwnd(_hwnd) { }
 
-		void show(WindowShowType type = WindowShowType::show);
-		void hide();
+	operator HWND() const { return hwnd; }
+};
 
-		DisplayWindow get_display_window();
-
-		void set_needs_render() override;
-		bool local_root() override;
-		void layout_local() override;
-
-		Pointf to_screen_pos(const Pointf &pos) override;
-		Pointf from_screen_pos(const Pointf &pos) override;
-
-	private:
-		std::shared_ptr<WindowView_Impl> impl;
-	};
 }
+
+#endif

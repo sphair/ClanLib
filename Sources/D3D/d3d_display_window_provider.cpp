@@ -105,9 +105,9 @@ InputContext D3DDisplayWindowProvider::get_ic()
 	return window.get_ic();
 }
 
-HWND D3DDisplayWindowProvider::get_hwnd() const
+DisplayWindowHandle const *D3DDisplayWindowProvider::get_handle() const
 {
-	return window.get_hwnd();
+	return window.get_handle();
 }
 
 bool D3DDisplayWindowProvider::is_clipboard_text_available() const

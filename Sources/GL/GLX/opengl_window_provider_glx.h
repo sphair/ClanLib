@@ -201,11 +201,7 @@ public:
 
 	PixelBuffer get_clipboard_image() const { return x11_window.get_clipboard_image(); }
 
-	/// \brief Returns the X11 display handle.
-	::Display *get_display() const { return x11_window.get_display(); }
-
-	/// \brief Handle to X11 window handle.
-	::Window get_window() const { return x11_window.get_window(); }
+	DisplayWindowHandle const *get_handle() const override { return x11_window.get_handle(); }
 
 	/// \brief Returns the GLX rendering context for this window.
 	GLXContext get_opengl_context() { return opengl_context; }

@@ -35,13 +35,12 @@
 
 #if defined(WIN32)
 #include "API/Core/System/comptr.h"
+#include "Display/Win32/win32_handle.h"
 #include <Shlobj.h>
 #elif defined(__APPLE__)
-// To do: add Cocoa includes here
-#else
-#if defined(I_LOVE_AUTOHELL_AND_FIXED_THE_GTK_CHECK)
+// TODO Add Cocoa includes here
+#elif defined(I_LOVE_AUTOHELL_AND_FIXED_THE_GTK_CHECK)
 #include <gtk/gtk.h>
-#endif
 #endif
 
 namespace clan
@@ -104,7 +103,7 @@ namespace clan
 				}
 
 				if (owner && dynamic_cast<WindowView*>(owner->root_view()))
-					result = open_dialog->Show(static_cast<WindowView*>(owner->root_view())->get_display_window().get_hwnd());
+					result = open_dialog->Show(static_cast<WindowView*>(owner->root_view())->get_display_window().get_handle()->hwnd);
 				else
 					result = open_dialog->Show(0);
 
@@ -149,7 +148,7 @@ namespace clan
 				memset(Buffer, 0, sizeof(WCHAR) * MAX_PATH);
 
 				if (owner && dynamic_cast<WindowView*>(owner->root_view()))
-					bi.hwndOwner = static_cast<WindowView*>(owner->root_view())->get_display_window().get_hwnd();
+					bi.hwndOwner = static_cast<WindowView*>(owner->root_view())->get_display_window().get_handle()->hwnd;
 				else
 					bi.hwndOwner = 0;
 

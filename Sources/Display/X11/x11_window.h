@@ -41,6 +41,7 @@
 #include "API/Core/Math/point.h"
 #include "API/Core/Math/rect.h"
 #include "clipboard_x11.h"
+#include "x11_handle.h"
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -86,9 +87,10 @@ public:
 	Size get_minimum_size(bool client_area) const;
 	Size get_maximum_size(bool client_area) const;
 	std::string get_title() const;
-	bool is_fullscreen() const {return fullscreen;}
-	::Display *get_display() const { return display; }
-	::Window get_window() const { return window; }
+	bool is_fullscreen() const { return fullscreen; }
+	DisplayWindowHandle const *get_handle() const { return &handle; }
+	::Display *get_display() const { return handle.display; }
+	::Window get_window() const { return handle.window; }
 	InputContext get_ic() { return ic; }		// Important, do not return by reference, so the shared pointer exists if this window is destroyed
 	std::function<void()> &func_on_resized() { return callback_on_resized; }
 	std::function<bool(XButtonEvent &)> &func_on_clicked() { return callback_on_clicked; }
@@ -161,7 +163,7 @@ private:
 	InputDeviceProvider_X11Mouse *get_mouse() const;
 
 	InputContext ic;
-	::Window window;
+	DisplayWindowHandle handle;
 	Colormap color_map;
 	bool minimized;
 	bool maximized;
@@ -169,7 +171,6 @@ private:
 	bool fullscreen;
 	int current_screen;
 	XSetWindowAttributes attributes;
-	::Display *display;
 	::Cursor system_cursor;
 	::Cursor hidden_cursor;
 	Pixmap cursor_bitmap;

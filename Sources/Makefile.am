@@ -7,5 +7,6 @@ DIST_SUBDIRS = \
   Display        \
   GL             \
   Network        \
-  Sound 
+  Sound          \
+  UI
 # EOF #

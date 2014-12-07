@@ -35,10 +35,6 @@
 #include "../Window/display_window.h"
 #include <memory>
 
-#if !defined(WIN32) && !defined(__APPLE__)
-#include <X11/Xlib.h>
-#endif
-
 namespace clan
 {
 /// \addtogroup clanDisplay_Display clanDisplay Display
@@ -148,21 +144,10 @@ public:
 	/// \brief Return the input context for the window.
 	virtual InputContext get_ic() = 0;
 
-#ifdef WIN32
-
-	/// \brief Get Hwnd
-	///
-	/// \return hwnd
-	virtual HWND get_hwnd() const = 0;
-#elif defined(__APPLE__)
-	// nothing
-#else
-	/// \brief Returns the X11 display handle.
-	virtual ::Display *get_display() const = 0;
-
-	/// \brief Handle to X11 window handle.
-	virtual ::Window get_window() const = 0;
-#endif
+	/** Returns an platform-specific internal display window handle object.
+	 *  \note This function is used internally by ClanLib.
+	 */
+	virtual DisplayWindowHandle const *get_handle() const = 0;
 
 	/// \brief Returns true if text is available in the clipboard.
 	virtual bool is_clipboard_text_available() const = 0;
@@ -206,7 +191,7 @@ public:
 	virtual void set_cursor(CursorProvider *cursor) = 0;
 
 	/// \brief Sets the current cursor icon.
-	virtual void set_cursor(enum class StandardCursor type) = 0;
+	virtual void set_cursor(StandardCursor type) = 0;
 
 #ifdef WIN32
 	/// \brief Sets the current cursor handle (win32 only)

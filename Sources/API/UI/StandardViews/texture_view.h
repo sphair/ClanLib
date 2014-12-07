@@ -30,10 +30,10 @@
 
 #include "../View/view.h"
 #include "../../Display/Window/display_window.h"
+#include "../../Display/Window/keys.h"
 
 namespace clan
 {
-	enum InputCode;
 	class InputEvent;
 	class TextureView_Impl;
 

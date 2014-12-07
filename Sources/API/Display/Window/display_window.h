@@ -35,10 +35,6 @@
 #include "../display_target.h"
 #include <memory>
 
-#if !defined(WIN32) && !defined(__APPLE__)
-#include <X11/Xlib.h>
-#endif
-
 namespace clan
 {
 /// \addtogroup clanDisplay_Window clanDisplay Window
@@ -50,6 +46,7 @@ class Display;
 class GraphicContext;
 class DisplayWindowMode;
 class DisplayWindowDescription;
+class DisplayWindowHandle;
 class InputContext;
 class Point;
 class Cursor;
@@ -221,22 +218,10 @@ public:
 	/// \brief Returns the window title.
 	std::string get_title() const;
 
-#ifdef WIN32
-
-	/// \brief Get Hwnd
-	///
-	/// \return hwnd
-	HWND get_hwnd() const;
-
-#elif defined(__APPLE__)
-	// nothing
-#else
-	/// \brief Returns the X11 display handle.
-	::Display *get_display() const;
-
-	/// \brief Handle to X11 window handle.
-	::Window get_window() const;
-#endif
+	/** Returns an platform-specific internal display window handle object.
+	 *  \note This function is used internally by ClanLib.
+	 */
+	DisplayWindowHandle const *get_handle() const;
 
 /// \}
 /// \name Operations

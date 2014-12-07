@@ -33,7 +33,9 @@
 #include "API/UI/View/view.h"
 #include "API/UI/StandardViews/window_view.h"
 
-#if !defined(WIN32) && !defined(__APPLE__) && defined(I_LOVE_AUTOHELL_AND_FIXED_THE_GTK_CHECK)
+#if defined(WIN32)
+#include "Display/Win32/win32_handle.h"
+#elif !defined(__APPLE__) && defined(I_LOVE_AUTOHELL_AND_FIXED_THE_GTK_CHECK)
 #include <gtk/gtk.h>
 #endif
 
@@ -119,7 +121,6 @@ namespace clan
 		bool show(bool save_mode)
 		{
 #if defined(WIN32)
-
 			// THIS REALLY SHOULD BE UPDATED TO USE IFileOpenDialog under Vista or later!
 			// See BrowseFolderDialog_Impl for usage example.
 
@@ -129,7 +130,7 @@ namespace clan
 			ofn.lStructSize = sizeof(ofn);
 
 			if (owner && dynamic_cast<WindowView*>(owner->root_view()))
-				ofn.hwndOwner = static_cast<WindowView*>(owner->root_view())->get_display_window().get_hwnd();
+                ofn.hwndOwner = static_cast<WindowView*>(owner->root_view())->get_display_window().get_handle()->hwnd;
 			else
 				ofn.hwndOwner = 0;
 

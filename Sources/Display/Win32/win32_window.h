@@ -32,16 +32,17 @@
 
 #include <list>
 #include <map>
+#include "API/Display/Window/display_window.h"
 #include "API/Display/Window/input_context.h"
 #include "API/Display/Window/input_device.h"
 #include "API/Display/TargetProviders/input_device_provider.h"
-#include "API/Display/Window/display_window_description.h"
 #include "API/Core/System/event.h"
 #include "API/Core/Math/point.h"
 #include "API/Core/Math/rect.h"
 #include "API/Core/System/cl_platform.h"
 #include "API/Core/System/thread.h"
 #include "API/Display/Image/pixel_buffer.h"
+#include "win32_handle.h"
 #include <memory>
 
 namespace clan
@@ -52,7 +53,6 @@ class InputDeviceProvider_Win32Mouse;
 class InputDeviceProvider_Win32Tablet;
 class DisplayMessageQueue_Win32;
 class DisplayWindowSite;
-class DisplayWindowDescription;
 class PixelBuffer;
 class DataBuffer;
 class CursorProvider_Win32;
@@ -66,6 +66,7 @@ public:
 	~Win32Window();
 
 public:
+	DisplayWindowHandle const *get_handle() const { return &hwnd; }
 	HWND get_hwnd() const { return hwnd; }
 	Rect get_geometry() const;
 	Rect get_viewport() const;
@@ -77,8 +78,8 @@ public:
 	Size get_maximum_size(bool client_area) const;
 	std::string get_title() const;
 	std::function<void()> &func_on_resized() { return callback_on_resized; }
-	InputContext get_ic() { return ic; }		// Important, do not return by reference, so the shared pointer exists if this window is destroyed
-	const InputContext get_ic() const { return ic; }		// Important, do not return by reference, so the shared pointer exists if this window is destroyed
+	InputContext get_ic() { return ic; } // Important, do not return by reference, so the shared pointer exists if this window is destroyed
+	const InputContext get_ic() const { return ic; } // Important, do not return by reference, so the shared pointer exists if this window is destroyed
 	bool is_clipboard_text_available() const;
 	bool is_clipboard_image_available() const;
 	bool is_painting() const { return paintstruct.hdc != 0; }
@@ -93,7 +94,7 @@ public:
 
 	void show_system_cursor();
 	void set_cursor(CursorProvider_Win32 *cursor);
-	void set_cursor(enum class StandardCursor type);
+	void set_cursor(StandardCursor type);
 	void hide_system_cursor();
 	void set_cursor_handle(HCURSOR cursor);
 
@@ -187,7 +188,7 @@ private:
 	InputDeviceProvider_Win32Mouse *get_mouse();
 	InputDeviceProvider_Win32Tablet *get_tablet();
 
-	HWND hwnd;
+	DisplayWindowHandle hwnd;
 	bool destroy_hwnd;
 	HCURSOR current_cursor;
 	HICON large_icon;

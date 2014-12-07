@@ -102,16 +102,16 @@ namespace clan
 // From Xm/MwmUtil.h
 typedef struct
 {
-    // These were "int", but only work at "long". Is this okay on a 32bit platform?
-    long         flags;
-    long	 functions;
-    long	 decorations;
-    long	 input_mode;
-    long	 status;
+	// These were "int", but only work at "long". Is this okay on a 32bit platform?
+	long flags;
+	long functions;
+	long decorations;
+	long input_mode;
+	long status;
 } ClanLib_MotifWmHints;
 
 X11Window::X11Window()
-: window(0), color_map(0), display(0), system_cursor(0), hidden_cursor(0), cursor_bitmap(0), size_hints(NULL),
+: handle(0, 0), color_map(0), system_cursor(0), hidden_cursor(0), cursor_bitmap(0), size_hints(NULL),
   minimized(false), maximized(false), restore_to_maximized(false), fullscreen(false),
   wm_protocols(None), wm_delete_window(None), wm_state(None), motif_wm_hints(None), net_wm_state(None), net_wm_state_maximized_vert(None),
   net_wm_state_maximized_horz(None), net_wm_state_hidden(None), net_wm_state_fullscreen(None), kwm_win_decoration(None), win_hints(None),
@@ -121,7 +121,7 @@ X11Window::X11Window()
   always_send_window_position_changed_event(false), always_send_window_size_changed_event(false)
 
 {
-	display = DisplayMessageQueue_X11::message_queue.get_display();
+	handle.display = DisplayMessageQueue_X11::message_queue.get_display();
 
 	last_repaint_rect.reserve(32);
 	keyboard = InputDevice(new InputDeviceProvider_X11Keyboard(this));
@@ -153,7 +153,7 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 	close_window();		// Reset all variables
 
 	current_screen = visual->screen;
-	color_map = XCreateColormap( display, RootWindow(display,  visual->screen), visual->visual, AllocNone);
+	color_map = XCreateColormap( handle.display, RootWindow(handle.display, visual->screen), visual->visual, AllocNone);
 
 	memset(&attributes, 0, sizeof(attributes));
 
@@ -176,41 +176,41 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 		FocusChangeMask;
 
 	// retrieve some useful atoms
-	motif_wm_hints = XInternAtom(display, "_MOTIF_WM_HINTS", True);
-	wm_protocols = XInternAtom(display, "WM_PROTOCOLS", True);
-	wm_delete_window = XInternAtom(display, "WM_DELETE_WINDOW", True);
-	net_wm_ping = XInternAtom(display, "_NET_WM_PING", True);
-	wm_state = XInternAtom(display, "WM_STATE", True);
-	net_wm_state = XInternAtom(display, "_NET_WM_STATE", True);
-	net_wm_state_maximized_vert = XInternAtom(display, "_NET_WM_STATE_MAXIMIZED_VERT", True);
-	net_wm_state_maximized_horz = XInternAtom(display, "_NET_WM_STATE_MAXIMIZED_HORZ", True);
-	net_wm_state_hidden = XInternAtom(display, "_NET_WM_STATE_HIDDEN", True);
-	net_wm_state_fullscreen = XInternAtom(display, "_NET_WM_STATE_FULLSCREEN", True);
-	net_frame_extents = XInternAtom(display, "_NET_FRAME_EXTENTS", True);
-	kwm_win_decoration = XInternAtom(display, "KWM_WIN_DECORATION", True);
-	win_hints = XInternAtom(display, "_WIN_HINTS", True);
-	Atom net_wm_window_type = XInternAtom(display, "_NET_WM_WINDOW_TYPE", True);
-	Atom net_wm_window_type_desktop = XInternAtom(display, "_NET_WM_WINDOW_TYPE_DESKTOP", True);
-	Atom net_wm_window_type_dock = XInternAtom(display, "_NET_WM_WINDOW_TYPE_DOCK", True);
-	Atom net_wm_window_type_toolbar = XInternAtom(display, "_NET_WM_WINDOW_TYPE_TOOLBAR", True);
-	Atom net_wm_window_type_menu = XInternAtom(display, "_NET_WM_WINDOW_TYPE_MENU", True);
-	Atom net_wm_window_type_utility = XInternAtom(display, "_NET_WM_WINDOW_TYPE_UTILITY", True);
-	Atom net_wm_window_type_splash = XInternAtom(display, "_NET_WM_WINDOW_TYPE_SPLASH", True);
-	Atom net_wm_window_type_dialog = XInternAtom(display, "_NET_WM_WINDOW_TYPE_DIALOG", True);
-	Atom net_wm_window_type_dropdown_menu = XInternAtom(display, "_NET_WM_WINDOW_TYPE_DROPDOWN_MENU", True);
-	Atom net_wm_window_type_popup_menu = XInternAtom(display, "_NET_WM_WINDOW_TYPE_POPUP_MENU", True);
-	Atom net_wm_window_type_tooltip = XInternAtom(display, "_NET_WM_WINDOW_TYPE_TOOLTIP", True);
-	Atom net_wm_window_type_notification = XInternAtom(display, "_NET_WM_WINDOW_TYPE_NOTIFICATION", True);
-	Atom net_wm_window_type_combo = XInternAtom(display, "_NET_WM_WINDOW_TYPE_COMBO", True);
-	Atom net_wm_window_type_dnd = XInternAtom(display, "_NET_WM_WINDOW_TYPE_DND", True);
-	Atom net_wm_window_type_normal = XInternAtom(display, "_NET_WM_WINDOW_TYPE_NORMAL", True);
-	Atom kde_net_wm_window_type_override = XInternAtom(display, "_KDE_NET_WM_WINDOW_TYPE_OVERRIDE", True);
+	motif_wm_hints = XInternAtom(handle.display, "_MOTIF_WM_HINTS", True);
+	wm_protocols = XInternAtom(handle.display, "WM_PROTOCOLS", True);
+	wm_delete_window = XInternAtom(handle.display, "WM_DELETE_WINDOW", True);
+	net_wm_ping = XInternAtom(handle.display, "_NET_WM_PING", True);
+	wm_state = XInternAtom(handle.display, "WM_STATE", True);
+	net_wm_state = XInternAtom(handle.display, "_NET_WM_STATE", True);
+	net_wm_state_maximized_vert = XInternAtom(handle.display, "_NET_WM_STATE_MAXIMIZED_VERT", True);
+	net_wm_state_maximized_horz = XInternAtom(handle.display, "_NET_WM_STATE_MAXIMIZED_HORZ", True);
+	net_wm_state_hidden = XInternAtom(handle.display, "_NET_WM_STATE_HIDDEN", True);
+	net_wm_state_fullscreen = XInternAtom(handle.display, "_NET_WM_STATE_FULLSCREEN", True);
+	net_frame_extents = XInternAtom(handle.display, "_NET_FRAME_EXTENTS", True);
+	kwm_win_decoration = XInternAtom(handle.display, "KWM_WIN_DECORATION", True);
+	win_hints = XInternAtom(handle.display, "_WIN_HINTS", True);
+	Atom net_wm_window_type = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE", True);
+	Atom net_wm_window_type_desktop = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_DESKTOP", True);
+	Atom net_wm_window_type_dock = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_DOCK", True);
+	Atom net_wm_window_type_toolbar = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_TOOLBAR", True);
+	Atom net_wm_window_type_menu = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_MENU", True);
+	Atom net_wm_window_type_utility = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_UTILITY", True);
+	Atom net_wm_window_type_splash = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_SPLASH", True);
+	Atom net_wm_window_type_dialog = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_DIALOG", True);
+	Atom net_wm_window_type_dropdown_menu = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_DROPDOWN_MENU", True);
+	Atom net_wm_window_type_popup_menu = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_POPUP_MENU", True);
+	Atom net_wm_window_type_tooltip = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_TOOLTIP", True);
+	Atom net_wm_window_type_notification = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_NOTIFICATION", True);
+	Atom net_wm_window_type_combo = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_COMBO", True);
+	Atom net_wm_window_type_dnd = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_DND", True);
+	Atom net_wm_window_type_normal = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_NORMAL", True);
+	Atom kde_net_wm_window_type_override = XInternAtom(handle.display, "_KDE_NET_WM_WINDOW_TYPE_OVERRIDE", True);
 
 	size_hints = XAllocSizeHints();
 	if (!size_hints)
 		throw Exception("Cannot allocate X11 XSizeHints structure");
 
-	system_cursor = XCreateFontCursor(display, XC_left_ptr);	// This is allowed to fail
+	system_cursor = XCreateFontCursor(handle.display, XC_left_ptr);	// This is allowed to fail
 
 	int win_x = desc.get_position().left;
 	int win_y = desc.get_position().top;
@@ -232,23 +232,23 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 
 	if (win_x == -1 && win_y == -1)
 	{
-		int disp_width = DisplayWidth(display, current_screen);
-		int disp_height = DisplayHeight(display, current_screen);
+		int disp_width = DisplayWidth(handle.display, current_screen);
+		int disp_height = DisplayHeight(handle.display, current_screen);
 		win_x = (disp_width - win_width)/2 - 1;
 		win_y = (disp_height - win_height)/2 - 1;
 	}
 
-	window = XCreateWindow(display, RootWindow(display, current_screen),
-		win_x, win_y, win_width, win_height, 0,  visual->depth,
-		InputOutput,  visual->visual, CWBorderPixel | CWColormap | CWOverrideRedirect | CWEventMask, &attributes);
+	handle.window = XCreateWindow(handle.display, RootWindow(handle.display, current_screen),
+		win_x, win_y, win_width, win_height, 0, visual->depth,
+		InputOutput, visual->visual, CWBorderPixel | CWColormap | CWOverrideRedirect | CWEventMask, &attributes);
 
-	if (!window)
+	if (!handle.window)
 		throw Exception("Unable to create the X11 window");
 
 	if (!desc.get_owner().is_null())
 	{
 		DisplayWindow owner = desc.get_owner();
-		XSetTransientForHint(display, window, owner.get_window());
+		XSetTransientForHint(handle.display, handle.window, owner.get_handle()->get_window());
 	}
 
 	// Setup the hidden cursor (Maybe this should be done only once when required)
@@ -258,8 +258,8 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 	XColor black_color;
 	memset(&black_color, 0, sizeof(black_color));
 
-	cursor_bitmap = XCreateBitmapFromData(display, window, data, 8, 8);
-	hidden_cursor = XCreatePixmapCursor(display, cursor_bitmap, cursor_bitmap, &black_color, &black_color, 0,0 );
+	cursor_bitmap = XCreateBitmapFromData(handle.display, handle.window, data, 8, 8);
+	hidden_cursor = XCreatePixmapCursor(handle.display, cursor_bitmap, cursor_bitmap, &black_color, &black_color, 0,0 );
 
 	// set title of window:
 	set_title(desc.get_title());
@@ -272,18 +272,18 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 		long pid = getpid();
 		if (pid > 0)
 		{
-			Atom atom = XInternAtom(display, "_NET_WM_PID", False);
+			Atom atom = XInternAtom(handle.display, "_NET_WM_PID", False);
 			if (atom)
 			{
 				long pid = getpid();
-				XChangeProperty(display, window, atom, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &pid, 1);
+				XChangeProperty(handle.display, handle.window, atom, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &pid, 1);
 			}
 
-			atom = XInternAtom(display, "WM_CLIENT_MACHINE", False);
+			atom = XInternAtom(handle.display, "WM_CLIENT_MACHINE", False);
 			if (atom)
 			{
 				long pid = getpid();
-				XChangeProperty(display, window, atom, XA_STRING, 8, PropModeReplace, (unsigned char *) hostname, strlen(hostname));
+				XChangeProperty(handle.display, handle.window, atom, XA_STRING, 8, PropModeReplace, (unsigned char *) hostname, strlen(hostname));
 			}
 		}
 	}
@@ -333,13 +333,13 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 
 		if (decor)	// Ensure the atom exists
 		{
-			XChangeProperty(display, window, net_wm_window_type, XA_ATOM, 32, PropModeReplace, (unsigned char *)&decor, 1);
+			XChangeProperty(handle.display, handle.window, net_wm_window_type, XA_ATOM, 32, PropModeReplace, (unsigned char *)&decor, 1);
 		}
 
 		if (window_is_frameless)	// Attempt frameless windows for KDE 2 and 3, if dropdown menus are not supported
 		{
 			if (kde_net_wm_window_type_override)
-				XChangeProperty(display, window, net_wm_window_type, XA_ATOM, 32, PropModeReplace, (unsigned char *)&kde_net_wm_window_type_override, 1);
+				XChangeProperty(handle.display, handle.window, net_wm_window_type, XA_ATOM, 32, PropModeReplace, (unsigned char *)&kde_net_wm_window_type_override, 1);
 
 		}
 
@@ -372,7 +372,7 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 		}
 
 		ClanLib_MotifWmHints hints = { MWM_HINTS_DECORATIONS, 0, decor, 0, 0 };
-		XChangeProperty(display, window, motif_wm_hints, XA_CARDINAL, 32, PropModeReplace, (unsigned char *)&hints, 5);
+		XChangeProperty(handle.display, handle.window, motif_wm_hints, XA_CARDINAL, 32, PropModeReplace, (unsigned char *)&hints, 5);
 
 	}
 	else if (kwm_win_decoration != None)
@@ -389,7 +389,7 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 
 		if (decor >= 0)
 		{
-			XChangeProperty(display, window, kwm_win_decoration, XA_CARDINAL, 32, PropModeReplace, (unsigned char *)&decor, 1);
+			XChangeProperty(handle.display, handle.window, kwm_win_decoration, XA_CARDINAL, 32, PropModeReplace, (unsigned char *)&decor, 1);
 		}
 	}
 	else if (win_hints)
@@ -406,7 +406,7 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 
 		if (decor >= 0)
 		{
-			XChangeProperty(display, window, win_hints, XA_CARDINAL, 32, PropModeReplace, (unsigned char *)&decor, 1);
+			XChangeProperty(handle.display, handle.window, win_hints, XA_CARDINAL, 32, PropModeReplace, (unsigned char *)&decor, 1);
 		}
 	}
 
@@ -442,20 +442,20 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 	{
 		size_hints->flags |= PMaxSize;
 	}
-	XSetWMNormalHints(display, window, size_hints);
+	XSetWMNormalHints(handle.display, handle.window, size_hints);
 
 	// subscribe to window manager events
-	XSetWMProtocols(display, window, &wm_delete_window, 1);
+	XSetWMProtocols(handle.display, handle.window, &wm_delete_window, 1);
 
 	// Make auto repeat keys detectable
 	Bool supports_detectable_autorepeat;
-	XkbSetDetectableAutoRepeat(display,1,&supports_detectable_autorepeat);
+	XkbSetDetectableAutoRepeat(handle.display,1,&supports_detectable_autorepeat);
 
 	fullscreen = desc.is_fullscreen() && net_wm_state && net_wm_state_fullscreen;
 	if (fullscreen)
 	{
 		Atom atom1 = net_wm_state_fullscreen;
-		XChangeProperty(display, window, net_wm_state, XA_ATOM, 32, PropModeReplace, (unsigned char *)&atom1, 1);
+		XChangeProperty(handle.display, handle.window, net_wm_state, XA_ATOM, 32, PropModeReplace, (unsigned char *)&atom1, 1);
 	}
 
 	// Guess the initial position (until the window is mapped)
@@ -494,7 +494,7 @@ void X11Window::calculate_window_frame_size()
 	Atom actual_type;
 
 	// _NET_FRAME_EXTENTS, left, right, top, bottom, CARDINAL[4]/32
-	unsigned char *data = get_property(window, net_frame_extents, &number_items, &actual_format, &actual_type);
+	unsigned char *data = get_property(handle.window, net_frame_extents, &number_items, &actual_format, &actual_type);
 	if (data != NULL)
 	{
 		if (number_items >= 4)
@@ -512,33 +512,33 @@ void X11Window::close_window()
 {
 	current_window_events.clear();
 
-	if (window)
+	if (handle.window)
 	{
-		XDestroyWindow(display, window);
-		window = 0;
+		XDestroyWindow(handle.display, handle.window);
+		handle.window = 0;
 	}
 
 	if (system_cursor)
 	{
-		XFreeCursor(display, system_cursor);
+		XFreeCursor(handle.display, system_cursor);
 		system_cursor = 0;
 	}
 
 	if (hidden_cursor)
 	{
-		XFreeCursor(display, hidden_cursor);
+		XFreeCursor(handle.display, hidden_cursor);
 		hidden_cursor = 0;
 	}
 
 	if (cursor_bitmap)
 	{
-		XFreePixmap(display, cursor_bitmap);
+		XFreePixmap(handle.display, cursor_bitmap);
 		cursor_bitmap = 0;
 	}
 
 	if (color_map)
 	{
-		XFreeColormap(display, color_map);
+		XFreeColormap(handle.display, color_map);
 		color_map = 0;
 	}
 
@@ -589,8 +589,8 @@ bool X11Window::has_focus() const
 {
 	Window focus_return;
 	int revert_to_return;
-	XGetInputFocus(display, &focus_return, &revert_to_return);
-	if (focus_return == window) return true;
+	XGetInputFocus(handle.display, &focus_return, &revert_to_return);
+	if (focus_return == handle.window) return true;
 	return false;
 }
 
@@ -607,7 +607,7 @@ bool X11Window::is_minimized() const
 	// now check WM_STATE property
 	if (wm_state != None)
 	{
-		unsigned char *data = get_property(window, wm_state, &number_items, &actual_format, &actual_type);
+		unsigned char *data = get_property(handle.window, wm_state, &number_items, &actual_format, &actual_type);
 		if (data != NULL)
 		{
 			long state = *(long *)data;
@@ -628,7 +628,7 @@ bool X11Window::is_visible() const
 {
 	XWindowAttributes attr;
 
-	XGetWindowAttributes(display, window, &attr);
+	XGetWindowAttributes(handle.display, handle.window, &attr);
 	if (attr.map_state == IsViewable) return false;
 	return true;
 }
@@ -668,70 +668,70 @@ Point X11Window::screen_to_client(const Point &screen)
 
 void X11Window::show_system_cursor()
 {
-	XDefineCursor(display, window, system_cursor);
+	XDefineCursor(handle.display, handle.window, system_cursor);
 }
 
 void X11Window::set_cursor(StandardCursor type)
 {
 	if (system_cursor)
 	{
-		XFreeCursor(display, system_cursor);
+		XFreeCursor(handle.display, system_cursor);
 		system_cursor = 0;
 	}
 	unsigned int index = XC_left_ptr;
 	switch (type)
 	{
-		case cursor_arrow:
+		case StandardCursor::arrow:
 			index = XC_left_ptr;
 			break;
-		case cursor_appstarting:
+		case StandardCursor::appstarting:
 			index = XC_watch;
 			break;
-		case cursor_cross:
+		case StandardCursor::cross:
 			index = XC_cross;
 			break;
-		case cursor_hand:
+		case StandardCursor::hand:
 			index = XC_hand2;
 			break;
-		case cursor_ibeam:
+		case StandardCursor::ibeam:
 			index = XC_xterm;
 			break;
-		case cursor_size_all:
+		case StandardCursor::size_all:
 			index = XC_fleur;
 			break;
-		case cursor_size_ns:
+		case StandardCursor::size_ns:
 			index = XC_double_arrow;
 			break;
-		case cursor_size_we:
+		case StandardCursor::size_we:
 			index = XC_sb_h_double_arrow;
 			break;
-		case cursor_uparrow:
+		case StandardCursor::uparrow:
 			index = XC_sb_up_arrow;
 			break;
-		case cursor_wait:
+		case StandardCursor::wait:
 			index = XC_watch;
 			break;
-		case cursor_no:
+		case StandardCursor::no:
 			index = XC_X_cursor;
 			break;
-		case cursor_size_nesw:
-		case cursor_size_nwse:
+		case StandardCursor::size_nesw:
+		case StandardCursor::size_nwse:
 		default:
 			break;
 	}
-	system_cursor = XCreateFontCursor(display, index);
-	XDefineCursor(display, window, system_cursor);
+	system_cursor = XCreateFontCursor(handle.display, index);
+	XDefineCursor(handle.display, handle.window, system_cursor);
 }
 
 void X11Window::hide_system_cursor()
 {
-	XDefineCursor(display, window, hidden_cursor);
+	XDefineCursor(handle.display, handle.window, hidden_cursor);
 }
 
 void X11Window::set_title(const std::string &new_title)
 {
 	window_title = new_title;
-	XSetStandardProperties(display, window, new_title.c_str(), new_title.c_str(), None, NULL, 0, NULL);
+	XSetStandardProperties(handle.display, handle.window, new_title.c_str(), new_title.c_str(), None, NULL, 0, NULL);
 }
 
 void X11Window::set_position(const Rect &pos, bool client_area)
@@ -748,9 +748,9 @@ void X11Window::set_position(const Rect &pos, bool client_area)
 	if (!resize_enabled)	// If resize has been disabled, we have to temporary enable it
 	{
 		long user_hints;
-		XGetWMNormalHints(display, window, size_hints, &user_hints);
+		XGetWMNormalHints(handle.display, handle.window, size_hints, &user_hints);
 		size_hints->flags &= ~(PMinSize | PMaxSize);
-		XSetWMNormalHints(display, window, size_hints);
+		XSetWMNormalHints(handle.display, handle.window, size_hints);
 	}
 
 	int width = pos.get_width();
@@ -759,14 +759,14 @@ void X11Window::set_position(const Rect &pos, bool client_area)
 	if (client_area)
 	{
 		requested_current_window_client_area = pos;
-		XMoveResizeWindow(display, window, pos.left - frame_size_left, pos.top - frame_size_top, width, height);
+		XMoveResizeWindow(handle.display, handle.window, pos.left - frame_size_left, pos.top - frame_size_top, width, height);
 	}
 	else
 	{
 		width = width - frame_size_left - frame_size_right;
 		height = height - frame_size_top - frame_size_bottom;
 		requested_current_window_client_area = Rect(pos.left + frame_size_left, pos.top + frame_size_top, Size(width, height));
-		XMoveResizeWindow(display, window, pos.left, pos.top, width, height);
+		XMoveResizeWindow(handle.display, handle.window, pos.left, pos.top, width, height);
 	}
 
 	if (!resize_enabled)	// resize has been temporary enabled
@@ -776,7 +776,7 @@ void X11Window::set_position(const Rect &pos, bool client_area)
 		size_hints->max_width   = width;
 		size_hints->max_height  = height;
 		size_hints->flags |= PMinSize | PMaxSize;
-		XSetWMNormalHints(display, window, size_hints);
+		XSetWMNormalHints(handle.display, handle.window, size_hints);
 	}
 }
 
@@ -794,16 +794,16 @@ void X11Window::set_size(int width, int height, bool client_area)
 	if (!resize_enabled)	// If resize has been disabled, we have to temporary enable it
 	{
 		long user_hints;
-		XGetWMNormalHints(display, window, size_hints, &user_hints);
+		XGetWMNormalHints(handle.display, handle.window, size_hints, &user_hints);
 		size_hints->flags &= ~(PMinSize | PMaxSize);
-		XSetWMNormalHints(display, window, size_hints);
+		XSetWMNormalHints(handle.display, handle.window, size_hints);
 	}
 
 	if (client_area)
 	{
 		requested_current_window_client_area = Rect(requested_current_window_client_area.left, requested_current_window_client_area.top, Size(width, height));
 
-		XResizeWindow(display, window, width, height);
+		XResizeWindow(handle.display, handle.window, width, height);
 	}
 	else
 	{
@@ -816,7 +816,7 @@ void X11Window::set_size(int width, int height, bool client_area)
 
 		requested_current_window_client_area = Rect(requested_current_window_client_area.left, requested_current_window_client_area.top, Size(width, height));
 
-		XResizeWindow(display, window, width, height);
+		XResizeWindow(handle.display, handle.window, width, height);
 	}
 
 	if (!resize_enabled)	// resize has been temporary enabled
@@ -826,7 +826,7 @@ void X11Window::set_size(int width, int height, bool client_area)
 		size_hints->max_width   = width;
 		size_hints->max_height  = height;
 		size_hints->flags |= PMinSize | PMaxSize;
-		XSetWMNormalHints(display, window, size_hints);
+		XSetWMNormalHints(handle.display, handle.window, size_hints);
 	}
 
 }
@@ -841,7 +841,7 @@ void X11Window::minimize()
 {
 	if (!is_minimized())
 		restore_to_maximized = is_maximized();
-	XIconifyWindow(display, window, current_screen);
+	XIconifyWindow(handle.display, handle.window, current_screen);
 }
 
 void X11Window::restore()
@@ -869,7 +869,7 @@ void X11Window::map_window()
 
 	if (!is_window_mapped)
 	{
-		int result = XMapWindow(display, window);
+		int result = XMapWindow(handle.display, handle.window);
 		if ( (result == BadValue) || (result == BadWindow) )
 		{
 			throw Exception("Failed to map window");
@@ -878,13 +878,13 @@ void X11Window::map_window()
 		{
 			XEvent event;
 			do {
-				XWindowEvent(display, window, StructureNotifyMask, &event);
+				XWindowEvent(handle.display, handle.window, StructureNotifyMask, &event);
 			}while ( event.type != MapNotify );
 
 			is_window_mapped = true;
 
 			if (fullscreen)
-				XSetInputFocus(display, window, RevertToParent, CurrentTime);
+				XSetInputFocus(handle.display, handle.window, RevertToParent, CurrentTime);
 		}
 
 		if (!frame_size_calculated)
@@ -912,7 +912,7 @@ void X11Window::unmap_window()
 	clear_structurenotify_events();
 	if (is_window_mapped)
 	{
-		int result = XUnmapWindow(display, window);
+		int result = XUnmapWindow(handle.display, handle.window);
 		if ( (result == BadValue) || (result == BadWindow) )
 		{
 			throw Exception("Failed to unmap window");
@@ -921,7 +921,7 @@ void X11Window::unmap_window()
 		{
 			XEvent event;
 			do {
-				XWindowEvent(display, window, StructureNotifyMask, &event);
+				XWindowEvent(handle.display, handle.window, StructureNotifyMask, &event);
 			}while (event.type != UnmapNotify);
 
 			is_window_mapped = false;
@@ -953,7 +953,7 @@ void X11Window::hide()
 
 void X11Window::bring_to_front()
 {
-	XRaiseWindow(display, window);
+	XRaiseWindow(handle.display, handle.window);
 }
 
 void X11Window::capture_mouse(bool capture)
@@ -964,7 +964,7 @@ void X11Window::capture_mouse(bool capture)
 void X11Window::clear_structurenotify_events()
 {
 	XEvent event;
-	while( XCheckMaskEvent(display, StructureNotifyMask, &event));
+	while( XCheckMaskEvent(handle.display, StructureNotifyMask, &event));
 
 }
 
@@ -977,7 +977,7 @@ bool X11Window::check_net_wm_state(Atom atom1, Atom atom2) const
 	// search for atom1 or atom2 in _NET_WM_STATE array
 	if (net_wm_state != None)
 	{
-		unsigned char *data = get_property(window, net_wm_state, &number_items, &actual_format, &actual_type);
+		unsigned char *data = get_property(handle.window, net_wm_state, &number_items, &actual_format, &actual_type);
 		if (data != NULL)
 		{
 			bool find = false;
@@ -1006,14 +1006,14 @@ bool X11Window::modify_net_wm_state(bool add, Atom atom1, Atom atom2)
 		XEvent xev;
 		memset(&xev, 0, sizeof(xev));
 		xev.xclient.type = ClientMessage;
-		xev.xclient.window = window;
+		xev.xclient.window = handle.window;
 		xev.xclient.message_type = net_wm_state;
 		xev.xclient.format = 32;
 		xev.xclient.data.l[0] = add ? _NET_WM_STATE_ADD : _NET_WM_STATE_REMOVE;
 		xev.xclient.data.l[1] = atom1;
 		xev.xclient.data.l[2] = atom2;
 		xev.xclient.data.l[3] = None;
-		return XSendEvent(display, DefaultRootWindow(display), False, SubstructureRedirectMask | SubstructureNotifyMask, &xev) != 0;
+		return XSendEvent(handle.display, DefaultRootWindow(handle.display), False, SubstructureRedirectMask | SubstructureNotifyMask, &xev) != 0;
 	}
 
 	return false;
@@ -1031,30 +1031,30 @@ Rect X11Window::get_screen_position() const
 	Window temp_window;
 	XWindowAttributes attr;
 
-	XLockDisplay(display);
+	XLockDisplay(handle.display);
 
-	XGetWindowAttributes(display, window, &attr);
+	XGetWindowAttributes(handle.display, handle.window, &attr);
 
 	xpos = attr.x;
 	ypos = attr.y;
 	width = attr.width;
 	height = attr.height;
 
-	Window current_window = window;
+	Window current_window = handle.window;
 	while(true)
 	{
 		children_ptr = NULL;
-		XQueryTree(display, current_window, &temp_window, &current_window, &children_ptr, &num_child);
+		XQueryTree(handle.display, current_window, &temp_window, &current_window, &children_ptr, &num_child);
 		if (children_ptr)
 			XFree(children_ptr);
 
 		if (!current_window) break;
 
-		XGetWindowAttributes(display, current_window, &attr);
+		XGetWindowAttributes(handle.display, current_window, &attr);
 		xpos += attr.x;
 		ypos += attr.y;
 	}
-	XUnlockDisplay(display);
+	XUnlockDisplay(handle.display);
 
 	return (Rect(xpos, ypos, width+xpos, height+ypos));
 
@@ -1066,11 +1066,11 @@ Rect X11Window::get_screen_position() const
 //	int x, y;
 //	unsigned int width, height;
 //	unsigned int depth, border_width;
-//	XGetGeometry(display, window, &root_window, &x, &y, &width, &height, &border_width, &depth);
+//	XGetGeometry(handle.display, handle.window, &root_window, &x, &y, &width, &height, &border_width, &depth);
 //
 //	Window child_return;
 //	int newx, newy;
-//	XTranslateCoordinates(display, window, root_window, x, y, &newx, &newy, &child_return);
+//	XTranslateCoordinates(handle.display, handle.window, root_window, x, y, &newx, &newy, &child_return);
 //
 //	return Rect(newx, newy, Size(width, height));
 //}
@@ -1156,7 +1156,7 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 					{
 						if (event.xclient.data.l[0] == net_wm_ping)
 						{
-							XSendEvent( display, RootWindow(display, current_screen), False, SubstructureNotifyMask | SubstructureRedirectMask, &event );
+							XSendEvent( handle.display, RootWindow(handle.display, current_screen), False, SubstructureNotifyMask | SubstructureRedirectMask, &event );
 						}
 					}
 				}
@@ -1529,14 +1529,14 @@ void X11Window::process_queued_events()
 		event.xexpose.type = Expose;
 		event.xexpose.serial = 0;
 		event.xexpose.send_event = True;
-		event.xexpose.display = display;
-		event.xexpose.window = window;
+		event.xexpose.display = handle.display;
+		event.xexpose.window = handle.window;
 		event.xexpose.x = rect.left;
 		event.xexpose.y = rect.top;
 		event.xexpose.width = rect.get_width();
 		event.xexpose.height = rect.get_height();
 		event.xexpose.count = (max -1) - cnt;
-		XSendEvent( display, window, False, 0, &event );
+		XSendEvent( handle.display, handle.window, False, 0, &event );
 	}
 	last_repaint_rect.clear();
 }
@@ -1546,11 +1546,11 @@ void X11Window::set_minimum_size( int width, int height, bool client_area)
 	minimum_size = Size(width,height);
 
 	long user_hints;
-	XGetWMNormalHints(display, window, size_hints, &user_hints);
+	XGetWMNormalHints(handle.display, handle.window, size_hints, &user_hints);
 	size_hints->min_width   = minimum_size.width;
 	size_hints->min_height  = minimum_size.height;
 	size_hints->flags |= PMinSize;
-	XSetWMNormalHints(display, window, size_hints);
+	XSetWMNormalHints(handle.display, handle.window, size_hints);
 }
 
 void X11Window::set_maximum_size( int width, int height, bool client_area)
@@ -1558,11 +1558,11 @@ void X11Window::set_maximum_size( int width, int height, bool client_area)
 	maximum_size = Size(width,height);
 
 	long user_hints;
-	XGetWMNormalHints(display, window, size_hints, &user_hints);
+	XGetWMNormalHints(handle.display, handle.window, size_hints, &user_hints);
 	size_hints->max_width   = maximum_size.width;
 	size_hints->max_height  = maximum_size.height;
 	size_hints->flags |= PMaxSize;
-	XSetWMNormalHints(display, window, size_hints);
+	XSetWMNormalHints(handle.display, handle.window, size_hints);
 }
 
 void X11Window::get_keyboard_modifiers(bool &key_shift, bool &key_alt, bool &key_ctrl) const
@@ -1598,7 +1598,7 @@ unsigned char *X11Window::get_property(Window use_window, Atom prop, unsigned lo
 		{
 			XFree(read_data);
 		}
-		int result = XGetWindowProperty(display, use_window, prop, 0, read_bytes, False, AnyPropertyType, actual_type_ptr, actual_format_ptr, number_items_ptr, &bytes_after, &read_data);
+		int result = XGetWindowProperty(handle.display, use_window, prop, 0, read_bytes, False, AnyPropertyType, actual_type_ptr, actual_format_ptr, number_items_ptr, &bytes_after, &read_data);
 		if (result != Success)
 		{
 			*number_items_ptr = 0;
@@ -1644,12 +1644,12 @@ void X11Window::set_large_icon(const PixelBuffer &image)
 	geom[2] = image.get_width();
 	geom[3] = image.get_height();
 
-	Atom propertyGeom = XInternAtom(display, "_NET_WM_ICON_GEOMETRY", 0);
-	XChangeProperty(display, window, propertyGeom, XA_CARDINAL, 32, PropModeReplace, (unsigned char*)geom, 4);
+	Atom propertyGeom = XInternAtom(handle.display, "_NET_WM_ICON_GEOMETRY", 0);
+	XChangeProperty(handle.display, handle.window, propertyGeom, XA_CARDINAL, 32, PropModeReplace, (unsigned char*)geom, 4);
 
 	// set icon data
-	Atom property = XInternAtom(display, "_NET_WM_ICON", 0);
-	XChangeProperty(display, window, property, XA_CARDINAL, 32, PropModeReplace,
+	Atom property = XInternAtom(handle.display, "_NET_WM_ICON", 0);
+	XChangeProperty(handle.display, handle.window, property, XA_CARDINAL, 32, PropModeReplace,
 		(unsigned char*)data, size);
 
 }

@@ -62,7 +62,7 @@ public:
 	GraphicContext& get_gc();
 	InputContext get_ic();
 
-	HWND get_hwnd() const;
+	DisplayWindowHandle const *get_handle() const override;
 
 	bool is_clipboard_text_available() const;
 	bool is_clipboard_image_available() const;
