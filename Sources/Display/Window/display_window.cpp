@@ -121,18 +121,6 @@ HWND DisplayWindow::get_hwnd() const
 {
 	return impl->provider->get_hwnd();
 }
-#elif defined(__APPLE__)
-	// nothing
-#else
-::Display *DisplayWindow::get_display() const
-{
-	return impl->provider->get_display();
-}
-
-::Window DisplayWindow::get_window() const
-{
-	return impl->provider->get_window();
-}
 #endif
 
 Rect DisplayWindow::get_geometry() const

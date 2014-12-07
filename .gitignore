@@ -26,8 +26,7 @@ doxyoutput
 /Tests/CSSLayout/WebBrowser/htmlpage.css
 /Tests/CSSLayout/WebBrowser/htmlpage.html
 /Tests/CSSLayout/WebBrowser/*.opensdf
-/Documentation/Makefile.in
-/Documentation/Reference/Makefile.in
+/Documentation/Makefile
 
 Makefile.in
 /aclocal.m4
@@ -51,6 +50,7 @@ Makefile.in
 /Setup/Makefile
 /Setup/pkgconfig/Makefile
 /Setup/pkgconfig/clan*.pc
+/Sources/Makefile
 /Sources/*/Makefile
 /Tests/Makefile.conf
 /config.log

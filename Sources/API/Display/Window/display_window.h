@@ -35,10 +35,6 @@
 #include "../display_target.h"
 #include <memory>
 
-#if !defined(WIN32) && !defined(__APPLE__)
-#include <X11/Xlib.h>
-#endif
-
 namespace clan
 {
 /// \addtogroup clanDisplay_Window clanDisplay Window
@@ -222,20 +218,11 @@ public:
 	std::string get_title() const;
 
 #ifdef WIN32
-
-	/// \brief Get Hwnd
-	///
-	/// \return hwnd
+	/** Returns the Windows window handle object for the display window.
+	 *  \note This function only exists on Windows.
+	 *  \return `HWND` for use with the Windows API.
+	 */
 	HWND get_hwnd() const;
-
-#elif defined(__APPLE__)
-	// nothing
-#else
-	/// \brief Returns the X11 display handle.
-	::Display *get_display() const;
-
-	/// \brief Handle to X11 window handle.
-	::Window get_window() const;
 #endif
 
 /// \}

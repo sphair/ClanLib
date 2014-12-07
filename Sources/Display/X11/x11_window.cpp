@@ -102,12 +102,12 @@ namespace clan
 // From Xm/MwmUtil.h
 typedef struct
 {
-    // These were "int", but only work at "long". Is this okay on a 32bit platform?
-    long         flags;
-    long	 functions;
-    long	 decorations;
-    long	 input_mode;
-    long	 status;
+	// These were "int", but only work at "long". Is this okay on a 32bit platform?
+	long flags;
+	long functions;
+	long decorations;
+	long input_mode;
+	long status;
 } ClanLib_MotifWmHints;
 
 X11Window::X11Window()
@@ -247,8 +247,10 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 
 	if (!desc.get_owner().is_null())
 	{
-		DisplayWindow owner = desc.get_owner();
-		XSetTransientForHint(display, window, owner.get_window());
+		throw Exception("Transient windows are not yet implemented in X11.");
+		// TODO Implement cross-platform window handle object retrieval from a DisplayWindow.
+		// DisplayWindow owner = desc.get_owner();
+		// XSetTransientForHint(display, window, owner.get_window());
 	}
 
 	// Setup the hidden cursor (Maybe this should be done only once when required)
