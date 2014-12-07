@@ -46,7 +46,7 @@ public:
 	HWND hwnd;
 
 	DisplayWindowHandle() = delete;
-	DisplayWindowHandle(DisplayWindowHandle const &other) : DisplayWindowHandle(other.get_hwnd()) { }
+	DisplayWindowHandle(DisplayWindowHandle const &other) : DisplayWindowHandle(other.hwnd) { }
 	DisplayWindowHandle(HWND _hwnd) : hwnd(_hwnd) { }
 
 	operator HWND() const { return hwnd; }

@@ -32,6 +32,7 @@
 
 #include <list>
 #include <map>
+#include "API/Display/Window/display_window.h"
 #include "API/Display/Window/input_context.h"
 #include "API/Display/Window/input_device.h"
 #include "API/Display/TargetProviders/input_device_provider.h"
@@ -65,7 +66,7 @@ public:
 	~Win32Window();
 
 public:
-	DisplayWindowHandle *get_handle() { return &hwnd; }
+	DisplayWindowHandle const *get_handle() const { return &hwnd; }
 	HWND get_hwnd() const { return hwnd; }
 	Rect get_geometry() const;
 	Rect get_viewport() const;
@@ -93,7 +94,7 @@ public:
 
 	void show_system_cursor();
 	void set_cursor(CursorProvider_Win32 *cursor);
-	void set_cursor(enum class StandardCursor type);
+	void set_cursor(StandardCursor type);
 	void hide_system_cursor();
 	void set_cursor_handle(HCURSOR cursor);
 

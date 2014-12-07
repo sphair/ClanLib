@@ -58,7 +58,7 @@ namespace clan
 
 OpenGLWindowProvider::OpenGLWindowProvider(OpenGLWindowDescription &opengl_desc)
 : win32_window(),
-  opengl_context(0), device_context(0), hwnd(0), shadow_window(false), dwm_layered(false), site(0), fullscreen(false),
+  opengl_context(0), device_context(0), handle(0), shadow_window(false), dwm_layered(false), site(0), fullscreen(false),
   wglSwapIntervalEXT(0), swap_interval(-1), opengl_desc(opengl_desc), using_gl3(true), double_buffered(true)
 {
 	win32_window.func_on_resized() = bind_member(this, &OpenGLWindowProvider::on_window_resized);
@@ -95,16 +95,16 @@ OpenGLWindowProvider::~OpenGLWindowProvider()
 	{
 		ReleaseDC(win32_window.get_hwnd(), device_context);
 		device_context = 0;
-		hwnd = 0;
+		handle = 0;
 	}
 	if (shadow_window)
 	{
-		if (hwnd)
-			DestroyWindow(hwnd);
+		if (handle)
+			DestroyWindow(handle);
 		shadow_window = false;
 	}
 
-	hwnd = 0;
+	handle = 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -204,7 +204,7 @@ void OpenGLWindowProvider::create_shadow_window(HWND wnd)
 	if (window_info.dwStyle & WS_VISIBLE)
 		window_info.dwStyle -= WS_VISIBLE;
 
-	hwnd = CreateWindowEx(
+	handle = CreateWindowEx(
 		0, //window_info.dwExStyle,
 		WC_STATIC, //(LPCTSTR) window_info.atomWindowType,
 		TEXT(""),
@@ -214,7 +214,7 @@ void OpenGLWindowProvider::create_shadow_window(HWND wnd)
 		window_info.rcWindow.right - window_info.rcWindow.left,
 		window_info.rcWindow.bottom - window_info.rcWindow.top,
 		GetParent(wnd), 0, GetModuleHandle(0), 0);
-	if (hwnd == 0)
+	if (handle == 0)
 		throw Exception("Unable to create display window (opengl offscreen window)");
 
 	shadow_window = true;
@@ -229,12 +229,12 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 
 	if (!opengl_context)
 	{
-		hwnd = win32_window.get_hwnd();
+		handle = win32_window.get_hwnd();
 		dwm_layered = false;
 
 		if (desc.is_layered() && !DwmFunctions::is_composition_enabled())
 		{
-			create_shadow_window(hwnd);
+			create_shadow_window(handle);
 		}
 		else 
 		{
@@ -244,11 +244,11 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 
 		desc.is_layered() ? double_buffered = false : double_buffered = true;	// Only can use Layered windows that are single buffered with OpenGL (via shadow window) ( PFD_DOUBLEBUFFER_DONTCARE set in OpenGLCreationHelper::set_multisampling_pixel_format)
 
-		device_context = GetDC(hwnd);
+		device_context = GetDC(handle);
 
 		HGLRC share_context = get_share_context();
 
-		OpenGLCreationHelper helper(hwnd, device_context);
+		OpenGLCreationHelper helper(handle, device_context);
 		helper.set_multisampling_pixel_format(desc);
 
 		int gl_major = opengl_desc.get_version_major();
@@ -377,7 +377,7 @@ void OpenGLWindowProvider::on_window_resized()
 	{
 		RECT rect = { 0,0,0,0 };
 		GetClientRect(win32_window.get_hwnd(), &rect);
-		SetWindowPos(hwnd, 0, 0, 0, rect.right, rect.bottom, SWP_NOREPOSITION|SWP_NOZORDER);
+		SetWindowPos(handle, 0, 0, 0, rect.right, rect.bottom, SWP_NOREPOSITION|SWP_NOZORDER);
 	}
 
 	if (using_gl3)

@@ -71,7 +71,7 @@ public:
 	std::string get_title() const;
 	Size get_minimum_size(bool client_area) const;
 	Size get_maximum_size(bool client_area) const;
-	HWND get_hwnd() const { return hwnd; }
+	DisplayWindowHandle const *get_handle() const override { return &handle; }
 	HDC get_device_context() const { return device_context; }
 	HGLRC get_opengl_context() const { return opengl_context; }
 	GraphicContext& get_gc() { return gc; }
@@ -155,8 +155,8 @@ private:
 	HGLRC opengl_context;
 
 	/// \brief Device context for this window.
-	HDC device_context;
-	HWND hwnd;
+    HDC device_context;
+	DisplayWindowHandle handle;
 	bool shadow_window;
 	bool dwm_layered;
 	DisplayWindowSite *site;
