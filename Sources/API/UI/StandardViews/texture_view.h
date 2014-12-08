@@ -42,6 +42,14 @@ namespace clan
 	public:
 		TextureView(Canvas &canvas);
 
+		/// \brief Set position and size within the canvas
+		///
+		/// \param rect = position and size.
+		void set_rect(const Rect &rect);
+
+		/// \brief Returns the position and size within the canvas
+		Rect get_rect() const;
+
 		void set_needs_render() override;
 		bool local_root() override;
 		void layout_local() override;

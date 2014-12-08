@@ -40,10 +40,12 @@ namespace clan
 	public:
 		TextureView_Impl(TextureView *view, Canvas &canvas);
 
+		void update();
+
 		TextureView *window_view;
 		Canvas canvas;
 
 		bool needs_render = false;
-
+		Rect canvas_rect;
 	};
 }

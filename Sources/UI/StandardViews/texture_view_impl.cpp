@@ -42,6 +42,21 @@ namespace clan
 
 	TextureView_Impl::TextureView_Impl(TextureView *view, Canvas &canvas) : window_view(view), canvas(canvas)
 	{
+		canvas_rect = canvas.get_size();
 	}
 
+	void TextureView_Impl::update()
+	{
+		if (needs_render)
+		{
+			canvas.set_cliprect(canvas_rect);
+			canvas.clear(clan::Colorf::transparent);
+
+			needs_render = false;
+			window_view->set_geometry(BoxGeometry::from_margin_box(window_view->box_style, canvas_rect));
+			window_view->layout(canvas);
+			window_view->render(canvas);
+			canvas.reset_cliprect();
+		}
+	}
 }
