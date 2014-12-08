@@ -85,10 +85,12 @@ namespace clan
 			{
 				for (auto it = sig->slots.begin(); it != sig->slots.end(); ++it)
 				{
-					if (it->lock().get() == this)
+					// todo: investigate if "it->lock().get() == this" is required
+					if (it->expired() || it->lock().get() == this)
 					{
-						sig->slots.erase(it);
-						break;
+						it = sig->slots.erase(it);
+						if (it == sig->slots.end())
+							break;
 					}
 				}
 			}
