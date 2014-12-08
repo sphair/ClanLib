@@ -91,7 +91,7 @@ private:
 
 	std::map<int, vector_glyph> char_cache;
 
-	FontMetrics metrics;
+	FontMetrics font_metrics;
 
 	FontEngine *font_engine;
 

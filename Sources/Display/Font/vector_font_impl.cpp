@@ -98,7 +98,7 @@ void VectorFont_Impl::load_font(const FontDescription &desc, const std::string &
 	font_engine = new FontEngine_Freetype(io_dev, average_width, height);
 #endif
 
-	metrics = font_engine->get_metrics();
+	font_metrics = font_engine->get_metrics();
 }
 
 VectorFont_Impl::~VectorFont_Impl()
@@ -116,7 +116,7 @@ VectorFont_Impl::~VectorFont_Impl()
 
 FontMetrics VectorFont_Impl::get_font_metrics()
 {
-	return metrics;
+	return font_metrics;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -131,12 +131,20 @@ GlyphMetrics VectorFont_Impl::get_metrics(Canvas &canvas, unsigned int glyph)
 GlyphMetrics VectorFont_Impl::get_metrics(Canvas &canvas, const std::string &string)
 {
 	GlyphMetrics total_metrics;
+	int line_spacing = font_metrics.get_height() + font_metrics.get_external_leading();
 
 	UTF8_Reader reader(string.data(), string.length());
 	while (!reader.is_end())
 	{
 		unsigned int glyph = reader.get_char();
 		reader.next();
+
+		if (glyph == '\n')
+		{
+			total_metrics.advance.width = 0;
+			total_metrics.advance.height += line_spacing;
+			continue;
+		}
 
 		GlyphMetrics metrics = get_metrics(canvas, glyph);
 
@@ -153,6 +161,9 @@ void VectorFont_Impl::draw(Canvas &canvas, const Pointf &position, const std::st
 {
 	float offset_x = 0;
 	float offset_y = 0;
+
+	int line_spacing = font_metrics.get_height() + font_metrics.get_external_leading();
+
 	const Mat4f original_transform = canvas.get_transform();
 	UTF8_Reader reader(text.data(), text.length());
 	while (!reader.is_end())
@@ -160,6 +171,13 @@ void VectorFont_Impl::draw(Canvas &canvas, const Pointf &position, const std::st
 		unsigned int glyph = reader.get_char();
 		reader.next();
 	
+		if (glyph == '\n')
+		{
+			offset_x = 0;
+			offset_y += line_spacing;
+			continue;
+		}
+
 		store_in_char_cache(glyph);
 
 		canvas.set_transform(original_transform * Mat4f::translate(position.x + offset_x, position.y + offset_y, 0));
