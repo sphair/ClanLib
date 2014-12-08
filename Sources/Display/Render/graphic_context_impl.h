@@ -81,7 +81,7 @@ private:
 	std::shared_ptr<GraphicScreen> graphic_screen;
 
 	Size display_window_size;
-    SlotContainer sc;
+    Slot resize_slot;
 
 	RasterizerState default_rasterizer_state;
 	BlendState default_blend_state;
