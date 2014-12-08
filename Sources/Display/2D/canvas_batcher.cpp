@@ -44,7 +44,7 @@ public:
 
 	void flush();
 	bool set_batcher(GraphicContext &gc, RenderBatcher *batcher);
-	void update_batcher_matrix(GraphicContext &gc, const Mat4f &modelview, const Mat4f &projection);
+	void update_batcher_matrix(GraphicContext &gc, const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis);
 
 	GraphicContext current_gc;
 
@@ -120,7 +120,7 @@ void CanvasBatcher_Impl::flush()
 	}
 }
 
-void CanvasBatcher_Impl::update_batcher_matrix(GraphicContext &gc, const Mat4f &modelview, const Mat4f &projection)
+void CanvasBatcher_Impl::update_batcher_matrix(GraphicContext &gc, const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis)
 {
 	if (gc != current_gc)
 	{
@@ -130,7 +130,7 @@ void CanvasBatcher_Impl::update_batcher_matrix(GraphicContext &gc, const Mat4f &
 
 	if (active_batcher)
 	{
-		active_batcher->matrix_changed(modelview, projection);
+		active_batcher->matrix_changed(modelview, projection, image_yaxis);
 	}
 }
 
@@ -151,9 +151,9 @@ void CanvasBatcher::flush()
 	impl->flush();
 }
 
-void CanvasBatcher::update_batcher_matrix(GraphicContext &gc, const Mat4f &modelview, const Mat4f &projection)
+void CanvasBatcher::update_batcher_matrix(GraphicContext &gc, const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis)
 {
-	impl->update_batcher_matrix(gc, modelview, projection);
+	impl->update_batcher_matrix(gc, modelview, projection, image_yaxis);
 }
 
 bool CanvasBatcher::set_batcher(GraphicContext &gc, RenderBatcher *batcher)

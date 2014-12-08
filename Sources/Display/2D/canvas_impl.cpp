@@ -114,7 +114,7 @@ void Canvas_Impl::flush()
 
 void Canvas_Impl::update_batcher_matrix()
 {
-	batcher.update_batcher_matrix(gc, canvas_transform, canvas_projection);
+	batcher.update_batcher_matrix(gc, canvas_transform, canvas_projection, canvas_y_axis);
 }
 
 void Canvas_Impl::set_batcher(Canvas &canvas, RenderBatcher *new_batcher)

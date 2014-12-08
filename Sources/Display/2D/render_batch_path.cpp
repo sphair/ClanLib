@@ -72,9 +72,10 @@ namespace clan
 		fill_renderer.flush(gc);
 	}
 
-	void RenderBatchPath::matrix_changed(const Mat4f &new_modelview, const Mat4f &new_projection)
+	void RenderBatchPath::matrix_changed(const Mat4f &new_modelview, const Mat4f &new_projection, TextureImageYAxis image_yaxis)
 	{
 		// We ignore the projection
+		fill_renderer.set_yaxis(image_yaxis);
 		modelview_matrix = new_modelview;
 	}
 

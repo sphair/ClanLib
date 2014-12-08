@@ -328,6 +328,9 @@ public:
 	/// \return The frame buffer. Use frame_buffer.is_null() to determine if the frame buffer was not selected
 	FrameBuffer get_read_frame_buffer() const;
 
+	/// \brief Returns the currently selected program object
+	ProgramObject get_program_object() const;
+
 	/// \brief Returns the current width of the context.
 	int get_width() const;
 

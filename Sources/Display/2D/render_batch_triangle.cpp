@@ -366,7 +366,7 @@ void RenderBatchTriangle::flush(GraphicContext &gc)
 	}
 }
 
-void RenderBatchTriangle::matrix_changed(const Mat4f &new_modelview, const Mat4f &new_projection)
+void RenderBatchTriangle::matrix_changed(const Mat4f &new_modelview, const Mat4f &new_projection, TextureImageYAxis image_yaxis)
 {
 	modelview_projection_matrix = new_projection * new_modelview;
 }

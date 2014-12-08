@@ -67,6 +67,8 @@ public:
 	void set_program_object(const ProgramObject &program);
 	void reset_program_object();
 
+	ProgramObject get_program_object() const;
+
 	void set_rasterizer_state(const RasterizerState &state);
 	void set_blend_state(const BlendState &state, const Colorf &blend_color, unsigned int sample_mask);
 	void set_depth_stencil_state(const DepthStencilState &state, int stencil_ref);

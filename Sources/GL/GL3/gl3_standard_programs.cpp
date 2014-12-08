@@ -214,6 +214,7 @@ const std::string::value_type *cl_glsl_vertex_path =
 	"	out vec4 vary_data;\n"
 	"	out vec2 mask_position;\n"
 	"	uniform sampler2D instance_data;\n"
+	"	uniform float ypos_scale;\n"
 	"	flat out ivec2 instance_offset;\n"
 	"\n"
 	"	void main()\n"
@@ -224,7 +225,7 @@ const std::string::value_type *cl_glsl_vertex_path =
 	"\n"
 	"		vec4 canvas_data = texelFetch(instance_data, ivec2(0, 0), 0);\n"
 	"		ivec2 size = ivec2((Vertex.z % 2), (Vertex.z / 2));\n"
-	"		gl_Position = vec4(((Vertex.x + size.x * mask_block_size)*2.0 / canvas_data.x) - 1.0, ((Vertex.y + size.y * mask_block_size)*-2.0 / canvas_data.y) + 1.0, 0.0, 1.0);\n"
+	"		gl_Position = vec4(((Vertex.x + size.x * mask_block_size)*2.0 / canvas_data.x) - 1.0, ypos_scale * (((Vertex.y + size.y * mask_block_size)*-2.0 / canvas_data.y) + 1.0), 0.0, 1.0);\n"
 	"		int mask_offset = Vertex.w % 65536;\n"
 	"\n"
 	"		int y_offset = (mask_offset*mask_block_size) / mask_width;\n"
@@ -348,6 +349,7 @@ const std::string::value_type *cl_glsl15_vertex_path = R"shaderend(
 			out vec4 vary_data;
 			out vec2 mask_position;
 			uniform sampler2D instance_data;
+			uniform float ypos_scale;
 			flat out ivec2 instance_offset;
 
 			void main()
@@ -358,7 +360,7 @@ const std::string::value_type *cl_glsl15_vertex_path = R"shaderend(
 
 				vec4 canvas_data = texelFetch(instance_data, ivec2(0, 0), 0);
 				ivec2 size = ivec2( (Vertex.z % 2), (Vertex.z / 2) );
-				gl_Position = vec4(((Vertex.x+size.x * mask_block_size)*2.0 / canvas_data.x) - 1.0, ((Vertex.y+size.y * mask_block_size)*-2.0 / canvas_data.y) + 1.0, 0.0, 1.0);
+				gl_Position = vec4(((Vertex.x+size.x * mask_block_size)*2.0 / canvas_data.x) - 1.0, ypos_scale * (((Vertex.y+size.y * mask_block_size)*-2.0 / canvas_data.y) + 1.0), 0.0, 1.0);
 				int mask_offset = Vertex.w % 65536;
 
 				int y_offset = (mask_offset*mask_block_size) / mask_width;

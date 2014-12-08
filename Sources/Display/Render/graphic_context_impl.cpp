@@ -223,6 +223,11 @@ void GraphicContext_Impl::set_program_object(StandardProgram standard_program)
 	graphic_screen->on_program_changed(this);
 }
 
+ProgramObject GraphicContext_Impl::get_program_object() const
+{
+	return program;
+}
+
 void GraphicContext_Impl::set_program_object(const ProgramObject &new_program)
 {
 	program = new_program;

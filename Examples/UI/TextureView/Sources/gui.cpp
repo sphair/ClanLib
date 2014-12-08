@@ -80,6 +80,7 @@ int GUI::start(const std::vector<std::string> &args)
 	clan::Image gui_image(gui_texture, gui_texture.get_size());
 	clan::FrameBuffer gui_framebuffer = clan::FrameBuffer(canvas);
 	gui_framebuffer.attach_color(0, gui_texture);
+	//clan::Canvas gui_canvas(canvas);//, gui_framebuffer);
 	clan::Canvas gui_canvas(canvas, gui_framebuffer);
 
 	// Create a source for our resources
@@ -90,6 +91,8 @@ int GUI::start(const std::vector<std::string> &args)
 	clan::UIThread ui_thread(resources);
 
 	std::shared_ptr<clan::TextureView> root = std::make_shared<clan::TextureView>(gui_canvas);
+
+	root->set_rect(clan::Rect(64, 64, clan::Size(256, 256)));
 
 	// Style the root view to use rounded corners and a bit of drop shadow
 	root->box_style.set_background(clan::Colorf(240, 240, 240, 255));
@@ -116,11 +119,11 @@ int GUI::start(const std::vector<std::string> &args)
 	edit->set_text("42");
 	edit->box_style.set_margin(0.0f, 5.0f);
 	edit->box_style.set_background(clan::Colorf(255, 255, 255));
-	edit->box_style.set_border(clan::Colorf(0.0f, 0.0f, 0.0f), 1.0f);
+	edit->box_style.set_border(clan::Colorf(1.0f, 0.0f, 0.0f), 1.0f);
 	edit->box_style.set_border_radius(3.0f);
 	edit->box_style.set_padding(5.0f, 2.0f, 5.0f, 3.0f);
 	edit->box_style.set_width(35.0f);
-
+	
 	// Create a span layout view with some more complex inline formatting
 	std::shared_ptr<clan::SpanLayoutView> span = std::make_shared<clan::SpanLayoutView>();
 	clan::TextStyle font_desc2;
@@ -146,7 +149,7 @@ int GUI::start(const std::vector<std::string> &args)
 	font_desc5.set_weight(800);
 	span->add_text(" units! sdfjghsdkfj hkjsdfhg jksdhfj gkshdfk gsjdkfghsjkdfh kgjshdfkg sjkdfh gjskhf gskjdfg hkjsdfh kgjsdhfkgjhsdkjfhgksjdfhg kjsdfhgjkshdfkhgskjdf ghkjsdfsg kdfhg skjdfhgjksdh fgsdfhg kjsdhfjkghsdkjfh gkjsdhfjkgsdhfkgjhsdkfj hgksj.", font_desc5);
 	root->add_subview(span);
-
+	
 	clan::GameTime game_time;
 
 	// Run until someone presses escape
@@ -156,8 +159,8 @@ int GUI::start(const std::vector<std::string> &args)
 
 		canvas.clear(clan::Colorf(0.3f,0.7f,0.2f));
 
-		root->set_needs_layout();
-		root->set_needs_render();
+		//root->set_needs_layout();
+		//root->set_needs_render();
 		root->update();
 		gui_canvas.flush();
 

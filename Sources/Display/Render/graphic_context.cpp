@@ -315,6 +315,11 @@ void GraphicContext::reset_depth_stencil_state()
 	set_depth_stencil_state(impl->default_depth_stencil_state);
 }
 
+ProgramObject GraphicContext::get_program_object() const
+{
+	return impl->get_program_object();
+}
+
 void GraphicContext::set_program_object(StandardProgram standard_program)
 {
 	impl->set_program_object(standard_program);

@@ -38,6 +38,7 @@ namespace clan
 
 class GraphicContext;
 class Canvas;
+enum TextureImageYAxis;
 
 /// \brief Render batching abstraction
 class RenderBatcher
@@ -56,7 +57,8 @@ public:
 	///
 	/// \param modelview = Mat4f
 	/// \param projection = Mat4f
-	virtual void matrix_changed(const Mat4f &modelview, const Mat4f &projection) = 0;
+	/// \param image_yaxis = The image Y axis, to use where "projection" is not used
+	virtual void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis) = 0;
 /// \}
 };
 

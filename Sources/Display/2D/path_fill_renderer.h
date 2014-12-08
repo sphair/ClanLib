@@ -208,12 +208,16 @@ namespace clan
 		void fill(Canvas &canvas, PathFillMode mode, const Brush &brush, const Mat4f &transform);
 		void flush(GraphicContext &gc);
 
+		void set_yaxis(TextureImageYAxis yaxis) { image_yaxis = yaxis; }
+
 		const float rcp_mask_texture_size = 1.0f / (float)PathConstants::mask_texture_size;
 
 	private:
 		void insert_sorted(PathScanline &scanline, const PathScanlineEdge &edge);
 
 		void initialise_buffers(Canvas &canvas);
+
+		TextureImageYAxis image_yaxis = y_axis_top_down;
 
 		struct Extent
 		{

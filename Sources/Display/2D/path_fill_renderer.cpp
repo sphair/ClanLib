@@ -216,6 +216,10 @@ namespace clan
 
 		gc.set_blend_state(blend_state);
 		gc.set_program_object(program_path);
+
+		ProgramObject obj = gc.get_program_object();
+		obj.set_uniform1f("ypos_scale", image_yaxis == y_axis_top_down ? 1.0f : -1.0f);
+
 		gc.set_texture(0, mask_texture);
 		gc.set_texture(1, instance_texture);
 

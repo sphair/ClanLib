@@ -56,7 +56,7 @@ public:
 
 	void flush();
 	bool set_batcher(GraphicContext &gc, RenderBatcher *batcher);
-	void update_batcher_matrix(GraphicContext &gc, const Mat4f &modelview, const Mat4f &projection);
+	void update_batcher_matrix(GraphicContext &gc, const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis);
 
 	RenderBatchTriangle *get_triangle_batcher();
 	RenderBatchLine *get_line_batcher();

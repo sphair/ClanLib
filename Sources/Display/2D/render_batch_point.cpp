@@ -102,7 +102,7 @@ void RenderBatchPoint::flush(GraphicContext &gc)
 	}
 }
 
-void RenderBatchPoint::matrix_changed(const Mat4f &new_modelview, const Mat4f &new_projection)
+void RenderBatchPoint::matrix_changed(const Mat4f &new_modelview, const Mat4f &new_projection, TextureImageYAxis image_yaxis)
 {
 	modelview_projection_matrix = new_projection * new_modelview;
 }
