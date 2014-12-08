@@ -64,41 +64,13 @@ public:
 /// \name Operations
 /// \{
 public:
-	/// \brief Print text on gc.
-	void draw_text(Canvas &canvas, float x, float y, const std::string &text, const Colorf &color);
+	void draw(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color = Colorf::white);
 
-	/// \brief Calculate size of text string.
-	Size get_text_size(GraphicContext &gc, const std::string &text);
-
-	GlyphMetrics get_glyph_metrics(Canvas &canvas, unsigned int glyph);
-
-	/// \brief Set to draw filled (default)
-	void set_filled(bool enable);
-
-	void get_glyphs(
-		const std::string &text,
-		int *out_glyphs,
-		float *out_interspacing_x,
-		float *out_interspacing_y);
-
-	void draw_glyphs(
-		Canvas &canvas,
-		float x,
-		float y,
-		int *glyphs,
-		int length,
-		bool filled,
-		float *interspacing_x,
-		float *interspacing_y,
-		const Colorf &color = Colorf::white);
+	GlyphMetrics get_metrics(Canvas &canvas, unsigned int glyph);
+	GlyphMetrics get_metrics(Canvas &canvas, const std::string &string);
 
 	void load_font(const FontDescription &desc, const std::string &filename);
-	Rectf get_bounding_box(const std::string &reference_string);
 
-	void set_texture(const Texture2D &src_texture, const Rectf &bounding_rect, const Rectf &texture_rect);
-
-	const std::vector<Vec2f> &get_glyph_filled(unsigned int glyph);
-	const std::vector< std::vector<Vec2f> > &get_glyph_outline(unsigned int glyph);
 
 /// \}
 /// \name Implementation
@@ -116,8 +88,6 @@ private:
 
 		GlyphMetrics glyph_metrics;
 	};
-	
-	void draw_prim_array(Canvas &canvas, vector_glyph &vg, const Colorf &color);
 
 	std::map<int, vector_glyph> char_cache;
 
@@ -126,12 +96,6 @@ private:
 	FontEngine *font_engine;
 
 	int size_height;
-
-	bool is_filled;
-
-	Texture2D current_texture;
-	Rectf current_bounding_rect;
-	Rectf current_texture_rect;
 /// \}
 };
 

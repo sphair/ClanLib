@@ -55,6 +55,7 @@
 #include "API/Display/2D/shape2d.h"
 #include "../2D/render_batch_triangle.h"
 #include "../2D/canvas_impl.h"
+#include "API/Core/Text/utf8_reader.h"
 
 namespace clan
 {
@@ -62,7 +63,7 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // VectorFont_Impl Construction:
 
-VectorFont_Impl::VectorFont_Impl() : font_engine(NULL), is_filled(true)
+VectorFont_Impl::VectorFont_Impl() : font_engine(NULL)
 {
 }
 
@@ -121,78 +122,54 @@ FontMetrics VectorFont_Impl::get_font_metrics()
 /////////////////////////////////////////////////////////////////////////////
 // VectorFont_Impl Operations:
 
-GlyphMetrics VectorFont_Impl::get_glyph_metrics(Canvas &canvas, unsigned int glyph)
+GlyphMetrics VectorFont_Impl::get_metrics(Canvas &canvas, unsigned int glyph)
 {
 	store_in_char_cache(glyph);
 	return char_cache[glyph].glyph_metrics;
 }
 
-void VectorFont_Impl::draw_text(Canvas &canvas, float x, float y, const std::string &text, const Colorf &color)
+GlyphMetrics VectorFont_Impl::get_metrics(Canvas &canvas, const std::string &string)
 {
-	if (text.length() == 0)
-		return;
+	GlyphMetrics total_metrics;
 
-	unsigned int text_length = text.length();
-	DataBuffer buf_out_glyphs(sizeof(int) * (text_length+1));
-	DataBuffer buf_interspacing_x(sizeof(float) * (text_length+1));
-	int *out_glyphs = (int *) buf_out_glyphs.get_data();
-	float *interspacing_x = (float *) buf_interspacing_x.get_data();
- 
-	get_glyphs(text, out_glyphs, interspacing_x, 0);
+	UTF8_Reader reader(string.data(), string.length());
+	while (!reader.is_end())
+	{
+		unsigned int glyph = reader.get_char();
+		reader.next();
 
-	draw_glyphs(canvas, x, y, out_glyphs, text_length, is_filled, interspacing_x, 0, color);
+		GlyphMetrics metrics = get_metrics(canvas, glyph);
 
+		total_metrics.black_box.left = clan::min(total_metrics.black_box.left, metrics.black_box.left + total_metrics.advance.width);
+		total_metrics.black_box.top = clan::min(total_metrics.black_box.top, metrics.black_box.top + total_metrics.advance.height);
+		total_metrics.black_box.right = clan::max(total_metrics.black_box.right, metrics.black_box.right + total_metrics.advance.width);
+		total_metrics.black_box.bottom = clan::max(total_metrics.black_box.bottom, metrics.black_box.bottom + total_metrics.advance.height);
+		total_metrics.advance += metrics.advance;
+	}
+	return total_metrics;
 }
 
-Size VectorFont_Impl::get_text_size(GraphicContext &gc, const std::string &text)
+void VectorFont_Impl::draw(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color)
 {
-	if (text.length() == 0)
-		return Size(0, 0);
-
-	unsigned int text_length = text.length();
-	DataBuffer buf_out_glyphs(sizeof(int) * (text_length+1));
-	DataBuffer buf_interspacing_x(sizeof(float) * (text_length+1));
-	int *out_glyphs = (int *) buf_out_glyphs.get_data();
-	float *interspacing_x = (float *) buf_interspacing_x.get_data();
- 
-	get_glyphs(text, out_glyphs, interspacing_x, 0);
-
-	float offset_x=0.0f;
-	float offset_y=metrics.get_height();
-
-	float max_x = 0.0f;
-
-	for( int i=0; i<text_length; i++ )
+	float offset_x = 0;
+	float offset_y = 0;
+	const Mat4f original_transform = canvas.get_transform();
+	UTF8_Reader reader(text.data(), text.length());
+	while (!reader.is_end())
 	{
-		offset_x += interspacing_x[i];
+		unsigned int glyph = reader.get_char();
+		reader.next();
+	
+		store_in_char_cache(glyph);
 
-		if (offset_x > max_x)
-			max_x = offset_x;
+		canvas.set_transform(original_transform * Mat4f::translate(position.x + offset_x, position.y + offset_y, 0));
 
-		if( out_glyphs[i] == '\n' )
-		{
-			offset_x = 0;
-			offset_y += metrics.get_height();
-		}
+		if (!char_cache[glyph].primitives_array.empty())
+			canvas.fill_triangles(&char_cache[glyph].primitives_array[0], char_cache[glyph].primitives_array.size(), color);
+		offset_x += char_cache[glyph].glyph_metrics.advance.width;
+
 	}
-	return Size(max_x, offset_y);
-}
-
-void VectorFont_Impl::get_glyphs(
-	const std::string &text,
-	int *out_glyphs,
-	float *out_interspacing_x,
-	float *out_interspacing_y)
-{
-	//TODO: This function is totally unicode broken
-
-	for( unsigned int i=0; i<text.length(); i++ )
-	{
-		store_in_char_cache(text[i]);
-		
-		out_glyphs[i] = text[i];
-		out_interspacing_x[i] = char_cache[text[i]].glyph_metrics.advance.width;
-	}
+	canvas.set_transform(original_transform);
 }
 
 void VectorFont_Impl::store_in_char_cache(unsigned int glyph)
@@ -208,144 +185,7 @@ void VectorFont_Impl::store_in_char_cache(unsigned int glyph)
 	}
 }
 
-void VectorFont_Impl::draw_glyphs(
-	Canvas &canvas,
-	float x,
-	float y,
-	int *glyphs,
-	int length,
-	bool filled,
-	float *interspacing_x,
-	float *interspacing_y,
-	const Colorf &color)
-{
-	float offset_x=0;
-	float offset_y=0;
-
-	const Mat4f original_transform = canvas.get_transform();
-
-	for( int i=0; i<length; i++ )
-	{
-		canvas.set_transform(original_transform * Mat4f::translate(x + offset_x, y + offset_y, 0));
-
-		if( filled )
-		{
-			draw_prim_array(canvas, char_cache[glyphs[i]], color);
-		}
-		else
-		{
-			std::vector< std::vector<Vec2f> > &prim_array_outline = char_cache[glyphs[i]].primitives_array_outline;
-
-			std::vector< std::vector<Vec2f> >::iterator it;
-
-			for (it = prim_array_outline.begin(); it != prim_array_outline.end(); ++it)
-			{
-				canvas.draw_line_strip(&((*it)[0]), it->size(), color);
-			}
-		}
-		
-		offset_x += interspacing_x[i];
-		if( glyphs[i] == '\n' )
-		{
-			offset_x = 0;
-			y += metrics.get_height();
-		}
-	}
-	canvas.set_transform(original_transform);
-
-}
-
-void VectorFont_Impl::set_filled(bool enable)
-{
-	is_filled = enable;
-}
-
-Rectf VectorFont_Impl::get_bounding_box(const std::string &reference_string)
-{
-	Rectf bounding_rect(100000.0f, 100000.0f, -100000.0f, -100000.0f);
-	for( unsigned int i=0; i<reference_string.length(); i++ )
-	{
-		store_in_char_cache(reference_string[i]);
-		std::vector<Vec2f> &primitives_array = char_cache[reference_string[i]].primitives_array;
-
-		for (unsigned int cnt=0; cnt< primitives_array.size(); cnt++)
-		{
-			clan::Vec2f pos = primitives_array[cnt];
-			bounding_rect.left = clan::min(bounding_rect.left, pos.x);
-			bounding_rect.top = clan::min(bounding_rect.top, pos.y);
-			bounding_rect.right = clan::max(bounding_rect.right, pos.x);
-			bounding_rect.bottom = clan::max(bounding_rect.bottom, pos.y);
-		}
-
-	}
-
-	if (bounding_rect.left > bounding_rect.right)
-		return Rectf();
-
-	return bounding_rect;
-}
-
-
-void VectorFont_Impl::set_texture(const Texture2D &src_texture, const Rectf &bounding_rect, const Rectf &texture_rect)
-{
-	current_texture = src_texture;
-	current_bounding_rect = bounding_rect;
-	current_texture_rect = texture_rect;
-
-}
-
-const std::vector<Vec2f> &VectorFont_Impl::get_glyph_filled(unsigned int glyph)
-{
-	store_in_char_cache(glyph);
-	return char_cache[glyph].primitives_array;
-}
-
-const std::vector< std::vector<Vec2f> > &VectorFont_Impl::get_glyph_outline(unsigned int glyph)
-{
-	store_in_char_cache(glyph);
-	return char_cache[glyph].primitives_array_outline;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // VectorFont_Impl Implementation:
-
-void VectorFont_Impl::draw_prim_array(Canvas &canvas, vector_glyph &vg, const Colorf &color)
-{
-	if (vg.primitives_array.empty())
-		return;
-
-	if (current_texture.is_null())
-	{
-		canvas.fill_triangles(&vg.primitives_array[0], vg.primitives_array.size(), color);
-		return;
-	}
-
-	if ( (current_bounding_rect != vg.calculated_bounding_rect) || (current_texture_rect != vg.calculated_texture_rect) || vg.texture_positions.empty() )
-	{
-		vg.calculated_bounding_rect = current_bounding_rect;
-		vg.calculated_texture_rect = current_texture_rect;
-		vg.texture_positions.resize(vg.primitives_array.size());
-
-		float scale_x = current_texture_rect.get_width() / current_bounding_rect.get_width();
-		float scale_y = current_texture_rect.get_height() / current_bounding_rect.get_height();
-
-
-		// Recalculate the texture positions
-		for (unsigned int cnt=0; cnt< vg.primitives_array.size(); cnt++)
-		{
-			clan::Vec2f pos = vg.primitives_array[cnt];
-			pos.x -= current_bounding_rect.left;
-			pos.y -= current_bounding_rect.top;
-			pos.x *= scale_x;
-			pos.y *= scale_y;
-			pos.x += current_texture_rect.left;
-			pos.y += current_texture_rect.top;
-
-			vg.texture_positions[cnt] = pos;
-		}
-	}
-	canvas.fill_triangles(&vg.primitives_array[0], &vg.texture_positions[0], vg.primitives_array.size(), current_texture, color);
-
-}
 
 }
