@@ -53,8 +53,6 @@ public:
 	void load_font( GraphicContext &context, const FontDescription &desc, const std::string &filename);
 	void load_font( GraphicContext &context, const FontDescription &desc, const std::string &filename, FileSystem& fs);
 	void load_font( Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics);
-	void draw_text(Canvas &canvas, float xpos, float ypos, const std::string &text, const Colorf &color);
-	Size get_text_size(GraphicContext &gc, const std::string &text);
 	FontMetrics get_font_metrics();
 	int get_character_index(GraphicContext &gc, const std::string &text, const Point &point);
 

@@ -110,12 +110,12 @@ namespace clan
 		Font font = impl->get_font(canvas);
 		std::string clipped_text = impl->_text;
 		LineMetrics line_metrics(font);
-		GlyphMetrics advance = font.get_glyph_metrics(canvas, clipped_text);
+		GlyphMetrics advance = font.measure_text(canvas, clipped_text);
 
 		if (advance.advance.width > geometry().content.get_width())
 		{
 			std::string ellipsis = StringHelp::unicode_to_utf8(0x2026);
-			GlyphMetrics ellipsis_advance = font.get_glyph_metrics(canvas, ellipsis);
+			GlyphMetrics ellipsis_advance = font.measure_text(canvas, ellipsis);
 
 			switch (impl->_line_break_mode)
 			{
@@ -139,7 +139,7 @@ namespace clan
 				break;
 			}
 
-			advance = font.get_glyph_metrics(canvas, clipped_text);
+			advance = font.measure_text(canvas, clipped_text);
 			
 			if (advance.advance.width > geometry().content.get_width())
 				return; // Still no room.  Draw nothing!
@@ -147,15 +147,15 @@ namespace clan
 
 		if (impl->text_alignment == TextAlignment::left)
 		{
-			font.draw_text(canvas, 0.0f, line_metrics.ascent, clipped_text, impl->text_style.color());
+			font.draw_text(canvas, Pointf(0.0f, line_metrics.ascent), clipped_text, impl->text_style.color());
 		}
 		else if (impl->text_alignment == TextAlignment::right)
 		{
-			font.draw_text(canvas, geometry().content.get_width() - advance.advance.width, line_metrics.ascent, clipped_text, impl->text_style.color());
+			font.draw_text(canvas, Pointf(geometry().content.get_width() - advance.advance.width, line_metrics.ascent), clipped_text, impl->text_style.color());
 		}
 		else if (impl->text_alignment == TextAlignment::center)
 		{
-			font.draw_text(canvas, std::round((geometry().content.get_width() - advance.advance.width) * 0.5f), line_metrics.ascent, clipped_text, impl->text_style.color());
+			font.draw_text(canvas, Pointf(std::round((geometry().content.get_width() - advance.advance.width) * 0.5f), line_metrics.ascent), clipped_text, impl->text_style.color());
 		}
 	}
 
@@ -164,7 +164,7 @@ namespace clan
 		if (box_style.is_width_auto())
 		{
 			Font font = impl->get_font(canvas);
-			return font.get_glyph_metrics(canvas, impl->_text).advance.width;
+			return font.measure_text(canvas, impl->_text).advance.width;
 		}
 		else
 			return box_style.width();

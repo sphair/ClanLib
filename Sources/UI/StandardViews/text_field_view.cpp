@@ -328,8 +328,8 @@ namespace clan
 		}
 
 		Font font = impl->get_font(canvas);
-		float advance_before = font.get_glyph_metrics(canvas, txt_before).advance.width;
-		float advance_selected = font.get_glyph_metrics(canvas, txt_selected).advance.width;
+		float advance_before = font.measure_text(canvas, txt_before).advance.width;
+		float advance_selected = font.measure_text(canvas, txt_selected).advance.width;
 		LineMetrics line_metrics(font);
 
 		if (!txt_selected.empty())
@@ -342,7 +342,7 @@ namespace clan
 		font.draw_text(canvas, advance_before, line_metrics.ascent, txt_selected, focus_view() == this ? Colorf(255, 255, 255) : impl->text_style.color());
 		font.draw_text(canvas, advance_before + advance_selected, line_metrics.ascent, txt_after, impl->text_style.color());
 
-		float cursor_advance = std::round(font.get_glyph_metrics(canvas, impl->text.substr(0, impl->cursor_pos)).advance.width);
+		float cursor_advance = std::round(font.measure_text(canvas, impl->text.substr(0, impl->cursor_pos)).advance.width);
 
 		if (impl->cursor_blink_visible)
 			canvas.fill(Path::rect(cursor_advance, line_metrics.leading_top, 1.0f, line_metrics.text_height), Brush(impl->text_style.color()));
@@ -365,7 +365,7 @@ namespace clan
 		if (box_style.is_width_auto())
 		{
 			Font font = impl->get_font(canvas);
-			return font.get_glyph_metrics(canvas, impl->text).advance.width;
+			return font.measure_text(canvas, impl->text).advance.width;
 		}
 		else
 			return box_style.width();

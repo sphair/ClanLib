@@ -33,6 +33,7 @@
 #include "../Image/pixel_buffer.h"
 #include "../2D/sprite.h"
 #include "font_description.h"
+#include "glyph_metrics.h"
 
 namespace clan
 {
@@ -108,65 +109,16 @@ public:
 
 public:
 
-	/// \brief Print text on gc.
-	///
-	/// Multiline text (seperated by /n) is supported
-	///
-	/// \param canvas = Canvas
-	/// \param x = X position
-	/// \param y = Y position
-	/// \param text = The text to draw
-	/// \param color = The text color
-	void draw_text(Canvas &canvas, int x, int y, const std::string &text, const Colorf &color = Colorf::white);
-
-	/// \brief Print text on gc.
-	///
-	/// Multiline text (seperated by /n) is supported
-	///
-	/// \param canvas = Canvas
-	/// \param x = X position
-	/// \param y = Y position
-	/// \param text = The text to draw
-	/// \param color = The text color
-	void draw_text(Canvas &canvas, float x, float y, const std::string &text, const Colorf &color = Colorf::white);
-
-	/// \brief Print text on gc.
-	///
-	/// Multiline text (seperated by /n) is supported
+	/// \brief Print text 
 	///
 	/// \param canvas = Canvas
 	/// \param position = Dest position
 	/// \param text = The text to draw
 	/// \param color = The text color
 	void draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color = Colorf::white);
+	void draw_text(Canvas &canvas, float xpos, float ypos, const std::string &text, const Colorf &color = Colorf::white) { draw_text(canvas, Pointf(xpos, ypos), text, color); }
 
-	/// \brief Print text on gc adding ellipses if it does not fit
-	///
-	/// Multiline text (seperated by /n) is supported
-	///
-	/// \param canvas = Canvas
-	/// \param x = X position
-	/// \param y = Y position
-	/// \param content_box = Rectangle the text is allowed within
-	/// \param text = The text to draw
-	/// \param color = The text color
-	void draw_text_ellipsis(Canvas &canvas, int x, int y, Rect content_box, const std::string &text, const Colorf &color = Colorf::white);
-
-	/// \brief Print text on gc adding ellipses if it does not fit
-	///
-	/// Multiline text (seperated by /n) is supported
-	///
-	/// \param canvas = Canvas
-	/// \param x = X position
-	/// \param y = Y position
-	/// \param content_box = Rectangle the text is allowed within
-	/// \param text = The text to draw
-	/// \param color = The text color
-	void draw_text_ellipsis(Canvas &canvas, float x, float y, Rectf content_box, const std::string &text, const Colorf &color = Colorf::white);
-
-	/// \brief Print text on gc adding ellipses if it does not fit
-	///
-	/// Multiline text (seperated by /n) is supported
+	/// \brief Print text adding ellipses if it does not fit
 	///
 	/// \param canvas = Canvas
 	/// \param position = Dest position
@@ -174,53 +126,24 @@ public:
 	/// \param text = The text to draw
 	/// \param color = The text color
 	void draw_text_ellipsis(Canvas &canvas, const Pointf &position, Rectf content_box, const std::string &text, const Colorf &color = Colorf::white);
-
-	/// \brief Draw the glyph
-	///
-	/// \param canvas = Canvas
-	/// \param position = Dest position
-	/// \param glyph = The glyph to draw
-	/// \param color = The text color
-	void draw_glyph(Canvas &canvas, const Pointf &position, unsigned int glyph, const Colorf &color = Colorf::white);
-	void draw_glyph(Canvas &canvas, float x, float y, unsigned int glyph, const Colorf &color = Colorf::white) { draw_glyph(canvas, Pointf(x, y), glyph, color); }
-	void draw_glyph(Canvas &canvas, int x, int y, unsigned int glyph, const Colorf &color = Colorf::white) { draw_glyph(canvas, Pointf(static_cast<float>(x), static_cast<float>(y)), glyph, color); }
-
-	/// \brief Calculate size of text string.
-	///
-	/// Multiline text (seperated by /n) is supported\n
-	/// \n
-	/// Note: The height also includes whitespace (to give the maximum font height), so "." and "X" returns the same height.\n
-	/// The width is the pixel width\n
-	/// \n
-	/// The size is the increment value to the next glyph
-	Size get_text_size(Canvas &canvas, const std::string &text);
-
-	/// \brief Gets the size of a specified glyph
-	///
-	/// The size is the increment value to the next glyph
-	///
-	/// \param glyph = The glyph to get
-	/// \return The size
-	Size get_glyph_size(Canvas &canvas, unsigned int glyph);
+	void draw_text_ellipsis(Canvas &canvas, float xpos, float ypos, Rectf content_box, const std::string &text, const Colorf &color = Colorf::white) { draw_text_ellipsis(canvas, Pointf(xpos, ypos), content_box, text, color); }
 
 	/// \brief Gets the glyph metrics
 	///
 	/// \param glyph = The glyph to get
 	/// \return The glyph metrics
-	GlyphMetrics get_glyph_metrics(Canvas &canvas, unsigned int glyph);
+	GlyphMetrics get_metrics(Canvas &canvas, unsigned int glyph);
 
-	/// \brief Gets the glyph metrics
+	/// \brief Measure text size
 	///
-	/// \param glyph = The glyph to get
-	/// \return The glyph metrics
-	GlyphMetrics get_glyph_metrics(Canvas &canvas, const std::string &string);
+	/// \param string = The text to use
+	/// \return The metrics
+	GlyphMetrics measure_text(Canvas &canvas, const std::string &string);
 
 	/// \brief Retrieves font metrics description for the selected font.
 	FontMetrics get_font_metrics();
 
 	/// \brief Get the character index at a specified point
-	///
-	/// Multiline text (seperated by /n) is supported
 	///
 	/// \param canvas = Canvas
 	/// \param text = The string

@@ -128,7 +128,7 @@ namespace clan
 
 					std::string obj_text = text.substr(obj_text_start, obj_text_length);
 
-					GlyphMetrics advance = object.get_font(canvas).get_glyph_metrics(canvas, obj_text);
+					GlyphMetrics advance = object.get_font(canvas).measure_text(canvas, obj_text);
 
 					object.get_font(canvas).draw_text(canvas, x, y + metrics.ascent + object.baseline_offset, obj_text, object.style.color());
 
@@ -178,7 +178,7 @@ namespace clan
 					size_t obj_text_end = obj_index == metrics.object_end ? metrics.text_end : object.end;
 					size_t obj_text_length = obj_text_end - obj_text_start;
 
-					GlyphMetrics advance = object.get_font(canvas).get_glyph_metrics(canvas, text.substr(obj_text_start, obj_text_length));
+					GlyphMetrics advance = object.get_font(canvas).measure_text(canvas, text.substr(obj_text_start, obj_text_length));
 					x += advance.advance.width;
 				}
 				else if (object.type == SpanObjectType::view)
@@ -233,7 +233,7 @@ namespace clan
 		{
 			if (object.type == SpanObjectType::text)
 			{
-				GlyphMetrics advance = object.get_font(canvas).get_glyph_metrics(canvas, text.substr(object.start, object.end - object.start));
+				GlyphMetrics advance = object.get_font(canvas).measure_text(canvas, text.substr(object.start, object.end - object.start));
 				x += advance.advance.width;
 			}
 			else if (object.type == SpanObjectType::view)
@@ -304,7 +304,7 @@ namespace clan
 			{
 				std::string obj_text = text.substr(obj_text_start, obj_text_length);
 
-				obj_advance_width = object.get_font(canvas).get_glyph_metrics(canvas, obj_text).advance.width;
+				obj_advance_width = object.get_font(canvas).measure_text(canvas, obj_text).advance.width;
 
 				LineMetrics object_line(object.get_font(canvas));
 				obj_ascent = object_line.ascent;
@@ -329,7 +329,7 @@ namespace clan
 					if (x != 0.0f || word_clip_pos > 0)
 					{
 						obj_text_length = word_clip_pos;
-						obj_advance_width = object.get_font(canvas).get_glyph_metrics(canvas, text.substr(obj_text_start, obj_text_length)).advance.width;
+						obj_advance_width = object.get_font(canvas).measure_text(canvas, text.substr(obj_text_start, obj_text_length)).advance.width;
 
 						obj_ascent = std::max(obj_ascent + object.baseline_offset, 0.0f);
 						obj_descent = std::max(obj_descent - object.baseline_offset, 0.0f);

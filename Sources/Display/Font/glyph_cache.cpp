@@ -83,32 +83,6 @@ FontMetrics GlyphCache::get_font_metrics()
 	return font_metrics;
 }
 
-Size GlyphCache::get_text_size(FontEngine *font_engine, GraphicContext &gc, const std::string &text)
-{
-	int width = 0;
-
-	UTF8_Reader reader(text.data(), text.length());
-	while(!reader.is_end())
-	{
-		unsigned int glyph = reader.get_char();
-		reader.next();
-		Font_TextureGlyph *gptr = get_glyph(font_engine, gc, glyph);
-		if (gptr == NULL) continue;
-		width += gptr->metrics.advance.width;
-	}
-	int height;
-	if (width == 0)
-	{
-		height = 0;
-	}
-	else
-	{
-		height = font_metrics.get_ascent() + font_metrics.get_descent();
-	}
-
-	return (Size(width, height));
-}
-
 Font_TextureGlyph *GlyphCache::get_glyph(FontEngine *font_engine, GraphicContext &gc, unsigned int glyph)
 {
 	std::vector< Font_TextureGlyph * >::size_type size = glyph_list.size();
@@ -136,33 +110,54 @@ Font_TextureGlyph *GlyphCache::get_glyph(FontEngine *font_engine, GraphicContext
 /////////////////////////////////////////////////////////////////////////////
 // GlyphCache Operations:
 
-void GlyphCache::draw_glyph(FontEngine *font_engine, Canvas &canvas, const Pointf &position, unsigned int glyph, const Colorf &color)
+void GlyphCache::draw(FontEngine *font_engine, Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color)
 {
 	RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
 	GraphicContext &gc = canvas.get_gc();
 
-	Font_TextureGlyph *gptr = get_glyph(font_engine, gc, glyph);
-	if (gptr)
+	Pointf pos = canvas.grid_fit(position);
+	float offset_x = 0;
+	float offset_y = 0;
+	int line_spacing = font_metrics.get_height() + font_metrics.get_external_leading();
+	UTF8_Reader reader(text.data(), text.length());
+	while (!reader.is_end())
 	{
-		if (!gptr->texture.is_null())
-		{
-			float xp = position.x + gptr->offset.x;
-			float yp = position.y + gptr->offset.y;
+		unsigned int glyph = reader.get_char();
+		reader.next();
 
-			Rectf dest_size(xp, yp, Sizef(gptr->geometry.get_size()));
-			if (enable_subpixel)
+		if (glyph == '\n')
+		{
+			offset_x = 0;
+			offset_y += line_spacing;
+			continue;
+		}
+
+		Font_TextureGlyph *gptr = get_glyph(font_engine, gc, glyph);
+		if (gptr)
+		{
+			if (!gptr->texture.is_null())
 			{
-				batcher->draw_glyph_subpixel(canvas, gptr->geometry, dest_size, color, gptr->texture);
+				float xp = offset_x + position.x + gptr->offset.x;
+				float yp = offset_y + position.y + gptr->offset.y;
+
+				Rectf dest_size(xp, yp, Sizef(gptr->geometry.get_size()));
+				if (enable_subpixel)
+				{
+					batcher->draw_glyph_subpixel(canvas, gptr->geometry, dest_size, color, gptr->texture);
+				}
+				else
+				{
+					batcher->draw_image(canvas, gptr->geometry, dest_size, color, gptr->texture);
+				}
 			}
-			else
-			{
-				batcher->draw_image(canvas, gptr->geometry, dest_size, color, gptr->texture);
-			}
+			offset_x += gptr->metrics.advance.width;
+			offset_y += gptr->metrics.advance.height;
+
 		}
 	}
 }
 
-GlyphMetrics GlyphCache::get_glyph_metrics(FontEngine *font_engine, Canvas &canvas, unsigned int glyph)
+GlyphMetrics GlyphCache::get_metrics(FontEngine *font_engine, Canvas &canvas, unsigned int glyph)
 {
 	GraphicContext &gc = canvas.get_gc();
 
@@ -190,6 +185,8 @@ int GlyphCache::get_character_index(FontEngine *font_engine, GraphicContext &gc,
 	int font_height = fm.get_height();
 	int font_ascent = fm.get_ascent();
 	int font_external_leading = fm.get_external_leading();
+
+	//TODO: Fix me, so we do not need to line split
 
 	std::vector<std::string> lines = StringHelp::split_text(text, "\n", false);
 	for (std::vector<std::string>::size_type i=0; i<lines.size(); i++)
@@ -308,45 +305,6 @@ void GlyphCache::insert_glyph(FontEngine *font_engine, GraphicContext &gc, int g
 		{
 			insert_glyph(gc, pb);
 		}
-	}
-}
-
-void GlyphCache::draw_text(FontEngine *font_engine, Canvas &canvas, float xpos, float ypos, const std::string &text, const Colorf &color) 
-{
-	std::string::size_type string_length = text.length();
-	if (string_length==0)
-	{
-		return;
-	}
-
-	RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
-	GraphicContext &gc = canvas.get_gc();
-	// Scan the string
-	UTF8_Reader reader(text.data(), text.length());
-	while(!reader.is_end())
-	{
-		unsigned int glyph = reader.get_char();
-		reader.next();
-
-		Font_TextureGlyph *gptr = get_glyph(font_engine, gc, glyph);
-		if (gptr == NULL) continue;
-
-		if (!gptr->texture.is_null())
-		{
-			float xp = xpos + gptr->offset.x;
-			float yp = ypos + gptr->offset.y;
-
-			Rectf dest_size(xp, yp, Sizef(gptr->geometry.get_size()));
-			if (enable_subpixel)
-			{
-				batcher->draw_glyph_subpixel(canvas, gptr->geometry, dest_size, color, gptr->texture);
-			}else
-			{
-				batcher->draw_image(canvas, gptr->geometry, dest_size, color, gptr->texture);
-			}
-		}
-		xpos += gptr->metrics.advance.width;
-		ypos += gptr->metrics.advance.height;
 	}
 }
 

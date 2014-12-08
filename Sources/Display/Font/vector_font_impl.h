@@ -67,7 +67,7 @@ public:
 	void draw(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color = Colorf::white);
 
 	GlyphMetrics get_metrics(Canvas &canvas, unsigned int glyph);
-	GlyphMetrics get_metrics(Canvas &canvas, const std::string &string);
+	GlyphMetrics measure_text(Canvas &canvas, const std::string &string);
 
 	void load_font(const FontDescription &desc, const std::string &filename);
 

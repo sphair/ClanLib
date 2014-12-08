@@ -189,17 +189,6 @@ void Font_Impl::load_font( GraphicContext &context, const FontDescription &desc,
 #endif
 }
 
-void Font_Impl::draw_text(Canvas &canvas, float xpos, float ypos, const std::string &text, const Colorf &color)
-{
-	glyph_cache.draw_text(font_engine, canvas, xpos, ypos, text, color);
-}
-
-Size Font_Impl::get_text_size(GraphicContext &gc, const std::string &text)
-{
-	return glyph_cache.get_text_size(font_engine, gc, text);
-}
-
-
 FontMetrics Font_Impl::get_font_metrics()
 {
 	return glyph_cache.get_font_metrics();

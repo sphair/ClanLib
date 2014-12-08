@@ -101,14 +101,9 @@ public:
 /// \name Operations
 /// \{
 public:
-	GlyphMetrics get_glyph_metrics(FontEngine *font_engine, Canvas &canvas, unsigned int glyph);
-	void draw_glyph(FontEngine *font_engine, Canvas &canvas, const Pointf &position, unsigned int glyph, const Colorf &color);
-	
-	/// \brief Print text on gc.
-	void draw_text(FontEngine *font_engine,Canvas &canvas, float xpos, float ypos, const std::string &text, const Colorf &color);
+	GlyphMetrics get_metrics(FontEngine *font_engine, Canvas &canvas, unsigned int glyph);
 
-	/// \brief Calculate size of text string.
-	Size get_text_size(FontEngine *font_engine, GraphicContext &gc, const std::string &text);
+	void draw(FontEngine *font_engine, Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color);
 
 	/// \brief Set the font metrics for the bitmap font. This is done automatically if the font is loaded from the system font
 	void set_font_metrics(const FontMetrics &metrics);

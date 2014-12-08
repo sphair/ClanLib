@@ -83,10 +83,10 @@ GlyphMetrics VectorFont::get_metrics(Canvas &canvas, unsigned int glyph)
 	return GlyphMetrics();
 }
 
-GlyphMetrics VectorFont::get_metrics(Canvas &canvas, const std::string &string)
+GlyphMetrics VectorFont::measure_text(Canvas &canvas, const std::string &string)
 {
 	if (impl)
-		return impl->get_metrics(canvas, string);
+		return impl->measure_text(canvas, string);
 	return GlyphMetrics();
 }
 

@@ -128,7 +128,7 @@ GlyphMetrics VectorFont_Impl::get_metrics(Canvas &canvas, unsigned int glyph)
 	return char_cache[glyph].glyph_metrics;
 }
 
-GlyphMetrics VectorFont_Impl::get_metrics(Canvas &canvas, const std::string &string)
+GlyphMetrics VectorFont_Impl::measure_text(Canvas &canvas, const std::string &string)
 {
 	GlyphMetrics total_metrics;
 	int line_spacing = font_metrics.get_height() + font_metrics.get_external_leading();

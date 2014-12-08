@@ -90,11 +90,11 @@ public:
 	/// \return The glyph metrics
 	GlyphMetrics get_metrics(Canvas &canvas, unsigned int glyph);
 
-	/// \brief Gets the metics from text
+	/// \brief Measure text size
 	///
 	/// \param string = The text
 	/// \return The metrics
-	GlyphMetrics get_metrics(Canvas &canvas, const std::string &string);
+	GlyphMetrics measure_text(Canvas &canvas, const std::string &string);
 
 /// \}
 /// \name Operations
