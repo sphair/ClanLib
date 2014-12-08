@@ -41,10 +41,18 @@ namespace clan
 class GlyphMetrics
 {
 public:
-	GlyphMetrics() {};
-	GlyphMetrics(const Rectf &black_box, const Sizef &advance) : black_box(black_box), advance(advance) {}
-	Rectf black_box;	//!< The coordinates of the upper left corner and the size of the smallest rectangle that completely encloses the glyph
-	Sizef advance;		//!< The distance from the origin of the current character cell to the origin of the next character cell
+	GlyphMetrics() { }
+	GlyphMetrics(const Pointf &bbox_offset, const Sizef &bbox_size, const Sizef &advance) : bbox_offset(bbox_offset), bbox_size(bbox_size), advance(advance) { }
+
+	/// \brief Bounding box offset relative to the write cursor position
+	Pointf bbox_offset;
+
+	/// \brief Bounding box size
+	/// The bounding box is the smallest rectangle that completely encloses the glyph
+	Sizef bbox_size;
+
+	/// \brief Distance the write cursor is moved
+	Sizef advance;
 };
 
 }

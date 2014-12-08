@@ -113,7 +113,7 @@ void SpanLayout_Impl::draw_layout(Canvas &canvas)
 			{
 				if (segment.type == object_text)
 				{
-					int cursor_x = x + segment.x_position + segment.font.measure_text(canvas, text.substr(segment.start, segment.end - segment.start)).black_box.get_width();
+					int cursor_x = x + segment.x_position + segment.font.measure_text(canvas, text.substr(segment.start, segment.end - segment.start)).bbox_size.width;
                     int cursor_width = 1;
                     canvas.fill_rect(cursor_x, y + line.ascender-segment.ascender, cursor_x + cursor_width, y+line.ascender+segment.descender, cursor_color);
 				}
@@ -156,16 +156,16 @@ void SpanLayout_Impl::draw_layout_text(Canvas &canvas, Line &line, LineSegment &
 	if (s1 != s2)
 	{
 		int xx = x + segment.x_position;
-		int xx0 = xx + segment.font.measure_text(canvas, segment_text.substr(0, s1)).black_box.get_width();
-		int xx1 = xx0 + segment.font.measure_text(canvas, segment_text.substr(s1, s2 - s1)).black_box.get_width();
-		int sel_width = segment.font.measure_text(canvas, segment_text.substr(s1, s2 - s1)).black_box.get_width();
+		int xx0 = xx + segment.font.measure_text(canvas, segment_text.substr(0, s1)).advance.width;
+		int xx1 = xx0 + segment.font.measure_text(canvas, segment_text.substr(s1, s2 - s1)).advance.width;
+		int sel_width = segment.font.measure_text(canvas, segment_text.substr(s1, s2 - s1)).advance.width;
 
 		canvas.fill_rect(xx0, y + line.ascender-segment.ascender, xx1, y+line.ascender+segment.descender, sel_background);
 
 		if (cursor_visible && cursor_pos >= segment.start && cursor_pos < segment.end)
 		{
-			int cursor_x = x + segment.x_position + segment.font.measure_text(canvas, text.substr(segment.start, cursor_pos - segment.start)).black_box.get_width();
-			int cursor_width = cursor_overwrite_mode ? segment.font.measure_text(canvas, text.substr(cursor_pos, 1)).black_box.get_width() : 1;
+			int cursor_x = x + segment.x_position + segment.font.measure_text(canvas, text.substr(segment.start, cursor_pos - segment.start)).advance.width;
+			int cursor_width = cursor_overwrite_mode ? segment.font.measure_text(canvas, text.substr(cursor_pos, 1)).advance.width : 1;
 			canvas.fill_rect(cursor_x, y + line.ascender-segment.ascender, cursor_x + cursor_width, y+line.ascender+segment.descender, cursor_color);
 		}
 
@@ -193,8 +193,8 @@ void SpanLayout_Impl::draw_layout_text(Canvas &canvas, Line &line, LineSegment &
 	{
 		if (cursor_visible && cursor_pos >= segment.start && cursor_pos < segment.end)
 		{
-			int cursor_x = x + segment.x_position + segment.font.measure_text(canvas, text.substr(segment.start, cursor_pos - segment.start)).black_box.get_width();
-			int cursor_width = cursor_overwrite_mode ? segment.font.measure_text(canvas, text.substr(cursor_pos, 1)).black_box.get_width() : 1;
+			int cursor_x = x + segment.x_position + segment.font.measure_text(canvas, text.substr(segment.start, cursor_pos - segment.start)).advance.width;
+			int cursor_width = cursor_overwrite_mode ? segment.font.measure_text(canvas, text.substr(cursor_pos, 1)).advance.width : 1;
 			canvas.fill_rect(cursor_x, y + line.ascender-segment.ascender, cursor_x + cursor_width, y+line.ascender+segment.descender, cursor_color);
 		}
 
@@ -387,10 +387,10 @@ SpanLayout_Impl::TextSizeResult SpanLayout_Impl::find_text_size(Canvas &canvas, 
 		int end = min(objects[object_index].end, block.end);
 		std::string subtext = text.substr(pos, end-pos);
 
-		Sizef text_size = font.measure_text(canvas, subtext).black_box.get_size();
+		float text_width = font.measure_text(canvas, subtext).advance.width;
 
-		result.width += text_size.width;
-		result.height = max(result.height, (int)(layout_cache.metrics.get_height()+layout_cache.metrics.get_external_leading())/*text_size.height*/);
+		result.width += text_width;
+		result.height = max(result.height, (int)(layout_cache.metrics.get_height()+layout_cache.metrics.get_external_leading()));
 		result.ascender = max(result.ascender, (int)layout_cache.metrics.get_ascent());
 		result.descender = max(result.descender, (int)layout_cache.metrics.get_descent());
 
@@ -402,10 +402,10 @@ SpanLayout_Impl::TextSizeResult SpanLayout_Impl::find_text_size(Canvas &canvas, 
 		segment.color = objects[object_index].color;
 		segment.id = objects[object_index].id;
 		segment.x_position = x_position;
-		segment.width = text_size.width;
+		segment.width = text_width;
 		segment.ascender = (int)layout_cache.metrics.get_ascent();
 		segment.descender = (int)layout_cache.metrics.get_descent();
-		x_position += text_size.width;
+		x_position += text_width;
 		result.segments.push_back(segment);
 
 		pos = end;

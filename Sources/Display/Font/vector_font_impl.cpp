@@ -148,10 +148,16 @@ GlyphMetrics VectorFont_Impl::measure_text(Canvas &canvas, const std::string &st
 
 		GlyphMetrics metrics = get_metrics(canvas, glyph);
 
-		total_metrics.black_box.left = clan::min(total_metrics.black_box.left, metrics.black_box.left + total_metrics.advance.width);
-		total_metrics.black_box.top = clan::min(total_metrics.black_box.top, metrics.black_box.top + total_metrics.advance.height);
-		total_metrics.black_box.right = clan::max(total_metrics.black_box.right, metrics.black_box.right + total_metrics.advance.width);
-		total_metrics.black_box.bottom = clan::max(total_metrics.black_box.bottom, metrics.black_box.bottom + total_metrics.advance.height);
+		float bb_left = clan::min(total_metrics.bbox_offset.x, metrics.bbox_offset.x + total_metrics.advance.width);
+		float bb_top = clan::min(total_metrics.bbox_offset.y, metrics.bbox_offset.y + total_metrics.advance.height);
+		float bb_right = clan::max(total_metrics.bbox_offset.x + total_metrics.bbox_size.width, metrics.bbox_offset.x + metrics.bbox_size.width + total_metrics.advance.width);
+		float bb_bottom = clan::max(total_metrics.bbox_offset.y + total_metrics.bbox_size.height, metrics.bbox_offset.y + metrics.bbox_size.height + total_metrics.advance.height);
+
+		total_metrics.bbox_offset.x = bb_left;
+		total_metrics.bbox_offset.y = bb_top;
+		total_metrics.bbox_size.width = bb_right - bb_left;
+		total_metrics.bbox_size.height = bb_bottom - bb_top;
+
 		total_metrics.advance += metrics.advance;
 	}
 	return total_metrics;
