@@ -406,15 +406,15 @@ void SvgNode::render(clan::Canvas &canvas)
 
 	if (stroke && fill)
 	{
-		canvas.stroke(path, pen);
-		canvas.fill(path, brush);
+		path.stroke(canvas, pen);
+		path.fill(canvas, brush);
 	}
 	else if (stroke)
 	{
-		canvas.stroke(path, pen);
+		path.stroke(canvas, pen);
 	}
 	else if (fill)
 	{
-		canvas.fill(path, brush);
+		path.fill(canvas, brush);
 	}
 }

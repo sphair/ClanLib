@@ -386,13 +386,13 @@ void SvgRenderer::render_path(clan::Path &path, clan::DomElement &e)
 			brush.color = fill.get_color();
 		}
 
-		canvas.fill(path, brush);
+		path.fill(canvas, brush);
 	}
 	else if (!stroke.is_keyword("none"))
 	{
 		double width = 1.0;
 		if (stroke_width.is_length())
 			width = stroke_width.get_length();
-		canvas.stroke(path, clan::Pen(clan::Colorf::white, (float)width));
+		path.stroke(canvas, clan::Pen(clan::Colorf::white, (float)width));
 	}
 }
