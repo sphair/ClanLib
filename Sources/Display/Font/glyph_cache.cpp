@@ -137,8 +137,8 @@ void GlyphCache::draw(FontEngine *font_engine, Canvas &canvas, const Pointf &pos
 		{
 			if (!gptr->texture.is_null())
 			{
-				float xp = offset_x + position.x + gptr->offset.x;
-				float yp = offset_y + position.y + gptr->offset.y;
+				float xp = offset_x + pos.x + gptr->offset.x;
+				float yp = offset_y + pos.y + gptr->offset.y;
 
 				Rectf dest_size(xp, yp, Sizef(gptr->geometry.get_size()));
 				if (enable_subpixel)
