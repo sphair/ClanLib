@@ -39,6 +39,9 @@ namespace clan
 	class Font;
 	class PathImpl;
 	class GlyphMetrics;
+	class Canvas;
+	class Pen;
+	class Brush;
 
 	enum class PathFillMode
 	{
@@ -60,6 +63,15 @@ namespace clan
 		void bezier_to(const Pointf &control, const Pointf &point);
 		void bezier_to(const Pointf &control1, const Pointf &control2, const Pointf &point);
 		void close();
+
+		/// \brief Strokes a path
+		void stroke(Canvas &canvas, const Pen &pen);
+
+		/// \brief Fills a path
+		void fill(Canvas &canvas, const Brush &brush);
+
+		/// \brief First fills a path, then strokes on top
+		void fill_and_stroke(Canvas &canvas, const Pen &pen, const Brush &brush);
 
 		// \brief Copy the entire description (not just the implementation)
 		Path clone() const;

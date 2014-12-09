@@ -40,7 +40,6 @@
 #include "API/Core/Math/quad.h"
 #include "API/Core/Math/triangle_math.h"
 #include "render_batch_triangle.h"
-#include "render_batch_path.h"
 #include "canvas_impl.h"
 #include "API/Display/Font/font.h"
 namespace clan
@@ -668,25 +667,6 @@ void Canvas::fill_ellipse(const Pointf &center, float radius_x, float radius_y, 
 	set_transform(original_transform);
 }
 
-void Canvas::stroke(const Path &path, const Pen &pen)
-{
-	RenderBatchPath *batcher = impl->batcher.get_path_batcher();
-	batcher->stroke(*this, path, pen);
-}
-
-void Canvas::fill(const Path &path, const Brush &brush)
-{
-	RenderBatchPath *batcher = impl->batcher.get_path_batcher();
-	batcher->fill(*this, path, brush);
-}
-
-void Canvas::fill_and_stroke(const Path &path, const Pen &pen, const Brush &brush)
-{
-	RenderBatchPath *batcher = impl->batcher.get_path_batcher();
-	batcher->fill(*this, path, brush);
-	batcher->stroke(*this, path, pen);
-}
-
 Pointf Canvas::grid_fit(const Pointf &pos) const
 {
 	Vec4f world_pos = get_transform() * Vec4f(pos.x, pos.y, 0.0f, 1.0f);
@@ -695,7 +675,6 @@ Pointf Canvas::grid_fit(const Pointf &pos) const
 	Vec4f object_pos = Mat4f::inverse(get_transform()) * world_pos;
 	return Pointf(object_pos.x, object_pos.y);
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 // Canvas Implementation:

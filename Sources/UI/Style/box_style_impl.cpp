@@ -303,10 +303,10 @@ namespace clan
 					brush_bottom_left.center_point = Pointf(border_box.left + border.bottom_left_radius.x, border_box.bottom - border.bottom_left_radius.y);
 					brush_bottom_left.stops = shadow_blur_stops(shadow_color, shadow_blur_radius, border.bottom_left_radius.x / brush_bottom_left.radius_x);
 
-					canvas.fill(top_left, brush_top_left);
-					canvas.fill(top_right, brush_top_right);
-					canvas.fill(bottom_right, brush_bottom_right);
-					canvas.fill(bottom_left, brush_bottom_left);
+					top_left.fill(canvas, brush_top_left);
+					top_right.fill(canvas, brush_top_right);
+					bottom_right.fill(canvas, brush_bottom_right);
+					bottom_left.fill(canvas, brush_bottom_left);
 
 					Brush brush_linear;
 					brush_linear.type = BrushType::linear;
@@ -342,25 +342,25 @@ namespace clan
 
 					brush_linear.start_point = border_points[0];
 					brush_linear.end_point = Pointf(border_points[0].x, border_points[0].y - shadow_blur_radius);
-					canvas.fill(top, brush_linear);
+					top.fill(canvas, brush_linear);
 
 					brush_linear.start_point = border_points[2];
 					brush_linear.end_point = Pointf(border_points[2].x + shadow_blur_radius, border_points[2].y);
-					canvas.fill(right, brush_linear);
+					right.fill(canvas, brush_linear);
 
 					brush_linear.start_point = border_points[4];
 					brush_linear.end_point = Pointf(border_points[4].x, border_points[4].y + shadow_blur_radius);
-					canvas.fill(bottom, brush_linear);
+					bottom.fill(canvas, brush_linear);
 
 					brush_linear.start_point = border_points[6];
 					brush_linear.end_point = Pointf(border_points[6].x - shadow_blur_radius, border_points[6].y);
-					canvas.fill(left, brush_linear);
+					left.fill(canvas, brush_linear);
 				}
 			}
 
 			if (background.color.a != 0.0f)
 			{
-				canvas.fill(border_area_path, Brush(background.color));
+				border_area_path.fill(canvas, Brush(background.color));
 			}
 
 			if (!background.stops.empty())
@@ -382,7 +382,7 @@ namespace clan
 				for (const BoxGradientStop &stop : background.stops)
 					brush.stops.push_back(BrushGradientStop(stop.color, stop.position));
 
-				canvas.fill(border_area_path, brush);
+				border_area_path.fill(canvas, brush);
 			}
 
 			if (!background.image.is_null())
@@ -391,12 +391,12 @@ namespace clan
 				brush.type = BrushType::image;
 				brush.image = Image(canvas, background.image, background.image.get_size());
 				brush.transform = Mat3f::translate(border_box.left, border_box.top);
-				canvas.fill(border_area_path, brush);
+				border_area_path.fill(canvas, brush);
 			}
 
 			if (border.top.type == BoxBorderValue::type_solid)
 			{
-				canvas.fill(border_path, Brush(border.top.color));
+				border_path.fill(canvas, Brush(border.top.color));
 			}
 		}
 	}

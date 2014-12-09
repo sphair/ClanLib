@@ -31,6 +31,8 @@
 #include "API/Display/2D/path.h"
 #include "path_impl.h"
 #include "../Font/font_impl.h"
+#include "canvas_impl.h"
+#include "render_batch_path.h"
 
 namespace clan
 {
@@ -202,4 +204,22 @@ namespace clan
 		return path;
 	}
 
+	void Path::stroke(Canvas &canvas, const Pen &pen)
+	{
+		RenderBatchPath *batcher = canvas.impl->batcher.get_path_batcher();
+		batcher->stroke(canvas, *this, pen);
+	}
+
+	void Path::fill(Canvas &canvas, const Brush &brush)
+	{
+		RenderBatchPath *batcher = canvas.impl->batcher.get_path_batcher();
+		batcher->fill(canvas, *this, brush);
+	}
+
+	void Path::fill_and_stroke(Canvas &canvas, const Pen &pen, const Brush &brush)
+	{
+		RenderBatchPath *batcher = canvas.impl->batcher.get_path_batcher();
+		batcher->fill(canvas, *this, brush);
+		batcher->stroke(canvas, *this, pen);
+	}
 }

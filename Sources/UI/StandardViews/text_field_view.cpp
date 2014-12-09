@@ -335,7 +335,7 @@ namespace clan
 		if (!txt_selected.empty())
 		{
 			Rectf selection_rect = Rectf::xywh(advance_before, line_metrics.leading_top, advance_selected, line_metrics.text_height);
-			canvas.fill(Path::rect(selection_rect), focus_view() == this ? Brush::solid_rgb8(51, 153, 255) : Brush::solid_rgb8(200, 200, 200));
+			Path::rect(selection_rect).fill(canvas, focus_view() == this ? Brush::solid_rgb8(51, 153, 255) : Brush::solid_rgb8(200, 200, 200));
 		}
 
 		font.draw_text(canvas, 0.0f, line_metrics.ascent, txt_before, impl->text_style.color());
@@ -345,7 +345,7 @@ namespace clan
 		float cursor_advance = std::round(font.measure_text(canvas, impl->text.substr(0, impl->cursor_pos)).advance.width);
 
 		if (impl->cursor_blink_visible)
-			canvas.fill(Path::rect(cursor_advance, line_metrics.leading_top, 1.0f, line_metrics.text_height), Brush(impl->text_style.color()));
+			Path::rect(cursor_advance, line_metrics.leading_top, 1.0f, line_metrics.text_height).fill(canvas,Brush(impl->text_style.color()));
 
 		// draw cursor
 		/*

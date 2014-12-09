@@ -399,15 +399,6 @@ public:
 	/// \brief Draw a gradient filled ellipse.
 	void fill_ellipse(const Pointf &center, float radius_x, float radius_y, const Gradient &gradient);
 
-	/// \brief Strokes a path
-	void stroke(const Path &path, const Pen &pen);
-
-	/// \brief Fills a path
-	void fill(const Path &path, const Brush &brush);
-
-	/// \brief First fills a path, then strokes on top
-	void fill_and_stroke(const Path &path, const Pen &pen, const Brush &brush);
-
 	/// \brief Snaps the point to the nearest pixel corner
 	Pointf grid_fit(const Pointf &pos) const;
 
@@ -425,6 +416,7 @@ private:
 	friend class Sprite_Impl;
 	friend class Image;
 	friend class GlyphCache;
+	friend class Path;
 /// \}
 };
 

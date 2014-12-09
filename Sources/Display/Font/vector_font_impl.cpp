@@ -187,7 +187,7 @@ void VectorFont_Impl::draw_text(Canvas &canvas, const Pointf &position, const st
 		store_in_char_cache(glyph);
 
 		canvas.set_transform(original_transform * Mat4f::translate(position.x + offset_x, position.y + offset_y, 0));
-		canvas.fill(char_cache[glyph].path, brush);
+		char_cache[glyph].path.fill(canvas, brush);
 		offset_x += char_cache[glyph].metrics.advance.width;
 
 	}
