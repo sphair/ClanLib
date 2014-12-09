@@ -70,16 +70,6 @@ Font_TextureGlyph *FontProvider_Freetype::get_glyph(GraphicContext &gc, unsigned
 /////////////////////////////////////////////////////////////////////////////
 // FontProvider_Freetype Operations:
 
-void FontProvider_Freetype::draw_text(Canvas &canvas, float xpos, float ypos, const std::string &text, const Colorf &color)
-{
-	glyph_cache.draw_text(font_engine, canvas, xpos, ypos, text, color);
-}
-
-Size FontProvider_Freetype::get_text_size(GraphicContext &gc, const std::string &text)
-{
-	return glyph_cache.get_text_size(font_engine, gc, text);
-}
-
 void FontProvider_Freetype::set_font_metrics(const FontMetrics &metrics)
 {
 	glyph_cache.set_font_metrics(metrics);

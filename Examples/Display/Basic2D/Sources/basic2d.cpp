@@ -53,7 +53,7 @@ int Basic2D::start(const std::vector<std::string> &args)
 	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &Basic2D::on_input_up));
 
 	// Load a sprite from a png-file
-	clan::Image spr_logo(canvas, "Resources/actor3.png");
+	clan::Image spr_logo(canvas, "Resources/logo.png");
 	clan::Font font(canvas, "tahoma", 24);
 
 	float sin_count = 0.0f;
@@ -76,7 +76,7 @@ int Basic2D::start(const std::vector<std::string> &args)
 		spr_logo.draw(canvas, canvas_size.width-spr_logo.get_width(), canvas_size.height-spr_logo.get_height());
 
 		std::string text("Welcome to the ClanLib SDK");
-		clan::Size text_size = font.get_text_size(canvas, text);
+		clan::Sizef text_size = font.measure_text(canvas, text).bbox_size;
 		font.draw_text(canvas, ( ( canvas.get_width() - text_size.width) / 2), 32, text, clan::Colorf::white);
 
 		// Draw moving lines

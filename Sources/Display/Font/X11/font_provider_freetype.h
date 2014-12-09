@@ -60,12 +60,6 @@ public:
 /// \name Operations
 /// \{
 public:
-	/// \brief Print text on gc.
-	void draw_text(Canvas &canvas, float xpos, float ypos, const std::string &text, const Colorf &color);
-
-	/// \brief Calculate size of text string.
-	Size get_text_size(GraphicContext &gc, const std::string &text);
-
 	/// \brief Set the font metrics for the bitmap font. This is done automatically if the font is loaded from the system font
 	void set_font_metrics(const FontMetrics &metrics);
 
