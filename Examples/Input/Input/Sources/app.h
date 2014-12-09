@@ -45,7 +45,6 @@ private:
 	void on_joystick_down(const InputEvent &key, int joystick_number);
 	void on_window_close();
 
-	void calculate_matrix(Canvas &canvas);
 	void create_shooter( const InputEvent &key, const std::string &str, bool use_red, bool use_green, bool use_blue);
 	void draw_text_shooter(Canvas &canvas);
 
@@ -61,9 +60,7 @@ private:
 
 	VectorFont vector_font;
 	clan::Font font;
-
-	Mat4f projection_matrix;
-
+	
 	std::list<TextShooter> text_shooter;
 
 	Canvas canvas;

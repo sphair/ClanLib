@@ -61,12 +61,8 @@ int App::start(const std::vector<std::string> &args)
 	font = clan::Font(canvas, "tahoma", 16);
 	vector_font = VectorFont(canvas, "Bitstream Vera Sans", 256, "../../Display_Text/Font/Resources/bitstream_vera_sans/VeraBd.ttf");
 
-	calculate_matrix(canvas);
-
 	while(!quit)
 	{
-		canvas.set_map_mode(map_2d_upper_left);
-
 		canvas.fill_rect(Rect(0, 0, canvas.get_width(), canvas.get_height()/2), Gradient(Colorf(0.2f, 0.2f, 0.8f, 1.0f), Colorf(0.0f, 0.0f, 0.2f, 1.0f)));
 		canvas.fill_rect(Rect(0, canvas.get_height()/2, canvas.get_width(), canvas.get_height()), Gradient(Colorf(0.0f, 0.0f, 0.2f, 1.0f), Colorf(0.2f, 0.2f, 0.8f, 1.0f)));
 
@@ -97,9 +93,6 @@ int App::start(const std::vector<std::string> &args)
 			draw_tablet_state(canvas, tablet_number, yoffset);
 			yoffset -= y_gap;
 		}
-
-		canvas.set_map_mode(map_user_projection);
-		canvas.set_projection(projection_matrix);
 
 		draw_text_shooter(canvas);
 
@@ -185,25 +178,6 @@ void App::on_joystick_down(const InputEvent &key, int joystick_number)
 void App::on_window_close()
 {
 	quit = true;
-}
-
-void App::calculate_matrix(Canvas &canvas)
-{
-	float lens_zoom = 3.2f;
-	float lens_near = 0.1f;
-	float lens_far = 10000.0f;
-	float lens_aspect = 1.0f;
-
-	float fov = 2.0f * atan2(1.0f, lens_zoom);
-	float aspect = 1.0f;
-	float width = (float) canvas.get_width();
-	float height = (float) canvas.get_height();
-
-	if (height)
-		aspect = ( width * lens_aspect) / height;
-
-	fov = (fov * 180.0f) / PI;
-	projection_matrix = Mat4f::perspective( fov, aspect, lens_near, lens_far, handed_left, clip_negative_positive_w);
 }
 
 void App::draw_text_shooter(Canvas &canvas)

@@ -136,9 +136,10 @@ bool TextShooter::draw(Canvas &canvas, ubyte64 current_time)
 	font_color.a = font_alpha;
 
 	// Draw the text
-	clan::Mat4f matrix = clan::Mat4f::translate(current_position.x, current_position.y, current_position.z);
-	matrix = matrix * clan::Mat4f::scale( 2.0f / canvas.get_width(), -2.0f / canvas.get_height(), 1.0f);
-	canvas.set_transform(matrix);
+	current_position.x = ((current_position.x + 1.0f)  * canvas.get_width()) / 2.0f;
+	current_position.y = canvas.get_height() - ((current_position.y + 1.0f)  * canvas.get_height()) / 2.0f;
+
+	canvas.set_transform(clan::Mat4f::translate(current_position.x, current_position.y, 0.0f) * clan::Mat4f::scale(1.0f/current_position.z, 1.0f/current_position.z, 1.0f/current_position.z));
 
 	Sizef text_size = vector_font.measure_text(canvas, text).bbox_size;
 
