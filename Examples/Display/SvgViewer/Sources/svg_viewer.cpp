@@ -57,7 +57,7 @@ int SvgViewer::run(const std::vector<std::string> &args)
 
 	Svg svg("Resources/tiger.svg");
 	float angle = 0.0f;
-	float scale = 1.2f;
+	float scale = 0.5f;
 	sc.connect(window.get_ic().get_mouse().sig_key_up(), [&](const clan::InputEvent &key)
 	{
 		if (key.id == clan::mouse_wheel_up)
@@ -83,9 +83,13 @@ int SvgViewer::run(const std::vector<std::string> &args)
 			if (angle < 0.0f) angle += 360.0f;
 		}
 
-		clan::Mat4f rotation = clan::Mat4f::translate(128.0f, 128.0f, 0.0f) * clan::Mat4f::rotate(clan::Angle(angle, clan::angle_degrees), 0.0f, 0.0f, 1.0f) * clan::Mat4f::translate(-128.0f, -128.0f, 0.0f);
+		//transform = "matrix(1.7656463,0,0,1.7656463,324.90716,255.00942)"
+		float new_scale = scale / 1.7656463f;
+		clan::Pointf position(324.90716, 255.00942);
+		position *= 0.5f;
 
-		canvas.set_transform(clan::Mat4f::translate(380.0f, 275.0f, 0.0f) * clan::Mat4f::scale(scale, scale, scale) * rotation);
+		clan::Mat4f rotation = clan::Mat4f::translate(canvas.get_width()/2.0f, canvas.get_height()/2.0f, 0.0f) * clan::Mat4f::rotate(clan::Angle(angle, clan::angle_degrees), 0.0f, 0.0f, 1.0f) * clan::Mat4f::translate(-canvas.get_width()/2.0f, -canvas.get_height()/2.0f, 0.0f);
+		canvas.set_transform(rotation * clan::Mat4f::translate(-position.x, -position.y, 0.0f) * clan::Mat4f::scale(new_scale, new_scale, new_scale));
 		svg.render(canvas);
 		canvas.set_transform(clan::Mat4f::identity());
 		font.draw_text(canvas, 17, 40, clan::string_format("%1 FPS", time.get_updates_per_second()), clan::Colorf::black);
