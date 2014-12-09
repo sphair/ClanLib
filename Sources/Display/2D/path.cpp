@@ -82,11 +82,14 @@ namespace clan
 		}
 	}
 
-	Path Path::glyph(Font &font, unsigned int glyph)
+	Path Path::glyph(Font &font, unsigned int glyph, GlyphMetrics &out_metrics)
 	{
-		if (!font.impl)
-			return Path();
-		return font.impl->glyph_cache.get_glyph_path(font.impl->font_engine, glyph);
+		Path path;
+		if (font.impl)
+		{
+			font.impl->glyph_cache.get_glyph_path(font.impl->font_engine, glyph, path, out_metrics);
+		}
+		return path;
 	}
 
 	Path Path::rect(const Rectf &box)

@@ -219,7 +219,7 @@ Size FontEngine_Freetype::get_size(const std::string &text, int pos)
 /////////////////////////////////////////////////////////////////////////////
 // FontEngine_Freetype Operations:
 
-Path FontEngine_Freetype::load_glyph_path(int c)
+void FontEngine_Freetype::load_glyph_path(unsigned int c, Path &out_path, GlyphMetrics &out_metrics)
 {
 	FT_UInt glyph_index;
 
@@ -243,8 +243,6 @@ Path FontEngine_Freetype::load_glyph_path(int c)
 	FT_OutlineGlyph ft_outline_glyph_rec = (FT_OutlineGlyph)glyph;
 	FT_Outline ft_outline = ft_outline_glyph_rec->outline;
 
-	Path path;
-
 	for( int cont = 0; cont < ft_outline.n_contours; cont++ )
 	{
 		std::vector<TaggedPoint> points = get_contour_points(cont, &ft_outline);
@@ -256,13 +254,13 @@ Path FontEngine_Freetype::load_glyph_path(int c)
 
 			if( tp.tag == FT_Curve_Tag_On )
 			{
-				path.line_to(tp.pos);
+				out_path.line_to(tp.pos);
 			}
 			else if( tp.tag == FT_Curve_Tag_Conic )
 			{
 				if (i)
 				{
-					path.bezier_to(points[i-1].pos, tp.pos, points[i+1].pos);
+					out_path.bezier_to(points[i - 1].pos, tp.pos, points[i + 1].pos);
 				}
 			}
 			else if( tp.tag == FT_Curve_Tag_Cubic && points[i-1].tag == FT_Curve_Tag_Cubic )
@@ -279,84 +277,11 @@ Path FontEngine_Freetype::load_glyph_path(int c)
 			}
 		}
 
-		path.close();
+		out_path.close();
 	}
 
 	FT_Done_Glyph(glyph);
-
-	return path;
-}
-
-
-Shape2D FontEngine_Freetype::load_glyph_outline(int c, GlyphMetrics &out_glyph_metrics)
-{
-	FT_UInt glyph_index;
-
-	glyph_index = FT_Get_Char_Index( face, FT_ULong(c) );
-
-	FT_Error error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
-	if ( error )
-	{
-		throw Exception("freetype: error loading glyph");
-	}
-
-	FT_Glyph glyph;
-
-	error = FT_Get_Glyph( face->glyph, &glyph );
-
-	if ( error )
-	{
-		throw Exception("freetype: error getting glyph");
-	}
-
-	FT_OutlineGlyph ft_outline_glyph_rec = (FT_OutlineGlyph)glyph;
-	FT_Outline ft_outline = ft_outline_glyph_rec->outline;
-
-	Shape2D outline;
-
-	for( int cont = 0; cont < ft_outline.n_contours; cont++ )
-	{
-		Path2D contour;
-
-		std::vector<TaggedPoint> points = get_contour_points(cont, &ft_outline);
-		points.push_back(points.front()); // just to simplify, it's removed later.
-
-		for( unsigned int i = 0; i < points.size()-1; i++ )
-		{
-			TaggedPoint &tp = points[i];
-
-			if( tp.tag == FT_Curve_Tag_On )
-			{
-				contour.add_line_to(tp.pos);
-			}
-			else if( tp.tag == FT_Curve_Tag_Conic )
-			{
-				// TODO: i - 1 is safe here because we made sure the contour will start with a Tag_On.
-				BezierCurve curve;
-				curve.add_control_point( points[i-1].pos);
-				curve.add_control_point( tp.pos );
-				curve.add_control_point( points[i+1].pos );
-				contour.add_curve(curve);
-			}
-			else if( tp.tag == FT_Curve_Tag_Cubic && points[i-1].tag == FT_Curve_Tag_Cubic )
-			{
-				BezierCurve curve;
-				curve.add_control_point( points[i-2].pos);
-				curve.add_control_point( points[i-1].pos);
-				curve.add_control_point( tp.pos );
-				curve.add_control_point( points[i+1].pos );
-				contour.add_curve(curve);
-			}
-		}
-
-		outline.add_path(contour);
-	}
-
-	FT_Done_Glyph(glyph);
-
-	out_glyph_metrics = get_glyph_metrics(c);
-
-	return outline;
+	out_metrics = get_glyph_metrics(c);
 }
 
 FontPixelBuffer FontEngine_Freetype::get_font_glyph_standard(int glyph, bool anti_alias)

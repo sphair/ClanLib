@@ -66,8 +66,7 @@ public:
 	FontMetrics get_metrics() {return FontMetrics(); }
 	FontPixelBuffer get_font_glyph_standard(int glyph, bool anti_alias) { return FontPixelBuffer(); }
 	FontPixelBuffer get_font_glyph_subpixel(int glyph) { return FontPixelBuffer(); }
-	Shape2D load_glyph_outline(int glyph_index, GlyphMetrics &out_glyph_metrics) { return Shape2D(); }
-	Path load_glyph_path(int glyph_index) { return Path(); }
+	void load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics) {}
 
 };
 

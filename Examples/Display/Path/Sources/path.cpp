@@ -55,7 +55,8 @@ int PathApp::start(const std::vector<std::string> &args)
 
 	clan::Font test_font(canvas, "tahoma", 20);
 	clan::Path complex_shape = clan::Path::circle(128.0f, 128.0f, 128.0f);
-	complex_shape += clan::Path::glyph(test_font, 'G').transform_self(clan::Mat3f::translate(58.0f, 198.0f) * clan::Mat3f::scale(10.0f, 10.0f));
+	clan::GlyphMetrics glyph_metrics;
+	complex_shape += clan::Path::glyph(test_font, 'G', glyph_metrics).transform_self(clan::Mat3f::translate(58.0f, 198.0f) * clan::Mat3f::scale(10.0f, 10.0f));
 
 	clan::Brush brush_solid = clan::Brush::solid_rgba8(50, 200, 150, 255);
 	clan::Brush brush_image;

@@ -95,7 +95,7 @@ public:
 	/// \brief Get a glyph. Returns NULL if the glyph was not found
 	Font_TextureGlyph *get_glyph(FontEngine *font_engine, GraphicContext &gc, unsigned int glyph);
 
-	Path get_glyph_path(FontEngine *font_engine, unsigned int glyph);
+	void get_glyph_path(FontEngine *font_engine, unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics);
 
 /// \}
 /// \name Operations

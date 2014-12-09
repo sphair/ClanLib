@@ -260,12 +260,10 @@ clanDisplay_includes = \
 	Display/2D/span_layout.h \
 	Display/2D/color.h \
 	Display/2D/canvas.h \
-	Display/2D/path2d.h \
 	Display/2D/sprite.h \
 	Display/2D/subtexture.h \
 	Display/2D/color_hsv.h \
 	Display/2D/color_hsl.h \
-	Display/2D/shape2d.h \
 	Display/2D/path.h \
 	Display/2D/pen.h \
 	Display/2D/brush.h \

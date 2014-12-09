@@ -107,7 +107,12 @@ namespace clan
 			brush.color = Colorf(r, g, b, a);
 			return brush;
 		}
-
+		static Brush solid(const Colorf &color)
+		{
+			Brush brush;
+			brush.color = color;
+			return brush;
+		}
 		static Brush solid_rgb8(int r, int g, int b)
 		{
 			Brush brush;

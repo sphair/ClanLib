@@ -289,12 +289,7 @@ FontPixelBuffer FontEngine_Cocoa::get_empty_font_glyph(int glyph)
 	return font_buffer;
 }
 
-Shape2D FontEngine_Cocoa::load_glyph_outline(int c, GlyphMetrics &out_glyph_metrics)
-{
-	throw Exception("Implement Me");
-}
-
-Path FontEngine_Cocoa::load_glyph_path(int glyph_index)
+void FontEngine_Cocoa::load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics)
 {
 	throw Exception("Implement Me");
 }

@@ -32,7 +32,7 @@
 #include "font_engine.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/Font/font_description.h"
-#include "API/Display/2D/shape2d.h"
+#include "API/Display/2D/path.h"
 #include <CoreText/CoreText.h>
 #include <CoreGraphics/CoreGraphics.h>
 
@@ -51,8 +51,7 @@ public:
 	FontMetrics get_metrics();
 	FontPixelBuffer get_font_glyph_standard(int glyph, bool anti_alias);
 	FontPixelBuffer get_font_glyph_subpixel(int glyph);
-	Shape2D load_glyph_outline(int c, GlyphMetrics &out_glyph_metrics);
-	Path load_glyph_path(int glyph_index);
+	void load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics);
 
 private:
     void load_font(const FontDescription& desc, const std::string& filename, IODevice& file);

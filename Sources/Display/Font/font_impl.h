@@ -33,7 +33,6 @@
 #include "API/Display/Font/font_metrics.h"
 #include "API/Display/Font/glyph_metrics.h"
 #include "API/Display/Font/font.h"
-#include "API/Display/2D/shape2d.h"
 #include "API/Display/Render/texture_2d.h"
 #include <list>
 #include <map>

@@ -34,7 +34,6 @@
 #include "API/Display/Font/font.h"
 #include "API/Display/Font/font_description.h"
 #include "API/Core/System/databuffer.h"
-#include "API/Display/2D/shape2d.h"
 
 extern "C"
 {
@@ -95,8 +94,7 @@ public:
 /// \{
 
 public:
-	Shape2D load_glyph_outline(int glyph_index, GlyphMetrics &out_glyph_metrics);
-	Path load_glyph_path(int glyph_index);
+	void load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics);
 
 /// \}
 /// \name Implementation

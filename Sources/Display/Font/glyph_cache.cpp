@@ -169,9 +169,9 @@ GlyphMetrics GlyphCache::get_metrics(FontEngine *font_engine, Canvas &canvas, un
 	return GlyphMetrics();
 }
 
-Path GlyphCache::get_glyph_path(FontEngine *font_engine, unsigned int glyph)
+void GlyphCache::get_glyph_path(FontEngine *font_engine, unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics)
 {
-	return font_engine->load_glyph_path(glyph);
+	return font_engine->load_glyph_path(glyph_index, out_path, out_metrics);
 }
 
 int GlyphCache::get_character_index(FontEngine *font_engine, GraphicContext &gc, const std::string &text, const Point &point)

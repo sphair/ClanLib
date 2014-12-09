@@ -52,7 +52,7 @@
 #include "API/Display/TargetProviders/graphic_context_provider.h"
 #include "API/Display/Font/font_metrics.h"
 #include "API/Display/Font/vector_font.h"
-#include "API/Display/2D/shape2d.h"
+#include "API/Display/2D/path.h"
 #include "../2D/render_batch_triangle.h"
 #include "../2D/canvas_impl.h"
 #include "API/Core/Text/utf8_reader.h"
@@ -125,7 +125,7 @@ FontMetrics VectorFont_Impl::get_font_metrics()
 GlyphMetrics VectorFont_Impl::get_metrics(Canvas &canvas, unsigned int glyph)
 {
 	store_in_char_cache(glyph);
-	return char_cache[glyph].glyph_metrics;
+	return char_cache[glyph].metrics;
 }
 
 GlyphMetrics VectorFont_Impl::measure_text(Canvas &canvas, const std::string &string)
@@ -163,7 +163,7 @@ GlyphMetrics VectorFont_Impl::measure_text(Canvas &canvas, const std::string &st
 	return total_metrics;
 }
 
-void VectorFont_Impl::draw(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color)
+void VectorFont_Impl::draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Brush &brush)
 {
 	float offset_x = 0;
 	float offset_y = 0;
@@ -187,10 +187,8 @@ void VectorFont_Impl::draw(Canvas &canvas, const Pointf &position, const std::st
 		store_in_char_cache(glyph);
 
 		canvas.set_transform(original_transform * Mat4f::translate(position.x + offset_x, position.y + offset_y, 0));
-
-		if (!char_cache[glyph].primitives_array.empty())
-			canvas.fill_triangles(&char_cache[glyph].primitives_array[0], char_cache[glyph].primitives_array.size(), color);
-		offset_x += char_cache[glyph].glyph_metrics.advance.width;
+		canvas.fill(char_cache[glyph].path, brush);
+		offset_x += char_cache[glyph].metrics.advance.width;
 
 	}
 	canvas.set_transform(original_transform);
@@ -200,12 +198,8 @@ void VectorFont_Impl::store_in_char_cache(unsigned int glyph)
 {
 	if( char_cache.find(glyph) == char_cache.end() )
 	{
-		GlyphMetrics glyph_metrics;
-		Shape2D outline = font_engine->load_glyph_outline(glyph, glyph_metrics);
 		vector_glyph &vg = char_cache[glyph];
-		vg.glyph_metrics = glyph_metrics;
-		outline.get_triangles(vg.primitives_array);
-		outline.get_outline(vg.primitives_array_outline);
+		font_engine->load_glyph_path(glyph, vg.path, vg.metrics);
 	}
 }
 

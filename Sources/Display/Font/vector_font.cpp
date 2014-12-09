@@ -33,7 +33,6 @@
 #include "API/Display/Font/vector_font.h"
 #include "API/Display/Font/font_metrics.h"
 #include "API/Core/IOData/file_system.h"
-#include "API/Display/2D/shape2d.h"
 #include "vector_font_impl.h"
 #include "API/Display/2D/canvas.h"
 #include "API/Core/Text/string_help.h"
@@ -100,10 +99,10 @@ FontMetrics VectorFont::get_font_metrics()
 /////////////////////////////////////////////////////////////////////////////
 // VectorFont Operations:
 
-void VectorFont::draw(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color)
+void VectorFont::draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Brush &brush)
 {
 	if (impl)
-		impl->draw(canvas, position, text, color);
+		impl->draw_text(canvas, position, text, brush);
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -33,7 +33,7 @@
 #include "API/Display/Font/font_metrics.h"
 #include "API/Display/Font/glyph_metrics.h"
 #include "API/Display/Font/font.h"
-#include "API/Display/2D/shape2d.h"
+#include "API/Display/2D/path.h"
 #include "API/Display/Render/texture_2d.h"
 #include <list>
 #include <map>
@@ -43,6 +43,7 @@ namespace clan
 
 class FreetypeFont;
 class FontEngine;
+class Brush;
 
 class VectorFont_Impl
 {
@@ -64,7 +65,7 @@ public:
 /// \name Operations
 /// \{
 public:
-	void draw(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color = Colorf::white);
+	void draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Brush &brush);
 
 	GlyphMetrics get_metrics(Canvas &canvas, unsigned int glyph);
 	GlyphMetrics measure_text(Canvas &canvas, const std::string &string);
@@ -80,16 +81,11 @@ private:
 
 	struct vector_glyph
 	{
-		std::vector<Vec2f> primitives_array;
-		std::vector< std::vector<Vec2f> > primitives_array_outline;
-		std::vector<Vec2f> texture_positions;
-		Rectf calculated_bounding_rect;	// texture_positions calculated using this rect
-		Rectf calculated_texture_rect;	// texture_positions calculated using this rect
-
-		GlyphMetrics glyph_metrics;
+		Path path;
+		GlyphMetrics metrics;
 	};
 
-	std::map<int, vector_glyph> char_cache;
+	std::map<unsigned int, vector_glyph> char_cache;
 
 	FontMetrics font_metrics;
 

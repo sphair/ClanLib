@@ -140,9 +140,10 @@ bool TextShooter::draw(Canvas &canvas, ubyte64 current_time)
 	matrix = matrix * clan::Mat4f::scale( 2.0f / canvas.get_width(), -2.0f / canvas.get_height(), 1.0f);
 	canvas.set_transform(matrix);
 
-	Sizef text_size = vector_font.get_metrics(canvas, text).black_box.get_size();
+	Sizef text_size = vector_font.measure_text(canvas, text).bbox_size;
 
-	vector_font.draw(canvas, clan::Pointf(-text_size.width/2, text_size.height/4), text, font_color);
+	clan::Brush brush = clan::Brush::solid(font_color);
+	vector_font.draw_text(canvas, clan::Pointf(-text_size.width/2, text_size.height/4), text, font_color);
 	canvas.set_transform(clan::Mat4f::identity());
 
 	return true;

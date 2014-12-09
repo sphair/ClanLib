@@ -31,6 +31,7 @@
 #pragma once
 
 #include "font.h"
+#include "../2D/brush.h"
 
 namespace clan
 {
@@ -106,8 +107,8 @@ public:
 	/// \param canvas = Canvas
 	/// \param position = Dest position
 	/// \param text = The text to draw
-	/// \param color = The text color
-	void draw(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color = Colorf::white);
+	/// \param brush = The brush
+	void draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Brush &brush = Brush::solid(1.0f, 1.0f, 1.0f));
 
 /// \}
 /// \name Implementation

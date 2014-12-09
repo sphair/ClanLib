@@ -38,6 +38,7 @@ namespace clan
 {
 	class Font;
 	class PathImpl;
+	class GlyphMetrics;
 
 	enum class PathFillMode
 	{
@@ -75,8 +76,8 @@ namespace clan
 		static Path circle(const Pointf &center, float radius) { return Path::ellipse(center, Sizef(radius, radius)); }
 		static Path ellipse(const Pointf &center, const Sizef &radius);
 
-		// This function is to assist in debugging, it may be removed in the future. Don't use at the moment.
-		static Path glyph(Font &font, unsigned int glyph);
+		// This function is to assist in debugging, it has not been decided if it will be removed. Don't use at the moment.
+		static Path glyph(Font &font, unsigned int glyph, GlyphMetrics &out_metrics);
 
 		std::shared_ptr<PathImpl> get_impl() const { return impl; }
 
