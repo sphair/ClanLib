@@ -527,8 +527,7 @@ void FontEngine_Win32::load_glyph_path(unsigned int glyph_index, Path &path, Gly
 		if (polygon_header->dwType != TT_POLYGON_TYPE)
 			throw Exception("invalid polygon type");
 
-		Pointf previous_point = PointFXtoPoint(polygon_header->pfxStart);
-		//Pointf initial_point = previous_point;
+		path.move_to(PointFXtoPoint(polygon_header->pfxStart));
 
 		int curve_bytes = polygon_header->cb - sizeof(TTPOLYGONHEADER);
 		if (curve_bytes < 0)
@@ -552,17 +551,13 @@ void FontEngine_Win32::load_glyph_path(unsigned int glyph_index, Path &path, Gly
 			if (next_poly_curve < poly_curve || ((char *)poly_curve > data_end))
 				throw Exception("invalid structure 2");
 
-			path.line_to(previous_point);
-
 			if (poly_curve->wType == TT_PRIM_LINE)
 			{
-				Pointf first_point = previous_point;
 				for (int i = 0; i < poly_curve->cpfx; i++)
 				{
 					next_point = PointFXtoPoint(poly_curve->apfx[i]);
 					path.line_to(next_point);
 				}
-				previous_point = next_point;
 			}
 			else if (poly_curve->wType == TT_PRIM_QSPLINE)
 			{
@@ -580,18 +575,7 @@ void FontEngine_Win32::load_glyph_path(unsigned int glyph_index, Path &path, Gly
 						next_point = Pointf((this_point.x + next_point.x) / 2.0f, (this_point.y + next_point.y) / 2.0f);
 					}
 
-					// conversion of a quadratic to a cubic
-
-					// Cubic P1 in terms of Quadratic P0 and P1
-					Pointf control1(previous_point.x + 2.0f * (this_point.x - previous_point.x) / 3.0f, previous_point.y + 2.0f * (this_point.y - previous_point.y) / 3.0f);
-
-					// Cubic P2 in terms of Quadratic P1 and P2
-					Pointf control2(this_point.x + (next_point.x - this_point.x) / 3.0f, this_point.y + (next_point.y - this_point.y) / 3.0f);
-
-					// Cubic P3 is the on curve end point
-					path.bezier_to(control1, control2, next_point);
-
-					previous_point = next_point;
+					path.bezier_to(this_point, next_point);
 				}
 			}
 			else
