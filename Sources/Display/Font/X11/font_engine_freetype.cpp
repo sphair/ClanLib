@@ -183,10 +183,10 @@ GlyphMetrics FontEngine_Freetype::get_glyph_metrics(unsigned int glyph)
 	FT_GlyphSlot slot = face->glyph;
 	GlyphMetrics metrics;
 	// Note, these values have not been checked
-	metrics.black_box.left = slot->metrics.horiBearingX / 64.0f;
-	metrics.black_box.top = slot->metrics.horiBearingY / 64.0f;
-	metrics.black_box.right = metrics.black_box.left + slot->metrics.width / 64.0f;
-	metrics.black_box.bottom = metrics.black_box.top + slot->metrics.height / 64.0f;
+	metrics.bbox_offset.x = slot->metrics.horiBearingX / 64.0f;
+	metrics.bbox_offset.y = slot->metrics.horiBearingY / 64.0f;
+	metrics.bbox_size.width = slot->metrics.width / 64.0f;
+	metrics.bbox_size.height = slot->metrics.height / 64.0f;
 	metrics.advance.width = slot->advance.x / 64.0f;
 	metrics.advance.height = slot->advance.y / 64.0f;
 
@@ -337,10 +337,10 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph_standard(int glyph, bool ant
 	font_buffer.glyph = glyph;
 	// Set Increment pen position
 	// Note, these values have not been checked
-	font_buffer.metrics.black_box.left = slot->metrics.horiBearingX / 64.0f;
-	font_buffer.metrics.black_box.top = slot->metrics.horiBearingY / 64.0f;
-	font_buffer.metrics.black_box.right = font_buffer.metrics.black_box.left + slot->metrics.width / 64.0f;
-	font_buffer.metrics.black_box.bottom = font_buffer.metrics.black_box.top + slot->metrics.height / 64.0f;
+	font_buffer.metrics.bbox_offset.x = slot->metrics.horiBearingX / 64.0f;
+	font_buffer.metrics.bbox_offset.y = slot->metrics.horiBearingY / 64.0f;
+	font_buffer.metrics.bbox_size.width = slot->metrics.width / 64.0f;
+	font_buffer.metrics.bbox_size.height = slot->metrics.height / 64.0f;
 	font_buffer.metrics.advance.width = slot->advance.x / 64.0f;
 	font_buffer.metrics.advance.height = slot->advance.y / 64.0f;
 
