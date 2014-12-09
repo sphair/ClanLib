@@ -71,6 +71,7 @@ public:
 
 	void set_transform(const Mat4f &matrix);
 	const Mat4f &get_transform() const;
+	Mat4f &get_inverse_transform();
 	const Mat4f &get_projection() const;
 
 	void set_map_mode(MapMode map_mode);
@@ -97,6 +98,8 @@ private:
     SlotContainer sc;
 
 	Mat4f canvas_transform;
+	bool canvas_inverse_transform_set = false;
+	Mat4f canvas_inverse_transform;
 	Mat4f canvas_projection;
 	MapMode canvas_map_mode;
 	Size canvas_size;

@@ -73,7 +73,8 @@ void Canvas_Impl::setup(GraphicContext &new_gc)
 	}
 
 	gc_clip_z_range = gc.get_provider()->get_clip_z_range();
-	canvas_transform = Mat4f::identity();
+	canvas_inverse_transform = canvas_transform = Mat4f::identity();
+	canvas_inverse_transform_set = true;
 
 	if (gc.get_write_frame_buffer().is_null())	// No framebuffer attached to canvas
 	{
@@ -163,12 +164,23 @@ MapMode Canvas_Impl::get_top_down_map_mode() const
 void Canvas_Impl::set_transform(const Mat4f &matrix)
 {
 	canvas_transform = matrix;
+	canvas_inverse_transform_set = false;
 	update_batcher_matrix();
 }
 
 const Mat4f &Canvas_Impl::get_transform() const
 {
 	return canvas_transform;
+}
+
+Mat4f &Canvas_Impl::get_inverse_transform()
+{
+	if (!canvas_inverse_transform_set)
+	{
+		canvas_inverse_transform_set = true;
+		canvas_inverse_transform = clan::Mat4f::inverse(canvas_transform);
+	}
+	return canvas_inverse_transform;
 }
 
 const Mat4f &Canvas_Impl::get_projection() const

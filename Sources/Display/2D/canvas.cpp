@@ -96,6 +96,11 @@ const Mat4f &Canvas::get_transform() const
 	return impl->get_transform();
 }
 
+Mat4f &Canvas::get_inverse_transform()
+{
+	return impl->get_inverse_transform();
+}
+
 const Mat4f &Canvas::get_projection() const
 {
 	return impl->get_projection();
@@ -667,12 +672,12 @@ void Canvas::fill_ellipse(const Pointf &center, float radius_x, float radius_y, 
 	set_transform(original_transform);
 }
 
-Pointf Canvas::grid_fit(const Pointf &pos) const
+Pointf Canvas::grid_fit(const Pointf &pos)
 {
 	Vec4f world_pos = get_transform() * Vec4f(pos.x, pos.y, 0.0f, 1.0f);
 	world_pos.x = std::round(world_pos.x);
 	world_pos.y = std::round(world_pos.y);
-	Vec4f object_pos = Mat4f::inverse(get_transform()) * world_pos;
+	Vec4f object_pos = get_inverse_transform() * world_pos;
 	return Pointf(object_pos.x, object_pos.y);
 }
 

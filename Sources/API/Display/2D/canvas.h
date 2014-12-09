@@ -107,6 +107,11 @@ public:
 	/// \brief Returns the current effective transform matrix.
 	const Mat4f &get_transform() const;
 
+	/// \brief Returns the inverse of the current effective transform matrix
+	///
+	/// This is cached
+	Mat4f &get_inverse_transform();
+
 	/// \brief Returns the current effective projection matrix.
 	const Mat4f &get_projection() const;
 
@@ -400,7 +405,7 @@ public:
 	void fill_ellipse(const Pointf &center, float radius_x, float radius_y, const Gradient &gradient);
 
 	/// \brief Snaps the point to the nearest pixel corner
-	Pointf grid_fit(const Pointf &pos) const;
+	Pointf grid_fit(const Pointf &pos);
 
 /// \}
 /// \name Events
