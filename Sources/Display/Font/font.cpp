@@ -292,16 +292,14 @@ void Font::draw_text(Canvas &canvas, const Pointf &position, const std::string &
 		impl->glyph_cache.draw(impl->font_engine, canvas, position, text, color);
 }
 
-void Font::draw_text_ellipsis(Canvas &canvas, const Pointf &position, Rectf content_box, const std::string &text, const Colorf &color)
+std::string Font::get_clipped_text(Canvas &canvas, const Sizef &box_size, const std::string &text, const std::string &ellipsis_text)
 {
-	//FIXME!
-	draw_text(canvas, position, text, color);
-	/*
+	std::string out_string;
+	out_string.reserve(text.length());
+
 	if (impl)
 	{
-		Pointf pos = canvas.grid_fit(Pointf(dest_x, dest_y));
-		dest_x = pos.x;
-		dest_y = pos.y;
+		Pointf pos;
 
 		FontMetrics fm = get_font_metrics();
 		int ascent = fm.get_ascent();
@@ -310,16 +308,18 @@ void Font::draw_text_ellipsis(Canvas &canvas, const Pointf &position, Rectf cont
 		std::vector<std::string> lines = StringHelp::split_text(text, "\n", false);
 		for (std::vector<std::string>::size_type i=0; i<lines.size(); i++)
 		{
-			if (i == 0 || (dest_y - ascent >= content_box.top && dest_y + descent < content_box.bottom))
+			if (i == 0 || pos.y + descent < box_size.height)
 			{
-				Size size = get_metrics(canvas, lines[i]);
-				if (dest_x + size.width <= content_box.right)
+				Sizef size = measure_text(canvas, lines[i]).bbox_size;
+				if (pos.x + size.width <= box_size.width)
 				{
-					draw_text(canvas, dest_x, dest_y, lines[i], color);
+					if (!out_string.empty())
+						out_string += "\n";
+					out_string += lines[i];
 				}
 				else
 				{
-					Size ellipsis = get_metrics(canvas, "...");
+					Sizef ellipsis = measure_text(canvas, ellipsis_text).bbox_size;
 
 					int seek_start = 0;
 					int seek_end = lines[i].size();
@@ -341,23 +341,24 @@ void Font::draw_text_ellipsis(Canvas &canvas, const Pointf &position, Rectf cont
 						if (utf8_reader.get_position() == seek_end)
 							break;
 
-						Size text_size = get_metrics(canvas, lines[i].substr(0, seek_center));
+						Sizef text_size = measure_text(canvas, lines[i].substr(0, seek_center)).bbox_size;
 
-						if (dest_x + text_size.width + ellipsis.width >= content_box.right)
+						if (pos.x + text_size.width + ellipsis.width >= box_size.width)
 							seek_end = seek_center;
 						else
 							seek_start = seek_center;
 						seek_center = (seek_start+seek_end)/2;
 					}
 
-					draw_text(canvas, dest_x, dest_y, lines[i].substr(0, seek_center) + "...", color);
+					if (!out_string.empty())
+						out_string += "\n";
+					out_string += lines[i].substr(0, seek_center) + ellipsis_text;
 				}
-
-				dest_y += line_spacing;
+				pos.y += line_spacing;
 			}
 		}
 	}
-	*/
+	return out_string;
 }
 
 FontMetrics Font::get_font_metrics()

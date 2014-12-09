@@ -172,19 +172,19 @@ void SpanLayout_Impl::draw_layout_text(Canvas &canvas, Line &line, LineSegment &
 		if (s1 > 0)
 		{
 			if (is_ellipsis_draw)
-				segment.font.draw_text_ellipsis(canvas, xx, y + line.ascender, ellipsis_content_rect, segment_text.substr(0, s1), segment.color);
+				segment.font.draw_text(canvas, xx, y + line.ascender, segment.font.get_clipped_text(canvas, ellipsis_content_rect.get_size(), segment_text.substr(0, s1)), segment.color);
 			else
 				segment.font.draw_text(canvas, xx, y + line.ascender, segment_text.substr(0, s1), segment.color);
 		}
 		if (is_ellipsis_draw)
-			segment.font.draw_text_ellipsis(canvas, xx0, y+line.ascender, ellipsis_content_rect, segment_text.substr(s1, s2 - s1), sel_foreground);
+			segment.font.draw_text(canvas, xx0, y + line.ascender, segment.font.get_clipped_text(canvas, ellipsis_content_rect.get_size(), segment_text.substr(s1, s2 - s1)), sel_foreground);
 		else
 			segment.font.draw_text(canvas, xx0, y+line.ascender, segment_text.substr(s1, s2 - s1), sel_foreground);
 		xx += sel_width;
 		if (s2 < length)
 		{
 			if (is_ellipsis_draw)
-				segment.font.draw_text_ellipsis(canvas, xx1, y + line.ascender, ellipsis_content_rect, segment_text.substr(s2), segment.color);
+				segment.font.draw_text(canvas, xx1, y + line.ascender, segment.font.get_clipped_text(canvas, ellipsis_content_rect.get_size(), segment_text.substr(s2)), segment.color);
 			else
 				segment.font.draw_text(canvas, xx1, y + line.ascender, segment_text.substr(s2), segment.color);
 		}
@@ -199,7 +199,7 @@ void SpanLayout_Impl::draw_layout_text(Canvas &canvas, Line &line, LineSegment &
 		}
 
 		if (is_ellipsis_draw)
-			segment.font.draw_text_ellipsis(canvas, x + segment.x_position, y + line.ascender, ellipsis_content_rect, segment_text, segment.color);
+			segment.font.draw_text(canvas, x + segment.x_position, y + line.ascender, segment.font.get_clipped_text(canvas, ellipsis_content_rect.get_size(), segment_text), segment.color);
 		else
 			segment.font.draw_text(canvas, x + segment.x_position, y + line.ascender, segment_text, segment.color);
 	}

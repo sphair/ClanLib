@@ -118,16 +118,6 @@ public:
 	void draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color = Colorf::white);
 	void draw_text(Canvas &canvas, float xpos, float ypos, const std::string &text, const Colorf &color = Colorf::white) { draw_text(canvas, Pointf(xpos, ypos), text, color); }
 
-	/// \brief Print text adding ellipses if it does not fit
-	///
-	/// \param canvas = Canvas
-	/// \param position = Dest position
-	/// \param content_box = Rectangle the text is allowed within
-	/// \param text = The text to draw
-	/// \param color = The text color
-	void draw_text_ellipsis(Canvas &canvas, const Pointf &position, Rectf content_box, const std::string &text, const Colorf &color = Colorf::white);
-	void draw_text_ellipsis(Canvas &canvas, float xpos, float ypos, Rectf content_box, const std::string &text, const Colorf &color = Colorf::white) { draw_text_ellipsis(canvas, Pointf(xpos, ypos), content_box, text, color); }
-
 	/// \brief Gets the glyph metrics
 	///
 	/// \param glyph = The glyph to get
@@ -142,6 +132,11 @@ public:
 
 	/// \brief Retrieves font metrics description for the selected font.
 	FontMetrics get_font_metrics();
+
+	/// \brief Retrieves clipped version of the text that will fit into a box
+	///
+	/// \return The string
+	std::string get_clipped_text(Canvas &canvas, const Sizef &box_size, const std::string &text, const std::string &ellipsis_text = "...");
 
 	/// \brief Get the character index at a specified point
 	///
