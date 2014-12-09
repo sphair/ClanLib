@@ -219,9 +219,72 @@ Size FontEngine_Freetype::get_size(const std::string &text, int pos)
 /////////////////////////////////////////////////////////////////////////////
 // FontEngine_Freetype Operations:
 
-Path FontEngine_Freetype::load_glyph_path(int glyph_index)
+Path FontEngine_Freetype::load_glyph_path(int c)
 {
-	throw Exception("Implement Me");
+	FT_UInt glyph_index;
+
+	glyph_index = FT_Get_Char_Index( face, FT_ULong(c) );
+
+	FT_Error error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
+	if ( error )
+	{
+		throw Exception("freetype: error loading glyph");
+	}
+
+	FT_Glyph glyph;
+
+	error = FT_Get_Glyph( face->glyph, &glyph );
+
+	if ( error )
+	{
+		throw Exception("freetype: error getting glyph");
+	}
+
+	FT_OutlineGlyph ft_outline_glyph_rec = (FT_OutlineGlyph)glyph;
+	FT_Outline ft_outline = ft_outline_glyph_rec->outline;
+
+	Path path;
+
+	for( int cont = 0; cont < ft_outline.n_contours; cont++ )
+	{
+		std::vector<TaggedPoint> points = get_contour_points(cont, &ft_outline);
+		points.push_back(points.front()); // just to simplify, it's removed later.
+
+		for( unsigned int i = 0; i < points.size()-1; i++ )
+		{
+			TaggedPoint &tp = points[i];
+
+			if( tp.tag == FT_Curve_Tag_On )
+			{
+				path.line_to(tp.pos);
+			}
+			else if( tp.tag == FT_Curve_Tag_Conic )
+			{
+				if (i)
+				{
+					path.bezier_to(points[i-1].pos, tp.pos, points[i+1].pos);
+				}
+			}
+			else if( tp.tag == FT_Curve_Tag_Cubic && points[i-1].tag == FT_Curve_Tag_Cubic )
+			{
+				// TODO: Fixme if there is a font that use quadtratics
+				/*
+				BezierCurve curve;
+				curve.add_control_point( points[i-2].pos);
+				curve.add_control_point( points[i-1].pos);
+				curve.add_control_point( tp.pos );
+				curve.add_control_point( points[i+1].pos );
+				contour.add_curve(curve);
+				*/
+			}
+		}
+
+		path.close();
+	}
+
+	FT_Done_Glyph(glyph);
+
+	return path;
 }
 
 
@@ -251,20 +314,9 @@ Shape2D FontEngine_Freetype::load_glyph_outline(int c, GlyphMetrics &out_glyph_m
 
 	Shape2D outline;
 
-//	cl_write_console_line(string_format("Num contours: %1", ft_outline.n_contours));
-
 	for( int cont = 0; cont < ft_outline.n_contours; cont++ )
 	{
-//		cl_write_console_line(string_format("Num points in contour %1: %2", cont, ft_outline.contours[0]+1));
-
 		Path2D contour;
-
-		// debug: dump contents of points array to terminal
-//		for( int i = 0; i <= ft_outline.contours[cont]; ++i )
-//		{
-//			FT_Vector pos = ft_outline.points[i];
-//			cl_write_console_line(string_format("dump points[%1]: (%2,%3) \t type: %4", i, pos.x, pos.y, ft_outline.tags[i]));
-//		}
 
 		std::vector<TaggedPoint> points = get_contour_points(cont, &ft_outline);
 		points.push_back(points.front()); // just to simplify, it's removed later.
