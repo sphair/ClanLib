@@ -99,15 +99,15 @@ int PathApp::start(const std::vector<std::string> &args)
 		canvas.clear(clan::Colorf(0.2f, 0.2f, 0.5f));
 
 		canvas.set_transform(clan::Mat4f::translate(50.0f, 10.0f, 0.0f) * rotation);
-		canvas.fill(rounded_rect_shape, brush_solid);
+		rounded_rect_shape.fill(canvas, brush_solid);
 		canvas.set_transform(clan::Mat4f::translate(380.0f, 10.0f, 0.0f) * rotation);
-		canvas.fill(complex_shape, brush_image);
+		complex_shape.fill(canvas, brush_image);
 
 		canvas.set_transform(clan::Mat4f::translate(50.0f, 300.0f, 0.0f) * rotation);
-		canvas.fill(rounded_rect_shape, brush_linear);
+		rounded_rect_shape.fill(canvas, brush_linear);
 
 		canvas.set_transform(clan::Mat4f::translate(380.0f, 300.0f, 0.0f) * rotation );
-		canvas.fill(rounded_rect_shape, brush_radial);
+		rounded_rect_shape.fill(canvas, brush_radial);
 		
 		canvas.set_transform(clan::Mat4f::identity());
 		std::string fps = clan::string_format("%1 fps", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1));
