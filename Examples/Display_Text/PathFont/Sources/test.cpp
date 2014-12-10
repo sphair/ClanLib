@@ -65,7 +65,7 @@ int Test::start(const std::vector<std::string> &args)
 	{
 		game_time.update();
 
-		canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
+		canvas.clear(clan::Colorf(0.0f,0.0f,0.3f));
 
 		font.draw_text(canvas, 17, 40, clan::string_format("%1 FPS", game_time.get_updates_per_second()), clan::Colorf::white);
 
@@ -74,18 +74,17 @@ int Test::start(const std::vector<std::string> &args)
 		clan::FontMetrics font_metrics = path_font.get_font_metrics();
 
 		clan::Pointf box_position((canvas.get_width() - text_metrics.bbox_size.width) / 2.0f, (canvas.get_height() - text_metrics.bbox_size.height) / 2.0f);
-		clan::Rectf box_rect(box_position, text_metrics.bbox_size);
+		clan::Rectf inner_rect(box_position, text_metrics.bbox_size);
+		clan::Rectf offset_rect = inner_rect;
+		offset_rect.left = offset_rect.left + text_metrics.bbox_offset.x;
+		offset_rect.top = offset_rect.bottom - text_metrics.bbox_offset.y;
 
-		clan::Rectf outer_box = box_rect;
-		outer_box.left += text_metrics.bbox_offset.x;
-		outer_box.top += text_metrics.bbox_offset.y;
+		canvas.fill_rect(inner_rect, clan::Colorf::black);
+		canvas.fill_rect(offset_rect, clan::Colorf(1.0f, 1.0f, 1.0f, 0.2f));
+		canvas.draw_box(inner_rect, clan::Colorf::green);
+		canvas.draw_box(offset_rect, clan::Colorf::green);
 
-		canvas.fill_rect(box_rect, clan::Colorf::black);
-		canvas.fill_rect(outer_box, clan::Colorf::black);
-		canvas.draw_box(box_rect, clan::Colorf::green);
-		canvas.draw_box(outer_box, clan::Colorf::green);
-
-		clan::Pointf text_base(box_rect.left, font_metrics.get_ascent() + box_rect.top + (box_rect.get_height() - (font_metrics.get_ascent() - font_metrics.get_internal_leading())) / 2.0f);
+		clan::Pointf text_base(inner_rect.left, text_metrics.bbox_offset.y + inner_rect.top);
 
 		draw_info(canvas, font, "Ascender", text_base.y, text_base.y - font_metrics.get_ascent(), 10.0f);
 		draw_info(canvas, font, "Decender", text_base.y, text_base.y + font_metrics.get_descent(), 15.0f);
