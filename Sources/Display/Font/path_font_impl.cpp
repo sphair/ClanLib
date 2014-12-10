@@ -29,7 +29,7 @@
 */
 
 #include "Display/precomp.h"
-#include "vector_font_impl.h"
+#include "path_font_impl.h"
 
 #ifdef __APPLE__
 #include "FontEngine/font_engine_cocoa.h"
@@ -51,7 +51,7 @@
 #include "API/Display/2D/canvas.h"
 #include "API/Display/TargetProviders/graphic_context_provider.h"
 #include "API/Display/Font/font_metrics.h"
-#include "API/Display/Font/vector_font.h"
+#include "API/Display/Font/path_font.h"
 #include "API/Display/2D/path.h"
 #include "../2D/render_batch_triangle.h"
 #include "../2D/canvas_impl.h"
@@ -61,13 +61,13 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// VectorFont_Impl Construction:
+// PathFont_Impl Construction:
 
-VectorFont_Impl::VectorFont_Impl() : font_engine(NULL)
+PathFont_Impl::PathFont_Impl() : font_engine(NULL)
 {
 }
 
-void VectorFont_Impl::load_font(const FontDescription &desc, const std::string &filename)
+void PathFont_Impl::load_font(const FontDescription &desc, const std::string &filename)
 {
 #ifdef WIN32
 	font_engine = new FontEngine_Win32(desc, filename);
@@ -101,7 +101,7 @@ void VectorFont_Impl::load_font(const FontDescription &desc, const std::string &
 	font_metrics = font_engine->get_metrics();
 }
 
-VectorFont_Impl::~VectorFont_Impl()
+PathFont_Impl::~PathFont_Impl()
 {
 	if (font_engine)
 	{
@@ -111,24 +111,24 @@ VectorFont_Impl::~VectorFont_Impl()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// VectorFont_Impl Attributes:
+// PathFont_Impl Attributes:
 
 
-FontMetrics VectorFont_Impl::get_font_metrics()
+FontMetrics PathFont_Impl::get_font_metrics()
 {
 	return font_metrics;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// VectorFont_Impl Operations:
+// PathFont_Impl Operations:
 
-GlyphMetrics VectorFont_Impl::get_metrics(Canvas &canvas, unsigned int glyph)
+GlyphMetrics PathFont_Impl::get_metrics(Canvas &canvas, unsigned int glyph)
 {
 	store_in_char_cache(glyph);
 	return char_cache[glyph].metrics;
 }
 
-GlyphMetrics VectorFont_Impl::measure_text(Canvas &canvas, const std::string &string)
+GlyphMetrics PathFont_Impl::measure_text(Canvas &canvas, const std::string &string)
 {
 	GlyphMetrics total_metrics;
 	int line_spacing = font_metrics.get_height() + font_metrics.get_external_leading();
@@ -163,7 +163,7 @@ GlyphMetrics VectorFont_Impl::measure_text(Canvas &canvas, const std::string &st
 	return total_metrics;
 }
 
-void VectorFont_Impl::draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Brush &brush)
+void PathFont_Impl::draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Brush &brush)
 {
 	float offset_x = 0;
 	float offset_y = 0;
@@ -194,7 +194,7 @@ void VectorFont_Impl::draw_text(Canvas &canvas, const Pointf &position, const st
 	canvas.set_transform(original_transform);
 }
 
-void VectorFont_Impl::store_in_char_cache(unsigned int glyph)
+void PathFont_Impl::store_in_char_cache(unsigned int glyph)
 {
 	if( char_cache.find(glyph) == char_cache.end() )
 	{
@@ -204,6 +204,6 @@ void VectorFont_Impl::store_in_char_cache(unsigned int glyph)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// VectorFont_Impl Implementation:
+// PathFont_Impl Implementation:
 
 }

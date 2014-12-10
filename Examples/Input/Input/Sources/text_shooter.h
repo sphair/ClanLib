@@ -31,7 +31,7 @@
 class TextShooter
 {
 public:
-	TextShooter(VectorFont &new_vector_font, const std::string &new_text);
+	TextShooter(PathFont &new_vector_font, const std::string &new_text);
 
 	void set_start_position(const Vec3f &new_start_position);
 	void set_end_position(const Vec3f &new_end_position);
@@ -45,7 +45,7 @@ public:
 	bool draw(Canvas &canvas, clan::ubyte64 current_time);
 
 private:
-	VectorFont vector_font;
+	PathFont vector_font;
 	std::string text;
 
 	Vec3f start_position;

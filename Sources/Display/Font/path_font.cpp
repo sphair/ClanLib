@@ -30,10 +30,10 @@
 
 #include "Display/precomp.h"
 
-#include "API/Display/Font/vector_font.h"
+#include "API/Display/Font/path_font.h"
 #include "API/Display/Font/font_metrics.h"
 #include "API/Core/IOData/file_system.h"
-#include "vector_font_impl.h"
+#include "path_font_impl.h"
 #include "API/Display/2D/canvas.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/Text/string_format.h"
@@ -43,53 +43,53 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// VectorFont Construction:
+// PathFont Construction:
 
-VectorFont::VectorFont()
+PathFont::PathFont()
 {
 }
 
-VectorFont::VectorFont( Canvas &canvas, const std::string &typeface_name, int height, const std::string &filename)
+PathFont::PathFont( Canvas &canvas, const std::string &typeface_name, int height, const std::string &filename)
 {
 	FontDescription desc;
 	desc.set_typeface_name(typeface_name);
 	desc.set_height(height);
-	*this = VectorFont(canvas, desc, filename);
+	*this = PathFont(canvas, desc, filename);
 }
 
-VectorFont::VectorFont( Canvas &canvas, const FontDescription &desc, const std::string &filename) : impl(std::make_shared<VectorFont_Impl>())
+PathFont::PathFont( Canvas &canvas, const FontDescription &desc, const std::string &filename) : impl(std::make_shared<PathFont_Impl>())
 {
 	impl->load_font(desc, filename);
 }
 
-VectorFont::~VectorFont()
+PathFont::~PathFont()
 {
 
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// VectorFont Attributes:
+// PathFont Attributes:
 
-bool VectorFont::is_null() const
+bool PathFont::is_null() const
 {
 	return !impl;
 }
 
-GlyphMetrics VectorFont::get_metrics(Canvas &canvas, unsigned int glyph)
+GlyphMetrics PathFont::get_metrics(Canvas &canvas, unsigned int glyph)
 {
 	if (impl)
 		return impl->get_metrics(canvas, glyph);
 	return GlyphMetrics();
 }
 
-GlyphMetrics VectorFont::measure_text(Canvas &canvas, const std::string &string)
+GlyphMetrics PathFont::measure_text(Canvas &canvas, const std::string &string)
 {
 	if (impl)
 		return impl->measure_text(canvas, string);
 	return GlyphMetrics();
 }
 
-FontMetrics VectorFont::get_font_metrics()
+FontMetrics PathFont::get_font_metrics()
 {
 	if (impl)
 		return impl->get_font_metrics();
@@ -97,15 +97,15 @@ FontMetrics VectorFont::get_font_metrics()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// VectorFont Operations:
+// PathFont Operations:
 
-void VectorFont::draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Brush &brush)
+void PathFont::draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Brush &brush)
 {
 	if (impl)
 		impl->draw_text(canvas, position, text, brush);
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// VectorFont Implementation:
+// PathFont Implementation:
 
 }

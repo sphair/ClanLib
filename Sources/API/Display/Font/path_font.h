@@ -38,38 +38,38 @@ namespace clan
 /// \addtogroup clanDisplay_Font clanDisplay Font
 /// \{
 
-class VectorFont_Impl;
+class PathFont_Impl;
 class FontMetrics;
 class FileSystem;
-class VectorFont_Impl;
+class PathFont_Impl;
 
 /// \brief Vector font drawing class.
-class VectorFont
+class PathFont
 {
 /// \name Construction
 /// \{
 
 public:
 /// \brief Constructs vector font.
-	VectorFont();
+	PathFont();
 
 	/// \brief Constructs a Font Vector
 	///
 	/// \param canvas = Canvas
 	/// \param typeface_name = Name
 	/// \param height = value
-	VectorFont( Canvas &canvas, const std::string &typeface_name, int height, const std::string &filename);
+	PathFont( Canvas &canvas, const std::string &typeface_name, int height, const std::string &filename);
 
 	/// \brief Constructs a Font Vector
 	///
 	/// \param canvas = Canvas
 	/// \param desc = Font Description
-	VectorFont( Canvas &canvas, const FontDescription &desc, const std::string &filename);
+	PathFont( Canvas &canvas, const FontDescription &desc, const std::string &filename);
 
 	/// \brief Constructs a Font Vector from a Font, ensuring the correct type
-	explicit VectorFont( const Font &font);
+	explicit PathFont( const Font &font);
 
-	~VectorFont();
+	~PathFont();
 
 /// \}
 /// \name Attributes
@@ -113,7 +113,7 @@ public:
 /// \}
 /// \name Implementation
 /// \{
-	std::shared_ptr<VectorFont_Impl> impl;
+	std::shared_ptr<PathFont_Impl> impl;
 
 /// \}
 };

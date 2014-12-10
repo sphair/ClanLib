@@ -45,14 +45,14 @@ class FreetypeFont;
 class FontEngine;
 class Brush;
 
-class VectorFont_Impl
+class PathFont_Impl
 {
 /// \name Construction
 /// \{
 
 public:
-	VectorFont_Impl();
-	virtual ~VectorFont_Impl();
+	PathFont_Impl();
+	virtual ~PathFont_Impl();
 
 /// \}
 /// \name Attributes
