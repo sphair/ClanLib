@@ -52,7 +52,7 @@ int Test::start(const std::vector<std::string> &args)
 	// Connect a keyboard handler to on_key_up()
 	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &Test::on_input_up));
 
-	clan::Font font(canvas, "tahoma", 24);
+	clan::Font font(canvas, "tahoma", 16);
 
 	clan::PathFont path_font("arial", 250);
 
@@ -75,10 +75,22 @@ int Test::start(const std::vector<std::string> &args)
 
 		clan::Pointf box_position((canvas.get_width() - text_metrics.bbox_size.width) / 2.0f, (canvas.get_height() - text_metrics.bbox_size.height) / 2.0f);
 		clan::Rectf box_rect(box_position, text_metrics.bbox_size);
+
+		clan::Rectf outer_box = box_rect;
+		outer_box.left += text_metrics.bbox_offset.x;
+		outer_box.top += text_metrics.bbox_offset.y;
+
 		canvas.fill_rect(box_rect, clan::Colorf::black);
+		canvas.fill_rect(outer_box, clan::Colorf::black);
 		canvas.draw_box(box_rect, clan::Colorf::green);
+		canvas.draw_box(outer_box, clan::Colorf::green);
 
 		clan::Pointf text_base(box_rect.left, font_metrics.get_ascent() + box_rect.top + (box_rect.get_height() - (font_metrics.get_ascent() - font_metrics.get_internal_leading())) / 2.0f);
+
+		draw_info(canvas, font, "Ascender", text_base.y, text_base.y - font_metrics.get_ascent(), 10.0f);
+		draw_info(canvas, font, "Decender", text_base.y, text_base.y + font_metrics.get_descent(), 15.0f);
+		draw_info(canvas, font, "External Leading", text_base.y + font_metrics.get_descent(), text_base.y + font_metrics.get_descent() + font_metrics.get_external_leading(), 20.0f);
+		draw_info(canvas, font, "Internal Leading", text_base.y - font_metrics.get_ascent(), text_base.y - font_metrics.get_ascent() + font_metrics.get_internal_leading(), 20.0f);
 
 		path_font.draw_text(canvas, text_base, message, brush);
 
@@ -89,6 +101,16 @@ int Test::start(const std::vector<std::string> &args)
 	}
 
 	return 0;
+}
+
+void Test::draw_info(clan::Canvas &canvas, clan::Font &font, const std::string &info, float ypos_a, float ypos_b, float info_xpos)
+{
+	canvas.draw_line(0.0f, ypos_a, canvas.get_width(), ypos_a, clan::Colorf::red);
+	canvas.draw_line(0.0f, ypos_b, canvas.get_width(), ypos_b, clan::Colorf::red);
+
+	canvas.draw_line(info_xpos, ypos_a, info_xpos, ypos_b, clan::Colorf::white);
+
+	font.draw_text(canvas, info_xpos + 2.0f, (ypos_a + ypos_b) / 2.0f + 4.0f, info, clan::Colorf::yellow);
 }
 
 // A key was pressed

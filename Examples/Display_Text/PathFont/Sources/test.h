@@ -37,7 +37,7 @@ public:
 
 private:
 	void on_input_up(const clan::InputEvent &key);
-
+	void draw_info(clan::Canvas &canvas, clan::Font &font, const std::string &info, float ypos_a, float ypos_b, float info_xpos);
 private:
 	bool quit;
 };
