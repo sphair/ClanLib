@@ -123,17 +123,6 @@ CTFontRef CreateCTFontWithPixelSize(CGFontRef cgFont,
     return ct_font;
 }
     
-    
-    
-FontEngine_Cocoa::FontEngine_Cocoa(const FontDescription &desc, const std::string &filename)
-    : handle(0)
-{
-        
-    // First load our file into memory
-    File file(filename);
-    load_font(desc,filename,file);
-}
-    
 void FontEngine_Cocoa::load_font(const FontDescription& desc, const std::string& filename, IODevice& file){
     char * rawBytes = new char[file.get_size()]; // TODO: A better version would use CGDataProviderCreateDirect and give it callbacks to load from vfs itself.
     file.read(rawBytes,file.get_size());

@@ -25,8 +25,8 @@
 **
 **    Magnus Norddahl
 **    Harry Storbacka
+**    Mark Page
 */
-
 
 #pragma once
 
@@ -43,28 +43,39 @@ class FontMetrics;
 class FileSystem;
 class PathFont_Impl;
 
-/// \brief Vector font drawing class.
+/// \brief Path font drawing class.
 class PathFont
 {
 /// \name Construction
 /// \{
 
 public:
-/// \brief Constructs vector font.
+/// \brief Constructs a null font.
 	PathFont();
 
-	/// \brief Constructs a Font Vector
+	/// \brief Constructs Path font
+	///
+	/// \param canvas = Canvas
+	PathFont(const std::string &typeface_name, int height);
+
+	// \brief Constructs Path font
+	PathFont(const FontDescription &desc);
+
+	/// \brief Constructs a Path Font
 	///
 	/// \param canvas = Canvas
 	/// \param typeface_name = Name
 	/// \param height = value
-	PathFont( Canvas &canvas, const std::string &typeface_name, int height, const std::string &filename);
+	PathFont(const std::string &typeface_name, int height, const std::string &ttf_filename);
 
-	/// \brief Constructs a Font Vector
+	/// \brief Constructs a Path Font
 	///
 	/// \param canvas = Canvas
 	/// \param desc = Font Description
-	PathFont( Canvas &canvas, const FontDescription &desc, const std::string &filename);
+	PathFont(const FontDescription &desc, const std::string &ttf_filename);
+
+	// \brief Constructs Path font
+	PathFont(const FontDescription &desc, const std::string &ttf_filename, FileSystem fs);
 
 	/// \brief Constructs a Font Vector from a Font, ensuring the correct type
 	explicit PathFont( const Font &font);

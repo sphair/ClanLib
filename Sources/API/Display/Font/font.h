@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #pragma once
@@ -54,7 +55,7 @@ class Font
 /// \{
 
 public:
-	/// \brief Constructs a font.
+	/// \brief Constructs a null font.
 	Font();
 
 	/// \brief Constructs standard font

@@ -63,16 +63,19 @@ Font::Font( Canvas &canvas, const FontDescription &desc)
 	*this = Font(canvas, desc, "");
 }
 
-  Font::Font( Canvas &canvas, const FontDescription &desc, const std::string &ttf_filename) : impl(std::make_shared<Font_Impl>())
+Font::Font( Canvas &canvas, const FontDescription &desc, const std::string &ttf_filename) : impl(std::make_shared<Font_Impl>())
 {
-  impl->load_font( canvas, desc, ttf_filename );
+	std::string path = PathHelp::get_fullpath(ttf_filename, PathHelp::path_type_file);
+	std::string new_filename = PathHelp::get_filename(ttf_filename, PathHelp::path_type_file);
+	FileSystem vfs(path);
+
+	impl->load_font(canvas, desc, new_filename, vfs);
 }
 
-  Font::Font( Canvas &canvas, const FontDescription &desc, const std::string &ttf_filename, FileSystem fs) : impl(std::make_shared<Font_Impl>())
+Font::Font( Canvas &canvas, const FontDescription &desc, const std::string &ttf_filename, FileSystem fs) : impl(std::make_shared<Font_Impl>())
 {
-  impl->load_font( canvas, desc, ttf_filename, fs );
+	impl->load_font( canvas, desc, ttf_filename, fs );
 }
-
 
 Font::Font( Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics) : impl(std::make_shared<Font_Impl>())
 {
@@ -86,7 +89,6 @@ Resource<Font> Font::resource(Canvas &canvas, const FontDescription &desc, const
 {
 	return DisplayCache::get(resources).get_font(canvas, desc);
 }
-
 
 Font Font_Impl::load(Canvas &canvas, const FontDescription &reference_desc, const std::string &id, const XMLResourceDocument &doc, std::function<Resource<Sprite>(Canvas &, const std::string &)> cb_get_sprite)
 {

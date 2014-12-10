@@ -70,7 +70,7 @@ public:
 	GlyphMetrics get_metrics(Canvas &canvas, unsigned int glyph);
 	GlyphMetrics measure_text(Canvas &canvas, const std::string &string);
 
-	void load_font(const FontDescription &desc, const std::string &filename);
+	void load_font(const FontDescription &desc, const std::string &filename, FileSystem fs);
 
 
 /// \}

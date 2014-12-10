@@ -38,6 +38,7 @@
 #include "API/Core/Text/string_help.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/utf8_reader.h"
+#include "API/Core/IOData/path_help.h"
 
 namespace clan
 {
@@ -49,17 +50,38 @@ PathFont::PathFont()
 {
 }
 
-PathFont::PathFont( Canvas &canvas, const std::string &typeface_name, int height, const std::string &filename)
+PathFont::PathFont(const std::string &typeface_name, int height)
 {
 	FontDescription desc;
 	desc.set_typeface_name(typeface_name);
 	desc.set_height(height);
-	*this = PathFont(canvas, desc, filename);
+	*this = PathFont(desc);
 }
 
-PathFont::PathFont( Canvas &canvas, const FontDescription &desc, const std::string &filename) : impl(std::make_shared<PathFont_Impl>())
+PathFont::PathFont(const FontDescription &desc)
 {
-	impl->load_font(desc, filename);
+	*this = PathFont(desc, "");
+}
+
+PathFont::PathFont(const std::string &typeface_name, int height, const std::string &ttf_filename)
+{
+	FontDescription desc;
+	desc.set_typeface_name(typeface_name);
+	desc.set_height(height);
+	*this = PathFont(desc, ttf_filename);
+}
+
+PathFont::PathFont(const FontDescription &desc, const std::string &ttf_filename) : impl(std::make_shared<PathFont_Impl>())
+{
+	std::string path = PathHelp::get_fullpath(ttf_filename, PathHelp::path_type_file);
+	std::string new_filename = PathHelp::get_filename(ttf_filename, PathHelp::path_type_file);
+	FileSystem vfs(path);
+	impl->load_font(desc, new_filename, vfs);
+}
+
+PathFont::PathFont(const FontDescription &desc, const std::string &ttf_filename, FileSystem fs) : impl(std::make_shared<PathFont_Impl>())
+{
+	impl->load_font(desc, ttf_filename, fs);
 }
 
 PathFont::~PathFont()

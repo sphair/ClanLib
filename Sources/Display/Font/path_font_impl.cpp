@@ -67,26 +67,25 @@ PathFont_Impl::PathFont_Impl() : font_engine(NULL)
 {
 }
 
-void PathFont_Impl::load_font(const FontDescription &desc, const std::string &filename)
+void PathFont_Impl::load_font(const FontDescription &desc, const std::string &filename, FileSystem fs)
 {
 #ifdef WIN32
-	font_engine = new FontEngine_Win32(desc, filename);
+	font_engine = new FontEngine_Win32(desc, filename, fs);
 #elif defined(__APPLE__)
-	font_engine = new FontEngine_Cocoa(desc, filename);
+	font_engine = new FontEngine_Cocoa(desc, filename, fs);
 #else
-
-	std::string font_file_path = filename;
-	if (font_file_path.empty())
+	std::string new_filename = filename;
+	if (filename.empty())
 	{
-	    // Obtain the best matching font file from fontconfig.
+		// Obtain the best matching font file from fontconfig.
 		FontConfig &fc = FontConfig::instance();
 		font_file_path = fc.match_font(desc);
+		std::string path = PathHelp::get_fullpath(filename, PathHelp::path_type_file);
+		new_filename = PathHelp::get_filename(filename, PathHelp::path_type_file);
+		fs = FileSystem(path);
 	}
 
-	std::string path = PathHelp::get_fullpath(font_file_path, PathHelp::path_type_file);
-	std::string new_filename = PathHelp::get_filename(font_file_path, PathHelp::path_type_file);
-	FileSystem vfs(path);
-	IODevice io_dev = vfs.open_file(new_filename);
+	IODevice io_dev = fs.open_file(new_filename);
 
 	int average_width = desc.get_average_width();
 	int height = desc.get_height();
@@ -97,9 +96,9 @@ void PathFont_Impl::load_font(const FontDescription &desc, const std::string &fi
 
 	font_engine = new FontEngine_Freetype(io_dev, average_width, height);
 #endif
-
 	font_metrics = font_engine->get_metrics();
 }
+
 
 PathFont_Impl::~PathFont_Impl()
 {
@@ -107,7 +106,6 @@ PathFont_Impl::~PathFont_Impl()
 	{
 		delete font_engine;
 	}
-
 }
 
 /////////////////////////////////////////////////////////////////////////////
