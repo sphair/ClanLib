@@ -83,7 +83,7 @@ FontMetrics GlyphCache::get_font_metrics()
 	return font_metrics;
 }
 
-Font_TextureGlyph *GlyphCache::get_glyph(FontEngine *font_engine, GraphicContext &gc, unsigned int glyph)
+Font_TextureGlyph *GlyphCache::get_glyph(Canvas &canvas, FontEngine *font_engine, unsigned int glyph)
 {
 	std::vector< Font_TextureGlyph * >::size_type size = glyph_list.size();
 	for (int cnt=0; cnt<size; cnt++)
@@ -94,7 +94,7 @@ Font_TextureGlyph *GlyphCache::get_glyph(FontEngine *font_engine, GraphicContext
 
 	// If glyph does not exist, create one automatically
 
-	insert_glyph(font_engine, gc, glyph);
+	insert_glyph(canvas, font_engine, glyph);
 
 	// Search for the glyph again
 	size = glyph_list.size();
@@ -132,7 +132,7 @@ void GlyphCache::draw(FontEngine *font_engine, Canvas &canvas, const Pointf &pos
 			continue;
 		}
 
-		Font_TextureGlyph *gptr = get_glyph(font_engine, gc, glyph);
+		Font_TextureGlyph *gptr = get_glyph(canvas, font_engine, glyph);
 		if (gptr)
 		{
 			if (!gptr->texture.is_null())
@@ -159,9 +159,7 @@ void GlyphCache::draw(FontEngine *font_engine, Canvas &canvas, const Pointf &pos
 
 GlyphMetrics GlyphCache::get_metrics(FontEngine *font_engine, Canvas &canvas, unsigned int glyph)
 {
-	GraphicContext &gc = canvas.get_gc();
-
-	Font_TextureGlyph *gptr = get_glyph(font_engine, gc, glyph);
+	Font_TextureGlyph *gptr = get_glyph(canvas, font_engine, glyph);
 	if (gptr)
 	{
 		return gptr->metrics;
@@ -174,7 +172,7 @@ void GlyphCache::get_glyph_path(FontEngine *font_engine, unsigned int glyph_inde
 	return font_engine->load_glyph_path(glyph_index, out_path, out_metrics);
 }
 
-int GlyphCache::get_character_index(FontEngine *font_engine, GraphicContext &gc, const std::string &text, const Point &point)
+int GlyphCache::get_character_index(Canvas &canvas, FontEngine *font_engine, const std::string &text, const Point &point)
 {
 	int dest_x = 0;
 	int dest_y = 0;
@@ -206,7 +204,7 @@ int GlyphCache::get_character_index(FontEngine *font_engine, GraphicContext &gc,
 			std::string::size_type glyph_pos = reader.get_position();
 			reader.next();
 
-			Font_TextureGlyph *gptr = get_glyph(font_engine, gc, glyph);
+			Font_TextureGlyph *gptr = get_glyph(canvas, font_engine,  glyph);
 			if (gptr == NULL) continue;
 
 			Rect position(xpos, ypos - font_ascent, Size(gptr->metrics.advance.width, gptr->metrics.advance.height + font_height + font_external_leading));
@@ -227,7 +225,7 @@ int GlyphCache::get_character_index(FontEngine *font_engine, GraphicContext &gc,
 	return -1;	// Not found
 }
 
-void GlyphCache::insert_glyph(GraphicContext &gc, FontPixelBuffer &pb)
+void GlyphCache::insert_glyph(Canvas &canvas, FontPixelBuffer &pb)
 {
 	// Search for duplicated glyph's, if found silently ignore them
 	std::vector< Font_TextureGlyph * >::size_type size = glyph_list.size();
@@ -247,7 +245,7 @@ void GlyphCache::insert_glyph(GraphicContext &gc, FontPixelBuffer &pb)
 	if (!pb.empty_buffer)
 	{
 		PixelBuffer buffer_with_border = PixelBufferHelp::add_border(pb.buffer, glyph_border_size, pb.buffer_rect);
-
+		GraphicContext gc = canvas.get_gc();
 		Subtexture sub_texture = texture_group.add(gc, Size(buffer_with_border.get_width(), buffer_with_border.get_height() ));
 		font_glyph->texture = sub_texture.get_texture();
 		font_glyph->geometry = Rect(sub_texture.get_geometry().left + glyph_border_size, sub_texture.get_geometry().top + glyph_border_size, pb.buffer_rect.get_size() );
@@ -255,15 +253,7 @@ void GlyphCache::insert_glyph(GraphicContext &gc, FontPixelBuffer &pb)
 	}
 }
 
-void GlyphCache::insert_glyph(FontEngine *font_engine, GraphicContext &gc, const std::string &text)
-{
-	for (std::string::size_type p = 0; p < text.length(); ++p)
-	{
-		insert_glyph(font_engine, gc, text[p]);
-	}
-}
-
-void GlyphCache::insert_glyph(GraphicContext &gc, unsigned int glyph, Subtexture &sub_texture, const Point &offset, const GlyphMetrics &glyph_metrics)
+void GlyphCache::insert_glyph(Canvas &canvas, unsigned int glyph, Subtexture &sub_texture, const Point &offset, const GlyphMetrics &glyph_metrics)
 {
 	// Search for duplicated glyph's, if found silently ignore them
 	std::vector< Font_TextureGlyph * >::size_type size = glyph_list.size();
@@ -288,44 +278,11 @@ void GlyphCache::insert_glyph(GraphicContext &gc, unsigned int glyph, Subtexture
 
 }
 
-void GlyphCache::insert_glyph(FontEngine *font_engine, GraphicContext &gc, int glyph)
+void GlyphCache::insert_glyph(Canvas &canvas, FontEngine *font_engine, int glyph)
 {
-	if (enable_subpixel)
-	{
-		FontPixelBuffer pb = font_engine->get_font_glyph_subpixel(glyph);
-		if (pb.glyph)	// Ignore invalid glyphs
-		{
-			insert_glyph(gc, pb);
-		}
-	}
-	else
-	{
-		FontPixelBuffer pb = font_engine->get_font_glyph_standard(glyph, anti_alias);
-		if (pb.glyph)	// Ignore invalid glyphs
-		{
-			insert_glyph(gc, pb);
-		}
-	}
-}
-
-void GlyphCache::set_texture_group(TextureGroup &new_texture_group)
-{
-	if (new_texture_group.is_null())
-	{
-		throw Exception("Specified texture group is not valid");
-	}
-
-	if (!glyph_list.empty())
-	{
-		throw Exception("Cannot specify a new texture group after the font has been used");
-	}
-
-	texture_group = new_texture_group;
-}
-
-void GlyphCache::set_font_metrics(const FontMetrics &metrics)
-{
-	font_metrics = metrics;
+	FontPixelBuffer pb = enable_subpixel ? font_engine->get_font_glyph_subpixel(glyph) : font_engine->get_font_glyph_standard(glyph, anti_alias);
+	if (pb.glyph)	// Ignore invalid glyphs
+		insert_glyph(canvas, pb);
 }
 
 /////////////////////////////////////////////////////////////////////////////

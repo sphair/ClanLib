@@ -93,7 +93,7 @@ public:
 	FontMetrics get_font_metrics();
 
 	/// \brief Get a glyph. Returns NULL if the glyph was not found
-	Font_TextureGlyph *get_glyph(FontEngine *font_engine, GraphicContext &gc, unsigned int glyph);
+	Font_TextureGlyph *get_glyph(Canvas &canvas, FontEngine *font_engine, unsigned int glyph);
 
 	void get_glyph_path(FontEngine *font_engine, unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics);
 
@@ -105,24 +105,16 @@ public:
 
 	void draw(FontEngine *font_engine, Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color);
 
-	/// \brief Set the font metrics for the bitmap font. This is done automatically if the font is loaded from the system font
-	void set_font_metrics(const FontMetrics &metrics);
+	int get_character_index(Canvas &canvas, FontEngine *font_engine, const std::string &text, const Point &point);
 
-	void set_texture_group(TextureGroup &new_texture_group);
-
-	int get_character_index(FontEngine *font_engine, GraphicContext &gc, const std::string &text, const Point &point);
-
-	void insert_glyph(GraphicContext &gc, unsigned int glyph, Subtexture &sub_texture, const Point &offset, const GlyphMetrics &glyph_metrics);
-	void insert_glyph(FontEngine *font_engine, GraphicContext &gc, int glyph);
-	void insert_glyph(GraphicContext &gc, FontPixelBuffer &pb);
-	void insert_glyph(FontEngine *font_engine, GraphicContext &gc, const std::string &text);
+	void insert_glyph(Canvas &canvas, unsigned int glyph, Subtexture &sub_texture, const Point &offset, const GlyphMetrics &glyph_metrics);
+	void insert_glyph(Canvas &canvas, FontEngine *font_engine, int glyph);
+	void insert_glyph(Canvas &canvas, FontPixelBuffer &pb);
 
 /// \}
 /// \name Implementation
 /// \{
 private:
-	/// \brief Set the font metrics from the OS font
-	void write_font_metrics(GraphicContext &gc);
 
 	std::vector<Font_TextureGlyph* > glyph_list;
 

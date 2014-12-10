@@ -89,7 +89,7 @@ void Font_Impl::free_font()
 	}
 }
 
-void Font_Impl::load_font( GraphicContext &context, const FontDescription &desc, const std::string &filename, FileSystem fs)
+void Font_Impl::load_font(Canvas &canvas, const FontDescription &desc, const std::string &filename, FileSystem fs)
 {
 	free_font();
 
@@ -139,9 +139,9 @@ FontMetrics Font_Impl::get_font_metrics()
 	return glyph_cache.get_font_metrics();
 }
 
-int Font_Impl::get_character_index(GraphicContext &gc, const std::string &text, const Point &point)
+int Font_Impl::get_character_index(Canvas &canvas, const std::string &text, const Point &point)
 {
-	return glyph_cache.get_character_index(font_engine, gc, text, point);
+	return glyph_cache.get_character_index(canvas, font_engine, text, point);
 }
 
 void Font_Impl::load_font( Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics)

@@ -61,7 +61,7 @@ public:
 	/// \brief Constructs standard font
 	///
 	/// \param canvas = Canvas
-	Font( Canvas &canvas, const std::string &typeface_name, int height);
+	Font(Canvas &canvas, const std::string &typeface_name, int height);
 
 	// \brief Constructs standard font
 	Font( Canvas &canvas, const FontDescription &desc);

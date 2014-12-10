@@ -49,10 +49,10 @@ public:
 	Font_Impl();
 	~Font_Impl();
 	
-	void load_font( GraphicContext &context, const FontDescription &desc, const std::string &filename, FileSystem fs);
+	void load_font(Canvas &canvas, const FontDescription &desc, const std::string &filename, FileSystem fs);
 	void load_font( Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics);
 	FontMetrics get_font_metrics();
-	int get_character_index(GraphicContext &gc, const std::string &text, const Point &point);
+	int get_character_index(Canvas &canvas, const std::string &text, const Point &point);
 
 	/// \brief Loads a font from a XML resource definition
 	static Font load(Canvas &canvas, const FontDescription &reference_desc, const std::string &id, const XMLResourceDocument &doc, std::function<Resource<Sprite>(Canvas &, const std::string &)> cb_get_sprite);
