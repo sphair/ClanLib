@@ -114,8 +114,8 @@ void Font_Impl::load_font(Canvas &canvas, const FontDescription &desc, const std
 		// Obtain the best matching font file from fontconfig.
 		FontConfig &fc = FontConfig::instance();
 		std::string font_file_path = fc.match_font(desc);
-		std::string path = PathHelp::get_fullpath(filename, PathHelp::path_type_file);
-		new_filename = PathHelp::get_filename(filename, PathHelp::path_type_file);
+		std::string path = PathHelp::get_fullpath(font_file_path, PathHelp::path_type_file);
+		new_filename = PathHelp::get_filename(font_file_path, PathHelp::path_type_file);
 		fs = FileSystem(path);
 	}
 
