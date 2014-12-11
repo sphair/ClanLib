@@ -39,4 +39,5 @@ private:
 	void on_input_up(const clan::InputEvent &key);
 private:
 	bool quit;
+	float elapsed;
 };

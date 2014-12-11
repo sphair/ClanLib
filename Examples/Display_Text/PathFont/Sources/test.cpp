@@ -54,10 +54,27 @@ int Test::start(const std::vector<std::string> &args)
 
 	clan::Font font(canvas, "tahoma", 16);
 
-	clan::PathFont path_font("comic sans ms", 200);
+	float font_height = 100.0f;
+	clan::PathFont path_font("comic sans ms", font_height);
 	//clan::Font path_font(canvas, "arial", 200);
 
 	clan::Brush brush = clan::Brush::solid(clan::Colorf::white);
+
+	elapsed = 0.0f;
+	sc.connect(window.get_ic().get_mouse().sig_key_up(), [&](const clan::InputEvent &key)
+	{
+		float delta = 50.0f * elapsed;
+		if (key.id == clan::mouse_wheel_up)
+		{
+			font_height += delta;
+			font_height = clan::min(font_height, 300.0f);
+		}
+		if (key.id == clan::mouse_wheel_down)
+		{
+			font_height -= delta;
+			font_height = clan::max(font_height, 1.0f);
+		}
+	});
 
 	clan::GameTime game_time;
 
@@ -66,9 +83,14 @@ int Test::start(const std::vector<std::string> &args)
 	{
 		game_time.update();
 
+		path_font.set_height(font_height);
+
+		elapsed = game_time.get_tick_time_elapsed();
+
 		canvas.clear(clan::Colorf(0.95f, 0.95f, 0.95f));
 
 		font.draw_text(canvas, 17, 40, clan::string_format("%1 FPS", game_time.get_updates_per_second()), clan::Colorf::black);
+		font.draw_text(canvas, canvas.get_width() - 600, 40, clan::string_format("(Use Mouse Wheel to control font height)        Font Height %1", clan::StringHelp::float_to_text(font_height, 1)), clan::Colorf::black);
 
 		std::string message = clan::StringHelp::ucs2_to_utf8({ 0xc5, 'A', 'g', 'j', 'l', 'M' });
 

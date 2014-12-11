@@ -72,6 +72,7 @@ public:
 
 	void load_font(const FontDescription &desc, const std::string &filename, FileSystem fs);
 
+	void set_height(float value) { scaled_height = value / 100.0f; }
 
 /// \}
 /// \name Implementation
@@ -91,7 +92,8 @@ private:
 
 	FontEngine *font_engine;
 
-	int size_height;
+	float scaled_height;	// Relative to 100.0f
+
 /// \}
 };
 

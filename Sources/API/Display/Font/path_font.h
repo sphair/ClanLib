@@ -110,6 +110,9 @@ public:
 /// \{
 
 public:
+	/// \brief Sets the font height
+	void set_height(float value);
+
 	/// \brief Draw text
 	///
 	/// \param canvas = Canvas

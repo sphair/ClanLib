@@ -121,6 +121,13 @@ FontMetrics PathFont::get_font_metrics()
 /////////////////////////////////////////////////////////////////////////////
 // PathFont Operations:
 
+/// \brief Sets the font height
+void PathFont::set_height(float value)
+{
+	if (impl)
+		impl->set_height(value);
+}
+
 void PathFont::draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Brush &brush)
 {
 	if (impl)

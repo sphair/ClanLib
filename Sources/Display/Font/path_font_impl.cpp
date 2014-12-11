@@ -67,8 +67,12 @@ PathFont_Impl::PathFont_Impl() : font_engine(NULL)
 {
 }
 
-void PathFont_Impl::load_font(const FontDescription &desc, const std::string &filename, FileSystem fs)
+void PathFont_Impl::load_font(const FontDescription &original_desc, const std::string &filename, FileSystem fs)
 {
+	FontDescription desc = original_desc.clone();
+	desc.set_height(100.0f);
+	scaled_height = original_desc.get_height() / 100.0f;
+
 #ifdef WIN32
 	font_engine = new FontEngine_Win32(desc, filename, fs);
 #elif defined(__APPLE__)
@@ -114,7 +118,14 @@ PathFont_Impl::~PathFont_Impl()
 
 FontMetrics PathFont_Impl::get_font_metrics()
 {
-	return font_metrics;
+	FontMetrics copy(
+		font_metrics.get_height() * scaled_height,
+		font_metrics.get_line_height() * scaled_height,
+		font_metrics.get_ascent() * scaled_height,
+		font_metrics.get_descent() * scaled_height,
+		font_metrics.get_internal_leading() * scaled_height,
+		font_metrics.get_external_leading() * scaled_height);
+	return copy;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -123,14 +134,19 @@ FontMetrics PathFont_Impl::get_font_metrics()
 GlyphMetrics PathFont_Impl::get_metrics(Canvas &canvas, unsigned int glyph)
 {
 	store_in_char_cache(glyph);
-	return char_cache[glyph].metrics;
+
+	GlyphMetrics glyph_metrics = char_cache[glyph].metrics;
+	glyph_metrics.advance *= scaled_height;
+	glyph_metrics.bbox_offset *= scaled_height;
+	glyph_metrics.bbox_size *= scaled_height;
+
+	return glyph_metrics;
 }
+
 
 GlyphMetrics PathFont_Impl::measure_text(Canvas &canvas, const std::string &string)
 {
 	GlyphMetrics total_metrics;
-	total_metrics.bbox_offset.x = std::numeric_limits<float>::max();
-	total_metrics.bbox_offset.y = std::numeric_limits<float>::max();
 
 	int line_spacing = static_cast<int>(font_metrics.get_line_height() + 0.5f);
 	bool first_char = true;
@@ -149,7 +165,8 @@ GlyphMetrics PathFont_Impl::measure_text(Canvas &canvas, const std::string &stri
 			continue;
 		}
 
-		GlyphMetrics metrics = get_metrics(canvas, glyph);
+		store_in_char_cache(glyph);
+		GlyphMetrics metrics = char_cache[glyph].metrics;
 		metrics.bbox_offset.x += total_metrics.advance.width;
 		metrics.bbox_offset.y += total_metrics.advance.height;
 
@@ -169,6 +186,11 @@ GlyphMetrics PathFont_Impl::measure_text(Canvas &canvas, const std::string &stri
 
 	total_metrics.bbox_offset = text_bbox.get_top_left();
 	total_metrics.bbox_size = text_bbox.get_size();
+
+	total_metrics.advance *= scaled_height;
+	total_metrics.bbox_offset *= scaled_height;
+	total_metrics.bbox_size *= scaled_height;
+
 	return total_metrics;
 }
 
@@ -176,6 +198,8 @@ void PathFont_Impl::draw_text(Canvas &canvas, const Pointf &position, const std:
 {
 	float offset_x = 0;
 	float offset_y = 0;
+
+	clan::Mat4f scale_matrix = clan::Mat4f::scale(scaled_height, scaled_height, scaled_height);
 
 	int line_spacing = font_metrics.get_height() + font_metrics.get_external_leading();
 
@@ -189,15 +213,15 @@ void PathFont_Impl::draw_text(Canvas &canvas, const Pointf &position, const std:
 		if (glyph == '\n')
 		{
 			offset_x = 0;
-			offset_y += line_spacing;
+			offset_y += line_spacing * scaled_height;
 			continue;
 		}
 
 		store_in_char_cache(glyph);
 
-		canvas.set_transform(original_transform * Mat4f::translate(position.x + offset_x, position.y + offset_y, 0));
+		canvas.set_transform(original_transform * Mat4f::translate(position.x + offset_x, position.y + offset_y, 0) * scale_matrix);
 		char_cache[glyph].path.fill(canvas, brush);
-		offset_x += char_cache[glyph].metrics.advance.width;
+		offset_x += char_cache[glyph].metrics.advance.width * scaled_height;
 
 	}
 	canvas.set_transform(original_transform);
