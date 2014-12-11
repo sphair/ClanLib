@@ -138,7 +138,6 @@ Win32/dwm_functions.cpp
 else
 libclan40Display_la_SOURCES += \
 Font/X11/font_engine_freetype.cpp \
-Font/X11/font_provider_freetype.cpp \
 X11/display_message_queue_x11.cpp \
 X11/input_device_provider_x11keyboard.cpp \
 X11/clipboard_x11.cpp \

@@ -44,4 +44,6 @@
 #endif
 
 #include <cstring>
+#include <limits>
+
 

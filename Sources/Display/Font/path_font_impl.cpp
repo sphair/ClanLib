@@ -79,7 +79,7 @@ void PathFont_Impl::load_font(const FontDescription &desc, const std::string &fi
 	{
 		// Obtain the best matching font file from fontconfig.
 		FontConfig &fc = FontConfig::instance();
-		font_file_path = fc.match_font(desc);
+		std::string font_file_path = fc.match_font(desc);
 		std::string path = PathHelp::get_fullpath(filename, PathHelp::path_type_file);
 		new_filename = PathHelp::get_filename(filename, PathHelp::path_type_file);
 		fs = FileSystem(path);

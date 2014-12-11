@@ -267,11 +267,11 @@ void FontEngine_Freetype::load_glyph_path(unsigned int c, Path &out_path, GlyphM
 			}
 			else if( tp.tag == FT_Curve_Tag_Cubic && points[i-1].tag == FT_Curve_Tag_Cubic )
 			{
-				// TODO: This needs checking. I do not have a font that uses cubics - This is likely to be incorrect
-				if (i >= 2)
-				{
-					out_path.bezier_to(points[i - 2].pos, points[i - 1].pos, tp.pos, points[i + 1].pos);
-				}
+				// TODO: This needs checking. I do not have a font that uses cubics - This is likely to be incorrect ... and not supported by path
+				//if (i >= 2)
+				//{
+					//out_path.bezier_to(points[i - 2].pos, points[i - 1].pos, tp.pos, points[i + 1].pos);
+				//}
 			}
 		}
 
