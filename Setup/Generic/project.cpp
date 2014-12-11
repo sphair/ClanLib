@@ -71,6 +71,8 @@ static const char *exclude_from_build[] =
 	"AGL",
 	"font_engine_cocoa.h",
 	"font_engine_cocoa.mm",
+	"font_engine_freetype.h",
+	"font_engine_freetype.cpp",
 	nullptr
 };
 
