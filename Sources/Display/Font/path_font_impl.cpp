@@ -36,7 +36,7 @@
 #elif defined(WIN32)
 #include "FontEngine/font_engine_win32.h"
 #else
-#include "X11/font_engine_freetype.h"
+#include "FontEngine/font_engine_freetype.h"
 #include "../Display/X11/font_config.h"
 #endif
 
