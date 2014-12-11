@@ -88,7 +88,7 @@ void SoundOutput_Impl::stop_session(SoundBuffer_Session &session)
 {
 	MutexSection mutex_lock(&mutex);
 
-	for (std::vector<SoundBuffer_Session>::iterator it = sessions.begin(); it != sessions.end(); ++it)
+	for (auto it = sessions.begin(); it != sessions.end(); ++it)
 	{
 		if (session.impl.get() == it->impl.get())
 		{

@@ -314,7 +314,7 @@ XMLResourceNode XMLResourceDocument::create_resource(const std::string &resource
 	// Walk tree as deep as we can get:
 	DomNode parent = impl->document.get_document_element();
 	DomNode cur = parent.get_first_child();
-	std::vector<std::string>::iterator path_it = path_elements.begin();
+	auto path_it = path_elements.begin();
 	while (!cur.is_null() && path_it != path_elements.end())
 	{
 		if (cur.is_element() &&

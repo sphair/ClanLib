@@ -316,7 +316,7 @@ PrimitivesArrayProvider *GL1GraphicContextProvider::alloc_primitives_array()
 
 std::shared_ptr<RasterizerStateProvider> GL1GraphicContextProvider::create_rasterizer_state(const RasterizerStateDescription &desc)
 {
-	std::map<RasterizerStateDescription, std::shared_ptr<RasterizerStateProvider> >::iterator it = rasterizer_states.find(desc);
+	auto it = rasterizer_states.find(desc);
 	if (it != rasterizer_states.end())
 	{
 		return it->second;
@@ -331,7 +331,7 @@ std::shared_ptr<RasterizerStateProvider> GL1GraphicContextProvider::create_raste
 
 std::shared_ptr<BlendStateProvider> GL1GraphicContextProvider::create_blend_state(const BlendStateDescription &desc)
 {
-	std::map<BlendStateDescription, std::shared_ptr<BlendStateProvider> >::iterator it = blend_states.find(desc);
+	auto it = blend_states.find(desc);
 	if (it != blend_states.end())
 	{
 		return it->second;
@@ -346,7 +346,7 @@ std::shared_ptr<BlendStateProvider> GL1GraphicContextProvider::create_blend_stat
 
 std::shared_ptr<DepthStencilStateProvider> GL1GraphicContextProvider::create_depth_stencil_state(const DepthStencilStateDescription &desc)
 {
-	std::map<DepthStencilStateDescription, std::shared_ptr<DepthStencilStateProvider> >::iterator it = depth_stencil_states.find(desc);
+	auto it = depth_stencil_states.find(desc);
 	if (it != depth_stencil_states.end())
 	{
 		return it->second;

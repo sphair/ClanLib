@@ -95,7 +95,7 @@ void GL1FrameBufferProvider::attach_color(int attachment_index, const Texture2D 
 
 	// Find existing pbuffer
 	std::weak_ptr<Texture_Impl> texture_impl(texture.get_impl());
-	std::map< std::weak_ptr<Texture_Impl>, PBuffer_GL1, WeakPtrCompare>::iterator texture_it = texture_pbuffer_map.find(texture_impl);
+	auto texture_it = texture_pbuffer_map.find(texture_impl);
 	if (texture_it == texture_pbuffer_map.end())
 	{
 		// Not found, create a new entry

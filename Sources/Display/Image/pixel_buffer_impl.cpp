@@ -65,7 +65,7 @@ PixelBuffer_Impl::PixelBuffer_Impl(PixelBufferProvider *provider)
 PixelBuffer_Impl::PixelBuffer_Impl(int width, int height, TextureFormat texture_format, const void *data_ptr, bool only_reference_data)
 : provider(nullptr)	// Default to locked for CPU buffer
 {
-	CPUPixelBufferProvider *cpu_provider = new CPUPixelBufferProvider;
+	auto cpu_provider = new CPUPixelBufferProvider;
 	provider = cpu_provider;
 
 	cpu_provider->create(texture_format, Size(width, height), data_ptr, only_reference_data);

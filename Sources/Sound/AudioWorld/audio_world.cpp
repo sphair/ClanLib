@@ -38,12 +38,12 @@ bool AudioWorld::is_reverse_stereo_enabled() const
 
 void AudioWorld::update()
 {
-	for (std::list<AudioObject_Impl *>::iterator it = impl->objects.begin(); it != impl->objects.end(); ++it)
+	for (auto it = impl->objects.begin(); it != impl->objects.end(); ++it)
 	{
 		impl->update_session(*it);
 	}
 
-	for (std::list<AudioObject>::iterator it = impl->active_objects.begin(); it != impl->active_objects.end(); )
+	for (auto it = impl->active_objects.begin(); it != impl->active_objects.end(); )
 	{
 		if (it->impl->session.is_playing())
 		{

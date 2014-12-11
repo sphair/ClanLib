@@ -151,7 +151,7 @@ std::string GL3ShaderObjectProvider::get_info_log() const
 	GLsizei buffer_size = 16*1024;
 	while (buffer_size < 2*1024*1024)
 	{
-		GLchar *info_log = new GLchar[buffer_size];
+		auto info_log = new GLchar[buffer_size];
 		GLsizei length = 0;
 		glGetShaderInfoLog(handle, buffer_size, &length, info_log);
 		if (length < buffer_size-1)
@@ -171,7 +171,7 @@ std::string GL3ShaderObjectProvider::get_shader_source() const
 	GLsizei buffer_size = 16*1024;
 	while (buffer_size < 2*1024*1024)
 	{
-		GLchar *shader_source = new GLchar[buffer_size];
+		auto shader_source = new GLchar[buffer_size];
 		GLsizei length = 0;
 		glGetShaderSource(handle, buffer_size, &length, shader_source);
 		if (length < buffer_size-1)

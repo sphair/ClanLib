@@ -235,7 +235,7 @@ void GlyphCache::insert_glyph(Canvas &canvas, FontPixelBuffer &pb)
 			return ;
 	}
 
-	Font_TextureGlyph *font_glyph = new Font_TextureGlyph();
+	auto font_glyph = new Font_TextureGlyph();
 	
 	glyph_list.push_back(font_glyph);
 	font_glyph->glyph = pb.glyph;
@@ -263,7 +263,7 @@ void GlyphCache::insert_glyph(Canvas &canvas, unsigned int glyph, Subtexture &su
 			return;
 	}
 
-	Font_TextureGlyph *font_glyph = new Font_TextureGlyph();
+	auto font_glyph = new Font_TextureGlyph();
 	
 	glyph_list.push_back(font_glyph);
 	font_glyph->glyph = glyph;

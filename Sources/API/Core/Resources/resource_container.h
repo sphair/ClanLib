@@ -54,7 +54,7 @@ public:
 	template<typename Type>
 	Resource<Type> get(const std::string &name)
 	{
-		std::map<std::string, ResourceObject>::iterator it = impl->resources.find(name);
+		auto it = impl->resources.find(name);
 		if (it != impl->resources.end())
 			return it->second.cast<Type>();
 

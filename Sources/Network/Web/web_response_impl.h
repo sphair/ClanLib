@@ -50,7 +50,7 @@ inline void WebResponse_Impl::send_request(TCPConnection &connection)
 	}
 
 	std::string request_header = string_format("%1 %2%3 HTTP/1.1\r\n", get_request_keyword(), request->url.path, request->url.query);
-	for (std::map<std::string, std::string>::iterator it = request->headers.begin(); it != request->headers.end(); ++it)
+	for (auto it = request->headers.begin(); it != request->headers.end(); ++it)
 		request_header += string_format("%1: %2\r\n", it->first, it->second);
 	request_header += "\r\n";
 
@@ -226,7 +226,7 @@ inline void WebResponse_Impl::read_header(TCPConnection &connection, RingBuffer 
 		std::string field_name = StringHelp::trim(lines[i].substr(0, index_colon));
 		std::string field_value = StringHelp::trim(lines[i].substr(index_colon+1));
 
-		std::map<std::string, std::string>::iterator it = headers.find(field_name);
+		auto it = headers.find(field_name);
 		if (it == headers.end())
 		{
 			headers[field_name] = field_value;

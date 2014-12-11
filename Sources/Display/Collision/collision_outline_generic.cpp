@@ -742,13 +742,13 @@ bool CollisionOutline_Impl::contours_collide(const Contour &contour1, const Cont
 void CollisionOutline_Impl::calculate_penetration_depth( std::vector< CollidingContours > & collision_info )
 {
 	// Figure out the pen-depth
-	for(std::vector<CollidingContours>::iterator it = collision_info.begin(); it != collision_info.end(); ++it)
+	for(auto it = collision_info.begin(); it != collision_info.end(); ++it)
 	{
 		CollidingContours &cc = (*it);
 		if(cc.points.size() % 2 != 0)
 		{
 			std::cout << "ERROR: we have an uneven number of collisionpoints: " << cc.points.size() << "\n";
-			for(std::vector<CollisionPoint>::iterator pit = cc.points.begin(); pit != cc.points.end(); ++pit)
+			for(auto pit = cc.points.begin(); pit != cc.points.end(); ++pit)
 			{
 				CollisionPoint &p1 = (*pit);
 				std::cout << "\tLineSegment1:"

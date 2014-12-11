@@ -268,10 +268,10 @@ void EarClipTriangulator_Impl::end_hole()
 		}
 	}
 
-	LinkedVertice *outer_bridge_start = new LinkedVertice();
-	LinkedVertice *outer_bridge_end = new LinkedVertice();
-	LinkedVertice *inner_bridge_start = new LinkedVertice();
-	LinkedVertice *inner_bridge_end = new LinkedVertice();
+	auto outer_bridge_start = new LinkedVertice();
+	auto outer_bridge_end = new LinkedVertice();
+	auto inner_bridge_start = new LinkedVertice();
+	auto inner_bridge_end = new LinkedVertice();
 
 	//  offset new points along old edges
 	Pointf outer_point(outer_vertice->x, outer_vertice->y);
@@ -397,7 +397,7 @@ void EarClipTriangulator_Impl::create_lists(bool create_ear_list)
 	{
 //		cl_write_console_line("Ear list:");
 
-		for( std::vector<LinkedVertice*>::iterator it = vertices.begin(); it != vertices.end(); ++it )
+		for( auto it = vertices.begin(); it != vertices.end(); ++it )
 		{
 			if( is_ear(*(*it)) )
 			{

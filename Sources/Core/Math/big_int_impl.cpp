@@ -171,7 +171,7 @@ void BigInt_Impl::internal_grow(unsigned int min)
 		// Set min to next nearest default precision block size
 		min = ((min + (default_allocated_precision - 1)) / default_allocated_precision) * default_allocated_precision;
 
-		ubyte32 *tmp = new ubyte32[min];
+		auto tmp = new ubyte32[min];
 
 		memcpy(tmp, digits, sizeof(ubyte32) * digits_used);
 		memset(tmp + digits_used, 0, (min - digits_used) * sizeof(ubyte32));

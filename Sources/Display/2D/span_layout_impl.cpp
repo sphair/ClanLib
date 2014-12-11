@@ -682,7 +682,7 @@ void SpanLayout_Impl::layout_text(Canvas &canvas, std::vector<TextBlock> blocks,
 void SpanLayout_Impl::next_line(CurrentLine &current_line)
 {
 	current_line.cur_line.width = current_line.x_position;
-	for (std::vector<LineSegment>::reverse_iterator it = current_line.cur_line.segments.rbegin(); it != current_line.cur_line.segments.rend(); ++it)
+	for (auto it = current_line.cur_line.segments.rbegin(); it != current_line.cur_line.segments.rend(); ++it)
 	{
 		LineSegment &segment = *it;
 		if (segment.type == object_text)
@@ -715,7 +715,7 @@ void SpanLayout_Impl::next_line(CurrentLine &current_line)
 
 void SpanLayout_Impl::place_line_segments(CurrentLine &current_line, TextSizeResult &text_size_result)
 {
-	for (std::vector<LineSegment>::iterator it = text_size_result.segments.begin(); it != text_size_result.segments.end(); ++it)
+	for (auto it = text_size_result.segments.begin(); it != text_size_result.segments.end(); ++it)
 	{
 		LineSegment segment = *it;
 		segment.x_position += current_line.x_position;

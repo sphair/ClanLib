@@ -71,7 +71,7 @@ public:
 		thread.join();
 
 		// Delete all timer objects in the map
-		for (std::map<int, Timer_Object* >::iterator it = timer_objects.begin(); it != timer_objects.end(); ++it)
+		for (auto it = timer_objects.begin(); it != timer_objects.end(); ++it)
 		{
 			delete it->second;
 		}
@@ -105,7 +105,7 @@ public:
 	{
 		// Remove the unused timers, to prevent memory leaks
 		MutexSection mutex_lock(&mutex);
-		std::map<int, Timer_Object *>::iterator it = timer_objects.find(timer_id);
+		auto it = timer_objects.find(timer_id);
 		if (it != timer_objects.end())
 		{
 			delete it->second;
@@ -120,7 +120,7 @@ public:
 		ubyte64 current_time = System::get_time();
 
 		// Scan for events and trigger them
-		for (std::map<int, Timer_Object *>::iterator it = timer_objects.begin(); it != timer_objects.end();)
+		for (auto it = timer_objects.begin(); it != timer_objects.end();)
 		{
 			Timer_Object &object = *(it->second);
 			++it;	// We need to update the iterator here - Because func_expired may remove the timer object
@@ -162,13 +162,13 @@ private:
 	Timer_Object &get_timer_object(int timer_id)
 	{
 		// Find existing timer
-		std::map<int, Timer_Object* >::iterator it = timer_objects.find(timer_id);
+		auto it = timer_objects.find(timer_id);
 		if (it != timer_objects.end())
 		{
 			return *(it->second);
 		}
 
-		Timer_Object *object = new Timer_Object;
+		auto object = new Timer_Object;
 		timer_objects[timer_id] = object;
 		return *object;
 	}
@@ -187,7 +187,7 @@ private:
 			bool found_timer = false;
 
 			// Scan for timers to find the next one to call
-			for (std::map<int, Timer_Object *>::iterator it = timer_objects.begin(); it != timer_objects.end(); ++it)
+			for (auto it = timer_objects.begin(); it != timer_objects.end(); ++it)
 			{
 				Timer_Object &object = *(it->second);
 				if (!object.stopped)

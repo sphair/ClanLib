@@ -106,7 +106,7 @@ DomNode DomNodeList::item(unsigned long index) const
 		DomNode empty_node;
 		return(empty_node);
 	}
-	std::vector<DomNode>::const_iterator i=node_list.begin()+index;
+	auto i=node_list.begin()+index;
 	return(*i);
 }
 

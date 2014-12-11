@@ -418,7 +418,7 @@ std::string IODevice::read_string_a()
 {
 	int size = read_int32();
 
-	char *str = new char[size];
+	auto str = new char[size];
 	try
 	{
 		read(str, size);
@@ -542,7 +542,7 @@ std::string IODevice::read_string_text(const char *skip_initial_chars, const cha
 
 	// Read the string, now that we know its length
 
-	char *str = new char[size];
+	auto str = new char[size];
 	try
 	{
 		read(str, size);

@@ -63,7 +63,7 @@ void ZipDigitalSignature::load(IODevice &input)
 
 	size_of_data = input.read_int16();
 
-	char *str = new char[size_of_data];
+	auto str = new char[size_of_data];
 	try
 	{
 		input.read(str, size_of_data);

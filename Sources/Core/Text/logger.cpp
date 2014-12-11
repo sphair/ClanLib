@@ -68,7 +68,7 @@ void Logger::enable()
 void Logger::disable()
 {
 	MutexSection mutex_lock(&Logger::mutex);
-	std::vector<Logger*>::iterator il = std::find(instances.begin(), instances.end(), this);
+	auto il = std::find(instances.begin(), instances.end(), this);
 	if(il != instances.end())
 		instances.erase(il);
 }
@@ -128,7 +128,7 @@ void log_event(const std::string &type, const std::string &text)
 	MutexSection mutex_lock(&Logger::mutex);
 	if (Logger::instances.empty())
 		return;
-	for(std::vector<Logger*>::iterator il = Logger::instances.begin(); il != Logger::instances.end(); il++)
+	for(auto il = Logger::instances.begin(); il != Logger::instances.end(); il++)
 		(*il)->log(type, text);
 }
 

@@ -56,7 +56,7 @@ XMLDisplayCache::~XMLDisplayCache()
 
 Resource<Sprite> XMLDisplayCache::get_sprite(Canvas &canvas, const std::string &id)
 {
-	std::map<std::string, Resource<Sprite> >::iterator it = sprites.find(id);
+	auto it = sprites.find(id);
 	if (it != sprites.end())
 	{
 		Resource<Sprite> sprite = it->second;
@@ -72,7 +72,7 @@ Resource<Sprite> XMLDisplayCache::get_sprite(Canvas &canvas, const std::string &
 
 Resource<Image> XMLDisplayCache::get_image(Canvas &canvas, const std::string &id)
 {
-	std::map<std::string, Resource<Image> >::iterator it = images.find(id);
+	auto it = images.find(id);
 	if (it != images.end())
 	{
 		Resource<Image> image = it->second;
@@ -88,7 +88,7 @@ Resource<Image> XMLDisplayCache::get_image(Canvas &canvas, const std::string &id
 
 Resource<CollisionOutline> XMLDisplayCache::get_collision(const std::string &id)
 {
-	std::map<std::string, Resource<CollisionOutline> >::iterator it = collisions.find(id);
+	auto it = collisions.find(id);
 	if (it != collisions.end())
 	{
 		Resource<CollisionOutline> collision = it->second;
@@ -104,7 +104,7 @@ Resource<CollisionOutline> XMLDisplayCache::get_collision(const std::string &id)
 
 Resource<Texture> XMLDisplayCache::get_texture(GraphicContext &gc, const std::string &id)
 {
-	std::map<std::string, Resource<Texture> >::iterator it = textures.find(id);
+	auto it = textures.find(id);
 	if (it != textures.end())
 		return it->second;
 
@@ -117,7 +117,7 @@ Resource<Font> XMLDisplayCache::get_font(Canvas &canvas, const FontDescription &
 {
 	std::string id = desc.get_unique_id();
 
-	std::map<std::string, Resource<Font> >::iterator it = fonts.find(id);
+	auto it = fonts.find(id);
 	if (it != fonts.end())
 		return it->second;
 

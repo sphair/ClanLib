@@ -95,7 +95,7 @@ void DelauneyTriangulator_Impl::create_ordered_vertex_list(std::vector<DelauneyT
 	std::sort(vertices.begin(), vertices.end(), CompareVertices());
 
 	// Remove duplicates:
-	std::vector<DelauneyTriangulator_Vertex *>::iterator it = vertices.begin();
+	auto it = vertices.begin();
 	if (it == vertices.end()) return;
 	float last_x = (*it)->x;
 	float last_y = (*it)->y;

@@ -45,7 +45,7 @@ ResourceManager::~ResourceManager()
 
 UserDataOwner &ResourceManager::get_cache_owner(const std::string &name) const
 {
-	std::map<std::string, std::shared_ptr<UserDataOwner> >::iterator it = impl->caches.find(name);
+	auto it = impl->caches.find(name);
 	if (it == impl->caches.end())
 		throw Exception(string_format("ResourceManager has no cache named %1", name));
 	return *it->second.get();

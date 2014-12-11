@@ -444,7 +444,7 @@ Color Color::find_color(const std::string &name)
 		color_map["gray90"] = &Color::gray90;
 	}
 	
-	std::map<std::string, Color *>::iterator it = color_map.find(StringHelp::text_to_local8(name));
+	auto it = color_map.find(StringHelp::text_to_local8(name));
 	if (it != color_map.end()) return *it->second;
 
 	static Color null(0,0,0,0);

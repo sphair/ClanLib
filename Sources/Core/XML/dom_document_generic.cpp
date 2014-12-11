@@ -107,7 +107,7 @@ unsigned int DomDocument_Impl::allocate_tree_node()
 {
 	if (free_nodes.empty())
 	{
-		DomTreeNode *node = new (&node_allocator) DomTreeNode();
+		auto node = new (&node_allocator) DomTreeNode();
 		nodes.push_back(node);
 		return nodes.size() - 1;
 	}
@@ -129,7 +129,7 @@ DomNode_Impl *DomDocument_Impl::allocate_dom_node()
 {
 	if (free_dom_nodes.empty())
 	{
-		DomNode_Impl *node = new DomNode_Impl;
+		auto node = new DomNode_Impl;
 		node->owner_document = owner_document;
 		return node;
 	}
@@ -154,7 +154,7 @@ DomNamedNodeMap_Impl *DomDocument_Impl::allocate_named_node_map()
 {
 	if (free_named_node_maps.empty())
 	{
-		DomNamedNodeMap_Impl *map = new (&node_allocator) DomNamedNodeMap_Impl();
+		auto map = new (&node_allocator) DomNamedNodeMap_Impl();
 		map->owner_document = owner_document;
 		return map;
 	}

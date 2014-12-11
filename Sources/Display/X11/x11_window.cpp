@@ -1419,7 +1419,7 @@ void X11Window::setup_joysticks()
 		{
 			try
 			{
-				InputDeviceProvider_LinuxJoystick *joystick_provider = new InputDeviceProvider_LinuxJoystick(this, pathname);
+				auto joystick_provider = new InputDeviceProvider_LinuxJoystick(this, pathname);
 				InputDevice device(joystick_provider);
 				joysticks.push_back(device);
 				ic.add_joystick(device);

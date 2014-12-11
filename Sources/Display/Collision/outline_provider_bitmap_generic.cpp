@@ -175,7 +175,7 @@ void OutlineProviderBitmap_Impl::find_contours()
 				std::vector<Pointf> rpoints;
 				rpoints.push_back(contour.get_points().front());
 				contour.get_points().erase(contour.get_points().begin());
-				std::vector<Pointf>::reverse_iterator it = contour.get_points().rend();
+				auto it = contour.get_points().rend();
 				do
 				{
 					it--;
@@ -212,7 +212,7 @@ void OutlineProviderBitmap_Impl::find_contours()
 						}
 							
 						// Now its time to add our reversed points
-						for(std::vector<Pointf>::iterator it = rpoints.begin(); it != rpoints.end(); ++it)
+						for(auto it = rpoints.begin(); it != rpoints.end(); ++it)
 						{
 							combined_points.push_back(*it);
 						}

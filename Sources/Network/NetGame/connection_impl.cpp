@@ -69,7 +69,7 @@ NetGameConnection_Impl::~NetGameConnection_Impl()
 
 void NetGameConnection_Impl::set_data(const std::string &name, void *new_data)
 {
-	for (std::vector<AttachedData>::iterator it = data.begin(); it != data.end(); ++it)
+	for (auto it = data.begin(); it != data.end(); ++it)
 	{
 		if (it->name == name)
 		{
@@ -85,7 +85,7 @@ void NetGameConnection_Impl::set_data(const std::string &name, void *new_data)
 
 void *NetGameConnection_Impl::get_data(const std::string &name) const
 {
-	for (std::vector<AttachedData>::const_iterator it = data.begin(); it != data.end(); ++it)
+	for (auto it = data.begin(); it != data.end(); ++it)
 	{
 		if (it->name == name)
 			return it->data;

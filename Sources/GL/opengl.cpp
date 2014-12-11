@@ -363,7 +363,7 @@ static ProcAddress *cl_get_proc_address_extension(const std::string& function_na
 
 GLFunctions *cl_setup_binds()
 {
-	GLFunctions *functions = new GLFunctions;
+	auto functions = new GLFunctions;
 	memset(functions, 0, sizeof(GLFunctions));
 
 	functions->cullFace = (GLFunctions::ptr_glCullFace) cl_get_proc_address_extension("glCullFace");

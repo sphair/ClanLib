@@ -79,9 +79,9 @@ void ZipFileHeader::load(IODevice &input)
 	relative_offset_of_local_header = input.read_int32();
 	filename.resize(file_name_length);
 
-	char *str1 = new char[file_name_length];
-	char *str2 = new char[extra_field_length];
-	char *str3 = new char[file_comment_length];
+	auto str1 = new char[file_name_length];
+	auto str2 = new char[extra_field_length];
+	auto str3 = new char[file_comment_length];
 	try
 	{
 		input.read(str1, file_name_length);

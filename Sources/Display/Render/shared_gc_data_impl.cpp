@@ -60,7 +60,7 @@ void SharedGCData_Impl::remove_provider(GraphicContextProvider *provider)
 	if (graphic_context_providers.size() == 1)
 		dispose_objects();
 
-	for (std::vector<GraphicContextProvider*>::iterator it=graphic_context_providers.begin(); it != graphic_context_providers.end(); ++it)
+	for (auto it=graphic_context_providers.begin(); it != graphic_context_providers.end(); ++it)
 	{
 		if (provider == (*it))
 		{

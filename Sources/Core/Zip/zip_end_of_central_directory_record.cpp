@@ -72,7 +72,7 @@ void ZipEndOfCentralDirectoryRecord::load(IODevice &input)
 	offset_to_start_of_central_directory = input.read_int32();
 	file_comment_length = input.read_int16();
 
-	char *str = new char[file_comment_length];
+	auto str = new char[file_comment_length];
 	try
 	{
 		input.read(str, file_comment_length);

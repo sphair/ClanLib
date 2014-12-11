@@ -117,7 +117,7 @@ RingBuffer &RingBuffer::operator=(const RingBuffer &other)
 {
 	if (this != &other)
 	{
-		char *new_data = new char[other.size];
+		auto new_data = new char[other.size];
 		delete[] data;
 		data = new_data;
 		size = other.size;

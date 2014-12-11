@@ -49,7 +49,7 @@ XMLSoundCache::~XMLSoundCache()
 
 Resource<SoundBuffer> XMLSoundCache::get_sound(const std::string &id)
 {
-	std::map<std::string, Resource<SoundBuffer> >::iterator it = sounds.find(id);
+	auto it = sounds.find(id);
 	if (it != sounds.end())
 		return it->second;
 
