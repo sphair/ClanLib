@@ -182,9 +182,8 @@ GlyphMetrics FontEngine_Freetype::get_glyph_metrics(unsigned int glyph)
 
 	FT_GlyphSlot slot = face->glyph;
 	GlyphMetrics metrics;
-	// Note, these values have not been checked
 	metrics.bbox_offset.x = slot->metrics.horiBearingX / 64.0f;
-	metrics.bbox_offset.y = slot->metrics.horiBearingY / 64.0f;
+	metrics.bbox_offset.y = -slot->metrics.horiBearingY / 64.0f;
 	metrics.bbox_size.width = slot->metrics.width / 64.0f;
 	metrics.bbox_size.height = slot->metrics.height / 64.0f;
 	metrics.advance.width = slot->advance.x / 64.0f;
@@ -250,13 +249,22 @@ void FontEngine_Freetype::load_glyph_path(unsigned int c, Path &out_path, GlyphM
 		std::vector<TaggedPoint> points = get_contour_points(cont, &ft_outline);
 		points.push_back(points.front()); // just to simplify, it's removed later.
 
+		bool initial = true;
 		for( unsigned int i = 0; i < points.size()-1; i++ )
 		{
 			TaggedPoint &tp = points[i];
 
 			if( tp.tag == FT_Curve_Tag_On )
 			{
-				out_path.line_to(tp.pos);
+				if (initial)
+				{
+					out_path.move_to(tp.pos);
+					initial = false;
+				}
+				else
+				{
+					out_path.line_to(tp.pos);
+				}
 			}
 			else if( tp.tag == FT_Curve_Tag_Conic )
 			{
@@ -267,7 +275,7 @@ void FontEngine_Freetype::load_glyph_path(unsigned int c, Path &out_path, GlyphM
 			}
 			else if( tp.tag == FT_Curve_Tag_Cubic && points[i-1].tag == FT_Curve_Tag_Cubic )
 			{
-				// TODO: This needs checking. I do not have a font that uses cubics - This is likely to be incorrect ... and not supported by path
+				// TODO: This needs checking. We do not have a fonts that uses cubics ... and bizier is currrently not supported by path
 				//if (i >= 2)
 				//{
 					//out_path.bezier_to(points[i - 2].pos, points[i - 1].pos, tp.pos, points[i + 1].pos);
