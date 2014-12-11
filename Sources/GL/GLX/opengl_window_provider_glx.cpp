@@ -74,9 +74,9 @@ namespace clan
 
 OpenGLWindowProvider::OpenGLWindowProvider(OpenGLWindowDescription &opengl_desc)
 : x11_window(),
- opengl_context(0), opengl_visual_info(0), glXSwapIntervalSGI(NULL), glXSwapIntervalMESA(NULL), swap_interval(-1), opengl_desc(opengl_desc), using_gl3(true)
+ opengl_context(nullptr), opengl_visual_info(nullptr), glXSwapIntervalSGI(nullptr), glXSwapIntervalMESA(nullptr), swap_interval(-1), opengl_desc(opengl_desc), using_gl3(true)
 #ifdef GL_USE_DLOPEN
-, opengl_lib_handle(NULL)
+, opengl_lib_handle(nullptr)
 #endif
 {
 #ifdef GL_USE_DLOPEN
@@ -131,27 +131,27 @@ OpenGLWindowProvider::OpenGLWindowProvider(OpenGLWindowDescription &opengl_desc)
 	glx.glXGetProcAddressARB = (GL_GLXFunctions::ptr_glXGetProcAddressARB) GL_LOAD_GLFUNC(glXGetProcAddressARB);
 	glx.glXGetProcAddress = (GL_GLXFunctions::ptr_glXGetProcAddress) GL_LOAD_GLFUNC(glXGetProcAddress);
 
-	glx.glXCreatePbufferSGIX = NULL;	// Setup later
-	glx.glXDestroyPbufferSGIX = NULL;	// Setup later
-	glx.glXChooseFBConfigSGIX = NULL;	// Setup later
-	glx.glXGetVisualFromFBConfigSGIX = NULL;	// Setup later
+	glx.glXCreatePbufferSGIX = nullptr;	// Setup later
+	glx.glXDestroyPbufferSGIX = nullptr;	// Setup later
+	glx.glXChooseFBConfigSGIX = nullptr;	// Setup later
+	glx.glXGetVisualFromFBConfigSGIX = nullptr;	// Setup later
 
-	if ( (glx.glXDestroyContext == NULL) ||
-		(glx.glXMakeCurrent == NULL) ||
-		(glx.glXGetCurrentContext == NULL) ||
-		(glx.glXChooseVisual == NULL) ||
-		(glx.glXIsDirect == NULL) ||
-		(glx.glXGetConfig == NULL) ||
-		(glx.glXQueryExtensionsString == NULL) ||
-		(glx.glXQueryVersion == NULL) ||
-		(glx.glXGetVisualFromFBConfig == NULL) ||
-		(glx.glXCreateNewContext == NULL) ||
-		(glx.glXCreateContext == NULL) )
+	if ( (glx.glXDestroyContext == nullptr) ||
+		(glx.glXMakeCurrent == nullptr) ||
+		(glx.glXGetCurrentContext == nullptr) ||
+		(glx.glXChooseVisual == nullptr) ||
+		(glx.glXIsDirect == nullptr) ||
+		(glx.glXGetConfig == nullptr) ||
+		(glx.glXQueryExtensionsString == nullptr) ||
+		(glx.glXQueryVersion == nullptr) ||
+		(glx.glXGetVisualFromFBConfig == nullptr) ||
+		(glx.glXCreateNewContext == nullptr) ||
+		(glx.glXCreateContext == nullptr) )
 	{
 		throw Exception("Cannot obtain required OpenGL GLX functions");
 	}
 
-	if ((glx.glXGetProcAddressARB == NULL) && (glx.glXGetProcAddress == NULL))
+	if ((glx.glXGetProcAddressARB == nullptr) && (glx.glXGetProcAddress == nullptr))
 	{
 		throw Exception("Cannot obtain required OpenGL GLX functions");
 	}
@@ -165,7 +165,7 @@ OpenGLWindowProvider::~OpenGLWindowProvider()
 	if (opengl_visual_info)
 	{
 		XFree(opengl_visual_info);
-		opengl_visual_info = NULL;
+		opengl_visual_info = nullptr;
 	}
 
 	if (opengl_context)
@@ -191,7 +191,7 @@ OpenGLWindowProvider::~OpenGLWindowProvider()
 		::Display *disp = x11_window.get_display();
 		if (glx.glXGetCurrentContext() == opengl_context)
 		{
-			OpenGL::set_active(NULL);
+			OpenGL::set_active(nullptr);
 		}
 
 		if (disp)
@@ -199,7 +199,7 @@ OpenGLWindowProvider::~OpenGLWindowProvider()
 			glx.glXDestroyContext(disp, opengl_context);
 		}
 
-		opengl_context = 0;
+		opengl_context = nullptr;
 	}
 
 }
@@ -216,7 +216,7 @@ ProcAddress *OpenGLWindowProvider::get_proc_address(const std::string& function_
 		return glx.glXGetProcAddressARB((GLubyte*)function_name.c_str());
 	if (glx.glXGetProcAddress)
 		return glx.glXGetProcAddress((GLubyte*)function_name.c_str());
-	return NULL;
+	return nullptr;
 }
 
 void OpenGLWindowProvider::make_current() const
@@ -344,7 +344,7 @@ void OpenGLWindowProvider::get_opengl_version(int &version_major, int &version_m
 
 void OpenGLWindowProvider::create_glx_1_3(DisplayWindowSite *new_site, const DisplayWindowDescription &desc, ::Display *disp)
 {
-	if (glx.glXChooseFBConfig == NULL)
+	if (glx.glXChooseFBConfig == nullptr)
 		throw Exception("Cannot find the glXChooseFBConfig function");
 
 	// Setup OpenGL:
@@ -487,7 +487,7 @@ void OpenGLWindowProvider::create_glx_1_3(DisplayWindowSite *new_site, const Dis
 
 	if (opengl_visual_info) XFree(opengl_visual_info);
 	opengl_visual_info = glx.glXGetVisualFromFBConfig(disp, fbconfig);
-	if (opengl_visual_info == NULL)
+	if (opengl_visual_info == nullptr)
 	{
 		throw Exception("glXGetVisualFromFBConfig failed");
 	}
@@ -533,11 +533,11 @@ void OpenGLWindowProvider::create_glx_1_2(DisplayWindowSite *new_site, const Dis
 	if (opengl_visual_info) XFree(opengl_visual_info);
 	opengl_visual_info = glx.glXChooseVisual(disp, DefaultScreen(disp), gl_attribs);
 
-	if (opengl_visual_info == NULL)
+	if (opengl_visual_info == nullptr)
 	{
 		opengl_visual_info = glx.glXChooseVisual(disp, DefaultScreen(disp), gl_attribs_single);
 		printf("Requested visual not supported by your OpenGL implementation. Falling back on singlebuffered Visual!\n");
-		if (opengl_visual_info == NULL)
+		if (opengl_visual_info == nullptr)
 		{
 			throw Exception("glxChooseVisual failed");
 		}
@@ -607,12 +607,12 @@ void OpenGLWindowProvider::setup_extension_pointers()
 	// See - http://dri.freedesktop.org/wiki/glXGetProcAddressNeverReturnsNULL ,get_proc_address() may return an invalid extension address
 	if ( !is_glx_extension_supported("GLX_SGI_swap_control") )
 	{
-		glXSwapIntervalSGI = NULL;
+		glXSwapIntervalSGI = nullptr;
 	}
 
 	if ( !is_glx_extension_supported("GLX_MESA_swap_control") )
 	{
-		glXSwapIntervalMESA = NULL;
+		glXSwapIntervalMESA = nullptr;
 	}
 
 	glx.glXCreatePbufferSGIX = (GL_GLXFunctions::ptr_glXCreatePbufferSGIX) OpenGL::get_proc_address("glXCreateGLXPbufferSGIX");
@@ -621,13 +621,13 @@ void OpenGLWindowProvider::setup_extension_pointers()
 	glx.glXGetVisualFromFBConfigSGIX = (GL_GLXFunctions::ptr_glXGetVisualFromFBConfig) OpenGL::get_proc_address("glXGetVisualFromFBConfigSGIX");
 	if ( !is_glx_extension_supported("GLX_SGIX_pbuffer") )
 	{
-		glx.glXCreatePbufferSGIX = NULL;
-		glx.glXDestroyPbufferSGIX = NULL;
+		glx.glXCreatePbufferSGIX = nullptr;
+		glx.glXDestroyPbufferSGIX = nullptr;
 	}
 	if ( !is_glx_extension_supported("GLX_SGIX_fbconfig") )
 	{
-		glx.glXChooseFBConfigSGIX = NULL;
-		glx.glXGetVisualFromFBConfigSGIX = NULL;
+		glx.glXChooseFBConfigSGIX = nullptr;
+		glx.glXGetVisualFromFBConfigSGIX = nullptr;
 	}
 }
 
@@ -640,14 +640,14 @@ static int cl_ctxErrorHandler( ::Display *dpy, XErrorEvent *ev )
 
 GLXContext OpenGLWindowProvider::create_context(const DisplayWindowDescription &desc)
 {
-	GLXContext shared_context = NULL;
+	GLXContext shared_context = nullptr;
 
 	std::unique_ptr<MutexSection> mutex_section;
 	GraphicContextProvider* gc_providers = SharedGCData::get_provider(mutex_section);
 	if (gc_providers)
 	{
 
-		const DisplayWindowProvider *rwp = NULL;
+		const DisplayWindowProvider *rwp = nullptr;
 
 		GL3GraphicContextProvider *gl3_provider = dynamic_cast<GL3GraphicContextProvider*>(gc_providers);
 		if (gl3_provider)
@@ -722,7 +722,7 @@ GLXContext OpenGLWindowProvider::create_context_glx_1_3_helper(GLXContext shared
 		if (context_gl3)
 		{
 			glx.glXDestroyContext(x11_window.get_display(), context_gl3);
-			context_gl3 = 0;
+			context_gl3 = nullptr;
 		}
 	}
 	return context_gl3;
@@ -733,10 +733,10 @@ GLXContext OpenGLWindowProvider::create_context_glx_1_3(const DisplayWindowDescr
 	GLXContext context;
 
 	context = glx.glXCreateNewContext(x11_window.get_display(), fbconfig, GLX_RGBA_TYPE, shared_context, True);
-	if(context == NULL)
+	if(context == nullptr)
 		throw Exception("glXCreateContext failed");
 
-	ptr_glXCreateContextAttribs glXCreateContextAttribs = NULL;
+	ptr_glXCreateContextAttribs glXCreateContextAttribs = nullptr;
 
 	if (is_glx_extension_supported("GLX_ARB_create_context"))
 	{
@@ -755,7 +755,7 @@ GLXContext OpenGLWindowProvider::create_context_glx_1_3(const DisplayWindowDescr
 		// threads issuing X commands while this code is running.
 		int (*oldHandler)(::Display*, XErrorEvent*) = XSetErrorHandler(&cl_ctxErrorHandler);
 
-		GLXContext context_gl3 = 0;
+		GLXContext context_gl3 = nullptr;
 
 		int gl_major = opengl_desc.get_version_major();
 		int gl_minor = opengl_desc.get_version_minor();
@@ -826,7 +826,7 @@ GLXContext OpenGLWindowProvider::create_context_glx_1_2(const DisplayWindowDescr
 
 	GLXContext context;
 	context = glx.glXCreateContext(x11_window.get_display(), opengl_visual_info, shared_context, GL_TRUE);
-	if(context == NULL)
+	if(context == nullptr)
 		throw Exception("glXCreateContext failed");
 
 	return context;

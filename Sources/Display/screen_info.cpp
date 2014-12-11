@@ -49,7 +49,7 @@ public:
 #ifdef WIN32
 		provider = new ScreenInfoProvider_Win32;
 #else
-		provider = 0;
+		provider = nullptr;
 #endif
 	}
 

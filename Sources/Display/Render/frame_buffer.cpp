@@ -39,7 +39,7 @@ namespace clan
 class FrameBuffer_Impl
 {
 public:
-	FrameBuffer_Impl() : provider(0)
+	FrameBuffer_Impl() : provider(nullptr)
 	{
 	}
 

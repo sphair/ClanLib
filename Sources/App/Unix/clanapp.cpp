@@ -37,7 +37,7 @@
 
 int main(int argc, char **argv)
 {
-	if (clan::Application::main == 0)
+	if (clan::Application::main == nullptr)
 	{
 		std::cout << "ClanLib: No global Application instance!" << std::endl;
 		return 255;
@@ -77,6 +77,6 @@ int main(int argc, char **argv)
 	return retval;
 }
 
-clan::Application::MainFunction *clan::Application::main = 0;
+clan::Application::MainFunction *clan::Application::main = nullptr;
 bool clan::Application::enable_catch_exceptions = true;
 

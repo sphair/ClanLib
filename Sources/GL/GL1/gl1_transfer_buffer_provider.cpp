@@ -37,7 +37,7 @@ namespace clan
 // GL1TransferBufferProvider Construction:
 
 GL1TransferBufferProvider::GL1TransferBufferProvider()
-: data(0), size(0)
+: data(nullptr), size(0)
 {
 }
 
@@ -50,7 +50,7 @@ GL1TransferBufferProvider::~GL1TransferBufferProvider()
 void GL1TransferBufferProvider::create(int new_size, BufferUsage usage)
 {
 	delete[] data;
-	data = 0;
+	data = nullptr;
 	size = 0;
 	data = new char[new_size];
 	size = new_size;
@@ -59,7 +59,7 @@ void GL1TransferBufferProvider::create(int new_size, BufferUsage usage)
 void GL1TransferBufferProvider::create(void *init_data, int new_size, BufferUsage usage)
 {
 	delete[] data;
-	data = 0;
+	data = nullptr;
 	size = 0;
 	data = new char[new_size];
 	size = new_size;

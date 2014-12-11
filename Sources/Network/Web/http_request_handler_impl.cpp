@@ -37,7 +37,7 @@ namespace clan
 // HTTPRequestHandler_Impl Construction:
 
 HTTPRequestHandler_Impl::HTTPRequestHandler_Impl()
-: provider(0)
+: provider(nullptr)
 {
 }
 

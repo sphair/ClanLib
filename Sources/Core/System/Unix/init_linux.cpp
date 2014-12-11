@@ -87,7 +87,7 @@ ubyte64 System::get_time()
 ubyte64 System::get_microseconds()
 {
 	timeval tv;
-	gettimeofday(&tv, NULL);
+	gettimeofday(&tv, nullptr);
 	return (ubyte64) tv.tv_sec*(ubyte64) 1000000 + (ubyte64) tv.tv_usec;
 }
 
@@ -130,7 +130,7 @@ std::string System::get_exe_path()
 		struct stat sba;
 
 		exe_file[0] = '\0';
-		if ((pathenv = getenv("PATH")) != NULL)
+		if ((pathenv = getenv("PATH")) != nullptr)
 		{
 			for (name = pathenv; name; name = end)
 			{
@@ -149,7 +149,7 @@ std::string System::get_exe_path()
 		// try current directory as last resort
 		if (!exe_file[0])
 		{
-			if (getcwd(cwd, sizeof(cwd)) != NULL)
+			if (getcwd(cwd, sizeof(cwd)) != nullptr)
 			{
 				snprintf(fname, sizeof(fname),
 					"%s/%s", cwd, (char *)__progname);

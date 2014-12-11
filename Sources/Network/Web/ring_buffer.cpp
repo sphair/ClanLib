@@ -7,7 +7,7 @@ namespace clan
 {
 
 RingBuffer::RingBuffer()
-: data(0), size(0), pos(0), length(0)
+: data(nullptr), size(0), pos(0), length(0)
 {
 }
 

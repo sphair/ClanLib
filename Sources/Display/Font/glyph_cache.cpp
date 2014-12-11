@@ -104,7 +104,7 @@ Font_TextureGlyph *GlyphCache::get_glyph(Canvas &canvas, FontEngine *font_engine
 			return &(*glyph_list[cnt]);
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -205,7 +205,7 @@ int GlyphCache::get_character_index(Canvas &canvas, FontEngine *font_engine, con
 			reader.next();
 
 			Font_TextureGlyph *gptr = get_glyph(canvas, font_engine,  glyph);
-			if (gptr == NULL) continue;
+			if (gptr == nullptr) continue;
 
 			Rect position(xpos, ypos - font_ascent, Size(gptr->metrics.advance.width, gptr->metrics.advance.height + font_height + font_external_leading));
 			if (position.contains(point))

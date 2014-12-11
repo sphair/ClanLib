@@ -62,11 +62,11 @@ public:
 	static ProviderType_Register<TargaProvider> *tga_provider;
 };
 
-ProviderType_Register<JPEGProvider> *SetupDisplay_Impl::jpeg_provider = NULL;
-ProviderType_Register<JPEGProvider> *SetupDisplay_Impl::jpg_provider = NULL;
-ProviderType_Register<PNGProvider> *SetupDisplay_Impl::png_provider = NULL;
-ProviderType_Register<TargaProvider> *SetupDisplay_Impl::targa_provider = NULL;
-ProviderType_Register<TargaProvider> *SetupDisplay_Impl::tga_provider = NULL;
+ProviderType_Register<JPEGProvider> *SetupDisplay_Impl::jpeg_provider = nullptr;
+ProviderType_Register<JPEGProvider> *SetupDisplay_Impl::jpg_provider = nullptr;
+ProviderType_Register<PNGProvider> *SetupDisplay_Impl::png_provider = nullptr;
+ProviderType_Register<TargaProvider> *SetupDisplay_Impl::targa_provider = nullptr;
+ProviderType_Register<TargaProvider> *SetupDisplay_Impl::tga_provider = nullptr;
 
 /////////////////////////////////////////////////////////////////////////////
 // SetupDisplay Construction:
@@ -103,19 +103,19 @@ void SetupDisplay_Impl::init()
 void SetupDisplay_Impl::deinit()
 {
 	delete jpeg_provider;
-	jpeg_provider = NULL;
+	jpeg_provider = nullptr;
 
 	delete jpg_provider;
-	jpg_provider = NULL;
+	jpg_provider = nullptr;
 
 	delete png_provider;
-	png_provider = NULL;
+	png_provider = nullptr;
 
 	delete targa_provider;
-	targa_provider = NULL;
+	targa_provider = nullptr;
 
 	delete tga_provider;
-	tga_provider = NULL;
+	tga_provider = nullptr;
 }
 
 void SetupDisplay_Impl::add_cache_factory(ResourceManager &manager, const XMLResourceDocument &doc)

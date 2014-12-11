@@ -49,7 +49,7 @@ ubyte32 HashFunctions::crc32( const void *data, int size, ubyte32 running_crc/*=
 {
 	ubyte32 crc = running_crc;
 	if (crc == 0)
-		crc = mz_crc32(0L, 0, 0);
+		crc = mz_crc32(0L, nullptr, 0);
 
 	return mz_crc32(running_crc, (const unsigned char*)data, size);;
 }
@@ -58,7 +58,7 @@ ubyte32 HashFunctions::adler32( const void *data, int size, ubyte32 running_adle
 {
 	ubyte32 adler = running_adler32;
 	if (adler == 0)
-		adler = mz_adler32(0L, 0, 0);
+		adler = mz_adler32(0L, nullptr, 0);
 
 	return mz_adler32(adler, (const unsigned char*)data, size);
 }

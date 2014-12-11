@@ -111,13 +111,13 @@ typedef struct
 } ClanLib_MotifWmHints;
 
 X11Window::X11Window()
-: handle(0, 0), color_map(0), system_cursor(0), hidden_cursor(0), cursor_bitmap(0), size_hints(NULL),
+: handle(nullptr, 0), color_map(0), system_cursor(0), hidden_cursor(0), cursor_bitmap(0), size_hints(nullptr),
   minimized(false), maximized(false), restore_to_maximized(false), fullscreen(false),
   wm_protocols(None), wm_delete_window(None), wm_state(None), motif_wm_hints(None), net_wm_state(None), net_wm_state_maximized_vert(None),
   net_wm_state_maximized_horz(None), net_wm_state_hidden(None), net_wm_state_fullscreen(None), kwm_win_decoration(None), win_hints(None),
   net_wm_ping(None), net_frame_extents(None),
   is_window_mapped(false),
-  site(0), clipboard(this),
+  site(nullptr), clipboard(this),
   always_send_window_position_changed_event(false), always_send_window_size_changed_event(false)
 
 {
@@ -495,7 +495,7 @@ void X11Window::calculate_window_frame_size()
 
 	// _NET_FRAME_EXTENTS, left, right, top, bottom, CARDINAL[4]/32
 	unsigned char *data = get_property(handle.window, net_frame_extents, &number_items, &actual_format, &actual_type);
-	if (data != NULL)
+	if (data != nullptr)
 	{
 		if (number_items >= 4)
 		{
@@ -545,7 +545,7 @@ void X11Window::close_window()
 	if (size_hints)
 	{
 		XFree(size_hints);
-		size_hints = NULL;
+		size_hints = nullptr;
 	}
 
 	wm_protocols = None;
@@ -608,7 +608,7 @@ bool X11Window::is_minimized() const
 	if (wm_state != None)
 	{
 		unsigned char *data = get_property(handle.window, wm_state, &number_items, &actual_format, &actual_type);
-		if (data != NULL)
+		if (data != nullptr)
 		{
 			long state = *(long *)data;
 			XFree(data);
@@ -731,7 +731,7 @@ void X11Window::hide_system_cursor()
 void X11Window::set_title(const std::string &new_title)
 {
 	window_title = new_title;
-	XSetStandardProperties(handle.display, handle.window, new_title.c_str(), new_title.c_str(), None, NULL, 0, NULL);
+	XSetStandardProperties(handle.display, handle.window, new_title.c_str(), new_title.c_str(), None, nullptr, 0, nullptr);
 }
 
 void X11Window::set_position(const Rect &pos, bool client_area)
@@ -978,7 +978,7 @@ bool X11Window::check_net_wm_state(Atom atom1, Atom atom2) const
 	if (net_wm_state != None)
 	{
 		unsigned char *data = get_property(handle.window, net_wm_state, &number_items, &actual_format, &actual_type);
-		if (data != NULL)
+		if (data != nullptr)
 		{
 			bool find = false;
 			for (unsigned i = 0; i < number_items; ++i)
@@ -1043,7 +1043,7 @@ Rect X11Window::get_screen_position() const
 	Window current_window = handle.window;
 	while(true)
 	{
-		children_ptr = NULL;
+		children_ptr = nullptr;
 		XQueryTree(handle.display, current_window, &temp_window, &current_window, &children_ptr, &num_child);
 		if (children_ptr)
 			XFree(children_ptr);
@@ -1215,16 +1215,16 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 				{
 					if (is_minimized())
 					{
-						if (!minimized && site != NULL)
+						if (!minimized && site != nullptr)
 							(*site->sig_window_minimized)();
 						minimized = true;
 						maximized = false;
 					}
 					else if (is_maximized())
 					{
-						if (!maximized && site != NULL)
+						if (!maximized && site != nullptr)
 							(*site->sig_window_maximized)();
-						if (minimized && site != NULL)
+						if (minimized && site != nullptr)
 						{
 							// generate resize events for minimized -> maximized transition
 							Rect rect = get_geometry();
@@ -1240,7 +1240,7 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 					}
 					else
 					{
-						if ((minimized || maximized) && site != NULL)
+						if ((minimized || maximized) && site != nullptr)
 							(*site->sig_window_restored)();
 						minimized = false;
 						maximized = false;
@@ -1253,13 +1253,13 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 				{
 					if (is_minimized())
 					{
-						if (!minimized && site != NULL)
+						if (!minimized && site != nullptr)
 							(*site->sig_window_minimized)();
 						minimized = true;
 					}
 					else
 					{
-						if (minimized && site != NULL)
+						if (minimized && site != nullptr)
 							(*site->sig_window_restored)();
 						minimized = false;
 					}
@@ -1591,10 +1591,10 @@ unsigned char *X11Window::get_property(Window use_window, Atom prop, unsigned lo
 {
 	unsigned long bytes_after;
 	int read_bytes = 1024;
-	unsigned char *read_data = NULL;
+	unsigned char *read_data = nullptr;
 	do
 	{
-		if(read_data != NULL)
+		if(read_data != nullptr)
 		{
 			XFree(read_data);
 		}
@@ -1604,7 +1604,7 @@ unsigned char *X11Window::get_property(Window use_window, Atom prop, unsigned lo
 			*number_items_ptr = 0;
 			*actual_format_ptr = 0;
 			*actual_type_ptr = None;
-			return NULL;
+			return nullptr;
 		}
 		read_bytes += bytes_after;
 	}while(bytes_after != 0);

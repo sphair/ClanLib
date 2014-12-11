@@ -50,7 +50,7 @@ GL3TransferBufferProvider::~GL3TransferBufferProvider()
 
 void GL3TransferBufferProvider::create(int size, BufferUsage usage)
 {
-	create(0, size, usage);
+	create(nullptr, size, usage);
 }
 
 void GL3TransferBufferProvider::create(void *data, int size, BufferUsage usage)

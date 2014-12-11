@@ -58,7 +58,7 @@ public:
 	RenderBatchPath render_batcher_path;
 };
 
-CanvasBatcher_Impl::CanvasBatcher_Impl(GraphicContext &gc) : active_batcher(0),
+CanvasBatcher_Impl::CanvasBatcher_Impl(GraphicContext &gc) : active_batcher(nullptr),
 	render_batcher_buffer(gc),
 	render_batcher_triangle(gc, &render_batcher_buffer),
 	render_batcher_line(gc, &render_batcher_buffer),
@@ -115,7 +115,7 @@ void CanvasBatcher_Impl::flush()
 	if (active_batcher)
 	{
 		RenderBatcher *batcher = active_batcher;
-		active_batcher = 0;
+		active_batcher = nullptr;
 		batcher->flush(current_gc);
 	}
 }

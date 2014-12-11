@@ -76,7 +76,7 @@ void InputDevice::throw_if_null() const
 InputDeviceProvider *InputDevice::get_provider() const
 {
 	if (!impl)
-		return 0;
+		return nullptr;
 	else
 		return impl->provider;
 }

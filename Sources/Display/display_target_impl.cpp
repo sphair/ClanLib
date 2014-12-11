@@ -42,7 +42,7 @@ bool DisplayTarget_Impl::current_target_valid = false;
 std::vector< std::weak_ptr<DisplayTarget_Impl> > DisplayTarget_Impl::display_targets;
 
 DisplayTarget_Impl::DisplayTarget_Impl()
-: provider(0)
+: provider(nullptr)
 {
 }
 

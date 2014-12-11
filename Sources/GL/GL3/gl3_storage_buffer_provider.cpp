@@ -49,7 +49,7 @@ GL3StorageBufferProvider::~GL3StorageBufferProvider()
 
 void GL3StorageBufferProvider::create(int size, int stride, BufferUsage usage)
 {
-	buffer.create(0, size, usage, GL_UNIFORM_BUFFER_BINDING, GL_UNIFORM_BUFFER);
+	buffer.create(nullptr, size, usage, GL_UNIFORM_BUFFER_BINDING, GL_UNIFORM_BUFFER);
 }
 
 void GL3StorageBufferProvider::create(const void *data, int size, int stride, BufferUsage usage)

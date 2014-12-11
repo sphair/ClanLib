@@ -73,7 +73,7 @@ public:
 	/// \param sized_format = Texture Format
 	/// \param data = data to copy from (May be NULL)
 	/// \param usage = Buffer Usage
-	TransferTexture(GraphicContext &gc, int width, int height, PixelBufferDirection direction = data_to_gpu, TextureFormat texture_format = tf_rgba8, const void *data = 0, BufferUsage usage = usage_stream_draw);
+	TransferTexture(GraphicContext &gc, int width, int height, PixelBufferDirection direction = data_to_gpu, TextureFormat texture_format = tf_rgba8, const void *data = nullptr, BufferUsage usage = usage_stream_draw);
 
 	/// \brief Constructs a GPU Transfer Buffer from an existing pixelbuffer
 	///

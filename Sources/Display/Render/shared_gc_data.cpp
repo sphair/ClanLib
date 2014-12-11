@@ -40,7 +40,7 @@ namespace clan
 {
 
 Mutex SharedGCData_Impl::cl_sharedgc_mutex;
-SharedGCData *SharedGCData_Impl::cl_sharedgc = 0;
+SharedGCData *SharedGCData_Impl::cl_sharedgc = nullptr;
 
 SharedGCData::SharedGCData(): impl(std::make_shared<SharedGCData_Impl>())
 {
@@ -54,7 +54,7 @@ void SharedGCData::add_ref()
 {
 	MutexSection mutex_lock(&SharedGCData_Impl::cl_sharedgc_mutex);
 
-	if (SharedGCData_Impl::cl_sharedgc == 0)
+	if (SharedGCData_Impl::cl_sharedgc == nullptr)
 	{
 		SharedGCData_Impl::cl_sharedgc = new SharedGCData;
 	}
@@ -68,7 +68,7 @@ void SharedGCData::release_ref()
 	if (SharedGCData_Impl::cl_sharedgc && --SharedGCData_Impl::cl_sharedgc->impl->reference_count == 0)
 	{
 		delete SharedGCData_Impl::cl_sharedgc;
-		SharedGCData_Impl::cl_sharedgc = NULL;
+		SharedGCData_Impl::cl_sharedgc = nullptr;
 	}
 }
 
@@ -104,7 +104,7 @@ GraphicContextProvider *SharedGCData::get_provider(std::unique_ptr<MutexSection>
 	MutexSection mutex_lock(&SharedGCData_Impl::cl_sharedgc_mutex);
 	if (SharedGCData_Impl::cl_sharedgc)
 		return SharedGCData_Impl::cl_sharedgc->impl->get_provider();
-	return NULL;
+	return nullptr;
 }
 
 Canvas SharedGCData::get_resource_canvas()

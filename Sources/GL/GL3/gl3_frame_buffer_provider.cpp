@@ -60,7 +60,7 @@ GL3FrameBufferProvider::GL3FrameBufferProvider(GL3GraphicContextProvider *gc_pro
 
 	OpenGL::set_active(gc_provider);
 
-	if(glGenFramebuffers == 0)
+	if(glGenFramebuffers == nullptr)
 		throw Exception("Framebuffer not supported on your graphics card.");
 
 	glGenFramebuffers(1, &handle);

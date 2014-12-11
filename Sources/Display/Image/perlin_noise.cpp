@@ -637,7 +637,7 @@ float PerlinNoise_Impl::noise_4d( float x, float y, float z, float w )
 
 void PerlinNoise_Impl::set_permutations(const unsigned char *table, unsigned int size)
 {
-	if ( (size == 0) || (table == NULL) )
+	if ( (size == 0) || (table == nullptr) )
 	{
 		permutation_table_set = false;
 		return;

@@ -37,7 +37,7 @@ namespace clan
 {
 
 Mutex SoundOutput_Impl::singleton_mutex;
-SoundOutput_Impl *SoundOutput_Impl::instance = 0;
+SoundOutput_Impl *SoundOutput_Impl::instance = nullptr;
 
 /////////////////////////////////////////////////////////////////////////////
 // SoundOutput_Impl construction:
@@ -46,11 +46,11 @@ SoundOutput_Impl::SoundOutput_Impl(int mixing_frequency, int latency)
 : mixing_frequency(mixing_frequency), mixing_latency(latency), volume(1.0f),
   pan(0.0f), mix_buffer_size(0)
 {
- 	mix_buffers[0] = 0;
-	mix_buffers[1] = 0;
-	temp_buffers[0] = 0;
-	temp_buffers[1] = 0;
-	stereo_buffer = 0;
+ 	mix_buffers[0] = nullptr;
+	mix_buffers[1] = nullptr;
+	temp_buffers[0] = nullptr;
+	temp_buffers[1] = nullptr;
+	stereo_buffer = nullptr;
 
 	MutexSection lock(&singleton_mutex);
 	if (instance)
@@ -68,7 +68,7 @@ SoundOutput_Impl::~SoundOutput_Impl()
 	SoundSSE::aligned_free(temp_buffers[1]);
 
 	MutexSection lock(&singleton_mutex);
-	instance = NULL;
+	instance = nullptr;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -159,11 +159,11 @@ void SoundOutput_Impl::resize_mix_buffers()
 {
 	if (get_fragment_size() != mix_buffer_size)
 	{
-		SoundSSE::aligned_free(stereo_buffer); stereo_buffer = 0;
-		SoundSSE::aligned_free(mix_buffers[0]); mix_buffers[0] = 0;
-		SoundSSE::aligned_free(mix_buffers[1]); mix_buffers[1] = 0;
-		SoundSSE::aligned_free(temp_buffers[0]); temp_buffers[0] = 0;
-		SoundSSE::aligned_free(temp_buffers[1]); temp_buffers[1] = 0;
+		SoundSSE::aligned_free(stereo_buffer); stereo_buffer = nullptr;
+		SoundSSE::aligned_free(mix_buffers[0]); mix_buffers[0] = nullptr;
+		SoundSSE::aligned_free(mix_buffers[1]); mix_buffers[1] = nullptr;
+		SoundSSE::aligned_free(temp_buffers[0]); temp_buffers[0] = nullptr;
+		SoundSSE::aligned_free(temp_buffers[1]); temp_buffers[1] = nullptr;
 
 		mix_buffer_size = get_fragment_size();
 		//if (mix_buffer_size & 3)

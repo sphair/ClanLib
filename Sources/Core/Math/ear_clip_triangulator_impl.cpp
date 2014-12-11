@@ -235,7 +235,7 @@ void EarClipTriangulator_Impl::end_hole()
 	// 2. Create bridge start and end points by offsetting the new vertices a bit along the edges to the next and prev vertices.
 	// 
 
-	LinkedVertice *outer_vertice = 0;
+	LinkedVertice *outer_vertice = nullptr;
 	LinkedVertice *segment_start;
 	LinkedVertice *segment_end;
 	Pointf inner_point;
@@ -296,19 +296,19 @@ void EarClipTriangulator_Impl::end_hole()
 	segment_start->next = inner_bridge_end;
 
 	delete outer_vertice;
-	outer_vertice = 0;
+	outer_vertice = nullptr;
 
 	if( inner_point_rel == 0.0 ) // if split point is at line end, remove inner vertex
 	{
 		segment_start->previous->next = inner_bridge_end;
 		delete segment_start;
-		segment_start = 0;
+		segment_start = nullptr;
 	}
 	if( inner_point_rel == 1.0 ) // if split point is at line end, remove inner vertex
 	{
 		inner_bridge_start->next = segment_end->next;
 		delete segment_end;
-		segment_end = 0;
+		segment_end = nullptr;
 	}
 
 	hole.clear();

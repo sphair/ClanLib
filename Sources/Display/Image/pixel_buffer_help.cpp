@@ -57,7 +57,7 @@ PixelBuffer PixelBufferHelp::add_border(const PixelBuffer &pb, int border_size, 
 		work_pb = work_buffer;
 	}
 
-	PixelBuffer new_pb(new_width, new_height, work_pb.get_format(), NULL);
+	PixelBuffer new_pb(new_width, new_height, work_pb.get_format(), nullptr);
 
 	int old_pitch = work_pb.get_pitch();
 	int new_pitch = new_pb.get_pitch();

@@ -55,7 +55,7 @@ SoundOutput_alsa::SoundOutput_alsa(int mixing_frequency, int mixing_latency) :
 	if (rc < 0)
 	{
 		log_event("warn", "ClanSound: Couldn't open sound device, disabling sound");
-		handle = NULL;
+		handle = nullptr;
 		return;
 	}
 
@@ -65,21 +65,21 @@ SoundOutput_alsa::SoundOutput_alsa(int mixing_frequency, int mixing_latency) :
 	snd_pcm_hw_params_set_format(handle, hwparams, SND_PCM_FORMAT_FLOAT);
 	snd_pcm_hw_params_set_channels(handle, hwparams, 2);
 	snd_pcm_hw_params_set_rate_near(handle, hwparams,
-				(unsigned int *)&this->mixing_frequency, 0);
+				(unsigned int *)&this->mixing_frequency, nullptr);
 	snd_pcm_hw_params_set_buffer_size_near(handle, hwparams, &frames_in_buffer);
 	frames_in_period = frames_in_buffer / 4;
-	snd_pcm_hw_params_set_period_size_near(handle, hwparams, &frames_in_period, 0);
+	snd_pcm_hw_params_set_period_size_near(handle, hwparams, &frames_in_period, nullptr);
 	
 	rc = snd_pcm_hw_params(handle, hwparams);
 	if (rc < 0)
 	{
 		log_event("warn", "ClanSound: Couldn't initialize sound device, disabling sound");
 		snd_pcm_close(handle);
-		handle = NULL;
+		handle = nullptr;
 		return;
 	}
 	
-	snd_pcm_hw_params_get_period_size(hwparams, &frames_in_period, 0);
+	snd_pcm_hw_params_get_period_size(hwparams, &frames_in_period, nullptr);
 
 	start_mixer_thread();
 }
@@ -89,7 +89,7 @@ SoundOutput_alsa::~SoundOutput_alsa()
 	stop_mixer_thread();
 	if (handle) {
 		snd_pcm_close(handle);
-		handle = NULL;
+		handle = nullptr;
 	}
 }
 
@@ -108,7 +108,7 @@ bool SoundOutput_alsa::is_full()
 	int rc;
 	snd_pcm_sframes_t delay;
 	
-	if (handle == NULL) return false;
+	if (handle == nullptr) return false;
 	
 	rc = snd_pcm_delay(handle, &delay);
 	if (rc < 0) {
@@ -129,7 +129,7 @@ void SoundOutput_alsa::write_fragment(float *data)
 {
 	snd_pcm_sframes_t rc;
 
-	if (handle == NULL) return;
+	if (handle == nullptr) return;
 
 	switch(snd_pcm_state(handle)) {
 		case SND_PCM_STATE_XRUN:
@@ -150,7 +150,7 @@ void SoundOutput_alsa::write_fragment(float *data)
 
 void SoundOutput_alsa::wait()
 {
-	if(handle == NULL)
+	if(handle == nullptr)
 	{
 		System::sleep(100);
 		return;

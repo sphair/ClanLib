@@ -73,7 +73,7 @@ void SharedGCData_Impl::remove_provider(GraphicContextProvider *provider)
 GraphicContextProvider *SharedGCData_Impl::get_provider()
 {
 	if (graphic_context_providers.empty())
-		return NULL;
+		return nullptr;
 	return graphic_context_providers.back();
 }
 

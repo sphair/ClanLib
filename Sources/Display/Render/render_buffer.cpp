@@ -40,7 +40,7 @@ namespace clan
 class RenderBuffer_Impl
 {
 public:
-	RenderBuffer_Impl() : provider(0)
+	RenderBuffer_Impl() : provider(nullptr)
 	{
 	}
 

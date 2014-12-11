@@ -82,7 +82,7 @@ FontEngine_Freetype_Library &FontEngine_Freetype_Library::instance()
 /////////////////////////////////////////////////////////////////////////////
 // FontEngine_Freetype Construction:
 
-FontEngine_Freetype::FontEngine_Freetype(IODevice &io_dev, int average_width, int height) : face(0)
+FontEngine_Freetype::FontEngine_Freetype(IODevice &io_dev, int average_width, int height) : face(nullptr)
 {
 
 	data_buffer = DataBuffer(io_dev.get_size());

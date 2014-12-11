@@ -119,62 +119,62 @@ public:
 
 	DomTreeNode *get_parent(DomDocument_Impl *owner_document)
 	{
-		return parent != cl_null_node_index ? owner_document->nodes[parent] : 0;
+		return parent != cl_null_node_index ? owner_document->nodes[parent] : nullptr;
 	}
 
 	const DomTreeNode *get_parent(DomDocument_Impl *owner_document) const
 	{
-		return parent != cl_null_node_index ? owner_document->nodes[parent] : 0;
+		return parent != cl_null_node_index ? owner_document->nodes[parent] : nullptr;
 	}
 
 	DomTreeNode *get_first_child(DomDocument_Impl *owner_document)
 	{
-		return first_child != cl_null_node_index ? owner_document->nodes[first_child] : 0;
+		return first_child != cl_null_node_index ? owner_document->nodes[first_child] : nullptr;
 	}
 
 	const DomTreeNode *get_first_child(DomDocument_Impl *owner_document) const
 	{
-		return first_child != cl_null_node_index ? owner_document->nodes[first_child] : 0;
+		return first_child != cl_null_node_index ? owner_document->nodes[first_child] : nullptr;
 	}
 
 	DomTreeNode *get_last_child(DomDocument_Impl *owner_document)
 	{
-		return last_child != cl_null_node_index ? owner_document->nodes[last_child] : 0;
+		return last_child != cl_null_node_index ? owner_document->nodes[last_child] : nullptr;
 	}
 
 	const DomTreeNode *get_last_child(DomDocument_Impl *owner_document) const
 	{
-		return last_child != cl_null_node_index ? owner_document->nodes[last_child] : 0;
+		return last_child != cl_null_node_index ? owner_document->nodes[last_child] : nullptr;
 	}
 
 	DomTreeNode *get_previous_sibling(DomDocument_Impl *owner_document)
 	{
-		return previous_sibling != cl_null_node_index ? owner_document->nodes[previous_sibling] : 0;
+		return previous_sibling != cl_null_node_index ? owner_document->nodes[previous_sibling] : nullptr;
 	}
 
 	const DomTreeNode *get_previous_sibling(DomDocument_Impl *owner_document) const
 	{
-		return previous_sibling != cl_null_node_index ? owner_document->nodes[previous_sibling] : 0;
+		return previous_sibling != cl_null_node_index ? owner_document->nodes[previous_sibling] : nullptr;
 	}
 
 	DomTreeNode *get_next_sibling(DomDocument_Impl *owner_document)
 	{
-		return next_sibling != cl_null_node_index ? owner_document->nodes[next_sibling] : 0;
+		return next_sibling != cl_null_node_index ? owner_document->nodes[next_sibling] : nullptr;
 	}
 
 	const DomTreeNode *get_next_sibling(DomDocument_Impl *owner_document) const
 	{
-		return next_sibling != cl_null_node_index ? owner_document->nodes[next_sibling] : 0;
+		return next_sibling != cl_null_node_index ? owner_document->nodes[next_sibling] : nullptr;
 	}
 
 	DomTreeNode *get_first_attribute(DomDocument_Impl *owner_document)
 	{
-		return first_attribute != cl_null_node_index ? owner_document->nodes[first_attribute] : 0;
+		return first_attribute != cl_null_node_index ? owner_document->nodes[first_attribute] : nullptr;
 	}
 
 	const DomTreeNode *get_first_attribute(DomDocument_Impl *owner_document) const
 	{
-		return first_attribute != cl_null_node_index ? owner_document->nodes[first_attribute] : 0;
+		return first_attribute != cl_null_node_index ? owner_document->nodes[first_attribute] : nullptr;
 	}
 /// \}
 

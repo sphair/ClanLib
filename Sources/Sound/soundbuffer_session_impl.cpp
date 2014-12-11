@@ -43,7 +43,7 @@ namespace clan
 //! Construction:
 
 SoundBuffer_Session_Impl::SoundBuffer_Session_Impl(SoundBuffer &soundbuffer, bool looping, SoundOutput &output)
-: soundbuffer(soundbuffer), provider_session(0), output(output), volume(1.0f), pan(0.0f), looping(looping), playing(false)
+: soundbuffer(soundbuffer), provider_session(nullptr), output(output), volume(1.0f), pan(0.0f), looping(looping), playing(false)
 {
 	volume = soundbuffer.get_volume();
 	pan = soundbuffer.get_pan();

@@ -40,7 +40,7 @@ class Texture_Impl
 {
 public:
 	Texture_Impl()
-	: provider(0),
+	: provider(nullptr),
 	width(0),
 	height(0),
 	depth(0),

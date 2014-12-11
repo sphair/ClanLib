@@ -38,7 +38,7 @@ namespace clan
 // SoundBuffer_Impl construction:
 
 SoundBuffer_Impl::SoundBuffer_Impl() :
-	provider(0),
+	provider(nullptr),
 	volume(1.0f), pan(0.0f)
 {
 }

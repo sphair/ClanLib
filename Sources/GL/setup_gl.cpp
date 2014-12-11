@@ -39,7 +39,7 @@ namespace clan
 
 Mutex SetupGL_Impl::cl_opengl_mutex;
 int SetupGL_Impl::cl_opengl_refcount = 0;
-OpenGLTarget *SetupGL_Impl::cl_opengl_target = 0;
+OpenGLTarget *SetupGL_Impl::cl_opengl_target = nullptr;
 
 SetupGL::SetupGL()
 {

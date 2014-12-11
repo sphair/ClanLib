@@ -101,7 +101,7 @@ namespace clan
 		int store_radial(Canvas &canvas, const Brush &brush, const Mat4f &transform);
 		int store_image(Canvas &canvas, const Brush &brush, const Mat4f &transform);
 
-		Vec4f *buffer = 0;
+		Vec4f *buffer = nullptr;
 		int max_entries = 0;
 		int end_position = 0;		// The next free position
 
@@ -119,7 +119,7 @@ namespace clan
 		int get_position() const { return position; }
 
 	private:
-		Vec4i *vertices = 0;
+		Vec4i *vertices = nullptr;
 		int max_vertices = 0;
 		int position = 0;
 	};
@@ -154,7 +154,7 @@ namespace clan
 		int x1;
 
 	private:
-		const PathScanline *scanline = 0;
+		const PathScanline *scanline = nullptr;
 		PathFillMode mode;
 		size_t i = 0;
 		int nonzero_rule = 0;
@@ -185,10 +185,10 @@ namespace clan
 
 		PathRasterRange range[PathConstants::scanline_block_size];
 
-		unsigned char *mask_buffer_data = 0;
+		unsigned char *mask_buffer_data = nullptr;
 		int mask_buffer_pitch = 0;
 
-		unsigned char *mask_row_block_data = 0;
+		unsigned char *mask_row_block_data = nullptr;
 
 		bool found_filled_block = false;
 		int filled_block_index = 0;

@@ -42,7 +42,7 @@ namespace clan
 class ElementArrayBuffer_Impl
 {
 public:
-	ElementArrayBuffer_Impl() : lock_count(0), provider(0) { }
+	ElementArrayBuffer_Impl() : lock_count(0), provider(nullptr) { }
 	~ElementArrayBuffer_Impl() { if (provider) delete provider; }
 
 	int lock_count;

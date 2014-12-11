@@ -43,7 +43,7 @@ namespace clan
 {
 
 JPEGRGBDecoder::JPEGRGBDecoder(JPEGLoader *loader)
-: loader(loader), mcu_x(0), mcu_y(0), pixels(0)
+: loader(loader), mcu_x(0), mcu_y(0), pixels(nullptr)
 {
 	mcu_x = loader->mcu_x;
 	mcu_y = loader->mcu_y;

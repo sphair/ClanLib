@@ -37,7 +37,7 @@ CoreGlobal cl_core_global;
 #ifdef WIN32
 #elif !defined(HAVE_TLS)
 #else
-__thread ThreadLocalStorage_Impl *CoreGlobal::cl_tls_impl = 0;
+__thread ThreadLocalStorage_Impl *CoreGlobal::cl_tls_impl = nullptr;
 #endif
 
 // This class controls the destruction order of clanCore global variables
@@ -53,10 +53,10 @@ CoreGlobal::CoreGlobal()
 	cl_tls_index_created = false;
 	cl_tls_index = 0;
 #else
-	cl_tls_impl = NULL;
+	cl_tls_impl = nullptr;
 #endif
 
-	cl_tls = NULL;
+	cl_tls = nullptr;
 }
 
 CoreGlobal::~CoreGlobal()

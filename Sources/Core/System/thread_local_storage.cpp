@@ -134,7 +134,7 @@ std::shared_ptr<ThreadLocalStorageData> ThreadLocalStorage::get_variable(const s
 #else
 	ThreadLocalStorage_Impl *tls_impl = cl_core_global.cl_tls_impl;
 #endif
-	if (tls_impl == 0)
+	if (tls_impl == nullptr)
 		throw Exception("No ThreadLocalStorage object created for this thread.");
 	return tls_impl->get_variable(name);
 }
@@ -155,7 +155,7 @@ void ThreadLocalStorage::set_variable(const std::string &name, std::shared_ptr<T
 #else
 	ThreadLocalStorage_Impl *tls_impl = cl_core_global.cl_tls_impl;
 #endif
-	if (tls_impl == 0)
+	if (tls_impl == nullptr)
 		throw Exception("No ThreadLocalStorage object created for this thread.");
 	tls_impl->set_variable(name,ptr);
 }

@@ -53,7 +53,7 @@ namespace clan
 // PixelBuffer_Impl construction:
 
 PixelBuffer_Impl::PixelBuffer_Impl()
-: provider(0)
+: provider(nullptr)
 {
 }
 
@@ -63,7 +63,7 @@ PixelBuffer_Impl::PixelBuffer_Impl(PixelBufferProvider *provider)
 }
 
 PixelBuffer_Impl::PixelBuffer_Impl(int width, int height, TextureFormat texture_format, const void *data_ptr, bool only_reference_data)
-: provider(0)	// Default to locked for CPU buffer
+: provider(nullptr)	// Default to locked for CPU buffer
 {
 	CPUPixelBufferProvider *cpu_provider = new CPUPixelBufferProvider;
 	provider = cpu_provider;

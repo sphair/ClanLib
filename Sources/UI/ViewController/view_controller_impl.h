@@ -33,7 +33,7 @@ namespace clan
 	class ViewControllerImpl
 	{
 	public:
-		ViewController *parent_controller = 0;
+		ViewController *parent_controller = nullptr;
 		std::vector<std::shared_ptr<ViewController>> child_controllers;
 	};
 }

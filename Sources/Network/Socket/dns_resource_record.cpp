@@ -327,7 +327,7 @@ static RRType rr_types[] =
 	{"MAILB", 253, "qtype: A request for mailbox-related records (MB, MG or MR)"},
 	{"MAILA", 254, "qtype: A request for mail agent RRs (Obsolete - see MX)"},
 	{"*",     255, "qtype: A request for all records"},
-	{0,       0,   0}
+	{nullptr,       0,   nullptr}
 };
 
 struct ClassType
@@ -344,13 +344,13 @@ static ClassType class_types[] =
 	{"CH",    3,   "the CHAOS class"},
 	{"HS",    4,   "Hesiod [Dyer 87]"},
 	{"*",     255, "qclass: Any class"},
-	{0,       0,   0}
+	{nullptr,       0,   nullptr}
 };
 
 int DNSResourceRecord::type_to_int(const std::string &qtype)
 {
 	std::string qtype_local8 = StringHelp::text_to_local8(qtype);
-	for (int index = 0; rr_types[index].name != 0; index++)
+	for (int index = 0; rr_types[index].name != nullptr; index++)
 	{
 		if (rr_types[index].name == qtype_local8)
 			return rr_types[index].value;
@@ -364,7 +364,7 @@ int DNSResourceRecord::type_to_int(const std::string &qtype)
 
 std::string DNSResourceRecord::type_from_int(int qtype)
 {
-	for (int index = 0; rr_types[index].name != 0; index++)
+	for (int index = 0; rr_types[index].name != nullptr; index++)
 	{
 		if (rr_types[index].value == qtype)
 			return StringHelp::local8_to_text(rr_types[index].name);
@@ -375,7 +375,7 @@ std::string DNSResourceRecord::type_from_int(int qtype)
 std::string DNSResourceRecord::type_description(const std::string &qtype)
 {
 	std::string qtype_local8 = StringHelp::text_to_local8(qtype);
-	for (int index = 0; rr_types[index].name != 0; index++)
+	for (int index = 0; rr_types[index].name != nullptr; index++)
 	{
 		if (rr_types[index].name == qtype_local8)
 			return StringHelp::local8_to_text(rr_types[index].description);
@@ -385,7 +385,7 @@ std::string DNSResourceRecord::type_description(const std::string &qtype)
 
 std::string DNSResourceRecord::type_description(int qtype)
 {
-	for (int index = 0; rr_types[index].name != 0; index++)
+	for (int index = 0; rr_types[index].name != nullptr; index++)
 	{
 		if (rr_types[index].value == qtype)
 			return StringHelp::local8_to_text(rr_types[index].description);
@@ -396,7 +396,7 @@ std::string DNSResourceRecord::type_description(int qtype)
 int DNSResourceRecord::class_to_int(const std::string &qclass)
 {
 	std::string qclass_local8 = StringHelp::text_to_local8(qclass);
-	for (int index = 0; class_types[index].name != 0; index++)
+	for (int index = 0; class_types[index].name != nullptr; index++)
 	{
 		if (class_types[index].name == qclass_local8)
 			return class_types[index].value;
@@ -410,7 +410,7 @@ int DNSResourceRecord::class_to_int(const std::string &qclass)
 
 std::string DNSResourceRecord::class_from_int(int qclass)
 {
-	for (int index = 0; class_types[index].name != 0; index++)
+	for (int index = 0; class_types[index].name != nullptr; index++)
 	{
 		if (class_types[index].value == qclass)
 			return StringHelp::local8_to_text(class_types[index].name);
@@ -421,7 +421,7 @@ std::string DNSResourceRecord::class_from_int(int qclass)
 std::string DNSResourceRecord::class_description(const std::string &qclass)
 {
 	std::string qclass_local8 = StringHelp::text_to_local8(qclass);
-	for (int index = 0; class_types[index].name != 0; index++)
+	for (int index = 0; class_types[index].name != nullptr; index++)
 	{
 		if (class_types[index].name == qclass_local8)
 			return StringHelp::local8_to_text(class_types[index].description);
@@ -431,7 +431,7 @@ std::string DNSResourceRecord::class_description(const std::string &qclass)
 
 std::string DNSResourceRecord::class_description(int qclass)
 {
-	for (int index = 0; class_types[index].name != 0; index++)
+	for (int index = 0; class_types[index].name != nullptr; index++)
 	{
 		if (class_types[index].value == qclass)
 			return StringHelp::local8_to_text(class_types[index].description);

@@ -38,7 +38,7 @@
 namespace clan
 {
 
-PBuffer_GL1_Impl::PBuffer_GL1_Impl(GL1GraphicContextProvider *gc_provider) : gc_provider(gc_provider), window_provider(NULL), pbuffer(0), pbuffer_context(0)
+PBuffer_GL1_Impl::PBuffer_GL1_Impl(GL1GraphicContextProvider *gc_provider) : gc_provider(gc_provider), window_provider(nullptr), pbuffer(0), pbuffer_context(nullptr)
 {
 	if (!gc_provider)
 		throw Exception("Unexpected provider");
@@ -71,8 +71,8 @@ void PBuffer_GL1_Impl::reset()
 		}
 	}
 
-	window_provider = NULL;
-	pbuffer_context = 0;
+	window_provider = nullptr;
+	pbuffer_context = nullptr;
 	pbuffer = 0;
 }
 
@@ -92,7 +92,7 @@ void PBuffer_GL1_Impl::create(OpenGLWindowProvider &gl_window_provider, const Si
 	pbuffer_size = size;
 
 	::Display *disp = gl_window_provider.get_handle()->get_display();
-	if (disp == NULL)
+	if (disp == nullptr)
 	{
 		throw Exception("Cannot obtain GL1 display");
 	}
@@ -123,19 +123,19 @@ void PBuffer_GL1_Impl::create(OpenGLWindowProvider &gl_window_provider, const Si
 
 	scrnum = DefaultScreen(disp );
 
-	if (gl_window_provider.glx.glXCreateContext == NULL)
+	if (gl_window_provider.glx.glXCreateContext == nullptr)
 	{
 		throw Exception("internal error, cannot locate glxCreateContext");
 	}
 
 	if (gl_window_provider.glx_1_3)
 	{
-		if ((gl_window_provider.glx.glXCreatePbuffer == NULL) || (gl_window_provider.glx.glXChooseFBConfig == NULL) || (gl_window_provider.glx.glXGetVisualFromFBConfig == NULL))
+		if ((gl_window_provider.glx.glXCreatePbuffer == nullptr) || (gl_window_provider.glx.glXChooseFBConfig == nullptr) || (gl_window_provider.glx.glXGetVisualFromFBConfig == nullptr))
 			throw Exception("glXCreatePbuffer is not available, even though you are running glx 1.3 or better.");
 
 		fbconfig = gl_window_provider.glx.glXChooseFBConfig(disp, scrnum, attrib, &nitems);
 
-		if (fbconfig == NULL)
+		if (fbconfig == nullptr)
 		{
 			throw Exception("Error: couldn't get fbconfig");
 		}
@@ -156,11 +156,11 @@ void PBuffer_GL1_Impl::create(OpenGLWindowProvider &gl_window_provider, const Si
 	}
 	else
 	{
-		if ((gl_window_provider.glx.glXCreatePbufferSGIX == NULL) || (gl_window_provider.glx.glXChooseFBConfigSGIX == NULL) || (gl_window_provider.glx.glXGetVisualFromFBConfigSGIX == NULL))
+		if ((gl_window_provider.glx.glXCreatePbufferSGIX == nullptr) || (gl_window_provider.glx.glXChooseFBConfigSGIX == nullptr) || (gl_window_provider.glx.glXGetVisualFromFBConfigSGIX == nullptr))
 			throw Exception("pbuffer support is not available. Try updating your graphic card driver.");
 
 		fbconfig = gl_window_provider.glx.glXChooseFBConfigSGIX(disp, scrnum, attrib, &nitems);
-		if (fbconfig == NULL)
+		if (fbconfig == nullptr)
 		{
 			throw Exception("Error: couldn't get fbconfig");
 		}
@@ -241,7 +241,7 @@ ProcAddress *PBuffer_GL1_Impl::get_proc_address(const std::string& function_name
 		return window_provider->glx.glXGetProcAddressARB((GLubyte*)function_name.c_str());
 	if (window_provider->glx.glXGetProcAddress)
 		return window_provider->glx.glXGetProcAddress((GLubyte*)function_name.c_str());
-	return NULL;
+	return nullptr;
 }
 
 }

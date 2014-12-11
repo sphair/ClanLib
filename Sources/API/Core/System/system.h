@@ -76,7 +76,7 @@ public:
 	static void aligned_free(void *ptr);
 
 	/// \brief Captures a stack back trace by walking up the stack and recording the information for each frame
-	static int capture_stack_trace(int frames_to_skip, int max_frames, void **out_frames, unsigned int *out_hash = 0);
+	static int capture_stack_trace(int frames_to_skip, int max_frames, void **out_frames, unsigned int *out_hash = nullptr);
 
 	/// \brief Returns the function names and lines for the specified stack frame addresses
 	/** <p>On Linux, to obtain function names, remember to link with the -rdynamic flag </p>*/

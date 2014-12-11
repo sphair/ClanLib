@@ -39,7 +39,7 @@ class IODevice_Impl
 /// \{
 
 public:
-	IODevice_Impl() : little_endian_mode(true), provider(0)
+	IODevice_Impl() : little_endian_mode(true), provider(nullptr)
 	{
 	}
 

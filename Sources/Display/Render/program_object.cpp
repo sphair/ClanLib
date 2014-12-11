@@ -50,7 +50,7 @@ namespace clan
 class ProgramObject_Impl
 {
 public:
-	ProgramObject_Impl() : provider(0)
+	ProgramObject_Impl() : provider(nullptr)
 	{
 	}
 
@@ -319,7 +319,7 @@ unsigned int ProgramObject::get_handle() const
 ProgramObjectProvider *ProgramObject::get_provider() const
 {
 	if (!impl)
-		return 0;
+		return nullptr;
 	return impl->provider;
 }
 

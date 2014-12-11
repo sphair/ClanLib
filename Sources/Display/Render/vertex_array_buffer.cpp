@@ -42,7 +42,7 @@ namespace clan
 class VertexArrayBuffer_Impl
 {
 public:
-	VertexArrayBuffer_Impl() : lock_count(0), provider(0) { }
+	VertexArrayBuffer_Impl() : lock_count(0), provider(nullptr) { }
 	~VertexArrayBuffer_Impl() { if (provider) delete provider; }
 
 	int lock_count;

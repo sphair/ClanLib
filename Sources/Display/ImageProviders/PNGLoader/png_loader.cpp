@@ -42,7 +42,7 @@ PixelBuffer PNGLoader::load(IODevice iodevice, bool srgb)
 }
 
 PNGLoader::PNGLoader(IODevice iodevice, bool force_srgb)
-: file(iodevice), force_srgb(force_srgb), scanline(0), prev_scanline(0), scanline_4ub(0), scanline_4us(0), palette(0)
+: file(iodevice), force_srgb(force_srgb), scanline(nullptr), prev_scanline(nullptr), scanline_4ub(nullptr), scanline_4us(nullptr), palette(nullptr)
 {
 	read_magic();
 	read_chunks();

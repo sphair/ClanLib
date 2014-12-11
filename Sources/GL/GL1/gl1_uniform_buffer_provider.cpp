@@ -38,7 +38,7 @@ namespace clan
 // GL1UniformBufferProvider Construction:
 
 GL1UniformBufferProvider::GL1UniformBufferProvider()
-: data(0), size(0)
+: data(nullptr), size(0)
 {
 }
 
@@ -50,7 +50,7 @@ GL1UniformBufferProvider::~GL1UniformBufferProvider()
 void GL1UniformBufferProvider::create(int new_size, BufferUsage usage)
 {
 	delete[] data;
-	data = 0;
+	data = nullptr;
 	size = 0;
 	data = new char[new_size];
 	size = new_size;
@@ -59,7 +59,7 @@ void GL1UniformBufferProvider::create(int new_size, BufferUsage usage)
 void GL1UniformBufferProvider::create(const void *init_data, int new_size, BufferUsage usage)
 {
 	delete[] data;
-	data = 0;
+	data = nullptr;
 	size = 0;
 	data = new char[new_size];
 	size = new_size;

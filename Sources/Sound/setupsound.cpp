@@ -63,8 +63,8 @@ public:
 };
 
 int SetupSound_Impl::ref_count = 0;
-SoundProviderType *SetupSound_Impl::providertype_wave = 0;
-SoundProviderType *SetupSound_Impl::providertype_ogg = 0;
+SoundProviderType *SetupSound_Impl::providertype_wave = nullptr;
+SoundProviderType *SetupSound_Impl::providertype_ogg = nullptr;
 
 SetupSound::SetupSound()
 {
@@ -93,10 +93,10 @@ void SetupSound_Impl::deinit()
 		return;	// Wait until final call to deinit
 
 	delete providertype_wave;
-	providertype_wave = 0;
+	providertype_wave = nullptr;
 
 	delete providertype_ogg;
-	providertype_ogg = 0;
+	providertype_ogg = nullptr;
 }
 
 void SetupSound_Impl::add_cache_factory(ResourceManager &manager, const XMLResourceDocument &doc)

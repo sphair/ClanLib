@@ -90,7 +90,7 @@ void *NetGameConnection_Impl::get_data(const std::string &name) const
 		if (it->name == name)
 			return it->data;
 	}
-	return 0;
+	return nullptr;
 }
 
 void NetGameConnection_Impl::send_event(const NetGameEvent &game_event)

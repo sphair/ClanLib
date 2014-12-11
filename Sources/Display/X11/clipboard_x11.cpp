@@ -71,7 +71,7 @@ std::string Clipboard_X11::get_clipboard_text() const
 	unsigned long number_items;
 	unsigned char *read_data = x11_window->get_property(window, atom_CLIPBOARD, &number_items, &actual_format, &actual_type);
 
-	if ( (actual_format != 8) || (actual_type != XA_STRING) || (number_items <=0) || (read_data==NULL) )
+	if ( (actual_format != 8) || (actual_type != XA_STRING) || (number_items <=0) || (read_data==nullptr) )
 	{
 		if (read_data)
 		{
@@ -141,9 +141,9 @@ void Clipboard_X11::event_selection_request(XSelectionRequestEvent &xselectionre
 	Atom xa_targets = XInternAtom(disp, "TARGETS", False);
 	Atom xa_multiple = XInternAtom(disp, "MULTIPLE", False);
 
-	struct AtomPair { Atom target; Atom property; } *multi_ptr = NULL;
+	struct AtomPair { Atom target; Atom property; } *multi_ptr = nullptr;
 
-	unsigned char *data_ptr = NULL;
+	unsigned char *data_ptr = nullptr;
 	int num_multi = 0;
 	int index_multi = -1;
 	if (rptr->target == xa_multiple)

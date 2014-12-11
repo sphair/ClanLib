@@ -43,7 +43,7 @@ namespace clan
 class GraphicContext_GL_Impl
 {
 public:
-	GraphicContext_GL_Impl() : provider(0)
+	GraphicContext_GL_Impl() : provider(nullptr)
 	{
 	}
 

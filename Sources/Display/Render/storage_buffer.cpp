@@ -43,7 +43,7 @@ namespace clan
 class StorageBuffer_Impl
 {
 public:
-	StorageBuffer_Impl() : provider(0) { }
+	StorageBuffer_Impl() : provider(nullptr) { }
 	~StorageBuffer_Impl() { if (provider) delete provider; }
 
 	StorageBufferProvider *provider;

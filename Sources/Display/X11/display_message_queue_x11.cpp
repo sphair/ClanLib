@@ -45,7 +45,7 @@ DisplayMessageQueue_X11 DisplayMessageQueue_X11::message_queue;
 /////////////////////////////////////////////////////////////////////////////
 // DisplayMessageQueue_X11 construction:
 
-DisplayMessageQueue_X11::DisplayMessageQueue_X11() : current_mouse_capture_window(NULL), display(0), dlopen_lib_handle(NULL)
+DisplayMessageQueue_X11::DisplayMessageQueue_X11() : current_mouse_capture_window(nullptr), display(nullptr), dlopen_lib_handle(nullptr)
 {
 }
 
@@ -82,7 +82,7 @@ void *DisplayMessageQueue_X11::dlopen_opengl(const char *filename, int flag)
 {
 	if (!display)
 	{
-		display = XOpenDisplay(NULL);
+		display = XOpenDisplay(nullptr);
 		if (!display)
 			throw Exception("Could not open X11 display!");
 	}
@@ -124,7 +124,7 @@ int DisplayMessageQueue_X11::wait(const std::vector<Event> &events, int timeout)
 			for (int i=0; i<num_handles; i++)
 			{
 				EventProvider *provider = events[index_events].get_event_provider();
-				if (provider == 0)
+				if (provider == nullptr)
 					throw Exception("EventProvider is a null pointer!");
 
 				SocketMessage_X11 msg;
@@ -198,7 +198,7 @@ void DisplayMessageQueue_X11::set_mouse_capture(X11Window *window, bool state)
 	else
 	{
 		if (current_mouse_capture_window == window)
-			current_mouse_capture_window = NULL;
+			current_mouse_capture_window = nullptr;
 	}
 
 }
@@ -333,9 +333,9 @@ int DisplayMessageQueue_X11::msg_wait_for_multiple_objects(std::vector<SocketMes
 
 	int result = select(
 	highest_fd+1,
-	reads ? &rfds : 0,
-	writes ? &wfds : 0,
-	exceptions ? &efds : 0,
+	reads ? &rfds : nullptr,
+	writes ? &wfds : nullptr,
+	exceptions ? &efds : nullptr,
 	&tv);
 
 	int object_id = -1;
@@ -424,7 +424,7 @@ void DisplayMessageQueue_X11::process_message()
 			if (window->get_window() == event.xany.window)
 			{
 				X11Window *mouse_capture_window = current_mouse_capture_window;
-				if (mouse_capture_window == NULL)
+				if (mouse_capture_window == nullptr)
 					mouse_capture_window = window;
 
 				window->process_message(event, mouse_capture_window);

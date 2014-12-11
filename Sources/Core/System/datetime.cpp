@@ -125,7 +125,7 @@ DateTime DateTime::get_utc_time_from_ticks(byte64 ticks)
 		memset(&tm_utc, 0, sizeof(tm));
 		time_t unix_ticks = (ticks - ticks_from_1601_to_1900) / 10000000;
 		tm *result = gmtime_r(&unix_ticks, &tm_utc);
-		if (result == 0)
+		if (result == nullptr)
 			throw Exception("gmtime_r failed");
 		datetime.year = ((int)result->tm_year)+1900;
 		datetime.month = result->tm_mon+1;
@@ -282,7 +282,7 @@ DateTime DateTime::to_utc() const
 
 		memset(&tm_local, 0, sizeof(tm));
 		tm *result = gmtime_r(&unix_ticks, &tm_local);
-		if (result == 0)
+		if (result == nullptr)
 			throw Exception("gmtime_r failed");
 
 		DateTime datetime;
@@ -396,7 +396,7 @@ DateTime DateTime::to_local() const
 		memset(&tm_local, 0, sizeof(tm));
 
 		tm *result = localtime_r(&unix_ticks, &tm_local);
-		if (result == 0)
+		if (result == nullptr)
 			throw Exception("localtime_r failed");
 
 		DateTime datetime;

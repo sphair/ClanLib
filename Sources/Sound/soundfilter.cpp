@@ -38,7 +38,7 @@ class SoundFilter_Impl
 {
 public:
 	SoundFilter_Impl()
-	: provider(0)
+	: provider(nullptr)
 	{
 	}
 
@@ -76,7 +76,7 @@ void SoundFilter::throw_if_null() const
 SoundFilterProvider *SoundFilter::get_provider() const
 {
 	if (!impl)
-		return 0;
+		return nullptr;
 	return impl->provider;
 }
 

@@ -39,7 +39,7 @@ namespace clan
 // TextureGroup_Impl construction:
 
 TextureGroup_Impl::TextureGroup_Impl(const Size &texture_sizes)
-: initial_texture_size(texture_sizes), active_root(NULL), next_id(0)
+: initial_texture_size(texture_sizes), active_root(nullptr), next_id(0)
 {
 }
 
@@ -104,7 +104,7 @@ Subtexture TextureGroup_Impl::add_new_node(GraphicContext &context, const Size &
 	if (!active_root)
 	{
 		// Create an initial root, if it does not exist
-		node = NULL;
+		node = nullptr;
 		next_id = 1;
 	}
 	else
@@ -112,7 +112,7 @@ Subtexture TextureGroup_Impl::add_new_node(GraphicContext &context, const Size &
 		node = active_root->node.insert(texture_size, next_id);
 	}
 
-	if(node == 0) // Couldn't find a fit in current active texture
+	if(node == nullptr) // Couldn't find a fit in current active texture
 	{
 		// Search previous textures if policy says so
 		if(texture_allocation_policy == TextureGroup::search_previous_textures)
@@ -127,7 +127,7 @@ Subtexture TextureGroup_Impl::add_new_node(GraphicContext &context, const Size &
 			}
 		}
 
-		if(node == 0) // Couldn't find a fit, so create a new texture
+		if(node == nullptr) // Couldn't find a fit, so create a new texture
 		{
 			if(texture_size.width > initial_texture_size.width || texture_size.height > initial_texture_size.height)
 			{
@@ -140,7 +140,7 @@ Subtexture TextureGroup_Impl::add_new_node(GraphicContext &context, const Size &
 			}
 		}
 
-		if(node == 0)
+		if(node == nullptr)
 			throw Exception("Unable to pack Texture into TextureGroup");
 	}
 
@@ -178,7 +178,7 @@ void TextureGroup_Impl::insert_texture(Texture2D &texture, const Rect &texture_r
 void TextureGroup_Impl::remove(Subtexture &subtexture)
 {
 	// Find the texture
-	Node *node = NULL;
+	Node *node = nullptr;
 	Texture2D texture = subtexture.get_texture();
 	Rect rect = subtexture.get_geometry();
 
@@ -204,7 +204,7 @@ void TextureGroup_Impl::remove(Subtexture &subtexture)
 		}
 		if(root_nodes.empty())
 		{
-			active_root = 0;
+			active_root = nullptr;
 		}
 		else
 		{
@@ -222,8 +222,8 @@ void TextureGroup_Impl::remove(Subtexture &subtexture)
 
 TextureGroup_Impl::Node::Node()
 {
-	child[0] = NULL;
-	child[1] = NULL;
+	child[0] = nullptr;
+	child[1] = nullptr;
 
 	id = 0;
 }
@@ -232,8 +232,8 @@ TextureGroup_Impl::Node::Node(const Rect &new_rect)
 {
 	node_rect = new_rect;
 
-	child[0] = NULL;
-	child[1] = NULL;
+	child[0] = nullptr;
+	child[1] = nullptr;
 
 	id = 0;
 }
@@ -263,12 +263,12 @@ void TextureGroup_Impl::Node::clear()
 	if(child[0])
 	{
 		delete child[0];
-		child[0] = NULL;
+		child[0] = nullptr;
 	}
 	if(child[1])
 	{
 		delete child[1];
-		child[1] = NULL;
+		child[1] = nullptr;
 	}
 	id = 0;
 }
@@ -280,7 +280,7 @@ TextureGroup_Impl::Node *TextureGroup_Impl::Node::insert(const Size &texture_siz
 	{
 		// Try inserting into first child
 		Node *new_node = child[0]->insert(texture_size, texture_id);
-		if(new_node != NULL)
+		if(new_node != nullptr)
 			return new_node;
         
 		// No room, insert into second
@@ -290,11 +290,11 @@ TextureGroup_Impl::Node *TextureGroup_Impl::Node::insert(const Size &texture_siz
 	{
 		// If there's already a texture here, return
 		if (id)
-			return NULL;
+			return nullptr;
 
 		// If we're too small, return
 		if (texture_size.width > node_rect.get_width() || texture_size.height > node_rect.get_height())
-			return NULL;
+			return nullptr;
 
 		// If we're just right, accept
 		if (texture_size.width == node_rect.get_width() && texture_size.height == node_rect.get_height())
@@ -342,12 +342,12 @@ TextureGroup_Impl::Node *TextureGroup_Impl::Node::find_image_rect(const Rect &ne
 	}
 
 	if (id == 0)
-		return NULL;
+		return nullptr;
 
 	if (image_rect == new_rect)
 		return this;
 
-	return NULL;
+	return nullptr;
 
 }
 

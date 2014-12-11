@@ -41,7 +41,7 @@ ConsoleWindow::ConsoleWindow(
 	const std::string &title,
 	int width,
 	int height)
-: impl(NULL)
+: impl(nullptr)
 {
 	impl = new ConsoleWindow_Impl(title, width, height);
 }

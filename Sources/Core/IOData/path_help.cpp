@@ -72,7 +72,7 @@ std::string PathHelp::make_absolute(
 #else
 			char working_dir[1024];
 			memset(working_dir, 0, 1024);
-			if (getcwd(working_dir, 1024) == 0)
+			if (getcwd(working_dir, 1024) == nullptr)
 				throw Exception("Unable to get current working directory!");
 			base = add_trailing_slash(working_dir, path_type) + base;
 #endif
@@ -180,7 +180,7 @@ std::string PathHelp::make_relative(
 #else
 			char working_dir[1024];
 			memset(working_dir, 0, 1024);
-			if (getcwd(working_dir, 1024) == 0)
+			if (getcwd(working_dir, 1024) == nullptr)
 				throw Exception("Unable to get current working directory!");
 			base = add_trailing_slash(working_dir, path_type) + base;
 #endif
@@ -220,7 +220,7 @@ std::string PathHelp::make_relative(
 #else
 			char working_dir[1024];
 			memset(working_dir, 0, 1024);
-			if (getcwd(working_dir, 1024) == 0)
+			if (getcwd(working_dir, 1024) == nullptr)
 				throw Exception("Unable to get current working directory!");
 			absolute = add_trailing_slash(working_dir, path_type) + absolute;
 #endif

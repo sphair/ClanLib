@@ -64,7 +64,7 @@ namespace clan
 		void start_blink();
 		void stop_blink();
 
-		TextFieldView *textfield = 0;
+		TextFieldView *textfield = nullptr;
 
 		TextStyle text_style;
 		TextAlignment alignment = TextAlignment::left;

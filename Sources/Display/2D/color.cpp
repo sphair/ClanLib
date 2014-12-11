@@ -52,7 +52,7 @@ Color::Color(const std::string &hexstr)
 	if( hexstr[0] == '#' )
 		pos++;
 
-	unsigned int color = strtoul(StringHelp::text_to_local8(hexstr.substr(pos)).c_str(), 0, 16);
+	unsigned int color = strtoul(StringHelp::text_to_local8(hexstr.substr(pos)).c_str(), nullptr, 16);
  
 	bool have_alpha = (hexstr.length()-pos) > 6;
 

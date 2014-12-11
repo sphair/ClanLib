@@ -47,7 +47,7 @@ class FileSystem_Impl
 {
 //! Construction:
 public:
-	FileSystem_Impl() : provider(0)
+	FileSystem_Impl() : provider(nullptr)
 	{
 	}
 

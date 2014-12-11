@@ -242,7 +242,7 @@ std::vector<std::string> System::get_stack_frames_text(void **frames, int num_fr
 		}
 
 		int status;
-		char *new_function = abi::__cxa_demangle(function, 0, 0, &status);
+		char *new_function = abi::__cxa_demangle(function, nullptr, nullptr, &status);
 		if (new_function)	// Was correctly decoded
 		{
 			function = new_function;
@@ -271,7 +271,7 @@ void System::sleep(int msecs)
 	timeval tv;
 	tv.tv_sec = msecs / 1000;
 	tv.tv_usec = (msecs % 1000) * 1000;
-	select(0, 0, 0, 0, &tv);
+	select(0, nullptr, nullptr, nullptr, &tv);
 #endif
 }
 
@@ -297,7 +297,7 @@ void System::pause(int msecs)
 	timeval tv;
 	tv.tv_sec = msecs / 1000;
 	tv.tv_usec = (msecs % 1000) * 1000;
-	select(0, 0, 0, 0, &tv);
+	select(0, nullptr, nullptr, nullptr, &tv);
 #endif
 }
 

@@ -40,24 +40,24 @@ namespace clan
 		ResourceManager resources;
 	};
 
-	static UIThread *ui_thread_instance = 0;
+	static UIThread *ui_thread_instance = nullptr;
 
 	UIThread::UIThread(ResourceManager manager) : impl(std::make_shared<UIThreadImpl>())
 	{
 		impl->resources = manager;
 
-		if (ui_thread_instance != 0) throw Exception("Only one UIThread is allowed");
+		if (ui_thread_instance != nullptr) throw Exception("Only one UIThread is allowed");
 		ui_thread_instance = this;
 	}
 
 	UIThread::~UIThread()
 	{
-		ui_thread_instance = 0;
+		ui_thread_instance = nullptr;
 	}
 
 	UIThread *UIThread::get_instance()
 	{
-		if (ui_thread_instance == 0) throw Exception("No UIThread created");
+		if (ui_thread_instance == nullptr) throw Exception("No UIThread created");
 		return ui_thread_instance;
 	}
 

@@ -52,7 +52,7 @@ class PixelBufferLock
 public:
 	/// \brief Constructs a gpu pixel buffer lock
 	PixelBufferLock(GraphicContext &gc, PixelBuffer &pixel_buffer, BufferAccess access, bool lock_pixelbuffer = true)
-	: pixel_buffer(pixel_buffer), lock_count(0), pitch(0), data(0)
+	: pixel_buffer(pixel_buffer), lock_count(0), pitch(0), data(nullptr)
 	{
 		width = pixel_buffer.get_width();
 		height = pixel_buffer.get_height();
@@ -62,7 +62,7 @@ public:
 
 	/// \brief Constructs a system pixel buffer lock
 	PixelBufferLock(PixelBuffer &pixel_buffer, bool lock_pixelbuffer = true)
-	: pixel_buffer(pixel_buffer), lock_count(0), pitch(0), data(0)
+	: pixel_buffer(pixel_buffer), lock_count(0), pitch(0), data(nullptr)
 	{
 		width = pixel_buffer.get_width();
 		height = pixel_buffer.get_height();

@@ -127,7 +127,7 @@ SoundBuffer SoundBuffer::load(const std::string &id, const XMLResourceDocument &
 SoundProvider *SoundBuffer::get_provider() const
 {
 	if (!impl)
-		return 0;
+		return nullptr;
 	return impl->provider;
 }
 
@@ -192,7 +192,7 @@ SoundBuffer_Session SoundBuffer::play(bool looping, SoundOutput *output)
 SoundBuffer_Session SoundBuffer::prepare(bool looping, SoundOutput *output)
 {
 	SoundOutput current_output = Sound::get_current_output();
-	if (output == 0) output = &current_output;
+	if (output == nullptr) output = &current_output;
 
 	MutexSection mutex_lock(&impl->mutex);
 	return SoundBuffer_Session(*this, looping, *output);

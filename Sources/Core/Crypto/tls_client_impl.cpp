@@ -747,7 +747,7 @@ void TLSClient_Impl::send_record(void *data_ptr, unsigned int data_size)
 		// "the encryption and MAC functions convert TLSCompressed.fragment structures to and from block TLSCiphertext.fragment structures."
 		const unsigned char *input_ptr = (const unsigned char *) data_ptr + sizeof(TLS_Record);
 		unsigned int input_size = data_size - sizeof(TLS_Record);
-		Secret mac = calculate_mac(data_ptr, data_size, NULL, 0, security_parameters.write_sequence_number, security_parameters.client_write_mac_secret);	// MAC includes the header and sequence number
+		Secret mac = calculate_mac(data_ptr, data_size, nullptr, 0, security_parameters.write_sequence_number, security_parameters.client_write_mac_secret);	// MAC includes the header and sequence number
 		DataBuffer encrypted = encrypt_data(input_ptr , input_size, mac.get_data(), mac.get_size());
 
 		// Update the length
@@ -833,7 +833,7 @@ void TLSClient_Impl::create_security_parameters_client_random()
 {
 	unsigned char *key_ptr = security_parameters.client_random.get_data();
 	m_Random.get_random_bytes(key_ptr + 4, 28);
-	time_t current_time = time(NULL);
+	time_t current_time = time(nullptr);
 	key_ptr[0] = current_time >> 24;
 	key_ptr[1] = current_time >> 16;
 	key_ptr[2] = current_time >> 8;

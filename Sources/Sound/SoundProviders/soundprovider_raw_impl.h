@@ -34,7 +34,7 @@ namespace clan
 class SoundProvider_Raw_Impl
 {
 public:
-	SoundProvider_Raw_Impl() : sound_data(NULL)
+	SoundProvider_Raw_Impl() : sound_data(nullptr)
 	{
 
 	}

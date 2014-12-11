@@ -81,7 +81,7 @@ public:
 	/// \param sized_format = Pixel Format
 	/// \param data = The data (0 = Allocate automatically to a boundary of 16 bytes)
 	/// \param only_reference_data : true = Reference the data. false = Copy the data
-	PixelBuffer(int width, int height, TextureFormat texture_format, const void *data = 0, bool only_reference_data = false);
+	PixelBuffer(int width, int height, TextureFormat texture_format, const void *data = nullptr, bool only_reference_data = false);
 
 	/// \brief Constructs a PixelBuffer
 	///

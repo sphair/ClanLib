@@ -55,7 +55,7 @@ void NetGameClient::connect(const std::string &server, const std::string &port)
 
 void NetGameClient::disconnect()
 {
-	if (impl->connection.get() != 0)
+	if (impl->connection.get() != nullptr)
 		impl->connection->disconnect();
 	impl->connection.reset();
 	impl->events.clear();
@@ -68,7 +68,7 @@ void NetGameClient::process_events()
 
 void NetGameClient::send_event(const NetGameEvent &game_event)
 {
-	if (impl->connection.get() != 0)
+	if (impl->connection.get() != nullptr)
 		impl->connection->send_event(game_event);
 }
 

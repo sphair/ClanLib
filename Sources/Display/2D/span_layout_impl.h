@@ -154,7 +154,7 @@ private:
 
 	struct SpanObject
 	{
-		SpanObject() : type(object_text), float_type(float_none), start(0), end(0), component(0), baseline_offset(0), id(-1) { }
+		SpanObject() : type(object_text), float_type(float_none), start(0), end(0), component(nullptr), baseline_offset(0), id(-1) { }
 
 		ObjectType type;
 		FloatType float_type;
@@ -172,7 +172,7 @@ private:
 
 	struct LineSegment
 	{
-		LineSegment() : type(object_text), start(0), end(0), x_position(0), width(0), ascender(0), descender(0), component(0), baseline_offset(0), id(-1) { }
+		LineSegment() : type(object_text), start(0), end(0), x_position(0), width(0), ascender(0), descender(0), component(nullptr), baseline_offset(0), id(-1) { }
 
 		ObjectType type;
 
@@ -225,7 +225,7 @@ private:
 
 	struct FloatBox
 	{
-		FloatBox() : type(object_image), component(0), id(-1) { }
+		FloatBox() : type(object_image), component(nullptr), id(-1) { }
 
 		Rect rect;
 		ObjectType type;

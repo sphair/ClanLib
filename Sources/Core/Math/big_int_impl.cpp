@@ -57,13 +57,13 @@ const int BigInt_Impl::default_allocated_precision = 64;
 
 std::vector<ubyte32> BigInt_Impl::prime_tab;
 
-BigInt_Impl::BigInt_Impl(unsigned int prec) : digits_negative(false), digits_alloc(0), digits_used(0), digits(NULL)
+BigInt_Impl::BigInt_Impl(unsigned int prec) : digits_negative(false), digits_alloc(0), digits_used(0), digits(nullptr)
 {
 	if (prec)
 		internal_init_size(prec);
 }
 
-BigInt_Impl::BigInt_Impl(const BigInt_Impl &other) : digits_negative(false), digits_alloc(0), digits_used(0), digits(NULL)
+BigInt_Impl::BigInt_Impl(const BigInt_Impl &other) : digits_negative(false), digits_alloc(0), digits_used(0), digits(nullptr)
 {
 	other.copy(this);
 }
@@ -92,7 +92,7 @@ void BigInt_Impl::internal_free()
 	{
 		// memset(digits, 0, digits_alloc * sizeof(ubyte32)); <-- ClanLib does not pretend to be secure
 		delete[] digits;
-		digits = NULL;
+		digits = nullptr;
 
 	}
 	digits_negative = false;
@@ -323,7 +323,7 @@ void BigInt_Impl::copy(BigInt_Impl *to) const
 		to->digits_negative = digits_negative;
 		to->digits_alloc = digits_alloc;
 		to->digits_used = digits_used;
-		to->digits = NULL;
+		to->digits = nullptr;
 		if (digits)
 		{
 			to->digits = new ubyte32[digits_alloc];
@@ -524,7 +524,7 @@ ubyte32 BigInt_Impl::mod_d(ubyte32 d) const
 
 	if(internal_cmp_d(d) > 0)
 	{
-		div_d(d, NULL, &rem);
+		div_d(d, nullptr, &rem);
 	}
 	else
 	{
@@ -1291,7 +1291,7 @@ void BigInt_Impl::mod(const BigInt_Impl *m, BigInt_Impl *c) const
 
 	if((mag = internal_cmp(m)) > 0)
 	{
-		div(m, NULL, c);
+		div(m, nullptr, c);
 
 		if (c->digits_negative)
 		{
@@ -1622,7 +1622,7 @@ void BigInt_Impl::exptmod(const BigInt_Impl *b, const BigInt_Impl *m, BigInt_Imp
 	// mu = b^2k / m
 	mu.internal_add_d(1);
 	mu.internal_lshd(2 * m->digits_used);
-	mu.div(m, &mu, NULL);
+	mu.div(m, &mu, nullptr);
 
 	// Loop over digits of b in ascending order, except highest order
 	for(dig = 0; dig < (ub - 1); dig++)
@@ -1833,7 +1833,7 @@ bool BigInt_Impl::pprime(int nt) const
 		return false;
 	}
 
-	amo.div_2d(b, &m, 0);
+	amo.div_2d(b, &m, nullptr);
 
 	bool result = true;
 
@@ -1933,7 +1933,7 @@ bool BigInt_Impl::invmod(const BigInt_Impl *m, BigInt_Impl *c) const
 
 	BigInt_Impl  g, x;
 
-	xgcd( m, &g, &x, NULL);
+	xgcd( m, &g, &x, nullptr);
 
 	if(g.cmp_d(1) != 0)
 	{

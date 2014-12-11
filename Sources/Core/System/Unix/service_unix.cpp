@@ -124,10 +124,10 @@ int Service_Unix::run_daemon(std::vector<std::string> args)
 		struct sigaction action;
 		memset(&action, 0, sizeof(struct sigaction));
 		action.sa_handler = &Service_Unix::sig_term;
-		sigaction(SIGTERM, &action, 0);
+		sigaction(SIGTERM, &action, nullptr);
 		memset(&action, 0, sizeof(struct sigaction));
 		action.sa_handler = &Service_Unix::sig_hup;
-		sigaction(SIGHUP, &action, 0);
+		sigaction(SIGHUP, &action, nullptr);
 
 		int pid = fork();
 		if (pid)
@@ -176,13 +176,13 @@ int Service_Unix::run_debug(std::vector<std::string> args)
 	struct sigaction action;
 	memset(&action, 0, sizeof(struct sigaction));
 	action.sa_handler = &Service_Unix::sig_term;
-	sigaction(SIGTERM, &action, 0);
+	sigaction(SIGTERM, &action, nullptr);
 	memset(&action, 0, sizeof(struct sigaction));
 	action.sa_handler = &Service_Unix::sig_hup;
-	sigaction(SIGHUP, &action, 0);
+	sigaction(SIGHUP, &action, nullptr);
 	memset(&action, 0, sizeof(struct sigaction));
 	action.sa_handler = &Service_Unix::sig_term;
-	sigaction(SIGINT, &action, 0);
+	sigaction(SIGINT, &action, nullptr);
 
 	// Starting service in separate thread to avoid
 	// signals sent to this pid causing EINTR errors

@@ -43,7 +43,7 @@ namespace clan
 // InputDeviceProvider_X11Keyboard construction:
 
 InputDeviceProvider_X11Keyboard::InputDeviceProvider_X11Keyboard(X11Window *window)
-: sig_provider_event(0), window(window), ctrl_down(false), shift_down(false), alt_down(false)
+: sig_provider_event(nullptr), window(window), ctrl_down(false), shift_down(false), alt_down(false)
 {
 	current_keys_down.clear();
 }
@@ -265,7 +265,7 @@ void InputDeviceProvider_X11Keyboard::received_keyboard_input(XKeyEvent &event)
 
 	const int buff_size = 16;
 	char buff[buff_size];
-	int result = XLookupString(&event, buff, buff_size - 1, NULL, NULL);
+	int result = XLookupString(&event, buff, buff_size - 1, nullptr, nullptr);
 	if (result < 0) result = 0;
 	if (result > (buff_size-1)) result = buff_size - 1;
 	buff[result] = 0;

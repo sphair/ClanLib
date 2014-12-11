@@ -91,7 +91,7 @@ namespace clan
 			auto it = std::find_if(super->impl->_subviews.begin(), super->impl->_subviews.end(), [&](const std::shared_ptr<View> &view) { return view.get() == this; });
 			if (it != super->impl->_subviews.end())
 				super->impl->_subviews.erase(it);
-			impl->_superview = 0;
+			impl->_superview = nullptr;
 
 			super->set_needs_layout();
 
@@ -342,7 +342,7 @@ namespace clan
 		View *root = root_view();
 		View *old_focus_view = root->impl->_focus_view;
 
-		root->impl->_focus_view = 0;
+		root->impl->_focus_view = nullptr;
 
 		if (old_focus_view)
 		{
@@ -355,12 +355,12 @@ namespace clan
 	{
 		View *root = root_view();
 		View *cur_focus = root->impl->_focus_view;
-		View *prev_focus = 0;
+		View *prev_focus = nullptr;
 
 		if (cur_focus)
 		{
 			prev_focus = cur_focus->impl->find_prev_with_tab_index(cur_focus->tab_index());
-			if (prev_focus == 0)
+			if (prev_focus == nullptr)
 				prev_focus = cur_focus->impl->find_prev_with_tab_index(root->impl->find_prev_tab_index(cur_focus->tab_index()));
 		}
 		else
@@ -376,12 +376,12 @@ namespace clan
 	{
 		View *root = root_view();
 		View *cur_focus = root->impl->_focus_view;
-		View *next_focus = 0;
+		View *next_focus = nullptr;
 
 		if (cur_focus)
 		{
 			next_focus = cur_focus->impl->find_next_with_tab_index(cur_focus->tab_index());
-			if (next_focus == 0)
+			if (next_focus == nullptr)
 				next_focus = cur_focus->impl->find_next_with_tab_index(root->impl->find_next_tab_index(cur_focus->tab_index()));
 		}
 		else
@@ -735,7 +735,7 @@ namespace clan
 				}
 				else
 				{
-					View *next = subview->impl->find_next_with_tab_index(search_index, 0, false);
+					View *next = subview->impl->find_next_with_tab_index(search_index, nullptr, false);
 					if (next)
 						return next;
 				}
@@ -747,7 +747,7 @@ namespace clan
 		}
 
 		if (!also_search_ancestors || !_superview)
-			return 0;
+			return nullptr;
 
 		return _superview->impl->find_next_with_tab_index(search_index, this, true);
 	}
@@ -769,7 +769,7 @@ namespace clan
 				}
 				else
 				{
-					View *next = subview->impl->find_prev_with_tab_index(search_index, 0, false);
+					View *next = subview->impl->find_prev_with_tab_index(search_index, nullptr, false);
 					if (next)
 						return next;
 				}
@@ -781,7 +781,7 @@ namespace clan
 		}
 
 		if (!also_search_ancestors || !_superview)
-			return 0;
+			return nullptr;
 
 		return _superview->impl->find_prev_with_tab_index(search_index, this, true);
 	}

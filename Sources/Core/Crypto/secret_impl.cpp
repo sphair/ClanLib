@@ -42,7 +42,7 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // Secret_Impl Construction:
 
-Secret_Impl::Secret_Impl() : key(NULL), key_length(0)
+Secret_Impl::Secret_Impl() : key(nullptr), key_length(0)
 {
 
 }
@@ -84,7 +84,7 @@ void Secret_Impl::free()
 			*p++ = 0;
 #endif
 		delete[] key;
-		key = NULL;
+		key = nullptr;
 		key_length = 0;
 	}
 }

@@ -37,7 +37,7 @@ namespace clan
 // RectPacker_Impl construction:
 
 RectPacker_Impl::RectPacker_Impl(const Size &max_group_size)
-: active_root_node(0), next_node_id(0), max_group_size(max_group_size)
+: active_root_node(nullptr), next_node_id(0), max_group_size(max_group_size)
 {
 }
 
@@ -87,7 +87,7 @@ RectPacker::AllocatedRect RectPacker_Impl::add_new_node(const Size &rect_size)
 	if (!active_root_node)
 	{
 		// Create an initial root, if it does not exist
-		node = 0;
+		node = nullptr;
 		next_node_id = 1;
 	}
 	else
@@ -95,7 +95,7 @@ RectPacker::AllocatedRect RectPacker_Impl::add_new_node(const Size &rect_size)
 		node = active_root_node->node.insert(rect_size, next_node_id);
 	}
 
-	if(node == 0) // Couldn't find a fit in current active group
+	if(node == nullptr) // Couldn't find a fit in current active group
 	{
 		if(allocation_policy == RectPacker::fail_if_full && root_nodes.size() > 0)
 		{
@@ -114,7 +114,7 @@ RectPacker::AllocatedRect RectPacker_Impl::add_new_node(const Size &rect_size)
 			}
 		}
 
-		if(node == 0) // Couldn't find a fit, so create a new group
+		if(node == nullptr) // Couldn't find a fit, so create a new group
 		{
 			if(rect_size.width <= max_group_size.width && rect_size.height <= max_group_size.height)
 			{
@@ -126,7 +126,7 @@ RectPacker::AllocatedRect RectPacker_Impl::add_new_node(const Size &rect_size)
 			}
 		}
 
-		if(node == 0)
+		if(node == nullptr)
 			throw Exception("Unable to pack rect into group: Unknown reason");
 	}
 
@@ -153,8 +153,8 @@ RectPacker_Impl::RootNode *RectPacker_Impl::add_new_root()
 
 RectPacker_Impl::Node::Node()
 {
-	child[0] = NULL;
-	child[1] = NULL;
+	child[0] = nullptr;
+	child[1] = nullptr;
 
 	id = 0;
 }
@@ -163,8 +163,8 @@ RectPacker_Impl::Node::Node(const Rect &new_rect)
 {
 	node_rect = new_rect;
 
-	child[0] = NULL;
-	child[1] = NULL;
+	child[0] = nullptr;
+	child[1] = nullptr;
 
 	id = 0;
 }
@@ -194,12 +194,12 @@ void RectPacker_Impl::Node::clear()
 	if(child[0])
 	{
 		delete child[0];
-		child[0] = NULL;
+		child[0] = nullptr;
 	}
 	if(child[1])
 	{
 		delete child[1];
-		child[1] = NULL;
+		child[1] = nullptr;
 	}
 	id = 0;
 }
@@ -211,7 +211,7 @@ RectPacker_Impl::Node *RectPacker_Impl::Node::insert(const Size &rect_size, int 
 	{
 		// Try inserting into first child
 		Node *new_node = child[0]->insert(rect_size, rect_id);
-		if(new_node != NULL)
+		if(new_node != nullptr)
 			return new_node;
         
 		// No room, insert into second
@@ -221,11 +221,11 @@ RectPacker_Impl::Node *RectPacker_Impl::Node::insert(const Size &rect_size, int 
 	{
 		// If there's already a rect here, return
 		if (id)
-			return NULL;
+			return nullptr;
 
 		// If we're too small, return
 		if (rect_size.width > node_rect.get_width() || rect_size.height > node_rect.get_height())
-			return NULL;
+			return nullptr;
 
 		// If we're just right, accept
 		if (rect_size.width == node_rect.get_width() && rect_size.height == node_rect.get_height())

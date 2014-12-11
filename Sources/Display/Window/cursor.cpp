@@ -41,7 +41,7 @@ namespace clan
 class Cursor_Impl
 {
 public:
-	Cursor_Impl() : provider(0) { }
+	Cursor_Impl() : provider(nullptr) { }
 	~Cursor_Impl() { if (provider) delete provider; }
 
 	CursorProvider *provider;
@@ -74,7 +74,7 @@ CursorProvider *Cursor::get_provider() const
 	if (impl)
 		return impl->provider;
 	else
-		return 0;
+		return nullptr;
 }
 
 /////////////////////////////////////////////////////////////////////////////

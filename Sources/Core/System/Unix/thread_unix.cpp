@@ -63,7 +63,7 @@ void Thread_Unix::start(Runnable *runnable)
 		handle_valid = false;
 	}
 
-	int result = pthread_create(&handle, NULL, &Thread_Unix::thread_main, runnable);
+	int result = pthread_create(&handle, nullptr, &Thread_Unix::thread_main, runnable);
 	if (result != 0)
 		throw Exception("Unable to create new thread");
 	handle_valid = true;
@@ -73,7 +73,7 @@ void Thread_Unix::join()
 {
 	if (handle_valid)
 	{
-		pthread_join(handle, NULL);
+		pthread_join(handle, nullptr);
 		handle = 0;
 		handle_valid = false;
 	}
@@ -95,12 +95,12 @@ void Thread_Unix::kill()
 void *Thread_Unix::thread_main(void *data)
 {
 	// kill thread immediately - no cancellation point
-	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, nullptr);
 
 	Runnable *runnable = (Runnable *)data;
 	ThreadLocalStorage tls;
 	runnable->run();
-	return NULL;
+	return nullptr;
 }
 
 }

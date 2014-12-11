@@ -59,7 +59,7 @@ inline void WebResponse_Impl::send_request(TCPConnection &connection)
 	if (!request->body.is_null())
 		connection.send(request->body.get_data(), request->body.get_size(), true);
 	else
-		connection.send(0, 0);
+		connection.send(nullptr, 0);
 }
 
 inline void WebResponse_Impl::read_response(TCPConnection &connection)

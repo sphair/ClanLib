@@ -55,7 +55,7 @@ class UserDataOwner
 {
 public:
 	UserDataOwner()
-	: user_data(0)
+	: user_data(nullptr)
 	{
 	}
 
@@ -64,7 +64,7 @@ public:
 		if (user_data)
 		{
 			user_data->~UserDataBase();
-			user_data = 0;
+			user_data = nullptr;
 		}
 	}
 
@@ -74,7 +74,7 @@ public:
 		if (user_data)
 		{
 			user_data->~UserDataBase();
-			user_data = 0;
+			user_data = nullptr;
 		}
 
 		static_assert(sizeof(UserData<T>) <= 32, "userdata_storage is too small!");

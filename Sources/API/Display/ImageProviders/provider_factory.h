@@ -67,7 +67,7 @@ public:
 		const std::string &filename,
 		const std::string &type = std::string(),
 		const FileSystem &fs = FileSystem(),
-		std::string *out_failure_reason = 0,
+		std::string *out_failure_reason = nullptr,
 		bool srgb = false);
 
 	/// \brief Loads an image file from 'filename', using the provider

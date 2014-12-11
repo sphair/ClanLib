@@ -71,7 +71,7 @@ namespace clan
 class GL1SelectedTexture
 {
 public:
-	GL1SelectedTexture() : texture(NULL) {};
+	GL1SelectedTexture() : texture(nullptr) {};
 
 	GL1TextureProvider *texture;
 };
@@ -453,9 +453,9 @@ void GL1GraphicContextProvider::set_texture(int unit_index, const Texture &textu
 	{
 		throw Exception("Invalid texture unit index in GL1 target");
 	}
-	selected_textures[unit_index].texture = NULL;
+	selected_textures[unit_index].texture = nullptr;
 
-	if (glActiveTexture != 0)
+	if (glActiveTexture != nullptr)
 	{
 		glActiveTexture( GL_TEXTURE0 + unit_index );
 	}
@@ -487,10 +487,10 @@ void GL1GraphicContextProvider::reset_texture(int unit_index)
 
 	if ( (unit_index >=0) && (unit_index < max_texture_coords) )
 	{
-		selected_textures[unit_index].texture = NULL;
+		selected_textures[unit_index].texture = nullptr;
 	}
 
-	if (glActiveTexture != 0)
+	if (glActiveTexture != nullptr)
 	{
 		glActiveTexture( GL_TEXTURE0 + unit_index );
 	}
@@ -919,7 +919,7 @@ void GL1GraphicContextProvider::set_primitive_texture( int texture_index, Primit
 	GL1TextureProvider *texture;
 	if ( (texture_index <0) || (texture_index >= max_texture_coords) )
 	{
-		texture = NULL;		// Ignore invalid texture index's
+		texture = nullptr;		// Ignore invalid texture index's
 	}
 	else
 	{
@@ -928,7 +928,7 @@ void GL1GraphicContextProvider::set_primitive_texture( int texture_index, Primit
 
 	if (texture)
 	{
-		if (glActiveTexture != 0)
+		if (glActiveTexture != nullptr)
 			glActiveTexture( GL_TEXTURE0 + texture_index );
 
 		glEnable(texture->get_texture_type());
@@ -974,7 +974,7 @@ void GL1GraphicContextProvider::reset_primitive_texture( int texture_index)
 	GL1TextureProvider *texture = selected_textures[texture_index].texture;
 	if (texture)
 	{
-		if (glActiveTexture != 0)
+		if (glActiveTexture != nullptr)
 			glActiveTexture( GL_TEXTURE0 + texture_index );
 
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -990,7 +990,7 @@ void GL1GraphicContextProvider::reset_primitive_texture_all()
 		GL1TextureProvider *texture = selected_textures[cnt].texture;
 		if (texture)
 		{
-			if (glActiveTexture != 0)
+			if (glActiveTexture != nullptr)
 				glActiveTexture( GL_TEXTURE0 + cnt );
 	
 			glBindTexture(GL_TEXTURE_2D, 0);

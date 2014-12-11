@@ -44,7 +44,7 @@ namespace clan
 // InputDeviceProvider_LinuxJoystick construction:
 
 InputDeviceProvider_LinuxJoystick::InputDeviceProvider_LinuxJoystick(X11Window *window, const std::string &device)
-: sig_provider_event(0), window(window), device(device), fd(-1), new_event(false)
+: sig_provider_event(nullptr), window(window), device(device), fd(-1), new_event(false)
 {
 	fd = open(device.c_str(), O_RDONLY | O_NONBLOCK);
 

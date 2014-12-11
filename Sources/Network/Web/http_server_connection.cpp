@@ -83,7 +83,7 @@ public:
 
 	IODeviceProvider *duplicate()
 	{
-		return 0;
+		return nullptr;
 	}
 
 //! Implementation:

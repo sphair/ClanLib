@@ -167,14 +167,14 @@ public:
 	/// \param output Sound output to be used - NULL means use the current selected sound output (Sound::get_selected_output().
 	///
 	/// \return The playback session.
-	SoundBuffer_Session play(bool looping = false, SoundOutput *output = 0);
+	SoundBuffer_Session play(bool looping = false, SoundOutput *output = nullptr);
 
 	/// \brief Prepares the soundbuffer for playback on the specified soundcard.
 	///
 	/// \param output Sound output to be used - NULL means use the current selected sound output (Sound::get_selected_output().
 	///
 	/// \return The playback session.
-	SoundBuffer_Session prepare(bool looping = false, SoundOutput *output = 0);
+	SoundBuffer_Session prepare(bool looping = false, SoundOutput *output = nullptr);
 
 /// \}
 /// \name Implementation

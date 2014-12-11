@@ -50,7 +50,7 @@ GL3ElementArrayBufferProvider::~GL3ElementArrayBufferProvider()
 
 void GL3ElementArrayBufferProvider::create(int size, BufferUsage usage)
 {
-	create(0, size, usage);
+	create(nullptr, size, usage);
 }
 
 void GL3ElementArrayBufferProvider::create(void *data, int size, BufferUsage usage)

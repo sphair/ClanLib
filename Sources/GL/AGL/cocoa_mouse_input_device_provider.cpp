@@ -7,7 +7,7 @@ namespace clan
 {
 
 CocoaMouseInputDeviceProvider::CocoaMouseInputDeviceProvider()
-: sig_provider_event(0), down(false)
+: sig_provider_event(nullptr), down(false)
 {
 }
 

@@ -779,7 +779,7 @@ DomNode_Impl::~DomNode_Impl()
 DomTreeNode *DomNode_Impl::get_tree_node()
 {
 	if (node_index == cl_null_node_index)
-		return 0;
+		return nullptr;
 	DomDocument_Impl *doc_impl = (DomDocument_Impl *) owner_document.lock().get();
 	return doc_impl->nodes[node_index];
 }
@@ -787,7 +787,7 @@ DomTreeNode *DomNode_Impl::get_tree_node()
 const DomTreeNode *DomNode_Impl::get_tree_node() const
 {
 	if (node_index == cl_null_node_index)
-		return 0;
+		return nullptr;
 	DomDocument_Impl *doc_impl = (DomDocument_Impl *) owner_document.lock().get();
 	return doc_impl->nodes[node_index];
 }

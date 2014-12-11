@@ -64,8 +64,8 @@
 namespace clan
 {
 
-cl_tls_variable GLFunctions *OpenGL::functions = 0;
-cl_tls_variable const OpenGLGraphicContextProvider * cl_active_opengl_gc = 0;
+cl_tls_variable GLFunctions *OpenGL::functions = nullptr;
+cl_tls_variable const OpenGLGraphicContextProvider * cl_active_opengl_gc = nullptr;
 static Mutex cl_function_map_mutex;
 
 // A fix for a compiler bug with compiler version 13.00.9466
@@ -241,7 +241,7 @@ ProcAddress *OpenGL::get_proc_address(const std::string& function_name)
 		return cl_active_opengl_gc->get_proc_address(function_name);
 
 #endif
-	return NULL;
+	return nullptr;
 }
 
 void OpenGL::set_active(GraphicContext &gc)
@@ -268,7 +268,7 @@ bool OpenGL::set_active()
 			return true;
 		}
 	}
-	set_active(NULL);
+	set_active(nullptr);
 	return false;
 }
 
@@ -317,7 +317,7 @@ void OpenGL::set_active(const OpenGLGraphicContextProvider * const gc_provider)
 #		endif
 
 			// If no current context, don't map function bindings either.
-			OpenGL::functions = NULL;
+			OpenGL::functions = nullptr;
 		}
 
 		// OK, make our context the active one
@@ -338,7 +338,7 @@ void OpenGL::remove_active(const OpenGLGraphicContextProvider * const gc_provide
 
 		if (cl_active_opengl_gc == gc_provider)
 		{
-			set_active(NULL);
+			set_active(nullptr);
 		}
 	}
 }

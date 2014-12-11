@@ -86,7 +86,7 @@ void GL1FrameBufferProvider::attach_color(int attachment_index, const Texture2D 
 		sync_texture();
 
 	GL1TextureProvider *texture_provider = dynamic_cast<GL1TextureProvider *> (texture.get_provider());
-	if (texture_provider == NULL)
+	if (texture_provider == nullptr)
 	{
 		throw Exception("Selected texture is not a GL1 texture");
 	}
@@ -231,7 +231,7 @@ void GL1FrameBufferProvider::sync_pbuffer()
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, selected_texture_provider->get_handle());
 
-	if (glActiveTexture != 0)
+	if (glActiveTexture != nullptr)
 			glActiveTexture( GL_TEXTURE0 + 0 );
 
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -304,7 +304,7 @@ void GL1FrameBufferProvider::sync_texture()
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
-		if (glActiveTexture != 0)
+		if (glActiveTexture != nullptr)
 			glActiveTexture( GL_TEXTURE0 );
 
 		glPixelZoom(1.0f, 1.0f);

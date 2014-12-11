@@ -41,7 +41,7 @@ namespace clan
 class PrimitivesArray_Impl
 {
 public:
-	PrimitivesArray_Impl() : provider(0) { }
+	PrimitivesArray_Impl() : provider(nullptr) { }
 	~PrimitivesArray_Impl() { if (provider) delete provider; }
 
 	PrimitivesArrayProvider *provider;

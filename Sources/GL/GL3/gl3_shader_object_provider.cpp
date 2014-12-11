@@ -84,8 +84,8 @@ void GL3ShaderObjectProvider::create(
 	type = shader_type;
 	handle = glCreateShader(shadertype_to_opengl(type));
 
-	GLchar ** array_sources = 0;
-	GLint *array_source_lengths = 0;
+	GLchar ** array_sources = nullptr;
+	GLint *array_source_lengths = nullptr;
 	try
 	{
 		array_sources = new GLchar*[sources.size()];

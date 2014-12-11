@@ -40,12 +40,12 @@ namespace clan
 		unsigned int find_next_tab_index(unsigned int tab_index) const;
 		unsigned int find_prev_tab_index(unsigned int tab_index) const;
 		unsigned int find_highest_tab_index() const;
-		View *find_next_with_tab_index(unsigned int tab_index, const ViewImpl *search_from = 0, bool also_search_ancestors = true) const;
-		View *find_prev_with_tab_index(unsigned int tab_index, const ViewImpl *search_from = 0, bool also_search_ancestors = true) const;
+		View *find_next_with_tab_index(unsigned int tab_index, const ViewImpl *search_from = nullptr, bool also_search_ancestors = true) const;
+		View *find_prev_with_tab_index(unsigned int tab_index, const ViewImpl *search_from = nullptr, bool also_search_ancestors = true) const;
 
 		void inverse_bubble(EventUI *e);
 
-		View *_superview = 0;
+		View *_superview = nullptr;
 		std::vector<std::shared_ptr<View>> _subviews;
 
 		unsigned int tab_index = 0;
@@ -74,9 +74,9 @@ namespace clan
 		Signal<void(KeyEvent &)> _sig_key_release[4];
 
 		// Root view variables:
-		View *_owner_view = 0;
-		View *_focus_view = 0;
-		View *_proximity_view = 0;
+		View *_owner_view = nullptr;
+		View *_focus_view = nullptr;
+		View *_proximity_view = nullptr;
 
 		AnimationGroup animation_group;
 

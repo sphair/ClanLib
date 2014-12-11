@@ -42,7 +42,7 @@ namespace clan
 class TransferBuffer_Impl
 {
 public:
-	TransferBuffer_Impl() : lock_count(0), provider(0) { }
+	TransferBuffer_Impl() : lock_count(0), provider(nullptr) { }
 	~TransferBuffer_Impl() { if (provider) delete provider; }
 
 	int lock_count;

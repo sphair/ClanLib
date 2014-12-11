@@ -38,7 +38,7 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // FileLogger Construction:
 
-FileLogger::FileLogger(const std::string &filename) : file(0)
+FileLogger::FileLogger(const std::string &filename) : file(nullptr)
 {
 	file = new File(filename, File::open_always, File::access_read_write);
 }

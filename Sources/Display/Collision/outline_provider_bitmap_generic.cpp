@@ -46,7 +46,7 @@ OutlineProviderBitmap_Impl::OutlineProviderBitmap_Impl(
 	int alpha_limit,
 	bool get_insides)
 :
-	data(0),
+	data(nullptr),
 	get_insides(get_insides),
 	alpha_limit(alpha_limit),
 	//double_precision(false),
@@ -185,7 +185,7 @@ void OutlineProviderBitmap_Impl::find_contours()
 				// Since we will be going through our starting point twice, we add it to the end.
 				rpoints.push_back(rpoints.front());
 				
-				Contour *outside_contour = 0;
+				Contour *outside_contour = nullptr;
 				Pointf tmp_point = rpoints.front();
 				// Look for the outside contour to the left of our starting point (that was the upper left corner, remember)
 				while(!outside_contour)
@@ -412,7 +412,7 @@ Contour *OutlineProviderBitmap_Impl::point_in_outline(unsigned int x, unsigned i
 		}
 	}
 
-	return 0;
+	return nullptr;
 }
 
 bool OutlineProviderBitmap_Impl::is_opaque(int x, int y)

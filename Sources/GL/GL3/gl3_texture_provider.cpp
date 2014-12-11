@@ -182,27 +182,27 @@ void GL3TextureProvider::create(int new_width, int new_height, int new_depth, in
 
 		if (texture_type == GL_TEXTURE_1D)
 		{
-			glTexImage1D(GL_TEXTURE_1D, level, tf.internal_format, mip_width, 0, tf.pixel_format, tf.pixel_datatype, 0);
+			glTexImage1D(GL_TEXTURE_1D, level, tf.internal_format, mip_width, 0, tf.pixel_format, tf.pixel_datatype, nullptr);
 		}
 		else if (texture_type == GL_TEXTURE_1D_ARRAY)
 		{
-			glTexImage2D(GL_TEXTURE_1D_ARRAY, level, tf.internal_format, mip_width, array_size, 0, tf.pixel_format, tf.pixel_datatype, 0);
+			glTexImage2D(GL_TEXTURE_1D_ARRAY, level, tf.internal_format, mip_width, array_size, 0, tf.pixel_format, tf.pixel_datatype, nullptr);
 		}
 		else if (texture_type == GL_TEXTURE_2D)
 		{
 			if (PixelBuffer::is_compressed(texture_format))
 			{
 				unsigned data_size = PixelBuffer::get_data_size(Size(mip_width, mip_height), texture_format);
-				glCompressedTexImage2D(GL_TEXTURE_2D, level,  tf.internal_format, mip_width, mip_height, 0,data_size, 0);
+				glCompressedTexImage2D(GL_TEXTURE_2D, level,  tf.internal_format, mip_width, mip_height, 0,data_size, nullptr);
 			}
 			else
 			{
-				glTexImage2D(GL_TEXTURE_2D, level, tf.internal_format, mip_width, mip_height, 0, tf.pixel_format, tf.pixel_datatype, 0);
+				glTexImage2D(GL_TEXTURE_2D, level, tf.internal_format, mip_width, mip_height, 0, tf.pixel_format, tf.pixel_datatype, nullptr);
 			}
 		}
 		else if (texture_type == GL_TEXTURE_2D_ARRAY)
 		{
-			glTexImage3D(GL_TEXTURE_2D_ARRAY, level, tf.internal_format, mip_width, mip_height, array_size, 0, tf.pixel_format, tf.pixel_datatype, 0);
+			glTexImage3D(GL_TEXTURE_2D_ARRAY, level, tf.internal_format, mip_width, mip_height, array_size, 0, tf.pixel_format, tf.pixel_datatype, nullptr);
 		}
 		else if (texture_type == GL_TEXTURE_2D_MULTISAMPLE)
 		{
@@ -215,17 +215,17 @@ void GL3TextureProvider::create(int new_width, int new_height, int new_depth, in
 		else if (texture_type == GL_TEXTURE_CUBE_MAP)
 		{
 			for (int i = 0; i < 6; i++)
-				glTexImage2D(OpenGL::to_cube_target(i), level, tf.internal_format, mip_width, mip_height, 0, tf.pixel_format, tf.pixel_datatype, 0);
+				glTexImage2D(OpenGL::to_cube_target(i), level, tf.internal_format, mip_width, mip_height, 0, tf.pixel_format, tf.pixel_datatype, nullptr);
 		}
 		else if (texture_type == GL_TEXTURE_CUBE_MAP_ARRAY)
 		{
 			array_size /= 6;
 			for (int i = 0; i < 6; i++)
-				glTexImage3D(OpenGL::to_cube_target(i), level, tf.internal_format, mip_width, mip_height, array_size, 0, tf.pixel_format, tf.pixel_datatype, 0);
+				glTexImage3D(OpenGL::to_cube_target(i), level, tf.internal_format, mip_width, mip_height, array_size, 0, tf.pixel_format, tf.pixel_datatype, nullptr);
 		}
 		else
 		{
-			glTexImage3D(GL_TEXTURE_3D, level, tf.internal_format, mip_width, mip_height, depth, 0, tf.pixel_format, tf.pixel_datatype, 0);
+			glTexImage3D(GL_TEXTURE_3D, level, tf.internal_format, mip_width, mip_height, depth, 0, tf.pixel_format, tf.pixel_datatype, nullptr);
 		}
 	}
 }
@@ -282,8 +282,8 @@ void GL3TextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, 
 	OpenGL::set_active(gc);
 	TextureStateTracker state_tracker(texture_type, handle);
 
-	const unsigned char *data = 0;
-	GL3PixelBufferProvider *buffer_provider = 0;
+	const unsigned char *data = nullptr;
+	GL3PixelBufferProvider *buffer_provider = nullptr;
 	GLint last_buffer = 0;
 	buffer_provider = dynamic_cast<GL3PixelBufferProvider*>(src_converted.get_provider());
 	if (buffer_provider)

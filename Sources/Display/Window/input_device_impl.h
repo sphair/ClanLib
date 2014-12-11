@@ -40,7 +40,7 @@ class InputDevice_Impl
 {
 public:
 	InputDevice_Impl()
-	: provider(0)
+	: provider(nullptr)
 	{
 		sc.connect(sig_provider_event, bind_member(this, &InputDevice_Impl::on_provider_event));
 	}

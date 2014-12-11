@@ -98,7 +98,7 @@ void UnixSocket::disconnect_graceful(int timeout)
 	timeval tv;
 	tv.tv_sec = timeout/1000;
 	tv.tv_usec = (timeout%1000)*1000;
-	select(handle+1, &rfds, 0, 0, &tv);
+	select(handle+1, &rfds, nullptr, nullptr, &tv);
 
 	close_handle();
 }

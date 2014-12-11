@@ -146,7 +146,7 @@ KeepAliveObject::~KeepAliveObject()
 	if (tls_objects->empty())
 	{
 		delete tls_objects;
-		cl_set_keep_alive_vector(0);
+		cl_set_keep_alive_vector(nullptr);
 	}
 }
 
@@ -216,7 +216,7 @@ std::vector<KeepAliveObject *> *cl_get_keep_alive_vector()
 
 #else
 
-__thread std::vector<KeepAliveObject*> *cl_tls_keep_alive = 0;
+__thread std::vector<KeepAliveObject*> *cl_tls_keep_alive = nullptr;
 
 void cl_alloc_tls_keep_alive_slot()
 {

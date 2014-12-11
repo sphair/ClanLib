@@ -41,7 +41,7 @@ namespace clan
 // GL3BufferObjectProvider Construction:
 
 GL3BufferObjectProvider::GL3BufferObjectProvider()
-: handle(0), data_ptr(0)
+: handle(0), data_ptr(nullptr)
 {
 	SharedGCData::add_disposable(this);
 	OpenGL::set_active();
@@ -88,7 +88,7 @@ void GL3BufferObjectProvider::create(const void *data, int size, BufferUsage usa
 
 void *GL3BufferObjectProvider::get_data()
 {
-	if (data_ptr == NULL)
+	if (data_ptr == nullptr)
 		throw Exception("PixelBuffer was not locked");
 	return data_ptr;
 }
@@ -119,7 +119,7 @@ void GL3BufferObjectProvider::unlock()
 	glBindBuffer(target, handle);
 	glUnmapBuffer(target);
 	glBindBuffer(target, last_buffer);
-	data_ptr = 0;
+	data_ptr = nullptr;
 	lock_gc = GraphicContext();
 }
 

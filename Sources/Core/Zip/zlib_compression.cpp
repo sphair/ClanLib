@@ -54,7 +54,7 @@ DataBuffer ZLibCompression::compress(const DataBuffer &data, bool raw, int compr
 	case fixed: strategy = MZ_FIXED; break;
 	}
 
-	mz_stream zs = { 0 };
+	mz_stream zs = { nullptr };
 	int result = mz_deflateInit2(&zs, compression_level, MZ_DEFLATED, raw ? -window_bits : window_bits, 8, strategy); // Undocumented: if wbits is negative, zlib skips header check
 	if (result != MZ_OK)
 		throw Exception("Zlib deflateInit failed");
@@ -100,7 +100,7 @@ DataBuffer ZLibCompression::decompress(const DataBuffer &data, bool raw)
 	DataBuffer zbuffer(1024*1024);
 	IODevice_Memory output;
 
-	mz_stream zs = { 0 };
+	mz_stream zs = { nullptr };
 	int result = mz_inflateInit2(&zs, raw ? -window_bits : window_bits);
 	if (result != MZ_OK)
 		throw Exception("Zlib inflateInit failed");

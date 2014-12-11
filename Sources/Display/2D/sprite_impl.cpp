@@ -85,7 +85,7 @@ const Sprite_Impl::SpriteFrame *Sprite_Impl::get_frame(unsigned int index) const
 	if(index < frames.size())
 		return &frames[index];
 	else
-		return NULL;
+		return nullptr;
 }
 
 Sprite_Impl::SpriteFrame *Sprite_Impl::get_frame(unsigned int index) 
@@ -93,7 +93,7 @@ Sprite_Impl::SpriteFrame *Sprite_Impl::get_frame(unsigned int index)
 	if(index < frames.size())
 		return &frames[index];
 	else
-		return NULL;
+		return nullptr;
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -492,7 +492,7 @@ void GL3GraphicContextProvider::set_texture(int unit_index, const Texture &textu
 {
 	OpenGL::set_active(this);
 
-	if (glActiveTexture != 0)
+	if (glActiveTexture != nullptr)
 	{
 		glActiveTexture( GL_TEXTURE0 + unit_index );
 	}
@@ -512,7 +512,7 @@ void GL3GraphicContextProvider::reset_texture(int unit_index)
 {
 	OpenGL::set_active(this);
 
-	if (glActiveTexture != 0)
+	if (glActiveTexture != nullptr)
 	{
 		glActiveTexture( GL_TEXTURE0 + unit_index );
 	}
@@ -604,7 +604,7 @@ void GL3GraphicContextProvider::set_program_object(StandardProgram standard_prog
 void GL3GraphicContextProvider::set_program_object(const ProgramObject &program)
 {
 	OpenGL::set_active(this);
-	if (glUseProgram == 0)
+	if (glUseProgram == nullptr)
 		return;
 
 	if (program.is_null())

@@ -187,7 +187,7 @@ void SoundOutput_OSS::wait()
 	FD_ZERO(&wfds);
 	FD_SET(dev_dsp_fd, &wfds);
 
-	/*int retval =*/ select(dev_dsp_fd+1, NULL, &wfds, NULL, NULL);
+	/*int retval =*/ select(dev_dsp_fd+1, nullptr, &wfds, nullptr, nullptr);
 //	cl_assert(retval != -1);
 }
 

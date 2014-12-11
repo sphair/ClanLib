@@ -35,7 +35,7 @@
 namespace clan
 {
 
-GraphicScreen::GraphicScreen(GraphicContextProvider *provider) : max_attributes(0), provider(provider), current(0)
+GraphicScreen::GraphicScreen(GraphicContextProvider *provider) : max_attributes(0), provider(provider), current(nullptr)
 {
 	SharedGCData::add_ref();
 	set_default_state();
@@ -88,7 +88,7 @@ void GraphicScreen::state_destroyed(GraphicContext_State *state)
 	if (current == state)
 	{
 		// To do: reset objects on provider (so any destroyed, but still bound, objects are released now)
-		current = 0;
+		current = nullptr;
 	}
 }
 

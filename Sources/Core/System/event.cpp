@@ -167,7 +167,7 @@ int Event::wait(int count, Event const * const * events, int timeout)
 	for (index_events = 0; index_events < count; index_events++)
 	{
 		EventProvider *provider = events[index_events]->impl->provider;
-		if (provider == 0)
+		if (provider == nullptr)
 			throw Exception("Event's EventProvider is a null pointer!");
 		bool flagged = provider->check_before_wait();
 		if (flagged)
@@ -207,7 +207,7 @@ int Event::wait(int count, Event const * const * events, int timeout)
 		for (index_events = 0; index_events < count; index_events++)
 		{
 			EventProvider *provider = events[index_events]->impl->provider;
-			if (provider == 0)
+			if (provider == nullptr)
 				throw Exception("Event's EventProvider is a null pointer!");
 			int num_handles = provider->get_num_event_handles();
 			for (int i=0; i<num_handles; i++)
@@ -241,10 +241,10 @@ int Event::wait(int count, Event const * const * events, int timeout)
 		do
 		{
 			result = select(highest_fd+1,
-					reads ? &rfds : 0,
-					writes ? &wfds : 0,
-					exceptions ? &efds : 0,
-					(timeout == -1) ? 0 : &tv);
+					reads ? &rfds : nullptr,
+					writes ? &wfds : nullptr,
+					exceptions ? &efds : nullptr,
+					(timeout == -1) ? nullptr : &tv);
 		} while (result == -1 && errno == EINTR); // The syscall was interrupted.  Try again.
 		
 		if (result == -1) // Error occoured
@@ -261,7 +261,7 @@ int Event::wait(int count, Event const * const * events, int timeout)
 			for (index_events = 0; index_events < count; index_events++)
 			{
 				EventProvider *provider = events[index_events]->impl->provider;
-				if (provider == 0)
+				if (provider == nullptr)
 					throw Exception("Event's EventProvider is a null pointer!");
 				int num_handles = provider->get_num_event_handles();
 				for (int i=0; i<num_handles; i++)
@@ -304,7 +304,7 @@ int Event::wait(const std::vector<Event *> &events, int timeout)
 	if (events.size() > 0)
 		return wait((int) events.size(), &events[0], timeout);
 	else
-		return wait(0, 0, timeout);
+		return wait(0, nullptr, timeout);
 }
 
 int Event::wait(const std::vector<Event> &events, int timeout)

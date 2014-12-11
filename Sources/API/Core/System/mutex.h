@@ -144,7 +144,7 @@ public:
 	/// \brief Attempt to lock mutex.
 	bool try_lock()
 	{
-		if (mutex == 0 || mutex->try_lock())
+		if (mutex == nullptr || mutex->try_lock())
 		{
 			lock_count++;
 			return true;

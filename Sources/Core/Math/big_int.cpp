@@ -273,52 +273,52 @@ BigInt BigInt::operator *= (ubyte32 d)
 BigInt BigInt::operator / (const BigInt& b)
 {
 	BigInt c;
-	impl->div(b.impl.get(), c.impl.get(), NULL);
+	impl->div(b.impl.get(), c.impl.get(), nullptr);
 	return c;
 }
 BigInt BigInt::operator / (ubyte32 d)
 {
 	BigInt c;
-	impl->div_d(d, c.impl.get(), NULL);
+	impl->div_d(d, c.impl.get(), nullptr);
 	return c;
 }
 
 BigInt BigInt::operator /= (const BigInt& b)
 {
 	BigInt c;
-	impl->div(b.impl.get(), impl.get(), NULL);
+	impl->div(b.impl.get(), impl.get(), nullptr);
 	return *this;
 }
 
 BigInt BigInt::operator /= (ubyte32 d)
 {
 	BigInt c;
-	impl->div_d(d, impl.get(), NULL);
+	impl->div_d(d, impl.get(), nullptr);
 	return *this;
 }
 BigInt BigInt::operator % (const BigInt& b)
 {
 	BigInt c;
-	impl->div(b.impl.get(), NULL, c.impl.get());
+	impl->div(b.impl.get(), nullptr, c.impl.get());
 	return c;
 }
 BigInt BigInt::operator % (ubyte32 d)
 {
 	BigInt c;
-	impl->div_2d(d, NULL, c.impl.get());
+	impl->div_2d(d, nullptr, c.impl.get());
 	return c;
 }
 
 BigInt BigInt::operator %= (const BigInt& b)
 {
 	BigInt c;
-	impl->div(b.impl.get(), NULL, impl.get());
+	impl->div(b.impl.get(), nullptr, impl.get());
 	return *this;
 }
 BigInt BigInt::operator %= (ubyte32 d)
 {
 	BigInt c;
-	impl->div_2d(d, NULL, impl.get());
+	impl->div_2d(d, nullptr, impl.get());
 	return *this;
 }
 void BigInt::div(const BigInt &b, BigInt *q, BigInt *r) const

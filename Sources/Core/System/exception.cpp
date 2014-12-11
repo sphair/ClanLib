@@ -42,7 +42,7 @@ Exception::Exception(const std::string &message) : message(message)
 {
 	num_frames = System::capture_stack_trace(1, max_frames, frames);
 	for (int i = num_frames; i < max_frames; i++)
-		frames[i] = 0;
+		frames[i] = nullptr;
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -41,11 +41,11 @@ namespace clan
 // SoundProvider_Vorbis_Session construction:
 
 SoundProvider_Vorbis_Session::SoundProvider_Vorbis_Session(SoundProvider_Vorbis &source) :
-	source(source), position(0), stream_eof(false), handle(0), stream_byte_offset(0), pcm(0), pcm_position(0), pcm_samples(0)
+	source(source), position(0), stream_eof(false), handle(nullptr), stream_byte_offset(0), pcm(nullptr), pcm_position(0), pcm_samples(0)
 {
 	int error = 0;
-	handle = stb_vorbis_open_pushdata(source.impl->buffer.get_data<unsigned char>(), source.impl->buffer.get_size(), &stream_byte_offset, &error, 0);
-	if (handle == 0)
+	handle = stb_vorbis_open_pushdata(source.impl->buffer.get_data<unsigned char>(), source.impl->buffer.get_size(), &stream_byte_offset, &error, nullptr);
+	if (handle == nullptr)
 		throw Exception("Unable to read ogg file");
 
 	stream_info = stb_vorbis_get_info(handle);
@@ -104,12 +104,12 @@ bool SoundProvider_Vorbis_Session::set_position(int pos)
 
 	if (handle)
 		stb_vorbis_close(handle);
-	handle = 0;
+	handle = nullptr;
 	stream_byte_offset = 0;
 
 	int error = 0;
-	handle = stb_vorbis_open_pushdata(source.impl->buffer.get_data<unsigned char>(), source.impl->buffer.get_size(), &stream_byte_offset, &error, 0);
-	if (handle == 0)
+	handle = stb_vorbis_open_pushdata(source.impl->buffer.get_data<unsigned char>(), source.impl->buffer.get_size(), &stream_byte_offset, &error, nullptr);
+	if (handle == nullptr)
 		throw Exception("Unable to read ogg file");
 
 	stream_info = stb_vorbis_get_info(handle);
@@ -124,10 +124,10 @@ int SoundProvider_Vorbis_Session::get_data(float **channels, int data_requested)
 	{
 		while (pcm_position == pcm_samples)
 		{
-			pcm = 0;
+			pcm = nullptr;
 			pcm_position = 0;
 			pcm_samples = 0;
-			int bytes_used = stb_vorbis_decode_frame_pushdata(handle, source.impl->buffer.get_data<unsigned char>() + stream_byte_offset, source.impl->buffer.get_size() - stream_byte_offset, 0, &pcm, &pcm_samples);
+			int bytes_used = stb_vorbis_decode_frame_pushdata(handle, source.impl->buffer.get_data<unsigned char>() + stream_byte_offset, source.impl->buffer.get_size() - stream_byte_offset, nullptr, &pcm, &pcm_samples);
 			stream_byte_offset += bytes_used;
 			if (bytes_used == 0 || stream_byte_offset == source.impl->buffer.get_size())
 			{

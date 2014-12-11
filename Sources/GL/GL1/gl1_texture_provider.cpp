@@ -165,7 +165,7 @@ void GL1TextureProvider::create(int new_width, int new_height, int new_depth, in
 			0,						// border
 			gl_pixel_format,		// format
 			GL_UNSIGNED_BYTE,		// type (it really doesn't matter since nothing is uploaded)
-			0);						// texels (0 to avoid uploading)
+			nullptr);						// texels (0 to avoid uploading)
 	}
 	else if (texture_type == GL_TEXTURE_2D)
 	{
@@ -191,7 +191,7 @@ void GL1TextureProvider::create(int new_width, int new_height, int new_depth, in
 			0,						// border
 			gl_pixel_format,		// format 
 			GL_UNSIGNED_BYTE,		// type (it really doesn't matter since nothing is uploaded)
-			0);						// texels (0 to avoid uploading)
+			nullptr);						// texels (0 to avoid uploading)
 
 		// Clear the whole texture if it is npot
 		if (!power_of_two_texture)
@@ -250,7 +250,7 @@ void GL1TextureProvider::create(int new_width, int new_height, int new_depth, in
 			0,						// border
 			gl_pixel_format,		// format 
 			GL_UNSIGNED_BYTE,		// type (it really doesn't matter since nothing is uploaded)
-			0);						// texels (0 to avoid uploading)
+			nullptr);						// texels (0 to avoid uploading)
 	}
 }
 PixelBuffer GL1TextureProvider::get_pixeldata(GraphicContext &gc, TextureFormat texture_format, int level) const

@@ -48,7 +48,7 @@ namespace clan
 class ShaderObject_Impl
 {
 public:
-	ShaderObject_Impl() : provider(0)
+	ShaderObject_Impl() : provider(nullptr)
 	{
 	}
 

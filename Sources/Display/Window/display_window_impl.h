@@ -47,7 +47,7 @@ class DisplayWindow_Impl
 {
 public:
 	DisplayWindow_Impl()
-	: provider(0)
+	: provider(nullptr)
 	{
 		SharedGCData::add_ref();
 		site.sig_lost_focus = &sig_lost_focus;
@@ -71,7 +71,7 @@ public:
 	{
 		if (provider)
 			delete provider;
-		provider = 0;
+		provider = nullptr;
 		SharedGCData::release_ref();
 	}
 

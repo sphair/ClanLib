@@ -364,7 +364,7 @@ DomNamedNodeMap_Impl::~DomNamedNodeMap_Impl()
 inline DomTreeNode *DomNamedNodeMap_Impl::get_tree_node()
 {
 	if (node_index == cl_null_node_index)
-		return 0;
+		return nullptr;
 	DomDocument_Impl *doc_impl = (DomDocument_Impl *) owner_document.lock().get();
 	return doc_impl->nodes[node_index];
 }
@@ -372,7 +372,7 @@ inline DomTreeNode *DomNamedNodeMap_Impl::get_tree_node()
 inline const DomTreeNode *DomNamedNodeMap_Impl::get_tree_node() const
 {
 	if (node_index == cl_null_node_index)
-		return 0;
+		return nullptr;
 	DomDocument_Impl *doc_impl = (DomDocument_Impl *) owner_document.lock().get();
 	return doc_impl->nodes[node_index];
 }

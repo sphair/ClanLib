@@ -408,7 +408,7 @@ void ZipArchive_Impl::calc_time_and_date(byte16 &out_date, byte16 &out_time)
 #else
 	static Mutex mutex;
 	MutexSection mutex_lock(&mutex);
-	time_t t = time(0);
+	time_t t = time(nullptr);
 	tm *tm_time = gmtime(&t);
 	day_of_month = tm_time->tm_mday;
 	month = tm_time->tm_mon + 1;

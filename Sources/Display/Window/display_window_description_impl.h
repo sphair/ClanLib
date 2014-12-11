@@ -63,7 +63,7 @@ public:
 		bpp = 0;
 		create_tablet_context = false;
 		layered = false;
-		handle = 0;
+		handle = nullptr;
 		depth_size = 0;
 		stencil_size = 0;
 		use_cached_window = false;

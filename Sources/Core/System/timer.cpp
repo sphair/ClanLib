@@ -257,7 +257,7 @@ public:
 		if (!timer_thread_instance_count)
 		{
 			delete timer_thread;
-			timer_thread = NULL;
+			timer_thread = nullptr;
 		}
 	}
 
@@ -293,7 +293,7 @@ private:
 	int id;
 };
 
-Timer_Thread *Timer_Impl::timer_thread = NULL;
+Timer_Thread *Timer_Impl::timer_thread = nullptr;
 int Timer_Impl::timer_thread_instance_count = 0;
 Mutex Timer_Impl::timer_thread_mutex;
 int Timer_Impl::timer_thread_max_id = 0;

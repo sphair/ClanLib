@@ -67,7 +67,7 @@ void OutlineTriangulator_Impl::triangulate()
 	{
 		vertices[index_vertices]->num_triangles = 0;
 		vertices[index_vertices]->extra = 0;
-		vertices[index_vertices]->triangles = 0;
+		vertices[index_vertices]->triangles = nullptr;
 
 		delauney.add_vertex(
 			vertices[index_vertices]->x,
@@ -428,7 +428,7 @@ void OutlineTriangulator_Impl::remove_triangle(DelauneyTriangulator_Triangle con
 {
 	for (int vertex = 0; vertex < 3; vertex++)
 	{
-		OutlineTriangulator_Vertex *data = 0;
+		OutlineTriangulator_Vertex *data = nullptr;
 		switch (vertex)
 		{
 		case 0:

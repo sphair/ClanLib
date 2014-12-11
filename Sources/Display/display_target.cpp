@@ -65,7 +65,7 @@ DisplayTargetProvider *DisplayTarget::get_provider()
 	if (impl)
 		return impl->get_provider();
 	else
-		return 0;
+		return nullptr;
 }
 
 void DisplayTarget::throw_if_null() const

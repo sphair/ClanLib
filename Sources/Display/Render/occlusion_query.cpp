@@ -41,7 +41,7 @@ namespace clan
 class OcclusionQuery_Impl
 {
 public:
-	OcclusionQuery_Impl() : provider(0)
+	OcclusionQuery_Impl() : provider(nullptr)
 	{
 	}
 

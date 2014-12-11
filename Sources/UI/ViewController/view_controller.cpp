@@ -73,7 +73,7 @@ namespace clan
 			auto it = std::find_if(parent->impl->child_controllers.begin(), parent->impl->child_controllers.end(), [&](const std::shared_ptr<ViewController> &controller) { return controller.get() == this; });
 			if (it != parent->impl->child_controllers.end())
 				parent->impl->child_controllers.erase(it);
-			impl->parent_controller = 0;
+			impl->parent_controller = nullptr;
 
 			child_controller_removed(controller_ptr);
 		}

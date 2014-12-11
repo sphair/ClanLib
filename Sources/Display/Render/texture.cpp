@@ -253,7 +253,7 @@ CompareFunction Texture::get_compare_function() const
 TextureProvider *Texture::get_provider() const
 {
 	if (!impl)
-		return 0;
+		return nullptr;
 	else
 		return impl->provider;
 }

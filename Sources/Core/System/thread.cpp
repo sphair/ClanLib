@@ -62,7 +62,7 @@ Thread::~Thread()
 
 void Thread::start(Runnable *runnable)
 {
-	if (runnable == 0)
+	if (runnable == nullptr)
 		throw Exception("Invalid runnable pointer");
 
 	impl->start(runnable);

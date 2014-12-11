@@ -437,7 +437,7 @@ std::string IODevice::read_string_a()
 
 std::string IODevice::read_string_nul()
 {
-	return (read_string_text(NULL, NULL, false));
+	return (read_string_text(nullptr, nullptr, false));
 }
 
 std::string IODevice::read_string_text(const char *skip_initial_chars, const char *read_until_chars, bool allow_eof)

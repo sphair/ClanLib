@@ -189,7 +189,7 @@ GraphicContextProvider *GraphicContext::get_provider()
 	if (impl)
 		return impl->graphic_screen->get_provider();
 	else
-		return 0;
+		return nullptr;
 }
 
 const GraphicContextProvider * GraphicContext::get_provider() const
@@ -197,7 +197,7 @@ const GraphicContextProvider * GraphicContext::get_provider() const
 	if (impl)
 		return impl->graphic_screen->get_provider();
 	else
-		return 0;
+		return nullptr;
 }
 
 /////////////////////////////////////////////////////////////////////////////

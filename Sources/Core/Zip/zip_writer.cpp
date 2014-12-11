@@ -197,7 +197,7 @@ void ZipWriter::end_file()
 
 	if (impl->compress)
 	{
-		impl->zs.next_in = 0;
+		impl->zs.next_in = nullptr;
 		impl->zs.avail_in = 0;
 
 		while (true)
@@ -227,7 +227,7 @@ void ZipWriter::end_file()
 
 	impl->local_header.uncompressed_size = impl->uncompressed_length;
 	impl->local_header.compressed_size = impl->compressed_length;
-	impl->local_header.crc32 = ZipArchive_Impl::calc_crc32(0, 0, impl->crc32, true);
+	impl->local_header.crc32 = ZipArchive_Impl::calc_crc32(nullptr, 0, impl->crc32, true);
 
 	byte64 current_offset = impl->output.get_position();
 	impl->output.seek(impl->local_header_offset);

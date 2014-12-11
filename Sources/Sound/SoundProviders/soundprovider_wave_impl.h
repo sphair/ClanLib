@@ -40,7 +40,7 @@ class SoundProvider_Wave_Impl
 {
 public:
 	SoundProvider_Wave_Impl()
-	: data(0)
+	: data(nullptr)
 	{
 	}
 

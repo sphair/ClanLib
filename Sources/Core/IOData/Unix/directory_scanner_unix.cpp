@@ -41,7 +41,7 @@ namespace clan
 {
 
 DirectoryScanner_Unix::DirectoryScanner_Unix ()
-	: dir_temp (NULL), entry (NULL)
+	: dir_temp (nullptr), entry (nullptr)
 {
 }
 
@@ -57,7 +57,7 @@ bool DirectoryScanner_Unix::scan (const std::string& arg_path_name)
 		closedir(dir_temp);
 
 	dir_temp = opendir(path_name.c_str());
-	if (dir_temp == NULL)
+	if (dir_temp == nullptr)
 		return false;
 	else
 		return true;
@@ -77,7 +77,7 @@ bool DirectoryScanner_Unix::scan (const std::string& arg_path_name,
 		closedir(dir_temp);
 
 	dir_temp = opendir(path_name.c_str());
-	if (dir_temp == NULL)
+	if (dir_temp == nullptr)
 		return false;
 	else
 		return true;
@@ -136,7 +136,7 @@ bool DirectoryScanner_Unix::next()
 
 	entry = readdir(dir_temp);
 
-	if( entry == NULL )
+	if( entry == nullptr )
 		return false;
 
 	file_name = entry->d_name;

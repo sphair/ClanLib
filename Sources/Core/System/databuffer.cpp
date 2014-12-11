@@ -39,7 +39,7 @@ namespace clan
 class DataBuffer_Impl
 {
 public:
-	DataBuffer_Impl() : data(0), size(0), allocated_size(0)
+	DataBuffer_Impl() : data(nullptr), size(0), allocated_size(0)
 	{
 	}
 

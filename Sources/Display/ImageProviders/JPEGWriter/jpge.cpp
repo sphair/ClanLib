@@ -485,7 +485,7 @@ bool jpeg_encoder::jpg_open(int p_x_res, int p_y_res, int src_channels)
   m_image_bpl_mcu  = m_image_x_mcu * m_num_components;
   m_mcus_per_row   = m_image_x_mcu / m_mcu_x;
 
-  if ((m_mcu_lines[0] = static_cast<uint8*>(jpge_malloc(m_image_bpl_mcu * m_mcu_y))) == NULL) return false;
+  if ((m_mcu_lines[0] = static_cast<uint8*>(jpge_malloc(m_image_bpl_mcu * m_mcu_y))) == nullptr) return false;
   for (int i = 1; i < m_mcu_y; i++)
     m_mcu_lines[i] = m_mcu_lines[i-1] + m_image_bpl_mcu;
 
@@ -851,7 +851,7 @@ void jpeg_encoder::load_mcu(const void *pSrc)
 
 void jpeg_encoder::clear()
 {
-  m_mcu_lines[0] = NULL;
+  m_mcu_lines[0] = nullptr;
   m_pass_num = 0;
   m_all_stream_writes_succeeded = true;
 }
@@ -910,7 +910,7 @@ class cfile_stream : public output_stream
    bool m_bStatus;
 
 public:
-   cfile_stream() : m_pFile(NULL), m_bStatus(false) { }
+   cfile_stream() : m_pFile(nullptr), m_bStatus(false) { }
 
    virtual ~cfile_stream()
    {
@@ -921,7 +921,7 @@ public:
    {
       close();
       m_pFile = fopen(pFilename, "wb");
-      m_bStatus = (m_pFile != NULL);
+      m_bStatus = (m_pFile != nullptr);
       return m_bStatus;
    }
 
@@ -933,7 +933,7 @@ public:
          {
             m_bStatus = false;
          }
-         m_pFile = NULL;
+         m_pFile = nullptr;
       }
       return m_bStatus;
    }
@@ -969,7 +969,7 @@ bool compress_image_to_jpeg_file(const char *pFilename, int width, int height, i
        if (!dst_image.process_scanline(pBuf))
           return false;
     }
-    if (!dst_image.process_scanline(NULL))
+    if (!dst_image.process_scanline(nullptr))
        return false;
   }
 
@@ -1028,7 +1028,7 @@ bool compress_image_to_jpeg_file_in_memory(void *pDstBuf, int &buf_size, int wid
         if (!dst_image.process_scanline(pScanline))
            return false;
      }
-     if (!dst_image.process_scanline(NULL))
+     if (!dst_image.process_scanline(nullptr))
         return false;
    }
 

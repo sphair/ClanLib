@@ -43,7 +43,7 @@ namespace clan
 class UniformBuffer_Impl
 {
 public:
-	UniformBuffer_Impl() : lock_count(0), provider(0) { }
+	UniformBuffer_Impl() : lock_count(0), provider(nullptr) { }
 	~UniformBuffer_Impl() { if (provider) delete provider; }
 
 	int lock_count;

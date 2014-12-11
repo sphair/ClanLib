@@ -38,7 +38,7 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // CPUPixelBufferProvider Construction:
 
-CPUPixelBufferProvider::CPUPixelBufferProvider() : delete_data(false), data(0)
+CPUPixelBufferProvider::CPUPixelBufferProvider() : delete_data(false), data(nullptr)
 {
 }
 
