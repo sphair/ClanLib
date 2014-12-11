@@ -42,22 +42,22 @@ class GL1TransferBufferProvider : public TransferBufferProvider
 public:
 	GL1TransferBufferProvider();
 	~GL1TransferBufferProvider();
-	void create(int size, BufferUsage usage);
-	void create(void *data, int size, BufferUsage usage);
+	void create(int size, BufferUsage usage) override;
+	void create(void *data, int size, BufferUsage usage) override;
 /// \}
 
 /// \name Attributes
 /// \{
 public:
-	void *get_data() { return data; }
+	void *get_data() override { return data; }
 /// \}
 
 /// \name Operations
 /// \{
 public:
-	void lock(GraphicContext &gc, BufferAccess access) {}
-	void unlock() {}
-	void upload_data(GraphicContext &gc, int offset, const void *data, int size);
+	void lock(GraphicContext &gc, BufferAccess access) override {}
+	void unlock() override {}
+	void upload_data(GraphicContext &gc, int offset, const void *data, int size) override;
 /// \}
 
 /// \name Implementation

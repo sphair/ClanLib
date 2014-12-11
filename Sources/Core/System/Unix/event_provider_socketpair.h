@@ -46,17 +46,17 @@ public:
 /// \name Attributes
 /// \{
 public:
-	EventType get_event_type(int index);
-	int get_event_handle(int index);
-	int get_num_event_handles();
+	EventType get_event_type(int index) override;
+	int get_event_handle(int index) override;
+	int get_num_event_handles() override;
 /// \}
 
 /// \name Operations
 /// \{
 public:
-	bool check_after_wait(int index);
-	bool set();
-	bool reset();
+	bool check_after_wait(int index) override;
+	bool set() override;
+	bool reset() override;
 /// \}
 
 /// \name Implementation

@@ -48,22 +48,22 @@ public:
 
 	void create(TextureFormat new_format, const Size &new_size, const void *data_ptr, bool only_reference_data);
 
-	void create(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage);
+	void create(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage) override;
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-	void *get_data() { return data; }
+	void *get_data() override { return data; }
 
-	int get_pitch() const {return size.width * PixelBuffer::get_bytes_per_pixel(texture_format); }
+	int get_pitch() const override {return size.width * PixelBuffer::get_bytes_per_pixel(texture_format); }
 
-	Size get_size() const { return size; }
+	Size get_size() const override { return size; }
 
-	bool is_gpu() const { return false; }
+	bool is_gpu() const override { return false; }
 
-	TextureFormat get_format() const { return texture_format; };
+	TextureFormat get_format() const override { return texture_format; };
 
 
 /// \}
@@ -71,11 +71,11 @@ public:
 /// \{
 
 public:
-	void lock(GraphicContext &gc, BufferAccess access) { }
+	void lock(GraphicContext &gc, BufferAccess access) override { }
 
-	void unlock() { }
+	void unlock() override { }
 
-	void upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data);
+	void upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data) override;
 
 /// \}
 /// \name Implementation

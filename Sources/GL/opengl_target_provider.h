@@ -59,7 +59,7 @@ public:
 /// \{
 
 public:
-	DisplayWindowProvider *alloc_display_window();
+	DisplayWindowProvider *alloc_display_window() override;
 
 	void set_description(OpenGLWindowDescription &desc) {description = desc;}
 

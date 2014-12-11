@@ -52,7 +52,7 @@ public:
 	}
 
 private:
-	void process()
+	void process() override
 	{
 		MutexSection mutex_lock(&mutex);
 		awoken.set();

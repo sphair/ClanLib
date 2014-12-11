@@ -46,23 +46,23 @@ class GL3TransferBufferProvider : public TransferBufferProvider
 public:
 	GL3TransferBufferProvider();
 	~GL3TransferBufferProvider();
-	void create(int size, BufferUsage usage);
-	void create(void *data, int size, BufferUsage usage);
+	void create(int size, BufferUsage usage) override;
+	void create(void *data, int size, BufferUsage usage) override;
 /// \}
 
 /// \name Attributes
 /// \{
 public:
-	void *get_data() { return buffer.get_data(); }
+	void *get_data() override { return buffer.get_data(); }
 	GLuint get_handle() const { return buffer.get_handle(); }
 /// \}
 
 /// \name Operations
 /// \{
 public:
-	void lock(GraphicContext &gc, BufferAccess access) { buffer.lock(gc, access); }
-	void unlock() { buffer.unlock(); }
-	void upload_data(GraphicContext &gc, int offset, const void *data, int size) { buffer.upload_data(gc, offset, data, size); }
+	void lock(GraphicContext &gc, BufferAccess access) override { buffer.lock(gc, access); }
+	void unlock() override { buffer.unlock(); }
+	void upload_data(GraphicContext &gc, int offset, const void *data, int size) override { buffer.upload_data(gc, offset, data, size); }
 /// \}
 
 /// \name Implementation

@@ -38,7 +38,7 @@ template<typename Type>
 class PixelReader_4cast : public PixelReader
 {
 public:
-	void read(const void *input, Vec4f *output, int num_pixels)
+	void read(const void *input, Vec4f *output, int num_pixels) override
 	{
 		const Vec4<Type> *d = static_cast<const Vec4<Type> *>(input);
 		for (int i = 0; i < num_pixels; i++)
@@ -52,7 +52,7 @@ template<typename Type>
 class PixelReader_3cast : public PixelReader
 {
 public:
-	void read(const void *input, Vec4f *output, int num_pixels)
+	void read(const void *input, Vec4f *output, int num_pixels) override
 	{
 		const Vec3<Type> *d = static_cast<const Vec3<Type> *>(input);
 		for (int i = 0; i < num_pixels; i++)
@@ -66,7 +66,7 @@ template<typename Type>
 class PixelReader_2cast : public PixelReader
 {
 public:
-	void read(const void *input, Vec4f *output, int num_pixels)
+	void read(const void *input, Vec4f *output, int num_pixels) override
 	{
 		const Vec2<Type> *d = static_cast<const Vec2<Type> *>(input);
 		for (int i = 0; i < num_pixels; i++)
@@ -80,7 +80,7 @@ template<typename Type>
 class PixelReader_1cast : public PixelReader
 {
 public:
-	void read(const void *input, Vec4f *output, int num_pixels)
+	void read(const void *input, Vec4f *output, int num_pixels) override
 	{
 		const Type *d = static_cast<const Type *>(input);
 		for (int i = 0; i < num_pixels; i++)

@@ -68,12 +68,12 @@ public:
 public:
 	/// \brief Called by SoundBuffer when a new session starts.
 	/** \return The soundbuffer session to be attached to the newly started session.*/
-	virtual SoundProvider_Session *begin_session();
+	virtual SoundProvider_Session *begin_session() override;
 
 	/// \brief Called by SoundBuffer when a session has finished. After this call,
 	/** <p>SoundBuffer will not access the session anymore. It can safely be deleted
 	    here (and in most cases should be delete here).</p>*/
-	virtual void end_session(SoundProvider_Session *session);
+	virtual void end_session(SoundProvider_Session *session) override;
 
 /// \}
 /// \name Implementation

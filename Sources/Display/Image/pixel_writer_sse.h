@@ -44,7 +44,7 @@ namespace clan
 class PixelWriterSSE2_rgba8 : public PixelWriter
 {
 public:
-	void write(void *output, Vec4f *input, int num_pixels)
+	void write(void *output, Vec4f *input, int num_pixels) override
 	{
 		Vec4ub *d = static_cast<Vec4ub *>(output);
 
@@ -79,7 +79,7 @@ public:
 class PixelWriterSSE2_bgra8 : public PixelWriter
 {
 public:
-	void write(void *output, Vec4f *input, int num_pixels)
+	void write(void *output, Vec4f *input, int num_pixels) override
 	{
 		Vec4ub *d = static_cast<Vec4ub *>(output);
 

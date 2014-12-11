@@ -54,7 +54,7 @@ public:
 /// \name Operations
 /// \{
 public:
-	void set_attribute(int index, const VertexData &data, bool normalize);
+	void set_attribute(int index, const VertexData &data, bool normalize) override;
 
 /// \}
 

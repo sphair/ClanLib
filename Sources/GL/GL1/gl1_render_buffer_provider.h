@@ -61,7 +61,7 @@ public:
 
 public:
 	/// \brief Creates a render buffer image of the specified dimensions.
-	virtual void create(int width, int height, TextureFormat texture_format, int multisample_samples);
+	virtual void create(int width, int height, TextureFormat texture_format, int multisample_samples) override;
 
 /// \}
 /// \name Implementation

@@ -72,13 +72,13 @@ public:
 	{
 	}
 
-	void line_end()
+	void line_end() override
 	{
 		line_start_ptr += pitch;
 		current_ptr = line_start_ptr;
 	}
 
-	void write_pixel(float value)
+	void write_pixel(float value) override
 	{
 		int color= (int)((value*128.0f)+128.0f);
 		if(color>255)
@@ -104,13 +104,13 @@ public:
 	{
 	}
 
-	void line_end()
+	void line_end() override
 	{
 		line_start_ptr += pitch;
 		current_ptr = line_start_ptr;
 	}
 
-	void write_pixel(float value)
+	void write_pixel(float value) override
 	{
 		int color= (int)((value*128.0f)+128.0f);
 		if(color>255)
@@ -138,13 +138,13 @@ public:
 	{
 	}
 
-	void line_end()
+	void line_end() override
 	{
 		line_start_ptr += pitch;
 		current_ptr = line_start_ptr;
 	}
 
-	void write_pixel(float value)
+	void write_pixel(float value) override
 	{
 		int color= (int)((value*128.0f)+128.0f);
 		if(color>255)
@@ -170,13 +170,13 @@ public:
 	{
 	}
 
-	void line_end()
+	void line_end() override
 	{
 		line_start_ptr += pitch;
 		current_ptr = line_start_ptr;
 	}
 
-	void write_pixel(float value)
+	void write_pixel(float value) override
 	{
 		*(current_ptr++) = value;
 	}

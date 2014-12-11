@@ -175,40 +175,40 @@ public:
 
 public:
 	bool is_double_buffered() const { return true; }
-	Rect get_geometry() const {return x11_window.get_geometry();}
+	Rect get_geometry() const override {return x11_window.get_geometry();}
 
-	Rect get_viewport() const {return x11_window.get_viewport();}
+	Rect get_viewport() const override {return x11_window.get_viewport();}
 
-	bool is_fullscreen() const {return x11_window.is_fullscreen();}
+	bool is_fullscreen() const override {return x11_window.is_fullscreen();}
 
-	bool has_focus() const {return x11_window.has_focus();}
+	bool has_focus() const override {return x11_window.has_focus();}
 
-	bool is_minimized() const {return x11_window.is_minimized();}
+	bool is_minimized() const override {return x11_window.is_minimized();}
 
-	bool is_maximized() const {return x11_window.is_maximized();}
+	bool is_maximized() const override {return x11_window.is_maximized();}
 
-	bool is_visible() const {return x11_window.is_visible();}
+	bool is_visible() const override {return x11_window.is_visible();}
 
-	bool is_clipboard_text_available() const { return x11_window.is_clipboard_text_available(); }
+	bool is_clipboard_text_available() const override { return x11_window.is_clipboard_text_available(); }
 
-	bool is_clipboard_image_available() const { return x11_window.is_clipboard_image_available(); }
+	bool is_clipboard_image_available() const override { return x11_window.is_clipboard_image_available(); }
 
-	std::string get_title() const { return x11_window.get_title(); }
-	Size get_minimum_size(bool client_area) const { return x11_window.get_minimum_size(client_area); }
-	Size get_maximum_size(bool client_area) const { return x11_window.get_maximum_size(client_area); }
+	std::string get_title() const override { return x11_window.get_title(); }
+	Size get_minimum_size(bool client_area) const override { return x11_window.get_minimum_size(client_area); }
+	Size get_maximum_size(bool client_area) const override { return x11_window.get_maximum_size(client_area); }
 
-	std::string get_clipboard_text() const { return x11_window.get_clipboard_text(); }
+	std::string get_clipboard_text() const override { return x11_window.get_clipboard_text(); }
 
-	PixelBuffer get_clipboard_image() const { return x11_window.get_clipboard_image(); }
+	PixelBuffer get_clipboard_image() const override { return x11_window.get_clipboard_image(); }
 
 	DisplayWindowHandle const *get_handle() const override { return x11_window.get_handle(); }
 
 	/// \brief Returns the GLX rendering context for this window.
 	GLXContext get_opengl_context() { return opengl_context; }
 
-	GraphicContext& get_gc() { return gc; }
+	GraphicContext& get_gc() override { return gc; }
 
-	InputContext get_ic() { return x11_window.get_ic(); }
+	InputContext get_ic() override { return x11_window.get_ic(); }
 
 	GraphicContext gc;
 
@@ -223,54 +223,54 @@ public:
 public:
 	void make_current() const;
 	void destroy() { delete this; }
-	Point client_to_screen(const Point &client) { return x11_window.client_to_screen(client); }
+	Point client_to_screen(const Point &client) override { return x11_window.client_to_screen(client); }
 
-	Point screen_to_client(const Point &screen) { return x11_window.screen_to_client(screen); }
+	Point screen_to_client(const Point &screen) override { return x11_window.screen_to_client(screen); }
 
-	void create(DisplayWindowSite *site, const DisplayWindowDescription &description);
+	void create(DisplayWindowSite *site, const DisplayWindowDescription &description) override;
 
-	void show_system_cursor() { x11_window.show_system_cursor(); }
+	void show_system_cursor() override { x11_window.show_system_cursor(); }
 
-	CursorProvider *create_cursor(const CursorDescription &cursor_description);
+	CursorProvider *create_cursor(const CursorDescription &cursor_description) override;
 
-	void set_cursor(CursorProvider *cursor);
+	void set_cursor(CursorProvider *cursor) override;
 
-	void set_cursor(StandardCursor type) { x11_window.set_cursor(type); }
+	void set_cursor(StandardCursor type) override { x11_window.set_cursor(type); }
 
-	void hide_system_cursor()  { x11_window.hide_system_cursor(); }
+	void hide_system_cursor() override  { x11_window.hide_system_cursor(); }
 
-	void set_title(const std::string &new_title) { x11_window.set_title(new_title); }
+	void set_title(const std::string &new_title) override { x11_window.set_title(new_title); }
 
-	void set_position(const Rect &pos, bool client_area) { return x11_window.set_position(pos, client_area); };
+	void set_position(const Rect &pos, bool client_area) override { return x11_window.set_position(pos, client_area); };
 
-	void set_size(int width, int height, bool client_area)  { return x11_window.set_size(width, height, client_area); }
+	void set_size(int width, int height, bool client_area) override  { return x11_window.set_size(width, height, client_area); }
 
-	void set_minimum_size(int width, int height, bool client_area) { return x11_window.set_minimum_size(width, height, client_area); }
+	void set_minimum_size(int width, int height, bool client_area) override { return x11_window.set_minimum_size(width, height, client_area); }
 
-	void set_maximum_size( int width, int height, bool client_area) { return x11_window.set_maximum_size(width, height, client_area); }
+	void set_maximum_size( int width, int height, bool client_area) override { return x11_window.set_maximum_size(width, height, client_area); }
 
-	void set_enabled(bool enable) { return x11_window.set_enabled(enable); }
+	void set_enabled(bool enable) override { return x11_window.set_enabled(enable); }
 
-	void minimize() { x11_window.minimize(); }
+	void minimize() override { x11_window.minimize(); }
 
-	void restore() { x11_window.restore(); }
+	void restore() override { x11_window.restore(); }
 
-	void maximize() { x11_window.maximize(); }
+	void maximize() override { x11_window.maximize(); }
 
-	void show(bool activate)  { x11_window.show(activate); }
+	void show(bool activate) override  { x11_window.show(activate); }
 
-	void hide() { x11_window.hide(); }
+	void hide() override { x11_window.hide(); }
 
-	void bring_to_front() { x11_window.bring_to_front(); }
+	void bring_to_front() override { x11_window.bring_to_front(); }
 
 	/// \brief Flip opengl buffers.
-	void flip(int interval);
+	void flip(int interval) override;
 
 	/// \brief Copy a region of the backbuffer to the frontbuffer.
-	void update(const Rect &rect);
+	void update(const Rect &rect) override;
 
 	/// \brief Capture/Release the mouse.
-	void capture_mouse(bool capture) { x11_window.capture_mouse(capture); }
+	void capture_mouse(bool capture) override { x11_window.capture_mouse(capture); }
 
 	void process_messages();
 
@@ -280,17 +280,17 @@ public:
 	/** \return true when there is a message*/
 	//bool has_messages() { return x11_window.has_messages(); }
 
-	void set_clipboard_text(const std::string &text) { x11_window.set_clipboard_text(text); }
+	void set_clipboard_text(const std::string &text) override { x11_window.set_clipboard_text(text); }
 
-	void set_clipboard_image(const PixelBuffer &buf) { x11_window.set_clipboard_image(buf); }
+	void set_clipboard_image(const PixelBuffer &buf) override { x11_window.set_clipboard_image(buf); }
 
-	void request_repaint(const Rect &rect) { x11_window.request_repaint(rect); }
+	void request_repaint(const Rect &rect) override { x11_window.request_repaint(rect); }
 
-	void set_large_icon(const PixelBuffer &image);
-	void set_small_icon(const PixelBuffer &image);
+	void set_large_icon(const PixelBuffer &image) override;
+	void set_small_icon(const PixelBuffer &image) override;
 
-	void enable_alpha_channel(const Rect &blur_rect);
-	void extend_frame_into_client_area(int left, int top, int right, int bottom);
+	void enable_alpha_channel(const Rect &blur_rect) override;
+	void extend_frame_into_client_area(int left, int top, int right, int bottom) override;
 
 /// \}
 /// \name Implementation

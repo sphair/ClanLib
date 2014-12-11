@@ -37,7 +37,7 @@ namespace clan
 class PixelWriter_bgra8 : public PixelWriter
 {
 public:
-	void write(void *output, Vec4f *input, int num_pixels)
+	void write(void *output, Vec4f *input, int num_pixels) override
 	{
 		Vec4ub *d = static_cast<Vec4ub *>(output);
 		for (int i = 0; i < num_pixels; i++)
@@ -51,7 +51,7 @@ public:
 class PixelWriter_bgr8 : public PixelWriter
 {
 public:
-	void write(void *output, Vec4f *input, int num_pixels)
+	void write(void *output, Vec4f *input, int num_pixels) override
 	{
 		Vec3ub *d = static_cast<Vec3ub *>(output);
 		for (int i = 0; i < num_pixels; i++)
@@ -65,7 +65,7 @@ public:
 class PixelWriter_r3_g3_b2 : public PixelWriter
 {
 public:
-	void write(void *output, Vec4f *input, int num_pixels)
+	void write(void *output, Vec4f *input, int num_pixels) override
 	{
 		unsigned char *d = static_cast<unsigned char *>(output);
 		for (int i = 0; i < num_pixels; i++)
@@ -80,7 +80,7 @@ public:
 class PixelWriter_rgb4 : public PixelWriter
 {
 public:
-	void write(void *output, Vec4f *input, int num_pixels)
+	void write(void *output, Vec4f *input, int num_pixels) override
 	{
 		unsigned short *d = static_cast<unsigned short *>(output);
 		for (int i = 0; i < num_pixels; i++)
@@ -94,7 +94,7 @@ public:
 class PixelWriter_rgb5 : public PixelWriter
 {
 public:
-	void write(void *output, Vec4f *input, int num_pixels)
+	void write(void *output, Vec4f *input, int num_pixels) override
 	{
 		unsigned short *d = static_cast<unsigned short *>(output);
 		for (int i = 0; i < num_pixels; i++)
@@ -108,7 +108,7 @@ public:
 class PixelWriter_rgb10 : public PixelWriter
 {
 public:
-	void write(void *output, Vec4f *input, int num_pixels)
+	void write(void *output, Vec4f *input, int num_pixels) override
 	{
 		ubyte32 *d = static_cast<ubyte32 *>(output);
 		for (int i = 0; i < num_pixels; i++)
@@ -123,7 +123,7 @@ public:
 class PixelWriter_rgba4 : public PixelWriter
 {
 public:
-	void write(void *output, Vec4f *input, int num_pixels)
+	void write(void *output, Vec4f *input, int num_pixels) override
 	{
 		unsigned short *d = static_cast<unsigned short *>(output);
 		for (int i = 0; i < num_pixels; i++)
@@ -137,7 +137,7 @@ public:
 class PixelWriter_rgb5_a1 : public PixelWriter
 {
 public:
-	void write(void *output, Vec4f *input, int num_pixels)
+	void write(void *output, Vec4f *input, int num_pixels) override
 	{
 		unsigned short *d = static_cast<unsigned short *>(output);
 		for (int i = 0; i < num_pixels; i++)
@@ -151,7 +151,7 @@ public:
 class PixelWriter_rgb10_a2 : public PixelWriter
 {
 public:
-	void write(void *output, Vec4f *input, int num_pixels)
+	void write(void *output, Vec4f *input, int num_pixels) override
 	{
 		ubyte32 *d = static_cast<ubyte32 *>(output);
 		for (int i = 0; i < num_pixels; i++)

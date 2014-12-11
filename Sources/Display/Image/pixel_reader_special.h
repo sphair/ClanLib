@@ -37,7 +37,7 @@ namespace clan
 class PixelReader_bgra8 : public PixelReader
 {
 public:
-	void read(const void *input, Vec4f *output, int num_pixels)
+	void read(const void *input, Vec4f *output, int num_pixels) override
 	{
 		const float rcp_255 = 1.0f / 255.0f;
 		const Vec4ub *d = static_cast<const Vec4ub *>(input);
@@ -51,7 +51,7 @@ public:
 class PixelReader_bgr8 : public PixelReader
 {
 public:
-	void read(const void *input, Vec4f *output, int num_pixels)
+	void read(const void *input, Vec4f *output, int num_pixels) override
 	{
 		const float rcp_255 = 1.0f / 255.0f;
 		const Vec3ub *d = static_cast<const Vec3ub *>(input);
@@ -65,7 +65,7 @@ public:
 class PixelReader_r3_g3_b2 : public PixelReader
 {
 public:
-	void read(const void *input, Vec4f *output, int num_pixels)
+	void read(const void *input, Vec4f *output, int num_pixels) override
 	{
 		const float rcp_7 = 1.0f / 7.0f;
 		const float rcp_3 = 1.0f / 3.0f;
@@ -81,7 +81,7 @@ public:
 class PixelReader_rgb4 : public PixelReader
 {
 public:
-	void read(const void *input, Vec4f *output, int num_pixels)
+	void read(const void *input, Vec4f *output, int num_pixels) override
 	{
 		const float rcp_15 = 1.0f / 15.0f;
 		const unsigned short *d = static_cast<const unsigned short *>(input);
@@ -97,7 +97,7 @@ public:
 class PixelReader_rgb5 : public PixelReader
 {
 public:
-	void read(const void *input, Vec4f *output, int num_pixels)
+	void read(const void *input, Vec4f *output, int num_pixels) override
 	{
 		const float rcp_31 = 1.0f / 31.0f;
 		const unsigned short *d = static_cast<const unsigned short *>(input);
@@ -112,7 +112,7 @@ public:
 class PixelReader_rgb10 : public PixelReader
 {
 public:
-	void read(const void *input, Vec4f *output, int num_pixels)
+	void read(const void *input, Vec4f *output, int num_pixels) override
 	{
 		const float rcp_1023 = 1.0f / 1023.0f;
 		const ubyte32 *d = static_cast<const ubyte32 *>(input);
@@ -127,7 +127,7 @@ public:
 class PixelReader_rgba4 : public PixelReader
 {
 public:
-	void read(const void *input, Vec4f *output, int num_pixels)
+	void read(const void *input, Vec4f *output, int num_pixels) override
 	{
 		const float rcp_15 = 1.0f / 15.0f;
 		const unsigned short *d = static_cast<const unsigned short *>(input);
@@ -142,7 +142,7 @@ public:
 class PixelReader_rgb5_a1 : public PixelReader
 {
 public:
-	void read(const void *input, Vec4f *output, int num_pixels)
+	void read(const void *input, Vec4f *output, int num_pixels) override
 	{
 		const float rcp_31 = 1.0f / 31.0f;
 		const unsigned short *d = static_cast<const unsigned short *>(input);
@@ -158,7 +158,7 @@ public:
 class PixelReader_rgb10_a2 : public PixelReader
 {
 public:
-	void read(const void *input, Vec4f *output, int num_pixels)
+	void read(const void *input, Vec4f *output, int num_pixels) override
 	{
 		const float rcp_1023 = 1.0f / 1023.0f;
 		const float rcp_3 = 1.0f / 3.0f;

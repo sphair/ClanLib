@@ -50,11 +50,11 @@ public:
 
 	virtual ~GL3ShaderObjectProvider();
 
-	virtual void create(ShaderType type, const std::string &source);
+	virtual void create(ShaderType type, const std::string &source) override;
 
-	virtual void create(ShaderType type, const void *source, int source_size);
+	virtual void create(ShaderType type, const void *source, int source_size) override;
 
-	virtual void create(ShaderType type, const std::vector<std::string> &sources);
+	virtual void create(ShaderType type, const std::vector<std::string> &sources) override;
 	
 /// \}
 /// \name Attributes
@@ -62,19 +62,19 @@ public:
 
 public:
 	/// \brief Returns the OpenGL shader handle.
-	virtual unsigned int get_handle() const;
+	virtual unsigned int get_handle() const override;
 
 	/// \brief Returns true if compile succeeded.
-	virtual bool get_compile_status() const;
+	virtual bool get_compile_status() const override;
 
 	/// \brief Gets the shader type.
-	virtual ShaderType get_shader_type() const;
+	virtual ShaderType get_shader_type() const override;
 
 	/// \brief Get shader object's info log.
-	virtual std::string get_info_log() const;
+	virtual std::string get_info_log() const override;
 
 	/// \brief Get shader source code.
-	virtual std::string get_shader_source() const;
+	virtual std::string get_shader_source() const override;
 
 
 /// \}
@@ -85,7 +85,7 @@ public:
 	/// \brief Compile program.
 	/** <p>If the compilation fails, get_compile_status() will return false and
 	    get_info_log() will return the compile log.</p>*/
-	virtual void compile();
+	virtual void compile() override;
 
 
 /// \}
@@ -93,7 +93,7 @@ public:
 /// \{
 
 private:
-	void on_dispose();
+	void on_dispose() override;
 	GLenum shadertype_to_opengl(ShaderType type);
 
 	GLuint handle;

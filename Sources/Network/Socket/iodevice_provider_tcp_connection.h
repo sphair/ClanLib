@@ -80,10 +80,10 @@ public:
 	void disconnect_abortive();
 	void set_nodelay(bool enable);
 	void set_keep_alive(bool enable, int timeout, int interval);
-	int send(const void *data, int len, bool send_all);
-	int receive(void *data, int len, bool receive_all);
-	int peek(void *data, int len);
-	IODeviceProvider *duplicate();
+	int send(const void *data, int len, bool send_all) override;
+	int receive(void *data, int len, bool receive_all) override;
+	int peek(void *data, int len) override;
+	IODeviceProvider *duplicate() override;
 
 /// \}
 /// \name Implementation

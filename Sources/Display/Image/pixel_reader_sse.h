@@ -38,7 +38,7 @@ namespace clan
 class PixelReaderSSE2_rgba8 : public PixelReader
 {
 public:
-	void read(const void *input, Vec4f *output, int num_pixels)
+	void read(const void *input, Vec4f *output, int num_pixels) override
 	{
 		__m128 rcp_255 = _mm_set1_ps(1.0f / 255.0f);
 		const Vec4ub *d = static_cast<const Vec4ub *>(input);
@@ -74,7 +74,7 @@ public:
 class PixelReaderSSE2_bgra8 : public PixelReader
 {
 public:
-	void read(const void *input, Vec4f *output, int num_pixels)
+	void read(const void *input, Vec4f *output, int num_pixels) override
 	{
 		__m128 rcp_255 = _mm_set1_ps(1.0f / 255.0f);
 		const Vec4ub *d = static_cast<const Vec4ub *>(input);
@@ -116,7 +116,7 @@ public:
 class PixelReaderSSE2_rgba16 : public PixelReader
 {
 public:
-	void read(const void *input, Vec4f *output, int num_pixels)
+	void read(const void *input, Vec4f *output, int num_pixels) override
 	{
 		__m128 rcp_65535 = _mm_set1_ps(1.0f / 65535.0f);
 		const Vec4us *d = static_cast<const Vec4us *>(input);

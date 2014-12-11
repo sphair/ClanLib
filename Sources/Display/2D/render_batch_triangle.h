@@ -72,8 +72,8 @@ private:
 	int set_batcher_active(Canvas &canvas, const Texture2D &texture, bool glyph_program = false, const Colorf &constant_color = Colorf::black);
 	int set_batcher_active(Canvas &canvas);
 	int set_batcher_active(Canvas &canvas, int num_vertices);
-	void flush(GraphicContext &gc);
-	void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis);
+	void flush(GraphicContext &gc) override;
+	void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis) override;
 
 	inline void to_sprite_vertex(const Pointf &texture_position, const Pointf &dest_position, RenderBatchTriangle::SpriteVertex &v, int texindex, const Colorf &color) const;
 	inline Vec4f to_position(float x, float y) const;

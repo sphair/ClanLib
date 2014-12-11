@@ -60,7 +60,7 @@ public:
 		alpha.w = (swizzle.w == 3) ? 1.0f : 0.0f;
 	}
 
-	void filter(Vec4f *pixels, int num_pixels)
+	void filter(Vec4f *pixels, int num_pixels) override
 	{
 		for (int i = 0; i < num_pixels; i++)
 		{
@@ -106,7 +106,7 @@ public:
 			swizzle.w == 3 ? 0xffffffff : 0));
 	}
 
-	void filter(Vec4f *pixels, int num_pixels)
+	void filter(Vec4f *pixels, int num_pixels) override
 	{
 		for (int i = 0; i < num_pixels; i++)
 		{

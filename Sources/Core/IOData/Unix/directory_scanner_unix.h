@@ -50,39 +50,39 @@ public:
 
 //!Attributes:
 public:
-	bool scan (const std::string& pathname);
+	bool scan (const std::string& pathname) override;
 
-	bool scan (const std::string& pathname, const std::string& pattern);
+	bool scan (const std::string& pathname, const std::string& pattern) override;
 
 	/// \brief Returns the path of the directory being scanned.
-	std::string get_directory_path();
+	std::string get_directory_path() override;
 
 	/// \brief Returns the size of the current found file.
-	int get_size();
+	int get_size() override;
 
 	/// \brief Returns the name of the current found file.
-	std::string get_name();
+	std::string get_name() override;
 
 	/// \brief Returns the name of the current found file, including the directory path.
-	std::string get_pathname();
+	std::string get_pathname() override;
 
 	/// \brief Returns true if filename is a directory.
-	bool is_directory();
+	bool is_directory() override;
 
 	/// \brief Returns true if filename is hidden.
-	bool is_hidden();
+	bool is_hidden() override;
 
   	/// \brief Returns true if file is readable by current user.
-	virtual bool is_readable();
+	virtual bool is_readable() override;
 
 	/// \brief Returns true if file is writable by current user.
-	virtual bool is_writable();
+	virtual bool is_writable() override;
 	// todo: add other attributes of a file.
 
 //!Operations:
 public:
 	/// \brief Find next file in directory scan. Returns false if no more files was found.
-	bool next();
+	bool next() override;
 
 /// \name Implementation
 /// \{

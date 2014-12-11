@@ -37,7 +37,7 @@ namespace clan
 class PixelFilterPremultiplyAlpha : public PixelFilter
 {
 public:
-	void filter(Vec4f *pixels, int num_pixels)
+	void filter(Vec4f *pixels, int num_pixels) override
 	{
 		for (int i = 0; i < num_pixels; i++)
 		{
@@ -49,7 +49,7 @@ public:
 class PixelFilterPremultiplyAlphaSSE2 : public PixelFilter
 {
 public:
-	void filter(Vec4f *pixels, int num_pixels)
+	void filter(Vec4f *pixels, int num_pixels) override
 	{
 		__m128 alpha_mask = _mm_castsi128_ps(_mm_set_epi32(0,0,0,0xffffffff));
 		for (int i = 0; i < num_pixels; i++)

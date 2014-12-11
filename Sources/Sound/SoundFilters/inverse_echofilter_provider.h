@@ -40,7 +40,7 @@ public:
 	InverseEchoFilterProvider(int buffer_size);
 	~InverseEchoFilterProvider();
 
-	void filter(float **sample_data, int num_samples, int channels);
+	void filter(float **sample_data, int num_samples, int channels) override;
 
 private:
 	float *buffer[2];

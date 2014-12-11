@@ -99,7 +99,7 @@ public:
 /// \{
 
 private:
-	void on_dispose();
+	void on_dispose() override;
 
 	std::vector< std::pair<InputEvent, std::weak_ptr<InputDevice_Impl> > > events;
 /// \}

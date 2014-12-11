@@ -75,8 +75,8 @@ public:
 /// \name Attributes
 /// \{
 public:
-	int get_max_attributes();
-	Size get_max_texture_size() const;
+	int get_max_attributes() override;
+	Size get_max_texture_size() const override;
 
 	/// \brief Get the opengl version major number
 	int get_opengl_version_major() const {return opengl_version_major;}
@@ -91,101 +91,101 @@ public:
 	int get_glsl_version_minor() const {return shader_version_minor;}
 
 	const DisplayWindowProvider & get_render_window() const;
-	Size get_display_window_size() const;
-	void get_opengl_version(int &version_major, int &version_minor) const;
-	void get_opengl_version(int &version_major, int &version_minor, int &version_release) const { get_opengl_version(version_major, version_minor); version_release = 0; }
-	void get_opengl_shading_language_version(int &version_major, int &version_minor) { version_major = shader_version_major; version_minor = shader_version_minor; }
+	Size get_display_window_size() const override;
+	void get_opengl_version(int &version_major, int &version_minor) const override;
+	void get_opengl_version(int &version_major, int &version_minor, int &version_release) const override { get_opengl_version(version_major, version_minor); version_release = 0; }
+	void get_opengl_shading_language_version(int &version_major, int &version_minor) override { version_major = shader_version_major; version_minor = shader_version_minor; }
 
-	Signal<void(const Size &)> &sig_window_resized() { return window_resized_signal; }
+	Signal<void(const Size &)> &sig_window_resized() override { return window_resized_signal; }
 
-	ProgramObject get_program_object(StandardProgram standard_program) const;
+	ProgramObject get_program_object(StandardProgram standard_program) const override;
 
 /// \}
 /// \name Operations
 /// \{
 public:
-	ClipZRange get_clip_z_range() const { return clip_negative_positive_w; }
-	TextureImageYAxis get_texture_image_y_axis() const { return y_axis_bottom_up; }
-	ShaderLanguage get_shader_language() const { return shader_glsl; }
-	int get_major_version() const { int major = 0, minor = 0; get_opengl_version(major, minor); return major; }
-	int get_minor_version() const { int major = 0, minor = 0; get_opengl_version(major, minor); return minor; }
-	bool has_compute_shader_support() const { return false; }
-	TextureProvider *alloc_texture(TextureDimensions texture_dimensions);
-	OcclusionQueryProvider *alloc_occlusion_query();
-	ProgramObjectProvider *alloc_program_object();
-	ShaderObjectProvider *alloc_shader_object();
-	FrameBufferProvider *alloc_frame_buffer();
-	RenderBufferProvider *alloc_render_buffer();
-	PixelBufferProvider *alloc_pixel_buffer();
-	VertexArrayBufferProvider *alloc_vertex_array_buffer();
-	UniformBufferProvider *alloc_uniform_buffer();
-	StorageBufferProvider *alloc_storage_buffer();
-	ElementArrayBufferProvider *alloc_element_array_buffer();
-	TransferBufferProvider *alloc_transfer_buffer();
-	PrimitivesArrayProvider *alloc_primitives_array();
-	std::shared_ptr<RasterizerStateProvider> create_rasterizer_state(const RasterizerStateDescription &desc);
-	std::shared_ptr<BlendStateProvider> create_blend_state(const BlendStateDescription &desc);
-	std::shared_ptr<DepthStencilStateProvider> create_depth_stencil_state(const DepthStencilStateDescription &desc);
-	void set_rasterizer_state(RasterizerStateProvider *state);
-	void set_blend_state(BlendStateProvider *state, const Colorf &blend_color, unsigned int sample_mask);
-	void set_depth_stencil_state(DepthStencilStateProvider *state, int stencil_ref);
-	PixelBuffer get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const;
-	void set_uniform_buffer(int index, const UniformBuffer &buffer);
-	void reset_uniform_buffer(int index);
-	void set_storage_buffer(int index, const StorageBuffer &buffer);
-	void reset_storage_buffer(int index);
-	void set_texture(int unit_index, const Texture &texture);
-	void reset_texture(int unit_index);
-	void set_image_texture(int unit_index, const Texture &texture);
-	void reset_image_texture(int unit_index);
-	bool is_frame_buffer_owner(const FrameBuffer &fb);
-	void set_frame_buffer(const FrameBuffer &write_buffer, const FrameBuffer &read_buffer);
-	void reset_frame_buffer();
-	void set_program_object(StandardProgram standard_program);
-	void set_program_object(const ProgramObject &program);
-	void reset_program_object();
+	ClipZRange get_clip_z_range() const override { return clip_negative_positive_w; }
+	TextureImageYAxis get_texture_image_y_axis() const override { return y_axis_bottom_up; }
+	ShaderLanguage get_shader_language() const override { return shader_glsl; }
+	int get_major_version() const override { int major = 0, minor = 0; get_opengl_version(major, minor); return major; }
+	int get_minor_version() const override { int major = 0, minor = 0; get_opengl_version(major, minor); return minor; }
+	bool has_compute_shader_support() const override { return false; }
+	TextureProvider *alloc_texture(TextureDimensions texture_dimensions) override;
+	OcclusionQueryProvider *alloc_occlusion_query() override;
+	ProgramObjectProvider *alloc_program_object() override;
+	ShaderObjectProvider *alloc_shader_object() override;
+	FrameBufferProvider *alloc_frame_buffer() override;
+	RenderBufferProvider *alloc_render_buffer() override;
+	PixelBufferProvider *alloc_pixel_buffer() override;
+	VertexArrayBufferProvider *alloc_vertex_array_buffer() override;
+	UniformBufferProvider *alloc_uniform_buffer() override;
+	StorageBufferProvider *alloc_storage_buffer() override;
+	ElementArrayBufferProvider *alloc_element_array_buffer() override;
+	TransferBufferProvider *alloc_transfer_buffer() override;
+	PrimitivesArrayProvider *alloc_primitives_array() override;
+	std::shared_ptr<RasterizerStateProvider> create_rasterizer_state(const RasterizerStateDescription &desc) override;
+	std::shared_ptr<BlendStateProvider> create_blend_state(const BlendStateDescription &desc) override;
+	std::shared_ptr<DepthStencilStateProvider> create_depth_stencil_state(const DepthStencilStateDescription &desc) override;
+	void set_rasterizer_state(RasterizerStateProvider *state) override;
+	void set_blend_state(BlendStateProvider *state, const Colorf &blend_color, unsigned int sample_mask) override;
+	void set_depth_stencil_state(DepthStencilStateProvider *state, int stencil_ref) override;
+	PixelBuffer get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const override;
+	void set_uniform_buffer(int index, const UniformBuffer &buffer) override;
+	void reset_uniform_buffer(int index) override;
+	void set_storage_buffer(int index, const StorageBuffer &buffer) override;
+	void reset_storage_buffer(int index) override;
+	void set_texture(int unit_index, const Texture &texture) override;
+	void reset_texture(int unit_index) override;
+	void set_image_texture(int unit_index, const Texture &texture) override;
+	void reset_image_texture(int unit_index) override;
+	bool is_frame_buffer_owner(const FrameBuffer &fb) override;
+	void set_frame_buffer(const FrameBuffer &write_buffer, const FrameBuffer &read_buffer) override;
+	void reset_frame_buffer() override;
+	void set_program_object(StandardProgram standard_program) override;
+	void set_program_object(const ProgramObject &program) override;
+	void reset_program_object() override;
 
-	void set_draw_buffer(DrawBuffer buffer);
+	void set_draw_buffer(DrawBuffer buffer) override;
 
-	bool is_primitives_array_owner(const PrimitivesArray &primitives_array);
-	void draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArray &primitives_array);
-	void set_primitives_array(const PrimitivesArray &primitives_array);
-	void draw_primitives_array(PrimitivesType type, int offset, int num_vertices);
-	void draw_primitives_array_instanced(PrimitivesType type, int offset, int num_vertices, int instance_count);
-	void set_primitives_elements(ElementArrayBufferProvider *array_provider);
-	void draw_primitives_elements(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset = 0);
-	void draw_primitives_elements_instanced(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset, int instance_count);
-	void reset_primitives_elements();
-	void draw_primitives_elements(PrimitivesType type, int count, ElementArrayBufferProvider *array_provider, VertexAttributeDataType indices_type, void *offset);
-	void draw_primitives_elements_instanced(PrimitivesType type, int count, ElementArrayBufferProvider *array_provider, VertexAttributeDataType indices_type, void *offset, int instance_count);
-	void reset_primitives_array();
-	void set_scissor(const Rect &rect);
-	void reset_scissor();
-	void dispatch(int x, int y, int z);
-	void clear(const Colorf &color);
-	void clear_depth(float value);
-	void clear_stencil(int value);
-	void set_viewport(const Rectf &viewport);
-	void set_viewport(int index, const Rectf &viewport);
-	void set_depth_range(float n, float f);
-	void set_depth_range(int viewport, float n, float f);
+	bool is_primitives_array_owner(const PrimitivesArray &primitives_array) override;
+	void draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArray &primitives_array) override;
+	void set_primitives_array(const PrimitivesArray &primitives_array) override;
+	void draw_primitives_array(PrimitivesType type, int offset, int num_vertices) override;
+	void draw_primitives_array_instanced(PrimitivesType type, int offset, int num_vertices, int instance_count) override;
+	void set_primitives_elements(ElementArrayBufferProvider *array_provider) override;
+	void draw_primitives_elements(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset = 0) override;
+	void draw_primitives_elements_instanced(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset, int instance_count) override;
+	void reset_primitives_elements() override;
+	void draw_primitives_elements(PrimitivesType type, int count, ElementArrayBufferProvider *array_provider, VertexAttributeDataType indices_type, void *offset) override;
+	void draw_primitives_elements_instanced(PrimitivesType type, int count, ElementArrayBufferProvider *array_provider, VertexAttributeDataType indices_type, void *offset, int instance_count) override;
+	void reset_primitives_array() override;
+	void set_scissor(const Rect &rect) override;
+	void reset_scissor() override;
+	void dispatch(int x, int y, int z) override;
+	void clear(const Colorf &color) override;
+	void clear_depth(float value) override;
+	void clear_stencil(int value) override;
+	void set_viewport(const Rectf &viewport) override;
+	void set_viewport(int index, const Rectf &viewport) override;
+	void set_depth_range(float n, float f) override;
+	void set_depth_range(int viewport, float n, float f) override;
 
 	void on_window_resized();
 
 	void add_disposable(DisposableObject *disposable);
 	void remove_disposable(DisposableObject *disposable);
 
-	ProcAddress *get_proc_address(const std::string& function_name) const;
+	ProcAddress *get_proc_address(const std::string& function_name) const override;
 
-	void make_current() const;
+	void make_current() const override;
 
-	void flush();
+	void flush() override;
 
 /// \}
 /// \name Implementation
 /// \{
 private:
-	void on_dispose();
+	void on_dispose() override;
 	void create_standard_programs();
 	
 	void check_opengl_version();

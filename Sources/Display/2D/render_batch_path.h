@@ -58,8 +58,8 @@ private:
 	void render(const Path &path, PathRenderer *renderer);
 
 	int set_batcher_active(Canvas &canvas);
-	void flush(GraphicContext &gc);
-	void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis);
+	void flush(GraphicContext &gc) override;
+	void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis) override;
 
 	inline Pointf to_position(const clan::Pointf &point) const;
 

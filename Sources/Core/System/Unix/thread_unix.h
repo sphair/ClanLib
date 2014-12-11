@@ -57,9 +57,9 @@ public:
 /// \name Operations
 /// \{
 public:
-	void start(Runnable *runnable);
-	void join();
-	void kill();
+	void start(Runnable *runnable) override;
+	void join() override;
+	void kill() override;
 /// \}
 
 /// \name Implementation

@@ -51,11 +51,11 @@ public:
 /// \{
 
 public:
-	EventType get_event_type(int index) { return type; }
+	EventType get_event_type(int index) override { return type; }
 
-	int get_event_handle(int index) { return handle; }
+	int get_event_handle(int index) override { return handle; }
 
-	int get_num_event_handles() { return 1; }
+	int get_num_event_handles() override { return 1; }
 
 
 /// \}

@@ -40,7 +40,7 @@ public:
 	EchoFilterProvider(int buffer_size, float shift_factor);
 	~EchoFilterProvider();
 
-	void filter(float **sample_data, int num_samples, int channels);
+	void filter(float **sample_data, int num_samples, int channels) override;
 
 private:
 	int buffer_size;

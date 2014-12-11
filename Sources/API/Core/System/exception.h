@@ -58,7 +58,7 @@ public:
 	std::string message;
 
 	/// \brief Returns description of exception
-	virtual const char* what() const throw();
+	virtual const char* what() const throw() override;
 
 /// \}
 /// \name Operations

@@ -60,12 +60,12 @@ public:
 /// \name Operations
 /// \{
 public:
-	void generate_mipmap();
-	void create(int width, int height, int depth, int array_size, TextureFormat texture_format, int levels);
+	void generate_mipmap() override;
+	void create(int width, int height, int depth, int array_size, TextureFormat texture_format, int levels) override;
 
-	PixelBuffer get_pixeldata(GraphicContext &gc, TextureFormat texture_format, int level) const;
+	PixelBuffer get_pixeldata(GraphicContext &gc, TextureFormat texture_format, int level) const override;
 
-	void copy_from(GraphicContext &gc, int x, int y, int slice, int level, const PixelBuffer &src, const Rect &src_rect);
+	void copy_from(GraphicContext &gc, int x, int y, int slice, int level, const PixelBuffer &src, const Rect &src_rect) override;
 
 	void copy_image_from(
 		int x,
@@ -74,7 +74,7 @@ public:
 		int height,
 		int level,
 		TextureFormat texture_format,
-		GraphicContextProvider *gc);
+		GraphicContextProvider *gc) override;
 
 	void copy_subimage_from(
 		int offset_x,
@@ -84,31 +84,31 @@ public:
 		int width,
 		int height,
 		int level,
-		GraphicContextProvider *gc);
+		GraphicContextProvider *gc) override;
 
-	void set_min_lod(double min_lod);
-	void set_max_lod(double max_lod);
-	void set_lod_bias(double lod_bias);
-	void set_base_level(int base_level);
-	void set_max_level(int max_level);
+	void set_min_lod(double min_lod) override;
+	void set_max_lod(double max_lod) override;
+	void set_lod_bias(double lod_bias) override;
+	void set_base_level(int base_level) override;
+	void set_max_level(int max_level) override;
 
 	void set_wrap_mode(
 		TextureWrapMode wrap_s,
 		TextureWrapMode wrap_t,
-		TextureWrapMode wrap_r);
+		TextureWrapMode wrap_r) override;
 
 	void set_wrap_mode(
 		TextureWrapMode wrap_s,
-		TextureWrapMode wrap_t);
+		TextureWrapMode wrap_t) override;
 
 	void set_wrap_mode(
-		TextureWrapMode wrap_s);
+		TextureWrapMode wrap_s) override;
 
-	void set_min_filter(TextureFilter filter);
-	void set_mag_filter(TextureFilter filter);
-	void set_max_anisotropy(float v);
-	void set_texture_compare(TextureCompareMode mode, CompareFunction func);
-	TextureProvider *create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers);
+	void set_min_filter(TextureFilter filter) override;
+	void set_mag_filter(TextureFilter filter) override;
+	void set_max_anisotropy(float v) override;
+	void set_texture_compare(TextureCompareMode mode, CompareFunction func) override;
+	TextureProvider *create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers) override;
 /// \}
 
 /// \name Implementation
@@ -117,7 +117,7 @@ private:
 	void create_initial(TextureDimensions texture_dimensions);
 	GL3TextureProvider(GL3TextureProvider *orig_texture, TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers);
 
-	void on_dispose();
+	void on_dispose() override;
 
 	int width, height, depth, array_size;
 

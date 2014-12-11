@@ -54,8 +54,8 @@ public:
 /// \{
 
 public:
-	GLint get_result() const;
-	bool is_result_ready() const;
+	GLint get_result() const override;
+	bool is_result_ready() const override;
 
 
 /// \}
@@ -63,16 +63,16 @@ public:
 /// \{
 
 public:
-	void begin();
-	void end();
-	void create();
+	void begin() override;
+	void end() override;
+	void create() override;
 
 /// \}
 /// \name Implementation
 /// \{
 
 private:
-	void on_dispose();
+	void on_dispose() override;
 	/// \brief OpenGL occlusion query handle.
 	GLuint handle;
 

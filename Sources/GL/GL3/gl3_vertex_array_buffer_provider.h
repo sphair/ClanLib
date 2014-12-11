@@ -46,8 +46,8 @@ class GL3VertexArrayBufferProvider : public VertexArrayBufferProvider
 public:
 	GL3VertexArrayBufferProvider();
 	~GL3VertexArrayBufferProvider();
-	void create(int size, BufferUsage usage);
-	void create(void *data, int size, BufferUsage usage);
+	void create(int size, BufferUsage usage) override;
+	void create(void *data, int size, BufferUsage usage) override;
 /// \}
 
 /// \name Attributes
@@ -59,9 +59,9 @@ public:
 /// \name Operations
 /// \{
 public:
-	void upload_data(GraphicContext &gc, int offset, const void *data, int size) { buffer.upload_data(gc, offset, data, size); }
-	void copy_from(GraphicContext &gc, TransferBuffer &transfer_buffer, int dest_pos, int src_pos, int size) { buffer.copy_from(gc, transfer_buffer, dest_pos, src_pos, size); }
-	void copy_to(GraphicContext &gc, TransferBuffer &transfer_buffer, int dest_pos, int src_pos, int size) { buffer.copy_to(gc, transfer_buffer, dest_pos, src_pos, size); }
+	void upload_data(GraphicContext &gc, int offset, const void *data, int size) override { buffer.upload_data(gc, offset, data, size); }
+	void copy_from(GraphicContext &gc, TransferBuffer &transfer_buffer, int dest_pos, int src_pos, int size) override { buffer.copy_from(gc, transfer_buffer, dest_pos, src_pos, size); }
+	void copy_to(GraphicContext &gc, TransferBuffer &transfer_buffer, int dest_pos, int src_pos, int size) override { buffer.copy_to(gc, transfer_buffer, dest_pos, src_pos, size); }
 /// \}
 
 /// \name Implementation

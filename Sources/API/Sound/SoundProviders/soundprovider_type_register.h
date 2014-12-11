@@ -59,7 +59,7 @@ public:
 	virtual SoundProvider *load(
 		const std::string &filename,
 		bool stream,
-		const FileSystem &fs)
+		const FileSystem &fs) override
 	{
 		return new SoundProviderClass(filename, fs, stream);
 	}
@@ -67,7 +67,7 @@ public:
 	/// \brief Called to load static with this sound provider type.
 	virtual SoundProvider *load(
 		IODevice &file,
-		bool stream)
+		bool stream) override
 	{
 		return new SoundProviderClass(file, stream);
 	}

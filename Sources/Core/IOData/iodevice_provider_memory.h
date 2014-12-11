@@ -50,9 +50,9 @@ public:
 /// \{
 
 public:
-	virtual int get_size() const;
+	virtual int get_size() const override;
 
-	virtual int get_position() const;
+	virtual int get_position() const override;
 
 	const DataBuffer &get_data() const;
 
@@ -64,15 +64,15 @@ public:
 /// \{
 
 public:
-	virtual int send(const void *data, int len, bool send_all = true);
+	virtual int send(const void *data, int len, bool send_all = true) override;
 
-	virtual int receive(void *data, int len, bool receive_all = true);
+	virtual int receive(void *data, int len, bool receive_all = true) override;
 
-	virtual int peek(void *data, int len);
+	virtual int peek(void *data, int len) override;
 
-	virtual bool seek(int position, IODevice::SeekMode mode);
+	virtual bool seek(int position, IODevice::SeekMode mode) override;
 
-	IODeviceProvider *duplicate();
+	IODeviceProvider *duplicate() override;
 
 
 /// \}

@@ -74,7 +74,7 @@ public:
 	/// \brief Get Size
 	///
 	/// \return size
-	Size get_size() const
+	Size get_size() const override
 	{
 		return component->get_size();
 	}
@@ -82,7 +82,7 @@ public:
 	/// \brief Set geometry
 	///
 	/// \param geometry = Rect
-	void set_geometry(const Rect &geometry)
+	void set_geometry(const Rect &geometry) override
 	{
 		component->set_geometry(geometry);
 	}

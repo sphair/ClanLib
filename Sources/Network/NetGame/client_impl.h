@@ -37,7 +37,7 @@ namespace clan
 class NetGameClient_Impl : public KeepAliveObject
 {
 public:
-	void process();
+	void process() override;
 
 	Mutex mutex;
 	std::vector<NetGameNetworkEvent> events;

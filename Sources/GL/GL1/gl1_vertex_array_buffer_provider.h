@@ -40,8 +40,8 @@ class GL1VertexArrayBufferProvider : public VertexArrayBufferProvider
 public:
 	GL1VertexArrayBufferProvider();
 	~GL1VertexArrayBufferProvider();
-	void create(int size, BufferUsage usage);
-	void create(void *data, int size, BufferUsage usage);
+	void create(int size, BufferUsage usage) override;
+	void create(void *data, int size, BufferUsage usage) override;
 
 /// \}
 
@@ -54,9 +54,9 @@ public:
 /// \name Operations
 /// \{
 public:
-	void upload_data(GraphicContext &gc, int offset, const void *data, int size);
-	void copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size);
-	void copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size);
+	void upload_data(GraphicContext &gc, int offset, const void *data, int size) override;
+	void copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) override;
+	void copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) override;
 /// \}
 
 /// \name Implementation

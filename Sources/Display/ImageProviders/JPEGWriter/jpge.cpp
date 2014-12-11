@@ -938,7 +938,7 @@ public:
       return m_bStatus;
    }
 
-   virtual bool put_buf(const void* pBuf, int len)
+   virtual bool put_buf(const void* pBuf, int len) override
    {
       m_bStatus = m_bStatus && (fwrite(pBuf, len, 1, m_pFile) == 1);
       return m_bStatus;
@@ -991,7 +991,7 @@ public:
 
    virtual ~memory_stream() { }
 
-   virtual bool put_buf(const void* pBuf, int len)
+   virtual bool put_buf(const void* pBuf, int len) override
    {
       uint buf_remaining = m_buf_size - m_buf_ofs;
       if ((uint)len > buf_remaining)

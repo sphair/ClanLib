@@ -45,7 +45,7 @@ class WorkItemProcess : public WorkItem
 public:
 	WorkItemProcess(const std::function<void()> &func) : func(func) { }
 
-	void process_work() { func(); }
+	void process_work() override { func(); }
 
 private:
 	std::function<void()> func;
@@ -56,8 +56,8 @@ class WorkItemWorkCompleted : public WorkItem
 public:
 	WorkItemWorkCompleted(const std::function<void()> &func) : func(func) { }
 
-	void process_work() { }
-	void work_completed() { func(); }
+	void process_work() override { }
+	void work_completed() override { func(); }
 
 private:
 	std::function<void()> func;
@@ -75,7 +75,7 @@ public:
 	int get_items_queued() const { return items_queued.get(); }
 
 private:
-	void process();
+	void process() override;
 	void worker_main();
 
 	bool serial_queue;

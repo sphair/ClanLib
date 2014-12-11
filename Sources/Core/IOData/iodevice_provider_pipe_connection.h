@@ -71,15 +71,15 @@ public:
 /// \{
 
 public:
-	int send(const void *data, int len, bool send_all);
+	int send(const void *data, int len, bool send_all) override;
 
-	int receive(void *data, int len, bool receive_all);
+	int receive(void *data, int len, bool receive_all) override;
 
-	int peek(void *data, int len);
+	int peek(void *data, int len) override;
 
 	void disconnect();
 
-	IODeviceProvider *duplicate();
+	IODeviceProvider *duplicate() override;
 
 
 /// \}

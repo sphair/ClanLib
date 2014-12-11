@@ -38,7 +38,7 @@ namespace clan
 class PixelFilterRGBToYCrCb : public PixelFilter
 {
 public:
-	void filter(Vec4f *pixels, int num_pixels)
+	void filter(Vec4f *pixels, int num_pixels) override
 	{
 		for (int i = 0; i < num_pixels; i++)
 		{
@@ -53,7 +53,7 @@ public:
 class PixelFilterYCrCbToRGB : public PixelFilter
 {
 public:
-	void filter(Vec4f *pixels, int num_pixels)
+	void filter(Vec4f *pixels, int num_pixels) override
 	{
 		for (int i = 0; i < num_pixels; i++)
 		{
@@ -70,7 +70,7 @@ public:
 class PixelFilterSSE2_RGBToYCrCb : public PixelFilter
 {
 public:
-	void filter(Vec4f *pixels, int num_pixels)
+	void filter(Vec4f *pixels, int num_pixels) override
 	{
 		__m128 constant_0_299 = _mm_set1_ps(0.299f);
 		__m128 constant_0_587 = _mm_set1_ps(0.587f);
@@ -116,7 +116,7 @@ public:
 class PixelFilterSSE2_YCrCbToRGB : public PixelFilter
 {
 public:
-	void filter(Vec4f *pixels, int num_pixels)
+	void filter(Vec4f *pixels, int num_pixels) override
 	{
 		__m128 constant_1_402 = _mm_set1_ps(1.402f);
 		__m128 constant_0_5 = _mm_set1_ps(0.5f);

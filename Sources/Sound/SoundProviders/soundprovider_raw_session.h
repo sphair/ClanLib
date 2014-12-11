@@ -49,10 +49,10 @@ public:
 /// \{
 
 public:
-	int get_num_samples() const;
-	int get_frequency() const;
-	int get_num_channels() const;
-	int get_position() const;
+	int get_num_samples() const override;
+	int get_frequency() const override;
+	int get_num_channels() const override;
+	int get_position() const override;
 
 
 /// \}
@@ -60,12 +60,12 @@ public:
 /// \{
 
 public:
-	bool eof() const;
-	void stop();
-	bool play();
-	bool set_position(int pos);
-	bool set_end_position(int pos) { return false; }
-	int get_data(float **data_ptr, int data_requested);
+	bool eof() const override;
+	void stop() override;
+	bool play() override;
+	bool set_position(int pos) override;
+	bool set_end_position(int pos) override { return false; }
+	int get_data(float **data_ptr, int data_requested) override;
 
 
 /// \}

@@ -59,9 +59,9 @@ public:
 /// \{
 
 public:
-	int get_size() const;
+	int get_size() const override;
 
-	int get_position() const;
+	int get_position() const override;
 
 /// \}
 /// \name Operations
@@ -81,15 +81,15 @@ public:
 
 	int write(const void *buffer, int size, bool write_all);
 
-	int send(const void *data, int len, bool send_all);
+	int send(const void *data, int len, bool send_all) override;
 
-	int receive(void *data, int len, bool receive_all);
+	int receive(void *data, int len, bool receive_all) override;
 
-	int peek(void *data, int len);
+	int peek(void *data, int len) override;
 
-	bool seek(int position, IODevice::SeekMode mode);
+	bool seek(int position, IODevice::SeekMode mode) override;
 
-	IODeviceProvider *duplicate();
+	IODeviceProvider *duplicate() override;
 
 
 /// \}

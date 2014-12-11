@@ -47,19 +47,19 @@ class GL3PixelBufferProvider : public PixelBufferProvider
 public:
 	GL3PixelBufferProvider();
 	~GL3PixelBufferProvider();
-	void create(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage);
+	void create(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage) override;
 /// \}
 
 /// \name Attributes
 /// \{
 public:
-	void *get_data();
-	int get_pitch() const {return pitch; }
-	Size get_size() const { return size; }
+	void *get_data() override;
+	int get_pitch() const override {return pitch; }
+	Size get_size() const override { return size; }
 
-	bool is_gpu() const { return true; }
+	bool is_gpu() const override { return true; }
 
-	TextureFormat get_format() const { return texture_format; };
+	TextureFormat get_format() const override { return texture_format; };
 
 	GLuint get_handle() const { return buffer.get_handle(); }
 	GLenum get_binding() const { return buffer.get_binding(); }
@@ -69,9 +69,9 @@ public:
 /// \name Operations
 /// \{
 public:
-	void lock(GraphicContext &gc, BufferAccess access) { 	data_locked = true; buffer.lock(gc, access); }
-	void unlock() { data_locked = false; buffer.unlock(); }
-	void upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data);
+	void lock(GraphicContext &gc, BufferAccess access) override { 	data_locked = true; buffer.lock(gc, access); }
+	void unlock() override { data_locked = false; buffer.unlock(); }
+	void upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data) override;
 /// \}
 
 /// \name Implementation

@@ -41,7 +41,7 @@ public:
 	XMLSoundCache(const XMLResourceDocument &doc);
 	~XMLSoundCache();
 
-	Resource<SoundBuffer> get_sound(const std::string &id);
+	Resource<SoundBuffer> get_sound(const std::string &id) override;
 
 private:
 	XMLResourceDocument doc;

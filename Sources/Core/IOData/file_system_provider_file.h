@@ -55,9 +55,9 @@ public:
 /// \{
 
 public:
-	std::string get_path() const;
+	std::string get_path() const override;
 
-	std::string get_identifier() const;
+	std::string get_identifier() const override;
 
 /// \}
 /// \name Operations
@@ -75,11 +75,11 @@ public:
 		File::OpenMode mode = File::open_existing,
 		unsigned int access = File::access_read | File::access_write,
 		unsigned int share = File::share_all,
-		unsigned int flags = 0);
+		unsigned int flags = 0) override;
 
-	bool initialize_directory_listing(const std::string &path);
+	bool initialize_directory_listing(const std::string &path) override;
 
-	bool next_file(DirectoryListingEntry &entry);
+	bool next_file(DirectoryListingEntry &entry) override;
 
 
 /// \}

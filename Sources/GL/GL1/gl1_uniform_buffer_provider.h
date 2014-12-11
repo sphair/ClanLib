@@ -42,8 +42,8 @@ class GL1UniformBufferProvider : public UniformBufferProvider
 public:
 	GL1UniformBufferProvider();
 	~GL1UniformBufferProvider();
-	void create(int size, BufferUsage usage);
-	void create(const void *data, int size, BufferUsage usage);
+	void create(int size, BufferUsage usage) override;
+	void create(const void *data, int size, BufferUsage usage) override;
 /// \}
 
 /// \name Attributes
@@ -55,9 +55,9 @@ public:
 /// \name Operations
 /// \{
 public:
-	void upload_data(GraphicContext &gc, const void *data, int size);
-	void copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size);
-	void copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size);
+	void upload_data(GraphicContext &gc, const void *data, int size) override;
+	void copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) override;
+	void copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) override;
 /// \}
 
 /// \name Implementation

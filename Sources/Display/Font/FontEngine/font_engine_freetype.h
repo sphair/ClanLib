@@ -72,7 +72,7 @@ public:
 /// \{
 
 public:
-	FontMetrics get_metrics();
+	FontMetrics get_metrics() override;
 	float get_kerning(const std::string::value_type &ch1, const std::string::value_type &ch2);
 	GlyphMetrics get_glyph_metrics(unsigned int glyph);
 
@@ -82,19 +82,19 @@ public:
 	///
 	/// \param glyph The glyph
 	/// \param anti_alias If anti_aliasing should be used
-	FontPixelBuffer get_font_glyph_standard(int glyph, bool anti_alias);
+	FontPixelBuffer get_font_glyph_standard(int glyph, bool anti_alias) override;
 
 	/// \brief Constructs a pixel buffer using subpixel rendering from a Freetype glyph.
 	///
 	/// \param glyph The glyph
-	FontPixelBuffer get_font_glyph_subpixel(int glyph);
+	FontPixelBuffer get_font_glyph_subpixel(int glyph) override;
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
-	void load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics);
+	void load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics) override;
 
 /// \}
 /// \name Implementation

@@ -60,7 +60,7 @@ public:
 
 public:
 	/// \brief Log text to console.
-	void log(const std::string &type, const std::string &text);
+	void log(const std::string &type, const std::string &text) override;
 
 /// \}
 /// \name Implementation

@@ -53,35 +53,35 @@ public:
 
 //! Attributes:
 public:
-	int get_size() const { return impl.lock()->connection.get_size(); }
+	int get_size() const override { return impl.lock()->connection.get_size(); }
 	
-	int get_position() const { return impl.lock()->connection.get_position(); }
+	int get_position() const override { return impl.lock()->connection.get_position(); }
 
 //! Operations:
 public:
-	int send(const void *data, int len, bool send_all)
+	int send(const void *data, int len, bool send_all) override
 	{
 		impl.lock()->performed_write = true;
 		return impl.lock()->connection.send(data, len, send_all);
 	}
 
-	int receive(void *data, int len, bool receive_all)
+	int receive(void *data, int len, bool receive_all) override
 	{
 		impl.lock()->performed_read = true;
 		return impl.lock()->connection.receive(data, len, receive_all);
 	}
 
-	int peek(void *data, int len)
+	int peek(void *data, int len) override
 	{
 		return impl.lock()->connection.peek(data, len);
 	}
 
-	bool seek(int position, IODevice::SeekMode mode)
+	bool seek(int position, IODevice::SeekMode mode) override
 	{
 		return impl.lock()->connection.seek(position, mode);
 	}
 
-	IODeviceProvider *duplicate()
+	IODeviceProvider *duplicate() override
 	{
 		return nullptr;
 	}

@@ -37,7 +37,7 @@ namespace clan
 class PixelReader_4hf : public PixelReader
 {
 public:
-	void read(const void *input, Vec4f *output, int num_pixels)
+	void read(const void *input, Vec4f *output, int num_pixels) override
 	{
 		const Vec4hf *d = static_cast<const Vec4hf *>(input);
 		for (int i = 0; i < num_pixels; i++)
@@ -50,7 +50,7 @@ public:
 class PixelReader_3hf : public PixelReader
 {
 public:
-	void read(const void *input, Vec4f *output, int num_pixels)
+	void read(const void *input, Vec4f *output, int num_pixels) override
 	{
 		const Vec3hf *d = static_cast<const Vec3hf *>(input);
 		for (int i = 0; i < num_pixels; i++)
@@ -63,7 +63,7 @@ public:
 class PixelReader_2hf : public PixelReader
 {
 public:
-	void read(const void *input, Vec4f *output, int num_pixels)
+	void read(const void *input, Vec4f *output, int num_pixels) override
 	{
 		const Vec2hf *d = static_cast<const Vec2hf *>(input);
 		for (int i = 0; i < num_pixels; i++)
@@ -76,7 +76,7 @@ public:
 class PixelReader_1hf : public PixelReader
 {
 public:
-	void read(const void *input, Vec4f *output, int num_pixels)
+	void read(const void *input, Vec4f *output, int num_pixels) override
 	{
 		const HalfFloat *d = static_cast<const HalfFloat *>(input);
 		for (int i = 0; i < num_pixels; i++)

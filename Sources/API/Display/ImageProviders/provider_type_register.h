@@ -61,14 +61,14 @@ public:
 	virtual PixelBuffer load(
 		const std::string &filename,
 		const FileSystem &fs,
-		bool srgb)
+		bool srgb) override
 	{
 		return ProviderClass::load(filename, fs, srgb);
 	}
 
 	virtual PixelBuffer load(
 		IODevice &file,
-		bool srgb)
+		bool srgb) override
 	{
 		return ProviderClass::load(file, srgb);
 	}
@@ -76,14 +76,14 @@ public:
 	virtual void save(
 		PixelBuffer buffer,
 		const std::string &filename,
-		FileSystem &fs)
+		FileSystem &fs) override
 	{
 		ProviderClass::save(buffer, filename, fs);
 	}
 
 	virtual void save(
 		PixelBuffer buffer,
-		IODevice &file)
+		IODevice &file) override
 	{
 		ProviderClass::save(buffer, file);
 	}

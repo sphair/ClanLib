@@ -76,7 +76,7 @@ public:
 /// \name Implementation
 /// \{
 private:
-	void on_dispose();
+	void on_dispose() override;
 
 	GLuint handle;
 	GLenum binding;

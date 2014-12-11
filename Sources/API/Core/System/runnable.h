@@ -97,7 +97,7 @@ public:
 /// \{
 
 public:
-	virtual void run()
+	virtual void run() override
 	{
 		set_thread_name(typeid(func).name());
 		C *local_instance = instance;
@@ -139,7 +139,7 @@ public:
 /// \{
 
 public:
-	virtual void run()
+	virtual void run() override
 	{
 		set_thread_name(typeid(func).name());
 		C *local_instance = instance;
@@ -184,7 +184,7 @@ public:
 /// \{
 
 public:
-	virtual void run()
+	virtual void run() override
 	{
 		set_thread_name(typeid(func).name());
 		C *local_instance = instance;
@@ -232,7 +232,7 @@ public:
 /// \{
 
 public:
-	virtual void run()
+	virtual void run() override
 	{
 		set_thread_name(typeid(func).name());
 		C *local_instance = instance;
@@ -283,7 +283,7 @@ public:
 /// \{
 
 public:
-	virtual void run()
+	virtual void run() override
 	{
 		set_thread_name(typeid(func).name());
 		C *local_instance = instance;
@@ -337,7 +337,7 @@ public:
 /// \{
 
 public:
-	virtual void run()
+	virtual void run() override
 	{
 		set_thread_name(typeid(func).name());
 		C *local_instance = instance;

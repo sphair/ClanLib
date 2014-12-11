@@ -38,7 +38,7 @@ namespace clan
 class NetGameServer_Impl : public KeepAliveObject
 {
 public:
-	void process();
+	void process() override;
 
 	std::unique_ptr<TCPListen> tcp_listen;
 	Thread listen_thread;

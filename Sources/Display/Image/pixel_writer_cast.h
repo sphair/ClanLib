@@ -100,7 +100,7 @@ template<typename Type>
 class PixelWriter_4cast : public PixelWriter_cast
 {
 public:
-	void write(void *output, Vec4f *input, int num_pixels)
+	void write(void *output, Vec4f *input, int num_pixels) override
 	{
 		Vec4<Type> *d = static_cast<Vec4<Type> *>(output);
 		for (int i = 0; i < num_pixels; i++)
@@ -114,7 +114,7 @@ template<typename Type>
 class PixelWriter_3cast : public PixelWriter_cast
 {
 public:
-	void write(void *output, Vec4f *input, int num_pixels)
+	void write(void *output, Vec4f *input, int num_pixels) override
 	{
 		Vec3<Type> *d = static_cast<Vec3<Type> *>(output);
 		for (int i = 0; i < num_pixels; i++)
@@ -128,7 +128,7 @@ template<typename Type>
 class PixelWriter_2cast : public PixelWriter_cast
 {
 public:
-	void write(void *output, Vec4f *input, int num_pixels)
+	void write(void *output, Vec4f *input, int num_pixels) override
 	{
 		Vec2<Type> *d = static_cast<Vec2<Type> *>(output);
 		for (int i = 0; i < num_pixels; i++)
@@ -142,7 +142,7 @@ template<typename Type>
 class PixelWriter_1cast : public PixelWriter_cast
 {
 public:
-	void write(void *output, Vec4f *input, int num_pixels)
+	void write(void *output, Vec4f *input, int num_pixels) override
 	{
 		Type *d = static_cast< Type *>(output);
 		for (int i = 0; i < num_pixels; i++)

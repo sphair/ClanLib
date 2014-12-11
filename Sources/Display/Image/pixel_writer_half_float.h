@@ -37,7 +37,7 @@ namespace clan
 class PixelWriter_4hf : public PixelWriter
 {
 public:
-	void write(void *output, Vec4f *input, int num_pixels)
+	void write(void *output, Vec4f *input, int num_pixels) override
 	{
 		Vec4hf *d = static_cast<Vec4hf *>(output);
 		for (int i = 0; i < num_pixels; i++)
@@ -50,7 +50,7 @@ public:
 class PixelWriter_3hf : public PixelWriter
 {
 public:
-	void write(void *output, Vec4f *input, int num_pixels)
+	void write(void *output, Vec4f *input, int num_pixels) override
 	{
 		Vec3hf *d = static_cast<Vec3hf *>(output);
 		for (int i = 0; i < num_pixels; i++)
@@ -63,7 +63,7 @@ public:
 class PixelWriter_2hf : public PixelWriter
 {
 public:
-	void write(void *output, Vec4f *input, int num_pixels)
+	void write(void *output, Vec4f *input, int num_pixels) override
 	{
 		Vec2hf *d = static_cast<Vec2hf *>(output);
 		for (int i = 0; i < num_pixels; i++)
@@ -76,7 +76,7 @@ public:
 class PixelWriter_1hf : public PixelWriter
 {
 public:
-	void write(void *output, Vec4f *input, int num_pixels)
+	void write(void *output, Vec4f *input, int num_pixels) override
 	{
 		HalfFloat *d = static_cast<HalfFloat *>(output);
 		for (int i = 0; i < num_pixels; i++)

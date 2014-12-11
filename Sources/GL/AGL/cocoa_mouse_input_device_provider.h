@@ -40,25 +40,25 @@ public:
 	CocoaMouseInputDeviceProvider();
 	~CocoaMouseInputDeviceProvider();
 
-	void on_dispose() { }
+	void on_dispose() override { }
 	void destroy() { delete this; }
-	std::string get_name() const { return "Mouse"; }
-	std::string get_device_name() const { return "mouse"; }
-	InputDevice::Type get_type() const { return InputDevice::pointer; }
-	std::string get_key_name(int id) const { return string_format("Button %1", id); }
-	bool supports_keyid_mapping() const { return false; }
-	std::string keyid_to_string(int keycode) const { return std::string(); }
-	int string_to_keyid(const std::string &str) const { return 0; }
+	std::string get_name() const override { return "Mouse"; }
+	std::string get_device_name() const override { return "mouse"; }
+	InputDevice::Type get_type() const override { return InputDevice::pointer; }
+	std::string get_key_name(int id) const override { return string_format("Button %1", id); }
+	bool supports_keyid_mapping() const override { return false; }
+	std::string keyid_to_string(int keycode) const override { return std::string(); }
+	int string_to_keyid(const std::string &str) const override { return 0; }
 
-	bool get_keycode(int keycode) const;
-	int get_x() const;
-	int get_y() const;
-	float get_axis(int index) const { return 0.0f; }
+	bool get_keycode(int keycode) const override;
+	int get_x() const override;
+	int get_y() const override;
+	float get_axis(int index) const override { return 0.0f; }
 	int get_axis_count() const { return 0; }
-	int get_button_count() const { return 1; }
-	bool in_proximity() const { return false; }
+	int get_button_count() const override { return 1; }
+	bool in_proximity() const override { return false; }
 	void init(Signal<const InputEvent &> *new_sig_provider_event) { sig_provider_event = new_sig_provider_event; }
-	void set_position(int x, int y) { }
+	void set_position(int x, int y) override { }
 	bool poll(bool peek_only) { return false; }
 
     Signal<const InputEvent &> *sig_provider_event;

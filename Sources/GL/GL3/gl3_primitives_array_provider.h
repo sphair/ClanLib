@@ -57,14 +57,14 @@ public:
 /// \name Operations
 /// \{
 public:
-	void set_attribute(int index, const VertexData &data, bool normalize);
+	void set_attribute(int index, const VertexData &data, bool normalize) override;
 
 /// \}
 
 /// \name Implementation
 /// \{
 private:
-	void on_dispose();
+	void on_dispose() override;
 
 	GL3GraphicContextProvider *gc_provider;
 /// \}

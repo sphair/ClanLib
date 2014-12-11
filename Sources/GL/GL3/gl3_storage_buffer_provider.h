@@ -46,8 +46,8 @@ class GL3StorageBufferProvider : public StorageBufferProvider
 public:
 	GL3StorageBufferProvider();
 	~GL3StorageBufferProvider();
-	void create(int size, int stride, BufferUsage usage);
-	void create(const void *data, int size, int stride, BufferUsage usage);
+	void create(int size, int stride, BufferUsage usage) override;
+	void create(const void *data, int size, int stride, BufferUsage usage) override;
 /// \}
 
 /// \name Attributes
@@ -59,9 +59,9 @@ public:
 /// \name Operations
 /// \{
 public:
-	void upload_data(GraphicContext &gc, const void *data, int size) { buffer.upload_data(gc, data, size); }
-	void copy_from(GraphicContext &gc, TransferBuffer &transfer_buffer, int dest_pos, int src_pos, int size) { buffer.copy_from(gc, transfer_buffer, dest_pos, src_pos, size); }
-	void copy_to(GraphicContext &gc, TransferBuffer &transfer_buffer, int dest_pos, int src_pos, int size) { buffer.copy_to(gc, transfer_buffer, dest_pos, src_pos, size); }
+	void upload_data(GraphicContext &gc, const void *data, int size) override { buffer.upload_data(gc, data, size); }
+	void copy_from(GraphicContext &gc, TransferBuffer &transfer_buffer, int dest_pos, int src_pos, int size) override { buffer.copy_from(gc, transfer_buffer, dest_pos, src_pos, size); }
+	void copy_to(GraphicContext &gc, TransferBuffer &transfer_buffer, int dest_pos, int src_pos, int size) override { buffer.copy_to(gc, transfer_buffer, dest_pos, src_pos, size); }
 /// \}
 
 /// \name Implementation

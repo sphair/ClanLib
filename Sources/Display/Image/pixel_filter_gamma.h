@@ -38,7 +38,7 @@ class PixelFilterGamma : public PixelFilter
 {
 public:
 	PixelFilterGamma(float gamma) : gamma(gamma) { }
-	void filter(Vec4f *pixels, int num_pixels)	
+	void filter(Vec4f *pixels, int num_pixels) override	
 	{
 		for (int i = 0; i < num_pixels; i++)
 		{
@@ -54,7 +54,7 @@ class PixelFilterGammaSSE2 : public PixelFilter
 {
 public:
 	PixelFilterGammaSSE2(float gamma) : gamma(gamma) { }
-	void filter(Vec4f *pixels, int num_pixels)	
+	void filter(Vec4f *pixels, int num_pixels) override	
 	{
 		__m128 b = _mm_set1_ps(gamma);
 

@@ -84,7 +84,7 @@ private:
 	/// \brief Add network event
 	///
 	/// \param e = Net Game Network Event
-	void add_network_event(const NetGameNetworkEvent &e);
+	void add_network_event(const NetGameNetworkEvent &e) override;
 
 	std::shared_ptr<NetGameServer_Impl> impl;
 };
