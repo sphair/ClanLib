@@ -221,6 +221,8 @@ Size FontEngine_Freetype::get_size(const std::string &text, int pos)
 
 void FontEngine_Freetype::load_glyph_path(unsigned int c, Path &out_path, GlyphMetrics &out_metrics)
 {
+	out_path.set_fill_mode(PathFillMode::winding);
+
 	FT_UInt glyph_index;
 
 	glyph_index = FT_Get_Char_Index( face, FT_ULong(c) );
@@ -265,15 +267,11 @@ void FontEngine_Freetype::load_glyph_path(unsigned int c, Path &out_path, GlyphM
 			}
 			else if( tp.tag == FT_Curve_Tag_Cubic && points[i-1].tag == FT_Curve_Tag_Cubic )
 			{
-				// TODO: Fixme if there is a font that use quadtratics
-				/*
-				BezierCurve curve;
-				curve.add_control_point( points[i-2].pos);
-				curve.add_control_point( points[i-1].pos);
-				curve.add_control_point( tp.pos );
-				curve.add_control_point( points[i+1].pos );
-				contour.add_curve(curve);
-				*/
+				// TODO: This needs checking. I do not have a font that uses cubics - This is likely to be incorrect
+				if (i >= 2)
+				{
+					out_path.bezier_to(points[i - 2].pos, points[i - 1].pos, tp.pos, points[i + 1].pos);
+				}
 			}
 		}
 
