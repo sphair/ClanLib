@@ -212,10 +212,10 @@ GlyphMetrics Font::measure_text(Canvas &canvas, const std::string &string)
 
 	if (!impl)
 		return total_metrics;
-	total_metrics.bbox_offset.x = std::numeric_limits<float>::max();
-	total_metrics.bbox_offset.y = std::numeric_limits<float>::max();
 
-	int line_spacing = impl->glyph_cache.font_metrics.get_height() + impl->glyph_cache.font_metrics.get_external_leading();
+	int line_spacing = static_cast<int>(impl->glyph_cache.font_metrics.get_line_height() + 0.5f);
+	bool first_char = true;
+	Rectf text_bbox;
 
 	UTF8_Reader reader(string.data(), string.length());
 	while (!reader.is_end())
@@ -231,14 +231,25 @@ GlyphMetrics Font::measure_text(Canvas &canvas, const std::string &string)
 		}
 
 		GlyphMetrics metrics = impl->glyph_cache.get_metrics(impl->font_engine, canvas, glyph);
+		metrics.bbox_offset.x += total_metrics.advance.width;
+		metrics.bbox_offset.y += total_metrics.advance.height;
 
-		total_metrics.bbox_offset.x = clan::min(total_metrics.bbox_offset.x, metrics.bbox_offset.x + total_metrics.advance.width);
-		total_metrics.bbox_offset.y = clan::min(total_metrics.bbox_offset.y, metrics.bbox_offset.y + total_metrics.advance.height);
-		total_metrics.bbox_size.width = clan::max(total_metrics.bbox_size.width, metrics.bbox_size.width + total_metrics.advance.width);
-		total_metrics.bbox_size.height = clan::max(total_metrics.bbox_size.height, metrics.bbox_size.height + total_metrics.advance.height);
+		if (first_char)
+		{
+			text_bbox = Rectf(metrics.bbox_offset, metrics.bbox_size);
+			first_char = false;
+		}
+		else
+		{
+			Rectf glyph_bbox(metrics.bbox_offset, metrics.bbox_size);
+			text_bbox.bounding_rect(glyph_bbox);
+		}
 
 		total_metrics.advance += metrics.advance;
 	}
+
+	total_metrics.bbox_offset = text_bbox.get_top_left();
+	total_metrics.bbox_size = text_bbox.get_size();
 	return total_metrics;
 }
 

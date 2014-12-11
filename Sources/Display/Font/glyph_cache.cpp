@@ -118,7 +118,7 @@ void GlyphCache::draw(FontEngine *font_engine, Canvas &canvas, const Pointf &pos
 	Pointf pos = canvas.grid_fit(position);
 	float offset_x = 0;
 	float offset_y = 0;
-	int line_spacing = font_metrics.get_height() + font_metrics.get_external_leading();
+	int line_spacing = static_cast<int>(font_metrics.get_line_height() + 0.5f);
 	UTF8_Reader reader(text.data(), text.length());
 	while (!reader.is_end())
 	{

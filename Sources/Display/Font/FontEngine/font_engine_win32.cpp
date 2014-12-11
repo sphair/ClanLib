@@ -40,30 +40,15 @@ namespace clan
 {
 
 FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, const std::string &filename, FileSystem& fs)
-: handle(0)
+	: handle(0), line_height(desc.get_line_height())
 {
-	if (!filename.empty())
-	{
-		IODevice file = fs.open_file(filename);
-		DataBuffer data(file.get_size());
-		file.read(data.get_data(), data.get_size());
-		DWORD out_number_of_fonts = 0;
-		HANDLE font_handle = AddFontMemResourceEx(data.get_data(), data.get_size(), 0, &out_number_of_fonts);
-		if(out_number_of_fonts == 0)
-			throw Exception("Unable to register font " + filename);
-	}
-
-	line_height = desc.get_line_height();
-
-	// ClanLib now only supports negative font sizes. (To avoid confusion)
-	int height = desc.get_height();
-	if (height >0)
-		height =-height;
+	load_font(filename, fs);
 
 	handle = CreateFont(
-		height, desc.get_average_width(),
-		(int) (desc.get_escapement() * 10 + 0.5),
-		(int) (desc.get_orientation() * 10 + 0.5),
+		-std::abs(desc.get_height()),
+		desc.get_average_width(),
+		static_cast<int>(desc.get_escapement() * 10.0f + 0.5f),
+		static_cast<int>(desc.get_orientation() * 10.0f + 0.5f),
 		desc.get_weight(),
 		desc.get_italic() ? TRUE : FALSE,
 		FALSE,
@@ -96,6 +81,20 @@ FontEngine_Win32::~FontEngine_Win32()
 {
 	if (handle)
 		DeleteObject(handle);
+}
+
+void FontEngine_Win32::load_font(const std::string &filename, FileSystem& fs)
+{
+	if (!filename.empty())
+	{
+		IODevice file = fs.open_file(filename);
+		DataBuffer data(file.get_size());
+		file.read(data.get_data(), data.get_size());
+		DWORD out_number_of_fonts = 0;
+		HANDLE font_handle = AddFontMemResourceEx(data.get_data(), data.get_size(), 0, &out_number_of_fonts);
+		if (out_number_of_fonts == 0)
+			throw Exception("Unable to register font " + filename);
+	}
 }
 
 FontMetrics FontEngine_Win32::get_metrics()
@@ -209,7 +208,7 @@ FontPixelBuffer FontEngine_Win32::get_font_glyph_lcd(int glyph)
 	font_buffer.metrics.advance.width = glyph_metrics.gmCellIncX;
 	font_buffer.metrics.advance.height = glyph_metrics.gmCellIncY;
 	font_buffer.metrics.bbox_offset.x = glyph_metrics.gmptGlyphOrigin.x;
-	font_buffer.metrics.bbox_offset.y = glyph_metrics.gmptGlyphOrigin.y;
+	font_buffer.metrics.bbox_offset.y = -glyph_metrics.gmptGlyphOrigin.y;
 	font_buffer.metrics.bbox_size.width = glyph_metrics.gmBlackBoxX;
 	font_buffer.metrics.bbox_size.height = glyph_metrics.gmBlackBoxY;
 	return font_buffer;
@@ -251,7 +250,7 @@ FontPixelBuffer FontEngine_Win32::get_font_glyph_gray8(int glyph)
 		font_buffer.metrics.advance.width = glyph_metrics.gmCellIncX;
 		font_buffer.metrics.advance.height = glyph_metrics.gmCellIncY;
 		font_buffer.metrics.bbox_offset.x = glyph_metrics.gmptGlyphOrigin.x;
-		font_buffer.metrics.bbox_offset.y = glyph_metrics.gmptGlyphOrigin.y;
+		font_buffer.metrics.bbox_offset.y = -glyph_metrics.gmptGlyphOrigin.y;
 		font_buffer.metrics.bbox_size.width = glyph_metrics.gmBlackBoxX;
 		font_buffer.metrics.bbox_size.height = glyph_metrics.gmBlackBoxY;
 		return font_buffer;
@@ -297,7 +296,7 @@ FontPixelBuffer FontEngine_Win32::get_font_glyph_mono(int glyph)
 		font_buffer.metrics.advance.width = glyph_metrics.gmCellIncX;
 		font_buffer.metrics.advance.height = glyph_metrics.gmCellIncY;
 		font_buffer.metrics.bbox_offset.x = glyph_metrics.gmptGlyphOrigin.x;
-		font_buffer.metrics.bbox_offset.y = glyph_metrics.gmptGlyphOrigin.y;
+		font_buffer.metrics.bbox_offset.y = -glyph_metrics.gmptGlyphOrigin.y;
 		font_buffer.metrics.bbox_size.width = glyph_metrics.gmBlackBoxX;
 		font_buffer.metrics.bbox_size.height = glyph_metrics.gmBlackBoxY;
 		return font_buffer;
@@ -348,7 +347,8 @@ FontPixelBuffer FontEngine_Win32::get_empty_font_glyph(int glyph)
 	if (GetCharABCWidths(dc, glyph, glyph, &abc))
 	{
 		font_buffer.metrics.advance.width = abc.abcA + abc.abcB + abc.abcC;
-		font_buffer.metrics.bbox_size.width = font_buffer.metrics.advance.width;
+		font_buffer.metrics.bbox_offset = Pointf(0.0f, -1.0f);
+		font_buffer.metrics.bbox_size = Sizef(font_buffer.metrics.advance.width, 1.0f);
 	}
 
 	SelectObject(dc, old_font);
@@ -424,6 +424,8 @@ int FontEngine_Win32::decode_charset(FontDescription::Charset selected_charset)
 }
 void FontEngine_Win32::load_glyph_path(unsigned int glyph_index, Path &path, GlyphMetrics &out_metrics)
 {
+	path.set_fill_mode(PathFillMode::winding);
+
 	GLYPHMETRICS glyph_metrics = { 0 };
 	MAT2 matrix = { 0 };
 	matrix.eM11.value = 1;
@@ -462,7 +464,7 @@ void FontEngine_Win32::load_glyph_path(unsigned int glyph_index, Path &path, Gly
 		out_metrics.advance.width = glyph_metrics.gmCellIncX;
 		out_metrics.advance.height = glyph_metrics.gmCellIncY;
 		out_metrics.bbox_offset.x = glyph_metrics.gmptGlyphOrigin.x;
-		out_metrics.bbox_offset.y = glyph_metrics.gmptGlyphOrigin.y;
+		out_metrics.bbox_offset.y = -glyph_metrics.gmptGlyphOrigin.y;
 		out_metrics.bbox_size.width = glyph_metrics.gmBlackBoxX;
 		out_metrics.bbox_size.height = glyph_metrics.gmBlackBoxY;
 		return;
@@ -477,7 +479,7 @@ void FontEngine_Win32::load_glyph_path(unsigned int glyph_index, Path &path, Gly
 		if (polygon_header->dwType != TT_POLYGON_TYPE)
 			throw Exception("invalid polygon type");
 
-		path.move_to(PointFXtoPoint(polygon_header->pfxStart));
+		path.move_to(to_point(polygon_header->pfxStart));
 
 		int curve_bytes = polygon_header->cb - sizeof(TTPOLYGONHEADER);
 		if (curve_bytes < 0)
@@ -505,7 +507,7 @@ void FontEngine_Win32::load_glyph_path(unsigned int glyph_index, Path &path, Gly
 			{
 				for (int i = 0; i < poly_curve->cpfx; i++)
 				{
-					next_point = PointFXtoPoint(poly_curve->apfx[i]);
+					next_point = to_point(poly_curve->apfx[i]);
 					path.line_to(next_point);
 				}
 			}
@@ -513,15 +515,15 @@ void FontEngine_Win32::load_glyph_path(unsigned int glyph_index, Path &path, Gly
 			{
 				for (int i = 0; i < poly_curve->cpfx;)
 				{
-					this_point = PointFXtoPoint(poly_curve->apfx[i++]);
+					this_point = to_point(poly_curve->apfx[i++]);
 
 					if (i == poly_curve->cpfx - 1)
 					{
-						next_point = PointFXtoPoint(poly_curve->apfx[i++]);
+						next_point = to_point(poly_curve->apfx[i++]);
 					}
 					else
 					{
-						next_point = PointFXtoPoint(poly_curve->apfx[i]);
+						next_point = to_point(poly_curve->apfx[i]);
 						next_point = Pointf((this_point.x + next_point.x) / 2.0f, (this_point.y + next_point.y) / 2.0f);
 					}
 
@@ -538,7 +540,7 @@ void FontEngine_Win32::load_glyph_path(unsigned int glyph_index, Path &path, Gly
 	out_metrics.advance.width = glyph_metrics.gmCellIncX;
 	out_metrics.advance.height = glyph_metrics.gmCellIncY;
 	out_metrics.bbox_offset.x = glyph_metrics.gmptGlyphOrigin.x;
-	out_metrics.bbox_offset.y = glyph_metrics.gmptGlyphOrigin.y;
+	out_metrics.bbox_offset.y = -glyph_metrics.gmptGlyphOrigin.y;
 	out_metrics.bbox_size.width = glyph_metrics.gmBlackBoxX;
 	out_metrics.bbox_size.height = glyph_metrics.gmBlackBoxY;
 

@@ -39,7 +39,7 @@ int Test::start(const std::vector<std::string> &args)
 	// Set the window
 	clan::DisplayWindowDescription desc;
 	desc.set_title("ClanLib Path Font Example");
-	desc.set_size(clan::Size(800, 600), true);
+	desc.set_size(clan::Size(900, 600), true);
 	desc.set_allow_resize(true);
 
 	clan::DisplayWindow window(desc);
@@ -54,7 +54,8 @@ int Test::start(const std::vector<std::string> &args)
 
 	clan::Font font(canvas, "tahoma", 16);
 
-	clan::PathFont path_font("arial", 250);
+	clan::PathFont path_font("comic sans ms", 200);
+	//clan::Font path_font(canvas, "arial", 200);
 
 	clan::Brush brush = clan::Brush::solid(clan::Colorf::white);
 
@@ -65,33 +66,47 @@ int Test::start(const std::vector<std::string> &args)
 	{
 		game_time.update();
 
-		canvas.clear(clan::Colorf(0.0f,0.0f,0.3f));
+		canvas.clear(clan::Colorf(0.95f, 0.95f, 0.95f));
 
-		font.draw_text(canvas, 17, 40, clan::string_format("%1 FPS", game_time.get_updates_per_second()), clan::Colorf::white);
+		font.draw_text(canvas, 17, 40, clan::string_format("%1 FPS", game_time.get_updates_per_second()), clan::Colorf::black);
 
-		std::string message = "joy";
+		std::string message = clan::StringHelp::ucs2_to_utf8({ 0xc5, 'A', 'g', 'j', 'l', 'M' });
+
+		// Find metrics for the text:
 		clan::GlyphMetrics text_metrics = path_font.measure_text(canvas, message);
 		clan::FontMetrics font_metrics = path_font.get_font_metrics();
 
-		clan::Pointf box_position((canvas.get_width() - text_metrics.bbox_size.width) / 2.0f, (canvas.get_height() - text_metrics.bbox_size.height) / 2.0f);
-		clan::Rectf inner_rect(box_position, text_metrics.bbox_size);
-		clan::Rectf offset_rect = inner_rect;
-		offset_rect.left = offset_rect.left + text_metrics.bbox_offset.x;
-		offset_rect.top = offset_rect.bottom - text_metrics.bbox_offset.y;
+		// Center text vertically by finding where the top of the text should begin:
+		float top_y = canvas.get_height() * 0.5f - font_metrics.get_height() * 0.5f;
 
-		canvas.fill_rect(inner_rect, clan::Colorf::black);
-		canvas.fill_rect(offset_rect, clan::Colorf(1.0f, 1.0f, 1.0f, 0.2f));
-		canvas.draw_box(inner_rect, clan::Colorf::green);
-		canvas.draw_box(offset_rect, clan::Colorf::green);
+		// Calculate font designer metrics:
+		float internal_leading_y = top_y + font_metrics.get_internal_leading();
+		float baseline_y = top_y + font_metrics.get_ascent();
+		float bottom_y = top_y + font_metrics.get_height();
+		float linegap_y = bottom_y + font_metrics.get_external_leading();
 
-		clan::Pointf text_base(inner_rect.left, text_metrics.bbox_offset.y + inner_rect.top);
+		// Layout line height: (defaults to font designer line height (ascent+descent+linegap), but can be overridden when creating Font)
+		float line_top = top_y + (font_metrics.get_height() - font_metrics.get_line_height()) * 0.5f;
+		float line_bottom = line_top + font_metrics.get_line_height();
 
-		draw_info(canvas, font, "Ascender", text_base.y, text_base.y - font_metrics.get_ascent(), 10.0f);
-		draw_info(canvas, font, "Decender", text_base.y, text_base.y + font_metrics.get_descent(), 15.0f);
-		draw_info(canvas, font, "External Leading", text_base.y + font_metrics.get_descent(), text_base.y + font_metrics.get_descent() + font_metrics.get_external_leading(), 20.0f);
-		draw_info(canvas, font, "Internal Leading", text_base.y - font_metrics.get_ascent(), text_base.y - font_metrics.get_ascent() + font_metrics.get_internal_leading(), 20.0f);
+		// Text bounding box:
+		clan::Rectf bbox(text_metrics.bbox_offset + clan::Pointf(100.0f, baseline_y), text_metrics.bbox_size);
 
-		path_font.draw_text(canvas, text_base, message, brush);
+		// Render our metrics lines:
+		canvas.fill_rect(0.0f, line_top, canvas.get_width(), line_bottom, clan::Colorf(0.9f, 0.9f, 0.9f));
+		canvas.fill_rect(bbox, clan::Colorf(0.85f, 0.85f, 0.85f));
+		canvas.draw_line(0.0f, top_y, canvas.get_width(), top_y, clan::Colorf::red);
+		canvas.draw_line(0.0f, internal_leading_y, canvas.get_width(), internal_leading_y, clan::Colorf::red);
+		canvas.draw_line(0.0f, baseline_y, canvas.get_width(), baseline_y, clan::Colorf::red);
+		canvas.draw_line(0.0f, bottom_y, canvas.get_width(), bottom_y, clan::Colorf::red);
+		canvas.draw_line(0.0f, linegap_y, canvas.get_width(), linegap_y, clan::Colorf::red);
+
+		// Draw the text:
+		path_font.draw_text(canvas, clan::Pointf(100.0f, baseline_y), message, clan::Colorf::black);
+
+		// Circle for cursor start and end:
+		clan::Path::circle(100.0f, baseline_y, 4.0f).fill(canvas, clan::Colorf::dodgerblue);
+		clan::Path::circle(100.0f + text_metrics.advance.width, baseline_y + text_metrics.advance.height, 4.0f).fill(canvas, clan::Colorf::dodgerblue);
 
 		window.flip(1);
 
@@ -100,16 +115,6 @@ int Test::start(const std::vector<std::string> &args)
 	}
 
 	return 0;
-}
-
-void Test::draw_info(clan::Canvas &canvas, clan::Font &font, const std::string &info, float ypos_a, float ypos_b, float info_xpos)
-{
-	canvas.draw_line(0.0f, ypos_a, canvas.get_width(), ypos_a, clan::Colorf::red);
-	canvas.draw_line(0.0f, ypos_b, canvas.get_width(), ypos_b, clan::Colorf::red);
-
-	canvas.draw_line(info_xpos, ypos_a, info_xpos, ypos_b, clan::Colorf::white);
-
-	font.draw_text(canvas, info_xpos + 2.0f, (ypos_a + ypos_b) / 2.0f + 4.0f, info, clan::Colorf::yellow);
 }
 
 // A key was pressed

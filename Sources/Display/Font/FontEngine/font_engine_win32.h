@@ -44,25 +44,33 @@ public:
 	FontEngine_Win32(const FontDescription &description, const std::string &filename, FileSystem& fs);
 	~FontEngine_Win32();
 
-	FontMetrics get_metrics();
+	FontMetrics get_metrics() override;
 
 	/// \brief Constructs a pixel buffer from a Freetype glyph.
 	///
 	/// \param glyph The glyph
 	/// \param anti_alias If anti_aliasing should be used
-	FontPixelBuffer get_font_glyph_standard(int glyph, bool anti_alias);
+	FontPixelBuffer get_font_glyph_standard(int glyph, bool anti_alias) override;
 
 	/// \brief Constructs a pixel buffer using subpixel rendering from a Freetype glyph.
 	///
 	/// \param glyph The glyph
-	FontPixelBuffer get_font_glyph_subpixel(int glyph);
+	FontPixelBuffer get_font_glyph_subpixel(int glyph) override;
 
-	void load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics);
+	void load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics) override;
 
 private:
-	inline Pointf PointFXtoPoint(POINTFX &fx)
+	void load_font(const std::string &filename, FileSystem& fs);
+
+	inline Pointf to_point(POINTFX &fx)
 	{
-		return Pointf( ((float) fx.x.value) + (float) fx.x.fract / 65535.0f , - ( ((float) fx.y.value) + (float) fx.y.fract / 65535.0f) );
+		return Pointf(to_float(fx.x), -to_float(fx.y));
+	}
+
+	inline float to_float(const FIXED &fixed)
+	{
+		double v = static_cast<int>(fixed.value) << 16 + static_cast<int>(fixed.fract);
+		return static_cast<float>(v / 65536.0);
 	}
 
 	FontPixelBuffer get_font_glyph_lcd(int glyph);

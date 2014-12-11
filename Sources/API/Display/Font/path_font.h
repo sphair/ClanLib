@@ -77,9 +77,6 @@ public:
 	// \brief Constructs Path font
 	PathFont(const FontDescription &desc, const std::string &ttf_filename, FileSystem fs);
 
-	/// \brief Constructs a Font Vector from a Font, ensuring the correct type
-	explicit PathFont( const Font &font);
-
 	~PathFont();
 
 /// \}
