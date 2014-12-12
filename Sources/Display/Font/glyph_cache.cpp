@@ -58,15 +58,7 @@ namespace clan
 GlyphCache::GlyphCache()
 {
 	glyph_list.reserve(256);
-
-	// Note, the user can specify a different texture group size using set_texture_group()
 	texture_group = TextureGroup(Size(256,256));
-
-	// Set default font metrics
-	font_metrics = FontMetrics();
-
-	anti_alias = true;
-	enable_subpixel = true;
 }
 
 GlyphCache::~GlyphCache()
@@ -78,11 +70,6 @@ GlyphCache::~GlyphCache()
 /////////////////////////////////////////////////////////////////////////////
 // GlyphCache Attributes:
 
-FontMetrics GlyphCache::get_font_metrics()
-{
-	return font_metrics;
-}
-
 Font_TextureGlyph *GlyphCache::get_glyph(Canvas &canvas, FontEngine *font_engine, unsigned int glyph)
 {
 	std::vector< Font_TextureGlyph * >::size_type size = glyph_list.size();
@@ -93,8 +80,9 @@ Font_TextureGlyph *GlyphCache::get_glyph(Canvas &canvas, FontEngine *font_engine
 	}
 
 	// If glyph does not exist, create one automatically
-
-	insert_glyph(canvas, font_engine, glyph);
+	FontPixelBuffer pb = enable_subpixel ? font_engine->get_font_glyph_subpixel(glyph) : font_engine->get_font_glyph_standard(glyph, anti_alias);
+	if (pb.glyph)	// Ignore invalid glyphs
+		insert_glyph(canvas, pb);
 
 	// Search for the glyph again
 	size = glyph_list.size();
@@ -223,13 +211,6 @@ void GlyphCache::insert_glyph(Canvas &canvas, unsigned int glyph, Subtexture &su
 		font_glyph->geometry = sub_texture.get_geometry();
 	}
 
-}
-
-void GlyphCache::insert_glyph(Canvas &canvas, FontEngine *font_engine, int glyph)
-{
-	FontPixelBuffer pb = enable_subpixel ? font_engine->get_font_glyph_subpixel(glyph) : font_engine->get_font_glyph_standard(glyph, anti_alias);
-	if (pb.glyph)	// Ignore invalid glyphs
-		insert_glyph(canvas, pb);
 }
 
 /////////////////////////////////////////////////////////////////////////////
