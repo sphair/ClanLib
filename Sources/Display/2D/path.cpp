@@ -89,7 +89,7 @@ namespace clan
 		Path path;
 		if (font.impl)
 		{
-			font.impl->glyph_cache.get_glyph_path(font.impl->font_engine, glyph, path, out_metrics);
+			font.impl->get_glyph_path(font.impl->font_engine, glyph, path, out_metrics);
 		}
 		return path;
 	}

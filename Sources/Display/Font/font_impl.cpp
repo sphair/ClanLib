@@ -328,4 +328,9 @@ void Font_Impl::load_font( Canvas &canvas, Sprite &sprite, const std::string &gl
 	}
 }
 
+void Font_Impl::get_glyph_path(FontEngine *font_engine, unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics)
+{
+	return font_engine->load_glyph_path(glyph_index, out_path, out_metrics);
+}
+
 }

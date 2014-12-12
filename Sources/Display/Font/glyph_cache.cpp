@@ -154,11 +154,6 @@ GlyphMetrics GlyphCache::get_metrics(FontEngine *font_engine, Canvas &canvas, un
 	return GlyphMetrics();
 }
 
-void GlyphCache::get_glyph_path(FontEngine *font_engine, unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics)
-{
-	return font_engine->load_glyph_path(glyph_index, out_path, out_metrics);
-}
-
 void GlyphCache::insert_glyph(Canvas &canvas, FontPixelBuffer &pb)
 {
 	// Search for duplicated glyph's, if found silently ignore them
