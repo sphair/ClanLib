@@ -97,7 +97,6 @@ Font_TextureGlyph *GlyphCache::get_glyph(Canvas &canvas, FontEngine *font_engine
 /////////////////////////////////////////////////////////////////////////////
 // GlyphCache Operations:
 
-
 GlyphMetrics GlyphCache::get_metrics(FontEngine *font_engine, Canvas &canvas, unsigned int glyph, bool use_subpixel, bool use_antialias)
 {
 	Font_TextureGlyph *gptr = get_glyph(canvas, font_engine, glyph, use_subpixel, use_antialias);
@@ -110,14 +109,6 @@ GlyphMetrics GlyphCache::get_metrics(FontEngine *font_engine, Canvas &canvas, un
 
 void GlyphCache::insert_glyph(Canvas &canvas, FontPixelBuffer &pb)
 {
-	// Search for duplicated glyph's, if found silently ignore them
-	std::vector< Font_TextureGlyph * >::size_type size = glyph_list.size();
-	for (int cnt=0; cnt<size; cnt++)
-	{
-		if (glyph_list[cnt]->glyph == pb.glyph)
-			return ;
-	}
-
 	auto font_glyph = new Font_TextureGlyph();
 	
 	glyph_list.push_back(font_glyph);
@@ -138,14 +129,6 @@ void GlyphCache::insert_glyph(Canvas &canvas, FontPixelBuffer &pb)
 
 void GlyphCache::insert_glyph(Canvas &canvas, unsigned int glyph, Subtexture &sub_texture, const Point &offset, const GlyphMetrics &glyph_metrics)
 {
-	// Search for duplicated glyph's, if found silently ignore them
-	std::vector< Font_TextureGlyph * >::size_type size = glyph_list.size();
-	for (int cnt=0; cnt<size; cnt++)
-	{
-		if (glyph_list[cnt]->glyph == glyph)
-			return;
-	}
-
 	auto font_glyph = new Font_TextureGlyph();
 	
 	glyph_list.push_back(font_glyph);
@@ -158,7 +141,6 @@ void GlyphCache::insert_glyph(Canvas &canvas, unsigned int glyph, Subtexture &su
 		font_glyph->texture = sub_texture.get_texture();
 		font_glyph->geometry = sub_texture.get_geometry();
 	}
-
 }
 
 /////////////////////////////////////////////////////////////////////////////
