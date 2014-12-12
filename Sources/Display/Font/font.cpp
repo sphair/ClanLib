@@ -202,55 +202,15 @@ bool Font::is_null() const
 GlyphMetrics Font::get_metrics(Canvas &canvas, unsigned int glyph)
 {
 	if (impl)
-		return impl->glyph_cache.get_metrics(impl->font_engine, canvas, glyph);
+		return impl->get_metrics(canvas, glyph);
 	return GlyphMetrics();
 }
 
 GlyphMetrics Font::measure_text(Canvas &canvas, const std::string &string)
 {
-	GlyphMetrics total_metrics;
-
-	if (!impl)
-		return total_metrics;
-
-	int line_spacing = static_cast<int>(impl->font_metrics.get_line_height() + 0.5f);
-	bool first_char = true;
-	Rectf text_bbox;
-
-	UTF8_Reader reader(string.data(), string.length());
-	while (!reader.is_end())
-	{
-		unsigned int glyph = reader.get_char();
-		reader.next();
-
-		if (glyph == '\n')
-		{
-			total_metrics.advance.width = 0;
-			total_metrics.advance.height += line_spacing;
-			continue;
-		}
-
-		GlyphMetrics metrics = impl->glyph_cache.get_metrics(impl->font_engine, canvas, glyph);
-		metrics.bbox_offset.x += total_metrics.advance.width;
-		metrics.bbox_offset.y += total_metrics.advance.height;
-
-		if (first_char)
-		{
-			text_bbox = Rectf(metrics.bbox_offset, metrics.bbox_size);
-			first_char = false;
-		}
-		else
-		{
-			Rectf glyph_bbox(metrics.bbox_offset, metrics.bbox_size);
-			text_bbox.bounding_rect(glyph_bbox);
-		}
-
-		total_metrics.advance += metrics.advance;
-	}
-
-	total_metrics.bbox_offset = text_bbox.get_top_left();
-	total_metrics.bbox_size = text_bbox.get_size();
-	return total_metrics;
+	if (impl)
+		return impl->measure_text(canvas, string);
+	return GlyphMetrics();
 }
 
 size_t Font::clip_from_left(Canvas &canvas, const std::string &text, float width)

@@ -90,15 +90,13 @@ public:
 
 public:
 	/// \brief Get a glyph. Returns NULL if the glyph was not found
-	Font_TextureGlyph *get_glyph(Canvas &canvas, FontEngine *font_engine, unsigned int glyph);
+	Font_TextureGlyph *get_glyph(Canvas &canvas, FontEngine *font_engine, unsigned int glyph, bool use_subpixel, bool use_antialias);
 
 /// \}
 /// \name Operations
 /// \{
 public:
-	GlyphMetrics get_metrics(FontEngine *font_engine, Canvas &canvas, unsigned int glyph);
-
-	//void draw(FontEngine *font_engine, Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color, int line_spacing);
+	GlyphMetrics get_metrics(FontEngine *font_engine, Canvas &canvas, unsigned int glyph, bool use_subpixel, bool use_antialias);
 
 	void insert_glyph(Canvas &canvas, unsigned int glyph, Subtexture &sub_texture, const Point &offset, const GlyphMetrics &glyph_metrics);
 	void insert_glyph(Canvas &canvas, FontPixelBuffer &pb);
@@ -114,9 +112,6 @@ private:
 
 	static const int glyph_border_size = 1;
 
-public:
-	bool anti_alias = true;		// Contains the anti alias setting
-	bool enable_subpixel = true;	// true to enable subpixel rendering setting (implies anti_alias is true)
 /// \}
 };
 

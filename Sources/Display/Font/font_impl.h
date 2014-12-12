@@ -53,6 +53,10 @@ public:
 	void load_font( Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics);
 	int get_character_index(Canvas &canvas, const std::string &text, const Point &point);
 
+	GlyphMetrics get_metrics(Canvas &canvas, unsigned int glyph);
+
+	GlyphMetrics measure_text(Canvas &canvas, const std::string &string);
+
 	void draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color);
 
 	void get_glyph_path(FontEngine *font_engine, unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics);
@@ -66,7 +70,8 @@ public:
 
 private:
 	void free_font();
-
+	bool anti_alias = true;		// Contains the anti alias setting
+	bool enable_subpixel = true;	// true to enable subpixel rendering setting (implies anti_alias is true)
 };
 
 }

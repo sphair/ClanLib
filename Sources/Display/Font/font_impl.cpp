@@ -95,13 +95,13 @@ void Font_Impl::load_font(Canvas &canvas, const FontDescription &desc, const std
 
 	if (desc.get_subpixel())
 	{
-		glyph_cache.enable_subpixel = true;
-		glyph_cache.anti_alias = true;	// Implies anti_alias is set
+		enable_subpixel = true;
+		anti_alias = true;	// Implies anti_alias is set
 	}
 	else
 	{
-		glyph_cache.enable_subpixel = false;
-		glyph_cache.anti_alias = desc.get_anti_alias();
+		enable_subpixel = false;
+		anti_alias = desc.get_anti_alias();
 	}
 
 #ifdef WIN32
@@ -165,7 +165,7 @@ int Font_Impl::get_character_index(Canvas &canvas, const std::string &text, cons
 			std::string::size_type glyph_pos = reader.get_position();
 			reader.next();
 
-			Font_TextureGlyph *gptr = glyph_cache.get_glyph(canvas, font_engine, glyph);
+			Font_TextureGlyph *gptr = glyph_cache.get_glyph(canvas, font_engine, glyph, enable_subpixel, anti_alias);
 			if (gptr == nullptr) continue;
 
 			Rect position(xpos, ypos - font_ascent, Size(gptr->metrics.advance.width, gptr->metrics.advance.height + font_height + font_external_leading));
@@ -191,8 +191,8 @@ void Font_Impl::load_font( Canvas &canvas, Sprite &sprite, const std::string &gl
 	free_font();
 	font_engine = new FontEngine_Sprite();
 
-	glyph_cache.anti_alias = true;
-	glyph_cache.enable_subpixel = false;
+	anti_alias = true;
+	enable_subpixel = false;
 	font_metrics = metrics;
 
 	const int length = StringHelp::utf8_length(glyph_list);
@@ -357,7 +357,7 @@ void Font_Impl::draw_text(Canvas &canvas, const Pointf &position, const std::str
 			continue;
 		}
 
-		Font_TextureGlyph *gptr = glyph_cache.get_glyph(canvas, font_engine, glyph);
+		Font_TextureGlyph *gptr = glyph_cache.get_glyph(canvas, font_engine, glyph, enable_subpixel, anti_alias);
 		if (gptr)
 		{
 			if (!gptr->texture.is_null())
@@ -366,7 +366,7 @@ void Font_Impl::draw_text(Canvas &canvas, const Pointf &position, const std::str
 				float yp = offset_y + pos.y + gptr->offset.y;
 
 				Rectf dest_size(xp, yp, Sizef(gptr->geometry.get_size()));
-				if (glyph_cache.enable_subpixel)
+				if (enable_subpixel)
 				{
 					batcher->draw_glyph_subpixel(canvas, gptr->geometry, dest_size, color, gptr->texture);
 				}
@@ -379,6 +379,55 @@ void Font_Impl::draw_text(Canvas &canvas, const Pointf &position, const std::str
 			offset_y += gptr->metrics.advance.height;
 		}
 	}
+}
+
+GlyphMetrics Font_Impl::get_metrics(Canvas &canvas, unsigned int glyph)
+{
+	return glyph_cache.get_metrics(font_engine, canvas, glyph, enable_subpixel, anti_alias);
+}
+
+GlyphMetrics Font_Impl::measure_text(Canvas &canvas, const std::string &string)
+{
+	GlyphMetrics total_metrics;
+
+	int line_spacing = static_cast<int>(font_metrics.get_line_height() + 0.5f);
+	bool first_char = true;
+	Rectf text_bbox;
+
+	UTF8_Reader reader(string.data(), string.length());
+	while (!reader.is_end())
+	{
+		unsigned int glyph = reader.get_char();
+		reader.next();
+
+		if (glyph == '\n')
+		{
+			total_metrics.advance.width = 0;
+			total_metrics.advance.height += line_spacing;
+			continue;
+		}
+
+		GlyphMetrics metrics = glyph_cache.get_metrics(font_engine, canvas, glyph, enable_subpixel, anti_alias);
+		metrics.bbox_offset.x += total_metrics.advance.width;
+		metrics.bbox_offset.y += total_metrics.advance.height;
+
+		if (first_char)
+		{
+			text_bbox = Rectf(metrics.bbox_offset, metrics.bbox_size);
+			first_char = false;
+		}
+		else
+		{
+			Rectf glyph_bbox(metrics.bbox_offset, metrics.bbox_size);
+			text_bbox.bounding_rect(glyph_bbox);
+		}
+
+		total_metrics.advance += metrics.advance;
+	}
+
+	total_metrics.bbox_offset = text_bbox.get_top_left();
+	total_metrics.bbox_size = text_bbox.get_size();
+	return total_metrics;
 }
 
 }
