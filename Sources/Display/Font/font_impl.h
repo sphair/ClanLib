@@ -51,7 +51,6 @@ public:
 	
 	void load_font(Canvas &canvas, const FontDescription &desc, const std::string &filename, FileSystem fs);
 	void load_font( Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics);
-	FontMetrics get_font_metrics();
 	int get_character_index(Canvas &canvas, const std::string &text, const Point &point);
 
 	/// \brief Loads a font from a XML resource definition
@@ -59,6 +58,7 @@ public:
 
 	GlyphCache glyph_cache;
 	FontEngine *font_engine;
+	FontMetrics font_metrics;
 
 private:
 	void free_font();

@@ -213,7 +213,7 @@ GlyphMetrics Font::measure_text(Canvas &canvas, const std::string &string)
 	if (!impl)
 		return total_metrics;
 
-	int line_spacing = static_cast<int>(impl->glyph_cache.font_metrics.get_line_height() + 0.5f);
+	int line_spacing = static_cast<int>(impl->font_metrics.get_line_height() + 0.5f);
 	bool first_char = true;
 	Rectf text_bbox;
 
@@ -299,7 +299,11 @@ size_t Font::clip_from_right(Canvas &canvas, const std::string &text, float widt
 void Font::draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color)
 {
 	if (impl)
-		impl->glyph_cache.draw(impl->font_engine, canvas, position, text, color);
+	{
+		int line_spacing = static_cast<int>(impl->font_metrics.get_line_height() + 0.5f);
+
+		impl->glyph_cache.draw(impl->font_engine, canvas, position, text, color, line_spacing);
+	}
 }
 
 std::string Font::get_clipped_text(Canvas &canvas, const Sizef &box_size, const std::string &text, const std::string &ellipsis_text)
@@ -374,7 +378,7 @@ std::string Font::get_clipped_text(Canvas &canvas, const Sizef &box_size, const 
 FontMetrics Font::get_font_metrics()
 {
 	if (impl)
-		return impl->get_font_metrics();
+		return impl->font_metrics;
 	return FontMetrics();
 }
 

@@ -98,7 +98,7 @@ Font_TextureGlyph *GlyphCache::get_glyph(Canvas &canvas, FontEngine *font_engine
 /////////////////////////////////////////////////////////////////////////////
 // GlyphCache Operations:
 
-void GlyphCache::draw(FontEngine *font_engine, Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color)
+void GlyphCache::draw(FontEngine *font_engine, Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color, int line_spacing)
 {
 	RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
 	GraphicContext &gc = canvas.get_gc();
@@ -106,7 +106,6 @@ void GlyphCache::draw(FontEngine *font_engine, Canvas &canvas, const Pointf &pos
 	Pointf pos = canvas.grid_fit(position);
 	float offset_x = 0;
 	float offset_y = 0;
-	int line_spacing = static_cast<int>(font_metrics.get_line_height() + 0.5f);
 	UTF8_Reader reader(text.data(), text.length());
 	while (!reader.is_end())
 	{

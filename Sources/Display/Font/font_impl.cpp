@@ -130,12 +130,7 @@ void Font_Impl::load_font(Canvas &canvas, const FontDescription &desc, const std
 
 	font_engine = new FontEngine_Freetype(io_dev, average_width, height);
 #endif
-	glyph_cache.font_metrics = font_engine->get_metrics();
-}
-
-FontMetrics Font_Impl::get_font_metrics()
-{
-	return glyph_cache.get_font_metrics();
+	font_metrics = font_engine->get_metrics();
 }
 
 int Font_Impl::get_character_index(Canvas &canvas, const std::string &text, const Point &point)
@@ -145,10 +140,9 @@ int Font_Impl::get_character_index(Canvas &canvas, const std::string &text, cons
 
 	int character_counter = 0;
 
-	FontMetrics fm = get_font_metrics();
-	int font_height = fm.get_height();
-	int font_ascent = fm.get_ascent();
-	int font_external_leading = fm.get_external_leading();
+	int font_height = font_metrics.get_height();
+	int font_ascent = font_metrics.get_ascent();
+	int font_external_leading = font_metrics.get_external_leading();
 
 	//TODO: Fix me, so we do not need to line split
 
@@ -198,7 +192,7 @@ void Font_Impl::load_font( Canvas &canvas, Sprite &sprite, const std::string &gl
 
 	glyph_cache.anti_alias = true;
 	glyph_cache.enable_subpixel = false;
-	glyph_cache.font_metrics = metrics;
+	font_metrics = metrics;
 
 	const int length = StringHelp::utf8_length(glyph_list);
 
@@ -279,7 +273,7 @@ void Font_Impl::load_font( Canvas &canvas, Sprite &sprite, const std::string &gl
 			increment.x = sprite_frame.position.get_width();
 		}
 		Point offset(sprite_frame.offset);
-		offset.y -= glyph_cache.font_metrics.get_ascent();
+		offset.y -= font_metrics.get_ascent();
 
 		Subtexture sub_texture(sprite_frame.texture, sprite_frame.position);
 		glyph_cache.insert_glyph(canvas, glyph, sub_texture, offset, GlyphMetrics(Pointf(offset.x, offset.y), Sizef(increment.x, increment.y), Sizef(increment.x, increment.y)));
@@ -322,15 +316,15 @@ void Font_Impl::load_font( Canvas &canvas, Sprite &sprite, const std::string &gl
 
 	}
 
-	if (glyph_cache.font_metrics.get_height() == 0)
+	if (font_metrics.get_height() == 0)
 	{
-		glyph_cache.font_metrics = FontMetrics(
+		font_metrics = FontMetrics(
 			height,
-			height + glyph_cache.font_metrics.get_line_height(),
-			glyph_cache.font_metrics.get_ascent(),
-			glyph_cache.font_metrics.get_descent(),
-			glyph_cache.font_metrics.get_internal_leading(),
-			glyph_cache.font_metrics.get_external_leading());
+			height + font_metrics.get_line_height(),
+			font_metrics.get_ascent(),
+			font_metrics.get_descent(),
+			font_metrics.get_internal_leading(),
+			font_metrics.get_external_leading());
 	}
 }
 

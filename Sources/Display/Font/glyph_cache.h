@@ -89,9 +89,6 @@ public:
 /// \{
 
 public:
-	/// \brief Returns information about the current font.
-	const FontMetrics &get_font_metrics() { return font_metrics; }
-
 	/// \brief Get a glyph. Returns NULL if the glyph was not found
 	Font_TextureGlyph *get_glyph(Canvas &canvas, FontEngine *font_engine, unsigned int glyph);
 
@@ -103,7 +100,7 @@ public:
 public:
 	GlyphMetrics get_metrics(FontEngine *font_engine, Canvas &canvas, unsigned int glyph);
 
-	void draw(FontEngine *font_engine, Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color);
+	void draw(FontEngine *font_engine, Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color, int line_spacing);
 
 	void insert_glyph(Canvas &canvas, unsigned int glyph, Subtexture &sub_texture, const Point &offset, const GlyphMetrics &glyph_metrics);
 	void insert_glyph(Canvas &canvas, FontPixelBuffer &pb);
@@ -122,8 +119,6 @@ private:
 public:
 	bool anti_alias = true;		// Contains the anti alias setting
 	bool enable_subpixel = true;	// true to enable subpixel rendering setting (implies anti_alias is true)
-
-	FontMetrics font_metrics;
 /// \}
 };
 
