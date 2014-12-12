@@ -172,59 +172,6 @@ void GlyphCache::get_glyph_path(FontEngine *font_engine, unsigned int glyph_inde
 	return font_engine->load_glyph_path(glyph_index, out_path, out_metrics);
 }
 
-int GlyphCache::get_character_index(Canvas &canvas, FontEngine *font_engine, const std::string &text, const Point &point)
-{
-	int dest_x = 0;
-	int dest_y = 0;
-
-	int character_counter = 0;
-
-	FontMetrics fm = get_font_metrics();
-	int font_height = fm.get_height();
-	int font_ascent = fm.get_ascent();
-	int font_external_leading = fm.get_external_leading();
-
-	//TODO: Fix me, so we do not need to line split
-
-	std::vector<std::string> lines = StringHelp::split_text(text, "\n", false);
-	for (std::vector<std::string>::size_type i=0; i<lines.size(); i++)
-	{
-		int xpos = dest_x;
-		int ypos = dest_y;
-
-		std::string &textline = lines[i];
-		std::string::size_type string_length = textline.length();
-
-		// Scan the string
-
-		UTF8_Reader reader(textline.data(), textline.length());
-		while(!reader.is_end())
-		{
-			unsigned int glyph = reader.get_char();
-			std::string::size_type glyph_pos = reader.get_position();
-			reader.next();
-
-			Font_TextureGlyph *gptr = get_glyph(canvas, font_engine,  glyph);
-			if (gptr == nullptr) continue;
-
-			Rect position(xpos, ypos - font_ascent, Size(gptr->metrics.advance.width, gptr->metrics.advance.height + font_height + font_external_leading));
-			if (position.contains(point))
-			{
-				return glyph_pos + character_counter;
-			}
-		
-			xpos += gptr->metrics.advance.width;
-			ypos += gptr->metrics.advance.height;
-		}
-
-		dest_y += font_height + font_external_leading;
-
-		character_counter += string_length + 1;		// (Including the '\n')
-
-	}
-	return -1;	// Not found
-}
-
 void GlyphCache::insert_glyph(Canvas &canvas, FontPixelBuffer &pb)
 {
 	// Search for duplicated glyph's, if found silently ignore them

@@ -140,7 +140,55 @@ FontMetrics Font_Impl::get_font_metrics()
 
 int Font_Impl::get_character_index(Canvas &canvas, const std::string &text, const Point &point)
 {
-	return glyph_cache.get_character_index(canvas, font_engine, text, point);
+	int dest_x = 0;
+	int dest_y = 0;
+
+	int character_counter = 0;
+
+	FontMetrics fm = get_font_metrics();
+	int font_height = fm.get_height();
+	int font_ascent = fm.get_ascent();
+	int font_external_leading = fm.get_external_leading();
+
+	//TODO: Fix me, so we do not need to line split
+
+	std::vector<std::string> lines = StringHelp::split_text(text, "\n", false);
+	for (std::vector<std::string>::size_type i = 0; i<lines.size(); i++)
+	{
+		int xpos = dest_x;
+		int ypos = dest_y;
+
+		std::string &textline = lines[i];
+		std::string::size_type string_length = textline.length();
+
+		// Scan the string
+
+		UTF8_Reader reader(textline.data(), textline.length());
+		while (!reader.is_end())
+		{
+			unsigned int glyph = reader.get_char();
+			std::string::size_type glyph_pos = reader.get_position();
+			reader.next();
+
+			Font_TextureGlyph *gptr = glyph_cache.get_glyph(canvas, font_engine, glyph);
+			if (gptr == nullptr) continue;
+
+			Rect position(xpos, ypos - font_ascent, Size(gptr->metrics.advance.width, gptr->metrics.advance.height + font_height + font_external_leading));
+			if (position.contains(point))
+			{
+				return glyph_pos + character_counter;
+			}
+
+			xpos += gptr->metrics.advance.width;
+			ypos += gptr->metrics.advance.height;
+		}
+
+		dest_y += font_height + font_external_leading;
+
+		character_counter += string_length + 1;		// (Including the '\n')
+
+	}
+	return -1;	// Not found
 }
 
 void Font_Impl::load_font( Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics)
@@ -221,8 +269,6 @@ void Font_Impl::load_font( Canvas &canvas, Sprite &sprite, const std::string &gl
 		
 		const Sprite_Impl::SpriteFrame &sprite_frame = sprite.impl->frames[sprite_index];
 
-		Subtexture sub_texture(sprite_frame.texture, sprite_frame.position);
-
 		Point increment;
 		if (fixed_width)
 		{
@@ -235,6 +281,7 @@ void Font_Impl::load_font( Canvas &canvas, Sprite &sprite, const std::string &gl
 		Point offset(sprite_frame.offset);
 		offset.y -= glyph_cache.font_metrics.get_ascent();
 
+		Subtexture sub_texture(sprite_frame.texture, sprite_frame.position);
 		glyph_cache.insert_glyph(canvas, glyph, sub_texture, offset, GlyphMetrics(Pointf(offset.x, offset.y), Sizef(increment.x, increment.y), Sizef(increment.x, increment.y)));
 
 		sprite_index++;

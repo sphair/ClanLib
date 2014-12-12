@@ -105,16 +105,14 @@ public:
 
 	void draw(FontEngine *font_engine, Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color);
 
-	int get_character_index(Canvas &canvas, FontEngine *font_engine, const std::string &text, const Point &point);
-
 	void insert_glyph(Canvas &canvas, unsigned int glyph, Subtexture &sub_texture, const Point &offset, const GlyphMetrics &glyph_metrics);
-	void insert_glyph(Canvas &canvas, FontEngine *font_engine, int glyph);
 	void insert_glyph(Canvas &canvas, FontPixelBuffer &pb);
 
 /// \}
 /// \name Implementation
 /// \{
 private:
+	void insert_glyph(Canvas &canvas, FontEngine *font_engine, int glyph);
 
 	std::vector<Font_TextureGlyph* > glyph_list;
 
