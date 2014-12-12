@@ -84,8 +84,8 @@ public:
 	/// \brief Constructs a 4x4 matrix (zero'ed)
 	Mat4()
 	{
-		for (int i=0; i<16; i++)
-			matrix[i] = 0;
+		for (auto & elem : matrix)
+			elem = 0;
 	}
 
 	/// \brief Constructs a 4x4 matrix (copied)

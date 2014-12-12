@@ -107,10 +107,10 @@ namespace clan
 	float VBoxLayout::get_first_baseline_offset(Canvas &canvas, View *view, float width)
 	{
 		const auto &subviews = view->subviews();
-		for (auto it = subviews.begin(); it != subviews.end(); ++it)
+		for (const auto & subview : subviews)
 		{
-			if (!(*it)->hidden())
-				return (*it)->get_first_baseline_offset(canvas, width);
+			if (!(subview)->hidden())
+				return (subview)->get_first_baseline_offset(canvas, width);
 		}
 		return 0.0f;
 	}

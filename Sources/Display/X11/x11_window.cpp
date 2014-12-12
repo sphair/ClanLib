@@ -140,8 +140,8 @@ X11Window::~X11Window()
 	get_keyboard()->dispose();
 	get_mouse()->dispose();
 
-	for (size_t i = 0; i < joysticks.size(); i++)
-		joysticks[i].get_provider()->dispose();
+	for (auto & elem : joysticks)
+		elem.get_provider()->dispose();
 
 	close_window();
 }
@@ -1398,8 +1398,8 @@ void X11Window::process_message_complete()
 
 void X11Window::setup_joysticks()
 {
-	for (size_t i = 0; i < joysticks.size(); i++)
-		joysticks[i].get_provider()->dispose();
+	for (auto & elem : joysticks)
+		elem.get_provider()->dispose();
 	joysticks.clear();
 
 #ifdef HAVE_LINUX_JOYSTICK_H
@@ -1672,9 +1672,9 @@ InputDeviceProvider_X11Mouse *X11Window::get_mouse() const
 bool X11Window::process_window_sockets(bool peek_only)
 {
 	bool message = false;
-	for (size_t i = 0; i < joysticks.size(); i++)
+	for (auto & elem : joysticks)
 	{
-		InputDeviceProvider_LinuxJoystick *joystick_provider = dynamic_cast<InputDeviceProvider_LinuxJoystick *>(joysticks[i].get_provider());
+		InputDeviceProvider_LinuxJoystick *joystick_provider = dynamic_cast<InputDeviceProvider_LinuxJoystick *>(elem.get_provider());
 		if (joystick_provider)
 			message = joystick_provider->poll(peek_only);
 	}

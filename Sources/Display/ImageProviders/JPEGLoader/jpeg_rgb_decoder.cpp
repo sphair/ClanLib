@@ -50,14 +50,14 @@ JPEGRGBDecoder::JPEGRGBDecoder(JPEGLoader *loader)
 	try
 	{
 		pixels = (unsigned int *) System::aligned_alloc(mcu_x*mcu_y*64*4, 16);
-		for (size_t c = 0; c < loader->start_of_frame.components.size(); c++)
+		for (auto & elem : loader->start_of_frame.components)
 			channels.push_back((unsigned char *) System::aligned_alloc(mcu_x*mcu_y*64, 16));
 	}
 	catch (...)
 	{
         System::aligned_free(pixels);
-		for (size_t c = 0; c < channels.size(); c++)
-			System::aligned_free(channels[c]);
+		for (auto & elem : channels)
+			System::aligned_free(elem);
 		throw;
 	}
 }
@@ -65,8 +65,8 @@ JPEGRGBDecoder::JPEGRGBDecoder(JPEGLoader *loader)
 JPEGRGBDecoder::~JPEGRGBDecoder()
 {
     System::aligned_free(pixels);
-	for (size_t c = 0; c < channels.size(); c++)
-		System::aligned_free(channels[c]);
+	for (auto & elem : channels)
+		System::aligned_free(elem);
 }
 
 void JPEGRGBDecoder::decode(JPEGMCUDecoder *mcu_decoder)

@@ -126,12 +126,12 @@ WorkQueue_Impl::WorkQueue_Impl(bool serial_queue)
 WorkQueue_Impl::~WorkQueue_Impl()
 {
 	stop_event.set();
-	for (size_t i = 0; i < threads.size(); i++)
-		threads[i].join();
-	for (size_t i = 0; i < queued_items.size(); i++)
-		delete queued_items[i];
-	for (size_t i = 0; i < finished_items.size(); i++)
-		delete finished_items[i];
+	for (auto & elem : threads)
+		elem.join();
+	for (auto & elem : queued_items)
+		delete elem;
+	for (auto & elem : finished_items)
+		delete elem;
 }
 
 void WorkQueue_Impl::queue(WorkItem *item) // transfers ownership

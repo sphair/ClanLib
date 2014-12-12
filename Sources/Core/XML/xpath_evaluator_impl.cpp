@@ -1445,12 +1445,12 @@ bool XPathEvaluator_Impl::confirm_step_predicate(XPathNodeSet &context, XPathNod
 void XPathEvaluator_Impl::evaluate_location_step_predicates(const XPathNodeSet &context, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string &expression, XPathNodeSet &nodes) const
 {
 	XPathNodeSet nodeset = context;
-	for (auto pit = steps[step_index].predicates.begin(), pEnd = steps[step_index].predicates.end(); pit != pEnd; ++pit)
+	for (const auto & elem : steps[step_index].predicates)
 	{
 		XPathNodeSet filtered_nodes;
 		for (XPathNodeSet::size_type node_index = 0, num_nodes = nodeset.size(); node_index < num_nodes; node_index++)
 		{
-			if (confirm_step_predicate(nodeset, node_index, *pit, expression))
+			if (confirm_step_predicate(nodeset, node_index, elem, expression))
 				filtered_nodes.push_back(nodeset[node_index]);
 		}
 		nodeset = filtered_nodes;
@@ -1986,9 +1986,9 @@ XPathObject XPathEvaluator_Impl::function_concat(const XPathNodeSet& context, XP
 		throw XPathException("Function concat(string, string, string*) expects 2 or more string parameters");
 
 	std::string result;
-	for (auto it = parameters.begin(), itEnd = parameters.end(); it != itEnd; ++it)
+	for (auto obj : parameters)
 	{
-		XPathObject obj = *it;
+		
 		if (obj.get_type() != XPathObject::type_string)
 			obj = string(obj);
 		result.append(obj.get_string());

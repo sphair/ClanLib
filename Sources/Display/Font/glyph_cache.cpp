@@ -63,8 +63,8 @@ GlyphCache::GlyphCache()
 
 GlyphCache::~GlyphCache()
 {
-	for (int cnt = 0; cnt < glyph_list.size(); cnt++)
-		delete glyph_list[cnt];
+	for (auto & elem : glyph_list)
+		delete elem;
 }
 
 /////////////////////////////////////////////////////////////////////////////

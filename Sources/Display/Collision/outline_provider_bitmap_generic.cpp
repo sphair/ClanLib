@@ -212,9 +212,9 @@ void OutlineProviderBitmap_Impl::find_contours()
 						}
 							
 						// Now its time to add our reversed points
-						for(auto it = rpoints.begin(); it != rpoints.end(); ++it)
+						for(auto & rpoint : rpoints)
 						{
-							combined_points.push_back(*it);
+							combined_points.push_back(rpoint);
 						}
 
 						bridge_point = combined_points.back();

@@ -38,9 +38,9 @@ namespace clan
 
 RenderBatchBuffer::RenderBatchBuffer(GraphicContext &gc)
 {
-	for (int index=0; index < num_vertex_buffers; index++)
+	for (auto & elem : vertex_buffers)
 	{
-		vertex_buffers[index] = VertexArrayBuffer(gc, vertex_buffer_size, usage_stream_draw);
+		elem = VertexArrayBuffer(gc, vertex_buffer_size, usage_stream_draw);
 	}
 }
 

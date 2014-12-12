@@ -180,12 +180,12 @@ namespace clan
 
 	Path &Path::transform_self(const Mat3f &transform)
 	{
-		for (unsigned int subpaths_cnt = 0; subpaths_cnt < impl->subpaths.size(); subpaths_cnt++)
+		for (auto & elem : impl->subpaths)
 		{
-			std::vector<Pointf> &points = impl->subpaths[subpaths_cnt].points;
-			for (unsigned int points_cnt = 0; points_cnt < points.size(); points_cnt++)
+			std::vector<Pointf> &points = elem.points;
+			for (auto & point : points)
 			{
-				points[points_cnt] = transform * points[points_cnt];
+				point = transform * point;
 			}
 		}
 		return *this;

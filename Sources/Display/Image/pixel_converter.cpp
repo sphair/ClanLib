@@ -142,8 +142,8 @@ void PixelConverter::convert(void *output, int output_pitch, TextureFormat outpu
 		const char *input_line = static_cast<const char*>(input) + input_pitch * input_y;
 		char *output_line = static_cast<char*>(output) + output_pitch * output_y;
 		reader->read(input_line, temp, width);
-		for (size_t i = 0; i < filters.size(); i++)
-			filters[i]->filter(temp, width);
+		for (auto & filter : filters)
+			filter->filter(temp, width);
 		writer->write(output_line, temp, width);
 	}
 }

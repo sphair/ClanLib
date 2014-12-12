@@ -100,15 +100,15 @@ void NetGameClient_Impl::process()
 	std::vector<NetGameNetworkEvent> new_events;
 	new_events.swap(events);
 	mutex_lock.unlock();
-	for (unsigned int i = 0; i < new_events.size(); i++)
+	for (auto & new_event : new_events)
 	{
-		switch (new_events[i].type)
+		switch (new_event.type)
 		{
 		case NetGameNetworkEvent::client_connected:
 			sig_game_connected();
 			break;
 		case NetGameNetworkEvent::event_received:
-			sig_game_event_received(new_events[i].game_event);
+			sig_game_event_received(new_event.game_event);
 			break;
 		case NetGameNetworkEvent::client_disconnected:
 			sig_game_disconnected();

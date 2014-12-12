@@ -152,32 +152,32 @@ ColorHSLx<float,Colorf>::operator Colorf()
 	temp_rgb[0]=hue + 1.0f / 3.0f;
 	temp_rgb[1]=hue;
 	temp_rgb[2]=hue - 1.0f / 3.0f;
-	for (int i=0;i<3;i++)
+	for (auto & elem : temp_rgb)
 	{
-		while(temp_rgb[i] < 0.0f)
+		while(elem < 0.0f)
 		{
-			temp_rgb[i] += 1.0f;
+			elem += 1.0f;
 		}
-		while(temp_rgb[i] > 1.0f)
+		while(elem > 1.0f)
 		{
-			temp_rgb[i] -= 1.0f;
+			elem -= 1.0f;
 		}
 
-		if (temp_rgb[i] < (1.0f/6.0f))
+		if (elem < (1.0f/6.0f))
 		{
-			temp_rgb[i] = p + (q - p) * 6.0f * temp_rgb[i];
+			elem = p + (q - p) * 6.0f * elem;
 		}
-		else if (temp_rgb[i] < 0.5f)
+		else if (elem < 0.5f)
 		{
-			temp_rgb[i] = q;
+			elem = q;
 		}
-		else if (temp_rgb[i] < (2.0f/3.0f))
+		else if (elem < (2.0f/3.0f))
 		{
-			temp_rgb[i] = p + (q - p) * 6.0f * ((2.0f/3.0f) - temp_rgb[i]);
+			elem = p + (q - p) * 6.0f * ((2.0f/3.0f) - elem);
 		}
 		else
 		{
-			temp_rgb[i] = p;
+			elem = p;
 		}
 	}
 	return Colorf(temp_rgb[0], temp_rgb[1], temp_rgb[2], a);

@@ -111,10 +111,10 @@ void PNGLoader::read_chunks()
 
 	idat = DataBuffer((int)total_idat_size);
 	int idat_pos = 0;
-	for (size_t i = 0; i < idat_chunks.size(); i++)
+	for (auto & idat_chunk : idat_chunks)
 	{
-		memcpy(idat.get_data() + idat_pos, idat_chunks[i].get_data(), idat_chunks[i].get_size());
-		idat_pos += idat_chunks[i].get_size();
+		memcpy(idat.get_data() + idat_pos, idat_chunk.get_data(), idat_chunk.get_size());
+		idat_pos += idat_chunk.get_size();
 	}
 
 	ihdr = chunks["IHDR"];

@@ -128,8 +128,8 @@ void log_event(const std::string &type, const std::string &text)
 	MutexSection mutex_lock(&Logger::mutex);
 	if (Logger::instances.empty())
 		return;
-	for(auto il = Logger::instances.begin(); il != Logger::instances.end(); il++)
-		(*il)->log(type, text);
+	for(auto & instance : Logger::instances)
+		(instance)->log(type, text);
 }
 
 /////////////////////////////////////////////////////////////////////////////

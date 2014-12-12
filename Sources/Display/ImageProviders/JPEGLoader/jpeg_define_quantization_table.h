@@ -34,7 +34,7 @@ namespace clan
 class JPEGQuantizationTable
 {
 public:
-	JPEGQuantizationTable() : table_index(0) { for (int i = 0; i < 64; i++) values[i] = 0; }
+	JPEGQuantizationTable() : table_index(0) { for (auto & elem : values) elem = 0; }
 
 	// Specifies one of four possible destinations at the decoder into which the quantization table shall be installed.
 	ubyte8 table_index;

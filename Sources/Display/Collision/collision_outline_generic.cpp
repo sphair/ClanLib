@@ -150,9 +150,9 @@ void CollisionOutline_Impl::set_translation(float x, float y, bool offset_points
 	else
 		translation = (position - old_position);
 
-	for (unsigned int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
+	for (auto & elem : contours)
 	{
-		Contour *contour_ptr = &contours[outer_cnt];
+		Contour *contour_ptr = &elem;
 		std::vector<Pointf>::size_type point_size = contour_ptr->get_points().size();
 		for (int inner_cnt = 0; inner_cnt < point_size; inner_cnt++)
 		{
@@ -160,9 +160,9 @@ void CollisionOutline_Impl::set_translation(float x, float y, bool offset_points
 		}
 	}
 
-	for (unsigned int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
+	for (auto & elem : contours)
 	{
-		Contour *contour_ptr = &contours[outer_cnt];
+		Contour *contour_ptr = &elem;
 		std::vector<Pointf>::size_type sub_circles_size = contour_ptr->get_sub_circles().size();
 		for (int inner_cnt = 0; inner_cnt < sub_circles_size; inner_cnt++)
 		{
@@ -177,9 +177,9 @@ void CollisionOutline_Impl::rotate(const Angle &add_angle)
 {
 	angle += add_angle.to_degrees();
 
-	for (unsigned int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
+	for (auto & elem : contours)
 	{
-		Contour *contour_ptr = &contours[outer_cnt];
+		Contour *contour_ptr = &elem;
 		std::vector<Pointf>::size_type point_size = contour_ptr->get_points().size();
 		for (int inner_cnt = 0; inner_cnt < point_size; inner_cnt++)
 		{
@@ -187,9 +187,9 @@ void CollisionOutline_Impl::rotate(const Angle &add_angle)
 		}
 	}
 
-	for (unsigned int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
+	for (auto & elem : contours)
 	{
-		Contour *contour_ptr = &contours[outer_cnt];
+		Contour *contour_ptr = &elem;
 		std::vector<Pointf>::size_type sub_circles_size = contour_ptr->get_sub_circles().size();
 		for (int inner_cnt = 0; inner_cnt < sub_circles_size; inner_cnt++)
 		{
@@ -206,9 +206,9 @@ void CollisionOutline_Impl::set_angle(const Angle &angle)
 	float rotate_angle = angle.to_degrees() - this->angle;
 	this->angle = angle.to_degrees();
 
-	for (unsigned int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
+	for (auto & elem : contours)
 	{
-		Contour *contour_ptr = &contours[outer_cnt];
+		Contour *contour_ptr = &elem;
 		std::vector<Pointf>::size_type point_size = contour_ptr->get_points().size();
 		for (int inner_cnt = 0; inner_cnt < point_size; inner_cnt++)
 		{
@@ -216,9 +216,9 @@ void CollisionOutline_Impl::set_angle(const Angle &angle)
 		}
 	}
 
-	for (unsigned int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
+	for (auto & elem : contours)
 	{
-		Contour *contour_ptr = &contours[outer_cnt];
+		Contour *contour_ptr = &elem;
 		std::vector<Pointf>::size_type sub_circles_size = contour_ptr->get_sub_circles().size();
 		for (int inner_cnt = 0; inner_cnt < sub_circles_size; inner_cnt++)
 		{
@@ -241,9 +241,9 @@ void CollisionOutline_Impl::set_scale(float new_scale_x, float new_scale_y)
 	float scale_x = new_scale_x / scale_factor.x;
 	float scale_y = new_scale_y / scale_factor.y;
 	
-	for (unsigned int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
+	for (auto & elem : contours)
 	{
-		Contour *contour_ptr = &contours[outer_cnt];
+		Contour *contour_ptr = &elem;
 		std::vector<Pointf>::size_type point_size = contour_ptr->get_points().size();
 		for (int inner_cnt = 0; inner_cnt < point_size; inner_cnt++)
 		{
@@ -742,9 +742,9 @@ bool CollisionOutline_Impl::contours_collide(const Contour &contour1, const Cont
 void CollisionOutline_Impl::calculate_penetration_depth( std::vector< CollidingContours > & collision_info )
 {
 	// Figure out the pen-depth
-	for(auto it = collision_info.begin(); it != collision_info.end(); ++it)
+	for(auto & cc : collision_info)
 	{
-		CollidingContours &cc = (*it);
+		
 		if(cc.points.size() % 2 != 0)
 		{
 			std::cout << "ERROR: we have an uneven number of collisionpoints: " << cc.points.size() << "\n";
@@ -825,23 +825,23 @@ void CollisionOutline_Impl::calculate_penetration_depth( std::vector< CollidingC
 			// Calculate the penetration-depth of this overlap
 			float c1maxdepth = FLT_MAX;
 			float c2maxdepth = FLT_MIN;
-			for(unsigned int p5 = 0; p5 < c1points.size(); p5++)
+			for(auto & c1point : c1points)
 			{
 				// The dotproduct is the projection onto an other vector
-				float newdepth = c1points[p5].x * normal.x + c1points[p5].y * normal.y;
+				float newdepth = c1point.x * normal.x + c1point.y * normal.y;
 				if(newdepth < c1maxdepth)
 				{
-					cc.contour1_deep_point = c1points[p5] + p1.point;
+					cc.contour1_deep_point = c1point + p1.point;
 					c1maxdepth = newdepth;
 				}
 			}
-			for(unsigned int p = 0; p < c2points.size(); p++)
+			for(auto & c2point : c2points)
 			{
 				// The dotproduct is the projection onto an other vector
-				float newdepth = c2points[p].x * normal.x + c2points[p].y * normal.y;
+				float newdepth = c2point.x * normal.x + c2point.y * normal.y;
 				if(newdepth > c2maxdepth)
 				{
-					cc.contour2_deep_point = c2points[p] + p1.point;
+					cc.contour2_deep_point = c2point + p1.point;
 					c2maxdepth = newdepth;
 				}
 			}

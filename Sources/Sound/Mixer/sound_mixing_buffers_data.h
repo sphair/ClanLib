@@ -34,7 +34,7 @@ namespace clan
 class SoundMixingBuffersData
 {
 public:
-	SoundMixingBuffersData() { for (int i=0; i<32; i++) channels[i] = nullptr; }
+	SoundMixingBuffersData() { for (auto & elem : channels) elem = nullptr; }
 
 	float *channels[32];
 };

@@ -383,8 +383,8 @@ namespace clan
 		const int block_size = mask_block_size / 16 * mask_block_size;
 		__m128i block[block_size];
 
-		for (int sse_block = 0; sse_block < block_size; sse_block++)
-			block[sse_block] = _mm_setzero_si128();
+		for (auto & elem : block)
+			elem = _mm_setzero_si128();
 
 		for (unsigned int cnt = 0; cnt < scanline_block_size; cnt++)
 		{
@@ -429,8 +429,8 @@ namespace clan
 		}
 
 		__m128i empty_status = _mm_setzero_si128();
-		for (int sse_block = 0; sse_block < block_size; sse_block++)
-			empty_status = _mm_or_si128(empty_status, block[sse_block]);
+		for (auto & elem : block)
+			empty_status = _mm_or_si128(empty_status, elem);
 
 		bool empty_block = _mm_movemask_epi8(_mm_cmpeq_epi32(empty_status, _mm_setzero_si128())) == 0xffff;
 		if (empty_block) return false;
@@ -557,13 +557,13 @@ namespace clan
 
 	bool PathMaskBuffer::is_full_block(int xpos) const
 	{
-		for (unsigned int filled_cnt = 0; filled_cnt < scanline_block_size; filled_cnt++)
+		for (auto & elem : range)
 		{
-			if (!range[filled_cnt].found)
+			if (!elem.found)
 			{
 				return false;
 			}
-			if ((range[filled_cnt].x0 > xpos) || (range[filled_cnt].x1 < (xpos + scanline_block_size - 1)))
+			if ((elem.x0 > xpos) || (elem.x1 < (xpos + scanline_block_size - 1)))
 			{
 				return false;
 			}

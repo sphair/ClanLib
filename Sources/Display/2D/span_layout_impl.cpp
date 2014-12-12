@@ -48,10 +48,10 @@ SpanLayout_Impl::~SpanLayout_Impl()
 
 void SpanLayout_Impl::clear()
 {
-	for (size_t i = 0; i < objects.size(); i++)
+	for (auto & elem : objects)
 	{
-		if (objects[i].type == object_component)
-			delete objects[i].component;
+		if (elem.type == object_component)
+			delete elem.component;
 	}
 
 	objects.clear();
@@ -65,9 +65,9 @@ std::vector<Rect> SpanLayout_Impl::get_rect_by_id(int id) const
 
 	int x = position.x;
 	int y = position.y;
-	for (std::vector<Line>::size_type line_index = 0; line_index < lines.size(); line_index++)
+	for (auto & elem : lines)
 	{
-		const Line &line = lines[line_index];
+		const Line &line = elem;
 		for (std::vector<LineSegment>::size_type segment_index = 0; segment_index < line.segments.size(); segment_index++)
 		{
 			const LineSegment &segment = line.segments[segment_index];
@@ -227,9 +227,9 @@ SpanLayout::HitTestResult SpanLayout_Impl::hit_test(Canvas &canvas, const Point 
 		return result;
 	}
 
-	for (std::vector<Line>::size_type line_index = 0; line_index < lines.size(); line_index++)
+	for (auto & elem : lines)
 	{
-		Line &line = lines[line_index];
+		Line &line = elem;
 
 		// Check if we found current line
 		if(pos.y >= y && pos.y <= y + line.height)
@@ -292,9 +292,9 @@ Rect SpanLayout_Impl::get_rect() const
 	const int max_value = 0x70000000;
 	Rect rect(max_value, max_value, -max_value, -max_value);
 
-	for (std::vector<Line>::size_type line_index = 0; line_index < lines.size(); line_index++)
+	for (auto & elem : lines)
 	{
-		const Line &line = lines[line_index];
+		const Line &line = elem;
 		for (std::vector<LineSegment>::size_type segment_index = 0; segment_index < line.segments.size(); segment_index++)
 		{
 			const LineSegment &segment = line.segments[segment_index];
@@ -604,21 +604,21 @@ SpanLayout_Impl::FloatBox SpanLayout_Impl::float_box_any(FloatBox box, int max_w
 	do
 	{
 		restart = false;
-		for (size_t i=0; i<floats1.size(); i++)
+		for (auto & elem : floats1)
 		{
-			int top = max(floats1[i].rect.top, box.rect.top);
-			int bottom = min(floats1[i].rect.bottom, box.rect.bottom);
-			if (bottom > top && box.rect.left < floats1[i].rect.right)
+			int top = max(elem.rect.top, box.rect.top);
+			int bottom = min(elem.rect.bottom, box.rect.bottom);
+			if (bottom > top && box.rect.left < elem.rect.right)
 			{
 				Size s = box.rect.get_size();
-				box.rect.left = floats1[i].rect.left;
+				box.rect.left = elem.rect.left;
 				box.rect.right = box.rect.left+s.width;
 
 				if (!box_fits_on_line(box, max_width))
 				{
 					box.rect.left = 0;
 					box.rect.right = s.width;
-					box.rect.top = floats1[i].rect.bottom;
+					box.rect.top = elem.rect.bottom;
 					box.rect.bottom = box.rect.top + s.height;
 					restart = true;
 					break;
@@ -631,13 +631,13 @@ SpanLayout_Impl::FloatBox SpanLayout_Impl::float_box_any(FloatBox box, int max_w
 
 bool SpanLayout_Impl::box_fits_on_line(const FloatBox &box, int max_width)
 {
-	for (size_t i=0; i<floats_right.size(); i++)
+	for (auto & elem : floats_right)
 	{
-		int top = max(floats_right[i].rect.top, box.rect.top);
-		int bottom = min(floats_right[i].rect.bottom, box.rect.bottom);
+		int top = max(elem.rect.top, box.rect.top);
+		int bottom = min(elem.rect.bottom, box.rect.bottom);
 		if (bottom > top)
 		{
-			if (box.rect.right + floats_right[i].rect.right > max_width)
+			if (box.rect.right + elem.rect.right > max_width)
 				return false;
 		}
 	}
@@ -715,9 +715,9 @@ void SpanLayout_Impl::next_line(CurrentLine &current_line)
 
 void SpanLayout_Impl::place_line_segments(CurrentLine &current_line, TextSizeResult &text_size_result)
 {
-	for (auto it = text_size_result.segments.begin(); it != text_size_result.segments.end(); ++it)
+	for (auto segment : text_size_result.segments)
 	{
-		LineSegment segment = *it;
+		
 		segment.x_position += current_line.x_position;
 		current_line.cur_line.segments.push_back(segment);
 	}
@@ -757,15 +757,15 @@ bool SpanLayout_Impl::larger_than_line(const TextSizeResult &text_size_result, i
 
 void SpanLayout_Impl::align_right(int max_width)
 {
-	for (std::vector<Line>::size_type line_index = 0; line_index < lines.size(); line_index++)
+	for (auto & elem : lines)
 	{
-		Line &line = lines[line_index];
+		Line &line = elem;
 		int offset = max_width - line.width;
 		if (offset < 0) offset = 0;
 
-		for (std::vector<LineSegment>::size_type segment_index = 0; segment_index < line.segments.size(); segment_index++)
+		for (auto & _segment_index : line.segments)
 		{
-			LineSegment &segment = line.segments[segment_index];
+			LineSegment &segment = _segment_index;
 			segment.x_position += offset;
 		}
 	}
@@ -773,15 +773,15 @@ void SpanLayout_Impl::align_right(int max_width)
 
 void SpanLayout_Impl::align_center(int max_width)
 {
-	for (std::vector<Line>::size_type line_index = 0; line_index < lines.size(); line_index++)
+	for (auto & elem : lines)
 	{
-		Line &line = lines[line_index];
+		Line &line = elem;
 		int offset = (max_width - line.width)/2;
 		if (offset < 0) offset = 0;
 
-		for (std::vector<LineSegment>::size_type segment_index = 0; segment_index < line.segments.size(); segment_index++)
+		for (auto & _segment_index : line.segments)
 		{
-			LineSegment &segment = line.segments[segment_index];
+			LineSegment &segment = _segment_index;
 			segment.x_position += offset;
 		}
 	}
@@ -836,19 +836,19 @@ void SpanLayout_Impl::set_component_geometry()
 {
 	int x = position.x;
 	int y = position.y;
-	for (size_t i = 0; i < lines.size(); i++)
+	for (auto & elem : lines)
 	{
-		for (size_t j = 0; j < lines[i].segments.size(); j++)
+		for (size_t j = 0; j < elem.segments.size(); j++)
 		{
-			if (lines[i].segments[j].type == object_component)
+			if (elem.segments[j].type == object_component)
 			{
-				Point pos(x+lines[i].segments[j].x_position, y + lines[i].ascender - lines[i].segments[j].ascender);
-				Size size = lines[i].segments[j].component->get_size();
+				Point pos(x+elem.segments[j].x_position, y + elem.ascender - elem.segments[j].ascender);
+				Size size = elem.segments[j].component->get_size();
 				Rect rect(pos, size);
-				lines[i].segments[j].component->set_geometry(rect);
+				elem.segments[j].component->set_geometry(rect);
 			}
 		}
-		y += lines[i].height;
+		y += elem.height;
 	}
 }
 

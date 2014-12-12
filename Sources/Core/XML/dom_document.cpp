@@ -370,9 +370,9 @@ std::vector<DomNode> DomDocument::load(
 	}
 	catch (const Exception& e)
 	{
-		for (std::vector<DomNode>::size_type i = 0; i < result.size(); i++)
+		for (auto & elem : result)
 		{
-			insert_point.remove_child(result[i]);
+			insert_point.remove_child(elem);
 		}
 		throw;
 	}

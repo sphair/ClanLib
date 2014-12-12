@@ -36,7 +36,7 @@ struct JPEGHuffmanNode;
 class JPEGHuffmanTable
 {
 public:
-	JPEGHuffmanTable() : table_class(dc_table), table_index(0) { for (int i = 0; i < 16; i++) bits[i] = 0; }
+	JPEGHuffmanTable() : table_class(dc_table), table_index(0) { for (auto & elem : bits) elem = 0; }
 	void build_tree();
 
 	enum TableClass

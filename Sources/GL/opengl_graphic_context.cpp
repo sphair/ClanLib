@@ -115,8 +115,8 @@ std::vector<std::string> GraphicContext_GL::get_extensions()
 	std::string extension_string = (char*)glGetString(GL_EXTENSIONS);
 	std::vector<std::string> tmp = StringHelp::split_text(extension_string, " ");
 	std::vector<std::string> extensions;
-	for (std::vector<std::string>::size_type i=0; i<tmp.size(); i++)
-		extensions.push_back(tmp[i]);
+	for (auto & elem : tmp)
+		extensions.push_back(elem);
 	return extensions;
 }
 

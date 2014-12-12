@@ -575,9 +575,9 @@ void jpeg_encoder::load_quantized_coefficients(int component_num)
 {
   int32 *q = m_quantization_tables[component_num > 0];
   int16 *pDst = m_coefficient_array;
-  for (int i = 0; i < 64; i++)
+  for (auto & elem : s_zag)
   {
-    sample_array_t j = m_sample_array[s_zag[i]];
+    sample_array_t j = m_sample_array[elem];
     if (j < 0)
     {
       if ((j = -j + (*q >> 1)) < *q)

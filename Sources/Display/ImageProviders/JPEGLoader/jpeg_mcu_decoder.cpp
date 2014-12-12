@@ -71,20 +71,20 @@ JPEGMCUDecoder::JPEGMCUDecoder(JPEGLoader *loader)
 	}
 	catch (...)
 	{
-		for (size_t c = 0; c < channels.size(); c++)
-			System::aligned_free(channels[c]);
-		for (size_t c = 0; c < quant.size(); c++)
-			System::aligned_free(quant[c]);
+		for (auto & elem : channels)
+			System::aligned_free(elem);
+		for (auto & elem : quant)
+			System::aligned_free(elem);
 		throw;
 	}
 }
 
 JPEGMCUDecoder::~JPEGMCUDecoder()
 {
-	for (size_t c = 0; c < channels.size(); c++)
-		System::aligned_free(channels[c]);
-	for (size_t c = 0; c < quant.size(); c++)
-		System::aligned_free(quant[c]);
+	for (auto & elem : channels)
+		System::aligned_free(elem);
+	for (auto & elem : quant)
+		System::aligned_free(elem);
 }
 
 void JPEGMCUDecoder::decode(int block)

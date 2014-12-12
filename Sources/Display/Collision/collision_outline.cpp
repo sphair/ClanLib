@@ -320,14 +320,14 @@ void CollisionOutline::draw(
 	GraphicContext &gc = canvas.get_gc();
 
 	// Draw collision outline (Contours are assumed as closed polygons, hence we use line-loop)
-	for(unsigned int i = 0; i < impl->contours.size(); i++)
+	for(auto & elem : impl->contours)
 	{
 		// Draw the contour
-		unsigned int numpoints = impl->contours[i].get_points().size();
+		unsigned int numpoints = elem.get_points().size();
 		for(unsigned int s = 0; s < numpoints; s++)
 		{
-			const Pointf &p1 = impl->contours[i].get_points()[s];
-			const Pointf &p2 = impl->contours[i].get_points()[(s+1) % numpoints];
+			const Pointf &p1 = elem.get_points()[s];
+			const Pointf &p2 = elem.get_points()[(s+1) % numpoints];
 			canvas.draw_line(x + p1.x + 0.5f, y + p1.y + 0.5f, x + p2.x + 0.5f, y + p2.y + 0.5f, color);
 		}
 
@@ -335,14 +335,14 @@ void CollisionOutline::draw(
 
 	Colorf colorinv(1.0f-color.get_red(),1.0f-color.get_green(),1.0f-color.get_blue());
 
-	for(unsigned int i = 0; i < impl->contours.size(); i++)
+	for(auto & elem : impl->contours)
 	{
-		unsigned int numpoints = impl->contours[i].get_points().size();
+		unsigned int numpoints = elem.get_points().size();
 
 		// Add points (as opposite color)
 		for(unsigned int s1 = 0; s1 < numpoints; s1++)
 		{
-			const Pointf &p1 = impl->contours[i].get_points()[s1];
+			const Pointf &p1 = elem.get_points()[s1];
 			canvas.draw_point(x + p1.x + 0.5f, y + p1.y + 0.5f, colorinv);
 		}
 	}
@@ -355,13 +355,13 @@ void CollisionOutline::draw_sub_circles(
 	Canvas &canvas)
 {
 	// Draw the circles
-	for(unsigned int i = 0; i < impl->contours.size(); i++)
+	for(auto & elem : impl->contours)
 	{
-		unsigned int numcircles = impl->contours[i].get_sub_circles().size();
+		unsigned int numcircles = elem.get_sub_circles().size();
 		for(unsigned int s = 0; s < numcircles; s++)
 		{
-			Pointf center = impl->contours[i].get_sub_circles()[s].position;
-			float radius     = impl->contours[i].get_sub_circles()[s].radius;
+			Pointf center = elem.get_sub_circles()[s].position;
+			float radius     = elem.get_sub_circles()[s].radius;
 			float numsegments = 16;
 			for(float e = 0; e < numsegments; e++)
 			{

@@ -66,8 +66,8 @@ public:
 	/// \brief Constructs a 3x3 matrix (zero'ed)
 	Mat3()
 	{
-		for (int i = 0; i < 9; i++)
-			matrix[i] = 0;
+		for (auto & elem : matrix)
+			elem = 0;
 	}
 
 	/// \brief Constructs a 3x3 matrix (copied)

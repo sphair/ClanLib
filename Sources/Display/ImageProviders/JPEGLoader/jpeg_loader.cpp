@@ -187,10 +187,10 @@ void JPEGLoader::process_sof(JPEGMarker marker, JPEGFileReader &reader)
 		start_of_frame = reader.read_sof();
 		component_dcts.resize(start_of_frame.components.size());
 
-		for (size_t c = 0; c < start_of_frame.components.size(); c++)
+		for (auto & elem : start_of_frame.components)
 		{
-			mcu_x = max(mcu_x, start_of_frame.components[c].horz_sampling_factor);
-			mcu_y = max(mcu_y, start_of_frame.components[c].vert_sampling_factor);
+			mcu_x = max(mcu_x, elem.horz_sampling_factor);
+			mcu_y = max(mcu_y, elem.vert_sampling_factor);
 		}
 
 		mcu_width = (start_of_frame.width + (mcu_x*8-1)) / (mcu_x*8);
@@ -210,22 +210,22 @@ void JPEGLoader::process_sof(JPEGMarker marker, JPEGFileReader &reader)
 void JPEGLoader::process_dht(JPEGFileReader &reader)
 {
 	JPEGDefineHuffmanTable tables = reader.read_dht();
-	for (size_t i = 0; i < tables.size(); i++)
+	for (auto & table : tables)
 	{
-		if (tables[i].table_class == JPEGHuffmanTable::ac_table)
-			huffman_ac_tables[tables[i].table_index] = tables[i];
+		if (table.table_class == JPEGHuffmanTable::ac_table)
+			huffman_ac_tables[table.table_index] = table;
 		else // JPEGHuffmanTable::dc_table
-			huffman_dc_tables[tables[i].table_index] = tables[i];
+			huffman_dc_tables[table.table_index] = table;
 	}
 }
 
 void JPEGLoader::process_dqt(JPEGFileReader &reader)
 {
 	JPEGDefineQuantizationTable tables = reader.read_dqt();
-	for (size_t i = 0; i < tables.size(); i++)
+	for (auto & table : tables)
 	{
 		for (size_t j = 0; j < 64; j++)
-			quantization_tables[tables[i].table_index].values[zigzag_map[j]] = tables[i].values[j];
+			quantization_tables[table.table_index].values[zigzag_map[j]] = table.values[j];
 	}
 }
 
@@ -234,12 +234,12 @@ void JPEGLoader::process_sos(JPEGFileReader &reader)
 	JPEGStartOfScan start_of_scan = reader.read_sos();
 
 	std::vector<int > component_to_sof;
-	for (size_t c = 0; c < start_of_scan.components.size(); c++)
+	for (auto & elem : start_of_scan.components)
 	{
 		bool found = false;
 		for (size_t i = 0; i < start_of_frame.components.size(); i++)
 		{
-			if (start_of_scan.components[c].component_selector == start_of_frame.components[i].id)
+			if (elem.component_selector == start_of_frame.components[i].id)
 			{
 				component_to_sof.push_back(i);
 				found = true;
@@ -260,18 +260,18 @@ void JPEGLoader::process_sos(JPEGFileReader &reader)
 
 void JPEGLoader::verify_dc_table_selector(const JPEGStartOfScan &start_of_scan)
 {
-	for (size_t c = 0; c < start_of_scan.components.size(); c++)
+	for (auto & elem : start_of_scan.components)
 	{
-		if (huffman_dc_tables[start_of_scan.components[c].dc_table_selector].tree.empty())
+		if (huffman_dc_tables[elem.dc_table_selector].tree.empty())
 			throw Exception("Invalid JPEG file");
 	}
 }
 
 void JPEGLoader::verify_ac_table_selector(const JPEGStartOfScan &start_of_scan)
 {
-	for (size_t c = 0; c < start_of_scan.components.size(); c++)
+	for (auto & elem : start_of_scan.components)
 	{
-		if (huffman_ac_tables[start_of_scan.components[c].ac_table_selector].tree.empty())
+		if (huffman_ac_tables[elem.ac_table_selector].tree.empty())
 			throw Exception("Invalid JPEG file");
 	}
 }
@@ -318,8 +318,8 @@ void JPEGLoader::process_sos_sequential(JPEGStartOfScan &start_of_scan, std::vec
 				throw Exception("Restart marker missing between JPEG entropy data");
 			}
 			restart_counter = 0;
-			for (size_t i = 0; i < last_dc_values.size(); i++)
-				last_dc_values[i] = 0;
+			for (auto & elem : last_dc_values)
+				elem = 0;
 			bit_reader.reset();
 			eobrun = 0;
 		}
@@ -389,8 +389,8 @@ void JPEGLoader::process_sos_progressive(JPEGStartOfScan &start_of_scan, std::ve
 					throw Exception("Restart marker missing between JPEG entropy data");
 				}
 				restart_counter = 0;
-				for (size_t i = 0; i < last_dc_values.size(); i++)
-					last_dc_values[i] = 0;
+				for (auto & elem : last_dc_values)
+					elem = 0;
 				bit_reader.reset();
 				eobrun = 0;
 			}
@@ -452,8 +452,8 @@ void JPEGLoader::process_sos_progressive(JPEGStartOfScan &start_of_scan, std::ve
 					throw Exception("Restart marker missing between JPEG entropy data");
 				}
 				restart_counter = 0;
-				for (size_t i = 0; i < last_dc_values.size(); i++)
-					last_dc_values[i] = 0;
+				for (auto & elem : last_dc_values)
+					elem = 0;
 				bit_reader.reset();
 				eobrun = 0;
 			}

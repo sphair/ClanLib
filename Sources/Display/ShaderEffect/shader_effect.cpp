@@ -112,46 +112,46 @@ void ShaderEffect::dispatch(GraphicContext &gc, int x, int y, int z)
 {
 	gc.set_program_object(impl->program);
 
-	for (auto it = impl->uniform_bindings.begin(); it != impl->uniform_bindings.end(); ++it)
+	for (auto & elem : impl->uniform_bindings)
 	{
-		gc.set_uniform_buffer(it->first, it->second);
+		gc.set_uniform_buffer(elem.first, elem.second);
 	}
 
-	for (auto it = impl->storage_bindings.begin(); it != impl->storage_bindings.end(); ++it)
+	for (auto & elem : impl->storage_bindings)
 	{
-		gc.set_storage_buffer(it->first, it->second);
+		gc.set_storage_buffer(elem.first, elem.second);
 	}
 
-	for (auto it = impl->image_bindings.begin(); it != impl->image_bindings.end(); ++it)
+	for (auto & elem : impl->image_bindings)
 	{
-		gc.set_image_texture(it->first, it->second);
+		gc.set_image_texture(elem.first, elem.second);
 	}
 
-	for (auto it = impl->texture_bindings.begin(); it != impl->texture_bindings.end(); ++it)
+	for (auto & elem : impl->texture_bindings)
 	{
-		gc.set_texture(it->first, it->second);
+		gc.set_texture(elem.first, elem.second);
 	}
 
 	gc.dispatch(x, y, z);
 
-	for (auto it = impl->uniform_bindings.begin(); it != impl->uniform_bindings.end(); ++it)
+	for (auto & elem : impl->uniform_bindings)
 	{
-		gc.reset_uniform_buffer(it->first);
+		gc.reset_uniform_buffer(elem.first);
 	}
 
-	for (auto it = impl->storage_bindings.begin(); it != impl->storage_bindings.end(); ++it)
+	for (auto & elem : impl->storage_bindings)
 	{
-		gc.reset_storage_buffer(it->first);
+		gc.reset_storage_buffer(elem.first);
 	}
 
-	for (auto it = impl->image_bindings.begin(); it != impl->image_bindings.end(); ++it)
+	for (auto & elem : impl->image_bindings)
 	{
-		gc.reset_image_texture(it->first);
+		gc.reset_image_texture(elem.first);
 	}
 
-	for (auto it = impl->texture_bindings.begin(); it != impl->texture_bindings.end(); ++it)
+	for (auto & elem : impl->texture_bindings)
 	{
-		gc.reset_texture(it->first);
+		gc.reset_texture(elem.first);
 	}
 
 	gc.reset_program_object();
@@ -173,24 +173,24 @@ void ShaderEffect::draw(GraphicContext &gc)
 	if (!impl->depth_stencil_state.is_null())
 		gc.set_depth_stencil_state(impl->depth_stencil_state);
 
-	for (auto it = impl->uniform_bindings.begin(); it != impl->uniform_bindings.end(); ++it)
+	for (auto & elem : impl->uniform_bindings)
 	{
-		gc.set_uniform_buffer(it->first, it->second);
+		gc.set_uniform_buffer(elem.first, elem.second);
 	}
 
-	for (auto it = impl->storage_bindings.begin(); it != impl->storage_bindings.end(); ++it)
+	for (auto & elem : impl->storage_bindings)
 	{
-		gc.set_storage_buffer(it->first, it->second);
+		gc.set_storage_buffer(elem.first, elem.second);
 	}
 
-	for (auto it = impl->image_bindings.begin(); it != impl->image_bindings.end(); ++it)
+	for (auto & elem : impl->image_bindings)
 	{
-		gc.set_image_texture(it->first, it->second);
+		gc.set_image_texture(elem.first, elem.second);
 	}
 
-	for (auto it = impl->texture_bindings.begin(); it != impl->texture_bindings.end(); ++it)
+	for (auto & elem : impl->texture_bindings)
 	{
-		gc.set_texture(it->first, it->second);
+		gc.set_texture(elem.first, elem.second);
 	}
 
 	if (!impl->elements.is_null())
@@ -208,24 +208,24 @@ void ShaderEffect::draw(GraphicContext &gc)
 		gc.reset_primitives_array();
 	}
 
-	for (auto it = impl->uniform_bindings.begin(); it != impl->uniform_bindings.end(); ++it)
+	for (auto & elem : impl->uniform_bindings)
 	{
-		gc.reset_uniform_buffer(it->first);
+		gc.reset_uniform_buffer(elem.first);
 	}
 
-	for (auto it = impl->storage_bindings.begin(); it != impl->storage_bindings.end(); ++it)
+	for (auto & elem : impl->storage_bindings)
 	{
-		gc.reset_storage_buffer(it->first);
+		gc.reset_storage_buffer(elem.first);
 	}
 
-	for (auto it = impl->image_bindings.begin(); it != impl->image_bindings.end(); ++it)
+	for (auto & elem : impl->image_bindings)
 	{
-		gc.reset_image_texture(it->first);
+		gc.reset_image_texture(elem.first);
 	}
 
-	for (auto it = impl->texture_bindings.begin(); it != impl->texture_bindings.end(); ++it)
+	for (auto & elem : impl->texture_bindings)
 	{
-		gc.reset_texture(it->first);
+		gc.reset_texture(elem.first);
 	}
 
 	if (!impl->rasterizer_state.is_null())
@@ -254,8 +254,8 @@ std::string ShaderEffect_Impl::add_defines(GraphicContext &gc, const std::string
 	if (gc.get_shader_language() == shader_glsl && description->glsl_version != 0)
 		prefix += string_format("#version %1\r\n", description->glsl_version);
 
-	for (auto it = description->defines.begin(); it != description->defines.end(); ++it)
-		prefix += string_format("#define %1 %2\r\n", it->first, it->second);
+	for (const auto & elem : description->defines)
+		prefix += string_format("#define %1 %2\r\n", elem.first, elem.second);
 	prefix += "#line 0\r\n";
 
 	return prefix + code[gc.get_shader_language()];
@@ -292,15 +292,15 @@ void ShaderEffect_Impl::create_shaders(GraphicContext &gc, const ShaderEffectDes
 	}
 
 	int index = 0;
-	for(auto it = description->attributes.begin(); it != description->attributes.end(); ++it)
+	for(const auto & elem : description->attributes)
 	{
-		program.bind_attribute_location(index++, it->first);
+		program.bind_attribute_location(index++, elem.first);
 	}
 
 	index = 0;
-	for(auto it = description->frag_data.begin(); it != description->frag_data.end(); ++it)
+	for(const auto & elem : description->frag_data)
 	{
-		program.bind_frag_data_location(index++, it->first);
+		program.bind_frag_data_location(index++, elem.first);
 	}
 
 	if (!program.link())
@@ -391,22 +391,22 @@ void ShaderEffect_Impl::create_primitives_array(GraphicContext &gc, const Shader
 void ShaderEffect_Impl::create_frame_buffer(GraphicContext &gc, const ShaderEffectDescription_Impl *description)
 {
 	int index = 0;
-	for (auto it = description->frag_data.begin(); it != description->frag_data.end(); ++it)
+	for (const auto & elem : description->frag_data)
 	{
-		if (!it->second.texture.is_null())
+		if (!elem.second.texture.is_null())
 		{
 			if (fb.is_null())
 				fb = FrameBuffer(gc);
 
 			// To do: improve this so it can attach more than just 2d textures
 
-			fb.attach_color(index, it->second.texture.to_texture_2d());
+			fb.attach_color(index, elem.second.texture.to_texture_2d());
 		}
-		else if (!it->second.buffer.is_null())
+		else if (!elem.second.buffer.is_null())
 		{
 			if (fb.is_null())
 				fb = FrameBuffer(gc);
-			fb.attach_color(index, it->second.buffer);
+			fb.attach_color(index, elem.second.buffer);
 		}
 		index++;
 	}

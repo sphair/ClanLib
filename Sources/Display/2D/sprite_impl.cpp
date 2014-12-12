@@ -523,9 +523,9 @@ std::vector<CollisionOutline> Sprite_Impl::create_collision_outlines(Canvas &can
 	Texture2D last_texture;
 	PixelBuffer texture_pixelbuffer;
 
-	for (unsigned int cnt = 0; cnt < frames.size(); cnt++)
+	for (auto & elem : frames)
 	{
-		const SpriteFrame &description_frame = frames[cnt];
+		const SpriteFrame &description_frame = elem;
 
 		if (last_texture != description_frame.texture)
 		{

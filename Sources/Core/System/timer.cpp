@@ -71,9 +71,9 @@ public:
 		thread.join();
 
 		// Delete all timer objects in the map
-		for (auto it = timer_objects.begin(); it != timer_objects.end(); ++it)
+		for (auto & elem : timer_objects)
 		{
-			delete it->second;
+			delete elem.second;
 		}
 	}
 
@@ -187,9 +187,9 @@ private:
 			bool found_timer = false;
 
 			// Scan for timers to find the next one to call
-			for (auto it = timer_objects.begin(); it != timer_objects.end(); ++it)
+			for (auto & elem : timer_objects)
 			{
-				Timer_Object &object = *(it->second);
+				Timer_Object &object = *(elem.second);
 				if (!object.stopped)
 				{
 					if (!found_timer)

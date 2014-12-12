@@ -62,9 +62,9 @@ void NetGameServer::add_network_event(const NetGameNetworkEvent &e)
 void NetGameServer::send_event(const NetGameEvent &game_event)
 {
 	MutexSection mutex_lock(&impl->mutex);
-	for (unsigned int i = 0; i < impl->connections.size(); i++)
+	for (auto & elem : impl->connections)
 	{
-		impl->connections[i]->send_event(game_event);
+		elem->send_event(game_event);
 	}
 }
 
@@ -90,9 +90,9 @@ void NetGameServer::stop()
 	impl->listen_thread.join();
 	impl->tcp_listen.reset();
 
-	for (unsigned int i = 0; i < impl->connections.size(); i++)
+	for (auto & elem : impl->connections)
 	{
-		delete impl->connections[i];
+		delete elem;
 	}
 	impl->connections.clear();
 }
@@ -135,32 +135,32 @@ void NetGameServer_Impl::process()
 	new_events.swap(events);
 	mutex_lock.unlock();
 
-	for (unsigned int i = 0; i < new_events.size(); i++)
+	for (auto & new_event : new_events)
 	{
-		switch (new_events[i].type)
+		switch (new_event.type)
 		{
 		case NetGameNetworkEvent::client_connected:
-			sig_game_client_connected(new_events[i].connection);
+			sig_game_client_connected(new_event.connection);
 			break;
 		case NetGameNetworkEvent::event_received:
-			sig_game_event_received(new_events[i].connection, new_events[i].game_event);
+			sig_game_event_received(new_event.connection, new_event.game_event);
 			break;
 		case NetGameNetworkEvent::client_disconnected:
 			{
-				std::string reason = new_events[i].game_event.get_name();
-				sig_game_client_disconnected(new_events[i].connection, reason);
+				std::string reason = new_event.game_event.get_name();
+				sig_game_client_disconnected(new_event.connection, reason);
 			}
 
 			// Destroy connection object
 			{
 				MutexSection mutex_lock(&mutex);
 				std::vector<NetGameConnection *>::iterator connection_it;
-				connection_it = std::find(connections.begin(), connections.end(), new_events[i].connection);
+				connection_it = std::find(connections.begin(), connections.end(), new_event.connection);
 				if (connection_it != connections.end())
 				{
 					connections.erase( connection_it );
 				}
-				delete new_events[i].connection;
+				delete new_event.connection;
 			}
 			break;
 		default:

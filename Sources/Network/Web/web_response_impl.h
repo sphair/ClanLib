@@ -50,8 +50,8 @@ inline void WebResponse_Impl::send_request(TCPConnection &connection)
 	}
 
 	std::string request_header = string_format("%1 %2%3 HTTP/1.1\r\n", get_request_keyword(), request->url.path, request->url.query);
-	for (auto it = request->headers.begin(); it != request->headers.end(); ++it)
-		request_header += string_format("%1: %2\r\n", it->first, it->second);
+	for (auto & elem : request->headers)
+		request_header += string_format("%1: %2\r\n", elem.first, elem.second);
 	request_header += "\r\n";
 
 	connection.send(request_header.data(), request_header.length(), true);
@@ -203,8 +203,8 @@ inline void WebResponse_Impl::read_header(TCPConnection &connection, RingBuffer 
 	std::string header = buffer.read_to_string(header_length);
 	buffer.read(4);
 	std::vector<std::string> lines = StringHelp::split_text(header, "\n");
-	for (size_t i = 0; i < lines.size(); i++)
-		lines[i] = StringHelp::trim(lines[i]);
+	for (auto & line : lines)
+		line = StringHelp::trim(line);
 	if (lines.size() < 1)
 		throw Exception("Invalid HTTP response header");
 

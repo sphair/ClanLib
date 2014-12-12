@@ -54,9 +54,9 @@ void KeepAlive::process(int timeout)
 	// Get the objects to wait for
 	std::vector<KeepAliveObject *> objects = get_objects();
 	std::vector<Event> events;
-	for (std::vector<KeepAliveObject *>::size_type i = 0; i < objects.size(); i++)
+	for (auto & object : objects)
 	{
-		events.push_back(objects[i]->impl->wakeup_event);
+		events.push_back(object->impl->wakeup_event);
 	}
 		
 	ubyte64 time_start = System::get_time();

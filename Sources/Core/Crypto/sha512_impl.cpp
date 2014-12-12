@@ -325,17 +325,17 @@ void SHA512_Impl::set_hmac(const void *key_data, int key_size)
 		key_chunk_filled = key_size;
 	}
 
-	for (int cnt = 0; cnt < block_size; cnt++)	// XOR key with inner pad values
+	for (auto & elem : hmac_key_chunk)	// XOR key with inner pad values
 	{
-		hmac_key_chunk[cnt] ^= 0x36;
+		elem ^= 0x36;
 	}
 
 	add(hmac_key_chunk, block_size);	// Add the inner HMAC
 
-	for (int cnt = 0; cnt < block_size; cnt++)	// XOR key with outer pad values
+	for (auto & elem : hmac_key_chunk)	// XOR key with outer pad values
 	{
-		hmac_key_chunk[cnt] ^= 0x36;	// Undo the inner pad
-		hmac_key_chunk[cnt] ^= 0x5c;
+		elem ^= 0x36;	// Undo the inner pad
+		elem ^= 0x5c;
 	}
 	hmac_enabled = true;	// This has to be after the add(), as that function may call reset()
 

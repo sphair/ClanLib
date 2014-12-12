@@ -49,14 +49,14 @@ EarClipTriangulator_Impl::EarClipTriangulator_Impl()
 
 EarClipTriangulator_Impl::~EarClipTriangulator_Impl()
 {
-	for (unsigned int cnt = 0; cnt < vertices.size(); cnt++)
+	for (auto & elem : vertices)
 	{
-		delete vertices[cnt];
+		delete elem;
 	}
 
-	for (unsigned int cnt = 0; cnt < hole.size(); cnt++)
+	for (auto & elem : hole)
 	{
-		delete hole[cnt];
+		delete elem;
 	}
 }
 
@@ -67,9 +67,9 @@ std::vector<Pointf> EarClipTriangulator_Impl::get_vertices()
 {
 	std::vector<Pointf> points;
 
-	for (unsigned int cnt = 0; cnt < vertices.size(); cnt++)
+	for (auto & elem : vertices)
 	{
-		points.push_back( Pointf(vertices[cnt]->x, vertices[cnt]->y));
+		points.push_back( Pointf(elem->x, elem->y));
 	}
 
 	return points;
@@ -101,9 +101,9 @@ void EarClipTriangulator_Impl::add_vertex(float x, float y)
 
 void EarClipTriangulator_Impl::clear()
 {
-	for (unsigned int cnt = 0; cnt < vertices.size(); cnt++)
+	for (auto & elem : vertices)
 	{
-		delete vertices[cnt];
+		delete elem;
 	}
 
 	vertices.clear();
@@ -242,15 +242,15 @@ void EarClipTriangulator_Impl::end_hole()
 	float inner_point_rel;
 	float distance = FLT_MAX;
 
-	for (unsigned int vertex_cnt = 0; vertex_cnt < vertices.size(); vertex_cnt++)
+	for (auto & elem : vertices)
 	{
-		Pointf tmp_outer_point = Pointf(vertices[vertex_cnt]->x,vertices[vertex_cnt]->y);
+		Pointf tmp_outer_point = Pointf(elem->x,elem->y);
 
-		for (unsigned int hole_cnt = 0; hole_cnt < hole.size(); hole_cnt++)
+		for (auto & _hole_cnt : hole)
 		{
 
-			Pointf tmp_line_start(hole[hole_cnt]->x, hole[hole_cnt]->y);
-			Pointf tmp_line_end(hole[hole_cnt]->next->x, hole[hole_cnt]->next->y);
+			Pointf tmp_line_start(_hole_cnt->x, _hole_cnt->y);
+			Pointf tmp_line_end(_hole_cnt->next->x, _hole_cnt->next->y);
 			
 			Pointf tmp_inner_point = LineMath::closest_point(tmp_outer_point, tmp_line_start, tmp_line_end);
 			
@@ -260,10 +260,10 @@ void EarClipTriangulator_Impl::end_hole()
 			{
 				inner_point_rel = LineMath::closest_point_relative(tmp_outer_point, tmp_line_start, tmp_line_end);
 				distance = tmp_distance;
-				outer_vertice = vertices[vertex_cnt];
+				outer_vertice = elem;
 				inner_point = tmp_inner_point;
-				segment_start = hole[hole_cnt];
-				segment_end = hole[hole_cnt]->next;
+				segment_start = _hole_cnt;
+				segment_end = _hole_cnt->next;
 			}
 		}
 	}
@@ -397,12 +397,12 @@ void EarClipTriangulator_Impl::create_lists(bool create_ear_list)
 	{
 //		cl_write_console_line("Ear list:");
 
-		for( auto it = vertices.begin(); it != vertices.end(); ++it )
+		for(auto & elem : vertices)
 		{
-			if( is_ear(*(*it)) )
+			if( is_ear(*(elem)) )
 			{
-				ear_list.push_back((*it));
-				(*it)->is_ear = true;
+				ear_list.push_back((elem));
+				(elem)->is_ear = true;
 
 //				cl_write_console_line(string_format("    (%1,%2)", (*it)->x, (*it)->y ) );
 			}

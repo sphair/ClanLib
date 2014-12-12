@@ -226,8 +226,8 @@ public:
 
 		std::vector<Type> list;
 		list.reserve(items.size());
-		for (size_t i = 0; i < items.size(); i++)
-			list.push_back(items[i]);
+		for (auto & elem : items)
+			list.push_back(elem);
 		return list;
 	}
 

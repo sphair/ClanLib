@@ -42,9 +42,9 @@ ResourceManager XMLResourceManager::create(const XMLResourceDocument &doc)
 {
 	ResourceManager manager;
 	manager.set_cache<XMLResourceDocument>("clan.xmldoc", std::shared_ptr<XMLResourceDocument>(new XMLResourceDocument(doc)));
-	for (size_t i = 0; i < xml_cache_factories.size(); i++)
+	for (auto & xml_cache_factory : xml_cache_factories)
 	{
-		xml_cache_factories[i](manager, doc);
+		xml_cache_factory(manager, doc);
 	}
 	return manager;
 }

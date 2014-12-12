@@ -105,11 +105,11 @@ namespace clan
 		{
 			std::wstring filter;
 
-			for (int i = 0; i < filters.size(); ++i)
+			for (auto & elem : filters)
 			{
-				filter += StringHelp::utf8_to_ucs2(filters[i].description);
+				filter += StringHelp::utf8_to_ucs2(elem.description);
 				filter += (wchar_t) '\0';
-				filter += StringHelp::utf8_to_ucs2(filters[i].extension);
+				filter += StringHelp::utf8_to_ucs2(elem.extension);
 				filter += (wchar_t) '\0';
 			}
 			filter += (wchar_t) '\0';

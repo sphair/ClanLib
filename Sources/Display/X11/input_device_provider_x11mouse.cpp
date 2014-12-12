@@ -43,7 +43,7 @@ namespace clan
 InputDeviceProvider_X11Mouse::InputDeviceProvider_X11Mouse(X11Window *window)
 : sig_provider_event(nullptr), window(window), mouse_pos(-1,-1), time_at_last_press(0), last_press_id(-1)
 {
-	for (int i=0; i<32; i++) key_states[i] = false;
+	for (auto & elem : key_states) elem = false;
 }
 
 InputDeviceProvider_X11Mouse::~InputDeviceProvider_X11Mouse()

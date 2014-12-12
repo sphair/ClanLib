@@ -133,8 +133,8 @@ DataBuffer IconSet_Impl::create_ico_helper(const std::vector<PixelBuffer> &image
 	device.write(&header, sizeof(IconHeader));
 
 	std::vector<PixelBuffer> bmp_images;
-	for (size_t i = 0; i < images.size(); i++)
-		bmp_images.push_back(create_bitmap_data(images[i]));
+	for (auto & image : images)
+		bmp_images.push_back(create_bitmap_data(image));
 
 	int image_offset = size_header + size_direntry*bmp_images.size();
 	for (size_t i = 0; i < bmp_images.size(); i++)
@@ -157,18 +157,18 @@ DataBuffer IconSet_Impl::create_ico_helper(const std::vector<PixelBuffer> &image
 		image_offset += entry.dwBytesInRes;
 	}
 
-	for (size_t i = 0; i < bmp_images.size(); i++)
+	for (auto & bmp_image : bmp_images)
 	{
 		IconBitmapInfoHeader bmp_header;
 		memset(&bmp_header, 0, sizeof(IconBitmapInfoHeader));
 		bmp_header.biSize = size_bitmap_info;
-		bmp_header.biWidth = bmp_images[i].get_width();
-		bmp_header.biHeight = bmp_images[i].get_height() * 2; // why on earth do I have to multiply this by two??
+		bmp_header.biWidth = bmp_image.get_width();
+		bmp_header.biHeight = bmp_image.get_height() * 2; // why on earth do I have to multiply this by two??
 		bmp_header.biPlanes = 1;
 		bmp_header.biBitCount = 32;
 		bmp_header.biCompression = bi_rgb;
 		device.write(&bmp_header, size_bitmap_info);
-		device.write(bmp_images[i].get_data(), bmp_images[i].get_pitch() * bmp_images[i].get_height());
+		device.write(bmp_image.get_data(), bmp_image.get_pitch() * bmp_image.get_height());
 	}
 
 	return device.get_data();

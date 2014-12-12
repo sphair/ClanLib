@@ -445,7 +445,7 @@ std::string PathHelp::normalize(
 #endif
 	}
 
-	for (std::string::size_type i = 0; i < elements.size(); i++)
+	for (auto & element : elements)
 	{
 #ifdef WIN32
 		if (path_type == path_type_file)
@@ -453,7 +453,7 @@ std::string PathHelp::normalize(
 		else
 			normalized_path += elements[i] + "/";
 #else
-		normalized_path += elements[i] + "/";
+		normalized_path += element + "/";
 #endif
 	}
 	if (!elements.empty() && !ends_in_slash)

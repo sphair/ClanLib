@@ -118,12 +118,12 @@ int DisplayMessageQueue_X11::wait(const std::vector<Event> &events, int timeout)
 
 		std::vector<SocketMessage_X11> handles;
 
-		for (std::vector<Event>::size_type index_events = 0; index_events < events.size(); ++index_events)
+		for (auto & event : events)
 		{
-			int num_handles = events[index_events].get_event_provider()->get_num_event_handles();
+			int num_handles = event.get_event_provider()->get_num_event_handles();
 			for (int i=0; i<num_handles; i++)
 			{
-				EventProvider *provider = events[index_events].get_event_provider();
+				EventProvider *provider = event.get_event_provider();
 				if (provider == nullptr)
 					throw Exception("EventProvider is a null pointer!");
 
@@ -418,9 +418,9 @@ void DisplayMessageQueue_X11::process_message()
 	{
 		XNextEvent(display, &event);
 
-		for (std::vector<X11Window *>::size_type i = 0; i < data->windows.size(); i++)
+		for (auto & elem : data->windows)
 		{
-			X11Window *window = data->windows[i];
+			X11Window *window = elem;
 			if (window->get_window() == event.xany.window)
 			{
 				X11Window *mouse_capture_window = current_mouse_capture_window;
@@ -432,15 +432,15 @@ void DisplayMessageQueue_X11::process_message()
 		}
 	}
 
-	for (std::vector<X11Window *>::size_type i = 0; i < data->windows.size(); i++)
+	for (auto & elem : data->windows)
 	{
-		data->windows[i]->process_message_complete();
+		elem->process_message_complete();
 	}
 
 	// Process all input context messages (done seperately, because of the mouse_capture hack)
-	for (std::vector<X11Window *>::size_type i = 0; i < data->windows.size(); i++)
+	for (auto & elem : data->windows)
 	{
-		InputContext context = data->windows[i]->get_ic();
+		InputContext context = elem->get_ic();
 		context.process_messages();
 	}
 }

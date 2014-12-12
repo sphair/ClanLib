@@ -191,9 +191,9 @@ void SoundBuffer_Session_Impl::get_data_in_mixer_frequency(int num_samples, floa
 
 void SoundBuffer_Session_Impl::run_filters(float **temp_data, int num_samples)
 {
-	for (std::vector<SoundFilter *>::size_type index_filter = 0; index_filter < filters.size(); index_filter++)
+	for (auto & elem : filters)
 	{
-		filters[index_filter].filter(temp_data, num_samples, num_buffer_channels);
+		elem.filter(temp_data, num_samples, num_buffer_channels);
 	}
 }
 

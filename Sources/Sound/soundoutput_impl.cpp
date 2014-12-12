@@ -236,12 +236,12 @@ void SoundOutput_Impl::apply_master_volume_on_mix_buffers()
 void SoundOutput_Impl::clamp_mix_buffers()
 {
 	// Make sure values stay inside 16 bit range:
-	for (int chan = 0; chan < 2; chan++)
+	for (auto & elem : mix_buffers)
 	{
 		for (int k=0; k<mix_buffer_size; k++)
 		{
-			if      (mix_buffers[chan][k] > 1.0f)  mix_buffers[chan][k] = 1.0f;
-			else if (mix_buffers[chan][k] < -1.0f) mix_buffers[chan][k] = -1.0f;
+			if      (elem[k] > 1.0f)  elem[k] = 1.0f;
+			else if (elem[k] < -1.0f) elem[k] = -1.0f;
 		}
 	}
 }
