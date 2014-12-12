@@ -70,7 +70,7 @@ std::string Exception::get_message_and_stack_trace() const
 	for (auto & elem : stack_trace)
 	{
 	#ifdef WIN32
-		text += string_format("\r\n    at %1", stack_trace[i]);
+		text += string_format("\r\n    at %1", elem);
 	#else
 		text += string_format("\n    at %1", elem);
 	#endif

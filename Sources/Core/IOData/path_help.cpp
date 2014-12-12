@@ -449,9 +449,9 @@ std::string PathHelp::normalize(
 	{
 #ifdef WIN32
 		if (path_type == path_type_file)
-			normalized_path += elements[i] + "\\";
+			normalized_path += element + "\\";
 		else
-			normalized_path += elements[i] + "/";
+			normalized_path += element + "/";
 #else
 		normalized_path += element + "/";
 #endif
