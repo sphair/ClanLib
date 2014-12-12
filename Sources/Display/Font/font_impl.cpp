@@ -42,6 +42,7 @@
 #include "API/Display/2D/path.h"
 #include "API/Display/Resources/display_cache.h"
 #include "API/Core/IOData/path_help.h"
+#include "../2D/canvas_impl.h"
 
 #ifdef WIN32
 #include "FontEngine/font_engine_win32.h"
@@ -331,6 +332,53 @@ void Font_Impl::load_font( Canvas &canvas, Sprite &sprite, const std::string &gl
 void Font_Impl::get_glyph_path(FontEngine *font_engine, unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics)
 {
 	return font_engine->load_glyph_path(glyph_index, out_path, out_metrics);
+}
+
+void Font_Impl::draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color)
+{
+	int line_spacing = static_cast<int>(font_metrics.get_line_height() + 0.5f);
+
+	RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
+	GraphicContext &gc = canvas.get_gc();
+
+	Pointf pos = canvas.grid_fit(position);
+	float offset_x = 0;
+	float offset_y = 0;
+	UTF8_Reader reader(text.data(), text.length());
+	while (!reader.is_end())
+	{
+		unsigned int glyph = reader.get_char();
+		reader.next();
+
+		if (glyph == '\n')
+		{
+			offset_x = 0;
+			offset_y += line_spacing;
+			continue;
+		}
+
+		Font_TextureGlyph *gptr = glyph_cache.get_glyph(canvas, font_engine, glyph);
+		if (gptr)
+		{
+			if (!gptr->texture.is_null())
+			{
+				float xp = offset_x + pos.x + gptr->offset.x;
+				float yp = offset_y + pos.y + gptr->offset.y;
+
+				Rectf dest_size(xp, yp, Sizef(gptr->geometry.get_size()));
+				if (glyph_cache.enable_subpixel)
+				{
+					batcher->draw_glyph_subpixel(canvas, gptr->geometry, dest_size, color, gptr->texture);
+				}
+				else
+				{
+					batcher->draw_image(canvas, gptr->geometry, dest_size, color, gptr->texture);
+				}
+			}
+			offset_x += gptr->metrics.advance.width;
+			offset_y += gptr->metrics.advance.height;
+		}
+	}
 }
 
 }

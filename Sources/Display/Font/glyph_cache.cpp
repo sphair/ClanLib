@@ -46,7 +46,6 @@
 #include "../2D/render_batch_triangle.h"
 #include "../Render/graphic_context_impl.h"
 #include "API/Display/2D/canvas.h"
-#include "../2D/canvas_impl.h"
 #include "API/Display/Font/glyph_metrics.h"
 
 namespace clan
@@ -98,51 +97,6 @@ Font_TextureGlyph *GlyphCache::get_glyph(Canvas &canvas, FontEngine *font_engine
 /////////////////////////////////////////////////////////////////////////////
 // GlyphCache Operations:
 
-void GlyphCache::draw(FontEngine *font_engine, Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color, int line_spacing)
-{
-	RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
-	GraphicContext &gc = canvas.get_gc();
-
-	Pointf pos = canvas.grid_fit(position);
-	float offset_x = 0;
-	float offset_y = 0;
-	UTF8_Reader reader(text.data(), text.length());
-	while (!reader.is_end())
-	{
-		unsigned int glyph = reader.get_char();
-		reader.next();
-
-		if (glyph == '\n')
-		{
-			offset_x = 0;
-			offset_y += line_spacing;
-			continue;
-		}
-
-		Font_TextureGlyph *gptr = get_glyph(canvas, font_engine, glyph);
-		if (gptr)
-		{
-			if (!gptr->texture.is_null())
-			{
-				float xp = offset_x + pos.x + gptr->offset.x;
-				float yp = offset_y + pos.y + gptr->offset.y;
-
-				Rectf dest_size(xp, yp, Sizef(gptr->geometry.get_size()));
-				if (enable_subpixel)
-				{
-					batcher->draw_glyph_subpixel(canvas, gptr->geometry, dest_size, color, gptr->texture);
-				}
-				else
-				{
-					batcher->draw_image(canvas, gptr->geometry, dest_size, color, gptr->texture);
-				}
-			}
-			offset_x += gptr->metrics.advance.width;
-			offset_y += gptr->metrics.advance.height;
-
-		}
-	}
-}
 
 GlyphMetrics GlyphCache::get_metrics(FontEngine *font_engine, Canvas &canvas, unsigned int glyph)
 {

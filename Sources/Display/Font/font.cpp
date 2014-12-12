@@ -300,9 +300,7 @@ void Font::draw_text(Canvas &canvas, const Pointf &position, const std::string &
 {
 	if (impl)
 	{
-		int line_spacing = static_cast<int>(impl->font_metrics.get_line_height() + 0.5f);
-
-		impl->glyph_cache.draw(impl->font_engine, canvas, position, text, color, line_spacing);
+		impl->draw_text(canvas, position, text, color);
 	}
 }
 

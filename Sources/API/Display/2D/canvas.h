@@ -420,7 +420,7 @@ private:
 
 	friend class Sprite_Impl;
 	friend class Image;
-	friend class GlyphCache;
+	friend class Font_Impl;
 	friend class Path;
 /// \}
 };
