@@ -32,6 +32,7 @@
 #include "font_engine.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/Font/font_description.h"
+#include "API/Display/Font/font_metrics.h"
 #include "API/Display/2D/path.h"
 #include <CoreText/CoreText.h>
 #include <CoreGraphics/CoreGraphics.h>
@@ -47,7 +48,7 @@ public:
 	FontEngine_Cocoa(const FontDescription &description, const std::string &filename, FileSystem& vfs);
 	~FontEngine_Cocoa();
 
-	FontMetrics get_metrics();
+	const FontMetrics &get_metrics() const override { return font_metrics; }
 	FontPixelBuffer get_font_glyph_standard(int glyph, bool anti_alias);
 	FontPixelBuffer get_font_glyph_subpixel(int glyph);
 	FontPixelBuffer get_font_glyph(int glyph) override;
@@ -64,6 +65,7 @@ private:
     float avg_glyph_width;
     float max_glyph_height;
 	FontDescription font_description;
+	FontMetrics font_metrics;
 
 };
 

@@ -32,6 +32,7 @@
 #include "font_engine.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/Font/font_description.h"
+#include "API/Display/Font/font_metrics.h"
 
 namespace clan
 {
@@ -44,7 +45,7 @@ public:
 	FontEngine_Win32(const FontDescription &description, const std::string &filename, FileSystem& fs);
 	~FontEngine_Win32();
 
-	FontMetrics get_metrics() override;
+	const FontMetrics &get_metrics() const override { return font_metrics; }
 
 	FontPixelBuffer get_font_glyph(int glyph) override;
 
@@ -80,6 +81,7 @@ private:
 	float line_height = 0.0f;
 
 	FontDescription font_description;
+	FontMetrics font_metrics;
 
 };
 

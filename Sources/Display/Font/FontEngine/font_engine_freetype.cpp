@@ -123,6 +123,8 @@ FontEngine_Freetype::FontEngine_Freetype(IODevice &io_dev, const FontDescription
 
 	// if the device is 72 DCL_PI then 1 point becomes 1 pixel
 	FT_Set_Char_Size( face, (int)(average_width*64.0f), (int)(height*64.0f), 72, 72 );
+
+	calculate_font_metrics();
 }
 
 FontEngine_Freetype::~FontEngine_Freetype()
@@ -146,32 +148,6 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph(int glyph)
 	{
 		get_font_glyph_standard(glyph, font_description.get_anti_alias());
 	}
-}
-
-
-FontMetrics FontEngine_Freetype::get_metrics()
-{
-	// A glyph has to be loaded to be able to get the scaled metrics information.
-	FT_UInt glyph_index = FT_Get_Char_Index( face, FT_ULong(' ') );
-	FT_Error error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
-	if ( error )
-	throw Exception("freetype: error loading glyph");
-
-	float ascent = face->size->metrics.ascender / 64.0f;
-	float descent = -face->size->metrics.descender / 64.0f;
-	float height = ascent + descent;
-	float max_char_width = face->size->metrics.max_advance / 64.0f;
-	float avg_char_width = (max_char_width * 2.0f) / 3.0f;
-
-	float internal_leading = height - face->size->metrics.y_ppem;
-	float external_leading = (face->size->metrics.height / 64.0f) - height;
-	return FontMetrics(
-		height,
-		height + external_leading,
-		ascent,
-		descent,
-		internal_leading,
-		external_leading);
 }
 
 float FontEngine_Freetype::get_kerning(const std::string::value_type &lchar, const std::string::value_type &rchar)
@@ -581,6 +557,31 @@ std::vector<TaggedPoint> FontEngine_Freetype::get_contour_points(int cont, FT_Ou
 	}
 
 	return points;
+}
+
+void FontEngine_Freetype::calculate_font_metrics()
+{
+	// A glyph has to be loaded to be able to get the scaled metrics information.
+	FT_UInt glyph_index = FT_Get_Char_Index(face, FT_ULong(' '));
+	FT_Error error = FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT);
+	if (error)
+		throw Exception("freetype: error loading glyph");
+
+	float ascent = face->size->metrics.ascender / 64.0f;
+	float descent = -face->size->metrics.descender / 64.0f;
+	float height = ascent + descent;
+	float max_char_width = face->size->metrics.max_advance / 64.0f;
+	float avg_char_width = (max_char_width * 2.0f) / 3.0f;
+
+	float internal_leading = height - face->size->metrics.y_ppem;
+	float external_leading = (face->size->metrics.height / 64.0f) - height;
+	font_metrics = FontMetrics(
+		height,
+		height + external_leading,
+		ascent,
+		descent,
+		internal_leading,
+		external_leading);
 }
 
 }

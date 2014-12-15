@@ -75,6 +75,20 @@ FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, const std::strin
 		handle = 0;
 		throw Exception("GetTextMetrics failed");
 	}
+
+	if (line_height == 0.0f) // To do: maybe have a special 'auto' mode in the FontDescription?
+	{
+		line_height = metrics.tmHeight + metrics.tmExternalLeading;
+	}
+
+	font_metrics = FontMetrics(
+		(float)metrics.tmHeight,
+		line_height,
+		(float)metrics.tmAscent,
+		(float)metrics.tmDescent,
+		(float)metrics.tmInternalLeading,
+		(float)metrics.tmExternalLeading);
+
 	font_description = desc.clone();
 }
 
@@ -96,22 +110,6 @@ void FontEngine_Win32::load_font(const std::string &filename, FileSystem& fs)
 		if (out_number_of_fonts == 0)
 			throw Exception("Unable to register font " + filename);
 	}
-}
-
-FontMetrics FontEngine_Win32::get_metrics()
-{
-	if (line_height == 0.0f) // To do: maybe have a special 'auto' mode in the FontDescription?
-	{
-		line_height = metrics.tmHeight + metrics.tmExternalLeading;
-	}
-
-	return FontMetrics(
-		(float)metrics.tmHeight,
-		line_height,
-		(float)metrics.tmAscent, 
-		(float)metrics.tmDescent, 
-		(float)metrics.tmInternalLeading,
-		(float)metrics.tmExternalLeading);
 }
 
 FontPixelBuffer FontEngine_Win32::get_font_glyph_standard(int glyph, bool anti_alias)

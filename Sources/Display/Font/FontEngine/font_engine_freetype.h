@@ -33,6 +33,7 @@
 #include "../FontEngine/font_engine.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/Font/font_description.h"
+#include "API/Display/Font/font_metrics.h"
 #include "API/Core/System/databuffer.h"
 
 extern "C"
@@ -72,7 +73,7 @@ public:
 /// \{
 
 public:
-	FontMetrics get_metrics() override;
+	const FontMetrics &get_metrics() const override { return font_metrics; }
 	float get_kerning(const std::string::value_type &ch1, const std::string::value_type &ch2);
 	GlyphMetrics get_glyph_metrics(unsigned int glyph);
 
@@ -97,6 +98,7 @@ public:
 /// \{
 
 private:
+	void calculate_font_metrics();
 	TagStruct get_tag_struct(int cont, int index, FT_Outline *outline);
 	int get_index_of_next_contour_point(int cont, int index, FT_Outline *outline);
 	int get_index_of_prev_contour_point(int cont, int index, FT_Outline *outline);
@@ -108,6 +110,7 @@ private:
 
 	DataBuffer data_buffer;
 	FontDescription font_description;
+	FontMetrics font_metrics;
 
 /// \}
 

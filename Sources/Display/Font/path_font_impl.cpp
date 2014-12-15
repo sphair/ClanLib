@@ -92,7 +92,6 @@ void PathFont_Impl::load_font(const FontDescription &original_desc, const std::s
 	IODevice io_dev = fs.open_file(new_filename);
 	font_engine = new FontEngine_Freetype(io_dev, desc);
 #endif
-	font_metrics = font_engine->get_metrics();
 }
 
 
@@ -110,6 +109,7 @@ PathFont_Impl::~PathFont_Impl()
 
 FontMetrics PathFont_Impl::get_font_metrics()
 {
+	const FontMetrics &font_metrics = font_engine->get_metrics();
 	FontMetrics copy(
 		font_metrics.get_height() * scaled_height,
 		font_metrics.get_line_height() * scaled_height,
@@ -140,7 +140,7 @@ GlyphMetrics PathFont_Impl::measure_text(Canvas &canvas, const std::string &stri
 {
 	GlyphMetrics total_metrics;
 
-	int line_spacing = static_cast<int>(font_metrics.get_line_height() + 0.5f);
+	int line_spacing = static_cast<int>(font_engine->get_metrics().get_line_height() + 0.5f);
 	bool first_char = true;
 	Rectf text_bbox;
 
@@ -193,7 +193,7 @@ void PathFont_Impl::draw_text(Canvas &canvas, const Pointf &position, const std:
 
 	clan::Mat4f scale_matrix = clan::Mat4f::scale(scaled_height, scaled_height, scaled_height);
 
-	int line_spacing = font_metrics.get_height() + font_metrics.get_external_leading();
+	int line_spacing = static_cast<int>(font_engine->get_metrics().get_line_height() + 0.5f);
 
 	const Mat4f original_transform = canvas.get_transform();
 	UTF8_Reader reader(text.data(), text.length());

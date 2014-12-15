@@ -88,8 +88,6 @@ private:
 
 	std::map<unsigned int, vector_glyph> char_cache;
 
-	FontMetrics font_metrics;
-
 	FontEngine *font_engine;
 
 	float scaled_height;	// Relative to 100.0f

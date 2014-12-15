@@ -49,6 +49,8 @@ public:
 	Font_Impl();
 	~Font_Impl();
 	
+	const FontMetrics &get_font_metrics() const;
+
 	void load_font(Canvas &canvas, const FontDescription &desc, const std::string &filename, FileSystem fs);
 	void load_font( Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics);
 	int get_character_index(Canvas &canvas, const std::string &text, const Point &point);
@@ -66,7 +68,6 @@ public:
 
 	GlyphCache glyph_cache;
 	FontEngine *font_engine;
-	FontMetrics font_metrics;
 
 private:
 	void free_font();

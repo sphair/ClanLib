@@ -165,19 +165,7 @@ FontEngine_Cocoa::FontEngine_Cocoa(const FontDescription &desc, const std::strin
     IODevice file = vfs.open_file(filename);
     load_font(desc,filename,file);
 
-	font_description = desc.clone();
-
-}
-
-FontEngine_Cocoa::~FontEngine_Cocoa()
-{
-	if (handle)
-        CFRelease(handle);
-}
-
-FontMetrics FontEngine_Cocoa::get_metrics()
-{
-	return FontMetrics(
+	font_metrics = FontMetrics(
 		getLineHeightForFont(handle),
 		CTFontGetAscent(handle),
 		CTFontGetDescent(handle), 
@@ -193,6 +181,15 @@ FontMetrics FontEngine_Cocoa::get_metrics()
 		false /* tmUnderlined */, 
 		false /* tmStruckOut */,
 		false/*CTFontGetAverageCharWidth(handle) == CTFontGetMaxCharWidth(handle)*/);
+
+	font_description = desc.clone();
+
+}
+
+FontEngine_Cocoa::~FontEngine_Cocoa()
+{
+	if (handle)
+        CFRelease(handle);
 }
 
 FontPixelBuffer FontEngine_Cocoa::get_font_glyph(int glyph)

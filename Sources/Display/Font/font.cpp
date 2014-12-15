@@ -336,7 +336,7 @@ std::string Font::get_clipped_text(Canvas &canvas, const Sizef &box_size, const 
 FontMetrics Font::get_font_metrics()
 {
 	if (impl)
-		return impl->font_metrics;
+		return impl->get_font_metrics();
 	return FontMetrics();
 }
 

@@ -62,14 +62,15 @@ namespace clan
 class FontEngine_Sprite : public FontEngine
 {
 public:
-	FontEngine_Sprite(const FontDescription &desc) { font_description = desc.clone(); }
+	FontEngine_Sprite(const FontDescription &desc, FontMetrics &metrics) : font_metrics(metrics) { font_description = desc.clone(); }
 	~FontEngine_Sprite() {}
-	FontMetrics get_metrics() {return FontMetrics(); }
-	FontPixelBuffer get_font_glyph(int glyph) { return FontPixelBuffer(); }
-	void load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics) {}
+	const FontMetrics &get_metrics() const override { return font_metrics; }
+	FontPixelBuffer get_font_glyph(int glyph) override { return FontPixelBuffer(); }
+	void load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics) override {}
 	const FontDescription &get_desc() const override { return font_description; }
 private:
 	FontDescription font_description;
+	FontMetrics font_metrics;
 };
 
 Font_Impl::Font_Impl() : font_engine(NULL)
@@ -115,7 +116,6 @@ void Font_Impl::load_font(Canvas &canvas, const FontDescription &desc, const std
 
 	font_engine = new FontEngine_Freetype(io_dev, average_width, height);
 #endif
-	font_metrics = font_engine->get_metrics();
 }
 
 int Font_Impl::get_character_index(Canvas &canvas, const std::string &text, const Point &point)
@@ -124,6 +124,8 @@ int Font_Impl::get_character_index(Canvas &canvas, const std::string &text, cons
 	int dest_y = 0;
 
 	int character_counter = 0;
+
+	const FontMetrics &font_metrics = font_engine->get_metrics();
 
 	int font_height = font_metrics.get_height();
 	int font_ascent = font_metrics.get_ascent();
@@ -170,11 +172,16 @@ int Font_Impl::get_character_index(Canvas &canvas, const std::string &text, cons
 	return -1;	// Not found
 }
 
+const FontMetrics &Font_Impl::get_font_metrics() const
+{
+	return font_engine->get_metrics();
+}
+
 void Font_Impl::load_font( Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics)
 {
 	free_font();
 
-	font_metrics = metrics;
+	FontMetrics font_metrics = metrics;
 
 	const int length = StringHelp::utf8_length(glyph_list);
 
@@ -311,7 +318,7 @@ void Font_Impl::load_font( Canvas &canvas, Sprite &sprite, const std::string &gl
 	FontDescription desc;
 	desc.set_typeface_name("SPRITE_FONT");
 	desc.set_height(height);
-	font_engine = new FontEngine_Sprite(desc);
+	font_engine = new FontEngine_Sprite(desc, font_metrics);
 
 }
 
@@ -322,7 +329,8 @@ void Font_Impl::get_glyph_path(FontEngine *font_engine, unsigned int glyph_index
 
 void Font_Impl::draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color)
 {
-	int line_spacing = static_cast<int>(font_metrics.get_line_height() + 0.5f);
+
+	int line_spacing = static_cast<int>(font_engine->get_metrics().get_line_height() + 0.5f);
 
 	bool enable_subpixel = font_engine->get_desc().get_subpixel();
 
@@ -378,7 +386,7 @@ GlyphMetrics Font_Impl::measure_text(Canvas &canvas, const std::string &string)
 {
 	GlyphMetrics total_metrics;
 
-	int line_spacing = static_cast<int>(font_metrics.get_line_height() + 0.5f);
+	int line_spacing = static_cast<int>(font_engine->get_metrics().get_line_height() + 0.5f);
 	bool first_char = true;
 	Rectf text_bbox;
 
