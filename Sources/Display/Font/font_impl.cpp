@@ -62,12 +62,14 @@ namespace clan
 class FontEngine_Sprite : public FontEngine
 {
 public:
-	~FontEngine_Sprite() { }
+	FontEngine_Sprite(const FontDescription &desc) { font_description = desc.clone(); }
+	~FontEngine_Sprite() {}
 	FontMetrics get_metrics() {return FontMetrics(); }
-	FontPixelBuffer get_font_glyph_standard(int glyph, bool anti_alias) { return FontPixelBuffer(); }
-	FontPixelBuffer get_font_glyph_subpixel(int glyph) { return FontPixelBuffer(); }
+	FontPixelBuffer get_font_glyph(int glyph) { return FontPixelBuffer(); }
 	void load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics) {}
-
+	const FontDescription &get_desc() const override { return font_description; }
+private:
+	FontDescription font_description;
 };
 
 Font_Impl::Font_Impl() : font_engine(NULL)
@@ -93,17 +95,6 @@ void Font_Impl::load_font(Canvas &canvas, const FontDescription &desc, const std
 {
 	free_font();
 
-	if (desc.get_subpixel())
-	{
-		enable_subpixel = true;
-		anti_alias = true;	// Implies anti_alias is set
-	}
-	else
-	{
-		enable_subpixel = false;
-		anti_alias = desc.get_anti_alias();
-	}
-
 #ifdef WIN32
 	font_engine = new FontEngine_Win32(desc, filename, fs);
 #elif defined(__APPLE__)
@@ -121,13 +112,6 @@ void Font_Impl::load_font(Canvas &canvas, const FontDescription &desc, const std
 	}
 
 	IODevice io_dev = fs.open_file(new_filename);
-
-	int average_width = desc.get_average_width();
-	int height = desc.get_height();
-
-	// Ensure width and height are positive
-	if (average_width < 0) average_width =-average_width;
-	if (height < 0) height =-height;
 
 	font_engine = new FontEngine_Freetype(io_dev, average_width, height);
 #endif
@@ -165,7 +149,7 @@ int Font_Impl::get_character_index(Canvas &canvas, const std::string &text, cons
 			std::string::size_type glyph_pos = reader.get_position();
 			reader.next();
 
-			Font_TextureGlyph *gptr = glyph_cache.get_glyph(canvas, font_engine, glyph, enable_subpixel, anti_alias);
+			Font_TextureGlyph *gptr = glyph_cache.get_glyph(canvas, font_engine, glyph);
 			if (gptr == nullptr) continue;
 
 			Rect position(xpos, ypos - font_ascent, Size(gptr->metrics.advance.width, gptr->metrics.advance.height + font_height + font_external_leading));
@@ -189,10 +173,7 @@ int Font_Impl::get_character_index(Canvas &canvas, const std::string &text, cons
 void Font_Impl::load_font( Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics)
 {
 	free_font();
-	font_engine = new FontEngine_Sprite();
 
-	anti_alias = true;
-	enable_subpixel = false;
 	font_metrics = metrics;
 
 	const int length = StringHelp::utf8_length(glyph_list);
@@ -327,6 +308,11 @@ void Font_Impl::load_font( Canvas &canvas, Sprite &sprite, const std::string &gl
 			font_metrics.get_internal_leading(),
 			font_metrics.get_external_leading());
 	}
+	FontDescription desc;
+	desc.set_typeface_name("SPRITE_FONT");
+	desc.set_height(height);
+	font_engine = new FontEngine_Sprite(desc);
+
 }
 
 void Font_Impl::get_glyph_path(FontEngine *font_engine, unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics)
@@ -337,6 +323,8 @@ void Font_Impl::get_glyph_path(FontEngine *font_engine, unsigned int glyph_index
 void Font_Impl::draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color)
 {
 	int line_spacing = static_cast<int>(font_metrics.get_line_height() + 0.5f);
+
+	bool enable_subpixel = font_engine->get_desc().get_subpixel();
 
 	RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
 	GraphicContext &gc = canvas.get_gc();
@@ -357,7 +345,7 @@ void Font_Impl::draw_text(Canvas &canvas, const Pointf &position, const std::str
 			continue;
 		}
 
-		Font_TextureGlyph *gptr = glyph_cache.get_glyph(canvas, font_engine, glyph, enable_subpixel, anti_alias);
+		Font_TextureGlyph *gptr = glyph_cache.get_glyph(canvas, font_engine, glyph);
 		if (gptr)
 		{
 			if (!gptr->texture.is_null())
@@ -383,7 +371,7 @@ void Font_Impl::draw_text(Canvas &canvas, const Pointf &position, const std::str
 
 GlyphMetrics Font_Impl::get_metrics(Canvas &canvas, unsigned int glyph)
 {
-	return glyph_cache.get_metrics(font_engine, canvas, glyph, enable_subpixel, anti_alias);
+	return glyph_cache.get_metrics(font_engine, canvas, glyph);
 }
 
 GlyphMetrics Font_Impl::measure_text(Canvas &canvas, const std::string &string)
@@ -407,7 +395,7 @@ GlyphMetrics Font_Impl::measure_text(Canvas &canvas, const std::string &string)
 			continue;
 		}
 
-		GlyphMetrics metrics = glyph_cache.get_metrics(font_engine, canvas, glyph, enable_subpixel, anti_alias);
+		GlyphMetrics metrics = glyph_cache.get_metrics(font_engine, canvas, glyph);
 		metrics.bbox_offset.x += total_metrics.advance.width;
 		metrics.bbox_offset.y += total_metrics.advance.height;
 

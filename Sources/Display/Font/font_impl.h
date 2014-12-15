@@ -70,8 +70,6 @@ public:
 
 private:
 	void free_font();
-	bool anti_alias = true;		// Contains the anti alias setting
-	bool enable_subpixel = true;	// true to enable subpixel rendering setting (implies anti_alias is true)
 };
 
 }

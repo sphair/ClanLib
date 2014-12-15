@@ -90,13 +90,13 @@ public:
 
 public:
 	/// \brief Get a glyph. Returns NULL if the glyph was not found
-	Font_TextureGlyph *get_glyph(Canvas &canvas, FontEngine *font_engine, unsigned int glyph, bool use_subpixel, bool use_antialias);
+	Font_TextureGlyph *get_glyph(Canvas &canvas, FontEngine *font_engine, unsigned int glyph);
 
 /// \}
 /// \name Operations
 /// \{
 public:
-	GlyphMetrics get_metrics(FontEngine *font_engine, Canvas &canvas, unsigned int glyph, bool use_subpixel, bool use_antialias);
+	GlyphMetrics get_metrics(FontEngine *font_engine, Canvas &canvas, unsigned int glyph);
 
 	void insert_glyph(Canvas &canvas, unsigned int glyph, Subtexture &sub_texture, const Point &offset, const GlyphMetrics &glyph_metrics);
 	void insert_glyph(Canvas &canvas, FontPixelBuffer &pb);

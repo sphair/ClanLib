@@ -82,8 +82,16 @@ FontEngine_Freetype_Library &FontEngine_Freetype_Library::instance()
 /////////////////////////////////////////////////////////////////////////////
 // FontEngine_Freetype Construction:
 
-FontEngine_Freetype::FontEngine_Freetype(IODevice &io_dev, int average_width, int height) : face(nullptr)
+FontEngine_Freetype::FontEngine_Freetype(IODevice &io_dev, const FontDescription &description) : face(nullptr)
 {
+	font_description = description.clone();
+
+	int average_width = description.get_average_width();
+	int height = description.get_height();
+
+	// Ensure width and height are positive
+	if (average_width < 0) average_width = -average_width;
+	if (height < 0) height = -height;
 
 	data_buffer = DataBuffer(io_dev.get_size());
 	io_dev.read(data_buffer.get_data(), data_buffer.get_size());
@@ -127,6 +135,19 @@ FontEngine_Freetype::~FontEngine_Freetype()
 
 /////////////////////////////////////////////////////////////////////////////
 // FontEngine_Freetype Attributes:
+
+FontPixelBuffer FontEngine_Freetype::get_font_glyph(int glyph)
+{
+	if (font_description.get_subpixel())
+	{
+		return get_font_glyph_subpixel(glyph);
+	}
+	else
+	{
+		get_font_glyph_standard(glyph, font_description.get_anti_alias());
+	}
+}
+
 
 FontMetrics FontEngine_Freetype::get_metrics()
 {

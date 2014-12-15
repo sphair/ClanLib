@@ -46,16 +46,12 @@ public:
 
 	FontMetrics get_metrics() override;
 
-	/// \brief Constructs a pixel buffer from a Freetype glyph.
-	///
-	/// \param glyph The glyph
-	/// \param anti_alias If anti_aliasing should be used
-	FontPixelBuffer get_font_glyph_standard(int glyph, bool anti_alias) override;
+	FontPixelBuffer get_font_glyph(int glyph) override;
 
-	/// \brief Constructs a pixel buffer using subpixel rendering from a Freetype glyph.
-	///
-	/// \param glyph The glyph
-	FontPixelBuffer get_font_glyph_subpixel(int glyph) override;
+	FontPixelBuffer get_font_glyph_standard(int glyph, bool anti_alias);
+
+	FontPixelBuffer get_font_glyph_subpixel(int glyph);
+	const FontDescription &get_desc() const override { return font_description; }
 
 	void load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics) override;
 
@@ -82,6 +78,9 @@ private:
 	HFONT handle = 0;
 	TEXTMETRIC metrics;
 	float line_height = 0.0f;
+
+	FontDescription font_description;
+
 };
 
 }

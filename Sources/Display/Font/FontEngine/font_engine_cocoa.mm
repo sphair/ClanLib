@@ -164,6 +164,9 @@ FontEngine_Cocoa::FontEngine_Cocoa(const FontDescription &desc, const std::strin
     // First load our file into memory
     IODevice file = vfs.open_file(filename);
     load_font(desc,filename,file);
+
+	font_description = desc.clone();
+
 }
 
 FontEngine_Cocoa::~FontEngine_Cocoa()
@@ -192,6 +195,17 @@ FontMetrics FontEngine_Cocoa::get_metrics()
 		false/*CTFontGetAverageCharWidth(handle) == CTFontGetMaxCharWidth(handle)*/);
 }
 
+FontPixelBuffer FontEngine_Cocoa::get_font_glyph(int glyph)
+{
+	if (font_description.get_subpixel())
+	{
+		return get_font_glyph_subpixel(glyph);
+	}
+	else
+	{
+		get_font_glyph_standard(glyph, font_description.get_anti_alias());
+	}
+}
 FontPixelBuffer FontEngine_Cocoa::get_font_glyph_standard(int glyph, bool anti_alias)
 {
 	return get_font_glyph_lcd(glyph);

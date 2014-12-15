@@ -50,6 +50,9 @@ public:
 	FontMetrics get_metrics();
 	FontPixelBuffer get_font_glyph_standard(int glyph, bool anti_alias);
 	FontPixelBuffer get_font_glyph_subpixel(int glyph);
+	FontPixelBuffer get_font_glyph(int glyph) override;
+	const FontDescription &get_desc() const override { return font_description; }
+
 	void load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics);
 
 private:
@@ -60,6 +63,8 @@ private:
 	CTFontRef handle;
     float avg_glyph_width;
     float max_glyph_height;
+	FontDescription font_description;
+
 };
 
 }

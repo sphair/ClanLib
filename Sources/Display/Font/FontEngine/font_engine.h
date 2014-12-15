@@ -40,6 +40,7 @@ class FontMetrics;
 class FontPixelBuffer;
 class Colorf;
 class Path;
+class FontDescription;
 
 /// \brief Font pixel buffer format (holds a pixel buffer containing a glyph)
 class FontPixelBuffer
@@ -73,9 +74,8 @@ class FontEngine
 public:
 	virtual ~FontEngine() { }
 	virtual FontMetrics get_metrics() = 0;
-
-	virtual FontPixelBuffer get_font_glyph_standard(int glyph, bool anti_alias) = 0;
-	virtual FontPixelBuffer get_font_glyph_subpixel(int glyph) = 0;
+	virtual FontPixelBuffer get_font_glyph(int glyph) = 0;
+	virtual const FontDescription &get_desc() const = 0;
 	virtual void load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics) = 0;
 
 };

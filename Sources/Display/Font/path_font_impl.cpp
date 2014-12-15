@@ -90,15 +90,7 @@ void PathFont_Impl::load_font(const FontDescription &original_desc, const std::s
 	}
 
 	IODevice io_dev = fs.open_file(new_filename);
-
-	int average_width = desc.get_average_width();
-	int height = desc.get_height();
-
-	// Ensure width and height are positive
-	if (average_width < 0) average_width =-average_width;
-	if (height < 0) height =-height;
-
-	font_engine = new FontEngine_Freetype(io_dev, average_width, height);
+	font_engine = new FontEngine_Freetype(io_dev, desc);
 #endif
 	font_metrics = font_engine->get_metrics();
 }

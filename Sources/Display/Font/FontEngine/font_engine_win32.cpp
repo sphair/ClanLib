@@ -75,6 +75,7 @@ FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, const std::strin
 		handle = 0;
 		throw Exception("GetTextMetrics failed");
 	}
+	font_description = desc.clone();
 }
 
 FontEngine_Win32::~FontEngine_Win32()
@@ -119,6 +120,18 @@ FontPixelBuffer FontEngine_Win32::get_font_glyph_standard(int glyph, bool anti_a
 		return get_font_glyph_gray8(glyph);
 	else
 		return get_font_glyph_mono(glyph);
+}
+
+FontPixelBuffer FontEngine_Win32::get_font_glyph(int glyph)
+{
+	if (font_description.get_subpixel())
+	{
+		return get_font_glyph_subpixel(glyph);
+	}
+	else
+	{
+		return get_font_glyph_standard(glyph, font_description.get_anti_alias());
+	}
 }
 
 FontPixelBuffer FontEngine_Win32::get_font_glyph_subpixel(int glyph)

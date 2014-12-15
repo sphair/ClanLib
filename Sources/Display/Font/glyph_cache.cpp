@@ -69,7 +69,7 @@ GlyphCache::~GlyphCache()
 /////////////////////////////////////////////////////////////////////////////
 // GlyphCache Attributes:
 
-Font_TextureGlyph *GlyphCache::get_glyph(Canvas &canvas, FontEngine *font_engine, unsigned int glyph, bool use_subpixel, bool use_antialias)
+Font_TextureGlyph *GlyphCache::get_glyph(Canvas &canvas, FontEngine *font_engine, unsigned int glyph)
 {
 	std::vector< Font_TextureGlyph * >::size_type size = glyph_list.size();
 	for (int cnt=0; cnt<size; cnt++)
@@ -79,7 +79,7 @@ Font_TextureGlyph *GlyphCache::get_glyph(Canvas &canvas, FontEngine *font_engine
 	}
 
 	// If glyph does not exist, create one automatically
-	FontPixelBuffer pb = use_subpixel ? font_engine->get_font_glyph_subpixel(glyph) : font_engine->get_font_glyph_standard(glyph, use_antialias);
+	FontPixelBuffer pb = font_engine->get_font_glyph(glyph);
 	if (pb.glyph)	// Ignore invalid glyphs
 		insert_glyph(canvas, pb);
 
@@ -97,9 +97,9 @@ Font_TextureGlyph *GlyphCache::get_glyph(Canvas &canvas, FontEngine *font_engine
 /////////////////////////////////////////////////////////////////////////////
 // GlyphCache Operations:
 
-GlyphMetrics GlyphCache::get_metrics(FontEngine *font_engine, Canvas &canvas, unsigned int glyph, bool use_subpixel, bool use_antialias)
+GlyphMetrics GlyphCache::get_metrics(FontEngine *font_engine, Canvas &canvas, unsigned int glyph)
 {
-	Font_TextureGlyph *gptr = get_glyph(canvas, font_engine, glyph, use_subpixel, use_antialias);
+	Font_TextureGlyph *gptr = get_glyph(canvas, font_engine, glyph);
 	if (gptr)
 	{
 		return gptr->metrics;

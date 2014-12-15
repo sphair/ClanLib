@@ -64,7 +64,7 @@ class FontEngine_Freetype : public FontEngine
 /// \name Construction
 /// \{
 public:
-	FontEngine_Freetype(IODevice &io_dev, int average_width, int height);
+	FontEngine_Freetype(IODevice &io_dev, const FontDescription &description);
 	~FontEngine_Freetype();
 
 /// \}
@@ -78,16 +78,12 @@ public:
 
 	Size get_size(const std::string &text, int pos);
 
-	/// \brief Constructs a pixel buffer from a Freetype glyph.
-	///
-	/// \param glyph The glyph
-	/// \param anti_alias If anti_aliasing should be used
-	FontPixelBuffer get_font_glyph_standard(int glyph, bool anti_alias) override;
+	FontPixelBuffer get_font_glyph(int glyph) override;
 
-	/// \brief Constructs a pixel buffer using subpixel rendering from a Freetype glyph.
-	///
-	/// \param glyph The glyph
-	FontPixelBuffer get_font_glyph_subpixel(int glyph) override;
+	FontPixelBuffer get_font_glyph_standard(int glyph, bool anti_alias);
+
+	FontPixelBuffer get_font_glyph_subpixel(int glyph);
+	const FontDescription &get_desc() const override { return font_description; }
 
 /// \}
 /// \name Operations
@@ -111,6 +107,8 @@ private:
 	std::vector<TaggedPoint> get_contour_points(int cont, FT_Outline *outline);
 
 	DataBuffer data_buffer;
+	FontDescription font_description;
+
 /// \}
 
 };
