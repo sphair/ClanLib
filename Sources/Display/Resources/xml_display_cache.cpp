@@ -86,22 +86,6 @@ Resource<Image> XMLDisplayCache::get_image(Canvas &canvas, const std::string &id
 	return image;
 }
 
-Resource<CollisionOutline> XMLDisplayCache::get_collision(const std::string &id)
-{
-	auto it = collisions.find(id);
-	if (it != collisions.end())
-	{
-		Resource<CollisionOutline> collision = it->second;
-		collision.get() = collision.get().clone();
-		return collision;
-	}
-
-	Resource<CollisionOutline> collision = CollisionOutline::load(id, doc);
-	collisions[id] = collision;
-	collision.get() = collision.get().clone();
-	return collision;
-}
-
 Resource<Texture> XMLDisplayCache::get_texture(GraphicContext &gc, const std::string &id)
 {
 	auto it = textures.find(id);

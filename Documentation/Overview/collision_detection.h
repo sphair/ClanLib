@@ -165,12 +165,4 @@ The following piece of code shows how to access the metadata.
 	}
 \endcode
 
-<h2>Resources</h2>
-
-Collision information can be provided in resources as follows: 
-
-\<collisionoutline file="mysprite.col"/\>  <br/>
-\<collisionoutline file="mysprite.png" accuracy="medium" alpha_limit="128"/\>
-
-
 */

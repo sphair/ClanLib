@@ -40,7 +40,6 @@
 #include "../../Core/Math/origin.h"
 #include "../../Core/Math/circle.h"
 #include "../../Core/IOData/file_system.h"
-#include "../../Core/Resources/resource.h"
 
 namespace clan
 {
@@ -48,11 +47,9 @@ namespace clan
 /// \{
 
 class CollisionOutline_Impl;
-class XMLResourceDocument;
 class OutputSourceProvider;
 class GraphicContext;
 class Color;
-class ResourceManager;
 class Canvas;
 
 /// \brief Collision point information structure.
@@ -158,19 +155,6 @@ public:
 	CollisionOutline(const std::vector<Contour> &contours, const Size &size, OutlineAccuracy accuracy);
 
 	~CollisionOutline();
-/// \name Resources
-/// \{
-public:
-	/// \brief Retrieves a CollisionOutline from the resource manager
-	///
-	/// \param gc = Graphic Context
-	/// \param resources = Resource manager
-	/// \param id = id
-	static Resource<CollisionOutline> resource(const std::string &id, const ResourceManager &resources);
-
-	/// \brief Loads a CollisionOutline from a XML resource definition
-	static CollisionOutline load(const std::string &id, const XMLResourceDocument &doc);
-/// \}
 
 /// \}
 /// \name Attributes

@@ -140,51 +140,6 @@ CollisionOutline::~CollisionOutline()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CollisionOutline Resources:
-
-Resource<CollisionOutline> CollisionOutline::resource(const std::string &id, const ResourceManager &resources)
-{
-	return DisplayCache::get(resources).get_collision(id);
-}
-
-CollisionOutline CollisionOutline::load(const std::string &id, const XMLResourceDocument &doc)
-{
-	XMLResourceNode resource = doc.get_resource(id);
-
-	if (resource.get_type() != "collisionoutline")
-		throw Exception(string_format("Resource '%1' is not of type 'collisionoutline'", id));
-
-	std::string filename = resource.get_element().get_attribute("file");
-	int alpha_limit = StringHelp::text_to_int( (resource.get_element().get_attribute("alpha_value", "128")));
-	std::string accuracy_str = resource.get_element().get_attribute("accuracy", "medium");
-	OutlineAccuracy accuracy;
-
-	if(accuracy_str == "high")
-		accuracy = accuracy_high;
-	else if(accuracy_str == "medium")
-		accuracy = accuracy_medium;
-	else if(accuracy_str == "low")
-		accuracy = accuracy_low;
-	else if(accuracy_str == "poor")
-		accuracy = accuracy_poor;
-    else
-		accuracy = accuracy_raw;
-
-	if (filename.length() >= 3 && filename.substr(filename.length()-3, 3) == "out" )
-	{
-		IODevice file = resource.get_file_system().open_file(PathHelp::combine(resource.get_base_path(), filename));
-		OutlineProviderFile outline_provider(file);
-		return CollisionOutline(outline_provider.get_contours(), outline_provider.get_size(), accuracy_raw);
-	}
-	else
-	{
-		PixelBuffer pbuf = ImageProviderFactory::load(PathHelp::combine(resource.get_base_path(), filename), resource.get_file_system(), "");
-		OutlineProviderBitmap outline_provider(pbuf, alpha_limit);
-		return CollisionOutline(outline_provider.get_contours(), outline_provider.get_size(), accuracy);
-	}
-}
-
-/////////////////////////////////////////////////////////////////////////////
 // CollisionOutline Attributes:
 
 std::vector<Contour> &CollisionOutline::get_contours()
