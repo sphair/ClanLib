@@ -63,23 +63,29 @@ Font::Font( Canvas &canvas, const FontDescription &desc)
 	*this = Font(canvas, desc, "");
 }
 
-Font::Font( Canvas &canvas, const FontDescription &desc, const std::string &ttf_filename) : impl(std::make_shared<Font_Impl>())
+Font::Font(Canvas &canvas, const FontDescription &desc, const std::string &ttf_filename) : impl(std::make_shared<Font_Impl>())
 {
 	std::string path = PathHelp::get_fullpath(ttf_filename, PathHelp::path_type_file);
 	std::string new_filename = PathHelp::get_filename(ttf_filename, PathHelp::path_type_file);
 	FileSystem vfs(path);
 
-	impl->load_font(canvas, desc, new_filename, vfs);
+	FontFace font_face;
+	font_face.add(desc, new_filename, vfs);
+	impl->set_font_face(font_face);
 }
 
 Font::Font( Canvas &canvas, const FontDescription &desc, const std::string &ttf_filename, FileSystem fs) : impl(std::make_shared<Font_Impl>())
 {
-	impl->load_font(canvas, desc, ttf_filename, fs);
+	FontFace font_face;
+	font_face.add(desc, ttf_filename, fs);
+	impl->set_font_face(font_face);
 }
 
 Font::Font( Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics) : impl(std::make_shared<Font_Impl>())
 {
-	impl->load_font(canvas, sprite, glyph_list, spacelen, monospace, metrics);
+	FontFace font_face;
+	font_face.add(canvas, sprite, glyph_list, spacelen, monospace, metrics);
+	impl->set_font_face(font_face);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -198,6 +204,35 @@ bool Font::is_null() const
 
 /////////////////////////////////////////////////////////////////////////////
 // Font Operations:
+
+void Font::set_typeface_name(const std::string &name)
+{
+	if (impl)
+		impl->set_typeface_name(name);
+}
+
+void Font::set_height(int value)
+{
+	if (impl)
+		impl->set_height(value);
+}
+
+void Font::set_weight(int value)
+{
+	if (impl)
+		impl->set_weight(value);
+}
+
+void Font::set_line_height(float height)
+{
+	if (impl)
+		impl->set_line_height(height);
+}
+void Font::set_italic(bool setting)
+{
+	if (impl)
+		impl->set_italic(setting);
+}
 
 GlyphMetrics Font::get_metrics(Canvas &canvas, unsigned int glyph)
 {

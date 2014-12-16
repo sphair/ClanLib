@@ -86,6 +86,7 @@ Collision/outline_math.cpp \
 Collision/outline_provider_bitmap_generic.cpp \
 precomp.cpp \
 Font/font.cpp \
+Font/font_face.cpp \
 Font/path_font_impl.cpp \
 Font/path_font.cpp \
 Font/glyph_cache.cpp \
@@ -93,6 +94,7 @@ Font/font_description.cpp \
 Font/font_metrics_impl.cpp \
 Font/font_metrics.cpp \
 Font/font_impl.cpp \
+Font/font_face_impl.cpp \
 ShaderEffect/shader_effect_description.cpp \
 ShaderEffect/shader_effect.cpp \
 Window/input_context_impl.cpp \

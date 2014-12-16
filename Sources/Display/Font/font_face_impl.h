@@ -32,7 +32,6 @@
 
 #include "API/Display/Font/font_metrics.h"
 #include "API/Display/Font/glyph_metrics.h"
-#include "API/Display/Font/font.h"
 #include "API/Display/Font/font_face.h"
 #include "API/Display/Render/texture_2d.h"
 #include <list>
@@ -44,42 +43,30 @@ namespace clan
 
 class FontEngine;
 
-class Font_Impl
+class Font_Cache
 {
 public:
-	Font_Impl();
-	~Font_Impl();
+	Font_Cache(std::shared_ptr<FontEngine> &new_engine) : engine(new_engine), glyph_cache(std::make_shared<GlyphCache>()) {}
+	std::shared_ptr<FontEngine> engine;
+	std::shared_ptr<GlyphCache> glyph_cache;
+};
 
-	const FontMetrics &get_font_metrics();
+class FontFace_Impl
+{
+public:
+	FontFace_Impl();
+	~FontFace_Impl();
 
-	void set_font_face(FontFace &new_font_face);
+	void load_font(const FontDescription &desc, const std::string &filename, FileSystem fs);
+	void load_font(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics);
 
-	int get_character_index(Canvas &canvas, const std::string &text, const Point &point);
-
-	GlyphMetrics get_metrics(Canvas &canvas, unsigned int glyph);
-
-	GlyphMetrics measure_text(Canvas &canvas, const std::string &string);
-
-	void draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color);
-
-	void get_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics);
-
-	static Font load(Canvas &canvas, const FontDescription &reference_desc, const std::string &id, const XMLResourceDocument &doc, std::function<Resource<Sprite>(Canvas &, const std::string &)> cb_get_sprite);
-
-	void set_typeface_name(const std::string &name);
-	void set_height(int value);
-	void set_weight(int value);
-	void set_line_height(float height);
-	void set_italic(bool setting);
+	Font_Cache get_font(const FontDescription &desc);
+	Font_Cache get_last_font();
 
 private:
-	void select_font_face();
+	TextureGroup texture_group;		// Shared texture group between glyph cache's
+	std::vector<Font_Cache> font_cache;
 
-	FontDescription selected_description;
-
-	GlyphCache *glyph_cache = nullptr;
-	FontEngine *font_engine = nullptr;	// If null, use select_font_face() to update
-	FontFace font_face;
 };
 
 }

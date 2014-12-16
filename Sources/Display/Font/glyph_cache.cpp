@@ -57,7 +57,6 @@ namespace clan
 GlyphCache::GlyphCache()
 {
 	glyph_list.reserve(256);
-	texture_group = TextureGroup(Size(256,256));
 }
 
 GlyphCache::~GlyphCache()
@@ -96,6 +95,11 @@ Font_TextureGlyph *GlyphCache::get_glyph(Canvas &canvas, FontEngine *font_engine
 
 /////////////////////////////////////////////////////////////////////////////
 // GlyphCache Operations:
+
+void GlyphCache::set_texture_group(TextureGroup &new_texture_group)
+{
+	texture_group = new_texture_group;
+}
 
 GlyphMetrics GlyphCache::get_metrics(FontEngine *font_engine, Canvas &canvas, unsigned int glyph)
 {

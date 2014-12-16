@@ -101,6 +101,8 @@ public:
 	void insert_glyph(Canvas &canvas, unsigned int glyph, Subtexture &sub_texture, const Point &offset, const GlyphMetrics &glyph_metrics);
 	void insert_glyph(Canvas &canvas, FontPixelBuffer &pb);
 
+	void set_texture_group(TextureGroup &new_texture_group);
+
 /// \}
 /// \name Implementation
 /// \{

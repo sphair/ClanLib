@@ -60,6 +60,7 @@
 #include "Display/Collision/outline_accuracy.h"
 #include "Display/Collision/outline_circle.h"
 #include "Display/Collision/outline_math.h"
+#include "Display/Font/font_face.h"
 #include "Display/Font/font.h"
 #include "Display/Font/font_description.h"
 #include "Display/Font/font_metrics.h"
