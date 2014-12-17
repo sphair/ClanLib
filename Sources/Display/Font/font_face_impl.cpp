@@ -85,10 +85,10 @@ namespace clan
 	{
 	}
 
-	void FontFace_Impl::load_font(const FontDescription &desc, std::string filename, FileSystem fs)
+	void FontFace_Impl::load_font(const FontDescription &desc, DataBuffer &font_databuffer)
 	{
 #if !defined(WIN32) && !defined(__APPLE__)
-		if (filename.empty())
+		if (font_databuffer.get_size() == 0)
 		{
 			// Obtain the best matching font file from fontconfig.
 			FontConfig &fc = FontConfig::instance();
@@ -96,15 +96,13 @@ namespace clan
 			std::string path = PathHelp::get_fullpath(font_file_path, PathHelp::path_type_file);
 			filename = PathHelp::get_filename(font_file_path, PathHelp::path_type_file);
 			fs = FileSystem(path);
-		}
-#endif
-		DataBuffer font_databuffer;
-		if (!filename.empty())
-		{
+
 			IODevice file = fs.open_file(filename);
 			font_databuffer.set_size(file.get_size());
 			file.read(font_databuffer.get_data(), font_databuffer.get_size());
+
 		}
+#endif
 
 #ifdef WIN32
 		std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Win32>(desc, font_databuffer);
@@ -280,18 +278,24 @@ namespace clan
 		if (font_cache.empty())
 			throw Exception("FontFace is empty");
 
+		DataBuffer font_databuffer;
+
 		// Find cached version
 		for (auto &cache : font_cache)
 		{
 			// TODO: Decide how the line_height is handled here
+			if (desc.get_typeface_name() != cache.engine->get_desc().get_typeface_name())
+				continue;
+
+			font_databuffer = cache.engine->get_databuffer();	// Get shared databuffer
+
 			if (desc == cache.engine->get_desc())
 			{
 				return cache;
 			}
 		}
 		// TODO: Intelligently select fonts, to share font engine data for loaded fonts
-		FileSystem fs;
-		load_font(desc, "", fs);
+		load_font(desc, font_databuffer);
 		return font_cache.back();
 	}
 

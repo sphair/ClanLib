@@ -53,27 +53,45 @@ namespace clan
 		FontDescription desc;
 		desc.set_typeface_name(typeface_name);
 		desc.set_height(height);
-		FileSystem fs;
-		impl->load_font(desc, "", fs);
+
+		DataBuffer font_databuffer;
+		impl->load_font(desc, font_databuffer);
 	}
 
 	void FontFace::add(const FontDescription &desc)
 	{
-		FileSystem fs;
-		impl->load_font(desc, "", fs);
+		DataBuffer font_databuffer;
+		impl->load_font(desc, font_databuffer);
 	}
 
 	void FontFace::add(const FontDescription &desc, const std::string &ttf_filename)
 	{
-		std::string path = PathHelp::get_fullpath(ttf_filename, PathHelp::path_type_file);
-		std::string new_filename = PathHelp::get_filename(ttf_filename, PathHelp::path_type_file);
-		FileSystem fs(path);
-		impl->load_font(desc, new_filename, fs);
+		DataBuffer font_databuffer;
+		if (!ttf_filename.empty())
+		{
+			std::string path = PathHelp::get_fullpath(ttf_filename, PathHelp::path_type_file);
+			std::string new_filename = PathHelp::get_filename(ttf_filename, PathHelp::path_type_file);
+			FileSystem fs(path);
+
+			IODevice file = fs.open_file(new_filename);
+			font_databuffer.set_size(file.get_size());
+			file.read(font_databuffer.get_data(), font_databuffer.get_size());
+		}
+
+		impl->load_font(desc, font_databuffer);
 	}
 
 	void FontFace::add(const FontDescription &desc, const std::string &ttf_filename, FileSystem fs)
 	{
-		impl->load_font(desc, ttf_filename, fs);
+		DataBuffer font_databuffer;
+		if (!ttf_filename.empty())
+		{
+			IODevice file = fs.open_file(ttf_filename);
+			font_databuffer.set_size(file.get_size());
+			file.read(font_databuffer.get_data(), font_databuffer.get_size());
+		}
+
+		impl->load_font(desc, font_databuffer);
 	}
 
 	void FontFace::add(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics)
