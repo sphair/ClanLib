@@ -284,6 +284,7 @@ namespace clan
 		for (auto &cache : font_cache)
 		{
 			// TODO: Decide how the line_height is handled here
+
 			if (desc.get_typeface_name() != cache.engine->get_desc().get_typeface_name())
 				continue;
 
@@ -294,7 +295,6 @@ namespace clan
 				return cache;
 			}
 		}
-		// TODO: Intelligently select fonts, to share font engine data for loaded fonts
 		load_font(desc, font_databuffer);
 		return font_cache.back();
 	}
