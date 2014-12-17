@@ -82,7 +82,7 @@ FontEngine_Freetype_Library &FontEngine_Freetype_Library::instance()
 /////////////////////////////////////////////////////////////////////////////
 // FontEngine_Freetype Construction:
 
-FontEngine_Freetype::FontEngine_Freetype(IODevice &io_dev, const FontDescription &description) : face(nullptr)
+FontEngine_Freetype::FontEngine_Freetype(const FontDescription &description, DataBuffer &font_databuffer) : face(nullptr)
 {
 	font_description = description.clone();
 
@@ -93,8 +93,7 @@ FontEngine_Freetype::FontEngine_Freetype(IODevice &io_dev, const FontDescription
 	if (average_width < 0) average_width = -average_width;
 	if (height < 0) height = -height;
 
-	data_buffer = DataBuffer(io_dev.get_size());
-	io_dev.read(data_buffer.get_data(), data_buffer.get_size());
+	data_buffer = font_databuffer;
 
 	FontEngine_Freetype_Library &library = FontEngine_Freetype_Library::instance();
 

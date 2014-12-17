@@ -57,7 +57,7 @@ public:
 	FontFace_Impl();
 	~FontFace_Impl();
 
-	void load_font(const FontDescription &desc, const std::string &filename, FileSystem fs);
+	void load_font(const FontDescription &desc, std::string filename, FileSystem fs);
 	void load_font(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics);
 
 	Font_Cache get_font(const FontDescription &desc);

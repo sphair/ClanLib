@@ -123,14 +123,13 @@ CTFontRef CreateCTFontWithPixelSize(CGFontRef cgFont,
     return ct_font;
 }
     
-void FontEngine_Cocoa::load_font(const FontDescription& desc, const std::string& filename, IODevice& file){
-    char * rawBytes = new char[file.get_size()]; // TODO: A better version would use CGDataProviderCreateDirect and give it callbacks to load from vfs itself.
-    file.read(rawBytes,file.get_size());
+void FontEngine_Cocoa::load_font(const FontDescription& desc, DataBuffer &font_databuffer){
     // Then, create a data provider
+	data_buffer = font_databuffer;
     CGDataProviderRef dataProvider =  CGDataProviderCreateWithData (
-                                                                    rawBytes,
-                                                                    rawBytes,
-                                                                    file.get_size(),
+                                                                    data_buffer.get_data(),
+                                                                    data_buffer.get_data(),
+                                                                    data_buffer.get_size(),
                                                                     fontProviderReleaseData
                                                                     );
     // Now use our data provider to load a CGFont
@@ -151,19 +150,17 @@ void FontEngine_Cocoa::load_font(const FontDescription& desc, const std::string&
 
     CFRelease(dataProvider);
     CFRelease(theCGFont);
-    //delete[] rawBytes;
     if (handle == 0)
         throw Exception(string_format("Unable to create font %1", desc.get_typeface_name()));
     
 }
     
-FontEngine_Cocoa::FontEngine_Cocoa(const FontDescription &desc, const std::string &filename, FileSystem& vfs)
+FontEngine_Cocoa::FontEngine_Cocoa(const FontDescription &desc, DataBuffer &font_databuffer)
 : handle(0)
 {
 
     // First load our file into memory
-    IODevice file = vfs.open_file(filename);
-    load_font(desc,filename,file);
+    load_font(desc,font_databuffer);
 
 	font_metrics = FontMetrics(
 		getLineHeightForFont(handle),

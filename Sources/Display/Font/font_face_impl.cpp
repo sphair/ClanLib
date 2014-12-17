@@ -83,28 +83,35 @@ namespace clan
 	{
 	}
 
-	void FontFace_Impl::load_font(const FontDescription &desc, const std::string &filename, FileSystem fs)
+	void FontFace_Impl::load_font(const FontDescription &desc, std::string filename, FileSystem fs)
 	{
-#ifdef WIN32
-		std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Win32>(desc, filename, fs);
-		font_cache.push_back(Font_Cache(engine));
-#elif defined(__APPLE__)
-		std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Cocoa>(desc, filename, fs);
-		font_cache.push_back(Font_Cache(engine));
-#else
-		std::string new_filename = filename;
+#if !defined(WIN32) && !defined(__APPLE__)
 		if (filename.empty())
 		{
 			// Obtain the best matching font file from fontconfig.
 			FontConfig &fc = FontConfig::instance();
 			std::string font_file_path = fc.match_font(desc);
 			std::string path = PathHelp::get_fullpath(font_file_path, PathHelp::path_type_file);
-			new_filename = PathHelp::get_filename(font_file_path, PathHelp::path_type_file);
+			filename = PathHelp::get_filename(font_file_path, PathHelp::path_type_file);
 			fs = FileSystem(path);
 		}
+#endif
+		DataBuffer font_databuffer;
+		if (!filename.empty())
+		{
+			IODevice file = fs.open_file(filename);
+			font_databuffer.set_size(file.get_size());
+			file.read(font_databuffer.get_data(), font_databuffer.get_size());
+		}
 
-		IODevice io_dev = fs.open_file(new_filename);
-		std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Freetype>(io_dev, desc);
+#ifdef WIN32
+		std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Win32>(desc, font_databuffer);
+		font_cache.push_back(Font_Cache(engine));
+#elif defined(__APPLE__)
+		std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Cocoa>(desc, font_databuffer);
+		font_cache.push_back(Font_Cache(engine));
+#else
+		std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Freetype>(desc, font_databuffer);
 		font_cache.push_back(Font_Cache(engine));
 #endif
 		font_cache.back().glyph_cache->set_texture_group(texture_group);

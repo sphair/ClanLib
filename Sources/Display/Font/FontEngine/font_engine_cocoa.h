@@ -36,6 +36,7 @@
 #include "API/Display/2D/path.h"
 #include <CoreText/CoreText.h>
 #include <CoreGraphics/CoreGraphics.h>
+#include "API/Core/System/databuffer.h"
 
 namespace clan
 {
@@ -45,7 +46,7 @@ class DataBuffer;
 class FontEngine_Cocoa : public FontEngine
 {
 public:
-	FontEngine_Cocoa(const FontDescription &description, const std::string &filename, FileSystem& vfs);
+	FontEngine_Cocoa(const FontDescription &description, DataBuffer &font_databuffer);
 	~FontEngine_Cocoa();
 
 	const FontMetrics &get_metrics() const override { return font_metrics; }
@@ -57,7 +58,7 @@ public:
 	void load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics);
 
 private:
-    void load_font(const FontDescription& desc, const std::string& filename, IODevice& file);
+	void load_font(const FontDescription& desc, DataBuffer &font_databuffer);
 	FontPixelBuffer get_font_glyph_lcd(int glyph);
 	FontPixelBuffer get_empty_font_glyph(int glyph);
 
@@ -66,6 +67,7 @@ private:
     float max_glyph_height;
 	FontDescription font_description;
 	FontMetrics font_metrics;
+	DataBuffer data_buffer;
 
 };
 

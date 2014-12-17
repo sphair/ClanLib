@@ -39,10 +39,10 @@
 namespace clan
 {
 
-FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, const std::string &filename, FileSystem& fs)
+FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, DataBuffer &font_databuffer)
 	: handle(0), line_height(desc.get_line_height())
 {
-	load_font(filename, fs);
+	load_font(font_databuffer);
 
 	handle = CreateFont(
 		-std::abs(desc.get_height()),
@@ -98,17 +98,14 @@ FontEngine_Win32::~FontEngine_Win32()
 		DeleteObject(handle);
 }
 
-void FontEngine_Win32::load_font(const std::string &filename, FileSystem& fs)
+void FontEngine_Win32::load_font(DataBuffer &font_databuffer)
 {
-	if (!filename.empty())
+	if (font_databuffer.get_size())
 	{
-		IODevice file = fs.open_file(filename);
-		DataBuffer data(file.get_size());
-		file.read(data.get_data(), data.get_size());
 		DWORD out_number_of_fonts = 0;
-		HANDLE font_handle = AddFontMemResourceEx(data.get_data(), data.get_size(), 0, &out_number_of_fonts);
+		HANDLE font_handle = AddFontMemResourceEx(font_databuffer.get_data(), font_databuffer.get_size(), 0, &out_number_of_fonts);
 		if (out_number_of_fonts == 0)
-			throw Exception("Unable to register font " + filename);
+			throw Exception("Unable to register font");
 	}
 }
 

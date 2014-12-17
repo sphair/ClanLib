@@ -42,7 +42,7 @@ class DataBuffer;
 class FontEngine_Win32 : public FontEngine
 {
 public:
-	FontEngine_Win32(const FontDescription &description, const std::string &filename, FileSystem& fs);
+	FontEngine_Win32(const FontDescription &description, DataBuffer &font_databuffer);
 	~FontEngine_Win32();
 
 	const FontMetrics &get_metrics() const override { return font_metrics; }
@@ -57,7 +57,7 @@ public:
 	void load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics) override;
 
 private:
-	void load_font(const std::string &filename, FileSystem& fs);
+	void load_font(DataBuffer &font_databuffer);
 
 	inline Pointf to_point(POINTFX &fx)
 	{

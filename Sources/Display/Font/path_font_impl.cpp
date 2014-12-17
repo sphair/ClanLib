@@ -67,31 +67,39 @@ PathFont_Impl::PathFont_Impl() : font_engine(NULL)
 {
 }
 
-void PathFont_Impl::load_font(const FontDescription &original_desc, const std::string &filename, FileSystem fs)
+void PathFont_Impl::load_font(const FontDescription &original_desc, std::string filename, FileSystem fs)
 {
 	FontDescription desc = original_desc.clone();
 	desc.set_height(100.0f);
 	scaled_height = original_desc.get_height() / 100.0f;
 
-#ifdef WIN32
-	font_engine = new FontEngine_Win32(desc, filename, fs);
-#elif defined(__APPLE__)
-	font_engine = new FontEngine_Cocoa(desc, filename, fs);
-#else
-	std::string new_filename = filename;
+#if !defined(WIN32) && !defined(__APPLE__)
 	if (filename.empty())
 	{
 		// Obtain the best matching font file from fontconfig.
 		FontConfig &fc = FontConfig::instance();
 		std::string font_file_path = fc.match_font(desc);
 		std::string path = PathHelp::get_fullpath(font_file_path, PathHelp::path_type_file);
-		new_filename = PathHelp::get_filename(font_file_path, PathHelp::path_type_file);
+		filename = PathHelp::get_filename(font_file_path, PathHelp::path_type_file);
 		fs = FileSystem(path);
 	}
-
-	IODevice io_dev = fs.open_file(new_filename);
-	font_engine = new FontEngine_Freetype(io_dev, desc);
 #endif
+	DataBuffer font_databuffer;
+	if (!filename.empty())
+	{
+		IODevice file = fs.open_file(filename);
+		font_databuffer.set_size(file.get_size());
+		file.read(font_databuffer.get_data(), font_databuffer.get_size());
+	}
+
+#ifdef WIN32
+	font_engine = new FontEngine_Win32(desc, font_databuffer);
+#elif defined(__APPLE__)
+	font_engine = new FontEngine_Cocoa(desc, font_databuffer);
+#else
+	font_engine = new FontEngine_Freetype(desc, font_databuffer);
+#endif
+
 }
 
 
