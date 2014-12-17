@@ -554,4 +554,11 @@ void FontEngine_Win32::load_glyph_path(unsigned int glyph_index, Path &path, Gly
 
 }
 
+DataBuffer FontEngine_Win32::get_databuffer()
+{
+	// Not required for Win32, since the font is already imported for the application for the OS
+	return DataBuffer();
+}
+
+
 }

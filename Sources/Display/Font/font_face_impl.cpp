@@ -68,6 +68,8 @@ namespace clan
 		FontPixelBuffer get_font_glyph(int glyph) override { return FontPixelBuffer(); }
 		void load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics) override {}
 		const FontDescription &get_desc() const override { return font_description; }
+		DataBuffer get_databuffer() override { return DataBuffer(); }
+
 	private:
 		FontDescription font_description;
 		FontMetrics font_metrics;

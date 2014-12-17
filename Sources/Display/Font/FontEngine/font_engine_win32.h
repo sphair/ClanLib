@@ -55,6 +55,7 @@ public:
 	const FontDescription &get_desc() const override { return font_description; }
 
 	void load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics) override;
+	DataBuffer get_databuffer() override;
 
 private:
 	void load_font(DataBuffer &font_databuffer);

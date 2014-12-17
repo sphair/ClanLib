@@ -41,6 +41,7 @@ class FontPixelBuffer;
 class Colorf;
 class Path;
 class FontDescription;
+class DataBuffer;
 
 /// \brief Font pixel buffer format (holds a pixel buffer containing a glyph)
 class FontPixelBuffer
@@ -75,6 +76,7 @@ public:
 	virtual ~FontEngine() { }
 	virtual const FontMetrics &get_metrics() const = 0;
 	virtual FontPixelBuffer get_font_glyph(int glyph) = 0;
+	virtual DataBuffer get_databuffer() = 0;		// Get the font databuffer that was used to create the font. Empty when databuffer is not required or font registered with the OS
 	virtual const FontDescription &get_desc() const = 0;
 	virtual void load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics) = 0;
 

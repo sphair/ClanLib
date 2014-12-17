@@ -85,6 +85,7 @@ public:
 
 	FontPixelBuffer get_font_glyph_subpixel(int glyph);
 	const FontDescription &get_desc() const override { return font_description; }
+	DataBuffer get_databuffer() override { return data_buffer; }
 
 /// \}
 /// \name Operations
