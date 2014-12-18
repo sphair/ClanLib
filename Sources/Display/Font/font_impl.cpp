@@ -30,7 +30,6 @@
 
 #include "Display/precomp.h"
 #include "font_impl.h"
-#include "font_face_impl.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/Font/font_metrics.h"
 #include "API/Display/Font/font_description.h"
@@ -57,7 +56,15 @@ Font_Impl::Font_Impl()
 void Font_Impl::set_font_face(FontFace &new_font_face)
 {
 	font_face = new_font_face;
-	selected_description = font_face.impl->get_last_font().engine->get_desc().clone();
+	const FontDescription &description = font_face.impl->get_last_font().engine->get_desc();
+
+	selected_description.typeface_name = description.get_typeface_name();
+	selected_description.height = description.get_height();
+	selected_description.weight = description.get_weight();
+	selected_description.style = description.get_style();
+
+	selected_line_height = description.get_line_height();
+
 	select_font_face();
 }
 
@@ -246,30 +253,30 @@ GlyphMetrics Font_Impl::measure_text(Canvas &canvas, const std::string &string)
 
 void Font_Impl::set_typeface_name(const std::string &name)
 {
-	selected_description.set_typeface_name(name);
+	selected_description.typeface_name = name;
 	font_engine = nullptr;
 }
 
 void Font_Impl::set_height(float value)
 {
-	selected_description.set_height(value);
+	selected_description.height = value;
 	font_engine = nullptr;
 }
 
 void Font_Impl::set_weight(FontWeight value)
 {
-	selected_description.set_weight(value);
+	selected_description.weight = value;
 	font_engine = nullptr;
 }
 
 void Font_Impl::set_line_height(float height)
 {
-	selected_description.set_line_height(height);
+	selected_line_height = height;
 	font_engine = nullptr;
 }
 void Font_Impl::set_style(FontStyle setting)
 {
-	selected_description.set_style(setting);
+	selected_description.style = setting;
 	font_engine = nullptr;
 }
 

@@ -273,29 +273,45 @@ namespace clan
 	}
 
 
-	Font_Cache FontFace_Impl::get_font(const FontDescription &desc)
+	Font_Cache FontFace_Impl::get_font(const Font_Selected &desc)
 	{
 		if (font_cache.empty())
 			throw Exception("FontFace is empty");
 
-		DataBuffer font_databuffer;
-
 		// Find cached version
 		for (auto &cache : font_cache)
 		{
-			// TODO: Decide how the line_height is handled here
+			if (desc.typeface_name != cache.engine->get_desc().get_typeface_name())
+				continue;
+			if (desc.height != cache.engine->get_desc().get_height())
+				continue;
+			if (desc.style != cache.engine->get_desc().get_style())
+				continue;
+			if (desc.weight != cache.engine->get_desc().get_weight())
+				continue;
 
-			if (desc.get_typeface_name() != cache.engine->get_desc().get_typeface_name())
+			return cache;
+		}
+
+		// Find existing typeface, to obtain shared data that we can copy
+		FontDescription new_desc;
+		DataBuffer font_databuffer;
+		for (auto &cache : font_cache)
+		{
+			if (desc.typeface_name != cache.engine->get_desc().get_typeface_name())
 				continue;
 
 			font_databuffer = cache.engine->get_databuffer();	// Get shared databuffer
-
-			if (desc == cache.engine->get_desc())
-			{
-				return cache;
-			}
+			new_desc = cache.engine->get_desc().clone();
+			break;
 		}
-		load_font(desc, font_databuffer);
+
+		new_desc.set_typeface_name(desc.typeface_name);
+		new_desc.set_height(desc.height);
+		new_desc.set_style(desc.style);
+		new_desc.set_weight(desc.weight);
+
+		load_font(new_desc, font_databuffer);
 		return font_cache.back();
 	}
 

@@ -38,6 +38,7 @@
 #include <list>
 #include <map>
 #include "glyph_cache.h"
+#include "font_face_impl.h"
 
 namespace clan
 {
@@ -75,7 +76,8 @@ public:
 private:
 	void select_font_face();
 
-	FontDescription selected_description;
+	Font_Selected selected_description;
+	float selected_line_height = 0.0f;
 
 	GlyphCache *glyph_cache = nullptr;
 	FontEngine *font_engine = nullptr;	// If null, use select_font_face() to update

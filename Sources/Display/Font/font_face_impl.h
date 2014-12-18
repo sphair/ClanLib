@@ -43,6 +43,16 @@ namespace clan
 
 class FontEngine;
 
+class Font_Selected
+{
+public:
+	// This structure contains the FontDescription options that are selectable in clan::Font
+	std::string typeface_name;
+	float height = 20.0f;
+	FontWeight weight = FontWeight::normal;
+	FontStyle style = FontStyle::normal;
+};
+
 class Font_Cache
 {
 public:
@@ -60,7 +70,7 @@ public:
 	void load_font(const FontDescription &desc, DataBuffer &font_databuffer);
 	void load_font(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics);
 
-	Font_Cache get_font(const FontDescription &desc);
+	Font_Cache get_font(const Font_Selected &desc);
 	Font_Cache get_last_font();
 
 private:
