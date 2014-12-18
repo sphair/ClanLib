@@ -75,6 +75,17 @@ void Font_Impl::select_font_face()
 		Font_Cache font_cache = font_face.impl->get_font(selected_description);
 		glyph_cache = font_cache.glyph_cache.get();
 		font_engine = font_cache.engine.get();
+
+		const FontMetrics &metrics = font_engine->get_metrics();
+		selected_metrics = FontMetrics(
+			metrics.get_height() * scaled_height,
+			metrics.get_ascent() * scaled_height,
+			metrics.get_descent() * scaled_height,
+			metrics.get_internal_leading() * scaled_height,
+			metrics.get_external_leading() * scaled_height,
+			selected_line_height	// Do not scale the line height
+			);
+
 	}
 }
 
@@ -91,11 +102,10 @@ int Font_Impl::get_character_index(Canvas &canvas, const std::string &text, cons
 
 	int character_counter = 0;
 
-	const FontMetrics &font_metrics = font_engine->get_metrics();
-
-	int font_height = font_metrics.get_height();
-	int font_ascent = font_metrics.get_ascent();
-	int font_external_leading = font_metrics.get_external_leading();
+	int font_height = selected_metrics.get_height();
+	int font_ascent = selected_metrics.get_ascent();
+	int font_external_leading = selected_metrics.get_external_leading();
+	int line_spacing = static_cast<int>(selected_line_height + 0.5f);
 
 	//TODO: Fix me, so we do not need to line split
 
@@ -130,7 +140,7 @@ int Font_Impl::get_character_index(Canvas &canvas, const std::string &text, cons
 			ypos += gptr->metrics.advance.height;
 		}
 
-		dest_y += font_height + font_external_leading;
+		dest_y += line_spacing;
 
 		character_counter += string_length + 1;		// (Including the '\n')
 
@@ -141,7 +151,7 @@ int Font_Impl::get_character_index(Canvas &canvas, const std::string &text, cons
 const FontMetrics &Font_Impl::get_font_metrics()
 {
 	select_font_face();
-	return font_engine->get_metrics();
+	return selected_metrics;
 }
 
 void Font_Impl::get_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics)
@@ -153,7 +163,7 @@ void Font_Impl::get_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMe
 void Font_Impl::draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color)
 {
 	select_font_face();
-	int line_spacing = static_cast<int>(font_engine->get_metrics().get_line_height() + 0.5f);
+	int line_spacing = static_cast<int>(selected_line_height + 0.5f);
 
 	bool enable_subpixel = font_engine->get_desc().get_subpixel();
 
@@ -211,7 +221,7 @@ GlyphMetrics Font_Impl::measure_text(Canvas &canvas, const std::string &string)
 	select_font_face();
 	GlyphMetrics total_metrics;
 
-	int line_spacing = static_cast<int>(font_engine->get_metrics().get_line_height() + 0.5f);
+	int line_spacing = static_cast<int>(selected_line_height + 0.5f);
 	bool first_char = true;
 	Rectf text_bbox;
 

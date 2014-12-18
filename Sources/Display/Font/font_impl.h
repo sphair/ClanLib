@@ -78,6 +78,8 @@ private:
 
 	Font_Selected selected_description;
 	float selected_line_height = 0.0f;
+	float scaled_height = 1.0f;	// Currently not implemented
+	FontMetrics selected_metrics;
 
 	GlyphCache *glyph_cache = nullptr;
 	FontEngine *font_engine = nullptr;	// If null, use select_font_face() to update
