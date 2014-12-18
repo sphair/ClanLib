@@ -86,12 +86,12 @@ FontEngine_Freetype::FontEngine_Freetype(const FontDescription &description, Dat
 {
 	font_description = description.clone();
 
-	int average_width = description.get_average_width();
-	int height = description.get_height();
+	float average_width = description.get_average_width();
+	float height = description.get_height();
 
 	// Ensure width and height are positive
-	if (average_width < 0) average_width = -average_width;
-	if (height < 0) height = -height;
+	if (average_width < 0.0f) average_width = -average_width;
+	if (height < 0.0f) height = -height;
 
 	data_buffer = font_databuffer;
 

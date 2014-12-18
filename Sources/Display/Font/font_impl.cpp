@@ -250,13 +250,13 @@ void Font_Impl::set_typeface_name(const std::string &name)
 	font_engine = nullptr;
 }
 
-void Font_Impl::set_height(int value)
+void Font_Impl::set_height(float value)
 {
 	selected_description.set_height(value);
 	font_engine = nullptr;
 }
 
-void Font_Impl::set_weight(int value)
+void Font_Impl::set_weight(FontWeight value)
 {
 	selected_description.set_weight(value);
 	font_engine = nullptr;
@@ -267,9 +267,9 @@ void Font_Impl::set_line_height(float height)
 	selected_description.set_line_height(height);
 	font_engine = nullptr;
 }
-void Font_Impl::set_italic(bool setting)
+void Font_Impl::set_style(FontStyle setting)
 {
-	selected_description.set_italic(setting);
+	selected_description.set_style(setting);
 	font_engine = nullptr;
 }
 

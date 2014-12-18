@@ -32,13 +32,6 @@
 
 namespace clan
 {
-	enum class FontStyle
-	{
-		normal,
-		italic,
-		oblique
-	};
-
 	class TextShadow
 	{
 	public:
@@ -70,7 +63,7 @@ namespace clan
 		float size = 11.0f;
 		float line_height = 0.0f;
 		FontStyle style = FontStyle::normal;
-		int weight = 400;
+		FontWeight weight = FontWeight::normal;
 		Colorf color = Colorf::black;
 		TextShadow shadow;
 		TextTransform transform = TextTransform::none;

@@ -30,6 +30,7 @@
 
 #include <string>
 #include <memory>
+#include "API/Display/Font/font_description.h"
 
 namespace clan
 {
@@ -59,8 +60,8 @@ namespace clan
 
 		void set_weight_normal();
 		void set_weight_bold();
-		void set_weight(int weight);
-		int weight() const;
+		void set_weight(FontWeight weight);
+		FontWeight weight() const;
 
 		void set_style_normal();
 		void set_style_italic();

@@ -43,16 +43,13 @@ public:
 /// \{
 public:
 	std::string typeface_name;
-	int height = 0;
+	float height = 20.0f;
 	float line_height = 0.0f;
-	int average_width = 0;
+	float average_width = 0.0f;
 	float escapement = 0.0f;
 	float orientation = 0.0f;
-	int weight = 0;
-	bool italic = false;
-	bool underline = false;
-	bool strikeout = false;
-	bool fixed_pitch = false;
+	FontWeight weight = FontWeight::normal;
+	FontStyle style = FontStyle::normal;
 	bool anti_alias = true;
 	bool subpixel = true;
 	FontDescription::Charset charset = FontDescription::charset_default;

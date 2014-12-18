@@ -74,7 +74,7 @@ const std::string &FontDescription::get_typeface_name() const
 	return impl->typeface_name;
 }
 
-int FontDescription::get_height() const
+float FontDescription::get_height() const
 {
 	return impl->height;
 }
@@ -84,7 +84,7 @@ float FontDescription::get_line_height() const
 	return impl->line_height;
 }
 
-int FontDescription::get_average_width() const
+float FontDescription::get_average_width() const
 {
 	return impl->average_width;
 }
@@ -99,29 +99,14 @@ float FontDescription::get_orientation() const
 	return impl->orientation;
 }
 
-int FontDescription::get_weight() const
+FontWeight FontDescription::get_weight() const
 {
 	return impl->weight;
 }
 
-bool FontDescription::get_italic() const
+FontStyle FontDescription::get_style() const
 {
-	return impl->italic;
-}
-
-bool FontDescription::get_underline() const
-{
-	return impl->underline;
-}
-
-bool FontDescription::get_strikeout() const
-{
-	return impl->strikeout;
-}
-
-bool FontDescription::get_fixed_pitch() const
-{
-	return impl->fixed_pitch;
+	return impl->style;
 }
 
 bool FontDescription::get_anti_alias() const
@@ -141,20 +126,17 @@ FontDescription::Charset FontDescription::get_charset() const
 
 std::string FontDescription::get_unique_id() const
 {
-	StringFormat format("%1-%2-%3-%4-%5-%6-%7-%8-%9-%10-%11-%12-%13");
+	StringFormat format("%1-%2-%3-%4-%5-%6-%7-%8-%9-%10");
 	format.set_arg(1, impl->typeface_name);
-	format.set_arg(2, impl->anti_alias);
-	format.set_arg(3, impl->subpixel);
-	format.set_arg(4, impl->height);
-	format.set_arg(5, impl->average_width);
-	format.set_arg(6, impl->escapement);
-	format.set_arg(7, impl->orientation);
-	format.set_arg(8, impl->weight);
-	format.set_arg(9, impl->italic);
-	format.set_arg(10, impl->underline);
-	format.set_arg(11, impl->strikeout);
-	format.set_arg(12, impl->fixed_pitch);
-	format.set_arg(13, impl->charset);
+	format.set_arg(2, impl->anti_alias ? 1 : 0);
+	format.set_arg(3, impl->subpixel ? 1 : 0);
+	format.set_arg(4, static_cast<int>(impl->height * 10.0f + 0.5f));
+	format.set_arg(5, static_cast<int>(impl->average_width * 10.0f + 0.5f));
+	format.set_arg(6, static_cast<int>(impl->escapement * 10.0f + 0.5f));
+	format.set_arg(7, static_cast<int>(impl->orientation * 10.0f + 0.5f));
+	format.set_arg(8, static_cast<int>(impl->weight));
+	format.set_arg(9, static_cast<int>(impl->style));
+	format.set_arg(10, impl->charset);
 	return format.get_result();
 }
 
@@ -168,10 +150,7 @@ bool FontDescription::operator==(const FontDescription &other) const
 			impl->escapement == other.impl->escapement && 
 			impl->orientation == other.impl->orientation && 
 			impl->weight == other.impl->weight && 
-			impl->italic == other.impl->italic && 
-			impl->underline == other.impl->underline && 
-			impl->strikeout == other.impl->strikeout && 
-			impl->fixed_pitch == other.impl->fixed_pitch && 
+			impl->style == other.impl->style && 
 			impl->charset == other.impl->charset;
 }
 
@@ -197,7 +176,7 @@ void FontDescription::set_typeface_name(const std::string &name)
 	impl->typeface_name = name;
 }
 
-void FontDescription::set_height(int value)
+void FontDescription::set_height(float value)
 {
 	impl->height = value;
 }
@@ -207,7 +186,7 @@ void FontDescription::set_line_height(float value)
 	impl->line_height = value;
 }
 
-void FontDescription::set_average_width(int value)
+void FontDescription::set_average_width(float value)
 {
 	impl->average_width = value;
 }
@@ -222,29 +201,14 @@ void FontDescription::set_orientation(float value)
 	impl->orientation = value;
 }
 
-void FontDescription::set_weight(int value)
+void FontDescription::set_weight(FontWeight value)
 {
 	impl->weight = value;
 }
 
-void FontDescription::set_italic(bool setting)
+void FontDescription::set_style(FontStyle setting)
 {
-	impl->italic = setting;
-}
-
-void FontDescription::set_underline(bool setting)
-{
-	impl->underline = setting;
-}
-
-void FontDescription::set_strikeout(bool setting)
-{
-	impl->strikeout = setting;
-}
-
-void FontDescription::set_fixed_pitch(bool setting)
-{
-	impl->fixed_pitch = setting;
+	impl->style = setting;
 }
 
 void FontDescription::set_anti_alias(bool setting)

@@ -90,20 +90,20 @@ namespace clan
 
 	void TextStyle::set_weight_normal()
 	{
-		set_weight(400);
+		set_weight(FontWeight::normal);
 	}
 
 	void TextStyle::set_weight_bold()
 	{
-		set_weight(700);
+		set_weight(FontWeight::bold);
 	}
 
-	void TextStyle::set_weight(int weight)
+	void TextStyle::set_weight(FontWeight weight)
 	{
 		impl->weight = weight;
 	}
 
-	int TextStyle::weight() const
+	FontWeight TextStyle::weight() const
 	{
 		return impl->weight;
 	}
@@ -243,7 +243,7 @@ namespace clan
 		font_desc.set_height(impl->size);
 		font_desc.set_line_height(impl->line_height);
 		font_desc.set_weight(impl->weight);
-		font_desc.set_italic(is_style_italic() || is_style_oblique());
+		font_desc.set_style(impl->style);
 		font_desc.set_subpixel(impl->subpixel);
 		return Font::resource(canvas, font_desc, UIThread::get_resources());
 	}

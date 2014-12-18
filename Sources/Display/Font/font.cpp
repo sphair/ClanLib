@@ -211,13 +211,13 @@ void Font::set_typeface_name(const std::string &name)
 		impl->set_typeface_name(name);
 }
 
-void Font::set_height(int value)
+void Font::set_height(float value)
 {
 	if (impl)
 		impl->set_height(value);
 }
 
-void Font::set_weight(int value)
+void Font::set_weight(FontWeight value)
 {
 	if (impl)
 		impl->set_weight(value);
@@ -228,10 +228,10 @@ void Font::set_line_height(float height)
 	if (impl)
 		impl->set_line_height(height);
 }
-void Font::set_italic(bool setting)
+void Font::set_style(FontStyle style)
 {
 	if (impl)
-		impl->set_italic(setting);
+		impl->set_style(style);
 }
 
 GlyphMetrics Font::get_metrics(Canvas &canvas, unsigned int glyph)

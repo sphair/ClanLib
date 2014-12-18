@@ -109,20 +109,20 @@ public:
 /// \{
 
 public:
-	/// \brief Sets the typeface name
+	/// \brief Sets the font name
 	void set_typeface_name(const std::string &name);
 
 	/// \brief Sets the font height
-	void set_height(int value);
+	void set_height(float value);
 
 	/// \brief Sets the font weight
-	void set_weight(int value);
+	void set_weight(FontWeight value = FontWeight::normal);
 
 	/// \brief Sets the distance between each line
 	void set_line_height(float height);
 
-	/// \brief Sets the font italic setting
-	void set_italic(bool setting);
+	/// \brief Sets the font style setting
+	void set_style(FontStyle setting = FontStyle::normal);
 
 	/// \brief Print text 
 	///

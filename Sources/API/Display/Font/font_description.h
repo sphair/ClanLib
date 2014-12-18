@@ -40,6 +40,26 @@ namespace clan
 class DisplayWindow;
 class FontDescription_Impl;
 
+enum class FontWeight
+{
+	thin = 100,
+	extra_light = 200,
+	light = 300,
+	normal = 400,
+	medium = 500,
+	semi_bold = 600,
+	bold = 700,
+	extra_bold = 800,
+	heavy = 900
+};
+
+enum class FontStyle
+{
+	normal,
+	italic,
+	oblique	// Currently not supported by ClanLib
+};
+
 /// \brief Font description class.
 ///
 ///  This class allows you to setup a more advanced description when creating a font.
@@ -101,13 +121,15 @@ public:
 	const std::string &get_typeface_name() const;
 
 	/// \brief Returns the font height
-	int get_height() const;
+	float get_height() const;
 
 	/// \brief Returns the distance between each line
 	float get_line_height() const;
 
 	/// \brief Returns the font average width
-	int get_average_width() const;
+	///
+	/// 0.0f = Use default
+	float get_average_width() const;
 
 	/// \brief Returns the font escapement
 	float get_escapement() const;
@@ -116,19 +138,10 @@ public:
 	float get_orientation() const;
 
 	/// \brief Returns the font weight
-	int get_weight() const;
+	FontWeight get_weight() const;
 
-	/// \brief Returns the font italic setting
-	bool get_italic() const;
-
-	/// \brief Returns the font underline setting
-	bool get_underline() const;
-
-	/// \brief Returns the font strikeout setting
-	bool get_strikeout() const;
-
-	/// \brief Returns the font fixed pitch setting
-	bool get_fixed_pitch() const;
+	/// \brief Returns the font style
+	FontStyle get_style() const;
 
 	/// \brief Get the font anti-alias setting (defaults to true)
 	bool get_anti_alias() const;
@@ -162,10 +175,12 @@ public:
 	void set_typeface_name(const std::string &name);
 
 	/// \brief Sets the font height
-	void set_height(int value);
+	void set_height(float value = 20.0f);
 
 	/// \brief Sets the font average width
-	void set_average_width(int value);
+	///
+	/// 0.0f = Use default
+	void set_average_width(float value = 0.0f);
 
 	/// \brief Sets the font escapement
 	void set_escapement(float value);
@@ -173,23 +188,14 @@ public:
 	/// \brief Sets the font orientation
 	void set_orientation(float value);
 
-	/// \brief Sets the font weight
-	void set_weight(int value);
+		/// \brief Sets the font weight
+	void set_weight(FontWeight value = FontWeight::normal);
 
 	/// \brief Sets the distance between each line
 	void set_line_height(float height);
 
-	/// \brief Sets the font italic setting
-	void set_italic(bool setting = true);
-
-	/// \brief Sets the font underline setting
-	void set_underline(bool setting = true);
-
-	/// \brief Sets the font strikeout setting
-	void set_strikeout(bool setting = true);
-
-	/// \brief Sets the font fixed pitch setting
-	void set_fixed_pitch(bool setting = true);
+	/// \brief Sets the font style
+	void set_style(FontStyle setting = FontStyle::normal);
 
 	/// \brief Sets the font anti-alias setting (defaults to true)
 	void set_anti_alias(bool setting = true);

@@ -49,15 +49,15 @@ FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, DataBuffer &font
 		desc.get_average_width(),
 		static_cast<int>(desc.get_escapement() * 10.0f + 0.5f),
 		static_cast<int>(desc.get_orientation() * 10.0f + 0.5f),
-		desc.get_weight(),
-		desc.get_italic() ? TRUE : FALSE,
+		static_cast<int>(desc.get_weight()),
+		desc.get_style() == FontStyle::italic ? TRUE : FALSE,
 		FALSE,
 		FALSE,
 		decode_charset(desc.get_charset()),
 		OUT_DEFAULT_PRECIS,
 		CLIP_DEFAULT_PRECIS,
 		DEFAULT_QUALITY,
-		(desc.get_fixed_pitch() ? FIXED_PITCH : DEFAULT_PITCH) | FF_DONTCARE,
+		DEFAULT_PITCH | FF_DONTCARE,
 		StringHelp::utf8_to_ucs2(desc.get_typeface_name()).c_str());
 	if (handle == 0)
 		throw Exception("CreateFont failed");

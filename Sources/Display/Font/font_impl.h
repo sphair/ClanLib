@@ -67,10 +67,10 @@ public:
 	static Font load(Canvas &canvas, const FontDescription &reference_desc, const std::string &id, const XMLResourceDocument &doc, std::function<Resource<Sprite>(Canvas &, const std::string &)> cb_get_sprite);
 
 	void set_typeface_name(const std::string &name);
-	void set_height(int value);
-	void set_weight(int value);
+	void set_height(float value);
+	void set_weight(FontWeight value);
 	void set_line_height(float height);
-	void set_italic(bool setting);
+	void set_style(FontStyle setting);
 
 private:
 	void select_font_face();
