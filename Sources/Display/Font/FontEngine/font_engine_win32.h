@@ -79,7 +79,6 @@ private:
 	int decode_charset(FontDescription::Charset selected_charset);
 	HFONT handle = 0;
 	TEXTMETRIC metrics;
-	float line_height = 0.0f;
 
 	FontDescription font_description;
 	FontMetrics font_metrics;

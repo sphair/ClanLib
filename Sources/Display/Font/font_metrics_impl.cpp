@@ -35,8 +35,10 @@ namespace clan
 	{
 	}
 
-	FontMetrics_Impl::FontMetrics_Impl(float height, float line_height, float ascent, float descent, float internal_leading, float external_leading) : height(height), line_height(line_height), ascent(ascent), descent(descent), internal_leading(internal_leading), external_leading(external_leading)
+	FontMetrics_Impl::FontMetrics_Impl(float height, float ascent, float descent, float internal_leading, float external_leading, float line_height) : height(height), ascent(ascent), descent(descent), internal_leading(internal_leading), external_leading(external_leading), line_height(line_height)
 	{
+		if (line_height = 0.0f)
+			line_height = height + external_leading;
 	}
 
 	FontMetrics_Impl::~FontMetrics_Impl()

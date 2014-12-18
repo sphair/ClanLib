@@ -183,11 +183,11 @@ namespace clan
 		{
 			font_metrics = FontMetrics(
 				height,
-				height + font_metrics.get_line_height(),
 				font_metrics.get_ascent(),
 				font_metrics.get_descent(),
 				font_metrics.get_internal_leading(),
-				font_metrics.get_external_leading());
+				font_metrics.get_external_leading(),
+				font_metrics.get_line_height());
 		}
 
 		FontDescription desc;

@@ -153,11 +153,13 @@ public:
 	Charset get_charset() const;
 
 	/// \brief Returns true if the font is identical
+	/// Line_height is excluded.
 	bool operator==(const FontDescription &other) const;
 
 	/// \brief Returns an unique string identifying this font description
 	///
 	/// This is useful for placing font descriptions in a map.
+	/// Line_height is excluded.
 	std::string get_unique_id() const;
 
 /// \}

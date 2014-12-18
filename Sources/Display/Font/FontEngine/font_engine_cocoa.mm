@@ -165,19 +165,11 @@ FontEngine_Cocoa::FontEngine_Cocoa(const FontDescription &desc, DataBuffer &font
 	font_metrics = FontMetrics(
 		getLineHeightForFont(handle),
 		CTFontGetAscent(handle),
-		CTFontGetDescent(handle), 
+		CTFontGetDescent(handle),
 		CTFontGetLeading(handle),
-		0.0f/* CTFontGetExternalLeading(handle)*/,
-		avg_glyph_width,
-		0.0f /*CTFontGetMaxCharWidth(handle)*/,
-		400 /* weight */,
-		0 /* overhang */, 
-		1.0f /* tmDigitizedAspectX */,
-		1.0f /* tmDigitizedAspectY */,
-		false /* tmItalic */, 
-		false /* tmUnderlined */, 
-		false /* tmStruckOut */,
-		false/*CTFontGetAverageCharWidth(handle) == CTFontGetMaxCharWidth(handle)*/);
+		CTFontGetExternalLeading(handle),
+		desc.get_line_height()		// Calculated in FontMetrics as height + metrics.tmExternalLeading if not specified
+		);
 
 	font_description = desc.clone();
 

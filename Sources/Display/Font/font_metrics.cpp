@@ -38,8 +38,8 @@ namespace clan
 	{
 	}
 
-	FontMetrics::FontMetrics(float height, float line_height, float ascent, float descent, float internal_leading, float external_leading)
-		: impl(std::make_shared<FontMetrics_Impl>(height, line_height, ascent, descent, internal_leading, external_leading))
+	FontMetrics::FontMetrics(float height, float ascent, float descent, float internal_leading, float external_leading, float line_height)
+		: impl(std::make_shared<FontMetrics_Impl>(height, ascent, descent, internal_leading, external_leading, line_height))
 	{
 	}
 

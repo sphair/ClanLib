@@ -148,7 +148,7 @@ Font Font_Impl::load(Canvas &canvas, const FontDescription &reference_desc, cons
 		if (sprite_element.has_attribute("external_leading")) 
 			external_leading = StringHelp::text_to_float(sprite_element.get_attribute("external_leading", "0"));
 
-		FontMetrics font_metrics(height, line_height, ascent, descent, internal_leading, external_leading);
+		FontMetrics font_metrics(height, ascent, descent, internal_leading, external_leading, line_height);
 
 		return Font(canvas, spr_glyphs.get(), letters, spacelen, monospace, font_metrics);
 	}

@@ -120,11 +120,12 @@ FontMetrics PathFont_Impl::get_font_metrics()
 	const FontMetrics &font_metrics = font_engine->get_metrics();
 	FontMetrics copy(
 		font_metrics.get_height() * scaled_height,
-		font_metrics.get_line_height() * scaled_height,
 		font_metrics.get_ascent() * scaled_height,
 		font_metrics.get_descent() * scaled_height,
 		font_metrics.get_internal_leading() * scaled_height,
-		font_metrics.get_external_leading() * scaled_height);
+		font_metrics.get_external_leading() * scaled_height,
+		font_metrics.get_line_height() * scaled_height
+		);
 	return copy;
 }
 

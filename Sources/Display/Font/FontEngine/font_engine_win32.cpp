@@ -40,7 +40,7 @@ namespace clan
 {
 
 FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, DataBuffer &font_databuffer)
-	: handle(0), line_height(desc.get_line_height())
+	: handle(0)
 {
 	load_font(font_databuffer);
 
@@ -76,18 +76,13 @@ FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, DataBuffer &font
 		throw Exception("GetTextMetrics failed");
 	}
 
-	if (line_height == 0.0f) // To do: maybe have a special 'auto' mode in the FontDescription?
-	{
-		line_height = metrics.tmHeight + metrics.tmExternalLeading;
-	}
-
 	font_metrics = FontMetrics(
 		(float)metrics.tmHeight,
-		line_height,
 		(float)metrics.tmAscent,
 		(float)metrics.tmDescent,
 		(float)metrics.tmInternalLeading,
-		(float)metrics.tmExternalLeading);
+		(float)metrics.tmExternalLeading,
+		desc.get_line_height());		// Calculated in FontMetrics as tmHeight + tmExternalLeading if not specified
 
 	font_description = desc.clone();
 }

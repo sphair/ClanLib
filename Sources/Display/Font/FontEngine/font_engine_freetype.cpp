@@ -576,11 +576,12 @@ void FontEngine_Freetype::calculate_font_metrics()
 	float external_leading = (face->size->metrics.height / 64.0f) - height;
 	font_metrics = FontMetrics(
 		height,
-		height + external_leading,
 		ascent,
 		descent,
 		internal_leading,
-		external_leading);
+		external_leading,
+		desc.get_line_height()		// Calculated in FontMetrics as height + metrics.tmExternalLeading if not specified
+		);
 }
 
 }

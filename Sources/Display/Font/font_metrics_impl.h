@@ -34,14 +34,14 @@ namespace clan
 	{
 	public:
 		FontMetrics_Impl();
-		FontMetrics_Impl(float height, float line_height, float ascent, float descent, float internal_leading, float external_leading);
+		FontMetrics_Impl(float height, float ascent, float descent, float internal_leading, float external_leading, float line_height);
 		~FontMetrics_Impl();
 
 		float height = 0.0f;
-		float line_height = 0.0f;
 		float ascent = 0.0f;
 		float descent = 0.0f;
 		float internal_leading = 0.0f;
 		float external_leading = 0.0f;
+		float line_height = 0.0f;
 	};
 }
