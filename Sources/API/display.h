@@ -65,7 +65,6 @@
 #include "Display/Font/font_description.h"
 #include "Display/Font/font_metrics.h"
 #include "Display/Font/glyph_metrics.h"
-#include "Display/Font/path_font.h"
 #include "Display/Image/pixel_buffer.h"
 #include "Display/Image/pixel_buffer_lock.h"
 #include "Display/Image/pixel_buffer_help.h"

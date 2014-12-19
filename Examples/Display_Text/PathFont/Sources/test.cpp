@@ -55,8 +55,7 @@ int Test::start(const std::vector<std::string> &args)
 	clan::Font font(canvas, "tahoma", 16);
 
 	float font_height = 100.0f;
-	clan::PathFont path_font("comic sans ms", font_height);
-	//clan::Font path_font(canvas, "arial", 200);
+	clan::Font path_font(canvas, "comic sans ms", font_height);
 
 	clan::Brush brush = clan::Brush::solid(clan::Colorf::white);
 
@@ -90,7 +89,8 @@ int Test::start(const std::vector<std::string> &args)
 		canvas.clear(clan::Colorf(0.95f, 0.95f, 0.95f));
 
 		font.draw_text(canvas, 17, 40, clan::string_format("%1 FPS", game_time.get_updates_per_second()), clan::Colorf::black);
-		font.draw_text(canvas, canvas.get_width() - 600, 40, clan::string_format("(Use Mouse Wheel to control font height)        Font Height %1", clan::StringHelp::float_to_text(font_height, 1)), clan::Colorf::black);
+		font.draw_text(canvas, canvas.get_width() - 200, 40, clan::string_format("Font Height %1", clan::StringHelp::float_to_text(font_height, 1)), clan::Colorf::black);
+		font.draw_text(canvas, 17, 70, "Use Left Mouse Button to remove font information. Use Mouse Wheel to control font height", clan::Colorf::black);
 
 		std::string message = clan::StringHelp::ucs2_to_utf8({ 0xc5, 'A', 'g', 'j', 'l', 'M' });
 
@@ -114,21 +114,29 @@ int Test::start(const std::vector<std::string> &args)
 		// Text bounding box:
 		clan::Rectf bbox(text_metrics.bbox_offset + clan::Pointf(100.0f, baseline_y), text_metrics.bbox_size);
 
-		// Render our metrics lines:
-		canvas.fill_rect(0.0f, line_top, canvas.get_width(), line_bottom, clan::Colorf(0.9f, 0.9f, 0.9f));
-		canvas.fill_rect(bbox, clan::Colorf(0.85f, 0.85f, 0.85f));
-		canvas.draw_line(0.0f, top_y, canvas.get_width(), top_y, clan::Colorf::red);
-		canvas.draw_line(0.0f, internal_leading_y, canvas.get_width(), internal_leading_y, clan::Colorf::red);
-		canvas.draw_line(0.0f, baseline_y, canvas.get_width(), baseline_y, clan::Colorf::red);
-		canvas.draw_line(0.0f, bottom_y, canvas.get_width(), bottom_y, clan::Colorf::red);
-		canvas.draw_line(0.0f, linegap_y, canvas.get_width(), linegap_y, clan::Colorf::red);
+		bool disable_information = window.get_ic().get_mouse().get_keycode(clan::mouse_left);
+
+		if (!disable_information)
+		{
+			// Render our metrics lines:
+			canvas.fill_rect(0.0f, line_top, canvas.get_width(), line_bottom, clan::Colorf(0.9f, 0.9f, 0.9f));
+			canvas.fill_rect(bbox, clan::Colorf(0.85f, 0.85f, 0.85f));
+			canvas.draw_line(0.0f, top_y, canvas.get_width(), top_y, clan::Colorf::red);
+			canvas.draw_line(0.0f, internal_leading_y, canvas.get_width(), internal_leading_y, clan::Colorf::red);
+			canvas.draw_line(0.0f, baseline_y, canvas.get_width(), baseline_y, clan::Colorf::red);
+			canvas.draw_line(0.0f, bottom_y, canvas.get_width(), bottom_y, clan::Colorf::red);
+			canvas.draw_line(0.0f, linegap_y, canvas.get_width(), linegap_y, clan::Colorf::red);
+		}
 
 		// Draw the text:
 		path_font.draw_text(canvas, clan::Pointf(100.0f, baseline_y), message, clan::Colorf::black);
 
-		// Circle for cursor start and end:
-		clan::Path::circle(100.0f, baseline_y, 4.0f).fill(canvas, clan::Colorf::dodgerblue);
-		clan::Path::circle(100.0f + text_metrics.advance.width, baseline_y + text_metrics.advance.height, 4.0f).fill(canvas, clan::Colorf::dodgerblue);
+		if (!disable_information)
+		{
+			// Circle for cursor start and end:
+			clan::Path::circle(100.0f, baseline_y, 4.0f).fill(canvas, clan::Colorf::dodgerblue);
+			clan::Path::circle(100.0f + text_metrics.advance.width, baseline_y + text_metrics.advance.height, 4.0f).fill(canvas, clan::Colorf::dodgerblue);
+		}
 
 		window.flip(1);
 
