@@ -273,20 +273,29 @@ GlyphMetrics Font_Impl::measure_text(Canvas &canvas, const std::string &string)
 
 void Font_Impl::set_typeface_name(const std::string &name)
 {
-	selected_description.typeface_name = name;
-	font_engine = nullptr;
+	if (selected_description.typeface_name != name)
+	{
+		selected_description.typeface_name = name;
+		font_engine = nullptr;
+	}
 }
 
 void Font_Impl::set_height(float value)
 {
-	selected_description.height = value;
-	font_engine = nullptr;
+	if (selected_description.height != value)
+	{
+		selected_description.height = value;
+		font_engine = nullptr;
+	}
 }
 
 void Font_Impl::set_weight(FontWeight value)
 {
-	selected_description.weight = value;
-	font_engine = nullptr;
+	if (selected_description.weight != value)
+	{
+		selected_description.weight = value;
+		font_engine = nullptr;
+	}
 }
 
 void Font_Impl::set_line_height(float height)
@@ -297,8 +306,11 @@ void Font_Impl::set_line_height(float height)
 
 void Font_Impl::set_style(FontStyle setting)
 {
-	selected_description.style = setting;
-	font_engine = nullptr;
+	if (selected_description.style != setting)
+	{
+		selected_description.style = setting;
+		font_engine = nullptr;
+	}
 }
 
 void Font_Impl::set_scalable(float height_threshold)
