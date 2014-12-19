@@ -81,10 +81,10 @@ Font::Font( Canvas &canvas, const FontDescription &desc, const std::string &ttf_
 	impl->set_font_face(font_face);
 }
 
-Font::Font( Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics) : impl(std::make_shared<Font_Impl>())
+Font::Font(Canvas &canvas, const std::string &typeface_name, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics) : impl(std::make_shared<Font_Impl>())
 {
 	FontFace font_face;
-	font_face.add(canvas, sprite, glyph_list, spacelen, monospace, metrics);
+	font_face.add(canvas, typeface_name, sprite, glyph_list, spacelen, monospace, metrics);
 	impl->set_font_face(font_face);
 }
 
@@ -148,9 +148,15 @@ Font Font_Impl::load(Canvas &canvas, const FontDescription &reference_desc, cons
 		if (sprite_element.has_attribute("external_leading")) 
 			external_leading = StringHelp::text_to_float(sprite_element.get_attribute("external_leading", "0"));
 
+		if (!sprite_element.has_attribute("typeface"))
+			throw Exception(string_format("Font resource %1 has no 'typeface' attribute.", resource.get_name()));
+
+		std::string typeface_name = sprite_element.get_attribute("typeface");
+
+
 		FontMetrics font_metrics(height, ascent, descent, internal_leading, external_leading, line_height);
 
-		return Font(canvas, spr_glyphs.get(), letters, spacelen, monospace, font_metrics);
+		return Font(canvas, typeface_name, spr_glyphs.get(), letters, spacelen, monospace, font_metrics);
 	}
 
 	DomElement ttf_element = resource.get_element().named_item("ttf").to_element();
@@ -171,8 +177,10 @@ Font Font_Impl::load(Canvas &canvas, const FontDescription &reference_desc, cons
 		    desc.set_typeface_name(ttf_element.get_attribute("file"));
 		  }
 
-		if (ttf_element.has_attribute("typeface"))
-			desc.set_typeface_name(ttf_element.get_attribute("typeface"));
+		if (!ttf_element.has_attribute("typeface"))
+			throw Exception(string_format("Font resource %1 has no 'typeface' attribute.", resource.get_name()));
+
+		desc.set_typeface_name(ttf_element.get_attribute("typeface"));
 
 		if (ttf_element.has_attribute("height"))
 			desc.set_height(ttf_element.get_attribute_int("height", 0));

@@ -23,6 +23,9 @@ Describes a system font<br/>
 <h2>Using the \<sprite\> element</h2>
 
 <ul>
+<li>Attribute: <b>typeface</b><br/>
+Use this to set the typeface name of this font.<br/>
+Default value: None, MUST BE PRESENT.
 <li>Attribute: <b>glyphs</b><br/>
 The sprite description containing the glyphs. See \ref SpriteResource <br/>
 Default value: None, MUST BE PRESENT. 
@@ -75,8 +78,9 @@ The width of unknown glyphs. If unset, this defaults to the average of the font 
 <li>Attribute: <b>file</b> (Optional) <br/>
 Use this filename that contains the font.<br/>
 </li>
-<li>Attribute: <b>typeface</b> (Optional) <br/>
+<li>Attribute: <b>typeface</b><br/>
 Use this to change the typeface name of the font. i.e. The typeface name inside the font file.<br/>
+Default value: None, MUST BE PRESENT.
 </li>
 <li>Attribute: <b>height</b> (Optional) <br/>floating point value
 </li>

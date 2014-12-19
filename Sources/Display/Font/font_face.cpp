@@ -94,9 +94,9 @@ namespace clan
 		impl->load_font(desc, font_databuffer);
 	}
 
-	void FontFace::add(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics)
+	void FontFace::add(Canvas &canvas, const std::string &typeface_name, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics)
 	{
-		impl->load_font(canvas, sprite, glyph_list, spacelen, monospace, metrics);
+		impl->load_font(canvas, typeface_name, sprite, glyph_list, spacelen, monospace, metrics);
 	}
 
 }

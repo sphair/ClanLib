@@ -79,7 +79,7 @@ public:
 	/// \param spacelen = Width of space character
 	/// \param monospace = Force monospaced font (using widest sprite character)
 	/// \param metrics = Font metrics for the sprite font
-	Font( Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics);
+	Font( Canvas &canvas, const std::string &typeface_name, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics);
 
 /// \}
 

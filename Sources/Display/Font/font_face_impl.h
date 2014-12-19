@@ -71,7 +71,7 @@ public:
 	~FontFace_Impl();
 
 	void load_font(const FontDescription &desc, DataBuffer &font_databuffer);
-	void load_font(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics);
+	void load_font(Canvas &canvas, const std::string &typeface_name, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics);
 
 	// Returns null engine if font not found
 	Font_Cache get_font(const Font_Selected &desc);

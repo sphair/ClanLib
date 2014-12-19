@@ -119,7 +119,7 @@ namespace clan
 		font_cache.back().glyph_cache->set_texture_group(texture_group);
 	}
 
-	void FontFace_Impl::load_font(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics)
+	void FontFace_Impl::load_font(Canvas &canvas, const std::string &typeface_name, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics)
 	{
 		FontMetrics font_metrics = metrics;
 
