@@ -72,11 +72,53 @@ void Font_Impl::select_font_face()
 {
 	if (!font_engine)
 	{
-		Font_Cache font_cache = font_face.impl->get_font(selected_description);
-		glyph_cache = font_cache.glyph_cache.get();
+		// Copy the required font, setting a scalable font size
+		Font_Selected new_selected = selected_description;
+		if (selected_description.height >= selected_height_threshold)
+			new_selected.height = 256.0f;	// A reasonable scalable size
+
+		Font_Cache font_cache = font_face.impl->get_font(new_selected);
+		if (!font_cache.engine)	// Font not found
+			font_cache = font_face.impl->copy_font(new_selected);
+
 		font_engine = font_cache.engine.get();
+		GlyphCache *glyph_cache = font_cache.glyph_cache.get();
+		PathCache *path_cache = font_cache.path_cache.get();
 
 		const FontMetrics &metrics = font_engine->get_metrics();
+
+		// Determine if pathfont method is required. TODO: This feels a bit hacky
+		selected_pathfont = font_engine->is_automatic_recreation_allowed();
+		if (selected_description.height < selected_height_threshold)
+			selected_pathfont = false;
+
+		// Deterimine if font scaling is required
+		scaled_height = selected_description.height / font_engine->get_desc().get_height();
+		if ((scaled_height >= 0.9999f) && (scaled_height <= 1.0001f))	// Allow for floating point accuracy issues when determining when scaling is not required
+			scaled_height = 1.0f;
+
+		// Deterimine the correct drawing engine
+		if (selected_pathfont)
+		{
+			font_draw_path.init(path_cache, font_engine, scaled_height);
+			font_draw = &font_draw_path;
+		}
+		else if (font_engine->get_desc().get_subpixel())
+		{
+			font_draw_subpixel.init(glyph_cache, font_engine);
+			font_draw = &font_draw_subpixel;
+		}
+		else if (scaled_height == 1.0f)
+		{
+			font_draw_flat.init(glyph_cache, font_engine);
+			font_draw = &font_draw_path;
+		}
+		else
+		{
+			font_draw_scaled.init(glyph_cache, font_engine, scaled_height);
+			font_draw = &font_draw_scaled;
+		}
+
 		selected_metrics = FontMetrics(
 			metrics.get_height() * scaled_height,
 			metrics.get_ascent() * scaled_height,
@@ -85,7 +127,6 @@ void Font_Impl::select_font_face()
 			metrics.get_external_leading() * scaled_height,
 			selected_line_height	// Do not scale the line height
 			);
-
 	}
 }
 
@@ -127,17 +168,16 @@ int Font_Impl::get_character_index(Canvas &canvas, const std::string &text, cons
 			std::string::size_type glyph_pos = reader.get_position();
 			reader.next();
 
-			Font_TextureGlyph *gptr = glyph_cache->get_glyph(canvas, font_engine, glyph);
-			if (gptr == nullptr) continue;
+			GlyphMetrics metrics = font_draw->get_metrics(canvas, glyph);
 
-			Rect position(xpos, ypos - font_ascent, Size(gptr->metrics.advance.width, gptr->metrics.advance.height + font_height + font_external_leading));
+			Rect position(xpos, ypos - font_ascent, Size(metrics.advance.width, metrics.advance.height + font_height + font_external_leading));
 			if (position.contains(point))
 			{
 				return glyph_pos + character_counter;
 			}
 
-			xpos += gptr->metrics.advance.width;
-			ypos += gptr->metrics.advance.height;
+			xpos += metrics.advance.width;
+			ypos += metrics.advance.height;
 		}
 
 		dest_y += line_spacing;
@@ -163,58 +203,22 @@ void Font_Impl::get_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMe
 void Font_Impl::draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color)
 {
 	select_font_face();
+
 	int line_spacing = static_cast<int>(selected_line_height + 0.5f);
-
-	bool enable_subpixel = font_engine->get_desc().get_subpixel();
-
-	RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
-	GraphicContext &gc = canvas.get_gc();
-
 	Pointf pos = canvas.grid_fit(position);
-	float offset_x = 0;
-	float offset_y = 0;
-	UTF8_Reader reader(text.data(), text.length());
-	while (!reader.is_end())
-	{
-		unsigned int glyph = reader.get_char();
-		reader.next();
-
-		if (glyph == '\n')
-		{
-			offset_x = 0;
-			offset_y += line_spacing;
-			continue;
-		}
-
-		Font_TextureGlyph *gptr = glyph_cache->get_glyph(canvas, font_engine, glyph);
-		if (gptr)
-		{
-			if (!gptr->texture.is_null())
-			{
-				float xp = offset_x + pos.x + gptr->offset.x;
-				float yp = offset_y + pos.y + gptr->offset.y;
-
-				Rectf dest_size(xp, yp, Sizef(gptr->geometry.get_size()));
-				if (enable_subpixel)
-				{
-					batcher->draw_glyph_subpixel(canvas, gptr->geometry, dest_size, color, gptr->texture);
-				}
-				else
-				{
-					batcher->draw_image(canvas, gptr->geometry, dest_size, color, gptr->texture);
-				}
-			}
-			offset_x += gptr->metrics.advance.width;
-			offset_y += gptr->metrics.advance.height;
-		}
-	}
+	font_draw->draw_text(canvas, pos, text, color, line_spacing);
 }
 
 GlyphMetrics Font_Impl::get_metrics(Canvas &canvas, unsigned int glyph)
 {
 	select_font_face();
-	return glyph_cache->get_metrics(font_engine, canvas, glyph);
+	GlyphMetrics metrics = font_draw->get_metrics(canvas, glyph);
+	metrics.advance *= scaled_height;
+	metrics.bbox_offset *= scaled_height;
+	metrics.bbox_size *= scaled_height;
+	return metrics;
 }
+
 
 GlyphMetrics Font_Impl::measure_text(Canvas &canvas, const std::string &string)
 {
@@ -238,7 +242,8 @@ GlyphMetrics Font_Impl::measure_text(Canvas &canvas, const std::string &string)
 			continue;
 		}
 
-		GlyphMetrics metrics = glyph_cache->get_metrics(font_engine, canvas, glyph);
+		GlyphMetrics metrics = font_draw->get_metrics(canvas, glyph);
+
 		metrics.bbox_offset.x += total_metrics.advance.width;
 		metrics.bbox_offset.y += total_metrics.advance.height;
 
@@ -258,6 +263,11 @@ GlyphMetrics Font_Impl::measure_text(Canvas &canvas, const std::string &string)
 
 	total_metrics.bbox_offset = text_bbox.get_top_left();
 	total_metrics.bbox_size = text_bbox.get_size();
+
+	total_metrics.advance *= scaled_height;
+	total_metrics.bbox_offset *= scaled_height;
+	total_metrics.bbox_size *= scaled_height;
+
 	return total_metrics;
 }
 
@@ -282,12 +292,19 @@ void Font_Impl::set_weight(FontWeight value)
 void Font_Impl::set_line_height(float height)
 {
 	selected_line_height = height;
-	font_engine = nullptr;
+	// (Don't need to reset the font engine)
 }
+
 void Font_Impl::set_style(FontStyle setting)
 {
 	selected_description.style = setting;
 	font_engine = nullptr;
+}
+
+void Font_Impl::set_scalable(float height_threshold)
+{
+	selected_height_threshold = height_threshold;
+	// (Don't need to reset the font engine)
 }
 
 }

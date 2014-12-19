@@ -45,6 +45,8 @@ public:
 	FontEngine_Win32(const FontDescription &description, DataBuffer &font_databuffer);
 	~FontEngine_Win32();
 
+	bool is_automatic_recreation_allowed() const override { return true; }
+
 	const FontMetrics &get_metrics() const override { return font_metrics; }
 
 	FontPixelBuffer get_font_glyph(int glyph) override;

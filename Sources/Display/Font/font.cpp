@@ -234,6 +234,12 @@ void Font::set_style(FontStyle style)
 		impl->set_style(style);
 }
 
+void Font::set_scalable(float height_threshold)
+{
+	if (impl)
+		impl->set_scalable(height_threshold);
+}
+
 GlyphMetrics Font::get_metrics(Canvas &canvas, unsigned int glyph)
 {
 	if (impl)

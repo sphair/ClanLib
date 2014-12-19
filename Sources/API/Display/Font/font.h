@@ -124,6 +124,11 @@ public:
 	/// \brief Sets the font style setting
 	void set_style(FontStyle setting = FontStyle::normal);
 
+	/// \brief Sets the threshold to determine if the font can be drawn scaled
+	///
+	/// All font sizes are scalable when using sprite fonts
+	void set_scalable(float height_threshold = 32.0f);
+
 	/// \brief Print text 
 	///
 	/// \param canvas = Canvas

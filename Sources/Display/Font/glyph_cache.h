@@ -48,6 +48,7 @@ class Font_TextureGlyph;
 class Subtexture;
 class FontPixelBuffer;
 class Path;
+class RenderBatchTriangle;
 
 /// \brief Font texture format (holds a pixel buffer containing a glyph)
 class Font_TextureGlyph

@@ -74,6 +74,7 @@ class FontEngine
 {
 public:
 	virtual ~FontEngine() { }
+	virtual bool is_automatic_recreation_allowed() const = 0;		// true if the engine supports automatic recreation of the font via the databuffer. (false for sprite fonts)
 	virtual const FontMetrics &get_metrics() const = 0;
 	virtual FontPixelBuffer get_font_glyph(int glyph) = 0;
 	virtual DataBuffer get_databuffer() = 0;		// Get the font databuffer that was used to create the font. Empty when databuffer is not required or font registered with the OS

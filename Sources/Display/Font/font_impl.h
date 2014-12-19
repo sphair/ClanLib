@@ -38,7 +38,13 @@
 #include <list>
 #include <map>
 #include "glyph_cache.h"
+#include "path_cache.h"
 #include "font_face_impl.h"
+
+#include "FontDraw/font_draw_subpixel.h"
+#include "FontDraw/font_draw_flat.h"
+#include "FontDraw/font_draw_path.h"
+#include "FontDraw/font_draw_scaled.h"
 
 namespace clan
 {
@@ -72,18 +78,29 @@ public:
 	void set_weight(FontWeight value);
 	void set_line_height(float height);
 	void set_style(FontStyle setting);
+	void set_scalable(float height_threshold);
 
 private:
 	void select_font_face();
 
 	Font_Selected selected_description;
 	float selected_line_height = 0.0f;
-	float scaled_height = 1.0f;	// Currently not implemented
+	float scaled_height = 1.0f;				// Currently not implemented
+	float selected_height_threshold = 32.0f;		// Values greater or equal to this value can be drawn scaled
+	bool selected_pathfont = false;
+
 	FontMetrics selected_metrics;
 
-	GlyphCache *glyph_cache = nullptr;
 	FontEngine *font_engine = nullptr;	// If null, use select_font_face() to update
 	FontFace font_face;
+
+	Font_Draw *font_draw = nullptr;
+
+	Font_DrawSubPixel font_draw_subpixel;
+	Font_DrawFlat font_draw_flat;
+	Font_DrawScaled font_draw_scaled;
+	Font_DrawPath font_draw_path;
+
 };
 
 }

@@ -64,6 +64,8 @@ namespace clan
 	public:
 		FontEngine_Sprite(const FontDescription &desc, FontMetrics &metrics) : font_metrics(metrics) { font_description = desc.clone(); }
 		~FontEngine_Sprite() {}
+
+		bool is_automatic_recreation_allowed() const override { return false; }
 		const FontMetrics &get_metrics() const override { return font_metrics; }
 		FontPixelBuffer get_font_glyph(int glyph) override { return FontPixelBuffer(); }
 		void load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics) override {}
@@ -283,16 +285,23 @@ namespace clan
 		{
 			if (desc.typeface_name != cache.engine->get_desc().get_typeface_name())
 				continue;
-			if (desc.height != cache.engine->get_desc().get_height())
-				continue;
 			if (desc.style != cache.engine->get_desc().get_style())
 				continue;
 			if (desc.weight != cache.engine->get_desc().get_weight())
 				continue;
+			if (cache.engine->is_automatic_recreation_allowed())
+			{
+				if (desc.height != cache.engine->get_desc().get_height())
+					continue;
+			}
 
 			return cache;
 		}
+		return Font_Cache();
+	}
 
+	Font_Cache FontFace_Impl::copy_font(const Font_Selected &desc)
+	{
 		// Find existing typeface, to obtain shared data that we can copy
 		FontDescription new_desc;
 		DataBuffer font_databuffer;

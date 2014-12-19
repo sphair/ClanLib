@@ -421,6 +421,9 @@ private:
 	friend class Sprite_Impl;
 	friend class Image;
 	friend class Font_Impl;
+	friend class Font_DrawSubPixel;
+	friend class Font_DrawFlat;
+	friend class Font_DrawScaled;
 	friend class Path;
 /// \}
 };

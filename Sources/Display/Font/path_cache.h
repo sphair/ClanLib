@@ -23,54 +23,73 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
 **    Mark Page
 */
 
 #pragma once
 
-#include "font_engine.h"
 #include "API/Display/Font/font.h"
-#include "API/Display/Font/font_description.h"
+#include "API/Display/Font/glyph_metrics.h"
 #include "API/Display/Font/font_metrics.h"
+#include "API/Display/Render/texture.h"
 #include "API/Display/2D/path.h"
-#include <CoreText/CoreText.h>
-#include <CoreGraphics/CoreGraphics.h>
-#include "API/Core/System/databuffer.h"
+#include <list>
+#include <map>
 
 namespace clan
 {
 
-class DataBuffer;
+class Colorf;
+class TextureGroup;
+class FontEngine;
+class Subtexture;
+class FontPixelBuffer;
+class Path;
+class RenderBatchTriangle;
 
-class FontEngine_Cocoa : public FontEngine
+class Font_PathGlyph
 {
 public:
-	FontEngine_Cocoa(const FontDescription &description, DataBuffer &font_databuffer);
-	~FontEngine_Cocoa();
+	Font_PathGlyph() : glyph(0) { };
 
-	bool is_automatic_recreation_allowed() const override { return true; }
-	const FontMetrics &get_metrics() const override { return font_metrics; }
-	FontPixelBuffer get_font_glyph_standard(int glyph, bool anti_alias);
-	FontPixelBuffer get_font_glyph_subpixel(int glyph);
-	FontPixelBuffer get_font_glyph(int glyph) override;
-	const FontDescription &get_desc() const override { return font_description; }
+	/// \brief Glyph this buffer refers to.
+	unsigned int glyph;
 
-	void load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics);
-	DataBuffer get_databuffer() override { return data_buffer; }
+	Path path;
+	GlyphMetrics metrics;
 
+};
+
+class PathCache
+{
+/// \name Construction
+/// \{
+public:
+	PathCache();
+	virtual ~PathCache();
+
+/// \}
+/// \name Attributes
+/// \{
+
+public:
+	/// \brief Get a glyph. Returns NULL if the glyph was not found
+	Font_PathGlyph *get_glyph(Canvas &canvas, FontEngine *font_engine, unsigned int glyph);
+
+/// \}
+/// \name Operations
+/// \{
+public:
+	GlyphMetrics get_metrics(FontEngine *font_engine, Canvas &canvas, unsigned int glyph);
+
+/// \}
+/// \name Implementation
+/// \{
 private:
-	void load_font(const FontDescription& desc, DataBuffer &font_databuffer);
-	FontPixelBuffer get_font_glyph_lcd(int glyph);
-	FontPixelBuffer get_empty_font_glyph(int glyph);
 
-	CTFontRef handle;
-    float avg_glyph_width;
-    float max_glyph_height;
-	FontDescription font_description;
-	FontMetrics font_metrics;
-	DataBuffer data_buffer;
+	std::vector<Font_PathGlyph* > glyph_list;
 
+/// \}
 };
 
 }

@@ -37,6 +37,7 @@
 #include <list>
 #include <map>
 #include "glyph_cache.h"
+#include "path_cache.h"
 
 namespace clan
 {
@@ -56,9 +57,11 @@ public:
 class Font_Cache
 {
 public:
-	Font_Cache(std::shared_ptr<FontEngine> &new_engine) : engine(new_engine), glyph_cache(std::make_shared<GlyphCache>()) {}
+	Font_Cache() {}
+	Font_Cache(std::shared_ptr<FontEngine> &new_engine) : engine(new_engine), glyph_cache(std::make_shared<GlyphCache>()), path_cache(std::make_shared<PathCache>()) {}
 	std::shared_ptr<FontEngine> engine;
 	std::shared_ptr<GlyphCache> glyph_cache;
+	std::shared_ptr<PathCache> path_cache;
 };
 
 class FontFace_Impl
@@ -70,7 +73,12 @@ public:
 	void load_font(const FontDescription &desc, DataBuffer &font_databuffer);
 	void load_font(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics);
 
+	// Returns null engine if font not found
 	Font_Cache get_font(const Font_Selected &desc);
+
+	// Find font and copy it using the revised description
+	Font_Cache copy_font(const Font_Selected &desc);
+
 	Font_Cache get_last_font();
 
 private:
