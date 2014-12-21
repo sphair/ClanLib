@@ -50,6 +50,19 @@ Font::Font()
 {
 }
 
+Font::Font(FontFace &font_face, int height) : impl(std::make_shared<Font_Impl>())
+{
+	FontDescription desc;
+	desc.set_typeface_name(font_face.get_family_name());
+	desc.set_height(height);
+	*this = Font(font_face, desc);
+}
+
+Font::Font(FontFace &font_face, const FontDescription &desc) : impl(std::make_shared<Font_Impl>())
+{
+	impl->set_font_face(font_face);
+}
+
 Font::Font(Canvas &canvas, const std::string &typeface_name, int height)
 {
 	FontDescription desc;
@@ -60,7 +73,7 @@ Font::Font(Canvas &canvas, const std::string &typeface_name, int height)
 
 Font::Font( Canvas &canvas, const FontDescription &desc)
 {
-	*this = Font(canvas, desc, "");
+	*this = Font(canvas, desc, std::string());
 }
 
 Font::Font(Canvas &canvas, const FontDescription &desc, const std::string &ttf_filename) : impl(std::make_shared<Font_Impl>())
@@ -69,21 +82,21 @@ Font::Font(Canvas &canvas, const FontDescription &desc, const std::string &ttf_f
 	std::string new_filename = PathHelp::get_filename(ttf_filename, PathHelp::path_type_file);
 	FileSystem vfs(path);
 
-	FontFace font_face;
+	FontFace font_face(desc.get_typeface_name());
 	font_face.add(desc, new_filename, vfs);
 	impl->set_font_face(font_face);
 }
 
 Font::Font( Canvas &canvas, const FontDescription &desc, const std::string &ttf_filename, FileSystem fs) : impl(std::make_shared<Font_Impl>())
 {
-	FontFace font_face;
+	FontFace font_face(desc.get_typeface_name());
 	font_face.add(desc, ttf_filename, fs);
 	impl->set_font_face(font_face);
 }
 
 Font::Font(Canvas &canvas, const std::string &typeface_name, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics) : impl(std::make_shared<Font_Impl>())
 {
-	FontFace font_face;
+	FontFace font_face(typeface_name);
 	font_face.add(canvas, typeface_name, sprite, glyph_list, spacelen, monospace, metrics);
 	impl->set_font_face(font_face);
 }

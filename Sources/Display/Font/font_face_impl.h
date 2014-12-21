@@ -67,10 +67,10 @@ public:
 class FontFace_Impl
 {
 public:
-	FontFace_Impl();
+	FontFace_Impl(const std::string &family_name);
 	~FontFace_Impl();
 
-	bool is_empty() const { return font_cache.empty(); }
+	const std::string &get_family_name() const { return family_name; }
 
 	void load_font(const FontDescription &desc, DataBuffer &font_databuffer);
 	void load_font(Canvas &canvas, const std::string &typeface_name, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics);
@@ -84,6 +84,7 @@ public:
 	Font_Cache get_last_font();
 
 private:
+	std::string family_name;
 	TextureGroup texture_group;		// Shared texture group between glyph cache's
 	std::vector<Font_Cache> font_cache;
 

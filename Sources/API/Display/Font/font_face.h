@@ -55,16 +55,22 @@ class FontFace
 /// \{
 
 public:
-	/// \brief Constructs a font face
+	/// \brief Constructs a null font face
 	FontFace();
+
+	/// \brief Constructs a font face with the given family name
+	FontFace(const std::string &family_name);
 
 /// \}
 
 /// \name Attributes
 /// \{
 public:
-	/// \brief Returns true if the font face contains no fonts
-	bool is_empty() const;
+	/// \brief Returns true if the font face is a null object
+	bool is_null() const;
+
+	/// \brief Font family name used for this font face
+	const std::string &get_family_name() const;
 
 /// \}
 /// \name Operations
@@ -92,6 +98,13 @@ public:
 	/// \param monospace = Force monospaced font (using widest sprite character)
 	/// \param metrics = Font metrics for the sprite font
 	void add(Canvas &canvas, const std::string &typeface_name, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics);
+
+	bool operator<(const FontFace &that) const { return get_family_name() < that.get_family_name(); }
+	bool operator<=(const FontFace &that) const { return get_family_name() <= that.get_family_name(); }
+	bool operator>(const FontFace &that) const { return get_family_name() > that.get_family_name(); }
+	bool operator>=(const FontFace &that) const { return get_family_name() >= that.get_family_name(); }
+	bool operator==(const FontFace &that) const { return get_family_name() == that.get_family_name(); }
+	bool operator!=(const FontFace &that) const { return get_family_name() != that.get_family_name(); }
 
 /// \}
 /// \name Implementation

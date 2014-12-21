@@ -42,15 +42,22 @@
 
 namespace clan
 {
-
-	FontFace::FontFace() : impl(std::make_shared<FontFace_Impl>())
+	FontFace::FontFace()
 	{
-
 	}
 
-	bool FontFace::is_empty() const
+	FontFace::FontFace(const std::string &family_name) : impl(std::make_shared<FontFace_Impl>(family_name))
 	{
-		return impl->is_empty();
+	}
+
+	bool FontFace::is_null() const
+	{
+		return !impl;
+	}
+
+	const std::string &FontFace::get_family_name() const
+	{
+		return impl->get_family_name();
 	}
 
 	void FontFace::add(const std::string &typeface_name, int height)

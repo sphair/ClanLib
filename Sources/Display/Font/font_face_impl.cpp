@@ -77,10 +77,8 @@ namespace clan
 		FontMetrics font_metrics;
 	};
 
-	FontFace_Impl::FontFace_Impl() : texture_group(Size(256, 256))
+	FontFace_Impl::FontFace_Impl(const std::string &family_name) : family_name(family_name), texture_group(Size(256, 256))
 	{
-
-
 	}
 
 	FontFace_Impl::~FontFace_Impl()
