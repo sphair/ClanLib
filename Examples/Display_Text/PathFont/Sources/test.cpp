@@ -52,10 +52,36 @@ int Test::start(const std::vector<std::string> &args)
 	// Connect a keyboard handler to on_key_up()
 	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &Test::on_input_up));
 
+
+	// Describe a custom font face:
+
+	clan::FontFace font_face("Lobster Two");
+	{
+		clan::FontDescription regular;
+		regular.set_typeface_name("Lobster Two");
+		font_face.add(regular, "Resources/Lobster_Two/LobsterTwo-Regular.ttf");
+
+		clan::FontDescription bold;
+		bold.set_typeface_name("Lobster Two");
+		bold.set_weight(clan::FontWeight::bold);
+		font_face.add(bold, "Resources/Lobster_Two/LobsterTwo-Bold.ttf");
+
+		clan::FontDescription italic;
+		italic.set_typeface_name("Lobster Two");
+		italic.set_style(clan::FontStyle::italic);
+		font_face.add(italic, "Resources/Lobster_Two/LobsterTwo-Italic.ttf");
+
+		clan::FontDescription bold_italic;
+		bold_italic.set_typeface_name("Lobster Two");
+		bold_italic.set_weight(clan::FontWeight::bold);
+		bold_italic.set_style(clan::FontStyle::italic);
+		font_face.add(bold_italic, "Resources/Lobster_Two/LobsterTwo-BoldItalic.ttf");
+	}
+
 	clan::Font font(canvas, "tahoma", 16);
 
 	float font_height = 100.0f;
-	clan::Font path_font(canvas, "comic sans ms", font_height);
+	clan::Font path_font(font_face, font_height);
 
 	clan::Brush brush = clan::Brush::solid(clan::Colorf::white);
 
@@ -83,6 +109,8 @@ int Test::start(const std::vector<std::string> &args)
 		game_time.update();
 
 		path_font.set_height(font_height);
+		path_font.set_weight(window.get_ic().get_keyboard().get_keycode(clan::keycode_b) ? clan::FontWeight::bold : clan::FontWeight::normal);
+		path_font.set_style(window.get_ic().get_keyboard().get_keycode(clan::keycode_i) ? clan::FontStyle::italic : clan::FontStyle::normal);
 
 		elapsed = game_time.get_tick_time_elapsed();
 
@@ -91,6 +119,7 @@ int Test::start(const std::vector<std::string> &args)
 		font.draw_text(canvas, 17, 40, clan::string_format("%1 FPS", game_time.get_updates_per_second()), clan::Colorf::black);
 		font.draw_text(canvas, canvas.get_width() - 200, 40, clan::string_format("Font Height %1", clan::StringHelp::float_to_text(font_height, 1)), clan::Colorf::black);
 		font.draw_text(canvas, 17, 70, "Use Left Mouse Button to remove font information. Use Mouse Wheel to control font height", clan::Colorf::black);
+		font.draw_text(canvas, 17, 100, "Use B and I buttons to control font weight and font style", clan::Colorf::black);
 
 		std::string message = clan::StringHelp::ucs2_to_utf8({ 0xc5, 'A', 'g', 'j', 'l', 'M' });
 
