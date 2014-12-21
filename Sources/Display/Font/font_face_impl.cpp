@@ -117,7 +117,7 @@ namespace clan
 		font_cache.back().glyph_cache->set_texture_group(texture_group);
 	}
 
-	void FontFace_Impl::load_font(Canvas &canvas, const std::string &typeface_name, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics)
+	void FontFace_Impl::load_font(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics)
 	{
 		FontMetrics font_metrics = metrics;
 
@@ -265,14 +265,6 @@ namespace clan
 
 	}
 
-	Font_Cache FontFace_Impl::get_last_font()
-	{
-		if (font_cache.empty())
-			throw Exception("FontFace is empty");
-		return font_cache.back();
-	}
-
-
 	Font_Cache FontFace_Impl::get_font(const Font_Selected &desc)
 	{
 		if (font_cache.empty())
@@ -281,8 +273,6 @@ namespace clan
 		// Find cached version
 		for (auto &cache : font_cache)
 		{
-			if (desc.typeface_name != cache.engine->get_desc().get_typeface_name())
-				continue;
 			if (desc.style != cache.engine->get_desc().get_style())
 				continue;
 			if (desc.weight != cache.engine->get_desc().get_weight())
@@ -305,15 +295,11 @@ namespace clan
 		DataBuffer font_databuffer;
 		for (auto &cache : font_cache)
 		{
-			if (desc.typeface_name != cache.engine->get_desc().get_typeface_name())
-				continue;
-
 			font_databuffer = cache.engine->get_databuffer();	// Get shared databuffer
 			new_desc = cache.engine->get_desc().clone();
 			break;
 		}
 
-		new_desc.set_typeface_name(desc.typeface_name);
 		new_desc.set_height(desc.height);
 		new_desc.set_style(desc.style);
 		new_desc.set_weight(desc.weight);

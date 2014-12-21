@@ -59,7 +59,7 @@ public:
 
 	const FontMetrics &get_font_metrics();
 
-	void set_font_face(FontFace &new_font_face);
+	void set_font_face(FontFace &new_font_face, const FontDescription &description);
 
 	int get_character_index(Canvas &canvas, const std::string &text, const Point &point);
 
@@ -73,7 +73,6 @@ public:
 
 	static Font load(Canvas &canvas, const FontDescription &reference_desc, const std::string &id, const XMLResourceDocument &doc, std::function<Resource<Sprite>(Canvas &, const std::string &)> cb_get_sprite);
 
-	void set_typeface_name(const std::string &name);
 	void set_height(float value);
 	void set_weight(FontWeight value);
 	void set_line_height(float height);

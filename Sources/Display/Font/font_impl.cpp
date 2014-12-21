@@ -53,12 +53,10 @@ Font_Impl::Font_Impl()
 {
 }
 
-void Font_Impl::set_font_face(FontFace &new_font_face)
+void Font_Impl::set_font_face(FontFace &new_font_face, const FontDescription &description)
 {
 	font_face = new_font_face;
-	const FontDescription &description = font_face.impl->get_last_font().engine->get_desc();
 
-	selected_description.typeface_name = description.get_typeface_name();
 	selected_description.height = description.get_height();
 	selected_description.weight = description.get_weight();
 	selected_description.style = description.get_style();
@@ -269,15 +267,6 @@ GlyphMetrics Font_Impl::measure_text(Canvas &canvas, const std::string &string)
 	total_metrics.bbox_size *= scaled_height;
 
 	return total_metrics;
-}
-
-void Font_Impl::set_typeface_name(const std::string &name)
-{
-	if (selected_description.typeface_name != name)
-	{
-		selected_description.typeface_name = name;
-		font_engine = nullptr;
-	}
 }
 
 void Font_Impl::set_height(float value)

@@ -48,7 +48,6 @@ class Font_Selected
 {
 public:
 	// This structure contains the FontDescription options that are selectable in clan::Font
-	std::string typeface_name;
 	float height = 20.0f;
 	FontWeight weight = FontWeight::normal;
 	FontStyle style = FontStyle::normal;
@@ -73,15 +72,13 @@ public:
 	const std::string &get_family_name() const { return family_name; }
 
 	void load_font(const FontDescription &desc, DataBuffer &font_databuffer);
-	void load_font(Canvas &canvas, const std::string &typeface_name, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics);
+	void load_font(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics);
 
 	// Returns null engine if font not found
 	Font_Cache get_font(const Font_Selected &desc);
 
 	// Find font and copy it using the revised description
 	Font_Cache copy_font(const Font_Selected &desc);
-
-	Font_Cache get_last_font();
 
 private:
 	std::string family_name;

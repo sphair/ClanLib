@@ -60,7 +60,7 @@ Font::Font(FontFace &font_face, int height) : impl(std::make_shared<Font_Impl>()
 
 Font::Font(FontFace &font_face, const FontDescription &desc) : impl(std::make_shared<Font_Impl>())
 {
-	impl->set_font_face(font_face);
+	impl->set_font_face(font_face, desc);
 }
 
 Font::Font(Canvas &canvas, const std::string &typeface_name, int height)
@@ -84,21 +84,25 @@ Font::Font(Canvas &canvas, const FontDescription &desc, const std::string &ttf_f
 
 	FontFace font_face(desc.get_typeface_name());
 	font_face.add(desc, new_filename, vfs);
-	impl->set_font_face(font_face);
+	impl->set_font_face(font_face, desc);
 }
 
 Font::Font( Canvas &canvas, const FontDescription &desc, const std::string &ttf_filename, FileSystem fs) : impl(std::make_shared<Font_Impl>())
 {
 	FontFace font_face(desc.get_typeface_name());
 	font_face.add(desc, ttf_filename, fs);
-	impl->set_font_face(font_face);
+	impl->set_font_face(font_face, desc);
 }
 
 Font::Font(Canvas &canvas, const std::string &typeface_name, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics) : impl(std::make_shared<Font_Impl>())
 {
+	FontDescription desc;
+	desc.set_typeface_name(typeface_name);
+	desc.set_height(metrics.get_height());
+
 	FontFace font_face(typeface_name);
-	font_face.add(canvas, typeface_name, sprite, glyph_list, spacelen, monospace, metrics);
-	impl->set_font_face(font_face);
+	font_face.add(canvas, sprite, glyph_list, spacelen, monospace, metrics);
+	impl->set_font_face(font_face, desc);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -225,12 +229,6 @@ bool Font::is_null() const
 
 /////////////////////////////////////////////////////////////////////////////
 // Font Operations:
-
-void Font::set_typeface_name(const std::string &name)
-{
-	if (impl)
-		impl->set_typeface_name(name);
-}
 
 void Font::set_height(float value)
 {

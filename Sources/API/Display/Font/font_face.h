@@ -92,19 +92,11 @@ public:
 	/// \brief Add a Font based on a sprite
 	///
 	/// \param sprite = Sprite with glyphs
-	/// \param typeface_name = The typeface name that this sprite font is going to be known as
 	/// \param glyph_list = Letter to glyph mapping
 	/// \param spacelen = Width of space character
 	/// \param monospace = Force monospaced font (using widest sprite character)
 	/// \param metrics = Font metrics for the sprite font
-	void add(Canvas &canvas, const std::string &typeface_name, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics);
-
-	bool operator<(const FontFace &that) const { return get_family_name() < that.get_family_name(); }
-	bool operator<=(const FontFace &that) const { return get_family_name() <= that.get_family_name(); }
-	bool operator>(const FontFace &that) const { return get_family_name() > that.get_family_name(); }
-	bool operator>=(const FontFace &that) const { return get_family_name() >= that.get_family_name(); }
-	bool operator==(const FontFace &that) const { return get_family_name() == that.get_family_name(); }
-	bool operator!=(const FontFace &that) const { return get_family_name() != that.get_family_name(); }
+	void add(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics);
 
 /// \}
 /// \name Implementation

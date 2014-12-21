@@ -116,9 +116,6 @@ public:
 /// \{
 
 public:
-	/// \brief Sets the font name
-	void set_typeface_name(const std::string &name);
-
 	/// \brief Sets the font height
 	void set_height(float value);
 
