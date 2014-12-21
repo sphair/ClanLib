@@ -70,6 +70,8 @@ public:
 	FontFace_Impl();
 	~FontFace_Impl();
 
+	bool is_empty() const { return font_cache.empty(); }
+
 	void load_font(const FontDescription &desc, DataBuffer &font_databuffer);
 	void load_font(Canvas &canvas, const std::string &typeface_name, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics);
 

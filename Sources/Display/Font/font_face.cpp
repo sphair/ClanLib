@@ -48,6 +48,11 @@ namespace clan
 
 	}
 
+	bool FontFace::is_empty() const
+	{
+		return impl->is_empty();
+	}
+
 	void FontFace::add(const std::string &typeface_name, int height)
 	{
 		FontDescription desc;

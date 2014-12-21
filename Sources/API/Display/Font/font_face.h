@@ -63,6 +63,8 @@ public:
 /// \name Attributes
 /// \{
 public:
+	/// \brief Returns true if the font face contains no fonts
+	bool is_empty() const;
 
 /// \}
 /// \name Operations
