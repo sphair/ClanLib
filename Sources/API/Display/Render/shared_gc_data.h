@@ -31,11 +31,8 @@
 
 #pragma once
 
-#include "../../Core/Signals/signal.h"
-#include "texture.h"
-#include "../Image/image_import_description.h"
 #include <vector>
-#include <map>
+#include <memory>
 
 namespace clan
 {
@@ -43,10 +40,10 @@ namespace clan
 /// \{
 
 class GraphicContext;
+class GraphicContextProvider;
 class DisposableObject;
 class SharedGCData_Impl;
 class MutexSection;
-class Canvas;
 
 /// \brief Shared Graphic Context Data
 class SharedGCData
