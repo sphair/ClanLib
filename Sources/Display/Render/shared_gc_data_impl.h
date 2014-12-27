@@ -58,15 +58,10 @@ public:
 	static SharedGCData *cl_sharedgc;
 
 private:
-
 	Signal<void()> sig_destruction_imminent;
 
 	std::vector<GraphicContextProvider*> graphic_context_providers;
 	std::vector<DisposableObject*> disposable_objects;
-
-	DisplayWindow resource_window;
-	Canvas resource_canvas;
-
 };
 
 }

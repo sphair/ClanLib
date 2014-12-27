@@ -65,9 +65,4 @@ namespace clan
 	{
 		return get_instance()->impl->resources;
 	}
-
-	Canvas UIThread::get_resource_canvas()
-	{
-		return SharedGCData::get_resource_canvas();
-	}
 }

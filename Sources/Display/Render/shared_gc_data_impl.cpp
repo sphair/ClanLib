@@ -97,20 +97,4 @@ void SharedGCData_Impl::remove_disposable(DisposableObject *disposable)
 		disposable_objects.erase(it);
 }
 
-
-Canvas &SharedGCData_Impl::get_resource_canvas()
-{
-	if (resource_canvas.is_null())
-	{
-		clan::DisplayWindowDescription desc;
-		desc.set_size(clan::Size(64, 64), false);
-		desc.set_visible(false);
-		resource_window = clan::DisplayWindow(desc);
-		resource_canvas = clan::Canvas(resource_window);
-
-	}
-	return resource_canvas;
-}
-
-
 }

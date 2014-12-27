@@ -65,11 +65,6 @@ public:
 	/// \brief Remove a provider
 	static void remove_provider(GraphicContextProvider *provider);
 
-	/// \brief Get the resource canvas
-	///
-	/// This is linked to a hidden display window, that is always available
-	static Canvas get_resource_canvas();
-
 	/// \brief Get a provider
 	///
 	/// \param mutex_section : Returns the mutex section for the provider lock

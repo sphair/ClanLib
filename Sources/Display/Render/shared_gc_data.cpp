@@ -107,14 +107,6 @@ GraphicContextProvider *SharedGCData::get_provider(std::unique_ptr<MutexSection>
 	return nullptr;
 }
 
-Canvas SharedGCData::get_resource_canvas()
-{
-	MutexSection mutex_lock(&SharedGCData_Impl::cl_sharedgc_mutex);
-	if (!SharedGCData_Impl::cl_sharedgc)
-		throw Exception("Attempted to use an invalid SharedGCData");
-	return SharedGCData_Impl::cl_sharedgc->impl->get_resource_canvas();
-}
-
 void SharedGCData::add_disposable(DisposableObject *disposable)
 {
 	MutexSection mutex_lock(&SharedGCData_Impl::cl_sharedgc_mutex);

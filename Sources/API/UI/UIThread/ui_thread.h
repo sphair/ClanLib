@@ -44,7 +44,6 @@ namespace clan
 
 		static UIThread *get_instance();
 		static ResourceManager get_resources();
-		static Canvas get_resource_canvas();
 
 		//static void execute(const std::function<void()> &func);
 
