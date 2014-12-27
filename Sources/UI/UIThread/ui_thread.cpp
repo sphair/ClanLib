@@ -28,7 +28,6 @@
 
 #include "UI/precomp.h"
 #include "API/Core/Resources/resource_manager.h"
-#include "API/Display/Render/shared_gc_data.h"
 #include "API/Display/2D/canvas.h"
 #include "API/UI/UIThread/ui_thread.h"
 
