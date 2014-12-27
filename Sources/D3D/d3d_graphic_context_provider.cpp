@@ -104,6 +104,7 @@ D3DGraphicContextProvider::~D3DGraphicContextProvider()
 void D3DGraphicContextProvider::begin_resize_swap_chain()
 {
 	window->get_device_context()->OMSetRenderTargets(0, 0, 0);
+	window->get_device_context()->Flush();
 
 	default_dsv.clear();
 	default_depth_render_buffer.reset();

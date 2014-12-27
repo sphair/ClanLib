@@ -42,6 +42,7 @@ namespace clan
 
 		WindowView *window_view;
 		DisplayWindow window;
+		Canvas canvas;
 		SlotContainer slots;
 
 		std::shared_ptr<View> captured_view;

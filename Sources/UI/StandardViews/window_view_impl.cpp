@@ -39,9 +39,10 @@
 
 namespace clan
 {
-
 	WindowView_Impl::WindowView_Impl(WindowView *view, const DisplayWindowDescription &desc) : window_view(view), window(desc)
 	{
+		canvas = Canvas(window);
+
 		slots.connect(window.sig_lost_focus(), clan::bind_member(this, &WindowView_Impl::on_lost_focus));
 		slots.connect(window.sig_got_focus(), clan::bind_member(this, &WindowView_Impl::on_got_focus));
 		slots.connect(window.sig_resize(), clan::bind_member(this, &WindowView_Impl::on_resize));
@@ -74,8 +75,6 @@ namespace clan
 
 	void WindowView_Impl::on_paint(const clan::Rect &box)
 	{
-		Canvas canvas(window);
-
 		canvas.clear(clan::Colorf::transparent);
 
 		window_view->set_geometry(BoxGeometry::from_margin_box(window_view->box_style, window.get_viewport()));
