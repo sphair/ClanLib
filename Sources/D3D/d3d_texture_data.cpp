@@ -49,22 +49,22 @@ D3DTextureData::~D3DTextureData()
 
 void D3DTextureData::device_destroyed(ID3D11Device *device)
 {
-	if (handles.size() == 1)	// Only allocated for a single device
-	{
-		copy_handle_for_another_provider(device);
-	}
-
 	for (size_t i = 0; i < handles.size(); i++)
 	{
 		if (handles[i]->device.get() == device)
 		{
+			if (handles.size() == 1)	// Only allocated for a single device
+			{
+				attach_to_another_device(device);
+			}
+
 			handles.erase(handles.begin() + i);
 			return;
 		}
 	}
 }
 
-void D3DTextureData::copy_handle_for_another_provider(ID3D11Device *device)
+void D3DTextureData::attach_to_another_device(ID3D11Device *not_this_device)
 {
 	// This code is used to ensure the texture is copied to another provider if the (single) owner is destroyed
 	std::unique_ptr<MutexSection> mutex_section;
@@ -74,14 +74,13 @@ void D3DTextureData::copy_handle_for_another_provider(ID3D11Device *device)
 	for(unsigned int cnt=0; cnt<max; cnt++)
 	{
 		D3DGraphicContextProvider* gc_provider = dynamic_cast<D3DGraphicContextProvider *>(gc_providers[cnt]);
-		if (gc_provider->get_window()->get_device() != device)
+		if (gc_provider->get_window()->get_device() != not_this_device)
 		{
 			ComPtr<ID3D11Device> device = gc_provider->get_window()->get_device();
 			get_handles(device);
 			return;
 		}
 	}
-
 }
 
 D3DTextureData::DeviceHandles &D3DTextureData::get_handles(const ComPtr<ID3D11Device> &device) const

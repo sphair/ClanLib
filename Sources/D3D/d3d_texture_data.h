@@ -72,11 +72,6 @@ public:
 			return static_cast<ID3D11Texture3D *>(texture.get());
 		}
 
-		//ComPtr<ID3D11Texture2D> get_texture_2d_com()
-		//{
-		//	return ComPtr<ID3D11Texture2D>(texture);
-		//}
-
 		ComPtr<ID3D11Device> device;
 		ComPtr<ID3D11Resource> texture;
 		DeviceTextureType texture_type;
@@ -85,7 +80,8 @@ public:
 	void device_destroyed(ID3D11Device *device);
 	DeviceHandles &get_handles(const ComPtr<ID3D11Device> &device) const;
 	DeviceTextureType decode_texture_type(TextureDimensions texture_dimensions) const;
-	void copy_handle_for_another_provider(ID3D11Device *device);
+	void attach_to_another_device(ID3D11Device *not_this_device);
+
 	mutable std::vector<std::shared_ptr<DeviceHandles> > handles;
 	D3D_FEATURE_LEVEL feature_level;
 	TextureDimensions texture_dimensions;
