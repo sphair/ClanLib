@@ -26,8 +26,6 @@
 **    Mark Page
 */
 
-#pragma once
-
 #include "Display/precomp.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/Font/font_metrics.h"
