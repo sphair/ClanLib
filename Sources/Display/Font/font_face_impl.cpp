@@ -94,8 +94,8 @@ namespace clan
 			FontConfig &fc = FontConfig::instance();
 			std::string font_file_path = fc.match_font(desc);
 			std::string path = PathHelp::get_fullpath(font_file_path, PathHelp::path_type_file);
-			filename = PathHelp::get_filename(font_file_path, PathHelp::path_type_file);
-			fs = FileSystem(path);
+			auto filename = PathHelp::get_filename(font_file_path, PathHelp::path_type_file);
+			auto fs = FileSystem(path);
 
 			IODevice file = fs.open_file(filename);
 			font_databuffer.set_size(file.get_size());
