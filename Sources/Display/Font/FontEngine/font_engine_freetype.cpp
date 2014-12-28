@@ -145,7 +145,7 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph(int glyph)
 	}
 	else
 	{
-		get_font_glyph_standard(glyph, font_description.get_anti_alias());
+		return get_font_glyph_standard(glyph, font_description.get_anti_alias());
 	}
 }
 
@@ -580,7 +580,7 @@ void FontEngine_Freetype::calculate_font_metrics()
 		descent,
 		internal_leading,
 		external_leading,
-		desc.get_line_height()		// Calculated in FontMetrics as height + metrics.tmExternalLeading if not specified
+		font_description.get_line_height()		// Calculated in FontMetrics as height + metrics.tmExternalLeading if not specified
 		);
 }
 
