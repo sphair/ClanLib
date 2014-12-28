@@ -222,9 +222,62 @@ namespace clan
 		set_margin(size, size, size, size);
 	}
 
+	void BoxStyle::set_margin_auto()
+	{
+		impl->margin.left.type = BoxMarginValue::type_auto;
+		impl->margin.left.value = 0.0f;
+		impl->margin.right.type = BoxMarginValue::type_auto;
+		impl->margin.right.value = 0.0f;
+		impl->margin.top.type = BoxMarginValue::type_auto;
+		impl->margin.top.value = 0.0f;
+		impl->margin.bottom.type = BoxMarginValue::type_auto;
+		impl->margin.bottom.value = 0.0f;
+		if (impl->style_changed) impl->style_changed();
+	}
+
+	void BoxStyle::set_margin_left_auto()
+	{
+		impl->margin.left.type = BoxMarginValue::type_auto;
+		impl->margin.left.value = 0.0f;
+		if (impl->style_changed) impl->style_changed();
+	}
+
+	void BoxStyle::set_margin_top_auto()
+	{
+		impl->margin.top.type = BoxMarginValue::type_auto;
+		impl->margin.top.value = 0.0f;
+		if (impl->style_changed) impl->style_changed();
+	}
+
+	void BoxStyle::set_margin_right_auto()
+	{
+		impl->margin.right.type = BoxMarginValue::type_auto;
+		impl->margin.right.value = 0.0f;
+		if (impl->style_changed) impl->style_changed();
+	}
+
+	void BoxStyle::set_margin_bottom_auto()
+	{
+		impl->margin.bottom.type = BoxMarginValue::type_auto;
+		impl->margin.bottom.value = 0.0f;
+		if (impl->style_changed) impl->style_changed();
+	}
+
 	void BoxStyle::set_border_none()
 	{
-
+		impl->border.left.type = BoxBorderValue::type_none;
+		impl->border.left.color = Colorf();
+		impl->border.left.width = 0.0f;
+		impl->border.right.type = BoxBorderValue::type_none;
+		impl->border.right.color = Colorf();
+		impl->border.right.width = 0.0f;
+		impl->border.top.type = BoxBorderValue::type_none;
+		impl->border.top.color = Colorf();
+		impl->border.top.width = 0.0f;
+		impl->border.bottom.type = BoxBorderValue::type_none;
+		impl->border.bottom.color = Colorf();
+		impl->border.bottom.width = 0.0f;
+		if (impl->style_changed) impl->style_changed();
 	}
 
 	void BoxStyle::set_border(const Colorf &color, float left, float top, float right, float bottom)

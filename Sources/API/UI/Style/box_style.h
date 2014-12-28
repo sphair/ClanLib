@@ -87,6 +87,11 @@ namespace clan
 		void set_margin(float left, float top, float right, float bottom);
 		void set_margin(float width, float height);
 		void set_margin(float size);
+		void set_margin_auto();
+		void set_margin_left_auto();
+		void set_margin_top_auto();
+		void set_margin_right_auto();
+		void set_margin_bottom_auto();
 		bool is_margin_left_auto() const;
 		bool is_margin_top_auto() const;
 		bool is_margin_right_auto() const;

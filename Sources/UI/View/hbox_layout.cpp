@@ -184,28 +184,6 @@ namespace clan
 		{
 			if (subview->box_style.is_static() && !subview->hidden())
 			{
-				float top_noncontent = 0.0f;
-				top_noncontent += subview->box_style.margin_top();
-				top_noncontent += subview->box_style.border_top();
-				top_noncontent += subview->box_style.padding_top();
-
-				float bottom_noncontent = 0.0f;
-				bottom_noncontent += subview->box_style.margin_bottom();
-				bottom_noncontent += subview->box_style.border_bottom();
-				bottom_noncontent += subview->box_style.padding_bottom();
-
-				float subview_height = view->geometry().content.get_height() - top_noncontent - bottom_noncontent;
-				if (subview_height < 0.0f)
-				{
-					bottom_noncontent = 0.0f;
-					subview_height = view->geometry().content.get_height() - top_noncontent;
-					if (subview_height < 0.0f)
-					{
-						top_noncontent = 0.0f;
-						subview_height = view->geometry().content.get_height();
-					}
-				}
-
 				float subview_width = subview->box_style.flex_basis();
 				if (subview->box_style.is_flex_basis_auto())
 					subview_width = subview->get_preferred_width(canvas);
@@ -216,6 +194,47 @@ namespace clan
 					subview_width += subview->box_style.flex_grow() * free_space / total_grow_factor;
 
 				subview_width = std::round(subview_width); // To do: this way of rounding may cause the total width to go beyond the available content width
+
+				float top_noncontent = 0.0f;
+				top_noncontent += subview->box_style.margin_top();
+				top_noncontent += subview->box_style.border_top();
+				top_noncontent += subview->box_style.padding_top();
+
+				float bottom_noncontent = 0.0f;
+				bottom_noncontent += subview->box_style.margin_bottom();
+				bottom_noncontent += subview->box_style.border_bottom();
+				bottom_noncontent += subview->box_style.padding_bottom();
+
+				float subview_height = subview->get_preferred_height(canvas, subview_width);
+				float available_margin = view->geometry().content.get_height() - subview_height - top_noncontent - bottom_noncontent;
+
+				if (subview->box_style.is_margin_top_auto() && subview->box_style.is_margin_bottom_auto())
+				{
+					top_noncontent += available_margin * 0.5f;
+					bottom_noncontent += available_margin * 0.5f;
+				}
+				else if (subview->box_style.is_margin_top_auto())
+				{
+					top_noncontent += available_margin;
+				}
+				else if (subview->box_style.is_margin_bottom_auto())
+				{
+					top_noncontent -= available_margin;
+				}
+				else
+				{
+					subview_height = view->geometry().content.get_height() - top_noncontent - bottom_noncontent;
+					if (subview_height < 0.0f)
+					{
+						bottom_noncontent = 0.0f;
+						subview_height = view->geometry().content.get_height() - top_noncontent;
+						if (subview_height < 0.0f)
+						{
+							top_noncontent = 0.0f;
+							subview_height = view->geometry().content.get_height();
+						}
+					}
+				}
 
 				x += subview->box_style.margin_left();
 				x += subview->box_style.border_left();

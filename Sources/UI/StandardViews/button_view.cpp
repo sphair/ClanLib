@@ -28,6 +28,7 @@
 
 #include "UI/precomp.h"
 #include "API/UI/StandardViews/button_view.h"
+#include "API/UI/StandardViews/image_view.h"
 
 namespace clan
 {
@@ -42,12 +43,14 @@ namespace clan
 	{
 		box_style.set_layout_hbox();
 
+		impl->image_view = std::make_shared<ImageView>();
+		impl->image_view->box_style.set_flex(0.0f, 0.0f);
+		add_subview(impl->image_view);
+
 		impl->label = std::make_shared<LabelView>();
+		impl->label->box_style.set_margin_auto();
 		impl->label->box_style.set_flex(1.0f, 1.0f);
 		add_subview(impl->label);
-
-		//impl->image_view = std::make_shared<ImageView>();
-		//add_subview(impl->image_view);
 	}
 
 	ButtonView::~ButtonView()
@@ -62,5 +65,23 @@ namespace clan
 	std::shared_ptr<ImageView> ButtonView::image_view()
 	{
 		return impl->image_view;
+	}
+
+	void ButtonView::move_label_before_image()
+	{
+		impl->label->remove_from_super();
+		impl->image_view->remove_from_super();
+
+		add_subview(impl->label);
+		add_subview(impl->image_view);
+	}
+
+	void ButtonView::move_label_after_image()
+	{
+		impl->label->remove_from_super();
+		impl->image_view->remove_from_super();
+
+		add_subview(impl->image_view);
+		add_subview(impl->label);
 	}
 }

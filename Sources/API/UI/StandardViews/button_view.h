@@ -45,6 +45,9 @@ namespace clan
 		std::shared_ptr<LabelView> label();
 		std::shared_ptr<ImageView> image_view();
 
+		void move_label_before_image();
+		void move_label_after_image();
+
 	private:
 		std::unique_ptr<ButtonViewImpl> impl;
 	};
