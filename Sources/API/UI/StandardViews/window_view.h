@@ -57,6 +57,9 @@ namespace clan
 	public:
 		WindowView(const DisplayWindowDescription &desc);
 
+		bool hidden() const override;
+		void set_hidden(bool value = true) override;
+
 		void show(WindowShowType type = WindowShowType::show);
 		void hide();
 

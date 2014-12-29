@@ -36,11 +36,13 @@ namespace clan
 	{
 		for (const std::shared_ptr<View> &subview : view->subviews())
 		{
-			if (subview->hidden()) continue;
-
 			if (subview->local_root())
 			{
 				subview->layout_local();
+			}
+			else if (subview->hidden())
+			{
+				continue;
 			}
 			else if (subview->box_style.is_absolute())
 			{

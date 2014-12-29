@@ -69,8 +69,8 @@ namespace clan
 		void add_subview(const std::shared_ptr<View> &view);
 		void remove_from_super();
 
-		bool hidden() const;
-		void set_hidden(bool value = true);
+		virtual bool hidden() const;
+		virtual void set_hidden(bool value = true);
 
 		bool needs_layout() const;
 		void set_needs_layout();

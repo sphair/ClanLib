@@ -49,6 +49,21 @@ namespace clan
 		return impl->window;
 	}
 
+	bool WindowView::hidden() const
+	{
+		return !impl->window.is_visible();
+	}
+
+	void WindowView::set_hidden(bool value)
+	{
+		if (hidden() != value)
+		{
+			set_needs_layout();
+			set_needs_render();
+			show(value ? WindowShowType::hide : WindowShowType::show);
+		}
+	}
+
 	void WindowView::show(WindowShowType type)
 	{
 		switch (type)
