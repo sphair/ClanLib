@@ -36,7 +36,6 @@ public:
 	clan::Resource<clan::Sprite> get_sprite(clan::Canvas &canvas, const std::string &id) override { throw clan::Exception("No sprite resources"); }
 	clan::Resource<clan::Image> get_image(clan::Canvas &canvas, const std::string &id) override { throw clan::Exception("No image resources"); }
 	clan::Resource<clan::Texture> get_texture(clan::GraphicContext &gc, const std::string &id) override { throw clan::Exception("No texture resources"); }
-	clan::Resource<clan::CollisionOutline> get_collision(const std::string &id) override { throw clan::Exception("No collision resources"); }
 
 	clan::Resource<clan::Font> get_font(clan::Canvas &canvas, const clan::FontDescription &desc)
 	{
@@ -123,7 +122,7 @@ int GUI::start(const std::vector<std::string> &args)
 	edit->box_style.set_border_radius(3.0f);
 	edit->box_style.set_padding(5.0f, 2.0f, 5.0f, 3.0f);
 	edit->box_style.set_width(35.0f);
-	
+
 	// Create a span layout view with some more complex inline formatting
 	std::shared_ptr<clan::SpanLayoutView> span = std::make_shared<clan::SpanLayoutView>();
 	clan::TextStyle font_desc2;
@@ -146,10 +145,10 @@ int GUI::start(const std::vector<std::string> &args)
 	font_desc5.set_font_family("Segoe UI");
 	font_desc5.set_size(16.0f);
 	font_desc5.set_line_height(40.0f);
-	font_desc5.set_weight(800);
+	font_desc5.set_weight(clan::FontWeight::extra_bold);
 	span->add_text(" units! sdfjghsdkfj hkjsdfhg jksdhfj gkshdfk gsjdkfghsjkdfh kgjshdfkg sjkdfh gjskhf gskjdfg hkjsdfh kgjsdhfkgjhsdkjfhgksjdfhg kjsdfhgjkshdfkhgskjdf ghkjsdfsg kdfhg skjdfhgjksdh fgsdfhg kjsdhfjkghsdkjfh gkjsdhfjkgsdhfkgjhsdkfj hgksj.", font_desc5);
 	root->add_subview(span);
-	
+
 	clan::GameTime game_time;
 
 	// Run until someone presses escape

@@ -10,7 +10,6 @@ class DisplayResources : public DisplayCache
 public:
 	Resource<Sprite> get_sprite(Canvas &canvas, const std::string &id) override { throw Exception("No sprite resources"); }
 	Resource<Texture> get_texture(GraphicContext &gc, const std::string &id) override { throw Exception("No texture resources"); }
-	Resource<CollisionOutline> get_collision(const std::string &id) override { throw Exception("No collision resources"); }
 
 	Resource<Image> get_image(Canvas &canvas, const std::string &id) override
 	{
