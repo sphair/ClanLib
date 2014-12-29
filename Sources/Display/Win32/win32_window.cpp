@@ -2057,7 +2057,7 @@ void Win32Window::resend_nccalcsize()
 {
 	RECT box = { 0 };
 	GetWindowRect(hwnd, &box);
-	SetWindowPos(hwnd, 0, box.left, box.top, box.right - box.left, box.bottom - box.top, SWP_FRAMECHANGED);
+	SetWindowPos(hwnd, 0, box.left, box.top, box.right - box.left, box.bottom - box.top, SWP_FRAMECHANGED|SWP_NOACTIVATE);
 }
 
 }
