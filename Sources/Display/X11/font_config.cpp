@@ -31,7 +31,7 @@
 #include "API/Core/IOData/iodevice.h"
 #include "API/Core/System/databuffer.h"
 #include "API/Display/Font/font_description.h"
-#include <cstdlib>
+#include <cmath>
 
 namespace clan
 {
@@ -74,16 +74,17 @@ std::string FontConfig::match_font(const FontDescription &desc) const
 	FcPattern * fc_match = nullptr;
 	try
 	{
-		int weight = desc.get_weight();
+		int weight = static_cast<int>(desc.get_weight());
 
 		// Build font matching pattern.
 		fc_pattern = FcPatternBuild (nullptr,
-		FC_FAMILY, FcTypeString, desc.get_typeface_name().c_str(),
-		FC_PIXEL_SIZE, FcTypeDouble, (double) std::abs(desc.get_height()),
-		FC_WEIGHT, FcTypeInteger, ((weight > 0) ? (int)(weight * (FC_WEIGHT_HEAVY/900.0)) : FC_WEIGHT_NORMAL),
-		FC_SLANT, FcTypeInteger, desc.get_italic() ? FC_SLANT_ITALIC : FC_SLANT_ROMAN,
-		FC_SPACING, FcTypeInteger, desc.get_fixed_pitch() ? FC_MONO : FC_PROPORTIONAL,
-		(char*) nullptr);
+			FC_FAMILY    , FcTypeString , desc.get_typeface_name().c_str(),
+			FC_PIXEL_SIZE, FcTypeDouble , (double) std::abs(desc.get_height()),
+			FC_WEIGHT    , FcTypeInteger, (weight > 0) ? (int)(weight * (FC_WEIGHT_HEAVY/900.0)) : FC_WEIGHT_NORMAL,
+			FC_SLANT     , FcTypeInteger, (desc.get_style() == clan::FontStyle::italic) ? FC_SLANT_ITALIC : ((desc.get_style() == clan::FontStyle::oblique) ? FC_SLANT_OBLIQUE : FC_SLANT_ROMAN),
+			FC_SPACING   , FcTypeInteger, FC_PROPORTIONAL,
+			(char*) nullptr
+			);
 		if (!fc_pattern)
 		{
 			throw Exception("CL_FontConfig: Building FontConfig pattern failed.");
@@ -100,7 +101,7 @@ std::string FontConfig::match_font(const FontDescription &desc) const
 
 		// Find best match for pattern and extract filename.
 		FcResult match_result; // Doesn't appear to be actually updated.
-                fc_match = FcFontMatch(fc_config, fc_pattern, &match_result);
+		fc_match = FcFontMatch(fc_config, fc_pattern, &match_result);
 		FcChar8 * fc_font_file_path = nullptr;
 		if (FcResultMatch != FcPatternGetString (fc_match, FC_FILE, 0, &fc_font_file_path))
 		{

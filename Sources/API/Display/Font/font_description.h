@@ -40,7 +40,7 @@ namespace clan
 class DisplayWindow;
 class FontDescription_Impl;
 
-enum class FontWeight
+enum class FontWeight : int
 {
 	thin = 100,
 	extra_light = 200,
