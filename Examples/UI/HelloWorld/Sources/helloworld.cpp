@@ -38,7 +38,6 @@ public:
 	Resource<Sprite> get_sprite(Canvas &canvas, const std::string &id) override { throw Exception("No sprite resources"); }
 	Resource<Image> get_image(Canvas &canvas, const std::string &id) override { throw Exception("No image resources"); }
 	Resource<Texture> get_texture(GraphicContext &gc, const std::string &id) override { throw Exception("No texture resources"); }
-	Resource<CollisionOutline> get_collision(const std::string &id) override { throw Exception("No collision resources"); }
 
 	Resource<Font> get_font(Canvas &canvas, const FontDescription &desc)
 	{
@@ -75,8 +74,6 @@ int HelloWorld::start(const std::vector<std::string> &args)
 	// Exit run loop when close is clicked.
 	// We have to store the return Slot because if it is destroyed the lambda function is disconnected from the signal.
 	Slot slot_close = root->sig_close().connect([&](CloseEvent &e) { exit(); });
-
-	Canvas canvas = UIThread::get_resource_canvas();
 
 	// Style the root view to use rounded corners and a bit of drop shadow
 	root->box_style.set_background(Colorf(240, 240, 240, 255));
@@ -130,7 +127,7 @@ int HelloWorld::start(const std::vector<std::string> &args)
 	font_desc5.set_font_family("Segoe UI");
 	font_desc5.set_size(16.0f);
 	font_desc5.set_line_height(40.0f);
-	font_desc5.set_weight(800);
+	font_desc5.set_weight(FontWeight::extra_bold);
 	span->add_text(" units! sdfjghsdkfj hkjsdfhg jksdhfj gkshdfk gsjdkfghsjkdfh kgjshdfkg sjkdfh gjskhf gskjdfg hkjsdfh kgjsdhfkgjhsdkjfhgksjdfhg kjsdfhgjkshdfkhgskjdf ghkjsdfsg kdfhg skjdfhgjksdh fgsdfhg kjsdhfjkghsdkjfh gkjsdhfjkgsdhfkgjhsdkfj hgksj.", font_desc5);
 	root->add_subview(span);
 
