@@ -109,7 +109,7 @@ void Font_Impl::select_font_face()
 		else if (scaled_height == 1.0f)
 		{
 			font_draw_flat.init(glyph_cache, font_engine);
-			font_draw = &font_draw_path;
+			font_draw = &font_draw_flat;
 		}
 		else
 		{
