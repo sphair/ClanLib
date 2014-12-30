@@ -47,5 +47,6 @@ namespace clan
 
 	PopupView::PopupView() : WindowView(PopupViewImpl::get_window_desc())
 	{
+		get_display_window().enable_alpha_channel(Rect(-1, -1, 0, 0));
 	}
 }
