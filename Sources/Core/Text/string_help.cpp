@@ -264,12 +264,35 @@ std::wstring StringHelp::ucs2_to_lower(const std::wstring &s)
 	return result;
 }
 
-std::string StringHelp::float_to_text(float value, int num_decimal_places)
+std::string StringHelp::remove_trailing_zeros(std::string text)
 {
-	return float_to_local8(value, num_decimal_places);
+	if (text.find_first_of('.') != std::string::npos)
+	{
+		while (!text.empty() && text.back() == '0') text.pop_back();
+		if (!text.empty() && text.back() == '.') text.pop_back();
+	}
+	return text;
 }
 
-std::string StringHelp::float_to_local8(float value, int num_decimals)
+std::wstring StringHelp::remove_trailing_zeros(std::wstring text)
+{
+	if (text.find_first_of(L'.') != std::wstring::npos)
+	{
+		while (!text.empty() && text.back() == L'0') text.pop_back();
+		if (!text.empty() && text.back() == L'.') text.pop_back();
+	}
+	return text;
+}
+
+std::string StringHelp::float_to_text(float value, int num_decimal_places, bool remove_zeros)
+{
+	if (remove_zeros)
+		return remove_trailing_zeros(float_to_local8(value, num_decimal_places));
+	else
+		return float_to_local8(value, num_decimal_places);
+}
+
+std::string StringHelp::float_to_local8(float value, int num_decimals, bool remove_zeros)
 {
 	char buf[64];
 	memset(buf, 0, 64);
@@ -278,21 +301,30 @@ std::string StringHelp::float_to_local8(float value, int num_decimals)
 #else
 	snprintf(buf, 63, ("%." + StringHelp::int_to_local8(num_decimals) + "f").c_str(), value);
 #endif
-	return std::string(buf);
+	if (remove_zeros)
+		return remove_trailing_zeros(std::string(buf));
+	else
+		return std::string(buf);
 }
 	
-std::wstring StringHelp::float_to_ucs2(float value, int num_decimals)
+std::wstring StringHelp::float_to_ucs2(float value, int num_decimals, bool remove_zeros)
 {
 #ifdef WIN32
 	WCHAR buf[64];
 	memset(buf, 0, 64 * sizeof(WCHAR));
 	swprintf(buf, (L"%." + StringHelp::int_to_ucs2(num_decimals) + L"f").c_str(), value);
-	return std::wstring(buf);
+	if (remove_zeros)
+		return remove_trailing_zeros(std::wstring(buf));
+	else
+		return std::wstring(buf);
 #else
 	wchar_t buf[64];
 	memset(buf, 0, 64 * sizeof(wchar_t));
 	swprintf(buf, 63, (L"%." + StringHelp::int_to_ucs2(num_decimals) + L"f").c_str(), value);
-	return std::wstring(buf);
+	if (remove_zeros)
+		return remove_trailing_zeros(std::wstring(buf));
+	else
+		return std::wstring(buf);
 #endif
 }
 

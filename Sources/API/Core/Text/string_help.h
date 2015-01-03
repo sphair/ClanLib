@@ -72,6 +72,13 @@ public:
 	/// \return Temp String
 	static std::string trim(const std::string &text);
 
+	/// \brief Removes trailing zeros from floating point numbers
+	///
+	/// If the input string is "42.21000", then this function returns "42.21".
+	/// If the string is "42.00000", then it returns "42".
+	static std::string remove_trailing_zeros(std::string text);
+	static std::wstring remove_trailing_zeros(std::wstring text);
+
 	/// \brief Compare
 	///
 	/// \param a = String Ref8
@@ -138,7 +145,7 @@ public:
 	/// \param num_decimal_places = value
 	///
 	/// \return Temp String
-	static std::string float_to_text(float value, int num_decimal_places=6);
+	static std::string float_to_text(float value, int num_decimal_places = 6, bool remove_trailing_zeros = true);
 
 	/// \brief Float to local8
 	///
@@ -146,7 +153,7 @@ public:
 	/// \param num_decimal_places = value
 	///
 	/// \return Temp String8
-	static std::string float_to_local8(float value, int num_decimal_places=6);
+	static std::string float_to_local8(float value, int num_decimal_places = 6, bool remove_trailing_zeros = true);
 
 	/// \brief Float to ucs2
 	///
@@ -154,7 +161,7 @@ public:
 	/// \param num_decimal_places = value
 	///
 	/// \return Temp String16
-	static std::wstring float_to_ucs2(float value, int num_decimal_places=6);
+	static std::wstring float_to_ucs2(float value, int num_decimal_places = 6, bool remove_trailing_zeros = true);
 
 	/// \brief Text to float
 	///
