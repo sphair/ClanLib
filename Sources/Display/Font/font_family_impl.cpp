@@ -298,11 +298,29 @@ namespace clan
 		// Find existing typeface, to obtain shared data that we can copy
 		FontDescription new_desc;
 		DataBuffer font_databuffer;
+
+		// Find find an exact match using style and weight
 		for (auto &cache : font_cache)
 		{
+			if (desc.style != cache.engine->get_desc().get_style())
+				continue;
+			if (desc.weight != cache.engine->get_desc().get_weight())
+				continue;
+
 			font_databuffer = cache.engine->get_databuffer();	// Get shared databuffer
 			new_desc = cache.engine->get_desc().clone();
 			break;
+		}
+
+		// Else find the first font
+		if (font_databuffer.is_null())
+		{
+			for (auto &cache : font_cache)
+			{
+				font_databuffer = cache.engine->get_databuffer();	// Get shared databuffer
+				new_desc = cache.engine->get_desc().clone();
+				break;
+			}
 		}
 
 		new_desc.set_height(desc.height);

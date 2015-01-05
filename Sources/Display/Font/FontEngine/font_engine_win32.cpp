@@ -49,6 +49,8 @@ FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, DataBuffer &font
 	if (font_databuffer.is_null())
 		throw Exception("Attempt to load an empty font buffer");
 
+	data_buffer = font_databuffer;
+
 	DWORD out_number_of_fonts = 0;
 	HANDLE font_handle = AddFontMemResourceEx(font_databuffer.get_data(), font_databuffer.get_size(), 0, &out_number_of_fonts);
 	if (out_number_of_fonts == 0)
@@ -555,12 +557,6 @@ void FontEngine_Win32::load_glyph_path(unsigned int glyph_index, Path &path, Gly
 	out_metrics.bbox_size.width = glyph_metrics.gmBlackBoxX;
 	out_metrics.bbox_size.height = glyph_metrics.gmBlackBoxY;
 
-}
-
-DataBuffer FontEngine_Win32::get_databuffer()
-{
-	// Not required for Win32, since the font is already imported for the application for the OS
-	return DataBuffer();
 }
 
 std::string FontEngine_Win32::get_ttf_typeface_name(DataBuffer &font_databuffer)

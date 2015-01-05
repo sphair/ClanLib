@@ -58,7 +58,7 @@ public:
 	const FontDescription &get_desc() const override { return font_description; }
 
 	void load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics) override;
-	DataBuffer get_databuffer() override;
+	DataBuffer get_databuffer() override { return data_buffer; }
 
 private:
 	void load_font(const FontDescription &desc, const std::string &typeface_name);
@@ -131,6 +131,7 @@ private:
 	HFONT handle = 0;
 	TEXTMETRIC metrics;
 
+	DataBuffer data_buffer;
 	FontDescription font_description;
 	FontMetrics font_metrics;
 
