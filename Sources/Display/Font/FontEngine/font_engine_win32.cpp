@@ -44,6 +44,14 @@ FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, DataBuffer &font
 {
 	load_font(font_databuffer);
 
+	std::string typeface_name = desc.get_typeface_name();
+	if (font_databuffer.get_size())
+	{
+		std::string new_name = get_ttf_typeface_name(font_databuffer);
+		if (!new_name.empty())
+			typeface_name = new_name;
+	}
+
 	handle = CreateFont(
 		-std::abs(desc.get_height()),
 		desc.get_average_width(),
