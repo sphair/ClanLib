@@ -29,8 +29,8 @@
 */
 
 #include "Display/precomp.h"
-#include "font_face_impl.h"
-#include "API/Display/Font/font_face.h"
+#include "font_family_impl.h"
+#include "API/Display/Font/font_family.h"
 #include "API/Display/Font/font_metrics.h"
 #include "API/Display/Font/font_description.h"
 #include "API/Display/TargetProviders/graphic_context_provider.h"
@@ -77,15 +77,15 @@ namespace clan
 		FontMetrics font_metrics;
 	};
 
-	FontFace_Impl::FontFace_Impl(const std::string &family_name) : family_name(family_name), texture_group(Size(256, 256))
+	FontFamily_Impl::FontFamily_Impl(const std::string &family_name) : family_name(family_name), texture_group(Size(256, 256))
 	{
 	}
 
-	FontFace_Impl::~FontFace_Impl()
+	FontFamily_Impl::~FontFamily_Impl()
 	{
 	}
 
-	void FontFace_Impl::load_font(const FontDescription &desc, DataBuffer &font_databuffer)
+	void FontFamily_Impl::load_font(const FontDescription &desc, DataBuffer &font_databuffer)
 	{
 #if !defined(WIN32) && !defined(__APPLE__)
 		if (font_databuffer.get_size() == 0)
@@ -117,7 +117,7 @@ namespace clan
 		font_cache.back().glyph_cache->set_texture_group(texture_group);
 	}
 
-	void FontFace_Impl::load_font(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics)
+	void FontFamily_Impl::load_font(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics)
 	{
 		FontMetrics font_metrics = metrics;
 
@@ -265,10 +265,10 @@ namespace clan
 
 	}
 
-	Font_Cache FontFace_Impl::get_font(const Font_Selected &desc)
+	Font_Cache FontFamily_Impl::get_font(const Font_Selected &desc)
 	{
 		if (font_cache.empty())
-			throw Exception("FontFace is empty");
+			throw Exception("FontFamily is empty");
 
 		// Find cached version
 		for (auto &cache : font_cache)
@@ -288,7 +288,7 @@ namespace clan
 		return Font_Cache();
 	}
 
-	Font_Cache FontFace_Impl::copy_font(const Font_Selected &desc)
+	Font_Cache FontFamily_Impl::copy_font(const Font_Selected &desc)
 	{
 		// Find existing typeface, to obtain shared data that we can copy
 		FontDescription new_desc;

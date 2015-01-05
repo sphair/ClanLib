@@ -49,11 +49,11 @@
 namespace clan
 {
 
-Font_Impl::Font_Impl(FontFace &new_font_face, const FontDescription &description)
+Font_Impl::Font_Impl(FontFamily &new_font_family, const FontDescription &description)
 {
-	new_font_face.throw_if_null();
+	new_font_family.throw_if_null();
 
-	font_face = new_font_face;
+	font_family = new_font_family;
 
 	selected_description.height = description.get_height();
 	selected_description.weight = description.get_weight();
@@ -61,10 +61,10 @@ Font_Impl::Font_Impl(FontFace &new_font_face, const FontDescription &description
 
 	selected_line_height = description.get_line_height();
 
-	select_font_face();
+	select_font_family();
 }
 
-void Font_Impl::select_font_face()
+void Font_Impl::select_font_family()
 {
 	if (!font_engine)
 	{
@@ -73,9 +73,9 @@ void Font_Impl::select_font_face()
 		if (selected_description.height >= selected_height_threshold)
 			new_selected.height = 256.0f;	// A reasonable scalable size
 
-		Font_Cache font_cache = font_face.impl->get_font(new_selected);
+		Font_Cache font_cache = font_family.impl->get_font(new_selected);
 		if (!font_cache.engine)	// Font not found
-			font_cache = font_face.impl->copy_font(new_selected);
+			font_cache = font_family.impl->copy_font(new_selected);
 
 		font_engine = font_cache.engine.get();
 		GlyphCache *glyph_cache = font_cache.glyph_cache.get();
@@ -132,7 +132,7 @@ Font_Impl::~Font_Impl()
 
 int Font_Impl::get_character_index(Canvas &canvas, const std::string &text, const Point &point)
 {
-	select_font_face();
+	select_font_family();
 
 	int dest_x = 0;
 	int dest_y = 0;
@@ -186,19 +186,19 @@ int Font_Impl::get_character_index(Canvas &canvas, const std::string &text, cons
 
 const FontMetrics &Font_Impl::get_font_metrics()
 {
-	select_font_face();
+	select_font_family();
 	return selected_metrics;
 }
 
 void Font_Impl::get_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics)
 {
-	select_font_face();
+	select_font_family();
 	return font_engine->load_glyph_path(glyph_index, out_path, out_metrics);
 }
 
 void Font_Impl::draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color)
 {
-	select_font_face();
+	select_font_family();
 
 	int line_spacing = static_cast<int>(selected_line_height + 0.5f);
 	Pointf pos = canvas.grid_fit(position);
@@ -207,7 +207,7 @@ void Font_Impl::draw_text(Canvas &canvas, const Pointf &position, const std::str
 
 GlyphMetrics Font_Impl::get_metrics(Canvas &canvas, unsigned int glyph)
 {
-	select_font_face();
+	select_font_family();
 	GlyphMetrics metrics = font_draw->get_metrics(canvas, glyph);
 	metrics.advance *= scaled_height;
 	metrics.bbox_offset *= scaled_height;
@@ -218,7 +218,7 @@ GlyphMetrics Font_Impl::get_metrics(Canvas &canvas, unsigned int glyph)
 
 GlyphMetrics Font_Impl::measure_text(Canvas &canvas, const std::string &string)
 {
-	select_font_face();
+	select_font_family();
 	GlyphMetrics total_metrics;
 
 	int line_spacing = static_cast<int>(selected_line_height + 0.5f);

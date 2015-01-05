@@ -38,28 +38,28 @@
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Font clanDisplay FontFace
+/// \addtogroup clanDisplay_Font clanDisplay FontFamily
 /// \{
 
 class FontProvider;
 class Canvas;
-class FontFace_Impl;
+class FontFamily_Impl;
 class GlyphMetrics;
 
-/// \brief FontFace class
+/// \brief FontFamily class
 ///
-/// A FontFace is a collection of font descriptions
-class FontFace
+/// A FontFamily is a collection of font descriptions
+class FontFamily
 {
 /// \name Construction
 /// \{
 
 public:
-	/// \brief Constructs a null font face
-	FontFace();
+	/// \brief Constructs a null font family
+	FontFamily();
 
-	/// \brief Constructs a font face with the given family name
-	FontFace(const std::string &family_name);
+	/// \brief Constructs a font family with the given family name
+	FontFamily(const std::string &family_name);
 
 /// \}
 
@@ -72,7 +72,7 @@ public:
 	/// \brief Throw an exception if this object is invalid.
 	void throw_if_null() const;
 
-	/// \brief Font family name used for this font face
+	/// \brief Font family name used for this font family
 	const std::string &get_family_name() const;
 
 /// \}
@@ -106,7 +106,7 @@ public:
 /// \{
 
 private:
-	std::shared_ptr<FontFace_Impl> impl;
+	std::shared_ptr<FontFamily_Impl> impl;
 
 	friend class Font_Impl;
 

@@ -86,14 +86,14 @@ Collision/outline_math.cpp \
 Collision/outline_provider_bitmap_generic.cpp \
 precomp.cpp \
 Font/font.cpp \
-Font/font_face.cpp \
+Font/font_family.cpp \
 Font/glyph_cache.cpp \
 Font/path_cache.cpp \
 Font/font_description.cpp \
 Font/font_metrics_impl.cpp \
 Font/font_metrics.cpp \
 Font/font_impl.cpp \
-Font/font_face_impl.cpp \
+Font/font_family_impl.cpp \
 Font/FontDraw/font_draw_flat.cpp \
 Font/FontDraw/font_draw_path.cpp \
 Font/FontDraw/font_draw_scaled.cpp \

@@ -467,7 +467,7 @@ public:
 private:
 	std::shared_ptr<Sprite_Impl> impl;
 
-	friend class FontFace_Impl;
+	friend class FontFamily_Impl;
 
 /// \}
 };

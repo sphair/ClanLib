@@ -32,7 +32,7 @@
 
 #include "API/Display/Font/font_metrics.h"
 #include "API/Display/Font/glyph_metrics.h"
-#include "API/Display/Font/font_face.h"
+#include "API/Display/Font/font_family.h"
 #include "API/Display/Render/texture_2d.h"
 #include <list>
 #include <map>
@@ -63,11 +63,11 @@ public:
 	std::shared_ptr<PathCache> path_cache;
 };
 
-class FontFace_Impl
+class FontFamily_Impl
 {
 public:
-	FontFace_Impl(const std::string &family_name);
-	~FontFace_Impl();
+	FontFamily_Impl(const std::string &family_name);
+	~FontFamily_Impl();
 
 	const std::string &get_family_name() const { return family_name; }
 

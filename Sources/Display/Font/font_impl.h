@@ -33,13 +33,13 @@
 #include "API/Display/Font/font_metrics.h"
 #include "API/Display/Font/glyph_metrics.h"
 #include "API/Display/Font/font.h"
-#include "API/Display/Font/font_face.h"
+#include "API/Display/Font/font_family.h"
 #include "API/Display/Render/texture_2d.h"
 #include <list>
 #include <map>
 #include "glyph_cache.h"
 #include "path_cache.h"
-#include "font_face_impl.h"
+#include "font_family_impl.h"
 
 #include "FontDraw/font_draw_subpixel.h"
 #include "FontDraw/font_draw_flat.h"
@@ -54,7 +54,7 @@ class FontEngine;
 class Font_Impl
 {
 public:
-	Font_Impl(FontFace &new_font_face, const FontDescription &description);
+	Font_Impl(FontFamily &new_font_family, const FontDescription &description);
 	~Font_Impl();
 
 	const FontMetrics &get_font_metrics();
@@ -78,7 +78,7 @@ public:
 	void set_scalable(float height_threshold);
 
 private:
-	void select_font_face();
+	void select_font_family();
 
 	Font_Selected selected_description;
 	float selected_line_height = 0.0f;
@@ -88,8 +88,8 @@ private:
 
 	FontMetrics selected_metrics;
 
-	FontEngine *font_engine = nullptr;	// If null, use select_font_face() to update
-	FontFace font_face;
+	FontEngine *font_engine = nullptr;	// If null, use select_font_family() to update
+	FontFamily font_family;
 
 	Font_Draw *font_draw = nullptr;
 

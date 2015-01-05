@@ -50,18 +50,18 @@ Font::Font()
 {
 }
 
-Font::Font(FontFace &font_face, int height)
+Font::Font(FontFamily &font_family, int height)
 {
-	font_face.throw_if_null();
+	font_family.throw_if_null();
 	FontDescription desc;
-	desc.set_typeface_name(font_face.get_family_name());
+	desc.set_typeface_name(font_family.get_family_name());
 	desc.set_height(height);
-	*this = Font(font_face, desc);
+	*this = Font(font_family, desc);
 }
 
-Font::Font(FontFace &font_face, const FontDescription &desc)
+Font::Font(FontFamily &font_family, const FontDescription &desc)
 {
-	impl = std::make_shared<Font_Impl>(font_face, desc);
+	impl = std::make_shared<Font_Impl>(font_family, desc);
 }
 
 Font::Font(Canvas &canvas, const std::string &typeface_name, int height)
@@ -83,16 +83,16 @@ Font::Font(Canvas &canvas, const FontDescription &desc, const std::string &ttf_f
 	std::string new_filename = PathHelp::get_filename(ttf_filename, PathHelp::path_type_file);
 	FileSystem vfs(path);
 
-	FontFace font_face(desc.get_typeface_name());
-	font_face.add(desc, new_filename, vfs);
-	impl = std::make_shared<Font_Impl>(font_face, desc);
+	FontFamily font_family(desc.get_typeface_name());
+	font_family.add(desc, new_filename, vfs);
+	impl = std::make_shared<Font_Impl>(font_family, desc);
 }
 
 Font::Font( Canvas &canvas, const FontDescription &desc, const std::string &ttf_filename, FileSystem fs)
 {
-	FontFace font_face(desc.get_typeface_name());
-	font_face.add(desc, ttf_filename, fs);
-	impl = std::make_shared<Font_Impl>(font_face, desc);
+	FontFamily font_family(desc.get_typeface_name());
+	font_family.add(desc, ttf_filename, fs);
+	impl = std::make_shared<Font_Impl>(font_family, desc);
 }
 
 Font::Font(Canvas &canvas, const std::string &typeface_name, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics)
@@ -101,9 +101,9 @@ Font::Font(Canvas &canvas, const std::string &typeface_name, Sprite &sprite, con
 	desc.set_typeface_name(typeface_name);
 	desc.set_height(metrics.get_height());
 
-	FontFace font_face(typeface_name);
-	font_face.add(canvas, sprite, glyph_list, spacelen, monospace, metrics);
-	impl = std::make_shared<Font_Impl>(font_face, desc);
+	FontFamily font_family(typeface_name);
+	font_family.add(canvas, sprite, glyph_list, spacelen, monospace, metrics);
+	impl = std::make_shared<Font_Impl>(font_family, desc);
 }
 
 /////////////////////////////////////////////////////////////////////////////

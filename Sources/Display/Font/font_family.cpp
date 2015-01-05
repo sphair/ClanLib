@@ -27,7 +27,7 @@
 */
 
 #include "Display/precomp.h"
-#include "API/Display/Font/font_face.h"
+#include "API/Display/Font/font_family.h"
 #include "API/Display/Font/font_metrics.h"
 #include "API/Display/Font/font_description.h"
 #include "API/Display/TargetProviders/graphic_context_provider.h"
@@ -38,25 +38,25 @@
 #include "API/Core/XML/dom_element.h"
 #include "API/Display/2D/canvas.h"
 #include "API/Display/Resources/display_cache.h"
-#include "font_face_impl.h"
+#include "font_family_impl.h"
 
 namespace clan
 {
-	FontFace::FontFace()
+	FontFamily::FontFamily()
 	{
 	}
 
-	FontFace::FontFace(const std::string &family_name) : impl(std::make_shared<FontFace_Impl>(family_name))
+	FontFamily::FontFamily(const std::string &family_name) : impl(std::make_shared<FontFamily_Impl>(family_name))
 	{
 	}
 
-	const std::string &FontFace::get_family_name() const
+	const std::string &FontFamily::get_family_name() const
 	{
 		throw_if_null();
 		return impl->get_family_name();
 	}
 
-	void FontFace::add(const std::string &typeface_name, int height)
+	void FontFamily::add(const std::string &typeface_name, int height)
 	{
 		throw_if_null();
 		FontDescription desc;
@@ -67,14 +67,14 @@ namespace clan
 		impl->load_font(desc, font_databuffer);
 	}
 
-	void FontFace::add(const FontDescription &desc)
+	void FontFamily::add(const FontDescription &desc)
 	{
 		throw_if_null();
 		DataBuffer font_databuffer;
 		impl->load_font(desc, font_databuffer);
 	}
 
-	void FontFace::add(const FontDescription &desc, const std::string &ttf_filename)
+	void FontFamily::add(const FontDescription &desc, const std::string &ttf_filename)
 	{
 		throw_if_null();
 		DataBuffer font_databuffer;
@@ -92,7 +92,7 @@ namespace clan
 		impl->load_font(desc, font_databuffer);
 	}
 
-	void FontFace::add(const FontDescription &desc, const std::string &ttf_filename, FileSystem fs)
+	void FontFamily::add(const FontDescription &desc, const std::string &ttf_filename, FileSystem fs)
 	{
 		throw_if_null();
 		DataBuffer font_databuffer;
@@ -106,16 +106,16 @@ namespace clan
 		impl->load_font(desc, font_databuffer);
 	}
 
-	void FontFace::add(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics)
+	void FontFamily::add(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics)
 	{
 		throw_if_null();
 		impl->load_font(canvas, sprite, glyph_list, spacelen, monospace, metrics);
 	}
 
-	void FontFace::throw_if_null() const
+	void FontFamily::throw_if_null() const
 	{
 		if (!impl)
-			throw Exception("FontFace is null");
+			throw Exception("FontFamily is null");
 	}
 
 }

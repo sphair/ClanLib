@@ -284,7 +284,7 @@ clanDisplay_includes = \
 	Display/Collision/outline_circle.h \
 	Display/Collision/outline_math.h \
 	Display/Collision/collision_outline.h \
-	Display/Font/font_face.h \
+	Display/Font/font_family.h \
 	Display/Font/font.h \
 	Display/Font/font_metrics.h \
 	Display/Font/glyph_metrics.h \

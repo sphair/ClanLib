@@ -42,7 +42,7 @@ namespace clan
 /// \{
 
 class FontProvider;
-class FontFace;
+class FontFamily;
 class Canvas;
 class Font_Impl;
 class GlyphMetrics;
@@ -59,11 +59,11 @@ public:
 	/// \brief Constructs a null font.
 	Font();
 
-	// \brief Create font using the specified font face
-	Font(FontFace &font_face, int height);
+	// \brief Create font using the specified font family
+	Font(FontFamily &font_family, int height);
 
-	// \brief Create font using the specified font face
-	Font(FontFace &font_face, const FontDescription &desc);
+	// \brief Create font using the specified font family
+	Font(FontFamily &font_family, const FontDescription &desc);
 
 	/// \brief Constructs standard font
 	///
