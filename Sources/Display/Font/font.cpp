@@ -54,7 +54,6 @@ Font::Font(FontFamily &font_family, int height)
 {
 	font_family.throw_if_null();
 	FontDescription desc;
-	desc.set_typeface_name(font_family.get_family_name());
 	desc.set_height(height);
 	*this = Font(font_family, desc);
 }
@@ -67,14 +66,14 @@ Font::Font(FontFamily &font_family, const FontDescription &desc)
 Font::Font(Canvas &canvas, const std::string &typeface_name, int height)
 {
 	FontDescription desc;
-	desc.set_typeface_name(typeface_name);
 	desc.set_height(height);
-	*this = Font(canvas, desc);
+	*this = Font(canvas, typeface_name, desc);
 }
 
-Font::Font( Canvas &canvas, const FontDescription &desc)
+Font::Font(Canvas &canvas, const std::string &typeface_name, const FontDescription &desc)
 {
-	*this = Font(canvas, desc, std::string());
+	FontFamily font_family(typeface_name);
+	*this = Font(font_family, desc);
 }
 
 Font::Font(Canvas &canvas, const FontDescription &desc, const std::string &ttf_filename)
@@ -83,14 +82,15 @@ Font::Font(Canvas &canvas, const FontDescription &desc, const std::string &ttf_f
 	std::string new_filename = PathHelp::get_filename(ttf_filename, PathHelp::path_type_file);
 	FileSystem vfs(path);
 
-	FontFamily font_family(desc.get_typeface_name());
+	FontFamily font_family(new_filename);
 	font_family.add(desc, new_filename, vfs);
 	impl = std::make_shared<Font_Impl>(font_family, desc);
 }
 
 Font::Font( Canvas &canvas, const FontDescription &desc, const std::string &ttf_filename, FileSystem fs)
 {
-	FontFamily font_family(desc.get_typeface_name());
+	std::string new_filename = PathHelp::get_filename(ttf_filename, PathHelp::path_type_file);
+	FontFamily font_family(new_filename);
 	font_family.add(desc, ttf_filename, fs);
 	impl = std::make_shared<Font_Impl>(font_family, desc);
 }
@@ -98,7 +98,6 @@ Font::Font( Canvas &canvas, const FontDescription &desc, const std::string &ttf_
 Font::Font(Canvas &canvas, const std::string &typeface_name, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics)
 {
 	FontDescription desc;
-	desc.set_typeface_name(typeface_name);
 	desc.set_height(metrics.get_height());
 
 	FontFamily font_family(typeface_name);
@@ -109,9 +108,9 @@ Font::Font(Canvas &canvas, const std::string &typeface_name, Sprite &sprite, con
 /////////////////////////////////////////////////////////////////////////////
 // Font Resources:
 
-Resource<Font> Font::resource(Canvas &canvas, const FontDescription &desc, const ResourceManager &resources)
+Resource<Font> Font::resource(Canvas &canvas, const std::string &family_name, const FontDescription &desc, const ResourceManager &resources)
 {
-	return DisplayCache::get(resources).get_font(canvas, desc);
+	return DisplayCache::get(resources).get_font(canvas, family_name, desc);
 }
 
 Font Font_Impl::load(Canvas &canvas, const FontDescription &reference_desc, const std::string &id, const XMLResourceDocument &doc, std::function<Resource<Sprite>(Canvas &, const std::string &)> cb_get_sprite)
@@ -186,19 +185,15 @@ Font Font_Impl::load(Canvas &canvas, const FontDescription &reference_desc, cons
 		FontDescription desc = reference_desc.clone();
 
 		std::string filename;
-
-		
-
 		if (ttf_element.has_attribute("file"))
-		  {
-		    filename = PathHelp::combine(resource.get_base_path(), ttf_element.get_attribute("file"));
-		    desc.set_typeface_name(ttf_element.get_attribute("file"));
-		  }
+		{
+			filename = PathHelp::combine(resource.get_base_path(), ttf_element.get_attribute("file"));
+		}
 
 		if (!ttf_element.has_attribute("typeface"))
 			throw Exception(string_format("Font resource %1 has no 'typeface' attribute.", resource.get_name()));
 
-		desc.set_typeface_name(ttf_element.get_attribute("typeface"));
+		std::string font_typeface_name = ttf_element.get_attribute("typeface");
 
 		if (ttf_element.has_attribute("height"))
 			desc.set_height(ttf_element.get_attribute_int("height", 0));
@@ -212,7 +207,14 @@ Font Font_Impl::load(Canvas &canvas, const FontDescription &reference_desc, cons
 		if (ttf_element.has_attribute("subpixel"))
 			desc.set_subpixel(ttf_element.get_attribute_bool("subpixel", true));
 
-		return Font(canvas, desc, filename, resource.get_file_system());
+		if (filename.empty())
+		{
+			return Font(canvas, font_typeface_name, desc );
+		}
+		else
+		{
+			return Font(canvas, desc, filename, resource.get_file_system());
+		}
 	}
 
 	throw Exception(string_format("Font resource %1 did not have a <sprite> or <ttf> child element", resource.get_name()));

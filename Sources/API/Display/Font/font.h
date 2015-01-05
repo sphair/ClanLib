@@ -71,7 +71,7 @@ public:
 	Font(Canvas &canvas, const std::string &typeface_name, int height);
 
 	// \brief Constructs standard font
-	Font( Canvas &canvas, const FontDescription &desc);
+	Font(Canvas &canvas, const std::string &typeface_name, const FontDescription &desc);
 
 	// \brief Constructs standard font
 	Font( Canvas &canvas, const FontDescription &desc, const std::string &ttf_filename);
@@ -98,7 +98,7 @@ public:
 	/// \param canvas = Canvas
 	/// \param resources = Resource manager
 	/// \param id = id
-	static Resource<Font> resource(Canvas &canvas, const FontDescription &desc, const ResourceManager &resources);
+	static Resource<Font> resource(Canvas &canvas, const std::string &family_name, const FontDescription &desc, const ResourceManager &resources);
 
 /// \}
 

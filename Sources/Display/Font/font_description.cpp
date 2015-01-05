@@ -43,11 +43,6 @@ FontDescription::FontDescription() : impl(std::make_shared<FontDescription_Impl>
 {
 }
 
-FontDescription::FontDescription(const std::string &typeface_name) : impl(std::make_shared<FontDescription_Impl>())
-{
-	set_typeface_name(typeface_name);
-}
-
 FontDescription::~FontDescription()
 {
 }
@@ -67,11 +62,6 @@ void FontDescription::throw_if_null() const
 {
 	if (!impl)
 		throw Exception("is null");
-}
-
-const std::string &FontDescription::get_typeface_name() const
-{
-	return impl->typeface_name;
 }
 
 float FontDescription::get_height() const
@@ -126,24 +116,22 @@ FontDescription::Charset FontDescription::get_charset() const
 
 std::string FontDescription::get_unique_id() const
 {
-	StringFormat format("%1-%2-%3-%4-%5-%6-%7-%8-%9-%10");
-	format.set_arg(1, impl->typeface_name);
-	format.set_arg(2, impl->anti_alias ? 1 : 0);
-	format.set_arg(3, impl->subpixel ? 1 : 0);
-	format.set_arg(4, static_cast<int>(impl->height * 10.0f + 0.5f));
-	format.set_arg(5, static_cast<int>(impl->average_width * 10.0f + 0.5f));
-	format.set_arg(6, static_cast<int>(impl->escapement * 10.0f + 0.5f));
-	format.set_arg(7, static_cast<int>(impl->orientation * 10.0f + 0.5f));
-	format.set_arg(8, static_cast<int>(impl->weight));
-	format.set_arg(9, static_cast<int>(impl->style));
-	format.set_arg(10, impl->charset);
+	StringFormat format("%1-%2-%3-%4-%5-%6-%7-%8-%9");
+	format.set_arg(1, impl->anti_alias ? 1 : 0);
+	format.set_arg(2, impl->subpixel ? 1 : 0);
+	format.set_arg(3, static_cast<int>(impl->height * 10.0f + 0.5f));
+	format.set_arg(4, static_cast<int>(impl->average_width * 10.0f + 0.5f));
+	format.set_arg(5, static_cast<int>(impl->escapement * 10.0f + 0.5f));
+	format.set_arg(6, static_cast<int>(impl->orientation * 10.0f + 0.5f));
+	format.set_arg(7, static_cast<int>(impl->weight));
+	format.set_arg(8, static_cast<int>(impl->style));
+	format.set_arg(9, impl->charset);
 	return format.get_result();
 }
 
 bool FontDescription::operator==(const FontDescription &other) const
 {
-	return impl->typeface_name == other.impl->typeface_name && 
-			impl->anti_alias == other.impl->anti_alias && 
+	return 	impl->anti_alias == other.impl->anti_alias && 
 			impl->subpixel == other.impl->subpixel && 
 			impl->height == other.impl->height && 
 			impl->average_width == other.impl->average_width && 
@@ -168,12 +156,6 @@ FontDescription FontDescription::clone() const
 	FontDescription copy;
 	*copy.impl = *impl;
 	return copy;
-}
-
-
-void FontDescription::set_typeface_name(const std::string &name)
-{
-	impl->typeface_name = name;
 }
 
 void FontDescription::set_height(float value)

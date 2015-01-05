@@ -42,7 +42,6 @@ public:
 /// \name Attributes
 /// \{
 public:
-	std::string typeface_name;
 	float height = 20.0f;
 	float line_height = 0.0f;
 	float average_width = 0.0f;

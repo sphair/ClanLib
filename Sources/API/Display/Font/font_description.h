@@ -72,9 +72,6 @@ public:
 	/// \brief Constructs a font description with default values.
 	FontDescription();
 
-	/// \brief Constructs a font description with default values.
-	FontDescription(const std::string &typeface_name);
-
 	virtual ~FontDescription();
 
 	/// \brief Create null object
@@ -116,9 +113,6 @@ public:
 
 	/// \brief Throw an exception if this object is invalid.
 	void throw_if_null() const;
-
-	/// \brief Returns the typeface name
-	const std::string &get_typeface_name() const;
 
 	/// \brief Returns the font height
 	float get_height() const;
@@ -172,9 +166,6 @@ public:
 
 	// \brief Copy the entire font description (not just the implementation)
 	FontDescription clone() const;
-
-	/// \brief Sets the typeface name
-	void set_typeface_name(const std::string &name);
 
 	/// \brief Sets the font height
 	void set_height(float value = 20.0f);

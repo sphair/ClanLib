@@ -239,12 +239,11 @@ namespace clan
 	Font TextStyle::get_font(Canvas &canvas)
 	{
 		FontDescription font_desc;
-		font_desc.set_typeface_name(impl->family);
 		font_desc.set_height(impl->size);
 		font_desc.set_line_height(impl->line_height);
 		font_desc.set_weight(impl->weight);
 		font_desc.set_style(impl->style);
 		font_desc.set_subpixel(impl->subpixel);
-		return Font::resource(canvas, font_desc, UIThread::get_resources());
+		return Font::resource(canvas, impl->family, font_desc, UIThread::get_resources());
 	}
 }

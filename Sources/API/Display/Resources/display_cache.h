@@ -53,7 +53,7 @@ public:
 	virtual Resource<Sprite> get_sprite(Canvas &canvas, const std::string &id) = 0;
 	virtual Resource<Image> get_image(Canvas &canvas, const std::string &id) = 0;
 	virtual Resource<Texture> get_texture(GraphicContext &gc, const std::string &id) = 0;
-	virtual Resource<Font> get_font(Canvas &canvas, const FontDescription &desc) = 0;
+	virtual Resource<Font> get_font(Canvas &canvas, const std::string &family_name, const FontDescription &desc) = 0;
 
 	static DisplayCache &get(const ResourceManager &resources);
 	static void set(ResourceManager &resources, const std::shared_ptr<DisplayCache> &cache);

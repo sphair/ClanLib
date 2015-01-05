@@ -60,18 +60,14 @@ namespace clan
 	{
 		throw_if_null();
 		FontDescription desc;
-		desc.set_typeface_name(typeface_name);
 		desc.set_height(height);
-
-		DataBuffer font_databuffer;
-		impl->load_font(desc, font_databuffer);
+		impl->load_font(desc, typeface_name);
 	}
 
-	void FontFamily::add(const FontDescription &desc)
+	void FontFamily::add(const std::string &typeface_name, const FontDescription &desc)
 	{
 		throw_if_null();
-		DataBuffer font_databuffer;
-		impl->load_font(desc, font_databuffer);
+		impl->load_font(desc, typeface_name);
 	}
 
 	void FontFamily::add(const FontDescription &desc, const std::string &ttf_filename)

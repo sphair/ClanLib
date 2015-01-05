@@ -43,10 +43,10 @@ public:
 	Resource<Sprite> get_sprite(Canvas &canvas, const std::string &id) override;
 	Resource<Image> get_image(Canvas &canvas, const std::string &id) override;
 	Resource<Texture> get_texture(GraphicContext &gc, const std::string &id) override;
-	Resource<Font> get_font(Canvas &canvas, const FontDescription &desc) override;
+	Resource<Font> get_font(Canvas &canvas, const std::string &family_name, const FontDescription &desc) override;
 
 private:
-	Resource<Font> load_font(Canvas &canvas, const FontDescription &desc);
+	Resource<Font> load_font(Canvas &canvas, const std::string &family_name, const FontDescription &desc);
 
 	XMLResourceDocument doc;
 

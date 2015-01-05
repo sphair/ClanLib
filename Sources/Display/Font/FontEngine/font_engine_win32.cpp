@@ -39,19 +39,30 @@
 namespace clan
 {
 
-FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, DataBuffer &font_databuffer)
-	: handle(0)
+FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, const std::string &typeface_name)
 {
-	load_font(font_databuffer);
+	load_font(desc, typeface_name);
+}
+	
+FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, DataBuffer &font_databuffer)
+{
+	if (font_databuffer.is_null())
+		throw Exception("Attempt to load an empty font buffer");
 
-	std::string typeface_name = desc.get_typeface_name();
-	if (font_databuffer.get_size())
-	{
-		std::string new_name = get_ttf_typeface_name(font_databuffer);
-		if (!new_name.empty())
-			typeface_name = new_name;
-	}
+	DWORD out_number_of_fonts = 0;
+	HANDLE font_handle = AddFontMemResourceEx(font_databuffer.get_data(), font_databuffer.get_size(), 0, &out_number_of_fonts);
+	if (out_number_of_fonts == 0)
+		throw Exception("Unable to register font");
 
+	std::string typeface_name = get_ttf_typeface_name(font_databuffer);
+	if (typeface_name.empty())
+		throw Exception("Unable to obtain typeface name");
+
+	load_font(desc, typeface_name);
+}
+
+void FontEngine_Win32::load_font(const FontDescription &desc, const std::string &typeface_name)
+{
 	handle = CreateFont(
 		-std::abs(desc.get_height()),
 		desc.get_average_width(),
@@ -66,7 +77,7 @@ FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, DataBuffer &font
 		CLIP_DEFAULT_PRECIS,
 		DEFAULT_QUALITY,
 		DEFAULT_PITCH | FF_DONTCARE,
-		StringHelp::utf8_to_ucs2(desc.get_typeface_name()).c_str());
+		StringHelp::utf8_to_ucs2(typeface_name).c_str());
 	if (handle == 0)
 		throw Exception("CreateFont failed");
 
@@ -99,17 +110,6 @@ FontEngine_Win32::~FontEngine_Win32()
 {
 	if (handle)
 		DeleteObject(handle);
-}
-
-void FontEngine_Win32::load_font(DataBuffer &font_databuffer)
-{
-	if (font_databuffer.get_size())
-	{
-		DWORD out_number_of_fonts = 0;
-		HANDLE font_handle = AddFontMemResourceEx(font_databuffer.get_data(), font_databuffer.get_size(), 0, &out_number_of_fonts);
-		if (out_number_of_fonts == 0)
-			throw Exception("Unable to register font");
-	}
 }
 
 FontPixelBuffer FontEngine_Win32::get_font_glyph_standard(int glyph, bool anti_alias)

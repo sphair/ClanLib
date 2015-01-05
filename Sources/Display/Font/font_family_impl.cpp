@@ -87,23 +87,6 @@ namespace clan
 
 	void FontFamily_Impl::load_font(const FontDescription &desc, DataBuffer &font_databuffer)
 	{
-#if !defined(WIN32) && !defined(__APPLE__)
-		if (font_databuffer.get_size() == 0)
-		{
-			// Obtain the best matching font file from fontconfig.
-			FontConfig &fc = FontConfig::instance();
-			std::string font_file_path = fc.match_font(desc);
-			std::string path = PathHelp::get_fullpath(font_file_path, PathHelp::path_type_file);
-			auto filename = PathHelp::get_filename(font_file_path, PathHelp::path_type_file);
-			auto fs = FileSystem(path);
-
-			IODevice file = fs.open_file(filename);
-			font_databuffer.set_size(file.get_size());
-			file.read(font_databuffer.get_data(), font_databuffer.get_size());
-
-		}
-#endif
-
 #ifdef WIN32
 		std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Win32>(desc, font_databuffer);
 		font_cache.push_back(Font_Cache(engine));
@@ -115,6 +98,32 @@ namespace clan
 		font_cache.push_back(Font_Cache(engine));
 #endif
 		font_cache.back().glyph_cache->set_texture_group(texture_group);
+	}
+
+	void FontFamily_Impl::load_font(const FontDescription &desc, const std::string &typeface_name)
+	{
+#ifdef WIN32
+		std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Win32>(desc, typeface_name);
+		font_cache.push_back(Font_Cache(engine));
+		font_cache.back().glyph_cache->set_texture_group(texture_group);
+#elif defined(__APPLE__)
+		throw Exception("automatic typeface to ttf file selection is not supported on apple");
+		//std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Cocoa>(desc, typeface_name);
+		//font_cache.push_back(Font_Cache(engine));
+		//font_cache.back().glyph_cache->set_texture_group(texture_group);
+#else
+		// Obtain the best matching font file from fontconfig.
+		FontConfig &fc = FontConfig::instance();
+		std::string font_file_path = fc.match_font(desc);
+		std::string path = PathHelp::get_fullpath(font_file_path, PathHelp::path_type_file);
+		auto filename = PathHelp::get_filename(font_file_path, PathHelp::path_type_file);
+		auto fs = FileSystem(path);
+		IODevice file = fs.open_file(filename);
+		FontDataBuffer font_databuffer;
+		font_databuffer.set_size(file.get_size());
+		file.read(font_databuffer.get_data(), font_databuffer.get_size());
+		load_font(desc, font_databuffer);
+#endif
 	}
 
 	void FontFamily_Impl::load_font(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics)
@@ -191,7 +200,6 @@ namespace clan
 		}
 
 		FontDescription desc;
-		desc.set_typeface_name("SPRITE_FONT");
 		desc.set_height(height);
 
 		std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Sprite>(desc, font_metrics);
@@ -267,9 +275,6 @@ namespace clan
 
 	Font_Cache FontFamily_Impl::get_font(const Font_Selected &desc)
 	{
-		if (font_cache.empty())
-			throw Exception("FontFamily is empty");
-
 		// Find cached version
 		for (auto &cache : font_cache)
 		{
@@ -304,7 +309,14 @@ namespace clan
 		new_desc.set_style(desc.style);
 		new_desc.set_weight(desc.weight);
 
-		load_font(new_desc, font_databuffer);
+		if (font_databuffer.is_null())
+		{
+			load_font(new_desc, family_name);
+		}
+		else
+		{
+			load_font(new_desc, font_databuffer);
+		}
 		return font_cache.back();
 	}
 

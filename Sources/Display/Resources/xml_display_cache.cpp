@@ -97,26 +97,26 @@ Resource<Texture> XMLDisplayCache::get_texture(GraphicContext &gc, const std::st
 	return texture;
 }
 
-Resource<Font> XMLDisplayCache::get_font(Canvas &canvas, const FontDescription &desc)
+Resource<Font> XMLDisplayCache::get_font(Canvas &canvas, const std::string &family_name, const FontDescription &desc)
 {
-	std::string id = desc.get_unique_id();
+	std::string id = family_name + desc.get_unique_id();
 
 	auto it = fonts.find(id);
 	if (it != fonts.end())
 		return it->second;
 
-	Resource<Font> font = load_font(canvas, desc);
+	Resource<Font> font = load_font(canvas, family_name, desc);
 	fonts[id] = font;
 	return font;
 }
 
-Resource<Font> XMLDisplayCache::load_font(Canvas &canvas, const FontDescription &desc)
+Resource<Font> XMLDisplayCache::load_font(Canvas &canvas, const std::string &family_name, const FontDescription &desc)
 {
 	bool is_resource_font = false;
 
-	if (doc.resource_exists(desc.get_typeface_name()))
+	if (doc.resource_exists(family_name))
 	{
-		DomElement font_element = doc.get_resource(desc.get_typeface_name()).get_element();
+		DomElement font_element = doc.get_resource(family_name).get_element();
 		std::string type = font_element.get_tag_name();
 		if (type == "font")
 		{
@@ -126,11 +126,11 @@ Resource<Font> XMLDisplayCache::load_font(Canvas &canvas, const FontDescription 
 
 	if (is_resource_font)
 	{
-		return Resource<Font>(Font_Impl::load(canvas, desc, desc.get_typeface_name(), doc, bind_member(this, &XMLDisplayCache::get_sprite)));
+		return Resource<Font>(Font_Impl::load(canvas, desc, family_name, doc, bind_member(this, &XMLDisplayCache::get_sprite)));
 	}
 	else
 	{
-		return Resource<Font>(Font(canvas, desc));
+		return Resource<Font>(Font(canvas, family_name, desc));
 	}
 }
 

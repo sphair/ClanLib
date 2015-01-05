@@ -151,7 +151,7 @@ void FontEngine_Cocoa::load_font(const FontDescription& desc, DataBuffer &font_d
     CFRelease(dataProvider);
     CFRelease(theCGFont);
     if (handle == 0)
-        throw Exception(string_format("Unable to create font %1", desc.get_typeface_name()));
+        throw Exception("Unable to create font"));
     
 }
     

@@ -52,27 +52,22 @@ int Test::start(const std::vector<std::string> &args)
 	// Connect a keyboard handler to on_key_up()
 	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &Test::on_input_up));
 
-
 	// Describe a custom font face:
 
-	clan::FontFace font_face("Lobster Two");
+	clan::FontFamily font_face("Lobster Two");
 	{
 		clan::FontDescription regular;
-		regular.set_typeface_name("Lobster Two");
 		font_face.add(regular, "Resources/Lobster_Two/LobsterTwo-Regular.ttf");
 
 		clan::FontDescription bold;
-		bold.set_typeface_name("Lobster Two");
 		bold.set_weight(clan::FontWeight::bold);
 		font_face.add(bold, "Resources/Lobster_Two/LobsterTwo-Bold.ttf");
 
 		clan::FontDescription italic;
-		italic.set_typeface_name("Lobster Two");
 		italic.set_style(clan::FontStyle::italic);
 		font_face.add(italic, "Resources/Lobster_Two/LobsterTwo-Italic.ttf");
 
 		clan::FontDescription bold_italic;
-		bold_italic.set_typeface_name("Lobster Two");
 		bold_italic.set_weight(clan::FontWeight::bold);
 		bold_italic.set_style(clan::FontStyle::italic);
 		font_face.add(bold_italic, "Resources/Lobster_Two/LobsterTwo-BoldItalic.ttf");

@@ -84,7 +84,7 @@ public:
 	void add(const std::string &typeface_name, int height);
 
 	// \brief Add standard font
-	void add(const FontDescription &desc);
+	void add(const std::string &typeface_name, const FontDescription &desc);
 
 	// \brief Add standard font
 	void add(const FontDescription &desc, const std::string &ttf_filename);

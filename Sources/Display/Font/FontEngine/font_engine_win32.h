@@ -42,6 +42,7 @@ class DataBuffer;
 class FontEngine_Win32 : public FontEngine
 {
 public:
+	FontEngine_Win32(const FontDescription &description, const std::string &typeface_name);
 	FontEngine_Win32(const FontDescription &description, DataBuffer &font_databuffer);
 	~FontEngine_Win32();
 
@@ -60,6 +61,7 @@ public:
 	DataBuffer get_databuffer() override;
 
 private:
+	void load_font(const FontDescription &desc, const std::string &typeface_name);
 
 	// Structure information from: http://www.microsoft.com/typography/otspec/otff.htm
 	struct ttf_version
@@ -108,7 +110,6 @@ private:
 	void swap(ULONG &value) const { value = ((value << 8) & 0xFF00FF00) | ((value >> 8) & 0xFF00FF); value = (value << 16) | (value >> 16); }
 
 	std::string get_ttf_typeface_name(DataBuffer &font_databuffer);
-	void load_font(DataBuffer &font_databuffer);
 
 	inline Pointf to_point(POINTFX &fx)
 	{
