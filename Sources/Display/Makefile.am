@@ -108,6 +108,7 @@ Window/display_window_description.cpp \
 Window/cursor_description.cpp \
 Window/input_context.cpp \
 Window/input_device.cpp \
+Window/keys.cpp \
 ImageProviders/targa_provider.cpp \
 ImageProviders/PNGLoader/png_loader.cpp \
 ImageProviders/provider_type.cpp \

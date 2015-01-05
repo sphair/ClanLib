@@ -299,6 +299,7 @@ clanDisplay_includes = \
 	Display/Window/keys.h \
 	Display/Window/display_window_description.h \
 	Display/Window/input_context.h \
+	Display/Window/input_code.h \
 	Display/ImageProviders/targa_provider.h \
 	Display/ImageProviders/png_output_description.h \
 	Display/ImageProviders/dds_provider.h \

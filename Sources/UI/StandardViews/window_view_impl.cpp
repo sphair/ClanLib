@@ -163,7 +163,7 @@ namespace clan
 	void WindowView_Impl::on_key_down(const clan::InputEvent &e)
 	{
 		KeyEventType type = KeyEventType::press;
-		Key key = (Key)e.id;
+		Key key = decode_ic(e.id);
 		int repeat_count = e.repeat_count;
 		const std::string text = e.str;
 		const Pointf pointer_pos = Pointf(static_cast<float>(e.mouse_pos.x), static_cast<float>(e.mouse_pos.y));
@@ -178,7 +178,7 @@ namespace clan
 	void WindowView_Impl::on_key_up(const clan::InputEvent &e)
 	{
 		KeyEventType type = KeyEventType::release;
-		Key key = (Key)e.id;
+		Key key = decode_ic(e.id);
 		int repeat_count = e.repeat_count;
 		const std::string text = e.str;
 		const Pointf pointer_pos = Pointf(static_cast<float>(e.mouse_pos.x), static_cast<float>(e.mouse_pos.y));
