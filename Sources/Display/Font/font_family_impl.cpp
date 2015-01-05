@@ -114,12 +114,12 @@ namespace clan
 #else
 		// Obtain the best matching font file from fontconfig.
 		FontConfig &fc = FontConfig::instance();
-		std::string font_file_path = fc.match_font(desc);
+		std::string font_file_path = fc.match_font(typeface_name, desc);
 		std::string path = PathHelp::get_fullpath(font_file_path, PathHelp::path_type_file);
 		auto filename = PathHelp::get_filename(font_file_path, PathHelp::path_type_file);
 		auto fs = FileSystem(path);
 		IODevice file = fs.open_file(filename);
-		FontDataBuffer font_databuffer;
+		DataBuffer font_databuffer;
 		font_databuffer.set_size(file.get_size());
 		file.read(font_databuffer.get_data(), font_databuffer.get_size());
 		load_font(desc, font_databuffer);

@@ -57,7 +57,7 @@ public:
 /// \name Operations
 /// \{
 public:
-	std::string match_font( const FontDescription &desc) const;
+	std::string match_font( const std::string &typeface_name, const FontDescription &desc) const;
 /// \}
 
 /// \name Implementation

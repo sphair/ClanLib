@@ -68,7 +68,7 @@ FontConfig &FontConfig::instance()
 /////////////////////////////////////////////////////////////////////////////
 // FontConfig Operations:
 
-std::string FontConfig::match_font(const FontDescription &desc) const
+std::string FontConfig::match_font(const std::string &typeface_name, const FontDescription &desc) const
 {
 	FcPattern * fc_pattern = nullptr;
 	FcPattern * fc_match = nullptr;
@@ -78,7 +78,7 @@ std::string FontConfig::match_font(const FontDescription &desc) const
 
 		// Build font matching pattern.
 		fc_pattern = FcPatternBuild (nullptr,
-			FC_FAMILY    , FcTypeString , desc.get_typeface_name().c_str(),
+			FC_FAMILY    , FcTypeString , typeface_name.c_str(),
 			FC_PIXEL_SIZE, FcTypeDouble , (double) std::abs(desc.get_height()),
 			FC_WEIGHT    , FcTypeInteger, (weight > 0) ? (int)(weight * (FC_WEIGHT_HEAVY/900.0)) : FC_WEIGHT_NORMAL,
 			FC_SLANT     , FcTypeInteger, (desc.get_style() == clan::FontStyle::italic) ? FC_SLANT_ITALIC : ((desc.get_style() == clan::FontStyle::oblique) ? FC_SLANT_OBLIQUE : FC_SLANT_ROMAN),
