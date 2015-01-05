@@ -555,5 +555,108 @@ DataBuffer FontEngine_Win32::get_databuffer()
 	return DataBuffer();
 }
 
+std::string FontEngine_Win32::get_ttf_typeface_name(DataBuffer &font_databuffer)
+{
+	if (!font_databuffer.get_size())
+		return std::string();
+
+	const char *start_ptr = font_databuffer.get_data();
+	unsigned int full_size = font_databuffer.get_size();
+
+	const char *read_ptr = start_ptr;
+	unsigned int size = full_size;
+
+	size -= sizeof(ttf_offset_table);
+	if (size <= 0)
+		return std::string();
+	ttf_offset_table offset_table = *reinterpret_cast<const ttf_offset_table *>(read_ptr);
+	read_ptr += sizeof(ttf_offset_table);
+	swap(offset_table.numTables);
+	swap(offset_table.entrySelector);
+	swap(offset_table.rangeShift);
+	swap(offset_table.searchRange);
+	swap(offset_table.version.major);
+	swap(offset_table.version.minor);
+
+	if (offset_table.numTables > 0xFFFF)	// Lets reject fonts that appear unusual
+		return std::string();
+
+	for (unsigned int record_count = 0; record_count < offset_table.numTables; record_count++)
+	{
+		size -= sizeof(ttf_table_record);
+		if (size <= 0)
+			return std::string();
+		ttf_table_record table_record = *reinterpret_cast<const ttf_table_record *>(read_ptr);
+		read_ptr += sizeof(ttf_table_record);
+		swap(table_record.checkSum);
+		swap(table_record.length);
+		swap(table_record.offset);
+
+		if (table_record.offset >= full_size)
+			return std::string();
+
+		if ((table_record.offset + table_record.length) > full_size)
+			return std::string();
+
+		if ((table_record.tag[0] == 'n') && (table_record.tag[1] == 'a') && (table_record.tag[2] == 'm') && (table_record.tag[3] == 'e'))
+		{
+			unsigned int record_size = table_record.length;
+			const char *record_read_ptr = start_ptr + table_record.offset;
+			if (record_size < sizeof(ttf_naming_table))
+				return std::string();
+			ttf_naming_table naming_table = *reinterpret_cast<const ttf_naming_table *>(record_read_ptr);
+			swap(naming_table.count);
+			swap(naming_table.format);
+			swap(naming_table.stringOffset);
+
+			if (naming_table.stringOffset >= record_size)
+				return std::string();
+
+			const char *string_base = record_read_ptr + naming_table.stringOffset;
+			if (naming_table.count > 0xFFFF)	// Lets reject fonts that appear unusual
+				return std::string();
+			unsigned int string_base_size = record_size - naming_table.stringOffset;
+
+			record_read_ptr += sizeof(ttf_naming_table);
+			record_size -= sizeof(ttf_naming_table);
+			for (unsigned int naming_record_count = 0; naming_record_count < naming_table.count; naming_record_count++)
+			{
+				record_size -= sizeof(ttf_naming_record);
+				if (record_size <= 0)
+					return std::string();
+				ttf_naming_record naming_record = *reinterpret_cast<const ttf_naming_record *>(record_read_ptr);
+				record_read_ptr += sizeof(ttf_naming_record);
+				swap(naming_record.encodingID);
+				swap(naming_record.languageID);
+				swap(naming_record.length);
+				swap(naming_record.nameID);
+				swap(naming_record.offset);
+				swap(naming_record.platformID);
+
+				if (naming_record.offset >= string_base_size)
+					return std::string();
+
+				if (naming_record.length + naming_record.offset > string_base_size)
+					return std::string();
+
+				// From Microsoft Docs: 4 == Full font name
+				if (naming_record.nameID == 4)
+				{
+					std::vector<char> buffer;
+					buffer.resize(naming_record.length + 1);
+					memcpy(&buffer[0], string_base + naming_record.offset, naming_record.length);
+					buffer[naming_record.length] = 0;
+					return &buffer[0];
+				}
+			}
+
+			return std::string();
+
+		}
+	}
+
+	return std::string();
+
+}
 
 }
