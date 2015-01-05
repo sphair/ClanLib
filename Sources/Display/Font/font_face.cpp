@@ -50,18 +50,15 @@ namespace clan
 	{
 	}
 
-	bool FontFace::is_null() const
-	{
-		return !impl;
-	}
-
 	const std::string &FontFace::get_family_name() const
 	{
+		throw_if_null();
 		return impl->get_family_name();
 	}
 
 	void FontFace::add(const std::string &typeface_name, int height)
 	{
+		throw_if_null();
 		FontDescription desc;
 		desc.set_typeface_name(typeface_name);
 		desc.set_height(height);
@@ -72,12 +69,14 @@ namespace clan
 
 	void FontFace::add(const FontDescription &desc)
 	{
+		throw_if_null();
 		DataBuffer font_databuffer;
 		impl->load_font(desc, font_databuffer);
 	}
 
 	void FontFace::add(const FontDescription &desc, const std::string &ttf_filename)
 	{
+		throw_if_null();
 		DataBuffer font_databuffer;
 		if (!ttf_filename.empty())
 		{
@@ -95,6 +94,7 @@ namespace clan
 
 	void FontFace::add(const FontDescription &desc, const std::string &ttf_filename, FileSystem fs)
 	{
+		throw_if_null();
 		DataBuffer font_databuffer;
 		if (!ttf_filename.empty())
 		{
@@ -108,7 +108,14 @@ namespace clan
 
 	void FontFace::add(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics)
 	{
+		throw_if_null();
 		impl->load_font(canvas, sprite, glyph_list, spacelen, monospace, metrics);
+	}
+
+	void FontFace::throw_if_null() const
+	{
+		if (!impl)
+			throw Exception("FontFace is null");
 	}
 
 }

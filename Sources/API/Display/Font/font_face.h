@@ -66,8 +66,11 @@ public:
 /// \name Attributes
 /// \{
 public:
-	/// \brief Returns true if the font face is a null object
-	bool is_null() const;
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return !impl; }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
 
 	/// \brief Font family name used for this font face
 	const std::string &get_family_name() const;

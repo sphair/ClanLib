@@ -54,12 +54,10 @@ class FontEngine;
 class Font_Impl
 {
 public:
-	Font_Impl();
+	Font_Impl(FontFace &new_font_face, const FontDescription &description);
 	~Font_Impl();
 
 	const FontMetrics &get_font_metrics();
-
-	void set_font_face(FontFace &new_font_face, const FontDescription &description);
 
 	int get_character_index(Canvas &canvas, const std::string &text, const Point &point);
 

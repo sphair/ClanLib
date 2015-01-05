@@ -49,12 +49,10 @@
 namespace clan
 {
 
-Font_Impl::Font_Impl()
+Font_Impl::Font_Impl(FontFace &new_font_face, const FontDescription &description)
 {
-}
+	new_font_face.throw_if_null();
 
-void Font_Impl::set_font_face(FontFace &new_font_face, const FontDescription &description)
-{
 	font_face = new_font_face;
 
 	selected_description.height = description.get_height();
