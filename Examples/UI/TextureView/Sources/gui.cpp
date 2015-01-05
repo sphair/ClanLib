@@ -37,12 +37,12 @@ public:
 	clan::Resource<clan::Image> get_image(clan::Canvas &canvas, const std::string &id) override { throw clan::Exception("No image resources"); }
 	clan::Resource<clan::Texture> get_texture(clan::GraphicContext &gc, const std::string &id) override { throw clan::Exception("No texture resources"); }
 
-	clan::Resource<clan::Font> get_font(clan::Canvas &canvas, const clan::FontDescription &desc)
+	clan::Resource<clan::Font> get_font(clan::Canvas &canvas, const std::string &family_name, const clan::FontDescription &desc) override
 	{
 		std::string id = desc.get_unique_id();
 		if (loaded_fonts.find(id) == loaded_fonts.end())
 		{
-			loaded_fonts[id] = clan::Font(canvas, desc);
+			loaded_fonts[id] = clan::Font(canvas, family_name, desc);
 		}
 		return loaded_fonts[id];
 	}

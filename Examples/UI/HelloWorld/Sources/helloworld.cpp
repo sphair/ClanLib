@@ -39,12 +39,12 @@ public:
 	Resource<Image> get_image(Canvas &canvas, const std::string &id) override { throw Exception("No image resources"); }
 	Resource<Texture> get_texture(GraphicContext &gc, const std::string &id) override { throw Exception("No texture resources"); }
 
-	Resource<Font> get_font(Canvas &canvas, const FontDescription &desc)
+	Resource<Font> get_font(Canvas &canvas, const std::string &family_name, const FontDescription &desc) override
 	{
 		std::string id = desc.get_unique_id();
 		if (loaded_fonts.find(id) == loaded_fonts.end())
 		{
-			loaded_fonts[id] = Font(canvas, desc);
+			loaded_fonts[id] = Font(canvas, family_name, desc);
 		}
 		return loaded_fonts[id];
 	}

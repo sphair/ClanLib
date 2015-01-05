@@ -138,6 +138,7 @@
 #include "Display/Window/cursor_description.h"
 #include "Display/Window/display_window.h"
 #include "Display/Window/display_window_description.h"
+#include "Display/Window/input_code.h"
 #include "Display/Window/input_context.h"
 #include "Display/Window/input_device.h"
 #include "Display/Window/input_event.h"

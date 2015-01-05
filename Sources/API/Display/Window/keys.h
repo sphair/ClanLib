@@ -1,491 +1,176 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
-**
-**  This software is provided 'as-is', without any express or implied
-**  warranty.  In no event will the authors be held liable for any damages
-**  arising from the use of this software.
-**
-**  Permission is granted to anyone to use this software for any purpose,
-**  including commercial applications, and to alter it and redistribute it
-**  freely, subject to the following restrictions:
-**
-**  1. The origin of this software must not be misrepresented; you must not
-**     claim that you wrote the original software. If you use this software
-**     in a product, an acknowledgment in the product documentation would be
-**     appreciated but is not required.
-**  2. Altered source versions must be plainly marked as such, and must not be
-**     misrepresented as being the original software.
-**  3. This notice may not be removed or altered from any source distribution.
-**
-**  Note: Some of the libraries ClanLib may link to may have additional
-**  requirements or restrictions.
-**
-**  File Author(s):
-**
-**    Magnus Norddahl
-*/
+ **  ClanLib SDK
+ **  Copyright (c) 1997-2015 The ClanLib Team
+ **
+ **  This software is provided 'as-is', without any express or implied
+ **  warranty.  In no event will the authors be held liable for any damages
+ **  arising from the use of this software.
+ **
+ **  Permission is granted to anyone to use this software for any purpose,
+ **  including commercial applications, and to alter it and redistribute it
+ **  freely, subject to the following restrictions:
+ **
+ **  1. The origin of this software must not be misrepresented; you must not
+ **     claim that you wrote the original software. If you use this software
+ **     in a product, an acknowledgment in the product documentation would be
+ **     appreciated but is not required.
+ **  2. Altered source versions must be plainly marked as such, and must not be
+ **     misrepresented as being the original software.
+ **  3. This notice may not be removed or altered from any source distribution.
+ **
+ **  Note: Some of the libraries ClanLib may link to may have additional
+ **  requirements or restrictions.
+ **
+ **  File Author(s):
+ **
+ **    Magnus Norddahl
+ **    Chu Chin Kuan
+ */
 
 #pragma once
 
-// Keyboard & mouse platform independence support.
-
-#ifdef WIN32
-#include <windows.h>
-#endif
+#include "input_code.h"
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Input clanDisplay Input
-/// \{
 
-enum InputCode
+//! Enumeration of keyboard keys recognized on ClanLib.
+enum class Key
 {
-	mouse_left=0,
-	mouse_right=1,
-	mouse_middle=2,
-	mouse_wheel_up=3,
-	mouse_wheel_down=4,
-	mouse_xbutton1=5,
-	mouse_xbutton2=6,
-	mouse_count=7,
+	none        = 0x00,
+	backspace   = 0x08,
+	tab         = 0x09, // ASCII HT, Horizontal tab
+	linefeed    = 0x0a, // ASCII LF
+	clear       = 0x0b, // ASCII VT
+	scroll      = 0x0c, // ASCII FF, Clear screen
+	key_return  = 0x0d, // ASCII CR, Enter key
+	select      = 0x0e,
+	execute     = 0x1a,
+	escape      = 0x1b,
+	pause       = 0x1c,
+	print       = 0x1d,
 
-	tablet_x_axis = 0x10000,
-	tablet_y_axis,
-	tablet_z_axis,
-	tablet_tilt_x,
-	tablet_tilt_y,
-	tablet_rotation_pitch,
-	tablet_rotation_roll,
-	tablet_rotation_yaw,
-	tablet_proximity_enter,
-	tablet_proximity_exit,
-	tablet_key,		// "id_offset" set
+	space       = 0x20,
 
-	joystick_x = 0,
-	joystick_y,
-	joystick_z,
-	joystick_rx,
-	joystick_ry,
-	joystick_rz,
-	joystick_slider,
-	joystick_dial,
-	joystick_wheel,
-	joystick_vx,
-	joystick_vy,
-	joystick_vz,
-	joystick_vrx,
-	joystick_vry,
-	joystick_vrz,
-	joystick_vslider0,
-	joystick_vslider1,
-	joystick_ax,
-	joystick_ay,
-	joystick_az,
-	joystick_arx,
-	joystick_ary,
-	joystick_arz,
-	joystick_aslider0,
-	joystick_aslider1,
-	joystick_fx,
-	joystick_fy,
-	joystick_fz,
-	joystick_frx,
-	joystick_fry,
-	joystick_frz,
-	joystick_fslider0,
-	joystick_fslider1,
+	prior       = 0x21,
+	next        = 0x22,
+	home        = 0x23,
+	end         = 0x24,
+	left        = 0x25,
+	up          = 0x26,
+	right       = 0x27,
+	down        = 0x28,
 
-	joystick_button = 0,	// "id_offset" set
-	joystick_hat = 0,		// "id_offset" set
+	kanji       = 0x29,
+	convert     = 0x2a,
+	nonconvert  = 0x2b,
+	separator   = 0x2c, // ASCII ','
 
-#ifdef WIN32
-	keycode_backspace=VK_BACK,
-	keycode_tab=VK_TAB,
-	keycode_clear=VK_CLEAR,
-	keycode_return=VK_RETURN,
-	keycode_shift=VK_SHIFT,
-	keycode_control=VK_CONTROL,
-	keycode_menu=VK_MENU,
-	keycode_pause=VK_PAUSE,
-	keycode_escape=VK_ESCAPE,
+	help        = 0x3f, // ASCII '?'
 
-#if !defined(__CYGWIN__) && !defined(__MINGW32__)
-	keycode_kanji=VK_KANJI,
-	keycode_convert=VK_CONVERT,
-	keycode_nonconvert=VK_NONCONVERT,
-#endif
+	key_0 = '0', // 0x30
+	key_1 = '1',
+	key_2 = '2',
+	key_3 = '3',
+	key_4 = '4',
+	key_5 = '5',
+	key_6 = '6',
+	key_7 = '7',
+	key_8 = '8',
+	key_9 = '9',
 
-	keycode_space=VK_SPACE,
-	keycode_prior=VK_PRIOR,
-	keycode_next=VK_NEXT,
-	keycode_end=VK_END,
-	keycode_home=VK_HOME,
-	keycode_left=VK_LEFT,
-	keycode_up=VK_UP,
-	keycode_right=VK_RIGHT,
-	keycode_down=VK_DOWN,
-	keycode_select=VK_SELECT,
-	keycode_print=VK_PRINT,
-	keycode_execute=VK_EXECUTE,
-	keycode_insert=VK_INSERT,
-	keycode_delete=VK_DELETE,
-	keycode_help=VK_HELP,
-	keycode_0='0',
-	keycode_1='1',
-	keycode_2='2',
-	keycode_3='3',
-	keycode_4='4',
-	keycode_5='5',
-	keycode_6='6',
-	keycode_7='7',
-	keycode_8='8',
-	keycode_9='9',
-	keycode_a='A',
-	keycode_b='B',
-	keycode_c='C',
-	keycode_d='D',
-	keycode_e='E',
-	keycode_f='F',
-	keycode_g='G',
-	keycode_h='H',
-	keycode_i='I',
-	keycode_j='J',
-	keycode_k='K',
-	keycode_l='L',
-	keycode_m='M',
-	keycode_n='N',
-	keycode_o='O',
-	keycode_p='P',
-	keycode_q='Q',
-	keycode_r='R',
-	keycode_s='S',
-	keycode_t='T',
-	keycode_u='U',
-	keycode_v='V',
-	keycode_w='W',
-	keycode_x='X',
-	keycode_y='Y',
-	keycode_z='Z',
-	keycode_lwin=VK_LWIN,
-	keycode_rwin=VK_RWIN,
-	keycode_apps=VK_APPS,
-	keycode_numpad0=VK_NUMPAD0,
-	keycode_numpad1=VK_NUMPAD1,
-	keycode_numpad2=VK_NUMPAD2,
-	keycode_numpad3=VK_NUMPAD3,
-	keycode_numpad4=VK_NUMPAD4,
-	keycode_numpad5=VK_NUMPAD5,
-	keycode_numpad6=VK_NUMPAD6,
-	keycode_numpad7=VK_NUMPAD7,
-	keycode_numpad8=VK_NUMPAD8,
-	keycode_numpad9=VK_NUMPAD9,
-	keycode_numpad_enter=keycode_return,
-	keycode_multiply=VK_MULTIPLY,
-	keycode_add=VK_ADD,
-	keycode_separator=VK_SEPARATOR,
-	keycode_subtract=VK_SUBTRACT,
-	keycode_decimal=VK_DECIMAL,
-	keycode_divide=VK_DIVIDE,
-	keycode_f1=VK_F1,
-	keycode_f2=VK_F2,
-	keycode_f3=VK_F3,
-	keycode_f4=VK_F4,
-	keycode_f5=VK_F5,
-	keycode_f6=VK_F6,
-	keycode_f7=VK_F7,
-	keycode_f8=VK_F8,
-	keycode_f9=VK_F9,
-	keycode_f10=VK_F10,
-	keycode_f11=VK_F11,
-	keycode_f12=VK_F12,
-	keycode_f13=VK_F13,
-	keycode_f14=VK_F14,
-	keycode_f15=VK_F15,
-	keycode_f16=VK_F16,
-	keycode_f17=VK_F17,
-	keycode_f18=VK_F18,
-	keycode_f19=VK_F19,
-	keycode_f20=VK_F20,
-	keycode_f21=VK_F21,
-	keycode_f22=VK_F22,
-	keycode_f23=VK_F23,
-	keycode_f24=VK_F24,
-	keycode_numlock=VK_NUMLOCK,
-	keycode_scroll=VK_SCROLL,
-	keycode_lshift=VK_LSHIFT,
-	keycode_rshift=VK_RSHIFT,
-	keycode_lcontrol=VK_LCONTROL,
-	keycode_rcontrol=VK_RCONTROL,
-	keycode_lmenu=VK_LMENU,
-	keycode_rmenu=VK_RMENU,
+	a = 'A', // 0x41
+	b = 'B',
+	c = 'C',
+	d = 'D',
+	e = 'E',
+	f = 'F',
+	g = 'G',
+	h = 'H',
+	i = 'I',
+	j = 'J',
+	k = 'K',
+	l = 'L',
+	m = 'M',
+	n = 'N',
+	o = 'O',
+	p = 'P',
+	q = 'Q',
+	r = 'R',
+	s = 'S',
+	t = 'T',
+	u = 'U',
+	v = 'V',
+	w = 'W',
+	x = 'X',
+	y = 'Y',
+	z = 'Z',
 
-#else
-#ifdef __APPLE__
+	f1 = 0x61, // ASCII 'a'
+	f2 = 0x62,
+	f3 = 0x63,
+	f4 = 0x64,
+	f5 = 0x65,
+	f6 = 0x66,
+	f7 = 0x67,
+	f8 = 0x68,
+	f9 = 0x69,
+	f10 = 0x6a,
+	f11 = 0x6b,
+	f12 = 0x6c,
+	f13 = 0x6d,
+	f14 = 0x6e,
+	f15 = 0x6f,
+	f16 = 0x70,
+	f17 = 0x71,
+	f18 = 0x72,
+	f19 = 0x73,
+	f20 = 0x74,
+	f21 = 0x75,
+	f22 = 0x76,
+	f23 = 0x77,
+	f24 = 0x78,
 
-// Seems like this platform dont have keysyms, or their docs suck so much I
-// can't find it.
-//
-// To solve this matter I've made my own virtual key numbering. If a key
-// pressed does not match any of these, then it will return the actual
-// MacOSX keycode in the high order word (keycode + 0x10000000).
-//
-// Naturally this require that they dont use keycode values above 0xffff,
-// but if they do complain to Apple for their crappy keyboard support.
-// Already kinda annoyed that the keys for typing { and } are alt+shift+8 and
-// alt+shift+9, plus that backslash is alt+shift+7. How hostile is that!?!?
-// Oh well what can you expect from a company that write "Designed by Apple
-// in California" with big letters when you open your box that the powerbook
-// came in. Yes it shows thats its designed in California!!
-//
-// (No offence to California though. Been there once and loved the place.)
+	insert     = 0x7e,
+	key_delete = 0x7f, // ASCII DEL
 
-	keycode_backspace=10,
-	keycode_tab=11,
-	keycode_clear=12,
-	keycode_return=13,
-	keycode_shift=14,
-	keycode_control=15,
-	keycode_menu=16,
-	keycode_pause=17,
-	keycode_kanji=18,
-	keycode_escape=19,
-	keycode_convert=20,
-	keycode_nonconvert=21,
-	keycode_space=22,
-	keycode_prior=23,
-	keycode_next=24,
-	keycode_end=25,
-	keycode_home=26,
-	keycode_left=27,
-	keycode_up=28,
-	keycode_right=29,
-	keycode_down=30,
-	keycode_select=31,
-	keycode_print=32,
-	keycode_execute=33,
-	keycode_insert=34,
-	keycode_delete=35,
-	keycode_help=36,
-	keycode_0=37,
-	keycode_1=38,
-	keycode_2=39,
-	keycode_3=40,
-	keycode_4=41,
-	keycode_5=42,
-	keycode_6=43,
-	keycode_7=44,
-	keycode_8=45,
-	keycode_9=46,
-	keycode_a=47,
-	keycode_b=48,
-	keycode_c=49,
-	keycode_d=50,
-	keycode_e=51,
-	keycode_f=52,
-	keycode_g=53,
-	keycode_h=54,
-	keycode_i=55,
-	keycode_j=56,
-	keycode_k=57,
-	keycode_l=58,
-	keycode_m=59,
-	keycode_n=60,
-	keycode_o=61,
-	keycode_p=62,
-	keycode_q=63,
-	keycode_r=64,
-	keycode_s=65,
-	keycode_t=66,
-	keycode_u=67,
-	keycode_v=68,
-	keycode_w=69,
-	keycode_x=70,
-	keycode_y=71,
-	keycode_z=72,
-	keycode_lwin=73,
-	keycode_rwin=74,
-	keycode_apps=75,
-	keycode_numpad0=76,
-	keycode_numpad1=77,
-	keycode_numpad2=78,
-	keycode_numpad3=79,
-	keycode_numpad4=80,
-	keycode_numpad5=81,
-	keycode_numpad6=82,
-	keycode_numpad7=83,
-	keycode_numpad8=84,
-	keycode_numpad9=85,
-	keycode_numpad_enter=keycode_return,
-	keycode_multiply=86,
-	keycode_add=87,
-	keycode_separator=88,
-	keycode_subtract=89,
-	keycode_decimal=90,
-	keycode_divide=91,
-	keycode_f1=92,
-	keycode_f2=93,
-	keycode_f3=94,
-	keycode_f4=95,
-	keycode_f5=96,
-	keycode_f6=97,
-	keycode_f7=98,
-	keycode_f8=99,
-	keycode_f9=100,
-	keycode_f10=101,
-	keycode_f11=102,
-	keycode_f12=103,
-	keycode_f13=104,
-	keycode_f14=105,
-	keycode_f15=106,
-	keycode_f16=107,
-	keycode_f17=108,
-	keycode_f18=109,
-	keycode_f19=110,
-	keycode_f20=111,
-	keycode_f21=112,
-	keycode_f22=113,
-	keycode_f23=114,
-	keycode_f24=115,
-	keycode_numlock=116,
-	keycode_scroll=117,
-	keycode_lshift=118,
-	keycode_rshift=119,
-	keycode_lcontrol=120,
-	keycode_rcontrol=121,
-	keycode_lmenu=122,
-	keycode_rmenu=123,
-	keycode_count=124,
+	// Numpad numbers
+	numpad_0   = 0x80,
+	numpad_1   = 0x81,
+	numpad_2   = 0x82,
+	numpad_3   = 0x83,
+	numpad_4   = 0x84,
+	numpad_5   = 0x85,
+	numpad_6   = 0x86,
+	numpad_7   = 0x87,
+	numpad_8   = 0x88,
+	numpad_9   = 0x89,
 
-#else
+	// Numpad buttons
+	multiply   = 0x8a,
+	add        = 0x8b,
+	seperator  = 0x8c,
+	subtract   = 0x8d,
+	decimal    = 0x8e,
+	divide     = 0x8f,
 
-#include <X11/keysym.h>
+	// Modifiers
+	lshift     = 0xe0,
+	rshift     = 0xe1,
+	lcontrol   = 0xe2,
+	rcontrol   = 0xe3,
+	lalt       = 0xe4, loption = lalt,
+	ralt       = 0xe5, roption = ralt,
+	lmenu      = 0xe6, apps = lmenu,
+	rmenu      = 0xe7,
+	lsuper     = 0xe8, lcmd = lsuper,
+	rsuper     = 0xe9, rcmd = rsuper,
 
-	keycode_backspace=XK_BackSpace,
-	keycode_tab=XK_Tab,
-	keycode_clear=XK_Clear,
-	keycode_return=XK_Return,
-	keycode_shift=XK_Shift_L,
-	keycode_control=XK_Control_L,
-	keycode_menu=XK_Menu, // there is no XK_Alt, only XK_Alt_L and XK_Alt_R. Maybe remove this key? -- mbn 30 sep 2003
-	keycode_pause=XK_Pause,
-	keycode_kanji=XK_Kanji,
-	keycode_escape=XK_Escape,
-	keycode_convert=XK_Henkan_Mode,
-	keycode_nonconvert=XK_Muhenkan,
-	keycode_space=XK_space,
-	keycode_prior=XK_Prior,
-	keycode_next=XK_Next,
-	keycode_end=XK_End,
-	keycode_home=XK_Home,
-	keycode_left=XK_Left,
-	keycode_up=XK_Up,
-	keycode_right=XK_Right,
-	keycode_down=XK_Down,
-	keycode_select=XK_Select,
-	keycode_print=XK_Print,
-	keycode_execute=XK_Execute,
-	keycode_insert=XK_Insert,
-	keycode_delete=XK_Delete,
-	keycode_help=XK_Help,
-	keycode_0=XK_0,
-	keycode_1=XK_1,
-	keycode_2=XK_2,
-	keycode_3=XK_3,
-	keycode_4=XK_4,
-	keycode_5=XK_5,
-	keycode_6=XK_6,
-	keycode_7=XK_7,
-	keycode_8=XK_8,
-	keycode_9=XK_9,
-	keycode_a=XK_a,
-	keycode_b=XK_b,
-	keycode_c=XK_c,
-	keycode_d=XK_d,
-	keycode_e=XK_e,
-	keycode_f=XK_f,
-	keycode_g=XK_g,
-	keycode_h=XK_h,
-	keycode_i=XK_i,
-	keycode_j=XK_j,
-	keycode_k=XK_k,
-	keycode_l=XK_l,
-	keycode_m=XK_m,
-	keycode_n=XK_n,
-	keycode_o=XK_o,
-	keycode_p=XK_p,
-	keycode_q=XK_q,
-	keycode_r=XK_r,
-	keycode_s=XK_s,
-	keycode_t=XK_t,
-	keycode_u=XK_u,
-	keycode_v=XK_v,
-	keycode_w=XK_w,
-	keycode_x=XK_x,
-	keycode_y=XK_y,
-	keycode_z=XK_z,
-	keycode_lwin=XK_Super_L,
-	keycode_rwin=XK_Multi_key,
-	keycode_apps=XK_Menu,
-	keycode_numpad0=XK_KP_0,
-	keycode_numpad1=XK_KP_1,
-	keycode_numpad2=XK_KP_2,
-	keycode_numpad3=XK_KP_3,
-	keycode_numpad4=XK_KP_4,
-	keycode_numpad5=XK_KP_5,
-	keycode_numpad6=XK_KP_6,
-	keycode_numpad7=XK_KP_7,
-	keycode_numpad8=XK_KP_8,
-	keycode_numpad9=XK_KP_9,
-	keycode_numpad_enter=XK_KP_Enter,
-	keycode_multiply=XK_KP_Multiply,
-	keycode_add=XK_KP_Add,
-	keycode_separator=XK_KP_Separator,
-	keycode_subtract=XK_KP_Subtract,
-	keycode_decimal=XK_KP_Decimal,
-	keycode_divide=XK_KP_Divide,
-	keycode_f1=XK_F1,
-	keycode_f2=XK_F2,
-	keycode_f3=XK_F3,
-	keycode_f4=XK_F4,
-	keycode_f5=XK_F5,
-	keycode_f6=XK_F6,
-	keycode_f7=XK_F7,
-	keycode_f8=XK_F8,
-	keycode_f9=XK_F9,
-	keycode_f10=XK_F10,
-	keycode_f11=XK_F11,
-	keycode_f12=XK_F12,
-	keycode_f13=XK_F13,
-	keycode_f14=XK_F14,
-	keycode_f15=XK_F15,
-	keycode_f16=XK_F16,
-	keycode_f17=XK_F17,
-	keycode_f18=XK_F18,
-	keycode_f19=XK_F19,
-	keycode_f20=XK_F20,
-	keycode_f21=XK_F21,
-	keycode_f22=XK_F22,
-	keycode_f23=XK_F23,
-	keycode_f24=XK_F24,
-	keycode_numlock=XK_Num_Lock,
-	keycode_scroll=XK_Scroll_Lock,
-	keycode_lshift=XK_Shift_L,
-	keycode_rshift=XK_Shift_R,
-	keycode_lcontrol=XK_Control_L,
-	keycode_rcontrol=XK_Control_R,
-	keycode_lmenu=XK_Meta_L,
-	keycode_rmenu=XK_Meta_R,
-#endif
-#endif
-
-	keycode_enter=keycode_return,
-	keycode_lapple=keycode_lwin,
-	keycode_rapple=keycode_rwin,
-
-	keycode_unknown=-1
+	scrolllock = 0xea,
+	capslock   = 0xeb,
+	numlock    = 0xec
 };
 
-}
+Key decode_ic(InputCode);
 
-/// \}
+}
