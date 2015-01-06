@@ -33,7 +33,7 @@ class Teapot
 {
 public:
 	Teapot();
-	void create(clan::Canvas &canvas, clan::ResourceManager &resources);
+	void create(clan::Canvas &canvas);
 	void clone(const Teapot &source);
 	void draw_collision_outline(clan::Canvas &canvas);
 	void update(clan::Canvas &canvas, int elapsed_ms, std::vector<Teapot> &teapot_list);
@@ -41,7 +41,6 @@ public:
 	void set_position(int xpos, int ypos);
 	void set_scale(float x_scale, float y_scale);
 	void set_movement_delta(clan::Vec2f &normal, float new_speed);
-	void set_frame(int frame_number);
 	void set_color(const clan::Colorf &color);
 private:
 	void move(clan::Canvas &canvas, int elapsed_ms);
@@ -49,8 +48,8 @@ private:
 	bool check_hit_other_object(int previous_xpos, int previous_ypos, int xpos, int ypos, std::vector<Teapot> &teapot_list);
 
 private:
-	clan::Sprite teapot_sprites;
-	std::vector<clan::CollisionOutline> teapot_collisions;
+	clan::Sprite teapot_sprite;
+	clan::CollisionOutline teapot_collision;
 	int dest_xpos;
 	int dest_ypos;
 	float x_delta;
@@ -59,5 +58,4 @@ private:
 	float float_ypos;
 	float speed;
 	bool flash;
-	int previous_teapot_animation_frame;
 };

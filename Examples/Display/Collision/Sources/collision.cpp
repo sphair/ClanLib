@@ -51,8 +51,6 @@ int Collision::start(const std::vector<std::string> &args)
 
 	// Connect a keyboard handler to on_key_up()
 	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &Collision::on_input_up));
-
-	clan::ResourceManager resources = clan::XMLResourceManager::create(clan::XMLResourceDocument("Resources/resources.xml"));
 	
 	clan::Font font(canvas, "tahoma", 24);
 
@@ -64,7 +62,7 @@ int Collision::start(const std::vector<std::string> &args)
 	int num_teapots = 8;
 
 	Teapot base_teapot;
-	base_teapot.create(canvas, resources);
+	base_teapot.create(canvas);
 
 	std::vector<Teapot> teapot_list;
 	teapot_list.resize(num_teapots);
@@ -86,9 +84,6 @@ int Collision::start(const std::vector<std::string> &args)
 
 		int scale = (rand() & 0xffff);
 		teapot_list[cnt].set_scale(0.5f + scale * 0.00002f, 0.5f + scale * 0.00002f);
-
-		int frame = (rand() & 0xffff);
-		teapot_list[cnt].set_frame(frame % 60);	// Assuming teapots has 60 frames
 
 		teapot_list[cnt].set_color( clan::Colorf(
 			(rand() & 0xFF) / 256.0f,
