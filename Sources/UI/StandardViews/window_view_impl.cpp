@@ -91,7 +91,7 @@ namespace clan
 		window_view->dispatch_event(&e);
 	}
 
-	void WindowView_Impl::on_window_key_event(KeyEvent &e)
+	void WindowView_Impl::window_key_event(KeyEvent &e)
 	{
 		View *view = window_view->focus_view();
 		if (view)
@@ -109,7 +109,7 @@ namespace clan
 		}
 	}
 
-	void WindowView_Impl::on_window_pointer_event(PointerEvent &e_window)
+	void WindowView_Impl::window_pointer_event(PointerEvent &e_window)
 	{
 		PointerEvent e = e_window;
 		e.set_pos(e.pos() - window_view->geometry().content.get_top_left());
@@ -172,7 +172,7 @@ namespace clan
 		bool ctrl_down = e.ctrl;
 		bool cmd_down = false;
 		KeyEvent key_event(type, key, repeat_count, text, pointer_pos, alt_down, shift_down, ctrl_down, cmd_down);
-		on_window_key_event(key_event);
+		window_key_event(key_event);
 	}
 
 	void WindowView_Impl::on_key_up(const clan::InputEvent &e)
@@ -187,7 +187,7 @@ namespace clan
 		bool ctrl_down = e.ctrl;
 		bool cmd_down = false;
 		KeyEvent key_event(type, key, repeat_count, text, pointer_pos, alt_down, shift_down, ctrl_down, cmd_down);
-		on_window_key_event(key_event);
+		window_key_event(key_event);
 	}
 
 	void WindowView_Impl::on_mouse_down(const clan::InputEvent &e)
@@ -200,7 +200,7 @@ namespace clan
 		bool ctrl_down = e.ctrl;
 		bool cmd_down = false;
 		PointerEvent pointer_event(type, button, pos, alt_down, shift_down, ctrl_down, cmd_down);
-		on_window_pointer_event(pointer_event);
+		window_pointer_event(pointer_event);
 	}
 
 	void WindowView_Impl::on_mouse_dblclk(const clan::InputEvent &e)
@@ -213,7 +213,7 @@ namespace clan
 		bool ctrl_down = e.ctrl;
 		bool cmd_down = false;
 		PointerEvent pointer_event(type, button, pos, alt_down, shift_down, ctrl_down, cmd_down);
-		on_window_pointer_event(pointer_event);
+		window_pointer_event(pointer_event);
 	}
 
 	void WindowView_Impl::on_mouse_up(const clan::InputEvent &e)
@@ -226,13 +226,13 @@ namespace clan
 		bool ctrl_down = e.ctrl;
 		bool cmd_down = false;
 		PointerEvent pointer_event(type, button, pos, alt_down, shift_down, ctrl_down, cmd_down);
-		on_window_pointer_event(pointer_event);
+		window_pointer_event(pointer_event);
 	}
 
 	void WindowView_Impl::on_mouse_move(const clan::InputEvent &clan_event)
 	{
 		PointerEvent e(PointerEventType::move, PointerButton::none, Pointf((float)clan_event.mouse_pos.x, (float)clan_event.mouse_pos.y), clan_event.alt, clan_event.shift, clan_event.ctrl, false/*clan_event.cmd*/);
-		on_window_pointer_event(e);
+		window_pointer_event(e);
 	}
 
 	PointerButton WindowView_Impl::decode_id(clan::InputCode ic) const

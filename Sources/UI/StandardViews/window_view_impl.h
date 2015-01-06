@@ -51,14 +51,11 @@ namespace clan
 		std::shared_ptr<View> hot_view;
 
 	private:
-		void on_window_size_changed();
-		void on_window_render(Canvas &canvas);
-		void on_window_key_event(KeyEvent &e);
-		void on_window_pointer_event(PointerEvent &e);
-		void on_window_close();
-		void on_window_activated();
-		void on_window_deactivated();
 
+		void window_key_event(KeyEvent &e);
+		void window_pointer_event(PointerEvent &e);
+
+		void on_window_close();
 		void on_lost_focus();
 		void on_got_focus();
 		void on_resize(int, int);
