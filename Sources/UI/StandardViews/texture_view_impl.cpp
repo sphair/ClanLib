@@ -45,6 +45,25 @@ namespace clan
 		canvas_rect = canvas.get_size();
 	}
 
+	void TextureView_Impl::set_event_window(const DisplayWindow &new_event_window, const Mat4f &new_transform_mouse_matrix)
+	{
+		slots = SlotContainer();
+		event_window = new_event_window;
+		transform_mouse_matrix = new_transform_mouse_matrix;
+		if (!event_window.is_null())
+		{
+			slots.connect(event_window.sig_lost_focus(), clan::bind_member(this, &TextureView_Impl::on_lost_focus));
+			slots.connect(event_window.sig_got_focus(), clan::bind_member(this, &TextureView_Impl::on_got_focus));
+			slots.connect(event_window.sig_window_close(), clan::bind_member(this, &TextureView_Impl::on_window_close));
+			slots.connect(event_window.get_ic().get_keyboard().sig_key_down(), clan::bind_member(this, &TextureView_Impl::transform_on_key_down));
+			slots.connect(event_window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &TextureView_Impl::transform_on_key_up));
+			slots.connect(event_window.get_ic().get_mouse().sig_key_down(), clan::bind_member(this, &TextureView_Impl::transform_on_mouse_down));
+			slots.connect(event_window.get_ic().get_mouse().sig_key_dblclk(), clan::bind_member(this, &TextureView_Impl::transform_on_mouse_dblclk));
+			slots.connect(event_window.get_ic().get_mouse().sig_key_up(), clan::bind_member(this, &TextureView_Impl::transform_on_mouse_up));
+			slots.connect(event_window.get_ic().get_mouse().sig_pointer_move(), clan::bind_member(this, &TextureView_Impl::transform_on_mouse_move));
+		}
+	}
+
 	void TextureView_Impl::update()
 	{
 		if (needs_render)
@@ -58,5 +77,221 @@ namespace clan
 			window_view->render(canvas);
 			canvas.reset_cliprect();
 		}
+	}
+
+	void TextureView_Impl::on_lost_focus()
+	{
+		ActivationChangeEvent e(ActivationChangeType::deactivated);
+		window_view->dispatch_event(&e);
+	}
+
+	void TextureView_Impl::on_got_focus()
+	{
+		ActivationChangeEvent e(ActivationChangeType::activated);
+		window_view->dispatch_event(&e);
+	}
+
+	void TextureView_Impl::on_window_close()
+	{
+		CloseEvent e;
+		window_view->dispatch_event(&e);
+	}
+
+	void TextureView_Impl::window_key_event(KeyEvent &e)
+	{
+		View *view = window_view->focus_view();
+		if (view)
+		{
+			view->dispatch_event(&e);
+		}
+
+		if (!e.default_prevented() && e.type() == KeyEventType::press && e.shift_down() && e.key() == Key::tab)
+		{
+			window_view->root_view()->prev_focus();
+		}
+		else if (!e.default_prevented() && e.type() == KeyEventType::press && e.key() == Key::tab)
+		{
+			window_view->root_view()->next_focus();
+		}
+	}
+
+	void TextureView_Impl::window_pointer_event(PointerEvent &e_window)
+	{
+		PointerEvent e = e_window;
+		e.set_pos(e.pos() - window_view->geometry().content.get_top_left());
+
+		std::shared_ptr<View> view_above_cursor = window_view->find_view_at(e.pos());
+
+		if (view_above_cursor != hot_view)
+		{
+			if (hot_view)
+			{
+				PointerEvent e_exit(PointerEventType::leave, PointerButton::none, e.pos(), e.alt_down(), e.shift_down(), e.ctrl_down(), e.cmd_down());
+				hot_view->dispatch_event(&e_exit, true);
+			}
+
+			hot_view = view_above_cursor;
+
+			if (hot_view)
+			{
+				PointerEvent e_enter(PointerEventType::enter, PointerButton::none, e.pos(), e.alt_down(), e.shift_down(), e.ctrl_down(), e.cmd_down());
+				hot_view->dispatch_event(&e_enter, true);
+
+				if (!cursor_window.is_null())
+					hot_view->update_cursor(cursor_window);
+			}
+		}
+
+		if (e.type() == PointerEventType::enter || e.type() == PointerEventType::leave)
+			return;
+
+		if (e.type() == PointerEventType::press || e.type() == PointerEventType::double_click)
+		{
+			// To do: use flags for each mouse key rather than a counter - it is safer in case a release event is never sent
+			capture_down_counter++;
+			if (capture_down_counter == 1)
+				captured_view = view_above_cursor;
+		}
+
+		std::shared_ptr<View> view = captured_view ? captured_view : view_above_cursor;
+		if (view)
+			view->dispatch_event(&e);
+		else
+			window_view->dispatch_event(&e);
+
+		if (e.type() == PointerEventType::release)
+		{
+			capture_down_counter--;
+			if (capture_down_counter == 0)
+				captured_view.reset();
+		}
+	}
+
+	void TextureView_Impl::on_key_down(const clan::InputEvent &e)
+	{
+		KeyEventType type = KeyEventType::press;
+		Key key = decode_ic(e.id);
+		int repeat_count = e.repeat_count;
+		const std::string text = e.str;
+		const Pointf pointer_pos = Pointf(static_cast<float>(e.mouse_pos.x), static_cast<float>(e.mouse_pos.y));
+		bool alt_down = e.alt;
+		bool shift_down = e.shift;
+		bool ctrl_down = e.ctrl;
+		bool cmd_down = false;
+		KeyEvent key_event(type, key, repeat_count, text, pointer_pos, alt_down, shift_down, ctrl_down, cmd_down);
+		window_key_event(key_event);
+	}
+
+	void TextureView_Impl::on_key_up(const clan::InputEvent &e)
+	{
+		KeyEventType type = KeyEventType::release;
+		Key key = decode_ic(e.id);
+		int repeat_count = e.repeat_count;
+		const std::string text = e.str;
+		const Pointf pointer_pos = Pointf(static_cast<float>(e.mouse_pos.x), static_cast<float>(e.mouse_pos.y));
+		bool alt_down = e.alt;
+		bool shift_down = e.shift;
+		bool ctrl_down = e.ctrl;
+		bool cmd_down = false;
+		KeyEvent key_event(type, key, repeat_count, text, pointer_pos, alt_down, shift_down, ctrl_down, cmd_down);
+		window_key_event(key_event);
+	}
+
+	void TextureView_Impl::on_mouse_down(const clan::InputEvent &e)
+	{
+		PointerEventType type = PointerEventType::press;
+		PointerButton button = decode_id(e.id);
+		const Pointf pos = Pointf(static_cast<float>(e.mouse_pos.x), static_cast<float>(e.mouse_pos.y));
+		bool alt_down = e.alt;
+		bool shift_down = e.shift;
+		bool ctrl_down = e.ctrl;
+		bool cmd_down = false;
+		PointerEvent pointer_event(type, button, pos, alt_down, shift_down, ctrl_down, cmd_down);
+		window_pointer_event(pointer_event);
+	}
+
+	void TextureView_Impl::on_mouse_dblclk(const clan::InputEvent &e)
+	{
+		PointerEventType type = PointerEventType::double_click;
+		PointerButton button = decode_id(e.id);
+		const Pointf pos = Pointf(static_cast<float>(e.mouse_pos.x), static_cast<float>(e.mouse_pos.y));
+		bool alt_down = e.alt;
+		bool shift_down = e.shift;
+		bool ctrl_down = e.ctrl;
+		bool cmd_down = false;
+		PointerEvent pointer_event(type, button, pos, alt_down, shift_down, ctrl_down, cmd_down);
+		window_pointer_event(pointer_event);
+	}
+
+	void TextureView_Impl::on_mouse_up(const clan::InputEvent &e)
+	{
+		PointerEventType type = PointerEventType::release;
+		PointerButton button = decode_id(e.id);
+		const Pointf pos = Pointf(static_cast<float>(e.mouse_pos.x), static_cast<float>(e.mouse_pos.y));
+		bool alt_down = e.alt;
+		bool shift_down = e.shift;
+		bool ctrl_down = e.ctrl;
+		bool cmd_down = false;
+		PointerEvent pointer_event(type, button, pos, alt_down, shift_down, ctrl_down, cmd_down);
+		window_pointer_event(pointer_event);
+	}
+
+	void TextureView_Impl::on_mouse_move(const clan::InputEvent &clan_event)
+	{
+		PointerEvent e(PointerEventType::move, PointerButton::none, Pointf((float)clan_event.mouse_pos.x, (float)clan_event.mouse_pos.y), clan_event.alt, clan_event.shift, clan_event.ctrl, false/*clan_event.cmd*/);
+		window_pointer_event(e);
+	}
+
+	PointerButton TextureView_Impl::decode_id(clan::InputCode ic) const
+	{
+		switch (ic)
+		{
+		default:
+			return PointerButton::none;
+		case clan::InputCode::mouse_left:
+			return PointerButton::left;
+		case clan::InputCode::mouse_right:
+			return PointerButton::right;
+		case clan::InputCode::mouse_middle:
+			return PointerButton::middle;
+		case clan::InputCode::mouse_wheel_up:
+			return PointerButton::wheel_up;
+		case clan::InputCode::mouse_wheel_down:
+			return PointerButton::wheel_down;
+		case clan::InputCode::mouse_xbutton1:
+			return PointerButton::xbutton1;
+		case clan::InputCode::mouse_xbutton2:
+			return PointerButton::xbutton2;
+		}
+	}
+
+	void TextureView_Impl::transform_on_key_down(const clan::InputEvent &e)
+	{
+		on_key_down(transform_input_event(e));
+	}
+
+	void TextureView_Impl::transform_on_key_up(const clan::InputEvent &e)
+	{
+		on_key_up(transform_input_event(e));
+	}
+
+	void TextureView_Impl::transform_on_mouse_down(const clan::InputEvent &e)
+	{
+		on_mouse_down(transform_input_event(e));
+	}
+
+	void TextureView_Impl::transform_on_mouse_dblclk(const clan::InputEvent &e)
+	{
+		on_mouse_dblclk(transform_input_event(e));
+	}
+
+	void TextureView_Impl::transform_on_mouse_up(const clan::InputEvent &e)
+	{
+		on_mouse_up(transform_input_event(e));
+	}
+
+	void TextureView_Impl::transform_on_mouse_move(const clan::InputEvent &clan_event)
+	{
+		on_mouse_move(transform_input_event(clan_event));
 	}
 }

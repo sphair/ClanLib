@@ -91,7 +91,10 @@ int GUI::start(const std::vector<std::string> &args)
 
 	std::shared_ptr<clan::TextureView> root = std::make_shared<clan::TextureView>(gui_canvas);
 
-	root->set_rect(clan::Rect(64, 64, clan::Size(256, 256)));
+	root->set_event_window(window);
+	root->set_cursor_window(window);
+
+	root->set_rect(clan::Rect(0, 0, clan::Size(256, 256)));
 
 	// Style the root view to use rounded corners and a bit of drop shadow
 	root->box_style.set_background(clan::Colorf(240, 240, 240, 255));
@@ -163,7 +166,7 @@ int GUI::start(const std::vector<std::string> &args)
 		root->update();
 		gui_canvas.flush();
 
-		gui_image.draw(canvas, 64, 64);
+		gui_image.draw(canvas, 0, 0);
 
 		std::string fps = clan::string_format("%1 fps", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1));
 		font.draw_text(canvas, canvas.get_width() - 200, 30, fps);

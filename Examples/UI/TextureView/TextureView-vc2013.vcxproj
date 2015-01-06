@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>WindowView</ProjectName>
+    <ProjectName>TextureView</ProjectName>
     <ProjectGuid>{4E27E943-27C7-4F00-A431-B6ACA236FFE4}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

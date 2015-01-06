@@ -87,9 +87,57 @@ namespace clan
 		impl->canvas_rect = rect;
 	}
 
+	void TextureView::set_cursor_window(const DisplayWindow &new_cursor_window)
+	{
+		impl->cursor_window = new_cursor_window;
+	}
+
+	void TextureView::set_event_window(const DisplayWindow &event_window, const Mat4f &transform_mouse_matrix)
+	{
+		impl->set_event_window(event_window, transform_mouse_matrix);
+	}
+
 	Rect TextureView::get_rect() const
 	{
 		return impl->canvas_rect;
+	}
+
+	void TextureView::on_window_close()
+	{
+		impl->on_window_close();
+	}
+	void TextureView::on_lost_focus()
+	{
+		impl->on_lost_focus();
+
+	}
+	void TextureView::on_got_focus()
+	{
+		impl->on_got_focus();
+	}
+	void TextureView::on_key_down(const clan::InputEvent &e)
+	{
+		impl->on_key_down(e);
+	}
+	void TextureView::on_key_up(const clan::InputEvent &e)
+	{
+		impl->on_key_up(e);
+	}
+	void TextureView::on_mouse_down(const clan::InputEvent &e)
+	{
+		impl->on_mouse_down(e);
+	}
+	void TextureView::on_mouse_dblclk(const clan::InputEvent &e)
+	{
+		impl->on_mouse_dblclk(e);
+	}
+	void TextureView::on_mouse_up(const clan::InputEvent &e)
+	{
+		impl->on_mouse_up(e);
+	}
+	void TextureView::on_mouse_move(const clan::InputEvent &e)
+	{
+		impl->on_mouse_move(e);
 	}
 
 }

@@ -59,6 +59,29 @@ namespace clan
 		Pointf to_screen_pos(const Pointf &pos) override;
 		Pointf from_screen_pos(const Pointf &pos) override;
 
+		/// \brief Set the window to use to automatically set the cursor.
+		///
+		/// Default = Don't change the cursor
+		void set_cursor_window(const DisplayWindow &cursor_window);
+
+		/// \brief Set the window to use to automatically handle window events
+		///
+		/// Default = You need to call the user defined events instead (on_...)
+		/// \param event_window = The window to use
+		/// \param transform_mouse_matrix = Matrix to use to transform the mouse coordinates
+		void set_event_window(const DisplayWindow &event_window, const Mat4f &transform_mouse_matrix = Mat4f::identity());
+
+		/// User defined events. Call these if set_event_window() is not used
+		void on_window_close();
+		void on_lost_focus();
+		void on_got_focus();
+		void on_key_down(const clan::InputEvent &);
+		void on_key_up(const clan::InputEvent &);
+		void on_mouse_down(const clan::InputEvent &);
+		void on_mouse_dblclk(const clan::InputEvent &);
+		void on_mouse_up(const clan::InputEvent &);
+		void on_mouse_move(const clan::InputEvent &);
+
 	private:
 		std::shared_ptr<TextureView_Impl> impl;
 	};
