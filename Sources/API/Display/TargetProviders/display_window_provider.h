@@ -53,44 +53,44 @@ class DisplayWindowSite
 /// \name Attributes
 /// \{
 public:
-	/// \brief Pointer to lost focus signal.
-	Signal<void()> *sig_lost_focus;
+	/// \brief lost focus signal.
+	Signal<void()> sig_lost_focus;
 
-	/// \brief Pointer to got focus signal.
-	Signal<void()> *sig_got_focus;
+	/// \brief got focus signal.
+	Signal<void()> sig_got_focus;
 
-	/// \brief Pointer to resize signal.
-	Signal<void(int, int)> *sig_resize;
+	/// \brief resize signal.
+	Signal<void(int, int)> sig_resize;
 
-	/// \brief Pointer to paint signal.
-	Signal<void(const Rect &)> *sig_paint;
+	/// \brief paint signal.
+	Signal<void(const Rect &)> sig_paint;
 
-	/// \brief Pointer to window close signal.
-	Signal<void()> *sig_window_close;
+	/// \brief window close signal.
+	Signal<void()> sig_window_close;
 
-	/// \brief Pointer to window destroy signal.
-	Signal<void()> *sig_window_destroy;
+	/// \brief window destroy signal.
+	Signal<void()> sig_window_destroy;
 
-	/// \brief Pointer to window minimized signal.
-	Signal<void()> *sig_window_minimized;
+	/// \brief window minimized signal.
+	Signal<void()> sig_window_minimized;
 
-	/// \brief Pointer to window maximized signal.
-	Signal<void()> *sig_window_maximized;
+	/// \brief window maximized signal.
+	Signal<void()> sig_window_maximized;
 
-	/// \brief Pointer to window restored signal.
-	Signal<void()> *sig_window_restored;
+	/// \brief window restored signal.
+	Signal<void()> sig_window_restored;
 
-	/// \brief Pointer to window resize callback function.
-	std::function<void(Rect &)> *func_window_resize;
+	/// \brief window resize callback function.
+	std::function<void(Rect &)> func_window_resize;
 
-	/// \brief Pointer to minimized clicked callback function.
-	std::function<bool()> *func_minimize_clicked;
+	/// \brief minimized clicked callback function.
+	std::function<bool()> func_minimize_clicked;
 
-	/// \brief Pointer to window moved signal.
-	Signal<void()> *sig_window_moved;
+	/// \brief window moved signal.
+	Signal<void()> sig_window_moved;
 
 #ifdef WIN32
-	std::function<bool(HWND, UINT, WPARAM, LPARAM)> *func_window_message;
+	std::function<bool(HWND, UINT, WPARAM, LPARAM)> func_window_message;
 #endif
 
 /// \}

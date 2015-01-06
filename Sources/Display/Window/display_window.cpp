@@ -150,69 +150,69 @@ InputContext DisplayWindow::get_ic() const
 
 Signal<void()> &DisplayWindow::sig_lost_focus()
 {
-	return impl->sig_lost_focus;
+	return impl->site.sig_lost_focus;
 }
 
 Signal<void()> &DisplayWindow::sig_got_focus()
 {
-	return impl->sig_got_focus;
+	return impl->site.sig_got_focus;
 }
 
 Signal<void(int, int)> &DisplayWindow::sig_resize()
 {
-	return impl->sig_resize;
+	return impl->site.sig_resize;
 }
 
 Signal<void(const Rect &)> &DisplayWindow::sig_paint()
 {
-	return impl->sig_paint;
+	return impl->site.sig_paint;
 }
 
 Signal<void()> &DisplayWindow::sig_window_close()
 {
-	return impl->sig_window_close;
+	return impl->site.sig_window_close;
 }
 
 Signal<void()> &DisplayWindow::sig_window_destroy()
 {
-	return impl->sig_window_destroy;
+	return impl->site.sig_window_destroy;
 }
 
 Signal<void()> &DisplayWindow::sig_window_minimized()
 {
-	return impl->sig_window_minimized;
+	return impl->site.sig_window_minimized;
 }
 
 Signal<void()> &DisplayWindow::sig_window_maximized()
 {
-	return impl->sig_window_maximized;
+	return impl->site.sig_window_maximized;
 }
 
 Signal<void()> &DisplayWindow::sig_window_restored()
 {
-	return impl->sig_window_restored;
+	return impl->site.sig_window_restored;
 }
 
 std::function<void(Rect &)> &DisplayWindow::func_window_resize()
 {
-	return impl->func_window_resize;
+	return impl->site.func_window_resize;
 }
 
 std::function<bool()> &DisplayWindow::func_minimize_clicked()
 {
-	return impl->func_minimize_clicked;
+	return impl->site.func_minimize_clicked;
 }
 
 #ifdef WIN32
 std::function<bool(HWND, UINT, WPARAM, LPARAM)> &DisplayWindow::func_window_message()
 {
-	return impl->func_window_message;
+	return impl->site.func_window_message;
 }
 #endif
 
 Signal<void()> &DisplayWindow::sig_window_moved()
 {
-	return impl->sig_window_moved;
+	return impl->site.sig_window_moved;
 }
 
 Signal<void()> &DisplayWindow::sig_window_flip()

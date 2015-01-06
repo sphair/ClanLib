@@ -1084,21 +1084,21 @@ void X11Window::process_window_resize(const Rect &new_rect)
 	{
 		if ( (rect.left != current_window_client_area.left) || (rect.top != current_window_client_area.top) || always_send_window_position_changed_event )
 		{
-			(*site->sig_window_moved)();
+			(site->sig_window_moved)();
 		}
 
 		if ( (rect.get_width() != current_window_client_area.get_width()) || (rect.get_height() != current_window_client_area.get_height()) || always_send_window_size_changed_event )
 		{
-			if (*(site->func_window_resize))
+			if (site->func_window_resize)
 			{
-				(*site->func_window_resize)(rect);
+				(site->func_window_resize)(rect);
 				// TODO: If rect output is different, update this window rect. Maybe use a  XConfigureRequestEvent?
 			}
 
 			if (callback_on_resized)
 				callback_on_resized();
 
-			(*site->sig_resize)(rect.get_width(), rect.get_height());
+			(site->sig_resize)(rect.get_width(), rect.get_height());
 		}
 	}
 	always_send_window_position_changed_event = false;
@@ -1149,7 +1149,7 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 						if (event.xclient.data.l[0] == wm_delete_window)
 						{
 							if (site)
-								(*site->sig_window_close)();
+								(site->sig_window_close)();
 						}
 					}
 					if (net_wm_ping)
@@ -1196,7 +1196,7 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 			break;
 		case FocusIn:
 			if (site)
-				(*site->sig_got_focus)();
+				(site->sig_got_focus)();
 
 			break;
 		case FocusOut:
@@ -1204,11 +1204,14 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 			{
 				if (!has_focus())	// For an unknown reason, FocusOut is called when clicking on title bar of window
 				{
-					(*site->sig_lost_focus)();
+					(site->sig_lost_focus)();
 				}
 			}
 			break;
 		case PropertyNotify:
+			if (!site)
+				break;
+
 			if (net_wm_state != None)
 			{
 				if (event.xproperty.atom == net_wm_state && event.xproperty.state == PropertyNewValue)
@@ -1216,24 +1219,24 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 					if (is_minimized())
 					{
 						if (!minimized && site != nullptr)
-							(*site->sig_window_minimized)();
+							(site->sig_window_minimized)();
 						minimized = true;
 						maximized = false;
 					}
 					else if (is_maximized())
 					{
 						if (!maximized && site != nullptr)
-							(*site->sig_window_maximized)();
+							(site->sig_window_maximized)();
 						if (minimized && site != nullptr)
 						{
 							// generate resize events for minimized -> maximized transition
 							Rect rect = get_geometry();
-							(*site->sig_window_moved)();
-							if (*(site->func_window_resize))
-								(*site->func_window_resize)(rect);
+							(site->sig_window_moved)();
+							if (site->func_window_resize)
+								(site->func_window_resize)(rect);
 							if (callback_on_resized)
 								callback_on_resized();
-							(*site->sig_resize)(rect.get_width(), rect.get_height());
+							(site->sig_resize)(rect.get_width(), rect.get_height());
 						}
 						minimized = false;
 						maximized = true;
@@ -1241,7 +1244,7 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 					else
 					{
 						if ((minimized || maximized) && site != nullptr)
-							(*site->sig_window_restored)();
+							(site->sig_window_restored)();
 						minimized = false;
 						maximized = false;
 					}
@@ -1254,13 +1257,13 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 					if (is_minimized())
 					{
 						if (!minimized && site != nullptr)
-							(*site->sig_window_minimized)();
+							(site->sig_window_minimized)();
 						minimized = true;
 					}
 					else
 					{
 						if (minimized && site != nullptr)
-							(*site->sig_window_restored)();
+							(site->sig_window_restored)();
 						minimized = false;
 					}
 				}
@@ -1354,17 +1357,17 @@ void X11Window::process_message_complete()
 
 	if (max==1)	// Simple case, a single rect
 	{
-		(*site->sig_paint)(largest_exposed_rect);
+		(site->sig_paint)(largest_exposed_rect);
 	}
 	else if (max >= max_allowable_expose_events)
 	{
 		Rect window_rect = get_viewport();
-		(*site->sig_paint)(window_rect);
+		(site->sig_paint)(window_rect);
 	}
 	else if (max > 1)
 	{
 		// Send the largest rect first
-		(*site->sig_paint)(largest_exposed_rect);
+		(site->sig_paint)(largest_exposed_rect);
 		for (unsigned int cnt=0; cnt < max; cnt++)
 		{
 			Rect &rect = exposed_rects[cnt];
@@ -1388,7 +1391,7 @@ void X11Window::process_message_complete()
 
 			if (!inner_flag)
 			{
-				(*site->sig_paint)(rect);
+				(site->sig_paint)(rect);
 			}
 		}
 	}
