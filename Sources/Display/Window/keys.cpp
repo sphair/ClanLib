@@ -26,6 +26,7 @@
  **    Chu Chin Kuan
  */
 
+#include "Display/precomp.h"
 #include "API/Display/Window/keys.h"
 
 namespace clan
