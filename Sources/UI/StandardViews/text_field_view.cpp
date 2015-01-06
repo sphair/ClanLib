@@ -889,7 +889,7 @@ namespace clan
 	{
 		start = std::min(start, text.length());
 		length = std::min(length, text.length() - start);
-		if (length == 0) start = 0;
+		//if (length == 0) start = 0;
 		if (selection_length != length || selection_start != start)
 		{
 			selection_start = start;
