@@ -171,6 +171,11 @@ public:
 	/// \return The character index. -1 = Not at specified point
 	int get_character_index(Canvas &canvas, const std::string &text, const Point &point);
 
+	/// \brief Get the rectangles of each glyph in a string of text
+	///
+	/// \return A list of Rects for every glyph
+	std::vector<Rect> get_character_indices(Canvas &canvas, const std::string &text);
+
 	// Finds the offset for the last visible character when clipping the head
 	size_t clip_from_left(Canvas &canvas, const std::string &text, float width);
 

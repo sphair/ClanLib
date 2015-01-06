@@ -265,17 +265,26 @@ namespace clan
 			return this;
 	}
 
-	View *View::owner_view()
+	const View *View::root_view() const
+	{
+		View *super = superview();
+		if (super)
+			return super->root_view();
+		else
+			return this;
+	}
+
+	View *View::owner_view() const
 	{
 		return root_view()->impl->_owner_view;
 	}
 
-	View *View::focus_view()
+	View *View::focus_view() const
 	{
 		return root_view()->impl->_focus_view;
 	}
 
-	View *View::proximity_view()
+	View *View::proximity_view() const
 	{
 		return root_view()->impl->_proximity_view;
 	}

@@ -184,6 +184,57 @@ int Font_Impl::get_character_index(Canvas &canvas, const std::string &text, cons
 	return -1;	// Not found
 }
 
+std::vector<Rect> Font_Impl::get_character_indices(Canvas &canvas, const std::string &text)
+{
+	select_font_family();
+	std::vector<Rect> index_store;
+
+	int dest_x = 0;
+	int dest_y = 0;
+
+	int character_counter = 0;
+
+	int font_height = selected_metrics.get_height();
+	int font_ascent = selected_metrics.get_ascent();
+	int font_external_leading = selected_metrics.get_external_leading();
+	int line_spacing = static_cast<int>(selected_line_height + 0.5f);
+
+	//TODO: Fix me, so we do not need to line split
+
+	std::vector<std::string> lines = StringHelp::split_text(text, "\n", false);
+	for (std::vector<std::string>::size_type i = 0; i<lines.size(); i++)
+	{
+		int xpos = dest_x;
+		int ypos = dest_y;
+
+		std::string &textline = lines[i];
+		std::string::size_type string_length = textline.length();
+
+		// Scan the string
+
+		UTF8_Reader reader(textline.data(), textline.length());
+		while (!reader.is_end())
+		{
+			unsigned int glyph = reader.get_char();
+			std::string::size_type glyph_pos = reader.get_position();
+			reader.next();
+
+			GlyphMetrics metrics = font_draw->get_metrics(canvas, glyph);
+
+			Rect position(xpos, ypos - font_ascent, Size(metrics.advance.width, metrics.advance.height + font_height + font_external_leading));
+			index_store.push_back(position);
+			xpos += metrics.advance.width;
+			ypos += metrics.advance.height;
+		}
+
+		dest_y += line_spacing;
+
+		if (i != lines.size() - 1)
+			index_store.push_back(Rect());	// Store the '\n' as a empty rect
+	}
+	return index_store;
+}
+
 const FontMetrics &Font_Impl::get_font_metrics()
 {
 	select_font_family();

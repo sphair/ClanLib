@@ -100,14 +100,11 @@ namespace clan
 
 		bool cursor_blink_visible = false;
 		Timer blink_timer;
-
-		/*
-		bool mouse_selecting = false;
 		bool mouse_moves_left = false;
-		bool ignore_mouse_events = false;
-
 		Timer scroll_timer;
-		*/
+		bool ignore_mouse_events = false;
+		bool mouse_selecting = false;
+
 		struct UndoInfo
 		{
 			/* set undo text when:
@@ -125,6 +122,8 @@ namespace clan
 		static const std::string break_characters;
 		static const std::string numeric_mode_characters;
 
+		std::vector<Rect> last_measured_rects;
+
 		void set_text_selection(size_t start, size_t length);
 
 		std::string get_text_before_selection() const;
@@ -137,5 +136,7 @@ namespace clan
 		int find_previous_break_character(int search_start) const;
 
 		bool input_mask_accepts_input(const std::string &str) const;
+		unsigned int get_character_index(int mouse_x_wincoords);
+		Size get_visual_text_size(Canvas &canvas, int pos, int npos);
 	};
 }

@@ -411,6 +411,13 @@ int Font::get_character_index(Canvas &canvas, const std::string &text, const Poi
 	return 0;
 }
 
+std::vector<Rect> Font::get_character_indices(Canvas &canvas, const std::string &text)
+{
+	if (impl)
+		return impl->get_character_indices(canvas, text);
+	return std::vector<Rect>();
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // Font Implementation:
 

@@ -40,6 +40,7 @@
 #include <cmath>
 #include "API/Display/Render/shared_gc_data.h"
 #include "API/UI/StandardViews/window_view.h"
+#include "API/UI/Events/pointer_event.h"
 
 namespace clan
 {
@@ -57,6 +58,14 @@ namespace clan
 		slots.connect(sig_pointer_move(), impl.get(), &TextFieldViewImpl::on_pointer_move);
 		slots.connect(sig_focus_gained(), impl.get(), &TextFieldViewImpl::on_focus_gained);
 		slots.connect(sig_focus_lost(), impl.get(), &TextFieldViewImpl::on_focus_lost);
+
+		impl->scroll_timer.func_expired() = [&]()
+		{
+			if (impl->mouse_moves_left)
+				impl->move(-1, false, false);
+			else
+				impl->move(1, false, false);
+		};
 	}
 
 	TextFieldView::~TextFieldView()
@@ -332,6 +341,9 @@ namespace clan
 		float advance_selected = font.measure_text(canvas, txt_selected).advance.width;
 		LineMetrics line_metrics(font);
 
+		// Measure text for get_character_index()
+		impl->last_measured_rects = font.get_character_indices(canvas, txt_before + txt_selected + txt_after);
+
 		if (!txt_selected.empty())
 		{
 			Rectf selection_rect = Rectf::xywh(advance_before, line_metrics.leading_top, advance_selected, line_metrics.text_height);
@@ -346,18 +358,6 @@ namespace clan
 
 		if (impl->cursor_blink_visible)
 			Path::rect(cursor_advance, line_metrics.leading_top, 1.0f, line_metrics.text_height).fill(canvas,Brush(impl->text_style.color()));
-
-		// draw cursor
-		/*
-		if (has_focus() || (focus_policy() == FocusPolicy::parent && impl->cursor_drawing_enabled_when_parent_focused))
-		{
-			if (impl->cursor_blink_visible)
-			{
-				Rectf cursor_rect = impl->get_cursor_rect();
-				part_cursor.render_box(canvas, cursor_rect);
-			}
-		}
-		*/
 	}
 
 	float TextFieldView::get_preferred_width(Canvas &canvas)
@@ -429,7 +429,7 @@ namespace clan
 		start_blink();
 		cursor_blink_visible = true;
 		textfield->set_needs_render();
-
+		ignore_mouse_events = true;
 		if (select_all_on_focus_gain) select_all();
 	}
 
@@ -537,16 +537,71 @@ namespace clan
 
 	void TextFieldViewImpl::on_pointer_press(PointerEvent &e)
 	{
-		textfield->set_focus();
+		if (textfield->has_focus())
+		{
+			textfield->set_capture();
+			mouse_selecting = true;
+			cursor_pos = get_character_index(e.pos().x);
+			set_text_selection(cursor_pos, 0);
+		}
+		else
+		{
+			textfield->set_focus();
+		}
+
 	}
 
 	void TextFieldViewImpl::on_pointer_release(PointerEvent &e)
 	{
+		if (!mouse_selecting)
+			return;
+
+		textfield->release_capture();
+
+		if (ignore_mouse_events) // This prevents text selection from changing from what was set when focus was gained.
+		{
+			ignore_mouse_events = false;
+			mouse_selecting = false;
+		}
+		else
+		{
+			scroll_timer.stop();
+			mouse_selecting = false;
+			int sel_end = get_character_index(e.pos().x);
+			selection_length = sel_end - selection_start;
+			cursor_pos = sel_end;
+			textfield->set_focus();
+			textfield->set_needs_render();
+		}
 
 	}
 
 	void TextFieldViewImpl::on_pointer_move(PointerEvent &e)
 	{
+		if (!mouse_selecting)
+			return;
+		if (ignore_mouse_events)
+			return;
+
+		Rect content_rect = textfield->geometry().content_box();
+		int xpos = e.pos().x;
+		if (xpos < content_rect.left || xpos > content_rect.right)
+		{
+			if (xpos < content_rect.left)
+				mouse_moves_left = true;
+			else
+				mouse_moves_left = false;
+
+			if (!readonly)
+				scroll_timer.start(50, true);
+		}
+		else
+		{
+			scroll_timer.stop();
+			cursor_pos = get_character_index(e.pos().x);
+			selection_length = cursor_pos - selection_start;
+			textfield->set_needs_render();
+		}
 
 	}
 
@@ -896,6 +951,33 @@ namespace clan
 		return pos;
 	}
 
+
+	unsigned int TextFieldViewImpl::get_character_index(int mouse_x_wincoords)
+	{
+		Rect content_rect = textfield->geometry().content_box();
+		int mouse_x = mouse_x_wincoords - content_rect.left;
+
+		if (last_measured_rects.empty())
+			return 0;
+
+		for (unsigned int cnt = 0; cnt < last_measured_rects.size(); cnt++)
+		{
+			if ((last_measured_rects[cnt].left <= mouse_x) && (last_measured_rects[cnt].right > mouse_x))
+				return cnt + 1;
+		}
+		if (last_measured_rects[0].left >= mouse_x)
+			return 0;
+		return last_measured_rects.size();
+	}
+
+	Size TextFieldViewImpl::get_visual_text_size(Canvas &canvas, int pos, int npos)
+	{
+		Font font = get_font(canvas);
+
+		return password_mode ? 
+			Size(font.measure_text(canvas, create_password(StringHelp::utf8_length(text.substr(pos, npos)))).bbox_size) :
+			Size(font.measure_text(canvas, text.substr(pos, npos)).bbox_size);
+	}
 	const std::string TextFieldViewImpl::numeric_mode_characters = "0123456789";
 	const std::string TextFieldViewImpl::break_characters = " ::;,.-";
 }

@@ -91,14 +91,18 @@ namespace clan
 
 		virtual bool local_root();
 
+		void set_capture() {};	//FIXME
+		void release_capture() {}; //FIXME
+
 		void layout(Canvas &canvas);
 		virtual void layout_local();
 		virtual void layout_subviews(Canvas &canvas);
 
+		const View *root_view() const;
 		View *root_view();
-		View *owner_view();
-		View *focus_view();
-		View *proximity_view();
+		View *owner_view() const;
+		View *focus_view() const;
+		View *proximity_view() const;
 
 		std::shared_ptr<View> find_view_at(const Pointf &pos) const;
 
@@ -110,6 +114,7 @@ namespace clan
 
 		void set_focus();
 		void remove_focus();
+		bool has_focus() const { return focus_view() == this; }
 
 		void prev_focus();
 		void next_focus();
