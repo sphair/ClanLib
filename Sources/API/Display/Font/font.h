@@ -66,18 +66,16 @@ public:
 	Font(FontFamily &font_family, const FontDescription &desc);
 
 	/// \brief Constructs standard font
-	///
-	/// \param canvas = Canvas
-	Font(Canvas &canvas, const std::string &typeface_name, int height);
+	Font(const std::string &typeface_name, int height);
 
 	// \brief Constructs standard font
-	Font(Canvas &canvas, const std::string &typeface_name, const FontDescription &desc);
+	Font(const std::string &typeface_name, const FontDescription &desc);
 
 	// \brief Constructs standard font
-	Font( Canvas &canvas, const FontDescription &desc, const std::string &ttf_filename);
+	Font(const FontDescription &desc, const std::string &ttf_filename);
 
 	// \brief Constructs standard font
-	Font( Canvas &canvas, const FontDescription &desc, const std::string &ttf_filename, FileSystem fs);
+	Font(const FontDescription &desc, const std::string &ttf_filename, FileSystem fs);
 
 	/// \brief Constructs a Font based on a sprite
 	///
@@ -86,7 +84,7 @@ public:
 	/// \param spacelen = Width of space character
 	/// \param monospace = Force monospaced font (using widest sprite character)
 	/// \param metrics = Font metrics for the sprite font
-	Font( Canvas &canvas, const std::string &typeface_name, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics);
+	Font(Canvas &canvas, const std::string &typeface_name, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics);
 
 /// \}
 
@@ -134,7 +132,7 @@ public:
 	/// All font sizes are scalable when using sprite fonts
 	void set_scalable(float height_threshold = 32.0f);
 
-	/// \brief Print text 
+	/// \brief Print text
 	///
 	/// \param canvas = Canvas
 	/// \param position = Dest position

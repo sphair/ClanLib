@@ -97,9 +97,9 @@ void ChatView::render_text_content(ChatTextView *text_view, Canvas &canvas)
 
 	if (font.is_null())
 	{
-		font = Font(canvas, get_font_description());
-		font_url = Font(canvas, get_url_font_description());
-		font_fixed = Font(canvas, get_fixed_font_description());
+		font = Font(get_font_description());
+		font_url = Font(get_url_font_description());
+		font_fixed = Font(get_fixed_font_description());
 		baseline_offset1 = (int)(font.get_font_metrics().get_ascent() - font_fixed.get_font_metrics().get_ascent());
 	}
 
