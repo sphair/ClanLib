@@ -39,16 +39,15 @@ public:
 
 	clan::Resource<clan::Font> get_font(clan::Canvas &canvas, const std::string &family_name, const clan::FontDescription &desc) override
 	{
-		std::string id = desc.get_unique_id();
-		if (loaded_fonts.find(id) == loaded_fonts.end())
+		if (loaded_fonts.find(family_name) == loaded_fonts.end())
 		{
-			loaded_fonts[id] = clan::Font(canvas, family_name, desc);
+			loaded_fonts[family_name] = clan::FontFamily(family_name);
 		}
-		return loaded_fonts[id];
+		return clan::Font(loaded_fonts[family_name], desc);
 	}
 
 private:
-	std::map<std::string, clan::Resource<clan::Font>> loaded_fonts;
+	std::map<std::string, clan::FontFamily > loaded_fonts;
 };
 
 // The start of the Application

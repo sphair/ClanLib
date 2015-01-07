@@ -41,16 +41,16 @@ public:
 
 	Resource<Font> get_font(Canvas &canvas, const std::string &family_name, const FontDescription &desc) override
 	{
-		std::string id = desc.get_unique_id();
-		if (loaded_fonts.find(id) == loaded_fonts.end())
+		if (loaded_fonts.find(family_name) == loaded_fonts.end())
 		{
-			loaded_fonts[id] = Font(canvas, family_name, desc);
+			loaded_fonts[family_name] = FontFamily(family_name);
 		}
-		return loaded_fonts[id];
+		return Font(loaded_fonts[family_name], desc);
 	}
 
 private:
-	std::map<std::string, Resource<Font>> loaded_fonts;
+	std::map<std::string, FontFamily > loaded_fonts;
+
 };
 
 // The start of the Application

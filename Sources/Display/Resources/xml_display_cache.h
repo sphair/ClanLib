@@ -52,7 +52,7 @@ private:
 	std::map<std::string, Resource<Sprite> > sprites;
 	std::map<std::string, Resource<Image> > images;
 	std::map<std::string, Resource<Texture> > textures;
-	std::map<std::string, Resource<FontFamily> > fonts;
+	std::map<std::string, FontFamily > fonts;
 };
 
 }
