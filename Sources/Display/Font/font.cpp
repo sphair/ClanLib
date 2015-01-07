@@ -63,20 +63,20 @@ Font::Font(FontFamily &font_family, const FontDescription &desc)
 	impl = std::make_shared<Font_Impl>(font_family, desc);
 }
 
-Font::Font(Canvas &canvas, const std::string &typeface_name, int height)
+Font::Font(const std::string &typeface_name, int height)
 {
 	FontDescription desc;
 	desc.set_height(height);
-	*this = Font(canvas, typeface_name, desc);
+	*this = Font(typeface_name, desc);
 }
 
-Font::Font(Canvas &canvas, const std::string &typeface_name, const FontDescription &desc)
+Font::Font(const std::string &typeface_name, const FontDescription &desc)
 {
 	FontFamily font_family(typeface_name);
 	*this = Font(font_family, desc);
 }
 
-Font::Font(Canvas &canvas, const FontDescription &desc, const std::string &ttf_filename)
+Font::Font(const FontDescription &desc, const std::string &ttf_filename)
 {
 	std::string path = PathHelp::get_fullpath(ttf_filename, PathHelp::path_type_file);
 	std::string new_filename = PathHelp::get_filename(ttf_filename, PathHelp::path_type_file);
@@ -87,7 +87,7 @@ Font::Font(Canvas &canvas, const FontDescription &desc, const std::string &ttf_f
 	impl = std::make_shared<Font_Impl>(font_family, desc);
 }
 
-Font::Font( Canvas &canvas, const FontDescription &desc, const std::string &ttf_filename, FileSystem fs)
+Font::Font(const FontDescription &desc, const std::string &ttf_filename, FileSystem fs)
 {
 	std::string new_filename = PathHelp::get_filename(ttf_filename, PathHelp::path_type_file);
 	FontFamily font_family(new_filename);

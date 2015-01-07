@@ -72,7 +72,7 @@ int GUI::start(const std::vector<std::string> &args)
 	// Connect a keyboard handler to on_key_up()
 	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &GUI::on_input_up));
 
-	clan::Font font(canvas, "tahoma", 24);
+	clan::Font font("tahoma", 24);
 
 	clan::Texture2D gui_texture = clan::Texture2D(canvas, 512, 512);
 	clan::Image gui_image(gui_texture, gui_texture.get_size());
