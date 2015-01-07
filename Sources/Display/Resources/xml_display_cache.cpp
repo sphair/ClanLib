@@ -99,39 +99,39 @@ Resource<Texture> XMLDisplayCache::get_texture(GraphicContext &gc, const std::st
 
 Resource<Font> XMLDisplayCache::get_font(Canvas &canvas, const std::string &family_name, const FontDescription &desc)
 {
-	std::string id = family_name + desc.get_unique_id();
-
-	auto it = fonts.find(id);
+	auto it = fonts.find(family_name);
 	if (it != fonts.end())
-		return it->second;
+		return Font(it->second, desc);
 
-	Resource<Font> font = load_font(canvas, family_name, desc);
-	fonts[id] = font;
-	return font;
-}
-
-Resource<Font> XMLDisplayCache::load_font(Canvas &canvas, const std::string &family_name, const FontDescription &desc)
-{
 	bool is_resource_font = false;
+	DomElement font_element;
+	XMLResourceNode resource;
 
 	if (doc.resource_exists(family_name))
 	{
-		DomElement font_element = doc.get_resource(family_name).get_element();
-		std::string type = font_element.get_tag_name();
-		if (type == "font")
+		resource = doc.get_resource(family_name);
+		font_element = resource.get_element();
+		if (font_element.get_tag_name() == "font")
 		{
 			is_resource_font = true;
 		}
 	}
 
+	Font font;
+
+	FontFamily font_family(family_name);
+	fonts[family_name] = font_family;
+
 	if (is_resource_font)
 	{
-		return Resource<Font>(Font_Impl::load(canvas, desc, family_name, doc, bind_member(this, &XMLDisplayCache::get_sprite)));
+		font = Font_Impl::load(canvas, desc, font_family, font_element, resource, bind_member(this, &XMLDisplayCache::get_sprite));
 	}
 	else
 	{
-		return Resource<Font>(Font(canvas, family_name, desc));
+		font = Font(font_family, desc);
 	}
+
+	return font;
 }
 
 }

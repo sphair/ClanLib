@@ -9,7 +9,7 @@ The font element must contain either the \<sprite\>  or \<ttf\> element
 
 <ul>
 <li>Attribute: <b>name</b><br/>
-Resource identifier to use as base for this font. This is specified in the typeface name of \ref clan::FontDescription <br/>
+Resource identifier to use as base for this font. This is specified in the font family name of \ref clan::FontFamily <br/>
 Default value: None, MUST BE PRESENT. 
 </li>
 <li>Element: <b>\<sprite\> </b><br/>
@@ -23,9 +23,6 @@ Describes a system font<br/>
 <h2>Using the \<sprite\> element</h2>
 
 <ul>
-<li>Attribute: <b>typeface</b><br/>
-Use this to set the typeface name of this font.<br/>
-Default value: None, MUST BE PRESENT.
 <li>Attribute: <b>glyphs</b><br/>
 The sprite description containing the glyphs. See \ref SpriteResource <br/>
 Default value: None, MUST BE PRESENT. 

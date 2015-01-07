@@ -70,7 +70,7 @@ public:
 
 	void get_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics);
 
-	static Font load(Canvas &canvas, const FontDescription &reference_desc, const std::string &id, const XMLResourceDocument &doc, std::function<Resource<Sprite>(Canvas &, const std::string &)> cb_get_sprite);
+	static Font load(Canvas &canvas, const FontDescription &reference_desc, FontFamily &font_family, const DomElement &font_element, const XMLResourceNode &resource, std::function<Resource<Sprite>(Canvas &, const std::string &)> cb_get_sprite);
 
 	void set_height(float value);
 	void set_weight(FontWeight value);

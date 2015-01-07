@@ -33,6 +33,7 @@
 
 namespace clan
 {
+class FontFamily;
 
 class XMLDisplayCache : public DisplayCache
 {
@@ -46,14 +47,12 @@ public:
 	Resource<Font> get_font(Canvas &canvas, const std::string &family_name, const FontDescription &desc) override;
 
 private:
-	Resource<Font> load_font(Canvas &canvas, const std::string &family_name, const FontDescription &desc);
-
 	XMLResourceDocument doc;
 
 	std::map<std::string, Resource<Sprite> > sprites;
 	std::map<std::string, Resource<Image> > images;
 	std::map<std::string, Resource<Texture> > textures;
-	std::map<std::string, Resource<Font> > fonts;
+	std::map<std::string, Resource<FontFamily> > fonts;
 };
 
 }
