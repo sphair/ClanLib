@@ -58,6 +58,9 @@ namespace clan
 
 	void WindowView_Impl::on_lost_focus()
 	{
+		capture_down_counter = 0;
+		captured_view.reset();
+
 		ActivationChangeEvent e(ActivationChangeType::deactivated);
 		window_view->dispatch_event(&e);
 	}
@@ -154,9 +157,12 @@ namespace clan
 
 		if (e.type() == PointerEventType::release)
 		{
-			capture_down_counter--;
-			if (capture_down_counter == 0)
-				captured_view.reset();
+			if (capture_down_counter > 0)
+			{
+				capture_down_counter--;
+				if (capture_down_counter == 0)
+					captured_view.reset();
+			}
 		}
 	}
 

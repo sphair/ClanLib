@@ -435,6 +435,11 @@ namespace clan
 
 	void TextFieldViewImpl::on_focus_lost(FocusChangeEvent &e)
 	{
+		if (mouse_selecting)
+		{
+			scroll_timer.stop();
+			mouse_selecting = false;
+		}
 		stop_blink();
 		set_text_selection(0, 0);
 	}
@@ -539,7 +544,6 @@ namespace clan
 	{
 		if (textfield->has_focus())
 		{
-			textfield->set_capture();
 			mouse_selecting = true;
 			cursor_pos = get_character_index(e.pos().x);
 			set_text_selection(cursor_pos, 0);
@@ -555,8 +559,6 @@ namespace clan
 	{
 		if (!mouse_selecting)
 			return;
-
-		textfield->release_capture();
 
 		if (ignore_mouse_events) // This prevents text selection from changing from what was set when focus was gained.
 		{

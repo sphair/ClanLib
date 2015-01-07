@@ -81,6 +81,9 @@ namespace clan
 
 	void TextureView_Impl::on_lost_focus()
 	{
+		capture_down_counter = 0;
+		captured_view.reset();
+
 		ActivationChangeEvent e(ActivationChangeType::deactivated);
 		window_view->dispatch_event(&e);
 	}
@@ -161,10 +164,14 @@ namespace clan
 
 		if (e.type() == PointerEventType::release)
 		{
-			capture_down_counter--;
-			if (capture_down_counter == 0)
-				captured_view.reset();
+			if (capture_down_counter > 0)
+			{
+				capture_down_counter--;
+				if (capture_down_counter == 0)
+					captured_view.reset();
+			}
 		}
+
 	}
 
 	void TextureView_Impl::on_key_down(const clan::InputEvent &e)

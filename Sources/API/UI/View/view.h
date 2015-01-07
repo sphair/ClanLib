@@ -91,9 +91,6 @@ namespace clan
 
 		virtual bool local_root();
 
-		void set_capture() {};	//FIXME
-		void release_capture() {}; //FIXME
-
 		void layout(Canvas &canvas);
 		virtual void layout_local();
 		virtual void layout_subviews(Canvas &canvas);
