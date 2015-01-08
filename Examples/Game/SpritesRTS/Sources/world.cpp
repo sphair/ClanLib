@@ -33,7 +33,7 @@
 
 World::World(clan::DisplayWindow &display_window) : window(display_window), quit(false)
 {
-	window.sig_window_close().connect(this, &World::on_window_close);
+	cc.connect(window.sig_window_close(), clan::bind_member(this, &World::on_window_close));
 
 	canvas = clan::Canvas(window);
 
