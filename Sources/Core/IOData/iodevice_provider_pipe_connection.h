@@ -36,8 +36,6 @@
 namespace clan
 {
 
-class Event;
-
 class IODeviceProvider_PipeConnection : public IODeviceProvider
 {
 /// \name Construction

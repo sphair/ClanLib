@@ -36,8 +36,6 @@ namespace clan
 /// \addtogroup clanCore_I_O_Data clanCore I/O Data
 /// \{
 
-class Event;
-
 /// \brief Pipe connection I/O device.
 class PipeConnection : public IODevice
 {

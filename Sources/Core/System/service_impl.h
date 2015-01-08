@@ -33,7 +33,6 @@
 namespace clan
 {
 
-class Event;
 class Service;
 
 class Service_Impl
