@@ -45,10 +45,6 @@
 #pragma managed(push, off)
 #endif
 
-#ifdef WIN32
-#include <windows.h>
-#endif
-
 #include <string>
 
 #include "Core/System/cl_platform.h"

@@ -32,9 +32,6 @@
 #pragma once
 
 #include <memory>
-#ifdef WIN32
-#include <windows.h>
-#endif
 
 namespace clan
 {
