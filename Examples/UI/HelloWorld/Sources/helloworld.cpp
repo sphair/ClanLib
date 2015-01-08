@@ -74,14 +74,14 @@ int HelloWorld::start(const std::vector<std::string> &args)
 
 	// Create a text field for our span layout
 	std::shared_ptr<TextFieldView> edit = std::make_shared<TextFieldView>();
-	edit->text_style().set_font("Ravie", 11.0f, 20.0f);
-	edit->set_text("42");
+	edit->text_style().set_font("Segoe UI", 11.0f, 20.0f);
+	edit->set_text("Text File View");
 	edit->box_style.set_margin(0.0f, 5.0f);
 	edit->box_style.set_background(Colorf(255, 255, 255));
 	edit->box_style.set_border(Colorf(0.0f, 0.0f, 0.0f), 1.0f);
 	edit->box_style.set_border_radius(3.0f);
 	edit->box_style.set_padding(5.0f, 2.0f, 5.0f, 3.0f);
-	edit->box_style.set_width(35.0f);
+	edit->box_style.set_width(128.0f);
 
 	// Create a span layout view with some more complex inline formatting
 	std::shared_ptr<SpanLayoutView> span = std::make_shared<SpanLayoutView>();
@@ -90,23 +90,15 @@ int HelloWorld::start(const std::vector<std::string> &args)
 	font_desc2.set_size(13.0f);
 	font_desc2.set_line_height(40.0f);
 	span->add_text("This is the UI core ", font_desc2);
-	TextStyle font_desc3;
-	font_desc3.set_font_family("Segoe UI");
-	font_desc3.set_size(18.0f);
-	font_desc3.set_line_height(40.0f);
-	span->add_text("Hello World!", font_desc3);
-	TextStyle font_desc4;
-	font_desc4.set_font_family("Segoe UI");
-	font_desc4.set_size(13.0f);
-	font_desc4.set_line_height(40.0f);
-	span->add_text(" example! Here's a text field: ", font_desc4);
+
 	span->add_subview(edit);
+
 	TextStyle font_desc5;
 	font_desc5.set_font_family("Segoe UI");
 	font_desc5.set_size(16.0f);
 	font_desc5.set_line_height(40.0f);
 	font_desc5.set_weight(FontWeight::extra_bold);
-	span->add_text(" units! sdfjghsdkfj hkjsdfhg jksdhfj gkshdfk gsjdkfghsjkdfh kgjshdfkg sjkdfh gjskhf gskjdfg hkjsdfh kgjsdhfkgjhsdkjfhgksjdfhg kjsdfhgjkshdfkhgskjdf ghkjsdfsg kdfhg skjdfhgjksdh fgsdfhg kjsdhfjkghsdkjfh gkjsdhfjkgsdhfkgjhsdkfj hgksj.", font_desc5);
+	span->add_text(" units!", font_desc5);
 	root->add_subview(span);
 
 	// Make our window visible
