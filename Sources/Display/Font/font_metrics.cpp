@@ -59,7 +59,7 @@ namespace clan
 
 	float FontMetrics::get_baseline_offset() const
 	{
-		return (get_line_height() - get_height()) * 0.5f;
+		return (get_line_height() - get_height()) * 0.5f + get_ascent();
 	}
 
 	float FontMetrics::get_ascent() const
