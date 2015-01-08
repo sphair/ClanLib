@@ -49,6 +49,6 @@ int Program::main(const std::vector<std::string> &args)
 	int retval = app.start(args);
 	return retval;
 }
-
+ 
 // Instantiate Application, informing it where the Program is located
 clan::Application app(&Program::main);
