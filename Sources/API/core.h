@@ -72,7 +72,6 @@
 #include "Core/System/event.h"
 #include "Core/System/event_provider.h"
 #include "Core/System/exception.h"
-#include "Core/System/runnable.h"
 #include "Core/System/service.h"
 #include "Core/System/setup_core.h"
 #include "Core/System/thread_local_storage.h"

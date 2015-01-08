@@ -153,7 +153,6 @@ Math/rect_packer.cpp \
 Math/vec3.cpp \
 core_global.cpp \
 core_iostream.cpp \
-System/runnable.cpp \
 System/setup_core.cpp \
 System/service_impl.cpp \
 System/event_impl.cpp \

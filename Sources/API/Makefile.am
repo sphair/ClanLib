@@ -192,7 +192,6 @@ clanCore_includes = \
 	Core/Math/vec2.h \
 	Core/Math/easing.h \
 	Core/core_iostream.h \
-	Core/System/runnable.h \
 	Core/System/service.h \
 	Core/System/keep_alive.h \
 	Core/System/block_allocator.h \
