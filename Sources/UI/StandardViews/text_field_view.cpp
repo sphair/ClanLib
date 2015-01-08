@@ -346,7 +346,9 @@ namespace clan
 
 		if (!txt_selected.empty())
 		{
-			Rectf selection_rect = Rectf::xywh(advance_before, line_metrics.leading_top, advance_selected, line_metrics.text_height);
+			float top_y = (line_metrics.line_height - line_metrics.ascent - line_metrics.descent) * 0.5f;
+			float bottom_y = (line_metrics.line_height + line_metrics.ascent + line_metrics.descent) * 0.5f;
+			Rectf selection_rect = Rectf(advance_before, top_y, advance_before + advance_selected, bottom_y);
 			Path::rect(selection_rect).fill(canvas, focus_view() == this ? Brush::solid_rgb8(51, 153, 255) : Brush::solid_rgb8(200, 200, 200));
 		}
 
