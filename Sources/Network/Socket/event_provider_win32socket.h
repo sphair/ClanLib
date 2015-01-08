@@ -30,7 +30,6 @@
 
 #include "API/Core/System/event_provider.h"
 #include "API/Core/System/mutex.h"
-#include "API/Core/System/interlocked_variable.h"
 #include "win32_socket.h"
 
 namespace clan

@@ -204,7 +204,6 @@ clanCore_includes = \
 	Core/System/event_provider.h \
 	Core/System/exception.h \
 	Core/System/datetime.h \
-	Core/System/interlocked_variable.h \
 	Core/System/registry_key.h \
 	Core/System/game_time.h \
 	Core/System/databuffer.h \

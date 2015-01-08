@@ -82,7 +82,6 @@
 #include "Core/System/keep_alive.h"
 #include "Core/System/timer.h"
 #include "Core/System/registry_key.h"
-#include "Core/System/interlocked_variable.h"
 #include "Core/System/userdata.h"
 #include "Core/System/game_time.h"
 #include "Core/System/work_queue.h"
