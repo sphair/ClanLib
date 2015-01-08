@@ -28,16 +28,17 @@
 
 #pragma once
 
-#include "API/Core/System/mutex.h"
+#ifdef _MSC_VER
+#include <windows.h>
+#include <dbghelp.h>
+#include <signal.h>
+#include <mutex>
+#endif
 
 namespace clan
 {
 
 #ifdef _MSC_VER
-
-#include <windows.h>
-#include <dbghelp.h>
-#include <signal.h>
 
 class CrashReporter_Impl
 {
@@ -65,7 +66,7 @@ private:
 	static std::wstring reports_directory;
 	static std::wstring uploader_exe;
 
-	static Mutex mutex;
+	static std::recursive_mutex mutex;
 
 	static DWORD WINAPI create_dump_main(LPVOID thread_parameter);
 

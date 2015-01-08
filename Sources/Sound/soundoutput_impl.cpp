@@ -36,7 +36,7 @@
 namespace clan
 {
 
-Mutex SoundOutput_Impl::singleton_mutex;
+std::recursive_mutex SoundOutput_Impl::singleton_mutex;
 SoundOutput_Impl *SoundOutput_Impl::instance = nullptr;
 
 /////////////////////////////////////////////////////////////////////////////
@@ -52,7 +52,7 @@ SoundOutput_Impl::SoundOutput_Impl(int mixing_frequency, int latency)
 	temp_buffers[1] = nullptr;
 	stereo_buffer = nullptr;
 
-	MutexSection lock(&singleton_mutex);
+	std::unique_lock<std::recursive_mutex> lock(singleton_mutex);
 	if (instance)
 		throw Exception("Only a single instance of SoundOutput is allowed");
 	instance = this;
@@ -67,7 +67,7 @@ SoundOutput_Impl::~SoundOutput_Impl()
 	SoundSSE::aligned_free(temp_buffers[0]);
 	SoundSSE::aligned_free(temp_buffers[1]);
 
-	MutexSection lock(&singleton_mutex);
+	std::unique_lock<std::recursive_mutex> lock(singleton_mutex);
 	instance = nullptr;
 }
 
@@ -80,13 +80,13 @@ SoundOutput_Impl::~SoundOutput_Impl()
 
 void SoundOutput_Impl::play_session(SoundBuffer_Session &session)
 {
-	MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	sessions.push_back(session);
 }
 
 void SoundOutput_Impl::stop_session(SoundBuffer_Session &session)
 {
-	MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 
 	for (auto it = sessions.begin(); it != sessions.end(); ++it)
 	{
@@ -106,7 +106,7 @@ void SoundOutput_Impl::start_mixer_thread()
 
 void SoundOutput_Impl::stop_mixer_thread()
 {
-	MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	stop_mixer.set();
 	mutex_lock.unlock();
 	thread.join();
@@ -148,7 +148,7 @@ void SoundOutput_Impl::mixer_thread()
 
 bool SoundOutput_Impl::if_continue_mixing()
 {
-	MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	if (stop_mixer.wait(0))
 		return false;
 	else
@@ -187,7 +187,7 @@ void SoundOutput_Impl::clear_mix_buffers()
 
 void SoundOutput_Impl::fill_mix_buffers()
 {
-	MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	std::vector< SoundBuffer_Session > ended_sessions;
 	std::vector< SoundBuffer_Session >::iterator it;
 	for (it = sessions.begin(); it != sessions.end(); ++it)
@@ -205,7 +205,7 @@ void SoundOutput_Impl::fill_mix_buffers()
 void SoundOutput_Impl::filter_mix_buffers()
 {
 	// Apply global filters to mixing buffers:
-	MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	int size_filters = filters.size();
 	int i;
 	for (i = 0; i < size_filters; i++)

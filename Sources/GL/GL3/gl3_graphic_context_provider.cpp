@@ -52,7 +52,6 @@
 #include "API/Core/Math/vec3.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/Text/string_format.h"
-#include "API/Core/System/mutex.h"
 #include "API/Display/Render/texture.h"
 #include "API/Display/Render/primitives_array.h"
 #include "API/Display/Image/pixel_buffer.h"
@@ -103,7 +102,7 @@ GL3GraphicContextProvider::~GL3GraphicContextProvider()
 void GL3GraphicContextProvider::create_standard_programs()
 {
 	// Find an existing provider
-	std::unique_ptr<MutexSection> mutex_section;
+	std::unique_ptr<std::unique_lock<std::recursive_mutex>> mutex_section;
 	std::vector<GraphicContextProvider*> &gc_providers = SharedGCData::get_gc_providers(mutex_section);
 
 	unsigned int max = gc_providers.size();

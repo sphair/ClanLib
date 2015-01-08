@@ -128,7 +128,7 @@ void HTTPServer_Impl::accept_thread_main()
 {
 	while (true)
 	{
-		MutexSection mutex_lock(&mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 		std::vector<Event> events;
 		events.push_back(stop_event);
 		events.push_back(update_event);
@@ -198,7 +198,7 @@ void HTTPServer_Impl::connection_thread_main(TCPConnection connection)
 		// Handle request:
 
 		// Look for a request handler that will deal with the HTTP request:
-		MutexSection mutex_lock(&mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 		std::vector<HTTPRequestHandler>::size_type index, size;
 		size = handlers.size();
 		bool handled = false;

@@ -98,7 +98,7 @@ private:
 
 	typedef HRESULT (WINAPI *FuncDirectSoundCreate)(_In_opt_ LPCGUID pcGuidDevice, LPDIRECTSOUND *ppDS, _Pre_null_ LPUNKNOWN pUnkOuter);
 
-	static Mutex dsound_mutex;
+	static std::recursive_mutex dsound_mutex;
 	static HMODULE dsound_dll;
 	static FuncDirectSoundCreate directsound_create;
 

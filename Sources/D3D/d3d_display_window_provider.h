@@ -31,6 +31,7 @@
 #include "API/Display/TargetProviders/display_window_provider.h"
 #include "API/Display/Render/graphic_context.h"
 #include "Display/Win32/win32_window.h"
+#include <mutex>
 
 namespace clan
 {
@@ -171,7 +172,7 @@ private:
 		__out_opt D3D_FEATURE_LEVEL* pFeatureLevel,
 		__out_opt ID3D11DeviceContext** ppImmediateContext );
 
-	static Mutex d3d11_mutex;
+	static std::recursive_mutex d3d11_mutex;
 	static HMODULE d3d11_dll;
 	static FuncD3D11CreateDeviceAndSwapChain d3d11_createdeviceandswapchain;
 

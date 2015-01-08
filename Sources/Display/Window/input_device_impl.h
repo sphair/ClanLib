@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "API/Core/System/mutex.h"
 #include "API/Core/Signals/signal.h"
 #include "API/Display/TargetProviders/input_device_provider.h"
 #include "input_context_impl.h"
@@ -53,7 +52,7 @@ public:
 	
 	void on_provider_event(const InputEvent &e)
 	{
-		MutexSection mutex_lock(&InputContext_Impl::mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(InputContext_Impl::mutex);
 		std::vector< std::weak_ptr<InputContext_Impl> >::size_type pos, size;
 		size = input_contexts.size();
 		for (pos = 0; pos < size; pos++)

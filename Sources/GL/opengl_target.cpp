@@ -69,7 +69,7 @@ bool OpenGLTarget::is_current()
 
 OpenGLWindowDescription OpenGLTarget::get_description()
 {
-	MutexSection mutex_lock(&SetupGL_Impl::cl_opengl_mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(SetupGL_Impl::cl_opengl_mutex);
 	if (SetupGL_Impl::cl_opengl_target)
 	{
 		OpenGLTargetProvider *provider = dynamic_cast<OpenGLTargetProvider*>(SetupGL_Impl::cl_opengl_target->get_provider());
@@ -83,7 +83,7 @@ OpenGLWindowDescription OpenGLTarget::get_description()
 
 void OpenGLTarget::set_description(OpenGLWindowDescription &desc)
 {
-	MutexSection mutex_lock(&SetupGL_Impl::cl_opengl_mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(SetupGL_Impl::cl_opengl_mutex);
 	if (SetupGL_Impl::cl_opengl_target)
 	{
 		OpenGLTargetProvider *provider = dynamic_cast<OpenGLTargetProvider*>(SetupGL_Impl::cl_opengl_target->get_provider());
@@ -96,7 +96,7 @@ void OpenGLTarget::set_description(OpenGLWindowDescription &desc)
 
 void OpenGLTarget::set_current()
 {
-	MutexSection mutex_lock(&SetupGL_Impl::cl_opengl_mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(SetupGL_Impl::cl_opengl_mutex);
 	if (!SetupGL_Impl::cl_opengl_target)
 		throw Exception("clanGL has not been initialised");
 	SetupGL_Impl::cl_opengl_target->DisplayTarget::set_current();

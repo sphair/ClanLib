@@ -159,7 +159,6 @@ System/service_impl.cpp \
 System/event_impl.cpp \
 System/thread.cpp \
 System/game_time.cpp \
-System/mutex.cpp \
 System/keep_alive.cpp \
 System/timer.cpp \
 System/console_window_generic.cpp \

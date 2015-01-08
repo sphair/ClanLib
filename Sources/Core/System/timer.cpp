@@ -31,7 +31,6 @@
 #include "API/Core/System/timer.h"
 #include "API/Core/System/keep_alive.h"
 #include "API/Core/System/thread.h"
-#include "API/Core/System/mutex.h"
 #include "API/Core/System/event.h"
 #include "API/Core/System/system.h"
 #include <map>
@@ -64,7 +63,7 @@ public:
 
 	~Timer_Thread()
 	{
-		MutexSection mutex_lock(&mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 		stop_thread = true;
 		mutex_lock.unlock();
 		update_event.set();
@@ -79,7 +78,7 @@ public:
 
 	void start(int timer_id, unsigned int new_timeout, bool repeat)
 	{
-		MutexSection mutex_lock(&mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 
 		Timer_Object &object = get_timer_object(timer_id);
 		object.stopped = false;
@@ -96,7 +95,7 @@ public:
 
 	void stop(int timer_id)
 	{
-		MutexSection mutex_lock(&mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 		Timer_Object &object = get_timer_object(timer_id);
 		object.stopped = true;
 	}
@@ -104,7 +103,7 @@ public:
 	void remove_timer(int timer_id)
 	{
 		// Remove the unused timers, to prevent memory leaks
-		MutexSection mutex_lock(&mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 		auto it = timer_objects.find(timer_id);
 		if (it != timer_objects.end())
 		{
@@ -115,7 +114,7 @@ public:
 
 	void process() override
 	{
-		MutexSection mutex_lock(&mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 
 		ubyte64 current_time = System::get_time();
 
@@ -154,7 +153,7 @@ public:
 
 	std::function<void()> &get_func_expired(int timer_id)
 	{
-		MutexSection mutex_lock(&mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 		return get_timer_object(timer_id).func_expired;
 	}
 
@@ -177,7 +176,7 @@ private:
 	{
 		while (true)
 		{
-			MutexSection mutex_lock(&mutex);
+			std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 			update_event.reset();
 			if (stop_thread)
 				break;
@@ -222,7 +221,7 @@ private:
 
 	Thread thread;
 	Event update_event;
-	Mutex mutex;
+	std::recursive_mutex mutex;
 	int timeout;
 	bool stop_thread;
 
@@ -238,7 +237,7 @@ public:
 	Timer_Impl() : timeout(0), repeating(false), id(-1)
 	{
 		// Create a static timer thread if none exist
-		MutexSection mutex_lock(&timer_thread_mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(timer_thread_mutex);
 		if (!timer_thread_instance_count)
 		{
 			timer_thread = new(Timer_Thread);
@@ -251,7 +250,7 @@ public:
 	~Timer_Impl()
 	{
 		// Destroy the static timer thread if this is the last timer
-		MutexSection mutex_lock(&timer_thread_mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(timer_thread_mutex);
 		timer_thread->remove_timer(id);
 		timer_thread_instance_count--;
 		if (!timer_thread_instance_count)
@@ -263,13 +262,13 @@ public:
 
 	void start(unsigned int new_timeout, bool repeat)
 	{
-		MutexSection mutex_lock(&timer_thread_mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(timer_thread_mutex);
 		timer_thread->start(id, new_timeout, repeat);
 	}
 
 	void stop()
 	{
-		MutexSection mutex_lock(&timer_thread_mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(timer_thread_mutex);
 		timer_thread->stop(id);
 	}
 
@@ -278,14 +277,14 @@ public:
 
 	std::function<void()> &func_expired()
 	{
-		MutexSection mutex_lock(&timer_thread_mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(timer_thread_mutex);
 		return timer_thread->get_func_expired(id);
 	}
 
 private:
 	static Timer_Thread *timer_thread;
 	static int timer_thread_instance_count;
-	static Mutex timer_thread_mutex;
+	static std::recursive_mutex timer_thread_mutex;
 	static int timer_thread_max_id;	// Unique timer id
 
 	unsigned int timeout;
@@ -295,7 +294,7 @@ private:
 
 Timer_Thread *Timer_Impl::timer_thread = nullptr;
 int Timer_Impl::timer_thread_instance_count = 0;
-Mutex Timer_Impl::timer_thread_mutex;
+std::recursive_mutex Timer_Impl::timer_thread_mutex;
 int Timer_Impl::timer_thread_max_id = 0;
 
 /////////////////////////////////////////////////////////////////////////////

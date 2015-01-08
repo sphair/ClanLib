@@ -29,10 +29,10 @@
 #pragma once
 
 #include "API/Display/TargetProviders/shader_object_provider.h"
-#include "API/Core/System/mutex.h"
 #include <map>
 
 #include <D3Dcompiler.h>
+#include <mutex>
 
 namespace clan
 {
@@ -117,7 +117,7 @@ private:
 		REFIID pInterface,
 		void** ppReflector);
 
-	static Mutex d3dcompiler_mutex;
+	static std::recursive_mutex d3dcompiler_mutex;
 	static HMODULE d3dcompiler_dll;
 	static FuncD3DCompile d3dcompile;
 	static FuncD3DReflect d3dreflect;

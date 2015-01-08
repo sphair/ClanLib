@@ -27,7 +27,6 @@
 */
 
 #pragma once
-#include "API/Core/System/mutex.h"
 
 namespace clan
 {
@@ -40,7 +39,7 @@ public:
 	static void init();
 	static void deinit();
 
-	static Mutex cl_opengl_mutex;
+	static std::recursive_mutex cl_opengl_mutex;
 	static int cl_opengl_refcount;
 	static OpenGLTarget *cl_opengl_target;
 

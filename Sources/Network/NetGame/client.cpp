@@ -89,14 +89,14 @@ Signal<void()> &NetGameClient::sig_disconnected()
 
 void NetGameClient::add_network_event(const NetGameNetworkEvent &e)
 {
-	MutexSection mutex_lock(&impl->mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 	impl->events.push_back(e);
 	impl->set_wakeup_event();
 }
 
 void NetGameClient_Impl::process()
 {
-	MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	std::vector<NetGameNetworkEvent> new_events;
 	new_events.swap(events);
 	mutex_lock.unlock();

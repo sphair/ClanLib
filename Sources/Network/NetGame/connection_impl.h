@@ -28,6 +28,7 @@
 */
 
 #pragma once
+#include <mutex>
 
 namespace clan
 {
@@ -58,7 +59,7 @@ private:
 	bool is_connected;
 	Thread thread;
 	Event stop_event, queue_event;
-	Mutex mutex;
+	std::recursive_mutex mutex;
 	struct Message
 	{
 		Message() : type(type_message), event(std::string()) { }

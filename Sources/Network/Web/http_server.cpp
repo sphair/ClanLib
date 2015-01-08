@@ -54,20 +54,20 @@ HTTPServer::~HTTPServer()
 void HTTPServer::bind(const SocketName &name)
 {
 	TCPListen tcp_listen(name);
-	MutexSection mutex_lock(&impl->mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 	impl->listen_ports.push_back(tcp_listen);
 	impl->update_event.set();
 }
 
 void HTTPServer::add_handler(const HTTPRequestHandler &handler)
 {
-	MutexSection mutex_lock(&impl->mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 	impl->handlers.push_back(handler);
 }
 
 void HTTPServer::remove_handler(const HTTPRequestHandler &handler)
 {
-	MutexSection mutex_lock(&impl->mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 	std::vector<HTTPRequestHandler>::size_type index, size;
 	size = impl->handlers.size();
 	for (index = 0; index < size; index++)

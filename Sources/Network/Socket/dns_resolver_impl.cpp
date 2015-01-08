@@ -75,7 +75,7 @@ void DNSResolver_Impl::thread_main()
 			try
 			{
 				DNSPacket packet(buffer);
-				MutexSection mutex_lock(&mutex);
+				std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 				int query_id = packet.get_query_id();
 				auto it = queries.find(query_id);
 				if (it != queries.end())

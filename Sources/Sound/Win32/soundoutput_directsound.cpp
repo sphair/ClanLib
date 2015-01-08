@@ -47,7 +47,7 @@ DEFINE_GUID(GUID_NULL,0x00000000L, 0x0000, 0x0000, 0x00, 0x00, 0x00, 0x00, 0x00,
 
 namespace clan
 {
-Mutex SoundOutput_DirectSound::dsound_mutex;
+std::recursive_mutex SoundOutput_DirectSound::dsound_mutex;
 HMODULE SoundOutput_DirectSound::dsound_dll = 0;
 SoundOutput_DirectSound::FuncDirectSoundCreate SoundOutput_DirectSound::directsound_create = 0;
 
@@ -193,7 +193,7 @@ void SoundOutput_DirectSound::release_resources()
 
 void SoundOutput_DirectSound::create_directsound_object()
 {
-	MutexSection mutex_lock(&dsound_mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(dsound_mutex);
 	if (dsound_dll == 0)
 	{
 		dsound_dll = LoadLibrary(L"dsound.dll");

@@ -31,6 +31,7 @@
 #include "API/Network/Socket/tcp_listen.h"
 #include "API/Core/System/keep_alive.h"
 #include <memory>
+#include <mutex>
 
 namespace clan
 {
@@ -43,7 +44,7 @@ public:
 	std::unique_ptr<TCPListen> tcp_listen;
 	Thread listen_thread;
 
-	Mutex mutex;
+	std::recursive_mutex mutex;
 	Event stop_event;
 	std::vector<NetGameConnection *> connections;
 	std::vector<NetGameNetworkEvent> events;

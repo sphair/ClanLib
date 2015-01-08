@@ -67,7 +67,7 @@ void CrashReporter::generate_report()
 std::wstring CrashReporter_Impl::reports_directory;
 std::wstring CrashReporter_Impl::uploader_exe;
 CrashReporter_Impl::MiniDumpWriteDumpPointer CrashReporter_Impl::func_MiniDumpWriteDump = 0;
-Mutex CrashReporter_Impl::mutex;
+std::recursive_mutex CrashReporter_Impl::mutex;
 
 CrashReporter_Impl::CrashReporter_Impl(const std::string &new_reports_directory, const std::string &new_uploader_executable)
 {
@@ -193,7 +193,7 @@ void CrashReporter_Impl::on_se_unhandled_exception(unsigned int exception_code, 
 	dump_params.exception_code = exception_code;
 
 	// Ensure we only get a dump of the first thread crashing - let other threads block here.
-	MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 
 	// Create dump in separate thread:
 	DWORD threadId;
@@ -212,7 +212,7 @@ LONG CrashReporter_Impl::on_win32_unhandled_exception(PEXCEPTION_POINTERS except
 	dump_params.exception_code = 0;
 
 	// Ensure we only get a dump of the first thread crashing - let other threads block here.
-	MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 
 	// Create minidump in seperate thread:
 	DWORD threadId;

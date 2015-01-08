@@ -31,9 +31,9 @@
 #include <vector>
 #include <list>
 #include "API/Core/System/thread.h"
-#include "API/Core/System/mutex.h"
 #include "API/Core/System/event.h"
 #include <memory>
+#include <mutex>
 
 namespace clan
 {
@@ -76,7 +76,7 @@ public:
 
 	std::vector< SoundBuffer_Session > sessions;
 
-	mutable Mutex mutex;
+	mutable std::recursive_mutex mutex;
 
 	int mix_buffer_size;
 
@@ -155,7 +155,7 @@ private:
 	/// \brief Clamp mixing buffer values to the -1 to 1 range
 	void clamp_mix_buffers();
 
-	static Mutex singleton_mutex;
+	static std::recursive_mutex singleton_mutex;
 	static SoundOutput_Impl *instance;
 /// \}
 };

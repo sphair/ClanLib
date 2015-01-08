@@ -160,13 +160,13 @@ void KeepAliveObject::set_wakeup_event()
 #ifdef WIN32
 
 static DWORD cl_tls_keep_alive_index = TLS_OUT_OF_INDEXES;
-static Mutex cl_tls_keep_alive_mutex;
+static std::recursive_mutex cl_tls_keep_alive_mutex;
 
 void cl_alloc_tls_keep_alive_slot()
 {
 	if (cl_tls_keep_alive_index == TLS_OUT_OF_INDEXES)
 	{
-		MutexSection mutex_lock(&cl_tls_keep_alive_mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(cl_tls_keep_alive_mutex);
 		cl_tls_keep_alive_index = TlsAlloc();
 		if (cl_tls_keep_alive_index == TLS_OUT_OF_INDEXES)
 			throw Exception("No TLS slots available!");
@@ -190,13 +190,13 @@ std::vector<KeepAliveObject *> *cl_get_keep_alive_vector()
 
 static bool cl_tls_keep_alive_index_created = false;
 static pthread_key_t cl_tls_keep_alive_index;
-static Mutex cl_tls_keep_alive_mutex;
+static std::recursive_mutex cl_tls_keep_alive_mutex;
 
 void cl_alloc_tls_keep_alive_slot()
 {
 	if (!cl_tls_keep_alive_index_created)
 	{
-		MutexSection mutex_lock(&cl_tls_keep_alive_mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(cl_tls_keep_alive_mutex);
 		pthread_key_create(&cl_tls_keep_alive_index, 0);
 		cl_tls_keep_alive_index_created = true;
 	}

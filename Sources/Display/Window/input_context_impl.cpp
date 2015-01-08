@@ -50,7 +50,7 @@ InputContext_Impl::~InputContext_Impl()
 /////////////////////////////////////////////////////////////////////////////
 // InputContext_Impl attributes:
 
-Mutex InputContext_Impl::mutex;
+std::recursive_mutex InputContext_Impl::mutex;
 
 /////////////////////////////////////////////////////////////////////////////
 // InputContext_Impl operations:
@@ -69,7 +69,7 @@ void InputContext_Impl::add_keyboard(InputDevice &keyboard)
 {
 	throw_if_disposed();
 
-	MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	keyboards.push_back(keyboard);
 	keyboard.impl->input_contexts.push_back(input_context);
 }
@@ -78,7 +78,7 @@ void InputContext_Impl::add_mouse(InputDevice &mouse)
 {
 	throw_if_disposed();
 
-	MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	mice.push_back(mouse);
 	mouse.impl->input_contexts.push_back(input_context);
 }
@@ -87,7 +87,7 @@ void InputContext_Impl::add_joystick(InputDevice &joystick)
 {
 	throw_if_disposed();
 
-	MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	joysticks.push_back(joystick);
 	joystick.impl->input_contexts.push_back(input_context);
 }
@@ -96,7 +96,7 @@ void InputContext_Impl::add_tablet(InputDevice &tablet)
 {
 	throw_if_disposed();
 
-	MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	tablets.push_back(tablet);
 	tablet.impl->input_contexts.push_back(input_context);
 }
@@ -108,7 +108,7 @@ void InputContext_Impl::process_messages()
 	std::vector< std::pair<InputEvent, std::weak_ptr<InputDevice_Impl> > >::size_type pos, size;
 
 	// Fetch latest events received:
-	MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	std::vector< std::pair<InputEvent, std::weak_ptr<InputDevice_Impl> > > cur_events  = events;
 	events.clear();
 	mutex_lock.unlock();

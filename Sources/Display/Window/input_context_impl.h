@@ -32,7 +32,7 @@
 #include <vector>
 #include "API/Display/Window/input_device.h"
 #include "API/Core/System/disposable_object.h"
-#include "API/Core/System/mutex.h"
+#include <mutex>
 
 namespace clan
 {
@@ -55,7 +55,7 @@ public:
 /// \{
 
 public:
-	static Mutex mutex;
+	static std::recursive_mutex mutex;
 
 	std::vector<InputDevice> keyboards;
 

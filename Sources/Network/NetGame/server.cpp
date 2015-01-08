@@ -54,14 +54,14 @@ void NetGameServer::process_events()
 
 void NetGameServer::add_network_event(const NetGameNetworkEvent &e)
 {
-	MutexSection mutex_lock(&impl->mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 	impl->events.push_back(e);
 	impl->set_wakeup_event();
 }
 
 void NetGameServer::send_event(const NetGameEvent &game_event)
 {
-	MutexSection mutex_lock(&impl->mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 	for (auto & elem : impl->connections)
 	{
 		elem->send_event(game_event);
@@ -108,7 +108,7 @@ void NetGameServer::listen_thread_main()
 
 		TCPConnection connection = impl->tcp_listen->accept();
 		std::unique_ptr<NetGameConnection> game_connection(new NetGameConnection(this, connection));
-		MutexSection mutex_lock(&impl->mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 		impl->connections.push_back(game_connection.release());
 	}
 }
@@ -130,7 +130,7 @@ Signal<void(NetGameConnection *, const NetGameEvent &)> &NetGameServer::sig_even
 
 void NetGameServer_Impl::process()
 {
-	MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	std::vector<NetGameNetworkEvent> new_events;
 	new_events.swap(events);
 	mutex_lock.unlock();
@@ -153,7 +153,7 @@ void NetGameServer_Impl::process()
 
 			// Destroy connection object
 			{
-				MutexSection mutex_lock(&mutex);
+				std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 				std::vector<NetGameConnection *>::iterator connection_it;
 				connection_it = std::find(connections.begin(), connections.end(), new_event.connection);
 				if (connection_it != connections.end())

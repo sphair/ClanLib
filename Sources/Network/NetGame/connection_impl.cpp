@@ -95,7 +95,7 @@ void *NetGameConnection_Impl::get_data(const std::string &name) const
 
 void NetGameConnection_Impl::send_event(const NetGameEvent &game_event)
 {
-	MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	Message message;
 	message.type = Message::type_message;
 	message.event = game_event;
@@ -105,7 +105,7 @@ void NetGameConnection_Impl::send_event(const NetGameEvent &game_event)
 
 void NetGameConnection_Impl::disconnect()
 {
-	MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	Message message;
 	message.type = Message::type_disconnect;
 	send_queue.push_back(message);
@@ -229,7 +229,7 @@ bool NetGameConnection_Impl::read_data(const void *data, int size, int &bytes_co
 
 bool NetGameConnection_Impl::write_data(DataBuffer &buffer)
 {
-	MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	queue_event.reset();
 	std::vector<Message> new_send_queue;
 	send_queue.swap(new_send_queue);

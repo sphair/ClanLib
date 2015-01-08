@@ -28,7 +28,6 @@
 */
 
 #include "Display/precomp.h"
-#include "API/Core/System/mutex.h"
 #include "API/Core/System/disposable_object.h"
 #include "API/Display/Render/shared_gc_data.h"
 #include <algorithm>

@@ -31,6 +31,7 @@
 #include "setup_d3d_impl.h"
 #include "API/D3D/setup_d3d.h"
 #include "API/D3D/d3d_target.h"
+#include <mutex>
 
 //#pragma comment(lib, "D3D11.lib")
 //#pragma comment(lib, "D3dcompiler.lib")
@@ -41,7 +42,7 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // SetupSWRender Construction:
 
-Mutex SetupD3D_Impl::cl_d3d_mutex;
+std::recursive_mutex SetupD3D_Impl::cl_d3d_mutex;
 int SetupD3D_Impl::cl_d3d_refcount = 0;
 D3DTarget *SetupD3D_Impl::cl_d3d_target = 0;
 
@@ -58,7 +59,7 @@ SetupD3D::~SetupD3D()
 
 void SetupD3D_Impl::init()
 {
-	MutexSection mutex_lock(&SetupD3D_Impl::cl_d3d_mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(SetupD3D_Impl::cl_d3d_mutex);
 	if (SetupD3D_Impl::cl_d3d_refcount == 0)
 		SetupD3D_Impl::cl_d3d_target = new D3DTarget();
 	SetupD3D_Impl::cl_d3d_refcount++;
@@ -66,7 +67,7 @@ void SetupD3D_Impl::init()
 
 void SetupD3D_Impl::deinit()
 {
-	MutexSection mutex_lock(&SetupD3D_Impl::cl_d3d_mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(SetupD3D_Impl::cl_d3d_mutex);
 	SetupD3D_Impl::cl_d3d_refcount--;
 	if (SetupD3D_Impl::cl_d3d_refcount == 0)
 		delete SetupD3D_Impl::cl_d3d_target;

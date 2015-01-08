@@ -30,7 +30,6 @@
 #include "API/Core/System/work_queue.h"
 #include "API/Core/System/keep_alive.h"
 #include "API/Core/System/event.h"
-#include "API/Core/System/mutex.h"
 #include "API/Core/System/thread.h"
 #include "API/Core/System/system.h"
 #include <algorithm>
@@ -80,7 +79,7 @@ private:
 
 	bool serial_queue;
 	std::vector<Thread> threads;
-	Mutex mutex;
+	std::recursive_mutex mutex;
 	Event stop_event, work_available_event;
 	std::vector<WorkItem *> queued_items;
 	std::vector<WorkItem *> finished_items;
@@ -147,7 +146,7 @@ void WorkQueue_Impl::queue(WorkItem *item) // transfers ownership
 		}
 	}
 
-	MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	queued_items.push_back(item);
 	++items_queued;
 	mutex_lock.unlock();
@@ -156,7 +155,7 @@ void WorkQueue_Impl::queue(WorkItem *item) // transfers ownership
 
 void WorkQueue_Impl::work_completed(WorkItem *item) // transfers ownership
 {
-	MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	finished_items.push_back(item);
 	++items_queued;
 	mutex_lock.unlock();
@@ -165,7 +164,7 @@ void WorkQueue_Impl::work_completed(WorkItem *item) // transfers ownership
 
 void WorkQueue_Impl::process()
 {
-	MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	std::vector<WorkItem *> items;
 	items.swap(finished_items);
 	mutex_lock.unlock();
@@ -193,7 +192,7 @@ void WorkQueue_Impl::worker_main()
 		int wakeup_reason = Event::wait(stop_event, work_available_event);
 		if (wakeup_reason != 1)
 			break;
-		MutexSection mutex_lock(&mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 		if (!queued_items.empty())
 		{
 			WorkItem *item = queued_items.front();

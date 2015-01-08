@@ -29,8 +29,8 @@
 #pragma once
 
 #include "Core/precomp.h"
-#include "API/Core/System/mutex.h"
 #include "API/Core/System/thread_local_storage.h"
+#include <mutex>
 
 namespace clan
 {
@@ -53,10 +53,10 @@ private:
 
 	// These cl_tls_ variables are used by System/thread_local_storage.cpp
 #ifdef WIN32
-	Mutex cl_tls_mutex;
+	std::recursive_mutex cl_tls_mutex;
 	DWORD cl_tls_index;
 #elif !defined(HAVE_TLS)
-	Mutex cl_tls_mutex;
+	std::recursive_mutex cl_tls_mutex;
 	bool cl_tls_index_created;
 	pthread_key_t cl_tls_index;
 #else

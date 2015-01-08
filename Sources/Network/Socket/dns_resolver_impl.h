@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "API/Core/System/mutex.h"
 #include "API/Core/System/thread.h"
 #include "API/Core/System/event.h"
 #include "API/Network/Socket/socket_name.h"
@@ -36,6 +35,7 @@
 #include "API/Network/Socket/dns_packet.h"
 #include <vector>
 #include <map>
+#include <mutex>
 
 namespace clan
 {
@@ -66,7 +66,7 @@ public:
 
 	UDPSocket udp_socket;
 
-	Mutex mutex;
+	std::recursive_mutex mutex;
 
 	Thread thread;
 

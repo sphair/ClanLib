@@ -54,7 +54,7 @@ public:
 	Canvas &get_resource_canvas();
 
 	int reference_count;
-	static Mutex cl_sharedgc_mutex;
+	static std::recursive_mutex cl_sharedgc_mutex;
 	static SharedGCData *cl_sharedgc;
 
 private:

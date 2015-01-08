@@ -31,6 +31,7 @@
 #include "API/Core/Text/logger.h"
 #include "API/Core/Text/string_format.h"
 #include <algorithm>
+#include <mutex>
 
 namespace clan
 {
@@ -53,21 +54,21 @@ Logger::~Logger()
 
 std::vector<Logger*> Logger::instances;
 
-Mutex Logger::mutex;
+std::recursive_mutex Logger::mutex;
 
 /////////////////////////////////////////////////////////////////////////////
 // Logger Operations:
 
 void Logger::enable()
 {
-	MutexSection mutex_lock(&Logger::mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(Logger::mutex);
 	if (std::find(instances.begin(), instances.end(), this) == instances.end())
 		instances.push_back(this);
 }
 
 void Logger::disable()
 {
-	MutexSection mutex_lock(&Logger::mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(Logger::mutex);
 	auto il = std::find(instances.begin(), instances.end(), this);
 	if(il != instances.end())
 		instances.erase(il);
@@ -125,7 +126,7 @@ StringFormat Logger::get_log_string(const std::string &type, const std::string &
 
 void log_event(const std::string &type, const std::string &text)
 {
-	MutexSection mutex_lock(&Logger::mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(Logger::mutex);
 	if (Logger::instances.empty())
 		return;
 	for(auto & instance : Logger::instances)

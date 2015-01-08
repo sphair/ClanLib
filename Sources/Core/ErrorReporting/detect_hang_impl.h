@@ -30,9 +30,9 @@
 
 #include "API/Core/ErrorReporting/crash_reporter.h"
 #include "API/Core/System/keep_alive.h"
-#include "API/Core/System/mutex.h"
 #include "API/Core/System/event.h"
 #include "API/Core/System/thread.h"
+#include <mutex>
 
 namespace clan
 {
@@ -54,7 +54,7 @@ public:
 private:
 	void process() override
 	{
-		MutexSection mutex_lock(&mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 		awoken.set();
 	}
 
@@ -62,7 +62,7 @@ private:
 	{
 		while (true)
 		{
-			MutexSection mutex_lock(&mutex);
+			std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 			awoken.reset();
 			set_wakeup_event();
 			mutex_lock.unlock();
@@ -78,7 +78,7 @@ private:
 		}
 	}
 
-	Mutex mutex;
+	std::recursive_mutex mutex;
 	Event awoken, stop;
 	Thread thread;
 };

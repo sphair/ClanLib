@@ -29,7 +29,6 @@
 
 #include "Core/precomp.h"
 #include "API/Core/System/system.h"
-#include "API/Core/System/mutex.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/string_help.h"
 
@@ -148,8 +147,8 @@ int System::capture_stack_trace(int frames_to_skip, int max_frames, void **out_f
 std::vector<std::string> System::get_stack_frames_text(void **frames, int num_frames)
 {
 #ifdef WIN32
-	static Mutex mutex;
-	MutexSection mutex_lock(&mutex);
+	static std::recursive_mutex mutex;
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 
 	BOOL result = SymInitialize(GetCurrentProcess(), NULL, TRUE);
 	if (!result)

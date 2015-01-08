@@ -29,7 +29,6 @@
 #pragma once
 
 #include "API/Core/System/event_provider.h"
-#include "API/Core/System/mutex.h"
 #include "win32_socket.h"
 
 namespace clan

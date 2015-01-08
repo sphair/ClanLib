@@ -29,11 +29,11 @@
 #pragma once
 
 #include <vector>
-#include "API/Core/System/mutex.h"
 #include "API/Sound/soundformat.h"
 #include "API/Sound/soundoutput.h"
 #include "API/Sound/soundbuffer.h"
 #include <memory>
+#include <mutex>
 
 namespace clan
 {
@@ -71,7 +71,7 @@ public:
 	bool looping;
 	bool playing;
 	std::vector<SoundFilter> filters;
-	mutable Mutex mutex;
+	mutable std::recursive_mutex mutex;
 
 
 /// \}

@@ -34,7 +34,6 @@
 #include "API/Core/IOData/path_help.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/string_help.h"
-#include "API/Core/System/mutex.h"
 #include "zip_archive_impl.h"
 #include "zip_file_header.h"
 #include "zip_64_end_of_central_directory_record.h"
@@ -406,8 +405,8 @@ void ZipArchive_Impl::calc_time_and_date(byte16 &out_date, byte16 &out_time)
 	min = tm_time.tm_min;
 	sec = tm_time.tm_sec;
 #else
-	static Mutex mutex;
-	MutexSection mutex_lock(&mutex);
+	static std::recursive_mutex mutex;
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	time_t t = time(nullptr);
 	tm *tm_time = gmtime(&t);
 	day_of_month = tm_time->tm_mday;

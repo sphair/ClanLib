@@ -33,13 +33,12 @@
 
 #include "../System/cl_platform.h"
 #include <vector>
+#include <mutex>
 
 namespace clan
 {
 /// \addtogroup clanCore_System clanCore System
 /// \{
-
-class Mutex;
 
 /// \brief General system helper functions.
 class System

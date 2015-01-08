@@ -235,7 +235,7 @@ DNSPacket DNSResolver::perform_query(
 	int timeout,
 	const std::string &dns_server_name)
 {
-	MutexSection mutex_lock(&impl->mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 	int query_id = impl->query_id++;
 	if (impl->query_id > 0xffff)
 		impl->query_id = 0;
