@@ -31,10 +31,10 @@
 #include "API/Network/Web/http_request_handler.h"
 #include "API/Network/Socket/tcp_listen.h"
 #include "API/Network/Socket/tcp_connection.h"
-#include "API/Core/System/thread.h"
 #include "API/Core/System/event.h"
 #include <vector>
 #include <mutex>
+#include <thread>
 
 namespace clan
 {
@@ -57,7 +57,7 @@ public:
 public:
 	std::recursive_mutex mutex;
 
-	Thread accept_thread;
+	std::thread accept_thread;
 
 	Event stop_event, update_event;
 

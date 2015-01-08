@@ -40,10 +40,10 @@
 #include "API/Core/Math/point.h"
 #include "API/Core/Math/rect.h"
 #include "API/Core/System/cl_platform.h"
-#include "API/Core/System/thread.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "win32_handle.h"
 #include <memory>
+#include <thread>
 
 namespace clan
 {
@@ -217,7 +217,7 @@ private:
 	DisplayWindowDescription window_desc;
 	Rect window_blur_rect;
 
-	Thread update_window_worker_thread;
+	std::thread update_window_worker_thread;
 	bool update_window_worker_thread_started;
 	PixelBuffer update_window_image;
 	Event update_window_event_stop;

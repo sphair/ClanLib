@@ -1739,7 +1739,7 @@ void Win32Window::update_layered(PixelBuffer &image)
 {
 	if (!update_window_worker_thread_started)
 	{
-		update_window_worker_thread.start(this, &Win32Window::update_layered_worker_thread);
+		update_window_worker_thread = std::thread(&Win32Window::update_layered_worker_thread, this);
 		update_window_worker_thread_started = true;
 	}
 	else

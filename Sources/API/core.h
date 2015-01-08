@@ -75,7 +75,6 @@
 #include "Core/System/runnable.h"
 #include "Core/System/service.h"
 #include "Core/System/setup_core.h"
-#include "Core/System/thread.h"
 #include "Core/System/thread_local_storage.h"
 #include "Core/System/system.h"
 #include "Core/System/keep_alive.h"

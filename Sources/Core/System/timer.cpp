@@ -30,10 +30,10 @@
 #include "Core/precomp.h"
 #include "API/Core/System/timer.h"
 #include "API/Core/System/keep_alive.h"
-#include "API/Core/System/thread.h"
 #include "API/Core/System/event.h"
 #include "API/Core/System/system.h"
 #include <map>
+#include <thread>
 
 namespace clan
 {
@@ -58,7 +58,7 @@ class Timer_Thread : public KeepAliveObject
 public:
 	Timer_Thread() : timeout(-1), stop_thread(false)
 	{
-		thread.start(this, &Timer_Thread::timer_main);
+		thread = std::thread(&Timer_Thread::timer_main, this);
 	}
 
 	~Timer_Thread()
@@ -219,7 +219,7 @@ private:
 		}
 	}
 
-	Thread thread;
+	std::thread thread;
 	Event update_event;
 	std::recursive_mutex mutex;
 	int timeout;

@@ -31,8 +31,8 @@
 #include "API/Core/ErrorReporting/crash_reporter.h"
 #include "API/Core/System/keep_alive.h"
 #include "API/Core/System/event.h"
-#include "API/Core/System/thread.h"
 #include <mutex>
+#include <thread>
 
 namespace clan
 {
@@ -42,7 +42,7 @@ class DetectHang_Impl : KeepAliveObject
 public:
 	DetectHang_Impl()
 	{
-		thread.start(this, &DetectHang_Impl::worker_main);
+		thread = std::thread(&DetectHang_Impl::worker_main, this);
 	}
 
 	~DetectHang_Impl()
@@ -80,7 +80,7 @@ private:
 
 	std::recursive_mutex mutex;
 	Event awoken, stop;
-	Thread thread;
+	std::thread thread;
 };
 
 }

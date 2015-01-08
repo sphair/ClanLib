@@ -28,6 +28,7 @@
 
 #include "Network/precomp.h"
 #include "API/Core/System/databuffer.h"
+#include "API/Core/Signals/bind_member.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/logger.h"
@@ -43,7 +44,7 @@ namespace clan
 
 HTTPServer_Impl::HTTPServer_Impl()
 {
-	accept_thread.start(this, &HTTPServer_Impl::accept_thread_main);
+	accept_thread = std::thread(&HTTPServer_Impl::accept_thread_main, this);
 }
 
 HTTPServer_Impl::~HTTPServer_Impl()
@@ -147,11 +148,9 @@ void HTTPServer_Impl::accept_thread_main()
 			continue;
 		}
 
-		Thread connection_thread;
-		connection_thread.start(
-			this,
-			&HTTPServer_Impl::connection_thread_main,
-			listen_ports[result-2].accept());
+		auto connection = listen_ports[result - 2].accept();
+		std::thread connection_thread([=](){connection_thread_main(connection); });
+		connection_thread.detach();
 	}
 }
 

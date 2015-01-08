@@ -73,7 +73,7 @@ void NetGameServer::start(const std::string &port)
 	stop();
 	impl->stop_event.reset();
 	impl->tcp_listen.reset(new TCPListen(SocketName(port)));
-	impl->listen_thread.start(this, &NetGameServer::listen_thread_main);
+	impl->listen_thread = std::thread(&NetGameServer::listen_thread_main, this);
 }
 
 void NetGameServer::start(const std::string &address, const std::string &port)
@@ -81,7 +81,7 @@ void NetGameServer::start(const std::string &address, const std::string &port)
 	stop();
 	impl->stop_event.reset();
 	impl->tcp_listen.reset(new TCPListen(SocketName(address, port)));
-	impl->listen_thread.start(this, &NetGameServer::listen_thread_main);
+	impl->listen_thread = std::thread(&NetGameServer::listen_thread_main, this);
 }
 
 void NetGameServer::stop()

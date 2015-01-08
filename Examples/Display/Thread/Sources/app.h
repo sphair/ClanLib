@@ -59,7 +59,7 @@ private:
 	clan::Event worker_thread_stop_event;
 
 	// Worker thead variables
-	clan::Mutex worker_thread_mutex;
+	std::recursive_timed_mutex worker_thread_mutex;
 	float scale;
 	unsigned char *dest_pixels;	// Used by the worker thread to contain where to write the pixels to
 };

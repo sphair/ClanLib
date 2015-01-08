@@ -34,7 +34,6 @@
 #include "event.h"
 #include "../Socket/tcp_connection.h" // TODO: Remove
 #include "../Socket/socket_name.h" // TODO: Remove
-#include "../../Core/System/thread.h" // TODO: Remove
 #include "../../Core/System/event.h"	// TODO: Remove
 
 namespace clan

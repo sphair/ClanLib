@@ -40,7 +40,7 @@ namespace clan
 DNSResolver_Impl::DNSResolver_Impl()
 : query_id(0)
 {
-	thread.start(this, &DNSResolver_Impl::thread_main);
+	thread = std::thread(&DNSResolver_Impl::thread_main, this);
 }
 
 DNSResolver_Impl::~DNSResolver_Impl()

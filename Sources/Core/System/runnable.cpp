@@ -28,7 +28,6 @@
 
 #include "Core/precomp.h"
 #include "API/Core/System/runnable.h"
-#include "API/Core/System/thread.h"
 
 namespace clan
 {
@@ -49,11 +48,6 @@ Runnable::~Runnable()
 
 /////////////////////////////////////////////////////////////////////////////
 // Runnable Operations:
-
-void Runnable::set_thread_name(const char *name)
-{
-	Thread::set_thread_name(name);
-}
 
 /////////////////////////////////////////////////////////////////////////////
 // Runnable Implementation:

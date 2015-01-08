@@ -30,10 +30,10 @@
 
 #include <vector>
 #include <list>
-#include "API/Core/System/thread.h"
 #include "API/Core/System/event.h"
 #include <memory>
 #include <mutex>
+#include <thread>
 
 namespace clan
 {
@@ -70,7 +70,7 @@ public:
 
 	std::vector<SoundFilter> filters;
 
-	Thread thread;
+	std::thread thread;
 
 	Event stop_mixer;
 

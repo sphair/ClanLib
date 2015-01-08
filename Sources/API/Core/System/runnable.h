@@ -37,7 +37,7 @@ namespace clan
 /// \addtogroup clanCore_System clanCore System
 /// \{
 
-/// \brief Thread runnable object.
+/// \brief std::thread runnable object.
 class Runnable
 {
 /// \name Construction
@@ -62,11 +62,6 @@ public:
 
 public:
 	virtual void run() = 0;
-
-	/// \brief Sets the name (displayed in debuggers) of the calling thread.
-	/** <p>Currently this only works with the Visual Studio compiler and debugger.</p>*/
-	static void set_thread_name(const char *name);
-
 
 /// \}
 /// \name Implementation
@@ -99,7 +94,6 @@ public:
 public:
 	virtual void run() override
 	{
-		set_thread_name(typeid(func).name());
 		C *local_instance = instance;
 		PtrMemberFunc local_func = func;
 		delete this;
@@ -141,7 +135,6 @@ public:
 public:
 	virtual void run() override
 	{
-		set_thread_name(typeid(func).name());
 		C *local_instance = instance;
 		PtrMemberFunc local_func = func;
 		P1 local_p1 = p1;
@@ -186,7 +179,6 @@ public:
 public:
 	virtual void run() override
 	{
-		set_thread_name(typeid(func).name());
 		C *local_instance = instance;
 		PtrMemberFunc local_func = func;
 		P1 local_p1 = p1;
@@ -234,7 +226,6 @@ public:
 public:
 	virtual void run() override
 	{
-		set_thread_name(typeid(func).name());
 		C *local_instance = instance;
 		PtrMemberFunc local_func = func;
 		P1 local_p1 = p1;
@@ -285,7 +276,6 @@ public:
 public:
 	virtual void run() override
 	{
-		set_thread_name(typeid(func).name());
 		C *local_instance = instance;
 		PtrMemberFunc local_func = func;
 		P1 local_p1 = p1;
@@ -339,7 +329,6 @@ public:
 public:
 	virtual void run() override
 	{
-		set_thread_name(typeid(func).name());
 		C *local_instance = instance;
 		PtrMemberFunc local_func = func;
 		P1 local_p1 = p1;

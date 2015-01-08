@@ -157,7 +157,6 @@ System/runnable.cpp \
 System/setup_core.cpp \
 System/service_impl.cpp \
 System/event_impl.cpp \
-System/thread.cpp \
 System/game_time.cpp \
 System/keep_alive.cpp \
 System/timer.cpp \
@@ -183,7 +182,6 @@ libclan40Core_la_SOURCES += \
 System/Win32/service_win32.cpp \
 System/Win32/init_win32.cpp \
 System/Win32/event_provider_win32.cpp \
-System/Win32/thread_win32.cpp \
 IOData/Win32/directory_scanner_win32.cpp
 
 else
@@ -191,8 +189,7 @@ libclan40Core_la_SOURCES += \
 IOData/Unix/directory_scanner_unix.cpp \
 System/Unix/init_linux.cpp \
 System/Unix/service_unix.cpp \
-System/Unix/event_provider_socketpair.cpp \
-System/Unix/thread_unix.cpp
+System/Unix/event_provider_socketpair.cpp
 
 endif
 

@@ -31,7 +31,6 @@
 #include "API/Sound/soundoutput_description.h"
 #include "API/Sound/soundfilter.h"
 #include "API/Sound/sound.h"
-#include "API/Core/System/thread.h"
 #include "soundoutput_impl.h"
 
 #ifdef WIN32

@@ -29,6 +29,7 @@
 
 #pragma once
 #include <mutex>
+#include <thread>
 
 namespace clan
 {
@@ -57,7 +58,7 @@ private:
 	TCPConnection connection;
 	SocketName socket_name;
 	bool is_connected;
-	Thread thread;
+	std::thread thread;
 	Event stop_event, queue_event;
 	std::recursive_mutex mutex;
 	struct Message

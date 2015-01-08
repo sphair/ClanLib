@@ -28,7 +28,6 @@
 */
 
 #include "Display/precomp.h"
-#include "API/Core/System/thread.h"
 #include "API/Display/Window/input_event.h"
 #ifdef __MINGW32__
 #include "API/Display/Window/display_window.h"

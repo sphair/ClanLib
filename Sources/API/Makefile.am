@@ -196,7 +196,6 @@ clanCore_includes = \
 	Core/System/service.h \
 	Core/System/keep_alive.h \
 	Core/System/block_allocator.h \
-	Core/System/thread.h \
 	Core/System/userdata.h \
 	Core/System/cl_platform.h \
 	Core/System/thread_local_storage.h \

@@ -55,7 +55,7 @@ public:
 
 class ThreadLocalStorage_Impl;
 
-/// \brief Thread class.
+/// \brief ThreadLocalStorage class.
 class ThreadLocalStorage
 {
 /// \name Construction

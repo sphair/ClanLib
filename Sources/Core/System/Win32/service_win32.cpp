@@ -32,7 +32,6 @@
 #include "API/Core/Text/string_help.h"
 #include "API/Core/Text/console.h"
 #include "API/Core/System/exception.h"
-#include "API/Core/System/thread.h"
 #include "service_win32.h"
 #include <iostream>
 

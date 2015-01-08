@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "API/Core/System/thread.h"
 #include "API/Core/System/event.h"
 #include "API/Network/Socket/socket_name.h"
 #include "API/Network/Socket/udp_socket.h"
@@ -36,6 +35,7 @@
 #include <vector>
 #include <map>
 #include <mutex>
+#include <thread>
 
 namespace clan
 {
@@ -68,7 +68,7 @@ public:
 
 	std::recursive_mutex mutex;
 
-	Thread thread;
+	std::thread thread;
 
 	Event event_stop, event_bound;
 

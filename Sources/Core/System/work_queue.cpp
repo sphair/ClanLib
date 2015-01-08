@@ -30,11 +30,11 @@
 #include "API/Core/System/work_queue.h"
 #include "API/Core/System/keep_alive.h"
 #include "API/Core/System/event.h"
-#include "API/Core/System/thread.h"
 #include "API/Core/System/system.h"
 #include <algorithm>
 #include "API/Core/Math/cl_math.h"
 #include <atomic>
+#include <thread>
 
 namespace clan
 {
@@ -78,7 +78,7 @@ private:
 	void worker_main();
 
 	bool serial_queue;
-	std::vector<Thread> threads;
+	std::vector<std::thread> threads;
 	std::recursive_mutex mutex;
 	Event stop_event, work_available_event;
 	std::vector<WorkItem *> queued_items;
@@ -140,9 +140,7 @@ void WorkQueue_Impl::queue(WorkItem *item) // transfers ownership
 		int num_cores = serial_queue ? 1 : clan::max(System::get_num_cores() - 1, 1);
 		for (int i = 0; i < num_cores; i++)
 		{
-			Thread thread;
-			thread.start(this, &WorkQueue_Impl::worker_main);
-			threads.push_back(thread);
+			threads.push_back(std::thread(&WorkQueue_Impl::worker_main, this));
 		}
 	}
 

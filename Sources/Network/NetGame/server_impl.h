@@ -32,6 +32,7 @@
 #include "API/Core/System/keep_alive.h"
 #include <memory>
 #include <mutex>
+#include <thread>
 
 namespace clan
 {
@@ -42,7 +43,7 @@ public:
 	void process() override;
 
 	std::unique_ptr<TCPListen> tcp_listen;
-	Thread listen_thread;
+	std::thread listen_thread;
 
 	std::recursive_mutex mutex;
 	Event stop_event;

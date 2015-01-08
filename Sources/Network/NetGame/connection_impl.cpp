@@ -49,7 +49,7 @@ void NetGameConnection_Impl::start(NetGameConnection *xbase, NetGameConnectionSi
 	connection = xconnection;
 	socket_name = connection.get_remote_name();
 	is_connected = true;
-	thread.start(this, &NetGameConnection_Impl::connection_main);
+	thread = std::thread(&NetGameConnection_Impl::connection_main, this);
 }
 
 void NetGameConnection_Impl::start(NetGameConnection *xbase, NetGameConnectionSite *xsite, const SocketName &xsocket_name)
@@ -58,7 +58,7 @@ void NetGameConnection_Impl::start(NetGameConnection *xbase, NetGameConnectionSi
 	site = xsite;
 	socket_name = xsocket_name;
 	is_connected = false;
-	thread.start(this, &NetGameConnection_Impl::connection_main);
+	thread = std::thread(&NetGameConnection_Impl::connection_main, this);
 }
 
 NetGameConnection_Impl::~NetGameConnection_Impl()
