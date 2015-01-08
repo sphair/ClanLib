@@ -36,7 +36,10 @@
 #include "API/Core/Resources/resource_manager.h"
 #include "API/Core/Resources/xml_resource_manager.h"
 #include "API/Core/Resources/xml_resource_document.h"
+#include "API/Core/Resources/file_resource_manager.h"
+#include "API/Core/Resources/file_resource_document.h"
 #include "Display/Resources/xml_display_cache.h"
+#include "Display/Resources/file_display_cache.h"
 
 #ifndef WIN32
 #ifndef __APPLE__
@@ -53,7 +56,8 @@ public:
 	static void init();
 	static void deinit();
 
-	static void add_cache_factory(ResourceManager &manager, const XMLResourceDocument &doc);
+	static void add_cache_factory_xml(ResourceManager &manager, const XMLResourceDocument &doc);
+	static void add_cache_factory_file(ResourceManager &manager, const FileResourceDocument &doc);
 
 	static ProviderType_Register<JPEGProvider> *jpeg_provider;
 	static ProviderType_Register<JPEGProvider> *jpg_provider;
@@ -97,7 +101,8 @@ void SetupDisplay_Impl::init()
 	targa_provider = new ProviderType_Register<TargaProvider>("targa");
 	tga_provider   = new ProviderType_Register<TargaProvider>("tga");
 
-	XMLResourceManager::add_cache_factory(std::function<void(ResourceManager &, const XMLResourceDocument &)>(&SetupDisplay_Impl::add_cache_factory));
+	XMLResourceManager::add_cache_factory(std::function<void(ResourceManager &, const XMLResourceDocument &)>(&SetupDisplay_Impl::add_cache_factory_xml));
+	FileResourceManager::add_cache_factory(std::function<void(ResourceManager &, const FileResourceDocument &)>(&SetupDisplay_Impl::add_cache_factory_file));
 }
 
 void SetupDisplay_Impl::deinit()
@@ -118,9 +123,14 @@ void SetupDisplay_Impl::deinit()
 	tga_provider = nullptr;
 }
 
-void SetupDisplay_Impl::add_cache_factory(ResourceManager &manager, const XMLResourceDocument &doc)
+void SetupDisplay_Impl::add_cache_factory_xml(ResourceManager &manager, const XMLResourceDocument &doc)
 {
 	DisplayCache::set(manager, std::shared_ptr<DisplayCache>(new XMLDisplayCache(doc)));
+}
+
+void SetupDisplay_Impl::add_cache_factory_file(ResourceManager &manager, const FileResourceDocument &doc)
+{
+	DisplayCache::set(manager, std::shared_ptr<DisplayCache>(new FileDisplayCache(doc)));
 }
 
 }

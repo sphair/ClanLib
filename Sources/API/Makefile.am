@@ -80,10 +80,12 @@ clanCore_includes = \
 	Core/Resources/resource_object.h \
 	Core/Resources/resource.h \
 	Core/Resources/xml_resource_document.h \
+	Core/Resources/file_resource_document.h \
 	Core/Resources/xml_resource_node.h \
 	Core/Resources/resource_manager.h \
 	Core/Resources/resource_container.h \
 	Core/Resources/xml_resource_manager.h \
+	Core/Resources/file_resource_manager.h \
 	Core/ErrorReporting/detect_hang.h \
 	Core/ErrorReporting/crash_reporter.h \
 	Core/ErrorReporting/exception_dialog.h \

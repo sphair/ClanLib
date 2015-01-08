@@ -32,33 +32,11 @@
 
 using namespace clan;
 
-class DisplayResources : public DisplayCache
-{
-public:
-	Resource<Sprite> get_sprite(Canvas &canvas, const std::string &id) override { throw Exception("No sprite resources"); }
-	Resource<Image> get_image(Canvas &canvas, const std::string &id) override { throw Exception("No image resources"); }
-	Resource<Texture> get_texture(GraphicContext &gc, const std::string &id) override { throw Exception("No texture resources"); }
-
-	Resource<Font> get_font(Canvas &canvas, const std::string &family_name, const FontDescription &desc) override
-	{
-		if (loaded_fonts.find(family_name) == loaded_fonts.end())
-		{
-			loaded_fonts[family_name] = FontFamily(family_name);
-		}
-		return Font(loaded_fonts[family_name], desc);
-	}
-
-private:
-	std::map<std::string, FontFamily > loaded_fonts;
-
-};
-
 // The start of the Application
 int HelloWorld::start(const std::vector<std::string> &args)
 {
 	// Create a source for our resources
-	ResourceManager resources;
-	DisplayCache::set(resources, std::make_shared<DisplayResources>());
+	ResourceManager resources = FileResourceManager::create();
 
 	// Mark this thread as the UI thread
 	UIThread ui_thread(resources);
