@@ -50,7 +50,7 @@ World::World(ResourceManager &resources, DisplayWindow &window) :
 	// first time created.
 
 	cc.connect(window.get_ic().get_keyboard().sig_key_down(), this, &World::on_key_down);
-    fnt_clansoft = clan::Font::resource(canvas, FontDescription("Game/fnt_clansoft"), resources);
+	fnt_clansoft = clan::Font::resource(canvas, "Game/fnt_clansoft", FontDescription(), resources);
 
 	map = new Map(resources, canvas);
 }
@@ -184,8 +184,8 @@ void World::run(DisplayWindow &window)
 		{
 			std::string text1 = "YOU ARE DEAD";
 			std::string text2 = "Press space to restart";
-			Size size1 = fnt_clansoft.get_text_size(canvas, text1);
-			Size size2 = fnt_clansoft.get_text_size(canvas, text2);
+			Sizef size1 = fnt_clansoft.measure_text(canvas, text1).advance;
+			Sizef size2 = fnt_clansoft.measure_text(canvas, text2).advance;
 			fnt_clansoft.draw_text(canvas, canvas.get_width()/2 - size1.width/2, canvas.get_width()/2 - size1.height, text1, Colorf::firebrick);
 			fnt_clansoft.draw_text(canvas, canvas.get_width()/2 - size2.width/2, canvas.get_height()*3/4 - size2.height, text2, Colorf::lightgrey);
 		}
@@ -193,13 +193,13 @@ void World::run(DisplayWindow &window)
 		if (game_time.get_current_time_ms() <= 3000) // 3 sec
 		{
 			std::string text1 = "Welcome to the Pacman Game";
-			Size size1 = fnt_clansoft.get_text_size(canvas, text1);
+			Sizef size1 = fnt_clansoft.measure_text(canvas, text1).advance;
 			fnt_clansoft.draw_text(canvas, canvas.get_width()/2 - size1.width/2, canvas.get_height() - 32 - size1.height, text1, Colorf::lightgoldenrodyellow);
 		}
 		else if (welcome_shown == false && blowups.size() < 10)
 		{
 			const char *text1 = "Welcome to the Pacman Game";
-			Size size1 = fnt_clansoft.get_text_size(canvas, text1);
+			Sizef size1 = fnt_clansoft.measure_text(canvas, text1).advance;
 			blowups.push_back(new FontBlowUp(canvas, text1, canvas.get_width()/2, canvas.get_height() - 32 - size1.height, fnt_clansoft, Colorf::lightgoldenrodyellow));
 			welcome_shown = true;
 		}
@@ -208,7 +208,7 @@ void World::run(DisplayWindow &window)
 		fnt_clansoft.draw_text(canvas, 20, 52, fps);
 
 		std::string text2 = string_format("%1 bonus bananas", score);
-		Size size2 = fnt_clansoft.get_text_size(canvas, text2);
+		Sizef size2 = fnt_clansoft.measure_text(canvas, text2).advance;
 		fnt_clansoft.draw_text(canvas, canvas.get_width() - 20 - size2.width, 52, text2);
 
 		{ // vc++ needs this scope to ensure for() is scoped...
