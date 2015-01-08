@@ -111,7 +111,7 @@ bool EventProvider_Socketpair::check_after_wait(int index)
 	{
 		// For automatic reset, check if we are first
 		// thread:
-		MutexSection mutex_lock(&mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 		if (state == true)
 		{
 			int msg = 0;
@@ -131,7 +131,7 @@ bool EventProvider_Socketpair::check_after_wait(int index)
 
 bool EventProvider_Socketpair::set()
 {
-	MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	if (state == false)
 	{
 		state = true;
@@ -145,7 +145,7 @@ bool EventProvider_Socketpair::set()
 
 bool EventProvider_Socketpair::reset()
 {
-	MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	if (state == true)
 	{
 		int msg = 0;

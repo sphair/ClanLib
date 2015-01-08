@@ -44,6 +44,7 @@
 #include "zip_compression_method.h"
 #include "zip_digital_signature.h"
 #include <ctime>
+#include <mutex>
 
 namespace clan
 {

@@ -29,7 +29,7 @@
 #pragma once
 
 #include "API/Core/System/event_provider.h"
-#include "API/Core/System/mutex.h"
+#include <mutex>
 
 namespace clan
 {
@@ -62,7 +62,7 @@ public:
 /// \name Implementation
 /// \{
 private:
-	Mutex mutex;
+	std::recursive_mutex mutex;
 	bool manual_reset;
 	bool state;
 	int wait_sockets[2];

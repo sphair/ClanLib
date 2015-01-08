@@ -138,7 +138,7 @@ Image::Image(Subtexture &sub_texture)
 	impl->texture_rect = sub_texture.get_geometry();
 }
 
-Image::Image(Canvas &canvas, const std::string &filename, FileSystem &fs, const ImageImportDescription &import_desc)
+Image::Image(Canvas &canvas, const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc)
 : impl(std::make_shared<Image_Impl>())
 {
 	impl->texture = Texture2D(canvas, filename, fs, import_desc);
