@@ -47,6 +47,10 @@
 
 #include <string>
 
+#ifdef WIN32
+#include <windows.h>
+#endif
+
 #include "Core/System/cl_platform.h"
 
 #ifdef WIN32
