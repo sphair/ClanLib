@@ -71,6 +71,9 @@ public:
 	/// \brief Return the distance between lines.
 	float get_line_height() const;
 
+	/// \brief Returns the baseline offset from the top of a line
+	float get_baseline_offset() const;
+
 	/// \brief Returns the font ascender.
 	float get_ascent() const;
 

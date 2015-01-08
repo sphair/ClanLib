@@ -34,7 +34,7 @@
 #include "API/Display/2D/pen.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/Font/glyph_metrics.h"
-#include "line_metrics.h"
+#include "API/Display/Font/font_metrics.h"
 #include "text_field_view_impl.h"
 #include <algorithm>
 #include <cmath>
@@ -339,27 +339,29 @@ namespace clan
 		Font font = impl->get_font(canvas);
 		float advance_before = font.measure_text(canvas, txt_before).advance.width;
 		float advance_selected = font.measure_text(canvas, txt_selected).advance.width;
-		LineMetrics line_metrics(font);
+
+		FontMetrics font_metrics = font.get_font_metrics();
+		float baseline = font_metrics.get_baseline_offset();
+		float top_y = baseline - font_metrics.get_ascent();
+		float bottom_y = baseline + font_metrics.get_descent();
 
 		// Measure text for get_character_index()
 		impl->last_measured_rects = font.get_character_indices(canvas, txt_before + txt_selected + txt_after);
 
 		if (!txt_selected.empty())
 		{
-			float top_y = (line_metrics.line_height - line_metrics.ascent - line_metrics.descent) * 0.5f;
-			float bottom_y = (line_metrics.line_height + line_metrics.ascent + line_metrics.descent) * 0.5f;
 			Rectf selection_rect = Rectf(advance_before, top_y, advance_before + advance_selected, bottom_y);
 			Path::rect(selection_rect).fill(canvas, focus_view() == this ? Brush::solid_rgb8(51, 153, 255) : Brush::solid_rgb8(200, 200, 200));
 		}
 
-		font.draw_text(canvas, 0.0f, line_metrics.ascent, txt_before, impl->text_style.color());
-		font.draw_text(canvas, advance_before, line_metrics.ascent, txt_selected, focus_view() == this ? Colorf(255, 255, 255) : impl->text_style.color());
-		font.draw_text(canvas, advance_before + advance_selected, line_metrics.ascent, txt_after, impl->text_style.color());
+		font.draw_text(canvas, 0.0f, baseline, txt_before, impl->text_style.color());
+		font.draw_text(canvas, advance_before, baseline, txt_selected, focus_view() == this ? Colorf(255, 255, 255) : impl->text_style.color());
+		font.draw_text(canvas, advance_before + advance_selected, baseline, txt_after, impl->text_style.color());
 
 		float cursor_advance = std::round(font.measure_text(canvas, impl->text.substr(0, impl->cursor_pos)).advance.width);
 
 		if (impl->cursor_blink_visible)
-			Path::rect(cursor_advance, line_metrics.leading_top, 1.0f, line_metrics.text_height).fill(canvas,Brush(impl->text_style.color()));
+			Path::rect(cursor_advance, top_y, 1.0f, bottom_y - top_y).fill(canvas,Brush(impl->text_style.color()));
 	}
 
 	float TextFieldView::get_preferred_width(Canvas &canvas)
@@ -378,8 +380,7 @@ namespace clan
 		if (box_style.is_height_auto())
 		{
 			Font font = impl->get_font(canvas);
-			LineMetrics line_metrics(font);
-			return line_metrics.line_height;
+			return font.get_font_metrics().get_line_height();
 		}
 		else
 			return box_style.height();
@@ -388,8 +389,7 @@ namespace clan
 	float TextFieldView::get_first_baseline_offset(Canvas &canvas, float width)
 	{
 		Font font = impl->get_font(canvas);
-		LineMetrics line_metrics(font);
-		return line_metrics.ascent;
+		return font.get_font_metrics().get_baseline_offset();
 	}
 
 	float TextFieldView::get_last_baseline_offset(Canvas &canvas, float width)

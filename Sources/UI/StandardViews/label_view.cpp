@@ -37,7 +37,6 @@
 #include "API/Display/Font/font.h"
 #include "API/Display/Font/font_metrics.h"
 #include "API/Display/Font/glyph_metrics.h"
-#include "line_metrics.h"
 #include <cmath>
 
 namespace clan
@@ -108,8 +107,10 @@ namespace clan
 	void LabelView::render_content(Canvas &canvas)
 	{
 		Font font = impl->get_font(canvas);
+		FontMetrics font_metrics = font.get_font_metrics();
+		float baseline = font_metrics.get_baseline_offset();
+
 		std::string clipped_text = impl->_text;
-		LineMetrics line_metrics(font);
 		GlyphMetrics advance = font.measure_text(canvas, clipped_text);
 
 		if (advance.advance.width > geometry().content.get_width())
@@ -147,15 +148,15 @@ namespace clan
 
 		if (impl->text_alignment == TextAlignment::left)
 		{
-			font.draw_text(canvas, Pointf(0.0f, line_metrics.ascent), clipped_text, impl->text_style.color());
+			font.draw_text(canvas, Pointf(0.0f, baseline), clipped_text, impl->text_style.color());
 		}
 		else if (impl->text_alignment == TextAlignment::right)
 		{
-			font.draw_text(canvas, Pointf(geometry().content.get_width() - advance.advance.width, line_metrics.ascent), clipped_text, impl->text_style.color());
+			font.draw_text(canvas, Pointf(geometry().content.get_width() - advance.advance.width, baseline), clipped_text, impl->text_style.color());
 		}
 		else if (impl->text_alignment == TextAlignment::center)
 		{
-			font.draw_text(canvas, Pointf(std::round((geometry().content.get_width() - advance.advance.width) * 0.5f), line_metrics.ascent), clipped_text, impl->text_style.color());
+			font.draw_text(canvas, Pointf(std::round((geometry().content.get_width() - advance.advance.width) * 0.5f), baseline), clipped_text, impl->text_style.color());
 		}
 	}
 
@@ -175,8 +176,7 @@ namespace clan
 		if (box_style.is_height_auto())
 		{
 			Font font = impl->get_font(canvas);
-			LineMetrics line_metrics(font);
-			return line_metrics.line_height;
+			return font.get_font_metrics().get_line_height();
 		}
 		else
 			return box_style.height();
@@ -185,8 +185,7 @@ namespace clan
 	float LabelView::get_first_baseline_offset(Canvas &canvas, float width)
 	{
 		Font font = impl->get_font(canvas);
-		LineMetrics line_metrics(font);
-		return line_metrics.ascent;
+		return font.get_font_metrics().get_baseline_offset();
 	}
 
 	float LabelView::get_last_baseline_offset(Canvas &canvas, float width)

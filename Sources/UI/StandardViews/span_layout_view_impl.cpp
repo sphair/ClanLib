@@ -32,9 +32,9 @@
 #include "API/Display/2D/canvas.h"
 #include "API/Display/2D/brush.h"
 #include "API/Display/Font/glyph_metrics.h"
-#include "line_metrics.h"
-#include <algorithm>
+#include "API/Display/Font/font_metrics.h"
 #include "API/Display/Render/shared_gc_data.h"
+#include <algorithm>
 
 namespace clan
 {
@@ -306,9 +306,9 @@ namespace clan
 
 				obj_advance_width = object.get_font(canvas).measure_text(canvas, obj_text).advance.width;
 
-				LineMetrics object_line(object.get_font(canvas));
-				obj_ascent = object_line.ascent;
-				obj_descent = object_line.descent;
+				FontMetrics font_metrics = object.get_font(canvas).get_font_metrics();
+				obj_ascent = font_metrics.get_baseline_offset();
+				obj_descent = font_metrics.get_line_height() - font_metrics.get_baseline_offset();
 
 				if (x + obj_advance_width > width)
 				{
