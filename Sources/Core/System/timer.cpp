@@ -79,7 +79,7 @@ namespace clan
 			if (!timer->active)
 			{
 				auto active = std::make_shared<ActiveTimer>(timer);
-				timers.push_back(timer->active);
+				timers.push_back(active);
 				timer->active = active;
 			}
 
