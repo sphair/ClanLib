@@ -108,7 +108,7 @@ int Basic2D::start(const std::vector<std::string> &args)
 		window.flip(1);
 
 		// This call processes user input and other events
-		clan::KeepAlive::process(0);
+		clan::RunLoop::process(0);
 	}
 
 	return 0;

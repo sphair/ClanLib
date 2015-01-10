@@ -43,16 +43,10 @@
 #include "Network/setupnetwork.h"
 
 #include "Network/Socket/socket_name.h"
+#include "Network/Socket/network_condition_variable.h"
 #include "Network/Socket/tcp_connection.h"
 #include "Network/Socket/tcp_listen.h"
 #include "Network/Socket/udp_socket.h"
-
-#include "Network/Web/web_request.h"
-#include "Network/Web/web_response.h"
-#include "Network/Web/http_request_handler.h"
-#include "Network/Web/http_request_handler_provider.h"
-#include "Network/Web/http_server.h"
-#include "Network/Web/http_server_connection.h"
 
 #include "Network/NetGame/client.h"
 #include "Network/NetGame/connection.h"
@@ -60,8 +54,6 @@
 #include "Network/NetGame/event_dispatcher.h"
 #include "Network/NetGame/event_value.h"
 #include "Network/NetGame/server.h"
-
-#include "Network/TLS/tls_connection.h"
 
 #ifdef __cplusplus_cli
 #pragma managed(pop)
