@@ -103,7 +103,6 @@ namespace clan
 
 			if (timer->active)
 			{
-				std::unique_lock<std::mutex> lock(mutex);
 				auto it = std::find(timers.begin(), timers.end(), timer->active);
 				if (it != timers.end())
 					timers.erase(it);
