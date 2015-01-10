@@ -67,6 +67,8 @@ namespace clan
 		void process_input_contexts();
 		bool process_message(MSG &msg);
 
+		DWORD main_thread_id = 0;
+
 		class ThreadData : public ThreadLocalStorageData
 		{
 		public:

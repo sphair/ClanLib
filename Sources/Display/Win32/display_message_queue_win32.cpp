@@ -43,6 +43,7 @@ namespace clan
 
 	DisplayMessageQueue_Win32::DisplayMessageQueue_Win32()
 	{
+		main_thread_id = GetCurrentThreadId();
 	}
 
 	DisplayMessageQueue_Win32::~DisplayMessageQueue_Win32()
@@ -65,7 +66,7 @@ namespace clan
 
 	void DisplayMessageQueue_Win32::exit()
 	{
-		PostThreadMessage(0, WM_EXIT_LOOP, 0, 0);
+		PostThreadMessage(main_thread_id, WM_EXIT_LOOP, 0, 0);
 	}
 
 	bool DisplayMessageQueue_Win32::process(int timeout_ms)
@@ -101,7 +102,7 @@ namespace clan
 
 	void DisplayMessageQueue_Win32::post_async_work_needed()
 	{
-		PostThreadMessage(0, WM_ASYNC_WORK, 0, 0);
+		PostThreadMessage(main_thread_id, WM_ASYNC_WORK, 0, 0);
 	}
 
 	bool DisplayMessageQueue_Win32::process_message(MSG &msg)
