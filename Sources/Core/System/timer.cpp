@@ -51,6 +51,8 @@ namespace clan
 	class TimerImpl
 	{
 	public:
+		~TimerImpl();
+
 		bool is_repeating = false;
 		int timeout = 0;
 		std::shared_ptr<ActiveTimer> active;
@@ -60,18 +62,6 @@ namespace clan
 	class TimerThread
 	{
 	public:
-		~TimerThread()
-		{
-			if (thread.joinable())
-			{
-				std::unique_lock<std::mutex> lock(mutex);
-				stop_flag = true;
-				lock.unlock();
-				timers_changed_event.notify_all();
-				thread.join();
-			}
-		}
-
 		void start(std::shared_ptr<TimerImpl> timer)
 		{
 			std::unique_lock<std::mutex> lock(mutex);
@@ -88,16 +78,19 @@ namespace clan
 			timer->active->is_repeating = timer->is_repeating;
 			timer->active->func_expired = timer->func_expired;
 			timer->active->next_awake_time = std::chrono::system_clock::now() + std::chrono::milliseconds(timer->timeout);
+			stop_flag = false;
 
 			lock.unlock();
-
 			timers_changed_event.notify_one();
 
-			if (!thread.joinable())
+			if (!thread_created)
+			{
+				thread_created = true;
 				thread = std::thread([=]() { worker_main(); });
+			}
 		}
 
-		void stop(std::shared_ptr<TimerImpl> timer)
+		void stop(TimerImpl *timer)
 		{
 			std::unique_lock<std::mutex> lock(mutex);
 
@@ -107,6 +100,19 @@ namespace clan
 				if (it != timers.end())
 					timers.erase(it);
 				timer->active.reset();
+			}
+
+			bool no_timers = timers.empty();
+			if (no_timers)
+				stop_flag = true;
+
+			lock.unlock();
+			timers_changed_event.notify_one();
+
+			if (no_timers && thread_created)
+			{
+				thread.join();
+				thread_created = false;
 			}
 		}
 
@@ -187,6 +193,7 @@ namespace clan
 			return t;
 		}
 
+		bool thread_created = false;
 		std::thread thread;
 		std::mutex mutex;
 		std::condition_variable timers_changed_event;
@@ -195,6 +202,11 @@ namespace clan
 	};
 
 	TimerThread timer_thread;
+
+	TimerImpl::~TimerImpl()
+	{
+		timer_thread.stop(this);
+	}
 
 	Timer::Timer() : impl(std::make_shared<TimerImpl>())
 	{
@@ -224,6 +236,6 @@ namespace clan
 
 	void Timer::stop()
 	{
-		timer_thread.stop(impl);
+		timer_thread.stop(impl.get());
 	}
 }
