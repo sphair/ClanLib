@@ -28,45 +28,32 @@
 
 #pragma once
 
-#include "API/Core/System/event_provider.h"
 #include <mutex>
+#include <vector>
+#include <functional>
 
 namespace clan
 {
+	class RunLoopImpl
+	{
+	public:
+		RunLoopImpl();
+		virtual ~RunLoopImpl();
 
-class EventProvider_Socketpair : public EventProvider
-{
-/// \name Construction
-/// \{
-public:
-	EventProvider_Socketpair(bool manual_reset, bool initial_state);
-	~EventProvider_Socketpair();
-/// \}
+		void process_async_work();
 
-/// \name Attributes
-/// \{
-public:
-	EventType get_event_type(int index) override;
-	int get_event_handle(int index) override;
-	int get_num_event_handles() override;
-/// \}
+		virtual void run() = 0;
+		virtual void exit() = 0;
+		virtual bool process(int timeout_ms) = 0;
+		virtual void post_async_work_needed() = 0;
 
-/// \name Operations
-/// \{
-public:
-	bool check_after_wait(int index) override;
-	bool set() override;
-	bool reset() override;
-/// \}
+		static RunLoopImpl *get_instance();
 
-/// \name Implementation
-/// \{
-private:
-	std::recursive_mutex mutex;
-	bool manual_reset;
-	bool state;
-	int wait_sockets[2];
-/// \}
-};
+	private:
+		std::mutex mutex;
+		std::vector<std::function<void()>> async_work;
+		static RunLoopImpl *instance;
 
+		friend class RunLoop;
+	};
 }

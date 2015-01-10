@@ -1,147 +1,255 @@
-/*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
-**
-**  This software is provided 'as-is', without any express or implied
-**  warranty.  In no event will the authors be held liable for any damages
-**  arising from the use of this software.
-**
-**  Permission is granted to anyone to use this software for any purpose,
-**  including commercial applications, and to alter it and redistribute it
-**  freely, subject to the following restrictions:
-**
-**  1. The origin of this software must not be misrepresented; you must not
-**     claim that you wrote the original software. If you use this software
-**     in a product, an acknowledgment in the product documentation would be
-**     appreciated but is not required.
-**  2. Altered source versions must be plainly marked as such, and must not be
-**     misrepresented as being the original software.
-**  3. This notice may not be removed or altered from any source distribution.
-**
-**  Note: Some of the libraries ClanLib may link to may have additional
-**  requirements or restrictions.
-**
-**  File Author(s):
-**
-**    Magnus Norddahl
-*/
 
 #include "Network/precomp.h"
 #include "API/Network/Socket/tcp_connection.h"
 #include "API/Network/Socket/socket_name.h"
-#include "API/Core/System/event.h"
-#include "Core/IOData/iodevice_impl.h"
-#include "iodevice_provider_tcp_connection.h"
+#include "tcp_socket.h"
+#include "API/Core/System/exception.h"
 
 namespace clan
 {
 
-/////////////////////////////////////////////////////////////////////////////
-// TCPConnection Construction:
+#if defined(WIN32)
 
-TCPConnection::TCPConnection()
-: IODevice(new IODeviceProvider_TCPConnection())
-{
-}
-	
-TCPConnection::TCPConnection(const SocketName &remote)
-: IODevice(new IODeviceProvider_TCPConnection(remote))
-{
-}
-	
-TCPConnection::TCPConnection(const SocketName &remote, const SocketName &local)
-: IODevice(new IODeviceProvider_TCPConnection(remote, local))
-{
-}
-	
-TCPConnection::TCPConnection(int socket, bool close_socket)
-: IODevice(new IODeviceProvider_TCPConnection(socket, close_socket))
-{
-}
-	
-TCPConnection::~TCPConnection()
-{
-}
+#pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib, "iphlpapi.lib")
 
-/////////////////////////////////////////////////////////////////////////////
-// TCPConnection Attributes:
+	TCPConnection::TCPConnection()
+	{
+	}
 
-int TCPConnection::get_handle() const
-{
-	const IODeviceProvider_TCPConnection *provider = dynamic_cast<const IODeviceProvider_TCPConnection*>(impl->provider);
-	return provider->get_handle();
-}
+	TCPConnection::TCPConnection(const SocketName &endpoint)
+		: impl(new TCPSocket())
+	{
+		int receive_buffer_size = 600 * 1024;
+		int send_buffer_size = 600 * 1024;
+		//int result = setsockopt(impl->handle, SOL_SOCKET, SO_RCVBUF, (const char *) &receive_buffer_size, sizeof(int));
+		int result = setsockopt(impl->handle, SOL_SOCKET, SO_SNDBUF, (const char *)&send_buffer_size, sizeof(int));
 
-SocketName TCPConnection::get_local_name() const
-{
-	const IODeviceProvider_TCPConnection *provider = dynamic_cast<const IODeviceProvider_TCPConnection*>(impl->provider);
-	return provider->get_local_name();
-}
-	
-SocketName TCPConnection::get_remote_name() const
-{
-	const IODeviceProvider_TCPConnection *provider = dynamic_cast<const IODeviceProvider_TCPConnection*>(impl->provider);
-	return provider->get_remote_name();
-}
+		sockaddr_in addr;
+		endpoint.to_sockaddr(AF_INET, (sockaddr *)&addr, sizeof(sockaddr_in));
+		result = ::connect(impl->handle, (const sockaddr *)&addr, sizeof(sockaddr_in));
+		if (result == SOCKET_ERROR)
+			throw Exception("Connect to server failed");
 
-Event TCPConnection::get_read_event()
-{
-	IODeviceProvider_TCPConnection *provider = dynamic_cast<IODeviceProvider_TCPConnection*>(impl->provider);
-	return provider->get_read_event();
-}
+		int value = 1;
+		result = setsockopt(impl->handle, IPPROTO_TCP, TCP_NODELAY, (const char *)&value, sizeof(int));
 
-Event TCPConnection::get_write_event()
-{
-	IODeviceProvider_TCPConnection *provider = dynamic_cast<IODeviceProvider_TCPConnection*>(impl->provider);
-	return provider->get_write_event();
-}
+		result = WSAEventSelect(impl->handle, impl->wait_handle, FD_READ | FD_WRITE | FD_CLOSE);
+		if (result == SOCKET_ERROR)
+			throw Exception("WSAEventSelect failed");
 
-/////////////////////////////////////////////////////////////////////////////
-// TCPConnection Operations:
+		//int receive_buffer_size = 0;
+		//int send_buffer_size = 0;
+		//int len = sizeof(int);
+		//getsockopt(impl->handle, SOL_SOCKET, SO_RCVBUF, (char *) &receive_buffer_size, &len);
+		//getsockopt(impl->handle, SOL_SOCKET, SO_SNDBUF, (char *) &send_buffer_size, &len);
+	}
 
-void TCPConnection::connect(const SocketName &remote)
-{
-	IODeviceProvider_TCPConnection *provider = dynamic_cast<IODeviceProvider_TCPConnection*>(impl->provider);
-	provider->connect(remote);
-}
+	TCPConnection::TCPConnection(const std::shared_ptr<TCPSocket> &impl)
+		: impl(impl)
+	{
+		int receive_buffer_size = 600 * 1024;
+		int send_buffer_size = 600 * 1024;
+		//int result = setsockopt(impl->handle, SOL_SOCKET, SO_RCVBUF, (const char *) &receive_buffer_size, sizeof(int));
+		int result = setsockopt(impl->handle, SOL_SOCKET, SO_SNDBUF, (const char *)&send_buffer_size, sizeof(int));
 
-void TCPConnection::connect(const SocketName &remote, const SocketName &local)
-{
-	IODeviceProvider_TCPConnection *provider = dynamic_cast<IODeviceProvider_TCPConnection*>(impl->provider);
-	provider->connect(remote, local);
-}
-	
-void TCPConnection::set_handle(int socket, bool close_socket)
-{
-	IODeviceProvider_TCPConnection *provider = dynamic_cast<IODeviceProvider_TCPConnection*>(impl->provider);
-	provider->set_handle(socket, close_socket);
-}
+		result = WSAEventSelect(impl->handle, impl->wait_handle, FD_READ | FD_WRITE | FD_CLOSE);
+		if (result == SOCKET_ERROR)
+			throw Exception("WSAEventSelect failed");
+	}
 
-void TCPConnection::disconnect_graceful()
-{
-	IODeviceProvider_TCPConnection *provider = dynamic_cast<IODeviceProvider_TCPConnection*>(impl->provider);
-	provider->disconnect_graceful();
-}
+	TCPConnection::~TCPConnection()
+	{
+	}
 
-void TCPConnection::disconnect_abortive()
-{
-	IODeviceProvider_TCPConnection *provider = dynamic_cast<IODeviceProvider_TCPConnection*>(impl->provider);
-	provider->disconnect_abortive();
-}
+	int TCPConnection::write(const void *data, int size)
+	{
+		int result = ::send(impl->handle, static_cast<const char *>(data), size, 0);
+		if (result == SOCKET_ERROR)
+		{
+			if (WSAGetLastError() == WSAEWOULDBLOCK)
+				return -1;
+			else
+				throw Exception("Error writing to server");
+		}
+		return result;
+	}
 
-void TCPConnection::set_nodelay(bool enable)
-{
-	IODeviceProvider_TCPConnection *provider = dynamic_cast<IODeviceProvider_TCPConnection*>(impl->provider);
-	provider->set_nodelay(enable);
-}
+	int TCPConnection::read(void *data, int size)
+	{
+		int result = ::recv(impl->handle, static_cast<char *>(data), size, 0);
+		if (result == SOCKET_ERROR)
+		{
+			if (WSAGetLastError() == WSAEWOULDBLOCK)
+				return -1;
+			else
+				throw Exception("Error reading from server");
+		}
+		return result;
+	}
 
-void TCPConnection::set_keep_alive(bool enable, int timeout, int interval)
-{
-	IODeviceProvider_TCPConnection *provider = dynamic_cast<IODeviceProvider_TCPConnection*>(impl->provider);
-	provider->set_keep_alive(enable, timeout, interval);
-}
+	void TCPConnection::close()
+	{
+		if (impl)
+			impl->close();
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// TCPConnection Implementation:
+	SocketName TCPConnection::get_local_name()
+	{
+		sockaddr_in addr;
+		memset(&addr, 0, sizeof(sockaddr_in));
+		int size = sizeof(sockaddr_in);
+		int result = getsockname(impl->handle, (sockaddr *)&addr, &size);
+		if (result == SOCKET_ERROR)
+			throw Exception("Error retrieving local socket name");
+
+		SocketName name;
+		name.from_sockaddr(AF_INET, (sockaddr *)&addr, sizeof(sockaddr_in));
+		return name;
+	}
+
+	SocketName TCPConnection::get_remote_name()
+	{
+		sockaddr_in addr;
+		memset(&addr, 0, sizeof(sockaddr_in));
+		int size = sizeof(sockaddr_in);
+		int result = getpeername(impl->handle, (sockaddr *)&addr, &size);
+		if (result == SOCKET_ERROR)
+			throw Exception("Error retrieving remote socket name");
+
+		SocketName name;
+		name.from_sockaddr(AF_INET, (sockaddr *)&addr, sizeof(sockaddr_in));
+		return name;
+	}
+
+	SocketHandle *TCPConnection::get_socket_handle()
+	{
+		return impl.get();
+	}
+
+#else
+
+	void TCPConnection::init_sockets()
+	{
+	}
+
+	TCPConnection::TCPConnection()
+	{
+	}
+
+	TCPConnection::TCPConnection(const SocketName &endpoint)
+		: impl(new TCPSocket())
+	{
+		int receive_buffer_size = 600*1024;
+		int send_buffer_size = 600*1024;
+		//int result = setsockopt(impl->handle, SOL_SOCKET, SO_RCVBUF, (const char *) &receive_buffer_size, sizeof(int));
+		int result = setsockopt(impl->handle, SOL_SOCKET, SO_SNDBUF, (const char *) &send_buffer_size, sizeof(int));
+
+		sockaddr_in addr;
+		endpoint.to_sockaddr(AF_INET, (sockaddr *) &addr, sizeof(sockaddr_in));
+		result = ::connect(impl->handle, (const sockaddr *) &addr, sizeof(sockaddr_in));
+		if (result == -1)
+			throw Exception("Connect to server failed");
+
+		int value = 1;
+		result = setsockopt(impl->handle, IPPROTO_TCP, TCP_NODELAY, (const char *) &value, sizeof(int));
+
+		//int receive_buffer_size = 0;
+		//int send_buffer_size = 0;
+		//int len = sizeof(int);
+		//getsockopt(impl->handle, SOL_SOCKET, SO_RCVBUF, (char *) &receive_buffer_size, &len);
+		//getsockopt(impl->handle, SOL_SOCKET, SO_SNDBUF, (char *) &send_buffer_size, &len);
+
+		int nonblocking = 1;
+		ioctl(impl->handle, FIONBIO, &nonblocking);
+	}
+
+	TCPConnection::TCPConnection(const std::shared_ptr<TCPSocket> &impl)
+		: impl(impl)
+	{
+		int receive_buffer_size = 600*1024;
+		int send_buffer_size = 600*1024;
+		//int result = setsockopt(impl->handle, SOL_SOCKET, SO_RCVBUF, (const char *) &receive_buffer_size, sizeof(int));
+		int result = setsockopt(impl->handle, SOL_SOCKET, SO_SNDBUF, (const char *) &send_buffer_size, sizeof(int));
+
+		int nonblocking = 1;
+		ioctl(impl->handle, FIONBIO, &nonblocking);
+	}
+
+	TCPConnection::~TCPConnection()
+	{
+	}
+
+	int TCPConnection::write(const void *data, int size)
+	{
+		int result = ::send(impl->handle, static_cast<const char *>(data), size, 0);
+		if (result == -1)
+		{
+			if (errno == EWOULDBLOCK)
+			{
+				impl->can_write = false;
+				return -1;
+			}
+			else
+			{
+				throw Exception("Error writing to server");
+			}
+		}
+		return result;
+	}
+
+	int TCPConnection::read(void *data, int size)
+	{
+		int result = ::recv(impl->handle, static_cast<char *>(data), size, 0);
+		if (result == -1)
+		{
+			if (errno == EWOULDBLOCK)
+				return -1;
+			else
+				throw Exception("Error reading from server");
+		}
+		return result;
+	}
+
+	void TCPConnection::close()
+	{
+		if (impl)
+			impl->close();
+	}
+
+	SocketName TCPConnection::get_local_name()
+	{
+		sockaddr_in addr;
+		memset(&addr, 0, sizeof(sockaddr_in));
+		int size = sizeof(sockaddr_in);
+		int result = getsockname(impl->handle, (sockaddr *)&addr, &size);
+		if (result == -1)
+			throw Exception("Error retrieving local socket name");
+
+		SocketName name;
+		name.from_sockaddr(AF_INET, (sockaddr *)&addr, sizeof(sockaddr_in));
+		return name;
+	}
+
+	SocketName TCPConnection::get_remote_name()
+	{
+		sockaddr_in addr;
+		memset(&addr, 0, sizeof(sockaddr_in));
+		int size = sizeof(sockaddr_in);
+		int result = getpeername(impl->handle, (sockaddr *)&addr, &size);
+		if (result == -1)
+			throw Exception("Error retrieving remote socket name");
+
+		SocketName name;
+		name.from_sockaddr(AF_INET, (sockaddr *)&addr, sizeof(sockaddr_in));
+		return name;
+	}
+
+	SocketHandle *TCPConnection::get_socket_handle()
+	{
+		return impl.get();
+	}
+
+#endif
 
 }

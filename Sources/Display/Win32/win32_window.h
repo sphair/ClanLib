@@ -36,7 +36,6 @@
 #include "API/Display/Window/input_context.h"
 #include "API/Display/Window/input_device.h"
 #include "API/Display/TargetProviders/input_device_provider.h"
-#include "API/Core/System/event.h"
 #include "API/Core/Math/point.h"
 #include "API/Core/Math/rect.h"
 #include "API/Core/System/cl_platform.h"
@@ -44,6 +43,7 @@
 #include "win32_handle.h"
 #include <memory>
 #include <thread>
+#include <condition_variable>
 
 namespace clan
 {
@@ -220,9 +220,12 @@ private:
 	std::thread update_window_worker_thread;
 	bool update_window_worker_thread_started;
 	PixelBuffer update_window_image;
-	Event update_window_event_stop;
-	Event update_window_event_start;
-	Event update_window_event_completed;
+	bool update_window_stop_flag = false;
+	bool update_window_start_flag = false;
+	bool update_window_completed_flag = false;
+	std::mutex update_window_mutex;
+	std::condition_variable update_window_main_event;
+	std::condition_variable update_window_worker_event;
 	HRGN update_window_region;
 	unsigned int update_window_max_region_rects;
 };

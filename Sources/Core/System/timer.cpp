@@ -29,318 +29,202 @@
 
 #include "Core/precomp.h"
 #include "API/Core/System/timer.h"
-#include "API/Core/System/keep_alive.h"
-#include "API/Core/System/event.h"
 #include "API/Core/System/system.h"
+#include "API/Core/System/run_loop.h"
 #include <map>
 #include <thread>
 
 namespace clan
 {
-
-class Timer_Object
-{
-public:
-	Timer_Object() : stopped(true) {}
-
-	bool stopped;
-	ubyte64 end_time;
-	unsigned int timeout;
-	bool repeating;
-	std::function<void()> func_expired;
-};
-
-/////////////////////////////////////////////////////////////////////////////
-// Timer_Thread Class:
-
-class Timer_Thread : public KeepAliveObject
-{
-public:
-	Timer_Thread() : timeout(-1), stop_thread(false)
+	class ActiveTimer
 	{
-		thread = std::thread(&Timer_Thread::timer_main, this);
-	}
+	public:
+		ActiveTimer(std::weak_ptr<TimerImpl> impl) : timer_impl(std::move(impl)) { }
 
-	~Timer_Thread()
+		std::weak_ptr<TimerImpl> timer_impl;
+		bool is_repeating = false;
+		int timeout = 0;
+		std::chrono::system_clock::time_point next_awake_time;
+		std::function<void()> func_expired;
+	};
+
+	class TimerImpl
 	{
-		std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
-		stop_thread = true;
-		mutex_lock.unlock();
-		update_event.set();
-		thread.join();
+	public:
+		bool is_repeating = false;
+		int timeout = 0;
+		std::shared_ptr<ActiveTimer> active;
+		std::function<void()> func_expired;
+	};
 
-		// Delete all timer objects in the map
-		for (auto & elem : timer_objects)
+	class TimerThread
+	{
+	public:
+		~TimerThread()
 		{
-			delete elem.second;
-		}
-	}
-
-	void start(int timer_id, unsigned int new_timeout, bool repeat)
-	{
-		std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
-
-		Timer_Object &object = get_timer_object(timer_id);
-		object.stopped = false;
-		object.end_time = System::get_time() + new_timeout;
-		object.timeout = new_timeout;
-		object.repeating = repeat;
-
-		if ( (timeout == -1) || (new_timeout < ( (unsigned int) timeout) ) )
-		{
-			// Only break into the thread when a shorter timeout is required
-			update_event.set();
-		}
-	}
-
-	void stop(int timer_id)
-	{
-		std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
-		Timer_Object &object = get_timer_object(timer_id);
-		object.stopped = true;
-	}
-
-	void remove_timer(int timer_id)
-	{
-		// Remove the unused timers, to prevent memory leaks
-		std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
-		auto it = timer_objects.find(timer_id);
-		if (it != timer_objects.end())
-		{
-			delete it->second;
-			timer_objects.erase(it);
-		}
-	}
-
-	void process() override
-	{
-		std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
-
-		ubyte64 current_time = System::get_time();
-
-		// Scan for events and trigger them
-		for (auto it = timer_objects.begin(); it != timer_objects.end();)
-		{
-			Timer_Object &object = *(it->second);
-			++it;	// We need to update the iterator here - Because func_expired may remove the timer object
-
-			// Found a timer
-			const int grace_period = 1;	// Allow 1ms grace
-			if (object.end_time <= (current_time + grace_period))
+			if (thread.joinable())
 			{
-				if (!object.stopped)
+				std::unique_lock<std::mutex> lock(mutex);
+				stop_flag = true;
+				lock.unlock();
+				timers_changed_event.notify_all();
+				thread.join();
+			}
+		}
+
+		void start(std::shared_ptr<TimerImpl> timer)
+		{
+			std::unique_lock<std::mutex> lock(mutex);
+
+			if (!timer->active)
+			{
+				auto active = std::make_shared<ActiveTimer>(timer);
+				timers.push_back(timer->active);
+				timer->active = active;
+			}
+
+			// Copy timer fields to keep TimerImpl fields updateable outside the mutex lock
+			timer->active->timeout = timer->timeout;
+			timer->active->is_repeating = timer->is_repeating;
+			timer->active->func_expired = timer->func_expired;
+			timer->active->next_awake_time = std::chrono::system_clock::now() + std::chrono::milliseconds(timer->timeout);
+
+			lock.unlock();
+
+			timers_changed_event.notify_one();
+
+			if (!thread.joinable())
+				thread = std::thread([=]() { worker_main(); });
+		}
+
+		void stop(std::shared_ptr<TimerImpl> timer)
+		{
+			std::unique_lock<std::mutex> lock(mutex);
+
+			if (timer->active)
+			{
+				std::unique_lock<std::mutex> lock(mutex);
+				auto it = std::find(timers.begin(), timers.end(), timer->active);
+				if (it != timers.end())
+					timers.erase(it);
+				timer->active.reset();
+			}
+		}
+
+	private:
+		void worker_main()
+		{
+			std::unique_lock<std::mutex> lock(mutex);
+			while (!stop_flag)
+			{
+				fire_timers();
+
+				if (timers.empty())
+					timers_changed_event.wait(lock);
+				else
+					timers_changed_event.wait_until(lock, next_awake_time());
+			}
+		}
+
+		void fire_timers()
+		{
+			auto cur_time = std::chrono::system_clock::now();
+			for (auto it = timers.begin(); it != timers.end();)
+			{
+				auto &timer = *it;
+				bool remove = false;
+
+				if (timer->next_awake_time < cur_time)
 				{
-					if (object.repeating)
+					if (timer->func_expired)
 					{
-						object.end_time += object.timeout;
-						if (object.end_time <= current_time)
+						// Copy timer fields to detach them from the mutex lock
+						auto timer_impl = timer->timer_impl;
+						auto func_expired = timer->func_expired;
+
+						RunLoop::main_thread_async([=]()
 						{
-							// An event has been missed, reset the timer
-							object.end_time = current_time + object.timeout;
-						}
+							// Only fire the timer if it is still valid when we reached the main thread
+							if (timer_impl.lock())
+								func_expired();
+						});
+					}
+
+					if (timer->is_repeating)
+					{
+						while (timer->next_awake_time < cur_time)
+							timer->next_awake_time += std::chrono::milliseconds(timer->timeout);
 					}
 					else
 					{
-						object.stopped = true;
+						remove = true;
 					}
-
-					if (object.func_expired)
-						object.func_expired();
 				}
+
+				if (remove)
+					it = timers.erase(it);
+				else
+					++it;
 			}
 		}
-	}
 
-	std::function<void()> &get_func_expired(int timer_id)
-	{
-		std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
-		return get_timer_object(timer_id).func_expired;
-	}
-
-private:
-	Timer_Object &get_timer_object(int timer_id)
-	{
-		// Find existing timer
-		auto it = timer_objects.find(timer_id);
-		if (it != timer_objects.end())
+		std::chrono::system_clock::time_point next_awake_time()
 		{
-			return *(it->second);
-		}
-
-		auto object = new Timer_Object;
-		timer_objects[timer_id] = object;
-		return *object;
-	}
-
-	void timer_main()
-	{
-		while (true)
-		{
-			std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
-			update_event.reset();
-			if (stop_thread)
-				break;
-
-			ubyte64 current_time = System::get_time();
-			timeout = -1;
-			bool found_timer = false;
-
-			// Scan for timers to find the next one to call
-			for (auto & elem : timer_objects)
+			std::chrono::system_clock::time_point t;
+			bool first = true;
+			for (auto &timer : timers)
 			{
-				Timer_Object &object = *(elem.second);
-				if (!object.stopped)
+				if (first)
 				{
-					if (!found_timer)
-					{
-						// First timer in the list
-						timeout = object.end_time - current_time;
-						found_timer = true;
-					}
-					else
-					{
-						// Get the smallest timeout
-						int next_timeout = object.end_time - current_time;
-						if (next_timeout < timeout)
-						{
-							timeout = next_timeout;
-						}
-					}
-					// Force update, if a timer was missed
-					if (timeout < 1)
-						timeout = 1;
+					t = timer->next_awake_time;
+					first = false;
+				}
+				else
+				{
+					if (t > timer->next_awake_time)
+						t = timer->next_awake_time;
 				}
 			}
-
-			mutex_lock.unlock();
-
-			if (Event::wait(update_event, timeout) == -1)
-				set_wakeup_event();
+			return t;
 		}
-	}
 
-	std::thread thread;
-	Event update_event;
-	std::recursive_mutex mutex;
-	int timeout;
-	bool stop_thread;
+		std::thread thread;
+		std::mutex mutex;
+		std::condition_variable timers_changed_event;
+		bool stop_flag = false;
+		std::vector<std::shared_ptr<ActiveTimer>> timers;
+	};
 
-	std::map<int, Timer_Object *> timer_objects;
-};
+	TimerThread timer_thread;
 
-/////////////////////////////////////////////////////////////////////////////
-// Timer_Impl Class:
-
-class Timer_Impl
-{
-public:
-	Timer_Impl() : timeout(0), repeating(false), id(-1)
+	Timer::Timer() : impl(std::make_shared<TimerImpl>())
 	{
-		// Create a static timer thread if none exist
-		std::unique_lock<std::recursive_mutex> mutex_lock(timer_thread_mutex);
-		if (!timer_thread_instance_count)
-		{
-			timer_thread = new(Timer_Thread);
-		}
-		timer_thread_instance_count++;
-		timer_thread_max_id++;
-		id = timer_thread_max_id;
 	}
 
-	~Timer_Impl()
+	bool Timer::is_repeating() const
 	{
-		// Destroy the static timer thread if this is the last timer
-		std::unique_lock<std::recursive_mutex> mutex_lock(timer_thread_mutex);
-		timer_thread->remove_timer(id);
-		timer_thread_instance_count--;
-		if (!timer_thread_instance_count)
-		{
-			delete timer_thread;
-			timer_thread = nullptr;
-		}
+		return impl->is_repeating;
 	}
 
-	void start(unsigned int new_timeout, bool repeat)
+	unsigned int Timer::get_timeout() const
 	{
-		std::unique_lock<std::recursive_mutex> mutex_lock(timer_thread_mutex);
-		timer_thread->start(id, new_timeout, repeat);
+		return impl->timeout;
 	}
 
-	void stop()
+	std::function<void()> &Timer::func_expired()
 	{
-		std::unique_lock<std::recursive_mutex> mutex_lock(timer_thread_mutex);
-		timer_thread->stop(id);
+		return impl->func_expired;
 	}
 
-	bool is_repeating() const { return repeating; }
-	unsigned int get_timeout() const { return timeout; }
-
-	std::function<void()> &func_expired()
+	void Timer::start(unsigned int timeout, bool repeat)
 	{
-		std::unique_lock<std::recursive_mutex> mutex_lock(timer_thread_mutex);
-		return timer_thread->get_func_expired(id);
+		impl->timeout = timeout;
+		impl->is_repeating = repeat;
+		timer_thread.start(impl);
 	}
 
-private:
-	static Timer_Thread *timer_thread;
-	static int timer_thread_instance_count;
-	static std::recursive_mutex timer_thread_mutex;
-	static int timer_thread_max_id;	// Unique timer id
-
-	unsigned int timeout;
-	bool repeating;
-	int id;
-};
-
-Timer_Thread *Timer_Impl::timer_thread = nullptr;
-int Timer_Impl::timer_thread_instance_count = 0;
-std::recursive_mutex Timer_Impl::timer_thread_mutex;
-int Timer_Impl::timer_thread_max_id = 0;
-
-/////////////////////////////////////////////////////////////////////////////
-// Timer Construction:
-
-Timer::Timer()
-: impl(std::make_shared<Timer_Impl>())
-{
-}
-
-Timer::~Timer()
-{
-}
-
-bool Timer::is_repeating() const
-{
-	return impl->is_repeating();
-}
-
-unsigned int Timer::get_timeout() const
-{
-	return impl->get_timeout();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Timer Events:
-
-std::function<void()> &Timer::func_expired()
-{
-	return impl->func_expired();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Timer Operations:
-
-void Timer::start(unsigned int timeout, bool repeat)
-{
-	impl->start(timeout, repeat);
-}
-
-void Timer::stop()
-{
-	impl->stop();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Timer Implementation:
-
+	void Timer::stop()
+	{
+		timer_thread.stop(impl);
+	}
 }

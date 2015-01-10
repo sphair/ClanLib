@@ -29,7 +29,6 @@
 #pragma once
 
 #include "API/Network/Socket/tcp_listen.h"
-#include "API/Core/System/keep_alive.h"
 #include <memory>
 #include <mutex>
 #include <thread>
@@ -37,16 +36,17 @@
 namespace clan
 {
 
-class NetGameServer_Impl : public KeepAliveObject
+class NetGameServer_Impl
 {
 public:
-	void process() override;
+	void process();
 
 	std::unique_ptr<TCPListen> tcp_listen;
 	std::thread listen_thread;
 
-	std::recursive_mutex mutex;
-	Event stop_event;
+	NetworkConditionVariable worker_event;
+	std::mutex mutex;
+	bool stop_flag = false;
 	std::vector<NetGameConnection *> connections;
 	std::vector<NetGameNetworkEvent> events;
 

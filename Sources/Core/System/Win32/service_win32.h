@@ -28,9 +28,9 @@
 
 #pragma once
 
-
 #include "../service_impl.h"
-#include "API/Core/System/event.h"
+#include <mutex>
+#include <condition_variable>
 
 namespace clan
 {
@@ -79,8 +79,11 @@ private:
 		DWORD win32_exitcode,
 		DWORD wait_hint);
 
-	Event stop_event;
-	Event reload_event;
+	std::mutex mutex;
+	std::condition_variable event_condition;
+	bool stop_flag = false;
+	bool reload_flag = false;
+
 	bool debug_mode;
 	int check_point;
 	SERVICE_STATUS_HANDLE handle_service_status;

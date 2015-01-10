@@ -28,6 +28,7 @@
 */
 
 #pragma once
+
 #include <mutex>
 #include <thread>
 
@@ -49,18 +50,25 @@ public:
 
 private:
 	void connection_main();
+
+	bool read_connection_data(DataBuffer &receive_buffer, int &bytes_received);
+	bool write_connection_data(DataBuffer &send_buffer, int &bytes_sent, bool &send_graceful_close);
+
 	bool read_data(const void *data, int size, int &out_bytes_consumed);
 	bool write_data(DataBuffer &buffer);
 
 	NetGameConnection *base;
 
 	NetGameConnectionSite *site;
+
+	NetworkConditionVariable worker_event;
 	TCPConnection connection;
 	SocketName socket_name;
 	bool is_connected;
 	std::thread thread;
-	Event stop_event, queue_event;
-	std::recursive_mutex mutex;
+	bool stop_flag = false;
+	bool queue_flag = false;
+	std::mutex mutex;
 	struct Message
 	{
 		Message() : type(type_message), event(std::string()) { }

@@ -42,9 +42,6 @@
 
 #include "Network/setupnetwork.h"
 
-#include "Network/Socket/dns_resolver.h"
-#include "Network/Socket/dns_packet.h"
-#include "Network/Socket/dns_resource_record.h"
 #include "Network/Socket/socket_name.h"
 #include "Network/Socket/tcp_connection.h"
 #include "Network/Socket/tcp_listen.h"

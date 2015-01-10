@@ -28,17 +28,16 @@
 
 #pragma once
 
-#include "API/Core/System/keep_alive.h"
 #include <memory>
 #include <mutex>
 
 namespace clan
 {
 
-class NetGameClient_Impl : public KeepAliveObject
+class NetGameClient_Impl
 {
 public:
-	void process() override;
+	void process();
 
 	std::recursive_mutex mutex;
 	std::vector<NetGameNetworkEvent> events;

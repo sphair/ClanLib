@@ -92,11 +92,14 @@ int Service_Win32::run_debug(std::vector<std::string> args)
 	service_start(args);
 	while (true)
 	{
-		int wakeup_reason = Event::wait(stop_event, reload_event);
-		if (wakeup_reason == 1)
-			service_reload();
-		else
+		std::unique_lock<std::mutex> lock(mutex);
+		event_condition.wait(lock, [&]() { return stop_flag || reload_flag; });
+
+		if (stop_flag)
 			break;
+
+		reload_flag = false;
+		service_reload();
 	}
 	service_stop();
 	return 0;
@@ -141,11 +144,14 @@ void Service_Win32::service_thread_main(DWORD argc, LPTSTR *argv)
 	instance_win32->service_start(args);
 	while (true)
 	{
-		int wakeup_reason = Event::wait(instance_win32->stop_event, instance_win32->reload_event);
-		if (wakeup_reason == 1)
-			instance_win32->service_reload();
-		else
+		std::unique_lock<std::mutex> lock(instance_win32->mutex);
+		instance_win32->event_condition.wait(lock, [&]() { return instance_win32->stop_flag || instance_win32->reload_flag; });
+
+		if (instance_win32->stop_flag)
 			break;
+
+		instance_win32->reload_flag = false;
+		instance_win32->service_reload();
 	}
 	instance_win32->service_stop();
 
@@ -164,7 +170,12 @@ BOOL Service_Win32::control_handler(DWORD ctrl_type)
 	case CTRL_BREAK_EVENT:  // use Ctrl+C or Ctrl+Break to simulate
 	case CTRL_C_EVENT:      // SERVICE_CONTROL_STOP in debug mode
 		instance_win32->report_status(SERVICE_STOP_PENDING, NO_ERROR, 15000);
-		instance_win32->stop_event.set();
+
+		{
+			std::unique_lock<std::mutex> lock(instance_win32->mutex);
+			instance_win32->stop_flag = true;
+		}
+		instance_win32->event_condition.notify_all();
 		return TRUE;
 	}
 	return FALSE;
@@ -206,7 +217,12 @@ VOID WINAPI Service_Win32::service_ctrl(DWORD ctrl_code)
 	if (ctrl_code == SERVICE_CONTROL_STOP)
 	{
 		instance_win32->report_status(SERVICE_STOP_PENDING, NO_ERROR, 1000);
-		instance_win32->stop_event.set();
+
+		{
+			std::unique_lock<std::mutex> lock(instance_win32->mutex);
+			instance_win32->stop_flag = true;
+		}
+		instance_win32->event_condition.notify_all();
 	}
 	else
 	{

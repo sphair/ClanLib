@@ -1,114 +1,215 @@
-/*
-**  ClanLib SDK
-**  Copyright (c) 1997-2015 The ClanLib Team
-**
-**  This software is provided 'as-is', without any express or implied
-**  warranty.  In no event will the authors be held liable for any damages
-**  arising from the use of this software.
-**
-**  Permission is granted to anyone to use this software for any purpose,
-**  including commercial applications, and to alter it and redistribute it
-**  freely, subject to the following restrictions:
-**
-**  1. The origin of this software must not be misrepresented; you must not
-**     claim that you wrote the original software. If you use this software
-**     in a product, an acknowledgment in the product documentation would be
-**     appreciated but is not required.
-**  2. Altered source versions must be plainly marked as such, and must not be
-**     misrepresented as being the original software.
-**  3. This notice may not be removed or altered from any source distribution.
-**
-**  Note: Some of the libraries ClanLib may link to may have additional
-**  requirements or restrictions.
-**
-**  File Author(s):
-**
-**    Magnus Norddahl
-*/
 
 #include "Network/precomp.h"
 #include "API/Network/Socket/udp_socket.h"
 #include "API/Network/Socket/socket_name.h"
-#include "API/Core/System/event.h"
-#include "udp_socket_impl.h"
+#include "API/Core/System/exception.h"
+#include "tcp_socket.h"
+
+#if !defined(WIN32)
+#include <sys/time.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/ioctl.h>
+#include <unistd.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+#include <errno.h>
+#endif
+#if defined(__APPLE__)
+#define SOL_TCP IPPROTO_TCP
+#endif
 
 namespace clan
 {
 
-/////////////////////////////////////////////////////////////////////////////
-// UDPSocket Construction:
+#if defined(WIN32)
 
-UDPSocket::UDPSocket()
-: impl(std::make_shared<UDPSocket_Impl>())
-{
-}
+	class UDPSocketImpl : public SocketHandle
+	{
+	public:
+		UDPSocketImpl()
+		{
+			handle = socket(AF_INET, SOCK_DGRAM, 0);
+			if (handle == INVALID_SOCKET)
+				throw Exception("Unable to create socket handle");
+		}
 
-UDPSocket::UDPSocket(const SocketName &local_name, bool force_bind)
-: impl(std::make_shared<UDPSocket_Impl>(local_name, force_bind))
-{
-}
+		UDPSocketImpl(SOCKET handle) : SocketHandle(handle)
+		{
+		}
+	};
 
-UDPSocket::UDPSocket(int socket, bool close_socket)
-: impl(std::make_shared<UDPSocket_Impl>(socket, close_socket))
-{
-}
+	UDPSocket::UDPSocket() : impl(new UDPSocketImpl())
+	{
+		int result = WSAEventSelect(impl->handle, impl->wait_handle, FD_READ);
+		if (result == SOCKET_ERROR)
+			throw Exception("WSAEventSelect failed");
+	}
 
-UDPSocket::~UDPSocket()
-{
-}
+	UDPSocket::~UDPSocket()
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// UDPSocket Attributes:
+	SocketHandle *UDPSocket::get_socket_handle()
+	{
+		return impl.get();
+	}
 
-int UDPSocket::get_handle() const
-{
-	return impl->get_handle();
-}
+	void UDPSocket::bind(const SocketName &endpoint)
+	{
+		sockaddr_in addr;
+		endpoint.to_sockaddr(AF_INET, (sockaddr *)&addr, sizeof(sockaddr_in));
+		int result = ::bind(impl->handle, (const sockaddr *)&addr, sizeof(sockaddr_in));
+		if (result == SOCKET_ERROR)
+			throw Exception("Could not bind socket to end point");
+	}
 
-SocketName UDPSocket::get_local_name() const
-{
-	return impl->get_local_name();
-}
+	void UDPSocket::send(const void *data, int size, const SocketName &endpoint)
+	{
+		sockaddr_in addr;
+		endpoint.to_sockaddr(AF_INET, (sockaddr *)&addr, sizeof(sockaddr_in));
 
-Event UDPSocket::get_read_event()
-{
-	return impl->get_read_event();
-}
+		int result = sendto(impl->handle, static_cast<const char*>(data), size, 0, (const sockaddr *)&addr, sizeof(sockaddr_in));
+		if (result == SOCKET_ERROR)
+		{
+			int last_error = WSAGetLastError();
+			if (last_error != WSAENOBUFS)
+			{
+				throw Exception("Error writing to udp socket");
+			}
+		}
+	}
 
-Event UDPSocket::get_write_event()
-{
-	return impl->get_write_event();
-}
+	int UDPSocket::read(void *data, int size, SocketName &endpoint)
+	{
+		sockaddr_in addr;
+		int addr_len = sizeof(sockaddr_in);
 
-/////////////////////////////////////////////////////////////////////////////
-// UDPSocket Operations:
+		int result = recvfrom(impl->handle, static_cast<char*>(data), size, 0, (sockaddr *)&addr, &addr_len);
+		if (result == SOCKET_ERROR)
+		{
+			int last_error = WSAGetLastError();
+			// To do: maybe return different return values for sending errors
+			if (last_error == WSAEWOULDBLOCK || last_error == WSAEMSGSIZE || last_error == WSAECONNRESET || last_error == WSAENETRESET)
+			{
+				endpoint = SocketName();
+				return -1;
+			}
+			else
+			{
+				throw Exception("Error reading from udp socket");
+			}
+		}
 
-void UDPSocket::bind(const SocketName &local_name, bool force_bind)
-{
-	impl->bind(local_name, force_bind);
-}
+		endpoint = SocketName();
+		endpoint.from_sockaddr(AF_INET, (sockaddr *)&addr, addr_len);
+		return result;
+	}
 
-void UDPSocket::set_handle(int socket, bool close_socket)
-{
-	impl->set_handle(socket, close_socket);
-}
+	void UDPSocket::close()
+	{
+		impl->close();
+	}
 
-int UDPSocket::send(const void *data, int len, const SocketName &to)
-{
-	return impl->send(data, len, to);
-}
+#else
 
-int UDPSocket::receive(void *data, int len, SocketName &out_from)
-{
-	return impl->receive(data, len, out_from);
-}
+	class UDPSocketImpl : public SocketHandle
+	{
+	public:
+		UDPSocketImpl()
+			: handle(-1)
+		{
+			handle = socket(AF_INET, SOCK_DGRAM, 0);
+			if (handle == -1)
+				throw Exception("Unable to create socket handle");
+		}
 
-int UDPSocket::peek(void *data, int len, SocketName &out_from)
-{
-	return impl->peek(data, len, out_from);
-}
+		UDPSocketImpl(int handle)
+			: handle(handle)
+		{
+		}
 
-/////////////////////////////////////////////////////////////////////////////
-// UDPSocket Implementation:
+		~UDPSocketImpl()
+		{
+			close();
+		}
 
+		void close()
+		{
+			if (handle != -1)
+			{
+				::close(handle);
+				handle = -1;
+			}
+		}
+
+		void begin_wait(fd_set &rfds, fd_set &wfds, int &max_fd) override
+		{
+			FD_SET(handle, &rfds);
+			max_fd = std::max(max_fd, handle);
+		}
+
+		void end_wait(fd_set &rfds, fd_set &wfds) override
+		{
+		}
+
+		int handle;
+	};
+
+	UDPSocket::UDPSocket() : impl(new UDPSocketImpl())
+	{
+		int nonblocking = 1;
+		ioctl(impl->handle, FIONBIO, &nonblocking);
+	}
+
+	UDPSocket::~UDPSocket()
+	{
+	}
+
+	SocketHandle *UDPSocket::get_socket_handle()
+	{
+		return impl.get();
+	}
+
+	void UDPSocket::bind(const SocketName &endpoint)
+	{
+		sockaddr_in addr;
+		endpoint.to_sockaddr(AF_INET, (sockaddr *)&addr, sizeof(sockaddr_in));
+		int result = ::bind(impl->handle, (const sockaddr *)&addr, sizeof(sockaddr_in));
+		if (result == -1)
+			throw Exception("Could not bind socket to end point");
+	}
+
+	void UDPSocket::send(const void *data, int size, const SocketName &endpoint)
+	{
+		sockaddr_in addr;
+		endpoint.to_sockaddr(AF_INET, (sockaddr *)&addr, sizeof(sockaddr_in));
+
+		sendto(impl->handle, static_cast<const char*>(data), size, 0, (const sockaddr *)&addr, sizeof(sockaddr_in));
+	}
+
+	int UDPSocket::read(void *data, int size, SocketName &endpoint)
+	{
+		sockaddr_in addr;
+		socklen_t addr_len = sizeof(sockaddr_in);
+
+		int result = recvfrom(impl->handle, static_cast<char*>(data), size, 0, (sockaddr *)&addr, &addr_len);
+		if (result == -1)
+		{
+			if (errno == EWOULDBLOCK || errno == EMSGSIZE || errno == ECONNRESET || errno == ENETRESET)
+			{
+				endpoint = SocketName();
+				return -1;
+			}
+			else
+			{
+				throw Exception("Error reading from udp socket");
+			}
+		}
+
+		endpoint = SocketName::from_sockaddr(AF_INET, (sockaddr *)&addr, addr_len);
+		return result;
+	}
+
+#endif
 }

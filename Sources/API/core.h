@@ -52,11 +52,7 @@
 #endif
 
 #include "Core/System/cl_platform.h"
-
-#ifdef WIN32
 #include "Core/System/comptr.h"
-#endif
-
 #include "Core/Text/file_logger.h"
 #include "Core/Text/console.h"
 #include "Core/Text/console_logger.h"
@@ -69,14 +65,12 @@
 #include "Core/System/console_window.h"
 #include "Core/System/datetime.h"
 #include "Core/System/disposable_object.h"
-#include "Core/System/event.h"
-#include "Core/System/event_provider.h"
 #include "Core/System/exception.h"
 #include "Core/System/service.h"
 #include "Core/System/setup_core.h"
 #include "Core/System/thread_local_storage.h"
 #include "Core/System/system.h"
-#include "Core/System/keep_alive.h"
+#include "Core/System/run_loop.h"
 #include "Core/System/timer.h"
 #include "Core/System/registry_key.h"
 #include "Core/System/userdata.h"
@@ -125,8 +119,6 @@
 #include "Core/IOData/path_help.h"
 #include "Core/IOData/iodevice.h"
 #include "Core/IOData/iodevice_provider.h"
-#include "Core/IOData/pipe_connection.h"
-#include "Core/IOData/pipe_listen.h"
 #include "Core/IOData/directory.h"
 #include "Core/IOData/cl_endian.h"
 #include "Core/IOData/directory_scanner.h"

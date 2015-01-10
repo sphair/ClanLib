@@ -29,58 +29,51 @@
 #pragma once
 
 #include "API/Core/ErrorReporting/crash_reporter.h"
-#include "API/Core/System/keep_alive.h"
-#include "API/Core/System/event.h"
+#include "API/Core/System/run_loop.h"
 #include <mutex>
 #include <thread>
+#include <condition_variable>
 
 namespace clan
 {
-
-class DetectHang_Impl : KeepAliveObject
-{
-public:
-	DetectHang_Impl()
+	class DetectHang_Impl
 	{
-		thread = std::thread(&DetectHang_Impl::worker_main, this);
-	}
-
-	~DetectHang_Impl()
-	{
-		stop.set();
-		thread.join();
-	}
-
-private:
-	void process() override
-	{
-		std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
-		awoken.set();
-	}
-
-	void worker_main()
-	{
-		while (true)
+	public:
+		DetectHang_Impl()
 		{
-			std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
-			awoken.reset();
-			set_wakeup_event();
-			mutex_lock.unlock();
-			int reason = Event::wait(awoken, stop, 30000);
-			if (reason == -1)
-				CrashReporter::invoke();
-			else if (reason == 1)
-				break;
-
-			reason = Event::wait(stop, 30000);
-			if (reason == 0)
-				break;
+			thread = std::thread(&DetectHang_Impl::worker_main, this);
 		}
-	}
 
-	std::recursive_mutex mutex;
-	Event awoken, stop;
-	std::thread thread;
-};
+		~DetectHang_Impl()
+		{
+			{
+				std::unique_lock<std::mutex> mutex_lock(mutex);
+				stop_flag = true;
+			}
+			stop_condition.notify_all();
+			thread.join();
+		}
 
+	private:
+		void worker_main()
+		{
+			while (true)
+			{
+				std::unique_lock<std::mutex> mutex_lock(mutex);
+
+				std::future<void> heartbeat = RunLoop::main_thread_task([](){});
+
+				if (stop_condition.wait_for(mutex_lock, std::chrono::seconds(30), [&]() -> bool { return stop_flag; }))
+					break;
+
+				if (heartbeat.wait_for(std::chrono::seconds(1)) == std::future_status::timeout)
+					CrashReporter::invoke();
+			}
+		}
+
+		std::mutex mutex;
+		std::condition_variable stop_condition;
+		bool stop_flag = false;
+		std::thread thread;
+	};
 }

@@ -91,7 +91,6 @@ void NetGameClient::add_network_event(const NetGameNetworkEvent &e)
 {
 	std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 	impl->events.push_back(e);
-	impl->set_wakeup_event();
 }
 
 void NetGameClient_Impl::process()
