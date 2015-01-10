@@ -43,11 +43,18 @@ namespace clan
 
 	DisplayMessageQueue_Win32::DisplayMessageQueue_Win32()
 	{
-		main_thread_id = GetCurrentThreadId();
+		WNDCLASSEX class_desc = { 0 };
+		class_desc.cbSize = sizeof(WNDCLASSEX);
+		class_desc.lpszClassName = L"AsyncMessageWindow";
+		class_desc.lpfnWndProc = DisplayMessageQueue_Win32::async_message_window_proc;
+		RegisterClassEx(&class_desc);
+
+		async_message_window_handle = CreateWindowEx(0, L"AsyncMessageWindow", L"Message Window", WS_POPUP, 0, 0, 100, 100, 0, 0, GetModuleHandle(0), 0);
 	}
 
 	DisplayMessageQueue_Win32::~DisplayMessageQueue_Win32()
 	{
+		DestroyWindow(async_message_window_handle);
 	}
 
 	void DisplayMessageQueue_Win32::run()
@@ -66,7 +73,7 @@ namespace clan
 
 	void DisplayMessageQueue_Win32::exit()
 	{
-		PostThreadMessage(main_thread_id, WM_EXIT_LOOP, 0, 0);
+		PostMessage(async_message_window_handle, WM_EXIT_LOOP, 0, 0);
 	}
 
 	bool DisplayMessageQueue_Win32::process(int timeout_ms)
@@ -102,26 +109,39 @@ namespace clan
 
 	void DisplayMessageQueue_Win32::post_async_work_needed()
 	{
-		PostThreadMessage(main_thread_id, WM_ASYNC_WORK, 0, 0);
+		PostMessage(async_message_window_handle, WM_ASYNC_WORK, 0, 0);
+	}
+
+	LRESULT DisplayMessageQueue_Win32::async_message_window_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+	{
+		if (msg == WM_EXIT_LOOP)
+		{
+			message_queue.exit_loop = true;
+		}
+		else if (msg == WM_ASYNC_WORK)
+		{
+			message_queue.process_async_work();
+		}
+
+		return DefWindowProc(hwnd, msg, wParam, lParam);
 	}
 
 	bool DisplayMessageQueue_Win32::process_message(MSG &msg)
 	{
-		if (msg.message == WM_QUIT || msg.message == WM_EXIT_LOOP)
+		if (msg.message == WM_QUIT)
 			return false;
 
-		if (msg.message == WM_ASYNC_WORK)
-		{
-			process_async_work();
-		}
-		else
-		{
-			allow_exceptions();
+		allow_exceptions();
 
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
 
-			process_input_contexts();
+		process_input_contexts();
+
+		if (exit_loop)
+		{
+			exit_loop = false;
+			return false;
 		}
 
 		return true;

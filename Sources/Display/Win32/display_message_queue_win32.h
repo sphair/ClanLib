@@ -63,11 +63,14 @@ namespace clan
 		}
 
 	private:
+		static LRESULT WINAPI async_message_window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
 		static void allow_exceptions();
 		void process_input_contexts();
 		bool process_message(MSG &msg);
 
-		DWORD main_thread_id = 0;
+		bool exit_loop = false;
+		HWND async_message_window_handle;
 
 		class ThreadData : public ThreadLocalStorageData
 		{
