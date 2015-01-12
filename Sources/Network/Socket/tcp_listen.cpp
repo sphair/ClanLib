@@ -161,7 +161,7 @@ namespace clan
 				throw Exception("Error accepting from socket");
 		}
 
-		out_end_point = SocketName::from_sockaddr(AF_INET, reinterpret_cast<sockaddr*>(&peer_address), peer_address_length);
+		out_end_point.from_sockaddr(AF_INET, reinterpret_cast<sockaddr*>(&peer_address), peer_address_length);
 		return TCPConnection(std::make_shared<TCPSocket>(result));
 	}
 

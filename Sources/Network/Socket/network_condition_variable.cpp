@@ -31,6 +31,11 @@
 #include "API/Network/Socket/network_condition_variable.h"
 #include "tcp_socket.h"
 
+#ifndef WIN32
+#include <unistd.h>
+#include <fcntl.h>
+#endif
+
 namespace clan
 {
 #if defined(WIN32)
@@ -98,12 +103,11 @@ namespace clan
 			if (result < 0)
 				throw Exception("Unable to create pipe handle");
 
-			result = fcntl(notify_handle[0], F_SETFL, O_NONBLOCK) < 0);
+			result = fcntl(notify_handle[0], F_SETFL, O_NONBLOCK);
 			if (result < 0)
 			{
 				::close(notify_handle[0]);
 				::close(notify_handle[1]);
-				::close(handle);
 				throw Exception("Unable to set pipe non-blocking mode");
 			}
 		}
@@ -132,7 +136,7 @@ namespace clan
 	{
 	}
 
-	bool NetworkConditionVariable::wait_impl(int count, NetworkEvent **events, int timeout)
+	bool NetworkConditionVariable::wait_impl(int count, NetworkEvent **events, int timeout_ms)
 	{
 		int max_fd = impl->notify_handle[0];
 
