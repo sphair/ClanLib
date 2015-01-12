@@ -33,6 +33,7 @@
 #include "API/Core/System/run_loop.h"
 #include <map>
 #include <thread>
+#include <algorithm>
 
 namespace clan
 {
