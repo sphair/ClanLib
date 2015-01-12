@@ -30,7 +30,6 @@
 #include "d3d_shader_object_provider.h"
 #include "API/D3D/d3d_target.h"
 #include "API/Core/Text/string_format.h"
-#include "API/Core/System/mutex.h"
 
 namespace clan
 {
@@ -183,14 +182,14 @@ void D3DShaderObjectProvider::compile()
 /////////////////////////////////////////////////////////////////////////////
 // D3DShaderObjectProvider Implementation:
 
-Mutex D3DShaderObjectProvider::d3dcompiler_mutex;
+std::recursive_mutex D3DShaderObjectProvider::d3dcompiler_mutex;
 HMODULE D3DShaderObjectProvider::d3dcompiler_dll = 0;
 D3DShaderObjectProvider::FuncD3DCompile D3DShaderObjectProvider::d3dcompile = 0;
 D3DShaderObjectProvider::FuncD3DReflect D3DShaderObjectProvider::d3dreflect = 0;
 
 void D3DShaderObjectProvider::load_compiler_dll()
 {
-	MutexSection mutex_lock(&d3dcompiler_mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(d3dcompiler_mutex);
 	if (d3dcompiler_dll == 0)
 	{
 		d3dcompiler_dll = LoadLibrary(D3DCOMPILER_DLL);

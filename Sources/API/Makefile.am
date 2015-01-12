@@ -80,10 +80,12 @@ clanCore_includes = \
 	Core/Resources/resource_object.h \
 	Core/Resources/resource.h \
 	Core/Resources/xml_resource_document.h \
+	Core/Resources/file_resource_document.h \
 	Core/Resources/xml_resource_node.h \
 	Core/Resources/resource_manager.h \
 	Core/Resources/resource_container.h \
 	Core/Resources/xml_resource_manager.h \
+	Core/Resources/file_resource_manager.h \
 	Core/ErrorReporting/detect_hang.h \
 	Core/ErrorReporting/crash_reporter.h \
 	Core/ErrorReporting/exception_dialog.h \
@@ -190,19 +192,15 @@ clanCore_includes = \
 	Core/Math/vec2.h \
 	Core/Math/easing.h \
 	Core/core_iostream.h \
-	Core/System/runnable.h \
 	Core/System/service.h \
 	Core/System/keep_alive.h \
 	Core/System/block_allocator.h \
-	Core/System/thread.h \
-	Core/System/mutex.h \
 	Core/System/userdata.h \
 	Core/System/cl_platform.h \
 	Core/System/thread_local_storage.h \
 	Core/System/event_provider.h \
 	Core/System/exception.h \
 	Core/System/datetime.h \
-	Core/System/interlocked_variable.h \
 	Core/System/registry_key.h \
 	Core/System/game_time.h \
 	Core/System/databuffer.h \

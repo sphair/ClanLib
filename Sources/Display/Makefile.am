@@ -75,6 +75,7 @@ Image/pixel_converter.cpp \
 Image/cpu_pixel_buffer_provider.cpp \
 Image/pixel_buffer_impl.cpp \
 Resources/xml_display_cache.cpp \
+Resources/file_display_cache.cpp \
 Resources/display_cache.cpp \
 Collision/collision_outline_generic.cpp \
 Collision/outline_provider_bitmap.cpp \

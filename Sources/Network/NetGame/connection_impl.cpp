@@ -49,7 +49,7 @@ void NetGameConnection_Impl::start(NetGameConnection *xbase, NetGameConnectionSi
 	connection = xconnection;
 	socket_name = connection.get_remote_name();
 	is_connected = true;
-	thread.start(this, &NetGameConnection_Impl::connection_main);
+	thread = std::thread(&NetGameConnection_Impl::connection_main, this);
 }
 
 void NetGameConnection_Impl::start(NetGameConnection *xbase, NetGameConnectionSite *xsite, const SocketName &xsocket_name)
@@ -58,12 +58,15 @@ void NetGameConnection_Impl::start(NetGameConnection *xbase, NetGameConnectionSi
 	site = xsite;
 	socket_name = xsocket_name;
 	is_connected = false;
-	thread.start(this, &NetGameConnection_Impl::connection_main);
+	thread = std::thread(&NetGameConnection_Impl::connection_main, this);
 }
 
 NetGameConnection_Impl::~NetGameConnection_Impl()
 {
-	stop_event.set();
+	std::unique_lock<std::mutex> mutex_lock(mutex);
+	stop_flag = true;
+	mutex_lock.unlock();
+	worker_event.notify();
 	thread.join();
 }
 
@@ -95,26 +98,86 @@ void *NetGameConnection_Impl::get_data(const std::string &name) const
 
 void NetGameConnection_Impl::send_event(const NetGameEvent &game_event)
 {
-	MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::mutex> mutex_lock(mutex);
 	Message message;
 	message.type = Message::type_message;
 	message.event = game_event;
 	send_queue.push_back(message);
-	queue_event.set();
+	mutex_lock.unlock();
+	worker_event.notify();
 }
 
 void NetGameConnection_Impl::disconnect()
 {
-	MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::mutex> mutex_lock(mutex);
 	Message message;
 	message.type = Message::type_disconnect;
 	send_queue.push_back(message);
-	queue_event.set();
+	mutex_lock.unlock();
+	worker_event.notify();
 }
 
 SocketName NetGameConnection_Impl::get_remote_name() const
 {
 	return socket_name;
+}
+
+bool NetGameConnection_Impl::read_connection_data(DataBuffer &receive_buffer, int &bytes_received)
+{
+	while (true)
+	{
+		int bytes = connection.read(receive_buffer.get_data() + bytes_received, receive_buffer.get_size() - bytes_received);
+		if (bytes < 0)
+			return false;
+
+		if (bytes == 0)
+		{
+			connection.close();
+			return true;
+		}
+
+		bytes_received += bytes;
+
+		int bytes_consumed = 0;
+		bool exit = read_data(receive_buffer.get_data(), bytes_received, bytes_consumed);
+
+		if (bytes_consumed >= 0)
+		{
+			memmove(receive_buffer.get_data(), receive_buffer.get_data() + bytes_consumed, bytes_received - bytes_consumed);
+			bytes_received -= bytes_consumed;
+		}
+
+		if (exit)
+			return exit;
+	}
+
+}
+
+bool NetGameConnection_Impl::write_connection_data(DataBuffer &send_buffer, int &bytes_sent, bool &send_graceful_close)
+{
+	while (true)
+	{
+		int bytes = connection.write(send_buffer.get_data() + bytes_sent, send_buffer.get_size() - bytes_sent);
+		if (bytes < 0)
+			return false;
+
+		bytes_sent += bytes;
+
+		if (bytes_sent == send_buffer.get_size())
+		{
+			if (send_graceful_close)
+			{
+				connection.close();
+				return true;
+			}
+			else
+			{
+				bytes_sent = 0;
+				send_buffer.set_size(0);
+				send_graceful_close = write_data(send_buffer);
+			}
+		}
+	}
 }
 
 void NetGameConnection_Impl::connection_main()
@@ -134,66 +197,18 @@ void NetGameConnection_Impl::connection_main()
 
 		bool send_graceful_close = false;
 
-		connection.set_nodelay(true);
 		while (true)
 		{
-			bool send_buffer_empty = (bytes_sent == send_buffer.get_size());
-
-			Event read_event = connection.get_read_event();
-			Event send_event = send_buffer_empty ? queue_event : connection.get_write_event();
-			int wakeup_reason = Event::wait(stop_event, read_event, send_event);
-			if (wakeup_reason <= 0)
-			{
+			if (read_connection_data(receive_buffer, bytes_received))
 				break;
-			}
-			else if (wakeup_reason == 1) // we got data to receive
-			{
-				int bytes = connection.read(receive_buffer.get_data() + bytes_received, receive_buffer.get_size() - bytes_received, false);
-				if (bytes <= 0)
-				{
-					connection.disconnect_graceful();
-					break;
-				}
+			if (write_connection_data(send_buffer, bytes_sent, send_graceful_close))
+				break;
 
-				bytes_received += bytes;
-
-				int bytes_consumed = 0;
-				bool exit = read_data(receive_buffer.get_data(), bytes_received, bytes_consumed);
-
-				if (bytes_consumed >= 0)
-				{
-					memmove(receive_buffer.get_data(), receive_buffer.get_data() + bytes_consumed, bytes_received - bytes_consumed);
-					bytes_received -= bytes_consumed;
-				}
-
-				if (exit)
-					break;
-			}
-			else if (wakeup_reason == 2) // we got data to send
-			{
-				if (!send_buffer_empty)
-				{
-					int bytes = connection.write(send_buffer.get_data() + bytes_sent, send_buffer.get_size() - bytes_sent, false);
-					if (bytes < 0)
-						throw Exception("TCPConnection.write failed");
-					bytes_sent += bytes;
-				}
-
-				if (bytes_sent == send_buffer.get_size())
-				{
-					if (send_graceful_close)
-					{
-						connection.disconnect_graceful();
-						break;
-					}
-					else
-					{
-						bytes_sent = 0;
-						send_buffer.set_size(0);
-						send_graceful_close = write_data(send_buffer);
-					}
-				}
-			}
+			std::unique_lock<std::mutex> lock(mutex);
+			if (stop_flag)
+				break;
+			NetworkEvent *events[] = { &connection };
+			worker_event.wait(lock, 1, events);
 		}
 
 		site->add_network_event(NetGameNetworkEvent(base, NetGameNetworkEvent::client_disconnected));
@@ -229,8 +244,7 @@ bool NetGameConnection_Impl::read_data(const void *data, int size, int &bytes_co
 
 bool NetGameConnection_Impl::write_data(DataBuffer &buffer)
 {
-	MutexSection mutex_lock(&mutex);
-	queue_event.reset();
+	std::unique_lock<std::mutex> mutex_lock(mutex);
 	std::vector<Message> new_send_queue;
 	send_queue.swap(new_send_queue);
 	mutex_lock.unlock();

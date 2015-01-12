@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "API/Core/System/mutex.h"
+#include <mutex>
 
 namespace clan
 {
@@ -40,7 +40,7 @@ public:
 	static void init();
 	static void deinit();
 
-	static Mutex cl_d3d_mutex;
+	static std::recursive_mutex cl_d3d_mutex;
 	static int cl_d3d_refcount;
 	static D3DTarget *cl_d3d_target;
 };

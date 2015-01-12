@@ -32,7 +32,6 @@
 #include "API/GL/opengl.h"
 #include "API/GL/opengl_wrap.h"
 #include "API/Core/System/exception.h"
-#include "API/Core/System/mutex.h"
 #include "API/Core/IOData/cl_endian.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Display/Render/graphic_context.h"
@@ -66,7 +65,7 @@ namespace clan
 
 cl_tls_variable GLFunctions *OpenGL::functions = nullptr;
 cl_tls_variable const OpenGLGraphicContextProvider * cl_active_opengl_gc = nullptr;
-static Mutex cl_function_map_mutex;
+static std::recursive_mutex cl_function_map_mutex;
 
 // A fix for a compiler bug with compiler version 13.00.9466
 #if _MSC_VER > 1300
@@ -257,7 +256,7 @@ bool OpenGL::set_active()
 	if (cl_active_opengl_gc)	// If already active, we can exit now
 		return true;
 
-	std::unique_ptr<MutexSection> mutex_section;
+	std::unique_ptr<std::unique_lock<std::recursive_mutex>> mutex_section;
 	GraphicContextProvider* shared_provider = SharedGCData::get_provider(mutex_section);
 	if (shared_provider)
 	{
@@ -285,7 +284,7 @@ void OpenGL::set_active(const OpenGLGraphicContextProvider * const gc_provider)
 			gc_provider->make_current();
 
 			// Map bound functions for this graphic context. Add to static cache if necessary.
-			MutexSection mutex_lock(&cl_function_map_mutex);
+			std::unique_lock<std::recursive_mutex> mutex_lock(cl_function_map_mutex);
 			cl_function_map_type::iterator it;
 			it = cl_function_map.find(gc_provider);
 			if (it != cl_function_map.end())
@@ -327,7 +326,7 @@ void OpenGL::set_active(const OpenGLGraphicContextProvider * const gc_provider)
 
 void OpenGL::remove_active(const OpenGLGraphicContextProvider * const gc_provider)
 {
-	MutexSection mutex_lock(&cl_function_map_mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(cl_function_map_mutex);
 	cl_function_map_type::iterator it;
 	it = cl_function_map.find(gc_provider);
 	if (it != cl_function_map.end())

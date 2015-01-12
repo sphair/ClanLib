@@ -43,8 +43,6 @@
 #include "pktdef.h" // PACKETDATA and PACKETMODE must be defined before pktdef include.
 
 #include "API/Display/TargetProviders/input_device_provider.h"
-#include "API/Core/System/thread.h"
-#include "API/Core/System/event.h"
 #include "API/Core/Math/point.h"
 
 namespace clan

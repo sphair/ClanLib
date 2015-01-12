@@ -78,7 +78,7 @@ bool D3DTarget::is_current()
 
 void D3DTarget::set_current()
 {
-	MutexSection mutex_lock(&SetupD3D_Impl::cl_d3d_mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(SetupD3D_Impl::cl_d3d_mutex);
 	if (!SetupD3D_Impl::cl_d3d_target)
 		throw Exception("clanD3D has not been initialised");
 	SetupD3D_Impl::cl_d3d_target->DisplayTarget::set_current();

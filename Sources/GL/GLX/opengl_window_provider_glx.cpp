@@ -642,7 +642,7 @@ GLXContext OpenGLWindowProvider::create_context(const DisplayWindowDescription &
 {
 	GLXContext shared_context = nullptr;
 
-	std::unique_ptr<MutexSection> mutex_section;
+	std::unique_ptr<std::unique_lock<std::recursive_mutex>> mutex_section;
 	GraphicContextProvider* gc_providers = SharedGCData::get_provider(mutex_section);
 	if (gc_providers)
 	{

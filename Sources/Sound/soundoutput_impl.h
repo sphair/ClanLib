@@ -30,134 +30,101 @@
 
 #include <vector>
 #include <list>
-#include "API/Core/System/thread.h"
-#include "API/Core/System/mutex.h"
-#include "API/Core/System/event.h"
 #include <memory>
+#include <mutex>
+#include <thread>
+#include <atomic>
 
 namespace clan
 {
+	class SoundFilter;
+	class SoundBuffer_Session_Impl;
+	class SoundBuffer_Session;
 
-class SoundFilter;
-class SoundBuffer_Session_Impl;
-class SoundBuffer_Session;
+	class SoundOutput_Impl
+	{
+	public:
+		SoundOutput_Impl(int mixing_frequency, int mixing_latency);
+		virtual ~SoundOutput_Impl();
 
-class SoundOutput_Impl
-{
-/// \name Construction
-/// \{
+		void play_session(SoundBuffer_Session &session);
+		void stop_session(SoundBuffer_Session &session);
 
-public:
-	SoundOutput_Impl(int mixing_frequency, int mixing_latency);
+	protected:
+		std::string name;
+		int mixing_frequency;
+		int mixing_latency;
+		float volume;
+		float pan;
+		std::vector<SoundFilter> filters;
+		std::thread thread;
+		std::atomic_bool stop_flag;
+		std::vector< SoundBuffer_Session > sessions;
 
-	virtual ~SoundOutput_Impl();
+		int mix_buffer_size;
+		float *mix_buffers[2];
+		float *temp_buffers[2];
+		float *stereo_buffer;
 
+		/// \brief Called when we have no samples to play - and wants to tell the soundcard
+		/// \brief about this possible event.
+		virtual void silence() = 0;
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief Returns the buffer size used by device (returned as num [stereo] samples).
+		virtual int get_fragment_size() = 0;
 
-public:
-	std::string name;
+		/// \brief Writes a fragment to the soundcard.
+		virtual void write_fragment(float *data) = 0;
 
-	int mixing_frequency;
+		/// \brief Waits until output source isn't full anymore.
+		virtual void wait() = 0;
 
-	int mixing_latency;
+		/// \brief Called by the mixer thread when it starts
+		virtual void mixer_thread_starting() { }
 
-	float volume;
+		/// \brief Called by the mixer thread when it stops
+		virtual void mixer_thread_stopping() { }
 
-	float pan;
+		/// \brief Starts a thread and call mix_fragment() and wait() continueously.
+		void start_mixer_thread();
 
-	std::vector<SoundFilter> filters;
+		/// \brief Stops the mixer thread.
+		void stop_mixer_thread();
 
-	Thread thread;
+		/// \brief Mixes a single fragment and stores the result in stereo_buffer.
+		void mix_fragment();
 
-	Event stop_mixer;
+	private:
+		/// \brief Worker thread for output device. Mixes the audio and sends it to write_fragment.
+		void mixer_thread();
 
-	std::vector< SoundBuffer_Session > sessions;
+		/// \brief Returns true if the mixer thread should continue mixing fragments
+		bool if_continue_mixing();
 
-	mutable Mutex mutex;
+		/// \brief Ensures the mixing buffers match the fragment size
+		void resize_mix_buffers();
 
-	int mix_buffer_size;
+		/// \brief Clears the content of the mixing buffers
+		void clear_mix_buffers();
 
-	float *mix_buffers[2];
+		/// \brief Mixes soundbuffer sessions into the mixing buffers
+		void fill_mix_buffers();
 
-	float *temp_buffers[2];
+		/// \brief Applies filters to the mixing buffers
+		void filter_mix_buffers();
 
-	float *stereo_buffer;
+		/// \brief Apply master volume and panning to mix buffers
+		void apply_master_volume_on_mix_buffers();
 
+		/// \brief Clamp mixing buffer values to the -1 to 1 range
+		void clamp_mix_buffers();
 
-/// \}
-/// \name Operations
-/// \{
+		static std::mutex singleton_mutex;
+		static SoundOutput_Impl *instance;
 
-public:
+		mutable std::mutex mutex;
 
-	void play_session(SoundBuffer_Session &session);
-
-	void stop_session(SoundBuffer_Session &session);
-
-protected:
-	/// \brief Called when we have no samples to play - and wants to tell the soundcard
-	/// \brief about this possible event.
-	virtual void silence() = 0;
-
-	/// \brief Returns the buffer size used by device (returned as num [stereo] samples).
-	virtual int get_fragment_size() = 0;
-
-	/// \brief Writes a fragment to the soundcard.
-	virtual void write_fragment(float *data) = 0;
-
-	/// \brief Waits until output source isn't full anymore.
-	virtual void wait() = 0;
-    
-    /// \brief Called by the mixer thread when it starts
-    virtual void mixer_thread_starting() { }
-    
-    /// \brief Called by the mixer thread when it stops
-    virtual void mixer_thread_stopping() { }
-
-	/// \brief Starts a thread and call mix_fragment() and wait() continueously.
-	void start_mixer_thread();
-
-	/// \brief Stops the mixer thread.
-	void stop_mixer_thread();
-
-	/// \brief Mixes a single fragment and stores the result in stereo_buffer.
-	void mix_fragment();
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	/// \brief Worker thread for output device. Mixes the audio and sends it to write_fragment.
-	void mixer_thread();
-
-	/// \brief Returns true if the mixer thread should continue mixing fragments
-	bool if_continue_mixing();
-
-	/// \brief Ensures the mixing buffers match the fragment size
-	void resize_mix_buffers();
-
-	/// \brief Clears the content of the mixing buffers
-	void clear_mix_buffers();
-
-	/// \brief Mixes soundbuffer sessions into the mixing buffers
-	void fill_mix_buffers();
-
-	/// \brief Applies filters to the mixing buffers
-	void filter_mix_buffers();
-
-	/// \brief Apply master volume and panning to mix buffers
-	void apply_master_volume_on_mix_buffers();
-
-	/// \brief Clamp mixing buffer values to the -1 to 1 range
-	void clamp_mix_buffers();
-
-	static Mutex singleton_mutex;
-	static SoundOutput_Impl *instance;
-/// \}
-};
+		friend class SoundOutput;
+	};
 
 }

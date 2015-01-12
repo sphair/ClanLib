@@ -67,7 +67,7 @@ int SoundBuffer_Session::get_position() const
 {
 	if (impl)
 	{
-		MutexSection mutex_lock(&impl->mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 		return impl->provider_session->get_position();
 	}
 	else
@@ -80,7 +80,7 @@ float SoundBuffer_Session::get_position_relative() const
 {
 	if (impl)
 	{
-		MutexSection mutex_lock(&impl->mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 		int position = impl->provider_session->get_position();
 		int length = impl->provider_session->get_num_samples();
 		if (length == 0) return 1.0f;
@@ -96,7 +96,7 @@ int SoundBuffer_Session::get_length() const
 {
 	if (impl)
 	{
-		MutexSection mutex_lock(&impl->mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 		return impl->provider_session->get_num_samples();
 	}
 	else
@@ -121,7 +121,7 @@ float SoundBuffer_Session::get_volume() const
 {
 	if (impl)
 	{
-		MutexSection mutex_lock(&impl->mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 		return impl->volume;
 	}
 	else
@@ -134,7 +134,7 @@ float SoundBuffer_Session::get_pan() const
 {
 	if (impl)
 	{
-		MutexSection mutex_lock(&impl->mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 		return impl->pan;
 	}
 	else
@@ -159,7 +159,7 @@ bool SoundBuffer_Session::is_playing()
 {
 	if (impl)
 	{
-		MutexSection mutex_lock(&impl->mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 		return impl->playing;
 	}
 	else
@@ -175,7 +175,7 @@ bool SoundBuffer_Session::set_position(int new_pos)
 {
 	if (impl)
 	{
-		MutexSection mutex_lock(&impl->mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 		if (impl->provider_session->set_position(new_pos))
 		{
 			// instantly update position here?
@@ -193,7 +193,7 @@ bool SoundBuffer_Session::set_end_position(int new_pos)
 {
 	if (impl)
 	{
-		MutexSection mutex_lock(&impl->mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 		if (impl->provider_session->set_end_position(new_pos))
 		{
 			// instantly update end position here?
@@ -242,7 +242,7 @@ void SoundBuffer_Session::play()
 {
 	if (impl)
 	{
-		MutexSection mutex_lock(&impl->mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 		if (impl->playing) return;
 		if (impl->provider_session->play())
 		{
@@ -257,7 +257,7 @@ void SoundBuffer_Session::stop()
 {
 	if (impl)
 	{
-		MutexSection mutex_lock(&impl->mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 		if (!impl->playing) return;
 		mutex_lock.unlock();
 		impl->output.impl->stop_session(*this);
@@ -271,7 +271,7 @@ void SoundBuffer_Session::set_looping(bool loop)
 {
 	if (impl)
 	{
-		MutexSection mutex_lock(&impl->mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 		impl->looping = loop;
 		impl->provider_session->set_looping(loop);
 	}
@@ -281,7 +281,7 @@ void SoundBuffer_Session::add_filter(SoundFilter &filter)
 {
 	if (impl)
 	{
-		MutexSection mutex_lock(&impl->mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 		impl->filters.push_back(filter);
 	}
 }
@@ -290,7 +290,7 @@ void SoundBuffer_Session::remove_filter(SoundFilter &filter)
 {
 	if (impl)
 	{
-		MutexSection mutex_lock(&impl->mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 		for (std::vector<SoundFilter>::size_type i=0; i<impl->filters.size(); i++)
 		{
 			if (impl->filters[i] == filter)

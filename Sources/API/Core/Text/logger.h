@@ -31,7 +31,7 @@
 
 #include "string_format.h"
 #include "string_help.h"
-#include "../System/mutex.h"
+#include <mutex>
 
 namespace clan
 {
@@ -59,7 +59,7 @@ public:
 	static std::vector<Logger*> instances;
 
 	/// \brief Logger mutex object.
-	static Mutex mutex;
+	static std::recursive_mutex mutex;
 
 /// \}
 /// \name Operations

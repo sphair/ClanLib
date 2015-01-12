@@ -806,7 +806,7 @@ void OpenGLWindowProvider::extend_frame_into_client_area(int left, int top, int 
 HGLRC OpenGLWindowProvider::get_share_context()
 {
 	HGLRC share_context = 0;
-	std::unique_ptr<MutexSection> mutex_section;
+	std::unique_ptr<std::unique_lock<std::recursive_mutex>> mutex_section;
 	GraphicContextProvider* gc_providers = SharedGCData::get_provider(mutex_section);
 	if (gc_providers)
 	{

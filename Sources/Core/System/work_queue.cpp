@@ -28,14 +28,12 @@
 
 #include "Core/precomp.h"
 #include "API/Core/System/work_queue.h"
-#include "API/Core/System/keep_alive.h"
-#include "API/Core/System/event.h"
-#include "API/Core/System/mutex.h"
-#include "API/Core/System/thread.h"
 #include "API/Core/System/system.h"
-#include "API/Core/System/interlocked_variable.h"
 #include <algorithm>
 #include "API/Core/Math/cl_math.h"
+#include <atomic>
+#include <thread>
+#include <condition_variable>
 
 namespace clan
 {
@@ -63,7 +61,7 @@ private:
 	std::function<void()> func;
 };
 
-class WorkQueue_Impl : public KeepAliveObject
+class WorkQueue_Impl
 {
 public:
 	WorkQueue_Impl(bool serial_queue);
@@ -72,19 +70,21 @@ public:
 	void queue(WorkItem *item); // transfers ownership
 	void work_completed(WorkItem *item); // transfers ownership
 
-	int get_items_queued() const { return items_queued.get(); }
+	int get_items_queued() const { return items_queued; }
+
+	void process_work_completed();
 
 private:
-	void process() override;
 	void worker_main();
 
-	bool serial_queue;
-	std::vector<Thread> threads;
-	Mutex mutex;
-	Event stop_event, work_available_event;
+	bool serial_queue = false;
+	std::vector<std::thread> threads;
+	std::mutex mutex;
+	std::condition_variable worker_event;
+	bool stop_flag = false;
 	std::vector<WorkItem *> queued_items;
 	std::vector<WorkItem *> finished_items;
-	InterlockedVariable items_queued;
+	std::atomic_int items_queued;
 };
 
 WorkQueue::WorkQueue(bool serial_queue)
@@ -116,6 +116,11 @@ int WorkQueue::get_items_queued() const
 	return impl->get_items_queued();
 }
 
+void WorkQueue::process_work_completed()
+{
+	impl->process_work_completed();
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 WorkQueue_Impl::WorkQueue_Impl(bool serial_queue)
@@ -125,7 +130,11 @@ WorkQueue_Impl::WorkQueue_Impl(bool serial_queue)
 
 WorkQueue_Impl::~WorkQueue_Impl()
 {
-	stop_event.set();
+	std::unique_lock<std::mutex> mutex_lock(mutex);
+	stop_flag = true;
+	mutex_lock.unlock();
+	worker_event.notify_all();
+
 	for (auto & elem : threads)
 		elem.join();
 	for (auto & elem : queued_items)
@@ -141,31 +150,27 @@ void WorkQueue_Impl::queue(WorkItem *item) // transfers ownership
 		int num_cores = serial_queue ? 1 : clan::max(System::get_num_cores() - 1, 1);
 		for (int i = 0; i < num_cores; i++)
 		{
-			Thread thread;
-			thread.start(this, &WorkQueue_Impl::worker_main);
-			threads.push_back(thread);
+			threads.push_back(std::thread(&WorkQueue_Impl::worker_main, this));
 		}
 	}
 
-	MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::mutex> mutex_lock(mutex);
 	queued_items.push_back(item);
-	items_queued.increment();
+	++items_queued;
 	mutex_lock.unlock();
-	work_available_event.set();
+	worker_event.notify_one();
 }
 
 void WorkQueue_Impl::work_completed(WorkItem *item) // transfers ownership
 {
-	MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::mutex> mutex_lock(mutex);
 	finished_items.push_back(item);
-	items_queued.increment();
-	mutex_lock.unlock();
-	set_wakeup_event();
+	++items_queued;
 }
 
-void WorkQueue_Impl::process()
+void WorkQueue_Impl::process_work_completed()
 {
-	MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::mutex> mutex_lock(mutex);
 	std::vector<WorkItem *> items;
 	items.swap(finished_items);
 	mutex_lock.unlock();
@@ -182,7 +187,7 @@ void WorkQueue_Impl::process()
 			throw;
 		}
 		delete items[i];
-		items_queued.decrement();
+		--items_queued;
 	}
 }
 
@@ -190,25 +195,21 @@ void WorkQueue_Impl::worker_main()
 {
 	while (true)
 	{
-		int wakeup_reason = Event::wait(stop_event, work_available_event);
-		if (wakeup_reason != 1)
+		std::unique_lock<std::mutex> mutex_lock(mutex);
+		worker_event.wait(mutex_lock, [&]() { return stop_flag || !queued_items.empty(); });
+
+		if (stop_flag)
 			break;
-		MutexSection mutex_lock(&mutex);
-		if (!queued_items.empty())
-		{
-			WorkItem *item = queued_items.front();
-			queued_items.erase(queued_items.begin());
-			mutex_lock.unlock();
-			item->process_work();
-			mutex_lock.lock();
-			finished_items.push_back(item);
-			mutex_lock.unlock();
-			set_wakeup_event();
-		}
-		else
-		{
-			work_available_event.reset();
-		}
+
+		WorkItem *item = queued_items.front();
+		queued_items.erase(queued_items.begin());
+		mutex_lock.unlock();
+
+		item->process_work();
+
+		mutex_lock.lock();
+		finished_items.push_back(item);
+		mutex_lock.unlock();
 	}
 }
 

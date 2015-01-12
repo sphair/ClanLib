@@ -32,7 +32,6 @@
 #include "../../Core/Math/rect.h"
 #include "../../Core/Math/easing.h"
 #include "../../Core/Signals/signal.h"
-#include "../../Core/System/event.h"
 #include "../../UI/Events/event.h"
 #include "../Style/box_geometry.h"
 #include "focus_policy.h"

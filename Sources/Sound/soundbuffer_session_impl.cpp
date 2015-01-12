@@ -82,7 +82,7 @@ SoundBuffer_Session_Impl::~SoundBuffer_Session_Impl()
 
 bool SoundBuffer_Session_Impl::mix_to(float **sample_data, float **temp_data, int num_samples, int num_channels)
 {
-	MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	get_data_in_mixer_frequency(num_samples, temp_data);
 	run_filters(temp_data, num_samples);
 	mix_channels(num_channels, num_samples, sample_data, temp_data);

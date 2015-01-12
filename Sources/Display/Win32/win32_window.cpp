@@ -84,7 +84,10 @@ Win32Window::~Win32Window()
 {
 	if (update_window_worker_thread_started)
 	{
-		update_window_event_stop.set();
+		std::unique_lock<std::mutex> lock(update_window_mutex);
+		update_window_stop_flag = true;
+		lock.unlock();
+		update_window_worker_event.notify_all();
 		update_window_worker_thread.join();
 	}
 	if (update_window_region)
@@ -1739,12 +1742,15 @@ void Win32Window::update_layered(PixelBuffer &image)
 {
 	if (!update_window_worker_thread_started)
 	{
-		update_window_worker_thread.start(this, &Win32Window::update_layered_worker_thread);
+		update_window_worker_thread = std::thread(&Win32Window::update_layered_worker_thread, this);
 		update_window_worker_thread_started = true;
 	}
 	else
 	{
-		update_window_event_completed.wait();
+		std::unique_lock<std::mutex> lock(update_window_mutex);
+		update_window_main_event.wait(lock, [&]() { return update_window_completed_flag; });
+		update_window_completed_flag = false;
+		lock.unlock();
 
 		// SetWindowRgn can only be called from the main thread, not a worker thread.
 		// The region is one frame behind, but nobody will notice!
@@ -1753,23 +1759,26 @@ void Win32Window::update_layered(PixelBuffer &image)
 				DeleteObject(update_window_region);
 
 		update_window_region = 0;
-
-		update_window_event_completed.reset();
 	}
 	update_window_image = image;
-	update_window_event_start.set();
+
+	std::unique_lock<std::mutex> lock(update_window_mutex);
+	update_window_start_flag = true;
+	lock.unlock();
+	update_window_worker_event.notify_one();
 }
 
 void Win32Window::update_layered_worker_thread()
 {
 	while (true)
 	{
-		int wakeup_reason = Event::wait(update_window_event_start, update_window_event_stop);
-
-		if (wakeup_reason != 0)
+		std::unique_lock<std::mutex> lock(update_window_mutex);
+		update_window_worker_event.wait(lock, [&]() { return update_window_start_flag || update_window_stop_flag; });
+		if (update_window_stop_flag)
 			break;
+		update_window_start_flag = false;
+		lock.unlock();
 
-		update_window_event_start.reset();
 		if (DwmFunctions::is_composition_enabled())
 		{
 			update_layered_worker_thread_process_dwm();
@@ -1778,8 +1787,12 @@ void Win32Window::update_layered_worker_thread()
 		{
 			update_layered_worker_thread_process();
 		}
+
+		lock.lock();
 		update_window_image = PixelBuffer();
-		update_window_event_completed.set();
+		update_window_completed_flag = true;
+		lock.unlock();
+		update_window_main_event.notify_one();
 	}
 }
 

@@ -59,7 +59,7 @@ void FontBlowUp::create_letters(Canvas &canvas)
 	const char *letters = text.data();
 	int num = text.length();
 
-	int total_length = font.get_text_size(canvas, text).width;
+	int total_length = font.measure_text(canvas, text).advance.width;
 	int x = initial_x - total_length/2;
 
 	letters_x = new float[num];
@@ -83,7 +83,7 @@ void FontBlowUp::create_letters(Canvas &canvas)
 
 		output[0] = letters[i];
 
-		x += font.get_text_size(canvas, output).width;
+		x += font.measure_text(canvas, output).advance.width;
 	}
 }
 

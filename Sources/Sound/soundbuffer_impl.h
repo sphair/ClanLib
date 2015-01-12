@@ -29,7 +29,7 @@
 #pragma once
 
 #include <vector>
-#include "API/Core/System/mutex.h"
+#include <mutex>
 
 namespace clan
 {
@@ -61,7 +61,7 @@ public:
 
 	std::vector<SoundFilter> filters;
 
-	mutable Mutex mutex;
+	mutable std::recursive_mutex mutex;
 
 
 /// \}

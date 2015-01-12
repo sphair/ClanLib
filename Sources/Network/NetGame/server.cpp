@@ -54,14 +54,13 @@ void NetGameServer::process_events()
 
 void NetGameServer::add_network_event(const NetGameNetworkEvent &e)
 {
-	MutexSection mutex_lock(&impl->mutex);
+	std::unique_lock<std::mutex> mutex_lock(impl->mutex);
 	impl->events.push_back(e);
-	impl->set_wakeup_event();
 }
 
 void NetGameServer::send_event(const NetGameEvent &game_event)
 {
-	MutexSection mutex_lock(&impl->mutex);
+	std::unique_lock<std::mutex> mutex_lock(impl->mutex);
 	for (auto & elem : impl->connections)
 	{
 		elem->send_event(game_event);
@@ -71,22 +70,29 @@ void NetGameServer::send_event(const NetGameEvent &game_event)
 void NetGameServer::start(const std::string &port)
 {
 	stop();
-	impl->stop_event.reset();
+	std::unique_lock<std::mutex> lock(impl->mutex);
+	impl->stop_flag = false;
+	lock.unlock();
 	impl->tcp_listen.reset(new TCPListen(SocketName(port)));
-	impl->listen_thread.start(this, &NetGameServer::listen_thread_main);
+	impl->listen_thread = std::thread(&NetGameServer::listen_thread_main, this);
 }
 
 void NetGameServer::start(const std::string &address, const std::string &port)
 {
 	stop();
-	impl->stop_event.reset();
+	std::unique_lock<std::mutex> lock(impl->mutex);
+	impl->stop_flag = false;
+	lock.unlock();
 	impl->tcp_listen.reset(new TCPListen(SocketName(address, port)));
-	impl->listen_thread.start(this, &NetGameServer::listen_thread_main);
+	impl->listen_thread = std::thread(&NetGameServer::listen_thread_main, this);
 }
 
 void NetGameServer::stop()
 {
-	impl->stop_event.set();
+	std::unique_lock<std::mutex> lock(impl->mutex);
+	impl->stop_flag = true;
+	lock.unlock();
+	impl->worker_event.notify();
 	impl->listen_thread.join();
 	impl->tcp_listen.reset();
 
@@ -101,15 +107,20 @@ void NetGameServer::listen_thread_main()
 {
 	while (true)
 	{
-		Event accept_event = impl->tcp_listen->get_accept_event();
-		int wakeup_reason = Event::wait(impl->stop_event, accept_event);
-		if (wakeup_reason != 1)
+		std::unique_lock<std::mutex> lock(impl->mutex);
+		if (impl->stop_flag)
 			break;
 
-		TCPConnection connection = impl->tcp_listen->accept();
-		std::unique_ptr<NetGameConnection> game_connection(new NetGameConnection(this, connection));
-		MutexSection mutex_lock(&impl->mutex);
-		impl->connections.push_back(game_connection.release());
+		NetworkEvent *events[] = { impl->tcp_listen.get() };
+		impl->worker_event.wait(lock, 1, events);
+
+		SocketName peer_endpoint;
+		TCPConnection connection = impl->tcp_listen->accept(peer_endpoint);
+		if (!connection.is_null())
+		{
+			std::unique_ptr<NetGameConnection> game_connection(new NetGameConnection(this, connection));
+			impl->connections.push_back(game_connection.release());
+		}
 	}
 }
 
@@ -130,7 +141,7 @@ Signal<void(NetGameConnection *, const NetGameEvent &)> &NetGameServer::sig_even
 
 void NetGameServer_Impl::process()
 {
-	MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::mutex> mutex_lock(mutex);
 	std::vector<NetGameNetworkEvent> new_events;
 	new_events.swap(events);
 	mutex_lock.unlock();
@@ -153,7 +164,7 @@ void NetGameServer_Impl::process()
 
 			// Destroy connection object
 			{
-				MutexSection mutex_lock(&mutex);
+				std::unique_lock<std::mutex> mutex_lock(mutex);
 				std::vector<NetGameConnection *>::iterator connection_it;
 				connection_it = std::find(connections.begin(), connections.end(), new_event.connection);
 				if (connection_it != connections.end())

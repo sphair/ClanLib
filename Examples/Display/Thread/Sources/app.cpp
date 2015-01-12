@@ -45,7 +45,7 @@ int App::start(const std::vector<std::string> &args)
 	cc.connect(window.sig_window_close(), clan::bind_member(this, &App::window_close));
 
 	// Load the font
-	clan::Font font(canvas, "tahoma", 32);
+	clan::Font font("tahoma", 32);
 
 	// Create the initial textures
 	texture_buffers[0] = clan::Texture2D(canvas, texture_size, texture_size);
@@ -83,13 +83,13 @@ int App::start(const std::vector<std::string> &args)
 	quit = false;
 	crashed_flag = false;
 
-	clan::MutexSection worker_thread_mutex_section(&worker_thread_mutex, false);
+	std::unique_lock<std::recursive_timed_mutex> worker_thread_mutex_section(worker_thread_mutex, std::defer_lock);
 
 	// We require a try block, so the worker thread exits correctly
-	clan::Thread thread;
+	std::thread thread;
 	try
 	{
-		thread.start(this, &App::worker_thread);
+		thread = std::thread(&App::worker_thread, this);
 
 		// Main loop
 		FramerateCounter framerate_counter;
@@ -286,7 +286,7 @@ void App::worker_thread()
 	try
 	{
 		
-		clan::MutexSection worker_thread_mutex_section(&worker_thread_mutex, false);
+		std::unique_lock<std::recursive_timed_mutex> worker_thread_mutex_section(worker_thread_mutex, std::defer_lock);
 
 		while(true)
 		{

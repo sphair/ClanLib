@@ -31,10 +31,10 @@
 #include "API/Core/IOData/file.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/System/exception.h"
-#include "API/Core/System/thread.h"
 #include "service_unix.h"
 #include <iostream>
 #include <signal.h>
+#include <thread>
 
 namespace clan
 {
@@ -147,8 +147,7 @@ int Service_Unix::run_daemon(std::vector<std::string> args)
 			// Starting service in seperate thread to avoid
 			// signals sent to this pid causing EINTR errors
 			// randomly in the service itself.
-			Thread thread;
-			thread.start(this, &Service_Unix::service_thread_main, args);
+			std::thread thread([=](){service_thread_main(args); });
 			while (true)
 			{
 				try
@@ -187,8 +186,8 @@ int Service_Unix::run_debug(std::vector<std::string> args)
 	// Starting service in separate thread to avoid
 	// signals sent to this pid causing EINTR errors
 	// randomly in the service itself.
-	Thread thread;
-	thread.start(this, &Service_Unix::service_thread_main, args);
+	std::thread thread([=](){service_thread_main(args); });
+
 	while (true)
 	{
 		try

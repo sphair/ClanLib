@@ -29,7 +29,6 @@
 #include "D3D/precomp.h"
 #include "d3d_texture_data.h"
 #include "API/D3D/d3d_target.h"
-#include "API/Core/System/mutex.h"
 #include "API/Display/Render/shared_gc_data.h"
 #include "d3d_graphic_context_provider.h"
 #include "d3d_display_window_provider.h"
@@ -67,7 +66,7 @@ void D3DTextureData::device_destroyed(ID3D11Device *device)
 void D3DTextureData::attach_to_another_device(ID3D11Device *not_this_device)
 {
 	// This code is used to ensure the texture is copied to another provider if the (single) owner is destroyed
-	std::unique_ptr<MutexSection> mutex_section;
+	std::unique_ptr<std::unique_lock<std::recursive_mutex>> mutex_section;
 	std::vector<GraphicContextProvider*> &gc_providers = SharedGCData::get_gc_providers(mutex_section);
 
 	unsigned int max = gc_providers.size();

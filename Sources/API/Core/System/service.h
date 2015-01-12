@@ -38,7 +38,6 @@ namespace clan
 /// \addtogroup clanCore_System clanCore System
 /// \{
 
-class Event;
 class Service_Impl;
 
 /// \brief Service/daemon class.

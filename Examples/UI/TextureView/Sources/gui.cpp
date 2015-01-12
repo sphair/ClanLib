@@ -30,26 +30,6 @@
 #include "precomp.h"
 #include "gui.h"
 
-class DisplayResources : public clan::DisplayCache
-{
-public:
-	clan::Resource<clan::Sprite> get_sprite(clan::Canvas &canvas, const std::string &id) override { throw clan::Exception("No sprite resources"); }
-	clan::Resource<clan::Image> get_image(clan::Canvas &canvas, const std::string &id) override { throw clan::Exception("No image resources"); }
-	clan::Resource<clan::Texture> get_texture(clan::GraphicContext &gc, const std::string &id) override { throw clan::Exception("No texture resources"); }
-
-	clan::Resource<clan::Font> get_font(clan::Canvas &canvas, const std::string &family_name, const clan::FontDescription &desc) override
-	{
-		if (loaded_fonts.find(family_name) == loaded_fonts.end())
-		{
-			loaded_fonts[family_name] = clan::FontFamily(family_name);
-		}
-		return clan::Font(loaded_fonts[family_name], desc);
-	}
-
-private:
-	std::map<std::string, clan::FontFamily > loaded_fonts;
-};
-
 // The start of the Application
 int GUI::start(const std::vector<std::string> &args)
 {
@@ -82,8 +62,7 @@ int GUI::start(const std::vector<std::string> &args)
 	clan::Canvas gui_canvas(canvas, gui_framebuffer);
 
 	// Create a source for our resources
-	clan::ResourceManager resources;
-	clan::DisplayCache::set(resources, std::make_shared<DisplayResources>());
+	clan::ResourceManager resources = clan::FileResourceManager::create();
 
 	// Mark this thread as the UI thread
 	clan::UIThread ui_thread(resources);

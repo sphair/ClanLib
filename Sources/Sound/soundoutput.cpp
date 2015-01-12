@@ -31,7 +31,6 @@
 #include "API/Sound/soundoutput_description.h"
 #include "API/Sound/soundfilter.h"
 #include "API/Sound/sound.h"
-#include "API/Core/System/thread.h"
 #include "soundoutput_impl.h"
 
 #ifdef WIN32
@@ -131,31 +130,31 @@ void SoundOutput::throw_if_null() const
 
 const std::string &SoundOutput::get_name() const
 {
-	MutexSection mutex_lock(&impl->mutex);
+	std::unique_lock<std::mutex> mutex_lock(impl->mutex);
 	return impl->name;
 }
 
 int SoundOutput::get_mixing_frequency() const
 {
-	MutexSection mutex_lock(&impl->mutex);
+	std::unique_lock<std::mutex> mutex_lock(impl->mutex);
 	return impl->mixing_frequency;
 }
 
 int SoundOutput::get_mixing_latency() const
 {
-	MutexSection mutex_lock(&impl->mutex);
+	std::unique_lock<std::mutex> mutex_lock(impl->mutex);
 	return impl->mixing_latency;
 }
 
 float SoundOutput::get_global_volume() const
 {
-	MutexSection mutex_lock(&impl->mutex);
+	std::unique_lock<std::mutex> mutex_lock(impl->mutex);
 	return impl->volume;
 }
 
 float SoundOutput::get_global_pan() const
 {
-	MutexSection mutex_lock(&impl->mutex);
+	std::unique_lock<std::mutex> mutex_lock(impl->mutex);
 	return impl->pan;
 }
 
@@ -170,7 +169,7 @@ void SoundOutput::set_global_volume(float volume)
 {
 	if (impl)
 	{
-		MutexSection mutex_lock(&impl->mutex);
+		std::unique_lock<std::mutex> mutex_lock(impl->mutex);
 		impl->volume = volume;
 	}
 }
@@ -179,7 +178,7 @@ void SoundOutput::set_global_pan(float pan)
 {
 	if (impl)
 	{
-		MutexSection mutex_lock(&impl->mutex);
+		std::unique_lock<std::mutex> mutex_lock(impl->mutex);
 		impl->pan = pan;
 	}
 }
@@ -188,7 +187,7 @@ void SoundOutput::add_filter(SoundFilter &filter)
 {
 	if (impl)
 	{
-		MutexSection mutex_lock(&impl->mutex);
+		std::unique_lock<std::mutex> mutex_lock(impl->mutex);
 		impl->filters.push_back(filter);
 	}
 }
@@ -197,7 +196,7 @@ void SoundOutput::remove_filter(SoundFilter &filter)
 {
 	if (impl)
 	{
-		MutexSection mutex_lock(&impl->mutex);
+		std::unique_lock<std::mutex> mutex_lock(impl->mutex);
 		for (std::vector<SoundFilter>::size_type i=0; i<impl->filters.size(); i++)
 		{
 			if (impl->filters[i] == filter)

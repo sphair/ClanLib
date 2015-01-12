@@ -69,6 +69,7 @@ public:
 FileSystem::FileSystem()
 : impl(std::make_shared<FileSystem_Impl>())
 {
+	impl->provider = new FileSystemProvider_File("");
 }
 
 FileSystem::FileSystem(FileSystem::NullVFS null_fs)

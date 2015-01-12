@@ -50,7 +50,7 @@ ThreadLocalStorage::ThreadLocalStorage()
 #ifdef WIN32
 	if (cl_core_global.cl_tls_index == TLS_OUT_OF_INDEXES)
 	{
-		MutexSection mutex_lock(&cl_core_global.cl_tls_mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(cl_core_global.cl_tls_mutex);
 		cl_core_global.cl_tls_index = TlsAlloc();
 	}
 
@@ -69,7 +69,7 @@ ThreadLocalStorage::ThreadLocalStorage()
 #elif !defined(HAVE_TLS)
 	if (!cl_core_global.cl_tls_index_created)
 	{
-		MutexSection mutex_lock(&cl_core_global.cl_tls_mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(cl_core_global.cl_tls_mutex);
 		pthread_key_create(&cl_core_global.cl_tls_index, 0);
 		cl_core_global.cl_tls_index_created = true;
 	}

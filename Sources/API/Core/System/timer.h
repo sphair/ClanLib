@@ -34,7 +34,7 @@
 namespace clan
 {
 
-class Timer_Impl;
+class TimerImpl;
 
 /// \brief Timer class that invokes a callback on a specified interval
 class Timer
@@ -44,9 +44,6 @@ class Timer
 public:
 	/// \brief Creates a timer object
 	Timer();
-
-	/// \brief Destroys the timer object
-	virtual ~Timer();
 
 	/// \brief Returns true if the timer repeats until it is stopped
 	bool is_repeating() const;
@@ -75,7 +72,7 @@ public:
 /// \name Implementation
 /// \{
 private:
-	std::shared_ptr<Timer_Impl> impl;
+	std::shared_ptr<TimerImpl> impl;
 /// \}
 };
 

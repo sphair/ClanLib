@@ -75,6 +75,11 @@ public:
 	/// \brief Returns the number of items currently queued
 	int get_items_queued() const;
 
+	/// \brief Process work completed queue
+	///
+	/// Needs to be called on the main WorkQueue thread periodically to finish queued work
+	void process_work_completed();
+
 private:
 
 	std::shared_ptr<WorkQueue_Impl> impl;

@@ -32,33 +32,11 @@
 
 using namespace clan;
 
-class DisplayResources : public DisplayCache
-{
-public:
-	Resource<Sprite> get_sprite(Canvas &canvas, const std::string &id) override { throw Exception("No sprite resources"); }
-	Resource<Image> get_image(Canvas &canvas, const std::string &id) override { throw Exception("No image resources"); }
-	Resource<Texture> get_texture(GraphicContext &gc, const std::string &id) override { throw Exception("No texture resources"); }
-
-	Resource<Font> get_font(Canvas &canvas, const std::string &family_name, const FontDescription &desc) override
-	{
-		if (loaded_fonts.find(family_name) == loaded_fonts.end())
-		{
-			loaded_fonts[family_name] = FontFamily(family_name);
-		}
-		return Font(loaded_fonts[family_name], desc);
-	}
-
-private:
-	std::map<std::string, FontFamily > loaded_fonts;
-
-};
-
 // The start of the Application
 int HelloWorld::start(const std::vector<std::string> &args)
 {
 	// Create a source for our resources
-	ResourceManager resources;
-	DisplayCache::set(resources, std::make_shared<DisplayResources>());
+	ResourceManager resources = FileResourceManager::create();
 
 	// Mark this thread as the UI thread
 	UIThread ui_thread(resources);
@@ -96,14 +74,14 @@ int HelloWorld::start(const std::vector<std::string> &args)
 
 	// Create a text field for our span layout
 	std::shared_ptr<TextFieldView> edit = std::make_shared<TextFieldView>();
-	edit->text_style().set_font("Ravie", 11.0f, 20.0f);
-	edit->set_text("42");
+	edit->text_style().set_font("Segoe UI", 11.0f, 20.0f);
+	edit->set_text("Text File View");
 	edit->box_style.set_margin(0.0f, 5.0f);
 	edit->box_style.set_background(Colorf(255, 255, 255));
 	edit->box_style.set_border(Colorf(0.0f, 0.0f, 0.0f), 1.0f);
 	edit->box_style.set_border_radius(3.0f);
 	edit->box_style.set_padding(5.0f, 2.0f, 5.0f, 3.0f);
-	edit->box_style.set_width(35.0f);
+	edit->box_style.set_width(128.0f);
 
 	// Create a span layout view with some more complex inline formatting
 	std::shared_ptr<SpanLayoutView> span = std::make_shared<SpanLayoutView>();
@@ -112,23 +90,15 @@ int HelloWorld::start(const std::vector<std::string> &args)
 	font_desc2.set_size(13.0f);
 	font_desc2.set_line_height(40.0f);
 	span->add_text("This is the UI core ", font_desc2);
-	TextStyle font_desc3;
-	font_desc3.set_font_family("Segoe UI");
-	font_desc3.set_size(18.0f);
-	font_desc3.set_line_height(40.0f);
-	span->add_text("Hello World!", font_desc3);
-	TextStyle font_desc4;
-	font_desc4.set_font_family("Segoe UI");
-	font_desc4.set_size(13.0f);
-	font_desc4.set_line_height(40.0f);
-	span->add_text(" example! Here's a text field: ", font_desc4);
+
 	span->add_subview(edit);
+
 	TextStyle font_desc5;
 	font_desc5.set_font_family("Segoe UI");
 	font_desc5.set_size(16.0f);
 	font_desc5.set_line_height(40.0f);
 	font_desc5.set_weight(FontWeight::extra_bold);
-	span->add_text(" units! sdfjghsdkfj hkjsdfhg jksdhfj gkshdfk gsjdkfghsjkdfh kgjshdfkg sjkdfh gjskhf gskjdfg hkjsdfh kgjsdhfkgjhsdkjfhgksjdfhg kjsdfhgjkshdfkhgskjdf ghkjsdfsg kdfhg skjdfhgjksdh fgsdfhg kjsdhfjkghsdkjfh gkjsdhfjkgsdhfkgjhsdkfj hgksj.", font_desc5);
+	span->add_text(" units!", font_desc5);
 	root->add_subview(span);
 
 	// Make our window visible

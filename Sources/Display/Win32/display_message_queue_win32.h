@@ -28,126 +28,121 @@
 
 #pragma once
 
-
-#include "API/Core/System/event.h"
 #include "API/Core/System/thread_local_storage.h"
+#include "Core/System/run_loop_impl.h"
 #include <vector>
 #include <WinNT.h>
 
 namespace clan
 {
+	class Win32Window;
 
-class Win32Window;
-
-class DisplayMessageQueue_Win32
-{
-/// \name Construction
-/// \{
-public:
-	DisplayMessageQueue_Win32();
-	~DisplayMessageQueue_Win32();
-
-	static DisplayMessageQueue_Win32 message_queue;
-
-/// \}
-/// \name Operations
-/// \{
-public:
-	int wait(const std::vector<Event> &events, int timeout);
-
-	void add_client(Win32Window *window);
-	void remove_client(Win32Window *window);
-
-	static bool should_apply_vista_x64_workaround()
-	{
-#ifdef _M_X86
-		return ptrSetProcessUserModeExceptionPolicy == 0 || ptrGetProcessUserModeExceptionPolicy == 0;
-#else
-		return false;
-#endif
-	}
-
- /// \}
- /// \name Implementation
- /// \{
-
-private:
-	void process_message();
-
-	class ThreadData : public ThreadLocalStorageData
+	class DisplayMessageQueue_Win32 : public RunLoopImpl
 	{
 	public:
-		ThreadData() : already_flagged(false) { }
+		DisplayMessageQueue_Win32();
+		~DisplayMessageQueue_Win32();
 
-		std::vector<Win32Window *> windows;
-		bool already_flagged;
+		static DisplayMessageQueue_Win32 message_queue;
+
+		void run() override;
+		void exit() override;
+		bool process(int timeout_ms) override;
+		void post_async_work_needed() override;
+
+		void add_client(Win32Window *window);
+		void remove_client(Win32Window *window);
+
+		static bool should_apply_vista_x64_workaround()
+		{
+#ifdef _M_X86
+			return ptrSetProcessUserModeExceptionPolicy == 0 || ptrGetProcessUserModeExceptionPolicy == 0;
+#else
+			return false;
+#endif
+		}
+
+	private:
+		static LRESULT WINAPI async_message_window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+		static void allow_exceptions();
+		void process_input_contexts();
+		bool process_message(MSG &msg);
+
+		bool exit_loop = false;
+		HWND async_message_window_handle;
+
+		class ThreadData : public ThreadLocalStorageData
+		{
+		public:
+			std::vector<Win32Window *> windows;
+		};
+
+		std::shared_ptr<ThreadData> get_thread_data();
+
+#define WIN32_PROCESS_CALLBACK_FILTER_ENABLED 0x1
+		typedef BOOL(WINAPI FuncSetProcessUserModeExceptionPolicy)(DWORD dwFlags);
+		typedef BOOL(WINAPI FuncGetProcessUserModeExceptionPolicy)(LPDWORD lpFlags);
+		static HMODULE moduleKernel32;
+		static FuncSetProcessUserModeExceptionPolicy *ptrSetProcessUserModeExceptionPolicy;
+		static FuncGetProcessUserModeExceptionPolicy *ptrGetProcessUserModeExceptionPolicy;
+		/// \}
 	};
 
-	std::shared_ptr<ThreadData> get_thread_data();
-
-	#define WIN32_PROCESS_CALLBACK_FILTER_ENABLED 0x1
-	typedef BOOL (WINAPI FuncSetProcessUserModeExceptionPolicy)(DWORD dwFlags);
-	typedef BOOL (WINAPI FuncGetProcessUserModeExceptionPolicy)(LPDWORD lpFlags);
-	static HMODULE moduleKernel32;
-	static FuncSetProcessUserModeExceptionPolicy *ptrSetProcessUserModeExceptionPolicy;
-	static FuncGetProcessUserModeExceptionPolicy *ptrGetProcessUserModeExceptionPolicy;
- /// \}
-};
-
-struct WIN32_EXCEPTION_REGISTRATION_RECORD
-{
-	WIN32_EXCEPTION_REGISTRATION_RECORD *Next;
-	void *Handler;
-};
-
-// Workaround for the KB976038 bug on unpatched systems.
-class SEHCatchAllWorkaround
-{
-public:
-	SEHCatchAllWorkaround()
-	: was_patched(DisplayMessageQueue_Win32::should_apply_vista_x64_workaround()), old_exception_handler(0)
+	struct WIN32_EXCEPTION_REGISTRATION_RECORD
 	{
-		if (was_patched)
+		WIN32_EXCEPTION_REGISTRATION_RECORD *Next;
+		void *Handler;
+	};
+
+	// Workaround for the KB976038 bug on unpatched systems.
+	class SEHCatchAllWorkaround
+	{
+	public:
+		SEHCatchAllWorkaround()
+			: was_patched(DisplayMessageQueue_Win32::should_apply_vista_x64_workaround()), old_exception_handler(0)
 		{
-			// remove all exception handler with exception of the default handler
-			NT_TIB *tib = get_tib();
-			old_exception_handler = (WIN32_EXCEPTION_REGISTRATION_RECORD*)tib->ExceptionList;
-			while (((WIN32_EXCEPTION_REGISTRATION_RECORD*)tib->ExceptionList)->Next != (WIN32_EXCEPTION_REGISTRATION_RECORD*)-1)
-				tib->ExceptionList = (_EXCEPTION_REGISTRATION_RECORD*)((WIN32_EXCEPTION_REGISTRATION_RECORD*)tib->ExceptionList)->Next;
+			if (was_patched)
+			{
+				// remove all exception handler with exception of the default handler
+				NT_TIB *tib = get_tib();
+				old_exception_handler = (WIN32_EXCEPTION_REGISTRATION_RECORD*)tib->ExceptionList;
+				while (((WIN32_EXCEPTION_REGISTRATION_RECORD*)tib->ExceptionList)->Next != (WIN32_EXCEPTION_REGISTRATION_RECORD*)-1)
+					tib->ExceptionList = (_EXCEPTION_REGISTRATION_RECORD*)((WIN32_EXCEPTION_REGISTRATION_RECORD*)tib->ExceptionList)->Next;
+			}
 		}
-	}
 
-	void unpatch()
-	{
-		if (was_patched)
+		void unpatch()
 		{
-			// restore old exception handler
-			NT_TIB *tib = get_tib();
-			tib->ExceptionList = (_EXCEPTION_REGISTRATION_RECORD*)old_exception_handler;
+			if (was_patched)
+			{
+				// restore old exception handler
+				NT_TIB *tib = get_tib();
+				tib->ExceptionList = (_EXCEPTION_REGISTRATION_RECORD*)old_exception_handler;
+			}
 		}
-	}
 
-private:
-	// get thread information block
-	NT_TIB *get_tib()
-	{
-		NT_TIB * pTib = (NT_TIB *)NtCurrentTeb();
-		return pTib;
-		//#ifdef _MSC_VER
-		//return (NT_TIB *)__readfsdword(0x18);
-		//#else
-		//NT_TIB *tib = 0;
-		//__asm
-		//{
-		//	mov EAX, FS:[18h]
-		//	mov [tib], EAX
-		//}
-		//return tib;
-		//#endif
-	}
+	private:
+		// get thread information block
+		NT_TIB *get_tib()
+		{
+			NT_TIB * pTib = (NT_TIB *)NtCurrentTeb();
+			return pTib;
+			//#ifdef _MSC_VER
+			//return (NT_TIB *)__readfsdword(0x18);
+			//#else
+			//NT_TIB *tib = 0;
+			//__asm
+			//{
+			//	mov EAX, FS:[18h]
+			//	mov [tib], EAX
+			//}
+			//return tib;
+			//#endif
+		}
 
-	bool was_patched;
-	WIN32_EXCEPTION_REGISTRATION_RECORD* old_exception_handler;
-};
+		bool was_patched;
+		WIN32_EXCEPTION_REGISTRATION_RECORD* old_exception_handler;
+	};
 
 }

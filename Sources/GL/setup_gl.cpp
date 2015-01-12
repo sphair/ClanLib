@@ -37,7 +37,7 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // SetupGL Construction:
 
-Mutex SetupGL_Impl::cl_opengl_mutex;
+std::recursive_mutex SetupGL_Impl::cl_opengl_mutex;
 int SetupGL_Impl::cl_opengl_refcount = 0;
 OpenGLTarget *SetupGL_Impl::cl_opengl_target = nullptr;
 
@@ -55,7 +55,7 @@ SetupGL::~SetupGL()
 
 void SetupGL_Impl::init()
 {
-	MutexSection mutex_lock(&SetupGL_Impl::cl_opengl_mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(SetupGL_Impl::cl_opengl_mutex);
 	if (SetupGL_Impl::cl_opengl_refcount == 0)
 		SetupGL_Impl::cl_opengl_target = new OpenGLTarget();
 	SetupGL_Impl::cl_opengl_refcount++;
@@ -63,7 +63,7 @@ void SetupGL_Impl::init()
 
 void SetupGL_Impl::deinit()
 {
-	MutexSection mutex_lock(&SetupGL_Impl::cl_opengl_mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(SetupGL_Impl::cl_opengl_mutex);
 	SetupGL_Impl::cl_opengl_refcount--;
 	if (SetupGL_Impl::cl_opengl_refcount == 0)
 		delete SetupGL_Impl::cl_opengl_target;

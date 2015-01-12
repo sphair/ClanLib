@@ -33,6 +33,7 @@
 
 #include <vector>
 #include <memory>
+#include <mutex>
 
 namespace clan
 {
@@ -43,7 +44,6 @@ class GraphicContext;
 class GraphicContextProvider;
 class DisposableObject;
 class SharedGCData_Impl;
-class MutexSection;
 
 /// \brief Shared Graphic Context Data
 class SharedGCData
@@ -67,14 +67,14 @@ public:
 	/// \param mutex_section : Returns the mutex section for the provider lock
 	///
 	/// \return NULL = None available
-	static GraphicContextProvider *get_provider(std::unique_ptr<MutexSection> &mutex_section);
+	static GraphicContextProvider *get_provider(std::unique_ptr<std::unique_lock<std::recursive_mutex>> &mutex_section);
 
 	/// \brief Get the providers
 	///
 	/// \param mutex_section : Returns the mutex section for the provider lock
 	///
 	/// \return NULL = None available
-	static std::vector<GraphicContextProvider*> &get_gc_providers(std::unique_ptr<MutexSection> &mutex_section);
+	static std::vector<GraphicContextProvider*> &get_gc_providers(std::unique_ptr<std::unique_lock<std::recursive_mutex>> &mutex_section);
 
 	/// \brief Add disposable
 	///

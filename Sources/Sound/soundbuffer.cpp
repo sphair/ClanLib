@@ -153,25 +153,25 @@ float SoundBuffer::get_pan() const
 
 void SoundBuffer::set_volume(float new_volume)
 {
-	MutexSection mutex_lock(&impl->mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 	impl->volume = new_volume;
 }
 
 void SoundBuffer::set_pan(float new_pan)
 {
-	MutexSection mutex_lock(&impl->mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 	impl->pan = new_pan;
 }
 
 void SoundBuffer::add_filter(SoundFilter &filter)
 {
-	MutexSection mutex_lock(&impl->mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 	impl->filters.push_back(filter);
 }
 
 void SoundBuffer::remove_filter(SoundFilter &filter)
 {
-	MutexSection mutex_lock(&impl->mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 	for (unsigned int i=0; i<impl->filters.size(); i++)
 	{
 		if (impl->filters[i] == filter)
@@ -194,7 +194,7 @@ SoundBuffer_Session SoundBuffer::prepare(bool looping, SoundOutput *output)
 	SoundOutput current_output = Sound::get_current_output();
 	if (output == nullptr) output = &current_output;
 
-	MutexSection mutex_lock(&impl->mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 	return SoundBuffer_Session(*this, looping, *output);
 }
 

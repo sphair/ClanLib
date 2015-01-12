@@ -54,7 +54,7 @@ int Basic2D::start(const std::vector<std::string> &args)
 
 	// Load a sprite from a png-file
 	clan::Image spr_logo(canvas, "Resources/logo.png");
-	clan::Font font(canvas, "tahoma", 24);
+	clan::Font font("tahoma", 24);
 
 	float sin_count = 0.0f;
 
@@ -108,7 +108,7 @@ int Basic2D::start(const std::vector<std::string> &args)
 		window.flip(1);
 
 		// This call processes user input and other events
-		clan::KeepAlive::process(0);
+		clan::RunLoop::process(0);
 	}
 
 	return 0;
