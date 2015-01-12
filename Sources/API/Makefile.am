@@ -14,347 +14,317 @@ clanApp_includes = \
 
 clanNetwork_includes = \
 	network.h \
-	Network/Web/http_server.h \
-	Network/Web/http_server_connection.h \
-	Network/Web/http_request_handler.h \
-	Network/Web/http_request_handler_provider.h \
-	Network/Web/web_request.h \
-	Network/Web/web_response.h \
-	Network/NetGame/client.h \
-	Network/NetGame/connection.h \
-	Network/NetGame/connection_site.h \
-	Network/NetGame/event.h \
-	Network/NetGame/event_dispatcher.h \
-	Network/NetGame/event_value.h \
-	Network/NetGame/server.h \
-	Network/Socket/dns_packet.h \
-	Network/Socket/dns_resolver.h \
-	Network/Socket/dns_resource_record.h \
-	Network/Socket/socket_name.h \
-	Network/Socket/tcp_connection.h \
-	Network/Socket/tcp_listen.h \
-	Network/Socket/udp_socket.h \
-	Network/TLS/tls_connection.h \
-	Network/setupnetwork.h
-
-clanSound_includes = \
-	sound.h \
-	Sound/soundfilter.h \
+	Sound/soundoutput_description.h \
+	Sound/soundoutput.h \
+	Sound/soundbuffer_session.h \
 	Sound/soundbuffer.h \
 	Sound/soundformat.h \
 	Sound/setupsound.h \
-	Sound/sound_sse.h \
-	Sound/SoundProviders/soundprovider_type.h \
-	Sound/SoundProviders/soundfilter_provider.h \
-	Sound/SoundProviders/soundprovider_type_register.h \
-	Sound/SoundProviders/soundprovider.h \
-	Sound/SoundProviders/soundprovider_raw.h \
-	Sound/SoundProviders/soundprovider_factory.h \
-	Sound/SoundProviders/soundprovider_session.h \
-	Sound/SoundProviders/soundprovider_vorbis.h \
-	Sound/SoundProviders/soundprovider_wave.h \
-	Sound/Resources/sound_cache.h \
-	Sound/soundbuffer_session.h \
-	Sound/SoundFilters/inverse_echofilter.h \
 	Sound/SoundFilters/fadefilter.h \
 	Sound/SoundFilters/echofilter.h \
-	Sound/AudioWorld/audio_world.h \
+	Sound/SoundFilters/inverse_echofilter.h \
+	Sound/cd_drive.h \
+	Sound/sound_sse.h \
 	Sound/AudioWorld/audio_object.h \
 	Sound/AudioWorld/audio_definition.h \
-	Sound/soundoutput_description.h \
-	Sound/soundoutput.h \
+	Sound/AudioWorld/audio_world.h \
+	Sound/Resources/sound_cache.h \
+	Sound/SoundProviders/soundprovider_type_register.h \
+	Sound/SoundProviders/soundprovider_type.h \
+	Sound/SoundProviders/soundprovider_session.h \
+	Sound/SoundProviders/soundprovider_factory.h \
+	Sound/SoundProviders/soundprovider_wave.h \
+	Sound/SoundProviders/soundprovider.h \
+	Sound/SoundProviders/soundprovider_raw.h \
+	Sound/SoundProviders/soundprovider_vorbis.h \
+	Sound/SoundProviders/soundfilter_provider.h \
 	Sound/sound.h \
-	Sound/cd_drive.h
+	Sound/soundfilter.h
 
 clanCore_includes = \
 	core.h \
-	Core/Signals/bind_member.h \
-	Core/Signals/signal.h \
-	Core/Text/utf8_reader.h \
-	Core/Text/logger.h \
-	Core/Text/string_help.h \
-	Core/Text/file_logger.h \
-	Core/Text/console.h \
-	Core/Text/string_format.h \
-	Core/Text/console_logger.h \
-	Core/Resources/resource_object.h \
-	Core/Resources/resource.h \
-	Core/Resources/xml_resource_document.h \
-	Core/Resources/file_resource_document.h \
-	Core/Resources/xml_resource_node.h \
-	Core/Resources/resource_manager.h \
-	Core/Resources/resource_container.h \
-	Core/Resources/xml_resource_manager.h \
-	Core/Resources/file_resource_manager.h \
-	Core/ErrorReporting/detect_hang.h \
-	Core/ErrorReporting/crash_reporter.h \
-	Core/ErrorReporting/exception_dialog.h \
-	Core/Crypto/tls_client.h \
-	Core/Crypto/md5.h \
-	Core/Crypto/hash_functions.h \
-	Core/Crypto/aes192_decrypt.h \
-	Core/Crypto/sha256.h \
-	Core/Crypto/aes128_encrypt.h \
-	Core/Crypto/rsa.h \
-	Core/Crypto/sha384.h \
-	Core/Crypto/aes192_encrypt.h \
-	Core/Crypto/aes256_decrypt.h \
-	Core/Crypto/aes128_decrypt.h \
-	Core/Crypto/sha512_224.h \
-	Core/Crypto/sha224.h \
-	Core/Crypto/sha1.h \
-	Core/Crypto/sha512_256.h \
-	Core/Crypto/random.h \
-	Core/Crypto/aes256_encrypt.h \
-	Core/Crypto/secret.h \
-	Core/Crypto/sha512.h \
-	Core/IOData/file_help.h \
-	Core/IOData/iodevice.h \
-	Core/IOData/iodevice_memory.h \
-	Core/IOData/directory_listing_entry.h \
-	Core/IOData/iodevice_provider.h \
-	Core/IOData/pipe_listen.h \
-	Core/IOData/directory.h \
-	Core/IOData/file_system.h \
-	Core/IOData/directory_scanner.h \
-	Core/IOData/file_system_provider.h \
-	Core/IOData/html_url.h \
-	Core/IOData/path_help.h \
-	Core/IOData/file.h \
-	Core/IOData/directory_listing.h \
-	Core/IOData/cl_endian.h \
-	Core/IOData/pipe_connection.h \
-	Core/XML/dom_processing_instruction.h \
-	Core/XML/dom_notation.h \
-	Core/XML/xml_writer.h \
-	Core/XML/dom_character_data.h \
-	Core/XML/dom_cdata_section.h \
-	Core/XML/xpath_exception.h \
-	Core/XML/xpath_object.h \
-	Core/XML/dom_entity.h \
-	Core/XML/xml_token.h \
-	Core/XML/dom_element.h \
-	Core/XML/dom_node.h \
-	Core/XML/dom_exception.h \
-	Core/XML/dom_entity_reference.h \
-	Core/XML/dom_implementation.h \
-	Core/XML/dom_node_list.h \
-	Core/XML/dom_string.h \
-	Core/XML/dom_document_type.h \
-	Core/XML/xpath_evaluator.h \
-	Core/XML/dom_document_fragment.h \
-	Core/XML/dom_named_node_map.h \
-	Core/XML/dom_comment.h \
-	Core/XML/dom_attr.h \
-	Core/XML/dom_document.h \
-	Core/XML/dom_text.h \
-	Core/XML/xml_tokenizer.h \
-	Core/Zip/zip_writer.h \
-	Core/Zip/zip_file_entry.h \
-	Core/Zip/zip_reader.h \
-	Core/Zip/zip_archive.h \
-	Core/Zip/zlib_compression.h \
-	Core/Math/half_float.h \
-	Core/Math/quad.h \
-	Core/Math/frustum_planes.h \
-	Core/Math/ear_clip_triangulator.h \
-	Core/Math/size.h \
-	Core/Math/vec4.h \
-	Core/Math/delauney_triangulator.h \
-	Core/Math/pointset_math.h \
-	Core/Math/circle.h \
-	Core/Math/intersection_test.h \
-	Core/Math/line.h \
-	Core/Math/mat2.h \
-	Core/Math/rect.h \
-	Core/Math/bezier_curve.h \
-	Core/Math/line_ray.h \
-	Core/Math/aabb.h \
-	Core/Math/angle.h \
-	Core/Math/base64_encoder.h \
-	Core/Math/half_float_vector.h \
-	Core/Math/line_math.h \
-	Core/Math/big_int.h \
-	Core/Math/vec3.h \
-	Core/Math/rect_packer.h \
-	Core/Math/cl_math.h \
-	Core/Math/outline_triangulator.h \
-	Core/Math/obb.h \
-	Core/Math/origin.h \
-	Core/Math/mat4.h \
-	Core/Math/mat3.h \
-	Core/Math/quaternion.h \
-	Core/Math/base64_decoder.h \
-	Core/Math/point.h \
-	Core/Math/ear_clip_result.h \
-	Core/Math/triangle_math.h \
-	Core/Math/line_segment.h \
-	Core/Math/vec2.h \
-	Core/Math/easing.h \
-	Core/core_iostream.h \
-	Core/System/service.h \
-	Core/System/keep_alive.h \
-	Core/System/block_allocator.h \
-	Core/System/userdata.h \
+	Core/System/setup_core.h \
 	Core/System/cl_platform.h \
-	Core/System/thread_local_storage.h \
-	Core/System/event_provider.h \
-	Core/System/exception.h \
-	Core/System/datetime.h \
+	Core/System/system.h \
+	Core/System/service.h \
 	Core/System/registry_key.h \
 	Core/System/game_time.h \
 	Core/System/databuffer.h \
-	Core/System/setup_core.h \
-	Core/System/timer.h \
-	Core/System/comptr.h \
-	Core/System/console_window.h \
+	Core/System/datetime.h \
+	Core/System/run_loop.h \
+	Core/System/exception.h \
+	Core/System/thread_local_storage.h \
 	Core/System/disposable_object.h \
-	Core/System/event.h \
+	Core/System/console_window.h \
+	Core/System/block_allocator.h \
+	Core/System/userdata.h \
+	Core/System/timer.h \
 	Core/System/work_queue.h \
+	Core/System/comptr.h \
+	Core/XML/xml_tokenizer.h \
+	Core/XML/dom_named_node_map.h \
+	Core/XML/dom_node_list.h \
+	Core/XML/dom_attr.h \
+	Core/XML/dom_notation.h \
+	Core/XML/dom_comment.h \
+	Core/XML/dom_string.h \
+	Core/XML/dom_character_data.h \
+	Core/XML/xpath_evaluator.h \
+	Core/XML/xpath_exception.h \
+	Core/XML/dom_entity_reference.h \
+	Core/XML/xml_token.h \
+	Core/XML/dom_processing_instruction.h \
+	Core/XML/dom_document_fragment.h \
+	Core/XML/xml_writer.h \
+	Core/XML/dom_document_type.h \
+	Core/XML/dom_element.h \
+	Core/XML/dom_entity.h \
+	Core/XML/dom_exception.h \
+	Core/XML/xpath_object.h \
+	Core/XML/dom_cdata_section.h \
+	Core/XML/dom_node.h \
+	Core/XML/dom_text.h \
+	Core/XML/dom_implementation.h \
+	Core/XML/dom_document.h \
+	Core/Zip/zip_reader.h \
+	Core/Zip/zlib_compression.h \
+	Core/Zip/zip_archive.h \
+	Core/Zip/zip_file_entry.h \
+	Core/Zip/zip_writer.h \
+	Core/core_iostream.h \
+	Core/Math/pointset_math.h \
+	Core/Math/easing.h \
+	Core/Math/size.h \
+	Core/Math/obb.h \
+	Core/Math/aabb.h \
+	Core/Math/angle.h \
+	Core/Math/ear_clip_result.h \
+	Core/Math/origin.h \
+	Core/Math/circle.h \
+	Core/Math/quad.h \
+	Core/Math/base64_decoder.h \
+	Core/Math/line.h \
+	Core/Math/triangle_math.h \
+	Core/Math/vec4.h \
+	Core/Math/mat3.h \
+	Core/Math/mat2.h \
+	Core/Math/rect_packer.h \
+	Core/Math/line_ray.h \
+	Core/Math/intersection_test.h \
+	Core/Math/big_int.h \
+	Core/Math/outline_triangulator.h \
+	Core/Math/rect.h \
+	Core/Math/line_segment.h \
+	Core/Math/ear_clip_triangulator.h \
+	Core/Math/delauney_triangulator.h \
+	Core/Math/quaternion.h \
+	Core/Math/vec3.h \
+	Core/Math/half_float_vector.h \
+	Core/Math/frustum_planes.h \
+	Core/Math/base64_encoder.h \
+	Core/Math/vec2.h \
+	Core/Math/point.h \
+	Core/Math/mat4.h \
+	Core/Math/bezier_curve.h \
+	Core/Math/cl_math.h \
+	Core/Math/line_math.h \
+	Core/Math/half_float.h \
+	Core/ErrorReporting/crash_reporter.h \
+	Core/ErrorReporting/exception_dialog.h \
+	Core/ErrorReporting/detect_hang.h \
 	Core/JSON/json_value.h \
-	Core/System/system.h
+	Core/Text/file_logger.h \
+	Core/Text/string_help.h \
+	Core/Text/logger.h \
+	Core/Text/utf8_reader.h \
+	Core/Text/console_logger.h \
+	Core/Text/string_format.h \
+	Core/Text/console.h \
+	Core/Signals/signal.h \
+	Core/Signals/bind_member.h \
+	Core/IOData/path_help.h \
+	Core/IOData/file_help.h \
+	Core/IOData/directory_listing_entry.h \
+	Core/IOData/iodevice_memory.h \
+	Core/IOData/file.h \
+	Core/IOData/file_system_provider.h \
+	Core/IOData/iodevice_provider.h \
+	Core/IOData/file_system.h \
+	Core/IOData/directory_listing.h \
+	Core/IOData/directory_scanner.h \
+	Core/IOData/iodevice.h \
+	Core/IOData/cl_endian.h \
+	Core/IOData/directory.h \
+	Core/IOData/html_url.h \
+	Core/Resources/file_resource_manager.h \
+	Core/Resources/resource_object.h \
+	Core/Resources/xml_resource_node.h \
+	Core/Resources/xml_resource_document.h \
+	Core/Resources/resource_manager.h \
+	Core/Resources/xml_resource_manager.h \
+	Core/Resources/resource_container.h \
+	Core/Resources/file_resource_document.h \
+	Core/Resources/resource.h \
+	Core/Crypto/random.h \
+	Core/Crypto/md5.h \
+	Core/Crypto/sha256.h \
+	Core/Crypto/sha1.h \
+	Core/Crypto/sha512_224.h \
+	Core/Crypto/aes192_decrypt.h \
+	Core/Crypto/aes256_encrypt.h \
+	Core/Crypto/rsa.h \
+	Core/Crypto/tls_client.h \
+	Core/Crypto/aes128_decrypt.h \
+	Core/Crypto/sha384.h \
+	Core/Crypto/hash_functions.h \
+	Core/Crypto/aes128_encrypt.h \
+	Core/Crypto/aes256_decrypt.h \
+	Core/Crypto/sha512_256.h \
+	Core/Crypto/aes192_encrypt.h \
+	Core/Crypto/secret.h \
+	Core/Crypto/sha224.h \
+	Core/Crypto/sha512.h
 
 clanDisplay_includes = \
 	display.h \
 	d3d.h \
-	Display/Render/vertex_array_buffer.h \
-	Display/Render/texture_cube.h \
-	Display/Render/transfer_vector.h \
-	Display/Render/shader_object.h \
-	Display/Render/texture_2d_array.h \
-	Display/Render/blend_state_description.h \
-	Display/Render/element_array_buffer.h \
-	Display/Render/program_object.h \
-	Display/Render/primitives_array.h \
-	Display/Render/shared_gc_data.h \
-	Display/Render/uniform_vector.h \
-	Display/Render/texture_3d.h \
-	Display/Render/render_buffer.h \
-	Display/Render/texture.h \
-	Display/Render/frame_buffer.h \
-	Display/Render/blend_state.h \
-	Display/Render/vertex_array_vector.h \
-	Display/Render/graphic_context.h \
-	Display/Render/occlusion_query.h \
-	Display/Render/transfer_buffer.h \
-	Display/Render/rasterizer_state.h \
-	Display/Render/depth_stencil_state.h \
-	Display/Render/texture_2d.h \
-	Display/Render/render_batcher.h \
-	Display/Render/transfer_texture.h \
-	Display/Render/texture_1d_array.h \
-	Display/Render/rasterizer_state_description.h \
-	Display/Render/storage_buffer.h \
-	Display/Render/storage_vector.h \
-	Display/Render/uniform_buffer.h \
-	Display/Render/texture_cube_array.h \
-	Display/Render/texture_1d.h \
-	Display/Render/element_array_vector.h \
-	Display/Render/depth_stencil_state_description.h \
-	Display/display_target.h \
-	Display/2D/image.h \
-	Display/2D/texture_group.h \
-	Display/2D/gradient.h \
-	Display/2D/span_layout.h \
-	Display/2D/color.h \
-	Display/2D/canvas.h \
-	Display/2D/sprite.h \
-	Display/2D/subtexture.h \
-	Display/2D/color_hsv.h \
-	Display/2D/color_hsl.h \
-	Display/2D/path.h \
-	Display/2D/pen.h \
-	Display/2D/brush.h \
-	Display/screen_info.h \
-	Display/Image/pixel_buffer_lock.h \
-	Display/Image/pixel_buffer_help.h \
+	Display/ShaderEffect/shader_effect.h \
+	Display/ShaderEffect/shader_effect_description.h \
+	Display/Window/cursor_description.h \
+	Display/Window/input_device.h \
+	Display/Window/keys.h \
+	Display/Window/display_window_description.h \
+	Display/Window/input_context.h \
+	Display/Window/input_event.h \
+	Display/Window/display_window.h \
+	Display/Window/cursor.h \
+	Display/Window/input_code.h \
 	Display/Image/pixel_buffer.h \
 	Display/Image/pixel_converter.h \
+	Display/Image/pixel_buffer_help.h \
 	Display/Image/image_import_description.h \
 	Display/Image/buffer_usage.h \
 	Display/Image/texture_format.h \
 	Display/Image/perlin_noise.h \
-	Display/Image/icon_set.h \
 	Display/Image/pixel_buffer_set.h \
-	Display/Resources/display_cache.h \
-	Display/Font/font_family.h \
-	Display/Font/font.h \
+	Display/Image/icon_set.h \
+	Display/Image/pixel_buffer_lock.h \
+	Display/display.h \
+	Display/2D/path.h \
+	Display/2D/canvas.h \
+	Display/2D/color.h \
+	Display/2D/image.h \
+	Display/2D/color_hsv.h \
+	Display/2D/color_hsl.h \
+	Display/2D/subtexture.h \
+	Display/2D/gradient.h \
+	Display/2D/sprite.h \
+	Display/2D/texture_group.h \
+	Display/2D/span_layout.h \
+	Display/2D/brush.h \
+	Display/2D/pen.h \
+	Display/Render/shared_gc_data.h \
+	Display/Render/uniform_vector.h \
+	Display/Render/transfer_vector.h \
+	Display/Render/program_object.h \
+	Display/Render/texture_3d.h \
+	Display/Render/uniform_buffer.h \
+	Display/Render/rasterizer_state_description.h \
+	Display/Render/shader_object.h \
+	Display/Render/texture_2d_array.h \
+	Display/Render/texture_2d.h \
+	Display/Render/depth_stencil_state_description.h \
+	Display/Render/texture_cube.h \
+	Display/Render/frame_buffer.h \
+	Display/Render/transfer_texture.h \
+	Display/Render/transfer_buffer.h \
+	Display/Render/rasterizer_state.h \
+	Display/Render/vertex_array_buffer.h \
+	Display/Render/texture_cube_array.h \
+	Display/Render/element_array_buffer.h \
+	Display/Render/graphic_context.h \
+	Display/Render/vertex_array_vector.h \
+	Display/Render/texture_1d.h \
+	Display/Render/texture_1d_array.h \
+	Display/Render/blend_state.h \
+	Display/Render/primitives_array.h \
+	Display/Render/texture.h \
+	Display/Render/render_batcher.h \
+	Display/Render/storage_vector.h \
+	Display/Render/storage_buffer.h \
+	Display/Render/occlusion_query.h \
+	Display/Render/render_buffer.h \
+	Display/Render/element_array_vector.h \
+	Display/Render/blend_state_description.h \
+	Display/Render/depth_stencil_state.h \
 	Display/Font/font_metrics.h \
+	Display/Font/font.h \
+	Display/Font/font_family.h \
 	Display/Font/glyph_metrics.h \
 	Display/Font/font_description.h \
-	Display/ShaderEffect/shader_effect_description.h \
-	Display/ShaderEffect/shader_effect.h \
-	Display/Window/input_device.h \
-	Display/Window/cursor_description.h \
-	Display/Window/input_event.h \
-	Display/Window/display_window.h \
-	Display/Window/cursor.h \
-	Display/Window/keys.h \
-	Display/Window/display_window_description.h \
-	Display/Window/input_context.h \
-	Display/Window/input_code.h \
-	Display/ImageProviders/targa_provider.h \
-	Display/ImageProviders/png_output_description.h \
+	Display/screen_info.h \
+	Display/setup_display.h \
+	Display/display_target.h \
 	Display/ImageProviders/dds_provider.h \
-	Display/ImageProviders/provider_type_register.h \
-	Display/ImageProviders/jpeg_provider.h \
-	Display/ImageProviders/provider_factory.h \
 	Display/ImageProviders/provider_type.h \
+	Display/ImageProviders/provider_factory.h \
+	Display/ImageProviders/targa_provider.h \
+	Display/ImageProviders/provider_type_register.h \
 	Display/ImageProviders/png_provider.h \
-	Display/display.h \
-	Display/TargetProviders/render_buffer_provider.h \
-	Display/TargetProviders/input_device_provider.h \
-	Display/TargetProviders/primitives_array_provider.h \
-	Display/TargetProviders/uniform_buffer_provider.h \
-	Display/TargetProviders/graphic_context_provider.h \
-	Display/TargetProviders/program_object_provider.h \
+	Display/ImageProviders/png_output_description.h \
+	Display/ImageProviders/jpeg_provider.h \
+	Display/Resources/display_cache.h \
 	Display/TargetProviders/shader_object_provider.h \
-	Display/TargetProviders/texture_provider.h \
 	Display/TargetProviders/element_array_buffer_provider.h \
+	Display/TargetProviders/texture_provider.h \
+	Display/TargetProviders/storage_buffer_provider.h \
+	Display/TargetProviders/primitives_array_provider.h \
+	Display/TargetProviders/input_device_provider.h \
+	Display/TargetProviders/program_object_provider.h \
 	Display/TargetProviders/occlusion_query_provider.h \
-	Display/TargetProviders/pixel_buffer_provider.h \
+	Display/TargetProviders/frame_buffer_provider.h \
+	Display/TargetProviders/cursor_provider.h \
 	Display/TargetProviders/transfer_buffer_provider.h \
+	Display/TargetProviders/render_buffer_provider.h \
+	Display/TargetProviders/vertex_array_buffer_provider.h \
 	Display/TargetProviders/display_target_provider.h \
 	Display/TargetProviders/display_window_provider.h \
-	Display/TargetProviders/vertex_array_buffer_provider.h \
-	Display/TargetProviders/storage_buffer_provider.h \
-	Display/TargetProviders/cursor_provider.h \
-	Display/TargetProviders/frame_buffer_provider.h \
-	Display/setup_display.h
+	Display/TargetProviders/pixel_buffer_provider.h \
+	Display/TargetProviders/graphic_context_provider.h \
+	Display/TargetProviders/uniform_buffer_provider.h
 
 clanUI_includes = \
 	ui.h \
-	UI/UIThread/ui_thread.h \
-	UI/ViewController/view_controller.h \
-	UI/StandardViews/progress_view.h \
-	UI/StandardViews/text_field_view.h \
-	UI/StandardViews/text_view.h \
-	UI/StandardViews/spinner_view.h \
-	UI/StandardViews/button_view.h \
-	UI/StandardViews/window_view.h \
-	UI/StandardViews/label_view.h \
-	UI/StandardViews/popup_view.h \
-	UI/StandardViews/image_view.h \
-	UI/StandardViews/texture_view.h \
-	UI/StandardViews/span_layout_view.h \
-	UI/StandardViews/scrollbar_view.h \
-	UI/StandardViews/scroll_view.h \
-	UI/SystemDialogs/folder_browse_dialog.h \
+	UI/Style/box_geometry.h \
+	UI/Style/box_style.h \
+	UI/Style/text_style.h \
 	UI/SystemDialogs/open_file_dialog.h \
 	UI/SystemDialogs/save_file_dialog.h \
-	UI/Events/activation_change_event.h \
-	UI/Events/pointer_event.h \
-	UI/Events/event.h \
-	UI/Events/resize_event.h \
+	UI/SystemDialogs/folder_browse_dialog.h \
+	UI/UIThread/ui_thread.h \
 	UI/Events/key_event.h \
-	UI/Events/focus_change_event.h \
 	UI/Events/close_event.h \
-	UI/View/view.h \
+	UI/Events/event.h \
+	UI/Events/pointer_event.h \
+	UI/Events/activation_change_event.h \
+	UI/Events/resize_event.h \
+	UI/Events/focus_change_event.h \
+	UI/StandardViews/label_view.h \
+	UI/StandardViews/text_field_view.h \
+	UI/StandardViews/image_view.h \
+	UI/StandardViews/scrollbar_view.h \
+	UI/StandardViews/window_view.h \
+	UI/StandardViews/spinner_view.h \
+	UI/StandardViews/texture_view.h \
+	UI/StandardViews/text_view.h \
+	UI/StandardViews/button_view.h \
+	UI/StandardViews/scroll_view.h \
+	UI/StandardViews/progress_view.h \
+	UI/StandardViews/span_layout_view.h \
+	UI/StandardViews/popup_view.h \
+	UI/ViewController/view_controller.h \
 	UI/View/focus_policy.h \
-	UI/Style/text_style.h \
-	UI/Style/box_geometry.h \
-	UI/Style/box_style.h
-
+	UI/View/view.h
 
 ClanLibincludedir=$(includedir)/ClanLib-@LT_RELEASE@/ClanLib
 nobase_ClanLibinclude_HEADERS = @ClanLib_API_Modules@
