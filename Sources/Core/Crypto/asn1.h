@@ -93,7 +93,7 @@ public:
 		tag_bmpstring = 0x1d
 	};
 
-	void get_object_identifier(std::vector<ubyte32> &output);
+	void get_object_identifier(std::vector<uint32_t> &output);
 
 	ASN1 get_next();
 	ASN1 get_next_universal_set();
@@ -101,7 +101,7 @@ public:
 	ASN1 get_next_universal_oid();
 	ASN1 get_next_universal_printablestring();
 
-	ubyte32 get_next_universal_integer_ubyte32();
+	uint32_t get_next_universal_integer_ubyte32();
 	void get_next_universal_bitstring(std::vector<unsigned char> &output);
 
 	void get_universal_integer(std::vector<unsigned char> &output) const;
@@ -128,7 +128,7 @@ public:
 /// \{
 
 private:
-	ubyte8 identifier;
+	uint8_t identifier;
 	ASN1_Class type_class;
 	bool is_constructed;	// Else is primitive
 	ASN1_Tag tag;

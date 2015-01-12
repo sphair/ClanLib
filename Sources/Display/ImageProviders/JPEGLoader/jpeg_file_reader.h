@@ -39,8 +39,8 @@ namespace clan
 class JPEGStartOfFrame;
 class JPEGStartOfScan;
 
-typedef ubyte16 JPEGDefineRestartInterval;
-typedef ubyte16 JPEGDefineNumberOfLines;
+typedef uint16_t JPEGDefineRestartInterval;
+typedef uint16_t JPEGDefineNumberOfLines;
 
 class JPEGFileReader
 {

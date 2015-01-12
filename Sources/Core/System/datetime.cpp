@@ -43,7 +43,7 @@ namespace clan
 {
 
 #ifndef WIN32
-const byte64 DateTime::ticks_from_1601_to_1900 = 94354848000000000LL;
+const int64_t DateTime::ticks_from_1601_to_1900 = 94354848000000000LL;
 #endif
 
 DateTime::DateTime()
@@ -86,17 +86,17 @@ DateTime DateTime::get_current_utc_time()
 	unix_ticks = time(&unix_ticks);
 	if (unix_ticks == -1)
 		throw Exception("Failed to get current UTC time");
-	byte64 ticks = ticks_from_1601_to_1900 + ((byte64) unix_ticks) * 10000000;
+	int64_t ticks = ticks_from_1601_to_1900 + ((int64_t) unix_ticks) * 10000000;
 	return DateTime::get_utc_time_from_ticks(ticks);
 #endif
 }
 
-DateTime DateTime::get_local_time_from_ticks(byte64 ticks)
+DateTime DateTime::get_local_time_from_ticks(int64_t ticks)
 {
 	return get_utc_time_from_ticks(ticks).to_local();
 }
 
-DateTime DateTime::get_utc_time_from_ticks(byte64 ticks)
+DateTime DateTime::get_utc_time_from_ticks(int64_t ticks)
 {
 	DateTime datetime;
 	datetime.timezone = utc_timezone;
@@ -118,7 +118,7 @@ DateTime DateTime::get_utc_time_from_ticks(byte64 ticks)
 		result = SystemTimeToFileTime(&system_time, &file_time);
 		if (result == FALSE)
 			throw Exception("SystemTimeToFileTime failed");
-		byte64 new_ticks = (((byte64)file_time.dwHighDateTime) << 32) + file_time.dwLowDateTime;
+		int64_t new_ticks = (((int64_t)file_time.dwHighDateTime) << 32) + file_time.dwLowDateTime;
 		datetime.nanoseconds += (ticks - new_ticks)*100;
 	#else
 		tm tm_utc;
@@ -138,7 +138,7 @@ DateTime DateTime::get_utc_time_from_ticks(byte64 ticks)
 	return datetime;
 }
 
-byte64 DateTime::to_ticks() const
+int64_t DateTime::to_ticks() const
 {
 	throw_if_null();
 	if (timezone == local_timezone)
@@ -160,11 +160,11 @@ byte64 DateTime::to_ticks() const
 		BOOL result = SystemTimeToFileTime(&system_time, &file_time);
 		if (result == FALSE)
 			throw Exception("SystemTimeToFileTime failed");
-		byte64 ticks = (((byte64)file_time.dwHighDateTime) << 32) + file_time.dwLowDateTime;
+		int64_t ticks = (((int64_t)file_time.dwHighDateTime) << 32) + file_time.dwLowDateTime;
 		ticks += (nanoseconds % 1000000)/100;
 		return ticks;
 	#else
-		byte64 ticks;
+		int64_t ticks;
 	
 		ticks = year - 1601;
 		ticks *= 365;	// Days in a year
@@ -941,43 +941,43 @@ std::string DateTime::to_string() const
 
 bool DateTime::operator <(const DateTime &other) const
 {
-	byte64 a = is_null() ? 0 : to_ticks();
-	byte64 b = other.is_null() ? 0 : other.to_ticks();
+	int64_t a = is_null() ? 0 : to_ticks();
+	int64_t b = other.is_null() ? 0 : other.to_ticks();
 	return a < b;
 }
 
 bool DateTime::operator <=(const DateTime &other) const
 {
-	byte64 a = is_null() ? 0 : to_ticks();
-	byte64 b = other.is_null() ? 0 : other.to_ticks();
+	int64_t a = is_null() ? 0 : to_ticks();
+	int64_t b = other.is_null() ? 0 : other.to_ticks();
 	return a <= b;
 }
 
 bool DateTime::operator >(const DateTime &other) const
 {
-	byte64 a = is_null() ? 0 : to_ticks();
-	byte64 b = other.is_null() ? 0 : other.to_ticks();
+	int64_t a = is_null() ? 0 : to_ticks();
+	int64_t b = other.is_null() ? 0 : other.to_ticks();
 	return a > b;
 }
 
 bool DateTime::operator >=(const DateTime &other) const
 {
-	byte64 a = is_null() ? 0 : to_ticks();
-	byte64 b = other.is_null() ? 0 : other.to_ticks();
+	int64_t a = is_null() ? 0 : to_ticks();
+	int64_t b = other.is_null() ? 0 : other.to_ticks();
 	return a >= b;
 }
 
 bool DateTime::operator ==(const DateTime &other) const
 {
-	byte64 a = is_null() ? 0 : to_ticks();
-	byte64 b = other.is_null() ? 0 : other.to_ticks();
+	int64_t a = is_null() ? 0 : to_ticks();
+	int64_t b = other.is_null() ? 0 : other.to_ticks();
 	return a == b;
 }
 
 bool DateTime::operator !=(const DateTime &other) const
 {
-	byte64 a = is_null() ? 0 : to_ticks();
-	byte64 b = other.is_null() ? 0 : other.to_ticks();
+	int64_t a = is_null() ? 0 : to_ticks();
+	int64_t b = other.is_null() ? 0 : other.to_ticks();
 	return a != b;
 }
 

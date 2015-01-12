@@ -66,36 +66,36 @@ public:
 	static const int aes256_nb_mult_nr_plus1 = aes256_block_size_nb * (aes256_num_rounds_nr+1);
 	static const int aes256_block_size_bytes = aes256_block_size_nb * 4;
 
-	static ubyte32 sbox_substitution_values[256];
-	static ubyte32 sbox_inverse_substitution_values[256];
-	static ubyte32 rcon_values[10];
+	static uint32_t sbox_substitution_values[256];
+	static uint32_t sbox_inverse_substitution_values[256];
+	static uint32_t rcon_values[10];
 
 	// Combining SubBytes and ShiftRows with MixColumns, and transforming them into a sequence of table lookups
-	static ubyte32 table_e0[256];
-	static ubyte32 table_e1[256];
-	static ubyte32 table_e2[256];
-	static ubyte32 table_e3[256];
-	static ubyte32 table_d0[256];
-	static ubyte32 table_d1[256];
-	static ubyte32 table_d2[256];
-	static ubyte32 table_d3[256];
+	static uint32_t table_e0[256];
+	static uint32_t table_e1[256];
+	static uint32_t table_e2[256];
+	static uint32_t table_e3[256];
+	static uint32_t table_d0[256];
+	static uint32_t table_d1[256];
+	static uint32_t table_d2[256];
+	static uint32_t table_d3[256];
 /// \}
 /// \name Operations
 /// \{
 
 public:
-	void extract_encrypt_key128(const unsigned char key[aes128_key_length_bytes], ubyte32 key_expanded[aes128_nb_mult_nr_plus1]);
-	void extract_encrypt_key192(const unsigned char key[aes192_key_length_bytes], ubyte32 key_expanded[aes192_nb_mult_nr_plus1]);
-	void extract_encrypt_key256(const unsigned char key[aes256_key_length_bytes], ubyte32 key_expanded[aes256_nb_mult_nr_plus1]);
-	void extract_decrypt_key(ubyte32 *key_expanded, int num_rounds);
-	void store_block(ubyte32 s0, ubyte32 s1, ubyte32 s2, ubyte32 s3, DataBuffer &databuffer);
+	void extract_encrypt_key128(const unsigned char key[aes128_key_length_bytes], uint32_t key_expanded[aes128_nb_mult_nr_plus1]);
+	void extract_encrypt_key192(const unsigned char key[aes192_key_length_bytes], uint32_t key_expanded[aes192_nb_mult_nr_plus1]);
+	void extract_encrypt_key256(const unsigned char key[aes256_key_length_bytes], uint32_t key_expanded[aes256_nb_mult_nr_plus1]);
+	void extract_decrypt_key(uint32_t *key_expanded, int num_rounds);
+	void store_block(uint32_t s0, uint32_t s1, uint32_t s2, uint32_t s3, DataBuffer &databuffer);
 
-	inline ubyte32 get_word(const unsigned char *data) const
+	inline uint32_t get_word(const unsigned char *data) const
 	{
 		return ( (data[0] << 24) | (data[1] << 16) | (data[2] << 8) | (data[3]) );
 	}
 
-	inline void put_word(ubyte32 source_value, unsigned char *dest_data) const
+	inline void put_word(uint32_t source_value, unsigned char *dest_data) const
 	{
 		dest_data[0] = (unsigned char) (source_value >> 24);
 		dest_data[1] = (unsigned char) (source_value >> 16);

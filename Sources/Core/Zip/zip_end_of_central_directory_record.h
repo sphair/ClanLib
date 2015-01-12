@@ -51,21 +51,21 @@ public:
 /// \{
 
 public:
-	byte32 signature; // 0x06054b50
+	int32_t signature; // 0x06054b50
 
-	byte16 number_of_this_disk;
+	int16_t number_of_this_disk;
 
-	byte16 number_of_disk_with_start_of_central_directory;
+	int16_t number_of_disk_with_start_of_central_directory;
 
-	byte16 number_of_entries_on_this_disk;
+	int16_t number_of_entries_on_this_disk;
 
-	byte16 number_of_entries_in_central_directory;
+	int16_t number_of_entries_in_central_directory;
 
-	byte32 size_of_central_directory;
+	int32_t size_of_central_directory;
 
-	byte32 offset_to_start_of_central_directory;
+	int32_t offset_to_start_of_central_directory;
 
-	byte16 file_comment_length;
+	int16_t file_comment_length;
 
 	std::string file_comment;
 

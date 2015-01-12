@@ -133,25 +133,25 @@ enum TLS_AlertDescription
 
 typedef struct	// As stated in TLS specification
 {
-	ubyte8 major, minor;
+	uint8_t major, minor;
 } TLS_ProtocolVersion;
 
 typedef struct {	// As stated in TLS specification
-	ubyte8 type;		// TLS_ContentType
+	uint8_t type;		// TLS_ContentType
 	TLS_ProtocolVersion version;
-	ubyte8 length[2];
+	uint8_t length[2];
 } TLS_Record;
 
 typedef struct	// As stated in TLS specification
 {
-	ubyte8 msg_type;		// TLS_HandshakeType
-	ubyte8 length[3];			// bytes in message
+	uint8_t msg_type;		// TLS_HandshakeType
+	uint8_t length[3];			// bytes in message
 } TLS_Handshake;
 
 typedef struct	// As stated in TLS specification
 {
-	ubyte8 gmt_unix_time[4];
-	ubyte8 random_bytes[28];		// opaque
+	uint8_t gmt_unix_time[4];
+	uint8_t random_bytes[28];		// opaque
 } TLS_Random;
 
 class TLS_SecurityParameters
@@ -192,12 +192,12 @@ public:
 	TLS_ConnectionEnd entity;
 	TLS_BulkCipherAlgorithm bulk_cipher_algorithm;
 	TLS_CipherType cipher_type;
-	ubyte8 key_size;
-	ubyte8 key_material_length;
-	ubyte8 iv_size;
+	uint8_t key_size;
+	uint8_t key_material_length;
+	uint8_t iv_size;
 	bool is_exportable;
 	TLS_MACAlgorithm mac_algorithm;
-	ubyte8 hash_size;
+	uint8_t hash_size;
 	TLS_CompressionMethod compression_algorithm;
 	Secret master_secret;
 	Secret client_random;
@@ -209,8 +209,8 @@ public:
 	Secret server_write_key;
 	Secret client_write_iv;
 	Secret server_write_iv;
-	ubyte64 read_sequence_number;
-	ubyte64 write_sequence_number;
+	uint64_t read_sequence_number;
+	uint64_t write_sequence_number;
 
 	bool is_send_encrypted;
 	bool is_receive_encrypted;
@@ -295,8 +295,8 @@ private:
 	void set_compression_methods(unsigned char *dest_ptr) const;
 	int get_cipher_suites_length() const;
 	void set_cipher_suites(unsigned char *dest_ptr) const;
-	void select_cipher_suite(ubyte8 value1, ubyte8 value2);
-	void select_compression_method(ubyte8 value);
+	void select_cipher_suite(uint8_t value1, uint8_t value2);
+	void select_compression_method(uint8_t value);
 	void inspect_certificate(std::vector<unsigned char> &cert);
 	void set_server_public_key();
 	void PRF(void *output_ptr, unsigned int output_size, const Secret &secret, const char *label_ptr, const Secret &seed_part1, const Secret &seed_part2);
@@ -305,7 +305,7 @@ private:
 	DataBuffer decrypt_record(TLS_Record &record, const DataBuffer &record_data);
 	DataBuffer decrypt_data(const void *data_ptr, unsigned int data_size);
 
-	Secret calculate_mac(const void *data_ptr, unsigned int data_size, const void *data2_ptr, unsigned int data2_size, ubyte64 sequence_number, const Secret &mac_secret);
+	Secret calculate_mac(const void *data_ptr, unsigned int data_size, const void *data2_ptr, unsigned int data2_size, uint64_t sequence_number, const Secret &mac_secret);
 	DataBuffer encrypt_data(const void *data_ptr, unsigned int data_size, const void *mac_ptr, unsigned int mac_size);
 
 	static const unsigned int max_record_length = 2<<14;	// RFC 2246 (6.2.1)

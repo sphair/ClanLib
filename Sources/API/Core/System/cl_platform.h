@@ -32,6 +32,7 @@
 #pragma once
 
 #include <cstring>
+#include <cstdint>
 
 #ifdef WIN32
 // GCC automatically sets __SSE2__
@@ -41,30 +42,11 @@
 #endif
 #endif
 
+
 namespace clan
 {
 /// \addtogroup clanCore_System clanCore System
 /// \{
-
-#if defined(WIN32) && (defined(__MINGW32__) == 0)
-typedef __int8             byte8;
-typedef unsigned __int8    ubyte8;
-typedef __int16            byte16;
-typedef unsigned __int16   ubyte16;
-typedef __int32            byte32;
-typedef unsigned __int32   ubyte32;
-typedef __int64            byte64;
-typedef unsigned __int64   ubyte64;
-#else
-typedef char               byte8;
-typedef unsigned char      ubyte8;
-typedef short              byte16;
-typedef unsigned short     ubyte16;
-typedef int                byte32;
-typedef unsigned int       ubyte32;
-typedef long long          byte64;
-typedef unsigned long long ubyte64;
-#endif
 
 const float  PI_F =		   3.14159274101257f;
 const double PI_D =	 3.141592653589793115998;

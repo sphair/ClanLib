@@ -45,7 +45,7 @@ ASN1::ASN1(const unsigned char *base_ptr, unsigned int length)
 /////////////////////////////////////////////////////////////////////////////
 // ASN1 Attributes:
 
-void ASN1::get_object_identifier(std::vector<ubyte32> &output)
+void ASN1::get_object_identifier(std::vector<uint32_t> &output)
 {
 	output.clear();
 
@@ -74,7 +74,7 @@ void ASN1::get_object_identifier(std::vector<ubyte32> &output)
 	end_ptr = data_ptr + length;
 	while(read_ptr < end_ptr)
 	{
-		ubyte32 value = 0;
+		uint32_t value = 0;
 		unsigned char temp;
 
 		do
@@ -90,7 +90,7 @@ void ASN1::get_object_identifier(std::vector<ubyte32> &output)
 			first_time  = false;
 			// "The numerical value of the first subidentifier is derived from the values of the first two object identifier components in the object identifier value being encoded, using the formula:"
 			// "(X*40) + Y"
-			ubyte32 out = value / 40;
+			uint32_t out = value / 40;
 			output.push_back(out);
 			output.push_back(value - (out * 40));
 		}
@@ -171,14 +171,14 @@ bool ASN1::is_context_specific() const
 	return false;
 }
 
-ubyte32 ASN1::get_next_universal_integer_ubyte32()
+uint32_t ASN1::get_next_universal_integer_ubyte32()
 {
 	ASN1 tag = get_next();
 	if ( (tag.type_class != ASN1::class_universal)
 		|| (tag.tag != ASN1::tag_integer) )
 			throw_invalid();
 
-	ubyte32 value = 0;
+	uint32_t value = 0;
 	for (unsigned int cnt=0; cnt<tag.length; cnt++)
 	{
 		value = (value << 8) | tag.data_ptr[cnt];
@@ -350,7 +350,7 @@ void ASN1::read(const unsigned char *base_ptr, unsigned int x_length)
 		if (read_ptr>=end_ptr)
 			throw_eof();
 
-		ubyte8 value = *(read_ptr++);
+		uint8_t value = *(read_ptr++);
 		read_tag = (read_tag << 7) | (value & 0x4f);
 	}
 
@@ -359,7 +359,7 @@ void ASN1::read(const unsigned char *base_ptr, unsigned int x_length)
 	if (read_ptr>=end_ptr)
 		throw_eof();
 
-	ubyte8 value = *(read_ptr++);
+	uint8_t value = *(read_ptr++);
 	if (value & 0x80)
 	{
 		// Note - The length value 0x80, used only in constructed form types, is defined as "indefinite length".

@@ -1270,7 +1270,7 @@ PixelBuffer Win32Window::get_clipboard_image() const
 		HGLOBAL handle = reinterpret_cast<HGLOBAL>(GetClipboardData(png_format));
 		if (handle)
 		{
-			ubyte8 *data = reinterpret_cast<ubyte8 *>(GlobalLock(handle));
+			uint8_t *data = reinterpret_cast<uint8_t *>(GlobalLock(handle));
 			size_t size = GlobalSize(handle);
 
 			PixelBuffer image = get_argb8888_from_png(data, size);
@@ -1343,7 +1343,7 @@ PixelBuffer Win32Window::get_argb8888_from_rgb_dib(BITMAPV5HEADER *bitmapInfo, s
 		throw Exception("GetDIBits failed");
 
 	// GetDIBits above sets the alpha channel to 0 - need to convert it to 255.
-	ubyte8 *data = (ubyte8 *)bitmap_data.get_data();
+	uint8_t *data = (uint8_t *)bitmap_data.get_data();
 	for (int y=0; y<abs(bitmapInfo->bV5Height); y++)
 	{
 		for (int x=0; x<abs(bitmapInfo->bV5Width); x++)
@@ -1406,7 +1406,7 @@ PixelBuffer Win32Window::get_argb8888_from_bitfields_dib(BITMAPV5HEADER *bitmapI
 		throw Exception("GetDIBits failed");
 
 	// GetDIBits above sets the alpha channel to 0 - need to convert it to 255.
-	ubyte8 *data = (ubyte8 *)bitmap_data.get_data();
+	uint8_t *data = (uint8_t *)bitmap_data.get_data();
 	for (int y=0; y<abs(bitmapInfo->bV5Height); y++)
 	{
 		for (int x=0; x<abs(bitmapInfo->bV5Width); x++)
@@ -1430,23 +1430,23 @@ PixelBuffer Win32Window::get_argb8888_from_bitfields_dib(BITMAPV5HEADER *bitmapI
 
 void Win32Window::flip_pixelbuffer_vertical(PixelBuffer &pbuf) const
 {
-	ubyte8 *data = (ubyte8*)pbuf.get_data();
+	uint8_t *data = (uint8_t*)pbuf.get_data();
 
 	for (int y=0; y<(pbuf.get_height()/2); y++)
 	{
-		ubyte32 *dy = (ubyte32*)(data + (y*pbuf.get_pitch()));
-		ubyte32 *dy2 = (ubyte32*)(data + (pbuf.get_height()-y-1)*pbuf.get_pitch());
+		uint32_t *dy = (uint32_t*)(data + (y*pbuf.get_pitch()));
+		uint32_t *dy2 = (uint32_t*)(data + (pbuf.get_height()-y-1)*pbuf.get_pitch());
 
 		for (int x=0; x<pbuf.get_width(); x++)
 		{
-			ubyte32 tmp = dy[x];
+			uint32_t tmp = dy[x];
 			dy[x] = dy2[x];
 			dy2[x] = tmp;
 		}
 	}
 }
 
-PixelBuffer Win32Window::get_argb8888_from_png(ubyte8 *data, size_t size) const
+PixelBuffer Win32Window::get_argb8888_from_png(uint8_t *data, size_t size) const
 {
 	DataBuffer data_buffer(data, size);
 	IODevice_Memory iodev(data_buffer);

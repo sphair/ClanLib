@@ -132,7 +132,7 @@ void SHA1_Impl::add(const void *_data, int size)
 			chunk_filled = 0;
 		}
 	}
-	length_message += size * (ubyte64) 8;
+	length_message += size * (uint64_t) 8;
 }
 
 void SHA1_Impl::set_hmac(const void *key_data, int key_size)
@@ -238,15 +238,15 @@ void SHA1_Impl::process_chunk()
 	for (i = 16; i < 80; i++)
 		w[i] = leftrotate_uint32(w[i-3] ^ w[i-8] ^ w[i-14] ^ w[i-16], 1);
 		
-	ubyte32 a = h0;
-	ubyte32 b = h1;
-	ubyte32 c = h2;
-	ubyte32 d = h3;
-	ubyte32 e = h4;
+	uint32_t a = h0;
+	uint32_t b = h1;
+	uint32_t c = h2;
+	uint32_t d = h3;
+	uint32_t e = h4;
 	
 	for (i = 0; i < 80; i++)
 	{
-		ubyte32 f, k;
+		uint32_t f, k;
 		if (i < 20)
 		{
 			f = (b & c) | ((~b) & d);
@@ -268,7 +268,7 @@ void SHA1_Impl::process_chunk()
 			k = 0xCA62C1D6;
 		}
 		
-		ubyte32 temp = leftrotate_uint32(a, 5) + f + e + k + w[i];
+		uint32_t temp = leftrotate_uint32(a, 5) + f + e + k + w[i];
 		e = d;
 		d = c;
 		c = leftrotate_uint32(b, 30);

@@ -64,7 +64,7 @@ public:
 	void begin_file(const std::string &filename, bool compress);
 
 	/// \brief Writes some file data to the zip file.
-	void write_file_data(const void *data, byte64 size);
+	void write_file_data(const void *data, int64_t size);
 
 	/// \brief Ends the file entry.
 	void end_file();

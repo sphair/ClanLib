@@ -58,22 +58,22 @@ BigInt::BigInt() : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allo
 {
 }
 
-BigInt::BigInt(ubyte32 value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
+BigInt::BigInt(uint32_t value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
 {
 	set(value);
 }
 
-BigInt::BigInt(byte32 value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
+BigInt::BigInt(int32_t value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
 {
 	set(value);
 }
 
-BigInt::BigInt(ubyte64 value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
+BigInt::BigInt(uint64_t value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
 {
 	set(value);
 }
 
-BigInt::BigInt(byte64 value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
+BigInt::BigInt(int64_t value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
 {
 	set(value);
 }
@@ -124,64 +124,64 @@ int BigInt::significant_bits() const
 	return impl->significant_bits();
 }
 
-void BigInt::div_d(ubyte32 d, BigInt *q, ubyte32 *r) const
+void BigInt::div_d(uint32_t d, BigInt *q, uint32_t *r) const
 {
 	impl->div_d(d, q->impl.get(), r);
 }
 
-ubyte32 BigInt::mod_d(ubyte32 d) const
+uint32_t BigInt::mod_d(uint32_t d) const
 {
 	return impl->mod_d(d);
 }
 
-void BigInt::sieve(const ubyte32 *primes, unsigned int num_primes, std::vector<unsigned char> &sieve)
+void BigInt::sieve(const uint32_t *primes, unsigned int num_primes, std::vector<unsigned char> &sieve)
 {
 	impl->sieve(primes, num_primes, sieve);
 }
 
-void BigInt::set(ubyte32 d)
+void BigInt::set(uint32_t d)
 {
 	impl->set(d);
 }
 
-void BigInt::set(byte32 d)
+void BigInt::set(int32_t d)
 {
 	impl->set(d);
 }
 
-void BigInt::set(ubyte64 d)
+void BigInt::set(uint64_t d)
 {
 	impl->set(d);
 }
 
-void BigInt::set(byte64 d)
+void BigInt::set(int64_t d)
 {
 	impl->set(d);
 }
 
 
-void BigInt::get(ubyte32 &d)
+void BigInt::get(uint32_t &d)
 {
 	impl->get(d);
 }
 
-void BigInt::get(byte32 &d)
+void BigInt::get(int32_t &d)
 {
 	impl->get(d);
 }
 
 
-void BigInt::get(ubyte64 &d)
+void BigInt::get(uint64_t &d)
 {
 	impl->get(d);
 }
 
-void BigInt::get(byte64 &d)
+void BigInt::get(int64_t &d)
 {
 	impl->get(d);
 }
 
-void BigInt::div(ubyte32 d, BigInt *q, BigInt *r) const
+void BigInt::div(uint32_t d, BigInt *q, BigInt *r) const
 {
 	impl->div_2d(d, q->impl.get(), r->impl.get());
 }
@@ -198,7 +198,7 @@ BigInt BigInt::operator + (const BigInt& b)
 	impl->add(b.impl.get(), c.impl.get());
 	return c;
 }
-BigInt BigInt::operator + (ubyte32 d)
+BigInt BigInt::operator + (uint32_t d)
 {
 	BigInt c;
 	impl->add_d(d, c.impl.get());
@@ -212,7 +212,7 @@ BigInt BigInt::operator += (const BigInt& b)
 	return *this;
 }
 
-BigInt BigInt::operator += (ubyte32 d)
+BigInt BigInt::operator += (uint32_t d)
 {
 	BigInt c;
 	impl->add_d(d, impl.get());
@@ -226,7 +226,7 @@ BigInt BigInt::operator - (const BigInt& b)
 	return c;
 }
 
-BigInt BigInt::operator - (ubyte32 d)
+BigInt BigInt::operator - (uint32_t d)
 {
 	BigInt c;
 	impl->sub_d(d, c.impl.get());
@@ -239,7 +239,7 @@ BigInt BigInt::operator -= (const BigInt& b)
 	return *this;
 }
 
-BigInt BigInt::operator -= (ubyte32 d)
+BigInt BigInt::operator -= (uint32_t d)
 {
 	impl->sub_d(d, impl.get());
 	return *this;
@@ -250,7 +250,7 @@ BigInt BigInt::operator * (const BigInt& b)
 	impl->mul(b.impl.get(), c.impl.get());
 	return c;
 }
-BigInt BigInt::operator * (ubyte32 d)
+BigInt BigInt::operator * (uint32_t d)
 {
 	BigInt c;
 	impl->mul_d(d, c.impl.get());
@@ -263,7 +263,7 @@ BigInt BigInt::operator *= (const BigInt& b)
 	impl->mul(b.impl.get(), impl.get());
 	return *this;
 }
-BigInt BigInt::operator *= (ubyte32 d)
+BigInt BigInt::operator *= (uint32_t d)
 {
 	BigInt c;
 	impl->mul_d(d, impl.get());
@@ -276,7 +276,7 @@ BigInt BigInt::operator / (const BigInt& b)
 	impl->div(b.impl.get(), c.impl.get(), nullptr);
 	return c;
 }
-BigInt BigInt::operator / (ubyte32 d)
+BigInt BigInt::operator / (uint32_t d)
 {
 	BigInt c;
 	impl->div_d(d, c.impl.get(), nullptr);
@@ -290,7 +290,7 @@ BigInt BigInt::operator /= (const BigInt& b)
 	return *this;
 }
 
-BigInt BigInt::operator /= (ubyte32 d)
+BigInt BigInt::operator /= (uint32_t d)
 {
 	BigInt c;
 	impl->div_d(d, impl.get(), nullptr);
@@ -302,7 +302,7 @@ BigInt BigInt::operator % (const BigInt& b)
 	impl->div(b.impl.get(), nullptr, c.impl.get());
 	return c;
 }
-BigInt BigInt::operator % (ubyte32 d)
+BigInt BigInt::operator % (uint32_t d)
 {
 	BigInt c;
 	impl->div_2d(d, nullptr, c.impl.get());
@@ -315,7 +315,7 @@ BigInt BigInt::operator %= (const BigInt& b)
 	impl->div(b.impl.get(), nullptr, impl.get());
 	return *this;
 }
-BigInt BigInt::operator %= (ubyte32 d)
+BigInt BigInt::operator %= (uint32_t d)
 {
 	BigInt c;
 	impl->div_2d(d, nullptr, impl.get());
@@ -337,12 +337,12 @@ void BigInt::exptmod(const BigInt *b, const BigInt *m, BigInt *c) const
 	impl->exptmod(b->impl.get(), m->impl.get(), c->impl.get());
 }
 
-bool BigInt::fermat(ubyte32 w) const
+bool BigInt::fermat(uint32_t w) const
 {
 	return impl->fermat(w);
 }
 
-int BigInt::cmp_d(ubyte32 d) const
+int BigInt::cmp_d(uint32_t d) const
 {
 	return impl->cmp_d(d);
 }

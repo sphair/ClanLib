@@ -175,7 +175,7 @@ private:
 	void create_hid_devices();
 	void setup_tablet();
 
-	PixelBuffer get_argb8888_from_png(ubyte8 *data, size_t size) const;
+	PixelBuffer get_argb8888_from_png(uint8_t *data, size_t size) const;
 	PixelBuffer get_argb8888_from_rgb_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const;
 	PixelBuffer get_argb8888_from_bitfields_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const;
 

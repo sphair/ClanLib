@@ -81,12 +81,12 @@ float GameTime::get_current_time() const
 	return (float) timer;
 }
 
-ubyte64 GameTime::get_current_time_microseconds() const
+uint64_t GameTime::get_current_time_microseconds() const
 {
 	return (impl->current_time - impl->start_time);
 }
 
-ubyte64 GameTime::get_current_time_ms() const
+uint64_t GameTime::get_current_time_ms() const
 {
 	return (impl->current_time - impl->start_time) / 1000;
 }
@@ -98,15 +98,15 @@ void GameTime::update()
 
 void GameTime_Impl::update()
 {
-	ubyte64 last_time = current_time;
+	uint64_t last_time = current_time;
 
 	current_time = System::get_microseconds();
 
 	if (current_time < last_time)		// Old cpu's may report time travelling on early multicore processors (iirc)
 		last_time = current_time;
 
-	ubyte64 ticks_per_microsecond = 1000000 / ticks_per_second;
-	ubyte64 current_tick = (current_time - start_time) / ticks_per_microsecond;
+	uint64_t ticks_per_microsecond = 1000000 / ticks_per_second;
+	uint64_t current_tick = (current_time - start_time) / ticks_per_microsecond;
 
 	ticks_elapsed = current_tick - last_tick;
 	time_elapsed_ms = (int) ((current_time - last_time) / 1000);

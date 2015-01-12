@@ -331,8 +331,8 @@ PixelBuffer PixelBuffer::copy(const Rect &rect) const
 	int new_height = rect.get_height();
 
 	PixelBuffer pbuf(new_width, new_height, get_format());
-	ubyte8 *dst_data = (ubyte8 *)pbuf.get_data();
-	ubyte8 *src_data = (ubyte8 *)get_data() + (rect.top*size.width + rect.left)*get_bytes_per_pixel();
+	uint8_t *dst_data = (uint8_t *)pbuf.get_data();
+	uint8_t *src_data = (uint8_t *)get_data() + (rect.top*size.width + rect.left)*get_bytes_per_pixel();
 
 	int byte_width = new_width * get_bytes_per_pixel();
 	int src_pitch = get_pitch();
@@ -449,17 +449,17 @@ void PixelBuffer::premultiply_alpha()
 		{
 			int w = get_width();
 			int h = get_height();
-			ubyte32 *p = (ubyte32 *) get_data();
+			uint32_t *p = (uint32_t *) get_data();
 			for (int y = 0; y < h; y++)
 			{
 				int index = y * w;
-				ubyte32 *line = p + index;
+				uint32_t *line = p + index;
 				for (int x = 0; x < w; x++)
 				{
-					ubyte32 a = ((line[x] >> 24) & 0xff);
-					ubyte32 b = ((line[x] >> 16) & 0xff);
-					ubyte32 g = ((line[x] >> 8) & 0xff);
-					ubyte32 r = (line[x] & 0xff);
+					uint32_t a = ((line[x] >> 24) & 0xff);
+					uint32_t b = ((line[x] >> 16) & 0xff);
+					uint32_t g = ((line[x] >> 8) & 0xff);
+					uint32_t r = (line[x] & 0xff);
 
 					r = r * a / 255;
 					g = g * a / 255;
@@ -473,17 +473,17 @@ void PixelBuffer::premultiply_alpha()
 		{
 			int w = get_width();
 			int h = get_height();
-			ubyte32 *p = (ubyte32 *) get_data();
+			uint32_t *p = (uint32_t *) get_data();
 			for (int y = 0; y < h; y++)
 			{
 				int index = y * w;
-				ubyte32 *line = p + index;
+				uint32_t *line = p + index;
 				for (int x = 0; x < w; x++)
 				{
-					ubyte32 a = ((line[x] >> 24) & 0xff);
-					ubyte32 r = ((line[x] >> 16) & 0xff);
-					ubyte32 g = ((line[x] >> 8) & 0xff);
-					ubyte32 b = (line[x] & 0xff);
+					uint32_t a = ((line[x] >> 24) & 0xff);
+					uint32_t r = ((line[x] >> 16) & 0xff);
+					uint32_t g = ((line[x] >> 8) & 0xff);
+					uint32_t b = (line[x] & 0xff);
 
 					r = r * a / 255;
 					g = g * a / 255;
@@ -497,17 +497,17 @@ void PixelBuffer::premultiply_alpha()
 		{
 			int w = get_width();
 			int h = get_height();
-			ubyte16 *p = (ubyte16 *) get_data();
+			uint16_t *p = (uint16_t *) get_data();
 			for (int y = 0; y < h; y++)
 			{
 				int index = y * w;
-				ubyte16 *line = p + index;
+				uint16_t *line = p + index;
 				for (int x = 0; x < w; x++)
 				{
-					ubyte32 r = line[x * 4];
-					ubyte32 g = line[x * 4 + 1];
-					ubyte32 b = line[x * 4 + 2];
-					ubyte32 a = line[x * 4 + 3];
+					uint32_t r = line[x * 4];
+					uint32_t g = line[x * 4 + 1];
+					uint32_t b = line[x * 4 + 2];
+					uint32_t a = line[x * 4 + 3];
 
 					r = r * a / 65535;
 					g = g * a / 65535;

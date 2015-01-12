@@ -99,13 +99,13 @@ public:
 private:
 	void process_chunk();
 
-	ubyte32 key_expanded[aes128_nb_mult_nr_plus1];
+	uint32_t key_expanded[aes128_nb_mult_nr_plus1];
 
 	unsigned char chunk[aes128_block_size_bytes];
-	ubyte32 initialisation_vector_1;
-	ubyte32 initialisation_vector_2;
-	ubyte32 initialisation_vector_3;
-	ubyte32 initialisation_vector_4;
+	uint32_t initialisation_vector_1;
+	uint32_t initialisation_vector_2;
+	uint32_t initialisation_vector_3;
+	uint32_t initialisation_vector_4;
 	
 	int chunk_filled;
 

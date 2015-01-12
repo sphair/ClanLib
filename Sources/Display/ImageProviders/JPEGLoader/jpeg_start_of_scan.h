@@ -39,10 +39,10 @@ public:
 	JPEGStartOfScan() : start_dct_coefficient(0), end_dct_coefficient(0), preceding_point_transform(0), point_transform(0){ }
 
 	std::vector<JPEGStartOfScanComponent> components;
-	ubyte8 start_dct_coefficient;     // Ss
-	ubyte8 end_dct_coefficient;       // Se
-	ubyte8 preceding_point_transform; // Ah
-	ubyte8 point_transform;           // Al
+	uint8_t start_dct_coefficient;     // Ss
+	uint8_t end_dct_coefficient;       // Se
+	uint8_t preceding_point_transform; // Ah
+	uint8_t point_transform;           // Al
 };
 
 class JPEGStartOfScanComponent
@@ -50,9 +50,9 @@ class JPEGStartOfScanComponent
 public:
 	JPEGStartOfScanComponent() : component_selector(0), dc_table_selector(0), ac_table_selector(0) { }
 
-	ubyte8 component_selector;        // Cs
-	ubyte8 dc_table_selector;         // Td
-	ubyte8 ac_table_selector;         // Ta
+	uint8_t component_selector;        // Cs
+	uint8_t dc_table_selector;         // Td
+	uint8_t ac_table_selector;         // Ta
 };
 
 }

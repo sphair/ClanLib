@@ -51,11 +51,11 @@ public:
 /// \{
 
 public:
-	byte32 crc32;
+	int32_t crc32;
 
-	byte32 compressed_size;
+	int32_t compressed_size;
 
-	byte32 uncompressed_size;
+	int32_t uncompressed_size;
 
 
 /// \}

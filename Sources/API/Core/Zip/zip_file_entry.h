@@ -67,10 +67,10 @@ public:
 	std::string get_input_filename() const;
 
 	/// \brief Returns the uncompressed size of file entry.
-	byte64 get_uncompressed_size();
+	int64_t get_uncompressed_size();
 
 	/// \brief Returns the compressed size of file entry.
-	byte64 get_compressed_size();
+	int64_t get_compressed_size();
 
 	/// \brief Is Directory
 	///

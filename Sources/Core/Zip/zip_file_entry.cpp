@@ -65,12 +65,12 @@ std::string ZipFileEntry::get_archive_filename() const
 	return impl->record.filename;
 }
 
-byte64 ZipFileEntry::get_uncompressed_size()
+int64_t ZipFileEntry::get_uncompressed_size()
 {
 	return impl->record.uncompressed_size;
 }
 	
-byte64 ZipFileEntry::get_compressed_size()
+int64_t ZipFileEntry::get_compressed_size()
 {
 	return impl->record.compressed_size;
 }

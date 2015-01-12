@@ -38,10 +38,10 @@ class ubyte128
 { 
 public: 
 	ubyte128() {}
-	ubyte128(const ubyte64 &value) : high(0), low(value) {}
+	ubyte128(const uint64_t &value) : high(0), low(value) {}
 	ubyte128(const ubyte128 &value) : high(value.high), low(value.low) {}
 
-	ubyte128 operator+(const ubyte64 & value) 
+	ubyte128 operator+(const uint64_t & value) 
 	{ 
 		ubyte128 sum; 
 		sum.high = high; 
@@ -70,8 +70,8 @@ public:
 		return difference; 
 	} 
  
-    ubyte64 high; 
-    ubyte64 low; 
+    uint64_t high; 
+    uint64_t low; 
 }; 
 
 enum cl_sha_type
@@ -92,29 +92,29 @@ class SHA
 public:
 
 
-	inline ubyte32 leftrotate_uint32(ubyte32 value, int shift) const
+	inline uint32_t leftrotate_uint32(uint32_t value, int shift) const
 	{
 		return (value << shift) | (value >> (32-shift));
 	}
 
-	inline ubyte32 rightrotate_uint32(ubyte32 value, int shift) const
+	inline uint32_t rightrotate_uint32(uint32_t value, int shift) const
 	{
 		return (value >> shift) | (value << (32-shift));
 	}
 
-	inline ubyte64 leftrotate_uint64(ubyte64 value, int shift) const
+	inline uint64_t leftrotate_uint64(uint64_t value, int shift) const
 	{
 		return (value << shift) | (value >> (64-shift));
 	}
 
-	inline ubyte64 rightrotate_uint64(ubyte64 value, int shift) const
+	inline uint64_t rightrotate_uint64(uint64_t value, int shift) const
 	{
 		return (value >> shift) | (value << (64-shift));
 	}
 
-	void to_hex_be(char *buffer, ubyte32 value, bool uppercase) const;
-	void to_hex_le(char *buffer, ubyte32 value, bool uppercase) const;
-	void to_hex64_be(char *buffer, ubyte64 value, bool uppercase) const;
+	void to_hex_be(char *buffer, uint32_t value, bool uppercase) const;
+	void to_hex_le(char *buffer, uint32_t value, bool uppercase) const;
+	void to_hex64_be(char *buffer, uint64_t value, bool uppercase) const;
 
 };
 

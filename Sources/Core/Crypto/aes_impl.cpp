@@ -57,33 +57,33 @@ AES_Impl::AES_Impl()
 
 bool AES_Impl::is_tables_created = false;
 
-ubyte32 AES_Impl::table_e0[256];
-ubyte32 AES_Impl::table_e1[256];
-ubyte32 AES_Impl::table_e2[256];
-ubyte32 AES_Impl::table_e3[256];
-ubyte32 AES_Impl::table_d0[256];
-ubyte32 AES_Impl::table_d1[256];
-ubyte32 AES_Impl::table_d2[256];
-ubyte32 AES_Impl::table_d3[256];
-ubyte32 AES_Impl::sbox_inverse_substitution_values[256];
-ubyte32 AES_Impl::sbox_substitution_values[256];
-ubyte32 AES_Impl::rcon_values[10];
+uint32_t AES_Impl::table_e0[256];
+uint32_t AES_Impl::table_e1[256];
+uint32_t AES_Impl::table_e2[256];
+uint32_t AES_Impl::table_e3[256];
+uint32_t AES_Impl::table_d0[256];
+uint32_t AES_Impl::table_d1[256];
+uint32_t AES_Impl::table_d2[256];
+uint32_t AES_Impl::table_d3[256];
+uint32_t AES_Impl::sbox_inverse_substitution_values[256];
+uint32_t AES_Impl::sbox_substitution_values[256];
+uint32_t AES_Impl::rcon_values[10];
 
 /////////////////////////////////////////////////////////////////////////////
 // AES_Impl Operations:
 
-void AES_Impl::extract_encrypt_key128(const unsigned char key[aes128_key_length_bytes], ubyte32 key_expanded[aes128_nb_mult_nr_plus1])
+void AES_Impl::extract_encrypt_key128(const unsigned char key[aes128_key_length_bytes], uint32_t key_expanded[aes128_nb_mult_nr_plus1])
 {
 	for (int cnt=0; cnt<aes128_key_length_nk; cnt++)
 	{
 		key_expanded[cnt] = get_word(key + 4*cnt);
 	}
 
-	ubyte32 *key_expanded_ptr = key_expanded;
+	uint32_t *key_expanded_ptr = key_expanded;
 
 	for (int cnt=0; cnt < aes128_num_rounds_nr; cnt++)
 	{
-		ubyte32 temp = key_expanded_ptr[3];
+		uint32_t temp = key_expanded_ptr[3];
 		key_expanded_ptr[4] = key_expanded_ptr[0] ^
 		(sbox_substitution_values[(temp >> 16) & 0xff] & 0xff000000) ^
 		(sbox_substitution_values[(temp >>  8) & 0xff] & 0x00ff0000) ^
@@ -98,18 +98,18 @@ void AES_Impl::extract_encrypt_key128(const unsigned char key[aes128_key_length_
 	}
 }
 
-void AES_Impl::extract_encrypt_key192(const unsigned char key[aes192_key_length_bytes], ubyte32 key_expanded[aes192_nb_mult_nr_plus1])
+void AES_Impl::extract_encrypt_key192(const unsigned char key[aes192_key_length_bytes], uint32_t key_expanded[aes192_nb_mult_nr_plus1])
 {
 	for (int cnt=0; cnt<aes192_key_length_nk; cnt++)
 	{
 		key_expanded[cnt] = get_word(key + 4*cnt);
 	}
 
-	ubyte32 *key_expanded_ptr = key_expanded;
+	uint32_t *key_expanded_ptr = key_expanded;
 
 	for (int cnt=0; cnt < 8; cnt++ )
 	{
-		ubyte32 temp = key_expanded_ptr[5];
+		uint32_t temp = key_expanded_ptr[5];
 		key_expanded_ptr[6] = key_expanded_ptr[0] ^
 		(sbox_substitution_values[(temp >> 16) & 0xff] & 0xff000000) ^
 		(sbox_substitution_values[(temp >>  8) & 0xff] & 0x00ff0000) ^
@@ -130,18 +130,18 @@ void AES_Impl::extract_encrypt_key192(const unsigned char key[aes192_key_length_
 	}
 }
 
-void AES_Impl::extract_encrypt_key256(const unsigned char key[aes256_key_length_bytes], ubyte32 key_expanded[aes256_nb_mult_nr_plus1])
+void AES_Impl::extract_encrypt_key256(const unsigned char key[aes256_key_length_bytes], uint32_t key_expanded[aes256_nb_mult_nr_plus1])
 {
 	for (int cnt=0; cnt<aes256_key_length_nk; cnt++)
 	{
 		key_expanded[cnt] = get_word(key + 4*cnt);
 	}
 
-	ubyte32 *key_expanded_ptr = key_expanded;
+	uint32_t *key_expanded_ptr = key_expanded;
 
 	for (int cnt=0; cnt < 7; cnt++)
 	{
-		ubyte32 temp = key_expanded_ptr[7];
+		uint32_t temp = key_expanded_ptr[7];
 		key_expanded_ptr[8] = key_expanded_ptr[0] ^
 		(sbox_substitution_values[(temp >> 16) & 0xff] & 0xff000000) ^
 		(sbox_substitution_values[(temp >>  8) & 0xff] & 0x00ff0000) ^
@@ -168,7 +168,7 @@ void AES_Impl::extract_encrypt_key256(const unsigned char key[aes256_key_length_
 
 	}
 }
-void AES_Impl::store_block(ubyte32 s0, ubyte32 s1, ubyte32 s2, ubyte32 s3, DataBuffer &databuffer)
+void AES_Impl::store_block(uint32_t s0, uint32_t s1, uint32_t s2, uint32_t s3, DataBuffer &databuffer)
 {
 	// (Note AES 128, 192 and 256 all have the same block size)
 
@@ -190,12 +190,12 @@ void AES_Impl::store_block(ubyte32 s0, ubyte32 s1, ubyte32 s2, ubyte32 s3, DataB
 	put_word(s3, dest_ptr+12);
 }
 
-void AES_Impl::extract_decrypt_key(ubyte32 *key_expanded, int num_rounds)
+void AES_Impl::extract_decrypt_key(uint32_t *key_expanded, int num_rounds)
 {
 	// Invert the order of the round keys
 	for (int start_value = 0, end_value = 4*num_rounds; start_value < end_value; start_value += 4, end_value -= 4)
 	{
-		ubyte32 temp;
+		uint32_t temp;
 		temp = key_expanded[start_value    ]; key_expanded[start_value    ] = key_expanded[end_value    ]; key_expanded[end_value    ] = temp;
 		temp = key_expanded[start_value + 1]; key_expanded[start_value + 1] = key_expanded[end_value + 1]; key_expanded[end_value + 1] = temp;
 		temp = key_expanded[start_value + 2]; key_expanded[start_value + 2] = key_expanded[end_value + 2]; key_expanded[end_value + 2] = temp;
@@ -203,7 +203,7 @@ void AES_Impl::extract_decrypt_key(ubyte32 *key_expanded, int num_rounds)
 	}
 
 	// Apply the inverse MixColumn transform to all round keys but the first and the last
-	ubyte32 *key_expanded_ptr = key_expanded;
+	uint32_t *key_expanded_ptr = key_expanded;
 	for (int cnt = 1; cnt < num_rounds; cnt++)
 	{
 		key_expanded_ptr += 4;

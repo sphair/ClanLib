@@ -51,13 +51,13 @@ public:
 /// \{
 
 public:
-	byte32 signature; // 0x07064b50
+	int32_t signature; // 0x07064b50
 
-	byte32 number_of_disk_with_zip64_end_of_central_directory;
+	int32_t number_of_disk_with_zip64_end_of_central_directory;
 
-	byte64 relative_offset_of_zip64_end_of_central_directory;
+	int64_t relative_offset_of_zip64_end_of_central_directory;
 
-	byte32 total_number_of_disks;
+	int32_t total_number_of_disks;
 
 
 /// \}

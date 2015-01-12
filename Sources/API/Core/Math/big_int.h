@@ -67,16 +67,16 @@ public:
 	BigInt();
 
 	/// \brief Constructs a big integer (initialised to value)
-	explicit BigInt(ubyte32 value);
+	explicit BigInt(uint32_t value);
 
 	/// \brief Constructs a big integer (initialised to value)
-	explicit BigInt(byte32 value);
+	explicit BigInt(int32_t value);
 
 	/// \brief Constructs a big integer (initialised to value)
-	explicit BigInt(ubyte64 value);
+	explicit BigInt(uint64_t value);
 
 	/// \brief Constructs a big integer (initialised to value)
-	explicit BigInt(byte64 value);
+	explicit BigInt(int64_t value);
 
 	/// \brief Copy constructor
 	BigInt(const BigInt &other);
@@ -110,20 +110,20 @@ public:
 
 	int significant_bits() const;
 
-	void sieve(const ubyte32 *primes, unsigned int num_primes, std::vector<unsigned char> &sieve);
+	void sieve(const uint32_t *primes, unsigned int num_primes, std::vector<unsigned char> &sieve);
 
 	/// \brief  Compute c = a (mod d).  Result will always be 0 <= c < d
-	ubyte32 mod_d(ubyte32 d) const;
+	uint32_t mod_d(uint32_t d) const;
 
 	/// \brief  Compute the quotient q = a / d and remainder r = a mod d, for a single digit d.  Respects the sign of its divisor (single digits are unsigned anyway).
-	void div_d(ubyte32 d, BigInt *q, ubyte32 *r) const;
+	void div_d(uint32_t d, BigInt *q, uint32_t *r) const;
 
 	/// \brief  Using w as a witness, try pseudo-primality testing based on Fermat's little theorem. 
 	///
 	/// If a is prime, and (w, a) = 1, then w^a == w (mod a).
 	/// So, we compute z = w^a (mod a) and compare z to w; if they are
 	/// equal, the test passes and we return true.  Otherwise, we return false.
-	bool fermat(ubyte32 w) const;
+	bool fermat(uint32_t w) const;
 
 	/// \brief  Performs nt iteration of the Miller-Rabin probabilistic primality test on a.
 	///
@@ -132,18 +132,18 @@ public:
 	bool pprime(int nt) const;
 
 	/// \brief Sets a value
-	void set(byte32 d);
-	void set(ubyte32 d);
-	void set(ubyte64 d);
-	void set(byte64 d);
+	void set(int32_t d);
+	void set(uint32_t d);
+	void set(uint64_t d);
+	void set(int64_t d);
 
 	/// \brief Gets a value.
 	///
 	/// Throws exception if number exceeds datatype bounds
-	void get(ubyte32 &d);
-	void get(ubyte64 &d);
-	void get(byte64 &d);
-	void get(byte32 &d);
+	void get(uint32_t &d);
+	void get(uint64_t &d);
+	void get(int64_t &d);
+	void get(int32_t &d);
 
 	/// \brief  Compute c = (a ** b) mod m.
 	///
@@ -163,52 +163,52 @@ public:
 	/// as output parameters.  If q or r is NULL, that portion of the
 	/// computation will be discarded (although it will still be computed)
 	void div(const BigInt &b, BigInt *q, BigInt *r) const;
-	void div(ubyte32 d, BigInt *q, BigInt *r) const;
+	void div(uint32_t d, BigInt *q, BigInt *r) const;
 
 	/// \brief Compute result = this + b.
 	BigInt operator + (const BigInt& b);
-	BigInt operator + (ubyte32 d);
+	BigInt operator + (uint32_t d);
 
 	/// \brief Compute this += b.
 	BigInt operator += (const BigInt& b);
-	BigInt operator += (ubyte32 d);
+	BigInt operator += (uint32_t d);
 
 	/// \brief Compute result = this - b.
 	BigInt operator - (const BigInt& b);
-	BigInt operator - (ubyte32 d);
+	BigInt operator - (uint32_t d);
 
 	/// \brief Compute this -= b.
 	BigInt operator -= (const BigInt& b);
-	BigInt operator -= (ubyte32 d);
+	BigInt operator -= (uint32_t d);
 
 	/// \brief Compute result = this * b.
 	BigInt operator * (const BigInt& b);
-	BigInt operator * (ubyte32 d);
+	BigInt operator * (uint32_t d);
 
 	/// \brief Compute this *= b.
 	BigInt operator *= (const BigInt& b);
-	BigInt operator *= (ubyte32 d);
+	BigInt operator *= (uint32_t d);
 
 	/// \brief Compute result = this / b.
 	BigInt operator / (const BigInt& b);
-	BigInt operator / (ubyte32 d);
+	BigInt operator / (uint32_t d);
 
 	/// \brief Compute this /= b.
 	BigInt operator /= (const BigInt& b);
-	BigInt operator /= (ubyte32 d);
+	BigInt operator /= (uint32_t d);
 
 	/// \brief Compute result = this % b.
 	BigInt operator % (const BigInt& b);
-	BigInt operator % (ubyte32 d);
+	BigInt operator % (uint32_t d);
 
 	/// \brief Compute this %= b.
 	BigInt operator %= (const BigInt& b);
-	BigInt operator %= (ubyte32 d);
+	BigInt operator %= (uint32_t d);
 
 	int cmp(const BigInt *b) const;
 
 	/// \brief  Compare a <=> d.  Returns <0 if a<d, 0 if a=d, >0 if a>d
-	int cmp_d(ubyte32 d) const;
+	int cmp_d(uint32_t d) const;
 
 	/// \brief  Compute b = -a.  'a' and 'b' may be identical.
 	void neg(BigInt *b) const;

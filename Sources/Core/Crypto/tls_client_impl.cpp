@@ -340,7 +340,7 @@ void TLSClient_Impl::change_cipher_spec_data(DataBuffer record_plaintext)
 
 	security_parameters.read_sequence_number = 0;
 
-	ubyte8 value = record_plaintext.get_data<ubyte8>()[0];
+	uint8_t value = record_plaintext.get_data<uint8_t>()[0];
 	if (value != 1)
 		throw Exception("TLS server change cipher spec did not send 1");
 
@@ -355,7 +355,7 @@ void TLSClient_Impl::alert_data(DataBuffer record_plaintext)
 		throw Exception("Invalid TLS content alert message");
 
 	const int alert_data_size = 2;
-	ubyte8 *alert_data = record_plaintext.get_data<ubyte8>();
+	uint8_t *alert_data = record_plaintext.get_data<uint8_t>();
 
 	if (alert_data[0] == cl_tls_warning)
 		return;
@@ -616,12 +616,12 @@ void TLSClient_Impl::handshake_server_hello_received(const void *data, int size)
 	if (!memcmp(security_parameters.server_random.get_data(), security_parameters.client_random.get_data(), security_parameters.server_random.get_size()))
 		throw Exception("TLS Client and Server random numbers must not match");
 
-	ubyte8 session_id_length;
+	uint8_t session_id_length;
 	copy_data(&session_id_length, 1, data, size);
 	Secret session_id(session_id_length);
 	copy_data(session_id.get_data(), session_id_length, data, size);
 
-	byte8 buffer[3];
+	int8_t buffer[3];
 	copy_data(buffer, 3, data, size);
 
 	select_cipher_suite(buffer[0], buffer[1]);
@@ -635,7 +635,7 @@ void TLSClient_Impl::handshake_certificate_received(const void *data, int size)
 	if (conversation_state != cl_tls_state_receive_certificate)
 		throw Exception("TLS Expected certificate");
 
-	ubyte8 buffer[3];
+	uint8_t buffer[3];
 	copy_data(buffer, 3, data, size);
 
 	unsigned int certificate_list_size = buffer[0] << 16 | buffer[1] << 8 | buffer[2];
@@ -870,7 +870,7 @@ void TLSClient_Impl::set_compression_methods(unsigned char *dest_ptr) const
 	*(dest_ptr) = cl_tls_compression_null;
 }
 
-void TLSClient_Impl::select_compression_method(ubyte8 value)
+void TLSClient_Impl::select_compression_method(uint8_t value)
 {
 	switch (value)
 	{
@@ -905,7 +905,7 @@ void TLSClient_Impl::set_cipher_suites(unsigned char *dest_ptr) const
 	*(dest_ptr++) = 0x00;	*(dest_ptr++) = 0x2F;	// TLS_RSA_WITH_AES_128_CBC_SHA
 }
 
-void TLSClient_Impl::select_cipher_suite(ubyte8 value1, ubyte8 value2)
+void TLSClient_Impl::select_cipher_suite(uint8_t value1, uint8_t value2)
 {
 	if (value1 == 0)
 	{
@@ -1076,11 +1076,11 @@ bool TLSClient_Impl::send_client_key_exchange()
 
 void TLSClient_Impl::PRF(void *output_ptr, unsigned int output_size, const Secret &secret, const char *label_ptr, const Secret &seed_part1, const Secret &seed_part2)
 {
-	const ubyte8 *secret_part1 = secret.get_data();
+	const uint8_t *secret_part1 = secret.get_data();
 	int secret_length = secret.get_size();
 	int split_length = secret_length / 2;
 
-	const ubyte8 *secret_part2 = secret_part1 + split_length;
+	const uint8_t *secret_part2 = secret_part1 + split_length;
 
 	if (secret_length & 1)	// Is an odd number
 	{
@@ -1266,7 +1266,7 @@ DataBuffer TLSClient_Impl::encrypt_data(const void *data_ptr, unsigned int data_
 
 }
 
-Secret TLSClient_Impl::calculate_mac(const void *data_ptr, unsigned int data_size, const void *data2_ptr, unsigned int data2_size, ubyte64 sequence_number, const Secret &mac_secret)
+Secret TLSClient_Impl::calculate_mac(const void *data_ptr, unsigned int data_size, const void *data2_ptr, unsigned int data2_size, uint64_t sequence_number, const Secret &mac_secret)
 {
 	unsigned char sequence_number_buffer[8];
 

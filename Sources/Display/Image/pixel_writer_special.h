@@ -110,11 +110,11 @@ class PixelWriter_rgb10 : public PixelWriter
 public:
 	void write(void *output, Vec4f *input, int num_pixels) override
 	{
-		ubyte32 *d = static_cast<ubyte32 *>(output);
+		uint32_t *d = static_cast<uint32_t *>(output);
 		for (int i = 0; i < num_pixels; i++)
 		{
 			Vec3f v = Vec3f(input[i].x * 1023.0f + 0.5f, input[i].y * 1023.0f + 0.5f, input[i].z * 1023.0f + 0.5f);
-			d[i] = (ubyte32) (((int)clamp(v.x, 0, 1023) << 22 ) | ((int)clamp(v.y, 0, 1023) << 12) | ((int)clamp(v.z, 0, 1023)) << 2);
+			d[i] = (uint32_t) (((int)clamp(v.x, 0, 1023) << 22 ) | ((int)clamp(v.y, 0, 1023) << 12) | ((int)clamp(v.z, 0, 1023)) << 2);
 		}
 	}
 };
@@ -153,11 +153,11 @@ class PixelWriter_rgb10_a2 : public PixelWriter
 public:
 	void write(void *output, Vec4f *input, int num_pixels) override
 	{
-		ubyte32 *d = static_cast<ubyte32 *>(output);
+		uint32_t *d = static_cast<uint32_t *>(output);
 		for (int i = 0; i < num_pixels; i++)
 		{
 			Vec4f v = Vec4f(input[i].x * 1023.0f + 0.5f, input[i].y * 1023.0f + 0.5f, input[i].z * 1023.0f + 0.5f, input[i].a * 3.0f + 0.5f);
-			d[i] = (ubyte32) (((int)clamp(v.x, 0, 1023) << 22 ) | ((int)clamp(v.y, 0, 1023) << 12) | ((int)clamp(v.z, 0, 1023)) << 2 | ((int)clamp(v.a, 0, 3)) << 0);
+			d[i] = (uint32_t) (((int)clamp(v.x, 0, 1023) << 22 ) | ((int)clamp(v.y, 0, 1023) << 12) | ((int)clamp(v.z, 0, 1023)) << 2 | ((int)clamp(v.a, 0, 3)) << 0);
 		}
 	}
 };
