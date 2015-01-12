@@ -45,7 +45,7 @@ namespace clan
 		std::weak_ptr<TimerImpl> timer_impl;
 		bool is_repeating = false;
 		int timeout = 0;
-		std::chrono::system_clock::time_point next_awake_time;
+		std::chrono::steady_clock::time_point next_awake_time;
 		std::function<void()> func_expired;
 	};
 
@@ -78,7 +78,7 @@ namespace clan
 			timer->active->timeout = timer->timeout;
 			timer->active->is_repeating = timer->is_repeating;
 			timer->active->func_expired = timer->func_expired;
-			timer->active->next_awake_time = std::chrono::system_clock::now() + std::chrono::milliseconds(timer->timeout);
+			timer->active->next_awake_time = std::chrono::steady_clock::now() + std::chrono::milliseconds(timer->timeout);
 			stop_flag = false;
 
 			lock.unlock();
@@ -134,7 +134,7 @@ namespace clan
 
 		void fire_timers()
 		{
-			auto cur_time = std::chrono::system_clock::now();
+			auto cur_time = std::chrono::steady_clock::now();
 			for (auto it = timers.begin(); it != timers.end();)
 			{
 				auto &timer = *it;
@@ -174,9 +174,9 @@ namespace clan
 			}
 		}
 
-		std::chrono::system_clock::time_point next_awake_time()
+		std::chrono::steady_clock::time_point next_awake_time()
 		{
-			std::chrono::system_clock::time_point t;
+			std::chrono::steady_clock::time_point t;
 			bool first = true;
 			for (auto &timer : timers)
 			{

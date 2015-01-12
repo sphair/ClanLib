@@ -134,7 +134,7 @@ namespace clan
 
 	bool DisplayMessageQueue_X11::process(int timeout_ms)
 	{
-		auto end_time = std::chrono::system_clock::now() + std::chrono::milliseconds(timeout_ms);
+		auto end_time = std::chrono::steady_clock::now() + std::chrono::milliseconds(timeout_ms);
 
 		while (true)
 		{
@@ -142,7 +142,7 @@ namespace clan
 			process_queued_events(); // What is this? If its related to Event then it should be removed
 			process_window_sockets(); // Same for this thing
 
-			if (end_time <= std::chrono::system_clock::now())
+			if (end_time <= std::chrono::steady_clock::now())
 				break;
 
 			int x11_handle = ConnectionNumber(display);
