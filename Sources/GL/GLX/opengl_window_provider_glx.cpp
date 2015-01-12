@@ -1002,7 +1002,7 @@ bool OpenGLWindowProvider::on_clicked(XButtonEvent &event)
 		GL_UNSIGNED_INT_8_8_8_8,
 		pixelbuffer.get_data());
 
-	const ubyte32 *xptr = (const ubyte32 *) (pixelbuffer.get_data());
+	const uint32_t *xptr = (const uint32_t *) (pixelbuffer.get_data());
 	if (((*xptr) & 0xFF) < 10)
 	{
 
