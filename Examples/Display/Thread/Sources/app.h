@@ -40,7 +40,6 @@ private:
 	void worker_thread();
 
 	bool quit;
-	volatile bool crashed_flag;
 
 	static const int texture_size = 256;
 
@@ -49,7 +48,6 @@ private:
 
 	int texture_buffers_offset;
 	int pixel_buffers_offset;
-	volatile bool worker_thread_complete;
 
 	clan::PixelBuffer *pixelbuffer_write;	// Pixelbuffer that is written to
 	clan::PixelBuffer *pixelbuffer_completed;	// Completed pixelbuffer
@@ -61,6 +59,7 @@ private:
 	bool thread_exit_flag = false;
 	bool thread_start_flag = false;
 	bool thread_complete_flag = false;
+	bool thread_crashed_flag = false;
 	std::mutex thread_mutex;
 	std::condition_variable thread_worker_event;
 

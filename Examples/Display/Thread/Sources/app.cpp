@@ -72,7 +72,6 @@ int App::start(const std::vector<std::string> &args)
 
 	texture_buffers_offset = 0;
 	pixel_buffers_offset = 0;
-	worker_thread_complete = false;
 	
 	texture_write = &texture_buffers[0];
 	texture_completed = &texture_buffers[1];
@@ -81,7 +80,6 @@ int App::start(const std::vector<std::string> &args)
 
 	dest_pixels = NULL;
 	quit = false;
-	crashed_flag = false;
 
 	thread = std::thread(&App::worker_thread, this);
 
@@ -92,7 +90,6 @@ int App::start(const std::vector<std::string> &args)
 	clan::ubyte64 last_mandelbrot_time = clan::System::get_time();
 
 	float angle = 0.0f;
-	bool worker_thread_started = false;
 	bool texture_write_active = false;
 
 	while (!quit)
@@ -130,10 +127,9 @@ int App::start(const std::vector<std::string> &args)
 
 		// Wait for pixel buffer completion
 		std::unique_lock<std::mutex> lock(thread_mutex);
-		if ((worker_thread_started == true) && (worker_thread_complete==true))
+		if (thread_complete_flag == true)
 		{
-			worker_thread_started = false;
-			worker_thread_complete = false;
+			thread_complete_flag = false;
 			pixelbuffer_write->unlock();
 
 			texture_write->set_subimage(canvas, 0, 0, *pixelbuffer_write, pixelbuffer_write->get_size());
@@ -142,7 +138,7 @@ int App::start(const std::vector<std::string> &args)
 		}
 
 		// Start a new transfer when required
-		if ((worker_thread_started == false) && (worker_thread_complete==false))
+		if ((thread_start_flag == false))
 		{
 			worker_thread_framerate_counter.frame_shown();
 
@@ -162,8 +158,8 @@ int App::start(const std::vector<std::string> &args)
 
 			pixelbuffer_write->lock(canvas, clan::access_write_only);
 			dest_pixels = (unsigned char *) pixelbuffer_write->get_data();
-			worker_thread_started = true;
-			worker_thread_complete = false;
+			thread_start_flag = true;
+			thread_complete_flag = false;
 
 			// Adjust the mandelbrot scale
 			float mandelbrot_time_delta_ms = (float) (current_time - last_mandelbrot_time);
@@ -191,7 +187,7 @@ int App::start(const std::vector<std::string> &args)
 		font.draw_text(canvas, 16, canvas.get_height()-64-2, fps, clan::Colorf(1.0f, 1.0f, 0.0f, 1.0f));
 
 		// Draw worker thread crashed message
-		if (crashed_flag)
+		if (thread_crashed_flag)
 			font.draw_text(canvas, 16, 32, "WORKER THREAD CRASHED");
 	
 		window.flip(0);
@@ -285,15 +281,16 @@ void App::worker_thread()
 			if (dest_pixels)
 				render_mandelbrot(scale, dest_pixels);
 
-			//throw Exception("Bang!");	// <--- Use this to test the application handles exceptions in threads
+			//throw clan::Exception("Bang!");	// <--- Use this to test the application handles exceptions in threads
 
 			lock.lock();
-			worker_thread_complete = true;
+			thread_complete_flag = true;
 		}
 	}
 	catch(clan::Exception &)
 	{
-		crashed_flag = true;
+		std::unique_lock<std::mutex> lock(thread_mutex);
+		thread_crashed_flag = true;
 	}
 
 
