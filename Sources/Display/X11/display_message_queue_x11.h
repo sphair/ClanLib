@@ -33,6 +33,8 @@
 #include <vector>
 #include <X11/Xlib.h>
 #include "API/Core/System/thread_local_storage.h"
+#include <unistd.h>
+#include <fcntl.h>
 
 namespace clan
 {
@@ -89,12 +91,11 @@ namespace clan
 				if (result < 0)
 					throw Exception("Unable to create pipe handle");
 
-				result = fcntl(notify_handle[0], F_SETFL, O_NONBLOCK) < 0);
+				result = fcntl(notify_handle[0], F_SETFL, O_NONBLOCK);
 				if (result < 0)
 				{
 					::close(notify_handle[0]);
 					::close(notify_handle[1]);
-					::close(handle);
 					throw Exception("Unable to set pipe non-blocking mode");
 				}
 			}

@@ -30,9 +30,6 @@
 #include "Display/precomp.h"
 #include "API/Core/System/databuffer.h"
 #include "API/Core/System/thread_local_storage.h"
-#include "API/Core/System/event_provider.h"
-#include "API/Core/System/event.h"
-#include "API/Core/System/keep_alive.h"
 #include "display_message_queue_x11.h"
 #include "x11_window.h"
 #include <dlfcn.h>
@@ -151,12 +148,12 @@ namespace clan
 			int x11_handle = ConnectionNumber(display);
 
 			struct timeval tv;
-			if (timeout > 0)
+			if (timeout_ms > 0)
 			{
-				tv.tv_sec = timeout / 1000;
-				tv.tv_usec = (timeout % 1000) * 1000;
+				tv.tv_sec = timeout_ms / 1000;
+				tv.tv_usec = (timeout_ms % 1000) * 1000;
 			}
-			else if (timeout == 0)
+			else if (timeout_ms == 0)
 			{
 				tv.tv_sec = 0;
 				tv.tv_usec = 0;
@@ -174,7 +171,7 @@ namespace clan
 			FD_SET(async_work_event.read_fd(), &rfds);
 			FD_SET(exit_event.read_fd(), &rfds);
 
-			int result = select(std::max(std::max(async_work_event.read_fd(), x11_handle), exit_event.read_fd()) + 1, reads, nullptr, nullptr, &tv);
+			int result = select(std::max(std::max(async_work_event.read_fd(), x11_handle), exit_event.read_fd()) + 1, &rfds, nullptr, nullptr, &tv);
 			if (result > 0)
 			{
 				if (FD_ISSET(async_work_event.read_fd(), &rfds))
