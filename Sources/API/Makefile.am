@@ -277,11 +277,6 @@ clanDisplay_includes = \
 	Display/Image/icon_set.h \
 	Display/Image/pixel_buffer_set.h \
 	Display/Resources/display_cache.h \
-	Display/Collision/outline_accuracy.h \
-	Display/Collision/contour.h \
-	Display/Collision/outline_circle.h \
-	Display/Collision/outline_math.h \
-	Display/Collision/collision_outline.h \
 	Display/Font/font_family.h \
 	Display/Font/font.h \
 	Display/Font/font_metrics.h \

@@ -50,6 +50,8 @@ namespace clan
 {
 
 class FontEngine;
+class XMLResourceNode;
+class DomElement;
 
 class Font_Impl
 {

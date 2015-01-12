@@ -142,6 +142,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Sources\collision.cpp" />
+    <ClCompile Include="Sources\Collision\collision_outline.cpp" />
+    <ClCompile Include="Sources\Collision\collision_outline_generic.cpp" />
+    <ClCompile Include="Sources\Collision\contour.cpp" />
+    <ClCompile Include="Sources\Collision\outline_math.cpp" />
+    <ClCompile Include="Sources\Collision\outline_provider_bitmap.cpp" />
+    <ClCompile Include="Sources\Collision\outline_provider_bitmap_generic.cpp" />
+    <ClCompile Include="Sources\Collision\outline_provider_file.cpp" />
+    <ClCompile Include="Sources\Collision\outline_provider_file_generic.cpp" />
     <ClCompile Include="Sources\precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -150,7 +158,17 @@
     <ClCompile Include="Sources\teapot.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Sources\API\collision_outline.h" />
+    <ClInclude Include="Sources\API\contour.h" />
+    <ClInclude Include="Sources\API\outline_accuracy.h" />
+    <ClInclude Include="Sources\API\outline_circle.h" />
+    <ClInclude Include="Sources\API\outline_math.h" />
     <ClInclude Include="Sources\collision.h" />
+    <ClInclude Include="Sources\Collision\collision_outline_generic.h" />
+    <ClInclude Include="Sources\Collision\outline_provider_bitmap.h" />
+    <ClInclude Include="Sources\Collision\outline_provider_bitmap_generic.h" />
+    <ClInclude Include="Sources\Collision\outline_provider_file.h" />
+    <ClInclude Include="Sources\Collision\outline_provider_file_generic.h" />
     <ClInclude Include="Sources\precomp.h" />
     <ClInclude Include="Sources\program.h" />
     <ClInclude Include="Sources\teapot.h" />

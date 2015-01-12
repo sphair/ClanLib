@@ -154,6 +154,20 @@ public:
 	/// \param accuracy = Outline Accuracy
 	CollisionOutline(const std::vector<Contour> &contours, const Size &size, OutlineAccuracy accuracy);
 
+	/// \brief Create the collision outlines from the sprite description
+	///
+	/// \param alpha_limit = Alpha limit for pixels considered solid (collidable)
+	/// \param accuracy = Amount of optimization of the outline (default medium)
+	/// \return The collision outlines
+	static std::vector<CollisionOutline> create_collision_outlines(Canvas &canvas, int alpha_limit, OutlineAccuracy accuracy);
+
+	/// \brief Create the collision outline from the sprites description
+	///
+	/// \param alpha_limit = Alpha limit for pixels considered solid (collidable)
+	/// \param accuracy = Amount of optimization of the outline (default medium)
+	/// \return The collision outlines
+	static CollisionOutline create_collision_outline(Canvas &canvas, int alpha_limit = 128, OutlineAccuracy accuracy = accuracy_medium);
+
 	~CollisionOutline();
 
 /// \}

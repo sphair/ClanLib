@@ -45,6 +45,7 @@
 #include "../2D/canvas_impl.h"
 #include "FontEngine/font_engine.h"
 #include "../2D/sprite_impl.h"
+#include "API/Core/Resources/xml_resource_node.h"
 
 namespace clan
 {

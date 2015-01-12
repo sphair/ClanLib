@@ -42,7 +42,6 @@
 #include "API/Display/ImageProviders/provider_factory.h"
 #include "API/Display/ImageProviders/targa_provider.h"
 #include "API/Display/ImageProviders/png_provider.h"
-#include "API/Display/Collision/collision_outline.h"
 #include "sprite_impl.h"
 #include "render_batch_triangle.h"
 #include "API/Display/Resources/display_cache.h"
@@ -977,16 +976,7 @@ void Sprite::add_alphaclipped_frames_free(Canvas &canvas, const Texture2D &textu
 {
 	impl->add_alphaclipped_frames_free(canvas, texture, xpos, ypos, trans_limit);
 }
-std::vector<CollisionOutline> Sprite::create_collision_outlines(Canvas &canvas, int alpha_limit, OutlineAccuracy accuracy) const
-{
-	return impl->create_collision_outlines(canvas, alpha_limit, accuracy);
-}
 
-CollisionOutline Sprite::create_collision_outline(Canvas &canvas, int alpha_limit, OutlineAccuracy accuracy) const
-{
-	return impl->create_collision_outline(canvas, alpha_limit, accuracy);
-
-}
 
 /////////////////////////////////////////////////////////////////////////////
 // Sprite signals:

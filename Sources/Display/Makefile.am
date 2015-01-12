@@ -77,14 +77,6 @@ Image/pixel_buffer_impl.cpp \
 Resources/xml_display_cache.cpp \
 Resources/file_display_cache.cpp \
 Resources/display_cache.cpp \
-Collision/collision_outline_generic.cpp \
-Collision/outline_provider_bitmap.cpp \
-Collision/collision_outline.cpp \
-Collision/outline_provider_file_generic.cpp \
-Collision/outline_provider_file.cpp \
-Collision/contour.cpp \
-Collision/outline_math.cpp \
-Collision/outline_provider_bitmap_generic.cpp \
 precomp.cpp \
 Font/font.cpp \
 Font/font_family.cpp \

@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio Express 2013 for Windows Desktop
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{67526D1E-B801-4460-A8D3-F5C604037478}"
 	ProjectSection(SolutionItems) = preProject
 		assimp-linux.html = assimp-linux.html
@@ -56,7 +58,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "external", "external", "{5C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Overview", "Overview", "{0F8BA8C7-6826-4E88-9FF2-DAF310464CD8}"
 	ProjectSection(SolutionItems) = preProject
-		Overview\collision_detection.h = Overview\collision_detection.h
 		Overview\compute.h = Overview\compute.h
 		Overview\core.h = Overview\core.h
 		Overview\csslayout.h = Overview\csslayout.h
@@ -93,8 +94,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{54F34B62-9AD4-453D-8703-F476EEA8111A} = {67526D1E-B801-4460-A8D3-F5C604037478}
 		{B32A6748-7237-401B-A49F-F9A1C1FF443D} = {67526D1E-B801-4460-A8D3-F5C604037478}
-		{0F8BA8C7-6826-4E88-9FF2-DAF310464CD8} = {67526D1E-B801-4460-A8D3-F5C604037478}
-		{5CE3824F-EE9C-4CCB-A258-6F11127573A0} = {54F34B62-9AD4-453D-8703-F476EEA8111A}
 		{C2FF3027-9401-4894-BAD8-61FA884E6AEC} = {B32A6748-7237-401B-A49F-F9A1C1FF443D}
+		{5CE3824F-EE9C-4CCB-A258-6F11127573A0} = {54F34B62-9AD4-453D-8703-F476EEA8111A}
+		{0F8BA8C7-6826-4E88-9FF2-DAF310464CD8} = {67526D1E-B801-4460-A8D3-F5C604037478}
 	EndGlobalSection
 EndGlobal
