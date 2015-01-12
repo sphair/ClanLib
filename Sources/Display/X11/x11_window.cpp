@@ -40,7 +40,6 @@
 #include "API/Display/Window/keys.h"
 #include "API/Display/TargetProviders/display_window_provider.h"
 #include "API/Display/Image/pixel_buffer.h"
-#include "API/Core/System/event_provider.h"
 #include "x11_window.h"
 #include "input_device_provider_x11keyboard.h"
 #include "input_device_provider_x11mouse.h"
@@ -1427,10 +1426,7 @@ void X11Window::setup_joysticks()
 				joysticks.push_back(device);
 				ic.add_joystick(device);
 
-				SocketMessage_X11 joystick_connection;
-				joystick_connection.type = EventProvider::type_fd_read;
-				joystick_connection.handle = joystick_provider->get_fd();
-				current_window_events.push_back(joystick_connection);
+				current_window_events.push_back(joystick_provider->get_fd());
 
 			}
 			catch (Exception error)
@@ -1614,7 +1610,7 @@ unsigned char *X11Window::get_property(Window use_window, Atom prop, unsigned lo
 	return read_data;
 }
 
-const std::vector<SocketMessage_X11> &X11Window::get_window_socket_messages() const
+const std::vector<int> &X11Window::get_window_socket_messages() const
 {
 	return current_window_events;
 }

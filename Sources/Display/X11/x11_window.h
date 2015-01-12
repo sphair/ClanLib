@@ -61,7 +61,6 @@ class Rect;
 class DisplayWindowSite;
 class DisplayWindowDescription;
 class CursorProvider_X11;
-class SocketMessage_X11;
 
 class X11Window
 {
@@ -99,7 +98,7 @@ public:
 	std::string get_clipboard_text() const;
 	PixelBuffer get_clipboard_image() const;
 	unsigned char *get_property(::Window use_window, Atom prop, unsigned long *number_items_ptr, int *actual_format_ptr, Atom *actual_type_ptr) const;
-	const std::vector<SocketMessage_X11> &get_window_socket_messages() const;
+	const std::vector<int> &get_window_socket_messages() const;
 
 /// \}
 /// \name Operations
@@ -184,7 +183,7 @@ private:
 	std::string window_title;
 	bool resize_enabled;
 	Clipboard_X11 clipboard;
-	std::vector<SocketMessage_X11> current_window_events;
+	std::vector<int> current_window_events;
 	std::vector<Rect> last_repaint_rect;
 	bool is_window_mapped;
 	XSizeHints *size_hints;
