@@ -117,7 +117,7 @@ namespace clan
 		void reset_notify()
 		{
 			unsigned char buf;
-			while (read(impl->notify_handle[0], &buf, 1) == 1);
+			while (read(notify_handle[0], &buf, 1) == 1);
 		}
 
 		void set_notify()
