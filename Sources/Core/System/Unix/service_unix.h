@@ -29,7 +29,8 @@
 #pragma once
 
 #include "../service_impl.h"
-#include "API/Core/System/event.h"
+#include <mutex>
+#include <condition_variable>
 
 namespace clan
 {
@@ -63,8 +64,10 @@ private:
 	static void sig_term(int signal_code);
 	static void sig_hup(int signal_code);
 
-	Event stop_event;
-	Event reload_event;
+	std::mutex mutex;
+	std::condition_variable event_condition;
+	bool stop_flag = false;
+	bool reload_flag = false;
 /// \}
 };
 

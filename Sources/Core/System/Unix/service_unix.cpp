@@ -88,11 +88,14 @@ void Service_Unix::service_thread_main(std::vector<std::string> args)
 	service_start(args);
 	while (true)
 	{
-		int wakeup_reason = Event::wait(stop_event, reload_event);
-		if (wakeup_reason == 1)
-			service_reload();
-		else
+		std::unique_lock<std::mutex> lock(mutex);
+		event_condition.wait(lock, [&]() { return stop_flag || reload_flag; });
+
+		if (stop_flag)
 			break;
+
+		reload_flag = false;
+		service_reload();
 	}
 	service_stop();
 }
@@ -102,7 +105,13 @@ void Service_Unix::sig_term(int signal_code)
 	if (instance)
 	{
 		Service_Unix *instance_unix = (Service_Unix *) instance;
-		instance_unix->stop_event.set();
+
+		{
+			std::unique_lock<std::mutex> lock(instance_unix->mutex);
+			instance_unix->stop_flag = true;
+		}
+		instance_unix->event_condition.notify_all();
+
 	}
 }
 
@@ -111,7 +120,11 @@ void Service_Unix::sig_hup(int signal_code)
 	if (instance)
 	{
 		Service_Unix *instance_unix = (Service_Unix *) instance;
-		instance_unix->reload_event.set();
+		{
+			std::unique_lock<std::mutex> lock(instance_unix->mutex);
+			instance_unix->reload_flag = true;
+		}
+		instance_unix->event_condition.notify_all();
 	}
 }
 
@@ -150,14 +163,12 @@ int Service_Unix::run_daemon(std::vector<std::string> args)
 			std::thread thread([=](){service_thread_main(args); });
 			while (true)
 			{
-				try
-				{
-					if (stop_event.wait())
-						break;
-				}
-				catch (Exception e)
-				{
-				}
+				std::unique_lock<std::mutex> lock(mutex);
+				event_condition.wait(lock, [&]() { return stop_flag || reload_flag; });
+
+				if (stop_flag)
+					break;
+	
 			}
 			thread.join();
 			return 0;
@@ -190,17 +201,15 @@ int Service_Unix::run_debug(std::vector<std::string> args)
 
 	while (true)
 	{
-		try
-		{
-			if (stop_event.wait())
-				break;
-		}
-		catch (Exception e)
-		{
-		}
+		std::unique_lock<std::mutex> lock(mutex);
+		event_condition.wait(lock, [&]() { return stop_flag || reload_flag; });
+
+		if (stop_flag)
+			break;
 	}
 	thread.join();
 	return 0;
 }
 
 }
+
