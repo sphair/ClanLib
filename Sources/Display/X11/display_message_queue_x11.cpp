@@ -148,6 +148,8 @@ namespace clan
 			if (end_time <= std::chrono::system_clock::now())
 				break;
 
+			int x11_handle = ConnectionNumber(display);
+
 			struct timeval tv;
 			if (timeout > 0)
 			{
