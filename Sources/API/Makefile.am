@@ -14,6 +14,21 @@ clanApp_includes = \
 
 clanNetwork_includes = \
 	network.h \
+	Network/NetGame/event_value.h \
+	Network/NetGame/event.h \
+	Network/NetGame/connection.h \
+	Network/NetGame/client.h \
+	Network/NetGame/event_dispatcher.h \
+	Network/NetGame/connection_site.h \
+	Network/NetGame/server.h \
+	Network/Socket/socket_name.h \
+	Network/Socket/tcp_connection.h \
+	Network/Socket/network_condition_variable.h \
+	Network/Socket/tcp_listen.h \
+	Network/Socket/udp_socket.h
+
+clanSound_includes = \
+	sound.h \
 	Sound/soundoutput_description.h \
 	Sound/soundoutput.h \
 	Sound/soundbuffer_session.h \
