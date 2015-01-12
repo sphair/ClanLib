@@ -30,6 +30,7 @@
 class App
 {
 public:
+	~App();
 	int start(const std::vector<std::string> &args);
 	void window_close();
 
@@ -55,11 +56,15 @@ private:
 	clan::Texture2D *texture_write;	// Texture that is written to
 	clan::Texture2D *texture_completed;	// Completed texture
 
-	clan::Event worker_thread_activate_event;
-	clan::Event worker_thread_stop_event;
+	std::thread thread;
+
+	bool thread_exit_flag = false;
+	bool thread_start_flag = false;
+	bool thread_complete_flag = false;
+	std::mutex thread_mutex;
+	std::condition_variable thread_worker_event;
 
 	// Worker thead variables
-	std::recursive_timed_mutex worker_thread_mutex;
 	float scale;
 	unsigned char *dest_pixels;	// Used by the worker thread to contain where to write the pixels to
 };
