@@ -100,15 +100,18 @@ void Font_Impl::select_font_family()
 			font_draw_path.init(path_cache, font_engine, scaled_height);
 			font_draw = &font_draw_path;
 		}
-		else if (font_engine->get_desc().get_subpixel())
-		{
-			font_draw_subpixel.init(glyph_cache, font_engine);
-			font_draw = &font_draw_subpixel;
-		}
 		else if (scaled_height == 1.0f)
 		{
-			font_draw_flat.init(glyph_cache, font_engine);
-			font_draw = &font_draw_flat;
+			if (font_engine->get_desc().get_subpixel())
+			{
+				font_draw_subpixel.init(glyph_cache, font_engine);
+				font_draw = &font_draw_subpixel;
+			}
+			else
+			{
+				font_draw_flat.init(glyph_cache, font_engine);
+				font_draw = &font_draw_flat;
+			}
 		}
 		else
 		{
@@ -408,7 +411,8 @@ Font Font_Impl::load(Canvas &canvas, const FontDescription &reference_desc, Font
 
 		font_family.add(canvas, spr_glyphs.get(), letters, spacelen, monospace, font_metrics);
 
-		return Font(font_family, reference_desc);
+		FontDescription desc = reference_desc.clone();
+		return Font(font_family, desc);
 	}
 
 	DomElement ttf_element = font_element.named_item("ttf").to_element();
