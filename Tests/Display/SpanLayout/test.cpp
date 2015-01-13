@@ -47,9 +47,8 @@ public:
 		GraphicContext gc = window.get_gc();
 
 		FontDescription font_desc1;
-		font_desc1.set_typeface_name("Verdana");
-		font_desc1.set_height(-13);
-		Font font1(canvas, font_desc1);
+		font_desc1.set_height(13);
+		Font font1("Verdana", font_desc1);
 
 		Image smiley(canvas, "smiley.png");
 

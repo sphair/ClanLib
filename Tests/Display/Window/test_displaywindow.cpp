@@ -51,7 +51,6 @@ void TestApp::test_display_window(void)
 	desc_1.show_caption(true);
 	desc_1.set_visible(true);
 	desc_1.set_topmost(false);
-	desc_1.set_tool_window(false);
 	desc_1.set_drop_shadow(false);
 	desc_1.set_title("Window 1");
 	Rect window_1_rect = Rect(window_1_xpos, window_1_ypos, window_1_width + window_1_xpos, window_1_height + window_1_ypos);
@@ -60,7 +59,6 @@ void TestApp::test_display_window(void)
 	desc_2.show_caption(false);
 	desc_2.set_visible(true);
 	desc_2.set_topmost(false);
-	desc_2.set_tool_window(false);
 	desc_2.set_drop_shadow(false);
 	desc_2.set_title("Window 2");
 	Rect window_2_rect = Rect(window_2_xpos, window_2_ypos, window_2_width + window_2_xpos, window_2_height + window_2_ypos);
