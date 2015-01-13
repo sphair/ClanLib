@@ -45,22 +45,22 @@ private:
 	void write_result();
 	void test();
 	void draw_info(const std::string &text);
-	clan::byte64 run_test();
-	clan::ubyte64 get_start_time() const;
+	int64_t run_test();
+	uint64_t get_start_time() const;
 private:
 	bool quit;
-	clan::Callback_v0 cb_main;
-	clan::Callback_v0 cb_test;
+	std::function<void()> cb_main;
+	std::function<void()> cb_test;
 	clan::DisplayWindow window;
 	clan::Canvas canvas;
 	clan::Font font;
 	clan::GameTime game_time;
 	Tests tests;
-	clan::ubyte64 num_iterations;
-	clan::ubyte64 base_line;
+	uint64_t num_iterations;
+	uint64_t base_line;
 	int testlist_offset;
 	std::vector<TestInfo> testlist;
-	clan::ubyte64 tests_run_length_microseconds;
+	uint64_t tests_run_length_microseconds;
 	float target_test_run_length_seconds;
 	std::string priority_class;
 
