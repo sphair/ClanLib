@@ -46,15 +46,11 @@ int FullScreen::start(const std::vector<std::string> &args)
 	const float virtual_screen_height = 600.0f;
 
 	Sprite spr_logo(canvas, "../Basic2D/Resources/logo.png");
-	Sprite spr_background(canvas, "../../Display/Shape2D/Resources/lobby_background2.png");
+	Sprite spr_background(canvas, "../../Display/Path/Resources/lobby_background2.png");
 
 	float sin_count = 0.0f;
 
-	FontDescription desc;
-	desc.set_typeface_name("tahoma");
-	desc.set_height(24);
-	desc.set_subpixel(true);
-	clan::Font font(canvas, desc);
+	clan::Font font("tahoma", 24);
 
 	GameTime game_time;
 
@@ -77,15 +73,17 @@ int FullScreen::start(const std::vector<std::string> &args)
 
 		canvas.clear(Colorf(0.0f,0.0f,0.2f));
 
-		// Note drawing scaled fonts looks bad, even with sub pixel aliasing off
+		int font_size = 28;
+		font_size *= canvas.get_width() / virtual_screen_width;
+		font.set_height(font_size);
 		canvas.set_transform(Mat4f::identity());
 		if (is_fullscreen)
 		{
-			font.draw_text(canvas, 16, 32, "Full Screen Mode. Press 'F' to switch to resizable window.");
+			font.draw_text(canvas, 16, font_size, "Full Screen Mode. Press 'F' to switch to resizable window.");
 		}
 		else
 		{
-			font.draw_text(canvas, 16, 32, "Resizable Window. Press 'F' to switch to full screen mode.");
+			font.draw_text(canvas, 16, font_size, "Resizable Window. Press 'F' to switch to full screen mode.");
 		}
 
 		// Scale the drawing to the screen to a virtual screen size
@@ -109,7 +107,7 @@ int FullScreen::start(const std::vector<std::string> &args)
 		window.flip(1);
 
 		// This call processes user input and other events
-		KeepAlive::process(0);
+		RunLoop::process(0);
 	}
 
 	return 0;

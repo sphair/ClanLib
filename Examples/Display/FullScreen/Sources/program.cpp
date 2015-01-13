@@ -41,8 +41,8 @@ int Program::main(const std::vector<std::string> &args)
 	SetupDisplay setup_display;
 
 	// We support all display targets, in order listed here
-	clan::SetupD3D setup_d3d;
 	clan::SetupGL setup_gl;
+	clan::SetupD3D setup_d3d;
 
 	// Start the Application
 	FullScreen app;
