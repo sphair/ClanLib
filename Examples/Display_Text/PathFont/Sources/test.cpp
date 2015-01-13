@@ -73,7 +73,7 @@ int Test::start(const std::vector<std::string> &args)
 		font_face.add(bold_italic, "Resources/Lobster_Two/LobsterTwo-BoldItalic.ttf");
 	}
 
-	clan::Font font(canvas, "tahoma", 16);
+	clan::Font font("tahoma", 16);
 
 	float font_height = 100.0f;
 	clan::Font path_font(font_face, font_height);
@@ -165,7 +165,7 @@ int Test::start(const std::vector<std::string> &args)
 		window.flip(1);
 
 		// This call processes user input and other events
-		clan::KeepAlive::process(0);
+		clan::RunLoop::process(0);
 	}
 
 	return 0;
