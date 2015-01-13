@@ -118,26 +118,21 @@ void Alpha::on_window_close()
 clan::Image Alpha::create_block(clan::Canvas &canvas, const clan::Colorf &colour)
 {
 	const int size = 24;
-	
+
 	clan::Color colour_int(colour);
-	uint8_t colour_a = colour_int.a;
-	uint8_t colour_r = colour_int.r;
-	uint8_t colour_g = colour_int.g;
-	uint8_t colour_b = colour_int.b;
 
 	clan::PixelBuffer pbuff(size, size, clan::tf_rgba8);
-	uint8_t *pixels = (uint8_t *) pbuff.get_data();
+	uint8_t *pixels = pbuff.get_data_uint8();
 	int pitch = pbuff.get_pitch();
 	for (int ypos = 0; ypos < size; ypos++)
 	{
 		uint8_t *dest_ptr = pixels + ypos * pitch;
 		for (int xpos = 0; xpos < size; xpos++)
 		{
-			*(dest_ptr++) = colour_a;
-			*(dest_ptr++) = colour_b;
-			*(dest_ptr++) = colour_g;
-			*(dest_ptr++) = colour_r;
-
+			*(dest_ptr++) = colour_int.r;
+			*(dest_ptr++) = colour_int.g;
+			*(dest_ptr++) = colour_int.b;
+			*(dest_ptr++) = colour_int.a;
 		}
 	}
 	return clan::Image(canvas, pbuff, pbuff.get_size());
