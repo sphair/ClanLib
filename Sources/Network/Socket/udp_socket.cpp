@@ -207,7 +207,7 @@ namespace clan
 			}
 		}
 
-		endpoint = SocketName::from_sockaddr(AF_INET, (sockaddr *)&addr, addr_len);
+		endpoint.from_sockaddr(AF_INET, (sockaddr *)&addr, addr_len);
 		return result;
 	}
 

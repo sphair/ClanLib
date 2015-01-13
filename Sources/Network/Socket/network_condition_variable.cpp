@@ -154,7 +154,8 @@ namespace clan
 		tv.tv_sec = timeout_ms / 1000;
 		tv.tv_usec = (timeout_ms % 1000) * 1000;
 
-		int result = select(max_fd + 1, &rfds, !impl->can_write ? &wfds : 0, 0, timeout_ms >= 0 ? &tv : 0);
+		//FIXME - Should this have: Use "!impl->can_write ? &wfds : 0" ??
+		int result = select(max_fd + 1, &rfds, 0, 0, timeout_ms >= 0 ? &tv : 0);
 		if (result == -1)
 			throw Exception("select failed");
 

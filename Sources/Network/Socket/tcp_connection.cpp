@@ -221,7 +221,7 @@ namespace clan
 	{
 		sockaddr_in addr;
 		memset(&addr, 0, sizeof(sockaddr_in));
-		int size = sizeof(sockaddr_in);
+		socklen_t size = sizeof(sockaddr_in);
 		int result = getsockname(impl->handle, (sockaddr *)&addr, &size);
 		if (result == -1)
 			throw Exception("Error retrieving local socket name");
@@ -235,7 +235,7 @@ namespace clan
 	{
 		sockaddr_in addr;
 		memset(&addr, 0, sizeof(sockaddr_in));
-		int size = sizeof(sockaddr_in);
+		socklen_t size = sizeof(sockaddr_in);
 		int result = getpeername(impl->handle, (sockaddr *)&addr, &size);
 		if (result == -1)
 			throw Exception("Error retrieving remote socket name");
