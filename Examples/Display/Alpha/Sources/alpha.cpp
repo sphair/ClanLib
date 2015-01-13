@@ -96,7 +96,6 @@ int Alpha::start(const std::vector<std::string> &args)
 		// This call processes user input and other events
 		clan::RunLoop::process(0);
 	}
-
 	return 0;
 }
 
@@ -136,14 +135,12 @@ clan::Image Alpha::create_block(clan::Canvas &canvas, const clan::Colorf &colour
 		}
 	}
 	return clan::Image(canvas, pbuff, pbuff.get_size());
-
 }
 
 std::string Alpha::get_text(float value)
 {
 	return clan::StringHelp::float_to_text(value, 2, false);
 }
-
 
 void Alpha::draw_section(clan::Canvas &canvas, clan::Font &font, int yoffset, const clan::Colorf &background, const clan::Colorf &vertex_colour, const clan::Colorf &image_colour)
 {
@@ -194,11 +191,6 @@ void Alpha::draw_section(clan::Canvas &canvas, clan::Font &font, int yoffset, co
 	calculated.b = source.a * source.b + (1.0f - source.a) * background.b;
 	calculated.a = source.a + (1.0f - source.a) * background.a;
 
-	//"Destination Color    =    AlphaSource * ColorSource    +    ( 1 - AlphaSource ) * ColorDestination"
-	//"Destination Alpha    =   AlphaSource                   +    ( 1 - AlphaSource ) * AlphaDestination"
-	//"ColorSource = Vertex Color * Image Color"
-	//"AlphaSource = Vertex Alpha * Image Alpha"
-
 	info = std::string(clan::string_format("Source = %1, %2, %3, %4", get_text(source.r), get_text(source.g), get_text(source.b), get_text(source.a)));
 	font.draw_text(canvas, xpos, ypos, info, clan::Colorf::black);
 
@@ -207,5 +199,4 @@ void Alpha::draw_section(clan::Canvas &canvas, clan::Font &font, int yoffset, co
 
 	info = std::string(clan::string_format("Actual = %1, %2, %3, %4", get_text(output.r), get_text(output.g), get_text(output.b), get_text(output.a)));
 	font.draw_text(canvas, xpos + 500, ypos, info, clan::Colorf::black);
-
 }
