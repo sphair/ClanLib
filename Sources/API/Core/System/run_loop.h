@@ -45,7 +45,7 @@ namespace clan
 		
 		/// \brief Process messages for specified amount of time
 		/// \retval Returns false if RunLoop::exit() has been called or the OS signalled the app needs to shut down
-		static bool process(int timeout_ms);
+		static bool process(int timeout_ms = 0);
 		
 		/// \brief Executes a function on the main thread during message processing
 		///
