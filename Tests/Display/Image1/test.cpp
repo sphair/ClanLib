@@ -46,7 +46,7 @@ public:
 			Image image_bottom_right = Image::resource(canvas, "image_bottom_right", resources);
 			Image image_black = Image::resource(canvas, "image_black", resources);
 
-			Font small_font = Font(canvas, "Tahoma", 12);
+			Font small_font = Font("Tahoma", 10);
 
 			//Console::write_line("Color: %1,%2,%3,%4", image_resources.get_color().r, image_resources.get_color().g, image_resources.get_color().b, image_resources.get_color().a);
 			//Console::write_line("Scale: %1,%2", image_resources.get_scale_x(), image_resources.get_scale_y());
@@ -180,10 +180,10 @@ public:
 	int dump_fps()
 	{
 		// Calculate time since last update
-		static clan::uint64_t start_time = System::get_time();
+		static uint64_t start_time = System::get_time();
 		static int fps_dump_time = 0;
 
-		clan::uint64_t cur_time = System::get_time();
+		uint64_t cur_time = System::get_time();
 		int delta_time = cur_time - start_time;
 		start_time = cur_time;
 
