@@ -155,7 +155,7 @@ public:
 				dump_fps();
 
 				window.flip(1);
-				KeepAlive::process();
+				RunLoop::process();
 			}
 
 			return 0;
@@ -180,10 +180,10 @@ public:
 	int dump_fps()
 	{
 		// Calculate time since last update
-		static clan::ubyte64 start_time = System::get_time();
+		static clan::uint64_t start_time = System::get_time();
 		static int fps_dump_time = 0;
 
-		clan::ubyte64 cur_time = System::get_time();
+		clan::uint64_t cur_time = System::get_time();
 		int delta_time = cur_time - start_time;
 		start_time = cur_time;
 

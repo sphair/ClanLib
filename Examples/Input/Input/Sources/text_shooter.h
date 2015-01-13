@@ -36,13 +36,13 @@ public:
 	void set_start_position(const Vec3f &new_start_position);
 	void set_end_position(const Vec3f &new_end_position);
 	void set_duration(int new_duration);
-	void set_start_time( clan::ubyte64 new_start_time);
+	void set_start_time( uint64_t new_start_time);
 	void set_end_fade_time(int new_end_fade_time);
 	void set_initial_white_time(int new_initial_white_time);
 	void set_color_component(bool new_red, bool new_green, bool new_blue);
 
 	// Returns false when the text has reached the destination position
-	bool draw(Canvas &canvas, clan::ubyte64 current_time);
+	bool draw(Canvas &canvas, uint64_t current_time);
 
 private:
 	PathFont vector_font;
@@ -51,7 +51,7 @@ private:
 	Vec3f start_position;
 	Vec3f end_position;
 	int duration;
-	ubyte64 start_time;
+	uint64_t start_time;
 
 	float end_fade_time;
 	float initial_white_time;

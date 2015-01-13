@@ -37,7 +37,7 @@ FramerateCounter::FramerateCounter()
 void FramerateCounter::frame_shown()
 {
 	frames++;
-	clan::ubyte64 current_time = clan::System::get_time();
+	uint64_t current_time = clan::System::get_time();
 	if (start_time == 0)
 	{
 		start_time = current_time;

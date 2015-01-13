@@ -94,7 +94,7 @@ int DemoSimple::run(clan::DisplayWindow &window)
 		window.flip(0);	// Set to "1" to lock to screen refresh rate
 		frameratecounter.frame_shown();
 
-		clan::KeepAlive::process(0);
+		clan::RunLoop::process(0);
 	}
 
 	// deinitialize LinearParticle

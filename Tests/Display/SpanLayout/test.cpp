@@ -106,7 +106,7 @@ public:
 			font1.draw_text(canvas, 10, 300, result_text);
 
 			window.flip();
-			KeepAlive::process();
+			RunLoop::process();
 			System::sleep(50);
 		}
 

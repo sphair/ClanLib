@@ -119,7 +119,7 @@ int App::start(const std::vector<std::string> &args)
 
 		// Use flip(1) to lock the fps
 		window.flip(0);
-		clan::KeepAlive::process(0);
+		clan::RunLoop::process(0);
 
 	}
 
@@ -173,7 +173,7 @@ void App::draw_texture(clan::Canvas &canvas, clan::Texture2D &texture, int xpos,
 
 void App::read_write_pixel_buffer(clan::Canvas &canvas, clan::PixelBuffer &pbuff)
 {
-	clan::ubyte64 time_now = clan::System::get_time();
+	uint64_t time_now = clan::System::get_time();
 	pbuff.lock(canvas, clan::access_read_write);
 	if (pbuff.get_format() != clan::tf_rgba8)
 		throw clan::Exception("Expected the format to be RGBA8");

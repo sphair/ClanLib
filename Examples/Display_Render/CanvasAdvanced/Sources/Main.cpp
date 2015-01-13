@@ -143,7 +143,7 @@ int ExampleCanvas::start(const std::vector<std::string> &args)
 		window.flip(0);
 
 		// This call updates input and performs other "housekeeping"
-		clan::KeepAlive::process();
+		clan::RunLoop::process();
 	}
 
 	// Cleanup

@@ -224,7 +224,7 @@ public:
 				canvas.flush();
 
 				window.flip(1);
-				KeepAlive::process();
+				RunLoop::process();
 
 				System::sleep(10);
 			}

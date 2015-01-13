@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2013 for Windows Desktop
-VisualStudioVersion = 12.0.30602.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HSVSprite", "Examples\Display_Shaders\HSVSprite\HSVSprite-vc2013.vcxproj", "{77173D24-4CBD-4925-9307-D75442CAD4AD}"
 EndProject
@@ -82,8 +82,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Scroller", "Examples\Display_Text\Scroller\Scroller-vc2013.vcxproj", "{4E27E943-27C7-4F00-A431-B6DDD136FFE4}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SineScroll", "Examples\Display\SineScroll\SineScroll-vc2013.vcxproj", "{4E27E943-27C7-4F00-A431-B6FACE22FFE4}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Collision", "Examples\Display\Collision\Collision-vc2013.vcxproj", "{4E27E943-27C7-4F00-A431-B6111236ACE4}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TextFade", "Examples\Display_Text\TextFade\TextFade-vc2013.vcxproj", "{4E27E943-27C7-4F00-A431-12345676FFE4}"
 EndProject
@@ -349,12 +347,6 @@ Global
 		{4E27E943-27C7-4F00-A431-B6FACE22FFE4}.Release|Win32.ActiveCfg = Release|Win32
 		{4E27E943-27C7-4F00-A431-B6FACE22FFE4}.Release|Win32.Build.0 = Release|Win32
 		{4E27E943-27C7-4F00-A431-B6FACE22FFE4}.Release|x64.ActiveCfg = Release|Win32
-		{4E27E943-27C7-4F00-A431-B6111236ACE4}.Debug|Win32.ActiveCfg = Debug|Win32
-		{4E27E943-27C7-4F00-A431-B6111236ACE4}.Debug|Win32.Build.0 = Debug|Win32
-		{4E27E943-27C7-4F00-A431-B6111236ACE4}.Debug|x64.ActiveCfg = Debug|Win32
-		{4E27E943-27C7-4F00-A431-B6111236ACE4}.Release|Win32.ActiveCfg = Release|Win32
-		{4E27E943-27C7-4F00-A431-B6111236ACE4}.Release|Win32.Build.0 = Release|Win32
-		{4E27E943-27C7-4F00-A431-B6111236ACE4}.Release|x64.ActiveCfg = Release|Win32
 		{4E27E943-27C7-4F00-A431-12345676FFE4}.Debug|Win32.ActiveCfg = Debug|Win32
 		{4E27E943-27C7-4F00-A431-12345676FFE4}.Debug|Win32.Build.0 = Debug|Win32
 		{4E27E943-27C7-4F00-A431-12345676FFE4}.Debug|x64.ActiveCfg = Debug|Win32

@@ -108,7 +108,7 @@ int App::start(const std::vector<std::string> &args)
 	}
 	canvas_mask.flush();
 
-	clan::ubyte64 startTime = clan::System::get_time();
+	uint64_t startTime = clan::System::get_time();
 
 	while (!quit)
 	{
@@ -132,7 +132,7 @@ int App::start(const std::vector<std::string> &args)
 
 		clan::System::sleep(10);
 
-		clan::KeepAlive::process();
+		clan::RunLoop::process();
 	}
 
 	return 0;

@@ -221,7 +221,7 @@ void App::render(DisplayWindow &window, GameTime &game_time)
 
 	window.flip(1);
 
-	KeepAlive::process();
+	RunLoop::process();
 }
 
 void App::select_font()

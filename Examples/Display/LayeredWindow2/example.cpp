@@ -210,7 +210,7 @@ int App::start(const std::vector<std::string> &args)
 		window_center.flip(0);
 
 		// This call processes user input and other events
-		clan::KeepAlive::process();
+		clan::RunLoop::process();
 	}
 
 	return 0;

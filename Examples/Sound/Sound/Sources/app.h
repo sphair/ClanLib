@@ -149,7 +149,7 @@ private:
 	std::list<SoundSession> soundbuffer_sessions;
 	SoundSession selected_sound_session;
 
-	ubyte64 initial_time;
+	uint64_t initial_time;
 
 	SoundFilter last_soundoutput_echo_filter;
 	SoundFilter last_soundoutput_inverse_echo_filter;

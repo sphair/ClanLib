@@ -30,7 +30,7 @@ void Server::exec()
 
 	while (true)
 	{
-		KeepAlive::process(10);
+		RunLoop::process(10);
 	}
 
 	network_server.stop();

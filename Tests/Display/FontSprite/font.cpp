@@ -80,7 +80,7 @@ int App::start(const std::vector<std::string> &args)
 		window.flip(1);
 
 		// This call processes user input and other events
-		KeepAlive::process();
+		RunLoop::process();
 	}
 
 	return 0;

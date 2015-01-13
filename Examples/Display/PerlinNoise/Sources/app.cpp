@@ -199,7 +199,7 @@ int App::start(const std::vector<std::string> &args)
 
 		window.flip(1);
 
-		clan::KeepAlive::process();
+		clan::RunLoop::process();
 	}
 	return 0;
 }

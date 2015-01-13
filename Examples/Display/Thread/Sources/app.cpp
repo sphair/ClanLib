@@ -86,8 +86,8 @@ int App::start(const std::vector<std::string> &args)
 	// Main loop
 	FramerateCounter framerate_counter;
 	FramerateCounter worker_thread_framerate_counter;
-	clan::ubyte64 last_time = clan::System::get_time();
-	clan::ubyte64 last_mandelbrot_time = clan::System::get_time();
+	uint64_t last_time = clan::System::get_time();
+	uint64_t last_mandelbrot_time = clan::System::get_time();
 
 	float angle = 0.0f;
 	bool texture_write_active = false;
@@ -97,7 +97,7 @@ int App::start(const std::vector<std::string> &args)
 		framerate_counter.frame_shown();
 
 		// Calculate timings
-		clan::ubyte64 current_time = clan::System::get_time();
+		uint64_t current_time = clan::System::get_time();
 		float time_delta_ms = (float) (current_time - last_time);
 		last_time = current_time;
 

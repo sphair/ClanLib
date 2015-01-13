@@ -103,7 +103,7 @@ void World::run(DisplayWindow &window)
 	bool welcome_shown = false;
 
 	GameTime game_time;
-	ubyte64 score_time = System::get_time();
+	uint64_t score_time = System::get_time();
 	while (!quit)
 	{
 		game_time.update();
@@ -233,7 +233,7 @@ void World::run(DisplayWindow &window)
 
 		if (map->get_eggs_left() == 0) break; // level completed
 
-		KeepAlive::process();
+		RunLoop::process();
 	}
 
 }

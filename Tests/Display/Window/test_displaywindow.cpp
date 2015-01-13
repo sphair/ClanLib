@@ -208,8 +208,8 @@ void TestApp::test_display_window(void)
 	Console::write_line("   Function: std::string get_clipboard_text() const");
 	window_1.set_clipboard_text("Hello World");
 
-//NOTE: This test will not work on linux, as the KeepAlive::process() needs operating during is_clipboard_text_available()
-	KeepAlive::process();
+//NOTE: This test will not work on linux, as the RunLoop::process() needs operating during is_clipboard_text_available()
+	RunLoop::process();
 	if (!window_2.is_clipboard_text_available()) fail();
 	std::string text = window_2.get_clipboard_text();
 

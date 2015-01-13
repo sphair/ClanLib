@@ -30,7 +30,7 @@ void Client::exec()
 
 	while (!quit)
 	{
-		KeepAlive::process(10);
+		RunLoop::process(10);
 	}
 }
 

@@ -61,7 +61,7 @@ int Program::main(const std::vector<std::string> &args)
 			break;
 		}
 		window.flip();
-		clan::KeepAlive::process();
+		clan::RunLoop::process();
 	}
 
 	return 0;

@@ -250,7 +250,7 @@ void World::run()
 		draw();
 
 		window.flip(1);
-		clan::KeepAlive::process();
+		clan::RunLoop::process();
 	};
 }
 

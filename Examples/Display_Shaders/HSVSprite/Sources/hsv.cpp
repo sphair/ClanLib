@@ -52,8 +52,8 @@ int HSV::start(const std::vector<std::string> &args)
 	HSVSprite car2(canvas, &sprite_batcher, "Resources/ferrari_maranello.png");
 	HSVSprite *cars[] = { &car1, &car2 };
 
-	ubyte64 last_fps_update = System::get_time();
-	ubyte64 last_time = last_fps_update;
+	uint64_t last_fps_update = System::get_time();
+	uint64_t last_time = last_fps_update;
 
 	int fps = 0;
 	std::string fps_text;
@@ -61,7 +61,7 @@ int HSV::start(const std::vector<std::string> &args)
 	float hue_offset = 0.0;
 	while (!quit)
 	{
-		ubyte64 current_time = System::get_time();
+		uint64_t current_time = System::get_time();
 		float time_delta_ms = static_cast<float> (current_time - last_time);
 		last_time = current_time;
 
@@ -103,7 +103,7 @@ int HSV::start(const std::vector<std::string> &args)
 		font.draw_text(canvas, 32, 730, "Use cursor keys left and right");
 
 		window.flip(0);
-		KeepAlive::process();
+		RunLoop::process();
 	}
 
 	return 0;

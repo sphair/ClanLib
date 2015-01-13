@@ -98,7 +98,7 @@ int App::start(const std::vector<std::string> &args)
 
 		window.flip(1);
 
-		KeepAlive::process();
+		RunLoop::process();
 	}
 
 	return 0;
@@ -182,7 +182,7 @@ void App::on_window_close()
 
 void App::draw_text_shooter(Canvas &canvas)
 {
-	ubyte64 current_time = System::get_time();
+	uint64_t current_time = System::get_time();
 
 	std::list<TextShooter>::iterator it;
 	for (it = text_shooter.begin(); it != text_shooter.end();)

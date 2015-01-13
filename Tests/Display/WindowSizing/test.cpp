@@ -59,7 +59,7 @@ public:
 				gc.clear(Colorf::gray70);
 
 				window.flip();
-				KeepAlive::process();
+				RunLoop::process();
 				System::sleep(50);
 			}
 		}

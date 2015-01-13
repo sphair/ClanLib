@@ -130,7 +130,7 @@ int App::start(const std::vector<std::string> &args)
 			window.flip(0);
 
 			// This call processes user input and other events
-			KeepAlive::process();
+			RunLoop::process();
 		}
 
 		explosions_same_tex.clear();
@@ -204,10 +204,10 @@ void App::on_window_close()
 int App::dump_fps()
 {
 	// Calculate time since last update
-	static clan::ubyte64 start_time = System::get_time();
+	static clan::uint64_t start_time = System::get_time();
 	static int fps_dump_time = 0;
 
-	clan::ubyte64 cur_time = System::get_time();
+	clan::uint64_t cur_time = System::get_time();
 	int delta_time = cur_time - start_time;
 	start_time = cur_time;
 	

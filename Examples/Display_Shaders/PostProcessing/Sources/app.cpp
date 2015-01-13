@@ -78,7 +78,7 @@ int App::start(const std::vector<std::string> &args)
 
 	float scale = 1.0f;
 
-	ubyte64 startTime = System::get_time();
+	uint64_t startTime = System::get_time();
 
 	while (!keyboard.get_keycode(clan::keycode_escape) && !quit )
 	{
@@ -123,7 +123,7 @@ int App::start(const std::vector<std::string> &args)
 
 		clan::System::sleep(10);
 
-		clan::KeepAlive::process();
+		clan::RunLoop::process();
 	}
 
 	return 0;

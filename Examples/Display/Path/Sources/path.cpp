@@ -116,7 +116,7 @@ int PathApp::start(const std::vector<std::string> &args)
 		window.flip(0);
 
 		// This call processes user input and other events
-		clan::KeepAlive::process(0);
+		clan::RunLoop::process(0);
 	}
 
 	return 0;

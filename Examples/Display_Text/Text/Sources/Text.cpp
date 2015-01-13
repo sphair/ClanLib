@@ -169,7 +169,7 @@ int ExampleText::start(const std::vector<std::string> &args)
 		window.flip(1);
 
 		// This call updates input and performs other "housekeeping" call this each frame
-		clan::KeepAlive::process();
+		clan::RunLoop::process();
 	}
 
 	return 0;

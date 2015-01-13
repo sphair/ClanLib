@@ -24,5 +24,5 @@ private:
 	int wanted_dir;
 	bool i_am_dead;
 	bool got_powerup;
-	clan::ubyte64 powerup_starttime;
+	uint64_t powerup_starttime;
 };

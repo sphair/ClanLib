@@ -116,7 +116,7 @@ void HelloWorld::run()
 	exit_flag = false;
 	while (!exit_flag)
 	{
-		clan::KeepAlive::process(250);
+		clan::RunLoop::process(250);
 	}
 }
 

@@ -45,7 +45,7 @@ int Target::start(const std::vector<std::string> &args)
 	{
 		// These 2 lines are to avoid recreating the windows too quickly (that confuses the win32 keyboard queue)
 		clan::System::sleep(250);
-		clan::KeepAlive::process(0);
+		clan::RunLoop::process(0);
 
 		switch (render_target)
 		{
@@ -192,7 +192,7 @@ bool Target::run_demo()
 
 		window.flip(0);
 	
-		clan::KeepAlive::process(0);
+		clan::RunLoop::process(0);
 	}
 	return !quit;
 }

@@ -143,7 +143,7 @@ int App::start(const std::vector<std::string> &args)
 		canvas.reset_depth_stencil_state();
 
 		window.flip(1);
-		KeepAlive::process();
+		RunLoop::process();
 	}
 
 	return 0;
