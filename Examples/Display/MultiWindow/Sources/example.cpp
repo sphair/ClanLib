@@ -65,9 +65,9 @@ int Example::start(const std::vector<std::string> &args)
 	clan::Canvas canvas_2(window_2);
 
 	// Load the example text - Note, any window can create the font
-	clan::Font font(canvas_1, "tahoma", 64);
+	clan::Font font("tahoma", 64);
 	std::string example_text("This is an example ClanLib application that uses 2 windows. Try resizing and moving the windows. Press a key to flash selected window. ");
-	clan::Size text_size = font.get_text_size(canvas_1, example_text);	
+	clan::Size text_size = clan::Size(font.measure_text(canvas_1, example_text).bbox_size);	
 	clan::FontMetrics font_metrics = font.get_font_metrics();
 	int font_yoffset = (int)( font_metrics.get_ascent() - font_metrics.get_internal_leading() ) / 2;
 	int font_xoffset = 0;
@@ -132,7 +132,7 @@ int Example::start(const std::vector<std::string> &args)
 		window_2.flip(1);	// Sync to vertical blanking on the second (last) window
 
 		// This call processes user input and other events
-		clan::KeepAlive::process(0);
+		clan::RunLoop::process(0);
 	}
 
 	return 0;
