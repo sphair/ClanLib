@@ -207,7 +207,15 @@ PixelBuffer GraphicContext::get_pixeldata(const Rect &rect2, TextureFormat textu
 {
 	Rect rect = rect2;
 	if (rect == Rect())
+	{
 		rect = Rect(0, 0, get_size());
+	}
+	else
+	{
+		Size size = get_size();;
+		if ((rect.left < 0) || (rect.top < 0) || (rect.right > size.width) || (rect.bottom > size.height))
+			throw Exception("Specified rect exceeds pixel data size");
+	}
 
 	return get_provider()->get_pixeldata(rect, texture_format, clamp);
 }

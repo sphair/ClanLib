@@ -161,15 +161,19 @@ void Alpha::draw_section(clan::Canvas &canvas, clan::Font &font, int yoffset, co
 	image.set_color(vertex_colour);
 	image.draw(canvas, outer_xoffset + (outer_area_size - image.get_width())/2, yoffset + (outer_area_size - image.get_height())/2);
 
+	clan::Colorf output;
 	// Get the composited pixel buffer
 	clan::Rect rect(outer_xoffset + outer_area_size / 2, (yoffset + outer_area_size / 2), clan::Size(64,64));
-	clan::PixelBuffer pbuff = canvas.get_pixeldata(rect, clan::tf_rgba8);
-	pbuff.lock(canvas, clan::access_read_only);
+	if (rect.is_inside(canvas.get_size()))
+	{
+		clan::PixelBuffer pbuff = canvas.get_pixeldata(rect, clan::tf_rgba8);
+		pbuff.lock(canvas, clan::access_read_only);
 
-	//clan::ImageProviderFactory::save(pbuff, "test.png");
+		//clan::ImageProviderFactory::save(pbuff, "test.png");
 
- 	clan::Colorf output = pbuff.get_pixel(0,0);
-	pbuff.unlock();
+		clan::Colorf output = pbuff.get_pixel(0, 0);
+		pbuff.unlock();
+	}
  
 	// Create the information string
 	std::string info(clan::string_format("Background = %1, %2, %3, %4", get_text(background.r), get_text(background.g), get_text(background.b), get_text(background.a)));
