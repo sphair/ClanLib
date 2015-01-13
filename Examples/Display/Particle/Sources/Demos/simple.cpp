@@ -62,7 +62,7 @@ int DemoSimple::run(clan::DisplayWindow &window)
 	float x_vel = 3.0f;
 	float y_vel = 3.0f;
 
-	clan::Font font(canvas, "tahoma", 16 );
+	clan::Font font("tahoma", 16 );
 
 	FramerateCounter frameratecounter;
 

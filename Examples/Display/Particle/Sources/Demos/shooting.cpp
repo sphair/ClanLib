@@ -54,7 +54,7 @@ int DemoShooting::run(clan::DisplayWindow &window)
 	quit = false;
 	show_menu = true;
 
-	clan::Font font(canvas, "Arial", 16 );
+	clan::Font font("Arial", 16 );
 	FramerateCounter frameratecounter;
 	uint64_t last_time = clan::System::get_time();
 

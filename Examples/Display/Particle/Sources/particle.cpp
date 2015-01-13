@@ -52,7 +52,7 @@ int Particle::start(const std::vector<std::string> &args)
 	// Get the graphic context
 	clan::Canvas canvas(window);
 
-	clan::Font font(canvas, "tahoma", 20);
+	clan::Font font("tahoma", 20);
 
 	// Run until someone presses escape
 	while (!quit)

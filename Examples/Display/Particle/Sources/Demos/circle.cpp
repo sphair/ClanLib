@@ -50,7 +50,7 @@ int DemoCircle::run(clan::DisplayWindow &window)
 	quit = false;
 	show_menu = true;
 
-	clan::Font font(canvas, "tahoma", 16 );
+	clan::Font font("tahoma", 16 );
 
 	FramerateCounter frameratecounter;
 
