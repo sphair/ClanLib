@@ -92,7 +92,7 @@ int App::start(const std::vector<std::string> &args)
 	Canvas canvas(window);
 	GraphicContext gc = canvas.get_gc();
 
-	Font font = Font(canvas, "Tahoma", 20);
+	Font font = Font("Tahoma", 20);
 
 	PixelBuffer pacman = ImageProviderFactory::load("pacman.png");
 
@@ -110,7 +110,8 @@ int App::start(const std::vector<std::string> &args)
 	}
 
 	Point hotspot(0,0);
-	Cursor cursor(window, description, hotspot);
+	description.set_hotspot(hotspot);
+	Cursor cursor(window, description);
 	window.set_cursor(cursor);
 
 	// Run until someone presses escape
