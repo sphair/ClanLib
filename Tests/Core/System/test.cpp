@@ -68,7 +68,6 @@ int TestApp::main(const std::vector<std::string> &args)
 		Console::write_line("Directory: API/Core/System");
 
 		test_datetime();
-		test_interlock();
 		
 		Console::write_line("All Tests Complete");
 		console.display_close_message();

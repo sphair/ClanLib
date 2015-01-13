@@ -95,7 +95,7 @@ void TestApp::run_test()
 		Console::write_line("File: %1", zip_reader.get_filename());
 		DataBuffer buffer(zip_reader.get_uncompressed_size());
 		zip_reader.read_file_data(buffer.get_data(), buffer.get_size());
-		std::string str8(buffer.get_data(), buffer.get_size(), false);
+		std::string str8(buffer.get_data(), buffer.get_size());
 		Console::write_line("Contents: %1", StringHelp::utf8_to_text(str8));
 	}
 }

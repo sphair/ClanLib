@@ -253,7 +253,7 @@ void TestApp::test_datetime()
 	Console::write_line(string_format("difference: %1 days. %2", diff, diff == 366 ? "OK" : "FAIL"));
 
 
-	Console::wait_for_key();
+	//Console::wait_for_key();
 
 }
 
