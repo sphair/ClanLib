@@ -9,9 +9,7 @@ class UDPNetGameClient
 public:
 	UDPNetGameClient();
 
-	clan::Callback_v1<clan::NetGameEvent> &func_event_received() { return cb_event_received; }
-
-	void send_event(clan::NetGameEvent net_event, UDPNetGameResendMethod resend_method);
+	std::function<clan::NetGameEvent()> &func_event_received() { return cb_event_received; }
 
 	void process();
 
@@ -28,5 +26,5 @@ private:
 
 	UDPNetGameConnectionState connection_state;
 
-	clan::Callback_v1<clan::NetGameEvent> cb_event_received;
+	std::function<clan::NetGameEvent()> cb_event_received;
 };

@@ -34,14 +34,14 @@ void test1()
 	SocketName socket_name("www.clanlib.org", "80");
 	TCPConnection connection(socket_name);
 	connection.set_nodelay(true);
-	clan::uint64_t start_time = System::get_time();
+	uint64_t start_time = System::get_time();
 	Console::write_line("Time start: %1", start_time);
 	for (int i = 0; i < 10; i++)
 	{
 		send_request(connection);
 		receive_response(connection);
 	}
-	clan::uint64_t end_time = System::get_time();
+	uint64_t end_time = System::get_time();
 	Console::write_line("Time end: %1", end_time);
 	Console::write_line("Delta time: %1", (end_time - start_time));
 
