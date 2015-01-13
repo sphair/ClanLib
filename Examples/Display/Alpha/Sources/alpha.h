@@ -41,6 +41,7 @@ private:
 	clan::Image create_block(clan::Canvas &canvas, const clan::Colorf &colour);
 	void draw_section(clan::Canvas &canvas, clan::Font &font, int yoffset, const clan::Colorf &background, const clan::Colorf &vertex_colour, const clan::Colorf &image_colour);
 private:
+	std::string get_text(float value);
 	bool quit;
 	clan::BlendState blend_disabled;
 	clan::BlendState blend_enabled;

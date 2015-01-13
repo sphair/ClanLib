@@ -59,7 +59,7 @@ int Alpha::start(const std::vector<std::string> &args)
 	blend_desc.enable_blending(true);
 	blend_enabled = clan::BlendState(canvas, blend_desc);
 
-	clan::Font font(canvas, "tahoma", 16);
+	clan::Font font("tahoma", 16);
 
 	// Run until someone presses escape
 	while (!quit)
@@ -88,13 +88,13 @@ int Alpha::start(const std::vector<std::string> &args)
 		ypos += ygap;
 		draw_section(canvas, font, ypos, clan::Colorf(0.0f, 0.0f, 1.0f, 0.5f), clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f), clan::Colorf(1.0f, 0.0f, 0.0f, 0.5f));
 		ypos += ygap;
-		draw_section(canvas, font, ypos, clan::Colorf(0.5f, 0.5f, 1.0f, 1.0f), clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f), clan::Colorf(0.0f, 0.0f, 0.0f, 0.3f));
+		draw_section(canvas, font, ypos, clan::Colorf(0.0f, 0.0f, 1.0f, 0.5f), clan::Colorf(1.0f, 0.5f, 0.0f, 1.0f), clan::Colorf(0.0f, 0.5f, 0.0f, 1.0f));
 		ypos += ygap;
 
 		window.flip(1);
 
 		// This call processes user input and other events
-		clan::KeepAlive::process(0);
+		clan::RunLoop::process(0);
 	}
 
 	return 0;
@@ -120,17 +120,17 @@ clan::Image Alpha::create_block(clan::Canvas &canvas, const clan::Colorf &colour
 	const int size = 24;
 	
 	clan::Color colour_int(colour);
-	clan::ubyte8 colour_a = colour_int.a;
-	clan::ubyte8 colour_r = colour_int.r;
-	clan::ubyte8 colour_g = colour_int.g;
-	clan::ubyte8 colour_b = colour_int.b;
+	uint8_t colour_a = colour_int.a;
+	uint8_t colour_r = colour_int.r;
+	uint8_t colour_g = colour_int.g;
+	uint8_t colour_b = colour_int.b;
 
 	clan::PixelBuffer pbuff(size, size, clan::tf_rgba8);
-	clan::ubyte8 *pixels = (clan::ubyte8 *) pbuff.get_data();
+	uint8_t *pixels = (uint8_t *) pbuff.get_data();
 	int pitch = pbuff.get_pitch();
 	for (int ypos = 0; ypos < size; ypos++)
 	{
-		clan::ubyte8 *dest_ptr = pixels + ypos * pitch;
+		uint8_t *dest_ptr = pixels + ypos * pitch;
 		for (int xpos = 0; xpos < size; xpos++)
 		{
 			*(dest_ptr++) = colour_a;
@@ -143,6 +143,12 @@ clan::Image Alpha::create_block(clan::Canvas &canvas, const clan::Colorf &colour
 	return clan::Image(canvas, pbuff, pbuff.get_size());
 
 }
+
+std::string Alpha::get_text(float value)
+{
+	return clan::StringHelp::float_to_text(value, 2, false);
+}
+
 
 void Alpha::draw_section(clan::Canvas &canvas, clan::Font &font, int yoffset, const clan::Colorf &background, const clan::Colorf &vertex_colour, const clan::Colorf &image_colour)
 {
@@ -168,27 +174,43 @@ void Alpha::draw_section(clan::Canvas &canvas, clan::Font &font, int yoffset, co
 	clan::PixelBuffer pbuff = canvas.get_pixeldata(rect, clan::tf_rgba8);
 	pbuff.lock(canvas, clan::access_read_only);
 
-	clan::ImageProviderFactory::save(pbuff, "test.png");
+	//clan::ImageProviderFactory::save(pbuff, "test.png");
 
  	clan::Colorf output = pbuff.get_pixel(0,0);
 	pbuff.unlock();
  
 	// Create the information string
-	std::string info(clan::string_format("Initial Destination Colour: RGBA = %1, %2, %3, %4", background.r , background.g, background.b, background.a));
+	std::string info(clan::string_format("Background = %1, %2, %3, %4", get_text(background.r), get_text(background.g), get_text(background.b), get_text(background.a)));
 	int xpos = outer_xoffset + outer_area_size + 8;
-	int ypos = yoffset - 4;
+	int ypos = yoffset + 12;
 	font.draw_text(canvas, xpos, ypos, info, clan::Colorf::black);
 
-	info = std::string(clan::string_format("Vertex Colour: RGBA = %1, %2, %3, %4", vertex_colour.r , vertex_colour.g, vertex_colour.b, vertex_colour.a));
-	ypos += 16;
+	info = std::string(clan::string_format("Vertex = %1, %2, %3, %4", get_text(vertex_colour.r), get_text(vertex_colour.g), get_text(vertex_colour.b), get_text(vertex_colour.a)));
+	font.draw_text(canvas, xpos + 250, ypos, info, clan::Colorf::black);
+
+	info = std::string(clan::string_format("Image = %1, %2, %3, %4", get_text(image_colour.r), get_text(image_colour.g), get_text(image_colour.b), get_text(image_colour.a)));
+	font.draw_text(canvas, xpos + 500, ypos, info, clan::Colorf::black);
+
+	ypos += 20;
+	clan::Colorf source(vertex_colour * image_colour);
+	clan::Colorf calculated;
+	calculated.r = source.a * source.r + (1.0f - source.a) * background.r;
+	calculated.g = source.a * source.g + (1.0f - source.a) * background.g;
+	calculated.b = source.a * source.b + (1.0f - source.a) * background.b;
+	calculated.a = source.a + (1.0f - source.a) * background.a;
+
+	//"Destination Color    =    AlphaSource * ColorSource    +    ( 1 - AlphaSource ) * ColorDestination"
+	//"Destination Alpha    =   AlphaSource                   +    ( 1 - AlphaSource ) * AlphaDestination"
+	//"ColorSource = Vertex Color * Image Color"
+	//"AlphaSource = Vertex Alpha * Image Alpha"
+
+	info = std::string(clan::string_format("Source = %1, %2, %3, %4", get_text(source.r), get_text(source.g), get_text(source.b), get_text(source.a)));
 	font.draw_text(canvas, xpos, ypos, info, clan::Colorf::black);
 
-	info = std::string(clan::string_format("Image Colour: RGBA = %1, %2, %3, %4", image_colour.r , image_colour.g, image_colour.b, image_colour.a));
-	ypos += 16;
-	font.draw_text(canvas, xpos, ypos, info, clan::Colorf::black);
+	info = std::string(clan::string_format("Calculated = %1, %2, %3, %4", get_text(calculated.r), get_text(calculated.g), get_text(calculated.b), get_text(calculated.a)));
+	font.draw_text(canvas, xpos +  250, ypos, info, clan::Colorf::black);
 
-	info = std::string(clan::string_format("Destination Colour: RGBA = %1, %2, %3, %4", output.r , output.g, output.b, output.a));
-	ypos += 16;
-	font.draw_text(canvas, xpos, ypos, info, clan::Colorf::black);
+	info = std::string(clan::string_format("Actual = %1, %2, %3, %4", get_text(output.r), get_text(output.g), get_text(output.b), get_text(output.a)));
+	font.draw_text(canvas, xpos + 500, ypos, info, clan::Colorf::black);
 
 }
