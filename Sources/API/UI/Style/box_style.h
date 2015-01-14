@@ -95,8 +95,8 @@ namespace clan
 		 *
 		 *  Example usage:
 		 *  ```cpp
-		 *  // This makes the box background a rainbow of 6 colors going from
-		 *  // the top to bottom.
+		 *  // This makes the box background a white-to-black gradient going
+		 *  // from the top to bottom.
 		 *  set_background_gradient({{ clan::Colorf::white, 0.0f }, { clan::Colorf::black, 1.0f }}, 180.0f);
 		 *
 		 *  // This makes the box background a semi-transparent 6-color rainbow
