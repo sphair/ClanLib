@@ -79,7 +79,15 @@ int IODeviceProvider_Memory::send(const void *send_data, int len, bool send_all)
 	validate_position();
 	int size_needed = position + len;
 	if (size_needed > data.get_size())
-		data.set_size(clan::max(size_needed + clan::min(size_needed, 16*1024*1024), 16*1024));
+	{
+		if (size_needed > data.get_capacity())	// Capacity exceeded
+		{
+			// Estimate the optimum databuffer capacity. TODO: Maybe adjust this class to be link list based, thus removing reallocation and block movement of the DataBuffer
+			data.set_capacity(clan::max(size_needed + clan::min(size_needed, 16 * 1024 * 1024), 16 * 1024));
+		}
+
+		data.set_size(size_needed);
+	}
 	memcpy(data.get_data() + position, send_data, len);
 	position += len;
 	return len;
