@@ -48,7 +48,7 @@ int HSV::start(const std::vector<std::string> &args)
 	clan::Font font(canvas, "Tahoma", -11);
 
 	HSVSpriteBatch sprite_batcher(canvas);
-	HSVSprite car1(canvas, &sprite_batcher, "../../Game/SpritesRTS/Gfx/spaceshoot_body_moving1.png");
+	HSVSprite car1(canvas, &sprite_batcher, "Resources/spaceshoot_body_moving1.png");
 	HSVSprite car2(canvas, &sprite_batcher, "Resources/ferrari_maranello.png");
 	HSVSprite *cars[] = { &car1, &car2 };
 
