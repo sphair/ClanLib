@@ -74,7 +74,7 @@ namespace clan
 		DWORD result = WaitForMultipleObjects(handles.size(), &handles[0], FALSE, timeout > 0 ? timeout : INFINITE);
 		if (result == WAIT_TIMEOUT)
 			return false;
-		else if (result != WAIT_OBJECT_0)
+		else if (result < WAIT_OBJECT_0 || result > WAIT_OBJECT_0 + count)
 			throw Exception("WaitForMultipleObjects failed");
 
 		for (int i = 0; i < count; i++)
