@@ -9,8 +9,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PostProcessing", "Examples\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Pacman", "Examples\Game\Pacman\Pacman-vc2013.vcxproj", "{BEDE1F93-9C8C-4EB2-9033-05AB652FCE0F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SpritesRTS", "Examples\Game\SpritesRTS\SpritesRTS-vc2013.vcxproj", "{D9CE0CB9-BDC8-4306-A1C8-7C9D0C1E61EB}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Input", "Examples\Input\Input\input-vc2013.vcxproj", "{BAB64109-DBA5-439B-A821-5AFF2D8133A9}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sound", "Examples\Sound\Sound\sound-vc2013.vcxproj", "{BAB64109-DBA5-439B-A821-5AFF2D8166FF}"
@@ -125,12 +123,6 @@ Global
 		{BEDE1F93-9C8C-4EB2-9033-05AB652FCE0F}.Release|Win32.Build.0 = Release|Win32
 		{BEDE1F93-9C8C-4EB2-9033-05AB652FCE0F}.Release|x64.ActiveCfg = Release|x64
 		{BEDE1F93-9C8C-4EB2-9033-05AB652FCE0F}.Release|x64.Build.0 = Release|x64
-		{D9CE0CB9-BDC8-4306-A1C8-7C9D0C1E61EB}.Debug|Win32.ActiveCfg = Debug|Win32
-		{D9CE0CB9-BDC8-4306-A1C8-7C9D0C1E61EB}.Debug|Win32.Build.0 = Debug|Win32
-		{D9CE0CB9-BDC8-4306-A1C8-7C9D0C1E61EB}.Debug|x64.ActiveCfg = Debug|Win32
-		{D9CE0CB9-BDC8-4306-A1C8-7C9D0C1E61EB}.Release|Win32.ActiveCfg = Release|Win32
-		{D9CE0CB9-BDC8-4306-A1C8-7C9D0C1E61EB}.Release|Win32.Build.0 = Release|Win32
-		{D9CE0CB9-BDC8-4306-A1C8-7C9D0C1E61EB}.Release|x64.ActiveCfg = Release|Win32
 		{BAB64109-DBA5-439B-A821-5AFF2D8133A9}.Debug|Win32.ActiveCfg = Debug|Win32
 		{BAB64109-DBA5-439B-A821-5AFF2D8133A9}.Debug|Win32.Build.0 = Debug|Win32
 		{BAB64109-DBA5-439B-A821-5AFF2D8133A9}.Debug|x64.ActiveCfg = Debug|Win32
