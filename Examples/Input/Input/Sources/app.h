@@ -58,7 +58,7 @@ private:
 
 	DisplayWindow window;
 
-	PathFont vector_font;
+	Font vector_font;
 	clan::Font font;
 	
 	std::list<TextShooter> text_shooter;

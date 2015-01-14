@@ -58,8 +58,10 @@ int App::start(const std::vector<std::string> &args)
 
 	canvas = Canvas(window);
 
-	font = clan::Font(canvas, "tahoma", 16);
-	vector_font = PathFont("Bitstream Vera Sans", 256, "../../Display_Text/Font/Resources/bitstream_vera_sans/VeraBd.ttf");
+	font = clan::Font("tahoma", 16);
+	clan::FontDescription font_desc;
+	font_desc.set_height(256);
+	vector_font = Font(font_desc, "../../Display_Text/Font/Resources/bitstream_vera_sans/VeraBd.ttf");
 
 	while(!quit)
 	{
