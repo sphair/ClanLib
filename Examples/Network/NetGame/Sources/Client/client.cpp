@@ -30,7 +30,8 @@ void Client::exec()
 
 	while (!quit)
 	{
-		RunLoop::process(10);
+		System::sleep(10);
+		network_client.process_events();
 	}
 }
 
