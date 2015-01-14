@@ -38,7 +38,7 @@ namespace clan
 /// \{
 
 class ScreenInfo_Impl;
-class Rect;
+class Rectf;
 
 /// \brief Screen Information class.
 class ScreenInfo
@@ -56,7 +56,7 @@ public:
 
 public:
 	/// \brief Returns the geometries of the attached screens and the index of the primary screen in the returned array.
-	std::vector<Rect> get_screen_geometries(int &primary_screen_index) const;
+	std::vector<Rectf> get_screen_geometries(int &primary_screen_index) const;
 
 /// \}
 /// \name Operations

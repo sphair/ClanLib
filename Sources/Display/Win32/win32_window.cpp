@@ -1721,14 +1721,14 @@ RECT Win32Window::get_window_geometry_from_description(const DisplayWindowDescri
 	{
 		int primary_screen = 0;
 		ScreenInfo screen_info;
-		std::vector<Rect> screen_rects = screen_info.get_screen_geometries(primary_screen);
-		Rect R = screen_rects[desc.get_fullscreen_monitor()];
+		std::vector<Rectf> screen_rects = screen_info.get_screen_geometries(primary_screen);
+		Rectf R = screen_rects[desc.get_fullscreen_monitor()];
 
 		clientSize = false;
-		x = R.left;
-		y = R.top;
-		width = R.get_width();
-		height = R.get_height();
+		x = (int)std::round(R.left * get_dpi() / 96.0f);
+		y = (int)std::round(R.top * get_dpi() / 96.0f);
+		width = (int)std::round(R.get_width() * get_dpi() / 96.0f);
+		height = (int)std::round(R.get_height() * get_dpi() / 96.0f);
 	}
 	else if (desc.get_position().left == -1 && desc.get_position().top == -1)
 	{
