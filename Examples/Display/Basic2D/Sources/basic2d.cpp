@@ -40,7 +40,7 @@ int Basic2D::start(const std::vector<std::string> &args)
 	// Set the window
 	clan::DisplayWindowDescription desc;
 	desc.set_title("ClanLib Basic2D Example");
-	desc.set_size(clan::Size(640, 480), true);
+	desc.set_size(clan::Sizef(640.0f, 480.0f), true);
 	desc.set_allow_resize(true);
 
 	clan::DisplayWindow window(desc);

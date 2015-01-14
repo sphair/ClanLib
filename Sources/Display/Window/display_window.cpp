@@ -44,8 +44,8 @@ DisplayWindow::DisplayWindow()
 
 DisplayWindow::DisplayWindow(
 	const std::string &title,
-	int width,
-	int height,
+	float width,
+	float height,
 	bool start_fullscreen,
 	bool allow_resize,
 	int flipping_buffers)
@@ -121,14 +121,26 @@ DisplayWindowHandle const * DisplayWindow::get_handle() const
 	return impl->provider->get_handle();
 }
 
-Rect DisplayWindow::get_geometry() const
+Rectf DisplayWindow::get_geometry() const
 {
-	return impl->provider->get_geometry();
+	Rect geometryi = impl->provider->get_geometry();
+	Rectf geometry;
+	geometry.left = geometryi.left * 96.0f / impl->provider->get_dpi();
+	geometry.top = geometryi.top * 96.0f / impl->provider->get_dpi();
+	geometry.right = geometryi.right * 96.0f / impl->provider->get_dpi();
+	geometry.bottom = geometryi.bottom * 96.0f / impl->provider->get_dpi();
+	return geometry;
 }
 
-Rect DisplayWindow::get_viewport() const
+Rectf DisplayWindow::get_viewport() const
 {
-	return impl->provider->get_viewport();
+	Rect viewporti = impl->provider->get_viewport();
+	Rectf viewport;
+	viewport.left = viewporti.left * 96.0f / impl->provider->get_dpi();
+	viewport.top = viewporti.top * 96.0f / impl->provider->get_dpi();
+	viewport.right = viewporti.right * 96.0f / impl->provider->get_dpi();
+	viewport.bottom = viewporti.bottom * 96.0f / impl->provider->get_dpi();
+	return viewport;
 }
 
 bool DisplayWindow::has_focus() const
@@ -158,12 +170,12 @@ Signal<void()> &DisplayWindow::sig_got_focus()
 	return impl->site.sig_got_focus;
 }
 
-Signal<void(int, int)> &DisplayWindow::sig_resize()
+Signal<void(float, float)> &DisplayWindow::sig_resize()
 {
 	return impl->site.sig_resize;
 }
 
-Signal<void(const Rect &)> &DisplayWindow::sig_paint()
+Signal<void(const Rectf &)> &DisplayWindow::sig_paint()
 {
 	return impl->site.sig_paint;
 }
@@ -193,7 +205,7 @@ Signal<void()> &DisplayWindow::sig_window_restored()
 	return impl->site.sig_window_restored;
 }
 
-std::function<void(Rect &)> &DisplayWindow::func_window_resize()
+std::function<void(Rectf &)> &DisplayWindow::func_window_resize()
 {
 	return impl->site.func_window_resize;
 }
@@ -272,14 +284,22 @@ PixelBuffer DisplayWindow::get_clipboard_image() const
 	return impl->provider->get_clipboard_image();
 }
 
-Size DisplayWindow::get_minimum_size( bool client_area )
+Sizef DisplayWindow::get_minimum_size( bool client_area )
 {
-	return impl->provider->get_minimum_size(client_area);
+	Size sizei = impl->provider->get_minimum_size(client_area);
+	Sizef sizef;
+	sizef.width = sizei.width * 96.0f / impl->provider->get_dpi();
+	sizef.height = sizei.height * 96.0f / impl->provider->get_dpi();
+	return sizef;
 }
 
-Size DisplayWindow::get_maximum_size( bool client_area )
+Sizef DisplayWindow::get_maximum_size( bool client_area )
 {
-	return impl->provider->get_maximum_size(client_area);
+	Size sizei = impl->provider->get_maximum_size(client_area);
+	Sizef sizef;
+	sizef.width = sizei.width * 96.0f / impl->provider->get_dpi();
+	sizef.height = sizei.height * 96.0f / impl->provider->get_dpi();
+	return sizef;
 }
 
 std::string DisplayWindow::get_title() const
@@ -297,14 +317,28 @@ void DisplayWindow::set_cursor_handle(HCURSOR cursor)
 /////////////////////////////////////////////////////////////////////////////
 // DisplayWindow Operations:
 
-Point DisplayWindow::client_to_screen(const Point &client)
+Pointf DisplayWindow::client_to_screen(const Pointf &client)
 {
-	return impl->provider->client_to_screen(client);
+	Point clienti;
+	clienti.x = (int)std::round(client.x * impl->provider->get_dpi() / 96.0f);
+	clienti.y = (int)std::round(client.y * impl->provider->get_dpi() / 96.0f);
+	Point screeni = impl->provider->client_to_screen(clienti);
+	Pointf screen;
+	screen.x = screeni.x * 96.0f / impl->provider->get_dpi();
+	screen.y = screeni.y * 96.0f / impl->provider->get_dpi();
+	return screen;
 }
 
-Point DisplayWindow::screen_to_client(const Point &screen)
+Pointf DisplayWindow::screen_to_client(const Pointf &screen)
 {
-	return impl->provider->screen_to_client(screen);
+	Point screeni;
+	screeni.x = (int)std::round(screen.x * impl->provider->get_dpi() / 96.0f);
+	screeni.y = (int)std::round(screen.y * impl->provider->get_dpi() / 96.0f);
+	Point clienti = impl->provider->screen_to_client(screeni);
+	Pointf client;
+	client.x = clienti.x * 96.0f / impl->provider->get_dpi();
+	client.y = clienti.y * 96.0f / impl->provider->get_dpi();
+	return client;
 }
 
 void DisplayWindow::capture_mouse(bool capture)
@@ -312,9 +346,14 @@ void DisplayWindow::capture_mouse(bool capture)
 	impl->provider->capture_mouse(capture);
 }
 
-void DisplayWindow::request_repaint(const Rect &rect)
+void DisplayWindow::request_repaint(const Rectf &rect)
 {
-	impl->provider->request_repaint(rect);
+	Rect recti;
+	recti.left = (int)std::floor(rect.left * impl->provider->get_dpi() / 96.0f);
+	recti.top = (int)std::floor(rect.top * impl->provider->get_dpi() / 96.0f);
+	recti.right = (int)std::ceil(rect.right * impl->provider->get_dpi() / 96.0f);
+	recti.bottom = (int)std::ceil(rect.bottom * impl->provider->get_dpi() / 96.0f);
+	impl->provider->request_repaint(recti);
 }
 
 void DisplayWindow::set_title(const std::string &title)
@@ -322,30 +361,43 @@ void DisplayWindow::set_title(const std::string &title)
 	impl->provider->set_title(title);
 }
 
-void DisplayWindow::set_position(const Rect &pos, bool client_area)
+void DisplayWindow::set_position(const Rectf &rect, bool client_area)
 {
-	impl->provider->set_position(pos, client_area);
+	Rect recti;
+	recti.left = (int)std::round(rect.left * impl->provider->get_dpi() / 96.0f);
+	recti.top = (int)std::round(rect.top * impl->provider->get_dpi() / 96.0f);
+	recti.right = (int)std::round(rect.right * impl->provider->get_dpi() / 96.0f);
+	recti.bottom = (int)std::round(rect.bottom * impl->provider->get_dpi() / 96.0f);
+	impl->provider->set_position(recti, client_area);
 }
 
-void DisplayWindow::set_position(int x, int y)
+void DisplayWindow::set_position(float x, float y)
 {
+	int xi = (int)std::round(x * impl->provider->get_dpi() / 96.0f);
+	int yi = (int)std::round(y * impl->provider->get_dpi() / 96.0f);
 	Rect geometry = impl->provider->get_geometry();
-	impl->provider->set_position(Rect(x, y, x + geometry.get_width(), y + geometry.get_height()), false);
+	impl->provider->set_position(Rect(xi, yi, xi + geometry.get_width(), yi + geometry.get_height()), false);
 }
 
-void DisplayWindow::set_size(int width, int height, bool client_area)
+void DisplayWindow::set_size(float width, float height, bool client_area)
 {
-	impl->provider->set_size(width, height, client_area);
+	int widthi = (int)std::round(width * impl->provider->get_dpi() / 96.0f);
+	int heighti = (int)std::round(height * impl->provider->get_dpi() / 96.0f);
+	impl->provider->set_size(widthi, heighti, client_area);
 }
 
-void DisplayWindow::set_minimum_size( int width, int height, bool client_area)
+void DisplayWindow::set_minimum_size(float width, float height, bool client_area)
 {
-	impl->provider->set_minimum_size(width, height, client_area);
+	int widthi = (int)std::round(width * impl->provider->get_dpi() / 96.0f);
+	int heighti = (int)std::round(height * impl->provider->get_dpi() / 96.0f);
+	impl->provider->set_minimum_size(widthi, heighti, client_area);
 }
 
-void DisplayWindow::set_maximum_size( int width, int height, bool client_area)
+void DisplayWindow::set_maximum_size(float width, float height, bool client_area)
 {
-	impl->provider->set_maximum_size(width, height, client_area);
+	int widthi = (int)std::round(width * impl->provider->get_dpi() / 96.0f);
+	int heighti = (int)std::round(height * impl->provider->get_dpi() / 96.0f);
+	impl->provider->set_maximum_size(widthi, heighti, client_area);
 }
 
 void DisplayWindow::set_enabled(bool enable)
@@ -391,9 +443,14 @@ void DisplayWindow::bring_to_front()
 	impl->provider->bring_to_front();
 }
 
-void DisplayWindow::update(const Rect &rect)
+void DisplayWindow::update(const Rectf &rect)
 {
-	impl->provider->update(rect);
+	Rect recti;
+	recti.left = (int)std::round(rect.left * impl->provider->get_dpi() / 96.0f);
+	recti.top = (int)std::round(rect.top * impl->provider->get_dpi() / 96.0f);
+	recti.right = (int)std::round(rect.right * impl->provider->get_dpi() / 96.0f);
+	recti.bottom = (int)std::round(rect.bottom * impl->provider->get_dpi() / 96.0f);
+	impl->provider->update(recti);
 }
 
 void DisplayWindow::flip(int interval)
@@ -444,14 +501,23 @@ void DisplayWindow::set_small_icon(const PixelBuffer &image)
 	impl->provider->set_small_icon(image);
 }
 
-void DisplayWindow::enable_alpha_channel(const Rect &blur_rect)
+void DisplayWindow::enable_alpha_channel(const Rectf &blur_rect)
 {
-	impl->provider->enable_alpha_channel(blur_rect);
+	Rect blur_recti;
+	blur_recti.left = (int)std::round(blur_rect.left * impl->provider->get_dpi() / 96.0f);
+	blur_recti.top = (int)std::round(blur_rect.top * impl->provider->get_dpi() / 96.0f);
+	blur_recti.right = (int)std::round(blur_rect.right * impl->provider->get_dpi() / 96.0f);
+	blur_recti.bottom = (int)std::round(blur_rect.bottom * impl->provider->get_dpi() / 96.0f);
+	impl->provider->enable_alpha_channel(blur_recti);
 }
 
-void DisplayWindow::extend_frame_into_client_area(int left, int top, int right, int bottom)
+void DisplayWindow::extend_frame_into_client_area(float left, float top, float right, float bottom)
 {
-	impl->provider->extend_frame_into_client_area(left, top, right, bottom);
+	int lefti = (int)std::round(left * impl->provider->get_dpi() / 96.0f);
+	int topi = (int)std::round(top * impl->provider->get_dpi() / 96.0f);
+	int righti = (int)std::round(right * impl->provider->get_dpi() / 96.0f);
+	int bottomi = (int)std::round(bottom * impl->provider->get_dpi() / 96.0f);
+	impl->provider->extend_frame_into_client_area(lefti, topi, righti, bottomi);
 }
 
 

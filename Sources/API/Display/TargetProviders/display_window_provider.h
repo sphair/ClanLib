@@ -40,6 +40,8 @@ namespace clan
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
+class Rect;
+class Size;
 class Point;
 class DisplayWindowDescription;
 class GraphicContext;
@@ -60,10 +62,10 @@ public:
 	Signal<void()> sig_got_focus;
 
 	/// \brief resize signal.
-	Signal<void(int, int)> sig_resize;
+	Signal<void(float, float)> sig_resize;
 
 	/// \brief paint signal.
-	Signal<void(const Rect &)> sig_paint;
+	Signal<void(const Rectf &)> sig_paint;
 
 	/// \brief window close signal.
 	Signal<void()> sig_window_close;
@@ -81,7 +83,7 @@ public:
 	Signal<void()> sig_window_restored;
 
 	/// \brief window resize callback function.
-	std::function<void(Rect &)> func_window_resize;
+	std::function<void(Rectf &)> func_window_resize;
 
 	/// \brief minimized clicked callback function.
 	std::function<bool()> func_minimize_clicked;

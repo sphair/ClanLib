@@ -49,7 +49,7 @@ DisplayWindowDescription::DisplayWindowDescription(const std::string &title)
 	impl->title = title;
 }
 
-DisplayWindowDescription::DisplayWindowDescription(const std::string &title, const Rect &position, bool client_area)
+DisplayWindowDescription::DisplayWindowDescription(const std::string &title, const Rectf &position, bool client_area)
 : impl(std::make_shared<DisplayWindowDescription_Impl>())
 {
 	impl->title = title;
@@ -57,7 +57,7 @@ DisplayWindowDescription::DisplayWindowDescription(const std::string &title, con
 	impl->position_client_area = client_area;
 }
 
-DisplayWindowDescription::DisplayWindowDescription(const std::string &title, const Size &size, bool client_area)
+DisplayWindowDescription::DisplayWindowDescription(const std::string &title, const Sizef &size, bool client_area)
 	: impl(std::make_shared<DisplayWindowDescription_Impl>())
 {
 	impl->title = title;
@@ -65,7 +65,7 @@ DisplayWindowDescription::DisplayWindowDescription(const std::string &title, con
 	impl->position_client_area = client_area;
 }
 
-DisplayWindowDescription::DisplayWindowDescription(const Rect &position, bool client_area)
+DisplayWindowDescription::DisplayWindowDescription(const Rectf &position, bool client_area)
 : impl(std::make_shared<DisplayWindowDescription_Impl>())
 {
 	impl->position = position;
@@ -95,12 +95,12 @@ const std::string &DisplayWindowDescription::get_title() const
 	return impl->title;
 }
 
-Size DisplayWindowDescription::get_size() const
+Sizef DisplayWindowDescription::get_size() const
 {
 	return impl->position.get_size();
 }
 
-Rect DisplayWindowDescription::get_position() const
+Rectf DisplayWindowDescription::get_position() const
 {
 	return impl->position;
 }
@@ -310,13 +310,13 @@ void DisplayWindowDescription::set_title(const std::string &title)
 	impl->title = title;
 }
 
-void DisplayWindowDescription::set_size(const Size &size, bool client_area)
+void DisplayWindowDescription::set_size(const Sizef &size, bool client_area)
 {
 	impl->position.set_size(size);
 	impl->position_client_area = client_area;
 }
 
-void DisplayWindowDescription::set_position(const Rect &position, bool client_area)
+void DisplayWindowDescription::set_position(const Rectf &position, bool client_area)
 {
 	impl->position = position;
 	impl->position_client_area = client_area;

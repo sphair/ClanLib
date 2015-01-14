@@ -45,7 +45,7 @@ public:
 	DisplayWindowDescription_Impl()
 	{
 		title = "Untitled Clanlib Window";
-		position = Rect(-1, -1, 639, 479);
+		position = Rectf(-1.0f, -1.0f, 639.0f, 479.0f);
 		position_client_area = false;
 		caption = true;
 		topmost = false;
@@ -79,7 +79,7 @@ public:
 /// \{
 public:
 	std::string title;
-	Rect position;
+	Rectf position;
 	bool position_client_area;
 	bool caption;
 	bool minimize_button;

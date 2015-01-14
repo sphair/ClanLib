@@ -494,8 +494,20 @@ LRESULT Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lpara
 				win_rect->right-wi.cxWindowBorders,
 				win_rect->bottom-wi.cyWindowBorders);
 
+			Rectf client_rectf;
+			client_rectf.left = client_rect.left * 96.0f / get_dpi();
+			client_rectf.top = client_rect.top * 96.0f / get_dpi();
+			client_rectf.right = client_rect.right * 96.0f / get_dpi();
+			client_rectf.bottom = client_rect.bottom * 96.0f / get_dpi();
+
 			if (site->func_window_resize)
-				(site->func_window_resize)(client_rect);
+				(site->func_window_resize)(client_rectf);
+
+			client_rect.left = (int)std::round(client_rectf.left * get_dpi() / 96.0f);
+			client_rect.top = (int)std::round(client_rectf.top * get_dpi() / 96.0f);
+			client_rect.right = (int)std::round(client_rectf.right * get_dpi() / 96.0f);
+			client_rect.bottom = (int)std::round(client_rectf.bottom * get_dpi() / 96.0f);
+
 			win_rect->left = client_rect.left - wi.cxWindowBorders;
 			win_rect->right = client_rect.right + wi.cxWindowBorders;
 			win_rect->top = client_rect.top - wi.cyWindowBorders - (ti.rcTitleBar.bottom-ti.rcTitleBar.top);
@@ -1710,10 +1722,16 @@ void Win32Window::get_styles_from_description(const DisplayWindowDescription &de
 
 RECT Win32Window::get_window_geometry_from_description(const DisplayWindowDescription &desc, DWORD style, DWORD ex_style)
 {
-	int x = desc.get_position().left;
-	int y = desc.get_position().top;
-	int width = desc.get_size().width;
-	int height = desc.get_size().height;
+	HDC dc = GetDC(0);
+	float dpi = (float)GetDeviceCaps(dc, LOGPIXELSX);
+	ReleaseDC(0, dc);
+
+	float dpi_scale = dpi / 96.0f;
+
+	int x = (int)std::round(desc.get_position().left * dpi_scale);
+	int y = (int)std::round(desc.get_position().top * dpi_scale);
+	int width = (int)std::round(desc.get_size().width * dpi_scale);
+	int height = (int)std::round(desc.get_size().height * dpi_scale);
 
 	bool clientSize = desc.get_position_client_area();	// false = Size includes the window frame. true = Size is the drawable size.
 
@@ -1725,10 +1743,10 @@ RECT Win32Window::get_window_geometry_from_description(const DisplayWindowDescri
 		Rectf R = screen_rects[desc.get_fullscreen_monitor()];
 
 		clientSize = false;
-		x = (int)std::round(R.left * get_dpi() / 96.0f);
-		y = (int)std::round(R.top * get_dpi() / 96.0f);
-		width = (int)std::round(R.get_width() * get_dpi() / 96.0f);
-		height = (int)std::round(R.get_height() * get_dpi() / 96.0f);
+		x = (int)std::round(R.left * dpi_scale);
+		y = (int)std::round(R.top * dpi_scale);
+		width = (int)std::round(R.get_width() * dpi_scale);
+		height = (int)std::round(R.get_height() * dpi_scale);
 	}
 	else if (desc.get_position().left == -1 && desc.get_position().top == -1)
 	{

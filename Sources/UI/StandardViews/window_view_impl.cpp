@@ -71,7 +71,7 @@ namespace clan
 		window_view->dispatch_event(&e);
 	}
 
-	void WindowView_Impl::on_resize(int, int)
+	void WindowView_Impl::on_resize(float, float)
 	{
 		window.request_repaint(window.get_viewport());
 	}
