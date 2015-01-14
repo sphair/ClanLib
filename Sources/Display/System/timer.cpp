@@ -27,10 +27,10 @@
 **    Mark Page
 */
 
-#include "Core/precomp.h"
-#include "API/Core/System/timer.h"
+#include "Display/precomp.h"
+#include "API/Display/System/timer.h"
 #include "API/Core/System/system.h"
-#include "API/Core/System/run_loop.h"
+#include "API/Display/System/run_loop.h"
 #include <map>
 #include <thread>
 #include <algorithm>

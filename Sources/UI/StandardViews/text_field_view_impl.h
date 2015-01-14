@@ -30,7 +30,7 @@
 
 #include "API/Core/Signals/signal.h"
 #include "API/UI/Events/key_event.h"
-#include "API/Core/System/timer.h"
+#include "API/Display/System/timer.h"
 #include "API/Display/Font/font.h"
 #include "API/UI/Style/text_style.h"
 

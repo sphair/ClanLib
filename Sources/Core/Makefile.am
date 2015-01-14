@@ -4,7 +4,6 @@ lib_LTLIBRARIES = libclan40Core.la
 
 libclan40Core_la_SOURCES = \
 System/block_allocator.cpp \
-System/run_loop.cpp \
 System/service_impl.cpp \
 System/exception.cpp \
 System/system.cpp \
@@ -21,7 +20,6 @@ System/detect_cpu_ext.cpp \
 System/disposable_object.cpp \
 System/service.cpp \
 System/thread_local_storage_impl.cpp \
-System/timer.cpp \
 XML/xml_writer.cpp \
 XML/dom_exception.cpp \
 XML/dom_entity.cpp \
@@ -99,7 +97,6 @@ Math/big_int.cpp \
 Math/triangle_math.cpp \
 core_global.cpp \
 ErrorReporting/crash_reporter.cpp \
-ErrorReporting/detect_hang.cpp \
 ErrorReporting/exception_dialog.cpp \
 JSON/json_value.cpp \
 Text/string_format.cpp \

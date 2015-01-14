@@ -40,6 +40,9 @@ Render/occlusion_query.cpp \
 Render/shared_gc_data_impl.cpp \
 screen_info.cpp \
 display_target.cpp \
+System/run_loop.cpp \
+System/timer.cpp \
+System/detect_hang.cpp \
 2D/render_batch_line.cpp \
 2D/render_batch_line_texture.cpp \
 2D/sprite.cpp \

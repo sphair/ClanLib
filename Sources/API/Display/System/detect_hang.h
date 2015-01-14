@@ -39,7 +39,7 @@ namespace clan
 
 class DetectHang_Impl;
 
-/// \brief Calls CrashReporter::invoke if the constructing thread does not call KeepAlive::process for more than 30 seconds.
+/// \brief Calls CrashReporter::invoke if the constructing thread does not call RunLoop::process for more than 30 seconds.
 class DetectHang
 {
 /// \name Construction

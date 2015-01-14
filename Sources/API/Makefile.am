@@ -66,14 +66,12 @@ clanCore_includes = \
 	Core/System/game_time.h \
 	Core/System/databuffer.h \
 	Core/System/datetime.h \
-	Core/System/run_loop.h \
 	Core/System/exception.h \
 	Core/System/thread_local_storage.h \
 	Core/System/disposable_object.h \
 	Core/System/console_window.h \
 	Core/System/block_allocator.h \
 	Core/System/userdata.h \
-	Core/System/timer.h \
 	Core/System/work_queue.h \
 	Core/System/comptr.h \
 	Core/XML/xml_tokenizer.h \
@@ -146,7 +144,6 @@ clanCore_includes = \
 	Core/Math/half_float.h \
 	Core/ErrorReporting/crash_reporter.h \
 	Core/ErrorReporting/exception_dialog.h \
-	Core/ErrorReporting/detect_hang.h \
 	Core/JSON/json_value.h \
 	Core/Text/file_logger.h \
 	Core/Text/string_help.h \
@@ -238,6 +235,9 @@ clanDisplay_includes = \
 	Display/2D/span_layout.h \
 	Display/2D/brush.h \
 	Display/2D/pen.h \
+	Display/System/run_loop.h \
+	Display/System/timer.h \
+	Display/System/detect_hang.h \
 	Display/Render/shared_gc_data.h \
 	Display/Render/uniform_vector.h \
 	Display/Render/transfer_vector.h \
