@@ -127,7 +127,7 @@ public:
 	inline Sizef get_size() const {return get_gc().get_px_size();}
 
 	/// \brief Returns the current clipping rectangle
-	Rect get_cliprect() const;
+	Rectf get_cliprect() const;
 
 	/// \brief Return the content of the read buffer into a pixel buffer.
 	PixelBuffer get_pixeldata(const Rect& rect, TextureFormat texture_format = tf_rgba8, bool clamp = true);
@@ -158,13 +158,13 @@ public:
 	void reset_depth_stencil_state();
 
 	/// \brief Set the current clipping rectangle.
-	void set_cliprect(const Rect &rect);
+	void set_cliprect(const Rectf &rect);
 
 	/// \brief Push current clipping rectangle to stack.
 	/** <p>If a rectangle is passed, it afterwards sets clipping
 	    rectangle to the union of the current rectangle and the passed
 	    rectangle.</p>*/
-	void push_cliprect(const Rect &rect);
+	void push_cliprect(const Rectf &rect);
 
 	/// \brief Push cliprect
 	void push_cliprect();

@@ -220,14 +220,22 @@ void Canvas_Impl::on_window_resized(const Size &size)
 	update_viewport_size();
 }
 
-void Canvas_Impl::write_cliprect(const Rect &rect)
+void Canvas_Impl::write_cliprect(const Rectf &rect)
 {
 	if ( (rect.left > rect.right) || (rect.top > rect.bottom) )
 		throw Exception("Invalid cliprect");
-	gc.set_scissor(rect, canvas_y_axis ? y_axis_top_down : y_axis_bottom_up);
+
+	// DPI scale and grid fit clipping rect
+	Rect recti;
+	recti.left = (int)std::round(rect.left * gc.get_dpi_x() / 96.0f);
+	recti.top = (int)std::round(rect.top * gc.get_dpi_y() / 96.0f);
+	recti.right = (int)std::round(rect.right * gc.get_dpi_x() / 96.0f);
+	recti.bottom = (int)std::round(rect.bottom * gc.get_dpi_y() / 96.0f);
+
+	gc.set_scissor(recti, canvas_y_axis ? y_axis_top_down : y_axis_bottom_up);
 }
 
-void Canvas_Impl::set_cliprect(const Rect &rect)
+void Canvas_Impl::set_cliprect(const Rectf &rect)
 {
 	if (!cliprects.empty())
 		cliprects.back() = rect;
@@ -236,11 +244,11 @@ void Canvas_Impl::set_cliprect(const Rect &rect)
 	write_cliprect(rect);
 }
 
-void Canvas_Impl::push_cliprect(const Rect &rect)
+void Canvas_Impl::push_cliprect(const Rectf &rect)
 {
 	if (!cliprects.empty())
 	{
-		Rect r = cliprects.back();
+		Rectf r = cliprects.back();
 		r.overlap(rect);
 		cliprects.push_back(r);
 	}

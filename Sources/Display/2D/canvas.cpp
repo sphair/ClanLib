@@ -106,12 +106,12 @@ const Mat4f &Canvas::get_projection() const
 	return impl->get_projection();
 }
 
-Rect Canvas::get_cliprect() const
+Rectf Canvas::get_cliprect() const
 {
 	if (!impl->cliprects.empty())
 		return impl->cliprects.back();
 
-	return Rect(0,0,get_width(),get_height());
+	return Rectf(0,0,get_width(),get_height());
 }
 
 PixelBuffer Canvas::get_pixeldata(const Rect &rect2, TextureFormat texture_format, bool clamp)
@@ -165,13 +165,13 @@ void Canvas::reset_depth_stencil_state()
 	get_gc().reset_depth_stencil_state();
 }
 
-void Canvas::set_cliprect(const Rect &rect)
+void Canvas::set_cliprect(const Rectf &rect)
 {
 	flush();
 	impl->set_cliprect(rect);
 }
 
-void Canvas::push_cliprect(const Rect &rect)
+void Canvas::push_cliprect(const Rectf &rect)
 {
 	flush();
 	impl->push_cliprect(rect);
