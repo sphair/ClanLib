@@ -368,7 +368,7 @@ namespace clan
 				Pointf center = padding_box.get_center();
 				Pointf delta;
 				{
-					float radians = background.angle * M_PI / 180.0f;
+					float radians = background.angle * PI / 180.0f;
 					float M = std::cos(radians) * (0.5f * padding_box.get_height()) + (0.5f * padding_box.get_width()) * std::tan(radians);
 					delta.x = M * std::sin(radians);
 					delta.y = M * std::cos(radians);

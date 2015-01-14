@@ -136,6 +136,15 @@ public:
 	/// \brief Returns the pitch (bytes per scanline).
 	int get_pitch() const;
 
+	/// \brief Returns with image width in device independent (96 DPI) pixels
+	float get_px_width() const { return get_width() * get_dpi_x() / 96.0f; }
+
+	/// \brief Returns with image height in device independent (96 DPI) pixels
+	float get_px_height() const { return get_height() * get_dpi_y() / 96.0f; }
+
+	/// \brief Returns with image size in device independent (96 DPI) pixels
+	Sizef get_px_size() const { return Sizef(get_px_width(), get_px_height()); }
+
 	/// \brief Returns a pointer to the beginning of the pixel buffer.
 	void *get_data();
 
@@ -225,6 +234,12 @@ public:
 	/// \brief Return color of pixel at the specified coordinates.
 	Colorf get_pixel(int x, int y);
 
+	/// \brief Physical pixels/dots per inch in the horizontal direction
+	float get_dpi_x() const;
+
+	/// \brief Physical pixels/dots per inch in the vertical direction
+	float get_dpi_y() const;
+
 /// \}
 /// \name Operations
 /// \{
@@ -293,6 +308,15 @@ public:
 	/// Calling this function with 2.2 gamma converts a sRGB image into linear space.
 	/// To convert from linear to sRGB use 1.0/2.2
 	void premultiply_gamma(float gamma);
+
+	/// \brief Sets the physical size for a pixel
+	/// \param dpi Pixels/dots per inch in both directions
+	void set_dpi(float dpi);
+
+	/// \brief Sets the physical size for a pixel
+	/// \param dpi_x Pixels/dots per inch in the horizontal direction
+	/// \param dpi_y Pixels/dots per inch in the vertical direction
+	void set_dpi(float dpi_x, float dpi_y);
 
 /// \}
 /// \name Implementation

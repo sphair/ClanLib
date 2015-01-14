@@ -88,6 +88,10 @@ SetupDisplay::~SetupDisplay()
 
 void SetupDisplay_Impl::init()
 {
+#ifdef WIN32
+	SetProcessDPIAware();
+#endif
+
 #ifndef WIN32
 #ifndef __APPLE__
 	// The XInitThreads() function initializes Xlib support for concurrent threads.

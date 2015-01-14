@@ -293,8 +293,29 @@ Colorf PixelBuffer::get_pixel(int x, int y)
 	return impl->get_pixel(x,y);
 }
 
+float PixelBuffer::get_dpi_x() const
+{
+	return impl->dpi_x;
+}
+
+float PixelBuffer::get_dpi_y() const
+{
+	return impl->dpi_y;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // PixelBuffer operations:
+
+void PixelBuffer::set_dpi(float dpi)
+{
+	set_dpi(dpi, dpi);
+}
+
+void PixelBuffer::set_dpi(float dpi_x, float dpi_y)
+{
+	impl->dpi_x = dpi_x;
+	impl->dpi_y = dpi_y;
+}
 
 void PixelBuffer::lock(GraphicContext &gc, BufferAccess access)
 {
