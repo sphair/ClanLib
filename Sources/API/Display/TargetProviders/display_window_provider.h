@@ -114,11 +114,8 @@ public:
 	/// \brief Returns the drawable area of the window.
 	virtual Rect get_viewport() const = 0;
 
-	/// \brief Physical pixels/dots per inch in the horizontal direction
-	virtual float get_dpi_x() const = 0;
-
-	/// \brief Physical pixels/dots per inch in the vertical direction
-	virtual float get_dpi_y() const = 0;
+	/// \brief Physical pixels/dots per inch
+	virtual float get_dpi() const = 0;
 
 	/// \brief Returns true if window has focus.
 	virtual bool has_focus() const = 0;

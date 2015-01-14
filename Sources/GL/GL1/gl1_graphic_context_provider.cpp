@@ -234,16 +234,10 @@ Size GL1GraphicContextProvider::get_display_window_size() const
 	return render_window->get_viewport().get_size();
 }
 
-float GL1GraphicContextProvider::get_dpi_x() const
+float GL1GraphicContextProvider::get_dpi() const
 {
-	return render_window->get_dpi_x();
+	return render_window->get_dpi();
 }
-
-float GL1GraphicContextProvider::get_dpi_y() const
-{
-	return render_window->get_dpi_y();
-}
-
 
 /////////////////////////////////////////////////////////////////////////////
 // GL1GraphicContextProvider Operations:

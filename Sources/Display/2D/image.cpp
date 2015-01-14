@@ -108,8 +108,8 @@ void Image_Impl::calc_hotspot()
 			break;
 	}
 
-	translated_hotspot.x *= 96.0f / texture.get_dpi_x();
-	translated_hotspot.y *= 96.0f / texture.get_dpi_y();
+	translated_hotspot.x *= 96.0f / texture.get_dpi();
+	translated_hotspot.y *= 96.0f / texture.get_dpi();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -308,8 +308,8 @@ Image Image::load(Canvas &canvas, const std::string &id, const XMLResourceDocume
 			int xoffset = StringHelp::text_to_int(cur_element.get_attribute("x", "0"));
 			int yoffset = StringHelp::text_to_int(cur_element.get_attribute("y", "0"));
 
-			xoffset *= 96.0f / image.get_texture().get_texture().get_dpi_x();
-			yoffset *= 96.0f / image.get_texture().get_texture().get_dpi_y();
+			xoffset *= 96.0f / image.get_texture().get_texture().get_dpi();
+			yoffset *= 96.0f / image.get_texture().get_texture().get_dpi();
 
 			image.set_alignment(origin, xoffset, yoffset);
 		}
@@ -363,12 +363,12 @@ void Image::get_alignment(Origin &origin, float &x, float &y) const
 
 float Image::get_width() const
 {
-	return impl->texture_rect.get_width() * 96.0f / impl->texture.get_dpi_x();
+	return impl->texture_rect.get_width() * 96.0f / impl->texture.get_dpi();
 }
 
 float Image::get_height() const
 {
-	return impl->texture_rect.get_height() * 96.0f / impl->texture.get_dpi_y();
+	return impl->texture_rect.get_height() * 96.0f / impl->texture.get_dpi();
 }
 
 Sizef Image::get_size() const

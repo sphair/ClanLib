@@ -154,14 +154,9 @@ Size D3DGraphicContextProvider::get_display_window_size() const
 	return window->get_viewport().get_size();
 }
 
-float D3DGraphicContextProvider::get_dpi_x() const
+float D3DGraphicContextProvider::get_dpi() const
 {
-	return window->get_dpi_x();
-}
-
-float D3DGraphicContextProvider::get_dpi_y() const
-{
-	return window->get_dpi_y();
+	return window->get_dpi();
 }
 
 HDC D3DGraphicContextProvider::get_drawable() const

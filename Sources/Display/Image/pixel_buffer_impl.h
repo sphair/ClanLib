@@ -60,8 +60,7 @@ public:
 
 	PixelBufferProvider *provider;
 
-	float dpi_x = 96.0f;
-	float dpi_y = 96.0f;
+	float dpi = 96.0f;
 
 /// \}
 /// \name Attributes

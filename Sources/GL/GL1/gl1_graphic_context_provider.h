@@ -99,8 +99,7 @@ public:
 	OpenGLWindowProvider & get_opengl_window();
 	
 	Size get_display_window_size() const override;
-	float get_dpi_x() const override;
-	float get_dpi_y() const override;
+	float get_dpi() const override;
 
 	// GL1 Only
 	int get_max_texture_coords();

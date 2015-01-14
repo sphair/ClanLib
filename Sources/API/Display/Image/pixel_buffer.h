@@ -137,10 +137,10 @@ public:
 	int get_pitch() const;
 
 	/// \brief Returns with image width in device independent (96 DPI) pixels
-	float get_px_width() const { return get_width() * 96.0f / get_dpi_x(); }
+	float get_px_width() const { return get_width() * 96.0f / get_dpi(); }
 
 	/// \brief Returns with image height in device independent (96 DPI) pixels
-	float get_px_height() const { return get_height() * 96.0f / get_dpi_y(); }
+	float get_px_height() const { return get_height() * 96.0f / get_dpi(); }
 
 	/// \brief Returns with image size in device independent (96 DPI) pixels
 	Sizef get_px_size() const { return Sizef(get_px_width(), get_px_height()); }
@@ -234,11 +234,8 @@ public:
 	/// \brief Return color of pixel at the specified coordinates.
 	Colorf get_pixel(int x, int y);
 
-	/// \brief Physical pixels/dots per inch in the horizontal direction
-	float get_dpi_x() const;
-
-	/// \brief Physical pixels/dots per inch in the vertical direction
-	float get_dpi_y() const;
+	/// \brief Gets the dots per inch (physical size) for a pixel
+	float get_dpi() const;
 
 /// \}
 /// \name Operations
@@ -312,11 +309,6 @@ public:
 	/// \brief Sets the physical size for a pixel
 	/// \param dpi Pixels/dots per inch in both directions
 	void set_dpi(float dpi);
-
-	/// \brief Sets the physical size for a pixel
-	/// \param dpi_x Pixels/dots per inch in the horizontal direction
-	/// \param dpi_y Pixels/dots per inch in the vertical direction
-	void set_dpi(float dpi_x, float dpi_y);
 
 /// \}
 /// \name Implementation

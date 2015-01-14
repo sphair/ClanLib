@@ -75,14 +75,9 @@ Rect D3DDisplayWindowProvider::get_viewport() const
 	return window.get_viewport();
 }
 
-float D3DDisplayWindowProvider::get_dpi_x() const
+float D3DDisplayWindowProvider::get_dpi() const
 {
-	return window.get_dpi_x();
-}
-
-float D3DDisplayWindowProvider::get_dpi_y() const
-{
-	return window.get_dpi_y();
+	return window.get_dpi();
 }
 
 bool D3DDisplayWindowProvider::has_focus() const

@@ -107,11 +107,8 @@ public:
 	/// \brief Returns the current size of the display window
 	virtual Size get_display_window_size() const = 0;
 
-	/// \brief Physical pixels/dots per inch in the horizontal direction
-	virtual float get_dpi_x() const = 0;
-
-	/// \brief Physical pixels/dots per inch in the vertical direction
-	virtual float get_dpi_y() const = 0;
+	/// \brief Physical pixels/dots per inch
+	virtual float get_dpi() const = 0;
 
 	/// \brief Get the window resized signal
 	virtual Signal<void(const Size &)> &sig_window_resized() = 0;

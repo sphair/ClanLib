@@ -80,8 +80,7 @@ public:
 	bool is_clipboard_image_available() const;
 	std::string get_clipboard_text() const;
 	PixelBuffer get_clipboard_image() const;
-	float get_dpi_x() const override;
-	float get_dpi_y() const override;
+	float get_dpi() const override;
 
 /// \}
 /// \name Operations

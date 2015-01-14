@@ -140,25 +140,14 @@ Texture2D Texture2DArray::create_2d_view(int array_index, TextureFormat texture_
 	return view.to_texture_2d();
 }
 
-float Texture2DArray::get_dpi_x() const
+float Texture2DArray::get_dpi() const
 {
-	return impl->dpi_x;
-}
-
-float Texture2DArray::get_dpi_y() const
-{
-	return impl->dpi_y;
+	return impl->dpi;
 }
 
 void Texture2DArray::set_dpi(float dpi)
 {
-	set_dpi(dpi, dpi);
-}
-
-void Texture2DArray::set_dpi(float dpi_x, float dpi_y)
-{
-	impl->dpi_x = dpi_x;
-	impl->dpi_y = dpi_y;
+	impl->dpi = dpi;
 }
 
 }

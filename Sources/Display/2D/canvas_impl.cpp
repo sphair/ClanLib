@@ -227,10 +227,10 @@ void Canvas_Impl::write_cliprect(const Rectf &rect)
 
 	// DPI scale and grid fit clipping rect
 	Rect recti;
-	recti.left = (int)std::round(rect.left * gc.get_dpi_x() / 96.0f);
-	recti.top = (int)std::round(rect.top * gc.get_dpi_y() / 96.0f);
-	recti.right = (int)std::round(rect.right * gc.get_dpi_x() / 96.0f);
-	recti.bottom = (int)std::round(rect.bottom * gc.get_dpi_y() / 96.0f);
+	recti.left = (int)std::round(rect.left * gc.get_dpi() / 96.0f);
+	recti.top = (int)std::round(rect.top * gc.get_dpi() / 96.0f);
+	recti.right = (int)std::round(rect.right * gc.get_dpi() / 96.0f);
+	recti.bottom = (int)std::round(rect.bottom * gc.get_dpi() / 96.0f);
 
 	gc.set_scissor(recti, canvas_y_axis ? y_axis_top_down : y_axis_bottom_up);
 }
