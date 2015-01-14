@@ -119,10 +119,10 @@ namespace clan
 		/// \brief Clamp mixing buffer values to the -1 to 1 range
 		void clamp_mix_buffers();
 
-		static std::mutex singleton_mutex;
+		static std::recursive_mutex singleton_mutex;
 		static SoundOutput_Impl *instance;
 
-		mutable std::mutex mutex;
+		mutable std::recursive_mutex mutex;
 
 		friend class SoundOutput;
 	};

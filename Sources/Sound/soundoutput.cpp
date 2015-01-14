@@ -130,31 +130,31 @@ void SoundOutput::throw_if_null() const
 
 const std::string &SoundOutput::get_name() const
 {
-	std::unique_lock<std::mutex> mutex_lock(impl->mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 	return impl->name;
 }
 
 int SoundOutput::get_mixing_frequency() const
 {
-	std::unique_lock<std::mutex> mutex_lock(impl->mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 	return impl->mixing_frequency;
 }
 
 int SoundOutput::get_mixing_latency() const
 {
-	std::unique_lock<std::mutex> mutex_lock(impl->mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 	return impl->mixing_latency;
 }
 
 float SoundOutput::get_global_volume() const
 {
-	std::unique_lock<std::mutex> mutex_lock(impl->mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 	return impl->volume;
 }
 
 float SoundOutput::get_global_pan() const
 {
-	std::unique_lock<std::mutex> mutex_lock(impl->mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 	return impl->pan;
 }
 
@@ -169,7 +169,7 @@ void SoundOutput::set_global_volume(float volume)
 {
 	if (impl)
 	{
-		std::unique_lock<std::mutex> mutex_lock(impl->mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 		impl->volume = volume;
 	}
 }
@@ -178,7 +178,7 @@ void SoundOutput::set_global_pan(float pan)
 {
 	if (impl)
 	{
-		std::unique_lock<std::mutex> mutex_lock(impl->mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 		impl->pan = pan;
 	}
 }
@@ -187,7 +187,7 @@ void SoundOutput::add_filter(SoundFilter &filter)
 {
 	if (impl)
 	{
-		std::unique_lock<std::mutex> mutex_lock(impl->mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 		impl->filters.push_back(filter);
 	}
 }
@@ -196,7 +196,7 @@ void SoundOutput::remove_filter(SoundFilter &filter)
 {
 	if (impl)
 	{
-		std::unique_lock<std::mutex> mutex_lock(impl->mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 		for (std::vector<SoundFilter>::size_type i=0; i<impl->filters.size(); i++)
 		{
 			if (impl->filters[i] == filter)
