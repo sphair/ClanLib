@@ -29,7 +29,7 @@
 #include "Display/precomp.h"
 #include "cursor_provider_win32.h"
 #include "API/Core/System/databuffer.h"
-#include "API/Core/IOData/iodevice_memory.h"
+#include "API/Core/IOData/memory_device.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/Window/cursor_description.h"
 #ifdef __MINGW32__
@@ -100,7 +100,7 @@ DataBuffer CursorProvider_Win32::create_ico_helper(const std::vector<PixelBuffer
 {
 	DataBuffer buf;
 	buf.set_capacity(32*1024);
-	IODevice_Memory device(buf);
+	MemoryDevice device(buf);
 
 	ICONHEADER header;
 	memset(&header, 0, sizeof(ICONHEADER));

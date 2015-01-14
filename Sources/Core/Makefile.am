@@ -111,7 +111,7 @@ Text/logger.cpp \
 Text/console_logger.cpp \
 precomp.cpp \
 IOData/file_help.cpp \
-IOData/iodevice_memory.cpp \
+IOData/memory_device.cpp \
 IOData/directory_listing_entry.cpp \
 IOData/html_url.cpp \
 IOData/iodevice.cpp \

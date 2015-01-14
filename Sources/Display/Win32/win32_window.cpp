@@ -34,7 +34,7 @@
 #include "API/Core/Math/point.h"
 #include "API/Core/Text/logger.h"
 #include "API/Core/System/databuffer.h"
-#include "API/Core/IOData/iodevice_memory.h"
+#include "API/Core/IOData/memory_device.h"
 #include "API/Display/Window/display_window_description.h"
 #include "API/Display/Window/input_event.h"
 #include "API/Display/display.h"
@@ -1056,7 +1056,7 @@ void Win32Window::set_clipboard_image(const PixelBuffer &image)
 void Win32Window::add_png_to_clipboard(const PixelBuffer &image)
 {
 	DataBuffer png_data_buf(1024*8);
-	IODevice_Memory iodev_mem(png_data_buf);
+	MemoryDevice iodev_mem(png_data_buf);
 	PNGProvider::save(image, iodev_mem);
 	DataBuffer png_data = iodev_mem.get_data();
 
@@ -1449,7 +1449,7 @@ void Win32Window::flip_pixelbuffer_vertical(PixelBuffer &pbuf) const
 PixelBuffer Win32Window::get_argb8888_from_png(uint8_t *data, size_t size) const
 {
 	DataBuffer data_buffer(data, size);
-	IODevice_Memory iodev(data_buffer);
+	MemoryDevice iodev(data_buffer);
 	PixelBuffer pbuf = PNGProvider::load(iodev);
 	return pbuf;
 }

@@ -160,7 +160,7 @@ clanCore_includes = \
 	Core/IOData/path_help.h \
 	Core/IOData/file_help.h \
 	Core/IOData/directory_listing_entry.h \
-	Core/IOData/iodevice_memory.h \
+	Core/IOData/memory_device.h \
 	Core/IOData/file.h \
 	Core/IOData/file_system_provider.h \
 	Core/IOData/iodevice_provider.h \

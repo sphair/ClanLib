@@ -33,13 +33,13 @@ void TestApp::test_iodevice(void)
 {
 	Console::write_line(" Header: iodevice.h");
 	Console::write_line("  Class: IODevice");
-	Console::write_line("  (Using IODevice_Memory as a base class)");
+	Console::write_line("  (Using MemoryDevice as a base class)");
 
 	std::string str;
 	std::string str2;
 	const size_t buffer_size = 1024;
 	DataBuffer data(buffer_size);
-	IODevice_Memory mem(data);
+	MemoryDevice mem(data);
 	const size_t test_data_size = 256;
 	char test_data[test_data_size];
 	char test_data2[test_data_size];

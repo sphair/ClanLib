@@ -31,14 +31,14 @@
 
 void TestApp::test_iodevice_memory(void)
 {
-	Console::write_line(" Header: iodevice_memory.h");
-	Console::write_line("  Class: IODevice_Memory");
+	Console::write_line(" Header: memory_device.h");
+	Console::write_line("  Class: MemoryDevice");
 
 	std::string str;
 	std::string str2;
 	size_t buffer_size = 200;
 	DataBuffer data(buffer_size);
-	IODevice_Memory mem(data);
+	MemoryDevice mem(data);
 	const size_t test_data_size = 256;
 	char test_data[test_data_size];
 	char test_data2[test_data_size];
@@ -49,7 +49,7 @@ void TestApp::test_iodevice_memory(void)
 	}
 
 //*** testing get_data()
-	Console::write_line("   Function: DataBuffer &IODevice_Memory::get_data()");
+	Console::write_line("   Function: DataBuffer &MemoryDevice::get_data()");
 	if (mem.get_data().get_data() != data.get_data()) fail();
 
 //*** testing get_size()

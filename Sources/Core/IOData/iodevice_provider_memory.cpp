@@ -27,7 +27,7 @@
 */
 
 #include "Core/precomp.h"
-#include "API/Core/IOData/iodevice_memory.h"
+#include "API/Core/IOData/memory_device.h"
 #include "iodevice_provider_memory.h"
 #include "API/Core/Math/cl_math.h"
 

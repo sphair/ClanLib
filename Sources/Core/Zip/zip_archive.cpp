@@ -30,7 +30,7 @@
 #include "Core/precomp.h"
 #include "API/Core/Zip/zip_archive.h"
 #include "API/Core/IOData/file.h"
-#include "API/Core/IOData/iodevice_memory.h"
+#include "API/Core/IOData/memory_device.h"
 #include "API/Core/IOData/path_help.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/string_help.h"
@@ -176,7 +176,7 @@ IODevice ZipArchive::open_file(const std::string &filename)
 				break;
 
 			case ZipFileEntry_Impl::type_added_memory:
-				return IODevice_Memory(entry.impl->data);
+				return MemoryDevice(entry.impl->data);
 
 			case ZipFileEntry_Impl::type_added_file:
 				return File(entry.impl->filename);

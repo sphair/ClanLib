@@ -26,60 +26,46 @@
 **    Magnus Norddahl
 */
 
-
-#pragma once
-
-#include "iodevice.h"
+#include "Core/precomp.h"
+#include "API/Core/IOData/memory_device.h"
+#include "iodevice_impl.h"
+#include "iodevice_provider_memory.h"
 
 namespace clan
 {
-/// \addtogroup clanCore_I_O_Data clanCore I/O Data
-/// \{
 
-class DataBuffer;
+/////////////////////////////////////////////////////////////////////////////
+// MemoryDevice Construction:
 
-/// \brief Memory I/O device.
-class IODevice_Memory : public IODevice
+MemoryDevice::MemoryDevice()
+: IODevice(new IODeviceProvider_Memory())
 {
-/// \name Construction
-/// \{
-
-public:
-	/// \brief Constructs a memory I/O device.
-	IODevice_Memory();
-
-	/// \brief Constructs a IODevice Memory
-	///
-	/// \param data = Data Buffer
-	IODevice_Memory(DataBuffer &data);
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	/// \brief Retrieves the data buffer for the memory device.
-	const DataBuffer &get_data() const;
-
-	/// \brief Get Data
-	///
-	/// \return data
-	DataBuffer &get_data();
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-};
-
 }
 
-/// \}
+MemoryDevice::MemoryDevice(DataBuffer &data)
+: IODevice(new IODeviceProvider_Memory(data))
+{
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// MemoryDevice Attributes:
+
+const DataBuffer &MemoryDevice::get_data() const
+{
+	const IODeviceProvider_Memory *provider = dynamic_cast<const IODeviceProvider_Memory*>(impl->provider);
+	return provider->get_data();
+}
+
+DataBuffer &MemoryDevice::get_data()
+{
+	IODeviceProvider_Memory *provider = dynamic_cast<IODeviceProvider_Memory*>(impl->provider);
+	return provider->get_data();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// MemoryDevice Operations:
+
+/////////////////////////////////////////////////////////////////////////////
+// MemoryDevice Implementation:
+
+}

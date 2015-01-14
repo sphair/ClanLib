@@ -29,7 +29,7 @@
 #include "Core/precomp.h"
 #include "API/Core/Zip/zlib_compression.h"
 #include "API/Core/System/databuffer.h"
-#include "API/Core/IOData/iodevice_memory.h"
+#include "API/Core/IOData/memory_device.h"
 
 #define INCLUDED_FROM_ZLIB_COMPRESSION_CPP
 #include "miniz.h"
@@ -42,7 +42,7 @@ DataBuffer ZLibCompression::compress(const DataBuffer &data, bool raw, int compr
 	const int window_bits = 15;
 
 	DataBuffer zbuffer(1024*1024);
-	IODevice_Memory output;
+	MemoryDevice output;
 
 	int strategy = MZ_DEFAULT_STRATEGY;
 	switch (mode)
@@ -98,7 +98,7 @@ DataBuffer ZLibCompression::decompress(const DataBuffer &data, bool raw)
 	const int window_bits = 15;
 
 	DataBuffer zbuffer(1024*1024);
-	IODevice_Memory output;
+	MemoryDevice output;
 
 	mz_stream zs = { nullptr };
 	int result = mz_inflateInit2(&zs, raw ? -window_bits : window_bits);

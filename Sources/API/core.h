@@ -125,7 +125,7 @@
 #include "Core/IOData/file_system.h"
 #include "Core/IOData/file_system_provider.h"
 #include "Core/IOData/directory_listing.h"
-#include "Core/IOData/iodevice_memory.h"
+#include "Core/IOData/memory_device.h"
 #include "Core/IOData/html_url.h"
 #include "Core/Zip/zip_archive.h"
 #include "Core/Zip/zip_writer.h"

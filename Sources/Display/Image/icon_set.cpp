@@ -31,7 +31,7 @@
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Core/System/cl_platform.h"
 #include "API/Core/System/databuffer.h"
-#include "API/Core/IOData/iodevice_memory.h"
+#include "API/Core/IOData/memory_device.h"
 
 namespace clan
 {
@@ -124,7 +124,7 @@ DataBuffer IconSet_Impl::create_ico_helper(const std::vector<PixelBuffer> &image
 {
 	DataBuffer buf;
 	buf.set_capacity(32*1024);
-	IODevice_Memory device(buf);
+	MemoryDevice device(buf);
 
 	IconHeader header;
 	memset(&header, 0, sizeof(IconHeader));
