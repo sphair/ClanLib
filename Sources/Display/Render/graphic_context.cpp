@@ -179,6 +179,16 @@ Size GraphicContext::get_size() const
 	return impl->get_size();
 }
 
+float GraphicContext::get_dpi_x() const
+{
+	return impl->graphic_screen->get_provider()->get_dpi_x();
+}
+
+float GraphicContext::get_dpi_y() const
+{
+	return impl->graphic_screen->get_provider()->get_dpi_x();
+}
+
 Size GraphicContext::get_max_texture_size() const
 {
 	return impl->graphic_screen->get_provider()->get_max_texture_size();

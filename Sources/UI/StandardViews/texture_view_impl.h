@@ -48,7 +48,7 @@ namespace clan
 		Canvas canvas;
 
 		bool needs_render = false;
-		Rect canvas_rect;
+		Rectf canvas_rect;
 		DisplayWindow cursor_window;
 		DisplayWindow event_window;
 		SlotContainer slots;

@@ -48,8 +48,10 @@ public:
 /// \name Attributes
 /// \{
 public:
-	Rect get_geometry() const;
-	Rect get_viewport() const;
+	Rect get_geometry() const override;
+	Rect get_viewport() const override;
+	float get_dpi_x() const override;
+	float get_dpi_y() const override;
 
 	bool has_focus() const;
 	bool is_minimized() const;

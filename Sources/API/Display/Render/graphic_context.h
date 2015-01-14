@@ -340,6 +340,21 @@ public:
 	/// \brief Returns the current size of the context.
 	Size get_size() const;
 
+	/// \brief Returns with image width in device independent (96 DPI) pixels
+	float get_px_width() const { return get_width() * 96.0f / get_dpi_x(); }
+
+	/// \brief Returns with image height in device independent (96 DPI) pixels
+	float get_px_height() const { return get_height() * 96.0f / get_dpi_y(); }
+
+	/// \brief Returns with image size in device independent (96 DPI) pixels
+	Sizef get_px_size() const { return Sizef(get_px_width(), get_px_height()); }
+
+	/// \brief Physical pixels/dots per inch in the horizontal direction
+	float get_dpi_x() const;
+
+	/// \brief Physical pixels/dots per inch in the vertical direction
+	float get_dpi_y() const;
+
 	/// \brief Returns the maximum size of a texture this graphic context supports.
 	/** <p>It returns Size(0,0) if there is no known limitation to the max
 	    texture size.</p>*/

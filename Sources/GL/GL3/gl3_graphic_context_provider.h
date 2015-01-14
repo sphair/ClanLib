@@ -92,6 +92,8 @@ public:
 
 	const DisplayWindowProvider & get_render_window() const;
 	Size get_display_window_size() const override;
+	float get_dpi_x() const override;
+	float get_dpi_y() const override;
 	void get_opengl_version(int &version_major, int &version_minor) const override;
 	void get_opengl_version(int &version_major, int &version_minor, int &version_release) const override { get_opengl_version(version_major, version_minor); version_release = 0; }
 	void get_opengl_shading_language_version(int &version_major, int &version_minor) override { version_major = shader_version_major; version_minor = shader_version_minor; }

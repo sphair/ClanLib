@@ -281,6 +281,16 @@ ProgramObject GL3GraphicContextProvider::get_program_object(StandardProgram stan
 	return standard_programs.get_program_object(standard_program);
 }
 
+float GL3GraphicContextProvider::get_dpi_x() const
+{
+	return render_window->get_dpi_x();
+}
+
+float GL3GraphicContextProvider::get_dpi_y() const
+{
+	return render_window->get_dpi_y();
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // GL3GraphicContextProvider Operations:
 

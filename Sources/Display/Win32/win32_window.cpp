@@ -127,6 +127,22 @@ Rect Win32Window::get_viewport() const
 	return Rect(rect.left, rect.top, rect.right, rect.bottom);
 }
 
+float Win32Window::get_dpi_x() const
+{
+	HDC dc = GetDC(hwnd);
+	float dpi_x = (float)GetDeviceCaps(dc, LOGPIXELSX);
+	ReleaseDC(hwnd, dc);
+	return dpi_x;
+}
+
+float Win32Window::get_dpi_y() const
+{
+	HDC dc = GetDC(hwnd);
+	float dpi_y = (float)GetDeviceCaps(dc, LOGPIXELSY);
+	ReleaseDC(hwnd, dc);
+	return dpi_y;
+}
+
 bool Win32Window::has_focus() const
 {
 	return (GetFocus() == hwnd);

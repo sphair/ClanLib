@@ -151,7 +151,17 @@ Size D3DGraphicContextProvider::get_max_texture_size() const
 
 Size D3DGraphicContextProvider::get_display_window_size() const
 {
-	return window->get_viewport().get_size(); // To do: is this the viewport or the window size?
+	return window->get_viewport().get_size();
+}
+
+float D3DGraphicContextProvider::get_dpi_x() const
+{
+	return window->get_dpi_x();
+}
+
+float D3DGraphicContextProvider::get_dpi_y() const
+{
+	return window->get_dpi_y();
 }
 
 HDC D3DGraphicContextProvider::get_drawable() const
