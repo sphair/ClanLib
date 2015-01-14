@@ -100,6 +100,7 @@ void SoundOutput_Impl::stop_session(SoundBuffer_Session &session)
 
 void SoundOutput_Impl::start_mixer_thread()
 {
+	stop_flag = false;
 	thread = std::thread(&SoundOutput_Impl::mixer_thread, this);
 //	thread.set_priority(cl_priority_highest);
 }
