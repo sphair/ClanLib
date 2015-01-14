@@ -21,7 +21,6 @@ precomp.cpp \
 soundoutput_impl.cpp \
 soundfilter.cpp \
 soundbuffer_impl.cpp \
-cd_drive.cpp \
 SoundFilters/inverse_echofilter.cpp \
 SoundFilters/echofilter.cpp \
 SoundFilters/fadefilter.cpp \

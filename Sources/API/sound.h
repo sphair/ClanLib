@@ -50,7 +50,6 @@
 #include "Sound/soundbuffer.h"
 #include "Sound/soundbuffer_session.h"
 #include "Sound/soundfilter.h"
-#include "Sound/cd_drive.h"
 #include "Sound/sound_sse.h"
 
 #include "Sound/SoundProviders/soundprovider_wave.h"

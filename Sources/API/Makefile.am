@@ -38,7 +38,6 @@ clanSound_includes = \
 	Sound/SoundFilters/fadefilter.h \
 	Sound/SoundFilters/echofilter.h \
 	Sound/SoundFilters/inverse_echofilter.h \
-	Sound/cd_drive.h \
 	Sound/sound_sse.h \
 	Sound/AudioWorld/audio_object.h \
 	Sound/AudioWorld/audio_definition.h \
