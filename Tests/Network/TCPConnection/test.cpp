@@ -36,10 +36,12 @@ void test1()
 
 	uint64_t start_time = System::get_time();
 	Console::write_line("Time start: %1", start_time);
+	Console::write_line("");
 	for (int i = 0; i < 10; i++)
 	{
 		send_request(connection);
 		receive_response(connection);
+		Console::write_line("");
 	}
 	uint64_t end_time = System::get_time();
 	Console::write_line("Time end: %1", end_time);
