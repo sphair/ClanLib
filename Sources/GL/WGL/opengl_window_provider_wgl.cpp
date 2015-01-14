@@ -127,6 +127,11 @@ Rect OpenGLWindowProvider::get_viewport() const
 	return win32_window.get_viewport();
 }
 
+float OpenGLWindowProvider::get_dpi() const
+{
+	return win32_window.get_dpi();
+}
+
 bool OpenGLWindowProvider::is_fullscreen() const
 {
 	return fullscreen;

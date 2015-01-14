@@ -128,26 +128,28 @@ void Canvas_Impl::calculate_map_mode_matrices()
 {
 	Mat4f matrix;
 
+	float dpi_scale = gc.get_dpi() / 96.0f;
+
 	MapMode mode = (canvas_y_axis == y_axis_bottom_up) ? get_top_down_map_mode() : canvas_map_mode;
 	switch (mode)
 	{
 	default:
 	case map_2d_upper_left:
-		matrix = Mat4f::ortho_2d(0.0f, canvas_size.width, canvas_size.height, 0.0f, handed_right, gc_clip_z_range);
+		matrix = Mat4f::ortho_2d(0.0f, canvas_size.width, canvas_size.height, 0.0f, handed_right, gc_clip_z_range) * Mat4f::scale(dpi_scale, dpi_scale, dpi_scale);
 		break;
 	case map_2d_lower_left:
-		matrix = Mat4f::ortho_2d(0.0f, canvas_size.width, 0.0f, canvas_size.height, handed_right, gc_clip_z_range);
+		matrix = Mat4f::ortho_2d(0.0f, canvas_size.width, 0.0f, canvas_size.height, handed_right, gc_clip_z_range) * Mat4f::scale(dpi_scale, dpi_scale, dpi_scale);
 		break;
 	case map_user_projection:
-		matrix = user_projection;
+		matrix = Mat4f::scale(dpi_scale, dpi_scale, 1.0f) * user_projection;
 		break;
 	}
+
 	if (matrix != canvas_projection)
 	{
 		canvas_projection = matrix;
 		update_batcher_matrix();
 	}
-
 }
 
 MapMode Canvas_Impl::get_top_down_map_mode() const
