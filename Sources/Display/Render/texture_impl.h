@@ -91,6 +91,9 @@ public:
 	TextureCompareMode compare_mode;
 	CompareFunction compare_function;
 
+	float dpi_x = 96.0f;
+	float dpi_y = 96.0f;
+
 private:
 
 };

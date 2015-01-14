@@ -101,7 +101,9 @@ Texture2D::Texture2D( GraphicContext &context, const std::string &filename, cons
 
 	*this = Texture2D(context, pb.get_width(), pb.get_height(), import_desc.is_srgb() ? tf_srgb8_alpha8 : tf_rgba8);
 
+	set_dpi(pb.get_dpi_x(), pb.get_dpi_y());
 	set_subimage(context, Point(0, 0), pb, Rect(pb.get_size()), 0);
+
 	impl->provider->set_wrap_mode(impl->wrap_mode_s, impl->wrap_mode_t);
 }
 
@@ -111,6 +113,7 @@ Texture2D::Texture2D(GraphicContext &context, IODevice &file, const std::string 
 	pb = import_desc.process(pb);
 	*this = Texture2D(context, pb.get_width(), pb.get_height(), import_desc.is_srgb() ? tf_srgb8_alpha8 : tf_rgba8);
 
+	set_dpi(pb.get_dpi_x(), pb.get_dpi_y());
 	set_subimage(context, Point(0, 0), pb, Rect(pb.get_size()), 0);
 
 	impl->provider->set_wrap_mode(impl->wrap_mode_s, impl->wrap_mode_t);
@@ -125,7 +128,9 @@ Texture2D::Texture2D(GraphicContext &context, const PixelBuffer &image, const Re
 {
 	*this = Texture2D(context, src_rect.get_width(), src_rect.get_height(), is_srgb ? tf_srgb8_alpha8 : tf_rgba8);
 
+	set_dpi(image.get_dpi_x(), image.get_dpi_y());
 	set_subimage(context, Point(0, 0), image, src_rect, 0);
+
 	impl->provider->set_wrap_mode(impl->wrap_mode_s, impl->wrap_mode_t);
 }
 
@@ -213,6 +218,27 @@ void Texture2D::set_wrap_mode(TextureWrapMode wrap_s, TextureWrapMode wrap_t)
 		impl->wrap_mode_s = wrap_s;
 		impl->wrap_mode_t = wrap_t;
 	}
+}
+
+float Texture2D::get_dpi_x() const
+{
+	return impl->dpi_x;
+}
+
+float Texture2D::get_dpi_y() const
+{
+	return impl->dpi_y;
+}
+
+void Texture2D::set_dpi(float dpi)
+{
+	set_dpi(dpi, dpi);
+}
+
+void Texture2D::set_dpi(float dpi_x, float dpi_y)
+{
+	impl->dpi_x = dpi_x;
+	impl->dpi_y = dpi_y;
 }
 
 }
