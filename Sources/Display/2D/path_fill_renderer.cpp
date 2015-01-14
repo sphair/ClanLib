@@ -138,7 +138,7 @@ namespace clan
 			current_instance_offset = instances.push(canvas, brush, transform);
 		}
 
-		int max_width = canvas.get_width() * antialias_level;;
+		int max_width = canvas.get_gc().get_width() * antialias_level;
 
 		int start_y = first_scanline / scanline_block_size * scanline_block_size;
 		int end_y = (last_scanline + scanline_block_size - 1) / scanline_block_size * scanline_block_size;

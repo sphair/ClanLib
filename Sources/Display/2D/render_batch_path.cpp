@@ -53,7 +53,7 @@ namespace clan
 	{
 		canvas.set_batcher(this);
 
-		fill_renderer.set_size(canvas, canvas.get_width(), canvas.get_height());
+		fill_renderer.set_size(canvas, canvas.get_gc().get_width(), canvas.get_gc().get_height());
 		fill_renderer.clear();
 		render(path, &fill_renderer);
 		fill_renderer.fill(canvas, path.get_impl()->fill_mode, brush, modelview_matrix);
@@ -72,11 +72,11 @@ namespace clan
 		fill_renderer.flush(gc);
 	}
 
-	void RenderBatchPath::matrix_changed(const Mat4f &new_modelview, const Mat4f &new_projection, TextureImageYAxis image_yaxis)
+	void RenderBatchPath::matrix_changed(const Mat4f &new_modelview, const Mat4f &new_projection, TextureImageYAxis image_yaxis, float dpi)
 	{
 		// We ignore the projection
 		fill_renderer.set_yaxis(image_yaxis);
-		modelview_matrix = new_modelview;
+		modelview_matrix = Mat4f::scale(dpi / 96.0f, dpi / 96.0f, 1.0f) * new_modelview;
 	}
 
 	void RenderBatchPath::render(const Path &path, PathRenderer *path_renderer)

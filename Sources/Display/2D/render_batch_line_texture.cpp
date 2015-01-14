@@ -128,7 +128,7 @@ void RenderBatchLineTexture::flush(GraphicContext &gc)
 
 }
 
-void RenderBatchLineTexture::matrix_changed(const Mat4f &new_modelview, const Mat4f &new_projection, TextureImageYAxis image_yaxis)
+void RenderBatchLineTexture::matrix_changed(const Mat4f &new_modelview, const Mat4f &new_projection, TextureImageYAxis image_yaxis, float dpi)
 {
 	modelview_projection_matrix = new_projection * new_modelview;
 }

@@ -59,7 +59,7 @@ public:
 	/// \param modelview = Mat4f
 	/// \param projection = Mat4f
 	/// \param image_yaxis = The image Y axis, to use where "projection" is not used
-	virtual void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis) = 0;
+	virtual void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis, float dpi) = 0;
 /// \}
 };
 
