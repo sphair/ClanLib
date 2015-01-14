@@ -29,9 +29,10 @@
 #pragma once
 
 #include "../../Display/2D/color.h"
+#include <functional>
+#include <initializer_list>
 #include <memory>
 #include <string>
-#include <functional>
 
 namespace clan
 {
@@ -46,10 +47,17 @@ namespace clan
 		BoxStyle();
 		~BoxStyle();
 
-		/// \brief Copy assignment operator (does not copy the style, use clone() if you want that)
-		BoxStyle &operator =(const BoxStyle &copy);
+		/*! Copy assignment operator overload.
+		 *  \note Only the reference to the style is copied. Changes made to
+		 *        one object will also be seen on the other object.
+		 *        Use clone() if you want a new style object.
+		 */
+		BoxStyle &operator=(const BoxStyle &copy);
 
-		// \brief Copy the entire style (not just the implementation)
+		/*! Creates a new copy of the box style object.
+		 *  \note Creates a new box style object with the same attributes.
+		 *        Changes made to one object will not affect the other object.
+		 */
 		BoxStyle clone() const;
 
 		void set_layout_none();
@@ -77,10 +85,32 @@ namespace clan
 
 		void set_background_none();
 		void set_background(const Colorf &color);
+
+		/*! Sets a gradient background for the box.
+		 *
+		 *  \param gradient_stops An initializer list containing one or more
+		 *                        color-point pair denoting gradient stops.
+		 *  \param angle          Gradient direction. Defaults to `0.0f`, which
+		 *                        makes the gradient go from left to right.
+		 *
+		 *  Example usage:
+		 *  ```cpp
+		 *  // This makes the box background a white-to-black gradient going
+		 *  // from the top to bottom.
+		 *  set_background_gradient({{ clan::Colorf::white, 0.0f }, { clan::Colorf::black, 1.0f }}, 180.0f);
+		 *
+		 *  // This makes the box background a semi-transparent 6-color rainbow
+		 *  // running diagonally.
+		 *  set_background_gradient({
+		 *          { {255,0,0,40}, 0.0f }, { {255,255,0,80}, 0.2f }, { {0,255,0,160}, 0.4f },
+		 *          { {0,255,255,160}, 0.6f }, { {0,0,255,80}, 0.8f }, { {255,0,255,40}, 1.0f }
+		 *          }, 45.0f);
+		 *  ```
+		 */
+		void set_background_gradient(std::initializer_list<std::pair<Colorf,float>> gradient_stops, float angle_degrees = 0.0f);
+
 		void set_background_gradient_to_bottom(const Colorf &top, const Colorf &bottom);
-		void set_background_gradient_to_bottom(const Colorf &stop1, float t1, const Colorf &stop2, float t2, const Colorf &stop3, float t3, const Colorf &stop4, float t4);
 		void set_background_gradient_to_right(const Colorf &left, const Colorf &right);
-		void set_background_gradient_to_right(const Colorf &stop1, float t1, const Colorf &stop2, float t2, const Colorf &stop3, float t3, const Colorf &stop4, float t4);
 		void set_background_image(const std::string &url);
 		void set_background_size_contain();
 
