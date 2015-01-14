@@ -365,20 +365,20 @@ namespace clan
 
 			if (!background.stops.empty())
 			{
-				// To do: use background.angle to calculate start and end point
+				Pointf center = padding_box.get_center();
+				Pointf delta;
+				{
+					float radians = background.angle * M_PI / 180.0f;
+					float M = std::cos(radians) * (0.5f * padding_box.get_height()) + (0.5f * padding_box.get_width()) * std::tan(radians);
+					delta.x = M * std::sin(radians);
+					delta.y = M * std::cos(radians);
+				}
 
 				Brush brush;
 				brush.type = BrushType::linear;
-				if (background.angle == 0.0f)
-				{
-					brush.start_point = Pointf(padding_box.left, padding_box.top);
-					brush.end_point = Pointf(padding_box.right, padding_box.top);
-				}
-				else
-				{
-					brush.start_point = Pointf(padding_box.left, padding_box.top);
-					brush.end_point = Pointf(padding_box.left, padding_box.bottom);
-				}
+				brush.start_point = center - delta;
+				brush.end_point   = center + delta;
+
 				for (const BoxGradientStop &stop : background.stops)
 					brush.stops.push_back(BrushGradientStop(stop.color, stop.position));
 

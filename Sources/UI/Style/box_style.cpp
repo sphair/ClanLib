@@ -148,44 +148,27 @@ namespace clan
 		if (impl->style_changed) impl->style_changed();
 	}
 
-	void BoxStyle::set_background_gradient_to_bottom(const Colorf &top, const Colorf &bottom)
+	void BoxStyle::set_background_gradient(std::initializer_list<std::pair<Colorf,float>> gradient_stops, float angle_degrees)
 	{
 		impl->background.stops.clear();
-		impl->background.stops.push_back(BoxGradientStop(top, 0.0f));
-		impl->background.stops.push_back(BoxGradientStop(bottom, 1.0f));
-		impl->background.angle = 180.0f;
+		const std::pair<Colorf, float> * it = gradient_stops.begin();
+		while (it != gradient_stops.end())
+		{
+			impl->background.stops.emplace_back(it->first, it->second);
+			it++;
+		}
+		impl->background.angle = angle_degrees;
 		if (impl->style_changed) impl->style_changed();
 	}
 
-	void BoxStyle::set_background_gradient_to_bottom(const Colorf &stop1, float t1, const Colorf &stop2, float t2, const Colorf &stop3, float t3, const Colorf &stop4, float t4)
+	void BoxStyle::set_background_gradient_to_bottom(const Colorf &top, const Colorf &bottom)
 	{
-		impl->background.stops.clear();
-		impl->background.stops.push_back(BoxGradientStop(stop1, t1));
-		impl->background.stops.push_back(BoxGradientStop(stop2, t2));
-		impl->background.stops.push_back(BoxGradientStop(stop3, t3));
-		impl->background.stops.push_back(BoxGradientStop(stop4, t4));
-		impl->background.angle = 180.0f;
-		if (impl->style_changed) impl->style_changed();
+		set_background_gradient({{ top, 0.0f }, { bottom, 1.0f }}, 180.0f);
 	}
 
 	void BoxStyle::set_background_gradient_to_right(const Colorf &left, const Colorf &right)
 	{
-		impl->background.stops.clear();
-		impl->background.stops.push_back(BoxGradientStop(left, 0.0f));
-		impl->background.stops.push_back(BoxGradientStop(right, 1.0f));
-		impl->background.angle = 0.0f;
-		if (impl->style_changed) impl->style_changed();
-	}
-
-	void BoxStyle::set_background_gradient_to_right(const Colorf &stop1, float t1, const Colorf &stop2, float t2, const Colorf &stop3, float t3, const Colorf &stop4, float t4)
-	{
-		impl->background.stops.clear();
-		impl->background.stops.push_back(BoxGradientStop(stop1, t1));
-		impl->background.stops.push_back(BoxGradientStop(stop2, t2));
-		impl->background.stops.push_back(BoxGradientStop(stop3, t3));
-		impl->background.stops.push_back(BoxGradientStop(stop4, t4));
-		impl->background.angle = 0.0f;
-		if (impl->style_changed) impl->style_changed();
+		set_background_gradient({{ left, 0.0f }, { right, 1.0f }}, 0.0f);
 	}
 
 	void BoxStyle::set_background_image(const std::string &url)
