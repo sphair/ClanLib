@@ -53,16 +53,16 @@ int TextFade::start(const std::vector<std::string> &args)
 	// Get the graphic context
 	clan::Canvas canvas(window);
 
-	clan::Image background(canvas, "../../Display/Shape2D/Resources/lobby_background2.png");
+	clan::Image background(canvas, "../../Display/Path/Resources/lobby_background2.png");
 
 	clan::FontDescription font_description;
-	font_description.set_typeface_name("arial");
 	font_description.set_height(48);
 	font_description.set_subpixel(false);	// Fading only works with sub pixel off
-	clan::Font standard_font(canvas, font_description);
+	clan::Font standard_font("arial", font_description);
 
 	clan::ResourceManager resources = clan::XMLResourceManager::create(clan::XMLResourceDocument("../Font/Resources/resources.xml"));
-	clan::Font sprite_font = clan::Font::resource(canvas, clan::FontDescription("ClanFont"), resources);
+	clan::Font sprite_font = clan::Font::resource(canvas, "ClanFont", clan::FontDescription(), resources);
+	sprite_font.set_height(32);
 
 	// Run until someone presses escape
 	while (!quit)
@@ -88,7 +88,7 @@ void TextFade::draw_text(clan::Canvas &canvas, clan::Font &font, int ypos, const
 
 	int gc_width = canvas.get_width();
 
-	clan::Size text_size = font.get_text_size(canvas, text);
+	clan::Size text_size = clan::Size(font.measure_text(canvas, text).bbox_size);
 
 	int xpos = (gc_width - text_size.width) / 2;
 
@@ -106,7 +106,7 @@ void TextFade::draw_text(clan::Canvas &canvas, clan::Font &font, int ypos, const
 		float alpha = 1.0f - ( (float) position_off_centre * 2.0f / gc_width );
 		if (alpha > 0.0f)
 			font.draw_text(canvas, xpos, ypos,  buffer, clan::Colorf(0.4f, 0.4f, 1.0f, alpha));
-		xpos += font.get_glyph_size(canvas, let).width;
+		xpos += font.get_metrics(canvas, let).bbox_size.width;
 	}
 
 }

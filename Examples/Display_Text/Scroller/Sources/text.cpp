@@ -34,9 +34,9 @@ Text::Text()
 {
 }
 
-void Text::init(clan::Canvas &canvas, const clan::FontDescription &font_description, const clan::DomElement &configuration, const char *text_name)
+void Text::init(clan::Canvas &canvas, const std::string &font_family_name, const clan::FontDescription &font_description, const clan::DomElement &configuration, const char *text_name)
 {
-	font = clan::Font(canvas, font_description);
+	font = clan::Font(font_family_name, font_description);
 
 	text = configuration.get_child_string(text_name);
 	if (text.length() == 0)
@@ -153,7 +153,7 @@ void Text::init_stage2_examine_glyphs(clan::Canvas &canvas, clan::UTF8_Reader &r
 	{
 		glyph_offset[current_glyph_count] = reader.get_position();
 
-		clan::Size size = font.get_glyph_size(canvas, reader.get_char());
+		clan::Size size = clan::Size(font.get_metrics(canvas, reader.get_char()).bbox_size);
 		glyph_width[current_glyph_count] = size.width;
 		total_width += size.width;
 

@@ -73,19 +73,17 @@ int Language::start(const std::vector<std::string> &args)
 	if (document_element.is_null())
 		throw clan::Exception("Cannot obtain the document element");
 
-	clan::Font font_english(canvas, "dejavu", 32);
+	clan::Font font_english("arial", 30);
 
 	clan::FontDescription desc_chinese;
-	desc_chinese.set_typeface_name("dejavu");
-	desc_chinese.set_height(48);
+	desc_chinese.set_height(30);
 	desc_chinese.set_charset(clan::FontDescription::charset_chinesebig5);
-	clan::Font font_chinese(canvas, desc_chinese);
+	clan::Font font_chinese("simsun", desc_chinese);
 
 	clan::FontDescription desc_arabic;
-	desc_arabic.set_typeface_name("dejavu");
-	desc_arabic.set_height(48);
+	desc_arabic.set_height(30);
 	desc_arabic.set_charset(clan::FontDescription::charset_arabic);
-	clan::Font font_arabic(canvas, desc_arabic);
+	clan::Font font_arabic("arial", desc_arabic);
 
 	// Run until someone presses escape
 	while (!quit)
@@ -96,7 +94,7 @@ int Language::start(const std::vector<std::string> &args)
 		std::string text;
 		
 		text = document_element.get_child_string("ENGLISH");
-		font_english.draw_text(canvas, 10, 30, text);
+		font_english.draw_text(canvas, 10, 60, text);
 
 		text = document_element.get_child_string("CHINESE");
 		font_chinese.draw_text(canvas, 10, 130, text);

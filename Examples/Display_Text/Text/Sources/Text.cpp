@@ -81,14 +81,12 @@ int ExampleText::start(const std::vector<std::string> &args)
 	clan::Canvas canvas(window);
 
 	clan::FontDescription font_desc;
-	font_desc.set_typeface_name("Tahoma");
-	font_desc.set_anti_alias(true);
 	font_desc.set_height(32);
-	clan::Font font_normal(canvas, font_desc);
+	clan::Font font_normal("Tahoma", font_desc);
 
-	font_desc.set_weight(800);
+	font_desc.set_weight(clan::FontWeight::bold);
 	font_desc.set_height(40);
-	clan::Font font_bold(canvas, font_desc);
+	clan::Font font_bold("Tahoma", font_desc);
 
 	clan::Texture2D texture_text(canvas, text_window_size, text_window_size);
 	texture_text.set_wrap_mode(clan::wrap_repeat, clan::wrap_repeat);

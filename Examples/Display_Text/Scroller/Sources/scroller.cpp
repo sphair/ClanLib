@@ -63,9 +63,8 @@ int Scroller::start(const std::vector<std::string> &args)
 
 	Text text;
 	clan::FontDescription font_description;
-	font_description.set_typeface_name("arial");
 	font_description.set_height(24);
-	text.init(canvas, font_description, document_element, "TEXT");
+	text.init(canvas, "arial", font_description, document_element, "TEXT");
 
 	clan::GameTime game_time;
 	// Run until someone presses escape
