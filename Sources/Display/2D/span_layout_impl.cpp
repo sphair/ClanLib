@@ -534,7 +534,7 @@ void SpanLayout_Impl::layout_block(CurrentLine &current_line, int max_width, std
 
 void SpanLayout_Impl::layout_inline_block(CurrentLine &current_line, int max_width, std::vector<TextBlock> &blocks, std::vector<TextBlock>::size_type block_index)
 {
-	Size size;
+	Sizef size;
 	LineSegment segment;
 	if (objects[current_line.object_index].type == object_image)
 	{
@@ -572,9 +572,9 @@ void SpanLayout_Impl::layout_float_block(CurrentLine &current_line, int max_widt
 	floatbox.component = objects[current_line.object_index].component;
 	floatbox.id = objects[current_line.object_index].id;
 	if (objects[current_line.object_index].type == object_image)
-		floatbox.rect = Rect(Point(0, current_line.y_position), floatbox.image.get_size());
+		floatbox.rect = Rect(Point(0, current_line.y_position), Size(floatbox.image.get_size()));
 	else if (objects[current_line.object_index].type == object_component)
-		floatbox.rect = Rect(Point(0, current_line.y_position), floatbox.component->get_size());
+		floatbox.rect = Rect(Point(0, current_line.y_position), Size(floatbox.component->get_size()));
 
 	if (objects[current_line.object_index].float_type == float_left)
 		floats_left.push_back(float_box_left(floatbox, max_width));

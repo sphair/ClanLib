@@ -65,10 +65,10 @@ public:
 
 	float scale_x, scale_y;
 
-	Point translation_hotspot;
+	Pointf translation_hotspot;
 	Origin translation_origin;
 
-	Point translated_hotspot;	// Precalculated from calc_hotspot()
+	Pointf translated_hotspot;	// Precalculated from calc_hotspot()
 
 	Texture2D texture;
 	Rect texture_rect;
@@ -80,33 +80,36 @@ void Image_Impl::calc_hotspot()
 	{
 		case origin_top_left:
 		default:
-			translated_hotspot = Point(translation_hotspot.x, translation_hotspot.y);
+			translated_hotspot = Pointf(translation_hotspot.x, translation_hotspot.y);
 			break;
 		case origin_top_center:
-			translated_hotspot = Point(translation_hotspot.x - texture_rect.get_width() * scale_x / 2, translation_hotspot.y);
+			translated_hotspot = Pointf(translation_hotspot.x - texture_rect.get_width() * scale_x * 0.5f, translation_hotspot.y);
 			break;
 		case origin_top_right:
-			translated_hotspot = Point(translation_hotspot.x - texture_rect.get_width() * scale_x, translation_hotspot.y);
+			translated_hotspot = Pointf(translation_hotspot.x - texture_rect.get_width() * scale_x, translation_hotspot.y);
 			break;
 		case origin_center_left:
-			translated_hotspot = Point(translation_hotspot.x, translation_hotspot.y - texture_rect.get_height() * scale_y / 2);
+			translated_hotspot = Pointf(translation_hotspot.x, translation_hotspot.y - texture_rect.get_height() * scale_y * 0.5f);
 			break;
 		case origin_center:
-			translated_hotspot = Point(translation_hotspot.x - texture_rect.get_width() * scale_x / 2, translation_hotspot.y - texture_rect.get_height() * scale_y / 2);
+			translated_hotspot = Pointf(translation_hotspot.x - texture_rect.get_width() * scale_x * 0.5f, translation_hotspot.y - texture_rect.get_height() * scale_y * 0.5f);
 			break;
 		case origin_center_right:
-			translated_hotspot = Point(translation_hotspot.x - texture_rect.get_width() * scale_x, translation_hotspot.y - texture_rect.get_height() * scale_y / 2);
+			translated_hotspot = Pointf(translation_hotspot.x - texture_rect.get_width() * scale_x, translation_hotspot.y - texture_rect.get_height() * scale_y * 0.5f);
 			break;
 		case origin_bottom_left:
-			translated_hotspot = Point(translation_hotspot.x, translation_hotspot.y - texture_rect.get_height() * scale_y);
+			translated_hotspot = Pointf(translation_hotspot.x, translation_hotspot.y - texture_rect.get_height() * scale_y);
 			break;
 		case origin_bottom_center:
-			translated_hotspot = Point(translation_hotspot.x - texture_rect.get_width() * scale_x / 2, translation_hotspot.y - texture_rect.get_height() * scale_y);
+			translated_hotspot = Pointf(translation_hotspot.x - texture_rect.get_width() * scale_x * 0.5f, translation_hotspot.y - texture_rect.get_height() * scale_y);
 			break;
 		case origin_bottom_right:
-			translated_hotspot = Point(translation_hotspot.x - texture_rect.get_width() * scale_x, translation_hotspot.y - texture_rect.get_height() * scale_y);
+			translated_hotspot = Pointf(translation_hotspot.x - texture_rect.get_width() * scale_x, translation_hotspot.y - texture_rect.get_height() * scale_y);
 			break;
 	}
+
+	translated_hotspot.x *= 96.0f / texture.get_dpi_x();
+	translated_hotspot.y *= 96.0f / texture.get_dpi_y();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -305,6 +308,9 @@ Image Image::load(Canvas &canvas, const std::string &id, const XMLResourceDocume
 			int xoffset = StringHelp::text_to_int(cur_element.get_attribute("x", "0"));
 			int yoffset = StringHelp::text_to_int(cur_element.get_attribute("y", "0"));
 
+			xoffset *= 96.0f / image.get_texture().get_texture().get_dpi_x();
+			yoffset *= 96.0f / image.get_texture().get_texture().get_dpi_y();
+
 			image.set_alignment(origin, xoffset, yoffset);
 		}
 
@@ -348,56 +354,39 @@ Colorf Image::get_color() const
 	return impl->color;
 }
 
-void Image::get_alignment(Origin &origin, int &x, int &y) const
+void Image::get_alignment(Origin &origin, float &x, float &y) const
 {
 	origin = impl->translation_origin;
 	x = impl->translation_hotspot.x;
 	y = impl->translation_hotspot.y;
 }
 
-int Image::get_width() const
+float Image::get_width() const
 {
-	return impl->texture_rect.get_width();
+	return impl->texture_rect.get_width() * 96.0f / impl->texture.get_dpi_x();
 }
 
-int Image::get_height() const
+float Image::get_height() const
 {
-	return impl->texture_rect.get_height();
+	return impl->texture_rect.get_height() * 96.0f / impl->texture.get_dpi_y();
 }
 
-Size Image::get_size() const
+Sizef Image::get_size() const
 {
-	return impl->texture_rect.get_size();
+	return Sizef(get_width(), get_height());
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // Image Operations:
 
-void Image::set_subimage(
-	Canvas &canvas,
-	int x,
-	int y,
-	const PixelBuffer &image,
-	const Rect &src_rect,
-
-	int level)
-{
-	impl->texture.set_subimage(canvas, x, y, image, src_rect, level);
-}
-
 void Image::draw(Canvas &canvas, float x, float y) const
 {
 	Rectf dest(
 		x + impl->translated_hotspot.x, y + impl->translated_hotspot.y, 
-		Sizef(impl->texture_rect.get_width() * impl->scale_x, impl->texture_rect.get_height() * impl->scale_y));
+		Sizef(get_width() * impl->scale_x, get_height() * impl->scale_y));
 
 	RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
 	batcher->draw_image(canvas, impl->texture_rect, dest, impl->color, impl->texture);
-}
-
-void Image::draw(Canvas &canvas, int x, int y) const
-{
-	draw(canvas, (float) x, (float) y);
 }
 
 void Image::draw(Canvas &canvas, const Rectf &src, const Rectf &dest) const
@@ -465,7 +454,7 @@ void Image::set_color(const Colorf &color)
 	impl->color = color;
 }
 
-void Image::set_alignment(Origin origin, int x, int y)
+void Image::set_alignment(Origin origin, float x, float y)
 {
 	impl->translation_origin = origin;
 	impl->translation_hotspot.x = x;

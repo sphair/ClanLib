@@ -137,10 +137,10 @@ public:
 	int get_pitch() const;
 
 	/// \brief Returns with image width in device independent (96 DPI) pixels
-	float get_px_width() const { return get_width() * get_dpi_x() / 96.0f; }
+	float get_px_width() const { return get_width() * 96.0f / get_dpi_x(); }
 
 	/// \brief Returns with image height in device independent (96 DPI) pixels
-	float get_px_height() const { return get_height() * get_dpi_y() / 96.0f; }
+	float get_px_height() const { return get_height() * 96.0f / get_dpi_y(); }
 
 	/// \brief Returns with image size in device independent (96 DPI) pixels
 	Sizef get_px_size() const { return Sizef(get_px_width(), get_px_height()); }
