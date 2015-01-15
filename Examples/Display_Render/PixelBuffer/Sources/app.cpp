@@ -67,7 +67,7 @@ int App::start(const std::vector<std::string> &args)
 		textures[cnt] = clan::Texture2D(canvas, tux.get_width(), tux.get_height(), clan::tf_rgba8);
 	}
 
-	clan::Font font(canvas, "Tahoma", 24);
+	clan::Font font("Tahoma", 24);
 
 	clan::GameTime game_time;
 
