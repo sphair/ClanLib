@@ -3,7 +3,7 @@
 
 #include "../IRCSession/irc_text.h"
 
-class DCCChatConnection : public clan::KeepAliveObject
+class DCCChatConnection
 {
 public:
 	DCCChatConnection(const std::string &local_nick, const std::string &remote_nick, const clan::SocketName &socket_name);
@@ -44,11 +44,12 @@ private:
 
 	clan::SocketName socket_name;
 	std::thread thread;
-	clan::Event stop_event;
-	clan::Event send_event;
-	clan::Event started_event;
+	std::mutex mutex;
+	std::condition_variable started_event;
+	clan::NetworkConditionVariable change_event;
+	bool stop_flag = false;
+	bool started_flag = false;
 	bool is_server;
-	std::recursive_mutex mutex;
 	std::vector<Message> send_queue;
 	std::vector<Message> receive_queue;
 };
