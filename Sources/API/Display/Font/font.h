@@ -98,6 +98,9 @@ public:
 	/// \param id = id
 	static Resource<Font> resource(Canvas &canvas, const std::string &family_name, const FontDescription &desc, const ResourceManager &resources);
 
+	/// \brief Loads a Font from a XML resource definition
+	static Font load(Canvas &canvas, const std::string &family_name, const FontDescription &reference_desc, FontFamily &font_family, const XMLResourceDocument &doc, std::function<Resource<Sprite>(Canvas &, const std::string &)> cb_get_sprite = std::function<Resource<Sprite>(Canvas &, const std::string &)>());
+
 /// \}
 
 /// \name Attributes

@@ -112,6 +112,7 @@ public:
 
 	/// \brief Loads a Sprite from a XML resource definition
 	static Image load(Canvas &canvas, const std::string &id, const XMLResourceDocument &doc);
+
 /// \}
 
 /// \name Attributes

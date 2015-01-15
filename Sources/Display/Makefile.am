@@ -86,6 +86,7 @@ Resources/XML/program_object_xml.cpp \
 Resources/XML/shader_object_xml.cpp \
 Resources/XML/sprite_xml.cpp \
 Resources/XML/texture_xml.cpp \
+Resources/XML/font_xml.cpp \
 precomp.cpp \
 Font/font.cpp \
 Font/font_family.cpp \

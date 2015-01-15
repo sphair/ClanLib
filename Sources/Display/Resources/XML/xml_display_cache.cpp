@@ -32,6 +32,7 @@
 #include "API/Display/2D/image.h"
 #include "API/Display/Render/texture_2d.h"
 #include "API/Display/Font/font.h"
+#include "API/Display/Font/font_family.h"
 #include "API/Display/Font/font_description.h"
 #include "API/Display/Font/font_metrics.h"
 #include "API/Display/Render/texture.h"
@@ -40,7 +41,6 @@
 #include "API/Core/XML/dom_element.h"
 #include "API/Core/IOData/path_help.h"
 #include "xml_display_cache.h"
-#include "../../Font/font_impl.h"
 
 namespace clan
 {
@@ -104,14 +104,11 @@ Resource<Font> XMLDisplayCache::get_font(Canvas &canvas, const std::string &fami
 		return Font(it->second, desc);
 
 	bool is_resource_font = false;
-	DomElement font_element;
-	XMLResourceNode resource;
 
 	if (doc.resource_exists(family_name))
 	{
-		resource = doc.get_resource(family_name);
-		font_element = resource.get_element();
-		if (font_element.get_tag_name() == "font")
+		XMLResourceNode resource = doc.get_resource(family_name);
+		if (resource.get_element().get_tag_name() == "font")
 		{
 			is_resource_font = true;
 		}
@@ -124,7 +121,7 @@ Resource<Font> XMLDisplayCache::get_font(Canvas &canvas, const std::string &fami
 
 	if (is_resource_font)
 	{
-		font = Font_Impl::load(canvas, desc, font_family, font_element, resource, bind_member(this, &XMLDisplayCache::get_sprite));
+		font = Font::load(canvas, family_name, desc, font_family, doc, bind_member(this, &XMLDisplayCache::get_sprite));
 	}
 	else
 	{
