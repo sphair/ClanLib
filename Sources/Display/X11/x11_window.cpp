@@ -211,10 +211,10 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 
 	system_cursor = XCreateFontCursor(handle.display, XC_left_ptr);	// This is allowed to fail
 
-	int win_x = desc.get_position().left;
-	int win_y = desc.get_position().top;
-	int win_width = desc.get_size().width;
-	int win_height = desc.get_size().height;
+	int win_x = desc.get_position().left * get_dpi() / 96.0f;
+	int win_y = desc.get_position().top * get_dpi() / 96.0f;
+	int win_width = desc.get_size().width * get_dpi() / 96.0f;
+	int win_height = desc.get_size().height * get_dpi() / 96.0f;
 
 	// Check for valid width and height
 	if ( win_width <=0 )
