@@ -34,12 +34,9 @@
 #include "API/Display/2D/subtexture.h"
 #include "API/Display/Render/graphic_context.h"
 #include "API/Display/Render/texture_2d.h"
-#include "API/Display/Resources/display_cache.h"
 #include "API/Core/XML/dom_element.h"
 #include "API/Core/Text/string_help.h"
-#include "API/Core/Math/quad.h"
 #include "API/Core/Resources/xml_resource_document.h"
-#include "API/Display/Resources/display_cache.h"
 
 namespace clan
 {

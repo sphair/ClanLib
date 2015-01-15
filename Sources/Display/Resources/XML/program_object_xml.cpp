@@ -33,12 +33,9 @@
 #include "API/Display/Render/shader_object.h"
 #include "API/Display/Render/program_object.h"
 #include "API/Display/Render/graphic_context.h"
-#include "API/Display/TargetProviders/graphic_context_provider.h"
-#include "API/Display/TargetProviders/program_object_provider.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Resources/xml_resource_node.h"
-#include "API/Core/IOData/iodevice.h"
 #include "API/Core/XML/dom_element.h"
 
 namespace clan

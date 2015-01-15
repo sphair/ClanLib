@@ -31,14 +31,11 @@
 #include "API/Display/Font/font_family.h"
 #include "API/Display/Font/font_metrics.h"
 #include "API/Display/Font/font_description.h"
-#include "API/Display/TargetProviders/graphic_context_provider.h"
 #include "API/Core/IOData/path_help.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/Text/string_format.h"
-#include "API/Core/Text/utf8_reader.h"
 #include "API/Core/XML/dom_element.h"
 #include "API/Display/2D/canvas.h"
-#include "API/Display/Resources/display_cache.h"
 #include "API/Core/Resources/xml_resource_document.h"
 
 namespace clan
