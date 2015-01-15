@@ -584,6 +584,19 @@ Rect X11Window::get_viewport() const
 	return Rect(0, 0, requested_current_window_client_area.get_size());
 }
 
+float X11Window::get_dpi() const
+{
+	int w_px = XDisplayWidth  (handle.display, current_screen);
+	int w_mm = XDisplayWidthMM(handle.display, current_screen);
+
+	printf("ClanLib [info] XDisplayWidth = %d, XDisplayWidthMM = %d\n", w_px, w_mm);
+
+	if (w_mm < 24) // Prevent division by zero in case Xlib doesn't have the value.
+		return 96.0f;
+
+	return 25.4f * static_cast<float>(w_px) / static_cast<float>(w_mm);
+}
+
 bool X11Window::has_focus() const
 {
 	Window focus_return;
@@ -1088,16 +1101,24 @@ void X11Window::process_window_resize(const Rect &new_rect)
 
 		if ( (rect.get_width() != current_window_client_area.get_width()) || (rect.get_height() != current_window_client_area.get_height()) || always_send_window_size_changed_event )
 		{
+			float scale = 96.0f / get_dpi();
+			Rectf rectf = rect;
+			rectf.left   *= scale,
+			rectf.top    *= scale,
+			rectf.right  *= scale,
+			rectf.bottom *= scale;
+
 			if (site->func_window_resize)
 			{
-				(site->func_window_resize)(rect);
+				(site->func_window_resize)(rectf);
 				// TODO: If rect output is different, update this window rect. Maybe use a  XConfigureRequestEvent?
 			}
 
 			if (callback_on_resized)
 				callback_on_resized();
 
-			(site->sig_resize)(rect.get_width(), rect.get_height());
+			(site->sig_resize)(rectf.get_width(), rectf.get_height());
+			rect = rectf;
 		}
 	}
 	always_send_window_position_changed_event = false;
@@ -1229,13 +1250,22 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 						if (minimized && site != nullptr)
 						{
 							// generate resize events for minimized -> maximized transition
-							Rect rect = get_geometry();
+							float scale = 96.0f / get_dpi();
+							Rectf rectf = get_geometry();
+							rectf.left   *= scale,
+							rectf.top    *= scale,
+							rectf.right  *= scale,
+							rectf.bottom *= scale;
+
 							(site->sig_window_moved)();
 							if (site->func_window_resize)
-								(site->func_window_resize)(rect);
+							{
+								(site->func_window_resize)(rectf);
+								rect = rectf;
+							}
 							if (callback_on_resized)
 								callback_on_resized();
-							(site->sig_resize)(rect.get_width(), rect.get_height());
+							(site->sig_resize)(rectf.get_width(), rectf.get_height());
 						}
 						minimized = false;
 						maximized = true;

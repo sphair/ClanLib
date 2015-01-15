@@ -91,12 +91,12 @@ int InputDeviceProvider_LinuxJoystick::get_fd() const
 	return fd;
 }
 
-int InputDeviceProvider_LinuxJoystick::get_x() const
+float InputDeviceProvider_LinuxJoystick::get_x() const
 {
 	return 0;
 }
 
-int InputDeviceProvider_LinuxJoystick::get_y() const
+float InputDeviceProvider_LinuxJoystick::get_y() const
 {
 	return 0;
 }
@@ -148,7 +148,7 @@ int InputDeviceProvider_LinuxJoystick::get_button_count() const
 /////////////////////////////////////////////////////////////////////////////
 // InputDeviceProvider_LinuxJoystick operations:
 
-void InputDeviceProvider_LinuxJoystick::set_position(int x, int y)
+void InputDeviceProvider_LinuxJoystick::set_position(float x, float y)
 {
 	// Force feedback?
 }
@@ -156,7 +156,7 @@ void InputDeviceProvider_LinuxJoystick::set_position(int x, int y)
 void InputDeviceProvider_LinuxJoystick::process_event(js_event event) const
 {
 	InputEvent input_event;
-	input_event.mouse_pos = window->get_mouse_position();
+	input_event.mouse_pos = Pointf(window->get_mouse_position());
 	input_event.repeat_count = 0;
 
 	// We don't threat JS_EVENT_INIT special, so this should do

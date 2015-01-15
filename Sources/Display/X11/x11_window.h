@@ -79,6 +79,7 @@ public:
 public:
 	Rect get_geometry() const;
 	Rect get_viewport() const;
+	float get_dpi() const;
 	bool has_focus() const;
 	bool is_minimized() const;
 	bool is_maximized() const;

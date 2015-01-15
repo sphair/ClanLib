@@ -175,22 +175,19 @@ public:
 
 public:
 	bool is_double_buffered() const { return true; }
-	Rect get_geometry() const override {return x11_window.get_geometry();}
 
-	Rect get_viewport() const override {return x11_window.get_viewport();}
+	Rect get_geometry() const override { return x11_window.get_geometry(); }
+	Rect get_viewport() const override { return x11_window.get_viewport(); }
 
-	bool is_fullscreen() const override {return x11_window.is_fullscreen();}
+	float get_dpi() const override { return x11_window.get_dpi(); }
 
-	bool has_focus() const override {return x11_window.has_focus();}
-
-	bool is_minimized() const override {return x11_window.is_minimized();}
-
-	bool is_maximized() const override {return x11_window.is_maximized();}
-
-	bool is_visible() const override {return x11_window.is_visible();}
+	bool has_focus() const override { return x11_window.has_focus(); }
+	bool is_fullscreen() const override { return x11_window.is_fullscreen(); }
+	bool is_minimized() const override { return x11_window.is_minimized(); }
+	bool is_maximized() const override { return x11_window.is_maximized(); }
+	bool is_visible() const override { return x11_window.is_visible(); }
 
 	bool is_clipboard_text_available() const override { return x11_window.is_clipboard_text_available(); }
-
 	bool is_clipboard_image_available() const override { return x11_window.is_clipboard_image_available(); }
 
 	std::string get_title() const override { return x11_window.get_title(); }
