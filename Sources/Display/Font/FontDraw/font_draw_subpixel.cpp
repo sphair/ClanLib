@@ -88,7 +88,7 @@ namespace clan
 					float xp = offset_x + position.x + gptr->offset.x;
 					float yp = offset_y + position.y + gptr->offset.y;
 
-					Rectf dest_size(xp, yp, Sizef(gptr->geometry.get_size()));
+					Rectf dest_size(xp, yp, gptr->size);
 					batcher->draw_glyph_subpixel(canvas, gptr->geometry, dest_size, color, gptr->texture);
 				}
 				offset_x += gptr->metrics.advance.width;

@@ -227,11 +227,13 @@ namespace clan
 			{
 				increment.x = sprite_frame.position.get_width();
 			}
-			Point offset(sprite_frame.offset);
+			Pointf offset(sprite_frame.offset);
 			offset.y -= font_metrics.get_ascent();
 
+			Sizef size = sprite_frame.position.get_size();
+
 			Subtexture sub_texture(sprite_frame.texture, sprite_frame.position);
-			glyph_cache->insert_glyph(canvas, glyph, sub_texture, offset, GlyphMetrics(Pointf(offset.x, offset.y), Sizef(increment.x, increment.y), Sizef(increment.x, increment.y)));
+			glyph_cache->insert_glyph(canvas, glyph, sub_texture, offset, size, GlyphMetrics(Pointf(offset.x, offset.y), Sizef(increment.x, increment.y), Sizef(increment.x, increment.y)));
 
 			sprite_index++;
 		}

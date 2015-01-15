@@ -127,11 +127,12 @@ void GlyphCache::insert_glyph(Canvas &canvas, FontPixelBuffer &pb)
 		Subtexture sub_texture = texture_group.add(gc, buffer_with_border.get_size());
 		font_glyph->texture = sub_texture.get_texture();
 		font_glyph->geometry = Rect(sub_texture.get_geometry().left + glyph_border_size, sub_texture.get_geometry().top + glyph_border_size, pb.buffer_rect.get_size() );
+		font_glyph->size = pb.size;
 		sub_texture.get_texture().set_subimage(gc, sub_texture.get_geometry().left, sub_texture.get_geometry().top, buffer_with_border, buffer_with_border.get_size());
 	}
 }
 
-void GlyphCache::insert_glyph(Canvas &canvas, unsigned int glyph, Subtexture &sub_texture, const Point &offset, const GlyphMetrics &glyph_metrics)
+void GlyphCache::insert_glyph(Canvas &canvas, unsigned int glyph, Subtexture &sub_texture, const Pointf &offset, const Sizef &size, const GlyphMetrics &glyph_metrics)
 {
 	auto font_glyph = new Font_TextureGlyph();
 	
@@ -139,6 +140,7 @@ void GlyphCache::insert_glyph(Canvas &canvas, unsigned int glyph, Subtexture &su
 	font_glyph->glyph = glyph;
 	font_glyph->offset = offset;
 	font_glyph->metrics = glyph_metrics;
+	font_glyph->size = size;
 
 	if ( (sub_texture.get_geometry().get_width() > 0 ) && (sub_texture.get_geometry().get_height() > 0) )
 	{

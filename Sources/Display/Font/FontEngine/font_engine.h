@@ -65,7 +65,10 @@ public:
 	/** For example:
 	    x = pos_x + pixelbuffer.offset.x
 	    y = pos_y + pixelbuffer.offset.y*/
-	Point offset;
+	Pointf offset;
+
+	/// \brief Size of the glyph
+	Sizef size;
 
 	GlyphMetrics metrics;
 };

@@ -134,7 +134,7 @@ private:
 	DataBuffer data_buffer;
 	FontDescription font_description;
 	FontMetrics font_metrics;
-
+	float dpi = 96.0f;
 };
 
 }
