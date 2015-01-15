@@ -88,7 +88,7 @@ int App::start(const std::vector<std::string> &args)
 
 	float scale = 1.0f;
 
-	clan::Font font(canvas, "tahoma", 32);
+	clan::Font font("tahoma", 32);
 
 	blur = 1.0f;
 	uint64_t startTime = clan::System::get_time();

@@ -76,7 +76,7 @@ int Program::main(const std::vector<std::string> &args)
 
 			effect.draw(gc);
 			window.flip(0);
-			KeepAlive::process();
+			RunLoop::process();
 		}
 	}
 	catch (Exception &e)

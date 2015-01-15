@@ -36,8 +36,8 @@ public:
 	Subtexture alloc_sprite(Canvas &canvas, const Size &size);
 	void draw_sprite(Canvas &canvas, const Rectf &dest, const Rect &src, const Texture &texture, float hue_offset);
 
-	void flush(GraphicContext &gc);
-	void matrix_changed(const Mat4f &modelview, const Mat4f &projection);
+	void flush(GraphicContext &gc) override;
+	void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis, float dpi) override;
 
 private:
 	static ProgramObject create_shader_program(GraphicContext &gc);
