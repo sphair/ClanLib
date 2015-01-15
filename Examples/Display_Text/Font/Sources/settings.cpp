@@ -40,10 +40,10 @@ void App::draw_font_info()
 	switch (selected_fontclass)
 	{
 		case font_ttf:
-			small_font.draw_text(canvas, offset_x, offset_y, string_format("TTF", font_desc.get_typeface_name()),  Colorf::white);
+			small_font.draw_text(canvas, offset_x, offset_y, string_format("TTF", font_typeface), Colorf::white);
 			break;
 		case font_sprite:
-			small_font.draw_text(canvas, offset_x, offset_y, string_format("Sprite", font_desc.get_typeface_name()),  Colorf::white);
+			small_font.draw_text(canvas, offset_x, offset_y, string_format("Sprite", font_typeface), Colorf::white);
 			break;
 	}
 	offset_y += gap;
@@ -51,7 +51,7 @@ void App::draw_font_info()
 	small_font.draw_text(canvas, offset_x - 10, offset_y, "Font Description :", Colorf::yellow);
 	offset_y += gap;
 
-	small_font.draw_text(canvas, offset_x, offset_y, string_format("Name : %1", font_desc.get_typeface_name()),  Colorf::white);
+	small_font.draw_text(canvas, offset_x, offset_y, string_format("Name : %1", font_typeface), Colorf::white);
 	offset_y += gap;
 
 	small_font.draw_text(canvas, offset_x, offset_y, string_format("Height : %1", font_desc.get_height()),  Colorf::white);
@@ -66,19 +66,10 @@ void App::draw_font_info()
 	small_font.draw_text(canvas, offset_x, offset_y, string_format("Orientation : %1", font_desc.get_orientation()),  Colorf::white);
 	offset_y += gap;
 
-	small_font.draw_text(canvas, offset_x, offset_y, string_format("Weight : %1", font_desc.get_weight()),  Colorf::white);
+	small_font.draw_text(canvas, offset_x, offset_y, string_format("Weight : %1", (int) font_desc.get_weight()),  Colorf::white);
 	offset_y += gap;
 
-	small_font.draw_text(canvas, offset_x, offset_y, string_format("Italic : %1", font_desc.get_italic() ? "true" : "false"),  Colorf::white);
-	offset_y += gap;
-
-	small_font.draw_text(canvas, offset_x, offset_y, string_format("Underline : %1", font_desc.get_underline() ? "true" : "false"),  Colorf::white);
-	offset_y += gap;
-
-	small_font.draw_text(canvas, offset_x, offset_y, string_format("Strikeout : %1", font_desc.get_strikeout() ? "true" : "false"),  Colorf::white);
-	offset_y += gap;
-
-	small_font.draw_text(canvas, offset_x, offset_y, string_format("Fixed Pitch : %1", font_desc.get_fixed_pitch() ? "true" : "false"),  Colorf::white);
+	small_font.draw_text(canvas, offset_x, offset_y, string_format("Italic : %1", font_desc.get_style() == FontStyle::italic ? "true" : "false"), Colorf::white);
 	offset_y += gap;
 
 	small_font.draw_text(canvas, offset_x, offset_y, string_format("SubPixel Rendering : %1", font_desc.get_subpixel() ? "true" : "false"),  Colorf::white);
@@ -130,54 +121,12 @@ void App::draw_font_info()
 
 	small_font.draw_text(canvas, offset_x, offset_y, string_format("External Leading : %1", font_metrics.get_external_leading()),  Colorf::white);
 	offset_y += gap;
-
-	small_font.draw_text(canvas, offset_x, offset_y, string_format("Average Character Width : %1", font_metrics.get_average_character_width()),  Colorf::white);
-	offset_y += gap;
-
-	small_font.draw_text(canvas, offset_x, offset_y, string_format("Maximum Character Width : %1", font_metrics.get_max_character_width()),  Colorf::white);
-	offset_y += gap;
-
-	small_font.draw_text(canvas, offset_x, offset_y, string_format("Weight : %1", font_metrics.get_weight()),  Colorf::white);
-	offset_y += gap;
-
-	small_font.draw_text(canvas, offset_x, offset_y, string_format("Overhang : %1", font_metrics.get_overhang()),  Colorf::white);
-	offset_y += gap;
-
-	small_font.draw_text(canvas, offset_x, offset_y, string_format("Digitized Aspect X : %1", font_metrics.get_digitized_aspect_x()),  Colorf::white);
-	offset_y += gap;
-
-	small_font.draw_text(canvas, offset_x, offset_y, string_format("Digitized Aspect Y : %1", font_metrics.get_digitized_aspect_y()),  Colorf::white);
-	offset_y += gap;
-
-	small_font.draw_text(canvas, offset_x, offset_y, string_format("First Char : %1", font_metrics.get_first_char()),  Colorf::white);
-	offset_y += gap;
-
-	small_font.draw_text(canvas, offset_x, offset_y, string_format("Last Char : %1", font_metrics.get_last_char()),  Colorf::white);
-	offset_y += gap;
-
-	small_font.draw_text(canvas, offset_x, offset_y, string_format("Default Char : %1", font_metrics.get_default_char()),  Colorf::white);
-	offset_y += gap;
-
-	small_font.draw_text(canvas, offset_x, offset_y, string_format("Word Break Char : %1", font_metrics.get_word_break_char()),  Colorf::white);
-	offset_y += gap;
-
-	small_font.draw_text(canvas, offset_x, offset_y, string_format("Is Italic : %1", font_metrics.is_italic() ? "true" : "false"),  Colorf::white);
-	offset_y += gap;
-
-	small_font.draw_text(canvas, offset_x, offset_y, string_format("Is Underlined : %1", font_metrics.is_underlined() ? "true" : "false"),  Colorf::white);
-	offset_y += gap;
-
-	small_font.draw_text(canvas, offset_x, offset_y, string_format("Is Struck Out : %1", font_metrics.is_struck_out() ? "true" : "false"),  Colorf::white);
-	offset_y += gap;
-
-	small_font.draw_text(canvas, offset_x, offset_y, string_format("Is Fixed Pitch : %1", font_metrics.is_fixed_pitch() ? "true" : "false"),  Colorf::white);
-	offset_y += gap;
 }
 
 void App::on_lineedit_changed(InputEvent &e)
 {
-	font_text = lineedit_text_ptr->get_text();
-	font_size = selected_font.get_text_size(canvas, font_text);
+	//FIXME: font_text = lineedit_text_ptr->get_text();
+	//FIXME: font_size = selected_font.get_text_size(canvas, font_text);
 }
 
 void App::on_button_clicked_class_sprite()
@@ -185,18 +134,18 @@ void App::on_button_clicked_class_sprite()
 	selected_fontclass = font_sprite;
 	font_typeface = "ClanFont";
 	font_filename = "";
-	button_typeface_sans_ptr->set_enabled(false);
-	button_typeface_tahoma_ptr->set_enabled(false);
-	button_typeface_bitstream_ptr->set_enabled(false);
+	//FIXME: button_typeface_sans_ptr->set_enabled(false);
+	//FIXME: button_typeface_tahoma_ptr->set_enabled(false);
+	//FIXME: button_typeface_bitstream_ptr->set_enabled(false);
 	select_font();
 }
 void App::on_button_clicked_class_system()
 {
 	selected_fontclass = font_ttf;
-	button_typeface_tahoma_ptr->set_enabled();
-	button_typeface_sans_ptr->set_enabled();
-	button_typeface_bitstream_ptr->set_enabled();
-	on_button_clicked_typeface_tahoma(button_typeface_tahoma_ptr);
+	//FIXME: button_typeface_tahoma_ptr->set_enabled();
+	//FIXME: button_typeface_sans_ptr->set_enabled();
+	//FIXME: button_typeface_bitstream_ptr->set_enabled();
+	//FIXME: on_button_clicked_typeface_tahoma(button_typeface_tahoma_ptr);
 }
 
 void App::on_button_clicked_typeface_tahoma()
@@ -220,51 +169,39 @@ void App::on_button_clicked_typeface_bitstream()
 	select_font();
 }
 
-void App::on_checkbox_state_underline()
-{
-	font_desc.set_underline(checkbox->is_checked());
-	select_font();
-}
-
 void App::on_checkbox_state_italic()
 {
-	font_desc.set_italic(checkbox->is_checked());
+	//FIXME: font_desc.set_italic(checkbox->is_checked());
 	select_font();
 }
 
 void App::on_checkbox_state_subpixel()
 {
-	font_desc.set_subpixel(checkbox->is_checked());
-	select_font();
-}
-
-void App::on_checkbox_state_strikeout()
-{
-	font_desc.set_strikeout(checkbox->is_checked());
+	//FIXME: font_desc.set_subpixel(checkbox->is_checked());
 	select_font();
 }
 
 void App::on_checkbox_state_antialias()
 {
-	font_desc.set_anti_alias(checkbox->is_checked());
+	//FIXME: font_desc.set_anti_alias(checkbox->is_checked());
 	select_font();
 }
 
 void App::on_button_clicked_weight_light()
 {
-	font_desc.set_weight(300);
+	font_desc.set_weight(FontWeight::light);
 	select_font();
 }
 
 void App::on_button_clicked_weight_normal()
 {
-	font_desc.set_weight(400);
+	font_desc.set_weight(FontWeight::normal);
 	select_font();
 }
 
 void App::on_button_clicked_weight_bold()
 {
-	font_desc.set_weight(700);
+	font_desc.set_weight(FontWeight::bold);
 	select_font();
 }
 
