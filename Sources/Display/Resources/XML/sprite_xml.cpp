@@ -37,13 +37,6 @@
 #include "API/Core/Text/string_format.h"
 #include "API/Display/2D/sprite.h"
 #include "API/Display/2D/canvas.h"
-#include "API/Display/Render/primitives_array.h"
-#include "API/Display/Image/pixel_buffer.h"
-#include "API/Display/ImageProviders/provider_factory.h"
-#include "API/Display/ImageProviders/targa_provider.h"
-#include "API/Display/ImageProviders/png_provider.h"
-#include "API/Display/Resources/display_cache.h"
-#include "API/Display/2D/subtexture.h"
 #include "API/Display/Render/texture_2d.h"
 
 namespace clan
