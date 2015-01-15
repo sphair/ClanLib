@@ -40,7 +40,6 @@ int Program::main(const std::vector<std::string> &args)
 	clan::SetupDisplay setup_display;
 
 	clan::SetupGL setup_gl;
-	clan::SetupGUI setup_gui;
 
 	// Start the Application
 	App app;
