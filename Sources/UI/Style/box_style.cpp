@@ -148,7 +148,7 @@ namespace clan
 		if (impl->style_changed) impl->style_changed();
 	}
 
-	void BoxStyle::set_background_gradient(std::initializer_list<std::pair<Colorf,float>> gradient_stops, float angle_degrees)
+	void BoxStyle::set_background_gradient(std::initializer_list<std::pair<Colorf,float>> gradient_stops, Angle angle)
 	{
 		impl->background.stops.clear();
 		const std::pair<Colorf, float> * it = gradient_stops.begin();
@@ -157,18 +157,18 @@ namespace clan
 			impl->background.stops.emplace_back(it->first, it->second);
 			it++;
 		}
-		impl->background.angle = angle_degrees;
+		impl->background.angle = angle;
 		if (impl->style_changed) impl->style_changed();
 	}
 
 	void BoxStyle::set_background_gradient_to_bottom(const Colorf &top, const Colorf &bottom)
 	{
-		set_background_gradient({{ top, 0.0f }, { bottom, 1.0f }}, 180.0f);
+		set_background_gradient({{ top, 0.0f }, { bottom, 1.0f }}, Angle::from_degrees(180.0f));
 	}
 
 	void BoxStyle::set_background_gradient_to_right(const Colorf &left, const Colorf &right)
 	{
-		set_background_gradient({{ left, 0.0f }, { right, 1.0f }}, 0.0f);
+		set_background_gradient({{ left, 0.0f }, { right, 1.0f }}, Angle::from_degrees(90.0f));
 	}
 
 	void BoxStyle::set_background_image(const std::string &url)
