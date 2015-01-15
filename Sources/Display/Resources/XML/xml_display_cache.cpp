@@ -40,7 +40,7 @@
 #include "API/Core/XML/dom_element.h"
 #include "API/Core/IOData/path_help.h"
 #include "xml_display_cache.h"
-#include "../Font/font_impl.h"
+#include "../../Font/font_impl.h"
 
 namespace clan
 {

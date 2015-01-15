@@ -38,7 +38,7 @@
 #include "API/Core/Resources/xml_resource_document.h"
 #include "API/Core/Resources/file_resource_manager.h"
 #include "API/Core/Resources/file_resource_document.h"
-#include "Display/Resources/xml_display_cache.h"
+#include "Display/Resources/XML/xml_display_cache.h"
 #include "Display/Resources/file_display_cache.h"
 
 #ifndef WIN32

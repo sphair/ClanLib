@@ -77,9 +77,9 @@ Image/pixel_buffer_set.cpp \
 Image/pixel_converter.cpp \
 Image/cpu_pixel_buffer_provider.cpp \
 Image/pixel_buffer_impl.cpp \
-Resources/xml_display_cache.cpp \
 Resources/file_display_cache.cpp \
 Resources/display_cache.cpp \
+Resources/XML/xml_display_cache.cpp \
 Resources/XML/cursor_description_xml.cpp \
 Resources/XML/image_xml.cpp \
 Resources/XML/program_object_xml.cpp \

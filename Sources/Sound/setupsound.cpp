@@ -35,7 +35,7 @@
 #include "API/Core/Resources/xml_resource_document.h"
 #include "API/Core/Resources/resource_manager.h"
 #include "API/Core/Resources/xml_resource_manager.h"
-#include "Sound/Resources/xml_sound_cache.h"
+#include "Sound/Resources/XML/xml_sound_cache.h"
 
 #define INCLUDED_FROM_SETUPVORBIS
 #include "SoundProviders/stb_vorbis.h"
