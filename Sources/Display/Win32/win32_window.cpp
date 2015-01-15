@@ -71,6 +71,10 @@ Win32Window::Win32Window()
   minimum_size(0,0), maximum_size(0xffff, 0xffff), allow_dropshadow(false),
   update_window_worker_thread_started(false), update_window_region(0), update_window_max_region_rects(1024)
 {
+	HDC dc = GetDC(hwnd);
+	dpi = (float)GetDeviceCaps(dc, LOGPIXELSX);
+	ReleaseDC(hwnd, dc);
+
 	memset(&paintstruct, 0, sizeof(PAINTSTRUCT));
 	keyboard = InputDevice(new InputDeviceProvider_Win32Keyboard(this));
 	mouse = InputDevice(new InputDeviceProvider_Win32Mouse(this));
@@ -710,10 +714,6 @@ void Win32Window::create_new_window()
 			ShowWindow(hwnd, SW_SHOW);
 	}
 
-	HDC dc = GetDC(hwnd);
-	dpi = (float)GetDeviceCaps(dc, LOGPIXELSX);
-	ReleaseDC(hwnd, dc);
-
 	connect_window_input(window_desc);
 }
 
@@ -722,10 +722,10 @@ void Win32Window::update_dwm_settings()
 	if (DwmFunctions::is_composition_enabled())
 	{
 		extend_frame_into_client_area(
-			(int)std::round(window_desc.get_extend_frame_left()),
-			(int)std::round(window_desc.get_extend_frame_top()),
-			(int)std::round(window_desc.get_extend_frame_right()),
-			(int)std::round(window_desc.get_extend_frame_bottom()));
+			(int)std::round(window_desc.get_extend_frame_left() * get_dpi() / 96.0f),
+			(int)std::round(window_desc.get_extend_frame_top() * get_dpi() / 96.0f),
+			(int)std::round(window_desc.get_extend_frame_right() * get_dpi() / 96.0f),
+			(int)std::round(window_desc.get_extend_frame_bottom() * get_dpi() / 96.0f));
 
 		if ((window_desc.get_type() != WindowType::normal) || (window_desc.is_layered()))
 			set_alpha_channel();
