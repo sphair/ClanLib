@@ -96,7 +96,7 @@ public:
 	InputDevice device;
 
 	/// \brief Mouse position at event time.
-	Point mouse_pos;
+	Pointf mouse_pos;
 
 	/// \brief Axis position.
 	double axis_pos;

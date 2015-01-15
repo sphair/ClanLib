@@ -77,12 +77,12 @@ InputDeviceProvider_Win32Tablet::~InputDeviceProvider_Win32Tablet()
 /////////////////////////////////////////////////////////////////////////////
 // InputDeviceProvider_Win32Tablet Attributes:
 
-int InputDeviceProvider_Win32Tablet::get_x() const
+float InputDeviceProvider_Win32Tablet::get_x() const
 {
 	return mouse_pos.x;
 }
 
-int InputDeviceProvider_Win32Tablet::get_y() const
+float InputDeviceProvider_Win32Tablet::get_y() const
 {
 	return mouse_pos.y;
 }
@@ -154,7 +154,7 @@ bool InputDeviceProvider_Win32Tablet::is_context_on_top()
 /////////////////////////////////////////////////////////////////////////////
 // InputDeviceProvider_Win32Tablet Operations:
 
-void InputDeviceProvider_Win32Tablet::set_position(int x, int y)
+void InputDeviceProvider_Win32Tablet::set_position(float x, float y)
 {
 }
 
@@ -324,7 +324,7 @@ BOOL InputDeviceProvider_Win32Tablet::process_packet(WPARAM wParam, LPARAM lPara
 				e.id = tablet_key;
 				e.id_offset = keycode;
 				e.type         = InputEvent::pressed;
-				e.mouse_pos    = Point(pkt.pkX - winfo.rcClient.left, pkt.pkY - winfo.rcClient.top);
+				e.mouse_pos    = Pointf((pkt.pkX - winfo.rcClient.left) * 96.0f / window->get_dpi(), (pkt.pkY - winfo.rcClient.top) * 96.0f / window->get_dpi());
 				e.axis_pos     = 0;
 				e.repeat_count = 0;
 				window->set_modifier_keys(e);
@@ -340,7 +340,7 @@ BOOL InputDeviceProvider_Win32Tablet::process_packet(WPARAM wParam, LPARAM lPara
 				e.id = tablet_key;
 				e.id_offset = keycode;
 				e.type         = InputEvent::released;
-				e.mouse_pos    = Point(pkt.pkX - winfo.rcClient.left, pkt.pkY - winfo.rcClient.top);
+				e.mouse_pos    = Pointf((pkt.pkX - winfo.rcClient.left) * 96.0f / window->get_dpi(), (pkt.pkY - winfo.rcClient.top) * 96.0f / window->get_dpi());
 				e.axis_pos     = 0;
 				e.repeat_count = 0;
 				window->set_modifier_keys(e);
@@ -353,7 +353,7 @@ BOOL InputDeviceProvider_Win32Tablet::process_packet(WPARAM wParam, LPARAM lPara
 
 				e.id           = tablet_z_axis; // TODO: support tilt, rotation.
 				e.type         = InputEvent::axis_moved; // x,y as pointer movements
-				e.mouse_pos    = Point(pkt.pkX - winfo.rcClient.left, pkt.pkY - winfo.rcClient.top);
+				e.mouse_pos    = Pointf((pkt.pkX - winfo.rcClient.left) * 96.0f / window->get_dpi(), (pkt.pkY - winfo.rcClient.top) * 96.0f / window->get_dpi());
 				e.axis_pos     = get_axis(2);
 				e.repeat_count = 0;
 				window->set_modifier_keys(e);

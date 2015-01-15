@@ -785,7 +785,7 @@ void Win32Window::received_keyboard_input(UINT msg, WPARAM wparam, LPARAM lparam
 		key.type = InputEvent::pressed;
 	else
 		key.type = InputEvent::released;
-	key.mouse_pos = mouse_pos;
+	key.mouse_pos = Pointf(mouse_pos.x * 96.0f / get_dpi(), mouse_pos.y * 96.0f / get_dpi());
 	key.id = key_id;
 	key.repeat_count = repeat_count[key_id];
 
@@ -846,7 +846,7 @@ void Win32Window::received_mouse_input(UINT msg, WPARAM wparam, LPARAM lparam)
 	}
 	// Prepare event to be emitted:
 	InputEvent key;
-	key.mouse_pos = mouse_pos;
+	key.mouse_pos = Pointf(mouse_pos.x * 96.0f / get_dpi(), mouse_pos.y * 96.0f / get_dpi());
 	key.id = id;
 	set_modifier_keys(key);
 
@@ -904,7 +904,7 @@ void Win32Window::received_mouse_move(UINT msg, WPARAM wparam, LPARAM lparam)
 		// Prepare event to be emitted:
 		InputEvent key;
 		key.type = InputEvent::pointer_moved;
-		key.mouse_pos = mouse_pos;
+		key.mouse_pos = Pointf(mouse_pos.x * 96.0f / get_dpi(), mouse_pos.y * 96.0f / get_dpi());
 		set_modifier_keys(key);
 
 		// Fire off signal
