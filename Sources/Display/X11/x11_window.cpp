@@ -594,7 +594,20 @@ float X11Window::get_dpi() const
 	if (w_mm < 24) // Prevent division by zero in case Xlib doesn't have the value.
 		return 96.0f;
 
-	return 25.4f * static_cast<float>(w_px) / static_cast<float>(w_mm);
+	// To do: grab DPI from a configuration file so the user can override it, if needed
+
+	// Actual physical DPI of the monitor:
+	float physical_dpi = 25.4f * static_cast<float>(w_px) / static_cast<float>(w_mm);
+
+	// Use DPI in steps of 100%, 125%, 150%, 200%, 300%, 400%..
+	if (physical_dpi < 120.0f)
+		return 96.0f;
+	else if (physical_dpi < 144.0f)
+		return 120.0f;
+	else if (physical_dpi < 192.0f)
+		return 144.0f;
+	else
+		return static_cast<float>(static_cast<int>(physical_dpi / 96.0f) * 96.0f);
 }
 
 bool X11Window::has_focus() const
