@@ -6,7 +6,6 @@
 class IRCConnectionQueues
 {
 public:
-
 	void reset();
 	void push_send(const IRCRawString &line);
 	IRCRawString pop_send();
@@ -16,12 +15,9 @@ public:
 	void set_disconnected(const std::string &reason);
 	bool pop_disconnected(std::string &out_reason);
 
-	//FIXME clan::Event send_event;
-
 private:
-	std::recursive_mutex mutex;
 	std::vector<IRCRawString> send_queue;
 	std::vector<IRCRawString> receive_queue;
-	std::atomic_int disconnected;
+	bool disconnected = false;
 	std::string disconnected_reason;
 };

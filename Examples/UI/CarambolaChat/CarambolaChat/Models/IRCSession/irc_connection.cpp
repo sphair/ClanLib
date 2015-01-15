@@ -9,46 +9,43 @@ IRCConnection::IRCConnection()
 
 IRCConnection::~IRCConnection()
 {
-	disconnect_abortive();
+	disconnect();
 }
 
 void IRCConnection::connect(const clan::SocketName &new_server)
 {
-	disconnect_abortive();
-	stop_event.reset();
+	disconnect();
+
+	std::unique_lock<std::mutex> lock(mutex);
+	stop_flag = false;
 	queues.reset();
-	shutdown_graceful.set(0);
 	server = new_server;
-	
-	thread_worker.start(this, &IRCConnection::worker_main);
+	lock.unlock();
+	change_event.notify();
+
+	thread_worker = std::thread(&IRCConnection::worker_main, this);
 }
 
-void IRCConnection::disconnect_graceful()
+void IRCConnection::disconnect()
 {
-	shutdown_graceful.set(1);
-	/*while (queues.receive_event.wait(2000))
-	{
-		queues.pop_received();
-		std::string reason;
-		if (queues.pop_disconnected(reason))
-			break;
-	}
-	shutdown_graceful.set(0);*/
-	stop_event.set();
-	thread_worker.join();
-}
+	if (!thread_worker.joinable())
+		return;
 
-void IRCConnection::disconnect_abortive()
-{
-	shutdown_graceful.set(0);
-	stop_event.set();
+	std::unique_lock<std::mutex> lock(mutex);
+	stop_flag = true;
+	lock.unlock();
+	change_event.notify();
+
 	thread_worker.join();
 }
 
 void IRCConnection::send_command(const IRCRawString &command, const std::vector<IRCRawString> params)
 {
+	std::unique_lock<std::mutex> lock(mutex);
 	IRCRawString line = IRCMessage::create_line(IRCRawString(), command, params);
 	queues.push_send(line);
+	lock.unlock();
+	change_event.notify();
 }
 
 void IRCConnection::send_pass(const IRCRawString &password)
@@ -242,17 +239,24 @@ void IRCConnection::process()
 {
 	while (true)
 	{
+		std::unique_lock<std::mutex> lock(mutex);
+
 		IRCRawString line = queues.pop_received();
 		if (line.empty())
 			break;
+
+		lock.unlock();
 
 		IRCMessage message = IRCMessage::parse_line(line);
 		if (cb_message_received)
 			cb_message_received(message);
 	}
 
+	std::unique_lock<std::mutex> lock(mutex);
 	std::string reason;
 	bool was_disconnected = queues.pop_disconnected(reason);
+	lock.unlock();
+
 	if (was_disconnected && cb_disconnected)
 		cb_disconnected(reason);
 }
@@ -261,93 +265,84 @@ void IRCConnection::worker_main()
 {
 	try
 	{
-		//clan::ConsoleWindow console("Debug");
 		clan::TCPConnection connection(server);
-		connection.set_nodelay(true);
-		connection.set_keep_alive(true, 60*1000, 60*1000);
-
-		clan::Event read_event = connection.get_read_event();
-		clan::Event write_event = connection.get_write_event();
 
 		IRCRawString read_line, write_line;
 		IRCRawString::size_type write_pos = 0;
 
-		std::vector<clan::Event> wait_events;
-		bool continue_loop = true;
-		while (continue_loop)
+		std::unique_lock<std::mutex> lock(mutex);
+
+		while (true)
 		{
-			wait_events.clear();
-			wait_events.push_back(read_event);
+			if (stop_flag)
+				break;
 
-			if (write_line.length() != write_pos)
-				wait_events.push_back(write_event);
-			else
-				wait_events.push_back(queues.send_event);
+			if (!read_connection_data(connection, read_line))
+				break;
 
-			wait_events.push_back(stop_event);
+			write_connection_data(write_line, write_pos, connection);
 
-			int wakeup_reason = clan::Event::wait(wait_events, -1);
-			if (wakeup_reason == 0) // read_event flagged
-			{
-				continue_loop = read_connection_data(connection, read_line);
-			}
-			else if (wakeup_reason == 1) // write_event / queues.send_event flagged
-			{
-				continue_loop = write_connection_data(write_line, write_pos, connection);
-			}
-			else // stop_event flagged
-			{
-				continue_loop = false;
-			}
+			clan::NetworkEvent *events[] = { &connection };
+			change_event.wait(lock, 1, events);
 		}
 
 		queues.set_disconnected(std::string());
-		set_wakeup_event();
+		clan::RunLoop::main_thread_async(clan::bind_member(this, &IRCConnection::process));
 	}
 	catch (clan::Exception &e)
 	{
 		queues.set_disconnected(e.message);
-		set_wakeup_event();
+		clan::RunLoop::main_thread_async(clan::bind_member(this, &IRCConnection::process));
 	}
 }
 
 bool IRCConnection::read_connection_data(clan::TCPConnection &connection, IRCRawString &read_line)
 {
-	char buffer[16*1024];
-	int data_read = connection.read(buffer, 16*1024, false);
-	if (data_read == 0) // EOF from server
+	while (true)
 	{
-		connection.disconnect_graceful();
-		return false;
-	}
-	int start_pos = 0;
-	for (int i=0; i<data_read; i++)
-	{
-		if (buffer[i] == '\n')
+		char buffer[16 * 1024];
+		int data_read = connection.read(buffer, 16 * 1024);
+		if (data_read == -1)
+			return true;
+		else if (data_read == 0) // EOF from server
+			return false;
+
+		int start_pos = 0;
+		for (int i = 0; i < data_read; i++)
 		{
-			read_line.append(buffer+start_pos, i-start_pos+1);
-			start_pos = i+1;
-			queues.push_received(read_line);
-			set_wakeup_event();
-			read_line.clear();
+			if (buffer[i] == '\n')
+			{
+				read_line.append(buffer + start_pos, i - start_pos + 1);
+				start_pos = i + 1;
+				queues.push_received(read_line);
+
+				clan::RunLoop::main_thread_async(clan::bind_member(this, &IRCConnection::process));
+
+				read_line.clear();
+			}
 		}
+		read_line.append(buffer + start_pos, data_read - start_pos);
 	}
-	read_line.append(buffer+start_pos, data_read-start_pos);
-	return true;
 }
 
-bool IRCConnection::write_connection_data(IRCRawString &write_line, IRCRawString::size_type &write_pos, clan::TCPConnection &connection)
+void IRCConnection::write_connection_data(IRCRawString &write_line, IRCRawString::size_type &write_pos, clan::TCPConnection &connection)
 {
-	if (write_line.length() != write_pos)
+	while (true)
 	{
-		//int old_pos = write_pos;
-		write_pos += connection.write(write_line.data()+write_pos, write_line.length()-write_pos);
-		//clan::Console::write_line(std::string8(write_line.data()+old_pos, write_pos-old_pos, false));
+		if (write_line.length() != write_pos)
+		{
+			int result = connection.write(write_line.data() + write_pos, write_line.length() - write_pos);
+			if (result == -1)
+				break;
+			write_pos += result;
+		}
+		else
+		{
+			write_line = queues.pop_send();
+			write_pos = 0;
+
+			if (write_line.empty())
+				break;
+		}
 	}
-	else
-	{
-		write_line = queues.pop_send();
-		write_pos = 0;
-	}
-	return true;
 }

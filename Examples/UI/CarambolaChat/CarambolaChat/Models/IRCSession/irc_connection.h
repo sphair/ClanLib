@@ -7,15 +7,14 @@
 class IRCMessage;
 class IRCText;
 
-class IRCConnection : public clan::KeepAliveObject
+class IRCConnection
 {
 public:
 	IRCConnection();
 	~IRCConnection();
 
 	void connect(const clan::SocketName &server);
-	void disconnect_graceful();
-	void disconnect_abortive();
+	void disconnect();
 
 	void send_command(const IRCRawString &command, const std::vector<IRCRawString> params);
 
@@ -52,18 +51,18 @@ public:
 	// on_disconnected(const std::string &reason)
 	std::function<void(const std::string &)> &func_disconnected();
 
-	void process();
-	clan::Event get_wakeup_event();
-
 private:
+	void process();
+
 	void worker_main();
 	bool read_connection_data(clan::TCPConnection &connection, IRCRawString &read_line);
-	bool write_connection_data(IRCRawString &write_line, IRCRawString::size_type &write_pos, clan::TCPConnection &connection);
+	void write_connection_data(IRCRawString &write_line, IRCRawString::size_type &write_pos, clan::TCPConnection &connection);
 
 	clan::SocketName server;
 	std::thread thread_worker;
-	clan::Event stop_event;
-	std::atomic_int shutdown_graceful;
+	std::mutex mutex;
+	clan::NetworkConditionVariable change_event;
+	bool stop_flag = false;
 	IRCConnectionQueues queues;
 
 	std::function<void(const IRCMessage &)> cb_message_received;
