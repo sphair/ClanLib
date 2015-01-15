@@ -32,8 +32,6 @@
 #include <vector>
 #include <string>
 #include "event.h"
-#include "../Socket/tcp_connection.h" // TODO: Remove
-#include "../Socket/socket_name.h" // TODO: Remove
 
 namespace clan
 {
@@ -42,6 +40,8 @@ namespace clan
 
 class NetGameConnectionSite;
 class NetGameConnection_Impl;
+class SocketName;
+class TCPConnection;
 
 /// \brief NetGameConnection
 class NetGameConnection
