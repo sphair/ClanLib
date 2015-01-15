@@ -53,7 +53,7 @@ namespace clan
 
 		// Linear gradient
 		std::vector<BoxGradientStop> stops;
-		float angle = 0.0f;
+		Angle angle = Angle::from_degrees(0.0f);
 
 		// Image
 		PixelBuffer image;

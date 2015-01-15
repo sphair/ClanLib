@@ -86,12 +86,19 @@ namespace clan
 		void set_background_none();
 		void set_background(const Colorf &color);
 
-		/*! Sets a gradient background for the box.
+		/*! Sets a linear gradient background (based on CSS spec) for the box.
 		 *
 		 *  \param gradient_stops An initializer list containing one or more
-		 *                        color-point pair denoting gradient stops.
-		 *  \param angle          Gradient direction. Defaults to `0.0f`, which
-		 *                        makes the gradient go from left to right.
+		 *                        `(Colorf, float)` pairs that denote the color
+		 *                        and location of a color stop on the gradient.
+		 *                        Stop location values are normalized between
+		 *                        `0.0f` (0% in CSS) and `1.0f` (100%).
+		 *  \param angle          Gradient vector angle at clock-wise rotation.
+		 *                        Defaults to `0`, where the gradient points
+		 *                        upwards (i.e. going from bottom to top).
+		 *                        Setting this to `45` degrees will make the
+		 *                        gradient run diagonally from bottom-left to
+		 *                        the top-right.
 		 *
 		 *  Example usage:
 		 *  ```cpp
@@ -107,7 +114,7 @@ namespace clan
 		 *          }, 45.0f);
 		 *  ```
 		 */
-		void set_background_gradient(std::initializer_list<std::pair<Colorf,float>> gradient_stops, float angle_degrees = 0.0f);
+		void set_background_gradient(std::initializer_list<std::pair<Colorf,float>> gradient_stops, Angle angle = Angle::from_degrees(0.0f));
 
 		void set_background_gradient_to_bottom(const Colorf &top, const Colorf &bottom);
 		void set_background_gradient_to_right(const Colorf &left, const Colorf &right);
