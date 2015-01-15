@@ -38,10 +38,7 @@ int Program::main(const std::vector<std::string> &args)
 
 	// Initialize the ClanLib display component
 	clan::SetupDisplay setup_display;
-
 	clan::SetupGL setup_gl;
-
-	clan::SetupGUI setup_gui;
 
 	// Start the Application
 	App app;
