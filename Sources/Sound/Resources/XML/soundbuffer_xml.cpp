@@ -28,44 +28,23 @@
 
 #include "Sound/precomp.h"
 #include "API/Sound/soundbuffer.h"
-#include "API/Sound/soundbuffer_session.h"
-#include "API/Sound/soundfilter.h"
-#include "API/Sound/soundoutput.h"
-#include "API/Sound/sound.h"
-#include "API/Sound/SoundProviders/soundprovider_factory.h"
 #include "API/Core/Resources/xml_resource_document.h"
 #include "API/Core/Resources/xml_resource_node.h"
-#include "API/Core/IOData/file_system.h"
-#include "API/Core/IOData/path_help.h"
 #include "API/Core/XML/dom_element.h"
-#include "../../soundbuffer_impl.h"
-#include "API/Sound/Resources/sound_cache.h"
 
 namespace clan
 {
 
 SoundBuffer SoundBuffer::load(const std::string &id, const XMLResourceDocument &doc)
 {
-	SoundBuffer sound;
-
-	sound.impl = std::shared_ptr<SoundBuffer_Impl>(new SoundBuffer_Impl);
-
 	XMLResourceNode resource = doc.get_resource(id);
-
 	DomElement &element = resource.get_element();
 
 	std::string name = resource.get_element().get_attribute("file");
 	std::string sound_format = resource.get_element().get_attribute("format");
 	bool streamed = (element.get_attribute("stream", "no") == "yes");
 
-	sound.impl->provider = SoundProviderFactory::load(
-		PathHelp::combine(resource.get_base_path(), name),
-		streamed,
-		resource.get_file_system(), sound_format);
-
-	if (!sound.impl->provider)
-		throw Exception("Unknown sample format");
-	return sound;
+	return SoundBuffer(name, streamed, sound_format);
 }
 
 }
