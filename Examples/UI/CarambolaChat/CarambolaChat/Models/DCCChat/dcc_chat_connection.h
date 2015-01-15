@@ -43,12 +43,12 @@ private:
 	};
 
 	clan::SocketName socket_name;
-	clan::Thread thread;
+	std::thread thread;
 	clan::Event stop_event;
 	clan::Event send_event;
 	clan::Event started_event;
 	bool is_server;
-	clan::Mutex mutex;
+	std::recursive_mutex mutex;
 	std::vector<Message> send_queue;
 	std::vector<Message> receive_queue;
 };

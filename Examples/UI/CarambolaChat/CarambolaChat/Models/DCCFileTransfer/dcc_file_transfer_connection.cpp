@@ -15,7 +15,7 @@ DCCFileTransferConnection::~DCCFileTransferConnection()
 
 void DCCFileTransferConnection::start(const std::string &output_filename)
 {
-	clan::MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	if (status != status_not_started)
 		throw clan::Exception("DCC file transfer can only be started once");
 
@@ -29,19 +29,19 @@ void DCCFileTransferConnection::start(const std::string &output_filename)
 
 DCCFileTransferConnection::Status DCCFileTransferConnection::get_status()
 {
-	clan::MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	return status;
 }
 
 std::string DCCFileTransferConnection::get_status_text()
 {
-	clan::MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	return status_text;
 }
 
 unsigned int DCCFileTransferConnection::get_bytes_received()
 {
-	clan::MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	return bytes_received;
 }
 
@@ -57,7 +57,7 @@ void DCCFileTransferConnection::worker_main()
 		connection = clan::TCPConnection(socket_name);
 		connection.set_big_endian_mode();
 		connection.set_nodelay(true);
-		clan::MutexSection mutex_lock(&mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 		status = status_receiving;
 		status_text = "Downloading..";
 		mutex_lock.unlock();
@@ -105,7 +105,7 @@ void DCCFileTransferConnection::worker_main()
 	catch (clan::Exception &e)
 	{
 		connection = clan::TCPConnection();
-		clan::MutexSection mutex_lock(&mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 		status = status_error;
 		status_text = e.message;
 	}

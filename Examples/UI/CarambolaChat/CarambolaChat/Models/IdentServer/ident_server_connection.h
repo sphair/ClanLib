@@ -15,5 +15,5 @@ private:
 
 	IdentServer *server;
 	clan::TCPConnection connection;
-	clan::Thread thread;
+	std::thread thread;
 };

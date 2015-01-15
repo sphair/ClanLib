@@ -17,6 +17,6 @@ public:
 private:
 	void worker_main();
 
-	clan::Thread thread;
+	std::thread thread;
 	clan::Event stop_event;
 };

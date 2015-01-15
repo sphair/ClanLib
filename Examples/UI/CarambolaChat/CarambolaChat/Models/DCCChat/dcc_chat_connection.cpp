@@ -33,7 +33,7 @@ void DCCChatConnection::disconnect()
 
 void DCCChatConnection::send_line(const IRCText &text)
 {
-	clan::MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	send_queue.push_back(Message(Message::type_text, text.to_raw()));
 	mutex_lock.unlock();
 	send_event.set();
@@ -42,7 +42,7 @@ void DCCChatConnection::send_line(const IRCText &text)
 void DCCChatConnection::process()
 {
 	std::vector<Message> received_messages;
-	clan::MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	received_messages.swap(receive_queue);
 	mutex_lock.unlock();
 
@@ -191,7 +191,7 @@ bool DCCChatConnection::write_connection_data(IRCRawString &write_line, IRCRawSt
 	}
 	else
 	{
-		clan::MutexSection mutex_lock(&mutex);
+		std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 		write_line.clear();
 		write_pos = 0;
 		if (!send_queue.empty())
@@ -213,7 +213,7 @@ bool DCCChatConnection::write_connection_data(IRCRawString &write_line, IRCRawSt
 
 void DCCChatConnection::queue_system(const IRCRawString &text)
 {
-	clan::MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	receive_queue.push_back(Message(Message::type_system, text));
 	mutex_lock.unlock();
 	set_wakeup_event();
@@ -221,7 +221,7 @@ void DCCChatConnection::queue_system(const IRCRawString &text)
 
 void DCCChatConnection::queue_disconnected(const IRCRawString &reason)
 {
-	clan::MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	receive_queue.push_back(Message(Message::type_disconnect, reason));
 	mutex_lock.unlock();
 	set_wakeup_event();
@@ -229,7 +229,7 @@ void DCCChatConnection::queue_disconnected(const IRCRawString &reason)
 
 void DCCChatConnection::queue_line(const IRCRawString &line)
 {
-	clan::MutexSection mutex_lock(&mutex);
+	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	receive_queue.push_back(Message(Message::type_text, line));
 	mutex_lock.unlock();
 	set_wakeup_event();
