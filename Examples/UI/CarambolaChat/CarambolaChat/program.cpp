@@ -39,14 +39,14 @@ private:
 int Program::main(const std::vector<std::string> &args)
 {
 	SetupCore setup_core;
-
+	/*
 	#ifndef _DEBUG
 	std::string appdata_dir = clan::Directory::get_appdata("ClanLib", "Carambola", "1.0");
 	CrashReporter crash_reporter(appdata_dir);
 
 	DetectHang detect_hang;
 	#endif
-
+	*/
 	SetupSound setup_sound;
 	SetupDisplay setup_display;
 	SetupGL setup_gl;
