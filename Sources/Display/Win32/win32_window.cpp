@@ -71,9 +71,9 @@ Win32Window::Win32Window()
   minimum_size(0,0), maximum_size(0xffff, 0xffff), allow_dropshadow(false),
   update_window_worker_thread_started(false), update_window_region(0), update_window_max_region_rects(1024)
 {
-	HDC dc = GetDC(hwnd);
+	HDC dc = GetDC(0);
 	dpi = (float)GetDeviceCaps(dc, LOGPIXELSX);
-	ReleaseDC(hwnd, dc);
+	ReleaseDC(0, dc);
 
 	memset(&paintstruct, 0, sizeof(PAINTSTRUCT));
 	keyboard = InputDevice(new InputDeviceProvider_Win32Keyboard(this));
