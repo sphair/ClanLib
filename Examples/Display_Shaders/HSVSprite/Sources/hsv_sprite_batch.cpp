@@ -110,9 +110,9 @@ void HSVSpriteBatch::flush(GraphicContext &gc)
 	}
 }
 
-void HSVSpriteBatch::matrix_changed(const Mat4f &new_modelview, const Mat4f &new_projection)
+void HSVSpriteBatch::matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis, float dpi)
 {
-	modelview_projection_matrix = new_projection * new_modelview;
+	modelview_projection_matrix = projection * modelview;
 }
 
 ProgramObject HSVSpriteBatch::create_shader_program(GraphicContext &gc)

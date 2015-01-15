@@ -45,7 +45,7 @@ int HSV::start(const std::vector<std::string> &args)
 	Canvas canvas(window);
 	InputContext ic = window.get_ic();
 
-	clan::Font font(canvas, "Tahoma", -11);
+	clan::Font font("Tahoma", 11);
 
 	HSVSpriteBatch sprite_batcher(canvas);
 	HSVSprite car1(canvas, &sprite_batcher, "Resources/spaceshoot_body_moving1.png");
@@ -98,7 +98,7 @@ int HSV::start(const std::vector<std::string> &args)
 			fps = 0;
 		}
 
-		Size fps_size = font.get_text_size(canvas, fps_text);
+		Sizef fps_size = font.measure_text(canvas, fps_text).bbox_size;
 		font.draw_text(canvas, canvas.get_width()-10-fps_size.width, 16, fps_text);
 		font.draw_text(canvas, 32, 730, "Use cursor keys left and right");
 

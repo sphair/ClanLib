@@ -107,7 +107,7 @@ int App::start(const std::vector<std::string> &args)
 
 	float scale = 1.0f;
 
-	clan::Font font(canvas, "tahoma", 32);
+	clan::Font font("tahoma", 32);
 
 	select_text = "Default";
 	highlight_threshold = 0.25f;

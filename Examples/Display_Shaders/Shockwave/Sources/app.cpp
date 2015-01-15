@@ -74,7 +74,7 @@ int App::start(const std::vector<std::string> &args)
 
 	float scale = 1.0f;
 
-	clan::Font font(canvas, "tahoma", 32);
+	clan::Font font("tahoma", 32);
 
 	// Shader idea and code from http://www.geeks3d.com/20091116/shader-library-2d-shockwave-post-processing-filter-glsl/
 	// Shader enhanced for clanlib
