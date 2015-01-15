@@ -30,8 +30,9 @@ private:
 	std::string filename;
 	clan::TCPConnection connection;
 	std::thread thread;
-	clan::Event abort_event;
-	std::recursive_mutex mutex;
+	std::mutex mutex;
+	clan::NetworkConditionVariable change_event;
+	bool abort_flag = false;
 	unsigned int bytes_received;
 	Status status;
 	std::string status_text;
