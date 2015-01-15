@@ -29,16 +29,10 @@
 
 #include "Display/precomp.h"
 #include "API/Display/Render/texture.h"
-#include "API/Display/Render/texture_1d.h"
-#include "API/Display/Render/texture_1d_array.h"
 #include "API/Display/Render/texture_2d.h"
 #include "API/Display/Render/texture_2d_array.h"
-#include "API/Display/Render/texture_3d.h"
-#include "API/Display/Render/texture_cube.h"
-#include "API/Display/Render/texture_cube_array.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/Image/pixel_buffer_set.h"
-#include "API/Display/Resources/display_cache.h"
 #include "API/Core/Resources/xml_resource_manager.h"
 #include "API/Core/Resources/xml_resource_node.h"
 #include "API/Core/XML/dom_element.h"
@@ -48,7 +42,7 @@
 namespace clan
 {
 
-	Texture Texture::load(GraphicContext &gc, const std::string &id, const XMLResourceDocument &doc)
+	Texture Texture::load(GraphicContext &gc, const std::string &id, const XMLResourceDocument &doc, const ImageImportDescription &import_desc)
 	{
 		XMLResourceNode resource = doc.get_resource(id);
 
@@ -56,8 +50,6 @@ namespace clan
 
 		if (type != "texture")
 			throw Exception(string_format("Resource '%1' is not of type 'texture'", id));
-
-		ImageImportDescription import_desc; // The infamous ImageImportDescription strikes again!
 
 		std::string filename = resource.get_element().get_attribute("file");
 		FileSystem fs = resource.get_file_system();

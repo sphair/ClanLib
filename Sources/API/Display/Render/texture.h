@@ -135,7 +135,7 @@ public:
 	static Resource<Texture> resource(GraphicContext &gc, const std::string &id, const ResourceManager &resources);
 
 	/// \brief Loads a Texture from a XML resource definition
-	static Texture load(GraphicContext &gc, const std::string &id, const XMLResourceDocument &doc);
+	static Texture load(GraphicContext &gc, const std::string &id, const XMLResourceDocument &doc, const ImageImportDescription &import_desc = ImageImportDescription());
 /// \}
 
 /// \name Operators
