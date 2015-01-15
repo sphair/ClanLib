@@ -56,7 +56,7 @@ namespace clan
 		return impl->get_family_name();
 	}
 
-	void FontFamily::add(const std::string &typeface_name, int height)
+	void FontFamily::add(const std::string &typeface_name, float height)
 	{
 		throw_if_null();
 		FontDescription desc;
@@ -102,7 +102,7 @@ namespace clan
 		impl->load_font(desc, font_databuffer);
 	}
 
-	void FontFamily::add(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics)
+	void FontFamily::add(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, float spacelen, bool monospace, const FontMetrics &metrics)
 	{
 		throw_if_null();
 		impl->load_font(canvas, sprite, glyph_list, spacelen, monospace, metrics);

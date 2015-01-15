@@ -61,8 +61,8 @@ public:
 
 	const FontMetrics &get_font_metrics();
 
-	int get_character_index(Canvas &canvas, const std::string &text, const Point &point);
-	std::vector<Rect> get_character_indices(Canvas &canvas, const std::string &text);
+	int get_character_index(Canvas &canvas, const std::string &text, const Pointf &point);
+	std::vector<Rectf> get_character_indices(Canvas &canvas, const std::string &text);
 
 	GlyphMetrics get_metrics(Canvas &canvas, unsigned int glyph);
 

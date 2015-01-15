@@ -50,7 +50,7 @@ Font::Font()
 {
 }
 
-Font::Font(FontFamily &font_family, int height)
+Font::Font(FontFamily &font_family, float height)
 {
 	font_family.throw_if_null();
 	FontDescription desc;
@@ -63,7 +63,7 @@ Font::Font(FontFamily &font_family, const FontDescription &desc)
 	impl = std::make_shared<Font_Impl>(font_family, desc);
 }
 
-Font::Font(const std::string &typeface_name, int height)
+Font::Font(const std::string &typeface_name, float height)
 {
 	FontDescription desc;
 	desc.set_height(height);
@@ -95,7 +95,7 @@ Font::Font(const FontDescription &desc, const std::string &ttf_filename, FileSys
 	impl = std::make_shared<Font_Impl>(font_family, desc);
 }
 
-Font::Font(Canvas &canvas, const std::string &typeface_name, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics)
+Font::Font(Canvas &canvas, const std::string &typeface_name, Sprite &sprite, const std::string &glyph_list, float spacelen, bool monospace, const FontMetrics &metrics)
 {
 	FontDescription desc;
 	desc.set_height(metrics.get_height());
@@ -229,9 +229,9 @@ std::string Font::get_clipped_text(Canvas &canvas, const Sizef &box_size, const 
 		Pointf pos;
 
 		FontMetrics fm = get_font_metrics();
-		int ascent = fm.get_ascent();
-		int descent = fm.get_descent();
-		int line_spacing = fm.get_height() + fm.get_external_leading();
+		float ascent = fm.get_ascent();
+		float descent = fm.get_descent();
+		float line_spacing = fm.get_line_height();
 		std::vector<std::string> lines = StringHelp::split_text(text, "\n", false);
 		for (std::vector<std::string>::size_type i=0; i<lines.size(); i++)
 		{
@@ -295,18 +295,18 @@ FontMetrics Font::get_font_metrics()
 	return FontMetrics();
 }
 
-int Font::get_character_index(Canvas &canvas, const std::string &text, const Point &point)
+int Font::get_character_index(Canvas &canvas, const std::string &text, const Pointf &point)
 {
 	if (impl)
 		return impl->get_character_index(canvas, text, point);
 	return 0;
 }
 
-std::vector<Rect> Font::get_character_indices(Canvas &canvas, const std::string &text)
+std::vector<Rectf> Font::get_character_indices(Canvas &canvas, const std::string &text)
 {
 	if (impl)
 		return impl->get_character_indices(canvas, text);
-	return std::vector<Rect>();
+	return std::vector<Rectf>();
 }
 
 /////////////////////////////////////////////////////////////////////////////

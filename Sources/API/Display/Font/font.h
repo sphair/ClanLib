@@ -60,13 +60,13 @@ public:
 	Font();
 
 	// \brief Create font using the specified font family
-	Font(FontFamily &font_family, int height);
+	Font(FontFamily &font_family, float height);
 
 	// \brief Create font using the specified font family
 	Font(FontFamily &font_family, const FontDescription &desc);
 
 	/// \brief Constructs standard font
-	Font(const std::string &typeface_name, int height);
+	Font(const std::string &typeface_name, float height);
 
 	// \brief Constructs standard font
 	Font(const std::string &typeface_name, const FontDescription &desc);
@@ -84,7 +84,7 @@ public:
 	/// \param spacelen = Width of space character
 	/// \param monospace = Force monospaced font (using widest sprite character)
 	/// \param metrics = Font metrics for the sprite font
-	Font(Canvas &canvas, const std::string &typeface_name, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics);
+	Font(Canvas &canvas, const std::string &typeface_name, Sprite &sprite, const std::string &glyph_list, float spacelen, bool monospace, const FontMetrics &metrics);
 
 /// \}
 
@@ -170,12 +170,12 @@ public:
 	/// \param text = The string
 	/// \param point = The point
 	/// \return The character index. -1 = Not at specified point
-	int get_character_index(Canvas &canvas, const std::string &text, const Point &point);
+	int get_character_index(Canvas &canvas, const std::string &text, const Pointf &point);
 
 	/// \brief Get the rectangles of each glyph in a string of text
 	///
 	/// \return A list of Rects for every glyph
-	std::vector<Rect> get_character_indices(Canvas &canvas, const std::string &text);
+	std::vector<Rectf> get_character_indices(Canvas &canvas, const std::string &text);
 
 	// Finds the offset for the last visible character when clipping the head
 	size_t clip_from_left(Canvas &canvas, const std::string &text, float width);

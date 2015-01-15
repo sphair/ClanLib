@@ -134,27 +134,26 @@ Font_Impl::~Font_Impl()
 {
 }
 
-int Font_Impl::get_character_index(Canvas &canvas, const std::string &text, const Point &point)
+int Font_Impl::get_character_index(Canvas &canvas, const std::string &text, const Pointf &point)
 {
 	select_font_family();
 
-	int dest_x = 0;
-	int dest_y = 0;
+	float dest_x = 0;
+	float dest_y = 0;
 
 	int character_counter = 0;
 
-	int font_height = selected_metrics.get_height();
-	int font_ascent = selected_metrics.get_ascent();
-	int font_external_leading = selected_metrics.get_external_leading();
-	int line_spacing = static_cast<int>(selected_line_height + 0.5f);
+	float font_height = selected_metrics.get_height();
+	float font_ascent = selected_metrics.get_ascent();
+	float line_spacing = std::round(selected_line_height); // TBD: do we want to round this?
 
 	//TODO: Fix me, so we do not need to line split
 
 	std::vector<std::string> lines = StringHelp::split_text(text, "\n", false);
 	for (std::vector<std::string>::size_type i = 0; i<lines.size(); i++)
 	{
-		int xpos = dest_x;
-		int ypos = dest_y;
+		float xpos = dest_x;
+		float ypos = dest_y;
 
 		std::string &textline = lines[i];
 		std::string::size_type string_length = textline.length();
@@ -170,7 +169,7 @@ int Font_Impl::get_character_index(Canvas &canvas, const std::string &text, cons
 
 			GlyphMetrics metrics = font_draw->get_metrics(canvas, glyph);
 
-			Rect position(xpos, ypos - font_ascent, Size(metrics.advance.width, metrics.advance.height + font_height + font_external_leading));
+			Rectf position(xpos, ypos - font_ascent, Sizef(metrics.advance.width, metrics.advance.height + font_height));
 			if (position.contains(point))
 			{
 				return glyph_pos + character_counter;
@@ -183,33 +182,31 @@ int Font_Impl::get_character_index(Canvas &canvas, const std::string &text, cons
 		dest_y += line_spacing;
 
 		character_counter += string_length + 1;		// (Including the '\n')
-
 	}
 	return -1;	// Not found
 }
 
-std::vector<Rect> Font_Impl::get_character_indices(Canvas &canvas, const std::string &text)
+std::vector<Rectf> Font_Impl::get_character_indices(Canvas &canvas, const std::string &text)
 {
 	select_font_family();
-	std::vector<Rect> index_store;
+	std::vector<Rectf> index_store;
 
-	int dest_x = 0;
-	int dest_y = 0;
+	float dest_x = 0;
+	float dest_y = 0;
 
 	int character_counter = 0;
 
-	int font_height = selected_metrics.get_height();
-	int font_ascent = selected_metrics.get_ascent();
-	int font_external_leading = selected_metrics.get_external_leading();
-	int line_spacing = static_cast<int>(selected_line_height + 0.5f);
+	float font_height = selected_metrics.get_height();
+	float font_ascent = selected_metrics.get_ascent();
+	float line_spacing = std::round(selected_line_height); // TBD: do we want to round this?
 
 	//TODO: Fix me, so we do not need to line split
 
 	std::vector<std::string> lines = StringHelp::split_text(text, "\n", false);
 	for (std::vector<std::string>::size_type i = 0; i<lines.size(); i++)
 	{
-		int xpos = dest_x;
-		int ypos = dest_y;
+		float xpos = dest_x;
+		float ypos = dest_y;
 
 		std::string &textline = lines[i];
 		std::string::size_type string_length = textline.length();
@@ -225,7 +222,7 @@ std::vector<Rect> Font_Impl::get_character_indices(Canvas &canvas, const std::st
 
 			GlyphMetrics metrics = font_draw->get_metrics(canvas, glyph);
 
-			Rect position(xpos, ypos - font_ascent, Size(metrics.advance.width, metrics.advance.height + font_height + font_external_leading));
+			Rectf position(xpos, ypos - font_ascent, Sizef(metrics.advance.width, metrics.advance.height + font_height));
 			index_store.push_back(position);
 			xpos += metrics.advance.width;
 			ypos += metrics.advance.height;
@@ -255,7 +252,7 @@ void Font_Impl::draw_text(Canvas &canvas, const Pointf &position, const std::str
 {
 	select_font_family();
 
-	int line_spacing = static_cast<int>(selected_line_height + 0.5f);
+	float line_spacing = std::round(selected_line_height); // TBD: do we want to round this?
 	Pointf pos = canvas.grid_fit(position);
 	font_draw->draw_text(canvas, pos, text, color, line_spacing);
 }
@@ -276,7 +273,7 @@ GlyphMetrics Font_Impl::measure_text(Canvas &canvas, const std::string &string)
 	select_font_family();
 	GlyphMetrics total_metrics;
 
-	int line_spacing = static_cast<int>(selected_line_height + 0.5f);
+	float line_spacing = std::round(selected_line_height); // TBD: do weant to round this?
 	bool first_char = true;
 	Rectf text_bbox;
 
