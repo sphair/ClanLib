@@ -403,28 +403,28 @@ bool InputDevice::get_keycode(int keycode) const
 		return false;
 }
 
-Point InputDevice::get_position() const
+Pointf InputDevice::get_position() const
 {
 	if (impl->provider)
-		return Point(impl->provider->get_x(), impl->provider->get_y());
+		return Pointf(impl->provider->get_x(), impl->provider->get_y());
 	else
-		return Point(0,0);
+		return Pointf();
 }
 
-int InputDevice::get_x() const
+float InputDevice::get_x() const
 {
 	if (impl->provider)
 		return impl->provider->get_x();
 	else
-		return 0;
+		return 0.0f;
 }
 
-int InputDevice::get_y() const
+float InputDevice::get_y() const
 {
 	if (impl->provider)
 		return impl->provider->get_y();
 	else
-		return 0;
+		return 0.0f;
 }
 
 float InputDevice::get_axis(int index) const
@@ -477,7 +477,7 @@ InputDevice &InputDevice::operator =(const InputDevice &copy)
 	return *this;
 }
 
-void InputDevice::set_position(int x, int y)
+void InputDevice::set_position(float x, float y)
 {
 	if (impl->provider)
 		impl->provider->set_position(x, y);

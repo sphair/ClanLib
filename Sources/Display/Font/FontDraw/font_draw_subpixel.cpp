@@ -85,10 +85,11 @@ namespace clan
 			{
 				if (!gptr->texture.is_null())
 				{
-					float xp = offset_x + position.x + gptr->offset.x;
-					float yp = offset_y + position.y + gptr->offset.y;
+					float xp = std::round(offset_x + position.x + gptr->offset.x);
+					float yp = std::round(offset_y + position.y + gptr->offset.y);
+					Pointf pos = canvas.grid_fit(Pointf(xp, yp));
 
-					Rectf dest_size(xp, yp, gptr->size);
+					Rectf dest_size(pos, gptr->size);
 					batcher->draw_glyph_subpixel(canvas, gptr->geometry, dest_size, color, gptr->texture);
 				}
 				offset_x += gptr->metrics.advance.width;

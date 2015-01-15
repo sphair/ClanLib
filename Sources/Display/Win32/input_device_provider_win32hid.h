@@ -70,11 +70,11 @@ public:
 
 	/// \brief Returns the x position of the device.
 	/** <p>Only valid for mouse.</p>*/
-	int get_x() const { return 0; }
+	float get_x() const { return 0; }
 
 	/// \brief Returns the y position of the device.
 	/** <p>Only valid for mouse.</p>*/
-	int get_y() const { return 0; }
+	float get_y() const { return 0; }
 
 	/// \brief Returns the the current position of a joystick axis.
 	float get_axis(int index) const;
@@ -106,7 +106,7 @@ public:
 	}
 
 	/// \brief Sets the position of the device.
-	void set_position(int x, int y) { }
+	void set_position(float x, float y) { }
 
 	void update(RAWINPUT *raw_input);
 
