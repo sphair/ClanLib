@@ -29,7 +29,7 @@
 #include "precomp.h"
 
 #include "options.h"
-
+/*
 Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComponent(&gui, clan::GUITopLevelDescription("Options", gui_position, false))
 {
 	// Note, when changing these, remember to change the popup menu defaults
@@ -124,3 +124,4 @@ void Options::update_all_slider_text()
 	slider_point_size_changed();
 }
 
+*/

@@ -70,7 +70,7 @@ public:
 	HWND get_hwnd() const { return hwnd; }
 	Rect get_geometry() const;
 	Rect get_viewport() const;
-	float get_dpi() const;
+	float get_dpi() const { return dpi; }
 	bool has_focus() const;
 	bool is_minimized() const;
 	bool is_maximized() const;
@@ -229,6 +229,8 @@ private:
 	std::condition_variable update_window_worker_event;
 	HRGN update_window_region;
 	unsigned int update_window_max_region_rects;
+
+	float dpi = 96.0f;
 };
 
 }

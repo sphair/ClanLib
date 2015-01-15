@@ -29,7 +29,7 @@
 #include "precomp.h"
 
 #include "options.h"
-
+/*
 Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComponent(&gui, clan::GUITopLevelDescription("Options", gui_position, false))
 {
 	// Note, when changing these, remember to change the popup menu defaults
@@ -197,3 +197,4 @@ clan::Label *Options::create_combobox_label(clan::ComboBox *combo, const char *t
 	component->set_text(text);
 	return component;
 }
+*/

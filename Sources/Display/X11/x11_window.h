@@ -79,7 +79,7 @@ public:
 public:
 	Rect get_geometry() const;
 	Rect get_viewport() const;
-	float get_dpi() const;
+	float get_dpi() const { return dpi; }
 	bool has_focus() const;
 	bool is_minimized() const;
 	bool is_maximized() const;
@@ -220,6 +220,8 @@ private:
 
 	std::vector<Rect> exposed_rects;
 	Rect largest_exposed_rect;
+	float dpi = 96.0f;
+
 /// \}
 };
 

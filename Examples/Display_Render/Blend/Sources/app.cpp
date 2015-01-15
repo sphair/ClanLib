@@ -48,21 +48,10 @@ int App::start(const std::vector<std::string> &args)
 	cc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
 	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 
-	std::string theme;
-	if (clan::FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))
-		theme = "../../../Resources/GUIThemeAero";
-	else if (clan::FileHelp::file_exists("../../../Resources/GUIThemeBasic/theme.css"))
-		theme = "../../../Resources/GUIThemeBasic";
-	else
-		throw clan::Exception("No themes found");
-
-	clan::GUIWindowManagerTexture wm(window);
-	clan::GUIManager gui(wm, theme);
-	
 	clan::Canvas canvas(window);
 
 	// Deleted automatically by the GUI
-	Options *options = new Options(gui, clan::Rect(0, 0, canvas.get_size()));
+	//Options *options = new Options(gui, clan::Rect(0, 0, canvas.get_size()));
 
 	clan::Image image_grid(canvas, "Resources/grid.png");
 	clan::Image image_ball(canvas, "Resources/ball.png");
@@ -73,51 +62,48 @@ int App::start(const std::vector<std::string> &args)
 
 	setup_balls();
 
-	options->request_repaint();
+	//options->request_repaint();
 
-	clan::Font font(canvas, "Tahoma", 16);
+	clan::Font font("Tahoma", 16);
 
 	clan::GameTime game_time;
 	while (!quit)
 	{
 		game_time.update();
 	
-		wm.process();
-		wm.draw_windows(canvas);
-
 		const float grid_xpos = 10.0f;
 		const float grid_ypos = 10.0f;
 		image_grid.draw(canvas, grid_xpos, grid_ypos);
 
-		image_ball.set_color(options->primary_color);
-		image_ball_premultiply_alpha.set_color(options->primary_color);
+		//image_ball.set_color(options->primary_color);
+		//image_ball_premultiply_alpha.set_color(options->primary_color);
 
-		int num_balls = options->num_balls;
+		int num_balls = 4;	// options->num_balls;
 		if (num_balls > max_balls)
 			num_balls = max_balls;
 
-		if (options->is_moveballs_set)
+		//if (options->is_moveballs_set)
 			move_balls(game_time.get_time_elapsed(), num_balls);
 
 		clan::BlendStateDescription blend_desc;
-		blend_desc.set_blend_function(options->blendfunc[0],options->blendfunc[1],options->blendfunc[2],options->blendfunc[3]);
-		blend_desc.set_blend_equation(options->blendequation[0], options->blendequation[1]);
-		blend_desc.enable_blending(options->is_blending_set);
-		blend_desc.set_logic_op(options->logic_operation);
-		blend_desc.enable_logic_op(options->logic_operation_enabled);
+		//blend_desc.set_blend_function(options->blendfunc[0],options->blendfunc[1],options->blendfunc[2],options->blendfunc[3]);
+		//blend_desc.set_blend_equation(options->blendequation[0], options->blendequation[1]);
+		//blend_desc.enable_blending(options->is_blending_set);
+		//blend_desc.set_logic_op(options->logic_operation);
+		//blend_desc.enable_logic_op(options->logic_operation_enabled);
 
 		clan::RasterizerState raster_desc;
 	
 		clan::BlendState blend_state(canvas, blend_desc);
-		canvas.set_blend_state(blend_state, options->blend_color);
+		canvas.set_blend_state(blend_state);// , options->blend_color);
 
 		for (int cnt=0; cnt<num_balls; cnt++)
 		{
-			if (options->is_premult_alpha_set)
-			{
-				image_ball_premultiply_alpha.draw(canvas, grid_xpos + balls[cnt].xpos, grid_ypos + balls[cnt].ypos);
-			}
-			else
+		//	if (options->is_premult_alpha_set)
+		//	{
+		//		image_ball_premultiply_alpha.draw(canvas, grid_xpos + balls[cnt].xpos, grid_ypos + balls[cnt].ypos);
+		//	}
+		//	else
 			{
 				image_ball.draw(canvas, grid_xpos + balls[cnt].xpos, grid_ypos + balls[cnt].ypos);
 			}
@@ -125,7 +111,7 @@ int App::start(const std::vector<std::string> &args)
 
 		canvas.reset_blend_state();
 	
-		draw_equation(canvas, font, options);
+		//draw_equation(canvas, font, options);
 
 		window.flip(1);
 
@@ -211,7 +197,7 @@ void App::move_balls(float time_diff, int num_balls)
 
 	}
 }
-
+/*
 void App::draw_equation(clan::Canvas &canvas, clan::Font &font, Options *options)
 {
 	clan::Rect equation_rect(10, canvas.get_height() - 70, clan::Size(canvas.get_width() - 20, 60));
@@ -247,6 +233,7 @@ void App::draw_equation(clan::Canvas &canvas, clan::Font &font, Options *options
 	}
 
 }
+*/
 
 std::string App::get_blendfunc(clan::BlendFunc blendfunc, const std::string &fragment_colour)
 {

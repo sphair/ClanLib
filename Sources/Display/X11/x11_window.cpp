@@ -244,6 +244,29 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 	if (!handle.window)
 		throw Exception("Unable to create the X11 window");
 
+	int w_px = XDisplayWidth(handle.display, current_screen);
+	int w_mm = XDisplayWidthMM(handle.display, current_screen);
+
+	//printf("ClanLib [info] XDisplayWidth = %d, XDisplayWidthMM = %d\n", w_px, w_mm);
+	dpi = 96.0f;
+	if (w_mm >= 24) // Prevent division by zero in case Xlib doesn't have the value.
+	{
+		// To do: grab DPI from a configuration file so the user can override it, if needed
+
+		// Actual physical DPI of the monitor:
+		float physical_dpi = 25.4f * static_cast<float>(w_px) / static_cast<float>(w_mm);
+
+		// Use DPI in steps of 100%, 125%, 150%, 200%, 300%, 400%..
+		if (physical_dpi < 120.0f)
+			dpi = 96.0f;
+		else if (physical_dpi < 144.0f)
+			dpi = 120.0f;
+		else if (physical_dpi < 192.0f)
+			dpi = 144.0f;
+		else
+			dpi = static_cast<float>(static_cast<int>(physical_dpi / 96.0f) * 96.0f);
+	}
+
 	if (!desc.get_owner().is_null())
 	{
 		DisplayWindow owner = desc.get_owner();
@@ -582,32 +605,6 @@ Rect X11Window::get_geometry() const
 Rect X11Window::get_viewport() const
 {
 	return Rect(0, 0, requested_current_window_client_area.get_size());
-}
-
-float X11Window::get_dpi() const
-{
-	int w_px = XDisplayWidth  (handle.display, current_screen);
-	int w_mm = XDisplayWidthMM(handle.display, current_screen);
-
-	printf("ClanLib [info] XDisplayWidth = %d, XDisplayWidthMM = %d\n", w_px, w_mm);
-
-	if (w_mm < 24) // Prevent division by zero in case Xlib doesn't have the value.
-		return 96.0f;
-
-	// To do: grab DPI from a configuration file so the user can override it, if needed
-
-	// Actual physical DPI of the monitor:
-	float physical_dpi = 25.4f * static_cast<float>(w_px) / static_cast<float>(w_mm);
-
-	// Use DPI in steps of 100%, 125%, 150%, 200%, 300%, 400%..
-	if (physical_dpi < 120.0f)
-		return 96.0f;
-	else if (physical_dpi < 144.0f)
-		return 120.0f;
-	else if (physical_dpi < 192.0f)
-		return 144.0f;
-	else
-		return static_cast<float>(static_cast<int>(physical_dpi / 96.0f) * 96.0f);
 }
 
 bool X11Window::has_focus() const

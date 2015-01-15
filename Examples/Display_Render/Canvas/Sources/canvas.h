@@ -49,7 +49,7 @@ private:
 	Canvas canvas_window;
 	Canvas canvas_framebuffer;
 
-	Point mouse_pos;
+	Pointf mouse_pos;
 
 	float scale;
 
