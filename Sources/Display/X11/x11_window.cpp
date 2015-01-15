@@ -244,6 +244,16 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 	if (!handle.window)
 		throw Exception("Unable to create the X11 window");
 
+	int w_px = XDisplayWidth(handle.display, current_screen);
+	int w_mm = XDisplayWidthMM(handle.display, current_screen);
+	// printf("ClanLib [info] XDisplayWidth = %d, XDisplayWidthMM = %d\n", w_px, w_mm);
+	if (w_mm < 24) // Prevent division by zero in case Xlib doesn't have the value.
+		dpi = 96.0f;
+	else
+	{
+		dpi = 25.4f * static_cast<float>(w_px) / static_cast<float>(w_mm);
+	}
+
 	if (!desc.get_owner().is_null())
 	{
 		DisplayWindow owner = desc.get_owner();
@@ -582,19 +592,6 @@ Rect X11Window::get_geometry() const
 Rect X11Window::get_viewport() const
 {
 	return Rect(0, 0, requested_current_window_client_area.get_size());
-}
-
-float X11Window::get_dpi() const
-{
-	int w_px = XDisplayWidth  (handle.display, current_screen);
-	int w_mm = XDisplayWidthMM(handle.display, current_screen);
-
-	printf("ClanLib [info] XDisplayWidth = %d, XDisplayWidthMM = %d\n", w_px, w_mm);
-
-	if (w_mm < 24) // Prevent division by zero in case Xlib doesn't have the value.
-		return 96.0f;
-
-	return 25.4f * static_cast<float>(w_px) / static_cast<float>(w_mm);
 }
 
 bool X11Window::has_focus() const
