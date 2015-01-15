@@ -61,9 +61,9 @@ private:
 	bool write_connection_data(IRCRawString &write_line, IRCRawString::size_type &write_pos, clan::TCPConnection &connection);
 
 	clan::SocketName server;
-	clan::Thread thread_worker;
+	std::thread thread_worker;
 	clan::Event stop_event;
-	clan::InterlockedVariable shutdown_graceful;
+	std::atomic_int shutdown_graceful;
 	IRCConnectionQueues queues;
 
 	std::function<void(const IRCMessage &)> cb_message_received;

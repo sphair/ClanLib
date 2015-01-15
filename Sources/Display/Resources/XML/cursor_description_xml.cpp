@@ -38,14 +38,13 @@
 #include "API/Display/Window/cursor_description.h"
 #include "API/Display/ImageProviders/provider_factory.h"
 
-#include "../../Window/cursor_description_impl.h"
-
 namespace clan
 {
 
-CursorDescription::CursorDescription(GraphicContext &gc, const std::string &resource_id, const XMLResourceDocument &resources, const ImageImportDescription &import_desc)
-: impl(std::make_shared<CursorDescription_Impl>())
+CursorDescription CursorDescription::load(GraphicContext &gc, const std::string &resource_id, const XMLResourceDocument &resources, const ImageImportDescription &import_desc)
 {
+	CursorDescription desc;
+
 	XMLResourceNode resource = resources.get_resource(resource_id);
 	if (resource.get_type() != "cursor" && resource.get_type() != "cursor_description" && resource.get_type() != "image")
 		throw Exception(string_format("Resource '%1' is not of type 'cursor' or 'cursor_description' or 'image'", resource_id));
@@ -96,11 +95,11 @@ CursorDescription::CursorDescription(GraphicContext &gc, const std::string &reso
 
 					try
 					{
-						add_frame(PathHelp::combine(resource.get_base_path(), file_name), fs, import_desc);
+						desc.add_frame(PathHelp::combine(resource.get_base_path(), file_name), fs, import_desc);
 					}
 					catch (const Exception&)
 					{
-						if (get_frames().empty())
+						if (desc.get_frames().empty())
 						{
 							//must have been an error, pass it down
 							throw;
@@ -120,7 +119,7 @@ CursorDescription::CursorDescription(GraphicContext &gc, const std::string &reso
 				DomNode cur_child(cur_element.get_first_child());
 				if(cur_child.is_null()) 
 				{
-					add_frame(pixelbuffer);
+					desc.add_frame(pixelbuffer);
 				}
 				else 
 				{
@@ -179,7 +178,7 @@ CursorDescription::CursorDescription(GraphicContext &gc, const std::string &reso
 								yspacing = StringHelp::text_to_int(image_spacing[1]);
 							}
 
-							add_gridclipped_frames(pixelbuffer,
+							desc.add_gridclipped_frames(pixelbuffer,
 								xpos, ypos,
 								width, height,
 								xarray, yarray,
@@ -210,13 +209,13 @@ CursorDescription::CursorDescription(GraphicContext &gc, const std::string &reso
 
 							if (cur_child_elemnt.has_attribute("free"))
 							{
-								add_alphaclipped_frames_free(pixelbuffer,
+								desc.add_alphaclipped_frames_free(pixelbuffer,
 									xpos, ypos,
 									trans_limit);
 							}
 							else
 							{
-								add_alphaclipped_frames(pixelbuffer,
+								desc.add_alphaclipped_frames(pixelbuffer,
 									xpos, ypos,
 									trans_limit);
 							}
@@ -230,8 +229,10 @@ CursorDescription::CursorDescription(GraphicContext &gc, const std::string &reso
 		cur_node = cur_node.get_next_sibling();
 	}
 
-	if (get_frames().empty()) 
+	if (desc.get_frames().empty())
 		throw Exception("Cursor resource contained no frames!");
+	return desc;
+
 }
 
 

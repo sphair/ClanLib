@@ -29,9 +29,9 @@ private:
 	clan::SocketName socket_name;
 	std::string filename;
 	clan::TCPConnection connection;
-	clan::Thread thread;
+	std::thread thread;
 	clan::Event abort_event;
-	clan::Mutex mutex;
+	std::recursive_mutex mutex;
 	unsigned int bytes_received;
 	Status status;
 	std::string status_text;

@@ -33,6 +33,7 @@
 #include "network_event.h"
 #include "server_impl.h"
 #include <algorithm>
+#include "API/Network/Socket/tcp_connection.h"
 
 namespace clan
 {

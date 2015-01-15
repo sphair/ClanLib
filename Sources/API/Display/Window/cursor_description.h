@@ -73,17 +73,7 @@ class CursorDescription
 /// \{
 public:
 	/// \brief Constructs a cursor description.
-	///
-	/// \param resource_id Resource name of a cursor description resource.
-	/// \param resources Resource manager used to load resource.
 	CursorDescription();
-
-	/// \brief Constructs a CursorDescription
-	///
-	/// \param gc = Graphic Context
-	/// \param resource_id = String Ref
-	/// \param resources = Resource Manager
-	CursorDescription(GraphicContext &gc, const std::string &resource_id, const XMLResourceDocument &resources, const ImageImportDescription &import_desc = ImageImportDescription ());
 
 	/// \brief Constructs a CursorDescription
 	///
@@ -91,6 +81,9 @@ public:
 	CursorDescription(const CursorDescription &copy);
 
 	~CursorDescription();
+
+	/// \brief Loads a CursorDescription from a XML resource definition
+	static CursorDescription load(GraphicContext &gc, const std::string &resource_id, const XMLResourceDocument &doc, const ImageImportDescription &import_desc = ImageImportDescription());
 
 /// \}
 /// \name Attributes

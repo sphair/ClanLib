@@ -16,12 +16,12 @@ public:
 	void set_disconnected(const std::string &reason);
 	bool pop_disconnected(std::string &out_reason);
 
-	clan::Event send_event;
+	//FIXME clan::Event send_event;
 
 private:
-	clan::Mutex mutex;
+	std::recursive_mutex mutex;
 	std::vector<IRCRawString> send_queue;
 	std::vector<IRCRawString> receive_queue;
-	clan::InterlockedVariable disconnected;
+	std::atomic_int disconnected;
 	std::string disconnected_reason;
 };
