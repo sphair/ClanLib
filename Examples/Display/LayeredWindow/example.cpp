@@ -109,13 +109,12 @@ int App::start(const std::vector<std::string> &args)
 
 	// Get the graphics
 	clan::FontDescription font_desc;
-	font_desc.set_typeface_name("tahoma");
 	font_desc.set_height(48);
 	font_desc.set_subpixel(false);
-	clan::Font font_large(canvas, font_desc);
+	clan::Font font_large("tahoma", font_desc);
 
 	font_desc.set_height(30);
-	clan::Font font_small(canvas, font_desc);
+	clan::Font font_small("tahoma", font_desc);
 	clan::Sprite tux(canvas, "round_tux.png");
 	tux_radius = tux.get_width()/2;
 
