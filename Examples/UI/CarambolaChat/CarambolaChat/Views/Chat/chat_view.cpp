@@ -32,29 +32,19 @@ ChatView::~ChatView()
 {
 }
 
-FontDescription ChatView::get_font_description()
+Font ChatView::get_font_description()
 {
-	FontDescription desc;
-	desc.set_typeface_name("Verdana");
-	desc.set_height(13);
-	return desc;
+	return Font("Verdana", 13.0f);
 }
 
-FontDescription ChatView::get_fixed_font_description()
+Font ChatView::get_fixed_font_description()
 {
-	FontDescription desc;
-	desc.set_typeface_name("Consolas");
-	desc.set_height(13);
-	return desc;
+	return Font("Consolas", 13.0f);
 }
 
-FontDescription ChatView::get_url_font_description()
+Font ChatView::get_url_font_description()
 {
-	FontDescription desc;
-	desc.set_typeface_name("Verdana");
-	desc.set_height(13);
-	desc.set_underline(true);
-	return desc;
+	return Font("Verdana", 13.0f);
 }
 
 void ChatView::add_line(ChatLine line)
@@ -97,15 +87,15 @@ void ChatView::render_text_content(ChatTextView *text_view, Canvas &canvas)
 
 	if (font.is_null())
 	{
-		font = Font(get_font_description());
-		font_url = Font(get_url_font_description());
-		font_fixed = Font(get_fixed_font_description());
+		font = get_font_description();
+		font_url = get_url_font_description();
+		font_fixed = get_fixed_font_description();
 		baseline_offset1 = (int)(font.get_font_metrics().get_ascent() - font_fixed.get_font_metrics().get_ascent());
 	}
 
 	Rect content_box = text_view->geometry().content_box();
 
-	canvas.fill(Path::rect(0.0f, 0.0f, (float)get_prefix_width(), (float)content_box.get_height()), Brush::solid(0.94901f, 0.94901f, 0.94901f));
+	Path::rect(0.0f, 0.0f, (float)get_prefix_width(), (float)content_box.get_height()).fill(canvas, Brush::solid(0.94901f, 0.94901f, 0.94901f));
 
 	content_box.shrink(5);
 

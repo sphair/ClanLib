@@ -63,7 +63,7 @@ int Program::main(const std::vector<std::string> &args)
 	Slot exit_slot = chat_window->window_view()->sig_close().connect([&](CloseEvent &e) { exit = true; });
 	while (!exit)
 	{
-		KeepAlive::process(250);
+		RunLoop::process(250);
 	}
 
 	return 0;
