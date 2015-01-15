@@ -122,7 +122,7 @@ namespace clan
 		static const std::string break_characters;
 		static const std::string numeric_mode_characters;
 
-		std::vector<Rect> last_measured_rects;
+		std::vector<Rectf> last_measured_rects;
 
 		void set_text_selection(size_t start, size_t length);
 

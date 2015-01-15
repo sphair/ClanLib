@@ -126,7 +126,7 @@ namespace clan
 #endif
 	}
 
-	void FontFamily_Impl::load_font(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics)
+	void FontFamily_Impl::load_font(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, float spacelen, bool monospace, const FontMetrics &metrics)
 	{
 		FontMetrics font_metrics = metrics;
 

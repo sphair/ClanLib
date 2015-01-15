@@ -251,7 +251,7 @@ SpanLayout::HitTestResult SpanLayout_Impl::hit_test(Canvas &canvas, const Point 
 				if(pos.x >= x + segment.x_position && pos.x <= x + segment.x_position + segment.width)
 				{
 					std::string segment_text = text.substr(segment.start, segment.end-segment.start);
-					Point hit_point(pos.x - x - segment.x_position, 0);
+					Pointf hit_point(pos.x - x - segment.x_position, 0);
 					int offset = segment.start + segment.font.get_character_index(canvas, segment_text, hit_point);
 
 					result.type = SpanLayout::HitTestResult::inside;
