@@ -275,18 +275,23 @@ namespace clan
 
 	}
 
-	Font_Cache FontFamily_Impl::get_font(const Font_Selected &desc)
+	Font_Cache FontFamily_Impl::get_font(const FontDescription &desc)
 	{
 		// Find cached version
 		for (auto &cache : font_cache)
 		{
-			if (desc.style != cache.engine->get_desc().get_style())
+			if (desc.get_style() != cache.engine->get_desc().get_style())
 				continue;
-			if (desc.weight != cache.engine->get_desc().get_weight())
+			if (desc.get_weight() != cache.engine->get_desc().get_weight())
 				continue;
+			if (desc.get_subpixel() != cache.engine->get_desc().get_subpixel())
+				continue;
+			if (desc.get_anti_alias() != cache.engine->get_desc().get_anti_alias())
+				continue;
+
 			if (cache.engine->is_automatic_recreation_allowed())
 			{
-				if (desc.height != cache.engine->get_desc().get_height())
+				if (desc.get_height() != cache.engine->get_desc().get_height())
 					continue;
 			}
 
@@ -295,22 +300,20 @@ namespace clan
 		return Font_Cache();
 	}
 
-	Font_Cache FontFamily_Impl::copy_font(const Font_Selected &desc)
+	Font_Cache FontFamily_Impl::copy_font(const FontDescription &desc)
 	{
 		// Find existing typeface, to obtain shared data that we can copy
-		FontDescription new_desc;
 		DataBuffer font_databuffer;
 
 		// Find find an exact match using style and weight
 		for (auto &cache : font_cache)
 		{
-			if (desc.style != cache.engine->get_desc().get_style())
+			if (desc.get_style() != cache.engine->get_desc().get_style())
 				continue;
-			if (desc.weight != cache.engine->get_desc().get_weight())
+			if (desc.get_weight() != cache.engine->get_desc().get_weight())
 				continue;
 
 			font_databuffer = cache.engine->get_databuffer();	// Get shared databuffer
-			new_desc = cache.engine->get_desc().clone();
 			break;
 		}
 
@@ -320,22 +323,17 @@ namespace clan
 			for (auto &cache : font_cache)
 			{
 				font_databuffer = cache.engine->get_databuffer();	// Get shared databuffer
-				new_desc = cache.engine->get_desc().clone();
 				break;
 			}
 		}
 
-		new_desc.set_height(desc.height);
-		new_desc.set_style(desc.style);
-		new_desc.set_weight(desc.weight);
-
 		if (font_databuffer.is_null())
 		{
-			load_font(new_desc, family_name);
+			load_font(desc, family_name);
 		}
 		else
 		{
-			load_font(new_desc, font_databuffer);
+			load_font(desc, font_databuffer);
 		}
 		return font_cache.back();
 	}

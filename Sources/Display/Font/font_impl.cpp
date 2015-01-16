@@ -56,10 +56,7 @@ Font_Impl::Font_Impl(FontFamily &new_font_family, const FontDescription &descrip
 
 	font_family = new_font_family;
 
-	selected_description.height = description.get_height();
-	selected_description.weight = description.get_weight();
-	selected_description.style = description.get_style();
-
+	selected_description = description.clone();
 	selected_line_height = description.get_line_height();
 
 	select_font_family();
@@ -70,9 +67,9 @@ void Font_Impl::select_font_family()
 	if (!font_engine)
 	{
 		// Copy the required font, setting a scalable font size
-		Font_Selected new_selected = selected_description;
-		if (selected_description.height >= selected_height_threshold)
-			new_selected.height = 256.0f;	// A reasonable scalable size
+		FontDescription new_selected = selected_description.clone();
+		if (selected_description.get_height() >= selected_height_threshold)
+			new_selected.set_height(256.0f);	// A reasonable scalable size
 
 		Font_Cache font_cache = font_family.impl->get_font(new_selected);
 		if (!font_cache.engine)	// Font not found
@@ -86,11 +83,11 @@ void Font_Impl::select_font_family()
 
 		// Determine if pathfont method is required. TODO: This feels a bit hacky
 		selected_pathfont = font_engine->is_automatic_recreation_allowed();
-		if (selected_description.height < selected_height_threshold)
+		if (selected_description.get_height() < selected_height_threshold)
 			selected_pathfont = false;
 
 		// Deterimine if font scaling is required
-		scaled_height = selected_description.height / font_engine->get_desc().get_height();
+		scaled_height = selected_description.get_height() / font_engine->get_desc().get_height();
 		if ((scaled_height >= 0.9999f) && (scaled_height <= 1.0001f))	// Allow for floating point accuracy issues when determining when scaling is not required
 			scaled_height = 1.0f;
 
@@ -321,18 +318,18 @@ GlyphMetrics Font_Impl::measure_text(Canvas &canvas, const std::string &string)
 
 void Font_Impl::set_height(float value)
 {
-	if (selected_description.height != value)
+	if (selected_description.get_height() != value)
 	{
-		selected_description.height = value;
+		selected_description.set_height(value);
 		font_engine = nullptr;
 	}
 }
 
 void Font_Impl::set_weight(FontWeight value)
 {
-	if (selected_description.weight != value)
+	if (selected_description.get_weight() != value)
 	{
-		selected_description.weight = value;
+		selected_description.set_weight(value);
 		font_engine = nullptr;
 	}
 }
@@ -345,9 +342,9 @@ void Font_Impl::set_line_height(float height)
 
 void Font_Impl::set_style(FontStyle setting)
 {
-	if (selected_description.style != setting)
+	if (selected_description.get_style() != setting)
 	{
-		selected_description.style = setting;
+		selected_description.set_style(setting);
 		font_engine = nullptr;
 	}
 }

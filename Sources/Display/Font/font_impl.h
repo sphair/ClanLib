@@ -81,9 +81,9 @@ public:
 private:
 	void select_font_family();
 
-	Font_Selected selected_description;
+	FontDescription selected_description;
 	float selected_line_height = 0.0f;
-	float scaled_height = 1.0f;				// Currently not implemented
+	float scaled_height = 1.0f;	
 	float selected_height_threshold = 32.0f;		// Values greater or equal to this value can be drawn scaled
 	bool selected_pathfont = false;
 
