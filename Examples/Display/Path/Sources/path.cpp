@@ -53,7 +53,7 @@ int PathApp::start(const std::vector<std::string> &args)
 
 	clan::Path rounded_rect_shape = clan::Path::rect(clan::Rectf(0.0f, 0.0f, clan::Sizef(256, 256)), clan::Sizef(64.0f, 64.0f));
 
-	clan::Font test_font(canvas, "tahoma", 20);
+	clan::Font test_font( "tahoma", 20);
 	clan::Path complex_shape = clan::Path::circle(128.0f, 128.0f, 128.0f);
 	clan::GlyphMetrics glyph_metrics;
 	complex_shape += clan::Path::glyph(test_font, 'e', glyph_metrics).transform_self(clan::Mat3f::translate(58.0f, 198.0f) * clan::Mat3f::scale(10.0f, 10.0f));
@@ -82,7 +82,7 @@ int PathApp::start(const std::vector<std::string> &args)
 	brush_radial.stops.push_back(clan::BrushGradientStop(clan::Colorf::white, 0.5f));
 	brush_radial.stops.push_back(clan::BrushGradientStop(clan::Colorf::aliceblue, 1.0f));
 
-	clan::Font fps_font(canvas, "tahoma", 20);
+	clan::Font fps_font("tahoma", 20);
 	clan::GameTime game_time;
 
 	float angle = 0.0f;

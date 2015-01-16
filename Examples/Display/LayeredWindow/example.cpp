@@ -52,7 +52,7 @@ private:
 private:
 	int tux_radius;
 	clan::Pointf tux_position;
-	clan::Point last_mouse_pos;
+	clan::Pointf last_mouse_pos;
 	bool drag_start;
 
 	bool quit;

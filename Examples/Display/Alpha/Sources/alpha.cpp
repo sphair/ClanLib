@@ -163,7 +163,7 @@ void Alpha::draw_section(clan::Canvas &canvas, clan::Font &font, int yoffset, co
 
 	clan::Colorf output;
 	// Get the composited pixel buffer
-	clan::Rect rect(outer_xoffset + outer_area_size / 2, (yoffset + outer_area_size / 2), clan::Size(64,64));
+	clan::Rectf rect(outer_xoffset + outer_area_size / 2, (yoffset + outer_area_size / 2), clan::Sizef(64,64));
 	if (rect.is_inside(canvas.get_size()))
 	{
 		clan::PixelBuffer pbuff = canvas.get_pixeldata(rect, clan::tf_rgba8);
