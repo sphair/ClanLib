@@ -61,8 +61,6 @@ GlyphCache::GlyphCache()
 
 GlyphCache::~GlyphCache()
 {
-	for (auto & elem : glyph_list)
-		delete elem;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -70,7 +68,7 @@ GlyphCache::~GlyphCache()
 
 Font_TextureGlyph *GlyphCache::get_glyph(Canvas &canvas, FontEngine *font_engine, unsigned int glyph)
 {
-	std::vector< Font_TextureGlyph * >::size_type size = glyph_list.size();
+	auto size = glyph_list.size();
 	for (int cnt=0; cnt<size; cnt++)
 	{
 		if (glyph_list[cnt]->glyph == glyph)
@@ -113,9 +111,8 @@ GlyphMetrics GlyphCache::get_metrics(FontEngine *font_engine, Canvas &canvas, un
 
 void GlyphCache::insert_glyph(Canvas &canvas, FontPixelBuffer &pb)
 {
-	auto font_glyph = new Font_TextureGlyph();
+	auto font_glyph = std::unique_ptr<Font_TextureGlyph>(new Font_TextureGlyph());
 	
-	glyph_list.push_back(font_glyph);
 	font_glyph->glyph = pb.glyph;
 	font_glyph->offset = pb.offset;
 	font_glyph->metrics = pb.metrics;
@@ -130,13 +127,14 @@ void GlyphCache::insert_glyph(Canvas &canvas, FontPixelBuffer &pb)
 		font_glyph->size = pb.size;
 		sub_texture.get_texture().set_subimage(gc, sub_texture.get_geometry().left, sub_texture.get_geometry().top, buffer_with_border, buffer_with_border.get_size());
 	}
+
+	glyph_list.push_back(std::move(font_glyph));
 }
 
 void GlyphCache::insert_glyph(Canvas &canvas, unsigned int glyph, Subtexture &sub_texture, const Pointf &offset, const Sizef &size, const GlyphMetrics &glyph_metrics)
 {
-	auto font_glyph = new Font_TextureGlyph();
-	
-	glyph_list.push_back(font_glyph);
+	auto font_glyph = std::unique_ptr<Font_TextureGlyph>(new Font_TextureGlyph());
+
 	font_glyph->glyph = glyph;
 	font_glyph->offset = offset;
 	font_glyph->metrics = glyph_metrics;
@@ -147,6 +145,8 @@ void GlyphCache::insert_glyph(Canvas &canvas, unsigned int glyph, Subtexture &su
 		font_glyph->texture = sub_texture.get_texture();
 		font_glyph->geometry = sub_texture.get_geometry();
 	}
+
+	glyph_list.push_back(std::move(font_glyph));
 }
 
 /////////////////////////////////////////////////////////////////////////////

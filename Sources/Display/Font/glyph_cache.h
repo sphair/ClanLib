@@ -112,7 +112,7 @@ public:
 /// \{
 private:
 
-	std::vector<Font_TextureGlyph* > glyph_list;
+	std::vector<std::unique_ptr<Font_TextureGlyph>> glyph_list;
 
 	TextureGroup texture_group;
 
