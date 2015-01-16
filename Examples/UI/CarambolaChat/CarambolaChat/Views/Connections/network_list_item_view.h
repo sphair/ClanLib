@@ -10,6 +10,7 @@ public:
 	void set_status_online();
 	void set_status_offline();
 
+	std::shared_ptr<clan::ButtonView> connect_button;
 	std::shared_ptr<clan::ButtonView> edit_button;
 	std::shared_ptr<clan::ButtonView> remove_button;
 

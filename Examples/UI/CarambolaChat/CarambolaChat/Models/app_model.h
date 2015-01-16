@@ -24,6 +24,9 @@ public:
 
 	Settings settings;
 
+	void auto_connect_to_servers();
+	void connect_to_server(XMLSettings &connection);
+
 	IRCSession *create_irc_session(const std::string &connection_name);
 	void destroy_irc_session(IRCSession *session);
 

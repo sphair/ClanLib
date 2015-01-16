@@ -33,6 +33,15 @@ NetworkListItemView::NetworkListItemView()
 
 	add_subview(name_status_block);
 
+	connect_button = std::make_shared<ButtonView>();
+	connect_button->label()->text_style().set_font("Segoe UI", 13.0f, 16.0f);
+	connect_button->label()->text_style().set_color(Colorf::navy);
+	connect_button->box_style.set_flex(0.0f, 0.0f);
+	connect_button->box_style.set_margin(0.0f, 0.0f, 15.0f, 0.0);
+	connect_button->box_style.set_margin_top_auto();
+	connect_button->box_style.set_margin_bottom_auto();
+	add_subview(connect_button);
+
 	edit_button = std::make_shared<ButtonView>();
 	edit_button->label()->set_text("Edit");
 	edit_button->label()->text_style().set_font("Segoe UI", 13.0f, 16.0f);
@@ -59,10 +68,12 @@ void NetworkListItemView::set_status_online()
 {
 	status_icon->set_image(ImageSource::from_resource("Icons/status_online32.png"));
 	status_text->set_text("Connected");
+	connect_button->label()->set_text("Disconnect");
 }
 
 void NetworkListItemView::set_status_offline()
 {
 	status_icon->set_image(ImageSource::from_resource("Icons/status_offline32.png"));
 	status_text->set_text("Not connected");
+	connect_button->label()->set_text("Connect");
 }
