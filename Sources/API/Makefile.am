@@ -14,6 +14,7 @@ clanApp_includes = \
 
 clanNetwork_includes = \
 	network.h \
+	Network/setupnetwork.h \
 	Network/NetGame/event_value.h \
 	Network/NetGame/event.h \
 	Network/NetGame/connection.h \
