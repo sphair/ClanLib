@@ -20,6 +20,8 @@ public:
 	AppModel();
 	~AppModel();
 
+	static AppModel *instance();
+
 	Settings settings;
 
 	IRCSession *create_irc_session(const std::string &connection_name);
@@ -49,4 +51,6 @@ private:
 	std::vector<XMPPSession *> xmpp_sessions;
 #endif
 	std::vector<DCCChatConnection *> dcc_chat_connections;
+
+	static AppModel *instance_ptr;
 };

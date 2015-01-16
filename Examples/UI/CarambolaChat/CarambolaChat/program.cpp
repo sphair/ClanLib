@@ -2,6 +2,7 @@
 #include "precomp.h"
 #include "program.h"
 #include "Controllers/ChatWindow/chat_window_controller.h"
+#include "Models/app_model.h"
 
 using namespace clan;
 
@@ -56,6 +57,8 @@ int Program::main(const std::vector<std::string> &args)
 	DisplayCache::set(resources, std::make_shared<DisplayResources>());
 
 	UIThread ui_thread(resources);
+
+	AppModel app_model;
 
 	auto chat_window = std::make_shared<ChatWindowViewController>();
 

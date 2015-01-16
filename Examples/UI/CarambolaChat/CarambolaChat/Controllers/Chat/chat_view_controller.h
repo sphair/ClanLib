@@ -5,6 +5,7 @@
 #include "Models/IRCSession/irc_text.h"
 #include "Views/Chat/chat_view.h"
 
+class WorkspaceViewController;
 class IRCSession;
 class IRCEntity;
 class ChatUrl;
@@ -21,8 +22,12 @@ public:
 	//void add_private_text(const IRCNick &nick, const IRCText &text);
 
 private:
+	void irc_session_destroyed(IRCSession *session);
+	void irc_channel_parted(const IRCChannel &channel);
+
 	IRCSession *session = 0;
 	IRCEntity filter;
+	clan::SlotContainer slots;
 /*
 	static std::string get_view_caption(IRCSession *session, const IRCEntity &filter);
 

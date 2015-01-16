@@ -8,6 +8,7 @@
 #include "Models/IRCSession/irc_session.h"
 #include "Models/IRCSession/irc_text.h"
 #include "Models/IRCSession/command.h"
+#include "Models/app_model.h"
 
 using namespace clan;
 
@@ -62,6 +63,10 @@ ChatViewController::ChatViewController(IRCSession *session, const IRCEntity &fil
 	user_list->add_user("user4", "Foo", "Icons/user_voice.png");
 	user_list->add_user("user5", "Bar", "Icons/user.png");
 	user_list->add_user("user6", "Foobar", "Icons/user.png");
+
+	slots.connect(AppModel::instance()->cb_irc_session_destroyed, this, &ChatViewController::irc_session_destroyed);
+	if (session)
+		slots.connect(session->cb_parted, this, &ChatViewController::irc_channel_parted);
 
 	/*
 	set_type_name("chatview");
@@ -139,6 +144,22 @@ ChatViewController::ChatViewController(IRCSession *session, const IRCEntity &fil
 
 ChatViewController::~ChatViewController()
 {
+}
+
+void ChatViewController::irc_session_destroyed(IRCSession *destroyed_session)
+{
+	if (session == destroyed_session)
+	{
+		remove_from_parent_controller();
+	}
+}
+
+void ChatViewController::irc_channel_parted(const IRCChannel &channel)
+{
+	if (channel == filter)
+	{
+		remove_from_parent_controller();
+	}
 }
 
 /*

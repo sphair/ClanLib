@@ -8,8 +8,11 @@
 #include "IdentServer/ident_server.h"
 #include <algorithm>
 
+AppModel *AppModel::instance_ptr = nullptr;
+
 AppModel::AppModel()
 {
+	instance_ptr = this;
 }
 
 AppModel::~AppModel()
@@ -27,6 +30,15 @@ AppModel::~AppModel()
 	for (size_t i = 0; i < dcc_chat_connections.size(); i++)
 		delete dcc_chat_connections[i];
 	dcc_chat_connections.clear();
+
+	instance_ptr = nullptr;
+}
+
+AppModel *AppModel::instance()
+{
+	if (instance_ptr == nullptr)
+		throw clan::Exception("No AppModel instance!");
+	return instance_ptr;
 }
 
 IRCSession *AppModel::create_irc_session(const std::string &connection_name)
