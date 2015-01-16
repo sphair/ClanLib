@@ -48,7 +48,7 @@ private:
 private:
 	void render(GraphicContext &gc);
 	void create_scene(GraphicContext &gc);
-	void update_light(GraphicContext &gc, Options *options);
+	void update_light(GraphicContext &gc);
 	void calculate_matricies(GraphicContext &gc);
 	void control_target(Options *options);
 private:
