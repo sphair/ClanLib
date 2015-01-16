@@ -85,8 +85,8 @@ namespace clan
 			{
 				if (!gptr->texture.is_null())
 				{
-					float xp = std::round(offset_x + position.x + gptr->offset.x);
-					float yp = std::round(offset_y + position.y + gptr->offset.y);
+					float xp = offset_x + position.x + gptr->offset.x;
+					float yp = offset_y + position.y + gptr->offset.y;
 					Pointf pos = canvas.grid_fit(Pointf(xp, yp));
 
 					Rectf dest_size(pos, gptr->size);
