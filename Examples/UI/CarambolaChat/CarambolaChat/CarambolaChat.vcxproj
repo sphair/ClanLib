@@ -108,6 +108,8 @@
     </ClCompile>
     <ClCompile Include="Views\Chat\chat_line.cpp" />
     <ClCompile Include="Views\Chat\chat_view.cpp" />
+    <ClCompile Include="Views\Connections\network_list_item_view.cpp" />
+    <ClCompile Include="Views\Connections\network_list_view.cpp" />
     <ClCompile Include="Views\UserList\user_list_view.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -140,6 +142,8 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="Views\Chat\chat_line.h" />
     <ClInclude Include="Views\Chat\chat_view.h" />
+    <ClInclude Include="Views\Connections\network_list_item_view.h" />
+    <ClInclude Include="Views\Connections\network_list_view.h" />
     <ClInclude Include="Views\UserList\user_list_view.h" />
   </ItemGroup>
   <ItemGroup>

@@ -75,6 +75,12 @@
     <ClCompile Include="Controllers\Connections\connections_view_controller.cpp">
       <Filter>Controllers\Connections</Filter>
     </ClCompile>
+    <ClCompile Include="Views\Connections\network_list_item_view.cpp">
+      <Filter>Views\Connections</Filter>
+    </ClCompile>
+    <ClCompile Include="Views\Connections\network_list_view.cpp">
+      <Filter>Views\Connections</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="precomp.h" />
@@ -161,6 +167,12 @@
     <ClInclude Include="Controllers\Connections\connections_view_controller.h">
       <Filter>Controllers\Connections</Filter>
     </ClInclude>
+    <ClInclude Include="Views\Connections\network_list_item_view.h">
+      <Filter>Views\Connections</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\Connections\network_list_view.h">
+      <Filter>Views\Connections</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -207,6 +219,9 @@
     </Filter>
     <Filter Include="Controllers\Connections">
       <UniqueIdentifier>{66704273-fc72-419c-964a-9448a3f4b2d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Views\Connections">
+      <UniqueIdentifier>{8a055fca-9a03-4d44-95d0-fc8569604b1f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
