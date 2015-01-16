@@ -108,16 +108,9 @@ FontEngine_Freetype::FontEngine_Freetype(const FontDescription &description, Dat
 		throw Exception("Freetype error: Font file could not be opened or read, or is corrupted.");
 	}
 
-	if (height >= 0.0f)
+	if (face->units_per_EM !=0)
 	{
-		if ( (face->height != 0) && (face->units_per_EM !=0) )	// Is scalable font
-		{
-			height = height*face->units_per_EM/face->height;
-		}
-	}
-	else
-	{
-		height = -height;
+		height = height*face->units_per_EM/face->height;
 	}
 
 	// if the device is 72 DCL_PI then 1 point becomes 1 pixel
@@ -291,7 +284,6 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph_standard(int glyph, bool ant
 	FontPixelBuffer font_buffer;
 	FT_GlyphSlot slot = face->glyph;
 	FT_UInt glyph_index;
-
 	// Get glyph index
 	glyph_index = FT_Get_Char_Index(face, glyph);
 
@@ -338,6 +330,8 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph_standard(int glyph, bool ant
 	font_buffer.buffer = pixelbuffer;
 	font_buffer.buffer_rect = pixelbuffer.get_size();
 	font_buffer.empty_buffer = false;
+
+	font_buffer.size = Sizef(pixelbuffer.get_width(), pixelbuffer.get_height());
 
 	unsigned char *src_data = slot->bitmap.buffer;
 	unsigned char *pixel_data = (unsigned char *) font_buffer.buffer.get_data();
@@ -407,7 +401,6 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph_subpixel(int glyph)
 
 	// Get glyph index
 	glyph_index = FT_Get_Char_Index(face, glyph);
-
 	FT_Error error;
 
 	error = FT_Load_Glyph(face, glyph_index, FT_LOAD_TARGET_LCD );
@@ -437,6 +430,7 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph_subpixel(int glyph)
 	font_buffer.buffer = pixelbuffer;
 	font_buffer.buffer_rect = pixelbuffer.get_size();
 	font_buffer.empty_buffer = false;
+	font_buffer.size = Sizef(pixelbuffer.get_width(), pixelbuffer.get_height());
 
 	unsigned char *src_data = slot->bitmap.buffer;
 	unsigned char *pixel_data = (unsigned char *) font_buffer.buffer.get_data();

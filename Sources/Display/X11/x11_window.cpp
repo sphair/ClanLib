@@ -175,6 +175,7 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 		else
 			dpi = static_cast<float>(static_cast<int>(physical_dpi / 96.0f) * 96.0f);
 	}
+	//printf("DPI = %f\n", dpi);
 
 	color_map = XCreateColormap( handle.display, RootWindow(handle.display, visual->screen), visual->visual, AllocNone);
 
