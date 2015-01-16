@@ -3,6 +3,7 @@
 #include "chat_window_controller.h"
 #include "Controllers/Workspace/workspace_view_controller.h"
 #include "Controllers/Chat/chat_view_controller.h"
+#include "Controllers/Connections/connections_view_controller.h"
 #include "Models/app_model.h"
 #include "Models/IRCSession/irc_session.h"
 
@@ -25,8 +26,7 @@ ChatWindowViewController::ChatWindowViewController()
 
 	slots.connect(AppModel::instance()->cb_irc_session_created, this, &ChatWindowViewController::irc_session_created);
 
-	workspace->add_page("Freenode", std::make_shared<ChatViewController>(nullptr, IRCEntity()));
-	workspace->add_page("#clanlib", std::make_shared<ChatViewController>(nullptr, IRCEntity::from_text("#clanlib")));
+	workspace->add_page("Connections", std::make_shared<ConnectionsViewController>());
 
 	window_view()->show(WindowShowType::show_default);
 }
