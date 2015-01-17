@@ -71,6 +71,10 @@ private:
 	std::shared_ptr<UserListView> user_list;
 	std::shared_ptr<clan::TextFieldView> input_text;
 
+	std::string icon_normal = "Icons/user.png";
+	std::string icon_operator = "Icons/user_operator.png";
+	std::string icon_voiced = "Icons/user_voice.png";
+
 	clan::SlotContainer slots;
 /*
 	static std::string get_view_caption(IRCSession *session, const IRCEntity &filter);
