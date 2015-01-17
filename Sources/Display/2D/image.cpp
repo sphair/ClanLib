@@ -108,9 +108,11 @@ void Image_Impl::calc_hotspot()
 			break;
 	}
 
-	// TODO Test get_pixel_ratio();
-	translated_hotspot.x /= texture.get_pixel_ratio();
-	translated_hotspot.y /= texture.get_pixel_ratio();
+	if (texture.get_pixel_ratio() != 0.0f)
+	{
+		translated_hotspot.x /= texture.get_pixel_ratio();
+		translated_hotspot.y /= texture.get_pixel_ratio();
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -224,12 +226,18 @@ void Image::get_alignment(Origin &origin, float &x, float &y) const
 
 float Image::get_width() const
 {
-	return impl->texture_rect.get_width() / impl->texture.get_pixel_ratio();
+	if (impl->texture.get_pixel_ratio() != 0.0f)
+		return impl->texture_rect.get_width() / impl->texture.get_pixel_ratio();
+	else
+		return impl->texture_rect.get_width();
 }
 
 float Image::get_height() const
 {
-	return impl->texture_rect.get_height() / impl->texture.get_pixel_ratio();
+	if (impl->texture.get_pixel_ratio() != 0.0f)
+		return impl->texture_rect.get_height() / impl->texture.get_pixel_ratio();
+	else
+		return impl->texture_rect.get_height();
 }
 
 Sizef Image::get_size() const
