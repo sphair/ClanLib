@@ -72,37 +72,37 @@ private:
 
 	struct ttf_offset_table
 	{
-		ttf_version version;	// Fixed sfnt version 0x00010000 for version 1.0. 
-		USHORT numTables;	// Number of tables. 
-		USHORT searchRange;	// (Maximum power of 2 <= numTables) x 16. 
-		USHORT entrySelector;	// Log2(maximum power of 2 <= numTables). 
-		USHORT rangeShift;	// NumTables x 16-searchRange. 
+		ttf_version version;	// Fixed sfnt version 0x00010000 for version 1.0.
+		USHORT numTables;	// Number of tables.
+		USHORT searchRange;	// (Maximum power of 2 <= numTables) x 16.
+		USHORT entrySelector;	// Log2(maximum power of 2 <= numTables).
+		USHORT rangeShift;	// NumTables x 16-searchRange.
 	};
 
 	struct ttf_table_record
 	{
-		char tag[4];	// 4 -byte identifier. 
-		ULONG checkSum;	// CheckSum for this table. 
-		ULONG offset;	// Offset from beginning of TrueType font file. 
-		ULONG length;	// Length of this table. 
+		char tag[4];	// 4 -byte identifier.
+		ULONG checkSum;	// CheckSum for this table.
+		ULONG offset;	// Offset from beginning of TrueType font file.
+		ULONG length;	// Length of this table.
 	};
 
 	struct ttf_naming_table
 	{
-		USHORT format;	// Format selector (=0). 
-		USHORT count;	// Number of name records. 
-		USHORT stringOffset;	// Offset to start of string storage (from start of table). 
-		// NameRecord nameRecord[count] The name records where count is the number of records. 
+		USHORT format;	// Format selector (=0).
+		USHORT count;	// Number of name records.
+		USHORT stringOffset;	// Offset to start of string storage (from start of table).
+		// NameRecord nameRecord[count] The name records where count is the number of records.
 	};
 
 	struct ttf_naming_record
 	{
-		USHORT platformID;	// Platform ID. 
-		USHORT encodingID;	// Platform-specific encoding ID. 
-		USHORT languageID;	// Language ID. 
-		USHORT nameID;		// Name ID. 
-		USHORT length;		// String length (in bytes). 
-		USHORT offset;		// String offset from start of storage area (in bytes). 
+		USHORT platformID;	// Platform ID.
+		USHORT encodingID;	// Platform-specific encoding ID.
+		USHORT languageID;	// Language ID.
+		USHORT nameID;		// Name ID.
+		USHORT length;		// String length (in bytes).
+		USHORT offset;		// String offset from start of storage area (in bytes).
 	};
 
 	// Swap the endians
@@ -134,7 +134,9 @@ private:
 	DataBuffer data_buffer;
 	FontDescription font_description;
 	FontMetrics font_metrics;
-	float dpi = 96.0f;
+
+	float ppi           = 96.0f;
+	float pixel_ratio   = std::nan("");
 };
 
 }

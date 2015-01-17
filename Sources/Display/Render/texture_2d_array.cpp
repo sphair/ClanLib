@@ -84,11 +84,6 @@ int Texture2DArray::get_height() const
 	return impl->height;
 }
 
-Size Texture2DArray::get_size() const
-{
-	return Size(impl->width, impl->height);
-}
-
 int Texture2DArray::get_array_size() const
 {
 	return impl->array_size;
@@ -140,14 +135,14 @@ Texture2D Texture2DArray::create_2d_view(int array_index, TextureFormat texture_
 	return view.to_texture_2d();
 }
 
-float Texture2DArray::get_dpi() const
+float Texture2DArray::get_pixel_ratio() const
 {
-	return impl->dpi;
+	return impl->pixel_ratio;
 }
 
-void Texture2DArray::set_dpi(float dpi)
+void Texture2DArray::set_pixel_ratio(float ratio)
 {
-	impl->dpi = dpi;
+	impl->pixel_ratio = ratio;
 }
 
 }

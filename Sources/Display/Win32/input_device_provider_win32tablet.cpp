@@ -44,7 +44,7 @@ namespace clan
 
 InputDeviceProvider_Win32Tablet::InputDeviceProvider_Win32Tablet(Win32Window *window)
 : InputDeviceProvider(),
-  sig_provider_event(0), 
+  sig_provider_event(0),
   window(window),
   htab(0),
   wintab_dll(0),
@@ -288,7 +288,7 @@ void InputDeviceProvider_Win32Tablet::init_axis()
 }
 
 BOOL InputDeviceProvider_Win32Tablet::process_packet(WPARAM wParam, LPARAM lParam)
-{	 
+{
 	WINDOWINFO winfo; // todo: updating this info could probably be connected to some window move signal
 	memset(&winfo, 0, sizeof(WINDOWINFO));
 	winfo.cbSize = sizeof(WINDOWINFO);
@@ -324,7 +324,7 @@ BOOL InputDeviceProvider_Win32Tablet::process_packet(WPARAM wParam, LPARAM lPara
 				e.id = tablet_key;
 				e.id_offset = keycode;
 				e.type         = InputEvent::pressed;
-				e.mouse_pos    = Pointf((pkt.pkX - winfo.rcClient.left) * 96.0f / window->get_dpi(), (pkt.pkY - winfo.rcClient.top) * 96.0f / window->get_dpi());
+				e.mouse_pos    = Pointf((pkt.pkX - winfo.rcClient.left) / window->get_pixel_ratio(), (pkt.pkY - winfo.rcClient.top) / window->get_pixel_ratio());
 				e.axis_pos     = 0;
 				e.repeat_count = 0;
 				window->set_modifier_keys(e);
@@ -340,7 +340,7 @@ BOOL InputDeviceProvider_Win32Tablet::process_packet(WPARAM wParam, LPARAM lPara
 				e.id = tablet_key;
 				e.id_offset = keycode;
 				e.type         = InputEvent::released;
-				e.mouse_pos    = Pointf((pkt.pkX - winfo.rcClient.left) * 96.0f / window->get_dpi(), (pkt.pkY - winfo.rcClient.top) * 96.0f / window->get_dpi());
+				e.mouse_pos    = Pointf((pkt.pkX - winfo.rcClient.left) / window->get_pixel_ratio(), (pkt.pkY - winfo.rcClient.top) / window->get_pixel_ratio());
 				e.axis_pos     = 0;
 				e.repeat_count = 0;
 				window->set_modifier_keys(e);
@@ -353,7 +353,7 @@ BOOL InputDeviceProvider_Win32Tablet::process_packet(WPARAM wParam, LPARAM lPara
 
 				e.id           = tablet_z_axis; // TODO: support tilt, rotation.
 				e.type         = InputEvent::axis_moved; // x,y as pointer movements
-				e.mouse_pos    = Pointf((pkt.pkX - winfo.rcClient.left) * 96.0f / window->get_dpi(), (pkt.pkY - winfo.rcClient.top) * 96.0f / window->get_dpi());
+				e.mouse_pos    = Pointf((pkt.pkX - winfo.rcClient.left) / window->get_pixel_ratio(), (pkt.pkY - winfo.rcClient.top) / window->get_pixel_ratio());
 				e.axis_pos     = get_axis(2);
 				e.repeat_count = 0;
 				window->set_modifier_keys(e);

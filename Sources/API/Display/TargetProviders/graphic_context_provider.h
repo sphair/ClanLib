@@ -108,7 +108,10 @@ public:
 	virtual Size get_display_window_size() const = 0;
 
 	/// \brief Physical pixels/dots per inch
-	virtual float get_dpi() const = 0;
+	virtual float get_ppi() const = 0;
+
+	/// \brief Physical pixels/dots per inch
+	virtual float get_pixel_ratio() const = 0;
 
 	/// \brief Get the window resized signal
 	virtual Signal<void(const Size &)> &sig_window_resized() = 0;
@@ -127,7 +130,7 @@ public:
 
 	/// \brief Returns the Y axis direction for viewports, clipping rects, textures and render targets
 	virtual TextureImageYAxis get_texture_image_y_axis() const = 0;
-	
+
 	/// \brief Returns the shader language used
 	virtual ShaderLanguage get_shader_language() const = 0;
 
@@ -145,7 +148,7 @@ public:
 
 	/// \brief Returns true if the hardware supports compute shaders
 	///
-	/// This always returns true for OpenGL 4.3 or newer, or Direct3D 11.0 or newer. 
+	/// This always returns true for OpenGL 4.3 or newer, or Direct3D 11.0 or newer.
 	/// For Direct3D 10.0 and 10.1 the support for compute shaders is optional.
 	virtual bool has_compute_shader_support() const = 0;
 

@@ -124,26 +124,33 @@ public:
 	/// \brief Create a copy of the pixelbuffer that doesn't share data with the original pixel buffer.
 	PixelBuffer copy(const Rect &rect) const;
 
-	/// \brief Returns the buffer width.
+	/// Retrieves the actual width of the buffer.
 	int get_width() const;
 
-	/// \brief Returns the buffer height.
+	/// Retrieves the actual height of the buffer.
 	int get_height() const;
 
-	/// \brief Returns the width and height of the buffer.
-	Size get_size() const;
+	/// Retrieves the actual size of the buffer.
+	Size get_size() const { return Size{ get_width(), get_height() }; }
 
-	/// \brief Returns the pitch (bytes per scanline).
+	/// Returns the pitch (in bytes per scanline).
 	int get_pitch() const;
 
-	/// \brief Returns with image width in device independent (96 DPI) pixels
-	float get_px_width() const { return get_width() * 96.0f / get_dpi(); }
+	/** Retrieves the pixel ratio of this texture.
+	 *  \return The display pixel ratio set for this texture.
+	 *          A NaN value implies that the texture should use the pixel ratio
+	 *          set in the DisplayWindowProvider.
+	 */
+	float get_pixel_ratio() const;
 
-	/// \brief Returns with image height in device independent (96 DPI) pixels
-	float get_px_height() const { return get_height() * 96.0f / get_dpi(); }
+	/// Returns the device independent width of this texture.
+	float get_dip_width() const { return get_width() / get_pixel_ratio(); }
 
-	/// \brief Returns with image size in device independent (96 DPI) pixels
-	Sizef get_px_size() const { return Sizef(get_px_width(), get_px_height()); }
+	/// Returns the device independent height of this texture.
+	float get_dip_height() const { return get_height() / get_pixel_ratio(); }
+
+	/// Returns the device independent size of this texture.
+	Sizef get_dip_size() const { return Sizef{ get_dip_width(), get_dip_height() }; }
 
 	/// \brief Returns a pointer to the beginning of the pixel buffer.
 	void *get_data();
@@ -234,9 +241,6 @@ public:
 	/// \brief Return color of pixel at the specified coordinates.
 	Colorf get_pixel(int x, int y);
 
-	/// \brief Gets the dots per inch (physical size) for a pixel
-	float get_dpi() const;
-
 /// \}
 /// \name Operations
 /// \{
@@ -306,9 +310,8 @@ public:
 	/// To convert from linear to sRGB use 1.0/2.2
 	void premultiply_gamma(float gamma);
 
-	/// \brief Sets the physical size for a pixel
-	/// \param dpi Pixels/dots per inch in both directions
-	void set_dpi(float dpi);
+	/// Sets the display pixel ratio for this texture.
+	void set_pixel_ratio(float ratio);
 
 /// \}
 /// \name Implementation

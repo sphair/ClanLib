@@ -66,8 +66,8 @@ public:
 	void pop_cliprect();
 	void reset_cliprect();
 
-	GraphicContext get_gc() const {return gc;}
-	GraphicContext& get_gc() {return gc;}
+	GraphicContext get_gc() const { return gc; }
+	GraphicContext& get_gc() { return gc; }
 
 	void set_transform(const Mat4f &matrix);
 	const Mat4f &get_transform() const;

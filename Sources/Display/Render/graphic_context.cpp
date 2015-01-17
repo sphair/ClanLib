@@ -42,7 +42,7 @@
 #include "API/Core/Math/angle.h"
 #include "primitives_array_impl.h"
 #include "graphic_context_impl.h"
-#include "API/Display/Render/shared_gc_data.h" 
+#include "API/Display/Render/shared_gc_data.h"
 #include "API/Display/Render/depth_stencil_state_description.h"
 #include "API/Display/Render/blend_state_description.h"
 #include "API/Display/Render/rasterizer_state_description.h"
@@ -179,9 +179,14 @@ Size GraphicContext::get_size() const
 	return impl->get_size();
 }
 
-float GraphicContext::get_dpi() const
+float GraphicContext::get_ppi() const
 {
-	return impl->graphic_screen->get_provider()->get_dpi();
+	return impl->graphic_screen->get_provider()->get_ppi();
+}
+
+float GraphicContext::get_pixel_ratio() const
+{
+	return impl->graphic_screen->get_provider()->get_pixel_ratio();
 }
 
 Size GraphicContext::get_max_texture_size() const

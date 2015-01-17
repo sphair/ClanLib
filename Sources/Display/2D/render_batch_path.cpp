@@ -72,11 +72,11 @@ namespace clan
 		fill_renderer.flush(gc);
 	}
 
-	void RenderBatchPath::matrix_changed(const Mat4f &new_modelview, const Mat4f &new_projection, TextureImageYAxis image_yaxis, float dpi)
+	void RenderBatchPath::matrix_changed(const Mat4f &new_modelview, const Mat4f &new_projection, TextureImageYAxis image_yaxis, float pixel_ratio)
 	{
 		// We ignore the projection
 		fill_renderer.set_yaxis(image_yaxis);
-		modelview_matrix = Mat4f::scale(dpi / 96.0f, dpi / 96.0f, 1.0f) * new_modelview;
+		modelview_matrix = Mat4f::scale(pixel_ratio, pixel_ratio, 1.0f) * new_modelview;
 	}
 
 	void RenderBatchPath::render(const Path &path, PathRenderer *path_renderer)

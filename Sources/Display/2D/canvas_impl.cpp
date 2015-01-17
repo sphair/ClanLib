@@ -127,21 +127,20 @@ void Canvas_Impl::set_batcher(Canvas &canvas, RenderBatcher *new_batcher)
 void Canvas_Impl::calculate_map_mode_matrices()
 {
 	Mat4f matrix;
-
-	float dpi_scale = gc.get_dpi() / 96.0f;
+	Mat4f pixel_scaling_matrix = Mat4f::scale(gc.get_pixel_ratio(), gc.get_pixel_ratio(), 1.0f);
 
 	MapMode mode = (canvas_y_axis == y_axis_bottom_up) ? get_top_down_map_mode() : canvas_map_mode;
 	switch (mode)
 	{
 	default:
 	case map_2d_upper_left:
-		matrix = Mat4f::ortho_2d(0.0f, canvas_size.width, canvas_size.height, 0.0f, handed_right, gc_clip_z_range) * Mat4f::scale(dpi_scale, dpi_scale, 1.0f);
+		matrix = Mat4f::ortho_2d(0.0f, canvas_size.width, canvas_size.height, 0.0f, handed_right, gc_clip_z_range) * pixel_scaling_matrix;
 		break;
 	case map_2d_lower_left:
-		matrix = Mat4f::ortho_2d(0.0f, canvas_size.width, 0.0f, canvas_size.height, handed_right, gc_clip_z_range) * Mat4f::scale(dpi_scale, dpi_scale, 1.0f);
+		matrix = Mat4f::ortho_2d(0.0f, canvas_size.width, 0.0f, canvas_size.height, handed_right, gc_clip_z_range) * pixel_scaling_matrix;
 		break;
 	case map_user_projection:
-		matrix = Mat4f::scale(dpi_scale, dpi_scale, 1.0f) * user_projection;
+		matrix = pixel_scaling_matrix * user_projection;
 		break;
 	}
 
@@ -227,12 +226,13 @@ void Canvas_Impl::write_cliprect(const Rectf &rect)
 	if ( (rect.left > rect.right) || (rect.top > rect.bottom) )
 		throw Exception("Invalid cliprect");
 
-	// DPI scale and grid fit clipping rect
-	Rect recti;
-	recti.left = (int)std::round(rect.left * gc.get_dpi() / 96.0f);
-	recti.top = (int)std::round(rect.top * gc.get_dpi() / 96.0f);
-	recti.right = (int)std::round(rect.right * gc.get_dpi() / 96.0f);
-	recti.bottom = (int)std::round(rect.bottom * gc.get_dpi() / 96.0f);
+	// Grid-fitted, display pixel ratio scaled clipping rect
+	Rect recti {
+		std::round(rect.left * gc.get_pixel_ratio()),
+		std::round(rect.top * gc.get_pixel_ratio()),
+		std::round(rect.right * gc.get_pixel_ratio()),
+		std::round(rect.bottom * gc.get_pixel_ratio())
+	};
 
 	gc.set_scissor(recti, canvas_y_axis ? y_axis_top_down : y_axis_bottom_up);
 }

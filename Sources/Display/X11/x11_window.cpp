@@ -153,51 +153,37 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 
 	current_screen = visual->screen;
 
-	int w_px = XDisplayWidth(handle.display, current_screen);
-	int w_mm = XDisplayWidthMM(handle.display, current_screen);
+	int disp_width_px = XDisplayWidth(handle.display, current_screen);
+	int disp_height_px = XDisplayHeight(handle.display, current_screen);
+	int disp_width_mm = XDisplayWidthMM(handle.display, current_screen);
 
-	//printf("ClanLib [info] XDisplayWidth = %d, XDisplayWidthMM = %d\n", w_px, w_mm);
-	dpi = 96.0f;
-	if (w_mm >= 24) // Prevent division by zero in case Xlib doesn't have the value.
-	{
-		// To do: grab DPI from a configuration file so the user can override it, if needed
+	// Get DPI of screen or use 96.0f if Xlib doesn't have a value.
+	ppi = (disp_width_mm < 24) ? 96.0f : (25.4f * static_cast<float>(disp_width_px) / static_cast<float>(disp_width_mm));
 
-		// Actual physical DPI of the monitor:
-		float physical_dpi = 25.4f * static_cast<float>(w_px) / static_cast<float>(w_mm);
+	// Update pixel ratio.
+	set_pixel_ratio(pixel_ratio);
 
-		// Use DPI in steps of 100%, 125%, 150%, 200%, 300%, 400%..
-		if (physical_dpi < 120.0f)
-			dpi = 96.0f;
-		else if (physical_dpi < 144.0f)
-			dpi = 120.0f;
-		else if (physical_dpi < 192.0f)
-			dpi = 144.0f;
-		else
-			dpi = static_cast<float>(static_cast<int>(physical_dpi / 96.0f) * 96.0f);
-	}
-	//printf("DPI = %f\n", dpi);
+	color_map = XCreateColormap(handle.display, RootWindow(handle.display, visual->screen), visual->visual, AllocNone);
 
-	color_map = XCreateColormap( handle.display, RootWindow(handle.display, visual->screen), visual->visual, AllocNone);
+	XSetWindowAttributes attr;
+	memset(&attr, 0, sizeof(attr));
 
-	memset(&attributes, 0, sizeof(attributes));
-
-	attributes.colormap = color_map;
-	attributes.border_pixel = 0;
-	attributes.override_redirect = False;
-
-	attributes.event_mask =
-		ExposureMask |
+	attr.border_pixel = 0;
+	attr.override_redirect = False;
+	attr.colormap = color_map;
+	attr.event_mask =
 		KeyPressMask |
 		KeyReleaseMask |
 		ButtonPressMask |
 		ButtonReleaseMask |
-		StructureNotifyMask |
-		PropertyChangeMask |
-		PointerMotionMask |
 		EnterWindowMask |
 		LeaveWindowMask |
+		PointerMotionMask |
 		KeymapStateMask |
-		FocusChangeMask;
+		ExposureMask |
+		StructureNotifyMask |
+		FocusChangeMask |
+		PropertyChangeMask;
 
 	// retrieve some useful atoms
 	motif_wm_hints = XInternAtom(handle.display, "_MOTIF_WM_HINTS", True);
@@ -234,19 +220,25 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 	if (!size_hints)
 		throw Exception("Cannot allocate X11 XSizeHints structure");
 
-	system_cursor = XCreateFontCursor(handle.display, XC_left_ptr);	// This is allowed to fail
+	system_cursor = XCreateFontCursor(handle.display, XC_left_ptr); // This is allowed to fail
 
-	int win_x = desc.get_position().left * get_dpi() / 96.0f;
-	int win_y = desc.get_position().top * get_dpi() / 96.0f;
-	int win_width = desc.get_size().width * get_dpi() / 96.0f;
-	int win_height = desc.get_size().height * get_dpi() / 96.0f;
+	int win_x = desc.get_position().left * pixel_ratio;
+	int win_y = desc.get_position().top * pixel_ratio;
+	int win_width = desc.get_size().width * pixel_ratio;
+	int win_height = desc.get_size().height * pixel_ratio;
 
 	// Check for valid width and height
-	if ( win_width <=0 )
-		win_width = 128;
+	if (win_width <= 0)
+	{
+		throw Exception("Invalid window width.");
+		// win_width = 128;
+	}
 
-	if ( win_height <=0 )
-		win_height = 128;
+	if (win_height <= 0)
+	{
+		throw Exception("Invalid window height.");
+		// win_height = 128;
+	}
 
 	if (desc.is_fullscreen())
 	{
@@ -256,15 +248,17 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 
 	if (win_x == -1 && win_y == -1)
 	{
-		int disp_width = DisplayWidth(handle.display, current_screen);
-		int disp_height = DisplayHeight(handle.display, current_screen);
-		win_x = (disp_width - win_width)/2 - 1;
-		win_y = (disp_height - win_height)/2 - 1;
+		win_x = (disp_width_px - win_width)/2 - 1;
+		win_y = (disp_height_px - win_height)/2 - 1;
 	}
 
-	handle.window = XCreateWindow(handle.display, RootWindow(handle.display, current_screen),
-		win_x, win_y, win_width, win_height, 0, visual->depth,
-		InputOutput, visual->visual, CWBorderPixel | CWColormap | CWOverrideRedirect | CWEventMask, &attributes);
+	handle.window = XCreateWindow(
+			handle.display, RootWindow(handle.display, current_screen),
+			win_x, win_y, win_width, win_height, 0, visual->depth,
+			InputOutput, visual->visual,
+			CWBorderPixel | CWColormap | CWOverrideRedirect | CWEventMask,
+			&attr
+			);
 
 	if (!handle.window)
 		throw Exception("Unable to create the X11 window");
@@ -364,9 +358,7 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 		{
 			if (kde_net_wm_window_type_override)
 				XChangeProperty(handle.display, handle.window, net_wm_window_type, XA_ATOM, 32, PropModeReplace, (unsigned char *)&kde_net_wm_window_type_override, 1);
-
 		}
-
 	}
 
 	// Do not use an else clause here, because on the net_wm_window_type may not turn off the border
@@ -457,8 +449,8 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 	size_hints->min_height  = minimum_size.height;
 	size_hints->max_width   = maximum_size.width;
 	size_hints->max_height  = maximum_size.height;
-	size_hints->width_inc = 1;
-	size_hints->height_inc = 1;
+	size_hints->width_inc   = 1;
+	size_hints->height_inc  = 1;
 	size_hints->win_gravity = NorthWestGravity;
 	size_hints->flags       = PSize|PBaseSize|PPosition|PMinSize|PResizeInc|PWinGravity;
 
@@ -591,7 +583,6 @@ void X11Window::close_window()
 	frame_size_top = 0;
 	frame_size_bottom = 0;
 	frame_size_calculated = false;
-
 }
 
 Rect X11Window::get_geometry() const
@@ -651,7 +642,6 @@ bool X11Window::is_maximized() const
 bool X11Window::is_visible() const
 {
 	XWindowAttributes attr;
-
 	XGetWindowAttributes(handle.display, handle.window, &attr);
 	if (attr.map_state == IsViewable) return false;
 	return true;
@@ -662,7 +652,7 @@ Size X11Window::get_minimum_size(bool client_area) const
 	if (!client_area)
 		return minimum_size;
 	else
-		throw Exception("X11Window::get_minimum_size not implemented for client_area");
+		throw Exception("X11Window::get_minimum_size() not implemented for client_area");
 }
 
 Size X11Window::get_maximum_size(bool client_area) const
@@ -670,7 +660,7 @@ Size X11Window::get_maximum_size(bool client_area) const
 	if (!client_area)
 		return maximum_size;
 	else
-		throw Exception("X11Window::get_maximum_size not implemented for client_area");
+		throw Exception("X11Window::get_maximum_size() not implemented for client_area");
 }
 
 std::string X11Window::get_title() const
@@ -857,8 +847,25 @@ void X11Window::set_size(int width, int height, bool client_area)
 
 void X11Window::set_enabled(bool enable)
 {
-	// Window's version of set_enabled() calls EnableWindow() which tells the windows API that the window can have input focus if desired.
-	// If you do require it for linux, changing the masks: KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask might work
+	XSetWindowAttributes attr;
+	attr.event_mask =
+		( enable
+			? KeyPressMask
+			| KeyReleaseMask
+			| ButtonPressMask
+			| ButtonReleaseMask
+			| PointerMotionMask
+			: 0
+		)
+		| EnterWindowMask
+		| LeaveWindowMask
+		| KeymapStateMask
+		| ExposureMask
+		| StructureNotifyMask
+		| FocusChangeMask
+		| PropertyChangeMask;
+
+	XChangeWindowAttributes(handle.display, handle.window, CWEventMask, &attr);
 }
 
 void X11Window::minimize()
@@ -956,17 +963,12 @@ void X11Window::unmap_window()
 void X11Window::maximize()
 {
 	modify_net_wm_state(true, net_wm_state_maximized_vert, net_wm_state_maximized_horz);
-
 }
 
 void X11Window::show(bool activate)
 {
 	map_window();
 	if (activate) set_enabled(true);
-
-	// Force the window is updated
-	//Rect window_rect = get_viewport();
-	//set_size(window_rect.get_width(), window_rect.get_height(), true);
 }
 
 void X11Window::hide()
@@ -1045,7 +1047,6 @@ bool X11Window::modify_net_wm_state(bool add, Atom atom1, Atom atom2)
 
 Rect X11Window::get_screen_position() const
 {
-
 	int xpos;
 	int ypos;
 	unsigned int width;
@@ -1113,18 +1114,14 @@ void X11Window::process_window_resize(const Rect &new_rect)
 
 		if ( (rect.get_width() != current_window_client_area.get_width()) || (rect.get_height() != current_window_client_area.get_height()) || always_send_window_size_changed_event )
 		{
-			float scale = 96.0f / get_dpi();
 			Rectf rectf = rect;
-			rectf.left   *= scale,
-			rectf.top    *= scale,
-			rectf.right  *= scale,
-			rectf.bottom *= scale;
+			rectf.left   /= pixel_ratio,
+			rectf.top    /= pixel_ratio,
+			rectf.right  /= pixel_ratio,
+			rectf.bottom /= pixel_ratio;
 
 			if (site->func_window_resize)
-			{
 				(site->func_window_resize)(rectf);
-				// TODO: If rect output is different, update this window rect. Maybe use a  XConfigureRequestEvent?
-			}
 
 			if (callback_on_resized)
 				callback_on_resized();
@@ -1262,12 +1259,11 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 						if (minimized && site != nullptr)
 						{
 							// generate resize events for minimized -> maximized transition
-							float scale = 96.0f / get_dpi();
 							Rectf rectf = get_geometry();
-							rectf.left   *= scale,
-							rectf.top    *= scale,
-							rectf.right  *= scale,
-							rectf.bottom *= scale;
+							rectf.left   /= pixel_ratio,
+							rectf.top    /= pixel_ratio,
+							rectf.right  /= pixel_ratio,
+							rectf.bottom /= pixel_ratio;
 
 							(site->sig_window_moved)();
 							if (site->func_window_resize)
@@ -1503,8 +1499,6 @@ std::string X11Window::get_clipboard_text() const
 PixelBuffer X11Window::get_clipboard_image() const
 {
 	throw Exception("Todo: X11Window::get_clipboard_image");
-
-	return PixelBuffer();
 }
 
 bool X11Window::is_clipboard_text_available() const
@@ -1582,7 +1576,7 @@ void X11Window::process_queued_events()
 	last_repaint_rect.clear();
 }
 
-void X11Window::set_minimum_size( int width, int height, bool client_area)
+void X11Window::set_minimum_size(int width, int height, bool client_area)
 {
 	minimum_size = Size(width,height);
 
@@ -1594,7 +1588,7 @@ void X11Window::set_minimum_size( int width, int height, bool client_area)
 	XSetWMNormalHints(handle.display, handle.window, size_hints);
 }
 
-void X11Window::set_maximum_size( int width, int height, bool client_area)
+void X11Window::set_maximum_size(int width, int height, bool client_area)
 {
 	maximum_size = Size(width,height);
 
@@ -1604,6 +1598,31 @@ void X11Window::set_maximum_size( int width, int height, bool client_area)
 	size_hints->max_height  = maximum_size.height;
 	size_hints->flags |= PMaxSize;
 	XSetWMNormalHints(handle.display, handle.window, size_hints);
+}
+
+void X11Window::set_pixel_ratio(float ratio)
+{
+	pixel_ratio = ratio;
+
+	// Pixel ratio is not set; calculate closest pixel ratio.
+	if (std::isnan(pixel_ratio))
+	{
+		int s = std::round(ppi / 16.0f);
+		/**/ if (s <= 6)  // <=  96 PPI; old tech; use 1:1 ratio.
+		{
+			pixel_ratio = 1.0f;
+		}
+		else if (s >= 12) // >= 192 PPI; new tech; use 1:1 ratio to avoid sub-pixeling.
+		{
+			pixel_ratio = static_cast<float>(s / 6);
+		}
+		else // 96 ~ 192 PPI; modern; use one-sixth steps
+		{
+			pixel_ratio = static_cast<float>(s) / 6.0f;
+		}
+	}
+
+	// TODO Adjust everything related to pixel ratio.
 }
 
 void X11Window::get_keyboard_modifiers(bool &key_shift, bool &key_alt, bool &key_ctrl) const

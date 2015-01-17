@@ -179,7 +179,8 @@ public:
 	Rect get_geometry() const override { return x11_window.get_geometry(); }
 	Rect get_viewport() const override { return x11_window.get_viewport(); }
 
-	float get_dpi() const override { return x11_window.get_dpi(); }
+	float get_ppi() const override { return x11_window.get_ppi(); }
+	float get_pixel_ratio() const override { return x11_window.get_pixel_ratio(); }
 
 	bool has_focus() const override { return x11_window.has_focus(); }
 	bool is_fullscreen() const override { return x11_window.is_fullscreen(); }
@@ -220,44 +221,33 @@ public:
 public:
 	void make_current() const;
 	void destroy() { delete this; }
-	Point client_to_screen(const Point &client) override { return x11_window.client_to_screen(client); }
 
+	Point client_to_screen(const Point &client) override { return x11_window.client_to_screen(client); }
 	Point screen_to_client(const Point &screen) override { return x11_window.screen_to_client(screen); }
 
 	void create(DisplayWindowSite *site, const DisplayWindowDescription &description) override;
 
 	void show_system_cursor() override { x11_window.show_system_cursor(); }
-
 	CursorProvider *create_cursor(const CursorDescription &cursor_description) override;
-
 	void set_cursor(CursorProvider *cursor) override;
-
 	void set_cursor(StandardCursor type) override { x11_window.set_cursor(type); }
-
 	void hide_system_cursor() override  { x11_window.hide_system_cursor(); }
 
 	void set_title(const std::string &new_title) override { x11_window.set_title(new_title); }
+	void set_position(const Rect &pos, bool client_area) override { return x11_window.set_position(pos, client_area); }
 
-	void set_position(const Rect &pos, bool client_area) override { return x11_window.set_position(pos, client_area); };
-
-	void set_size(int width, int height, bool client_area) override  { return x11_window.set_size(width, height, client_area); }
-
+	void set_pixel_ratio(float ratio) override { return x11_window.set_pixel_ratio(ratio); }
+	void set_size(int width, int height, bool client_area) override { return x11_window.set_size(width, height, client_area); }
 	void set_minimum_size(int width, int height, bool client_area) override { return x11_window.set_minimum_size(width, height, client_area); }
-
 	void set_maximum_size( int width, int height, bool client_area) override { return x11_window.set_maximum_size(width, height, client_area); }
 
 	void set_enabled(bool enable) override { return x11_window.set_enabled(enable); }
 
 	void minimize() override { x11_window.minimize(); }
-
 	void restore() override { x11_window.restore(); }
-
 	void maximize() override { x11_window.maximize(); }
-
 	void show(bool activate) override  { x11_window.show(activate); }
-
 	void hide() override { x11_window.hide(); }
-
 	void bring_to_front() override { x11_window.bring_to_front(); }
 
 	/// \brief Flip opengl buffers.

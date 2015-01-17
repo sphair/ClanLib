@@ -64,11 +64,11 @@ Image Image::load(Canvas &canvas, const std::string &id, const XMLResourceDocume
 			Texture2D texture = Texture2D(canvas, PathHelp::combine(resource.get_base_path(), image_name), resource.get_file_system());
 
 			DomNode cur_child(cur_element.get_first_child());
-			if(cur_child.is_null()) 
+			if(cur_child.is_null())
 			{
 				image = Image(texture, texture.get_size());
 			}
-			else 
+			else
 			{
 				do {
 					DomElement cur_child_elemnt = cur_child.to_element();
@@ -169,8 +169,9 @@ Image Image::load(Canvas &canvas, const std::string &id, const XMLResourceDocume
 			int xoffset = StringHelp::text_to_int(cur_element.get_attribute("x", "0"));
 			int yoffset = StringHelp::text_to_int(cur_element.get_attribute("y", "0"));
 
-			xoffset *= 96.0f / image.get_texture().get_texture().get_dpi();
-			yoffset *= 96.0f / image.get_texture().get_texture().get_dpi();
+			// TODO Find out what is going on here...
+			xoffset /= image.get_texture().get_texture().get_pixel_ratio();
+			yoffset /= image.get_texture().get_texture().get_pixel_ratio();
 
 			image.set_alignment(origin, xoffset, yoffset);
 		}
