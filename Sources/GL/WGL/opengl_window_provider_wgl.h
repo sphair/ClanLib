@@ -80,7 +80,8 @@ public:
 	bool is_clipboard_image_available() const;
 	std::string get_clipboard_text() const;
 	PixelBuffer get_clipboard_image() const;
-	float get_dpi() const override;
+	float get_ppi() const override;
+	float get_pixel_ratio() const override;
 
 /// \}
 /// \name Operations
@@ -136,6 +137,8 @@ public:
 	void extend_frame_into_client_area(int left, int top, int right, int bottom);
 
 	ProcAddress *get_proc_address(const std::string& function_name) const;
+
+	void set_pixel_ratio(float ratio) override;
 
 /// \}
 /// \name Implementation

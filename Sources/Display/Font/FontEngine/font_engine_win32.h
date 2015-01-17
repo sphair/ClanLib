@@ -135,8 +135,7 @@ private:
 	FontDescription font_description;
 	FontMetrics font_metrics;
 
-	float ppi           = 96.0f;
-	float pixel_ratio   = std::nan("");
+	float pixel_ratio = 1.0f;
 };
 
 }

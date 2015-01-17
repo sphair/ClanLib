@@ -73,8 +73,8 @@ Win32Window::Win32Window()
 {
 	HDC dc = GetDC(0);
 	ppi = (float)GetDeviceCaps(dc, LOGPIXELSX);
-	set_pixel_ratio(pixel_ratio);
 	ReleaseDC(0, dc);
+	set_pixel_ratio(std::nan(""));
 
 	memset(&paintstruct, 0, sizeof(PAINTSTRUCT));
 	keyboard = InputDevice(new InputDeviceProvider_Win32Keyboard(this));
@@ -1266,22 +1266,8 @@ void Win32Window::set_pixel_ratio(float ratio)
 	// Pixel ratio is not set; calculate closest pixel ratio.
 	if (std::isnan(pixel_ratio))
 	{
-		int s = std::round(ppi / 16.0f);
-		/**/ if (s <= 6)  // <=  96 PPI; old tech; use 1:1 ratio.
-		{
-			pixel_ratio = 1.0f;
-		}
-		else if (s >= 12) // >= 192 PPI; new tech; use 1:1 ratio to avoid sub-pixeling.
-		{
-			pixel_ratio = static_cast<float>(s / 6);
-		}
-		else // 96 ~ 192 PPI; modern; use one-sixth steps
-		{
-			pixel_ratio = static_cast<float>(s) / 6.0f;
-		}
+		pixel_ratio = ppi / 96.0f;
 	}
-
-	// TODO Adjust everything related to pixel ratio.
 }
 
 PixelBuffer Win32Window::get_clipboard_image() const
@@ -1744,16 +1730,10 @@ void Win32Window::get_styles_from_description(const DisplayWindowDescription &de
 
 RECT Win32Window::get_window_geometry_from_description(const DisplayWindowDescription &desc, DWORD style, DWORD ex_style)
 {
-	HDC dc = GetDC(0);
-	float ppi = (float)GetDeviceCaps(dc, LOGPIXELSX);
-	ReleaseDC(0, dc);
-
-	float ppi_scale = ppi / 96.0f;
-
-	int x = (int)std::round(desc.get_position().left * ppi_scale);
-	int y = (int)std::round(desc.get_position().top * ppi_scale);
-	int width = (int)std::round(desc.get_size().width * ppi_scale);
-	int height = (int)std::round(desc.get_size().height * ppi_scale);
+	int x = (int)std::round(desc.get_position().left * pixel_ratio);
+	int y = (int)std::round(desc.get_position().top * pixel_ratio);
+	int width = (int)std::round(desc.get_size().width * pixel_ratio);
+	int height = (int)std::round(desc.get_size().height * pixel_ratio);
 
 	bool clientSize = desc.get_position_client_area();	// false = Size includes the window frame. true = Size is the drawable size.
 
@@ -1765,10 +1745,10 @@ RECT Win32Window::get_window_geometry_from_description(const DisplayWindowDescri
 		Rectf R = screen_rects[desc.get_fullscreen_monitor()];
 
 		clientSize = false;
-		x = (int)std::round(R.left * ppi_scale);
-		y = (int)std::round(R.top * ppi_scale);
-		width = (int)std::round(R.get_width() * ppi_scale);
-		height = (int)std::round(R.get_height() * ppi_scale);
+		x = (int)std::round(R.left * pixel_ratio);
+		y = (int)std::round(R.top * pixel_ratio);
+		width = (int)std::round(R.get_width() * pixel_ratio);
+		height = (int)std::round(R.get_height() * pixel_ratio);
 	}
 	else if (desc.get_position().left == -1 && desc.get_position().top == -1)
 	{

@@ -66,28 +66,10 @@ FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, DataBuffer &font
 void FontEngine_Win32::load_font(const FontDescription &desc, const std::string &typeface_name)
 {
 	HDC dc = GetDC(0);
-	ppi = (float)GetDeviceCaps(dc, LOGPIXELSX);
+	int ppi = GetDeviceCaps(dc, LOGPIXELSX);
 	ReleaseDC(0, dc);
 
-	pixel_ratio = ratio;
-
-	// Pixel ratio is not set; calculate closest pixel ratio.
-	if (std::isnan(pixel_ratio))
-	{
-		int s = std::round(ppi / 16.0f);
-		/**/ if (s <= 6)  // <=  96 PPI; old tech; use 1:1 ratio.
-		{
-			pixel_ratio = 1.0f;
-		}
-		else if (s >= 12) // >= 192 PPI; new tech; use 1:1 ratio to avoid sub-pixeling.
-		{
-			pixel_ratio = static_cast<float>(s / 6);
-		}
-		else // 96 ~ 192 PPI; modern; use one-sixth steps
-		{
-			pixel_ratio = static_cast<float>(s) / 6.0f;
-		}
-	}
+	pixel_ratio = ppi / 96.0f;
 
 	float device_font_size = std::abs(desc.get_height()) * pixel_ratio;
 	float device_average_width = desc.get_average_width() * pixel_ratio;

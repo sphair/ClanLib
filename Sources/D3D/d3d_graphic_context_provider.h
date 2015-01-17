@@ -67,7 +67,8 @@ public:
 	int get_max_attributes();
 	Size get_max_texture_size() const;
 	Size get_display_window_size() const;
-	float get_dpi() const override;
+	float get_ppi() const override;
+	float get_pixel_ratio() const override;
 	D3DDisplayWindowProvider *get_window() const { return window; }
 
 #ifdef WIN32

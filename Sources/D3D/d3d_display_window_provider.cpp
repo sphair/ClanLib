@@ -75,9 +75,14 @@ Rect D3DDisplayWindowProvider::get_viewport() const
 	return window.get_viewport();
 }
 
-float D3DDisplayWindowProvider::get_dpi() const
+float D3DDisplayWindowProvider::get_ppi() const
 {
-	return window.get_dpi();
+	return window.get_ppi();
+}
+
+float D3DDisplayWindowProvider::get_pixel_ratio() const
+{
+	return window.get_pixel_ratio();
 }
 
 bool D3DDisplayWindowProvider::has_focus() const
@@ -439,6 +444,11 @@ void D3DDisplayWindowProvider::validate_context()
 			log_event("d3d", "Direct3D context not valid before draw call!");
 		}
 	}
+}
+
+void D3DDisplayWindowProvider::set_pixel_ratio(float ratio)
+{
+	window.set_pixel_ratio(ratio);
 }
 
 /////////////////////////////////////////////////////////////////////////////

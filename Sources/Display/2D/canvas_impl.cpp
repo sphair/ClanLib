@@ -228,10 +228,10 @@ void Canvas_Impl::write_cliprect(const Rectf &rect)
 
 	// Grid-fitted, display pixel ratio scaled clipping rect
 	Rect recti {
-		std::round(rect.left * gc.get_pixel_ratio()),
-		std::round(rect.top * gc.get_pixel_ratio()),
-		std::round(rect.right * gc.get_pixel_ratio()),
-		std::round(rect.bottom * gc.get_pixel_ratio())
+		static_cast<int>(std::round(rect.left * gc.get_pixel_ratio())),
+		static_cast<int>(std::round(rect.top * gc.get_pixel_ratio())),
+		static_cast<int>(std::round(rect.right * gc.get_pixel_ratio())),
+		static_cast<int>(std::round(rect.bottom * gc.get_pixel_ratio()))
 	};
 
 	gc.set_scissor(recti, canvas_y_axis ? y_axis_top_down : y_axis_bottom_up);

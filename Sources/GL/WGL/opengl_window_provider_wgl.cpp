@@ -127,9 +127,14 @@ Rect OpenGLWindowProvider::get_viewport() const
 	return win32_window.get_viewport();
 }
 
-float OpenGLWindowProvider::get_dpi() const
+float OpenGLWindowProvider::get_ppi() const
 {
-	return win32_window.get_dpi();
+	return win32_window.get_ppi();
+}
+
+float OpenGLWindowProvider::get_pixel_ratio() const
+{
+	return win32_window.get_pixel_ratio();
 }
 
 bool OpenGLWindowProvider::is_fullscreen() const
@@ -846,6 +851,11 @@ void OpenGLWindowProvider::set_clipboard_image( const PixelBuffer &buf )
 PixelBuffer OpenGLWindowProvider::get_clipboard_image() const
 {
 	return win32_window.get_clipboard_image();
+}
+
+void OpenGLWindowProvider::set_pixel_ratio(float ratio)
+{
+	win32_window.set_pixel_ratio(ratio);
 }
 
 }

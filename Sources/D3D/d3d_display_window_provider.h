@@ -50,7 +50,8 @@ public:
 public:
 	Rect get_geometry() const override;
 	Rect get_viewport() const override;
-	float get_dpi() const override;
+	float get_ppi() const override;
+	float get_pixel_ratio() const override;
 
 	bool has_focus() const;
 	bool is_minimized() const;
@@ -130,6 +131,9 @@ public:
 	void extend_frame_into_client_area(int left, int top, int right, int bottom);
 
 	void validate_context();
+
+	void set_pixel_ratio(float ratio) override;
+
 /// \}
 
 /// \name Implementation
