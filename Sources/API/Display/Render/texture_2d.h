@@ -37,115 +37,113 @@ namespace clan
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
-/// \brief 2D texture object class.
+/// 2D texture object class.
 class Texture2D : public Texture
 {
 /// \name Construction
 /// \{
 public:
-	/// \brief Constructs a null instance.
+	/// Constructs a null instance.
 	Texture2D();
 
-	/// \brief Constructs a texture from an implementation
-	///
-	/// \param impl = The implementation
+	/** Constructs a texture from an implementation.
+	 *  \param impl The Texture object implementation.
+	 */
 	Texture2D(const std::shared_ptr<Texture_Impl> &impl) : Texture(impl) { }
 
-	/// \brief Constructs a Texture
-	///
-	/// \param context = Graphic Context
-	/// \param width = value
-	/// \param height = value
-	/// \param internal_format = Texture Format
-	/// \param levels = Mipmap levels for the texture. 0 = all levels
-	Texture2D(GraphicContext &context, int width, int height, TextureFormat texture_format = tf_rgba8, int levels = 1);
+	/** Constructs a new Texture object.
+	 *  \param context  Graphic context to construct the texture on.
+	 *  \param width    Width of the new texture.
+	 *  \param height   Height of the new texture.
+	 *  \param format   Data format of the new texture.
+	 *  \param levels   Number of mipmap levels for the new texture. Setting
+	 *                  this to `0` enables all levels.
+	 */
+	Texture2D(GraphicContext &context, int width, int height, TextureFormat format = tf_rgba8, int levels = 1);
 
-	/// \brief Constructs a Texture
-	///
-	/// \param context = Graphic Context
-	/// \param size = Size
-	/// \param internal_format = Texture Format
-	/// \param levels = Mipmap levels for the texture. 0 = all levels
+	/** Constructs a new Texture object.
+	 *  \param context  Graphic context to construct the texture on.
+	 *  \param size     Size of the new texture.
+	 *  \param format   Data format of the new texture.
+	 *  \param levels   Number of mipmap levels for the new texture. Setting
+	 *                  this to `0` enables all levels.
+	 */
 	Texture2D(GraphicContext &context, const Size &size, TextureFormat texture_format = tf_rgba8, int levels = 1);
 
-	Texture2D(
-		GraphicContext &context,
-		const std::string &fullname, const ImageImportDescription &import_desc = ImageImportDescription ());
-
-	Texture2D(
-		GraphicContext &context,
-		const std::string &filename,
-		const FileSystem &fs, const ImageImportDescription &import_desc = ImageImportDescription ());
-
-	Texture2D(
-		GraphicContext &context,
-		IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc = ImageImportDescription ());
+	Texture2D(GraphicContext &context, const std::string &fullname, const ImageImportDescription &import_desc = {});
+	Texture2D(GraphicContext &context, const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc = {});
+	Texture2D(GraphicContext &context, IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc = {});
 
 	Texture2D(GraphicContext &context, const PixelBuffer &image, bool is_srgb = false);
 	Texture2D(GraphicContext &context, const PixelBuffer &image, const Rect &src_rect, bool is_srgb = false);
-
 /// \}
 
 /// \name Attributes
 /// \{
 public:
-	/// \brief Get the texture width.
+	/// Retrieves the actual width of the texture in the display.
 	int get_width() const;
 
-	/// \brief Get the texture height.
+	/// Retrieves the actual height of the texture in the display.
 	int get_height() const;
 
-	/// \brief Get the texture size.
-	Size get_size() const;
+	/// Retrieves the actual size of the texture.
+	Size get_size() const { return Size{ get_width(), get_height() }; }
 
-	/// \brief Returns with texture width in device independent (96 DPI) pixels
-	float get_px_width() const { return get_width() * 96.0f / get_dpi(); }
+	/** Retrieves the pixel ratio of this texture.
+	 *  \return The display pixel ratio set for this texture.
+	 *          A NaN value implies that the texture should use the pixel ratio
+	 *          set in the DisplayWindowProvider.
+	 */
+	float get_pixel_ratio() const;
 
-	/// \brief Returns with texture height in device independent (96 DPI) pixels
-	float get_px_height() const { return get_height() * 96.0f / get_dpi(); }
+	/// Returns the device independent width of this texture.
+	float get_dip_width() const { return get_width() / get_pixel_ratio(); }
 
-	/// \brief Returns with texture size in device independent (96 DPI) pixels
-	Sizef get_px_size() const { return Sizef(get_px_width(), get_px_height()); }
+	/// Returns the device independent height of this texture.
+	float get_dip_height() const { return get_height() / get_pixel_ratio(); }
 
-	/// \brief Physical pixels/dots per inch
-	float get_dpi() const;
+	/// Returns the device independent size of this texture.
+	Sizef get_dip_size() const { return Sizef{ get_dip_width(), get_dip_height() }; }
 
-	/// \brief Retrieve image data from texture.
+	/// Retrieve image data from texture.
 	PixelBuffer get_pixeldata(GraphicContext &gc, int level = 0) const;
 
-	/// \brief Get pixeldata
-	///
-	/// \param format = Pixel Format
-	/// \param level = value
-	///
-	/// \return Pixel Buffer
+	/** Retrieve image data from this texture.
+	 *  \param format Output data format.
+	 *  \param level  Mipmap level of the texture to retrieve data from.
+	 */
 	PixelBuffer get_pixeldata(GraphicContext &gc, TextureFormat texture_format, int level = 0) const;
 
-	/// \brief Get the texture wrap mode for the s coordinate.
+	/// Get the texture wrap mode for the s coordinate.
 	TextureWrapMode get_wrap_mode_s() const;
 
-	/// \brief Get the texture wrap mode for the t coordinate.
+	/// Get the texture wrap mode for the t coordinate.
 	TextureWrapMode get_wrap_mode_t() const;
 /// \}
 
 /// \name Operations
 /// \{
 public:
-	/// \brief Upload image to texture.
-	///
-	/// \param context Graphic context to use for the request
-	/// \param image Image to upload.
-	/// \param level Mipmap level-of-detail number.
+	/** Upload image to this texture.
+	 *  \param context Graphic context to use for the request.
+	 *  \param image   Image to upload.
+	 *  \param level   Mipmap level-of-detail number.
+	 */
 	void set_image(
 		GraphicContext &context,
 		const PixelBuffer &image,
 		int level = 0);
 
-	/// \brief Upload image to sub texture.
-	///
-	/// \param context Graphic context to use for the request
-	/// \param image Image to upload.
-	/// \param level Mipmap level-of-detail number.
+	/** Upload image to sub-texture.
+	 *  \param context Graphic context to use for the request.
+	 *  \param x       The horizontal point in the texture to write the new
+	 *                 sub-texture image onto.
+	 *  \param y       The vertical point in the texture to write the new
+	 *                 sub-texture image onto.
+	 *  \param image   Image to upload.
+	 *  \param level   Mipmap level-of-detail number.
+	 */
 	void set_subimage(
 		GraphicContext &context,
 		int x,
@@ -154,6 +152,13 @@ public:
 		const Rect &src_rect,
 		int level = 0);
 
+	/** Upload image to sub-texture.
+	 *  \param context Graphic context to use for the request.
+	 *  \param point   Point in the texture to write the new sub-texture image.
+	 *                 onto.
+	 *  \param image   Image to upload.
+	 *  \param level   Mipmap level-of-detail number.
+	 */
 	void set_subimage(
 		GraphicContext &context,
 		const Point &point,
@@ -161,7 +166,7 @@ public:
 		const Rect &src_rect,
 		int level = 0);
 
-	/// \brief Copy image data from a graphic context.
+	/// Copy image data from a graphic context.
 	void copy_image_from(
 		GraphicContext &context,
 		int level,
@@ -182,7 +187,7 @@ public:
 		int level = 0,
 		TextureFormat texture_format = tf_rgba8);
 
-	/// \brief Copy sub image data from a graphic context.
+	/// Copy sub image data from a graphic context.
 	void copy_subimage_from(
 		GraphicContext &context,
 		int offset_x,
@@ -203,9 +208,8 @@ public:
 		TextureWrapMode wrap_s,
 		TextureWrapMode wrap_t);
 
-	/// \brief Sets the physical size for a pixel
-	/// \param dpi Pixels/dots per inch in both directions
-	void set_dpi(float dpi);
+	/// Sets the display pixel ratio for this texture.
+	void set_pixel_ratio(float ratio);
 
 /// \}
 };

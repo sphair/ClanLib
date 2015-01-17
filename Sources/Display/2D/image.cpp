@@ -108,8 +108,9 @@ void Image_Impl::calc_hotspot()
 			break;
 	}
 
-	translated_hotspot.x *= 96.0f / texture.get_dpi();
-	translated_hotspot.y *= 96.0f / texture.get_dpi();
+	// TODO Test get_pixel_ratio();
+	translated_hotspot.x /= texture.get_pixel_ratio();
+	translated_hotspot.y /= texture.get_pixel_ratio();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -223,12 +224,12 @@ void Image::get_alignment(Origin &origin, float &x, float &y) const
 
 float Image::get_width() const
 {
-	return impl->texture_rect.get_width() * 96.0f / impl->texture.get_dpi();
+	return impl->texture_rect.get_width() / impl->texture.get_pixel_ratio();
 }
 
 float Image::get_height() const
 {
-	return impl->texture_rect.get_height() * 96.0f / impl->texture.get_dpi();
+	return impl->texture_rect.get_height() / impl->texture.get_pixel_ratio();
 }
 
 Sizef Image::get_size() const
@@ -242,7 +243,7 @@ Sizef Image::get_size() const
 void Image::draw(Canvas &canvas, float x, float y) const
 {
 	Rectf dest(
-		x + impl->translated_hotspot.x, y + impl->translated_hotspot.y, 
+		x + impl->translated_hotspot.x, y + impl->translated_hotspot.y,
 		Sizef(get_width() * impl->scale_x, get_height() * impl->scale_y));
 
 	RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();

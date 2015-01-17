@@ -30,6 +30,7 @@
 
 #pragma once
 
+#include <cmath>
 #include <list>
 #include <map>
 #include "API/Core/Signals/signal.h"

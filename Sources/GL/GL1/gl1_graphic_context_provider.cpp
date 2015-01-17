@@ -168,11 +168,11 @@ void GL1GraphicContextProvider::check_opengl_version()
 
 void GL1GraphicContextProvider::get_opengl_version(int &version_major, int &version_minor, int &version_release) const
 {
-/*	The GL_VERSION string begins with a version number. The version number uses one of these forms: 
-	major_number.minor_number 
-	major_number.minor_number.release_number 
-	Vendor-specific information may follow the version number. Its format depends on the implementation, but a space always separates the version number and the vendor-specific information. 
-	All strings are null-terminated. 
+/*	The GL_VERSION string begins with a version number. The version number uses one of these forms:
+	major_number.minor_number
+	major_number.minor_number.release_number
+	Vendor-specific information may follow the version number. Its format depends on the implementation, but a space always separates the version number and the vendor-specific information.
+	All strings are null-terminated.
 	If an error is generated, glGetString returns zero.
 */
 	OpenGL::set_active(this);
@@ -215,8 +215,8 @@ int GL1GraphicContextProvider::get_max_attributes()
 	set_active();
 	GLint max_attributes = 0;
 	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &max_attributes);
-    if(max_attributes < 16)
-        max_attributes = 16;
+	if (max_attributes < 16)
+		max_attributes = 16;
 	return max_attributes;
 }
 
@@ -234,11 +234,15 @@ Size GL1GraphicContextProvider::get_display_window_size() const
 	return render_window->get_viewport().get_size();
 }
 
-float GL1GraphicContextProvider::get_dpi() const
+float GL1GraphicContextProvider::get_ppi() const
 {
-	return render_window->get_dpi();
+	return render_window->get_ppi();
 }
 
+float GL1GraphicContextProvider::get_pixel_ratio() const
+{
+	return render_window->get_pixel_ratio();
+}
 /////////////////////////////////////////////////////////////////////////////
 // GL1GraphicContextProvider Operations:
 
@@ -374,7 +378,7 @@ void GL1GraphicContextProvider::set_rasterizer_state(RasterizerStateProvider *st
 			selected_state.rasterizer.set(gl1_state->desc);
 			set_active();
 			framebuffer_bound ? framebuffer_provider->set_state(selected_state.rasterizer) : selected_state.rasterizer.apply();
-	
+
 			scissor_enabled = gl1_state->desc.get_enable_scissor();
 		}
 
@@ -409,7 +413,7 @@ void GL1GraphicContextProvider::set_depth_stencil_state(DepthStencilStateProvide
 	}
 }
 
-PixelBuffer GL1GraphicContextProvider::get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const 
+PixelBuffer GL1GraphicContextProvider::get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const
 {
 	GLenum format;
 	GLenum type;
@@ -677,7 +681,7 @@ void GL1GraphicContextProvider::draw_primitives_array(PrimitivesType type, int o
 		// Multiple textures possible
 		switch(primitives_array_texindex.type)
 		{
-			case type_int: 
+			case type_int:
 			{
 				int stride_float;
 				if (primitives_array_texindex.stride)
@@ -908,12 +912,12 @@ void GL1GraphicContextProvider::flush()
 
 const DisplayWindowProvider & GL1GraphicContextProvider::get_render_window() const
 {
-	return *render_window; 
+	return *render_window;
 }
 
 OpenGLWindowProvider & GL1GraphicContextProvider::get_opengl_window()
 {
-	return *render_window; 
+	return *render_window;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -997,7 +1001,7 @@ void GL1GraphicContextProvider::reset_primitive_texture_all()
 		{
 			if (glActiveTexture != nullptr)
 				glActiveTexture( GL_TEXTURE0 + cnt );
-	
+
 			glBindTexture(GL_TEXTURE_2D, 0);
 			glDisable(GL_TEXTURE_2D);
 		}

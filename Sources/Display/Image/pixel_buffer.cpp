@@ -113,11 +113,6 @@ bool PixelBuffer::is_gpu() const
 	return impl->provider->is_gpu();
 }
 
-Size PixelBuffer::get_size() const
-{
-	return impl->provider->get_size();
-}
-
 int PixelBuffer::get_pitch() const
 {
 	return impl->provider->get_pitch();
@@ -293,17 +288,17 @@ Colorf PixelBuffer::get_pixel(int x, int y)
 	return impl->get_pixel(x,y);
 }
 
-float PixelBuffer::get_dpi() const
+float PixelBuffer::get_pixel_ratio() const
 {
-	return impl->dpi;
+	return impl->pixel_ratio;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // PixelBuffer operations:
 
-void PixelBuffer::set_dpi(float dpi)
+void PixelBuffer::set_pixel_ratio(float ratio)
 {
-	impl->dpi = dpi;
+	impl->pixel_ratio = ratio;
 }
 
 void PixelBuffer::lock(GraphicContext &gc, BufferAccess access)

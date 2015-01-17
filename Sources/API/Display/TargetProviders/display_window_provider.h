@@ -123,7 +123,9 @@ public:
 	 */
 	virtual float get_ppi() const = 0;
 
-	/// Returns the display pixel ratio of the window.
+	/** Returns the display pixel ratio of the window.
+	 *  \seealso Resolution Independence
+	 */
 	virtual float get_pixel_ratio() const = 0;
 
 	/// Returns true if window has focus.

@@ -65,7 +65,7 @@ float InputDeviceProvider_Win32Mouse::get_x() const
 	BOOL res = ScreenToClient(window->get_hwnd(), &cursor_pos);
 	if (res == FALSE) return 0;
 
-	return cursor_pos.x * 96.0f / window->get_dpi();
+	return cursor_pos.x / window->get_pixel_ratio();
 }
 
 float InputDeviceProvider_Win32Mouse::get_y() const
@@ -77,7 +77,7 @@ float InputDeviceProvider_Win32Mouse::get_y() const
 	BOOL res = ScreenToClient(window->get_hwnd(), &cursor_pos);
 	if (res == FALSE) return 0;
 
-	return cursor_pos.y * 96.0f / window->get_dpi();
+	return cursor_pos.y / window->get_pixel_ratio();
 }
 
 bool InputDeviceProvider_Win32Mouse::get_keycode(int keycode) const
@@ -139,9 +139,9 @@ void InputDeviceProvider_Win32Mouse::set_position(float x, float y)
 {
 	throw_if_disposed();
 	POINT pt;
-	pt.x = (int)std::round(x * window->get_dpi() / 96.0f);
-	pt.y = (int)std::round(y * window->get_dpi() / 96.0f);
-	
+	pt.x = (int)std::round(x * window->get_pixel_ratio());
+	pt.y = (int)std::round(y * window->get_pixel_ratio());
+
 	ClientToScreen(window->get_hwnd(), &pt);
 	SetCursorPos(pt.x, pt.y);
 }

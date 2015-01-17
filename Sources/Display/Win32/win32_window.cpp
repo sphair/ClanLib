@@ -1264,12 +1264,20 @@ void Win32Window::set_pixel_ratio(float ratio)
 	pixel_ratio = ratio;
 
 	// Pixel ratio is not set; calculate closest pixel ratio.
-	if (std::is_nan(pixel_ratio))
+	if (std::isnan(pixel_ratio))
 	{
-		pixel_ratio = 1.0f;
-		while (96.0f * pixel_ratio < ppi)
+		int s = std::round(ppi / 16.0f);
+		/**/ if (s <= 6)  // <=  96 PPI; old tech; use 1:1 ratio.
 		{
-			pixel_ratio += 1.0f / 12.0f;
+			pixel_ratio = 1.0f;
+		}
+		else if (s >= 12) // >= 192 PPI; new tech; use 1:1 ratio to avoid sub-pixeling.
+		{
+			pixel_ratio = static_cast<float>(s / 6);
+		}
+		else // 96 ~ 192 PPI; modern; use one-sixth steps
+		{
+			pixel_ratio = static_cast<float>(s) / 6.0f;
 		}
 	}
 

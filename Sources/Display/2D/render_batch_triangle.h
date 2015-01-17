@@ -73,7 +73,7 @@ private:
 	int set_batcher_active(Canvas &canvas);
 	int set_batcher_active(Canvas &canvas, int num_vertices);
 	void flush(GraphicContext &gc) override;
-	void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis, float dpi) override;
+	void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis, float pixel_ratio) override;
 
 	inline void to_sprite_vertex(const Pointf &texture_position, const Pointf &dest_position, RenderBatchTriangle::SpriteVertex &v, int texindex, const Colorf &color) const;
 	inline Vec4f to_position(float x, float y) const;

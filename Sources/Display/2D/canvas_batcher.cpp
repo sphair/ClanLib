@@ -130,7 +130,7 @@ void CanvasBatcher_Impl::update_batcher_matrix(GraphicContext &gc, const Mat4f &
 
 	if (active_batcher)
 	{
-		active_batcher->matrix_changed(modelview, projection, image_yaxis, gc.get_dpi());
+		active_batcher->matrix_changed(modelview, projection, image_yaxis, gc.get_pixel_ratio());
 	}
 }
 

@@ -65,7 +65,7 @@ class RasterizerState;
 class BlendState;
 class DepthStencilState;
 
-/// \brief Polygon culling modes.
+/// Polygon culling modes.
 enum CullMode
 {
 	cull_front,
@@ -73,7 +73,7 @@ enum CullMode
 	cull_front_and_back
 };
 
-/// \brief Polygon filling modes.
+/// Polygon filling modes.
 enum FillMode
 {
 	fill_point,
@@ -81,14 +81,14 @@ enum FillMode
 	fill_polygon
 };
 
-/// \brief Front face modes.
+/// Front face modes.
 enum FaceSide
 {
 	face_clockwise,
 	face_counter_clockwise
 };
 
-/// \brief Compare functions.
+/// Compare functions.
 enum CompareFunction
 {
 	compare_lequal,
@@ -101,7 +101,7 @@ enum CompareFunction
 	compare_never
 };
 
-/// \brief Stencil operations
+/// Stencil operations
 enum StencilOp
 {
 	stencil_keep,
@@ -114,7 +114,7 @@ enum StencilOp
 	stencil_decr_wrap
 };
 
-/// \brief Drawing buffers.
+/// Drawing buffers.
 enum DrawBuffer
 {
 	buffer_none,
@@ -129,11 +129,11 @@ enum DrawBuffer
 	buffer_front_and_back
 };
 
-/// \brief Logic Op
+/// Logic Op
 enum LogicOp
 {
 	logic_clear,
-	logic_and, 
+	logic_and,
 	logic_and_reverse,
 	logic_copy,
 	logic_and_inverted,
@@ -150,56 +150,56 @@ enum LogicOp
 	logic_set
 };
 
-/// \brief Blending functions.
+/// Blending functions.
 enum BlendFunc
 {
-	/// \brief source or destination (0, 0, 0, 0)
+	/// source or destination (0, 0, 0, 0)
 	blend_zero,
 
-	/// \brief source or destination (1, 1, 1, 1)
+	/// source or destination (1, 1, 1, 1)
 	blend_one,
 
-	/// \brief source (Rd, Gd, Bd, Ad)
+	/// source (Rd, Gd, Bd, Ad)
 	blend_dest_color,
 
-	/// \brief destination (Rs, Gs, Bs, As)
+	/// destination (Rs, Gs, Bs, As)
 	blend_src_color,
 
-	/// \brief source (1, 1, 1, 1) - (Rd, Gd, Bd, Ad)
+	/// source (1, 1, 1, 1) - (Rd, Gd, Bd, Ad)
 	blend_one_minus_dest_color,
 
-	/// \brief destination (1, 1, 1, 1) - (Rs, Gs, Bs, As)
+	/// destination (1, 1, 1, 1) - (Rs, Gs, Bs, As)
 	blend_one_minus_src_color,
 
-	/// \brief source or destination (As, As, As, As)
+	/// source or destination (As, As, As, As)
 	blend_src_alpha,
 
-	/// \brief source or destination (1, 1, 1, 1) - (As, As, As, As)
+	/// source or destination (1, 1, 1, 1) - (As, As, As, As)
 	blend_one_minus_src_alpha,
 
-	/// \brief source or destination (Ad, Ad, Ad, Ad)
+	/// source or destination (Ad, Ad, Ad, Ad)
 	blend_dest_alpha,
 
-	/// \brief source or destination (1, 1, 1, 1) - (Ad, Ad, Ad, Ad)
+	/// source or destination (1, 1, 1, 1) - (Ad, Ad, Ad, Ad)
 	blend_one_minus_dest_alpha,
 
-	/// \brief source (f, f, f, 1) - f = min(As, 1 - Ad)
+	/// source (f, f, f, 1) - f = min(As, 1 - Ad)
 	blend_src_alpha_saturate,
 
-	/// \brief source or destination (Rc, Gc, Bc, Ac)
+	/// source or destination (Rc, Gc, Bc, Ac)
 	blend_constant_color,
 
-	/// \brief source or destination (1, 1, 1, 1) - (Rc, Gc, Bc, Ac)
+	/// source or destination (1, 1, 1, 1) - (Rc, Gc, Bc, Ac)
 	blend_one_minus_constant_color,
 
-	/// \brief source or destination (Ac, Ac, Ac, Ac)
+	/// source or destination (Ac, Ac, Ac, Ac)
 	blend_constant_alpha,
 
-	/// \brief source or destination (1, 1, 1, 1) - (Ac, Ac, Ac, Ac)
+	/// source or destination (1, 1, 1, 1) - (Ac, Ac, Ac, Ac)
 	blend_one_minus_constant_alpha
 };
 
-/// \brief Blending equations.
+/// Blending equations.
 enum BlendEquation
 {
 	equation_add,
@@ -209,14 +209,14 @@ enum BlendEquation
 	equation_max
 };
 
-/// \brief Point Sprite Origin
+/// Point Sprite Origin
 enum PointSpriteOrigin
 {
 	origin_upper_left,
 	origin_lower_left
 };
 
-/// \brief Primitive types.
+/// Primitive types.
 enum PrimitivesType
 {
 	type_points,
@@ -228,14 +228,14 @@ enum PrimitivesType
 	type_triangles
 };
 
-/// \brief Y axis direction for viewports, clipping rects, textures and render targets
+/// Y axis direction for viewports, clipping rects, textures and render targets
 enum TextureImageYAxis
 {
-	y_axis_bottom_up,  // OpenGL, origin is lower left with Y going upwards
-	y_axis_top_down    // Direct3D, origin is upper left with Y going downwards
+	y_axis_bottom_up,  //!< OpenGL, origin is lower left with Y going upwards
+	y_axis_top_down    //!< Direct3D, origin is upper left with Y going downwards
 };
 
-/// \brief Standard Program
+/// Standard Program
 enum StandardProgram
 {
 	program_color_only,
@@ -244,7 +244,7 @@ enum StandardProgram
 	program_path
 };
 
-/// \brief Shader language used
+/// Shader language used
 enum ShaderLanguage
 {
 	shader_glsl,
@@ -253,19 +253,19 @@ enum ShaderLanguage
 	num_shader_languages
 };
 
-/// \brief Interface to drawing graphics.
+/// Interface to drawing graphics.
 class GraphicContext
 {
 /// \name Construction
 /// \{
 
 public:
-	/// \brief Constructs a null instance.
+	/// Constructs a null instance.
 	GraphicContext();
 
-	/// \brief Constructs a GraphicContext
-	///
-	/// \param provider = Graphic Context Provider
+	/** Constructs a new graphic context from a provider.
+	 *  \param provider = Graphic Context Provider
+	 */
 	GraphicContext(GraphicContextProvider *provider);
 
 	~GraphicContext();
@@ -274,90 +274,102 @@ public:
 /// \name Attributes
 /// \{
 public:
-	/// \brief Returns true if this object is invalid.
+	/// Returns true if this object is invalid.
 	bool is_null() const { return !impl; }
 
-	/// \brief Throw an exception if this object is invalid.
+	/// Throw an exception if this object is invalid.
 	void throw_if_null() const;
 
-	/// \brief Returns in what range clip space z values are clipped.
+	/// Returns in what range clip space z values are clipped.
 	ClipZRange get_clip_z_range() const;
 
-	/// \brief Returns the Y axis direction for viewports, clipping rects, textures and render targets
+	/// Returns the Y axis direction for viewports, clipping rects, textures and render targets
 	TextureImageYAxis get_texture_image_y_axis() const;
 
-	/// \brief Returns the shader language used
+	/// Returns the shader language used
 	ShaderLanguage get_shader_language() const;
 
-	/// \brief Returns the major version / feature level supported by the hardware
-	///
-	/// For the OpenGL target, this returns the major OpenGL version the driver supports.
-	/// For the Direct3D target, this returns the major feature level.
+	/** Returns the major version / feature level supported by the hardware.
+	 *  For an OpenGL target, this returns the major OpenGL version the driver supports.
+	 *  For a Direct3D target, this returns the major feature level.
+	 */
 	int get_major_version() const;
 
-	/// \brief Returns the major version / feature level supported by the hardware
-	///
-	/// For the OpenGL target, this returns the minor OpenGL version the driver supports.
-	/// For the Direct3D target, this returns the minor feature level.
+	/** Returns the minor version / feature level supported by the hardware.
+	 *  For an OpenGL target, this returns the minor OpenGL version the driver supports.
+	 *  For a Direct3D target, this returns the minor feature level.
+	 */
 	int get_minor_version() const;
 
-	/// \brief Returns true if the hardware supports compute shaders
-	///
-	/// This always returns true for OpenGL 4.3 or newer, or Direct3D 11.0 or newer. 
-	/// For Direct3D 10.0 and 10.1 the support for compute shaders is optional.
+	/** Returns `true` if the hardware supports compute shaders.
+	 *  This function will always returns true for OpenGL 4.3 or newer, or
+	 *  Direct3D 11.0 or newer. For Direct3D 10.0 and 10.1, the support for
+	 *  compute shaders is optional.
+	 */
 	bool has_compute_shader_support() const;
 
-	/// \brief Returns the currently selected texture for the specified index.
-	///
-	/// \param index = 0 to x, the index of the texture
-	/// \return The texture. Use texture.is_null() to determine if the texture was not selected
+	/** Retrieves the texture selected in this context with an index number.
+	 *  \param index The texture index number to retrieve. [0 to n]
+	 *  \return The texture on the specified index. Use Texture::is_null() to
+	 *          determine whether the texture has been selected by the context.
+	 */
 	Texture get_texture(int index) const;
 
-	/// \brief Returns the currently selected textures
-	///
-	/// \return The selected textures (placed at unit_index 0 to size()-1).  These may contain null textures if textures were not selected
+	/** Returns the textures currently selected in this context.
+	 *  \return A vector containing the selected textures. The vector may
+	 *          contain null (unselected) texture elements within it..
+	 */
 	std::vector<Texture> get_textures() const;
 
-	/// \brief Returns the currently selected write frame buffer.
-	///
-	/// \return The frame buffer. Use frame_buffer.is_null() to determine if the frame buffer was not selected
+	/** Returns the currently selected write frame buffer.
+	 *  \return The frame buffer. Use frame_buffer.is_null() to determine if the frame buffer was not selected
+	 */
 	FrameBuffer get_write_frame_buffer() const;
 
-	/// \brief Returns the currently selected read frame buffer.
+	/// Returns the currently selected read frame buffer.
 	///
 	/// \return The frame buffer. Use frame_buffer.is_null() to determine if the frame buffer was not selected
 	FrameBuffer get_read_frame_buffer() const;
 
-	/// \brief Returns the currently selected program object
+	/// Returns the currently selected program object
 	ProgramObject get_program_object() const;
 
-	/// \brief Returns the current width of the context.
+	/// Returns the current actual width of the context.
 	int get_width() const;
 
-	/// \brief Returns the current height of the context.
+	/// Returns the current actual height of the context.
 	int get_height() const;
 
-	/// \brief Returns the current size of the context.
+	/// Returns the current actual size of the context.
 	Size get_size() const;
 
-	/// \brief Returns with image width in device independent (96 DPI) pixels
-	float get_px_width() const { return get_width() * 96.0f / get_dpi(); }
+	/// Retrieves the number of physical pixels or dots per inch of the screen.
+	/// \seealso Resolution Independence
+	float get_ppi() const;
 
-	/// \brief Returns with image height in device independent (96 DPI) pixels
-	float get_px_height() const { return get_height() * 96.0f / get_dpi(); }
+	/// Retrieves the display pixel ratio of the context.
+	/// \seealso Resolution Independence
+	float get_pixel_ratio() const;
 
-	/// \brief Returns with image size in device independent (96 DPI) pixels
-	Sizef get_px_size() const { return Sizef(get_px_width(), get_px_height()); }
+	/// Calculates the device independent width of the context.
+	/// \seealso Resolution Independence
+	float get_dip_width() const { return get_width() / get_pixel_ratio(); }
 
-	/// \brief Physical pixels/dots per inch
-	float get_dpi() const;
+	/// Calculates the device independent height of the context.
+	/// \seealso Resolution Independence
+	float get_dip_height() const { return get_height() / get_pixel_ratio(); }
 
-	/// \brief Returns the maximum size of a texture this graphic context supports.
-	/** <p>It returns Size(0,0) if there is no known limitation to the max
-	    texture size.</p>*/
+	/// Calculates the device independent dimensions of the context.
+	/// \seealso Resolution Independence
+	Sizef get_dip_size() const { return Sizef{ get_dip_width(), get_dip_height() }; }
+
+	/** Retrieves the maximum size for a texture that this graphic context will
+	 *  allow. Size(0, 0) will be returned if there is no known limitation to
+	 *  the maximum texture size allowed for the context.
+	 */
 	Size get_max_texture_size() const;
 
-	/// \brief Returns the provider for this graphic context.
+	/// Returns the provider for this graphic context.
 	GraphicContextProvider *get_provider();
 
 	const GraphicContextProvider * get_provider() const;
@@ -366,140 +378,143 @@ public:
 /// \name Operations
 /// \{
 public:
-	/// \brief Create a new default graphic context compatible with this one
+	/// Create a new default graphic context compatible with this one
 	GraphicContext create() const;
 
-	/// \brief Create a new default graphic context with a frame buffer selected
+	/// Create a new default graphic context with a frame buffer selected
 	GraphicContext create(FrameBuffer &buffer) const;
 
-	/// \brief Create a new default graphic context cloned with this one
+	/// Create a new default graphic context cloned with this one
 	GraphicContext clone() const;
 
-	/// \brief Return the content of the read buffer into a pixel buffer.
+	/// Return the content of the read buffer into a pixel buffer.
 	PixelBuffer get_pixeldata(const Rect& rect, TextureFormat texture_format = tf_rgba8, bool clamp = true);
 
-	/// \brief Return the content of the read buffer into a pixel buffer.
+	/// Return the content of the read buffer into a pixel buffer.
 	PixelBuffer get_pixeldata(TextureFormat texture_format = tf_rgba8, bool clamp = true);
 
-	/// \brief Returns true if this frame buffer object is owned by this graphic context.
-	///
-	/// Frame buffer objects cannot be shared between graphic contexts.  This function verifies that the frame buffer object
-	/// belongs to this graphic context.
+	/** Returns `true` if this frame buffer object is owned by this graphic
+	 *  context.
+	 *
+	 *  Frame buffer objects cannot be shared between graphic contexts. This
+	 *  function will verify if the frame buffer object belongs to this graphic
+	 *  context.
+	 */
 	bool is_frame_buffer_owner(const FrameBuffer &fb);
 
-	/// \brief Sets the current frame buffer.
+	/// Sets the current frame buffer.
 	void set_frame_buffer(const FrameBuffer &write_buffer);
 	void set_frame_buffer(const FrameBuffer &write_buffer, const FrameBuffer &read_buffer);
 
-	/// \brief Resets the current frame buffer to be the initial frame buffer.
+	/// Resets the current frame buffer to be the initial frame buffer.
 	void reset_frame_buffer();
 
-	/// \brief Select uniform buffer into index
+	/// Select uniform buffer into index
 	void set_uniform_buffer(int index, const UniformBuffer &buffer);
 
-	/// \brief Remove uniform buffer from index
+	/// Remove uniform buffer from index
 	void reset_uniform_buffer(int index);
 
-	/// \brief Select storage buffer into index
+	/// Select storage buffer into index
 	void set_storage_buffer(int index, const StorageBuffer &buffer);
 
-	/// \brief Remove storage buffer from index
+	/// Remove storage buffer from index
 	void reset_storage_buffer(int index);
 
-	/// \brief Select texture into index.
+	/// Select texture into index.
 	///
 	/// \param unit_index = 0 to x, the index of this texture
 	/// \param texture = The texture to select.  This can be an empty texture Texture()
 	void set_texture(int unit_index, const Texture &texture);
 
-	/// \brief Select textures
+	/// Select textures
 	///
 	/// Only textures units from 0 to textures.size()-1 are set.
 	///
 	/// \param textures = The texture to select (placed at unit_index 0 to texture.size()-1).  These may contain null textures
 	void set_textures(std::vector<Texture> &textures);
 
-	/// \brief Remove texture from index.
+	/// Remove texture from index.
 	///
 	/// \param unit_index = 0 to x, the index of the texture
 	void reset_texture(int unit_index);
 
-	/// \brief Remove all selected textures
+	/// Remove all selected textures
 	void reset_textures();
 
-	/// \brief Select texture image into index.
+	/// Select texture image into index.
 	///
 	/// \param unit_index = 0 to x, the index of this texture
 	/// \param texture = The texture to select.  This can be an empty texture Texture()
 	void set_image_texture(int unit_index, const Texture &texture);
 
-	/// \brief Select texture images
+	/// Select texture images
 	///
 	/// Only textures units from 0 to textures.size()-1 are set.
 	///
 	/// \param textures = The texture to select (placed at unit_index 0 to texture.size()-1).  These may contain null textures
 	void set_image_texture(std::vector<Texture> &textures);
 
-	/// \brief Remove texture from index.
+	/// Remove texture from index.
 	///
 	/// \param unit_index = 0 to x, the index of the texture
 	void reset_image_texture(int unit_index);
 
-	/// \brief Remove all selected textures
+	/// Remove all selected textures
 	void reset_image_textures();
 
-	/// \brief Set active rasterizer state
+	/// Set active rasterizer state
 	void set_rasterizer_state(const RasterizerState &state);
 
-	/// \brief Set active blend state
+	/// Set active blend state
 	void set_blend_state(const BlendState &state, const Colorf &blend_color = Colorf::white, unsigned int sample_mask = 0xffffffff);
 
-	/// \brief Set active depth stencil state
+	/// Set active depth stencil state
 	void set_depth_stencil_state(const DepthStencilState &state, int stencil_ref = 0);
 
-	/// \brief Set active rasterizer state
+	/// Set active rasterizer state
 	void reset_rasterizer_state();
 
-	/// \brief Set active blend state
+	/// Set active blend state
 	void reset_blend_state();
 
-	/// \brief Set active depth stencil state
+	/// Set active depth stencil state
 	void reset_depth_stencil_state();
 
-	/// \brief Set active program object to the standard program specified.
+	/// Set active program object to the standard program specified.
 	void set_program_object(StandardProgram standard_program);
 
-	/// \brief Set active program object.
+	/// Set active program object.
 	///
 	/// \param program = Program to set
 	void set_program_object(const ProgramObject &program);
 
-	/// \brief Remove active program object.
+	/// Remove active program object.
 	void reset_program_object();
 
-	/// \brief Returns true if this primitives array is owned by this graphic context.
+	/// Returns true if this primitives array is owned by this graphic context.
 	///
 	/// Primitive array objects cannot be shared between graphic contexts.  This function verifies that the primitives array
 	/// belongs to this graphic context.
 	bool is_primitives_array_owner(const PrimitivesArray &primitives_array);
 
-	/// \brief Draw primitives on gc.
+	/// Draw primitives on gc.
 	void draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArray &array);
 
-	/// \brief Set the primitives array on the gc.
+	/// Set the primitives array on the gc.
 	void set_primitives_array(const PrimitivesArray &array);
 
-	/// \brief Draws primitives from the current assigned primitives array.
+	/// Draws primitives from the current assigned primitives array.
 	void draw_primitives_array(PrimitivesType type, int num_vertices);
 
-	/// \brief Draw primitives array
+	/// Draw primitives array
 	///
 	/// \param type = Primitives Type
 	/// \param offset = value
 	/// \param num_vertices = value
 	void draw_primitives_array(PrimitivesType type, int offset, int num_vertices);
 
-	/// \brief Draw primitives array instanced
+	/// Draw primitives array instanced
 	///
 	/// \param type = Primitives Type
 	/// \param offset = value
@@ -507,17 +522,17 @@ public:
 	/// \param instance_count = number of instances drawn
 	void draw_primitives_array_instanced(PrimitivesType type, int offset, int num_vertices, int instance_count);
 
-	/// \brief Sets current elements array buffer
+	/// Sets current elements array buffer
 	void set_primitives_elements(ElementArrayBuffer &element_array);
 
-	/// \brief Sets current elements array buffer
+	/// Sets current elements array buffer
 	template<typename Type>
 	void set_primitives_elements(ElementArrayVector<Type> &element_array)
 	{
 		set_primitives_elements((ElementArrayBuffer&)element_array);
 	}
 
-	/// \brief Draw primitives elements
+	/// Draw primitives elements
 	///
 	/// \param type = Primitives Type
 	/// \param count = value
@@ -525,7 +540,7 @@ public:
 	/// \param offset = void
 	void draw_primitives_elements(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset = 0);
 
-	/// \brief Draw primitives elements instanced
+	/// Draw primitives elements instanced
 	///
 	/// \param type = Primitives Type
 	/// \param count = value
@@ -534,10 +549,10 @@ public:
 	/// \param instance_count = number of instances drawn
 	void draw_primitives_elements_instanced(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset, int instance_count);
 
-	/// \brief Resets current elements array buffer
+	/// Resets current elements array buffer
 	void reset_primitives_elements();
 
-	/// \brief Draw primitives elements
+	/// Draw primitives elements
 	///
 	/// \param type = Primitives Type
 	/// \param count = value
@@ -546,7 +561,7 @@ public:
 	/// \param offset = void
 	void draw_primitives_elements(PrimitivesType type, int count, ElementArrayBuffer &element_array, VertexAttributeDataType indices_type, size_t offset = 0);
 
-	/// \brief Draw primitives elements
+	/// Draw primitives elements
 	///
 	/// \param type = Primitives Type
 	/// \param count = value
@@ -558,7 +573,7 @@ public:
 		draw_primitives_elements(type, count, (ElementArrayBuffer&)element_array, type_unsigned_int, offset * sizeof(unsigned int));
 	}
 
-	/// \brief Draw primitives elements
+	/// Draw primitives elements
 	///
 	/// \param type = Primitives Type
 	/// \param count = value
@@ -570,7 +585,7 @@ public:
 		draw_primitives_elements(type, count, (ElementArrayBuffer&)element_array, type_unsigned_short, offset * sizeof(unsigned short));
 	}
 
-	/// \brief Draw primitives elements
+	/// Draw primitives elements
 	///
 	/// \param type = Primitives Type
 	/// \param count = value
@@ -582,7 +597,7 @@ public:
 		draw_primitives_elements(type, count, (ElementArrayBuffer&)element_array, type_unsigned_byte, offset * sizeof(unsigned char));
 	}
 
-	/// \brief Draw primitives elements instanced
+	/// Draw primitives elements instanced
 	///
 	/// \param type = Primitives Type
 	/// \param count = value
@@ -592,7 +607,7 @@ public:
 	/// \param instance_count = number of instances drawn
 	void draw_primitives_elements_instanced(PrimitivesType type, int count, ElementArrayBuffer &element_array, VertexAttributeDataType indices_type, size_t offset, int instance_count);
 
-	/// \brief Draw primitives elements instanced
+	/// Draw primitives elements instanced
 	///
 	/// \param type = Primitives Type
 	/// \param count = value
@@ -605,7 +620,7 @@ public:
 		draw_primitives_elements_instanced(type, count, (ElementArrayBuffer&)element_array, type_unsigned_int, offset * sizeof(unsigned int), instance_count);
 	}
 
-	/// \brief Draw primitives elements instanced
+	/// Draw primitives elements instanced
 	///
 	/// \param type = Primitives Type
 	/// \param count = value
@@ -618,7 +633,7 @@ public:
 		draw_primitives_elements_instanced(type, count, (ElementArrayBuffer&)element_array, type_unsigned_short, offset * sizeof(unsigned short), instance_count);
 	}
 
-	/// \brief Draw primitives elements instanced
+	/// Draw primitives elements instanced
 	///
 	/// \param type = Primitives Type
 	/// \param count = value
@@ -631,52 +646,52 @@ public:
 		draw_primitives_elements_instanced(type, count, (ElementArrayBuffer&)element_array, type_unsigned_byte, offset * sizeof(unsigned char), instance_count);
 	}
 
-	/// \brief Reset the primitives arrays.
+	/// Reset the primitives arrays.
 	void reset_primitives_array();
 
-	/// \brief Execute a compute shader.
+	/// Execute a compute shader.
 	void dispatch(int x = 1, int y = 1, int z = 1);
 
-	/// \brief Clears the whole context using the specified color.
+	/// Clears the whole context using the specified color.
 	void clear(const Colorf &color = Colorf::black);
 
-	/// \brief Clear the stencil buffer
+	/// Clear the stencil buffer
 	///
 	/// \param value value to clear to.
 	void clear_stencil(int value = 0);
 
-	/// \brief Clear the depth buffer
+	/// Clear the depth buffer
 	///
 	/// \param value: value to clear to. Range 0.0 - 1.0.
 	void clear_depth(float value = 0);
 
-	/// \brief Set the current clipping rectangle.
+	/// Set the current clipping rectangle.
 	void set_scissor(const Rect &rect, TextureImageYAxis y_axis);
 
-	/// \brief Removes the set clipping rectangle 
+	/// Removes the set clipping rectangle
 	void reset_scissor();
 
-	/// \brief Set the viewport to be used in user projection map mode.
+	/// Set the viewport to be used in user projection map mode.
 	///
 	/// \param viewport = The viewport to set
 	void set_viewport(const Rectf &viewport);
 
-	/// \brief Set the specified viewport to be used in user projection map mode.
+	/// Set the specified viewport to be used in user projection map mode.
 	///
 	/// \param index = The viewport index (0 to x)
 	/// \param viewport = The viewport to set
 	void set_viewport(int index, const Rectf &viewport);
 
-	/// \brief Specifies the depth range for all viewports
+	/// Specifies the depth range for all viewports
 	void set_depth_range(float n, float f);
 
-	/// \brief Specifies the depth range for the specified viewport
+	/// Specifies the depth range for the specified viewport
 	void set_depth_range(int viewport, float n, float f);
 
-	/// \brief Set used draw buffer.
+	/// Set used draw buffer.
 	void set_draw_buffer(DrawBuffer buffer);
 
-	/// \brief Flush the command buffer
+	/// Flush the command buffer
 	void flush();
 
 /// \}
