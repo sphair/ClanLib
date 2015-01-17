@@ -10,7 +10,7 @@ WorkspaceViewController::WorkspaceViewController()
 
 	labels_group = std::make_shared<View>();
 	labels_group->box_style.set_flex(0.0f, 0.0f);
-	labels_group->box_style.set_padding(7.0f, 12.0f, 8.0f, 0.0f);
+	labels_group->box_style.set_padding(7.5f, 12.0f, 8.0f, 0.0f);
 	labels_group->box_style.set_height(30.0f);
 	labels_group->box_style.set_layout_hbox();
 
@@ -38,9 +38,8 @@ void WorkspaceViewController::add_page(const std::string &label_text, std::share
 
 	page.tab = std::make_shared<View>();
 	page.tab->box_style.set_flex(0.0f, 1.0f);
-	page.tab->box_style.set_border_radius(6.0f, 6.0f, 0.0f, 0.0f);
+	page.tab->box_style.set_border_radius(2.0f, 2.0f, 0.0f, 0.0f);
 	page.tab->box_style.set_padding(10.0f, 2.0f, 7.0f, 2.0f);
-	page.tab->box_style.set_margin(5.0f, 0.0f);
 	page.tab->box_style.set_layout_line();
 
 	page.label = std::make_shared<LabelView>();
@@ -88,13 +87,13 @@ void WorkspaceViewController::set_selected(TabPage &page, bool selected, bool an
 		{
 			if (t > 0.0f)
 			{
-				tab->box_style.set_background_gradient_to_bottom(Colorf(255, 255, 255, (int)(t * 255.0f)), Colorf(235, 243, 252, (int)(t * 255.0f)));
-				tab->box_style.set_border(Colorf(102, 102, 102, (int)(t * 255.0f)), 1.0f, 1.0f, 1.0f, 0.0f);
+				tab->box_style.set_background_gradient_to_bottom(Colorf(255, 255, 255, (int)((0.2f + t * 0.8f) * 255.0f)), Colorf(235, 243, 252, (int)((0.2f + t * 0.8f) * 255.0f)));
+				tab->box_style.set_border(Colorf(102, 102, 102, (int)(t * 255.0f)), 0.5f, 0.5f, 0.5f, 0.0f);
 			}
 			else
 			{
-				tab->box_style.set_background_none();
-				tab->box_style.set_border(Colorf::transparent, 1.0f, 1.0f, 1.0f, 0.0f);
+				tab->box_style.set_background(Colorf(1.0f, 1.0f, 1.0f, 0.2f));
+				tab->box_style.set_border(Colorf::transparent, 0.5f, 0.5f, 0.5f, 0.0f);
 			}
 		});
 	}
@@ -103,12 +102,12 @@ void WorkspaceViewController::set_selected(TabPage &page, bool selected, bool an
 		if (selected)
 		{
 			page.tab->box_style.set_background_gradient_to_bottom(Colorf::white, Colorf(235, 243, 252));
-			page.tab->box_style.set_border(Colorf::gray40, 1.0f, 1.0f, 1.0f, 0.0f);
+			page.tab->box_style.set_border(Colorf::gray40, 0.5f, 0.5f, 0.5f, 0.0f);
 		}
 		else
 		{
-			page.tab->box_style.set_background_none();
-			page.tab->box_style.set_border(Colorf::transparent, 1.0f, 1.0f, 1.0f, 0.0f);
+			page.tab->box_style.set_background(Colorf(1.0f, 1.0f, 1.0f, 0.2f));
+			page.tab->box_style.set_border(Colorf::transparent, 0.5f, 0.5f, 0.5f, 0.0f);
 		}
 	}
 
