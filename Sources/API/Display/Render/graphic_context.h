@@ -343,10 +343,6 @@ public:
 	/// Returns the current actual size of the context.
 	Size get_size() const;
 
-	/// Retrieves the number of physical pixels or dots per inch of the screen.
-	/// \seealso Resolution Independence
-	float get_ppi() const;
-
 	/// Retrieves the display pixel ratio of the context.
 	/// \seealso Resolution Independence
 	float get_pixel_ratio() const;

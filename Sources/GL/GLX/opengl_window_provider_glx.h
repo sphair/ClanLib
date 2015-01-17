@@ -179,7 +179,6 @@ public:
 	Rect get_geometry() const override { return x11_window.get_geometry(); }
 	Rect get_viewport() const override { return x11_window.get_viewport(); }
 
-	float get_ppi() const override { return x11_window.get_ppi(); }
 	float get_pixel_ratio() const override { return x11_window.get_pixel_ratio(); }
 
 	bool has_focus() const override { return x11_window.has_focus(); }

@@ -108,9 +108,6 @@ public:
 	virtual Size get_display_window_size() const = 0;
 
 	/// \brief Physical pixels/dots per inch
-	virtual float get_ppi() const = 0;
-
-	/// \brief Physical pixels/dots per inch
 	virtual float get_pixel_ratio() const = 0;
 
 	/// \brief Get the window resized signal

@@ -179,11 +179,6 @@ Size GraphicContext::get_size() const
 	return impl->get_size();
 }
 
-float GraphicContext::get_ppi() const
-{
-	return impl->graphic_screen->get_provider()->get_ppi();
-}
-
 float GraphicContext::get_pixel_ratio() const
 {
 	return impl->graphic_screen->get_provider()->get_pixel_ratio();

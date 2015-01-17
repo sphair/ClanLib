@@ -234,11 +234,6 @@ Size GL1GraphicContextProvider::get_display_window_size() const
 	return render_window->get_viewport().get_size();
 }
 
-float GL1GraphicContextProvider::get_ppi() const
-{
-	return render_window->get_ppi();
-}
-
 float GL1GraphicContextProvider::get_pixel_ratio() const
 {
 	return render_window->get_pixel_ratio();

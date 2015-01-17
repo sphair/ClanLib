@@ -116,13 +116,6 @@ public:
 	/// Returns the drawable area of the window.
 	virtual Rect get_viewport() const = 0;
 
-	/** Retrieves the number of physical pixels or dots per inch of the screen.
-	 *  \note DPI independence is a hard problem. On most platforms this value
-	 *        is fixed and will never change until either this application OR
-	 *        the operating system display manager is restarted.
-	 */
-	virtual float get_ppi() const = 0;
-
 	/** Returns the display pixel ratio of the window.
 	 *  \seealso Resolution Independence
 	 */

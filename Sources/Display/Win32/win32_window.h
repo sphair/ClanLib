@@ -70,7 +70,6 @@ public:
 	HWND get_hwnd() const { return hwnd; }
 	Rect get_geometry() const;
 	Rect get_viewport() const;
-	float get_ppi() const { return ppi; }
 	float get_pixel_ratio() const { return pixel_ratio; }
 	bool has_focus() const;
 	bool is_minimized() const;

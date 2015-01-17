@@ -99,7 +99,6 @@ public:
 	OpenGLWindowProvider & get_opengl_window();
 
 	Size get_display_window_size() const override;
-	float get_ppi() const override;
 	float get_pixel_ratio() const override;
 
 	// GL1 Only

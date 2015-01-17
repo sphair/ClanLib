@@ -154,11 +154,6 @@ Size D3DGraphicContextProvider::get_display_window_size() const
 	return window->get_viewport().get_size();
 }
 
-float D3DGraphicContextProvider::get_ppi() const
-{
-	return window->get_ppi();
-}
-
 float D3DGraphicContextProvider::get_pixel_ratio() const
 {
 	return window->get_pixel_ratio();

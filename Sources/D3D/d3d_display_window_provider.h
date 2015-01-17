@@ -50,7 +50,6 @@ public:
 public:
 	Rect get_geometry() const override;
 	Rect get_viewport() const override;
-	float get_ppi() const override;
 	float get_pixel_ratio() const override;
 
 	bool has_focus() const;

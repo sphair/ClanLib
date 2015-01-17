@@ -92,7 +92,6 @@ public:
 
 	const DisplayWindowProvider & get_render_window() const;
 	Size get_display_window_size() const override;
-	float get_ppi() const override;
 	float get_pixel_ratio() const override;
 	void get_opengl_version(int &version_major, int &version_minor) const override;
 	void get_opengl_version(int &version_major, int &version_minor, int &version_release) const override { get_opengl_version(version_major, version_minor); version_release = 0; }

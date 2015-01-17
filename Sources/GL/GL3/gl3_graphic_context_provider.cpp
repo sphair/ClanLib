@@ -281,11 +281,6 @@ ProgramObject GL3GraphicContextProvider::get_program_object(StandardProgram stan
 	return standard_programs.get_program_object(standard_program);
 }
 
-float GL3GraphicContextProvider::get_ppi() const
-{
-	return render_window->get_ppi();
-}
-
 float GL3GraphicContextProvider::get_pixel_ratio() const
 {
 	return render_window->get_pixel_ratio();

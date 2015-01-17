@@ -80,7 +80,6 @@ public:
 	bool is_clipboard_image_available() const;
 	std::string get_clipboard_text() const;
 	PixelBuffer get_clipboard_image() const;
-	float get_ppi() const override;
 	float get_pixel_ratio() const override;
 
 /// \}

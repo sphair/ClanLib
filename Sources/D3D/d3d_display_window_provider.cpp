@@ -75,11 +75,6 @@ Rect D3DDisplayWindowProvider::get_viewport() const
 	return window.get_viewport();
 }
 
-float D3DDisplayWindowProvider::get_ppi() const
-{
-	return window.get_ppi();
-}
-
 float D3DDisplayWindowProvider::get_pixel_ratio() const
 {
 	return window.get_pixel_ratio();

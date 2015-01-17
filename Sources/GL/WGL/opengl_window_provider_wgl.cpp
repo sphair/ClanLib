@@ -127,11 +127,6 @@ Rect OpenGLWindowProvider::get_viewport() const
 	return win32_window.get_viewport();
 }
 
-float OpenGLWindowProvider::get_ppi() const
-{
-	return win32_window.get_ppi();
-}
-
 float OpenGLWindowProvider::get_pixel_ratio() const
 {
 	return win32_window.get_pixel_ratio();
