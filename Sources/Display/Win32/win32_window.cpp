@@ -72,9 +72,9 @@ Win32Window::Win32Window()
   update_window_worker_thread_started(false), update_window_region(0), update_window_max_region_rects(1024)
 {
 	HDC dc = GetDC(0);
-	ppi = (float)GetDeviceCaps(dc, LOGPIXELSX);
+	int ppi = GetDeviceCaps(dc, LOGPIXELSX);
 	ReleaseDC(0, dc);
-	set_pixel_ratio(std::nan(""));
+	set_pixel_ratio(ppi / 96.0f);
 
 	memset(&paintstruct, 0, sizeof(PAINTSTRUCT));
 	keyboard = InputDevice(new InputDeviceProvider_Win32Keyboard(this));
@@ -1262,12 +1262,6 @@ void Win32Window::set_maximum_size( int width, int height, bool client_area)
 void Win32Window::set_pixel_ratio(float ratio)
 {
 	pixel_ratio = ratio;
-
-	// Pixel ratio is not set; calculate closest pixel ratio.
-	if (std::isnan(pixel_ratio))
-	{
-		pixel_ratio = ppi / 96.0f;
-	}
 }
 
 PixelBuffer Win32Window::get_clipboard_image() const

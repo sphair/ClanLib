@@ -233,8 +233,7 @@ private:
 	HRGN update_window_region;
 	unsigned int update_window_max_region_rects;
 
-	float ppi           = 96.0f;
-	float pixel_ratio   = std::nan("");
+	float pixel_ratio   = 1.0f;
 };
 
 }

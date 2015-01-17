@@ -92,8 +92,7 @@ public:
 
 	/** Retrieves the pixel ratio of this texture.
 	 *  \return The display pixel ratio set for this texture.
-	 *          A NaN value implies that the texture should use the pixel ratio
-	 *          set in the DisplayWindowProvider.
+	 *          A zero value implies that no pixel ratio has been set
 	 */
 	float get_pixel_ratio() const;
 

@@ -237,9 +237,6 @@ public:
 
 	/** Sets the display pixel ratio of this window.
 	 *  \param ratio The new display pixel ratio to use on this window.
-	 *               If a NaN floating point is supplied, ClanLib will
-	 *               use a value based on the current resolution of the
-	 *               screen.
 	 */
 	virtual void set_pixel_ratio(float ratio) = 0;
 

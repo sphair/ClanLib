@@ -60,7 +60,7 @@ public:
 
 	PixelBufferProvider *provider;
 
-	float pixel_ratio = std::nan("");
+	float pixel_ratio = 0.0f;
 
 /// \}
 /// \name Attributes
