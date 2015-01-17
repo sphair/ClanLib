@@ -32,12 +32,12 @@ ConnectionsViewController::ConnectionsViewController()
 		auto item = networks->add_item(name);
 		item->set_status_offline();
 
-		slots.connect(item->edit_button->sig_pointer_release(EventUIPhase::at_target), [=](PointerEvent &) { connect_clicked(connection); });
-		slots.connect(item->edit_button->sig_pointer_release(EventUIPhase::bubbling), [=](PointerEvent &) { connect_clicked(connection); });
+		slots.connect(item->connect_button->sig_pointer_release(EventUIPhase::at_target), [=](PointerEvent &) { connect_clicked(connection); });
+		slots.connect(item->connect_button->sig_pointer_release(EventUIPhase::bubbling), [=](PointerEvent &) { connect_clicked(connection); });
 		slots.connect(item->edit_button->sig_pointer_release(EventUIPhase::at_target), [=](PointerEvent &) { edit_clicked(connection); });
 		slots.connect(item->edit_button->sig_pointer_release(EventUIPhase::bubbling), [=](PointerEvent &) { edit_clicked(connection); });
-		slots.connect(item->edit_button->sig_pointer_release(EventUIPhase::at_target), [=](PointerEvent &) { remove_clicked(connection); });
-		slots.connect(item->edit_button->sig_pointer_release(EventUIPhase::bubbling), [=](PointerEvent &) { remove_clicked(connection); });
+		slots.connect(item->remove_button->sig_pointer_release(EventUIPhase::at_target), [=](PointerEvent &) { remove_clicked(connection); });
+		slots.connect(item->remove_button->sig_pointer_release(EventUIPhase::bubbling), [=](PointerEvent &) { remove_clicked(connection); });
 	}
 }
 

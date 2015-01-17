@@ -52,7 +52,7 @@ void IdentServer::worker_main()
 			}
 			else
 			{
-				clan::NetworkEvent *events[] = { &connection };
+				clan::NetworkEvent *events[] = { &listen };
 				change_event.wait(lock, 1, events);
 			}
 		}
