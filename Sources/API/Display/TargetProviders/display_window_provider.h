@@ -49,46 +49,46 @@ class InputContext;
 class CursorProvider;
 class CursorDescription;
 
-/// \brief Display Window site.
+/// Display Window site.
 class DisplayWindowSite
 {
 /// \name Attributes
 /// \{
 public:
-	/// \brief lost focus signal.
+	/// Lost focus signal.
 	Signal<void()> sig_lost_focus;
 
-	/// \brief got focus signal.
+	/// Obtained focus signal.
 	Signal<void()> sig_got_focus;
 
-	/// \brief resize signal.
+	/// Resize signal.
 	Signal<void(float, float)> sig_resize;
 
-	/// \brief paint signal.
+	/// Paint signal.
 	Signal<void(const Rectf &)> sig_paint;
 
-	/// \brief window close signal.
+	/// Window close signal.
 	Signal<void()> sig_window_close;
 
-	/// \brief window destroy signal.
+	/// Window destroy signal.
 	Signal<void()> sig_window_destroy;
 
-	/// \brief window minimized signal.
+	/// Window minimized signal.
 	Signal<void()> sig_window_minimized;
 
-	/// \brief window maximized signal.
+	/// Window maximized signal.
 	Signal<void()> sig_window_maximized;
 
-	/// \brief window restored signal.
+	/// Window restored signal.
 	Signal<void()> sig_window_restored;
 
-	/// \brief window resize callback function.
+	/// Window resize callback function.
 	std::function<void(Rectf &)> func_window_resize;
 
-	/// \brief minimized clicked callback function.
+	/// Minimize button is clicked callback function.
 	std::function<bool()> func_minimize_clicked;
 
-	/// \brief window moved signal.
+	/// Window moved signal.
 	Signal<void()> sig_window_moved;
 
 #ifdef WIN32
@@ -98,7 +98,7 @@ public:
 /// \}
 };
 
-/// \brief Interface for implementing a DisplayWindow target.
+/// Interface for implementing a DisplayWindow target.
 class DisplayWindowProvider
 {
 /// \name Construction
@@ -110,43 +110,50 @@ public:
 /// \name Attributes
 /// \{
 public:
-	/// \brief Returns the position and size of the window frame.
+	/// Returns the position and size of the window frame.
 	virtual Rect get_geometry() const = 0;
 
-	/// \brief Returns the drawable area of the window.
+	/// Returns the drawable area of the window.
 	virtual Rect get_viewport() const = 0;
 
-	/// \brief Physical pixels/dots per inch
-	virtual float get_dpi() const = 0;
+	/** Retrieves the number of physical pixels or dots per inch of the screen.
+	 *  \note DPI independence is a hard problem. On most platforms this value
+	 *        is fixed and will never change until either this application OR
+	 *        the operating system display manager is restarted.
+	 */
+	virtual float get_ppi() const = 0;
 
-	/// \brief Returns true if window has focus.
+	/// Returns the display pixel ratio of the window.
+	virtual float get_pixel_ratio() const = 0;
+
+	/// Returns true if window has focus.
 	virtual bool has_focus() const = 0;
 
-	/// \brief Returns true if the window is minimized.
+	/// Returns true if the window is minimized.
 	virtual bool is_minimized() const = 0;
 
-	/// \brief Returns true if the window is maximized.
+	/// Returns true if the window is maximized.
 	virtual bool is_maximized() const = 0;
 
-	/// \brief Returns true if the window is visible.
+	/// Returns true if the window is visible.
 	virtual bool is_visible() const = 0;
 
-	/// \brief Returns true if the window is fullscreen.
+	/// Returns true if the window is fullscreen.
 	virtual bool is_fullscreen() const = 0;
 
-	/// \brief Returns the minimum size of the window.
+	/// Returns the minimum size of the window.
 	virtual Size get_minimum_size(bool client_area) const = 0;
 
-	/// \brief Returns the maximum size of the window.
+	/// Returns the maximum size of the window.
 	virtual Size get_maximum_size(bool client_area) const = 0;
 
-	/// \brief Returns the maximum size of the window.
+	/// Returns the maximum size of the window.
 	virtual std::string get_title() const = 0;
 
-	/// \brief Return the graphic context for the window.
+	/// Returns the graphic context for the window.
 	virtual GraphicContext& get_gc() = 0;
 
-	/// \brief Return the input context for the window.
+	/// Returns the input context for the window.
 	virtual InputContext get_ic() = 0;
 
 	/** Returns an platform-specific internal display window handle object.
@@ -154,16 +161,16 @@ public:
 	 */
 	virtual DisplayWindowHandle const *get_handle() const = 0;
 
-	/// \brief Returns true if text is available in the clipboard.
+	/// Returns true if text is available in the clipboard.
 	virtual bool is_clipboard_text_available() const = 0;
 
-	/// \brief Returns true if an image is available in the clipboard.
+	/// Returns true if an image is available in the clipboard.
 	virtual bool is_clipboard_image_available() const = 0;
 
-	/// \brief Returns the text stored in the clipboard.
+	/// Returns the text stored in the clipboard.
 	virtual std::string get_clipboard_text() const = 0;
 
-	/// \brief Returns the image stored in the clipboard.
+	/// Returns the image stored in the clipboard.
 	virtual PixelBuffer get_clipboard_image() const = 0;
 
 /// \}
@@ -171,116 +178,129 @@ public:
 /// \{
 public:
 
-	/// \brief Convert from window client coordinates to screen coordinates.
+	/// Convert from window client coordinates to screen coordinates.
 	virtual Point client_to_screen(const Point &client) = 0;
 
-	/// \brief Convert from screen coordinates to client coordinates.
+	/// Convert from screen coordinates to client coordinates.
 	virtual Point screen_to_client(const Point &screen) = 0;
 
-	/// \brief Capture/Release the mouse.
+	/// Capture/Release the mouse.
 	virtual void capture_mouse(bool capture) = 0;
 
-	/// \brief Invalidates a region of a screen, causing a repaint.
+	/// Invalidates a region of a screen, causing a repaint.
 	virtual void request_repaint(const Rect &rect) = 0;
 
-	/// \brief Creates window, assigning site and description to provider.
+	/// Creates window, assigning site and description to provider.
 	virtual void create(DisplayWindowSite *site, const DisplayWindowDescription &description) = 0;
 
-	/// \brief Shows the mouse cursor.
+	/// Shows the mouse cursor.
 	virtual void show_system_cursor() = 0;
 
-	/// \brief Creates a new custom cursor.
+	/// Hides the mouse cursor.
+	virtual void hide_system_cursor() = 0;
+
+	/// Creates a new custom cursor.
 	virtual CursorProvider *create_cursor(const CursorDescription &cursor_description) = 0;
 
-	/// \brief Sets the current cursor icon.
+	/// Sets the current cursor icon.
 	virtual void set_cursor(CursorProvider *cursor) = 0;
 
-	/// \brief Sets the current cursor icon.
+	/// Sets the current cursor icon.
 	virtual void set_cursor(StandardCursor type) = 0;
 
 #ifdef WIN32
-	/// \brief Sets the current cursor handle (win32 only)
+	/// Sets the current cursor handle (win32 only)
 	virtual void set_cursor_handle(HCURSOR cursor) = 0;
 #endif
 
-	/// \brief Hides the mouse cursor.
-	virtual void hide_system_cursor() = 0;
-
-	/// \brief Change window title.
+	/// Change window title.
 	virtual void set_title(const std::string &new_title) = 0;
 
-	/// \brief Set window position and size.
+	/// Sets the position and size of this window on the screen.
 	virtual void set_position(const Rect &pos, bool client_area) = 0;
 
-	/// \brief Set size
-	///
-	/// \param width = value
-	/// \param height = value
-	/// \param client_area = bool
+	/** Sets the size of this window.
+	 *  \param width       Minimum width of the window.
+	 *  \param height      Minimum height of the window.
+	 *  \param client_area Size includes the entire window frame?
+	 */
 	virtual void set_size(int width, int height, bool client_area) = 0;
 
-	/// \brief Set minimum size
-	///
-	/// \param width = value
-	/// \param height = value
-	/// \param client_area = bool
+	/** Sets the minimum size allowed for this window when resizing.
+	 *  \param width       Minimum width of the window.
+	 *  \param height      Minimum height of the window.
+	 *  \param client_area Size includes the entire window frame?
+	 */
 	virtual void set_minimum_size(int width, int height, bool client_area) = 0;
 
-	/// \brief Set maximum size
-	///
-	/// \param width = value
-	/// \param height = value
-	/// \param client_area = bool
+	/** Sets the maximum size allowed for this window when resizing.
+	 *  \param width       Maximum width of the window.
+	 *  \param height      Maximum height of the window.
+	 *  \param client_area Size includes the entire window frame?
+	 */
 	virtual void set_maximum_size(int width, int height, bool client_area) = 0;
 
-	/// \brief Enables or disables a window.
+	/** Sets the display pixel ratio of this window.
+	 *  \param ratio The new display pixel ratio to use on this window.
+	 *               If a NaN floating point is supplied, ClanLib will
+	 *               use a value based on the current resolution of the
+	 *               screen.
+	 */
+	virtual void set_pixel_ratio(float ratio) = 0;
+
+	/// Enables or disables input into this window.
 	virtual void set_enabled(bool enable) = 0;
 
-	/// \brief Minimizes the window.
+	/// Minimizes the window.
 	virtual void minimize() = 0;
 
-	/// \brief Restores the window.
+	/// Restores the window.
 	virtual void restore() = 0;
 
-	/// \brief Maximizes the window.
+	/// Maximizes the window.
 	virtual void maximize() = 0;
 
-	/// \brief Displays the window in its current size and position.
+	/// Displays the window in its current size and position.
 	virtual void show(bool activate) = 0;
 
-	/// \brief Hides the window.
+	/// Hides the window.
 	virtual void hide() = 0;
 
-	/// \brief Raise window on top of other windows.
+	/// Raise window on top of other windows.
 	virtual void bring_to_front() = 0;
 
-	/// \brief Flip opengl buffers.
+	/// Flip the window display buffers.
 	virtual void flip(int interval) = 0;
 
-	/// \brief Copy a region of the backbuffer to the frontbuffer.
+	/// Copy a region of the backbuffer to the frontbuffer.
 	virtual void update(const Rect &rect) = 0;
 
-	/// \brief Stores text in the clipboard.
+	/// Stores text in the clipboard.
 	virtual void set_clipboard_text(const std::string &text) = 0;
 
-	/// \brief Stores an image in the clipboard.
+	/// Stores an image in the clipboard.
 	virtual void set_clipboard_image(const PixelBuffer &buf) = 0;
 
-	/// \brief Sets the large icon used for this window.
+	/// Sets the large icon used for this window.
 	virtual void set_large_icon(const PixelBuffer &image) = 0;
 
-	/// \brief Sets the small icon used for this window.
+	/// Sets the small icon used for this window.
 	virtual void set_small_icon(const PixelBuffer &image) = 0;
 
-	/// \brief Enable alpha channel for this window.
-	///
-	/// This is only supported on Windows Vista and above (Else use Layered windows instead)
-	/// \param blur_rect = Blur rectangle. If size = 0, then the entire window is used
+	/** Enable alpha channel blending for this window.
+	 *
+	 *  \note This is only supported on Windows Vista and above. You can use
+	 *        layered windows to achieve the same effect on systems that do
+	 *        not support this.
+	 *
+	 *  \param blur_rect Window blur area. If its size is `0`, the area of
+	 *                   the entire window will be used.
+	 */
 	virtual void enable_alpha_channel(const Rect &blur_rect) = 0;
 
-	/// \brief Exend the window frame into the client area
-	///
-	/// Only implemented on win32
+	/** Extend the window frame into the client area.
+	 *  \note This is only applicable in Windows.
+	 */
 	virtual void extend_frame_into_client_area(int left, int top, int right, int bottom) = 0;
 
 
