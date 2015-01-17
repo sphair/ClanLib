@@ -60,7 +60,7 @@ public:
 
 	PixelBufferProvider *provider;
 
-	float dpi = 96.0f;
+	float pixel_ratio = std::nan("");
 
 /// \}
 /// \name Attributes

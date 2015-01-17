@@ -634,8 +634,8 @@ void OpenGLWindowProvider::setup_extension_pointers()
 static bool cl_ctxErrorOccurred = false;
 static int cl_ctxErrorHandler( ::Display *dpy, XErrorEvent *ev )
 {
-    cl_ctxErrorOccurred = true;
-    return 0;
+	cl_ctxErrorOccurred = true;
+	return 0;
 }
 
 GLXContext OpenGLWindowProvider::create_context(const DisplayWindowDescription &desc)

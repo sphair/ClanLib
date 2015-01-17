@@ -172,11 +172,11 @@ void GL3GraphicContextProvider::get_opengl_version(int &version_major, int &vers
 	if (!opengl_version_major)	// Is not cached
 	{
 
-	/*	The GL_VERSION string begins with a version number. The version number uses one of these forms: 
-		major_number.minor_number 
-		major_number.minor_number.release_number 
-		Vendor-specific information may follow the version number. Its format depends on the implementation, but a space always separates the version number and the vendor-specific information. 
-		All strings are null-terminated. 
+	/*	The GL_VERSION string begins with a version number. The version number uses one of these forms:
+		major_number.minor_number
+		major_number.minor_number.release_number
+		Vendor-specific information may follow the version number. Its format depends on the implementation, but a space always separates the version number and the vendor-specific information.
+		All strings are null-terminated.
 		If an error is generated, glGetString returns zero.
 	*/
 		OpenGL::set_active(this);
@@ -185,14 +185,14 @@ void GL3GraphicContextProvider::get_opengl_version(int &version_major, int &vers
 			opengl_version_major = 0;
 			opengl_version_minor = 0;
 			glGetIntegerv(GL_MAJOR_VERSION, &opengl_version_major);
-            glGetIntegerv(GL_MINOR_VERSION, &opengl_version_minor);
+			glGetIntegerv(GL_MINOR_VERSION, &opengl_version_minor);
 		#else
 
 			std::string version = (char*)glGetString(GL_VERSION);
 
 			opengl_version_major = 0;
 			opengl_version_minor = 0;
-    
+
 			std::vector<std::string> split_version = StringHelp::split_text(version, ".");
 			if(split_version.size() > 0)
 				opengl_version_major = StringHelp::text_to_int(split_version[0]);
@@ -214,7 +214,7 @@ void GL3GraphicContextProvider::calculate_shading_language_version()
 	if ( (opengl_version_major < 2) || ( (opengl_version_major == 2) && (opengl_version_minor < 1) ) )
 	{
 		OpenGL::set_active(this);
-			
+
 		std::string version = (char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
 
 		std::vector<std::string> split_version = StringHelp::split_text(version, ".");
@@ -258,8 +258,8 @@ int GL3GraphicContextProvider::get_max_attributes()
 	OpenGL::set_active(this);
 	GLint max_attributes = 0;
 	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &max_attributes);
-    if(max_attributes < 16)
-        max_attributes = 16;
+	if (max_attributes < 16)
+		max_attributes = 16;
 	return max_attributes;
 }
 
@@ -281,9 +281,14 @@ ProgramObject GL3GraphicContextProvider::get_program_object(StandardProgram stan
 	return standard_programs.get_program_object(standard_program);
 }
 
-float GL3GraphicContextProvider::get_dpi() const
+float GL3GraphicContextProvider::get_ppi() const
 {
-	return render_window->get_dpi();
+	return render_window->get_ppi();
+}
+
+float GL3GraphicContextProvider::get_pixel_ratio() const
+{
+	return render_window->get_pixel_ratio();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -442,7 +447,7 @@ void GL3GraphicContextProvider::set_depth_stencil_state(DepthStencilStateProvide
 	}
 }
 
-PixelBuffer GL3GraphicContextProvider::get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const 
+PixelBuffer GL3GraphicContextProvider::get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const
 {
 	TextureFormat_GL tf = OpenGL::get_textureformat(texture_format);
 	if (!tf.valid)
@@ -584,7 +589,7 @@ void GL3GraphicContextProvider::reset_frame_buffer()
 	// To do: move this to OpenGLWindowProvider abstraction (some targets doesn't have a default frame buffer)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-    
+
 	if (render_window->is_double_buffered())
 	{
 		glDrawBuffer(GL_BACK);
@@ -766,10 +771,10 @@ void GL3GraphicContextProvider::clear_stencil(int value)
 void GL3GraphicContextProvider::clear_depth(float value)
 {
 	OpenGL::set_active(this);
-    if (glClearDepth)
-        glClearDepth(value);
-    else
-        glClearDepthf(value);
+	if (glClearDepth)
+		glClearDepth(value);
+	else
+		glClearDepthf(value);
 	glClear(GL_DEPTH_BUFFER_BIT);
 }
 
@@ -828,8 +833,8 @@ void GL3GraphicContextProvider::set_draw_buffer(DrawBuffer buffer)
 			buffer = buffer_front;
 	}
 
-    if (glDrawBuffer)
-        glDrawBuffer( OpenGL::to_enum(buffer) );
+	if (glDrawBuffer)
+		glDrawBuffer( OpenGL::to_enum(buffer) );
 
 }
 

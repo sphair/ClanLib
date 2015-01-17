@@ -30,6 +30,7 @@
 
 #pragma once
 
+#include <cmath>
 #include <list>
 #include <map>
 #include "API/Core/Signals/signal.h"
@@ -79,26 +80,38 @@ public:
 public:
 	Rect get_geometry() const;
 	Rect get_viewport() const;
-	float get_dpi() const { return dpi; }
+
+	float get_ppi() const { return ppi; }
+	float get_pixel_ratio() const { return pixel_ratio; }
+
 	bool has_focus() const;
 	bool is_minimized() const;
 	bool is_maximized() const;
 	bool is_visible() const;
+	bool is_fullscreen() const { return fullscreen; }
+
 	Size get_minimum_size(bool client_area) const;
 	Size get_maximum_size(bool client_area) const;
+
 	std::string get_title() const;
-	bool is_fullscreen() const { return fullscreen; }
+
 	DisplayWindowHandle const *get_handle() const { return &handle; }
 	::Display *get_display() const { return handle.display; }
 	::Window get_window() const { return handle.window; }
-	InputContext get_ic() { return ic; }		// Important, do not return by reference, so the shared pointer exists if this window is destroyed
+
+	InputContext get_ic() { return ic; } // Important: do not return by reference, so the shared pointer exists if this window is destroyed
+
 	std::function<void()> &func_on_resized() { return callback_on_resized; }
 	std::function<bool(XButtonEvent &)> &func_on_clicked() { return callback_on_clicked; }
+
 	bool is_clipboard_text_available() const;
 	bool is_clipboard_image_available() const;
+
 	std::string get_clipboard_text() const;
 	PixelBuffer get_clipboard_image() const;
+
 	unsigned char *get_property(::Window use_window, Atom prop, unsigned long *number_items_ptr, int *actual_format_ptr, Atom *actual_type_ptr) const;
+
 	const std::vector<int> &get_window_socket_messages() const;
 
 /// \}
@@ -108,18 +121,26 @@ public:
 public:
 	Point client_to_screen(const Point &client);
 	Point screen_to_client(const Point &screen);
+
+	void capture_mouse(bool capture);
+
+	void request_repaint(const Rect &rect);
+
 	void create(XVisualInfo *visual, DisplayWindowSite *site, const DisplayWindowDescription &description);
+
 	void show_system_cursor();
-	void set_large_icon(const PixelBuffer &image);
-	void set_small_icon(const PixelBuffer &image);
+	void hide_system_cursor();
 	void set_cursor(CursorProvider_X11 *cursor);
 	void set_cursor(enum StandardCursor type);
-	void hide_system_cursor();
+
 	void set_title(const std::string &new_title);
 	void set_position(const Rect &pos, bool client_area);
 	void set_size(int width, int height, bool client_area);
 	void set_minimum_size(int width, int height, bool client_area);
 	void set_maximum_size(int width, int height, bool client_area);
+
+	void set_pixel_ratio(float ratio);
+
 	void set_enabled(bool enable);
 	void minimize();
 	void restore();
@@ -127,12 +148,16 @@ public:
 	void show(bool activate);
 	void hide();
 	void bring_to_front();
-	void capture_mouse(bool capture);
-	void process_message(XEvent &event, X11Window *mouse_capture_window);
-	void process_message_complete();
-	void request_repaint(const Rect &rect);
+
 	void set_clipboard_text(const std::string &text);
 	void set_clipboard_image(const PixelBuffer &buf);
+
+	void set_large_icon(const PixelBuffer &image);
+	void set_small_icon(const PixelBuffer &image);
+
+	void process_message(XEvent &event, X11Window *mouse_capture_window);
+	void process_message_complete();
+
 	void get_keyboard_modifiers(bool &key_shift, bool &key_alt, bool &key_ctrl) const;
 	Point get_mouse_position() const;
 
@@ -170,7 +195,6 @@ private:
 	bool restore_to_maximized;
 	bool fullscreen;
 	int current_screen;
-	XSetWindowAttributes attributes;
 	::Cursor system_cursor;
 	::Cursor hidden_cursor;
 	Pixmap cursor_bitmap;
@@ -203,15 +227,16 @@ private:
 	Atom net_frame_extents;
 	Atom win_hints;
 
-	bool frame_size_calculated;	// This is set when the window is mapped
-	bool requested_size_contains_frame;	// true when requested_current_window_client_area contains the window frame (because the frame size is not yet known)
+	bool frame_size_calculated; // This is set when the window is mapped
+	bool requested_size_contains_frame; // true when requested_current_window_client_area contains the window frame (because the frame size is not yet known)
 	int frame_size_left;
 	int frame_size_right;
 	int frame_size_top;
 	int frame_size_bottom;
+	int border_width;
 
-	Rect current_window_client_area;		// Set by ConfigureNotify event. Excludes window frame
-	Rect requested_current_window_client_area;	// Excludes window frame. Requested from ClanLib before ConfigureNotify is called
+	Rect current_window_client_area; // Set by ConfigureNotify event. Excludes window frame
+	Rect requested_current_window_client_area; // Excludes window frame. Requested from ClanLib before ConfigureNotify is called
 
 	const static int max_allowable_expose_events = 8;
 
@@ -220,7 +245,9 @@ private:
 
 	std::vector<Rect> exposed_rects;
 	Rect largest_exposed_rect;
-	float dpi = 96.0f;
+
+	float ppi           = 96.0f;
+	float pixel_ratio   = std::nan("");
 
 /// \}
 };

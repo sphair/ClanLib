@@ -91,7 +91,7 @@ public:
 	TextureCompareMode compare_mode;
 	CompareFunction compare_function;
 
-	float dpi = 96.0f;
+	float pixel_ratio = std::nan("");
 
 private:
 

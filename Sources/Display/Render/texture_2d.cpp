@@ -94,14 +94,14 @@ Texture2D::Texture2D(GraphicContext &context, const std::string &fullname, const
 	*this = Texture2D(context, filename, vfs, import_desc );
 }
 
-Texture2D::Texture2D( GraphicContext &context, const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc)
+Texture2D::Texture2D(GraphicContext &context, const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc)
 {
 	PixelBuffer pb = ImageProviderFactory::load(filename, fs, std::string());
 	pb = import_desc.process(pb);
 
 	*this = Texture2D(context, pb.get_width(), pb.get_height(), import_desc.is_srgb() ? tf_srgb8_alpha8 : tf_rgba8);
 
-	set_dpi(pb.get_dpi());
+	set_pixel_ratio(pb.get_pixel_ratio());
 	set_subimage(context, Point(0, 0), pb, Rect(pb.get_size()), 0);
 
 	impl->provider->set_wrap_mode(impl->wrap_mode_s, impl->wrap_mode_t);
@@ -113,7 +113,7 @@ Texture2D::Texture2D(GraphicContext &context, IODevice &file, const std::string 
 	pb = import_desc.process(pb);
 	*this = Texture2D(context, pb.get_width(), pb.get_height(), import_desc.is_srgb() ? tf_srgb8_alpha8 : tf_rgba8);
 
-	set_dpi(pb.get_dpi());
+	set_pixel_ratio(pb.get_pixel_ratio());
 	set_subimage(context, Point(0, 0), pb, Rect(pb.get_size()), 0);
 
 	impl->provider->set_wrap_mode(impl->wrap_mode_s, impl->wrap_mode_t);
@@ -128,7 +128,7 @@ Texture2D::Texture2D(GraphicContext &context, const PixelBuffer &image, const Re
 {
 	*this = Texture2D(context, src_rect.get_width(), src_rect.get_height(), is_srgb ? tf_srgb8_alpha8 : tf_rgba8);
 
-	set_dpi(image.get_dpi());
+	set_pixel_ratio(image.get_pixel_ratio());
 	set_subimage(context, Point(0, 0), image, src_rect, 0);
 
 	impl->provider->set_wrap_mode(impl->wrap_mode_s, impl->wrap_mode_t);
@@ -144,15 +144,9 @@ int Texture2D::get_height() const
 	return impl->height;
 }
 
-Size Texture2D::get_size() const
-{
-	return Size(impl->width, impl->height);
-}
-
 PixelBuffer Texture2D::get_pixeldata(GraphicContext &gc, int level) const
 {
-	// todo: pixel format rgba8888?
-	return impl->provider->get_pixeldata(gc, tf_rgba8, level); 
+	return impl->provider->get_pixeldata(gc, tf_rgba8, level);
 }
 
 PixelBuffer Texture2D::get_pixeldata(GraphicContext &gc, TextureFormat texture_format, int level) const
@@ -220,14 +214,14 @@ void Texture2D::set_wrap_mode(TextureWrapMode wrap_s, TextureWrapMode wrap_t)
 	}
 }
 
-float Texture2D::get_dpi() const
+float Texture2D::get_pixel_ratio() const
 {
-	return impl->dpi;
+	return impl->pixel_ratio;
 }
 
-void Texture2D::set_dpi(float dpi)
+void Texture2D::set_pixel_ratio(float ratio)
 {
-	impl->dpi = dpi;
+	impl->pixel_ratio = ratio;
 }
 
 }

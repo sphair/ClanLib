@@ -36,15 +36,6 @@
 #include "API/Display/TargetProviders/graphic_context_provider.h"
 #include "API/Display/TargetProviders/pixel_buffer_provider.h"
 #include "API/Display/Image/pixel_converter.h"
-#include <emmintrin.h>
-
-#ifndef WIN32
-#include <cstdlib>
-#endif
-
-#ifdef __MINGW32__
-#include <malloc.h>
-#endif
 
 namespace clan
 {

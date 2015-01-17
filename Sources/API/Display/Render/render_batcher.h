@@ -49,17 +49,19 @@ class RenderBatcher
 public:
 	virtual ~RenderBatcher() { }
 
-	/// \brief Flush
-	///
-	/// \param gc = Graphic Context
+	/** Flush render batcher contents.
+	 *  \param gc Graphic context to flush contents to.
+	 */
 	virtual void flush(GraphicContext &gc) = 0;
 
-	/// \brief Matrix changed
-	///
-	/// \param modelview = Mat4f
-	/// \param projection = Mat4f
-	/// \param image_yaxis = The image Y axis, to use where "projection" is not used
-	virtual void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis, float dpi) = 0;
+	/** Function to call when matrices are changed.
+	 *  \param modelview    New wodel view matrix.
+	 *  \param projection   New projection matrix.
+	 *  \param image_yaxis  The image Y axis to use where `projection` is not
+	 *                      used.
+	 *  \param pixel_ratio  The display pixel ratio to use when rendering.
+	 */
+	virtual void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis, float pixel_ratio) = 0;
 /// \}
 };
 

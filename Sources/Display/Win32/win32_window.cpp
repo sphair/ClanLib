@@ -72,7 +72,8 @@ Win32Window::Win32Window()
   update_window_worker_thread_started(false), update_window_region(0), update_window_max_region_rects(1024)
 {
 	HDC dc = GetDC(0);
-	dpi = (float)GetDeviceCaps(dc, LOGPIXELSX);
+	ppi = (float)GetDeviceCaps(dc, LOGPIXELSX);
+	set_pixel_ratio(pixel_ratio);
 	ReleaseDC(0, dc);
 
 	memset(&paintstruct, 0, sizeof(PAINTSTRUCT));
@@ -354,7 +355,7 @@ LRESULT Win32Window::static_window_proc(
 		LPCREATESTRUCT create_struct = (LPCREATESTRUCT) lparam;
 		self = (Win32Window *) create_struct->lpCreateParams;
 		SetWindowLongPtr(wnd, GWLP_USERDATA, (LONG_PTR) self);
-		self->hwnd = wnd; 
+		self->hwnd = wnd;
 	}
 	else
 	{
@@ -491,18 +492,18 @@ LRESULT Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lpara
 				win_rect->bottom-wi.cyWindowBorders);
 
 			Rectf client_rectf;
-			client_rectf.left = client_rect.left * 96.0f / get_dpi();
-			client_rectf.top = client_rect.top * 96.0f / get_dpi();
-			client_rectf.right = client_rect.right * 96.0f / get_dpi();
-			client_rectf.bottom = client_rect.bottom * 96.0f / get_dpi();
+			client_rectf.left = client_rect.left / pixel_ratio;
+			client_rectf.top = client_rect.top / pixel_ratio;
+			client_rectf.right = client_rect.right / pixel_ratio;
+			client_rectf.bottom = client_rect.bottom / pixel_ratio;
 
 			if (site->func_window_resize)
 				(site->func_window_resize)(client_rectf);
 
-			client_rect.left = (int)std::round(client_rectf.left * get_dpi() / 96.0f);
-			client_rect.top = (int)std::round(client_rectf.top * get_dpi() / 96.0f);
-			client_rect.right = (int)std::round(client_rectf.right * get_dpi() / 96.0f);
-			client_rect.bottom = (int)std::round(client_rectf.bottom * get_dpi() / 96.0f);
+			client_rect.left = (int)std::round(client_rectf.left * pixel_ratio);
+			client_rect.top = (int)std::round(client_rectf.top * pixel_ratio);
+			client_rect.right = (int)std::round(client_rectf.right * pixel_ratio);
+			client_rect.bottom = (int)std::round(client_rectf.bottom * pixel_ratio);
 
 			win_rect->left = client_rect.left - wi.cxWindowBorders;
 			win_rect->right = client_rect.right + wi.cxWindowBorders;
@@ -635,7 +636,7 @@ LRESULT Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lpara
 
 		case SC_SCREENSAVE:
 			if (!window_desc.get_allow_screensaver())
-				return 0; 
+				return 0;
 			break;
 
 		default:
@@ -722,10 +723,10 @@ void Win32Window::update_dwm_settings()
 	if (DwmFunctions::is_composition_enabled())
 	{
 		extend_frame_into_client_area(
-			(int)std::round(window_desc.get_extend_frame_left() * get_dpi() / 96.0f),
-			(int)std::round(window_desc.get_extend_frame_top() * get_dpi() / 96.0f),
-			(int)std::round(window_desc.get_extend_frame_right() * get_dpi() / 96.0f),
-			(int)std::round(window_desc.get_extend_frame_bottom() * get_dpi() / 96.0f));
+			(int)std::round(window_desc.get_extend_frame_left() * pixel_ratio),
+			(int)std::round(window_desc.get_extend_frame_top() * pixel_ratio),
+			(int)std::round(window_desc.get_extend_frame_right() * pixel_ratio),
+			(int)std::round(window_desc.get_extend_frame_bottom() * pixel_ratio));
 
 		if ((window_desc.get_type() != WindowType::normal) || (window_desc.is_layered()))
 			set_alpha_channel();
@@ -742,7 +743,7 @@ void Win32Window::received_keyboard_input(UINT msg, WPARAM wparam, LPARAM lparam
 		case WM_SYSKEYDOWN:
 			keydown = true;
 			break;
-		
+
 		case WM_KEYUP:
 		case WM_SYSKEYUP:
 			keydown = false;
@@ -781,7 +782,7 @@ void Win32Window::received_keyboard_input(UINT msg, WPARAM wparam, LPARAM lparam
 		key.type = InputEvent::pressed;
 	else
 		key.type = InputEvent::released;
-	key.mouse_pos = Pointf(mouse_pos.x * 96.0f / get_dpi(), mouse_pos.y * 96.0f / get_dpi());
+	key.mouse_pos = Pointf(mouse_pos.x / pixel_ratio, mouse_pos.y / pixel_ratio);
 	key.id = key_id;
 	key.repeat_count = repeat_count[key_id];
 
@@ -842,7 +843,7 @@ void Win32Window::received_mouse_input(UINT msg, WPARAM wparam, LPARAM lparam)
 	}
 	// Prepare event to be emitted:
 	InputEvent key;
-	key.mouse_pos = Pointf(mouse_pos.x * 96.0f / get_dpi(), mouse_pos.y * 96.0f / get_dpi());
+	key.mouse_pos = Pointf(mouse_pos.x / pixel_ratio, mouse_pos.y / pixel_ratio);
 	key.id = id;
 	set_modifier_keys(key);
 
@@ -877,7 +878,7 @@ void Win32Window::received_mouse_input(UINT msg, WPARAM wparam, LPARAM lparam)
 		if (id >= 0 && id < 32)
 			get_mouse()->key_states[id] = false;
 
-		(*get_mouse()->sig_provider_event)(key);	
+		(*get_mouse()->sig_provider_event)(key);
 	}
 }
 
@@ -900,7 +901,7 @@ void Win32Window::received_mouse_move(UINT msg, WPARAM wparam, LPARAM lparam)
 		// Prepare event to be emitted:
 		InputEvent key;
 		key.type = InputEvent::pointer_moved;
-		key.mouse_pos = Pointf(mouse_pos.x * 96.0f / get_dpi(), mouse_pos.y * 96.0f / get_dpi());
+		key.mouse_pos = Pointf(mouse_pos.x / pixel_ratio, mouse_pos.y / pixel_ratio);
 		set_modifier_keys(key);
 
 		// Fire off signal
@@ -1162,7 +1163,7 @@ PixelBuffer Win32Window::create_bitmap_data(const PixelBuffer &image, const Rect
 
 	bmp_image.set_subimage(image, Point(0, 0), rect);
 	bmp_image.flip_vertical(); // flip_vertical() ensures the pixels are stored upside-down as expected by the BMP format
-	
+
 	// Note that the APIs use pre-multiplied alpha, which means that the red,
 	// green and blue channel values in the bitmap must be pre-multiplied with
 	// the alpha channel value. For example, if the alpha channel value is x,
@@ -1258,6 +1259,31 @@ void Win32Window::set_maximum_size( int width, int height, bool client_area)
 	this->maximum_size = Size(width,height);
 }
 
+void Win32Window::set_pixel_ratio(float ratio)
+{
+	pixel_ratio = ratio;
+
+	// Pixel ratio is not set; calculate closest pixel ratio.
+	if (std::isnan(pixel_ratio))
+	{
+		int s = std::round(ppi / 16.0f);
+		/**/ if (s <= 6)  // <=  96 PPI; old tech; use 1:1 ratio.
+		{
+			pixel_ratio = 1.0f;
+		}
+		else if (s >= 12) // >= 192 PPI; new tech; use 1:1 ratio to avoid sub-pixeling.
+		{
+			pixel_ratio = static_cast<float>(s / 6);
+		}
+		else // 96 ~ 192 PPI; modern; use one-sixth steps
+		{
+			pixel_ratio = static_cast<float>(s) / 6.0f;
+		}
+	}
+
+	// TODO Adjust everything related to pixel ratio.
+}
+
 PixelBuffer Win32Window::get_clipboard_image() const
 {
 	BOOL result = OpenClipboard(hwnd);
@@ -1270,8 +1296,8 @@ PixelBuffer Win32Window::get_clipboard_image() const
 	{
 		WCHAR szFormatName[80];
 		int retLen = GetClipboardFormatName(format, szFormatName, sizeof(szFormatName));
-		
-		if (std::wstring(L"image/png") == szFormatName || 
+
+		if (std::wstring(L"image/png") == szFormatName ||
 			std::wstring(L"PNG") == szFormatName)
 		{
 			png_format = format;
@@ -1526,7 +1552,7 @@ void Win32Window::register_window_class()
 	{
 		WNDCLASS wndclass;
 		memset(&wndclass, 0, sizeof(WNDCLASS));
-		wndclass.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS; // 0; 
+		wndclass.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS; // 0;
 		wndclass.lpfnWndProc = (WNDPROC) Win32Window::static_window_proc;
 		wndclass.cbClsExtra = 0;
 		wndclass.cbWndExtra = 0;
@@ -1596,20 +1622,20 @@ void Win32Window::connect_window_input(const DisplayWindowDescription &desc)
 //	RAWINPUTDEVICE Rid[3];	(for mouse)
 	RAWINPUTDEVICE Rid[2];
 
-	Rid[0].usUsagePage = HID_USAGE_PAGE_GENERIC; 
-	Rid[0].usUsage = HID_USAGE_GENERIC_JOYSTICK; 
-	Rid[0].dwFlags = 0;//RIDEV_INPUTSINK;   
+	Rid[0].usUsagePage = HID_USAGE_PAGE_GENERIC;
+	Rid[0].usUsage = HID_USAGE_GENERIC_JOYSTICK;
+	Rid[0].dwFlags = 0;//RIDEV_INPUTSINK;
 	Rid[0].hwndTarget = hwnd;
-	Rid[1].usUsagePage = HID_USAGE_PAGE_GENERIC; 
-	Rid[1].usUsage = HID_USAGE_GENERIC_GAMEPAD; 
-	Rid[1].dwFlags = 0;//RIDEV_INPUTSINK;   
+	Rid[1].usUsagePage = HID_USAGE_PAGE_GENERIC;
+	Rid[1].usUsage = HID_USAGE_GENERIC_GAMEPAD;
+	Rid[1].dwFlags = 0;//RIDEV_INPUTSINK;
 	Rid[1].hwndTarget = hwnd;
 	BOOL result = RegisterRawInputDevices(Rid, 2, sizeof(RAWINPUTDEVICE));
 /*
 	-- Experimental mouse support disabled for now.  Note, (many?) mices are still PS2.
 	Rid[2].usUsagePage = HID_USAGE_PAGE_GENERIC;
-	Rid[2].usUsage = HID_USAGE_GENERIC_MOUSE; 
-	Rid[2].dwFlags = 0;//RIDEV_INPUTSINK;   
+	Rid[2].usUsage = HID_USAGE_GENERIC_MOUSE;
+	Rid[2].dwFlags = 0;//RIDEV_INPUTSINK;
 	Rid[2].hwndTarget = hwnd;
 	BOOL result = RegisterRawInputDevices(Rid, 3, sizeof(RAWINPUTDEVICE));
 */
@@ -1719,15 +1745,15 @@ void Win32Window::get_styles_from_description(const DisplayWindowDescription &de
 RECT Win32Window::get_window_geometry_from_description(const DisplayWindowDescription &desc, DWORD style, DWORD ex_style)
 {
 	HDC dc = GetDC(0);
-	float dpi = (float)GetDeviceCaps(dc, LOGPIXELSX);
+	float ppi = (float)GetDeviceCaps(dc, LOGPIXELSX);
 	ReleaseDC(0, dc);
 
-	float dpi_scale = dpi / 96.0f;
+	float ppi_scale = ppi / 96.0f;
 
-	int x = (int)std::round(desc.get_position().left * dpi_scale);
-	int y = (int)std::round(desc.get_position().top * dpi_scale);
-	int width = (int)std::round(desc.get_size().width * dpi_scale);
-	int height = (int)std::round(desc.get_size().height * dpi_scale);
+	int x = (int)std::round(desc.get_position().left * ppi_scale);
+	int y = (int)std::round(desc.get_position().top * ppi_scale);
+	int width = (int)std::round(desc.get_size().width * ppi_scale);
+	int height = (int)std::round(desc.get_size().height * ppi_scale);
 
 	bool clientSize = desc.get_position_client_area();	// false = Size includes the window frame. true = Size is the drawable size.
 
@@ -1739,10 +1765,10 @@ RECT Win32Window::get_window_geometry_from_description(const DisplayWindowDescri
 		Rectf R = screen_rects[desc.get_fullscreen_monitor()];
 
 		clientSize = false;
-		x = (int)std::round(R.left * dpi_scale);
-		y = (int)std::round(R.top * dpi_scale);
-		width = (int)std::round(R.get_width() * dpi_scale);
-		height = (int)std::round(R.get_height() * dpi_scale);
+		x = (int)std::round(R.left * ppi_scale);
+		y = (int)std::round(R.top * ppi_scale);
+		width = (int)std::round(R.get_width() * ppi_scale);
+		height = (int)std::round(R.get_height() * ppi_scale);
 	}
 	else if (desc.get_position().left == -1 && desc.get_position().top == -1)
 	{

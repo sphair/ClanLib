@@ -70,7 +70,8 @@ public:
 	HWND get_hwnd() const { return hwnd; }
 	Rect get_geometry() const;
 	Rect get_viewport() const;
-	float get_dpi() const { return dpi; }
+	float get_ppi() const { return ppi; }
+	float get_pixel_ratio() const { return pixel_ratio; }
 	bool has_focus() const;
 	bool is_minimized() const;
 	bool is_maximized() const;
@@ -109,6 +110,9 @@ public:
 	void set_size(int width, int height, bool client_area);
 	void set_minimum_size(int width, int height, bool client_area);
 	void set_maximum_size(int width, int height, bool client_area);
+
+	void set_pixel_ratio(float ratio);
+
 	void minimize();
 	void restore();
 	void maximize();
@@ -230,7 +234,8 @@ private:
 	HRGN update_window_region;
 	unsigned int update_window_max_region_rects;
 
-	float dpi = 96.0f;
+	float ppi           = 96.0f;
+	float pixel_ratio   = std::nan("");
 };
 
 }

@@ -43,7 +43,7 @@ FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, const std::strin
 {
 	load_font(desc, typeface_name);
 }
-	
+
 FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, DataBuffer &font_databuffer)
 {
 	if (font_databuffer.is_null())
@@ -66,11 +66,31 @@ FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, DataBuffer &font
 void FontEngine_Win32::load_font(const FontDescription &desc, const std::string &typeface_name)
 {
 	HDC dc = GetDC(0);
-	dpi = (float)GetDeviceCaps(dc, LOGPIXELSX);
+	ppi = (float)GetDeviceCaps(dc, LOGPIXELSX);
 	ReleaseDC(0, dc);
 
-	float device_font_size = std::abs(desc.get_height()) * dpi / 96.0f;
-	float device_average_width = desc.get_average_width() * dpi / 96.0f;
+	pixel_ratio = ratio;
+
+	// Pixel ratio is not set; calculate closest pixel ratio.
+	if (std::isnan(pixel_ratio))
+	{
+		int s = std::round(ppi / 16.0f);
+		/**/ if (s <= 6)  // <=  96 PPI; old tech; use 1:1 ratio.
+		{
+			pixel_ratio = 1.0f;
+		}
+		else if (s >= 12) // >= 192 PPI; new tech; use 1:1 ratio to avoid sub-pixeling.
+		{
+			pixel_ratio = static_cast<float>(s / 6);
+		}
+		else // 96 ~ 192 PPI; modern; use one-sixth steps
+		{
+			pixel_ratio = static_cast<float>(s) / 6.0f;
+		}
+	}
+
+	float device_font_size = std::abs(desc.get_height()) * pixel_ratio;
+	float device_average_width = desc.get_average_width() * pixel_ratio;
 
 	handle = CreateFont(
 		-device_font_size,
@@ -105,11 +125,11 @@ void FontEngine_Win32::load_font(const FontDescription &desc, const std::string 
 	}
 
 	font_metrics = FontMetrics(
-		metrics.tmHeight * 96.0f / dpi,
-		metrics.tmAscent * 96.0f / dpi,
-		metrics.tmDescent * 96.0f / dpi,
-		metrics.tmInternalLeading * 96.0f / dpi,
-		metrics.tmExternalLeading * 96.0f / dpi,
+		metrics.tmHeight / pixel_ratio,
+		metrics.tmAscent / pixel_ratio,
+		metrics.tmDescent / pixel_ratio,
+		metrics.tmInternalLeading / pixel_ratio,
+		metrics.tmExternalLeading / pixel_ratio,
 		desc.get_line_height());		// Calculated in FontMetrics as tmHeight + tmExternalLeading if not specified
 
  	font_description = desc.clone();
@@ -222,16 +242,16 @@ FontPixelBuffer FontEngine_Win32::get_font_glyph_lcd(int glyph)
 	font_buffer.glyph = glyph;
 	font_buffer.buffer = pixelbuffer;
 	font_buffer.buffer_rect = pixelbuffer.get_size();
-	font_buffer.size = Sizef(pixelbuffer.get_width() * 96.0f / dpi, pixelbuffer.get_height() * 96.0f / dpi);
-	font_buffer.offset.x = -cursor.x * 96.0f / dpi;
-	font_buffer.offset.y = -cursor.y * 96.0f / dpi;
+	font_buffer.size = Sizef(pixelbuffer.get_width() / pixel_ratio, pixelbuffer.get_height() / pixel_ratio);
+	font_buffer.offset.x = -cursor.x / pixel_ratio;
+	font_buffer.offset.y = -cursor.y / pixel_ratio;
 	font_buffer.empty_buffer = false;
-	font_buffer.metrics.advance.width = glyph_metrics.gmCellIncX * 96.0f / dpi;
-	font_buffer.metrics.advance.height = glyph_metrics.gmCellIncY * 96.0f / dpi;
-	font_buffer.metrics.bbox_offset.x = glyph_metrics.gmptGlyphOrigin.x * 96.0f / dpi;
-	font_buffer.metrics.bbox_offset.y = -glyph_metrics.gmptGlyphOrigin.y * 96.0f / dpi;
-	font_buffer.metrics.bbox_size.width = glyph_metrics.gmBlackBoxX * 96.0f / dpi;
-	font_buffer.metrics.bbox_size.height = glyph_metrics.gmBlackBoxY * 96.0f / dpi;
+	font_buffer.metrics.advance.width = glyph_metrics.gmCellIncX / pixel_ratio;
+	font_buffer.metrics.advance.height = glyph_metrics.gmCellIncY / pixel_ratio;
+	font_buffer.metrics.bbox_offset.x = glyph_metrics.gmptGlyphOrigin.x / pixel_ratio;
+	font_buffer.metrics.bbox_offset.y = -glyph_metrics.gmptGlyphOrigin.y / pixel_ratio;
+	font_buffer.metrics.bbox_size.width = glyph_metrics.gmBlackBoxX / pixel_ratio;
+	font_buffer.metrics.bbox_size.height = glyph_metrics.gmBlackBoxY / pixel_ratio;
 	return font_buffer;
 }
 
@@ -265,16 +285,16 @@ FontPixelBuffer FontEngine_Win32::get_font_glyph_gray8(int glyph)
 		font_buffer.glyph = glyph;
 		font_buffer.buffer = pixelbuffer;
 		font_buffer.buffer_rect = pixelbuffer.get_size();
-		font_buffer.size = Sizef(pixelbuffer.get_width() * 96.0f / dpi, pixelbuffer.get_height() * 96.0f / dpi);
-		font_buffer.offset.x = glyph_metrics.gmptGlyphOrigin.x * 96.0f / dpi;
-		font_buffer.offset.y = -glyph_metrics.gmptGlyphOrigin.y * 96.0f / dpi;
+		font_buffer.size = Sizef(pixelbuffer.get_width() / pixel_ratio, pixelbuffer.get_height() / pixel_ratio);
+		font_buffer.offset.x = glyph_metrics.gmptGlyphOrigin.x / pixel_ratio;
+		font_buffer.offset.y = -glyph_metrics.gmptGlyphOrigin.y / pixel_ratio;
 		font_buffer.empty_buffer = false;
-		font_buffer.metrics.advance.width = glyph_metrics.gmCellIncX * 96.0f / dpi;
-		font_buffer.metrics.advance.height = glyph_metrics.gmCellIncY * 96.0f / dpi;
-		font_buffer.metrics.bbox_offset.x = glyph_metrics.gmptGlyphOrigin.x * 96.0f / dpi;
-		font_buffer.metrics.bbox_offset.y = -glyph_metrics.gmptGlyphOrigin.y * 96.0f / dpi;
-		font_buffer.metrics.bbox_size.width = glyph_metrics.gmBlackBoxX * 96.0f / dpi;
-		font_buffer.metrics.bbox_size.height = glyph_metrics.gmBlackBoxY * 96.0f / dpi;
+		font_buffer.metrics.advance.width = glyph_metrics.gmCellIncX / pixel_ratio;
+		font_buffer.metrics.advance.height = glyph_metrics.gmCellIncY / pixel_ratio;
+		font_buffer.metrics.bbox_offset.x = glyph_metrics.gmptGlyphOrigin.x / pixel_ratio;
+		font_buffer.metrics.bbox_offset.y = -glyph_metrics.gmptGlyphOrigin.y / pixel_ratio;
+		font_buffer.metrics.bbox_size.width = glyph_metrics.gmBlackBoxX / pixel_ratio;
+		font_buffer.metrics.bbox_size.height = glyph_metrics.gmBlackBoxY / pixel_ratio;
 		return font_buffer;
 	}
 	else
@@ -312,16 +332,16 @@ FontPixelBuffer FontEngine_Win32::get_font_glyph_mono(int glyph)
 		font_buffer.glyph = glyph;
 		font_buffer.buffer = pixelbuffer;
 		font_buffer.buffer_rect = pixelbuffer.get_size();
-		font_buffer.size = Sizef(pixelbuffer.get_width() * 96.0f / dpi, pixelbuffer.get_height() * 96.0f / dpi);
-		font_buffer.offset.x = glyph_metrics.gmptGlyphOrigin.x * 96.0f / dpi;
-		font_buffer.offset.y = -glyph_metrics.gmptGlyphOrigin.y * 96.0f / dpi;
+		font_buffer.size = Sizef(pixelbuffer.get_width() / pixel_ratio, pixelbuffer.get_height() / pixel_ratio);
+		font_buffer.offset.x = glyph_metrics.gmptGlyphOrigin.x / pixel_ratio;
+		font_buffer.offset.y = -glyph_metrics.gmptGlyphOrigin.y / pixel_ratio;
 		font_buffer.empty_buffer = false;
-		font_buffer.metrics.advance.width = glyph_metrics.gmCellIncX * 96.0f / dpi;
-		font_buffer.metrics.advance.height = glyph_metrics.gmCellIncY * 96.0f / dpi;
-		font_buffer.metrics.bbox_offset.x = glyph_metrics.gmptGlyphOrigin.x * 96.0f / dpi;
-		font_buffer.metrics.bbox_offset.y = -glyph_metrics.gmptGlyphOrigin.y * 96.0f / dpi;
-		font_buffer.metrics.bbox_size.width = glyph_metrics.gmBlackBoxX * 96.0f / dpi;
-		font_buffer.metrics.bbox_size.height = glyph_metrics.gmBlackBoxY * 96.0f / dpi;
+		font_buffer.metrics.advance.width = glyph_metrics.gmCellIncX / pixel_ratio;
+		font_buffer.metrics.advance.height = glyph_metrics.gmCellIncY / pixel_ratio;
+		font_buffer.metrics.bbox_offset.x = glyph_metrics.gmptGlyphOrigin.x / pixel_ratio;
+		font_buffer.metrics.bbox_offset.y = -glyph_metrics.gmptGlyphOrigin.y / pixel_ratio;
+		font_buffer.metrics.bbox_size.width = glyph_metrics.gmBlackBoxX / pixel_ratio;
+		font_buffer.metrics.bbox_size.height = glyph_metrics.gmBlackBoxY / pixel_ratio;
 		return font_buffer;
 	}
 	else
@@ -369,7 +389,7 @@ FontPixelBuffer FontEngine_Win32::get_empty_font_glyph(int glyph)
 	ABC abc = { 0 };
 	if (GetCharABCWidths(dc, glyph, glyph, &abc))
 	{
-		font_buffer.metrics.advance.width = (abc.abcA + abc.abcB + abc.abcC) * 96.0f / dpi;
+		font_buffer.metrics.advance.width = (abc.abcA + abc.abcB + abc.abcC) / pixel_ratio;
 		font_buffer.metrics.bbox_offset = Pointf(0.0f, -1.0f);
 		font_buffer.metrics.bbox_size = Sizef(font_buffer.metrics.advance.width, 1.0f);
 	}
@@ -484,12 +504,12 @@ void FontEngine_Win32::load_glyph_path(unsigned int glyph_index, Path &path, Gly
 
 	if (glyph_buffer.is_null())
 	{
-		out_metrics.advance.width = glyph_metrics.gmCellIncX * 96.0f / dpi;
-		out_metrics.advance.height = glyph_metrics.gmCellIncY * 96.0f / dpi;
-		out_metrics.bbox_offset.x = glyph_metrics.gmptGlyphOrigin.x * 96.0f / dpi;
-		out_metrics.bbox_offset.y = -glyph_metrics.gmptGlyphOrigin.y * 96.0f / dpi;
-		out_metrics.bbox_size.width = glyph_metrics.gmBlackBoxX * 96.0f / dpi;
-		out_metrics.bbox_size.height = glyph_metrics.gmBlackBoxY * 96.0f / dpi;
+		out_metrics.advance.width = glyph_metrics.gmCellIncX / pixel_ratio;
+		out_metrics.advance.height = glyph_metrics.gmCellIncY / pixel_ratio;
+		out_metrics.bbox_offset.x = glyph_metrics.gmptGlyphOrigin.x / pixel_ratio;
+		out_metrics.bbox_offset.y = -glyph_metrics.gmptGlyphOrigin.y / pixel_ratio;
+		out_metrics.bbox_size.width = glyph_metrics.gmBlackBoxX / pixel_ratio;
+		out_metrics.bbox_size.height = glyph_metrics.gmBlackBoxY / pixel_ratio;
 		return;
 	}
 
@@ -560,12 +580,12 @@ void FontEngine_Win32::load_glyph_path(unsigned int glyph_index, Path &path, Gly
 		}
 		path.close();
 	}
-	out_metrics.advance.width = glyph_metrics.gmCellIncX * 96.0f / dpi;
-	out_metrics.advance.height = glyph_metrics.gmCellIncY * 96.0f / dpi;
-	out_metrics.bbox_offset.x = glyph_metrics.gmptGlyphOrigin.x * 96.0f / dpi;
-	out_metrics.bbox_offset.y = -glyph_metrics.gmptGlyphOrigin.y * 96.0f / dpi;
-	out_metrics.bbox_size.width = glyph_metrics.gmBlackBoxX * 96.0f / dpi;
-	out_metrics.bbox_size.height = glyph_metrics.gmBlackBoxY * 96.0f / dpi;
+	out_metrics.advance.width = glyph_metrics.gmCellIncX / pixel_ratio;
+	out_metrics.advance.height = glyph_metrics.gmCellIncY / pixel_ratio;
+	out_metrics.bbox_offset.x = glyph_metrics.gmptGlyphOrigin.x / pixel_ratio;
+	out_metrics.bbox_offset.y = -glyph_metrics.gmptGlyphOrigin.y / pixel_ratio;
+	out_metrics.bbox_size.width = glyph_metrics.gmBlackBoxX / pixel_ratio;
+	out_metrics.bbox_size.height = glyph_metrics.gmBlackBoxY / pixel_ratio;
 
 }
 

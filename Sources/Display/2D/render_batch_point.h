@@ -54,8 +54,8 @@ private:
 	inline Vec4f to_position(float x, float y) const;
 	void set_batcher_active(Canvas &canvas, int num_vertices);
 	void flush(GraphicContext &gc) override;
-	void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis, float dpi) override;
-	
+	void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis, float pixel_ratio) override;
+
 	enum { max_vertices = RenderBatchBuffer::vertex_buffer_size / sizeof(PointVertex) };
 	PointVertex *vertices;
 	RenderBatchBuffer *batch_buffer;
