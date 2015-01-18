@@ -61,19 +61,19 @@ NetworkListItemView::NetworkListItemView()
 	remove_button->box_style.set_margin_bottom_auto();
 	add_subview(remove_button);
 
-	set_status_offline();
+	set_status_offline("Not Connected");
 }
 
-void NetworkListItemView::set_status_online()
+void NetworkListItemView::set_status_online(const std::string &text)
 {
 	status_icon->set_image(ImageSource::from_resource("Icons/status_online32.png"));
-	status_text->set_text("Connected");
+	status_text->set_text(text);
 	connect_button->label()->set_text("Disconnect");
 }
 
-void NetworkListItemView::set_status_offline()
+void NetworkListItemView::set_status_offline(const std::string &text)
 {
 	status_icon->set_image(ImageSource::from_resource("Icons/status_offline32.png"));
-	status_text->set_text("Not connected");
+	status_text->set_text(text);
 	connect_button->label()->set_text("Connect");
 }

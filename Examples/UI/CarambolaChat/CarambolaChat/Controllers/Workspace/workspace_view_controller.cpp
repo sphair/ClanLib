@@ -81,19 +81,18 @@ void WorkspaceViewController::set_selected(TabPage &page, bool selected, bool an
 
 		float from = selected ? 0.0f : 1.0f;
 		float to = selected ? 1.0f : 0.0f;
-		auto tab = page.tab;
 
 		page.tab->animate(from, to, [=](float t)
 		{
 			if (t > 0.0f)
 			{
-				tab->box_style.set_background_gradient_to_bottom(Colorf(255, 255, 255, (int)((0.2f + t * 0.8f) * 255.0f)), Colorf(235, 243, 252, (int)((0.2f + t * 0.8f) * 255.0f)));
-				tab->box_style.set_border(Colorf(102, 102, 102, (int)(t * 255.0f)), 0.5f, 0.5f, 0.5f, 0.0f);
+				page.tab->box_style.set_background_gradient_to_bottom(Colorf(255, 255, 255, (int)((0.2f + t * 0.8f) * 255.0f)), Colorf(235, 243, 252, (int)((0.2f + t * 0.8f) * 255.0f)));
+				page.tab->box_style.set_border(Colorf(102, 102, 102, (int)(t * 255.0f)), 0.5f, 0.5f, 0.5f, 0.0f);
 			}
 			else
 			{
-				tab->box_style.set_background(Colorf(1.0f, 1.0f, 1.0f, 0.2f));
-				tab->box_style.set_border(Colorf::transparent, 0.5f, 0.5f, 0.5f, 0.0f);
+				page.tab->box_style.set_background(Colorf(1.0f, 1.0f, 1.0f, 0.2f));
+				page.tab->box_style.set_border(Colorf::transparent, 0.5f, 0.5f, 0.5f, 0.0f);
 			}
 		});
 	}
