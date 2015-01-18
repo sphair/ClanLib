@@ -69,10 +69,6 @@ private:
 	int get_prefix_width() const;
 	void invalidate_lines(int start, int end);
 
-	static clan::Font get_font_description();
-	static clan::Font get_fixed_font_description();
-	static clan::Font get_url_font_description();
-
 	std::shared_ptr<clan::ScrollBarView> scroll;
 	std::list<ChatLine> lines;
 	clan::SlotContainer slots;

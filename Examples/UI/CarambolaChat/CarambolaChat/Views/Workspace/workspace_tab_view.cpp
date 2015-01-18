@@ -12,7 +12,7 @@ WorkspaceTabView::WorkspaceTabView(const std::string &label_text)
 	box_style.set_layout_hbox();
 
 	label = std::make_shared<LabelView>();
-	label->text_style().set_font("Segoe UI", 12.0f, 26.0f);
+	label->text_style().set_font("Source Sans Pro", 12.0f, 26.0f);
 	label->text_style().set_target_transparent();
 	label->set_text(label_text);
 	add_subview(label);
@@ -25,7 +25,7 @@ WorkspaceTabView::WorkspaceTabView(const std::string &label_text)
 	message_count->box_style.set_padding(5.0f, 1.0f);
 	message_count->box_style.set_border(Colorf::gray90, 1.0f);
 	message_count->box_style.set_border_radius(6.0f);
-	message_count->text_style().set_font("Segoe UI", 9.0f, 15.0f);
+	message_count->text_style().set_font("Source Sans Pro", 9.0f, 15.0f);
 	message_count->text_style().set_weight_bold();
 	message_count->text_style().set_color(Colorf::black);
 	message_count->set_hidden();

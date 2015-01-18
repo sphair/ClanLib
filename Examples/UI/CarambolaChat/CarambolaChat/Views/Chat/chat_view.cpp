@@ -32,21 +32,6 @@ ChatView::~ChatView()
 {
 }
 
-Font ChatView::get_font_description()
-{
-	return Font("Verdana", 13.0f);
-}
-
-Font ChatView::get_fixed_font_description()
-{
-	return Font("Consolas", 13.0f);
-}
-
-Font ChatView::get_url_font_description()
-{
-	return Font("Verdana", 13.0f);
-}
-
 void ChatView::add_line(ChatLine line)
 {
 	line.timestamp = create_timestamp();
@@ -87,9 +72,12 @@ void ChatView::render_text_content(ChatTextView *text_view, Canvas &canvas)
 
 	if (font.is_null())
 	{
-		font = get_font_description();
-		font_url = get_url_font_description();
-		font_fixed = get_fixed_font_description();
+		TextStyle style;
+		style.set_font("Source Sans Pro", 14.0f, 20.0f);
+
+		font = style.get_font(canvas);
+		font_url = font;
+		font_fixed = font;
 		baseline_offset1 = (int)(font.get_font_metrics().get_ascent() - font_fixed.get_font_metrics().get_ascent());
 	}
 

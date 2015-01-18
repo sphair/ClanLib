@@ -23,18 +23,18 @@ NetworkListItemView::NetworkListItemView()
 	name_status_block->box_style.set_layout_vbox();
 
 	name = std::make_shared<LabelView>();
-	name->text_style().set_font("Segoe UI", 13.0f, 16.0f);
+	name->text_style().set_font("Source Sans Pro", 13.0f, 16.0f);
 	name->text_style().set_weight_bold();
 	name_status_block->add_subview(name);
 
 	status_text = std::make_shared<LabelView>();
-	status_text->text_style().set_font("Segoe UI", 13.0f, 16.0f);
+	status_text->text_style().set_font("Source Sans Pro", 13.0f, 16.0f);
 	name_status_block->add_subview(status_text);
 
 	add_subview(name_status_block);
 
 	connect_button = std::make_shared<ButtonView>();
-	connect_button->label()->text_style().set_font("Segoe UI", 13.0f, 16.0f);
+	connect_button->label()->text_style().set_font("Source Sans Pro", 13.0f, 16.0f);
 	connect_button->label()->text_style().set_color(Colorf::navy);
 	connect_button->box_style.set_flex(0.0f, 0.0f);
 	connect_button->box_style.set_margin(0.0f, 0.0f, 15.0f, 0.0);
@@ -44,7 +44,7 @@ NetworkListItemView::NetworkListItemView()
 
 	edit_button = std::make_shared<ButtonView>();
 	edit_button->label()->set_text("Edit");
-	edit_button->label()->text_style().set_font("Segoe UI", 13.0f, 16.0f);
+	edit_button->label()->text_style().set_font("Source Sans Pro", 13.0f, 16.0f);
 	edit_button->label()->text_style().set_color(Colorf::navy);
 	edit_button->box_style.set_flex(0.0f, 0.0f);
 	edit_button->box_style.set_margin(0.0f, 0.0f, 15.0f, 0.0);
@@ -54,7 +54,7 @@ NetworkListItemView::NetworkListItemView()
 
 	remove_button = std::make_shared<ButtonView>();
 	remove_button->label()->set_text("Remove");
-	remove_button->label()->text_style().set_font("Segoe UI", 13.0f, 16.0f);
+	remove_button->label()->text_style().set_font("Source Sans Pro", 13.0f, 16.0f);
 	remove_button->label()->text_style().set_color(Colorf::navy);
 	remove_button->box_style.set_flex(0.0f, 0.0f);
 	remove_button->box_style.set_margin_top_auto();

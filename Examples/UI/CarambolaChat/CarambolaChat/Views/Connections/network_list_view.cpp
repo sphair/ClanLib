@@ -16,7 +16,7 @@ NetworkListView::NetworkListView()
 
 	auto add_button = std::make_shared<ButtonView>();
 	add_button->label()->set_text("Add Network");
-	add_button->label()->text_style().set_font("Segoe UI", 13.0f, 16.0f);
+	add_button->label()->text_style().set_font("Source Sans Pro", 13.0f, 16.0f);
 	add_button->label()->text_style().set_color(Colorf::navy);
 	add_subview(add_button);
 }

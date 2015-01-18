@@ -126,7 +126,7 @@ void ChatViewController::create_layout()
 	input_text->box_style.set_border_radius(2.0f);
 	input_text->box_style.set_background(Colorf::white);
 	input_text->box_style.set_padding(5.0f, 2.0f);
-	input_text->text_style().set_font("Segoe UI", 12.0f, 20.0f);
+	input_text->text_style().set_font("Source Sans Pro", 12.0f, 20.0f);
 	input_bar->add_subview(input_text);
 
 	view->box_style.set_layout_vbox();
@@ -221,7 +221,7 @@ void ChatViewController::add_line_text(ChatLine &line, const std::string &text, 
 		else*/
 		{
 			TextStyle style;
-			style.set_font("Verdana", 13.0f);
+			style.set_font("Source Sans Pro", 14.0f, 20.0f);
 			style.set_color(color);
 			line.add_text(style, text.substr(start_offset));
 			break;

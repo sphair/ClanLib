@@ -25,7 +25,32 @@ public:
 	{
 		if (loaded_fonts.find(family_name) == loaded_fonts.end())
 		{
-			loaded_fonts[family_name] = FontFamily(family_name);
+			if (family_name == "Source Sans Pro")
+			{
+				FontFamily family(family_name);
+
+				FontDescription normal;
+				family.add(normal, PathHelp::combine(resource_path, "SourceSansPro/SourceSansPro-Regular.ttf"));
+
+				FontDescription bold;
+				bold.set_weight(FontWeight::bold);
+				family.add(bold, PathHelp::combine(resource_path, "SourceSansPro/SourceSansPro-Bold.ttf"));
+
+				FontDescription italic;
+				italic.set_style(FontStyle::italic);
+				family.add(italic, PathHelp::combine(resource_path, "SourceSansPro/SourceSansPro-Italic.ttf"));
+
+				FontDescription bold_italic;
+				bold_italic.set_weight(FontWeight::bold);
+				bold_italic.set_style(FontStyle::italic);
+				family.add(bold_italic, PathHelp::combine(resource_path, "SourceSansPro/SourceSansPro-BoldItalic.ttf"));
+
+				loaded_fonts[family_name] = family;
+			}
+			else
+			{
+				loaded_fonts[family_name] = FontFamily(family_name);
+			}
 		}
 		return Font(loaded_fonts[family_name], desc);
 	}

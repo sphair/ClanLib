@@ -14,7 +14,7 @@ ConnectionsViewController::ConnectionsViewController()
 	view->box_style.set_margin(11.0f);
 
 	auto title = std::make_shared<LabelView>();
-	title->text_style().set_font("Segoe UI", 20.0f, 25.0f);
+	title->text_style().set_font("Source Sans Pro", 20.0f, 25.0f);
 	title->text_style().set_weight_bold();
 	title->set_text("Chat Networks");
 	view->add_subview(title);

@@ -28,7 +28,7 @@ void UserListView::update_user(const std::string &id, const std::string &name, c
 		user.label = std::make_shared<LabelView>();
 		user.label->set_text(name);
 		user.label->text_style().set_color(Colorf::black);
-		user.label->text_style().set_font("Segoe UI", 12.0f, 15.0f);
+		user.label->text_style().set_font("Source Sans Pro", 12.0f, 15.0f);
 		user.label->box_style.set_margin(5.0f, 0.0f, 0.0f, 0.0f);
 		user.view->add_subview(user.label);
 		add_subview(user.view);
