@@ -1,12 +1,13 @@
 
 #pragma once
 
+#include "Controllers/Workspace/workspace_page_view_controller.h"
 #include "Models/IRCSession/irc_session.h"
 
 class XMLSettings;
 class NetworkListView;
 
-class ConnectionsViewController : public clan::ViewController
+class ConnectionsViewController : public WorkspacePageViewController
 {
 public:
 	ConnectionsViewController();

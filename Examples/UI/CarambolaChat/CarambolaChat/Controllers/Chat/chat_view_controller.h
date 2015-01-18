@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "Controllers/Workspace/workspace_page_view_controller.h"
 #include "Models/IRCSession/irc_entity.h"
 #include "Models/IRCSession/irc_text.h"
 #include "Views/Chat/chat_view.h"
@@ -13,7 +14,7 @@ class ChatView;
 class ChatLine;
 class UserListView;
 
-class ChatViewController : public clan::ViewController
+class ChatViewController : public WorkspacePageViewController
 {
 public:
 	ChatViewController(IRCSession *session, const IRCEntity &filter);

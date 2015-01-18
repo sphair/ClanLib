@@ -81,6 +81,15 @@
     <ClCompile Include="Views\Connections\network_list_view.cpp">
       <Filter>Views\Connections</Filter>
     </ClCompile>
+    <ClCompile Include="Views\Workspace\workspace_view.cpp">
+      <Filter>Views\Workspace</Filter>
+    </ClCompile>
+    <ClCompile Include="Views\Workspace\workspace_tab_view.cpp">
+      <Filter>Views\Workspace</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\Workspace\workspace_page_view_controller.cpp">
+      <Filter>Controllers\Workspace</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="precomp.h" />
@@ -173,6 +182,15 @@
     <ClInclude Include="Views\Connections\network_list_view.h">
       <Filter>Views\Connections</Filter>
     </ClInclude>
+    <ClInclude Include="Views\Workspace\workspace_view.h">
+      <Filter>Views\Workspace</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\Workspace\workspace_tab_view.h">
+      <Filter>Views\Workspace</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\Workspace\workspace_page_view_controller.h">
+      <Filter>Controllers\Workspace</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -222,6 +240,9 @@
     </Filter>
     <Filter Include="Views\Connections">
       <UniqueIdentifier>{8a055fca-9a03-4d44-95d0-fc8569604b1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Views\Workspace">
+      <UniqueIdentifier>{07de6001-a96c-44e9-8b28-5e6c68815ef1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

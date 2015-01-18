@@ -249,6 +249,7 @@ void ChatViewController::on_text(const IRCChannel &room, const IRCNick &nick, co
 {
 	if (get_filter() == room)
 	{
+		increment_message_count();
 		add_line(nick, text, chat_log->get_color_text(), chat_log->get_color_nick_others());
 	}
 }
@@ -258,6 +259,7 @@ void ChatViewController::on_notice(const IRCChannel &room, const IRCNick &nick, 
 	if ((room.is_channel() && get_filter() == room) ||
 		(!room.is_channel() && is_active_view()))
 	{
+		increment_message_count();
 		add_notice_line(nick, text);
 	}
 }
@@ -266,6 +268,7 @@ void ChatViewController::on_action(const IRCChannel &room, const IRCNick &nick, 
 {
 	if (get_filter() == room)
 	{
+		increment_message_count();
 		add_action_line(nick, text);
 	}
 }
