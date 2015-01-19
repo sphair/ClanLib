@@ -133,7 +133,7 @@ public:
 	/// \brief Sets the threshold to determine if the font can be drawn scaled
 	///
 	/// All font sizes are scalable when using sprite fonts
-	void set_scalable(float height_threshold = 32.0f);
+	void set_scalable(float height_threshold = 64.0f);
 
 	/// \brief Print text
 	///
