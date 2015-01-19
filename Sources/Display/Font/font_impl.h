@@ -83,6 +83,7 @@ private:
 
 	FontDescription selected_description;
 	float selected_line_height = 0.0f;
+	float selected_pixel_ratio = 1.0f;
 	float scaled_height = 1.0f;	
 	float selected_height_threshold = 64.0f;		// Values greater or equal to this value can be drawn scaled
 	bool selected_pathfont = false;

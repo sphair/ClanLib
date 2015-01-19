@@ -62,16 +62,18 @@ Font_Impl::Font_Impl(FontFamily &new_font_family, const FontDescription &descrip
 
 void Font_Impl::select_font_family(Canvas &canvas)
 {
-	if (!font_engine)
+	float pixel_ratio = canvas.get_gc().get_pixel_ratio();
+	if (pixel_ratio == 0.0f)
+		pixel_ratio = 1.0f;
+
+	if ((!font_engine) || (pixel_ratio != selected_pixel_ratio))
 	{
 		// Copy the required font, setting a scalable font size
 		FontDescription new_selected = selected_description.clone();
 		if (selected_description.get_height() >= selected_height_threshold)
 			new_selected.set_height(256.0f);	// A reasonable scalable size
 
-		float pixel_ratio = canvas.get_gc().get_pixel_ratio();
-		if (pixel_ratio == 0.0f)
-			pixel_ratio = 1.0f;
+		selected_pixel_ratio = pixel_ratio;
 
 		Font_Cache font_cache = font_family.impl->get_font(new_selected, pixel_ratio);
 		if (!font_cache.engine)	// Font not found
