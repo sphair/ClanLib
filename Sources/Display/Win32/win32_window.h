@@ -66,7 +66,7 @@ public:
 	~Win32Window();
 
 public:
-	DisplayWindowHandle const *get_handle() const { return &hwnd; }
+	DisplayWindowHandle get_handle() const { return hwnd; }
 	HWND get_hwnd() const { return hwnd; }
 	Rect get_geometry() const;
 	Rect get_viewport() const;

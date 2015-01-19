@@ -41,6 +41,8 @@ namespace clan
 /** Platform-specific display window handle container.
  *  This is the implementation for X11 display windows.
  */
+
+/*
 class DisplayWindowHandle
 {
 public:
@@ -57,7 +59,7 @@ public:
 	::Display* get_display() const { return display; }
 	::Window get_window() const { return window; }
 };
-
+*/
 }
 
 #endif

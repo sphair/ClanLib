@@ -110,7 +110,7 @@ InputContext D3DDisplayWindowProvider::get_ic()
 	return window.get_ic();
 }
 
-DisplayWindowHandle const *D3DDisplayWindowProvider::get_handle() const
+DisplayWindowHandle D3DDisplayWindowProvider::get_handle() const
 {
 	return window.get_handle();
 }

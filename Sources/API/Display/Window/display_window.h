@@ -35,6 +35,13 @@
 #include "../display_target.h"
 #include <memory>
 
+#ifndef WIN32
+// We prefer not to include Xlib.h in clanlib (to prevent namespace issues when "using namespace clan")
+struct _XDisplay;
+typedef struct _XDisplay Display;
+typedef unsigned long Window;
+#endif
+
 namespace clan
 {
 /// \addtogroup clanDisplay_Window clanDisplay Window
@@ -70,6 +77,16 @@ enum class StandardCursor
 	size_we,
 	uparrow,
 	wait
+};
+
+struct DisplayWindowHandle
+{
+#ifdef WIN32
+	HWND hwnd = 0;
+#else
+	::Display *display = 0;
+	::Window window = 0;
+#endif
 };
 
 /// \brief Top-level window class.
@@ -219,9 +236,8 @@ public:
 	std::string get_title() const;
 
 	/** Returns an platform-specific internal display window handle object.
-	 *  \note This function is used internally by ClanLib.
 	 */
-	DisplayWindowHandle const *get_handle() const;
+	DisplayWindowHandle get_handle() const;
 
 /// \}
 /// \name Operations

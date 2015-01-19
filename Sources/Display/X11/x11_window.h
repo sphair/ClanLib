@@ -95,7 +95,7 @@ public:
 
 	std::string get_title() const;
 
-	DisplayWindowHandle const *get_handle() const { return &handle; }
+	DisplayWindowHandle get_handle() const { return handle; }
 	::Display *get_display() const { return handle.display; }
 	::Window get_window() const { return handle.window; }
 

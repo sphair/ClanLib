@@ -198,7 +198,7 @@ public:
 
 	PixelBuffer get_clipboard_image() const override { return x11_window.get_clipboard_image(); }
 
-	DisplayWindowHandle const *get_handle() const override { return x11_window.get_handle(); }
+	DisplayWindowHandle get_handle() const override { return x11_window.get_handle(); }
 
 	/// \brief Returns the GLX rendering context for this window.
 	GLXContext get_opengl_context() { return opengl_context; }

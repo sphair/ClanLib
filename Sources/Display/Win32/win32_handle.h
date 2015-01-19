@@ -40,6 +40,7 @@ namespace clan
 /** Platform-specific display window handle container.
  *  This is the implementation for Win32 display windows.
  */
+/*
 class DisplayWindowHandle
 {
 public:
@@ -51,7 +52,7 @@ public:
 
 	operator HWND() const { return hwnd; }
 };
-
+*/
 }
 
 #endif

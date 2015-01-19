@@ -110,7 +110,7 @@ typedef struct
 } ClanLib_MotifWmHints;
 
 X11Window::X11Window()
-: handle(nullptr, 0), color_map(0), system_cursor(0), hidden_cursor(0), cursor_bitmap(0), size_hints(nullptr),
+: color_map(0), system_cursor(0), hidden_cursor(0), cursor_bitmap(0), size_hints(nullptr),
   minimized(false), maximized(false), restore_to_maximized(false), fullscreen(false),
   wm_protocols(None), wm_delete_window(None), wm_state(None), motif_wm_hints(None), net_wm_state(None), net_wm_state_maximized_vert(None),
   net_wm_state_maximized_horz(None), net_wm_state_hidden(None), net_wm_state_fullscreen(None), kwm_win_decoration(None), win_hints(None),
@@ -266,7 +266,7 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 	if (!desc.get_owner().is_null())
 	{
 		DisplayWindow owner = desc.get_owner();
-		XSetTransientForHint(handle.display, handle.window, owner.get_handle()->get_window());
+		XSetTransientForHint(handle.display, handle.window, owner.get_handle().window);
 	}
 
 	// Setup the hidden cursor (Maybe this should be done only once when required)

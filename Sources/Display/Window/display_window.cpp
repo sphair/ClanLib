@@ -116,7 +116,7 @@ DisplayWindow::~DisplayWindow()
 /////////////////////////////////////////////////////////////////////////////
 // DisplayWindow Attributes:
 
-DisplayWindowHandle const * DisplayWindow::get_handle() const
+DisplayWindowHandle DisplayWindow::get_handle() const
 {
 	return impl->provider->get_handle();
 }

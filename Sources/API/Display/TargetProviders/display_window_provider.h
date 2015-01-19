@@ -152,9 +152,8 @@ public:
 	virtual InputContext get_ic() = 0;
 
 	/** Returns an platform-specific internal display window handle object.
-	 *  \note This function is used internally by ClanLib.
 	 */
-	virtual DisplayWindowHandle const *get_handle() const = 0;
+	virtual DisplayWindowHandle get_handle() const = 0;
 
 	/// Returns true if text is available in the clipboard.
 	virtual bool is_clipboard_text_available() const = 0;
