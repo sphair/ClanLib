@@ -106,7 +106,7 @@ namespace clan
 		std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Win32>(desc, font_databuffer, pixel_ratio);
 		font_cache.push_back(Font_Cache(engine));
 #elif defined(__APPLE__)
-		std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Cocoa>(desc, font_databuffer);
+		std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Cocoa>(desc, font_databuffer, pixel_ratio);
 		font_cache.push_back(Font_Cache(engine));
 #else
 		std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Freetype>(desc, font_databuffer);
@@ -139,7 +139,7 @@ namespace clan
 		DataBuffer font_databuffer;
 		font_databuffer.set_size(file.get_size());
 		file.read(font_databuffer.get_data(), font_databuffer.get_size());
-		load_font(desc, font_databuffer);
+		load_font(desc, font_databuffer, pixel_ratio);
 #endif
 	}
 

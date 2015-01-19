@@ -82,7 +82,7 @@ FontEngine_Freetype_Library &FontEngine_Freetype_Library::instance()
 /////////////////////////////////////////////////////////////////////////////
 // FontEngine_Freetype Construction:
 
-FontEngine_Freetype::FontEngine_Freetype(const FontDescription &description, DataBuffer &font_databuffer) : face(nullptr)
+FontEngine_Freetype::FontEngine_Freetype(const FontDescription &description, DataBuffer &font_databuffer, float pixel_ratio) : face(nullptr)
 {
 	font_description = description.clone();
 
@@ -113,10 +113,13 @@ FontEngine_Freetype::FontEngine_Freetype(const FontDescription &description, Dat
 		height = height*face->units_per_EM/face->height;
 	}
 
-	// if the device is 72 DCL_PI then 1 point becomes 1 pixel
-	FT_Set_Char_Size( face, (int)(average_width*64.0f), (int)(height*64.0f), 72, 72 );
+	float device_font_size = std::abs(desc.get_height()) * pixel_ratio;
+	float device_average_width = desc.get_average_width() * pixel_ratio;
 
-	calculate_font_metrics();
+	// if the device is 72 DCL_PI then 1 point becomes 1 pixel
+	FT_Set_Char_Size(face, (int)(device_average_width*64.0f), (int)(device_font_size*64.0f), 72, 72);
+
+	calculate_font_metrics(pixel_ratio);
 }
 
 FontEngine_Freetype::~FontEngine_Freetype()
@@ -552,7 +555,7 @@ std::vector<TaggedPoint> FontEngine_Freetype::get_contour_points(int cont, FT_Ou
 	return points;
 }
 
-void FontEngine_Freetype::calculate_font_metrics()
+void FontEngine_Freetype::calculate_font_metrics(float pixel_ratio)
 {
 	// A glyph has to be loaded to be able to get the scaled metrics information.
 	FT_UInt glyph_index = FT_Get_Char_Index(face, FT_ULong(' '));
@@ -569,11 +572,11 @@ void FontEngine_Freetype::calculate_font_metrics()
 	float internal_leading = height - face->size->metrics.y_ppem;
 	float external_leading = (face->size->metrics.height / 64.0f) - height;
 	font_metrics = FontMetrics(
-		height,
-		ascent,
-		descent,
-		internal_leading,
-		external_leading,
+		height / pixel_ratio,
+		ascent / pixel_ratio,
+		descent / pixel_ratio,
+		internal_leading / pixel_ratio,
+		external_leading / pixel_ratio,
 		font_description.get_line_height()		// Calculated in FontMetrics as height + metrics.tmExternalLeading if not specified
 		);
 }
