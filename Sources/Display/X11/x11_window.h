@@ -42,7 +42,6 @@
 #include "API/Core/Math/point.h"
 #include "API/Core/Math/rect.h"
 #include "clipboard_x11.h"
-#include "x11_handle.h"
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>

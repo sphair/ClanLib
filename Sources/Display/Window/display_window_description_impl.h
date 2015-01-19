@@ -63,7 +63,6 @@ public:
 		bpp = 0;
 		create_tablet_context = false;
 		layered = false;
-		handle = nullptr;
 		depth_size = 0;
 		stencil_size = 0;
 		use_cached_window = false;
@@ -100,7 +99,7 @@ public:
 	bool use_cached_window;
 	bool layered;
 
-	DisplayWindowHandle *handle;
+	DisplayWindowHandle handle;
 
 	int depth_size;
 	int stencil_size;

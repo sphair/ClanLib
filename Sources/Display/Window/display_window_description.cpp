@@ -140,7 +140,7 @@ bool DisplayWindowDescription::is_layered() const
 	return impl->layered;
 }
 
-DisplayWindowHandle const *DisplayWindowDescription::get_handle() const
+DisplayWindowHandle DisplayWindowDescription::get_handle() const
 {
 	return impl->handle;
 }
@@ -363,7 +363,7 @@ void DisplayWindowDescription::set_layered(bool layered)
 	impl->layered = layered;
 }
 
-void DisplayWindowDescription::set_handle(DisplayWindowHandle *handle)
+void DisplayWindowDescription::set_handle(DisplayWindowHandle handle)
 {
 	impl->handle = handle;
 }

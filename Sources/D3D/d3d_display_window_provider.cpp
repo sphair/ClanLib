@@ -112,7 +112,9 @@ InputContext D3DDisplayWindowProvider::get_ic()
 
 DisplayWindowHandle D3DDisplayWindowProvider::get_handle() const
 {
-	return window.get_handle();
+	DisplayWindowHandle handle;
+	handle.hwnd = window.get_hwnd();
+	return handle;
 }
 
 bool D3DDisplayWindowProvider::is_clipboard_text_available() const

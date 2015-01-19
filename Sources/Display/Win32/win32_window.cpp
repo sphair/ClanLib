@@ -666,9 +666,9 @@ void Win32Window::create_new_window()
 {
 	DwmFunctions::open_dll();
 
-	if (window_desc.get_handle())
+	if (window_desc.get_handle().hwnd)
 	{
-		hwnd = window_desc.get_handle()->hwnd;
+		hwnd = window_desc.get_handle().hwnd;
 		destroy_hwnd = false;
 	}
 	else
@@ -682,7 +682,7 @@ void Win32Window::create_new_window()
 
 		HWND parent = 0;
 		if (!window_desc.get_owner().is_null())
-			parent = window_desc.get_owner().get_provider()->get_handle()->hwnd;
+			parent = window_desc.get_owner().get_provider()->get_handle().hwnd;
 
 		hwnd = CreateWindowEx(
 			ex_style,

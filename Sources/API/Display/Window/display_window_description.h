@@ -129,9 +129,8 @@ public:
 	bool is_layered() const;
 
 	/** Returns an platform-specific internal display window handle object.
-	 *  \note This function is used internally by ClanLib.
 	 */
-	DisplayWindowHandle const *get_handle() const;
+	DisplayWindowHandle get_handle() const;
 
 	/// \brief Returns true if a title bar is shown.
 	bool has_caption() const;
@@ -275,9 +274,8 @@ public:
 	void set_allow_screensaver(bool allow_screensaver = true);
 
 	/** Sets the platform-specific internal display window handle object.
-	 *  \note This function is used internally by ClanLib.
 	 */
-	void set_handle(DisplayWindowHandle *handle);
+	void set_handle(DisplayWindowHandle handle);
 
 	/// \brief Sets the minimum required depth buffer.
 	/** <p>If this value is zero, the smallest available depth buffer is preferred. Otherwise,

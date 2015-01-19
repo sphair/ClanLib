@@ -58,7 +58,7 @@ namespace clan
 
 OpenGLWindowProvider::OpenGLWindowProvider(OpenGLWindowDescription &opengl_desc)
 : win32_window(),
-  opengl_context(0), device_context(0), handle(0), shadow_window(false), dwm_layered(false), site(0), fullscreen(false),
+  opengl_context(0), device_context(0), shadow_hwnd(0), shadow_window(false), dwm_layered(false), site(0), fullscreen(false),
   wglSwapIntervalEXT(0), swap_interval(-1), opengl_desc(opengl_desc), using_gl3(true), double_buffered(true)
 {
 	win32_window.func_on_resized() = bind_member(this, &OpenGLWindowProvider::on_window_resized);
@@ -95,16 +95,16 @@ OpenGLWindowProvider::~OpenGLWindowProvider()
 	{
 		ReleaseDC(win32_window.get_hwnd(), device_context);
 		device_context = 0;
-		handle = 0;
+		shadow_hwnd = 0;
 	}
 	if (shadow_window)
 	{
-		if (handle)
-			DestroyWindow(handle);
+		if (shadow_hwnd)
+			DestroyWindow(shadow_hwnd);
 		shadow_window = false;
 	}
 
-	handle = 0;
+	shadow_hwnd = 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -209,7 +209,7 @@ void OpenGLWindowProvider::create_shadow_window(HWND wnd)
 	if (window_info.dwStyle & WS_VISIBLE)
 		window_info.dwStyle -= WS_VISIBLE;
 
-	handle = CreateWindowEx(
+	shadow_hwnd = CreateWindowEx(
 		0, //window_info.dwExStyle,
 		WC_STATIC, //(LPCTSTR) window_info.atomWindowType,
 		TEXT(""),
@@ -219,7 +219,7 @@ void OpenGLWindowProvider::create_shadow_window(HWND wnd)
 		window_info.rcWindow.right - window_info.rcWindow.left,
 		window_info.rcWindow.bottom - window_info.rcWindow.top,
 		GetParent(wnd), 0, GetModuleHandle(0), 0);
-	if (handle == 0)
+	if (shadow_hwnd == 0)
 		throw Exception("Unable to create display window (opengl offscreen window)");
 
 	shadow_window = true;
@@ -234,7 +234,7 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 
 	if (!opengl_context)
 	{
-		handle = win32_window.get_hwnd();
+		HWND handle = win32_window.get_hwnd();
 		dwm_layered = false;
 
 		if (desc.is_layered() && !DwmFunctions::is_composition_enabled())
@@ -382,7 +382,7 @@ void OpenGLWindowProvider::on_window_resized()
 	{
 		RECT rect = { 0,0,0,0 };
 		GetClientRect(win32_window.get_hwnd(), &rect);
-		SetWindowPos(handle, 0, 0, 0, rect.right, rect.bottom, SWP_NOREPOSITION|SWP_NOZORDER);
+		SetWindowPos(shadow_hwnd, 0, 0, 0, rect.right, rect.bottom, SWP_NOREPOSITION | SWP_NOZORDER);
 	}
 
 	if (using_gl3)

@@ -33,6 +33,7 @@
 #include <list>
 #include <map>
 #include "API/Display/Window/display_window.h"
+#include "API/Display/Window/display_window_description.h"
 #include "API/Display/Window/input_context.h"
 #include "API/Display/Window/input_device.h"
 #include "API/Display/TargetProviders/input_device_provider.h"
@@ -40,7 +41,6 @@
 #include "API/Core/Math/rect.h"
 #include "API/Core/System/cl_platform.h"
 #include "API/Display/Image/pixel_buffer.h"
-#include "win32_handle.h"
 #include <memory>
 #include <thread>
 #include <condition_variable>
@@ -66,7 +66,6 @@ public:
 	~Win32Window();
 
 public:
-	DisplayWindowHandle get_handle() const { return hwnd; }
 	HWND get_hwnd() const { return hwnd; }
 	Rect get_geometry() const;
 	Rect get_viewport() const;
@@ -192,7 +191,7 @@ private:
 	InputDeviceProvider_Win32Mouse *get_mouse();
 	InputDeviceProvider_Win32Tablet *get_tablet();
 
-	DisplayWindowHandle hwnd;
+	HWND hwnd;
 	bool destroy_hwnd;
 	HCURSOR current_cursor;
 	HICON large_icon;
