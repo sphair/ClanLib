@@ -78,7 +78,7 @@ void ChatView::render_text_content(ChatTextView *text_view, Canvas &canvas)
 		font = style.get_font(canvas);
 		font_url = font;
 		font_fixed = font;
-		baseline_offset1 = (int)(font.get_font_metrics().get_ascent() - font_fixed.get_font_metrics().get_ascent());
+		baseline_offset1 = (int)(font.get_font_metrics(canvas).get_ascent() - font_fixed.get_font_metrics(canvas).get_ascent());
 	}
 
 	Rect content_box = text_view->geometry().content_box();

@@ -107,7 +107,7 @@ namespace clan
 	void LabelView::render_content(Canvas &canvas)
 	{
 		Font font = impl->get_font(canvas);
-		FontMetrics font_metrics = font.get_font_metrics();
+		FontMetrics font_metrics = font.get_font_metrics(canvas);
 		float baseline = font_metrics.get_baseline_offset();
 
 		std::string clipped_text = impl->_text;
@@ -176,7 +176,7 @@ namespace clan
 		if (box_style.is_height_auto())
 		{
 			Font font = impl->get_font(canvas);
-			return font.get_font_metrics().get_line_height();
+			return font.get_font_metrics(canvas).get_line_height();
 		}
 		else
 			return box_style.height();
@@ -185,7 +185,7 @@ namespace clan
 	float LabelView::get_first_baseline_offset(Canvas &canvas, float width)
 	{
 		Font font = impl->get_font(canvas);
-		return font.get_font_metrics().get_baseline_offset();
+		return font.get_font_metrics(canvas).get_baseline_offset();
 	}
 
 	float LabelView::get_last_baseline_offset(Canvas &canvas, float width)

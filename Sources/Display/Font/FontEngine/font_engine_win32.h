@@ -42,8 +42,8 @@ class DataBuffer;
 class FontEngine_Win32 : public FontEngine
 {
 public:
-	FontEngine_Win32(const FontDescription &description, const std::string &typeface_name);
-	FontEngine_Win32(const FontDescription &description, DataBuffer &font_databuffer);
+	FontEngine_Win32(const FontDescription &description, const std::string &typeface_name, float pixel_ratio);
+	FontEngine_Win32(const FontDescription &description, DataBuffer &font_databuffer, float pixel_ratio);
 	~FontEngine_Win32();
 
 	bool is_automatic_recreation_allowed() const override { return true; }
@@ -58,10 +58,9 @@ public:
 	const FontDescription &get_desc() const override { return font_description; }
 
 	void load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics) override;
-	DataBuffer get_databuffer() override { return data_buffer; }
 
 private:
-	void load_font(const FontDescription &desc, const std::string &typeface_name);
+	void load_font(const FontDescription &desc, const std::string &typeface_name, float pixel_ratio);
 
 	// Structure information from: http://www.microsoft.com/typography/otspec/otff.htm
 	struct ttf_version
@@ -131,7 +130,6 @@ private:
 	HFONT handle = 0;
 	TEXTMETRIC metrics;
 
-	DataBuffer data_buffer;
 	FontDescription font_description;
 	FontMetrics font_metrics;
 

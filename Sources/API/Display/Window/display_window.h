@@ -53,7 +53,7 @@ class Display;
 class GraphicContext;
 class DisplayWindowMode;
 class DisplayWindowDescription;
-class DisplayWindowHandle;
+struct DisplayWindowHandle;
 class InputContext;
 class Pointf;
 class Cursor;

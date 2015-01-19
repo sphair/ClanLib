@@ -58,11 +58,9 @@ Font_Impl::Font_Impl(FontFamily &new_font_family, const FontDescription &descrip
 
 	selected_description = description.clone();
 	selected_line_height = description.get_line_height();
-
-	select_font_family();
 }
 
-void Font_Impl::select_font_family()
+void Font_Impl::select_font_family(Canvas &canvas)
 {
 	if (!font_engine)
 	{
@@ -71,9 +69,13 @@ void Font_Impl::select_font_family()
 		if (selected_description.get_height() >= selected_height_threshold)
 			new_selected.set_height(256.0f);	// A reasonable scalable size
 
-		Font_Cache font_cache = font_family.impl->get_font(new_selected);
+		float pixel_ratio = canvas.get_gc().get_pixel_ratio();
+		if (pixel_ratio == 0.0f)
+			pixel_ratio = 1.0f;
+
+		Font_Cache font_cache = font_family.impl->get_font(new_selected, pixel_ratio);
 		if (!font_cache.engine)	// Font not found
-			font_cache = font_family.impl->copy_font(new_selected);
+			font_cache = font_family.impl->copy_font(new_selected, pixel_ratio);
 
 		font_engine = font_cache.engine.get();
 		GlyphCache *glyph_cache = font_cache.glyph_cache.get();
@@ -133,7 +135,7 @@ Font_Impl::~Font_Impl()
 
 int Font_Impl::get_character_index(Canvas &canvas, const std::string &text, const Pointf &point)
 {
-	select_font_family();
+	select_font_family(canvas);
 
 	float dest_x = 0;
 	float dest_y = 0;
@@ -185,7 +187,7 @@ int Font_Impl::get_character_index(Canvas &canvas, const std::string &text, cons
 
 std::vector<Rectf> Font_Impl::get_character_indices(Canvas &canvas, const std::string &text)
 {
-	select_font_family();
+	select_font_family(canvas);
 	std::vector<Rectf> index_store;
 
 	float dest_x = 0;
@@ -233,21 +235,21 @@ std::vector<Rectf> Font_Impl::get_character_indices(Canvas &canvas, const std::s
 	return index_store;
 }
 
-const FontMetrics &Font_Impl::get_font_metrics()
+const FontMetrics &Font_Impl::get_font_metrics(Canvas &canvas)
 {
-	select_font_family();
+	select_font_family(canvas);
 	return selected_metrics;
 }
 
-void Font_Impl::get_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics)
+void Font_Impl::get_glyph_path(Canvas &canvas, unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics)
 {
-	select_font_family();
+	select_font_family(canvas);
 	return font_engine->load_glyph_path(glyph_index, out_path, out_metrics);
 }
 
 void Font_Impl::draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color)
 {
-	select_font_family();
+	select_font_family(canvas);
 
 	float line_spacing = std::round(selected_line_height); // TBD: do we want to round this?
 	Pointf pos = canvas.grid_fit(position);
@@ -256,7 +258,7 @@ void Font_Impl::draw_text(Canvas &canvas, const Pointf &position, const std::str
 
 GlyphMetrics Font_Impl::get_metrics(Canvas &canvas, unsigned int glyph)
 {
-	select_font_family();
+	select_font_family(canvas);
 	GlyphMetrics metrics = font_draw->get_metrics(canvas, glyph);
 	metrics.advance *= scaled_height;
 	metrics.bbox_offset *= scaled_height;
@@ -267,10 +269,10 @@ GlyphMetrics Font_Impl::get_metrics(Canvas &canvas, unsigned int glyph)
 
 GlyphMetrics Font_Impl::measure_text(Canvas &canvas, const std::string &string)
 {
-	select_font_family();
+	select_font_family(canvas);
 	GlyphMetrics total_metrics;
 
-	float line_spacing = std::round(selected_line_height); // TBD: do weant to round this?
+	float line_spacing = std::round(selected_line_height); // TBD: do we want to round this?
 	bool first_char = true;
 	Rectf text_bbox;
 

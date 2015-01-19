@@ -54,7 +54,7 @@ class Sizef;
 class Rectf;
 class DisplayWindow;
 class DisplayWindowDescription_Impl;
-class DisplayWindowHandle;
+struct DisplayWindowHandle;
 
 /// \brief Display window description class.
 ///

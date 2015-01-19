@@ -61,13 +61,13 @@ namespace clan
 		throw_if_null();
 		FontDescription desc;
 		desc.set_height(height);
-		impl->load_font(desc, typeface_name);
+		impl->add(desc, typeface_name);
 	}
 
 	void FontFamily::add(const std::string &typeface_name, const FontDescription &desc)
 	{
 		throw_if_null();
-		impl->load_font(desc, typeface_name);
+		impl->add(desc, typeface_name);
 	}
 
 	void FontFamily::add(const FontDescription &desc, const std::string &ttf_filename)
@@ -85,7 +85,7 @@ namespace clan
 			file.read(font_databuffer.get_data(), font_databuffer.get_size());
 		}
 
-		impl->load_font(desc, font_databuffer);
+		impl->add(desc, font_databuffer);
 	}
 
 	void FontFamily::add(const FontDescription &desc, const std::string &ttf_filename, FileSystem fs)
@@ -99,13 +99,13 @@ namespace clan
 			file.read(font_databuffer.get_data(), font_databuffer.get_size());
 		}
 
-		impl->load_font(desc, font_databuffer);
+		impl->add(desc, font_databuffer);
 	}
 
 	void FontFamily::add(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, float spacelen, bool monospace, const FontMetrics &metrics)
 	{
 		throw_if_null();
-		impl->load_font(canvas, sprite, glyph_list, spacelen, monospace, metrics);
+		impl->font_face_load(canvas, sprite, glyph_list, spacelen, monospace, metrics);
 	}
 
 	void FontFamily::throw_if_null() const

@@ -150,6 +150,4 @@ namespace clan
 		throw Exception(string_format("Font resource %1 did not have a <sprite> or <ttf> child element", resource.get_name()));
 
 	}
-
-
 }

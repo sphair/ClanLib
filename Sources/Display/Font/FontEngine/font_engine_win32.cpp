@@ -39,17 +39,15 @@
 namespace clan
 {
 
-FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, const std::string &typeface_name)
+FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, const std::string &typeface_name, float pixel_ratio)
 {
-	load_font(desc, typeface_name);
+	load_font(desc, typeface_name, pixel_ratio);
 }
 
-FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, DataBuffer &font_databuffer)
+FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, DataBuffer &font_databuffer, float pixel_ratio)
 {
 	if (font_databuffer.is_null())
 		throw Exception("Attempt to load an empty font buffer");
-
-	data_buffer = font_databuffer;
 
 	DWORD out_number_of_fonts = 0;
 	HANDLE font_handle = AddFontMemResourceEx(font_databuffer.get_data(), font_databuffer.get_size(), 0, &out_number_of_fonts);
@@ -60,17 +58,11 @@ FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, DataBuffer &font
 	if (typeface_name.empty())
 		throw Exception("Unable to obtain typeface name");
 
-	load_font(desc, typeface_name);
+	load_font(desc, typeface_name, pixel_ratio);
 }
 
-void FontEngine_Win32::load_font(const FontDescription &desc, const std::string &typeface_name)
+void FontEngine_Win32::load_font(const FontDescription &desc, const std::string &typeface_name, float pixel_ratio)
 {
-	HDC dc = GetDC(0);
-	int ppi = GetDeviceCaps(dc, LOGPIXELSX);
-	ReleaseDC(0, dc);
-
-	pixel_ratio = ppi / 96.0f;
-
 	float device_font_size = std::abs(desc.get_height()) * pixel_ratio;
 	float device_average_width = desc.get_average_width() * pixel_ratio;
 
@@ -92,7 +84,7 @@ void FontEngine_Win32::load_font(const FontDescription &desc, const std::string 
 	if (handle == 0)
 		throw Exception("CreateFont failed");
 
-	dc = GetDC(0);
+	HDC dc = GetDC(0);
 	int old_mode = SetMapMode(dc, MM_TEXT);
 	HGDIOBJ old_font = SelectObject(dc, handle);
 	BOOL result = GetTextMetrics(dc, &metrics);

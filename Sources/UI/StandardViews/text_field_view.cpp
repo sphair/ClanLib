@@ -340,7 +340,7 @@ namespace clan
 		float advance_before = font.measure_text(canvas, txt_before).advance.width;
 		float advance_selected = font.measure_text(canvas, txt_selected).advance.width;
 
-		FontMetrics font_metrics = font.get_font_metrics();
+		FontMetrics font_metrics = font.get_font_metrics(canvas);
 		float baseline = font_metrics.get_baseline_offset();
 		float top_y = baseline - font_metrics.get_ascent();
 		float bottom_y = baseline + font_metrics.get_descent();
@@ -380,7 +380,7 @@ namespace clan
 		if (box_style.is_height_auto())
 		{
 			Font font = impl->get_font(canvas);
-			return font.get_font_metrics().get_line_height();
+			return font.get_font_metrics(canvas).get_line_height();
 		}
 		else
 			return box_style.height();
@@ -389,7 +389,7 @@ namespace clan
 	float TextFieldView::get_first_baseline_offset(Canvas &canvas, float width)
 	{
 		Font font = impl->get_font(canvas);
-		return font.get_font_metrics().get_baseline_offset();
+		return font.get_font_metrics(canvas).get_baseline_offset();
 	}
 
 	float TextFieldView::get_last_baseline_offset(Canvas &canvas, float width)

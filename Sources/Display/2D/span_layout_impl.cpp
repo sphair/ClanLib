@@ -375,7 +375,7 @@ SpanLayout_Impl::TextSizeResult SpanLayout_Impl::find_text_size(Canvas &canvas, 
 	if (layout_cache.object_index != object_index)
 	{
 		layout_cache.object_index = object_index;
-		layout_cache.metrics = font.get_font_metrics();
+		layout_cache.metrics = font.get_font_metrics(canvas);
 	}
 
 	TextSizeResult result;
@@ -418,7 +418,7 @@ SpanLayout_Impl::TextSizeResult SpanLayout_Impl::find_text_size(Canvas &canvas, 
 			{
 				layout_cache.object_index = object_index;
 				font = objects[object_index].font;
-				layout_cache.metrics = font.get_font_metrics();
+				layout_cache.metrics = font.get_font_metrics(canvas);
 			}
 		}
 	}

@@ -59,7 +59,7 @@ public:
 	Font_Impl(FontFamily &new_font_family, const FontDescription &description);
 	~Font_Impl();
 
-	const FontMetrics &get_font_metrics();
+	const FontMetrics &get_font_metrics(Canvas &canvas);
 
 	int get_character_index(Canvas &canvas, const std::string &text, const Pointf &point);
 	std::vector<Rectf> get_character_indices(Canvas &canvas, const std::string &text);
@@ -70,7 +70,7 @@ public:
 
 	void draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color);
 
-	void get_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics);
+	void get_glyph_path(Canvas &canvas, unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics);
 
 	void set_height(float value);
 	void set_weight(FontWeight value);
@@ -79,7 +79,7 @@ public:
 	void set_scalable(float height_threshold);
 
 private:
-	void select_font_family();
+	void select_font_family(Canvas &canvas);
 
 	FontDescription selected_description;
 	float selected_line_height = 0.0f;

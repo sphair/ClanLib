@@ -228,7 +228,7 @@ std::string Font::get_clipped_text(Canvas &canvas, const Sizef &box_size, const 
 	{
 		Pointf pos;
 
-		FontMetrics fm = get_font_metrics();
+		FontMetrics fm = get_font_metrics(canvas);
 		float ascent = fm.get_ascent();
 		float descent = fm.get_descent();
 		float line_spacing = fm.get_line_height();
@@ -288,10 +288,10 @@ std::string Font::get_clipped_text(Canvas &canvas, const Sizef &box_size, const 
 	return out_string;
 }
 
-FontMetrics Font::get_font_metrics()
+FontMetrics Font::get_font_metrics(Canvas &canvas)
 {
 	if (impl)
-		return impl->get_font_metrics();
+		return impl->get_font_metrics(canvas);
 	return FontMetrics();
 }
 

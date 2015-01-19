@@ -306,7 +306,7 @@ namespace clan
 
 				obj_advance_width = object.get_font(canvas).measure_text(canvas, obj_text).advance.width;
 
-				FontMetrics font_metrics = object.get_font(canvas).get_font_metrics();
+				FontMetrics font_metrics = object.get_font(canvas).get_font_metrics(canvas);
 				obj_ascent = font_metrics.get_baseline_offset();
 				obj_descent = font_metrics.get_line_height() - font_metrics.get_baseline_offset();
 

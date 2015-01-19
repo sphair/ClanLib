@@ -157,7 +157,7 @@ public:
 	GlyphMetrics measure_text(Canvas &canvas, const std::string &string);
 
 	/// \brief Retrieves font metrics description for the selected font.
-	FontMetrics get_font_metrics();
+	FontMetrics get_font_metrics(Canvas &canvas);
 
 	/// \brief Retrieves clipped version of the text that will fit into a box
 	///
