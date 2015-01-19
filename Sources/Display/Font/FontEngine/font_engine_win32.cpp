@@ -39,12 +39,12 @@
 namespace clan
 {
 
-FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, const std::string &typeface_name, float pixel_ratio)
+FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, const std::string &typeface_name, float pixel_ratio) : pixel_ratio(pixel_ratio)
 {
 	load_font(desc, typeface_name, pixel_ratio);
 }
 
-FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, DataBuffer &font_databuffer, float pixel_ratio)
+FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, DataBuffer &font_databuffer, float pixel_ratio) : pixel_ratio(pixel_ratio)
 {
 	if (font_databuffer.is_null())
 		throw Exception("Attempt to load an empty font buffer");
