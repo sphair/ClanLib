@@ -199,34 +199,39 @@ void ChatViewController::add_line(const IRCNick &sender, const IRCText &text, co
 
 void ChatViewController::add_line_text(ChatLine &line, const std::string &text, const Colorf &color)
 {
-	int start_offset = 0;
-	while (true)
+	auto urls_begin = std::sregex_iterator(text.begin(), text.end(), regexp_url1);
+	auto urls_end = std::sregex_iterator();
+
+	TextStyle style;
+	style.set_font("Source Sans Pro", 14.0f, 20.0f);
+	style.set_color(color);
+
+	TextStyle url_style;
+	url_style.set_font("Source Sans Pro", 14.0f, 20.0f);
+	url_style.set_weight_bold();
+	url_style.set_color(chat_log->get_color_url());
+
+	size_t pos = 0;
+	for (auto it = urls_begin; it != urls_end; ++it)
 	{
-		/*RegExpMatch result = regexp_url1.search(text, start_offset);
-		if (result.is_match())
+		auto match = *it;
+		if (pos != match.position())
 		{
-			int cur_offset = result.get_capture_pos(1);
-			if (cur_offset != start_offset)
-				layout.add_text(clan::StringHelp::utf8_to_text(text.substr(start_offset, cur_offset - start_offset)), chat->font, color);
-
-			ChatUrl url;
-			url.object_id = next_chat_url_id++;
-			url.url = clan::StringHelp::utf8_to_text(result.get_capture(text, 1));
-			chat_urls.push_back(url);
-
-			layout.add_text(url.url, chat->font_url, chat->get_color_url(), url.object_id);
-
-			start_offset = cur_offset + result.get_capture_length(1);
+			line.add_text(style, text.substr(pos, match.position() - pos));
 		}
-		else*/
-		{
-			TextStyle style;
-			style.set_font("Source Sans Pro", 14.0f, 20.0f);
-			style.set_color(color);
-			line.add_text(style, text.substr(start_offset));
-			break;
-		}
+
+		ChatUrl url;
+		url.object_id = next_chat_url_id++;
+		url.url = match.str();
+		chat_urls.push_back(url);
+
+		line.add_text(url_style, match.str(), url.object_id);
+
+		pos = match.position() + match.length();
 	}
+
+	if (pos != text.length())
+		line.add_text(style, text.substr(pos));
 }
 
 void ChatViewController::irc_session_destroyed(IRCSession *destroyed_session)

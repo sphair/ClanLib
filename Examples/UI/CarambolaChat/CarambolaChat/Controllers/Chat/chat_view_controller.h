@@ -5,6 +5,7 @@
 #include "Models/IRCSession/irc_entity.h"
 #include "Models/IRCSession/irc_text.h"
 #include "Views/Chat/chat_view.h"
+#include <regex>
 
 class WorkspaceViewController;
 class IRCSession;
@@ -76,6 +77,10 @@ private:
 	std::string icon_operator = "Icons/user_operator.png";
 	std::string icon_voiced = "Icons/user_voice.png";
 
+	std::vector<ChatUrl> chat_urls;
+	int next_chat_url_id = 1;
+	std::regex regexp_url1 = std::regex("(https?://.*?)([ \\r\\n\\t\"'>)]|$)");
+
 	clan::SlotContainer slots;
 /*
 	static std::string get_view_caption(IRCSession *session, const IRCEntity &filter);
@@ -116,13 +121,8 @@ private:
 	const static int inputbox_min_height = 22;
 	int inputbox_height = inputbox_min_height;
 
-	std::vector<ChatUrl> chat_urls;
-	int next_chat_url_id = 1;
-
 	int icon_normal_index, icon_operator_index, icon_voiced_index;
 	int next_icon_index = 1;
-
-	CL_RegExp regexp_url1 = "(https?://.*?)([ \\r\\n\\t\"'>)]|$)";
 
 	CL_Image icon_action;
 	CL_Image icon_notice;
