@@ -113,8 +113,8 @@ FontEngine_Freetype::FontEngine_Freetype(const FontDescription &description, Dat
 		height = height*face->units_per_EM/face->height;
 	}
 
-	float device_font_size = std::abs(desc.get_height()) * pixel_ratio;
-	float device_average_width = desc.get_average_width() * pixel_ratio;
+	float device_font_size = std::abs(height) * pixel_ratio;
+	float device_average_width = description.get_average_width() * pixel_ratio;
 
 	// if the device is 72 DCL_PI then 1 point becomes 1 pixel
 	FT_Set_Char_Size(face, (int)(device_average_width*64.0f), (int)(device_font_size*64.0f), 72, 72);

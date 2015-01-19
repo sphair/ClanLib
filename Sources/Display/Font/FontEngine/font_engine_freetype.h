@@ -99,7 +99,7 @@ public:
 /// \{
 
 private:
-	void calculate_font_metrics();
+	void calculate_font_metrics(float pixel_ratio);
 	TagStruct get_tag_struct(int cont, int index, FT_Outline *outline);
 	int get_index_of_next_contour_point(int cont, int index, FT_Outline *outline);
 	int get_index_of_prev_contour_point(int cont, int index, FT_Outline *outline);
