@@ -181,6 +181,13 @@ Size GraphicContext::get_size() const
 
 float GraphicContext::get_pixel_ratio() const
 {
+	if (!impl->write_frame_buffer.is_null())
+	{
+		float ratio = impl->write_frame_buffer.get_pixel_ratio();
+		if (ratio != 0.0f)
+			return ratio;
+		return 1.0f;
+	}
 	return impl->graphic_screen->get_provider()->get_pixel_ratio();
 }
 

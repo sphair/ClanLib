@@ -199,6 +199,13 @@ public:
 	/// \param target = Target
 	void set_bind_target(FrameBufferBindTarget target);
 
+	/** Retrieves the pixel ratio of this texture.
+	*  \return The display pixel ratio set for this texture.
+	*          A zero value implies that no pixel ratio has been set
+	*/
+	float get_pixel_ratio() const;
+
+
 /// \}
 /// \name Implementation
 /// \{
