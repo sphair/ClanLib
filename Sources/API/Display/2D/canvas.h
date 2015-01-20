@@ -71,8 +71,8 @@ enum MapMode
 /// \brief 2D Graphics Canvas
 class Canvas
 {
-/// \name Construction
-/// \{
+	/// \name Construction
+	/// \{
 
 public:
 	/// \brief Constructs a null instance.
@@ -86,9 +86,9 @@ public:
 
 	~Canvas();
 
-/// \}
-/// \name Attributes
-/// \{
+	/// \}
+	/// \name Attributes
+	/// \{
 public:
 	/// \brief Create a copy of a canvas
 	Canvas create();
@@ -134,6 +134,10 @@ public:
 
 	/// \brief Return the content of the read buffer into a pixel buffer.
 	PixelBuffer get_pixeldata(TextureFormat texture_format = tf_rgba8, bool clamp = true);
+
+	/// Retrieves the display pixel ratio of the context.
+	/// \seealso Resolution Independence
+	float get_pixel_ratio() const { return get_gc().get_pixel_ratio(); }
 
 /// \}
 /// \name Operations
