@@ -113,11 +113,10 @@ FontEngine_Freetype::FontEngine_Freetype(const FontDescription &description, Dat
 		height = height*face->units_per_EM/face->height;
 	}
 
-	float device_font_size = std::abs(height) * pixel_ratio;
-	float device_average_width = description.get_average_width() * pixel_ratio;
+	float dpi = 96.0f * pixel_ratio;
 
 	// if the device is 72 DCL_PI then 1 point becomes 1 pixel
-	FT_Set_Char_Size(face, (int)(device_average_width*64.0f), (int)(device_font_size*64.0f), 72, 72);
+	FT_Set_Char_Size(face, (int)(description.get_average_width()*64.0f), (int)(height*64.0f), dpi, dpi);
 
 	calculate_font_metrics();
 }
@@ -351,7 +350,7 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph_standard(int glyph, bool ant
 	font_buffer.buffer_rect = pixelbuffer.get_size();
 	font_buffer.empty_buffer = false;
 
-	font_buffer.size = Sizef(pixelbuffer.get_width(), pixelbuffer.get_height());
+	font_buffer.size = Sizef(pixelbuffer.get_width() / pixel_ratio, pixelbuffer.get_height() / pixel_ratio);
 
 	unsigned char *src_data = slot->bitmap.buffer;
 	unsigned char *pixel_data = (unsigned char *) font_buffer.buffer.get_data();
@@ -463,7 +462,7 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph_subpixel(int glyph)
 	font_buffer.buffer = pixelbuffer;
 	font_buffer.buffer_rect = pixelbuffer.get_size();
 	font_buffer.empty_buffer = false;
-	font_buffer.size = Sizef(pixelbuffer.get_width(), pixelbuffer.get_height());
+	font_buffer.size = Sizef(pixelbuffer.get_width() / pixel_ratio, pixelbuffer.get_height() / pixel_ratio);
 
 	unsigned char *src_data = slot->bitmap.buffer;
 	unsigned char *pixel_data = (unsigned char *) font_buffer.buffer.get_data();

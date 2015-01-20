@@ -246,7 +246,7 @@ private:
 	Rect largest_exposed_rect;
 
 	float ppi           = 96.0f;
-	float pixel_ratio   = std::nan("");
+	float pixel_ratio   = 0.0f;	// 0.0f = Unset
 
 /// \}
 };
