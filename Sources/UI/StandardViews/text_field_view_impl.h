@@ -46,6 +46,8 @@ namespace clan
 		void on_pointer_move(PointerEvent &e);
 		void on_focus_gained(FocusChangeEvent &e);
 		void on_focus_lost(FocusChangeEvent &e);
+		void on_activated(ActivationChangeEvent &e);
+		void on_deactivated(ActivationChangeEvent &e);
 
 		void select_to(size_t pos);
 
