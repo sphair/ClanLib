@@ -49,6 +49,11 @@ namespace clan
 		return impl->window;
 	}
 
+	Canvas WindowView::get_canvas() const
+	{
+		return impl->canvas;
+	}
+
 	bool WindowView::hidden() const
 	{
 		return !impl->window.is_visible();

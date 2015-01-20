@@ -50,6 +50,7 @@ namespace clan
 		/// \brief Returns the position and size within the canvas
 		Rect get_rect() const;
 
+		Canvas get_canvas() const override;
 		void set_needs_render() override;
 		bool local_root() override;
 		void layout_local() override;

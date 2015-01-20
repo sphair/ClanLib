@@ -77,6 +77,8 @@ namespace clan
 		const BoxGeometry &geometry() const;
 		void set_geometry(const BoxGeometry &geometry);
 
+		virtual Canvas get_canvas() const;
+
 		virtual void set_needs_render();
 
 		void render(Canvas &canvas);

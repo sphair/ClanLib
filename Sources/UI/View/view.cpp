@@ -129,6 +129,15 @@ namespace clan
 			set_needs_render();
 	}
 
+	Canvas View::get_canvas() const
+	{
+		View *super = superview();
+		if (super)
+			return super->get_canvas();
+		else
+			return Canvas();
+	}
+
 	void View::set_needs_render()
 	{
 		View *super = superview();
