@@ -1605,7 +1605,7 @@ void X11Window::set_pixel_ratio(float ratio)
 	pixel_ratio = ratio;
 
 	// Pixel ratio is not set; calculate closest pixel ratio.
-	if (std::isnan(pixel_ratio))
+	if (pixel_ratio == 0.0f)
 	{
 		int s = std::round(ppi / 16.0f);
 		/**/ if (s <= 6)  // <=  96 PPI; old tech; use 1:1 ratio.
@@ -1621,7 +1621,6 @@ void X11Window::set_pixel_ratio(float ratio)
 			pixel_ratio = static_cast<float>(s) / 6.0f;
 		}
 	}
-
 	// TODO Adjust everything related to pixel ratio.
 }
 
