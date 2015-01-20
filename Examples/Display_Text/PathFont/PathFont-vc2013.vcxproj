@@ -12,7 +12,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>PathFont</ProjectName>
-    <ProjectGuid>{4E27E943-27C7-4F00-A431-B6ACA236FFE4}</ProjectGuid>
+    <ProjectGuid>{AA25EBA5-F728-40CC-8E45-BA8D3577801B}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">

@@ -142,7 +142,7 @@ int App::start(const std::vector<std::string> &args)
 		canvas.reset_rasterizer_state();
 		canvas.reset_depth_stencil_state();
 
-		window.flip(1);
+		window.flip(0);
 		RunLoop::process();
 	}
 
