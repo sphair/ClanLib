@@ -109,7 +109,8 @@ void GameTime_Impl::update()
 	uint64_t current_tick = (current_time - start_time) / ticks_per_microsecond;
 
 	ticks_elapsed = current_tick - last_tick;
-	time_elapsed_ms = (int) ((current_time - last_time) / 1000);
+	time_elapsed_ms = (int)((time_elapsed_ms_microsecond_adjustment + current_time - last_time) / 1000);
+	time_elapsed_ms_microsecond_adjustment = (current_time - last_time) % 1000;
 	time_elapsed = (float)((current_time - last_time) / (double) 1000000);
 	tick_interpolation_time = (float)(((current_time - start_time) % ticks_per_microsecond) / (double)ticks_per_microsecond);
 
@@ -167,6 +168,7 @@ void GameTime_Impl::reset()
 	ticks_elapsed = 0;
 	tick_interpolation_time = 0.0f;
 	time_elapsed_ms = 0;
+	time_elapsed_ms_microsecond_adjustment = 0;
 	num_updates_in_2_seconds = 0;
 	update_frame_start_time = current_time;
 	current_fps = 0;

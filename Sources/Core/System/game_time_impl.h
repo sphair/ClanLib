@@ -54,6 +54,8 @@ public:
 
 	float time_elapsed;
 	int time_elapsed_ms;
+	int time_elapsed_ms_microsecond_adjustment;		// Amount of Microseconds lost due to time_elapsed_ms rounding (to add on for next time)
+
 	int ticks_elapsed;
 	float tick_interpolation_time;
 
