@@ -58,6 +58,8 @@ namespace clan
 		slots.connect(sig_pointer_move(), impl.get(), &TextFieldViewImpl::on_pointer_move);
 		slots.connect(sig_focus_gained(), impl.get(), &TextFieldViewImpl::on_focus_gained);
 		slots.connect(sig_focus_lost(), impl.get(), &TextFieldViewImpl::on_focus_lost);
+		slots.connect(sig_activated(), impl.get(), &TextFieldViewImpl::on_activated);
+		slots.connect(sig_activated(), impl.get(), &TextFieldViewImpl::on_deactivated);
 
 		impl->scroll_timer.func_expired() = [&]()
 		{
@@ -444,6 +446,24 @@ namespace clan
 		}
 		stop_blink();
 		set_text_selection(0, 0);
+	}
+
+	void TextFieldViewImpl::on_activated(ActivationChangeEvent &e)
+	{
+		if (textfield->has_focus())
+		{
+			start_blink();
+		}
+	}
+
+	void TextFieldViewImpl::on_deactivated(ActivationChangeEvent &e)
+	{
+		if (mouse_selecting)
+		{
+			scroll_timer.stop();
+			mouse_selecting = false;
+		}
+		stop_blink();
 	}
 
 	void TextFieldViewImpl::on_key_press(KeyEvent &e)
