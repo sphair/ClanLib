@@ -2,6 +2,10 @@
 #include "precomp.h"
 #include "dcc_file_transfer_connection.h"
 
+#ifndef WIN32
+#include <arpa/inet.h>
+#endif
+
 DCCFileTransferConnection::DCCFileTransferConnection(const clan::SocketName &socket_name)
 : socket_name(socket_name), bytes_received(0), status(status_not_started)
 {
