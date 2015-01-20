@@ -46,7 +46,7 @@ void Text::init(clan::Canvas &canvas, const std::string &font_family_name, const
 	init_stage1_count_glyphs(reader);
 	init_stage2_examine_glyphs(canvas, reader);
 
-	font_metrics = font.get_font_metrics();
+	font_metrics = font.get_font_metrics(canvas);
 
 	scroller_xoffset = 0;
 	time_counter = 0;

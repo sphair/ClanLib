@@ -221,7 +221,7 @@ void App::select_font()
 			break;
 	}
 
-	font_metrics = selected_font.get_font_metrics();
+	font_metrics = selected_font.get_font_metrics(canvas);
 	font_size = selected_font.measure_text(canvas, font_text).bbox_size;
 }
 
