@@ -567,7 +567,7 @@ namespace clan
 		if (textfield->has_focus())
 		{
 			mouse_selecting = true;
-			cursor_pos = get_character_index(e.pos().x);
+			cursor_pos = get_character_index(e.pos(textfield).x);
 			set_text_selection(cursor_pos, 0);
 		}
 		else
@@ -591,7 +591,7 @@ namespace clan
 		{
 			scroll_timer.stop();
 			mouse_selecting = false;
-			int sel_end = get_character_index(e.pos().x);
+			int sel_end = get_character_index(e.pos(textfield).x);
 			selection_length = sel_end - selection_start;
 			cursor_pos = sel_end;
 			textfield->set_focus();
@@ -608,7 +608,7 @@ namespace clan
 			return;
 
 		Rect content_rect = textfield->geometry().content_box();
-		int xpos = e.pos().x;
+		int xpos = e.pos(textfield).x;
 		if (xpos < content_rect.left || xpos > content_rect.right)
 		{
 			if (xpos < content_rect.left)
@@ -622,7 +622,7 @@ namespace clan
 		else
 		{
 			scroll_timer.stop();
-			cursor_pos = get_character_index(e.pos().x);
+			cursor_pos = get_character_index(e.pos(textfield).x);
 			selection_length = cursor_pos - selection_start;
 			textfield->set_needs_render();
 		}

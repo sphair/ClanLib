@@ -28,7 +28,7 @@ public:
 
 	void add_line(ChatLine text);
 
-	//TextPosition hit_test(const clan::Point &pos);
+	TextPosition hit_test(const clan::Point &pos);
 	void set_selection(const TextPosition &start, const TextPosition &end);
 	void copy_to_clipboard();
 
@@ -53,12 +53,11 @@ private:
 	void render_text_content(ChatTextView *text_view, clan::Canvas &canvas);
 
 	void on_scroll();
-	//void on_resize();
-	//void on_process_message(clan::GUIMessage &msg);
-	//void on_input_message(const clan::GUIMessage_Input &msg);
-	//void on_pointer_message(const clan::GUIMessage_Pointer &msg);
+	void on_pointer_press(clan::PointerEvent &e);
+	void on_pointer_release(clan::PointerEvent &e);
+	void on_pointer_move(clan::PointerEvent &e);
 
-	//TextPosition hit_test_line_column(clan::GraphicContext &gc, int line, int column, clan::SpanLayout &span_layout, const clan::Point &pos);
+	TextPosition hit_test_line_column(clan::Canvas &canvas, int line, int column, clan::SpanLayout &span_layout, const clan::Point &pos);
 	static int offset_for_line_column(int line_index, int column, const TextPosition &pos);
 
 	void append_column_text(int line, int column, ChatLine &chatline, std::string prefix, std::string postfix, std::string &out_text);
@@ -69,6 +68,7 @@ private:
 	int get_prefix_width() const;
 	void invalidate_lines(int start, int end);
 
+	std::shared_ptr<ChatTextView> text_view;
 	std::shared_ptr<clan::ScrollBarView> scroll;
 	std::list<ChatLine> lines;
 	clan::SlotContainer slots;

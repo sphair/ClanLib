@@ -495,6 +495,22 @@ namespace clan
 			return Pointf();
 	}
 
+	Pointf View::to_root_pos(const Pointf &pos)
+	{
+		if (superview())
+			return superview()->to_root_pos(geometry().content_box().get_top_left() + pos);
+		else
+			return pos;
+	}
+
+	Pointf View::from_root_pos(const Pointf &pos)
+	{
+		if (superview())
+			return superview()->from_root_pos(pos) - geometry().content_box().get_top_left();
+		else
+			return pos;
+	}
+
 	void View::dispatch_event(EventUI *e, bool no_propagation)
 	{
 		e->_target = shared_from_this();

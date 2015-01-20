@@ -459,7 +459,6 @@ void ChatViewController::on_nick_mode_change(const IRCNick &executing_nick, cons
 
 void ChatViewController::on_url_clicked(int object_id)
 {
-	/*
 	for (size_t i = 0; i < chat_urls.size(); ++i)
 	{
 		if (chat_urls[i].object_id == object_id)
@@ -469,7 +468,6 @@ void ChatViewController::on_url_clicked(int object_id)
 #endif
 		}
 	}
-	*/
 }
 
 void ChatViewController::on_inputbox_return_pressed()

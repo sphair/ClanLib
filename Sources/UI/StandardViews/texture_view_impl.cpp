@@ -121,15 +121,15 @@ namespace clan
 	void TextureView_Impl::window_pointer_event(PointerEvent &e_window)
 	{
 		PointerEvent e = e_window;
-		e.set_pos(e.pos() - window_view->geometry().content.get_top_left());
+		e.set_pos(window_view, e.pos(window_view) - window_view->geometry().content.get_top_left());
 
-		std::shared_ptr<View> view_above_cursor = window_view->find_view_at(e.pos());
+		std::shared_ptr<View> view_above_cursor = window_view->find_view_at(e.pos(window_view));
 
 		if (view_above_cursor != hot_view)
 		{
 			if (hot_view)
 			{
-				PointerEvent e_exit(PointerEventType::leave, PointerButton::none, e.pos(), e.alt_down(), e.shift_down(), e.ctrl_down(), e.cmd_down());
+				PointerEvent e_exit(PointerEventType::leave, PointerButton::none, e.pos(window_view->root_view()), e.alt_down(), e.shift_down(), e.ctrl_down(), e.cmd_down());
 				hot_view->dispatch_event(&e_exit, true);
 			}
 
@@ -137,7 +137,7 @@ namespace clan
 
 			if (hot_view)
 			{
-				PointerEvent e_enter(PointerEventType::enter, PointerButton::none, e.pos(), e.alt_down(), e.shift_down(), e.ctrl_down(), e.cmd_down());
+				PointerEvent e_enter(PointerEventType::enter, PointerButton::none, e.pos(window_view->root_view()), e.alt_down(), e.shift_down(), e.ctrl_down(), e.cmd_down());
 				hot_view->dispatch_event(&e_enter, true);
 
 				if (!cursor_window.is_null())

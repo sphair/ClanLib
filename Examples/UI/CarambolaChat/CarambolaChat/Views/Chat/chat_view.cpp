@@ -10,8 +10,9 @@ ChatView::ChatView()
 {
 	box_style.set_layout_hbox();
 
-	auto text_view = std::make_shared<ChatTextView>(this);
+	text_view = std::make_shared<ChatTextView>(this);
 	text_view->box_style.set_flex(1.0f, 1.0f);
+	text_view->set_focus_policy(FocusPolicy::accept);
 
 	scroll = std::make_shared<ScrollBarView>();
 	scroll->set_vertical();
@@ -26,6 +27,9 @@ ChatView::ChatView()
 	add_subview(scroll);
 
 	slots.connect(scroll->sig_scroll(), this, &ChatView::on_scroll);
+	slots.connect(text_view->sig_pointer_press(), this, &ChatView::on_pointer_press);
+	slots.connect(text_view->sig_pointer_release(), this, &ChatView::on_pointer_release);
+	slots.connect(text_view->sig_pointer_move(), this, &ChatView::on_pointer_move);
 }
 
 ChatView::~ChatView()
@@ -120,22 +124,19 @@ void ChatView::render_text_content(ChatTextView *text_view, Canvas &canvas)
 	canvas.pop_cliprect();
 }
 
-/*
 ChatView::TextPosition ChatView::hit_test(const Point &pos)
 {
-	GraphicContext gc = get_gc();
-	Rect content_box = part_background.get_content_box(get_size());
-	content_box.right -= scroll->get_width();
-	content_box = part_text.get_content_box(content_box);
-	content_box.left += 5;
-	content_box.right -= 5;
-	content_box.top += 5;
-	content_box.bottom -= 5;
+	Canvas canvas = get_canvas();
+	if (canvas.is_null())
+		return TextPosition();
+
+	Rect content_box = text_view->geometry().content_box();
+	content_box.shrink(5);
 
 	int y = content_box.bottom;
-	int skip_lines = scroll->get_max()-(scroll->get_position()+1);
+	int skip_lines = (int)std::round(scroll->max_position() - (scroll->position() + 1));
 
-	std::list<ChatLine *>::reverse_iterator it;
+	std::list<ChatLine>::reverse_iterator it;
 	int line_index = lines.size();
 	for (it = lines.rbegin(); it != lines.rend(); ++it, line_index--)
 	{
@@ -148,33 +149,33 @@ ChatView::TextPosition ChatView::hit_test(const Point &pos)
 			continue;
 		}
 
-		ChatLine *line = *it;
-		layout_line(gc, line, content_box, line_index);
+		ChatLine &line = *it;
+		layout_line(canvas, line, content_box, line_index - 1);
 
-		int line_height = std::max(line->column2.get_size().height, line->column3.get_size().height);
+		int line_height = std::max(line.column2.get_size().height, line.column3.get_size().height);
 		y -= line_height;
 
-		line->column1.set_position(Point(content_box.left, y));
-		line->column2.set_position(Point(content_box.left, y));
-		line->column3.set_position(Point(content_box.left+get_prefix_width(), y));
+		line.column1.set_position(Point(content_box.left, y + baseline_offset1));
+		line.column2.set_position(Point(content_box.left, y));
+		line.column3.set_position(Point(content_box.left + get_prefix_width(), y));
 
-		Rect column1_rect(content_box.left, y, content_box.left+column1_width, y+line_height);
-		Rect column2_rect(content_box.left+content_box.left, y, content_box.left+prefix_width, y+line_height);
-		Rect column3_rect(content_box.left+prefix_width, y, content_box.right, y+line_height);
+		Rect column1_rect(content_box.left, y, content_box.left + column1_width, y + line_height);
+		Rect column2_rect(content_box.left + content_box.left, y, content_box.left + prefix_width, y + line_height);
+		Rect column3_rect(content_box.left + prefix_width, y, content_box.right, y + line_height);
 		if (column1_rect.contains(pos))
-			return hit_test_line_column(gc, line_index-1, 0, line->column1, pos);
+			return hit_test_line_column(canvas, line_index-1, 0, line.column1, pos);
 		else if (column2_rect.contains(pos))
-			return hit_test_line_column(gc, line_index-1, 1, line->column2, pos);
+			return hit_test_line_column(canvas, line_index-1, 1, line.column2, pos);
 		else if (column3_rect.contains(pos))
-			return hit_test_line_column(gc, line_index-1, 2, line->column3, pos);
+			return hit_test_line_column(canvas, line_index-1, 2, line.column3, pos);
 	}
 
 	return TextPosition();
 }
 
-ChatView::TextPosition ChatView::hit_test_line_column(GraphicContext &gc, int line, int column, SpanLayout &span_layout, const Point &pos)
+ChatView::TextPosition ChatView::hit_test_line_column(Canvas &canvas, int line, int column, SpanLayout &span_layout, const Point &pos)
 {
-	SpanLayout::HitTestResult result = span_layout.hit_test(gc, pos);
+	SpanLayout::HitTestResult result = span_layout.hit_test(canvas, pos);
 	TextPosition text_pos;
 	text_pos.line = line;
 	text_pos.column = column;
@@ -183,7 +184,7 @@ ChatView::TextPosition ChatView::hit_test_line_column(GraphicContext &gc, int li
 		text_pos.id = result.object_id;
 	return text_pos;
 }
-*/
+
 void ChatView::on_scroll()
 {
 	set_needs_render();
@@ -269,38 +270,37 @@ int ChatView::offset_for_line_column(int line_index, int column, const TextPosit
 		return pos.offset;
 }
 
-/*
-void ChatView::on_input_message(const GUIMessage_Input &msg)
+void ChatView::on_pointer_press(PointerEvent &e)
 {
-	InputEvent input_event = msg.get_event();
-
-	if(input_event.type == InputEvent::pressed && input_event.id == MOUSE_WHEEL_UP)
+	if (e.button() == PointerButton::wheel_up)
 	{
-		scroll->set_position(scroll->get_position() - 3);
+		scroll->set_position(scroll->position() - 3);
 		on_scroll();
 	}
-	else if(input_event.type == InputEvent::pressed && input_event.id == MOUSE_WHEEL_DOWN)
+	else if (e.button() == PointerButton::wheel_down)
 	{
-		scroll->set_position(scroll->get_position() + 3);
+		scroll->set_position(scroll->position() + 3);
 		on_scroll();
 	}
-	else if (input_event.type == InputEvent::pressed && input_event.id == MOUSE_LEFT)
+	else if (e.button() == PointerButton::left)
 	{
-		capture_mouse(true);
 		mouse_down = true;
-		mouse_down_text_position = hit_test(input_event.mouse_pos);
+		mouse_down_text_position = hit_test(Point(e.pos(text_view.get())));
 	}
-	else if (input_event.type == InputEvent::released && input_event.id == MOUSE_LEFT)
-	{
-		capture_mouse(false);
-		mouse_down = false;
-		TextPosition mouse_up_text_position = hit_test(input_event.mouse_pos);
+}
 
-		if(mouse_up_text_position == mouse_down_text_position)
+void ChatView::on_pointer_release(PointerEvent &e)
+{
+	if (e.button() == PointerButton::left)
+	{
+		mouse_down = false;
+		TextPosition mouse_up_text_position = hit_test(Point(e.pos(text_view.get())));
+
+		if (mouse_up_text_position == mouse_down_text_position)
 		{
-			if(mouse_up_text_position.id != -1)
+			if (mouse_up_text_position.id != -1)
 			{
-				cb_url_clicked.invoke(mouse_up_text_position.id);
+				cb_url_clicked(mouse_up_text_position.id);
 			}
 		}
 		else
@@ -310,26 +310,26 @@ void ChatView::on_input_message(const GUIMessage_Input &msg)
 			set_selection(TextPosition(), TextPosition());
 		}
 	}
-	else if (input_event.type == InputEvent::pointer_moved)
+}
+
+void ChatView::on_pointer_move(PointerEvent &e)
+{
+	TextPosition text_position = hit_test(Point(e.pos(text_view.get())));
+
+	if (mouse_down)
 	{
-		TextPosition text_position = hit_test(input_event.mouse_pos);
+		set_selection(mouse_down_text_position, text_position);
+	}
 
-		if (mouse_down)
-		{
-			set_selection(mouse_down_text_position, text_position);
-		}
-
-		if(text_position.id != -1)
-		{
-			set_cursor(cursor_hand);
-		}
-		else
-		{
-			set_cursor(cursor_arrow);
-		}
+	if (text_position.id != -1)
+	{
+		text_view->set_cursor(StandardCursor::hand);
+	}
+	else
+	{
+		text_view->set_cursor(StandardCursor::arrow);
 	}
 }
-*/
 
 void ChatView::set_selection(const TextPosition &start, const TextPosition &end)
 {

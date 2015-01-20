@@ -57,7 +57,7 @@ namespace clan
 
 		const std::string &text() const { return _text; }
 
-		Pointf pointer_pos() const { return _pointer_pos; }
+		Pointf pointer_pos(View *view) const;
 
 		bool alt_down() const { return _alt_down; }
 		bool shift_down() const { return _shift_down; }

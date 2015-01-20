@@ -147,6 +147,9 @@ namespace clan
 		virtual Pointf to_screen_pos(const Pointf &pos);
 		virtual Pointf from_screen_pos(const Pointf &pos);
 
+		Pointf to_root_pos(const Pointf &pos);
+		Pointf from_root_pos(const Pointf &pos);
+
 	protected:
 		virtual void subview_added(const std::shared_ptr<View> &view) { }
 		virtual void subview_removed(const std::shared_ptr<View> &view) { }
