@@ -23,50 +23,47 @@
 **
 **  File Author(s):
 **
+**    Magnus Norddahl
+**    Harry Storbacka
 **    Mark Page
 */
 
+
+
 #pragma once
 
-#include "Core/precomp.h"
-#include "API/Core/System/thread_local_storage.h"
+#include <vector>
+#include <memory>
 #include <mutex>
 
 namespace clan
 {
+	class ThreadLocalStorage_Instance;
 
-// This class controls the destruction order of clanCore global variables
-// This class MUST be a singleton, created in core_global.cpp
+	class SetupModule
+	{
+	public:
+		virtual ~SetupModule() {};
+	};
 
-class ThreadLocalStorage;
-class CoreGlobal;
-extern CoreGlobal cl_core_global;
+	class SetupCore
+	{
+	public:
+		static void start_core();
 
-class CoreGlobal
-{
-public:
-	CoreGlobal();
-	~CoreGlobal();
+	private:
+		SetupCore();
+		~SetupCore();
 
-private:
-	friend class ThreadLocalStorage;
+	public:
+		static SetupCore instance;
 
-	// These cl_tls_ variables are used by System/thread_local_storage.cpp
-#ifdef WIN32
-	std::recursive_mutex cl_tls_mutex;
-	DWORD cl_tls_index;
-#elif !defined(HAVE_TLS)
-	std::recursive_mutex cl_tls_mutex;
-	bool cl_tls_index_created;
-	pthread_key_t cl_tls_index;
-#else
-	static __thread ThreadLocalStorage_Impl *cl_tls_impl;
-#endif
+	private:
 
-	ThreadLocalStorage *cl_tls ;
+		std::unique_ptr<SetupModule> module_core;
 
-protected:
-	void destroy_tls();
-};
+		std::mutex mutex;
+	};
 
 }
+

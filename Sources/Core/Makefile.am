@@ -95,7 +95,7 @@ Math/big_int_impl.cpp \
 Math/mat3.cpp \
 Math/big_int.cpp \
 Math/triangle_math.cpp \
-core_global.cpp \
+System/tls_instance.cpp \
 ErrorReporting/crash_reporter.cpp \
 ErrorReporting/exception_dialog.cpp \
 JSON/json_value.cpp \

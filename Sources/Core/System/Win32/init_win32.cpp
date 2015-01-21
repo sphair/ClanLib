@@ -44,7 +44,6 @@
 #endif
 
 #include "API/Core/System/system.h"
-#include "API/Core/System/setup_core.h"
 #include "API/Core/System/exception.h"
 #include "API/Core/Text/string_help.h"
 #if defined UNICODE && !defined _UNICODE

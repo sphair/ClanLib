@@ -58,7 +58,6 @@ clanSound_includes = \
 
 clanCore_includes = \
 	core.h \
-	Core/System/setup_core.h \
 	Core/System/cl_platform.h \
 	Core/System/system.h \
 	Core/System/service.h \

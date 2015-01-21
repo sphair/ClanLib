@@ -28,20 +28,25 @@
 */
 
 #include "Core/precomp.h"
-#include "API/Core/System/setup_core.h"
+#include "setup_core.h"
 #include "API/Core/System/exception.h"
 #include "API/Core/System/thread_local_storage.h"
 #include "API/Core/System/system.h"
+#include "tls_instance.h"
 
 namespace clan
 {
 
+SetupCore SetupCore::instance;
 
-class SetupCore_Impl
+class SetupCore_Impl : public SetupModule
 {
 public:
-	static void init();
-	static void deinit();
+	SetupCore_Impl();
+	virtual ~SetupCore_Impl();
+
+	ThreadLocalStorage_Instance tls_instance;
+
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -49,24 +54,31 @@ public:
 
 SetupCore::SetupCore()
 {
-	SetupCore_Impl::init();
-}
 
+}
 
 SetupCore::~SetupCore()
 {
-	SetupCore_Impl::deinit();
+}
+
+void SetupCore::start_core()
+{
+	std::lock_guard<std::mutex> lock(instance.mutex);
+
+	if (instance.module_core)
+		return;
+
+	instance.module_core = std::make_unique<SetupCore_Impl>();
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // SetupCore Implementation:
-void SetupCore_Impl::init()
+SetupCore_Impl::SetupCore_Impl()
 {
-	ThreadLocalStorage::create_initial_instance();
 #ifndef CL_DISABLE_SSE2
 	if (!System::detect_cpu_extension(System::sse2))
 	{
-		throw Exception("Sorry, ClanLib 3.0 and higher requires a processor capable of SSE2 instructions. (Update your CPU)");
+		throw Exception("Sorry, A processor capable of SSE2 instructions is required. (Update your CPU)");
 	}
 #endif
 
@@ -75,7 +87,7 @@ void SetupCore_Impl::init()
 #endif
 }
 
-void SetupCore_Impl::deinit()
+SetupCore_Impl::~SetupCore_Impl()
 {
 #ifdef WIN32
 	::CoUninitialize();

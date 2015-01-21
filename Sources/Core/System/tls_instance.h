@@ -23,47 +23,48 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
-**    Harry Storbacka
+**    Mark Page
 */
-
-
 
 #pragma once
 
-#include <vector>
+#include "Core/precomp.h"
+#include "API/Core/System/thread_local_storage.h"
+#include <mutex>
 
 namespace clan
 {
-/// \addtogroup clanCore_System clanCore System
-/// \{
 
-/// \brief Library initializer class.
-class SetupCore
+// This class MUST be a singleton, created in SetupCore_Impl
+
+class ThreadLocalStorage;
+class ThreadLocalStorage_Instance;
+
+class ThreadLocalStorage_Instance
 {
-/// \name Construction
-/// \{
-
 public:
-	/// \brief Initializes clanCore.
-	SetupCore();
-	~SetupCore();
+	ThreadLocalStorage_Instance();
+	~ThreadLocalStorage_Instance();
 
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-
-/// \}
-/// \name Implementation
-/// \{
 
 private:
-/// \}
+	friend class ThreadLocalStorage;
+
+	// These cl_tls_ variables are used by System/thread_local_storage.cpp
+#ifdef WIN32
+	std::recursive_mutex cl_tls_mutex;
+	DWORD cl_tls_index;
+#elif !defined(HAVE_TLS)
+	std::recursive_mutex cl_tls_mutex;
+	bool cl_tls_index_created;
+	pthread_key_t cl_tls_index;
+#else
+	static __thread ThreadLocalStorage_Impl *cl_tls_impl;
+#endif
+
+public:
+	std::unique_ptr<ThreadLocalStorage> cl_tls ;
+
 };
 
 }
-
-/// \}
