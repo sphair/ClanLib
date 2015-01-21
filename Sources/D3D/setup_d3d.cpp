@@ -29,9 +29,10 @@
 
 #include "D3D/precomp.h"
 #include "setup_d3d_impl.h"
-#include "API/D3D/setup_d3d.h"
+#include "setup_d3d.h"
 #include "API/D3D/d3d_target.h"
 #include <mutex>
+#include "../Display/setup_display.h"
 
 //#pragma comment(lib, "D3D11.lib")
 //#pragma comment(lib, "D3dcompiler.lib")
@@ -39,39 +40,32 @@
 namespace clan
 {
 
+SetupD3D_Impl *SetupD3D_Impl::instance = nullptr;
+
 /////////////////////////////////////////////////////////////////////////////
 // SetupSWRender Construction:
 
-std::recursive_mutex SetupD3D_Impl::cl_d3d_mutex;
-int SetupD3D_Impl::cl_d3d_refcount = 0;
-D3DTarget *SetupD3D_Impl::cl_d3d_target = 0;
-
-SetupD3D::SetupD3D()
+void SetupD3D::start()
 {
-	SetupD3D_Impl::init();
+	std::lock_guard<std::recursive_mutex> lock(SetupCore::instance.mutex);
 
+	if (SetupCore::instance.module_d3d)
+		return;
+
+	SetupDisplay::start();	// D3D depends on display
+	SetupCore::instance.module_d3d = std::make_unique<SetupD3D_Impl>();
 }
 
-SetupD3D::~SetupD3D()
+SetupD3D_Impl::SetupD3D_Impl()
 {
-	SetupD3D_Impl::deinit();
+	instance = this;
+	cl_d3d_target = new D3DTarget();
 }
 
-void SetupD3D_Impl::init()
+SetupD3D_Impl::~SetupD3D_Impl()
 {
-	std::unique_lock<std::recursive_mutex> mutex_lock(SetupD3D_Impl::cl_d3d_mutex);
-	if (SetupD3D_Impl::cl_d3d_refcount == 0)
-		SetupD3D_Impl::cl_d3d_target = new D3DTarget();
-	SetupD3D_Impl::cl_d3d_refcount++;
+	delete cl_d3d_target;
+	instance = nullptr;
 }
-
-void SetupD3D_Impl::deinit()
-{
-	std::unique_lock<std::recursive_mutex> mutex_lock(SetupD3D_Impl::cl_d3d_mutex);
-	SetupD3D_Impl::cl_d3d_refcount--;
-	if (SetupD3D_Impl::cl_d3d_refcount == 0)
-		delete SetupD3D_Impl::cl_d3d_target;
-}
-
 
 }

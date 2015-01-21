@@ -63,6 +63,8 @@ namespace clan
 		std::unique_ptr<SetupModule> module_display;
 		std::unique_ptr<SetupModule> module_network;
 		std::unique_ptr<SetupModule> module_sound;
+		std::unique_ptr<SetupModule> module_gl;
+		std::unique_ptr<SetupModule> module_d3d;
 	};
 
 }

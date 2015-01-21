@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 
@@ -32,26 +33,12 @@
 
 namespace clan
 {
-/// \addtogroup clanD3D_System clanD3D System
-/// \{
 
-/// \brief ClanD3D initialization functions.
-class SetupD3D
-{
-/// \name Construction
-/// \{
-public:
-	/// \brief Initializes clanD3D
-	SetupD3D();
-	~SetupD3D();
-/// \}
-
-/// \name Operations
-/// \{
-public:
-/// \}
-};
+	class SetupD3D
+	{
+	public:
+		static void start();
+	};
 
 }
 
-/// \}

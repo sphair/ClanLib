@@ -1,7 +1,6 @@
 clanGL_includes = \
 	gl.h \
 	GL/opengl_wrap.h \
-	GL/setup_gl.h \
 	GL/opengl_graphic_context.h \
 	GL/opengl.h \
 	GL/opengl_defines.h \

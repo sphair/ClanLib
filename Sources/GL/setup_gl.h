@@ -24,36 +24,19 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 
 #pragma once
 
-
 namespace clan
 {
-/// \addtogroup clanGL_System clanGL System
-/// \{
 
-/// \brief ClanGL initialization functions.
-class SetupGL
-{
-/// \name Construction
-/// \{
-
-public:
-	/// \brief Initializes clanGL.
-	SetupGL();
-	~SetupGL();
-/// \}
-/// \name Operations
-/// \{
-
-public:
-
-/// \}
-};
+	class SetupGL
+	{
+	public:
+		static void start();
+	};
 
 }
-
-/// \}
