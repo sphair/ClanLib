@@ -28,9 +28,7 @@ struct Uniforms
 
 int Program::main(const std::vector<std::string> &args)
 {
-	SetupCore setup_core;
-	SetupDisplay setup_display;
-	SetupGL setup_gl;
+	OpenGLTarget::enable();
 
 	try
 	{

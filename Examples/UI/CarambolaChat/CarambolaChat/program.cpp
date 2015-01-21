@@ -72,8 +72,7 @@ int Program::main(const std::vector<std::string> &args)
 	DetectHang detect_hang;
 	#endif
 	*/
-	SetupSound setup_sound;
-	SetupGL setup_gl;
+	OpenGLTarget::enable();
 
 	ResourceManager resources;
 	DisplayCache::set(resources, std::make_shared<DisplayResources>());
