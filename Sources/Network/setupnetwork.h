@@ -24,36 +24,21 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 
 #pragma once
 
-
 namespace clan
 {
-/// \addtogroup clanNetwork_System clanNetwork System
-/// \{
 
-/// \brief Initialization class for clanNetwork.
-class SetupNetwork
-{
-/// \name Construction
-/// \{
-
-public:
-	/// \brief Initializes clanNetwork.
-	SetupNetwork();
-	~SetupNetwork();
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-/// \}
-};
+	class SetupNetwork
+	{
+	public:
+		static void start();
+	};
 
 }
 
-/// \}
+

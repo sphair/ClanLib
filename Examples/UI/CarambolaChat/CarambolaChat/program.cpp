@@ -74,7 +74,6 @@ int Program::main(const std::vector<std::string> &args)
 	*/
 	SetupSound setup_sound;
 	SetupGL setup_gl;
-	SetupNetwork setup_network;
 
 	ResourceManager resources;
 	DisplayCache::set(resources, std::make_shared<DisplayResources>());

@@ -31,48 +31,42 @@
 #ifdef _MSC_VER
 #pragma warning (disable:4786)
 #endif
-#include "API/Network/setupnetwork.h"
+#include "setupnetwork.h"
 #include "API/Core/System/exception.h"
+#include "../Core/System/setup_core.h"
 
 namespace clan
 {
-class SetupNetwork_Impl
-{
-public:
-	static void init();
-	static void deinit();
-	static int ref_count;
-};
+	class SetupNetwork_Impl : public SetupModule
+	{
+	public:
+		SetupNetwork_Impl();
+		virtual ~SetupNetwork_Impl();
+	};
 
-int SetupNetwork_Impl::ref_count = 0;
+	void SetupNetwork::start()
+	{
+		std::lock_guard<std::recursive_mutex> lock(SetupCore::instance.mutex);
 
-SetupNetwork::SetupNetwork()
-{
-	SetupNetwork_Impl::init();
+		if (SetupCore::instance.module_network)
+			return;
 
-}
+		SetupCore::instance.module_network = std::make_unique<SetupNetwork_Impl>();
 
+	}
 
-SetupNetwork::~SetupNetwork()
-{
-	SetupNetwork_Impl::deinit();
-}
-void SetupNetwork_Impl::init()
-{
-	ref_count++;
-	if (ref_count > 1) return;
+	SetupNetwork_Impl::SetupNetwork_Impl()
+	{
+		WORD winsock_version = MAKEWORD(2, 2);
+		WSADATA wsaData;
+		int err = WSAStartup(winsock_version, &wsaData);
+		if (err != 0)
+			throw Exception("Failed to initialize winsockets");
+	}
 
-	WORD winsock_version = MAKEWORD( 2, 2 ); 
-	WSADATA wsaData;
-	int err = WSAStartup(winsock_version, &wsaData);
-	if (err != 0)
-		throw Exception("Failed to initialize winsockets");
-}
-
-void SetupNetwork_Impl::deinit()
-{
-	ref_count--;
-	if (ref_count > 0) return;
-}
+	SetupNetwork_Impl::~SetupNetwork_Impl()
+	{
+	}
 
 }
+

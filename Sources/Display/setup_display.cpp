@@ -56,7 +56,7 @@ namespace clan
 	{
 	public:
 		SetupDisplay_Impl();
-		~SetupDisplay_Impl();
+		virtual ~SetupDisplay_Impl();
 
 		static void add_cache_factory_xml(ResourceManager &manager, const XMLResourceDocument &doc);
 		static void add_cache_factory_file(ResourceManager &manager, const FileResourceDocument &doc);

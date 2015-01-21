@@ -61,7 +61,7 @@ namespace clan
 
 		std::unique_ptr<SetupModule> module_core;
 		std::unique_ptr<SetupModule> module_display;
-
+		std::unique_ptr<SetupModule> module_network;
 	};
 
 }
