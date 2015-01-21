@@ -17,11 +17,9 @@ ChatView::ChatView()
 	scroll = std::make_shared<ScrollBarView>();
 	scroll->set_vertical();
 	scroll->box_style.set_flex(0.0f, 0.0f);
-	scroll->box_style.set_background(Colorf::orangered);
-	scroll->button_increment()->box_style.set_background(Colorf::gray70);
-	scroll->button_decrement()->box_style.set_background(Colorf::gray70);
-	scroll->track()->box_style.set_background(Colorf::gray90);
-	scroll->thumb()->box_style.set_background(Colorf::gray80);
+	scroll->box_style.set_background(Colorf(232, 232, 236));
+	scroll->track()->box_style.set_padding(4.0f, 0.0f);
+	scroll->thumb()->box_style.set_background(Colorf(208, 209, 215));
 
 	add_subview(text_view);
 	add_subview(scroll);

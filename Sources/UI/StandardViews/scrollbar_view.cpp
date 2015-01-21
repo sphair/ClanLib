@@ -28,15 +28,82 @@
 
 #include "UI/precomp.h"
 #include "API/UI/StandardViews/scrollbar_view.h"
+#include "API/Display/2D/path.h"
+#include "API/Display/2D/brush.h"
 #include <algorithm>
 
 namespace clan
 {
+	enum class ScrollBarButtonDirection
+	{
+		left,
+		right,
+		up,
+		down
+	};
+
+	class ScrollBarButtonView : public View
+	{
+	public:
+		ScrollBarButtonView()
+		{
+		}
+
+		void render_content(Canvas &canvas) override
+		{
+			Rectf box = geometry().content_box().get_size();
+			box.shrink(4.0f, 6.0f);
+
+			Path path;
+			path.set_fill_mode(PathFillMode::alternate);
+			switch (direction)
+			{
+			case ScrollBarButtonDirection::left:
+				path.move_to(box.right, box.top);
+				path.line_to(box.right, box.bottom);
+				path.line_to(box.left, box.top + box.get_height() * 0.5f);
+				path.close();
+				break;
+			case ScrollBarButtonDirection::right:
+				path.move_to(box.left, box.top);
+				path.line_to(box.left, box.bottom);
+				path.line_to(box.right, box.top + box.get_height() * 0.5f);
+				path.close();
+				break;
+			case ScrollBarButtonDirection::up:
+				path.move_to(box.left, box.bottom);
+				path.line_to(box.right, box.bottom);
+				path.line_to(box.left + box.get_width() * 0.5f, box.top);
+				path.close();
+				break;
+			case ScrollBarButtonDirection::down:
+				path.move_to(box.left, box.top);
+				path.line_to(box.right, box.top);
+				path.line_to(box.left + box.get_width() * 0.5f, box.bottom);
+				path.close();
+				break;
+			}
+			path.fill(canvas, Colorf(134, 137, 153));
+		}
+
+		void set_direction(ScrollBarButtonDirection new_dir)
+		{
+			if (new_dir != direction)
+			{
+				direction = new_dir;
+				set_needs_render();
+			}
+		}
+
+	private:
+		ScrollBarButtonDirection direction = ScrollBarButtonDirection::left;
+	};
+
 	class ScrollBarViewImpl
 	{
 	public:
-		std::shared_ptr<View> button_decrement;
-		std::shared_ptr<View> button_increment;
+		std::shared_ptr<ScrollBarButtonView> button_decrement;
+		std::shared_ptr<ScrollBarButtonView> button_increment;
 		std::shared_ptr<View> track;
 		std::shared_ptr<View> thumb;
 		std::shared_ptr<View> thumb_grip;
@@ -62,8 +129,8 @@ namespace clan
 
 	ScrollBarView::ScrollBarView() : impl(std::make_shared<ScrollBarViewImpl>())
 	{
-		impl->button_decrement = std::make_shared<View>();
-		impl->button_increment = std::make_shared<View>();
+		impl->button_decrement = std::make_shared<ScrollBarButtonView>();
+		impl->button_increment = std::make_shared<ScrollBarButtonView>();
 		impl->track = std::make_shared<View>();
 		impl->thumb = std::make_shared<View>();
 		impl->thumb_grip = std::make_shared<View>();
@@ -138,6 +205,8 @@ namespace clan
 		impl->track->box_style.set_layout_vbox();
 		impl->thumb->box_style.set_layout_vbox();
 		impl->thumb_grip->box_style.set_layout_vbox();
+		impl->button_decrement->set_direction(ScrollBarButtonDirection::up);
+		impl->button_increment->set_direction(ScrollBarButtonDirection::down);
 	}
 
 	void ScrollBarView::set_horizontal()
@@ -148,6 +217,8 @@ namespace clan
 		impl->track->box_style.set_layout_hbox();
 		impl->thumb->box_style.set_layout_hbox();
 		impl->thumb_grip->box_style.set_layout_hbox();
+		impl->button_decrement->set_direction(ScrollBarButtonDirection::left);
+		impl->button_increment->set_direction(ScrollBarButtonDirection::right);
 	}
 
 	double ScrollBarView::line_step() const
