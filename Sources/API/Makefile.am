@@ -34,7 +34,6 @@ clanSound_includes = \
 	Sound/soundbuffer_session.h \
 	Sound/soundbuffer.h \
 	Sound/soundformat.h \
-	Sound/setupsound.h \
 	Sound/SoundFilters/fadefilter.h \
 	Sound/SoundFilters/echofilter.h \
 	Sound/SoundFilters/inverse_echofilter.h \

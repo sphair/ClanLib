@@ -39,6 +39,7 @@
 #include "API/Core/IOData/file_system.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/IOData/file_system.h"
+#include "../setupsound.h"
 
 namespace clan
 {
@@ -57,6 +58,8 @@ SoundProvider *SoundProviderFactory::load(
 	const FileSystem &fs,
 	const std::string &type)
 {
+	SetupSound::start();
+
 	if (!type.empty())
 	{
 		if (types.find(type) == types.end()) throw Exception("Unknown sound provider type " + type);
@@ -80,6 +83,7 @@ SoundProvider *SoundProviderFactory::load(
 	bool streamed,
 	const std::string &type)
 {
+	SetupSound::start();
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
 	FileSystem vfs(path);
@@ -91,6 +95,7 @@ SoundProvider *SoundProviderFactory::load(
 	bool streamed,
 	const std::string &type)
 {
+	SetupSound::start();
 	if (types.find(type) == types.end()) throw Exception("Unknown sound provider type " + type);
 
 	SoundProviderType *factory = types[type];
