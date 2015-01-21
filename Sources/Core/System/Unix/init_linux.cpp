@@ -43,7 +43,6 @@
 // note: this cannot be replaced by <ctime>! (timeval needs to be defined)
 #include <sys/time.h>
 #include <sys/stat.h>
-#include "API/Core/System/setup_core.h"
 #include "API/Core/System/system.h"
 
 #ifdef __APPLE__

@@ -27,25 +27,23 @@
 */
 
 #include "Core/precomp.h"
-#include "core_global.h"
+#include "tls_instance.h"
 
 namespace clan
 {
 
-CoreGlobal cl_core_global;
-
 #ifdef WIN32
 #elif !defined(HAVE_TLS)
 #else
-__thread ThreadLocalStorage_Impl *CoreGlobal::cl_tls_impl = nullptr;
+__thread ThreadLocalStorage_Impl *ThreadLocalStorage_Instance::cl_tls_impl = nullptr;
 #endif
 
 // This class controls the destruction order of clanCore global variables
 
 /////////////////////////////////////////////////////////////////////////////
-// CoreGlobal Construction:
+// ThreadLocalStorage_Instance Construction:
 
-CoreGlobal::CoreGlobal()
+ThreadLocalStorage_Instance::ThreadLocalStorage_Instance()
 {
 #ifdef WIN32
 	cl_tls_index = TLS_OUT_OF_INDEXES;
@@ -56,26 +54,15 @@ CoreGlobal::CoreGlobal()
 	cl_tls_impl = nullptr;
 #endif
 
-	cl_tls = nullptr;
+	ThreadLocalStorage::instance = this;
+	cl_tls = std::make_unique<ThreadLocalStorage>();	// create initial instance
 }
 
-CoreGlobal::~CoreGlobal()
+ThreadLocalStorage_Instance::~ThreadLocalStorage_Instance()
 {
-	destroy_tls();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// CoreGlobal Implementation:
-
-void CoreGlobal::destroy_tls()
-{
-
+	cl_tls = std::unique_ptr<ThreadLocalStorage>();
 #ifdef WIN32
-	if (cl_tls)
-	{
-		delete (cl_tls);
-		cl_tls = NULL;
-	}
+
 	if (cl_tls_index != TLS_OUT_OF_INDEXES)
 	{
 		TlsFree(cl_tls_index);
@@ -83,11 +70,6 @@ void CoreGlobal::destroy_tls()
 	}
 
 #elif !defined(HAVE_TLS)
-	if (cl_tls)
-	{
-		delete (cl_tls);
-		cl_tls = NULL;
-	}
 
 	if (cl_tls_index_created)
 	{
@@ -96,6 +78,8 @@ void CoreGlobal::destroy_tls()
 		cl_tls_index = 0;
 	}
 #endif
+	ThreadLocalStorage::instance = nullptr;
+
 }
 
 }

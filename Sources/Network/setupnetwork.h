@@ -24,37 +24,21 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 
 #pragma once
 
-
 namespace clan
 {
-/// \addtogroup clanSound_System clanSound System
-/// \{
 
-/// \brief ClanSound initialization functions.
-class SetupSound
-{
-/// \name Construction
-/// \{
-
-public:
-	/// \brief Initializes clanSound.
-	SetupSound();
-	~SetupSound();
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-
-/// \}
-};
+	class SetupNetwork
+	{
+	public:
+		static void start();
+	};
 
 }
 
-/// \}
+

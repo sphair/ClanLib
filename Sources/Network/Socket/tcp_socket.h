@@ -2,6 +2,7 @@
 #pragma once
 
 #include "API/Core/System/exception.h"
+#include "../setupnetwork.h"
 
 #if !defined(WIN32)
 #include <sys/time.h>
@@ -28,6 +29,7 @@ namespace clan
 	public:
 		SocketHandle() : handle(INVALID_SOCKET)
 		{
+			SetupNetwork::start();
 			wait_handle = CreateEvent(0, TRUE, FALSE, 0);
 			if (wait_handle == INVALID_HANDLE_VALUE)
 				throw Exception("Unable to create event object for socket");
@@ -74,6 +76,7 @@ namespace clan
 	public:
 		TCPSocket()
 		{
+			SetupNetwork::start();
 			handle = socket(AF_INET, SOCK_STREAM, 0);
 			if (handle == INVALID_SOCKET)
 				throw Exception("Unable to create socket handle");

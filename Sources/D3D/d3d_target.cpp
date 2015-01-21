@@ -42,6 +42,7 @@
 #include "d3d_graphic_context_provider.h"
 #include "d3d_display_window_provider.h"
 #include "setup_d3d_impl.h"
+#include "setup_d3d.h"
 #include "API/Display/display.h"
 
 namespace clan
@@ -76,12 +77,20 @@ bool D3DTarget::is_current()
 /////////////////////////////////////////////////////////////////////////////
 // D3DTarget Operations:
 
+void D3DTarget::enable()
+{
+	SetupD3D::start();
+}
+
 void D3DTarget::set_current()
 {
-	std::unique_lock<std::recursive_mutex> mutex_lock(SetupD3D_Impl::cl_d3d_mutex);
-	if (!SetupD3D_Impl::cl_d3d_target)
+	SetupD3D::start();
+	if (!SetupD3D_Impl::instance)
+		throw Exception("clanD3D instance invalid");
+
+	if (!SetupD3D_Impl::instance->cl_d3d_target)
 		throw Exception("clanD3D has not been initialised");
-	SetupD3D_Impl::cl_d3d_target->DisplayTarget::set_current();
+	SetupD3D_Impl::instance->cl_d3d_target->DisplayTarget::set_current();
 }
 
 ID3D11Texture2D *D3DTarget::get_texture2d_handle(const GraphicContext &gc, const Texture &texture)

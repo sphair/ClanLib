@@ -49,14 +49,6 @@ class GraphicContext;
 /// \brief Display target for clanDisplay.
 class D3DTarget : public DisplayTarget
 {
-/// \name Construction
-/// \{
-public:
-	/// \brief Constructs a D3DTarget target.
-	D3DTarget();
-	~D3DTarget();
-/// \}
-
 /// \name Attributes
 /// \{
 public:
@@ -70,6 +62,10 @@ public:
 /// \name Operations
 /// \{
 public:
+
+	/// \brief Enable this target
+	static void enable();
+
 	/// \brief Returns the Direct3D handle used by the texture object
 	///
 	/// The reference count on the COM object is not increased (AddRef is not called).
@@ -136,6 +132,12 @@ public:
 /// \name Implementation
 /// \{
 private:
+public:
+	/// \brief Constructs a D3DTarget target.
+	D3DTarget();
+	~D3DTarget();
+	friend class SetupD3D_Impl;
+
 /// \}
 };
 

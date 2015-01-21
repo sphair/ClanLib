@@ -32,6 +32,7 @@
 #include "API/Sound/soundfilter.h"
 #include "API/Sound/sound.h"
 #include "soundoutput_impl.h"
+#include "setupsound.h"
 
 #ifdef WIN32
 #include "Win32/soundoutput_win32.h"
@@ -68,6 +69,7 @@ SoundOutput::SoundOutput(int mixing_frequency, int latency)
 
 SoundOutput::SoundOutput(const SoundOutput_Description &desc)
 {
+	SetupSound::start();
 #ifdef WIN32
 	try
 	{

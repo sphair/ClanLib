@@ -144,68 +144,6 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph(int glyph)
 	}
 }
 
-float FontEngine_Freetype::get_kerning(const std::string::value_type &lchar, const std::string::value_type &rchar)
-{
-	FT_Vector kerning;
-
-	FT_UInt left_ch_index  = FT_Get_Char_Index( face, FT_ULong(lchar) );
-	FT_UInt right_ch_index = FT_Get_Char_Index( face, FT_ULong(rchar) );
-
-	int error = FT_Get_Kerning( face, left_ch_index, right_ch_index, FT_KERNING_UNFITTED, &kerning );
-
-	if ( error )
-	{
-		throw Exception("FreeTypeFont: error retrieving kerning info");
-	}
-
-	return float(kerning.x) / 64.0f;
-}
-
-GlyphMetrics FontEngine_Freetype::get_glyph_metrics(unsigned int glyph)
-{
-	FT_UInt glyph_index = FT_Get_Char_Index(face, FT_ULong(glyph));
-
-	int error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
-	if ( error )
-	{
-		throw Exception("freetype: error loading glyph");
-	}
-
-	FT_GlyphSlot slot = face->glyph;
-	GlyphMetrics metrics;
-	metrics.bbox_offset.x = slot->metrics.horiBearingX / 64.0f;
-	metrics.bbox_offset.y = -slot->metrics.horiBearingY / 64.0f;
-	metrics.bbox_size.width = slot->metrics.width / 64.0f;
-	metrics.bbox_size.height = slot->metrics.height / 64.0f;
-	metrics.advance.width = slot->advance.x / 64.0f;
-	metrics.advance.height = slot->advance.y / 64.0f;
-
-	return metrics;
-}
-
-Size FontEngine_Freetype::get_size(const std::string &text, int pos)
-{
-	FT_UInt glyph_index;
-
-	// Get glyph index
-	glyph_index = FT_Get_Char_Index(face, text[pos]);
-
-	// Load glyph image
-	FT_Error error = FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT );
-	if (error) return Size(0,0);
-
-	FT_Glyph glyph;
-	FT_BBox bbox;
-	FT_Get_Glyph(face->glyph, &glyph);
-	FT_Glyph_Get_CBox( glyph, FT_GLYPH_BBOX_PIXELS, &bbox );
-
-	int y = bbox.yMax + bbox.yMin;	// Include the whitespace, to match the windows GetTextExtentPoint32()
-
-	int x = int(face->glyph->advance.x / 64.0f);
-
-	return (Size(x,y));
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // FontEngine_Freetype Operations:
 
@@ -266,7 +204,7 @@ void FontEngine_Freetype::load_glyph_path(unsigned int c, Path &out_path, GlyphM
 			}
 			else if( tp.tag == FT_Curve_Tag_Cubic && points[i-1].tag == FT_Curve_Tag_Cubic )
 			{
-				// TODO: This needs checking. We do not have a fonts that uses cubics ... and bizier is currrently not supported by path
+				// TODO: This needs checking. We do not have a fonts that uses cubics ... and this bezier is currrently not supported by path
 				//if (i >= 2)
 				//{
 					//out_path.bezier_to(points[i - 2].pos, points[i - 1].pos, tp.pos, points[i + 1].pos);
@@ -277,8 +215,14 @@ void FontEngine_Freetype::load_glyph_path(unsigned int c, Path &out_path, GlyphM
 		out_path.close();
 	}
 
-	FT_Done_Glyph(glyph);
-	out_metrics = get_glyph_metrics(c);
+	FT_GlyphSlot slot = face->glyph;
+
+	out_metrics.bbox_offset.x = slot->metrics.horiBearingX / 64.0f;
+	out_metrics.bbox_offset.y = -slot->metrics.horiBearingY / 64.0f;
+	out_metrics.bbox_size.width = slot->metrics.width / 64.0f;
+	out_metrics.bbox_size.height = slot->metrics.height / 64.0f;
+	out_metrics.advance.width = slot->advance.x / 64.0f;
+	out_metrics.advance.height = slot->advance.y / 64.0f;
 
 	out_metrics.advance.width /= pixel_ratio;
 	out_metrics.advance.height /= pixel_ratio;
@@ -287,6 +231,7 @@ void FontEngine_Freetype::load_glyph_path(unsigned int c, Path &out_path, GlyphM
 	out_metrics.bbox_size.width /= pixel_ratio;
 	out_metrics.bbox_size.height /= pixel_ratio;
 
+	FT_Done_Glyph(glyph);
 
 }
 
@@ -579,6 +524,11 @@ std::vector<TaggedPoint> FontEngine_Freetype::get_contour_points(int cont, FT_Ou
 			tp_middle.tag = FT_Curve_Tag_On;
 			points.push_back(tp_middle);
 		}
+	}
+
+	for (unsigned int cnt=0; cnt<points.size(); cnt++)
+	{
+		points[cnt].pos /= pixel_ratio;
 	}
 
 	return points;

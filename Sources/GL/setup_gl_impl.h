@@ -28,22 +28,23 @@
 
 #pragma once
 
+#include "../Core/System/setup_core.h"
+
 namespace clan
 {
 
-class OpenGLTarget;
+	class OpenGLTarget;
 
-class SetupGL_Impl
-{
-public:
-	static void init();
-	static void deinit();
+	class SetupGL_Impl : public SetupModule
+	{
+	public:
+		SetupGL_Impl();
+		virtual ~SetupGL_Impl();
 
-	static std::recursive_mutex cl_opengl_mutex;
-	static int cl_opengl_refcount;
-	static OpenGLTarget *cl_opengl_target;
+		OpenGLTarget *cl_opengl_target = nullptr;
+		static SetupGL_Impl *instance;
 
-};
+	};
 
 }
 

@@ -24,46 +24,19 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    Harry Storbacka
+**    Mark Page
 */
-
 
 
 #pragma once
 
-#include <vector>
-
 namespace clan
 {
-/// \addtogroup clanCore_System clanCore System
-/// \{
 
-/// \brief Library initializer class.
-class SetupCore
-{
-/// \name Construction
-/// \{
-
-public:
-	/// \brief Initializes clanCore.
-	SetupCore();
-	~SetupCore();
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-};
+	class SetupSound
+	{
+	public:
+		static void start();
+	};
 
 }
-
-/// \}

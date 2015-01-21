@@ -33,7 +33,7 @@
 #include "API/GL/opengl_target.h"
 #include "opengl_target_provider.h"
 #include "setup_gl_impl.h"
-
+#include "setup_gl.h"
 namespace clan
 {
 
@@ -67,12 +67,18 @@ bool OpenGLTarget::is_current()
 /////////////////////////////////////////////////////////////////////////////
 // OpenGLTarget Operations:
 
+void OpenGLTarget::enable()
+{
+	SetupGL::start();
+}
+
 OpenGLWindowDescription OpenGLTarget::get_description()
 {
-	std::unique_lock<std::recursive_mutex> mutex_lock(SetupGL_Impl::cl_opengl_mutex);
-	if (SetupGL_Impl::cl_opengl_target)
+	SetupGL::start();
+
+	if (SetupGL_Impl::instance)
 	{
-		OpenGLTargetProvider *provider = dynamic_cast<OpenGLTargetProvider*>(SetupGL_Impl::cl_opengl_target->get_provider());
+		OpenGLTargetProvider *provider = dynamic_cast<OpenGLTargetProvider*>(SetupGL_Impl::instance->cl_opengl_target->get_provider());
 		if (provider)
 		{
 			return provider->get_description();
@@ -83,10 +89,10 @@ OpenGLWindowDescription OpenGLTarget::get_description()
 
 void OpenGLTarget::set_description(OpenGLWindowDescription &desc)
 {
-	std::unique_lock<std::recursive_mutex> mutex_lock(SetupGL_Impl::cl_opengl_mutex);
-	if (SetupGL_Impl::cl_opengl_target)
+	SetupGL::start();
+	if (SetupGL_Impl::instance)
 	{
-		OpenGLTargetProvider *provider = dynamic_cast<OpenGLTargetProvider*>(SetupGL_Impl::cl_opengl_target->get_provider());
+		OpenGLTargetProvider *provider = dynamic_cast<OpenGLTargetProvider*>(SetupGL_Impl::instance->cl_opengl_target->get_provider());
 		if (provider)
 		{
 			provider->set_description(desc);
@@ -96,10 +102,10 @@ void OpenGLTarget::set_description(OpenGLWindowDescription &desc)
 
 void OpenGLTarget::set_current()
 {
-	std::unique_lock<std::recursive_mutex> mutex_lock(SetupGL_Impl::cl_opengl_mutex);
-	if (!SetupGL_Impl::cl_opengl_target)
+	SetupGL::start();
+	if (!SetupGL_Impl::instance)
 		throw Exception("clanGL has not been initialised");
-	SetupGL_Impl::cl_opengl_target->DisplayTarget::set_current();
+	SetupGL_Impl::instance->cl_opengl_target->DisplayTarget::set_current();
 }
 
 /////////////////////////////////////////////////////////////////////////////

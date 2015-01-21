@@ -1,7 +1,6 @@
 clanGL_includes = \
 	gl.h \
 	GL/opengl_wrap.h \
-	GL/setup_gl.h \
 	GL/opengl_graphic_context.h \
 	GL/opengl.h \
 	GL/opengl_defines.h \
@@ -14,7 +13,6 @@ clanApp_includes = \
 
 clanNetwork_includes = \
 	network.h \
-	Network/setupnetwork.h \
 	Network/NetGame/event_value.h \
 	Network/NetGame/event.h \
 	Network/NetGame/connection.h \
@@ -35,7 +33,6 @@ clanSound_includes = \
 	Sound/soundbuffer_session.h \
 	Sound/soundbuffer.h \
 	Sound/soundformat.h \
-	Sound/setupsound.h \
 	Sound/SoundFilters/fadefilter.h \
 	Sound/SoundFilters/echofilter.h \
 	Sound/SoundFilters/inverse_echofilter.h \
@@ -58,7 +55,6 @@ clanSound_includes = \
 
 clanCore_includes = \
 	core.h \
-	Core/System/setup_core.h \
 	Core/System/cl_platform.h \
 	Core/System/system.h \
 	Core/System/service.h \
@@ -278,7 +274,6 @@ clanDisplay_includes = \
 	Display/Font/glyph_metrics.h \
 	Display/Font/font_description.h \
 	Display/screen_info.h \
-	Display/setup_display.h \
 	Display/display_target.h \
 	Display/ImageProviders/dds_provider.h \
 	Display/ImageProviders/provider_type.h \

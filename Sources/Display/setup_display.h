@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 
@@ -32,28 +33,12 @@
 
 namespace clan
 {
-/// \addtogroup clanGL_System clanGL System
-/// \{
 
-/// \brief ClanGL initialization functions.
-class SetupGL
-{
-/// \name Construction
-/// \{
-
-public:
-	/// \brief Initializes clanGL.
-	SetupGL();
-	~SetupGL();
-/// \}
-/// \name Operations
-/// \{
-
-public:
-
-/// \}
-};
+	class SetupDisplay
+	{
+	public:
+		static void start();
+	};
 
 }
 
-/// \}

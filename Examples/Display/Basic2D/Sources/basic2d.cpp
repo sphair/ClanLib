@@ -35,6 +35,10 @@ int Basic2D::start(const std::vector<std::string> &args)
 {
 	quit = false;
 
+	// We support all display targets, in order listed here
+	clan::D3DTarget::enable();
+	clan::OpenGLTarget::enable();
+
     clan::SlotContainer sc;
 
 	// Set the window

@@ -39,7 +39,6 @@
 
 #include "Display/display.h"
 #include "Display/display_target.h"
-#include "Display/setup_display.h"
 #include "Display/screen_info.h"
 #include "Display/Resources/display_cache.h"
 #include "Display/2D/canvas.h"

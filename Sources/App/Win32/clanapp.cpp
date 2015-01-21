@@ -33,7 +33,6 @@
 #define _UNICODE
 #endif
 #include <tchar.h>
-#include "API/Core/System/setup_core.h"
 #include "API/App/clanapp.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/System/exception.h"

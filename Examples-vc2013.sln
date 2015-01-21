@@ -89,8 +89,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PointSprite", "Examples\Dis
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PacmanEvolutions", "Examples\Game\PacmanEvolutions\PacmanEvolutions.vcxproj", "{67340DA3-FC66-437E-85EE-BE6EED4B10C0}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MikMod", "Examples\Sound\MikMod\MikMod-vc2013.vcxproj", "{4E27E943-27C7-4F00-A431-B6ACA2316161}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Path", "Examples\Display\Path\Path-vc2013.vcxproj", "{743538CE-A883-4F17-9BA6-4258E36423AF}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HelloWorld", "Examples\UI\HelloWorld\HelloWorld-vc2013.vcxproj", "{F4EF3E39-3146-44A7-9A86-ADF7C94834A6}"
@@ -373,12 +371,6 @@ Global
 		{67340DA3-FC66-437E-85EE-BE6EED4B10C0}.Release|Win32.ActiveCfg = Release|Win32
 		{67340DA3-FC66-437E-85EE-BE6EED4B10C0}.Release|Win32.Build.0 = Release|Win32
 		{67340DA3-FC66-437E-85EE-BE6EED4B10C0}.Release|x64.ActiveCfg = Release|Win32
-		{4E27E943-27C7-4F00-A431-B6ACA2316161}.Debug|Win32.ActiveCfg = Debug|Win32
-		{4E27E943-27C7-4F00-A431-B6ACA2316161}.Debug|Win32.Build.0 = Debug|Win32
-		{4E27E943-27C7-4F00-A431-B6ACA2316161}.Debug|x64.ActiveCfg = Debug|Win32
-		{4E27E943-27C7-4F00-A431-B6ACA2316161}.Release|Win32.ActiveCfg = Release|Win32
-		{4E27E943-27C7-4F00-A431-B6ACA2316161}.Release|Win32.Build.0 = Release|Win32
-		{4E27E943-27C7-4F00-A431-B6ACA2316161}.Release|x64.ActiveCfg = Release|Win32
 		{743538CE-A883-4F17-9BA6-4258E36423AF}.Debug|Win32.ActiveCfg = Debug|Win32
 		{743538CE-A883-4F17-9BA6-4258E36423AF}.Debug|Win32.Build.0 = Debug|Win32
 		{743538CE-A883-4F17-9BA6-4258E36423AF}.Debug|x64.ActiveCfg = Debug|Win32

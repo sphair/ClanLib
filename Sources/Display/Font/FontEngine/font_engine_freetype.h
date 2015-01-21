@@ -75,10 +75,6 @@ public:
 public:
 	bool is_automatic_recreation_allowed() const override { return true; }
 	const FontMetrics &get_metrics() const override { return font_metrics; }
-	float get_kerning(const std::string::value_type &ch1, const std::string::value_type &ch2);
-	GlyphMetrics get_glyph_metrics(unsigned int glyph);
-
-	Size get_size(const std::string &text, int pos);
 
 	FontPixelBuffer get_font_glyph(int glyph) override;
 

@@ -24,36 +24,48 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Harry Storbacka
+**    Mark Page
 */
+
 
 
 #pragma once
 
+#include <vector>
+#include <memory>
+#include <mutex>
 
 namespace clan
 {
-/// \addtogroup clanNetwork_System clanNetwork System
-/// \{
+	class ThreadLocalStorage_Instance;
 
-/// \brief Initialization class for clanNetwork.
-class SetupNetwork
-{
-/// \name Construction
-/// \{
+	class SetupModule
+	{
+	public:
+		virtual ~SetupModule() {};
+	};
 
-public:
-	/// \brief Initializes clanNetwork.
-	SetupNetwork();
-	~SetupNetwork();
+	class SetupCore
+	{
+	public:
+		static void start();
 
-/// \}
-/// \name Operations
-/// \{
+	private:
+		SetupCore();
+		~SetupCore();
 
-public:
-/// \}
-};
+	public:
+		static SetupCore instance;
+		std::recursive_mutex mutex;
+
+		std::unique_ptr<SetupModule> module_core;
+		std::unique_ptr<SetupModule> module_display;
+		std::unique_ptr<SetupModule> module_network;
+		std::unique_ptr<SetupModule> module_sound;
+		std::unique_ptr<SetupModule> module_gl;
+		std::unique_ptr<SetupModule> module_d3d;
+	};
 
 }
 
-/// \}

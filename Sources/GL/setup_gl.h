@@ -24,30 +24,19 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 
 #pragma once
 
-
 namespace clan
 {
-/// \addtogroup clanDisplay_System clanDisplay System
-/// \{
 
-/// \brief ClanDisplay initialization functions.
-class SetupDisplay
-{
-/// \name Construction
-/// \{
-
-public:
-	/// \brief Initializes clanDisplay.
-	SetupDisplay();
-	~SetupDisplay();
-/// \}
-};
+	class SetupGL
+	{
+	public:
+		static void start();
+	};
 
 }
-
-/// \}

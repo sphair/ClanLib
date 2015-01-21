@@ -40,8 +40,6 @@
 #pragma managed(push, off)
 #endif
 
-#include "Network/setupnetwork.h"
-
 #include "Network/Socket/socket_name.h"
 #include "Network/Socket/network_condition_variable.h"
 #include "Network/Socket/tcp_connection.h"

@@ -39,7 +39,6 @@
 #endif
 
 #include "D3D/d3d_target.h"
-#include "D3D/setup_d3d.h"
 
 #ifdef __cplusplus_cli
 #pragma managed(pop)
