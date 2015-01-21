@@ -120,7 +120,7 @@ ThreadLocalStorage::~ThreadLocalStorage()
 void ThreadLocalStorage::init_core()
 {
 	if (!instance)
-		SetupCore::start_core();
+		SetupCore::start();
 	if (!instance)
 		throw Exception("No ThreadLocalStorage instance");
 }

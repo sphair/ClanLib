@@ -61,9 +61,9 @@ SetupCore::~SetupCore()
 {
 }
 
-void SetupCore::start_core()
+void SetupCore::start()
 {
-	std::lock_guard<std::mutex> lock(instance.mutex);
+	std::lock_guard<std::recursive_mutex> lock(instance.mutex);
 
 	if (instance.module_core)
 		return;

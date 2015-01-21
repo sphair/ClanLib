@@ -31,6 +31,7 @@
 #include "Display/precomp.h"
 #include "display_window_impl.h"
 #include "../Render/graphic_context_impl.h"
+#include "../setup_display.h"
 
 namespace clan
 {
@@ -69,6 +70,8 @@ DisplayWindow::DisplayWindow(
 DisplayWindow::DisplayWindow(
 	const DisplayWindowDescription &description)
 {
+	SetupDisplay::start();
+
 	std::string exception_text;
 
 	while(true)		// Try each display provider

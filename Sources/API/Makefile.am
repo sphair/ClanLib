@@ -277,7 +277,6 @@ clanDisplay_includes = \
 	Display/Font/glyph_metrics.h \
 	Display/Font/font_description.h \
 	Display/screen_info.h \
-	Display/setup_display.h \
 	Display/display_target.h \
 	Display/ImageProviders/dds_provider.h \
 	Display/ImageProviders/provider_type.h \

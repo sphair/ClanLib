@@ -49,7 +49,7 @@ namespace clan
 	class SetupCore
 	{
 	public:
-		static void start_core();
+		static void start();
 
 	private:
 		SetupCore();
@@ -57,12 +57,11 @@ namespace clan
 
 	public:
 		static SetupCore instance;
-
-	private:
+		std::recursive_mutex mutex;
 
 		std::unique_ptr<SetupModule> module_core;
+		std::unique_ptr<SetupModule> module_display;
 
-		std::mutex mutex;
 	};
 
 }

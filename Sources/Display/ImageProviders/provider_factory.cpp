@@ -36,6 +36,7 @@
 #include "API/Core/System/exception.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/IOData/path_help.h"
+#include "../setup_display.h"
 
 namespace clan
 {
@@ -55,6 +56,7 @@ PixelBuffer ImageProviderFactory::try_load(
 	std::string *out_failure_reason,
 	bool srgb)
 {
+	SetupDisplay::start();
 	try
 	{
 		return load(filename, fs, type, srgb);
@@ -73,6 +75,7 @@ PixelBuffer ImageProviderFactory::load(
 	const std::string &type,
 	bool srgb)
 {
+	SetupDisplay::start();
 	if (type != "")
 	{
 		if (types.find(type) == types.end()) throw Exception("Unknown image provider type " + type);
@@ -95,6 +98,7 @@ PixelBuffer ImageProviderFactory::load(
 	const std::string &type,
 	bool srgb)
 {
+	SetupDisplay::start();
 	if (types.find(type) == types.end()) throw Exception("Unknown image provider type " + type);
 
 	ImageProviderType *factory = types[type];
@@ -106,6 +110,7 @@ PixelBuffer ImageProviderFactory::load(
 	const std::string &type,
 	bool srgb)
 {
+	SetupDisplay::start();
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
 	FileSystem vfs(path);
@@ -118,6 +123,7 @@ void ImageProviderFactory::save(
 	FileSystem &fs,
 	const std::string &type_)
 {
+	SetupDisplay::start();
 	std::string type = type_;
 
 	if (type.empty())
@@ -134,6 +140,7 @@ void ImageProviderFactory::save(
 	const std::string &fullname,
 	const std::string &type)
 {
+	SetupDisplay::start();
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
 	FileSystem vfs(path);
@@ -145,7 +152,8 @@ void ImageProviderFactory::save(
 	IODevice &file,
 	const std::string &type)
 {
-	
+	SetupDisplay::start();
+
 	if (types.find(type) == types.end()) throw Exception("Unknown image provider type " + type);
 
 	ImageProviderType *factory = types[type];

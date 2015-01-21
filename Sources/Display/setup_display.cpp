@@ -24,10 +24,11 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #include "Display/precomp.h"
-#include "API/Display/setup_display.h"
+#include "setup_display.h"
 #include "API/Display/ImageProviders/provider_type_register.h"
 #include "API/Display/ImageProviders/targa_provider.h"
 #include "API/Display/ImageProviders/jpeg_provider.h"
@@ -40,6 +41,7 @@
 #include "API/Core/Resources/file_resource_document.h"
 #include "Display/Resources/XML/xml_display_cache.h"
 #include "Display/Resources/file_display_cache.h"
+#include "../Core/System/setup_core.h"
 
 #ifndef WIN32
 #ifndef __APPLE__
@@ -50,91 +52,78 @@
 namespace clan
 {
 
-class SetupDisplay_Impl
-{
-public:
-	static void init();
-	static void deinit();
+	class SetupDisplay_Impl : public SetupModule
+	{
+	public:
+		SetupDisplay_Impl();
+		~SetupDisplay_Impl();
 
-	static void add_cache_factory_xml(ResourceManager &manager, const XMLResourceDocument &doc);
-	static void add_cache_factory_file(ResourceManager &manager, const FileResourceDocument &doc);
+		static void add_cache_factory_xml(ResourceManager &manager, const XMLResourceDocument &doc);
+		static void add_cache_factory_file(ResourceManager &manager, const FileResourceDocument &doc);
 
-	static ProviderType_Register<JPEGProvider> *jpeg_provider;
-	static ProviderType_Register<JPEGProvider> *jpg_provider;
-	static ProviderType_Register<PNGProvider> *png_provider;
-	static ProviderType_Register<TargaProvider> *targa_provider;
-	static ProviderType_Register<TargaProvider> *tga_provider;
-};
+		ProviderType_Register<JPEGProvider> *jpeg_provider = nullptr;
+		ProviderType_Register<JPEGProvider> *jpg_provider = nullptr;
+		ProviderType_Register<PNGProvider> *png_provider = nullptr;
+		ProviderType_Register<TargaProvider> *targa_provider = nullptr;
+		ProviderType_Register<TargaProvider> *tga_provider = nullptr;
+	};
 
-ProviderType_Register<JPEGProvider> *SetupDisplay_Impl::jpeg_provider = nullptr;
-ProviderType_Register<JPEGProvider> *SetupDisplay_Impl::jpg_provider = nullptr;
-ProviderType_Register<PNGProvider> *SetupDisplay_Impl::png_provider = nullptr;
-ProviderType_Register<TargaProvider> *SetupDisplay_Impl::targa_provider = nullptr;
-ProviderType_Register<TargaProvider> *SetupDisplay_Impl::tga_provider = nullptr;
+	/////////////////////////////////////////////////////////////////////////////
+	// SetupDisplay Construction:
 
-/////////////////////////////////////////////////////////////////////////////
-// SetupDisplay Construction:
+	void SetupDisplay::start()
+	{
+		std::lock_guard<std::recursive_mutex> lock(SetupCore::instance.mutex);
 
-SetupDisplay::SetupDisplay()
-{
-	SetupDisplay_Impl::init();
-}
+		if (SetupCore::instance.module_display)
+			return;
+
+		SetupCore::start();	// Display depends on core.
+		SetupCore::instance.module_display = std::make_unique<SetupDisplay_Impl>();
+	}
 
 
-SetupDisplay::~SetupDisplay()
-{
-	SetupDisplay_Impl::deinit();
-}
-
-void SetupDisplay_Impl::init()
-{
+	SetupDisplay_Impl::SetupDisplay_Impl()
+	{
 #ifdef WIN32
-	SetProcessDPIAware();
+		SetProcessDPIAware();
 #endif
 
 #ifndef WIN32
 #ifndef __APPLE__
-	// The XInitThreads() function initializes Xlib support for concurrent threads.
-	// This function must be the first Xlib function a multi-threaded program calls, and it must complete before any other Xlib call is made.
-	XInitThreads();
+		// The XInitThreads() function initializes Xlib support for concurrent threads.
+		// This function must be the first Xlib function a multi-threaded program calls, and it must complete before any other Xlib call is made.
+		XInitThreads();
 #endif
 #endif
-	jpeg_provider  = new ProviderType_Register<JPEGProvider>("jpeg");
-	jpg_provider   = new ProviderType_Register<JPEGProvider>("jpg");
-	png_provider   = new ProviderType_Register<PNGProvider>("png");
-	targa_provider = new ProviderType_Register<TargaProvider>("targa");
-	tga_provider   = new ProviderType_Register<TargaProvider>("tga");
+		jpeg_provider = new ProviderType_Register<JPEGProvider>("jpeg");
+		jpg_provider = new ProviderType_Register<JPEGProvider>("jpg");
+		png_provider = new ProviderType_Register<PNGProvider>("png");
+		targa_provider = new ProviderType_Register<TargaProvider>("targa");
+		tga_provider = new ProviderType_Register<TargaProvider>("tga");
 
-	XMLResourceManager::add_cache_factory(std::function<void(ResourceManager &, const XMLResourceDocument &)>(&SetupDisplay_Impl::add_cache_factory_xml));
-	FileResourceManager::add_cache_factory(std::function<void(ResourceManager &, const FileResourceDocument &)>(&SetupDisplay_Impl::add_cache_factory_file));
-}
+		XMLResourceManager::add_cache_factory(std::function<void(ResourceManager &, const XMLResourceDocument &)>(&SetupDisplay_Impl::add_cache_factory_xml));
+		FileResourceManager::add_cache_factory(std::function<void(ResourceManager &, const FileResourceDocument &)>(&SetupDisplay_Impl::add_cache_factory_file));
+	}
 
-void SetupDisplay_Impl::deinit()
-{
-	delete jpeg_provider;
-	jpeg_provider = nullptr;
+	SetupDisplay_Impl::~SetupDisplay_Impl()
+	{
+		delete jpeg_provider;
+		delete jpg_provider;
+		delete png_provider;
+		delete targa_provider;
+		delete tga_provider;
+	}
 
-	delete jpg_provider;
-	jpg_provider = nullptr;
+	void SetupDisplay_Impl::add_cache_factory_xml(ResourceManager &manager, const XMLResourceDocument &doc)
+	{
+		DisplayCache::set(manager, std::shared_ptr<DisplayCache>(new XMLDisplayCache(doc)));
+	}
 
-	delete png_provider;
-	png_provider = nullptr;
-
-	delete targa_provider;
-	targa_provider = nullptr;
-
-	delete tga_provider;
-	tga_provider = nullptr;
-}
-
-void SetupDisplay_Impl::add_cache_factory_xml(ResourceManager &manager, const XMLResourceDocument &doc)
-{
-	DisplayCache::set(manager, std::shared_ptr<DisplayCache>(new XMLDisplayCache(doc)));
-}
-
-void SetupDisplay_Impl::add_cache_factory_file(ResourceManager &manager, const FileResourceDocument &doc)
-{
-	DisplayCache::set(manager, std::shared_ptr<DisplayCache>(new FileDisplayCache(doc)));
-}
+	void SetupDisplay_Impl::add_cache_factory_file(ResourceManager &manager, const FileResourceDocument &doc)
+	{
+		DisplayCache::set(manager, std::shared_ptr<DisplayCache>(new FileDisplayCache(doc)));
+	}
 
 }
+

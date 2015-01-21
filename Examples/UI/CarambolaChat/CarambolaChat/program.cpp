@@ -64,7 +64,6 @@ private:
 
 int Program::main(const std::vector<std::string> &args)
 {
-	SetupCore setup_core;
 	/*
 	#ifndef _DEBUG
 	std::string appdata_dir = clan::Directory::get_appdata("ClanLib", "Carambola", "1.0");
@@ -74,7 +73,6 @@ int Program::main(const std::vector<std::string> &args)
 	#endif
 	*/
 	SetupSound setup_sound;
-	SetupDisplay setup_display;
 	SetupGL setup_gl;
 	SetupNetwork setup_network;
 
