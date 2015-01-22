@@ -146,6 +146,8 @@ namespace clan
 		double page_step = 25.0;
 		double timer_step_size = 0.0;
 		double timer_target_position = 0.0;
+		double thumb_move_start_position = 0.0;
+		Pointf mouse_drag_start_pos;
 		Signal<void()> sig_scroll;
 		Timer scroll_timer;
 
@@ -198,13 +200,22 @@ namespace clan
 
 		slots.connect(impl->track->sig_pointer_press(), impl.get(), &ScrollBarViewImpl::on_pointer_track_press);
 		slots.connect(impl->track->sig_pointer_release(), impl.get(), &ScrollBarViewImpl::on_pointer_track_release);
+
+		//FIXME thumb grip works, but thumb doesn't
+		slots.connect(impl->thumb_grip->sig_pointer_press(), impl.get(), &ScrollBarViewImpl::on_pointer_thumb_press);
+		slots.connect(impl->thumb_grip->sig_pointer_release(), impl.get(), &ScrollBarViewImpl::on_pointer_thumb_release);
 		slots.connect(impl->thumb->sig_pointer_press(), impl.get(), &ScrollBarViewImpl::on_pointer_thumb_press);
 		slots.connect(impl->thumb->sig_pointer_release(), impl.get(), &ScrollBarViewImpl::on_pointer_thumb_release);
+
 		slots.connect(impl->button_decrement->sig_pointer_press(), impl.get(), &ScrollBarViewImpl::on_pointer_decrement_press);
 		slots.connect(impl->button_decrement->sig_pointer_release(), impl.get(), &ScrollBarViewImpl::on_pointer_decrement_release);
 		slots.connect(impl->button_increment->sig_pointer_press(), impl.get(), &ScrollBarViewImpl::on_pointer_increment_press);
 		slots.connect(impl->button_increment->sig_pointer_release(), impl.get(), &ScrollBarViewImpl::on_pointer_increment_release);
-		slots.connect(sig_pointer_move(), impl.get(), &ScrollBarViewImpl::on_pointer_move);
+
+		//FIXME thumb grip works, but thumb doesn't
+		slots.connect(impl->thumb_grip->sig_pointer_move(), impl.get(), &ScrollBarViewImpl::on_pointer_move);
+		slots.connect(impl->thumb->sig_pointer_move(), impl.get(), &ScrollBarViewImpl::on_pointer_move);
+
 		slots.connect(sig_focus_gained(), impl.get(), &ScrollBarViewImpl::on_focus_gained);
 		slots.connect(sig_focus_lost(), impl.get(), &ScrollBarViewImpl::on_focus_lost);
 		slots.connect(sig_activated(), impl.get(), &ScrollBarViewImpl::on_activated);
@@ -450,11 +461,14 @@ namespace clan
 
 	void ScrollBarViewImpl::on_pointer_thumb_press(PointerEvent &e)
 	{
-
+		mouse_down_mode = mouse_down_thumb_drag;
+		thumb_move_start_position = pos;
+		mouse_drag_start_pos = e.pos(track.get());
 	}
 
 	void ScrollBarViewImpl::on_pointer_thumb_release(PointerEvent &e)
 	{
+		mouse_down_mode = mouse_down_none;
 
 	}
 
@@ -486,7 +500,45 @@ namespace clan
 
 	void ScrollBarViewImpl::on_pointer_move(PointerEvent &e)
 	{
+		if (mouse_down_mode != mouse_down_thumb_drag)
+			return;
+
+		Pointf mouse_pos(e.pos(track.get()));
+		Rectf thumb_geometry(thumb->geometry().content_box());
+		Rectf track_geometry(track->geometry().content_box());
+
+		double last_position = pos;
+
+		if (mouse_pos.x < -100 || mouse_pos.x > track_geometry.get_width() + 100 || mouse_pos.y < -100 || mouse_pos.y > track_geometry.get_height() + 100)
+		{
+			pos = thumb_move_start_position;
+		}
+		else
+		{
+			if (scrollbar->horizontal())
+			{
+				double delta = (mouse_pos.x - mouse_drag_start_pos.x);
+				pos = thumb_move_start_position + delta * ((max_pos - min_pos)) / (track->geometry().content_box().get_width());
+			}
+			else
+			{
+				double delta = (mouse_pos.y - mouse_drag_start_pos.y);
+				pos = thumb_move_start_position + delta * ((max_pos - min_pos)) / (track->geometry().content_box().get_height());
+			}
+		}
+		if (pos > max_pos)
+			pos = max_pos;
+		if (pos < min_pos)
+			pos = min_pos;
+
+		if (last_position != pos)
+		{
+			sig_scroll();
+			scrollbar->set_needs_layout();
+		}
+
 	}
+
 
 	void ScrollBarViewImpl::scroll_timer_expired()
 	{
