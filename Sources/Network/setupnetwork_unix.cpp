@@ -33,7 +33,7 @@
 namespace clan
 {
 
-	void SetupDisplay::start()
+	void SetupNetwork::start()
 	{
 
 	}

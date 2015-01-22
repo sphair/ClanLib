@@ -88,6 +88,7 @@ public:
 	~D3DTarget() {};
 	static bool is_current() {return false;}
 	static void set_current() {};
+	static void enable() {};
 };
 
 }
