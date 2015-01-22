@@ -609,9 +609,9 @@ namespace clan
 
 		Rect content_rect = textfield->geometry().content_box();
 		int xpos = e.pos(textfield).x;
-		if (xpos < content_rect.left || xpos > content_rect.right)
+		if (xpos < 0 || xpos > content_rect.get_width())
 		{
-			if (xpos < content_rect.left)
+			if (xpos < 0)
 				mouse_moves_left = true;
 			else
 				mouse_moves_left = false;
@@ -622,7 +622,7 @@ namespace clan
 		else
 		{
 			scroll_timer.stop();
-			cursor_pos = get_character_index(e.pos(textfield).x);
+			cursor_pos = get_character_index(xpos);
 			selection_length = cursor_pos - selection_start;
 			textfield->set_needs_render();
 		}
@@ -978,8 +978,7 @@ namespace clan
 
 	unsigned int TextFieldViewImpl::get_character_index(int mouse_x_wincoords)
 	{
-		Rect content_rect = textfield->geometry().content_box();
-		int mouse_x = mouse_x_wincoords - content_rect.left;
+		int mouse_x = mouse_x_wincoords;
 
 		if (last_measured_rects.empty())
 			return 0;
