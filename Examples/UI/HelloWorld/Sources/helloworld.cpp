@@ -93,6 +93,18 @@ int HelloWorld::start(const std::vector<std::string> &args)
 
 	span->add_subview(edit);
 
+	std::shared_ptr<ScrollBarView> scrollbar = std::make_shared<ScrollBarView>();
+	scrollbar->set_horizontal();
+	scrollbar->box_style.set_flex(0.0f, 0.0f);
+	scrollbar->box_style.set_background(Colorf(232, 232, 236));
+	scrollbar->track()->box_style.set_padding(4.0f, 0.0f);
+	scrollbar->thumb()->box_style.set_background(Colorf(208, 209, 215));
+	scrollbar->set_range(0.0, 1.0);
+	scrollbar->set_position(0.5);
+	scrollbar->set_page_step(0.1);
+	scrollbar->set_line_step(0.01);
+	root->add_subview(scrollbar);
+
 	TextStyle font_desc5;
 	font_desc5.set_font_family("Segoe UI");
 	font_desc5.set_size(16.0f);

@@ -29,6 +29,7 @@
 #include "UI/precomp.h"
 #include "API/UI/StandardViews/scrollbar_view.h"
 #include "API/Display/2D/path.h"
+#include "API/Display/System/timer.h"
 #include "API/Display/2D/brush.h"
 #include <algorithm>
 
@@ -102,6 +103,36 @@ namespace clan
 	class ScrollBarViewImpl
 	{
 	public:
+
+		void on_pointer_track_press(PointerEvent &e);
+		void on_pointer_track_release(PointerEvent &e);
+		void on_pointer_thumb_press(PointerEvent &e);
+		void on_pointer_thumb_release(PointerEvent &e);
+		void on_pointer_decrement_press(PointerEvent &e);
+		void on_pointer_decrement_release(PointerEvent &e);
+		void on_pointer_increment_press(PointerEvent &e);
+		void on_pointer_increment_release(PointerEvent &e);
+
+		void on_pointer_move(PointerEvent &e);
+		void on_focus_gained(FocusChangeEvent &e);
+		void on_focus_lost(FocusChangeEvent &e);
+		void on_activated(ActivationChangeEvent &e);
+		void on_deactivated(ActivationChangeEvent &e);
+
+		void scroll_timer_expired();
+
+		enum MouseDownMode
+		{
+			mouse_down_none,
+			mouse_down_button_decr,
+			mouse_down_button_incr,
+			mouse_down_track_decr,
+			mouse_down_track_incr,
+			mouse_down_thumb_drag
+		} mouse_down_mode = mouse_down_none;
+
+		ScrollBarView *scrollbar = nullptr;
+
 		std::shared_ptr<ScrollBarButtonView> button_decrement;
 		std::shared_ptr<ScrollBarButtonView> button_increment;
 		std::shared_ptr<View> track;
@@ -112,7 +143,9 @@ namespace clan
 		double pos = 0.0;
 		double line_step = 1.0;
 		double page_step = 25.0;
+		double timer_step_size = 0.0;
 		Signal<void()> sig_scroll;
+		Timer scroll_timer;
 
 		void update_pos(ScrollBarView *view, double new_pos, double new_min, double new_max)
 		{
@@ -129,6 +162,8 @@ namespace clan
 
 	ScrollBarView::ScrollBarView() : impl(std::make_shared<ScrollBarViewImpl>())
 	{
+		impl->scrollbar = this;
+
 		impl->button_decrement = std::make_shared<ScrollBarButtonView>();
 		impl->button_increment = std::make_shared<ScrollBarButtonView>();
 		impl->track = std::make_shared<View>();
@@ -158,6 +193,22 @@ namespace clan
 		impl->button_decrement->box_style.set_height(17.0f);
 		impl->button_increment->box_style.set_width(17.0f);
 		impl->button_increment->box_style.set_height(17.0f);
+
+		slots.connect(impl->track->sig_pointer_press(), impl.get(), &ScrollBarViewImpl::on_pointer_track_press);
+		slots.connect(impl->track->sig_pointer_release(), impl.get(), &ScrollBarViewImpl::on_pointer_track_release);
+		slots.connect(impl->thumb->sig_pointer_press(), impl.get(), &ScrollBarViewImpl::on_pointer_thumb_press);
+		slots.connect(impl->thumb->sig_pointer_release(), impl.get(), &ScrollBarViewImpl::on_pointer_thumb_release);
+		slots.connect(impl->button_decrement->sig_pointer_press(), impl.get(), &ScrollBarViewImpl::on_pointer_decrement_press);
+		slots.connect(impl->button_decrement->sig_pointer_release(), impl.get(), &ScrollBarViewImpl::on_pointer_decrement_release);
+		slots.connect(impl->button_increment->sig_pointer_press(), impl.get(), &ScrollBarViewImpl::on_pointer_increment_press);
+		slots.connect(impl->button_increment->sig_pointer_release(), impl.get(), &ScrollBarViewImpl::on_pointer_increment_release);
+		slots.connect(sig_pointer_move(), impl.get(), &ScrollBarViewImpl::on_pointer_move);
+		slots.connect(sig_focus_gained(), impl.get(), &ScrollBarViewImpl::on_focus_gained);
+		slots.connect(sig_focus_lost(), impl.get(), &ScrollBarViewImpl::on_focus_lost);
+		slots.connect(sig_activated(), impl.get(), &ScrollBarViewImpl::on_activated);
+		slots.connect(sig_activated(), impl.get(), &ScrollBarViewImpl::on_deactivated);
+
+		impl->scroll_timer.func_expired() = clan::bind_member(impl.get(), &ScrollBarViewImpl::scroll_timer_expired);
 
 		set_vertical();
 	}
@@ -332,4 +383,102 @@ namespace clan
 	{
 		return impl->sig_scroll;
 	}
+
+
+	void ScrollBarViewImpl::on_focus_gained(FocusChangeEvent &e)
+	{
+	}
+
+	void ScrollBarViewImpl::on_focus_lost(FocusChangeEvent &e)
+	{
+		mouse_down_mode = mouse_down_none;
+		scroll_timer.stop();
+	}
+
+	void ScrollBarViewImpl::on_activated(ActivationChangeEvent &e)
+	{
+
+	}
+
+	void ScrollBarViewImpl::on_deactivated(ActivationChangeEvent &e)
+	{
+		mouse_down_mode = mouse_down_none;
+		scroll_timer.stop();
+	}
+
+	void ScrollBarViewImpl::on_pointer_track_press(PointerEvent &e)
+	{
+
+	}
+
+	void ScrollBarViewImpl::on_pointer_track_release(PointerEvent &e)
+	{
+		mouse_down_mode = mouse_down_none;
+		scroll_timer.stop();
+
+	}
+
+	void ScrollBarViewImpl::on_pointer_thumb_press(PointerEvent &e)
+	{
+
+	}
+
+	void ScrollBarViewImpl::on_pointer_thumb_release(PointerEvent &e)
+	{
+
+	}
+
+	void ScrollBarViewImpl::on_pointer_decrement_press(PointerEvent &e)
+	{
+		mouse_down_mode = mouse_down_button_decr;
+		timer_step_size = -line_step;
+		scroll_timer_expired();
+	}
+
+	void ScrollBarViewImpl::on_pointer_decrement_release(PointerEvent &e)
+	{
+		mouse_down_mode = mouse_down_none;
+		scroll_timer.stop();
+	}
+
+	void ScrollBarViewImpl::on_pointer_increment_press(PointerEvent &e)
+	{
+		mouse_down_mode = mouse_down_button_incr;
+		timer_step_size = line_step;
+		scroll_timer_expired();
+	}
+
+	void ScrollBarViewImpl::on_pointer_increment_release(PointerEvent &e)
+	{
+		mouse_down_mode = mouse_down_none;
+		scroll_timer.stop();
+	}
+
+	void ScrollBarViewImpl::on_pointer_move(PointerEvent &e)
+	{
+	}
+
+	void ScrollBarViewImpl::scroll_timer_expired()
+	{
+		if (mouse_down_mode == mouse_down_thumb_drag)
+			return;
+
+		double last_position = pos;
+		pos += timer_step_size;
+
+		if (pos > max_pos)
+			pos = max_pos;
+		if (pos < min_pos)
+			pos = min_pos;
+
+		if (last_position != pos)
+		{
+			sig_scroll();
+			scrollbar->set_needs_layout();
+		}
+		// FIXME - The scroll timer should work with "false" as a parameter. Well, ideally, this timer should be set to repeat outside of this function. But it shows a problem
+		scroll_timer.start(100, true);
+
+	}
+
 }
