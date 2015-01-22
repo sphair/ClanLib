@@ -37,6 +37,7 @@
 #include "API/Core/Resources/xml_resource_manager.h"
 #include "Sound/Resources/XML/xml_sound_cache.h"
 #include "../Core/System/setup_core.h"
+#include "API/Core/Math/cl_math.h"
 
 #define INCLUDED_FROM_SETUPVORBIS
 #include "SoundProviders/stb_vorbis.h"
@@ -71,7 +72,7 @@ void SetupSound::start()
 		return;
 
 	SetupCore::start();	// Display depends on core.
-	SetupCore::instance.module_sound = std::make_unique<SetupSound_Impl>();
+	SetupCore::instance.module_sound = clan::make_unique<SetupSound_Impl>();
 }
 
 SetupSound_Impl::SetupSound_Impl()

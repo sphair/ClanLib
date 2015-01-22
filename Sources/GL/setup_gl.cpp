@@ -49,7 +49,7 @@ void SetupGL::start()
 		return;
 
 	SetupDisplay::start();	// GL depends on display
-	SetupCore::instance.module_gl = std::make_unique<SetupGL_Impl>();
+	SetupCore::instance.module_gl = clan::make_unique<SetupGL_Impl>();
 }
 
 SetupGL_Impl::SetupGL_Impl()

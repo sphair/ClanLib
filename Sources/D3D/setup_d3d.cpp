@@ -33,6 +33,7 @@
 #include "API/D3D/d3d_target.h"
 #include <mutex>
 #include "../Display/setup_display.h"
+#include "API/Core/Math/cl_math.h"
 
 //#pragma comment(lib, "D3D11.lib")
 //#pragma comment(lib, "D3dcompiler.lib")
@@ -53,7 +54,7 @@ void SetupD3D::start()
 		return;
 
 	SetupDisplay::start();	// D3D depends on display
-	SetupCore::instance.module_d3d = std::make_unique<SetupD3D_Impl>();
+	SetupCore::instance.module_d3d = clan::make_unique<SetupD3D_Impl>();
 }
 
 SetupD3D_Impl::SetupD3D_Impl()

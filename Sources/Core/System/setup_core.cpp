@@ -33,6 +33,7 @@
 #include "API/Core/System/thread_local_storage.h"
 #include "API/Core/System/system.h"
 #include "tls_instance.h"
+#include "API/Core/Math/cl_math.h"
 
 namespace clan
 {
@@ -68,7 +69,7 @@ void SetupCore::start()
 	if (instance.module_core)
 		return;
 
-	instance.module_core = std::make_unique<SetupCore_Impl>();
+	instance.module_core = clan::make_unique<SetupCore_Impl>();
 }
 
 /////////////////////////////////////////////////////////////////////////////

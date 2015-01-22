@@ -28,6 +28,7 @@
 
 #include "Core/precomp.h"
 #include "tls_instance.h"
+#include "API/Core/Math/cl_math.h"
 
 namespace clan
 {
@@ -55,7 +56,7 @@ ThreadLocalStorage_Instance::ThreadLocalStorage_Instance()
 #endif
 
 	ThreadLocalStorage::instance = this;
-	cl_tls = std::make_unique<ThreadLocalStorage>();	// create initial instance
+	cl_tls = clan::make_unique<ThreadLocalStorage>();	// create initial instance
 }
 
 ThreadLocalStorage_Instance::~ThreadLocalStorage_Instance()
