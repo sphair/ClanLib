@@ -31,6 +31,7 @@
 #include "API/Display/2D/path.h"
 #include "API/Display/System/timer.h"
 #include "API/Display/2D/brush.h"
+#include "API/UI/Events/pointer_event.h"
 #include <algorithm>
 
 namespace clan
@@ -144,6 +145,7 @@ namespace clan
 		double line_step = 1.0;
 		double page_step = 25.0;
 		double timer_step_size = 0.0;
+		double timer_target_position = 0.0;
 		Signal<void()> sig_scroll;
 		Timer scroll_timer;
 
@@ -408,6 +410,34 @@ namespace clan
 
 	void ScrollBarViewImpl::on_pointer_track_press(PointerEvent &e)
 	{
+		float mouse_pos;
+		Rectf thumb_geometry(thumb->geometry().content_box());
+		float thumb_position;
+		if (scrollbar->horizontal())
+		{
+			mouse_pos = e.pos(track.get()).x;
+			thumb_position = thumb_geometry.left + thumb_geometry.get_width() / 2.0f;
+			timer_target_position = min_pos + mouse_pos * ((max_pos - min_pos)) / (track->geometry().content_box().get_width());
+		}
+		else
+		{
+			mouse_pos = e.pos(track.get()).y;
+			thumb_position = thumb_geometry.top + thumb_geometry.get_height() / 2.0f;
+			timer_target_position = min_pos + mouse_pos * ((max_pos - min_pos)) / (track->geometry().content_box().get_height());
+		}
+
+		if (mouse_pos < thumb_position)
+		{
+			mouse_down_mode = mouse_down_track_decr;
+			timer_step_size = -page_step;
+		}
+		else
+		{
+			mouse_down_mode = mouse_down_track_incr;
+			timer_step_size = page_step;
+		}
+
+		scroll_timer_expired();
 
 	}
 
@@ -460,11 +490,22 @@ namespace clan
 
 	void ScrollBarViewImpl::scroll_timer_expired()
 	{
-		if (mouse_down_mode == mouse_down_thumb_drag)
+		if ((mouse_down_mode == mouse_down_none) || (mouse_down_mode == mouse_down_thumb_drag))
 			return;
 
 		double last_position = pos;
 		pos += timer_step_size;
+
+		if (mouse_down_mode == mouse_down_track_decr)
+		{
+			if (pos < timer_target_position)
+				pos = timer_target_position;
+		}
+		if (mouse_down_mode == mouse_down_track_incr)
+		{
+			if (pos > timer_target_position)
+				pos = timer_target_position;
+		}
 
 		if (pos > max_pos)
 			pos = max_pos;
