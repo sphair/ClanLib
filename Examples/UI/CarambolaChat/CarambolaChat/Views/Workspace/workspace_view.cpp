@@ -11,20 +11,21 @@ WorkspaceView::WorkspaceView()
 
 	labels_group = std::make_shared<View>();
 	labels_group->box_style.set_flex(0.0f, 0.0f);
-	labels_group->box_style.set_padding(7.5f, 12.0f, 8.0f, 0.0f);
+	labels_group->box_style.set_margin(-0.5f, 0.0f);
+	labels_group->box_style.set_padding(0.0f, 0.0f, 0.0f, 0.0f);
 	labels_group->box_style.set_height(30.0f);
 	labels_group->box_style.set_layout_hbox();
 
 	toolbar = std::make_shared<View>();
 	toolbar->box_style.set_flex(0.0f, 0.0f);
 	toolbar->box_style.set_height(40.0f);
-	toolbar->box_style.set_margin(8.0f, 0.0f);
+	toolbar->box_style.set_margin(0.0f, 0.0f);
 	toolbar->box_style.set_background_gradient_to_bottom(Colorf(235, 243, 252), Colorf(219, 234, 249));
 	toolbar->box_style.set_border(Colorf::gray60, 0.0f, 0.0f, 0.0f, 1.0f);
 
 	pages_group = std::make_shared<View>();
 	pages_group->box_style.set_flex(1.0f, 1.0f);
-	pages_group->box_style.set_margin(8, 0, 8, 8);
+	pages_group->box_style.set_margin(0, 0, 0, 0);
 	pages_group->box_style.set_background(Colorf::white);
 	pages_group->box_style.set_layout_vbox();
 
@@ -100,6 +101,12 @@ void WorkspaceView::set_selected(TabPage &page, bool selected, bool animated)
 		page.tab->message_count->set_hidden();
 	}
 
+	Colorf background(243, 240, 244, 160);
+	Colorf foreground1(239, 247, 255);
+	Colorf foreground2(235, 243, 252);
+	Colorf foreground_border = Colorf::gray40;
+	Colorf background_border = Colorf::transparent;
+
 	if (animated)
 	{
 		if (selected == !page.page->hidden()) return;
@@ -109,29 +116,21 @@ void WorkspaceView::set_selected(TabPage &page, bool selected, bool animated)
 
 		page.tab->animate(from, to, [=](float t)
 		{
-			if (t > 0.0f)
-			{
-				page.tab->box_style.set_background_gradient_to_bottom(Colorf(255, 255, 255, (int)((0.2f + t * 0.8f) * 255.0f)), Colorf(235, 243, 252, (int)((0.2f + t * 0.8f) * 255.0f)));
-				page.tab->box_style.set_border(Colorf(102, 102, 102, (int)(t * 255.0f)), 0.5f, 0.5f, 0.5f, 0.0f);
-			}
-			else
-			{
-				page.tab->box_style.set_background(Colorf(1.0f, 1.0f, 1.0f, 0.2f));
-				page.tab->box_style.set_border(Colorf::transparent, 0.5f, 0.5f, 0.5f, 0.0f);
-			}
+			page.tab->box_style.set_background_gradient_to_bottom(mix(background, foreground1, t), mix(background, foreground2, t));
+			page.tab->box_style.set_border(mix(background_border, foreground_border, t), 0.5f, 0.5f, 0.5f, 0.0f);
 		});
 	}
 	else
 	{
 		if (selected)
 		{
-			page.tab->box_style.set_background_gradient_to_bottom(Colorf::white, Colorf(235, 243, 252));
-			page.tab->box_style.set_border(Colorf::gray40, 0.5f, 0.5f, 0.5f, 0.0f);
+			page.tab->box_style.set_background_gradient_to_bottom(foreground1, foreground2);
+			page.tab->box_style.set_border(foreground_border, 0.5f, 0.5f, 0.5f, 0.0f);
 		}
 		else
 		{
-			page.tab->box_style.set_background(Colorf(1.0f, 1.0f, 1.0f, 0.2f));
-			page.tab->box_style.set_border(Colorf::transparent, 0.5f, 0.5f, 0.5f, 0.0f);
+			page.tab->box_style.set_background_gradient_to_bottom(background, background);
+			page.tab->box_style.set_border(background_border, 0.5f, 0.5f, 0.5f, 0.0f);
 		}
 	}
 
