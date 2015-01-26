@@ -12,14 +12,17 @@ using namespace clan;
 ChatWindowViewController::ChatWindowViewController()
 {
 	DisplayWindowDescription desc;
-	desc.set_title("");
+	desc.set_title("Carambola Chat");
 	desc.set_allow_resize(true);
 	desc.set_size(Size(1536, 864), false);
-	desc.set_type(WindowType::custom);
-	desc.set_extend_frame(8, 42, 8, 8);
+	desc.set_type(WindowType::normal);
+	desc.set_extend_frame(0, 30, 0, 0);
 
 	view = std::make_shared<WindowView>(desc);
 	view->box_style.set_layout_vbox();
+
+	window_view()->get_display_window().set_large_icon(ImageProviderFactory::load("Resources/Icons/carambola-256.png"));
+	window_view()->get_display_window().set_small_icon(ImageProviderFactory::load("Resources/Icons/carambola-32.png"));
 
 	workspace = std::make_shared<WorkspaceViewController>();
 	add_child_controller(workspace);
