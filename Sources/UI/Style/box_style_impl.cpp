@@ -38,7 +38,7 @@ namespace clan
 {
 	void BoxStyleImpl::render(Canvas &canvas, const BoxGeometry &geometry) const
 	{
-		if (background.color.a != 0.0f || !background.stops.empty() || !background.image.is_null())
+		if (background.color.a != 0.0f || !background.stops.empty() || background.image)
 		{
 			Rectf border_box = geometry.border_box();
 			Rectf padding_box = geometry.padding_box();
@@ -383,11 +383,11 @@ namespace clan
 				border_area_path.fill(canvas, brush);
 			}
 
-			if (!background.image.is_null())
+			if (background.image)
 			{
 				Brush brush;
 				brush.type = BrushType::image;
-				brush.image = Image(canvas, background.image, background.image.get_size());
+				brush.image = background.image->get_image(canvas);
 				brush.transform = Mat3f::translate(border_box.left, border_box.top);
 				border_area_path.fill(canvas, brush);
 			}
