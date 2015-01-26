@@ -172,7 +172,7 @@ namespace clan
 		set_background_gradient({{ left, 0.0f }, { right, 1.0f }}, Angle::from_degrees(90.0f));
 	}
 
-	void BoxStyle::set_background_image(std::shared_ptr<ImageSource> image)
+	void BoxStyle::set_background_image(const std::shared_ptr<ImageSource> &image)
 	{
 		impl->background.image = image;
 		if (impl->style_changed) impl->style_changed();

@@ -64,7 +64,7 @@ namespace clan
 		return impl->image;
 	}
 
-	void ImageView::set_image(std::shared_ptr<ImageSource> image)
+	void ImageView::set_image(const std::shared_ptr<ImageSource> &image)
 	{
 		impl->image = image;
 		impl->canvas_image = Image();
@@ -82,7 +82,7 @@ namespace clan
 		return impl->highlighted_image;
 	}
 
-	void ImageView::set_highlighted_image(std::shared_ptr<ImageSource> image)
+	void ImageView::set_highlighted_image(const std::shared_ptr<ImageSource> &image)
 	{
 		impl->highlighted_image = image;
 		impl->canvas_highlighted_image = Image();

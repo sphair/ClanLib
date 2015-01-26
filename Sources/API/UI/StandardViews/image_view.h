@@ -43,11 +43,11 @@ namespace clan
 		ImageView();
 
 		std::shared_ptr<ImageSource> image();
-		void set_image(std::shared_ptr<ImageSource> image);
+		void set_image(const std::shared_ptr<ImageSource> &image);
 		void set_image(const Image &image);
 
 		std::shared_ptr<ImageSource> highlighted_image();
-		void set_highlighted_image(std::shared_ptr<ImageSource> image);
+		void set_highlighted_image(const std::shared_ptr<ImageSource> &image);
 		void set_highlighted_image(const Image &image);
 
 		/*

@@ -120,7 +120,7 @@ namespace clan
 
 		void set_background_gradient_to_bottom(const Colorf &top, const Colorf &bottom);
 		void set_background_gradient_to_right(const Colorf &left, const Colorf &right);
-		void set_background_image(std::shared_ptr<ImageSource> image);
+		void set_background_image(const std::shared_ptr<ImageSource> &image);
 		void set_background_image(const Image &image);
 		void set_background_size_contain();
 
