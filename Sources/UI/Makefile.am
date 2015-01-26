@@ -19,6 +19,7 @@ libclan40UI_la_SOURCES = \
 ./SystemDialogs/folder_browse_dialog.cpp \
 ./SystemDialogs/open_file_dialog.cpp \
 ./SystemDialogs/save_file_dialog.cpp \
+./Image/image_source.cpp \
 ./View/view.cpp \
 ./View/inline_layout.cpp \
 ./View/block_layout.cpp \

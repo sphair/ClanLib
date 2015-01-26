@@ -34,27 +34,6 @@
 
 namespace clan
 {
-	class ImageSourceCallback : public ImageSource
-	{
-	public:
-		ImageSourceCallback(const std::function<Image(Canvas &)> &cb_get_image) : cb_get_image(cb_get_image) { }
-		Image get_image(Canvas &canvas) override { return cb_get_image(canvas); }
-
-		std::function<Image(Canvas &)> cb_get_image;
-	};
-
-	std::shared_ptr<ImageSource> ImageSource::from_callback(const std::function<Image(Canvas &)> &get_image_callback)
-	{
-		return std::make_shared<ImageSourceCallback>(get_image_callback);
-	}
-
-	std::shared_ptr<ImageSource> ImageSource::from_resource(const std::string &resource_name)
-	{
-		return ImageSource::from_callback([=](Canvas &canvas)
-		{
-			return Image::resource(canvas, resource_name, UIThread::get_resources());
-		});
-	}
 
 	/////////////////////////////////////////////////////////////////////////
 
@@ -93,6 +72,11 @@ namespace clan
 		set_needs_layout();
 	}
 
+	void ImageView::set_image(const Image &image)
+	{
+		set_image(ImageSource::from_image(image));
+	}
+
 	std::shared_ptr<ImageSource> ImageView::highlighted_image()
 	{
 		return impl->highlighted_image;
@@ -104,6 +88,11 @@ namespace clan
 		impl->canvas_highlighted_image = Image();
 		set_needs_render();
 		set_needs_layout();
+	}
+
+	void ImageView::set_highlighted_image(const Image &image)
+	{
+		set_highlighted_image(ImageSource::from_image(image));
 	}
 
 	void ImageView::render_content(Canvas &canvas)
