@@ -59,6 +59,7 @@
 #include "UI/StandardViews/window_view.h"
 #include "UI/StandardViews/texture_view.h"
 #include "UI/StandardViews/popup_view.h"
+#include "UI/Image/image_source.h"
 #include "UI/Style/box_style.h"
 #include "UI/Style/box_geometry.h"
 #include "UI/Style/text_style.h"

@@ -26,44 +26,41 @@
 **    Magnus Norddahl
 */
 
-#pragma once
-
-#include "API/Display/2D/color.h"
-#include "API/Core/Math/point.h"
-#include "API/Display/Image/pixel_buffer.h"
-#include <vector>
+#include "UI/precomp.h"
 #include "API/UI/Image/image_source.h"
+#include "API/UI/UIThread/ui_thread.h"
+#include "API/Display/2D/image.h"
+#include "API/Display/2D/canvas.h"
 
 namespace clan
 {
-	class BoxGradientStop
+	class ImageSourceCallback : public ImageSource
 	{
 	public:
-		BoxGradientStop() {}
-		BoxGradientStop(const Colorf &color, float position) : color(color), position(position) { }
+		ImageSourceCallback(const std::function<Image(Canvas &)> &cb_get_image) : cb_get_image(cb_get_image) { }
+		Image get_image(Canvas &canvas) override { return cb_get_image(canvas); }
 
-		Colorf color;
-		float position = 0.0f;
+		std::function<Image(Canvas &)> cb_get_image;
 	};
 
-	class BoxBackground
+	std::shared_ptr<ImageSource> ImageSource::from_callback(const std::function<Image(Canvas &)> &get_image_callback)
 	{
-	public:
-		// Solid color
-		Colorf color = Colorf(0.0f, 0.0f, 0.0f, 0.0f);
+		return std::make_shared<ImageSourceCallback>(get_image_callback);
+	}
 
-		// Linear gradient
-		std::vector<BoxGradientStop> stops;
-		Angle angle = Angle::from_degrees(0.0f);
+	std::shared_ptr<ImageSource> ImageSource::from_resource(const std::string &resource_name)
+	{
+		return ImageSource::from_callback([=](Canvas &canvas)
+		{
+			return Image::resource(canvas, resource_name, UIThread::get_resources());
+		});
+	}
+	std::shared_ptr<ImageSource> ImageSource::from_image(const Image &image)
+	{
+			return ImageSource::from_callback([=](Canvas &canvas)
+			{
+				return image;
+			});
+	}
 
-		// Image
-		std::shared_ptr<ImageSource> image;
-
-		// Box shadow:
-		bool shadow_inset = false;
-		Pointf shadow_offset;
-		float shadow_blur_radius = 0.0f;
-		float shadow_spread_distance = 0.0f;
-		Colorf shadow_color;
-	};
 }

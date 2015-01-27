@@ -312,6 +312,7 @@ clanUI_includes = \
 	UI/SystemDialogs/save_file_dialog.h \
 	UI/SystemDialogs/folder_browse_dialog.h \
 	UI/UIThread/ui_thread.h \
+	UI/Image/image_source.h \
 	UI/Events/key_event.h \
 	UI/Events/close_event.h \
 	UI/Events/event.h \

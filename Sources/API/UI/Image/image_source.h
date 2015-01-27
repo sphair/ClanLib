@@ -28,42 +28,21 @@
 
 #pragma once
 
-#include "API/Display/2D/color.h"
-#include "API/Core/Math/point.h"
-#include "API/Display/Image/pixel_buffer.h"
-#include <vector>
-#include "API/UI/Image/image_source.h"
-
 namespace clan
 {
-	class BoxGradientStop
+	class Canvas;
+	class Image;
+
+	class ImageSource
 	{
 	public:
-		BoxGradientStop() {}
-		BoxGradientStop(const Colorf &color, float position) : color(color), position(position) { }
+		virtual Image get_image(Canvas &canvas) = 0;
+		static std::shared_ptr<ImageSource> from_resource(const std::string &resource_name);
+		static std::shared_ptr<ImageSource> from_callback(const std::function<Image(Canvas &)> &get_image_callback);
+		static std::shared_ptr<ImageSource> from_image(const Image &image);
+	protected:
+		virtual ~ImageSource() { }
 
-		Colorf color;
-		float position = 0.0f;
 	};
 
-	class BoxBackground
-	{
-	public:
-		// Solid color
-		Colorf color = Colorf(0.0f, 0.0f, 0.0f, 0.0f);
-
-		// Linear gradient
-		std::vector<BoxGradientStop> stops;
-		Angle angle = Angle::from_degrees(0.0f);
-
-		// Image
-		std::shared_ptr<ImageSource> image;
-
-		// Box shadow:
-		bool shadow_inset = false;
-		Pointf shadow_offset;
-		float shadow_blur_radius = 0.0f;
-		float shadow_spread_distance = 0.0f;
-		Colorf shadow_color;
-	};
 }

@@ -30,6 +30,7 @@
 #include "API/UI/Style/box_style.h"
 #include "API/Core/Text/string_help.h"
 #include "box_style_impl.h"
+#include "API/UI/Image/image_source.h"
 
 namespace clan
 {
@@ -171,10 +172,15 @@ namespace clan
 		set_background_gradient({{ left, 0.0f }, { right, 1.0f }}, Angle::from_degrees(90.0f));
 	}
 
-	void BoxStyle::set_background_image(const std::string &url)
+	void BoxStyle::set_background_image(const std::shared_ptr<ImageSource> &image)
 	{
-		impl->background.image = PixelBuffer(url);
-			if (impl->style_changed) impl->style_changed();
+		impl->background.image = image;
+		if (impl->style_changed) impl->style_changed();
+
+	}
+	void BoxStyle::set_background_image(const Image &image)
+	{
+		set_background_image(ImageSource::from_image(image));
 	}
 
 	void BoxStyle::set_background_size_contain()
