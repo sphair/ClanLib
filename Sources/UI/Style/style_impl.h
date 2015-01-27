@@ -28,15 +28,27 @@
 
 #pragma once
 
+#include "API/UI/Style/style_property_parser.h"
 #include <memory>
+#include <string>
 
 namespace clan
 {
 	class Style;
+	class ImageSource;
+	class Colorf;
 
-	class StyleImpl
+	class StyleImpl : public StylePropertySetter
 	{
 	public:
+		void set_keyword(const std::string &name, const std::string &keyword) override;
+		void set_length(const std::string &name, float length) override;
+		void set_percentage(const std::string &name, float length) override;
+		void set_string(const std::string &name, const std::string &str) override;
+		void set_url(const std::string &name, const std::string &url) override;
+		void set_color(const std::string &name, const Colorf &color) override;
+		void set_image(const std::string &name, const std::shared_ptr<ImageSource> &image) override;
+
 		std::shared_ptr<Style> base;
 	};
 }

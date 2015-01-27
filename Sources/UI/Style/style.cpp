@@ -138,4 +138,34 @@ namespace clan
 	{
 		return Font();
 	}
+
+	/////////////////////////////////////////////////////////////////////////
+
+	void StyleImpl::set_keyword(const std::string &name, const std::string &keyword)
+	{
+	}
+
+	void StyleImpl::set_length(const std::string &name, float length)
+	{
+	}
+
+	void StyleImpl::set_percentage(const std::string &name, float length)
+	{
+	}
+
+	void StyleImpl::set_string(const std::string &name, const std::string &str)
+	{
+	}
+
+	void StyleImpl::set_url(const std::string &name, const std::string &url)
+	{
+	}
+
+	void StyleImpl::set_color(const std::string &name, const Colorf &color)
+	{
+	}
+
+	void StyleImpl::set_image(const std::string &name, const std::shared_ptr<ImageSource> &image)
+	{
+	}
 }
