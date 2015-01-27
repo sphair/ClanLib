@@ -132,6 +132,7 @@ namespace clan
 	class StylePropertyParser
 	{
 	public:
+		StylePropertyParser();
 		virtual ~StylePropertyParser() { }
 		virtual const std::vector<std::string> &property_names() = 0;
 		virtual void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) = 0;
@@ -140,6 +141,6 @@ namespace clan
 	class StylePropertyDefault
 	{
 	public:
-		StylePropertyDefault(const std::string &name, const std::string &value);
+		StylePropertyDefault(const std::string &name, const std::string &value, StyleValueType type);
 	};
 }
