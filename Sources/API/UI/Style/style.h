@@ -48,6 +48,7 @@ namespace clan
 
 	enum class StyleValueType
 	{
+		undefined,
 		keyword,
 		length,
 		percentage,
@@ -82,7 +83,7 @@ namespace clan
 		float percentage(const std::string &property_name) const;
 		const std::string &string(const std::string &property_name) const;
 		const std::string &url(const std::string &property_name) const;
-		Colorf color(const std::string &property_name) const;
+		const Colorf &color(const std::string &property_name) const;
 		const std::shared_ptr<ImageSource> &image(const std::string &property_name) const;
 
 		void render_background(Canvas &canvas, const BoxGeometry &geometry) const;
