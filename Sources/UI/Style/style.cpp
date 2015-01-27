@@ -53,6 +53,7 @@ namespace clan
 
 	void Style::set(const std::string &property_name, const std::string &property_value, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
+		StyleProperty::parse(impl.get(), property_name, property_value, args);
 	}
 
 	bool Style::has(const std::string &property_name) const
