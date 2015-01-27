@@ -46,6 +46,9 @@ namespace clan
 		/// \brief Reads the next token
 		void read(StyleToken &out_token, bool eat_whitespace, bool eat_comments = true);
 
+		/// \brief Returns all tokens except start/end whitespace and comments
+		static std::vector<StyleToken> tokenize(const std::string &text);
+
 	private:
 		std::shared_ptr<StyleTokenizer_Impl> impl;
 	};

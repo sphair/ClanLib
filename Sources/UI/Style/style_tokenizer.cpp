@@ -67,4 +67,26 @@ namespace clan
 			}
 		} while((eat_whitespace && token.type == StyleTokenType::whitespace));
 	}
+
+	std::vector<StyleToken> StyleTokenizer::tokenize(const std::string &text)
+	{
+		std::vector<StyleToken> tokens;
+		StyleTokenizer tokenizer(text);
+		StyleToken token;
+		bool first = true;
+		while (true)
+		{
+			tokenizer.read(token, false);
+			if (token.type == StyleTokenType::null)
+				break;
+			if (!first || token.type != StyleTokenType::whitespace)
+			{
+				first = false;
+				tokens.push_back(token);
+			}
+		}
+		while (!tokens.empty() && tokens.back().type == StyleTokenType::whitespace)
+			tokens.pop_back();
+		return tokens;
+	}
 }

@@ -44,6 +44,7 @@ namespace clan
 	class Font;
 	class Colorf;
 	class ImageSource;
+	class StylePropertyInitializerValue;
 
 	enum class StyleValueType
 	{
@@ -54,29 +55,6 @@ namespace clan
 		url,
 		color,
 		image
-	};
-
-	class StylePropertyInitializerValue
-	{
-	public:
-		enum class Type
-		{
-			string,
-			number,
-			color,
-			image
-		};
-
-		StylePropertyInitializerValue(const std::string &str) : type(Type::string), str(str) { }
-		StylePropertyInitializerValue(float number) : type(Type::number), number(number) { }
-		StylePropertyInitializerValue(const Colorf &color) : type(Type::color), color(color) { }
-		StylePropertyInitializerValue(const std::shared_ptr<ImageSource> &image) : type(Type::image), image(image) { }
-
-		Type type;
-		std::string str;
-		float number = 0.0f;
-		Colorf color;
-		std::shared_ptr<ImageSource> image;
 	};
 
 	class Style
@@ -114,33 +92,5 @@ namespace clan
 
 	private:
 		std::unique_ptr<StyleImpl> impl;
-	};
-
-	class StylePropertySetter
-	{
-	public:
-		virtual ~StylePropertySetter() { }
-		virtual void set_keyword(const std::string &name, const std::string &keyword) = 0;
-		virtual void set_length(const std::string &name, float length) = 0;
-		virtual void set_percentage(const std::string &name, float length) = 0;
-		virtual void set_string(const std::string &name, const std::string &str) = 0;
-		virtual void set_url(const std::string &name, const std::string &url) = 0;
-		virtual void set_color(const std::string &name, const Colorf &color) = 0;
-		virtual void set_image(const std::string &name, const std::shared_ptr<ImageSource> &image) = 0;
-	};
-
-	class StylePropertyParser
-	{
-	public:
-		StylePropertyParser();
-		virtual ~StylePropertyParser() { }
-		virtual const std::vector<std::string> &property_names() = 0;
-		virtual void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) = 0;
-	};
-
-	class StylePropertyDefault
-	{
-	public:
-		StylePropertyDefault(const std::string &name, const std::string &value, StyleValueType type);
 	};
 }
