@@ -40,25 +40,263 @@ namespace clan
 
 	void WidthPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
+		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+
+		StyleValue width;
+
+		size_t pos = 0;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && pos == tokens.size())
+		{
+			if (equals(token.value, "auto"))
+				width = StyleValue::from_keyword("auto");
+			else if (equals(token.value, "inherit"))
+				width = StyleValue::from_keyword("inherit");
+			else
+				return;
+		}
+		else if (is_length(token) && pos == tokens.size())
+		{
+			StyleValue length;
+			if (parse_length(token, length) && length.number >= 0.0f)
+			{
+				width = length;
+			}
+			else
+			{
+				return;
+			}
+		}
+		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
+		{
+			float v = StringHelp::text_to_float(token.value);
+			if (v >= 0.0f)
+			{
+				width = StyleValue::from_percentage(v);
+			}
+			else
+			{
+				return;
+			}
+		}
+		else
+		{
+			return;
+		}
+
+		setter->set_value("width", width);
 	}
 
 	void HeightPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
+		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+
+		StyleValue height;
+
+		size_t pos = 0;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && pos == tokens.size())
+		{
+			if (equals(token.value, "auto"))
+				height = StyleValue::from_keyword("auto");
+			else if (equals(token.value, "inherit"))
+				height = StyleValue::from_keyword("inherit");
+			else
+				return;
+		}
+		else if (is_length(token) && pos == tokens.size())
+		{
+			StyleValue length;
+			if (parse_length(token, length) && length.number >= 0.0f)
+			{
+				height = length;
+			}
+			else
+			{
+				return;
+			}
+		}
+		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
+		{
+			float v = StringHelp::text_to_float(token.value);
+			if (v >= 0.0f)
+			{
+				height = StyleValue::from_percentage(v);
+			}
+			else
+			{
+				return;
+			}
+		}
+		else
+		{
+			return;
+		}
+
+		setter->set_value("height", height);
 	}
 
 	void MinWidthPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
+		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+
+		StyleValue min_width;
+
+		size_t pos = 0;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && pos == tokens.size())
+		{
+			if (equals(token.value, "inherit"))
+				min_width = StyleValue::from_keyword("inherit");
+			else if (equals(token.value, "auto"))
+				min_width = StyleValue::from_keyword("auto");
+			else
+				return;
+		}
+		else if (is_length(token) && pos == tokens.size())
+		{
+			StyleValue length;
+			if (parse_length(token, length))
+			{
+				min_width = length;
+			}
+			else
+			{
+				return;
+			}
+		}
+		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
+		{
+			min_width = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+		}
+		else
+		{
+			return;
+		}
+
+		setter->set_value("min-width", min_width);
 	}
 
 	void MinHeightPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
+		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+
+		StyleValue min_height;
+
+		size_t pos = 0;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && pos == tokens.size())
+		{
+			if (equals(token.value, "inherit"))
+				min_height = StyleValue::from_keyword("inherit");
+			else if (equals(token.value, "auto"))
+				min_height = StyleValue::from_keyword("auto");
+			else
+				return;
+		}
+		else if (is_length(token) && pos == tokens.size())
+		{
+			StyleValue length;
+			if (parse_length(token, length))
+			{
+				min_height = length;
+			}
+			else
+			{
+				return;
+			}
+		}
+		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
+		{
+			min_height = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+		}
+		else
+		{
+			return;
+		}
+
+		setter->set_value("min-height", min_height);
 	}
 
 	void MaxWidthPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
+		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+
+		StyleValue max_width;
+
+		size_t pos = 0;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && pos == tokens.size())
+		{
+			if (equals(token.value, "none"))
+				max_width = StyleValue::from_keyword("none");
+			else if (equals(token.value, "inherit"))
+				max_width = StyleValue::from_keyword("inherit");
+			else
+				return;
+		}
+		else if (is_length(token) && pos == tokens.size())
+		{
+			StyleValue length;
+			if (parse_length(token, length))
+			{
+				max_width = length;
+			}
+			else
+			{
+				return;
+			}
+		}
+		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
+		{
+			max_width = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+		}
+		else
+		{
+			return;
+		}
+
+		setter->set_value("max-width", max_width);
 	}
 
 	void MaxHeightPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
+		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+
+		StyleValue max_height;
+
+		size_t pos = 0;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && pos == tokens.size())
+		{
+			if (equals(token.value, "none"))
+				max_height = StyleValue::from_keyword("none");
+			else if (equals(token.value, "inherit"))
+				max_height = StyleValue::from_keyword("inherit");
+			else
+				return;
+		}
+		else if (is_length(token) && pos == tokens.size())
+		{
+			StyleValue length;
+			if (parse_length(token, length))
+			{
+				max_height = length;
+			}
+			else
+			{
+				return;
+			}
+		}
+		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
+		{
+			max_height = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+		}
+		else
+		{
+			return;
+		}
+
+		setter->set_value("max-height", max_height);
 	}
 }
