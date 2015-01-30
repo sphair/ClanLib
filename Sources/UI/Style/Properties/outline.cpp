@@ -38,17 +38,262 @@ namespace clan
 
 	void OutlinePropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
+		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+
+		StyleValue outline_width;
+		StyleValue outline_style;
+		StyleValue outline_color;
+		bool width_specified = false;
+		bool style_specified = false;
+		bool color_specified = false;
+
+		size_t pos = 0;
+		while (pos != tokens.size())
+		{
+			Colorf color;
+			if (!color_specified && parse_color(tokens, pos, color))
+			{
+				outline_color = StyleValue::from_color(color);
+				color_specified = true;
+			}
+			else
+			{
+				StyleToken token = next_token(pos, tokens);
+				if (token.type == StyleTokenType::ident)
+				{
+					if (equals(token.value, "inherit") && tokens.size() == 1)
+					{
+						outline_width = StyleValue::from_keyword("inherit");
+						outline_style = StyleValue::from_keyword("inherit");
+						outline_color = StyleValue::from_keyword("inherit");
+						setter->set_value("outline-width", outline_width);
+						setter->set_value("outline-style", outline_style);
+						setter->set_value("outline-color", outline_color);
+						return;
+					}
+					else if (!width_specified && equals(token.value, "thin"))
+					{
+						outline_width = StyleValue::from_keyword("thin");
+						width_specified = true;
+					}
+					else if (!width_specified && equals(token.value, "medium"))
+					{
+						outline_width = StyleValue::from_keyword("medium");
+						width_specified = true;
+					}
+					else if (!width_specified && equals(token.value, "thick"))
+					{
+						outline_width = StyleValue::from_keyword("thick");
+						width_specified = true;
+					}
+					else if (!style_specified && equals(token.value, "none"))
+					{
+						outline_style = StyleValue::from_keyword("none");
+						style_specified = true;
+					}
+					else if (!style_specified && equals(token.value, "hidden"))
+					{
+						outline_style = StyleValue::from_keyword("hidden");
+						style_specified = true;
+					}
+					else if (!style_specified && equals(token.value, "dotted"))
+					{
+						outline_style = StyleValue::from_keyword("dotted");
+						style_specified = true;
+					}
+					else if (!style_specified && equals(token.value, "dashed"))
+					{
+						outline_style = StyleValue::from_keyword("dashed");
+						style_specified = true;
+					}
+					else if (!style_specified && equals(token.value, "solid"))
+					{
+						outline_style = StyleValue::from_keyword("solid");
+						style_specified = true;
+					}
+					else if (!style_specified && equals(token.value, "double"))
+					{
+						outline_style = StyleValue::from_keyword("double");
+						style_specified = true;
+					}
+					else if (!style_specified && equals(token.value, "groove"))
+					{
+						outline_style = StyleValue::from_keyword("groove");
+						style_specified = true;
+					}
+					else if (!style_specified && equals(token.value, "ridge"))
+					{
+						outline_style = StyleValue::from_keyword("ridge");
+						style_specified = true;
+					}
+					else if (!style_specified && equals(token.value, "inset"))
+					{
+						outline_style = StyleValue::from_keyword("inset");
+						style_specified = true;
+					}
+					else if (!style_specified && equals(token.value, "outset"))
+					{
+						outline_style = StyleValue::from_keyword("outset");
+						style_specified = true;
+					}
+					else if (!color_specified && equals(token.value, "invert"))
+					{
+						outline_color = StyleValue::from_keyword("invert");
+						color_specified = true;
+					}
+					else
+					{
+						debug_parse_error(name, tokens);
+						return;
+					}
+				}
+				else if (is_length(token))
+				{
+					StyleValue length;
+					if (!width_specified && parse_length(token, length))
+					{
+						outline_width = length;
+						width_specified = true;
+					}
+					else
+					{
+						debug_parse_error(name, tokens);
+						return;
+					}
+				}
+				else
+				{
+					debug_parse_error(name, tokens);
+					return;
+				}
+			}
+		}
+
+		setter->set_value("outline-width", outline_width);
+		setter->set_value("outline-style", outline_style);
+		setter->set_value("outline-color", outline_color);
 	}
 
 	void OutlineColorPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
+		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+
+		StyleValue outline_color;
+
+		size_t pos = 0;
+		Colorf color;
+		if (parse_color(tokens, pos, color) && pos == tokens.size())
+		{
+			outline_color = StyleValue::from_color(color);
+		}
+		else
+		{
+			StyleToken token = next_token(pos, tokens);
+			if (token.type == StyleTokenType::ident && pos == tokens.size())
+			{
+				if (equals(token.value, "invert"))
+				{
+					outline_color = StyleValue::from_keyword("invert");
+				}
+				else if (equals(token.value, "inherit"))
+				{
+					outline_color = StyleValue::from_keyword("inherit");
+				}
+				else
+				{
+					return;
+				}
+			}
+			else
+			{
+				return;
+			}
+		}
+
+		setter->set_value("outline-color", outline_color);
 	}
 
 	void OutlineStylePropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
+		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+
+		StyleValue outline_style;
+
+		size_t pos = 0;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && pos == tokens.size())
+		{
+			if (equals(token.value, "none"))
+				outline_style = StyleValue::from_keyword("none");
+			else if (equals(token.value, "hidden"))
+				outline_style = StyleValue::from_keyword("hidden");
+			else if (equals(token.value, "dotted"))
+				outline_style = StyleValue::from_keyword("dotted");
+			else if (equals(token.value, "dashed"))
+				outline_style = StyleValue::from_keyword("dashed");
+			else if (equals(token.value, "solid"))
+				outline_style = StyleValue::from_keyword("solid");
+			else if (equals(token.value, "double"))
+				outline_style = StyleValue::from_keyword("double");
+			else if (equals(token.value, "groove"))
+				outline_style = StyleValue::from_keyword("groove");
+			else if (equals(token.value, "ridge"))
+				outline_style = StyleValue::from_keyword("ridge");
+			else if (equals(token.value, "inset"))
+				outline_style = StyleValue::from_keyword("inset");
+			else if (equals(token.value, "outset"))
+				outline_style = StyleValue::from_keyword("outset");
+			else if (equals(token.value, "inherit"))
+				outline_style = StyleValue::from_keyword("inherit");
+			else
+				return;
+		}
+		else
+		{
+			return;
+		}
+
+		setter->set_value("outline-style", outline_style);
 	}
 
 	void OutlineWidthPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
+		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+
+		StyleValue outline_width;
+
+		size_t pos = 0;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && pos == tokens.size())
+		{
+			if (equals(token.value, "thin"))
+				outline_width = StyleValue::from_keyword("thin");
+			else if (equals(token.value, "medium"))
+				outline_width = StyleValue::from_keyword("medium");
+			else if (equals(token.value, "thick"))
+				outline_width = StyleValue::from_keyword("thick");
+			else if (equals(token.value, "inherit"))
+				outline_width = StyleValue::from_keyword("inherit");
+			else
+				return;
+		}
+		else if (is_length(token) && pos == tokens.size())
+		{
+			StyleValue length;
+			if (parse_length(token, length))
+			{
+				outline_width = length;
+			}
+			else
+			{
+				return;
+			}
+		}
+		else
+		{
+			return;
+		}
+
+		setter->set_value("outline-width", outline_width);
 	}
 }
