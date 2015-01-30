@@ -52,10 +52,43 @@ namespace clan
 		keyword,
 		length,
 		percentage,
+		number,
 		string,
 		url,
 		color,
 		image
+	};
+
+	enum class StyleDimension
+	{
+		px, // device independent pixel (96 dpi)
+		em, // relative to font-size length property
+		pt, // point, 1/72 inch
+		mm, // millimeter
+		cm, // centimeter
+		in, // inch, 1in is equal to 2.54cm
+		pc, // picas, 1pc is equal to 12pt
+		ex  // x-height, 1ex is equal to 0.5em
+	};
+
+	class StyleValue
+	{
+	public:
+		StyleValueType type = StyleValueType::undefined;
+		std::string text;
+		float number = 0.0f;
+		StyleDimension dimension = StyleDimension::px;
+		Colorf color;
+		std::shared_ptr<ImageSource> image;
+
+		static StyleValue from_keyword(const std::string &keyword) { StyleValue v; v.type = StyleValueType::keyword; v.text = keyword; return v; }
+		static StyleValue from_string(const std::string &text) { StyleValue v; v.type = StyleValueType::string; v.text = text; return v; }
+		static StyleValue from_length(float length, StyleDimension dimension = StyleDimension::px) { StyleValue v; v.type = StyleValueType::length; v.number = length; v.dimension = dimension; return v; }
+		static StyleValue from_percentage(float length) { StyleValue v; v.type = StyleValueType::percentage; v.number = length; return v; }
+		static StyleValue from_number(float length) { StyleValue v; v.type = StyleValueType::number; v.number = length; return v; }
+		static StyleValue from_url(const std::string &url) { StyleValue v; v.type = StyleValueType::url; v.text = url; return v; }
+		static StyleValue from_color(const Colorf &color) { StyleValue v; v.type = StyleValueType::color; v.color = color; return v; }
+		static StyleValue from_image(const std::shared_ptr<ImageSource> &image) { StyleValue v; v.type = StyleValueType::image; v.image = image; return v; }
 	};
 
 	class Style
@@ -81,6 +114,7 @@ namespace clan
 		const std::string &keyword(const std::string &property_name) const;
 		float length(const std::string &property_name) const;
 		float percentage(const std::string &property_name) const;
+		float number(const std::string &property_name) const;
 		const std::string &string(const std::string &property_name) const;
 		const std::string &url(const std::string &property_name) const;
 		const Colorf &color(const std::string &property_name) const;

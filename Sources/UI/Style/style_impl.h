@@ -41,13 +41,7 @@ namespace clan
 	class StyleImpl : public StylePropertySetter
 	{
 	public:
-		void set_keyword(const std::string &name, const std::string &keyword) override;
-		void set_length(const std::string &name, float length) override;
-		void set_percentage(const std::string &name, float length) override;
-		void set_string(const std::string &name, const std::string &str) override;
-		void set_url(const std::string &name, const std::string &url) override;
-		void set_color(const std::string &name, const Colorf &color) override;
-		void set_image(const std::string &name, const std::shared_ptr<ImageSource> &image) override;
+		void set_value(const std::string &name, const StyleValue &value) override;
 
 		std::shared_ptr<Style> base;
 	};

@@ -33,10 +33,16 @@
 #include <vector>
 #include <initializer_list>
 #include "../../Display/2D/color.h"
+#include "style.h"
+#include "style_token.h"
+#include "style_tokenizer.h"
 
 namespace clan
 {
+	enum class StyleDimension;
+	class StyleValue;
 	class ImageSource;
+	class StyleToken;
 
 	class StylePropertyInitializerValue
 	{
@@ -65,13 +71,7 @@ namespace clan
 	{
 	public:
 		virtual ~StylePropertySetter() { }
-		virtual void set_keyword(const std::string &name, const std::string &keyword) = 0;
-		virtual void set_length(const std::string &name, float length) = 0;
-		virtual void set_percentage(const std::string &name, float length) = 0;
-		virtual void set_string(const std::string &name, const std::string &str) = 0;
-		virtual void set_url(const std::string &name, const std::string &url) = 0;
-		virtual void set_color(const std::string &name, const Colorf &color) = 0;
-		virtual void set_image(const std::string &name, const std::shared_ptr<ImageSource> &image) = 0;
+		virtual void set_value(const std::string &name, const StyleValue &value) = 0;
 	};
 
 	class StylePropertyParser
@@ -80,6 +80,23 @@ namespace clan
 		StylePropertyParser(const std::vector<std::string> &property_names);
 		virtual ~StylePropertyParser() { }
 		virtual void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) = 0;
+
+	protected:
+		static StyleToken next_token(size_t &pos, const std::vector<StyleToken> &tokens, bool skip_whitespace = true);
+		static bool is_length(const StyleToken &token);
+		static bool parse_length(const StyleToken &token, StyleValue &out_length);
+		static bool parse_integer(const std::string &value, int &out_int);
+		static bool parse_color(const std::vector<StyleToken> &tokens, size_t &in_out_pos, Colorf &out_color);
+		static bool equals(const std::string &s1, const std::string &s2);
+		static void debug_parse_error(const std::string &name, const std::vector<StyleToken> &tokens);
+
+	private:
+		struct ColorType
+		{
+			const std::string::value_type *name;
+			int color;
+		};
+		static ColorType colors[];
 	};
 
 	class StylePropertyDefault

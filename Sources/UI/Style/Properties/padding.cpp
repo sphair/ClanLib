@@ -36,9 +36,169 @@ namespace clan
 
 	void PaddingPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
+		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+
+		StyleValue padding_widths[4];
+
+		int count;
+		size_t pos = 0;
+		for (count = 0; count < 4; count++)
+		{
+			StyleToken token = next_token(pos, tokens);
+			if (token.type == StyleTokenType::ident && equals(token.value, "inherit") && count == 0 && pos == tokens.size())
+			{
+				padding_widths[0] = StyleValue::from_keyword("inherit");
+				setter->set_value("padding-left", padding_widths[0]);
+				setter->set_value("padding-top", padding_widths[0]);
+				setter->set_value("padding-right", padding_widths[0]);
+				setter->set_value("padding-bottom", padding_widths[0]);
+				return;
+			}
+			else if (is_length(token))
+			{
+				StyleValue length;
+				if (parse_length(token, length))
+				{
+					padding_widths[count] = length;
+				}
+				else
+				{
+					debug_parse_error(name, tokens);
+					return;
+				}
+			}
+			else if (token.type == StyleTokenType::percentage)
+			{
+				padding_widths[count] = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+			}
+			else if (token.type == StyleTokenType::delim && token.value == "-")
+			{
+				token = next_token(pos, tokens);
+				if (is_length(token))
+				{
+					StyleValue length;
+					if (parse_length(token, length))
+					{
+						length.number = -length.number;
+						padding_widths[count] = length;
+					}
+					else
+					{
+						debug_parse_error(name, tokens);
+						return;
+					}
+				}
+				else if (token.type == StyleTokenType::percentage)
+				{
+					padding_widths[count] = StyleValue::from_percentage(-StringHelp::text_to_float(token.value));
+				}
+				else
+				{
+					debug_parse_error(name, tokens);
+					return;
+				}
+			}
+			else if (token.type == StyleTokenType::null)
+			{
+				break;
+			}
+			else
+			{
+				debug_parse_error(name, tokens);
+				return;
+			}
+		}
+
+		if (pos == tokens.size())
+		{
+			switch (count)
+			{
+			case 1:
+				setter->set_value("padding-left", padding_widths[0]);
+				setter->set_value("padding-top", padding_widths[0]);
+				setter->set_value("padding-right", padding_widths[0]);
+				setter->set_value("padding-bottom", padding_widths[0]);
+				break;
+			case 2:
+				setter->set_value("padding-top", padding_widths[0]);
+				setter->set_value("padding-bottom", padding_widths[0]);
+				setter->set_value("padding-left", padding_widths[1]);
+				setter->set_value("padding-right", padding_widths[1]);
+				break;
+			case 3:
+				setter->set_value("padding-top", padding_widths[0]);
+				setter->set_value("padding-left", padding_widths[1]);
+				setter->set_value("padding-right", padding_widths[1]);
+				setter->set_value("padding-bottom", padding_widths[2]);
+				break;
+			case 4:
+				setter->set_value("padding-top", padding_widths[0]);
+				setter->set_value("padding-right", padding_widths[1]);
+				setter->set_value("padding-bottom", padding_widths[2]);
+				setter->set_value("padding-left", padding_widths[3]);
+				break;
+			default:
+				break;
+			}
+		}
 	}
 
 	void PaddingLTRBPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
+		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+
+		StyleValue width = StyleValue::from_length(0.0f);
+
+		size_t pos = 0;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && pos == tokens.size())
+		{
+			if (equals(token.value, "inherit"))
+				width = StyleValue::from_keyword("inherit");
+			else
+				return;
+		}
+		else if (is_length(token) && pos == tokens.size())
+		{
+			if (!parse_length(token, width))
+			{
+				return;
+			}
+		}
+		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
+		{
+			width = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+		}
+		else if (token.type == StyleTokenType::delim && token.value == "-")
+		{
+			token = next_token(pos, tokens);
+			if (is_length(token) && pos == tokens.size())
+			{
+				StyleValue length;
+				if (parse_length(token, length))
+				{
+					length.number = -length.number;
+					width = length;
+				}
+				else
+				{
+					return;
+				}
+			}
+			else if (token.type == StyleTokenType::percentage && pos == tokens.size())
+			{
+				width = StyleValue::from_percentage(-StringHelp::text_to_float(token.value));
+			}
+			else
+			{
+				return;
+			}
+		}
+		else
+		{
+			return;
+		}
+
+		setter->set_value(name, width);
 	}
 }
