@@ -42,6 +42,7 @@ namespace clan
 	{
 	public:
 		void set_value(const std::string &name, const StyleValue &value) override;
+		void set_value_array(const std::string &name, const std::vector<StyleValue> &value_array) override;
 
 		std::shared_ptr<Style> base;
 	};

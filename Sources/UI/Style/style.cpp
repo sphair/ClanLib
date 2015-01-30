@@ -151,4 +151,9 @@ namespace clan
 	void StyleImpl::set_value(const std::string &name, const StyleValue &value)
 	{
 	}
+
+	void StyleImpl::set_value_array(const std::string &name, const std::vector<StyleValue> &value_array)
+	{
+
+	}
 }

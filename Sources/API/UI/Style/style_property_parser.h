@@ -72,6 +72,7 @@ namespace clan
 	public:
 		virtual ~StylePropertySetter() { }
 		virtual void set_value(const std::string &name, const StyleValue &value) = 0;
+		virtual void set_value_array(const std::string &name, const std::vector<StyleValue> &value_array) = 0;
 	};
 
 	class StylePropertyParser
