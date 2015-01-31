@@ -37,6 +37,15 @@ namespace clan
 	public:
 		BackgroundPropertyParser() : StylePropertyParser({ "background" }) { }
 		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+
+	private:
+		bool parse_bgcolor(StyleValue &bgcolor, size_t &parse_pos, const std::vector<StyleToken> &tokens);
+		bool parse_image(StyleValue &layer_image, size_t &parse_pos, const std::vector<StyleToken> &tokens);
+		bool parse_repeat(StyleValue &layer_repeat_x, StyleValue &layer_repeat_y, size_t &parse_pos, const std::vector<StyleToken> &tokens);
+		bool parse_attachment(StyleValue &layer_attachment, size_t &parse_pos, const std::vector<StyleToken> &tokens);
+		bool parse_position(StyleValue &layer_position_x, StyleValue &layer_position_y, size_t &parse_pos, const std::vector<StyleToken> &tokens);
+		bool parse_size(StyleValue &layer_size_x, StyleValue &layer_size_y, size_t &parse_pos, const std::vector<StyleToken> &tokens);
+		bool parse_boxes(StyleValue &layer_origin, StyleValue &layer_clip, size_t &parse_pos, const std::vector<StyleToken> &tokens);
 	};
 
 	class BackgroundAttachmentPropertyParser : public StylePropertyParser
