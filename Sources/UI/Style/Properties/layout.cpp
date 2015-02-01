@@ -45,25 +45,321 @@ namespace clan
 
 	void PositionPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
+		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+
+		StyleValue position;
+
+		size_t pos = 0;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && pos == tokens.size())
+		{
+			if (equals(token.value, "static"))
+				position = StyleValue::from_keyword("static");
+			else if (equals(token.value, "relative"))
+				position = StyleValue::from_keyword("relative");
+			else if (equals(token.value, "absolute"))
+				position = StyleValue::from_keyword("absolute");
+			else if (equals(token.value, "fixed"))
+				position = StyleValue::from_keyword("fixed");
+			else if (equals(token.value, "inherit"))
+				position = StyleValue::from_keyword("inherit");
+			else
+				return;
+		}
+		else
+		{
+			return;
+		}
+
+		setter->set_value("position", position);
 	}
 
 	void LeftPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
+		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+
+		StyleValue left;
+
+		size_t pos = 0;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && pos == tokens.size())
+		{
+			if (equals(token.value, "auto"))
+				left = StyleValue::from_keyword("auto");
+			else if (equals(token.value, "inherit"))
+				left = StyleValue::from_keyword("inherit");
+			else
+				return;
+		}
+		else if (is_length(token) && pos == tokens.size())
+		{
+			StyleValue length;
+			if (parse_length(token, length))
+			{
+				left = length;
+			}
+			else
+			{
+				return;
+			}
+		}
+		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
+		{
+			left = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+		}
+		else if (token.type == StyleTokenType::delim && token.value == "-")
+		{
+			token = next_token(pos, tokens);
+			if (is_length(token) && pos == tokens.size())
+			{
+				StyleValue length;
+				if (parse_length(token, length))
+				{
+					length.number = -length.number;
+					left = length;
+				}
+				else
+				{
+					return;
+				}
+			}
+			else if (token.type == StyleTokenType::percentage && pos == tokens.size())
+			{
+				left = StyleValue::from_percentage(-StringHelp::text_to_float(token.value));
+			}
+			else
+			{
+				return;
+			}
+		}
+
+		setter->set_value("left", left);
 	}
 
 	void TopPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
+		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+
+		StyleValue top;
+
+		size_t pos = 0;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && pos == tokens.size())
+		{
+			if (equals(token.value, "auto"))
+				top = StyleValue::from_keyword("auto");
+			else if (equals(token.value, "inherit"))
+				top = StyleValue::from_keyword("inherit");
+			else
+				return;
+		}
+		else if (is_length(token) && pos == tokens.size())
+		{
+			StyleValue length;
+			if (parse_length(token, length))
+			{
+				top = length;
+			}
+			else
+			{
+				return;
+			}
+		}
+		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
+		{
+			top = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+		}
+		else if (token.type == StyleTokenType::delim && token.value == "-")
+		{
+			token = next_token(pos, tokens);
+			if (is_length(token) && pos == tokens.size())
+			{
+				StyleValue length;
+				if (parse_length(token, length))
+				{
+					length.number = -length.number;
+					top = length;
+				}
+				else
+				{
+					return;
+				}
+			}
+			else if (token.type == StyleTokenType::percentage && pos == tokens.size())
+			{
+				top = StyleValue::from_percentage(-StringHelp::text_to_float(token.value));
+			}
+			else
+			{
+				return;
+			}
+		}
+
+		setter->set_value("top", top);
 	}
 
 	void RightPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
+		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+
+		StyleValue right;
+
+		size_t pos = 0;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && pos == tokens.size())
+		{
+			if (equals(token.value, "auto"))
+				right = StyleValue::from_keyword("auto");
+			else if (equals(token.value, "inherit"))
+				right = StyleValue::from_keyword("inherit");
+			else
+				return;
+		}
+		else if (is_length(token) && pos == tokens.size())
+		{
+			StyleValue length;
+			if (parse_length(token, length))
+			{
+				right = length;
+			}
+			else
+			{
+				return;
+			}
+		}
+		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
+		{
+			right = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+		}
+		else if (token.type == StyleTokenType::delim && token.value == "-")
+		{
+			token = next_token(pos, tokens);
+			if (is_length(token) && pos == tokens.size())
+			{
+				StyleValue length;
+				if (parse_length(token, length))
+				{
+					length.number = -length.number;
+					right = length;
+				}
+				else
+				{
+					return;
+				}
+			}
+			else if (token.type == StyleTokenType::percentage && pos == tokens.size())
+			{
+				right = StyleValue::from_percentage(-StringHelp::text_to_float(token.value));
+			}
+			else
+			{
+				return;
+			}
+		}
+		else
+		{
+			return;
+		}
+
+		setter->set_value("right", right);
 	}
 
 	void BottomPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
+		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+
+		StyleValue bottom;
+
+		size_t pos = 0;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && pos == tokens.size())
+		{
+			if (equals(token.value, "auto"))
+				bottom = StyleValue::from_keyword("auto");
+			else if (equals(token.value, "inherit"))
+				bottom = StyleValue::from_keyword("inherit");
+			else
+				return;
+		}
+		else if (is_length(token) && pos == tokens.size())
+		{
+			StyleValue length;
+			if (parse_length(token, length))
+			{
+				bottom = length;
+			}
+			else
+			{
+				return;
+			}
+		}
+		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
+		{
+			bottom = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+		}
+		else if (token.type == StyleTokenType::delim && token.value == "-")
+		{
+			token = next_token(pos, tokens);
+			if (is_length(token) && pos == tokens.size())
+			{
+				StyleValue length;
+				if (parse_length(token, length))
+				{
+					length.number = -length.number;
+					bottom = length;
+				}
+				else
+				{
+					return;
+				}
+			}
+			else if (token.type == StyleTokenType::percentage && pos == tokens.size())
+			{
+				bottom = StyleValue::from_percentage(-StringHelp::text_to_float(token.value));
+			}
+			else
+			{
+				return;
+			}
+		}
+
+		setter->set_value("bottom", bottom);
 	}
 
 	void ZIndexPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
+		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+
+		StyleValue z_index;
+
+		size_t pos = 0;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && pos == tokens.size())
+		{
+			if (equals(token.value, "auto"))
+				z_index = StyleValue::from_keyword("auto");
+			else if (equals(token.value, "inherit"))
+				z_index = StyleValue::from_keyword("inherit");
+			else
+				return;
+		}
+		else if (token.type == StyleTokenType::number && pos == tokens.size())
+		{
+			int value = 0;
+			if (parse_integer(token.value, value))
+			{
+				z_index = StyleValue::from_number((float)value);
+			}
+			else
+			{
+				return;
+			}
+		}
+		else
+		{
+			return;
+		}
+
+		setter->set_value("z-index", z_index);
 	}
 }
