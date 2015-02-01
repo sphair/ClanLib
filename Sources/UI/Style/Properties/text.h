@@ -32,6 +32,8 @@
 
 namespace clan
 {
+	void force_link_style_parser_text();
+
 	class ColorPropertyParser : public StylePropertyParser
 	{
 	public:

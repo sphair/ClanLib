@@ -32,6 +32,8 @@
 
 namespace clan
 {
+	void force_link_style_parser_margin();
+
 	class MarginPropertyParser : public StylePropertyParser
 	{
 	public:

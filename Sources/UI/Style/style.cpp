@@ -30,9 +30,39 @@
 #include "API/UI/Style/style.h"
 #include "API/Display/Font/font.h"
 #include "style_impl.h"
+#include "Properties/background.h"
+#include "Properties/border.h"
+#include "Properties/border_image.h"
+#include "Properties/box_shadow.h"
+#include "Properties/content.h"
+#include "Properties/flex.h"
+#include "Properties/layout.h"
+#include "Properties/margin.h"
+#include "Properties/outline.h"
+#include "Properties/padding.h"
+#include "Properties/text.h"
 
 namespace clan
 {
+	class StyleForceLink
+	{
+	public:
+		StyleForceLink()
+		{
+			force_link_style_parser_background();
+			force_link_style_parser_border();
+			force_link_style_parser_border_image();
+			force_link_style_parser_box_shadow();
+			force_link_style_parser_content();
+			force_link_style_parser_flex();
+			force_link_style_parser_layout();
+			force_link_style_parser_margin();
+			force_link_style_parser_outline();
+			force_link_style_parser_padding();
+			force_link_style_parser_text();
+		}
+	} style_force_link;
+
 	Style::Style() : impl(new StyleImpl())
 	{
 	}

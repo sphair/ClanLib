@@ -31,6 +31,10 @@
 
 namespace clan
 {
+	void force_link_style_parser_text()
+	{
+	}
+
 	ColorPropertyParser style_parser_color;
 	TextAlignPropertyParser style_parser_text_align;
 	TextDecorationPropertyParser style_parser_text_decoration;

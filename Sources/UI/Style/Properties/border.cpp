@@ -31,6 +31,10 @@
 
 namespace clan
 {
+	void force_link_style_parser_border()
+	{
+	}
+
 	BorderPropertyParser style_parser_border;
 	BorderColorPropertyParser style_parser_border_color;
 	BorderStylePropertyParser style_parser_border_style;

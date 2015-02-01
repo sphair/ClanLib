@@ -31,6 +31,10 @@
 
 namespace clan
 {
+	void force_link_style_parser_flex()
+	{
+	}
+
 	FlexPropertyParser style_parser_flex;
 	FlexBasisPropertyParser style_parser_flex_basis;
 	FlexDirectionPropertyParser style_parser_flex_direction;

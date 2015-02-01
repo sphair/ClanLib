@@ -31,6 +31,10 @@
 
 namespace clan
 {
+	void force_link_style_parser_layout()
+	{
+	}
+
 	LayoutPropertyParser style_parser_layout;
 	PositionPropertyParser style_parser_position;
 	LeftPropertyParser style_parser_left;

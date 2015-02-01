@@ -31,6 +31,10 @@
 
 namespace clan
 {
+	void force_link_style_parser_border_image()
+	{
+	}
+
 	BorderImagePropertyParser style_parser_border_image;
 	BorderImageOutsetPropertyParser style_parser_border_image_outset;
 	BorderImageRepeatPropertyParser style_parser_border_image_repeat;

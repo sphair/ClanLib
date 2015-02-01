@@ -41,6 +41,10 @@ namespace clan
 	BackgroundRepeatPropertyParser style_parser_background_repeat;
 	BackgroundSizePropertyParser style_parser_background_size;
 
+	void force_link_style_parser_background()
+	{
+	}
+
 	void BackgroundPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
 		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);

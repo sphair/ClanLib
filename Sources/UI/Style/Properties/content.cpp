@@ -31,6 +31,10 @@
 
 namespace clan
 {
+	void force_link_style_parser_content()
+	{
+	}
+
 	WidthPropertyParser style_parser_width;
 	HeightPropertyParser style_parser_height;
 	MinWidthPropertyParser style_parser_min_width;

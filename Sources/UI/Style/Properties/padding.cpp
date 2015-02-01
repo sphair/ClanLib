@@ -31,6 +31,10 @@
 
 namespace clan
 {
+	void force_link_style_parser_padding()
+	{
+	}
+
 	PaddingPropertyParser style_parser_padding;
 	PaddingLTRBPropertyParser style_parser_padding_ltrb;
 

@@ -32,6 +32,8 @@
 
 namespace clan
 {
+	void force_link_style_parser_content();
+
 	class WidthPropertyParser : public StylePropertyParser
 	{
 	public:

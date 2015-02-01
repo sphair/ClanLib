@@ -31,6 +31,10 @@
 
 namespace clan
 {
+	void force_link_style_parser_outline()
+	{
+	}
+
 	OutlinePropertyParser style_parser_outline;
 	OutlineColorPropertyParser style_parser_outline_color;
 	OutlineStylePropertyParser style_parser_outline_style;
