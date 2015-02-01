@@ -42,33 +42,420 @@ namespace clan
 
 	void FlexPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
+		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+
+		StyleValue flex_grow;
+		StyleValue flex_shrink;
+		StyleValue flex_basis;
+
+		size_t pos = 0;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && pos == tokens.size())
+		{
+			if (equals(token.value, "none"))
+			{
+				flex_grow = StyleValue::from_number(0.0f);
+				flex_shrink = StyleValue::from_number(0.0f);
+				flex_basis = StyleValue::from_keyword("auto");
+
+				setter->set_value("flex-grow", flex_grow);
+				setter->set_value("flex-shrink", flex_shrink);
+				setter->set_value("flex-basis", flex_basis);
+			}
+			else if (equals(token.value, "inherit"))
+			{
+				flex_grow = StyleValue::from_keyword("inherit");
+				flex_shrink = StyleValue::from_keyword("inherit");
+				flex_basis = StyleValue::from_keyword("inherit");
+
+				setter->set_value("flex-grow", flex_grow);
+				setter->set_value("flex-shrink", flex_shrink);
+				setter->set_value("flex-basis", flex_basis);
+			}
+			else
+			{
+				return;
+			}
+		}
+		else
+		{
+			pos = 0;
+
+			flex_grow = StyleValue::from_number(1.0f);
+			flex_shrink = StyleValue::from_number(1.0f);
+			flex_basis = StyleValue::from_length(0.0f);
+
+			bool grow_shrink_specified = false;
+			bool basis_specified = false;
+
+			do
+			{
+				if (!grow_shrink_specified && parse_grow_shrink(flex_grow, flex_shrink, pos, tokens))
+				{
+					grow_shrink_specified = true;
+				}
+				else if (!basis_specified && parse_basis(flex_basis, pos, tokens))
+				{
+					basis_specified = true;
+				}
+				else
+				{
+					return;
+				}
+			} while (pos != tokens.size());
+
+			setter->set_value("flex-grow", flex_grow);
+			setter->set_value("flex-shrink", flex_shrink);
+			setter->set_value("flex-basis", flex_basis);
+		}
+	}
+
+	bool FlexPropertyParser::parse_grow_shrink(StyleValue &grow, StyleValue &shrink, size_t &parse_pos, const std::vector<StyleToken> &tokens)
+	{
+		size_t pos = parse_pos;
+		StyleToken token = next_token(pos, tokens);
+
+		if (token.type == StyleTokenType::number)
+		{
+			grow = StyleValue::from_number(StringHelp::text_to_float(token.value));
+		}
+		else
+		{
+			return false;
+		}
+
+		parse_pos = pos;
+
+		if (pos != tokens.size())
+		{
+			token = next_token(pos, tokens);
+
+			if (token.type == StyleTokenType::number)
+			{
+				shrink = StyleValue::from_number(StringHelp::text_to_float(token.value));
+
+				parse_pos = pos;
+			}
+		}
+
+		return true;
+	}
+
+	bool FlexPropertyParser::parse_basis(StyleValue &basis, size_t &parse_pos, const std::vector<StyleToken> &tokens)
+	{
+		size_t pos = parse_pos;
+		StyleToken token = next_token(pos, tokens);
+
+		if (token.type == StyleTokenType::ident)
+		{
+			if (equals(token.value, "auto"))
+				basis = StyleValue::from_keyword("auto");
+			else
+				return false;
+		}
+		else if (is_length(token))
+		{
+			StyleValue length;
+			if (parse_length(token, length) && length.number >= 0.0f)
+			{
+				basis = length;
+			}
+		}
+		else if (token.type == StyleTokenType::percentage)
+		{
+			float v = StringHelp::text_to_float(token.value);
+			if (v >= 0.0f)
+			{
+				basis = StyleValue::from_percentage(v);
+			}
+		}
+		else
+		{
+			return false;
+		}
+
+		parse_pos = pos;
+		return true;
 	}
 
 	void FlexBasisPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
+		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+
+		StyleValue flex_basis;
+
+		size_t pos = 0;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && pos == tokens.size())
+		{
+			if (equals(token.value, "auto"))
+				flex_basis = StyleValue::from_keyword("auto");
+			else if (equals(token.value, "inherit"))
+				flex_basis = StyleValue::from_keyword("inherit");
+			else
+				return;
+		}
+		else if (is_length(token) && pos == tokens.size())
+		{
+			StyleValue length;
+			if (parse_length(token, length) && length.number >= 0.0f)
+			{
+				flex_basis = length;
+			}
+			else
+			{
+				return;
+			}
+		}
+		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
+		{
+			float v = StringHelp::text_to_float(token.value);
+			if (v >= 0.0f)
+			{
+				flex_basis = StyleValue::from_percentage(v);
+			}
+			else
+			{
+				return;
+			}
+		}
+
+		setter->set_value("flex-basis", flex_basis);
 	}
 
 	void FlexDirectionPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
+		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+
+		StyleValue flex_direction;
+
+		size_t pos = 0;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && pos == tokens.size())
+		{
+			if (equals(token.value, "row"))
+				flex_direction = StyleValue::from_keyword("row");
+			else if (equals(token.value, "row-reverse"))
+				flex_direction = StyleValue::from_keyword("row-reverse");
+			else if (equals(token.value, "column"))
+				flex_direction = StyleValue::from_keyword("column");
+			else if (equals(token.value, "column-reverse"))
+				flex_direction = StyleValue::from_keyword("column-reverse");
+			else if (equals(token.value, "inherit"))
+				flex_direction = StyleValue::from_keyword("inherit");
+			else
+				return;
+		}
+		else
+		{
+			return;
+		}
+
+		setter->set_value("flex-direction", flex_direction);
 	}
 
 	void FlexFlowPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
+		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+
+		size_t pos = 0;
+		StyleToken token = next_token(pos, tokens);
+
+		StyleValue direction = StyleValue::from_keyword("row");
+		StyleValue wrap = StyleValue::from_keyword("nowrap");
+
+		bool direction_specified = false;
+		bool wrap_specified = false;
+
+		do
+		{
+			if (!direction_specified && parse_direction(direction, pos, tokens))
+			{
+				direction_specified = true;
+			}
+			else if (!wrap_specified && parse_wrap(wrap, pos, tokens))
+			{
+				wrap_specified = true;
+			}
+			else
+			{
+				return;
+			}
+		} while (pos != tokens.size());
+
+		setter->set_value("flex-direction", direction);
+		setter->set_value("flex-wrap", wrap);
+	}
+
+	bool FlexFlowPropertyParser::parse_direction(StyleValue &direction, size_t &parse_pos, const std::vector<StyleToken> &tokens)
+	{
+		size_t pos = parse_pos;
+		StyleToken token = next_token(pos, tokens);
+
+		if (token.type == StyleTokenType::ident)
+		{
+			if (equals(token.value, "row"))
+				direction = StyleValue::from_keyword("row");
+			else if (equals(token.value, "row-reverse"))
+				direction = StyleValue::from_keyword("row-reverse");
+			else if (equals(token.value, "column"))
+				direction = StyleValue::from_keyword("column");
+			else if (equals(token.value, "column-reverse"))
+				direction = StyleValue::from_keyword("column-reverse");
+			else if (equals(token.value, "inherit"))
+				direction = StyleValue::from_keyword("inherit");
+			else
+				return false;
+		}
+		else
+		{
+			return false;
+		}
+
+		parse_pos = pos;
+		return true;
+	}
+
+	bool FlexFlowPropertyParser::parse_wrap(StyleValue &wrap, size_t &parse_pos, const std::vector<StyleToken> &tokens)
+	{
+		size_t pos = parse_pos;
+		StyleToken token = next_token(pos, tokens);
+
+		if (token.type == StyleTokenType::ident)
+		{
+			if (equals(token.value, "nowrap"))
+				wrap = StyleValue::from_keyword("nowrap");
+			else if (equals(token.value, "wrap"))
+				wrap = StyleValue::from_keyword("wrap");
+			else if (equals(token.value, "wrap-reverse"))
+				wrap = StyleValue::from_keyword("wrap-reverse");
+			else if (equals(token.value, "inherit"))
+				wrap = StyleValue::from_keyword("inherit");
+			else
+				return false;
+		}
+		else
+		{
+			return false;
+		}
+
+		parse_pos = pos;
+		return true;
 	}
 
 	void FlexGrowPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
+		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+
+		StyleValue flex_grow;
+
+		size_t pos = 0;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && pos == tokens.size())
+		{
+			if (equals(token.value, "inherit"))
+				flex_grow = StyleValue::from_keyword("inherit");
+			else
+				return;
+		}
+		else if (token.type == StyleTokenType::number && pos == tokens.size())
+		{
+			flex_grow = StyleValue::from_number(StringHelp::text_to_float(token.value));
+		}
+		else
+		{
+			return;
+		}
+
+		setter->set_value("flex-grow", flex_grow);
 	}
 
 	void FlexShrinkPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
+		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+
+		StyleValue flex_shrink;
+
+		size_t pos = 0;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && pos == tokens.size())
+		{
+			if (equals(token.value, "inherit"))
+				flex_shrink = StyleValue::from_keyword("inherit");
+			else
+				return;
+		}
+		else if (token.type == StyleTokenType::number && pos == tokens.size())
+		{
+			flex_shrink = StyleValue::from_number(StringHelp::text_to_float(token.value));
+		}
+		else
+		{
+			return;
+		}
 	}
 
 	void FlexWrapPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
+		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+
+		StyleValue flex_wrap;
+
+		size_t pos = 0;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && pos == tokens.size())
+		{
+			if (equals(token.value, "nowrap"))
+				flex_wrap = StyleValue::from_keyword("nowrap");
+			else if (equals(token.value, "wrap"))
+				flex_wrap = StyleValue::from_keyword("wrap");
+			else if (equals(token.value, "wrap-reverse"))
+				flex_wrap = StyleValue::from_keyword("wrap-reverse");
+			else if (equals(token.value, "inherit"))
+				flex_wrap = StyleValue::from_keyword("inherit");
+			else
+				return;
+		}
+		else
+		{
+			return;
+		}
+
+		setter->set_value("flex-wrap", flex_wrap);
 	}
 
 	void OrderPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
+		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+
+		StyleValue order;
+
+		size_t pos = 0;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && pos == tokens.size())
+		{
+			if (equals(token.value, "inherit"))
+				order = StyleValue::from_keyword("inherit");
+			else
+				return;
+		}
+		else if (token.type == StyleTokenType::number && pos == tokens.size())
+		{
+			int value = 0;
+			if (parse_integer(token.value, value))
+			{
+				order = StyleValue::from_number((float)value);
+			}
+			else
+			{
+				return;
+			}
+		}
+		else
+		{
+			return;
+		}
+
+		setter->set_value("order", order);
 	}
 }

@@ -37,6 +37,10 @@ namespace clan
 	public:
 		FlexPropertyParser() : StylePropertyParser({ "flex" }) { }
 		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+
+	private:
+		bool parse_grow_shrink(StyleValue &grow, StyleValue &shrink, size_t &parse_pos, const std::vector<StyleToken> &tokens);
+		bool parse_basis(StyleValue &basis, size_t &parse_pos, const std::vector<StyleToken> &tokens);
 	};
 
 	class FlexBasisPropertyParser : public StylePropertyParser
@@ -58,6 +62,10 @@ namespace clan
 	public:
 		FlexFlowPropertyParser() : StylePropertyParser({ "flex-flow" }) { }
 		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+
+	private:
+		bool parse_direction(StyleValue &direction, size_t &parse_pos, const std::vector<StyleToken> &tokens);
+		bool parse_wrap(StyleValue &wrap, size_t &parse_pos, const std::vector<StyleToken> &tokens);
 	};
 
 	class FlexGrowPropertyParser : public StylePropertyParser
