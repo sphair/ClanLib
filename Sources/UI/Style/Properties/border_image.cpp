@@ -40,6 +40,367 @@ namespace clan
 
 	void BorderImagePropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
+		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+
+		StyleValue border_image_source;
+		StyleValue border_image_slice[5];
+		StyleValue border_image_width[4];
+		StyleValue border_image_outset[4];
+		StyleValue border_image_repeat[2];
+
+		if (tokens.size() == 1 && tokens[0].type == StyleTokenType::ident && equals(tokens[0].value, "inherit"))
+		{
+			border_image_source = StyleValue::from_keyword("inherit");
+			for (int i = 0; i < 4; i++)
+			{
+				border_image_slice[i] = StyleValue::from_keyword("inherit");
+				border_image_width[i] = StyleValue::from_keyword("inherit");
+				border_image_outset[i] = StyleValue::from_keyword("inherit");
+			}
+			border_image_repeat[0] = StyleValue::from_keyword("inherit");
+			border_image_repeat[1] = StyleValue::from_keyword("inherit");
+
+			setter->set_value("border-image-source", border_image_source);
+			setter->set_value("border-image-slice-top", border_image_slice[0]);
+			setter->set_value("border-image-slice-right", border_image_slice[1]);
+			setter->set_value("border-image-slice-bottom", border_image_slice[2]);
+			setter->set_value("border-image-slice-left", border_image_slice[3]);
+			setter->set_value("border-image-slice-center", border_image_slice[4]);
+			setter->set_value("border-image-width-top", border_image_width[0]);
+			setter->set_value("border-image-width-right", border_image_width[1]);
+			setter->set_value("border-image-width-bottom", border_image_width[2]);
+			setter->set_value("border-image-width-left", border_image_width[3]);
+			setter->set_value("border-image-outset-top", border_image_outset[0]);
+			setter->set_value("border-image-outset-right", border_image_outset[1]);
+			setter->set_value("border-image-outset-bottom", border_image_outset[2]);
+			setter->set_value("border-image-outset-left", border_image_outset[3]);
+			setter->set_value("border-image-repeat-x", border_image_repeat[0]);
+			setter->set_value("border-image-repeat-y", border_image_repeat[1]);
+
+			return;
+		}
+
+		bool source_specified = false;
+		bool slice_specified = false;
+		bool repeat_specified = false;
+
+		size_t pos = 0;
+		do
+		{
+			if (!source_specified && parse_source(border_image_source, pos, tokens))
+			{
+				source_specified = true;
+			}
+			else if (!slice_specified && parse_slice(border_image_slice, pos, tokens))
+			{
+				slice_specified = true;
+
+				size_t next_pos = pos;
+				StyleToken token = next_token(next_pos, tokens);
+				if (token.type == StyleTokenType::delim && token.value == "/")
+				{
+					pos = next_pos;
+					if (parse_width(border_image_width, pos, tokens))
+					{
+						next_pos = pos;
+						StyleToken token = next_token(next_pos, tokens);
+						if (token.type == StyleTokenType::delim && token.value == "/")
+						{
+							pos = next_pos;
+							if (!parse_outset(border_image_outset, pos, tokens))
+							{
+								return;
+							}
+						}
+					}
+					else if (!parse_outset(border_image_outset, pos, tokens))
+					{
+						return;
+					}
+				}
+			}
+			else if (!repeat_specified && parse_repeat(border_image_repeat, pos, tokens))
+			{
+				repeat_specified = true;
+			}
+			else
+			{
+				return;
+			}
+		} while (pos != tokens.size());
+
+		setter->set_value("border-image-source", border_image_source);
+		setter->set_value("border-image-slice-top", border_image_slice[0]);
+		setter->set_value("border-image-slice-right", border_image_slice[1]);
+		setter->set_value("border-image-slice-bottom", border_image_slice[2]);
+		setter->set_value("border-image-slice-left", border_image_slice[3]);
+		setter->set_value("border-image-slice-center", border_image_slice[4]);
+		setter->set_value("border-image-width-top", border_image_width[0]);
+		setter->set_value("border-image-width-right", border_image_width[1]);
+		setter->set_value("border-image-width-bottom", border_image_width[2]);
+		setter->set_value("border-image-width-left", border_image_width[3]);
+		setter->set_value("border-image-outset-top", border_image_outset[0]);
+		setter->set_value("border-image-outset-right", border_image_outset[1]);
+		setter->set_value("border-image-outset-bottom", border_image_outset[2]);
+		setter->set_value("border-image-outset-left", border_image_outset[3]);
+		setter->set_value("border-image-repeat-x", border_image_repeat[0]);
+		setter->set_value("border-image-repeat-y", border_image_repeat[1]);
+	}
+
+	bool BorderImagePropertyParser::parse_source(StyleValue &border_image_source, size_t &parse_pos, const std::vector<StyleToken> &tokens)
+	{
+		size_t pos = parse_pos;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident)
+		{
+			if (equals(token.value, "none"))
+				border_image_source = StyleValue::from_keyword("none");
+			else
+				return false;
+		}
+		else if (token.type == StyleTokenType::uri)
+		{
+			border_image_source = StyleValue::from_url(token.value);
+		}
+		else
+		{
+			return false;
+		}
+
+		parse_pos = pos;
+		return true;
+	}
+
+	bool BorderImagePropertyParser::parse_slice(StyleValue *border_image_slice, size_t &parse_pos, const std::vector<StyleToken> &tokens)
+	{
+		size_t pos = parse_pos;
+		size_t last_pos = pos;
+		StyleToken token = next_token(pos, tokens);
+
+		int num_lengths;
+		StyleValue values[4];
+		for (num_lengths = 0; num_lengths < 4; num_lengths++)
+		{
+			if (token.type == StyleTokenType::percentage)
+			{
+				values[num_lengths] = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+			}
+			else if (token.type == StyleTokenType::number)
+			{
+				values[num_lengths] = StyleValue::from_number(StringHelp::text_to_float(token.value));
+			}
+			else
+			{
+				break;
+			}
+
+			last_pos = pos;
+			token = next_token(pos, tokens);
+		}
+
+		bool fill_center = false;
+		if (token.type == StyleTokenType::ident && equals(token.value, "fill"))
+		{
+			fill_center = true;
+		}
+		else
+		{
+			pos = last_pos;
+		}
+
+		if (num_lengths < 1)
+			return false;
+
+		if (num_lengths == 1)
+		{
+			for (int i = 1; i < 4; i++)
+			{
+				values[i] = values[0];
+			}
+		}
+		else if (num_lengths == 2)
+		{
+			values[2] = values[0];
+			values[3] = values[1];
+		}
+		else if (num_lengths == 3)
+		{
+			values[3] = values[1];
+		}
+
+		for (int i = 0; i < 4; i++)
+			border_image_slice[i] = values[i];
+		border_image_slice[4] = StyleValue::from_keyword(fill_center ? "fill" : "none");
+
+		parse_pos = pos;
+		return true;
+	}
+
+	bool BorderImagePropertyParser::parse_width(StyleValue *border_image_width, size_t &parse_pos, const std::vector<StyleToken> &tokens)
+	{
+		size_t pos = parse_pos;
+		size_t last_pos = pos;
+		StyleToken token = next_token(pos, tokens);
+
+		int num_lengths;
+		StyleValue values[4];
+		for (num_lengths = 0; num_lengths < 4; num_lengths++)
+		{
+			if (is_length(token))
+			{
+				if (!parse_length(token, values[num_lengths]))
+					return false;
+			}
+			else if (token.type == StyleTokenType::number)
+			{
+				values[num_lengths] = StyleValue::from_number(StringHelp::text_to_float(token.value));
+			}
+			else if (token.type == StyleTokenType::percentage)
+			{
+				values[num_lengths] = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+			}
+			else if (token.type == StyleTokenType::ident && equals(token.value, "auto"))
+			{
+				values[num_lengths] = StyleValue::from_keyword("auto");
+			}
+			else
+			{
+				break;
+			}
+
+			last_pos = pos;
+			token = next_token(pos, tokens);
+		}
+		if (num_lengths < 1)
+			return false;
+
+		pos = last_pos;
+
+		if (num_lengths == 1)
+		{
+			for (int i = 1; i < 4; i++)
+			{
+				values[i] = values[0];
+			}
+		}
+		else if (num_lengths == 2)
+		{
+			values[2] = values[0];
+			values[3] = values[1];
+		}
+		else if (num_lengths == 3)
+		{
+			values[3] = values[1];
+		}
+
+		for (int i = 0; i < 4; i++)
+			border_image_width[i] = values[i];
+
+		parse_pos = pos;
+		return true;
+	}
+
+	bool BorderImagePropertyParser::parse_outset(StyleValue *border_image_outset, size_t &parse_pos, const std::vector<StyleToken> &tokens)
+	{
+		size_t pos = parse_pos;
+		size_t last_pos = pos;
+		StyleToken token = next_token(pos, tokens);
+
+		int num_lengths;
+		StyleValue values[4];
+		for (num_lengths = 0; num_lengths < 4; num_lengths++)
+		{
+			if (is_length(token))
+			{
+				if (!parse_length(token, values[num_lengths]))
+					return false;
+			}
+			else if (token.type == StyleTokenType::number)
+			{
+				values[num_lengths] = StyleValue::from_number(StringHelp::text_to_float(token.value));
+			}
+			else
+			{
+				break;
+			}
+
+			last_pos = pos;
+			token = next_token(pos, tokens);
+		}
+		if (num_lengths < 1)
+			return false;
+
+		pos = last_pos;
+
+		if (num_lengths == 1)
+		{
+			for (int i = 1; i < 4; i++)
+			{
+				values[i] = values[0];
+			}
+		}
+		else if (num_lengths == 2)
+		{
+			values[2] = values[0];
+			values[3] = values[1];
+		}
+		else if (num_lengths == 3)
+		{
+			values[3] = values[1];
+		}
+
+		for (int i = 0; i < 4; i++)
+			border_image_outset[i] = values[i];
+
+		parse_pos = pos;
+
+		return true;
+	}
+
+	bool BorderImagePropertyParser::parse_repeat(StyleValue *border_image_repeat, size_t &parse_pos, const std::vector<StyleToken> &tokens)
+	{
+		size_t pos = parse_pos;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && equals(token.value, "stretch"))
+		{
+			border_image_repeat[0] = StyleValue::from_keyword("stretch");
+		}
+		else if (token.type == StyleTokenType::ident && equals(token.value, "repeat"))
+		{
+			border_image_repeat[0] = StyleValue::from_keyword("repeat");
+		}
+		else if (token.type == StyleTokenType::ident && equals(token.value, "round"))
+		{
+			border_image_repeat[0] = StyleValue::from_keyword("round");
+		}
+		else
+		{
+			return false;
+		}
+
+		border_image_repeat[1] = border_image_repeat[0];
+		parse_pos = pos;
+
+		if (pos != tokens.size())
+		{
+			token = next_token(pos, tokens);
+			if (token.type == StyleTokenType::ident && equals(token.value, "stretch"))
+			{
+				border_image_repeat[1] = StyleValue::from_keyword("stretch");
+				parse_pos = pos;
+			}
+			else if (token.type == StyleTokenType::ident && equals(token.value, "repeat"))
+			{
+				border_image_repeat[1] = StyleValue::from_keyword("repeat");
+				parse_pos = pos;
+			}
+			else if (token.type == StyleTokenType::ident && equals(token.value, "round"))
+			{
+				border_image_repeat[1] = StyleValue::from_keyword("round");
+				parse_pos = pos;
+			}
+		}
+		return true;
 	}
 
 	void BorderImageOutsetPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)

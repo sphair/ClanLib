@@ -37,6 +37,13 @@ namespace clan
 	public:
 		BorderImagePropertyParser() : StylePropertyParser({ "border-image" }) { }
 		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+
+	private:
+		bool parse_source(StyleValue &border_image_source, size_t &parse_pos, const std::vector<StyleToken> &tokens);
+		bool parse_slice(StyleValue *border_image_slice, size_t &parse_pos, const std::vector<StyleToken> &tokens);
+		bool parse_width(StyleValue *border_image_width, size_t &parse_pos, const std::vector<StyleToken> &tokens);
+		bool parse_outset(StyleValue *border_image_outset, size_t &parse_pos, const std::vector<StyleToken> &tokens);
+		bool parse_repeat(StyleValue *border_image_repeat, size_t &parse_pos, const std::vector<StyleToken> &tokens);
 	};
 
 	class BorderImageOutsetPropertyParser : public StylePropertyParser
