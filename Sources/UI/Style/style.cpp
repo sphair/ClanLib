@@ -132,6 +132,26 @@ namespace clan
 		{
 			float value = impl->prop_number.find(property_name)->second;
 			StyleDimension dimension = impl->prop_dimension.find(property_name)->second;
+			switch (dimension)
+			{
+			default:
+			case StyleDimension::px:
+				return value;
+			case StyleDimension::pt:
+				return value * (float)(96.0 / 72.0);
+			case StyleDimension::mm:
+				return value * (float)(96.0 / 25.4);
+			case StyleDimension::cm:
+				return value * (float)(96.0 / 2.54);
+			case StyleDimension::in:
+				return value * 96.0f;
+			case StyleDimension::pc:
+				return value * (float)(12.0 * 96.0 / 72.0);
+			case StyleDimension::em:
+			case StyleDimension::ex:
+				// To do: fetch font-size
+				break;
+			}
 		}
 
 		return 0.0f;
