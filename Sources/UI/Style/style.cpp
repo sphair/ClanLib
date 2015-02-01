@@ -58,30 +58,39 @@ namespace clan
 
 	bool Style::has(const std::string &property_name) const
 	{
-		return false;
+		const auto it = impl->prop_type.find(property_name);
+		return it != impl->prop_type.end();
 	}
 
 	void Style::remove(const std::string &property_name)
 	{
+		impl->set_value(property_name, StyleValue());
 	}
 
 	bool Style::is(const std::string &property_name, StyleValueType value_type) const
 	{
-		return false;
+		return impl->has_type(property_name, value_type);
 	}
 
-	bool Style::is(const std::string &property_name, const std::string &keyword) const
+	bool Style::is(const std::string &property_name, const std::string &value_keyword) const
 	{
-		return false;
+		return keyword(property_name) == value_keyword;
 	}
 
 	StyleValueType Style::value_type(const std::string &property_name) const
 	{
+		const auto it = impl->prop_type.find(property_name);
+		if (it != impl->prop_type.end())
+			return it->second;
 		return StyleValueType::undefined;
 	}
 
 	const std::string &Style::keyword(const std::string &property_name) const
 	{
+		if (impl->has_type(property_name, StyleValueType::keyword))
+		{
+			return impl->prop_text.find(property_name)->second;
+		}
 
 		static std::string not_found;
 		return not_found;
@@ -89,24 +98,41 @@ namespace clan
 
 	float Style::length(const std::string &property_name) const
 	{
+		if (impl->has_type(property_name, StyleValueType::length))
+		{
+			float value = impl->prop_number.find(property_name)->second;
+			StyleDimension dimension = impl->prop_dimension.find(property_name)->second;
+		}
 
 		return 0.0f;
 	}
 
 	float Style::percentage(const std::string &property_name) const
 	{
+		if (impl->has_type(property_name, StyleValueType::percentage))
+		{
+			return impl->prop_number.find(property_name)->second;
+		}
 
 		return 0.0f;
 	}
 
 	float Style::number(const std::string &property_name) const
 	{
+		if (impl->has_type(property_name, StyleValueType::number))
+		{
+			return impl->prop_number.find(property_name)->second;
+		}
 
 		return 0.0f;
 	}
 
 	const std::string &Style::string(const std::string &property_name) const
 	{
+		if (impl->has_type(property_name, StyleValueType::string))
+		{
+			return impl->prop_text.find(property_name)->second;
+		}
 
 		static std::string not_found;
 		return not_found;
@@ -114,6 +140,10 @@ namespace clan
 
 	const std::string &Style::url(const std::string &property_name) const
 	{
+		if (impl->has_type(property_name, StyleValueType::url))
+		{
+			return impl->prop_text.find(property_name)->second;
+		}
 
 		static std::string not_found;
 		return not_found;
@@ -121,6 +151,10 @@ namespace clan
 
 	const Colorf &Style::color(const std::string &property_name) const
 	{
+		if (impl->has_type(property_name, StyleValueType::color))
+		{
+			return impl->prop_color.find(property_name)->second;
+		}
 
 		static Colorf not_found;
 		return not_found;
@@ -128,6 +162,10 @@ namespace clan
 
 	const std::shared_ptr<ImageSource> &Style::image(const std::string &property_name) const
 	{
+		if (impl->has_type(property_name, StyleValueType::image))
+		{
+			return impl->prop_image.find(property_name)->second;
+		}
 
 		static std::shared_ptr<ImageSource> not_found;
 		return not_found;
@@ -148,12 +186,75 @@ namespace clan
 
 	/////////////////////////////////////////////////////////////////////////
 
+	bool StyleImpl::has_type(const std::string &property_name, StyleValueType type) const
+	{
+		const auto type_it = prop_type.find(property_name);
+		return type_it != prop_type.end() && type_it->second == type;
+	}
+
 	void StyleImpl::set_value(const std::string &name, const StyleValue &value)
 	{
+		auto type_it = prop_type.find(name);
+		if (type_it != prop_type.end() && type_it->second != value.type)
+		{
+			switch (type_it->second)
+			{
+			default:
+			case StyleValueType::undefined:
+				break;
+			case StyleValueType::keyword:
+			case StyleValueType::string:
+			case StyleValueType::url:
+				prop_text.erase(prop_text.find(name));
+				break;
+			case StyleValueType::length:
+				prop_dimension.erase(prop_dimension.find(name));
+				// intentional fall through
+			case StyleValueType::percentage:
+			case StyleValueType::number:
+				prop_number.erase(prop_number.find(name));
+				break;
+			case StyleValueType::color:
+				prop_color.erase(prop_color.find(name));
+				break;
+			case StyleValueType::image:
+				prop_image.erase(prop_image.find(name));
+				break;
+			}
+		}
+
+		if (value.type != StyleValueType::undefined)
+			prop_type[name] = value.type;
+		else if (type_it != prop_type.end())
+			prop_type.erase(type_it);
+
+		switch (value.type)
+		{
+		default:
+		case StyleValueType::undefined:
+			break;
+		case StyleValueType::keyword:
+		case StyleValueType::string:
+		case StyleValueType::url:
+			prop_text[name] = value.text;
+			break;
+		case StyleValueType::length:
+			prop_dimension[name] = value.dimension;
+			// intentional fall through
+		case StyleValueType::percentage:
+		case StyleValueType::number:
+			prop_number[name] = value.number;
+			break;
+		case StyleValueType::color:
+			prop_color[name] = value.color;
+			break;
+		case StyleValueType::image:
+			prop_image[name] = value.image;
+			break;
+		}
 	}
 
 	void StyleImpl::set_value_array(const std::string &name, const std::vector<StyleValue> &value_array)
 	{
-
 	}
 }

@@ -41,9 +41,18 @@ namespace clan
 	class StyleImpl : public StylePropertySetter
 	{
 	public:
+		bool has_type(const std::string &property_name, StyleValueType type) const;
+
 		void set_value(const std::string &name, const StyleValue &value) override;
 		void set_value_array(const std::string &name, const std::vector<StyleValue> &value_array) override;
 
 		std::shared_ptr<Style> base;
+
+		std::map<std::string, StyleValueType> prop_type;
+		std::map<std::string, std::string> prop_text;
+		std::map<std::string, float> prop_number;
+		std::map<std::string, StyleDimension> prop_dimension;
+		std::map<std::string, Colorf> prop_color;
+		std::map<std::string, std::shared_ptr<ImageSource>> prop_image;
 	};
 }
