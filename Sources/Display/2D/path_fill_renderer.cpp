@@ -194,7 +194,6 @@ namespace clan
 			return;
 
 		mask_blocks.flush_block();
-
 		mask_buffer.unlock();
 		instance_buffer.unlock();
 
@@ -237,7 +236,11 @@ namespace clan
 		gc.reset_program_object();
 		gc.reset_blend_state();
 
-		// Finishedwith the buffers
+		// Set nothing more to flush.
+		// Although this is cleared in PathMaskBuffer::reset() called by initialise_buffers(), It is still possible for this function to be called without reinitialising the buffers
+		mask_blocks.next_block = 0;
+
+		// Finished with the buffers
 		mask_buffer = TransferTexture();
 		mask_texture = Texture2D();
 		instance_buffer = TransferTexture();
