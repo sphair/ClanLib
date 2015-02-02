@@ -97,128 +97,73 @@ namespace clan
 		impl->set_value(property_name, StyleValue());
 	}
 
-	bool Style::is(const std::string &property_name, StyleValueType value_type) const
-	{
-		return impl->has_type(property_name, value_type);
-	}
-
-	bool Style::is(const std::string &property_name, const std::string &value_keyword) const
-	{
-		return keyword(property_name) == value_keyword;
-	}
-
-	StyleValueType Style::value_type(const std::string &property_name) const
+	StyleValue Style::specified_value(const std::string &property_name) const
 	{
 		const auto it = impl->prop_type.find(property_name);
-		if (it != impl->prop_type.end())
-			return it->second;
-		return StyleValueType::undefined;
+		if (it == impl->prop_type.end())
+			return StyleValue();
+
+		switch (it->second)
+		{
+		default:
+		case StyleValueType::undefined:
+			return StyleValue();
+		case StyleValueType::keyword:
+			return StyleValue::from_keyword(impl->prop_text.find(property_name)->second);
+		case StyleValueType::string:
+			return StyleValue::from_string(impl->prop_text.find(property_name)->second);
+		case StyleValueType::url:
+			return StyleValue::from_url(impl->prop_text.find(property_name)->second);
+		case StyleValueType::length:
+			return StyleValue::from_length(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
+		case StyleValueType::percentage:
+			return StyleValue::from_percentage(impl->prop_number.find(property_name)->second);
+		case StyleValueType::number:
+			return StyleValue::from_percentage(impl->prop_number.find(property_name)->second);
+		case StyleValueType::color:
+			return StyleValue::from_color(impl->prop_color.find(property_name)->second);
+		case StyleValueType::image:
+			return StyleValue::from_image(impl->prop_image.find(property_name)->second);
+		}
 	}
 
-	const std::string &Style::keyword(const std::string &property_name) const
+	StyleValue Style::computed_value(const std::string &property_name) const
 	{
-		if (impl->has_type(property_name, StyleValueType::keyword))
-		{
-			return impl->prop_text.find(property_name)->second;
-		}
+		// To do: pass on to property compute functions
 
-		static std::string not_found;
-		return not_found;
+		StyleValue specified = specified_value(property_name);
+		if (specified.is_length())
+		{
+			return compute_length(specified);
+		}
+		else
+		{
+			return specified;
+		}
 	}
 
-	float Style::length(const std::string &property_name) const
+	StyleValue Style::compute_length(const StyleValue &length) const
 	{
-		if (impl->has_type(property_name, StyleValueType::length))
+		switch (length.dimension)
 		{
-			float value = impl->prop_number.find(property_name)->second;
-			StyleDimension dimension = impl->prop_dimension.find(property_name)->second;
-			switch (dimension)
-			{
-			default:
-			case StyleDimension::px:
-				return value;
-			case StyleDimension::pt:
-				return value * (float)(96.0 / 72.0);
-			case StyleDimension::mm:
-				return value * (float)(96.0 / 25.4);
-			case StyleDimension::cm:
-				return value * (float)(96.0 / 2.54);
-			case StyleDimension::in:
-				return value * 96.0f;
-			case StyleDimension::pc:
-				return value * (float)(12.0 * 96.0 / 72.0);
-			case StyleDimension::em:
-			case StyleDimension::ex:
-				// To do: fetch font-size
-				break;
-			}
+		default:
+		case StyleDimension::px:
+			return length;
+		case StyleDimension::pt:
+			return StyleValue::from_length(length.number * (float)(96.0 / 72.0));
+		case StyleDimension::mm:
+			return StyleValue::from_length(length.number * (float)(96.0 / 25.4));
+		case StyleDimension::cm:
+			return StyleValue::from_length(length.number * (float)(96.0 / 2.54));
+		case StyleDimension::in:
+			return StyleValue::from_length(length.number * 96.0f);
+		case StyleDimension::pc:
+			return StyleValue::from_length(length.number * (float)(12.0 * 96.0 / 72.0));
+		case StyleDimension::em:
+			return StyleValue::from_length(computed_value("font-size").number * length.number);
+		case StyleDimension::ex:
+			return StyleValue::from_length(computed_value("font-size").number * length.number * 0.5f);
 		}
-
-		return 0.0f;
-	}
-
-	float Style::percentage(const std::string &property_name) const
-	{
-		if (impl->has_type(property_name, StyleValueType::percentage))
-		{
-			return impl->prop_number.find(property_name)->second;
-		}
-
-		return 0.0f;
-	}
-
-	float Style::number(const std::string &property_name) const
-	{
-		if (impl->has_type(property_name, StyleValueType::number))
-		{
-			return impl->prop_number.find(property_name)->second;
-		}
-
-		return 0.0f;
-	}
-
-	const std::string &Style::string(const std::string &property_name) const
-	{
-		if (impl->has_type(property_name, StyleValueType::string))
-		{
-			return impl->prop_text.find(property_name)->second;
-		}
-
-		static std::string not_found;
-		return not_found;
-	}
-
-	const std::string &Style::url(const std::string &property_name) const
-	{
-		if (impl->has_type(property_name, StyleValueType::url))
-		{
-			return impl->prop_text.find(property_name)->second;
-		}
-
-		static std::string not_found;
-		return not_found;
-	}
-
-	const Colorf &Style::color(const std::string &property_name) const
-	{
-		if (impl->has_type(property_name, StyleValueType::color))
-		{
-			return impl->prop_color.find(property_name)->second;
-		}
-
-		static Colorf not_found;
-		return not_found;
-	}
-
-	const std::shared_ptr<ImageSource> &Style::image(const std::string &property_name) const
-	{
-		if (impl->has_type(property_name, StyleValueType::image))
-		{
-			return impl->prop_image.find(property_name)->second;
-		}
-
-		static std::shared_ptr<ImageSource> not_found;
-		return not_found;
 	}
 
 	void Style::render_background(Canvas &canvas, const BoxGeometry &geometry) const
@@ -235,12 +180,6 @@ namespace clan
 	}
 
 	/////////////////////////////////////////////////////////////////////////
-
-	bool StyleImpl::has_type(const std::string &property_name, StyleValueType type) const
-	{
-		const auto type_it = prop_type.find(property_name);
-		return type_it != prop_type.end() && type_it->second == type;
-	}
 
 	void StyleImpl::set_value(const std::string &name, const StyleValue &value)
 	{
