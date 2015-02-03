@@ -307,12 +307,15 @@ clanUI_includes = \
 	ui.h \
 	UI/Style/box_geometry.h \
 	UI/Style/box_style.h \
-	UI/Style/text_style.h \
+	UI/Style/style_token.h \
+	UI/Style/style.h \
+	UI/Style/style_property_parser.h \
+	UI/Style/style_tokenizer.h \
+	UI/Image/image_source.h \
 	UI/SystemDialogs/open_file_dialog.h \
 	UI/SystemDialogs/save_file_dialog.h \
 	UI/SystemDialogs/folder_browse_dialog.h \
 	UI/UIThread/ui_thread.h \
-	UI/Image/image_source.h \
 	UI/Events/key_event.h \
 	UI/Events/close_event.h \
 	UI/Events/event.h \
