@@ -41,6 +41,7 @@
 
 namespace clan
 {
+	class Style;
 	class Canvas;
 	class ActivationChangeEvent;
 	class CloseEvent;
@@ -58,6 +59,9 @@ namespace clan
 	public:
 		View();
 		~View();
+
+		const std::shared_ptr<Style> &style() const;
+		void set_style(const std::shared_ptr<Style> &style);
 
 		BoxStyle box_style;
 		SlotContainer slots;

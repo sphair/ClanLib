@@ -56,6 +56,18 @@ namespace clan
 	{
 	}
 
+	const std::shared_ptr<Style> &View::style() const
+	{
+		return impl->style;
+	}
+
+	void View::set_style(const std::shared_ptr<Style> &style)
+	{
+		impl->style = style;
+		set_needs_layout();
+		set_needs_render();
+	}
+
 	View *View::superview() const
 	{
 		return impl->_superview;
