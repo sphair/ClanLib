@@ -29,7 +29,7 @@
 #include "UI/precomp.h"
 #include "API/UI/StandardViews/label_view.h"
 #include "API/UI/UIThread/ui_thread.h"
-#include "API/UI/Style/text_style.h"
+#include "API/UI/Style/style.h"
 #include "API/Display/2D/canvas.h"
 #include "API/Display/2D/path.h"
 #include "API/Display/2D/pen.h"
@@ -46,14 +46,13 @@ namespace clan
 	public:
 		std::string _text;
 		TextAlignment text_alignment = TextAlignment::left;
-		TextStyle text_style;
 		Font font;
 		LineBreakMode _line_break_mode = LineBreakMode::truncating_tail;
 
-		Font &get_font(Canvas &canvas)
+		Font &get_font(LabelView *view, Canvas &canvas)
 		{
 			if (font.is_null())
-				font = text_style.get_font(canvas);
+				font = view->style()->get_font(canvas);
 			return font;
 		}
 	};
@@ -83,16 +82,6 @@ namespace clan
 		impl->text_alignment = alignment;
 	}
 
-	const TextStyle &LabelView::text_style() const
-	{
-		return impl->text_style;
-	}
-
-	TextStyle &LabelView::text_style()
-	{
-		return impl->text_style;
-	}
-
 	LineBreakMode LabelView::line_break_mode() const
 	{
 		return impl->_line_break_mode;
@@ -106,7 +95,7 @@ namespace clan
 
 	void LabelView::render_content(Canvas &canvas)
 	{
-		Font font = impl->get_font(canvas);
+		Font font = impl->get_font(this, canvas);
 		FontMetrics font_metrics = font.get_font_metrics(canvas);
 		float baseline = font_metrics.get_baseline_offset();
 
@@ -146,17 +135,19 @@ namespace clan
 				return; // Still no room.  Draw nothing!
 		}
 
+		Colorf color = style()->computed_value("color").color;
+
 		if (impl->text_alignment == TextAlignment::left)
 		{
-			font.draw_text(canvas, Pointf(0.0f, baseline), clipped_text, impl->text_style.color());
+			font.draw_text(canvas, Pointf(0.0f, baseline), clipped_text, color);
 		}
 		else if (impl->text_alignment == TextAlignment::right)
 		{
-			font.draw_text(canvas, Pointf(geometry().content.get_width() - advance.advance.width, baseline), clipped_text, impl->text_style.color());
+			font.draw_text(canvas, Pointf(geometry().content.get_width() - advance.advance.width, baseline), clipped_text, color);
 		}
 		else if (impl->text_alignment == TextAlignment::center)
 		{
-			font.draw_text(canvas, Pointf(std::round((geometry().content.get_width() - advance.advance.width) * 0.5f), baseline), clipped_text, impl->text_style.color());
+			font.draw_text(canvas, Pointf(std::round((geometry().content.get_width() - advance.advance.width) * 0.5f), baseline), clipped_text, color);
 		}
 	}
 
@@ -164,7 +155,7 @@ namespace clan
 	{
 		if (box_style.is_width_auto())
 		{
-			Font font = impl->get_font(canvas);
+			Font font = impl->get_font(this, canvas);
 			return font.measure_text(canvas, impl->_text).advance.width;
 		}
 		else
@@ -175,7 +166,7 @@ namespace clan
 	{
 		if (box_style.is_height_auto())
 		{
-			Font font = impl->get_font(canvas);
+			Font font = impl->get_font(this, canvas);
 			return font.get_font_metrics(canvas).get_line_height();
 		}
 		else
@@ -184,7 +175,7 @@ namespace clan
 
 	float LabelView::get_first_baseline_offset(Canvas &canvas, float width)
 	{
-		Font font = impl->get_font(canvas);
+		Font font = impl->get_font(this, canvas);
 		return font.get_font_metrics(canvas).get_baseline_offset();
 	}
 

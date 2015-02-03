@@ -53,7 +53,7 @@ namespace clan
 			view->remove_from_super();
 	}
 
-	void SpanLayoutView::add_text(const std::string &text, const TextStyle &style)
+	void SpanLayoutView::add_text(const std::string &text, const std::shared_ptr<Style> &style)
 	{
 		impl->add_text(text, style);
 		set_needs_layout();

@@ -53,7 +53,7 @@ namespace clan
 		text.clear();
 	}
 
-	void SpanLayoutViewImpl::add_text(const std::string &more_text, const TextStyle &style, int id)
+	void SpanLayoutViewImpl::add_text(const std::string &more_text, const std::shared_ptr<Style> &style, int id)
 	{
 		SpanObject object;
 		object.type = SpanObjectType::text;
@@ -130,7 +130,7 @@ namespace clan
 
 					GlyphMetrics advance = object.get_font(canvas).measure_text(canvas, obj_text);
 
-					object.get_font(canvas).draw_text(canvas, x, y + metrics.ascent + object.baseline_offset, obj_text, object.style.color());
+					object.get_font(canvas).draw_text(canvas, x, y + metrics.ascent + object.baseline_offset, obj_text, object.style->computed_value("color").color);
 
 					x += advance.advance.width;
 				}

@@ -32,7 +32,6 @@
 #include "API/UI/Events/key_event.h"
 #include "API/Display/System/timer.h"
 #include "API/Display/Font/font.h"
-#include "API/UI/Style/text_style.h"
 
 namespace clan
 {
@@ -68,7 +67,6 @@ namespace clan
 
 		TextFieldView *textfield = nullptr;
 
-		TextStyle text_style;
 		TextAlignment alignment = TextAlignment::left;
 
 		Font &get_font(Canvas &canvas);

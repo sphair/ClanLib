@@ -28,6 +28,7 @@
 
 #include "UI/precomp.h"
 #include "API/UI/StandardViews/text_field_view.h"
+#include "API/UI/Style/style.h"
 #include "API/Display/2D/canvas.h"
 #include "API/Display/2D/path.h"
 #include "API/Display/2D/brush.h"
@@ -105,16 +106,6 @@ namespace clan
 	{
 		impl->placeholder = value;
 		set_needs_render();
-	}
-
-	const TextStyle &TextFieldView::text_style() const
-	{
-		return impl->text_style;
-	}
-
-	TextStyle &TextFieldView::text_style()
-	{
-		return impl->text_style;
 	}
 
 	TextAlignment TextFieldView::text_alignment() const
@@ -356,14 +347,15 @@ namespace clan
 			Path::rect(selection_rect).fill(canvas, focus_view() == this ? Brush::solid_rgb8(51, 153, 255) : Brush::solid_rgb8(200, 200, 200));
 		}
 
-		font.draw_text(canvas, 0.0f, baseline, txt_before, impl->text_style.color());
-		font.draw_text(canvas, advance_before, baseline, txt_selected, focus_view() == this ? Colorf(255, 255, 255) : impl->text_style.color());
-		font.draw_text(canvas, advance_before + advance_selected, baseline, txt_after, impl->text_style.color());
+		Colorf color = style()->computed_value("color").color;
+		font.draw_text(canvas, 0.0f, baseline, txt_before, color);
+		font.draw_text(canvas, advance_before, baseline, txt_selected, focus_view() == this ? Colorf(255, 255, 255) : color);
+		font.draw_text(canvas, advance_before + advance_selected, baseline, txt_after, color);
 
 		float cursor_advance = std::round(font.measure_text(canvas, impl->text.substr(0, impl->cursor_pos)).advance.width);
 
 		if (impl->cursor_blink_visible)
-			Path::rect(cursor_advance, top_y, 1.0f, bottom_y - top_y).fill(canvas,Brush(impl->text_style.color()));
+			Path::rect(cursor_advance, top_y, 1.0f, bottom_y - top_y).fill(canvas, Brush(color));
 	}
 
 	float TextFieldView::get_preferred_width(Canvas &canvas)
@@ -404,7 +396,7 @@ namespace clan
 	Font &TextFieldViewImpl::get_font(Canvas &canvas)
 	{
 		if (font.is_null())
-			font = text_style.get_font(canvas);
+			font = textfield->style()->get_font(canvas);
 		return font;
 	}
 

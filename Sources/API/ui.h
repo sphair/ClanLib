@@ -66,7 +66,6 @@
 #include "UI/Style/style_property_parser.h"
 #include "UI/Style/style_token.h"
 #include "UI/Style/style_tokenizer.h"
-#include "UI/Style/text_style.h"
 #include "UI/SystemDialogs/open_file_dialog.h"
 #include "UI/SystemDialogs/save_file_dialog.h"
 #include "UI/SystemDialogs/folder_browse_dialog.h"
