@@ -28,6 +28,7 @@
 
 #include "UI/precomp.h"
 #include "API/UI/Style/style.h"
+#include "API/UI/UIThread/ui_thread.h"
 #include "API/Display/Font/font.h"
 #include "style_impl.h"
 #include "Properties/background.h"
@@ -176,7 +177,49 @@ namespace clan
 
 	Font Style::get_font(Canvas &canvas)
 	{
-		return Font();
+		auto font_size = computed_value("font-size");
+		auto line_height = computed_value("line-height");
+		auto font_weight = computed_value("font-weight");
+		auto font_style = computed_value("font-style");
+		//auto font_variant = computed_value("font-variant"); // To do: needs FontDescription support
+		auto font_rendering = computed_value("font-rendering");
+		auto font_family_name = computed_value("font-family-names[0]");
+
+		FontDescription font_desc;
+		font_desc.set_height(font_size.number);
+
+		if (line_height.is_length())
+			font_desc.set_line_height(line_height.number);
+		else if (line_height.is_number())
+			font_desc.set_line_height(line_height.number * font_size.number);
+
+		if (font_weight.is_keyword("normal"))
+			font_desc.set_weight(FontWeight::normal);
+		else if (font_weight.is_keyword("bold") || font_weight.is_keyword("bolder"))
+			font_desc.set_weight(FontWeight::bold);
+		else if (font_weight.is_keyword("lighter"))
+			font_desc.set_weight(FontWeight::light);
+		else if (font_weight.is_number())
+			font_desc.set_weight((FontWeight)(int)font_weight.number);
+
+		if (font_style.is_keyword("normal"))
+			font_desc.set_style(FontStyle::normal);
+		else if (font_style.is_keyword("italic"))
+			font_desc.set_style(FontStyle::italic);
+		else if (font_style.is_keyword("oblique"))
+			font_desc.set_style(FontStyle::oblique);
+
+		font_desc.set_subpixel(!font_rendering.is_keyword("anti-alias"));
+
+		std::string family;
+		if (font_family_name.is_string())
+			family = font_family_name.text;
+		else if (font_family_name.is_keyword())
+			family = font_family_name.text;
+		else
+			family = "sans-serif";
+
+		return Font::resource(canvas, family, font_desc, UIThread::get_resources());
 	}
 
 	/////////////////////////////////////////////////////////////////////////
