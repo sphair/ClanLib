@@ -102,7 +102,7 @@ namespace clan
 	{
 		const auto it = impl->prop_type.find(property_name);
 		if (it == impl->prop_type.end())
-			return StyleValue();
+			return StyleProperty::default_value(property_name);
 
 		switch (it->second)
 		{

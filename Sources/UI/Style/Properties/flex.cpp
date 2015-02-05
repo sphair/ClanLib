@@ -35,6 +35,13 @@ namespace clan
 	{
 	}
 
+	StylePropertyDefault style_default_flex_grow("flex-grow", StyleValue::from_number(0.0f));
+	StylePropertyDefault style_default_flex_shrink("flex-shrink", StyleValue::from_number(1.0f));
+	StylePropertyDefault style_default_flex_basis("flex-basis", StyleValue::from_keyword("main-size"));
+	StylePropertyDefault style_default_flex_direction("flex-direction", StyleValue::from_keyword("row"));
+	StylePropertyDefault style_default_flex_wrap("flex-wrap", StyleValue::from_keyword("nowrap"));
+	StylePropertyDefault style_default_order("order", StyleValue::from_number(0.0f));
+
 	FlexPropertyParser style_parser_flex;
 	FlexBasisPropertyParser style_parser_flex_basis;
 	FlexDirectionPropertyParser style_parser_flex_direction;

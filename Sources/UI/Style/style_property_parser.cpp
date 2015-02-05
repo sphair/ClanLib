@@ -33,9 +33,9 @@
 
 namespace clan
 {
-	std::map<std::string, std::string> &style_defaults()
+	std::map<std::string, StyleValue> &style_defaults()
 	{
-		static std::map<std::string, std::string> defaults;
+		static std::map<std::string, StyleValue> defaults;
 		return defaults;
 	}
 
@@ -47,7 +47,7 @@ namespace clan
 
 	/////////////////////////////////////////////////////////////////////////
 
-	StylePropertyDefault::StylePropertyDefault(const std::string &name, const std::string &value)
+	StylePropertyDefault::StylePropertyDefault(const std::string &name, const StyleValue &value)
 	{
 		style_defaults()[name] = value;
 	}
@@ -452,13 +452,18 @@ namespace clan
 
 	/////////////////////////////////////////////////////////////////////////
 
-	std::string StyleProperty::default_value(const std::string &name)
+	const StyleValue &StyleProperty::default_value(const std::string &name)
 	{
 		auto it = style_defaults().find(name);
 		if (it != style_defaults().end())
+		{
 			return it->second;
+		}
 		else
-			return std::string();
+		{
+			static StyleValue undefined;
+			return undefined;
+		}
 	}
 
 	void StyleProperty::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)

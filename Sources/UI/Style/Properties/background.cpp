@@ -31,6 +31,28 @@
 
 namespace clan
 {
+	void force_link_style_parser_background()
+	{
+	}
+
+	StylePropertyDefault style_default_background_color("background-color", StyleValue::from_color(Colorf(0.0f, 0.0f, 0.0f, 0.0f)));
+	StylePropertyDefault style_default_background_image("background-image", StyleValue::from_keyword("none"));
+	StylePropertyDefault style_default_background_repeat("background-repeat", StyleValue::from_keyword("array"));
+	StylePropertyDefault style_default_background_repeats_x("background-repeats-x[0]", StyleValue::from_keyword("repeat"));
+	StylePropertyDefault style_default_background_repeats_y("background-repeats-y[0]", StyleValue::from_keyword("repeat"));
+	StylePropertyDefault style_default_background_attachment("background-attachment", StyleValue::from_keyword("array"));
+	StylePropertyDefault style_default_background_attachments("background-attachments[0]", StyleValue::from_keyword("scroll"));
+	StylePropertyDefault style_default_background_position("background-position", StyleValue::from_keyword("array"));
+	StylePropertyDefault style_default_background_positions_x("background-positions-x[0]", StyleValue::from_length(0.0f));
+	StylePropertyDefault style_default_background_positions_y("background-positions-y[0]", StyleValue::from_length(0.0f));
+	StylePropertyDefault style_default_background_origin("background-origin", StyleValue::from_keyword("array"));
+	StylePropertyDefault style_default_background_origins("background-origins[0]", StyleValue::from_keyword("padding-box"));
+	StylePropertyDefault style_default_background_clip("background-clip", StyleValue::from_keyword("array"));
+	StylePropertyDefault style_default_background_clips("background-clips[0]", StyleValue::from_keyword("border-box"));
+	StylePropertyDefault style_default_background_size("background-size", StyleValue::from_keyword("array"));
+	StylePropertyDefault style_default_background_sizes_x("background-sizes-x[0]", StyleValue::from_keyword("auto"));
+	StylePropertyDefault style_default_background_sizes_y("background-sizes-y[0]", StyleValue::from_keyword("auto"));
+
 	BackgroundPropertyParser style_parser_background;
 	BackgroundAttachmentPropertyParser style_parser_background_attachment;
 	BackgroundClipPropertyParser style_parser_background_clip;
@@ -40,10 +62,6 @@ namespace clan
 	BackgroundPositionPropertyParser style_parser_background_position;
 	BackgroundRepeatPropertyParser style_parser_background_repeat;
 	BackgroundSizePropertyParser style_parser_background_size;
-
-	void force_link_style_parser_background()
-	{
-	}
 
 	void BackgroundPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{

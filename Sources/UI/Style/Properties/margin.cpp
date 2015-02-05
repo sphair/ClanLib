@@ -35,6 +35,11 @@ namespace clan
 	{
 	}
 
+	StylePropertyDefault style_default_margin_left("margin-left", StyleValue::from_length(0.0f));
+	StylePropertyDefault style_default_margin_top("margin-top", StyleValue::from_length(0.0f));
+	StylePropertyDefault style_default_margin_right("margin-right", StyleValue::from_length(0.0f));
+	StylePropertyDefault style_default_margin_bottom("margin-bottom", StyleValue::from_length(0.0f));
+
 	MarginPropertyParser style_parser_margin;
 	MarginLTRBPropertyParser style_parser_margin_ltrb;
 

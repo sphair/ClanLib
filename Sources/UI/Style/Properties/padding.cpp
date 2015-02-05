@@ -35,6 +35,11 @@ namespace clan
 	{
 	}
 
+	StylePropertyDefault style_default_padding_left("padding-left", StyleValue::from_length(0.0f));
+	StylePropertyDefault style_default_padding_top("padding-top", StyleValue::from_length(0.0f));
+	StylePropertyDefault style_default_padding_right("padding-right", StyleValue::from_length(0.0f));
+	StylePropertyDefault style_default_padding_bottom("padding-bottom", StyleValue::from_length(0.0f));
+
 	PaddingPropertyParser style_parser_padding;
 	PaddingLTRBPropertyParser style_parser_padding_ltrb;
 

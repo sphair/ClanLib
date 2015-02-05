@@ -35,6 +35,10 @@ namespace clan
 	{
 	}
 
+	StylePropertyDefault style_default_outline_color("outline-color", StyleValue::from_keyword("invert"));
+	StylePropertyDefault style_default_outline_style("outline-style", StyleValue::from_keyword("none"));
+	StylePropertyDefault style_default_outline_width("outline-width", StyleValue::from_keyword("medium"));
+
 	OutlinePropertyParser style_parser_outline;
 	OutlineColorPropertyParser style_parser_outline_color;
 	OutlineStylePropertyParser style_parser_outline_style;

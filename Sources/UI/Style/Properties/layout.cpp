@@ -35,6 +35,14 @@ namespace clan
 	{
 	}
 
+	StylePropertyDefault style_default_layout("layout", StyleValue::from_keyword("flex"));
+	StylePropertyDefault style_default_position("position", StyleValue::from_keyword("static"));
+	StylePropertyDefault style_default_left("left", StyleValue::from_keyword("auto"));
+	StylePropertyDefault style_default_top("top", StyleValue::from_keyword("auto"));
+	StylePropertyDefault style_default_right("right", StyleValue::from_keyword("auto"));
+	StylePropertyDefault style_default_bottom("bottom", StyleValue::from_keyword("auto"));
+	StylePropertyDefault style_default_zindex("z-index", StyleValue::from_keyword("auto"));
+
 	LayoutPropertyParser style_parser_layout;
 	PositionPropertyParser style_parser_position;
 	LeftPropertyParser style_parser_left;

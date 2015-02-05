@@ -103,13 +103,13 @@ namespace clan
 	class StylePropertyDefault
 	{
 	public:
-		StylePropertyDefault(const std::string &name, const std::string &value);
+		StylePropertyDefault(const std::string &name, const StyleValue &value);
 	};
 
 	class StyleProperty
 	{
 	public:
-		static std::string default_value(const std::string &name);
+		static const StyleValue &default_value(const std::string &name);
 		static void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args);
 	};
 }

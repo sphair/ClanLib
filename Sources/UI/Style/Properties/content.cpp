@@ -35,6 +35,13 @@ namespace clan
 	{
 	}
 
+	StylePropertyDefault style_default_width("width", StyleValue::from_keyword("auto"));
+	StylePropertyDefault style_default_height("height", StyleValue::from_keyword("auto"));
+	StylePropertyDefault style_default_min_width("min-width", StyleValue::from_length(0.0f));
+	StylePropertyDefault style_default_min_height("min-height", StyleValue::from_length(0.0f));
+	StylePropertyDefault style_default_max_width("max-width", StyleValue::from_keyword("none"));
+	StylePropertyDefault style_default_max_height("max-height", StyleValue::from_keyword("none"));
+
 	WidthPropertyParser style_parser_width;
 	HeightPropertyParser style_parser_height;
 	MinWidthPropertyParser style_parser_min_width;
