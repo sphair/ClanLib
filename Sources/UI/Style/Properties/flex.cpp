@@ -60,7 +60,7 @@ namespace clan
 			{
 				flex_grow = StyleValue::from_number(0.0f);
 				flex_shrink = StyleValue::from_number(0.0f);
-				flex_basis = StyleValue::from_keyword("auto");
+				flex_basis = StyleValue::from_keyword("main-size");
 
 				setter->set_value("flex-grow", flex_grow);
 				setter->set_value("flex-shrink", flex_shrink);
@@ -152,8 +152,8 @@ namespace clan
 
 		if (token.type == StyleTokenType::ident)
 		{
-			if (equals(token.value, "auto"))
-				basis = StyleValue::from_keyword("auto");
+			if (equals(token.value, "main-size"))
+				basis = StyleValue::from_keyword("main-size");
 			else
 				return false;
 		}
@@ -192,8 +192,8 @@ namespace clan
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
-			if (equals(token.value, "auto"))
-				flex_basis = StyleValue::from_keyword("auto");
+			if (equals(token.value, "main-size"))
+				flex_basis = StyleValue::from_keyword("main-size");
 			else if (equals(token.value, "inherit"))
 				flex_basis = StyleValue::from_keyword("inherit");
 			else

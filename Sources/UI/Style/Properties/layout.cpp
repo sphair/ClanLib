@@ -45,6 +45,33 @@ namespace clan
 
 	void LayoutPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
+		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+
+		StyleValue layout;
+
+		size_t pos = 0;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && pos == tokens.size())
+		{
+			if (equals(token.value, "none"))
+				layout = StyleValue::from_keyword("none");
+			else if (equals(token.value, "flex"))
+				layout = StyleValue::from_keyword("flex");
+			else if (equals(token.value, "block"))
+				layout = StyleValue::from_keyword("block");
+			else if (equals(token.value, "inline-block"))
+				layout = StyleValue::from_keyword("inline-block");
+			else if (equals(token.value, "inherit"))
+				layout = StyleValue::from_keyword("inherit");
+			else
+				return;
+		}
+		else
+		{
+			return;
+		}
+
+		setter->set_value("layout", layout);
 	}
 
 	void PositionPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)

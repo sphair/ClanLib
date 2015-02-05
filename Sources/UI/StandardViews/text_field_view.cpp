@@ -360,24 +360,24 @@ namespace clan
 
 	float TextFieldView::get_preferred_width(Canvas &canvas)
 	{
-		if (box_style.is_width_auto())
+		if (style()->computed_value("width").is_keyword("auto"))
 		{
 			Font font = impl->get_font(canvas);
 			return font.measure_text(canvas, impl->text).advance.width;
 		}
 		else
-			return box_style.width();
+			return style()->computed_value("width").number;
 	}
 
 	float TextFieldView::get_preferred_height(Canvas &canvas, float width)
 	{
-		if (box_style.is_height_auto())
+		if (style()->computed_value("height").is_keyword("auto"))
 		{
 			Font font = impl->get_font(canvas);
 			return font.get_font_metrics(canvas).get_line_height();
 		}
 		else
-			return box_style.height();
+			return style()->computed_value("height").number;
 	}
 
 	float TextFieldView::get_first_baseline_offset(Canvas &canvas, float width)

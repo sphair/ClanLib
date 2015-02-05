@@ -34,6 +34,7 @@
 #include "../../Core/Signals/signal.h"
 #include "../../UI/Events/event.h"
 #include "../Style/box_geometry.h"
+#include "../Style/style.h"
 #include "focus_policy.h"
 #include <vector>
 #include <memory>

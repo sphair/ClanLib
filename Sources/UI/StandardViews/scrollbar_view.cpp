@@ -28,6 +28,7 @@
 
 #include "UI/precomp.h"
 #include "API/UI/StandardViews/scrollbar_view.h"
+#include "API/UI/Style/style_property_parser.h"
 #include "API/Display/2D/path.h"
 #include "API/Display/System/timer.h"
 #include "API/Display/2D/brush.h"
@@ -186,17 +187,17 @@ namespace clan
 		impl->thumb->add_subview(impl->thumb_grip);
 		impl->thumb->add_subview(spacer2);
 
-		impl->button_decrement->box_style.set_flex(0.0f, 0.0f);
-		impl->button_increment->box_style.set_flex(0.0f, 0.0f);
-		impl->track->box_style.set_flex(1.0f, 1.0f);
-		impl->thumb->box_style.set_absolute();
-		spacer1->box_style.set_flex(1.0f, 1.0f);
-		spacer2->box_style.set_flex(1.0f, 1.0f);
+		impl->button_decrement->style()->set("flex", "0 0 main-size");
+		impl->button_increment->style()->set("flex", "0 0 main-size");
+		impl->track->style()->set("flex", "1 1 main-size");
+		impl->thumb->style()->set("position", "absolute");
+		spacer1->style()->set("flex", "1 1 main-size");
+		spacer2->style()->set("flex", "1 1 main-size");
 
-		impl->button_decrement->box_style.set_width(17.0f);
-		impl->button_decrement->box_style.set_height(17.0f);
-		impl->button_increment->box_style.set_width(17.0f);
-		impl->button_increment->box_style.set_height(17.0f);
+		impl->button_decrement->style()->set("width", "17px");
+		impl->button_decrement->style()->set("height", "17px");
+		impl->button_increment->style()->set("width", "17px");
+		impl->button_increment->style()->set("height", "17px");
 
 		slots.connect(impl->track->sig_pointer_press(), impl.get(), &ScrollBarViewImpl::on_pointer_track_press);
 		slots.connect(impl->track->sig_pointer_release(), impl.get(), &ScrollBarViewImpl::on_pointer_track_release);
@@ -251,7 +252,7 @@ namespace clan
 
 	bool ScrollBarView::vertical() const
 	{
-		return box_style.is_layout_vbox();
+		return style()->computed_value("flex-direction").is_keyword("column");
 	}
 
 	bool ScrollBarView::horizontal() const
@@ -261,24 +262,24 @@ namespace clan
 
 	void ScrollBarView::set_vertical()
 	{
-		box_style.set_layout_vbox();
-		impl->button_decrement->box_style.set_layout_vbox();
-		impl->button_increment->box_style.set_layout_vbox();
-		impl->track->box_style.set_layout_vbox();
-		impl->thumb->box_style.set_layout_vbox();
-		impl->thumb_grip->box_style.set_layout_vbox();
+		style()->set("flex-direction", "column");
+		impl->button_decrement->style()->set("flex-direction", "column");
+		impl->button_increment->style()->set("flex-direction", "column");
+		impl->track->style()->set("flex-direction", "column");
+		impl->thumb->style()->set("flex-direction", "column");
+		impl->thumb_grip->style()->set("flex-direction", "column");
 		impl->button_decrement->set_direction(ScrollBarButtonDirection::up);
 		impl->button_increment->set_direction(ScrollBarButtonDirection::down);
 	}
 
 	void ScrollBarView::set_horizontal()
 	{
-		box_style.set_layout_hbox();
-		impl->button_decrement->box_style.set_layout_hbox();
-		impl->button_increment->box_style.set_layout_hbox();
-		impl->track->box_style.set_layout_hbox();
-		impl->thumb->box_style.set_layout_hbox();
-		impl->thumb_grip->box_style.set_layout_hbox();
+		style()->set("flex-direction", "row");
+		impl->button_decrement->style()->set("flex-direction", "row");
+		impl->button_increment->style()->set("flex-direction", "row");
+		impl->track->style()->set("flex-direction", "row");
+		impl->thumb->style()->set("flex-direction", "row");
+		impl->thumb_grip->style()->set("flex-direction", "row");
 		impl->button_decrement->set_direction(ScrollBarButtonDirection::left);
 		impl->button_increment->set_direction(ScrollBarButtonDirection::right);
 	}
@@ -356,10 +357,10 @@ namespace clan
 
 		if (impl->min_pos == impl->max_pos || impl->page_step == 0.0)
 		{
-			impl->thumb->box_style.set_left(0.0f);
-			impl->thumb->box_style.set_top(0.0f);
-			impl->thumb->box_style.set_width(track_geometry.content.get_width());
-			impl->thumb->box_style.set_height(track_geometry.content.get_height());
+			impl->thumb->style()->set("left", "0");
+			impl->thumb->style()->set("top", "0");
+			impl->thumb->style()->set("width", "px0", { track_geometry.content.get_width() });
+			impl->thumb->style()->set("height", "px0", { track_geometry.content.get_height() });
 		}
 		else
 		{
@@ -374,20 +375,19 @@ namespace clan
 
 			if (vertical())
 			{
-				impl->thumb->box_style.set_left(0.0f);
-				impl->thumb->box_style.set_top((float)thumb_pos);
-				impl->thumb->box_style.set_width(track_geometry.content.get_width());
-				impl->thumb->box_style.set_height((float)thumb_length);
+				impl->thumb->style()->set("left", "0");
+				impl->thumb->style()->set("top", "px0", { (float)thumb_pos });
+				impl->thumb->style()->set("width", "px0", { track_geometry.content.get_width() });
+				impl->thumb->style()->set("height", "px0", { (float)thumb_length });
 			}
 			else
 			{
-				impl->thumb->box_style.set_left((float)thumb_pos);
-				impl->thumb->box_style.set_top(0.0f);
-				impl->thumb->box_style.set_width((float)thumb_length);
-				impl->thumb->box_style.set_height(track_geometry.content.get_height());
+				impl->thumb->style()->set("left", "px0", { (float)thumb_pos });
+				impl->thumb->style()->set("top", "0");
+				impl->thumb->style()->set("width", "px0", { (float)thumb_length });
+				impl->thumb->style()->set("height", "px0", { track_geometry.content.get_height() });
 			}
 		}
-
 	}
 
 	Signal<void()> &ScrollBarView::sig_scroll()
