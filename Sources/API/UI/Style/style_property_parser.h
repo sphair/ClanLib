@@ -95,7 +95,9 @@ namespace clan
 		static bool parse_frequency(const StyleToken &token, StyleValue &out_frequency);
 		static bool parse_resolution(const StyleToken &token, StyleValue &out_resolution);
 		static bool parse_integer(const std::string &value, int &out_int);
+		static bool parse_gradient(const std::vector<StyleToken> &tokens, size_t &in_out_pos, StyleValue &out_gradient);
 		static bool parse_color(const std::vector<StyleToken> &tokens, size_t &in_out_pos, Colorf &out_color);
+		static bool parse_position(const std::vector<StyleToken> &tokens, size_t &in_out_pos, StyleValue &out_position_x, StyleValue &out_position_y);
 		static bool equals(const std::string &s1, const std::string &s2);
 		static void debug_parse_error(const std::string &name, const std::vector<StyleToken> &tokens);
 
