@@ -56,19 +56,41 @@ namespace clan
 		string,
 		url,
 		color,
-		image
+		image,
+		gradient,
+		angle,
+		time,
+		frequency,
+		resolution
 	};
 
 	enum class StyleDimension
 	{
-		px, // device independent pixel (96 dpi)
-		em, // relative to font-size length property
-		pt, // point, 1/72 inch
-		mm, // millimeter
-		cm, // centimeter
-		in, // inch, 1in is equal to 2.54cm
-		pc, // picas, 1pc is equal to 12pt
-		ex  // x-height, 1ex is equal to 0.5em
+		px,   // device independent pixel (96 dpi)
+		em,   // relative to font-size length property
+		pt,   // point, 1/72 inch
+		mm,   // millimeter
+		cm,   // centimeter
+		in,   // inch, 1in is equal to 2.54cm
+		pc,   // picas, 1pc is equal to 12pt
+		ex,   // x-height, 1ex is equal to 0.5em
+		ch,   // used advance measure of the "0" glyph found in the font used to render it
+		rem,  // computed value of 'font-size' on the root element
+		vw,   // 1/100 viewport (initial containing box) width
+		vh,   // 1/100 viewport (initial containing box) height
+		vmin, // the smaller of vw or vh
+		vmax, // the larger of vw or vh
+		deg,  // degrees (360 in a full circle)
+		grad, // gradians/gons/grades (400 in a full circle)
+		rad,  // radians (2*PI in a full circle)
+		turn, // turns (1 in a full circle)
+		s,    // seconds
+		ms,   // milliseconds
+		hz,   // hertz
+		khz,  // kilohertz
+		dpi,  // dots per inch
+		dpcm, // dots per cm
+		dppx  // dots per px unit
 	};
 
 	class StyleValue
@@ -86,18 +108,27 @@ namespace clan
 		bool is_keyword(const char *keyword) const { return is_keyword() && text == keyword; }
 		bool is_keyword(const std::string &keyword) const { return is_keyword() && text == keyword; }
 		bool is_length() const { return type == StyleValueType::length; }
+		bool is_angle() const { return type == StyleValueType::angle; }
+		bool is_time() const { return type == StyleValueType::time; }
+		bool is_frequency() const { return type == StyleValueType::frequency; }
+		bool is_resolution() const { return type == StyleValueType::resolution; }
 		bool is_percentage() const { return type == StyleValueType::percentage; }
 		bool is_number() const { return type == StyleValueType::number; }
 		bool is_string() const { return type == StyleValueType::string; }
 		bool is_url() const { return type == StyleValueType::url; }
 		bool is_color() const { return type == StyleValueType::color; }
 		bool is_image() const { return type == StyleValueType::image; }
+		bool is_gradient() const { return type == StyleValueType::gradient; }
 
 		static StyleValue from_keyword(const std::string &keyword) { StyleValue v; v.type = StyleValueType::keyword; v.text = keyword; return v; }
 		static StyleValue from_string(const std::string &text) { StyleValue v; v.type = StyleValueType::string; v.text = text; return v; }
 		static StyleValue from_length(float length, StyleDimension dimension = StyleDimension::px) { StyleValue v; v.type = StyleValueType::length; v.number = length; v.dimension = dimension; return v; }
-		static StyleValue from_percentage(float length) { StyleValue v; v.type = StyleValueType::percentage; v.number = length; return v; }
-		static StyleValue from_number(float length) { StyleValue v; v.type = StyleValueType::number; v.number = length; return v; }
+		static StyleValue from_angle(float angle, StyleDimension dimension = StyleDimension::deg) { StyleValue v; v.type = StyleValueType::angle; v.number = angle; v.dimension = dimension; return v; }
+		static StyleValue from_time(float t, StyleDimension dimension = StyleDimension::s) { StyleValue v; v.type = StyleValueType::time; v.number = t; v.dimension = dimension; return v; }
+		static StyleValue from_frequency(float freq, StyleDimension dimension = StyleDimension::hz) { StyleValue v; v.type = StyleValueType::frequency; v.number = freq; v.dimension = dimension; return v; }
+		static StyleValue from_resolution(float resolution, StyleDimension dimension = StyleDimension::dppx) { StyleValue v; v.type = StyleValueType::resolution; v.number = resolution; v.dimension = dimension; return v; }
+		static StyleValue from_percentage(float percentage) { StyleValue v; v.type = StyleValueType::percentage; v.number = percentage; return v; }
+		static StyleValue from_number(float number) { StyleValue v; v.type = StyleValueType::number; v.number = number; return v; }
 		static StyleValue from_url(const std::string &url) { StyleValue v; v.type = StyleValueType::url; v.text = url; return v; }
 		static StyleValue from_color(const Colorf &color) { StyleValue v; v.type = StyleValueType::color; v.color = color; return v; }
 		static StyleValue from_image(const std::shared_ptr<ImageSource> &image) { StyleValue v; v.type = StyleValueType::image; v.image = image; return v; }
