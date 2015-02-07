@@ -123,7 +123,7 @@ namespace clan
 		static StyleValue from_keyword(const std::string &keyword) { StyleValue v; v.type = StyleValueType::keyword; v.text = keyword; return v; }
 		static StyleValue from_string(const std::string &text) { StyleValue v; v.type = StyleValueType::string; v.text = text; return v; }
 		static StyleValue from_length(float length, StyleDimension dimension = StyleDimension::px) { StyleValue v; v.type = StyleValueType::length; v.number = length; v.dimension = dimension; return v; }
-		static StyleValue from_angle(float angle, StyleDimension dimension = StyleDimension::deg) { StyleValue v; v.type = StyleValueType::angle; v.number = angle; v.dimension = dimension; return v; }
+		static StyleValue from_angle(float angle, StyleDimension dimension = StyleDimension::rad) { StyleValue v; v.type = StyleValueType::angle; v.number = angle; v.dimension = dimension; return v; }
 		static StyleValue from_time(float t, StyleDimension dimension = StyleDimension::s) { StyleValue v; v.type = StyleValueType::time; v.number = t; v.dimension = dimension; return v; }
 		static StyleValue from_frequency(float freq, StyleDimension dimension = StyleDimension::hz) { StyleValue v; v.type = StyleValueType::frequency; v.number = freq; v.dimension = dimension; return v; }
 		static StyleValue from_resolution(float resolution, StyleDimension dimension = StyleDimension::dppx) { StyleValue v; v.type = StyleValueType::resolution; v.number = resolution; v.dimension = dimension; return v; }
@@ -153,6 +153,10 @@ namespace clan
 		StyleValue computed_value(const std::string &property_name) const;
 
 		StyleValue compute_length(const StyleValue &length) const;
+		StyleValue compute_angle(const StyleValue &angle) const;
+		StyleValue compute_time(const StyleValue &time) const;
+		StyleValue compute_frequency(const StyleValue &frequency) const;
+		StyleValue compute_resolution(const StyleValue &resolution) const;
 
 		void render_background(Canvas &canvas, const BoxGeometry &geometry) const;
 		void render_border(Canvas &canvas, const BoxGeometry &geometry) const;

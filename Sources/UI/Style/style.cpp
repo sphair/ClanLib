@@ -167,6 +167,60 @@ namespace clan
 		}
 	}
 
+	StyleValue Style::compute_angle(const StyleValue &angle) const
+	{
+		switch (angle.dimension)
+		{
+		default:
+		case StyleDimension::rad:
+			return angle;
+		case StyleDimension::deg:
+			return StyleValue::from_angle(angle.number * PI / 180.0f);
+		case StyleDimension::grad:
+			return StyleValue::from_angle(angle.number * PI / 400.0f);
+		case StyleDimension::turn:
+			return StyleValue::from_angle(angle.number * PI / 2.0f);
+		}
+	}
+
+	StyleValue Style::compute_time(const StyleValue &time) const
+	{
+		switch (time.dimension)
+		{
+		default:
+		case StyleDimension::s:
+			return time;
+		case StyleDimension::ms:
+			return StyleValue::from_time(time.number / 1000.0f);
+		}
+	}
+
+	StyleValue Style::compute_frequency(const StyleValue &frequency) const
+	{
+		switch (frequency.dimension)
+		{
+		default:
+		case StyleDimension::hz:
+			return frequency;
+		case StyleDimension::khz:
+			return StyleValue::from_frequency(frequency.number * 1000.0f);
+		}
+	}
+
+	StyleValue Style::compute_resolution(const StyleValue &resolution) const
+	{
+		switch (resolution.dimension)
+		{
+		default:
+		case StyleDimension::dppx:
+			return resolution;
+		case StyleDimension::dpi:
+			return StyleValue::from_resolution(resolution.number / 96.0f);
+		case StyleDimension::dpcm:
+			return StyleValue::from_resolution(resolution.number / (float)(96.0 / 2.54));
+		}
+	}
+
 	void Style::render_background(Canvas &canvas, const BoxGeometry &geometry) const
 	{
 	}
