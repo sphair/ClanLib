@@ -61,11 +61,11 @@ namespace clan
 		static void add_cache_factory_xml(ResourceManager &manager, const XMLResourceDocument &doc);
 		static void add_cache_factory_file(ResourceManager &manager, const FileResourceDocument &doc);
 
-		ProviderType_Register<JPEGProvider> *jpeg_provider = nullptr;
-		ProviderType_Register<JPEGProvider> *jpg_provider = nullptr;
-		ProviderType_Register<PNGProvider> *png_provider = nullptr;
-		ProviderType_Register<TargaProvider> *targa_provider = nullptr;
-		ProviderType_Register<TargaProvider> *tga_provider = nullptr;
+		std::unique_ptr<ProviderType_Register<JPEGProvider> > jpeg_provider;
+		std::unique_ptr<ProviderType_Register<JPEGProvider> > jpg_provider;
+		std::unique_ptr<ProviderType_Register<PNGProvider> > png_provider;
+		std::unique_ptr<ProviderType_Register<TargaProvider> > targa_provider;
+		std::unique_ptr<ProviderType_Register<TargaProvider> > tga_provider;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -96,11 +96,11 @@ namespace clan
 		XInitThreads();
 #endif
 #endif
-		jpeg_provider = new ProviderType_Register<JPEGProvider>("jpeg");
-		jpg_provider = new ProviderType_Register<JPEGProvider>("jpg");
-		png_provider = new ProviderType_Register<PNGProvider>("png");
-		targa_provider = new ProviderType_Register<TargaProvider>("targa");
-		tga_provider = new ProviderType_Register<TargaProvider>("tga");
+		jpeg_provider = clan::make_unique<ProviderType_Register<JPEGProvider> >("jpeg");
+		jpg_provider = clan::make_unique<ProviderType_Register<JPEGProvider> >("jpg");
+		png_provider = clan::make_unique<ProviderType_Register<PNGProvider> >("png");
+		targa_provider = clan::make_unique<ProviderType_Register<TargaProvider> >("targa");
+		tga_provider = clan::make_unique<ProviderType_Register<TargaProvider> >("tga");
 
 		XMLResourceManager::add_cache_factory(std::function<void(ResourceManager &, const XMLResourceDocument &)>(&SetupDisplay_Impl::add_cache_factory_xml));
 		FileResourceManager::add_cache_factory(std::function<void(ResourceManager &, const FileResourceDocument &)>(&SetupDisplay_Impl::add_cache_factory_file));
@@ -108,11 +108,6 @@ namespace clan
 
 	SetupDisplay_Impl::~SetupDisplay_Impl()
 	{
-		delete jpeg_provider;
-		delete jpg_provider;
-		delete png_provider;
-		delete targa_provider;
-		delete tga_provider;
 	}
 
 	void SetupDisplay_Impl::add_cache_factory_xml(ResourceManager &manager, const XMLResourceDocument &doc)
