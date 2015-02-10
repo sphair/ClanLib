@@ -513,43 +513,4 @@ void Sprite_Impl::add_alphaclipped_frames_free(Canvas &canvas,
 	}
 }
 
-std::vector<CollisionOutline> Sprite_Impl::create_collision_outlines(Canvas &canvas, int alpha_limit, OutlineAccuracy accuracy) const
-{
-	std::vector<CollisionOutline> outlines;
-	// Fetch frames
-
-	outlines.reserve(frames.size());
-
-	Texture2D last_texture;
-	PixelBuffer texture_pixelbuffer;
-
-	for (auto & elem : frames)
-	{
-		const SpriteFrame &description_frame = elem;
-
-		if (last_texture != description_frame.texture)
-		{
-				last_texture = description_frame.texture;
-				texture_pixelbuffer = description_frame.texture.get_pixeldata(canvas, tf_rgba8).to_cpu(canvas);
-		}
-
-		PixelBuffer target(description_frame.position.get_width(), description_frame.position.get_height(), tf_rgba8);
-		target.set_subimage(texture_pixelbuffer, Point(0, 0), description_frame.position);
-
-		CollisionOutline outline(target, alpha_limit, accuracy);
-		outlines.push_back(outline);
-
-	}
-	return outlines;
-
-}
-
-CollisionOutline Sprite_Impl::create_collision_outline(Canvas &canvas, int alpha_limit, OutlineAccuracy accuracy) const
-{
-	std::vector<CollisionOutline> outlines = create_collision_outlines(canvas, alpha_limit, accuracy);
-	if (outlines.empty())
-		return CollisionOutline();
-	return outlines[0];
-}
-
 }

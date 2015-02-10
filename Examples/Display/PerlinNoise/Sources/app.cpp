@@ -48,22 +48,10 @@ int App::start(const std::vector<std::string> &args)
 	cc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
 	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 
-	std::string theme;
-	if (clan::FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))
-		theme = "../../../Resources/GUIThemeAero";
-	else if (clan::FileHelp::file_exists("../../../Resources/GUIThemeBasic/theme.css"))
-		theme = "../../../Resources/GUIThemeBasic";
-	else
-		throw clan::Exception("No themes found");
-
 	clan::Canvas canvas(window);
 
-	clan::GUIWindowManagerTexture wm(window);
-	clan::GUIManager gui(wm, theme);
-	
-
 	// Deleted automatically by the GUI
-	Options *options = new Options(gui, canvas.get_size());
+	//Options *options = new Options(gui, canvas.get_size());
 
 	clan::Image image_grid(canvas, "../../Display_Render/Blend/Resources/grid.png");
 	image_grid.set_color(clan::Colorf(0.4f, 0.4f, 1.0f, 1.0f));
@@ -73,26 +61,23 @@ int App::start(const std::vector<std::string> &args)
 	clan::Image noise_image;
 
 	clan::TextureFormat last_sized_format = clan::tf_rgb8;
-	float last_amplitude = 0.0f;
-	int last_width = 0;
-	int last_height = 0;
-	int last_octaves = 0 ;
+	float last_amplitude = 1.0f;
+	int last_width = 256;
+	int last_height = 256;
+	int last_octaves = 1 ;
 	float last_start_x = 0.0f;
-	float last_length_x = 0.0f;
+	float last_length_x = 32.0f;
 	float last_start_y = 0.0f;
-	float last_length_y = 0.0f;
+	float last_length_y = 32.0f;
 	float last_position_z = 0.0f;
 	float last_position_w = 0.0f;
 	PerlinDimension last_dimension = perlin_2d;
 	bool last_is_normals_set = false;
+	bool changed_flag = true;
 
 	while (!quit)
 	{
-
-		wm.process();
-		wm.draw_windows(canvas);
-
-		bool changed_flag = false;
+		/*
 		if (last_dimension != options->dimension)
 		{
 			changed_flag = true;
@@ -165,9 +150,10 @@ int App::start(const std::vector<std::string> &args)
 			changed_flag = true;
 			last_position_w = options->position_w;
 		}
-
+		*/
 		if (changed_flag)
 		{
+			changed_flag = false;
 			clan::PixelBuffer pbuff;
 			switch (last_dimension)
 			{
@@ -199,7 +185,7 @@ int App::start(const std::vector<std::string> &args)
 
 		window.flip(1);
 
-		clan::KeepAlive::process();
+		clan::RunLoop::process();
 	}
 	return 0;
 }

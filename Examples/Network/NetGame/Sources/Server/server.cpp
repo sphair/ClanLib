@@ -27,10 +27,11 @@ void Server::exec()
 	network_server.start("4556");
 
 	log_event("system", "SERVER started");
-
 	while (true)
 	{
-		KeepAlive::process(10);
+		// Lets not worry about exiting this function!
+		System::sleep(10);
+		network_server.process_events();
 	}
 
 	network_server.stop();

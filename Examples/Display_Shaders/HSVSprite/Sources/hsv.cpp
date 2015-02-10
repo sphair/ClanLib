@@ -45,15 +45,15 @@ int HSV::start(const std::vector<std::string> &args)
 	Canvas canvas(window);
 	InputContext ic = window.get_ic();
 
-	clan::Font font(canvas, "Tahoma", -11);
+	clan::Font font("Tahoma", 11);
 
 	HSVSpriteBatch sprite_batcher(canvas);
-	HSVSprite car1(canvas, &sprite_batcher, "../../Game/SpritesRTS/Gfx/spaceshoot_body_moving1.png");
+	HSVSprite car1(canvas, &sprite_batcher, "Resources/spaceshoot_body_moving1.png");
 	HSVSprite car2(canvas, &sprite_batcher, "Resources/ferrari_maranello.png");
 	HSVSprite *cars[] = { &car1, &car2 };
 
-	ubyte64 last_fps_update = System::get_time();
-	ubyte64 last_time = last_fps_update;
+	uint64_t last_fps_update = System::get_time();
+	uint64_t last_time = last_fps_update;
 
 	int fps = 0;
 	std::string fps_text;
@@ -61,7 +61,7 @@ int HSV::start(const std::vector<std::string> &args)
 	float hue_offset = 0.0;
 	while (!quit)
 	{
-		ubyte64 current_time = System::get_time();
+		uint64_t current_time = System::get_time();
 		float time_delta_ms = static_cast<float> (current_time - last_time);
 		last_time = current_time;
 
@@ -98,12 +98,12 @@ int HSV::start(const std::vector<std::string> &args)
 			fps = 0;
 		}
 
-		Size fps_size = font.get_text_size(canvas, fps_text);
+		Sizef fps_size = font.measure_text(canvas, fps_text).bbox_size;
 		font.draw_text(canvas, canvas.get_width()-10-fps_size.width, 16, fps_text);
 		font.draw_text(canvas, 32, 730, "Use cursor keys left and right");
 
 		window.flip(0);
-		KeepAlive::process();
+		RunLoop::process();
 	}
 
 	return 0;

@@ -41,15 +41,15 @@ namespace clan
 
 	ButtonView::ButtonView() : impl(new ButtonViewImpl())
 	{
-		box_style.set_layout_hbox();
+		style()->set("flex-direction", "row");
 
 		impl->image_view = std::make_shared<ImageView>();
-		impl->image_view->box_style.set_flex(0.0f, 0.0f);
+		impl->image_view->style()->set("flex", "0 0 main-size");
 		add_subview(impl->image_view);
 
 		impl->label = std::make_shared<LabelView>();
-		impl->label->box_style.set_margin_auto();
-		impl->label->box_style.set_flex(1.0f, 1.0f);
+		impl->label->style()->set("margin", "auto");
+		impl->label->style()->set("flex", "1 1 main-size");
 		add_subview(impl->label);
 	}
 

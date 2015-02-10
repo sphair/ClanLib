@@ -71,7 +71,10 @@ public:
 	/** For example:
 	    x = pos_x + pixelbuffer.offset.x
 	    y = pos_y + pixelbuffer.offset.y*/
-	Point offset;
+	Pointf offset;
+
+	/// \brief Glyph size in device independent pixels (96 dpi)
+	Sizef size;
 
 	GlyphMetrics metrics;
 
@@ -99,7 +102,7 @@ public:
 public:
 	GlyphMetrics get_metrics(FontEngine *font_engine, Canvas &canvas, unsigned int glyph);
 
-	void insert_glyph(Canvas &canvas, unsigned int glyph, Subtexture &sub_texture, const Point &offset, const GlyphMetrics &glyph_metrics);
+	void insert_glyph(Canvas &canvas, unsigned int glyph, Subtexture &sub_texture, const Pointf &offset, const Sizef &size, const GlyphMetrics &glyph_metrics);
 	void insert_glyph(Canvas &canvas, FontPixelBuffer &pb);
 
 	void set_texture_group(TextureGroup &new_texture_group);
@@ -109,7 +112,7 @@ public:
 /// \{
 private:
 
-	std::vector<Font_TextureGlyph* > glyph_list;
+	std::vector<std::unique_ptr<Font_TextureGlyph>> glyph_list;
 
 	TextureGroup texture_group;
 

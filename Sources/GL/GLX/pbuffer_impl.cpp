@@ -57,16 +57,16 @@ void PBuffer_GL1_Impl::reset()
 
 	if (window_provider)
 	{
-		if (pbuffer_context) window_provider->glx.glXDestroyContext(window_provider->get_handle()->get_display(), pbuffer_context);
+		if (pbuffer_context) window_provider->glx.glXDestroyContext(window_provider->get_handle().display, pbuffer_context);
 		if (pbuffer)
 		{
 			if (window_provider->glx_1_3)
 			{
-				window_provider->glx.glXDestroyPbuffer(window_provider->get_handle()->get_display(), pbuffer);
+				window_provider->glx.glXDestroyPbuffer(window_provider->get_handle().display, pbuffer);
 			}
 			else
 			{
-				window_provider->glx.glXDestroyPbufferSGIX(window_provider->get_handle()->get_display(), pbuffer);
+				window_provider->glx.glXDestroyPbufferSGIX(window_provider->get_handle().display, pbuffer);
 			}
 		}
 	}
@@ -91,7 +91,7 @@ void PBuffer_GL1_Impl::create(OpenGLWindowProvider &gl_window_provider, const Si
 	window_provider = &gl_window_provider;
 	pbuffer_size = size;
 
-	::Display *disp = gl_window_provider.get_handle()->get_display();
+	::Display *disp = gl_window_provider.get_handle().display;
 	if (disp == nullptr)
 	{
 		throw Exception("Cannot obtain GL1 display");
@@ -222,7 +222,7 @@ void PBuffer_GL1_Impl::create(OpenGLWindowProvider &gl_window_provider, const Si
 
 void PBuffer_GL1_Impl::make_current() const
 {
-	window_provider->glx.glXMakeCurrent(window_provider->get_handle()->get_display(), pbuffer, pbuffer_context);
+	window_provider->glx.glXMakeCurrent(window_provider->get_handle().display, pbuffer, pbuffer_context);
 }
 
 void PBuffer_GL1_Impl::get_opengl_version(int &version_major, int &version_minor) const

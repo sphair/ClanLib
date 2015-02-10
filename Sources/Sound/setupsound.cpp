@@ -28,14 +28,16 @@
 */
 
 #include "Sound/precomp.h"
-#include "API/Sound/setupsound.h"
+#include "setupsound.h"
 #include "API/Sound/SoundProviders/soundprovider_wave.h"
 #include "API/Sound/SoundProviders/soundprovider_vorbis.h"
 #include "API/Sound/SoundProviders/soundprovider_type_register.h"
 #include "API/Core/Resources/xml_resource_document.h"
 #include "API/Core/Resources/resource_manager.h"
 #include "API/Core/Resources/xml_resource_manager.h"
-#include "Sound/Resources/xml_sound_cache.h"
+#include "Sound/Resources/XML/xml_sound_cache.h"
+#include "../Core/System/setup_core.h"
+#include "API/Core/Math/cl_math.h"
 
 #define INCLUDED_FROM_SETUPVORBIS
 #include "SoundProviders/stb_vorbis.h"
@@ -48,55 +50,42 @@ class XMLResourceDocument;
 /////////////////////////////////////////////////////////////////////////////
 // SetupSound operations:
 
-class SetupSound_Impl
+class SetupSound_Impl : public SetupModule
 {
 public:
-	static void init();
-	static void deinit();
+	SetupSound_Impl();
+	virtual ~SetupSound_Impl();
 
 	static void add_cache_factory(ResourceManager &manager, const XMLResourceDocument &doc);
 
-	static int ref_count;
-	static SoundProviderType *providertype_wave;
-	static SoundProviderType *providertype_ogg;
+	SoundProviderType *providertype_wave = nullptr;;
+	SoundProviderType *providertype_ogg = nullptr;;
 
 };
 
-int SetupSound_Impl::ref_count = 0;
-SoundProviderType *SetupSound_Impl::providertype_wave = nullptr;
-SoundProviderType *SetupSound_Impl::providertype_ogg = nullptr;
 
-SetupSound::SetupSound()
+void SetupSound::start()
 {
-	SetupSound_Impl::init();
-}
+	std::lock_guard<std::recursive_mutex> lock(SetupCore::instance.mutex);
 
-SetupSound::~SetupSound()
-{
-	SetupSound_Impl::deinit();
-}
-
-void SetupSound_Impl::init()
-{
-	ref_count++;
-	if (ref_count > 1)
+	if (SetupCore::instance.module_sound)
 		return;
+
+	SetupCore::start();	// Display depends on core.
+	SetupCore::instance.module_sound = clan::make_unique<SetupSound_Impl>();
+}
+
+SetupSound_Impl::SetupSound_Impl()
+{
 	providertype_wave = new SoundProviderType_Register<SoundProvider_Wave>("wav");
 	providertype_ogg = new SoundProviderType_Register<SoundProvider_Vorbis>("ogg");
 	XMLResourceManager::add_cache_factory(std::function<void(ResourceManager &, const XMLResourceDocument &)>(&SetupSound_Impl::add_cache_factory));
 }
 
-void SetupSound_Impl::deinit()
+SetupSound_Impl::~SetupSound_Impl()
 {
-	ref_count--;
-	if (ref_count > 0)
-		return;	// Wait until final call to deinit
-
 	delete providertype_wave;
-	providertype_wave = nullptr;
-
 	delete providertype_ogg;
-	providertype_ogg = nullptr;
 }
 
 void SetupSound_Impl::add_cache_factory(ResourceManager &manager, const XMLResourceDocument &doc)

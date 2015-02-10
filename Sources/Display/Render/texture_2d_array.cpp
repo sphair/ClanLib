@@ -84,11 +84,6 @@ int Texture2DArray::get_height() const
 	return impl->height;
 }
 
-Size Texture2DArray::get_size() const
-{
-	return Size(impl->width, impl->height);
-}
-
 int Texture2DArray::get_array_size() const
 {
 	return impl->array_size;
@@ -138,6 +133,16 @@ Texture2D Texture2DArray::create_2d_view(int array_index, TextureFormat texture_
 	view.impl->array_size = impl->array_size;
 	view.impl->provider = impl->provider->create_view(texture_2d, texture_format, min_level, num_levels, array_index, 1);
 	return view.to_texture_2d();
+}
+
+float Texture2DArray::get_pixel_ratio() const
+{
+	return impl->pixel_ratio;
+}
+
+void Texture2DArray::set_pixel_ratio(float ratio)
+{
+	impl->pixel_ratio = ratio;
 }
 
 }

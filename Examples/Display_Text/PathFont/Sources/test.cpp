@@ -73,7 +73,7 @@ int Test::start(const std::vector<std::string> &args)
 		font_face.add(bold_italic, "Resources/Lobster_Two/LobsterTwo-BoldItalic.ttf");
 	}
 
-	clan::Font font(canvas, "tahoma", 16);
+	clan::Font font("tahoma", 16);
 
 	float font_height = 100.0f;
 	clan::Font path_font(font_face, font_height);
@@ -120,7 +120,7 @@ int Test::start(const std::vector<std::string> &args)
 
 		// Find metrics for the text:
 		clan::GlyphMetrics text_metrics = path_font.measure_text(canvas, message);
-		clan::FontMetrics font_metrics = path_font.get_font_metrics();
+		clan::FontMetrics font_metrics = path_font.get_font_metrics(canvas);
 
 		// Center text vertically by finding where the top of the text should begin:
 		float top_y = canvas.get_height() * 0.5f - font_metrics.get_height() * 0.5f;
@@ -162,10 +162,10 @@ int Test::start(const std::vector<std::string> &args)
 			clan::Path::circle(100.0f + text_metrics.advance.width, baseline_y + text_metrics.advance.height, 4.0f).fill(canvas, clan::Colorf::dodgerblue);
 		}
 
-		window.flip(1);
+		window.flip(0);
 
 		// This call processes user input and other events
-		clan::KeepAlive::process(0);
+		clan::RunLoop::process(0);
 	}
 
 	return 0;

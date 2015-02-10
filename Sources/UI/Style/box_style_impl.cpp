@@ -38,7 +38,7 @@ namespace clan
 {
 	void BoxStyleImpl::render(Canvas &canvas, const BoxGeometry &geometry) const
 	{
-		if (background.color.a != 0.0f || !background.stops.empty() || !background.image.is_null())
+		if (background.color.a != 0.0f || !background.stops.empty() || background.image)
 		{
 			Rectf border_box = geometry.border_box();
 			Rectf padding_box = geometry.padding_box();
@@ -365,31 +365,29 @@ namespace clan
 
 			if (!background.stops.empty())
 			{
-				// To do: use background.angle to calculate start and end point
+				float angle = Angle::from_degrees(background.angle.to_degrees() - 90.0f).normalize().to_radians();
+				Pointf center = padding_box.get_center();
+				Pointf length {
+					0.5f * padding_box.get_width () * std::cos(angle),
+					0.5f * padding_box.get_height() * std::sin(angle)
+				};
 
 				Brush brush;
 				brush.type = BrushType::linear;
-				if (background.angle == 0.0f)
-				{
-					brush.start_point = Pointf(padding_box.left, padding_box.top);
-					brush.end_point = Pointf(padding_box.right, padding_box.top);
-				}
-				else
-				{
-					brush.start_point = Pointf(padding_box.left, padding_box.top);
-					brush.end_point = Pointf(padding_box.left, padding_box.bottom);
-				}
+				brush.start_point = center - length;
+				brush.end_point   = center + length;
+
 				for (const BoxGradientStop &stop : background.stops)
 					brush.stops.push_back(BrushGradientStop(stop.color, stop.position));
 
 				border_area_path.fill(canvas, brush);
 			}
 
-			if (!background.image.is_null())
+			if (background.image)
 			{
 				Brush brush;
 				brush.type = BrushType::image;
-				brush.image = Image(canvas, background.image, background.image.get_size());
+				brush.image = background.image->get_image(canvas);
 				brush.transform = Mat3f::translate(border_box.left, border_box.top);
 				border_area_path.fill(canvas, brush);
 			}

@@ -50,17 +50,17 @@ int DemoCircle::run(clan::DisplayWindow &window)
 	quit = false;
 	show_menu = true;
 
-	clan::Font font(canvas, "tahoma", 16 );
+	clan::Font font("tahoma", 16 );
 
 	FramerateCounter frameratecounter;
 
-	clan::ubyte64 last_time = clan::System::get_time();
+	uint64_t last_time = clan::System::get_time();
 
 	while(!quit)
 	{
 		canvas.clear();
 
-		clan::ubyte64 current_time = clan::System::get_time();
+		uint64_t current_time = clan::System::get_time();
 		int time_run = current_time - last_time;
 		last_time = current_time;
 
@@ -92,7 +92,7 @@ int DemoCircle::run(clan::DisplayWindow &window)
 		window.flip(0);	// Set to "1" to lock to screen refresh rate
 		frameratecounter.frame_shown();
 
-		clan::KeepAlive::process(0);
+		clan::RunLoop::process(0);
 	}
 
 	delete dropper;

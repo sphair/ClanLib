@@ -24,49 +24,44 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #include "GL/precomp.h"
 #include "setup_gl_impl.h"
-#include "API/GL/setup_gl.h"
+#include "setup_gl.h"
 #include "API/GL/opengl_target.h"
+#include "../Display/setup_display.h"
 
 namespace clan
 {
 
+SetupGL_Impl *SetupGL_Impl::instance = nullptr;
+
 /////////////////////////////////////////////////////////////////////////////
 // SetupGL Construction:
 
-std::recursive_mutex SetupGL_Impl::cl_opengl_mutex;
-int SetupGL_Impl::cl_opengl_refcount = 0;
-OpenGLTarget *SetupGL_Impl::cl_opengl_target = nullptr;
-
-SetupGL::SetupGL()
+void SetupGL::start()
 {
-	SetupGL_Impl::init();
+	std::lock_guard<std::recursive_mutex> lock(SetupCore::instance.mutex);
+
+	if (SetupCore::instance.module_gl)
+		return;
+
+	SetupDisplay::start();	// GL depends on display
+	SetupCore::instance.module_gl = clan::make_unique<SetupGL_Impl>();
 }
 
-
-SetupGL::~SetupGL()
+SetupGL_Impl::SetupGL_Impl()
 {
-	SetupGL_Impl::deinit();
-
+	instance = this;
+	cl_opengl_target = new OpenGLTarget();
 }
 
-void SetupGL_Impl::init()
+SetupGL_Impl::~SetupGL_Impl()
 {
-	std::unique_lock<std::recursive_mutex> mutex_lock(SetupGL_Impl::cl_opengl_mutex);
-	if (SetupGL_Impl::cl_opengl_refcount == 0)
-		SetupGL_Impl::cl_opengl_target = new OpenGLTarget();
-	SetupGL_Impl::cl_opengl_refcount++;
-}
-
-void SetupGL_Impl::deinit()
-{
-	std::unique_lock<std::recursive_mutex> mutex_lock(SetupGL_Impl::cl_opengl_mutex);
-	SetupGL_Impl::cl_opengl_refcount--;
-	if (SetupGL_Impl::cl_opengl_refcount == 0)
-		delete SetupGL_Impl::cl_opengl_target;
+	delete cl_opengl_target;
+	instance = nullptr;
 }
 
 }

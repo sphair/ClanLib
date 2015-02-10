@@ -9,7 +9,6 @@
 	<li>\ref Timing "Timing"</li>
 	<li>\ref UserInput "User input"</li>
 	<li>\ref SpriteResource "Sprite resource"</li>
-	<li>\ref CollisionDetection "Collision detection"</li>
 	<li>\ref FontResource "Font resources"</li>
 	<li>\ref TextureResource "Texture resource"</li>
 	<li>\ref SoundOverview "Sound"</li>

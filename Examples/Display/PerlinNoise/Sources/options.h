@@ -35,7 +35,7 @@ enum PerlinDimension
 	perlin_3d,
 	perlin_4d
 };
-
+/*
 class Options : public clan::GUIComponent
 {
 public:
@@ -118,3 +118,4 @@ private:
 
 };
 
+*/

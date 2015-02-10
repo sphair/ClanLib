@@ -32,6 +32,7 @@
 #include "API/Core/Math/point.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include <vector>
+#include "API/UI/Image/image_source.h"
 
 namespace clan
 {
@@ -53,10 +54,10 @@ namespace clan
 
 		// Linear gradient
 		std::vector<BoxGradientStop> stops;
-		float angle = 0.0f;
+		Angle angle = Angle::from_degrees(0.0f);
 
 		// Image
-		PixelBuffer image;
+		std::shared_ptr<ImageSource> image;
 
 		// Box shadow:
 		bool shadow_inset = false;

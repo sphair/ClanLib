@@ -52,7 +52,7 @@ private:
 private:
 	int tux_radius;
 	clan::Pointf tux_position;
-	clan::Point last_mouse_pos;
+	clan::Pointf last_mouse_pos;
 	bool drag_start;
 
 	bool quit;
@@ -60,15 +60,10 @@ private:
 
 int App::main(const std::vector<std::string> &args)
 {
-	// Initialize ClanLib base components
-	clan::SetupCore setup_core;
-
-	// Initialize the ClanLib display component
-	clan::SetupDisplay setup_display;
 
 	// We support all display targets, in order listed here
-	//clan::SetupD3D setup_d3d;
-	clan::SetupGL setup_gl;
+	//clan::D3DTarget::enable();
+	clan::OpenGLTarget::enable();
 
 	// Start the Application
 	App app;
@@ -109,13 +104,12 @@ int App::start(const std::vector<std::string> &args)
 
 	// Get the graphics
 	clan::FontDescription font_desc;
-	font_desc.set_typeface_name("tahoma");
 	font_desc.set_height(48);
 	font_desc.set_subpixel(false);
-	clan::Font font_large(canvas, font_desc);
+	clan::Font font_large("tahoma", font_desc);
 
 	font_desc.set_height(30);
-	clan::Font font_small(canvas, font_desc);
+	clan::Font font_small("tahoma", font_desc);
 	clan::Sprite tux(canvas, "round_tux.png");
 	tux_radius = tux.get_width()/2;
 
@@ -178,7 +172,7 @@ int App::start(const std::vector<std::string> &args)
 		window.flip(1);
 
 		// This call processes user input and other events
-		clan::KeepAlive::process();
+		clan::RunLoop::process();
 	}
 
 	return 0;

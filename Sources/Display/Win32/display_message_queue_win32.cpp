@@ -78,7 +78,7 @@ namespace clan
 
 	bool DisplayMessageQueue_Win32::process(int timeout_ms)
 	{
-		auto end_time = std::chrono::system_clock::now() + std::chrono::milliseconds(timeout_ms);
+		auto end_time = std::chrono::steady_clock::now() + std::chrono::milliseconds(timeout_ms);
 
 		while (true)
 		{
@@ -97,7 +97,7 @@ namespace clan
 				}
 			}
 
-			if (end_time <= std::chrono::system_clock::now())
+			if (end_time <= std::chrono::steady_clock::now())
 				break;
 
 			if (MsgWaitForMultipleObjects(0, 0, FALSE, timeout_ms, QS_ALLEVENTS | QS_SENDMESSAGE | QS_RAWINPUT) == WAIT_TIMEOUT)

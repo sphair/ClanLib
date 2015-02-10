@@ -61,13 +61,13 @@ void IRCSession::disconnect_graceful(const std::string &quit_message)
 {
 	user_requested_disconnect = true;
 	connection.send_quit(IRCText::from_text(quit_message));
-	connection.disconnect_graceful();
+	connection.disconnect();
 }
 
 void IRCSession::disconnect_abortive()
 {
 	user_requested_disconnect = true;
-	connection.disconnect_abortive();
+	connection.disconnect();
 }
 
 void IRCSession::set_connect_status(ConnectStatus new_status)

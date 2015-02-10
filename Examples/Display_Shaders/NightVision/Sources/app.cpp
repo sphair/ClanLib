@@ -84,7 +84,7 @@ int App::start(const std::vector<std::string> &args)
 
 	float scale = 1.0f;
 
-	clan::Font font(canvas, "tahoma", 32);
+	clan::Font font("tahoma", 32);
 
 	// Shader based on: http://www.geeks3d.com/20091009/shader-library-night-vision-post-processing-filter-glsl/
 
@@ -108,7 +108,7 @@ int App::start(const std::vector<std::string> &args)
 	}
 	canvas_mask.flush();
 
-	clan::ubyte64 startTime = clan::System::get_time();
+	uint64_t startTime = clan::System::get_time();
 
 	while (!quit)
 	{
@@ -132,7 +132,7 @@ int App::start(const std::vector<std::string> &args)
 
 		clan::System::sleep(10);
 
-		clan::KeepAlive::process();
+		clan::RunLoop::process();
 	}
 
 	return 0;

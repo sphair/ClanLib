@@ -47,17 +47,19 @@ public:
 	int ticks_per_second;
 	int min_update_time_ms;
 
-	ubyte64 start_time;
-	ubyte64 current_time;
+	uint64_t start_time;
+	uint64_t current_time;
 
-	ubyte64 last_tick;
+	uint64_t last_tick;
 
 	float time_elapsed;
 	int time_elapsed_ms;
+	int time_elapsed_ms_microsecond_adjustment;		// Amount of Microseconds lost due to time_elapsed_ms rounding (to add on for next time)
+
 	int ticks_elapsed;
 	float tick_interpolation_time;
 
-	ubyte64 update_frame_start_time;
+	uint64_t update_frame_start_time;
 	float current_fps;
 
 private:

@@ -149,9 +149,9 @@ void IODevice::set_little_endian_mode()
 	impl->little_endian_mode = true;
 }
 
-void IODevice::write_int64(byte64 data)
+void IODevice::write_int64(int64_t data)
 {
-	byte64 final = data;
+	int64_t final = data;
 	if (impl->little_endian_mode)
 	{
 		Endian::swap_if_big(&final, sizeof(final));
@@ -160,12 +160,12 @@ void IODevice::write_int64(byte64 data)
 	{
 		Endian::swap_if_little(&final, sizeof(final));
 	}
-	write(&final, sizeof(byte64));
+	write(&final, sizeof(int64_t));
 }
 
-void IODevice::write_uint64(ubyte64 data)
+void IODevice::write_uint64(uint64_t data)
 {
-	ubyte64 final = data;
+	uint64_t final = data;
 	if (impl->little_endian_mode)
 	{
 		Endian::swap_if_big(&final, sizeof(final));
@@ -174,12 +174,12 @@ void IODevice::write_uint64(ubyte64 data)
 	{
 		Endian::swap_if_little(&final, sizeof(final));
 	}
-	write(&final, sizeof(ubyte64));
+	write(&final, sizeof(uint64_t));
 }
 
-void IODevice::write_int32(byte32 data)
+void IODevice::write_int32(int32_t data)
 {
-	byte32 final = data;
+	int32_t final = data;
 	if (impl->little_endian_mode)
 	{
 		Endian::swap_if_big(&final, sizeof(final));
@@ -188,12 +188,12 @@ void IODevice::write_int32(byte32 data)
 	{
 		Endian::swap_if_little(&final, sizeof(final));
 	}
-	write(&final, sizeof(byte32));
+	write(&final, sizeof(int32_t));
 }
 
-void IODevice::write_uint32(ubyte32 data)
+void IODevice::write_uint32(uint32_t data)
 {
-	ubyte32 final = data;
+	uint32_t final = data;
 	if (impl->little_endian_mode)
 	{
 		Endian::swap_if_big(&final, sizeof(final));
@@ -202,12 +202,12 @@ void IODevice::write_uint32(ubyte32 data)
 	{
 		Endian::swap_if_little(&final, sizeof(final));
 	}
-	write(&final, sizeof(ubyte32));
+	write(&final, sizeof(uint32_t));
 }
 
-void IODevice::write_int16(byte16 data)
+void IODevice::write_int16(int16_t data)
 {
-	byte16 final = data;
+	int16_t final = data;
 	if (impl->little_endian_mode)
 	{
 		Endian::swap_if_big(&final, sizeof(final));
@@ -216,12 +216,12 @@ void IODevice::write_int16(byte16 data)
 	{
 		Endian::swap_if_little(&final, sizeof(final));
 	}
-	write(&final, sizeof(byte16));
+	write(&final, sizeof(int16_t));
 }
 
-void IODevice::write_uint16(ubyte16 data)
+void IODevice::write_uint16(uint16_t data)
 {
-	ubyte16 final = data;
+	uint16_t final = data;
 	if (impl->little_endian_mode)
 	{
 		Endian::swap_if_big(&final, sizeof(final));
@@ -230,17 +230,17 @@ void IODevice::write_uint16(ubyte16 data)
 	{
 		Endian::swap_if_little(&final, sizeof(final));
 	}
-	write(&final, sizeof(ubyte16));
+	write(&final, sizeof(uint16_t));
 }
 
-void IODevice::write_int8(byte8 data)
+void IODevice::write_int8(int8_t data)
 {
-	write(&data, sizeof(byte8));
+	write(&data, sizeof(int8_t));
 }
 
-void IODevice::write_uint8(ubyte8 data)
+void IODevice::write_uint8(uint8_t data)
 {
-	write(&data, sizeof(ubyte8));
+	write(&data, sizeof(uint8_t));
 }
 
 void IODevice::write_float(float data)
@@ -279,10 +279,10 @@ void IODevice::write_string_text(const std::string &str)
 #endif
 }
 
-byte64 IODevice::read_int64()
+int64_t IODevice::read_int64()
 {
-	byte64 answer;
-	if (read(&answer, sizeof(byte64)) != sizeof(byte64)) throw Exception("IODevice_Datafile::read_int64() failed");
+	int64_t answer;
+	if (read(&answer, sizeof(int64_t)) != sizeof(int64_t)) throw Exception("IODevice_Datafile::read_int64() failed");
 	if (impl->little_endian_mode)
 	{
 		Endian::swap_if_big(&answer, sizeof(answer));
@@ -294,10 +294,10 @@ byte64 IODevice::read_int64()
 	return answer;
 }
 
-ubyte64 IODevice::read_uint64()
+uint64_t IODevice::read_uint64()
 {
-	ubyte64 answer;
-	if (read(&answer, sizeof(ubyte64)) != sizeof(ubyte64)) throw Exception("IODevice_Datafile::read_uint64() failed");
+	uint64_t answer;
+	if (read(&answer, sizeof(uint64_t)) != sizeof(uint64_t)) throw Exception("IODevice_Datafile::read_uint64() failed");
 	if (impl->little_endian_mode)
 	{
 		Endian::swap_if_big(&answer, sizeof(answer));
@@ -309,10 +309,10 @@ ubyte64 IODevice::read_uint64()
 	return answer;
 }
 
-byte32 IODevice::read_int32()
+int32_t IODevice::read_int32()
 {
-	byte32 answer;
-	if (read(&answer, sizeof(byte32)) != sizeof(byte32)) throw Exception("IODevice_Datafile::read_int32() failed");
+	int32_t answer;
+	if (read(&answer, sizeof(int32_t)) != sizeof(int32_t)) throw Exception("IODevice_Datafile::read_int32() failed");
 	if (impl->little_endian_mode)
 	{
 		Endian::swap_if_big(&answer, sizeof(answer));
@@ -324,10 +324,10 @@ byte32 IODevice::read_int32()
 	return answer;
 }
 
-ubyte32 IODevice::read_uint32()
+uint32_t IODevice::read_uint32()
 {
-	ubyte32 answer;
-	if (read(&answer, sizeof(ubyte32)) != sizeof(ubyte32)) throw Exception("IODevice_Datafile::read_uint32() failed");
+	uint32_t answer;
+	if (read(&answer, sizeof(uint32_t)) != sizeof(uint32_t)) throw Exception("IODevice_Datafile::read_uint32() failed");
 	if (impl->little_endian_mode)
 	{
 		Endian::swap_if_big(&answer, sizeof(answer));
@@ -339,10 +339,10 @@ ubyte32 IODevice::read_uint32()
 	return answer;
 }
 
-byte16 IODevice::read_int16()
+int16_t IODevice::read_int16()
 {
-	byte16 answer;
-	if (read(&answer, sizeof(byte16)) != sizeof(byte16)) throw Exception("IODevice_Datafile::read_int16() failed");
+	int16_t answer;
+	if (read(&answer, sizeof(int16_t)) != sizeof(int16_t)) throw Exception("IODevice_Datafile::read_int16() failed");
 	if (impl->little_endian_mode)
 	{
 		Endian::swap_if_big(&answer, sizeof(answer));
@@ -354,10 +354,10 @@ byte16 IODevice::read_int16()
 	return answer;
 }
 
-ubyte16 IODevice::read_uint16()
+uint16_t IODevice::read_uint16()
 {
-	ubyte16 answer;
-	if (read(&answer, sizeof(ubyte16)) != sizeof(ubyte16)) throw Exception("IODevice_Datafile::read_uint16() failed");
+	uint16_t answer;
+	if (read(&answer, sizeof(uint16_t)) != sizeof(uint16_t)) throw Exception("IODevice_Datafile::read_uint16() failed");
 	if (impl->little_endian_mode)
 	{
 		Endian::swap_if_big(&answer, sizeof(answer));
@@ -369,10 +369,10 @@ ubyte16 IODevice::read_uint16()
 	return answer;
 }
 
-byte8 IODevice::read_int8()
+int8_t IODevice::read_int8()
 {
-	byte8 answer;
-	if (read(&answer, sizeof(byte8)) != sizeof(byte8)) throw Exception("IODevice_Datafile::read_int8() failed");
+	int8_t answer;
+	if (read(&answer, sizeof(int8_t)) != sizeof(int8_t)) throw Exception("IODevice_Datafile::read_int8() failed");
 	if (impl->little_endian_mode)
 	{
 		Endian::swap_if_big(&answer, sizeof(answer));
@@ -384,10 +384,10 @@ byte8 IODevice::read_int8()
 	return answer;
 }
 
-ubyte8 IODevice::read_uint8()
+uint8_t IODevice::read_uint8()
 {
-	ubyte8 answer;
-	if (read(&answer, sizeof(ubyte8)) != sizeof(ubyte8)) throw Exception("IODevice_Datafile::read_uint8() failed");
+	uint8_t answer;
+	if (read(&answer, sizeof(uint8_t)) != sizeof(uint8_t)) throw Exception("IODevice_Datafile::read_uint8() failed");
 	if (impl->little_endian_mode)
 	{
 		Endian::swap_if_big(&answer, sizeof(answer));

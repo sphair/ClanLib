@@ -164,25 +164,25 @@ void AES128_Encrypt_Impl::calculate()
 void AES128_Encrypt_Impl::process_chunk()
 {
 
-	const ubyte32 *key_expanded_ptr = key_expanded;
+	const uint32_t *key_expanded_ptr = key_expanded;
 
 	/* Electronic Codebook Mode
-	ubyte32 s0 = get_word(chunk) ^ key_expanded_ptr[0];
-	ubyte32 s1 = get_word(chunk + 4) ^ key_expanded_ptr[1];
-	ubyte32 s2 = get_word(chunk + 8) ^ key_expanded_ptr[2];
-	ubyte32 s3 = get_word(chunk + 12) ^ key_expanded_ptr[3];
+	uint32_t s0 = get_word(chunk) ^ key_expanded_ptr[0];
+	uint32_t s1 = get_word(chunk + 4) ^ key_expanded_ptr[1];
+	uint32_t s2 = get_word(chunk + 8) ^ key_expanded_ptr[2];
+	uint32_t s3 = get_word(chunk + 12) ^ key_expanded_ptr[3];
 	*/
 
 	// Cipher Block Chaining Mode
-	ubyte32 s0 = initialisation_vector_1 ^ get_word(chunk) ^ key_expanded_ptr[0];
-	ubyte32 s1 = initialisation_vector_2 ^ get_word(chunk + 4) ^ key_expanded_ptr[1];
-	ubyte32 s2 = initialisation_vector_3 ^ get_word(chunk + 8) ^ key_expanded_ptr[2];
-	ubyte32 s3 = initialisation_vector_4 ^ get_word(chunk + 12) ^ key_expanded_ptr[3];
+	uint32_t s0 = initialisation_vector_1 ^ get_word(chunk) ^ key_expanded_ptr[0];
+	uint32_t s1 = initialisation_vector_2 ^ get_word(chunk + 4) ^ key_expanded_ptr[1];
+	uint32_t s2 = initialisation_vector_3 ^ get_word(chunk + 8) ^ key_expanded_ptr[2];
+	uint32_t s3 = initialisation_vector_4 ^ get_word(chunk + 12) ^ key_expanded_ptr[3];
 
-	ubyte32 t0;
-	ubyte32 t1;
-	ubyte32 t2;
-	ubyte32 t3;
+	uint32_t t0;
+	uint32_t t1;
+	uint32_t t2;
+	uint32_t t3;
 
 	// round 1
 	t0 = table_e0[s0 >> 24] ^ table_e1[(s1 >> 16) & 0xff] ^ table_e2[(s2 >>  8) & 0xff] ^ table_e3[s3 & 0xff] ^ key_expanded_ptr[ 4];

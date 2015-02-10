@@ -60,14 +60,14 @@ public:
 	void flush();
 	void set_batcher(Canvas &canvas, RenderBatcher *batcher);
 
-	void set_cliprect(const Rect &rect);
-	void push_cliprect(const Rect &rect);
+	void set_cliprect(const Rectf &rect);
+	void push_cliprect(const Rectf &rect);
 	void push_cliprect();
 	void pop_cliprect();
 	void reset_cliprect();
 
-	GraphicContext get_gc() const {return gc;}
-	GraphicContext& get_gc() {return gc;}
+	GraphicContext get_gc() const { return gc; }
+	GraphicContext& get_gc() { return gc; }
 
 	void set_transform(const Mat4f &matrix);
 	const Mat4f &get_transform() const;
@@ -82,7 +82,7 @@ public:
 	static Rectf get_triangles_bounding_box(const Vec2f *triangles, int num_vertex);
 	static void get_texture_coords(const Vec2f *triangles, int num_vertex, const Texture2D &texture, const Rect &texture_rect, std::vector<Vec2f> &out_texture_positions);
 
-	std::vector<Rect> cliprects;
+	std::vector<Rectf> cliprects;
 	CanvasBatcher batcher;
 
 private:
@@ -91,7 +91,7 @@ private:
 	MapMode get_top_down_map_mode() const;
 	void on_window_resized(const Size &size);
 	void update_batcher_matrix();
-	void write_cliprect(const Rect &rect);
+	void write_cliprect(const Rectf &rect);
 	void on_window_flip();
 
 	GraphicContext gc;

@@ -12,11 +12,11 @@ public:
 	void start();
 	void stop();
 
-	clan::Event &get_stop_event() { return stop_event; }
-
 private:
 	void worker_main();
 
-	clan::Thread thread;
-	clan::Event stop_event;
+	std::thread thread;
+	std::mutex mutex;
+	clan::NetworkConditionVariable change_event;
+	bool stop_flag = true;
 };

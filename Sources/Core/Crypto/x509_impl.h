@@ -100,9 +100,9 @@ private:
 
 	X509_Version version;
 	std::vector<unsigned char> serial_number;
-	std::vector<ubyte32> signature;
+	std::vector<uint32_t> signature;
 
-	std::vector<ubyte32> public_key_algorithm_identifier;
+	std::vector<uint32_t> public_key_algorithm_identifier;
 	std::vector<unsigned char> public_key;
 
 	X509_BasicInfo subject;

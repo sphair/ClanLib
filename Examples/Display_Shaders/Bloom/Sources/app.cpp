@@ -107,7 +107,7 @@ int App::start(const std::vector<std::string> &args)
 
 	float scale = 1.0f;
 
-	clan::Font font(canvas, "tahoma", 32);
+	clan::Font font("tahoma", 32);
 
 	select_text = "Default";
 	highlight_threshold = 0.25f;
@@ -117,7 +117,7 @@ int App::start(const std::vector<std::string> &args)
 	bloom_saturation = 1.0f;
 	base_saturation = 1.0f;
 
-	clan::ubyte64 startTime = clan::System::get_time();
+	uint64_t startTime = clan::System::get_time();
 
 	while (!quit)
 	{
@@ -153,7 +153,7 @@ int App::start(const std::vector<std::string> &args)
 
 		clan::System::sleep(10);
 
-		clan::KeepAlive::process();
+		clan::RunLoop::process();
 	}
 
 	return 0;

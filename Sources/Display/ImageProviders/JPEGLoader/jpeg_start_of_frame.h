@@ -38,9 +38,9 @@ class JPEGStartOfFrame
 public:
 	JPEGStartOfFrame() : sample_precision(0), height(0), width(0) { }
 
-	ubyte8 sample_precision;
-	ubyte16 height;
-	ubyte16 width;
+	uint8_t sample_precision;
+	uint16_t height;
+	uint16_t width;
 	std::vector<JPEGStartOfFrameComponent> components;
 };
 
@@ -50,16 +50,16 @@ public:
 	JPEGStartOfFrameComponent() : id(0), horz_sampling_factor(0), vert_sampling_factor(0), quantization_table_selector(0) { }
 
 	// Component identifier – Assigns a unique label to the component in the sequence of frame component specification parameters.
-	ubyte8 id;
+	uint8_t id;
 
 	// specifies the number of horizontal data units of the component in each MCU, when more than one component is encoded in a scan.
-	ubyte8 horz_sampling_factor;
+	uint8_t horz_sampling_factor;
 
 	// Specifies the number of vertical data units of the component in each MCU, when more than one component is encoded in a scan.
-	ubyte8 vert_sampling_factor;
+	uint8_t vert_sampling_factor;
 
 	// Specifies one of four possible quantization table destinations from which the quantization table to use for dequantization of DCT coefficients of the component.
-	ubyte8 quantization_table_selector;
+	uint8_t quantization_table_selector;
 };
 
 }

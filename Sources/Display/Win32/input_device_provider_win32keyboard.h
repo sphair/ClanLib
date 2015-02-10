@@ -78,11 +78,11 @@ public:
 
 	/// \brief Returns the x position of the device.
 	/** <p>Only valid for mouse.</p>*/
-	int get_x() const { return 0; }
+	float get_x() const { return 0; }
 
 	/// \brief Returns the y position of the device.
 	/** <p>Only valid for mouse.</p>*/
-	int get_y() const { return 0; }
+	float get_y() const { return 0; }
 
 	/// \brief Returns true if a tablet stylus is in proximity (hovering close enough over the tablet surface).
 	bool in_proximity() const { return false; }
@@ -100,7 +100,7 @@ public:
 	}
 
 	/// \brief Sets the position of the device.
-	void set_position(int x, int y) { return; }
+	void set_position(float x, float y) { return; }
 
 /// \}
 /// \name Implementation

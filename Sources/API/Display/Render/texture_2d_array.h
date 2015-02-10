@@ -39,80 +39,104 @@ namespace clan
 
 class Texture2D;
 
-/// \brief 2D texture array object class.
+/// 2D texture array object class.
 class Texture2DArray : public Texture
 {
 /// \name Construction
 /// \{
 public:
-	/// \brief Constructs a null instance.
+	/// Constructs a null instance.
 	Texture2DArray();
 
-	/// \brief Constructs a texture from an implementation
-	///
-	/// \param impl = The implementation
+	/** Constructs a texture from an implementation.
+	 *  \param impl The Texture object implementation.
+	 */
 	Texture2DArray(const std::shared_ptr<Texture_Impl> &impl) : Texture(impl) { }
 
-	/// \brief Constructs a Texture
-	///
-	/// \param context = Graphic Context
-	/// \param width = value
-	/// \param height = value
-	/// \param internal_format = Texture Format
-	/// \param levels = Mipmap levels for the texture. 0 = all levels
+	/** Constructs a new Texture object.
+	 *  \param context    Graphic context to construct the texture on.
+	 *  \param width      Width of the new texture.
+	 *  \param height     Height of the new texture.
+	 *  \param array_size Number of textures to allocate in this array.
+	 *  \param format     Data format of the new texture.
+	 *  \param levels     Number of mipmap levels for the new texture. Setting
+	 *                    this to `0` enables all levels.
+	 */
 	Texture2DArray(GraphicContext &context, int width, int height, int array_size, TextureFormat texture_format = tf_rgba8, int levels = 1);
 
-	/// \brief Constructs a Texture
-	///
-	/// \param context = Graphic Context
-	/// \param size = Size
-	/// \param internal_format = Texture Format
+	/** Constructs a new Texture object.
+	 *  \param context    Graphic context to construct the texture on.
+	 *  \param size       Size of the new texture.
+	 *  \param array_size Number of textures to allocate in this array.
+	 *  \param format     Data format of the new texture.
+	 *  \param levels     Number of mipmap levels for the new texture. Setting
+	 *                    this to `0` enables all levels.
+	 */
 	Texture2DArray(GraphicContext &context, const Size &size, int array_size, TextureFormat texture_format = tf_rgba8, int levels = 1);
 /// \}
 
 /// \name Attributes
 /// \{
 public:
-	/// \brief Get the texture width.
+	/// Retrieves the actual width of the texture in the display.
 	int get_width() const;
 
-	/// \brief Get the texture height.
+	/// Retrieves the actual height of the texture in the display.
 	int get_height() const;
 
-	/// \brief Get the texture size.
-	Size get_size() const;
+	/// Retrieves the actual size of the texture.
+	Size get_size() const { return Size{ get_width(), get_height() }; }
 
-	/// \brief Get the texture array size
+	/** Retrieves the pixel ratio of this texture.
+	 *  \return The display pixel ratio set for this texture.
+	 *          A zero value implies that no pixel ratio has been set
+	 */
+	float get_pixel_ratio() const;
+
+	/// Returns the device independent width of this texture.
+	float get_dip_width() const { return get_width() / get_pixel_ratio(); }
+
+	/// Returns the device independent height of this texture.
+	float get_dip_height() const { return get_height() / get_pixel_ratio(); }
+
+	/// Returns the device independent size of this texture.
+	Sizef get_dip_size() const { return Sizef{ get_dip_width(), get_dip_height() }; }
+
+	/// Returns the number of textures in the array.
 	int get_array_size() const;
 
-	/// \brief Get the texture wrap mode for the s coordinate.
+	/// Get the texture wrap mode for the s coordinate.
 	TextureWrapMode get_wrap_mode_s() const;
 
-	/// \brief Get the texture wrap mode for the t coordinate.
+	/// Get the texture wrap mode for the t coordinate.
 	TextureWrapMode get_wrap_mode_t() const;
 /// \}
 
 /// \name Operations
 /// \{
 public:
-	/// \brief Upload image to texture.
-	///
-	/// \param context Graphic context to use for the request
-	/// \param array_index Index in the array
-	/// \param image Image to upload.
-	/// \param level Mipmap level-of-detail number.
+	/** Upload image to this texture array.
+	 *  \param context     Graphic context to use for the request.
+	 *  \param array_index Index in the array to upload the image into.
+	 *  \param image       Image to upload.
+	 *  \param level       Mipmap level-of-detail number.
+	 */
 	void set_image(
 		GraphicContext &context,
 		int array_index,
 		const PixelBuffer &image,
 		int level = 0);
 
-	/// \brief Upload image to sub texture.
-	///
-	/// \param context Graphic context to use for the request
-	/// \param array_index Index in the array
-	/// \param image Image to upload.
-	/// \param level Mipmap level-of-detail number.
+	/** Upload image to sub-texture.
+	 *  \param context     Graphic context to use for the request.
+	 *  \param array_index Index in the array to upload the image into.
+	 *  \param x           The horizontal point in the selected texture to
+	 *                     write the new sub-texture image onto.
+	 *  \param y           The vertical point in the selected texture to write
+	 *                     the sub-texture image onto.
+	 *  \param image       Image to upload.
+	 *  \param level       Mipmap level-of-detail number.
+	 */
 	void set_subimage(
 		GraphicContext &context,
 		int array_index,
@@ -121,6 +145,15 @@ public:
 		const PixelBuffer &image,
 		const Rect &src_rect,
 		int level = 0);
+
+	/** Upload image to sub-texture.
+	 *  \param context     Graphic context to use for the request.
+	 *  \param array_index Index in the array to upload the image into.
+	 *  \param point       Point in the selected texture to write the new
+	 *                     sub-texture image onto.
+	 *  \param image       Image to upload.
+	 *  \param level       Mipmap level-of-detail number.
+	 */
 
 	void set_subimage(
 		GraphicContext &context,
@@ -134,8 +167,11 @@ public:
 		TextureWrapMode wrap_s,
 		TextureWrapMode wrap_t);
 
-	/// \brief Creates a 2D texture view
+	/// Creates a 2D texture view
 	Texture2D create_2d_view(int array_index, TextureFormat texture_format, int min_level, int num_levels);
+
+	/// Sets the display pixel ratio for this texture.
+	void set_pixel_ratio(float ratio);
 /// \}
 };
 

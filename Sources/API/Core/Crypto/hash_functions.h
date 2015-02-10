@@ -65,10 +65,10 @@ public:
 
 public:
 	/// \brief Calculate a CRC32 checksum on the data. 
-	static ubyte32 crc32(const void *data, int size, ubyte32 running_crc=0);
+	static uint32_t crc32(const void *data, int size, uint32_t running_crc=0);
 
 	/// \brief Calculate a CRC32 checksum on the data. 
-	static ubyte32 adler32(const void *data, int size, ubyte32 running_adler32=0);
+	static uint32_t adler32(const void *data, int size, uint32_t running_adler32=0);
 
 	/// \brief Generate SHA-1 hash from data.
 	static std::string sha1(const void *data, int size, bool uppercase = false);

@@ -45,16 +45,6 @@ class OpenGLWindowDescription;
 /// \brief Display target for clanDisplay.
 class OpenGLTarget : public DisplayTarget
 {
-/// \name Construction
-/// \{
-
-public:
-	/// \brief Constructs an OpenGL target.
-	OpenGLTarget();
-
-	~OpenGLTarget();
-
-/// \}
 /// \name Attributes
 /// \{
 
@@ -71,6 +61,9 @@ public:
 /// \{
 
 public:
+	/// \brief Enable this target
+	static void enable();
+
 	/// \brief Set this display target to be the current target
 	static void set_current();
 
@@ -81,6 +74,10 @@ public:
 /// \{
 
 private:
+	/// \brief Constructs an OpenGL target.
+	OpenGLTarget();
+	~OpenGLTarget();
+	friend class SetupGL_Impl;
 /// \}
 };
 

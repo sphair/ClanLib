@@ -53,7 +53,7 @@ namespace clan
 		text.clear();
 	}
 
-	void SpanLayoutViewImpl::add_text(const std::string &more_text, const TextStyle &style, int id)
+	void SpanLayoutViewImpl::add_text(const std::string &more_text, const std::shared_ptr<Style> &style, int id)
 	{
 		SpanObject object;
 		object.type = SpanObjectType::text;
@@ -130,7 +130,7 @@ namespace clan
 
 					GlyphMetrics advance = object.get_font(canvas).measure_text(canvas, obj_text);
 
-					object.get_font(canvas).draw_text(canvas, x, y + metrics.ascent + object.baseline_offset, obj_text, object.style.color());
+					object.get_font(canvas).draw_text(canvas, x, y + metrics.ascent + object.baseline_offset, obj_text, object.style->computed_value("color").color);
 
 					x += advance.advance.width;
 				}
@@ -193,23 +193,23 @@ namespace clan
 					if (obj_baseline_offset == 0.0f) // Hmm, do we need get_first_baseline_offset to be able to return that there is no baseline?
 						obj_baseline_offset = obj_height;
 
-					obj_width += object.view->box_style.margin_left();
-					obj_width += object.view->box_style.border_left();
-					obj_width += object.view->box_style.padding_left();
-					obj_width += object.view->box_style.margin_right();
-					obj_width += object.view->box_style.border_right();
-					obj_width += object.view->box_style.padding_right();
+					obj_width += object.view->style()->computed_value("margin-left").number;
+					obj_width += object.view->style()->computed_value("border-left-width").number;
+					obj_width += object.view->style()->computed_value("padding-left").number;
+					obj_width += object.view->style()->computed_value("margin-right").number;
+					obj_width += object.view->style()->computed_value("border-right-width").number;
+					obj_width += object.view->style()->computed_value("padding-right").number;
 
-					obj_height += object.view->box_style.margin_top();
-					obj_height += object.view->box_style.border_top();
-					obj_height += object.view->box_style.padding_top();
-					obj_height += object.view->box_style.margin_bottom();
-					obj_height += object.view->box_style.border_bottom();
-					obj_height += object.view->box_style.padding_bottom();
+					obj_height += object.view->style()->computed_value("margin-top").number;
+					obj_height += object.view->style()->computed_value("border-top-width").number;
+					obj_height += object.view->style()->computed_value("padding-top").number;
+					obj_height += object.view->style()->computed_value("margin-bottom").number;
+					obj_height += object.view->style()->computed_value("border-bottom-width").number;
+					obj_height += object.view->style()->computed_value("padding-bottom").number;
 
-					obj_baseline_offset += object.view->box_style.margin_top();
-					obj_baseline_offset += object.view->box_style.border_top();
-					obj_baseline_offset += object.view->box_style.padding_top();
+					obj_baseline_offset += object.view->style()->computed_value("margin-top").number;
+					obj_baseline_offset += object.view->style()->computed_value("border-top-width").number;
+					obj_baseline_offset += object.view->style()->computed_value("padding-top").number;
 
 					obj_y -= obj_baseline_offset;
 
@@ -306,7 +306,7 @@ namespace clan
 
 				obj_advance_width = object.get_font(canvas).measure_text(canvas, obj_text).advance.width;
 
-				FontMetrics font_metrics = object.get_font(canvas).get_font_metrics();
+				FontMetrics font_metrics = object.get_font(canvas).get_font_metrics(canvas);
 				obj_ascent = font_metrics.get_baseline_offset();
 				obj_descent = font_metrics.get_line_height() - font_metrics.get_baseline_offset();
 
@@ -352,23 +352,23 @@ namespace clan
 				if (obj_baseline_offset == 0.0f) // Hmm, do we need get_first_baseline_offset to be able to return that there is no baseline?
 					obj_baseline_offset = obj_height;
 
-				obj_width += object.view->box_style.margin_left();
-				obj_width += object.view->box_style.border_left();
-				obj_width += object.view->box_style.padding_left();
-				obj_width += object.view->box_style.margin_right();
-				obj_width += object.view->box_style.border_right();
-				obj_width += object.view->box_style.padding_right();
+				obj_width += object.view->style()->computed_value("margin-left").number;
+				obj_width += object.view->style()->computed_value("border-left-width").number;
+				obj_width += object.view->style()->computed_value("padding-left").number;
+				obj_width += object.view->style()->computed_value("margin-right").number;
+				obj_width += object.view->style()->computed_value("border-right-width").number;
+				obj_width += object.view->style()->computed_value("padding-right").number;
 
-				obj_height += object.view->box_style.margin_top();
-				obj_height += object.view->box_style.border_top();
-				obj_height += object.view->box_style.padding_top();
-				obj_height += object.view->box_style.margin_bottom();
-				obj_height += object.view->box_style.border_bottom();
-				obj_height += object.view->box_style.padding_bottom();
+				obj_height += object.view->style()->computed_value("margin-top").number;
+				obj_height += object.view->style()->computed_value("border-top-width").number;
+				obj_height += object.view->style()->computed_value("padding-top").number;
+				obj_height += object.view->style()->computed_value("margin-bottom").number;
+				obj_height += object.view->style()->computed_value("border-bottom-width").number;
+				obj_height += object.view->style()->computed_value("padding-bottom").number;
 
-				obj_baseline_offset += object.view->box_style.margin_top();
-				obj_baseline_offset += object.view->box_style.border_top();
-				obj_baseline_offset += object.view->box_style.padding_top();
+				obj_baseline_offset += object.view->style()->computed_value("margin-top").number;
+				obj_baseline_offset += object.view->style()->computed_value("border-top-width").number;
+				obj_baseline_offset += object.view->style()->computed_value("padding-top").number;
 
 				obj_ascent = obj_baseline_offset;
 				obj_descent = obj_height - obj_baseline_offset;

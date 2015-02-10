@@ -34,31 +34,21 @@ int App::start(const std::vector<std::string> &args)
 {
 	quit = false;
 
-    clan::SlotContainer cc;
+    clan::SlotContainer slots;
 	DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("Font Example Application");
 	win_desc.set_size(Size( 1000, 700 ), false);
 
 	DisplayWindow window(win_desc);
-    cc.connect(window.sig_window_close(), std::function<void()>(this, &App::on_window_close));
-    cc.connect(window.get_ic().get_keyboard().sig_key_up(), std::function<void(const clan::InputEvent&)>(this, &App::on_input_up));
+	slots.connect(window.sig_window_close(), this, &App::on_window_close);
+	slots.connect(window.get_ic().get_keyboard().sig_key_up(), this, &App::on_input_up);
 
 	resources = clan::XMLResourceManager::create(clan::XMLResourceDocument("Resources/resources.xml"));
 
-	std::string theme;
-	if (FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))
-		theme = "../../../Resources/GUIThemeAero";
-	else if (FileHelp::file_exists("../../../Resources/GUIThemeBasic/theme.css"))
-		theme = "../../../Resources/GUIThemeBasic";
-	else
-		throw Exception("No themes found");
-
-	gui_manager = GUIWindowManagerTexture(window);
-	GUIManager gui(gui_manager, theme);
-
 	canvas = Canvas(window);
 
+	/* FIXME
 	GUITopLevelDescription gui_desc;
 	gui_desc.set_title("Options");
 	gui_desc.set_position(Rect(10, 10, 250, 400), false);
@@ -103,16 +93,6 @@ int App::start(const std::vector<std::string> &args)
 	button_typeface_bitstream.set_text("Typeface: Bitstream Vera Sans");
 	offset_y += gap;
 
-	CheckBox checkbox1(&gui_window);
-	checkbox1.set_geometry(Rect(offset_x, offset_y, offset_x + 80, offset_y + height));
-	checkbox1.func_state_changed() = bind_member(this, &App::on_checkbox_state_underline);
-	checkbox1.set_text("Underline");
-
-	CheckBox checkbox2(&gui_window);
-	checkbox2.set_geometry(Rect(offset_x+100, offset_y, offset_x + 180, offset_y + height));
-	checkbox2.func_state_changed() = bind_member(this, &App::on_checkbox_state_strikeout);
-	checkbox2.set_text("Strikeout");
-	offset_y += gap;
 
 	CheckBox checkbox3(&gui_window);
 	checkbox3.set_geometry(Rect(offset_x, offset_y, offset_x + 80, offset_y + height));
@@ -161,23 +141,25 @@ int App::start(const std::vector<std::string> &args)
 	button_size_64.set_text("Size 64");
 	offset_y += gap;
 
-	font_text = "Ω(The quick brown fox 0123456789)";
 
 	LineEdit lineedit1(&gui_window);
 	lineedit_text_ptr = &lineedit1;
 	lineedit1.set_geometry(Rect(offset_x, offset_y, offset_x + width, offset_y + 30));
 	lineedit1.set_text(font_text); 
 	lineedit1.func_after_edit_changed() = bind_member(this, &App::on_lineedit_changed);
+	*/
+
+	font_text = "Ω(The quick brown fox 0123456789)";
 
 	last_fps = 0.0f;
 	selected_fontclass = font_ttf;
 	font_typeface = "Microsoft Sans Serif";
 	font_filename = "";
 	font_desc.set_height(32);
-	font_desc.set_weight(400);
+	font_desc.set_weight(clan::FontWeight::normal);
 	select_font();
 
-	small_font = clan::Font(canvas, "Tahoma", 16);
+	small_font = clan::Font("Tahoma", 16);
 
 	GameTime game_time;
 	while(!quit)
@@ -210,43 +192,37 @@ void App::render(DisplayWindow &window, GameTime &game_time)
 
 	canvas.clear(Colorf(0.0f,0.0f,0.2f, 1.0f));
 
-	gui_manager.draw_windows(canvas);
-
 	draw_font_example();
 	draw_font_info();
 
 	last_fps = game_time.get_updates_per_second();
 
-	gui_manager.process();
-
 	window.flip(1);
 
-	KeepAlive::process();
+	RunLoop::process();
 }
 
 void App::select_font()
 {
-	font_desc.set_typeface_name(font_typeface);
-
 	switch (selected_fontclass)
 	{
 		case font_ttf:
 			if (font_filename.empty())
 			{
-				selected_font = clan::Font(canvas, font_desc);
+				selected_font = clan::Font(font_typeface, font_desc);
 			}
 			else
 			{
-				selected_font = clan::Font(canvas, font_desc, font_filename);
+				selected_font = clan::Font(font_desc, font_filename);
 			}
 			break;
 		case font_sprite:
-			selected_font = clan::Font::resource(canvas, font_desc, resources);
+			selected_font = clan::Font::resource(canvas, font_typeface, font_desc, resources);
 			break;
 	}
 
-	font_metrics = selected_font.get_font_metrics();
-	font_size = selected_font.get_text_size(canvas, font_text);
+	font_metrics = selected_font.get_font_metrics(canvas);
+	font_size = selected_font.measure_text(canvas, font_text).bbox_size;
 }
 
 void App::draw_font_example()

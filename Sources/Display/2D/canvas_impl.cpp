@@ -127,27 +127,28 @@ void Canvas_Impl::set_batcher(Canvas &canvas, RenderBatcher *new_batcher)
 void Canvas_Impl::calculate_map_mode_matrices()
 {
 	Mat4f matrix;
+	Mat4f pixel_scaling_matrix = Mat4f::scale(gc.get_pixel_ratio(), gc.get_pixel_ratio(), 1.0f);
 
 	MapMode mode = (canvas_y_axis == y_axis_bottom_up) ? get_top_down_map_mode() : canvas_map_mode;
 	switch (mode)
 	{
 	default:
 	case map_2d_upper_left:
-		matrix = Mat4f::ortho_2d(0.0f, canvas_size.width, canvas_size.height, 0.0f, handed_right, gc_clip_z_range);
+		matrix = Mat4f::ortho_2d(0.0f, canvas_size.width, canvas_size.height, 0.0f, handed_right, gc_clip_z_range) * pixel_scaling_matrix;
 		break;
 	case map_2d_lower_left:
-		matrix = Mat4f::ortho_2d(0.0f, canvas_size.width, 0.0f, canvas_size.height, handed_right, gc_clip_z_range);
+		matrix = Mat4f::ortho_2d(0.0f, canvas_size.width, 0.0f, canvas_size.height, handed_right, gc_clip_z_range) * pixel_scaling_matrix;
 		break;
 	case map_user_projection:
-		matrix = user_projection;
+		matrix = pixel_scaling_matrix * user_projection;
 		break;
 	}
+
 	if (matrix != canvas_projection)
 	{
 		canvas_projection = matrix;
 		update_batcher_matrix();
 	}
-
 }
 
 MapMode Canvas_Impl::get_top_down_map_mode() const
@@ -220,14 +221,23 @@ void Canvas_Impl::on_window_resized(const Size &size)
 	update_viewport_size();
 }
 
-void Canvas_Impl::write_cliprect(const Rect &rect)
+void Canvas_Impl::write_cliprect(const Rectf &rect)
 {
 	if ( (rect.left > rect.right) || (rect.top > rect.bottom) )
 		throw Exception("Invalid cliprect");
-	gc.set_scissor(rect, canvas_y_axis ? y_axis_top_down : y_axis_bottom_up);
+
+	// Grid-fitted, display pixel ratio scaled clipping rect
+	Rect recti {
+		static_cast<int>(std::round(rect.left * gc.get_pixel_ratio())),
+		static_cast<int>(std::round(rect.top * gc.get_pixel_ratio())),
+		static_cast<int>(std::round(rect.right * gc.get_pixel_ratio())),
+		static_cast<int>(std::round(rect.bottom * gc.get_pixel_ratio()))
+	};
+
+	gc.set_scissor(recti, canvas_y_axis ? y_axis_top_down : y_axis_bottom_up);
 }
 
-void Canvas_Impl::set_cliprect(const Rect &rect)
+void Canvas_Impl::set_cliprect(const Rectf &rect)
 {
 	if (!cliprects.empty())
 		cliprects.back() = rect;
@@ -236,11 +246,11 @@ void Canvas_Impl::set_cliprect(const Rect &rect)
 	write_cliprect(rect);
 }
 
-void Canvas_Impl::push_cliprect(const Rect &rect)
+void Canvas_Impl::push_cliprect(const Rectf &rect)
 {
 	if (!cliprects.empty())
 	{
-		Rect r = cliprects.back();
+		Rectf r = cliprects.back();
 		r.overlap(rect);
 		cliprects.push_back(r);
 	}

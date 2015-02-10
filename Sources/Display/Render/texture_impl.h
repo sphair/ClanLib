@@ -91,6 +91,8 @@ public:
 	TextureCompareMode compare_mode;
 	CompareFunction compare_function;
 
+	float pixel_ratio = 0.0f;
+
 private:
 
 };

@@ -31,6 +31,11 @@
 #include "API/Network/Socket/network_condition_variable.h"
 #include "tcp_socket.h"
 
+#ifndef WIN32
+#include <unistd.h>
+#include <fcntl.h>
+#endif
+
 namespace clan
 {
 #if defined(WIN32)
@@ -69,7 +74,7 @@ namespace clan
 		DWORD result = WaitForMultipleObjects(handles.size(), &handles[0], FALSE, timeout > 0 ? timeout : INFINITE);
 		if (result == WAIT_TIMEOUT)
 			return false;
-		else if (result != WAIT_OBJECT_0)
+		else if (result < WAIT_OBJECT_0 || result > WAIT_OBJECT_0 + count)
 			throw Exception("WaitForMultipleObjects failed");
 
 		for (int i = 0; i < count; i++)
@@ -98,12 +103,11 @@ namespace clan
 			if (result < 0)
 				throw Exception("Unable to create pipe handle");
 
-			result = fcntl(notify_handle[0], F_SETFL, O_NONBLOCK) < 0);
+			result = fcntl(notify_handle[0], F_SETFL, O_NONBLOCK);
 			if (result < 0)
 			{
 				::close(notify_handle[0]);
 				::close(notify_handle[1]);
-				::close(handle);
 				throw Exception("Unable to set pipe non-blocking mode");
 			}
 		}
@@ -117,7 +121,7 @@ namespace clan
 		void reset_notify()
 		{
 			unsigned char buf;
-			while (read(impl->notify_handle[0], &buf, 1) == 1);
+			while (read(notify_handle[0], &buf, 1) == 1);
 		}
 
 		void set_notify()
@@ -132,7 +136,7 @@ namespace clan
 	{
 	}
 
-	bool NetworkConditionVariable::wait_impl(int count, NetworkEvent **events, int timeout)
+	bool NetworkConditionVariable::wait_impl(int count, NetworkEvent **events, int timeout_ms)
 	{
 		int max_fd = impl->notify_handle[0];
 
@@ -150,7 +154,8 @@ namespace clan
 		tv.tv_sec = timeout_ms / 1000;
 		tv.tv_usec = (timeout_ms % 1000) * 1000;
 
-		int result = select(max_fd + 1, &rfds, !impl->can_write ? &wfds : 0, 0, timeout_ms >= 0 ? &tv : 0);
+		//FIXME - Should this have: Use "!impl->can_write ? &wfds : 0" ??
+		int result = select(max_fd + 1, &rfds, 0, 0, timeout_ms >= 0 ? &tv : 0);
 		if (result == -1)
 			throw Exception("select failed");
 

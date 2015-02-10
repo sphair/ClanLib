@@ -57,7 +57,7 @@ public:
 	Type type;
 
 	/// \brief Offset to zip data in zip file (type_file).
-	// byte64 offset;
+	// int64_t offset;
 
 	/// \brief Filename of file, if added from file (type_added_file).
 	std::string filename;

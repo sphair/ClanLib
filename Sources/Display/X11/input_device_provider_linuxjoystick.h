@@ -63,10 +63,10 @@ public:
 	InputDevice::Type get_type() const override { return InputDevice::joystick; }
 
 	/// \brief Returns the x position of the device.
-	int get_x() const override;
+	float get_x() const override;
 
 	/// \brief Returns the y position of the device.
-	int get_y() const override;
+	float get_y() const override;
 
 	/// \brief Returns true if the passed key code is down for this device.
 	bool get_keycode(int keycode) const override;
@@ -106,7 +106,7 @@ public:
 	}
 
 	/// \brief Sets the position of the device.
-	void set_position(int x, int y) override;
+	void set_position(float x, float y) override;
 
 	/// \brief Update device
 	///

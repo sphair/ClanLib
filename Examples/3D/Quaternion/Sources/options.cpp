@@ -29,7 +29,7 @@
 #include "precomp.h"
 
 #include "options.h"
-
+/*
 Options::Options(GUIManager &gui, Rect gui_position) : GUIComponent(&gui, GUITopLevelDescription("Options", gui_position, false))
 {
 	button_lerp_clicked = false;
@@ -360,3 +360,4 @@ void Options::set_new_quaternion(const Quaternionf &new_quaternion)
 	update_euler();
 }
 
+*/

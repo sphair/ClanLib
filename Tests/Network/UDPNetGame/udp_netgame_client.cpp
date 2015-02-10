@@ -8,10 +8,6 @@ UDPNetGameClient::UDPNetGameClient()
 {
 }
 
-void UDPNetGameClient::send_event(clan::NetGameEvent net_event, ResendMethod resend_method)
-{
-}
-
 void UDPNetGameClient::process()
 {
 	process_incoming();
@@ -26,7 +22,7 @@ void UDPNetGameClient::process_incoming()
 		packet.set_size(64*1024);
 
 		SocketName from;
-		int received = socket.receive(packet.get_data(), packet.get_size(), from);
+		int received = socket.read(packet.get_data(), packet.get_size(), from);
 		if (received == -1)
 			break;
 

@@ -45,7 +45,7 @@ namespace clan
 #define cl_tls_variable __thread
 #endif
 
-class SetupCore_Impl;
+class ThreadLocalStorage_Instance;
 
 class ThreadLocalStorageData
 {
@@ -68,8 +68,6 @@ public:
 	~ThreadLocalStorage();
 
 private:
-	/// \brief Create the initial instance of ThreadLocalStorage (Called by SetupCore)
-	static void create_initial_instance();
 
 /// \}
 /// \name Attributes
@@ -95,7 +93,9 @@ public:
 
 private:
 /// \}
-	friend class SetupCore_Impl;
+	static void init_core();
+	static ThreadLocalStorage_Instance *instance;
+	friend class ThreadLocalStorage_Instance;
 };
 
 }

@@ -81,7 +81,7 @@ int App::start(const std::vector<std::string> &args)
 
 	camera_angle = 0.0f;
 
-	clan::Font font(canvas, "tahoma", 24);
+	clan::Font font("tahoma", 24);
 
 	enable_dual_pass = false;
 
@@ -127,10 +127,10 @@ int App::start(const std::vector<std::string> &args)
 		font.draw_text(canvas, 16, 64, enable_dual_pass ? "Using 2 Render Passes (Press Space to toggle)" : "Using Single Pass (Press Space to toggle)");
 
 		// Use flip(1) to lock the fps
-		window.flip(1);
+		window.flip(0);
 
 		// This call processes user input and other events
-		KeepAlive::process();
+		RunLoop::process();
 	}
 
 	return 0;

@@ -29,6 +29,7 @@
 
 #include "Display/precomp.h"
 #include "API/Display/Render/frame_buffer.h"
+#include "API/Display/Render/texture_2d.h"
 #include "API/Display/Render/graphic_context.h"
 #include "API/Display/TargetProviders/graphic_context_provider.h"
 #include "API/Display/TargetProviders/frame_buffer_provider.h"
@@ -50,8 +51,8 @@ public:
 	}
 
 	FrameBufferProvider *provider;
+	float pixel_ratio = 0.0f;
 };
-
 
 /////////////////////////////////////////////////////////////////////////////
 // FrameBuffer Construction:
@@ -69,6 +70,11 @@ FrameBuffer::FrameBuffer(GraphicContext &context)
 
 /////////////////////////////////////////////////////////////////////////////
 // FrameBuffer Attributes:
+
+float FrameBuffer::get_pixel_ratio() const
+{
+	return impl->pixel_ratio;
+}
 
 void FrameBuffer::throw_if_null() const
 {
@@ -116,6 +122,9 @@ void FrameBuffer::attach_color(int attachment_index, const Texture1DArray &textu
 
 void FrameBuffer::attach_color(int attachment_index, const Texture2D &texture, int level)
 {
+	if (impl->pixel_ratio == 0.0f)
+		impl->pixel_ratio = texture.get_pixel_ratio();
+
 	impl->provider->attach_color(attachment_index, texture, level);
 }
 
@@ -146,6 +155,8 @@ void FrameBuffer::attach_stencil(const RenderBuffer &render_buffer)
 
 void FrameBuffer::attach_stencil(const Texture2D &texture, int level)
 {
+	if (impl->pixel_ratio == 0.0f)
+		impl->pixel_ratio = texture.get_pixel_ratio();
 	impl->provider->attach_stencil(texture, level);
 }
 
@@ -166,6 +177,8 @@ void FrameBuffer::attach_depth(const RenderBuffer &render_buffer)
 
 void FrameBuffer::attach_depth(const Texture2D &texture, int level)
 {
+	if (impl->pixel_ratio == 0.0f)
+		impl->pixel_ratio = texture.get_pixel_ratio();
 	impl->provider->attach_depth(texture, level);
 }
 
@@ -186,6 +199,8 @@ void FrameBuffer::attach_depth_stencil(const RenderBuffer &render_buffer)
 
 void FrameBuffer::attach_depth_stencil(const Texture2D &texture, int level)
 {
+	if (impl->pixel_ratio == 0.0f)
+		impl->pixel_ratio = texture.get_pixel_ratio();
 	impl->provider->attach_depth_stencil(texture, level);
 }
 

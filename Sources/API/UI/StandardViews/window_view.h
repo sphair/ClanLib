@@ -64,6 +64,7 @@ namespace clan
 		void hide();
 
 		DisplayWindow get_display_window();
+		Canvas get_canvas() const override;
 
 		void set_needs_render() override;
 		bool local_root() override;

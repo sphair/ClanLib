@@ -29,8 +29,6 @@
 #include "precomp.h"
 #include "app.h"
 
-int SoundSession::max_unique_id = 0;
-
 App::App()
 {
 }
@@ -38,231 +36,73 @@ App::App()
 // The start of the Application
 int App::start(const std::vector<std::string> &args)
 {
-	sfx_pacman_start = SoundBuffer("../../Game/Pacman/resources/start.wav");
-	sfx_cheer = SoundBuffer("Resources/cheer1.ogg");
+	quit = false;
 
-	std::string theme;
-	if (FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))
-		theme = "../../../Resources/GUIThemeAero";
-	else if (FileHelp::file_exists("../../../Resources/GUIThemeBasic/theme.css"))
-		theme = "../../../Resources/GUIThemeBasic";
-	else
-		throw Exception("No themes found");
+	clan::SlotContainer sc;
 
-	GUIManager gui(theme);
+	// Set the window
+	clan::DisplayWindowDescription desc;
+	desc.set_title("ClanLib Basic Sound Example");
+	desc.set_size(clan::Size(640, 480), true);
+	desc.set_allow_resize(true);
 
-	DisplayWindowDescription win_desc;
-	win_desc.set_allow_resize(true);
-	win_desc.set_title("Sound Example");
-	win_desc.set_position(Rect(200, 100, 540, 440), false);
-	win_desc.set_visible(false);
-	GUIComponent window(&gui, win_desc, "window");
-	window.func_close() = [=](){on_close(&window); };
+	clan::DisplayWindow window(desc);
+	clan::Canvas canvas(window);
 
-	GUILayoutCorners layout;
-	window.set_layout(layout);
+	// Connect the Window close event
+	sc.connect(window.sig_window_close(), [&](){quit = true; });
 
-	window.create_components("Resources/layout.xml");
+	// Connect a keyboard handler to on_key_up()
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	sc.connect(window.get_ic().get_keyboard().sig_key_down(), clan::bind_member(this, &App::on_input_down));
 
-	prepare_gui(window);
+	sfx_pacman_start = clan::SoundBuffer("../../Game/Pacman/resources/start.wav");
+	sfx_cheer = clan::SoundBuffer("Resources/cheer1.ogg");
+	sound_output = clan::SoundOutput(44100, 192);
 
-	window.set_visible(true);
+	clan::Font font("tahoma", 24);
 
-	set_sound_output();
+	clan::GameTime game_time;
 
-	initial_time = System::get_time();
+	// Run until someone presses escape
+	while (!quit)
+	{
+		game_time.update();
 
-	gui.exec();
+		// Clear the display in a dark blue nuance
+		canvas.clear(clan::Colorf(0.0f, 0.0f, 0.2f));
+
+		font.draw_text(canvas, 32, 32, "Press 1 or 2", clan::Colorf::white);
+
+		window.flip(1);
+
+		// This call processes user input and other events
+		clan::RunLoop::process(0);
+	}
 
 	return 0;
 }
 
-void App::set_sound_output()
+// A key was pressed
+void App::on_input_up(const clan::InputEvent &key)
 {
-	soundbuffer_sessions.clear();
-	selected_sound_session = SoundSession();
-
-	fill_session_combobox();
-	use_selected_session();
-
-	sound_output = SoundOutput(spin_output_frequency->get_value(), spin_output_latency->get_value());
-
-	if (chk_echo_filter->is_checked() || chk_fade_filter->is_checked() || chk_inverse_echo->is_checked() )
+	if (key.id == clan::keycode_escape)
 	{
-		btn_set_soundoutput_filters->set_enabled(false);
+		quit = true;
 	}
 
 }
 
-void App::on_btn_update_soundoutput()
+void App::on_input_down(const clan::InputEvent &key)
 {
-	set_sound_output();
-	btn_update_soundoutput->set_enabled(false);
-}
 
-void App::on_btn_set_soundoutput_filters()
-{
-	if (!last_soundoutput_echo_filter.is_null())
+	if (key.str == "1")
 	{
-		sound_output.remove_filter(last_soundoutput_echo_filter);
-		last_soundoutput_echo_filter = SoundFilter();
+		sfx_pacman_start.play();
 	}
-
-	if (!last_soundoutput_inverse_echo_filter.is_null())
+	if (key.str == "2")
 	{
-		sound_output.remove_filter(last_soundoutput_inverse_echo_filter);
-		last_soundoutput_inverse_echo_filter = SoundFilter();
-	}
-
-	if (!last_soundoutput_fade_filter.is_null())
-	{
-		sound_output.remove_filter(last_soundoutput_fade_filter);
-		last_soundoutput_fade_filter = SoundFilter();
-	}
-
-	if (chk_echo_filter->is_checked())
-	{
-		last_soundoutput_echo_filter = EchoFilter(spin_filter_echo_buffer_size->get_value(), spin_filter_echo_shift_factor->get_value_float());
-		sound_output.add_filter(last_soundoutput_echo_filter);
-	}
-
-	if (chk_fade_filter->is_checked())
-	{
-		last_soundoutput_fade_filter = FadeFilter(spin_filter_fade_volume->get_value_float());
-		sound_output.add_filter(last_soundoutput_fade_filter);
-	}
-
-	if (chk_inverse_echo->is_checked())
-	{
-		last_soundoutput_inverse_echo_filter = InverseEchoFilter(spin_filter_echo_buffer_size->get_value());
-		sound_output.add_filter(last_soundoutput_inverse_echo_filter);
-	}
-
-	btn_set_soundoutput_filters->set_enabled(false);
-}
-
-
-void App::on_btn_play()
-{
-	SoundBuffer &buffer = get_selected_soundbuffer();
-	buffer.set_volume(spin_initial_volume->get_value_float());
-	buffer.set_pan(spin_initial_pan->get_value_float());
-
-	SoundSession sound_session;
-	sound_session.is_null = false;
-	sound_session.session = buffer.prepare();
-	set_soundbuffer_session_filters(sound_session);
-	sound_session.session.play();
-}
-
-void App::on_btn_prepare()
-{
-	SoundBuffer &buffer = get_selected_soundbuffer();
-	buffer.set_volume(spin_initial_volume->get_value_float());
-	buffer.set_pan(spin_initial_pan->get_value_float());
-	SoundSession sound_session;
-	sound_session.is_null = false;
-	sound_session.session = buffer.prepare();
-	sound_session.name = string_format("Sound prepared at: %1 seconds", (System::get_time() - initial_time)/1000);
-	soundbuffer_sessions.push_front(sound_session);
-
-	set_soundbuffer_session_filters(sound_session);
-	selected_sound_session = sound_session;
-
-	fill_session_combobox();
-	use_selected_session();
-}
-
-void App::on_btn_sess_play()
-{
-	if (!selected_sound_session.is_null)
-	{
-		selected_sound_session.session.set_position_relative(0.0f);
-		set_spin_value(spin_session_position, selected_sound_session.session.get_position_relative());
-
-		selected_sound_session.session.play();
-		btn_sess_play->set_enabled(false);
-		btn_sess_stop->set_enabled(true);
+		sfx_cheer.play();
 	}
 }
 
-void App::on_btn_sess_stop()
-{
-	if (!selected_sound_session.is_null)
-	{
-		selected_sound_session.session.stop();
-		btn_sess_play->set_enabled(true);
-		btn_sess_stop->set_enabled(false);
-	}
-}
-
-void App::on_btn_sess_destroy()
-{
-	if (!selected_sound_session.is_null)
-	{
-		std::list<SoundSession>::iterator it;
-
-		for (it = soundbuffer_sessions.begin(); it != soundbuffer_sessions.end(); ++it)
-		{
-			if (it->unique_id == selected_sound_session.unique_id)
-			{
-				soundbuffer_sessions.erase(it);
-				break;
-			}
-		}
-		selected_sound_session.session.stop();
-		selected_sound_session = SoundSession();
-
-		cbox_session->set_text("");
-		fill_session_combobox();
-		use_selected_session();
-	}
-}
-
-void App::on_looping_checked()
-{
-	if (!selected_sound_session.is_null)
-	{
-		selected_sound_session.session.set_looping(true);
-	}
-}
-
-void App::on_looping_unchecked()
-{
-	if (!selected_sound_session.is_null)
-	{
-		selected_sound_session.session.set_looping(false);
-	}
-}
-
-void App::on_btn_set_fade_filter()
-{
-	if (!selected_sound_session.is_null)
-	{
-		selected_sound_session.fade_filter.fade_to_volume(spin_session_fade_volume->get_value_float(), spin_session_fade_duration->get_value());
-	}
-}
-
-void App::set_soundbuffer_session_filters(SoundSession &sound_session)
-{
-	if (chk_apply_session->is_checked())
-	{
-		if (chk_echo_filter->is_checked())
-		{
-			sound_session.echo_filter = EchoFilter(spin_filter_echo_buffer_size->get_value(), spin_filter_echo_shift_factor->get_value_float());
-			sound_session.session.add_filter(sound_session.echo_filter);
-		}
-
-		if (chk_fade_filter->is_checked())
-		{
-			sound_session.fade_filter = FadeFilter(spin_filter_fade_volume->get_value_float());
-			sound_session.session.add_filter(sound_session.fade_filter);
-		}
-
-		if (chk_inverse_echo->is_checked())
-		{
-			sound_session.inverse_echo_filter = InverseEchoFilter(spin_filter_echo_buffer_size->get_value());
-			sound_session.session.add_filter(sound_session.inverse_echo_filter);
-		}
-	}
-}

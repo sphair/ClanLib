@@ -91,7 +91,7 @@ int App::start(const std::vector<std::string> &args)
 
 	// ** Note, at this point "object_positions, object_normals and object_material_ambient" can be destroyed.
 
-	clan::Font fps_font(canvas, "tahoma", 20);
+	clan::Font fps_font("tahoma", 20);
 
 	GameTime game_time;
 
@@ -142,8 +142,8 @@ int App::start(const std::vector<std::string> &args)
 		canvas.reset_rasterizer_state();
 		canvas.reset_depth_stencil_state();
 
-		window.flip(1);
-		KeepAlive::process();
+		window.flip(0);
+		RunLoop::process();
 	}
 
 	return 0;

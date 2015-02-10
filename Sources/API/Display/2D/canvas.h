@@ -71,8 +71,8 @@ enum MapMode
 /// \brief 2D Graphics Canvas
 class Canvas
 {
-/// \name Construction
-/// \{
+	/// \name Construction
+	/// \{
 
 public:
 	/// \brief Constructs a null instance.
@@ -86,9 +86,9 @@ public:
 
 	~Canvas();
 
-/// \}
-/// \name Attributes
-/// \{
+	/// \}
+	/// \name Attributes
+	/// \{
 public:
 	/// \brief Create a copy of a canvas
 	Canvas create();
@@ -115,25 +115,29 @@ public:
 	/// \brief Returns the current effective projection matrix.
 	const Mat4f &get_projection() const;
 
-	operator GraphicContext&() const {return get_gc();}
+	operator GraphicContext&() const { return get_gc(); }
 
 	/// \brief Returns the current width of the context.
-	inline int get_width() const {return get_gc().get_width();}
+	inline float get_width() const { return get_gc().get_dip_width(); }
 
 	/// \brief Returns the current height of the context.
-	inline int get_height() const {return get_gc().get_height();}
+	inline float get_height() const { return get_gc().get_dip_height(); }
 
 	/// \brief Returns the current size of the context.
-	inline Size get_size() const {return get_gc().get_size();}
+	inline Sizef get_size() const { return get_gc().get_dip_size(); }
 
 	/// \brief Returns the current clipping rectangle
-	Rect get_cliprect() const;
+	Rectf get_cliprect() const;
 
 	/// \brief Return the content of the read buffer into a pixel buffer.
 	PixelBuffer get_pixeldata(const Rect& rect, TextureFormat texture_format = tf_rgba8, bool clamp = true);
 
 	/// \brief Return the content of the read buffer into a pixel buffer.
 	PixelBuffer get_pixeldata(TextureFormat texture_format = tf_rgba8, bool clamp = true);
+
+	/// Retrieves the display pixel ratio of the context.
+	/// \seealso Resolution Independence
+	float get_pixel_ratio() const { return get_gc().get_pixel_ratio(); }
 
 /// \}
 /// \name Operations
@@ -158,13 +162,13 @@ public:
 	void reset_depth_stencil_state();
 
 	/// \brief Set the current clipping rectangle.
-	void set_cliprect(const Rect &rect);
+	void set_cliprect(const Rectf &rect);
 
 	/// \brief Push current clipping rectangle to stack.
 	/** <p>If a rectangle is passed, it afterwards sets clipping
 	    rectangle to the union of the current rectangle and the passed
 	    rectangle.</p>*/
-	void push_cliprect(const Rect &rect);
+	void push_cliprect(const Rectf &rect);
 
 	/// \brief Push cliprect
 	void push_cliprect();

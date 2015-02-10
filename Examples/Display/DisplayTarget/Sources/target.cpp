@@ -45,7 +45,7 @@ int Target::start(const std::vector<std::string> &args)
 	{
 		// These 2 lines are to avoid recreating the windows too quickly (that confuses the win32 keyboard queue)
 		clan::System::sleep(250);
-		clan::KeepAlive::process(0);
+		clan::RunLoop::process(0);
 
 		switch (render_target)
 		{
@@ -87,15 +87,14 @@ bool Target::run_demo()
 
 	clan::Canvas canvas(window);
 
-	clan::Font target_font(canvas, "tahoma", 28);
-	clan::Font fps_font(canvas, "tahoma", 20);
+	clan::Font target_font("tahoma", 28);
+	clan::Font fps_font("tahoma", 20);
 
 	// Because we are using the alpha channel on fonts, we must disable subpixel rendering
 	clan::FontDescription font_desc;
-	font_desc.set_typeface_name("tahoma");
 	font_desc.set_height(16);
 	font_desc.set_subpixel(false);
-	clan::Font fall_font(canvas, font_desc);
+	clan::Font fall_font("tahoma", font_desc);
 
 	std::vector<FontFall> font_fall;
 
@@ -192,7 +191,7 @@ bool Target::run_demo()
 
 		window.flip(0);
 	
-		clan::KeepAlive::process(0);
+		clan::RunLoop::process(0);
 	}
 	return !quit;
 }

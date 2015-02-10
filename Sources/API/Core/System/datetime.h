@@ -63,10 +63,10 @@ public:
 	static DateTime get_current_utc_time();
 
 	/// \brief Converts a time tick value (number of 100-nanosecond intervals since January 1, 1601 UTC) to a date time in the local time zone.
-	static DateTime get_local_time_from_ticks(byte64 ticks);
+	static DateTime get_local_time_from_ticks(int64_t ticks);
 
 	/// \brief Converts a time tick value (number of 100-nanosecond intervals since January 1, 1601 UTC) to a date time in UTC.
-	static DateTime get_utc_time_from_ticks(byte64 ticks);
+	static DateTime get_utc_time_from_ticks(int64_t ticks);
 
 	static DateTime from_short_date_string(const std::string &value);
 
@@ -137,7 +137,7 @@ public:
 	DateTime to_local() const;
 
 	/// \brief Converts the date to the number of 100-nanosecond intervals since January 1, 1601 UTC.
-	byte64 to_ticks() const;
+	int64_t to_ticks() const;
 
 	/// \brief Mon Mar 3 2007
 	std::string to_long_date_string() const;
@@ -183,7 +183,7 @@ private:
 	unsigned int nanoseconds;
 
 	TimeZone timezone;
-	static const byte64 ticks_from_1601_to_1900;
+	static const int64_t ticks_from_1601_to_1900;
 /// \}
 };
 

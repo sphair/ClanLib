@@ -14,14 +14,14 @@ SoundProviders/soundprovider_vorbis_session.cpp \
 SoundProviders/soundprovider_type.cpp \
 SoundProviders/soundprovider_wave_session.cpp \
 SoundProviders/soundprovider_wave.cpp \
-Resources/xml_sound_cache.cpp \
 Resources/sound_cache.cpp \
+Resources/XML/xml_sound_cache.cpp \
+Resources/XML/soundbuffer_xml.cpp \
 setupsound.cpp \
 precomp.cpp \
 soundoutput_impl.cpp \
 soundfilter.cpp \
 soundbuffer_impl.cpp \
-cd_drive.cpp \
 SoundFilters/inverse_echofilter.cpp \
 SoundFilters/echofilter.cpp \
 SoundFilters/fadefilter.cpp \

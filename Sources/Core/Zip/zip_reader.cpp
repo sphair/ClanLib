@@ -54,14 +54,14 @@ public:
 			mz_inflateEnd(&zs);
 	}
 
-	byte64 deflate_read(void *data, byte64 size, bool read_all);
+	int64_t deflate_read(void *data, int64_t size, bool read_all);
 	
 	IODevice input;
 	ZipLocalFileHeader local_header;
 	mz_stream zs;
 	char zbuffer[16*1024];
 	bool zstream_open;
-	byte64 compressed_pos;
+	int64_t compressed_pos;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -123,24 +123,24 @@ bool ZipReader::has_data_descriptor() const
 	return (impl->local_header.general_purpose_bit_flag & ZIP_CRC32_IN_FILE_DESCRIPTOR);
 }
 
-byte64 ZipReader::get_compressed_size() const
+int64_t ZipReader::get_compressed_size() const
 {
 	return impl->local_header.compressed_size;
 }
 
-byte64 ZipReader::get_uncompressed_size() const
+int64_t ZipReader::get_uncompressed_size() const
 {
 	return impl->local_header.uncompressed_size;
 }
 
-void ZipReader::set_data_descriptor_data(byte64 compressed_size, byte64 uncompressed_size, ubyte32 crc32)
+void ZipReader::set_data_descriptor_data(int64_t compressed_size, int64_t uncompressed_size, uint32_t crc32)
 {
 	impl->local_header.compressed_size = compressed_size;
 	impl->local_header.uncompressed_size = uncompressed_size;
 	impl->local_header.crc32 = crc32;
 }
 
-byte64 ZipReader::read_file_data(void *data, byte64 size, bool read_all)
+int64_t ZipReader::read_file_data(void *data, int64_t size, bool read_all)
 {
 	if (impl->zstream_open)
 	{
@@ -155,7 +155,7 @@ byte64 ZipReader::read_file_data(void *data, byte64 size, bool read_all)
 /////////////////////////////////////////////////////////////////////////////
 // ZipReader Implementation:
 
-byte64 ZipReader_Impl::deflate_read(void *data, byte64 size, bool read_all)
+int64_t ZipReader_Impl::deflate_read(void *data, int64_t size, bool read_all)
 {
 	zs.next_out = (unsigned char *) data;
 	zs.avail_out = size;
@@ -169,7 +169,7 @@ byte64 ZipReader_Impl::deflate_read(void *data, byte64 size, bool read_all)
 			int received_input = 0;
 			while (received_input < 16*1024)
 			{
-				received_input += input.receive(zbuffer, int(min((byte64)16*1024, local_header.compressed_size - compressed_pos)), true);
+				received_input += input.receive(zbuffer, int(min((int64_t)16*1024, local_header.compressed_size - compressed_pos)), true);
 				if (compressed_pos + received_input == local_header.compressed_size) break;
 			}
 			compressed_pos += received_input;

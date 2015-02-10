@@ -77,7 +77,7 @@ void PNGLoader::read_chunks()
 	std::map<std::string, DataBuffer> chunks;
 
 	std::vector<DataBuffer> idat_chunks;
-	ubyte64 total_idat_size = 0;
+	uint64_t total_idat_size = 0;
 
 	while (true)
 	{

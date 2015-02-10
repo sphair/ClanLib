@@ -112,6 +112,7 @@ public:
 
 	/// \brief Loads a Sprite from a XML resource definition
 	static Image load(Canvas &canvas, const std::string &id, const XMLResourceDocument &doc);
+
 /// \}
 
 /// \name Attributes
@@ -140,21 +141,19 @@ public:
 	Colorf get_color() const;
 
 	/// \brief Returns translation hot-spot.
-	void get_alignment(Origin &origin, int &x, int &y) const;
+	void get_alignment(Origin &origin, float &x, float &y) const;
 
 	/// \brief Return the texture of the image
 	Subtexture get_texture() const;
 
-	/// \brief Get Size
-	///
-	/// \return size
-	Size get_size() const;
+	/// \brief Return the size of the image.
+	Sizef get_size() const;
 
 	/// \brief Return the width of the image.
-	int get_width() const;
+	float get_width() const;
 
 	/// \brief Return the height of the image.
-	int get_height() const;
+	float get_height() const;
 
 /// \}
 /// \name Operators
@@ -193,15 +192,6 @@ public:
 		Canvas &canvas,
 		float x,
 		float y) const;
-
-	/// \brief Draw image on graphic context.
-	///
-	/// \param x, y Anchor position of where to render image. Actual rendering position depends on the anchor and the alignment mode.
-	/// \param gc Graphic context on which to render upon.
-	void draw(
-		Canvas &canvas,
-		int x,
-		int y) const;
 
 	/// \brief Draw image on graphic context.
 	///
@@ -257,7 +247,7 @@ public:
 	void set_color(const Color& c) {Colorf color; color.r = c.get_red() / 255.0f; color.g = c.get_green() / 255.0f; color.b = c.get_blue() / 255.0f; color.a = c.get_alpha() / 255.0f; set_color(color);}
 
 	/// \brief Sets translation hotspot.
-	void set_alignment(Origin origin, int x = 0, int y = 0);
+	void set_alignment(Origin origin, float x = 0, float y = 0);
 
 	void set_wrap_mode(
 		TextureWrapMode wrap_s,
@@ -266,17 +256,6 @@ public:
 	/// \brief Set to true if a linear filter should be used for scaling up and down, false if a nearest-point filter should be used.
 	void set_linear_filter(bool linear_filter = true);
 
-	/// \brief Upload image to sub texture.
-	///
-	/// \param image Image to upload.
-	/// \param level Mipmap level-of-detail number.
-	void set_subimage(
-		Canvas &canvas,
-		int x,
-		int y,
-		const PixelBuffer &image,
-		const Rect &src_rect,
-		int level = 0);
 /// \}
 
 /// \name Implementation

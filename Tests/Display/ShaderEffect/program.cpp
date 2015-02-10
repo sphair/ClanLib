@@ -25,7 +25,7 @@ int Program::main(const std::vector<std::string> &args)
 
 	GraphicContext gc = window.get_gc();
 	InputDevice mouse = window.get_ic().get_mouse();
-	Texture2D texture(gc, "../../../Examples/GUI/CommonCode/Resources/tux.png");
+	Texture2D texture(gc, "../../../Examples/3D/Object3D/Resources/tux.png");
 
 	struct Uniforms
 	{
@@ -56,7 +56,7 @@ int Program::main(const std::vector<std::string> &args)
 
 		effect.draw(gc);
 		window.flip(0);
-		KeepAlive::process();
+		RunLoop::process();
 	}
 
 	return 0;

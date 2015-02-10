@@ -46,10 +46,8 @@ private:
 	void on_button_clicked_typeface_tahoma();
 	void on_button_clicked_typeface_sans();
 	void on_button_clicked_typeface_bitstream();
-	void on_checkbox_state_underline();
 	void on_checkbox_state_italic();
 	void on_checkbox_state_subpixel();
-	void on_checkbox_state_strikeout();
 	void on_checkbox_state_antialias();
 	void on_button_clicked_weight_light();
 	void on_button_clicked_weight_normal();
@@ -69,22 +67,17 @@ private:
 private:
 	bool quit;
 	Canvas canvas;
-	LineEdit *lineedit_text_ptr;
-	PushButton *button_typeface_tahoma_ptr;
-	PushButton *button_typeface_sans_ptr;
-	PushButton *button_typeface_bitstream_ptr;
 	std::string font_text;
 	FontMetrics font_metrics;
 	std::string font_typeface;
 	std::string font_filename;
 	FontDescription font_desc;
-	Size font_size;
+	Sizef font_size;
 	clan::Font small_font;
 	clan::Font selected_font;
 	FontClass selected_fontclass;
 	float last_fps;
 	ResourceManager resources;
-	GUIWindowManagerTexture gui_manager;
 };
 
 

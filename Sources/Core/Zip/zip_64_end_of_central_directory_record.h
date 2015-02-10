@@ -51,25 +51,25 @@ public:
 /// \{
 
 public:
-	byte32 signature; // 0x06064b50
+	int32_t signature; // 0x06064b50
 
-	byte64 size_of_record;
+	int64_t size_of_record;
 
-	byte16 version_made_by;
+	int16_t version_made_by;
 
-	byte16 version_needed_to_extract;
+	int16_t version_needed_to_extract;
 
-	byte32 number_of_this_disk;
+	int32_t number_of_this_disk;
 
-	byte32 number_of_disk_with_central_directory_start;
+	int32_t number_of_disk_with_central_directory_start;
 
-	byte64 number_of_entries_on_this_disk;
+	int64_t number_of_entries_on_this_disk;
 
-	byte64 number_of_entries_in_central_directory;
+	int64_t number_of_entries_in_central_directory;
 
-	byte64 size_of_central_directory;
+	int64_t size_of_central_directory;
 
-	byte64 offset_to_start_of_central_directory;
+	int64_t offset_to_start_of_central_directory;
 
 	std::string extensible_data_sector;
 

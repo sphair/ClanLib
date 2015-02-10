@@ -52,39 +52,39 @@ public:
 /// \{
 
 public:
-	byte32 signature; // 0x02014b50
+	int32_t signature; // 0x02014b50
 
-	byte16 version_made_by;
+	int16_t version_made_by;
 
-	byte16 version_needed_to_extract;
+	int16_t version_needed_to_extract;
 
-	byte16 general_purpose_bit_flag;
+	int16_t general_purpose_bit_flag;
 
-	byte16 compression_method;
+	int16_t compression_method;
 
-	byte16 last_mod_file_time;
+	int16_t last_mod_file_time;
 
-	byte16 last_mod_file_date;
+	int16_t last_mod_file_date;
 
-	ubyte32 crc32;
+	uint32_t crc32;
 
-	byte32 compressed_size;
+	int32_t compressed_size;
 
-	byte32 uncompressed_size;
+	int32_t uncompressed_size;
 
-	byte16 file_name_length;
+	int16_t file_name_length;
 
-	byte16 extra_field_length;
+	int16_t extra_field_length;
 
-	byte16 file_comment_length;
+	int16_t file_comment_length;
 
-	byte16 disk_number_start;
+	int16_t disk_number_start;
 
-	byte16 internal_file_attributes;
+	int16_t internal_file_attributes;
 
-	byte32 external_file_attributes;
+	int32_t external_file_attributes;
 
-	byte32 relative_offset_of_local_header;
+	int32_t relative_offset_of_local_header;
 
 	std::string filename;
 

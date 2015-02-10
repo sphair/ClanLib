@@ -44,7 +44,6 @@
 #endif
 
 #include "API/Core/System/system.h"
-#include "API/Core/System/setup_core.h"
 #include "API/Core/System/exception.h"
 #include "API/Core/Text/string_help.h"
 #if defined UNICODE && !defined _UNICODE
@@ -58,12 +57,12 @@ namespace clan
 
 // Win32 implementation of System functions:
 
-ubyte64 System::get_time()
+uint64_t System::get_time()
 {
 	return (get_microseconds() / 1000);
 }
 
-ubyte64 System::get_microseconds()
+uint64_t System::get_microseconds()
 {
 	static LARGE_INTEGER perf_counter;
 	static double perf_frequency;
@@ -82,7 +81,7 @@ ubyte64 System::get_microseconds()
 
 	QueryPerformanceCounter(&perf_counter);
 	double quad_part = (double) perf_counter.QuadPart;
-	return (ubyte64) (((1000000.0 * quad_part) / perf_frequency) + 0.5);
+	return (uint64_t) (((1000000.0 * quad_part) / perf_frequency) + 0.5);
 }
 
 std::string System::get_exe_path()

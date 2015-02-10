@@ -29,6 +29,7 @@
 #pragma once
 
 #include "../View/view.h"
+#include "../Image/image_source.h"
 
 namespace clan
 {
@@ -36,26 +37,18 @@ namespace clan
 	class Image;
 	class ImageViewImpl;
 
-	class ImageSource
-	{
-	public:
-		virtual ~ImageSource() { }
-		virtual Image get_image(Canvas &canvas) = 0;
-
-		static std::shared_ptr<ImageSource> from_resource(const std::string &resource_name);
-		static std::shared_ptr<ImageSource> from_callback(const std::function<Image(Canvas &)> &get_image_callback);
-	};
-
 	class ImageView : public View
 	{
 	public:
 		ImageView();
 
 		std::shared_ptr<ImageSource> image();
-		void set_image(std::shared_ptr<ImageSource> image);
+		void set_image(const std::shared_ptr<ImageSource> &image);
+		void set_image(const Image &image);
 
 		std::shared_ptr<ImageSource> highlighted_image();
-		void set_highlighted_image(std::shared_ptr<ImageSource> image);
+		void set_highlighted_image(const std::shared_ptr<ImageSource> &image);
+		void set_highlighted_image(const Image &image);
 
 		/*
 		std::vector<std::shared_ptr<ImageSource>> animation_images();

@@ -48,7 +48,7 @@ namespace clan
 		Canvas canvas;
 
 		bool needs_render = false;
-		Rect canvas_rect;
+		Rectf canvas_rect;
 		DisplayWindow cursor_window;
 		DisplayWindow event_window;
 		SlotContainer slots;
@@ -75,7 +75,7 @@ namespace clan
 		void transform_on_mouse_up(const clan::InputEvent &);
 		void transform_on_mouse_move(const clan::InputEvent &);
 
-		clan::InputEvent transform_input_event(const clan::InputEvent &event) { InputEvent e = event; e.mouse_pos = Vec2i(transform_mouse_matrix.get_transformed_point(Vec3f(e.mouse_pos.x, e.mouse_pos.y, 0))); return e; }
+		clan::InputEvent transform_input_event(const clan::InputEvent &event) { InputEvent e = event; e.mouse_pos = Vec2f(transform_mouse_matrix.get_transformed_point(Vec3f(e.mouse_pos.x, e.mouse_pos.y, 0))); return e; }
 
 		int capture_down_counter = 0;
 		std::shared_ptr<View> captured_view;

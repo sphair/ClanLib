@@ -162,9 +162,9 @@ void SoundOutput_OSS::write_fragment(float *data)
 {
 
 	// OSS Cannot handle floats (why!)
-	std::vector<byte16> buffer;
+	std::vector<int16_t> buffer;
 	buffer.resize(frag_size);
-	byte16 *bptr = &buffer[0];
+	int16_t *bptr = &buffer[0];
 	for (int cnt=0; cnt<frag_size; cnt++)
 	{
 		*(bptr++) = (int) ( *(data++) * 32767.0f );

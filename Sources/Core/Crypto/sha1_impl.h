@@ -78,7 +78,7 @@ private:
 		return (value << shift) + (value >> (32-shift));
 	}
 
-	ubyte32 h0, h1, h2, h3, h4;
+	uint32_t h0, h1, h2, h3, h4;
 
 	const static int block_size = 64;
 
@@ -86,7 +86,7 @@ private:
 
 	int chunk_filled;
 
-	ubyte64 length_message;
+	uint64_t length_message;
 
 	bool calculated;
 

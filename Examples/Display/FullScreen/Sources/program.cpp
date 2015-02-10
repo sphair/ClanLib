@@ -33,16 +33,9 @@
 
 int Program::main(const std::vector<std::string> &args)
 {
-
-	// Initialize ClanLib base components
-	SetupCore setup_core;
-
-	// Initialize the ClanLib display component
-	SetupDisplay setup_display;
-
 	// We support all display targets, in order listed here
-	clan::SetupD3D setup_d3d;
-	clan::SetupGL setup_gl;
+	clan::OpenGLTarget::enable();
+	clan::D3DTarget::enable();
 
 	// Start the Application
 	FullScreen app;

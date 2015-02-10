@@ -74,7 +74,7 @@ void X509_Impl::parse_tbs_certificate(ASN1 &asn1)
 
 	if (item.is_context_specific())
 	{
-		ubyte32 version_value = item.get_next_universal_integer_ubyte32();
+		uint32_t version_value = item.get_next_universal_integer_ubyte32();
 
 		version = static_cast<X509_Version> (version_value);
 		switch(version)
@@ -186,7 +186,7 @@ void X509_Impl::parse_name(ASN1 &tbs, X509_BasicInfo &output)
 
 		ASN1 tag_oid = tag_sequence.get_next_universal_oid();
 
-		std::vector<ubyte32> oid;
+		std::vector<uint32_t> oid;
 		tag_oid.get_object_identifier(oid);
 
 		ASN1 tag_string = tag_sequence.get_next();

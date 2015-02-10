@@ -90,50 +90,6 @@ ProgramObject::ProgramObject(ProgramObjectProvider *provider)
 	impl->provider = provider;
 }
 
-ProgramObject ProgramObject::load(
-	GraphicContext &gc,
-	const std::string &resource_id,
-	const XMLResourceDocument &resources)
-{
-	ProgramObject program_object(gc);
-
-	XMLResourceNode resource = resources.get_resource(resource_id);
-
-	DomNode node = resource.get_element().get_first_child();
-
-	while (!node.is_null())
-	{
-		if (node.is_element())
-		{
-			DomElement element = node.to_element();
-			if (element.get_tag_name() == "shader")
-			{
-				ShaderObject shader = ShaderObject::load(gc, element.get_attribute("name"), resources);
-				program_object.attach(shader);
-			}
-			else if (element.get_tag_name() == "bind-attribute")
-			{
-				program_object.bind_attribute_location(
-					StringHelp::text_to_int(element.get_attribute("index")),
-					element.get_attribute("name"));
-			}
-		}
-		node = node.get_next_sibling();
-	}
-	
-	if (!resource.get_element().get_attribute("shader").empty())
-	{
-		ShaderObject shader = ShaderObject::load(gc, resource.get_element().get_attribute("shader"), resources);
-		program_object.attach(shader);
-	}
-	
-	if (resource.get_element().get_attribute("link", "true") == "true")
-		if(!program_object.link())
-			throw Exception(string_format("Unable to link program object: %1", program_object.get_info_log()));
-
-	return program_object;
-}
-
 ProgramObject ProgramObject::load(GraphicContext &gc, const std::string &vertex_filename, const std::string &fragment_filename, const FileSystem &fs)
 {
 	ProgramObject program_object(gc);

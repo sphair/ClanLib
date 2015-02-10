@@ -35,20 +35,27 @@
 #include "../display_target.h"
 #include <memory>
 
+#ifndef WIN32
+// We prefer not to include Xlib.h in clanlib (to prevent namespace issues when "using namespace clan")
+struct _XDisplay;
+typedef struct _XDisplay Display;
+typedef unsigned long Window;
+#endif
+
 namespace clan
 {
 /// \addtogroup clanDisplay_Window clanDisplay Window
 /// \{
 
-class Size;
-class Rect;
+class Sizef;
+class Rectf;
 class Display;
 class GraphicContext;
 class DisplayWindowMode;
 class DisplayWindowDescription;
-class DisplayWindowHandle;
+struct DisplayWindowHandle;
 class InputContext;
-class Point;
+class Pointf;
 class Cursor;
 class DisplayWindowProvider;
 class DisplayWindow_Impl;
@@ -72,6 +79,16 @@ enum class StandardCursor
 	wait
 };
 
+struct DisplayWindowHandle
+{
+#ifdef WIN32
+	HWND hwnd = 0;
+#else
+	::Display *display = 0;
+	::Window window = 0;
+#endif
+};
+
 /// \brief Top-level window class.
 class DisplayWindow
 {
@@ -92,8 +109,8 @@ public:
 	/// \param target = Display target used to create the window.
 	DisplayWindow(
 		const std::string &title,
-		int width,
-		int height,
+		float width,
+		float height,
 		bool start_fullscreen = false,
 		bool allow_resize = false,
 		int flipping_buffers = 2);
@@ -117,10 +134,10 @@ public:
 /// \{
 public:
 	/// \brief Returns the position and size of the window frame.
-	Rect get_geometry() const;
+	Rectf get_geometry() const;
 
 	/// \brief Returns the drawable area of the window (excluding window frame).
-	Rect get_viewport() const;
+	Rectf get_viewport() const;
 
 	/// \brief Returns true if window is currently running fullscreen.
 	bool is_fullscreen() const;
@@ -141,10 +158,10 @@ public:
 	Signal<void()> &sig_got_focus();
 
 	/// \brief Signal emitted when window is resized.
-	Signal<void(int, int)> &sig_resize();
+	Signal<void(float, float)> &sig_resize();
 
 	/// \brief Signal emitted when an area of the window is invalidated.
-	Signal<void(const Rect &)> &sig_paint();
+	Signal<void(const Rectf &)> &sig_paint();
 
 	/// \brief Signal emitted when window is closed.
 	Signal<void()> &sig_window_close();
@@ -168,7 +185,7 @@ public:
 	Signal<void()> &sig_window_flip();
 
 	/// \brief Callback called when a window is being resized.
-	std::function<void(Rect &)> &func_window_resize();
+	std::function<void(Rectf &)> &func_window_resize();
 
 	/// \brief Callback called when a window is asked to minimize itself.
 	std::function<bool()> &func_minimize_clicked();
@@ -210,34 +227,33 @@ public:
 	PixelBuffer get_clipboard_image() const;
 
 	/// \brief Returns the minimum size the window can be resized to by the application user.
-	Size get_minimum_size(bool client_area=false);
+	Sizef get_minimum_size(bool client_area=false);
 
 	/// \brief Returns the maximum size the window can be resized to by the application user.
-	Size get_maximum_size(bool client_area=false);
+	Sizef get_maximum_size(bool client_area=false);
 
 	/// \brief Returns the window title.
 	std::string get_title() const;
 
 	/** Returns an platform-specific internal display window handle object.
-	 *  \note This function is used internally by ClanLib.
 	 */
-	DisplayWindowHandle const *get_handle() const;
+	DisplayWindowHandle get_handle() const;
 
 /// \}
 /// \name Operations
 /// \{
 public:
 	/// \brief Convert from window client coordinates to screen coordinates.
-	Point client_to_screen(const Point &client);
+	Pointf client_to_screen(const Pointf &client);
 
 	/// \brief Convert from screen coordinates to client coordinates.
-	Point screen_to_client(const Point &screen);
+	Pointf screen_to_client(const Pointf &screen);
 
 	/// \brief Capture/Release the mouse.
 	void capture_mouse(bool capture);
 
 	/// \brief Invalidates a region of a screen, causing a repaint.
-	void request_repaint(const Rect &rect);
+	void request_repaint(const Rectf &rect);
 
 	/// \brief Change window title.
 	void set_title(const std::string &title);
@@ -246,13 +262,13 @@ public:
 	///
 	/// \param pos = Window position and size.
 	/// \param client_area = true - Position relative to window client area
-	void set_position(const Rect &pos, bool client_area);
+	void set_position(const Rectf &pos, bool client_area);
 
-	/// \brief Set window position and size.
+	/// \brief Set window position.
 	///
 	/// \param x Window x position on desktop.
 	/// \param y Window y position on desktop.
-	void set_position(int x, int y);
+	void set_position(float x, float y);
 
 	/// \brief Set enabled
 	///
@@ -270,13 +286,13 @@ public:
 	/// \param width = New width of window in pixels.
 	/// \param height = New height of window in pixels.
 	/// \param client_area = true - relative to the window client area
-	void set_size(int width, int height, bool client_area);
+	void set_size(float width, float height, bool client_area);
 
 	/// \brief Minimum size a window can be resized to by the application user.
-	void set_minimum_size(int width, int height, bool client_area);
+	void set_minimum_size(float width, float height, bool client_area);
 
 	/// \brief Maximum size a window can be resized to by the application user.
-	void set_maximum_size(int width, int height, bool client_area);
+	void set_maximum_size(float width, float height, bool client_area);
 
 	/// \brief Minimizes the window.
 	void minimize();
@@ -299,7 +315,7 @@ public:
 	/// \brief Copy the specified rectangle area from back buffer to front buffer.
 	///
 	/// \param rect Area that should be copied.
-	void update(const Rect &rect);
+	void update(const Rectf &rect);
 
 	/// \brief Flip back buffer to front, making changes visible on screen.
 	///
@@ -349,12 +365,12 @@ public:
 	///
 	/// This is only supported on Windows Vista and above (Else use Layered windows instead)
 	/// \param blur_rect = Blur rectangle. If size = 0, then the entire window is used
-	void enable_alpha_channel(const Rect &blur_rect);
+	void enable_alpha_channel(const Rectf &blur_rect);
 
 	/// \brief Exend the window frame into the client area
 	///
 	/// Only implemented on win32
-	void extend_frame_into_client_area(int left, int top, int right, int bottom);
+	void extend_frame_into_client_area(float left, float top, float right, float bottom);
 
 /// \}
 /// \name Implementation

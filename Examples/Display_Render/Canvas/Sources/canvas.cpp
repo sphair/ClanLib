@@ -99,7 +99,7 @@ int ExampleCanvas::start(const std::vector<std::string> &args)
 		window.flip(1);
 
 		// This call updates input and performs other "housekeeping" call this each frame
-		KeepAlive::process();
+		RunLoop::process();
 	}
 	return 0;
 }

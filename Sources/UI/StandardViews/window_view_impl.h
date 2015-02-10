@@ -58,7 +58,7 @@ namespace clan
 		void on_window_close();
 		void on_lost_focus();
 		void on_got_focus();
-		void on_resize(int, int);
+		void on_resize(float, float);
 		void on_paint(const clan::Rect &);
 		void on_key_down(const clan::InputEvent &);
 		void on_key_up(const clan::InputEvent &);

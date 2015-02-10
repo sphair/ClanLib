@@ -115,10 +115,10 @@ public:
 	void read(const void *input, Vec4f *output, int num_pixels) override
 	{
 		const float rcp_1023 = 1.0f / 1023.0f;
-		const ubyte32 *d = static_cast<const ubyte32 *>(input);
+		const uint32_t *d = static_cast<const uint32_t *>(input);
 		for (int i = 0; i < num_pixels; i++)
 		{
-			ubyte32 value = d[i];
+			uint32_t value = d[i];
 			output[i] = Vec4f( ((value >> 22) & 1023) * rcp_1023, ((value >> 12) & 1023) * rcp_1023,((value>>2) & 1023) * rcp_1023, 1.0f);
 		}
 	}
@@ -162,10 +162,10 @@ public:
 	{
 		const float rcp_1023 = 1.0f / 1023.0f;
 		const float rcp_3 = 1.0f / 3.0f;
-		const ubyte32 *d = static_cast<const ubyte32 *>(input);
+		const uint32_t *d = static_cast<const uint32_t *>(input);
 		for (int i = 0; i < num_pixels; i++)
 		{
-			ubyte32 value = d[i];
+			uint32_t value = d[i];
 			output[i] = Vec4f( ((value >> 22) & 1023) * rcp_1023, ((value >> 12) & 1023) * rcp_1023,((value>>2) & 1023) * rcp_1023, ((value>>0) & 1023) * rcp_3);
 		}
 	}

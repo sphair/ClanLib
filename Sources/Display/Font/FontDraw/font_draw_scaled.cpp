@@ -93,7 +93,7 @@ namespace clan
 					float xp = gptr->offset.x;
 					float yp = gptr->offset.y;
 
-					Rectf dest_size(xp, yp, Sizef(gptr->geometry.get_size()));
+					Rectf dest_size(xp, yp, gptr->size);
 					batcher->draw_image(canvas, gptr->geometry, dest_size, color, gptr->texture);
 				}
 				offset_x += gptr->metrics.advance.width * scaled_height;

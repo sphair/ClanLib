@@ -49,7 +49,7 @@ int App::start(const std::vector<std::string> &args)
 	// Connect a keyboard handler to on_key_up()
 	clan::Slot slot_input_up = window.get_ic().get_keyboard().sig_key_up().connect(this, &App::on_input_up);
 
-	font = clan::Font(canvas, "tahoma", 16);
+	font = clan::Font("tahoma", 16);
 
 	target_test_run_length_seconds = 0.5f;
 
@@ -86,7 +86,7 @@ int App::start(const std::vector<std::string> &args)
 	
 #endif
 
-	cb_main.set(this, &App::initial_pause);
+	cb_main = clan::bind_member(this, &App::initial_pause);
 	game_time.reset();
 
 	// Run until someone presses escape
@@ -100,7 +100,7 @@ int App::start(const std::vector<std::string> &args)
 		canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
 
 		std::string text("ClanLib Benchmark Utility");
-		clan::Size text_size = font.get_text_size(canvas, text);
+		clan::Size text_size = clan::Size(font.measure_text(canvas, text).bbox_size);
 		font.draw_text(canvas, ( ( canvas_size.width - text_size.width) / 2), 32, text, clan::Colorf::white);
 
 		int ypos = 96;
@@ -141,12 +141,12 @@ int App::start(const std::vector<std::string> &args)
 			}
 		}
 
-		cb_main.invoke();
+		cb_main();
 
 		// This call processes user input and other events
-		clan::KeepAlive::process(0);
+		clan::RunLoop::process(0);
 	}
-
+	
 	return 0;
 }
 
@@ -167,7 +167,7 @@ void App::on_window_close()
 
 void App::draw_info(const std::string &text)
 {
-	clan::Size text_size = font.get_text_size(canvas, text);
+	clan::Size text_size = clan::Size(font.measure_text(canvas, text).bbox_size);
 	font.draw_text(canvas,  ( ( canvas.get_width() - text_size.width) / 2), 64, text, clan::Colorf::white);
 	window.flip(1);
 }
@@ -176,20 +176,20 @@ void App::initial_pause()
 {
 	draw_info("* Starting in 1 second *");
 
-	cb_test.set(&tests, &Tests::test_empty);
-	cb_test.invoke();
+	cb_test = clan::bind_member(&tests, &Tests::test_empty);
+	cb_test();
 	
 	if (game_time.get_current_time() >= 1.0f)
-		cb_main.set(this, &App::initialise_1);
+		cb_main = clan::bind_member(this, &App::initialise_1);
 }
 
-clan::ubyte64 App::get_start_time() const
+uint64_t App::get_start_time() const
 {
 	// Ensure that the time starts at the start of a new tick
-	clan::ubyte64 start_time = clan::System::get_microseconds();
+	uint64_t start_time = clan::System::get_microseconds();
 	while(true)
 	{
-		clan::ubyte64 time_now = clan::System::get_microseconds();
+		uint64_t time_now = clan::System::get_microseconds();
 		if (time_now != start_time)
 			return time_now;
 	}
@@ -199,45 +199,45 @@ void App::initialise_1()
 {
 	draw_info("* Calculating Test Run Length *");
 
-	cb_test.set(&tests, &Tests::test_empty);
+	cb_test = clan::bind_member(&tests, &Tests::test_empty);
 
-	tests_run_length_microseconds = (clan::ubyte64) (((double) target_test_run_length_seconds) * 1000000.0);
+	tests_run_length_microseconds = (uint64_t) (((double) target_test_run_length_seconds) * 1000000.0);
 
-	const clan::ubyte64 num_block_iteration = 10000;
+	const uint64_t num_block_iteration = 10000;
 
-	clan::ubyte64 start_time = get_start_time();
+	uint64_t start_time = get_start_time();
 	for (num_iterations = 0; ; num_iterations++)
 	{
-		clan::ubyte64 current_time = clan::System::get_microseconds();
+		uint64_t current_time = clan::System::get_microseconds();
 
 		if ((current_time - start_time) >= tests_run_length_microseconds)
 			break;
 	
-		for (clan::ubyte64 cnt=0; cnt < num_block_iteration; cnt++)
+		for (uint64_t cnt=0; cnt < num_block_iteration; cnt++)
 		{
-			cb_test.invoke();
+			cb_test();
 		}
 		num_iterations+=num_block_iteration;
 	}
-	cb_main.set(this, &App::initialise_2);
+	cb_main = clan::bind_member(this, &App::initialise_2);
 }
 
 void App::initialise_2()
 {
 	draw_info("* Adjusting Run Timer *");
 
-	cb_test.set(&tests, &Tests::test_empty);
+	cb_test = clan::bind_member(&tests, &Tests::test_empty);
 	tests_run_length_microseconds = run_test();
 	testlist_offset = 0;
-	cb_main.set(this, &App::test);
+	cb_main = clan::bind_member(this, &App::test);
 }
 
-clan::byte64 App::run_test()
+int64_t App::run_test()
 {
-	clan::ubyte64 start_time = get_start_time();
-	for (clan::ubyte64 cnt=0; cnt < num_iterations; cnt++)
+	uint64_t start_time = get_start_time();
+	for (uint64_t cnt=0; cnt < num_iterations; cnt++)
 	{
-		cb_test.invoke();
+		cb_test();
 	}
 	return (clan::System::get_microseconds() - start_time);
 
@@ -248,13 +248,13 @@ void App::test()
 	
 	draw_info(clan::string_format("* Running - %1 *", testlist[testlist_offset].name));
 
-	cb_test.set(&tests, testlist[testlist_offset].func);
-	clan::byte64 microseconds = run_test();
+	cb_test = clan::bind_member(&tests, testlist[testlist_offset].func);
+	int64_t microseconds = run_test();
 	double result = ((double) microseconds / (double)tests_run_length_microseconds) ;
 	testlist[testlist_offset].result = result + 0.05;	// Round up
 	testlist_offset++;
 	if (testlist_offset >= testlist.size())
-		cb_main.set(this, &App::write_result);
+		cb_main = clan::bind_member(this, &App::write_result);
 }
 
 void App::write_result()
@@ -290,6 +290,6 @@ void App::write_result()
 
 	clan::File::write_text("results.txt", output);
 
-	cb_main.set(this, &App::initialise_1);
+	cb_main = clan::bind_member(this, &App::initialise_1);
 }
 

@@ -28,6 +28,7 @@
 
 #include "UI/precomp.h"
 #include "API/UI/StandardViews/text_field_view.h"
+#include "API/UI/Style/style.h"
 #include "API/Display/2D/canvas.h"
 #include "API/Display/2D/path.h"
 #include "API/Display/2D/brush.h"
@@ -58,6 +59,8 @@ namespace clan
 		slots.connect(sig_pointer_move(), impl.get(), &TextFieldViewImpl::on_pointer_move);
 		slots.connect(sig_focus_gained(), impl.get(), &TextFieldViewImpl::on_focus_gained);
 		slots.connect(sig_focus_lost(), impl.get(), &TextFieldViewImpl::on_focus_lost);
+		slots.connect(sig_activated(), impl.get(), &TextFieldViewImpl::on_activated);
+		slots.connect(sig_activated(), impl.get(), &TextFieldViewImpl::on_deactivated);
 
 		impl->scroll_timer.func_expired() = [&]()
 		{
@@ -103,16 +106,6 @@ namespace clan
 	{
 		impl->placeholder = value;
 		set_needs_render();
-	}
-
-	const TextStyle &TextFieldView::text_style() const
-	{
-		return impl->text_style;
-	}
-
-	TextStyle &TextFieldView::text_style()
-	{
-		return impl->text_style;
 	}
 
 	TextAlignment TextFieldView::text_alignment() const
@@ -340,7 +333,7 @@ namespace clan
 		float advance_before = font.measure_text(canvas, txt_before).advance.width;
 		float advance_selected = font.measure_text(canvas, txt_selected).advance.width;
 
-		FontMetrics font_metrics = font.get_font_metrics();
+		FontMetrics font_metrics = font.get_font_metrics(canvas);
 		float baseline = font_metrics.get_baseline_offset();
 		float top_y = baseline - font_metrics.get_ascent();
 		float bottom_y = baseline + font_metrics.get_descent();
@@ -354,42 +347,43 @@ namespace clan
 			Path::rect(selection_rect).fill(canvas, focus_view() == this ? Brush::solid_rgb8(51, 153, 255) : Brush::solid_rgb8(200, 200, 200));
 		}
 
-		font.draw_text(canvas, 0.0f, baseline, txt_before, impl->text_style.color());
-		font.draw_text(canvas, advance_before, baseline, txt_selected, focus_view() == this ? Colorf(255, 255, 255) : impl->text_style.color());
-		font.draw_text(canvas, advance_before + advance_selected, baseline, txt_after, impl->text_style.color());
+		Colorf color = style()->computed_value("color").color;
+		font.draw_text(canvas, 0.0f, baseline, txt_before, color);
+		font.draw_text(canvas, advance_before, baseline, txt_selected, focus_view() == this ? Colorf(255, 255, 255) : color);
+		font.draw_text(canvas, advance_before + advance_selected, baseline, txt_after, color);
 
 		float cursor_advance = std::round(font.measure_text(canvas, impl->text.substr(0, impl->cursor_pos)).advance.width);
 
 		if (impl->cursor_blink_visible)
-			Path::rect(cursor_advance, top_y, 1.0f, bottom_y - top_y).fill(canvas,Brush(impl->text_style.color()));
+			Path::rect(cursor_advance, top_y, 1.0f, bottom_y - top_y).fill(canvas, Brush(color));
 	}
 
 	float TextFieldView::get_preferred_width(Canvas &canvas)
 	{
-		if (box_style.is_width_auto())
+		if (style()->computed_value("width").is_keyword("auto"))
 		{
 			Font font = impl->get_font(canvas);
 			return font.measure_text(canvas, impl->text).advance.width;
 		}
 		else
-			return box_style.width();
+			return style()->computed_value("width").number;
 	}
 
 	float TextFieldView::get_preferred_height(Canvas &canvas, float width)
 	{
-		if (box_style.is_height_auto())
+		if (style()->computed_value("height").is_keyword("auto"))
 		{
 			Font font = impl->get_font(canvas);
-			return font.get_font_metrics().get_line_height();
+			return font.get_font_metrics(canvas).get_line_height();
 		}
 		else
-			return box_style.height();
+			return style()->computed_value("height").number;
 	}
 
 	float TextFieldView::get_first_baseline_offset(Canvas &canvas, float width)
 	{
 		Font font = impl->get_font(canvas);
-		return font.get_font_metrics().get_baseline_offset();
+		return font.get_font_metrics(canvas).get_baseline_offset();
 	}
 
 	float TextFieldView::get_last_baseline_offset(Canvas &canvas, float width)
@@ -402,7 +396,7 @@ namespace clan
 	Font &TextFieldViewImpl::get_font(Canvas &canvas)
 	{
 		if (font.is_null())
-			font = text_style.get_font(canvas);
+			font = textfield->style()->get_font(canvas);
 		return font;
 	}
 
@@ -444,6 +438,24 @@ namespace clan
 		}
 		stop_blink();
 		set_text_selection(0, 0);
+	}
+
+	void TextFieldViewImpl::on_activated(ActivationChangeEvent &e)
+	{
+		if (textfield->has_focus())
+		{
+			start_blink();
+		}
+	}
+
+	void TextFieldViewImpl::on_deactivated(ActivationChangeEvent &e)
+	{
+		if (mouse_selecting)
+		{
+			scroll_timer.stop();
+			mouse_selecting = false;
+		}
+		stop_blink();
 	}
 
 	void TextFieldViewImpl::on_key_press(KeyEvent &e)
@@ -547,7 +559,7 @@ namespace clan
 		if (textfield->has_focus())
 		{
 			mouse_selecting = true;
-			cursor_pos = get_character_index(e.pos().x);
+			cursor_pos = get_character_index(e.pos(textfield).x);
 			set_text_selection(cursor_pos, 0);
 		}
 		else
@@ -571,7 +583,7 @@ namespace clan
 		{
 			scroll_timer.stop();
 			mouse_selecting = false;
-			int sel_end = get_character_index(e.pos().x);
+			int sel_end = get_character_index(e.pos(textfield).x);
 			selection_length = sel_end - selection_start;
 			cursor_pos = sel_end;
 			textfield->set_focus();
@@ -588,10 +600,10 @@ namespace clan
 			return;
 
 		Rect content_rect = textfield->geometry().content_box();
-		int xpos = e.pos().x;
-		if (xpos < content_rect.left || xpos > content_rect.right)
+		int xpos = e.pos(textfield).x;
+		if (xpos < 0 || xpos > content_rect.get_width())
 		{
-			if (xpos < content_rect.left)
+			if (xpos < 0)
 				mouse_moves_left = true;
 			else
 				mouse_moves_left = false;
@@ -602,7 +614,7 @@ namespace clan
 		else
 		{
 			scroll_timer.stop();
-			cursor_pos = get_character_index(e.pos().x);
+			cursor_pos = get_character_index(xpos);
 			selection_length = cursor_pos - selection_start;
 			textfield->set_needs_render();
 		}
@@ -958,8 +970,7 @@ namespace clan
 
 	unsigned int TextFieldViewImpl::get_character_index(int mouse_x_wincoords)
 	{
-		Rect content_rect = textfield->geometry().content_box();
-		int mouse_x = mouse_x_wincoords - content_rect.left;
+		int mouse_x = mouse_x_wincoords;
 
 		if (last_measured_rects.empty())
 			return 0;

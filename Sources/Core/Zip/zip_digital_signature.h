@@ -51,9 +51,9 @@ public:
 /// \{
 
 public:
-	byte32 signature; // 0x05054b50
+	int32_t signature; // 0x05054b50
 
-	byte16 size_of_data;
+	int16_t size_of_data;
 
 	std::string signature_data;
 

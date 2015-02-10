@@ -45,8 +45,8 @@ class IODevice_Impl;
 /// \brief I/O Device interface.
 ///
 /// This class can store basic datatypes and retain portability (using the specified endian mode)\n
-///    The supported datatypes are: byte64, byte32, byte16 and byte8\n
-///    The std::string datatype is supported - Using Size(byte32), Charactor Data (std::string characters) 
+///    The supported datatypes are: int64_t, int32_t, int16_t and int8_t\n
+///    The std::string datatype is supported - Using Size(int32_t), Charactor Data (std::string characters) 
 class IODevice
 {
 /// \name Enumerations
@@ -178,42 +178,42 @@ public:
 	/// \brief Writes a signed 64 bit integer to output source.
 	///
 	/// \param data Integer to write
-	void write_int64(byte64 data);
+	void write_int64(int64_t data);
 
 	/// \brief Writes an unsigned 64 bit integer to output source.
 	///
 	/// \param data Integer to write
-	void write_uint64(ubyte64 data);
+	void write_uint64(uint64_t data);
 
 	/// \brief Writes a signed 32 bit integer to output source.
 	///
 	/// \param data Integer to write
-	void write_int32(byte32 data);
+	void write_int32(int32_t data);
 
 	/// \brief Writes an unsigned 32 bit integer to output source.
 	///
 	/// \param data Integer to write
-	void write_uint32(ubyte32 data);
+	void write_uint32(uint32_t data);
 
 	/// \brief Writes a signed 16 bit integer to output source.
 	///
 	/// \param data Integer to write
-	void write_int16(byte16 data);
+	void write_int16(int16_t data);
 
 	/// \brief Writes an unsigned 16 bit integer to output source.
 	///
 	/// \param data Integer to write
-	void write_uint16(ubyte16 data);
+	void write_uint16(uint16_t data);
 
 	/// \brief Writes a signed 8 bit integer to output source.
 	///
 	/// \param data Integer to write
-	void write_int8(byte8 data);
+	void write_int8(int8_t data);
 
 	/// \brief Writes an unsigned 8 bit integer to output source.
 	///
 	/// \param data Integer to write
-	void write_uint8(ubyte8 data);
+	void write_uint8(uint8_t data);
 
 	/// \brief  Writes a float to output source.
 	///
@@ -248,35 +248,35 @@ public:
 
 	/// \brief Reads a signed 64 bit integer from input source.
 	/** \return The integer read.*/
-	byte64 read_int64();
+	int64_t read_int64();
 
 	/// \brief Reads an unsigned 64 bit integer from input source.
 	/** \return The integer read.*/
-	ubyte64 read_uint64();
+	uint64_t read_uint64();
 
 	/// \brief Reads a signed 32 bit integer from input source.
 	/** \return The integer read.*/
-	byte32 read_int32();
+	int32_t read_int32();
 
 	/// \brief Reads an unsigned 32 bit integer from input source.
 	/** \return The integer read.*/
-	ubyte32 read_uint32();
+	uint32_t read_uint32();
 
 	/// \brief Reads a signed 16 bit integer from input source.
 	/** \return The integer read.*/
-	byte16 read_int16();
+	int16_t read_int16();
 
 	/// \brief Reads an unsigned 16 bit integer from input source.
 	/** \return The integer read.*/
-	ubyte16 read_uint16();
+	uint16_t read_uint16();
 
 	/// \brief Reads a signed 8 bit integer from input source.
 	/** \return The integer read.*/
-	byte8 read_int8();
+	int8_t read_int8();
 
 	/// \brief Reads an unsigned 8 bit integer from input source.
 	/** \return The integer read.*/
-	ubyte8 read_uint8();
+	uint8_t read_uint8();
 
 	/// \brief Reads a float from input source.
 	/** Warning, this is not portable

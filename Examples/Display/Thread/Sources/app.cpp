@@ -72,7 +72,6 @@ int App::start(const std::vector<std::string> &args)
 
 	texture_buffers_offset = 0;
 	pixel_buffers_offset = 0;
-	worker_thread_complete = false;
 	
 	texture_write = &texture_buffers[0];
 	texture_completed = &texture_buffers[1];
@@ -81,149 +80,132 @@ int App::start(const std::vector<std::string> &args)
 
 	dest_pixels = NULL;
 	quit = false;
-	crashed_flag = false;
 
-	std::unique_lock<std::recursive_timed_mutex> worker_thread_mutex_section(worker_thread_mutex, std::defer_lock);
+	thread = std::thread(&App::worker_thread, this);
 
-	// We require a try block, so the worker thread exits correctly
-	std::thread thread;
-	try
+	// Main loop
+	FramerateCounter framerate_counter;
+	FramerateCounter worker_thread_framerate_counter;
+	uint64_t last_time = clan::System::get_time();
+	uint64_t last_mandelbrot_time = clan::System::get_time();
+
+	float angle = 0.0f;
+	bool texture_write_active = false;
+
+	while (!quit)
 	{
-		thread = std::thread(&App::worker_thread, this);
+		framerate_counter.frame_shown();
 
-		// Main loop
-		FramerateCounter framerate_counter;
-		FramerateCounter worker_thread_framerate_counter;
-		clan::ubyte64 last_time = clan::System::get_time();
-		clan::ubyte64 last_mandelbrot_time = clan::System::get_time();
+		// Calculate timings
+		uint64_t current_time = clan::System::get_time();
+		float time_delta_ms = (float) (current_time - last_time);
+		last_time = current_time;
 
-		float angle = 0.0f;
-		bool worker_thread_started = false;
-		bool texture_write_active = false;
+		angle += time_delta_ms / 50.0f;
+		while(angle > 360.0f)
+			angle-=360.0f;
 
-		while (!quit)
-		{
-			framerate_counter.frame_shown();
-
-			// Calculate timings
-			clan::ubyte64 current_time = clan::System::get_time();
-			float time_delta_ms = (float) (current_time - last_time);
-			last_time = current_time;
-
-			angle += time_delta_ms / 50.0f;
-			while(angle > 360.0f)
-				angle-=360.0f;
-
-			canvas.clear();
-			
-			// If the pixel buffer was uploaded on the last frame, double buffer it
-			if (texture_write_active)
-			{
-				texture_write_active = false;
-				if (texture_buffers_offset == 0)
-				{
-					texture_buffers_offset = 1;
-					texture_write = &texture_buffers[1];
-					texture_completed = &texture_buffers[0];
-				}
-				else
-				{
-					texture_buffers_offset = 0;
-					texture_write = &texture_buffers[0];
-					texture_completed = &texture_buffers[1];
-				}
-			}
-
-			// Wait for pixel buffer completion
-			if ((worker_thread_started == true) && (worker_thread_complete==true))
-			{
-				worker_thread_mutex_section.lock();
-
-				worker_thread_started = false;
-				worker_thread_complete = false;
-				pixelbuffer_write->unlock();
-
-				worker_thread_mutex_section.unlock();
-
-				texture_write->set_subimage(canvas, 0, 0, *pixelbuffer_write, pixelbuffer_write->get_size());
-				texture_write_active = true;
-				// Note the worker thread will start on the other pixelbuffer straight away, in the next "if" statement
-			}
-
-			// Start a new transfer when required
-			if ((worker_thread_started == false) && (worker_thread_complete==false))
-			{
-				worker_thread_framerate_counter.frame_shown();
-
-				worker_thread_mutex_section.lock();
-				// Swap the pixelbuffer's
-				if (pixel_buffers_offset == 0)
-				{
-					pixel_buffers_offset = 1;
-					pixelbuffer_write = &pixel_buffers[1];
-					pixelbuffer_completed = &pixel_buffers[0];
-				}
-				else
-				{
-					pixel_buffers_offset = 0;
-					pixelbuffer_write = &pixel_buffers[0];
-					pixelbuffer_completed = &pixel_buffers[1];
-				}
-
-				pixelbuffer_write->lock(canvas, clan::access_write_only);
-				dest_pixels = (unsigned char *) pixelbuffer_write->get_data();
-				worker_thread_started = true;
-				worker_thread_complete = false;
-
-				// Adjust the mandelbrot scale
-				float mandelbrot_time_delta_ms = (float) (current_time - last_mandelbrot_time);
-				last_mandelbrot_time = current_time;
-				scale -= scale * mandelbrot_time_delta_ms / 1000.0f;
-				if (scale <= 0.001f)
-					scale = 4.0f;
-
-				worker_thread_mutex_section.unlock();
-				worker_thread_activate_event.set();
-			}
-
-			// Draw rotating mandelbrot
-			canvas.set_transform(clan::Mat4f::translate(canvas.get_width()/2, canvas.get_height()/2, 0.0f) * clan::Mat4f::rotate(clan::Angle(angle, clan::angle_degrees), 0.0f, 0.0f, 1.0f));
-			clan::Image image(*texture_completed, clan::Size(texture_size, texture_size));
-			image.draw( canvas, -texture_size/2, -texture_size/2 );
-
-			canvas.set_transform(clan::Mat4f::identity());
-		
-			// Draw FPS
-			std::string fps;
-			fps = std::string(clan::string_format("Main Loop %1 fps", framerate_counter.get_framerate()));
-			font.draw_text(canvas, 16, canvas.get_height()-16-2, fps, clan::Colorf(1.0f, 1.0f, 0.0f, 1.0f));
-			fps = std::string(clan::string_format("Worker Thread %1 fps", worker_thread_framerate_counter.get_framerate()));
-			font.draw_text(canvas, 16, canvas.get_height()-64-2, fps, clan::Colorf(1.0f, 1.0f, 0.0f, 1.0f));
-
-			// Draw worker thread crashed message
-			if (crashed_flag)
-				font.draw_text(canvas, 16, 32, "WORKER THREAD CRASHED");
-	
-			window.flip(0);
-
-			clan::KeepAlive::process();
-		}
 		canvas.clear();
-		font.draw_text(canvas, 32, 32, "Waiting for worker thread to exit");
+			
+		// If the pixel buffer was uploaded on the last frame, double buffer it
+		if (texture_write_active)
+		{
+			texture_write_active = false;
+			if (texture_buffers_offset == 0)
+			{
+				texture_buffers_offset = 1;
+				texture_write = &texture_buffers[1];
+				texture_completed = &texture_buffers[0];
+			}
+			else
+			{
+				texture_buffers_offset = 0;
+				texture_write = &texture_buffers[0];
+				texture_completed = &texture_buffers[1];
+			}
+		}
+
+		// Wait for pixel buffer completion
+		std::unique_lock<std::mutex> lock(thread_mutex);
+		if (thread_complete_flag == true)
+		{
+			thread_complete_flag = false;
+			pixelbuffer_write->unlock();
+
+			texture_write->set_subimage(canvas, 0, 0, *pixelbuffer_write, pixelbuffer_write->get_size());
+			texture_write_active = true;
+			// Note the worker thread will start on the other pixelbuffer straight away, in the next "if" statement
+		}
+
+		// Start a new transfer when required
+		if ((thread_start_flag == false))
+		{
+			worker_thread_framerate_counter.frame_shown();
+
+			// Swap the pixelbuffer's
+			if (pixel_buffers_offset == 0)
+			{
+				pixel_buffers_offset = 1;
+				pixelbuffer_write = &pixel_buffers[1];
+				pixelbuffer_completed = &pixel_buffers[0];
+			}
+			else
+			{
+				pixel_buffers_offset = 0;
+				pixelbuffer_write = &pixel_buffers[0];
+				pixelbuffer_completed = &pixel_buffers[1];
+			}
+
+			pixelbuffer_write->lock(canvas, clan::access_write_only);
+			dest_pixels = (unsigned char *) pixelbuffer_write->get_data();
+			thread_start_flag = true;
+			thread_complete_flag = false;
+
+			// Adjust the mandelbrot scale
+			float mandelbrot_time_delta_ms = (float) (current_time - last_mandelbrot_time);
+			last_mandelbrot_time = current_time;
+			scale -= scale * mandelbrot_time_delta_ms / 1000.0f;
+			if (scale <= 0.001f)
+				scale = 4.0f;
+
+			thread_worker_event.notify_all();
+		}
+		pixelbuffer_write->unlock();
+
+		// Draw rotating mandelbrot
+		canvas.set_transform(clan::Mat4f::translate(canvas.get_width()/2, canvas.get_height()/2, 0.0f) * clan::Mat4f::rotate(clan::Angle(angle, clan::angle_degrees), 0.0f, 0.0f, 1.0f));
+		clan::Image image(*texture_completed, clan::Size(texture_size, texture_size));
+		image.draw( canvas, -texture_size/2, -texture_size/2 );
+
+		canvas.set_transform(clan::Mat4f::identity());
+		
+		// Draw FPS
+		std::string fps;
+		fps = std::string(clan::string_format("Main Loop %1 fps", framerate_counter.get_framerate()));
+		font.draw_text(canvas, 16, canvas.get_height()-16-2, fps, clan::Colorf(1.0f, 1.0f, 0.0f, 1.0f));
+		fps = std::string(clan::string_format("Worker Thread %1 fps", worker_thread_framerate_counter.get_framerate()));
+		font.draw_text(canvas, 16, canvas.get_height()-64-2, fps, clan::Colorf(1.0f, 1.0f, 0.0f, 1.0f));
+
+		// Draw worker thread crashed message
+		if (thread_crashed_flag)
+			font.draw_text(canvas, 16, 32, "WORKER THREAD CRASHED");
+	
 		window.flip(0);
-		worker_thread_stop_event.set();
-		thread.join();
-	}
-	catch(clan::Exception &exception)
-	{
-		worker_thread_stop_event.set();
-		thread.join();
-		throw exception;
+
+		clan::RunLoop::process(0);
 	}
 
 	return 0;
 }
 
+App::~App()
+{
+	std::unique_lock<std::mutex> lock(thread_mutex);
+	thread_exit_flag = true;
+	lock.unlock();
+	thread_worker_event.notify_all();
+	thread.join();
+}
 
 void App::window_close()
 {
@@ -285,31 +267,30 @@ void App::worker_thread()
 {
 	try
 	{
-		
-		std::unique_lock<std::recursive_timed_mutex> worker_thread_mutex_section(worker_thread_mutex, std::defer_lock);
-
 		while(true)
 		{
 		
-			int wakeup_reason = clan::Event::wait(worker_thread_activate_event, worker_thread_stop_event);
-			if (wakeup_reason != 0)	// Stop event called
+			std::unique_lock<std::mutex> lock(thread_mutex);
+			thread_worker_event.wait(lock, [&]() { return thread_start_flag || thread_exit_flag; });
+			if (thread_exit_flag)
 				break;
-			worker_thread_activate_event.reset();
+			thread_start_flag = false;
+			lock.unlock();
 
 			// Write to texture
-			worker_thread_mutex_section.lock();
 			if (dest_pixels)
 				render_mandelbrot(scale, dest_pixels);
-			worker_thread_mutex_section.unlock();
 
-			//throw Exception("Bang!");	// <--- Use this to test the application handles exceptions in threads
+			//throw clan::Exception("Bang!");	// <--- Use this to test the application handles exceptions in threads
 
-			worker_thread_complete = true;
+			lock.lock();
+			thread_complete_flag = true;
 		}
 	}
 	catch(clan::Exception &)
 	{
-		crashed_flag = true;
+		std::unique_lock<std::mutex> lock(thread_mutex);
+		thread_crashed_flag = true;
 	}
 
 

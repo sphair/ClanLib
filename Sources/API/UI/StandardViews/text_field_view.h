@@ -51,9 +51,6 @@ namespace clan
 		TextAlignment text_alignment() const;
 		void set_text_alignment(TextAlignment value);
 
-		const TextStyle &text_style() const;
-		TextStyle &text_style();
-
 		bool is_read_only() const;
 		void set_read_only(bool value = true);
 

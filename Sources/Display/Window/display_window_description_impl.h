@@ -45,7 +45,7 @@ public:
 	DisplayWindowDescription_Impl()
 	{
 		title = "Untitled Clanlib Window";
-		position = Rect(-1, -1, 639, 479);
+		position = Rectf(-1.0f, -1.0f, 639.0f, 479.0f);
 		position_client_area = false;
 		caption = true;
 		topmost = false;
@@ -63,7 +63,6 @@ public:
 		bpp = 0;
 		create_tablet_context = false;
 		layered = false;
-		handle = nullptr;
 		depth_size = 0;
 		stencil_size = 0;
 		use_cached_window = false;
@@ -79,7 +78,7 @@ public:
 /// \{
 public:
 	std::string title;
-	Rect position;
+	Rectf position;
 	bool position_client_area;
 	bool caption;
 	bool minimize_button;
@@ -100,7 +99,7 @@ public:
 	bool use_cached_window;
 	bool layered;
 
-	DisplayWindowHandle *handle;
+	DisplayWindowHandle handle;
 
 	int depth_size;
 	int stencil_size;

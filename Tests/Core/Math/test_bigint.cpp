@@ -42,7 +42,7 @@ void TestApp::test_bigint(void)
 		BigInt value3;
 		value3 = value;
 		value.set(33);
-		ubyte32 result;
+		uint32_t result;
 		value.get(result);
 		if (result != 33)
 			fail();
@@ -68,10 +68,10 @@ void TestApp::test_bigint(void)
 		
 	}
 
-	Console::write_line("   Function: BigInt set(ubyte32) and get(ubyte32)");
+	Console::write_line("   Function: BigInt set(uint32_t) and get(uint32_t)");
 	{
 		BigInt value(1234);
-		ubyte32 result;
+		uint32_t result;
 		value.get(result);
 		if (result != 1234)
 			fail();
@@ -85,10 +85,10 @@ void TestApp::test_bigint(void)
 			fail();
 	}
 
-	Console::write_line("   Function: BigInt set(ubyte64) and get(ubyte64)");
+	Console::write_line("   Function: BigInt set(uint64_t) and get(uint64_t)");
 	{
 		BigInt value(1234);
-		ubyte64 result;
+		uint64_t result;
 		value.get(result);
 		if (result != 1234ULL)
 			fail();
@@ -103,10 +103,10 @@ void TestApp::test_bigint(void)
 	}
 
 
-	Console::write_line("   Function: BigInt set(byte32) and get(byte32)");
+	Console::write_line("   Function: BigInt set(int32_t) and get(int32_t)");
 	{
 		BigInt value(1234);
-		byte32 result;
+		int32_t result;
 		value.get(result);
 		if (result != 1234)
 			fail();
@@ -125,10 +125,10 @@ void TestApp::test_bigint(void)
 			fail();
 	}
 
-	Console::write_line("   Function: BigInt set(byte64) and get(byte64)");
+	Console::write_line("   Function: BigInt set(int64_t) and get(int64_t)");
 	{
 		BigInt value(1234LL);
-		byte64 result;
+		int64_t result;
 		value.get(result);
 		if (result != 1234LL)
 			fail();
@@ -154,7 +154,7 @@ void TestApp::test_bigint(void)
 		BigInt value3;
 
 		value3 = value1 + value2;
-		byte32 result;
+		int32_t result;
 		value3.get(result);
 		if (result != 8)
 			fail();
@@ -167,7 +167,7 @@ void TestApp::test_bigint(void)
 		BigInt value2(3);
 
 		value1 += value2;
-		byte32 result;
+		int32_t result;
 		value1.get(result);
 		if (result != 8)
 			fail();
@@ -185,7 +185,7 @@ void TestApp::test_bigint(void)
 		BigInt value3;
 
 		value3 = value1 - value2;
-		byte32 result;
+		int32_t result;
 		value3.get(result);
 		if (result != 2)
 			fail();
@@ -196,7 +196,7 @@ void TestApp::test_bigint(void)
 		BigInt value2(3);
 	
 		value1 -= value2;
-		byte32 result;
+		int32_t result;
 		value1.get(result);
 		if (result != 2)
 			fail();
@@ -209,7 +209,7 @@ void TestApp::test_bigint(void)
 		BigInt value3;
 
 		value3 = value1 * value2;
-		byte32 result;
+		int32_t result;
 		value3.get(result);
 		if (result != 15)
 			fail();
@@ -221,7 +221,7 @@ void TestApp::test_bigint(void)
 		BigInt value2(3);
 
 		value1 *= value2;
-		byte32 result;
+		int32_t result;
 		value1.get(result);
 		if (result != 15)
 			fail();
@@ -264,7 +264,7 @@ void TestApp::test_bigint(void)
 		BigInt value3;
 
 		value3 = value1 / value2;
-		byte32 result;
+		int32_t result;
 		value3.get(result);
 		if (result != 2)
 			fail();
@@ -277,7 +277,7 @@ void TestApp::test_bigint(void)
 		BigInt value2(4);
 
 		value1 /= value2;
-		byte32 result;
+		int32_t result;
 		value1.get(result);
 		if (result != 2)
 			fail();
@@ -289,7 +289,7 @@ void TestApp::test_bigint(void)
 		BigInt value3;
 
 		value3 = value1 % value2;
-		byte32 result;
+		int32_t result;
 		value3.get(result);
 		if (result != 1)
 			fail();
@@ -302,7 +302,7 @@ void TestApp::test_bigint(void)
 		BigInt value2(4);
 
 		value1 %= value2;
-		byte32 result;
+		int32_t result;
 		value1.get(result);
 		if (result != 1)
 			fail();

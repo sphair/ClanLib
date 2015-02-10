@@ -694,6 +694,13 @@ public:
 
 	/// \brief Constructs a color.
 	///
+	/// \param color = The color
+	Colorf(const Vec4f &color) : Vec4f(color)
+	{
+	}
+
+	/// \brief Constructs a color.
+	///
 	/// Color components are specified in the range 0 to 255.\n
 	/// An alpha value of 0 means complete transparency, while 255 means completely opaque (solid).
 	///

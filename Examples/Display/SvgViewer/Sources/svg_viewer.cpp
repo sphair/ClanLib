@@ -53,7 +53,7 @@ int SvgViewer::run(const std::vector<std::string> &args)
 		}
 	});
 
-	clan::Font font(canvas, "Tahoma", 24);
+	clan::Font font("Tahoma", 24);
 
 	Svg svg("Resources/tiger.svg");
 	float angle = 0.0f;
@@ -85,7 +85,7 @@ int SvgViewer::run(const std::vector<std::string> &args)
 
 		//transform = "matrix(1.7656463,0,0,1.7656463,324.90716,255.00942)"
 		float new_scale = scale / 1.7656463f;
-		clan::Pointf position(324.90716, 255.00942);
+		clan::Pointf position(324.90716f, 255.00942f);
 		position *= 0.5f;
 
 		clan::Mat4f rotation = clan::Mat4f::translate(canvas.get_width()/2.0f, canvas.get_height()/2.0f, 0.0f) * clan::Mat4f::rotate(clan::Angle(angle, clan::angle_degrees), 0.0f, 0.0f, 1.0f) * clan::Mat4f::translate(-canvas.get_width()/2.0f, -canvas.get_height()/2.0f, 0.0f);
@@ -95,7 +95,7 @@ int SvgViewer::run(const std::vector<std::string> &args)
 		font.draw_text(canvas, 17, 40, clan::string_format("%1 FPS", time.get_updates_per_second()), clan::Colorf::black);
 
 		window.flip(0);
-		clan::KeepAlive::process(0);
+		clan::RunLoop::process(0);
 		time.update();
 	}
 

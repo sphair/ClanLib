@@ -71,7 +71,7 @@ public:
 	std::string get_title() const;
 	Size get_minimum_size(bool client_area) const;
 	Size get_maximum_size(bool client_area) const;
-	DisplayWindowHandle const *get_handle() const override { return &handle; }
+	DisplayWindowHandle get_handle() const override { DisplayWindowHandle handle; handle.hwnd = win32_window.get_hwnd(); return handle; }
 	HDC get_device_context() const { return device_context; }
 	HGLRC get_opengl_context() const { return opengl_context; }
 	GraphicContext& get_gc() { return gc; }
@@ -80,6 +80,7 @@ public:
 	bool is_clipboard_image_available() const;
 	std::string get_clipboard_text() const;
 	PixelBuffer get_clipboard_image() const;
+	float get_pixel_ratio() const override;
 
 /// \}
 /// \name Operations
@@ -136,6 +137,8 @@ public:
 
 	ProcAddress *get_proc_address(const std::string& function_name) const;
 
+	void set_pixel_ratio(float ratio) override;
+
 /// \}
 /// \name Implementation
 /// \{
@@ -156,7 +159,7 @@ private:
 
 	/// \brief Device context for this window.
     HDC device_context;
-	DisplayWindowHandle handle;
+	HWND shadow_hwnd = 0;
 	bool shadow_window;
 	bool dwm_layered;
 	DisplayWindowSite *site;

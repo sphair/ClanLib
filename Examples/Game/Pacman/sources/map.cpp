@@ -259,7 +259,7 @@ void Map::eat_trail(int x, int y)
 
 void Map::draw(int center_x, int center_y, Canvas &canvas)
 {
-	static ubyte64 start_time = -1;
+	static uint64_t start_time = -1;
 	if (start_time == -1) start_time = System::get_time();
 	
 	int powerup_spr = ((System::get_time()-start_time)/250)%2;

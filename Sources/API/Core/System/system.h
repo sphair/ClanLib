@@ -48,10 +48,10 @@ class System
 
 public:
 	/// \brief Get the current time (since system boot), in milliseconds.
-	static ubyte64 get_time();
+	static uint64_t get_time();
 
 	/// \brief Get the current time microseconds.
-	static ubyte64 get_microseconds();
+	static uint64_t get_microseconds();
 
     enum CPU_ExtensionX86 { mmx, mmx_ex, _3d_now, _3d_now_ex, sse, sse2, sse3, ssse3, sse4_a, sse4_1, sse4_2, xop, avx, aes, fma3, fma4 };
     enum CPU_ExtensionPPC { altivec };

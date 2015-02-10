@@ -70,7 +70,6 @@ namespace clan
 		FontPixelBuffer get_font_glyph(int glyph) override { return FontPixelBuffer(); }
 		void load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics) override {}
 		const FontDescription &get_desc() const override { return font_description; }
-		DataBuffer get_databuffer() override { return DataBuffer(); }
 
 	private:
 		FontDescription font_description;
@@ -85,27 +84,45 @@ namespace clan
 	{
 	}
 
-	void FontFamily_Impl::load_font(const FontDescription &desc, DataBuffer &font_databuffer)
+	void FontFamily_Impl::add(const FontDescription &desc, DataBuffer &font_databuffer)
+	{
+		FontFamily_Definition definition;
+		definition.desc = desc.clone();
+		definition.font_databuffer = font_databuffer;
+		font_definitions.push_back(definition);
+	}
+
+	void FontFamily_Impl::add(const FontDescription &desc, const std::string &typeface_name)
+	{
+		FontFamily_Definition definition;
+		definition.desc = desc.clone();
+		definition.typeface_name = typeface_name;
+		font_definitions.push_back(definition);
+	}
+
+	void FontFamily_Impl::font_face_load(const FontDescription &desc, DataBuffer &font_databuffer, float pixel_ratio)
 	{
 #ifdef WIN32
-		std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Win32>(desc, font_databuffer);
+		std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Win32>(desc, font_databuffer, pixel_ratio);
 		font_cache.push_back(Font_Cache(engine));
 #elif defined(__APPLE__)
 		std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Cocoa>(desc, font_databuffer);
 		font_cache.push_back(Font_Cache(engine));
 #else
-		std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Freetype>(desc, font_databuffer);
+		std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Freetype>(desc, font_databuffer, pixel_ratio);
 		font_cache.push_back(Font_Cache(engine));
 #endif
 		font_cache.back().glyph_cache->set_texture_group(texture_group);
+		font_cache.back().pixel_ratio = pixel_ratio;
 	}
 
-	void FontFamily_Impl::load_font(const FontDescription &desc, const std::string &typeface_name)
+	void FontFamily_Impl::font_face_load(const FontDescription &desc, const std::string &typeface_name, float pixel_ratio)
 	{
 #ifdef WIN32
-		std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Win32>(desc, typeface_name);
+		std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Win32>(desc, typeface_name, pixel_ratio);
 		font_cache.push_back(Font_Cache(engine));
 		font_cache.back().glyph_cache->set_texture_group(texture_group);
+		font_cache.back().pixel_ratio = pixel_ratio;
 #elif defined(__APPLE__)
 		throw Exception("automatic typeface to ttf file selection is not supported on apple");
 		//std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Cocoa>(desc, typeface_name);
@@ -122,11 +139,11 @@ namespace clan
 		DataBuffer font_databuffer;
 		font_databuffer.set_size(file.get_size());
 		file.read(font_databuffer.get_data(), font_databuffer.get_size());
-		load_font(desc, font_databuffer);
+		font_face_load(desc, font_databuffer, pixel_ratio);
 #endif
 	}
 
-	void FontFamily_Impl::load_font(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics)
+	void FontFamily_Impl::font_face_load(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, float spacelen, bool monospace, const FontMetrics &metrics)
 	{
 		FontMetrics font_metrics = metrics;
 
@@ -227,11 +244,13 @@ namespace clan
 			{
 				increment.x = sprite_frame.position.get_width();
 			}
-			Point offset(sprite_frame.offset);
+			Pointf offset(sprite_frame.offset);
 			offset.y -= font_metrics.get_ascent();
 
+			Sizef size = sprite_frame.position.get_size();
+
 			Subtexture sub_texture(sprite_frame.texture, sprite_frame.position);
-			glyph_cache->insert_glyph(canvas, glyph, sub_texture, offset, GlyphMetrics(Pointf(offset.x, offset.y), Sizef(increment.x, increment.y), Sizef(increment.x, increment.y)));
+			glyph_cache->insert_glyph(canvas, glyph, sub_texture, offset, size, GlyphMetrics(Pointf(offset.x, offset.y), Sizef(increment.x, increment.y), Sizef(increment.x, increment.y)));
 
 			sprite_index++;
 		}
@@ -273,18 +292,25 @@ namespace clan
 
 	}
 
-	Font_Cache FontFamily_Impl::get_font(const Font_Selected &desc)
+	Font_Cache FontFamily_Impl::get_font(const FontDescription &desc, float pixel_ratio)
 	{
 		// Find cached version
 		for (auto &cache : font_cache)
 		{
-			if (desc.style != cache.engine->get_desc().get_style())
+			if (cache.pixel_ratio != pixel_ratio)
 				continue;
-			if (desc.weight != cache.engine->get_desc().get_weight())
+			if (desc.get_style() != cache.engine->get_desc().get_style())
 				continue;
+			if (desc.get_weight() != cache.engine->get_desc().get_weight())
+				continue;
+			if (desc.get_subpixel() != cache.engine->get_desc().get_subpixel())
+				continue;
+			if (desc.get_anti_alias() != cache.engine->get_desc().get_anti_alias())
+				continue;
+
 			if (cache.engine->is_automatic_recreation_allowed())
 			{
-				if (desc.height != cache.engine->get_desc().get_height())
+				if (desc.get_height() != cache.engine->get_desc().get_height())
 					continue;
 			}
 
@@ -293,48 +319,49 @@ namespace clan
 		return Font_Cache();
 	}
 
-	Font_Cache FontFamily_Impl::copy_font(const Font_Selected &desc)
+	Font_Cache FontFamily_Impl::copy_font(const FontDescription &desc, float pixel_ratio)
 	{
 		// Find existing typeface, to obtain shared data that we can copy
-		FontDescription new_desc;
-		DataBuffer font_databuffer;
+		FontFamily_Definition font_definition;
+		bool found = false;
 
 		// Find find an exact match using style and weight
-		for (auto &cache : font_cache)
+		for (auto &definitions : font_definitions)
 		{
-			if (desc.style != cache.engine->get_desc().get_style())
+			if (desc.get_style() != definitions.desc.get_style())
 				continue;
-			if (desc.weight != cache.engine->get_desc().get_weight())
+			if (desc.get_weight() != definitions.desc.get_weight())
 				continue;
 
-			font_databuffer = cache.engine->get_databuffer();	// Get shared databuffer
-			new_desc = cache.engine->get_desc().clone();
+			font_definition = definitions;
+			found = true;
 			break;
 		}
 
 		// Else find the first font
-		if (font_databuffer.is_null())
+		if (!found)
 		{
-			for (auto &cache : font_cache)
+			if (!font_definitions.empty())
 			{
-				font_databuffer = cache.engine->get_databuffer();	// Get shared databuffer
-				new_desc = cache.engine->get_desc().clone();
-				break;
+				font_definition = font_definitions[0];
+				found = true;
 			}
 		}
 
-		new_desc.set_height(desc.height);
-		new_desc.set_style(desc.style);
-		new_desc.set_weight(desc.weight);
-
-		if (font_databuffer.is_null())
+		if (!found)
 		{
-			load_font(new_desc, family_name);
+			font_face_load(desc, family_name, pixel_ratio);
+		}
+
+		if (!font_definition.font_databuffer.is_null())
+		{
+			font_face_load(desc, font_definition.font_databuffer, pixel_ratio);
 		}
 		else
 		{
-			load_font(new_desc, font_databuffer);
+			font_face_load(desc, font_definition.typeface_name, pixel_ratio);
 		}
+
 		return font_cache.back();
 	}
 

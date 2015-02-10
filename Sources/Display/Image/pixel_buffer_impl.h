@@ -60,6 +60,8 @@ public:
 
 	PixelBufferProvider *provider;
 
+	float pixel_ratio = 0.0f;
+
 /// \}
 /// \name Attributes
 /// \{

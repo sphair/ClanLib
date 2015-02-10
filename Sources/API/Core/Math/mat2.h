@@ -103,28 +103,28 @@ public:
 	}
 
 	/// \brief Constructs a 2x2 matrix (copied from 4, 64 bit integers)
-	explicit Mat2(const byte64 *init_matrix)
+	explicit Mat2(const int64_t *init_matrix)
 	{
 		for (int i=0; i<4; i++)
 			matrix[i] = (Type) init_matrix[i];
 	}
 
 	/// \brief Constructs a 2x2 matrix (copied from 4, 32 bit integers)
-	explicit Mat2(const byte32 *init_matrix)
+	explicit Mat2(const int32_t *init_matrix)
 	{
 		for (int i=0; i<4; i++)
 			matrix[i] = (Type) init_matrix[i];
 	}
 
 	/// \brief Constructs a 2x2 matrix (copied from 4, 16 bit integers)
-	explicit Mat2(const byte16 *init_matrix)
+	explicit Mat2(const int16_t *init_matrix)
 	{
 		for (int i=0; i<4; i++)
 			matrix[i] = (Type) init_matrix[i];
 	}
 
 	/// \brief Constructs a 2x2 matrix (copied from 4, 8 bit integers)
-	explicit Mat2(const byte8 *init_matrix)
+	explicit Mat2(const int8_t *init_matrix)
 	{
 		for (int i=0; i<4; i++)
 			matrix[i] = (Type) init_matrix[i];

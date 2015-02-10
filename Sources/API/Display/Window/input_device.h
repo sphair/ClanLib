@@ -116,15 +116,15 @@ public:
 
 	/// \brief Returns the position (x,y) of the device.
 	/** <p>Only valid for pointer devices.</p>*/
-	Point get_position() const;
+	Pointf get_position() const;
 
 	/// \brief Returns the x position of the device.
 	/** <p>Only valid for pointer devices.</p>*/
-	int get_x() const;
+	float get_x() const;
 
 	/// \brief Returns the y position of the device.
 	/** <p>Only valid for pointer devices.</p>*/
-	int get_y() const;
+	float get_y() const;
 
 	/// \brief Returns the the current position of a joystick axis.
 	float get_axis(int axisid) const;
@@ -153,7 +153,7 @@ public:
 
 	/// \brief Sets the position of the device.
 	/** <p>Only valid for mouse.</p>*/
-	void set_position(int x, int y);
+	void set_position(float x, float y);
 
 /// \}
 /// \name Signals
