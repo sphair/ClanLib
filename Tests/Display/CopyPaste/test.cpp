@@ -89,7 +89,7 @@ int TestApp::main(const std::vector<std::string> &args)
 		{
 			window.get_gc().clear(Colorf::gray70);
 			window.flip();
-			KeepAlive::process();
+			RunLoop::process();
 			System::sleep(50);
 		}*/
 
@@ -137,7 +137,7 @@ int TestApp::main(const std::vector<std::string> &args)
 				window.flip(1);
 				
 				// This call processes user input and other events
-				KeepAlive::process();
+				RunLoop::process();
 			}
 		}
 	}

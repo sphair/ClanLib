@@ -72,39 +72,39 @@ public:
 
 private:
 
-	inline ubyte64 sigma_rr28_rr34_rr39(ubyte64 value) const
+	inline uint64_t sigma_rr28_rr34_rr39(uint64_t value) const
 	{
 		return (rightrotate_uint64(value, 28) ^ rightrotate_uint64(value, 34) ^ rightrotate_uint64(value, 39));
 	}
 
-	inline ubyte64 sigma_rr14_rr18_rr41(ubyte64 value) const
+	inline uint64_t sigma_rr14_rr18_rr41(uint64_t value) const
 	{
 		return (rightrotate_uint64(value, 14) ^ rightrotate_uint64(value, 18) ^ rightrotate_uint64(value, 41));
 	}
 
-	inline ubyte64 sigma_rr1_rr8_sr7(ubyte64 value) const
+	inline uint64_t sigma_rr1_rr8_sr7(uint64_t value) const
 	{
 		return (rightrotate_uint64(value, 1) ^ rightrotate_uint64(value, 8) ^ (value >> 7));
 	}
 
-	inline ubyte64 sigma_rr19_rr61_sr6(ubyte64 value) const
+	inline uint64_t sigma_rr19_rr61_sr6(uint64_t value) const
 	{
 		return (rightrotate_uint64(value, 19) ^ rightrotate_uint64(value, 61) ^ (value >> 6));
 	}
 
-	inline ubyte64 sha_ch(ubyte64 x, ubyte64 y, ubyte64 z) const
+	inline uint64_t sha_ch(uint64_t x, uint64_t y, uint64_t z) const
 	{
 		return (((x) & ((y) ^ (z))) ^ (z));
 	}
 
-	inline ubyte64 sha_maj(ubyte64 x, ubyte64 y, ubyte64 z) const
+	inline uint64_t sha_maj(uint64_t x, uint64_t y, uint64_t z) const
 	{
 		return  (((x) & ((y) | (z))) | ((y) & (z)));
 	}
 
 	void process_chunk();
 
-	ubyte64 h0, h1, h2, h3, h4, h5, h6, h7;
+	uint64_t h0, h1, h2, h3, h4, h5, h6, h7;
 
 	const static int block_size = 128;
 

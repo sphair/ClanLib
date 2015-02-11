@@ -89,7 +89,7 @@ namespace clan
 		static Path ellipse(const Pointf &center, const Sizef &radius);
 
 		// This function is to assist in debugging, it has not been decided if it will be removed. Don't use at the moment.
-		static Path glyph(Font &font, unsigned int glyph, GlyphMetrics &out_metrics);
+		static Path glyph(Canvas &canvas, Font &font, unsigned int glyph, GlyphMetrics &out_metrics);
 
 		std::shared_ptr<PathImpl> get_impl() const { return impl; }
 

@@ -33,6 +33,7 @@
 #include <list>
 #include <map>
 #include "API/Display/Window/display_window.h"
+#include "API/Display/Window/display_window_description.h"
 #include "API/Display/Window/input_context.h"
 #include "API/Display/Window/input_device.h"
 #include "API/Display/TargetProviders/input_device_provider.h"
@@ -40,7 +41,6 @@
 #include "API/Core/Math/rect.h"
 #include "API/Core/System/cl_platform.h"
 #include "API/Display/Image/pixel_buffer.h"
-#include "win32_handle.h"
 #include <memory>
 #include <thread>
 #include <condition_variable>
@@ -66,10 +66,10 @@ public:
 	~Win32Window();
 
 public:
-	DisplayWindowHandle const *get_handle() const { return &hwnd; }
 	HWND get_hwnd() const { return hwnd; }
 	Rect get_geometry() const;
 	Rect get_viewport() const;
+	float get_pixel_ratio() const { return pixel_ratio; }
 	bool has_focus() const;
 	bool is_minimized() const;
 	bool is_maximized() const;
@@ -108,6 +108,9 @@ public:
 	void set_size(int width, int height, bool client_area);
 	void set_minimum_size(int width, int height, bool client_area);
 	void set_maximum_size(int width, int height, bool client_area);
+
+	void set_pixel_ratio(float ratio);
+
 	void minimize();
 	void restore();
 	void maximize();
@@ -175,7 +178,7 @@ private:
 	void create_hid_devices();
 	void setup_tablet();
 
-	PixelBuffer get_argb8888_from_png(ubyte8 *data, size_t size) const;
+	PixelBuffer get_argb8888_from_png(uint8_t *data, size_t size) const;
 	PixelBuffer get_argb8888_from_rgb_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const;
 	PixelBuffer get_argb8888_from_bitfields_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const;
 
@@ -188,7 +191,7 @@ private:
 	InputDeviceProvider_Win32Mouse *get_mouse();
 	InputDeviceProvider_Win32Tablet *get_tablet();
 
-	DisplayWindowHandle hwnd;
+	HWND hwnd;
 	bool destroy_hwnd;
 	HCURSOR current_cursor;
 	HICON large_icon;
@@ -228,6 +231,8 @@ private:
 	std::condition_variable update_window_worker_event;
 	HRGN update_window_region;
 	unsigned int update_window_max_region_rects;
+
+	float pixel_ratio   = 1.0f;
 };
 
 }

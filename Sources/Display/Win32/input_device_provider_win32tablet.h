@@ -68,10 +68,10 @@ public:
 	InputDevice::Type get_type() const { return InputDevice::tablet; }
 
 	/// \brief Returns the x position of the device.
-	int get_x() const;
+	float get_x() const;
 
 	/// \brief Returns the y position of the device.
-	int get_y() const;
+	float get_y() const;
 
 	/// \brief Returns true if the passed key code is down for this device.
 	bool get_keycode(int keycode) const;
@@ -117,7 +117,7 @@ public:
 	}
 
 	/// \brief Sets the position of the device.
-	void set_position(int x, int y);
+	void set_position(float x, float y);
 
 	/// \brief Raises the tablet context to the top of the tablet context stack and enables it, or disable the context if false.
 	void set_context_on_top(bool enable);

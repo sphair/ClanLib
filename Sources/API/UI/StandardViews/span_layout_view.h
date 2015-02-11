@@ -45,7 +45,7 @@ namespace clan
 		void set_text_alignment(TextAlignment alignment);
 
 		void clear();
-		void add_text(const std::string &text, const TextStyle &style);
+		void add_text(const std::string &text, const std::shared_ptr<Style> &style);
 		void add_subview(const std::shared_ptr<View> &view, float baseline_offset = 0.0f);
 
 		void render_content(Canvas &canvas) override;

@@ -66,7 +66,7 @@ std::string SHA512_Impl::get_hash(bool uppercase) const
 	if (sha_type == cl_sha_512_224)
 	{
 		// upper 4 bytes of h3
-		to_hex_be(digest+48, (ubyte32) (h3>>32), uppercase);
+		to_hex_be(digest+48, (uint32_t) (h3>>32), uppercase);
 		digest[56] = 0;
 	}
 	else
@@ -270,7 +270,7 @@ void SHA512_Impl::add(const void *_data, int size)
 			chunk_filled = 0;
 		}
 	}
-	length_message = length_message + (size * (ubyte64) 8);
+	length_message = length_message + (size * (uint64_t) 8);
 }
 
 void SHA512_Impl::set_hmac(const void *key_data, int key_size)
@@ -358,8 +358,8 @@ void SHA512_Impl::calculate()
 	if (size < 17)
 		size += block_size;
 
-	ubyte64 length_upper = length_message.high;
-	ubyte64 length_lower = length_message.low;
+	uint64_t length_upper = length_message.high;
+	uint64_t length_lower = length_message.low;
 
 	end_data[size-16] = (length_upper & 0xff00000000000000ll) >> 56;
 	end_data[size-15] = (length_upper & 0x00ff000000000000ll) >> 48;
@@ -424,7 +424,7 @@ void SHA512_Impl::calculate()
 void SHA512_Impl::process_chunk()
 {
 	// Constants defined in FIPS 180-3, section 4.2.3
-	static const ubyte64 constant_K[80] = {
+	static const uint64_t constant_K[80] = {
 		0x428A2F98D728AE22ll, 0x7137449123EF65CDll, 0xB5C0FBCFEC4D3B2Fll,
 		0xE9B5DBA58189DBBCll, 0x3956C25BF348B538ll, 0x59F111F1B605D019ll,
 		0x923F82A4AF194F9Bll, 0xAB1C5ED5DA6D8118ll, 0xD807AA98A3030242ll,
@@ -456,18 +456,18 @@ void SHA512_Impl::process_chunk()
 	};
 
 	int i;
-	ubyte64 w[80];
+	uint64_t w[80];
 
 	for (i = 0; i < 16; i++)
 	{
-		ubyte64 b1 = chunk[i*8];
-		ubyte64 b2 = chunk[i*8+1];
-		ubyte64 b3 = chunk[i*8+2];
-		ubyte64 b4 = chunk[i*8+3];
-		ubyte64 b5 = chunk[i*8+4];
-		ubyte64 b6 = chunk[i*8+5];
-		ubyte64 b7 = chunk[i*8+6];
-		ubyte64 b8 = chunk[i*8+7];
+		uint64_t b1 = chunk[i*8];
+		uint64_t b2 = chunk[i*8+1];
+		uint64_t b3 = chunk[i*8+2];
+		uint64_t b4 = chunk[i*8+3];
+		uint64_t b5 = chunk[i*8+4];
+		uint64_t b6 = chunk[i*8+5];
+		uint64_t b7 = chunk[i*8+6];
+		uint64_t b8 = chunk[i*8+7];
 		w[i] = (b1 << 56) + (b2 << 48) + (b3 << 40) + (b4 << 32) + (b5 << 24) + (b6 << 16) + (b7 << 8) + b8;
 	}
 	
@@ -476,18 +476,18 @@ void SHA512_Impl::process_chunk()
 		w[i] = sigma_rr19_rr61_sr6(w[i-2]) + w[i-7] + sigma_rr1_rr8_sr7(w[i-15]) + w[i-16];
 	}
 		
-	ubyte64 a = h0;
-	ubyte64 b = h1;
-	ubyte64 c = h2;
-	ubyte64 d = h3;
-	ubyte64 e = h4;
-	ubyte64 f = h5;
-	ubyte64 g = h6;
-	ubyte64 h = h7;
+	uint64_t a = h0;
+	uint64_t b = h1;
+	uint64_t c = h2;
+	uint64_t d = h3;
+	uint64_t e = h4;
+	uint64_t f = h5;
+	uint64_t g = h6;
+	uint64_t h = h7;
 	
 	for (i = 0; i < 80; i++)
 	{
-		ubyte64 t1, t2;
+		uint64_t t1, t2;
 
 		t1 = h + sigma_rr14_rr18_rr41(e) + sha_ch(e,f,g) + constant_K[i] + w[i];
 		t2 = sigma_rr28_rr34_rr39(a) + sha_maj(a,b,c);

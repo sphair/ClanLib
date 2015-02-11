@@ -31,7 +31,7 @@
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Core/System/cl_platform.h"
 #include "API/Core/System/databuffer.h"
-#include "API/Core/IOData/iodevice_memory.h"
+#include "API/Core/IOData/memory_device.h"
 
 namespace clan
 {
@@ -46,45 +46,45 @@ public:
 
 	struct IconHeader
 	{
-		ubyte16 idReserved;
-		ubyte16 idType; // 1 = ICO, 2 = CUR
-		ubyte16 idCount;
+		uint16_t idReserved;
+		uint16_t idType; // 1 = ICO, 2 = CUR
+		uint16_t idCount;
 	};
 
 	struct IconDirectoryEntry
 	{
-		ubyte8 bWidth;
-		ubyte8 bHeight;
-		ubyte8 bColorCount;
-		ubyte8 bReserved;
+		uint8_t bWidth;
+		uint8_t bHeight;
+		uint8_t bColorCount;
+		uint8_t bReserved;
 		union
 		{
-			ubyte16 wPlanes;   // ICO format
-			byte16 XHotspot;   // CUR format
+			uint16_t wPlanes;   // ICO format
+			int16_t XHotspot;   // CUR format
 		};
 		union
 		{
-			ubyte16 wBitCount; // ICO format
-			byte16 YHotspot;   // CUR format
+			uint16_t wBitCount; // ICO format
+			int16_t YHotspot;   // CUR format
 		};
-		ubyte32 dwBytesInRes;
-		ubyte32 dwImageOffset;
-		/** ubyte16 nID; // Mentioned by http://msdn2.microsoft.com/en-us/library/ms997538.aspx but not in other ICO docs.*/
+		uint32_t dwBytesInRes;
+		uint32_t dwImageOffset;
+		/** uint16_t nID; // Mentioned by http://msdn2.microsoft.com/en-us/library/ms997538.aspx but not in other ICO docs.*/
 	};
 
 	struct IconBitmapInfoHeader
 	{
-        ubyte32 biSize;
-        byte32 biWidth;
-        byte32 biHeight;
-        ubyte16 biPlanes;
-        ubyte16 biBitCount;
-        ubyte32 biCompression;
-        ubyte32 biSizeImage;
-        byte32 biXPelsPerMeter;
-        byte32 biYPelsPerMeter;
-        ubyte32 biClrUsed;
-        ubyte32 biClrImportant;
+        uint32_t biSize;
+        int32_t biWidth;
+        int32_t biHeight;
+        uint16_t biPlanes;
+        uint16_t biBitCount;
+        uint32_t biCompression;
+        uint32_t biSizeImage;
+        int32_t biXPelsPerMeter;
+        int32_t biYPelsPerMeter;
+        uint32_t biClrUsed;
+        uint32_t biClrImportant;
 	};
 
 	enum IconBitmapInfoCompressionType
@@ -124,7 +124,7 @@ DataBuffer IconSet_Impl::create_ico_helper(const std::vector<PixelBuffer> &image
 {
 	DataBuffer buf;
 	buf.set_capacity(32*1024);
-	IODevice_Memory device(buf);
+	MemoryDevice device(buf);
 
 	IconHeader header;
 	memset(&header, 0, sizeof(IconHeader));

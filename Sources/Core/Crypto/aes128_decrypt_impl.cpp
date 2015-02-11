@@ -195,22 +195,22 @@ bool AES128_Decrypt_Impl::calculate()
 
 void AES128_Decrypt_Impl::process_chunk()
 {
-	const ubyte32 *key_expanded_ptr = key_expanded;
+	const uint32_t *key_expanded_ptr = key_expanded;
 
-	ubyte32 chunk1 = get_word(chunk);
-	ubyte32 chunk2 = get_word(chunk + 4);
-	ubyte32 chunk3 = get_word(chunk + 8);
-	ubyte32 chunk4 = get_word(chunk + 12);
+	uint32_t chunk1 = get_word(chunk);
+	uint32_t chunk2 = get_word(chunk + 4);
+	uint32_t chunk3 = get_word(chunk + 8);
+	uint32_t chunk4 = get_word(chunk + 12);
 
-	ubyte32 s0 = chunk1 ^ key_expanded_ptr[0];
-	ubyte32 s1 = chunk2 ^ key_expanded_ptr[1];
-	ubyte32 s2 = chunk3 ^ key_expanded_ptr[2];
-	ubyte32 s3 = chunk4 ^ key_expanded_ptr[3];
+	uint32_t s0 = chunk1 ^ key_expanded_ptr[0];
+	uint32_t s1 = chunk2 ^ key_expanded_ptr[1];
+	uint32_t s2 = chunk3 ^ key_expanded_ptr[2];
+	uint32_t s3 = chunk4 ^ key_expanded_ptr[3];
 
-	ubyte32 t0;
-	ubyte32 t1;
-	ubyte32 t2;
-	ubyte32 t3;
+	uint32_t t0;
+	uint32_t t1;
+	uint32_t t2;
+	uint32_t t3;
 
 	// Round 1
 	t0 = table_d0[s0 >> 24] ^ table_d1[(s3 >> 16) & 0xff] ^ table_d2[(s2 >> 8) & 0xff] ^ table_d3[s1 & 0xff] ^ key_expanded_ptr[ 4];

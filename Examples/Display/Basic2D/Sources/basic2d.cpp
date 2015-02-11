@@ -35,12 +35,16 @@ int Basic2D::start(const std::vector<std::string> &args)
 {
 	quit = false;
 
+	// We support all display targets, in order listed here
+	clan::D3DTarget::enable();
+	clan::OpenGLTarget::enable();
+
     clan::SlotContainer sc;
 
 	// Set the window
 	clan::DisplayWindowDescription desc;
 	desc.set_title("ClanLib Basic2D Example");
-	desc.set_size(clan::Size(640, 480), true);
+	desc.set_size(clan::Sizef(640.0f, 480.0f), true);
 	desc.set_allow_resize(true);
 
 	clan::DisplayWindow window(desc);
@@ -72,7 +76,7 @@ int Basic2D::start(const std::vector<std::string> &args)
 		canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
 
 		// Show the logo image.
-		clan::Size canvas_size = canvas.get_size();
+		clan::Sizef canvas_size = canvas.get_size();
 		spr_logo.draw(canvas, canvas_size.width-spr_logo.get_width(), canvas_size.height-spr_logo.get_height());
 
 		std::string text("Welcome to the ClanLib SDK");
@@ -85,7 +89,7 @@ int Basic2D::start(const std::vector<std::string> &args)
 		canvas.draw_line(0, ypos+198.0f, (float) canvas_size.width, ypos+198.0f, clan::Colorf(0.5f, 0.0f, 0.0f));
 
 		// Add a clipping rect
-		canvas.push_cliprect(clan::Rect(0, (int)(ypos), canvas_size.width, (int)(ypos+198)));
+		canvas.push_cliprect(clan::Rectf(0, ypos, canvas_size.width, ypos+198.0f));
 
 		// Draw a rectangle in the center of the screen
 		// going from (240, 140) -> (440, 340) _not_ including the 

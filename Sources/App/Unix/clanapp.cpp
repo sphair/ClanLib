@@ -28,7 +28,6 @@
 
 #include <cstdlib>
 #include <iostream>
-#include "API/Core/System/setup_core.h"
 #include "API/App/clanapp.h"
 #include "API/Core/System/exception.h"
 #include "API/Core/System/console_window.h"

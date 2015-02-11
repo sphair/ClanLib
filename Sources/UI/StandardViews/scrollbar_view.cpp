@@ -28,15 +28,115 @@
 
 #include "UI/precomp.h"
 #include "API/UI/StandardViews/scrollbar_view.h"
+#include "API/UI/Style/style_property_parser.h"
+#include "API/Display/2D/path.h"
+#include "API/Display/System/timer.h"
+#include "API/Display/2D/brush.h"
+#include "API/UI/Events/pointer_event.h"
 #include <algorithm>
 
 namespace clan
 {
+	enum class ScrollBarButtonDirection
+	{
+		left,
+		right,
+		up,
+		down
+	};
+
+	class ScrollBarButtonView : public View
+	{
+	public:
+		ScrollBarButtonView()
+		{
+		}
+
+		void render_content(Canvas &canvas) override
+		{
+			Rectf box = geometry().content_box().get_size();
+			box.shrink(4.0f, 6.0f);
+
+			Path path;
+			path.set_fill_mode(PathFillMode::alternate);
+			switch (direction)
+			{
+			case ScrollBarButtonDirection::left:
+				path.move_to(box.right, box.top);
+				path.line_to(box.right, box.bottom);
+				path.line_to(box.left, box.top + box.get_height() * 0.5f);
+				path.close();
+				break;
+			case ScrollBarButtonDirection::right:
+				path.move_to(box.left, box.top);
+				path.line_to(box.left, box.bottom);
+				path.line_to(box.right, box.top + box.get_height() * 0.5f);
+				path.close();
+				break;
+			case ScrollBarButtonDirection::up:
+				path.move_to(box.left, box.bottom);
+				path.line_to(box.right, box.bottom);
+				path.line_to(box.left + box.get_width() * 0.5f, box.top);
+				path.close();
+				break;
+			case ScrollBarButtonDirection::down:
+				path.move_to(box.left, box.top);
+				path.line_to(box.right, box.top);
+				path.line_to(box.left + box.get_width() * 0.5f, box.bottom);
+				path.close();
+				break;
+			}
+			path.fill(canvas, Colorf(134, 137, 153));
+		}
+
+		void set_direction(ScrollBarButtonDirection new_dir)
+		{
+			if (new_dir != direction)
+			{
+				direction = new_dir;
+				set_needs_render();
+			}
+		}
+
+	private:
+		ScrollBarButtonDirection direction = ScrollBarButtonDirection::left;
+	};
+
 	class ScrollBarViewImpl
 	{
 	public:
-		std::shared_ptr<View> button_decrement;
-		std::shared_ptr<View> button_increment;
+
+		void on_pointer_track_press(PointerEvent &e);
+		void on_pointer_track_release(PointerEvent &e);
+		void on_pointer_thumb_press(PointerEvent &e);
+		void on_pointer_thumb_release(PointerEvent &e);
+		void on_pointer_decrement_press(PointerEvent &e);
+		void on_pointer_decrement_release(PointerEvent &e);
+		void on_pointer_increment_press(PointerEvent &e);
+		void on_pointer_increment_release(PointerEvent &e);
+
+		void on_pointer_move(PointerEvent &e);
+		void on_focus_gained(FocusChangeEvent &e);
+		void on_focus_lost(FocusChangeEvent &e);
+		void on_activated(ActivationChangeEvent &e);
+		void on_deactivated(ActivationChangeEvent &e);
+
+		void scroll_timer_expired();
+
+		enum MouseDownMode
+		{
+			mouse_down_none,
+			mouse_down_button_decr,
+			mouse_down_button_incr,
+			mouse_down_track_decr,
+			mouse_down_track_incr,
+			mouse_down_thumb_drag
+		} mouse_down_mode = mouse_down_none;
+
+		ScrollBarView *scrollbar = nullptr;
+
+		std::shared_ptr<ScrollBarButtonView> button_decrement;
+		std::shared_ptr<ScrollBarButtonView> button_increment;
 		std::shared_ptr<View> track;
 		std::shared_ptr<View> thumb;
 		std::shared_ptr<View> thumb_grip;
@@ -45,7 +145,12 @@ namespace clan
 		double pos = 0.0;
 		double line_step = 1.0;
 		double page_step = 25.0;
+		double timer_step_size = 0.0;
+		double timer_target_position = 0.0;
+		double thumb_move_start_position = 0.0;
+		Pointf mouse_drag_start_pos;
 		Signal<void()> sig_scroll;
+		Timer scroll_timer;
 
 		void update_pos(ScrollBarView *view, double new_pos, double new_min, double new_max)
 		{
@@ -62,8 +167,10 @@ namespace clan
 
 	ScrollBarView::ScrollBarView() : impl(std::make_shared<ScrollBarViewImpl>())
 	{
-		impl->button_decrement = std::make_shared<View>();
-		impl->button_increment = std::make_shared<View>();
+		impl->scrollbar = this;
+
+		impl->button_decrement = std::make_shared<ScrollBarButtonView>();
+		impl->button_increment = std::make_shared<ScrollBarButtonView>();
 		impl->track = std::make_shared<View>();
 		impl->thumb = std::make_shared<View>();
 		impl->thumb_grip = std::make_shared<View>();
@@ -80,17 +187,40 @@ namespace clan
 		impl->thumb->add_subview(impl->thumb_grip);
 		impl->thumb->add_subview(spacer2);
 
-		impl->button_decrement->box_style.set_flex(0.0f, 0.0f);
-		impl->button_increment->box_style.set_flex(0.0f, 0.0f);
-		impl->track->box_style.set_flex(1.0f, 1.0f);
-		impl->thumb->box_style.set_absolute();
-		spacer1->box_style.set_flex(1.0f, 1.0f);
-		spacer2->box_style.set_flex(1.0f, 1.0f);
+		impl->button_decrement->style()->set("flex", "0 0 main-size");
+		impl->button_increment->style()->set("flex", "0 0 main-size");
+		impl->track->style()->set("flex", "1 1 main-size");
+		impl->thumb->style()->set("position", "absolute");
+		spacer1->style()->set("flex", "1 1 main-size");
+		spacer2->style()->set("flex", "1 1 main-size");
 
-		impl->button_decrement->box_style.set_width(17.0f);
-		impl->button_decrement->box_style.set_height(17.0f);
-		impl->button_increment->box_style.set_width(17.0f);
-		impl->button_increment->box_style.set_height(17.0f);
+		impl->button_decrement->style()->set("width", "17px");
+		impl->button_decrement->style()->set("height", "17px");
+		impl->button_increment->style()->set("width", "17px");
+		impl->button_increment->style()->set("height", "17px");
+
+		slots.connect(impl->track->sig_pointer_press(), impl.get(), &ScrollBarViewImpl::on_pointer_track_press);
+		slots.connect(impl->track->sig_pointer_release(), impl.get(), &ScrollBarViewImpl::on_pointer_track_release);
+
+		slots.connect(impl->thumb->sig_pointer_press(EventUIPhase::at_target), impl.get(), &ScrollBarViewImpl::on_pointer_thumb_press);
+		slots.connect(impl->thumb->sig_pointer_release(EventUIPhase::at_target), impl.get(), &ScrollBarViewImpl::on_pointer_thumb_release);
+		slots.connect(impl->thumb->sig_pointer_press(EventUIPhase::bubbling), impl.get(), &ScrollBarViewImpl::on_pointer_thumb_press);
+		slots.connect(impl->thumb->sig_pointer_release(EventUIPhase::bubbling), impl.get(), &ScrollBarViewImpl::on_pointer_thumb_release);
+
+		slots.connect(impl->button_decrement->sig_pointer_press(), impl.get(), &ScrollBarViewImpl::on_pointer_decrement_press);
+		slots.connect(impl->button_decrement->sig_pointer_release(), impl.get(), &ScrollBarViewImpl::on_pointer_decrement_release);
+		slots.connect(impl->button_increment->sig_pointer_press(), impl.get(), &ScrollBarViewImpl::on_pointer_increment_press);
+		slots.connect(impl->button_increment->sig_pointer_release(), impl.get(), &ScrollBarViewImpl::on_pointer_increment_release);
+
+		slots.connect(impl->thumb->sig_pointer_move(EventUIPhase::at_target), impl.get(), &ScrollBarViewImpl::on_pointer_move);
+		slots.connect(impl->thumb->sig_pointer_move(EventUIPhase::bubbling), impl.get(), &ScrollBarViewImpl::on_pointer_move);
+
+		slots.connect(sig_focus_gained(), impl.get(), &ScrollBarViewImpl::on_focus_gained);
+		slots.connect(sig_focus_lost(), impl.get(), &ScrollBarViewImpl::on_focus_lost);
+		slots.connect(sig_activated(), impl.get(), &ScrollBarViewImpl::on_activated);
+		slots.connect(sig_activated(), impl.get(), &ScrollBarViewImpl::on_deactivated);
+
+		impl->scroll_timer.func_expired() = clan::bind_member(impl.get(), &ScrollBarViewImpl::scroll_timer_expired);
 
 		set_vertical();
 	}
@@ -122,7 +252,7 @@ namespace clan
 
 	bool ScrollBarView::vertical() const
 	{
-		return box_style.is_layout_vbox();
+		return style()->computed_value("flex-direction").is_keyword("column");
 	}
 
 	bool ScrollBarView::horizontal() const
@@ -132,22 +262,26 @@ namespace clan
 
 	void ScrollBarView::set_vertical()
 	{
-		box_style.set_layout_vbox();
-		impl->button_decrement->box_style.set_layout_vbox();
-		impl->button_increment->box_style.set_layout_vbox();
-		impl->track->box_style.set_layout_vbox();
-		impl->thumb->box_style.set_layout_vbox();
-		impl->thumb_grip->box_style.set_layout_vbox();
+		style()->set("flex-direction", "column");
+		impl->button_decrement->style()->set("flex-direction", "column");
+		impl->button_increment->style()->set("flex-direction", "column");
+		impl->track->style()->set("flex-direction", "column");
+		impl->thumb->style()->set("flex-direction", "column");
+		impl->thumb_grip->style()->set("flex-direction", "column");
+		impl->button_decrement->set_direction(ScrollBarButtonDirection::up);
+		impl->button_increment->set_direction(ScrollBarButtonDirection::down);
 	}
 
 	void ScrollBarView::set_horizontal()
 	{
-		box_style.set_layout_hbox();
-		impl->button_decrement->box_style.set_layout_hbox();
-		impl->button_increment->box_style.set_layout_hbox();
-		impl->track->box_style.set_layout_hbox();
-		impl->thumb->box_style.set_layout_hbox();
-		impl->thumb_grip->box_style.set_layout_hbox();
+		style()->set("flex-direction", "row");
+		impl->button_decrement->style()->set("flex-direction", "row");
+		impl->button_increment->style()->set("flex-direction", "row");
+		impl->track->style()->set("flex-direction", "row");
+		impl->thumb->style()->set("flex-direction", "row");
+		impl->thumb_grip->style()->set("flex-direction", "row");
+		impl->button_decrement->set_direction(ScrollBarButtonDirection::left);
+		impl->button_increment->set_direction(ScrollBarButtonDirection::right);
 	}
 
 	double ScrollBarView::line_step() const
@@ -223,10 +357,10 @@ namespace clan
 
 		if (impl->min_pos == impl->max_pos || impl->page_step == 0.0)
 		{
-			impl->thumb->box_style.set_left(0.0f);
-			impl->thumb->box_style.set_top(0.0f);
-			impl->thumb->box_style.set_width(track_geometry.content.get_width());
-			impl->thumb->box_style.set_height(track_geometry.content.get_height());
+			impl->thumb->style()->set("left", "0");
+			impl->thumb->style()->set("top", "0");
+			impl->thumb->style()->set("width", "px0", { track_geometry.content.get_width() });
+			impl->thumb->style()->set("height", "px0", { track_geometry.content.get_height() });
 		}
 		else
 		{
@@ -241,24 +375,201 @@ namespace clan
 
 			if (vertical())
 			{
-				impl->thumb->box_style.set_left(0.0f);
-				impl->thumb->box_style.set_top((float)thumb_pos);
-				impl->thumb->box_style.set_width(track_geometry.content.get_width());
-				impl->thumb->box_style.set_height((float)thumb_length);
+				impl->thumb->style()->set("left", "0");
+				impl->thumb->style()->set("top", "px0", { (float)thumb_pos });
+				impl->thumb->style()->set("width", "px0", { track_geometry.content.get_width() });
+				impl->thumb->style()->set("height", "px0", { (float)thumb_length });
 			}
 			else
 			{
-				impl->thumb->box_style.set_left((float)thumb_pos);
-				impl->thumb->box_style.set_top(0.0f);
-				impl->thumb->box_style.set_width((float)thumb_length);
-				impl->thumb->box_style.set_height(track_geometry.content.get_height());
+				impl->thumb->style()->set("left", "px0", { (float)thumb_pos });
+				impl->thumb->style()->set("top", "0");
+				impl->thumb->style()->set("width", "px0", { (float)thumb_length });
+				impl->thumb->style()->set("height", "px0", { track_geometry.content.get_height() });
 			}
 		}
-
 	}
 
 	Signal<void()> &ScrollBarView::sig_scroll()
 	{
 		return impl->sig_scroll;
 	}
+
+
+	void ScrollBarViewImpl::on_focus_gained(FocusChangeEvent &e)
+	{
+	}
+
+	void ScrollBarViewImpl::on_focus_lost(FocusChangeEvent &e)
+	{
+		mouse_down_mode = mouse_down_none;
+		scroll_timer.stop();
+	}
+
+	void ScrollBarViewImpl::on_activated(ActivationChangeEvent &e)
+	{
+
+	}
+
+	void ScrollBarViewImpl::on_deactivated(ActivationChangeEvent &e)
+	{
+		mouse_down_mode = mouse_down_none;
+		scroll_timer.stop();
+	}
+
+	void ScrollBarViewImpl::on_pointer_track_press(PointerEvent &e)
+	{
+		float mouse_pos;
+		Rectf thumb_geometry(thumb->geometry().content_box());
+		float thumb_position;
+		if (scrollbar->horizontal())
+		{
+			mouse_pos = e.pos(track.get()).x;
+			thumb_position = thumb_geometry.left + thumb_geometry.get_width() / 2.0f;
+			timer_target_position = min_pos + mouse_pos * ((max_pos - min_pos)) / (track->geometry().content_box().get_width());
+		}
+		else
+		{
+			mouse_pos = e.pos(track.get()).y;
+			thumb_position = thumb_geometry.top + thumb_geometry.get_height() / 2.0f;
+			timer_target_position = min_pos + mouse_pos * ((max_pos - min_pos)) / (track->geometry().content_box().get_height());
+		}
+
+		if (mouse_pos < thumb_position)
+		{
+			mouse_down_mode = mouse_down_track_decr;
+			timer_step_size = -page_step;
+		}
+		else
+		{
+			mouse_down_mode = mouse_down_track_incr;
+			timer_step_size = page_step;
+		}
+
+		scroll_timer_expired();
+
+	}
+
+	void ScrollBarViewImpl::on_pointer_track_release(PointerEvent &e)
+	{
+		mouse_down_mode = mouse_down_none;
+		scroll_timer.stop();
+
+	}
+
+	void ScrollBarViewImpl::on_pointer_thumb_press(PointerEvent &e)
+	{
+		mouse_down_mode = mouse_down_thumb_drag;
+		thumb_move_start_position = pos;
+		mouse_drag_start_pos = e.pos(track.get());
+	}
+
+	void ScrollBarViewImpl::on_pointer_thumb_release(PointerEvent &e)
+	{
+		mouse_down_mode = mouse_down_none;
+
+	}
+
+	void ScrollBarViewImpl::on_pointer_decrement_press(PointerEvent &e)
+	{
+		mouse_down_mode = mouse_down_button_decr;
+		timer_step_size = -line_step;
+		scroll_timer_expired();
+	}
+
+	void ScrollBarViewImpl::on_pointer_decrement_release(PointerEvent &e)
+	{
+		mouse_down_mode = mouse_down_none;
+		scroll_timer.stop();
+	}
+
+	void ScrollBarViewImpl::on_pointer_increment_press(PointerEvent &e)
+	{
+		mouse_down_mode = mouse_down_button_incr;
+		timer_step_size = line_step;
+		scroll_timer_expired();
+	}
+
+	void ScrollBarViewImpl::on_pointer_increment_release(PointerEvent &e)
+	{
+		mouse_down_mode = mouse_down_none;
+		scroll_timer.stop();
+	}
+
+	void ScrollBarViewImpl::on_pointer_move(PointerEvent &e)
+	{
+		if (mouse_down_mode != mouse_down_thumb_drag)
+			return;
+
+		Pointf mouse_pos(e.pos(track.get()));
+		Rectf thumb_geometry(thumb->geometry().content_box());
+		Rectf track_geometry(track->geometry().content_box());
+
+		double last_position = pos;
+
+		if (mouse_pos.x < -100 || mouse_pos.x > track_geometry.get_width() + 100 || mouse_pos.y < -100 || mouse_pos.y > track_geometry.get_height() + 100)
+		{
+			pos = thumb_move_start_position;
+		}
+		else
+		{
+			if (scrollbar->horizontal())
+			{
+				double delta = (mouse_pos.x - mouse_drag_start_pos.x);
+				pos = thumb_move_start_position + delta * ((max_pos - min_pos)) / (track->geometry().content_box().get_width());
+			}
+			else
+			{
+				double delta = (mouse_pos.y - mouse_drag_start_pos.y);
+				pos = thumb_move_start_position + delta * ((max_pos - min_pos)) / (track->geometry().content_box().get_height());
+			}
+		}
+		if (pos > max_pos)
+			pos = max_pos;
+		if (pos < min_pos)
+			pos = min_pos;
+
+		if (last_position != pos)
+		{
+			sig_scroll();
+			scrollbar->set_needs_layout();
+		}
+
+	}
+
+
+	void ScrollBarViewImpl::scroll_timer_expired()
+	{
+		if ((mouse_down_mode == mouse_down_none) || (mouse_down_mode == mouse_down_thumb_drag))
+			return;
+
+		double last_position = pos;
+		pos += timer_step_size;
+
+		if (mouse_down_mode == mouse_down_track_decr)
+		{
+			if (pos < timer_target_position)
+				pos = timer_target_position;
+		}
+		if (mouse_down_mode == mouse_down_track_incr)
+		{
+			if (pos > timer_target_position)
+				pos = timer_target_position;
+		}
+
+		if (pos > max_pos)
+			pos = max_pos;
+		if (pos < min_pos)
+			pos = min_pos;
+
+		if (last_position != pos)
+		{
+			sig_scroll();
+			scrollbar->set_needs_layout();
+		}
+		// FIXME - The scroll timer should work with "false" as a parameter. Well, ideally, this timer should be set to repeat outside of this function. But it shows a problem
+		scroll_timer.start(100, true);
+
+	}
+
 }

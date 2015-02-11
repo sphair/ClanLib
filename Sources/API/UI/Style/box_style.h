@@ -29,9 +29,10 @@
 #pragma once
 
 #include "../../Display/2D/color.h"
+#include <functional>
+#include <initializer_list>
 #include <memory>
 #include <string>
-#include <functional>
 
 namespace clan
 {
@@ -39,6 +40,8 @@ namespace clan
 	class Colorf;
 	class BoxGeometry;
 	class BoxStyleImpl;
+	class ImageSource;
+	class Image;
 
 	class BoxStyle
 	{
@@ -46,10 +49,17 @@ namespace clan
 		BoxStyle();
 		~BoxStyle();
 
-		/// \brief Copy assignment operator (does not copy the style, use clone() if you want that)
-		BoxStyle &operator =(const BoxStyle &copy);
+		/*! Copy assignment operator overload.
+		 *  \note Only the reference to the style is copied. Changes made to
+		 *        one object will also be seen on the other object.
+		 *        Use clone() if you want a new style object.
+		 */
+		BoxStyle &operator=(const BoxStyle &copy);
 
-		// \brief Copy the entire style (not just the implementation)
+		/*! Creates a new copy of the box style object.
+		 *  \note Creates a new box style object with the same attributes.
+		 *        Changes made to one object will not affect the other object.
+		 */
 		BoxStyle clone() const;
 
 		void set_layout_none();
@@ -77,11 +87,41 @@ namespace clan
 
 		void set_background_none();
 		void set_background(const Colorf &color);
+
+		/*! Sets a linear gradient background (based on CSS spec) for the box.
+		 *
+		 *  \param gradient_stops An initializer list containing one or more
+		 *                        `(Colorf, float)` pairs that denote the color
+		 *                        and location of a color stop on the gradient.
+		 *                        Stop location values are normalized between
+		 *                        `0.0f` (0% in CSS) and `1.0f` (100%).
+		 *  \param angle          Gradient vector angle at clock-wise rotation.
+		 *                        Defaults to `0`, where the gradient points
+		 *                        upwards (i.e. going from bottom to top).
+		 *                        Setting this to `45` degrees will make the
+		 *                        gradient run diagonally from bottom-left to
+		 *                        the top-right.
+		 *
+		 *  Example usage:
+		 *  ```cpp
+		 *  // This makes the box background a white-to-black gradient going
+		 *  // from the top to bottom.
+		 *  set_background_gradient({{ clan::Colorf::white, 0.0f }, { clan::Colorf::black, 1.0f }}, 180.0f);
+		 *
+		 *  // This makes the box background a semi-transparent 6-color rainbow
+		 *  // running diagonally.
+		 *  set_background_gradient({
+		 *          { {255,0,0,40}, 0.0f }, { {255,255,0,80}, 0.2f }, { {0,255,0,160}, 0.4f },
+		 *          { {0,255,255,160}, 0.6f }, { {0,0,255,80}, 0.8f }, { {255,0,255,40}, 1.0f }
+		 *          }, 45.0f);
+		 *  ```
+		 */
+		void set_background_gradient(std::initializer_list<std::pair<Colorf,float>> gradient_stops, Angle angle = Angle::from_degrees(0.0f));
+
 		void set_background_gradient_to_bottom(const Colorf &top, const Colorf &bottom);
-		void set_background_gradient_to_bottom(const Colorf &stop1, float t1, const Colorf &stop2, float t2, const Colorf &stop3, float t3, const Colorf &stop4, float t4);
 		void set_background_gradient_to_right(const Colorf &left, const Colorf &right);
-		void set_background_gradient_to_right(const Colorf &stop1, float t1, const Colorf &stop2, float t2, const Colorf &stop3, float t3, const Colorf &stop4, float t4);
-		void set_background_image(const std::string &url);
+		void set_background_image(const std::shared_ptr<ImageSource> &image);
+		void set_background_image(const Image &image);
 		void set_background_size_contain();
 
 		void set_margin(float left, float top, float right, float bottom);

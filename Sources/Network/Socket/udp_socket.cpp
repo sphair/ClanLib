@@ -4,6 +4,7 @@
 #include "API/Network/Socket/socket_name.h"
 #include "API/Core/System/exception.h"
 #include "tcp_socket.h"
+#include "../setupnetwork.h"
 
 #if !defined(WIN32)
 #include <sys/time.h>
@@ -29,6 +30,7 @@ namespace clan
 	public:
 		UDPSocketImpl()
 		{
+			SetupNetwork::start();
 			handle = socket(AF_INET, SOCK_DGRAM, 0);
 			if (handle == INVALID_SOCKET)
 				throw Exception("Unable to create socket handle");
@@ -119,6 +121,8 @@ namespace clan
 		UDPSocketImpl()
 			: handle(-1)
 		{
+			SetupNetwork::start();
+
 			handle = socket(AF_INET, SOCK_DGRAM, 0);
 			if (handle == -1)
 				throw Exception("Unable to create socket handle");
@@ -207,7 +211,7 @@ namespace clan
 			}
 		}
 
-		endpoint = SocketName::from_sockaddr(AF_INET, (sockaddr *)&addr, addr_len);
+		endpoint.from_sockaddr(AF_INET, (sockaddr *)&addr, addr_len);
 		return result;
 	}
 

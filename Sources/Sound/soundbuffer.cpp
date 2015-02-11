@@ -96,31 +96,6 @@ Resource<SoundBuffer> SoundBuffer::resource(const std::string &id, const Resourc
 	return SoundCache::get(resources).get_sound(id);
 }
 
-SoundBuffer SoundBuffer::load(const std::string &id, const XMLResourceDocument &doc)
-{
-	SoundBuffer sound;
-
-	sound.impl = std::shared_ptr<SoundBuffer_Impl>(new SoundBuffer_Impl);
-
-	XMLResourceNode resource = doc.get_resource(id);
-
-	DomElement &element = resource.get_element();
-
-	std::string name = resource.get_element().get_attribute("file");
-	std::string sound_format = resource.get_element().get_attribute("format");
-	bool streamed = (element.get_attribute("stream", "no") == "yes");
-
-	sound.impl->provider = SoundProviderFactory::load(
-		PathHelp::combine(resource.get_base_path(), name),
-		streamed,
-		resource.get_file_system(), sound_format);
-
-	if (!sound.impl->provider)
-		throw Exception("Unknown sample format");
-	return sound;
-}
-
-
 /////////////////////////////////////////////////////////////////////////////
 // SoundBuffer attributes:
 
@@ -130,7 +105,6 @@ SoundProvider *SoundBuffer::get_provider() const
 		return nullptr;
 	return impl->provider;
 }
-
 
 void SoundBuffer::throw_if_null() const
 {

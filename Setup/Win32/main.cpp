@@ -40,6 +40,8 @@ int APIENTRY _tWinMain(
 	LPTSTR    lpCmdLine,
 	int       nCmdShow)
 {
+	SetProcessDPIAware();
+
 	if (GetFileAttributesA(".\\Sources") == INVALID_FILE_ATTRIBUTES)
 	{
 		SetCurrentDirectoryA("..");

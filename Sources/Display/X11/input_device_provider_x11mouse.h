@@ -60,10 +60,10 @@ public:
 	InputDevice::Type get_type() const override { return InputDevice::pointer; }
 
 	/// \brief Returns the x position of the device.
-	int get_x() const override;
+	float get_x() const override;
 
 	/// \brief Returns the y position of the device.
-	int get_y() const override;
+	float get_y() const override;
 
 	/// \brief Returns the x and y position of the device.
 	Point get_position() const;
@@ -106,7 +106,7 @@ public:
 	}
 
 	/// \brief Sets the position of the device.
-	void set_position(int x, int y) override;
+	void set_position(float x, float y) override;
 
 	void received_mouse_input(XButtonEvent &event);
 	void received_mouse_move(XMotionEvent &event);

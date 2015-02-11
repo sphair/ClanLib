@@ -62,11 +62,11 @@ PixelBuffer PixelBufferHelp::add_border(const PixelBuffer &pb, int border_size, 
 	int old_pitch = work_pb.get_pitch();
 	int new_pitch = new_pb.get_pitch();
 
-	byte32 *actual_src_data = (byte32 *) work_pb.get_data();
+	int32_t *actual_src_data = (int32_t *) work_pb.get_data();
 	actual_src_data += (rect.top * old_pitch) / 4;
 	actual_src_data += rect.left;
 
-	byte32 *actual_dest_data = (byte32 *) new_pb.get_data();
+	int32_t *actual_dest_data = (int32_t *) new_pb.get_data();
 
 	for (int ypos = 0; ypos < new_height; ypos++)
 	{
@@ -77,10 +77,10 @@ PixelBuffer PixelBufferHelp::add_border(const PixelBuffer &pb, int border_size, 
 		if (real_ypos >= old_height)
 			real_ypos = old_height-1;
 
-		byte32 *src_data = actual_src_data;
+		int32_t *src_data = actual_src_data;
 		src_data += (old_pitch * real_ypos)/4;
 
-		byte32 *dest_data = actual_dest_data;
+		int32_t *dest_data = actual_dest_data;
 		dest_data += (new_pitch * ypos)/4;
 
 		for (int xpos = 0; xpos < new_width; xpos++)

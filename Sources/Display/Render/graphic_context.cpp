@@ -42,7 +42,7 @@
 #include "API/Core/Math/angle.h"
 #include "primitives_array_impl.h"
 #include "graphic_context_impl.h"
-#include "API/Display/Render/shared_gc_data.h" 
+#include "API/Display/Render/shared_gc_data.h"
 #include "API/Display/Render/depth_stencil_state_description.h"
 #include "API/Display/Render/blend_state_description.h"
 #include "API/Display/Render/rasterizer_state_description.h"
@@ -179,6 +179,18 @@ Size GraphicContext::get_size() const
 	return impl->get_size();
 }
 
+float GraphicContext::get_pixel_ratio() const
+{
+	if (!impl->write_frame_buffer.is_null())
+	{
+		float ratio = impl->write_frame_buffer.get_pixel_ratio();
+		if (ratio != 0.0f)
+			return ratio;
+		return 1.0f;
+	}
+	return impl->graphic_screen->get_provider()->get_pixel_ratio();
+}
+
 Size GraphicContext::get_max_texture_size() const
 {
 	return impl->graphic_screen->get_provider()->get_max_texture_size();
@@ -207,7 +219,15 @@ PixelBuffer GraphicContext::get_pixeldata(const Rect &rect2, TextureFormat textu
 {
 	Rect rect = rect2;
 	if (rect == Rect())
+	{
 		rect = Rect(0, 0, get_size());
+	}
+	else
+	{
+		Size size = get_size();;
+		if ((rect.left < 0) || (rect.top < 0) || (rect.right > size.width) || (rect.bottom > size.height))
+			throw Exception("Specified rect exceeds pixel data size");
+	}
 
 	return get_provider()->get_pixeldata(rect, texture_format, clamp);
 }

@@ -72,7 +72,6 @@ public:
 	virtual int main(const std::vector<std::string> &args);
 private:
 	void test_datetime();
-	void test_interlock();
 
 	std::string convert_time(DateTime &datetime);
 	void fail(void);

@@ -30,9 +30,8 @@
 
 #include "API/Core/Signals/signal.h"
 #include "API/UI/Events/key_event.h"
-#include "API/Core/System/timer.h"
+#include "API/Display/System/timer.h"
 #include "API/Display/Font/font.h"
-#include "API/UI/Style/text_style.h"
 
 namespace clan
 {
@@ -46,6 +45,8 @@ namespace clan
 		void on_pointer_move(PointerEvent &e);
 		void on_focus_gained(FocusChangeEvent &e);
 		void on_focus_lost(FocusChangeEvent &e);
+		void on_activated(ActivationChangeEvent &e);
+		void on_deactivated(ActivationChangeEvent &e);
 
 		void select_to(size_t pos);
 
@@ -66,7 +67,6 @@ namespace clan
 
 		TextFieldView *textfield = nullptr;
 
-		TextStyle text_style;
 		TextAlignment alignment = TextAlignment::left;
 
 		Font &get_font(Canvas &canvas);
@@ -122,7 +122,7 @@ namespace clan
 		static const std::string break_characters;
 		static const std::string numeric_mode_characters;
 
-		std::vector<Rect> last_measured_rects;
+		std::vector<Rectf> last_measured_rects;
 
 		void set_text_selection(size_t start, size_t length);
 

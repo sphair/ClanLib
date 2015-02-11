@@ -36,15 +36,6 @@
 #include "API/Display/TargetProviders/graphic_context_provider.h"
 #include "API/Display/TargetProviders/pixel_buffer_provider.h"
 #include "API/Display/Image/pixel_converter.h"
-#include <emmintrin.h>
-
-#ifndef WIN32
-#include <cstdlib>
-#endif
-
-#ifdef __MINGW32__
-#include <malloc.h>
-#endif
 
 namespace clan
 {
@@ -87,10 +78,10 @@ Colorf PixelBuffer_Impl::get_pixel(int x, int y)
 
 	if (provider->get_format() == tf_rgba8)
 	{
-		const ubyte8* buf = static_cast<const ubyte8*>(provider->get_data());
-		const ubyte8 *pos = &buf[y * provider->get_pitch() + x * get_bytes_per_pixel()];
+		const uint8_t* buf = static_cast<const uint8_t*>(provider->get_data());
+		const uint8_t *pos = &buf[y * provider->get_pitch() + x * get_bytes_per_pixel()];
 
-		ubyte32 value = *((const ubyte32*)pos);
+		uint32_t value = *((const uint32_t*)pos);
 
 		float rcp_255 = 1.0f / 255.0f;
 		color = Colorf (((value & 0xFF) >> 0) * rcp_255,

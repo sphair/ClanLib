@@ -28,6 +28,7 @@
 
 #pragma once
 
+/*
 class ColorWheel : public clan::GUIComponent
 {
 public:
@@ -43,24 +44,14 @@ public:
 
 private:
 	void on_render(clan::Canvas &canvas, const clan::Rect &update_rect);
-	void create_colorwheel(const clan::Pointf &center, float radius);
 	clan::Slider *create_slider(int xpos, int ypos);
-	void draw_labels(clan::Canvas &canvas);
 	void get_options();
 	float get_value(clan::Slider *slider);
 	void option_changed();
 	void on_selected(clan::RadioButton *radiobutton);
 
-	float saturation_outer;
-	float saturation_inner;
-	float value_outer;
-	float value_inner;
-	bool is_hsl;
-
-	const static int colorwheel_segments = 360 / 2;
-	clan::Vec2f colorwheel_positions[colorwheel_segments * 3];
-	clan::Colorf colorwheel_colors[colorwheel_segments * 3];
 
 	clan::Font font;
 };
 
+*/

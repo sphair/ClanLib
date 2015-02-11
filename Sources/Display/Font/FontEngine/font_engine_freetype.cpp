@@ -82,7 +82,7 @@ FontEngine_Freetype_Library &FontEngine_Freetype_Library::instance()
 /////////////////////////////////////////////////////////////////////////////
 // FontEngine_Freetype Construction:
 
-FontEngine_Freetype::FontEngine_Freetype(const FontDescription &description, DataBuffer &font_databuffer) : face(nullptr)
+FontEngine_Freetype::FontEngine_Freetype(const FontDescription &description, DataBuffer &font_databuffer, float new_pixel_ratio) : face(nullptr), pixel_ratio(new_pixel_ratio)
 {
 	font_description = description.clone();
 
@@ -108,20 +108,15 @@ FontEngine_Freetype::FontEngine_Freetype(const FontDescription &description, Dat
 		throw Exception("Freetype error: Font file could not be opened or read, or is corrupted.");
 	}
 
-	if (height >= 0.0f)
+	if (face->units_per_EM !=0)
 	{
-		if ( (face->height != 0) && (face->units_per_EM !=0) )	// Is scalable font
-		{
-			height = height*face->units_per_EM/face->height;
-		}
-	}
-	else
-	{
-		height = -height;
+		height = height*face->units_per_EM/face->height;
 	}
 
+	float dpi = 96.0f * pixel_ratio;
+
 	// if the device is 72 DCL_PI then 1 point becomes 1 pixel
-	FT_Set_Char_Size( face, (int)(average_width*64.0f), (int)(height*64.0f), 72, 72 );
+	FT_Set_Char_Size(face, (int)(description.get_average_width()*64.0f), (int)(height*64.0f), dpi, dpi);
 
 	calculate_font_metrics();
 }
@@ -147,68 +142,6 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph(int glyph)
 	{
 		return get_font_glyph_standard(glyph, font_description.get_anti_alias());
 	}
-}
-
-float FontEngine_Freetype::get_kerning(const std::string::value_type &lchar, const std::string::value_type &rchar)
-{
-	FT_Vector kerning;
-
-	FT_UInt left_ch_index  = FT_Get_Char_Index( face, FT_ULong(lchar) );
-	FT_UInt right_ch_index = FT_Get_Char_Index( face, FT_ULong(rchar) );
-
-	int error = FT_Get_Kerning( face, left_ch_index, right_ch_index, FT_KERNING_UNFITTED, &kerning );
-
-	if ( error )
-	{
-		throw Exception("FreeTypeFont: error retrieving kerning info");
-	}
-
-	return float(kerning.x) / 64.0f;
-}
-
-GlyphMetrics FontEngine_Freetype::get_glyph_metrics(unsigned int glyph)
-{
-	FT_UInt glyph_index = FT_Get_Char_Index(face, FT_ULong(glyph));
-
-	int error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
-	if ( error )
-	{
-		throw Exception("freetype: error loading glyph");
-	}
-
-	FT_GlyphSlot slot = face->glyph;
-	GlyphMetrics metrics;
-	metrics.bbox_offset.x = slot->metrics.horiBearingX / 64.0f;
-	metrics.bbox_offset.y = -slot->metrics.horiBearingY / 64.0f;
-	metrics.bbox_size.width = slot->metrics.width / 64.0f;
-	metrics.bbox_size.height = slot->metrics.height / 64.0f;
-	metrics.advance.width = slot->advance.x / 64.0f;
-	metrics.advance.height = slot->advance.y / 64.0f;
-
-	return metrics;
-}
-
-Size FontEngine_Freetype::get_size(const std::string &text, int pos)
-{
-	FT_UInt glyph_index;
-
-	// Get glyph index
-	glyph_index = FT_Get_Char_Index(face, text[pos]);
-
-	// Load glyph image
-	FT_Error error = FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT );
-	if (error) return Size(0,0);
-
-	FT_Glyph glyph;
-	FT_BBox bbox;
-	FT_Get_Glyph(face->glyph, &glyph);
-	FT_Glyph_Get_CBox( glyph, FT_GLYPH_BBOX_PIXELS, &bbox );
-
-	int y = bbox.yMax + bbox.yMin;	// Include the whitespace, to match the windows GetTextExtentPoint32()
-
-	int x = int(face->glyph->advance.x / 64.0f);
-
-	return (Size(x,y));
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -271,7 +204,7 @@ void FontEngine_Freetype::load_glyph_path(unsigned int c, Path &out_path, GlyphM
 			}
 			else if( tp.tag == FT_Curve_Tag_Cubic && points[i-1].tag == FT_Curve_Tag_Cubic )
 			{
-				// TODO: This needs checking. We do not have a fonts that uses cubics ... and bizier is currrently not supported by path
+				// TODO: This needs checking. We do not have a fonts that uses cubics ... and this bezier is currrently not supported by path
 				//if (i >= 2)
 				//{
 					//out_path.bezier_to(points[i - 2].pos, points[i - 1].pos, tp.pos, points[i + 1].pos);
@@ -282,8 +215,24 @@ void FontEngine_Freetype::load_glyph_path(unsigned int c, Path &out_path, GlyphM
 		out_path.close();
 	}
 
+	FT_GlyphSlot slot = face->glyph;
+
+	out_metrics.bbox_offset.x = slot->metrics.horiBearingX / 64.0f;
+	out_metrics.bbox_offset.y = -slot->metrics.horiBearingY / 64.0f;
+	out_metrics.bbox_size.width = slot->metrics.width / 64.0f;
+	out_metrics.bbox_size.height = slot->metrics.height / 64.0f;
+	out_metrics.advance.width = slot->advance.x / 64.0f;
+	out_metrics.advance.height = slot->advance.y / 64.0f;
+
+	out_metrics.advance.width /= pixel_ratio;
+	out_metrics.advance.height /= pixel_ratio;
+	out_metrics.bbox_offset.x /= pixel_ratio;
+	out_metrics.bbox_offset.y /= pixel_ratio;
+	out_metrics.bbox_size.width /= pixel_ratio;
+	out_metrics.bbox_size.height /= pixel_ratio;
+
 	FT_Done_Glyph(glyph);
-	out_metrics = get_glyph_metrics(c);
+
 }
 
 FontPixelBuffer FontEngine_Freetype::get_font_glyph_standard(int glyph, bool anti_alias)
@@ -291,7 +240,6 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph_standard(int glyph, bool ant
 	FontPixelBuffer font_buffer;
 	FT_GlyphSlot slot = face->glyph;
 	FT_UInt glyph_index;
-
 	// Get glyph index
 	glyph_index = FT_Get_Char_Index(face, glyph);
 
@@ -315,13 +263,19 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph_standard(int glyph, bool ant
 
 	font_buffer.glyph = glyph;
 	// Set Increment pen position
-	// Note, these values have not been checked
 	font_buffer.metrics.bbox_offset.x = slot->metrics.horiBearingX / 64.0f;
-	font_buffer.metrics.bbox_offset.y = slot->metrics.horiBearingY / 64.0f;
+	font_buffer.metrics.bbox_offset.y = -slot->metrics.horiBearingY / 64.0f;
 	font_buffer.metrics.bbox_size.width = slot->metrics.width / 64.0f;
 	font_buffer.metrics.bbox_size.height = slot->metrics.height / 64.0f;
 	font_buffer.metrics.advance.width = slot->advance.x / 64.0f;
 	font_buffer.metrics.advance.height = slot->advance.y / 64.0f;
+
+	font_buffer.metrics.advance.width /= pixel_ratio;
+	font_buffer.metrics.advance.height /= pixel_ratio;
+	font_buffer.metrics.bbox_offset.x /= pixel_ratio;
+	font_buffer.metrics.bbox_offset.y /= pixel_ratio;
+	font_buffer.metrics.bbox_size.width /= pixel_ratio;
+	font_buffer.metrics.bbox_size.height /= pixel_ratio;
 
 	if (error || slot->bitmap.rows == 0 || slot->bitmap.width == 0)
 		return font_buffer;
@@ -329,6 +283,8 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph_standard(int glyph, bool ant
 	// Set destination offset
 	font_buffer.offset.x = slot->bitmap_left;
 	font_buffer.offset.y = -slot->bitmap_top;
+	font_buffer.offset.x /= pixel_ratio;
+	font_buffer.offset.y /= pixel_ratio;
 
 	int src_width = slot->bitmap.width;
 	int src_height = slot->bitmap.rows;
@@ -338,6 +294,8 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph_standard(int glyph, bool ant
 	font_buffer.buffer = pixelbuffer;
 	font_buffer.buffer_rect = pixelbuffer.get_size();
 	font_buffer.empty_buffer = false;
+
+	font_buffer.size = Sizef(pixelbuffer.get_width() / pixel_ratio, pixelbuffer.get_height() / pixel_ratio);
 
 	unsigned char *src_data = slot->bitmap.buffer;
 	unsigned char *pixel_data = (unsigned char *) font_buffer.buffer.get_data();
@@ -407,7 +365,6 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph_subpixel(int glyph)
 
 	// Get glyph index
 	glyph_index = FT_Get_Char_Index(face, glyph);
-
 	FT_Error error;
 
 	error = FT_Load_Glyph(face, glyph_index, FT_LOAD_TARGET_LCD );
@@ -417,8 +374,19 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph_subpixel(int glyph)
 
 	font_buffer.glyph = glyph;
 	// Set Increment pen position
-	font_buffer.metrics.advance.width = (slot->advance.x+32) >> 6;
-	font_buffer.metrics.advance.height = (slot->advance.y+32) >> 6;
+	font_buffer.metrics.bbox_offset.x = slot->metrics.horiBearingX / 64.0f;
+	font_buffer.metrics.bbox_offset.y = -slot->metrics.horiBearingY / 64.0f;
+	font_buffer.metrics.bbox_size.width = slot->metrics.width / 64.0f;
+	font_buffer.metrics.bbox_size.height = slot->metrics.height / 64.0f;
+	font_buffer.metrics.advance.width = slot->advance.x / 64.0f;
+	font_buffer.metrics.advance.height = slot->advance.y / 64.0f;
+
+	font_buffer.metrics.advance.width /= pixel_ratio;
+	font_buffer.metrics.advance.height /= pixel_ratio;
+	font_buffer.metrics.bbox_offset.x /= pixel_ratio;
+	font_buffer.metrics.bbox_offset.y /= pixel_ratio;
+	font_buffer.metrics.bbox_size.width /= pixel_ratio;
+	font_buffer.metrics.bbox_size.height /= pixel_ratio;
 
 	if (error || slot->bitmap.rows == 0 || slot->bitmap.width == 0)
 		return font_buffer;
@@ -426,6 +394,8 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph_subpixel(int glyph)
 	// Set destination offset
 	font_buffer.offset.x = slot->bitmap_left;
 	font_buffer.offset.y = -slot->bitmap_top;
+	font_buffer.offset.x /= pixel_ratio;
+	font_buffer.offset.y /= pixel_ratio;
 
 	int src_width = slot->bitmap.width;
 	int src_height = slot->bitmap.rows;
@@ -437,6 +407,7 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph_subpixel(int glyph)
 	font_buffer.buffer = pixelbuffer;
 	font_buffer.buffer_rect = pixelbuffer.get_size();
 	font_buffer.empty_buffer = false;
+	font_buffer.size = Sizef(pixelbuffer.get_width() / pixel_ratio, pixelbuffer.get_height() / pixel_ratio);
 
 	unsigned char *src_data = slot->bitmap.buffer;
 	unsigned char *pixel_data = (unsigned char *) font_buffer.buffer.get_data();
@@ -555,6 +526,11 @@ std::vector<TaggedPoint> FontEngine_Freetype::get_contour_points(int cont, FT_Ou
 		}
 	}
 
+	for (unsigned int cnt=0; cnt<points.size(); cnt++)
+	{
+		points[cnt].pos /= pixel_ratio;
+	}
+
 	return points;
 }
 
@@ -575,11 +551,11 @@ void FontEngine_Freetype::calculate_font_metrics()
 	float internal_leading = height - face->size->metrics.y_ppem;
 	float external_leading = (face->size->metrics.height / 64.0f) - height;
 	font_metrics = FontMetrics(
-		height,
-		ascent,
-		descent,
-		internal_leading,
-		external_leading,
+		height / pixel_ratio,
+		ascent / pixel_ratio,
+		descent / pixel_ratio,
+		internal_leading / pixel_ratio,
+		external_leading / pixel_ratio,
 		font_description.get_line_height()		// Calculated in FontMetrics as height + metrics.tmExternalLeading if not specified
 		);
 }

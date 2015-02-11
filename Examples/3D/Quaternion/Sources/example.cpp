@@ -78,23 +78,10 @@ int App::start(const std::vector<std::string> &args)
 	// Connect a keyboard handler to on_key_up()
 	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 
-	// Set up GUI
-	std::string theme;
-	if (FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))
-		theme = "../../../Resources/GUIThemeAero";
-	else if (FileHelp::file_exists("../../../Resources/GUIThemeBasic/theme.css"))
-		theme = "../../../Resources/GUIThemeBasic";
-	else
-		throw Exception("No themes found");
-
-	GUIWindowManagerTexture wm(window);
-	GUIManager gui(wm, theme);
-
 	Canvas canvas(window);
 
 	// Deleted automatically by the GUI
-	Options *options = new Options(gui, Rect(8, 8, Size(canvas.get_width()-16, 170)));
-	options->request_repaint();
+	//Options *options = new Options(gui, Rect(8, 8, Size(canvas.get_width()-16, 170)));
 
 	// Setup graphic store
 	GraphicStore graphic_store(canvas);
@@ -115,13 +102,13 @@ int App::start(const std::vector<std::string> &args)
 
 	create_scene(canvas);
 
-	clan::Font font(canvas, "tahoma", 24);
+	clan::Font font("tahoma", 24);
 
 	FramerateCounter framerate_counter;
 
 	active_lerp = false;
-	ubyte64 time_last = System::get_time();
-	ubyte64 time_start = time_last;
+	uint64_t time_last = System::get_time();
+	uint64_t time_start = time_last;
 
 	// Run until someone presses escape
 	while (!quit)
@@ -129,35 +116,35 @@ int App::start(const std::vector<std::string> &args)
 		framerate_counter.frame_shown();
 
 		// Calculate time since last frame
-		ubyte64 time_now = System::get_time();
+		uint64_t time_now = System::get_time();
 		current_time = time_now - time_start;
 		time_delta = time_now - time_last;
 		time_last = time_now;
 
 		// Control the target options
-		control_target(options);
+		//control_target(options);
 
 		// Use the euler angle options
-		rotation_euler_a->rotation_y = options->rotation_y;
-		rotation_euler_b->rotation_x = options->rotation_x;
-		rotation_euler_c->rotation_z = options->rotation_z;
+		//rotation_euler_a->rotation_y = options->rotation_y;
+		//rotation_euler_b->rotation_x = options->rotation_x;
+		//rotation_euler_c->rotation_z = options->rotation_z;
 
-		teapot_euler->rotation_x = options->rotation_x;
-		teapot_euler->rotation_y = options->rotation_y;
-		teapot_euler->rotation_z = options->rotation_z;
+		//teapot_euler->rotation_x = options->rotation_x;
+		//teapot_euler->rotation_y = options->rotation_y;
+		//teapot_euler->rotation_z = options->rotation_z;
 
 		// Use the target angle options
-		rotation_target_a->rotation_y = options->target_y;
-		rotation_target_b->rotation_x = options->target_x;
-		rotation_target_c->rotation_z = options->target_z;
+		//rotation_target_a->rotation_y = options->target_y;
+		//rotation_target_b->rotation_x = options->target_x;
+		//rotation_target_c->rotation_z = options->target_z;
 
-		teapot_target->rotation_x = options->target_x;
-		teapot_target->rotation_y = options->target_y;
-		teapot_target->rotation_z = options->target_z;
+		//teapot_target->rotation_x = options->target_x;
+		//teapot_target->rotation_y = options->target_y;
+		//teapot_target->rotation_z = options->target_z;
 
 		// Render the scene using euler angles
 		calculate_matricies(canvas);
-		update_light(canvas, options);
+		update_light(canvas);
 
 		canvas.set_depth_stencil_state(depth_write_enabled);
 		canvas.set_rasterizer_state(raster_state);
@@ -166,7 +153,7 @@ int App::start(const std::vector<std::string> &args)
 		// Show the quaternion teapot
 		Mat4f modelview_matrix = scene.gs->camera_modelview;
 		modelview_matrix.translate_self(0.0f, 0.0f, 0.0f);
-		modelview_matrix = modelview_matrix * options->quaternion.to_matrix();
+		//modelview_matrix = modelview_matrix * options->quaternion.to_matrix();
 		modelview_matrix.scale_self(5.0f, 5.0f, 5.0f);
 		model_teapot.Draw(canvas, scene.gs, modelview_matrix);
 
@@ -183,13 +170,10 @@ int App::start(const std::vector<std::string> &args)
 		font.draw_text(canvas, 600, 250, "Target Euler Orientation");
 		font.draw_text(canvas, 16, 630, "(Using YXZ rotation order)");
 
-		wm.process();
-		wm.draw_windows(canvas);
-
 		// Use flip(1) to lock the fps
 		window.flip(0);
 
-		KeepAlive::process();
+		RunLoop::process();
 	}
 
 	return 0;
@@ -314,8 +298,7 @@ void App::create_scene(GraphicContext &gc)
 
 }
 
-
-void App::update_light(GraphicContext &gc, Options *options)
+void App::update_light(GraphicContext &gc)
 {
 	Mat4f light_modelview_matrix = Mat4f::identity();
 	light_distant->GetWorldMatrix(light_modelview_matrix);
@@ -353,6 +336,7 @@ void App::calculate_matricies(GraphicContext &gc)
 	scene.gs->light_modelview.inverse();
 }
 
+/*
 void App::control_target(Options *options)
 {
 	if ((options->button_lerp_clicked) || (options->button_slerp_clicked))
@@ -407,5 +391,5 @@ void App::control_target(Options *options)
 			active_slerp = false;
 		}
 	}
-
 }
+*/

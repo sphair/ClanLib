@@ -32,12 +32,9 @@
 
 int Program::main(const std::vector<std::string> &args)
 {
-	SetupCore setup_core;
-	SetupDisplay setup_display;
-
 	// We support all display targets, in order listed here
-	SetupD3D setup_d3d;
-	SetupGL setup_gl;
+	D3DTarget::enable();
+	OpenGLTarget::enable();
 
 	Game game;
 	game.run();

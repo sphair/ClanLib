@@ -63,17 +63,17 @@ public:
 	struct FileEntry
 	{
 		ZipLocalFileHeader local_header;
-		byte64 local_header_offset;
+		int64_t local_header_offset;
 	};
 
 	IODevice output;
 	bool storeFilenamesAsUTF8;
 	bool file_begun;
 	ZipLocalFileHeader local_header;
-	byte64 local_header_offset;
-	byte64 uncompressed_length;
-	byte64 compressed_length;
-	ubyte32 crc32;
+	int64_t local_header_offset;
+	int64_t uncompressed_length;
+	int64_t compressed_length;
+	uint32_t crc32;
 	bool compress;
 	mz_stream zs;
 	char zbuffer[16*1024];
@@ -125,10 +125,10 @@ void ZipWriter::begin_file(const std::string &filename, bool compress)
 		std::string filename_cp437 = StringHelp::text_to_cp437(filename);
 		std::string filename_utf8 = StringHelp::text_to_utf8(filename);
 		DataBuffer unicode_path(9 + filename_utf8.length());
-		ubyte16 *extra_id = (ubyte16 *) (unicode_path.get_data());
-		ubyte16 *extra_len = (ubyte16 *) (unicode_path.get_data() + 2);
-		ubyte8 *extra_version = (ubyte8 *) (unicode_path.get_data() + 4);
-		ubyte32 *extra_crc32 = (ubyte32 *) (unicode_path.get_data() + 5);
+		uint16_t *extra_id = (uint16_t *) (unicode_path.get_data());
+		uint16_t *extra_len = (uint16_t *) (unicode_path.get_data() + 2);
+		uint8_t *extra_version = (uint8_t *) (unicode_path.get_data() + 4);
+		uint32_t *extra_crc32 = (uint32_t *) (unicode_path.get_data() + 5);
 		*extra_id = 0x7075;
 		*extra_len = 5 + filename_utf8.length();
 		*extra_version = 1;
@@ -149,7 +149,7 @@ void ZipWriter::begin_file(const std::string &filename, bool compress)
 	}
 }
 
-void ZipWriter::write_file_data(const void *data, byte64 size)
+void ZipWriter::write_file_data(const void *data, int64_t size)
 {
 	if (!impl->file_begun)
 		throw Exception("ZipWriter::begin_file not called prior ZipWriter::write_file_data");
@@ -173,7 +173,7 @@ void ZipWriter::write_file_data(const void *data, byte64 size)
 			if (result == MZ_BUF_ERROR) throw Exception("Not enough data in buffer when Z_FINISH was used");
 			if (result != MZ_OK) throw Exception("Zlib deflate failed while compressing zip file!");
 
-			byte64 zsize = 16*1024 - impl->zs.avail_out;
+			int64_t zsize = 16*1024 - impl->zs.avail_out;
 			if (zsize > 0)
 			{
 				impl->compressed_length += zsize;
@@ -211,7 +211,7 @@ void ZipWriter::end_file()
 			if (result == MZ_MEM_ERROR) throw Exception("Zlib did not have enough memory to compress file!");
 			if (result == MZ_BUF_ERROR) throw Exception("Not enough data in buffer when Z_FINISH was used");
 			if (result != MZ_OK && result != MZ_STREAM_END) throw Exception("Zlib deflate failed while compressing zip file!");
-			byte64 zsize = 16*1024 - impl->zs.avail_out;
+			int64_t zsize = 16*1024 - impl->zs.avail_out;
 			if (zsize == 0)
 				break;
 			impl->output.write(impl->zbuffer, zsize);
@@ -229,7 +229,7 @@ void ZipWriter::end_file()
 	impl->local_header.compressed_size = impl->compressed_length;
 	impl->local_header.crc32 = ZipArchive_Impl::calc_crc32(nullptr, 0, impl->crc32, true);
 
-	byte64 current_offset = impl->output.get_position();
+	int64_t current_offset = impl->output.get_position();
 	impl->output.seek(impl->local_header_offset);
 	impl->local_header.save(impl->output);
 	impl->output.seek(current_offset);
@@ -247,7 +247,7 @@ void ZipWriter::write_toc()
 	if (impl->file_begun)
 		throw Exception("Cannot write zip TOC when already writing a file entry");
 
-	byte64 offset_start_central_dir = impl->output.get_position();
+	int64_t offset_start_central_dir = impl->output.get_position();
 
 	// write central directory entries.
 	std::vector<ZipWriter_Impl::FileEntry>::size_type index;
@@ -279,7 +279,7 @@ void ZipWriter::write_toc()
 	digi_sign.size_of_data = 0;
 	digi_sign.save(output);
 */
-	byte64 central_dir_size = impl->output.get_position() - offset_start_central_dir;
+	int64_t central_dir_size = impl->output.get_position() - offset_start_central_dir;
 
 	ZipEndOfCentralDirectoryRecord central_dir_end;
 	central_dir_end.number_of_this_disk = 0;

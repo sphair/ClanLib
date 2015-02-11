@@ -74,12 +74,12 @@ private:
 
 	const static int block_size = 64;
 
-	inline ubyte32 leftrotate_uint32(ubyte32 value, int shift) const
+	inline uint32_t leftrotate_uint32(uint32_t value, int shift) const
 	{
 		return (value << shift) | (value >> (32-shift));
 	}
 
-	ubyte32 h0, h1, h2, h3;
+	uint32_t h0, h1, h2, h3;
 
 	unsigned char chunk[block_size];
 

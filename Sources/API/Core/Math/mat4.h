@@ -116,28 +116,28 @@ public:
 	}
 
 	/// \brief Constructs a 4x4 matrix (copied from a array of 64 bit integers)
-	explicit Mat4(const byte64 *init_matrix)
+	explicit Mat4(const int64_t *init_matrix)
 	{
 		for (int i=0; i<16; i++)
 			matrix[i] = (Type) init_matrix[i];
 	}
 
 	/// \brief Constructs a 4x4 matrix (copied from a array of 32 bit integers)
-	explicit Mat4(const byte32 *init_matrix)
+	explicit Mat4(const int32_t *init_matrix)
 	{
 		for (int i=0; i<16; i++)
 			matrix[i] = (Type) init_matrix[i];
 	}
 
 	/// \brief Constructs a 4x4 matrix (copied from a array of 16 bit integers)
-	explicit Mat4(const byte16 *init_matrix)
+	explicit Mat4(const int16_t *init_matrix)
 	{
 		for (int i=0; i<16; i++)
 			matrix[i] = (Type) init_matrix[i];
 	}
 
 	/// \brief Constructs a 4x4 matrix (copied from a array of 8 bit integers)
-	explicit Mat4(const byte8 *init_matrix)
+	explicit Mat4(const int8_t *init_matrix)
 	{
 		for (int i=0; i<16; i++)
 			matrix[i] = (Type) init_matrix[i];

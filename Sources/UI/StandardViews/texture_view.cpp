@@ -45,6 +45,11 @@ namespace clan
 
 	}
 
+	Canvas TextureView::get_canvas() const
+	{
+		return impl->canvas;
+	}
+
 	void TextureView::set_needs_render()
 	{
 		impl->needs_render = true;

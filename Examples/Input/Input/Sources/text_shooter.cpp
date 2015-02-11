@@ -29,7 +29,7 @@
 #include "precomp.h"
 #include "text_shooter.h"
 
-TextShooter::TextShooter(PathFont &new_vector_font, const std::string &new_text) : vector_font(new_vector_font), text(new_text)
+TextShooter::TextShooter(Font &new_vector_font, const std::string &new_text) : vector_font(new_vector_font), text(new_text)
 {
 	duration = 2 * 1000;
 	start_time = 0;
@@ -55,7 +55,7 @@ void TextShooter::set_duration(int new_duration)
 	duration = new_duration;
 }
 
-void TextShooter::set_start_time(ubyte64 new_start_time)
+void TextShooter::set_start_time(uint64_t new_start_time)
 {
 	start_time = new_start_time;
 }
@@ -77,7 +77,7 @@ void TextShooter::set_color_component(bool new_red, bool new_green, bool new_blu
 	use_blue_component = new_blue;
 }
 
-bool TextShooter::draw(Canvas &canvas, ubyte64 current_time)
+bool TextShooter::draw(Canvas &canvas, uint64_t current_time)
 {
 	int time_delta = current_time - start_time;
 	if (time_delta < 0)	// Not on screen

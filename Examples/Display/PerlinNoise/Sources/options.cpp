@@ -34,7 +34,7 @@
 #define MAX_AMPLITUDE	2.0f	
 #define MAX_POSITION	255.0f
 #define MAX_LENGTH		64.0f
-
+/*
 Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComponent(&gui, clan::GUITopLevelDescription("Options", gui_position, false))
 {
 	is_normals_set = false;
@@ -381,3 +381,4 @@ clan::Label *Options::create_combobox_label(clan::ComboBox *combo, const char *t
 	component->set_text(text);
 	return component;
 }
+*/

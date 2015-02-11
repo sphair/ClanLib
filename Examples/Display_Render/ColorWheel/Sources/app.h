@@ -39,7 +39,15 @@ public:
 private:
 	void on_input_up(const clan::InputEvent &key);
 	void on_window_close();
+	void draw(clan::Canvas &canvas, const clan::Pointf &center, float radius);
+	void draw_labels(clan::Canvas &canvas);
 private:
 	bool quit;
+
+	float saturation_outer;
+	float saturation_inner;
+	float value_outer;
+	float value_inner;
+	bool is_hsl;
 
 };

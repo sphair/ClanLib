@@ -172,25 +172,6 @@ Resource<Texture> Texture::resource(GraphicContext &gc, const std::string &id, c
 	return DisplayCache::get(resources).get_texture(gc, id);
 }
 
-Texture Texture::load(GraphicContext &gc, const std::string &id, const XMLResourceDocument &doc)
-{
-	XMLResourceNode resource = doc.get_resource(id);
-
-	std::string type = resource.get_type();
-
-	if (type != "texture")
-		throw Exception(string_format("Resource '%1' is not of type 'texture'", id));
-
-	ImageImportDescription import_desc; // The infamous ImageImportDescription strikes again!
-
-	std::string filename = resource.get_element().get_attribute("file");
-	FileSystem fs = resource.get_file_system();
-
-	Texture2D texture(gc, PathHelp::combine(resource.get_base_path(), filename), fs, import_desc);
-
-	return Resource<Texture>(texture);
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // Texture Attributes:
 

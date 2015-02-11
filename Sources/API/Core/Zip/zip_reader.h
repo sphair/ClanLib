@@ -73,16 +73,16 @@ public:
 	bool has_data_descriptor() const;
 
 	/// \brief Returns the compressed size of the file entry.
-	byte64 get_compressed_size() const;
+	int64_t get_compressed_size() const;
 
 	/// \brief Returns the uncompressed size of the file entry.
-	byte64 get_uncompressed_size() const;
+	int64_t get_uncompressed_size() const;
 
 	/// \brief Informs the zip reader what the data descriptor contains.
-	void set_data_descriptor_data(byte64 compressed_size, byte64 uncompressed_size, ubyte32 crc32);
+	void set_data_descriptor_data(int64_t compressed_size, int64_t uncompressed_size, uint32_t crc32);
 
 	/// \brief Reads some file data from the zip file.
-	byte64 read_file_data(void *data, byte64 size, bool read_all = true);
+	int64_t read_file_data(void *data, int64_t size, bool read_all = true);
 
 /// \}
 /// \name Implementation

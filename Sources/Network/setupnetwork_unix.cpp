@@ -27,18 +27,15 @@
 */
 
 #include "Network/precomp.h"
-#include "API/Network/setupnetwork.h"
+#include "setupnetwork.h"
 #include <signal.h>
 
 namespace clan
 {
 
-SetupNetwork::SetupNetwork()
-{
-}
+	void SetupNetwork::start()
+	{
 
-SetupNetwork::~SetupNetwork()
-{
-}
+	}
 
 }

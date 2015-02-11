@@ -45,9 +45,13 @@ ScreenInfoProvider_Win32::ScreenInfoProvider_Win32()
 /////////////////////////////////////////////////////////////////////////////
 // ScreenInfoProvider_Win32 Attributes:
 
-std::vector<Rect> ScreenInfoProvider_Win32::get_screen_geometries(int &primary_screen_index) const
+std::vector<Rectf> ScreenInfoProvider_Win32::get_screen_geometries(int &primary_screen_index) const
 {
-	std::vector<Rect> monitor_positions;
+	HDC dc = GetDC(0);
+	int ppi = GetDeviceCaps(dc, LOGPIXELSX);
+	ReleaseDC(0, dc);
+
+	std::vector<Rectf> monitor_positions;
 	primary_screen_index = 0;
 	int index = 0;
 	while (true)
@@ -74,11 +78,11 @@ std::vector<Rect> ScreenInfoProvider_Win32::get_screen_geometries(int &primary_s
 					if (display_device.StateFlags & DISPLAY_DEVICE_PRIMARY_DEVICE)
 						primary_screen_index = monitor_positions.size();
 
-					Rect pos(
-						devmode.dmPosition.x,
-						devmode.dmPosition.y,
-						devmode.dmPosition.x + devmode.dmPelsWidth,
-						devmode.dmPosition.y + devmode.dmPelsHeight);
+					Rectf pos(
+						devmode.dmPosition.x * 96.0f / ppi,
+						devmode.dmPosition.y * 96.0f / ppi,
+						(devmode.dmPosition.x + devmode.dmPelsWidth) * 96.0f / ppi,
+						(devmode.dmPosition.y + devmode.dmPelsHeight) * 96.0f / ppi);
 					monitor_positions.push_back(pos);
 				}
 			}

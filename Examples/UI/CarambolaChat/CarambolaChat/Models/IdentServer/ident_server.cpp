@@ -14,39 +14,50 @@ IdentServer::~IdentServer()
 
 void IdentServer::start()
 {
-	thread.start(this, &IdentServer::worker_main);
+	std::unique_lock<std::mutex> lock(mutex);
+	if (!stop_flag)
+		return;
+
+	stop_flag = false;
+	lock.unlock();
+	change_event.notify();
+
+	thread = std::thread(&IdentServer::worker_main, this);
 }
 
 void IdentServer::stop()
 {
-	stop_event.set();
+	std::unique_lock<std::mutex> lock(mutex);
+	stop_flag = true;
+	lock.unlock();
+	change_event.notify();
 	thread.join();
-	stop_event.reset();
 }
 
 void IdentServer::worker_main()
 {
-	std::vector<IdentServerConnection *> connections;
+	std::vector<std::shared_ptr<IdentServerConnection>> connections;
 
 	try
 	{
 		clan::TCPListen listen(clan::SocketName("113"));
-		while (true)
+		std::unique_lock<std::mutex> lock(mutex);
+		while (!stop_flag)
 		{
-			int wakeup_reason = clan::Event::wait(stop_event, listen.get_accept_event());
-			if (wakeup_reason != 1)
-				break;
-			connections.push_back(new IdentServerConnection(this, listen.accept()));
+			clan::SocketName end_point;
+			clan::TCPConnection connection = listen.accept(end_point);
+			if (!connection.is_null())
+			{
+				connections.push_back(std::make_shared<IdentServerConnection>(this, connection));
+			}
+			else
+			{
+				clan::NetworkEvent *events[] = { &listen };
+				change_event.wait(lock, 1, events);
+			}
 		}
 	}
 	catch (clan::Exception &)
 	{
-		stop_event.set();
-	}
-
-	for (size_t i = 0; i < connections.size(); i++)
-	{
-		connections[i]->join();
-		delete connections[i];
 	}
 }

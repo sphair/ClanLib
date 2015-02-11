@@ -39,7 +39,6 @@
 #pragma managed(push, off)
 #endif
 
-#include "Sound/setupsound.h"
 #include "Sound/sound.h"
 #include "Sound/soundoutput.h"
 #include "Sound/soundoutput_description.h"
@@ -50,7 +49,6 @@
 #include "Sound/soundbuffer.h"
 #include "Sound/soundbuffer_session.h"
 #include "Sound/soundfilter.h"
-#include "Sound/cd_drive.h"
 #include "Sound/sound_sse.h"
 
 #include "Sound/SoundProviders/soundprovider_wave.h"

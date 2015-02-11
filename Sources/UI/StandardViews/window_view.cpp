@@ -49,6 +49,11 @@ namespace clan
 		return impl->window;
 	}
 
+	Canvas WindowView::get_canvas() const
+	{
+		return impl->canvas;
+	}
+
 	bool WindowView::hidden() const
 	{
 		return !impl->window.is_visible();
@@ -133,13 +138,13 @@ namespace clan
 
 	Pointf WindowView::to_screen_pos(const Pointf &pos)
 	{
-		Point client_pos(geometry().content_box().get_top_left() + pos);
+		Pointf client_pos(geometry().content_box().get_top_left() + pos);
 		return Pointf(impl->window.client_to_screen(client_pos));
 	}
 
 	Pointf WindowView::from_screen_pos(const Pointf &pos)
 	{
-		Point client_pos = impl->window.screen_to_client(Point(pos));
+		Pointf client_pos = impl->window.screen_to_client(Pointf(pos));
 		return Pointf(client_pos) - geometry().content_box().get_top_left();
 	}
 }

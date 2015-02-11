@@ -81,7 +81,7 @@ public:
 
 public:
 	/// \brief Add standard font
-	void add(const std::string &typeface_name, int height);
+	void add(const std::string &typeface_name, float height);
 
 	// \brief Add standard font
 	void add(const std::string &typeface_name, const FontDescription &desc);
@@ -99,7 +99,7 @@ public:
 	/// \param spacelen = Width of space character
 	/// \param monospace = Force monospaced font (using widest sprite character)
 	/// \param metrics = Font metrics for the sprite font
-	void add(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics);
+	void add(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, float spacelen, bool monospace, const FontMetrics &metrics);
 
 /// \}
 /// \name Implementation

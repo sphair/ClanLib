@@ -45,6 +45,7 @@
 #include "../2D/canvas_impl.h"
 #include "FontEngine/font_engine.h"
 #include "../2D/sprite_impl.h"
+#include "API/Core/Resources/xml_resource_node.h"
 
 namespace clan
 {
@@ -55,27 +56,28 @@ Font_Impl::Font_Impl(FontFamily &new_font_family, const FontDescription &descrip
 
 	font_family = new_font_family;
 
-	selected_description.height = description.get_height();
-	selected_description.weight = description.get_weight();
-	selected_description.style = description.get_style();
-
+	selected_description = description.clone();
 	selected_line_height = description.get_line_height();
-
-	select_font_family();
 }
 
-void Font_Impl::select_font_family()
+void Font_Impl::select_font_family(Canvas &canvas)
 {
-	if (!font_engine)
+	float pixel_ratio = canvas.get_gc().get_pixel_ratio();
+	if (pixel_ratio == 0.0f)
+		pixel_ratio = 1.0f;
+
+	if ((!font_engine) || (pixel_ratio != selected_pixel_ratio))
 	{
 		// Copy the required font, setting a scalable font size
-		Font_Selected new_selected = selected_description;
-		if (selected_description.height >= selected_height_threshold)
-			new_selected.height = 256.0f;	// A reasonable scalable size
+		FontDescription new_selected = selected_description.clone();
+		if (selected_description.get_height() >= selected_height_threshold)
+			new_selected.set_height(256.0f);	// A reasonable scalable size
 
-		Font_Cache font_cache = font_family.impl->get_font(new_selected);
+		selected_pixel_ratio = pixel_ratio;
+
+		Font_Cache font_cache = font_family.impl->get_font(new_selected, pixel_ratio);
 		if (!font_cache.engine)	// Font not found
-			font_cache = font_family.impl->copy_font(new_selected);
+			font_cache = font_family.impl->copy_font(new_selected, pixel_ratio);
 
 		font_engine = font_cache.engine.get();
 		GlyphCache *glyph_cache = font_cache.glyph_cache.get();
@@ -85,11 +87,11 @@ void Font_Impl::select_font_family()
 
 		// Determine if pathfont method is required. TODO: This feels a bit hacky
 		selected_pathfont = font_engine->is_automatic_recreation_allowed();
-		if (selected_description.height < selected_height_threshold)
+		if (selected_description.get_height() < selected_height_threshold)
 			selected_pathfont = false;
 
 		// Deterimine if font scaling is required
-		scaled_height = selected_description.height / font_engine->get_desc().get_height();
+		scaled_height = selected_description.get_height() / font_engine->get_desc().get_height();
 		if ((scaled_height >= 0.9999f) && (scaled_height <= 1.0001f))	// Allow for floating point accuracy issues when determining when scaling is not required
 			scaled_height = 1.0f;
 
@@ -99,15 +101,18 @@ void Font_Impl::select_font_family()
 			font_draw_path.init(path_cache, font_engine, scaled_height);
 			font_draw = &font_draw_path;
 		}
-		else if (font_engine->get_desc().get_subpixel())
-		{
-			font_draw_subpixel.init(glyph_cache, font_engine);
-			font_draw = &font_draw_subpixel;
-		}
 		else if (scaled_height == 1.0f)
 		{
-			font_draw_flat.init(glyph_cache, font_engine);
-			font_draw = &font_draw_flat;
+			if (font_engine->get_desc().get_subpixel())
+			{
+				font_draw_subpixel.init(glyph_cache, font_engine);
+				font_draw = &font_draw_subpixel;
+			}
+			else
+			{
+				font_draw_flat.init(glyph_cache, font_engine);
+				font_draw = &font_draw_flat;
+			}
 		}
 		else
 		{
@@ -130,27 +135,26 @@ Font_Impl::~Font_Impl()
 {
 }
 
-int Font_Impl::get_character_index(Canvas &canvas, const std::string &text, const Point &point)
+int Font_Impl::get_character_index(Canvas &canvas, const std::string &text, const Pointf &point)
 {
-	select_font_family();
+	select_font_family(canvas);
 
-	int dest_x = 0;
-	int dest_y = 0;
+	float dest_x = 0;
+	float dest_y = 0;
 
 	int character_counter = 0;
 
-	int font_height = selected_metrics.get_height();
-	int font_ascent = selected_metrics.get_ascent();
-	int font_external_leading = selected_metrics.get_external_leading();
-	int line_spacing = static_cast<int>(selected_line_height + 0.5f);
+	float font_height = selected_metrics.get_height();
+	float font_ascent = selected_metrics.get_ascent();
+	float line_spacing = std::round(selected_line_height); // TBD: do we want to round this?
 
 	//TODO: Fix me, so we do not need to line split
 
 	std::vector<std::string> lines = StringHelp::split_text(text, "\n", false);
 	for (std::vector<std::string>::size_type i = 0; i<lines.size(); i++)
 	{
-		int xpos = dest_x;
-		int ypos = dest_y;
+		float xpos = dest_x;
+		float ypos = dest_y;
 
 		std::string &textline = lines[i];
 		std::string::size_type string_length = textline.length();
@@ -166,7 +170,7 @@ int Font_Impl::get_character_index(Canvas &canvas, const std::string &text, cons
 
 			GlyphMetrics metrics = font_draw->get_metrics(canvas, glyph);
 
-			Rect position(xpos, ypos - font_ascent, Size(metrics.advance.width, metrics.advance.height + font_height + font_external_leading));
+			Rectf position(xpos, ypos - font_ascent, Sizef(metrics.advance.width, metrics.advance.height + font_height));
 			if (position.contains(point))
 			{
 				return glyph_pos + character_counter;
@@ -179,33 +183,31 @@ int Font_Impl::get_character_index(Canvas &canvas, const std::string &text, cons
 		dest_y += line_spacing;
 
 		character_counter += string_length + 1;		// (Including the '\n')
-
 	}
 	return -1;	// Not found
 }
 
-std::vector<Rect> Font_Impl::get_character_indices(Canvas &canvas, const std::string &text)
+std::vector<Rectf> Font_Impl::get_character_indices(Canvas &canvas, const std::string &text)
 {
-	select_font_family();
-	std::vector<Rect> index_store;
+	select_font_family(canvas);
+	std::vector<Rectf> index_store;
 
-	int dest_x = 0;
-	int dest_y = 0;
+	float dest_x = 0;
+	float dest_y = 0;
 
 	int character_counter = 0;
 
-	int font_height = selected_metrics.get_height();
-	int font_ascent = selected_metrics.get_ascent();
-	int font_external_leading = selected_metrics.get_external_leading();
-	int line_spacing = static_cast<int>(selected_line_height + 0.5f);
+	float font_height = selected_metrics.get_height();
+	float font_ascent = selected_metrics.get_ascent();
+	float line_spacing = std::round(selected_line_height); // TBD: do we want to round this?
 
 	//TODO: Fix me, so we do not need to line split
 
 	std::vector<std::string> lines = StringHelp::split_text(text, "\n", false);
 	for (std::vector<std::string>::size_type i = 0; i<lines.size(); i++)
 	{
-		int xpos = dest_x;
-		int ypos = dest_y;
+		float xpos = dest_x;
+		float ypos = dest_y;
 
 		std::string &textline = lines[i];
 		std::string::size_type string_length = textline.length();
@@ -221,7 +223,7 @@ std::vector<Rect> Font_Impl::get_character_indices(Canvas &canvas, const std::st
 
 			GlyphMetrics metrics = font_draw->get_metrics(canvas, glyph);
 
-			Rect position(xpos, ypos - font_ascent, Size(metrics.advance.width, metrics.advance.height + font_height + font_external_leading));
+			Rectf position(xpos, ypos - font_ascent, Sizef(metrics.advance.width, metrics.advance.height + font_height));
 			index_store.push_back(position);
 			xpos += metrics.advance.width;
 			ypos += metrics.advance.height;
@@ -235,30 +237,30 @@ std::vector<Rect> Font_Impl::get_character_indices(Canvas &canvas, const std::st
 	return index_store;
 }
 
-const FontMetrics &Font_Impl::get_font_metrics()
+const FontMetrics &Font_Impl::get_font_metrics(Canvas &canvas)
 {
-	select_font_family();
+	select_font_family(canvas);
 	return selected_metrics;
 }
 
-void Font_Impl::get_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics)
+void Font_Impl::get_glyph_path(Canvas &canvas, unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics)
 {
-	select_font_family();
+	select_font_family(canvas);
 	return font_engine->load_glyph_path(glyph_index, out_path, out_metrics);
 }
 
 void Font_Impl::draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color)
 {
-	select_font_family();
+	select_font_family(canvas);
 
-	int line_spacing = static_cast<int>(selected_line_height + 0.5f);
+	float line_spacing = std::round(selected_line_height); // TBD: do we want to round this?
 	Pointf pos = canvas.grid_fit(position);
 	font_draw->draw_text(canvas, pos, text, color, line_spacing);
 }
 
 GlyphMetrics Font_Impl::get_metrics(Canvas &canvas, unsigned int glyph)
 {
-	select_font_family();
+	select_font_family(canvas);
 	GlyphMetrics metrics = font_draw->get_metrics(canvas, glyph);
 	metrics.advance *= scaled_height;
 	metrics.bbox_offset *= scaled_height;
@@ -269,10 +271,10 @@ GlyphMetrics Font_Impl::get_metrics(Canvas &canvas, unsigned int glyph)
 
 GlyphMetrics Font_Impl::measure_text(Canvas &canvas, const std::string &string)
 {
-	select_font_family();
+	select_font_family(canvas);
 	GlyphMetrics total_metrics;
 
-	int line_spacing = static_cast<int>(selected_line_height + 0.5f);
+	float line_spacing = std::round(selected_line_height); // TBD: do we want to round this?
 	bool first_char = true;
 	Rectf text_bbox;
 
@@ -320,18 +322,18 @@ GlyphMetrics Font_Impl::measure_text(Canvas &canvas, const std::string &string)
 
 void Font_Impl::set_height(float value)
 {
-	if (selected_description.height != value)
+	if (selected_description.get_height() != value)
 	{
-		selected_description.height = value;
+		selected_description.set_height(value);
 		font_engine = nullptr;
 	}
 }
 
 void Font_Impl::set_weight(FontWeight value)
 {
-	if (selected_description.weight != value)
+	if (selected_description.get_weight() != value)
 	{
-		selected_description.weight = value;
+		selected_description.set_weight(value);
 		font_engine = nullptr;
 	}
 }
@@ -344,9 +346,9 @@ void Font_Impl::set_line_height(float height)
 
 void Font_Impl::set_style(FontStyle setting)
 {
-	if (selected_description.style != setting)
+	if (selected_description.get_style() != setting)
 	{
-		selected_description.style = setting;
+		selected_description.set_style(setting);
 		font_engine = nullptr;
 	}
 }
@@ -355,106 +357,6 @@ void Font_Impl::set_scalable(float height_threshold)
 {
 	selected_height_threshold = height_threshold;
 	// (Don't need to reset the font engine)
-}
-
-Font Font_Impl::load(Canvas &canvas, const FontDescription &reference_desc, FontFamily &font_family, const DomElement &font_element, const XMLResourceNode &resource, std::function<Resource<Sprite>(Canvas &, const std::string &)> cb_get_sprite)
-{
-	DomElement sprite_element = font_element.named_item("sprite").to_element();
-
-	if (!sprite_element.is_null())
-	{
-		if (!sprite_element.has_attribute("glyphs"))
-			throw Exception(string_format("Font resource %1 has no 'glyphs' attribute.", resource.get_name()));
-
-		if (!sprite_element.has_attribute("letters"))
-			throw Exception(string_format("Font resource %1 has no 'letters' attribute.", resource.get_name()));
-
-		Resource<Sprite> spr_glyphs = cb_get_sprite(canvas, sprite_element.get_attribute("glyphs"));
-
-		const std::string &letters = sprite_element.get_attribute("letters");
-
-		int spacelen = StringHelp::text_to_int(sprite_element.get_attribute("spacelen", "-1"));
-		bool monospace = StringHelp::text_to_bool(sprite_element.get_attribute("monospace", "false"));
-
-		// Modify the default font metrics, if specified
-
-		float height = 0.0f;
-		float line_height = 0.0f;
-		float ascent = 0.0f;
-		float descent = 0.0f;
-		float internal_leading = 0.0f;
-		float external_leading = 0.0f;
-
-		if (sprite_element.has_attribute("height"))
-			height = StringHelp::text_to_float(sprite_element.get_attribute("height", "0"));
-
-		if (sprite_element.has_attribute("line_height"))
-			line_height = StringHelp::text_to_float(sprite_element.get_attribute("line_height", "0"));
-
-		if (sprite_element.has_attribute("ascent"))
-			ascent = StringHelp::text_to_float(sprite_element.get_attribute("ascent", "0"));
-
-		if (sprite_element.has_attribute("descent"))
-			descent = StringHelp::text_to_float(sprite_element.get_attribute("descent", "0"));
-
-		if (sprite_element.has_attribute("internal_leading"))
-			internal_leading = StringHelp::text_to_float(sprite_element.get_attribute("internal_leading", "0"));
-
-		if (sprite_element.has_attribute("external_leading"))
-			external_leading = StringHelp::text_to_float(sprite_element.get_attribute("external_leading", "0"));
-
-		FontMetrics font_metrics(height, ascent, descent, internal_leading, external_leading, line_height);
-
-		font_family.add(canvas, spr_glyphs.get(), letters, spacelen, monospace, font_metrics);
-
-		return Font(font_family, reference_desc);
-	}
-
-	DomElement ttf_element = font_element.named_item("ttf").to_element();
-	if (ttf_element.is_null())
-		ttf_element = font_element.named_item("freetype").to_element();
-
-	if (!ttf_element.is_null())
-	{
-		FontDescription desc = reference_desc.clone();
-
-		std::string filename;
-		if (ttf_element.has_attribute("file"))
-		{
-			filename = PathHelp::combine(resource.get_base_path(), ttf_element.get_attribute("file"));
-		}
-
-		if (!ttf_element.has_attribute("typeface"))
-			throw Exception(string_format("Font resource %1 has no 'typeface' attribute.", resource.get_name()));
-
-		std::string font_typeface_name = ttf_element.get_attribute("typeface");
-
-		if (ttf_element.has_attribute("height"))
-			desc.set_height(ttf_element.get_attribute_int("height", 0));
-
-		if (ttf_element.has_attribute("average_width"))
-			desc.set_average_width(ttf_element.get_attribute_int("average_width", 0));
-
-		if (ttf_element.has_attribute("anti_alias"))
-			desc.set_anti_alias(ttf_element.get_attribute_bool("anti_alias", true));
-
-		if (ttf_element.has_attribute("subpixel"))
-			desc.set_subpixel(ttf_element.get_attribute_bool("subpixel", true));
-
-		if (filename.empty())
-		{
-			font_family.add(font_typeface_name, desc);
-			return Font(font_family, desc);
-		}
-		else
-		{
-			font_family.add(desc, filename, resource.get_file_system());
-			return Font(font_family, desc);
-		}
-	}
-
-	throw Exception(string_format("Font resource %1 did not have a <sprite> or <ttf> child element", resource.get_name()));
-
 }
 
 }

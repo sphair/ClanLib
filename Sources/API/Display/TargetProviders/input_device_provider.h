@@ -83,11 +83,11 @@ public:
 
 	/// \brief Returns the x position of the device.
 	/** <p>Only valid for mouse.</p>*/
-	virtual int get_x() const = 0;
+	virtual float get_x() const = 0;
 
 	/// \brief Returns the y position of the device.
 	/** <p>Only valid for mouse.</p>*/
-	virtual int get_y() const = 0;
+	virtual float get_y() const = 0;
 
 	/// \brief Returns the the current position of a joystick axis.
 	virtual float get_axis(int index) const = 0;
@@ -118,7 +118,7 @@ public:
 	virtual void init(Signal<void(const InputEvent &)> *sig_provider_event) = 0;
 
 	/// \brief Sets the position of the device.
-	virtual void set_position(int x, int y) = 0;
+	virtual void set_position(float x, float y) = 0;
 
 /// \}
 /// \name Implementation

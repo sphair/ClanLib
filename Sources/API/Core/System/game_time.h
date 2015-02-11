@@ -84,10 +84,10 @@ public:
 	float get_current_time() const;
 
 	/// \brief Returns the number of microseconds since this class was reset()
-	ubyte64 get_current_time_microseconds() const;
+	uint64_t get_current_time_microseconds() const;
 
 	/// \brief Returns the number of milliseconds since this class was reset()
-	ubyte64 get_current_time_ms() const;
+	uint64_t get_current_time_ms() const;
 
 
 /// \}

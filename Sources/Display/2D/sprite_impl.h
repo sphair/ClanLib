@@ -73,8 +73,6 @@ public:
 	void add_gridclipped_frames(Canvas &canvas, const Texture2D &texture,int xpos, int ypos,int width, int height,int xarray = 1, int yarray = 1,int array_skipframes = 0,int xspacing = 0, int yspacing = 0);
 	void add_alphaclipped_frames(Canvas &canvas, const Texture2D &texture,int xpos = 0, int ypos = 0,float trans_limit = 0.05f);
 	void add_alphaclipped_frames_free(Canvas &canvas, const Texture2D &texture,int xpos = 0, int ypos = 0,float trans_limit = 0.05f);
-	CollisionOutline create_collision_outline(Canvas &canvas, int alpha_limit, OutlineAccuracy accuracy) const;
-	std::vector<CollisionOutline> create_collision_outlines(Canvas &canvas, int alpha_limit, OutlineAccuracy accuracy) const;
 
 	Angle angle, angle_pitch, angle_yaw;
 	Angle base_angle;

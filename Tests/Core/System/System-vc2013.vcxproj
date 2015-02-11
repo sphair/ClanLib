@@ -133,7 +133,6 @@
   <ItemGroup>
     <ClCompile Include="test.cpp" />
     <ClCompile Include="test_datetime.cpp" />
-    <ClCompile Include="test_interlock.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test.h" />

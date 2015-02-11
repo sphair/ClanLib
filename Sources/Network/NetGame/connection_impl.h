@@ -31,6 +31,8 @@
 
 #include <mutex>
 #include <thread>
+#include "API/Network/Socket/tcp_connection.h"
+#include "API/Network/Socket/socket_name.h"
 
 namespace clan
 {

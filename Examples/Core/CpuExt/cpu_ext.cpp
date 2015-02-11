@@ -33,7 +33,7 @@ int main(int argc, char** argv)
 {
 	try 
 	{
-		SetupCore setup_core;
+		
 
 		ConsoleWindow console("Console");
 		Console::write_line( string_format("mmx = %1", System::detect_cpu_extension(System::mmx)) );

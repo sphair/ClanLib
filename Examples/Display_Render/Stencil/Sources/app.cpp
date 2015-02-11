@@ -51,21 +51,10 @@ int App::start(const std::vector<std::string> &args)
 	cc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
 	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 
-	std::string theme;
-	if (clan::FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))
-		theme = "../../../Resources/GUIThemeAero";
-	else if (clan::FileHelp::file_exists("../../../Resources/GUIThemeBasic/theme.css"))
-		theme = "../../../Resources/GUIThemeBasic";
-	else
-		throw clan::Exception("No themes found");
-
-	clan::GUIWindowManagerTexture wm(window);
-	clan::GUIManager gui(wm, theme);
-	
 	clan::Canvas canvas(window);
 
 	// Deleted automatically by the GUI
-	Options *options = new Options(gui, clan::Rect(0, 0, canvas.get_size()));
+	//Options *options = new Options(gui, clan::Rect(0, 0, canvas.get_size()));
 
 	clan::Image image_grid(canvas, "../Blend/Resources/grid.png");
 	clan::Image image_ball(canvas, "../Blend/Resources/ball.png");
@@ -73,9 +62,7 @@ int App::start(const std::vector<std::string> &args)
 
 	setup_balls();
 
-	options->request_repaint();
-
-	clan::Font font(canvas, "Tahoma", 20);
+	clan::Font font("Tahoma", 20);
 
 	clan::BlendStateDescription blend_desc;
 	blend_desc.enable_color_write(false, false, false, false);
@@ -87,14 +74,12 @@ int App::start(const std::vector<std::string> &args)
 	{
 		game_time.update();
 	
-		wm.process();
-		wm.draw_windows(canvas);
 
-		int num_balls = options->num_balls;
+		int num_balls = 9;	// options->num_balls;
 		if (num_balls > max_balls)
 			num_balls = max_balls;
 
-		if (options->is_moveballs_set)
+		//if (options->is_moveballs_set)
 			move_balls(game_time.get_time_elapsed(), num_balls);
 
 		canvas.clear_stencil(0);
@@ -107,7 +92,7 @@ int App::start(const std::vector<std::string> &args)
 		clan::DepthStencilStateDescription stencil_desc;
 
 		// Draw the circle onto the stencil
-		if (options->is_circle_set)
+		//if (options->is_circle_set)
 		{
 			stencil_desc.enable_stencil_test(true);
 
@@ -128,10 +113,10 @@ int App::start(const std::vector<std::string> &args)
 		}
 
 		stencil_desc.enable_stencil_test(true);
-		stencil_desc.set_stencil_compare_front(options->compare_function, options->compare_reference, 255);
-		stencil_desc.set_stencil_compare_back(options->compare_function, options->compare_reference, 255);
-		stencil_desc.set_stencil_op_front(options->stencil_fail, options->stencil_pass, options->stencil_pass);
-		stencil_desc.set_stencil_op_back(options->stencil_fail, options->stencil_pass, options->stencil_pass);
+		//stencil_desc.set_stencil_compare_front(options->compare_function, options->compare_reference, 255);
+		//stencil_desc.set_stencil_compare_back(options->compare_function, options->compare_reference, 255);
+		//stencil_desc.set_stencil_op_front(options->stencil_fail, options->stencil_pass, options->stencil_pass);
+		//stencil_desc.set_stencil_op_back(options->stencil_fail, options->stencil_pass, options->stencil_pass);
 
 		// Note, depth testing disabled for this example
 		stencil_desc.enable_depth_write(false);
@@ -164,7 +149,7 @@ int App::start(const std::vector<std::string> &args)
 
 		window.flip(1);
 
-		clan::KeepAlive::process();
+		clan::RunLoop::process();
 	}
 
 	return 0;

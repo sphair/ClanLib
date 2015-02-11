@@ -55,6 +55,7 @@ int GUI::start(const std::vector<std::string> &args)
 	clan::Font font("tahoma", 24);
 
 	clan::Texture2D gui_texture = clan::Texture2D(canvas, 512, 512);
+	gui_texture.set_pixel_ratio(canvas.get_pixel_ratio());
 	clan::Image gui_image(gui_texture, gui_texture.get_size());
 	clan::FrameBuffer gui_framebuffer = clan::FrameBuffer(canvas);
 	gui_framebuffer.attach_color(0, gui_texture);
@@ -152,7 +153,7 @@ int GUI::start(const std::vector<std::string> &args)
 		window.flip(0);
 
 		// This call processes user input and other events
-		clan::KeepAlive::process(0);
+		clan::RunLoop::process(0);
 	}
 
 	return 0;

@@ -71,39 +71,39 @@ public:
 /// \{
 
 private:
-	inline ubyte32 sigma_rr2_rr13_rr22(ubyte32 value) const
+	inline uint32_t sigma_rr2_rr13_rr22(uint32_t value) const
 	{
 		return (rightrotate_uint32(value, 2) ^ rightrotate_uint32(value, 13) ^ rightrotate_uint32(value, 22));
 	}
 
-	inline ubyte32 sigma_rr6_rr11_rr25(ubyte32 value) const
+	inline uint32_t sigma_rr6_rr11_rr25(uint32_t value) const
 	{
 		return (rightrotate_uint32(value, 6) ^ rightrotate_uint32(value, 11) ^ rightrotate_uint32(value, 25));
 	}
 
-	inline ubyte32 sigma_rr7_rr18_sr3(ubyte32 value) const
+	inline uint32_t sigma_rr7_rr18_sr3(uint32_t value) const
 	{
 		return (rightrotate_uint32(value, 7) ^ rightrotate_uint32(value, 18) ^ (value >> 3));
 	}
 
-	inline ubyte32 sigma_rr17_rr19_sr10(ubyte32 value) const
+	inline uint32_t sigma_rr17_rr19_sr10(uint32_t value) const
 	{
 		return (rightrotate_uint32(value, 17) ^ rightrotate_uint32(value, 19) ^ (value >> 10));
 	}
 
-	inline ubyte32 sha_ch(ubyte32 x, ubyte32 y, ubyte32 z) const
+	inline uint32_t sha_ch(uint32_t x, uint32_t y, uint32_t z) const
 	{
 		return (((x) & ((y) ^ (z))) ^ (z));
 	}
 
-	inline ubyte32 sha_maj(ubyte32 x, ubyte32 y, ubyte32 z) const
+	inline uint32_t sha_maj(uint32_t x, uint32_t y, uint32_t z) const
 	{
 		return  (((x) & ((y) | (z))) | ((y) & (z)));
 	}
 
 	void process_chunk();
 
-	ubyte32 h0, h1, h2, h3, h4, h5, h6, h7;
+	uint32_t h0, h1, h2, h3, h4, h5, h6, h7;
 
 	const static int block_size = 64;
 
@@ -111,7 +111,7 @@ private:
 
 	int chunk_filled;
 
-	ubyte64 length_message;
+	uint64_t length_message;
 
 	bool calculated;
 

@@ -50,6 +50,8 @@ namespace clan
 {
 
 class FontEngine;
+class XMLResourceNode;
+class DomElement;
 
 class Font_Impl
 {
@@ -57,10 +59,10 @@ public:
 	Font_Impl(FontFamily &new_font_family, const FontDescription &description);
 	~Font_Impl();
 
-	const FontMetrics &get_font_metrics();
+	const FontMetrics &get_font_metrics(Canvas &canvas);
 
-	int get_character_index(Canvas &canvas, const std::string &text, const Point &point);
-	std::vector<Rect> get_character_indices(Canvas &canvas, const std::string &text);
+	int get_character_index(Canvas &canvas, const std::string &text, const Pointf &point);
+	std::vector<Rectf> get_character_indices(Canvas &canvas, const std::string &text);
 
 	GlyphMetrics get_metrics(Canvas &canvas, unsigned int glyph);
 
@@ -68,9 +70,7 @@ public:
 
 	void draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color);
 
-	void get_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics);
-
-	static Font load(Canvas &canvas, const FontDescription &reference_desc, FontFamily &font_family, const DomElement &font_element, const XMLResourceNode &resource, std::function<Resource<Sprite>(Canvas &, const std::string &)> cb_get_sprite);
+	void get_glyph_path(Canvas &canvas, unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics);
 
 	void set_height(float value);
 	void set_weight(FontWeight value);
@@ -79,12 +79,13 @@ public:
 	void set_scalable(float height_threshold);
 
 private:
-	void select_font_family();
+	void select_font_family(Canvas &canvas);
 
-	Font_Selected selected_description;
+	FontDescription selected_description;
 	float selected_line_height = 0.0f;
-	float scaled_height = 1.0f;				// Currently not implemented
-	float selected_height_threshold = 32.0f;		// Values greater or equal to this value can be drawn scaled
+	float selected_pixel_ratio = 1.0f;
+	float scaled_height = 1.0f;	
+	float selected_height_threshold = 64.0f;		// Values greater or equal to this value can be drawn scaled
 	bool selected_pathfont = false;
 
 	FontMetrics selected_metrics;

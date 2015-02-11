@@ -81,16 +81,15 @@ int ExampleText::start(const std::vector<std::string> &args)
 	clan::Canvas canvas(window);
 
 	clan::FontDescription font_desc;
-	font_desc.set_typeface_name("Tahoma");
-	font_desc.set_anti_alias(true);
 	font_desc.set_height(32);
-	clan::Font font_normal(canvas, font_desc);
+	clan::Font font_normal("Tahoma", font_desc);
 
-	font_desc.set_weight(800);
+	font_desc.set_weight(clan::FontWeight::bold);
 	font_desc.set_height(40);
-	clan::Font font_bold(canvas, font_desc);
+	clan::Font font_bold("Tahoma", font_desc);
 
 	clan::Texture2D texture_text(canvas, text_window_size, text_window_size);
+	texture_text.set_pixel_ratio(1.0f);
 	texture_text.set_wrap_mode(clan::wrap_repeat, clan::wrap_repeat);
 	texture_text.set_min_filter(clan::filter_linear);
 	texture_text.set_mag_filter(clan::filter_linear);
@@ -99,6 +98,8 @@ int ExampleText::start(const std::vector<std::string> &args)
 	clan::FrameBuffer fb_text;
 	fb_text = clan::FrameBuffer(canvas);
 	fb_text.attach_color(0, texture_text);
+
+	clan::Canvas canvas_fb(canvas, fb_text);
 
 	float angle = 0.0f;
 
@@ -110,6 +111,7 @@ int ExampleText::start(const std::vector<std::string> &args)
 	{
 		num_lines++;
 	}
+
 
 	// Extend layout vector
 	layout.resize(num_lines);
@@ -137,7 +139,7 @@ int ExampleText::start(const std::vector<std::string> &args)
 			layout[line_count].add_text(text_ptr, font_normal, clan::Colorf::yellow);
 		}
 
-		layout[line_count].layout(canvas, texture_text.get_width() - 60);
+		layout[line_count].layout(canvas_fb, texture_text.get_width() - 60);
 
 		ypos += layout[line_count].get_size().height;
 
@@ -155,7 +157,7 @@ int ExampleText::start(const std::vector<std::string> &args)
 		canvas.fill_rect(window.get_viewport(), clan::Gradient(clan::Colorf::lightblue, clan::Colorf::lightblue, clan::Colorf::darkblue, clan::Colorf::darkblue));
 
 		// Draw the text into the frame buffer
-		update_text(canvas, fb_text, font_normal, layout);
+		update_text(canvas_fb, fb_text, font_normal, layout);
 
 		angle += 0.5f;
 		if (angle >= 360.0f)
@@ -169,7 +171,7 @@ int ExampleText::start(const std::vector<std::string> &args)
 		window.flip(1);
 
 		// This call updates input and performs other "housekeeping" call this each frame
-		clan::KeepAlive::process();
+		clan::RunLoop::process();
 	}
 
 	return 0;
@@ -186,10 +188,8 @@ void ExampleText::draw_text(clan::Canvas &canvas, clan::Texture2D &texture, clan
 	canvas.set_transform(clan::Mat4f::identity());
 }
 
-void ExampleText::update_text(clan::Canvas &canvas, clan::FrameBuffer &fb_text, clan::Font &font, std::vector<clan::SpanLayout> &layout)
+void ExampleText::update_text(clan::Canvas &canvas_fb, clan::FrameBuffer &fb_text, clan::Font &font, std::vector<clan::SpanLayout> &layout)
 {
-	clan::Canvas canvas_fb(canvas, fb_text);
-
 	canvas_fb.fill_rect( 0.0f, 0.0f, (float)text_window_size, (float)text_window_size, clan::Colorf(0.0f, 0.0f, 0.0f, 1.0f));
 
 	std::string text(clan::string_format("Frames per second = %1", last_fps));

@@ -6,10 +6,14 @@
 #include "XMPPSession/xmpp_session.h"
 #endif
 #include "IdentServer/ident_server.h"
+#include "XMLSettings/xml_settings_list.h"
 #include <algorithm>
+
+AppModel *AppModel::instance_ptr = nullptr;
 
 AppModel::AppModel()
 {
+	instance_ptr = this;
 }
 
 AppModel::~AppModel()
@@ -27,6 +31,15 @@ AppModel::~AppModel()
 	for (size_t i = 0; i < dcc_chat_connections.size(); i++)
 		delete dcc_chat_connections[i];
 	dcc_chat_connections.clear();
+
+	instance_ptr = nullptr;
+}
+
+AppModel *AppModel::instance()
+{
+	if (instance_ptr == nullptr)
+		throw clan::Exception("No AppModel instance!");
+	return instance_ptr;
 }
 
 IRCSession *AppModel::create_irc_session(const std::string &connection_name)
@@ -125,4 +138,61 @@ void AppModel::destroy_dcc_chat_connection(DCCChatConnection *connection)
 		dcc_chat_connections.erase(it);
 		delete connection;
 	}
+}
+
+void AppModel::auto_connect_to_servers()
+{
+	XMLSettingsList connections = settings.xml_settings.get_list("connections");
+	int connection_count = connections.get_count();
+	for (int i = 0; i < connection_count; ++i)
+	{
+		XMLSettings connection = connections.get(i);
+
+		if (connection.get_bool("autoconnect"))
+		{
+			connect_to_server(connection);
+		}
+	}
+}
+
+void AppModel::connect_to_server(XMLSettings &connection)
+{
+	std::string connection_name = connection.get_string("connectionname");
+	std::string connection_type = connection.get_string("connectiontype", "irc");
+	if (connection_type == "irc")
+	{
+		std::string nick = connection.get_string("nick", "CTalk2015");
+		std::string alt_nick = connection.get_string("altnick", nick + "_");
+		std::string username = connection.get_string("username", "carambola");
+		std::string name = connection.get_string("name", "Anonymous ClanLib Carambola User");
+		std::string server_name = connection.get_string("server");
+
+		std::vector<std::string> perform;
+		XMLSettingsList performlist = connection.get_list("performlist");
+		int perform_count = performlist.get_count();
+		for (int i = 0; i<perform_count; i++)
+		{
+			XMLSettings item = performlist.get(i);
+			perform.push_back(item.get_string("command"));
+		}
+
+		IRCSession *session = create_irc_session(connection_name);
+		session->set_perform_list(perform);
+		session->connect(server_name, "6667", nick, alt_nick, username, name);
+	}
+#if defined(XMPP_SUPPORT)
+	else if (connection_type == "xmpp")
+	{
+		std::string server = connection.get_string("server");
+		std::string port = connection.get_string("port");
+		std::string username = connection.get_string("username");
+		std::string password = connection.get_string("password");
+		std::string domain = connection.get_string("domain");
+		std::string name = connection.get_string("name");
+
+		XMPPSession *session = document->create_xmpp_session(connection_name);
+		session->set_nick_name(name);
+		session->connect(server, port, username, password, domain);
+	}
+#endif
 }

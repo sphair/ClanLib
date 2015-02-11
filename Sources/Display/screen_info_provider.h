@@ -31,7 +31,7 @@
 namespace clan
 {
 
-class Rect;
+class Rectf;
 
 class ScreenInfoProvider
 {
@@ -40,7 +40,7 @@ public:
 	{
 	}
 
-	virtual std::vector<Rect> get_screen_geometries(int &primary_screen_index) const=0;
+	virtual std::vector<Rectf> get_screen_geometries(int &primary_screen_index) const=0;
 };
 
 }

@@ -33,20 +33,9 @@
 
 int Program::main(const std::vector<std::string> &args)
 {
-
-	// Initialize ClanLib base components
-	SetupCore setup_core;
-
-	// Initialize the ClanLib display component
-	SetupDisplay setup_display;
-
 	// We support all display targets, in order listed here
-	SetupD3D setup_d3d;
-	SetupGL setup_gl;
-	SetupSWRender setup_swrender;
-
-	// Initialize the sound system
-	SetupSound setup_sound;
+	clan::D3DTarget::enable();
+	clan::OpenGLTarget::enable();
 
 	// Start the Application
 	App app;
@@ -55,4 +44,4 @@ int Program::main(const std::vector<std::string> &args)
 }
 
 // Instantiate Application, informing it where the Program is located
-Application app(&Program::main);
+clan::Application app(&Program::main);

@@ -33,15 +33,8 @@
 
 int Program::main(const std::vector<std::string> &args)
 {
-	// Initialize ClanLib base components
-	SetupCore setup_core;
-
-	// Initialize the ClanLib display component
-	SetupDisplay setup_display;
-
-	SetupGL setup_gl;
-	clan::SetupD3D setup_d3d;
-	SetupGUI setup_gui;
+	OpenGLTarget::enable();
+	D3DTarget::enable();
 
 	// Start the Application
 	App app;

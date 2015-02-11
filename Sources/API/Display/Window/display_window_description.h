@@ -50,11 +50,11 @@ enum class WindowType
 	custom
 };
 
-class Size;
-class Rect;
+class Sizef;
+class Rectf;
 class DisplayWindow;
 class DisplayWindowDescription_Impl;
-class DisplayWindowHandle;
+struct DisplayWindowHandle;
 
 /// \brief Display window description class.
 ///
@@ -71,13 +71,13 @@ public:
 	DisplayWindowDescription(const std::string &title);
 
 	/// \brief Constructs a window description with default values, a title and a position.
-	DisplayWindowDescription(const std::string &title, const Rect &position, bool client_area);
+	DisplayWindowDescription(const std::string &title, const Rectf &position, bool client_area);
 
 	/// \brief Constructs a window description with default values, a title and a size.
-	DisplayWindowDescription(const std::string &title, const Size &size, bool client_area);
+	DisplayWindowDescription(const std::string &title, const Sizef &size, bool client_area);
 
 	/// \brief Constructs a window description with default values and a position.
-	DisplayWindowDescription(const Rect &position, bool client_area);
+	DisplayWindowDescription(const Rectf &position, bool client_area);
 
 	/// \brief Constructs a DisplayWindowDescription
 	/// \param copy = Display Window Description
@@ -97,10 +97,10 @@ public:
 	const std::string &get_title() const;
 
 	/// \brief Returns the size of the window stored in description.
-	Size get_size() const;
+	Sizef get_size() const;
 
 	/// \brief Returns the initial position of the window.
-	Rect get_position() const;
+	Rectf get_position() const;
 
 	/// \brief Returns if the client area is used for the initial position of the window
 	bool get_position_client_area() const;
@@ -129,9 +129,8 @@ public:
 	bool is_layered() const;
 
 	/** Returns an platform-specific internal display window handle object.
-	 *  \note This function is used internally by ClanLib.
 	 */
-	DisplayWindowHandle const *get_handle() const;
+	DisplayWindowHandle get_handle() const;
 
 	/// \brief Returns true if a title bar is shown.
 	bool has_caption() const;
@@ -226,7 +225,7 @@ public:
 	/// \brief Sets the size of the window (including window frame).
 	/// \param size = Window size
 	/// \param client_area = false = include the window frame. true = exclude the window frame
-	void set_size(const Size &size, bool client_area);
+	void set_size(const Sizef &size, bool client_area);
 
 	/// \brief Sets the position of the window (including window frame).
 	///
@@ -234,7 +233,7 @@ public:
 	///
 	/// \param position = Window position
 	/// \param client_area = false = include the window frame. true = exclude the window frame
-	void set_position(const Rect &position, bool client_area);
+	void set_position(const Rectf &position, bool client_area);
 
 	/// \brief Makes the window initially fullscreen.
 	void set_fullscreen(bool fullscreen = true, int monitor = 0);
@@ -275,9 +274,8 @@ public:
 	void set_allow_screensaver(bool allow_screensaver = true);
 
 	/** Sets the platform-specific internal display window handle object.
-	 *  \note This function is used internally by ClanLib.
 	 */
-	void set_handle(DisplayWindowHandle *handle);
+	void set_handle(DisplayWindowHandle handle);
 
 	/// \brief Sets the minimum required depth buffer.
 	/** <p>If this value is zero, the smallest available depth buffer is preferred. Otherwise,

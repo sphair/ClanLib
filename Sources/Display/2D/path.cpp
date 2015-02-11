@@ -84,12 +84,12 @@ namespace clan
 		}
 	}
 
-	Path Path::glyph(Font &font, unsigned int glyph, GlyphMetrics &out_metrics)
+	Path Path::glyph(Canvas &canvas, Font &font, unsigned int glyph, GlyphMetrics &out_metrics)
 	{
 		Path path;
 		if (font.impl)
 		{
-			font.impl->get_glyph_path(glyph, path, out_metrics);
+			font.impl->get_glyph_path(canvas, glyph, path, out_metrics);
 		}
 		return path;
 	}

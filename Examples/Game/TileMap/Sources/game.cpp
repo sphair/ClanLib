@@ -75,7 +75,7 @@ void Game::run()
 		window.flip(1);
 
 		// This call processes user input and other events
-		KeepAlive::process(0);
+		RunLoop::process(0);
 	}
 }
 

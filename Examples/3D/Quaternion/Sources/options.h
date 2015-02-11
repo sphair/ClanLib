@@ -27,7 +27,7 @@
 */
 
 #pragma once
-
+/*
 class Options : public GUIComponent
 {
 public:
@@ -113,3 +113,4 @@ private:
 
 };
 
+*/

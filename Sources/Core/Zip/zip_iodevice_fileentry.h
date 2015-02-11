@@ -92,7 +92,7 @@ private:
 
 	ZipLocalFileHeader file_header;
 
-	byte64 pos, compressed_pos;
+	int64_t pos, compressed_pos;
 
 	mz_stream zs;
 

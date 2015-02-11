@@ -118,7 +118,7 @@ int ZipIODevice_FileEntry::peek(void *data, int len)
 
 bool ZipIODevice_FileEntry::seek(int seek_pos, IODevice::SeekMode mode)
 {
-	byte64 absolute_pos = 0;
+	int64_t absolute_pos = 0;
 	switch (mode)
 	{
 	case IODevice::seek_set:
@@ -151,7 +151,7 @@ bool ZipIODevice_FileEntry::seek(int seek_pos, IODevice::SeekMode mode)
 		char buffer[1024];
 		while (absolute_pos > pos)
 		{
-			int received = receive(buffer, int(min(absolute_pos-pos, (byte64)1024)), true);
+			int received = receive(buffer, int(min(absolute_pos-pos, (int64_t)1024)), true);
 			if (received == 0) break;
 		}
 		break;
@@ -263,7 +263,7 @@ int ZipIODevice_FileEntry::lowlevel_read(void *data, int size, bool read_all)
 	{
 	case zip_compress_store: // no compression
 		{
-			int received = iodevice.receive(data, int(min((byte64)size, file_header.uncompressed_size - pos)), read_all);
+			int received = iodevice.receive(data, int(min((int64_t)size, file_header.uncompressed_size - pos)), read_all);
 			pos += received;
 			return received;
 		}
@@ -282,7 +282,7 @@ int ZipIODevice_FileEntry::lowlevel_read(void *data, int size, bool read_all)
 				int received_input = 0;
 				while (received_input < 16*1024)
 				{
-					received_input += iodevice.receive(zbuffer, int(min((byte64)16*1024, file_header.compressed_size - compressed_pos)), true);
+					received_input += iodevice.receive(zbuffer, int(min((int64_t)16*1024, file_header.compressed_size - compressed_pos)), true);
 					if (compressed_pos + received_input == file_header.compressed_size) break;
 				}
 				compressed_pos += received_input;

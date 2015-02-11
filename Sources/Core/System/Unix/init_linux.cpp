@@ -43,7 +43,6 @@
 // note: this cannot be replaced by <ctime>! (timeval needs to be defined)
 #include <sys/time.h>
 #include <sys/stat.h>
-#include "API/Core/System/setup_core.h"
 #include "API/Core/System/system.h"
 
 #ifdef __APPLE__
@@ -79,16 +78,16 @@ void deinit_system()
 	#endif
 }
 
-ubyte64 System::get_time()
+uint64_t System::get_time()
 {
 	return (get_microseconds() / 1000);
 }
 
-ubyte64 System::get_microseconds()
+uint64_t System::get_microseconds()
 {
 	timeval tv;
 	gettimeofday(&tv, nullptr);
-	return (ubyte64) tv.tv_sec*(ubyte64) 1000000 + (ubyte64) tv.tv_usec;
+	return (uint64_t) tv.tv_sec*(uint64_t) 1000000 + (uint64_t) tv.tv_usec;
 }
 
 std::string System::get_exe_path()

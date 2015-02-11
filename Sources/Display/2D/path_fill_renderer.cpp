@@ -138,7 +138,7 @@ namespace clan
 			current_instance_offset = instances.push(canvas, brush, transform);
 		}
 
-		int max_width = canvas.get_width() * antialias_level;;
+		int max_width = canvas.get_gc().get_width() * antialias_level;
 
 		int start_y = first_scanline / scanline_block_size * scanline_block_size;
 		int end_y = (last_scanline + scanline_block_size - 1) / scanline_block_size * scanline_block_size;
@@ -194,7 +194,6 @@ namespace clan
 			return;
 
 		mask_blocks.flush_block();
-
 		mask_buffer.unlock();
 		instance_buffer.unlock();
 
@@ -237,7 +236,11 @@ namespace clan
 		gc.reset_program_object();
 		gc.reset_blend_state();
 
-		// Finishedwith the buffers
+		// Set nothing more to flush.
+		// Although this is cleared in PathMaskBuffer::reset() called by initialise_buffers(), It is still possible for this function to be called without reinitialising the buffers
+		mask_blocks.next_block = 0;
+
+		// Finished with the buffers
 		mask_buffer = TransferTexture();
 		mask_texture = Texture2D();
 		instance_buffer = TransferTexture();

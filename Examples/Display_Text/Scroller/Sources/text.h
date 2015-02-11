@@ -33,7 +33,7 @@ class Text
 {
 public:
 	Text();
-	void init(clan::Canvas &canvas, const clan::FontDescription &font_description, const clan::DomElement &configuration, const char *text_name);
+	void init(clan::Canvas &canvas, const std::string &font_family_name, const clan::FontDescription &font_description, const clan::DomElement &configuration, const char *text_name);
 	void draw(clan::Canvas &canvas, const clan::Rect &rect);
 	void run(int time_delta_ms, int speed);
 private:

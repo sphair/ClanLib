@@ -6,7 +6,7 @@
 AgeAscii::AgeAscii(clan::Canvas &canvas, GameWorld *game)
 : game(game)
 {
-	font = clan::Font(canvas, "Courier New", -64);
+	font = clan::Font("Courier New", 64);
 	chars.resize(game->map.get_width() * game->map.get_height());
 	colors.resize(game->map.get_width() * game->map.get_height());
 }
@@ -37,9 +37,9 @@ void AgeAscii::render(clan::Canvas &canvas)
 	}
 
 
-	float char_width = (float)font.get_text_size(canvas, std::string("X")).width;
-	float line_height = font.get_font_metrics().get_height() + font.get_font_metrics().get_external_leading();
-	float baseline_offset = font.get_font_metrics().get_ascent();
+	float char_width = font.measure_text(canvas, std::string("X")).bbox_size.width;
+	float line_height = font.get_font_metrics(canvas).get_height() + font.get_font_metrics(canvas).get_external_leading();
+	float baseline_offset = font.get_font_metrics(canvas).get_ascent();
 
 	clan::Vec2i offset = clan::Vec2i(
 		(int)(look_at.x * char_width - canvas.get_width() * 0.5f),

@@ -33,13 +33,7 @@
 // This is the Program class that is called by Application
 int Program::main(const std::vector<std::string> &args)
 {
-	// Initialize ClanLib base components
-	clan::SetupCore setup_core;
-
-	// Initialize the ClanLib display component
-	clan::SetupDisplay setup_display;
-
-	clan::SetupGL setup_gl;
+	clan::OpenGLTarget::enable();
 
 	// Start the Application
 	App app;

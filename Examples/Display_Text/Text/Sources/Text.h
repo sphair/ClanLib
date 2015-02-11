@@ -36,7 +36,7 @@ private:
 	void on_keyboard_up(const clan::InputEvent &key);
 	void on_window_close();
 
-	void update_text(clan::Canvas &canvas, clan::FrameBuffer &fb_text, clan::Font &font, std::vector<clan::SpanLayout> &layout);
+	void update_text(clan::Canvas &canvas_fb, clan::FrameBuffer &fb_text, clan::Font &font, std::vector<clan::SpanLayout> &layout);
 	void draw_text(clan::Canvas &canvas, clan::Texture2D &texture, clan::Angle angle);
 
 	bool quit;

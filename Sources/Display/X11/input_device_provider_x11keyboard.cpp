@@ -139,7 +139,8 @@ void InputDeviceProvider_X11Keyboard::received_keyboard_input(XKeyEvent &event)
 		key.type = InputEvent::pressed;
 	else
 		key.type = InputEvent::released;
-	key.mouse_pos = window->get_mouse_position();
+
+	key.mouse_pos = Pointf(window->get_mouse_position());
 
 	KeySym key_symbol = XkbKeycodeToKeysym(window->get_display(), key_code, 0, 0);
 

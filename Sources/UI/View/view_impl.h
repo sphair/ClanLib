@@ -28,6 +28,7 @@
 
 #include "API/UI/View/view.h"
 #include "API/UI/View/focus_policy.h"
+#include "API/UI/Style/style.h"
 #include "API/Display/Window/cursor.h"
 #include "API/Display/Window/cursor_description.h"
 #include "../Animation/animation_group.h"
@@ -51,6 +52,7 @@ namespace clan
 		unsigned int tab_index = 0;
 		FocusPolicy focus_policy = FocusPolicy::reject;
 
+		std::shared_ptr<Style> style = std::make_shared<Style>();
 		BoxStyle _style;
 		BoxGeometry _geometry;
 		bool hidden = false;

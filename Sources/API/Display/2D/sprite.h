@@ -36,7 +36,6 @@
 #include "../../Core/Resources/resource.h"
 #include "../Render/graphic_context.h"
 #include "../Image/image_import_description.h"
-#include "../Collision/collision_outline.h"
 #include "color.h"
 
 namespace clan
@@ -50,6 +49,7 @@ class Canvas;
 class ResourceManager;
 class Font_Impl;
 class Subtexture;
+class XMLResourceDocument;
 
 /// \brief Sprite class.
 class Sprite
@@ -200,20 +200,6 @@ public:
 
 	/// \brief Returns true if animation has looped in the last update cycle
 	bool is_looping() const;
-
-	/// \brief Create the collision outlines from the sprite description
-	///
-	/// \param alpha_limit = Alpha limit for pixels considered solid (collidable)
-	/// \param accuracy = Amount of optimization of the outline (default medium)
-	/// \return The collision outlines
-	std::vector<CollisionOutline> create_collision_outlines(Canvas &canvas, int alpha_limit, OutlineAccuracy accuracy) const;
-
-	/// \brief Create the collision outline from the sprites description
-	///
-	/// \param alpha_limit = Alpha limit for pixels considered solid (collidable)
-	/// \param accuracy = Amount of optimization of the outline (default medium)
-	/// \return The collision outlines
-	CollisionOutline create_collision_outline(Canvas &canvas, int alpha_limit=128, OutlineAccuracy accuracy=accuracy_medium) const;
 
 /// \}
 

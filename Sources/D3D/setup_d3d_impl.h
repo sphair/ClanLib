@@ -29,21 +29,20 @@
 #pragma once
 
 #include <mutex>
+#include "../Core/System/setup_core.h"
 
 namespace clan
 {
+	class D3DTarget;
+	class SetupD3D_Impl : public SetupModule
+	{
+	public:
+		SetupD3D_Impl();
+		virtual ~SetupD3D_Impl();
 
-class D3DTarget;
-class SetupD3D_Impl
-{
-public:
-	static void init();
-	static void deinit();
+		D3DTarget *cl_d3d_target = nullptr;
+		static SetupD3D_Impl *instance;
 
-	static std::recursive_mutex cl_d3d_mutex;
-	static int cl_d3d_refcount;
-	static D3DTarget *cl_d3d_target;
-};
-
+	};
 }
 

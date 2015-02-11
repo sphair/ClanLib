@@ -56,6 +56,18 @@ namespace clan
 	{
 	}
 
+	const std::shared_ptr<Style> &View::style() const
+	{
+		return impl->style;
+	}
+
+	void View::set_style(const std::shared_ptr<Style> &style)
+	{
+		impl->style = style;
+		set_needs_layout();
+		set_needs_render();
+	}
+
 	View *View::superview() const
 	{
 		return impl->_superview;
@@ -129,6 +141,15 @@ namespace clan
 			set_needs_render();
 	}
 
+	Canvas View::get_canvas() const
+	{
+		View *super = superview();
+		if (super)
+			return super->get_canvas();
+		else
+			return Canvas();
+	}
+
 	void View::set_needs_render()
 	{
 		View *super = superview();
@@ -152,7 +173,8 @@ namespace clan
 
 	void View::render(Canvas &canvas)
 	{
-		box_style.render(canvas, geometry());
+		style()->render_background(canvas, geometry());
+		style()->render_border(canvas, geometry());
 
 		Mat4f old_transform = canvas.get_transform();
 		Pointf translate = impl->_geometry.content.get_top_left();
@@ -171,41 +193,45 @@ namespace clan
 
 	float View::get_preferred_width(Canvas &canvas)
 	{
-		if (box_style.is_layout_block())
+		if (style()->computed_value("layout").is_keyword("block"))
 			return BlockLayout::get_preferred_width(canvas, this);
-		else if (box_style.is_layout_line())
+		else if (style()->computed_value("layout").is_keyword("inline-block"))
 			return InlineLayout::get_preferred_width(canvas, this);
-		else if (box_style.is_layout_vbox())
+		else if (style()->computed_value("layout").is_keyword("flex") && style()->computed_value("flex-direction").is_keyword("column"))
 			return VBoxLayout::get_preferred_width(canvas, this);
-		else if (box_style.is_layout_hbox())
+		else if (style()->computed_value("layout").is_keyword("flex") && style()->computed_value("flex-direction").is_keyword("row"))
 			return HBoxLayout::get_preferred_width(canvas, this);
+		else if (style()->computed_value("width").is_keyword("auto"))
+			return 0.0f;
 		else
-			return !box_style.is_width_auto() ? box_style.width() : 0.0f;
+			return style()->computed_value("width").number;
 	}
 
 	float View::get_preferred_height(Canvas &canvas, float width)
 	{
-		if (box_style.is_layout_block())
+		if (style()->computed_value("layout").is_keyword("block"))
 			return BlockLayout::get_preferred_height(canvas, this, width);
-		else if (box_style.is_layout_line())
+		else if (style()->computed_value("layout").is_keyword("inline-block"))
 			return InlineLayout::get_preferred_height(canvas, this, width);
-		else if (box_style.is_layout_vbox())
+		else if (style()->computed_value("layout").is_keyword("flex") && style()->computed_value("flex-direction").is_keyword("column"))
 			return VBoxLayout::get_preferred_height(canvas, this, width);
-		else if (box_style.is_layout_hbox())
+		else if (style()->computed_value("layout").is_keyword("flex") && style()->computed_value("flex-direction").is_keyword("row"))
 			return HBoxLayout::get_preferred_height(canvas, this, width);
+		else if (style()->computed_value("height").is_keyword("auto"))
+			return 0.0f;
 		else
-			return !box_style.is_height_auto() ? box_style.height() : 0.0f;
+			return style()->computed_value("height").number;
 	}
 
 	float View::get_first_baseline_offset(Canvas &canvas, float width)
 	{
-		if (box_style.is_layout_block())
+		if (style()->computed_value("layout").is_keyword("block"))
 			return BlockLayout::get_first_baseline_offset(canvas, this, width);
-		else if (box_style.is_layout_line())
+		else if (style()->computed_value("layout").is_keyword("inline-block"))
 			return InlineLayout::get_first_baseline_offset(canvas, this, width);
-		else if (box_style.is_layout_vbox())
+		else if (style()->computed_value("layout").is_keyword("flex") && style()->computed_value("flex-direction").is_keyword("column"))
 			return VBoxLayout::get_first_baseline_offset(canvas, this, width);
-		else if (box_style.is_layout_hbox())
+		else if (style()->computed_value("layout").is_keyword("flex") && style()->computed_value("flex-direction").is_keyword("row"))
 			return HBoxLayout::get_first_baseline_offset(canvas, this, width);
 		else
 			return 0.0f;
@@ -213,13 +239,13 @@ namespace clan
 
 	float View::get_last_baseline_offset(Canvas &canvas, float width)
 	{
-		if (box_style.is_layout_block())
+		if (style()->computed_value("layout").is_keyword("block"))
 			return BlockLayout::get_last_baseline_offset(canvas, this, width);
-		else if (box_style.is_layout_line())
+		else if (style()->computed_value("layout").is_keyword("inline-block"))
 			return InlineLayout::get_last_baseline_offset(canvas, this, width);
-		else if (box_style.is_layout_vbox())
+		else if (style()->computed_value("layout").is_keyword("flex") && style()->computed_value("flex-direction").is_keyword("column"))
 			return VBoxLayout::get_last_baseline_offset(canvas, this, width);
-		else if (box_style.is_layout_hbox())
+		else if (style()->computed_value("layout").is_keyword("flex") && style()->computed_value("flex-direction").is_keyword("row"))
 			return HBoxLayout::get_last_baseline_offset(canvas, this, width);
 		else
 			return 0.0f;
@@ -246,13 +272,13 @@ namespace clan
 
 	void View::layout_subviews(Canvas &canvas)
 	{
-		if (box_style.is_layout_block())
+		if (style()->computed_value("layout").is_keyword("block"))
 			BlockLayout::layout_subviews(canvas, this);
-		else if (box_style.is_layout_line())
+		else if (style()->computed_value("layout").is_keyword("inline-block"))
 			InlineLayout::layout_subviews(canvas, this);
-		else if (box_style.is_layout_vbox())
+		else if (style()->computed_value("layout").is_keyword("flex") && style()->computed_value("flex-direction").is_keyword("column"))
 			VBoxLayout::layout_subviews(canvas, this);
-		else if (box_style.is_layout_hbox())
+		else if (style()->computed_value("layout").is_keyword("flex") && style()->computed_value("flex-direction").is_keyword("row"))
 			HBoxLayout::layout_subviews(canvas, this);
 	}
 
@@ -484,6 +510,22 @@ namespace clan
 			return superview()->from_screen_pos(pos) - geometry().content_box().get_top_left();
 		else
 			return Pointf();
+	}
+
+	Pointf View::to_root_pos(const Pointf &pos)
+	{
+		if (superview())
+			return superview()->to_root_pos(geometry().content_box().get_top_left() + pos);
+		else
+			return pos;
+	}
+
+	Pointf View::from_root_pos(const Pointf &pos)
+	{
+		if (superview())
+			return superview()->from_root_pos(pos) - geometry().content_box().get_top_left();
+		else
+			return pos;
 	}
 
 	void View::dispatch_event(EventUI *e, bool no_propagation)

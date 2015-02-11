@@ -48,7 +48,7 @@ private:
 private:
 	void render(GraphicContext &gc);
 	void create_scene(GraphicContext &gc);
-	void update_light(GraphicContext &gc, Options *options);
+	void update_light(GraphicContext &gc);
 	void calculate_matricies(GraphicContext &gc);
 	void control_target(Options *options);
 private:
@@ -75,7 +75,7 @@ private:
 	bool active_lerp;
 	bool active_slerp;
 
-	clan::ubyte64 current_time;
+	uint64_t current_time;
 	int time_delta;
 	bool quit;
 };

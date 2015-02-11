@@ -183,7 +183,7 @@ void MD5_Impl::calculate()
 	if (size < 9)
 		size += block_size;
 
-	ubyte64 length_message64 = length_message * (ubyte64) 8;
+	uint64_t length_message64 = length_message * (uint64_t) 8;
 
 	unsigned int length_upper = (unsigned int) (length_message64 >> 32);
 	unsigned int length_lower = (unsigned int) (length_message64 & 0xffffffff);
@@ -247,7 +247,7 @@ void MD5_Impl::process_chunk()
 		6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21
 	};
 
-	static const ubyte32 k[64] = 
+	static const uint32_t k[64] = 
 	{
 		// for i from 0 to 63
 		//	k[i] := floor(abs(sin(i + 1)) × (2 pow 32))
@@ -270,14 +270,14 @@ void MD5_Impl::process_chunk()
 		0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391
 	};
 
-	ubyte32 a = h0;
-	ubyte32 b = h1;
-	ubyte32 c = h2;
-	ubyte32 d = h3;
+	uint32_t a = h0;
+	uint32_t b = h1;
+	uint32_t c = h2;
+	uint32_t d = h3;
 	
 	for (i = 0; i < 64; i++)
 	{
-		ubyte32 f, g;
+		uint32_t f, g;
 		if (i < 16)
 		{
 			f = d ^ (b & (c ^ d));	// f = (b & c) | ((~b) & d);
@@ -299,7 +299,7 @@ void MD5_Impl::process_chunk()
 			g = (7 * i) & 0xF;
 		}
 		
-		ubyte32 temp = d;
+		uint32_t temp = d;
 		d = c;
 		c = b;
 		b = b + leftrotate_uint32(a + f + k[i] + w[g], r[i]);

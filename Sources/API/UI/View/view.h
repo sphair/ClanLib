@@ -34,6 +34,7 @@
 #include "../../Core/Signals/signal.h"
 #include "../../UI/Events/event.h"
 #include "../Style/box_geometry.h"
+#include "../Style/style.h"
 #include "focus_policy.h"
 #include <vector>
 #include <memory>
@@ -41,6 +42,7 @@
 
 namespace clan
 {
+	class Style;
 	class Canvas;
 	class ActivationChangeEvent;
 	class CloseEvent;
@@ -59,6 +61,9 @@ namespace clan
 		View();
 		~View();
 
+		const std::shared_ptr<Style> &style() const;
+		void set_style(const std::shared_ptr<Style> &style);
+
 		BoxStyle box_style;
 		SlotContainer slots;
 
@@ -76,6 +81,8 @@ namespace clan
 
 		const BoxGeometry &geometry() const;
 		void set_geometry(const BoxGeometry &geometry);
+
+		virtual Canvas get_canvas() const;
 
 		virtual void set_needs_render();
 
@@ -144,6 +151,9 @@ namespace clan
 
 		virtual Pointf to_screen_pos(const Pointf &pos);
 		virtual Pointf from_screen_pos(const Pointf &pos);
+
+		Pointf to_root_pos(const Pointf &pos);
+		Pointf from_root_pos(const Pointf &pos);
 
 	protected:
 		virtual void subview_added(const std::shared_ptr<View> &view) { }

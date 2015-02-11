@@ -34,7 +34,7 @@ namespace clan
 {
 	SpanLayoutView::SpanLayoutView() : impl(new SpanLayoutViewImpl())
 	{
-		box_style.set_layout_none();
+		style()->set("layout", "none");
 	}
 
 	void SpanLayoutView::set_text_alignment(TextAlignment alignment)
@@ -53,7 +53,7 @@ namespace clan
 			view->remove_from_super();
 	}
 
-	void SpanLayoutView::add_text(const std::string &text, const TextStyle &style)
+	void SpanLayoutView::add_text(const std::string &text, const std::shared_ptr<Style> &style)
 	{
 		impl->add_text(text, style);
 		set_needs_layout();
@@ -83,18 +83,18 @@ namespace clan
 
 	float SpanLayoutView::get_preferred_width(Canvas &canvas)
 	{
-		if (box_style.is_width_auto())
+		if (style()->computed_value("width").is_keyword("auto"))
 			return impl->get_preferred_width(canvas);
 		else
-			return box_style.width();
+			return style()->computed_value("width").number;
 	}
 
 	float SpanLayoutView::get_preferred_height(Canvas &canvas, float width)
 	{
-		if (box_style.is_height_auto())
+		if (style()->computed_value("height").is_keyword("auto"))
 			return impl->get_preferred_height(canvas, width);
 		else
-			return box_style.height();
+			return style()->computed_value("height").number;
 	}
 
 	float SpanLayoutView::get_first_baseline_offset(Canvas &canvas, float width)

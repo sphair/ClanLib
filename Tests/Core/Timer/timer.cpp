@@ -57,7 +57,7 @@ void TestApp::test_timer(void)
 	Timer timer_5;
 	Timer timer_6;
 
-	clan::ubyte64 start_time = System::get_time();
+	uint64_t start_time = System::get_time();
 
 	timer_1.func_expired() = bind_member(this, &TestApp::funx_timer_1);
 	timer_2.func_expired() = bind_member(this, &TestApp::funx_timer_2);
@@ -76,7 +76,7 @@ void TestApp::test_timer(void)
 	bool stopped_flag = false;
 	while(true)
 	{
-		clan::ubyte64 time_now = System::get_time();
+		uint64_t time_now = System::get_time();
 		int time_diff = time_now - start_time;
 		if (time_diff >= 1600) break;
 
@@ -91,7 +91,7 @@ void TestApp::test_timer(void)
 				}
 		}
 
-		KeepAlive::process();
+		RunLoop::process();
 	}
 
 	if (g_TimerValue1 != 1) fail();
@@ -101,17 +101,20 @@ void TestApp::test_timer(void)
 	if (g_TimerValue5 != 1) fail();
 	if (g_TimerValue6 != 1) fail();
 
+
 	Console::write_line("   Function: start() Test adjusting timer after started");
 
 	stopped_flag = false;
 	start_time = System::get_time();
+	timer_1.stop();
 	g_TimerValue1 = 0;
 	timer_1.start(3000, false);
 	while(true)
 	{
-		clan::ubyte64 time_now = System::get_time();
+		uint64_t time_now = System::get_time();
 		int time_diff = time_now - start_time;
-		if (time_diff >= 1600) break;
+		if (time_diff >= 1600)
+			break;
 
 		// Reset timer after 500ms
 		if (time_diff >= 500)
@@ -123,7 +126,7 @@ void TestApp::test_timer(void)
 				}
 		}
 
-		KeepAlive::process();
+		RunLoop::process();
 	}
 	if (g_TimerValue1 != 1) fail();
 

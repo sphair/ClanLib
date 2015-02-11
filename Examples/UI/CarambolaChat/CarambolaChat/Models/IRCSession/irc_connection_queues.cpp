@@ -4,9 +4,7 @@
 
 void IRCConnectionQueues::reset()
 {
-	clan::MutexSection mutex_lock(&mutex);
-	send_event.reset();
-	disconnected.set(0);
+	disconnected = false;
 	send_queue.clear();
 	receive_queue.clear();
 }
@@ -15,19 +13,14 @@ void IRCConnectionQueues::push_send(const IRCRawString &line)
 {
 	if (!line.empty())
 	{
-		clan::MutexSection mutex_lock(&mutex);
 		send_queue.push_back(line);
-		send_event.set();
-		mutex_lock.unlock();
 	}
 }
 
 IRCRawString IRCConnectionQueues::pop_send()
 {
-	clan::MutexSection mutex_lock(&mutex);
 	if (send_queue.empty())
 	{
-		send_event.reset();
 		return IRCRawString();
 	}
 	else
@@ -42,15 +35,12 @@ void IRCConnectionQueues::push_received(const IRCRawString &line)
 {
 	if (!line.empty())
 	{
-		clan::MutexSection mutex_lock(&mutex);
 		receive_queue.push_back(line);
-		mutex_lock.unlock();
 	}
 }
 
 IRCRawString IRCConnectionQueues::pop_received()
 {
-	clan::MutexSection mutex_lock(&mutex);
 	if (receive_queue.empty())
 	{
 		return IRCRawString();
@@ -65,25 +55,20 @@ IRCRawString IRCConnectionQueues::pop_received()
 
 bool IRCConnectionQueues::is_receive_queue_empty()
 {
-	clan::MutexSection mutex_lock(&mutex);
 	return receive_queue.empty();
 }
 
 void IRCConnectionQueues::set_disconnected(const std::string &reason)
 {
-	clan::MutexSection mutex_lock(&mutex);
 	disconnected_reason = reason;
-	disconnected.set(1);
-	mutex_lock.unlock();
+	disconnected = true;
 }
 
 bool IRCConnectionQueues::pop_disconnected(std::string &out_reason)
 {
-	bool was_disconnected = (disconnected.get() != 0);
-	if (was_disconnected)
+	if (disconnected)
 	{
-		clan::MutexSection mutex_lock(&mutex);
-		disconnected.set(0);
+		disconnected = false;
 		out_reason = disconnected_reason;
 		return true;
 	}

@@ -111,16 +111,16 @@ int App::start(const std::vector<std::string> &args)
 		desc_window_main.set_position(Rect(256, 128, Size(512, 128)), true);
 
 		DisplayWindow window_main(desc_window_main);
-		std::vector<Slot> slots;
+		SlotContainer slots;
 
-		slots.push_back(window_main.sig_window_close().connect(this, &App::on_window_close, &window_main));
-		slots.push_back(window_main.sig_window_moved().connect(this, &App::on_window_moved, &window_main));
-		slots.push_back(window_main.sig_resize().connect(this, &App::on_window_resize));
-		slots.push_back(window_main.get_ic().get_mouse().sig_key_down().connect(this, &App::on_mouse_down));
-		slots.push_back(window_main.get_ic().get_mouse().sig_key_up().connect(this, &App::on_mouse_up));
-		slots.push_back(window_main.get_ic().get_mouse().sig_pointer_move().connect(this, &App::on_mouse_move, &window_main));
-		slots.push_back(window_main.sig_lost_focus().connect(this, &App::on_lost_focus));
-		slots.push_back(window_main.get_ic().get_keyboard().sig_key_up().connect(this, &App::on_input_up));
+		slots.connect(window_main.sig_window_close(), [&](){on_window_close(&window_main); });
+		slots.connect(window_main.sig_window_moved(), [&](){on_window_moved(&window_main); });
+		slots.connect(window_main.sig_resize(), bind_member(this, &App::on_window_resize));
+		slots.connect(window_main.get_ic().get_mouse().sig_key_down(), this, &App::on_mouse_down);
+		slots.connect(window_main.get_ic().get_mouse().sig_key_up(), this, &App::on_mouse_up);
+		slots.connect(window_main.get_ic().get_mouse().sig_pointer_move(), [&](const InputEvent &key){on_mouse_move(key, &window_main); });
+		slots.connect(window_main.sig_lost_focus(), bind_member(this, &App::on_lost_focus));
+		slots.connect(window_main.get_ic().get_keyboard().sig_key_up(), this, &App::on_input_up);
 
 		DisplayWindowDescription desc_window_2;
 		desc_window_2.set_title("Window 2");
@@ -130,8 +130,8 @@ int App::start(const std::vector<std::string> &args)
 		Rect rect = window_main.get_geometry();
 		desc_window_2.set_position(rect.translate(0, rect.get_height()), false);
 		DisplayWindow window_2(desc_window_2);
-		slots.push_back(window_2.get_ic().get_keyboard().sig_key_up().connect(this, &App::on_input_up));
-		slots.push_back(window_2.sig_window_close().connect(this, &App::on_window_close, &window_2));
+		slots.connect(window_2.get_ic().get_keyboard().sig_key_up(), this, &App::on_input_up);
+		slots.connect(window_2.sig_window_close(), [&](){on_window_close(&window_2); });
 
 		DisplayWindowDescription desc_window_3;
 		desc_window_3.set_title("Window 3");
@@ -141,8 +141,8 @@ int App::start(const std::vector<std::string> &args)
 		rect = window_2.get_geometry();
 		desc_window_3.set_position(rect.translate(0, rect.get_height()), false);
 		DisplayWindow window_3(desc_window_3);
-		slots.push_back(window_3.get_ic().get_keyboard().sig_key_up().connect(this, &App::on_input_up));
-		slots.push_back(window_3.sig_window_close().connect(this, &App::on_window_close, &window_3));
+		slots.connect(window_3.get_ic().get_keyboard().sig_key_up(), this, &App::on_input_up);
+		slots.connect(window_3.sig_window_close(), [&](){on_window_close(&window_3); });
 
 		DisplayWindowDescription desc_window_4;
 		desc_window_4.set_title("Window 4");
@@ -152,8 +152,8 @@ int App::start(const std::vector<std::string> &args)
 		rect = window_3.get_geometry();
 		desc_window_4.set_position(rect.translate(0, rect.get_height()), true);
 		DisplayWindow window_4(desc_window_4);
-		slots.push_back(window_4.get_ic().get_keyboard().sig_key_up().connect(this, &App::on_input_up));
-		slots.push_back(window_4.sig_window_close().connect(this, &App::on_window_close, &window_4));
+		slots.connect(window_4.get_ic().get_keyboard().sig_key_up(), this, &App::on_input_up);
+		slots.connect(window_4.sig_window_close(), [&](){on_window_close(&window_4); });
 
 		DisplayWindowDescription desc_window_5;
 		desc_window_5.set_title("Window 5");
@@ -162,8 +162,8 @@ int App::start(const std::vector<std::string> &args)
 		rect = window_4.get_geometry();
 		desc_window_5.set_position(rect.translate(0, rect.get_height()), false);
 		DisplayWindow window_5(desc_window_5);
-		slots.push_back(window_5.get_ic().get_keyboard().sig_key_up().connect(this, &App::on_input_up));
-		slots.push_back(window_5.sig_window_close().connect(this, &App::on_window_close, &window_5));
+		slots.connect(window_5.get_ic().get_keyboard().sig_key_up(), this, &App::on_input_up);
+		slots.connect(window_5.sig_window_close(), [&](){on_window_close(&window_5); });
 
 		window_main_ptr = &window_main;
 		window_2_ptr = &window_2;
@@ -172,7 +172,7 @@ int App::start(const std::vector<std::string> &args)
 		window_5_ptr = &window_5;
 
 		Canvas canvas_window_main(window_main);
-		Font font(canvas_window_main, "tahoma", 16);
+		Font font("tahoma", 16);
 
 		// Run until someone presses escape
 		while (!quit)
@@ -211,7 +211,7 @@ int App::start(const std::vector<std::string> &args)
 			window_main.flip(1);
 
 			// This call processes user input and other events
-			KeepAlive::process();
+			RunLoop::process();
 		}
 	}
 	catch(Exception &exception)

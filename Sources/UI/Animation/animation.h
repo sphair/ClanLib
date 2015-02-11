@@ -46,6 +46,6 @@ namespace clan
 		std::function<float(float)> easing;
 		std::function<void()> animation_end;
 
-		std::chrono::system_clock::time_point start_time;
+		std::chrono::steady_clock::time_point start_time;
 	};
 }

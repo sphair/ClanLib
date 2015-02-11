@@ -121,15 +121,15 @@ namespace clan
 	void TextureView_Impl::window_pointer_event(PointerEvent &e_window)
 	{
 		PointerEvent e = e_window;
-		e.set_pos(e.pos() - window_view->geometry().content.get_top_left());
+		e.set_pos(window_view, e.pos(window_view) - window_view->geometry().content.get_top_left());
 
-		std::shared_ptr<View> view_above_cursor = window_view->find_view_at(e.pos());
+		std::shared_ptr<View> view_above_cursor = window_view->find_view_at(e.pos(window_view));
 
 		if (view_above_cursor != hot_view)
 		{
 			if (hot_view)
 			{
-				PointerEvent e_exit(PointerEventType::leave, PointerButton::none, e.pos(), e.alt_down(), e.shift_down(), e.ctrl_down(), e.cmd_down());
+				PointerEvent e_exit(PointerEventType::leave, PointerButton::none, e.pos(window_view->root_view()), e.alt_down(), e.shift_down(), e.ctrl_down(), e.cmd_down());
 				hot_view->dispatch_event(&e_exit, true);
 			}
 
@@ -137,7 +137,7 @@ namespace clan
 
 			if (hot_view)
 			{
-				PointerEvent e_enter(PointerEventType::enter, PointerButton::none, e.pos(), e.alt_down(), e.shift_down(), e.ctrl_down(), e.cmd_down());
+				PointerEvent e_enter(PointerEventType::enter, PointerButton::none, e.pos(window_view->root_view()), e.alt_down(), e.shift_down(), e.ctrl_down(), e.cmd_down());
 				hot_view->dispatch_event(&e_enter, true);
 
 				if (!cursor_window.is_null())
@@ -180,7 +180,7 @@ namespace clan
 		Key key = decode_ic(e.id);
 		int repeat_count = e.repeat_count;
 		const std::string text = e.str;
-		const Pointf pointer_pos = Pointf(static_cast<float>(e.mouse_pos.x), static_cast<float>(e.mouse_pos.y));
+		const Pointf pointer_pos = e.mouse_pos;
 		bool alt_down = e.alt;
 		bool shift_down = e.shift;
 		bool ctrl_down = e.ctrl;
@@ -195,7 +195,7 @@ namespace clan
 		Key key = decode_ic(e.id);
 		int repeat_count = e.repeat_count;
 		const std::string text = e.str;
-		const Pointf pointer_pos = Pointf(static_cast<float>(e.mouse_pos.x), static_cast<float>(e.mouse_pos.y));
+		const Pointf pointer_pos = e.mouse_pos;
 		bool alt_down = e.alt;
 		bool shift_down = e.shift;
 		bool ctrl_down = e.ctrl;
@@ -208,7 +208,7 @@ namespace clan
 	{
 		PointerEventType type = PointerEventType::press;
 		PointerButton button = decode_id(e.id);
-		const Pointf pos = Pointf(static_cast<float>(e.mouse_pos.x), static_cast<float>(e.mouse_pos.y));
+		const Pointf pos = e.mouse_pos;
 		bool alt_down = e.alt;
 		bool shift_down = e.shift;
 		bool ctrl_down = e.ctrl;
@@ -221,7 +221,7 @@ namespace clan
 	{
 		PointerEventType type = PointerEventType::double_click;
 		PointerButton button = decode_id(e.id);
-		const Pointf pos = Pointf(static_cast<float>(e.mouse_pos.x), static_cast<float>(e.mouse_pos.y));
+		const Pointf pos = e.mouse_pos;
 		bool alt_down = e.alt;
 		bool shift_down = e.shift;
 		bool ctrl_down = e.ctrl;
@@ -234,7 +234,7 @@ namespace clan
 	{
 		PointerEventType type = PointerEventType::release;
 		PointerButton button = decode_id(e.id);
-		const Pointf pos = Pointf(static_cast<float>(e.mouse_pos.x), static_cast<float>(e.mouse_pos.y));
+		const Pointf pos = e.mouse_pos;
 		bool alt_down = e.alt;
 		bool shift_down = e.shift;
 		bool ctrl_down = e.ctrl;
@@ -245,7 +245,7 @@ namespace clan
 
 	void TextureView_Impl::on_mouse_move(const clan::InputEvent &clan_event)
 	{
-		PointerEvent e(PointerEventType::move, PointerButton::none, Pointf((float)clan_event.mouse_pos.x, (float)clan_event.mouse_pos.y), clan_event.alt, clan_event.shift, clan_event.ctrl, false/*clan_event.cmd*/);
+		PointerEvent e(PointerEventType::move, PointerButton::none, clan_event.mouse_pos, clan_event.alt, clan_event.shift, clan_event.ctrl, false/*clan_event.cmd*/);
 		window_pointer_event(e);
 	}
 

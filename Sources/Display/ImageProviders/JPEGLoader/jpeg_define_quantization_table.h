@@ -37,10 +37,10 @@ public:
 	JPEGQuantizationTable() : table_index(0) { for (auto & elem : values) elem = 0; }
 
 	// Specifies one of four possible destinations at the decoder into which the quantization table shall be installed.
-	ubyte8 table_index;
+	uint8_t table_index;
 
 	// Quantization element values in zig-zag scan order.
-	ubyte16 values[64];
+	uint16_t values[64];
 };
 
 typedef std::vector<JPEGQuantizationTable> JPEGDefineQuantizationTable;

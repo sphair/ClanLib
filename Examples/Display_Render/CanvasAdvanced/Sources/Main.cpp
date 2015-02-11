@@ -134,16 +134,16 @@ int ExampleCanvas::start(const std::vector<std::string> &args)
 		// by staying white with 100% alpha.
 		clan::Image light_mask_image(light_mask, light_mask.get_size());
 		if(USE_SCALE)
-			canvas.mult_scale(CANVAS_SCALE_X,CANVAS_SCALE_Y);
+			canvas.set_transform(clan::Mat4f::scale(CANVAS_SCALE_X,CANVAS_SCALE_Y, 1.0f));
 		light_mask_image.draw(canvas, clan::Rect(light_mask.get_size()));
 
-		canvas.set_modelview(clan::Mat4f::identity());
+		canvas.set_transform(clan::Mat4f::identity());
 		
 		// Flip the display, showing on the screen what we have drawn (no v-sync)
 		window.flip(0);
 
 		// This call updates input and performs other "housekeeping"
-		clan::KeepAlive::process();
+		clan::RunLoop::process();
 	}
 
 	// Cleanup

@@ -74,7 +74,7 @@ int App::start(const std::vector<std::string> &args)
 
 	float scale = 1.0f;
 
-	clan::Font font(canvas, "tahoma", 32);
+	clan::Font font("tahoma", 32);
 
 	// Shader idea and code from http://www.geeks3d.com/20091116/shader-library-2d-shockwave-post-processing-filter-glsl/
 	// Shader enhanced for clanlib
@@ -88,7 +88,7 @@ int App::start(const std::vector<std::string> &args)
 
 	uniforms.shockParams = clan::Vec3f(10.0f, 0.8f, 0.1f);
 
-	clan::ubyte64 startTime = clan::System::get_time();
+	uint64_t startTime = clan::System::get_time();
 	shockwave_start_time = 0.0f;
 	shockwave_rate = 1.0f;
 	uniforms.glow = 0.1f;
@@ -123,7 +123,7 @@ int App::start(const std::vector<std::string> &args)
 
 		clan::System::sleep(10);
 
-		clan::KeepAlive::process();
+		clan::RunLoop::process();
 	}
 
 	return 0;

@@ -44,12 +44,12 @@ namespace clan
 			{
 				continue;
 			}
-			else if (subview->box_style.is_absolute())
+			else if (subview->style()->computed_value("position").is_keyword("absolute"))
 			{
 				// To do: decide how we determine the containing box used for absolute positioning. For now, use the parent content box.
 				layout_from_containing_box(canvas, subview.get(), view->geometry().content);
 			}
-			else if (subview->box_style.is_fixed())
+			else if (subview->style()->computed_value("position").is_keyword("fixed"))
 			{
 				Rectf offset_initial_containing_box;
 				View *current = view->superview();
@@ -87,30 +87,30 @@ namespace clan
 		float x = 0.0f;
 		float width = 0.0f;
 
-		if (!view->box_style.is_left_auto() && !view->box_style.is_right_auto())
+		if (!view->style()->computed_value("left").is_keyword("auto") && !view->style()->computed_value("right").is_keyword("auto"))
 		{
-			x = view->box_style.left();
-			width = clan::max(containing_box.get_width() - view->box_style.right() - x, 0.0f);
+			x = view->style()->computed_value("left").number;
+			width = clan::max(containing_box.get_width() - view->style()->computed_value("right").number - x, 0.0f);
 		}
-		else if (!view->box_style.is_left_auto() && !view->box_style.is_width_auto())
+		else if (!view->style()->computed_value("left").is_keyword("auto") && !view->style()->computed_value("width").is_keyword("auto"))
 		{
-			x = view->box_style.left();
-			width = view->box_style.width();
+			x = view->style()->computed_value("left").number;
+			width = view->style()->computed_value("width").number;
 		}
-		else if (!view->box_style.is_right_auto() && !view->box_style.is_width_auto())
+		else if (!view->style()->computed_value("right").is_keyword("auto") && !view->style()->computed_value("width").is_keyword("auto"))
 		{
-			width = view->box_style.width();
-			x = containing_box.get_width() - view->box_style.right() - width;
+			width = view->style()->computed_value("width").number;
+			x = containing_box.get_width() - view->style()->computed_value("right").number - width;
 		}
-		else if (!view->box_style.is_left_auto())
+		else if (!view->style()->computed_value("left").is_keyword("auto"))
 		{
-			x = view->box_style.left();
+			x = view->style()->computed_value("left").number;
 			width = view->get_preferred_width(canvas);
 		}
-		else if (!view->box_style.is_right_auto())
+		else if (!view->style()->computed_value("right").is_keyword("auto"))
 		{
 			width = view->get_preferred_width(canvas);
-			x = containing_box.get_width() - view->box_style.right() - width;
+			x = containing_box.get_width() - view->style()->computed_value("right").number - width;
 		}
 		else
 		{
@@ -121,30 +121,30 @@ namespace clan
 		float y = 0.0f;
 		float height = 0.0f;
 
-		if (!view->box_style.is_top_auto() && !view->box_style.is_bottom_auto())
+		if (!view->style()->computed_value("top").is_keyword("auto") && !view->style()->computed_value("bottom").is_keyword("auto"))
 		{
-			y = view->box_style.top();
-			height = clan::max(containing_box.get_height() - view->box_style.bottom() - y, 0.0f);
+			y = view->style()->computed_value("top").number;
+			height = clan::max(containing_box.get_height() - view->style()->computed_value("bottom").number - y, 0.0f);
 		}
-		else if (!view->box_style.is_top_auto() && !view->box_style.is_height_auto())
+		else if (!view->style()->computed_value("top").is_keyword("auto") && !view->style()->computed_value("height").is_keyword("auto"))
 		{
-			y = view->box_style.top();
-			height = view->box_style.height();
+			y = view->style()->computed_value("top").number;
+			height = view->style()->computed_value("height").number;
 		}
-		else if (!view->box_style.is_bottom_auto() && !view->box_style.is_height_auto())
+		else if (!view->style()->computed_value("bottom").is_keyword("auto") && !view->style()->computed_value("height").is_keyword("auto"))
 		{
-			height = view->box_style.height();
-			y = containing_box.get_height() - view->box_style.bottom() - height;
+			height = view->style()->computed_value("height").number;
+			y = containing_box.get_height() - view->style()->computed_value("bottom").number - height;
 		}
-		else if (!view->box_style.is_top_auto())
+		else if (!view->style()->computed_value("top").is_keyword("auto"))
 		{
-			y = view->box_style.top();
+			y = view->style()->computed_value("top").number;
 			height = view->get_preferred_height(canvas, width);
 		}
-		else if (!view->box_style.is_bottom_auto())
+		else if (!view->style()->computed_value("bottom").is_keyword("auto"))
 		{
 			height = view->get_preferred_height(canvas, width);
-			y = containing_box.get_height() - view->box_style.bottom() - height;
+			y = containing_box.get_height() - view->style()->computed_value("bottom").number - height;
 		}
 		else
 		{

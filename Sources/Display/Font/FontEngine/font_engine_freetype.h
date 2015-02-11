@@ -65,7 +65,7 @@ class FontEngine_Freetype : public FontEngine
 /// \name Construction
 /// \{
 public:
-	FontEngine_Freetype(const FontDescription &description, DataBuffer &font_databuffer);
+	FontEngine_Freetype(const FontDescription &description, DataBuffer &font_databuffer, float pixel_ratio);
 	~FontEngine_Freetype();
 
 /// \}
@@ -75,10 +75,6 @@ public:
 public:
 	bool is_automatic_recreation_allowed() const override { return true; }
 	const FontMetrics &get_metrics() const override { return font_metrics; }
-	float get_kerning(const std::string::value_type &ch1, const std::string::value_type &ch2);
-	GlyphMetrics get_glyph_metrics(unsigned int glyph);
-
-	Size get_size(const std::string &text, int pos);
 
 	FontPixelBuffer get_font_glyph(int glyph) override;
 
@@ -86,8 +82,7 @@ public:
 
 	FontPixelBuffer get_font_glyph_subpixel(int glyph);
 	const FontDescription &get_desc() const override { return font_description; }
-	DataBuffer get_databuffer() override { return data_buffer; }
-
+	
 /// \}
 /// \name Operations
 /// \{
@@ -113,6 +108,7 @@ private:
 	DataBuffer data_buffer;
 	FontDescription font_description;
 	FontMetrics font_metrics;
+	float pixel_ratio;
 
 /// \}
 

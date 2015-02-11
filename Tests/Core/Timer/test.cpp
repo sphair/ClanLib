@@ -36,6 +36,8 @@ public:
 	static int main(const std::vector<std::string> &args)
 	{
 		SetupCore setup_core;
+		SetupDisplay setup_display;
+		SetupGL setup_gl;
 
 		// Start the Application
 		TestApp app;

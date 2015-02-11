@@ -45,18 +45,18 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // HashFunctions Operations:
 
-ubyte32 HashFunctions::crc32( const void *data, int size, ubyte32 running_crc/*=0*/ )
+uint32_t HashFunctions::crc32( const void *data, int size, uint32_t running_crc/*=0*/ )
 {
-	ubyte32 crc = running_crc;
+	uint32_t crc = running_crc;
 	if (crc == 0)
 		crc = mz_crc32(0L, nullptr, 0);
 
 	return mz_crc32(running_crc, (const unsigned char*)data, size);;
 }
 
-ubyte32 HashFunctions::adler32( const void *data, int size, ubyte32 running_adler32/*=0*/ )
+uint32_t HashFunctions::adler32( const void *data, int size, uint32_t running_adler32/*=0*/ )
 {
-	ubyte32 adler = running_adler32;
+	uint32_t adler = running_adler32;
 	if (adler == 0)
 		adler = mz_adler32(0L, nullptr, 0);
 

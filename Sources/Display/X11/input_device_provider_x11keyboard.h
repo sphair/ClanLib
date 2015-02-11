@@ -86,11 +86,11 @@ public:
 
 	/// \brief Returns the x position of the device.
 	/** <p>Only valid for mouse.</p>*/
-	int get_x() const override { return 0; }
+	float get_x() const override { return 0.f; }
 
 	/// \brief Returns the y position of the device.
 	/** <p>Only valid for mouse.</p>*/
-	int get_y() const override { return 0; }
+	float get_y() const override { return 0.f; }
 
 	/// \brief Tablet specific functionality.
 	bool in_proximity() const override { return false; }
@@ -110,7 +110,7 @@ public:
 	}
 
 	/// \brief Sets the position of the device.
-	void set_position(int x, int y) override { return; }
+	void set_position(float x, float y) override { return; }
 
 	void received_keyboard_input(XKeyEvent &event);
 

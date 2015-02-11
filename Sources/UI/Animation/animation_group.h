@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "API/Core/System/timer.h"
+#include "API/Display/System/timer.h"
 #include "animation.h"
 #include <algorithm>
 #include <chrono>
@@ -57,7 +57,7 @@ namespace clan
 			{
 				timer.func_expired() = [&]()
 				{
-					std::chrono::system_clock::time_point current_time = std::chrono::system_clock::now();
+					std::chrono::steady_clock::time_point current_time = std::chrono::steady_clock::now();
 
 					auto it = active_animations.begin();
 					while (it != active_animations.end())
@@ -86,7 +86,7 @@ namespace clan
 			}
 			timer.start(16, true);
 
-			animation.start_time = std::chrono::system_clock::now();
+			animation.start_time = std::chrono::steady_clock::now();
 			active_animations.push_back(animation);
 		}
 

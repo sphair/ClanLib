@@ -28,7 +28,7 @@
 
 #include "Network/precomp.h"
 #include "API/Core/System/databuffer.h"
-#include "API/Core/IOData/iodevice_memory.h"
+#include "API/Core/IOData/memory_device.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/Zip/zlib_compression.h"
 #include "network_data.h"

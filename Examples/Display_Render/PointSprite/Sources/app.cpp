@@ -87,21 +87,11 @@ int App::start(const std::vector<std::string> &args)
 	cc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
 	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 
-	std::string theme;
-	if (clan::FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))
-		theme = "../../../Resources/GUIThemeAero";
-	else if (clan::FileHelp::file_exists("../../../Resources/GUIThemeBasic/theme.css"))
-		theme = "../../../Resources/GUIThemeBasic";
-	else
-		throw clan::Exception("No themes found");
 
-	clan::GUIWindowManagerTexture wm(window);
-	clan::GUIManager gui(wm, theme);
-	
 	clan::Canvas canvas(window);
 
 	// Deleted automatically by the GUI
-	Options *options = new Options(gui, clan::Rect(0, 0, canvas.get_size()));
+	//Options *options = new Options(gui, clan::Rect(0, 0, canvas.get_size()));
 
 	clan::Image image_grid(canvas, "../Blend/Resources/grid.png");
 	clan::Texture2D texture_particle(canvas, "Resources/particle.png");
@@ -135,8 +125,6 @@ int App::start(const std::vector<std::string> &args)
 	}
 	program_object.set_uniform1i("Texture0", 0);
 
-	options->request_repaint();
-
 	clan::BlendStateDescription blend_state_desc;
 	blend_state_desc.enable_blending(true);
 	blend_state_desc.set_blend_function(clan::blend_src_alpha, clan::blend_one, clan::blend_src_alpha, clan::blend_one);
@@ -148,10 +136,7 @@ int App::start(const std::vector<std::string> &args)
 	{
 		game_time.update();
 
-		wm.process();
-		wm.draw_windows(canvas);
-
-		int num_particles = options->num_particles;
+		int num_particles = 100;	// options->num_particles;
 		if (num_particles > max_particles)
 			num_particles = max_particles;
 
@@ -193,7 +178,7 @@ int App::start(const std::vector<std::string> &args)
 			canvas.set_blend_state(blend_state);
 
 			clan::RasterizerStateDescription raster_state_desc;
-			raster_state_desc.set_point_size(options->point_size);
+			raster_state_desc.set_point_size(64);	// (options->point_size);
 			raster_state_desc.set_point_sprite_origin(clan::origin_upper_left);
 			clan::RasterizerState raster_state(canvas, raster_state_desc);
 			canvas.set_rasterizer_state(raster_state);
@@ -207,7 +192,7 @@ int App::start(const std::vector<std::string> &args)
 			primarray.set_attributes(1, gpu_colors);
 
 			ProgramUniforms buffer;
-			buffer.cl_ModelViewProjectionMatrix = canvas.get_projection() * canvas.get_modelview();
+			buffer.cl_ModelViewProjectionMatrix = canvas.get_projection() * canvas.get_transform();
 			clan::UniformVector<ProgramUniforms> uniform_vector(gc, &buffer, 1);
 			gc.set_uniform_buffer(0, uniform_vector);
 
@@ -223,7 +208,7 @@ int App::start(const std::vector<std::string> &args)
 
 		window.flip(1);
 
-		clan::KeepAlive::process();
+		clan::RunLoop::process();
 	}
 	return 0;
 }

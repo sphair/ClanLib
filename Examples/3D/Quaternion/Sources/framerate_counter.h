@@ -41,7 +41,7 @@ public:
 	void frame_shown()
 	{
 		frames++;
-		ubyte64 current_time = System::get_time();
+		uint64_t current_time = System::get_time();
 		if (start_time == 0)
 		{
 			start_time = current_time;
@@ -61,6 +61,6 @@ public:
 
 private:
 	int current_fps;
-	ubyte64 start_time;
+	uint64_t start_time;
 	int frames;
 };

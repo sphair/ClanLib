@@ -63,7 +63,7 @@ IRCRawString IRCEntity::get_label() const
 		labelshort = label;
 	else
 		labelshort = label.substr(0, pos);
-	return labelshort;
+	return clan::StringHelp::text_to_lower(labelshort);
 }
 
 bool IRCEntity::is_channel() const

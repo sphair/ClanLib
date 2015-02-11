@@ -35,7 +35,7 @@ int DemoCMotion::run(clan::DisplayWindow &window)
 	// create surface to be used for particle and set the alignment
 	clan::Sprite surface(canvas,"Resources/sketch.png");
 	surface.set_alignment(clan::origin_center);
-	font = new clan::Font(canvas, "Arial", 16 );
+	font = new clan::Font("Arial", 16 );
 
 	motion_ctrl.set_speed_limit(0.65f);
 	motion_ctrl.set_point_acceleration( 320, 240, 0.001f );
@@ -69,13 +69,13 @@ int DemoCMotion::run(clan::DisplayWindow &window)
 	set_style(canvas);
 
 	FramerateCounter frameratecounter;
-	clan::ubyte64 last_time = clan::System::get_time();
+	uint64_t last_time = clan::System::get_time();
 
 	while(!quit)
 	{
 		canvas.clear(bg_color);
 
-		clan::ubyte64 current_time = clan::System::get_time();
+		uint64_t current_time = clan::System::get_time();
 		int time_run = current_time - last_time;
 		last_time = current_time;
 
@@ -113,7 +113,7 @@ int DemoCMotion::run(clan::DisplayWindow &window)
 		window.flip(0);	// Set to "1" to lock to screen refresh rate
 		frameratecounter.frame_shown();
 
-		clan::KeepAlive::process(0);
+		clan::RunLoop::process(0);
 	}
 
 	delete font;

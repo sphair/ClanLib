@@ -63,7 +63,7 @@ public:
 /// \}
 
 private:
-	ubyte32 find_subchunk(const char *chunk, IODevice &source, ubyte32 file_offset, ubyte32 max_offset );
+	uint32_t find_subchunk(const char *chunk, IODevice &source, uint32_t file_offset, uint32_t max_offset );
 
 };
 

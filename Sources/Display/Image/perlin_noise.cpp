@@ -67,7 +67,7 @@ class PerlinNoise_PixelWriter_RGBA8 : public PerlinNoise_PixelWriter
 public:
 	PerlinNoise_PixelWriter_RGBA8(PixelBuffer &pbuff) 
 		: pitch(pbuff.get_pitch() / pbuff.get_bytes_per_pixel()),
-		  current_ptr((ubyte32 *) pbuff.get_data()),
+		  current_ptr((uint32_t *) pbuff.get_data()),
 		  line_start_ptr(current_ptr)
 	{
 	}
@@ -90,8 +90,8 @@ public:
 	}
 private:
 	int pitch;
-	ubyte32 *current_ptr;
-	ubyte32 *line_start_ptr;
+	uint32_t *current_ptr;
+	uint32_t *line_start_ptr;
 };
 
 class PerlinNoise_PixelWriter_RGB8 : public PerlinNoise_PixelWriter
@@ -99,7 +99,7 @@ class PerlinNoise_PixelWriter_RGB8 : public PerlinNoise_PixelWriter
 public:
 	PerlinNoise_PixelWriter_RGB8(PixelBuffer &pbuff) 
 		: pitch(pbuff.get_pitch()),
-		  current_ptr((ubyte8 *) pbuff.get_data()),
+		  current_ptr((uint8_t *) pbuff.get_data()),
 		  line_start_ptr(current_ptr)
 	{
 	}
@@ -124,8 +124,8 @@ public:
 	}
 private:
 	int pitch;
-	ubyte8 *current_ptr;
-	ubyte8 *line_start_ptr;
+	uint8_t *current_ptr;
+	uint8_t *line_start_ptr;
 };
 
 class PerlinNoise_PixelWriter_R8 : public PerlinNoise_PixelWriter
@@ -133,7 +133,7 @@ class PerlinNoise_PixelWriter_R8 : public PerlinNoise_PixelWriter
 public:
 	PerlinNoise_PixelWriter_R8(PixelBuffer &pbuff) 
 		: pitch(pbuff.get_pitch()),
-		  current_ptr((ubyte8 *) pbuff.get_data()),
+		  current_ptr((uint8_t *) pbuff.get_data()),
 		  line_start_ptr(current_ptr)
 	{
 	}
@@ -156,8 +156,8 @@ public:
 	}
 private:
 	int pitch;
-	ubyte8 *current_ptr;
-	ubyte8 *line_start_ptr;
+	uint8_t *current_ptr;
+	uint8_t *line_start_ptr;
 };
 
 class PerlinNoise_PixelWriter_R32f : public PerlinNoise_PixelWriter

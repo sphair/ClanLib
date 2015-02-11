@@ -183,7 +183,7 @@ void SHA256_Impl::add(const void *_data, int size)
 			chunk_filled = 0;
 		}
 	}
-	length_message += size * (ubyte64) 8;
+	length_message += size * (uint64_t) 8;
 }
 
 void SHA256_Impl::set_hmac(const void *key_data, int key_size)
@@ -304,7 +304,7 @@ void SHA256_Impl::calculate()
 void SHA256_Impl::process_chunk()
 {
 	// Constants defined in FIPS 180-3, section 4.2.2
-	static const ubyte32 constant_K[64] = {
+	static const uint32_t constant_K[64] = {
 		0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b,
 		0x59f111f1, 0x923f82a4, 0xab1c5ed5, 0xd807aa98, 0x12835b01,
 		0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7,
@@ -337,18 +337,18 @@ void SHA256_Impl::process_chunk()
 		w[i] = sigma_rr17_rr19_sr10(w[i-2]) + w[i-7] + sigma_rr7_rr18_sr3(w[i-15]) + w[i-16];
 	}
 		
-	ubyte32 a = h0;
-	ubyte32 b = h1;
-	ubyte32 c = h2;
-	ubyte32 d = h3;
-	ubyte32 e = h4;
-	ubyte32 f = h5;
-	ubyte32 g = h6;
-	ubyte32 h = h7;
+	uint32_t a = h0;
+	uint32_t b = h1;
+	uint32_t c = h2;
+	uint32_t d = h3;
+	uint32_t e = h4;
+	uint32_t f = h5;
+	uint32_t g = h6;
+	uint32_t h = h7;
 	
 	for (i = 0; i < 64; i++)
 	{
-		ubyte32 t1, t2;
+		uint32_t t1, t2;
 
 		t1 = h + sigma_rr6_rr11_rr25(e) + sha_ch(e,f,g) + constant_K[i] + w[i];
 		t2 = sigma_rr2_rr13_rr22(a) + sha_maj(a,b,c);

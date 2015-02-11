@@ -106,12 +106,12 @@ const Mat4f &Canvas::get_projection() const
 	return impl->get_projection();
 }
 
-Rect Canvas::get_cliprect() const
+Rectf Canvas::get_cliprect() const
 {
 	if (!impl->cliprects.empty())
 		return impl->cliprects.back();
 
-	return Rect(0,0,get_width(),get_height());
+	return Rectf(0,0,get_width(),get_height());
 }
 
 PixelBuffer Canvas::get_pixeldata(const Rect &rect2, TextureFormat texture_format, bool clamp)
@@ -165,13 +165,13 @@ void Canvas::reset_depth_stencil_state()
 	get_gc().reset_depth_stencil_state();
 }
 
-void Canvas::set_cliprect(const Rect &rect)
+void Canvas::set_cliprect(const Rectf &rect)
 {
 	flush();
 	impl->set_cliprect(rect);
 }
 
-void Canvas::push_cliprect(const Rect &rect)
+void Canvas::push_cliprect(const Rectf &rect)
 {
 	flush();
 	impl->push_cliprect(rect);
@@ -674,9 +674,10 @@ void Canvas::fill_ellipse(const Pointf &center, float radius_x, float radius_y, 
 
 Pointf Canvas::grid_fit(const Pointf &pos)
 {
+	float pixel_ratio = get_gc().get_pixel_ratio();
 	Vec4f world_pos = get_transform() * Vec4f(pos.x, pos.y, 0.0f, 1.0f);
-	world_pos.x = std::round(world_pos.x);
-	world_pos.y = std::round(world_pos.y);
+	world_pos.x = std::round(world_pos.x * pixel_ratio) / pixel_ratio;
+	world_pos.y = std::round(world_pos.y * pixel_ratio) / pixel_ratio;
 	Vec4f object_pos = get_inverse_transform() * world_pos;
 	return Pointf(object_pos.x, object_pos.y);
 }

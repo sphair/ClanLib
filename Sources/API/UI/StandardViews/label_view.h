@@ -54,7 +54,6 @@ namespace clan
 		truncating_middle
 	};
 
-	class TextStyle;
 	class LabelViewImpl;
 
 	class LabelView : public View
@@ -67,9 +66,6 @@ namespace clan
 
 		TextAlignment text_alignment() const;
 		void set_text_alignment(TextAlignment alignment);
-
-		const TextStyle &text_style() const;
-		TextStyle &text_style();
 
 		LineBreakMode line_break_mode() const;
 		void set_line_break_mode(LineBreakMode value);

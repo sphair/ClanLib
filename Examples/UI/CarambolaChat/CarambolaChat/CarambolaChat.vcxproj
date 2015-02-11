@@ -82,6 +82,8 @@
   <ItemGroup>
     <ClCompile Include="Controllers\ChatWindow\chat_window_controller.cpp" />
     <ClCompile Include="Controllers\Chat\chat_view_controller.cpp" />
+    <ClCompile Include="Controllers\Connections\connections_view_controller.cpp" />
+    <ClCompile Include="Controllers\Workspace\workspace_page_view_controller.cpp" />
     <ClCompile Include="Controllers\Workspace\workspace_view_controller.cpp" />
     <ClCompile Include="Models\app_model.cpp" />
     <ClCompile Include="Models\DCCChat\dcc_chat_connection.cpp" />
@@ -107,12 +109,18 @@
     </ClCompile>
     <ClCompile Include="Views\Chat\chat_line.cpp" />
     <ClCompile Include="Views\Chat\chat_view.cpp" />
+    <ClCompile Include="Views\Connections\network_list_item_view.cpp" />
+    <ClCompile Include="Views\Connections\network_list_view.cpp" />
     <ClCompile Include="Views\UserList\user_list_view.cpp" />
+    <ClCompile Include="Views\Workspace\workspace_tab_view.cpp" />
+    <ClCompile Include="Views\Workspace\workspace_view.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Controllers\ChatWindow\chat_window_controller.h" />
     <ClInclude Include="Controllers\Chat\chat_url.h" />
     <ClInclude Include="Controllers\Chat\chat_view_controller.h" />
+    <ClInclude Include="Controllers\Connections\connections_view_controller.h" />
+    <ClInclude Include="Controllers\Workspace\workspace_page_view_controller.h" />
     <ClInclude Include="Controllers\Workspace\workspace_view_controller.h" />
     <ClInclude Include="Models\app_model.h" />
     <ClInclude Include="Models\DCCChat\dcc_chat_connection.h" />
@@ -138,7 +146,11 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="Views\Chat\chat_line.h" />
     <ClInclude Include="Views\Chat\chat_view.h" />
+    <ClInclude Include="Views\Connections\network_list_item_view.h" />
+    <ClInclude Include="Views\Connections\network_list_view.h" />
     <ClInclude Include="Views\UserList\user_list_view.h" />
+    <ClInclude Include="Views\Workspace\workspace_tab_view.h" />
+    <ClInclude Include="Views\Workspace\workspace_view.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

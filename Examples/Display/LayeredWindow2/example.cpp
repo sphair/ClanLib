@@ -70,14 +70,9 @@ private:
 
 int App::main(const std::vector<std::string> &args)
 {
-	// Initialize ClanLib base components
-	clan::SetupCore setup_core;
-
-	// Initialize the ClanLib display component
-	clan::SetupDisplay setup_display;
 
 	// We support all display targets, in order listed here
-	clan::SetupGL setup_gl;
+	clan::OpenGLTarget::enable();
 
 	// Start the Application
 	App app;
@@ -140,9 +135,8 @@ int App::start(const std::vector<std::string> &args)
 
 	// Get the graphics
 	clan::FontDescription font_desc;
-	font_desc.set_typeface_name("tahoma");
 	font_desc.set_height(24);
-	clan::Font font(canvas_center, font_desc);
+	clan::Font font("tahoma", font_desc);
 
 	clan::Sprite tux(canvas_center, "../LayeredWindow/round_tux.png");
 	clan::Image rock(canvas_center, "../LayeredWindow/rock.png");
@@ -210,7 +204,7 @@ int App::start(const std::vector<std::string> &args)
 		window_center.flip(0);
 
 		// This call processes user input and other events
-		clan::KeepAlive::process();
+		clan::RunLoop::process();
 	}
 
 	return 0;

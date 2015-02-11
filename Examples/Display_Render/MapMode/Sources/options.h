@@ -27,7 +27,7 @@
 */
 
 #pragma once
-
+/*
 class Options : public clan::GUIComponent
 {
 public:
@@ -68,3 +68,4 @@ private:
 
 };
 
+*/

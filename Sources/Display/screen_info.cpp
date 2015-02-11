@@ -72,7 +72,7 @@ ScreenInfo::ScreenInfo()
 /////////////////////////////////////////////////////////////////////////////
 // ScreenInfo Attributes:
 
-std::vector<Rect> ScreenInfo::get_screen_geometries(int &primary_screen_index) const
+std::vector<Rectf> ScreenInfo::get_screen_geometries(int &primary_screen_index) const
 {
 	return impl->provider->get_screen_geometries(primary_screen_index);
 }

@@ -30,7 +30,7 @@
 #include "Core/precomp.h"
 #include "API/Core/Zip/zip_archive.h"
 #include "API/Core/IOData/file.h"
-#include "API/Core/IOData/iodevice_memory.h"
+#include "API/Core/IOData/memory_device.h"
 #include "API/Core/IOData/path_help.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/string_help.h"
@@ -176,7 +176,7 @@ IODevice ZipArchive::open_file(const std::string &filename)
 				break;
 
 			case ZipFileEntry_Impl::type_added_memory:
-				return IODevice_Memory(entry.impl->data);
+				return MemoryDevice(entry.impl->data);
 
 			case ZipFileEntry_Impl::type_added_file:
 				return File(entry.impl->filename);
@@ -215,9 +215,9 @@ void ZipArchive::save(const std::string &filename)
 	File output(filename, File::create_always, File::access_read_write);
 
 	std::vector<int> local_header_offsets;
-	std::vector<ubyte32> crc32_codes;
+	std::vector<uint32_t> crc32_codes;
 
-	byte16 dos_date = 0, dos_time = 0;
+	int16_t dos_date = 0, dos_time = 0;
 	ZipArchive_Impl::calc_time_and_date(dos_date, dos_time);
 
 	std::vector<ZipFileEntry>::iterator it;
@@ -232,7 +232,7 @@ void ZipArchive::save(const std::string &filename)
 		DataBuffer data(input.get_size());
 		input.read(data.get_data(), data.get_size());
 
-		ubyte32 crc32 = ZipArchive_Impl::calc_crc32(data.get_data(), data.get_size());
+		uint32_t crc32 = ZipArchive_Impl::calc_crc32(data.get_data(), data.get_size());
 		crc32_codes.push_back(crc32);
 
 		// 1. local file header
@@ -372,7 +372,7 @@ void ZipArchive::load(IODevice &input)
 	if (zip64) input.seek(int(zip64_end_of_directory.offset_to_start_of_central_directory), IODevice::seek_set);
 	else input.seek(int(end_of_directory.offset_to_start_of_central_directory), IODevice::seek_set);
 
-	byte64 num_entries = end_of_directory.number_of_entries_in_central_directory;
+	int64_t num_entries = end_of_directory.number_of_entries_in_central_directory;
 	if (zip64) num_entries = zip64_end_of_directory.number_of_entries_in_central_directory;
 
 	for (int i=0; i<num_entries; i++)
@@ -386,14 +386,14 @@ void ZipArchive::load(IODevice &input)
 /////////////////////////////////////////////////////////////////////////////
 // ZipArchive implementation:
 
-void ZipArchive_Impl::calc_time_and_date(byte16 &out_date, byte16 &out_time)
+void ZipArchive_Impl::calc_time_and_date(int16_t &out_date, int16_t &out_time)
 {
-	ubyte32 day_of_month = 0;
-	ubyte32 month = 0;
-	ubyte32 year_from_1980 = 0;
-	ubyte32 hour = 0;
-	ubyte32 min = 0;
-	ubyte32 sec = 0;
+	uint32_t day_of_month = 0;
+	uint32_t month = 0;
+	uint32_t year_from_1980 = 0;
+	uint32_t hour = 0;
+	uint32_t min = 0;
+	uint32_t sec = 0;
 
 #if _MSC_VER >= 1400
 	time_t t = time(0);
@@ -419,16 +419,16 @@ void ZipArchive_Impl::calc_time_and_date(byte16 &out_date, byte16 &out_time)
 	mutex_lock.unlock();
 #endif
 
-	out_date = (byte16) (day_of_month + (month << 5) + (year_from_1980 << 9));
-	out_time = (byte16) (sec/2 + (min << 5) + (hour << 11));
+	out_date = (int16_t) (day_of_month + (month << 5) + (year_from_1980 << 9));
+	out_time = (int16_t) (sec/2 + (min << 5) + (hour << 11));
 }
 
-ubyte32 ZipArchive_Impl::calc_crc32(const void *data, byte64 size, ubyte32 crc, bool last_block)
+uint32_t ZipArchive_Impl::calc_crc32(const void *data, int64_t size, uint32_t crc, bool last_block)
 {
 	const char *d = (const char *) data;
-	for (ubyte32 data_index = 0; data_index < size; data_index++)
+	for (uint32_t data_index = 0; data_index < size; data_index++)
 	{
-		ubyte8 table_index = ((crc ^ d[data_index]) & 0xff);
+		uint8_t table_index = ((crc ^ d[data_index]) & 0xff);
 		crc = ((crc >> 8) & 0x00ffffff) ^ crc32_table[table_index];
 	}
 	if (last_block)
@@ -437,7 +437,7 @@ ubyte32 ZipArchive_Impl::calc_crc32(const void *data, byte64 size, ubyte32 crc, 
 		return crc;
 }
 
-ubyte32 ZipArchive_Impl::crc32_table[256] =
+uint32_t ZipArchive_Impl::crc32_table[256] =
 {
    0x00000000, 0x77073096, 0xee0e612c, 0x990951ba,
    0x076dc419, 0x706af48f, 0xe963a535, 0x9e6495a3,

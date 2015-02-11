@@ -34,22 +34,23 @@ namespace clan
 {
 	float BlockLayout::get_preferred_width(Canvas &canvas, View *view)
 	{
-		if (!view->box_style.is_width_auto())
-			return view->box_style.width();
+		auto style_width = view->style()->computed_value("width");
+		if (!style_width.is_keyword("auto"))
+			return style_width.number;
 
 		float width = 0.0f;
 		for (const std::shared_ptr<View> &subview : view->subviews())
 		{
-			if (subview->box_style.is_static() && !subview->hidden())
+			if (subview->style()->computed_value("position").is_keyword("static") && !subview->hidden())
 			{
 				float margin_box_width = 0.0f;
-				margin_box_width += subview->box_style.margin_left();
-				margin_box_width += subview->box_style.border_left();
-				margin_box_width += subview->box_style.padding_left();
+				margin_box_width += subview->style()->computed_value("margin-left").number;
+				margin_box_width += subview->style()->computed_value("border-left-width").number;
+				margin_box_width += subview->style()->computed_value("padding-left").number;
 				margin_box_width += subview->get_preferred_width(canvas);
-				margin_box_width += subview->box_style.padding_right();
-				margin_box_width += subview->box_style.border_right();
-				margin_box_width += subview->box_style.margin_right();
+				margin_box_width += subview->style()->computed_value("padding-right").number;
+				margin_box_width += subview->style()->computed_value("border-right-width").number;
+				margin_box_width += subview->style()->computed_value("margin-right").number;
 				width = clan::max(width, margin_box_width);
 			}
 		}
@@ -58,21 +59,22 @@ namespace clan
 
 	float BlockLayout::get_preferred_height(Canvas &canvas, View *view, float width)
 	{
-		if (!view->box_style.is_height_auto())
-			return view->box_style.height();
+		auto style_height = view->style()->computed_value("height");
+		if (!style_height.is_keyword("auto"))
+			return style_height.number;
 
 		float height = 0.0f;
 		for (const std::shared_ptr<View> &subview : view->subviews())
 		{
-			if (subview->box_style.is_static() && !subview->hidden())
+			if (subview->style()->computed_value("position").is_keyword("static") && !subview->hidden())
 			{
-				height += subview->box_style.margin_top();
-				height += subview->box_style.border_top();
-				height += subview->box_style.padding_top();
+				height += subview->style()->computed_value("margin-top").number;
+				height += subview->style()->computed_value("border-top-width").number;
+				height += subview->style()->computed_value("padding-top").number;
 				height += subview->get_preferred_height(canvas, width);
-				height += subview->box_style.padding_bottom();
-				height += subview->box_style.border_bottom();
-				height += subview->box_style.margin_bottom();
+				height += subview->style()->computed_value("padding-bottom").number;
+				height += subview->style()->computed_value("border-bottom-width").number;
+				height += subview->style()->computed_value("margin-bottom").number;
 			}
 		}
 		return height;
@@ -105,17 +107,17 @@ namespace clan
 		float y = 0.0f;
 		for (const std::shared_ptr<View> &subview : view->subviews())
 		{
-			if (subview->box_style.is_static() && !subview->hidden())
+			if (subview->style()->computed_value("position").is_keyword("static") && !subview->hidden())
 			{
 				float left_noncontent = 0.0f;
-				left_noncontent += subview->box_style.margin_left();
-				left_noncontent += subview->box_style.border_left();
-				left_noncontent += subview->box_style.padding_left();
+				left_noncontent += subview->style()->computed_value("margin-left").number;
+				left_noncontent += subview->style()->computed_value("border-left-width").number;
+				left_noncontent += subview->style()->computed_value("padding-left").number;
 
 				float right_noncontent = 0.0f;
-				right_noncontent += subview->box_style.margin_right();
-				right_noncontent += subview->box_style.border_right();
-				right_noncontent += subview->box_style.padding_right();
+				right_noncontent += subview->style()->computed_value("margin-right").number;
+				right_noncontent += subview->style()->computed_value("border-right-width").number;
+				right_noncontent += subview->style()->computed_value("padding-right").number;
 
 				float subview_width = view->geometry().content.get_width() - left_noncontent - right_noncontent;
 				if (subview_width < 0.0f)
@@ -131,16 +133,16 @@ namespace clan
 
 				float subview_height = subview->get_preferred_height(canvas, subview_width);
 
-				y += subview->box_style.margin_top();
-				y += subview->box_style.border_top();
-				y += subview->box_style.padding_top();
+				y += subview->style()->computed_value("margin-top").number;
+				y += subview->style()->computed_value("border-top-width").number;
+				y += subview->style()->computed_value("padding-top").number;
 
 				subview->set_geometry(BoxGeometry::from_content_box(subview->box_style, Rectf::xywh(left_noncontent, y, subview_width, subview_height)));
 
 				y += subview_height;
-				y += subview->box_style.padding_bottom();
-				y += subview->box_style.border_bottom();
-				y += subview->box_style.margin_bottom();
+				y += subview->style()->computed_value("padding-bottom").number;
+				y += subview->style()->computed_value("border-bottom-width").number;
+				y += subview->style()->computed_value("margin-bottom").number;
 
 				subview->layout_subviews(canvas);
 			}
