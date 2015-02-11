@@ -79,9 +79,99 @@ namespace clan
 		return token;
 	}
 
+	struct StyleDimensionLess
+	{
+		bool operator()(const std::string &a, const std::string &b) const { return StringHelp::compare(a, b, true) < 0; }
+	};
+
+	static std::map<std::string, StyleDimension, StyleDimensionLess> length_dimensions =
+	{
+		{ "px", StyleDimension::px },
+		{ "em", StyleDimension::em },
+		{ "pt", StyleDimension::pt },
+		{ "mm", StyleDimension::mm },
+		{ "cm", StyleDimension::cm },
+		{ "in", StyleDimension::in },
+		{ "pc", StyleDimension::pc },
+		{ "ex", StyleDimension::ex },
+		{ "ch", StyleDimension::ch },
+		{ "rem", StyleDimension::rem },
+		{ "vw", StyleDimension::vw },
+		{ "vh", StyleDimension::vh },
+		{ "vmin", StyleDimension::vmin },
+		{ "vmax", StyleDimension::vmax }
+	};
+
+	static std::map<std::string, StyleDimension, StyleDimensionLess> angle_dimensions =
+	{
+		{ "deg", StyleDimension::deg },
+		{ "grad", StyleDimension::grad },
+		{ "rad", StyleDimension::rad },
+		{ "turn", StyleDimension::turn }
+	};
+
+	static std::map<std::string, StyleDimension, StyleDimensionLess> time_dimensions =
+	{
+		{ "s", StyleDimension::s },
+		{ "ms", StyleDimension::ms }
+	};
+
+	static std::map<std::string, StyleDimension, StyleDimensionLess> frequency_dimensions =
+	{
+		{ "hz", StyleDimension::hz },
+		{ "khz", StyleDimension::khz }
+	};
+
+	static std::map<std::string, StyleDimension, StyleDimensionLess> resolution_dimensions =
+	{
+		{ "dpi", StyleDimension::dpi },
+		{ "dpcm", StyleDimension::dpcm },
+		{ "dppx", StyleDimension::dppx }
+	};
+
 	bool StylePropertyParser::is_length(const StyleToken &token)
 	{
-		if (token.type == StyleTokenType::dimension)
+		if (token.type == StyleTokenType::dimension && length_dimensions.find(token.dimension) != length_dimensions.end())
+			return true;
+		else if (token.type == StyleTokenType::number && token.value == "0")
+			return true;
+		else
+			return false;
+	}
+
+	bool StylePropertyParser::is_angle(const StyleToken &token)
+	{
+		if (token.type == StyleTokenType::dimension && angle_dimensions.find(token.dimension) != angle_dimensions.end())
+			return true;
+		else if (token.type == StyleTokenType::number && token.value == "0")
+			return true;
+		else
+			return false;
+	}
+
+	bool StylePropertyParser::is_time(const StyleToken &token)
+	{
+		if (token.type == StyleTokenType::dimension && time_dimensions.find(token.dimension) != time_dimensions.end())
+			return true;
+		else if (token.type == StyleTokenType::number && token.value == "0")
+			return true;
+		else
+			return false;
+	}
+
+	bool StylePropertyParser::is_frequency(const StyleToken &token)
+	{
+		if (token.type == StyleTokenType::dimension && frequency_dimensions.find(token.dimension) != frequency_dimensions.end())
+			return true;
+		else if (token.type == StyleTokenType::number && token.value == "0")
+			return true;
+		else
+			return false;
+	}
+
+	bool StylePropertyParser::is_resolution(const StyleToken &token)
+	{
+		if (token.type == StyleTokenType::dimension && resolution_dimensions.find(token.dimension) != resolution_dimensions.end())
 			return true;
 		else if (token.type == StyleTokenType::number && token.value == "0")
 			return true;
@@ -93,54 +183,104 @@ namespace clan
 	{
 		if (token.type == StyleTokenType::dimension)
 		{
-			if (equals(token.dimension, "px"))
-			{
-				out_length = StyleValue::from_length(StringHelp::text_to_float(token.value), StyleDimension::px);
-				return true;
-			}
-			else if (equals(token.dimension, "em"))
-			{
-				out_length = StyleValue::from_length(StringHelp::text_to_float(token.value), StyleDimension::em);
-				return true;
-			}
-			else if (equals(token.dimension, "pt"))
-			{
-				out_length = StyleValue::from_length(StringHelp::text_to_float(token.value), StyleDimension::pt);
-				return true;
-			}
-			else if (equals(token.dimension, "mm"))
-			{
-				out_length = StyleValue::from_length(StringHelp::text_to_float(token.value), StyleDimension::mm);
-				return true;
-			}
-			else if (equals(token.dimension, "cm"))
-			{
-				out_length = StyleValue::from_length(StringHelp::text_to_float(token.value), StyleDimension::cm);
-				return true;
-			}
-			else if (equals(token.dimension, "in"))
-			{
-				out_length = StyleValue::from_length(StringHelp::text_to_float(token.value), StyleDimension::in);
-				return true;
-			}
-			else if (equals(token.dimension, "pc"))
-			{
-				out_length = StyleValue::from_length(StringHelp::text_to_float(token.value), StyleDimension::pc);
-				return true;
-			}
-			else if (equals(token.dimension, "ex"))
-			{
-				out_length = StyleValue::from_length(StringHelp::text_to_float(token.value), StyleDimension::ex);
-				return true;
-			}
-			else
-			{
+			auto it = length_dimensions.find(token.dimension);
+			if (it == length_dimensions.end())
 				return false;
-			}
+
+			out_length = StyleValue::from_length(StringHelp::text_to_float(token.value), it->second);
+			return true;
 		}
 		else if (token.type == StyleTokenType::number && token.value == "0")
 		{
 			out_length = StyleValue::from_length(0.0f, StyleDimension::px);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	bool StylePropertyParser::parse_angle(const StyleToken &token, StyleValue &out_angle)
+	{
+		if (token.type == StyleTokenType::dimension)
+		{
+			auto it = angle_dimensions.find(token.dimension);
+			if (it == angle_dimensions.end())
+				return false;
+
+			out_angle = StyleValue::from_angle(StringHelp::text_to_float(token.value), it->second);
+			return true;
+		}
+		else if (token.type == StyleTokenType::number && token.value == "0")
+		{
+			out_angle = StyleValue::from_angle(0.0f, StyleDimension::px);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	bool StylePropertyParser::parse_time(const StyleToken &token, StyleValue &out_time)
+	{
+		if (token.type == StyleTokenType::dimension)
+		{
+			auto it = time_dimensions.find(token.dimension);
+			if (it == time_dimensions.end())
+				return false;
+
+			out_time = StyleValue::from_time(StringHelp::text_to_float(token.value), it->second);
+			return true;
+		}
+		else if (token.type == StyleTokenType::number && token.value == "0")
+		{
+			out_time = StyleValue::from_time(0.0f, StyleDimension::px);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	bool StylePropertyParser::parse_frequency(const StyleToken &token, StyleValue &out_frequency)
+	{
+		if (token.type == StyleTokenType::dimension)
+		{
+			auto it = frequency_dimensions.find(token.dimension);
+			if (it == frequency_dimensions.end())
+				return false;
+
+			out_frequency = StyleValue::from_frequency(StringHelp::text_to_float(token.value), it->second);
+			return true;
+		}
+		else if (token.type == StyleTokenType::number && token.value == "0")
+		{
+			out_frequency = StyleValue::from_frequency(0.0f, StyleDimension::px);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	bool StylePropertyParser::parse_resolution(const StyleToken &token, StyleValue &out_resolution)
+	{
+		if (token.type == StyleTokenType::dimension)
+		{
+			auto it = resolution_dimensions.find(token.dimension);
+			if (it == resolution_dimensions.end())
+				return false;
+
+			out_resolution = StyleValue::from_resolution(StringHelp::text_to_float(token.value), it->second);
+			return true;
+		}
+		else if (token.type == StyleTokenType::number && token.value == "0")
+		{
+			out_resolution = StyleValue::from_resolution(0.0f, StyleDimension::px);
 			return true;
 		}
 		else
@@ -159,6 +299,487 @@ namespace clan
 				return false;
 		}
 		out_int = StringHelp::text_to_int(value);
+		return true;
+	}
+
+	bool StylePropertyParser::parse_gradient(const std::vector<StyleToken> &tokens, size_t &in_out_pos, StyleValue &out_gradient)
+	{
+		size_t pos = in_out_pos;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type != StyleTokenType::function)
+			return false;
+
+		// Gradient type:
+		bool radial = false;
+		bool is_repeating = false;
+
+		// Color stops:
+		std::vector<std::pair<Colorf, StyleValue>> stops;
+
+		// Linear:
+		StyleValue angle;
+
+		// Radial:
+		bool shape_ellipse = false;
+		StyleValue size_x, size_y;
+		StyleValue position_x, position_y;
+
+		if (equals(token.value, "linear-gradient") || equals(token.value, "repeating-linear-gradient"))
+		{
+			bool is_repeating = equals(token.value, "repeating-linear-gradient");
+			token = next_token(pos, tokens);
+
+			if (parse_angle(token, angle))
+			{
+				if (!(token.type == StyleTokenType::delim && token.value == ","))
+					return false;
+
+				token = next_token(pos, tokens);
+			}
+			else if (token.type == StyleTokenType::ident && equals(token.value, "to"))
+			{
+				token = next_token(pos, tokens);
+
+				std::string x, y;
+
+				for (int i = 0; i < 2; i++)
+				{
+					if (token.type != StyleTokenType::ident)
+						break;
+
+					if (x.empty() && equals(token.value, "left"))
+					{
+						x = "left";
+					}
+					else if (x.empty() && equals(token.value, "right"))
+					{
+						x = "right";
+					}
+					else if (y.empty() && equals(token.value, "top"))
+					{
+						y = "top";
+					}
+					else if (y.empty() && equals(token.value, "bottom"))
+					{
+						y = "bottom";
+					}
+					else
+					{
+						break;
+					}
+
+					token = next_token(pos, tokens);
+				}
+
+				if ((x.empty() && y.empty()) || !(token.type == StyleTokenType::delim && token.value == ","))
+					return false;
+
+				token = next_token(pos, tokens);
+
+				if (y.empty() && x == "left")
+				{
+					angle = StyleValue::from_angle(270.0f, StyleDimension::deg);
+				}
+				else if (y.empty() && x == "right")
+				{
+					angle = StyleValue::from_angle(90.0f, StyleDimension::deg);
+				}
+				else if (x.empty() && y == "top")
+				{
+					angle = StyleValue::from_angle(0.0f, StyleDimension::deg);
+				}
+				else if (x.empty() && y == "bottom")
+				{
+					angle = StyleValue::from_angle(180.0f, StyleDimension::deg);
+				}
+				else
+				{
+					angle = StyleValue::from_keyword(y + "-" + x);
+				}
+			}
+		}
+		else if (equals(token.value, "radial-gradient") || equals(token.value, "repeating-radial-gradient"))
+		{
+			radial = true;
+			bool is_repeating = equals(token.value, "repeating-radial-gradient");
+			token = next_token(pos, tokens);
+
+			bool is_shape_known = false;
+			bool comma_required = false;
+			if (token.type == StyleTokenType::ident && equals(token.value, "circle"))
+			{
+				comma_required = true;
+				shape_ellipse = false;
+				is_shape_known = true;
+				token = next_token(pos, tokens);
+			}
+			else if (token.type == StyleTokenType::ident && equals(token.value, "ellipse"))
+			{
+				comma_required = true;
+				shape_ellipse = true;
+				is_shape_known = true;
+				token = next_token(pos, tokens);
+			}
+
+			if (parse_length(token, size_x))
+			{
+				comma_required = true;
+			}
+			else if ((!is_shape_known || shape_ellipse) && token.type == StyleTokenType::percentage)
+			{
+				comma_required = true;
+				size_x = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+				token = next_token(pos, tokens);
+			}
+			else
+			{
+				size_x = StyleValue::from_keyword("farthest-corner");
+
+				if (is_shape_known && token.type == StyleTokenType::ident)
+				{
+					if (equals(token.value, "closest-side"))
+					{
+						comma_required = true;
+						size_x = StyleValue::from_keyword("closest-side");
+						size_y = size_x;
+						token = next_token(pos, tokens);
+					}
+					else if (equals(token.value, "farthest-side"))
+					{
+						comma_required = true;
+						size_x = StyleValue::from_keyword("farthest-side");
+						size_y = size_x;
+						token = next_token(pos, tokens);
+					}
+					else if (equals(token.value, "closest-corner"))
+					{
+						comma_required = true;
+						size_x = StyleValue::from_keyword("closest-corner");
+						size_y = size_x;
+						token = next_token(pos, tokens);
+					}
+					else if (equals(token.value, "farthest-corner"))
+					{
+						comma_required = true;
+						size_x = StyleValue::from_keyword("farthest-corner");
+						size_y = size_x;
+						token = next_token(pos, tokens);
+					}
+				}
+			}
+
+			if (!is_shape_known || shape_ellipse)
+			{
+				if (size_x.is_keyword())
+				{
+				}
+				else if (parse_length(token, size_y))
+				{
+					shape_ellipse = true;
+					is_shape_known = true;
+				}
+				else if (token.type == StyleTokenType::percentage)
+				{
+					size_y = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+					shape_ellipse = true;
+					is_shape_known = true;
+				}
+			}
+
+			if (!is_shape_known)
+			{
+				shape_ellipse = false;
+			}
+
+			if (token.type == StyleTokenType::ident && equals(token.value, "at"))
+			{
+				token = next_token(pos, tokens);
+				comma_required = true;
+				if (!parse_position(tokens, pos, position_x, position_y))
+					return false;
+			}
+
+			if (comma_required)
+			{
+				if (!(token.type == StyleTokenType::delim && token.value == ","))
+					return false;
+				token = next_token(pos, tokens);
+			}
+		}
+		else
+		{
+			return false;
+		}
+
+		while (true)
+		{
+			Colorf stop_color;
+			StyleValue stop_pos;
+
+			if (!parse_color(tokens, pos, stop_color))
+				return false;
+
+			if (parse_length(token, stop_pos))
+			{
+			}
+			else if (token.type == StyleTokenType::percentage)
+			{
+				stop_pos = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+				token = next_token(pos, tokens);
+			}
+
+			stops.push_back({ stop_color, stop_pos });
+
+			if (!(token.type == StyleTokenType::delim && token.value == ","))
+				break;
+			token = next_token(pos, tokens);
+		}
+
+		if (token.type != StyleTokenType::bracket_end)
+			return false;
+		token = next_token(pos, tokens);
+
+		// To do: store something in out_gradient
+
+		in_out_pos = pos;
+		return true;
+	}
+
+	bool StylePropertyParser::parse_position(const std::vector<StyleToken> &tokens, size_t &parse_pos, StyleValue &layer_position_x, StyleValue &layer_position_y)
+	{
+		size_t last_pos = parse_pos;
+		size_t pos = last_pos;
+		StyleToken token = next_token(pos, tokens);
+
+		StyleValue bg_pos_x, bg_pos_y;
+		bool x_specified = false;
+		bool y_specified = false;
+		bool center_specified = false;
+		while (true)
+		{
+			if (token.type == StyleTokenType::ident)
+			{
+				if (!y_specified && equals(token.value, "top"))
+				{
+					bg_pos_y = StyleValue::from_keyword("top");
+					y_specified = true;
+
+					if (center_specified)
+					{
+						bg_pos_x = StyleValue::from_keyword("center");
+						x_specified = true;
+						center_specified = false;
+					}
+				}
+				else if (!y_specified && equals(token.value, "bottom"))
+				{
+					bg_pos_y = StyleValue::from_keyword("bottom");
+					y_specified = true;
+
+					if (center_specified)
+					{
+						bg_pos_x = StyleValue::from_keyword("center");
+						x_specified = true;
+						center_specified = false;
+					}
+				}
+				else if (!x_specified && equals(token.value, "left"))
+				{
+					bg_pos_x = StyleValue::from_keyword("left");
+					x_specified = true;
+
+					if (center_specified)
+					{
+						bg_pos_y = StyleValue::from_keyword("center");
+						y_specified = true;
+						center_specified = false;
+					}
+				}
+				else if (!x_specified && equals(token.value, "right"))
+				{
+					bg_pos_x = StyleValue::from_keyword("right");
+					x_specified = true;
+
+					if (center_specified)
+					{
+						bg_pos_y = StyleValue::from_keyword("center");
+						y_specified = true;
+						center_specified = false;
+					}
+				}
+				else if (equals(token.value, "center"))
+				{
+					if (center_specified)
+					{
+						bg_pos_x = StyleValue::from_keyword("center");
+						x_specified = true;
+						center_specified = false;
+					}
+
+					if (x_specified && !y_specified)
+					{
+						bg_pos_y = StyleValue::from_keyword("center");
+						y_specified = true;
+					}
+					else if (y_specified && !x_specified)
+					{
+						bg_pos_x = StyleValue::from_keyword("center");
+						x_specified = true;
+					}
+					else if (!x_specified && !y_specified)
+					{
+						center_specified = true;
+					}
+					else
+					{
+						return false;
+					}
+				}
+				else
+				{
+					break;
+				}
+			}
+			else if (is_length(token))
+			{
+				StyleValue length;
+				if (parse_length(token, length))
+				{
+					if (center_specified)
+					{
+						bg_pos_x = StyleValue::from_keyword("center");
+						x_specified = true;
+						center_specified = false;
+					}
+
+					if (!x_specified && !y_specified)
+					{
+						bg_pos_x = length;
+						x_specified = true;
+					}
+					else if (x_specified && !y_specified)
+					{
+						bg_pos_y = length;
+						y_specified = true;
+					}
+					else
+					{
+						return false;
+					}
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else if (token.type == StyleTokenType::percentage)
+			{
+				if (center_specified)
+				{
+					bg_pos_x = StyleValue::from_keyword("center");
+					x_specified = true;
+					center_specified = false;
+				}
+
+				if (!x_specified && !y_specified)
+				{
+					bg_pos_x = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+					x_specified = true;
+				}
+				else if (x_specified && !y_specified)
+				{
+					bg_pos_y = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+					y_specified = true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else if (token.type == StyleTokenType::delim && token.value == "-")
+			{
+				token = next_token(pos, tokens);
+				if (is_length(token))
+				{
+					StyleValue length;
+					if (parse_length(token, length))
+					{
+						length.number = -length.number;
+						if (center_specified)
+						{
+							bg_pos_x = StyleValue::from_keyword("center");
+							x_specified = true;
+							center_specified = false;
+						}
+
+						if (!x_specified && !y_specified)
+						{
+							bg_pos_x = length;
+							x_specified = true;
+						}
+						else if (x_specified && !y_specified)
+						{
+							bg_pos_y = length;
+							y_specified = true;
+						}
+						else
+						{
+							return false;
+						}
+					}
+					else
+					{
+						return false;
+					}
+				}
+				else if (token.type == StyleTokenType::percentage)
+				{
+					if (center_specified)
+					{
+						bg_pos_x = StyleValue::from_keyword("center");
+						x_specified = true;
+						center_specified = false;
+					}
+
+					if (!x_specified && !y_specified)
+					{
+						bg_pos_x = StyleValue::from_percentage(-StringHelp::text_to_float(token.value));
+						x_specified = true;
+						parse_pos = pos;
+					}
+					else if (x_specified && !y_specified)
+					{
+						bg_pos_y = StyleValue::from_percentage(-StringHelp::text_to_float(token.value));
+						y_specified = true;
+						parse_pos = pos;
+					}
+					else
+					{
+						return false;
+					}
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else
+			{
+				break;
+			}
+
+			last_pos = pos;
+			token = next_token(pos, tokens);
+		}
+
+		if (!x_specified)
+			bg_pos_x = StyleValue::from_keyword("center");
+		else if (!y_specified)
+			bg_pos_y = StyleValue::from_keyword("center");
+
+		parse_pos = last_pos;
+		layer_position_x = bg_pos_x;
+		layer_position_y = bg_pos_y;
 		return true;
 	}
 
