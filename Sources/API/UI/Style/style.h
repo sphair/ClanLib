@@ -155,6 +155,17 @@ namespace clan
 		std::vector<StyleGradientStop> stops;
 	};
 
+	class StyleImage
+	{
+	public:
+		StyleImage() { }
+		StyleImage(const StyleValue &image) : image(image) { }
+		StyleImage(const StyleGradient &gradient) : gradient(gradient) { }
+
+		StyleValue image;
+		StyleGradient gradient;
+	};
+
 	class Style
 	{
 	public:

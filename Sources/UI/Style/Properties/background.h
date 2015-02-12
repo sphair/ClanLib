@@ -42,7 +42,7 @@ namespace clan
 
 	private:
 		bool parse_bgcolor(StyleValue &bgcolor, size_t &parse_pos, const std::vector<StyleToken> &tokens);
-		bool parse_image(StyleValue &layer_image, size_t &parse_pos, const std::vector<StyleToken> &tokens);
+		bool parse_image(StyleImage &layer_image, size_t &parse_pos, const std::vector<StyleToken> &tokens);
 		bool parse_repeat(StyleValue &layer_repeat_x, StyleValue &layer_repeat_y, size_t &parse_pos, const std::vector<StyleToken> &tokens);
 		bool parse_attachment(StyleValue &layer_attachment, size_t &parse_pos, const std::vector<StyleToken> &tokens);
 		bool parse_size(StyleValue &layer_size_x, StyleValue &layer_size_y, size_t &parse_pos, const std::vector<StyleToken> &tokens);
