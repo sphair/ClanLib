@@ -302,34 +302,22 @@ namespace clan
 		return true;
 	}
 
-	bool StylePropertyParser::parse_gradient(const std::vector<StyleToken> &tokens, size_t &in_out_pos, StyleValue &out_gradient)
+	bool StylePropertyParser::parse_gradient(const std::vector<StyleToken> &tokens, size_t &in_out_pos, StyleGradient &out_gradient)
 	{
 		size_t pos = in_out_pos;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type != StyleTokenType::function)
 			return false;
 
-		// Gradient type:
-		bool radial = false;
-		bool is_repeating = false;
-
-		// Color stops:
-		std::vector<std::pair<Colorf, StyleValue>> stops;
-
-		// Linear:
-		StyleValue angle;
-
-		// Radial:
-		bool shape_ellipse = false;
-		StyleValue size_x, size_y;
-		StyleValue position_x, position_y;
+		StyleGradient gradient;
 
 		if (equals(token.value, "linear-gradient") || equals(token.value, "repeating-linear-gradient"))
 		{
-			bool is_repeating = equals(token.value, "repeating-linear-gradient");
+			gradient.type = StyleValue::from_keyword(token.value);
+
 			token = next_token(pos, tokens);
 
-			if (parse_angle(token, angle))
+			if (parse_angle(token, gradient.linear_angle))
 			{
 				if (!(token.type == StyleTokenType::delim && token.value == ","))
 					return false;
@@ -378,31 +366,35 @@ namespace clan
 
 				if (y.empty() && x == "left")
 				{
-					angle = StyleValue::from_angle(270.0f, StyleDimension::deg);
+					gradient.linear_angle = StyleValue::from_angle(270.0f, StyleDimension::deg);
 				}
 				else if (y.empty() && x == "right")
 				{
-					angle = StyleValue::from_angle(90.0f, StyleDimension::deg);
+					gradient.linear_angle = StyleValue::from_angle(90.0f, StyleDimension::deg);
 				}
 				else if (x.empty() && y == "top")
 				{
-					angle = StyleValue::from_angle(0.0f, StyleDimension::deg);
+					gradient.linear_angle = StyleValue::from_angle(0.0f, StyleDimension::deg);
 				}
 				else if (x.empty() && y == "bottom")
 				{
-					angle = StyleValue::from_angle(180.0f, StyleDimension::deg);
+					gradient.linear_angle = StyleValue::from_angle(180.0f, StyleDimension::deg);
 				}
 				else
 				{
-					angle = StyleValue::from_keyword(y + "-" + x);
+					gradient.linear_angle = StyleValue::from_keyword(y + "-" + x);
 				}
 			}
 		}
 		else if (equals(token.value, "radial-gradient") || equals(token.value, "repeating-radial-gradient"))
 		{
-			radial = true;
-			bool is_repeating = equals(token.value, "repeating-radial-gradient");
+			gradient.type = StyleValue::from_keyword(token.value);
+
 			token = next_token(pos, tokens);
+
+			bool shape_ellipse = false;
+			StyleValue size_x, size_y;
+			StyleValue position_x, position_y;
 
 			bool is_shape_known = false;
 			bool comma_required = false;
@@ -505,6 +497,12 @@ namespace clan
 					return false;
 				token = next_token(pos, tokens);
 			}
+
+			gradient.radial_shape = StyleValue::from_keyword(shape_ellipse ? "ellipse" : "circle");
+			gradient.radial_size_x = size_x;
+			gradient.radial_size_y = size_y;
+			gradient.radial_position_x = position_x;
+			gradient.radial_position_y = position_y;
 		}
 		else
 		{
@@ -528,7 +526,7 @@ namespace clan
 				token = next_token(pos, tokens);
 			}
 
-			stops.push_back({ stop_color, stop_pos });
+			gradient.stops.push_back(StyleGradientStop(StyleValue::from_color(stop_color), stop_pos));
 
 			if (!(token.type == StyleTokenType::delim && token.value == ","))
 				break;
@@ -539,8 +537,7 @@ namespace clan
 			return false;
 		token = next_token(pos, tokens);
 
-		// To do: store something in out_gradient
-
+		out_gradient = gradient;
 		in_out_pos = pos;
 		return true;
 	}
