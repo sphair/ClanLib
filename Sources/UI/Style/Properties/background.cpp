@@ -117,6 +117,14 @@ namespace clan
 			return;
 		}
 
+		bgimage = StyleValue::from_keyword("array");
+		bgrepeat = StyleValue::from_keyword("array");
+		bgattachment = StyleValue::from_keyword("array");
+		bgposition = StyleValue::from_keyword("array");
+		bgorigin = StyleValue::from_keyword("array");
+		bgclip = StyleValue::from_keyword("array");
+		bgsize = StyleValue::from_keyword("array");
+
 		size_t pos = 0;
 		while (true) // for each layer
 		{
@@ -262,16 +270,18 @@ namespace clan
 	bool BackgroundPropertyParser::parse_image(StyleImage &layer_image, size_t &parse_pos, const std::vector<StyleToken> &tokens)
 	{
 		size_t pos = parse_pos;
-		StyleToken token = next_token(pos, tokens);
+
 		StyleGradient gradient;
-		if (parse_gradient(tokens, parse_pos, gradient))
+		if (parse_gradient(tokens, pos, gradient))
 		{
 			layer_image = StyleImage();
 			layer_image.gradient = gradient;
 			parse_pos = pos;
 			return true;
 		}
-		else if (token.type == StyleTokenType::ident && equals(token.value, "none"))
+
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && equals(token.value, "none"))
 		{
 			layer_image = StyleImage();
 			parse_pos = pos;

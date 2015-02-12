@@ -362,8 +362,6 @@ namespace clan
 				if ((x.empty() && y.empty()) || !(token.type == StyleTokenType::delim && token.value == ","))
 					return false;
 
-				token = next_token(pos, tokens);
-
 				if (y.empty() && x == "left")
 				{
 					gradient.linear_angle = StyleValue::from_angle(270.0f, StyleDimension::deg);
@@ -390,6 +388,7 @@ namespace clan
 		{
 			gradient.type = StyleValue::from_keyword(token.value);
 
+			size_t start_pos = pos;
 			token = next_token(pos, tokens);
 
 			bool shape_ellipse = false;
@@ -495,7 +494,10 @@ namespace clan
 			{
 				if (!(token.type == StyleTokenType::delim && token.value == ","))
 					return false;
-				token = next_token(pos, tokens);
+			}
+			else
+			{
+				pos = start_pos;
 			}
 
 			gradient.radial_shape = StyleValue::from_keyword(shape_ellipse ? "ellipse" : "circle");
@@ -517,8 +519,11 @@ namespace clan
 			if (!parse_color(tokens, pos, stop_color))
 				return false;
 
+			token = next_token(pos, tokens);
+
 			if (parse_length(token, stop_pos))
 			{
+				token = next_token(pos, tokens);
 			}
 			else if (token.type == StyleTokenType::percentage)
 			{
@@ -530,12 +535,10 @@ namespace clan
 
 			if (!(token.type == StyleTokenType::delim && token.value == ","))
 				break;
-			token = next_token(pos, tokens);
 		}
 
 		if (token.type != StyleTokenType::bracket_end)
 			return false;
-		token = next_token(pos, tokens);
 
 		out_gradient = gradient;
 		in_out_pos = pos;
