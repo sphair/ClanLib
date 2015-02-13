@@ -7,13 +7,12 @@ int main(int, char **)
 {
 	auto style = std::make_shared<Style>();
 
-	style->set("color", "rgb(255,128,64)");
-	style->set("border", "1px solid yellow");
-	style->set("border-top", "none");
-	style->set("margin", "1em auto");
-	style->set("padding", "10mm 5pt 42px 2.1in");
-	style->set("font", "15px/24px 'Segoe UI', sans-serif");
-	style->set("background", "url('foobar.png'), linear-gradient(to bottom, red, green 25%, blue 100px, rgba(220,220,220,0.25)), red");
+	style->set("color: rgb(255,128,64)");
+	style->set("border: 1px solid yellow; border-top: none");
+	style->set("margin: 1em auto");
+	style->set("padding: 10mm 5pt 42px 2.1in");
+	style->set("font: 15px/24px 'Segoe UI', sans-serif");
+	style->set("background: url('foobar.png'), linear-gradient(to bottom, red, green 25%, blue 100px, rgba(220,220,220,0.25)), red");
 
 	Colorf c = style->computed_value("color").color;
 	Console::write_line("color: rgba(%1, %2, %3, %4)", (int)(c.r * 255), (int)(c.g * 255), (int)(c.b * 255), c.a);
