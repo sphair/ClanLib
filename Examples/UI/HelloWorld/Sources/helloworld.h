@@ -34,9 +34,4 @@ class HelloWorld
 {
 public:
 	int start(const std::vector<std::string> &args);
-
-	void run();
-	void exit();
-
-	bool exit_flag;
 };
