@@ -63,9 +63,9 @@ namespace clan
 	BackgroundRepeatPropertyParser style_parser_background_repeat;
 	BackgroundSizePropertyParser style_parser_background_size;
 
-	void BackgroundPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BackgroundPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue bgcolor;
 		StyleValue bgimage;
@@ -544,9 +544,9 @@ namespace clan
 		return true;
 	}
 
-	void BackgroundAttachmentPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BackgroundAttachmentPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
@@ -593,9 +593,9 @@ namespace clan
 		}
 	}
 
-	void BackgroundClipPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BackgroundClipPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue background_clip;
 		std::vector<StyleValue> background_clips;
@@ -650,9 +650,9 @@ namespace clan
 		}
 	}
 
-	void BackgroundColorPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BackgroundColorPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue background_color;
 
@@ -677,9 +677,9 @@ namespace clan
 		}
 	}
 
-	void BackgroundImagePropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BackgroundImagePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
@@ -755,9 +755,9 @@ namespace clan
 		}
 	}
 
-	void BackgroundOriginPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BackgroundOriginPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue background_origin;
 		std::vector<StyleValue> background_origins;
@@ -812,9 +812,9 @@ namespace clan
 		setter->set_value_array("background-origin", background_origins);
 	}
 
-	void BackgroundPositionPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BackgroundPositionPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue position;
 		std::vector<StyleValue> positions_x;
@@ -1085,9 +1085,9 @@ namespace clan
 		setter->set_value_array("background-position-y", positions_y);
 	}
 
-	void BackgroundRepeatPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BackgroundRepeatPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue background_repeat;
 		std::vector<StyleValue> background_repeat_x;
@@ -1212,9 +1212,9 @@ namespace clan
 		setter->set_value_array("background-repeat-y", background_repeat_y);
 	}
 
-	void BackgroundSizePropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BackgroundSizePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue background_size;
 		std::vector<StyleValue> background_sizes_x;

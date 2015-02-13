@@ -38,104 +38,104 @@ namespace clan
 	{
 	public:
 		ColorPropertyParser() : StylePropertyParser({ "color" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
 	};
 
 	class TextAlignPropertyParser : public StylePropertyParser
 	{
 	public:
 		TextAlignPropertyParser() : StylePropertyParser({ "text-align" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
 	};
 
 	class TextDecorationPropertyParser : public StylePropertyParser
 	{
 	public:
 		TextDecorationPropertyParser() : StylePropertyParser({ "text-decoration" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
 	};
 
 	class TextIndentPropertyParser : public StylePropertyParser
 	{
 	public:
 		TextIndentPropertyParser() : StylePropertyParser({ "text-indent" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
 	};
 
 	class TextTransformPropertyParser : public StylePropertyParser
 	{
 	public:
 		TextTransformPropertyParser() : StylePropertyParser({ "text-transform" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
 	};
 
 	class TextShadowPropertyParser : public StylePropertyParser
 	{
 	public:
 		TextShadowPropertyParser() : StylePropertyParser({ "text-shadow" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
 	};
 
 	class WordSpacingPropertyParser : public StylePropertyParser
 	{
 	public:
 		WordSpacingPropertyParser() : StylePropertyParser({ "word-spacing" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
 	};
 
 	class LetterSpacingPropertyParser : public StylePropertyParser
 	{
 	public:
 		LetterSpacingPropertyParser() : StylePropertyParser({ "letter-spacing" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
 	};
 
 	class FontPropertyParser : public StylePropertyParser
 	{
 	public:
 		FontPropertyParser() : StylePropertyParser({ "font" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
 	};
 
 	class FontFamilyPropertyParser : public StylePropertyParser
 	{
 	public:
 		FontFamilyPropertyParser() : StylePropertyParser({ "font-family" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
 	};
 
 	class FontSizePropertyParser : public StylePropertyParser
 	{
 	public:
 		FontSizePropertyParser() : StylePropertyParser({ "font-size" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
 	};
 
 	class LineHeightPropertyParser : public StylePropertyParser
 	{
 	public:
 		LineHeightPropertyParser() : StylePropertyParser({ "line-height" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
 	};
 
 	class FontStylePropertyParser : public StylePropertyParser
 	{
 	public:
 		FontStylePropertyParser() : StylePropertyParser({ "font-style" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
 	};
 
 	class FontVariantPropertyParser : public StylePropertyParser
 	{
 	public:
 		FontVariantPropertyParser() : StylePropertyParser({ "font-variant" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
 	};
 
 	class FontWeightPropertyParser : public StylePropertyParser
 	{
 	public:
 		FontWeightPropertyParser() : StylePropertyParser({ "font-weight" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
 	};
 }

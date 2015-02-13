@@ -75,12 +75,19 @@ namespace clan
 		virtual void set_value_array(const std::string &name, const std::vector<StyleValue> &value_array) = 0;
 	};
 
+	class StyleParser
+	{
+	public:
+		std::vector<StyleToken> tokens;
+		bool important_flag = false;
+	};
+
 	class StylePropertyParser
 	{
 	public:
 		StylePropertyParser(const std::vector<std::string> &property_names);
 		virtual ~StylePropertyParser() { }
-		virtual void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) = 0;
+		virtual void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) = 0;
 
 	protected:
 		static StyleToken next_token(size_t &pos, const std::vector<StyleToken> &tokens, bool skip_whitespace = true);
@@ -120,6 +127,6 @@ namespace clan
 	{
 	public:
 		static const StyleValue &default_value(const std::string &name);
-		static void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args);
+		static void parse(StylePropertySetter *setter, const std::string &styles, const std::initializer_list<StylePropertyInitializerValue> &args);
 	};
 }

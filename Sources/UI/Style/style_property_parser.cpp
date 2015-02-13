@@ -1087,10 +1087,39 @@ namespace clan
 		}
 	}
 
-	void StyleProperty::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void StyleProperty::parse(StylePropertySetter *setter, const std::string &properties, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		auto it = style_parsers().find(name);
-		if (it != style_parsers().end())
-			it->second->parse(setter, name, value, args);
+		StyleTokenizer tokenizer(properties);
+		StyleToken token;
+		while (true)
+		{
+			tokenizer.read(token, true);
+			if (token.type == StyleTokenType::ident)
+			{
+				std::string name = token.value;
+
+				tokenizer.read(token, true);
+				if (token.type == StyleTokenType::colon)
+				{
+					tokenizer.read(token, true);
+
+					StyleParser parser;
+					parser.tokens = tokenizer.read_property_value(token, parser.important_flag);
+
+					auto it = style_parsers().find(name);
+					if (it != style_parsers().end())
+						it->second->parse(setter, name, parser, args);
+				}
+				else
+				{
+					bool important_flag = false;
+					tokenizer.read_property_value(token, important_flag);
+				}
+			}
+			else if (token.type == StyleTokenType::null)
+			{
+				break;
+			}
+		}
 	}
 }

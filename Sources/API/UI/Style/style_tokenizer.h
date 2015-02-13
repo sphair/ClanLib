@@ -46,6 +46,9 @@ namespace clan
 		/// \brief Reads the next token
 		void read(StyleToken &out_token, bool eat_whitespace, bool eat_comments = true);
 
+		/// \brief Reads all tokens belonging to a property value
+		std::vector<StyleToken> read_property_value(StyleToken &token, bool &out_important_flag);
+
 		/// \brief Returns all tokens except start/end whitespace and comments
 		static std::vector<StyleToken> tokenize(const std::string &text);
 

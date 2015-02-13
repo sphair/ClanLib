@@ -38,13 +38,13 @@ namespace clan
 	{
 	public:
 		PaddingPropertyParser() : StylePropertyParser({ "padding" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
 	};
 
 	class PaddingLTRBPropertyParser : public StylePropertyParser
 	{
 	public:
 		PaddingLTRBPropertyParser() : StylePropertyParser({ "padding-left", "padding-top", "padding-right", "padding-bottom" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
 	};
 }

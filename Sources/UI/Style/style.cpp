@@ -82,9 +82,9 @@ namespace clan
 		impl->base = new_base;
 	}
 
-	void Style::set(const std::string &property_name, const std::string &property_value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void Style::set(const std::string &properties, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		StyleProperty::parse(impl.get(), property_name, property_value, args);
+		StyleProperty::parse(impl.get(), properties, args);
 	}
 
 	bool Style::has(const std::string &property_name) const
