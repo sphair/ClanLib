@@ -46,7 +46,7 @@ namespace clan
 				width += subview->style()->computed_value("margin-left").number;
 				width += subview->style()->computed_value("border-left-width").number;
 				width += subview->style()->computed_value("padding-left").number;
-				if (subview->style()->computed_value("flex-basis").is_keyword("auto"))
+				if (subview->style()->computed_value("flex-basis").is_keyword("main-size"))
 					width += subview->get_preferred_width(canvas);
 				else
 					width += subview->style()->computed_value("flex-basis").number;
@@ -83,7 +83,7 @@ namespace clan
 				total_grow_factor += subview->style()->computed_value("flex-grow").number;
 				total_shrink_factor += subview->style()->computed_value("flex-shrink").number;
 
-				if (subview->style()->computed_value("flex-basis").is_keyword("auto"))
+				if (subview->style()->computed_value("flex-basis").is_keyword("main-size"))
 					basis_width += subview->get_preferred_width(canvas);
 				else
 					basis_width += subview->style()->computed_value("flex-basis").number;
@@ -100,7 +100,7 @@ namespace clan
 			if (subview->style()->computed_value("position").is_keyword("static") && !subview->hidden())
 			{
 				float subview_width = subview->style()->computed_value("flex-basis").number;
-				if (subview->style()->computed_value("flex-basis").is_keyword("auto"))
+				if (subview->style()->computed_value("flex-basis").is_keyword("main-size"))
 					subview_width = subview->get_preferred_width(canvas);
 
 				if (free_space < 0.0f && total_shrink_factor != 0.0f)
@@ -168,7 +168,7 @@ namespace clan
 				total_grow_factor += subview->style()->computed_value("flex-grow").number;
 				total_shrink_factor += subview->style()->computed_value("flex-shrink").number;
 
-				if (subview->style()->computed_value("flex-basis").is_keyword("auto"))
+				if (subview->style()->computed_value("flex-basis").is_keyword("main-size"))
 					basis_width += subview->get_preferred_width(canvas);
 				else
 					basis_width += subview->style()->computed_value("flex-basis").number;
@@ -185,7 +185,7 @@ namespace clan
 			if (subview->style()->computed_value("position").is_keyword("static") && !subview->hidden())
 			{
 				float subview_width = subview->style()->computed_value("flex-basis").number;
-				if (subview->style()->computed_value("flex-basis").is_keyword("auto"))
+				if (subview->style()->computed_value("flex-basis").is_keyword("main-size"))
 					subview_width = subview->get_preferred_width(canvas);
 
 				if (free_space < 0.0f && total_shrink_factor != 0.0f)
@@ -240,7 +240,7 @@ namespace clan
 				x += subview->style()->computed_value("border-left-width").number;
 				x += subview->style()->computed_value("padding-left").number;
 
-				subview->set_geometry(BoxGeometry::from_content_box(subview->box_style, Rectf::xywh(x, top_noncontent, subview_width, subview_height)));
+				subview->set_geometry(BoxGeometry::from_content_box(subview->style(), Rectf::xywh(x, top_noncontent, subview_width, subview_height)));
 
 				x += subview_width;
 				x += subview->style()->computed_value("padding-right").number;

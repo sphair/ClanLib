@@ -172,7 +172,7 @@ namespace clan
 				content_y += subview->style()->computed_value("border-top-width").number;
 				content_y += subview->style()->computed_value("padding-top").number;
 
-				subview->set_geometry(BoxGeometry::from_content_box(subview->box_style, Rectf::xywh(x, content_y, subview_width, subview_height)));
+				subview->set_geometry(BoxGeometry::from_content_box(subview->style(), Rectf::xywh(x, content_y, subview_width, subview_height)));
 
 				x += subview_width;
 				x += subview->style()->computed_value("padding-right").number;
