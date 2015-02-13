@@ -28,8 +28,10 @@
 
 #include "UI/precomp.h"
 #include "API/UI/Style/style.h"
+#include "API/UI/Style/box_geometry.h"
 #include "API/UI/UIThread/ui_thread.h"
 #include "API/Display/Font/font.h"
+#include "API/Display/2D/canvas.h"
 #include "style_impl.h"
 #include "Properties/background.h"
 #include "Properties/border.h"
@@ -223,6 +225,9 @@ namespace clan
 
 	void Style::render_background(Canvas &canvas, const BoxGeometry &geometry) const
 	{
+		Colorf bg = computed_value("background-color").color;
+		if (bg.a > 0.0f)
+			canvas.fill_rect(geometry.border_box(), bg);
 	}
 
 	void Style::render_border(Canvas &canvas, const BoxGeometry &geometry) const
