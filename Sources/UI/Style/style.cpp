@@ -32,6 +32,8 @@
 #include "API/UI/UIThread/ui_thread.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/2D/canvas.h"
+#include "style_background_renderer.h"
+#include "style_border_renderer.h"
 #include "style_impl.h"
 #include "Properties/background.h"
 #include "Properties/border.h"
@@ -95,9 +97,17 @@ namespace clan
 		return it != impl->prop_type.end();
 	}
 
-	void Style::remove(const std::string &property_name)
+	int Style::array_size(const std::string &property_name) const
 	{
-		impl->set_value(property_name, StyleValue());
+		int size = 0;
+		while (true)
+		{
+			std::string prop_name = property_name + "[" + StringHelp::int_to_text(size) + "]";
+			if (!has(prop_name))
+				break;
+			size++;
+		}
+		return size;
 	}
 
 	StyleValue Style::specified_value(const std::string &property_name) const
@@ -225,13 +235,14 @@ namespace clan
 
 	void Style::render_background(Canvas &canvas, const BoxGeometry &geometry) const
 	{
-		Colorf bg = computed_value("background-color").color;
-		if (bg.a > 0.0f)
-			canvas.fill_rect(geometry.border_box(), bg);
+		StyleBackgroundRenderer renderer(canvas, geometry, *this);
+		renderer.render();
 	}
 
 	void Style::render_border(Canvas &canvas, const BoxGeometry &geometry) const
 	{
+		StyleBorderRenderer renderer(canvas, geometry, *this);
+		renderer.render();
 	}
 
 	Font Style::get_font(Canvas &canvas)

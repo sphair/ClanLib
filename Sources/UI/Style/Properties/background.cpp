@@ -135,7 +135,7 @@ namespace clan
 			bool position_specified = false;
 			bool boxes_specified = false;
 
-			StyleImage layer_image;
+			StyleImage layer_image = StyleValue::from_keyword("none");
 			StyleValue layer_repeat_x = StyleValue::from_keyword("repeat");
 			StyleValue layer_repeat_y = StyleValue::from_keyword("repeat");
 			StyleValue layer_attachment = StyleValue::from_keyword("scroll");

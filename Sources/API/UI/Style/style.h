@@ -179,7 +179,7 @@ namespace clan
 
 		void set(const std::string &properties, const std::initializer_list<StylePropertyInitializerValue> &args = std::initializer_list<StylePropertyInitializerValue>());
 		bool has(const std::string &property_name) const;
-		void remove(const std::string &property_name);
+		int array_size(const std::string &property_name) const;
 
 		StyleValue specified_value(const std::string &property_name) const;
 		StyleValue computed_value(const std::string &property_name) const;

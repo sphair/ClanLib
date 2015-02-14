@@ -76,13 +76,13 @@ int HelloWorld::start(const std::vector<std::string> &args)
 	// Create a text field for our span layout
 	std::shared_ptr<TextFieldView> edit = std::make_shared<TextFieldView>();
 	edit->style()->set("font: 11px/20px 'Segoe UI'");
-	edit->set_text("Text File View");
 	edit->style()->set("margin: 5px 0");
 	edit->style()->set("background: white");
 	edit->style()->set("border: 1px solid black");
 	edit->style()->set("border-radius: 3px");
 	edit->style()->set("padding: 2px 5px 3px 5px");
 	edit->style()->set("width: 128px");
+	edit->set_text("Text File View");
 
 	// Create a span layout view with some more complex inline formatting
 	std::shared_ptr<SpanLayoutView> span = std::make_shared<SpanLayoutView>();
