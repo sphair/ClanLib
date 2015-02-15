@@ -28,11 +28,16 @@
 
 #pragma once
 
+#include <array>
+
 namespace clan
 {
 	class Canvas;
 	class Image;
+	class Path;
 	class Colorf;
+	class Pointf;
+	class BrushGradientStop;
 	class Style;
 	class StyleValue;
 	class BoxGeometry;
@@ -45,6 +50,8 @@ namespace clan
 		void render_border();
 
 	private:
+		void render_box_shadow();
+
 		float get_start_x(int index, const Rectf &clip_box, const Rectf &origin_box, const Sizef &image_size);
 		float get_start_y(int index, const Rectf &clip_box, const Rectf &origin_box, const Sizef &image_size);
 		Sizef get_image_size(int index, Image &image, Rectf origin_box);
@@ -64,6 +71,15 @@ namespace clan
 		float get_vertical_radius(const StyleValue &border_radius) const;
 		Colorf get_light_color(const StyleValue &border_color) const;
 		Colorf get_dark_color(const StyleValue &border_color) const;
+
+		std::array<Pointf, 2 * 4> get_border_points();
+		std::array<Pointf, 2 * 4> get_padding_points(const std::array<Pointf, 2 * 4> &border_points);
+
+		static Path get_border_area_path(const std::array<Pointf, 2 * 4> &border_points);
+		static Path get_border_stroke_path(const std::array<Pointf, 2 * 4> &border_points, const std::array<Pointf, 2 * 4> &padding_points);
+
+		static std::vector<BrushGradientStop> shadow_blur_stops(const Colorf &shadow_color, float shadow_blur_radius, float start_t);
+		static float mix(float a, float b, float t);
 
 		Canvas &canvas;
 		const BoxGeometry &geometry;

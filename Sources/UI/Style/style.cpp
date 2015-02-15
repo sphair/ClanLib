@@ -94,7 +94,7 @@ namespace clan
 	bool Style::has(const std::string &property_name) const
 	{
 		const auto it = impl->prop_type.find(property_name);
-		return it != impl->prop_type.end();
+		return it != impl->prop_type.end() || !StyleProperty::default_value(property_name).is_undefined();
 	}
 
 	int Style::array_size(const std::string &property_name) const

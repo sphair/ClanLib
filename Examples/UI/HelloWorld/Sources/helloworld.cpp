@@ -59,7 +59,7 @@ int HelloWorld::start(const std::vector<std::string> &args)
 	root->style()->set("border: 1px solid black");
 	root->style()->set("border-radius: 15px");
 	root->style()->set("margin: 35px 10px 10px 10px");
-	root->style()->set("box-shadow: rgba(0,0,0,0.2) 0 0 20px");
+	root->style()->set("box-shadow: 0 0 20px rgba(0,0,0,0.2)");
 	root->style()->set("flex-direction: column");
 
 	// Create a label with some text to have some content

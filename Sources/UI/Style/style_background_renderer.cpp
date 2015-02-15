@@ -33,6 +33,8 @@
 #include "API/UI/UIThread/ui_thread.h"
 #include "API/Display/2D/canvas.h"
 #include "API/Display/2D/image.h"
+#include "API/Display/2D/path.h"
+#include "API/Display/2D/brush.h"
 
 namespace clan
 {
@@ -42,13 +44,19 @@ namespace clan
 
 	void StyleBackgroundRenderer::render_background()
 	{
+		render_box_shadow();
+
 		int num_layers = style.array_size("background-image");
 
 		StyleValue bg_color = style.computed_value("background-color");
 		if (bg_color.is_color() && bg_color.color.a != 0.0f)
 		{
-			Rectf clip_box = get_clip_box(num_layers - 1);
-			canvas.fill_rect(clip_box, bg_color.color);
+			auto border_points = get_border_points();
+
+			// To do: take get_layer_clip(num_layers - 1) into account
+
+			Path background_area = get_border_area_path(border_points);
+			background_area.fill(canvas, Brush(bg_color.color));
 		}
 
 		for (int index = num_layers - 1; index >= 0; index--)
@@ -56,6 +64,37 @@ namespace clan
 			StyleValue layer_image = style.computed_value("background-image[" + StringHelp::int_to_text(index) + "]");
 			if (layer_image.is_keyword("none"))
 				continue;
+
+			/*
+			if (!background.stops.empty())
+			{
+				float angle = Angle::from_degrees(background.angle.to_degrees() - 90.0f).normalize().to_radians();
+				Pointf center = padding_box.get_center();
+				Pointf length {
+					0.5f * padding_box.get_width () * std::cos(angle),
+					0.5f * padding_box.get_height() * std::sin(angle)
+				};
+
+				Brush brush;
+				brush.type = BrushType::linear;
+				brush.start_point = center - length;
+				brush.end_point   = center + length;
+
+				for (const BoxGradientStop &stop : background.stops)
+					brush.stops.push_back(BrushGradientStop(stop.color, stop.position));
+
+				border_area_path.fill(canvas, brush);
+			}
+
+			if (background.image)
+			{
+				Brush brush;
+				brush.type = BrushType::image;
+				brush.image = background.image->get_image(canvas);
+				brush.transform = Mat3f::translate(border_box.left, border_box.top);
+				border_area_path.fill(canvas, brush);
+			}
+			*/
 
 			Image image;
 			
@@ -130,178 +169,21 @@ namespace clan
 
 	void StyleBackgroundRenderer::render_border()
 	{
-		float outer_radius_top_left_x = get_horizontal_radius(style.computed_value("border-top-left-radius-x"));
-		float outer_radius_top_left_y = get_vertical_radius(style.computed_value("border-top-left-radius-y"));
-		float outer_radius_top_right_x = get_horizontal_radius(style.computed_value("border-top-right-radius-x"));
-		float outer_radius_top_right_y = get_vertical_radius(style.computed_value("border-top-right-radius-y"));
-		float outer_radius_bottom_left_x = get_horizontal_radius(style.computed_value("border-bottom-left-radius-x"));
-		float outer_radius_bottom_left_y = get_vertical_radius(style.computed_value("border-bottom-left-radius-y"));
-		float outer_radius_bottom_right_x = get_horizontal_radius(style.computed_value("border-bottom-right-radius-x"));
-		float outer_radius_bottom_right_y = get_vertical_radius(style.computed_value("border-bottom-right-radius-y"));
-
-		float inner_radius_top_left_x = max(0.0f, outer_radius_top_left_x - geometry.border_left);
-		float inner_radius_top_left_y = max(0.0f, outer_radius_top_left_y - geometry.border_top);
-		float inner_radius_top_right_x = max(0.0f, outer_radius_top_right_x - geometry.border_right);
-		float inner_radius_top_right_y = max(0.0f, outer_radius_top_right_y - geometry.border_top);
-		float inner_radius_bottom_left_x = max(0.0f, outer_radius_bottom_left_x - geometry.border_left);
-		float inner_radius_bottom_left_y = max(0.0f, outer_radius_bottom_left_y - geometry.border_bottom);
-		float inner_radius_bottom_right_x = max(0.0f, outer_radius_bottom_right_x - geometry.border_right);
-		float inner_radius_bottom_right_y = max(0.0f, outer_radius_bottom_right_y - geometry.border_bottom);
-
-		Rectf border_box = geometry.border_box();
-
-		Point center_top_left(border_box.left + (int)std::round(outer_radius_top_left_x), border_box.top + (int)std::round(outer_radius_top_left_y));
-		Point center_top_right(border_box.right - (int)std::round(outer_radius_top_right_x), border_box.top + (int)std::round(outer_radius_top_right_y));
-		Point center_bottom_left(border_box.left + (int)std::round(outer_radius_bottom_left_x), border_box.bottom - (int)std::round(outer_radius_bottom_left_y));
-		Point center_bottom_right(border_box.right - (int)std::round(outer_radius_bottom_right_x), border_box.bottom - (int)std::round(outer_radius_bottom_right_y));
+		int num_layers = style.array_size("background-image");
+		if (!get_layer_clip(num_layers - 1).is_keyword("border-box"))
+			return;
 
 		StyleValue style_top = style.computed_value("border-top-style");
-		StyleValue style_right = style.computed_value("border-right-style");
-		StyleValue style_bottom = style.computed_value("border-bottom-style");
-		StyleValue style_left = style.computed_value("border-left-style");
-
 		if (style_top.is_keyword("solid"))
 		{
-			canvas.fill_rect(Rect(center_top_left.x, border_box.top, center_top_right.x, border_box.top + geometry.border_top), style.computed_value("border-top-color").color);
-		}
-		else if (style_top.is_keyword("dotted"))
-		{
-			//canvas.dot_horizontal(Rect(center_top_left.x, border_box.top, center_top_right.x, border_box.top + geometry.border_top), style.computed_value("border-top-color").color);
-		}
-		else if (style_top.is_keyword("dashed"))
-		{
-			//canvas.dash_horizontal(Rect(center_top_left.x, border_box.top, center_top_right.x, border_box.top + geometry.border_top), style.computed_value("border-top-color").color);
-		}
-		else if (style_top.is_keyword("double"))
-		{
-			canvas.fill_rect(Rect(center_top_left.x, border_box.top, center_top_right.x, border_box.top + geometry.border_top / 3), style.computed_value("border-top-color").color);
-			canvas.fill_rect(Rect(center_top_left.x, border_box.top + geometry.border_top * 2 / 3, center_top_right.x, border_box.top + geometry.border_top), style.computed_value("border-top-color").color);
-		}
-		else if (style_top.is_keyword("groove"))
-		{
-			canvas.fill_rect(Rect(center_top_left.x, border_box.top, center_top_right.x, border_box.top + geometry.border_top / 2), get_dark_color(style.computed_value("border-top-color")));
-			canvas.fill_rect(Rect(center_top_left.x, border_box.top + geometry.border_top / 2, center_top_right.x, border_box.top + geometry.border_top), get_light_color(style.computed_value("border-top-color")));
-		}
-		else if (style_top.is_keyword("ridge"))
-		{
-			canvas.fill_rect(Rect(center_top_left.x, border_box.top, center_top_right.x, border_box.top + geometry.border_top / 2), get_light_color(style.computed_value("border-top-color")));
-			canvas.fill_rect(Rect(center_top_left.x, border_box.top + geometry.border_top / 2, center_top_right.x, border_box.top + geometry.border_top), get_dark_color(style.computed_value("border-top-color")));
-		}
-		else if (style_top.is_keyword("inset"))
-		{
-			canvas.fill_rect(Rect(center_top_left.x, border_box.top, center_top_right.x, border_box.top + geometry.border_top), get_dark_color(style.computed_value("border-top-color")));
-		}
-		else if (style_top.is_keyword("outset"))
-		{
-			canvas.fill_rect(Rect(center_top_left.x, border_box.top, center_top_right.x, border_box.top + geometry.border_top), get_light_color(style.computed_value("border-top-color")));
-		}
-
-		if (style_bottom.is_keyword("solid"))
-		{
-			canvas.fill_rect(Rect(center_bottom_left.x, border_box.bottom - geometry.border_bottom, center_bottom_right.x, border_box.bottom), style.computed_value("border-bottom-color").color);
-		}
-		else if (style_bottom.is_keyword("dotted"))
-		{
-			//canvas.dot_horizontal(Rect(center_bottom_left.x, border_box.bottom - geometry.border_bottom, center_bottom_right.x, border_box.bottom), style.computed_value("border-bottom-color").color);
-		}
-		else if (style_bottom.is_keyword("dashed"))
-		{
-			//canvas.dash_horizontal(Rect(center_bottom_left.x, border_box.bottom - geometry.border_bottom, center_bottom_right.x, border_box.bottom), style.computed_value("border-bottom-color").color);
-		}
-		else if (style_bottom.is_keyword("double"))
-		{
-			canvas.fill_rect(Rect(center_bottom_left.x, border_box.bottom - geometry.border_bottom, center_bottom_right.x, border_box.bottom - geometry.border_bottom * 2 / 3), style.computed_value("border-bottom-color").color);
-			canvas.fill_rect(Rect(center_bottom_left.x, border_box.bottom - geometry.border_bottom * 1 / 3, center_bottom_right.x, border_box.bottom), style.computed_value("border-bottom-color").color);
-		}
-		else if (style_bottom.is_keyword("groove"))
-		{
-			canvas.fill_rect(Rect(center_bottom_left.x, border_box.bottom - geometry.border_bottom, center_bottom_right.x, border_box.bottom - geometry.border_bottom / 2), get_dark_color(style.computed_value("border-bottom-color")));
-			canvas.fill_rect(Rect(center_bottom_left.x, border_box.bottom - geometry.border_bottom / 2, center_bottom_right.x, border_box.bottom), get_light_color(style.computed_value("border-bottom-color")));
-		}
-		else if (style_bottom.is_keyword("ridge"))
-		{
-			canvas.fill_rect(Rect(center_bottom_left.x, border_box.bottom - geometry.border_bottom, center_bottom_right.x, border_box.bottom - geometry.border_bottom / 2), get_light_color(style.computed_value("border-bottom-color")));
-			canvas.fill_rect(Rect(center_bottom_left.x, border_box.bottom - geometry.border_bottom / 2, center_bottom_right.x, border_box.bottom), get_dark_color(style.computed_value("border-bottom-color")));
-		}
-		else if (style_bottom.is_keyword("inset"))
-		{
-			canvas.fill_rect(Rect(center_bottom_left.x, border_box.bottom - geometry.border_bottom, center_bottom_right.x, border_box.bottom), get_light_color(style.computed_value("border-bottom-color")));
-		}
-		else if (style_bottom.is_keyword("outset"))
-		{
-			canvas.fill_rect(Rect(center_bottom_left.x, border_box.bottom - geometry.border_bottom, center_bottom_right.x, border_box.bottom), get_dark_color(style.computed_value("border-bottom-color")));
-		}
-
-		if (style_left.is_keyword("solid"))
-		{
-			canvas.fill_rect(Rect(border_box.left, center_top_left.y, border_box.left + geometry.border_left, center_bottom_left.y), style.computed_value("border-left-color").color);
-		}
-		else if (style_left.is_keyword("dotted"))
-		{
-			//canvas.dot_vertical(Rect(border_box.left, center_top_left.y, border_box.left + geometry.border_left, center_bottom_left.y), style.computed_value("border-left-color").color);
-		}
-		else if (style_left.is_keyword("dashed"))
-		{
-			//canvas.dash_vertical(Rect(border_box.left, center_top_left.y, border_box.left + geometry.border_left, center_bottom_left.y), style.computed_value("border-left-color").color);
-		}
-		else if (style_left.is_keyword("double"))
-		{
-			canvas.fill_rect(Rect(border_box.left, center_top_left.y, border_box.left + geometry.border_left / 3, center_bottom_left.y), style.computed_value("border-left-color").color);
-			canvas.fill_rect(Rect(border_box.left + geometry.border_left * 2 / 3, center_top_left.y, border_box.left + geometry.border_left, center_bottom_left.y), style.computed_value("border-left-color").color);
-		}
-		else if (style_left.is_keyword("groove"))
-		{
-			canvas.fill_rect(Rect(border_box.left, center_top_left.y, border_box.left + geometry.border_left / 2, center_bottom_left.y), get_dark_color(style.computed_value("border-left-color")));
-			canvas.fill_rect(Rect(border_box.left + geometry.border_left / 2, center_top_left.y, border_box.left + geometry.border_left, center_bottom_left.y), get_light_color(style.computed_value("border-left-color")));
-		}
-		else if (style_left.is_keyword("ridge"))
-		{
-			canvas.fill_rect(Rect(border_box.left, center_top_left.y, border_box.left + geometry.border_left / 2, center_bottom_left.y), get_light_color(style.computed_value("border-left-color")));
-			canvas.fill_rect(Rect(border_box.left + geometry.border_left / 2, center_top_left.y, border_box.left + geometry.border_left, center_bottom_left.y), get_dark_color(style.computed_value("border-left-color")));
-		}
-		else if (style_left.is_keyword("inset"))
-		{
-			canvas.fill_rect(Rect(border_box.left, center_top_left.y, border_box.left + geometry.border_left, center_bottom_left.y), get_dark_color(style.computed_value("border-left-color")));
-		}
-		else if (style_left.is_keyword("outset"))
-		{
-			canvas.fill_rect(Rect(border_box.left, center_top_left.y, border_box.left + geometry.border_left, center_bottom_left.y), get_light_color(style.computed_value("border-left-color")));
-		}
-
-		if (style_right.is_keyword("solid"))
-		{
-			canvas.fill_rect(Rect(border_box.right - geometry.border_right, center_top_right.y, border_box.right, center_bottom_right.y), style.computed_value("border-right-color").color);
-		}
-		else if (style_right.is_keyword("dotted"))
-		{
-			//canvas.dot_vertical(Rect(border_box.right - geometry.border_right, center_top_right.y, border_box.right, center_bottom_right.y), style.computed_value("border-right-color").color);
-		}
-		else if (style_right.is_keyword("dashed"))
-		{
-			//canvas.dash_vertical(Rect(border_box.right - geometry.border_right, center_top_right.y, border_box.right, center_bottom_right.y), style.computed_value("border-right-color").color);
-		}
-		else if (style_right.is_keyword("double"))
-		{
-			canvas.fill_rect(Rect(border_box.right - geometry.border_right, center_top_right.y, border_box.right - geometry.border_right * 2 / 3, center_bottom_right.y), style.computed_value("border-right-color").color);
-			canvas.fill_rect(Rect(border_box.right - geometry.border_right / 3, center_top_right.y, border_box.right, center_bottom_right.y), style.computed_value("border-right-color").color);
-		}
-		else if (style_right.is_keyword("groove"))
-		{
-			canvas.fill_rect(Rect(border_box.right - geometry.border_right, center_top_right.y, border_box.right - geometry.border_right / 2, center_bottom_right.y), get_dark_color(style.computed_value("border-right-color")));
-			canvas.fill_rect(Rect(border_box.right - geometry.border_right / 2, center_top_right.y, border_box.right, center_bottom_right.y), get_light_color(style.computed_value("border-right-color")));
-		}
-		else if (style_right.is_keyword("ridge"))
-		{
-			canvas.fill_rect(Rect(border_box.right - geometry.border_right, center_top_right.y, border_box.right - geometry.border_right / 2, center_bottom_right.y), get_light_color(style.computed_value("border-right-color")));
-			canvas.fill_rect(Rect(border_box.right - geometry.border_right / 2, center_top_right.y, border_box.right, center_bottom_right.y), get_dark_color(style.computed_value("border-right-color")));
-		}
-		else if (style_right.is_keyword("inset"))
-		{
-			canvas.fill_rect(Rect(border_box.right - geometry.border_right, center_top_right.y, border_box.right, center_bottom_right.y), get_light_color(style.computed_value("border-right-color")));
-		}
-		else if (style_right.is_keyword("outset"))
-		{
-			canvas.fill_rect(Rect(border_box.right - geometry.border_right, center_top_right.y, border_box.right, center_bottom_right.y), get_dark_color(style.computed_value("border-right-color")));
+			Colorf color = style.computed_value("border-top-color").color;
+			if (color.a > 0.0f)
+			{
+				auto border_points = get_border_points();
+				auto padding_points = get_padding_points(border_points);
+				Path border_path = get_border_stroke_path(border_points, padding_points);
+				border_path.fill(canvas, Brush(color));
+			}
 		}
 	}
 
@@ -538,105 +420,447 @@ namespace clan
 		return style.computed_value("background-repeat-y[" + StringHelp::int_to_text(index % count) + "]");
 	}
 
-	/*
-	void StyleLayoutTreeNode::render_background(StyleLayoutGraphics *graphics, StyleResourceCache *resource_cache, StyleBoxElement *element_node, Rect padding_box, Rect paint_box)
+	std::array<Pointf, 2 * 4> StyleBackgroundRenderer::get_border_points()
 	{
-		if (element_node->computed_properties.background_color.type == StyleValueBackgroundColor::type_color)
-			graphics->fill(paint_box, element_node->computed_properties.background_color.color);
+		float top_left_x = get_horizontal_radius(style.computed_value("border-top-left-radius-x"));
+		float top_left_y = get_vertical_radius(style.computed_value("border-top-left-radius-y"));
+		float top_right_x = get_horizontal_radius(style.computed_value("border-top-right-radius-x"));
+		float top_right_y = get_vertical_radius(style.computed_value("border-top-right-radius-y"));
+		float bottom_left_x = get_horizontal_radius(style.computed_value("border-bottom-left-radius-x"));
+		float bottom_left_y = get_vertical_radius(style.computed_value("border-bottom-left-radius-y"));
+		float bottom_right_x = get_horizontal_radius(style.computed_value("border-bottom-right-radius-x"));
+		float bottom_right_y = get_vertical_radius(style.computed_value("border-bottom-right-radius-y"));
 
-		if (element_node->computed_properties.background_image.type == StyleValueBackgroundImage::type_uri)
+		Rectf border_box = geometry.border_box();
+
+		std::array<Pointf, 2 * 4> border_points;
+		border_points[0] = Pointf(border_box.left + top_left_x, border_box.top);
+		border_points[1] = Pointf(border_box.right - top_right_x, border_box.top);
+		border_points[2] = Pointf(border_box.right, border_box.top + top_right_y);
+		border_points[3] = Pointf(border_box.right, border_box.bottom - bottom_right_y);
+		border_points[4] = Pointf(border_box.right - bottom_right_x, border_box.bottom);
+		border_points[5] = Pointf(border_box.left + bottom_left_x, border_box.bottom);
+		border_points[6] = Pointf(border_box.left, border_box.bottom - bottom_left_y);
+		border_points[7] = Pointf(border_box.left, border_box.top + top_left_y);
+		return border_points;
+	}
+
+	std::array<Pointf, 2 * 4> StyleBackgroundRenderer::get_padding_points(const std::array<Pointf, 2 * 4> &border_points)
+	{
+		Rectf padding_box = geometry.padding_box();
+
+		std::array<Pointf, 2 * 4> padding_points;
+		padding_points[0] = Pointf(padding_box.left, padding_box.top);
+		padding_points[1] = Pointf(padding_box.right, padding_box.top);
+		padding_points[2] = Pointf(padding_box.right, padding_box.top);
+		padding_points[3] = Pointf(padding_box.right, padding_box.bottom);
+		padding_points[4] = Pointf(padding_box.right, padding_box.bottom);
+		padding_points[5] = Pointf(padding_box.left, padding_box.bottom);
+		padding_points[6] = Pointf(padding_box.left, padding_box.bottom);
+		padding_points[7] = Pointf(padding_box.left, padding_box.top);
+
+		padding_points[0].x = clan::max(padding_points[0].x, border_points[0].x);
+		padding_points[0].y = clan::max(padding_points[0].y, border_points[0].y);
+		padding_points[1].x = clan::min(padding_points[1].x, border_points[1].x);
+		padding_points[1].y = clan::max(padding_points[1].y, border_points[1].y);
+		padding_points[2].x = clan::min(padding_points[2].x, border_points[2].x);
+		padding_points[2].y = clan::max(padding_points[2].y, border_points[2].y);
+		padding_points[3].x = clan::min(padding_points[3].x, border_points[3].x);
+		padding_points[3].y = clan::min(padding_points[3].y, border_points[3].y);
+		padding_points[4].x = clan::min(padding_points[4].x, border_points[4].x);
+		padding_points[4].y = clan::min(padding_points[4].y, border_points[4].y);
+		padding_points[5].x = clan::max(padding_points[5].x, border_points[5].x);
+		padding_points[5].y = clan::min(padding_points[5].y, border_points[5].y);
+		padding_points[6].x = clan::max(padding_points[6].x, border_points[6].x);
+		padding_points[6].y = clan::min(padding_points[6].y, border_points[6].y);
+		padding_points[7].x = clan::max(padding_points[7].x, border_points[7].x);
+		padding_points[7].y = clan::max(padding_points[7].y, border_points[7].y);
+
+		return padding_points;
+	}
+
+	Path StyleBackgroundRenderer::get_border_area_path(const std::array<Pointf, 2 * 4> &border_points)
+	{
+		float kappa = 0.552228474f;
+
+		// Border area path (to be used for filling)
+
+		Path border_area_path;
+
+		border_area_path.move_to(border_points[0]);
+		border_area_path.line_to(border_points[1]);
+		if (border_points[1] != border_points[2])
 		{
-			Image &image = graphics->get_image(element_node->computed_properties.background_image.url);
-			if (!image.is_null())
+			border_area_path.bezier_to(
+				Pointf(mix(border_points[1].x, border_points[2].x, kappa), border_points[1].y),
+				Pointf(border_points[2].x, mix(border_points[1].y, border_points[2].y, kappa)),
+				border_points[2]);
+		}
+
+		border_area_path.line_to(border_points[3]);
+		if (border_points[3] != border_points[4])
+		{
+			border_area_path.bezier_to(
+				Pointf(border_points[3].x, mix(border_points[3].y, border_points[4].y, kappa)),
+				Pointf(mix(border_points[3].x, border_points[4].x, kappa), border_points[4].y),
+				border_points[4]);
+		}
+
+		border_area_path.line_to(border_points[5]);
+		if (border_points[5] != border_points[6])
+		{
+			border_area_path.bezier_to(
+				Pointf(mix(border_points[5].x, border_points[6].x, kappa), border_points[5].y),
+				Pointf(border_points[6].x, mix(border_points[5].y, border_points[6].y, kappa)),
+				border_points[6]);
+		}
+
+		border_area_path.line_to(border_points[7]);
+		if (border_points[7] != border_points[0])
+		{
+			border_area_path.bezier_to(
+				Pointf(border_points[7].x, mix(border_points[7].y, border_points[0].y, kappa)),
+				Pointf(mix(border_points[7].x, border_points[0].x, kappa), border_points[0].y),
+				border_points[0]);
+		}
+
+		border_area_path.close();
+
+		return border_area_path;
+	}
+
+	Path StyleBackgroundRenderer::get_border_stroke_path(const std::array<Pointf, 2 * 4> &border_points, const std::array<Pointf, 2 * 4> &padding_points)
+	{
+		// Border path (the path defining the actual border)
+
+		float kappa = 0.552228474f;
+
+		Path border_path;
+
+		border_path.move_to(border_points[0]);
+		border_path.line_to(border_points[1]);
+		if (border_points[1] != border_points[2])
+		{
+			border_path.bezier_to(
+				Pointf(mix(border_points[1].x, border_points[2].x, kappa), border_points[1].y),
+				Pointf(border_points[2].x, mix(border_points[1].y, border_points[2].y, kappa)),
+				border_points[2]);
+		}
+
+		border_path.line_to(border_points[3]);
+		if (border_points[3] != border_points[4])
+		{
+			border_path.bezier_to(
+				Pointf(border_points[3].x, mix(border_points[3].y, border_points[4].y, kappa)),
+				Pointf(mix(border_points[3].x, border_points[4].x, kappa), border_points[4].y),
+				border_points[4]);
+		}
+
+		border_path.line_to(border_points[5]);
+		if (border_points[5] != border_points[6])
+		{
+			border_path.bezier_to(
+				Pointf(mix(border_points[5].x, border_points[6].x, kappa), border_points[5].y),
+				Pointf(border_points[6].x, mix(border_points[5].y, border_points[6].y, kappa)),
+				border_points[6]);
+		}
+
+		border_path.line_to(border_points[7]);
+		if (border_points[7] != border_points[0])
+		{
+			border_path.bezier_to(
+				Pointf(border_points[7].x, mix(border_points[7].y, border_points[0].y, kappa)),
+				Pointf(mix(border_points[7].x, border_points[0].x, kappa), border_points[0].y),
+				border_points[0]);
+		}
+
+		border_path.close();
+
+		border_path.move_to(padding_points[0]);
+		border_path.line_to(padding_points[1]);
+		if (padding_points[1] != padding_points[2])
+		{
+			border_path.bezier_to(
+				Pointf(mix(padding_points[1].x, padding_points[2].x, kappa), padding_points[1].y),
+				Pointf(padding_points[2].x, mix(padding_points[1].y, padding_points[2].y, kappa)),
+				padding_points[2]);
+		}
+
+		border_path.line_to(padding_points[3]);
+		if (padding_points[3] != padding_points[4])
+		{
+			border_path.bezier_to(
+				Pointf(padding_points[3].x, mix(padding_points[3].y, padding_points[4].y, kappa)),
+				Pointf(mix(padding_points[3].x, padding_points[4].x, kappa), padding_points[4].y),
+				padding_points[4]);
+		}
+
+		border_path.line_to(padding_points[5]);
+		if (padding_points[5] != padding_points[6])
+		{
+			border_path.bezier_to(
+				Pointf(mix(padding_points[5].x, padding_points[6].x, kappa), padding_points[5].y),
+				Pointf(padding_points[6].x, mix(padding_points[5].y, padding_points[6].y, kappa)),
+				padding_points[6]);
+		}
+
+		border_path.line_to(padding_points[7]);
+		if (padding_points[7] != padding_points[0])
+		{
+			border_path.bezier_to(
+				Pointf(padding_points[7].x, mix(padding_points[7].y, padding_points[0].y, kappa)),
+				Pointf(mix(padding_points[7].x, padding_points[0].x, kappa), padding_points[0].y),
+				padding_points[0]);
+		}
+
+		border_path.close();
+
+		return border_path;
+	}
+
+	void StyleBackgroundRenderer::render_box_shadow()
+	{
+		int num_shadows = style.array_size("box-shadow-style");
+		if (num_shadows == 0)
+			return;
+
+		Rectf border_box = geometry.border_box();
+		auto border_points = get_border_points();
+
+		for (int index = num_shadows - 1; index >= 0; index--)
+		{
+			auto layer_style = style.computed_value("box-shadow-style[" + StringHelp::int_to_text(index) + "]");
+
+			// To do: support inset
+
+			if (!layer_style.is_keyword("outset"))
+				continue;
+
+			auto layer_color = style.computed_value("box-shadow-color[" + StringHelp::int_to_text(index) + "]");
+			if (layer_color.color.a <= 0.0f)
+				continue;
+
+			auto layer_offset_x = style.computed_value("box-shadow-horizontal-offset[" + StringHelp::int_to_text(index) + "]");
+			auto layer_offset_y = style.computed_value("box-shadow-vertical-offset[" + StringHelp::int_to_text(index) + "]");
+			auto layer_blur_radius = style.computed_value("box-shadow-blur-radius[" + StringHelp::int_to_text(index) + "]");
+			//auto layer_spread_distance = style.computed_value("box-shadow-spread-distance[" + StringHelp::int_to_text(index) + "]");
+
+			// To do: support shadow_spread_distance
+
+			float shadow_blur_radius = layer_blur_radius.number;
+			Pointf shadow_offset(layer_offset_x.number, layer_offset_y.number);
+			Colorf shadow_color = layer_color.color;
+			Colorf transparent = shadow_color;
+			transparent.a = 0.0f;
+
+			float kappa = 0.552228474f;
+
+			float top_left_x = get_horizontal_radius(style.computed_value("border-top-left-radius-x"));
+			float top_left_y = get_vertical_radius(style.computed_value("border-top-left-radius-y"));
+			float top_right_x = get_horizontal_radius(style.computed_value("border-top-right-radius-x"));
+			float top_right_y = get_vertical_radius(style.computed_value("border-top-right-radius-y"));
+			float bottom_left_x = get_horizontal_radius(style.computed_value("border-bottom-left-radius-x"));
+			float bottom_left_y = get_vertical_radius(style.computed_value("border-bottom-left-radius-y"));
+			float bottom_right_x = get_horizontal_radius(style.computed_value("border-bottom-right-radius-x"));
+			float bottom_right_y = get_vertical_radius(style.computed_value("border-bottom-right-radius-y"));
+
+			if (shadow_blur_radius != 0.0f)
 			{
-				int x = padding_box.left;
-				switch (element_node->computed_properties.background_position.type_x)
+				Path top_left;
+				top_left.move_to(Pointf(border_box.left - shadow_blur_radius, border_box.top - shadow_blur_radius));
+				top_left.line_to(Pointf(border_points[0].x, border_points[0].y - shadow_blur_radius));
+				top_left.line_to(border_points[0]);
+				if (border_points[7] != border_points[0])
 				{
-				case StyleValueBackgroundPosition::type1_left:
-					x = padding_box.left;
-					break;
-				case StyleValueBackgroundPosition::type1_center:
-					x = padding_box.left + (padding_box.get_width() - image.get_width()) / 2;
-					break;
-				case StyleValueBackgroundPosition::type1_right:
-					x = padding_box.right - image.get_width();
-					break;
-				case StyleValueBackgroundPosition::type1_percentage:
-					x = used_to_actual(padding_box.left + (padding_box.get_width()-image.get_width()) * element_node->computed_properties.background_position.percentage_x / 100.0f);
-					break;
-				case StyleValueBackgroundPosition::type1_length:
-					x = used_to_actual(padding_box.left + element_node->computed_properties.background_position.length_x.value);
-					break;
+					top_left.bezier_to(
+						Pointf(border_points[0].x, mix(border_points[0].y, border_points[7].y, kappa)),
+						Pointf(mix(border_points[0].x, border_points[7].x, kappa), border_points[7].y),
+						border_points[7]);
 				}
+				top_left.line_to(Pointf(border_points[7].x - shadow_blur_radius, border_points[7].y));
+				top_left.close();
 
-				int y = padding_box.top;
-				switch (element_node->computed_properties.background_position.type_y)
+				Path top_right;
+				top_right.move_to(Pointf(border_points[1].x, border_points[1].y - shadow_blur_radius));
+				top_right.line_to(Pointf(border_box.right + shadow_blur_radius, border_box.top - shadow_blur_radius));
+				top_right.line_to(Pointf(border_points[2].x + shadow_blur_radius, border_points[2].y));
+				top_right.line_to(border_points[2]);
+				if (border_points[1] != border_points[2])
 				{
-				case StyleValueBackgroundPosition::type2_top:
-					y = padding_box.top;
-					break;
-				case StyleValueBackgroundPosition::type2_center:
-					y = padding_box.top + (padding_box.get_height() - image.get_height()) / 2;
-					break;
-				case StyleValueBackgroundPosition::type2_bottom:
-					y = padding_box.bottom - image.get_height();
-					break;
-				case StyleValueBackgroundPosition::type2_percentage:
-					y = used_to_actual(padding_box.top + (padding_box.get_height()-image.get_height()) * element_node->computed_properties.background_position.percentage_y / 100.0f);
-					break;
-				case StyleValueBackgroundPosition::type2_length:
-					y = used_to_actual(padding_box.top + element_node->computed_properties.background_position.length_y.value);
-					break;
+					top_right.bezier_to(
+						Pointf(border_points[2].x, mix(border_points[2].y, border_points[1].y, kappa)),
+						Pointf(mix(border_points[2].x, border_points[1].x, kappa), border_points[1].y),
+						border_points[1]);
 				}
+				top_right.close();
 
-				graphics->push_cliprect(paint_box);
-				if (element_node->computed_properties.background_repeat.type == StyleValueBackgroundRepeat::type_no_repeat)
+				Path bottom_right;
+				bottom_right.move_to(Pointf(border_box.right + shadow_blur_radius, border_box.bottom + shadow_blur_radius));
+				bottom_right.line_to(Pointf(border_points[4].x, border_points[4].y + shadow_blur_radius));
+				bottom_right.line_to(border_points[4]);
+				if (border_points[4] != border_points[3])
 				{
-					graphics->draw_image(image, x, y);
+					bottom_right.bezier_to(
+						Pointf(border_points[4].x, mix(border_points[4].y, border_points[3].y, kappa)),
+						Pointf(mix(border_points[4].x, border_points[3].x, kappa), border_points[3].y),
+						border_points[3]);
 				}
-				else if (element_node->computed_properties.background_repeat.type == StyleValueBackgroundRepeat::type_repeat_x)
+				bottom_right.line_to(Pointf(border_points[3].x + shadow_blur_radius, border_points[3].y));
+				bottom_right.close();
+
+				Path bottom_left;
+				bottom_left.move_to(Pointf(border_box.left - shadow_blur_radius, border_box.bottom + shadow_blur_radius));
+				bottom_left.line_to(Pointf(border_points[6].x - shadow_blur_radius, border_points[6].y));
+				bottom_left.line_to(border_points[6]);
+				if (border_points[6] != border_points[5])
 				{
-					int start_x;
-					if (x >= paint_box.left)
-						start_x = paint_box.left - (x-paint_box.left)%image.get_width();
-					else
-						start_x = paint_box.left - (paint_box.left-x)%image.get_width();
-
-					for (x = start_x; x < paint_box.right; x += image.get_width())
-						graphics->draw_image(image, x, y);
+					bottom_left.bezier_to(
+						Pointf(border_points[6].x, mix(border_points[6].y, border_points[5].y, kappa)),
+						Pointf(mix(border_points[6].x, border_points[5].x, kappa), border_points[5].y),
+						border_points[5]);
 				}
-				else if (element_node->computed_properties.background_repeat.type == StyleValueBackgroundRepeat::type_repeat_y)
-				{
-					int start_y;
-					if (y >= paint_box.top)
-						start_y = paint_box.top - (y-paint_box.top)%image.get_height();
-					else
-						start_y = paint_box.top - (paint_box.top-y)%image.get_height();
+				bottom_left.line_to(Pointf(border_points[5].x, border_points[5].y + shadow_blur_radius));
+				bottom_left.close();
 
-					for (y = start_y; y < paint_box.bottom; y += image.get_height())
-						graphics->draw_image(image, x, y);
-				}
-				else if (element_node->computed_properties.background_repeat.type == StyleValueBackgroundRepeat::type_repeat)
-				{
-					int start_x, start_y;
-					if (x >= paint_box.left)
-						start_x = paint_box.left - (x-paint_box.left)%image.get_width();
-					else
-						start_x = paint_box.left - (paint_box.left-x)%image.get_width();
+				Brush brush_top_left;
+				brush_top_left.type = BrushType::radial;
+				brush_top_left.radius_x = shadow_blur_radius + top_left_x;
+				brush_top_left.radius_y = shadow_blur_radius + top_left_y;
+				brush_top_left.center_point = Pointf(border_box.left + top_left_x, border_box.top + top_left_y);
+				brush_top_left.stops = shadow_blur_stops(shadow_color, shadow_blur_radius, top_left_x / brush_top_left.radius_x);
 
-					if (y >= paint_box.top)
-						start_y = paint_box.top - (y-paint_box.top)%image.get_height();
-					else
-						start_y = paint_box.top - (paint_box.top-y)%image.get_height();
+				Brush brush_top_right;
+				brush_top_right.type = BrushType::radial;
+				brush_top_right.radius_x = shadow_blur_radius + top_right_x;
+				brush_top_right.radius_y = shadow_blur_radius + top_right_y;
+				brush_top_right.center_point = Pointf(border_box.right - top_right_x, border_box.top + top_right_y);
+				brush_top_right.stops = shadow_blur_stops(shadow_color, shadow_blur_radius, top_right_x / brush_top_right.radius_x);
 
-					for (y = start_y; y < paint_box.bottom; y += image.get_height())
-						for (x = start_x; x < paint_box.right; x += image.get_width())
-							graphics->draw_image(image, x, y);
-				}
-				graphics->pop_cliprect();
+				Brush brush_bottom_right;
+				brush_bottom_right.type = BrushType::radial;
+				brush_bottom_right.radius_x = shadow_blur_radius + bottom_right_x;
+				brush_bottom_right.radius_y = shadow_blur_radius + bottom_right_y;
+				brush_bottom_right.center_point = Pointf(border_box.right - bottom_right_x, border_box.bottom - bottom_right_y);
+				brush_bottom_right.stops = shadow_blur_stops(shadow_color, shadow_blur_radius, bottom_right_x / brush_bottom_right.radius_x);
+
+				Brush brush_bottom_left;
+				brush_bottom_left.type = BrushType::radial;
+				brush_bottom_left.radius_x = shadow_blur_radius + bottom_left_x;
+				brush_bottom_left.radius_y = shadow_blur_radius + bottom_left_y;
+				brush_bottom_left.center_point = Pointf(border_box.left + bottom_left_x, border_box.bottom - bottom_left_y);
+				brush_bottom_left.stops = shadow_blur_stops(shadow_color, shadow_blur_radius, bottom_left_x / brush_bottom_left.radius_x);
+
+				top_left.fill(canvas, brush_top_left);
+				top_right.fill(canvas, brush_top_right);
+				bottom_right.fill(canvas, brush_bottom_right);
+				bottom_left.fill(canvas, brush_bottom_left);
+
+				Brush brush_linear;
+				brush_linear.type = BrushType::linear;
+				brush_linear.stops = shadow_blur_stops(shadow_color, shadow_blur_radius, 0.0f);
+
+				Path top;
+				top.move_to(Pointf(border_points[0].x, border_points[0].y - shadow_blur_radius));
+				top.line_to(Pointf(border_points[1].x, border_points[1].y - shadow_blur_radius));
+				top.line_to(border_points[1]);
+				top.line_to(border_points[0]);
+				top.close();
+
+				Path right;
+				right.move_to(Pointf(border_points[2].x + shadow_blur_radius, border_points[2].y));
+				right.line_to(Pointf(border_points[3].x + shadow_blur_radius, border_points[3].y));
+				right.line_to(border_points[3]);
+				right.line_to(border_points[2]);
+				right.close();
+
+				Path bottom;
+				bottom.move_to(Pointf(border_points[4].x, border_points[4].y + shadow_blur_radius));
+				bottom.line_to(Pointf(border_points[5].x, border_points[5].y + shadow_blur_radius));
+				bottom.line_to(border_points[5]);
+				bottom.line_to(border_points[4]);
+				bottom.close();
+
+				Path left;
+				left.move_to(Pointf(border_points[6].x - shadow_blur_radius, border_points[6].y));
+				left.line_to(Pointf(border_points[7].x - shadow_blur_radius, border_points[7].y));
+				left.line_to(border_points[7]);
+				left.line_to(border_points[6]);
+				left.close();
+
+				brush_linear.start_point = border_points[0];
+				brush_linear.end_point = Pointf(border_points[0].x, border_points[0].y - shadow_blur_radius);
+				top.fill(canvas, brush_linear);
+
+				brush_linear.start_point = border_points[2];
+				brush_linear.end_point = Pointf(border_points[2].x + shadow_blur_radius, border_points[2].y);
+				right.fill(canvas, brush_linear);
+
+				brush_linear.start_point = border_points[4];
+				brush_linear.end_point = Pointf(border_points[4].x, border_points[4].y + shadow_blur_radius);
+				bottom.fill(canvas, brush_linear);
+
+				brush_linear.start_point = border_points[6];
+				brush_linear.end_point = Pointf(border_points[6].x - shadow_blur_radius, border_points[6].y);
+				left.fill(canvas, brush_linear);
 			}
 		}
 	}
-	*/
 
+	std::vector<BrushGradientStop> StyleBackgroundRenderer::shadow_blur_stops(const Colorf &shadow_color, float shadow_blur_radius, float start_t)
+	{
+		std::vector<BrushGradientStop> stops;
+		stops.push_back(BrushGradientStop(shadow_color, start_t));
+		for (float step = 1.0f; step < shadow_blur_radius - 1.0f; step += 1.0f)
+		{
+			float t = step / shadow_blur_radius;
+			float a = (1.0f - t) * (1.0f - t);
+			float final_t = start_t + t * (1.0f - start_t);
+			stops.push_back(BrushGradientStop(Colorf(shadow_color.r, shadow_color.g, shadow_color.b, shadow_color.a * a), final_t));
+		}
+		stops.push_back(BrushGradientStop(Colorf(shadow_color.r, shadow_color.g, shadow_color.b, 0.0f), 1.0f));
+		return stops;
+	}
+
+	float StyleBackgroundRenderer::mix(float a, float b, float t)
+	{
+		return a * (1.0f - t) + b * t;
+	}
+
+	float StyleBackgroundRenderer::get_horizontal_radius(const StyleValue &border_radius) const
+	{
+		if (border_radius.is_length())
+			return border_radius.number;
+		else if (border_radius.is_percentage())
+			return border_radius.number * geometry.border_box().get_width() / 100.0f;
+		else
+			return 0.0f;
+	}
+
+	float StyleBackgroundRenderer::get_vertical_radius(const StyleValue &border_radius) const
+	{
+		if (border_radius.is_length())
+			return border_radius.number;
+		else if (border_radius.is_percentage())
+			return border_radius.number * geometry.border_box().get_height() / 100.0f;
+		else
+			return 0.0f;
+	}
+
+	Colorf StyleBackgroundRenderer::get_light_color(const StyleValue &border_color) const
+	{
+		Colorf light = border_color.color;
+		light.r = min(1.0f, light.r * 1.2f);
+		light.g = min(1.0f, light.g * 1.2f);
+		light.b = min(1.0f, light.b * 1.2f);
+		return light;
+	}
+
+	Colorf StyleBackgroundRenderer::get_dark_color(const StyleValue &border_color) const
+	{
+		Colorf dark = border_color.color;
+		dark.r *= 0.8f;
+		dark.g *= 0.8f;
+		dark.b *= 0.8f;
+		return dark;
+	}
 }

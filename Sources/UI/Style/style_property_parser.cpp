@@ -853,23 +853,30 @@ namespace clan
 		}
 		else if (token.type == StyleTokenType::function && equals(token.value, "rgba"))
 		{
-			int color[4] = { 0, 0, 0, 0 };
+			float color[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 			for (int channel = 0; channel < 4; channel++)
 			{
 				token = next_token(pos, tokens);
 				if (token.type == StyleTokenType::number)
 				{
-					int value = StringHelp::text_to_int(token.value);
-					value = min(255, value);
-					value = max(0, value);
-					color[channel] = value;
+					if (channel < 3)
+					{
+						int value = StringHelp::text_to_int(token.value);
+						value = min(255, value);
+						value = max(0, value);
+						color[channel] = value / 255.0f;
+					}
+					else
+					{
+						color[channel] = StringHelp::text_to_float(token.value);
+					}
 				}
 				else if (token.type == StyleTokenType::percentage)
 				{
 					float value = StringHelp::text_to_float(token.value) / 100.0f;
 					value = min(1.0f, value);
 					value = max(0.0f, value);
-					color[channel] = (int)(value*255.0f);
+					color[channel] = value;
 				}
 				else
 				{
@@ -886,7 +893,7 @@ namespace clan
 			token = next_token(pos, tokens);
 			if (token.type == StyleTokenType::bracket_end)
 			{
-				out_color = Colorf(color[0] / 255.0f, color[1] / 255.0f, color[2] / 255.0f, color[3] / 255.0f);
+				out_color = Colorf(color[0], color[1], color[2], color[3]);
 				in_out_pos = pos;
 				return true;
 			}
