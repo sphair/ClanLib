@@ -33,7 +33,7 @@
 #include "API/Display/Font/font.h"
 #include "API/Display/2D/canvas.h"
 #include "style_background_renderer.h"
-#include "style_border_renderer.h"
+#include "style_border_image_renderer.h"
 #include "style_impl.h"
 #include "Properties/background.h"
 #include "Properties/border.h"
@@ -236,13 +236,16 @@ namespace clan
 	void Style::render_background(Canvas &canvas, const BoxGeometry &geometry) const
 	{
 		StyleBackgroundRenderer renderer(canvas, geometry, *this);
-		renderer.render();
+		renderer.render_background();
 	}
 
 	void Style::render_border(Canvas &canvas, const BoxGeometry &geometry) const
 	{
-		StyleBorderRenderer renderer(canvas, geometry, *this);
-		renderer.render();
+		StyleBackgroundRenderer renderer(canvas, geometry, *this);
+		renderer.render_border();
+
+		StyleBorderImageRenderer image_renderer(canvas, geometry, *this);
+		image_renderer.render();
 	}
 
 	Font Style::get_font(Canvas &canvas)

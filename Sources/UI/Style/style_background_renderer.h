@@ -32,6 +32,7 @@ namespace clan
 {
 	class Canvas;
 	class Image;
+	class Colorf;
 	class Style;
 	class StyleValue;
 	class BoxGeometry;
@@ -40,7 +41,8 @@ namespace clan
 	{
 	public:
 		StyleBackgroundRenderer(Canvas &canvas, const BoxGeometry &geometry, const Style &style);
-		void render();
+		void render_background();
+		void render_border();
 
 	private:
 		float get_start_x(int index, const Rectf &clip_box, const Rectf &origin_box, const Sizef &image_size);
@@ -57,6 +59,11 @@ namespace clan
 		StyleValue get_layer_attachment(int index);
 		StyleValue get_layer_repeat_x(int index);
 		StyleValue get_layer_repeat_y(int index);
+
+		float get_horizontal_radius(const StyleValue &border_radius) const;
+		float get_vertical_radius(const StyleValue &border_radius) const;
+		Colorf get_light_color(const StyleValue &border_color) const;
+		Colorf get_dark_color(const StyleValue &border_color) const;
 
 		Canvas &canvas;
 		const BoxGeometry &geometry;

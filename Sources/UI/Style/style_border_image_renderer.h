@@ -37,10 +37,10 @@ namespace clan
 	class StyleValue;
 	class BoxGeometry;
 
-	class StyleBorderRenderer
+	class StyleBorderImageRenderer
 	{
 	public:
-		StyleBorderRenderer(Canvas &canvas, const BoxGeometry &geometry, const Style &style);
+		StyleBorderImageRenderer(Canvas &canvas, const BoxGeometry &geometry, const Style &style);
 		void render();
 
 	private:
@@ -54,10 +54,6 @@ namespace clan
 		int get_right_slice_value(int image_width) const;
 		int get_top_slice_value(int image_height) const;
 		int get_bottom_slice_value(int image_height) const;
-		float get_horizontal_radius(const StyleValue &border_radius) const;
-		float get_vertical_radius(const StyleValue &border_radius) const;
-		Colorf get_light_color(const StyleValue &border_color) const;
-		Colorf get_dark_color(const StyleValue &border_color) const;
 
 		Canvas &canvas;
 		const BoxGeometry &geometry;

@@ -40,7 +40,7 @@ namespace clan
 	{
 	}
 
-	void StyleBackgroundRenderer::render()
+	void StyleBackgroundRenderer::render_background()
 	{
 		int num_layers = style.array_size("background-image");
 
@@ -125,6 +125,183 @@ namespace clan
 
 				canvas.pop_cliprect();
 			}
+		}
+	}
+
+	void StyleBackgroundRenderer::render_border()
+	{
+		float outer_radius_top_left_x = get_horizontal_radius(style.computed_value("border-top-left-radius-x"));
+		float outer_radius_top_left_y = get_vertical_radius(style.computed_value("border-top-left-radius-y"));
+		float outer_radius_top_right_x = get_horizontal_radius(style.computed_value("border-top-right-radius-x"));
+		float outer_radius_top_right_y = get_vertical_radius(style.computed_value("border-top-right-radius-y"));
+		float outer_radius_bottom_left_x = get_horizontal_radius(style.computed_value("border-bottom-left-radius-x"));
+		float outer_radius_bottom_left_y = get_vertical_radius(style.computed_value("border-bottom-left-radius-y"));
+		float outer_radius_bottom_right_x = get_horizontal_radius(style.computed_value("border-bottom-right-radius-x"));
+		float outer_radius_bottom_right_y = get_vertical_radius(style.computed_value("border-bottom-right-radius-y"));
+
+		float inner_radius_top_left_x = max(0.0f, outer_radius_top_left_x - geometry.border_left);
+		float inner_radius_top_left_y = max(0.0f, outer_radius_top_left_y - geometry.border_top);
+		float inner_radius_top_right_x = max(0.0f, outer_radius_top_right_x - geometry.border_right);
+		float inner_radius_top_right_y = max(0.0f, outer_radius_top_right_y - geometry.border_top);
+		float inner_radius_bottom_left_x = max(0.0f, outer_radius_bottom_left_x - geometry.border_left);
+		float inner_radius_bottom_left_y = max(0.0f, outer_radius_bottom_left_y - geometry.border_bottom);
+		float inner_radius_bottom_right_x = max(0.0f, outer_radius_bottom_right_x - geometry.border_right);
+		float inner_radius_bottom_right_y = max(0.0f, outer_radius_bottom_right_y - geometry.border_bottom);
+
+		Rectf border_box = geometry.border_box();
+
+		Point center_top_left(border_box.left + (int)std::round(outer_radius_top_left_x), border_box.top + (int)std::round(outer_radius_top_left_y));
+		Point center_top_right(border_box.right - (int)std::round(outer_radius_top_right_x), border_box.top + (int)std::round(outer_radius_top_right_y));
+		Point center_bottom_left(border_box.left + (int)std::round(outer_radius_bottom_left_x), border_box.bottom - (int)std::round(outer_radius_bottom_left_y));
+		Point center_bottom_right(border_box.right - (int)std::round(outer_radius_bottom_right_x), border_box.bottom - (int)std::round(outer_radius_bottom_right_y));
+
+		StyleValue style_top = style.computed_value("border-top-style");
+		StyleValue style_right = style.computed_value("border-right-style");
+		StyleValue style_bottom = style.computed_value("border-bottom-style");
+		StyleValue style_left = style.computed_value("border-left-style");
+
+		if (style_top.is_keyword("solid"))
+		{
+			canvas.fill_rect(Rect(center_top_left.x, border_box.top, center_top_right.x, border_box.top + geometry.border_top), style.computed_value("border-top-color").color);
+		}
+		else if (style_top.is_keyword("dotted"))
+		{
+			//canvas.dot_horizontal(Rect(center_top_left.x, border_box.top, center_top_right.x, border_box.top + geometry.border_top), style.computed_value("border-top-color").color);
+		}
+		else if (style_top.is_keyword("dashed"))
+		{
+			//canvas.dash_horizontal(Rect(center_top_left.x, border_box.top, center_top_right.x, border_box.top + geometry.border_top), style.computed_value("border-top-color").color);
+		}
+		else if (style_top.is_keyword("double"))
+		{
+			canvas.fill_rect(Rect(center_top_left.x, border_box.top, center_top_right.x, border_box.top + geometry.border_top / 3), style.computed_value("border-top-color").color);
+			canvas.fill_rect(Rect(center_top_left.x, border_box.top + geometry.border_top * 2 / 3, center_top_right.x, border_box.top + geometry.border_top), style.computed_value("border-top-color").color);
+		}
+		else if (style_top.is_keyword("groove"))
+		{
+			canvas.fill_rect(Rect(center_top_left.x, border_box.top, center_top_right.x, border_box.top + geometry.border_top / 2), get_dark_color(style.computed_value("border-top-color")));
+			canvas.fill_rect(Rect(center_top_left.x, border_box.top + geometry.border_top / 2, center_top_right.x, border_box.top + geometry.border_top), get_light_color(style.computed_value("border-top-color")));
+		}
+		else if (style_top.is_keyword("ridge"))
+		{
+			canvas.fill_rect(Rect(center_top_left.x, border_box.top, center_top_right.x, border_box.top + geometry.border_top / 2), get_light_color(style.computed_value("border-top-color")));
+			canvas.fill_rect(Rect(center_top_left.x, border_box.top + geometry.border_top / 2, center_top_right.x, border_box.top + geometry.border_top), get_dark_color(style.computed_value("border-top-color")));
+		}
+		else if (style_top.is_keyword("inset"))
+		{
+			canvas.fill_rect(Rect(center_top_left.x, border_box.top, center_top_right.x, border_box.top + geometry.border_top), get_dark_color(style.computed_value("border-top-color")));
+		}
+		else if (style_top.is_keyword("outset"))
+		{
+			canvas.fill_rect(Rect(center_top_left.x, border_box.top, center_top_right.x, border_box.top + geometry.border_top), get_light_color(style.computed_value("border-top-color")));
+		}
+
+		if (style_bottom.is_keyword("solid"))
+		{
+			canvas.fill_rect(Rect(center_bottom_left.x, border_box.bottom - geometry.border_bottom, center_bottom_right.x, border_box.bottom), style.computed_value("border-bottom-color").color);
+		}
+		else if (style_bottom.is_keyword("dotted"))
+		{
+			//canvas.dot_horizontal(Rect(center_bottom_left.x, border_box.bottom - geometry.border_bottom, center_bottom_right.x, border_box.bottom), style.computed_value("border-bottom-color").color);
+		}
+		else if (style_bottom.is_keyword("dashed"))
+		{
+			//canvas.dash_horizontal(Rect(center_bottom_left.x, border_box.bottom - geometry.border_bottom, center_bottom_right.x, border_box.bottom), style.computed_value("border-bottom-color").color);
+		}
+		else if (style_bottom.is_keyword("double"))
+		{
+			canvas.fill_rect(Rect(center_bottom_left.x, border_box.bottom - geometry.border_bottom, center_bottom_right.x, border_box.bottom - geometry.border_bottom * 2 / 3), style.computed_value("border-bottom-color").color);
+			canvas.fill_rect(Rect(center_bottom_left.x, border_box.bottom - geometry.border_bottom * 1 / 3, center_bottom_right.x, border_box.bottom), style.computed_value("border-bottom-color").color);
+		}
+		else if (style_bottom.is_keyword("groove"))
+		{
+			canvas.fill_rect(Rect(center_bottom_left.x, border_box.bottom - geometry.border_bottom, center_bottom_right.x, border_box.bottom - geometry.border_bottom / 2), get_dark_color(style.computed_value("border-bottom-color")));
+			canvas.fill_rect(Rect(center_bottom_left.x, border_box.bottom - geometry.border_bottom / 2, center_bottom_right.x, border_box.bottom), get_light_color(style.computed_value("border-bottom-color")));
+		}
+		else if (style_bottom.is_keyword("ridge"))
+		{
+			canvas.fill_rect(Rect(center_bottom_left.x, border_box.bottom - geometry.border_bottom, center_bottom_right.x, border_box.bottom - geometry.border_bottom / 2), get_light_color(style.computed_value("border-bottom-color")));
+			canvas.fill_rect(Rect(center_bottom_left.x, border_box.bottom - geometry.border_bottom / 2, center_bottom_right.x, border_box.bottom), get_dark_color(style.computed_value("border-bottom-color")));
+		}
+		else if (style_bottom.is_keyword("inset"))
+		{
+			canvas.fill_rect(Rect(center_bottom_left.x, border_box.bottom - geometry.border_bottom, center_bottom_right.x, border_box.bottom), get_light_color(style.computed_value("border-bottom-color")));
+		}
+		else if (style_bottom.is_keyword("outset"))
+		{
+			canvas.fill_rect(Rect(center_bottom_left.x, border_box.bottom - geometry.border_bottom, center_bottom_right.x, border_box.bottom), get_dark_color(style.computed_value("border-bottom-color")));
+		}
+
+		if (style_left.is_keyword("solid"))
+		{
+			canvas.fill_rect(Rect(border_box.left, center_top_left.y, border_box.left + geometry.border_left, center_bottom_left.y), style.computed_value("border-left-color").color);
+		}
+		else if (style_left.is_keyword("dotted"))
+		{
+			//canvas.dot_vertical(Rect(border_box.left, center_top_left.y, border_box.left + geometry.border_left, center_bottom_left.y), style.computed_value("border-left-color").color);
+		}
+		else if (style_left.is_keyword("dashed"))
+		{
+			//canvas.dash_vertical(Rect(border_box.left, center_top_left.y, border_box.left + geometry.border_left, center_bottom_left.y), style.computed_value("border-left-color").color);
+		}
+		else if (style_left.is_keyword("double"))
+		{
+			canvas.fill_rect(Rect(border_box.left, center_top_left.y, border_box.left + geometry.border_left / 3, center_bottom_left.y), style.computed_value("border-left-color").color);
+			canvas.fill_rect(Rect(border_box.left + geometry.border_left * 2 / 3, center_top_left.y, border_box.left + geometry.border_left, center_bottom_left.y), style.computed_value("border-left-color").color);
+		}
+		else if (style_left.is_keyword("groove"))
+		{
+			canvas.fill_rect(Rect(border_box.left, center_top_left.y, border_box.left + geometry.border_left / 2, center_bottom_left.y), get_dark_color(style.computed_value("border-left-color")));
+			canvas.fill_rect(Rect(border_box.left + geometry.border_left / 2, center_top_left.y, border_box.left + geometry.border_left, center_bottom_left.y), get_light_color(style.computed_value("border-left-color")));
+		}
+		else if (style_left.is_keyword("ridge"))
+		{
+			canvas.fill_rect(Rect(border_box.left, center_top_left.y, border_box.left + geometry.border_left / 2, center_bottom_left.y), get_light_color(style.computed_value("border-left-color")));
+			canvas.fill_rect(Rect(border_box.left + geometry.border_left / 2, center_top_left.y, border_box.left + geometry.border_left, center_bottom_left.y), get_dark_color(style.computed_value("border-left-color")));
+		}
+		else if (style_left.is_keyword("inset"))
+		{
+			canvas.fill_rect(Rect(border_box.left, center_top_left.y, border_box.left + geometry.border_left, center_bottom_left.y), get_dark_color(style.computed_value("border-left-color")));
+		}
+		else if (style_left.is_keyword("outset"))
+		{
+			canvas.fill_rect(Rect(border_box.left, center_top_left.y, border_box.left + geometry.border_left, center_bottom_left.y), get_light_color(style.computed_value("border-left-color")));
+		}
+
+		if (style_right.is_keyword("solid"))
+		{
+			canvas.fill_rect(Rect(border_box.right - geometry.border_right, center_top_right.y, border_box.right, center_bottom_right.y), style.computed_value("border-right-color").color);
+		}
+		else if (style_right.is_keyword("dotted"))
+		{
+			//canvas.dot_vertical(Rect(border_box.right - geometry.border_right, center_top_right.y, border_box.right, center_bottom_right.y), style.computed_value("border-right-color").color);
+		}
+		else if (style_right.is_keyword("dashed"))
+		{
+			//canvas.dash_vertical(Rect(border_box.right - geometry.border_right, center_top_right.y, border_box.right, center_bottom_right.y), style.computed_value("border-right-color").color);
+		}
+		else if (style_right.is_keyword("double"))
+		{
+			canvas.fill_rect(Rect(border_box.right - geometry.border_right, center_top_right.y, border_box.right - geometry.border_right * 2 / 3, center_bottom_right.y), style.computed_value("border-right-color").color);
+			canvas.fill_rect(Rect(border_box.right - geometry.border_right / 3, center_top_right.y, border_box.right, center_bottom_right.y), style.computed_value("border-right-color").color);
+		}
+		else if (style_right.is_keyword("groove"))
+		{
+			canvas.fill_rect(Rect(border_box.right - geometry.border_right, center_top_right.y, border_box.right - geometry.border_right / 2, center_bottom_right.y), get_dark_color(style.computed_value("border-right-color")));
+			canvas.fill_rect(Rect(border_box.right - geometry.border_right / 2, center_top_right.y, border_box.right, center_bottom_right.y), get_light_color(style.computed_value("border-right-color")));
+		}
+		else if (style_right.is_keyword("ridge"))
+		{
+			canvas.fill_rect(Rect(border_box.right - geometry.border_right, center_top_right.y, border_box.right - geometry.border_right / 2, center_bottom_right.y), get_light_color(style.computed_value("border-right-color")));
+			canvas.fill_rect(Rect(border_box.right - geometry.border_right / 2, center_top_right.y, border_box.right, center_bottom_right.y), get_dark_color(style.computed_value("border-right-color")));
+		}
+		else if (style_right.is_keyword("inset"))
+		{
+			canvas.fill_rect(Rect(border_box.right - geometry.border_right, center_top_right.y, border_box.right, center_bottom_right.y), get_light_color(style.computed_value("border-right-color")));
+		}
+		else if (style_right.is_keyword("outset"))
+		{
+			canvas.fill_rect(Rect(border_box.right - geometry.border_right, center_top_right.y, border_box.right, center_bottom_right.y), get_dark_color(style.computed_value("border-right-color")));
 		}
 	}
 
