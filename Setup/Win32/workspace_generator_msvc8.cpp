@@ -220,14 +220,6 @@ void WorkspaceGenerator_MSVC8::write_property_sheet(const Workspace &workspace)
 	MSVC8_PropertySheet propertysheet(target_version);
 	propertysheet.name = "External Directories";
 
-	MSVC8_VCLinkerTool *tool_linker = new MSVC8_VCLinkerTool;
-	MSVC8_VCLibrarianTool *tool_librarian = new MSVC8_VCLibrarianTool;
-	propertysheet.tools.push_back(tool_linker);
-	propertysheet.tools.push_back(tool_librarian);
-
-	tool_linker->additional_library_directories = workspace.input_lib_dir + "\\$(PlatformName)$(ConfigurationName)";
-	tool_librarian->additional_library_directories = workspace.input_lib_dir + "\\$(PlatformName)$(ConfigurationName)";
-
 	propertysheet.input_include_dir_vs100 = workspace.input_include_dir;
 	propertysheet.input_lib_dir_vs100 = workspace.input_lib_dir;
 
@@ -592,26 +584,12 @@ WorkspaceGenerator_MSVC8::SharedConfig WorkspaceGenerator_MSVC8::create_shared_c
 		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\DisableIntrinsics.props");
 	}
 
-	if (config.dll)
-		shared.tool_linker = new MSVC8_VCLinkerTool;
-	else
-		shared.tool_librarian = new MSVC8_VCLibrarianTool;
-	shared.tool_post_build = new MSVC8_VCPostBuildEventTool;
-
 	if (has_precomp)
 	{
 		shared.config->use_precompiled_header= "2";
 		shared.config->precompiled_header_through = precomp_header;
 	}
 
-	shared.tool_post_build->description.set("Installing library and API headers...");
-	shared.tool_post_build->command_line.set("call install_clan" + project_name + ".bat &quot;$(TargetPath)&quot; &quot;$(TargetDir)$(TargetName).pdb&quot; &quot;$(TargetName).pdb&quot; &quot;$(PlatformName)&quot;");
-
-	if (config.dll)
-		shared.config->tools.push_back(shared.tool_linker);
-	else
-		shared.config->tools.push_back(shared.tool_librarian);
-	shared.config->tools.push_back(shared.tool_post_build);
 	return shared;
 }
 
@@ -624,20 +602,11 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_android_config(const std::
 	shared.config->name_without_platform = std::string(config.name);
 	shared.config->name_without_config = platform;
 
-	shared.tool_librarian = new MSVC8_VCLibrarianTool;
-	shared.tool_post_build = new MSVC8_VCPostBuildEventTool;
-
 	if (has_precomp)
 	{
 		shared.config->use_precompiled_header = "2";
 		shared.config->precompiled_header_through = precomp_header;
 	}
-
-	shared.tool_post_build->description.set("Installing library and API headers...");
-	shared.tool_post_build->command_line.set("call install_clan" + project_name + ".bat &quot;$(TargetPath)&quot; &quot;$(TargetDir)$(TargetName).pdb&quot; &quot;$(TargetName).pdb&quot; &quot;$(PlatformName)&quot;");
-
-	shared.config->tools.push_back(shared.tool_librarian);
-	shared.config->tools.push_back(shared.tool_post_build);
 
 	std::string output_file = "clan$(ProjectName)-static";
 	if (config.runtime_type == runtime_static_debug || config.runtime_type == runtime_dll_debug)
@@ -655,7 +624,6 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_android_config(const std::
 	}
 	output_file += ".a";
 
-	shared.tool_librarian->output_file.set(output_file);
 	return shared.config;
 }
 
@@ -687,7 +655,6 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_debug_mt_config(
 
 	shared.config->target_name_vs100 = make_target_name(config, platform, project_name);
 
-	shared.tool_librarian->output_file.set(make_output_filename(config, false, platform, project_name));
 	return shared.config;
 }
 
@@ -716,7 +683,6 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_release_mt_config(
 
 	shared.config->target_name_vs100 = make_target_name(config, platform, project_name);
 
-	shared.tool_librarian->output_file.set(make_output_filename(config, false, platform, project_name));
 	return shared.config;
 }
 
@@ -748,7 +714,6 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_debug_mtdll_config(
 
 	shared.config->target_name_vs100 = make_target_name(config, platform, project_name);
 
-	shared.tool_librarian->output_file.set(make_output_filename(config, false, platform, project_name));
 	return shared.config;
 }
 
@@ -771,7 +736,6 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_release_mtdll_config(
 
 	shared.config->target_name_vs100 = make_target_name(config, platform, project_name);
 
-	shared.tool_librarian->output_file.set(make_output_filename(config, false, platform, project_name));
 	return shared.config;
 }
 
@@ -803,7 +767,6 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_debug_dll_config(
 
 	shared.config->target_name_vs100 = make_target_name(config, platform, project_name);
 
-	shared.tool_linker->output_file.set(make_output_filename(config, true, platform, project_name));
 	return shared.config;
 }
 
@@ -832,37 +795,7 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_release_dll_config(
 
 	shared.config->target_name_vs100 = make_target_name(config, platform, project_name);
 
-	shared.tool_linker->output_file.set(make_output_filename(config, true, platform, project_name));
 	return shared.config;
-}
-
-std::string WorkspaceGenerator_MSVC8::make_output_filename(
-	const ConfigurationType &config,
-	bool make_dll_name,
-	const std::string &platform,
-	const std::string &project_name)
-{
-	std::string output_file = "$(OutDir)\\clan" + project_name;
-	if (config.dll)
-	{
-		output_file += "-dll";
-	}
-	else if (config.runtime_type != runtime_static_debug && config.runtime_type != runtime_static_release)
-	{
-		output_file += "-static-mtdll";
-	}
-	else
-	{
-		output_file += "-static-mt";
-	}
-
-	if (config.runtime_type == runtime_static_debug || config.runtime_type == runtime_dll_debug)
-		output_file += "-debug";
-	if (make_dll_name)
-		output_file += ".dll";
-	else
-		output_file += ".lib";
-	return output_file;
 }
 
 std::string WorkspaceGenerator_MSVC8::make_target_name(
@@ -1068,11 +1001,6 @@ MSVC8_PropertySheet::MSVC8_PropertySheet(int target_version) : target_version(ta
 
 MSVC8_PropertySheet::~MSVC8_PropertySheet()
 {
-	std::vector<MSVC8_Tool *>::size_type index;
-
-	for (index = 0; index < tools.size(); index++)
-		delete tools[index];
-	tools.clear();
 }
 
 void MSVC8_PropertySheet::write(OutputWriter &output, int indent)
@@ -1268,11 +1196,6 @@ MSVC8_Configuration::MSVC8_Configuration()
 
 MSVC8_Configuration::~MSVC8_Configuration()
 {
-	std::vector<MSVC8_Tool *>::size_type index;
-
-	for (index = 0; index < tools.size(); index++)
-		delete tools[index];
-	tools.clear();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1314,36 +1237,6 @@ void MSVC8_Setting::write(OutputWriter &output, int indent, const std::string &n
 {
 	if (!not_set)
 		output.write_line(indent, name + "=\"" + value + "\"");
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// MSVC8_Tool class:
-
-MSVC8_Tool::~MSVC8_Tool()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// MSVC8_VCLibrarianTool class:
-
-MSVC8_VCLibrarianTool::MSVC8_VCLibrarianTool()
-{
-	additional_options.set("/LTCG");	// Can the set when the "whole program optimisation" is disabled?
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// MSVC8_VCLinkerTool class:
-
-MSVC8_VCLinkerTool::MSVC8_VCLinkerTool()
-{
-}
-
-
-/////////////////////////////////////////////////////////////////////////////
-// MSVC8_VCPostBuildEventTool class:
-
-MSVC8_VCPostBuildEventTool::MSVC8_VCPostBuildEventTool()
-{
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1454,20 +1347,10 @@ MSVC8_File::MSVC8_File()
 
 MSVC8_File::~MSVC8_File()
 {
-	std::vector<MSVC8_FileConfiguration *>::size_type index;
-
-	for (index = 0; index < file_configurations.size(); index++)
-		delete file_configurations[index];
-	file_configurations.clear();
 }
 
 void MSVC8_File::write_filter_name_vs100(OutputWriter &output, int indent, const std::string &parent) const
 {
-	std::vector<MSVC8_FileConfiguration *>::size_type index;
-	for (index = 0; index < file_configurations.size(); index++)
-	{
-		file_configurations[index]->write_filter_name_vs100(output, indent, parent);
-	}
 }
 
 void MSVC8_File::write_vs100(OutputWriter &output, int indent, const std::vector<MSVC8_Configuration *> &configurations) const
@@ -1525,10 +1408,6 @@ void MSVC8_File::write_vs100(OutputWriter &output, int indent, const std::vector
 		   	output.write_line(indent, "<ClCompile Include=\"" + relative_path + "\" />");
 		}
 	}
-
-	std::vector<MSVC8_FileConfiguration *>::size_type index;
-	for (index = 0; index < file_configurations.size(); index++)
-		file_configurations[index]->write_vs100(output, indent+1, configurations);
 }
 
 void MSVC8_File::write_filter_files_vs100(OutputWriter &output, int indent, const std::string &parent) const
@@ -1545,36 +1424,4 @@ void MSVC8_File::write_filter_files_vs100(OutputWriter &output, int indent, cons
 		output.write_line(indent, "<Filter>" + parent + "</Filter>");
 		output.write_line(indent, "</ClCompile>");
 	}
-
-	std::vector<MSVC8_FileConfiguration *>::size_type index;
-	for (index = 0; index < file_configurations.size(); index++)
-		file_configurations[index]->write_filter_files_vs100(output, indent, parent);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// MSVC8_FileConfiguration class:
-
-MSVC8_FileConfiguration::MSVC8_FileConfiguration()
-{
-}
-
-MSVC8_FileConfiguration::~MSVC8_FileConfiguration()
-{
-	std::vector<MSVC8_Tool *>::size_type index;
-
-	for (index = 0; index < tools.size(); index++)
-		delete tools[index];
-	tools.clear();
-}
-
-void MSVC8_FileConfiguration::write_vs100(OutputWriter &output, int indent, const std::vector<MSVC8_Configuration *> &configurations) const
-{
-}
-
-void MSVC8_FileConfiguration::write_filter_name_vs100(OutputWriter &output, int indent, const std::string &parent) const
-{
-}
-
-void MSVC8_FileConfiguration::write_filter_files_vs100(OutputWriter &output, int indent, const std::string &parent) const
-{
 }

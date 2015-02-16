@@ -35,14 +35,12 @@
 
 class MSVC8_Project;
 class MSVC8_Configuration;
-class MSVC8_Tool;
 class MSVC8_FileItem;
 class MSVC8_File;
 class MSVC8_Filter;
 class MSVC8_FileConfiguration;
-class MSVC8_VCLibrarianTool;
 class MSVC8_VCLinkerTool;
-class MSVC8_VCPostBuildEventTool;
+
 
 /////////////////////////////////////////////////////////////////////////////
 // Workspace generator class:
@@ -80,13 +78,10 @@ private:
 	struct SharedConfig
 	{
 		SharedConfig()
-		: config(0), tool_librarian(0), tool_linker(0), tool_post_build(0)
+		: config(0)
 		{
 		}
 		MSVC8_Configuration *config;
-		MSVC8_VCLibrarianTool *tool_librarian;
-		MSVC8_VCLinkerTool *tool_linker;
-		MSVC8_VCPostBuildEventTool *tool_post_build;
 	};
 
 	void write_solution(const Workspace &workspace);
@@ -119,11 +114,6 @@ private:
 	MSVC8_Configuration *create_android_config(const std::string &platform, const std::string &project_name, const ConfigurationType &config, bool has_precomp, const std::string &precomp_header);
 
 	SharedConfig create_shared_config(const std::string &platform, const std::string &project_name, const ConfigurationType &config, bool has_precomp, const std::string &precomp_header);
-	std::string make_output_filename(
-		const ConfigurationType &config,
-		bool make_dll_name,
-		const std::string &platform,
-		const std::string &project_name);
 
 	std::string make_target_name(
 		const ConfigurationType &config,
@@ -165,7 +155,6 @@ public:
 	~MSVC8_PropertySheet();
 
 	std::string name;
-	std::vector<MSVC8_Tool *> tools;
 	std::string input_include_dir_vs100;
 	std::string input_lib_dir_vs100;
 	int target_version;
@@ -231,47 +220,6 @@ public:
 
 	bool is_this_android = false;
 	std::string android_debug_libraries;
-
-	std::vector<MSVC8_Tool *> tools;
-
-};
-
-class MSVC8_Tool
-{
-public:
-	virtual ~MSVC8_Tool();
-};
-
-class MSVC8_VCLibrarianTool : public MSVC8_Tool
-{
-public:
-	MSVC8_VCLibrarianTool();
-
-	MSVC8_Setting additional_library_directories;
-	MSVC8_Setting additional_options;
-	MSVC8_Setting output_file;
-	MSVC8_Setting suppress_startup_banner;
-
-};
-
-class MSVC8_VCLinkerTool : public MSVC8_Tool
-{
-public:
-	MSVC8_VCLinkerTool();
-
-	MSVC8_Setting additional_library_directories;
-	MSVC8_Setting output_file;
-
-};
-
-class MSVC8_VCPostBuildEventTool : public MSVC8_Tool
-{
-public:
-	MSVC8_VCPostBuildEventTool();
-
-	MSVC8_Setting description;
-	MSVC8_Setting command_line;
-
 };
 
 class MSVC8_FileItem
@@ -305,25 +253,11 @@ public:
 	~MSVC8_File();
 
 	std::string relative_path;
-	std::vector<MSVC8_FileConfiguration *> file_configurations;
 
 	void write_vs100(OutputWriter &output, int indent, const std::vector<MSVC8_Configuration *> &configurations) const;
 	void write_filter_name_vs100(OutputWriter &output, int indent, const std::string &parent) const;
 	void write_filter_files_vs100(OutputWriter &output, int indent, const std::string &parent) const;
 };
 
-class MSVC8_FileConfiguration
-{
-public:
-	MSVC8_FileConfiguration();
-	~MSVC8_FileConfiguration();
-
-	std::string name;
-	std::vector<MSVC8_Tool *> tools;
-
-	void write_vs100(OutputWriter &output, int indent, const std::vector<MSVC8_Configuration *> &configurations) const;
-	void write_filter_name_vs100(OutputWriter &output, int indent, const std::string &parent) const;
-	void write_filter_files_vs100(OutputWriter &output, int indent, const std::string &parent) const;
-};
 
 #endif
