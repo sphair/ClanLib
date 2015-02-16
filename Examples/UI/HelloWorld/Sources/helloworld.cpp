@@ -54,7 +54,7 @@ int HelloWorld::start(const std::vector<std::string> &args)
 	Slot slot_close = root->sig_close().connect([&](CloseEvent &e) { RunLoop::exit(); });
 
 	// Style the root view to use rounded corners and a bit of drop shadow
-	root->style()->set("background: rgb(240,240,240)");
+	root->style()->set("background: linear-gradient(to bottom, rgb(240,240,240), rgb(120,240,120))");
 	root->style()->set("padding: 11px");
 	root->style()->set("border: 1px solid black");
 	root->style()->set("border-radius: 15px");
@@ -80,7 +80,7 @@ int HelloWorld::start(const std::vector<std::string> &args)
 	edit->style()->set("background: white");
 	edit->style()->set("border: 1px solid black");
 	edit->style()->set("border-radius: 3px");
-	edit->style()->set("padding: 2px 5px 3px 5px");
+	edit->style()->set("padding: 2px 5px 2px 5px");
 	edit->style()->set("width: 128px");
 	edit->set_text("Text File View");
 

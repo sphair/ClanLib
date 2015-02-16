@@ -228,7 +228,7 @@ namespace clan
 				for (size_t j = 0; j < img.gradient.stops.size(); j++)
 				{
 					std::string stop_prop_name = prop_name + ".stop[" + StringHelp::int_to_text(j) + "]";
-					setter->set_value(stop_prop_name + ".color", img.gradient.stops[j].color);
+					setter->set_value(stop_prop_name, img.gradient.stops[j].color);
 					setter->set_value(stop_prop_name + ".position", img.gradient.stops[j].position);
 				}
 			}
@@ -744,7 +744,7 @@ namespace clan
 				for (size_t j = 0; j < img.gradient.stops.size(); j++)
 				{
 					std::string stop_prop_name = prop_name + ".stop[" + StringHelp::int_to_text(j) + "]";
-					setter->set_value(stop_prop_name + ".color", img.gradient.stops[j].color);
+					setter->set_value(stop_prop_name, img.gradient.stops[j].color);
 					setter->set_value(stop_prop_name + ".position", img.gradient.stops[j].position);
 				}
 			}
