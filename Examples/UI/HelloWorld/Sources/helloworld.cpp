@@ -54,7 +54,7 @@ int HelloWorld::start(const std::vector<std::string> &args)
 	Slot slot_close = root->sig_close().connect([&](CloseEvent &e) { RunLoop::exit(); });
 
 	// Style the root view to use rounded corners and a bit of drop shadow
-	root->style()->set("background: linear-gradient(13.37deg, rgb(240,240,240), rgb(120,240,120) 50%, rgb(240,240,240))");
+	root->style()->set("background: linear-gradient(13.37deg, #f0f0f0, rgb(120,240,120) 50%, #f0f0f0)");
 	root->style()->set("padding: 11px");
 	root->style()->set("border: 1px solid black");
 	root->style()->set("border-radius: 15px");
