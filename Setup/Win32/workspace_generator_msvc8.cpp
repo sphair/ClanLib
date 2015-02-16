@@ -38,13 +38,13 @@
 
 WorkspaceGenerator_MSVC8::ConfigurationType WorkspaceGenerator_MSVC8::types[] =
 {
-	false, "DebugMT", runtime_static_debug, true, false,
-	false, "DebugMTDLL", runtime_dll_debug, true, false,
-	false, "DebugDLL", runtime_dll_debug, true, true,
-	false, "ReleaseMT", runtime_static_release, true, false,
-	false, "ReleaseMTDLL", runtime_dll_release, true, false,
-	false, "ReleaseDLL", runtime_dll_release, true, true,
-	false, 0, runtime_static_debug, false, false
+	false, "DebugMT", runtime_static_debug, false,
+	false, "DebugMTDLL", runtime_dll_debug, false,
+	false, "DebugDLL", runtime_dll_debug, true,
+	false, "ReleaseMT", runtime_static_release, false,
+	false, "ReleaseMTDLL", runtime_dll_release, false,
+	false, "ReleaseDLL", runtime_dll_release, true,
+	false, 0, runtime_static_debug, false
 };
 
 WorkspaceGenerator_MSVC8::WorkspaceGenerator_MSVC8()
@@ -85,6 +85,11 @@ void WorkspaceGenerator_MSVC8::set_platforms(bool include_win32, bool include_x6
 	is_whole_program_optimize = enable_whole_program_optimize;
 	include_platform_win32 = include_win32;
 	include_platform_x64 = include_x64;
+}
+
+void WorkspaceGenerator_MSVC8::set_android(bool enable)
+{
+	target_android = enable;
 }
 
 void WorkspaceGenerator_MSVC8::write(const Workspace &workspace)
@@ -142,12 +147,22 @@ void WorkspaceGenerator_MSVC8::write_solution(const Workspace &workspace)
 		if (types[i].included == false)
 			continue;
 		char line[256];
-		sprintf_s(line, 256, "%s|Win32 = %s|Win32", types[i].name, types[i].name);
-		writer.write_line(2, line);
-		if (include_platform_x64)
+		if (target_android)
 		{
-			sprintf_s(line, 256, "%s|x64 = %s|x64", types[i].name, types[i].name);
+			sprintf_s(line, 256, "%s|Androidx86 = %s|Androidx86", types[i].name, types[i].name);
 			writer.write_line(2, line);
+			sprintf_s(line, 256, "%s|AndroidARM = %s|AndroidARM", types[i].name, types[i].name);
+			writer.write_line(2, line);
+		}
+		else
+		{
+			sprintf_s(line, 256, "%s|Win32 = %s|Win32", types[i].name, types[i].name);
+			writer.write_line(2, line);
+			if (include_platform_x64)
+			{
+				sprintf_s(line, 256, "%s|x64 = %s|x64", types[i].name, types[i].name);
+				writer.write_line(2, line);
+			}
 		}
 	}
 	writer.write_line(1, "EndGlobalSection");
@@ -161,18 +176,34 @@ void WorkspaceGenerator_MSVC8::write_solution(const Workspace &workspace)
 			if (types[i].included == false)
 				continue;
 			char line[256];
-			sprintf_s(line, 256, "%s.%s|Win32.ActiveCfg = %s|Win32", project_guid.c_str(), types[i].name, types[i].name);
-			writer.write_line(2, line);
-			sprintf_s(line, 256, "%s.%s|Win32.Build.0 = %s|Win32", project_guid.c_str(), types[i].name, types[i].name);
-			writer.write_line(2, line);
 
-			if (include_platform_x64)
+			if (target_android)
 			{
-				sprintf_s(line, 256, "%s.%s|x64.ActiveCfg = %s|x64", project_guid.c_str(), types[i].name, types[i].name);
+				sprintf_s(line, 256, "%s.%s|Androidx86.ActiveCfg = %s|x86", project_guid.c_str(), types[i].name, types[i].name);
 				writer.write_line(2, line);
-				sprintf_s(line, 256, "%s.%s|x64.Build.0 = %s|x64", project_guid.c_str(), types[i].name, types[i].name);
+				sprintf_s(line, 256, "%s.%s|Androidx86.Build.0 = %s|x86", project_guid.c_str(), types[i].name, types[i].name);
+				writer.write_line(2, line);
+				sprintf_s(line, 256, "%s.%s|AndroidARM.ActiveCfg = %s|ARM", project_guid.c_str(), types[i].name, types[i].name);
+				writer.write_line(2, line);
+				sprintf_s(line, 256, "%s.%s|AndroidARM.Build.0 = %s|ARM", project_guid.c_str(), types[i].name, types[i].name);
 				writer.write_line(2, line);
 			}
+			else
+			{
+				sprintf_s(line, 256, "%s.%s|Win32.ActiveCfg = %s|Win32", project_guid.c_str(), types[i].name, types[i].name);
+				writer.write_line(2, line);
+				sprintf_s(line, 256, "%s.%s|Win32.Build.0 = %s|Win32", project_guid.c_str(), types[i].name, types[i].name);
+				writer.write_line(2, line);
+
+				if (include_platform_x64)
+				{
+					sprintf_s(line, 256, "%s.%s|x64.ActiveCfg = %s|x64", project_guid.c_str(), types[i].name, types[i].name);
+					writer.write_line(2, line);
+					sprintf_s(line, 256, "%s.%s|x64.Build.0 = %s|x64", project_guid.c_str(), types[i].name, types[i].name);
+					writer.write_line(2, line);
+				}
+			}
+
 		}
 	}
 	writer.write_line(1, "EndGlobalSection");
@@ -196,7 +227,6 @@ void WorkspaceGenerator_MSVC8::write_property_sheet(const Workspace &workspace)
 	propertysheet.tools.push_back(tool_linker);
 	propertysheet.tools.push_back(tool_librarian);
 
-	tool_compiler->additional_include_directories = workspace.input_include_dir;
 	tool_linker->additional_library_directories = workspace.input_lib_dir + "\\$(PlatformName)$(ConfigurationName)";
 	tool_librarian->additional_library_directories = workspace.input_lib_dir + "\\$(PlatformName)$(ConfigurationName)";
 
@@ -234,11 +264,19 @@ void WorkspaceGenerator_MSVC8::write_project(const Workspace &workspace, const P
 	MSVC8_Project vc80proj;
 	vc80proj.name = project.name;
 	vc80proj.target_version = target_version;
+	vc80proj.target_android = target_android;
 	vc80proj.project_guid = get_project_guid(vc80proj.name);
-	if(include_platform_win32)
+
+	if (target_android)
+	{
+		vc80proj.platforms.push_back("Androidx86");
+		vc80proj.platforms.push_back("AndroidARM");
+	}
+	if (include_platform_win32)
 		vc80proj.platforms.push_back("Win32");
-	if(include_platform_x64)
+	if (include_platform_x64)
 		vc80proj.platforms.push_back("x64");
+
 	for (int i = 0; types[i].name != 0; i++)
 	{
 		if (types[i].included == false)
@@ -270,12 +308,22 @@ void WorkspaceGenerator_MSVC8::write_project(const Workspace &workspace, const P
 					vc80proj.configurations.push_back(create_debug_mt_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2));
 				if(include_platform_x64)
 					vc80proj.configurations.push_back(create_debug_mt_config("x64", project.name, types[i], has_precomp, precomp_header, false));
+				if (target_android)
+				{
+					vc80proj.configurations.push_back(create_android_config("x86", project.name, types[i], has_precomp, precomp_header));
+					vc80proj.configurations.push_back(create_android_config("ARM", project.name, types[i], has_precomp, precomp_header));
+				}
 				break;
 			case runtime_static_release:
 				if(include_platform_win32)
 					vc80proj.configurations.push_back(create_release_mt_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2));
 				if(include_platform_x64)
 					vc80proj.configurations.push_back(create_release_mt_config("x64", project.name, types[i], has_precomp, precomp_header, false));
+				if (target_android)
+				{
+					vc80proj.configurations.push_back(create_android_config("x86", project.name, types[i], has_precomp, precomp_header));
+					vc80proj.configurations.push_back(create_android_config("ARM", project.name, types[i], has_precomp, precomp_header));
+				}
 				break;
 			case runtime_dll_debug:
 				if(include_platform_win32)
@@ -533,15 +581,6 @@ WorkspaceGenerator_MSVC8::SharedConfig WorkspaceGenerator_MSVC8::create_shared_c
 	shared.config->name = std::string(config.name) + "|" + platform;
 	shared.config->name_without_platform = std::string(config.name);
 	shared.config->name_without_config = platform;
-	if (config.dll)
-		shared.config->configuration_type = "2";
-	shared.config->inherited_property_sheets =
-		"Sheets\\BuildDirectory.vsprops;"
-		"Sheets\\ExternalDirectories.vsprops;"
-		"Sheets\\WindowsVersion.vsprops;"
-		"Sheets\\DirectXVersion.vsprops;"
-		"Sheets\\LocalIncludes.vsprops;"
-		"Sheets\\MultiprocessorBuilding.vsprops;";
 
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\BuildDirectory.props");
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\ExternalDirectories.props");
@@ -552,14 +591,8 @@ WorkspaceGenerator_MSVC8::SharedConfig WorkspaceGenerator_MSVC8::create_shared_c
 
 	if (!is_enable_intrinsics)
 	{
-		shared.config->inherited_property_sheets +=  "Sheets\\DisableIntrinsics.vsprops;";
 		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\DisableIntrinsics.props");
 	}
-
-	if (config.unicode)
-		shared.config->character_set.set("1");
-	else
-		shared.config->character_set.set("2");
 
 	shared.tool_compiler = new MSVC8_VCCLCompilerTool;
 	if (config.dll)
@@ -587,6 +620,53 @@ WorkspaceGenerator_MSVC8::SharedConfig WorkspaceGenerator_MSVC8::create_shared_c
 	return shared;
 }
 
+MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_android_config(const std::string &platform, const std::string &project_name, const ConfigurationType &config, bool has_precomp, const std::string &precomp_header)
+{
+	SharedConfig shared;
+	shared.config = new MSVC8_Configuration;
+	shared.config->is_this_android = true;
+	shared.config->name = std::string(config.name) + "|" + platform;
+	shared.config->name_without_platform = std::string(config.name);
+	shared.config->name_without_config = platform;
+
+	shared.tool_compiler = new MSVC8_VCCLCompilerTool;
+	shared.tool_librarian = new MSVC8_VCLibrarianTool;
+	shared.tool_post_build = new MSVC8_VCPostBuildEventTool;
+
+	if (has_precomp)
+	{
+		shared.tool_compiler->use_precompiled_header.set("2");
+		shared.tool_compiler->precompiled_header_through.set(precomp_header);
+	}
+
+	shared.tool_post_build->description.set("Installing library and API headers...");
+	shared.tool_post_build->command_line.set("call install_clan" + project_name + ".bat &quot;$(TargetPath)&quot; &quot;$(TargetDir)$(TargetName).pdb&quot; &quot;$(TargetName).pdb&quot; &quot;$(PlatformName)&quot;");
+
+	shared.config->tools.push_back(shared.tool_compiler);
+	shared.config->tool_compiler_vs100 = shared.tool_compiler;
+	shared.config->tools.push_back(shared.tool_librarian);
+	shared.config->tools.push_back(shared.tool_post_build);
+
+	std::string output_file = "clan$(ProjectName)-static";
+	if (config.runtime_type == runtime_static_debug || config.runtime_type == runtime_dll_debug)
+	{
+		output_file += "-debug";
+		shared.config->android_debug_libraries = "true";
+	}
+
+	shared.config->target_name_vs100 = output_file;
+
+	output_file = "$(OutDir)\\clan" + project_name;
+	if (config.runtime_type != runtime_static_debug && config.runtime_type != runtime_static_release)
+	{
+		output_file += "-static";
+	}
+	output_file += ".a";
+
+	shared.tool_librarian->output_file.set(output_file);
+	return shared.config;
+}
+
 MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_debug_mt_config(
 	const std::string &platform,
 	const std::string &project_name,
@@ -595,11 +675,6 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_debug_mt_config(
 	const std::string &precomp_header, bool write_sse2_props)
 {
 	SharedConfig shared = create_shared_config(platform, project_name, config, has_precomp, precomp_header);
-	shared.config->inherited_property_sheets +=
-		"Sheets\\" + platform + "Platform.vsprops;"
-		"Sheets\\MTDebugRuntime.vsprops;";
-
-	shared.config->inherited_property_sheets += is_debug_optimize ?	"Sheets\\DebugBuildOptimized.vsprops" : "Sheets\\DebugBuild.vsprops";
 
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\" + platform + "Platform.props");
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\MTDebugRuntime.props");
@@ -615,7 +690,6 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_debug_mt_config(
 
 	if (write_sse2_props)
 	{
-		shared.config->inherited_property_sheets += ";Sheets\\SSE2Build.vsprops";
 		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\SSE2Build.props");
 	}
 
@@ -633,10 +707,6 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_release_mt_config(
 	const std::string &precomp_header, bool write_sse2_props)
 {
 	SharedConfig shared = create_shared_config(platform, project_name, config, has_precomp, precomp_header);
-	shared.config->inherited_property_sheets +=
-		"Sheets\\" + platform + "Platform.vsprops;"
-		"Sheets\\MTReleaseRuntime.vsprops;"
-		"Sheets\\ReleaseBuild.vsprops";
 
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\" + platform + "Platform.props");
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\MTReleaseRuntime.props");
@@ -644,13 +714,11 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_release_mt_config(
 
 	if (write_sse2_props)
 	{
-		shared.config->inherited_property_sheets += ";Sheets\\SSE2Build.vsprops";
 		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\SSE2Build.props");
 	}
 
 	if (is_whole_program_optimize)
 	{
-		shared.config->inherited_property_sheets += ";Sheets\\ReleaseWholeProgramOptimization.vsprops";
 		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\ReleaseWholeProgramOptimization.props");
 	}
 
@@ -668,11 +736,6 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_debug_mtdll_config(
 	const std::string &precomp_header, bool write_sse2_props)
 {
 	SharedConfig shared = create_shared_config(platform, project_name, config, has_precomp, precomp_header);
-	shared.config->inherited_property_sheets +=
-		"Sheets\\" + platform + "Platform.vsprops;"
-		"Sheets\\MTDLLDebugRuntime.vsprops;";
-
-	shared.config->inherited_property_sheets += is_debug_optimize ?	"Sheets\\DebugBuildOptimized.vsprops" : "Sheets\\DebugBuild.vsprops";
 
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\" + platform + "Platform.props");
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\MTDLLDebugRuntime.props");
@@ -688,7 +751,6 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_debug_mtdll_config(
 
 	if (write_sse2_props)
 	{
-		shared.config->inherited_property_sheets += ";Sheets\\SSE2Build.vsprops";
 		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\SSE2Build.props");
 	}
 
@@ -706,18 +768,12 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_release_mtdll_config(
 	const std::string &precomp_header, bool write_sse2_props)
 {
 	SharedConfig shared = create_shared_config(platform, project_name, config, has_precomp, precomp_header);
-	shared.config->inherited_property_sheets +=
-		"Sheets\\" + platform + "Platform.vsprops;"
-		"Sheets\\MTDLLReleaseRuntime.vsprops;"
-		"Sheets\\ReleaseBuild.vsprops";
-
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\" + platform + "Platform.props");
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\MTDLLReleaseRuntime.props");
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\ReleaseBuild.props");
 
 	if (write_sse2_props)
 	{
-		shared.config->inherited_property_sheets += ";Sheets\\SSE2Build.vsprops";
 		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\SSE2Build.props");
 	}
 
@@ -735,11 +791,6 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_debug_dll_config(
 	const std::string &precomp_header, bool write_sse2_props)
 {
 	SharedConfig shared = create_shared_config(platform, project_name, config, has_precomp, precomp_header);
-	shared.config->inherited_property_sheets +=
-		"Sheets\\" + platform + "Platform.vsprops;"
-		"Sheets\\MTDLLDebugRuntime.vsprops;";
-
-	shared.config->inherited_property_sheets += is_debug_optimize ?	"Sheets\\DebugBuildOptimized.vsprops" : "Sheets\\DebugBuild.vsprops";
 
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\" + platform + "Platform.props");
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\MTDLLDebugRuntime.props");
@@ -755,13 +806,11 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_debug_dll_config(
 
 	if (write_sse2_props)
 	{
-		shared.config->inherited_property_sheets += ";Sheets\\SSE2Build.vsprops";
 		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\SSE2Build.props");
 	}
 
 	shared.config->target_name_vs100 = make_target_name(config, platform, project_name);
 
-	shared.tool_compiler->preprocessor_definitions = "CL_API_DLL;CL_" + make_upper(project_name) + "_EXPORT";
 	shared.tool_linker->output_file.set(make_output_filename(config, true, platform, project_name));
 	return shared.config;
 }
@@ -774,11 +823,6 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_release_dll_config(
 	const std::string &precomp_header, bool write_sse2_props)
 {
 	SharedConfig shared = create_shared_config(platform, project_name, config, has_precomp, precomp_header);
-	shared.config->configuration_type = "2";
-	shared.config->inherited_property_sheets +=
-		"Sheets\\" + platform + "Platform.vsprops;"
-		"Sheets\\MTDLLReleaseRuntime.vsprops;"
-		"Sheets\\ReleaseBuild.vsprops";
 
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\" + platform + "Platform.props");
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\MTDLLReleaseRuntime.props");
@@ -786,19 +830,16 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_release_dll_config(
 
 	if (write_sse2_props)
 	{
-		shared.config->inherited_property_sheets += ";Sheets\\SSE2Build.vsprops";
 		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\SSE2Build.props");
 	}
 
 	if (is_whole_program_optimize)
 	{
-		shared.config->inherited_property_sheets += ";Sheets\\ReleaseWholeProgramOptimization.vsprops";
 		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\ReleaseWholeProgramOptimization.props");
 	}
 
 	shared.config->target_name_vs100 = make_target_name(config, platform, project_name);
 
-	shared.tool_compiler->preprocessor_definitions = "CL_API_DLL;CL_" + make_upper(project_name) + "_EXPORT";
 	shared.tool_linker->output_file.set(make_output_filename(config, true, platform, project_name));
 	return shared.config;
 }
@@ -1156,6 +1197,14 @@ void MSVC8_Project::write(OutputWriter &output, int indent) const
   	output.write_line(indent, "  <PropertyGroup Label=\"Globals\">");
   	output.write_line(indent, "    <ProjectName>" + name + "</ProjectName>");
   	output.write_line(indent, "    <ProjectGuid>" + project_guid + "</ProjectGuid>");
+
+	if (target_android)
+	{
+		output.write_line(indent, "		<Keyword>Android</Keyword>");
+		output.write_line(indent, "		<ApplicationType>Android</ApplicationType>");
+		output.write_line(indent, "		<ApplicationTypeRevision>1.0</ApplicationTypeRevision>");
+	}
+
   	output.write_line(indent, "  </PropertyGroup>");
 
   	output.write_line(indent, "  <Import Project=\"$(VCTargetsPath)\\Microsoft.Cpp.Default.props\" />");
@@ -1164,12 +1213,24 @@ void MSVC8_Project::write(OutputWriter &output, int indent) const
 	{
 	  	output.write_line(indent, "  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='" + configurations[index]->name + "'\" Label=\"Configuration\">");
 		output.write_line(indent, "    <ConfigurationType>StaticLibrary</ConfigurationType>");
-		output.write_line(indent, "    <UseOfMfc>false</UseOfMfc>");
-		output.write_line(indent, "    <CharacterSet>Unicode</CharacterSet>");
-		if (target_version == 1200)
-			output.write_line(indent, "    <PlatformToolset>v120</PlatformToolset>");
+
+		if (target_android)
+		{
+			output.write_line(indent, "    <PlatformToolset>Clang_3_4</PlatformToolset>");
+			if (!configurations[index]->android_debug_libraries.empty())
+			{
+				output.write_line(indent, "    <UseDebugLibraries>" + configurations[index]->android_debug_libraries + "</UseDebugLibraries>");
+			}
+		}
 		else
-			output.write_line(indent, "    <PlatformToolset>v140</PlatformToolset>");
+		{
+			output.write_line(indent, "    <UseOfMfc>false</UseOfMfc>");
+			output.write_line(indent, "    <CharacterSet>Unicode</CharacterSet>");
+			if (target_version == 1200)
+				output.write_line(indent, "    <PlatformToolset>v120</PlatformToolset>");
+			else
+				output.write_line(indent, "    <PlatformToolset>v140</PlatformToolset>");
+		}
 		output.write_line(indent, "  </PropertyGroup>");
 	}
 
@@ -1259,7 +1320,6 @@ void MSVC8_Project::write_filters(OutputWriter &output, int indent) const
 // MSVC8_Configuration class:
 
 MSVC8_Configuration::MSVC8_Configuration()
-: configuration_type("4"), use_of_mfc("0"), atl_minimizes_c_runtime_library_usage("false"), tool_compiler_vs100(NULL)
 {
 }
 
@@ -1270,24 +1330,6 @@ MSVC8_Configuration::~MSVC8_Configuration()
 	for (index = 0; index < tools.size(); index++)
 		delete tools[index];
 	tools.clear();
-}
-
-void MSVC8_Configuration::write(OutputWriter &output, int indent) const
-{
-	std::vector<MSVC8_Tool *>::size_type index;
-	output.write_line(indent, "<Configuration");
-	output.write_line(indent+1, "Name=\"" + name + "\"");
-	output_directory.write(output, indent+1, "OutputDirectory");
-	intermediate_directory.write(output, indent+1, "IntermediateDirectory");
-	output.write_line(indent+1, "ConfigurationType=\"" + configuration_type + "\"");
-	output.write_line(indent+1, "InheritedPropertySheets=\"" + inherited_property_sheets + "\"");
-	output.write_line(indent+1, "UseOfMFC=\"" + use_of_mfc + "\"");
-	output.write_line(indent+1, "ATLMinimizesCRunTimeLibraryUsage=\"" + atl_minimizes_c_runtime_library_usage + "\"");
-	character_set.write(output, indent+1, "CharacterSet");
-	output.write_line(indent+1, ">");
-	for (index = 0; index < tools.size(); index++)
-		tools[index]->write(output, indent +1);
-	output.write_line(indent, "</Configuration>");
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1338,54 +1380,11 @@ MSVC8_Tool::~MSVC8_Tool()
 {
 }
 
-void MSVC8_Tool::write(OutputWriter &output, int indent) const
-{
-	output.write_line(indent, "<Tool");
-	output.write_line(indent+1, "Name=\"" + name + "\"");
-	write_settings(output, indent+1);
-	output.write_line(indent+1, " />");
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // MSVC8_VCCLCompilerTool class:
 
 MSVC8_VCCLCompilerTool::MSVC8_VCCLCompilerTool()
 {
-	name = "VCCLCompilerTool";
-}
-
-void MSVC8_VCCLCompilerTool::write_settings(OutputWriter &output, int indent) const
-{
-	optimization.write(output, indent, "Optimization");
-	additional_include_directories.write(output, indent, "AdditionalIncludeDirectories");
-	preprocessor_definitions.write(output, indent, "PreprocessorDefinitions");
-	basic_runtime_checks.write(output, indent, "BasicRuntimeChecks");
-	runtime_library.write(output, indent, "RuntimeLibrary");
-	runtime_type_info.write(output, indent, "RuntimeTypeInfo");
-	use_precompiled_header.write(output, indent, "UsePrecompiledHeader");
-	precompiled_header_through.write(output, indent, "PrecompiledHeaderThrough");
-	precompiled_header_file.write(output, indent, "PrecompiledHeaderFile");
-	assembler_listing_location.write(output, indent, "AssemblerListingLocation");
-	object_file.write(output, indent, "ObjectFile");
-	program_database_filename.write(output, indent, "ProgramDataBaseFileName");
-	warning_level.write(output, indent, "WarningLevel");
-	suppress_startup_banner.write(output, indent, "SuppressStartupBanner");
-	debug_information_format.write(output, indent, "DebugInformationFormat");
-	compile_as.write(output, indent, "CompileAs");
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// MSVC8_VCResourceCompilerTool class:
-
-MSVC8_VCResourceCompilerTool::MSVC8_VCResourceCompilerTool()
-{
-	name = "VCResourceCompilerTool";
-}
-
-void MSVC8_VCResourceCompilerTool::write_settings(OutputWriter &output, int indent) const
-{
-	preprocessor_definitions.write(output, indent, "PreprocessorDefinitions");
-	culture.write(output, indent, "Culture");
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1393,16 +1392,7 @@ void MSVC8_VCResourceCompilerTool::write_settings(OutputWriter &output, int inde
 
 MSVC8_VCLibrarianTool::MSVC8_VCLibrarianTool()
 {
-	name = "VCLibrarianTool";
 	additional_options.set("/LTCG");	// Can the set when the "whole program optimisation" is disabled?
-}
-
-void MSVC8_VCLibrarianTool::write_settings(OutputWriter &output, int indent) const
-{
-	additional_options.write(output, indent, "AdditionalOptions");
-	additional_library_directories.write(output, indent, "AdditionalLibraryDirectories");
-	output_file.write(output, indent, "OutputFile");
-	suppress_startup_banner.write(output, indent, "SuppressStartupBanner");
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1410,27 +1400,14 @@ void MSVC8_VCLibrarianTool::write_settings(OutputWriter &output, int indent) con
 
 MSVC8_VCLinkerTool::MSVC8_VCLinkerTool()
 {
-	name = "VCLinkerTool";
 }
 
-void MSVC8_VCLinkerTool::write_settings(OutputWriter &output, int indent) const
-{
-	additional_library_directories.write(output, indent, "AdditionalLibraryDirectories");
-	output_file.write(output, indent, "OutputFile");
-}
 
 /////////////////////////////////////////////////////////////////////////////
 // MSVC8_VCPostBuildEventTool class:
 
 MSVC8_VCPostBuildEventTool::MSVC8_VCPostBuildEventTool()
 {
-	name = "VCPostBuildEventTool";
-}
-
-void MSVC8_VCPostBuildEventTool::write_settings(OutputWriter &output, int indent) const
-{
-	description.write(output, indent, "Description");
-	command_line.write(output, indent, "CommandLine");
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1454,15 +1431,6 @@ MSVC8_Filter::~MSVC8_Filter()
 	for (index = 0; index < files.size(); index++)
 		delete files[index];
 	files.clear();
-}
-
-void MSVC8_Filter::write(OutputWriter &output, int indent) const
-{
-	std::vector<MSVC8_FileItem *>::size_type index;
-	output.write_line(indent, "<Filter Name=\"" + name + "\">");
-	for (index = 0; index < files.size(); index++)
-		files[index]->write(output, indent+1);
-	output.write_line(indent, "</Filter>");
 }
 
 void MSVC8_Filter::write_filter_name_vs100(OutputWriter &output, int indent, const std::string &parent) const
@@ -1555,21 +1523,6 @@ MSVC8_File::~MSVC8_File()
 	for (index = 0; index < file_configurations.size(); index++)
 		delete file_configurations[index];
 	file_configurations.clear();
-}
-
-void MSVC8_File::write(OutputWriter &output, int indent) const
-{
-	if (file_configurations.empty())
-	{
-		output.write_line(indent, "<File RelativePath=\"" + relative_path + "\" />");
-		return;
-	}
-
-	std::vector<MSVC8_FileConfiguration *>::size_type index;
-	output.write_line(indent, "<File RelativePath=\"" + relative_path + "\">");
-	for (index = 0; index < file_configurations.size(); index++)
-		file_configurations[index]->write(output, indent+1);
-	output.write_line(indent, "</File>");
 }
 
 void MSVC8_File::write_filter_name_vs100(OutputWriter &output, int indent, const std::string &parent) const
@@ -1676,15 +1629,6 @@ MSVC8_FileConfiguration::~MSVC8_FileConfiguration()
 	for (index = 0; index < tools.size(); index++)
 		delete tools[index];
 	tools.clear();
-}
-
-void MSVC8_FileConfiguration::write(OutputWriter &output, int indent) const
-{
-	std::vector<MSVC8_Tool *>::size_type index;
-	output.write_line(indent, "<FileConfiguration Name=\"" + name + "\">");
-	for (index = 0; index <	tools.size(); index++)
-		tools[index]->write(output, indent+1);
-	output.write_line(indent, "</FileConfiguration>");
 }
 
 void MSVC8_FileConfiguration::write_vs100(OutputWriter &output, int indent, const std::vector<MSVC8_Configuration *> &configurations) const

@@ -39,9 +39,9 @@ public:
 	HPROPSHEETPAGE handle_propsheetpage;
 
 	int target_version;
+	bool target_android = false;
 
 	bool include_unicode, include_mtdll, include_dll, include_x64, include_sse2, include_intrinsics, enable_debug_optimize, enable_whole_program_optimize;
-
 	static INT_PTR CALLBACK dialog_proc(HWND, UINT, WPARAM, LPARAM);
 
 	INT_PTR on_notify(HWND hWnd, NMHDR *header);

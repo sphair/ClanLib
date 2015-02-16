@@ -195,6 +195,11 @@ BOOL Wizard::finish()
 			hKey, TEXT("IncludeX64"), 0, REG_DWORD,
 			(LPBYTE) &include_x64, sizeof(DWORD));
 
+		DWORD target_android = (page_target.target_android ? 1 : 0);
+		RegSetValueEx(
+			hKey, TEXT("TargetAndroid"), 0, REG_DWORD,
+			(LPBYTE)&target_android, sizeof(DWORD));
+
 		RegCloseKey(hKey);
 	}
 
@@ -202,7 +207,18 @@ BOOL Wizard::finish()
 
 	WorkspaceGenerator_MSVC8 generator;
 	generator.set_target_version(page_target.target_version);
-	generator.set_platforms(true, page_target.include_x64, page_target.include_sse2, page_target.include_intrinsics, page_target.enable_debug_optimize, page_target.enable_whole_program_optimize);
+
+	if (page_target.target_android)
+	{
+		generator.set_platforms(false, false, page_target.include_sse2, page_target.include_intrinsics, page_target.enable_debug_optimize, page_target.enable_whole_program_optimize);
+		generator.set_android(true);
+	}
+	else
+	{
+		generator.set_platforms(true, page_target.include_x64, page_target.include_sse2, page_target.include_intrinsics, page_target.enable_debug_optimize, page_target.enable_whole_program_optimize);
+		generator.set_android(false);
+	}
+
 	generator.enable_configurations(page_target.include_mtdll, page_target.include_dll);
 	generator.write(workspace);
 
