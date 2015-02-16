@@ -110,20 +110,17 @@ void WorkspaceGenerator_MSVC8::write_solution(const Workspace &workspace)
 
 	OutputWriter writer(sln_filename);
 
-	if(target_version == 1000)
-	{
-		writer.write_line(0, "Microsoft Visual Studio Solution File, Format Version 11.00");
-		writer.write_line(0, "# Visual C++ Express 2010");
-	}
-	else if (target_version == 1100)
-	{
-		writer.write_line(0, "Microsoft Visual Studio Solution File, Format Version 11.00");
-		writer.write_line(0, "# Visual C++ Express 2012");
-	}
-	else
+	if (target_version == 1200)
 	{
 		writer.write_line(0, "Microsoft Visual Studio Solution File, Format Version 12.00");
 		writer.write_line(0, "# Visual C++ Express 2013");
+	}
+	else	// (target_version == 1400)
+	{
+		writer.write_line(0, "Microsoft Visual Studio Solution File, Format Version 12.00");	// Note, format version has not changed
+		writer.write_line(0, "# Visual Studio 14");
+		writer.write_line(0, "VisualStudioVersion = 14.0.22310.1");
+		writer.write_line(0, "MinimumVisualStudioVersion = 10.0.40219.1");
 	}
 
 	for (it = workspace.projects.begin(); it != workspace.projects.end(); ++it)
@@ -252,15 +249,15 @@ void WorkspaceGenerator_MSVC8::write_project(const Workspace &workspace, const P
 			{
 			case runtime_dll_debug:
 				if(include_platform_win32)
-					vc80proj.configurations.push_back(create_debug_dll_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2, is_debug_optimize));
+					vc80proj.configurations.push_back(create_debug_dll_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2));
 				if(include_platform_x64)
-					vc80proj.configurations.push_back(create_debug_dll_config("x64", project.name, types[i], has_precomp, precomp_header, false, is_debug_optimize));
+					vc80proj.configurations.push_back(create_debug_dll_config("x64", project.name, types[i], has_precomp, precomp_header, false));
 				break;
 			case runtime_dll_release:
 				if(include_platform_win32)
-					vc80proj.configurations.push_back(create_release_dll_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2, is_whole_program_optimize));
+					vc80proj.configurations.push_back(create_release_dll_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2));
 				if(include_platform_x64)
-					vc80proj.configurations.push_back(create_release_dll_config("x64", project.name, types[i], has_precomp, precomp_header, false, is_whole_program_optimize));
+					vc80proj.configurations.push_back(create_release_dll_config("x64", project.name, types[i], has_precomp, precomp_header, false));
 				break;
 			}
 		}
@@ -270,27 +267,27 @@ void WorkspaceGenerator_MSVC8::write_project(const Workspace &workspace, const P
 			{
 			case runtime_static_debug:
 				if(include_platform_win32)
-					vc80proj.configurations.push_back(create_debug_mt_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2, is_debug_optimize));
+					vc80proj.configurations.push_back(create_debug_mt_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2));
 				if(include_platform_x64)
-					vc80proj.configurations.push_back(create_debug_mt_config("x64", project.name, types[i], has_precomp, precomp_header, false, is_debug_optimize));
+					vc80proj.configurations.push_back(create_debug_mt_config("x64", project.name, types[i], has_precomp, precomp_header, false));
 				break;
 			case runtime_static_release:
 				if(include_platform_win32)
-					vc80proj.configurations.push_back(create_release_mt_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2, is_whole_program_optimize));
+					vc80proj.configurations.push_back(create_release_mt_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2));
 				if(include_platform_x64)
-					vc80proj.configurations.push_back(create_release_mt_config("x64", project.name, types[i], has_precomp, precomp_header, false, is_whole_program_optimize));
+					vc80proj.configurations.push_back(create_release_mt_config("x64", project.name, types[i], has_precomp, precomp_header, false));
 				break;
 			case runtime_dll_debug:
 				if(include_platform_win32)
-					vc80proj.configurations.push_back(create_debug_mtdll_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2, is_debug_optimize));
+					vc80proj.configurations.push_back(create_debug_mtdll_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2));
 				if(include_platform_x64)
-					vc80proj.configurations.push_back(create_debug_mtdll_config("x64", project.name, types[i], has_precomp, precomp_header, false, is_debug_optimize));
+					vc80proj.configurations.push_back(create_debug_mtdll_config("x64", project.name, types[i], has_precomp, precomp_header, false));
 				break;
 			case runtime_dll_release:
 				if(include_platform_win32)
-					vc80proj.configurations.push_back(create_release_mtdll_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2, is_whole_program_optimize));
+					vc80proj.configurations.push_back(create_release_mtdll_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2));
 				if(include_platform_x64)
-					vc80proj.configurations.push_back(create_release_mtdll_config("x64", project.name, types[i], has_precomp, precomp_header, false, is_whole_program_optimize));
+					vc80proj.configurations.push_back(create_release_mtdll_config("x64", project.name, types[i], has_precomp, precomp_header, false));
 				break;
 			}
 		}
@@ -595,7 +592,7 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_debug_mt_config(
 	const std::string &project_name,
 	const ConfigurationType &config,
 	bool has_precomp,
-	const std::string &precomp_header, bool is_enable_sse2, bool is_debug_optimize)
+	const std::string &precomp_header, bool write_sse2_props)
 {
 	SharedConfig shared = create_shared_config(platform, project_name, config, has_precomp, precomp_header);
 	shared.config->inherited_property_sheets +=
@@ -616,7 +613,7 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_debug_mt_config(
 		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\DebugBuild.props");
 	}
 
-	if (is_enable_sse2)
+	if (write_sse2_props)
 	{
 		shared.config->inherited_property_sheets += ";Sheets\\SSE2Build.vsprops";
 		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\SSE2Build.props");
@@ -633,7 +630,7 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_release_mt_config(
 	const std::string &project_name,
 	const ConfigurationType &config,
 	bool has_precomp,
-	const std::string &precomp_header, bool is_enable_sse2, bool is_whole_program_optimize)
+	const std::string &precomp_header, bool write_sse2_props)
 {
 	SharedConfig shared = create_shared_config(platform, project_name, config, has_precomp, precomp_header);
 	shared.config->inherited_property_sheets +=
@@ -645,7 +642,7 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_release_mt_config(
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\MTReleaseRuntime.props");
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\ReleaseBuild.props");
 
-	if (is_enable_sse2)
+	if (write_sse2_props)
 	{
 		shared.config->inherited_property_sheets += ";Sheets\\SSE2Build.vsprops";
 		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\SSE2Build.props");
@@ -668,7 +665,7 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_debug_mtdll_config(
 	const std::string &project_name,
 	const ConfigurationType &config,
 	bool has_precomp,
-	const std::string &precomp_header, bool is_enable_sse2, bool is_debug_optimize)
+	const std::string &precomp_header, bool write_sse2_props)
 {
 	SharedConfig shared = create_shared_config(platform, project_name, config, has_precomp, precomp_header);
 	shared.config->inherited_property_sheets +=
@@ -689,7 +686,7 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_debug_mtdll_config(
 		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\DebugBuild.props");
 	}
 
-	if (is_enable_sse2)
+	if (write_sse2_props)
 	{
 		shared.config->inherited_property_sheets += ";Sheets\\SSE2Build.vsprops";
 		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\SSE2Build.props");
@@ -706,7 +703,7 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_release_mtdll_config(
 	const std::string &project_name,
 	const ConfigurationType &config,
 	bool has_precomp,
-	const std::string &precomp_header, bool is_enable_sse2, bool is_whole_program_optimize)
+	const std::string &precomp_header, bool write_sse2_props)
 {
 	SharedConfig shared = create_shared_config(platform, project_name, config, has_precomp, precomp_header);
 	shared.config->inherited_property_sheets +=
@@ -718,7 +715,7 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_release_mtdll_config(
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\MTDLLReleaseRuntime.props");
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\ReleaseBuild.props");
 
-	if (is_enable_sse2)
+	if (write_sse2_props)
 	{
 		shared.config->inherited_property_sheets += ";Sheets\\SSE2Build.vsprops";
 		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\SSE2Build.props");
@@ -735,7 +732,7 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_debug_dll_config(
 	const std::string &project_name,
 	const ConfigurationType &config,
 	bool has_precomp,
-	const std::string &precomp_header, bool is_enable_sse2, bool is_debug_optimize)
+	const std::string &precomp_header, bool write_sse2_props)
 {
 	SharedConfig shared = create_shared_config(platform, project_name, config, has_precomp, precomp_header);
 	shared.config->inherited_property_sheets +=
@@ -756,7 +753,7 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_debug_dll_config(
 		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\DebugBuild.props");
 	}
 
-	if (is_enable_sse2)
+	if (write_sse2_props)
 	{
 		shared.config->inherited_property_sheets += ";Sheets\\SSE2Build.vsprops";
 		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\SSE2Build.props");
@@ -774,7 +771,7 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_release_dll_config(
 	const std::string &project_name,
 	const ConfigurationType &config,
 	bool has_precomp,
-	const std::string &precomp_header, bool is_enable_sse2, bool is_whole_program_optimize)
+	const std::string &precomp_header, bool write_sse2_props)
 {
 	SharedConfig shared = create_shared_config(platform, project_name, config, has_precomp, precomp_header);
 	shared.config->configuration_type = "2";
@@ -787,7 +784,7 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_release_dll_config(
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\MTDLLReleaseRuntime.props");
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\ReleaseBuild.props");
 
-	if (is_enable_sse2)
+	if (write_sse2_props)
 	{
 		shared.config->inherited_property_sheets += ";Sheets\\SSE2Build.vsprops";
 		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\SSE2Build.props");
@@ -976,7 +973,6 @@ void WorkspaceGenerator_MSVC8::generate_source_files(MSVC8_Project &vcproj, cons
 std::list<std::string> WorkspaceGenerator_MSVC8::extract_path(const std::string &fullname)
 {
 	std::list<std::string> path;
-	std::string::size_type pos = 0;
 	std::string::size_type old_pos = 0;
 
 	while (true)
@@ -1138,7 +1134,14 @@ void MSVC8_Project::write(OutputWriter &output, int indent) const
 	std::vector<std::string>::size_type index2;
 
 	output.write_line(indent, "<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-	output.write_line(indent, "<Project DefaultTargets=\"Build\" ToolsVersion=\"4.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">");
+
+	std::string tools_version;
+	if (target_version == 1200)
+		tools_version = "12.0";
+	else
+		tools_version = "14.0";
+
+	output.write_line(indent, "<Project DefaultTargets=\"Build\" ToolsVersion=\"" + tools_version + "\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">");
   	output.write_line(indent, "<ItemGroup Label=\"ProjectConfigurations\">");
 		
 	for (index = 0; index < configurations.size(); index++)
@@ -1163,12 +1166,10 @@ void MSVC8_Project::write(OutputWriter &output, int indent) const
 		output.write_line(indent, "    <ConfigurationType>StaticLibrary</ConfigurationType>");
 		output.write_line(indent, "    <UseOfMfc>false</UseOfMfc>");
 		output.write_line(indent, "    <CharacterSet>Unicode</CharacterSet>");
-		if(target_version == 1000)
-			output.write_line(indent, "    <PlatformToolset>v100</PlatformToolset>");
-		else if (target_version == 1100)
-			output.write_line(indent, "    <PlatformToolset>v110</PlatformToolset>");
-		else
+		if (target_version == 1200)
 			output.write_line(indent, "    <PlatformToolset>v120</PlatformToolset>");
+		else
+			output.write_line(indent, "    <PlatformToolset>v140</PlatformToolset>");
 		output.write_line(indent, "  </PropertyGroup>");
 	}
 
@@ -1238,6 +1239,7 @@ void MSVC8_Project::write_filters(OutputWriter &output, int indent) const
 	std::vector<std::string>::size_type index;
 
 	output.write_line(indent, "<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+	// Note, the tools version here is always 4.0 with new projects (maybe visual studio bug?)
 	output.write_line(indent, "<Project ToolsVersion=\"4.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">");
 	output.write_line(indent, "  <ItemGroup>");
 
