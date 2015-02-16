@@ -40,7 +40,6 @@ class MSVC8_FileItem;
 class MSVC8_File;
 class MSVC8_Filter;
 class MSVC8_FileConfiguration;
-class MSVC8_VCCLCompilerTool;
 class MSVC8_VCLibrarianTool;
 class MSVC8_VCLinkerTool;
 class MSVC8_VCPostBuildEventTool;
@@ -81,11 +80,10 @@ private:
 	struct SharedConfig
 	{
 		SharedConfig()
-		: config(0), tool_compiler(0), tool_librarian(0), tool_linker(0), tool_post_build(0)
+		: config(0), tool_librarian(0), tool_linker(0), tool_post_build(0)
 		{
 		}
 		MSVC8_Configuration *config;
-		MSVC8_VCCLCompilerTool *tool_compiler;
 		MSVC8_VCLibrarianTool *tool_librarian;
 		MSVC8_VCLinkerTool *tool_linker;
 		MSVC8_VCPostBuildEventTool *tool_post_build;
@@ -228,11 +226,13 @@ public:
 	std::vector<std::string> inherited_property_sheets_vs100;
 	std::string target_name_vs100;
 
+	std::string use_precompiled_header;
+	std::string precompiled_header_through;
+
 	bool is_this_android = false;
 	std::string android_debug_libraries;
 
 	std::vector<MSVC8_Tool *> tools;
-	MSVC8_VCCLCompilerTool *tool_compiler_vs100 = nullptr;
 
 };
 
@@ -240,16 +240,6 @@ class MSVC8_Tool
 {
 public:
 	virtual ~MSVC8_Tool();
-};
-
-class MSVC8_VCCLCompilerTool : public MSVC8_Tool
-{
-public:
-	MSVC8_VCCLCompilerTool();
-
-	MSVC8_Setting use_precompiled_header;
-	MSVC8_Setting precompiled_header_through;
-
 };
 
 class MSVC8_VCLibrarianTool : public MSVC8_Tool

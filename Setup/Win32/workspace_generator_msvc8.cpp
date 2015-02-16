@@ -220,10 +220,8 @@ void WorkspaceGenerator_MSVC8::write_property_sheet(const Workspace &workspace)
 	MSVC8_PropertySheet propertysheet(target_version);
 	propertysheet.name = "External Directories";
 
-	MSVC8_VCCLCompilerTool *tool_compiler = new MSVC8_VCCLCompilerTool;
 	MSVC8_VCLinkerTool *tool_linker = new MSVC8_VCLinkerTool;
 	MSVC8_VCLibrarianTool *tool_librarian = new MSVC8_VCLibrarianTool;
-	propertysheet.tools.push_back(tool_compiler);
 	propertysheet.tools.push_back(tool_linker);
 	propertysheet.tools.push_back(tool_librarian);
 
@@ -594,7 +592,6 @@ WorkspaceGenerator_MSVC8::SharedConfig WorkspaceGenerator_MSVC8::create_shared_c
 		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\DisableIntrinsics.props");
 	}
 
-	shared.tool_compiler = new MSVC8_VCCLCompilerTool;
 	if (config.dll)
 		shared.tool_linker = new MSVC8_VCLinkerTool;
 	else
@@ -603,15 +600,13 @@ WorkspaceGenerator_MSVC8::SharedConfig WorkspaceGenerator_MSVC8::create_shared_c
 
 	if (has_precomp)
 	{
-		shared.tool_compiler->use_precompiled_header.set("2");
-		shared.tool_compiler->precompiled_header_through.set(precomp_header);
+		shared.config->use_precompiled_header= "2";
+		shared.config->precompiled_header_through = precomp_header;
 	}
 
 	shared.tool_post_build->description.set("Installing library and API headers...");
 	shared.tool_post_build->command_line.set("call install_clan" + project_name + ".bat &quot;$(TargetPath)&quot; &quot;$(TargetDir)$(TargetName).pdb&quot; &quot;$(TargetName).pdb&quot; &quot;$(PlatformName)&quot;");
 
-	shared.config->tools.push_back(shared.tool_compiler);
-	shared.config->tool_compiler_vs100 = shared.tool_compiler;
 	if (config.dll)
 		shared.config->tools.push_back(shared.tool_linker);
 	else
@@ -629,21 +624,18 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_android_config(const std::
 	shared.config->name_without_platform = std::string(config.name);
 	shared.config->name_without_config = platform;
 
-	shared.tool_compiler = new MSVC8_VCCLCompilerTool;
 	shared.tool_librarian = new MSVC8_VCLibrarianTool;
 	shared.tool_post_build = new MSVC8_VCPostBuildEventTool;
 
 	if (has_precomp)
 	{
-		shared.tool_compiler->use_precompiled_header.set("2");
-		shared.tool_compiler->precompiled_header_through.set(precomp_header);
+		shared.config->use_precompiled_header = "2";
+		shared.config->precompiled_header_through = precomp_header;
 	}
 
 	shared.tool_post_build->description.set("Installing library and API headers...");
 	shared.tool_post_build->command_line.set("call install_clan" + project_name + ".bat &quot;$(TargetPath)&quot; &quot;$(TargetDir)$(TargetName).pdb&quot; &quot;$(TargetName).pdb&quot; &quot;$(PlatformName)&quot;");
 
-	shared.config->tools.push_back(shared.tool_compiler);
-	shared.config->tool_compiler_vs100 = shared.tool_compiler;
 	shared.config->tools.push_back(shared.tool_librarian);
 	shared.config->tools.push_back(shared.tool_post_build);
 
@@ -956,51 +948,6 @@ void WorkspaceGenerator_MSVC8::generate_source_files(MSVC8_Project &vcproj, cons
 		MSVC8_File *vcfile = new MSVC8_File;
 		vcfile->relative_path = "..\\" + chop_str + file;
 
-		if (file.find("precomp.cpp") != std::string::npos)
-		{
-			char *platforms[] = {"Win32", "x64", 0 };
-
-			for (int j = 0; platforms[j] != 0; j++)
-			{
-				for (int i = 0; types[i].name != 0; i++)
-				{
-					if (types[i].included == false)
-						continue;
-
-					MSVC8_VCCLCompilerTool *file_tool_compiler = new MSVC8_VCCLCompilerTool;
-					file_tool_compiler->use_precompiled_header.set("1");
-
-					MSVC8_FileConfiguration *file_config = new MSVC8_FileConfiguration;
-					file_config->name = types[i].name + std::string("|") + std::string(platforms[j]);
-					file_config->tools.push_back(file_tool_compiler);
-
-					vcfile->file_configurations.push_back(file_config);
-				}
-			}
-		}
-		else if (file.length() > 2 && file.substr(file.length()-2) == ".c")
-		{
-			char *platforms[] = {"Win32", "x64", 0 };
-
-			for (int j = 0; platforms[j] != 0; j++)
-			{
-				for (int i = 0; types[i].name != 0; i++)
-				{
-					if (types[i].included == false)
-						continue;
-
-					MSVC8_VCCLCompilerTool *file_tool_compiler = new MSVC8_VCCLCompilerTool;
-					file_tool_compiler->use_precompiled_header.set("0");
-
-					MSVC8_FileConfiguration *file_config = new MSVC8_FileConfiguration;
-					file_config->name = types[i].name + std::string("|") + std::string(platforms[j]);
-					file_config->tools.push_back(file_tool_compiler);
-
-					vcfile->file_configurations.push_back(file_config);
-				}
-			}
-		}
-
 		if (filters.empty())
 			vcproj.files.push_back(vcfile);
 		else
@@ -1264,16 +1211,12 @@ void MSVC8_Project::write(OutputWriter &output, int indent) const
 	{
 		output.write_line(indent, "  <ItemDefinitionGroup Condition=\"'$(Configuration)|$(Platform)'=='" + configurations[index]->name + "'\">");
 
-		MSVC8_VCCLCompilerTool *tool_compiler = configurations[index]->tool_compiler_vs100;
-		if (tool_compiler)
+		if (configurations[index]->use_precompiled_header == "2")
 		{
-			if (tool_compiler->use_precompiled_header.get() == "2")
-			{
-  				output.write_line(indent, "    <ClCompile>");
-  				output.write_line(indent, "      <PrecompiledHeader>Use</PrecompiledHeader>");
-				output.write_line(indent, "      <PrecompiledHeaderFile>" + tool_compiler->precompiled_header_through.get() + "</PrecompiledHeaderFile>");
-  				output.write_line(indent, "    </ClCompile>");
-			}
+ 			output.write_line(indent, "    <ClCompile>");
+ 			output.write_line(indent, "      <PrecompiledHeader>Use</PrecompiledHeader>");
+			output.write_line(indent, "      <PrecompiledHeaderFile>" + configurations[index]->precompiled_header_through + "</PrecompiledHeaderFile>");
+ 			output.write_line(indent, "    </ClCompile>");
 		}
 
   		output.write_line(indent, "    <Lib>");
@@ -1377,13 +1320,6 @@ void MSVC8_Setting::write(OutputWriter &output, int indent, const std::string &n
 // MSVC8_Tool class:
 
 MSVC8_Tool::~MSVC8_Tool()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// MSVC8_VCCLCompilerTool class:
-
-MSVC8_VCCLCompilerTool::MSVC8_VCCLCompilerTool()
 {
 }
 
