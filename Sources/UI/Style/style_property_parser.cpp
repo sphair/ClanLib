@@ -315,14 +315,15 @@ namespace clan
 		{
 			gradient.type = StyleValue::from_keyword(token.value);
 
+			size_t peek_pos = pos;
 			token = next_token(pos, tokens);
 
 			if (parse_angle(token, gradient.linear_angle))
 			{
+				token = next_token(pos, tokens);
+
 				if (!(token.type == StyleTokenType::delim && token.value == ","))
 					return false;
-
-				token = next_token(pos, tokens);
 			}
 			else if (token.type == StyleTokenType::ident && equals(token.value, "to"))
 			{
@@ -382,6 +383,14 @@ namespace clan
 				{
 					gradient.linear_angle = StyleValue::from_keyword(y + "-" + x);
 				}
+
+				if (!(token.type == StyleTokenType::delim && token.value == ","))
+					return false;
+			}
+			else
+			{
+				pos = peek_pos;
+				gradient.linear_angle = StyleValue::from_angle(180.0f, StyleDimension::deg);
 			}
 		}
 		else if (equals(token.value, "radial-gradient") || equals(token.value, "repeating-radial-gradient"))
