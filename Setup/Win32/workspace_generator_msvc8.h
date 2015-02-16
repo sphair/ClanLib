@@ -188,6 +188,7 @@ public:
 
 	void write(OutputWriter &output, int indent) const;
 	void write_filters(OutputWriter &output, int indent) const;
+
 };
 
 class MSVC8_Setting

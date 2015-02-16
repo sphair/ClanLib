@@ -110,20 +110,17 @@ void WorkspaceGenerator_MSVC8::write_solution(const Workspace &workspace)
 
 	OutputWriter writer(sln_filename);
 
-	if(target_version == 1000)
-	{
-		writer.write_line(0, "Microsoft Visual Studio Solution File, Format Version 11.00");
-		writer.write_line(0, "# Visual C++ Express 2010");
-	}
-	else if (target_version == 1100)
-	{
-		writer.write_line(0, "Microsoft Visual Studio Solution File, Format Version 11.00");
-		writer.write_line(0, "# Visual C++ Express 2012");
-	}
-	else
+	if (target_version == 1200)
 	{
 		writer.write_line(0, "Microsoft Visual Studio Solution File, Format Version 12.00");
 		writer.write_line(0, "# Visual C++ Express 2013");
+	}
+	else	// (target_version == 1400)
+	{
+		writer.write_line(0, "Microsoft Visual Studio Solution File, Format Version 12.00");	// Note, format version has not changed
+		writer.write_line(0, "# Visual Studio 14");
+		writer.write_line(0, "VisualStudioVersion = 14.0.22310.1");
+		writer.write_line(0, "MinimumVisualStudioVersion = 10.0.40219.1");
 	}
 
 	for (it = workspace.projects.begin(); it != workspace.projects.end(); ++it)
@@ -1138,7 +1135,14 @@ void MSVC8_Project::write(OutputWriter &output, int indent) const
 	std::vector<std::string>::size_type index2;
 
 	output.write_line(indent, "<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-	output.write_line(indent, "<Project DefaultTargets=\"Build\" ToolsVersion=\"4.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">");
+
+	std::string tools_version;
+	if (target_version == 1200)
+		tools_version = "12.0";
+	else
+		tools_version = "14.0";
+
+	output.write_line(indent, "<Project DefaultTargets=\"Build\" ToolsVersion=\"" + tools_version + "\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">");
   	output.write_line(indent, "<ItemGroup Label=\"ProjectConfigurations\">");
 		
 	for (index = 0; index < configurations.size(); index++)
@@ -1163,12 +1167,10 @@ void MSVC8_Project::write(OutputWriter &output, int indent) const
 		output.write_line(indent, "    <ConfigurationType>StaticLibrary</ConfigurationType>");
 		output.write_line(indent, "    <UseOfMfc>false</UseOfMfc>");
 		output.write_line(indent, "    <CharacterSet>Unicode</CharacterSet>");
-		if(target_version == 1000)
-			output.write_line(indent, "    <PlatformToolset>v100</PlatformToolset>");
-		else if (target_version == 1100)
-			output.write_line(indent, "    <PlatformToolset>v110</PlatformToolset>");
-		else
+		if (target_version == 1200)
 			output.write_line(indent, "    <PlatformToolset>v120</PlatformToolset>");
+		else
+			output.write_line(indent, "    <PlatformToolset>v140</PlatformToolset>");
 		output.write_line(indent, "  </PropertyGroup>");
 	}
 
@@ -1238,6 +1240,7 @@ void MSVC8_Project::write_filters(OutputWriter &output, int indent) const
 	std::vector<std::string>::size_type index;
 
 	output.write_line(indent, "<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+	// Note, the tools version here is always 4.0 with new projects (maybe visual studio bug?)
 	output.write_line(indent, "<Project ToolsVersion=\"4.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">");
 	output.write_line(indent, "  <ItemGroup>");
 
