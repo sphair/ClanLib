@@ -51,6 +51,11 @@ namespace clan
 
 	private:
 		void render_box_shadow();
+		void render_background_image(const StyleValue &layer_image, int index);
+		void render_background_linear_gradient(int index);
+		void render_background_radial_gradient(int index);
+		void render_background_repeating_linear_gradient(int index);
+		void render_background_repeating_radial_gradient(int index);
 
 		float get_start_x(int index, const Rectf &clip_box, const Rectf &origin_box, const Sizef &image_size);
 		float get_start_y(int index, const Rectf &clip_box, const Rectf &origin_box, const Sizef &image_size);

@@ -65,106 +65,191 @@ namespace clan
 			if (layer_image.is_keyword("none"))
 				continue;
 
-			/*
-			if (!background.stops.empty())
+			if (layer_image.is_keyword("image"))
 			{
-				float angle = Angle::from_degrees(background.angle.to_degrees() - 90.0f).normalize().to_radians();
-				Pointf center = padding_box.get_center();
-				Pointf length {
-					0.5f * padding_box.get_width () * std::cos(angle),
-					0.5f * padding_box.get_height() * std::sin(angle)
-				};
-
-				Brush brush;
-				brush.type = BrushType::linear;
-				brush.start_point = center - length;
-				brush.end_point   = center + length;
-
-				for (const BoxGradientStop &stop : background.stops)
-					brush.stops.push_back(BrushGradientStop(stop.color, stop.position));
-
-				border_area_path.fill(canvas, brush);
+				render_background_image(layer_image, index);
 			}
-
-			if (background.image)
+			else if (layer_image.is_keyword("linear-gradient"))
 			{
-				Brush brush;
-				brush.type = BrushType::image;
-				brush.image = background.image->get_image(canvas);
-				brush.transform = Mat3f::translate(border_box.left, border_box.top);
-				border_area_path.fill(canvas, brush);
+				render_background_linear_gradient(index);
 			}
-			*/
-
-			Image image;
-			
-			if (layer_image.is_image())
-				image = Image::resource(canvas, layer_image.text, UIThread::get_resources());
-
-			if (!image.is_null())
+			else if (layer_image.is_keyword("radial-gradient"))
 			{
-				Rectf clip_box = get_clip_box(index);
-				Rectf origin_box = get_origin_box(index);
-				Sizef image_size = get_image_size(index, image, origin_box);
+				render_background_radial_gradient(index);
+			}
+			else if (layer_image.is_keyword("repeating-linear-gradient"))
+			{
+				render_background_repeating_linear_gradient(index);
+			}
+			else if (layer_image.is_keyword("repeating-radial-gradient"))
+			{
+				render_background_repeating_radial_gradient(index);
+			}
+		}
+	}
 
-				canvas.push_cliprect(clip_box);
+	void StyleBackgroundRenderer::render_background_image(const StyleValue &layer_image, int index)
+	{
+		/*
+		if (background.image)
+		{
+			Brush brush;
+			brush.type = BrushType::image;
+			brush.image = background.image->get_image(canvas);
+			brush.transform = Mat3f::translate(border_box.left, border_box.top);
+			border_area_path.fill(canvas, brush);
+		}
+		*/
 
-				StyleValue repeat_x = get_layer_repeat_x(index);
-				StyleValue repeat_y = get_layer_repeat_y(index);
+		Image image;
 
-				float y = get_start_y(index, clip_box, origin_box, image_size);
+		if (layer_image.is_image())
+			image = Image::resource(canvas, layer_image.text, UIThread::get_resources());
+
+		if (!image.is_null())
+		{
+			Rectf clip_box = get_clip_box(index);
+			Rectf origin_box = get_origin_box(index);
+			Sizef image_size = get_image_size(index, image, origin_box);
+
+			canvas.push_cliprect(clip_box);
+
+			StyleValue repeat_x = get_layer_repeat_x(index);
+			StyleValue repeat_y = get_layer_repeat_y(index);
+
+			float y = get_start_y(index, clip_box, origin_box, image_size);
+			while (true)
+			{
+				float x = get_start_x(index, clip_box, origin_box, image_size);
 				while (true)
 				{
-					float x = get_start_x(index, clip_box, origin_box, image_size);
-					while (true)
-					{
-						image.draw(canvas, Rectf(x, y, x + image_size.width, y + image_size.height));
+					image.draw(canvas, Rectf(x, y, x + image_size.width, y + image_size.height));
 
-						if (repeat_x.is_keyword("no-repeat"))
-						{
-							break;
-						}
-						else if (repeat_x.is_keyword("repeat"))
-						{
-							x += image_size.width;
-						}
-						else if (repeat_x.is_keyword("space"))
-						{
-							x += image_size.width;
-						}
-						else if (repeat_x.is_keyword("round"))
-						{
-							x += image_size.width;
-						}
-
-						if (x >= clip_box.right)
-							break;
-					}
-
-					if (repeat_y.is_keyword("no-repeat"))
+					if (repeat_x.is_keyword("no-repeat"))
 					{
 						break;
 					}
-					else if (repeat_y.is_keyword("repeat"))
+					else if (repeat_x.is_keyword("repeat"))
 					{
-						y += image_size.height;
+						x += image_size.width;
 					}
-					else if (repeat_y.is_keyword("space"))
+					else if (repeat_x.is_keyword("space"))
 					{
-						y += image_size.height;
+						x += image_size.width;
 					}
-					else if (repeat_y.is_keyword("round"))
+					else if (repeat_x.is_keyword("round"))
 					{
-						y += image_size.height;
+						x += image_size.width;
 					}
 
-					if (y >= clip_box.bottom)
+					if (x >= clip_box.right)
 						break;
 				}
 
-				canvas.pop_cliprect();
+				if (repeat_y.is_keyword("no-repeat"))
+				{
+					break;
+				}
+				else if (repeat_y.is_keyword("repeat"))
+				{
+					y += image_size.height;
+				}
+				else if (repeat_y.is_keyword("space"))
+				{
+					y += image_size.height;
+				}
+				else if (repeat_y.is_keyword("round"))
+				{
+					y += image_size.height;
+				}
+
+				if (y >= clip_box.bottom)
+					break;
 			}
+
+			canvas.pop_cliprect();
 		}
+	}
+
+	void StyleBackgroundRenderer::render_background_linear_gradient(int index)
+	{
+		std::string prop_name = "background-image[" + StringHelp::int_to_text(index) + "]";
+
+		auto prop_angle = style.computed_value(prop_name + ".angle");
+		int num_stops = style.array_size(prop_name + ".stop");
+		if (num_stops <= 0)
+			return;
+
+		// To do: support "top-left", "top-right", "bottom-left" and "bottom-right" keywords
+		if (!prop_angle.is_angle())
+			return;
+
+		Rectf clip_box = get_clip_box(index);
+
+		float angle = prop_angle.number;
+		Pointf center = clip_box.get_center();
+		Pointf length(
+			0.5f * clip_box.get_width() * std::sin(angle),
+			0.5f * clip_box.get_height() * -std::cos(angle)
+		);
+
+		Brush brush;
+		brush.type = BrushType::linear;
+		brush.start_point = center - length;
+		brush.end_point = center + length;
+
+		float gradient_length = (brush.end_point - brush.start_point).length();
+		if (gradient_length <= 0.0f)
+			return;
+
+		Path border_area_path = get_border_area_path(get_border_points());
+
+		float last_position = 0.0f;
+		for (int stop_index = 0; stop_index < num_stops; stop_index++)
+		{
+			std::string stop_prop_name = prop_name + ".stop[" + StringHelp::int_to_text(stop_index) + "]";
+
+			auto prop_color = style.computed_value(stop_prop_name);
+			auto prop_position = style.computed_value(stop_prop_name + ".position");
+
+			float position = 0.0f;
+			if (prop_position.is_number())
+				position = prop_position.number;
+			else if (prop_position.is_percentage())
+				position = prop_position.number / 100.0f;
+			else if (prop_position.is_length())
+				position = prop_position.number / gradient_length;
+			else if (stop_index == 0)
+				position = 0.0f;
+			else if (stop_index + 1 == num_stops)
+				position = 1.0f;
+
+			// to do: support evenly spread positions if position isn't specified for stops
+
+			if (stop_index > 0)
+				position = std::max(position, last_position);
+
+			last_position = position;
+
+			brush.stops.push_back(BrushGradientStop(prop_color.color, position));
+		}
+
+		border_area_path.fill(canvas, brush);
+	}
+
+	void StyleBackgroundRenderer::render_background_radial_gradient(int index)
+	{
+
+	}
+
+	void StyleBackgroundRenderer::render_background_repeating_linear_gradient(int index)
+	{
+
+	}
+
+	void StyleBackgroundRenderer::render_background_repeating_radial_gradient(int index)
+	{
+
 	}
 
 	void StyleBackgroundRenderer::render_border()

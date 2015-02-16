@@ -129,6 +129,14 @@ namespace clan
 			return StyleValue::from_url(impl->prop_text.find(property_name)->second);
 		case StyleValueType::length:
 			return StyleValue::from_length(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
+		case StyleValueType::angle:
+			return StyleValue::from_angle(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
+		case StyleValueType::time:
+			return StyleValue::from_time(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
+		case StyleValueType::frequency:
+			return StyleValue::from_frequency(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
+		case StyleValueType::resolution:
+			return StyleValue::from_resolution(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
 		case StyleValueType::percentage:
 			return StyleValue::from_percentage(impl->prop_number.find(property_name)->second);
 		case StyleValueType::number:
@@ -145,12 +153,19 @@ namespace clan
 		// To do: pass on to property compute functions
 
 		StyleValue specified = specified_value(property_name);
-		if (specified.is_length())
+		switch (specified.type)
 		{
+		case StyleValueType::length:
 			return compute_length(specified);
-		}
-		else
-		{
+		case StyleValueType::angle:
+			return compute_angle(specified);
+		case StyleValueType::time:
+			return compute_time(specified);
+		case StyleValueType::frequency:
+			return compute_frequency(specified);
+		case StyleValueType::resolution:
+			return compute_resolution(specified);
+		default:
 			return specified;
 		}
 	}
@@ -313,8 +328,13 @@ namespace clan
 				prop_text.erase(prop_text.find(name));
 				break;
 			case StyleValueType::length:
+			case StyleValueType::angle:
+			case StyleValueType::time:
+			case StyleValueType::frequency:
+			case StyleValueType::resolution:
 				prop_dimension.erase(prop_dimension.find(name));
-				// intentional fall through
+				prop_number.erase(prop_number.find(name));
+				break;
 			case StyleValueType::percentage:
 			case StyleValueType::number:
 				prop_number.erase(prop_number.find(name));
@@ -344,8 +364,13 @@ namespace clan
 			prop_text[name] = value.text;
 			break;
 		case StyleValueType::length:
+		case StyleValueType::angle:
+		case StyleValueType::time:
+		case StyleValueType::frequency:
+		case StyleValueType::resolution:
 			prop_dimension[name] = value.dimension;
-			// intentional fall through
+			prop_number[name] = value.number;
+			break;
 		case StyleValueType::percentage:
 		case StyleValueType::number:
 			prop_number[name] = value.number;
