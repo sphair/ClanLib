@@ -38,13 +38,11 @@
 
 WorkspaceGenerator_MSVC8::ConfigurationType WorkspaceGenerator_MSVC8::types[] =
 {
-	false, "DebugMT", runtime_static_debug, false,
-	false, "DebugMTDLL", runtime_dll_debug, false,
-	false, "DebugDLL", runtime_dll_debug, true,
-	false, "ReleaseMT", runtime_static_release, false,
-	false, "ReleaseMTDLL", runtime_dll_release, false,
-	false, "ReleaseDLL", runtime_dll_release, true,
-	false, 0, runtime_static_debug, false
+	false, "DebugMT", runtime_static_debug,
+	false, "DebugMTDLL", runtime_dll_debug,
+	false, "ReleaseMT", runtime_static_release,
+	false, "ReleaseMTDLL", runtime_dll_release,
+	false, 0, runtime_static_debug
 };
 
 WorkspaceGenerator_MSVC8::WorkspaceGenerator_MSVC8()
@@ -54,7 +52,7 @@ WorkspaceGenerator_MSVC8::WorkspaceGenerator_MSVC8()
 	is_whole_program_optimize = false;	// Set by set_platforms()
 }
 
-void WorkspaceGenerator_MSVC8::enable_configurations(bool include_mtdll, bool include_dll)
+void WorkspaceGenerator_MSVC8::enable_configurations(bool include_mtdll)
 {
 	int i;
 	for (i = 0; types[i].name != 0; i++)
@@ -67,8 +65,6 @@ void WorkspaceGenerator_MSVC8::enable_configurations(bool include_mtdll, bool in
 				types[i].included = false;
 		}
 
-		if (types[i].dll && include_dll == false)
-			types[i].included = false;
 	}
 }
 
@@ -271,63 +267,43 @@ void WorkspaceGenerator_MSVC8::write_project(const Workspace &workspace, const P
 	{
 		if (types[i].included == false)
 			continue;
-		if (types[i].dll)
+
+		switch (types[i].runtime_type)
 		{
-			switch (types[i].runtime_type)
+		case runtime_static_debug:
+			if(include_platform_win32)
+				vc80proj.configurations.push_back(create_debug_mt_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2));
+			if(include_platform_x64)
+				vc80proj.configurations.push_back(create_debug_mt_config("x64", project.name, types[i], has_precomp, precomp_header, false));
+			if (target_android)
 			{
-			case runtime_dll_debug:
-				if(include_platform_win32)
-					vc80proj.configurations.push_back(create_debug_dll_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2));
-				if(include_platform_x64)
-					vc80proj.configurations.push_back(create_debug_dll_config("x64", project.name, types[i], has_precomp, precomp_header, false));
-				break;
-			case runtime_dll_release:
-				if(include_platform_win32)
-					vc80proj.configurations.push_back(create_release_dll_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2));
-				if(include_platform_x64)
-					vc80proj.configurations.push_back(create_release_dll_config("x64", project.name, types[i], has_precomp, precomp_header, false));
-				break;
+				vc80proj.configurations.push_back(create_android_config("x86", project.name, types[i], has_precomp, precomp_header));
+				vc80proj.configurations.push_back(create_android_config("ARM", project.name, types[i], has_precomp, precomp_header));
 			}
-		}
-		else
-		{
-			switch (types[i].runtime_type)
+			break;
+		case runtime_static_release:
+			if(include_platform_win32)
+				vc80proj.configurations.push_back(create_release_mt_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2));
+			if(include_platform_x64)
+				vc80proj.configurations.push_back(create_release_mt_config("x64", project.name, types[i], has_precomp, precomp_header, false));
+			if (target_android)
 			{
-			case runtime_static_debug:
-				if(include_platform_win32)
-					vc80proj.configurations.push_back(create_debug_mt_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2));
-				if(include_platform_x64)
-					vc80proj.configurations.push_back(create_debug_mt_config("x64", project.name, types[i], has_precomp, precomp_header, false));
-				if (target_android)
-				{
-					vc80proj.configurations.push_back(create_android_config("x86", project.name, types[i], has_precomp, precomp_header));
-					vc80proj.configurations.push_back(create_android_config("ARM", project.name, types[i], has_precomp, precomp_header));
-				}
-				break;
-			case runtime_static_release:
-				if(include_platform_win32)
-					vc80proj.configurations.push_back(create_release_mt_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2));
-				if(include_platform_x64)
-					vc80proj.configurations.push_back(create_release_mt_config("x64", project.name, types[i], has_precomp, precomp_header, false));
-				if (target_android)
-				{
-					vc80proj.configurations.push_back(create_android_config("x86", project.name, types[i], has_precomp, precomp_header));
-					vc80proj.configurations.push_back(create_android_config("ARM", project.name, types[i], has_precomp, precomp_header));
-				}
-				break;
-			case runtime_dll_debug:
-				if(include_platform_win32)
-					vc80proj.configurations.push_back(create_debug_mtdll_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2));
-				if(include_platform_x64)
-					vc80proj.configurations.push_back(create_debug_mtdll_config("x64", project.name, types[i], has_precomp, precomp_header, false));
-				break;
-			case runtime_dll_release:
-				if(include_platform_win32)
-					vc80proj.configurations.push_back(create_release_mtdll_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2));
-				if(include_platform_x64)
-					vc80proj.configurations.push_back(create_release_mtdll_config("x64", project.name, types[i], has_precomp, precomp_header, false));
-				break;
+				vc80proj.configurations.push_back(create_android_config("x86", project.name, types[i], has_precomp, precomp_header));
+				vc80proj.configurations.push_back(create_android_config("ARM", project.name, types[i], has_precomp, precomp_header));
 			}
+			break;
+		case runtime_dll_debug:
+			if(include_platform_win32)
+				vc80proj.configurations.push_back(create_debug_mtdll_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2));
+			if(include_platform_x64)
+				vc80proj.configurations.push_back(create_debug_mtdll_config("x64", project.name, types[i], has_precomp, precomp_header, false));
+			break;
+		case runtime_dll_release:
+			if(include_platform_win32)
+				vc80proj.configurations.push_back(create_release_mtdll_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2));
+			if(include_platform_x64)
+				vc80proj.configurations.push_back(create_release_mtdll_config("x64", project.name, types[i], has_precomp, precomp_header, false));
+			break;
 		}
 	}
 
@@ -804,11 +780,8 @@ std::string WorkspaceGenerator_MSVC8::make_target_name(
 	const std::string &project_name)
 {
 	std::string output_file = "clan$(ProjectName)";
-	if (config.dll)
-	{
-		output_file += "-dll";
-	}
-	else if (config.runtime_type != runtime_static_debug && config.runtime_type != runtime_static_release)
+
+	if (config.runtime_type != runtime_static_debug && config.runtime_type != runtime_static_release)
 	{
 		output_file += "-static-mtdll";
 	}

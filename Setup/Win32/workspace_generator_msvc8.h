@@ -51,7 +51,7 @@ public:
 	WorkspaceGenerator_MSVC8();
 	void set_platforms(bool include_win32, bool include_x64, bool include_sse2, bool include_intrinsics, bool enable_debug_optimise, bool enable_whole_program_optimize);
 	void set_android(bool enable);
-	void enable_configurations(bool include_mtdll, bool include_dll);
+	void enable_configurations(bool include_mtdll);
 	void set_target_version(int version);
 	void write(const Workspace &workspace);
 
@@ -69,7 +69,6 @@ public:
 		bool included;
 		const char *name;
 		RuntimeType runtime_type;
-		bool dll;
 	};
 
 	static ConfigurationType types[];

@@ -185,11 +185,6 @@ BOOL Wizard::finish()
 			hKey, TEXT("IncludeIntrinsics"), 0, REG_DWORD,
 			(LPBYTE) &include_intrinsics, sizeof(DWORD));
 
-		DWORD include_dll = (page_target.include_dll ? 1 : 0);
-		RegSetValueEx(
-			hKey, TEXT("IncludeDLL"), 0, REG_DWORD,
-			(LPBYTE) &include_dll, sizeof(DWORD));
-
 		DWORD include_x64 = (page_target.include_x64 ? 1 : 0);
 		RegSetValueEx(
 			hKey, TEXT("IncludeX64"), 0, REG_DWORD,
@@ -219,7 +214,7 @@ BOOL Wizard::finish()
 		generator.set_android(false);
 	}
 
-	generator.enable_configurations(page_target.include_mtdll, page_target.include_dll);
+	generator.enable_configurations(page_target.include_mtdll);
 	generator.write(workspace);
 
 	return TRUE;
