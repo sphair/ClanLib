@@ -57,7 +57,6 @@ namespace clan
 		url,
 		color,
 		image,
-		gradient,
 		angle,
 		time,
 		frequency,
@@ -118,7 +117,6 @@ namespace clan
 		bool is_url() const { return type == StyleValueType::url; }
 		bool is_color() const { return type == StyleValueType::color; }
 		bool is_image() const { return type == StyleValueType::image; }
-		bool is_gradient() const { return type == StyleValueType::gradient; }
 
 		static StyleValue from_keyword(const std::string &keyword) { StyleValue v; v.type = StyleValueType::keyword; v.text = keyword; return v; }
 		static StyleValue from_string(const std::string &text) { StyleValue v; v.type = StyleValueType::string; v.text = text; return v; }
@@ -134,6 +132,40 @@ namespace clan
 		static StyleValue from_image(const std::shared_ptr<ImageSource> &image) { StyleValue v; v.type = StyleValueType::image; v.image = image; return v; }
 	};
 
+	class StyleGradientStop
+	{
+	public:
+		StyleGradientStop() { }
+		StyleGradientStop(const StyleValue &color, const StyleValue &position) : color(color), position(position) { }
+
+		StyleValue color;
+		StyleValue position;
+	};
+
+	class StyleGradient
+	{
+	public:
+		StyleValue type;
+		StyleValue linear_angle;
+		StyleValue radial_shape;
+		StyleValue radial_size_x;
+		StyleValue radial_size_y;
+		StyleValue radial_position_x;
+		StyleValue radial_position_y;
+		std::vector<StyleGradientStop> stops;
+	};
+
+	class StyleImage
+	{
+	public:
+		StyleImage() { }
+		StyleImage(const StyleValue &image) : image(image) { }
+		StyleImage(const StyleGradient &gradient) : gradient(gradient) { }
+
+		StyleValue image;
+		StyleGradient gradient;
+	};
+
 	class Style
 	{
 	public:
@@ -145,9 +177,9 @@ namespace clan
 		const std::shared_ptr<Style> &get_base();
 		void set_base(const std::shared_ptr<Style> &base);
 
-		void set(const std::string &property_name, const std::string &property_value, const std::initializer_list<StylePropertyInitializerValue> &args = std::initializer_list<StylePropertyInitializerValue>());
+		void set(const std::string &properties, const std::initializer_list<StylePropertyInitializerValue> &args = std::initializer_list<StylePropertyInitializerValue>());
 		bool has(const std::string &property_name) const;
-		void remove(const std::string &property_name);
+		int array_size(const std::string &property_name) const;
 
 		StyleValue specified_value(const std::string &property_name) const;
 		StyleValue computed_value(const std::string &property_name) const;

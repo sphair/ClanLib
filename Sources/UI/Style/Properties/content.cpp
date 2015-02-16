@@ -49,9 +49,9 @@ namespace clan
 	MaxWidthPropertyParser style_parser_max_width;
 	MaxHeightPropertyParser style_parser_max_height;
 
-	void WidthPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void WidthPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue width;
 
@@ -98,9 +98,9 @@ namespace clan
 		setter->set_value("width", width);
 	}
 
-	void HeightPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void HeightPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue height;
 
@@ -147,9 +147,9 @@ namespace clan
 		setter->set_value("height", height);
 	}
 
-	void MinWidthPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void MinWidthPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue min_width;
 
@@ -188,9 +188,9 @@ namespace clan
 		setter->set_value("min-width", min_width);
 	}
 
-	void MinHeightPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void MinHeightPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue min_height;
 
@@ -229,9 +229,9 @@ namespace clan
 		setter->set_value("min-height", min_height);
 	}
 
-	void MaxWidthPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void MaxWidthPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue max_width;
 
@@ -270,9 +270,9 @@ namespace clan
 		setter->set_value("max-width", max_width);
 	}
 
-	void MaxHeightPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void MaxHeightPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue max_height;
 

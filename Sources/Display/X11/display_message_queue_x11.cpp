@@ -224,7 +224,7 @@ namespace clan
 	void DisplayMessageQueue_X11::process_message()
 	{
 		std::shared_ptr<ThreadData> data = get_thread_data();
-
+		::Display *display = get_display();
 		XEvent event;
 		while (XPending(display) > 0)
 		{

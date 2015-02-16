@@ -75,12 +75,19 @@ namespace clan
 		virtual void set_value_array(const std::string &name, const std::vector<StyleValue> &value_array) = 0;
 	};
 
+	class StyleParser
+	{
+	public:
+		std::vector<StyleToken> tokens;
+		bool important_flag = false;
+	};
+
 	class StylePropertyParser
 	{
 	public:
 		StylePropertyParser(const std::vector<std::string> &property_names);
 		virtual ~StylePropertyParser() { }
-		virtual void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) = 0;
+		virtual void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) = 0;
 
 	protected:
 		static StyleToken next_token(size_t &pos, const std::vector<StyleToken> &tokens, bool skip_whitespace = true);
@@ -95,7 +102,7 @@ namespace clan
 		static bool parse_frequency(const StyleToken &token, StyleValue &out_frequency);
 		static bool parse_resolution(const StyleToken &token, StyleValue &out_resolution);
 		static bool parse_integer(const std::string &value, int &out_int);
-		static bool parse_gradient(const std::vector<StyleToken> &tokens, size_t &in_out_pos, StyleValue &out_gradient);
+		static bool parse_gradient(const std::vector<StyleToken> &tokens, size_t &in_out_pos, StyleGradient &out_gradient);
 		static bool parse_color(const std::vector<StyleToken> &tokens, size_t &in_out_pos, Colorf &out_color);
 		static bool parse_position(const std::vector<StyleToken> &tokens, size_t &in_out_pos, StyleValue &out_position_x, StyleValue &out_position_y);
 		static bool equals(const std::string &s1, const std::string &s2);
@@ -120,6 +127,6 @@ namespace clan
 	{
 	public:
 		static const StyleValue &default_value(const std::string &name);
-		static void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args);
+		static void parse(StylePropertySetter *setter, const std::string &styles, const std::initializer_list<StylePropertyInitializerValue> &args);
 	};
 }

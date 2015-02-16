@@ -38,13 +38,13 @@ namespace clan
 	{
 	public:
 		MarginPropertyParser() : StylePropertyParser({ "margin" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
 	};
 
 	class MarginLTRBPropertyParser : public StylePropertyParser
 	{
 	public:
 		MarginLTRBPropertyParser() : StylePropertyParser({ "margin-left", "margin-top", "margin-right", "margin-bottom" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
 	};
 }

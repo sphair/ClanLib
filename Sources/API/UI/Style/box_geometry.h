@@ -32,18 +32,18 @@
 
 namespace clan
 {
-	class BoxStyle;
+	class Style;
 
 	class BoxGeometry
 	{
 	public:
 		BoxGeometry() { }
-		BoxGeometry(const BoxStyle &style);
+		BoxGeometry(const std::shared_ptr<Style> &style);
 
-		static BoxGeometry from_margin_box(const BoxStyle &style, const Rectf &box);
-		static BoxGeometry from_border_box(const BoxStyle &style, const Rectf &box);
-		static BoxGeometry from_padding_box(const BoxStyle &style, const Rectf &box);
-		static BoxGeometry from_content_box(const BoxStyle &style, const Rectf &box);
+		static BoxGeometry from_margin_box(const std::shared_ptr<Style> &style, const Rectf &box);
+		static BoxGeometry from_border_box(const std::shared_ptr<Style> &style, const Rectf &box);
+		static BoxGeometry from_padding_box(const std::shared_ptr<Style> &style, const Rectf &box);
+		static BoxGeometry from_content_box(const std::shared_ptr<Style> &style, const Rectf &box);
 
 		Rectf margin_box() const;
 		Rectf border_box() const;

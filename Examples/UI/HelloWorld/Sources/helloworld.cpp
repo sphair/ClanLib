@@ -51,19 +51,20 @@ int HelloWorld::start(const std::vector<std::string> &args)
 
 	// Exit run loop when close is clicked.
 	// We have to store the return Slot because if it is destroyed the lambda function is disconnected from the signal.
-	Slot slot_close = root->sig_close().connect([&](CloseEvent &e) { exit(); });
+	Slot slot_close = root->sig_close().connect([&](CloseEvent &e) { RunLoop::exit(); });
 
 	// Style the root view to use rounded corners and a bit of drop shadow
-	root->box_style.set_background(Colorf(240, 240, 240, 255));
-	root->box_style.set_padding(11.0f);
-	root->box_style.set_border_radius(15.0f);
-	root->box_style.set_border(Colorf(0, 0, 0), 1.0f);
-	root->box_style.set_margin(10.0f, 35.0f, 10.0f, 10.0f);
-	root->box_style.set_box_shadow(Colorf(0, 0, 0, 50), 0.0f, 0.0f, 20.0f);
+	root->style()->set("background: rgb(240,240,240)");
+	root->style()->set("padding: 11px");
+	root->style()->set("border: 1px solid black");
+	root->style()->set("border-radius: 15px");
+	root->style()->set("margin: 35px 10px 10px 10px");
+	root->style()->set("box-shadow: 0 0 20px rgba(0,0,0,0.2)");
+	root->style()->set("flex-direction: column");
 
 	// Create a label with some text to have some content
 	std::shared_ptr<LabelView> label = std::make_shared<LabelView>();
-	label->text_style().set_font("Ravie", 20.0f, 40.0f);
+	label->style()->set("font: 20px/40px 'Ravie'");
 	label->set_text("Hello World!");
 	root->add_subview(label);
 
@@ -74,67 +75,47 @@ int HelloWorld::start(const std::vector<std::string> &args)
 
 	// Create a text field for our span layout
 	std::shared_ptr<TextFieldView> edit = std::make_shared<TextFieldView>();
-	edit->text_style().set_font("Segoe UI", 11.0f, 20.0f);
+	edit->style()->set("font: 11px/20px 'Segoe UI'");
+	edit->style()->set("margin: 5px 0");
+	edit->style()->set("background: white");
+	edit->style()->set("border: 1px solid black");
+	edit->style()->set("border-radius: 3px");
+	edit->style()->set("padding: 2px 5px 3px 5px");
+	edit->style()->set("width: 128px");
 	edit->set_text("Text File View");
-	edit->box_style.set_margin(0.0f, 5.0f);
-	edit->box_style.set_background(Colorf(255, 255, 255));
-	edit->box_style.set_border(Colorf(0.0f, 0.0f, 0.0f), 1.0f);
-	edit->box_style.set_border_radius(3.0f);
-	edit->box_style.set_padding(5.0f, 2.0f, 5.0f, 3.0f);
-	edit->box_style.set_width(128.0f);
 
 	// Create a span layout view with some more complex inline formatting
 	std::shared_ptr<SpanLayoutView> span = std::make_shared<SpanLayoutView>();
-	TextStyle font_desc2;
-	font_desc2.set_font_family("Segoe UI");
-	font_desc2.set_size(13.0f);
-	font_desc2.set_line_height(40.0f);
-	span->add_text("This is the UI core ", font_desc2);
+	std::shared_ptr<Style> text_style = std::make_shared<Style>();
+	text_style->set("font: 13px/40px 'Segoe UI'");
+	span->add_text("This is the UI core ", text_style);
 
 	span->add_subview(edit);
-
+	/*
 	std::shared_ptr<ScrollBarView> scrollbar = std::make_shared<ScrollBarView>();
 	scrollbar->set_horizontal();
-	scrollbar->box_style.set_flex(0.0f, 0.0f);
-	scrollbar->box_style.set_background(Colorf(232, 232, 236));
-	scrollbar->track()->box_style.set_padding(4.0f, 0.0f);
-	scrollbar->thumb()->box_style.set_background(Colorf(208, 209, 215));
+	scrollbar->style()->set("flex: 0 0 main-size");
+	scrollbar->style()->set("background: rgb(232, 232, 236)");
+	scrollbar->track()->set("padding: 0 4px");
+	scrollbar->track()->set("background: rgb(208, 209, 215)");
+	scrollbar->thumb()->set("padding: 0 4px");
+	scrollbar->thumb()->set("background: rgb(208, 209, 215)");
 	scrollbar->set_range(0.0, 1.0);
 	scrollbar->set_position(0.5);
 	scrollbar->set_page_step(0.1);
 	scrollbar->set_line_step(0.01);
 	root->add_subview(scrollbar);
-
-	TextStyle font_desc5;
-	font_desc5.set_font_family("Segoe UI");
-	font_desc5.set_size(16.0f);
-	font_desc5.set_line_height(40.0f);
-	font_desc5.set_weight(FontWeight::extra_bold);
-	span->add_text(" units!", font_desc5);
+	*/
+	std::shared_ptr<Style> text_style2 = std::make_shared<Style>();
+	text_style2->set("font: 16px/40px 'Segoe UI'; font-weight: 800");
+	span->add_text(" units!", text_style2);
 	root->add_subview(span);
 
 	// Make our window visible
 	root->show();
 
 	// Process messages until user exits
-	run();
-
+	RunLoop::run();
 
 	return 0;
 }
-
-void HelloWorld::run()
-{
-	exit_flag = false;
-	while (!exit_flag)
-	{
-		clan::RunLoop::process(250);
-	}
-}
-
-void HelloWorld::exit()
-{
-	exit_flag = true;
-}
-
-

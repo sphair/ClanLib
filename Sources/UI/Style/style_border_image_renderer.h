@@ -28,53 +28,35 @@
 
 #pragma once
 
-#include "box_layout.h"
-#include "box_position.h"
-#include "box_flex.h"
-#include "box_margin.h"
-#include "box_border.h"
-#include "box_padding.h"
-#include "box_content.h"
-#include "box_background.h"
-#include <functional>
-
 namespace clan
 {
 	class Canvas;
+	class Image;
+	class Colorf;
+	class Style;
+	class StyleValue;
 	class BoxGeometry;
-	class BrushGradientStop;
 
-	class BoxStyleImpl
+	class StyleBorderImageRenderer
 	{
 	public:
-		BoxStyleImpl &operator =(const BoxStyleImpl &that)
-		{
-			layout = that.layout;
-			position = that.position;
-			flex = that.flex;
-			margin = that.margin;
-			border = that.border;
-			padding = that.padding;
-			content = that.content;
-			background = that.background;
-			if (style_changed) style_changed();
-			return *this;
-		}
-
-		BoxLayout layout = BoxLayout::block;
-		BoxPosition position;
-		BoxFlex flex;
-		BoxMargin margin;
-		BoxBorder border;
-		BoxPadding padding;
-		BoxContent content;
-		BoxBackground background;
-		std::function<void()> style_changed;
-
-		void render(Canvas &canvas, const BoxGeometry &geometry) const;
+		StyleBorderImageRenderer(Canvas &canvas, const BoxGeometry &geometry, const Style &style);
+		void render();
 
 	private:
-		static std::vector<BrushGradientStop> shadow_blur_stops(const Colorf &shadow_color, float shadow_blur_radius, float start_t);
-		static float mix(float a, float b, float t);
+		void draw_area(Image &image, int x, int y, int w, int h, int sx, int sy, int sw, int sh);
+		Rect get_border_image_area() const;
+		float get_left_grid(float image_area_width, float auto_width) const;
+		float get_right_grid(float image_area_width, float auto_width) const;
+		float get_top_grid(float image_area_height, float auto_height) const;
+		float get_bottom_grid(float image_area_height, float auto_height) const;
+		int get_left_slice_value(int image_width) const;
+		int get_right_slice_value(int image_width) const;
+		int get_top_slice_value(int image_height) const;
+		int get_bottom_slice_value(int image_height) const;
+
+		Canvas &canvas;
+		const BoxGeometry &geometry;
+		const Style &style;
 	};
 }

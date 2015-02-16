@@ -72,7 +72,7 @@ namespace clan
 			canvas.clear(clan::Colorf::transparent);
 
 			needs_render = false;
-			window_view->set_geometry(BoxGeometry::from_margin_box(window_view->box_style, canvas_rect));
+			window_view->set_geometry(BoxGeometry::from_margin_box(window_view->style(), canvas_rect));
 			window_view->layout(canvas);
 			window_view->render(canvas);
 			canvas.reset_cliprect();

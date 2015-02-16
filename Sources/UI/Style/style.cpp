@@ -28,8 +28,12 @@
 
 #include "UI/precomp.h"
 #include "API/UI/Style/style.h"
+#include "API/UI/Style/box_geometry.h"
 #include "API/UI/UIThread/ui_thread.h"
 #include "API/Display/Font/font.h"
+#include "API/Display/2D/canvas.h"
+#include "style_background_renderer.h"
+#include "style_border_image_renderer.h"
 #include "style_impl.h"
 #include "Properties/background.h"
 #include "Properties/border.h"
@@ -82,20 +86,28 @@ namespace clan
 		impl->base = new_base;
 	}
 
-	void Style::set(const std::string &property_name, const std::string &property_value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void Style::set(const std::string &properties, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		StyleProperty::parse(impl.get(), property_name, property_value, args);
+		StyleProperty::parse(impl.get(), properties, args);
 	}
 
 	bool Style::has(const std::string &property_name) const
 	{
 		const auto it = impl->prop_type.find(property_name);
-		return it != impl->prop_type.end();
+		return it != impl->prop_type.end() || !StyleProperty::default_value(property_name).is_undefined();
 	}
 
-	void Style::remove(const std::string &property_name)
+	int Style::array_size(const std::string &property_name) const
 	{
-		impl->set_value(property_name, StyleValue());
+		int size = 0;
+		while (true)
+		{
+			std::string prop_name = property_name + "[" + StringHelp::int_to_text(size) + "]";
+			if (!has(prop_name))
+				break;
+			size++;
+		}
+		return size;
 	}
 
 	StyleValue Style::specified_value(const std::string &property_name) const
@@ -223,10 +235,17 @@ namespace clan
 
 	void Style::render_background(Canvas &canvas, const BoxGeometry &geometry) const
 	{
+		StyleBackgroundRenderer renderer(canvas, geometry, *this);
+		renderer.render_background();
 	}
 
 	void Style::render_border(Canvas &canvas, const BoxGeometry &geometry) const
 	{
+		StyleBackgroundRenderer renderer(canvas, geometry, *this);
+		renderer.render_border();
+
+		StyleBorderImageRenderer image_renderer(canvas, geometry, *this);
+		image_renderer.render();
 	}
 
 	Font Style::get_font(Canvas &canvas)

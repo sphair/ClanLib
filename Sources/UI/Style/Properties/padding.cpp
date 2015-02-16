@@ -43,9 +43,9 @@ namespace clan
 	PaddingPropertyParser style_parser_padding;
 	PaddingLTRBPropertyParser style_parser_padding_ltrb;
 
-	void PaddingPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void PaddingPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue padding_widths[4];
 
@@ -152,9 +152,9 @@ namespace clan
 		}
 	}
 
-	void PaddingLTRBPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void PaddingLTRBPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue width = StyleValue::from_length(0.0f);
 

@@ -302,34 +302,22 @@ namespace clan
 		return true;
 	}
 
-	bool StylePropertyParser::parse_gradient(const std::vector<StyleToken> &tokens, size_t &in_out_pos, StyleValue &out_gradient)
+	bool StylePropertyParser::parse_gradient(const std::vector<StyleToken> &tokens, size_t &in_out_pos, StyleGradient &out_gradient)
 	{
 		size_t pos = in_out_pos;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type != StyleTokenType::function)
 			return false;
 
-		// Gradient type:
-		bool radial = false;
-		bool is_repeating = false;
-
-		// Color stops:
-		std::vector<std::pair<Colorf, StyleValue>> stops;
-
-		// Linear:
-		StyleValue angle;
-
-		// Radial:
-		bool shape_ellipse = false;
-		StyleValue size_x, size_y;
-		StyleValue position_x, position_y;
+		StyleGradient gradient;
 
 		if (equals(token.value, "linear-gradient") || equals(token.value, "repeating-linear-gradient"))
 		{
-			bool is_repeating = equals(token.value, "repeating-linear-gradient");
+			gradient.type = StyleValue::from_keyword(token.value);
+
 			token = next_token(pos, tokens);
 
-			if (parse_angle(token, angle))
+			if (parse_angle(token, gradient.linear_angle))
 			{
 				if (!(token.type == StyleTokenType::delim && token.value == ","))
 					return false;
@@ -374,35 +362,38 @@ namespace clan
 				if ((x.empty() && y.empty()) || !(token.type == StyleTokenType::delim && token.value == ","))
 					return false;
 
-				token = next_token(pos, tokens);
-
 				if (y.empty() && x == "left")
 				{
-					angle = StyleValue::from_angle(270.0f, StyleDimension::deg);
+					gradient.linear_angle = StyleValue::from_angle(270.0f, StyleDimension::deg);
 				}
 				else if (y.empty() && x == "right")
 				{
-					angle = StyleValue::from_angle(90.0f, StyleDimension::deg);
+					gradient.linear_angle = StyleValue::from_angle(90.0f, StyleDimension::deg);
 				}
 				else if (x.empty() && y == "top")
 				{
-					angle = StyleValue::from_angle(0.0f, StyleDimension::deg);
+					gradient.linear_angle = StyleValue::from_angle(0.0f, StyleDimension::deg);
 				}
 				else if (x.empty() && y == "bottom")
 				{
-					angle = StyleValue::from_angle(180.0f, StyleDimension::deg);
+					gradient.linear_angle = StyleValue::from_angle(180.0f, StyleDimension::deg);
 				}
 				else
 				{
-					angle = StyleValue::from_keyword(y + "-" + x);
+					gradient.linear_angle = StyleValue::from_keyword(y + "-" + x);
 				}
 			}
 		}
 		else if (equals(token.value, "radial-gradient") || equals(token.value, "repeating-radial-gradient"))
 		{
-			radial = true;
-			bool is_repeating = equals(token.value, "repeating-radial-gradient");
+			gradient.type = StyleValue::from_keyword(token.value);
+
+			size_t start_pos = pos;
 			token = next_token(pos, tokens);
+
+			bool shape_ellipse = false;
+			StyleValue size_x, size_y;
+			StyleValue position_x, position_y;
 
 			bool is_shape_known = false;
 			bool comma_required = false;
@@ -503,8 +494,17 @@ namespace clan
 			{
 				if (!(token.type == StyleTokenType::delim && token.value == ","))
 					return false;
-				token = next_token(pos, tokens);
 			}
+			else
+			{
+				pos = start_pos;
+			}
+
+			gradient.radial_shape = StyleValue::from_keyword(shape_ellipse ? "ellipse" : "circle");
+			gradient.radial_size_x = size_x;
+			gradient.radial_size_y = size_y;
+			gradient.radial_position_x = position_x;
+			gradient.radial_position_y = position_y;
 		}
 		else
 		{
@@ -519,8 +519,11 @@ namespace clan
 			if (!parse_color(tokens, pos, stop_color))
 				return false;
 
+			token = next_token(pos, tokens);
+
 			if (parse_length(token, stop_pos))
 			{
+				token = next_token(pos, tokens);
 			}
 			else if (token.type == StyleTokenType::percentage)
 			{
@@ -528,19 +531,16 @@ namespace clan
 				token = next_token(pos, tokens);
 			}
 
-			stops.push_back({ stop_color, stop_pos });
+			gradient.stops.push_back(StyleGradientStop(StyleValue::from_color(stop_color), stop_pos));
 
 			if (!(token.type == StyleTokenType::delim && token.value == ","))
 				break;
-			token = next_token(pos, tokens);
 		}
 
 		if (token.type != StyleTokenType::bracket_end)
 			return false;
-		token = next_token(pos, tokens);
 
-		// To do: store something in out_gradient
-
+		out_gradient = gradient;
 		in_out_pos = pos;
 		return true;
 	}
@@ -853,23 +853,30 @@ namespace clan
 		}
 		else if (token.type == StyleTokenType::function && equals(token.value, "rgba"))
 		{
-			int color[4] = { 0, 0, 0, 0 };
+			float color[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 			for (int channel = 0; channel < 4; channel++)
 			{
 				token = next_token(pos, tokens);
 				if (token.type == StyleTokenType::number)
 				{
-					int value = StringHelp::text_to_int(token.value);
-					value = min(255, value);
-					value = max(0, value);
-					color[channel] = value;
+					if (channel < 3)
+					{
+						int value = StringHelp::text_to_int(token.value);
+						value = min(255, value);
+						value = max(0, value);
+						color[channel] = value / 255.0f;
+					}
+					else
+					{
+						color[channel] = StringHelp::text_to_float(token.value);
+					}
 				}
 				else if (token.type == StyleTokenType::percentage)
 				{
 					float value = StringHelp::text_to_float(token.value) / 100.0f;
 					value = min(1.0f, value);
 					value = max(0.0f, value);
-					color[channel] = (int)(value*255.0f);
+					color[channel] = value;
 				}
 				else
 				{
@@ -886,7 +893,7 @@ namespace clan
 			token = next_token(pos, tokens);
 			if (token.type == StyleTokenType::bracket_end)
 			{
-				out_color = Colorf(color[0] / 255.0f, color[1] / 255.0f, color[2] / 255.0f, color[3] / 255.0f);
+				out_color = Colorf(color[0], color[1], color[2], color[3]);
 				in_out_pos = pos;
 				return true;
 			}
@@ -1087,10 +1094,39 @@ namespace clan
 		}
 	}
 
-	void StyleProperty::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void StyleProperty::parse(StylePropertySetter *setter, const std::string &properties, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		auto it = style_parsers().find(name);
-		if (it != style_parsers().end())
-			it->second->parse(setter, name, value, args);
+		StyleTokenizer tokenizer(properties);
+		StyleToken token;
+		while (true)
+		{
+			tokenizer.read(token, true);
+			if (token.type == StyleTokenType::ident)
+			{
+				std::string name = token.value;
+
+				tokenizer.read(token, true);
+				if (token.type == StyleTokenType::colon)
+				{
+					tokenizer.read(token, true);
+
+					StyleParser parser;
+					parser.tokens = tokenizer.read_property_value(token, parser.important_flag);
+
+					auto it = style_parsers().find(name);
+					if (it != style_parsers().end())
+						it->second->parse(setter, name, parser, args);
+				}
+				else
+				{
+					bool important_flag = false;
+					tokenizer.read_property_value(token, important_flag);
+				}
+			}
+			else if (token.type == StyleTokenType::null)
+			{
+				break;
+			}
+		}
 	}
 }

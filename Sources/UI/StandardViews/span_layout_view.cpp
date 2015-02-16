@@ -34,7 +34,7 @@ namespace clan
 {
 	SpanLayoutView::SpanLayoutView() : impl(new SpanLayoutViewImpl())
 	{
-		style()->set("layout", "none");
+		style()->set("layout: none");
 	}
 
 	void SpanLayoutView::set_text_alignment(TextAlignment alignment)

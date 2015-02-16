@@ -68,6 +68,80 @@ namespace clan
 		} while((eat_whitespace && token.type == StyleTokenType::whitespace));
 	}
 
+	std::vector<StyleToken> StyleTokenizer::read_property_value(StyleToken &token, bool &important_flag)
+	{
+		std::vector<StyleToken> value_tokens;
+		important_flag = false;
+
+		// Remove any possible whitespace at the beginning of the property value:
+		if (token.type == StyleTokenType::whitespace)
+			read(token, true);
+
+		int curly_count = 0;
+		while (true)
+		{
+			if (token.type == StyleTokenType::null)
+			{
+				break;
+			}
+			else if (token.type == StyleTokenType::curly_brace_begin)
+			{
+				curly_count++;
+			}
+			else if (token.type == StyleTokenType::curly_brace_end)
+			{
+				curly_count--;
+				if (curly_count <= 0)
+					break;
+			}
+			else if (token.type == StyleTokenType::semi_colon)
+			{
+				if (curly_count == 0)
+					break;
+			}
+
+			//if (token.type == StyleTokenType::uri)
+			//	token.value = make_absolute_uri(token.value, base_uri);
+
+			value_tokens.push_back(token);
+			read(token, false);
+		}
+
+		// Remove any possible whitespace at the end of the property:
+		while (!value_tokens.empty() && value_tokens.back().type == StyleTokenType::whitespace)
+			value_tokens.pop_back();
+
+		// Remove the !important flag if found:
+		size_t tokens_size = value_tokens.size();
+		if (tokens_size >= 2 &&
+			value_tokens[tokens_size - 2].type == StyleTokenType::delim && value_tokens[tokens_size - 2].value == "!" &&
+			value_tokens[tokens_size - 1].type == StyleTokenType::ident && StringHelp::compare(value_tokens[tokens_size - 1].value, "important", true) == 0)
+		{
+			important_flag = true;
+			value_tokens.pop_back();
+			value_tokens.pop_back();
+		}
+		else if (tokens_size >= 3 &&
+			value_tokens[tokens_size - 3].type == StyleTokenType::delim && value_tokens[tokens_size - 3].value == "!" &&
+			value_tokens[tokens_size - 2].type == StyleTokenType::whitespace &&
+			value_tokens[tokens_size - 1].type == StyleTokenType::ident && StringHelp::compare(value_tokens[tokens_size - 1].value, "important", true) == 0)
+		{
+			important_flag = true;
+			value_tokens.pop_back();
+			value_tokens.pop_back();
+			value_tokens.pop_back();
+		}
+
+		if (important_flag)
+		{
+			// Remove any possible whitespace at the end of the property:
+			while (!value_tokens.empty() && value_tokens.back().type == StyleTokenType::whitespace)
+				value_tokens.pop_back();
+		}
+
+		return value_tokens;
+	}
+
 	std::vector<StyleToken> StyleTokenizer::tokenize(const std::string &text)
 	{
 		std::vector<StyleToken> tokens;

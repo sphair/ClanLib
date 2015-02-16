@@ -59,9 +59,9 @@ namespace clan
 	BorderImageSourcePropertyParser style_parser_border_image_source;
 	BorderImageWidthPropertyParser style_parser_border_image_width;
 
-	void BorderImagePropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BorderImagePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue border_image_source;
 		StyleValue border_image_slice[5];
@@ -425,9 +425,9 @@ namespace clan
 		return true;
 	}
 
-	void BorderImageOutsetPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BorderImageOutsetPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue border_image_outset_left;
 		StyleValue border_image_outset_top;
@@ -498,9 +498,9 @@ namespace clan
 		setter->set_value("border-image-outset-left", border_image_outset_left);
 	}
 
-	void BorderImageRepeatPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BorderImageRepeatPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue border_image_repeat_x, border_image_repeat_y;
 
@@ -562,9 +562,9 @@ namespace clan
 		}
 	}
 
-	void BorderImageSlicePropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BorderImageSlicePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue border_image_slice_top;
 		StyleValue border_image_slice_right;
@@ -650,9 +650,9 @@ namespace clan
 		}
 	}
 
-	void BorderImageSourcePropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BorderImageSourcePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue border_image_source;
 
@@ -678,9 +678,9 @@ namespace clan
 		}
 	}
 
-	void BorderImageWidthPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BorderImageWidthPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue border_image_width_top;
 		StyleValue border_image_width_right;
