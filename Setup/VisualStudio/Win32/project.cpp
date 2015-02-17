@@ -36,26 +36,6 @@
 /////////////////////////////////////////////////////////////////////////////
 // Project files exclude list:
 
-static const char *exclude_from_build[] =
-{
-	".",
-	"..",
-	"X11",
-	"Unix",
-	"Makefile.am",
-	"GLX",
-	"setupnetwork_unix.cpp",
-	"MacOS",
-	"MacOSX",
-	"OSX",
-	"AGL",
-	"font_engine_cocoa.h",
-	"font_engine_cocoa.mm",
-	"font_engine_freetype.h",
-	"font_engine_freetype.cpp",
-	nullptr
-};
-
 /////////////////////////////////////////////////////////////////////////////
 // Project construction:
 
@@ -113,9 +93,6 @@ void Project::generate_dir(
 
 		if (strncmp(data.cFileName, ".#", 2) == 0) continue; // don't add CVS revision backups.
 		if (strchr(data.cFileName, '~') != NULL) continue;  //Don't get those emacs/bcc backup files
-
-		for (int i=0; exclude_from_build[i] != NULL; i++)
-			if (_stricmp(data.cFileName, exclude_from_build[i]) == 0) skip = true;
 
 		std::list<std::string>::const_iterator it;
 		for (it = ignore_list.begin(); it != ignore_list.end(); it++)

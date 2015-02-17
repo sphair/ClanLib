@@ -43,7 +43,7 @@
 #include <sys/sysctl.h>
 #endif
 
-#ifndef __APPLE__
+#if !defined __APPLE__ && !defined CL_ANDROID
 #include <execinfo.h>
 #endif
 #include <cxxabi.h>
@@ -131,7 +131,7 @@ int System::capture_stack_trace(int frames_to_skip, int max_frames, void **out_f
 		*out_hash = 0;
 	return capturedFrames;
 
-#elif !defined(__APPLE__)
+#elif !defined __APPLE__ && !defined CL_ANDROID
 	// Ensure the output is cleared
 	memset(out_frames, 0, (sizeof(void *)) * max_frames);
 
@@ -191,7 +191,7 @@ std::vector<std::string> System::get_stack_frames_text(void **frames, int num_fr
 	SymCleanup(GetCurrentProcess());
 	return backtrace_text;
 
-#elif !defined(__APPLE__)
+#elif !defined __APPLE__ && !defined CL_ANDROID
 
 	char **strings;
  	strings = backtrace_symbols(frames, num_frames);

@@ -209,7 +209,7 @@ void WorkspaceGenerator_MSVC8::write_solution(const Workspace &workspace)
 
 void WorkspaceGenerator_MSVC8::write_property_sheet(const Workspace &workspace)
 {
-	MSVC8_PropertySheet propertysheet(target_version);
+	MSVC8_PropertySheet propertysheet(target_version, target_android);
 	propertysheet.name = "External Directories";
 
 	propertysheet.input_include_dir_vs100 = workspace.input_include_dir;
@@ -335,6 +335,8 @@ void WorkspaceGenerator_MSVC8::write_install_batch_file(const Workspace &workspa
 		install_copydir(bat, "API\\", std::string(instdir), &project);
 
 		bat << "copy %1 \"" << workspace.output_lib_dir.c_str() << "\\%4\" > nul" << std::endl;
+		if (target_android)	//TODO: Fixme
+			bat << "rem ";
 		bat << "copy %2 \"" << workspace.output_lib_dir.c_str() << "\\%4\\%3\" > nul" << std::endl;
 	}
 }
@@ -984,7 +986,7 @@ void OutputWriter::write_line(int indent, const std::string &line)
 /////////////////////////////////////////////////////////////////////////////
 // MSVC8_PropertySheet class:
 
-MSVC8_PropertySheet::MSVC8_PropertySheet(int target_version) : target_version(target_version)
+MSVC8_PropertySheet::MSVC8_PropertySheet(int target_version, bool target_android) : target_version(target_version), target_android(target_android)
 {
 }
 
@@ -1004,10 +1006,14 @@ void MSVC8_PropertySheet::write(OutputWriter &output, int indent)
 	output.write_line(indent, "    <ClCompile>");
 	output.write_line(indent, "      <AdditionalIncludeDirectories>" + input_include_dir_vs100 + ";%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>");
 	output.write_line(indent, "    </ClCompile>");
-	output.write_line(indent, "    <Lib>");
-	output.write_line(indent, "      <AdditionalLibraryDirectories>" + input_lib_dir_vs100 + "\\$(Platform)$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>");
-	output.write_line(indent, "    <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>");	// Can the set when the "whole program optimisation" is disabled?
-	output.write_line(indent, "    </Lib>");
+
+	if (!target_android)
+	{
+		output.write_line(indent, "    <Lib>");
+		output.write_line(indent, "      <AdditionalLibraryDirectories>" + input_lib_dir_vs100 + "\\$(Platform)$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>");
+		output.write_line(indent, "    <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>");	// Can the set when the "whole program optimisation" is disabled?
+		output.write_line(indent, "    </Lib>");
+	}
 	output.write_line(indent, "  </ItemDefinitionGroup>");
 	output.write_line(indent, "</Project>");
 }
@@ -1134,11 +1140,22 @@ void MSVC8_Project::write(OutputWriter &output, int indent) const
  			output.write_line(indent, "    <ClCompile>");
  			output.write_line(indent, "      <PrecompiledHeader>Use</PrecompiledHeader>");
 			output.write_line(indent, "      <PrecompiledHeaderFile>" + configurations[index]->precompiled_header_through + "</PrecompiledHeaderFile>");
+
+			if (target_android)
+				output.write_line(indent, "    <CompileAs>CompileAsCpp</CompileAs>");
+
  			output.write_line(indent, "    </ClCompile>");
 		}
 
   		output.write_line(indent, "    <Lib>");
-  		output.write_line(indent, "      <OutputFile>$(OutDir)" + configurations[index]->target_name_vs100 + ".lib</OutputFile>");
+		if (target_android)
+		{
+			output.write_line(indent, "      <OutputFile>$(OutDir)" + configurations[index]->target_name_vs100 + "$(TargetExt)</OutputFile>");
+		}
+		else
+		{
+			output.write_line(indent, "      <OutputFile>$(OutDir)" + configurations[index]->target_name_vs100 + ".lib</OutputFile>");
+		}
   		output.write_line(indent, "    </Lib>");
   		output.write_line(indent, "    <PostBuildEvent>");
   		output.write_line(indent, "      <Message>Installing library and API headers...</Message>");
@@ -1319,7 +1336,10 @@ void MSVC8_File::write_vs100(OutputWriter &output, int indent, const std::vector
 			for (index = 0; index < configurations.size(); index++)
 			{
 	  			output.write_line(indent, "  <PrecompiledHeader Condition=\"'$(Configuration)|$(Platform)'=='" + configurations[index]->name + "'\">Create</PrecompiledHeader>");
+				if (configurations[index]->is_this_android)			// TODO: Is this correct?
+					output.write_line(indent, "    <CompileAs>CompileAsCpp</CompileAs>");
 			}
+
 
 		   	output.write_line(indent, "</ClCompile>");
 		}

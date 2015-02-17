@@ -41,7 +41,7 @@ class Workspace;
 class Wizard
 {
 private:
-	Workspace create_workspace();
+	Workspace create_workspace(bool target_android);
 
 public:
 	Wizard();

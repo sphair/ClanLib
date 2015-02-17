@@ -49,7 +49,7 @@ public:
 		const std::list<std::string> &libs_list_shared,
 		const std::list<std::string> &libs_list_release,
 		const std::list<std::string> &libs_list_debug,
-		const std::list<std::string> &ignore_list = std::list<std::string>());
+		const std::list<std::string> &ignore_list);
 	// Construct a project by searching automatically for the files in the Sources subdir.
 
 // Attributes:

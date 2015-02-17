@@ -148,13 +148,14 @@ public:
 class MSVC8_PropertySheet
 {
 public:
-	MSVC8_PropertySheet(int target_version);
+	MSVC8_PropertySheet(int target_version, bool target_android);
 	~MSVC8_PropertySheet();
 
 	std::string name;
 	std::string input_include_dir_vs100;
 	std::string input_lib_dir_vs100;
 	int target_version;
+	bool target_android = false;
 
 	void write(OutputWriter &output, int indent);
 };

@@ -193,7 +193,7 @@ BOOL Wizard::finish()
 		RegCloseKey(hKey);
 	}
 
-	Workspace workspace = create_workspace();
+	Workspace workspace = create_workspace(page_target.target_android);
 
 	WorkspaceGenerator_MSVC8 generator;
 	generator.set_target_version(page_target.target_version);
@@ -218,7 +218,7 @@ BOOL Wizard::finish()
 /////////////////////////////////////////////////////////////////////////////
 // Workspace creation:
 
-Workspace Wizard::create_workspace()
+Workspace Wizard::create_workspace(bool target_android)
 {
 	Workspace workspace;
 	workspace.input_lib_dir = text_to_local8(page_system.path_input_lib);
@@ -230,14 +230,41 @@ Workspace Wizard::create_workspace()
 	std::list<std::string> libs_list_shared;
 	std::list<std::string> libs_list_release;
 	std::list<std::string> libs_list_debug;
-	
+
+	std::list<std::string> ignore_list;
+	ignore_list.push_back(".");
+	ignore_list.push_back("..");
+
+	if (target_android)
+	{
+		ignore_list.push_back("Win32");
+		ignore_list.push_back("setupnetwork_win32.cpp");
+	}
+	else
+	{
+		ignore_list.push_back("Unix");
+		ignore_list.push_back("setupnetwork_unix.cpp");
+	}
+
+	ignore_list.push_back("X11");
+	ignore_list.push_back("Makefile.am");
+	ignore_list.push_back("GLX");
+	ignore_list.push_back("MacOS");
+	ignore_list.push_back("MacOSX");
+	ignore_list.push_back("OSX");
+	ignore_list.push_back("AGL");
+	ignore_list.push_back("font_engine_cocoa.h");
+	ignore_list.push_back("font_engine_cocoa.mm");
+	ignore_list.push_back("font_engine_freetype.h");
+	ignore_list.push_back("font_engine_freetype.cpp");
+
 	Project clanCore(
 		"Core",
 		"clanCore",
 		"core.h",
 		libs_list_shared,
 		libs_list_release,
-		libs_list_debug);
+		libs_list_debug, ignore_list);
 
 	Project clanApp(
 		"App",
@@ -245,7 +272,7 @@ Workspace Wizard::create_workspace()
 		"application.h",
 		libs_list_shared,
 		libs_list_release,
-		libs_list_debug);
+		libs_list_debug, ignore_list);
 
 	Project clanNetwork(
 		"Network",
@@ -253,7 +280,7 @@ Workspace Wizard::create_workspace()
 		"network.h",
 		libs_list_shared,
 		libs_list_release,
-		libs_list_debug);
+		libs_list_debug, ignore_list);
 
 	Project clanDisplay(
 		"Display",
@@ -261,7 +288,7 @@ Workspace Wizard::create_workspace()
 		"display.h",
 		libs_list_shared,
 		libs_list_release,
-		libs_list_debug);
+		libs_list_debug, ignore_list);
 
 	Project clanSound(
 		"Sound",
@@ -269,7 +296,7 @@ Workspace Wizard::create_workspace()
 		"sound.h",
 		libs_list_shared,
 		libs_list_release,
-		libs_list_debug);
+		libs_list_debug, ignore_list);
 
 	Project clanGL(
 		"GL",
@@ -277,7 +304,7 @@ Workspace Wizard::create_workspace()
 		"gl.h",
 		libs_list_shared,
 		libs_list_release,
-		libs_list_debug);
+		libs_list_debug, ignore_list);
 
 	Project clanUI(
 		"UI",
@@ -285,15 +312,8 @@ Workspace Wizard::create_workspace()
 		"ui.h",
 		libs_list_shared,
 		libs_list_release,
-		libs_list_debug);
+		libs_list_debug, ignore_list);
 
-	Project clanD3D(
-		"D3D",
-		"clanD3D",
-		"d3d.h",
-		libs_list_shared,
-		libs_list_release,
-		libs_list_debug);
 
 	// Add projects to workspace:
 	workspace.projects.push_back(clanCore);
@@ -303,7 +323,20 @@ Workspace Wizard::create_workspace()
 	workspace.projects.push_back(clanSound);
 	workspace.projects.push_back(clanGL);
 	workspace.projects.push_back(clanUI);
-	workspace.projects.push_back(clanD3D);
+
+	if (!target_android)
+	{
+		Project clanD3D(
+			"D3D",
+			"clanD3D",
+			"d3d.h",
+			libs_list_shared,
+			libs_list_release,
+			libs_list_debug, ignore_list);
+
+		workspace.projects.push_back(clanD3D);
+	}
+
 
 	return workspace;
 }
