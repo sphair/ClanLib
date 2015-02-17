@@ -39,8 +39,6 @@ class MSVC8_FileItem;
 class MSVC8_File;
 class MSVC8_Filter;
 class MSVC8_FileConfiguration;
-class MSVC8_VCLinkerTool;
-
 
 /////////////////////////////////////////////////////////////////////////////
 // Workspace generator class:
@@ -182,24 +180,6 @@ public:
 
 };
 
-class MSVC8_Setting
-{
-public:
-	MSVC8_Setting();
-	MSVC8_Setting(const std::string &s);
-
-	bool is_set() const;
-	void set(const std::string &s);
-	const std::string &get() const;
-	void set_default();
-
-	void write(OutputWriter &output, int indent, const std::string &name) const;
-
-private:
-	bool not_set;
-	std::string value;
-};
-
 class MSVC8_Configuration
 {
 public:
@@ -209,8 +189,6 @@ public:
 	std::string name;
 	std::string name_without_platform;
 	std::string name_without_config;
-	MSVC8_Setting output_directory;
-	MSVC8_Setting intermediate_directory;
 	std::vector<std::string> inherited_property_sheets_vs100;
 	std::string target_name_vs100;
 

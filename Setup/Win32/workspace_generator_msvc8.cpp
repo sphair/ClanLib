@@ -1168,47 +1168,6 @@ MSVC8_Configuration::~MSVC8_Configuration()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// MSVC8_Setting class:
-
-MSVC8_Setting::MSVC8_Setting()
-: not_set(true)
-{
-}
-
-MSVC8_Setting::MSVC8_Setting(const std::string &s)
-: not_set(false), value(s)
-{
-}
-
-bool MSVC8_Setting::is_set() const
-{
-	return !not_set;
-}
-
-void MSVC8_Setting::set(const std::string &s)
-{
-	value = s;
-	not_set = false;
-}
-
-const std::string &MSVC8_Setting::get() const
-{
-	return value;
-}
-
-void MSVC8_Setting::set_default()
-{
-	not_set = true;
-	value.clear();
-}
-
-void MSVC8_Setting::write(OutputWriter &output, int indent, const std::string &name) const
-{
-	if (!not_set)
-		output.write_line(indent, name + "=\"" + value + "\"");
-}
-
-/////////////////////////////////////////////////////////////////////////////
 // MSVC8_FileItem class:
 
 MSVC8_FileItem::~MSVC8_FileItem()
