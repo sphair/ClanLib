@@ -155,11 +155,6 @@ BOOL Wizard::finish()
 			hKey, TEXT("TargetVersion"), 0, REG_DWORD,
 			(LPBYTE) &target_version, sizeof(DWORD));
 
-		DWORD include_unicode = (page_target.include_unicode ? 1 : 0);
-		RegSetValueEx(
-			hKey, TEXT("IncludeUnicode"), 0, REG_DWORD,
-			(LPBYTE) &include_unicode, sizeof(DWORD));
-
 		DWORD include_mtdll = (page_target.include_mtdll ? 1 : 0);
 		RegSetValueEx(
 			hKey, TEXT("IncludeMTDLL"), 0, REG_DWORD,
@@ -313,8 +308,7 @@ Workspace Wizard::create_workspace()
 	return workspace;
 }
 
-#ifdef UNICODE
-std::string Wizard::text_to_local8(const tstring &text)
+std::string Wizard::text_to_local8(const std::wstring &text)
 {
 	int local8_length = WideCharToMultiByte(CP_ACP, 0, text.data(), int(text.length()), 0, 0, 0, 0);
 	if (local8_length <= 0)
@@ -333,32 +327,22 @@ std::string Wizard::text_to_local8(const tstring &text)
 	return s;
 }
 
-Wizard::tstring Wizard::local8_to_text(const std::string &local8)
+std::wstring Wizard::local8_to_text(const std::string &local8)
 {
 	int text_length = MultiByteToWideChar(CP_ACP, 0, local8.data(), int(local8.length()), 0, 0);
 	if (text_length <= 0)
-		return tstring();
+		return std::wstring();
 	WCHAR *buffer = new WCHAR[text_length];
 	if (buffer == 0)
-		return tstring();
+		return std::wstring();
 	text_length = MultiByteToWideChar(CP_ACP, 0, local8.data(), int(local8.length()), buffer, text_length);
 	if (text_length <= 0)
 	{
 		delete[] buffer;
-		return tstring();
+		return std::wstring();
 	}
-	tstring s(buffer, text_length);
+	std::wstring s(buffer, text_length);
 	delete[] buffer;
 	return s;
 }
-#else
-std::string Wizard::text_to_local8(const tstring &text)
-{
-	return text;
-}
 
-tstring Wizard::local8_to_text(const std::string &local8)
-{
-	return local8;
-}
-#endif

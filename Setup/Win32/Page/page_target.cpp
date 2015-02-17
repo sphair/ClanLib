@@ -36,7 +36,6 @@ typedef HRESULT (WINAPI *FolderPathFunc)(HWND, LPTSTR, int, BOOL);
 PageTarget::PageTarget()
 {
 	target_version = 1200;
-	include_unicode = false;
 	include_sse2 = true;
 	include_intrinsics = true;
 	include_mtdll = false;
@@ -65,13 +64,6 @@ PageTarget::PageTarget()
 		if (result == ERROR_SUCCESS && type == REG_DWORD)
 		{
 			target_android = (value != 0);
-		}
-
-		size = sizeof(DWORD);
-		result = RegQueryValueEx(hKey, TEXT("IncludeUnicode"), 0, &type, (LPBYTE) &value, &size);
-		if (result == ERROR_SUCCESS && type == REG_DWORD)
-		{
-			include_unicode = (value != 0);
 		}
 
 		size = sizeof(DWORD);
@@ -164,8 +156,6 @@ INT_PTR CALLBACK PageTarget::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				break;
 			}
 
-			SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_NONUNICODE), BM_SETCHECK, BST_CHECKED, 0);
-			SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_UNICODE), BM_SETCHECK, self->include_unicode ? BST_CHECKED : BST_UNCHECKED, 0);
 			SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_MTDLL), BM_SETCHECK, self->include_mtdll ? BST_CHECKED : BST_UNCHECKED, 0);
 			SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_SSE2), BM_SETCHECK, self->include_sse2 ? BST_CHECKED : BST_UNCHECKED, 0);
 			SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_INTRINSICS), BM_SETCHECK, self->include_intrinsics ? BST_CHECKED : BST_UNCHECKED, 0);
@@ -222,7 +212,6 @@ INT_PTR PageTarget::on_notify(HWND hWnd, NMHDR *header)
 			target_android = true;
 		}
 
-		include_unicode = (SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_UNICODE), BM_GETCHECK, 0, 0) == BST_CHECKED);
 		include_x64 = (SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_X64), BM_GETCHECK, 0, 0) == BST_CHECKED);
 		include_mtdll = (SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_MTDLL), BM_GETCHECK, 0, 0) == BST_CHECKED);
 		include_sse2 = (SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_SSE2), BM_GETCHECK, 0, 0) == BST_CHECKED);

@@ -47,13 +47,9 @@ public:
 	Wizard();
 	INT_PTR exec();
 	BOOL finish();
-#ifdef UNICODE
-	typedef std::wstring tstring;
-#else
-	typedef std::string tstring;
-#endif
-	std::string text_to_local8(const tstring &text);
-	tstring local8_to_text(const std::string &local8);
+
+	std::string text_to_local8(const std::wstring &text);
+	std::wstring local8_to_text(const std::string &local8);
 
 	PageWelcome page_welcome;
 	PageTarget page_target;
