@@ -154,9 +154,8 @@ BEGIN
 
 	CONTROL         "Visual C++ .NET 201&3 (12.0)",IDC_RADIO_VC120,"Button",BS_AUTORADIOBUTTON,16,31,105,10
     CONTROL         "Visual C++ .NET 201&5 (14.0)",IDC_RADIO_VC140,"Button",BS_AUTORADIOBUTTON,16,45,105,10
-	CONTROL         "Visual C++ .NET 201&5 (14.0) ANDROID", IDC_RADIO_VC140_ANDROID, "Button", BS_AUTORADIOBUTTON, 16, 59, 200, 10
+	CONTROL         "Visual C++ .NET 201&5 (14.0) - Android (experimental)", IDC_RADIO_VC140_ANDROID, "Button", BS_AUTORADIOBUTTON, 16, 59, 200, 10
 	END
-
 
 /////////////////////////////////////////////////////////////////////////////
 //

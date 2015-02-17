@@ -580,12 +580,41 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_android_config(const std::
 		shared.config->precompiled_header_through = precomp_header;
 	}
 
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\" + platform + "Platform.props");
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\AndroidBuildDirectory.props");
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\ExternalDirectories.props");
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\LocalIncludes.props");
+
+	if (!is_enable_intrinsics)
+	{
+		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\DisableIntrinsics.props");
+	}
+
 	std::string output_file = "clan$(ProjectName)-static";
 	if (config.runtime_type == runtime_static_debug || config.runtime_type == runtime_dll_debug)
 	{
 		output_file += "-debug";
 		shared.config->android_debug_libraries = "true";
+
+		//shared.config->inherited_property_sheets_vs100.push_back("Sheets\\MTDebugRuntime.props");
+
+		//if (is_debug_optimize)
+		//{
+		//	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\DebugBuildOptimized.props");
+		//}
+		//else
+		//{
+		//	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\DebugBuild.props");
+		//}
+
 	}
+	else
+	{
+		//shared.config->inherited_property_sheets_vs100.push_back("Sheets\\MTReleaseRuntime.props");
+		//shared.config->inherited_property_sheets_vs100.push_back("Sheets\\ReleaseBuild.props");
+
+	}
+
 
 	shared.config->target_name_vs100 = output_file;
 
