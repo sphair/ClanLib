@@ -48,11 +48,14 @@
 #include <OpenGLES/ES2/glext.h>
 #elif defined(__APPLE__)
 #include "OSX/opengl_window_provider_osx.h"
+#elif defined(CL_ANDROID)
+#include <EGL/egl.h>
+#include <GLES/gl.h>
 #else
 #include <GL/gl.h>
 #endif
 
-#if !defined(WIN32) && !defined(__APPLE__)
+#if !defined(WIN32) && !defined(__APPLE__) && !defined(CL_ANDROID)
 #define GLX_GLXEXT_PROTOTYPES
 #include <GL/glx.h>
 #include "GLX/opengl_window_provider_glx.h"
