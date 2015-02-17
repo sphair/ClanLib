@@ -585,7 +585,7 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_android_config(const std::
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\" + platform + "Platform.props");
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\AndroidBuildDirectory.props");
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\ExternalDirectories.props");
-	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\LocalIncludes.props");
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\AndroidLocalIncludes.props");
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\AndroidRuntime.props");
 
 	//FIXME: if (!is_enable_intrinsics)
