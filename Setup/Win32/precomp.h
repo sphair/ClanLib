@@ -40,12 +40,7 @@
 #include <windows.h>
 #include <tchar.h>
 
-// disable debug info truncation warnings caused by STL
-#if defined(_MSC_VER)
-#pragma warning(disable: 4786)
-
 // deprecated API and security warnings (configure has to be backwards compatible to older msvcs)
 #pragma warning(disable: 4996)
-#endif
 
 #endif

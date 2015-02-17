@@ -31,11 +31,6 @@
 #include <windows.h>
 #endif
 
-#if defined(_MSC_VER)
-// deprecated API and security warnings (configure has to be backwards compatible to older msvcs)
-#pragma warning(disable: 4996)
-#endif
-
 #include "project.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -45,28 +40,13 @@ static const char *exclude_from_build[] =
 {
 	".",
 	"..",
-	"CVS",
-	".svn",
-	"Be",
 	"X11",
-	"GGI",
-	"Svgalib",
-	"FBDev",
-	"DirectFB",
-	"TTY",
 	"Unix",
 	"Makefile.am",
-	"oss.cpp",
-	"cdaudio_linux.cpp",
-	"DirectSound",
 	"GLX",
 	"setupnetwork_unix.cpp",
-	"unix_socket.cpp",
-	"unix_socket.h",
-	"Mac",
 	"MacOS",
 	"MacOSX",
-	"Quartz",
 	"OSX",
 	"AGL",
 	"font_engine_cocoa.h",
@@ -99,13 +79,11 @@ Project::Project(
 	libs_release(libs_list_release),
 	libs_debug(libs_list_debug)
 {
-#ifdef _MSC_VER
 	std::string lib_main_header;
 	lib_main_header = std::string("Sources\\API\\") + headername;
  	files.push_back(lib_main_header);
 
 	generate_dir(std::string("Sources\\API\\")+name, ignore_list);
-#endif
 	generate_dir(std::string("Sources\\")+name, ignore_list);
 }
 
@@ -137,12 +115,12 @@ void Project::generate_dir(
 		if (strchr(data.cFileName, '~') != NULL) continue;  //Don't get those emacs/bcc backup files
 
 		for (int i=0; exclude_from_build[i] != NULL; i++)
-			if (stricmp(data.cFileName, exclude_from_build[i]) == 0) skip = true;
+			if (_stricmp(data.cFileName, exclude_from_build[i]) == 0) skip = true;
 
 		std::list<std::string>::const_iterator it;
 		for (it = ignore_list.begin(); it != ignore_list.end(); it++)
 		{
-			if (stricmp(data.cFileName, it->c_str()) == 0)
+			if (_stricmp(data.cFileName, it->c_str()) == 0)
 			skip = true;
 		}
 

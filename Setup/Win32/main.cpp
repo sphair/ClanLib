@@ -30,9 +30,12 @@
 #include "wizard.h"
 #include <commctrl.h>
 
-#if _MSC_VER >= 1300
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
-#endif
+#pragma comment(lib, "user32.lib")
+#pragma comment(lib, "comctl32.lib")
+#pragma comment(lib, "rpcrt4.lib")
+#pragma comment(lib, "shell32.lib")
+#pragma comment(lib, "advapi32.lib")
 
 int APIENTRY _tWinMain(
 	HINSTANCE hInstance,
@@ -54,10 +57,3 @@ int APIENTRY _tWinMain(
 	return 0;
 }
 
-#if defined (_MSC_VER)
-#pragma comment(lib, "user32.lib")
-#pragma comment(lib, "comctl32.lib")
-#pragma comment(lib, "rpcrt4.lib")
-#pragma comment(lib, "shell32.lib")
-#pragma comment(lib, "advapi32.lib")
-#endif

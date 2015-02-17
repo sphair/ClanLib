@@ -29,9 +29,7 @@
 #ifndef header_workspace
 #define header_workspace
 
-#if _MSC_VER > 1000
 #pragma once
-#endif
 
 #include "project.h"
 

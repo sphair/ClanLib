@@ -29,10 +29,6 @@
 #include "precomp.h"
 #include "workspace_generator_msvc8.h"
 
-#if _MSC_VER < 1400
-#define sprintf_s _snprintf
-#endif
-
 /////////////////////////////////////////////////////////////////////////////
 // Workspace generator class:
 

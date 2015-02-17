@@ -29,9 +29,7 @@
 #ifndef header_project
 #define header_project
 
-#if _MSC_VER > 1000
 #pragma once
-#endif
 
 #include <string>
 #include <list>

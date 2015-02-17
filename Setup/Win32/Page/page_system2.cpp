@@ -127,18 +127,6 @@ INT_PTR CALLBACK PageSystem2::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, L
 
 INT_PTR PageSystem2::on_notify(HWND hWnd, NMHDR *header)
 {
-	// Don't go to next page yet:
-	// SetWindowLong(hwnd, DWL_MSGRESULT, -1);
-	// return TRUE;
-
-	// Go straight to the completion page:
-	// SetWindowLong(hwnd, DWL_MSGRESULT, IDD_FINISH);
-	// return TRUE;
-
-	// Not finished yet:
-	// SetWindowLong(hwnd, DWL_MSGRESULT, TRUE);
-	// return TRUE;
-
 	switch (header->code)
 	{
 	case PSN_SETACTIVE:
