@@ -47,7 +47,7 @@ int APIENTRY _tWinMain(
 
 	if (GetFileAttributesA(".\\Sources") == INVALID_FILE_ATTRIBUTES)
 	{
-		SetCurrentDirectoryA("..");
+		SetCurrentDirectoryA("..\\..");
 	}
 
 	InitCommonControls();
