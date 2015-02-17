@@ -26,10 +26,10 @@
 **    Magnus Norddahl
 */
 
-#include "precomp.h"
+#include "..\precomp.h"
 #include "page_finished.h"
-#include "resource.h"
-#include "wizard.h"
+#include "..\resource.h"
+#include "..\wizard.h"
 
 PageFinished::PageFinished()
 : wizard(0)

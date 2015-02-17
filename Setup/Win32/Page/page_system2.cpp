@@ -26,20 +26,20 @@
 **    Magnus Norddahl
 */
 
-#include "precomp.h"
-#include "page_system.h"
-#include "resource.h"
+#include "..\precomp.h"
+#include "page_system2.h"
+#include "..\resource.h"
 #include <shlobj.h>
 
 typedef HRESULT (WINAPI *FolderPathFunc)(HWND, LPTSTR, int, BOOL);
 
-PageSystem::PageSystem()
+PageSystem2::PageSystem2()
 {
-	memset(path_input_include, 0, sizeof(TCHAR) * MAX_PATH);
-	memset(path_input_lib, 0, sizeof(TCHAR) * MAX_PATH);
+	memset(path_output_include, 0, sizeof(TCHAR) * MAX_PATH);
+	memset(path_output_lib, 0, sizeof(TCHAR) * MAX_PATH);
 
-	_tcscpy(path_input_include, TEXT("C:\\Development\\Environment\\ClanLib\\Include"));
-	_tcscpy(path_input_lib, TEXT("C:\\Development\\Environment\\ClanLib\\Lib"));
+	_tcscpy(path_output_include, TEXT("C:\\Development\\Environment\\ClanLib\\Include"));
+	_tcscpy(path_output_lib, TEXT("C:\\Development\\Environment\\ClanLib\\Lib"));
 
 	HKEY hKey = 0;
 	LONG result = RegOpenKeyEx(
@@ -52,19 +52,19 @@ PageSystem::PageSystem()
 		DWORD size;
 		
 		size = MAX_PATH;
-		result = RegQueryValueEx(hKey, TEXT("InputInclude"), 0, &type, (LPBYTE) buffer, &size);
+		result = RegQueryValueEx(hKey, TEXT("OutputInclude"), 0, &type, (LPBYTE) buffer, &size);
 		if (result == ERROR_SUCCESS && type == REG_SZ)
 		{
 			buffer[size] = 0;
-			_tcscpy(path_input_include, buffer);
+			_tcscpy(path_output_include, buffer);
 		}
 
 		size = MAX_PATH;
-		result = RegQueryValueEx(hKey, TEXT("InputLib"), 0, &type, (LPBYTE) buffer, &size);
+		result = RegQueryValueEx(hKey, TEXT("OutputLib"), 0, &type, (LPBYTE) buffer, &size);
 		if (result == ERROR_SUCCESS && type == REG_SZ)
 		{
 			buffer[size] = 0;
-			_tcscpy(path_input_lib, buffer);
+			_tcscpy(path_output_lib, buffer);
 		}
 
 		RegCloseKey(hKey);
@@ -73,15 +73,15 @@ PageSystem::PageSystem()
 	memset(&propsheetpage, 0, sizeof(PROPSHEETPAGE));
 	propsheetpage.dwSize = sizeof(PROPSHEETPAGE);
 	propsheetpage.dwFlags = PSP_USEHEADERTITLE|PSP_USEHEADERSUBTITLE;
-	propsheetpage.pszTemplate = MAKEINTRESOURCE(IDD_SYSTEM_PAGE);
-	propsheetpage.pfnDlgProc = &PageSystem::dialog_proc;
+	propsheetpage.pszTemplate = MAKEINTRESOURCE(IDD_SYSTEM2_PAGE);
+	propsheetpage.pfnDlgProc = &PageSystem2::dialog_proc;
 	propsheetpage.lParam = (LPARAM) this;
-	propsheetpage.pszHeaderTitle = TEXT("Input Library Setup");
-	propsheetpage.pszHeaderSubTitle = TEXT("Search paths for headers and libraries");
+	propsheetpage.pszHeaderTitle = TEXT("Output Library Setup");
+	propsheetpage.pszHeaderSubTitle = TEXT("Installation paths");
 	handle_propsheetpage = CreatePropertySheetPage(&propsheetpage);
 }
 
-INT_PTR CALLBACK PageSystem::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK PageSystem2::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -89,11 +89,11 @@ INT_PTR CALLBACK PageSystem::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 		{
 			HWND default_focus = (HWND) wParam;
 			PROPSHEETPAGE *propsheetpage = (PROPSHEETPAGE *) lParam;
-			PageSystem *self = (PageSystem *) propsheetpage->lParam;
+			PageSystem2 *self = (PageSystem2 *) propsheetpage->lParam;
 			SetWindowLongPtr(hWnd, GWL_USERDATA, (LONG_PTR) self);
 
-			SendMessage(GetDlgItem(hWnd, IDC_INPUT_INCLUDE), WM_SETTEXT, 0, (LPARAM) self->path_input_include);
-			SendMessage(GetDlgItem(hWnd, IDC_INPUT_LIB), WM_SETTEXT, 0, (LPARAM) self->path_input_lib);
+			SendMessage(GetDlgItem(hWnd, IDC_OUTPUT_INCLUDE), WM_SETTEXT, 0, (LPARAM) self->path_output_include);
+			SendMessage(GetDlgItem(hWnd, IDC_OUTPUT_LIB), WM_SETTEXT, 0, (LPARAM) self->path_output_lib);
 
 			// return FALSE if we set the focus
 			return TRUE;
@@ -101,20 +101,20 @@ INT_PTR CALLBACK PageSystem::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 	case WM_NOTIFY:
 		{
 			NMHDR *header = (NMHDR *) lParam;
-			PageSystem *self = (PageSystem *) GetWindowLongPtr(hWnd, GWL_USERDATA);
+			PageSystem2 *self = (PageSystem2 *) GetWindowLongPtr(hWnd, GWL_USERDATA);
 			return self->on_notify(hWnd, header);
 		}
 	case WM_COMMAND:
 		if (HIWORD(wParam) == BN_CLICKED)
 		{
-			PageSystem *self = (PageSystem *) GetWindowLongPtr(hWnd, GWL_USERDATA);
+			PageSystem2 *self = (PageSystem2 *) GetWindowLongPtr(hWnd, GWL_USERDATA);
 			switch (LOWORD(wParam))
 			{
-			case IDC_INPUT_LIB_BROWSE:
-				self->on_input_lib_browse_clicked(hWnd);
+			case IDC_OUTPUT_LIB_BROWSE:
+				self->on_output_lib_browse_clicked(hWnd);
 				return TRUE;
-			case IDC_INPUT_INCLUDE_BROWSE:
-				self->on_input_include_browse_clicked(hWnd);
+			case IDC_OUTPUT_INCLUDE_BROWSE:
+				self->on_output_include_browse_clicked(hWnd);
 				return TRUE;
 			}
 		}
@@ -125,7 +125,7 @@ INT_PTR CALLBACK PageSystem::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 	}
 }
 
-INT_PTR PageSystem::on_notify(HWND hWnd, NMHDR *header)
+INT_PTR PageSystem2::on_notify(HWND hWnd, NMHDR *header)
 {
 	// Don't go to next page yet:
 	// SetWindowLong(hwnd, DWL_MSGRESULT, -1);
@@ -146,8 +146,8 @@ INT_PTR PageSystem::on_notify(HWND hWnd, NMHDR *header)
 		return TRUE;
 	case PSN_WIZBACK:
 	case PSN_WIZNEXT:
-		SendMessage(GetDlgItem(hWnd, IDC_INPUT_INCLUDE), WM_GETTEXT, MAX_PATH, (LPARAM) path_input_include);
-		SendMessage(GetDlgItem(hWnd, IDC_INPUT_LIB), WM_GETTEXT, MAX_PATH, (LPARAM) path_input_lib);
+		SendMessage(GetDlgItem(hWnd, IDC_OUTPUT_INCLUDE), WM_GETTEXT, MAX_PATH, (LPARAM) path_output_include);
+		SendMessage(GetDlgItem(hWnd, IDC_OUTPUT_LIB), WM_GETTEXT, MAX_PATH, (LPARAM) path_output_lib);
 		return TRUE;
 	case PSN_WIZFINISH:
 	default:
@@ -155,27 +155,27 @@ INT_PTR PageSystem::on_notify(HWND hWnd, NMHDR *header)
 	}
 }
 
-void PageSystem::on_input_lib_browse_clicked(HWND hWnd)
+void PageSystem2::on_output_lib_browse_clicked(HWND hWnd)
 {
 	TCHAR str[1024];
 	str[0] = 0;
-	if (BrowseForFolder(hWnd, TEXT("Select input Library directory"), str))
+	if (BrowseForFolder(hWnd, TEXT("Select output Library directory"), str))
 	{
-		SendMessage(GetDlgItem(hWnd, IDC_INPUT_LIB), WM_SETTEXT, 0, (LPARAM) str);
+		SendMessage(GetDlgItem(hWnd, IDC_OUTPUT_LIB), WM_SETTEXT, 0, (LPARAM) str);
 	}
 }
 
-void PageSystem::on_input_include_browse_clicked(HWND hWnd)
+void PageSystem2::on_output_include_browse_clicked(HWND hWnd)
 {
 	TCHAR str[1024];
 	str[0] = 0;
-	if (BrowseForFolder(hWnd, TEXT("Select input Include directory"), str))
+	if (BrowseForFolder(hWnd, TEXT("Select output Include directory"), str))
 	{
-		SendMessage(GetDlgItem(hWnd, IDC_INPUT_INCLUDE), WM_SETTEXT, 0, (LPARAM) str);
+		SendMessage(GetDlgItem(hWnd, IDC_OUTPUT_INCLUDE), WM_SETTEXT, 0, (LPARAM) str);
 	}
 }
 
-BOOL PageSystem::BrowseForFolder(HWND hOwner, TCHAR* szTitle, TCHAR* szRetval)
+BOOL PageSystem2::BrowseForFolder(HWND hOwner, TCHAR* szTitle, TCHAR* szRetval)
 {
 	BROWSEINFO info;
 	LPITEMIDLIST itemidlist;

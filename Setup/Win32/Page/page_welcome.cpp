@@ -26,9 +26,9 @@
 **    Magnus Norddahl
 */
 
-#include "precomp.h"
+#include "..\precomp.h"
 #include "page_welcome.h"
-#include "resource.h"
+#include "..\resource.h"
 
 PageWelcome::PageWelcome()
 {

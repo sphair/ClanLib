@@ -30,7 +30,7 @@
 #include "wizard.h"
 #include "resource.h"
 #include "workspace_generator_msvc8.h"
-#include "../Generic/workspace.h"
+#include "workspace.h"
 
 Wizard::Wizard()
 {

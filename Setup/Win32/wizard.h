@@ -29,11 +29,11 @@
 #ifndef header_wizard
 #define header_wizard
 
-#include "page_welcome.h"
-#include "page_target.h"
-#include "page_system.h"
-#include "page_system2.h"
-#include "page_finished.h"
+#include "Page/page_welcome.h"
+#include "Page/page_target.h"
+#include "Page/page_system.h"
+#include "Page/page_system2.h"
+#include "Page/page_finished.h"
 #include <string>
 
 class Workspace;

@@ -26,9 +26,9 @@
 **    Magnus Norddahl
 */
 
-#include "precomp.h"
+#include "..\precomp.h"
 #include "page_target.h"
-#include "resource.h"
+#include "..\resource.h"
 #include <shlobj.h>
 
 typedef HRESULT (WINAPI *FolderPathFunc)(HWND, LPTSTR, int, BOOL);

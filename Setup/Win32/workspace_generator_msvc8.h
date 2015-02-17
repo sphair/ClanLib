@@ -30,7 +30,7 @@
 #define header_workspace_generator_msvc8
 
 #include <vector>
-#include "../Generic/workspace.h"
+#include "workspace.h"
 #include <fstream>
 
 class MSVC8_Project;
