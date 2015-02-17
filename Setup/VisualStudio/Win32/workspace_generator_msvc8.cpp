@@ -577,15 +577,16 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_android_config(const std::
 	if (has_precomp)
 	{
 		shared.config->use_precompiled_header = "2";
-		shared.config->precompiled_header_through = precomp_header;
+		shared.config->precompiled_header_through = "../Sources/" + precomp_header;
 	}
 
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\" + platform + "Platform.props");
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\AndroidBuildDirectory.props");
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\ExternalDirectories.props");
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\LocalIncludes.props");
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\AndroidRuntime.props");
 
-	if (!is_enable_intrinsics)
+	//FIXME: if (!is_enable_intrinsics)
 	{
 		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\DisableIntrinsics.props");
 	}
@@ -596,7 +597,6 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_android_config(const std::
 		output_file += "-debug";
 		shared.config->android_debug_libraries = "true";
 
-		//shared.config->inherited_property_sheets_vs100.push_back("Sheets\\MTDebugRuntime.props");
 
 		//if (is_debug_optimize)
 		//{
@@ -610,20 +610,11 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_android_config(const std::
 	}
 	else
 	{
-		//shared.config->inherited_property_sheets_vs100.push_back("Sheets\\MTReleaseRuntime.props");
 		//shared.config->inherited_property_sheets_vs100.push_back("Sheets\\ReleaseBuild.props");
 
 	}
 
-
 	shared.config->target_name_vs100 = output_file;
-
-	output_file = "$(OutDir)\\clan" + project_name;
-	if (config.runtime_type != runtime_static_debug && config.runtime_type != runtime_static_release)
-	{
-		output_file += "-static";
-	}
-	output_file += ".a";
 
 	return shared.config;
 }
@@ -1090,6 +1081,7 @@ void MSVC8_Project::write(OutputWriter &output, int indent) const
 		if (target_android)
 		{
 			output.write_line(indent, "    <PlatformToolset>Clang_3_4</PlatformToolset>");
+			output.write_line(indent, "    <UseOfStl>gnustl_static</UseOfStl>");		// TODO: Optional dynamic (like -mtdll on windows)
 			if (!configurations[index]->android_debug_libraries.empty())
 			{
 				output.write_line(indent, "    <UseDebugLibraries>" + configurations[index]->android_debug_libraries + "</UseDebugLibraries>");
