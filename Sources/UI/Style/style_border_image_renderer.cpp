@@ -63,8 +63,8 @@ namespace clan
 
 			int x[4] = { border_image_area.left, border_image_area.left + grid_left, border_image_area.right - grid_right, border_image_area.right };
 			int y[4] = { border_image_area.top, border_image_area.top + grid_top, border_image_area.bottom - grid_bottom, border_image_area.bottom };
-			int sx[4] = { 0, slice_left, image.get_width() - slice_right, image.get_width() };
-			int sy[4] = { 0, slice_top, image.get_height() - slice_bottom, image.get_height() };
+			int sx[4] = { 0, slice_left, (int) image.get_width() - slice_right, (int)image.get_width() };
+			int sy[4] = { 0, slice_top, (int) image.get_height() - slice_bottom, (int)image.get_height() };
 
 			for (int yy = 0; yy < 3; yy++)
 			{
