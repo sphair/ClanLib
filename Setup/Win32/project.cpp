@@ -125,12 +125,6 @@ void Project::generate_dir(
 	std::string path = dir;
 	if (path[path.length()-1] != '\\') path += '\\';
 
-#ifdef __MINGW32__
-	for(int i=0;i<path.length();i++)
-	    if(path[i]=='\\')
-			path[i]='/';
-#endif
-
 	WIN32_FIND_DATAA	data;
 	HANDLE handle = FindFirstFileA(std::string(path + "*.*").c_str(), &data);
 	if (handle == INVALID_HANDLE_VALUE) return;
@@ -141,20 +135,6 @@ void Project::generate_dir(
 
 		if (strncmp(data.cFileName, ".#", 2) == 0) continue; // don't add CVS revision backups.
 		if (strchr(data.cFileName, '~') != NULL) continue;  //Don't get those emacs/bcc backup files
-
-#ifdef __BORLANDC__
-//		if (strstr(data.cFileName, ".cpp") == NULL) continue;
-		if (strstr(data.cFileName, ".s") != NULL) continue;
-		if (strstr(data.cFileName, ".h") != NULL) continue;
-		if (strstr(data.cFileName, ".nasm") != NULL) continue;
-		if (strstr(data.cFileName, ".asm") != NULL) continue;
-		if (strstr(data.cFileName, ".txt") != NULL) continue;
-		if (strstr(data.cFileName, "README") != NULL) continue;
-		if (strstr(data.cFileName, "Makefile") != NULL) continue;
-		if (strstr(data.cFileName, ".pkg") != NULL) continue;
-		if (strstr(data.cFileName, ".m4") != NULL) continue;
-		//Only snatch .cpp files
-#endif
 
 		for (int i=0; exclude_from_build[i] != NULL; i++)
 			if (stricmp(data.cFileName, exclude_from_build[i]) == 0) skip = true;
@@ -175,27 +155,7 @@ void Project::generate_dir(
 		}
 		else
 		{
-#ifdef __BORLANDC__
-			std::string tmp = path;
-			if(tmp[tmp.length()-1] == '\\')
-				tmp.erase((tmp.end()-1));
-			if(paths.empty())
-				paths.push_back(tmp);
-			else
-				if(!(paths.back() == tmp))
-					paths.push_back(tmp);
-			char *ext = strstr(data.cFileName, ".cpp");
-			if(ext == NULL)
-				continue;
-			*(ext++) = 0;
-			*(ext++) = 0;
-			*(ext++) = 0;
-			*(ext++) = 0;           
-			files.push_back(data.cFileName);
-			file_paths.push_back(path  +  data.cFileName);
-#else
 			files.push_back(path + data.cFileName);
-#endif
 		}
 
 	} while (FindNextFileA(handle, &data));
