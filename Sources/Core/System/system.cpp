@@ -64,6 +64,11 @@
 #include <malloc.h>
 #endif
 
+#ifdef CL_ANDROID
+// Remove this, when it works without
+extern int posix_memalign(void **memptr, size_t alignment, size_t size);
+#endif
+
 namespace clan
 {
 
