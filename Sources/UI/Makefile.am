@@ -1,12 +1,12 @@
 lib_LTLIBRARIES = libclan40UI.la
 
 libclan40UI_la_SOURCES = \
+./Style/style_background_renderer.cpp \
 ./Style/style.cpp \
 ./Style/style_tokenizer.cpp \
 ./Style/box_geometry.cpp \
 ./Style/style_tokenizer_impl.cpp \
-./Style/box_style_impl.cpp \
-./Style/box_style.cpp \
+./Style/style_border_image_renderer.cpp \
 ./Style/Properties/layout.cpp \
 ./Style/Properties/outline.cpp \
 ./Style/Properties/background.cpp \

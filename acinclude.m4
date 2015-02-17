@@ -39,7 +39,7 @@ define([CLANLIB_ENABLE_MODULES],[
 ClanLib_Modules="$ClanLib_Modules $1"
 ClanLib_pkgconfig="$ClanLib_pkgconfig m4_bpatsubst($1,\w+,[clan\&.pc])"
 ClanLib_API_Modules="$ClanLib_API_Modules m4_bpatsubst($1,\w+,[\\$(clan\&_includes)])"
-AC_CONFIG_FILES(m4_bpatsubst($1,\w+,Sources/\&/Makefile Setup/pkgconfig/clan\&.pc))])
+AC_CONFIG_FILES(m4_bpatsubst($1,\w+,Sources/\&/Makefile Setup/Unix/pkgconfig/clan\&.pc))])
 
 dnl CLANLIB_ARG_ENABLE(option, default, option label, checking message)
 define([CLANLIB_ARG_ENABLE],[AC_MSG_CHECKING($4)

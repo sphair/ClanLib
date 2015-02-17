@@ -306,7 +306,6 @@ clanDisplay_includes = \
 clanUI_includes = \
 	ui.h \
 	UI/Style/box_geometry.h \
-	UI/Style/box_style.h \
 	UI/Style/style_token.h \
 	UI/Style/style.h \
 	UI/Style/style_property_parser.h \

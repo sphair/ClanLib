@@ -639,6 +639,7 @@ AC_SUBST(ClanLib_API_Modules)
 AC_SUBST(ClanLib_Examples)
 
 AC_CONFIG_FILES([
+		Setup/Unix/pkgconfig/clanApp.pc
 		Setup/Unix/pkgconfig/Makefile
 		Makefile
 		Examples/Makefile
