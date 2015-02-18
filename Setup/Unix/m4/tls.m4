@@ -82,7 +82,7 @@ AC_DEFUN([GCC_CHECK_CC_TLS], [
 		 gcc_cv_have_cc_tls, [
     AC_COMPILE_IFELSE([AC_LANG_SOURCE([__thread int a; int b; int main() { return a = b; }])],
       [gcc_cv_have_cc_tls=yes], [gcc_cv_have_cc_tls=no])]
-    )])
+    )
 #  if test "$enable_tls $gcc_cv_have_cc_tls" = "yes yes"; then
   if test "$gcc_cv_have_cc_tls" = "yes"; then
     AC_DEFINE(HAVE_CC_TLS, 1,

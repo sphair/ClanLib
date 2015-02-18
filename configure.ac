@@ -8,7 +8,7 @@ AC_PREREQ(2.50)
 dnl Set the name of the package and its version. (This must be called first)
 AC_INIT(ClanLib, 4.0.0)
 
-AC_CONFIG_MACRO_DIR(m4)
+AC_CONFIG_MACRO_DIR(Setup/Unix/m4)
 
 dnl Ensure that the source code exists (by specifying a known source code file)
 AC_CONFIG_SRCDIR(Sources/API/core.h)

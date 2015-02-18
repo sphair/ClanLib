@@ -1,6 +1,3 @@
-dnl thread-local storage support macro
-m4_include(m4/tls.m4)
-
 dnl CLANLIB_CHECK_LIB(lib, testprog, module, failed_message, use_libs, use_cflags) library test macro
 define([CLANLIB_CHECK_LIB],[if test "$enable_$3" != "no"; then
     OLDLIBS="$LIBS"; LIBS="$5"; AC_MSG_CHECKING(for $1)
