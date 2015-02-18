@@ -44,10 +44,10 @@ Platform/Win32/init_guids.cpp \
 Platform/Win32/soundoutput_win32.cpp
 else
 libclan40Sound_la_SOURCES += \
-Platform/Unix/soundoutput_oss.cpp
+Platform/Linux/soundoutput_oss.cpp
 if ALSA
 libclan40Sound_la_SOURCES += \
-Platform/Unix/soundoutput_alsa.cpp
+Platform/Linux/soundoutput_alsa.cpp
 endif
 endif
 

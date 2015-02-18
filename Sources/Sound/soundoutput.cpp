@@ -41,12 +41,12 @@
 #ifdef __APPLE__
 #include "Platform/MacOSX/soundoutput_macosx.h"
 #else
-#include "Platform/Unix/soundoutput_oss.h"
+#include "Platform/Linux/soundoutput_oss.h"
 #endif
 #endif
 
 #ifdef HAVE_ALSA_ASOUNDLIB_H
-#include "Platform/Unix/soundoutput_alsa.h"
+#include "Platform/Linux/soundoutput_alsa.h"
 #endif
 
 namespace clan
