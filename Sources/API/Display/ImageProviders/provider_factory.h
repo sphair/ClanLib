@@ -49,8 +49,6 @@ class ImageProviderFactory
 /// \{
 
 public:
-	/// \brief Map of the class factories for each provider type.
-	static std::map<std::string, ImageProviderType *> types;
 
 /// \}
 /// \name Operations

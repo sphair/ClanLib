@@ -60,6 +60,7 @@
 namespace clan
 {
 
+	class ImageProviderType;
 	class SetupDisplay_Impl : public SetupModule
 	{
 	public:
@@ -69,18 +70,22 @@ namespace clan
 		static void add_cache_factory_xml(ResourceManager &manager, const XMLResourceDocument &doc);
 		static void add_cache_factory_file(ResourceManager &manager, const FileResourceDocument &doc);
 
+		static SetupDisplay_Impl *instance;
+
+		/// \brief Map of the class factories for each provider type.
+		std::map<std::string, ImageProviderType *> image_provider_factory_types;
+
+		ProviderType_Register<JPEGProvider> *jpeg_provider = nullptr;
+		ProviderType_Register<JPEGProvider> *jpg_provider = nullptr;
+		ProviderType_Register<PNGProvider> *png_provider = nullptr;
+		ProviderType_Register<TargaProvider> *targa_provider = nullptr;
+		ProviderType_Register<TargaProvider> *tga_provider = nullptr;
+
 #ifdef WIN32
 		DisplayMessageQueue_Win32 message_queue;
 #elif !defined(__APPLE__) && !defined(CL_ANDROID)
 		DisplayMessageQueue_X11 message_queue;
 #endif
-		static SetupDisplay_Impl *instance;
-
-		std::unique_ptr<ProviderType_Register<JPEGProvider> > jpeg_provider;
-		std::unique_ptr<ProviderType_Register<JPEGProvider> > jpg_provider;
-		std::unique_ptr<ProviderType_Register<PNGProvider> > png_provider;
-		std::unique_ptr<ProviderType_Register<TargaProvider> > targa_provider;
-		std::unique_ptr<ProviderType_Register<TargaProvider> > tga_provider;
 	};
 	SetupDisplay_Impl *SetupDisplay_Impl::instance = nullptr;
 
@@ -113,11 +118,11 @@ namespace clan
 		XInitThreads();
 #endif
 #endif
-		jpeg_provider = clan::make_unique<ProviderType_Register<JPEGProvider> >("jpeg");
-		jpg_provider = clan::make_unique<ProviderType_Register<JPEGProvider> >("jpg");
-		png_provider = clan::make_unique<ProviderType_Register<PNGProvider> >("png");
-		targa_provider = clan::make_unique<ProviderType_Register<TargaProvider> >("targa");
-		tga_provider = clan::make_unique<ProviderType_Register<TargaProvider> >("tga");
+		jpeg_provider = new ProviderType_Register<JPEGProvider>("jpeg");
+		jpg_provider = new ProviderType_Register<JPEGProvider>("jpg");
+		png_provider = new ProviderType_Register<PNGProvider>("png");
+		targa_provider = new ProviderType_Register<TargaProvider>("targa");
+		tga_provider = new ProviderType_Register<TargaProvider>("tga");
 
 		XMLResourceManager::add_cache_factory(std::function<void(ResourceManager &, const XMLResourceDocument &)>(&SetupDisplay_Impl::add_cache_factory_xml));
 		FileResourceManager::add_cache_factory(std::function<void(ResourceManager &, const FileResourceDocument &)>(&SetupDisplay_Impl::add_cache_factory_file));
@@ -125,6 +130,12 @@ namespace clan
 
 	SetupDisplay_Impl::~SetupDisplay_Impl()
 	{
+		delete jpeg_provider;
+		delete jpg_provider;
+		delete png_provider;
+		delete targa_provider;
+		delete tga_provider;
+
 		instance = nullptr;
 	}
 
@@ -141,16 +152,24 @@ namespace clan
 #ifdef WIN32
 	DisplayMessageQueue_Win32 *SetupDisplay::get_message_queue()
 	{
-		start();
+		if (!SetupDisplay_Impl::instance)
+			start();
 		return &SetupDisplay_Impl::instance->message_queue;
 	}
 #elif !defined(__APPLE__) && !defined(CL_ANDROID)
 	DisplayMessageQueue_X11* SetupDisplay::get_message_queue()
 	{
-		start();
+		if (!SetupDisplay_Impl::instance)
+			start();
 		return &SetupDisplay_Impl::instance->message_queue;
 	}
 #endif
+	std::map<std::string, ImageProviderType *> *SetupDisplay::get_image_provider_factory_types()
+	{
+		if (!SetupDisplay_Impl::instance)
+			start();
+		return &SetupDisplay_Impl::instance->image_provider_factory_types;
+	}
 
 }
 
