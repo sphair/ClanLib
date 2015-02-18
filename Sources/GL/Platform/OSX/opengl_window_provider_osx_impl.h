@@ -41,8 +41,8 @@
 #include "API/GL/opengl.h"
 #include "API/GL/opengl_window_description.h"
 #include "API/Core/Text/logger.h"
-#include "../opengl_window_description_impl.h"
-#include "../GL3/gl3_graphic_context_provider.h"
+#include "../../opengl_window_description_impl.h"
+#include "../../GL3/gl3_graphic_context_provider.h"
 
 #import <CoreFoundation/CoreFoundation.h>
 #import <AppKit/AppKit.h>

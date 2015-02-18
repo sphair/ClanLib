@@ -47,7 +47,7 @@
 #include <OpenGLES/ES2/gl.h>
 #include <OpenGLES/ES2/glext.h>
 #elif defined(__APPLE__)
-#include "OSX/opengl_window_provider_osx.h"
+#include "Platform/OSX/opengl_window_provider_osx.h"
 #elif defined(CL_ANDROID)
 #include <EGL/egl.h>
 #include <GLES/gl.h>
@@ -58,7 +58,7 @@
 #if !defined(WIN32) && !defined(__APPLE__) && !defined(CL_ANDROID)
 #define GLX_GLXEXT_PROTOTYPES
 #include <GL/glx.h>
-#include "GLX/opengl_window_provider_glx.h"
+#include "Platform/GLX/opengl_window_provider_glx.h"
 #endif
 
 #include "API/GL/opengl_graphic_context.h"

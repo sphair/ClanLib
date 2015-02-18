@@ -30,7 +30,7 @@
 
 #include "API/Display/TargetProviders/display_window_provider.h"
 #include "API/Display/Render/graphic_context.h"
-#include "Display/Win32/win32_window.h"
+#include "Display/Platform/Win32/win32_window.h"
 #include <mutex>
 
 namespace clan

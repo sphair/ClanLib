@@ -39,15 +39,15 @@ soundoutput.cpp
 
 if WIN32
 libclan40Sound_la_SOURCES += \
-Win32/soundoutput_directsound.cpp \
-Win32/init_guids.cpp \
-Win32/soundoutput_win32.cpp
+Platform/Win32/soundoutput_directsound.cpp \
+Platform/Win32/init_guids.cpp \
+Platform/Win32/soundoutput_win32.cpp
 else
 libclan40Sound_la_SOURCES += \
-Unix/soundoutput_oss.cpp
+Platform/Unix/soundoutput_oss.cpp
 if ALSA
 libclan40Sound_la_SOURCES += \
-Unix/soundoutput_alsa.cpp
+Platform/Unix/soundoutput_alsa.cpp
 endif
 endif
 

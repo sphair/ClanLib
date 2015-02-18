@@ -39,8 +39,8 @@
 #include "API/GL/opengl_window_description.h"
 #include "API/Core/Text/logger.h"
 //#include "Display/Cocoa/cursor_provider_cocoa.h"
-#include "../opengl_window_description_impl.h"
-#include "../opengl_graphic_context_provider.h"
+#include "../../opengl_window_description_impl.h"
+#include "../../opengl_graphic_context_provider.h"
 #include "../opengl_target_provider.h"
 
 namespace clan

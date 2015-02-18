@@ -23,62 +23,48 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
-**    Hans de Goede
+**    Mark Page
 */
 
 #pragma once
 
-#ifdef __linux__
-
-#include "../soundoutput_impl.h"
-#ifdef HAVE_ALSA_ASOUNDLIB_H
-#include <alsa/asoundlib.h> 
-#endif
-#ifdef HAVE_ASOUNDLIB_H
-#include <asoundlib.h>
-#endif
+#include "API/GL/opengl_wrap.h"
+#include "../../opengl_graphic_context_provider.h"
 
 namespace clan
 {
 
-class SoundOutput_alsa : public SoundOutput_Impl
+class GL1GraphicContextProvider;
+class OpenGLWindowProvider;
+
+class PBuffer_GL1_Impl : public OpenGLGraphicContextProvider
 {
-//! Construction:
+
 public:
-	SoundOutput_alsa(int mixing_frequency, int mixing_latency);
-	
-	~SoundOutput_alsa();
+	PBuffer_GL1_Impl(GL1GraphicContextProvider *gc_provider);
 
-//! Attributes:
+	~PBuffer_GL1_Impl();
+
 public:
-	snd_pcm_t *handle;
-	snd_pcm_uframes_t frames_in_period;
-	snd_pcm_uframes_t frames_in_buffer;
+	void make_current() const;
 
-//! Operations:
-public:
-	//: Called when we have no samples to play - and wants to tell the soundcard
-	//: about this possible event.
-	virtual void silence() override;
+	void get_opengl_version(int &version_major, int &version_minor) const;
+	void get_opengl_version(int &version_major, int &version_minor, int &version_release) const;
 
-	//: Returns true if all fragments are filled with data.
-	virtual bool is_full();
+	void create(OpenGLWindowProvider &window_provider, const Size &size);
+	ProcAddress *get_proc_address(const std::string& function_name) const;
 
-	//: Returns the buffer size used by device (returned as num [stereo] samples).
-	virtual int get_fragment_size() override;
-
-	//: Writes a fragment to the soundcard.
-	virtual void write_fragment(float *data) override;
-
-	//: Waits until output source isn't full anymore.
-	virtual void wait() override;
-
-//! Implementation:
 private:
+	void reset();
+
+	GL1GraphicContextProvider *gc_provider;
+	GLFunctions::HPBUFFERARB pbuffer;
+	HGLRC pbuffer_context;
+	HDC pbuffer_dc;
+
+	Size pbuffer_size;
+
+
 };
 
 }
-
-#endif
-

@@ -49,7 +49,7 @@
 #include "display_message_queue_x11.h"
 #include <X11/Xatom.h>
 #include <cstdio>
-#include "../Window/input_context_impl.h"
+#include "../../Window/input_context_impl.h"
 #include <X11/XKBlib.h>
 #include <dlfcn.h>
 #include <unistd.h>

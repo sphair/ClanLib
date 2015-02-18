@@ -28,58 +28,51 @@
 
 #pragma once
 
-#include "../soundoutput_impl.h"
-#include "API/Core/System/comptr.h"
-#include "API/Core/System/databuffer.h"
-#include <mmdeviceapi.h>
-#include <audioclient.h>
+#include "../../soundoutput_impl.h"
 
 namespace clan
 {
 
-class SoundOutput_Win32 : public SoundOutput_Impl
+class SoundOutput_OSS : public SoundOutput_Impl
 {
 /// \name Construction
 /// \{
 public:
-	SoundOutput_Win32(int mixing_frequency, int mixing_latency = 50);
-	~SoundOutput_Win32();
+	SoundOutput_OSS(int mixing_frequency, int mixing_latency);
+	~SoundOutput_OSS();
 /// \}
 
 /// \name Attributes
 /// \{
 public:
+	int dev_dsp_fd;
+	int frag_size;
+	bool has_sound;
 /// \}
 
 /// \name Operations
 /// \{
 public:
-	/// \brief Called when we have no samples to play - and wants to tell the sound card
+	/// \brief Called when we have no samples to play - and wants to tell the soundcard
 	/// \brief about this possible event.
-	void silence() override;
+	virtual void silence() override;
 
-	/// \brief Returns the buffer size used by device (returned as number of [stereo] samples).
-	int get_fragment_size() override;
+	/// \brief Returns true if all fragments are filled with data.
+	virtual bool is_full();
 
-	/// \brief Writes a fragment to the sound card.
-	void write_fragment(float *data) override;
+	/// \brief Returns the buffer size used by device (returned as num [stereo] samples).
+	virtual int get_fragment_size() override;
+
+	/// \brief Writes a fragment to the soundcard.
+	virtual void write_fragment(float *data) override;
 
 	/// \brief Waits until output source isn't full anymore.
-	void wait() override;
+	virtual void wait() override;
 /// \}
 
 /// \name Implementation
 /// \{
 private:
-	ComPtr<IMMDevice> mmdevice;
-	ComPtr<IAudioClient> audio_client;
-	ComPtr<IAudioRenderClient> audio_render_client;
-	DataBuffer next_fragment;
-	HANDLE audio_buffer_ready_event;
-	bool is_playing;
-	UINT32 fragment_size;
-	int wait_timeout;
-	int write_pos;
 /// \}
 };
 

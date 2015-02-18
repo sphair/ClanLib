@@ -32,7 +32,7 @@
 #include "API/Display/TargetProviders/display_window_provider.h"
 #include "API/Display/Render/graphic_context.h"
 #include "API/Display/Window/input_context.h"
-#include "Display/X11/x11_window.h"
+#include "Display/Platform/X11/x11_window.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/GL/opengl_window_description.h"
 

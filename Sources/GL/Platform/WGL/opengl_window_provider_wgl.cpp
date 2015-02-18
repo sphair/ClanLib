@@ -42,11 +42,11 @@
 #include "API/GL/opengl_wrap.h"
 #include "API/GL/opengl_window_description.h"
 #include "API/Core/Text/logger.h"
-#include "Display/Win32/cursor_provider_win32.h"
-#include "Display/Win32/dwm_functions.h"
-#include "../opengl_window_description_impl.h"
-#include "../GL3/gl3_graphic_context_provider.h"
-#include "../GL1/gl1_graphic_context_provider.h"
+#include "Display/Platform/Win32/cursor_provider_win32.h"
+#include "Display/Platform/Win32/dwm_functions.h"
+#include "../../opengl_window_description_impl.h"
+#include "../../GL3/gl3_graphic_context_provider.h"
+#include "../../GL1/gl1_graphic_context_provider.h"
 #include "opengl_creation_helper.h"
 #include <commctrl.h>
 

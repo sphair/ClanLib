@@ -27,7 +27,7 @@
 
 #pragma once
 
-#include "../soundoutput_impl.h"
+#include "../../soundoutput_impl.h"
 #include <dsound.h>
 
 #ifdef __MINGW32__

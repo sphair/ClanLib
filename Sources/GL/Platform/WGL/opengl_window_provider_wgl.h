@@ -33,7 +33,7 @@
 #include "API/Display/TargetProviders/display_window_provider.h"
 #include "API/Display/Render/graphic_context.h"
 #include "API/Display/Window/input_context.h"
-#include "Display/Win32/win32_window.h"
+#include "Display/Platform/Win32/win32_window.h"
 #include <memory>
 #include "API/GL/opengl_window_description.h"
 #include "API/GL/opengl_wrap.h"

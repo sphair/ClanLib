@@ -23,48 +23,22 @@
 **
 **  File Author(s):
 **
-**    Mark Page
+**    Harry Storbacka
 */
 
 #pragma once
 
-#include "API/GL/opengl_wrap.h"
-#include "../opengl_graphic_context_provider.h"
+#include "../../screen_info_provider.h"
 
 namespace clan
 {
 
-class GL1GraphicContextProvider;
-class OpenGLWindowProvider;
-
-class PBuffer_GL1_Impl : public OpenGLGraphicContextProvider
+class ScreenInfoProvider_Win32 : public ScreenInfoProvider 
 {
-
 public:
-	PBuffer_GL1_Impl(GL1GraphicContextProvider *gc_provider);
+	ScreenInfoProvider_Win32();
 
-	~PBuffer_GL1_Impl();
-
-public:
-	void make_current() const;
-
-	void get_opengl_version(int &version_major, int &version_minor) const;
-	void get_opengl_version(int &version_major, int &version_minor, int &version_release) const;
-
-	void create(OpenGLWindowProvider &window_provider, const Size &size);
-	ProcAddress *get_proc_address(const std::string& function_name) const;
-
-private:
-	void reset();
-
-	GL1GraphicContextProvider *gc_provider;
-	GLFunctions::HPBUFFERARB pbuffer;
-	HGLRC pbuffer_context;
-	HDC pbuffer_dc;
-
-	Size pbuffer_size;
-
-
+	virtual std::vector<Rectf> get_screen_geometries(int &primary_screen_index) const;
 };
 
 }

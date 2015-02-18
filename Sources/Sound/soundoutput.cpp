@@ -35,18 +35,18 @@
 #include "setupsound.h"
 
 #ifdef WIN32
-#include "Win32/soundoutput_win32.h"
-#include "Win32/soundoutput_directsound.h"
+#include "Platform/Win32/soundoutput_win32.h"
+#include "Platform/Win32/soundoutput_directsound.h"
 #else
 #ifdef __APPLE__
-#include "MacOSX/soundoutput_macosx.h"
+#include "Platform/MacOSX/soundoutput_macosx.h"
 #else
-#include "Unix/soundoutput_oss.h"
+#include "Platform/Unix/soundoutput_oss.h"
 #endif
 #endif
 
 #ifdef HAVE_ALSA_ASOUNDLIB_H
-#include "Unix/soundoutput_alsa.h"
+#include "Platform/Unix/soundoutput_alsa.h"
 #endif
 
 namespace clan

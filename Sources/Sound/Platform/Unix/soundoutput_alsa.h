@@ -23,48 +23,62 @@
 **
 **  File Author(s):
 **
-**    Mark Page
+**    Magnus Norddahl
+**    Hans de Goede
 */
 
 #pragma once
 
-#include "API/GL/opengl_wrap.h"
-#include "../opengl_graphic_context_provider.h"
-#include "opengl_window_provider_glx.h"
+#ifdef __linux__
+
+#include "../../soundoutput_impl.h"
+#ifdef HAVE_ALSA_ASOUNDLIB_H
+#include <alsa/asoundlib.h> 
+#endif
+#ifdef HAVE_ASOUNDLIB_H
+#include <asoundlib.h>
+#endif
 
 namespace clan
 {
 
-class GL1GraphicContextProvider;
-class OpenGLWindowProvider;
-
-class PBuffer_GL1_Impl : public OpenGLGraphicContextProvider
+class SoundOutput_alsa : public SoundOutput_Impl
 {
-
+//! Construction:
 public:
-	PBuffer_GL1_Impl(GL1GraphicContextProvider *gc_provider);
+	SoundOutput_alsa(int mixing_frequency, int mixing_latency);
+	
+	~SoundOutput_alsa();
 
-	~PBuffer_GL1_Impl();
-
+//! Attributes:
 public:
-	void make_current() const override;
+	snd_pcm_t *handle;
+	snd_pcm_uframes_t frames_in_period;
+	snd_pcm_uframes_t frames_in_buffer;
 
-	void get_opengl_version(int &version_major, int &version_minor) const override;
-	void get_opengl_version(int &version_major, int &version_minor, int &version_release) const override;
+//! Operations:
+public:
+	//: Called when we have no samples to play - and wants to tell the soundcard
+	//: about this possible event.
+	virtual void silence() override;
 
-	void create(OpenGLWindowProvider &window_provider, const Size &size);
-	ProcAddress *get_proc_address(const std::string& function_name) const override;
+	//: Returns true if all fragments are filled with data.
+	virtual bool is_full();
 
+	//: Returns the buffer size used by device (returned as num [stereo] samples).
+	virtual int get_fragment_size() override;
+
+	//: Writes a fragment to the soundcard.
+	virtual void write_fragment(float *data) override;
+
+	//: Waits until output source isn't full anymore.
+	virtual void wait() override;
+
+//! Implementation:
 private:
-	void reset();
-
-	GL1GraphicContextProvider *gc_provider;
-
-	Size pbuffer_size;
-	OpenGLWindowProvider *window_provider;
-	GLXPbuffer pbuffer;
-	GLXContext pbuffer_context;
-
 };
 
 }
+
+#endif
+

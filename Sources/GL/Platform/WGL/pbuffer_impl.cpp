@@ -30,7 +30,7 @@
 #include "API/GL/opengl_wrap.h"
 #include "API/GL/opengl.h"
 #include "pbuffer_impl.h"
-#include "../GL1/gl1_graphic_context_provider.h"
+#include "../../GL1/gl1_graphic_context_provider.h"
 #include "API/Display/Render/shared_gc_data.h"
 #include "API/Display/Window/input_context.h"
 #include "opengl_window_provider_wgl.h"

@@ -54,7 +54,7 @@
 #include "display_message_queue_win32.h"
 #include "cursor_provider_win32.h"
 #include "dwm_functions.h"
-#include "../Window/input_context_impl.h"
+#include "../../Window/input_context_impl.h"
 
 #include <emmintrin.h>
 
