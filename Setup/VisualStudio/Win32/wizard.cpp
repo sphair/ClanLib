@@ -238,12 +238,18 @@ Workspace Wizard::create_workspace(bool target_android)
 	if (target_android)
 	{
 		ignore_list.push_back("Win32");
+		ignore_list.push_back("WGL");
 		ignore_list.push_back("setupnetwork_win32.cpp");
+		ignore_list.push_back("font_engine_win32.h");
+		ignore_list.push_back("font_engine_win32.cpp");
 	}
 	else
 	{
 		ignore_list.push_back("Unix");
+		ignore_list.push_back("Android");
 		ignore_list.push_back("setupnetwork_unix.cpp");
+		ignore_list.push_back("font_engine_freetype.h");
+		ignore_list.push_back("font_engine_freetype.cpp");
 	}
 
 	ignore_list.push_back("X11");
@@ -251,12 +257,11 @@ Workspace Wizard::create_workspace(bool target_android)
 	ignore_list.push_back("GLX");
 	ignore_list.push_back("MacOS");
 	ignore_list.push_back("MacOSX");
+	ignore_list.push_back("Linux");
 	ignore_list.push_back("OSX");
 	ignore_list.push_back("AGL");
 	ignore_list.push_back("font_engine_cocoa.h");
 	ignore_list.push_back("font_engine_cocoa.mm");
-	ignore_list.push_back("font_engine_freetype.h");
-	ignore_list.push_back("font_engine_freetype.cpp");
 
 	Project clanCore(
 		"Core",
