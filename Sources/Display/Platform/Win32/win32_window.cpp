@@ -55,6 +55,7 @@
 #include "cursor_provider_win32.h"
 #include "dwm_functions.h"
 #include "../../Window/input_context_impl.h"
+#include "../../setup_display.h"
 
 #include <emmintrin.h>
 
@@ -80,7 +81,7 @@ Win32Window::Win32Window()
 	keyboard = InputDevice(new InputDeviceProvider_Win32Keyboard(this));
 	mouse = InputDevice(new InputDeviceProvider_Win32Mouse(this));
 
-	DisplayMessageQueue_Win32::message_queue.add_client(this);
+	SetupDisplay::get_message_queue()->add_client(this);
 
 	register_clipboard_formats();
 }
@@ -98,7 +99,7 @@ Win32Window::~Win32Window()
 	if (update_window_region)
 		DeleteObject(update_window_region);
 
-	DisplayMessageQueue_Win32::message_queue.remove_client(this);
+	SetupDisplay::get_message_queue()->remove_client(this);
 	ic.dispose();
 	get_keyboard()->dispose();
 	get_mouse()->dispose();

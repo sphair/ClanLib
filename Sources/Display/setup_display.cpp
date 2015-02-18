@@ -43,6 +43,14 @@
 #include "Display/Resources/file_display_cache.h"
 #include "../Core/System/setup_core.h"
 
+
+#ifdef WIN32
+#include "Platform/Win32/display_message_queue_win32.h"
+#elif !defined(__APPLE__) && !defined(CL_ANDROID)
+#include "Platform/X11/display_message_queue_x11.h"
+#endif
+
+
 #ifndef WIN32
 #ifndef __APPLE__
 #include <X11/Xlib.h>
@@ -61,12 +69,20 @@ namespace clan
 		static void add_cache_factory_xml(ResourceManager &manager, const XMLResourceDocument &doc);
 		static void add_cache_factory_file(ResourceManager &manager, const FileResourceDocument &doc);
 
+#ifdef WIN32
+		DisplayMessageQueue_Win32 message_queue;
+#elif !defined(__APPLE__) && !defined(CL_ANDROID)
+		DisplayMessageQueue_X11 message_queue;
+#endif
+		static SetupDisplay_Impl *instance;
+
 		std::unique_ptr<ProviderType_Register<JPEGProvider> > jpeg_provider;
 		std::unique_ptr<ProviderType_Register<JPEGProvider> > jpg_provider;
 		std::unique_ptr<ProviderType_Register<PNGProvider> > png_provider;
 		std::unique_ptr<ProviderType_Register<TargaProvider> > targa_provider;
 		std::unique_ptr<ProviderType_Register<TargaProvider> > tga_provider;
 	};
+	SetupDisplay_Impl *SetupDisplay_Impl::instance = nullptr;
 
 	/////////////////////////////////////////////////////////////////////////////
 	// SetupDisplay Construction:
@@ -85,6 +101,7 @@ namespace clan
 
 	SetupDisplay_Impl::SetupDisplay_Impl()
 	{
+		instance = this;
 #ifdef WIN32
 		SetProcessDPIAware();
 #endif
@@ -108,6 +125,7 @@ namespace clan
 
 	SetupDisplay_Impl::~SetupDisplay_Impl()
 	{
+		instance = nullptr;
 	}
 
 	void SetupDisplay_Impl::add_cache_factory_xml(ResourceManager &manager, const XMLResourceDocument &doc)
@@ -119,6 +137,20 @@ namespace clan
 	{
 		DisplayCache::set(manager, std::shared_ptr<DisplayCache>(new FileDisplayCache(doc)));
 	}
+
+#ifdef WIN32
+	DisplayMessageQueue_Win32 *SetupDisplay::get_message_queue()
+	{
+		start();
+		return &SetupDisplay_Impl::instance->message_queue;
+	}
+#elif !defined(__APPLE__) && !defined(CL_ANDROID)
+	DisplayMessageQueue_X11* SetupDisplay::get_message_queue()
+	{
+		start();
+		return &SetupDisplay_Impl::instance->message_queue;
+	}
+#endif
 
 }
 

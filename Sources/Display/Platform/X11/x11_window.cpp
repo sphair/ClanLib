@@ -53,6 +53,7 @@
 #include <X11/XKBlib.h>
 #include <dlfcn.h>
 #include <unistd.h>
+#include "../../setup_display.h"
 
 #ifndef MWM_HINTS_FUNCTIONS
 /* bit definitions for MwmHints.flags */
@@ -120,19 +121,19 @@ X11Window::X11Window()
   always_send_window_position_changed_event(false), always_send_window_size_changed_event(false)
 
 {
-	handle.display = DisplayMessageQueue_X11::message_queue.get_display();
+	handle.display = SetupDisplay::get_message_queue()->get_display();
 
 	last_repaint_rect.reserve(32);
 	keyboard = InputDevice(new InputDeviceProvider_X11Keyboard(this));
 	mouse = InputDevice(new InputDeviceProvider_X11Mouse(this));
 
-	DisplayMessageQueue_X11::message_queue.add_client(this);
+	SetupDisplay::get_message_queue()->add_client(this);
 }
 
 X11Window::~X11Window()
 {
-	DisplayMessageQueue_X11::message_queue.remove_client(this);
-	DisplayMessageQueue_X11::message_queue.set_mouse_capture(this, false);
+	SetupDisplay::get_message_queue()->remove_client(this);
+	SetupDisplay::get_message_queue()->set_mouse_capture(this, false);
 
 	ic.dispose();
 
@@ -984,7 +985,7 @@ void X11Window::bring_to_front()
 
 void X11Window::capture_mouse(bool capture)
 {
-	DisplayMessageQueue_X11::message_queue.set_mouse_capture(this, capture);
+	SetupDisplay::get_message_queue()->set_mouse_capture(this, capture);
 }
 
 void X11Window::clear_structurenotify_events()

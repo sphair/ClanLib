@@ -43,8 +43,6 @@ namespace clan
 		DisplayMessageQueue_Win32();
 		~DisplayMessageQueue_Win32();
 
-		static DisplayMessageQueue_Win32 message_queue;
-
 		void run() override;
 		void exit() override;
 		bool process(int timeout_ms) override;

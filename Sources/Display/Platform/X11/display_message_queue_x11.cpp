@@ -33,11 +33,10 @@
 #include "display_message_queue_x11.h"
 #include "x11_window.h"
 #include <dlfcn.h>
+#include "../../setup_display.h"
 
 namespace clan
 {
-	DisplayMessageQueue_X11 DisplayMessageQueue_X11::message_queue;
-
 	DisplayMessageQueue_X11::DisplayMessageQueue_X11()
 	{
 	}

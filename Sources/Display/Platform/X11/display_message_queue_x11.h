@@ -46,8 +46,6 @@ namespace clan
 		DisplayMessageQueue_X11();
 		~DisplayMessageQueue_X11();
 
-		static DisplayMessageQueue_X11 message_queue;
-
 		::Display *get_display();
 		void add_client(X11Window *window);
 		void remove_client(X11Window *window);

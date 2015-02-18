@@ -33,13 +33,12 @@
 #include "API/Display/Window/display_window.h"
 #include "display_message_queue_win32.h"
 #include "win32_window.h"
+#include "../../setup_display.h"
 
 namespace clan
 {
 	#define WM_ASYNC_WORK (WM_USER + 500)
 	#define WM_EXIT_LOOP (WM_USER + 501)
-
-	DisplayMessageQueue_Win32 DisplayMessageQueue_Win32::message_queue;
 
 	DisplayMessageQueue_Win32::DisplayMessageQueue_Win32()
 	{
@@ -116,11 +115,11 @@ namespace clan
 	{
 		if (msg == WM_EXIT_LOOP)
 		{
-			message_queue.exit_loop = true;
+			SetupDisplay::get_message_queue()->exit_loop = true;
 		}
 		else if (msg == WM_ASYNC_WORK)
 		{
-			message_queue.process_async_work();
+			SetupDisplay::get_message_queue()->process_async_work();
 		}
 
 		return DefWindowProc(hwnd, msg, wParam, lParam);
