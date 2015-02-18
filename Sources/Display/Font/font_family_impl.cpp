@@ -50,7 +50,7 @@
 #include "FontEngine/font_engine_cocoa.h"
 #else
 #include "FontEngine/font_engine_freetype.h"
-#include "../Display/X11/font_config.h"
+#include "../Display/Platform/X11/font_config.h"
 #endif
 
 #include "../2D/sprite_impl.h"
