@@ -65,6 +65,7 @@
 #ifdef HAVE_X11_EXTENSIONS_XRENDER_H
 #include <X11/extensions/Xrender.h>
 #endif
+#include "../../../Display/setup_display.h"
 
 namespace clan
 {
@@ -83,7 +84,7 @@ OpenGLWindowProvider::OpenGLWindowProvider(OpenGLWindowDescription &opengl_desc)
 	// http://www.xfree86.org/4.8.0/DRI11.html -
 	// "Do not close the library with dlclose() until after XCloseDisplay() has been called. When libGL.so initializes itself it registers several callbacks functions with Xlib. When XCloseDisplay() is called those callback functions are called. If libGL.so has already been unloaded with dlclose() this will cause a segmentation fault"
 	// - Which it did - So we need x11_window to own the library (and close it)
-	opengl_lib_handle = DisplayMessageQueue_X11::message_queue.dlopen_opengl(GL_OPENGL_LIBRARY, RTLD_NOW | RTLD_GLOBAL);
+	opengl_lib_handle = SetupDisplay::get_message_queue()->dlopen_opengl(GL_OPENGL_LIBRARY, RTLD_NOW | RTLD_GLOBAL);
 	if (!opengl_lib_handle)
 	{
 		throw Exception(string_format("Cannot open opengl library: %1", GL_OPENGL_LIBRARY));
