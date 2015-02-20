@@ -30,14 +30,26 @@
 
 #pragma once
 
+#include <map>
 
 namespace clan
 {
+	class DisplayMessageQueue_Win32;
+	class DisplayMessageQueue_X11;
+	class ImageProviderType;
 
 	class SetupDisplay
 	{
 	public:
 		static void start();
+
+#ifdef WIN32
+		static DisplayMessageQueue_Win32* get_message_queue();
+#elif !defined(__APPLE__) && !defined(CL_ANDROID)
+		static DisplayMessageQueue_X11* get_message_queue();
+#endif
+		static std::map<std::string, ImageProviderType *> *get_image_provider_factory_types();
+
 	};
 
 }

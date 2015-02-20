@@ -147,19 +147,19 @@ Win32/dwm_functions.cpp
 else
 libclan40Display_la_SOURCES += \
 Font/FontEngine/font_engine_freetype.cpp \
-X11/display_message_queue_x11.cpp \
-X11/input_device_provider_x11keyboard.cpp \
-X11/clipboard_x11.cpp \
-X11/x11_window.cpp \
-X11/input_device_provider_x11mouse.cpp \
-X11/cursor_provider_x11.cpp
+Platform/X11/display_message_queue_x11.cpp \
+Platform/X11/input_device_provider_x11keyboard.cpp \
+Platform/X11/clipboard_x11.cpp \
+Platform/X11/x11_window.cpp \
+Platform/X11/input_device_provider_x11mouse.cpp \
+Platform/X11/cursor_provider_x11.cpp
 
 if LINUX_JOYSTICK
 libclan40Display_la_SOURCES += \
-X11/input_device_provider_linuxjoystick.cpp
+Platform/X11/input_device_provider_linuxjoystick.cpp
 endif
 libclan40Display_la_SOURCES += \
-X11/font_config.cpp
+Platform/X11/font_config.cpp
 endif
 
 libclan40Display_la_LDFLAGS = \

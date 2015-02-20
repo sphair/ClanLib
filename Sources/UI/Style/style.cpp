@@ -28,8 +28,12 @@
 
 #include "UI/precomp.h"
 #include "API/UI/Style/style.h"
+#include "API/UI/Style/box_geometry.h"
 #include "API/UI/UIThread/ui_thread.h"
 #include "API/Display/Font/font.h"
+#include "API/Display/2D/canvas.h"
+#include "style_background_renderer.h"
+#include "style_border_image_renderer.h"
 #include "style_impl.h"
 #include "Properties/background.h"
 #include "Properties/border.h"
@@ -82,20 +86,28 @@ namespace clan
 		impl->base = new_base;
 	}
 
-	void Style::set(const std::string &property_name, const std::string &property_value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void Style::set(const std::string &properties, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		StyleProperty::parse(impl.get(), property_name, property_value, args);
+		StyleProperty::parse(impl.get(), properties, args);
 	}
 
 	bool Style::has(const std::string &property_name) const
 	{
 		const auto it = impl->prop_type.find(property_name);
-		return it != impl->prop_type.end();
+		return it != impl->prop_type.end() || !StyleProperty::default_value(property_name).is_undefined();
 	}
 
-	void Style::remove(const std::string &property_name)
+	int Style::array_size(const std::string &property_name) const
 	{
-		impl->set_value(property_name, StyleValue());
+		int size = 0;
+		while (true)
+		{
+			std::string prop_name = property_name + "[" + StringHelp::int_to_text(size) + "]";
+			if (!has(prop_name))
+				break;
+			size++;
+		}
+		return size;
 	}
 
 	StyleValue Style::specified_value(const std::string &property_name) const
@@ -117,6 +129,14 @@ namespace clan
 			return StyleValue::from_url(impl->prop_text.find(property_name)->second);
 		case StyleValueType::length:
 			return StyleValue::from_length(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
+		case StyleValueType::angle:
+			return StyleValue::from_angle(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
+		case StyleValueType::time:
+			return StyleValue::from_time(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
+		case StyleValueType::frequency:
+			return StyleValue::from_frequency(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
+		case StyleValueType::resolution:
+			return StyleValue::from_resolution(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
 		case StyleValueType::percentage:
 			return StyleValue::from_percentage(impl->prop_number.find(property_name)->second);
 		case StyleValueType::number:
@@ -133,12 +153,19 @@ namespace clan
 		// To do: pass on to property compute functions
 
 		StyleValue specified = specified_value(property_name);
-		if (specified.is_length())
+		switch (specified.type)
 		{
+		case StyleValueType::length:
 			return compute_length(specified);
-		}
-		else
-		{
+		case StyleValueType::angle:
+			return compute_angle(specified);
+		case StyleValueType::time:
+			return compute_time(specified);
+		case StyleValueType::frequency:
+			return compute_frequency(specified);
+		case StyleValueType::resolution:
+			return compute_resolution(specified);
+		default:
 			return specified;
 		}
 	}
@@ -223,10 +250,17 @@ namespace clan
 
 	void Style::render_background(Canvas &canvas, const BoxGeometry &geometry) const
 	{
+		StyleBackgroundRenderer renderer(canvas, geometry, *this);
+		renderer.render_background();
 	}
 
 	void Style::render_border(Canvas &canvas, const BoxGeometry &geometry) const
 	{
+		StyleBackgroundRenderer renderer(canvas, geometry, *this);
+		renderer.render_border();
+
+		StyleBorderImageRenderer image_renderer(canvas, geometry, *this);
+		image_renderer.render();
 	}
 
 	Font Style::get_font(Canvas &canvas)
@@ -294,8 +328,13 @@ namespace clan
 				prop_text.erase(prop_text.find(name));
 				break;
 			case StyleValueType::length:
+			case StyleValueType::angle:
+			case StyleValueType::time:
+			case StyleValueType::frequency:
+			case StyleValueType::resolution:
 				prop_dimension.erase(prop_dimension.find(name));
-				// intentional fall through
+				prop_number.erase(prop_number.find(name));
+				break;
 			case StyleValueType::percentage:
 			case StyleValueType::number:
 				prop_number.erase(prop_number.find(name));
@@ -325,8 +364,13 @@ namespace clan
 			prop_text[name] = value.text;
 			break;
 		case StyleValueType::length:
+		case StyleValueType::angle:
+		case StyleValueType::time:
+		case StyleValueType::frequency:
+		case StyleValueType::resolution:
 			prop_dimension[name] = value.dimension;
-			// intentional fall through
+			prop_number[name] = value.number;
+			break;
 		case StyleValueType::percentage:
 		case StyleValueType::number:
 			prop_number[name] = value.number;

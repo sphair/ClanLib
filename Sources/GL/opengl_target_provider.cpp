@@ -31,11 +31,11 @@
 #include "GL/precomp.h"
 #include "opengl_target_provider.h"
 #if defined(__APPLE__)
-#include "OSX/opengl_window_provider_osx.h"
+#include "Platform/OSX/opengl_window_provider_osx.h"
 #elif defined(WIN32)
-#include "WGL/opengl_window_provider_wgl.h"
+#include "Platform/WGL/opengl_window_provider_wgl.h"
 #else
-#include "GLX/opengl_window_provider_glx.h"
+#include "Platform/GLX/opengl_window_provider_glx.h"
 namespace clan { DisplayWindowProvider *newOpenGLWindowProvider(); }
 #endif
 

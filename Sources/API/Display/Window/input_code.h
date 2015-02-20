@@ -32,7 +32,7 @@
 
 #if defined(WIN32)
 #include <windows.h>
-#elif defined(__APPLE__)
+#elif defined(__APPLE__) || defined(CL_ANDROID)
 // No headers for Apple
 #else
 #include <X11/keysym.h>
@@ -226,7 +226,7 @@ enum InputCode
 	keycode_lmenu=VK_LMENU,
 	keycode_rmenu=VK_RMENU,
 
-#elif defined(__APPLE__)
+#elif defined(__APPLE__) || defined(CL_ANDROID)
 
 // Seems like this platform dont have keysyms, or their docs suck so much I
 // can't find it.

@@ -98,7 +98,7 @@ namespace clan
 		void set_filter_index(int filter_index)
 		{
 			if (filter_index >= 0 && filter_index < filters.size())
-				filter_index = filter_index;
+				this->filter_index = filter_index;
 		}
 
 		std::wstring get_filter_string() const

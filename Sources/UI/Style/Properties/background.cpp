@@ -38,20 +38,20 @@ namespace clan
 	StylePropertyDefault style_default_background_color("background-color", StyleValue::from_color(Colorf(0.0f, 0.0f, 0.0f, 0.0f)));
 	StylePropertyDefault style_default_background_image("background-image", StyleValue::from_keyword("none"));
 	StylePropertyDefault style_default_background_repeat("background-repeat", StyleValue::from_keyword("array"));
-	StylePropertyDefault style_default_background_repeats_x("background-repeats-x[0]", StyleValue::from_keyword("repeat"));
-	StylePropertyDefault style_default_background_repeats_y("background-repeats-y[0]", StyleValue::from_keyword("repeat"));
+	StylePropertyDefault style_default_background_repeats_x("background-repeat-x[0]", StyleValue::from_keyword("repeat"));
+	StylePropertyDefault style_default_background_repeats_y("background-repeat-y[0]", StyleValue::from_keyword("repeat"));
 	StylePropertyDefault style_default_background_attachment("background-attachment", StyleValue::from_keyword("array"));
-	StylePropertyDefault style_default_background_attachments("background-attachments[0]", StyleValue::from_keyword("scroll"));
+	StylePropertyDefault style_default_background_attachments("background-attachment[0]", StyleValue::from_keyword("scroll"));
 	StylePropertyDefault style_default_background_position("background-position", StyleValue::from_keyword("array"));
-	StylePropertyDefault style_default_background_positions_x("background-positions-x[0]", StyleValue::from_length(0.0f));
-	StylePropertyDefault style_default_background_positions_y("background-positions-y[0]", StyleValue::from_length(0.0f));
+	StylePropertyDefault style_default_background_positions_x("background-position-x[0]", StyleValue::from_length(0.0f));
+	StylePropertyDefault style_default_background_positions_y("background-position-y[0]", StyleValue::from_length(0.0f));
 	StylePropertyDefault style_default_background_origin("background-origin", StyleValue::from_keyword("array"));
-	StylePropertyDefault style_default_background_origins("background-origins[0]", StyleValue::from_keyword("padding-box"));
+	StylePropertyDefault style_default_background_origins("background-origin[0]", StyleValue::from_keyword("padding-box"));
 	StylePropertyDefault style_default_background_clip("background-clip", StyleValue::from_keyword("array"));
-	StylePropertyDefault style_default_background_clips("background-clips[0]", StyleValue::from_keyword("border-box"));
+	StylePropertyDefault style_default_background_clips("background-clip[0]", StyleValue::from_keyword("border-box"));
 	StylePropertyDefault style_default_background_size("background-size", StyleValue::from_keyword("array"));
-	StylePropertyDefault style_default_background_sizes_x("background-sizes-x[0]", StyleValue::from_keyword("auto"));
-	StylePropertyDefault style_default_background_sizes_y("background-sizes-y[0]", StyleValue::from_keyword("auto"));
+	StylePropertyDefault style_default_background_sizes_x("background-size-x[0]", StyleValue::from_keyword("auto"));
+	StylePropertyDefault style_default_background_sizes_y("background-size-y[0]", StyleValue::from_keyword("auto"));
 
 	BackgroundPropertyParser style_parser_background;
 	BackgroundAttachmentPropertyParser style_parser_background_attachment;
@@ -63,16 +63,16 @@ namespace clan
 	BackgroundRepeatPropertyParser style_parser_background_repeat;
 	BackgroundSizePropertyParser style_parser_background_size;
 
-	void BackgroundPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BackgroundPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue bgcolor;
 		StyleValue bgimage;
-		std::vector<StyleValue> bgimages;
+		std::vector<StyleImage> bgimages;
 		StyleValue bgrepeat;
-		std::vector<StyleValue> bgrepeatsx;
-		std::vector<StyleValue> bgrepeatsy;
+		std::vector<StyleValue> bgrepeatx;
+		std::vector<StyleValue> bgrepeaty;
 		StyleValue bgattachment;
 		std::vector<StyleValue> bgattachments;
 		StyleValue bgposition;
@@ -99,24 +99,31 @@ namespace clan
 
 			setter->set_value("background-color", bgcolor);
 			setter->set_value("background-image", bgimage);
-			setter->set_value_array("background-images", bgimages);
 			setter->set_value("background-repeat", bgrepeat);
-			setter->set_value_array("background-repeats-x", bgrepeatsx);
-			setter->set_value_array("background-repeats-y", bgrepeatsy);
+			setter->set_value_array("background-repeat-x", bgrepeatx);
+			setter->set_value_array("background-repeat-y", bgrepeaty);
 			setter->set_value("background-attachment", bgattachment);
-			setter->set_value_array("background-attachments", bgattachments);
+			setter->set_value_array("background-attachment", bgattachments);
 			setter->set_value("background-position", bgposition);
-			setter->set_value_array("background-positions-x", bgpositionsx);
-			setter->set_value_array("background-positions-y", bgpositionsy);
+			setter->set_value_array("background-position-x", bgpositionsx);
+			setter->set_value_array("background-position-y", bgpositionsy);
 			setter->set_value("background-origin", bgorigin);
-			setter->set_value_array("background-origins", bgorigins);
+			setter->set_value_array("background-origin", bgorigins);
 			setter->set_value("background-clip", bgclip);
-			setter->set_value_array("background-clips", bgclips);
+			setter->set_value_array("background-clip", bgclips);
 			setter->set_value("background-size", bgsize);
-			setter->set_value_array("background-sizes-x", bgsizesx);
-			setter->set_value_array("background-sizes-y", bgsizesy);
+			setter->set_value_array("background-size-x", bgsizesx);
+			setter->set_value_array("background-size-y", bgsizesy);
 			return;
 		}
+
+		bgimage = StyleValue::from_keyword("array");
+		bgrepeat = StyleValue::from_keyword("array");
+		bgattachment = StyleValue::from_keyword("array");
+		bgposition = StyleValue::from_keyword("array");
+		bgorigin = StyleValue::from_keyword("array");
+		bgclip = StyleValue::from_keyword("array");
+		bgsize = StyleValue::from_keyword("array");
 
 		size_t pos = 0;
 		while (true) // for each layer
@@ -128,7 +135,7 @@ namespace clan
 			bool position_specified = false;
 			bool boxes_specified = false;
 
-			StyleValue layer_image = StyleValue::from_keyword("none");
+			StyleImage layer_image = StyleValue::from_keyword("none");
 			StyleValue layer_repeat_x = StyleValue::from_keyword("repeat");
 			StyleValue layer_repeat_y = StyleValue::from_keyword("repeat");
 			StyleValue layer_attachment = StyleValue::from_keyword("scroll");
@@ -181,8 +188,8 @@ namespace clan
 			}
 
 			bgimages.push_back(layer_image);
-			bgrepeatsx.push_back(layer_repeat_x);
-			bgrepeatsy.push_back(layer_repeat_y);
+			bgrepeatx.push_back(layer_repeat_x);
+			bgrepeaty.push_back(layer_repeat_y);
 			bgattachments.push_back(layer_attachment);
 			bgpositionsx.push_back(layer_position_x);
 			bgpositionsy.push_back(layer_position_y);
@@ -201,22 +208,50 @@ namespace clan
 
 		setter->set_value("background-color", bgcolor);
 		setter->set_value("background-image", bgimage);
-		setter->set_value_array("background-images", bgimages);
+		for (size_t i = 0; i < bgimages.size(); i++)
+		{
+			auto &img = bgimages[i];
+			std::string prop_name = "background-image[" + StringHelp::int_to_text(i) + "]";
+			if (!img.image.is_undefined())
+			{
+				setter->set_value(prop_name, img.image);
+			}
+			else if (!img.gradient.type.is_undefined())
+			{
+				setter->set_value(prop_name, img.gradient.type);
+				setter->set_value(prop_name + ".angle", img.gradient.linear_angle);
+				setter->set_value(prop_name + ".shape", img.gradient.radial_shape);
+				setter->set_value(prop_name + ".size-x", img.gradient.radial_size_x);
+				setter->set_value(prop_name + ".size-y", img.gradient.radial_size_y);
+				setter->set_value(prop_name + ".position-x", img.gradient.radial_position_x);
+				setter->set_value(prop_name + ".position-y", img.gradient.radial_position_y);
+				for (size_t j = 0; j < img.gradient.stops.size(); j++)
+				{
+					std::string stop_prop_name = prop_name + ".stop[" + StringHelp::int_to_text(j) + "]";
+					setter->set_value(stop_prop_name, img.gradient.stops[j].color);
+					setter->set_value(stop_prop_name + ".position", img.gradient.stops[j].position);
+				}
+			}
+			else
+			{
+				setter->set_value(prop_name, StyleValue::from_keyword("none"));
+			}
+		}
 		setter->set_value("background-repeat", bgrepeat);
-		setter->set_value_array("background-repeats-x", bgrepeatsx);
-		setter->set_value_array("background-repeats-y", bgrepeatsy);
+		setter->set_value_array("background-repeat-x", bgrepeatx);
+		setter->set_value_array("background-repeat-y", bgrepeaty);
 		setter->set_value("background-attachment", bgattachment);
-		setter->set_value_array("background-attachments", bgattachments);
+		setter->set_value_array("background-attachment", bgattachments);
 		setter->set_value("background-position", bgposition);
-		setter->set_value_array("background-positions-x", bgpositionsx);
-		setter->set_value_array("background-positions-y", bgpositionsy);
+		setter->set_value_array("background-position-x", bgpositionsx);
+		setter->set_value_array("background-position-y", bgpositionsy);
 		setter->set_value("background-origin", bgorigin);
-		setter->set_value_array("background-origins", bgorigins);
+		setter->set_value_array("background-origin", bgorigins);
 		setter->set_value("background-clip", bgclip);
-		setter->set_value_array("background-clips", bgclips);
+		setter->set_value_array("background-clip", bgclips);
 		setter->set_value("background-size", bgsize);
-		setter->set_value_array("background-sizes-x", bgsizesx);
-		setter->set_value_array("background-sizes-y", bgsizesy);
+		setter->set_value_array("background-size-x", bgsizesx);
+		setter->set_value_array("background-size-y", bgsizesy);
 	}
 
 	bool BackgroundPropertyParser::parse_bgcolor(StyleValue &bgcolor, size_t &parse_pos, const std::vector<StyleToken> &tokens)
@@ -232,19 +267,30 @@ namespace clan
 		return false;
 	}
 
-	bool BackgroundPropertyParser::parse_image(StyleValue &layer_image, size_t &parse_pos, const std::vector<StyleToken> &tokens)
+	bool BackgroundPropertyParser::parse_image(StyleImage &layer_image, size_t &parse_pos, const std::vector<StyleToken> &tokens)
 	{
 		size_t pos = parse_pos;
+
+		StyleGradient gradient;
+		if (parse_gradient(tokens, pos, gradient))
+		{
+			layer_image = StyleImage();
+			layer_image.gradient = gradient;
+			parse_pos = pos;
+			return true;
+		}
+
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && equals(token.value, "none"))
 		{
-			layer_image = StyleValue::from_keyword("none");
+			layer_image = StyleImage();
 			parse_pos = pos;
 			return true;
 		}
 		else if (token.type == StyleTokenType::uri)
 		{
-			layer_image = StyleValue::from_url(token.value);
+			layer_image = StyleImage();
+			layer_image.image = StyleValue::from_url(token.value);
 			parse_pos = pos;
 			return true;
 		}
@@ -498,9 +544,9 @@ namespace clan
 		return true;
 	}
 
-	void BackgroundAttachmentPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BackgroundAttachmentPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
@@ -512,7 +558,7 @@ namespace clan
 		{
 			attachment = StyleValue::from_keyword("inherit");
 			setter->set_value("background-attachment", attachment);
-			setter->set_value_array("background-attachments", attachments);
+			setter->set_value_array("background-attachment", attachments);
 		}
 		else
 		{
@@ -543,13 +589,13 @@ namespace clan
 				}
 			}
 			setter->set_value("background-attachment", attachment);
-			setter->set_value_array("background-attachments", attachments);
+			setter->set_value_array("background-attachment", attachments);
 		}
 	}
 
-	void BackgroundClipPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BackgroundClipPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue background_clip;
 		std::vector<StyleValue> background_clips;
@@ -561,7 +607,7 @@ namespace clan
 		{
 			background_clip = StyleValue::from_keyword("inherit");
 			setter->set_value("background-clip", background_clip);
-			setter->set_value_array("background-clips", background_clips);
+			setter->set_value_array("background-clip", background_clips);
 		}
 		else
 		{
@@ -600,13 +646,13 @@ namespace clan
 			}
 
 			setter->set_value("background-clip", background_clip);
-			setter->set_value_array("background-clips", background_clips);
+			setter->set_value_array("background-clip", background_clips);
 		}
 	}
 
-	void BackgroundColorPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BackgroundColorPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue background_color;
 
@@ -631,21 +677,20 @@ namespace clan
 		}
 	}
 
-	void BackgroundImagePropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BackgroundImagePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 
 		StyleValue background_image;
-		std::vector<StyleValue> background_images;
+		std::vector<StyleImage> background_images;
 
 		if (token.type == StyleTokenType::ident && pos == tokens.size() && equals(token.value, "inherit"))
 		{
 			background_image = StyleValue::from_keyword("inherit");
 			setter->set_value("background-image", background_image);
-			setter->set_value_array("background-images", background_images);
 		}
 		else
 		{
@@ -653,7 +698,10 @@ namespace clan
 			background_images.clear();
 			while (true)
 			{
-				if (token.type == StyleTokenType::ident && equals(token.value, "none"))
+				StyleGradient gradient;
+				if (parse_gradient(tokens, pos, gradient))
+					background_images.push_back(StyleImage(gradient));
+				else if (token.type == StyleTokenType::ident && equals(token.value, "none"))
 					background_images.push_back(StyleValue::from_keyword("none"));
 				else if (token.type == StyleTokenType::uri)
 					background_images.push_back(StyleValue::from_url(token.value));
@@ -675,12 +723,41 @@ namespace clan
 		}
 
 		setter->set_value("background-image", background_image);
-		setter->set_value_array("background-images", background_images);
+
+		for (size_t i = 0; i < background_images.size(); i++)
+		{
+			auto &img = background_images[i];
+			std::string prop_name = "background-image[" + StringHelp::int_to_text(i) + "]";
+			if (!img.image.is_undefined())
+			{
+				setter->set_value(prop_name, img.image);
+			}
+			else if (!img.gradient.type.is_undefined())
+			{
+				setter->set_value(prop_name, img.gradient.type);
+				setter->set_value(prop_name + ".angle", img.gradient.linear_angle);
+				setter->set_value(prop_name + ".shape", img.gradient.radial_shape);
+				setter->set_value(prop_name + ".size-x", img.gradient.radial_size_x);
+				setter->set_value(prop_name + ".size-y", img.gradient.radial_size_y);
+				setter->set_value(prop_name + ".position-x", img.gradient.radial_position_x);
+				setter->set_value(prop_name + ".position-y", img.gradient.radial_position_y);
+				for (size_t j = 0; j < img.gradient.stops.size(); j++)
+				{
+					std::string stop_prop_name = prop_name + ".stop[" + StringHelp::int_to_text(j) + "]";
+					setter->set_value(stop_prop_name, img.gradient.stops[j].color);
+					setter->set_value(stop_prop_name + ".position", img.gradient.stops[j].position);
+				}
+			}
+			else
+			{
+				setter->set_value(prop_name, StyleValue::from_keyword("none"));
+			}
+		}
 	}
 
-	void BackgroundOriginPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BackgroundOriginPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue background_origin;
 		std::vector<StyleValue> background_origins;
@@ -692,7 +769,7 @@ namespace clan
 		{
 			background_origin = StyleValue::from_keyword("inherit");
 			setter->set_value("background-origin", background_origin);
-			setter->set_value_array("background-origins", background_origins);
+			setter->set_value_array("background-origin", background_origins);
 		}
 		else
 		{
@@ -732,12 +809,12 @@ namespace clan
 		}
 
 		setter->set_value("background-origin", background_origin);
-		setter->set_value_array("background-origins", background_origins);
+		setter->set_value_array("background-origin", background_origins);
 	}
 
-	void BackgroundPositionPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BackgroundPositionPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue position;
 		std::vector<StyleValue> positions_x;
@@ -750,8 +827,8 @@ namespace clan
 		{
 			position = StyleValue::from_keyword("inherit");
 			setter->set_value("background-position", position);
-			setter->set_value_array("background-positions-x", positions_x);
-			setter->set_value_array("background-positions-y", positions_y);
+			setter->set_value_array("background-position-x", positions_x);
+			setter->set_value_array("background-position-y", positions_y);
 			return;
 		}
 
@@ -1004,17 +1081,17 @@ namespace clan
 		}
 
 		setter->set_value("background-position", position);
-		setter->set_value_array("background-positions-x", positions_x);
-		setter->set_value_array("background-positions-y", positions_y);
+		setter->set_value_array("background-position-x", positions_x);
+		setter->set_value_array("background-position-y", positions_y);
 	}
 
-	void BackgroundRepeatPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BackgroundRepeatPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue background_repeat;
-		std::vector<StyleValue> background_repeats_x;
-		std::vector<StyleValue> background_repeats_y;
+		std::vector<StyleValue> background_repeat_x;
+		std::vector<StyleValue> background_repeat_y;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
@@ -1023,14 +1100,14 @@ namespace clan
 		{
 			background_repeat = StyleValue::from_keyword("inherit");
 			setter->set_value("background-repeat", background_repeat);
-			setter->set_value_array("background-repeats-x", background_repeats_x);
-			setter->set_value_array("background-repeats-y", background_repeats_y);
+			setter->set_value_array("background-repeat-x", background_repeat_x);
+			setter->set_value_array("background-repeat-y", background_repeat_y);
 		}
 		else
 		{
 			background_repeat = StyleValue::from_keyword("array");
-			background_repeats_x.clear();
-			background_repeats_y.clear();
+			background_repeat_x.clear();
+			background_repeat_y.clear();
 			while (true)
 			{
 				if (token.type != StyleTokenType::ident)
@@ -1076,8 +1153,8 @@ namespace clan
 				{
 					if (!single_style)
 						repeat_y = repeat_x;
-					background_repeats_x.push_back(repeat_x);
-					background_repeats_y.push_back(repeat_y);
+					background_repeat_x.push_back(repeat_x);
+					background_repeat_y.push_back(repeat_y);
 					break;
 				}
 
@@ -1086,8 +1163,8 @@ namespace clan
 				{
 					if (!single_style)
 						repeat_y = repeat_x;
-					background_repeats_x.push_back(repeat_x);
-					background_repeats_y.push_back(repeat_y);
+					background_repeat_x.push_back(repeat_x);
+					background_repeat_y.push_back(repeat_y);
 				}
 				else if (token.type == StyleTokenType::ident && !single_style)
 				{
@@ -1112,8 +1189,8 @@ namespace clan
 						return;
 					}
 
-					background_repeats_x.push_back(repeat_x);
-					background_repeats_y.push_back(repeat_y);
+					background_repeat_x.push_back(repeat_x);
+					background_repeat_y.push_back(repeat_y);
 
 					if (pos == tokens.size())
 						break;
@@ -1131,13 +1208,13 @@ namespace clan
 		}
 
 		setter->set_value("background-repeat", background_repeat);
-		setter->set_value_array("background-repeats-x", background_repeats_x);
-		setter->set_value_array("background-repeats-y", background_repeats_y);
+		setter->set_value_array("background-repeat-x", background_repeat_x);
+		setter->set_value_array("background-repeat-y", background_repeat_y);
 	}
 
-	void BackgroundSizePropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BackgroundSizePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue background_size;
 		std::vector<StyleValue> background_sizes_x;
@@ -1150,8 +1227,8 @@ namespace clan
 		{
 			background_size = StyleValue::from_keyword("inherit");
 			setter->set_value("background-size", background_size);
-			setter->set_value_array("background-sizes-x", background_sizes_x);
-			setter->set_value_array("background-sizes-y", background_sizes_y);
+			setter->set_value_array("background-size-x", background_sizes_x);
+			setter->set_value_array("background-size-y", background_sizes_y);
 		}
 		else
 		{
@@ -1265,7 +1342,7 @@ namespace clan
 		}
 
 		setter->set_value("background-size", background_size);
-		setter->set_value_array("background-sizes-x", background_sizes_x);
-		setter->set_value_array("background-sizes-y", background_sizes_y);
+		setter->set_value_array("background-size-x", background_sizes_x);
+		setter->set_value_array("background-size-y", background_sizes_y);
 	}
 }

@@ -38,27 +38,27 @@ namespace clan
 	{
 	public:
 		OutlinePropertyParser() : StylePropertyParser({ "outline" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
 	};
 
 	class OutlineColorPropertyParser : public StylePropertyParser
 	{
 	public:
 		OutlineColorPropertyParser() : StylePropertyParser({ "outline-color" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
 	};
 
 	class OutlineStylePropertyParser : public StylePropertyParser
 	{
 	public:
 		OutlineStylePropertyParser() : StylePropertyParser({ "outline-style" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
 	};
 
 	class OutlineWidthPropertyParser : public StylePropertyParser
 	{
 	public:
 		OutlineWidthPropertyParser() : StylePropertyParser({ "outline-width" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
 	};
 }

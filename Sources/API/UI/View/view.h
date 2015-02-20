@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../Style/box_style.h"
 #include "../../Core/Math/rect.h"
 #include "../../Core/Math/easing.h"
 #include "../../Core/Signals/signal.h"
@@ -64,7 +63,6 @@ namespace clan
 		const std::shared_ptr<Style> &style() const;
 		void set_style(const std::shared_ptr<Style> &style);
 
-		BoxStyle box_style;
 		SlotContainer slots;
 
 		View *superview() const;

@@ -49,7 +49,7 @@ namespace clan
 {
 	View::View() : impl(new ViewImpl())
 	{
-		box_style.set_style_changed(bind_member(this, &View::set_needs_layout));
+		//box_style.set_style_changed(bind_member(this, &View::set_needs_layout));
 	}
 
 	View::~View()

@@ -38,7 +38,7 @@ namespace clan
 	{
 	public:
 		FlexPropertyParser() : StylePropertyParser({ "flex" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
 
 	private:
 		bool parse_grow_shrink(StyleValue &grow, StyleValue &shrink, size_t &parse_pos, const std::vector<StyleToken> &tokens);
@@ -49,21 +49,21 @@ namespace clan
 	{
 	public:
 		FlexBasisPropertyParser() : StylePropertyParser({ "flex-basis" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
 	};
 
 	class FlexDirectionPropertyParser : public StylePropertyParser
 	{
 	public:
 		FlexDirectionPropertyParser() : StylePropertyParser({ "flex-direction" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
 	};
 
 	class FlexFlowPropertyParser : public StylePropertyParser
 	{
 	public:
 		FlexFlowPropertyParser() : StylePropertyParser({ "flex-flow" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
 
 	private:
 		bool parse_direction(StyleValue &direction, size_t &parse_pos, const std::vector<StyleToken> &tokens);
@@ -74,27 +74,27 @@ namespace clan
 	{
 	public:
 		FlexGrowPropertyParser() : StylePropertyParser({ "flex-grow" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
 	};
 
 	class FlexShrinkPropertyParser : public StylePropertyParser
 	{
 	public:
 		FlexShrinkPropertyParser() : StylePropertyParser({ "flex-shrink" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
 	};
 
 	class FlexWrapPropertyParser : public StylePropertyParser
 	{
 	public:
 		FlexWrapPropertyParser() : StylePropertyParser({ "flex-wrap" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
 	};
 
 	class OrderPropertyParser : public StylePropertyParser
 	{
 	public:
 		OrderPropertyParser() : StylePropertyParser({ "order" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
 	};
 }

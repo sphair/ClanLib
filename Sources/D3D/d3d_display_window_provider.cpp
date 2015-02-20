@@ -37,7 +37,7 @@
 #include "API/Display/Window/input_context.h"
 #include "API/Display/Window/display_window_description.h"
 #include "API/D3D/d3d_target.h"
-#include "Display/Win32/cursor_provider_win32.h"
+#include "Display/Platform/Win32/cursor_provider_win32.h"
 #include "d3d_share_list.h"
 
 namespace clan

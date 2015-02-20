@@ -64,13 +64,13 @@
 #include "API/Display/2D/image.h"
 #include "API/GL/opengl_window_description.h"
 #ifdef __APPLE__
-#include "../OSX/opengl_window_provider_osx.h"
+#include "../Platform/OSX/opengl_window_provider_osx.h"
 #elif !defined(WIN32)
-#include "../GLX/opengl_window_provider_glx.h"
+#include "../Platform/GLX/opengl_window_provider_glx.h"
 #endif
 
 #ifdef WIN32
-#include "../WGL/opengl_window_provider_wgl.h"
+#include "../Platform/WGL/opengl_window_provider_wgl.h"
 #endif
 
 #include <memory>

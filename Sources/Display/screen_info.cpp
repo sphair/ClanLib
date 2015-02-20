@@ -32,7 +32,7 @@
 #include "API/Core/Math/rect.h"
 
 #ifdef WIN32
- #include "Win32/screen_info_provider_win32.h"
+ #include "Platform/Win32/screen_info_provider_win32.h"
 #endif
 
 namespace clan
