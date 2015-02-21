@@ -37,6 +37,7 @@
 #include "API/UI/Events/key_event.h"
 #include "API/UI/Events/pointer_event.h"
 #include "API/UI/Events/resize_event.h"
+#include "API/UI/UIThread/ui_thread.h"
 #include "view_impl.h"
 #include "block_layout.h"
 #include "inline_layout.h"
@@ -180,7 +181,26 @@ namespace clan
 		Pointf translate = impl->_geometry.content.get_top_left();
 		canvas.set_transform(old_transform * Mat4f::translate(translate.x, translate.y, 0));
 
-		render_content(canvas);
+		if (!render_exception_encountered())
+		{
+			bool success = UIThread::try_catch([&]
+			{
+				render_content(canvas);
+			});
+
+			if (!success)
+			{
+				impl->exception_encountered = true;
+			}
+		}
+
+		if (render_exception_encountered())
+		{
+			canvas.set_transform(old_transform * Mat4f::translate(translate.x, translate.y, 0));
+			canvas.fill_rect(0.0f, 0.0f, impl->_geometry.content.get_width(), impl->_geometry.content.get_height(), Colorf(1.0f, 0.2f, 0.2f, 0.5f));
+			canvas.draw_line(0.0f, 0.0f, impl->_geometry.content.get_width(), impl->_geometry.content.get_height(), Colorf::black);
+			canvas.draw_line(impl->_geometry.content.get_width(), 0.0f, 0.0f, impl->_geometry.content.get_height(), Colorf::black);
+		}
 
 		for (std::shared_ptr<View> &view : impl->_subviews)
 		{
@@ -189,6 +209,20 @@ namespace clan
 		}
 
 		canvas.set_transform(old_transform);
+	}
+
+	bool View::render_exception_encountered() const
+	{
+		return impl->exception_encountered;
+	}
+
+	void View::clear_exception_encountered()
+	{
+		if (impl->exception_encountered)
+		{
+			impl->exception_encountered = false;
+			set_needs_render();
+		}
 	}
 
 	float View::get_preferred_width(Canvas &canvas)

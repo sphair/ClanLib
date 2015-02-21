@@ -86,6 +86,9 @@ namespace clan
 
 		void render(Canvas &canvas);
 
+		bool render_exception_encountered() const;
+		void clear_exception_encountered();
+
 		virtual void render_content(Canvas &canvas) { }
 
 		virtual float get_preferred_width(Canvas &canvas);

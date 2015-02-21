@@ -56,6 +56,8 @@ namespace clan
 		BoxGeometry _geometry;
 		bool hidden = false;
 
+		bool exception_encountered = false;
+
 		bool _needs_layout = true;
 
 		Signal<void(ActivationChangeEvent &)> _sig_activated[4];

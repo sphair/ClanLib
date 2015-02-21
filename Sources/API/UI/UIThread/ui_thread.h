@@ -36,16 +36,18 @@ namespace clan
 	class Canvas;
 	class UIThreadImpl;
 
+	typedef std::function<bool(const std::function<void()> &)> UITryCatchHandlerFunc;
+
 	class UIThread
 	{
 	public:
-		UIThread(ResourceManager manager);
+		UIThread(ResourceManager manager, const UITryCatchHandlerFunc &try_catch_handler = UITryCatchHandlerFunc());
 		~UIThread();
 
 		static UIThread *get_instance();
 		static ResourceManager get_resources();
 
-		//static void execute(const std::function<void()> &func);
+		static bool try_catch(const std::function<void()> &block);
 
 	private:
 		std::shared_ptr<UIThreadImpl> impl;
