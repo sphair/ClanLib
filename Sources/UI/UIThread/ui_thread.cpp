@@ -38,40 +38,27 @@ namespace clan
 	{
 	public:
 		ResourceManager resources;
-		UITryCatchHandlerFunc try_catch_handler;
+		std::function<void(const std::exception_ptr &)> exception_handler;
 	};
 
 	static UIThread *ui_thread_instance = nullptr;
 
-	UIThread::UIThread(ResourceManager manager, const UITryCatchHandlerFunc &try_catch_handler) : impl(std::make_shared<UIThreadImpl>())
+	UIThread::UIThread(ResourceManager manager, const std::function<void(const std::exception_ptr &)> &exception_handler) : impl(std::make_shared<UIThreadImpl>())
 	{
 		impl->resources = manager;
-		impl->try_catch_handler = try_catch_handler;
+		impl->exception_handler = exception_handler;
 
-		if (!try_catch_handler)
+		if (!exception_handler)
 		{
-			impl->try_catch_handler = [this](const std::function<void()> &block) -> bool
+			impl->exception_handler = [this](const std::exception_ptr &exception)
 			{
 				try
 				{
-					block();
-					return true;
+					std::rethrow_exception(exception);
 				}
-				catch (...)
+				catch (Exception &e)
 				{
-					std::exception_ptr exception = std::current_exception();
-					RunLoop::main_thread_async([=]()
-					{
-						try
-						{
-							std::rethrow_exception(exception);
-						}
-						catch (Exception &e)
-						{
-							ExceptionDialog::show(e);
-						}
-					});
-					return false;
+					ExceptionDialog::show(e);
 				}
 			};
 		}
@@ -98,6 +85,19 @@ namespace clan
 
 	bool UIThread::try_catch(const std::function<void()> &block)
 	{
-		return get_instance()->impl->try_catch_handler(block);
+		try
+		{
+			block();
+			return true;
+		}
+		catch (...)
+		{
+			std::exception_ptr exception = std::current_exception();
+			RunLoop::main_thread_async([=]()
+			{
+				get_instance()->impl->exception_handler(exception);
+			});
+			return false;
+		}
 	}
 }
