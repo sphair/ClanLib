@@ -71,8 +71,8 @@ namespace clan
 							ExceptionDialog::show(e);
 						}
 					});
+					return false;
 				}
-				return false;
 			};
 		}
 

@@ -48,6 +48,8 @@ void ExceptionDialog::show(Exception &e)
 
 #ifdef WIN32
 
+#define WM_OK_BUTTON_CLICK (WM_USER + 78)
+
 void ExceptionDialog_Impl::show(Exception &e)
 {
 	#define YEAR1865
@@ -76,7 +78,7 @@ void ExceptionDialog_Impl::show(Exception &e)
 			PostQuitMessage(msg.wParam);
 			break;
 		}
-		else if (msg.message == WM_USER || (msg.message == WM_KEYDOWN && msg.wParam == VK_RETURN))
+		else if (msg.message == WM_OK_BUTTON_CLICK || (msg.message == WM_KEYDOWN && msg.wParam == VK_RETURN))
 		{
 			break;
 		}
@@ -93,6 +95,10 @@ ExceptionDialog_Impl::ExceptionDialog_Impl(Exception &e, HWND owner)
 	if (owner == 0)
 		owner = GetDesktopWindow();
 
+	HDC screen_dc = GetDC(0);
+	int ppi = GetDeviceCaps(screen_dc, LOGPIXELSX);
+	ReleaseDC(0, screen_dc);
+
 	WNDCLASSEX class_desc = { 0 };
 	class_desc.cbSize = sizeof(WNDCLASSEX);
 	class_desc.style = 0;
@@ -105,21 +111,21 @@ ExceptionDialog_Impl::ExceptionDialog_Impl(Exception &e, HWND owner)
 
 	DWORD ex_style = WS_EX_DLGMODALFRAME;
 	DWORD style = WS_POPUPWINDOW|WS_CAPTION;
-	HWND window_handle = CreateWindowEx(ex_style, L"ExceptionDialog", L"Unhandled Exception", style, CW_USEDEFAULT, CW_USEDEFAULT, 320, 240, 0, 0, instance, this);
+	window_handle = CreateWindowEx(ex_style, L"ExceptionDialog", L"Unhandled Exception", style, CW_USEDEFAULT, CW_USEDEFAULT, 320 * ppi / 96, 240 * ppi / 96, 0, 0, instance, this);
 	if (window_handle == 0)
 		throw Exception("CreateWindowEx failed");
 
 	std::wstring text = StringHelp::utf8_to_ucs2(e.get_message_and_stack_trace());
 
-	frame = CreateWindowEx(0, L"STATIC", L"", WS_VISIBLE|WS_CHILD|SS_LEFT|SS_EDITCONTROL|SS_NOPREFIX, 0, 0, 100, 50, window_handle, 0, instance, 0);
-	text_label = CreateWindowEx(0, L"STATIC", text.c_str(), WS_VISIBLE|WS_CHILD|SS_LEFT|SS_EDITCONTROL|SS_NOPREFIX|SS_NOTIFY, 0, 0, 100, 50, window_handle, 0, instance, 0);
-	ok_button = CreateWindowEx(0, L"BUTTON", L"OK", WS_TABSTOP|WS_VISIBLE|WS_CHILD|BS_DEFPUSHBUTTON, 0, 0, 50, 10, window_handle, 0, instance, 0);
+	frame = CreateWindowEx(0, L"STATIC", L"", WS_VISIBLE | WS_CHILD | SS_LEFT | SS_EDITCONTROL | SS_NOPREFIX, 0, 0, 100 * ppi / 96, 50 * ppi / 96, window_handle, 0, instance, 0);
+	text_label = CreateWindowEx(0, L"STATIC", text.c_str(), WS_VISIBLE | WS_CHILD | SS_LEFT | SS_EDITCONTROL | SS_NOPREFIX | SS_NOTIFY, 0, 0, 100 * ppi / 96, 50 * ppi / 96, window_handle, 0, instance, 0);
+	ok_button = CreateWindowEx(0, L"BUTTON", L"OK", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON, 0, 0, 50 * ppi / 96, 10 * ppi / 96, window_handle, 0, instance, 0);
 
 	int point_size = 9;
-	font = CreateFont(-(point_size * 96 + 36) / 72, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, L"Segoe UI");
+	font = CreateFont(-(point_size * 96 + 36) / 72 * ppi / 96, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, L"Segoe UI");
 	SendMessage(frame, WM_SETFONT, (WPARAM)font, 0);
 	SendMessage(text_label, WM_SETFONT, (WPARAM)font, 0);
-	SendMessage(ok_button, WM_SETFONT, (WPARAM)font, 0);
+	//SendMessage(ok_button, WM_SETFONT, (WPARAM)font, 0);
 
 	RECT rect = { 0,0,0,0 };
 	HDC dc = GetDC(text_label);
@@ -133,20 +139,20 @@ ExceptionDialog_Impl::ExceptionDialog_Impl(Exception &e, HWND owner)
 	RECT owner_box = { 0,0,0,0 };
 	GetWindowRect(owner, &owner_box);
 
-	int width = clan::min(rect.right, (long int)800) + 50;
-	int height = clan::min(rect.bottom, (long int)600) + 100;
+	int width = clan::min(rect.right, (long int)1350 * ppi / 96) + 50 * ppi / 96;
+	int height = clan::min(rect.bottom, (long int)700 * ppi / 96) + 100 * ppi / 96;
 	SetWindowPos(window_handle, 0, (owner_box.left + owner_box.right - width) / 2, (owner_box.top + owner_box.bottom - height) / 2, width, height, SWP_NOZORDER);
 
 	RECT client_box = { 0,0,0,0 };
 	GetClientRect(window_handle, &client_box);
 
-	int button_width = 88;
-	int button_height = 26;
-	SetWindowPos(ok_button, 0, client_box.right - button_width - 11, client_box.bottom - 48 + button_height / 2, button_width, button_height, SWP_NOZORDER);
+	int button_width = 88 * ppi / 96;
+	int button_height = 26 * ppi / 96;
+	SetWindowPos(ok_button, 0, client_box.right - button_width - 11 * ppi / 96, client_box.bottom - 48 * ppi / 96 + button_height / 2, button_width, button_height, SWP_NOZORDER);
 
-	int text_bottom = client_box.bottom - 48;
+	int text_bottom = client_box.bottom - 48 * ppi / 96;
 	SetWindowPos(frame, 0, 0, 0, client_box.right, text_bottom, SWP_NOZORDER);
-	SetWindowPos(text_label, 0, 11, 11, client_box.right - 22, text_bottom - 11 - 7, SWP_NOZORDER);
+	SetWindowPos(text_label, 0, 11 * ppi / 96, 11 * ppi / 96, client_box.right - 22 * ppi / 96, text_bottom - (11 + 7) * ppi / 96, SWP_NOZORDER);
 
 	ShowWindow(window_handle, SW_SHOW);
 	SetFocus(ok_button);
@@ -163,7 +169,7 @@ LRESULT ExceptionDialog_Impl::window_proc(HWND window_handle, UINT message_id, W
 	if ((message_id == WM_COMMAND && HIWORD(wparam) == BN_CLICKED) || message_id == WM_CLOSE)
 	{
 		if (lparam != (LPARAM)text_label)	// Allow double clicks to copy text to clipboard
-			PostMessage(window_handle, WM_USER, 0, 0);
+			PostMessage(window_handle, WM_OK_BUTTON_CLICK, 0, 0);
 		return 0;
 	}
 	else if (message_id == WM_CTLCOLORSTATIC && lparam == (LPARAM)frame)
