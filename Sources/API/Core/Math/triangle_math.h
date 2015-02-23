@@ -56,6 +56,7 @@ public:
 	Trianglex() : p(), q(), r() {}
 	Trianglex(const Trianglex<Type> &copy) : p(copy.p), q(copy.q), r(copy.r) {}
 	Trianglex(const Vec2<Type> &point_p, const Vec2<Type> &point_q, const Vec2<Type> &point_r) : p(point_p), q(point_q), r(point_r) {}
+	virtual ~Trianglex() {}
 
 /// \name Attributes
 /// \{
