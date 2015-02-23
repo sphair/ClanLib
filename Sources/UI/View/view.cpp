@@ -641,6 +641,7 @@ namespace clan
 			case PointerEventType::release: sig_pointer_release(e->phase())(*pointer); break;
 			case PointerEventType::double_click: sig_pointer_double_click(e->phase())(*pointer); break;
 			case PointerEventType::promixity_change: sig_pointer_proximity_change(e->phase())(*pointer); break;
+			case PointerEventType::none: break;
 			}
 		}
 		else if (key)

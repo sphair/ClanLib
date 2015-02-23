@@ -784,7 +784,6 @@ PixelBuffer PerlinNoise_Impl::create_noise1d(float start_x, float end_x)
 void PerlinNoise_Impl::create_noise1d(PerlinNoise_PixelWriter &writer, float start_x, float end_x)
 {
 	float size_x = end_x - start_x;
-	float fheight = (float) height;
 	float fwidth = (float) width;
 
 	for (int y = 0; y < height; y++)

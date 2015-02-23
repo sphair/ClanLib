@@ -63,7 +63,7 @@ public:
 	// \brief Direction of the ray
 	Vec3<Type> v;
 
-	LineRay3x(): p(0), v(0) {}
+	LineRay3x() {}
 	LineRay3x(const LineRay3x<Type> &copy): p(copy.p), v(copy.v) {}
 	LineRay3x(const Vec3<Type> &point_p, const Vec3<Type> &direction_v): p(point_p), v(direction_v) {}
 
@@ -103,7 +103,7 @@ public:
 	// \brief Direction of the ray
 	Vec2<Type> v;
 
-	LineRay2x(): p(), v() {}
+	LineRay2x() {}
 	LineRay2x(const LineRay2x<Type> &copy): p(copy.p), v(copy.v) {}
 	LineRay2x(const Vec2<Type> &point_p, const Vec2<Type> &direction_v): p(point_p), v(direction_v) {}
 

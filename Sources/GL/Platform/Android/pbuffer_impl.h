@@ -23,53 +23,42 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
-**    Harry Storbacka
+**    Mark Page
 */
 
 #pragma once
 
-
-#include "gl1_graphic_context_provider.h"
-#include "API/Display/TargetProviders/render_buffer_provider.h"
+#include "API/GL/opengl_wrap.h"
+#include "../../opengl_graphic_context_provider.h"
 
 namespace clan
 {
 
-class GL1RenderBufferProvider : public RenderBufferProvider
+class GL1GraphicContextProvider;
+class OpenGLWindowProvider;
+
+class PBuffer_GL1_Impl : public OpenGLGraphicContextProvider
 {
-/// \name Construction
-/// \{
 
 public:
-	GL1RenderBufferProvider(GL1GraphicContextProvider *gc_provider);
+	PBuffer_GL1_Impl(GL1GraphicContextProvider *gc_provider);
 
-	~GL1RenderBufferProvider();
-
-
-/// \}
-/// \name Attributes
-/// \{
+	~PBuffer_GL1_Impl();
 
 public:
-	GLuint get_handle();
+	void make_current() const;
 
+	void get_opengl_version(int &version_major, int &version_minor) const;
+	void get_opengl_version(int &version_major, int &version_minor, int &version_release) const;
 
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	/// \brief Creates a render buffer image of the specified dimensions.
-	virtual void create(int width, int height, TextureFormat texture_format, int multisample_samples) override;
-
-/// \}
-/// \name Implementation
-/// \{
+	void create(OpenGLWindowProvider &window_provider, const Size &size);
+	ProcAddress *get_proc_address(const std::string& function_name) const;
 
 private:
+	void reset();
 
-/// \}
+	GL1GraphicContextProvider *gc_provider;
+
 };
 
 }

@@ -104,6 +104,53 @@ void OpenGL::check_error()
 
 }
 
+std::vector<MessageLog_GL> OpenGL::get_message_log(GLuint numMsgs)
+{
+	if (!glGetDebugMessageLog)
+		return std::vector<MessageLog_GL>();
+
+	GLint maxMsgLen = 0;
+	glGetIntegerv(GL_MAX_DEBUG_MESSAGE_LENGTH, &maxMsgLen);
+
+	std::vector<GLchar> msgData(numMsgs * maxMsgLen);
+	std::vector<GLenum> sources(numMsgs);
+	std::vector<GLenum> types(numMsgs);
+	std::vector<GLenum> severities(numMsgs);
+	std::vector<GLuint> ids(numMsgs);
+	std::vector<GLsizei> lengths(numMsgs);
+
+	GLuint numFound = glGetDebugMessageLog(numMsgs, msgData.size(), &sources[0], &types[0], &ids[0], &severities[0], &lengths[0], &msgData[0]);
+
+	sources.resize(numFound);
+	types.resize(numFound);
+	severities.resize(numFound);
+	ids.resize(numFound);
+	lengths.resize(numFound);
+
+	std::vector<std::string> messages;
+	messages.reserve(numFound);
+
+	std::vector<GLchar>::iterator currPos = msgData.begin();
+	for (size_t msg = 0; msg < lengths.size(); ++msg)
+	{
+		messages.push_back(std::string(currPos, currPos + lengths[msg] - 1));
+		currPos = currPos + lengths[msg];
+	}
+
+	std::vector<MessageLog_GL> log;
+	log.resize(numFound);
+	for (unsigned int cnt = 0; cnt < numFound; cnt++)
+	{
+		log[cnt].source = sources[cnt];
+		log[cnt].type = types[cnt];
+		log[cnt].severity = severities[cnt];
+		log[cnt].id = ids[cnt];
+		log[cnt].message = messages[cnt];
+	}
+	return log;
+
+}
+
 TextureFormat_GL OpenGL::get_textureformat(TextureFormat format)
 {
 	TextureFormat_GL tf;
