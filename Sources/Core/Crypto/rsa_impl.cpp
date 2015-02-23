@@ -256,7 +256,7 @@ void RSA_Impl::pkcs1v15_encode(int block_type, Random &random, const char *msg, 
 
 Secret RSA_Impl::pkcs1v15_decode(const char *emsg, int emlen)
 {
-	int    ix, jx, outlen;
+	int    ix, outlen;
 
 	// If message is less than minimum length, it's an error
 	if(emlen < 11)

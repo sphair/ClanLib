@@ -684,7 +684,7 @@ void BigInt_Impl::set(uint64_t d)
 		digits[1] = d_high;
 	}
 
-	digits[0] = d;
+	digits[0] = d_low;
 
 
 }
@@ -719,7 +719,7 @@ void BigInt_Impl::set(int64_t d)
 		digits[1] = d_high;
 	}
 
-	digits[0] = d;
+	digits[0] = d_low;
 
 }
 
