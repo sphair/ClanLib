@@ -52,8 +52,8 @@ public:
 	
 	Circlex(Type x, Type y, Type radius)	: position(x,y), radius(radius) { }
 	Circlex(const Vec2<Type> &p, Type radius) : position(p), radius(radius) { }
-	Circlex() : radius( (Type) 0 )  { }
-	Circlex(const Circlex<Type> &copy) { position = copy.position; radius = copy.radius;}
+	Circlex() : position(), radius( static_cast<Type> (0) )  { }
+	Circlex(const Circlex<Type> &copy) : position(copy.position), radius(copy.radius) {}
 
 /// \name Attributes
 /// \{

@@ -66,9 +66,9 @@ public:
 	// \brief End point on the line
 	Vec3<Type> q;
 
-	LineSegment3x() { }
-	LineSegment3x(const LineSegment3x<Type> &copy) { p = copy.p; q = copy.q;}
-	LineSegment3x(const Vec3<Type> &point_p, const Vec3<Type> &point_q) { p = point_p; q = point_q; }
+	LineSegment3x(): p(), q() {}
+	LineSegment3x(const LineSegment3x<Type> &copy): p(copy.p), q(copy.q) {}
+	LineSegment3x(const Vec3<Type> &point_p, const Vec3<Type> &point_q): p(point_p), q(point_q) {}
 
 /// \name Attributes
 /// \{
@@ -114,9 +114,9 @@ public:
 	// \brief End point on the line
 	Vec2<Type> q;
 
-	LineSegment2x() { }
-	LineSegment2x(const LineSegment2x<Type> &copy) { p = copy.p; q = copy.q;}
-	LineSegment2x(const Vec2<Type> &point_p, const Vec2<Type> &point_q) { p = point_p; q = point_q; }
+	LineSegment2x(): p(), q() {}
+	LineSegment2x(const LineSegment2x<Type> &copy): p(copy.p), q(copy.q) {}
+	LineSegment2x(const Vec2<Type> &point_p, const Vec2<Type> &point_q): p(point_p), q(point_q) {}
 
 /// \name Attributes
 /// \{

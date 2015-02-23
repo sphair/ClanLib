@@ -52,7 +52,7 @@ class Quadx
 
 public:
 	/// \brief Constructs a quad.
-	Quadx() { }
+	Quadx() : p(), q(), r(), s() {}
 
 	/// \brief Constructs a quad.
 	///
@@ -61,7 +61,7 @@ public:
 	/// \param new_r = coord for third point of quad.
 	/// \param new_s = coord for forth point of quad.
 	Quadx(const Vec2<Type> &new_p, const Vec2<Type> &new_q, const Vec2<Type> &new_r, const Vec2<Type> &new_s)
-	{ p = new_p; q = new_q;	r = new_r; s = new_s; }
+	: p(new_p), q(new_q), r(new_r), s(new_s) {}
 
 	/// \brief Constructs a quad.
 	///
@@ -74,16 +74,13 @@ public:
 	///     <li>Bottom-left: s</li>
 	///   </ul>
 	/// </p>
-	Quadx(const Rectx<Type> &rect)
-	{ p.x = rect.left; p.y = rect.top; q.x = rect.right; q.y = rect.top;
-		r.x = rect.right; r.y = rect.bottom; s.x = rect.left; s.y = rect.bottom;
-	}
+	Quadx(const Rectx<Type> &rect) : p(rect.left, rect.top), q(rect.right, rect.top),
+				 r(rect.right, rect.bottom), s(rect.left, rect.bottom) {}
 
 	/// \brief Constructs a quad.
 	///
 	/// \param quad = Quad used to initialize this quad.
-	Quadx(const Quadx<Type> &quad)
-	{ p = quad.p; q = quad.q; r = quad.r; s = quad.s; }
+	Quadx(const Quadx<Type> &quad) : p(quad.p), q(quad.q), r(quad.r), s(quad.s) {}
 
 	/// \brief Quad += Quad operator.
 	Quadx<Type> &operator+=(const Quadx<Type> &quad)
