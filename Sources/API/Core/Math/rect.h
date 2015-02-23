@@ -56,12 +56,12 @@ public:
 	/// \brief Constructs an rectangle.
 	///
 	/// Initialised to zero
-	Rectx() { left = right = top = bottom = 0; }
+	Rectx() : left(0), top(0), right(0), bottom(0) {}
 
 	/// \brief Constructs an rectangle.
 	///
 	/// \param s = Size
-	Rectx(const Sizex<Type> &s) { left = 0; top = 0; right = s.width; bottom = s.height; }
+	Rectx(const Sizex<Type> &s) : left(0), top(0), right(s.width), bottom(s.height) {}
 
 	/// \brief Constructs an rectangle.
 	///
@@ -70,14 +70,14 @@ public:
 	/// \param new_right Initial right position of rectangle.
 	/// \param new_bottom Initial bottom position of rectangle.
 	Rectx(Type new_left, Type new_top, Type new_right, Type new_bottom)
-	{ left = new_left; top = new_top; right = new_right; bottom = new_bottom; }
+	: left(new_left), top(new_top), right(new_right), bottom(new_bottom) {}
 
 	/// \brief Constructs an rectangle.
 	///
 	/// \param p = Initial top-left position of rectangle.
 	/// \param size Initial size of rectangle.
 	Rectx(const Pointx<Type> &p, const Sizex<Type> &size)
-	{ left = p.x; top = p.y; right = left + size.width; bottom = top + size.height; }
+	: left(p.x), top(p.y), right(p.x + size.width), bottom(p.y + size.height) {}
 
 	/// \brief Constructs an rectangle.
 	///
@@ -85,7 +85,7 @@ public:
 	/// \param new_top Initial top position of rectangle.
 	/// \param size Initial size of rectangle.
 	Rectx(Type new_left, Type new_top, const Sizex<Type> &size)
-	{ left = new_left; top = new_top; right = left + size.width; bottom = top + size.height; }
+	: left(new_left), top(new_top), right(new_left + size.width), bottom(new_top + size.height) {}
 
 	/// \brief Constructs an rectangle.
 	///
@@ -442,15 +442,21 @@ inline Rectx<int>::Rectx(const Rectx<double> &rect)
 
 template<typename Type>
 inline Rectx<Type>::Rectx(const Rectx<int> &rect)
-{ left = (Type) rect.left; top = (Type) rect.top; right = (Type) rect.right; bottom = (Type) rect.bottom; }
+	: left( static_cast<Type> (rect.left) ), top( static_cast<Type> (rect.top) ),
+	right( static_cast<Type> (rect.right) ), bottom( static_cast<Type> (rect.bottom) ) 
+	{}
 
 template<typename Type>
 inline Rectx<Type>::Rectx(const Rectx<float> &rect)
-{ left = (Type) rect.left; top = (Type) rect.top; right = (Type) rect.right; bottom = (Type) rect.bottom; }
+	: left( static_cast<Type> (rect.left) ), top( static_cast<Type> (rect.top) ),
+	right( static_cast<Type> (rect.right) ), bottom( static_cast<Type> (rect.bottom) ) 
+	{}
 
 template<typename Type>
 inline Rectx<Type>::Rectx(const Rectx<double> &rect)
-{ left = (Type) rect.left; top = (Type) rect.top; right = (Type) rect.right; bottom = (Type) rect.bottom; }
+	: left( static_cast<Type> (rect.left) ), top( static_cast<Type> (rect.top) ),
+	right( static_cast<Type> (rect.right) ), bottom( static_cast<Type> (rect.bottom) ) 
+	{}
 
 /// \brief 2D (left,top,right,bottom) rectangle structure - Integer
 class Rect : public Rectx<int>
