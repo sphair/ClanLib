@@ -62,6 +62,7 @@ public:
 	Line3x(): p(), q() {}
 	Line3x(const Line3x<Type> &copy): p(copy.p), q(copy.q) {}
 	Line3x(const Vec3<Type> &point_p, const Vec3<Type> &point_q): p(point_p), q(point_q) {}
+	virtual ~Line3x() {}
 
 /// \name Attributes
 /// \{
@@ -106,6 +107,7 @@ public:
 	Line2x(const Line2x<Type> &copy): p(copy.p), q(copy.q) {}
 	Line2x(const Vec2<Type> &point_p, const Vec2<Type> &point_q): p(point_p), q(point_q) {}
 	Line2x(const Vec2<Type> &point_p, Type gradient): p(point_p), q(static_cast<Type> (1), gradient) {}
+	virtual ~Line2x() {}
 
 /// \name Attributes
 /// \{
