@@ -426,9 +426,11 @@ PixelBuffer GL1GraphicContextProvider::get_pixeldata(const Rect& rect, TextureFo
 	Size display_size = get_display_window_size();
 
 	glPixelStorei(GL_PACK_ALIGNMENT, 1);
+#ifndef CL_ANDROID
 	glPixelStorei(GL_PACK_ROW_LENGTH, pbuf.get_pitch() / pbuf.get_bytes_per_pixel());
 	glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
 	glPixelStorei(GL_PACK_SKIP_ROWS, 0);
+#endif
 	glReadPixels(rect.left, display_size.height - rect.bottom, rect.get_width(), rect.get_height(), format, type, pbuf.get_data());
 	pbuf.flip_vertical();
 	return pbuf;
@@ -472,10 +474,14 @@ void GL1GraphicContextProvider::set_texture(int unit_index, const Texture &textu
 
 	if (texture.is_null())
 	{
+#ifndef CL_ANDROID
 		glDisable(GL_TEXTURE_1D);
+#endif
 		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_TEXTURE_3D);
+#ifndef CL_ANDROID
 		glDisable(GL_TEXTURE_CUBE_MAP);
+#endif
 	}
 	else
 	{
@@ -505,10 +511,14 @@ void GL1GraphicContextProvider::reset_texture(int unit_index)
 		return;
 	}
 
+#ifndef CL_ANDROID
 	glDisable(GL_TEXTURE_1D);
+#endif
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_TEXTURE_3D);
+#ifndef CL_ANDROID
 	glDisable(GL_TEXTURE_CUBE_MAP);
+#endif
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 }
@@ -775,7 +785,9 @@ void GL1GraphicContextProvider::reset_primitives_array()
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_COLOR_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
+#ifndef CL_ANDROID
 	glDisableClientState(GL_EDGE_FLAG_ARRAY);
+#endif
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	if (glClientActiveTexture)

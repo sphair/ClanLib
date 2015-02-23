@@ -31,7 +31,7 @@
 #ifdef WIN32
 #include "../Platform/WGL/pbuffer_impl.h"
 #elif defined(CL_ANDROID)
-#include "../Platform/Android/opengl_window_provider_android.h"
+#include "../Platform/Android/pbuffer_impl.h"
 #else
 #include "../Platform/GLX/pbuffer_impl.h"
 #endif

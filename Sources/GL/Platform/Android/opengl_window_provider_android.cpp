@@ -127,8 +127,18 @@ bool OpenGLWindowProvider::is_clipboard_image_available() const
 	return false;
 }
 
+ProcAddress *OpenGLWindowProvider::get_proc_address(const std::string& function_name) const
+{
+	return nullptr;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // OpenGLWindowProvider Operations:
+
+void OpenGLWindowProvider::make_current() const
+{
+
+}
 
 Point OpenGLWindowProvider::client_to_screen(const Point &client)
 {
