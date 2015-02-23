@@ -491,7 +491,7 @@ namespace clan
 			return;
 
 		Pointf mouse_pos(e.pos(track.get()));
-		Rectf thumb_geometry(thumb->geometry().content_box());
+		//Rectf thumb_geometry(thumb->geometry().content_box());
 		Rectf track_geometry(track->geometry().content_box());
 
 		double last_position = pos;
