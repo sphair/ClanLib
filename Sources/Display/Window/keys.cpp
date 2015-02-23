@@ -175,7 +175,11 @@ Key decode_ic(InputCode ic)
 
 		case keycode_apps   : return Key::apps;
 #else
+
+#if !defined CL_ANDROID
 		case keycode_numpad_enter: return Key::key_return;
+#endif
+
 #endif
 
 		case keycode_unknown:

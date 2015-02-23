@@ -201,7 +201,7 @@ std::string InputDevice::keyid_to_string(int keycode) const
 		case keycode_numpad7: return "numpad7";
 		case keycode_numpad8: return "numpad8";
 		case keycode_numpad9: return "numpad9";
-#if !defined(WIN32) && !defined(__APPLE__)
+#if !defined CL_ANDROID && ! defined __APPLE__ && ! defined WIN32
 		case keycode_numpad_enter: return "numpad_enter";
 #endif
 		case keycode_multiply: return "multiply";
