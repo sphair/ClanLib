@@ -28,6 +28,7 @@
 
 #include "Sound/precomp.h"
 #include "API/Sound/sound_sse.h"
+#include "API/Core/System/system.h"
 #include <cstdlib>
 #include <cstring>
 
@@ -44,36 +45,12 @@ namespace clan
 
 void *SoundSSE::aligned_alloc(int size)
 {
-	void *ptr;
-#if defined _MSC_VER || (defined __MINGW32__ && __MSVCRT_VERSION__ >= 0x0700)
-	ptr = _aligned_malloc(size, 16);
-	if (!ptr)
-		throw Exception("Out of memory");
-#elif defined __MINGW32__
-	ptr = __mingw_aligned_malloc(size, 16);
-	if (!ptr)
-		throw Exception("Out of memory");	
-#else
-	if (posix_memalign( (void **) &ptr, 16, size))
-	{
-		throw Exception("Panic! posix_memalign failed");
-	}
-#endif
-	return ptr;
+	return System::aligned_alloc(size, 16);
 }
 
 void SoundSSE::aligned_free(void *ptr)
 {
-	if (ptr)
-	{
-#if defined _MSC_VER || (defined __MINGW32__ && __MSVCRT_VERSION__ >= 0x0700)
-		_aligned_free(ptr);
-#elif defined __MINGW32__
-		__mingw_aligned_free (ptr);
-#else
-		free(ptr);
-#endif
-	}
+	return System::aligned_free(ptr);
 }
 
 void SoundSSE::unpack_16bit_stereo(short *input, int size, float *output[2])
