@@ -246,17 +246,31 @@ void GL1FrameBufferProvider::sync_pbuffer()
 	glLoadMatrixf(scale_matrix);
 	glMatrixMode(GL_MODELVIEW);
 
-	glBegin(GL_QUADS);
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	glTexCoord2f(float(surface_size.width), 0.0f);
-	glVertex2f(float(surface_size.width), 0.0f);
-	glTexCoord2f(float(surface_size.width), float(surface_size.height));
-	glVertex2f(float(surface_size.width), float(surface_size.height));
-	glTexCoord2f(0.0f, float(surface_size.height));
-	glVertex2f(0.0f, float(surface_size.height));
-	glTexCoord2f(0.0f, 0.0f);
-	glVertex2f(0.0f, 0.0f);
-	glEnd();
+
+	GLfloat vtx1[] = {
+		float(surface_size.width), 0.0f, 0.0f,
+		float(surface_size.width), float(surface_size.height), 0.0f,
+		0.0f, float(surface_size.height), 0.0f,
+		0.0f, 0.0f, 0.0f
+	};
+	GLfloat tex1[] = {
+		float(surface_size.width), 0.0f,
+		float(surface_size.width), float(surface_size.height),
+		0.0f, float(surface_size.height),
+		0.0f, 0.0f
+	};
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	glVertexPointer(3, GL_FLOAT, 0, vtx1);
+	glTexCoordPointer(2, GL_FLOAT, 0, tex1);
+	glDrawArrays(GL_TRIANGLE_FAN,0,4);
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
 	glDisable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
