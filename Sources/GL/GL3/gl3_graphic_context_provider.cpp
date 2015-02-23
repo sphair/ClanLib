@@ -66,7 +66,12 @@
 #ifdef __APPLE__
 #include "../Platform/OSX/opengl_window_provider_osx.h"
 #elif !defined(WIN32)
+
+#if defined(CL_ANDROID)
+#include "../Platform/Android/opengl_window_provider_android.h"
+#else
 #include "../Platform/GLX/opengl_window_provider_glx.h"
+#endif
 #endif
 
 #ifdef WIN32

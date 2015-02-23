@@ -74,12 +74,15 @@ public:
 	std::string get_clipboard_text() const override;
 	PixelBuffer get_clipboard_image() const override;
 	float get_pixel_ratio() const override;
+	ProcAddress *get_proc_address(const std::string& function_name) const;
+	bool is_double_buffered() const { return double_buffered; }
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
+	void make_current() const;
 	Point client_to_screen(const Point &client) override;
 	Point screen_to_client(const Point &screen) override;
 	void create(DisplayWindowSite *site, const DisplayWindowDescription &description) override;
@@ -133,7 +136,8 @@ public:
 
 private:
 	GraphicContext gc;
-/// \}
+	bool double_buffered = false;
+	/// \}
 };
 
 }

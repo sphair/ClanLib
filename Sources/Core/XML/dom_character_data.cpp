@@ -78,7 +78,6 @@ void DomCharacterData::append_data(const DomString &arg)
 {
 	if (impl)
 	{
-		DomDocument_Impl *doc = static_cast<DomDocument_Impl *>(impl->owner_document.lock().get());
 		DomString value = impl->get_tree_node()->get_node_value();
 		impl->get_tree_node()->node_value += arg;
 	}
@@ -88,7 +87,6 @@ void DomCharacterData::insert_data(unsigned long offset, const DomString &arg)
 {
 	if (impl)
 	{
-		DomDocument_Impl *doc = static_cast<DomDocument_Impl *>(impl->owner_document.lock().get());
 		DomString value = impl->get_tree_node()->get_node_value();
 		if (offset > value.length())
 			offset = value.length();

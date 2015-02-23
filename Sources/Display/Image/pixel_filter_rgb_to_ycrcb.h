@@ -30,7 +30,10 @@
 #pragma once
 
 #include "pixel_converter_impl.h"
+
+#if !defined CL_ANDROID && ! defined CL_DISABLE_SSE2
 #include <emmintrin.h>
+#endif
 
 namespace clan
 {
@@ -66,6 +69,7 @@ public:
 	}
 };
 
+#if !defined CL_ANDROID && ! defined CL_DISABLE_SSE2
 
 class PixelFilterSSE2_RGBToYCrCb : public PixelFilter
 {
@@ -156,5 +160,6 @@ public:
 		}
 	}
 };
+#endif
 
 }

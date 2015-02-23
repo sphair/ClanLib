@@ -59,6 +59,16 @@ typedef struct
 	GLenum pixel_datatype;
 } TextureFormat_GL;
 
+typedef struct
+{
+	GLenum source;
+	GLenum type;
+	GLenum severity;
+	GLuint id;
+	std::string message;
+
+} MessageLog_GL;
+
 /// \brief OpenGL utility class.
 class OpenGL
 {
@@ -92,6 +102,14 @@ public:
 	///
 	/// Remember to call glGetError() to clear any previous errors
 	static void check_error();
+
+	/// \brief Get the OpenGL message log
+	///
+	/// This is required for this function to operate
+	/// OpenGLWindowDescription gldesc;
+	/// gldesc.set_debug(true);
+	/// OpenGLTarget::set_description(gldesc);
+	static std::vector<MessageLog_GL> get_message_log(GLuint numMsgs);
 
 	/// \brief Returns the OpenGL texture handle
 	static GLuint get_texture_handle(Texture &texture);

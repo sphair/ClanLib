@@ -51,10 +51,8 @@
 #endif
 
 
-#ifndef WIN32
-#ifndef __APPLE__
+#if !defined CL_ANDROID && ! defined __APPLE__ && ! defined WIN32
 #include <X11/Xlib.h>
-#endif
 #endif
 
 namespace clan
@@ -111,12 +109,10 @@ namespace clan
 		SetProcessDPIAware();
 #endif
 
-#ifndef WIN32
-#ifndef __APPLE__
+#if !defined CL_ANDROID && ! defined __APPLE__ && ! defined WIN32
 		// The XInitThreads() function initializes Xlib support for concurrent threads.
 		// This function must be the first Xlib function a multi-threaded program calls, and it must complete before any other Xlib call is made.
 		XInitThreads();
-#endif
 #endif
 		jpeg_provider = new ProviderType_Register<JPEGProvider>("jpeg");
 		jpg_provider = new ProviderType_Register<JPEGProvider>("jpg");
