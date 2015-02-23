@@ -23,41 +23,67 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
-**    Harry Storbacka
+**    Mark Page
 */
 
 #include "GL/precomp.h"
-#include "API/Display/TargetProviders/render_buffer_provider.h"
 #include "API/GL/opengl_wrap.h"
 #include "API/GL/opengl.h"
-#include "gl1_render_buffer_provider.h"
+#include "pbuffer_impl.h"
+#include "../../GL1/gl1_graphic_context_provider.h"
+#include "API/Display/Render/shared_gc_data.h"
+#include "API/Display/Window/input_context.h"
+#include "opengl_window_provider_android.h"
 
 namespace clan
 {
 
-GL1RenderBufferProvider::GL1RenderBufferProvider(GL1GraphicContextProvider *gc_provider)
+PBuffer_GL1_Impl::PBuffer_GL1_Impl(GL1GraphicContextProvider *gc_provider) : gc_provider(gc_provider)
 {
-	throw Exception("GL1RenderBuffer is not supported");
+	if (!gc_provider)
+		throw Exception("Unexpected provider");
+
 }
 
-GL1RenderBufferProvider::~GL1RenderBufferProvider()
+PBuffer_GL1_Impl::~PBuffer_GL1_Impl()
 {
+	reset();
 }
 
-/////////////////////////////////////////////////////////////////////////////
-// GL1RenderBufferProvider Attributes:
-
-GLuint GL1RenderBufferProvider::get_handle()
+void PBuffer_GL1_Impl::reset()
 {
-	return 0;
+	OpenGL::set_active(gc_provider);
+
+	OpenGL::remove_active(this);
 }
 
-/////////////////////////////////////////////////////////////////////////////
-// GL1RenderBufferProvider Operations:
-
-void GL1RenderBufferProvider::create(int width, int height, TextureFormat texture_format, int multisample_samples)
+void PBuffer_GL1_Impl::create(OpenGLWindowProvider &window_provider, const Size &size)
 {
+	reset();
+
+	OpenGL::set_active(gc_provider);
+
+
+}
+
+void PBuffer_GL1_Impl::make_current() const
+{
+
+}
+
+ProcAddress *PBuffer_GL1_Impl::get_proc_address(const std::string& function_name) const
+{
+	return nullptr;
+}
+
+void PBuffer_GL1_Impl::get_opengl_version(int &version_major, int &version_minor) const
+{
+	gc_provider->get_opengl_version(version_major, version_minor);
+}
+
+void PBuffer_GL1_Impl::get_opengl_version(int &version_major, int &version_minor, int &version_release) const
+{
+	gc_provider->get_opengl_version(version_major, version_minor, version_release);
 }
 
 }

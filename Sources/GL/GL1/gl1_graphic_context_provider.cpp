@@ -61,6 +61,8 @@
 #include "../Platform/WGL/opengl_window_provider_wgl.h"
 #elif defined(APPLE)
 // To do: add Cocoa window provider here
+#elif defined(CL_ANDROID)
+#include "../Platform/Android/opengl_window_provider_android.h"
 #else
 #include "../Platform/GLX/opengl_window_provider_glx.h"
 #endif

@@ -247,7 +247,7 @@ void GL1FrameBufferProvider::sync_pbuffer()
 	glMatrixMode(GL_MODELVIEW);
 
 	glBegin(GL_QUADS);
-	glColor3f(1.0f, 1.0f, 1.0f);
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	glTexCoord2f(float(surface_size.width), 0.0f);
 	glVertex2f(float(surface_size.width), 0.0f);
 	glTexCoord2f(float(surface_size.width), float(surface_size.height));

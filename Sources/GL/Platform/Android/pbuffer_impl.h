@@ -26,55 +26,39 @@
 **    Mark Page
 */
 
-#include "GL/precomp.h"
+#pragma once
 
-#ifdef WIN32
-#include "../Platform/WGL/pbuffer_impl.h"
-#elif defined(CL_ANDROID)
-#include "../Platform/Android/opengl_window_provider_android.h"
-#else
-#include "../Platform/GLX/pbuffer_impl.h"
-#endif
-#include "pbuffer.h"
-
-#include "gl1_graphic_context_provider.h"
+#include "API/GL/opengl_wrap.h"
+#include "../../opengl_graphic_context_provider.h"
 
 namespace clan
 {
 
-PBuffer_GL1::PBuffer_GL1()
-{
-}
+class GL1GraphicContextProvider;
+class OpenGLWindowProvider;
 
-PBuffer_GL1::PBuffer_GL1(GL1GraphicContextProvider *gc_provider) : impl(std::make_shared<PBuffer_GL1_Impl>(gc_provider))
+class PBuffer_GL1_Impl : public OpenGLGraphicContextProvider
 {
-}
 
-PBuffer_GL1::~PBuffer_GL1()
-{
-}
+public:
+	PBuffer_GL1_Impl(GL1GraphicContextProvider *gc_provider);
 
-void PBuffer_GL1::create(OpenGLWindowProvider &window_provider, Size &size)
-{
-	impl->create(window_provider, size);
-	set_active();
+	~PBuffer_GL1_Impl();
 
-	glEnable(GL_POINT_SPRITE);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-}
+public:
+	void make_current() const;
 
-void PBuffer_GL1::set_active()
-{
-	OpenGL::set_active(impl.get());
-}
+	void get_opengl_version(int &version_major, int &version_minor) const;
+	void get_opengl_version(int &version_major, int &version_minor, int &version_release) const;
 
-void PBuffer_GL1::throw_if_null() const
-{
-	if (!impl)
-		throw Exception("is null");
-}
+	void create(OpenGLWindowProvider &window_provider, const Size &size);
+	ProcAddress *get_proc_address(const std::string& function_name) const;
+
+private:
+	void reset();
+
+	GL1GraphicContextProvider *gc_provider;
+
+};
 
 }

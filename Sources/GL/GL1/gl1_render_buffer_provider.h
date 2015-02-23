@@ -68,7 +68,6 @@ public:
 /// \{
 
 private:
-	GL1GraphicContextProvider *gc_provider;
 
 /// \}
 };
