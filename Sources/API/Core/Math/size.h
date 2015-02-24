@@ -72,9 +72,6 @@ public:
 	/// \param s = Size structure to construct this one from.
 	Sizex(const Sizex<Type> &s)
 	: width(s.width), height(s.height) {}
-	
-	/// \brief Destructs a size structure.
-	virtual ~Sizex() {};
 
 /// \}
 /// \name Attributes

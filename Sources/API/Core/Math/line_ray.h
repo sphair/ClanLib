@@ -66,7 +66,6 @@ public:
 	LineRay3x(): p(), v() {}
 	LineRay3x(const LineRay3x<Type> &copy): p(copy.p), v(copy.v) {}
 	LineRay3x(const Vec3<Type> &point_p, const Vec3<Type> &direction_v): p(point_p), v(direction_v) {}
-	virtual ~LineRay3x() {}
 
 /// \name Attributes
 /// \{
@@ -107,7 +106,6 @@ public:
 	LineRay2x(): p(), v() {}
 	LineRay2x(const LineRay2x<Type> &copy): p(copy.p), v(copy.v) {}
 	LineRay2x(const Vec2<Type> &point_p, const Vec2<Type> &direction_v): p(point_p), v(direction_v) {}
-	virtual ~LineRay2x() {}
 
 /// \name Attributes
 /// \{
