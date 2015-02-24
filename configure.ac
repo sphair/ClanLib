@@ -8,7 +8,7 @@ AC_PREREQ(2.50)
 dnl Set the name of the package and its version. (This must be called first)
 AC_INIT(ClanLib, 4.0.0)
 
-AC_CONFIG_MACRO_DIR(m4)
+AC_CONFIG_MACRO_DIR(Setup/Unix/m4)
 
 dnl Ensure that the source code exists (by specifying a known source code file)
 AC_CONFIG_SRCDIR(Sources/API/core.h)
@@ -209,7 +209,7 @@ use_sse2=no
 AC_ARG_ENABLE(sse2, AC_HELP_STRING([--enable-sse2], [Enable SSE2 support]),
 [
 	if test "$enable_sse2" != "no"; then
-		CLANLIB_CHECK_CPP([`cat $srcdir/Setup/Tests/sse2.cpp`], [ ], [ -msse2 ] )
+		CLANLIB_CHECK_CPP([`cat $srcdir/Setup/Unix/Tests/sse2.cpp`], [ ], [ -msse2 ] )
 		if test "$CL_RESULT" != "yes"; then
 			 AC_MSG_ERROR([ *** Compliler does not support SSE2, run configure with the --disable-sse2 option ])
 		fi
@@ -222,7 +222,7 @@ AC_ARG_ENABLE(sse2, AC_HELP_STRING([--enable-sse2], [Enable SSE2 support]),
 
 ],
 [
-	CLANLIB_CHECK_CPP([`cat $srcdir/Setup/Tests/sse2.cpp`], [ ], [ -msse2 ] )
+	CLANLIB_CHECK_CPP([`cat $srcdir/Setup/Unix/Tests/sse2.cpp`], [ ], [ -msse2 ] )
 	if test "$CL_RESULT" != "no"; then
 		AC_MSG_RESULT([enabled])
 		use_sse2=yes
@@ -313,7 +313,7 @@ echo ""
 if test "$enable_clanDisplay" != "no"; then
 	echo "Checking for clanDisplay stuff"
 	echo "=============================="
-	CLANLIB_CHECK_LIB(ttf, [`cat $srcdir/Setup/Tests/ttf.cpp`], clanDisplay, [ *** Cannot find ttf (freetype) (See http://freetype.sourceforge.net )  (Try libfreetype6-dev or better) ], [`freetype-config --libs` ], [ `freetype-config --cflags`])
+	CLANLIB_CHECK_LIB(ttf, [`cat $srcdir/Setup/Unix/Tests/ttf.cpp`], clanDisplay, [ *** Cannot find ttf (freetype) (See http://freetype.sourceforge.net )  (Try libfreetype6-dev or better) ], [`freetype-config --libs` ], [ `freetype-config --cflags`])
 
 	dnl  Optional linux/joystick.h
 	AC_CHECK_HEADERS(linux/joystick.h, has_linux_joystick=yes)
@@ -322,7 +322,7 @@ if test "$enable_clanDisplay" != "no"; then
 	AC_CHECK_HEADERS(linux/input.h, has_linux_input=yes)
 
 	if test "$WIN32" = "no" && test "$enable_clanDisplay" != "no"; then
-	CLANLIB_CHECK_LIB(fontconfig,  [`cat $srcdir/Setup/Tests/fontconfig.cpp`],  clanDisplay, [ *** Cannot find fontconfig (See http://fontconfig.org/ ) (Try libfontconfig1-dev or better) ], [-lfontconfig])
+	CLANLIB_CHECK_LIB(fontconfig,  [`cat $srcdir/Setup/Unix/Tests/fontconfig.cpp`],  clanDisplay, [ *** Cannot find fontconfig (See http://fontconfig.org/ ) (Try libfontconfig1-dev or better) ], [-lfontconfig])
 	fi
 	if test "$WIN32" = "yes" && test "$enable_clanDisplay" != "no"; then
 		CLANLIB_CHECK_LIB(gdi32,[#include <windows.h>
@@ -372,16 +372,16 @@ if test "$enable_clanDisplay" != "no"; then
 		echo "Checking for clanGL stuff"
 		echo "=============================="
 		if test "$WIN32" = "yes"; then
-			CLANLIB_CHECK_LIB(opengl32, [`cat $srcdir/Setup/Tests/opengl.cpp`], clanGL, [ *** Cannot find opengl32], [-lopengl32])
+			CLANLIB_CHECK_LIB(opengl32, [`cat $srcdir/Setup/Unix/Tests/opengl.cpp`], clanGL, [ *** Cannot find opengl32], [-lopengl32])
 		else
-			CLANLIB_CHECK_LIB(GL, [`cat $srcdir/Setup/Tests/opengl.cpp`], clanGL, [ *** Cannot find GL. Try installing libgl-mesa-dev], [ $LIBPTHREAD -lGL ])
+			CLANLIB_CHECK_LIB(GL, [`cat $srcdir/Setup/Unix/Tests/opengl.cpp`], clanGL, [ *** Cannot find GL. Try installing libgl-mesa-dev], [ $LIBPTHREAD -lGL ])
 			if test "$enable_clanGL" != "no" && test "$X11" = "yes"; then
 			
 				dnl Check for optional usage of /X11/extensions/Xrender.h
 				AC_CHECK_HEADERS(X11/extensions/Xrender.h, have_xrender=yes)
 
 				if test x"$have_xrender" = "xyes"; then
-					CLANLIB_CHECK_LIB(Xrender, [`cat $srcdir/Setup/Tests/xrender.cpp`], clanGL, [ *** Cannot find Xrender. Try installing libxrender-dev], [ -lXrender])
+					CLANLIB_CHECK_LIB(Xrender, [`cat $srcdir/Setup/Unix/Tests/xrender.cpp`], clanGL, [ *** Cannot find Xrender. Try installing libxrender-dev], [ -lXrender])
 				fi
 
 				dnl Check that glXGetProcAddressARB is defined in glx.h
@@ -472,7 +472,7 @@ fi
 
 
 dnl -----------------------------------------------------------------------
-dnl Store cflags for Setup/pkgconfig/clan*.in pkg-config files
+dnl Store cflags for Setup/Unix/pkgconfig/clan*.in pkg-config files
 dnl -----------------------------------------------------------------------
 AC_SUBST(extra_CFLAGS_clanApp)
 AC_SUBST(extra_CFLAGS_clanCore)
@@ -485,7 +485,7 @@ AC_SUBST(extra_CFLAGS_clanUI)
 AC_SUBST(clanGUI_CXXFLAGS)
 
 dnl -----------------------------------------------------------------------
-dnl Store libs for pkg-config Metadata - for files in Setup/pkgconfig/*.in
+dnl Store libs for pkg-config Metadata - for files in Setup/Unix/pkgconfig/*.in
 dnl -----------------------------------------------------------------------
 
 AC_SUBST(extra_LIBS_clanApp)
@@ -639,16 +639,14 @@ AC_SUBST(ClanLib_API_Modules)
 AC_SUBST(ClanLib_Examples)
 
 AC_CONFIG_FILES([
-		Setup/pkgconfig/clanApp.pc
-		Setup/pkgconfig/Makefile
+		Setup/Unix/pkgconfig/clanApp.pc
+		Setup/Unix/pkgconfig/Makefile
 		Makefile
 		Examples/Makefile
 		Examples/Makefile.conf
-		Setup/Makefile
 		Sources/API/Makefile
 		Sources/App/Makefile
 		Sources/Makefile
-		Tests/Makefile.conf
 		])
 
 AC_OUTPUT

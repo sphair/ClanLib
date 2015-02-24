@@ -36,7 +36,7 @@ case $AUTOMAKE_VERSION in
 	;;
 esac
 
-$ACLOCAL -I m4
+$ACLOCAL -I Setup/Unix/m4
 
 libtoolize --force --copy
 

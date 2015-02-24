@@ -29,7 +29,7 @@
 #include "Display/precomp.h"
 #include "API/Display/ImageProviders/provider_type.h"
 #include "API/Display/ImageProviders/provider_factory.h"
-
+#include "../setup_display.h"
 namespace clan
 {
 
@@ -38,18 +38,20 @@ namespace clan
 
 ImageProviderType::ImageProviderType(const std::string &type)
 {
-	ImageProviderFactory::types[type] = this;
+	auto &types = *SetupDisplay::get_image_provider_factory_types();
+	types[type] = this;
 }
 
 ImageProviderType::~ImageProviderType()
 {
+	auto &types = *SetupDisplay::get_image_provider_factory_types();
 	std::map<std::string, ImageProviderType *>::iterator it;
 	
-	for (it = ImageProviderFactory::types.begin(); it != ImageProviderFactory::types.end(); it++)
+	for (it = types.begin(); it != types.end(); it++)
 	{
 		if (it->second == this)
 		{
-			ImageProviderFactory::types.erase(it);
+			types.erase(it);
 			break;
 		}
 	}

@@ -50,7 +50,11 @@
 #include "FontEngine/font_engine_cocoa.h"
 #else
 #include "FontEngine/font_engine_freetype.h"
-#include "../Display/X11/font_config.h"
+
+#if !defined CL_ANDROID
+#include "../Platform/X11/font_config.h"
+#endif
+
 #endif
 
 #include "../2D/sprite_impl.h"
@@ -129,6 +133,11 @@ namespace clan
 		//font_cache.push_back(Font_Cache(engine));
 		//font_cache.back().glyph_cache->set_texture_group(texture_group);
 #else
+
+#if defined CL_ANDROID
+		throw Exception("automatic typeface to ttf file selection is not supported on android");
+#else
+
 		// Obtain the best matching font file from fontconfig.
 		FontConfig &fc = FontConfig::instance();
 		std::string font_file_path = fc.match_font(typeface_name, desc);
@@ -140,6 +149,7 @@ namespace clan
 		font_databuffer.set_size(file.get_size());
 		file.read(font_databuffer.get_data(), font_databuffer.get_size());
 		font_face_load(desc, font_databuffer, pixel_ratio);
+#endif
 #endif
 	}
 

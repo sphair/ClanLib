@@ -28,29 +28,29 @@
 
 #include "UI/precomp.h"
 #include "API/UI/Style/box_geometry.h"
-#include "API/UI/Style/box_style.h"
+#include "API/UI/Style/style.h"
 
 namespace clan
 {
-	BoxGeometry::BoxGeometry(const BoxStyle &style)
+	BoxGeometry::BoxGeometry(const std::shared_ptr<Style> &style)
 	{
-		margin_left = style.margin_left();
-		margin_top = style.margin_top();
-		margin_right = style.margin_right();
-		margin_bottom = style.margin_bottom();
+		margin_left = style->computed_value("margin-left").number;
+		margin_top = style->computed_value("margin-top").number;
+		margin_right = style->computed_value("margin-right").number;
+		margin_bottom = style->computed_value("margin-bottom").number;
 
-		border_left = style.border_left();
-		border_top = style.border_top();
-		border_right = style.border_right();
-		border_bottom = style.border_bottom();
+		border_left = style->computed_value("border-left-width").number;
+		border_top = style->computed_value("border-top-width").number;
+		border_right = style->computed_value("border-right-width").number;
+		border_bottom = style->computed_value("border-bottom-width").number;
 
-		padding_left = style.padding_left();
-		padding_top = style.padding_top();
-		padding_right = style.padding_right();
-		padding_bottom = style.padding_bottom();
+		padding_left = style->computed_value("padding-left").number;
+		padding_top = style->computed_value("padding-top").number;
+		padding_right = style->computed_value("padding-right").number;
+		padding_bottom = style->computed_value("padding-bottom").number;
 	}
 
-	BoxGeometry BoxGeometry::from_margin_box(const BoxStyle &style, const Rectf &box)
+	BoxGeometry BoxGeometry::from_margin_box(const std::shared_ptr<Style> &style, const Rectf &box)
 	{
 		BoxGeometry geometry(style);
 
@@ -63,7 +63,7 @@ namespace clan
 		return geometry;
 	}
 
-	BoxGeometry BoxGeometry::from_border_box(const BoxStyle &style, const Rectf &box)
+	BoxGeometry BoxGeometry::from_border_box(const std::shared_ptr<Style> &style, const Rectf &box)
 	{
 		BoxGeometry geometry(style);
 
@@ -76,7 +76,7 @@ namespace clan
 		return geometry;
 	}
 
-	BoxGeometry BoxGeometry::from_padding_box(const BoxStyle &style, const Rectf &box)
+	BoxGeometry BoxGeometry::from_padding_box(const std::shared_ptr<Style> &style, const Rectf &box)
 	{
 		BoxGeometry geometry(style);
 
@@ -89,7 +89,7 @@ namespace clan
 		return geometry;
 	}
 
-	BoxGeometry BoxGeometry::from_content_box(const BoxStyle &style, const Rectf &box)
+	BoxGeometry BoxGeometry::from_content_box(const std::shared_ptr<Style> &style, const Rectf &box)
 	{
 		BoxGeometry geometry(style);
 		geometry.content = box;

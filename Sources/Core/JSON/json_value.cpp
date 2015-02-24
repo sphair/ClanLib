@@ -68,6 +68,8 @@ void JsonValue::write(std::string &json) const
 	case Type::boolean:
 		json += value_boolean ? "true" : "false";
 		break;
+	case Type::undefined:
+		break;
 	}
 }
 

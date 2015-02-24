@@ -122,7 +122,6 @@ DomElement DomDocument::get_document_element()
 
 DomElement DomDocument::create_element(const DomString &tag_name)
 {
-	DomDocument_Impl *doc = static_cast<DomDocument_Impl *>(impl.get());
 	return DomElement(*this, tag_name);
 }
 
@@ -130,7 +129,6 @@ DomElement DomDocument::create_element_ns(
 	const DomString &namespace_uri,
 	const DomString &qualified_name)
 {
-	DomDocument_Impl *doc = static_cast<DomDocument_Impl *>(impl.get());
 	return DomElement(*this, qualified_name, namespace_uri);
 }
 
@@ -141,19 +139,16 @@ DomDocumentFragment DomDocument::create_document_fragment()
 
 DomText DomDocument::create_text_node(const DomString &data)
 {
-	DomDocument_Impl *doc = static_cast<DomDocument_Impl *>(impl.get());
 	return DomText(*this, data);
 }
 
 DomComment DomDocument::create_comment(const DomString &data)
 {
-	DomDocument_Impl *doc = static_cast<DomDocument_Impl *>(impl.get());
 	return DomComment(*this, data);
 }
 
 DomCDATASection DomDocument::create_cdata_section(const DomString &data)
 {
-	DomDocument_Impl *doc = static_cast<DomDocument_Impl *>(impl.get());
 	return DomCDATASection(*this, data);
 }
 
@@ -161,13 +156,11 @@ DomProcessingInstruction DomDocument::create_processing_instruction(
 	const DomString &target,
 	const DomString &data)
 {
-	DomDocument_Impl *doc = static_cast<DomDocument_Impl *>(impl.get());
 	return DomProcessingInstruction(*this, target, data);
 }
 
 DomAttr DomDocument::create_attribute(const DomString &name)
 {
-	DomDocument_Impl *doc = static_cast<DomDocument_Impl *>(impl.get());
 	return DomAttr(*this, name);
 }
 
@@ -175,13 +168,11 @@ DomAttr DomDocument::create_attribute_ns(
 	const DomString &namespace_uri,
 	const DomString &qualified_name)
 {
-	DomDocument_Impl *doc = static_cast<DomDocument_Impl *>(impl.get());
 	return DomAttr(*this, qualified_name, namespace_uri);
 }
 
 DomEntityReference DomDocument::create_entity_reference(const DomString &name)
 {
-	DomDocument_Impl *doc = static_cast<DomDocument_Impl *>(impl.get());
 	return DomEntityReference(*this, name);
 }
 

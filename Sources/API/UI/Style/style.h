@@ -155,6 +155,17 @@ namespace clan
 		std::vector<StyleGradientStop> stops;
 	};
 
+	class StyleImage
+	{
+	public:
+		StyleImage() { }
+		StyleImage(const StyleValue &image) : image(image) { }
+		StyleImage(const StyleGradient &gradient) : gradient(gradient) { }
+
+		StyleValue image;
+		StyleGradient gradient;
+	};
+
 	class Style
 	{
 	public:
@@ -166,9 +177,9 @@ namespace clan
 		const std::shared_ptr<Style> &get_base();
 		void set_base(const std::shared_ptr<Style> &base);
 
-		void set(const std::string &property_name, const std::string &property_value, const std::initializer_list<StylePropertyInitializerValue> &args = std::initializer_list<StylePropertyInitializerValue>());
+		void set(const std::string &properties, const std::initializer_list<StylePropertyInitializerValue> &args = std::initializer_list<StylePropertyInitializerValue>());
 		bool has(const std::string &property_name) const;
-		void remove(const std::string &property_name);
+		int array_size(const std::string &property_name) const;
 
 		StyleValue specified_value(const std::string &property_name) const;
 		StyleValue computed_value(const std::string &property_name) const;

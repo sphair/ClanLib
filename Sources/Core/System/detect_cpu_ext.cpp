@@ -33,7 +33,7 @@
 namespace clan
 {
 
-#ifdef ARM_PLATFORM
+#if defined(ARM_PLATFORM) || defined(CL_ARM)
 bool System::detect_cpu_extension(CPU_ExtensionPPC ext)
 {
 	throw ("Congratulations, you've just been selected to code this feature!");

@@ -51,9 +51,9 @@ namespace clan
 	BottomPropertyParser style_parser_bottom;
 	ZIndexPropertyParser style_parser_zindex;
 
-	void LayoutPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void LayoutPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue layout;
 
@@ -82,9 +82,9 @@ namespace clan
 		setter->set_value("layout", layout);
 	}
 
-	void PositionPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void PositionPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue position;
 
@@ -113,9 +113,9 @@ namespace clan
 		setter->set_value("position", position);
 	}
 
-	void LeftPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void LeftPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue left;
 
@@ -175,9 +175,9 @@ namespace clan
 		setter->set_value("left", left);
 	}
 
-	void TopPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void TopPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue top;
 
@@ -237,9 +237,9 @@ namespace clan
 		setter->set_value("top", top);
 	}
 
-	void RightPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void RightPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue right;
 
@@ -303,9 +303,9 @@ namespace clan
 		setter->set_value("right", right);
 	}
 
-	void BottomPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BottomPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue bottom;
 
@@ -365,9 +365,9 @@ namespace clan
 		setter->set_value("bottom", bottom);
 	}
 
-	void ZIndexPropertyParser::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void ZIndexPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		std::vector<StyleToken> tokens = StyleTokenizer::tokenize(value);
+		auto &tokens = parser.tokens;
 
 		StyleValue z_index;
 

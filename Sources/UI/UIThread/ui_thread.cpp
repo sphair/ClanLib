@@ -29,6 +29,7 @@
 #include "UI/precomp.h"
 #include "API/Core/Resources/resource_manager.h"
 #include "API/Display/2D/canvas.h"
+#include "API/Display/System/run_loop.h"
 #include "API/UI/UIThread/ui_thread.h"
 
 namespace clan
@@ -37,13 +38,30 @@ namespace clan
 	{
 	public:
 		ResourceManager resources;
+		std::function<void(const std::exception_ptr &)> exception_handler;
 	};
 
 	static UIThread *ui_thread_instance = nullptr;
 
-	UIThread::UIThread(ResourceManager manager) : impl(std::make_shared<UIThreadImpl>())
+	UIThread::UIThread(ResourceManager manager, const std::function<void(const std::exception_ptr &)> &exception_handler) : impl(std::make_shared<UIThreadImpl>())
 	{
 		impl->resources = manager;
+		impl->exception_handler = exception_handler;
+
+		if (!exception_handler)
+		{
+			impl->exception_handler = [this](const std::exception_ptr &exception)
+			{
+				try
+				{
+					std::rethrow_exception(exception);
+				}
+				catch (Exception &e)
+				{
+					ExceptionDialog::show(e);
+				}
+			};
+		}
 
 		if (ui_thread_instance != nullptr) throw Exception("Only one UIThread is allowed");
 		ui_thread_instance = this;
@@ -63,5 +81,23 @@ namespace clan
 	ResourceManager UIThread::get_resources()
 	{
 		return get_instance()->impl->resources;
+	}
+
+	bool UIThread::try_catch(const std::function<void()> &block)
+	{
+		try
+		{
+			block();
+			return true;
+		}
+		catch (...)
+		{
+			std::exception_ptr exception = std::current_exception();
+			RunLoop::main_thread_async([=]()
+			{
+				get_instance()->impl->exception_handler(exception);
+			});
+			return false;
+		}
 	}
 }

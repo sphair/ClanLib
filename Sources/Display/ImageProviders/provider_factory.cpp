@@ -42,11 +42,6 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// ProviderFactory attributes:
-
-std::map<std::string, ImageProviderType *> ImageProviderFactory::types;
-
-/////////////////////////////////////////////////////////////////////////////
 // ImageProviderFactory operations:
 
 PixelBuffer ImageProviderFactory::try_load(
@@ -76,6 +71,7 @@ PixelBuffer ImageProviderFactory::load(
 	bool srgb)
 {
 	SetupDisplay::start();
+	auto &types = *SetupDisplay::get_image_provider_factory_types();
 	if (type != "")
 	{
 		if (types.find(type) == types.end()) throw Exception("Unknown image provider type " + type);
@@ -99,6 +95,7 @@ PixelBuffer ImageProviderFactory::load(
 	bool srgb)
 {
 	SetupDisplay::start();
+	auto &types = *SetupDisplay::get_image_provider_factory_types();
 	if (types.find(type) == types.end()) throw Exception("Unknown image provider type " + type);
 
 	ImageProviderType *factory = types[type];
@@ -129,6 +126,7 @@ void ImageProviderFactory::save(
 	if (type.empty())
 		type = PathHelp::get_extension(filename, PathHelp::path_type_virtual);
 	
+	auto &types = *SetupDisplay::get_image_provider_factory_types();
 	if (types.find(type) == types.end()) throw Exception("Unknown image provider type " + type);
 	
 	ImageProviderType *factory = types[type];
@@ -154,6 +152,7 @@ void ImageProviderFactory::save(
 {
 	SetupDisplay::start();
 
+	auto &types = *SetupDisplay::get_image_provider_factory_types();
 	if (types.find(type) == types.end()) throw Exception("Unknown image provider type " + type);
 
 	ImageProviderType *factory = types[type];

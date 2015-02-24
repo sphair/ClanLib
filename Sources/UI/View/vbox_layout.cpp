@@ -47,7 +47,7 @@ namespace clan
 				margin_box_width += subview->style()->computed_value("margin-left").number;
 				margin_box_width += subview->style()->computed_value("border-left-width").number;
 				margin_box_width += subview->style()->computed_value("padding-left").number;
-				if (subview->style()->computed_value("flex-basis").is_keyword("auto"))
+				if (subview->style()->computed_value("flex-basis").is_keyword("main-size"))
 					margin_box_width += subview->get_preferred_width(canvas);
 				else
 					margin_box_width += subview->style()->computed_value("flex-basis").number;
@@ -148,7 +148,7 @@ namespace clan
 				total_grow_factor += subview->style()->computed_value("flex-grow").number;
 				total_shrink_factor += subview->style()->computed_value("flex-shrink").number;
 
-				if (subview->style()->computed_value("flex-basis").is_keyword("auto"))
+				if (subview->style()->computed_value("flex-basis").is_keyword("main-size"))
 					basis_height += subview->get_preferred_height(canvas, view->geometry().content.get_width());
 				else
 					basis_height += subview->style()->computed_value("flex-basis").number;
@@ -187,7 +187,7 @@ namespace clan
 				}
 
 				float subview_height = subview->style()->computed_value("flex-basis").number;
-				if (subview->style()->computed_value("flex-basis").is_keyword("auto"))
+				if (subview->style()->computed_value("flex-basis").is_keyword("main-size"))
 					subview_height = subview->get_preferred_height(canvas, subview_width);
 
 				if (free_space < 0.0f && total_shrink_factor != 0.0f)
@@ -201,7 +201,7 @@ namespace clan
 				y += subview->style()->computed_value("border-top-width").number;
 				y += subview->style()->computed_value("padding-top").number;
 
-				subview->set_geometry(BoxGeometry::from_content_box(subview->box_style, Rectf::xywh(left_noncontent, y, subview_width, subview_height)));
+				subview->set_geometry(BoxGeometry::from_content_box(subview->style(), Rectf::xywh(left_noncontent, y, subview_width, subview_height)));
 
 				y += subview_height;
 				y += subview->style()->computed_value("padding-bottom").number;

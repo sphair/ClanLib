@@ -31,12 +31,12 @@
 #include "jpeg_loader.h"
 #include "API/Core/System/system.h"
 
-#ifndef DISABLE_SSE2
+#ifndef CL_DISABLE_SSE2
 #ifndef ARM_PLATFORM
 #include <xmmintrin.h>
 #include <emmintrin.h>
 #endif
-#endif // not DISABLE_SSE2
+#endif // not CL_DISABLE_SSE2
 
 namespace clan
 {
@@ -100,7 +100,7 @@ void JPEGMCUDecoder::decode(int block)
 			{
 				short *dct = loader->component_dcts[c].get(block * block_size + dct_x + dct_y * scale_x);
 
-#ifdef DISABLE_SSE2
+#ifdef CL_DISABLE_SSE2
 				idct(dct, channels[c]+dct_x*8+dct_y*scale_x*64, scale_x*8, quant[c]);
 #else
 
@@ -109,7 +109,7 @@ void JPEGMCUDecoder::decode(int block)
 #else
 				idct(dct, channels[c]+dct_x*8+dct_y*scale_x*64, scale_x*8, quant[c]);
 #endif
-#endif // not DISABLE_SSE2
+#endif // not CL_DISABLE_SSE2
 
 
 			}
@@ -255,7 +255,7 @@ void JPEGMCUDecoder::idct(short *inptr, unsigned char *outptr, int pitch, float 
 	}
 }
 
-#ifndef DISABLE_SSE2
+#ifndef CL_DISABLE_SSE2
 
 #ifndef ARM_PLATFORM
 void JPEGMCUDecoder::idct_sse(short *inptr, unsigned char *outptr, int pitch, float *quantptr)
@@ -438,7 +438,7 @@ void JPEGMCUDecoder::idct_sse(short *inptr, unsigned char *outptr, int pitch, fl
 	}
 }
 #endif
-#endif // not DISABLE_SSE2
+#endif // not CL_DISABLE_SSE2
 
 
 

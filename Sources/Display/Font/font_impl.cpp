@@ -195,8 +195,6 @@ std::vector<Rectf> Font_Impl::get_character_indices(Canvas &canvas, const std::s
 	float dest_x = 0;
 	float dest_y = 0;
 
-	int character_counter = 0;
-
 	float font_height = selected_metrics.get_height();
 	float font_ascent = selected_metrics.get_ascent();
 	float line_spacing = std::round(selected_line_height); // TBD: do we want to round this?
@@ -210,7 +208,6 @@ std::vector<Rectf> Font_Impl::get_character_indices(Canvas &canvas, const std::s
 		float ypos = dest_y;
 
 		std::string &textline = lines[i];
-		std::string::size_type string_length = textline.length();
 
 		// Scan the string
 
@@ -218,7 +215,6 @@ std::vector<Rectf> Font_Impl::get_character_indices(Canvas &canvas, const std::s
 		while (!reader.is_end())
 		{
 			unsigned int glyph = reader.get_char();
-			std::string::size_type glyph_pos = reader.get_position();
 			reader.next();
 
 			GlyphMetrics metrics = font_draw->get_metrics(canvas, glyph);

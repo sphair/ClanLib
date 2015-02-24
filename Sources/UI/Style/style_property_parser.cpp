@@ -315,14 +315,15 @@ namespace clan
 		{
 			gradient.type = StyleValue::from_keyword(token.value);
 
+			size_t peek_pos = pos;
 			token = next_token(pos, tokens);
 
 			if (parse_angle(token, gradient.linear_angle))
 			{
+				token = next_token(pos, tokens);
+
 				if (!(token.type == StyleTokenType::delim && token.value == ","))
 					return false;
-
-				token = next_token(pos, tokens);
 			}
 			else if (token.type == StyleTokenType::ident && equals(token.value, "to"))
 			{
@@ -362,8 +363,6 @@ namespace clan
 				if ((x.empty() && y.empty()) || !(token.type == StyleTokenType::delim && token.value == ","))
 					return false;
 
-				token = next_token(pos, tokens);
-
 				if (y.empty() && x == "left")
 				{
 					gradient.linear_angle = StyleValue::from_angle(270.0f, StyleDimension::deg);
@@ -384,12 +383,21 @@ namespace clan
 				{
 					gradient.linear_angle = StyleValue::from_keyword(y + "-" + x);
 				}
+
+				if (!(token.type == StyleTokenType::delim && token.value == ","))
+					return false;
+			}
+			else
+			{
+				pos = peek_pos;
+				gradient.linear_angle = StyleValue::from_angle(180.0f, StyleDimension::deg);
 			}
 		}
 		else if (equals(token.value, "radial-gradient") || equals(token.value, "repeating-radial-gradient"))
 		{
 			gradient.type = StyleValue::from_keyword(token.value);
 
+			size_t start_pos = pos;
 			token = next_token(pos, tokens);
 
 			bool shape_ellipse = false;
@@ -495,7 +503,10 @@ namespace clan
 			{
 				if (!(token.type == StyleTokenType::delim && token.value == ","))
 					return false;
-				token = next_token(pos, tokens);
+			}
+			else
+			{
+				pos = start_pos;
 			}
 
 			gradient.radial_shape = StyleValue::from_keyword(shape_ellipse ? "ellipse" : "circle");
@@ -517,8 +528,11 @@ namespace clan
 			if (!parse_color(tokens, pos, stop_color))
 				return false;
 
+			token = next_token(pos, tokens);
+
 			if (parse_length(token, stop_pos))
 			{
+				token = next_token(pos, tokens);
 			}
 			else if (token.type == StyleTokenType::percentage)
 			{
@@ -530,12 +544,10 @@ namespace clan
 
 			if (!(token.type == StyleTokenType::delim && token.value == ","))
 				break;
-			token = next_token(pos, tokens);
 		}
 
 		if (token.type != StyleTokenType::bracket_end)
 			return false;
-		token = next_token(pos, tokens);
 
 		out_gradient = gradient;
 		in_out_pos = pos;
@@ -850,23 +862,30 @@ namespace clan
 		}
 		else if (token.type == StyleTokenType::function && equals(token.value, "rgba"))
 		{
-			int color[4] = { 0, 0, 0, 0 };
+			float color[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 			for (int channel = 0; channel < 4; channel++)
 			{
 				token = next_token(pos, tokens);
 				if (token.type == StyleTokenType::number)
 				{
-					int value = StringHelp::text_to_int(token.value);
-					value = min(255, value);
-					value = max(0, value);
-					color[channel] = value;
+					if (channel < 3)
+					{
+						int value = StringHelp::text_to_int(token.value);
+						value = min(255, value);
+						value = max(0, value);
+						color[channel] = value / 255.0f;
+					}
+					else
+					{
+						color[channel] = StringHelp::text_to_float(token.value);
+					}
 				}
 				else if (token.type == StyleTokenType::percentage)
 				{
 					float value = StringHelp::text_to_float(token.value) / 100.0f;
 					value = min(1.0f, value);
 					value = max(0.0f, value);
-					color[channel] = (int)(value*255.0f);
+					color[channel] = value;
 				}
 				else
 				{
@@ -883,7 +902,7 @@ namespace clan
 			token = next_token(pos, tokens);
 			if (token.type == StyleTokenType::bracket_end)
 			{
-				out_color = Colorf(color[0] / 255.0f, color[1] / 255.0f, color[2] / 255.0f, color[3] / 255.0f);
+				out_color = Colorf(color[0], color[1], color[2], color[3]);
 				in_out_pos = pos;
 				return true;
 			}
@@ -1003,24 +1022,24 @@ namespace clan
 
 	StylePropertyParser::ColorType StylePropertyParser::colors[] =
 	{
-		"maroon", 0x800000,
-		"red", 0xff0000,
-		"orange", 0xffa500,
-		"yellow", 0xffff00,
-		"olive", 0x808000,
-		"purple", 0x800080,
-		"fuchia", 0xff00ff,
-		"white", 0xffffff,
-		"lime", 0x00ff00,
-		"green", 0x008000,
-		"navy", 0x000080,
-		"blue", 0x0000ff,
-		"aqua", 0x00ffff,
-		"teal", 0x008080,
-		"black", 0x000000,
-		"silver", 0xc0c0c0,
-		"gray", 0x808080,
-		0, 0
+		{"maroon", 0x800000},
+		{"red", 0xff0000},
+		{"orange", 0xffa500},
+		{"yellow", 0xffff00},
+		{"olive", 0x808000},
+		{"purple", 0x800080},
+		{"fuchia", 0xff00ff},
+		{"white", 0xffffff},
+		{"lime", 0x00ff00},
+		{"green", 0x008000},
+		{"navy", 0x000080},
+		{"blue", 0x0000ff},
+		{"aqua", 0x00ffff},
+		{"teal", 0x008080},
+		{"black", 0x000000},
+		{"silver", 0xc0c0c0},
+		{"gray", 0x808080},
+		{nullptr, 0}
 	};
 
 	bool StylePropertyParser::equals(const std::string &s1, const std::string &s2)
@@ -1084,10 +1103,39 @@ namespace clan
 		}
 	}
 
-	void StyleProperty::parse(StylePropertySetter *setter, const std::string &name, const std::string &value, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void StyleProperty::parse(StylePropertySetter *setter, const std::string &properties, const std::initializer_list<StylePropertyInitializerValue> &args)
 	{
-		auto it = style_parsers().find(name);
-		if (it != style_parsers().end())
-			it->second->parse(setter, name, value, args);
+		StyleTokenizer tokenizer(properties);
+		StyleToken token;
+		while (true)
+		{
+			tokenizer.read(token, true);
+			if (token.type == StyleTokenType::ident)
+			{
+				std::string name = token.value;
+
+				tokenizer.read(token, true);
+				if (token.type == StyleTokenType::colon)
+				{
+					tokenizer.read(token, true);
+
+					StyleParser parser;
+					parser.tokens = tokenizer.read_property_value(token, parser.important_flag);
+
+					auto it = style_parsers().find(name);
+					if (it != style_parsers().end())
+						it->second->parse(setter, name, parser, args);
+				}
+				else
+				{
+					bool important_flag = false;
+					tokenizer.read_property_value(token, important_flag);
+				}
+			}
+			else if (token.type == StyleTokenType::null)
+			{
+				break;
+			}
+		}
 	}
 }

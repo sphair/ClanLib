@@ -29,9 +29,11 @@
 #include "GL/precomp.h"
 
 #ifdef WIN32
-#include "../WGL/pbuffer_impl.h"
+#include "../Platform/WGL/pbuffer_impl.h"
+#elif defined(CL_ANDROID)
+#include "../Platform/Android/pbuffer_impl.h"
 #else
-#include "../GLX/pbuffer_impl.h"
+#include "../Platform/GLX/pbuffer_impl.h"
 #endif
 #include "pbuffer.h"
 

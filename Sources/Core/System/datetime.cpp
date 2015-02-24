@@ -673,7 +673,6 @@ DateTime &DateTime::add_days(int days)
 
 		while (days > 0)
 		{
-			int days_in_month = DateTime::get_days_in_month(month, year); 
 			int prev_month = month-1;
 			int prev_month_year = year;
 			if (prev_month < 1)
@@ -702,10 +701,6 @@ DateTime &DateTime::add_days(int days)
 
 	}
 
-/*	int daynum = get_day_number();
-	daynum += days;
-	set_date_from_daynumber(daynum);
-*/
 	return *this; 
 }
 

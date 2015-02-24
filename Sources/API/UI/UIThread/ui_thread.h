@@ -39,13 +39,13 @@ namespace clan
 	class UIThread
 	{
 	public:
-		UIThread(ResourceManager manager);
+		UIThread(ResourceManager manager, const std::function<void(const std::exception_ptr &)> &exception_handler = std::function<void(const std::exception_ptr &)>());
 		~UIThread();
 
 		static UIThread *get_instance();
 		static ResourceManager get_resources();
 
-		//static void execute(const std::function<void()> &func);
+		static bool try_catch(const std::function<void()> &block);
 
 	private:
 		std::shared_ptr<UIThreadImpl> impl;

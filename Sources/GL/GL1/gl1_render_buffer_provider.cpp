@@ -37,7 +37,6 @@ namespace clan
 {
 
 GL1RenderBufferProvider::GL1RenderBufferProvider(GL1GraphicContextProvider *gc_provider)
-: gc_provider(gc_provider)
 {
 	throw Exception("GL1RenderBuffer is not supported");
 }

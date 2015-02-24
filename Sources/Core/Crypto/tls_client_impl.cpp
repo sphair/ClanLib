@@ -354,7 +354,6 @@ void TLSClient_Impl::alert_data(DataBuffer record_plaintext)
 	if (record_plaintext.get_size() != 2) // To do: theoretically this is not safe - it could be split into two 1 byte records.
 		throw Exception("Invalid TLS content alert message");
 
-	const int alert_data_size = 2;
 	uint8_t *alert_data = record_plaintext.get_data<uint8_t>();
 
 	if (alert_data[0] == cl_tls_warning)

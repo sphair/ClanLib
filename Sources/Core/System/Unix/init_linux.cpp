@@ -56,28 +56,6 @@
 namespace clan
 {
 
-static int init_ref_count = 0;
-
-void init_system()
-{
-	init_ref_count++;
-	if (init_ref_count > 1) return;
-
-	#ifdef NDEBUG
-	signal(SIGSEGV, deinit);
-	#endif
-}
-
-void deinit_system()
-{
-	init_ref_count--;
-	if (init_ref_count > 0) return;
-
-	#ifdef NDEBUG
-	signal(SIGSEGV,SIG_DFL); //restore default behavior
-	#endif
-}
-
 uint64_t System::get_time()
 {
 	return (get_microseconds() / 1000);
