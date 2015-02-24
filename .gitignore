@@ -68,3 +68,13 @@ Makefile.in
 *.mode2v3
 xcuserdata
 *.opensdf
+*.idb
+*.exe
+*.tlog
+*.pdb
+*.log
+*.vcxproj
+*.ilk
+*.obj
+*.pch
+*.vcxproj
