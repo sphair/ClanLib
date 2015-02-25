@@ -40,7 +40,7 @@ namespace clan
 class AxisAlignedBoundingBox
 {
 public:
-	AxisAlignedBoundingBox() { }
+	AxisAlignedBoundingBox() : aabb_min(), aabb_max() {}
 	AxisAlignedBoundingBox(const Vec3f &aabb_min, const Vec3f &aabb_max) : aabb_min(aabb_min), aabb_max(aabb_max) { }
 	AxisAlignedBoundingBox(const AxisAlignedBoundingBox &aabb, const Vec3f &barycentric_min, const Vec3f &barycentric_max)
 	: aabb_min(mix(aabb.aabb_min, aabb.aabb_max, barycentric_min)), aabb_max(mix(aabb.aabb_min, aabb.aabb_max, barycentric_max)) { }
