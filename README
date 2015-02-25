@@ -26,10 +26,6 @@ anything, don't hesitate to contact us.
 
 If you have fixed something in ClanLib, you can send us a pull request through GitHub.
 
-A developer's reference is available. This contains all the internal classes 
-for ClanLib which are useful for ClanLib developers.  To enable the reference, 
-go in to the Documentation/Reference directory and run 'make dev_ref'.
-
 ClanLib Website
 ---------------
 Check out ClanLib homepage at:
