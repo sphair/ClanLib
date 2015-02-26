@@ -629,8 +629,8 @@ public:
 	void set_blue_f(float value) { b = (unsigned char) (value*255.0f); }
 
 	/// \brief Set color based on rgba color components in the range 0-255.
-	void set_color(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha = 255)
-	{ r = red; g =  green; b = blue;  a = alpha; }
+	void set_color(unsigned char new_red, unsigned char new_green, unsigned char new_blue, unsigned char new_alpha = 255)
+	{ r = new_red; g = new_green; b = new_blue;  a = new_alpha; }
 
 	/// \brief Set color based on rgba color components
 	void set_rgba8(unsigned int color);

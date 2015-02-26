@@ -240,9 +240,9 @@ public:
 	/// \brief Shrink the rectangle
 	///
 	/// \return reference to this object
-	Rectx<Type> &shrink(const Type &left, const Type &top, const Type &right, const Type &bottom)
+	Rectx<Type> &shrink(const Type &new_left, const Type &new_top, const Type &new_right, const Type &new_bottom)
 	{
-		this->left += left; this->top += top; this->right -= right; this->bottom -= bottom;
+		left += new_left; top += new_top; right -= new_right; bottom -= new_bottom;
 		return *this;
 	};
 
@@ -251,7 +251,7 @@ public:
 	/// \return reference to this object
 	Rectx<Type> &shrink(const Type &left_right, const Type &top_bottom)
 	{
-		this->left += left_right; this->top += top_bottom; this->right -= left_right; this->bottom -= top_bottom;
+		left += left_right; top += top_bottom; right -= left_right; bottom -= top_bottom;
 		return *this;
 	};
 
@@ -260,16 +260,16 @@ public:
 	/// \return reference to this object
 	Rectx<Type> &shrink(const Type &shrink)
 	{
-		this->left += shrink; this->top += shrink; this->right -= shrink; this->bottom -= shrink;
+		left += shrink; top += shrink; right -= shrink; bottom -= shrink;
 		return *this;
 	};
 
 	/// \brief Expand the rectangle
 	///
 	/// \return reference to this object
-	Rectx<Type> &expand(const Type &left, const Type &top, const Type &right, const Type &bottom)
+	Rectx<Type> &expand(const Type &expand_left, const Type &expand_top, const Type &expand_right, const Type &expand_bottom)
 	{
-		this->left -= left; this->top -= top; this->right += right; this->bottom += bottom;
+		left -= expand_left; top -= expand_top; right += expand_right; bottom += expand_bottom;
 		return *this;
 	};
 
@@ -278,10 +278,10 @@ public:
 	/// \return reference to this object
 	Rectx<Type> &expand(const Type &left_and_right, const Type &top_and_bottom)
 	{
-		this->left -= left_and_right;
-		this->right += left_and_right;
-		this->top -= top_and_bottom;
-		this->bottom += top_and_bottom;
+		left -= left_and_right;
+		right += left_and_right;
+		top -= top_and_bottom;
+		bottom += top_and_bottom;
 		return *this;
 	};
 
@@ -290,10 +290,10 @@ public:
 	/// \return reference to this object
 	Rectx<Type> &expand(const Type &expand)
 	{
-		this->left -= expand;
-		this->right += expand;
-		this->top -= expand;
-		this->bottom += expand;
+		left -= expand;
+		right += expand;
+		top -= expand;
+		bottom += expand;
 		return *this;
 	};
 
