@@ -148,7 +148,7 @@ FontPixelBuffer FontEngine_Win32::get_font_glyph_lcd(int glyph)
 	HDC screen_dc = GetDC(0);
 	old_font = (HFONT)SelectObject(screen_dc, handle);
 
-	wchar_t text[2] = { glyph, 0 };
+	wchar_t text[2] = { static_cast<wchar_t>(glyph), 0 };
 	WORD indices[2] = {0};
 	GetGlyphIndicesW(screen_dc, text, 1, indices, GGI_MARK_NONEXISTING_GLYPHS);
 
@@ -329,7 +329,7 @@ bool FontEngine_Win32::try_load_glyph_bitmap(int glyph, UINT format, MAT2 &matri
 	HDC dc = GetDC(0);
 	HGDIOBJ old_font = SelectObject(dc, handle);
 
-	wchar_t text[2] = { glyph, 0 };
+	wchar_t text[2] = { static_cast<wchar_t>(glyph), 0 };
 	WORD indices[2] = {0};
 	GetGlyphIndicesW(dc, text, 1, indices, GGI_MARK_NONEXISTING_GLYPHS);
 	format |= GGO_GLYPH_INDEX;
