@@ -33,6 +33,7 @@
 #include "API/Display/2D/subtexture.h"
 #include "API/Core/System/system.h"
 #include <algorithm>
+#include <xmmintrin.h>
 
 using namespace clan::PathConstants;
 

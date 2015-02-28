@@ -59,6 +59,7 @@ public:
     std::shared_ptr<SolutionBuildConfiguration> debug_config = std::make_shared<SolutionBuildConfiguration>("Debug");
     std::shared_ptr<SolutionBuildConfiguration> release_config = std::make_shared<SolutionBuildConfiguration>("Release");
     std::vector<std::shared_ptr<SolutionProject>> projects;
+    std::shared_ptr<SolutionProject> aggr_target = std::make_shared<SolutionProject>();
     std::shared_ptr<SolutionFileItem> root_folder = std::make_shared<SolutionFileItem>();
     std::shared_ptr<SolutionFileItem> products_folder;
 };
@@ -327,6 +328,11 @@ private:
             output << id("PBXFileReference", item.get()) << " /* " << item->path << " */ = {isa = PBXFileReference; lastKnownFileType = " << file_type << "; path = \"" << item->path << "\"; sourceTree = \"<group>\"; };" << std::endl;
         }
         
+        for (const auto &project : solution->projects)
+        {
+            output << id("PBXFileReference", project.get()) << " /* lib" << project->name << ".a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = lib" << project->name << ".a; sourceTree = BUILT_PRODUCTS_DIR; };" << std::endl;
+        }
+        
         output << "/* End PBXFileReference section */" << std::endl;
     }
     
@@ -379,6 +385,15 @@ private:
                 else
                     output << "        " << id("PBXGroup", child.get()) << " /* " << child->path << " */," << std::endl;
             }
+            
+            if (item == solution->products_folder)
+            {
+                for (const auto &project : solution->projects)
+                {
+                    output << "        " << id("PBXFileReference", project.get()) << " /* lib" << project->name << ".a */," << std::endl;
+                }
+            }
+            
             output << "    );" << std::endl;
             if (!item->name.empty())
                 output << "    name = \"" << item->name << "\";" << std::endl;
@@ -391,32 +406,36 @@ private:
         output << "/* End PBXGroup section */" << std::endl;
     }
     
+    void pbx_aggregate_target_section()
+    {
+        output << std::endl;
+        output << "/* Begin PBXAggregateTarget section */" << std::endl;
+
+        output << id("PBXAggregateTarget", solution->aggr_target.get()) << " /* " << solution->name << " */ = {" << std::endl;
+        output << "    isa = PBXAggregateTarget;" << std::endl;
+        output << "    buildConfigurationList = " << id("XCConfigurationList", solution->aggr_target.get()) << " /* Build configuration list for PBXAggregateTarget \"" << solution->name << "\" */;" << std::endl;
+        output << "    buildPhases = (" << std::endl;
+        //output << "        528505C61665768600B19C5D /* ShellScript */," << std::endl;
+        output << "    );" << std::endl;
+        output << "    buildRules = (" << std::endl;
+        output << "    );" << std::endl;
+        output << "    dependencies = (" << std::endl;
+        for (const auto &project : solution->projects)
+        {
+            output << "        " << id("PBXTargetDependency", project.get()) << " /* " << project->name << " */," << std::endl;
+        }
+        output << "    );" << std::endl;
+        output << "    name = " << solution->name << ";" << std::endl;
+        output << "    productName = " << solution->name << ";" << std::endl;
+        output << "};" << std::endl;
+        
+        output << "/* End PBXAggregateTarget section */" << std::endl;
+    }
+    
     void pbx_native_target_section()
     {
         output << std::endl;
         output << "/* Begin PBXNativeTarget section */" << std::endl;
-        
-        //output << "1835B438163618BE0009AA23 /* ClanLib */ = {" << std::endl;
-        //output << "    isa = PBXNativeTarget;" << std::endl;
-        //output << "    buildConfigurationList = 1835B43B163618BE0009AA23 /* Build configuration list for PBXNativeTarget \"ClanLib\" */;" << std::endl;
-        //output << "    buildPhases = (" << std::endl;
-        //output << "        528505C61665768600B19C5D /* ShellScript */," << std::endl;
-        //output << "    );" << std::endl;
-        //output << "    buildRules = (" << std::endl;
-        //output << "    );" << std::endl;
-        //output << "    dependencies = (" << std::endl;
-        //output << "        1835C224163635A00009AA23 /* PBXTargetDependency */," << std::endl;
-        //output << "        1835C22A163635A00009AA23 /* PBXTargetDependency */," << std::endl;
-        //output << "        1835C232163635A00009AA23 /* PBXTargetDependency */," << std::endl;
-        //output << "        1835C234163635A00009AA23 /* PBXTargetDependency */," << std::endl;
-        //output << "        1835BE56163620BB0009AA23 /* PBXTargetDependency */," << std::endl;
-        //output << "        1835BE58163620BB0009AA23 /* PBXTargetDependency */," << std::endl;
-        //output << "    );" << std::endl;
-        //output << "    name = ClanLib;" << std::endl;
-        //output << "    productName = ClanLib;" << std::endl;
-        //output << "    productReference = 1835B439163618BE0009AA23 /* libClanLib.a */;" << std::endl;
-        //output << "    productType = \"com.apple.product-type.library.static\";" << std::endl;
-        //output << "};" << std::endl;
 
         for (const auto &project : solution->projects)
         {
@@ -433,7 +452,7 @@ private:
             output << "    );" << std::endl;
             output << "    name = " << project->name << ";" << std::endl;
             output << "    productName = " << project->name << ";" << std::endl;
-            output << "    productReference = 1835BD5216361C4A0009AA23 /* lib" << project->name << ".a */;" << std::endl;
+            output << "    productReference = " << id("PBXFileReference", project.get()) << " /* lib" << project->name << ".a */;" << std::endl;
             output << "    productType = \"com.apple.product-type.library.static\";" << std::endl;
             output << "};" << std::endl;
         }
@@ -548,8 +567,16 @@ private:
         output << id("XCBuildConfiguration", solution->debug_config.get()) << " /* " << solution->debug_config->name << " */ = {" << std::endl;
         output << "    isa = XCBuildConfiguration;" << std::endl;
         output << "    buildSettings = {" << std::endl;
+        output << "        CLANG_CXX_LANGUAGE_STANDARD = \"c++14\";" << std::endl;
+        output << "        CLANG_CXX_LIBRARY = \"libc++\";" << std::endl;
+        output << "        CLANG_ENABLE_OBJC_ARC = YES;" << std::endl;
+        output << "        GCC_OPTIMIZATION_LEVEL = 0;" << std::endl;
+        output << "        GCC_PREPROCESSOR_DEFINITIONS = (" << std::endl;
+        output << "                \"DEBUG=1\"," << std::endl;
+        output << "                \"$(inherited)\"," << std::endl;
+        output << "        );" << std::endl;
         output << "        ONLY_ACTIVE_ARCH = YES;" << std::endl;
-        output << "        USER_HEADER_SEARCH_PATHS = ../../Sources;" << std::endl;
+        output << "        USER_HEADER_SEARCH_PATHS = Sources;" << std::endl;
         output << "    };" << std::endl;
         output << "    name = " << solution->debug_config->name << ";" << std::endl;
         output << "};" << std::endl;
@@ -557,7 +584,10 @@ private:
         output << id("XCBuildConfiguration", solution->release_config.get()) << " /* " << solution->release_config->name << " */ = {" << std::endl;
         output << "    isa = XCBuildConfiguration;" << std::endl;
         output << "    buildSettings = {" << std::endl;
-        output << "        USER_HEADER_SEARCH_PATHS = ../../Sources;" << std::endl;
+        output << "        CLANG_CXX_LANGUAGE_STANDARD = \"c++14\";" << std::endl;
+        output << "        CLANG_CXX_LIBRARY = \"libc++\";" << std::endl;
+        output << "        CLANG_ENABLE_OBJC_ARC = YES;" << std::endl;
+        output << "        USER_HEADER_SEARCH_PATHS = Sources;" << std::endl;
         output << "    };" << std::endl;
         output << "    name = " << solution->release_config->name << ";" << std::endl;
         output << "};" << std::endl;
@@ -569,6 +599,7 @@ private:
             output << id("XCBuildConfiguration", project->debug_config.get()) << " /* " << project->debug_config->name << " */ = {" << std::endl;
             output << "    isa = XCBuildConfiguration;" << std::endl;
             output << "    buildSettings = {" << std::endl;
+            output << "        PRODUCT_NAME = \"$(TARGET_NAME)\";" << std::endl;
             output << "    };" << std::endl;
             output << "    name = " << project->debug_config->name << ";" << std::endl;
             output << "};" << std::endl;
@@ -576,6 +607,7 @@ private:
             output << id("XCBuildConfiguration", project->release_config.get()) << " /* " << project->release_config->name << " */ = {" << std::endl;
             output << "    isa = XCBuildConfiguration;" << std::endl;
             output << "    buildSettings = {" << std::endl;
+            output << "        PRODUCT_NAME = \"$(TARGET_NAME)\";" << std::endl;
             output << "    };" << std::endl;
             output << "    name = " << project->release_config->name << ";" << std::endl;
             output << "};" << std::endl;
