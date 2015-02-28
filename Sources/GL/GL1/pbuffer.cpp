@@ -32,6 +32,8 @@
 #include "../Platform/WGL/pbuffer_impl.h"
 #elif defined(CL_ANDROID)
 #include "../Platform/Android/pbuffer_impl.h"
+#elif __APPLE__
+#include "../Platform/AGL/pbuffer_impl.h"
 #else
 #include "../Platform/GLX/pbuffer_impl.h"
 #endif

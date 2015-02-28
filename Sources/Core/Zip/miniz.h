@@ -146,7 +146,9 @@ namespace clan
 #ifndef MINIZ_HEADER_INCLUDED
 #define MINIZ_HEADER_INCLUDED
 
+#ifndef __APPLE__ /* Something breaks in Apple headers if <stdlib.h> and <mutex> are both included!! */
 #include <stdlib.h>
+#endif
 
 #if !defined(MINIZ_NO_TIME) && !defined(MINIZ_NO_ARCHIVE_APIS)
 #include <time.h>
@@ -4776,4 +4778,4 @@ void *mz_zip_extract_archive_file_to_heap(const char *pZip_filename, const char 
 
   For more information, please refer to <http://unlicense.org/>
 */
-};
+}

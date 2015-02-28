@@ -80,7 +80,31 @@ std::vector<std::shared_ptr<SolutionFileItem>> flatten_tree(const std::shared_pt
     return items;
 }
 
-void add_source_files(std::string path, std::shared_ptr<Solution> solution, std::shared_ptr<SolutionProject> project, std::shared_ptr<SolutionFileItem> folder)
+bool check_ignore_list(const std::string &name)
+{
+    for (const char *search : {
+        "Win32",
+        "win32",
+        "Freetype",
+        "freetype",
+        "Linux",
+        "linux",
+        "X11",
+        "x11",
+        "GLX",
+        "glx",
+        "GL1", // Not ported yet (and why bother? dinosaur tech!)
+        "gl1"
+    })
+    {
+        if (name.find(search) != std::string::npos)
+            return true;
+    }
+
+    return false;
+}
+
+void add_source_files(std::string path, std::shared_ptr<Solution> solution, std::shared_ptr<SolutionProject> project, std::shared_ptr<SolutionFileItem> folder, bool folder_ignored = false)
 {
     std::vector<std::string> subfolders;
     std::vector<std::string> files;
@@ -117,7 +141,7 @@ void add_source_files(std::string path, std::shared_ptr<Solution> solution, std:
         subfolder->path = name;
         subfolder->parent = folder;
         folder->items.push_back(subfolder);
-        add_source_files(path + "/" + name, solution, project, subfolder);
+        add_source_files(path + "/" + name, solution, project, subfolder, folder_ignored || check_ignore_list(name));
     }
     
     for (const auto &name : files)
@@ -135,7 +159,7 @@ void add_source_files(std::string path, std::shared_ptr<Solution> solution, std:
         item->parent = folder;
         folder->items.push_back(item);
         
-        if (is_cpp || is_mm)
+        if ((is_cpp || is_mm) && !folder_ignored && !check_ignore_list(name))
             project->source_files.push_back(item);
     }
 }
@@ -322,6 +346,8 @@ private:
             std::string file_type;
             if (item->path.length() > 4 && item->path.substr(item->path.length() - 4) == ".cpp")
                 file_type = "sourcecode.cpp.cpp";
+            else if (item->path.length() > 3 && item->path.substr(item->path.length() - 3) == ".mm")
+                file_type = "sourcecode.mm.mm";
             else
                 file_type = "sourcecode.c.h";
 
@@ -567,6 +593,7 @@ private:
         output << id("XCBuildConfiguration", solution->debug_config.get()) << " /* " << solution->debug_config->name << " */ = {" << std::endl;
         output << "    isa = XCBuildConfiguration;" << std::endl;
         output << "    buildSettings = {" << std::endl;
+        output << "        ALWAYS_SEARCH_USER_PATHS = NO;" << std::endl;
         output << "        CLANG_CXX_LANGUAGE_STANDARD = \"c++14\";" << std::endl;
         output << "        CLANG_CXX_LIBRARY = \"libc++\";" << std::endl;
         output << "        CLANG_ENABLE_OBJC_ARC = YES;" << std::endl;
@@ -584,6 +611,7 @@ private:
         output << id("XCBuildConfiguration", solution->release_config.get()) << " /* " << solution->release_config->name << " */ = {" << std::endl;
         output << "    isa = XCBuildConfiguration;" << std::endl;
         output << "    buildSettings = {" << std::endl;
+        output << "        ALWAYS_SEARCH_USER_PATHS = NO;" << std::endl;
         output << "        CLANG_CXX_LANGUAGE_STANDARD = \"c++14\";" << std::endl;
         output << "        CLANG_CXX_LIBRARY = \"libc++\";" << std::endl;
         output << "        CLANG_ENABLE_OBJC_ARC = YES;" << std::endl;

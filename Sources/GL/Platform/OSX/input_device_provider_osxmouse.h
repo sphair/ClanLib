@@ -59,10 +59,10 @@ public:
 	InputDevice::Type get_type() const { return InputDevice::pointer; }
 
 	/// \brief Returns the x position of the device.
-	int get_x() const;
+	float get_x() const;
 
 	/// \brief Returns the y position of the device.
-	int get_y() const;
+	float get_y() const;
 
 	/// \brief Returns true if the passed key code is down for this device.
 	bool get_keycode(int keycode) const;

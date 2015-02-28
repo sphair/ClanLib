@@ -62,13 +62,13 @@ InputDeviceProvider_OSXMouse::~InputDeviceProvider_OSXMouse()
 /////////////////////////////////////////////////////////////////////////////
 // InputDeviceProvider_OSXMouse attributes:
 
-int InputDeviceProvider_OSXMouse::get_x() const
+float InputDeviceProvider_OSXMouse::get_x() const
 {
 	throw_if_disposed();
 	return mouse_position.x;
 }
 
-int InputDeviceProvider_OSXMouse::get_y() const
+float InputDeviceProvider_OSXMouse::get_y() const
 {
 	throw_if_disposed();
 	return mouse_position.y;

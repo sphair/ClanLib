@@ -29,8 +29,7 @@
 
 #include "clanapp_osx.h"
 
-#include "API/Core/System/setup_core.h"
-#include "API/Core/System/keep_alive.h"
+#include "API/Display/System/run_loop.h"
 #include "API/App/clanapp.h"
 #include "API/Core/System/exception.h"
 #include "API/Core/System/console_window.h"

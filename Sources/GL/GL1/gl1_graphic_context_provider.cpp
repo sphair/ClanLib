@@ -59,7 +59,7 @@
 
 #ifdef WIN32
 #include "../Platform/WGL/opengl_window_provider_wgl.h"
-#elif defined(APPLE)
+#elif defined(__APPLE__)
 // To do: add Cocoa window provider here
 #elif defined(CL_ANDROID)
 #include "../Platform/Android/opengl_window_provider_android.h"
