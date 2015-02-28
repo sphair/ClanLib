@@ -15,6 +15,7 @@ Release
 *.suo
 *.sdf
 *.user
+*~
 /Build
 /Projects/clan*.vcxproj.filters
 /Projects/clan*.vcxproj

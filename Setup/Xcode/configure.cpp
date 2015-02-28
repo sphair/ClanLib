@@ -141,17 +141,60 @@ void add_source_files(std::string path, std::shared_ptr<Solution> solution, std:
 
 std::shared_ptr<SolutionProject> add_project(std::string name, std::shared_ptr<Solution> solution, std::shared_ptr<SolutionFileItem> sources, std::shared_ptr<SolutionFileItem> api)
 {
-    auto subfolder = std::make_shared<SolutionFileItem>();
-    subfolder->path = name;
-    subfolder->parent = sources;
-    sources->items.push_back(subfolder);
+    auto sources_subfolder = std::make_shared<SolutionFileItem>();
+    sources_subfolder->path = name;
+    sources_subfolder->parent = sources;
+    sources->items.push_back(sources_subfolder);
     
+    auto api_subfolder = std::make_shared<SolutionFileItem>();
+    api_subfolder->path = name;
+    api_subfolder->parent = api;
+    api->items.push_back(api_subfolder);
+
     auto proj = std::make_shared<SolutionProject>();
     proj->name = "clan" + name;
-    add_source_files("Sources/API/" + name, solution, proj, api);
-    add_source_files("Sources/" + name, solution, proj, subfolder);
+    add_source_files("Sources/API/" + name, solution, proj, api_subfolder);
+    add_source_files("Sources/" + name, solution, proj, sources_subfolder);
     solution->projects.push_back(proj);
     return proj;
+}
+
+void add_main_api_headers(std::shared_ptr<SolutionFileItem> api)
+{
+    std::vector<std::string> files;
+    
+    DIR *dir = opendir("Sources/API");
+    if (dir)
+    {
+        while (true)
+        {
+            dirent *ent = readdir(dir);
+            if (ent == 0)
+                break;
+            
+            if (ent->d_type != DT_DIR)
+            {
+                files.push_back(ent->d_name);
+            }
+        }
+        closedir(dir);
+    }
+    
+    std::sort(files.begin(), files.end());
+
+    for (const auto &name : files)
+    {
+        bool is_h = name.length() > 2 && name.substr(name.length() - 2) == ".h";
+        
+        if (!is_h)
+            continue;
+            
+        auto item = std::make_shared<SolutionFileItem>();
+        item->type = SolutionFileItemType::item;
+        item->path = name;
+        item->parent = api;
+        api->items.push_back(item);
+    }
 }
 
 std::shared_ptr<Solution> generate_solution()
@@ -189,6 +232,8 @@ std::shared_ptr<Solution> generate_solution()
     auto clanNetwork = add_project("Network", solution, sources, api);
     auto clanUI = add_project("UI", solution, sources, api);
     auto clanApp = add_project("App", solution, sources, api);
+    
+    add_main_api_headers(api);
 
     return solution;
 }
@@ -404,7 +449,7 @@ private:
         output << id("PBXProject", solution.get()) << " /* Project object */ = {" << std::endl;
         output << "    isa = PBXProject;" << std::endl;
         output << "    attributes = {" << std::endl;
-        output << "        LastUpgradeCheck = 0510;" << std::endl;
+        output << "        LastUpgradeCheck = 0610;" << std::endl;
         output << "    };" << std::endl;
         output << "    buildConfigurationList = " << id("XCConfigurationList", solution.get()) << " /* Build configuration list for PBXProject \"ClanLib\" */;" << std::endl;
         output << "    compatibilityVersion = \"Xcode 3.2\";" << std::endl;
