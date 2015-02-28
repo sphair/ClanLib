@@ -2,6 +2,7 @@ patches
 /ClanLib.sln
 /ClanLib.opensdf
 /ClanLib.sdf
+/ClanLib.xcodeproj
 ipch
 Debug
 Release

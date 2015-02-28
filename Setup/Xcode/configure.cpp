@@ -621,8 +621,8 @@ public:
 
 int main(int argc, const char * argv[])
 {
+    std::cout << std::endl;
     std::cout << "Generating Xcode project files.." << std::endl;
-    std::cout << "Important: Current working directory must be the root ClanLib folder!" << std::endl;
 
     std::shared_ptr<Solution> solution = generate_solution();
     
@@ -635,7 +635,10 @@ int main(int argc, const char * argv[])
     XcodeWorkspaceWriter workspace_writer(solution->name + ".xcodeproj", solution->name + ".xcodeproj/project.xcworkspace/contents.xcworkspacedata");
     workspace_writer.write();
 
-    std::cout << "Finished generating files. Please open ClanLib.xcodeproj using Xcode to build Clanlib." << std::endl;
+    std::cout << "Finished generating files." << std::endl;
+    std::cout << std::endl;
+    std::cout << "Please open ClanLib.xcodeproj in Xcode to build Clanlib." << std::endl;
+    std::cout << std::endl;
     
     return 0;
 }
