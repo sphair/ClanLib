@@ -32,6 +32,7 @@
 #include "API/Core/System/exception.h"
 #include "API/Core/System/console_window.h"
 #include "API/Core/Text/console.h"
+#include "API/display.h"
 
 namespace clan
 {
@@ -76,7 +77,7 @@ int main(int argc, char **argv)
 	std::vector<std::string> args;
 	for (int i = 0; i < argc; i++)
 		args.push_back(argv[i]);
-	command_line_args = args;
+	clan::command_line_args = args;
 	
 	int retval = 0;
 	
@@ -84,7 +85,7 @@ int main(int argc, char **argv)
 	{
 		try
 		{
-			std::unique_ptr<Application> app = app_instance->create();
+			std::unique_ptr<clan::Application> app = clan::app_instance->create();
 			while (true)
 			{
 				try
@@ -92,7 +93,7 @@ int main(int argc, char **argv)
 					if (!app->update())
 						break;
 					
-					if (!clan::RunLoop::process(timing_timeout))
+					if (!clan::RunLoop::process(clan::timing_timeout))
 						break;
 				}
 				catch (clan::Exception &exception)
@@ -125,17 +126,16 @@ int main(int argc, char **argv)
 	}
 	else
 	{
-		std::unique_ptr<Application> app = app_instance->create();
+		std::unique_ptr<clan::Application> app = clan::app_instance->create();
 		while (true)
 		{
 			if (!app->update())
 				break;
 			
-			if (!clan::RunLoop::process(timing_timeout))
+			if (!clan::RunLoop::process(clan::timing_timeout))
 				break;
 		}
 	}
 
 	return retval;
 }
-
