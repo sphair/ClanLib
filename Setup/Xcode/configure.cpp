@@ -99,7 +99,8 @@ bool check_ignore_list(const std::string &name)
         "IOS",
         "iOS",
         "AGL", // To do: rename AGL to iOS (those providers got nothing to do with 1450 Carbon Apple GL
-        "agl"
+        "agl",
+        "clanapp.cpp"
     })
     {
         if (name.find(search) != std::string::npos)
