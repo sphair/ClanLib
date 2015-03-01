@@ -93,6 +93,10 @@ bool check_ignore_list(const std::string &name)
         "x11",
         "GLX",
         "glx",
+        "Android",
+        "android",
+        "WGL",
+        "wgl",
         "GL1", // Not ported yet (and why bother? dinosaur tech!)
         "gl1",
         "ios", // To do: iOS need special targets in the project

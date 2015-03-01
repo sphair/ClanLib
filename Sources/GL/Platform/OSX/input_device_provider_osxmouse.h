@@ -102,7 +102,7 @@ public:
 	}
 
 	/// \brief Sets the position of the device.
-	void set_position(int x, int y);
+	void set_position(float x, float y);
 
 /// \}
 /// \name Implementation
@@ -117,7 +117,7 @@ private:
 
     void on_dispose();
     void on_mouse_event(const clan::InputCode& keycode, const clan::InputEvent::Type& type,
-                        const clan::Point& position);
+                        const clan::Pointf& position);
 
     OpenGLWindowProvider *window;
     friend class OpenGLWindowProvider_Impl;

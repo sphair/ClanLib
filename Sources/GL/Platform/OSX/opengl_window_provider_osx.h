@@ -67,6 +67,7 @@ public:
 	std::string get_title() const;
 	Size get_minimum_size(bool client_area) const;
 	Size get_maximum_size(bool client_area) const;
+	DisplayWindowHandle get_handle() const override { DisplayWindowHandle handle; return handle; }
 	GraphicContext& get_gc();
 	InputContext get_ic();
 	bool is_clipboard_text_available() const;
@@ -74,6 +75,7 @@ public:
 	std::string get_clipboard_text() const;
 	PixelBuffer get_clipboard_image() const;
     bool is_double_buffered() const;
+	float get_pixel_ratio() const override;
 /// \}
 
 /// \name Operations
@@ -114,6 +116,8 @@ public:
 	void extend_frame_into_client_area(int left, int top, int right, int bottom);
 
 	ProcAddress *get_proc_address(const std::string& function_name) const;
+	
+	void set_pixel_ratio(float ratio) override;
 /// \}
 
 /// \name Implementation

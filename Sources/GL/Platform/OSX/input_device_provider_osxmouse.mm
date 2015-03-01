@@ -139,7 +139,7 @@ int InputDeviceProvider_OSXMouse::get_button_count() const
 /////////////////////////////////////////////////////////////////////////////
 // InputDeviceProvider_OSXMouse operations:
 
-void InputDeviceProvider_OSXMouse::set_position(int x, int y)
+void InputDeviceProvider_OSXMouse::set_position(float x, float y)
 {
     //
     // TODO: Reimplement.
@@ -156,7 +156,7 @@ void InputDeviceProvider_OSXMouse::on_dispose()
 }
 
 void InputDeviceProvider_OSXMouse::on_mouse_event(const clan::InputCode& keycode, const clan::InputEvent::Type& type,
-                                                  const clan::Point& position)
+                                                  const clan::Pointf& position)
 {
     // Sanity.
     assert(keycode < clan::mouse_count);

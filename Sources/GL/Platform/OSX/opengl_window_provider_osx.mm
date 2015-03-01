@@ -182,8 +182,7 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 	attributes.push_back(NSOpenGLPFAStencilSize);
 	attributes.push_back(desc.get_stencil_size());
 	attributes.push_back(NSOpenGLPFAMinimumPolicy); // Color and depth must minimum match what we specified
-	if (desc.is_fullscreen())
-		attributes.push_back(NSOpenGLPFAFullScreen);
+
 	if (desc.get_multisampling() > 0)
 	{
 		attributes.push_back(NSOpenGLPFAMultisample);
@@ -406,7 +405,7 @@ NSOpenGLContext *OpenGLWindowProvider_Impl::get_share_context()
 {
 	NSOpenGLContext *share_context = nil;
 
-	std::unique_ptr<MutexSection> mutex_section;
+	std::unique_ptr<std::unique_lock<std::recursive_mutex>> mutex_section;
 	GraphicContextProvider* gc_providers = SharedGCData::get_provider(mutex_section);
 	if (gc_providers)
 	{
@@ -483,7 +482,7 @@ void OpenGLWindowProvider_Impl::on_keyboard_event(NSEvent *theEvent)
 
     NSPoint mouse_location = [window convertScreenToBase:[NSEvent mouseLocation]];
     NSRect bounds = [window.contentView bounds];
-    clan::Point mouse_pos(mouse_location.x, bounds.size.height - mouse_location.y);
+    clan::Pointf mouse_pos(mouse_location.x, bounds.size.height - mouse_location.y);
     key.mouse_pos = mouse_pos;
 
     // Handle modifier flags
@@ -633,7 +632,7 @@ void OpenGLWindowProvider_Impl::on_mouse_event(NSEvent *theEvent)
 
     NSPoint mouse_location = [window convertScreenToBase:[NSEvent mouseLocation]];
     NSRect bounds = [window.contentView bounds];
-    clan::Point mouse_pos(mouse_location.x, bounds.size.height - mouse_location.y);
+    clan::Pointf mouse_pos(mouse_location.x, bounds.size.height - mouse_location.y);
 
 	// Prepare event to be emitted:
 	InputEvent key;

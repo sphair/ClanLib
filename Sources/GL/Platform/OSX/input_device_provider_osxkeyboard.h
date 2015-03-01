@@ -103,7 +103,7 @@ public:
 	}
 
 	/// \brief Sets the position of the device.
-	void set_position(int x, int y) { return; }
+	void set_position(float x, float y) { return; }
 
 /// \}
 /// \name Implementation
