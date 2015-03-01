@@ -79,7 +79,7 @@ namespace clan
 	///   bool update() override;
 	/// };
 	///
-	/// Application<MyApplication> clanapp;
+	/// ApplicationInstance<MyApplication> clanapp;
 	/// \endcode
 	/// If you do not want exceptions to be automatically caught, pass "false" to the optional catch_exceptions parameter in Application\n
 	/// Your program does not have to use this class. For more advanced usage use a normal main function for the target platform and interface with the RunLoop class in clanDisplay\n
@@ -92,7 +92,6 @@ namespace clan
 		/// \brief Clan Application constructor
 		ApplicationInstance(bool catch_exceptions = true) : ApplicationInstancePrivate(catch_exceptions)
 		{
-			main = main_function;
 		}
 
 	/// \}
