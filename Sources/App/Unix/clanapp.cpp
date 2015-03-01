@@ -33,10 +33,41 @@
 #include "API/Core/System/console_window.h"
 #include "API/Core/Text/console.h"
 
+namespace clan
+{
+	static void calc_commandline(std::vector<std::string> &out_args);
+	
+	static ApplicationInstancePrivate *app_instance = 0;
+	static bool enable_catch_exceptions = false;
+	static int timing_timeout = 0;
+	
+	static std::vector<std::string> command_line_args;
+	
+	ApplicationInstancePrivate::ApplicationInstancePrivate(bool catch_exceptions)
+	{
+		app_instance = this;
+		enable_catch_exceptions = catch_exceptions;
+	}
+	
+	const std::vector<std::string> &Application::main_args()
+	{
+		return command_line_args;
+	}
+	
+	void Application::use_animation_frame_timing(int swap_interval)
+	{
+		timing_timeout = 0;
+	}
+	
+	void Application::use_timeout_timing(int timeout)
+	{
+		timing_timeout = timeout;
+	}
+}
 
 int main(int argc, char **argv)
 {
-	if (clan::Application::main == nullptr)
+	if (clan::app_instance == nullptr)
 	{
 		std::cout << "ClanLib: No global Application instance!" << std::endl;
 		return 255;
@@ -45,37 +76,66 @@ int main(int argc, char **argv)
 	std::vector<std::string> args;
 	for (int i = 0; i < argc; i++)
 		args.push_back(argv[i]);
-	// Call clanapp main:
-	int retval;
-	if (clan::Application::enable_catch_exceptions)
+	command_line_args = args;
+	
+	int retval = 0;
+	
+	if (clan::enable_catch_exceptions)
 	{
 		try
 		{
-			retval = clan::Application::main(args);
+			std::unique_ptr<Application> app = app_instance->create();
+			while (true)
+			{
+				try
+				{
+					if (!app->update())
+						break;
+					
+					if (!clan::RunLoop::process(timing_timeout))
+						break;
+				}
+				catch (clan::Exception &exception)
+				{
+					std::string console_name("Console");
+					if (!args.empty())
+						console_name = args[0];
+					
+					clan::ConsoleWindow console(console_name, 80, 160);
+					clan::Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
+					console.display_close_message();
+
+					retval = -1;
+					break;
+				}
+			}
 		}
-		catch(clan::Exception &exception)
+		catch (clan::Exception &exception)
 		{
-			// Create a console window for text-output if not available
 			std::string console_name("Console");
 			if (!args.empty())
 				console_name = args[0];
-
+			
 			clan::ConsoleWindow console(console_name, 80, 160);
 			clan::Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
 			console.display_close_message();
 
 			retval = -1;
 		}
-
 	}
 	else
 	{
-		retval = clan::Application::main(args);
+		std::unique_ptr<Application> app = app_instance->create();
+		while (true)
+		{
+			if (!app->update())
+				break;
+			
+			if (!clan::RunLoop::process(timing_timeout))
+				break;
+		}
 	}
 
 	return retval;
 }
-
-clan::Application::MainFunction *clan::Application::main = nullptr;
-bool clan::Application::enable_catch_exceptions = true;
 
