@@ -94,7 +94,12 @@ bool check_ignore_list(const std::string &name)
         "GLX",
         "glx",
         "GL1", // Not ported yet (and why bother? dinosaur tech!)
-        "gl1"
+        "gl1",
+        "ios", // To do: iOS need special targets in the project
+        "IOS",
+        "iOS",
+        "AGL", // To do: rename AGL to iOS (those providers got nothing to do with 1450 Carbon Apple GL
+        "agl"
     })
     {
         if (name.find(search) != std::string::npos)
