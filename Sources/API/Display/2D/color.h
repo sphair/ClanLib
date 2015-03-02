@@ -645,12 +645,12 @@ public:
 	void set_argb8(unsigned int color);
 
 	/// \brief Set color based on rgba color components in the range 0-1.
-	void set_colorf(float red, float green, float blue, float alpha = 1.0f)
+	void set_colorf(float new_red, float new_green, float new_blue, float new_alpha = 1.0f)
 	{
-		r = (unsigned char) (red * 255.0f);
-		g = (unsigned char) (green * 255.0f);
-		b = (unsigned char) (blue * 255.0f);
-		a = (unsigned char) (alpha * 255.0f);
+		r = (unsigned char) (new_red * 255.0f);
+		g = (unsigned char) (new_green * 255.0f);
+		b = (unsigned char) (new_blue * 255.0f);
+		a = (unsigned char) (new_alpha * 255.0f);
 	}
 
 /// \}
