@@ -78,8 +78,6 @@ private:
 	int position;
 	int num_samples;
 	int frequency;
-
-	bool reached_end;
 /// \}
 };
 

@@ -36,8 +36,6 @@
 
 namespace clan
 {
-	static void calc_commandline(std::vector<std::string> &out_args);
-	
 	static ApplicationInstancePrivate *app_instance = 0;
 	static bool enable_catch_exceptions = false;
 	static int timing_timeout = 0;

@@ -109,7 +109,7 @@ namespace clan
 				throw Exception("Could not set reuse address socket option");
 		}
 
-		int receive_buffer_size = 600*1024;
+		//int receive_buffer_size = 600*1024;
 		int send_buffer_size = 600*1024;
 
 		// int result = setsockopt(impl->handle, SOL_SOCKET, SO_RCVBUF, (const char *) &receive_buffer_size, sizeof(int));
