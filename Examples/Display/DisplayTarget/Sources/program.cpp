@@ -28,6 +28,7 @@
 
 #include "precomp.h"
 #include "program.h"
+#include "target.h"
 
 clan::ApplicationInstance<Program> clanapp;
 
@@ -36,18 +37,21 @@ Program::Program()
 	// We support all display targets, in order listed here
 	clan::D3DTarget::enable();
 	clan::OpenGLTarget::enable();
+
+	target = clan::make_unique<Target>(Target::RenderTarget::legacy_gl);
 }
 
 bool Program::update()
 {
-	Target::RenderTarget rt = target.render_target;
-	target.run_demo();
-	if (target.quit)
+	Target::RenderTarget rt = target->render_target;
+	target->run_demo();
+	if (target->quit)
 		return false;
 
-	if (target.render_target != rt)
+	if (target->render_target != rt)
 	{
-		target = Target(target.render_target);
+		rt = target->render_target;
+		target = clan::make_unique<Target>(rt);
 	}
 	return true;
 }

@@ -46,7 +46,7 @@ public:
 		d3d
 	};
 
-	Target(RenderTarget new_target = legacy_gl);
+	Target(RenderTarget new_target);
 	void run_demo();
 
 private:

@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "target.h"
+class Target;
 
 // This is the Program class that is called by Application
 class Program : public clan::Application
@@ -36,6 +36,6 @@ class Program : public clan::Application
 public:
 	Program();
 	bool update() override;
-	Target target;
+	std::unique_ptr<Target> target;
 };
 
