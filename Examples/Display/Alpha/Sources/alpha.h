@@ -30,10 +30,11 @@
 #pragma once
 
 // This is the Application class (That is instantiated by the Program Class)
-class Alpha
+class Alpha : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
+	Alpha();
+	bool update() override;
 
 private:
 	void on_input_up(const clan::InputEvent &key);
@@ -42,7 +43,11 @@ private:
 	void draw_section(clan::Canvas &canvas, clan::Font &font, int yoffset, const clan::Colorf &background, const clan::Colorf &vertex_colour, const clan::Colorf &image_colour);
 private:
 	std::string get_text(float value);
-	bool quit;
+	bool quit = false;
+	clan::SlotContainer sc;
+	clan::DisplayWindow window;
+	clan::Canvas canvas;
+	clan::Font font;
 	clan::BlendState blend_disabled;
 	clan::BlendState blend_enabled;
 };
