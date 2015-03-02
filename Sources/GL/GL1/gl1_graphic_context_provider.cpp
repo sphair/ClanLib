@@ -61,7 +61,7 @@
 #include "../Platform/WGL/opengl_window_provider_wgl.h"
 #elif defined(__APPLE__)
 // To do: add Cocoa window provider here
-#elif defined(CL_ANDROID)
+#elif defined(__ANDROID__)
 #include "../Platform/Android/opengl_window_provider_android.h"
 #else
 #include "../Platform/GLX/opengl_window_provider_glx.h"
@@ -426,7 +426,7 @@ PixelBuffer GL1GraphicContextProvider::get_pixeldata(const Rect& rect, TextureFo
 	Size display_size = get_display_window_size();
 
 	glPixelStorei(GL_PACK_ALIGNMENT, 1);
-#ifndef CL_ANDROID
+#ifndef __ANDROID__
 	glPixelStorei(GL_PACK_ROW_LENGTH, pbuf.get_pitch() / pbuf.get_bytes_per_pixel());
 	glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
 	glPixelStorei(GL_PACK_SKIP_ROWS, 0);
@@ -474,12 +474,12 @@ void GL1GraphicContextProvider::set_texture(int unit_index, const Texture &textu
 
 	if (texture.is_null())
 	{
-#ifndef CL_ANDROID
+#ifndef __ANDROID__
 		glDisable(GL_TEXTURE_1D);
 #endif
 		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_TEXTURE_3D);
-#ifndef CL_ANDROID
+#ifndef __ANDROID__
 		glDisable(GL_TEXTURE_CUBE_MAP);
 #endif
 	}
@@ -511,12 +511,12 @@ void GL1GraphicContextProvider::reset_texture(int unit_index)
 		return;
 	}
 
-#ifndef CL_ANDROID
+#ifndef __ANDROID__
 	glDisable(GL_TEXTURE_1D);
 #endif
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_TEXTURE_3D);
-#ifndef CL_ANDROID
+#ifndef __ANDROID__
 	glDisable(GL_TEXTURE_CUBE_MAP);
 #endif
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -785,7 +785,7 @@ void GL1GraphicContextProvider::reset_primitives_array()
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_COLOR_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
-#ifndef CL_ANDROID
+#ifndef __ANDROID__
 	glDisableClientState(GL_EDGE_FLAG_ARRAY);
 #endif
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);

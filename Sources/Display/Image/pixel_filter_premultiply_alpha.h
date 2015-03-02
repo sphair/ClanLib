@@ -46,7 +46,7 @@ public:
 	}
 };
 
-#if !defined CL_ANDROID && ! defined CL_DISABLE_SSE2
+#if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 
 class PixelFilterPremultiplyAlphaSSE2 : public PixelFilter
 {

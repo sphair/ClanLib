@@ -30,7 +30,7 @@
 
 #ifdef WIN32
 #include "../Platform/WGL/pbuffer_impl.h"
-#elif defined(CL_ANDROID)
+#elif defined(__ANDROID__)
 #include "../Platform/Android/pbuffer_impl.h"
 #elif __APPLE__
 #include "../Platform/AGL/pbuffer_impl.h"

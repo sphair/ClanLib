@@ -34,7 +34,7 @@
 #include "API/Core/System/system.h"
 #include <algorithm>
 
-#if !defined CL_ANDROID && ! defined CL_DISABLE_SSE2
+#if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 #include <xmmintrin.h>
 #endif
 

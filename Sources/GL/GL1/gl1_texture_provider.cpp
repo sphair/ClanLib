@@ -56,7 +56,7 @@ GL1TextureProvider::GL1TextureProvider(TextureDimensions texture_dimensions)
 	switch (texture_dimensions)
 	{
 	case texture_1d:
-#ifdef CL_ANDROID
+#ifdef __ANDROID__
 		throw Exception("GL_TEXTURE_1D is not supported");
 #else
 		texture_type = GL_TEXTURE_1D;
@@ -70,7 +70,7 @@ GL1TextureProvider::GL1TextureProvider(TextureDimensions texture_dimensions)
 		texture_type = GL_TEXTURE_3D;
 		break;
 	case texture_cube:
-#ifdef CL_ANDROID
+#ifdef __ANDROID__
 		throw Exception("GL_TEXTURE_CUBE_MAP is not supported");
 #else
 		texture_type = GL_TEXTURE_CUBE_MAP;
@@ -85,7 +85,7 @@ GL1TextureProvider::GL1TextureProvider(TextureDimensions texture_dimensions)
 	glTexParameteri(texture_type, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(texture_type, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(texture_type, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-#ifndef CL_ANDROID
+#ifndef __ANDROID__
 	if (texture_type != GL_TEXTURE_1D)
 #endif
 	{
@@ -156,7 +156,7 @@ void GL1TextureProvider::create(int new_width, int new_height, int new_depth, in
 	depth = new_depth;
 	GL1TextureStateTracker state_tracker(texture_type, handle);
 
-#ifndef CL_ANDROID
+#ifndef __ANDROID__
 	if (texture_type == GL_TEXTURE_1D)
 	{
 		pot_width = get_next_power_of_two(new_width);
@@ -220,7 +220,7 @@ void GL1TextureProvider::create(int new_width, int new_height, int new_depth, in
 
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 			const int bytesPerPixel = image.get_bytes_per_pixel();
-#ifndef CL_ANDROID
+#ifndef __ANDROID__
 			glPixelStorei(GL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
 			glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 			glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
@@ -281,7 +281,7 @@ PixelBuffer GL1TextureProvider::get_pixeldata(GraphicContext &gc, TextureFormat 
 	{
 		PixelBuffer buffer(pot_width, pot_height, texture_format);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-#ifndef CL_ANDROID
+#ifndef __ANDROID__
 		glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer.get_pitch() / buffer.get_bytes_per_pixel());
 		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
@@ -293,7 +293,7 @@ PixelBuffer GL1TextureProvider::get_pixeldata(GraphicContext &gc, TextureFormat 
 	{
 		PixelBuffer buffer(pot_width, pot_height, tf_rgba8);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-#ifndef CL_ANDROID
+#ifndef __ANDROID__
 		glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer.get_pitch() / buffer.get_bytes_per_pixel());
 		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
@@ -336,7 +336,7 @@ void GL1TextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, 
 		// change alignment
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		const int bytesPerPixel = image.get_bytes_per_pixel();
-#ifndef CL_ANDROID
+#ifndef __ANDROID__
 		glPixelStorei(GL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
 		glPixelStorei(GL_UNPACK_SKIP_PIXELS, src_rect.left);
 		glPixelStorei(GL_UNPACK_SKIP_ROWS, src_rect.top);
@@ -362,7 +362,7 @@ void GL1TextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, 
 		// change alignment
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		const int bytesPerPixel = buffer.get_bytes_per_pixel();
-#ifndef CL_ANDROID
+#ifndef __ANDROID__
 		glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer.get_pitch() / bytesPerPixel);
 		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
@@ -429,7 +429,7 @@ void GL1TextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, 
 		}
 	}
 	// Restore these unpack values to the default
-#ifndef CL_ANDROID
+#ifndef __ANDROID__
 	glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 	glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 #endif
@@ -694,7 +694,7 @@ void GL1TextureProvider::set_texture_image2d(
 		// change alignment
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		const int bytesPerPixel = image.get_bytes_per_pixel();
-#ifndef CL_ANDROID
+#ifndef __ANDROID__
 		glPixelStorei(GL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
 		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
@@ -737,7 +737,7 @@ void GL1TextureProvider::set_texture_image2d(
 		// change alignment
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		const int bytesPerPixel = buffer.get_bytes_per_pixel();
-#ifndef CL_ANDROID
+#ifndef __ANDROID__
 		glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer.get_pitch() / bytesPerPixel);
 		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
@@ -799,7 +799,7 @@ void GL1TextureProvider::set_texture_image3d(
 		// change alignment
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		const int bytesPerPixel = image.get_bytes_per_pixel();
-#ifndef CL_ANDROID
+#ifndef __ANDROID__
 		glPixelStorei(GL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
 		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
@@ -839,7 +839,7 @@ void GL1TextureProvider::set_texture_image3d(
 		// change alignment
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		const int bytesPerPixel = buffer.get_bytes_per_pixel();
-#ifndef CL_ANDROID
+#ifndef __ANDROID__
 		glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer.get_pitch() / bytesPerPixel);
 		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
@@ -869,20 +869,20 @@ GL1TextureStateTracker::GL1TextureStateTracker(GLuint texture_type, GLuint handl
 {
 	OpenGL::set_active();
 
-#ifndef CL_ANDROID
+#ifndef __ANDROID__
 	last_is_enabled_texture1d = glIsEnabled(GL_TEXTURE_1D);
 #endif
 	last_is_enabled_texture2d = glIsEnabled(GL_TEXTURE_2D);
 	last_is_enabled_texture3d = glIsEnabled(GL_TEXTURE_3D);
 
-#ifndef CL_ANDROID
+#ifndef __ANDROID__
 	last_is_enabled_texture_cube_map = glIsEnabled(GL_TEXTURE_CUBE_MAP);
 	glGetIntegerv(GL_TEXTURE_BINDING_1D, (GLint *) &last_bound_texture1d);
 #endif
 	glGetIntegerv(GL_TEXTURE_BINDING_2D, (GLint *) &last_bound_texture2d);
 	glGetIntegerv(GL_TEXTURE_BINDING_3D, (GLint *) &last_bound_texture3d);
 
-#ifndef CL_ANDROID
+#ifndef __ANDROID__
 	glGetIntegerv(GL_TEXTURE_BINDING_CUBE_MAP, (GLint *) &last_bound_texture_cube_map);
 
 	if (texture_type == GL_TEXTURE_1D)
@@ -896,11 +896,11 @@ GL1TextureStateTracker::GL1TextureStateTracker(GLuint texture_type, GLuint handl
 #endif
 	if (texture_type == GL_TEXTURE_2D)
 	{
-#ifndef CL_ANDROID
+#ifndef __ANDROID__
 		glDisable(GL_TEXTURE_1D);
 #endif
 		glDisable(GL_TEXTURE_3D);
-#ifndef CL_ANDROID
+#ifndef __ANDROID__
 		glDisable(GL_TEXTURE_CUBE_MAP);
 #endif
 		glEnable(GL_TEXTURE_2D);
@@ -909,18 +909,18 @@ GL1TextureStateTracker::GL1TextureStateTracker(GLuint texture_type, GLuint handl
 
 	if (texture_type == GL_TEXTURE_3D)
 	{
-#ifndef CL_ANDROID
+#ifndef __ANDROID__
 		glDisable(GL_TEXTURE_1D);
 #endif
 		glDisable(GL_TEXTURE_2D);
-#ifndef CL_ANDROID
+#ifndef __ANDROID__
 		glDisable(GL_TEXTURE_CUBE_MAP);
 #endif
 		glEnable(GL_TEXTURE_3D);
 		glBindTexture(GL_TEXTURE_3D, handle);
 	}
 
-#ifndef CL_ANDROID
+#ifndef __ANDROID__
 	if (texture_type == GL_TEXTURE_CUBE_MAP)
 	{
 		glDisable(GL_TEXTURE_1D);
@@ -934,20 +934,20 @@ GL1TextureStateTracker::GL1TextureStateTracker(GLuint texture_type, GLuint handl
 
 GL1TextureStateTracker::~GL1TextureStateTracker()
 {
-#ifndef CL_ANDROID
+#ifndef __ANDROID__
 	if (last_is_enabled_texture1d) glEnable(GL_TEXTURE_1D); else glDisable(GL_TEXTURE_1D);
 #endif
 	if (last_is_enabled_texture2d) glEnable(GL_TEXTURE_2D); else glDisable(GL_TEXTURE_2D);
 	if (last_is_enabled_texture3d) glEnable(GL_TEXTURE_3D); else glDisable(GL_TEXTURE_3D);
 
-#ifndef CL_ANDROID
+#ifndef __ANDROID__
 	if (last_is_enabled_texture_cube_map) glEnable(GL_TEXTURE_CUBE_MAP); else glDisable(GL_TEXTURE_CUBE_MAP);
 
 	if (last_is_enabled_texture1d) glBindTexture(GL_TEXTURE_1D, last_bound_texture1d);
 #endif
 	if (last_is_enabled_texture2d) glBindTexture(GL_TEXTURE_2D, last_bound_texture2d);
 	if (last_is_enabled_texture3d) glBindTexture(GL_TEXTURE_3D, last_bound_texture3d);
-#ifndef CL_ANDROID
+#ifndef __ANDROID__
 	if (last_is_enabled_texture_cube_map) glBindTexture(GL_TEXTURE_CUBE_MAP, last_bound_texture_cube_map);
 #endif
 }

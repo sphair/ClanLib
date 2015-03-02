@@ -45,7 +45,7 @@ namespace clan
 
 #ifdef WIN32
 		static DisplayMessageQueue_Win32* get_message_queue();
-#elif !defined(__APPLE__) && !defined(CL_ANDROID)
+#elif !defined(__APPLE__) && !defined(__ANDROID__)
 		static DisplayMessageQueue_X11* get_message_queue();
 #endif
 		static std::map<std::string, ImageProviderType *> *get_image_provider_factory_types();

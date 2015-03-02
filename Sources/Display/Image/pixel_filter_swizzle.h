@@ -76,7 +76,7 @@ private:
 	Vec4f red, green, blue, alpha;
 };
 
-#if !defined CL_ANDROID && ! defined CL_DISABLE_SSE2
+#if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 
 class PixelFilterSwizzleSSE2 : public PixelFilter
 {

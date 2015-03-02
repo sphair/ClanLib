@@ -35,14 +35,14 @@
 #include "../display_target.h"
 #include <memory>
 
-#if !defined(WIN32) && !defined(CL_ANDROID) && !defined(__APPLE__)
+#if !defined(WIN32) && !defined(__ANDROID__) && !defined(__APPLE__)
 // We prefer not to include Xlib.h in clanlib (to prevent namespace issues when "using namespace clan")
 struct _XDisplay;
 typedef struct _XDisplay Display;
 typedef unsigned long Window;
 #endif
 
-#if defined(CL_ANDROID)
+#if defined(__ANDROID__)
 struct ANativeWindow;
 #endif
 
@@ -88,7 +88,7 @@ struct DisplayWindowHandle
 {
 #ifdef WIN32
 	HWND hwnd = 0;
-#elif defined(CL_ANDROID)
+#elif defined(__ANDROID__)
 	ANativeWindow *window = 0;
 #elif defined(__APPLE__)
 #else
