@@ -100,7 +100,7 @@ namespace clan
 	private:
 		std::unique_ptr<Application> create() override
 		{
-			return new ApplicationClass();
+			return std::unique_ptr<Application>(new ApplicationClass());
 		}
 	/// \}
 	};
