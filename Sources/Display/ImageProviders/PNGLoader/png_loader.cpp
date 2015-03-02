@@ -389,7 +389,7 @@ void PNGLoader::predictor_sub(unsigned char *scanline, const unsigned char *prev
 
 void PNGLoader::predictor_up(unsigned char *scanline, const unsigned char *prev_scanline, int byte_length, int channels, int bit_depth)
 {
-	int bytes_per_pixel = channels * ((bit_depth + 7) / 8);
+	//int bytes_per_pixel = channels * ((bit_depth + 7) / 8);
 	for (int i = 0; i < byte_length; i++)
 	{
 		int x = scanline[i];

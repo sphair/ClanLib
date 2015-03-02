@@ -42,7 +42,7 @@ namespace clan
 int RenderBatchTriangle::max_textures = 4;
 
 RenderBatchTriangle::RenderBatchTriangle(GraphicContext &gc, RenderBatchBuffer *batch_buffer)
-: position(0), num_current_textures(0), use_glyph_program(false), batch_buffer(batch_buffer)
+: batch_buffer(batch_buffer)
 {
 	vertices = (SpriteVertex *) batch_buffer->buffer;
 }
