@@ -29,11 +29,11 @@
 
 #pragma once
 
-// This is the Application class (That is instantiated by the Program Class)
-class FullScreen
+class FullScreen : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
+	FullScreen();
+	bool update() override;
 
 private:
 	void on_input_down(const InputEvent &key);
@@ -42,8 +42,17 @@ private:
 
 private:
 	DisplayWindow window;
-    SlotContainer cc;
-	bool quit;
-	bool fullscreen_requested;
-	bool is_fullscreen;
+    SlotContainer sc;
+	Canvas canvas;
+	bool quit = false;
+	bool fullscreen_requested = false;
+	bool is_fullscreen = false;
+
+	Sprite spr_logo;
+	Sprite spr_background;
+	float sin_count = 0.0f;
+	clan::Font font;
+
+	GameTime game_time;
+
 };
