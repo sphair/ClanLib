@@ -29,7 +29,6 @@
 
 #pragma once
 
-// This is the Application class (That is instantiated by the Program Class)
 class Basic2D : public clan::Application
 {
 public:
