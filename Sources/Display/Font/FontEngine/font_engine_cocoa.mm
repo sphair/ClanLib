@@ -151,7 +151,7 @@ void FontEngine_Cocoa::load_font(const FontDescription& desc, DataBuffer &font_d
     CFRelease(dataProvider);
     CFRelease(theCGFont);
     if (handle == 0)
-        throw Exception("Unable to create font"));
+        throw Exception("Unable to create font");
     
 }
     
@@ -167,7 +167,7 @@ FontEngine_Cocoa::FontEngine_Cocoa(const FontDescription &desc, DataBuffer &font
 		CTFontGetAscent(handle),
 		CTFontGetDescent(handle),
 		CTFontGetLeading(handle),
-		CTFontGetExternalLeading(handle),
+		CTFontGetLeading(handle),
 		desc.get_line_height()		// Calculated in FontMetrics as height + metrics.tmExternalLeading if not specified
 		);
 

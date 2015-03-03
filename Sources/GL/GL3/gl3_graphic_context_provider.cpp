@@ -67,7 +67,7 @@
 #include "../Platform/OSX/opengl_window_provider_osx.h"
 #elif !defined(WIN32)
 
-#if defined(CL_ANDROID)
+#if defined(__ANDROID__)
 #include "../Platform/Android/opengl_window_provider_android.h"
 #else
 #include "../Platform/GLX/opengl_window_provider_glx.h"

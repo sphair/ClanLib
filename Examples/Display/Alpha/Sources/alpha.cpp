@@ -30,10 +30,13 @@
 #include "precomp.h"
 #include "alpha.h"
 
-// The start of the Application
-int Alpha::start(const std::vector<std::string> &args)
+clan::ApplicationInstance<Alpha> clanapp;
+
+Alpha::Alpha()
 {
-	quit = false;
+	// We support all display targets, in order listed here
+	clan::D3DTarget::enable();
+	clan::OpenGLTarget::enable();
 
 	// Set the window
 	clan::DisplayWindowDescription desc;
@@ -41,17 +44,16 @@ int Alpha::start(const std::vector<std::string> &args)
 	desc.set_size(clan::Size(800, 800), true);
 	desc.set_allow_resize(true);
 
-	clan::DisplayWindow window(desc);
-    clan::SlotContainer cc;
+	window = clan::DisplayWindow(desc);
 
 	// Connect the Window close event
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &Alpha::on_window_close));
+	sc.connect(window.sig_window_close(), clan::bind_member(this, &Alpha::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &Alpha::on_input_up));
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &Alpha::on_input_up));
 
 	// Get the graphic context
-	clan::Canvas canvas(window);
+	canvas = clan::Canvas(window);
 
 	clan::BlendStateDescription blend_desc;
 	blend_desc.enable_blending(false);
@@ -59,44 +61,42 @@ int Alpha::start(const std::vector<std::string> &args)
 	blend_desc.enable_blending(true);
 	blend_enabled = clan::BlendState(canvas, blend_desc);
 
-	clan::Font font("tahoma", 16);
+	font = clan::Font("tahoma", 16);
 
-	// Run until someone presses escape
-	while (!quit)
-	{
-		canvas.clear(clan::Colorf(1.0f,1.0f,1.0f, 1.0f));	// White background
+}
 
-		font.draw_text(canvas, 8, 20, "Standard Equation:", clan::Colorf::black);
-		font.draw_text(canvas, 8, 40, "Destination Color    =    AlphaSource * ColorSource    +    ( 1 - AlphaSource ) * ColorDestination", clan::Colorf::black);
-		font.draw_text(canvas, 8, 60, "Destination Alpha    =   AlphaSource                          +    ( 1 - AlphaSource ) * AlphaDestination", clan::Colorf::black);
+bool Alpha::update()
+{
+	canvas.clear(clan::Colorf(1.0f,1.0f,1.0f, 1.0f));	// White background
 
-		font.draw_text(canvas, 8, 100, "ColorSource = Vertex Color * Image Color", clan::Colorf::black);
-		font.draw_text(canvas, 8, 120, "AlphaSource = Vertex Alpha * Image Alpha", clan::Colorf::black);
-		int ypos = 160;
-		int ygap = 80;
-		draw_section(canvas, font, ypos, clan::Colorf(0.0f, 0.0f, 1.0f, 1.0f), clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f), clan::Colorf(1.0f, 0.0f, 0.0f, 1.0f));
-		ypos += ygap;
-		draw_section(canvas, font, ypos, clan::Colorf(0.0f, 0.0f, 1.0f, 1.0f), clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f), clan::Colorf(1.0f, 0.0f, 0.0f, 0.5f));
-		ypos += ygap;
-		draw_section(canvas, font, ypos, clan::Colorf(0.0f, 0.0f, 1.0f, 1.0f), clan::Colorf(1.0f, 1.0f, 1.0f, 0.5f), clan::Colorf(1.0f, 0.0f, 0.0f, 1.0f));
-		ypos += ygap;
-		draw_section(canvas, font, ypos, clan::Colorf(0.0f, 0.0f, 1.0f, 1.0f), clan::Colorf(1.0f, 1.0f, 1.0f, 0.5f), clan::Colorf(1.0f, 0.0f, 0.0f, 1.0f));
-		ypos += ygap;
-		draw_section(canvas, font, ypos, clan::Colorf(0.0f, 0.0f, 1.0f, 1.0f), clan::Colorf(0.2f, 0.0f, 0.0f, 1.0f), clan::Colorf(0.9f, 0.0f, 0.0f, 1.0f));
-		ypos += ygap;
-		draw_section(canvas, font, ypos, clan::Colorf(0.0f, 0.0f, 1.0f, 1.0f), clan::Colorf(1.0f, 0.0f, 0.0f, 0.2f), clan::Colorf(1.0f, 0.0f, 0.0f, 0.9f));
-		ypos += ygap;
-		draw_section(canvas, font, ypos, clan::Colorf(0.0f, 0.0f, 1.0f, 0.5f), clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f), clan::Colorf(1.0f, 0.0f, 0.0f, 0.5f));
-		ypos += ygap;
-		draw_section(canvas, font, ypos, clan::Colorf(0.0f, 0.0f, 1.0f, 0.5f), clan::Colorf(1.0f, 0.5f, 0.0f, 1.0f), clan::Colorf(0.0f, 0.5f, 0.0f, 1.0f));
-		ypos += ygap;
+	font.draw_text(canvas, 8, 20, "Standard Equation:", clan::Colorf::black);
+	font.draw_text(canvas, 8, 40, "Destination Color    =    AlphaSource * ColorSource    +    ( 1 - AlphaSource ) * ColorDestination", clan::Colorf::black);
+	font.draw_text(canvas, 8, 60, "Destination Alpha    =   AlphaSource                          +    ( 1 - AlphaSource ) * AlphaDestination", clan::Colorf::black);
 
-		window.flip(1);
+	font.draw_text(canvas, 8, 100, "ColorSource = Vertex Color * Image Color", clan::Colorf::black);
+	font.draw_text(canvas, 8, 120, "AlphaSource = Vertex Alpha * Image Alpha", clan::Colorf::black);
+	int ypos = 160;
+	int ygap = 80;
+	draw_section(canvas, font, ypos, clan::Colorf(0.0f, 0.0f, 1.0f, 1.0f), clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f), clan::Colorf(1.0f, 0.0f, 0.0f, 1.0f));
+	ypos += ygap;
+	draw_section(canvas, font, ypos, clan::Colorf(0.0f, 0.0f, 1.0f, 1.0f), clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f), clan::Colorf(1.0f, 0.0f, 0.0f, 0.5f));
+	ypos += ygap;
+	draw_section(canvas, font, ypos, clan::Colorf(0.0f, 0.0f, 1.0f, 1.0f), clan::Colorf(1.0f, 1.0f, 1.0f, 0.5f), clan::Colorf(1.0f, 0.0f, 0.0f, 1.0f));
+	ypos += ygap;
+	draw_section(canvas, font, ypos, clan::Colorf(0.0f, 0.0f, 1.0f, 1.0f), clan::Colorf(1.0f, 1.0f, 1.0f, 0.5f), clan::Colorf(1.0f, 0.0f, 0.0f, 1.0f));
+	ypos += ygap;
+	draw_section(canvas, font, ypos, clan::Colorf(0.0f, 0.0f, 1.0f, 1.0f), clan::Colorf(0.2f, 0.0f, 0.0f, 1.0f), clan::Colorf(0.9f, 0.0f, 0.0f, 1.0f));
+	ypos += ygap;
+	draw_section(canvas, font, ypos, clan::Colorf(0.0f, 0.0f, 1.0f, 1.0f), clan::Colorf(1.0f, 0.0f, 0.0f, 0.2f), clan::Colorf(1.0f, 0.0f, 0.0f, 0.9f));
+	ypos += ygap;
+	draw_section(canvas, font, ypos, clan::Colorf(0.0f, 0.0f, 1.0f, 0.5f), clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f), clan::Colorf(1.0f, 0.0f, 0.0f, 0.5f));
+	ypos += ygap;
+	draw_section(canvas, font, ypos, clan::Colorf(0.0f, 0.0f, 1.0f, 0.5f), clan::Colorf(1.0f, 0.5f, 0.0f, 1.0f), clan::Colorf(0.0f, 0.5f, 0.0f, 1.0f));
+	ypos += ygap;
 
-		// This call processes user input and other events
-		clan::RunLoop::process(0);
-	}
-	return 0;
+	window.flip(1);
+
+	return !quit;
 }
 
 // A key was pressed

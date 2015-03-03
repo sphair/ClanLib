@@ -31,7 +31,7 @@
 
 #include "pixel_converter_impl.h"
 
-#if !defined CL_ANDROID && ! defined CL_DISABLE_SSE2
+#if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 #include <emmintrin.h>
 #endif
 
@@ -69,7 +69,7 @@ public:
 	}
 };
 
-#if !defined CL_ANDROID && ! defined CL_DISABLE_SSE2
+#if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 
 class PixelFilterSSE2_RGBToYCrCb : public PixelFilter
 {

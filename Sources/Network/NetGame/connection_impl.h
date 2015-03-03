@@ -69,7 +69,6 @@ private:
 	bool is_connected;
 	std::thread thread;
 	bool stop_flag = false;
-	bool queue_flag = false;
 	std::mutex mutex;
 	struct Message
 	{

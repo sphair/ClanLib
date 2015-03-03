@@ -545,8 +545,6 @@ void FontEngine_Freetype::calculate_font_metrics()
 	float ascent = face->size->metrics.ascender / 64.0f;
 	float descent = -face->size->metrics.descender / 64.0f;
 	float height = ascent + descent;
-	float max_char_width = face->size->metrics.max_advance / 64.0f;
-	float avg_char_width = (max_char_width * 2.0f) / 3.0f;
 
 	float internal_leading = height - face->size->metrics.y_ppem;
 	float external_leading = (face->size->metrics.height / 64.0f) - height;

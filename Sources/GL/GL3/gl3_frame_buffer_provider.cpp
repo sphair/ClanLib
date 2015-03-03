@@ -52,10 +52,8 @@ namespace clan
 // GL3FrameBufferProvider Construction:
 
 GL3FrameBufferProvider::GL3FrameBufferProvider(GL3GraphicContextProvider *gc_provider)
-: gc_provider(gc_provider), count_color_attachments(0)
+: gc_provider(gc_provider)
 {
-	bind_target = framebuffer_draw;
-	handle = 0; 
 	gc_provider->add_disposable(this);
 
 	OpenGL::set_active(gc_provider);

@@ -30,35 +30,40 @@
 
 #include "API/GL/opengl_wrap.h"
 #include "../../opengl_graphic_context_provider.h"
+#include <EGL/egl.h>
+#include <GLES/gl.h>
 
 namespace clan
 {
 
-class GL1GraphicContextProvider;
-class OpenGLWindowProvider;
+	class GL1GraphicContextProvider;
+	class OpenGLWindowProvider;
 
-class PBuffer_GL1_Impl : public OpenGLGraphicContextProvider
-{
+	class PBuffer_GL1_Impl : public OpenGLGraphicContextProvider
+	{
 
-public:
-	PBuffer_GL1_Impl(GL1GraphicContextProvider *gc_provider);
+	public:
+		PBuffer_GL1_Impl(GL1GraphicContextProvider *gc_provider);
 
-	~PBuffer_GL1_Impl();
+		~PBuffer_GL1_Impl();
 
-public:
-	void make_current() const;
+	public:
+		void make_current() const;
 
-	void get_opengl_version(int &version_major, int &version_minor) const;
-	void get_opengl_version(int &version_major, int &version_minor, int &version_release) const;
+		void get_opengl_version(int &version_major, int &version_minor) const;
+		void get_opengl_version(int &version_major, int &version_minor, int &version_release) const;
 
-	void create(OpenGLWindowProvider &window_provider, const Size &size);
-	ProcAddress *get_proc_address(const std::string& function_name) const;
+		void create(OpenGLWindowProvider &window_provider, const Size &size);
+		ProcAddress *get_proc_address(const std::string& function_name) const;
 
-private:
-	void reset();
+	private:
+		void reset();
 
-	GL1GraphicContextProvider *gc_provider;
+		GL1GraphicContextProvider *gc_provider;
+		OpenGLWindowProvider *window_provider = nullptr;
+		EGLSurface surface = EGL_NO_SURFACE;
 
-};
+	};
 
 }
+

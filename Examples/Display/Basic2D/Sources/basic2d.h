@@ -29,15 +29,22 @@
 
 #pragma once
 
-// This is the Application class (That is instantiated by the Program Class)
-class Basic2D
+class Basic2D : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
+	Basic2D();
+	bool update() override;
 
 private:
 	void on_input_up(const clan::InputEvent &key);
 
 private:
-	bool quit;
+	bool quit = false;
+	clan::SlotContainer sc;
+	clan::DisplayWindow window;
+	clan::Canvas canvas;
+	clan::Image logo;
+	clan::Font font;
+	clan::GameTime game_time;
+	float sin_count = 0.0f;
 };

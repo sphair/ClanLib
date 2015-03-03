@@ -115,10 +115,9 @@ private:
 	Texture attached_textures[num_attachment_offsets];
 	RenderBuffer attached_renderbuffers[num_attachment_offsets];
 
-	int count_color_attachments;
-	GLuint handle;
-
-	FrameBufferBindTarget bind_target;
+	int count_color_attachments = 0;
+	GLuint handle = 0;
+	FrameBufferBindTarget bind_target = framebuffer_draw;
 
 	GL3GraphicContextProvider *gc_provider;
 /// \}

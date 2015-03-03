@@ -189,13 +189,7 @@ private:
 class PerlinNoise_Impl
 {
 public:
-	PerlinNoise_Impl() : 
-		permutation_table_set(false),
-		texture_format(tf_rgb8),
-		width(256),
-		height(256),
-		octaves(1),
-		amplitude(1.0f)
+	PerlinNoise_Impl()
 	{
 	}
 
@@ -207,11 +201,11 @@ public:
 	PixelBuffer create_noise1d(float start_x, float end_x);
 
 public:
-	TextureFormat texture_format;
-	float amplitude;
-	int width;
-	int height;
-	int octaves;
+	TextureFormat texture_format = tf_rgb8;
+	float amplitude = 1.0f;
+	int width = 256;
+	int height = 256;
+	int octaves = 1;
 
 private:
 	void create_noise4d(PerlinNoise_PixelWriter &writer, float start_x, float end_x, float start_y, float end_y, float z_position, float w_position);
@@ -231,7 +225,7 @@ private:
 
 	void setup();
 
-	bool permutation_table_set;
+	bool permutation_table_set = false;
 
 	unsigned char permutation_table[permutation_table_size * 2];	// Table duplicated at permutation_table_size
 

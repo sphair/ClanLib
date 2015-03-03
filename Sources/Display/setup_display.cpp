@@ -46,12 +46,12 @@
 
 #ifdef WIN32
 #include "Platform/Win32/display_message_queue_win32.h"
-#elif !defined(__APPLE__) && !defined(CL_ANDROID)
+#elif !defined(__APPLE__) && !defined(__ANDROID__)
 #include "Platform/X11/display_message_queue_x11.h"
 #endif
 
 
-#if !defined CL_ANDROID && ! defined __APPLE__ && ! defined WIN32
+#if !defined __ANDROID__ && ! defined __APPLE__ && ! defined WIN32
 #include <X11/Xlib.h>
 #endif
 
@@ -81,7 +81,7 @@ namespace clan
 
 #ifdef WIN32
 		DisplayMessageQueue_Win32 message_queue;
-#elif !defined(__APPLE__) && !defined(CL_ANDROID)
+#elif !defined(__APPLE__) && !defined(__ANDROID__)
 		DisplayMessageQueue_X11 message_queue;
 #endif
 	};
@@ -109,7 +109,7 @@ namespace clan
 		SetProcessDPIAware();
 #endif
 
-#if !defined CL_ANDROID && ! defined __APPLE__ && ! defined WIN32
+#if !defined __ANDROID__ && ! defined __APPLE__ && ! defined WIN32
 		// The XInitThreads() function initializes Xlib support for concurrent threads.
 		// This function must be the first Xlib function a multi-threaded program calls, and it must complete before any other Xlib call is made.
 		XInitThreads();
@@ -152,7 +152,7 @@ namespace clan
 			start();
 		return &SetupDisplay_Impl::instance->message_queue;
 	}
-#elif !defined(__APPLE__) && !defined(CL_ANDROID)
+#elif !defined(__APPLE__) && !defined(__ANDROID__)
 	DisplayMessageQueue_X11* SetupDisplay::get_message_queue()
 	{
 		if (!SetupDisplay_Impl::instance)

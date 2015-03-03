@@ -29,132 +29,94 @@
 
 #include "clanapp_osx.h"
 
-#include "API/Core/System/setup_core.h"
-#include "API/Core/System/keep_alive.h"
-#include "API/App/clanapp.h"
+#include "API/Display/System/run_loop.h"
 #include "API/Core/System/exception.h"
-#include "API/Core/System/console_window.h"
-#include "API/Core/Text/console.h"
-
-#include <assert.h>
-#include <cstdlib>
-#include <iostream>
-#include <pthread.h>
-
-#import <CoreFoundation/CoreFoundation.h>
-#import <Cocoa/Cocoa.h>
-
-@implementation AppDelegate
-
-- (void) applicationDidFinishLaunching:(NSNotification *)aNotification
-{
-    NSLog(@"-applicationDidFinishLaunching:");
-
-	using namespace clan;
-	
-	if (Application::enable_catch_exceptions)
-	{
-		try
-		{
-            create_main_thread();
-		}
-		catch(Exception &exception)
-		{
-			// Create a console window for text-output if not available
-			std::string console_name("Console");
-			if (!main_args.empty())
-				console_name = main_args[0];
-			
-			ConsoleWindow console(console_name, 80, 160);
-			Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
-			console.display_close_message();
-		}
-	}
-	else
-	{
-        create_main_thread();
-	}
-}
-
-- (BOOL) applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender
-{
-    return YES;
-}
-
-@end
+#include "API/App/clanapp.h"
 
 namespace clan
 {
+	static ApplicationInstancePrivate *app_instance = 0;
+	static bool enable_catch_exceptions = false;
+	static int timing_timeout = 0;
+	
+	static std::vector<std::string> command_line_args;
+	
+	static std::unique_ptr<Application> app_obj;
+	static NSTimer *app_update_timer = nil;
 
-void *cl_app_on_thread_id()
-{
-    return CFRunLoopGetCurrent();
-}
-
-void cl_app_on_awake_thread(void *thread_id)
-{
-    CFRunLoopRef runloop = (CFRunLoopRef)thread_id;
-    CFRunLoopPerformBlock(runloop, kCFRunLoopCommonModes, ^(){ KeepAlive::process(); });
-    CFRunLoopWakeUp(runloop);
-}
-
-// TODO: Remove these once the official main function
-//       OSX update is rolled out.
-void* main_thread_wrapper(void*)
-{
-    try
-    {
-        clan::Application::main(clan::main_args);
-    }
-    catch(...) {}
-    
-    return nullptr;
-}
-
-// TODO: Remove these once the official main function
-//       OSX update is rolled out.
-void create_main_thread()
-{
-    pthread_attr_t  attr;
-    pthread_t       posixThreadID;
-    int             returnVal;
-        
-    returnVal = pthread_attr_init(&attr);
-    assert(!returnVal);
-    returnVal = pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
-    assert(!returnVal);
-        
-    int threadError = pthread_create(&posixThreadID, &attr, &main_thread_wrapper, nullptr);
-    assert(!threadError);
-        
-    returnVal = pthread_attr_destroy(&attr);
-    assert(!returnVal);
-}
-    
-Application::MainFunction *Application::main = 0;
-bool Application::enable_catch_exceptions = true;
-
+	ApplicationInstancePrivate::ApplicationInstancePrivate(bool catch_exceptions)
+	{
+		app_instance = this;
+		enable_catch_exceptions = catch_exceptions;
+	}
+	
+	const std::vector<std::string> &Application::main_args()
+	{
+		return command_line_args;
+	}
+	
+	void Application::use_animation_frame_timing(int swap_interval)
+	{
+		timing_timeout = 0;
+	}
+	
+	void Application::use_timeout_timing(int timeout)
+	{
+		timing_timeout = timeout;
+	}
 }
 
 int main(int argc, char **argv)
 {
 	using namespace clan;
 	
-	if (Application::main == 0)
+	if (app_instance == 0)
 	{
-		std::cout << "ClanLib: No global Application instance!" << std::endl;
+		NSLog(@"ClanLib: No global Application instance!");
 		return 255;
 	}
-    
+	
 	for (int i = 0; i < argc; i++)
-		main_args.push_back(argv[i]);
-    
-    KeepAlive::func_thread_id() = cl_app_on_thread_id;
-    KeepAlive::func_awake_thread() = cl_app_on_awake_thread;
-    
+		command_line_args.push_back(argv[i]);
+	
 	AppDelegate *appDelegate = [[AppDelegate alloc] init];
-	[NSApplication sharedApplication];
-	[NSApp setDelegate: appDelegate];
-	[NSApp run];
+	
+	NSApplication *app = [NSApplication sharedApplication];
+	[app setDelegate: appDelegate];
+	[app run];
+	
+	app_obj.reset();
+
 	return 0;
 }
+
+@implementation AppDelegate
+
+- (void) applicationDidFinishLaunching:(NSNotification *)aNotification
+{
+	using namespace clan;
+	
+	NSTimeInterval interval = timing_timeout/1000.0;
+	if (interval == 0.0)
+		interval = 0.01;
+	
+	app_obj = app_instance->create();
+	app_update_timer = [NSTimer scheduledTimerWithTimeInterval:interval target:self selector:@selector(updateTimeout:) userInfo:nil repeats:YES];
+}
+
+- (BOOL) applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender
+{
+	return NO;
+}
+
+- (void) updateTimeout:(NSTimer *)timer
+{
+	using namespace clan;
+	
+	if (!app_obj->update())
+	{
+		[[NSApplication sharedApplication] terminate: self];
+	}
+}
+
+@end

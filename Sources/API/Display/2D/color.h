@@ -629,8 +629,8 @@ public:
 	void set_blue_f(float value) { b = (unsigned char) (value*255.0f); }
 
 	/// \brief Set color based on rgba color components in the range 0-255.
-	void set_color(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha = 255)
-	{ r = red; g =  green; b = blue;  a = alpha; }
+	void set_color(unsigned char new_red, unsigned char new_green, unsigned char new_blue, unsigned char new_alpha = 255)
+	{ r = new_red; g = new_green; b = new_blue;  a = new_alpha; }
 
 	/// \brief Set color based on rgba color components
 	void set_rgba8(unsigned int color);
@@ -645,12 +645,12 @@ public:
 	void set_argb8(unsigned int color);
 
 	/// \brief Set color based on rgba color components in the range 0-1.
-	void set_colorf(float red, float green, float blue, float alpha = 1.0f)
+	void set_colorf(float new_red, float new_green, float new_blue, float new_alpha = 1.0f)
 	{
-		r = (unsigned char) (red * 255.0f);
-		g = (unsigned char) (green * 255.0f);
-		b = (unsigned char) (blue * 255.0f);
-		a = (unsigned char) (alpha * 255.0f);
+		r = (unsigned char) (new_red * 255.0f);
+		g = (unsigned char) (new_green * 255.0f);
+		b = (unsigned char) (new_blue * 255.0f);
+		a = (unsigned char) (new_alpha * 255.0f);
 	}
 
 /// \}

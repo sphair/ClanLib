@@ -2,6 +2,7 @@ patches
 /ClanLib.sln
 /ClanLib.opensdf
 /ClanLib.sdf
+/ClanLib.xcodeproj
 ipch
 Debug
 Release
@@ -14,6 +15,7 @@ Release
 *.suo
 *.sdf
 *.user
+*~
 /Build
 /Projects/clan*.vcxproj.filters
 /Projects/clan*.vcxproj

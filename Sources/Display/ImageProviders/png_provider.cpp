@@ -36,6 +36,7 @@
 #include "API/Display/ImageProviders/png_provider.h"
 #include "Display/ImageProviders/PNGLoader/png_loader.h"
 #include "Core/Zip/miniz.h"
+#include <stdlib.h>
 
 namespace clan
 {

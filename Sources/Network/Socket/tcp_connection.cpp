@@ -140,7 +140,7 @@ namespace clan
 	TCPConnection::TCPConnection(const SocketName &endpoint)
 		: impl(new TCPSocket())
 	{
-		int receive_buffer_size = 600*1024;
+		//int receive_buffer_size = 600*1024;
 		int send_buffer_size = 600*1024;
 		//int result = setsockopt(impl->handle, SOL_SOCKET, SO_RCVBUF, (const char *) &receive_buffer_size, sizeof(int));
 		int result = setsockopt(impl->handle, SOL_SOCKET, SO_SNDBUF, (const char *) &send_buffer_size, sizeof(int));
@@ -167,10 +167,10 @@ namespace clan
 	TCPConnection::TCPConnection(const std::shared_ptr<TCPSocket> &impl)
 		: impl(impl)
 	{
-		int receive_buffer_size = 600*1024;
+		//int receive_buffer_size = 600*1024;
 		int send_buffer_size = 600*1024;
 		//int result = setsockopt(impl->handle, SOL_SOCKET, SO_RCVBUF, (const char *) &receive_buffer_size, sizeof(int));
-		int result = setsockopt(impl->handle, SOL_SOCKET, SO_SNDBUF, (const char *) &send_buffer_size, sizeof(int));
+		setsockopt(impl->handle, SOL_SOCKET, SO_SNDBUF, (const char *) &send_buffer_size, sizeof(int));
 
 		int nonblocking = 1;
 		ioctl(impl->handle, FIONBIO, &nonblocking);

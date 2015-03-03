@@ -79,7 +79,7 @@ private:
 	inline Vec4f to_position(float x, float y) const;
 
 	Mat4f modelview_projection_matrix;
-	int position;
+	int position = 0;
 	enum { max_vertices = RenderBatchBuffer::vertex_buffer_size / sizeof(SpriteVertex) };
 	SpriteVertex *vertices;
 
@@ -90,9 +90,9 @@ private:
 	static const int max_number_of_texture_coords = 32;
 
 	Texture2D current_textures[max_number_of_texture_coords];
-	int num_current_textures;
+	int num_current_textures = 0;
 	Sizef tex_sizes[max_number_of_texture_coords];
-	bool use_glyph_program;
+	bool use_glyph_program = false;
 	Colorf constant_color;
 	BlendState glyph_blend;
 };

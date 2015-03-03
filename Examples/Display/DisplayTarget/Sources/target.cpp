@@ -29,171 +29,135 @@
 #include "precomp.h"
 #include "target.h"
 
-Target::Target()
+Target::Target(RenderTarget new_target) : render_target(new_target)
 {
-	render_target = d3d;
-}
-
-int Target::start(const std::vector<std::string> &args)
-{
-	// Since OpenGL 1.3 is compatible and fast - Use that as the default
-	render_target = legacy_gl;
-
 	clan::OpenGLWindowDescription opengl_desc;
 
-	do
+	switch (render_target)
 	{
-		// These 2 lines are to avoid recreating the windows too quickly (that confuses the win32 keyboard queue)
-		clan::System::sleep(250);
-		clan::RunLoop::process(0);
+	case (legacy_gl) :
+		opengl_desc.set_version(1, 3, true);
+		clan::OpenGLTarget::set_description(opengl_desc);
+		clan::OpenGLTarget::set_current();
+		break;
 
-		switch (render_target)
-		{
-			case (legacy_gl):
-				opengl_desc.set_version(1, 3, true);
-				clan::OpenGLTarget::set_description(opengl_desc);
-				clan::OpenGLTarget::set_current();
-				break;
+	case (opengl) :
+		opengl_desc.set_version(4, 3, true);
+		clan::OpenGLTarget::set_description(opengl_desc);
+		clan::OpenGLTarget::set_current();
+		break;
+	case (d3d) :
+		clan::D3DTarget::set_current();
+		break;
+	}
 
-			case (opengl):
-				opengl_desc.set_version(4, 3, true);
-				clan::OpenGLTarget::set_description(opengl_desc);
-				clan::OpenGLTarget::set_current();
-				break;
-			case (d3d):
-				clan::D3DTarget::set_current();
-				break;
-		}
-
-	}while (run_demo());
-
-	return 0;
-}
-
-bool Target::run_demo()
-{
-    clan::SlotContainer cc;
 	clan::DisplayWindowDescription desc;
 	desc.set_title("Target Display (with resizable window)");
 	desc.set_size(clan::Size(800, 600), true);
 	desc.set_allow_resize(true);
-	clan::DisplayWindow window(desc);
+	window = clan::DisplayWindow(desc);
 
 	// Connect the Window close event
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &Target::on_window_close));
+	sc.connect(window.sig_window_close(), clan::bind_member(this, &Target::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &Target::on_input_up));
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &Target::on_input_up));
 
-	clan::Canvas canvas(window);
+	canvas = clan::Canvas(window);
 
-	clan::Font target_font("tahoma", 28);
-	clan::Font fps_font("tahoma", 20);
+	target_font = clan::Font("tahoma", 28);
+	fps_font = clan::Font("tahoma", 20);
 
 	// Because we are using the alpha channel on fonts, we must disable subpixel rendering
 	clan::FontDescription font_desc;
 	font_desc.set_height(16);
 	font_desc.set_subpixel(false);
-	clan::Font fall_font("tahoma", font_desc);
+	fall_font = clan::Font("tahoma", font_desc);
 
-	std::vector<FontFall> font_fall;
+	game_time.reset();
+}
 
-	clan::GameTime game_time;
-	float fontfall_ticker = 0.0f;
+void Target::run_demo()
+{
+	game_time.update();
 
-	quit = false;
-	// Run until someone presses escape
-	while (!quit)
+	fontfall_ticker += game_time.get_time_elapsed();;
+	if (fontfall_ticker >= 0.01f)
 	{
-		game_time.update();
-
-		if (window.get_ic().get_keyboard().get_keycode(clan::keycode_1))
-		{
-			render_target = legacy_gl;
-			break;
-		}
-		if (window.get_ic().get_keyboard().get_keycode(clan::keycode_2))
-		{
-			render_target = opengl;
-			break;
-		}
-		if (window.get_ic().get_keyboard().get_keycode(clan::keycode_3))
-		{
-			render_target = d3d;
-			break;
-		}
-		if (window.get_ic().get_keyboard().get_keycode(clan::keycode_escape))
-		{
-			quit = true;
-			break;
-		}
-
-		fontfall_ticker += game_time.get_time_elapsed();;
-		if (fontfall_ticker >= 0.01f)
-		{
-			fontfall_ticker = 0.0f;
-			font_fall.push_back(new_fontfall(canvas.get_width()));
-		}
-
-		canvas.clear(clan::Colorf(0.0f,0.0f,0.0f));
-
-		std::string fps = clan::string_format("%1 fps", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1));
-		fps_font.draw_text(canvas, canvas.get_width() - 100, 30, fps);
-
-		std::string words = clan::string_format("%1 words", (int) font_fall.size());
-		fps_font.draw_text(canvas, 100, 30, words);
-
-		const int font_xpos = 32;
-		const int font_ypos = 64;
-
-		if (clan::OpenGLTarget::is_current())
-		{
-			clan::GraphicContext_GL gc(canvas);
-			int major,minor, version_release;
-			gc.get_opengl_version(major, minor, version_release);
-
-			if (gc.get_shader_language() == clan::shader_fixed_function)
-			{
-				target_font.draw_text(canvas, font_xpos, font_ypos, clan::string_format("1) OpenGL 1.3 Compatable. Context = %1.%2 (clanGL)", major, minor));
-			}
-			else
-			{
-				target_font.draw_text(canvas, font_xpos, font_ypos, clan::string_format("2) OpenGL 3.2 Compatable. Context = %1.%2 (clanGL)", major, minor));
-			}
-
-
-		}
-
-		if (clan::D3DTarget::is_current())
-				target_font.draw_text(canvas, font_xpos, font_ypos, "3) Direct3D renderer (clanD3D)");
-
-		fps_font.draw_text(canvas, 32, 96, "Press 1,2 or 3 to select targets, or escape to quit.");
-
-		float max_height = (float) (canvas.get_height() + 20);
-		float half_height = (float) canvas.get_height() / 2.0f;
-		for (std::vector<FontFall>::iterator it = font_fall.begin(); it != font_fall.end();)
-		{
-			FontFall &item = *it;
-			item.ypos += game_time.get_time_elapsed() * 100.0f;
-			if (item.ypos >= max_height)
-			{
-				it = font_fall.erase(it);
-			}
-			else
-			{
-				item.color.a = item.ypos / (half_height);
-				if (item.color.a > 1.0f)
-					item.color.a = 1.0f;
-				fall_font.draw_text(canvas, item.xpos, (int) item.ypos, item.text, item.color);
-				++it;
-			}
-		}
-
-		window.flip(0);
-	
-		clan::RunLoop::process(0);
+		fontfall_ticker = 0.0f;
+		font_fall.push_back(new_fontfall(canvas.get_width()));
 	}
-	return !quit;
+
+	canvas.clear(clan::Colorf(0.0f,0.0f,0.0f));
+
+	std::string fps = clan::string_format("%1 fps", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1));
+	fps_font.draw_text(canvas, canvas.get_width() - 100, 30, fps);
+
+	std::string words = clan::string_format("%1 words", (int) font_fall.size());
+	fps_font.draw_text(canvas, 100, 30, words);
+
+	const int font_xpos = 32;
+	const int font_ypos = 64;
+
+	if (clan::OpenGLTarget::is_current())
+	{
+		clan::GraphicContext_GL gc(canvas);
+		int major,minor, version_release;
+		gc.get_opengl_version(major, minor, version_release);
+
+		if (gc.get_shader_language() == clan::shader_fixed_function)
+		{
+			target_font.draw_text(canvas, font_xpos, font_ypos, clan::string_format("1) OpenGL 1.3 Compatable. Context = %1.%2 (clanGL)", major, minor));
+		}
+		else
+		{
+			target_font.draw_text(canvas, font_xpos, font_ypos, clan::string_format("2) OpenGL 3.2 Compatable. Context = %1.%2 (clanGL)", major, minor));
+		}
+	}
+
+	if (clan::D3DTarget::is_current())
+			target_font.draw_text(canvas, font_xpos, font_ypos, "3) Direct3D renderer (clanD3D)");
+
+	fps_font.draw_text(canvas, 32, 96, "Press 1,2 or 3 to select targets, or escape to quit.");
+
+	float max_height = (float) (canvas.get_height() + 20);
+	float half_height = (float) canvas.get_height() / 2.0f;
+	for (std::vector<FontFall>::iterator it = font_fall.begin(); it != font_fall.end();)
+	{
+		FontFall &item = *it;
+		item.ypos += game_time.get_time_elapsed() * 100.0f;
+		if (item.ypos >= max_height)
+		{
+			it = font_fall.erase(it);
+		}
+		else
+		{
+			item.color.a = item.ypos / (half_height);
+			if (item.color.a > 1.0f)
+				item.color.a = 1.0f;
+			fall_font.draw_text(canvas, item.xpos, (int) item.ypos, item.text, item.color);
+			++it;
+		}
+	}
+
+	window.flip(0);
+
+	if (window.get_ic().get_keyboard().get_keycode(clan::keycode_1))
+	{
+		render_target = legacy_gl;
+	}
+	if (window.get_ic().get_keyboard().get_keycode(clan::keycode_2))
+	{
+		render_target = opengl;
+	}
+	if (window.get_ic().get_keyboard().get_keycode(clan::keycode_3))
+	{
+		render_target = d3d;
+	}
+	if (window.get_ic().get_keyboard().get_keycode(clan::keycode_escape))
+	{
+		quit = true;
+	}
 }
 
 FontFall Target::new_fontfall(int window_width)

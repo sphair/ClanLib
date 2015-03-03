@@ -51,14 +51,14 @@ public:
 	int string_to_keyid(const std::string &str) const override { return 0; }
 
 	bool get_keycode(int keycode) const override;
-	int get_x() const override;
-	int get_y() const override;
+	float get_x() const override;
+	float get_y() const override;
 	float get_axis(int index) const override { return 0.0f; }
 	int get_axis_count() const { return 0; }
 	int get_button_count() const override { return 1; }
 	bool in_proximity() const override { return false; }
 	void init(Signal<const InputEvent &> *new_sig_provider_event) { sig_provider_event = new_sig_provider_event; }
-	void set_position(int x, int y) override { }
+	void set_position(float x, float y) override { }
 	bool poll(bool peek_only) { return false; }
 
     Signal<const InputEvent &> *sig_provider_event;

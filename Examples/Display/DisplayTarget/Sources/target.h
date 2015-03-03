@@ -46,19 +46,28 @@ public:
 		d3d
 	};
 
-	Target();
-
-	int start(const std::vector<std::string> &args);
+	Target(RenderTarget new_target);
+	void run_demo();
 
 private:
 	void on_button_clicked(RenderTarget selected_target);
 	void on_input_up(const clan::InputEvent &key);
 	void on_window_close();
 
-	bool run_demo();
 	FontFall new_fontfall(int window_width);
 
-private:
+	clan::SlotContainer sc;
+	clan::DisplayWindow window;
+	clan::Canvas canvas;
+	clan::GameTime game_time;
+	clan::Font target_font;
+	clan::Font fps_font;
+	clan::Font fall_font;
+	std::vector<FontFall> font_fall;
+	float fontfall_ticker = 0.0f;
+
+public:
 	RenderTarget render_target;
-	bool quit;
+	bool quit = false;
+
 };

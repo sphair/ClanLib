@@ -51,7 +51,7 @@
 #else
 #include "FontEngine/font_engine_freetype.h"
 
-#if !defined CL_ANDROID
+#if !defined __ANDROID__
 #include "../Platform/X11/font_config.h"
 #endif
 
@@ -134,7 +134,7 @@ namespace clan
 		//font_cache.back().glyph_cache->set_texture_group(texture_group);
 #else
 
-#if defined CL_ANDROID
+#if defined __ANDROID__
 		throw Exception("automatic typeface to ttf file selection is not supported on android");
 #else
 

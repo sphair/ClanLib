@@ -612,8 +612,6 @@ TextureStateTracker::~TextureStateTracker()
 	case GL_TEXTURE_CUBE_MAP_ARRAY:
 		glBindTexture(GL_TEXTURE_CUBE_MAP_ARRAY, previous_handle);
 		break;
-	default:
-		throw Exception("Unknown texture target");
 	}
 }
 

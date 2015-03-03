@@ -100,7 +100,7 @@ void OpenGLRasterizerState::apply()
 				break;
 			}
 		}
-#ifndef CL_ANDROID
+#ifndef __ANDROID__
 		desc.get_antialiased() ? glEnable(GL_POLYGON_SMOOTH) : glDisable(GL_POLYGON_SMOOTH);
 		desc.get_offset_point() ? glEnable(GL_POLYGON_OFFSET_POINT) : glDisable(GL_POLYGON_OFFSET_POINT);
 		desc.get_offset_line() ? glEnable(GL_POLYGON_OFFSET_LINE) : glDisable(GL_POLYGON_OFFSET_LINE);

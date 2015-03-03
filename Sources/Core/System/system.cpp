@@ -43,7 +43,7 @@
 #include <sys/sysctl.h>
 #endif
 
-#if !defined __APPLE__ && !defined CL_ANDROID
+#if !defined __APPLE__ && !defined __ANDROID__
 #include <execinfo.h>
 #endif
 #include <cxxabi.h>
@@ -64,9 +64,12 @@
 #include <malloc.h>
 #endif
 
-#ifdef CL_ANDROID
+#ifdef __ANDROID__
 // Remove this, when it works without
+extern "C" {
+	// Note, this still does not work. humm
 extern int posix_memalign(void **memptr, size_t alignment, size_t size);
+}  // extern "C"
 #endif
 
 namespace clan
@@ -136,7 +139,7 @@ int System::capture_stack_trace(int frames_to_skip, int max_frames, void **out_f
 		*out_hash = 0;
 	return capturedFrames;
 
-#elif !defined __APPLE__ && !defined CL_ANDROID
+#elif !defined __APPLE__ && !defined __ANDROID__
 	// Ensure the output is cleared
 	memset(out_frames, 0, (sizeof(void *)) * max_frames);
 
@@ -196,7 +199,7 @@ std::vector<std::string> System::get_stack_frames_text(void **frames, int num_fr
 	SymCleanup(GetCurrentProcess());
 	return backtrace_text;
 
-#elif !defined __APPLE__ && !defined CL_ANDROID
+#elif !defined __APPLE__ && !defined __ANDROID__
 
 	char **strings;
  	strings = backtrace_symbols(frames, num_frames);

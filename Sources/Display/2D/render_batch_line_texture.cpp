@@ -36,7 +36,7 @@ namespace clan
 {
 
 RenderBatchLineTexture::RenderBatchLineTexture(GraphicContext &gc, RenderBatchBuffer *batch_buffer)
-: position(0), batch_buffer(batch_buffer)
+: batch_buffer(batch_buffer)
 {
 	vertices = (LineTextureVertex *) batch_buffer->buffer;
 }

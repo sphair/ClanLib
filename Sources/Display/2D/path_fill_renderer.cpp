@@ -34,9 +34,11 @@
 #include "API/Core/System/system.h"
 #include <algorithm>
 
-using namespace clan::PathConstants;
+#if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
+#include <xmmintrin.h>
+#endif
 
-//#undef __SSE2__
+using namespace clan::PathConstants;
 
 namespace clan
 {
