@@ -29,11 +29,14 @@
 #include "precomp.h"
 #include "example.h"
 
-// The start of the Application
-int Example::start(const std::vector<std::string> &args)
-{
-	quit = false;
+clan::ApplicationInstance<Example> clanapp;
 
+Example::Example()
+{
+	// We support all display targets, in order listed here
+	clan::D3DTarget::enable();
+	clan::OpenGLTarget::enable();
+	
 	// Set the window 1 description
 	clan::DisplayWindowDescription desc_window_1;
 	desc_window_1.set_title("MultiWindow Example - Window 1");
@@ -47,10 +50,8 @@ int Example::start(const std::vector<std::string> &args)
 	desc_window_2.set_position(clan::Rect(50 + 350, 50, clan::Size(350, 350)), false);
 
 	// Open the windows
-	clan::DisplayWindow window_1(desc_window_1);
-	clan::DisplayWindow window_2(desc_window_2);
-
-    clan::SlotContainer sc;
+	window_1 = clan::DisplayWindow(desc_window_1);
+	window_2 = clan::DisplayWindow(desc_window_2);
 
 	// Connect the Window close event - to both windows
 	sc.connect(window_1.sig_window_close(), [&](){on_window_close(&window_1); });
@@ -61,81 +62,72 @@ int Example::start(const std::vector<std::string> &args)
 	sc.connect(window_2.get_ic().get_keyboard().sig_key_up(), [=](const clan::InputEvent &input_event){on_input_up(input_event, 2); });
 
 	// Get the canvas - for both windows
-	clan::Canvas canvas_1(window_1);
-	clan::Canvas canvas_2(window_2);
+	canvas_1 = clan::Canvas(window_1);
+	canvas_2 = clan::Canvas(window_2);
 
 	// Load the example text - Note, any window can create the font
-	clan::Font font("tahoma", 64);
+	font = clan::Font("tahoma", 64);
+
+	game_time.reset();
+}
+
+bool Example::update()
+{
 	std::string example_text("This is an example ClanLib application that uses 2 windows. Try resizing and moving the windows. Press a key to flash selected window. ");
-	clan::Size text_size = clan::Size(font.measure_text(canvas_1, example_text).bbox_size);	
+	clan::Size text_size = clan::Size(font.measure_text(canvas_1, example_text).bbox_size);
 	clan::FontMetrics font_metrics = font.get_font_metrics(canvas_1);
-	int font_yoffset = (int)( font_metrics.get_ascent() - font_metrics.get_internal_leading() ) / 2;
-	int font_xoffset = 0;
-	int font_counter = 0;
 
-	// Set the window colors
-	window_1_color = 0.2f;
-	window_2_color = 0.2f;
+	game_time.update();
 
-	clan::GameTime game_time;
+	// Control the window colors
+	window_1_color -= game_time.get_time_elapsed();
+	if (window_1_color < 0.2f)
+		window_1_color = 0.2f;
 
-	// Run until someone presses escape
-	while (!quit)
-	{
-		game_time.update();
+	window_2_color -= game_time.get_time_elapsed();
+	if (window_2_color < 0.2f)
+		window_2_color = 0.2f;
 
-		// Control the window colors
-		window_1_color -= game_time.get_time_elapsed();
-		if (window_1_color < 0.2f)
-			window_1_color = 0.2f;
+	// Clear both displays
+	canvas_1.clear(clan::Colorf(0.0f,0.0f,window_1_color, 1.0f));
+	canvas_2.clear(clan::Colorf(0.0f,0.0f,window_2_color, 1.0f));
 
-		window_2_color -= game_time.get_time_elapsed();
-		if (window_2_color < 0.2f)
-			window_2_color = 0.2f;
+	// Get the window geometry
+	clan::Rect window_geometry_1 = window_1.get_geometry();
+	clan::Rect window_geometry_2 = window_2.get_geometry();
 
-		// Clear both displays
-		canvas_1.clear(clan::Colorf(0.0f,0.0f,window_1_color, 1.0f));
-		canvas_2.clear(clan::Colorf(0.0f,0.0f,window_2_color, 1.0f));
+	// Get the connecting point (right edge of window 1 and left edge of window 2)
+	clan::Point window_1_connect(window_geometry_1.get_center());
+	clan::Point window_2_connect(window_geometry_2.get_center());
 
-		// Get the window geometry
-		clan::Rect window_geometry_1 = window_1.get_geometry();
-		clan::Rect window_geometry_2 = window_2.get_geometry();
+	// Scroll the text
+	const int font_speed = 5;
+	font_counter += game_time.get_time_elapsed_ms();
+	font_counter %= text_size.width * font_speed;		// Wrap around counter
+	font_xoffset = font_counter / font_speed;
 
-		// Get the connecting point (right edge of window 1 and left edge of window 2)
-		clan::Point window_1_connect(window_geometry_1.get_center());
-		clan::Point window_2_connect(window_geometry_2.get_center());
+	// Calculate the angle between the 2 windows
+	float angle = atan2( (float) (window_2_connect.y - window_1_connect.y), (float) (window_2_connect.x - window_1_connect.x));
 
-		// Scroll the text
-		const int font_speed = 5;
-		font_counter += game_time.get_time_elapsed_ms();
-		font_counter %= text_size.width * font_speed;		// Wrap around counter
-		font_xoffset = font_counter / font_speed;
+	// Draw the text for window 1
+	// To keep the example simple, the scroll text is drawn 3 times
+	int font_yoffset = (int)(font_metrics.get_ascent() - font_metrics.get_internal_leading()) / 2;
+	canvas_1.set_transform(clan::Mat4f::translate((float)canvas_1.get_width() / 2.0f, (float)canvas_1.get_height() / 2.0f, 0.0f) * clan::Mat4f::rotate(clan::Angle(angle, clan::angle_radians), 0.0f, 0.0f, 1.0f, false));
+	font.draw_text(canvas_1, -font_xoffset, font_yoffset, example_text, clan::Colorf::white);
+	font.draw_text(canvas_1, text_size.width - font_xoffset, font_yoffset, example_text,clan:: Colorf::white);
+	font.draw_text(canvas_1, -text_size.width - font_xoffset, font_yoffset, example_text, clan::Colorf::white);
 
-		// Calculate the angle between the 2 windows
-		float angle = atan2( (float) (window_2_connect.y - window_1_connect.y), (float) (window_2_connect.x - window_1_connect.x));
+	// Draw the text for window 2
+	canvas_2.set_transform(clan::Mat4f::translate((float)canvas_1.get_width() / 2.0f, (float)canvas_1.get_height() / 2.0f, 0.0f) * clan::Mat4f::rotate(clan::Angle(angle, clan::angle_radians), 0.0f, 0.0f, 1.0f, false));
+	font.draw_text(canvas_2, -font_xoffset - canvas_1.get_width(), font_yoffset, example_text, clan::Colorf::white);
+	font.draw_text(canvas_2, -font_xoffset + text_size.width-canvas_1.get_width(), font_yoffset, example_text, clan::Colorf::white);
+	font.draw_text(canvas_2, -font_xoffset - text_size.width-canvas_1.get_width(), font_yoffset, example_text, clan::Colorf::white);
 
-		// Draw the text for window 1
-		// To keep the example simple, the scroll text is drawn 3 times
-		canvas_1.set_transform(clan::Mat4f::translate((float)canvas_1.get_width() / 2.0f, (float)canvas_1.get_height() / 2.0f, 0.0f) * clan::Mat4f::rotate(clan::Angle(angle, clan::angle_radians), 0.0f, 0.0f, 1.0f, false));
-		font.draw_text(canvas_1, -font_xoffset, font_yoffset, example_text, clan::Colorf::white);
-		font.draw_text(canvas_1, text_size.width - font_xoffset, font_yoffset, example_text,clan:: Colorf::white);
-		font.draw_text(canvas_1, -text_size.width - font_xoffset, font_yoffset, example_text, clan::Colorf::white);
+	// Flip the displays
+	window_1.flip(0);
+	window_2.flip(1);	// Sync to vertical blanking on the second (last) window
 
-		// Draw the text for window 2
-		canvas_2.set_transform(clan::Mat4f::translate((float)canvas_1.get_width() / 2.0f, (float)canvas_1.get_height() / 2.0f, 0.0f) * clan::Mat4f::rotate(clan::Angle(angle, clan::angle_radians), 0.0f, 0.0f, 1.0f, false));
-		font.draw_text(canvas_2, -font_xoffset - canvas_1.get_width(), font_yoffset, example_text, clan::Colorf::white);
-		font.draw_text(canvas_2, -font_xoffset + text_size.width-canvas_1.get_width(), font_yoffset, example_text, clan::Colorf::white);
-		font.draw_text(canvas_2, -font_xoffset - text_size.width-canvas_1.get_width(), font_yoffset, example_text, clan::Colorf::white);
-
-		// Flip the displays
-		window_1.flip(0);
-		window_2.flip(1);	// Sync to vertical blanking on the second (last) window
-
-		// This call processes user input and other events
-		clan::RunLoop::process(0);
-	}
-
-	return 0;
+	return !quit;
 }
 
 // A key was pressed

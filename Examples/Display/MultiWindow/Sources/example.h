@@ -29,18 +29,29 @@
 
 #pragma once
 
-// This is the Application class (That is instantiated by the Program Class)
-class Example
+class Example : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
+	Example();
+	bool update() override;
 
 private:
 	void on_input_up(const clan::InputEvent &key, int window_number);
 	void on_window_close(clan::DisplayWindow *window);
 
 private:
-	float window_1_color;
-	float window_2_color;
-	bool quit;
+	clan::DisplayWindow window_1;
+	clan::DisplayWindow window_2;
+	clan::SlotContainer sc;
+	clan::Canvas canvas_1;
+	clan::Canvas canvas_2;
+	clan::Font font;
+
+	clan::GameTime game_time;
+	float window_1_color = 0.2f;
+	float window_2_color = 0.2f;
+	bool quit = false;
+	int font_xoffset = 0;
+	int font_counter = 0;
+
 };
