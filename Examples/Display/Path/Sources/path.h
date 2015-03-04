@@ -30,15 +30,28 @@
 #pragma once
 
 // This is the Application class (That is instantiated by the Program Class)
-class PathApp
+class PathApp : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
+	PathApp();
+	bool update() override;
 
 private:
 	void on_input_up(const clan::InputEvent &key);
 	void on_window_close();
 
 private:
-	bool quit;
+	clan::DisplayWindow window;
+	clan::Canvas canvas;
+	clan::SlotContainer sc;
+	clan::Font fps_font;
+	clan::Brush brush_radial;
+	clan::Brush brush_image;
+	clan::Brush brush_solid;
+	clan::Brush brush_linear;
+	clan::Path rounded_rect_shape;
+	clan::Path complex_shape;
+	bool quit = false;
+	clan::GameTime game_time;
+	float angle = 0.0f;
 };
