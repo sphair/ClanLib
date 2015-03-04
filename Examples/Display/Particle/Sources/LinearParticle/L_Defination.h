@@ -175,23 +175,14 @@ inline void L_DrawParticleBlend(clan::Canvas &canvas,L_Blend &blend, T *EmitterO
 	canvas.reset_blend_state();
 }
 
-
 template<class T>
-inline void L_DrawParticleBlend(clan::Canvas &canvas,L_Blend &blend, T &EmitterOrEffectorParticle)	 
-{				      
-	blend.set_blend_mode(canvas);	 
-    EmitterOrEffectorParticle.draw(canvas);		  
-	canvas.reset_blend_state();	      
-}
-
-template<class T>
-inline void L_DrawParticle(clan::Canvas &canvas, T &EmitterOrEffectorParticle)	 
+inline void L_DrawParticle(clan::Canvas &canvas, T *EmitterOrEffectorParticle)	 
 {				      
    L_DrawParticleBlend(canvas, l_blend, EmitterOrEffectorParticle);
 }
 
 template<class T>
-inline void L_DrawParticleMinusAlpha(clan::Canvas &canvas, T &EmitterOrEffectorParticle)	 
+inline void L_DrawParticleMinusAlpha(clan::Canvas &canvas, T *EmitterOrEffectorParticle)	 
 {				      
    L_DrawParticleBlend(canvas, l_blendMinusAlpha, EmitterOrEffectorParticle);
 }

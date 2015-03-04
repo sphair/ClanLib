@@ -28,100 +28,82 @@
 
 #include "precomp.h"
 #include "particle.h"
-#include "Demos/simple.h"
-#include "Demos/circle.h"
-#include "Demos/circle2.h"
-#include "Demos/cmotion.h"
-#include "Demos/explosion.h"
-#include "Demos/msmall.h"
-#include "Demos/shooting.h"
-#include "Demos/usercollision.h"
+#include "program.h"
 
-// The start of the Application
-int Particle::start(const std::vector<std::string> &args)
+Particle::Particle(clan::DisplayWindow &window) : window(window)
 {
-	quit = false;
-
-	// Set the window
-	clan::DisplayWindow window("LinearParticle Example - Main Menu", 640, 480, false);
+	window.set_title("LinearParticle Example - Main Menu");
 
 	// Connect the Window close event
-    clan::SlotContainer cc;
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &Particle::on_window_close));
+	sc.connect(window.sig_window_close(), clan::bind_member(this, &Particle::on_window_close));
 
 	// Get the graphic context
-	clan::Canvas canvas(window);
+	canvas = clan::Canvas(window);
+	font = clan::Font("tahoma", 20);
 
-	clan::Font font("tahoma", 20);
+}
 
-	// Run until someone presses escape
-	while (!quit)
+bool Particle::update()
+{
+	canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
+
+	int ypos = 32;
+	const int ygap = 24;
+	font.draw_text(canvas, 32, ypos, "Linear Particle Example - Main Menu");
+	ypos += ygap*2;
+	font.draw_text(canvas, 32, ypos, "1) Simple"); ypos += ygap;
+	font.draw_text(canvas, 32, ypos, "2) Circle"); ypos += ygap;
+	font.draw_text(canvas, 32, ypos, "3) Circle2"); ypos += ygap;
+	font.draw_text(canvas, 32, ypos, "4) MSmall"); ypos += ygap;
+	font.draw_text(canvas, 32, ypos, "5) Shooting"); ypos += ygap;
+	font.draw_text(canvas, 32, ypos, "6) Explosion"); ypos += ygap;
+	font.draw_text(canvas, 32, ypos, "7) CMotion"); ypos += ygap;
+	font.draw_text(canvas, 32, ypos, "8) UserCollision"); ypos += ygap;
+
+	ypos += ygap;
+	font.draw_text(canvas, 32, ypos, "Press Escape to exit the example and return to this screen."); ypos += ygap;
+
+	clan::InputDevice keyboard = window.get_ic().get_keyboard();
+	if (keyboard.get_keycode(clan::keycode_escape))
+		quit = true;
+
+	bool reset_title_flag = false;
+	if (keyboard.get_keycode(clan::keycode_1))
 	{
-		canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
-
-		int ypos = 32;
-		const int ygap = 24;
-		font.draw_text(canvas, 32, ypos, "Linear Particle Example - Main Menu");
-		ypos += ygap*2;
-		font.draw_text(canvas, 32, ypos, "1) Simple"); ypos += ygap;
-		font.draw_text(canvas, 32, ypos, "2) Circle"); ypos += ygap;
-		font.draw_text(canvas, 32, ypos, "3) Circle2"); ypos += ygap;
-		font.draw_text(canvas, 32, ypos, "4) MSmall"); ypos += ygap;
-		font.draw_text(canvas, 32, ypos, "5) Shooting"); ypos += ygap;
-		font.draw_text(canvas, 32, ypos, "6) Explosion"); ypos += ygap;
-		font.draw_text(canvas, 32, ypos, "7) CMotion"); ypos += ygap;
-		font.draw_text(canvas, 32, ypos, "8) UserCollision"); ypos += ygap;
-
-		ypos += ygap;
-		font.draw_text(canvas, 32, ypos, "Press Escape to exit the example and return to this screen."); ypos += ygap;
-
-		clan::InputDevice keyboard = window.get_ic().get_keyboard();
-		if (keyboard.get_keycode(clan::keycode_escape))
-			break;
-
-		bool reset_title_flag = false;
-		if (keyboard.get_keycode(clan::keycode_1))
-		{
-			DemoSimple demo; demo.run(window); reset_title_flag = true;
-		}
-		else if (keyboard.get_keycode(clan::keycode_2))
-		{
-			DemoCircle demo; demo.run(window); reset_title_flag = true;
-		}
-		else if (keyboard.get_keycode(clan::keycode_3))
-		{
-			DemoCircle2 demo; demo.run(window); reset_title_flag = true;
-		}
-		else if (keyboard.get_keycode(clan::keycode_4))
-		{
-			DemoMSmall demo; demo.run(window); reset_title_flag = true;
-		}
-		else if (keyboard.get_keycode(clan::keycode_5))
-		{
-			DemoShooting demo; demo.run(window); reset_title_flag = true;
-		}
-		else if (keyboard.get_keycode(clan::keycode_6))
-		{
-			DemoExplosion demo; demo.run(window); reset_title_flag = true;
-		}
-		else if (keyboard.get_keycode(clan::keycode_7))
-		{
-			DemoCMotion demo; demo.run(window); reset_title_flag = true;
-		}
-		else if (keyboard.get_keycode(clan::keycode_8))
-		{
-			DemoUserCollision demo; demo.run(window); reset_title_flag = true;
-		}
-
-		if (reset_title_flag)
-			window.set_title("LinearParticle Example - Main Menu");
-
-		window.flip(1);
-
-		clan::RunLoop::process(0);
+		Program::state = DemoState::simple;
+	}
+	else if (keyboard.get_keycode(clan::keycode_2))
+	{
+		Program::state = DemoState::circle;
+	}
+	else if (keyboard.get_keycode(clan::keycode_3))
+	{
+		Program::state = DemoState::circle2;
+	}
+	else if (keyboard.get_keycode(clan::keycode_4))
+	{
+		Program::state = DemoState::msmall;
+	}
+	else if (keyboard.get_keycode(clan::keycode_5))
+	{
+		Program::state = DemoState::shooting;
+	}
+	else if (keyboard.get_keycode(clan::keycode_6))
+	{
+		Program::state = DemoState::explosion;
+	}
+	else if (keyboard.get_keycode(clan::keycode_7))
+	{
+		Program::state = DemoState::cmotion;
+	}
+	else if (keyboard.get_keycode(clan::keycode_8))
+	{
+		Program::state = DemoState::usercollision;
 	}
 
-	return 0;
+	window.flip(1);
+
+	return !quit;
 }
 
 // The window was closed

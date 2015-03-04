@@ -28,17 +28,34 @@
 
 #pragma once
 
-class DemoSimple
+#include "../state.h"
+#include "../LinearParticle/L_ParticleSystem.h"
+#include "framerate_counter.h"
+
+class DemoSimple : public DemoScreen
 {
 public:
-	DemoSimple(){}
+	DemoSimple(clan::DisplayWindow &window);
 
-	int run(clan::DisplayWindow &window);
+	bool update() override;
 
 private:
 	void on_input_up(const clan::InputEvent &key);
 	void on_window_close();
 
 private:
-	bool quit;
+	clan::DisplayWindow window;
+	clan::SlotContainer sc;
+	clan::Canvas canvas;
+	clan::Sprite surface;
+	clan::Font font;
+	FramerateCounter frameratecounter;
+	bool quit = false;
+	std::unique_ptr<L_DroppingEffect> dropper;
+	std::unique_ptr<L_Particle> particle;
+
+	float x_pos = 320;
+	float y_pos = 240;
+	float x_vel = 3.0f;
+	float y_vel = 3.0f;
 };

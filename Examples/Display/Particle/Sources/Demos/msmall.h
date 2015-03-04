@@ -28,23 +28,33 @@
 
 #pragma once
 
+#include "../state.h"
 #include "../LinearParticle/L_ParticleSystem.h"
+#include "framerate_counter.h"
 
-class DemoMSmall
+class DemoMSmall : public DemoScreen
 {
 public:
-	DemoMSmall(){}
+	DemoMSmall(clan::DisplayWindow &window);
 
-	int run(clan::DisplayWindow &window);
+	bool update() override;
 
 private:
 	void on_key_up(const clan::InputEvent& key);
 	void on_window_close();
 
 private:
-	bool quit;
-	bool show_menu;
+	clan::DisplayWindow window;
+	clan::SlotContainer sc;
+	clan::Canvas canvas;
+	clan::Sprite surface;
+	clan::Font font;
+	FramerateCounter frameratecounter;
+	bool quit = false;
+	bool show_menu = true;
 	L_MotionController motion_ctrl;
-	L_ExplosionEffect* effect;
+	std::unique_ptr<L_ExplosionEffect> effect;
+	std::unique_ptr<L_Particle> particle;
+	uint64_t last_time;
 
 };

@@ -23,38 +23,29 @@
 **
 **  File Author(s):
 **
+**    Magnus Norddahl
 **    Mark Page
 */
 
 #pragma once
 
-#include "../state.h"
-#include "../LinearParticle/L_ParticleSystem.h"
-#include "framerate_counter.h"
-
-class DemoCircle : public DemoScreen
+class DemoScreen
 {
 public:
-	DemoCircle(clan::DisplayWindow &window);
+	virtual ~DemoScreen() {};
+	virtual bool update() = 0;
+};
 
-	bool update() override;
+enum class DemoState
+{
+	menu,
+	simple,
+	circle,
+	circle2,
+	msmall,
+	shooting,
+	explosion,
+	cmotion,
+	usercollision
 
-private:
-	void run_a_step(int time);
-	void on_key_up(const clan::InputEvent &key);
-	void on_window_close();
-
-private:
-	clan::DisplayWindow window;
-	clan::SlotContainer sc;
-	clan::Canvas canvas;
-	clan::Sprite surface;
-	clan::Font font;
-	FramerateCounter frameratecounter;
-	bool quit = false;
-	bool show_menu = true;
-	int dropping_period;
-	std::unique_ptr<L_DroppingEffect> dropper;
-	std::unique_ptr<L_Particle> particle;
-	uint64_t last_time;
 };
