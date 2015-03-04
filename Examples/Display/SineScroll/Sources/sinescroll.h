@@ -29,19 +29,23 @@
 
 #pragma once
 
-// This is the Application class (That is instantiated by the Program Class)
-class SineScroll
+class SineScroll : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
-
+	SineScroll();
+	bool update() override;
 private:
 	void on_input_up(const clan::InputEvent &key);
 	void on_window_close();
 	void draw_demo(clan::Canvas &canvas, int delta_ms);
 private:
-	bool quit;
+	clan::DisplayWindow window;
+	clan::Canvas canvas;
+	clan::SlotContainer sc;
+	clan::GameTime game_time;
+
+	bool quit = false;
 	clan::Texture2D texture;
-	float sin_offset;
+	float sin_offset = 0.0f;
 
 };
