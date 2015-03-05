@@ -34,14 +34,35 @@
 
 namespace clan
 {
+	static UIThreadImpl *ui_thread_instance = nullptr;
+
 	class UIThreadImpl
 	{
 	public:
+		UIThreadImpl()
+		{
+			if (ui_thread_instance != nullptr) throw Exception("Only one UIThread is allowed");
+			ui_thread_instance = this;
+		}
+
+		~UIThreadImpl()
+		{
+			ui_thread_instance = nullptr;
+		}
+
 		ResourceManager resources;
 		std::function<void(const std::exception_ptr &)> exception_handler;
+
+		static UIThreadImpl *get_instance()
+		{
+			if (ui_thread_instance == nullptr) throw Exception("No UIThread created");
+			return ui_thread_instance;
+		}
 	};
 
-	static UIThread *ui_thread_instance = nullptr;
+	UIThread::UIThread()
+	{
+	}
 
 	UIThread::UIThread()
 	{
@@ -67,25 +88,15 @@ namespace clan
 				}
 			};
 		}
-
-		if (ui_thread_instance != nullptr) throw Exception("Only one UIThread is allowed");
-		ui_thread_instance = this;
 	}
 
 	UIThread::~UIThread()
 	{
-		ui_thread_instance = nullptr;
-	}
-
-	UIThread *UIThread::get_instance()
-	{
-		if (ui_thread_instance == nullptr) throw Exception("No UIThread created");
-		return ui_thread_instance;
 	}
 
 	ResourceManager UIThread::get_resources()
 	{
-		return get_instance()->impl->resources;
+		return UIThreadImpl::get_instance()->resources;
 	}
 
 	bool UIThread::try_catch(const std::function<void()> &block)
@@ -100,7 +111,7 @@ namespace clan
 			std::exception_ptr exception = std::current_exception();
 			RunLoop::main_thread_async([=]()
 			{
-				get_instance()->impl->exception_handler(exception);
+				UIThreadImpl::get_instance()->exception_handler(exception);
 			});
 			return false;
 		}
