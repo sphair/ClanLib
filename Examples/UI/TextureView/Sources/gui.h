@@ -29,15 +29,25 @@
 
 #pragma once
 
-// This is the Application class (That is instantiated by the Program Class)
-class GUI
+class GUI : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
+	GUI();
+	bool update() override;
 
 private:
 	void on_input_up(const clan::InputEvent &key);
 
 private:
-	bool quit;
+	clan::DisplayWindow window;
+	clan::Canvas canvas;
+	clan::Canvas gui_canvas;
+	clan::Font font;
+	clan::GameTime game_time;
+	bool quit = false;
+	clan::UIThread ui_thread;
+	std::shared_ptr<clan::TextureView> root;
+	clan::SlotContainer sc;
+	clan::Image gui_image;
+
 };

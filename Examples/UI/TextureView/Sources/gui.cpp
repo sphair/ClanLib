@@ -30,12 +30,13 @@
 #include "precomp.h"
 #include "gui.h"
 
-// The start of the Application
-int GUI::start(const std::vector<std::string> &args)
-{
-	quit = false;
+clan::ApplicationInstance<GUI> clanapp;
 
-    clan::SlotContainer sc;
+GUI::GUI()
+{
+	// We support all display targets, in order listed here
+	//clan::D3DTarget::enable();
+	clan::OpenGLTarget::enable();
 
 	// Set the window
 	clan::DisplayWindowDescription desc;
@@ -43,8 +44,8 @@ int GUI::start(const std::vector<std::string> &args)
 	desc.set_size(clan::Size(640, 640), true);
 	desc.set_allow_resize(true);
 
-	clan::DisplayWindow window(desc);
-	clan::Canvas canvas(window);
+	window = clan::DisplayWindow(desc);
+	canvas = clan::Canvas(window);
 
 	// Connect the Window close event
 	sc.connect(window.sig_window_close(), [&](){quit = true; });
@@ -52,23 +53,23 @@ int GUI::start(const std::vector<std::string> &args)
 	// Connect a keyboard handler to on_key_up()
 	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &GUI::on_input_up));
 
-	clan::Font font("tahoma", 24);
+	font = clan::Font("tahoma", 24);
 
 	clan::Texture2D gui_texture = clan::Texture2D(canvas, 512, 512);
 	gui_texture.set_pixel_ratio(canvas.get_pixel_ratio());
-	clan::Image gui_image(gui_texture, gui_texture.get_size());
+	gui_image = clan::Image(gui_texture, gui_texture.get_size());
 	clan::FrameBuffer gui_framebuffer = clan::FrameBuffer(canvas);
 	gui_framebuffer.attach_color(0, gui_texture);
-	//clan::Canvas gui_canvas(canvas);//, gui_framebuffer);
-	clan::Canvas gui_canvas(canvas, gui_framebuffer);
+	//gui_canvas = clan::Canvas(canvas);//, gui_framebuffer);
+	gui_canvas = clan::Canvas(canvas, gui_framebuffer);
 
 	// Create a source for our resources
 	clan::ResourceManager resources = clan::FileResourceManager::create();
 
 	// Mark this thread as the UI thread
-	clan::UIThread ui_thread(resources);
+	ui_thread = clan::UIThread(resources);
 
-	std::shared_ptr<clan::TextureView> root = std::make_shared<clan::TextureView>(gui_canvas);
+	root = std::make_shared<clan::TextureView>(gui_canvas);
 
 	root->set_event_window(window);
 	root->set_cursor_window(window);
@@ -76,16 +77,17 @@ int GUI::start(const std::vector<std::string> &args)
 	root->set_rect(clan::Rect(0, 0, clan::Size(256, 256)));
 
 	// Style the root view to use rounded corners and a bit of drop shadow
-	root->box_style.set_background(clan::Colorf(240, 240, 240, 255));
-	root->box_style.set_padding(11.0f);
-	root->box_style.set_border_radius(15.0f);
-	root->box_style.set_border(clan::Colorf(0, 0, 0), 1.0f);
-	root->box_style.set_margin(20.0f, 20.0f, 20.0f, 20.0f);
-	root->box_style.set_box_shadow(clan::Colorf(0, 0, 0, 50), 0.0f, 0.0f, 20.0f);
+	root->style()->set("background: linear-gradient(13.37deg, #f0f0f0, rgb(120,240,120) 50%, #f0f0f0)");
+	root->style()->set("padding: 11px");
+	root->style()->set("border: 1px solid black");
+	root->style()->set("border-radius: 15px");
+	root->style()->set("margin: 35px 10px 10px 10px");
+	root->style()->set("box-shadow: 0 0 20px rgba(0,0,0,0.2)");
+	root->style()->set("flex-direction: column");
 
 	// Create a label with some text to have some content
 	std::shared_ptr<clan::LabelView> label = std::make_shared<clan::LabelView>();
-	label->text_style().set_font("Ravie", 20.0f, 40.0f);
+	label->style()->set("font: 20px/40px 'Ravie'");
 	label->set_text("Hello World!");
 	root->add_subview(label);
 
@@ -96,67 +98,64 @@ int GUI::start(const std::vector<std::string> &args)
 
 	// Create a text field for our span layout
 	std::shared_ptr<clan::TextFieldView> edit = std::make_shared<clan::TextFieldView>();
-	edit->text_style().set_font("Ravie", 11.0f, 20.0f);
-	edit->set_text("42");
-	edit->box_style.set_margin(0.0f, 5.0f);
-	edit->box_style.set_background(clan::Colorf(255, 255, 255));
-	edit->box_style.set_border(clan::Colorf(1.0f, 0.0f, 0.0f), 1.0f);
-	edit->box_style.set_border_radius(3.0f);
-	edit->box_style.set_padding(5.0f, 2.0f, 5.0f, 3.0f);
-	edit->box_style.set_width(35.0f);
+	edit->style()->set("font: 11px/20px 'Segoe UI'");
+	edit->style()->set("margin: 5px 0");
+	edit->style()->set("background: white");
+	edit->style()->set("border: 1px solid black");
+	edit->style()->set("border-radius: 3px");
+	edit->style()->set("padding: 2px 5px 2px 5px");
+	edit->style()->set("width: 128px");
+	edit->set_text("Text File View");
 
 	// Create a span layout view with some more complex inline formatting
 	std::shared_ptr<clan::SpanLayoutView> span = std::make_shared<clan::SpanLayoutView>();
-	clan::TextStyle font_desc2;
-	font_desc2.set_font_family("Segoe UI");
-	font_desc2.set_size(13.0f);
-	font_desc2.set_line_height(40.0f);
-	span->add_text("This is the UI core ", font_desc2);
-	clan::TextStyle font_desc3;
-	font_desc3.set_font_family("Segoe UI");
-	font_desc3.set_size(18.0f);
-	font_desc3.set_line_height(40.0f);
-	span->add_text("Hello World!", font_desc3);
-	clan::TextStyle font_desc4;
-	font_desc4.set_font_family("Segoe UI");
-	font_desc4.set_size(13.0f);
-	font_desc4.set_line_height(40.0f);
-	span->add_text(" example! Here's a text field: ", font_desc4);
+	std::shared_ptr<clan::Style> text_style = std::make_shared<clan::Style>();
+	text_style->set("font: 13px/40px 'Segoe UI'");
+	span->add_text("This is the UI core ", text_style);
+
 	span->add_subview(edit);
-	clan::TextStyle font_desc5;
-	font_desc5.set_font_family("Segoe UI");
-	font_desc5.set_size(16.0f);
-	font_desc5.set_line_height(40.0f);
-	font_desc5.set_weight(clan::FontWeight::extra_bold);
-	span->add_text(" units! sdfjghsdkfj hkjsdfhg jksdhfj gkshdfk gsjdkfghsjkdfh kgjshdfkg sjkdfh gjskhf gskjdfg hkjsdfh kgjsdhfkgjhsdkjfhgksjdfhg kjsdfhgjkshdfkhgskjdf ghkjsdfsg kdfhg skjdfhgjksdh fgsdfhg kjsdhfjkghsdkjfh gkjsdhfjkgsdhfkgjhsdkfj hgksj.", font_desc5);
+	/*
+	std::shared_ptr<clan::ScrollBarView> scrollbar = std::make_shared<clan::ScrollBarView>();
+	scrollbar->set_horizontal();
+	scrollbar->style()->set("flex: 0 0 main-size");
+	scrollbar->style()->set("background: rgb(232, 232, 236)");
+	scrollbar->track()->set("padding: 0 4px");
+	scrollbar->track()->set("background: rgb(208, 209, 215)");
+	scrollbar->thumb()->set("padding: 0 4px");
+	scrollbar->thumb()->set("background: rgb(208, 209, 215)");
+	scrollbar->set_range(0.0, 1.0);
+	scrollbar->set_position(0.5);
+	scrollbar->set_page_step(0.1);
+	scrollbar->set_line_step(0.01);
+	root->add_subview(scrollbar);
+	*/
+	std::shared_ptr<clan::Style> text_style2 = std::make_shared<clan::Style>();
+	text_style2->set("font: 16px/40px 'Segoe UI'; font-weight: 800");
+	span->add_text(" units!", text_style2);
 	root->add_subview(span);
 
-	clan::GameTime game_time;
+	game_time.reset();
+}
 
-	// Run until someone presses escape
-	while (!quit)
-	{
-		game_time.update();
+bool GUI::update()
+{
+	game_time.update();
 
-		canvas.clear(clan::Colorf(0.3f,0.7f,0.2f));
+	canvas.clear(clan::Colorf(0.3f,0.7f,0.2f));
 
-		//root->set_needs_layout();
-		//root->set_needs_render();
-		root->update();
-		gui_canvas.flush();
+	//root->set_needs_layout();
+	//root->set_needs_render();
+	root->update();
+	gui_canvas.flush();
 
-		gui_image.draw(canvas, 0, 0);
+	gui_image.draw(canvas, 0, 0);
 
-		std::string fps = clan::string_format("%1 fps", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1));
-		font.draw_text(canvas, canvas.get_width() - 200, 30, fps);
+	std::string fps = clan::string_format("%1 fps", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1));
+	font.draw_text(canvas, canvas.get_width() - 200, 30, fps);
 
-		window.flip(0);
+	window.flip(0);
 
-		// This call processes user input and other events
-		clan::RunLoop::process(0);
-	}
-
-	return 0;
+	return !quit;
 }
 
 // A key was pressed
