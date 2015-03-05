@@ -32,7 +32,6 @@
 #include "scene_object.h"
 #include "model.h"
 #include "graphic_store.h"
-#include "framerate_counter.h"
 #include "options.h"
 
 #if defined(_MSC_VER)
@@ -57,9 +56,14 @@
 #endif
 
 
-// The start of the Application
-int App::start(const std::vector<std::string> &args)
+clan::ApplicationInstance<App> clanapp;
+
+App::App()
 {
+	// We support all display targets, in order listed here
+	clan::D3DTarget::enable();
+	clan::OpenGLTarget::enable();
+
 	quit = false;
 
 	DisplayWindowDescription desc;
@@ -104,79 +108,74 @@ int App::start(const std::vector<std::string> &args)
 
 	clan::Font font("tahoma", 24);
 
-	FramerateCounter framerate_counter;
-
 	active_lerp = false;
 	uint64_t time_last = System::get_time();
 	uint64_t time_start = time_last;
+}
 
-	// Run until someone presses escape
-	while (!quit)
-	{
-		framerate_counter.frame_shown();
+bool App::update()
+{
+	framerate_counter.frame_shown();
 
-		// Calculate time since last frame
-		uint64_t time_now = System::get_time();
-		current_time = time_now - time_start;
-		time_delta = time_now - time_last;
-		time_last = time_now;
+	// Calculate time since last frame
+	uint64_t time_now = System::get_time();
+	current_time = time_now - time_start;
+	time_delta = time_now - time_last;
+	time_last = time_now;
 
-		// Control the target options
-		//control_target(options);
+	// Control the target options
+	//control_target(options);
 
-		// Use the euler angle options
-		//rotation_euler_a->rotation_y = options->rotation_y;
-		//rotation_euler_b->rotation_x = options->rotation_x;
-		//rotation_euler_c->rotation_z = options->rotation_z;
+	// Use the euler angle options
+	//rotation_euler_a->rotation_y = options->rotation_y;
+	//rotation_euler_b->rotation_x = options->rotation_x;
+	//rotation_euler_c->rotation_z = options->rotation_z;
 
-		//teapot_euler->rotation_x = options->rotation_x;
-		//teapot_euler->rotation_y = options->rotation_y;
-		//teapot_euler->rotation_z = options->rotation_z;
+	//teapot_euler->rotation_x = options->rotation_x;
+	//teapot_euler->rotation_y = options->rotation_y;
+	//teapot_euler->rotation_z = options->rotation_z;
 
-		// Use the target angle options
-		//rotation_target_a->rotation_y = options->target_y;
-		//rotation_target_b->rotation_x = options->target_x;
-		//rotation_target_c->rotation_z = options->target_z;
+	// Use the target angle options
+	//rotation_target_a->rotation_y = options->target_y;
+	//rotation_target_b->rotation_x = options->target_x;
+	//rotation_target_c->rotation_z = options->target_z;
 
-		//teapot_target->rotation_x = options->target_x;
-		//teapot_target->rotation_y = options->target_y;
-		//teapot_target->rotation_z = options->target_z;
+	//teapot_target->rotation_x = options->target_x;
+	//teapot_target->rotation_y = options->target_y;
+	//teapot_target->rotation_z = options->target_z;
 
-		// Render the scene using euler angles
-		calculate_matricies(canvas);
-		update_light(canvas);
+	// Render the scene using euler angles
+	calculate_matricies(canvas);
+	update_light(canvas);
 
-		canvas.set_depth_stencil_state(depth_write_enabled);
-		canvas.set_rasterizer_state(raster_state);
-		render(canvas);
+	canvas.set_depth_stencil_state(depth_write_enabled);
+	canvas.set_rasterizer_state(raster_state);
+	render(canvas);
 
-		// Show the quaternion teapot
-		Mat4f modelview_matrix = scene.gs->camera_modelview;
-		modelview_matrix.translate_self(0.0f, 0.0f, 0.0f);
-		//modelview_matrix = modelview_matrix * options->quaternion.to_matrix();
-		modelview_matrix.scale_self(5.0f, 5.0f, 5.0f);
-		model_teapot.Draw(canvas, scene.gs, modelview_matrix);
+	// Show the quaternion teapot
+	Mat4f modelview_matrix = scene.gs->camera_modelview;
+	modelview_matrix.translate_self(0.0f, 0.0f, 0.0f);
+	//modelview_matrix = modelview_matrix * options->quaternion.to_matrix();
+	modelview_matrix.scale_self(5.0f, 5.0f, 5.0f);
+	model_teapot.Draw(canvas, scene.gs, modelview_matrix);
 
-		// Draw information boxes
-		canvas.reset_rasterizer_state();
-		canvas.reset_depth_stencil_state();
+	// Draw information boxes
+	canvas.reset_rasterizer_state();
+	canvas.reset_depth_stencil_state();
 	
-		std::string fps(string_format("%1 fps", framerate_counter.get_framerate()));
-		font.draw_text(canvas, 16-2, canvas.get_height()-16-2, fps, Colorf(0.0f, 0.0f, 0.0f, 1.0f));
-		font.draw_text(canvas, 16, canvas.get_height()-16-2, fps, Colorf(1.0f, 1.0f, 1.0f, 1.0f));
+	std::string fps(string_format("%1 fps", framerate_counter.get_framerate()));
+	font.draw_text(canvas, 16-2, canvas.get_height()-16-2, fps, Colorf(0.0f, 0.0f, 0.0f, 1.0f));
+	font.draw_text(canvas, 16, canvas.get_height()-16-2, fps, Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 
-		font.draw_text(canvas, 60, 250, "Euler Orientation");
-		font.draw_text(canvas, 330, 250, "Quaternion Orientation");
-		font.draw_text(canvas, 600, 250, "Target Euler Orientation");
-		font.draw_text(canvas, 16, 630, "(Using YXZ rotation order)");
+	font.draw_text(canvas, 60, 250, "Euler Orientation");
+	font.draw_text(canvas, 330, 250, "Quaternion Orientation");
+	font.draw_text(canvas, 600, 250, "Target Euler Orientation");
+	font.draw_text(canvas, 16, 630, "(Using YXZ rotation order)");
 
-		// Use flip(1) to lock the fps
-		window.flip(0);
+	// Use flip(1) to lock the fps
+	window.flip(0);
 
-		RunLoop::process();
-	}
-
-	return 0;
+	return !quit;
 }
 
 // A key was pressed

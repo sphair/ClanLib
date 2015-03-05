@@ -31,11 +31,11 @@
 #include "scene.h"
 #include "model.h"
 
-// This is the Application class (That is instantiated by the Program Class)
-class App
+class App : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
+	App();
+	bool update() override;
 
 private:
 	void render(GraphicContext &gc);
@@ -57,6 +57,7 @@ private:
 	SceneObject *scene_clanlib;
 	SceneObject *scene_tuxball;
 
+	clan::GameTime game_time;
 
-	bool quit;
+	bool quit = false;
 };

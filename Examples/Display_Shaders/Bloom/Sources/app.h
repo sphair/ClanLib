@@ -27,10 +27,12 @@
 
 #pragma once
 
-class App
+class App : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
+	App();
+	bool update() override;
+	
 	void window_close();
 
 private:
@@ -41,7 +43,7 @@ private:
 	void render_extract_highlights(clan::Canvas &canvas, clan::Texture2D &source_texture, clan::ProgramObject &program_object);
 	void render_bloom_combine(clan::Canvas &canvas, clan::Texture2D &tex_base, clan::Texture2D &tex_bloom, clan::ProgramObject &program_object);
 
-	bool quit;
+	bool quit = false;
 
 	static const int sampleCount = 15;
 

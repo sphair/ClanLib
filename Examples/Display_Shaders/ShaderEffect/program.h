@@ -1,11 +1,12 @@
 
 #pragma once
 
-class Program
+class Program : public clan::Application
 {
 public:
-	static int main(const std::vector<std::string> &args);
-
+	Program();
+	bool update() override;
+	
 	static void exit_func();
 	static bool exit;
 };

@@ -28,8 +28,12 @@
 #include "precomp.h"
 #include "app.h"
 
-int App::start(const std::vector<std::string> &args)
+clan::ApplicationInstance<App> clanapp;
+
+App::App()
 {
+	clan::OpenGLTarget::enable();
+
 	clan::DisplayWindowDescription description;
 	description.set_title("Shockwave Shader");
 	description.set_size(clan::Size(1024, 768), true);
@@ -93,40 +97,37 @@ int App::start(const std::vector<std::string> &args)
 	shockwave_rate = 1.0f;
 	uniforms.glow = 0.1f;
 
-	while (!quit)
-	{
-		timer = (clan::System::get_time() - startTime) / 1000.0f;
+}
 
-		uniforms.time = (timer - shockwave_start_time) / shockwave_rate;
+bool App::update()
+{
+	timer = (clan::System::get_time() - startTime) / 1000.0f;
 
-		// Render standard image to offscreen buffer
-		background.draw(canvas_offscreen, 0, 0);
-		float xpos = canvas.get_width() / 2 + 200 * sinf(timer / 2.0f);
-		float ypos = canvas.get_height() / 2 + 200 * cosf(timer / 2.0f);
-		ball.draw(canvas_offscreen, xpos, ypos);
-		canvas_offscreen.flush();
+	uniforms.time = (timer - shockwave_start_time) / shockwave_rate;
 
-		uniforms.center.x = xpos / ((float) canvas.get_width());
-		uniforms.center.y = ypos / ((float) canvas.get_height());
+	// Render standard image to offscreen buffer
+	background.draw(canvas_offscreen, 0, 0);
+	float xpos = canvas.get_width() / 2 + 200 * sinf(timer / 2.0f);
+	float ypos = canvas.get_height() / 2 + 200 * cosf(timer / 2.0f);
+	ball.draw(canvas_offscreen, xpos, ypos);
+	canvas_offscreen.flush();
 
-		render_shockwave(canvas, texture_offscreen, shader);
+	uniforms.center.x = xpos / ((float) canvas.get_width());
+	uniforms.center.y = ypos / ((float) canvas.get_height());
 
-		const int gap = 32;
-		font.draw_text(canvas, 10, 64 + gap*0, "Press 'M' to emit a shockwave");
-		font.draw_text(canvas, 10, 64 + gap*1, "base: " + clan::StringHelp::float_to_text(uniforms.shockParams.x) + " (Press Q,W)");
-		font.draw_text(canvas, 10, 64 + gap*2, "exponent: " + clan::StringHelp::float_to_text(uniforms.shockParams.y) + " (Press A,S)");
-		font.draw_text(canvas, 10, 64 + gap*3, "distance: " + clan::StringHelp::float_to_text(uniforms.shockParams.z) + " (Press Z,X)");
-		font.draw_text(canvas, 10, 64 + gap*4, "rate: " + clan::StringHelp::float_to_text(shockwave_rate) + " (Press E,R)");
-		font.draw_text(canvas, 10, 64 + gap*5, "glow: " + clan::StringHelp::float_to_text(uniforms.glow) + " (Press D,F)");
+	render_shockwave(canvas, texture_offscreen, shader);
 
-		window.flip();
+	const int gap = 32;
+	font.draw_text(canvas, 10, 64 + gap*0, "Press 'M' to emit a shockwave");
+	font.draw_text(canvas, 10, 64 + gap*1, "base: " + clan::StringHelp::float_to_text(uniforms.shockParams.x) + " (Press Q,W)");
+	font.draw_text(canvas, 10, 64 + gap*2, "exponent: " + clan::StringHelp::float_to_text(uniforms.shockParams.y) + " (Press A,S)");
+	font.draw_text(canvas, 10, 64 + gap*3, "distance: " + clan::StringHelp::float_to_text(uniforms.shockParams.z) + " (Press Z,X)");
+	font.draw_text(canvas, 10, 64 + gap*4, "rate: " + clan::StringHelp::float_to_text(shockwave_rate) + " (Press E,R)");
+	font.draw_text(canvas, 10, 64 + gap*5, "glow: " + clan::StringHelp::float_to_text(uniforms.glow) + " (Press D,F)");
 
-		clan::System::sleep(10);
+	window.flip(1);
 
-		clan::RunLoop::process();
-	}
-
-	return 0;
+	return !quit;
 }
 
 

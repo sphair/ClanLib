@@ -28,8 +28,11 @@
 #include "precomp.h"
 #include "app.h"
 
-int App::start(const std::vector<std::string> &args)
+clan::ApplicationInstance<App> clanapp;
+
+App::App()
 {
+	clan::OpenGLTarget::enable();
 	clan::DisplayWindowDescription description;
 	description.set_title("Bloom Shader");
 	description.set_size(clan::Size(1024, 768), true);
@@ -118,45 +121,42 @@ int App::start(const std::vector<std::string> &args)
 	base_saturation = 1.0f;
 
 	uint64_t startTime = clan::System::get_time();
+}
 
-	while (!quit)
-	{
-		timer = (clan::System::get_time() - startTime) / 1000.0f;
+bool App::update()
+{
+	timer = (clan::System::get_time() - startTime) / 1000.0f;
 
-		// Render standard image to offscreen buffer
-		background.set_color(clan::Colorf(0.5f, 0.5f, 0.5f, 1.0f));	// Half brightness
-		background.draw(canvas_offscreen1, 0, 0);
-		float xpos = canvas.get_width() / 2 + 200 * sinf(timer / 2.0f);
-		float ypos = canvas.get_height() / 2 + 200 * cosf(timer / 2.0f);
-		canvas_offscreen1.fill_circle(xpos, ypos, 64.0f, clan::Colorf(0.8f, 0.8f, 0.0f, 1.0f));	// Draw Sun
+	// Render standard image to offscreen buffer
+	background.set_color(clan::Colorf(0.5f, 0.5f, 0.5f, 1.0f));	// Half brightness
+	background.draw(canvas_offscreen1, 0, 0);
+	float xpos = canvas.get_width() / 2 + 200 * sinf(timer / 2.0f);
+	float ypos = canvas.get_height() / 2 + 200 * cosf(timer / 2.0f);
+	canvas_offscreen1.fill_circle(xpos, ypos, 64.0f, clan::Colorf(0.8f, 0.8f, 0.0f, 1.0f));	// Draw Sun
 
-		canvas_offscreen1.flush();
-		// Render highlights
-		render_extract_highlights(canvas_offscreen2, texture_offscreen1, extract_highlights_shader);
-		canvas_offscreen2.flush();
+	canvas_offscreen1.flush();
+	// Render highlights
+	render_extract_highlights(canvas_offscreen2, texture_offscreen1, extract_highlights_shader);
+	canvas_offscreen2.flush();
 
-		// Render horizontal blur
-		render_gaussian_blur(canvas_offscreen3, blur_amount, texture_offscreen2, gaussian_blur_shader, 1.0f / texture_offscreen2.get_width(), 0.0f);
-		canvas_offscreen3.flush();
+	// Render horizontal blur
+	render_gaussian_blur(canvas_offscreen3, blur_amount, texture_offscreen2, gaussian_blur_shader, 1.0f / texture_offscreen2.get_width(), 0.0f);
+	canvas_offscreen3.flush();
 
-		// Render vertical blur
-		render_gaussian_blur(canvas_offscreen2, blur_amount, texture_offscreen3, gaussian_blur_shader, 0.0f, 1.0f / texture_offscreen3.get_height());
-		canvas_offscreen2.flush();
+	// Render vertical blur
+	render_gaussian_blur(canvas_offscreen2, blur_amount, texture_offscreen3, gaussian_blur_shader, 0.0f, 1.0f / texture_offscreen3.get_height());
+	canvas_offscreen2.flush();
 
-		// Render bloom combine
-		render_bloom_combine(canvas, texture_offscreen1, texture_offscreen2, bloom_combine_shader);
+	// Render bloom combine
+	render_bloom_combine(canvas, texture_offscreen1, texture_offscreen2, bloom_combine_shader);
 
-		std::string text( "Press 1 to 7 to select bloom. Currently it is :" + select_text );
-		font.draw_text(canvas, 10, 64, text);
+	std::string text( "Press 1 to 7 to select bloom. Currently it is :" + select_text );
+	font.draw_text(canvas, 10, 64, text);
 
-		window.flip();
+	window.flip(1);
 
-		clan::System::sleep(10);
 
-		clan::RunLoop::process();
-	}
-
-	return 0;
+	return !quit;
 }
 
 

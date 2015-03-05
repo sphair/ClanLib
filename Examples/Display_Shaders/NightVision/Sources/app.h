@@ -27,10 +27,12 @@
 
 #pragma once
 
-class App
+class App : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
+	App();
+	bool update() override;
+
 	void window_close();
 
 private:
@@ -55,8 +57,7 @@ private:
 
 	ProgramUniforms uniforms;
 
-
-	bool quit;
+	bool quit = false;
 
 };
 

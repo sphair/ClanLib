@@ -31,13 +31,12 @@
 #include "hsv_sprite.h"
 #include "hsv_sprite_batch.h"
 
-HSV::HSV()
-: quit(false)
-{
-}
+clan::ApplicationInstance<HSV> clanapp;
 
-int HSV::start(const std::vector<std::string> &args)
+HSV::HSV()
 {
+	clan::OpenGLTarget::enable();
+
     clan::SlotContainer cc;
 	DisplayWindow window("ClanLib HSV Sprite", 1024, 768);
 	cc.connect(window.sig_window_close(), clan::bind_member(this, &HSV::on_close));
@@ -59,54 +58,54 @@ int HSV::start(const std::vector<std::string> &args)
 	std::string fps_text;
 
 	float hue_offset = 0.0;
-	while (!quit)
+}
+
+bool HSV::update()
+{
+	uint64_t current_time = System::get_time();
+	float time_delta_ms = static_cast<float> (current_time - last_time);
+	last_time = current_time;
+
+	if (ic.get_keyboard().get_keycode(keycode_left))
+		hue_offset += 0.0005f * time_delta_ms;
+	else if (ic.get_keyboard().get_keycode(keycode_right))
+		hue_offset -= 0.0005f * time_delta_ms;
+	if (hue_offset < -1.0f)
+		hue_offset += 1.0f;
+	if (hue_offset > 1.0f)
+		hue_offset -= 1.0f;
+
+	canvas.clear(Colorf::darkslategrey);
+	float car_hue = hue_offset;
+	for (int y = 0; y < 10; y++)
 	{
-		uint64_t current_time = System::get_time();
-		float time_delta_ms = static_cast<float> (current_time - last_time);
-		last_time = current_time;
-
-		if (ic.get_keyboard().get_keycode(keycode_left))
-			hue_offset += 0.0005f * time_delta_ms;
-		else if (ic.get_keyboard().get_keycode(keycode_right))
-			hue_offset -= 0.0005f * time_delta_ms;
-		if (hue_offset < -1.0f)
-			hue_offset += 1.0f;
-		if (hue_offset > 1.0f)
-			hue_offset -= 1.0f;
-
-		canvas.clear(Colorf::darkslategrey);
-		float car_hue = hue_offset;
-		for (int y = 0; y < 10; y++)
+		for (int x = 0; x < 7; x++)
 		{
-			for (int x = 0; x < 7; x++)
-			{
-				cars[(x+y)%2]->draw(canvas, 60+x*128, 60+y*64, car_hue);
+			cars[(x+y)%2]->draw(canvas, 60+x*128, 60+y*64, car_hue);
 
-				car_hue += 0.02f;
-				if (car_hue < -1.0f)
-					car_hue += 1.0f;
-				if (car_hue > 1.0f)
-					car_hue -= 1.0f;
-			}
+			car_hue += 0.02f;
+			if (car_hue < -1.0f)
+				car_hue += 1.0f;
+			if (car_hue > 1.0f)
+				car_hue -= 1.0f;
 		}
-
-		fps++;
-		if (System::get_time() - last_fps_update > 2000)
-		{
-			fps_text = string_format("%1 fps", fps/2.0f);
-			last_fps_update = System::get_time();
-			fps = 0;
-		}
-
-		Sizef fps_size = font.measure_text(canvas, fps_text).bbox_size;
-		font.draw_text(canvas, canvas.get_width()-10-fps_size.width, 16, fps_text);
-		font.draw_text(canvas, 32, 730, "Use cursor keys left and right");
-
-		window.flip(0);
-		RunLoop::process();
 	}
 
-	return 0;
+	fps++;
+	if (System::get_time() - last_fps_update > 2000)
+	{
+		fps_text = string_format("%1 fps", fps/2.0f);
+		last_fps_update = System::get_time();
+		fps = 0;
+	}
+
+	Sizef fps_size = font.measure_text(canvas, fps_text).bbox_size;
+	font.draw_text(canvas, canvas.get_width()-10-fps_size.width, 16, fps_text);
+	font.draw_text(canvas, 32, 730, "Use cursor keys left and right");
+
+	window.flip(0);
+
+	return !quit;
 }
 
 void HSV::on_close()

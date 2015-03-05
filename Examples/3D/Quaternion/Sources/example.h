@@ -30,16 +30,17 @@
 
 #include "scene.h"
 #include "model.h"
+#include "framerate_counter.h"
 
 class ShaderDepth;
 class ShaderBumpMap;
 class Options;
 
-// This is the Application class (That is instantiated by the Program Class)
-class App
+class App : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
+	App();
+	bool update() override;
 
 private:
 	void on_input_up(const InputEvent &key);
@@ -77,7 +78,9 @@ private:
 
 	uint64_t current_time;
 	int time_delta;
-	bool quit;
+	bool quit = false;
+	FramerateCounter framerate_counter;
+
 };
 
 

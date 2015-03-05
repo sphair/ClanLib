@@ -27,10 +27,12 @@
 
 #pragma once
 
-class App
+class App : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
+	App();
+	bool update() override;
+
 	void draw_texture(clan::GraphicContext &gc, const clan::Rectf &rect, const clan::Rectf &texture_unit1_coords = clan::Rectf(0.0f,0.0f,1.0f,1.0f));
 	void window_close();
 
@@ -51,6 +53,6 @@ private:
 
 	ProgramUniforms uniforms;
 
-	bool quit;
+	bool quit = false;
 };
 

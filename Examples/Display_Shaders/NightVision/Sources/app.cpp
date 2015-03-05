@@ -28,8 +28,12 @@
 #include "precomp.h"
 #include "app.h"
 
-int App::start(const std::vector<std::string> &args)
+clan::ApplicationInstance<App> clanapp;
+
+App::App()
 {
+	clan::OpenGLTarget::enable();
+
 	clan::DisplayWindowDescription description;
 	description.set_title("NightVision Shader");
 	description.set_size(clan::Size(1024, 768), true);
@@ -110,32 +114,29 @@ int App::start(const std::vector<std::string> &args)
 
 	uint64_t startTime = clan::System::get_time();
 
-	while (!quit)
-	{
-		timer = (clan::System::get_time() - startTime) / 1000.0f;
+}
 
-		uniforms.elapsedTime = timer;
+bool App::update()
+{
+	timer = (clan::System::get_time() - startTime) / 1000.0f;
 
-		// Render standard image to offscreen buffer
-		background.draw(canvas_offscreen, 0, 0);
-		ball.draw(canvas_offscreen, canvas.get_width() / 2 + 200 * sinf(timer / 2.0f), canvas.get_height() / 2 + 200 * cosf(timer / 2.0f));
-		canvas_offscreen.flush();
+	uniforms.elapsedTime = timer;
 
-		render_night_vision(canvas, texture_offscreen, texture_mask, noise_texture, shader);
+	// Render standard image to offscreen buffer
+	background.draw(canvas_offscreen, 0, 0);
+	ball.draw(canvas_offscreen, canvas.get_width() / 2 + 200 * sinf(timer / 2.0f), canvas.get_height() / 2 + 200 * cosf(timer / 2.0f));
+	canvas_offscreen.flush();
 
-		const int gap = 32;
-		font.draw_text(canvas, 10, 64+gap*0, std::string("luminanceThreshold : " + clan::StringHelp::float_to_text(uniforms.luminanceThreshold) + " (Press Q,W)" ));
-		font.draw_text(canvas, 10, 64+gap*1, std::string("colorAmplification : " + clan::StringHelp::float_to_text(uniforms.colorAmplification) + " (Press A,S)" ));
-		font.draw_text(canvas, 10, 64+gap*2, std::string("effectCoverage : " + clan::StringHelp::float_to_text(uniforms.effectCoverage) + " (Press Z,X)" ));
+	render_night_vision(canvas, texture_offscreen, texture_mask, noise_texture, shader);
 
-		window.flip();
+	const int gap = 32;
+	font.draw_text(canvas, 10, 64+gap*0, std::string("luminanceThreshold : " + clan::StringHelp::float_to_text(uniforms.luminanceThreshold) + " (Press Q,W)" ));
+	font.draw_text(canvas, 10, 64+gap*1, std::string("colorAmplification : " + clan::StringHelp::float_to_text(uniforms.colorAmplification) + " (Press A,S)" ));
+	font.draw_text(canvas, 10, 64+gap*2, std::string("effectCoverage : " + clan::StringHelp::float_to_text(uniforms.effectCoverage) + " (Press Z,X)" ));
 
-		clan::System::sleep(10);
+	window.flip();
 
-		clan::RunLoop::process();
-	}
-
-	return 0;
+	return !quit;
 }
 
 

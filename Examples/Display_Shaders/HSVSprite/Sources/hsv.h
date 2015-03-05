@@ -28,17 +28,16 @@
 
 #pragma once
 
-class HSV
+class HSV : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
-
 	HSV();
+	bool update() override;
 	int run();
 
 private:
 	void on_close();
 	void on_input_up(const InputEvent &key);
 
-	bool quit;
+	bool quit = false;
 };

@@ -31,13 +31,11 @@
 #include "text_shooter.h"
 #include <list>
 
-// This is the Application class (That is instantiated by the Program Class)
-class App
+class App : public clan::Application
 {
 public:
 	App();
-
-	int start(const std::vector<std::string> &args);
+	bool update() override;
 
 private:
 	void on_input_down(const InputEvent &key);
@@ -54,12 +52,14 @@ private:
 	void draw_tablet_state(Canvas &canvas, int tablet_number, int yoffset);
 
 private:
-	bool quit;
+	bool quit = false;
 
 	DisplayWindow window;
+	SlotContainer sc;
 
 	Font vector_font;
 	clan::Font font;
+	int max_joysticks;
 	
 	std::list<TextShooter> text_shooter;
 

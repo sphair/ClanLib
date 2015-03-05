@@ -28,8 +28,12 @@
 #include "precomp.h"
 #include "app.h"
 
-int App::start(const std::vector<std::string> &args)
+clan::ApplicationInstance<App> clanapp;
+
+App::App()
 {
+	clan::OpenGLTarget::enable();
+
 	clan::DisplayWindowDescription description;
 	description.set_title("Postprocessing");
 	description.set_size(Size(1024, 768), true);
@@ -79,54 +83,52 @@ int App::start(const std::vector<std::string> &args)
 	float scale = 1.0f;
 
 	uint64_t startTime = System::get_time();
+}
 
-	while (!keyboard.get_keycode(clan::keycode_escape) && !quit )
+bool App::update()
+{
+	if (keyboard.get_keycode(clan::keycode_escape))
+		quit = true;
+	uniforms.timer = (System::get_time() - startTime) / 1000.0f;
+
+	// Uncomment this to make ball jump silly
+	//float scale = (sinf(timer * 2.0f) + 1.1f);
+	//ball.set_scale(scale, scale);
+
+	// Render standard image to offscreen buffer
+
+	background.draw(canvas_offscreen, 0, 0);
+	ball.draw(canvas_offscreen, canvas.get_width() / 2 + 200 * sinf(uniforms.timer / 2.0f), canvas.get_height() / 2 + 200 * cosf(uniforms.timer / 2.0f));
+	canvas_offscreen.flush();
+
+	// Render offscreen buffer to screen using post process shader
+
+	canvas.flush();
+	clan::GraphicContext gc = canvas.get_gc();
+
+	gc.set_texture(0, texture_offscreen);
+	gc.set_program_object(shader);
+
+	uniforms.cl_ModelViewProjectionMatrix = canvas.get_projection() * canvas.get_transform();
+	gpu_uniforms.upload_data(gc, &uniforms, 1);
+	gc.set_uniform_buffer(0, gpu_uniforms);
+
+	draw_texture(gc, clan::Rectf(0,0,canvas.get_width(),canvas.get_height()), clan::Rectf(0.0f, 0.0f, 1.0f, 1.0f));
+
+	gc.reset_program_object();
+	gc.reset_texture(0);
+
+
+	if(uniforms.timer > 2.0f)
 	{
-		uniforms.timer = (System::get_time() - startTime) / 1000.0f;
-
-		// Uncomment this to make ball jump silly
-		//float scale = (sinf(timer * 2.0f) + 1.1f);
-		//ball.set_scale(scale, scale);
-
-		// Render standard image to offscreen buffer
-
-		background.draw(canvas_offscreen, 0, 0);
-		ball.draw(canvas_offscreen, canvas.get_width() / 2 + 200 * sinf(uniforms.timer / 2.0f), canvas.get_height() / 2 + 200 * cosf(uniforms.timer / 2.0f));
-		canvas_offscreen.flush();
-
-		// Render offscreen buffer to screen using post process shader
-
-		canvas.flush();
-		clan::GraphicContext gc = canvas.get_gc();
-
-		gc.set_texture(0, texture_offscreen);
-		gc.set_program_object(shader);
-
-		uniforms.cl_ModelViewProjectionMatrix = canvas.get_projection() * canvas.get_transform();
-		gpu_uniforms.upload_data(gc, &uniforms, 1);
-		gc.set_uniform_buffer(0, gpu_uniforms);
-
-		draw_texture(gc, clan::Rectf(0,0,canvas.get_width(),canvas.get_height()), clan::Rectf(0.0f, 0.0f, 1.0f, 1.0f));
-
-		gc.reset_program_object();
-		gc.reset_texture(0);
-
-
-		if(uniforms.timer > 2.0f)
-		{
-			uniforms.amount += 0.005f;
-			if(uniforms.amount > 1.0f)
-				uniforms.amount = 1.0f;
-		}
-
-		window.flip();
-
-		clan::System::sleep(10);
-
-		clan::RunLoop::process();
+		uniforms.amount += 0.005f;
+		if(uniforms.amount > 1.0f)
+			uniforms.amount = 1.0f;
 	}
 
-	return 0;
+	window.flip(1);
+
+	return !quit;
 }
 
 void App::draw_texture(clan::GraphicContext &gc, const clan::Rectf &rect, const clan::Rectf &texture_unit1_coords)

@@ -54,9 +54,14 @@
 	#endif
 #endif
 
-// The start of the Application
-int App::start(const std::vector<std::string> &args)
+clan::ApplicationInstance<App> clanapp;
+
+App::App()
 {
+	// We support all display targets, in order listed here
+	clan::D3DTarget::enable();
+	clan::OpenGLTarget::enable();
+
 	quit = false;
     DisplayWindowDescription desc;
 
@@ -97,46 +102,42 @@ int App::start(const std::vector<std::string> &args)
 	
   	create_scene(canvas);
 
-	clan::GameTime game_time;
-
+	game_time.reset();
 	float angle = 0.0f;
-	// Run until someone presses escape
-	while (!quit)
-	{
-		game_time.update();
-		int time_delta_ms = game_time.get_time_elapsed_ms();
+}
 
-		canvas.clear(Colorf::black);
-		canvas.clear_depth(1.0f);
+bool App::update()
+{
+	game_time.update();
+	int time_delta_ms = game_time.get_time_elapsed_ms();
 
-		angle += time_delta_ms / 10.0f;
-		if (angle >= 360.0f)
-			angle -= 360.0f;
+	canvas.clear(Colorf::black);
+	canvas.clear_depth(1.0f);
 
-		scene_teapot->rotation_y.set_degrees(angle);
-		scene_clanlib->rotation_y.set_degrees(angle);
-		scene_tuxball->rotation_y.set_degrees(angle);
+	angle += time_delta_ms / 10.0f;
+	if (angle >= 360.0f)
+		angle -= 360.0f;
 
-		// Render the scene using euler angles
-		calculate_matricies(canvas);
-		update_light(canvas);
+	scene_teapot->rotation_y.set_degrees(angle);
+	scene_clanlib->rotation_y.set_degrees(angle);
+	scene_tuxball->rotation_y.set_degrees(angle);
 
-		canvas.set_depth_stencil_state(depth_write_enabled);
-		canvas.set_rasterizer_state(raster_state);
-		render(canvas);
+	// Render the scene using euler angles
+	calculate_matricies(canvas);
+	update_light(canvas);
 
-		canvas.reset_rasterizer_state();
-		canvas.reset_depth_stencil_state();
+	canvas.set_depth_stencil_state(depth_write_enabled);
+	canvas.set_rasterizer_state(raster_state);
+	render(canvas);
+
+	canvas.reset_rasterizer_state();
+	canvas.reset_depth_stencil_state();
 		
-		// Flip the display, showing on the screen what we have drawed
-		// since last call to flip()
-		window.flip(1);
+	// Flip the display, showing on the screen what we have drawed
+	// since last call to flip()
+	window.flip(1);
 
-		// This call processes user input and other events
-		RunLoop::process();
-	}
-
-	return 0;
+	return !quit;
 }
 void App::render(GraphicContext &gc)
 {

@@ -28,8 +28,12 @@
 #include "precomp.h"
 #include "app.h"
 
-int App::start(const std::vector<std::string> &args)
+clan::ApplicationInstance<App> clanapp;
+
+App::App()
 {
+	clan::OpenGLTarget::enable();
+
 	clan::DisplayWindowDescription description;
 	description.set_title("Guassian Blur Shader");
 	description.set_size(clan::Size(1024, 768), true);
@@ -92,32 +96,28 @@ int App::start(const std::vector<std::string> &args)
 
 	blur = 1.0f;
 	uint64_t startTime = clan::System::get_time();
+}
 
-	while (!quit)
-	{
-		timer = (clan::System::get_time() - startTime) / 1000.0f;
+bool App::update()
+{
+	timer = (clan::System::get_time() - startTime) / 1000.0f;
 
-		// Render standard image to offscreen buffer
-		background.draw(canvas_offscreen, 0, 0);
-		ball.draw(canvas_offscreen, canvas.get_width() / 2 + 200 * sinf(timer / 2.0f), canvas.get_height() / 2 + 200 * cosf(timer / 2.0f));
-		canvas_offscreen.flush();
+	// Render standard image to offscreen buffer
+	background.draw(canvas_offscreen, 0, 0);
+	ball.draw(canvas_offscreen, canvas.get_width() / 2 + 200 * sinf(timer / 2.0f), canvas.get_height() / 2 + 200 * cosf(timer / 2.0f));
+	canvas_offscreen.flush();
 
-		render_gaussian_blur(canvas_offscreen2, blur, texture_offscreen, shader, 1.0f / texture_offscreen2.get_width(), 0.0f);
-		canvas_offscreen2.flush();
+	render_gaussian_blur(canvas_offscreen2, blur, texture_offscreen, shader, 1.0f / texture_offscreen2.get_width(), 0.0f);
+	canvas_offscreen2.flush();
 
-		render_gaussian_blur(canvas, blur, texture_offscreen2, shader, 0.0f, 1.0f / texture_offscreen2.get_height());
+	render_gaussian_blur(canvas, blur, texture_offscreen2, shader, 0.0f, 1.0f / texture_offscreen2.get_height());
 
-		std::string text( "Press 1 to 9 to control blur amount. Currently it is :" + clan::StringHelp::float_to_text(blur) );
-		font.draw_text(canvas, 10, 64, text);
+	std::string text( "Press 1 to 9 to control blur amount. Currently it is :" + clan::StringHelp::float_to_text(blur) );
+	font.draw_text(canvas, 10, 64, text);
 
-		window.flip();
+	window.flip(1);
 
-		clan::System::sleep(10);
-
-		clan::RunLoop::process();
-	}
-
-	return 0;
+	return !quit;
 }
 
 
