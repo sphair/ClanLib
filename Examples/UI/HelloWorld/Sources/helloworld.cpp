@@ -32,9 +32,14 @@
 
 using namespace clan;
 
-// The start of the Application
-int HelloWorld::start(const std::vector<std::string> &args)
+clan::ApplicationInstance<HelloWorld> clanapp;
+
+HelloWorld::HelloWorld()
 {
+	// We support all display targets, in order listed here
+	//clan::D3DTarget::enable();
+	clan::OpenGLTarget::enable();
+
 	// Create a source for our resources
 	ResourceManager resources = FileResourceManager::create();
 
@@ -114,8 +119,11 @@ int HelloWorld::start(const std::vector<std::string> &args)
 	// Make our window visible
 	root->show();
 
+}
+
+bool HelloWorld::update()
+{
 	// Process messages until user exits
 	RunLoop::run();
 
-	return 0;
 }
