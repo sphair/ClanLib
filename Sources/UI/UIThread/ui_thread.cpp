@@ -64,11 +64,6 @@ namespace clan
 	{
 	}
 
-	UIThread::UIThread()
-	{
-
-	}
-
 	UIThread::UIThread(ResourceManager manager, const std::function<void(const std::exception_ptr &)> &exception_handler) : impl(std::make_shared<UIThreadImpl>())
 	{
 		impl->resources = manager;
