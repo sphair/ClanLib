@@ -29,25 +29,21 @@
 #include "precomp.h"
 #include "app.h"
 
+clan::ApplicationInstance<App> clanapp;
+
 App::App()
 {
-}
-
-// The start of the Application
-int App::start(const std::vector<std::string> &args)
-{
-	quit = false;
-
-	clan::SlotContainer sc;
-
+	// We support all display targets, in order listed here
+	clan::D3DTarget::enable();
+	clan::OpenGLTarget::enable();
 	// Set the window
 	clan::DisplayWindowDescription desc;
 	desc.set_title("ClanLib Basic Sound Example");
 	desc.set_size(clan::Size(640, 480), true);
 	desc.set_allow_resize(true);
 
-	clan::DisplayWindow window(desc);
-	clan::Canvas canvas(window);
+	window = clan::DisplayWindow(desc);
+	canvas = clan::Canvas(window);
 
 	// Connect the Window close event
 	sc.connect(window.sig_window_close(), [&](){quit = true; });
@@ -60,27 +56,23 @@ int App::start(const std::vector<std::string> &args)
 	sfx_cheer = clan::SoundBuffer("Resources/cheer1.ogg");
 	sound_output = clan::SoundOutput(44100, 192);
 
-	clan::Font font("tahoma", 24);
+	font = clan::Font("tahoma", 24);
 
-	clan::GameTime game_time;
+	game_time.reset();
+}
 
-	// Run until someone presses escape
-	while (!quit)
-	{
-		game_time.update();
+bool App::update()
+{
+	game_time.update();
 
-		// Clear the display in a dark blue nuance
-		canvas.clear(clan::Colorf(0.0f, 0.0f, 0.2f));
+	// Clear the display in a dark blue nuance
+	canvas.clear(clan::Colorf(0.0f, 0.0f, 0.2f));
 
-		font.draw_text(canvas, 32, 32, "Press 1 or 2", clan::Colorf::white);
+	font.draw_text(canvas, 32, 32, "Press 1 or 2", clan::Colorf::white);
 
-		window.flip(1);
+	window.flip(1);
 
-		// This call processes user input and other events
-		clan::RunLoop::process(0);
-	}
-
-	return 0;
+	return !quit;
 }
 
 // A key was pressed
