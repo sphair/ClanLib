@@ -44,7 +44,7 @@ HelloWorld::HelloWorld()
 	ResourceManager resources = FileResourceManager::create();
 
 	// Mark this thread as the UI thread
-	UIThread ui_thread(resources);
+	ui_thread = UIThread(resources);
 
 	// Create root view and window:
 	DisplayWindowDescription desc;
@@ -52,11 +52,11 @@ HelloWorld::HelloWorld()
 	desc.set_allow_resize(true);
 	desc.set_type(WindowType::custom);
 	desc.set_extend_frame(16, 40, 16, 16);
-	std::shared_ptr<WindowView> root = std::make_shared<WindowView>(desc);
+	root = std::make_shared<WindowView>(desc);
 
 	// Exit run loop when close is clicked.
 	// We have to store the return Slot because if it is destroyed the lambda function is disconnected from the signal.
-	Slot slot_close = root->sig_close().connect([&](CloseEvent &e) { RunLoop::exit(); });
+	slot_close = root->sig_close().connect([&](CloseEvent &e) { RunLoop::exit(); });
 
 	// Style the root view to use rounded corners and a bit of drop shadow
 	root->style()->set("background: linear-gradient(13.37deg, #f0f0f0, rgb(120,240,120) 50%, #f0f0f0)");
