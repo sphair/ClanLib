@@ -123,7 +123,5 @@ HelloWorld::HelloWorld()
 
 bool HelloWorld::update()
 {
-	// Process messages until user exits
-	RunLoop::run();
-
+	return true;
 }
