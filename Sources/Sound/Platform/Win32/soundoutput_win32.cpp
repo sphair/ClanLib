@@ -30,7 +30,7 @@
 #include "soundoutput_win32.h"
 #include "API/Core/System/exception.h"
 #include "API/Core/Text/logger.h"
-#include "Core/System/Win32/init_win32.h"
+#include "Core/System/Win32/system_win32.h"
 #include <mmreg.h>
 #include "API/Core/Math/cl_math.h"
 
