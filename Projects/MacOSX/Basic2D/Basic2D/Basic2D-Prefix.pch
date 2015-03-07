@@ -1,7 +1,0 @@
-//
-// Prefix header for all source files of the 'Basic2D' target in the 'Basic2D' project
-//
-
-#ifdef __OBJC__
-    #import <Cocoa/Cocoa.h>
-#endif
