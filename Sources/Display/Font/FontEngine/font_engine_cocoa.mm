@@ -199,7 +199,8 @@ namespace clan
 
 	void FontEngine_Cocoa::load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics)
 	{
-		throw Exception("Implement Me");
+		// CGPathRef path = CTFontCreatePathForGlyph(..)
+		throw Exception("FontEngine_Cocoa::load_glyph_path not implemented");
 	}
 
 }
