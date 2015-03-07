@@ -65,7 +65,10 @@ ProcAddress *OpenGLWindowProvider::get_proc_address(const std::string& function_
 			throw Exception("Unable to find com.apple.opengl bundle");
 	}
 
-	return (ProcAddress *)CFBundleGetFunctionPointerForName(bundle, CFStringCreateWithCStringNoCopy(0, function_name.c_str(), CFStringGetSystemEncoding(), 0));
+    CFStringRef name = CFStringCreateWithCString(NULL, function_name.c_str(), CFStringGetSystemEncoding());
+	auto ptr = (ProcAddress *)CFBundleGetFunctionPointerForName(bundle, name);
+    CFRelease(name);
+    return ptr;
 }
 
 Rect OpenGLWindowProvider::get_geometry() const
@@ -382,6 +385,15 @@ bool OpenGLWindowProvider::is_double_buffered() const
     // The OpenGL attributes are hard coded for double buffering at the moment.
     // So, we always return true here.
     return true;
+}
+	
+float OpenGLWindowProvider::get_pixel_ratio() const
+{
+	return 1.0f;
+}
+	
+void OpenGLWindowProvider::set_pixel_ratio(float ratio)
+{
 }
 
 InputDeviceProvider_OSXKeyboard *OpenGLWindowProvider::get_keyboard()
