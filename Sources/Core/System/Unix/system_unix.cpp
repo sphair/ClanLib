@@ -39,7 +39,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <climits>
-#include "init_linux.h"
+#include "system_unix.h"
 // note: this cannot be replaced by <ctime>! (timeval needs to be defined)
 #include <sys/time.h>
 #include <sys/stat.h>

@@ -35,7 +35,9 @@ clan::ApplicationInstance<Basic2D> clanapp;
 Basic2D::Basic2D()
 {
 	// We support all display targets, in order listed here
+#ifdef WIN32
 	clan::D3DTarget::enable();
+#endif
 	clan::OpenGLTarget::enable();
 
 	// Set the window
