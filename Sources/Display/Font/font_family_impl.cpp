@@ -106,11 +106,11 @@ namespace clan
 
 	void FontFamily_Impl::font_face_load(const FontDescription &desc, DataBuffer &font_databuffer, float pixel_ratio)
 	{
-#ifdef WIN32
+#if defined(WIN32)
 		std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Win32>(desc, font_databuffer, pixel_ratio);
 		font_cache.push_back(Font_Cache(engine));
 #elif defined(__APPLE__)
-		std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Cocoa>(desc, font_databuffer);
+		std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Cocoa>(desc, font_databuffer, pixel_ratio);
 		font_cache.push_back(Font_Cache(engine));
 #else
 		std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Freetype>(desc, font_databuffer, pixel_ratio);
@@ -122,19 +122,17 @@ namespace clan
 
 	void FontFamily_Impl::font_face_load(const FontDescription &desc, const std::string &typeface_name, float pixel_ratio)
 	{
-#ifdef WIN32
+#if defined(WIN32)
 		std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Win32>(desc, typeface_name, pixel_ratio);
 		font_cache.push_back(Font_Cache(engine));
 		font_cache.back().glyph_cache->set_texture_group(texture_group);
 		font_cache.back().pixel_ratio = pixel_ratio;
 #elif defined(__APPLE__)
-		throw Exception("automatic typeface to ttf file selection is not supported on apple");
-		//std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Cocoa>(desc, typeface_name);
-		//font_cache.push_back(Font_Cache(engine));
-		//font_cache.back().glyph_cache->set_texture_group(texture_group);
-#else
-
-#if defined __ANDROID__
+		std::shared_ptr<FontEngine> engine = std::make_shared<FontEngine_Cocoa>(desc, typeface_name, pixel_ratio);
+		font_cache.push_back(Font_Cache(engine));
+		font_cache.back().glyph_cache->set_texture_group(texture_group);
+		font_cache.back().pixel_ratio = pixel_ratio;
+#elif defined(__ANDROID__)
 		throw Exception("automatic typeface to ttf file selection is not supported on android");
 #else
 
@@ -149,7 +147,6 @@ namespace clan
 		font_databuffer.set_size(file.get_size());
 		file.read(font_databuffer.get_data(), font_databuffer.get_size());
 		font_face_load(desc, font_databuffer, pixel_ratio);
-#endif
 #endif
 	}
 

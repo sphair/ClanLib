@@ -78,6 +78,7 @@ bool Basic2D::update()
 
 	std::string text("Welcome to the ClanLib SDK");
 	clan::Sizef text_size = font.measure_text(canvas, text).bbox_size;
+	canvas.draw_line(0, 32, (float)canvas_size.width, 32, clan::Colorf(0.5f, 0.0f, 0.0f));
 	font.draw_text(canvas, ((canvas.get_width() - text_size.width) / 2), 32, text, clan::Colorf::white);
 
 	// Draw moving lines

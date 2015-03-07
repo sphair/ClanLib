@@ -38,249 +38,168 @@
 
 namespace clan
 {
-
-void fontProviderReleaseData (
-                                void *info,
-                                const void *data,
-                                size_t size
-                              )
-{
-    char* rawbytes = (char*)info;
-    delete[] rawbytes;
-}
-
-CGFloat getLineHeightForFont(CTFontRef iFont)
-{
-    CGFloat lineHeight = 0.0;
-    
-   
-    // Get the ascent from the font, already scaled for the font's size
-    lineHeight += CTFontGetAscent(iFont);
-    
-    // Get the descent from the font, already scaled for the font's size
-    lineHeight += CTFontGetDescent(iFont);
-    
-    // Get the leading from the font, already scaled for the font's size
-    lineHeight += CTFontGetLeading(iFont);
-    
-    return lineHeight;
-}
-    
-    
-// Creates a CTFont with the given CGFont and pixel size. Ownership is
-// transferred to the caller.
-//
-// Note: This code makes use of pixel sizes (rather than view coordinate sizes)
-CTFontRef CreateCTFontWithPixelSize(CGFontRef cgFont,
-                                    const int target_pixel_size) {
-    // Epsilon value used for comparing font sizes.
-    const CGFloat kEpsilon = 0.001;
-    // The observed pixel to points ratio for Lucida Grande on 10.6. Other fonts
-    // have other ratios and the documentation doesn't provide a guarantee that
-    // the relation is linear. So this ratio is used as a first try before
-    // falling back to the bisection method.
-    const CGFloat kPixelsToPointsRatio = 0.849088;
-    
- 
-    
-    // First, try using |kPixelsToPointsRatio|.
-    CGFloat point_size = target_pixel_size * kPixelsToPointsRatio;
-    CTFontRef ct_font(CTFontCreateWithGraphicsFont(cgFont, point_size, NULL,NULL));
-    CGFloat actual_pixel_size = getLineHeightForFont(ct_font);
-    if (std::fabs(actual_pixel_size - target_pixel_size) < kEpsilon){
-        return ct_font;
-    }
-    
-    // |kPixelsToPointsRatio| wasn't correct. Use the bisection method to find the
-    // right size.
-    
-    // First, find the initial bisection range, so that the point size that
-    // corresponds to |target_pixel_size| is between |lo| and |hi|.
-    CGFloat lo = 0;
-    CGFloat hi = point_size;
-    while (actual_pixel_size < target_pixel_size) {
-        lo = hi;
-        hi *= 2;
-        CFRelease(ct_font);
-        ct_font = CTFontCreateWithGraphicsFont(cgFont, hi, NULL,NULL);
-        actual_pixel_size = getLineHeightForFont(ct_font);
-    }
-    
-    // Now, bisect to find the right size.
-    while (lo < hi) {
-        point_size = (hi - lo) * 0.5 + lo;
-        CFRelease(ct_font);
-        ct_font  = CTFontCreateWithGraphicsFont(cgFont, point_size, NULL,NULL);
-        actual_pixel_size = getLineHeightForFont(ct_font);
-        if (std::fabs(actual_pixel_size - target_pixel_size) < kEpsilon)
-            break;
-        if (target_pixel_size > actual_pixel_size)
-            lo = point_size;
-        else
-            hi = point_size;
-    }
-    
-    return ct_font;
-}
-    
-void FontEngine_Cocoa::load_font(const FontDescription& desc, DataBuffer &font_databuffer){
-    // Then, create a data provider
-	data_buffer = font_databuffer;
-    CGDataProviderRef dataProvider =  CGDataProviderCreateWithData (
-                                                                    data_buffer.get_data(),
-                                                                    data_buffer.get_data(),
-                                                                    data_buffer.get_size(),
-                                                                    fontProviderReleaseData
-                                                                    );
-    // Now use our data provider to load a CGFont
-    CGFontRef theCGFont = CGFontCreateWithDataProvider(dataProvider);
-    
-#if APPROX_FONT_SIZE
-    //The real way to do this unfortunately involves a lot of
-    // creating and destroying the font and narrowing in on the right
-    // pixel size. So I cheat and approximate.
-    const CGFloat ptSize = float(desc.get_height()) * 0.7f; // The 0.7f is rough.
-    handle = CTFontCreateWithGraphicsFont(theCGFont, ptSize, NULL,NULL);
-#else
-    handle = CreateCTFontWithPixelSize(theCGFont,desc.get_height());
-#endif
-    
-    CGRect bbox = CTFontGetBoundingBox(handle);
-    avg_glyph_width = bbox.size.width / CTFontGetGlyphCount(handle);
-
-    CFRelease(dataProvider);
-    CFRelease(theCGFont);
-    if (handle == 0)
-        throw Exception("Unable to create font");
-    
-}
-    
-FontEngine_Cocoa::FontEngine_Cocoa(const FontDescription &desc, DataBuffer &font_databuffer)
-: handle(0)
-{
-
-    // First load our file into memory
-    load_font(desc,font_databuffer);
-
-	font_metrics = FontMetrics(
-		getLineHeightForFont(handle),
-		CTFontGetAscent(handle),
-		CTFontGetDescent(handle),
-		CTFontGetLeading(handle),
-		CTFontGetLeading(handle),
-		desc.get_line_height()		// Calculated in FontMetrics as height + metrics.tmExternalLeading if not specified
-		);
-
-	font_description = desc.clone();
-
-}
-
-FontEngine_Cocoa::~FontEngine_Cocoa()
-{
-	if (handle)
-        CFRelease(handle);
-}
-
-FontPixelBuffer FontEngine_Cocoa::get_font_glyph(int glyph)
-{
-	if (font_description.get_subpixel())
+	FontEngine_Cocoa::FontEngine_Cocoa(const FontDescription &desc, const std::string &typeface_name, float pixel_ratio)
+	: pixel_ratio(pixel_ratio)
 	{
-		return get_font_glyph_subpixel(glyph);
+        CFStringRef name = CFStringCreateWithCString(0, typeface_name.empty() ? "Helvetica" : typeface_name.c_str(), CFStringGetSystemEncoding());
+		if (name == 0)
+			throw Exception("CFStringCreateWithCString failed");
+		
+		CGFontRef cg_font = CGFontCreateWithFontName(name);
+		
+		CFRelease(name);
+		name = 0;
+		
+		if (cg_font == 0)
+			throw Exception("CGFontCreateWithFontName failed");
+		
+		handle = CTFontCreateWithGraphicsFont(cg_font, desc.get_height() * pixel_ratio, 0, 0);
+		
+		CFRelease(cg_font);
+		cg_font = 0;
+		
+		if (handle == 0)
+		{
+			throw Exception("CTFontCreateWithGraphicsFont failed");
+		}
+		
+		font_metrics = FontMetrics(
+			(CTFontGetAscent(handle) + CTFontGetDescent(handle)) / pixel_ratio,
+			(CTFontGetAscent(handle)) / pixel_ratio,
+			(CTFontGetDescent(handle)) / pixel_ratio,
+			0.0f,
+			(CTFontGetLeading(handle)) / pixel_ratio,
+			desc.get_line_height());
+		
+		font_description = desc.clone();
 	}
-	else
+
+	FontEngine_Cocoa::FontEngine_Cocoa(const FontDescription &desc, DataBuffer &font_databuffer, float pixel_ratio)
+	: pixel_ratio(pixel_ratio)
 	{
-		get_font_glyph_standard(glyph, font_description.get_anti_alias());
+		DataBuffer *cgdata_databuffer = new DataBuffer(font_databuffer);
+		
+		CGDataProviderRef cg_fontdata = CGDataProviderCreateWithData(cgdata_databuffer, cgdata_databuffer->get_data(), cgdata_databuffer->get_size(),[](void *info, const void *data, size_t size) { delete (DataBuffer *)info; });
+		
+		if (cg_fontdata == 0)
+		{
+			delete cgdata_databuffer;
+			throw Exception("CGDataProviderCreateWithData failed");
+		}
+		
+		CGFontRef cg_font = CGFontCreateWithDataProvider(cg_fontdata);
+		
+		CFRelease(cg_fontdata);
+		cg_fontdata = 0;
+		
+		if (cg_font == 0)
+		{
+			throw Exception("CGFontCreateWithDataProvider failed");
+		}
+		
+		handle = CTFontCreateWithGraphicsFont(cg_font, desc.get_height() * pixel_ratio, 0, 0);
+		
+		CFRelease(cg_font);
+		cg_font = 0;
+		
+		if (handle == 0)
+		{
+			throw Exception("CTFontCreateWithGraphicsFont failed");
+		}
+
+		font_metrics = FontMetrics(
+			(CTFontGetAscent(handle) + CTFontGetDescent(handle)) / pixel_ratio,
+			(CTFontGetAscent(handle)) / pixel_ratio,
+			(CTFontGetDescent(handle)) / pixel_ratio,
+			0.0f,
+			(CTFontGetLeading(handle)) / pixel_ratio,
+			desc.get_line_height());
+
+		font_description = desc.clone();
 	}
-}
-FontPixelBuffer FontEngine_Cocoa::get_font_glyph_standard(int glyph, bool anti_alias)
-{
-	return get_font_glyph_lcd(glyph);
-}
 
-FontPixelBuffer FontEngine_Cocoa::get_font_glyph_subpixel(int glyph)
-{
-    return get_font_glyph_standard(glyph, true);
-}
-
-FontPixelBuffer FontEngine_Cocoa::get_font_glyph_lcd(int glyph)
-{
-    // To do: CGRect and CGPoint return values in floats. Simply casting them to integers
-    // cause rounding issues with the baseline alignment and the size of the black box.
-    // As a temporary hack we extend the black box by 2 pixels but this does not fix the
-    // baseline problem.
-    
-    CGGlyph cgglyph = 0;
-    UniChar c = glyph;
-    bool found_char = CTFontGetGlyphsForCharacters(handle, &c, &cgglyph, 1);
-    
-    CGRect bbox;
-    CGRect result = CTFontGetBoundingRectsForGlyphs(handle, kCTFontDefaultOrientation, &cgglyph, &bbox, 1);
-    //if (result == CGRectNull)
-    //    return get_empty_font_glyph(glyph);
-    
-    PixelBuffer pixelbuffer(bbox.size.width+2, bbox.size.height+2, tf_bgra8);
-	unsigned char *p = (unsigned char *)pixelbuffer.get_data();
-    int len = pixelbuffer.get_width()*pixelbuffer.get_height();
-	for (int i = 0; i < len*4; i++)
-        p[i] = 255;
-    
-    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
-    
-    CGContextRef context = CGBitmapContextCreate(pixelbuffer.get_data(), pixelbuffer.get_width(), pixelbuffer.get_height(), 8, pixelbuffer.get_width() * 4, colorspace, kCGImageAlphaPremultipliedFirst);
-    
-    CGPoint position;
-    position.x = -bbox.origin.x+1;
-    position.y = -bbox.origin.y+1;
-    CTFontDrawGlyphs(handle, &cgglyph, &position, 1, context);
-    
-    CGContextRelease(context);
-    CGColorSpaceRelease(colorspace);
-    
-	for (int i = 0; i < len; i++)
+	FontEngine_Cocoa::~FontEngine_Cocoa()
 	{
-		p[i*4+0] = 255-p[i*4+0];
-		p[i*4+1] = 255-p[i*4+1];
-		p[i*4+2] = 255-p[i*4+2];
-		p[i*4+3] = 255;
+		if (handle)
+			CFRelease(handle);
 	}
-    
-    CGSize advance;
-    CTFontGetAdvancesForGlyphs(handle, kCTFontDefaultOrientation, &cgglyph, &advance, 1);
-    
-	FontPixelBuffer font_buffer;
-	font_buffer.glyph = glyph;
-	font_buffer.buffer = pixelbuffer;
-	font_buffer.buffer_rect = pixelbuffer.get_size();
-	font_buffer.offset.x = bbox.origin.x;
-	font_buffer.offset.y = -bbox.origin.y - bbox.size.height;
-	font_buffer.empty_buffer = false;
 
-	font_buffer.metrics.advance.width = advance.width;
-	font_buffer.metrics.advance.height = advance.width;
-	//FIXME = font_buffer.metrics.black_box
-	
-	return font_buffer;
-}
+	FontPixelBuffer FontEngine_Cocoa::get_font_glyph(int glyph)
+	{
+		// Retrieve glyph black box information:
+		
+		CGGlyph cgglyph = 0;
+		UniChar c = glyph;
+		bool found_char = CTFontGetGlyphsForCharacters(handle, &c, &cgglyph, 1);
+		
+		CGSize advance;
+		CTFontGetAdvancesForGlyphs(handle, kCTFontDefaultOrientation, &cgglyph, &advance, 1);
+		
+		CGRect cg_bbox; // cg_bbox.origin is the lower left corner of the black box relative to the cursor on the baseline
+		CTFontGetBoundingRectsForGlyphs(handle, kCTFontDefaultOrientation, &cgglyph, &cg_bbox, 1);
+		
+		float glyph_x = std::floor(cg_bbox.origin.x);
+		float glyph_y = -std::floor(cg_bbox.origin.y + cg_bbox.size.height);
+		int glyph_width = (int)std::ceil(cg_bbox.size.width + 2.0f);
+		int glyph_height = (int)std::ceil(cg_bbox.size.height + 2.0f);
+		
+		// Render glyph into bitmap:
+		
+		PixelBuffer pixelbuffer(glyph_width, glyph_height, tf_bgra8);
+		unsigned char *p = (unsigned char *)pixelbuffer.get_data();
+		int len = pixelbuffer.get_width()*pixelbuffer.get_height();
+		for (int i = 0; i < len*4; i++)
+			p[i] = 255;
+		
+		CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
+		
+		CGContextRef context = CGBitmapContextCreate(pixelbuffer.get_data(), pixelbuffer.get_width(), pixelbuffer.get_height(), 8, pixelbuffer.get_width() * 4, colorspace, kCGImageAlphaPremultipliedFirst);
+		
+		CGContextSetAllowsFontSmoothing(context, font_description.get_subpixel() || font_description.get_anti_alias());
+		CGContextSetAllowsAntialiasing(context, font_description.get_anti_alias());
+		CGContextSetAllowsFontSubpixelQuantization(context, font_description.get_subpixel());
+		CGContextSetAllowsFontSubpixelPositioning(context, false);
+		
+		CGPoint position;
+		position.x = -std::floor(cg_bbox.origin.x);
+		position.y = -std::floor(cg_bbox.origin.y + cg_bbox.size.height) + cg_bbox.size.height;
+		
+		CTFontDrawGlyphs(handle, &cgglyph, &position, 1, context);
+		
+		CGContextRelease(context);
+		CGColorSpaceRelease(colorspace);
+		
+		for (int i = 0; i < len; i++)
+		{
+			p[i*4+0] = 255-p[i*4+0];
+			p[i*4+1] = 255-p[i*4+1];
+			p[i*4+2] = 255-p[i*4+2];
+			p[i*4+3] = 255;
+		}
+		
+		// Return glyph black box as a FontPixelBuffer:
+		
+		FontPixelBuffer font_buffer;
+		font_buffer.glyph = glyph;
+		font_buffer.buffer = pixelbuffer;
+		font_buffer.buffer_rect = pixelbuffer.get_size();
+		font_buffer.offset.x = glyph_x / pixel_ratio;
+		font_buffer.offset.y = glyph_y / pixel_ratio;
+		font_buffer.size = Sizef(pixelbuffer.get_width() / pixel_ratio, pixelbuffer.get_height() / pixel_ratio);
+		font_buffer.empty_buffer = false;
+		font_buffer.metrics.advance.width = advance.width / pixel_ratio;
+		font_buffer.metrics.advance.height = advance.height / pixel_ratio;
+		font_buffer.metrics.bbox_offset.x = cg_bbox.origin.x / pixel_ratio;
+		font_buffer.metrics.bbox_offset.y = -(cg_bbox.origin.y + cg_bbox.size.height) / pixel_ratio;
+		font_buffer.metrics.bbox_size.width = cg_bbox.size.width / pixel_ratio;
+		font_buffer.metrics.bbox_size.height = cg_bbox.size.height / pixel_ratio;
+		
+		return font_buffer;
+	}
 
-FontPixelBuffer FontEngine_Cocoa::get_empty_font_glyph(int glyph)
-{
-	FontPixelBuffer font_buffer;
-	font_buffer.glyph = glyph;
-	font_buffer.empty_buffer = true;
-    
-    CGGlyph cgglyph = glyph;
-    CGSize advance;
-    CTFontGetAdvancesForGlyphs(handle, kCTFontDefaultOrientation, &cgglyph, &advance, 1);
-	font_buffer.metrics.advance.width = advance.width;
-	font_buffer.metrics.advance.height = advance.width;
-	//FIXME = font_buffer.metrics.black_box
-    
-	return font_buffer;
-}
-
-void FontEngine_Cocoa::load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics)
-{
-	throw Exception("Implement Me");
-}
+	void FontEngine_Cocoa::load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics)
+	{
+		throw Exception("Implement Me");
+	}
 
 }
