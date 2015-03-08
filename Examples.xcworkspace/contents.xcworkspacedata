@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:ClanLib.xcodeproj">
+   </FileRef>
+   <Group
+      location = "container:"
+      name = "Display">
+      <FileRef
+         location = "group:Examples/Display/Basic2D/Basic2D.xcodeproj">
+      </FileRef>
+   </Group>
+   <Group
+      location = "container:"
+      name = "UI">
+      <FileRef
+         location = "group:Examples/UI/HelloWorld/HelloWorld.xcodeproj">
+      </FileRef>
+   </Group>
+</Workspace>
