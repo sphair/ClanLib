@@ -41,16 +41,42 @@
 	clan::OpenGLWindowProvider_Impl *window_provider;
 }
 
-- (BOOL) acceptsFirstResponder
-{
-    NSLog(@"-acceptsFirstResponder:");
-    return YES;
-}
-
 - (id) initWithDescription:(const clan::DisplayWindowDescription &)desc provider:(clan::OpenGLWindowProvider_Impl*)provider_impl
 {
-	NSRect frame = NSMakeRect(0, 0, desc.get_size().width, desc.get_size().height);
-	NSUInteger styles = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask;
+	NSRect frame = NSMakeRect(desc.get_position().left, desc.get_position().top, desc.get_size().width, desc.get_size().height);
+
+	NSScreen *screen = [NSScreen mainScreen];
+	
+	if (desc.get_position().left == -1 && desc.get_position().top == -1)
+	{
+		NSRect workarea = [screen visibleFrame];
+		frame.origin.x = workarea.origin.x + (workarea.size.width - frame.size.width) * 0.5f;
+		frame.origin.y = workarea.origin.y + (workarea.size.height - frame.size.height) * 0.5f;
+	}
+	else
+	{
+		NSRect screen_frame = [screen frame];
+		float screen_top = screen_frame.origin.y + screen_frame.size.height;
+		frame.origin.y = screen_top - frame.origin.y - frame.size.height;
+	}
+	
+	NSUInteger styles = 0;
+	
+	if (desc.has_caption())
+		styles |= NSTitledWindowMask;
+	if (desc.has_minimize_button())
+		styles |= NSMiniaturizableWindowMask;
+	if (desc.has_sysmenu())
+		styles |= NSClosableWindowMask;
+	if (desc.get_allow_resize())
+		styles |= NSResizableWindowMask;
+	if (desc.is_fullscreen())
+		styles |= NSFullScreenWindowMask;
+	
+	if (!desc.get_position_client_area())
+	{
+		frame = [NSWindow contentRectForFrameRect:frame styleMask:styles];
+	}
 
 	self = [self initWithContentRect:frame styleMask:styles backing:NSBackingStoreBuffered defer:NO];
 	if (self)
@@ -92,22 +118,40 @@
 	}
 }
 
+- (BOOL) acceptsFirstResponder
+{
+	return YES;
+}
+
+- (BOOL)canBecomeMainWindow
+{
+	return YES;
+}
+
+- (BOOL)canBecomeKeyWindow
+{
+	return YES;
+}
+
+/*
+- (void)windowWillMiniaturize:(NSNotification *)notification
+{
+}
+ 
 - (void) windowDidMiniaturize:(NSNotification *)notification
 {
-    NSLog(@"-windowDidMiniaturize:");
-    // TODO:
 }
 
 - (void) windowDidDeminiaturize:(NSNotification *)notification
 {
-    NSLog(@"-windowDidDeminiaturize:");
-    // TODO:
+}
+
+- (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)frameSize
+{
 }
 
 - (void) windowDidResize:(NSNotification *)notification
 {
-    NSLog(@"-windowDidResize:");
-
     NSRect rect = [window_provider->window.contentView bounds];
 
     // TODO: Can't actually call this because of the threading issue.  However, this seems pretty close
@@ -116,10 +160,48 @@
     // glViewport(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
 }
 
+- (void)windowWillMove:(NSNotification *)notification
+{
+}
+
+-(void)windowDidMove:(NSNotification *)notification
+{
+}
+
+- (void)windowDidBecomeKey:(NSNotification *)notification
+{
+}
+
+-(void)windowDidResignKey:(NSNotification *)notification
+{
+}
+
+- (void)windowDidBecomeMain:(NSNotification *)notification
+{
+}
+
+- (void)windowDidResignMain:(NSNotification *)notification
+{
+}
+*/
+
+- (BOOL)windowShouldClose:(id)sender
+{
+	return NO;
+}
+
 - (void) windowWillClose:(NSNotification *)notification
 {
-    NSLog(@"-windowWillClose:");
-    // TOOD:
 }
+
+/*
+-(void)windowDidUpdate:(NSNotification *)notification
+{
+}
+
+- (void)windowDidExpose:(NSNotification *)notification
+{
+}
+*/
 
 @end

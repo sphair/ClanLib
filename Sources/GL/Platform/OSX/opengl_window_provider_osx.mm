@@ -73,13 +73,13 @@ ProcAddress *OpenGLWindowProvider::get_proc_address(const std::string& function_
 
 Rect OpenGLWindowProvider::get_geometry() const
 {
-	NSRect frame = impl->window.frame;
+	NSRect frame = [impl->window convertRectToBacking:impl->window.frame];
 	return Rect(frame.origin.x, frame.origin.y, frame.origin.x + frame.size.width, frame.origin.y + frame.size.height);
 }
 
 Rect OpenGLWindowProvider::get_viewport() const
 {
-	NSRect bounds = [impl->window.contentView bounds];
+	NSRect bounds = [impl->window convertRectToBacking:[impl->window.contentView frame]];
 	return Rect(bounds.origin.x, bounds.origin.y, bounds.origin.x + bounds.size.width, bounds.origin.y + bounds.size.height);
 }
 
@@ -150,13 +150,13 @@ void OpenGLWindowProvider::make_current() const
 
 Point OpenGLWindowProvider::client_to_screen(const Point &client)
 {
-	NSRect screen = [impl->window convertRectFromScreen:NSMakeRect(client.x, client.y, 1, 1)];
+	NSRect screen = [impl->window convertRectFromScreen:[impl->window convertRectFromBacking:NSMakeRect(client.x, client.y, 1, 1)]];
 	return Point(screen.origin.x, screen.origin.y);
 }
 
 Point OpenGLWindowProvider::screen_to_client(const Point &screen)
 {
-	NSRect client = [impl->window convertRectToScreen:NSMakeRect(screen.x, screen.y, 1, 1)];
+	NSRect client = [impl->window convertRectToBacking:[impl->window convertRectToScreen:NSMakeRect(screen.x, screen.y, 1, 1)]];
 	return Point(client.origin.x, client.origin.y);
 }
 
@@ -204,6 +204,7 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 	if (impl->opengl_context == nil)
 		throw Exception("Could not create OpenGL context");
 
+	[impl->window.contentView setWantsBestResolutionOpenGLSurface:true];
     [impl->opengl_context setView:impl->window.contentView];
 
 	impl->gc = GraphicContext(new GL3GraphicContextProvider(this));
@@ -212,9 +213,17 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 	impl->ic.add_keyboard(keyboard);
 	impl->ic.add_mouse(mouse);
 
-    [impl->window setDelegate:impl->window];
-	[impl->window makeKeyAndOrderFront:NSApp];
-    [impl->window makeMainWindow];
+	[impl->window setDelegate:impl->window];
+	
+	if (desc.is_visible())
+	{
+		[impl->window makeMainWindow];
+		[impl->window makeKeyAndOrderFront:impl->window];
+	}
+	/*else
+	{
+		[impl->window orderOut:impl->window];
+	}*/
 }
 
 void OpenGLWindowProvider::show_system_cursor()
@@ -294,29 +303,35 @@ void OpenGLWindowProvider::set_enabled(bool enable)
 
 void OpenGLWindowProvider::minimize()
 {
-	[impl->window miniaturize:nil];
+	[impl->window miniaturize:impl->window];
 }
 
 void OpenGLWindowProvider::restore()
 {
+	[impl->window deminiaturize:impl->window];
 }
 
 void OpenGLWindowProvider::maximize()
 {
-	[impl->window performZoom:nil];
+	[impl->window performZoom:impl->window];
 }
 
 void OpenGLWindowProvider::show(bool activate)
 {
+	if (activate)
+		[impl->window makeKeyAndOrderFront:impl->window];
+	else
+		[impl->window orderFront:impl->window];
 }
 
 void OpenGLWindowProvider::hide()
 {
+	[impl->window orderOut:impl->window];
 }
 
 void OpenGLWindowProvider::bring_to_front()
 {
-	[impl->window makeKeyAndOrderFront:NSApp];
+	[impl->window makeKeyAndOrderFront:impl->window];
 }
 
 void OpenGLWindowProvider::flip(int interval)
@@ -389,7 +404,7 @@ bool OpenGLWindowProvider::is_double_buffered() const
 	
 float OpenGLWindowProvider::get_pixel_ratio() const
 {
-	return 1.0f;
+	return [impl->window backingScaleFactor];
 }
 	
 void OpenGLWindowProvider::set_pixel_ratio(float ratio)
