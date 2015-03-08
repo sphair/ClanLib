@@ -58,6 +58,17 @@ namespace clan
 		void load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics);
 
 	private:
+		static Pointf to_pointf(const CGPoint &p);
+		
+		struct LoadGlyphPathInfo
+		{
+			LoadGlyphPathInfo(Path &path, float pixel_ratio)
+			: path(path), pixel_ratio(pixel_ratio) { }
+			
+			Path &path;
+			float pixel_ratio;
+		};
+		
 		CTFontRef handle = 0;
 		FontDescription font_description;
 		FontMetrics font_metrics;

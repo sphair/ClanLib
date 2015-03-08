@@ -232,10 +232,78 @@ namespace clan
 		return font_buffer;
 	}
 
-	void FontEngine_Cocoa::load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics)
+	void FontEngine_Cocoa::load_glyph_path(unsigned int glyph_index, Path &path, GlyphMetrics &metrics)
 	{
-		// CGPathRef path = CTFontCreatePathForGlyph(..)
+		// Retrieve glyph black box information:
+		
+		CGGlyph cgglyph = 0;
+		UniChar c = glyph_index;
+		bool found_char = CTFontGetGlyphsForCharacters(handle, &c, &cgglyph, 1);
+		
+		CGSize advance;
+		CTFontGetAdvancesForGlyphs(handle, kCTFontDefaultOrientation, &cgglyph, &advance, 1);
+		
+		CGRect cg_bbox;
+		CTFontGetBoundingRectsForGlyphs(handle, kCTFontDefaultOrientation, &cgglyph, &cg_bbox, 1);
+		
+		// Glyph metrics:
+		
+		metrics.advance.width = advance.width / pixel_ratio;
+		metrics.advance.height = advance.height / pixel_ratio;
+		metrics.bbox_offset.x = -cg_bbox.origin.x / pixel_ratio;
+		metrics.bbox_offset.y = -(cg_bbox.origin.y + cg_bbox.size.height) / pixel_ratio;
+		metrics.bbox_size.width = cg_bbox.size.width / pixel_ratio;
+		metrics.bbox_size.height = cg_bbox.size.height / pixel_ratio;
+		
+		// Retrieve path information:
+		
+		CGPathRef cg_path = CTFontCreatePathForGlyph(handle, cgglyph, 0);
+		if (cg_path == 0)
+			return;
+		
+		path.set_fill_mode(PathFillMode::winding);
+		
+		LoadGlyphPathInfo info(path, pixel_ratio);
+		
+		CGPathApply(cg_path, &info, [](void *info_ptr, const CGPathElement *element)
+		{
+			LoadGlyphPathInfo *info = (LoadGlyphPathInfo*)info_ptr;
+			
+			switch (element->type)
+			{
+				case kCGPathElementMoveToPoint:
+					info->path.move_to(to_pointf(element->points[0]) * info->pixel_ratio);
+					break;
+					
+				case kCGPathElementAddLineToPoint:
+					info->path.line_to(to_pointf(element->points[0]) * info->pixel_ratio);
+					break;
+					
+				case kCGPathElementAddQuadCurveToPoint:
+					info->path.bezier_to(to_pointf(element->points[0]) * info->pixel_ratio, to_pointf(element->points[1]) * info->pixel_ratio);
+					break;
+					
+				case kCGPathElementAddCurveToPoint:
+					info->path.bezier_to(to_pointf(element->points[0]) * info->pixel_ratio, to_pointf(element->points[1]) * info->pixel_ratio, to_pointf(element->points[2]) * info->pixel_ratio);
+					break;
+					
+				case kCGPathElementCloseSubpath:
+					info->path.close();
+					break;
+					
+				default:
+					break;
+			}
+		});
+		
+		CFRelease(cg_path);
+		
 		throw Exception("FontEngine_Cocoa::load_glyph_path not implemented");
+	}
+	
+	Pointf FontEngine_Cocoa::to_pointf(const CGPoint &p)
+	{
+		return Pointf(p.x, p.y);
 	}
 
 }
