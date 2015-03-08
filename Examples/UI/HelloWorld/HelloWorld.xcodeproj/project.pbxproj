@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		18077C8C1AAA781D00A2196B /* basic2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18077C881AAA781D00A2196B /* basic2d.cpp */; };
 		18077C8D1AAA781D00A2196B /* precomp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18077C8A1AAA781D00A2196B /* precomp.cpp */; };
 		18D4BB541AAA8798005B9D81 /* libclanApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D4BB501AAA8798005B9D81 /* libclanApp.a */; };
 		18D4BB551AAA8798005B9D81 /* libclanCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D4BB511AAA8798005B9D81 /* libclanCore.a */; };
@@ -15,11 +14,11 @@
 		18D4BB571AAA8798005B9D81 /* libclanGL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D4BB531AAA8798005B9D81 /* libclanGL.a */; };
 		18D4BB661AAA9108005B9D81 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D4BB651AAA9108005B9D81 /* Cocoa.framework */; };
 		18D4BB681AAA9113005B9D81 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D4BB671AAA9113005B9D81 /* OpenGL.framework */; };
+		18DB18EE1AAD080000B3EADD /* helloworld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18DB18EC1AAD080000B3EADD /* helloworld.cpp */; };
+		18DB18F01AAD086400B3EADD /* libclanUI.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 18DB18EF1AAD086400B3EADD /* libclanUI.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		18077C881AAA781D00A2196B /* basic2d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = basic2d.cpp; sourceTree = "<group>"; };
-		18077C891AAA781D00A2196B /* basic2d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = basic2d.h; sourceTree = "<group>"; };
 		18077C8A1AAA781D00A2196B /* precomp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = precomp.cpp; sourceTree = "<group>"; };
 		18077C8B1AAA781D00A2196B /* precomp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = precomp.h; sourceTree = "<group>"; };
 		186AF4101AAA7675007E3F0A /* HelloWorld.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HelloWorld.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -30,6 +29,9 @@
 		18D4BB531AAA8798005B9D81 /* libclanGL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libclanGL.a; path = ../../../Build/lib/osx/libclanGL.a; sourceTree = "<group>"; };
 		18D4BB651AAA9108005B9D81 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		18D4BB671AAA9113005B9D81 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		18DB18EC1AAD080000B3EADD /* helloworld.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = helloworld.cpp; sourceTree = "<group>"; };
+		18DB18ED1AAD080000B3EADD /* helloworld.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = helloworld.h; sourceTree = "<group>"; };
+		18DB18EF1AAD086400B3EADD /* libclanUI.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libclanUI.a; path = ../../../Build/lib/osx/libclanUI.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,6 +40,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				18D4BB681AAA9113005B9D81 /* OpenGL.framework in Frameworks */,
+				18DB18F01AAD086400B3EADD /* libclanUI.a in Frameworks */,
 				18D4BB661AAA9108005B9D81 /* Cocoa.framework in Frameworks */,
 				18D4BB561AAA8798005B9D81 /* libclanDisplay.a in Frameworks */,
 				18D4BB551AAA8798005B9D81 /* libclanCore.a in Frameworks */,
@@ -70,9 +73,9 @@
 		186AF4121AAA7675007E3F0A /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				18DB18EC1AAD080000B3EADD /* helloworld.cpp */,
+				18DB18ED1AAD080000B3EADD /* helloworld.h */,
 				186AF4141AAA7675007E3F0A /* Info.plist */,
-				18077C881AAA781D00A2196B /* basic2d.cpp */,
-				18077C891AAA781D00A2196B /* basic2d.h */,
 				18077C8A1AAA781D00A2196B /* precomp.cpp */,
 				18077C8B1AAA781D00A2196B /* precomp.h */,
 			);
@@ -82,12 +85,13 @@
 		18D4BB581AAA87A4005B9D81 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				18D4BB671AAA9113005B9D81 /* OpenGL.framework */,
-				18D4BB651AAA9108005B9D81 /* Cocoa.framework */,
 				18D4BB501AAA8798005B9D81 /* libclanApp.a */,
 				18D4BB511AAA8798005B9D81 /* libclanCore.a */,
 				18D4BB521AAA8798005B9D81 /* libclanDisplay.a */,
 				18D4BB531AAA8798005B9D81 /* libclanGL.a */,
+				18DB18EF1AAD086400B3EADD /* libclanUI.a */,
+				18D4BB651AAA9108005B9D81 /* Cocoa.framework */,
+				18D4BB671AAA9113005B9D81 /* OpenGL.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -159,7 +163,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				18077C8D1AAA781D00A2196B /* precomp.cpp in Sources */,
-				18077C8C1AAA781D00A2196B /* basic2d.cpp in Sources */,
+				18DB18EE1AAD080000B3EADD /* helloworld.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -231,6 +235,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/../../../Build/lib/osx",
+					/Users/mbn/Development/ClanLib/Build/lib/osx,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -276,6 +281,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/../../../Build/lib/osx",
+					/Users/mbn/Development/ClanLib/Build/lib/osx,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
