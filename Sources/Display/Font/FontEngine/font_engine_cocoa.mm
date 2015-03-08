@@ -297,8 +297,6 @@ namespace clan
 		});
 		
 		CFRelease(cg_path);
-		
-		throw Exception("FontEngine_Cocoa::load_glyph_path not implemented");
 	}
 	
 	Pointf FontEngine_Cocoa::to_pointf(const CGPoint &p)
