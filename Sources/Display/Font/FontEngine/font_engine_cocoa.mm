@@ -45,22 +45,14 @@ namespace clan
 		if (name == 0)
 			throw Exception("CFStringCreateWithCString failed");
 		
-		CGFontRef cg_font = CGFontCreateWithFontName(name);
+		handle = CTFontCreateWithName(name, desc.get_height() * pixel_ratio, 0);
 		
 		CFRelease(name);
 		name = 0;
 		
-		if (cg_font == 0)
-			throw Exception("CGFontCreateWithFontName failed");
-		
-		handle = CTFontCreateWithGraphicsFont(cg_font, desc.get_height() * pixel_ratio, 0, 0);
-		
-		CFRelease(cg_font);
-		cg_font = 0;
-		
 		if (handle == 0)
 		{
-			throw Exception("CTFontCreateWithGraphicsFont failed");
+			throw Exception("CGFontCreateWithFontName failed");
 		}
 		
 		font_metrics = FontMetrics(

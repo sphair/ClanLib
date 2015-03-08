@@ -34,6 +34,7 @@
 #import <AppKit/AppKit.h>
 
 #import "cocoa_window.h"
+#import "cocoa_view.h"
 #import "opengl_window_provider_osx.h"
 
 @implementation CocoaWindow
@@ -82,6 +83,8 @@
 	if (self)
 	{
 		window_provider = provider_impl;
+		
+		self.contentView = [[CocoaView alloc] initWithProvider:provider_impl];
 	}
 	return self;
 }
@@ -133,75 +136,50 @@
 	return YES;
 }
 
-/*
-- (void)windowWillMiniaturize:(NSNotification *)notification
-{
-}
- 
 - (void) windowDidMiniaturize:(NSNotification *)notification
 {
+	window_provider->site->sig_window_minimized();
 }
 
 - (void) windowDidDeminiaturize:(NSNotification *)notification
 {
+	window_provider->site->sig_window_restored();
 }
 
-- (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)frameSize
+// - (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)frameSize
+
+- (void)windowDidResize:(NSNotification *)notification
 {
+	float width = ((NSView*)self.contentView).frame.size.width;
+	float height = ((NSView*)self.contentView).frame.size.height;
+	window_provider->site->sig_resize(width, height);
 }
 
-- (void) windowDidResize:(NSNotification *)notification
-{
-    NSRect rect = [window_provider->window.contentView bounds];
-
-    // TODO: Can't actually call this because of the threading issue.  However, this seems pretty close
-    //       to where you would actually call something like this.  I am trying to resize the openGL rendering
-    //       area when the user manually resizes the window.
-    // glViewport(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
-}
-
-- (void)windowWillMove:(NSNotification *)notification
-{
-}
+//- (void)windowWillMove:(NSNotification *)notification
 
 -(void)windowDidMove:(NSNotification *)notification
 {
+	window_provider->site->sig_window_moved();
 }
 
 - (void)windowDidBecomeKey:(NSNotification *)notification
 {
+	window_provider->site->sig_got_focus();
 }
 
 -(void)windowDidResignKey:(NSNotification *)notification
 {
+	window_provider->site->sig_lost_focus();
 }
-
-- (void)windowDidBecomeMain:(NSNotification *)notification
-{
-}
-
-- (void)windowDidResignMain:(NSNotification *)notification
-{
-}
-*/
 
 - (BOOL)windowShouldClose:(id)sender
 {
+	window_provider->site->sig_window_close();
 	return NO;
 }
 
-- (void) windowWillClose:(NSNotification *)notification
-{
-}
-
-/*
--(void)windowDidUpdate:(NSNotification *)notification
-{
-}
-
-- (void)windowDidExpose:(NSNotification *)notification
-{
-}
-*/
+//- (void)windowDidBecomeMain:(NSNotification *)notification
+//- (void)windowDidResignMain:(NSNotification *)notification
+//- (void) windowWillClose:(NSNotification *)notification
 
 @end
