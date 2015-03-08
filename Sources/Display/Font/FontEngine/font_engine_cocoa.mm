@@ -135,16 +135,42 @@ namespace clan
 		CGSize advance;
 		CTFontGetAdvancesForGlyphs(handle, kCTFontDefaultOrientation, &cgglyph, &advance, 1);
 		
-		CGRect cg_bbox; // cg_bbox.origin is the lower left corner of the black box relative to the cursor on the baseline
+		CGRect cg_bbox;
 		CTFontGetBoundingRectsForGlyphs(handle, kCTFontDefaultOrientation, &cgglyph, &cg_bbox, 1);
-		
-		float glyph_x = std::floor(cg_bbox.origin.x);
-		float glyph_y = -std::floor(cg_bbox.origin.y + cg_bbox.size.height);
-		int glyph_width = (int)std::ceil(cg_bbox.size.width + 2.0f);
-		int glyph_height = (int)std::ceil(cg_bbox.size.height + 2.0f);
+        
+        // Black box in bitmap coordinates:
+        
+        float cursor_x = std::ceil(cg_bbox.origin.x);
+        float cursor_y = -std::ceil(cg_bbox.origin.y);
+        
+        int glyph_width = std::ceil(cursor_x + cg_bbox.origin.x + cg_bbox.size.width);
+        int glyph_height = std::ceil(cursor_y - cg_bbox.origin.y + cg_bbox.size.height);
+        
+        int glyph_x = -cursor_x;
+        int glyph_y = -(glyph_height - cursor_y);
+        
+        CGPoint position;
+        position.x = cursor_x; // axis right
+        position.y = cursor_y; // axis up
+        
+        // Check for empty glyphs:
+        
+        if (glyph_width <= 0 || glyph_height <= 0)
+        {
+            FontPixelBuffer font_buffer;
+            font_buffer.glyph = glyph;
+            font_buffer.empty_buffer = true;
+            font_buffer.metrics.advance.width = advance.width / pixel_ratio;
+            font_buffer.metrics.advance.height = advance.height / pixel_ratio;
+            font_buffer.metrics.bbox_offset.x = -cg_bbox.origin.x / pixel_ratio;
+            font_buffer.metrics.bbox_offset.y = -(cg_bbox.origin.y + cg_bbox.size.height) / pixel_ratio;
+            font_buffer.metrics.bbox_size.width = cg_bbox.size.width / pixel_ratio;
+            font_buffer.metrics.bbox_size.height = cg_bbox.size.height / pixel_ratio;
+            return font_buffer;
+        }
 		
 		// Render glyph into bitmap:
-		
+        
 		PixelBuffer pixelbuffer(glyph_width, glyph_height, tf_bgra8);
 		unsigned char *p = (unsigned char *)pixelbuffer.get_data();
 		int len = pixelbuffer.get_width()*pixelbuffer.get_height();
@@ -152,20 +178,20 @@ namespace clan
 			p[i] = 255;
 		
 		CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
+		CGFloat black_components[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+		CGColorRef black = CGColorCreate(colorspace, black_components);
 		
-		CGContextRef context = CGBitmapContextCreate(pixelbuffer.get_data(), pixelbuffer.get_width(), pixelbuffer.get_height(), 8, pixelbuffer.get_width() * 4, colorspace, kCGImageAlphaPremultipliedFirst);
+		CGContextRef context = CGBitmapContextCreate(pixelbuffer.get_data(), pixelbuffer.get_width(), pixelbuffer.get_height(), 8, pixelbuffer.get_width() * 4, colorspace, kCGImageAlphaPremultipliedLast);
 		
 		CGContextSetAllowsFontSmoothing(context, font_description.get_subpixel() || font_description.get_anti_alias());
 		CGContextSetAllowsAntialiasing(context, font_description.get_anti_alias());
 		CGContextSetAllowsFontSubpixelQuantization(context, font_description.get_subpixel());
 		CGContextSetAllowsFontSubpixelPositioning(context, false);
-		
-		CGPoint position;
-		position.x = -std::floor(cg_bbox.origin.x);
-		position.y = -std::floor(cg_bbox.origin.y + cg_bbox.size.height) + cg_bbox.size.height;
+		CGContextSetFillColorWithColor(context, black);
 		
 		CTFontDrawGlyphs(handle, &cgglyph, &position, 1, context);
 		
+		CFRelease(black);
 		CGContextRelease(context);
 		CGColorSpaceRelease(colorspace);
 		
@@ -175,6 +201,15 @@ namespace clan
 			p[i*4+1] = 255-p[i*4+1];
 			p[i*4+2] = 255-p[i*4+2];
 			p[i*4+3] = 255;
+
+#if 0 /* Debug black box positions */
+			bool l = i % glyph_width == 0;
+			bool r = i % glyph_width == glyph_width - 1;
+			bool t = i < glyph_width;
+			bool b = i >= glyph_width * (glyph_height - 1);
+			if (l || r || t || b)
+				p[i*4+1] = 255;
+#endif
 		}
 		
 		// Return glyph black box as a FontPixelBuffer:
@@ -189,7 +224,7 @@ namespace clan
 		font_buffer.empty_buffer = false;
 		font_buffer.metrics.advance.width = advance.width / pixel_ratio;
 		font_buffer.metrics.advance.height = advance.height / pixel_ratio;
-		font_buffer.metrics.bbox_offset.x = cg_bbox.origin.x / pixel_ratio;
+		font_buffer.metrics.bbox_offset.x = -cg_bbox.origin.x / pixel_ratio;
 		font_buffer.metrics.bbox_offset.y = -(cg_bbox.origin.y + cg_bbox.size.height) / pixel_ratio;
 		font_buffer.metrics.bbox_size.width = cg_bbox.size.width / pixel_ratio;
 		font_buffer.metrics.bbox_size.height = cg_bbox.size.height / pixel_ratio;
