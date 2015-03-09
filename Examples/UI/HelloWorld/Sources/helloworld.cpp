@@ -87,7 +87,7 @@ HelloWorld::HelloWorld()
 	edit->style()->set("border-radius: 3px");
 	edit->style()->set("padding: 2px 5px 2px 5px");
 	edit->style()->set("width: 128px");
-	edit->set_text("Text File View");
+	edit->set_text("amazing!");
 
 	// Create a span layout view with some more complex inline formatting
 	std::shared_ptr<SpanLayoutView> span = std::make_shared<SpanLayoutView>();
@@ -113,7 +113,7 @@ HelloWorld::HelloWorld()
 	*/
 	std::shared_ptr<Style> text_style2 = std::make_shared<Style>();
 	text_style2->set("font: 16px/40px 'Segoe UI'; font-weight: 800");
-	span->add_text(" units!", text_style2);
+	span->add_text(" example!", text_style2);
 	root->add_subview(span);
 
 	// Make our window visible
