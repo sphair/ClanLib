@@ -33,8 +33,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Stencil", "Examples\Display
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Blend", "Examples\Display_Render\Blend\blend-vc2013.vcxproj", "{BAB64109-DBA5-439B-A821-5AFF2D877AEE}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CanvasAdvanced", "Examples\Display_Render\CanvasAdvanced\CanvasAdvanced-vc2013.vcxproj", "{6367F40C-5DAC-40FB-BC55-4B1D3BCA7D0D}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PixelBuffer", "Examples\Display_Render\PixelBuffer\PixelBuffer-vc2013.vcxproj", "{BAB64109-DBA5-439B-A821-5AFF2D3FF4C0}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Text", "Examples\Display_Text\Text\Text-vc2013.vcxproj", "{903374C5-87EA-4010-BD44-95D54D95D234}"
@@ -195,12 +193,6 @@ Global
 		{BAB64109-DBA5-439B-A821-5AFF2D877AEE}.Release|Win32.ActiveCfg = Release|Win32
 		{BAB64109-DBA5-439B-A821-5AFF2D877AEE}.Release|Win32.Build.0 = Release|Win32
 		{BAB64109-DBA5-439B-A821-5AFF2D877AEE}.Release|x64.ActiveCfg = Release|Win32
-		{6367F40C-5DAC-40FB-BC55-4B1D3BCA7D0D}.Debug|Win32.ActiveCfg = Debug|Win32
-		{6367F40C-5DAC-40FB-BC55-4B1D3BCA7D0D}.Debug|Win32.Build.0 = Debug|Win32
-		{6367F40C-5DAC-40FB-BC55-4B1D3BCA7D0D}.Debug|x64.ActiveCfg = Debug|Win32
-		{6367F40C-5DAC-40FB-BC55-4B1D3BCA7D0D}.Release|Win32.ActiveCfg = Release|Win32
-		{6367F40C-5DAC-40FB-BC55-4B1D3BCA7D0D}.Release|Win32.Build.0 = Release|Win32
-		{6367F40C-5DAC-40FB-BC55-4B1D3BCA7D0D}.Release|x64.ActiveCfg = Release|Win32
 		{BAB64109-DBA5-439B-A821-5AFF2D3FF4C0}.Debug|Win32.ActiveCfg = Debug|Win32
 		{BAB64109-DBA5-439B-A821-5AFF2D3FF4C0}.Debug|Win32.Build.0 = Debug|Win32
 		{BAB64109-DBA5-439B-A821-5AFF2D3FF4C0}.Debug|x64.ActiveCfg = Debug|Win32
