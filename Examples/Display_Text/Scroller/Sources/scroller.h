@@ -29,16 +29,17 @@
 
 #pragma once
 
-// This is the Application class (That is instantiated by the Program Class)
-class Scroller
+class Scroller : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
+	Scroller();
+	bool update() override;
 
 private:
 	void on_input_up(const clan::InputEvent &key);
 	void on_window_close();
 
 private:
-	bool quit;
+	clan::GameTime game_time;
+	bool quit = false;
 };

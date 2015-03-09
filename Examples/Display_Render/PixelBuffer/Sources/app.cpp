@@ -29,101 +29,93 @@
 #include "precomp.h"
 #include "app.h"
 
-App::App() : quit(false)
-{
-}
+clan::ApplicationInstance<App> clanapp;
 
-// The start of the Application
-int App::start(const std::vector<std::string> &args)
+App::App()
 {
+	// We support all display targets, in order listed here
+#ifdef WIN32
+	//FIXME
+	//clan::D3DTarget::enable();
+#endif
+	clan::OpenGLTarget::enable();
+
 	clan::DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("PixelBuffer Example");
 	win_desc.set_size(clan::Size( 600, 630 ), false);
 
-	clan::DisplayWindow window(win_desc);
-    clan::SlotContainer cc;
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	window = clan::DisplayWindow(win_desc);
+	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	canvas = clan::Canvas(window);
 
-	clan::Canvas canvas(window);
+	tux = clan::PixelBuffer("../../3D/Object3D/Resources/tux.png");
 
-	clan::PixelBuffer tux("../../3D/Object3D/Resources/tux.png");
+	cpu_buffer = tux.copy();
 
-	clan::PixelBuffer cpu_buffer = tux.copy();
-
-	const int num_gpu_buffers = 2;
-	clan::TransferTexture gpu_buffer[num_gpu_buffers];
 	for (int cnt=0; cnt < num_gpu_buffers; cnt++)
 	{
 		// Note - This example only uses PIXEL_UNPACK_BUFFER_ARB, it does not use PIXEL_PACK_BUFFER_ARB
 		gpu_buffer[cnt] = clan::TransferTexture(canvas, tux);
 	}
 
-	const int num_textures = 2;
-	clan::Texture2D textures[num_textures];
 	for (int cnt=0; cnt < num_textures; cnt++)
 	{
 		textures[cnt] = clan::Texture2D(canvas, tux.get_width(), tux.get_height(), clan::tf_rgba8);
 	}
 
-	clan::Font font("Tahoma", 24);
+	font = clan::Font("Tahoma", 24);
 
-	clan::GameTime game_time;
+	game_time.reset();
+}
 
-	int gpu_buffer_cycle = 0;
-	int texture_cycle = 0;
-	cpu_active = true;
+bool App::update()
+{
+	game_time.update();
+	canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
 
-	while (!quit)
+	// Modify the pixel buffer
+	read_write_pixel_buffer(canvas, tux);
+
+	// Control the texture buffering
+	int texture_cycle_first = texture_cycle;
+	int texture_cycle_second = texture_cycle + 1;
+	if (texture_cycle_second >= num_textures)
+		texture_cycle_second -= num_textures;
+
+	// Control the gpu buffering
+	int gpu_buffer_cycle_first = gpu_buffer_cycle;
+	int gpu_buffer_cycle_second = gpu_buffer_cycle + 1;
+	if (gpu_buffer_cycle_second >= num_gpu_buffers)
+		gpu_buffer_cycle_second -= num_gpu_buffers;
+
+	// Always draw the same text, to ensure matching speed calculation
+	if (cpu_active)
 	{
-		game_time.update();
-		canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
-
-		// Modify the pixel buffer
-		read_write_pixel_buffer(canvas, tux);
-
-		// Control the texture buffering
-		int texture_cycle_first = texture_cycle;
-		int texture_cycle_second = texture_cycle + 1;
-		if (texture_cycle_second >= num_textures)
-			texture_cycle_second -= num_textures;
-
-		// Control the gpu buffering
-		int gpu_buffer_cycle_first = gpu_buffer_cycle;
-		int gpu_buffer_cycle_second = gpu_buffer_cycle + 1;
-		if (gpu_buffer_cycle_second >= num_gpu_buffers)
-			gpu_buffer_cycle_second -= num_gpu_buffers;
-
-		// Always draw the same text, to ensure matching speed calculation
-		if (cpu_active)
-		{
-			font.draw_text(canvas, 8, 24, "GPU Transfer Texture Object", clan::Colorf(0.0f, 0.0f, 0.2f, 1.0f));
-			font.draw_text(canvas, 8, 24, "CPU Pixel Buffer", clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f));
-			draw_cpu(canvas, cpu_buffer, tux, textures[texture_cycle_first], textures[texture_cycle_second]);
-		}
-		else
-		{
-			font.draw_text(canvas, 8, 24, "CPU Pixel Buffer", clan::Colorf(0.0f, 0.0f, 0.2f, 1.0f));
-			font.draw_text(canvas, 8, 24, "GPU Transfer Texture Object", clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f));
-			draw_gpu(canvas, gpu_buffer[gpu_buffer_cycle_first], gpu_buffer[gpu_buffer_cycle_second], tux, textures[texture_cycle_first], textures[texture_cycle_second]);
-		}
-
-		font.draw_text(canvas, 8, canvas.get_height() - 16, "Press any key to toggle method");
-
-		texture_cycle = texture_cycle_second;
-		gpu_buffer_cycle = gpu_buffer_cycle_second;
-
-		std::string fps(clan::string_format("%1 fps", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1)));
-		font.draw_text(canvas, canvas.get_width() - 100, canvas.get_height()-16, fps, clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f));
-
-		// Use flip(1) to lock the fps
-		window.flip(0);
-		clan::RunLoop::process(0);
-
+		font.draw_text(canvas, 8, 24, "GPU Transfer Texture Object", clan::Colorf(0.0f, 0.0f, 0.2f, 1.0f));
+		font.draw_text(canvas, 8, 24, "CPU Pixel Buffer", clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f));
+		draw_cpu(canvas, cpu_buffer, tux, textures[texture_cycle_first], textures[texture_cycle_second]);
+	}
+	else
+	{
+		font.draw_text(canvas, 8, 24, "CPU Pixel Buffer", clan::Colorf(0.0f, 0.0f, 0.2f, 1.0f));
+		font.draw_text(canvas, 8, 24, "GPU Transfer Texture Object", clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f));
+		draw_gpu(canvas, gpu_buffer[gpu_buffer_cycle_first], gpu_buffer[gpu_buffer_cycle_second], tux, textures[texture_cycle_first], textures[texture_cycle_second]);
 	}
 
-	return 0;
+	font.draw_text(canvas, 8, canvas.get_height() - 16, "Press any key to toggle method");
+
+	texture_cycle = texture_cycle_second;
+	gpu_buffer_cycle = gpu_buffer_cycle_second;
+
+	std::string fps(clan::string_format("%1 fps", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1)));
+	font.draw_text(canvas, canvas.get_width() - 100, canvas.get_height()-16, fps, clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f));
+
+	// Use flip(1) to lock the fps
+	window.flip(0);
+
+	return !quit;
 }
 
 // A key was pressed

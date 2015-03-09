@@ -31,52 +31,44 @@
 #include "colorwheel.h"
 #include <cstdlib>
 
-App::App() : quit(false)
-{
-}
+clan::ApplicationInstance<App> clanapp;
 
-// The start of the Application
-int App::start(const std::vector<std::string> &args)
+App::App()
 {
+	// We support all display targets, in order listed here
+#ifdef WIN32
+	clan::D3DTarget::enable();
+#endif
+	clan::OpenGLTarget::enable();
+	
 	clan::DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("ColorWheel Example");
 	win_desc.set_size(clan::Size( 800, 600 ), false);
 
-	clan::DisplayWindow window(win_desc);
-    clan::SlotContainer cc;
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	window = clan::DisplayWindow(win_desc);
+	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 
-	clan::Canvas canvas(window);
+	canvas = clan::Canvas(window);
 
 	// Deleted automatically by the GUI
 //	new ColorWheel(canvas, gui, clan::Rect(32, 32, clan::Size(512, 512)));
+}
 
-	saturation_outer = 1.0f;
-	saturation_inner = 0.0f;
-	value_outer = 1.0f;
-	value_inner = 0.0f;
-	is_hsl = false;
+bool App::update()
+{
+	canvas.clear(clan::Colorf(0.0f,0.0f,0.0f));
 
+	clan::Pointf center((float)canvas.get_width() / 2.0f, (float)canvas.get_height() / 2.0f);
+	float radius = 200.0f;
+	draw(canvas, center, radius);
 
-	while (!quit)
-	{
-		canvas.clear(clan::Colorf(0.0f,0.0f,0.0f));
+	draw_labels(canvas);
 
-		clan::Pointf center((float)canvas.get_width() / 2.0f, (float)canvas.get_height() / 2.0f);
-		float radius = 200.0f;
-		draw(canvas, center, radius);
+	window.flip(1);
 
-		draw_labels(canvas);
-
-
-		window.flip(1);
-
-		clan::RunLoop::process();
-	}
-
-	return 0;
+	return !quit;
 }
 
 void App::draw_labels(clan::Canvas &canvas)

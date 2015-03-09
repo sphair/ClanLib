@@ -31,30 +31,31 @@
 #include "options.h"
 #include <cstdlib>
 
-App::App() : quit(false)
-{
-}
+clan::ApplicationInstance<App> clanapp;
 
-// The start of the Application
-int App::start(const std::vector<std::string> &args)
+App::App()
 {
+	// We support all display targets, in order listed here
+#ifdef WIN32
+	clan::D3DTarget::enable();
+#endif
+	clan::OpenGLTarget::enable();
+
 	clan::DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("MapMode Example");
 	win_desc.set_size(clan::Size( 800, 480 ), false);
 
-	clan::DisplayWindow window(win_desc);
-    clan::SlotContainer cc;
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
-
-	clan::Canvas canvas(window);
+	window = clan::DisplayWindow(win_desc);
+	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	canvas = clan::Canvas(window);
 
 	// Deleted automatically by the GUI
 	//Options *options = new Options(gui, clan::Rect(0, 0, canvas.get_size()));
 
-	clan::Image image_grid(canvas, "../Blend/Resources/grid.png");
-	clan::Image image_ball(canvas, "../Blend/Resources/ball.png");
+	image_grid = clan::Image(canvas, "../Blend/Resources/grid.png");
+	image_ball = clan::Image(canvas, "../Blend/Resources/ball.png");
 	float grid_width = (float) image_grid.get_width();
 	float grid_height = (float) image_grid.get_height();
 
@@ -62,49 +63,48 @@ int App::start(const std::vector<std::string> &args)
 
 	setup_balls();
 
-	clan::GameTime game_time;
+	game_time.reset();
+}
 
-	while (!quit)
-	{
-		game_time.update();
+bool App::update()
+{
+	game_time.update();
 
 	
-		int num_balls = 3;	// options->num_balls;
-		if (num_balls > max_balls)
-			num_balls = max_balls;
+	int num_balls = 3;	// options->num_balls;
+	if (num_balls > max_balls)
+		num_balls = max_balls;
 
-	//	if (options->is_moveballs_set)
-			move_balls(game_time.get_time_elapsed(), num_balls);
+//	if (options->is_moveballs_set)
+		move_balls(game_time.get_time_elapsed(), num_balls);
 
-	//	canvas.set_map_mode(options->current_mapmode);
+//	canvas.set_map_mode(options->current_mapmode);
 
-		const float grid_xpos = 10.0f;
-		const float grid_ypos = 10.0f;
+	const float grid_xpos = 10.0f;
+	const float grid_ypos = 10.0f;
 
-	//	if (options->current_mapmode == clan::map_user_projection)
-	//	{
-	//		clan::Sizef area_size(grid_width + (grid_xpos * 2.0f), grid_height + (grid_ypos * 2.0f));
-	//		set_user_projection(canvas, area_size, options);
-	//	}
+//	if (options->current_mapmode == clan::map_user_projection)
+//	{
+//		clan::Sizef area_size(grid_width + (grid_xpos * 2.0f), grid_height + (grid_ypos * 2.0f));
+//		set_user_projection(canvas, area_size, options);
+//	}
 
-		// Draw the grid
-		image_grid.draw(canvas, grid_xpos, grid_ypos);
+	// Draw the grid
+	image_grid.draw(canvas, grid_xpos, grid_ypos);
 
-		for (int cnt=0; cnt<num_balls; cnt++)
-		{
-			image_ball.draw(canvas, grid_xpos + balls[cnt].xpos, grid_ypos + balls[cnt].ypos);
-		}
-
-		canvas.set_transform(clan::Mat4f::identity());
-		canvas.set_projection(clan::Mat4f::identity());
-		canvas.set_map_mode(clan::map_2d_upper_left);
-		canvas.get_gc().set_viewport(canvas.get_size());
-
-		window.flip(1);
-
-		clan::RunLoop::process();
+	for (int cnt=0; cnt<num_balls; cnt++)
+	{
+		image_ball.draw(canvas, grid_xpos + balls[cnt].xpos, grid_ypos + balls[cnt].ypos);
 	}
-	return 0;
+
+	canvas.set_transform(clan::Mat4f::identity());
+	canvas.set_projection(clan::Mat4f::identity());
+	canvas.set_map_mode(clan::map_2d_upper_left);
+	canvas.get_gc().set_viewport(canvas.get_size());
+
+	window.flip(1);
+
+	return !quit;
 }
 
 // A key was pressed

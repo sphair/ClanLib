@@ -28,13 +28,11 @@
 
 #pragma once
 
-// This is the Application class (That is instantiated by the Program Class)
-class App
+class App : public clan::Application
 {
 public:
 	App();
-
-	int start(const std::vector<std::string> &args);
+	bool update() override;
 
 private:
 	void on_input_up(const clan::InputEvent &key);
@@ -42,12 +40,16 @@ private:
 	void draw(clan::Canvas &canvas, const clan::Pointf &center, float radius);
 	void draw_labels(clan::Canvas &canvas);
 private:
-	bool quit;
+	clan::DisplayWindow window;
+	clan::SlotContainer sc;
+	clan::Canvas canvas;
 
-	float saturation_outer;
-	float saturation_inner;
-	float value_outer;
-	float value_inner;
-	bool is_hsl;
+	bool quit = false;
+
+	float saturation_outer = 1.0f;
+	float saturation_inner = 0.0f;
+	float value_outer = 1.0f;
+	float value_inner = 0.0f;
+	bool is_hsl = false;
 
 };

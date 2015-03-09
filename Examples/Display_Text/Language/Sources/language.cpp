@@ -44,6 +44,16 @@
 #include <fribidi/fribidi.h>
 #endif
 
+clan::ApplicationInstance<Language> clanapp;
+
+Language::Language()
+{
+	// We support all display targets, in order listed here
+#ifdef WIN32
+	clan::D3DTarget::enable();
+#endif
+	clan::OpenGLTarget::enable();
+
 // The start of the Application
 int Language::start(const std::vector<std::string> &args)
 {
@@ -85,52 +95,49 @@ int Language::start(const std::vector<std::string> &args)
 	desc_arabic.set_charset(clan::FontDescription::charset_arabic);
 	clan::Font font_arabic("arial", desc_arabic);
 
-	// Run until someone presses escape
-	while (!quit)
-	{
+}
 
-		canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
+bool Language::update()
+{
+	canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
 		
-		std::string text;
+	std::string text;
 		
-		text = document_element.get_child_string("ENGLISH");
-		font_english.draw_text(canvas, 10, 60, text);
+	text = document_element.get_child_string("ENGLISH");
+	font_english.draw_text(canvas, 10, 60, text);
 
-		text = document_element.get_child_string("CHINESE");
-		font_chinese.draw_text(canvas, 10, 130, text);
+	text = document_element.get_child_string("CHINESE");
+	font_chinese.draw_text(canvas, 10, 130, text);
 
 #ifdef ENABLE_THIS_IF_YOU_WANT_TO_USE_FRIBIDI
-		text = document_element.get_child_string("ARABIC");
+	text = document_element.get_child_string("ARABIC");
 
-		/* input */
-		std::wstring text_16 = StringHelp::utf8_to_ucs2(text);
-		FriBidiChar *fri_str = (FriBidiChar *) text_16.c_str();
-		FriBidiStrIndex fri_len = text_16.length();
-		FriBidiCharType fri_base_dir = FRIBIDI_TYPE_ON;
-		FriBidiCharType *fri_pbase_dir = &fri_base_dir;
+	/* input */
+	std::wstring text_16 = StringHelp::utf8_to_ucs2(text);
+	FriBidiChar *fri_str = (FriBidiChar *) text_16.c_str();
+	FriBidiStrIndex fri_len = text_16.length();
+	FriBidiCharType fri_base_dir = FRIBIDI_TYPE_ON;
+	FriBidiCharType *fri_pbase_dir = &fri_base_dir;
 
-		/* output */
-		std::vector<wchar_t> output_buffer;
-		output_buffer.resize(text_16.length() + 1);
-		FriBidiChar *fri_visual_str = &output_buffer[0];
-		FriBidiStrIndex *fri_position_L_to_V_list = NULL;
-		FriBidiStrIndex *fri_position_V_to_L_list = NULL;
-		FriBidiLevel    *fri_embedding_level_list = NULL;
-		fribidi_boolean fri_result;
-		fri_result = fribidi_log2vis(fri_str,  fri_len, fri_pbase_dir, fri_visual_str, fri_position_L_to_V_list, fri_position_V_to_L_list, fri_embedding_level_list);
-		if (fri_result)
-		{
-			output_buffer[text_16.length()] = 0;
-			std::string new_text = clan::StringHelp::ucs2_to_utf8(&output_buffer[0]);
-			font_arabic.draw_text(gc, 10, 230, new_text);
-		}
-#endif
-		window.flip(1);
-
-		clan::RunLoop::process(0);
+	/* output */
+	std::vector<wchar_t> output_buffer;
+	output_buffer.resize(text_16.length() + 1);
+	FriBidiChar *fri_visual_str = &output_buffer[0];
+	FriBidiStrIndex *fri_position_L_to_V_list = NULL;
+	FriBidiStrIndex *fri_position_V_to_L_list = NULL;
+	FriBidiLevel    *fri_embedding_level_list = NULL;
+	fribidi_boolean fri_result;
+	fri_result = fribidi_log2vis(fri_str,  fri_len, fri_pbase_dir, fri_visual_str, fri_position_L_to_V_list, fri_position_V_to_L_list, fri_embedding_level_list);
+	if (fri_result)
+	{
+		output_buffer[text_16.length()] = 0;
+		std::string new_text = clan::StringHelp::ucs2_to_utf8(&output_buffer[0]);
+		font_arabic.draw_text(gc, 10, 230, new_text);
 	}
+#endif
+	window.flip(1);
 
-	return 0;
+	return !quit;
 }
 
 // A key was pressed

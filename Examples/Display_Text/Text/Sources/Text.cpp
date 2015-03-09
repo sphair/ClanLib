@@ -60,6 +60,16 @@ static const char *TextToShow[] = {
 NULL
 };
 
+clan::ApplicationInstance<ExampleText> clanapp;
+
+ExampleText::ExampleText()
+{
+	// We support all display targets, in order listed here
+#ifdef WIN32
+	clan::D3DTarget::enable();
+#endif
+	clan::OpenGLTarget::enable();
+
 int ExampleText::start(const std::vector<std::string> &args)
 { 
 	quit = false;
@@ -144,37 +154,33 @@ int ExampleText::start(const std::vector<std::string> &args)
 		ypos += layout[line_count].get_size().height;
 
 	}
-	clan::GameTime game_time;
+	game_time.reset();
+}
 
-	// Run until someone presses escape
-	while (!quit)
-	{
-		game_time.update();
+bool ExampleText::update()
+{
+	game_time.update();
 
-		canvas.set_map_mode(clan::map_2d_upper_left);
+	canvas.set_map_mode(clan::map_2d_upper_left);
 
-		// Draw a nice blue gradient in the background
-		canvas.fill_rect(window.get_viewport(), clan::Gradient(clan::Colorf::lightblue, clan::Colorf::lightblue, clan::Colorf::darkblue, clan::Colorf::darkblue));
+	// Draw a nice blue gradient in the background
+	canvas.fill_rect(window.get_viewport(), clan::Gradient(clan::Colorf::lightblue, clan::Colorf::lightblue, clan::Colorf::darkblue, clan::Colorf::darkblue));
 
-		// Draw the text into the frame buffer
-		update_text(canvas_fb, fb_text, font_normal, layout);
+	// Draw the text into the frame buffer
+	update_text(canvas_fb, fb_text, font_normal, layout);
 
-		angle += 0.5f;
-		if (angle >= 360.0f)
-			angle -= 360.0f;
+	angle += 0.5f;
+	if (angle >= 360.0f)
+		angle -= 360.0f;
 
-		// Draw the text
-		draw_text(canvas, texture_text, clan::Angle(angle, clan::angle_degrees));
+	// Draw the text
+	draw_text(canvas, texture_text, clan::Angle(angle, clan::angle_degrees));
 
-		last_fps = game_time.get_updates_per_second();
-		// Flip the display, showing on the screen what we have drawn
-		window.flip(1);
+	last_fps = game_time.get_updates_per_second();
+	// Flip the display, showing on the screen what we have drawn
+	window.flip(1);
 
-		// This call updates input and performs other "housekeeping" call this each frame
-		clan::RunLoop::process();
-	}
-
-	return 0;
+	return !quit;
 }
 
 void ExampleText::draw_text(clan::Canvas &canvas, clan::Texture2D &texture, clan::Angle angle)
