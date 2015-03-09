@@ -46,6 +46,15 @@ private:
 
 	};
 
+	clan::DisplayWindow window;
+	clan::Canvas canvas;
+	clan::SlotContainer sc;
+	clan::ProgramObject shader;
+	clan::Image background;
+	clan::Image ball;
+	clan::Texture2D texture_offscreen;
+	clan::Canvas canvas_offscreen;
+
 	clan::VertexArrayVector<clan::Vec2f> gpu_positions;
 	clan::VertexArrayVector<clan::Vec2f> gpu_tex1_coords;
 	clan::UniformVector<ProgramUniforms> gpu_uniforms;
@@ -54,5 +63,7 @@ private:
 	ProgramUniforms uniforms;
 
 	bool quit = false;
+	float scale = 1.0f;
+	uint64_t startTime;
 };
 
