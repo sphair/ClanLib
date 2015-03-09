@@ -28,16 +28,16 @@
 
 #pragma once
 
-// This is the Application class (That is instantiated by the Program Class)
-class Language
+class Language : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
+	Language();
+	bool update() override;
 
 private:
 	void on_input_up(const clan::InputEvent &key);
 	void on_window_close();
 
 private:
-	bool quit;
+	bool quit = false;
 };

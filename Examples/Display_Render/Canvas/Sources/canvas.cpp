@@ -30,7 +30,17 @@
 #include "precomp.h"
 #include "canvas.h"
 
-int ExampleCanvas::start(const std::vector<std::string> &args)
+clan::ApplicationInstance<ExampleCanvas> clanapp;
+
+ExampleCanvas::ExampleCanvas()
+{
+	// We support all display targets, in order listed here
+#ifdef WIN32
+	clan::D3DTarget::enable();
+#endif
+	clan::OpenGLTarget::enable();
+
+	int ExampleCanvas::start(const std::vector<std::string> &args)
 { 
 	quit = false;
 
@@ -77,31 +87,29 @@ int ExampleCanvas::start(const std::vector<std::string> &args)
 	float back_pos = 0;
 	scale = 1.0f;
 
-	// Run until someone presses escape
-	while (!quit)
-	{
-		// Draw a nice blue gradient in the background
-		canvas_window.fill_rect(window.get_viewport(), Gradient(Colorf::lightblue, Colorf::lightblue, Colorf::darkblue, Colorf::darkblue));
+}
 
-		// Draw the moving background
-		back_pos+= 1.0f;
-		image_ground_back.set_color(Colorf(0.5f, 0.5f, 0.5f, 1.0f));
-		image_ground_back.draw(canvas_window, sinf(back_pos/100.0f)*100.0f, -20.0f);
+bool ExampleCanvas::update()
+{
+	// Draw a nice blue gradient in the background
+	canvas_window.fill_rect(window.get_viewport(), Gradient(Colorf::lightblue, Colorf::lightblue, Colorf::darkblue, Colorf::darkblue));
 
-		// Draw the ground
-		image_ground.draw(canvas_window, 0, 0);
+	// Draw the moving background
+	back_pos+= 1.0f;
+	image_ground_back.set_color(Colorf(0.5f, 0.5f, 0.5f, 1.0f));
+	image_ground_back.draw(canvas_window, sinf(back_pos/100.0f)*100.0f, -20.0f);
+
+	// Draw the ground
+	image_ground.draw(canvas_window, 0, 0);
 	
-		// Draw mouse cursor
-		image_cutter.set_scale(scale, scale);
-		image_cutter.draw(canvas_window, mouse_pos.x - image_cutter.get_width() * 0.5f * scale, mouse_pos.y - image_cutter.get_height() * 0.5f * scale);
+	// Draw mouse cursor
+	image_cutter.set_scale(scale, scale);
+	image_cutter.draw(canvas_window, mouse_pos.x - image_cutter.get_width() * 0.5f * scale, mouse_pos.y - image_cutter.get_height() * 0.5f * scale);
 
-		// Flip the display, showing on the screen what we have drawn
-		window.flip(1);
+	// Flip the display, showing on the screen what we have drawn
+	window.flip(1);
 
-		// This call updates input and performs other "housekeeping" call this each frame
-		RunLoop::process();
-	}
-	return 0;
+	return !quit;
 }
 
 

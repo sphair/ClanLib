@@ -34,11 +34,11 @@ enum FontClass
 	font_sprite
 };
 
-// This is the Application class (That is instantiated by the Program Class)
-class App
+class App : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
+	App();
+	bool update() override;
 
 private:
 	void on_button_clicked_class_system();
@@ -65,7 +65,7 @@ private:
 	void draw_font_info();
 
 private:
-	bool quit;
+	bool quit = false;
 	Canvas canvas;
 	std::string font_text;
 	FontMetrics font_metrics;
@@ -78,6 +78,7 @@ private:
 	FontClass selected_fontclass;
 	float last_fps;
 	ResourceManager resources;
+	GameTime game_time;
 };
 
 

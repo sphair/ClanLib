@@ -31,7 +31,16 @@
 #include "scroller.h"
 #include "text.h"
 
-// The start of the Application
+clan::ApplicationInstance<Scroller> clanapp;
+
+Scroller::Scroller()
+{
+	// We support all display targets, in order listed here
+#ifdef WIN32
+	clan::D3DTarget::enable();
+#endif
+	clan::OpenGLTarget::enable();
+	// The start of the Application
 int Scroller::start(const std::vector<std::string> &args)
 {
 	quit = false;
@@ -66,27 +75,25 @@ int Scroller::start(const std::vector<std::string> &args)
 	font_description.set_height(24);
 	text.init(canvas, "arial", font_description, document_element, "TEXT");
 
-	clan::GameTime game_time;
-	// Run until someone presses escape
-	while (!quit)
-	{
-		game_time.update();
-		text.run(game_time.get_time_elapsed_ms(), 20);
+	game_time.reset();
+}
 
-		canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
+bool App::update()
+{
+	game_time.update();
+	text.run(game_time.get_time_elapsed_ms(), 20);
 
-		clan::Rect rect( 32, 32, canvas.get_width() - 32, 64 );
-		canvas.fill_rect(rect, clan::Colorf::black);
-		text.draw(canvas, rect);
-		rect.expand(1);
-		canvas.draw_box(rect, clan::Colorf::white);
+	canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
 
-		window.flip(1);
+	clan::Rect rect( 32, 32, canvas.get_width() - 32, 64 );
+	canvas.fill_rect(rect, clan::Colorf::black);
+	text.draw(canvas, rect);
+	rect.expand(1);
+	canvas.draw_box(rect, clan::Colorf::white);
 
-		clan::RunLoop::process(0);
-	}
+	window.flip(1);
 
-	return 0;
+	return !quit;
 }
 
 // A key was pressed

@@ -94,7 +94,6 @@
     <ClInclude Include="Sources\LightContainer.h" />
     <ClInclude Include="Sources\Main.h" />
     <ClInclude Include="Sources\precomp.h" />
-    <ClInclude Include="Sources\program.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Main.cpp" />
@@ -102,7 +101,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Sources\program.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.txt" />

@@ -29,7 +29,16 @@
 #include "Main.h"
 #include "LightContainer.h"
 
-int ExampleCanvas::start(const std::vector<std::string> &args)
+clan::ApplicationInstance<ExampleCanvas> clanapp;
+
+ExampleCanvas::ExampleCanvas()
+{
+	// We support all display targets, in order listed here
+#ifdef WIN32
+	clan::D3DTarget::enable();
+#endif
+	clan::OpenGLTarget::enable();
+	int ExampleCanvas::start(const std::vector<std::string> &args)
 { 
 	quit = false;
 
@@ -68,8 +77,6 @@ int ExampleCanvas::start(const std::vector<std::string> &args)
 
 	clan::Canvas canvas_fb(canvas, fb_lightmask);
 
-	// Just a bunch of variables for keeping time and tracking FPS
-	clan::GameTime game_time;
 
 	// Some day/night cycle variables.
 	float daylight = 0.50f;
@@ -80,76 +87,76 @@ int ExampleCanvas::start(const std::vector<std::string> &args)
 	mouse_light->set_scale(3.0f, 3.0f);
 	mouse_light->set_color(clan::Colorf((float)get_random(0,100)/100,(float)get_random(0,100)/100,(float)get_random(0,100)/100,0.20f));
 	lights.add(mouse_light);
+	game_time.reset();
+}
 
-	// Run until someone presses escape
-	while (!quit)
+bool ExampleCanvas::update()
+{
+	// Manage our time
+	game_time.update();
+
+	float micro_second = game_time.get_time_elapsed() / 1000.0f;
+
+	// Manage our day/night cycle
+	if(daylight_forward)
 	{
-		// Manage our time
-		game_time.update();
-
-		float micro_second = game_time.get_time_elapsed() / 1000.0f;
-
-		// Manage our day/night cycle
-		if(daylight_forward)
-		{
-			daylight += micro_second * 0.10f;	// Add a smaller amount of our delta time to slow the transition a little.
-			if(daylight >= 1.0f)
-				daylight_forward = false;
-		}
-		else
-		{
-			daylight -= micro_second * 0.10f;
-			if(daylight <= 0.30f)
-				daylight_forward = true;
-		}
-
-		// Updates
-		lights.update(micro_second);
-
-		// ** Draw Regular Game Objects/Images ** \\
-
-		// Draw background
-		background.draw(canvas, 0, 0);
-
-		// Draw your normal game objects around here...
-
-		// Draw colored lights.
-		if(LIGHTS_COLOR)
-			lights.draw(canvas);
-
-		// ** Clip Light Mask ** \\
-
-			// Clear it from last frame.
-		// -- Here is where day/night can be accomplished, but interpolating the color/alpha values.
-		canvas_fb.clear(clan::Colorf(0.0f, 0.0f, 0.0f, daylight));
-		
-		// Draw the Light cutouts
-		lights.draw_clips(canvas_fb);
-
-		// We're done making our changes to the texture, so reset the buffer.
-		canvas_fb.flush();
-	
-		// Draw the lightmask texture
-		// The color of the texture here can influence your output.  I chose to keep it simple
-		// by staying white with 100% alpha.
-		clan::Image light_mask_image(light_mask, light_mask.get_size());
-		if(USE_SCALE)
-			canvas.set_transform(clan::Mat4f::scale(CANVAS_SCALE_X,CANVAS_SCALE_Y, 1.0f));
-		light_mask_image.draw(canvas, clan::Rect(light_mask.get_size()));
-
-		canvas.set_transform(clan::Mat4f::identity());
-		
-		// Flip the display, showing on the screen what we have drawn (no v-sync)
-		window.flip(0);
-
-		// This call updates input and performs other "housekeeping"
-		clan::RunLoop::process();
+		daylight += micro_second * 0.10f;	// Add a smaller amount of our delta time to slow the transition a little.
+		if(daylight >= 1.0f)
+			daylight_forward = false;
+	}
+	else
+	{
+		daylight -= micro_second * 0.10f;
+		if(daylight <= 0.30f)
+			daylight_forward = true;
 	}
 
-	// Cleanup
-	lights.clear();
+	// Updates
+	lights.update(micro_second);
 
-	return 0;
+	// ** Draw Regular Game Objects/Images ** \\
+
+	// Draw background
+	background.draw(canvas, 0, 0);
+
+	// Draw your normal game objects around here...
+
+	// Draw colored lights.
+	if(LIGHTS_COLOR)
+		lights.draw(canvas);
+
+	// ** Clip Light Mask ** \\
+
+		// Clear it from last frame.
+	// -- Here is where day/night can be accomplished, but interpolating the color/alpha values.
+	canvas_fb.clear(clan::Colorf(0.0f, 0.0f, 0.0f, daylight));
+		
+	// Draw the Light cutouts
+	lights.draw_clips(canvas_fb);
+
+	// We're done making our changes to the texture, so reset the buffer.
+	canvas_fb.flush();
+	
+	// Draw the lightmask texture
+	// The color of the texture here can influence your output.  I chose to keep it simple
+	// by staying white with 100% alpha.
+	clan::Image light_mask_image(light_mask, light_mask.get_size());
+	if(USE_SCALE)
+		canvas.set_transform(clan::Mat4f::scale(CANVAS_SCALE_X,CANVAS_SCALE_Y, 1.0f));
+	light_mask_image.draw(canvas, clan::Rect(light_mask.get_size()));
+
+	canvas.set_transform(clan::Mat4f::identity());
+		
+	// Flip the display, showing on the screen what we have drawn (no v-sync)
+	window.flip(0);
+
+	if (quit)
+	{
+		// Cleanup
+		lights.clear();
+	}
+
+	return !quit;
 }
 
 void ExampleCanvas::on_mouse_move(const clan::InputEvent &key)

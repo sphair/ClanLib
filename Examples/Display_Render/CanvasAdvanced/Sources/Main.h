@@ -34,10 +34,11 @@
 
 #include "LightContainer.h"
 
-class ExampleCanvas
+class ExampleCanvas : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
+	ExampleCanvas();
+	bool update() override;
 
 private:
 	void on_mouse_move(const clan::InputEvent &key);
@@ -52,6 +53,7 @@ private:
 	clan::Texture2D			light_mask;			// We require more low-level functions for our lights, so this should be a texture.
 	clan::FrameBuffer		fb_lightmask;		// The FrameBuffer.
 	clan::Canvas	canvas;					// Graphic Context
+	clan::GameTime game_time;
 
-	bool				quit;				
+	bool				quit = false;				
 };

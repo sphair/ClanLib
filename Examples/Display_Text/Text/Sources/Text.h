@@ -28,10 +28,12 @@
 
 #pragma once
 
-class ExampleText
+class ExampleText : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
+	ExampleText();
+	bool update() override;
+
 private:
 	void on_keyboard_up(const clan::InputEvent &key);
 	void on_window_close();
@@ -39,7 +41,8 @@ private:
 	void update_text(clan::Canvas &canvas_fb, clan::FrameBuffer &fb_text, clan::Font &font, std::vector<clan::SpanLayout> &layout);
 	void draw_text(clan::Canvas &canvas, clan::Texture2D &texture, clan::Angle angle);
 
-	bool quit;
+	clan::GameTime game_time;
+	bool quit = false;
 	float last_fps;
 	static const int text_window_size = 1024;
 };

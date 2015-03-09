@@ -29,6 +29,16 @@
 #include "precomp.h"
 #include "font.h"
 
+clan::ApplicationInstance<App> clanapp;
+
+App::App()
+{
+	// We support all display targets, in order listed here
+#ifdef WIN32
+	clan::D3DTarget::enable();
+#endif
+	clan::OpenGLTarget::enable();
+
 // The start of the Application
 int App::start(const std::vector<std::string> &args)
 {
@@ -161,14 +171,15 @@ int App::start(const std::vector<std::string> &args)
 
 	small_font = clan::Font("Tahoma", 16);
 
-	GameTime game_time;
-	while(!quit)
-	{
-		game_time.update();
-		render(window, game_time);
-	}
+	game_time.reset();
+}
 
-	return 0;
+bool App::update()
+{
+	game_time.update();
+	render(window, game_time);
+
+	return !quit;
 }
 
 // A key was pressed

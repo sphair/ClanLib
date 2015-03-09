@@ -29,10 +29,11 @@
 
 #pragma once
 
-class ExampleCanvas
+class ExampleCanvas : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
+	ExampleCanvas();
+	bool update() override;
 
 private:
 	void on_keyboard_up(const InputEvent &key);
@@ -55,6 +56,6 @@ private:
 
 	bool mouse_down;
 
-	bool quit;
+	bool quit = false;
 };
 

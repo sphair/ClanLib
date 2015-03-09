@@ -31,13 +31,16 @@
 #include "options.h"
 #include <cstdlib>
 
-App::App() : quit(false)
-{
-}
+clan::ApplicationInstance<App> clanapp;
 
-// The start of the Application
-int App::start(const std::vector<std::string> &args)
+App::App()
 {
+	// We support all display targets, in order listed here
+#ifdef WIN32
+	clan::D3DTarget::enable();
+#endif
+	clan::OpenGLTarget::enable();
+
 	clan::DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("Blend Example");
@@ -66,59 +69,58 @@ int App::start(const std::vector<std::string> &args)
 
 	clan::Font font("Tahoma", 16);
 
-	clan::GameTime game_time;
-	while (!quit)
+	game_time.reset();
+}
+
+bool App::update()
+{
+	game_time.update();
+	
+	const float grid_xpos = 10.0f;
+	const float grid_ypos = 10.0f;
+	image_grid.draw(canvas, grid_xpos, grid_ypos);
+
+	//image_ball.set_color(options->primary_color);
+	//image_ball_premultiply_alpha.set_color(options->primary_color);
+
+	int num_balls = 4;	// options->num_balls;
+	if (num_balls > max_balls)
+		num_balls = max_balls;
+
+	//if (options->is_moveballs_set)
+		move_balls(game_time.get_time_elapsed(), num_balls);
+
+	clan::BlendStateDescription blend_desc;
+	//blend_desc.set_blend_function(options->blendfunc[0],options->blendfunc[1],options->blendfunc[2],options->blendfunc[3]);
+	//blend_desc.set_blend_equation(options->blendequation[0], options->blendequation[1]);
+	//blend_desc.enable_blending(options->is_blending_set);
+	//blend_desc.set_logic_op(options->logic_operation);
+	//blend_desc.enable_logic_op(options->logic_operation_enabled);
+
+	clan::RasterizerState raster_desc;
+	
+	clan::BlendState blend_state(canvas, blend_desc);
+	canvas.set_blend_state(blend_state);// , options->blend_color);
+
+	for (int cnt=0; cnt<num_balls; cnt++)
 	{
-		game_time.update();
-	
-		const float grid_xpos = 10.0f;
-		const float grid_ypos = 10.0f;
-		image_grid.draw(canvas, grid_xpos, grid_ypos);
-
-		//image_ball.set_color(options->primary_color);
-		//image_ball_premultiply_alpha.set_color(options->primary_color);
-
-		int num_balls = 4;	// options->num_balls;
-		if (num_balls > max_balls)
-			num_balls = max_balls;
-
-		//if (options->is_moveballs_set)
-			move_balls(game_time.get_time_elapsed(), num_balls);
-
-		clan::BlendStateDescription blend_desc;
-		//blend_desc.set_blend_function(options->blendfunc[0],options->blendfunc[1],options->blendfunc[2],options->blendfunc[3]);
-		//blend_desc.set_blend_equation(options->blendequation[0], options->blendequation[1]);
-		//blend_desc.enable_blending(options->is_blending_set);
-		//blend_desc.set_logic_op(options->logic_operation);
-		//blend_desc.enable_logic_op(options->logic_operation_enabled);
-
-		clan::RasterizerState raster_desc;
-	
-		clan::BlendState blend_state(canvas, blend_desc);
-		canvas.set_blend_state(blend_state);// , options->blend_color);
-
-		for (int cnt=0; cnt<num_balls; cnt++)
+	//	if (options->is_premult_alpha_set)
+	//	{
+	//		image_ball_premultiply_alpha.draw(canvas, grid_xpos + balls[cnt].xpos, grid_ypos + balls[cnt].ypos);
+	//	}
+	//	else
 		{
-		//	if (options->is_premult_alpha_set)
-		//	{
-		//		image_ball_premultiply_alpha.draw(canvas, grid_xpos + balls[cnt].xpos, grid_ypos + balls[cnt].ypos);
-		//	}
-		//	else
-			{
-				image_ball.draw(canvas, grid_xpos + balls[cnt].xpos, grid_ypos + balls[cnt].ypos);
-			}
+			image_ball.draw(canvas, grid_xpos + balls[cnt].xpos, grid_ypos + balls[cnt].ypos);
 		}
-
-		canvas.reset_blend_state();
-	
-		//draw_equation(canvas, font, options);
-
-		window.flip(1);
-
-		clan::RunLoop::process();
 	}
 
-	return 0;
+	canvas.reset_blend_state();
+	
+	//draw_equation(canvas, font, options);
+
+	window.flip(1);
+
+	return !quit;
 }
 
 // A key was pressed
