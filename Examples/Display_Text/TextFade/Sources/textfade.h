@@ -41,5 +41,12 @@ private:
 	void draw_text(clan::Canvas &canvas, clan::Font &font, int ypos, const char *text);
 
 private:
+	clan::DisplayWindow window;
+	clan::SlotContainer sc;
+	clan::Canvas canvas;
+	clan::Font sprite_font;
+	clan::Image background;
+	clan::Font standard_font;
+
 	bool quit = false;
 };
