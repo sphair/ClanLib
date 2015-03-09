@@ -30,6 +30,17 @@
 #include "precomp.h"
 #include "textfade.h"
 
+clan::ApplicationInstance<TextFade> clanapp;
+
+TextFade::TextFade()
+{
+	// We support all display targets, in order listed here
+#ifdef WIN32
+	clan::D3DTarget::enable();
+#endif
+	clan::OpenGLTarget::enable();
+
+
 // The start of the Application
 int TextFade::start(const std::vector<std::string> &args)
 {
@@ -63,23 +74,19 @@ int TextFade::start(const std::vector<std::string> &args)
 	clan::ResourceManager resources = clan::XMLResourceManager::create(clan::XMLResourceDocument("../Font/Resources/resources.xml"));
 	clan::Font sprite_font = clan::Font::resource(canvas, "ClanFont", clan::FontDescription(), resources);
 	sprite_font.set_height(32);
+}
 
-	// Run until someone presses escape
-	while (!quit)
-	{
-		background.draw(canvas, canvas.get_size());
+bool TextFade::update()
+{
+	background.draw(canvas, canvas.get_size());
 
-		draw_text(canvas, standard_font, 100, "ABCDEFGHIJKLMNOPQRSTUVWXZ");
+	draw_text(canvas, standard_font, 100, "ABCDEFGHIJKLMNOPQRSTUVWXZ");
 
-		draw_text(canvas, sprite_font, 300, "ABCDEFGHIJKLMNOPQRSTUVWXZ");
+	draw_text(canvas, sprite_font, 300, "ABCDEFGHIJKLMNOPQRSTUVWXZ");
 
-		window.flip(1);
+	window.flip(1);
 
-		// This call processes user input and other events
-		clan::RunLoop::process(0);
-	}
-
-	return 0;
+	return !quit;
 }
 
 void TextFade::draw_text(clan::Canvas &canvas, clan::Font &font, int ypos, const char *text)

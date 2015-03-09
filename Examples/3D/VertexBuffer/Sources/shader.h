@@ -31,6 +31,7 @@
 class Shader
 {
 public:
+	Shader(){}
 	Shader(GraphicContext &gc);
 
 	void Use(GraphicContext &gc, const Mat4f &matrix_modelview, const Mat4f &matrix_modelview_projection, const Mat4f &matrix_normal);

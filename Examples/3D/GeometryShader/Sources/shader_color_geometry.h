@@ -31,6 +31,7 @@
 class ShaderColorGeometry
 {
 public:
+	ShaderColorGeometry(){}
 	ShaderColorGeometry(GraphicContext &gc);
 
 	void Use(GraphicContext &gc, const Mat4f &matrix_modelview_projection);

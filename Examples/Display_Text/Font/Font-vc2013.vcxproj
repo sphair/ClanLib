@@ -146,13 +146,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Sources\program.cpp" />
     <ClCompile Include="Sources\settings.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\Font.h" />
     <ClInclude Include="Sources\precomp.h" />
-    <ClInclude Include="Sources\program.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.txt" />

@@ -1,11 +1,32 @@
 
 #pragma once
 
-class Program
+class Program : public clan::Application
 {
 public:
-	static int main(const std::vector<std::string> &args);
+	Program();
+	bool update() override;
+	
+	bool exit = false;
 
-	static void exit_func();
-	static bool exit;
+	static const int particle_count = 30;
+	struct Uniforms
+	{
+		clan::Vec3f resolution;
+		float time;
+		clan::Vec4f mouse;
+
+		clan::Vec4f positions[particle_count];
+		int xparticle_count;
+	};
+
+	clan::DisplayWindow window;
+	clan::SlotContainer sc;
+	clan::GraphicContext gc;
+	unsigned int start_time;
+	Uniforms uniforms;
+	clan::UniformVector<Uniforms> uniformVector;
+	clan::ShaderEffect effect;
+
+
 };

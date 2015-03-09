@@ -30,8 +30,16 @@
 #include "precomp.h"
 #include "canvas.h"
 
-int ExampleCanvas::start(const std::vector<std::string> &args)
-{ 
+clan::ApplicationInstance<ExampleCanvas> clanapp;
+
+ExampleCanvas::ExampleCanvas()
+{
+	// We support all display targets, in order listed here
+#ifdef WIN32
+	clan::D3DTarget::enable();
+#endif
+	clan::OpenGLTarget::enable();
+
 	quit = false;
 
 	// Set a videomode - 1024x256
@@ -39,17 +47,16 @@ int ExampleCanvas::start(const std::vector<std::string> &args)
 	desc.set_allow_resize(false);
 	desc.set_title("ClanLib Draw To Texture Example");
 	desc.set_size(Size(1024, 256), true);
-	DisplayWindow window(desc);
-    clan::SlotContainer cc;
+	window = DisplayWindow(desc);
 	// Connect the Window close event
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &ExampleCanvas::on_window_close));
+	sc.connect(window.sig_window_close(), clan::bind_member(this, &ExampleCanvas::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &ExampleCanvas::on_keyboard_up));
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &ExampleCanvas::on_keyboard_up));
 
 	// Connect a mouse handler to on_key_down()
-	cc.connect(window.get_ic().get_mouse().sig_key_up(), clan::bind_member(this, &ExampleCanvas::on_mouse_down));
-	cc.connect(window.get_ic().get_mouse().sig_pointer_move(), clan::bind_member(this, &ExampleCanvas::on_mouse_move));
+	sc.connect(window.get_ic().get_mouse().sig_key_up(), clan::bind_member(this, &ExampleCanvas::on_mouse_down));
+	sc.connect(window.get_ic().get_mouse().sig_pointer_move(), clan::bind_member(this, &ExampleCanvas::on_mouse_move));
 
 	canvas_window = Canvas(window);
 
@@ -74,34 +81,29 @@ int ExampleCanvas::start(const std::vector<std::string> &args)
 	BlendState blend_state(canvas_framebuffer.get_gc(), blend_desc);
 	canvas_framebuffer.get_gc().set_blend_state(blend_state);
 
-	float back_pos = 0;
-	scale = 1.0f;
+}
 
-	// Run until someone presses escape
-	while (!quit)
-	{
-		// Draw a nice blue gradient in the background
-		canvas_window.fill_rect(window.get_viewport(), Gradient(Colorf::lightblue, Colorf::lightblue, Colorf::darkblue, Colorf::darkblue));
+bool ExampleCanvas::update()
+{
+	// Draw a nice blue gradient in the background
+	canvas_window.fill_rect(window.get_viewport(), Gradient(Colorf::lightblue, Colorf::lightblue, Colorf::darkblue, Colorf::darkblue));
 
-		// Draw the moving background
-		back_pos+= 1.0f;
-		image_ground_back.set_color(Colorf(0.5f, 0.5f, 0.5f, 1.0f));
-		image_ground_back.draw(canvas_window, sinf(back_pos/100.0f)*100.0f, -20.0f);
+	// Draw the moving background
+	back_pos+= 1.0f;
+	image_ground_back.set_color(Colorf(0.5f, 0.5f, 0.5f, 1.0f));
+	image_ground_back.draw(canvas_window, sinf(back_pos/100.0f)*100.0f, -20.0f);
 
-		// Draw the ground
-		image_ground.draw(canvas_window, 0, 0);
+	// Draw the ground
+	image_ground.draw(canvas_window, 0, 0);
 	
-		// Draw mouse cursor
-		image_cutter.set_scale(scale, scale);
-		image_cutter.draw(canvas_window, mouse_pos.x - image_cutter.get_width() * 0.5f * scale, mouse_pos.y - image_cutter.get_height() * 0.5f * scale);
+	// Draw mouse cursor
+	image_cutter.set_scale(scale, scale);
+	image_cutter.draw(canvas_window, mouse_pos.x - image_cutter.get_width() * 0.5f * scale, mouse_pos.y - image_cutter.get_height() * 0.5f * scale);
 
-		// Flip the display, showing on the screen what we have drawn
-		window.flip(1);
+	// Flip the display, showing on the screen what we have drawn
+	window.flip(1);
 
-		// This call updates input and performs other "housekeeping" call this each frame
-		RunLoop::process();
-	}
-	return 0;
+	return !quit;
 }
 
 

@@ -29,11 +29,11 @@
 
 #pragma once
 
-// This is the Application class (That is instantiated by the Program Class)
-class TextFade
+class TextFade : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
+	TextFade();
+	bool update() override;
 
 private:
 	void on_input_up(const clan::InputEvent &key);
@@ -41,5 +41,5 @@ private:
 	void draw_text(clan::Canvas &canvas, clan::Font &font, int ypos, const char *text);
 
 private:
-	bool quit;
+	bool quit = false;
 };

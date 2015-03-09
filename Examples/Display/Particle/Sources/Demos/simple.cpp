@@ -21,86 +21,78 @@ system which is much more flexible and robust but more complicated.
 #include "../LinearParticle/L_ParticleSystem.h"
 #include "framerate_counter.h"
 
-int DemoSimple::run(clan::DisplayWindow &window)
+DemoSimple::DemoSimple(clan::DisplayWindow &window) : window(window)
 {
 	quit = false;
 
 	// Set the window
 	window.set_title("LinearParticle Example - Simple ");
 
-    clan::SlotContainer cc;
 	// Connect the Window close event
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &DemoSimple::on_window_close));
+	sc.connect(window.sig_window_close(), clan::bind_member(this, &DemoSimple::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &DemoSimple::on_input_up));
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &DemoSimple::on_input_up));
 
 	// Get the graphic context
-	clan::Canvas canvas(window);
+	canvas = clan::Canvas(window);
 
 	// initialize LinearParticle
 	L_ParticleSystem::init();
 
 	// create surface to be used for particle and set the alignment
-	clan::Sprite surface(canvas,"Resources/light16p.png");
+	surface = clan::Sprite(canvas,"Resources/light16p.png");
 	surface.set_alignment(clan::origin_center);
 
 	// create a sample of particle with life of 5000
-	L_Particle particle(&surface,5000);
+	particle = clan::make_unique<L_Particle>(&surface, 5000);
 
 	// create dropping effect with period of 16
-	L_DroppingEffect dropper(0,0,16);
+	dropper = clan::make_unique<L_DroppingEffect>(0, 0, 16);
 
 	// add the particle to dropper effect
-	dropper.add(&particle);
+	dropper->add(particle.get());
 
 	// initialize particle effect
-	dropper.initialize();
+	dropper->initialize();
 
-	float x_pos = 320;
-	float y_pos = 240;
-	float x_vel = 3.0f;
-	float y_vel = 3.0f;
+	font = clan::Font("tahoma", 16 );
+}
 
-	clan::Font font("tahoma", 16 );
+bool DemoSimple::update()
+{
+	canvas.clear();
 
-	FramerateCounter frameratecounter;
+	x_pos += x_vel;
+	y_pos += y_vel;
 
-	// Run until someone presses escape
-	while (!quit)
+	if( x_pos > 640 || x_pos < 0 )
+		x_vel = -x_vel;
+
+	if( y_pos > 480 || y_pos < 0 )
+		y_vel = -y_vel;
+
+	dropper->set_position(x_pos, y_pos);
+		dropper->trigger();
+
+	/* pass frame time to L_ParticleEffect::run(int) for time based system,
+		a constant number would be a reference time unit for frame based system. */
+	dropper->run(16);
+
+	// draw dropping effect
+	L_DrawParticle(canvas, dropper.get());
+
+	frameratecounter.show_fps(canvas, font);
+	window.flip(0);	// Set to "1" to lock to screen refresh rate
+	frameratecounter.frame_shown();
+
+	if (quit)
 	{
-		canvas.clear();
-
-		x_pos += x_vel;
-		y_pos += y_vel;
-
-		if( x_pos > 640 || x_pos < 0 )
-			x_vel = -x_vel;
-
-		if( y_pos > 480 || y_pos < 0 )
-			y_vel = -y_vel;
-
-		dropper.set_position(x_pos, y_pos);
-			dropper.trigger();
-
-		/* pass frame time to L_ParticleEffect::run(int) for time based system,
-			a constant number would be a reference time unit for frame based system. */
-		dropper.run(16);
-
-		// draw dropping effect
-		L_DrawParticle(canvas,dropper);
-
-		frameratecounter.show_fps(canvas, font);
-		window.flip(0);	// Set to "1" to lock to screen refresh rate
-		frameratecounter.frame_shown();
-
-		clan::RunLoop::process(0);
+		// deinitialize LinearParticle
+		L_ParticleSystem::deinit();
 	}
 
-	// deinitialize LinearParticle
-	L_ParticleSystem::deinit();
-
-	return 0;
+	return !quit;
 }
 
 // A key was pressed

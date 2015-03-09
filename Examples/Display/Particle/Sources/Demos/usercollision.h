@@ -28,14 +28,16 @@
 
 #pragma once
 
+#include "../state.h"
 #include "../LinearParticle/L_ParticleSystem.h"
+#include "framerate_counter.h"
 
-class DemoUserCollision
+class DemoUserCollision : public DemoScreen
 {
 public:
-	DemoUserCollision(){}
+	DemoUserCollision(clan::DisplayWindow &window);
 
-	int run(clan::DisplayWindow &window);
+	bool update() override;
 
 private:
 	void on_key_up(const clan::InputEvent& key);
@@ -44,15 +46,25 @@ private:
 	static void check_collision(L_Particle& particle, const void* user_data);
 
 private:
-	bool quit;
-	bool show_menu;
+	clan::DisplayWindow window;
+	clan::SlotContainer sc;
+	clan::Canvas canvas;
+	clan::Font font;
+	FramerateCounter frameratecounter;
+	clan::Sprite particle_1_sur;
+	clan::Sprite particle_2_sur;
+	clan::Image circle_surface;
+	clan::Image cflight_surface;
+	bool quit = false;
+	bool show_menu = true;
 	bool triggered;
+	uint64_t last_time;
 
-	L_Particle* particle_1;
-	L_Particle* particle_2;
-	L_ShootingEffect* shooting_eff;
-	L_ExplosionEffect* exp_effect;
-	L_EffectEmitter* exp_emitter;
+	std::unique_ptr<L_Particle> particle_1;
+	std::unique_ptr<L_Particle> particle_2;
+	std::unique_ptr<L_ShootingEffect> shooting_eff;
+	std::unique_ptr<L_ExplosionEffect> exp_effect;
+	std::unique_ptr<L_EffectEmitter> exp_emitter;
 	L_MotionController motion_ctrl;
 	L_Vector circle_pos;
 };

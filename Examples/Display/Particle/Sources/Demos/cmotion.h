@@ -28,14 +28,16 @@
 
 #pragma once
 
+#include "../state.h"
 #include "../LinearParticle/L_ParticleSystem.h"
+#include "framerate_counter.h"
 
-class DemoCMotion
+class DemoCMotion : public DemoScreen
 {
 public:
-	DemoCMotion();
+	DemoCMotion(clan::DisplayWindow &window);
 
-	int run(clan::DisplayWindow &window);
+	bool update() override;
 
 private:
 	void set_style(clan::Canvas &canvas);
@@ -44,16 +46,22 @@ private:
 	void run_a_step(int time);
 
 private:
-	bool quit;
-	bool show_menu;
-	bool random_ini_rotation;
-	char current_style;
+	clan::DisplayWindow window;
+	clan::SlotContainer sc;
+	clan::Canvas canvas;
+	clan::Sprite surface;
+	clan::Font font;
+	FramerateCounter frameratecounter;
+	bool quit = false;
+	bool show_menu = true;
+	bool random_ini_rotation = false;
+	char current_style = 0;
 	clan::Colorf bg_color;
+	uint64_t last_time;
 
 	L_MotionController motion_ctrl;
-	L_Particle *particle;
-	L_ShootingEffect* effect;
-	clan::Font* font;
+	std::unique_ptr<L_Particle> particle;
+	std::unique_ptr<L_ShootingEffect> effect;
 	clan::Colorf fontColor;
 	L_BlendingMode blendingMode; 
 };

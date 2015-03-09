@@ -41,13 +41,11 @@ typedef struct _BallPosition
 
 class Options;
 
-// This is the Application class (That is instantiated by the Program Class)
-class App
+class App : public clan::Application
 {
 public:
 	App();
-
-	int start(const std::vector<std::string> &args);
+	bool update() override;
 
 private:
 	void on_input_up(const clan::InputEvent &key);
@@ -56,10 +54,11 @@ private:
 	void move_balls(float time_diff, int num_balls);
 	clan::Image get_stencil(clan::Canvas &canvas, clan::Rect rect);
 private:
-	bool quit;
+	bool quit = false;
 	float grid_space;
 	float ball_alpha;
 
+	clan::GameTime game_time;
 	static const int max_balls = 9;
 	BallPosition balls[max_balls];
 

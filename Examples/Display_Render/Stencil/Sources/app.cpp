@@ -31,6 +31,16 @@
 #include "options.h"
 #include <cstdlib>
 
+clan::ApplicationInstance<App> clanapp;
+
+App::App()
+{
+	// We support all display targets, in order listed here
+#ifdef WIN32
+	clan::D3DTarget::enable();
+#endif
+	clan::OpenGLTarget::enable();
+
 App::App() : quit(false)
 {
 }
@@ -68,91 +78,89 @@ int App::start(const std::vector<std::string> &args)
 	blend_desc.enable_color_write(false, false, false, false);
 	clan::BlendState blend_state_no_color_write(canvas, blend_desc);
 
-	clan::GameTime game_time;
+	game_time.reset();
+}
 
-	while (!quit)
-	{
-		game_time.update();
+bool App::update()
+{
+	game_time.update();
 	
 
-		int num_balls = 9;	// options->num_balls;
-		if (num_balls > max_balls)
-			num_balls = max_balls;
+	int num_balls = 9;	// options->num_balls;
+	if (num_balls > max_balls)
+		num_balls = max_balls;
 
-		//if (options->is_moveballs_set)
-			move_balls(game_time.get_time_elapsed(), num_balls);
+	//if (options->is_moveballs_set)
+		move_balls(game_time.get_time_elapsed(), num_balls);
 
-		canvas.clear_stencil(0);
+	canvas.clear_stencil(0);
 
-		// Draw the grid
-		const float grid_xpos = 10.0f;
-		const float grid_ypos = 10.0f;
-		image_grid.draw(canvas, grid_xpos, grid_ypos);
+	// Draw the grid
+	const float grid_xpos = 10.0f;
+	const float grid_ypos = 10.0f;
+	image_grid.draw(canvas, grid_xpos, grid_ypos);
 
-		clan::DepthStencilStateDescription stencil_desc;
+	clan::DepthStencilStateDescription stencil_desc;
 
-		// Draw the circle onto the stencil
-		//if (options->is_circle_set)
-		{
-			stencil_desc.enable_stencil_test(true);
-
-			stencil_desc.set_stencil_compare_front(clan::compare_always, 255, 255);
-			stencil_desc.set_stencil_compare_back(clan::compare_always, 255, 255);
-			stencil_desc.set_stencil_op_front(clan::stencil_incr_wrap, clan::stencil_incr_wrap, clan::stencil_incr_wrap);
-			stencil_desc.set_stencil_op_back(clan::stencil_incr_wrap, clan::stencil_incr_wrap, clan::stencil_incr_wrap);
-			stencil_desc.enable_depth_write(false);
-			stencil_desc.enable_depth_test(false);
-
-			clan::DepthStencilState stencil_state(canvas, stencil_desc);
-			canvas.set_depth_stencil_state(stencil_state);
-			canvas.set_blend_state(blend_state_no_color_write);
-
-			canvas.fill_circle(grid_xpos + image_grid.get_width()/2, grid_ypos + image_grid.get_height()/2, 100, clan::Colorf::white);
-			canvas.reset_blend_state();
-
-		}
-
+	// Draw the circle onto the stencil
+	//if (options->is_circle_set)
+	{
 		stencil_desc.enable_stencil_test(true);
-		//stencil_desc.set_stencil_compare_front(options->compare_function, options->compare_reference, 255);
-		//stencil_desc.set_stencil_compare_back(options->compare_function, options->compare_reference, 255);
-		//stencil_desc.set_stencil_op_front(options->stencil_fail, options->stencil_pass, options->stencil_pass);
-		//stencil_desc.set_stencil_op_back(options->stencil_fail, options->stencil_pass, options->stencil_pass);
 
-		// Note, depth testing disabled for this example
+		stencil_desc.set_stencil_compare_front(clan::compare_always, 255, 255);
+		stencil_desc.set_stencil_compare_back(clan::compare_always, 255, 255);
+		stencil_desc.set_stencil_op_front(clan::stencil_incr_wrap, clan::stencil_incr_wrap, clan::stencil_incr_wrap);
+		stencil_desc.set_stencil_op_back(clan::stencil_incr_wrap, clan::stencil_incr_wrap, clan::stencil_incr_wrap);
 		stencil_desc.enable_depth_write(false);
 		stencil_desc.enable_depth_test(false);
-		
-		clan::BlendState blend_state(canvas, blend_desc);
+
 		clan::DepthStencilState stencil_state(canvas, stencil_desc);
 		canvas.set_depth_stencil_state(stencil_state);
+		canvas.set_blend_state(blend_state_no_color_write);
 
-		for (int cnt=0; cnt<num_balls; cnt++)
-		{
-			image_ball.draw(canvas, grid_xpos + balls[cnt].xpos, grid_ypos + balls[cnt].ypos);
-		}
+		canvas.fill_circle(grid_xpos + image_grid.get_width()/2, grid_ypos + image_grid.get_height()/2, 100, clan::Colorf::white);
+		canvas.reset_blend_state();
 
-		canvas.reset_depth_stencil_state();
-
-		clan::Image stencil_image = get_stencil(canvas, 
-			clan::Rect(grid_xpos, grid_ypos, image_grid.get_width(), image_grid.get_height()));
-
-		const float stencil_image_xpos = 400.0f;
-		const float stencil_image_ypos = 30.0f;
-		const float stencil_image_scale = 0.5f;
-		stencil_image.set_scale(stencil_image_scale, stencil_image_scale);
-		stencil_image.draw(canvas, stencil_image_xpos, stencil_image_ypos);
-		canvas.draw_box(clan::Rectf(stencil_image_xpos, stencil_image_ypos, clan::Sizef(stencil_image.get_width() * stencil_image_scale, stencil_image.get_height() * stencil_image_scale)), clan::Colorf::white);
-		font.draw_text(canvas, stencil_image_xpos, stencil_image_ypos - 4.0f, "Stencil", clan::Colorf::black);
-
-		// Add a note to avoid confusion
-		font.draw_text(canvas, 10.0f, 500.0, "(This example does not use the stencil depth buffer comparison or the stencil bitmask)", clan::Colorf::black);
-
-		window.flip(1);
-
-		clan::RunLoop::process();
 	}
 
-	return 0;
+	stencil_desc.enable_stencil_test(true);
+	//stencil_desc.set_stencil_compare_front(options->compare_function, options->compare_reference, 255);
+	//stencil_desc.set_stencil_compare_back(options->compare_function, options->compare_reference, 255);
+	//stencil_desc.set_stencil_op_front(options->stencil_fail, options->stencil_pass, options->stencil_pass);
+	//stencil_desc.set_stencil_op_back(options->stencil_fail, options->stencil_pass, options->stencil_pass);
+
+	// Note, depth testing disabled for this example
+	stencil_desc.enable_depth_write(false);
+	stencil_desc.enable_depth_test(false);
+		
+	clan::BlendState blend_state(canvas, blend_desc);
+	clan::DepthStencilState stencil_state(canvas, stencil_desc);
+	canvas.set_depth_stencil_state(stencil_state);
+
+	for (int cnt=0; cnt<num_balls; cnt++)
+	{
+		image_ball.draw(canvas, grid_xpos + balls[cnt].xpos, grid_ypos + balls[cnt].ypos);
+	}
+
+	canvas.reset_depth_stencil_state();
+
+	clan::Image stencil_image = get_stencil(canvas, 
+		clan::Rect(grid_xpos, grid_ypos, image_grid.get_width(), image_grid.get_height()));
+
+	const float stencil_image_xpos = 400.0f;
+	const float stencil_image_ypos = 30.0f;
+	const float stencil_image_scale = 0.5f;
+	stencil_image.set_scale(stencil_image_scale, stencil_image_scale);
+	stencil_image.draw(canvas, stencil_image_xpos, stencil_image_ypos);
+	canvas.draw_box(clan::Rectf(stencil_image_xpos, stencil_image_ypos, clan::Sizef(stencil_image.get_width() * stencil_image_scale, stencil_image.get_height() * stencil_image_scale)), clan::Colorf::white);
+	font.draw_text(canvas, stencil_image_xpos, stencil_image_ypos - 4.0f, "Stencil", clan::Colorf::black);
+
+	// Add a note to avoid confusion
+	font.draw_text(canvas, 10.0f, 500.0, "(This example does not use the stencil depth buffer comparison or the stencil bitmask)", clan::Colorf::black);
+
+	window.flip(1);
+
+	return !quit;
 }
 
 // A key was pressed

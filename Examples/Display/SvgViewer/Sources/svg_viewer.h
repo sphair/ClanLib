@@ -29,8 +29,21 @@
 
 #pragma once
 
-class SvgViewer
+#include "svg.h"
+
+class SvgViewer : public clan::Application
 {
 public:
-	int run(const std::vector<std::string> &args);
+	SvgViewer();
+	bool update() override;
+private:
+	clan::DisplayWindow window;
+	clan::Canvas canvas;
+	clan::Font font;
+	clan::SlotContainer sc;
+	Svg svg;
+	clan::GameTime time;
+	float angle = 0.0f;
+	float scale = 0.5f;
+	bool quit = false;
 };

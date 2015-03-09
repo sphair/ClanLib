@@ -30,16 +30,17 @@
 
 #include "scene.h"
 #include "model.h"
+#include "framerate_counter.h"
 
 class ShaderDepth;
 class ShaderBumpMap;
 class Options;
 
-// This is the Application class (That is instantiated by the Program Class)
-class App
+class App : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
+	App();
+	bool update() override;
 
 private:
 	void on_input_up(const InputEvent &key);
@@ -52,6 +53,14 @@ private:
 	void calculate_matricies(GraphicContext &gc);
 	void control_target(Options *options);
 private:
+	DisplayWindow window;
+	SlotContainer sc;
+	Canvas canvas;
+	std::shared_ptr<GraphicStore> graphic_store;
+	RasterizerState raster_state;
+	DepthStencilState depth_write_enabled;
+	clan::Font font;
+	
 	Scene scene;
 
 	Model model_teapot;
@@ -67,17 +76,19 @@ private:
 	SceneObject *rotation_target_b;
 	SceneObject *rotation_target_c;
 
-
 	Quaternionf initial_quaternion;
 	Quaternionf final_quaternion;
 
 	int time_made_active;
-	bool active_lerp;
-	bool active_slerp;
+	bool active_lerp = false;
 
 	uint64_t current_time;
 	int time_delta;
-	bool quit;
+	bool quit = false;
+	FramerateCounter framerate_counter;
+	uint64_t time_last;
+	uint64_t time_start;
+
 };
 
 

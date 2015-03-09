@@ -28,15 +28,23 @@
 
 #pragma once
 
-// This is the Application class (That is instantiated by the Program Class)
-class Particle
+#include "state.h"
+
+class Particle : public DemoScreen
 {
 public:
-	int start(const std::vector<std::string> &args);
+	Particle(clan::DisplayWindow &window);
+	
+	bool update() override;
 
 private:
 	void on_window_close();
 
 private:
-	bool quit;
+	clan::DisplayWindow window;
+	clan::SlotContainer sc;
+	bool quit = false;
+	clan::Canvas canvas;
+	clan::Font font;
+
 };

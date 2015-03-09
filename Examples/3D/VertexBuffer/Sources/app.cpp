@@ -31,14 +31,14 @@
 #include "shader.h"
 #include <cstdlib>
 
-App::App() : quit(false)
-{
-}
+clan::ApplicationInstance<App> clanapp;
 
-// The start of the Application
-int App::start(const std::vector<std::string> &args)
+App::App()
 {
-    SlotContainer cc; 
+	// We support all display targets, in order listed here
+	clan::D3DTarget::enable();
+	clan::OpenGLTarget::enable();
+
 	DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("Vertex Buffer Object Example");
@@ -46,27 +46,27 @@ int App::start(const std::vector<std::string> &args)
 
 	win_desc.set_size(Size( 800, 600 ), false);
 
-	DisplayWindow window(win_desc);
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	window = DisplayWindow(win_desc);
+	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 
-	Canvas canvas(window);
+	canvas = Canvas(window);
 
-	Shader shader(canvas);
+	shader = Shader(canvas);
 
 	// Prepare the display
 	RasterizerStateDescription rasterizer_state_desc;
 	rasterizer_state_desc.set_culled(true);
 	rasterizer_state_desc.set_face_cull_mode(cull_back);
 	rasterizer_state_desc.set_front_face(face_clockwise);
-	RasterizerState raster_state(canvas, rasterizer_state_desc);
+	raster_state = RasterizerState(canvas, rasterizer_state_desc);
 
 	DepthStencilStateDescription depth_state_desc;
 	depth_state_desc.enable_depth_write(true);
 	depth_state_desc.enable_depth_test(true);
 	depth_state_desc.enable_stencil_test(false);
 	depth_state_desc.set_depth_compare_function(compare_lequal);
-	DepthStencilState depth_write_enabled(canvas, depth_state_desc);
+	depth_write_enabled = DepthStencilState(canvas, depth_state_desc);
 
 	std::vector<Vec3f> object_positions;
 	std::vector<Vec3f> object_normals;
@@ -82,71 +82,66 @@ int App::start(const std::vector<std::string> &args)
 		create_cube(object_positions, object_normals, object_material_ambient);
 	}
 
-	VertexArrayBuffer vb_positions(canvas, sizeof(Vec3f) * object_positions.size());
+	num_vertex = object_positions.size();
+	vb_positions = VertexArrayBuffer(canvas, sizeof(Vec3f) * object_positions.size());
 	vb_positions.upload_data(canvas, 0, &object_positions[0], sizeof(Vec3f) * object_positions.size()/2);
 	vb_positions.upload_data(canvas, sizeof(Vec3f) * object_positions.size()/2, &object_positions[object_positions.size()/2], sizeof(Vec3f) * object_positions.size()/2);
 
-	VertexArrayBuffer vb_normals(canvas, &object_normals[0], sizeof(Vec3f) * object_normals.size());
-	VertexArrayBuffer vb_material_ambient(canvas, &object_material_ambient[0], sizeof(Vec4f) * object_material_ambient.size());
+	vb_normals = VertexArrayBuffer(canvas, &object_normals[0], sizeof(Vec3f) * object_normals.size());
+	vb_material_ambient = VertexArrayBuffer(canvas, &object_material_ambient[0], sizeof(Vec4f) * object_material_ambient.size());
 
-	// ** Note, at this point "object_positions, object_normals and object_material_ambient" can be destroyed.
+	fps_font = clan::Font("tahoma", 20);
 
-	clan::Font fps_font("tahoma", 20);
+	game_time.reset();
+}
 
-	GameTime game_time;
+bool App::update()
+{
+	game_time.update();
 
-	float angle = 0.0f;
+	canvas.clear(Colorf(0.0f, 0.0f, 0.0f, 1.0f));
+	canvas.clear_depth(1.0f);
 
-	while (!quit)
-	{
-		game_time.update();
+	std::string fps = string_format("%1 fps", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1));
+	fps_font.draw_text(canvas, canvas.get_width() - 100, 30, fps);
+	std::string info = string_format("%1 vertices", num_vertex);
+	fps_font.draw_text(canvas, 30, 30, info);
 
-		canvas.clear(Colorf(0.0f, 0.0f, 0.0f, 1.0f));
-		canvas.clear_depth(1.0f);
+	Mat4f perspective_matrix = Mat4f::perspective(45.0f, ((float) canvas.get_width()) / ((float) canvas.get_height()), 0.1f, 10000.0f, handed_left, canvas.get_gc().get_clip_z_range() );
 
-		std::string fps = string_format("%1 fps", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1));
-		fps_font.draw_text(canvas, canvas.get_width() - 100, 30, fps);
-		std::string info = string_format("%1 vertices", (int) object_positions.size());
-		fps_font.draw_text(canvas, 30, 30, info);
+	angle += game_time.get_time_elapsed() * 50.0f;
+	if (angle >= 360.0f)
+		angle -= 360.0f;
 
-		Mat4f perspective_matrix = Mat4f::perspective(45.0f, ((float) canvas.get_width()) / ((float) canvas.get_height()), 0.1f, 10000.0f, handed_left, canvas.get_gc().get_clip_z_range() );
+	Mat4f modelview_matrix = Mat4f::identity();
+	modelview_matrix = modelview_matrix.translate(0.0f, 0.0f, 800.0f);
+	modelview_matrix = modelview_matrix * Mat4f::rotate(Angle(angle*2.0f, angle_degrees), 0.0f, 1.0f, 0.0f, false);
+	modelview_matrix = modelview_matrix * Mat4f::rotate(Angle(angle, angle_degrees), 1.0f, 0.0f, 0.0f, false);
 
-		angle += game_time.get_time_elapsed() * 50.0f;
-		if (angle >= 360.0f)
-			angle -= 360.0f;
+	canvas.set_depth_stencil_state(depth_write_enabled);
+	canvas.set_rasterizer_state(raster_state);
 
-		Mat4f modelview_matrix = Mat4f::identity();
-		modelview_matrix = modelview_matrix.translate(0.0f, 0.0f, 800.0f);
-		modelview_matrix = modelview_matrix * Mat4f::rotate(Angle(angle*2.0f, angle_degrees), 0.0f, 1.0f, 0.0f, false);
-		modelview_matrix = modelview_matrix * Mat4f::rotate(Angle(angle, angle_degrees), 1.0f, 0.0f, 0.0f, false);
+	PrimitivesArray prim_array(canvas);
 
+	prim_array.set_attributes(0, vb_positions, 3, type_float, 0);
+	prim_array.set_attributes(1, vb_normals, 3, type_float, 0);
+	prim_array.set_attributes(2, vb_material_ambient, 4, type_float, 0);
 
-		canvas.set_depth_stencil_state(depth_write_enabled);
-		canvas.set_rasterizer_state(raster_state);
+	Mat4f matrix_modelview_projection = perspective_matrix *  modelview_matrix;
+	Mat3f normal_matrix = Mat3f(modelview_matrix);
+	normal_matrix.inverse();
+	normal_matrix.transpose();
 
-		PrimitivesArray prim_array(canvas);
+	shader.Use(canvas, modelview_matrix, matrix_modelview_projection, Mat4f(normal_matrix));
 
-		prim_array.set_attributes(0, vb_positions, 3, type_float, 0);
-		prim_array.set_attributes(1, vb_normals, 3, type_float, 0);
-		prim_array.set_attributes(2, vb_material_ambient, 4, type_float, 0);
+	canvas.get_gc().draw_primitives(type_triangles, num_vertex, prim_array);
+	canvas.get_gc().reset_program_object();
+	canvas.reset_rasterizer_state();
+	canvas.reset_depth_stencil_state();
 
-		Mat4f matrix_modelview_projection = perspective_matrix *  modelview_matrix;
-		Mat3f normal_matrix = Mat3f(modelview_matrix);
-		normal_matrix.inverse();
-		normal_matrix.transpose();
+	window.flip(0);
 
-		shader.Use(canvas, modelview_matrix, matrix_modelview_projection, Mat4f(normal_matrix));
-
-		canvas.get_gc().draw_primitives(type_triangles, object_positions.size(), prim_array);
-		canvas.get_gc().reset_program_object();
-		canvas.reset_rasterizer_state();
-		canvas.reset_depth_stencil_state();
-
-		window.flip(0);
-		RunLoop::process();
-	}
-
-	return 0;
+	return !quit;
 }
 
 // A key was pressed

@@ -16,103 +16,92 @@ circular light trail.
 #include "circle2.h"
 #include "framerate_counter.h"
 
-int DemoCircle2::run(clan::DisplayWindow &window)
+DemoCircle2::DemoCircle2(clan::DisplayWindow &window) : window(window)
 {
-    clan::SlotContainer cc;
 	window.set_title("LinearParticle Example - Circle2 ");
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &DemoCircle2::on_window_close));
-	clan::Canvas canvas(window);
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &DemoCircle2::on_key_up));
+	sc.connect(window.sig_window_close(), clan::bind_member(this, &DemoCircle2::on_window_close));
+	canvas = clan::Canvas(window);
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &DemoCircle2::on_key_up));
 
 	// initialize LinearParticle
 	L_ParticleSystem::init();
 
 	// create surface to be used for particle and set the alignment
-	clan::Sprite surface(canvas,"Resources/light16p.png");
+	surface = clan::Sprite(canvas,"Resources/light16p.png");
 	surface.set_alignment(clan::origin_center);
 
 	// create 1st sample of particle
-	L_Particle particle(&surface,2000);
-	particle.set_size(2.0);
-	particle.coloring2( L_Color(255,130,255,20), L_Color(0,255,10,10) );
+	particle = clan::make_unique<L_Particle>(&surface, 2000);
+	particle->set_size(2.0);
+	particle->coloring2( L_Color(255,130,255,20), L_Color(0,255,10,10) );
 
 	// create 2nd sample of particle
-	L_Particle particle2(&surface,500);
-	particle2.sizing2( 12.0, 1.0 );
-	particle2.coloring2( L_Color(255,80,40,255), L_Color(0,255,40,40) );
-
+	particle2 = clan::make_unique<L_Particle>(&surface, 500);
+	particle2->sizing2( 12.0, 1.0 );
+	particle2->coloring2( L_Color(255,80,40,255), L_Color(0,255,40,40) );
 
 	dropping_period = 16;
 	// create dropping effect with period of 16
-	dropper = new L_DroppingEffect(480,240,dropping_period);
+	dropper = clan::make_unique<L_DroppingEffect>(480, 240, dropping_period);
 
 	/* add 1st particle to dropper effect with 0.92 probability to be
 	chosen for an emission. */
-	dropper->add(&particle, 0.92);
+	dropper->add(particle.get(), 0.92);
 
 	/* add 2nd particle, it takes the remaining probability (0.08
 	in this example) if probability is not specified. */
-	dropper->add(&particle2);
+	dropper->add(particle2.get());
 
 	// initialize particle effect
 	dropper->initialize();
 
+	font = clan::Font("Arial", 16 );
+	last_time = clan::System::get_time();
 
-	char str[32];
-	quit = false;
-	show_menu = true;
+}
 
-	clan::Font font("Arial", 16 );
-	FramerateCounter frameratecounter;
-	uint64_t last_time = clan::System::get_time();
+bool DemoCircle2::update()
+{
+	canvas.clear();
 
-	while(!quit)
+	uint64_t current_time = clan::System::get_time();
+	int time_run = current_time - last_time;
+	last_time = current_time;
+
+	/* the maximum time step is set to 50milisecs to avoid artifacts
+	and errors caused by low frame rate to be less noticeable. */
+	while( time_run > 50 )
 	{
-		canvas.clear();
-
-		uint64_t current_time = clan::System::get_time();
-		int time_run = current_time - last_time;
-		last_time = current_time;
-
-		/* the maximum time step is set to 50milisecs to avoid artifacts
-		and errors caused by low frame rate to be less noticeable. */
-		while( time_run > 50 )
-		{
-			run_a_step(50);
-			time_run -= 50;
-		}
-
-		if( time_run > 0 )
-			run_a_step(time_run);
-
-
-		L_DrawParticle(canvas,dropper);
-
-		if( show_menu )
-		{
-			frameratecounter.show_fps(canvas, font);
-
-			sprintf(str,"Period (millisecs) : %d",dropping_period);
-			font.draw_text(canvas,10,30,str);
-
-			font.draw_text(canvas,10,410,"F1 : hide/show menu");
-			font.draw_text(canvas,10,425,"Space : trigger random sleep");
-			font.draw_text(canvas,10,440,"Up/Down : change dropping period");
-		}
-
-
-		window.flip(0);	// Set to "1" to lock to screen refresh rate
-		frameratecounter.frame_shown();
-
-		clan::RunLoop::process(0);
+		run_a_step(50);
+		time_run -= 50;
 	}
 
-	delete dropper;
+	if( time_run > 0 )
+		run_a_step(time_run);
 
-	// deinitialize LinearParticle
-	L_ParticleSystem::deinit();
+	L_DrawParticle(canvas, dropper.get());
 
-	return 0;
+	if( show_menu )
+	{
+		frameratecounter.show_fps(canvas, font);
+
+		font.draw_text(canvas, 10, 30, clan::string_format("Period (millisecs) : %1", dropping_period));
+
+		font.draw_text(canvas,10,410,"F1 : hide/show menu");
+		font.draw_text(canvas,10,425,"Space : trigger random sleep");
+		font.draw_text(canvas,10,440,"Up/Down : change dropping period");
+	}
+
+
+	window.flip(0);	// Set to "1" to lock to screen refresh rate
+	frameratecounter.frame_shown();
+
+	if (quit)
+	{
+		// deinitialize LinearParticle
+		L_ParticleSystem::deinit();
+	}
+	return !quit;
 }
 
 

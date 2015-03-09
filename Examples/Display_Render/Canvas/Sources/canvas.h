@@ -29,16 +29,20 @@
 
 #pragma once
 
-class ExampleCanvas
+class ExampleCanvas : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
+	ExampleCanvas();
+	bool update() override;
 
 private:
 	void on_keyboard_up(const InputEvent &key);
 	void on_mouse_move(const InputEvent &key);
 	void on_mouse_down(const InputEvent &key);
 	void on_window_close();
+
+	DisplayWindow window;
+	clan::SlotContainer sc;
 
 	Image image_ground;
 	Image image_ground_back;
@@ -51,10 +55,11 @@ private:
 
 	Pointf mouse_pos;
 
-	float scale;
+	float scale = 1.0f;
+	float back_pos = 0;
 
 	bool mouse_down;
 
-	bool quit;
+	bool quit = false;
 };
 

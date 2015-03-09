@@ -32,9 +32,12 @@
 #include "particle_object.h"
 #include "graphic_store.h"
 
-// The start of the Application
-int App::start(const std::vector<std::string> &args)
+clan::ApplicationInstance<App> clanapp;
+
+App::App()
 {
+	clan::OpenGLTarget::enable();
+
 	quit = false;
 
 	DisplayWindowDescription desc;
@@ -44,26 +47,25 @@ int App::start(const std::vector<std::string> &args)
 	desc.set_allow_resize(false);
 	desc.set_depth_size(16);
 
-	DisplayWindow window(desc);
-    SlotContainer cc;
-
+	window = DisplayWindow(desc);
+ 
 	// Connect the Window close event
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
+	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 
-	Canvas canvas(window);
+	canvas = Canvas(window);
 
 	// Setup graphic store
-	GraphicStore graphic_store(canvas);
-	scene.gs = &graphic_store;
+	graphic_store = std::make_shared<GraphicStore>(canvas);
+	scene.gs = graphic_store.get();
 
 	RasterizerStateDescription rasterizer_state_desc;
 	rasterizer_state_desc.set_culled(false);
 	rasterizer_state_desc.set_face_cull_mode(cull_back);
 	rasterizer_state_desc.set_front_face(face_clockwise);
-	RasterizerState raster_state(canvas, rasterizer_state_desc);
+	raster_state = RasterizerState(canvas, rasterizer_state_desc);
 
 	DepthStencilStateDescription depth_state_desc;
 	depth_state_desc.enable_depth_write(true);
@@ -71,69 +73,61 @@ int App::start(const std::vector<std::string> &args)
 	depth_state_desc.enable_stencil_test(false);
 	depth_state_desc.set_depth_compare_function(compare_lequal);
 
-	DepthStencilState depth_write_enabled(canvas, depth_state_desc);
+	depth_write_enabled = DepthStencilState(canvas, depth_state_desc);
 
 	BlendStateDescription blend_state_desc;
 	blend_state_desc.enable_color_write(false, false, false, false);
-	BlendState blend_disable_color_write(canvas, blend_state_desc);
+	blend_disable_color_write = BlendState(canvas, blend_state_desc);
 
 	create_scene(canvas);
 
-	camera_angle = 0.0f;
+	font = clan::Font("tahoma", 24);
 
-	clan::Font font("tahoma", 24);
+	game_time.reset();
+}
 
-	enable_dual_pass = false;
+bool App::update()
+{
+	game_time.update();
+	time_delta = game_time.get_time_elapsed_ms();
 
-	clan::GameTime game_time;
+	control_camera();
+	calculate_matricies(canvas);
 
-	// Run until someone presses escape
-	while (!quit)
+	canvas.clear_depth(1.0f);
+
+	canvas.set_depth_stencil_state(depth_write_enabled);
+	canvas.set_rasterizer_state(raster_state);
+
+	if (enable_dual_pass)
 	{
-		game_time.update();
-		time_delta = game_time.get_time_elapsed_ms();
-
-		control_camera();
-		calculate_matricies(canvas);
-
-		canvas.clear_depth(1.0f);
-
-		canvas.set_depth_stencil_state(depth_write_enabled);
-		canvas.set_rasterizer_state(raster_state);
-
-		if (enable_dual_pass)
-		{
-			canvas.set_blend_state(blend_disable_color_write);
-			graphic_store.texture_ball = graphic_store.texture_alpha;
-			render_depth_buffer(canvas);	// Render to depth buffer first, to fake sorting the particles
-			canvas.reset_blend_state();
-		}
-		else
-		{
-			graphic_store.texture_ball = graphic_store.texture_solid;
-		}
-
-		render(canvas);	// Render scene
-		canvas.reset_rasterizer_state();
-		canvas.reset_depth_stencil_state();
-
-		std::string fps(string_format("fps = %1", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1)));
-		font.draw_text(canvas, 16-2, canvas.get_height()-16-2, fps, Colorf(0.0f, 0.0f, 0.0f, 1.0f));
-		font.draw_text(canvas, 16, canvas.get_height()-16-2, fps, Colorf(1.0f, 1.0f, 1.0f, 1.0f));
-
-		std::string info(string_format("Drawing %1 particles", ParticleObject::num_points));
-		font.draw_text(canvas, 16, 30, info);
-
-		font.draw_text(canvas, 16, 64, enable_dual_pass ? "Using 2 Render Passes (Press Space to toggle)" : "Using Single Pass (Press Space to toggle)");
-
-		// Use flip(1) to lock the fps
-		window.flip(0);
-
-		// This call processes user input and other events
-		RunLoop::process();
+		canvas.set_blend_state(blend_disable_color_write);
+		graphic_store->texture_ball = graphic_store->texture_alpha;
+		render_depth_buffer(canvas);	// Render to depth buffer first, to fake sorting the particles
+		canvas.reset_blend_state();
+	}
+	else
+	{
+		graphic_store->texture_ball = graphic_store->texture_solid;
 	}
 
-	return 0;
+	render(canvas);	// Render scene
+	canvas.reset_rasterizer_state();
+	canvas.reset_depth_stencil_state();
+
+	std::string fps(string_format("fps = %1", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1)));
+	font.draw_text(canvas, 16-2, canvas.get_height()-16-2, fps, Colorf(0.0f, 0.0f, 0.0f, 1.0f));
+	font.draw_text(canvas, 16, canvas.get_height()-16-2, fps, Colorf(1.0f, 1.0f, 1.0f, 1.0f));
+
+	std::string info(string_format("Drawing %1 particles", ParticleObject::num_points));
+	font.draw_text(canvas, 16, 30, info);
+
+	font.draw_text(canvas, 16, 64, enable_dual_pass ? "Using 2 Render Passes (Press Space to toggle)" : "Using Single Pass (Press Space to toggle)");
+
+	// Use flip(1) to lock the fps
+	window.flip(0);
+
+	return !quit;
 }
 
 // A key was pressed

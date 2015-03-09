@@ -12,9 +12,6 @@
     <ClCompile Include="Sources\precomp.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\program.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\shader.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
@@ -39,9 +36,6 @@
       <Filter>Sources</Filter>
     </ClInclude>
     <ClInclude Include="Sources\precomp.h">
-      <Filter>Sources</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\program.h">
       <Filter>Sources</Filter>
     </ClInclude>
     <ClInclude Include="Sources\shader.h">

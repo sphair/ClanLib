@@ -29,13 +29,11 @@
 #pragma once
 
 
-// This is the Application class (That is instantiated by the Program Class)
-class App
+class App : public clan::Application
 {
 public:
 	App();
-
-	int start(const std::vector<std::string> &args);
+	bool update() override;
 
 private:
 	void on_input_up(const clan::InputEvent &key);
@@ -48,7 +46,8 @@ private:
 	void draw_gpu(clan::Canvas &canvas, clan::PixelBuffer &gpu_buffer_to_write_into, clan::PixelBuffer &gpu_buffer_to_draw, clan::PixelBuffer &tux, clan::Texture2D &texture_to_write_into, clan::Texture2D &texture_to_draw);
 	void draw_texture(clan::Canvas &canvas, clan::Texture2D &texture, int xpos, int ypos);
 private:
-	bool quit;
+	bool quit = false;
 	bool cpu_active;
+	clan::GameTime game_time;
 
 };

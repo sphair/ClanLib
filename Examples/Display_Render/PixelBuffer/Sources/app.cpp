@@ -29,7 +29,16 @@
 #include "precomp.h"
 #include "app.h"
 
-App::App() : quit(false)
+clan::ApplicationInstance<App> clanapp;
+
+App::App()
+{
+	// We support all display targets, in order listed here
+#ifdef WIN32
+	clan::D3DTarget::enable();
+#endif
+	clan::OpenGLTarget::enable();
+	App::App() : quit(false)
 {
 }
 
@@ -69,61 +78,59 @@ int App::start(const std::vector<std::string> &args)
 
 	clan::Font font("Tahoma", 24);
 
-	clan::GameTime game_time;
 
 	int gpu_buffer_cycle = 0;
 	int texture_cycle = 0;
 	cpu_active = true;
+	game_time.reset();
+}
 
-	while (!quit)
+bool App::update()
+{
+	game_time.update();
+	canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
+
+	// Modify the pixel buffer
+	read_write_pixel_buffer(canvas, tux);
+
+	// Control the texture buffering
+	int texture_cycle_first = texture_cycle;
+	int texture_cycle_second = texture_cycle + 1;
+	if (texture_cycle_second >= num_textures)
+		texture_cycle_second -= num_textures;
+
+	// Control the gpu buffering
+	int gpu_buffer_cycle_first = gpu_buffer_cycle;
+	int gpu_buffer_cycle_second = gpu_buffer_cycle + 1;
+	if (gpu_buffer_cycle_second >= num_gpu_buffers)
+		gpu_buffer_cycle_second -= num_gpu_buffers;
+
+	// Always draw the same text, to ensure matching speed calculation
+	if (cpu_active)
 	{
-		game_time.update();
-		canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
-
-		// Modify the pixel buffer
-		read_write_pixel_buffer(canvas, tux);
-
-		// Control the texture buffering
-		int texture_cycle_first = texture_cycle;
-		int texture_cycle_second = texture_cycle + 1;
-		if (texture_cycle_second >= num_textures)
-			texture_cycle_second -= num_textures;
-
-		// Control the gpu buffering
-		int gpu_buffer_cycle_first = gpu_buffer_cycle;
-		int gpu_buffer_cycle_second = gpu_buffer_cycle + 1;
-		if (gpu_buffer_cycle_second >= num_gpu_buffers)
-			gpu_buffer_cycle_second -= num_gpu_buffers;
-
-		// Always draw the same text, to ensure matching speed calculation
-		if (cpu_active)
-		{
-			font.draw_text(canvas, 8, 24, "GPU Transfer Texture Object", clan::Colorf(0.0f, 0.0f, 0.2f, 1.0f));
-			font.draw_text(canvas, 8, 24, "CPU Pixel Buffer", clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f));
-			draw_cpu(canvas, cpu_buffer, tux, textures[texture_cycle_first], textures[texture_cycle_second]);
-		}
-		else
-		{
-			font.draw_text(canvas, 8, 24, "CPU Pixel Buffer", clan::Colorf(0.0f, 0.0f, 0.2f, 1.0f));
-			font.draw_text(canvas, 8, 24, "GPU Transfer Texture Object", clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f));
-			draw_gpu(canvas, gpu_buffer[gpu_buffer_cycle_first], gpu_buffer[gpu_buffer_cycle_second], tux, textures[texture_cycle_first], textures[texture_cycle_second]);
-		}
-
-		font.draw_text(canvas, 8, canvas.get_height() - 16, "Press any key to toggle method");
-
-		texture_cycle = texture_cycle_second;
-		gpu_buffer_cycle = gpu_buffer_cycle_second;
-
-		std::string fps(clan::string_format("%1 fps", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1)));
-		font.draw_text(canvas, canvas.get_width() - 100, canvas.get_height()-16, fps, clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f));
-
-		// Use flip(1) to lock the fps
-		window.flip(0);
-		clan::RunLoop::process(0);
-
+		font.draw_text(canvas, 8, 24, "GPU Transfer Texture Object", clan::Colorf(0.0f, 0.0f, 0.2f, 1.0f));
+		font.draw_text(canvas, 8, 24, "CPU Pixel Buffer", clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f));
+		draw_cpu(canvas, cpu_buffer, tux, textures[texture_cycle_first], textures[texture_cycle_second]);
+	}
+	else
+	{
+		font.draw_text(canvas, 8, 24, "CPU Pixel Buffer", clan::Colorf(0.0f, 0.0f, 0.2f, 1.0f));
+		font.draw_text(canvas, 8, 24, "GPU Transfer Texture Object", clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f));
+		draw_gpu(canvas, gpu_buffer[gpu_buffer_cycle_first], gpu_buffer[gpu_buffer_cycle_second], tux, textures[texture_cycle_first], textures[texture_cycle_second]);
 	}
 
-	return 0;
+	font.draw_text(canvas, 8, canvas.get_height() - 16, "Press any key to toggle method");
+
+	texture_cycle = texture_cycle_second;
+	gpu_buffer_cycle = gpu_buffer_cycle_second;
+
+	std::string fps(clan::string_format("%1 fps", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1)));
+	font.draw_text(canvas, canvas.get_width() - 100, canvas.get_height()-16, fps, clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f));
+
+	// Use flip(1) to lock the fps
+	window.flip(0);
+
+	return !quit;
 }
 
 // A key was pressed
