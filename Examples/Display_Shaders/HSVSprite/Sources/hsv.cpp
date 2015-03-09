@@ -37,31 +37,26 @@ HSV::HSV()
 {
 	clan::OpenGLTarget::enable();
 
-    clan::SlotContainer cc;
-	DisplayWindow window("ClanLib HSV Sprite", 1024, 768);
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &HSV::on_close));
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &HSV::on_input_up));
-	Canvas canvas(window);
-	InputContext ic = window.get_ic();
+	window = DisplayWindow("ClanLib HSV Sprite", 1024, 768);
+	sc.connect(window.sig_window_close(), clan::bind_member(this, &HSV::on_close));
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &HSV::on_input_up));
+	canvas = Canvas(window);
 
-	clan::Font font("Tahoma", 11);
+	font = clan::Font("Tahoma", 11);
 
-	HSVSpriteBatch sprite_batcher(canvas);
-	HSVSprite car1(canvas, &sprite_batcher, "Resources/spaceshoot_body_moving1.png");
-	HSVSprite car2(canvas, &sprite_batcher, "Resources/ferrari_maranello.png");
-	HSVSprite *cars[] = { &car1, &car2 };
+	sprite_batcher = std::make_shared<HSVSpriteBatch>(canvas);
+	car1 = std::make_shared<HSVSprite>(canvas, sprite_batcher.get(), "Resources/spaceshoot_body_moving1.png");
+	car2 = std::make_shared<HSVSprite>(canvas, sprite_batcher.get(), "Resources/ferrari_maranello.png");
 
-	uint64_t last_fps_update = System::get_time();
-	uint64_t last_time = last_fps_update;
-
-	int fps = 0;
-	std::string fps_text;
-
-	float hue_offset = 0.0;
+	last_fps_update = System::get_time();
+	last_time = last_fps_update;
 }
 
 bool HSV::update()
 {
+	HSVSprite *cars[] = { car1.get(), car2.get() };
+
+	InputContext ic = window.get_ic();
 	uint64_t current_time = System::get_time();
 	float time_delta_ms = static_cast<float> (current_time - last_time);
 	last_time = current_time;

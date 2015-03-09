@@ -58,8 +58,8 @@ App::App()
 	canvas = Canvas(window);
 
 	// Setup graphic store
-	graphic_store = GraphicStore(canvas);
-	scene.gs = &graphic_store;
+	graphic_store = std::make_shared<GraphicStore>(canvas);
+	scene.gs = graphic_store.get();
 
 	RasterizerStateDescription rasterizer_state_desc;
 	rasterizer_state_desc.set_culled(false);
@@ -102,13 +102,13 @@ bool App::update()
 	if (enable_dual_pass)
 	{
 		canvas.set_blend_state(blend_disable_color_write);
-		graphic_store.texture_ball = graphic_store.texture_alpha;
+		graphic_store->texture_ball = graphic_store->texture_alpha;
 		render_depth_buffer(canvas);	// Render to depth buffer first, to fake sorting the particles
 		canvas.reset_blend_state();
 	}
 	else
 	{
-		graphic_store.texture_ball = graphic_store.texture_solid;
+		graphic_store->texture_ball = graphic_store->texture_solid;
 	}
 
 	render(canvas);	// Render scene

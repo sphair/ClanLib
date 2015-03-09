@@ -62,7 +62,6 @@ App::App()
 	clan::D3DTarget::enable();
 	clan::OpenGLTarget::enable();
 
-	quit = false;
     DisplayWindowDescription desc;
 
 	desc.set_title("ClanLib Object 3D Example");
@@ -71,39 +70,37 @@ App::App()
 	desc.set_allow_resize(true);
 	desc.set_depth_size(16);
 
-	DisplayWindow window(desc);
-    SlotContainer cc;
+	window = DisplayWindow(desc);
 
 	// Connect the Window close event
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
+	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 
-	Canvas canvas(window);
+	canvas = Canvas(window);
 
 	// Setup graphic store
-	GraphicStore graphic_store(canvas);
-	scene.gs = &graphic_store;
+	graphic_store = std::make_shared<GraphicStore>(canvas);
+	scene.gs = graphic_store.get();
 
 	// Prepare the display
 	RasterizerStateDescription rasterizer_state_desc;
 	rasterizer_state_desc.set_culled(true);
 	rasterizer_state_desc.set_face_cull_mode(cull_back);
 	rasterizer_state_desc.set_front_face(face_clockwise);
-	RasterizerState raster_state(canvas, rasterizer_state_desc);
+	raster_state = RasterizerState(canvas, rasterizer_state_desc);
 
 	DepthStencilStateDescription depth_state_desc;
 	depth_state_desc.enable_depth_write(true);
 	depth_state_desc.enable_depth_test(true);
 	depth_state_desc.enable_stencil_test(false);
 	depth_state_desc.set_depth_compare_function(compare_lequal);
-	DepthStencilState depth_write_enabled(canvas, depth_state_desc);
+	depth_write_enabled = DepthStencilState(canvas, depth_state_desc);
 	
   	create_scene(canvas);
 
 	game_time.reset();
-	float angle = 0.0f;
 }
 
 bool App::update()

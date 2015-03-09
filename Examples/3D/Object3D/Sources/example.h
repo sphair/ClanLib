@@ -31,6 +31,8 @@
 #include "scene.h"
 #include "model.h"
 
+class GraphicStore;
+
 class App : public clan::Application
 {
 public:
@@ -45,6 +47,10 @@ private:
 	void update_light(GraphicContext &gc);
 	void calculate_matricies(GraphicContext &gc);
 
+	DisplayWindow window;
+	SlotContainer sc;
+	Canvas canvas;
+
 	Scene scene;
 
 	Model model_teapot;
@@ -58,6 +64,11 @@ private:
 	SceneObject *scene_tuxball;
 
 	clan::GameTime game_time;
+
+	RasterizerState raster_state;
+	DepthStencilState depth_write_enabled;
+	std::shared_ptr<GraphicStore> graphic_store;
+	float angle = 0.0f;
 
 	bool quit = false;
 };

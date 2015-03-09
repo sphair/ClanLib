@@ -33,7 +33,6 @@
 class GraphicStore
 {
 public:
-	GraphicStore() {};
 	GraphicStore(GraphicContext &gc);
 	~GraphicStore();
 

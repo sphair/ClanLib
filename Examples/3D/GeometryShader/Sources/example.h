@@ -72,7 +72,7 @@ private:
 	int time_delta;
 	bool quit = false;
 	clan::GameTime game_time;
-	GraphicStore graphic_store;
+	std::shared_ptr<GraphicStore> graphic_store;
 	clan::Font font;
 };
 

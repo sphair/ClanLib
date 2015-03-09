@@ -64,8 +64,6 @@ App::App()
 	clan::D3DTarget::enable();
 	clan::OpenGLTarget::enable();
 
-	quit = false;
-
 	DisplayWindowDescription desc;
 	desc.set_title("ClanLib Quaternion's Example");
 	desc.set_size(Size(900, 700), true);
@@ -73,44 +71,42 @@ App::App()
 	desc.set_allow_resize(true);
 	desc.set_depth_size(16);
 
-	DisplayWindow window(desc);
-    SlotContainer cc;
+	window = DisplayWindow(desc);
 
 	// Connect the Window close event
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
+	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 
-	Canvas canvas(window);
+	canvas = Canvas(window);
 
 	// Deleted automatically by the GUI
 	//Options *options = new Options(gui, Rect(8, 8, Size(canvas.get_width()-16, 170)));
 
 	// Setup graphic store
-	GraphicStore graphic_store(canvas);
-	scene.gs = &graphic_store;
+	graphic_store = std::make_shared<GraphicStore>(canvas);
+	scene.gs = graphic_store.get();
 
 	RasterizerStateDescription rasterizer_state_desc;
 	rasterizer_state_desc.set_culled(true);
 	rasterizer_state_desc.set_face_cull_mode(cull_back);
 	rasterizer_state_desc.set_front_face(face_clockwise);
-	RasterizerState raster_state(canvas, rasterizer_state_desc);
+	raster_state = RasterizerState(canvas, rasterizer_state_desc);
 
 	DepthStencilStateDescription depth_state_desc;
 	depth_state_desc.enable_depth_write(true);
 	depth_state_desc.enable_depth_test(true);
 	depth_state_desc.enable_stencil_test(false);
 	depth_state_desc.set_depth_compare_function(compare_lequal);
-	DepthStencilState depth_write_enabled(canvas, depth_state_desc);
+	depth_write_enabled = DepthStencilState(canvas, depth_state_desc);
 
 	create_scene(canvas);
 
-	clan::Font font("tahoma", 24);
+	font = clan::Font("tahoma", 24);
 
-	active_lerp = false;
-	uint64_t time_last = System::get_time();
-	uint64_t time_start = time_last;
+	time_last = System::get_time();
+	time_start = time_last;
 }
 
 bool App::update()

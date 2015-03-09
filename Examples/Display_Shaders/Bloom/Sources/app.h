@@ -60,6 +60,21 @@ private:
 		clan::Mat4f cl_ModelViewProjectionMatrix;
 		Sample sample[sampleCount];		// Each array element must be aligned to a vec4 (4 floats) in GLSL
 	};
+	clan::DisplayWindow window;
+	clan::Canvas canvas;
+	clan::SlotContainer sc;
+	clan::Font font;
+
+	clan::Canvas canvas_offscreen1;
+	clan::Canvas canvas_offscreen2;
+	clan::Canvas canvas_offscreen3;
+	clan::Image background;
+	clan::Texture2D texture_offscreen1;
+	clan::Texture2D texture_offscreen2;
+	clan::Texture2D texture_offscreen3;
+	clan::ProgramObject gaussian_blur_shader;
+	clan::ProgramObject extract_highlights_shader;
+	clan::ProgramObject bloom_combine_shader;
 
 	ProgramUniforms uniforms;
 	clan::VertexArrayVector<clan::Vec2f> gpu_positions;
@@ -68,11 +83,16 @@ private:
 	clan::PrimitivesArray gpu_primitives_array;
 
 	std::string select_text;
-	float highlight_threshold;
-	float base_intensity;
-	float base_saturation;
-	float bloom_intensity;
-	float bloom_saturation;
-	float blur_amount;
+	float highlight_threshold = 0.25f;
+	float base_intensity = 1.25f;
+	float base_saturation = 1.0f;
+	float bloom_intensity = 1.0f;
+	float bloom_saturation = 1.0f;
+	float blur_amount = 4;
+
+	float amount = 0.0f;
+	float timer = 0.0f;
+	float scale = 1.0f;
+	uint64_t startTime;
 };
 

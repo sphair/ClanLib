@@ -57,6 +57,19 @@ private:
 		clan::Mat4f cl_ModelViewProjectionMatrix;
 		Sample sample[sampleCount];		// Each array element must be aligned to a vec4 (4 floats) in GLSL
 	};
+	clan::DisplayWindow window;
+	clan::Canvas canvas;
+	clan::SlotContainer sc;
+	clan::ProgramObject shader;
+	clan::Font font;
+	clan::Image background;
+	clan::Image ball;
+	clan::Canvas canvas_offscreen;
+	clan::Canvas canvas_offscreen2;
+	clan::FrameBuffer framebuffer_offscreen;
+	clan::FrameBuffer framebuffer_offscreen2;
+	clan::Texture2D texture_offscreen;
+	clan::Texture2D texture_offscreen2;
 
 	clan::VertexArrayVector<clan::Vec2f> gpu_positions;
 	clan::VertexArrayVector<clan::Vec2f> gpu_tex1_coords;
@@ -65,7 +78,13 @@ private:
 
 	ProgramUniforms uniforms;
 
-	float blur;
+	uint64_t startTime;
+
+	float amount = 0.0f;
+	float timer = 0.0f;
+	float scale = 1.0f;
+
+	float blur = 1.0f;
 	bool quit = false;
 };
 

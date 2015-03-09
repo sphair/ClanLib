@@ -46,8 +46,11 @@ GraphicStore::GraphicStore(GraphicContext &gc) : shader_color(gc)
 
 GraphicStore::~GraphicStore()
 {
-	aiReleasePropertyStore(store);
-	aiDetachAllLogStreams();
+	if (store)
+	{
+		aiReleasePropertyStore(store);
+		aiDetachAllLogStreams();
+	}
 }
 
 void GraphicStore::LoadImages( GraphicContext &gc )

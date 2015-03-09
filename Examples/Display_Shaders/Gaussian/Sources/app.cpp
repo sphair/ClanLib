@@ -38,39 +38,37 @@ App::App()
 	description.set_title("Guassian Blur Shader");
 	description.set_size(clan::Size(1024, 768), true);
 
-	clan::DisplayWindow window(description);
-	clan::InputDevice keyboard = window.get_ic().get_keyboard();
-	clan::Canvas canvas(window);
-    clan::SlotContainer cc;
+	window = clan::DisplayWindow(description);
+	canvas = clan::Canvas(window);
 
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &App::window_close));
+	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::window_close));
 
 	// Create offscreen texture
-	clan::Texture2D texture_offscreen(canvas, canvas.get_width(), canvas.get_height());
+	texture_offscreen = clan::Texture2D(canvas, canvas.get_width(), canvas.get_height());
 	texture_offscreen.set_min_filter(clan::filter_nearest);
 	texture_offscreen.set_mag_filter(clan::filter_nearest);
 
-	clan::Texture2D texture_offscreen2(canvas, canvas.get_width(), canvas.get_height());
+	texture_offscreen2 = clan::Texture2D(canvas, canvas.get_width(), canvas.get_height());
 	texture_offscreen2.set_min_filter(clan::filter_nearest);
 	texture_offscreen2.set_mag_filter(clan::filter_nearest);
 
 	// Create offscreen framebuffer
-	clan::FrameBuffer framebuffer_offscreen(canvas);
+	framebuffer_offscreen = clan::FrameBuffer(canvas);
 	framebuffer_offscreen.attach_color(0, texture_offscreen);
-	clan::Canvas canvas_offscreen(canvas, framebuffer_offscreen);
+	canvas_offscreen = clan::Canvas(canvas, framebuffer_offscreen);
 
-	clan::FrameBuffer framebuffer_offscreen2(canvas);
+	framebuffer_offscreen2 = clan::FrameBuffer(canvas);
 	framebuffer_offscreen2.attach_color(0, texture_offscreen2);
-	clan::Canvas canvas_offscreen2(canvas, framebuffer_offscreen2);
+	canvas_offscreen2 = clan::Canvas(canvas, framebuffer_offscreen2);
 
-	clan::Image background(canvas, "../PostProcessing/Resources/background.png");
-	clan::Image ball(canvas, "../PostProcessing/Resources/ball.png");
+	background = clan::Image(canvas, "../PostProcessing/Resources/background.png");
+	ball = clan::Image(canvas, "../PostProcessing/Resources/ball.png");
 	ball.set_alignment(clan::origin_center);
 
 	// Load and link shaders
-	clan::ProgramObject shader = clan::ProgramObject::load(canvas, "Resources/vertex_shader.glsl", "Resources/fragment_shader.glsl");
+	shader = clan::ProgramObject::load(canvas, "Resources/vertex_shader.glsl", "Resources/fragment_shader.glsl");
 	shader.bind_attribute_location(0, "Position");
 	shader.bind_attribute_location(1, "TexCoord0");
 	shader.bind_frag_data_location(0, "cl_FragColor");
@@ -85,21 +83,14 @@ App::App()
 	gpu_primitives_array.set_attributes(0, gpu_positions);
 	gpu_primitives_array.set_attributes(1, gpu_tex1_coords);
 
-	quit = false;
+	font = clan::Font("tahoma", 32);
 
-	float amount = 0.0f;
-	float timer = 0.0f;
-
-	float scale = 1.0f;
-
-	clan::Font font("tahoma", 32);
-
-	blur = 1.0f;
-	uint64_t startTime = clan::System::get_time();
+	startTime = clan::System::get_time();
 }
 
 bool App::update()
 {
+	clan::InputDevice keyboard = window.get_ic().get_keyboard();
 	timer = (clan::System::get_time() - startTime) / 1000.0f;
 
 	// Render standard image to offscreen buffer

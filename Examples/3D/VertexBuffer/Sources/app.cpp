@@ -118,7 +118,6 @@ bool App::update()
 	modelview_matrix = modelview_matrix * Mat4f::rotate(Angle(angle*2.0f, angle_degrees), 0.0f, 1.0f, 0.0f, false);
 	modelview_matrix = modelview_matrix * Mat4f::rotate(Angle(angle, angle_degrees), 1.0f, 0.0f, 0.0f, false);
 
-
 	canvas.set_depth_stencil_state(depth_write_enabled);
 	canvas.set_rasterizer_state(raster_state);
 

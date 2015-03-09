@@ -27,6 +27,8 @@
 */
 
 #pragma once
+class HSVSpriteBatch;
+class HSVSprite;
 
 class HSV : public clan::Application
 {
@@ -39,5 +41,20 @@ private:
 	void on_close();
 	void on_input_up(const InputEvent &key);
 
+	DisplayWindow window;
+	Canvas canvas;
+	SlotContainer sc;
+	clan::Font font;
+
+	std::shared_ptr<HSVSpriteBatch> sprite_batcher;
+	std::shared_ptr<HSVSprite> car1;
+	std::shared_ptr<HSVSprite> car2;
+
+	uint64_t last_fps_update;
+	uint64_t last_time;
+
 	bool quit = false;
+	int fps = 0;
+	std::string fps_text;
+	float hue_offset = 0.0;
 };
