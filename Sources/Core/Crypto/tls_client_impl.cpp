@@ -37,6 +37,7 @@
 #include "API/Core/Crypto/aes256_decrypt.h"
 #include "API/Core/IOData/file.h"
 #include <ctime>
+#include <algorithm>
 #include "x509.h"
 
 #ifdef min

@@ -33,6 +33,7 @@
 #include "API/Core/System/mutex.h"
 #include "API/Core/System/thread.h"
 #include "API/Core/System/system.h"
+#include <algorithm>
 
 #undef max
 

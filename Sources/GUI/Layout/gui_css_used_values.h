@@ -29,6 +29,7 @@
 #pragma once
 
 #include "API/CSSLayout/ComputedValues/css_computed_values.h"
+#include <algorithm>
 
 namespace clan
 {
