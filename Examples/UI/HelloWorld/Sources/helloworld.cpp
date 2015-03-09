@@ -68,7 +68,7 @@ HelloWorld::HelloWorld()
 	root->style()->set("flex-direction: column");
 
 	// Create a label with some text to have some content
-	std::shared_ptr<LabelView> label = std::make_shared<LabelView>();
+	label = std::make_shared<LabelView>();
 	label->style()->set("font: 20px/40px 'Ravie'");
 	label->set_text("Hello World!");
 	root->add_subview(label);
