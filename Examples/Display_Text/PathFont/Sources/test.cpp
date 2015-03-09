@@ -40,24 +40,17 @@ Test::Test()
 #endif
 	clan::OpenGLTarget::enable();
 
-// The start of the Application
-int Test::start(const std::vector<std::string> &args)
-{
-	quit = false;
-
-
 	// Set the window
 	clan::DisplayWindowDescription desc;
 	desc.set_title("ClanLib Path Font Example");
 	desc.set_size(clan::Size(900, 600), true);
 	desc.set_allow_resize(true);
 
-	clan::DisplayWindow window(desc);
-	clan::Canvas canvas(window);
+	window = clan::DisplayWindow(desc);
+	canvas = clan::Canvas(window);
 
 	// Connect the Window close event
-    clan::SlotContainer sc;
-	sc.connect(window.sig_window_close(), [&](){quit = true; });
+ 	sc.connect(window.sig_window_close(), [&](){quit = true; });
 
 	// Connect a keyboard handler to on_key_up()
 	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &Test::on_input_up));
@@ -83,12 +76,11 @@ int Test::start(const std::vector<std::string> &args)
 		font_face.add(bold_italic, "Resources/Lobster_Two/LobsterTwo-BoldItalic.ttf");
 	}
 
-	clan::Font font("tahoma", 16);
+	font = clan::Font("tahoma", 16);
 
-	float font_height = 100.0f;
-	clan::Font path_font(font_face, font_height);
+	path_font = clan::Font(font_face, font_height);
 
-	clan::Brush brush = clan::Brush::solid(clan::Colorf::white);
+	brush = clan::Brush::solid(clan::Colorf::white);
 
 	elapsed = 0.0f;
 	sc.connect(window.get_ic().get_mouse().sig_key_up(), [&](const clan::InputEvent &key)
@@ -109,7 +101,7 @@ int Test::start(const std::vector<std::string> &args)
 	game_time.reset();
 }
 
-bool App::update()
+bool Test::update()
 {
 	game_time.update();
 

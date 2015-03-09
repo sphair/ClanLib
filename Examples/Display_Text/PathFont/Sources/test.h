@@ -38,7 +38,15 @@ public:
 private:
 	void on_input_up(const clan::InputEvent &key);
 private:
+	clan::DisplayWindow window;
+	clan::Canvas canvas;
+	clan::SlotContainer sc;
+	clan::Font font;
+	clan::Font path_font;
+	clan::Brush brush;
 	bool quit = false;
 	float elapsed;
 	clan::GameTime game_time;
+	float font_height = 100.0f;
+
 };

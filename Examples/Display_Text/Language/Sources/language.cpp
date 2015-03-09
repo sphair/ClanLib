@@ -54,46 +54,40 @@ Language::Language()
 #endif
 	clan::OpenGLTarget::enable();
 
-// The start of the Application
-int Language::start(const std::vector<std::string> &args)
-{
-	quit = false;
-
 	// Set the window
 	clan::DisplayWindowDescription desc;
 	desc.set_title("ClanLib Language Example");
 	desc.set_size(clan::Size(640, 480), true);
 	desc.set_allow_resize(true);
 
-	clan::DisplayWindow window(desc);
+	window = clan::DisplayWindow(desc);
 
 	// Connect the Window close event
-    clan::SlotContainer cc;
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &Language::on_window_close));
+ 	sc.connect(window.sig_window_close(), clan::bind_member(this, &Language::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &Language::on_input_up));
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &Language::on_input_up));
 
 	// Get the graphic context
-	clan::Canvas canvas(window);
+	canvas = clan::Canvas(window);
 
 	clan::File file("Resources/test.xml");
-	clan::DomDocument document(file);
-	clan::DomElement document_element = document.get_document_element();
+	document = clan::DomDocument(file);
+	document_element = document.get_document_element();
 	if (document_element.is_null())
 		throw clan::Exception("Cannot obtain the document element");
 
-	clan::Font font_english("arial", 30);
+	font_english = clan::Font("arial", 30);
 
 	clan::FontDescription desc_chinese;
 	desc_chinese.set_height(30);
 	desc_chinese.set_charset(clan::FontDescription::charset_chinesebig5);
-	clan::Font font_chinese("simsun", desc_chinese);
+	font_chinese = clan::Font("simsun", desc_chinese);
 
 	clan::FontDescription desc_arabic;
 	desc_arabic.set_height(30);
 	desc_arabic.set_charset(clan::FontDescription::charset_arabic);
-	clan::Font font_arabic("arial", desc_arabic);
+	font_arabic = clan::Font("arial", desc_arabic);
 
 }
 

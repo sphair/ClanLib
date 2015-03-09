@@ -39,18 +39,12 @@ App::App()
 #endif
 	clan::OpenGLTarget::enable();
 
-// The start of the Application
-int App::start(const std::vector<std::string> &args)
-{
-	quit = false;
-
-    clan::SlotContainer slots;
 	DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("Font Example Application");
 	win_desc.set_size(Size( 1000, 700 ), false);
 
-	DisplayWindow window(win_desc);
+	window = DisplayWindow(win_desc);
 	slots.connect(window.sig_window_close(), this, &App::on_window_close);
 	slots.connect(window.get_ic().get_keyboard().sig_key_up(), this, &App::on_input_up);
 

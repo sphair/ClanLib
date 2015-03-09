@@ -65,6 +65,7 @@ private:
 	void draw_font_info();
 
 private:
+	DisplayWindow window;
 	bool quit = false;
 	Canvas canvas;
 	std::string font_text;
@@ -72,6 +73,7 @@ private:
 	std::string font_typeface;
 	std::string font_filename;
 	FontDescription font_desc;
+	clan::SlotContainer slots;
 	Sizef font_size;
 	clan::Font small_font;
 	clan::Font selected_font;

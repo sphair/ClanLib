@@ -39,5 +39,14 @@ private:
 	void on_window_close();
 
 private:
+	clan::DisplayWindow window;
+	clan::SlotContainer sc;
+	clan::Canvas canvas;
+	clan::Font font_english;
+	clan::Font font_chinese;
+	clan::Font font_arabic;
+	clan::DomDocument document;
+	clan::DomElement document_element;
+
 	bool quit = false;
 };
