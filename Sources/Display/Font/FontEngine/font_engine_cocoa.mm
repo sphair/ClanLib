@@ -133,10 +133,10 @@ namespace clan
         // Black box in bitmap coordinates:
         
         float cursor_x = std::ceil(cg_bbox.origin.x);
-        float cursor_y = -std::ceil(cg_bbox.origin.y);
+        float cursor_y = -std::ceil(cg_bbox.origin.y) + 1;
         
-        int glyph_width = std::ceil(cursor_x + cg_bbox.origin.x + cg_bbox.size.width);
-        int glyph_height = std::ceil(cursor_y - cg_bbox.origin.y + cg_bbox.size.height);
+        int glyph_width = std::ceil(cursor_x + cg_bbox.origin.x + cg_bbox.size.width) + 1;
+        int glyph_height = std::ceil(cursor_y - cg_bbox.origin.y + cg_bbox.size.height) + 1;
         
         int glyph_x = -cursor_x;
         int glyph_y = -(glyph_height - cursor_y);
