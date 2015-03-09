@@ -357,16 +357,21 @@ namespace clan
 
 		if (!found)
 		{
+			// Could not find a cached version of the font to use as reference
 			font_face_load(desc, family_name, pixel_ratio);
-		}
-
-		if (!font_definition.font_databuffer.is_null())
-		{
-			font_face_load(desc, font_definition.font_databuffer, pixel_ratio);
 		}
 		else
 		{
-			font_face_load(desc, font_definition.typeface_name, pixel_ratio);
+			if (!font_definition.font_databuffer.is_null())
+			{
+				// Cached font is allocated via a font databuffer
+				font_face_load(desc, font_definition.font_databuffer, pixel_ratio);
+			}
+			else
+			{
+				// Cached font has allocated the typeface_name
+				font_face_load(desc, font_definition.typeface_name, pixel_ratio);
+			}
 		}
 
 		return font_cache.back();
