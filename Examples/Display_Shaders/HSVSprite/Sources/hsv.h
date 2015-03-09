@@ -27,18 +27,34 @@
 */
 
 #pragma once
+class HSVSpriteBatch;
+class HSVSprite;
 
-class HSV
+class HSV : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
-
 	HSV();
+	bool update() override;
 	int run();
 
 private:
 	void on_close();
 	void on_input_up(const InputEvent &key);
 
-	bool quit;
+	DisplayWindow window;
+	Canvas canvas;
+	SlotContainer sc;
+	clan::Font font;
+
+	std::shared_ptr<HSVSpriteBatch> sprite_batcher;
+	std::shared_ptr<HSVSprite> car1;
+	std::shared_ptr<HSVSprite> car2;
+
+	uint64_t last_fps_update;
+	uint64_t last_time;
+
+	bool quit = false;
+	int fps = 0;
+	std::string fps_text;
+	float hue_offset = 0.0;
 };

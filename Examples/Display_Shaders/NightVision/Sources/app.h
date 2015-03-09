@@ -27,10 +27,12 @@
 
 #pragma once
 
-class App
+class App : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
+	App();
+	bool update() override;
+
 	void window_close();
 
 private:
@@ -47,6 +49,24 @@ private:
 		float effectCoverage;
 
 	};
+	clan::DisplayWindow window;
+	clan::Canvas canvas;
+	clan::SlotContainer sc;
+
+	clan::Image background;
+	clan::Image ball;
+	clan::Texture2D noise_texture;
+
+	clan::FrameBuffer framebuffer_offscreen;
+	clan::Canvas canvas_offscreen;
+
+	clan::FrameBuffer framebuffer_mask;
+	clan::Canvas canvas_mask;
+
+	clan::Texture2D texture_offscreen;
+	clan::Texture2D texture_mask;
+
+	clan::ProgramObject shader;
 
 	clan::VertexArrayVector<clan::Vec2f> gpu_positions;
 	clan::VertexArrayVector<clan::Vec2f> gpu_tex1_coords;
@@ -55,8 +75,15 @@ private:
 
 	ProgramUniforms uniforms;
 
+	bool quit = false;
 
-	bool quit;
+	float amount = 0.0f;
+	float timer = 0.0f;
+
+	float scale = 1.0f;
+
+	clan::Font font;
+	uint64_t startTime;
 
 };
 

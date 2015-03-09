@@ -28,14 +28,16 @@
 
 #pragma once
 
+#include "../state.h"
 #include "../LinearParticle/L_ParticleSystem.h"
+#include "framerate_counter.h"
 
-class DemoCircle2
+class DemoCircle2 : public DemoScreen
 {
 public:
-	DemoCircle2(){}
+	DemoCircle2(clan::DisplayWindow &window);
 
-	int run(clan::DisplayWindow &window);
+	bool update() override;
 
 private:
 	void on_key_up(const clan::InputEvent& key);
@@ -44,8 +46,17 @@ private:
 
 
 private:
-	bool quit;
-	bool show_menu;
+	clan::DisplayWindow window;
+	clan::SlotContainer sc;
+	clan::Canvas canvas;
+	clan::Sprite surface;
+	clan::Font font;
+	FramerateCounter frameratecounter;
+	bool quit = false;
+	bool show_menu = true;
 	int dropping_period;
-	L_DroppingEffect* dropper;
+	std::unique_ptr<L_DroppingEffect> dropper;
+	std::unique_ptr<L_Particle> particle;
+	std::unique_ptr<L_Particle> particle2;
+	uint64_t last_time;
 };

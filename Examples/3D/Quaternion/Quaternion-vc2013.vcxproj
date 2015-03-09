@@ -150,7 +150,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Sources\program.cpp" />
     <ClCompile Include="Sources\scene.cpp" />
     <ClCompile Include="Sources\scene_object.cpp" />
     <ClCompile Include="Sources\shader_color.cpp" />
@@ -162,7 +161,6 @@
     <ClInclude Include="Sources\model.h" />
     <ClInclude Include="Sources\options.h" />
     <ClInclude Include="Sources\precomp.h" />
-    <ClInclude Include="Sources\program.h" />
     <ClInclude Include="Sources\scene.h" />
     <ClInclude Include="Sources\scene_object.h" />
     <ClInclude Include="Sources\shader_color.h" />

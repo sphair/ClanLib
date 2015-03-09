@@ -1,10 +1,10 @@
 
 #include "precomp.h"
 #include "program.h"
-#include "Controllers/ChatWindow/chat_window_controller.h"
-#include "Models/app_model.h"
 
 using namespace clan;
+
+clan::ApplicationInstance<Program> clanapp;
 
 class DisplayResources : public DisplayCache
 {
@@ -62,7 +62,7 @@ private:
 	std::map<std::string, Resource<Image>> loaded_images;
 };
 
-int Program::main(const std::vector<std::string> &args)
+Program::Program()
 {
 	/*
 	#ifndef _DEBUG
@@ -77,20 +77,17 @@ int Program::main(const std::vector<std::string> &args)
 	ResourceManager resources;
 	DisplayCache::set(resources, std::make_shared<DisplayResources>());
 
-	UIThread ui_thread(resources);
+	ui_thread = UIThread(resources);
 
-	AppModel app_model;
+	chat_window = std::make_shared<ChatWindowViewController>();
 
-	auto chat_window = std::make_shared<ChatWindowViewController>();
+	exit_slot = chat_window->window_view()->sig_close().connect([&](CloseEvent &e) { exit = true; });
 
-	bool exit = false;
-	Slot exit_slot = chat_window->window_view()->sig_close().connect([&](CloseEvent &e) { exit = true; });
-	while (!exit)
-	{
-		RunLoop::process(250);
-	}
-
-	return 0;
+	Application::use_timeout_timing(250);
 }
 
-Application app(&Program::main);
+bool Program::update()
+{
+	return !exit;
+}
+

@@ -28,19 +28,24 @@
 
 #pragma once
 
-// This is the Application class (That is instantiated by the Program Class)
-class App
+class App : public clan::Application
 {
 public:
 	App();
-
-	int start(const std::vector<std::string> &args);
+	bool update() override;
 
 private:
 	void on_input_up(const clan::InputEvent &key);
 	void on_input_down(const clan::InputEvent &key);
 
-	bool quit;
+	bool quit = false;
+
+	clan::DisplayWindow window;
+	clan::Canvas canvas;
+	clan::Font font;
+	clan::GameTime game_time;
+
+	clan::SlotContainer sc;
 
 	clan::SoundOutput sound_output;
 	clan::SoundBuffer sfx_pacman_start;

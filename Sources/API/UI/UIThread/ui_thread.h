@@ -39,6 +39,9 @@ namespace clan
 	class UIThread
 	{
 	public:
+		/// \brief Constructs a null instance.
+		UIThread();
+
 		UIThread(ResourceManager manager, const std::function<void(const std::exception_ptr &)> &exception_handler = std::function<void(const std::exception_ptr &)>());
 		~UIThread();
 

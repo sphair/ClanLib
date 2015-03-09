@@ -45,6 +45,8 @@ class SolutionProject
 {
 public:
     std::string name;
+    std::string header_folder;
+    std::string header_name;
     std::shared_ptr<SolutionBuildConfiguration> debug_config = std::make_shared<SolutionBuildConfiguration>("Debug");
     std::shared_ptr<SolutionBuildConfiguration> release_config = std::make_shared<SolutionBuildConfiguration>("Release");
     std::vector<std::shared_ptr<SolutionProjectDependency>> dependencies;
@@ -174,7 +176,7 @@ void add_source_files(std::string path, std::shared_ptr<Solution> solution, std:
     }
 }
 
-std::shared_ptr<SolutionProject> add_project(std::string name, std::shared_ptr<Solution> solution, std::shared_ptr<SolutionFileItem> sources, std::shared_ptr<SolutionFileItem> api)
+std::shared_ptr<SolutionProject> add_project(std::string name, std::string header_name, std::shared_ptr<Solution> solution, std::shared_ptr<SolutionFileItem> sources, std::shared_ptr<SolutionFileItem> api)
 {
     auto sources_subfolder = std::make_shared<SolutionFileItem>();
     sources_subfolder->path = name;
@@ -188,6 +190,8 @@ std::shared_ptr<SolutionProject> add_project(std::string name, std::shared_ptr<S
 
     auto proj = std::make_shared<SolutionProject>();
     proj->name = "clan" + name;
+    proj->header_folder = name;
+    proj->header_name = header_name;
     add_source_files("Sources/API/" + name, solution, proj, api_subfolder);
     add_source_files("Sources/" + name, solution, proj, sources_subfolder);
     solution->projects.push_back(proj);
@@ -261,12 +265,12 @@ std::shared_ptr<Solution> generate_solution()
     solution->root_folder->items.push_back(solution->products_folder);
     solution->products_folder->parent = solution->root_folder;
     
-    auto clanCore = add_project("Core", solution, sources, api);
-    auto clanDisplay = add_project("Display", solution, sources, api);
-    auto clanGL = add_project("GL", solution, sources, api);
-    auto clanNetwork = add_project("Network", solution, sources, api);
-    auto clanUI = add_project("UI", solution, sources, api);
-    auto clanApp = add_project("App", solution, sources, api);
+    auto clanCore = add_project("Core", "core.h", solution, sources, api);
+    auto clanDisplay = add_project("Display", "display.h", solution, sources, api);
+    auto clanGL = add_project("GL", "gl.h", solution, sources, api);
+    auto clanNetwork = add_project("Network", "network.h", solution, sources, api);
+    auto clanUI = add_project("UI", "ui.h", solution, sources, api);
+    auto clanApp = add_project("App", "application.h", solution, sources, api);
     
     add_main_api_headers(api);
 
@@ -451,7 +455,6 @@ private:
         output << "    isa = PBXAggregateTarget;" << std::endl;
         output << "    buildConfigurationList = " << id("XCConfigurationList", solution->aggr_target.get()) << " /* Build configuration list for PBXAggregateTarget \"" << solution->name << "\" */;" << std::endl;
         output << "    buildPhases = (" << std::endl;
-        //output << "        528505C61665768600B19C5D /* ShellScript */," << std::endl;
         output << "    );" << std::endl;
         output << "    buildRules = (" << std::endl;
         output << "    );" << std::endl;
@@ -481,6 +484,7 @@ private:
             output << "    buildPhases = (" << std::endl;
             output << "        " << id("PBXSourcesBuildPhase", project.get()) << " /* Sources */," << std::endl;
             output << "        " << id("PBXFrameworksBuildPhase", project.get()) << " /* Frameworks */," << std::endl;
+            output << "        " << id("PBXShellScriptBuildPhase", project.get()) << " /* ShellScript */," << std::endl;
             output << "    );" << std::endl;
             output << "    buildRules = (" << std::endl;
             output << "    );" << std::endl;
@@ -532,20 +536,30 @@ private:
     {
         output << std::endl;
         output << "/* Begin PBXShellScriptBuildPhase section */" << std::endl;
-        
-        //output << id("PBXShellScriptBuildPhase", solution.get()) << " /* ShellScript */ = {" << std::endl;
-        //output << "    isa = PBXShellScriptBuildPhase;" << std::endl;
-        //output << "    buildActionMask = 2147483647;" << std::endl;
-        //output << "    files = (" << std::endl;
-        //output << "    );" << std::endl;
-        //output << "    inputPaths = (" << std::endl;
-        //output << "    );" << std::endl;
-        //output << "    outputPaths = (" << std::endl;
-        //output << "    );" << std::endl;
-        //output << "    runOnlyForDeploymentPostprocessing = 0;" << std::endl;
-        //output << "    shellPath = /bin/sh;" << std::endl;
-        //output << "    shellScript = \"if [ -d \\\"../../Build/OSX/include\\\" ]; then rm -rf ../../Build/OSX/include/; fi\\nmkdir ../../Build/OSX/include\\ncp -r \\\"${PROJECT_DIR}/../../Sources/API\\\" \\\"../../Build/OSX/include/ClanLib\\\"\\nfind \\\"../../Build/OSX/include/ClanLib\\\" -name '.svn' | xargs rm -rf\";" << std::endl;
-        //output << "};" << std::endl;
+
+        for (const auto &project : solution->projects)
+        {
+            output << id("PBXShellScriptBuildPhase", project.get()) << " /* ShellScript */ = {" << std::endl;
+            output << "    isa = PBXShellScriptBuildPhase;" << std::endl;
+            output << "    buildActionMask = 2147483647;" << std::endl;
+            output << "    files = (" << std::endl;
+            output << "    );" << std::endl;
+            output << "    inputPaths = (" << std::endl;
+            output << "    );" << std::endl;
+            output << "    outputPaths = (" << std::endl;
+            output << "    );" << std::endl;
+            output << "    runOnlyForDeploymentPostprocessing = 0;" << std::endl;
+            output << "    shellPath = /bin/sh;" << std::endl;
+            output << "    shellScript = \""
+                "if [ -d \\\"Build/include/ClanLib/" << project->header_folder <<"\\\" ]; then "
+                "rm -rf Build/include/ClanLib/" << project->header_folder << "/; "
+                "fi \\n"
+                "mkdir -p Build/include/ClanLib/ \\n"
+                "cp -r \\\"${PROJECT_DIR}/Sources/API/" << project->header_folder << "\\\" \\\"Build/include/ClanLib/" << project->header_folder << "\\\" \\n"
+                "cp \\\"${PROJECT_DIR}/Sources/API/" << project->header_name << "\\\" \\\"Build/include/ClanLib/" << project->header_name << "\\\" \\n"
+                "\";" << std::endl;
+            output << "};" << std::endl;
+        }
         
         output << "/* End PBXShellScriptBuildPhase section */" << std::endl;
     }
@@ -614,6 +628,8 @@ private:
         output << "        );" << std::endl;
         output << "        ONLY_ACTIVE_ARCH = YES;" << std::endl;
         output << "        USER_HEADER_SEARCH_PATHS = Sources;" << std::endl;
+        output << "        DEPLOYMENT_LOCATION = YES;" << std::endl;
+        output << "        DSTROOT = Build;" << std::endl;
         output << "    };" << std::endl;
         output << "    name = " << solution->debug_config->name << ";" << std::endl;
         output << "};" << std::endl;
@@ -626,18 +642,20 @@ private:
         output << "        CLANG_CXX_LIBRARY = \"libc++\";" << std::endl;
         output << "        CLANG_ENABLE_OBJC_ARC = YES;" << std::endl;
         output << "        USER_HEADER_SEARCH_PATHS = Sources;" << std::endl;
+        output << "        DEPLOYMENT_LOCATION = YES;" << std::endl;
+        output << "        DSTROOT = Build;" << std::endl;
         output << "    };" << std::endl;
         output << "    name = " << solution->release_config->name << ";" << std::endl;
         output << "};" << std::endl;
         
         for (const auto &project : solution->projects)
         {
-            // Note: projects got a lot more build settings than below
-            
             output << id("XCBuildConfiguration", project->debug_config.get()) << " /* " << project->debug_config->name << " */ = {" << std::endl;
             output << "    isa = XCBuildConfiguration;" << std::endl;
             output << "    buildSettings = {" << std::endl;
             output << "        PRODUCT_NAME = \"$(TARGET_NAME)\";" << std::endl;
+            output << "        INSTALL_PATH = /lib/osx;" << std::endl;
+            output << "        SDKROOT = macosx;" << std::endl;
             output << "    };" << std::endl;
             output << "    name = " << project->debug_config->name << ";" << std::endl;
             output << "};" << std::endl;
@@ -646,6 +664,8 @@ private:
             output << "    isa = XCBuildConfiguration;" << std::endl;
             output << "    buildSettings = {" << std::endl;
             output << "        PRODUCT_NAME = \"$(TARGET_NAME)\";" << std::endl;
+            output << "        INSTALL_PATH = /lib/osx;" << std::endl;
+            output << "        SDKROOT = macosx;" << std::endl;
             output << "    };" << std::endl;
             output << "    name = " << project->release_config->name << ";" << std::endl;
             output << "};" << std::endl;

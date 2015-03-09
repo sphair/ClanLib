@@ -31,7 +31,17 @@
 #include "colorwheel.h"
 #include <cstdlib>
 
-App::App() : quit(false)
+clan::ApplicationInstance<App> clanapp;
+
+App::App()
+{
+	// We support all display targets, in order listed here
+#ifdef WIN32
+	clan::D3DTarget::enable();
+#endif
+	clan::OpenGLTarget::enable();
+	
+	App::App() : quit(false)
 {
 }
 
@@ -59,24 +69,21 @@ int App::start(const std::vector<std::string> &args)
 	value_inner = 0.0f;
 	is_hsl = false;
 
+}
 
-	while (!quit)
-	{
-		canvas.clear(clan::Colorf(0.0f,0.0f,0.0f));
+bool App::update()
+{
+	canvas.clear(clan::Colorf(0.0f,0.0f,0.0f));
 
-		clan::Pointf center((float)canvas.get_width() / 2.0f, (float)canvas.get_height() / 2.0f);
-		float radius = 200.0f;
-		draw(canvas, center, radius);
+	clan::Pointf center((float)canvas.get_width() / 2.0f, (float)canvas.get_height() / 2.0f);
+	float radius = 200.0f;
+	draw(canvas, center, radius);
 
-		draw_labels(canvas);
+	draw_labels(canvas);
 
+	window.flip(1);
 
-		window.flip(1);
-
-		clan::RunLoop::process();
-	}
-
-	return 0;
+	return !quit;
 }
 
 void App::draw_labels(clan::Canvas &canvas)

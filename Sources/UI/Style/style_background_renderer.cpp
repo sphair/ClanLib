@@ -180,23 +180,73 @@ namespace clan
 		if (num_stops <= 0)
 			return;
 
-		// To do: support "top-left", "top-right", "bottom-left" and "bottom-right" keywords
-		if (!prop_angle.is_angle())
-			return;
-
 		Rectf clip_box = get_clip_box(index);
-
-		float angle = prop_angle.number;
 		Pointf center = clip_box.get_center();
-		Pointf length(
-			0.5f * clip_box.get_width() * std::sin(angle),
-			0.5f * clip_box.get_height() * -std::cos(angle)
-		);
 
 		Brush brush;
 		brush.type = BrushType::linear;
-		brush.start_point = center - length;
-		brush.end_point = center + length;
+
+		if (prop_angle.is_angle())
+		{
+			float angle = std::fmod(prop_angle.number, 2 * PI);
+			if (angle < 0.0f)
+				angle += 2 * PI;
+
+			float dx = std::sin(angle);
+			float dy = -std::cos(angle);
+
+			Pointf corner1, corner2;
+
+			int corner_index = (int)(angle * 4 / PI);
+			switch (corner_index)
+			{
+			default:
+			case 0:
+				corner1 = clip_box.get_bottom_left();
+				corner2 = clip_box.get_top_right();
+				break;
+			case 1:
+				corner1 = clip_box.get_top_left();
+				corner2 = clip_box.get_bottom_right();
+				break;
+			case 2:
+				corner1 = clip_box.get_top_right();
+				corner2 = clip_box.get_bottom_left();
+				break;
+			case 3:
+				corner1 = clip_box.get_bottom_right();
+				corner2 = clip_box.get_top_left();
+				break;
+			}
+
+			bool intersect = false;
+			brush.start_point = Line2f(center, center + Vec2f(dx, dy)).get_intersection(Line2f(corner1, corner1 + Vec2f(-dy, dx)), intersect);
+			brush.end_point = Line2f(center, center + Vec2f(dx, dy)).get_intersection(Line2f(corner2, corner2 + Vec2f(-dy, dx)), intersect);
+		}
+		else if (prop_angle.is_keyword("top-left"))
+		{
+			brush.end_point = Pointf(clip_box.right, clip_box.bottom);
+			brush.start_point = Pointf(clip_box.left, clip_box.top);
+		}
+		else if (prop_angle.is_keyword("top-right"))
+		{
+			brush.end_point = Pointf(clip_box.left, clip_box.bottom);
+			brush.start_point = Pointf(clip_box.right, clip_box.top);
+		}
+		else if (prop_angle.is_keyword("bottom-left"))
+		{
+			brush.start_point = Pointf(clip_box.right, clip_box.top);
+			brush.end_point = Pointf(clip_box.left, clip_box.bottom);
+		}
+		else if (prop_angle.is_keyword("bottom-right"))
+		{
+			brush.start_point = Pointf(clip_box.left, clip_box.top);
+			brush.end_point = Pointf(clip_box.right, clip_box.bottom);
+		}
+		else
+		{
+			return;
+		}
 
 		float gradient_length = (brush.end_point - brush.start_point).length();
 		if (gradient_length <= 0.0f)

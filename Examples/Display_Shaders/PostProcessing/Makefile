@@ -1,6 +1,5 @@
 EXAMPLE_BIN=postprocessing
 OBJF = ./Sources/app.o \
-./Sources/program.o \
 ./Sources/precomp.o
 
 LIBS=clanApp clanDisplay clanCore clanGL

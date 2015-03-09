@@ -28,166 +28,144 @@
 
 #include "precomp.h"
 #include "app.h"
-#include "options.h"
 #include <cstdlib>
 
-App::App() : quit(false)
-{
-}
+clan::ApplicationInstance<App> clanapp;
 
-// The start of the Application
-int App::start(const std::vector<std::string> &args)
+App::App()
 {
+	// We support all display targets, in order listed here
+	clan::OpenGLTarget::enable();
+
 	clan::DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("Perlin Noise Example");
-	win_desc.set_size(clan::Size( 800, 520 ), false);
+	win_desc.set_size(clan::Size(800, 520), false);
 
-	clan::DisplayWindow window(win_desc);
-    clan::SlotContainer cc;
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	window = clan::DisplayWindow(win_desc);
+	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 
-	clan::Canvas canvas(window);
+	canvas = clan::Canvas(window);
 
 	// Deleted automatically by the GUI
 	//Options *options = new Options(gui, canvas.get_size());
 
-	clan::Image image_grid(canvas, "../../Display_Render/Blend/Resources/grid.png");
+	image_grid = clan::Image(canvas, "../../Display_Render/Blend/Resources/grid.png");
 	image_grid.set_color(clan::Colorf(0.4f, 0.4f, 1.0f, 1.0f));
+}
 
-	clan::PerlinNoise noise;
-
-	clan::Image noise_image;
-
-	clan::TextureFormat last_sized_format = clan::tf_rgb8;
-	float last_amplitude = 1.0f;
-	int last_width = 256;
-	int last_height = 256;
-	int last_octaves = 1 ;
-	float last_start_x = 0.0f;
-	float last_length_x = 32.0f;
-	float last_start_y = 0.0f;
-	float last_length_y = 32.0f;
-	float last_position_z = 0.0f;
-	float last_position_w = 0.0f;
-	PerlinDimension last_dimension = perlin_2d;
-	bool last_is_normals_set = false;
-	bool changed_flag = true;
-
-	while (!quit)
+bool App::update()
+{
+	/*
+	if (last_dimension != options->dimension)
 	{
-		/*
-		if (last_dimension != options->dimension)
-		{
-			changed_flag = true;
-			last_dimension = options->dimension;
-		}
-		if (last_is_normals_set != options->is_normals_set)
-		{
-			changed_flag = true;
-			last_is_normals_set = options->is_normals_set;
-		}
-
-		if (last_sized_format != options->sized_format)
-		{
-			changed_flag = true;
-			last_sized_format = options->sized_format;
-			noise.set_format(last_sized_format);
-		}
-		if (last_amplitude != options->amplitude)
-		{
-			changed_flag = true;
-			last_amplitude = options->amplitude;
-			noise.set_amplitude(last_amplitude);
-		}
-		if (last_width != options->width)
-		{
-			changed_flag = true;
-			last_width = options->width;
-			noise.set_size(last_width, last_height);
-		}
-		if (last_height != options->height)
-		{
-			changed_flag = true;
-			last_height = options->height;
-			noise.set_size(last_width, last_height);
-		}
-		if (last_octaves != options->octaves)
-		{
-			changed_flag = true;
-			last_octaves = options->octaves;
-			noise.set_octaves(last_octaves);
-		}
-
-		if (last_start_x != options->start_x)
-		{
-			changed_flag = true;
-			last_start_x = options->start_x;
-		}
-		if (last_length_x != options->length_x)
-		{
-			changed_flag = true;
-			last_length_x = options->length_x;
-		}
-		if (last_start_y != options->start_y)
-		{
-			changed_flag = true;
-			last_start_y = options->start_y;
-		}
-		if (last_length_y != options->length_y)
-		{
-			changed_flag = true;
-			last_length_y = options->length_y;
-		}
-		if (last_position_z != options->position_z)
-		{
-			changed_flag = true;
-			last_position_z = options->position_z;
-		}
-		if (last_position_w != options->position_w)
-		{
-			changed_flag = true;
-			last_position_w = options->position_w;
-		}
-		*/
-		if (changed_flag)
-		{
-			changed_flag = false;
-			clan::PixelBuffer pbuff;
-			switch (last_dimension)
-			{
-				case perlin_1d:
-					pbuff = noise.create_noise1d(last_start_x, last_start_x + last_length_x);
-					break;
-				case perlin_2d:
-					pbuff = noise.create_noise2d(last_start_x, last_start_x + last_length_x, last_start_y, last_start_y + last_length_y);
-					break;
-				case perlin_3d:
-					pbuff = noise.create_noise3d(last_start_x, last_start_x + last_length_x, last_start_y, last_start_y + last_length_y, last_position_z);
-					break;
-				case perlin_4d:
-				default:
-					pbuff = noise.create_noise4d(last_start_x, last_start_x + last_length_x, last_start_y, last_start_y + last_length_y, last_position_z, last_position_w);
-					break;
-			}
-
-			if (last_is_normals_set)
-				pbuff = convert_to_normalmap(pbuff);
-
-			pbuff = pbuff.to_format(clan::tf_rgba8);	// Required for clanD3D
-			noise_image = clan::Image(canvas, pbuff, pbuff.get_size());
-
-		}
-
-		image_grid.draw(canvas, 32, 32);
-		noise_image.draw(canvas, 33, 33);
-
-		window.flip(1);
-
-		clan::RunLoop::process();
+		changed_flag = true;
+		last_dimension = options->dimension;
 	}
-	return 0;
+	if (last_is_normals_set != options->is_normals_set)
+	{
+		changed_flag = true;
+		last_is_normals_set = options->is_normals_set;
+	}
+
+	if (last_sized_format != options->sized_format)
+	{
+		changed_flag = true;
+		last_sized_format = options->sized_format;
+		noise.set_format(last_sized_format);
+	}
+	if (last_amplitude != options->amplitude)
+	{
+		changed_flag = true;
+		last_amplitude = options->amplitude;
+		noise.set_amplitude(last_amplitude);
+	}
+	if (last_width != options->width)
+	{
+		changed_flag = true;
+		last_width = options->width;
+		noise.set_size(last_width, last_height);
+	}
+	if (last_height != options->height)
+	{
+		changed_flag = true;
+		last_height = options->height;
+		noise.set_size(last_width, last_height);
+	}
+	if (last_octaves != options->octaves)
+	{
+		changed_flag = true;
+		last_octaves = options->octaves;
+		noise.set_octaves(last_octaves);
+	}
+
+	if (last_start_x != options->start_x)
+	{
+		changed_flag = true;
+		last_start_x = options->start_x;
+	}
+	if (last_length_x != options->length_x)
+	{
+		changed_flag = true;
+		last_length_x = options->length_x;
+	}
+	if (last_start_y != options->start_y)
+	{
+		changed_flag = true;
+		last_start_y = options->start_y;
+	}
+	if (last_length_y != options->length_y)
+	{
+		changed_flag = true;
+		last_length_y = options->length_y;
+	}
+	if (last_position_z != options->position_z)
+	{
+		changed_flag = true;
+		last_position_z = options->position_z;
+	}
+	if (last_position_w != options->position_w)
+	{
+		changed_flag = true;
+		last_position_w = options->position_w;
+	}
+	*/
+	if (changed_flag)
+	{
+		changed_flag = false;
+		clan::PixelBuffer pbuff;
+		switch (last_dimension)
+		{
+			case perlin_1d:
+				pbuff = noise.create_noise1d(last_start_x, last_start_x + last_length_x);
+				break;
+			case perlin_2d:
+				pbuff = noise.create_noise2d(last_start_x, last_start_x + last_length_x, last_start_y, last_start_y + last_length_y);
+				break;
+			case perlin_3d:
+				pbuff = noise.create_noise3d(last_start_x, last_start_x + last_length_x, last_start_y, last_start_y + last_length_y, last_position_z);
+				break;
+			case perlin_4d:
+			default:
+				pbuff = noise.create_noise4d(last_start_x, last_start_x + last_length_x, last_start_y, last_start_y + last_length_y, last_position_z, last_position_w);
+				break;
+		}
+
+		if (last_is_normals_set)
+			pbuff = convert_to_normalmap(pbuff);
+
+		pbuff = pbuff.to_format(clan::tf_rgba8);	// Required for clanD3D
+		noise_image = clan::Image(canvas, pbuff, pbuff.get_size());
+
+	}
+
+	image_grid.draw(canvas, 32, 32);
+	noise_image.draw(canvas, 33, 33);
+
+	window.flip(1);
+
+	return !quit;
 }
 
 // A key was pressed

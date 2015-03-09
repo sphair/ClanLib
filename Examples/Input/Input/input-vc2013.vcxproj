@@ -147,13 +147,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Sources\program.cpp" />
     <ClCompile Include="Sources\text_shooter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\app.h" />
     <ClInclude Include="Sources\precomp.h" />
-    <ClInclude Include="Sources\program.h" />
     <ClInclude Include="Sources\text_shooter.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

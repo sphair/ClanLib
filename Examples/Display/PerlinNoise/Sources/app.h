@@ -28,15 +28,15 @@
 
 #pragma once
 
+#include "options.h"
+
 class Options;
 
-// This is the Application class (That is instantiated by the Program Class)
-class App
+class App : public clan::Application
 {
 public:
 	App();
-
-	int start(const std::vector<std::string> &args);
+	bool update() override;
 
 private:
 	void on_input_up(const clan::InputEvent &key);
@@ -44,7 +44,27 @@ private:
 	void set_user_projection(clan::Canvas &canvas, clan::Sizef &area_size, Options *options);
 	clan::PixelBuffer convert_to_normalmap(clan::PixelBuffer &input);
 private:
-	bool quit;
+	clan::DisplayWindow window;
+	clan::Canvas canvas;
+	clan::PerlinNoise noise;
+	clan::Image image_grid;
+	clan::Image noise_image;
 
+	clan::TextureFormat last_sized_format = clan::tf_rgb8;
+	float last_amplitude = 1.0f;
+	int last_width = 256;
+	int last_height = 256;
+	int last_octaves = 1;
+	float last_start_x = 0.0f;
+	float last_length_x = 32.0f;
+	float last_start_y = 0.0f;
+	float last_length_y = 32.0f;
+	float last_position_z = 0.0f;
+	float last_position_w = 0.0f;
+	PerlinDimension last_dimension = perlin_2d;
+	bool last_is_normals_set = false;
+	bool changed_flag = true;
 
+	bool quit = false;
+	clan::SlotContainer sc;
 };

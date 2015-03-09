@@ -41,13 +41,11 @@ typedef struct
 
 class Options;
 
-// This is the Application class (That is instantiated by the Program Class)
-class App
+class App : public clan::Application
 {
 public:
 	App();
-
-	int start(const std::vector<std::string> &args);
+	bool update() override;
 
 private:
 	void on_input_up(const clan::InputEvent &key);
@@ -55,10 +53,11 @@ private:
 	void setup_particles();
 	void move_particles(float time_diff, int num_particles);
 private:
-	bool quit;
+	bool quit = false;
 	float grid_space;
 	float ball_alpha;
 
+	clan::GameTime game_time;
 	static const int max_particles = 1000;
 	ParticlePosition particles[max_particles];
 

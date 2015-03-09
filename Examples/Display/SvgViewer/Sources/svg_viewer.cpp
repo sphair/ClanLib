@@ -29,20 +29,22 @@
 
 #include "precomp.h"
 #include "svg_viewer.h"
-#include "svg.h"
 
-int SvgViewer::run(const std::vector<std::string> &args)
+clan::ApplicationInstance<SvgViewer> clanapp;
+
+SvgViewer::SvgViewer()
 {
-	bool quit = false;
-    clan::SlotContainer sc;
+	// We support all display targets, in order listed here
+	clan::D3DTarget::enable();
+	clan::OpenGLTarget::enable();
 
 	clan::DisplayWindowDescription desc;
 	desc.set_title("ClanLib SVG Viewer Example");
 	desc.set_size(clan::Size(1000, 800), true);
 	desc.set_allow_resize(true);
 
-	clan::DisplayWindow window(desc);
-	clan::Canvas canvas(window);
+	window = clan::DisplayWindow(desc);
+	canvas = clan::Canvas(window);
 
 	sc.connect(window.sig_window_close(), [&](){quit = true; });
 	sc.connect(window.get_ic().get_keyboard().sig_key_up(), [&](const clan::InputEvent &key)
@@ -53,11 +55,9 @@ int SvgViewer::run(const std::vector<std::string> &args)
 		}
 	});
 
-	clan::Font font("Tahoma", 24);
+	font = clan::Font("Tahoma", 24);
 
-	Svg svg("Resources/tiger.svg");
-	float angle = 0.0f;
-	float scale = 0.5f;
+	svg = Svg("Resources/tiger.svg");
 	sc.connect(window.get_ic().get_mouse().sig_key_up(), [&](const clan::InputEvent &key)
 	{
 		if (key.id == clan::mouse_wheel_up)
@@ -66,38 +66,38 @@ int SvgViewer::run(const std::vector<std::string> &args)
 			scale -= 0.1f;
 	});
 
-	clan::GameTime time;
+	time.reset();
+}
 
-	while (!quit)
+bool SvgViewer::update()
+{
+	time.update();
+
+	canvas.clear(clan::Colorf(0.9f, 0.9f, 0.9f));
+
+	if (window.get_ic().get_mouse().get_keycode(clan::mouse_left))
 	{
-		canvas.clear(clan::Colorf(0.9f, 0.9f, 0.9f));
-
-		if (window.get_ic().get_mouse().get_keycode(clan::mouse_left))
-		{
-			angle += time.get_time_elapsed() * 64.0f;
-			if (angle >= 360.0f) angle = -360.0f;
-		}
-		if (window.get_ic().get_mouse().get_keycode(clan::mouse_right))
-		{
-			angle -= time.get_time_elapsed() * 64.0f;
-			if (angle < 0.0f) angle += 360.0f;
-		}
-
-		//transform = "matrix(1.7656463,0,0,1.7656463,324.90716,255.00942)"
-		float new_scale = scale / 1.7656463f;
-		clan::Pointf position(324.90716f, 255.00942f);
-		position *= 0.5f;
-
-		clan::Mat4f rotation = clan::Mat4f::translate(canvas.get_width()/2.0f, canvas.get_height()/2.0f, 0.0f) * clan::Mat4f::rotate(clan::Angle(angle, clan::angle_degrees), 0.0f, 0.0f, 1.0f) * clan::Mat4f::translate(-canvas.get_width()/2.0f, -canvas.get_height()/2.0f, 0.0f);
-		canvas.set_transform(rotation * clan::Mat4f::translate(-position.x, -position.y, 0.0f) * clan::Mat4f::scale(new_scale, new_scale, new_scale));
-		svg.render(canvas);
-		canvas.set_transform(clan::Mat4f::identity());
-		font.draw_text(canvas, 17, 40, clan::string_format("%1 FPS", time.get_updates_per_second()), clan::Colorf::black);
-
-		window.flip(0);
-		clan::RunLoop::process(0);
-		time.update();
+		angle += time.get_time_elapsed() * 64.0f;
+		if (angle >= 360.0f) angle = -360.0f;
+	}
+	if (window.get_ic().get_mouse().get_keycode(clan::mouse_right))
+	{
+		angle -= time.get_time_elapsed() * 64.0f;
+		if (angle < 0.0f) angle += 360.0f;
 	}
 
-	return 0;
+	//transform = "matrix(1.7656463,0,0,1.7656463,324.90716,255.00942)"
+	float new_scale = scale / 1.7656463f;
+	clan::Pointf position(324.90716f, 255.00942f);
+	position *= 0.5f;
+
+	clan::Mat4f rotation = clan::Mat4f::translate(canvas.get_width()/2.0f, canvas.get_height()/2.0f, 0.0f) * clan::Mat4f::rotate(clan::Angle(angle, clan::angle_degrees), 0.0f, 0.0f, 1.0f) * clan::Mat4f::translate(-canvas.get_width()/2.0f, -canvas.get_height()/2.0f, 0.0f);
+	canvas.set_transform(rotation * clan::Mat4f::translate(-position.x, -position.y, 0.0f) * clan::Mat4f::scale(new_scale, new_scale, new_scale));
+	svg.render(canvas);
+	canvas.set_transform(clan::Mat4f::identity());
+	font.draw_text(canvas, 17, 40, clan::string_format("%1 FPS", time.get_updates_per_second()), clan::Colorf::black);
+
+	window.flip(0);
+
+	return !quit;
 }

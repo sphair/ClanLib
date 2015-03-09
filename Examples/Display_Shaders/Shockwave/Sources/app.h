@@ -27,10 +27,12 @@
 
 #pragma once
 
-class App
+class App : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
+	App();
+	bool update() override;
+
 	void window_close();
 
 private:
@@ -47,6 +49,16 @@ private:
 		float glow;
 	};
 
+	clan::DisplayWindow window;
+	clan::Canvas canvas;
+	clan::SlotContainer sc;
+	clan::Font font;
+	clan::ProgramObject shader;
+	clan::Image background;
+	clan::Image ball;
+	clan::Canvas canvas_offscreen;
+	clan::Texture2D texture_offscreen;
+
 	clan::VertexArrayVector<clan::Vec2f> gpu_positions;
 	clan::VertexArrayVector<clan::Vec2f> gpu_tex1_coords;
 	clan::UniformVector<ProgramUniforms> gpu_uniforms;
@@ -54,10 +66,15 @@ private:
 
 	ProgramUniforms uniforms;
 
-	bool quit;
-	float timer;
-	float shockwave_start_time;
-	float shockwave_rate;
+	bool quit = false;
+	float timer = 0.0f;
+	float shockwave_start_time = 0.0f;
+	float shockwave_rate = 1.0f;
+
+	float amount = 0.0f;
+	float scale = 1.0f;
+	uint64_t startTime;
+
 
 };
 

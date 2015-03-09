@@ -47,8 +47,11 @@ GraphicStore::GraphicStore(GraphicContext &gc) : shader(gc), shader_texture(gc)
 
 GraphicStore::~GraphicStore()
 {
-	aiReleasePropertyStore(store);
-	aiDetachAllLogStreams();
+	if (store)
+	{
+		aiReleasePropertyStore(store);
+		aiDetachAllLogStreams();
+	}
 }
 
 void GraphicStore::LoadImages( GraphicContext &gc )

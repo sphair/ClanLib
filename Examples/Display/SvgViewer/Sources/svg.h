@@ -34,6 +34,7 @@ class SvgNode;
 class Svg
 {
 public:
+	Svg() {};
 	Svg(const std::string &filename);
 	void render(clan::Canvas &canvas);
 

@@ -29,9 +29,14 @@
 
 #pragma once
 
-// This is the Application class (That is instantiated by the Program Class)
-class HelloWorld
+class HelloWorld : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
+	HelloWorld();
+	bool update() override;
+
+	clan::UIThread ui_thread;
+	std::shared_ptr<clan::WindowView> root;
+	std::shared_ptr<clan::LabelView> label;
+	clan::Slot slot_close;
 };

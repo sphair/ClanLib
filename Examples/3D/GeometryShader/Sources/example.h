@@ -29,6 +29,7 @@
 #pragma once
 
 #include "scene.h"
+#include "graphic_store.h"
 
 class ShaderDepth;
 class ShaderColor;
@@ -37,12 +38,11 @@ class Options;
 
 class Model;
 
-// This is the Application class (That is instantiated by the Program Class)
-class App
+class App : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
-
+	App();
+	bool update() override;
 private:
 	void on_input_up(const InputEvent &key);
 	void on_window_close();
@@ -54,16 +54,25 @@ private:
 	void calculate_matricies(GraphicContext &gc);
 	void control_camera();
 private:
+	DisplayWindow window;
+	SlotContainer sc;
+	Canvas canvas;
+	BlendState blend_disable_color_write;
+	DepthStencilState depth_write_enabled;
+	RasterizerState raster_state;
 	Scene scene;
 
 	SceneObject *camera;
-	float camera_angle;
+	float camera_angle = 0.0f;
 
 	ParticleObject *object_particles;
 
-	bool enable_dual_pass;
+	bool enable_dual_pass = false;
 
 	int time_delta;
-	bool quit;
+	bool quit = false;
+	clan::GameTime game_time;
+	std::shared_ptr<GraphicStore> graphic_store;
+	clan::Font font;
 };
 

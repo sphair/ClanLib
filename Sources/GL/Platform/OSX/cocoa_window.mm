@@ -34,6 +34,7 @@
 #import <AppKit/AppKit.h>
 
 #import "cocoa_window.h"
+#import "cocoa_view.h"
 #import "opengl_window_provider_osx.h"
 
 @implementation CocoaWindow
@@ -41,21 +42,49 @@
 	clan::OpenGLWindowProvider_Impl *window_provider;
 }
 
-- (BOOL) acceptsFirstResponder
-{
-    NSLog(@"-acceptsFirstResponder:");
-    return YES;
-}
-
 - (id) initWithDescription:(const clan::DisplayWindowDescription &)desc provider:(clan::OpenGLWindowProvider_Impl*)provider_impl
 {
-	NSRect frame = NSMakeRect(0, 0, desc.get_size().width, desc.get_size().height);
-	NSUInteger styles = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask;
+	NSRect frame = NSMakeRect(desc.get_position().left, desc.get_position().top, desc.get_size().width, desc.get_size().height);
+
+	NSScreen *screen = [NSScreen mainScreen];
+	
+	if (desc.get_position().left == -1 && desc.get_position().top == -1)
+	{
+		NSRect workarea = [screen visibleFrame];
+		frame.origin.x = workarea.origin.x + (workarea.size.width - frame.size.width) * 0.5f;
+		frame.origin.y = workarea.origin.y + (workarea.size.height - frame.size.height) * 0.5f;
+	}
+	else
+	{
+		NSRect screen_frame = [screen frame];
+		float screen_top = screen_frame.origin.y + screen_frame.size.height;
+		frame.origin.y = screen_top - frame.origin.y - frame.size.height;
+	}
+	
+	NSUInteger styles = 0;
+	
+	if (desc.has_caption())
+		styles |= NSTitledWindowMask;
+	if (desc.has_minimize_button())
+		styles |= NSMiniaturizableWindowMask;
+	if (desc.has_sysmenu())
+		styles |= NSClosableWindowMask;
+	if (desc.get_allow_resize())
+		styles |= NSResizableWindowMask;
+	if (desc.is_fullscreen())
+		styles |= NSFullScreenWindowMask;
+	
+	if (!desc.get_position_client_area())
+	{
+		frame = [NSWindow contentRectForFrameRect:frame styleMask:styles];
+	}
 
 	self = [self initWithContentRect:frame styleMask:styles backing:NSBackingStoreBuffered defer:NO];
 	if (self)
 	{
 		window_provider = provider_impl;
+		
+		self.contentView = [[CocoaView alloc] initWithProvider:provider_impl];
 	}
 	return self;
 }
@@ -92,34 +121,65 @@
 	}
 }
 
+- (BOOL) acceptsFirstResponder
+{
+	return YES;
+}
+
+- (BOOL)canBecomeMainWindow
+{
+	return YES;
+}
+
+- (BOOL)canBecomeKeyWindow
+{
+	return YES;
+}
+
 - (void) windowDidMiniaturize:(NSNotification *)notification
 {
-    NSLog(@"-windowDidMiniaturize:");
-    // TODO:
+	window_provider->site->sig_window_minimized();
 }
 
 - (void) windowDidDeminiaturize:(NSNotification *)notification
 {
-    NSLog(@"-windowDidDeminiaturize:");
-    // TODO:
+	window_provider->site->sig_window_restored();
 }
 
-- (void) windowDidResize:(NSNotification *)notification
+// - (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)frameSize
+
+- (void)windowDidResize:(NSNotification *)notification
 {
-    NSLog(@"-windowDidResize:");
-
-    NSRect rect = [window_provider->window.contentView bounds];
-
-    // TODO: Can't actually call this because of the threading issue.  However, this seems pretty close
-    //       to where you would actually call something like this.  I am trying to resize the openGL rendering
-    //       area when the user manually resizes the window.
-    // glViewport(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
+	float width = ((NSView*)self.contentView).frame.size.width;
+	float height = ((NSView*)self.contentView).frame.size.height;
+	window_provider->site->sig_resize(width, height);
 }
 
-- (void) windowWillClose:(NSNotification *)notification
+//- (void)windowWillMove:(NSNotification *)notification
+
+-(void)windowDidMove:(NSNotification *)notification
 {
-    NSLog(@"-windowWillClose:");
-    // TOOD:
+	window_provider->site->sig_window_moved();
 }
+
+- (void)windowDidBecomeKey:(NSNotification *)notification
+{
+	window_provider->site->sig_got_focus();
+}
+
+-(void)windowDidResignKey:(NSNotification *)notification
+{
+	window_provider->site->sig_lost_focus();
+}
+
+- (BOOL)windowShouldClose:(id)sender
+{
+	window_provider->site->sig_window_close();
+	return NO;
+}
+
+//- (void)windowDidBecomeMain:(NSNotification *)notification
+//- (void)windowDidResignMain:(NSNotification *)notification
+//- (void) windowWillClose:(NSNotification *)notification
 
 @end

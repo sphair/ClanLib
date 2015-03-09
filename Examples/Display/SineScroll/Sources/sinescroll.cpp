@@ -30,11 +30,13 @@
 #include "precomp.h"
 #include "sinescroll.h"
 
-// The start of the Application
-int SineScroll::start(const std::vector<std::string> &args)
+clan::ApplicationInstance<SineScroll> clanapp;
+
+SineScroll::SineScroll()
 {
-	sin_offset = 0.0f;
-	quit = false;
+	// We support all display targets, in order listed here
+	clan::D3DTarget::enable();
+	clan::OpenGLTarget::enable();
 
 	// Set the window
 	clan::DisplayWindowDescription desc;
@@ -42,36 +44,32 @@ int SineScroll::start(const std::vector<std::string> &args)
 	desc.set_size(clan::Size(800, 700), true);
 	desc.set_allow_resize(true);
 
-	clan::DisplayWindow window(desc);
-    clan::SlotContainer cc;
+	window = clan::DisplayWindow(desc);
 
 	// Connect the Window close event
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &SineScroll::on_window_close));
+	sc.connect(window.sig_window_close(), clan::bind_member(this, &SineScroll::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &SineScroll::on_input_up));
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &SineScroll::on_input_up));
 
-	clan::Canvas canvas(window);
+	canvas = clan::Canvas(window);
 
-	texture = clan::Texture2D(canvas, "../../Display/Shape2D/Resources/lobby_background2.png");
+	texture = clan::Texture2D(canvas, "../../Display/Path/Resources/lobby_background2.png");
 
-	clan::GameTime game_time;
+	game_time.reset();
+}
 
-	// Run until someone presses escape
-	while (!quit)
-	{
-		game_time.update();
+bool SineScroll::update()
+{
+	game_time.update();
 	
-		canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
+	canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
 	
-		draw_demo(canvas, game_time.get_time_elapsed_ms());
+	draw_demo(canvas, game_time.get_time_elapsed_ms());
 
-		window.flip(1);
+	window.flip(1);
 
-		clan::RunLoop::process(0);
-	}
-
-	return 0;
+	return !quit;
 }
 
 // A key was pressed

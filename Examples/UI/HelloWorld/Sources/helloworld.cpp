@@ -32,14 +32,19 @@
 
 using namespace clan;
 
-// The start of the Application
-int HelloWorld::start(const std::vector<std::string> &args)
+clan::ApplicationInstance<HelloWorld> clanapp;
+
+HelloWorld::HelloWorld()
 {
+	// We support all display targets, in order listed here
+	//clan::D3DTarget::enable();
+	clan::OpenGLTarget::enable();
+
 	// Create a source for our resources
 	ResourceManager resources = FileResourceManager::create();
 
 	// Mark this thread as the UI thread
-	UIThread ui_thread(resources);
+	ui_thread = UIThread(resources);
 
 	// Create root view and window:
 	DisplayWindowDescription desc;
@@ -47,11 +52,11 @@ int HelloWorld::start(const std::vector<std::string> &args)
 	desc.set_allow_resize(true);
 	desc.set_type(WindowType::custom);
 	desc.set_extend_frame(16, 40, 16, 16);
-	std::shared_ptr<WindowView> root = std::make_shared<WindowView>(desc);
+	root = std::make_shared<WindowView>(desc);
 
 	// Exit run loop when close is clicked.
 	// We have to store the return Slot because if it is destroyed the lambda function is disconnected from the signal.
-	Slot slot_close = root->sig_close().connect([&](CloseEvent &e) { RunLoop::exit(); });
+	slot_close = root->sig_close().connect([&](CloseEvent &e) { RunLoop::exit(); });
 
 	// Style the root view to use rounded corners and a bit of drop shadow
 	root->style()->set("background: linear-gradient(13.37deg, #f0f0f0, rgb(120,240,120) 50%, #f0f0f0)");
@@ -63,7 +68,7 @@ int HelloWorld::start(const std::vector<std::string> &args)
 	root->style()->set("flex-direction: column");
 
 	// Create a label with some text to have some content
-	std::shared_ptr<LabelView> label = std::make_shared<LabelView>();
+	label = std::make_shared<LabelView>();
 	label->style()->set("font: 20px/40px 'Ravie'");
 	label->set_text("Hello World!");
 	root->add_subview(label);
@@ -82,7 +87,7 @@ int HelloWorld::start(const std::vector<std::string> &args)
 	edit->style()->set("border-radius: 3px");
 	edit->style()->set("padding: 2px 5px 2px 5px");
 	edit->style()->set("width: 128px");
-	edit->set_text("Text File View");
+	edit->set_text("amazing!");
 
 	// Create a span layout view with some more complex inline formatting
 	std::shared_ptr<SpanLayoutView> span = std::make_shared<SpanLayoutView>();
@@ -108,14 +113,15 @@ int HelloWorld::start(const std::vector<std::string> &args)
 	*/
 	std::shared_ptr<Style> text_style2 = std::make_shared<Style>();
 	text_style2->set("font: 16px/40px 'Segoe UI'; font-weight: 800");
-	span->add_text(" units!", text_style2);
+	span->add_text(" example!", text_style2);
 	root->add_subview(span);
 
 	// Make our window visible
 	root->show();
 
-	// Process messages until user exits
-	RunLoop::run();
+}
 
-	return 0;
+bool HelloWorld::update()
+{
+	return true;
 }

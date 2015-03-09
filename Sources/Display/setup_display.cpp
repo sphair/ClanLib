@@ -46,7 +46,9 @@
 
 #ifdef WIN32
 #include "Platform/Win32/display_message_queue_win32.h"
-#elif !defined(__APPLE__) && !defined(__ANDROID__)
+#elif defined(__APPLE__)
+#include "Platform/Cocoa/display_message_queue_cocoa.h"
+#elif !defined(__ANDROID__)
 #include "Platform/X11/display_message_queue_x11.h"
 #endif
 
@@ -79,9 +81,11 @@ namespace clan
 		ProviderType_Register<TargaProvider> *targa_provider = nullptr;
 		ProviderType_Register<TargaProvider> *tga_provider = nullptr;
 
-#ifdef WIN32
+#if defined(WIN32)
 		DisplayMessageQueue_Win32 message_queue;
-#elif !defined(__APPLE__) && !defined(__ANDROID__)
+#elif defined(__APPLE__)
+		DisplayMessageQueue_Cocoa message_queue;
+#elif !defined(__ANDROID__)
 		DisplayMessageQueue_X11 message_queue;
 #endif
 	};

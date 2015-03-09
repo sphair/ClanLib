@@ -29,10 +29,13 @@
 #include "precomp.h"
 #include "timing.h"
 
-// The start of the Application
-int Timing::start(const std::vector<std::string> &args)
+clan::ApplicationInstance<Timing> clanapp;
+
+Timing::Timing()
 {
-	quit = false;
+	// We support all display targets, in order listed here
+	clan::D3DTarget::enable();
+	clan::OpenGLTarget::enable();
 
 	// Set the window
 	clan::DisplayWindowDescription desc;
@@ -40,37 +43,32 @@ int Timing::start(const std::vector<std::string> &args)
 	desc.set_size(clan::Size(800, 600), true);
 	desc.set_allow_resize(true);
 
-	clan::DisplayWindow window(desc);
-    clan::SlotContainer cc;
-
+	window = clan::DisplayWindow(desc);
 	// Connect the Window close event
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &Timing::on_window_close));
+	sc.connect(window.sig_window_close(), clan::bind_member(this, &Timing::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &Timing::on_input_up));
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &Timing::on_input_up));
 
 	// Get the graphic context
-	clan::Canvas canvas(window);
+	canvas = clan::Canvas(window);
 
 	set_stars(canvas, 100);
 
-	clan::GameTime game_time(60, 60);
-	
-	// Run until someone presses escape
-	while (!quit)
-	{
-		game_time.update();
+	game_time = clan::GameTime(60, 60);
+}
 
-		canvas.clear(clan::Colorf(0.0f,0.0f,0.0f));
+bool Timing::update()
+{
+	game_time.update();
 
-		draw_graphics(canvas, game_time.get_time_elapsed());
+	canvas.clear(clan::Colorf(0.0f,0.0f,0.0f));
 
-		window.flip();
+	draw_graphics(canvas, game_time.get_time_elapsed());
 
-		clan::RunLoop::process(0);
-	}
+	window.flip();
 
-	return 0;
+	return !quit;
 }
 
 // A key was pressed
