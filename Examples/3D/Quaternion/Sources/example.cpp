@@ -34,6 +34,7 @@
 #include "graphic_store.h"
 #include "options.h"
 
+#if defined(I_LOVE_ASSIMP_AND_PRECOMPILED_IT)
 #if defined(_MSC_VER)
 	#if !defined(_DEBUG)
 		#if defined(_DLL)
@@ -54,7 +55,7 @@
 		#endif
 	#endif
 #endif
-
+#endif
 
 clan::ApplicationInstance<App> clanapp;
 
@@ -81,8 +82,9 @@ App::App()
 
 	canvas = Canvas(window);
 
-	// Deleted automatically by the GUI
-	//Options *options = new Options(gui, Rect(8, 8, Size(canvas.get_width()-16, 170)));
+	resources = FileResourceManager::create();
+	ui_thread = UIThread(resources);
+	options_view = std::make_shared<Options>(canvas);
 
 	// Setup graphic store
 	graphic_store = std::make_shared<GraphicStore>(canvas);
@@ -116,29 +118,29 @@ bool App::update()
 	// Calculate time since last frame
 	uint64_t time_now = System::get_time();
 	current_time = time_now - time_start;
-	time_delta = time_now - time_last;
+	time_delta = (int)(time_now - time_last);
 	time_last = time_now;
 
 	// Control the target options
-	//control_target(options);
+	control_target(options_view.get());
 
 	// Use the euler angle options
-	//rotation_euler_a->rotation_y = options->rotation_y;
-	//rotation_euler_b->rotation_x = options->rotation_x;
-	//rotation_euler_c->rotation_z = options->rotation_z;
+	rotation_euler_a->rotation_y = options_view->rotation_y;
+	rotation_euler_b->rotation_x = options_view->rotation_x;
+	rotation_euler_c->rotation_z = options_view->rotation_z;
 
-	//teapot_euler->rotation_x = options->rotation_x;
-	//teapot_euler->rotation_y = options->rotation_y;
-	//teapot_euler->rotation_z = options->rotation_z;
+	teapot_euler->rotation_x = options_view->rotation_x;
+	teapot_euler->rotation_y = options_view->rotation_y;
+	teapot_euler->rotation_z = options_view->rotation_z;
 
 	// Use the target angle options
-	//rotation_target_a->rotation_y = options->target_y;
-	//rotation_target_b->rotation_x = options->target_x;
-	//rotation_target_c->rotation_z = options->target_z;
+	rotation_target_a->rotation_y = options_view->target_y;
+	rotation_target_b->rotation_x = options_view->target_x;
+	rotation_target_c->rotation_z = options_view->target_z;
 
-	//teapot_target->rotation_x = options->target_x;
-	//teapot_target->rotation_y = options->target_y;
-	//teapot_target->rotation_z = options->target_z;
+	teapot_target->rotation_x = options_view->target_x;
+	teapot_target->rotation_y = options_view->target_y;
+	teapot_target->rotation_z = options_view->target_z;
 
 	// Render the scene using euler angles
 	calculate_matricies(canvas);
@@ -158,6 +160,10 @@ bool App::update()
 	// Draw information boxes
 	canvas.reset_rasterizer_state();
 	canvas.reset_depth_stencil_state();
+
+	options_view->update();
+	options_view->set_rect(Rect(8, 8, Size((int)canvas.get_width() - 16, 170)));
+	options_view->render(canvas);
 	
 	std::string fps(string_format("%1 fps", framerate_counter.get_framerate()));
 	font.draw_text(canvas, 16-2, canvas.get_height()-16-2, fps, Colorf(0.0f, 0.0f, 0.0f, 1.0f));
@@ -331,9 +337,9 @@ void App::calculate_matricies(GraphicContext &gc)
 	scene.gs->light_modelview.inverse();
 }
 
-/*
 void App::control_target(Options *options)
 {
+	/*
 	if ((options->button_lerp_clicked) || (options->button_slerp_clicked))
 	{
 		if (options->button_lerp_clicked)
@@ -386,5 +392,5 @@ void App::control_target(Options *options)
 			active_slerp = false;
 		}
 	}
+	*/
 }
-*/

@@ -27,12 +27,98 @@
 */
 
 #pragma once
-/*
-class Options : public GUIComponent
+
+class SliderView : public View
 {
 public:
-	Options(GUIManager &gui, Rect gui_position);
-	virtual ~Options();
+	SliderView()
+	{
+		style()->set("background: #efefef; height: 3px; border: 1px solid #aaa");
+	}
+
+	std::function<void()> &func_value_changed() { return _func_value_changed; }
+
+	int get_max() const { return _min_value; }
+	int get_position() const { return _value; }
+	int get_min() const { return _max_value; }
+
+	void set_max(int v) { _max_value = v; _min_value = std::min(_min_value, _max_value); _value = clamp(_value, _min_value, _max_value); set_needs_layout(); }
+	void set_position(int v) { _value = v; _value = clamp(_value, _min_value, _max_value); set_needs_layout(); set_needs_render(); }
+	void set_min(int v) { _min_value = v; _max_value = std::max(_max_value, _min_value); _value = clamp(_value, _min_value, _max_value); set_needs_layout(); }
+
+	void set_vertical(bool v) { _vertical = v; }
+	void set_horizontal(bool h) { set_vertical(!h); }
+
+	void set_tick_count(int tick_count) { _tick_count = tick_count; set_needs_layout(); }
+	void set_page_step(int page_step) { _page_step = page_step; set_needs_layout(); }
+	void set_lock_to_ticks(bool lock) { _lock_to_ticks = lock; }
+
+private:
+	std::function<void()> _func_value_changed;
+	int _min_value = 0;
+	int _max_value = 100;
+	int _value = 50;
+	bool _vertical = false;
+	int _tick_count = 1;
+	int _page_step = 1;
+	bool _lock_to_ticks = false;
+};
+
+class SliderOptionView : public View
+{
+public:
+	SliderOptionView()
+	{
+		style()->set("margin: 2px 0; flex-direction: row;");
+
+		slider->set_vertical(false);
+		slider->set_horizontal(true);
+		slider->set_min(0);
+		slider->set_max(1000);
+		slider->set_tick_count(100);
+		slider->set_page_step(100);
+		slider->set_lock_to_ticks(false);
+		slider->set_position(slider->get_max());
+
+		slider->style()->set("margin: auto 5px auto 0; flex: 1 1");
+		label->style()->set("margin: auto 0; flex: 1 1; font: 13px/1.5 'Segoe UI'");
+
+		add_subview(slider);
+		add_subview(label);
+	}
+
+	float get_value(float min_value, float max_value)
+	{
+		float value = (float)slider->get_position();
+		value /= (float)slider->get_max();
+		return (value * (max_value - min_value)) + min_value;
+	}
+
+	void set_value(float value, float min_value, float max_value)
+	{
+		value -= min_value;
+		value /= (max_value - min_value);
+		value *= (float)slider->get_max();
+		slider->set_position((int)value);
+	}
+
+	std::shared_ptr<SliderView> slider = std::make_shared<SliderView>();
+	std::shared_ptr<LabelView> label = std::make_shared<LabelView>();
+};
+
+class OptionColumnView : public View
+{
+public:
+	OptionColumnView()
+	{
+		style()->set("flex-direction: column; flex: 1 1; margin: 7px;");
+	}
+};
+
+class Options : public TextureView
+{
+public:
+	Options(Canvas &canvas);
 
 	Angle rotation_x;
 	Angle rotation_y;
@@ -48,9 +134,9 @@ public:
 	bool button_slerp_clicked;
 	bool button_rotate_clicked;
 
-	PushButton *button_lerp;
-	PushButton *button_slerp;
-	PushButton *button_rotate;
+	std::shared_ptr<ButtonView> button_lerp = std::make_shared<ButtonView>();
+	std::shared_ptr<ButtonView> button_slerp = std::make_shared<ButtonView>();
+	std::shared_ptr<ButtonView> button_rotate = std::make_shared<ButtonView>();
 
 	float max_angle_value;
 
@@ -61,13 +147,6 @@ private:
 	void update_euler();
 	void update_quaternion();
 	void update_all_slider_text();
-	Label *create_slider_label(Slider *slider);
-	CheckBox *create_checkbox(int xpos, int ypos, const char *name, bool state);
-	void on_render(Canvas &canvas, const Rect &update_rect);
-	Slider *create_slider(int xpos, int ypos);
-	float get_value(Slider *slider, float min_value, float max_value);
-	void set_value(Slider *slider, float value, float min_value, float max_value);
-	Label *create_combobox_label(ComboBox *combo, const char *text);
 	void slider_rotation_x_changed();
 	void slider_rotation_y_changed();
 	void slider_rotation_z_changed();
@@ -84,33 +163,20 @@ private:
 	void set_all_sliders();
 
 private:
+	std::shared_ptr<OptionColumnView> column1 = std::make_shared<OptionColumnView>();
+	std::shared_ptr<OptionColumnView> column2 = std::make_shared<OptionColumnView>();
+	std::shared_ptr<OptionColumnView> column3 = std::make_shared<OptionColumnView>();
 
-	Slider *slider_rotation_x;
-	Slider *slider_rotation_y;
-	Slider *slider_rotation_z;
+	std::shared_ptr<SliderOptionView> rotation_x_view = std::make_shared<SliderOptionView>();
+	std::shared_ptr<SliderOptionView> rotation_y_view = std::make_shared<SliderOptionView>();
+	std::shared_ptr<SliderOptionView> rotation_z_view = std::make_shared<SliderOptionView>();
 
-	Label *label_rotation_x;
-	Label *label_rotation_y;
-	Label *label_rotation_z;
+	std::shared_ptr<SliderOptionView> target_x_view = std::make_shared<SliderOptionView>();
+	std::shared_ptr<SliderOptionView> target_y_view = std::make_shared<SliderOptionView>();
+	std::shared_ptr<SliderOptionView> target_z_view = std::make_shared<SliderOptionView>();
 
-	Slider *slider_target_x;
-	Slider *slider_target_y;
-	Slider *slider_target_z;
-
-	Label *label_target_x;
-	Label *label_target_y;
-	Label *label_target_z;
-
-	Slider *slider_quaternion_w;
-	Slider *slider_quaternion_i;
-	Slider *slider_quaternion_j;
-	Slider *slider_quaternion_k;
-
-	Label *label_quaternion_w;
-	Label *label_quaternion_i;
-	Label *label_quaternion_j;
-	Label *label_quaternion_k;
-
+	std::shared_ptr<SliderOptionView> quaternion_w_view = std::make_shared<SliderOptionView>();
+	std::shared_ptr<SliderOptionView> quaternion_i_view = std::make_shared<SliderOptionView>();
+	std::shared_ptr<SliderOptionView> quaternion_j_view = std::make_shared<SliderOptionView>();
+	std::shared_ptr<SliderOptionView> quaternion_k_view = std::make_shared<SliderOptionView>();
 };
-
-*/

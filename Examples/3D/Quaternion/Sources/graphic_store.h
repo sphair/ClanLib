@@ -45,6 +45,8 @@ public:
 	Mat4f camera_modelview;
 	Mat4f light_projection;
 	Mat4f light_modelview;
+#if defined(I_LOVE_ASSIMP_AND_PRECOMPILED_IT)
 	aiPropertyStore* store = nullptr;
+#endif
 
 };

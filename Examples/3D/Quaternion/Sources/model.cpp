@@ -98,6 +98,7 @@ Model_Impl::Model_Impl()
 
 void Model_Impl::Load(GraphicContext &gc, GraphicStore *gs, const char *filename)
 {
+#if defined(I_LOVE_ASSIMP_AND_PRECOMPILED_IT)
 	const struct aiScene* scene = aiImportFileExWithProperties(filename,aiProcessPreset_TargetRealtime_MaxQuality, NULL, gs->store);
 	if (!scene)
 		throw Exception("Cannot load a model");
@@ -118,10 +119,12 @@ void Model_Impl::Load(GraphicContext &gc, GraphicStore *gs, const char *filename
 	}
 
 	aiReleaseImport(scene);
+#endif
 }
 
 int Model_Impl::count_vertices(const struct aiScene* sc, const struct aiNode* nd)
 {
+#if defined(I_LOVE_ASSIMP_AND_PRECOMPILED_IT)
 	int vertex_count = 0;
 	unsigned int n = 0, t;
 
@@ -148,10 +151,14 @@ int Model_Impl::count_vertices(const struct aiScene* sc, const struct aiNode* nd
 	}
 
 	return vertex_count;
+#else
+	return 0;
+#endif
 }
 
 int Model_Impl::insert_vbo(GraphicContext &gc, int vertex_count, const struct aiScene* sc, const struct aiNode* nd)
 {
+#if defined(I_LOVE_ASSIMP_AND_PRECOMPILED_IT)
 	int i;
 	unsigned int n = 0, t;
 
@@ -195,11 +202,15 @@ int Model_Impl::insert_vbo(GraphicContext &gc, int vertex_count, const struct ai
 		vertex_count = insert_vbo(gc, vertex_count, sc, nd->mChildren[n]);
 	}
 	return vertex_count;
+#else
+	return 0;
+#endif
 }
 
 
 void Model_Impl::Draw(GraphicContext &gc, GraphicStore *gs, const Mat4f &modelview_matrix)
 {
+#if defined(I_LOVE_ASSIMP_AND_PRECOMPILED_IT)
 	Mat4f matrix_modelview_projection = gs->camera_projection *  modelview_matrix;
 	Mat3f normal_matrix = Mat3f(modelview_matrix);
 	normal_matrix.inverse();
@@ -212,4 +223,5 @@ void Model_Impl::Draw(GraphicContext &gc, GraphicStore *gs, const Mat4f &modelvi
 	gs->shader_color.SetMaterial(material_shininess, material_emission, material_ambient, material_specular);
 	gs->shader_color.Use(gc, modelview_matrix, matrix_modelview_projection, Mat4f(normal_matrix));
 	gc.draw_primitives(type_triangles, vbo_size, prim_array);
+#endif
 }
