@@ -49,5 +49,6 @@ private:
 	std::shared_ptr<clan::TextureView> root;
 	clan::SlotContainer sc;
 	clan::Image gui_image;
+	std::shared_ptr<clan::LabelView> label;
 
 };

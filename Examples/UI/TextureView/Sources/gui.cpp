@@ -86,7 +86,7 @@ GUI::GUI()
 	root->style()->set("flex-direction: column");
 
 	// Create a label with some text to have some content
-	std::shared_ptr<clan::LabelView> label = std::make_shared<clan::LabelView>();
+	label = std::make_shared<clan::LabelView>();
 	label->style()->set("font: 20px/40px 'Ravie'");
 	label->set_text("Hello World!");
 	root->add_subview(label);

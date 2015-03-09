@@ -12,7 +12,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>TextureView</ProjectName>
-    <ProjectGuid>{51E268BD-619C-4336-BC36-ECFF14987DA5}</ProjectGuid>
+    <ProjectGuid>{4E27E943-27C7-4F00-A431-B6ACA236FFE4}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
