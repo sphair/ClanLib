@@ -58,6 +58,13 @@ private:
 	std::string get_logic_operation(clan::LogicOp logic_operation, const std::string &source_fragment, const std::string &dest_fragment);
 
 private:
+	clan::DisplayWindow window;
+	clan::SlotContainer sc;
+	clan::Canvas canvas;
+	clan::Font font;
+	clan::Image image_grid;
+	clan::Image image_ball;
+
 	bool quit = false;
 	float grid_space;
 	float ball_alpha;

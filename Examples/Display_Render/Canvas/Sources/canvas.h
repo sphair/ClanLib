@@ -41,6 +41,9 @@ private:
 	void on_mouse_down(const InputEvent &key);
 	void on_window_close();
 
+	DisplayWindow window;
+	clan::SlotContainer sc;
+
 	Image image_ground;
 	Image image_ground_back;
 	Image image_cutter;
@@ -52,7 +55,8 @@ private:
 
 	Pointf mouse_pos;
 
-	float scale;
+	float scale = 1.0f;
+	float back_pos = 0;
 
 	bool mouse_down;
 

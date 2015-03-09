@@ -46,18 +46,17 @@ App::App()
 	win_desc.set_title("Blend Example");
 	win_desc.set_size(clan::Size( 900, 570 ), false);
 
-	clan::DisplayWindow window(win_desc);
-    clan::SlotContainer cc;
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	window = clan::DisplayWindow(win_desc);
+	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 
-	clan::Canvas canvas(window);
+	canvas = clan::Canvas(window);
 
 	// Deleted automatically by the GUI
 	//Options *options = new Options(gui, clan::Rect(0, 0, canvas.get_size()));
 
-	clan::Image image_grid(canvas, "Resources/grid.png");
-	clan::Image image_ball(canvas, "Resources/ball.png");
+	image_grid = clan::Image(canvas, "Resources/grid.png");
+	image_ball = clan::Image(canvas, "Resources/ball.png");
 	clan::ImageImportDescription desc;
 	desc.set_premultiply_alpha(true);
 	clan::Image image_ball_premultiply_alpha(canvas, "Resources/ball.png", desc);
@@ -67,7 +66,7 @@ App::App()
 
 	//options->request_repaint();
 
-	clan::Font font("Tahoma", 16);
+	font = clan::Font("Tahoma", 16);
 
 	game_time.reset();
 }

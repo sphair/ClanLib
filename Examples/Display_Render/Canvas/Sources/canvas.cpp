@@ -40,8 +40,6 @@ ExampleCanvas::ExampleCanvas()
 #endif
 	clan::OpenGLTarget::enable();
 
-	int ExampleCanvas::start(const std::vector<std::string> &args)
-{ 
 	quit = false;
 
 	// Set a videomode - 1024x256
@@ -49,17 +47,16 @@ ExampleCanvas::ExampleCanvas()
 	desc.set_allow_resize(false);
 	desc.set_title("ClanLib Draw To Texture Example");
 	desc.set_size(Size(1024, 256), true);
-	DisplayWindow window(desc);
-    clan::SlotContainer cc;
+	window = DisplayWindow(desc);
 	// Connect the Window close event
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &ExampleCanvas::on_window_close));
+	sc.connect(window.sig_window_close(), clan::bind_member(this, &ExampleCanvas::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &ExampleCanvas::on_keyboard_up));
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &ExampleCanvas::on_keyboard_up));
 
 	// Connect a mouse handler to on_key_down()
-	cc.connect(window.get_ic().get_mouse().sig_key_up(), clan::bind_member(this, &ExampleCanvas::on_mouse_down));
-	cc.connect(window.get_ic().get_mouse().sig_pointer_move(), clan::bind_member(this, &ExampleCanvas::on_mouse_move));
+	sc.connect(window.get_ic().get_mouse().sig_key_up(), clan::bind_member(this, &ExampleCanvas::on_mouse_down));
+	sc.connect(window.get_ic().get_mouse().sig_pointer_move(), clan::bind_member(this, &ExampleCanvas::on_mouse_move));
 
 	canvas_window = Canvas(window);
 
@@ -83,9 +80,6 @@ ExampleCanvas::ExampleCanvas()
 	blend_desc.set_blend_function( blend_zero, blend_one_minus_src_alpha, blend_zero, blend_one_minus_src_alpha );
 	BlendState blend_state(canvas_framebuffer.get_gc(), blend_desc);
 	canvas_framebuffer.get_gc().set_blend_state(blend_state);
-
-	float back_pos = 0;
-	scale = 1.0f;
 
 }
 
