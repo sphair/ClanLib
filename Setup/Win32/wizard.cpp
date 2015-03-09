@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2011 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -34,16 +34,71 @@
 
 Wizard::Wizard()
 {
+	// Upscale bitmaps to correct DPI:
+	// (too bad this was all wasted effort as Microsoft didn't test WIZARD97 with other settings than 96 DPI!)
+
+	HBITMAP logo = (HBITMAP)LoadImage(GetModuleHandle(0), MAKEINTRESOURCE(IDB_LOGO1), IMAGE_BITMAP, 0, 0, LR_DEFAULTSIZE);
+	HBITMAP banner = (HBITMAP)LoadImage(GetModuleHandle(0), MAKEINTRESOURCE(IDB_BANNER), IMAGE_BITMAP, 0, 0, LR_DEFAULTSIZE);
+
+	BITMAP logo_info, banner_info;
+	GetObject(logo, sizeof(BITMAP), &logo_info);
+	GetObject(banner, sizeof(BITMAP), &banner_info);
+
+	SIZE logo_size, banner_size;
+	logo_size.cx = logo_info.bmWidth;
+	logo_size.cy = logo_info.bmHeight;
+	banner_size.cx = banner_info.bmWidth;
+	banner_size.cy = banner_info.bmHeight;
+
+	HDC dc = GetDC(0);
+	int dpi = GetDeviceCaps(dc, LOGPIXELSX);
+	float scale = dpi / 96.0f;
+
+	SIZE new_logo_size, new_banner_size;
+	new_logo_size.cx = (int)std::round(logo_size.cx * scale);
+	new_logo_size.cy = (int)std::round(logo_size.cy * scale);
+	new_banner_size.cx = (int)std::round(banner_size.cx * scale);
+	new_banner_size.cy = (int)std::round(banner_size.cy * scale);
+
+	HBITMAP new_logo = CreateCompatibleBitmap(dc, new_logo_size.cx, new_logo_size.cy);
+	HBITMAP new_banner = CreateCompatibleBitmap(dc, new_banner_size.cx, new_banner_size.cy);
+
+	HDC dest_dc = CreateCompatibleDC(dc);
+	HDC src_dc = CreateCompatibleDC(dc);
+	HGDIOBJ old_dest_bitmap;
+	HGDIOBJ old_src_bitmap;
+
+	int old_stretch_mode = SetStretchBltMode(dest_dc, HALFTONE);
+	SetBrushOrgEx(dest_dc, 0, 0, 0);
+
+	old_dest_bitmap = SelectObject(dest_dc, new_logo);
+	old_src_bitmap = SelectObject(src_dc, logo);
+	StretchBlt(dest_dc, 0, 0, new_logo_size.cx, new_logo_size.cy, src_dc, 0, 0, logo_size.cx, logo_size.cy, SRCCOPY);
+
+	SelectObject(dest_dc, new_banner);
+	SelectObject(src_dc, banner);
+	StretchBlt(dest_dc, 0, 0, new_banner_size.cx, new_banner_size.cy, src_dc, 0, 0, banner_size.cx, banner_size.cy, SRCCOPY);
+
+	SelectObject(dest_dc, old_dest_bitmap);
+	SelectObject(src_dc, old_src_bitmap);
+
+	SetStretchBltMode(dest_dc, old_stretch_mode);
+
+	DeleteDC(dest_dc);
+	DeleteDC(src_dc);
+
+	ReleaseDC(0, dc);
+
 	memset(&propsheetheader, 0, sizeof(PROPSHEETHEADER));
 	propsheetheader.dwSize = sizeof(PROPSHEETHEADER);
-	propsheetheader.dwFlags = PSH_WIZARD97|PSH_WATERMARK|PSH_HEADER;
+	propsheetheader.dwFlags = PSH_WIZARD97 | PSH_WATERMARK | PSH_HEADER | PSH_USEHBMWATERMARK | PSH_USEHBMHEADER;
 	propsheetheader.hInstance = GetModuleHandle(0);
 	propsheetheader.pszIcon = MAKEINTRESOURCE(IDR_MAINFRAME);
 	propsheetheader.pszCaption = MAKEINTRESOURCE(IDS_PROPSHT_CAPTION);
 	propsheetheader.nPages = 5;
 	propsheetheader.phpage = pages;
-	propsheetheader.pszbmWatermark = MAKEINTRESOURCE(IDB_LOGO1);
-	propsheetheader.pszbmHeader = MAKEINTRESOURCE(IDB_BANNER);
+	propsheetheader.hbmWatermark = new_logo;
+	propsheetheader.hbmHeader = new_banner;
 	pages[0] = page_welcome.handle_propsheetpage;
 	pages[1] = page_target.handle_propsheetpage;
 	pages[2] = page_system.handle_propsheetpage;
@@ -100,11 +155,6 @@ BOOL Wizard::finish()
 			hKey, TEXT("TargetVersion"), 0, REG_DWORD,
 			(LPBYTE) &target_version, sizeof(DWORD));
 
-		DWORD include_unicode = (page_target.include_unicode ? 1 : 0);
-		RegSetValueEx(
-			hKey, TEXT("IncludeUnicode"), 0, REG_DWORD,
-			(LPBYTE) &include_unicode, sizeof(DWORD));
-
 		DWORD include_mtdll = (page_target.include_mtdll ? 1 : 0);
 		RegSetValueEx(
 			hKey, TEXT("IncludeMTDLL"), 0, REG_DWORD,
@@ -130,11 +180,6 @@ BOOL Wizard::finish()
 			hKey, TEXT("IncludeIntrinsics"), 0, REG_DWORD,
 			(LPBYTE) &include_intrinsics, sizeof(DWORD));
 
-		DWORD include_dll = (page_target.include_dll ? 1 : 0);
-		RegSetValueEx(
-			hKey, TEXT("IncludeDLL"), 0, REG_DWORD,
-			(LPBYTE) &include_dll, sizeof(DWORD));
-
 		DWORD include_x64 = (page_target.include_x64 ? 1 : 0);
 		RegSetValueEx(
 			hKey, TEXT("IncludeX64"), 0, REG_DWORD,
@@ -147,8 +192,11 @@ BOOL Wizard::finish()
 
 	WorkspaceGenerator_MSVC8 generator;
 	generator.set_target_version(page_target.target_version);
+
 	generator.set_platforms(true, page_target.include_x64, page_target.include_sse2, page_target.include_intrinsics, page_target.enable_debug_optimize, page_target.enable_whole_program_optimize);
-	generator.enable_configurations(page_target.include_mtdll, page_target.include_dll);
+	generator.set_android(false);
+
+	generator.enable_configurations(page_target.include_mtdll);
 	generator.write(workspace);
 
 	return TRUE;
@@ -169,7 +217,7 @@ Workspace Wizard::create_workspace()
 	std::list<std::string> libs_list_shared;
 	std::list<std::string> libs_list_release;
 	std::list<std::string> libs_list_debug;
-	
+
 	Project clanCore(
 		"Core",
 		"clanCore",
@@ -340,8 +388,7 @@ Workspace Wizard::create_workspace()
 	return workspace;
 }
 
-#ifdef UNICODE
-std::string Wizard::text_to_local8(const tstring &text)
+std::string Wizard::text_to_local8(const std::wstring &text)
 {
 	int local8_length = WideCharToMultiByte(CP_ACP, 0, text.data(), int(text.length()), 0, 0, 0, 0);
 	if (local8_length <= 0)
@@ -360,32 +407,22 @@ std::string Wizard::text_to_local8(const tstring &text)
 	return s;
 }
 
-Wizard::tstring Wizard::local8_to_text(const std::string &local8)
+std::wstring Wizard::local8_to_text(const std::string &local8)
 {
 	int text_length = MultiByteToWideChar(CP_ACP, 0, local8.data(), int(local8.length()), 0, 0);
 	if (text_length <= 0)
-		return tstring();
+		return std::wstring();
 	WCHAR *buffer = new WCHAR[text_length];
 	if (buffer == 0)
-		return tstring();
+		return std::wstring();
 	text_length = MultiByteToWideChar(CP_ACP, 0, local8.data(), int(local8.length()), buffer, text_length);
 	if (text_length <= 0)
 	{
 		delete[] buffer;
-		return tstring();
+		return std::wstring();
 	}
-	tstring s(buffer, text_length);
+	std::wstring s(buffer, text_length);
 	delete[] buffer;
 	return s;
 }
-#else
-std::string Wizard::text_to_local8(const tstring &text)
-{
-	return text;
-}
 
-tstring Wizard::local8_to_text(const std::string &local8)
-{
-	return local8;
-}
-#endif

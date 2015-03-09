@@ -198,6 +198,8 @@ INT_PTR PageTarget::on_notify(HWND hWnd, NMHDR *header)
 			target_version = 1000;
 		else if (IsDlgButtonChecked(hWnd, IDC_RADIO_VC110) == BST_CHECKED)
 			target_version = 1100;
+		else if (IsDlgButtonChecked(hWnd, IDC_RADIO_VC120) == BST_CHECKED)
+			target_version = 1200;
 		include_unicode = (SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_UNICODE), BM_GETCHECK, 0, 0) == BST_CHECKED);
 		include_x64 = (SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_X64), BM_GETCHECK, 0, 0) == BST_CHECKED);
 		include_mtdll = (SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_MTDLL), BM_GETCHECK, 0, 0) == BST_CHECKED);
