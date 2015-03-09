@@ -50,8 +50,6 @@ HelloWorld::HelloWorld()
 	DisplayWindowDescription desc;
 	desc.set_title("UICore: Hello World");
 	desc.set_allow_resize(true);
-	desc.set_type(WindowType::custom);
-	desc.set_extend_frame(16, 40, 16, 16);
 	root = std::make_shared<WindowView>(desc);
 
 	// Exit run loop when close is clicked.
@@ -59,19 +57,26 @@ HelloWorld::HelloWorld()
 	slot_close = root->sig_close().connect([&](CloseEvent &e) { RunLoop::exit(); });
 
 	// Style the root view to use rounded corners and a bit of drop shadow
-	root->style()->set("background: linear-gradient(13.37deg, #f0f0f0, rgb(120,240,120) 50%, #f0f0f0)");
 	root->style()->set("padding: 11px");
-	root->style()->set("border: 1px solid black");
-	root->style()->set("border-radius: 15px");
-	root->style()->set("margin: 35px 10px 10px 10px");
-	root->style()->set("box-shadow: 0 0 20px rgba(0,0,0,0.2)");
+	root->style()->set("background: #efefef");
 	root->style()->set("flex-direction: column");
+
+	auto body = std::make_shared<View>();
+	//body->style()->set("background: linear-gradient(13.37deg, #f0f0f0, rgb(120,240,120) 50%, #f0f0f0)");
+	body->style()->set("background: white");
+	body->style()->set("padding: 11px");
+	body->style()->set("border-top: 5px solid #DD3B2A");
+	body->style()->set("border-bottom: 5px solid #DD3B2A");
+	body->style()->set("flex-direction: column");
+	body->style()->set("flex: 1 1 main-size");
+	root->add_subview(body);
 
 	// Create a label with some text to have some content
 	label = std::make_shared<LabelView>();
 	label->style()->set("font: 20px/40px 'Ravie'");
+	label->style()->set("color: #DD3B2A");
 	label->set_text("Hello World!");
-	root->add_subview(label);
+	body->add_subview(label);
 
 	// React to clicking
 	label->slots.connect(label->sig_pointer_press(), [&](PointerEvent &e) {
@@ -81,44 +86,47 @@ HelloWorld::HelloWorld()
 	// Create a text field for our span layout
 	std::shared_ptr<TextFieldView> edit = std::make_shared<TextFieldView>();
 	edit->style()->set("font: 11px/20px 'Segoe UI'");
-	edit->style()->set("margin: 5px 0");
-	edit->style()->set("background: white");
+	edit->style()->set("margin: 5px");
+	edit->style()->set("background: #efefef");
 	edit->style()->set("border: 1px solid black");
 	edit->style()->set("border-radius: 3px");
 	edit->style()->set("padding: 2px 5px 2px 5px");
 	edit->style()->set("width: 128px");
+	edit->style()->set("box-shadow: 0 0 5px rgba(100,100,200,0.2)");
 	edit->set_text("amazing!");
 
-	// Create a span layout view with some more complex inline formatting
-	std::shared_ptr<SpanLayoutView> span = std::make_shared<SpanLayoutView>();
-	std::shared_ptr<Style> text_style = std::make_shared<Style>();
-	text_style->set("font: 13px/40px 'Segoe UI'");
-	span->add_text("This is the UI core ", text_style);
+	// Create some text styles for the text we will write
+	std::shared_ptr<Style> normal = std::make_shared<Style>();
+	std::shared_ptr<Style> bold = std::make_shared<Style>();
+	std::shared_ptr<Style> italic = std::make_shared<Style>();
+	normal->set("font: 13px/25px 'Segoe UI'");
+	bold->set("font: 13px/25px 'Segoe UI'; font-weight: bold");
+	italic->set("font: 13px/25px 'Segoe UI'; font-style: italic");
 
-	span->add_subview(edit);
-	/*
-	std::shared_ptr<ScrollBarView> scrollbar = std::make_shared<ScrollBarView>();
-	scrollbar->set_horizontal();
-	scrollbar->style()->set("flex: 0 0 main-size");
-	scrollbar->style()->set("background: rgb(232, 232, 236)");
-	scrollbar->track()->set("padding: 0 4px");
-	scrollbar->track()->set("background: rgb(208, 209, 215)");
-	scrollbar->thumb()->set("padding: 0 4px");
-	scrollbar->thumb()->set("background: rgb(208, 209, 215)");
-	scrollbar->set_range(0.0, 1.0);
-	scrollbar->set_position(0.5);
-	scrollbar->set_page_step(0.1);
-	scrollbar->set_line_step(0.01);
-	root->add_subview(scrollbar);
-	*/
-	std::shared_ptr<Style> text_style2 = std::make_shared<Style>();
-	text_style2->set("font: 16px/40px 'Segoe UI'; font-weight: 800");
-	span->add_text(" example!", text_style2);
-	root->add_subview(span);
+	// Create a span layout views with some more complex inline formatting
+	std::shared_ptr<SpanLayoutView> p1 = std::make_shared<SpanLayoutView>();
+	p1->add_text("This is an example of why Sphair should never ever make fun of my ", normal);
+	p1->add_text("BEAUTIFUL", bold);
+	p1->add_text(" green 13.37deg gradients because he will never know what it is replaced with!", normal);
+	body->add_subview(p1);
+
+	std::shared_ptr<SpanLayoutView> p2 = std::make_shared<SpanLayoutView>();
+	p2->style()->set("margin: 15px 0 5px 0");
+	p2->style()->set("padding: 7px");
+	p2->style()->set("border-top: 5px solid #CCE4FB");
+	p2->style()->set("border-bottom: 5px solid #CCE4FB");
+	p2->style()->set("background: #EDF6FF");
+	p2->add_text("If you also think Sphair made a ", normal);
+	p2->add_text("BIG MISTAKE", bold);
+	p2->add_text(" please consider typing ", normal);
+	p2->add_text("Yes, yes, yes, yes, yes, yes, yes yes, YES!", italic);
+	p2->add_text(" in the text field: ", normal);
+	p2->add_subview(edit);
+	p2->add_text(" You know you want to!", bold);
+	body->add_subview(p2);
 
 	// Make our window visible
 	root->show();
-
 }
 
 bool HelloWorld::update()
