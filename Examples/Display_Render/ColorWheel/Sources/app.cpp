@@ -41,34 +41,19 @@ App::App()
 #endif
 	clan::OpenGLTarget::enable();
 	
-	App::App() : quit(false)
-{
-}
-
-// The start of the Application
-int App::start(const std::vector<std::string> &args)
-{
 	clan::DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("ColorWheel Example");
 	win_desc.set_size(clan::Size( 800, 600 ), false);
 
-	clan::DisplayWindow window(win_desc);
-    clan::SlotContainer cc;
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	window = clan::DisplayWindow(win_desc);
+	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 
-	clan::Canvas canvas(window);
+	canvas = clan::Canvas(window);
 
 	// Deleted automatically by the GUI
 //	new ColorWheel(canvas, gui, clan::Rect(32, 32, clan::Size(512, 512)));
-
-	saturation_outer = 1.0f;
-	saturation_inner = 0.0f;
-	value_outer = 1.0f;
-	value_inner = 0.0f;
-	is_hsl = false;
-
 }
 
 bool App::update()

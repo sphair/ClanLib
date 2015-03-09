@@ -64,43 +64,31 @@ const char text_shader_fragment[] =
 	;
 
 clan::ApplicationInstance<App> clanapp;
-
-App::App()
-{
-	clan::OpenGLTarget::enable();
-
-
-App::App() : quit(false)
-{
-}
-
 struct ProgramUniforms
 {
 	clan::Mat4f cl_ModelViewProjectionMatrix;
 };
 
-// The start of the Application
-int App::start(const std::vector<std::string> &args)
+App::App()
 {
+	clan::OpenGLTarget::enable();
+
 	clan::DisplayWindowDescription win_desc;
 	//win_desc.set_version(3, 2, false);
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("Point Sprite Example");
 	win_desc.set_size(clan::Size( 800, 480 ), false);
 
-	clan::DisplayWindow window(win_desc);
-    clan::SlotContainer cc;
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
-
-
-	clan::Canvas canvas(window);
+	window = clan::DisplayWindow(win_desc);
+	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	canvas = clan::Canvas(window);
 
 	// Deleted automatically by the GUI
 	//Options *options = new Options(gui, clan::Rect(0, 0, canvas.get_size()));
 
-	clan::Image image_grid(canvas, "../Blend/Resources/grid.png");
-	clan::Texture2D texture_particle(canvas, "Resources/particle.png");
+	image_grid = clan::Image(canvas, "../Blend/Resources/grid.png");
+	texture_particle = clan::Texture2D(canvas, "Resources/particle.png");
 	float grid_width = (float) image_grid.get_width();
 	float grid_height = (float) image_grid.get_height();
 
@@ -120,7 +108,7 @@ int App::start(const std::vector<std::string> &args)
 		throw clan::Exception(clan::string_format("Unable to compile fragment shader object: %1", fragment_shader.get_info_log()));
 	}
 
-	clan::ProgramObject program_object(canvas);
+	program_object = clan::ProgramObject(canvas);
 	program_object.attach(vertex_shader);
 	program_object.attach(fragment_shader);
 	program_object.bind_attribute_location(0, "InPosition");
@@ -134,7 +122,7 @@ int App::start(const std::vector<std::string> &args)
 	clan::BlendStateDescription blend_state_desc;
 	blend_state_desc.enable_blending(true);
 	blend_state_desc.set_blend_function(clan::blend_src_alpha, clan::blend_one, clan::blend_src_alpha, clan::blend_one);
-	clan::BlendState blend_state(canvas, blend_state_desc);
+	blend_state = clan::BlendState(canvas, blend_state_desc);
 
 	game_time.reset();
 }

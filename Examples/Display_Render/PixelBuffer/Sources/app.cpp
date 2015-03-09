@@ -35,53 +35,38 @@ App::App()
 {
 	// We support all display targets, in order listed here
 #ifdef WIN32
-	clan::D3DTarget::enable();
+	//FIXME
+	//clan::D3DTarget::enable();
 #endif
 	clan::OpenGLTarget::enable();
-	App::App() : quit(false)
-{
-}
 
-// The start of the Application
-int App::start(const std::vector<std::string> &args)
-{
 	clan::DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("PixelBuffer Example");
 	win_desc.set_size(clan::Size( 600, 630 ), false);
 
-	clan::DisplayWindow window(win_desc);
-    clan::SlotContainer cc;
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	window = clan::DisplayWindow(win_desc);
+	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	canvas = clan::Canvas(window);
 
-	clan::Canvas canvas(window);
+	tux = clan::PixelBuffer("../../3D/Object3D/Resources/tux.png");
 
-	clan::PixelBuffer tux("../../3D/Object3D/Resources/tux.png");
+	cpu_buffer = tux.copy();
 
-	clan::PixelBuffer cpu_buffer = tux.copy();
-
-	const int num_gpu_buffers = 2;
-	clan::TransferTexture gpu_buffer[num_gpu_buffers];
 	for (int cnt=0; cnt < num_gpu_buffers; cnt++)
 	{
 		// Note - This example only uses PIXEL_UNPACK_BUFFER_ARB, it does not use PIXEL_PACK_BUFFER_ARB
 		gpu_buffer[cnt] = clan::TransferTexture(canvas, tux);
 	}
 
-	const int num_textures = 2;
-	clan::Texture2D textures[num_textures];
 	for (int cnt=0; cnt < num_textures; cnt++)
 	{
 		textures[cnt] = clan::Texture2D(canvas, tux.get_width(), tux.get_height(), clan::tf_rgba8);
 	}
 
-	clan::Font font("Tahoma", 24);
+	font = clan::Font("Tahoma", 24);
 
-
-	int gpu_buffer_cycle = 0;
-	int texture_cycle = 0;
-	cpu_active = true;
 	game_time.reset();
 }
 

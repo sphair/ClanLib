@@ -53,6 +53,14 @@ private:
 	void setup_particles();
 	void move_particles(float time_diff, int num_particles);
 private:
+	clan::DisplayWindow window;
+	clan::SlotContainer sc;
+	clan::Canvas canvas;
+	clan::BlendState blend_state;
+	clan::ProgramObject program_object;
+	clan::Image image_grid;
+	clan::Texture2D texture_particle;
+
 	bool quit = false;
 	float grid_space;
 	float ball_alpha;

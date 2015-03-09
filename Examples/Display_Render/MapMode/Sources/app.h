@@ -55,6 +55,12 @@ private:
 	clan::Image get_stencil(clan::Canvas &canvas, clan::Rect rect);
 	void set_user_projection(clan::Canvas &canvas, clan::Sizef &area_size, Options *options);
 private:
+	clan::DisplayWindow window;
+	clan::SlotContainer sc;
+	clan::Canvas canvas;
+	clan::Image image_grid;
+	clan::Image image_ball;
+
 	bool quit = false;
 	float grid_space;
 	float ball_alpha;

@@ -36,18 +36,8 @@ clan::ApplicationInstance<App> clanapp;
 App::App()
 {
 	// We support all display targets, in order listed here
-#ifdef WIN32
-	clan::D3DTarget::enable();
-#endif
 	clan::OpenGLTarget::enable();
 
-App::App() : quit(false)
-{
-}
-
-// The start of the Application
-int App::start(const std::vector<std::string> &args)
-{
 	clan::DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_stencil_size(8);
@@ -56,27 +46,25 @@ int App::start(const std::vector<std::string> &args)
 	win_desc.set_title("Stencil Example");
 	win_desc.set_size(clan::Size( 900, 570 ), false);
 
-	clan::DisplayWindow window(win_desc);
-    clan::SlotContainer cc;
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
-
-	clan::Canvas canvas(window);
+	window = clan::DisplayWindow(win_desc);
+	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	canvas = clan::Canvas(window);
 
 	// Deleted automatically by the GUI
 	//Options *options = new Options(gui, clan::Rect(0, 0, canvas.get_size()));
 
-	clan::Image image_grid(canvas, "../Blend/Resources/grid.png");
-	clan::Image image_ball(canvas, "../Blend/Resources/ball.png");
+	image_grid = clan::Image(canvas, "../Blend/Resources/grid.png");
+	image_ball = clan::Image(canvas, "../Blend/Resources/ball.png");
 	grid_space = (float) (image_grid.get_width() - image_ball.get_width());
 
 	setup_balls();
 
-	clan::Font font("Tahoma", 20);
+	font = clan::Font("Tahoma", 20);
 
 	clan::BlendStateDescription blend_desc;
 	blend_desc.enable_color_write(false, false, false, false);
-	clan::BlendState blend_state_no_color_write(canvas, blend_desc);
+	blend_state_no_color_write = clan::BlendState(canvas, blend_desc);
 
 	game_time.reset();
 }
@@ -133,7 +121,7 @@ bool App::update()
 	stencil_desc.enable_depth_write(false);
 	stencil_desc.enable_depth_test(false);
 		
-	clan::BlendState blend_state(canvas, blend_desc);
+	//clan::BlendState blend_state(canvas, blend_desc);
 	clan::DepthStencilState stencil_state(canvas, stencil_desc);
 	canvas.set_depth_stencil_state(stencil_state);
 

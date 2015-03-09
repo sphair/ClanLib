@@ -46,8 +46,24 @@ private:
 	void draw_gpu(clan::Canvas &canvas, clan::PixelBuffer &gpu_buffer_to_write_into, clan::PixelBuffer &gpu_buffer_to_draw, clan::PixelBuffer &tux, clan::Texture2D &texture_to_write_into, clan::Texture2D &texture_to_draw);
 	void draw_texture(clan::Canvas &canvas, clan::Texture2D &texture, int xpos, int ypos);
 private:
+	clan::DisplayWindow window;
+	clan::SlotContainer sc;
+	clan::Canvas canvas;
+	clan::Font font;
+	clan::PixelBuffer tux;
+	clan::PixelBuffer cpu_buffer;
+
+	static const int num_gpu_buffers = 2;
+	clan::TransferTexture gpu_buffer[num_gpu_buffers];
+
+	static const int num_textures = 2;
+	clan::Texture2D textures[num_textures];
+
 	bool quit = false;
-	bool cpu_active;
+	bool cpu_active = true;
+	int gpu_buffer_cycle = 0;
+	int texture_cycle = 0;
+
 	clan::GameTime game_time;
 
 };

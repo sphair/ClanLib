@@ -54,6 +54,15 @@ private:
 	void move_balls(float time_diff, int num_balls);
 	clan::Image get_stencil(clan::Canvas &canvas, clan::Rect rect);
 private:
+
+	clan::DisplayWindow window;
+	clan::SlotContainer sc;
+	clan::Canvas canvas;
+	clan::Font font;
+	clan::BlendState blend_state_no_color_write;
+	clan::Image image_grid;
+	clan::Image image_ball;
+
 	bool quit = false;
 	float grid_space;
 	float ball_alpha;
