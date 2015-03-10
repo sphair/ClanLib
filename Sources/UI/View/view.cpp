@@ -570,7 +570,9 @@ namespace clan
 		{
 			e->_phase = EventUIPhase::at_target;
 			e->_current_target = e->_target;
-			e->_current_target->process_event(e);
+			e->_current_target->process_event(e, true);
+			if (!e->propagation_stopped())
+				e->_current_target->process_event(e, false);
 		}
 		else
 		{
@@ -580,7 +582,9 @@ namespace clan
 			{
 				e->_phase = EventUIPhase::at_target;
 				e->_current_target = e->_target;
-				e->_current_target->process_event(e);
+				e->_current_target->process_event(e, true);
+				if (!e->propagation_stopped())
+					e->_current_target->process_event(e, false);
 
 				while (e->_current_target && !e->propagation_stopped())
 				{
@@ -588,7 +592,7 @@ namespace clan
 					e->_phase = EventUIPhase::bubbling;
 					e->_current_target = current_target_superview ? current_target_superview->shared_from_this() : std::shared_ptr<View>();
 					if (e->_current_target)
-						e->_current_target->process_event(e);
+						e->_current_target->process_event(e, false);
 				}
 			}
 		}
@@ -597,7 +601,7 @@ namespace clan
 		e->_phase = EventUIPhase::none;
 	}
 
-	void View::process_event(EventUI *e)
+	void View::process_event(EventUI *e, bool use_capture)
 	{
 		ActivationChangeEvent *activation_change = dynamic_cast<ActivationChangeEvent*>(e);
 		CloseEvent *close = dynamic_cast<CloseEvent*>(e);
@@ -610,37 +614,37 @@ namespace clan
 		{
 			switch (activation_change->type())
 			{
-			case ActivationChangeType::activated: sig_activated(e->phase())(*activation_change); break;
-			case ActivationChangeType::deactivated: sig_deactivated(e->phase())(*activation_change); break;
+			case ActivationChangeType::activated: sig_activated(use_capture)(*activation_change); break;
+			case ActivationChangeType::deactivated: sig_deactivated(use_capture)(*activation_change); break;
 			}
 		}
 		else if (close)
 		{
-			sig_close(e->phase())(*close);
+			sig_close(use_capture)(*close);
 		}
 		else if (resize)
 		{
-			sig_resize(e->phase())(*resize);
+			sig_resize(use_capture)(*resize);
 		}
 		else if (focus_change)
 		{
 			switch (focus_change->type())
 			{
-			case FocusChangeType::gained: sig_focus_gained(e->phase())(*focus_change); break;
-			case FocusChangeType::lost: sig_focus_lost(e->phase())(*focus_change); break;
+			case FocusChangeType::gained: sig_focus_gained(use_capture)(*focus_change); break;
+			case FocusChangeType::lost: sig_focus_lost(use_capture)(*focus_change); break;
 			}
 		}
 		else if (pointer)
 		{
 			switch (pointer->type())
 			{
-			case PointerEventType::enter: sig_pointer_enter(e->phase())(*pointer); break;
-			case PointerEventType::leave: sig_pointer_leave(e->phase())(*pointer); break;
-			case PointerEventType::move: sig_pointer_move(e->phase())(*pointer); break;
-			case PointerEventType::press: sig_pointer_press(e->phase())(*pointer); break;
-			case PointerEventType::release: sig_pointer_release(e->phase())(*pointer); break;
-			case PointerEventType::double_click: sig_pointer_double_click(e->phase())(*pointer); break;
-			case PointerEventType::promixity_change: sig_pointer_proximity_change(e->phase())(*pointer); break;
+			case PointerEventType::enter: sig_pointer_enter(use_capture)(*pointer); break;
+			case PointerEventType::leave: sig_pointer_leave(use_capture)(*pointer); break;
+			case PointerEventType::move: sig_pointer_move(use_capture)(*pointer); break;
+			case PointerEventType::press: sig_pointer_press(use_capture)(*pointer); break;
+			case PointerEventType::release: sig_pointer_release(use_capture)(*pointer); break;
+			case PointerEventType::double_click: sig_pointer_double_click(use_capture)(*pointer); break;
+			case PointerEventType::promixity_change: sig_pointer_proximity_change(use_capture)(*pointer); break;
 			case PointerEventType::none: break;
 			}
 		}
@@ -649,85 +653,85 @@ namespace clan
 			switch (key->type())
 			{
 			case KeyEventType::none: break;
-			case KeyEventType::press: sig_key_press(e->phase())(*key); break;
-			case KeyEventType::release: sig_key_release(e->phase())(*key); break;
+			case KeyEventType::press: sig_key_press(use_capture)(*key); break;
+			case KeyEventType::release: sig_key_release(use_capture)(*key); break;
 			}
 		}
 	}
 
-	Signal<void(ActivationChangeEvent &)> &View::sig_activated(EventUIPhase phase)
+	Signal<void(ActivationChangeEvent &)> &View::sig_activated(bool use_capture)
 	{
-		return impl->_sig_activated[static_cast<int>(phase)];
+		return impl->_sig_activated[use_capture ? 1 : 0];
 	}
 
-	Signal<void(ActivationChangeEvent &)> &View::sig_deactivated(EventUIPhase phase)
+	Signal<void(ActivationChangeEvent &)> &View::sig_deactivated(bool use_capture)
 	{
-		return impl->_sig_deactivated[static_cast<int>(phase)];
+		return impl->_sig_deactivated[use_capture ? 1 : 0];
 	}
 
-	Signal<void(CloseEvent &)> &View::sig_close(EventUIPhase phase)
+	Signal<void(CloseEvent &)> &View::sig_close(bool use_capture)
 	{
-		return impl->_sig_close[static_cast<int>(phase)];
+		return impl->_sig_close[use_capture ? 1 : 0];
 	}
 
-	Signal<void(ResizeEvent &)> &View::sig_resize(EventUIPhase phase)
+	Signal<void(ResizeEvent &)> &View::sig_resize(bool use_capture)
 	{
-		return impl->_sig_resize[static_cast<int>(phase)];
+		return impl->_sig_resize[use_capture ? 1 : 0];
 	}
 
-	Signal<void(FocusChangeEvent &)> &View::sig_focus_gained(EventUIPhase phase)
+	Signal<void(FocusChangeEvent &)> &View::sig_focus_gained(bool use_capture)
 	{
-		return impl->_sig_focus_gained[static_cast<int>(phase)];
+		return impl->_sig_focus_gained[use_capture ? 1 : 0];
 	}
 
-	Signal<void(FocusChangeEvent &)> &View::sig_focus_lost(EventUIPhase phase)
+	Signal<void(FocusChangeEvent &)> &View::sig_focus_lost(bool use_capture)
 	{
-		return impl->_sig_focus_lost[static_cast<int>(phase)];
+		return impl->_sig_focus_lost[use_capture ? 1 : 0];
 	}
 
-	Signal<void(PointerEvent &)> &View::sig_pointer_enter(EventUIPhase phase)
+	Signal<void(PointerEvent &)> &View::sig_pointer_enter(bool use_capture)
 	{
-		return impl->_sig_pointer_enter[static_cast<int>(phase)];
+		return impl->_sig_pointer_enter[use_capture ? 1 : 0];
 	}
 
-	Signal<void(PointerEvent &)> &View::sig_pointer_leave(EventUIPhase phase)
+	Signal<void(PointerEvent &)> &View::sig_pointer_leave(bool use_capture)
 	{
-		return impl->_sig_pointer_leave[static_cast<int>(phase)];
+		return impl->_sig_pointer_leave[use_capture ? 1 : 0];
 	}
 
-	Signal<void(PointerEvent &)> &View::sig_pointer_move(EventUIPhase phase)
+	Signal<void(PointerEvent &)> &View::sig_pointer_move(bool use_capture)
 	{
-		return impl->_sig_pointer_move[static_cast<int>(phase)];
+		return impl->_sig_pointer_move[use_capture ? 1 : 0];
 	}
 
-	Signal<void(PointerEvent &)> &View::sig_pointer_press(EventUIPhase phase)
+	Signal<void(PointerEvent &)> &View::sig_pointer_press(bool use_capture)
 	{
-		return impl->_sig_pointer_press[static_cast<int>(phase)];
+		return impl->_sig_pointer_press[use_capture ? 1 : 0];
 	}
 
-	Signal<void(PointerEvent &)> &View::sig_pointer_release(EventUIPhase phase)
+	Signal<void(PointerEvent &)> &View::sig_pointer_release(bool use_capture)
 	{
-		return impl->_sig_pointer_release[static_cast<int>(phase)];
+		return impl->_sig_pointer_release[use_capture ? 1 : 0];
 	}
 
-	Signal<void(PointerEvent &)> &View::sig_pointer_double_click(EventUIPhase phase)
+	Signal<void(PointerEvent &)> &View::sig_pointer_double_click(bool use_capture)
 	{
-		return impl->_sig_pointer_double_click[static_cast<int>(phase)];
+		return impl->_sig_pointer_double_click[use_capture ? 1 : 0];
 	}
 
-	Signal<void(PointerEvent &)> &View::sig_pointer_proximity_change(EventUIPhase phase)
+	Signal<void(PointerEvent &)> &View::sig_pointer_proximity_change(bool use_capture)
 	{
-		return impl->_sig_pointer_proximity_change[static_cast<int>(phase)];
+		return impl->_sig_pointer_proximity_change[use_capture ? 1 : 0];
 	}
 
-	Signal<void(KeyEvent &)> &View::sig_key_press(EventUIPhase phase)
+	Signal<void(KeyEvent &)> &View::sig_key_press(bool use_capture)
 	{
-		return impl->_sig_key_press[static_cast<int>(phase)];
+		return impl->_sig_key_press[use_capture ? 1 : 0];
 	}
 
-	Signal<void(KeyEvent &)> &View::sig_key_release(EventUIPhase phase)
+	Signal<void(KeyEvent &)> &View::sig_key_release(bool use_capture)
 	{
-		return impl->_sig_key_release[static_cast<int>(phase)];
+		return impl->_sig_key_release[use_capture ? 1 : 0];
 	}
 
 	/////////////////////////////////////////////////////////////////////////
@@ -743,7 +747,7 @@ namespace clan
 				e->_phase = EventUIPhase::capturing;
 				e->_current_target = super;
 				if (e->_current_target)
-					e->_current_target->process_event(e);
+					e->_current_target->process_event(e, true);
 			}
 		}
 	}

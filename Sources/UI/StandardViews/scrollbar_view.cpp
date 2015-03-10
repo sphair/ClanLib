@@ -200,18 +200,15 @@ namespace clan
 		slots.connect(impl->track->sig_pointer_press(), impl.get(), &ScrollBarViewImpl::on_pointer_track_press);
 		slots.connect(impl->track->sig_pointer_release(), impl.get(), &ScrollBarViewImpl::on_pointer_track_release);
 
-		slots.connect(impl->thumb->sig_pointer_press(EventUIPhase::at_target), impl.get(), &ScrollBarViewImpl::on_pointer_thumb_press);
-		slots.connect(impl->thumb->sig_pointer_release(EventUIPhase::at_target), impl.get(), &ScrollBarViewImpl::on_pointer_thumb_release);
-		slots.connect(impl->thumb->sig_pointer_press(EventUIPhase::bubbling), impl.get(), &ScrollBarViewImpl::on_pointer_thumb_press);
-		slots.connect(impl->thumb->sig_pointer_release(EventUIPhase::bubbling), impl.get(), &ScrollBarViewImpl::on_pointer_thumb_release);
+		slots.connect(impl->thumb->sig_pointer_press(), impl.get(), &ScrollBarViewImpl::on_pointer_thumb_press);
+		slots.connect(impl->thumb->sig_pointer_release(), impl.get(), &ScrollBarViewImpl::on_pointer_thumb_release);
 
 		slots.connect(impl->button_decrement->sig_pointer_press(), impl.get(), &ScrollBarViewImpl::on_pointer_decrement_press);
 		slots.connect(impl->button_decrement->sig_pointer_release(), impl.get(), &ScrollBarViewImpl::on_pointer_decrement_release);
 		slots.connect(impl->button_increment->sig_pointer_press(), impl.get(), &ScrollBarViewImpl::on_pointer_increment_press);
 		slots.connect(impl->button_increment->sig_pointer_release(), impl.get(), &ScrollBarViewImpl::on_pointer_increment_release);
 
-		slots.connect(impl->thumb->sig_pointer_move(EventUIPhase::at_target), impl.get(), &ScrollBarViewImpl::on_pointer_move);
-		slots.connect(impl->thumb->sig_pointer_move(EventUIPhase::bubbling), impl.get(), &ScrollBarViewImpl::on_pointer_move);
+		slots.connect(impl->thumb->sig_pointer_move(), impl.get(), &ScrollBarViewImpl::on_pointer_move);
 
 		slots.connect(sig_focus_gained(), impl.get(), &ScrollBarViewImpl::on_focus_gained);
 		slots.connect(sig_focus_lost(), impl.get(), &ScrollBarViewImpl::on_focus_lost);

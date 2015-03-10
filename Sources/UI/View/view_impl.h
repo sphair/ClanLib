@@ -60,21 +60,21 @@ namespace clan
 
 		bool _needs_layout = true;
 
-		Signal<void(ActivationChangeEvent &)> _sig_activated[4];
-		Signal<void(ActivationChangeEvent &)> _sig_deactivated[4];
-		Signal<void(CloseEvent &)> _sig_close[4];
-		Signal<void(ResizeEvent &)> _sig_resize[4];
-		Signal<void(FocusChangeEvent &)> _sig_focus_gained[4];
-		Signal<void(FocusChangeEvent &)> _sig_focus_lost[4];
-		Signal<void(PointerEvent &)> _sig_pointer_enter[4];
-		Signal<void(PointerEvent &)> _sig_pointer_leave[4];
-		Signal<void(PointerEvent &)> _sig_pointer_move[4];
-		Signal<void(PointerEvent &)> _sig_pointer_press[4];
-		Signal<void(PointerEvent &)> _sig_pointer_release[4];
-		Signal<void(PointerEvent &)> _sig_pointer_double_click[4];
-		Signal<void(PointerEvent &)> _sig_pointer_proximity_change[4];
-		Signal<void(KeyEvent &)> _sig_key_press[4];
-		Signal<void(KeyEvent &)> _sig_key_release[4];
+		Signal<void(ActivationChangeEvent &)> _sig_activated[2];
+		Signal<void(ActivationChangeEvent &)> _sig_deactivated[2];
+		Signal<void(CloseEvent &)> _sig_close[2];
+		Signal<void(ResizeEvent &)> _sig_resize[2];
+		Signal<void(FocusChangeEvent &)> _sig_focus_gained[2];
+		Signal<void(FocusChangeEvent &)> _sig_focus_lost[2];
+		Signal<void(PointerEvent &)> _sig_pointer_enter[2];
+		Signal<void(PointerEvent &)> _sig_pointer_leave[2];
+		Signal<void(PointerEvent &)> _sig_pointer_move[2];
+		Signal<void(PointerEvent &)> _sig_pointer_press[2];
+		Signal<void(PointerEvent &)> _sig_pointer_release[2];
+		Signal<void(PointerEvent &)> _sig_pointer_double_click[2];
+		Signal<void(PointerEvent &)> _sig_pointer_proximity_change[2];
+		Signal<void(KeyEvent &)> _sig_key_press[2];
+		Signal<void(KeyEvent &)> _sig_key_release[2];
 
 		// Root view variables:
 		View *_owner_view = nullptr;
