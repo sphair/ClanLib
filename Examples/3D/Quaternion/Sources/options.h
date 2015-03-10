@@ -157,9 +157,9 @@ private:
 	void slider_quaternion_i_changed();
 	void slider_quaternion_j_changed();
 	void slider_quaternion_k_changed();
-	void on_clicked_button_lerp();
-	void on_clicked_button_slerp();
-	void on_clicked_button_rotate();
+	void on_clicked_button_lerp(PointerEvent &event);
+	void on_clicked_button_slerp(PointerEvent &event);
+	void on_clicked_button_rotate(PointerEvent &event);
 	void set_all_sliders();
 
 private:

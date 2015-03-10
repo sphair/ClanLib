@@ -105,9 +105,9 @@ Options::Options(Canvas &canvas) : TextureView(canvas)
 	button_slerp->label()->set_text("Spherical Linear Interpolation (slerp)");
 	button_rotate->label()->set_text("Rotate : q.multiply(target)");
 
-	//button_lerp->func_clicked() = bind_member(this, &Options::on_clicked_button_lerp);
-	//button_slerp->func_clicked() = bind_member(this, &Options::on_clicked_button_slerp);
-	//button_rotate->func_clicked() = bind_member(this, &Options::on_clicked_button_rotate);
+	button_lerp->slots.connect(button_lerp->sig_pointer_press(), bind_member(this, &Options::on_clicked_button_lerp));
+	button_slerp->slots.connect(button_slerp->sig_pointer_press(), bind_member(this, &Options::on_clicked_button_slerp));
+	button_rotate->slots.connect(button_rotate->sig_pointer_press(), bind_member(this, &Options::on_clicked_button_rotate));
 
 	set_all_sliders();
 }
@@ -197,17 +197,17 @@ void Options::slider_quaternion_k_changed()
 	update_euler();
 }
 
-void Options::on_clicked_button_lerp()
+void Options::on_clicked_button_lerp(PointerEvent &event)
 {
 	button_lerp_clicked = true;
 }
 
-void Options::on_clicked_button_slerp()
+void Options::on_clicked_button_slerp(PointerEvent &event)
 {
 	button_slerp_clicked = true;
 }
 
-void Options::on_clicked_button_rotate()
+void Options::on_clicked_button_rotate(PointerEvent &event)
 {
 	button_rotate_clicked = true;
 }

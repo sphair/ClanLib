@@ -86,6 +86,9 @@ App::App()
 	ui_thread = UIThread(resources);
 	options_view = std::make_shared<Options>(canvas);
 
+	options_view->set_event_window(window);
+	options_view->set_cursor_window(window);
+
 	// Setup graphic store
 	graphic_store = std::make_shared<GraphicStore>(canvas);
 	scene.gs = graphic_store.get();
