@@ -62,7 +62,6 @@ HelloWorld::HelloWorld()
 	root->style()->set("flex-direction: column");
 
 	auto body = std::make_shared<View>();
-	//body->style()->set("background: linear-gradient(13.37deg, #f0f0f0, rgb(120,240,120) 50%, #f0f0f0)");
 	body->style()->set("background: white");
 	body->style()->set("padding: 11px");
 	body->style()->set("border-top: 5px solid #DD3B2A");
@@ -124,6 +123,19 @@ HelloWorld::HelloWorld()
 	p2->add_subview(edit);
 	p2->add_text(" You know you want to!", bold);
 	body->add_subview(p2);
+	
+	std::shared_ptr<SpanLayoutView> p3 = std::make_shared<SpanLayoutView>();
+	p3->add_text("Since we both know you typed ", normal);
+	p3->add_text("Yes, yes, yes..", italic);
+	p3->add_text(" into the text field (who wouldn't!?), here's the amazing gradient:", normal);
+	body->add_subview(p3);
+	
+	std::shared_ptr<View> gradient_box = std::make_shared<View>();
+	gradient_box->style()->set("margin: 15px auto; width: 120px; height: 75px;");
+	gradient_box->style()->set("border: 1px solid #777");
+	gradient_box->style()->set("background: linear-gradient(13.37deg, #f0f0f0, rgb(120,240,120) 50%, #f0f0f0)");
+	gradient_box->style()->set("box-shadow: 7px 7px 7px rgba(0,0,0,0.2)");
+	body->add_subview(gradient_box);
 
 	// Make our window visible
 	root->show();
