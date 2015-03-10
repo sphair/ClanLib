@@ -28,6 +28,7 @@
 
 #include "UI/precomp.h"
 #include "API/UI/StandardViews/texture_view.h"
+#include "API/Display/Render/blend_state_description.h"
 #include "API/UI/Events/key_event.h"
 #include "API/UI/Events/pointer_event.h"
 #include "API/UI/Events/close_event.h"
@@ -43,6 +44,9 @@ namespace clan
 	TextureView_Impl::TextureView_Impl(TextureView *view, Canvas &canvas) : window_view(view), canvas(canvas)
 	{
 		canvas_rect = canvas.get_size();
+		BlendStateDescription blend_desc;
+		blend_desc.enable_blending(false);
+		opaque_blend = BlendState(canvas, blend_desc);
 	}
 
 	void TextureView_Impl::set_event_window(const DisplayWindow &new_event_window, const Mat4f &new_transform_mouse_matrix)
@@ -69,13 +73,17 @@ namespace clan
 		if (needs_render)
 		{
 			canvas.set_cliprect(canvas_rect);
-			canvas.clear(clan::Colorf::transparent);
+
+			canvas.set_blend_state(opaque_blend);
+			canvas.fill_rect(canvas_rect, Colorf::transparent);
+			//canvas.clear(clan::Colorf::transparent);	<--- On d3d, this clears the entire canvas - It does not recognise the cliprect
 
 			needs_render = false;
 			window_view->set_geometry(BoxGeometry::from_margin_box(window_view->style(), canvas_rect));
 			window_view->layout(canvas);
 			window_view->render(canvas);
 			canvas.reset_cliprect();
+			canvas.reset_blend_state();
 		}
 	}
 

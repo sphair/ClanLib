@@ -29,6 +29,7 @@
 #pragma once
 
 #include "API/Display/Window/display_window.h"
+#include "API/Display/Render/blend_state.h"
 
 namespace clan
 {
@@ -53,6 +54,8 @@ namespace clan
 		DisplayWindow event_window;
 		SlotContainer slots;
 		Mat4f transform_mouse_matrix;
+
+		BlendState opaque_blend;
 
 		void on_window_close();
 		void on_lost_focus();
