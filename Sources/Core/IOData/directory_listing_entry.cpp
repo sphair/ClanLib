@@ -39,7 +39,7 @@ class DirectoryListingEntry_Impl
 {
 //! Construction:
 public:
-	DirectoryListingEntry_Impl()
+	DirectoryListingEntry_Impl():	directory(false), hidden(false), writable(false), readable(false)
 	{
 	}
 
@@ -49,27 +49,27 @@ public:
 
 //! Attributes:
 public:
-	std::string get_filename()
+	std::string get_filename() const
 	{
 		return filename;
 	}
 
-	bool is_directory()
+	bool is_directory() const
 	{
 		return directory;
 	}
 
-	bool is_hidden()
+	bool is_hidden() const
 	{
 		return hidden;
 	}
 
-	bool is_writable()
+	bool is_writable() const
 	{
 		return writable;
 	}
 
-	bool is_readable()
+	bool is_readable() const
 	{
 		return readable;
 	}
@@ -121,7 +121,6 @@ DirectoryListingEntry::DirectoryListingEntry()
 
 DirectoryListingEntry::~DirectoryListingEntry()
 {
-	
 }
 
 /////////////////////////////////////////////////////////////////////////////

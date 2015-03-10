@@ -44,9 +44,8 @@ class XMLToken
 /// \{
 
 public:
-	XMLToken() : type(NULL_TOKEN), variant(SINGLE)
-	{
-	}
+	XMLToken() : type(NULL_TOKEN), variant(SINGLE), name(), value(), attributes()
+	{}
 
 /// \}
 /// \name Attributes
