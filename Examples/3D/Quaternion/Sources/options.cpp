@@ -84,9 +84,9 @@ Options::Options(Canvas &canvas) : TextureView(canvas)
 	rotation_y = Angle(0.0f, angle_degrees);
 	rotation_z = Angle(0.0f, angle_degrees);
 
-	target_x = Angle(0.0f, angle_degrees);
-	target_y = Angle(0.0f, angle_degrees);
-	target_z = Angle(0.0f, angle_degrees);
+	target_x = Angle(45.0f, angle_degrees);
+	target_y = Angle(45.0f, angle_degrees);
+	target_z = Angle(45.0f, angle_degrees);
 
 	rotation_y_view->slider->func_value_changed() = bind_member(this, &Options::slider_rotation_y_changed);
 	rotation_x_view->slider->func_value_changed() = bind_member(this, &Options::slider_rotation_x_changed);
@@ -105,7 +105,7 @@ Options::Options(Canvas &canvas) : TextureView(canvas)
 	button_slerp->label()->set_text("Spherical Linear Interpolation (slerp)");
 	button_rotate->label()->set_text("Rotate : q.multiply(target)");
 
-	button_lerp->slots.connect(button_lerp->sig_pointer_press(), bind_member(this, &Options::on_clicked_button_lerp));
+	button_lerp->slots.connect(button_lerp->sig_pointer_press(EventUIPhase::at_target), bind_member(this, &Options::on_clicked_button_lerp));
 	button_slerp->slots.connect(button_slerp->sig_pointer_press(), bind_member(this, &Options::on_clicked_button_slerp));
 	button_rotate->slots.connect(button_rotate->sig_pointer_press(), bind_member(this, &Options::on_clicked_button_rotate));
 

@@ -164,8 +164,8 @@ bool App::update()
 	canvas.reset_rasterizer_state();
 	canvas.reset_depth_stencil_state();
 
-	options_view->update();
 	options_view->set_rect(Rect(8, 8, Size((int)canvas.get_width() - 16, 170)));
+	options_view->update();
 	options_view->render(canvas);
 	
 	std::string fps(string_format("%1 fps", framerate_counter.get_framerate()));

@@ -9,6 +9,8 @@
 #include <ClanLib/ui.h>
 #include <cstdlib>
 
+#define I_LOVE_ASSIMP_AND_PRECOMPILED_IT
+
 #if defined(I_LOVE_ASSIMP_AND_PRECOMPILED_IT)
 #include "assimp/cimport.h"
 #include "assimp/postprocess.h"
