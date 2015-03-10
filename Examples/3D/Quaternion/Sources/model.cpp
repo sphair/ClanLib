@@ -119,7 +119,79 @@ void Model_Impl::Load(GraphicContext &gc, GraphicStore *gs, const char *filename
 	}
 
 	aiReleaseImport(scene);
+#else
+	Vec3f position;
+
+	Vec3f size(0.5f, 0.5f, 0.5f);
+
+	std::vector<Vec3f> object_normals;
+	std::vector<Vec3f> object_positions;
+	object_normals.reserve(6 * 6);
+	object_positions.reserve(6 * 6);
+
+	object_positions.push_back(Vec3f(-size.x, size.y, size.z) + position);
+	object_positions.push_back(Vec3f(-size.x, size.y, -size.z) + position);
+	object_positions.push_back(Vec3f(-size.x, -size.y, -size.z) + position);
+	object_positions.push_back(Vec3f(-size.x, -size.y, -size.z) + position);
+	object_positions.push_back(Vec3f(-size.x, -size.y, size.z) + position);
+	object_positions.push_back(Vec3f(-size.x, size.y, size.z) + position);
+
+	object_positions.push_back(Vec3f(-size.x, size.y, size.z) + position);
+	object_positions.push_back(Vec3f(-size.x, -size.y, size.z) + position);
+	object_positions.push_back(Vec3f(size.x, -size.y, size.z) + position);
+	object_positions.push_back(Vec3f(size.x, -size.y, size.z) + position);
+	object_positions.push_back(Vec3f(size.x, size.y, size.z) + position);
+	object_positions.push_back(Vec3f(-size.x, size.y, size.z) + position);
+
+	object_positions.push_back(Vec3f(-size.x, size.y, size.z) + position);
+	object_positions.push_back(Vec3f(size.x, size.y, size.z) + position);
+	object_positions.push_back(Vec3f(size.x, size.y, -size.z) + position);
+	object_positions.push_back(Vec3f(size.x, size.y, -size.z) + position);
+	object_positions.push_back(Vec3f(-size.x, size.y, -size.z) + position);
+	object_positions.push_back(Vec3f(-size.x, size.y, size.z) + position);
+
+	object_positions.push_back(Vec3f(size.x, -size.y, -size.z) + position);
+	object_positions.push_back(Vec3f(-size.x, -size.y, -size.z) + position);
+	object_positions.push_back(Vec3f(-size.x, size.y, -size.z) + position);
+	object_positions.push_back(Vec3f(-size.x, size.y, -size.z) + position);
+	object_positions.push_back(Vec3f(size.x, size.y, -size.z) + position);
+	object_positions.push_back(Vec3f(size.x, -size.y, -size.z) + position);
+
+	object_positions.push_back(Vec3f(size.x, -size.y, -size.z) + position);
+	object_positions.push_back(Vec3f(size.x, -size.y, size.z) + position);
+	object_positions.push_back(Vec3f(-size.x, -size.y, size.z) + position);
+	object_positions.push_back(Vec3f(-size.x, -size.y, size.z) + position);
+	object_positions.push_back(Vec3f(-size.x, -size.y, -size.z) + position);
+	object_positions.push_back(Vec3f(size.x, -size.y, -size.z) + position);
+
+	object_positions.push_back(Vec3f(size.x, -size.y, -size.z) + position);
+	object_positions.push_back(Vec3f(size.x, size.y, -size.z) + position);
+	object_positions.push_back(Vec3f(size.x, size.y, size.z) + position);
+	object_positions.push_back(Vec3f(size.x, size.y, size.z) + position);
+	object_positions.push_back(Vec3f(size.x, -size.y, size.z) + position);
+	object_positions.push_back(Vec3f(size.x, -size.y, -size.z) + position);
+
+	for (int cnt = 0; cnt<6; cnt++)
+		object_normals.push_back(Vec3f(-1.0f, 0.0f, 0.0f));
+	for (int cnt = 0; cnt<6; cnt++)
+		object_normals.push_back(Vec3f(0.0f, 0.0f, 1.0f));
+	for (int cnt = 0; cnt<6; cnt++)
+		object_normals.push_back(Vec3f(0.0f, 1.0f, 0.0f));
+	for (int cnt = 0; cnt<6; cnt++)
+		object_normals.push_back(Vec3f(0.0f, 0.0f, -1.0f));
+	for (int cnt = 0; cnt<6; cnt++)
+		object_normals.push_back(Vec3f(0.0f, -1.0f, 0.0f));
+	for (int cnt = 0; cnt<6; cnt++)
+		object_normals.push_back(Vec3f(1.0f, 0.0f, 0.0f));
+
+	vbo_positions = VertexArrayVector<Vec3f>(gc, object_positions.size());
+	vbo_normals = VertexArrayVector<Vec3f>(gc, object_normals.size());
+	vbo_positions.upload_data(gc, 0, &object_positions[0], object_positions.size());
+	vbo_normals.upload_data(gc, 0, &object_normals[0], object_normals.size());
+	vbo_size = object_positions.size();
+
 #endif
+
 }
 
 int Model_Impl::count_vertices(const struct aiScene* sc, const struct aiNode* nd)
@@ -210,7 +282,6 @@ int Model_Impl::insert_vbo(GraphicContext &gc, int vertex_count, const struct ai
 
 void Model_Impl::Draw(GraphicContext &gc, GraphicStore *gs, const Mat4f &modelview_matrix)
 {
-#if defined(I_LOVE_ASSIMP_AND_PRECOMPILED_IT)
 	Mat4f matrix_modelview_projection = gs->camera_projection *  modelview_matrix;
 	Mat3f normal_matrix = Mat3f(modelview_matrix);
 	normal_matrix.inverse();
@@ -223,5 +294,4 @@ void Model_Impl::Draw(GraphicContext &gc, GraphicStore *gs, const Mat4f &modelvi
 	gs->shader_color.SetMaterial(material_shininess, material_emission, material_ambient, material_specular);
 	gs->shader_color.Use(gc, modelview_matrix, matrix_modelview_projection, Mat4f(normal_matrix));
 	gc.draw_primitives(type_triangles, vbo_size, prim_array);
-#endif
 }
