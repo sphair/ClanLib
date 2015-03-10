@@ -153,7 +153,7 @@ bool App::update()
 	// Show the quaternion teapot
 	Mat4f modelview_matrix = scene.gs->camera_modelview;
 	modelview_matrix.translate_self(0.0f, 0.0f, 0.0f);
-	//modelview_matrix = modelview_matrix * options->quaternion.to_matrix();
+	modelview_matrix = modelview_matrix * options_view->quaternion.to_matrix();
 	modelview_matrix.scale_self(5.0f, 5.0f, 5.0f);
 	model_teapot.Draw(canvas, scene.gs, modelview_matrix);
 
@@ -339,7 +339,6 @@ void App::calculate_matricies(GraphicContext &gc)
 
 void App::control_target(Options *options)
 {
-	/*
 	if ((options->button_lerp_clicked) || (options->button_slerp_clicked))
 	{
 		if (options->button_lerp_clicked)
@@ -348,9 +347,9 @@ void App::control_target(Options *options)
 		if (options->button_slerp_clicked)
 			active_slerp = true;
 
-		options->button_lerp->set_enabled(false);
+		//FIXME: options->button_lerp->set_enabled(false);
 		options->button_lerp_clicked = false;
-		options->button_slerp->set_enabled(false);
+		//FIXME: options->button_slerp->set_enabled(false);
 		options->button_slerp_clicked = false;
 
 		time_made_active = current_time;
@@ -386,11 +385,10 @@ void App::control_target(Options *options)
 
 		if (time_active >= 1.0f)
 		{
-			options->button_lerp->set_enabled(true);
-			options->button_slerp->set_enabled(true);
+			//FIXME: options->button_lerp->set_enabled(true);
+			//FIXME: options->button_slerp->set_enabled(true);
 			active_lerp = false;
 			active_slerp = false;
 		}
 	}
-	*/
 }

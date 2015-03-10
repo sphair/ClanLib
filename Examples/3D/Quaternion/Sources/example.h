@@ -85,6 +85,7 @@ private:
 
 	int time_made_active;
 	bool active_lerp = false;
+	bool active_slerp = false;
 
 	uint64_t current_time;
 	int time_delta;
