@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2013 for Windows Desktop
+# Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{67526D1E-B801-4460-A8D3-F5C604037478}"
@@ -10,11 +10,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		build-environment-linux-gcc.html = build-environment-linux-gcc.html
 		build-environment-windows-msvc.html = build-environment-windows-msvc.html
 		compile-clanlib.html = compile-clanlib.html
+		contact.html = contact.html
 		contributions.html = contributions.html
 		debugging-msvc.html = debugging-msvc.html
 		development.html = development.html
 		documentation.html = documentation.html
-		donations.html = donations.html
 		download.html = download.html
 		doxygen-extra.css = doxygen-extra.css
 		doxygen.css = doxygen.css
