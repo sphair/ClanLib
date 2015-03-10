@@ -139,10 +139,13 @@ namespace clan
 			{
 				PointerEvent e_enter(PointerEventType::enter, PointerButton::none, e.pos(window_view->root_view()), e.alt_down(), e.shift_down(), e.ctrl_down(), e.cmd_down());
 				hot_view->dispatch_event(&e_enter, true);
-
-				if (!cursor_window.is_null())
-					hot_view->update_cursor(cursor_window);
 			}
+		}
+
+		if (hot_view)
+		{
+			if (!cursor_window.is_null())
+				hot_view->update_cursor(cursor_window);
 		}
 
 		if (e.type() == PointerEventType::enter || e.type() == PointerEventType::leave)
