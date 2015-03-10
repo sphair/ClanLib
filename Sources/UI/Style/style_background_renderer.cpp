@@ -197,7 +197,7 @@ namespace clan
 
 			Pointf corner1, corner2;
 
-			int corner_index = (int)(angle * 4 / PI);
+			int corner_index = (int)(angle * 2 / PI);
 			switch (corner_index)
 			{
 			default:

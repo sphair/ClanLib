@@ -55,6 +55,25 @@ namespace clan
 			throw Exception("CGFontCreateWithFontName failed");
 		}
 		
+		if (desc.get_style() != FontStyle::normal || desc.get_weight() != FontWeight::normal)
+		{
+			// To do: maybe add "-Bold" and such to font name instead. traits seem to be somewhat limited and not well documented
+			
+			CTFontSymbolicTraits traits = 0;
+			if (desc.get_weight() >= FontWeight::bold)
+				traits |= kCTFontBoldTrait;
+			if (desc.get_style() != FontStyle::normal)
+				traits |= kCTFontItalicTrait;
+			
+			CTFontRef new_handle = CTFontCreateCopyWithSymbolicTraits(handle, desc.get_height() * pixel_ratio, 0, traits, kCTFontBoldTrait|kCTFontItalicTrait);
+			
+			if (new_handle != 0)
+			{
+				CFRelease(handle);
+				handle = new_handle;
+			}
+		}
+		
 		font_metrics = FontMetrics(
 			(CTFontGetAscent(handle) + CTFontGetDescent(handle)) / pixel_ratio,
 			(CTFontGetAscent(handle)) / pixel_ratio,
