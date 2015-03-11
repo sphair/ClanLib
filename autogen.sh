@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
 	echo "OS X detected. Generating Xcode project generator instead"
