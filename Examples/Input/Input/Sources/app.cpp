@@ -226,7 +226,7 @@ void App::draw_mouse_state(Canvas &canvas, int yoffset)
 	text = text + string_format("Right %1 : ", 
 		mouse.get_keycode(mouse_right) ? "Pressed" : "Released" );
 
-	Point position = mouse.get_position();
+	Pointf position = mouse.get_position();
 	text = text + string_format("Position (%1,%2)", 
 		 position.x, position.y);
 
