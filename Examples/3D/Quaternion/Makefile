@@ -8,7 +8,7 @@ OBJF = ./Sources/options.o \
 ./Sources/scene.o \
 ./Sources/precomp.o
 
-LIBS=clanApp clanDisplay clanCore clanGL clanGUI
+LIBS=clanApp clanDisplay clanCore clanGL clanUI
 
 CXXFLAGS += -I./  -I Sources
 EXTRA_LIBS=-lassimp
