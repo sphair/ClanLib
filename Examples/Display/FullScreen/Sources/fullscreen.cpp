@@ -44,11 +44,11 @@ FullScreen::FullScreen()
 	spr_background = Sprite(canvas, "../../Display/Path/Resources/lobby_background2.png");
 
 	font = clan::Font("tahoma", 24);
+	game_time.reset();
 }
 
 bool FullScreen::update()
 {
-	game_time.reset();
 
 	const float virtual_screen_width = 800.0f;
 	const float virtual_screen_height = 600.0f;
