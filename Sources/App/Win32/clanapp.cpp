@@ -129,16 +129,18 @@ int WINAPI WinMain(
 					if (!clan::RunLoop::process(timing_timeout))
 						break;
 				}
-				catch (clan::Exception &exception)
+				catch (...)
 				{
+					std::exception_ptr exception = std::current_exception();
 					ExceptionDialog::show(exception);
 					retval = -1;
 					break;
 				}
 			}
 		}
-		catch (clan::Exception &exception)
+		catch (...)
 		{
+			std::exception_ptr exception = std::current_exception();
 			ExceptionDialog::show(exception);
 			retval = -1;
 		}

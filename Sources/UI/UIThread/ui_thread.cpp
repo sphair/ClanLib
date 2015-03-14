@@ -71,17 +71,7 @@ namespace clan
 
 		if (!exception_handler)
 		{
-			impl->exception_handler = [this](const std::exception_ptr &exception)
-			{
-				try
-				{
-					std::rethrow_exception(exception);
-				}
-				catch (Exception &e)
-				{
-					ExceptionDialog::show(e);
-				}
-			};
+			impl->exception_handler = ExceptionDialog::show;
 		}
 	}
 
