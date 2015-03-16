@@ -86,8 +86,10 @@ namespace clan
 		impl->base = new_base;
 	}
 
-	void Style::set(const std::string &properties, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void Style::set(const std::string &properties)
 	{
+		//TODO: Remove StylePropertyInitializerValue
+		std::initializer_list<StylePropertyInitializerValue> args;
 		StyleProperty::parse(impl.get(), properties, args);
 	}
 

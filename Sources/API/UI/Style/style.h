@@ -177,7 +177,14 @@ namespace clan
 		const std::shared_ptr<Style> &get_base();
 		void set_base(const std::shared_ptr<Style> &base);
 
-		void set(const std::string &properties, const std::initializer_list<StylePropertyInitializerValue> &args = std::initializer_list<StylePropertyInitializerValue>());
+		void set(const std::string &properties);
+
+		template <class Arg1, typename... Values>
+		void set(const std::string &properties, Arg1 arg1, Values... values)
+		{
+			set(string_format(properties, arg1, values...));
+		}
+
 		bool has(const std::string &property_name) const;
 		int array_size(const std::string &property_name) const;
 
