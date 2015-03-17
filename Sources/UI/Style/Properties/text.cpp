@@ -53,6 +53,8 @@ namespace clan
 	StylePropertyDefault style_default_font_family("font-family", StyleValue::from_keyword("array"));
 	StylePropertyDefault style_default_font_family_names("font-family-names[0]", StyleValue::from_keyword("sans-serif"));
 
+	StylePropertyDefault style_default_clan_font_rendering("-clan-font-rendering", StyleValue::from_keyword("auto"));
+
 	ColorPropertyParser style_parser_color;
 	TextAlignPropertyParser style_parser_text_align;
 	TextDecorationPropertyParser style_parser_text_decoration;
@@ -68,6 +70,8 @@ namespace clan
 	FontStylePropertyParser style_parser_font_style;
 	FontVariantPropertyParser style_parser_font_variant;
 	FontWeightPropertyParser style_parser_font_weight;
+
+	ClanFontRenderingPropertyParser style_parser_clan_font_rendering;
 
 	void ColorPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
@@ -1118,5 +1122,34 @@ namespace clan
 		}
 
 		setter->set_value("font-weight", font_weight);
+	}
+
+	void ClanFontRenderingPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
+	{
+		auto &tokens = parser.tokens;
+
+		StyleValue rendering;
+
+		size_t pos = 0;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && pos == tokens.size())
+		{
+			if (equals(token.value, "auto"))
+				rendering = StyleValue::from_keyword("auto");
+			else if (equals(token.value, "subpixel"))
+				rendering = StyleValue::from_keyword("subpixel");
+			else if (equals(token.value, "anti-alias"))
+				rendering = StyleValue::from_keyword("anti-alias");
+			else if (equals(token.value, "inherit"))
+				rendering = StyleValue::from_keyword("inherit");
+			else
+				return;
+		}
+		else
+		{
+			return;
+		}
+
+		setter->set_value("-clan-font-rendering", rendering);
 	}
 }

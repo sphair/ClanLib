@@ -270,7 +270,7 @@ namespace clan
 		auto font_weight = computed_value("font-weight");
 		auto font_style = computed_value("font-style");
 		//auto font_variant = computed_value("font-variant"); // To do: needs FontDescription support
-		auto font_rendering = computed_value("font-rendering");
+		auto font_rendering = computed_value("-clan-font-rendering");
 		auto font_family_name = computed_value("font-family-names[0]");
 
 		FontDescription font_desc;

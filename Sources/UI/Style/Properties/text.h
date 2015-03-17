@@ -138,4 +138,11 @@ namespace clan
 		FontWeightPropertyParser() : StylePropertyParser({ "font-weight" }) { }
 		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
+
+	class ClanFontRenderingPropertyParser : public StylePropertyParser
+	{
+	public:
+		ClanFontRenderingPropertyParser() : StylePropertyParser({ "-clan-font-rendering" }) { }
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
+	};
 }
