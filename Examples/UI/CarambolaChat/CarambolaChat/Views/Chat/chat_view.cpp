@@ -8,18 +8,18 @@ using namespace clan;
 
 ChatView::ChatView()
 {
-	box_style.set_layout_hbox();
+	style()->set("flex-direction: row");
 
 	text_view = std::make_shared<ChatTextView>(this);
-	text_view->box_style.set_flex(1.0f, 1.0f);
+	text_view->style()->set("flex: 1 1 main-size");
 	text_view->set_focus_policy(FocusPolicy::accept);
 
 	scroll = std::make_shared<ScrollBarView>();
 	scroll->set_vertical();
-	scroll->box_style.set_flex(0.0f, 0.0f);
-	scroll->box_style.set_background(Colorf(232, 232, 236));
-	scroll->track()->box_style.set_padding(4.0f, 0.0f);
-	scroll->thumb()->box_style.set_background(Colorf(208, 209, 215));
+	scroll->style()->set("flex: 0 0 main-size");
+	scroll->style()->set("background: rgb(232,232,236)");
+	scroll->track()->style()->set("padding: 0 4px");
+	scroll->thumb()->style()->set("background: rgb(208,209,215)");
 
 	add_subview(text_view);
 	add_subview(scroll);
@@ -74,8 +74,8 @@ void ChatView::render_text_content(ChatTextView *text_view, Canvas &canvas)
 
 	if (font.is_null())
 	{
-		TextStyle style;
-		style.set_font("Source Sans Pro", 14.0f, 20.0f);
+		clan::Style style;
+		style.set("font: 14px/20px 'Source Sans Pro'");
 
 		font = style.get_font(canvas);
 		font_url = font;
@@ -199,7 +199,7 @@ void ChatView::layout_line(Canvas &canvas, ChatLine &line, Rect &client_area, in
 		{
 			for (auto &i : line.inlines)
 			{
-				line.column3.add_text(i.text, i.style.get_font(canvas), i.style.color(), i.id);
+				line.column3.add_text(i.text, i.style->get_font(canvas), i.style->computed_value("color").color, i.id);
 			}
 
 			line.column3_rendered = true;

@@ -19,7 +19,7 @@ ChatWindowViewController::ChatWindowViewController()
 	desc.set_extend_frame(0, 30, 0, 0);
 
 	view = std::make_shared<WindowView>(desc);
-	view->box_style.set_layout_vbox();
+	view->style()->set("flex-direction: column");
 
 	window_view()->get_display_window().set_large_icon(ImageProviderFactory::load("Resources/Icons/carambola-256.png"));
 	window_view()->get_display_window().set_small_icon(ImageProviderFactory::load("Resources/Icons/carambola-32.png"));

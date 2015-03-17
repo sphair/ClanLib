@@ -12,7 +12,7 @@ ChatLine::ChatLine(const std::string &nick, const clan::Colorf &nick_color) : ni
 {
 }
 
-void ChatLine::add_text(const clan::TextStyle &style, const std::string &text, int id)
+void ChatLine::add_text(const std::shared_ptr<clan::Style> &style, const std::string &text, int id)
 {
 	inlines.push_back(InlineText(style, text, id));
 }

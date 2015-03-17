@@ -6,59 +6,53 @@ using namespace clan;
 
 NetworkListItemView::NetworkListItemView()
 {
-	box_style.set_layout_hbox();
-	box_style.set_padding(0.0f, 5.0f);
-	box_style.set_background(Colorf::white); // Bug: required to make the border work
-	box_style.set_border(Colorf::gray80, 0.0f, 1.0f, 0.0f, 0.0f);
+	style()->set("flex-direction: row");
+	style()->set("padding: 5px 0");
+	style()->set("background: white"); // Bug: required to make the border work
+	style()->set("border-top: 1px solid rgb(204,204,204)");
 
 	status_icon = std::make_shared<ImageView>();
-	status_icon->box_style.set_flex(0.0f, 0.0f);
-	status_icon->box_style.set_width(32.0f);
-	status_icon->box_style.set_margin(7.0f, 0.0f, 7.0f, 0.0);
+	status_icon->style()->set("flex: 0 0 main-size");
+	status_icon->style()->set("width: 32px");
+	status_icon->style()->set("margin: 0 7px");
 	add_subview(status_icon);
 
 	auto name_status_block = std::make_shared<View>();
-	name_status_block->box_style.set_flex(0.0f, 0.0f);
-	name_status_block->box_style.set_width(220.0f);
-	name_status_block->box_style.set_layout_vbox();
+	name_status_block->style()->set("flex: 0 0 main-size");
+	name_status_block->style()->set("width: 220px");
+	name_status_block->style()->set("flex-direction: column");
 
 	name = std::make_shared<LabelView>();
-	name->text_style().set_font("Source Sans Pro", 13.0f, 16.0f);
-	name->text_style().set_weight_bold();
+	name->style()->set("font: bold 13px/16px 'Source Sans Pro'");
 	name_status_block->add_subview(name);
 
 	status_text = std::make_shared<LabelView>();
-	status_text->text_style().set_font("Source Sans Pro", 13.0f, 16.0f);
+	status_text->style()->set("font: 13px/16px 'Source Sans Pro'");
 	name_status_block->add_subview(status_text);
 
 	add_subview(name_status_block);
 
 	connect_button = std::make_shared<ButtonView>();
-	connect_button->label()->text_style().set_font("Source Sans Pro", 13.0f, 16.0f);
-	connect_button->label()->text_style().set_color(Colorf::navy);
-	connect_button->box_style.set_flex(0.0f, 0.0f);
-	connect_button->box_style.set_margin(0.0f, 0.0f, 15.0f, 0.0);
-	connect_button->box_style.set_margin_top_auto();
-	connect_button->box_style.set_margin_bottom_auto();
+	connect_button->label()->style()->set("font: 13px/16px 'Source Sans Pro'");
+	connect_button->label()->style()->set("color: rgb(0,0,128)");
+	connect_button->style()->set("flex: 0 0 main-size");
+	connect_button->style()->set("margin: auto 15px auto 0");
 	add_subview(connect_button);
 
 	edit_button = std::make_shared<ButtonView>();
 	edit_button->label()->set_text("Edit");
-	edit_button->label()->text_style().set_font("Source Sans Pro", 13.0f, 16.0f);
-	edit_button->label()->text_style().set_color(Colorf::navy);
-	edit_button->box_style.set_flex(0.0f, 0.0f);
-	edit_button->box_style.set_margin(0.0f, 0.0f, 15.0f, 0.0);
-	edit_button->box_style.set_margin_top_auto();
-	edit_button->box_style.set_margin_bottom_auto();
+	edit_button->label()->style()->set("font: 13px/16px 'Source Sans Pro'");
+	edit_button->label()->style()->set("color: rgb(0,0,128)");
+	edit_button->style()->set("flex: 0 0 main-size");
+	edit_button->style()->set("margin: auto 15px auto 0");
 	add_subview(edit_button);
 
 	remove_button = std::make_shared<ButtonView>();
 	remove_button->label()->set_text("Remove");
-	remove_button->label()->text_style().set_font("Source Sans Pro", 13.0f, 16.0f);
-	remove_button->label()->text_style().set_color(Colorf::navy);
-	remove_button->box_style.set_flex(0.0f, 0.0f);
-	remove_button->box_style.set_margin_top_auto();
-	remove_button->box_style.set_margin_bottom_auto();
+	remove_button->label()->style()->set("font: 13px/16px 'Source Sans Pro'");
+	remove_button->label()->style()->set("color: rgb(0,0,128)");
+	remove_button->style()->set("flex: 0 0 main-size");
+	remove_button->style()->set("margin: auto 0");
 	add_subview(remove_button);
 
 	set_status_offline("Not Connected");

@@ -6,9 +6,9 @@ using namespace clan;
 
 UserListView::UserListView()
 {
-	box_style.set_background(Colorf(219, 234, 249));
-	box_style.set_padding(7.0f, 5.0f);
-	box_style.set_layout_vbox();
+	style()->set("background: rgb(219, 234, 249)");
+	style()->set("padding: 5px 7px");
+	style()->set("flex-direction: column");
 }
 
 void UserListView::update_user(const std::string &id, const std::string &name, const std::string &icon)
@@ -18,18 +18,18 @@ void UserListView::update_user(const std::string &id, const std::string &name, c
 	if (!user.view)
 	{
 		user.view = std::make_shared<View>();
-		user.view->box_style.set_flex(0.0f, 0.0f);
-		user.view->box_style.set_padding(5.0f);
-		user.view->box_style.set_layout_hbox();
+		user.view->style()->set("flex: 0 0 main-size");
+		user.view->style()->set("padding: 5px");
+		user.view->style()->set("flex-direction: row");
 		user.icon = std::make_shared<ImageView>();
 		user.icon->set_image(ImageSource::from_resource(icon));
-		user.icon->box_style.set_flex(0.0f, 0.0f);
+		user.icon->style()->set("flex: 0 0 main-size");
 		user.view->add_subview(user.icon);
 		user.label = std::make_shared<LabelView>();
 		user.label->set_text(name);
-		user.label->text_style().set_color(Colorf::black);
-		user.label->text_style().set_font("Source Sans Pro", 12.0f, 15.0f);
-		user.label->box_style.set_margin(5.0f, 0.0f, 0.0f, 0.0f);
+		user.label->style()->set("color: black");
+		user.label->style()->set("font: 12px/15px 'Source Sans Pro'");
+		user.label->style()->set("margin: 0 0 0 5px");
 		user.view->add_subview(user.label);
 		add_subview(user.view);
 	}

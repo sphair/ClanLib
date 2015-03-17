@@ -6,33 +6,30 @@ using namespace clan;
 
 WorkspaceTabView::WorkspaceTabView(const std::string &label_text)
 {
-	box_style.set_flex(0.0f, 1.0f);
-	box_style.set_border_radius(2.0f, 2.0f, 0.0f, 0.0f);
-	box_style.set_padding(10.0f, 2.0f, 7.0f, 2.0f);
-	box_style.set_layout_hbox();
+	style()->set("flex: 0 1 main-size");
+	style()->set("border-radius: 2px 2px 0 0");
+	style()->set("padding: 2px 7px 2px 10px");
+	style()->set("flex-direction: row");
 
 	label = std::make_shared<LabelView>();
-	label->text_style().set_font("Source Sans Pro", 12.0f, 26.0f);
-	label->text_style().set_target_transparent();
+	label->style()->set("font: 12px/26px 'Source Sans Pro'");
+	label->style()->set("-clan-font-rendering: anti-alias");
 	label->set_text(label_text);
 	add_subview(label);
 
 	message_count = std::make_shared<LabelView>();
-	message_count->box_style.set_margin(5.0f, 0.0f, 0.0f, 0.0f);
-	message_count->box_style.set_margin_top_auto();
-	message_count->box_style.set_margin_bottom_auto();
-	message_count->box_style.set_background(Colorf::gray90);
-	message_count->box_style.set_padding(5.0f, 1.0f);
-	message_count->box_style.set_border(Colorf::gray90, 1.0f);
-	message_count->box_style.set_border_radius(6.0f);
-	message_count->text_style().set_font("Source Sans Pro", 9.0f, 15.0f);
-	message_count->text_style().set_weight_bold();
-	message_count->text_style().set_color(Colorf::black);
+	message_count->style()->set("margin: auto 0 auto 5px");
+	message_count->style()->set("background: rgb(230,230,230)");
+	message_count->style()->set("padding: 1px 5px");
+	message_count->style()->set("border: 1px solid rgb(230,230,230)");
+	message_count->style()->set("border-radius: 6px");
+	message_count->style()->set("font: bold 9px/15px 'Source Sans Pro'");
+	message_count->style()->set("color: black");
 	message_count->set_hidden();
 	add_subview(message_count);
 
 	close = std::make_shared<ImageView>();
 	close->set_image(ImageSource::from_resource("Icons/cross-small.png"));
-	close->box_style.set_margin(8.0f, 9.0f, 0.0f, 9.0f);
+	close->style()->set("margin: 9px 0 9px 8px");
 	add_subview(close);
 }
