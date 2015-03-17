@@ -66,17 +66,10 @@ namespace clan
 
 	void ExceptionDialog_Impl::show(const std::string &message_and_stack_trace)
 	{
-		#define YEAR1865
-		#define ICC_1697_CLASSES ICC_STANDARD_CLASSES
-		#define ICC_1865_CLASSES ICC_WIN95_CLASSES
-		#define ICC_LOOL_CLASSES ICC_COOL_CLASSES
-
-		#if defined(YEAR1865)
 		INITCOMMONCONTROLSEX desc = { 0 };
 		desc.dwSize = sizeof(INITCOMMONCONTROLSEX);
-		desc.dwICC = ICC_1697_CLASSES | ICC_1865_CLASSES | ICC_LOOL_CLASSES;
+		desc.dwICC = ICC_STANDARD_CLASSES | ICC_WIN95_CLASSES | ICC_COOL_CLASSES;
 		InitCommonControlsEx(&desc);
-		#endif
 
 		ExceptionDialog_Impl dlg(message_and_stack_trace, 0);
 		while (true)
@@ -218,7 +211,7 @@ namespace clan
 
 	#else
 
-	void ExceptionDialog_Impl::show(Exception &e)
+	void ExceptionDialog_Impl::show(const std::string &message_and_stack_trace)
 	{
 	}
 

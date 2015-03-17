@@ -60,7 +60,7 @@ private:
 class ExceptionDialog_Impl
 {
 public:
-	static void show(Exception &e);
+	static void show(const std::string &message_and_stack_trace);
 };
 
 #endif

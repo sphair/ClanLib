@@ -60,33 +60,12 @@ void InputDeviceProvider_X11Mouse::on_dispose()
 
 float InputDeviceProvider_X11Mouse::get_x() const
 {
-	Window root_return;
-	Window child_return;
-	int root_x_return;
-	int root_y_return;
-	int win_x_return=0;
-	int win_y_return=0;
-	unsigned int mask_return;
-
-	XQueryPointer(window->get_display(), window->get_window(), &root_return, &child_return,
-		&root_x_return, &root_y_return, &win_x_return, &win_y_return, &mask_return);
-	return win_x_return;
-
+	return static_cast<float>(this->get_position().x);
 }
 
 float InputDeviceProvider_X11Mouse::get_y() const
 {
-	Window root_return;
-	Window child_return;
-	int root_x_return;
-	int root_y_return;
-	int win_x_return=0;
-	int win_y_return=0;
-	unsigned int mask_return;
-
-	XQueryPointer(window->get_display(), window->get_window(), &root_return, &child_return,
-		&root_x_return, &root_y_return, &win_x_return, &win_y_return, &mask_return);
-	return win_y_return;
+	return static_cast<float>(this->get_position().y);
 }
 
 Point InputDeviceProvider_X11Mouse::get_position() const
@@ -101,7 +80,7 @@ Point InputDeviceProvider_X11Mouse::get_position() const
 
 	XQueryPointer(window->get_display(), window->get_window(), &root_return, &child_return,
 		&root_x_return, &root_y_return, &win_x_return, &win_y_return, &mask_return);
-	return (Point(win_x_return, win_y_return));
+	return { win_x_return, win_y_return };
 }
 
 bool InputDeviceProvider_X11Mouse::get_keycode(int keycode) const
@@ -154,6 +133,9 @@ int InputDeviceProvider_X11Mouse::get_button_count() const
 
 void InputDeviceProvider_X11Mouse::set_position(float x, float y)
 {
+	x *= window->get_pixel_ratio();
+	y *= window->get_pixel_ratio();
+
 	XWarpPointer(window->get_display(), None, window->get_window(), 0,0, 0,0, x,y);
 }
 
