@@ -553,8 +553,7 @@ namespace clan
 			sig_scroll();
 			scrollbar->set_needs_layout();
 		}
-		// FIXME - The scroll timer should work with "false" as a parameter. Well, ideally, this timer should be set to repeat outside of this function. But it shows a problem
-		scroll_timer.start(100, true);
+		scroll_timer.start(100, false);
 
 	}
 

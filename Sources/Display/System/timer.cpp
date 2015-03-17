@@ -168,7 +168,13 @@ namespace clan
 				}
 
 				if (remove)
+				{
+					// Since the timer is now stopping, we must notify the implementation that the timer is no longer active, else we will not be able to restart it
+					auto timer_impl = timer->timer_impl.lock();
+					if (timer_impl)
+						timer_impl->active.reset();
 					it = timers.erase(it);
+				}
 				else
 					++it;
 			}
