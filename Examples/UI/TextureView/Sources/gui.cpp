@@ -119,10 +119,10 @@ GUI::GUI()
 	scrollbar->set_horizontal();
 	scrollbar->style()->set("flex: 0 0 main-size");
 	scrollbar->style()->set("background: rgb(232, 232, 236)");
-	//scrollbar->track()->style()->set("padding: 0 4px");
-	//scrollbar->track()->style()->set("background: rgb(208, 209, 215)");
-	//scrollbar->thumb()->style()->set("padding: 0 4px");
-	//scrollbar->thumb()->style()->set("background: rgb(208, 209, 215)");
+	scrollbar->track()->style()->set("padding: 0 4px");
+	scrollbar->track()->style()->set("background: rgb(255, 0, 0)");
+	scrollbar->thumb()->style()->set("padding: 0 4px");
+	scrollbar->thumb()->style()->set("background: rgb(0, 0, 255)");
 
 	scrollbar->set_range(0.0, 1.0);
 	scrollbar->set_position(0.5);
