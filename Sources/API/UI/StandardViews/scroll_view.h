@@ -51,10 +51,9 @@ namespace clan
 		std::shared_ptr<ScrollBarView> scrollbar_y_view() const;
 		
 		std::shared_ptr<View> content_view() const;
-		void set_content_view(std::shared_ptr<View> view);
 		
-		OverflowMode overflow_x() const;
-		OverflowMode overflow_y() const;
+		ContentOverflow overflow_x() const;
+		ContentOverflow overflow_y() const;
 		void set_overflow_x(ContentOverflow value);
 		void set_overflow_y(ContentOverflow value);
 		void set_overflow(ContentOverflow value_x, ContentOverflow value_y);
