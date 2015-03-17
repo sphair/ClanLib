@@ -38,7 +38,7 @@ namespace clan
 	{
 	public:
 		BackgroundPropertyParser() : StylePropertyParser({ "background" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 
 	private:
 		bool parse_bgcolor(StyleValue &bgcolor, size_t &parse_pos, const std::vector<StyleToken> &tokens);
@@ -53,55 +53,55 @@ namespace clan
 	{
 	public:
 		BackgroundAttachmentPropertyParser() : StylePropertyParser({ "background-attachment" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 
 	class BackgroundClipPropertyParser : public StylePropertyParser
 	{
 	public:
 		BackgroundClipPropertyParser() : StylePropertyParser({ "background-clip" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 
 	class BackgroundColorPropertyParser : public StylePropertyParser
 	{
 	public:
 		BackgroundColorPropertyParser() : StylePropertyParser({ "background-color" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 
 	class BackgroundImagePropertyParser : public StylePropertyParser
 	{
 	public:
 		BackgroundImagePropertyParser() : StylePropertyParser({ "background-image" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 
 	class BackgroundOriginPropertyParser : public StylePropertyParser
 	{
 	public:
 		BackgroundOriginPropertyParser() : StylePropertyParser({ "background-origin" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 
 	class BackgroundPositionPropertyParser : public StylePropertyParser
 	{
 	public:
 		BackgroundPositionPropertyParser() : StylePropertyParser({ "background-position" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 
 	class BackgroundRepeatPropertyParser : public StylePropertyParser
 	{
 	public:
 		BackgroundRepeatPropertyParser() : StylePropertyParser({ "background-repeat" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 
 	class BackgroundSizePropertyParser : public StylePropertyParser
 	{
 	public:
 		BackgroundSizePropertyParser() : StylePropertyParser({ "background-size" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 }

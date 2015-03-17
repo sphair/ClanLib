@@ -38,48 +38,48 @@ namespace clan
 	{
 	public:
 		LayoutPropertyParser() : StylePropertyParser({ "layout" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 
 	class PositionPropertyParser : public StylePropertyParser
 	{
 	public:
 		PositionPropertyParser() : StylePropertyParser({ "position" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 
 	class LeftPropertyParser : public StylePropertyParser
 	{
 	public:
 		LeftPropertyParser() : StylePropertyParser({ "left" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 
 	class TopPropertyParser : public StylePropertyParser
 	{
 	public:
 		TopPropertyParser() : StylePropertyParser({ "top" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 
 	class RightPropertyParser : public StylePropertyParser
 	{
 	public:
 		RightPropertyParser() : StylePropertyParser({ "right" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 
 	class BottomPropertyParser : public StylePropertyParser
 	{
 	public:
 		BottomPropertyParser() : StylePropertyParser({ "bottom" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 
 	class ZIndexPropertyParser : public StylePropertyParser
 	{
 	public:
 		ZIndexPropertyParser() : StylePropertyParser({ "z-index" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 }

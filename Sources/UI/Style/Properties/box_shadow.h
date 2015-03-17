@@ -38,6 +38,6 @@ namespace clan
 	{
 	public:
 		BoxShadowPropertyParser() : StylePropertyParser({ "box-shadow" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 }

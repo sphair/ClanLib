@@ -44,7 +44,6 @@ namespace clan
 	class Font;
 	class Colorf;
 	class ImageSource;
-	class StylePropertyInitializerValue;
 
 	enum class StyleValueType
 	{

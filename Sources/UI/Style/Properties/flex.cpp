@@ -51,7 +51,7 @@ namespace clan
 	FlexWrapPropertyParser style_parser_flex_wrap;
 	OrderPropertyParser style_parser_order;
 
-	void FlexPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void FlexPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -189,7 +189,7 @@ namespace clan
 		return true;
 	}
 
-	void FlexBasisPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void FlexBasisPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -234,7 +234,7 @@ namespace clan
 		setter->set_value("flex-basis", flex_basis);
 	}
 
-	void FlexDirectionPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void FlexDirectionPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -265,7 +265,7 @@ namespace clan
 		setter->set_value("flex-direction", flex_direction);
 	}
 
-	void FlexFlowPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void FlexFlowPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -354,7 +354,7 @@ namespace clan
 		return true;
 	}
 
-	void FlexGrowPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void FlexGrowPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -381,7 +381,7 @@ namespace clan
 		setter->set_value("flex-grow", flex_grow);
 	}
 
-	void FlexShrinkPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void FlexShrinkPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -406,7 +406,7 @@ namespace clan
 		}
 	}
 
-	void FlexWrapPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void FlexWrapPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -435,7 +435,7 @@ namespace clan
 		setter->set_value("flex-wrap", flex_wrap);
 	}
 
-	void OrderPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void OrderPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 

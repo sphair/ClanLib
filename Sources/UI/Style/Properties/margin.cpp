@@ -43,7 +43,7 @@ namespace clan
 	MarginPropertyParser style_parser_margin;
 	MarginLTRBPropertyParser style_parser_margin_ltrb;
 
-	void MarginPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void MarginPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -155,7 +155,7 @@ namespace clan
 		}
 	}
 
-	void MarginLTRBPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void MarginLTRBPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 

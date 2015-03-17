@@ -88,9 +88,7 @@ namespace clan
 
 	void Style::set(const std::string &properties)
 	{
-		//TODO: Remove StylePropertyInitializerValue
-		std::initializer_list<StylePropertyInitializerValue> args;
-		StyleProperty::parse(impl.get(), properties, args);
+		StyleProperty::parse(impl.get(), properties);
 	}
 
 	bool Style::has(const std::string &property_name) const

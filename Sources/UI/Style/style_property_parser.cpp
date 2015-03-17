@@ -1103,7 +1103,7 @@ namespace clan
 		}
 	}
 
-	void StyleProperty::parse(StylePropertySetter *setter, const std::string &properties, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void StyleProperty::parse(StylePropertySetter *setter, const std::string &properties)
 	{
 		StyleTokenizer tokenizer(properties);
 		StyleToken token;
@@ -1124,7 +1124,7 @@ namespace clan
 
 					auto it = style_parsers().find(name);
 					if (it != style_parsers().end())
-						it->second->parse(setter, name, parser, args);
+						it->second->parse(setter, name, parser);
 				}
 				else
 				{

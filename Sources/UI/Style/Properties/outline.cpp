@@ -44,7 +44,7 @@ namespace clan
 	OutlineStylePropertyParser style_parser_outline_style;
 	OutlineWidthPropertyParser style_parser_outline_width;
 
-	void OutlinePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void OutlinePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -182,7 +182,7 @@ namespace clan
 		setter->set_value("outline-color", outline_color);
 	}
 
-	void OutlineColorPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void OutlineColorPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -221,7 +221,7 @@ namespace clan
 		setter->set_value("outline-color", outline_color);
 	}
 
-	void OutlineStylePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void OutlineStylePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -264,7 +264,7 @@ namespace clan
 		setter->set_value("outline-style", outline_style);
 	}
 
-	void OutlineWidthPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void OutlineWidthPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 

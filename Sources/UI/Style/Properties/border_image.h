@@ -38,7 +38,7 @@ namespace clan
 	{
 	public:
 		BorderImagePropertyParser() : StylePropertyParser({ "border-image" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 
 	private:
 		bool parse_source(StyleValue &border_image_source, size_t &parse_pos, const std::vector<StyleToken> &tokens);
@@ -52,34 +52,34 @@ namespace clan
 	{
 	public:
 		BorderImageOutsetPropertyParser() : StylePropertyParser({ "border-image-outset" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 
 	class BorderImageRepeatPropertyParser : public StylePropertyParser
 	{
 	public:
 		BorderImageRepeatPropertyParser() : StylePropertyParser({ "border-image-repeat" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 
 	class BorderImageSlicePropertyParser : public StylePropertyParser
 	{
 	public:
 		BorderImageSlicePropertyParser() : StylePropertyParser({ "border-image-slice" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 
 	class BorderImageSourcePropertyParser : public StylePropertyParser
 	{
 	public:
 		BorderImageSourcePropertyParser() : StylePropertyParser({ "border-image-source" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 
 	class BorderImageWidthPropertyParser : public StylePropertyParser
 	{
 	public:
 		BorderImageWidthPropertyParser() : StylePropertyParser({ "border-image-width" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 }

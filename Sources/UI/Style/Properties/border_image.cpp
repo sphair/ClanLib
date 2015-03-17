@@ -59,7 +59,7 @@ namespace clan
 	BorderImageSourcePropertyParser style_parser_border_image_source;
 	BorderImageWidthPropertyParser style_parser_border_image_width;
 
-	void BorderImagePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BorderImagePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -425,7 +425,7 @@ namespace clan
 		return true;
 	}
 
-	void BorderImageOutsetPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BorderImageOutsetPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -498,7 +498,7 @@ namespace clan
 		setter->set_value("border-image-outset-left", border_image_outset_left);
 	}
 
-	void BorderImageRepeatPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BorderImageRepeatPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -562,7 +562,7 @@ namespace clan
 		}
 	}
 
-	void BorderImageSlicePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BorderImageSlicePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -650,7 +650,7 @@ namespace clan
 		}
 	}
 
-	void BorderImageSourcePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BorderImageSourcePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -678,7 +678,7 @@ namespace clan
 		}
 	}
 
-	void BorderImageWidthPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BorderImageWidthPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
