@@ -32,25 +32,43 @@
 
 namespace clan
 {
+	enum class ContentOverflow
+	{
+		hidden,
+		scroll,
+		automatic
+	};
+	
+	class ScrollBarView;
+	class ScrollViewImpl;
+	
 	class ScrollView : public View
 	{
 	public:
+		ScrollView();
+		
+		std::shared_ptr<ScrollBarView> scrollbar_x_view() const;
+		std::shared_ptr<ScrollBarView> scrollbar_y_view() const;
+		
+		std::shared_ptr<View> content_view() const;
+		void set_content_view(std::shared_ptr<View> view);
+		
+		OverflowMode overflow_x() const;
+		OverflowMode overflow_y() const;
+		void set_overflow_x(ContentOverflow value);
+		void set_overflow_y(ContentOverflow value);
+		void set_overflow(ContentOverflow value_x, ContentOverflow value_y);
+		
 		Pointf content_offset() const;
 		void set_content_offset(const Pointf &offset, bool animated = false);
-
-		Pointf content_size() const;
-		void set_content_size(const Pointf &value);
-
-		bool paging_enabled() const;
-		void set_paging_enabled(bool value);
-
-		float zoom_scale() const;
-		void set_zoom_scale(float value, bool animated = false);
-
-		float maximum_zoom_scale() const;
-		void set_maximum_zoom_scale(float value);
-
-		float minimum_zoom_scale() const;
-		void set_minimum_zoom_scale(float value);
+		
+		void layout_subviews(Canvas &canvas) override;
+		float get_preferred_width(Canvas &canvas) override;
+		float get_preferred_height(Canvas &canvas, float width) override;
+		float get_first_baseline_offset(Canvas &canvas, float width) override;
+		float get_last_baseline_offset(Canvas &canvas, float width) override;
+		
+	private:
+		std::unique_ptr<ScrollViewImpl> impl;
 	};
 }
