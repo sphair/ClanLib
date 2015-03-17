@@ -123,6 +123,8 @@ GUI::GUI()
 	scrollbar->track()->style()->set("background: rgb(255, 0, 0)");
 	scrollbar->thumb()->style()->set("padding: 0 4px");
 	scrollbar->thumb()->style()->set("background: rgb(0, 0, 255)");
+	scrollbar->thumb_grip()->style()->set("padding: 0 4px");
+	scrollbar->thumb_grip()->style()->set("background: rgb(0, 255, 0)");
 
 	scrollbar->set_range(0.0, 1.0);
 	scrollbar->set_position(0.5);
