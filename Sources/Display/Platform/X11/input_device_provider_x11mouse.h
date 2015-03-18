@@ -66,7 +66,7 @@ public:
 	float get_y() const override;
 
 	/// \brief Returns the x and y position of the device.
-	Point get_position() const;
+	Pointf get_position() const;
 
 	/// \brief Returns true if the passed key code is down for this device.
 	bool get_keycode(int keycode) const override;

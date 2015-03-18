@@ -112,14 +112,8 @@ namespace clan
 		}
 	}
 
-	void WindowView_Impl::window_pointer_event(PointerEvent &e_window)
+	void WindowView_Impl::window_pointer_event(PointerEvent &e)
 	{
-		PointerEvent e = e_window;
-		Pointf pointer_pos = e.pos(window_view);
-		pointer_pos /= window_view->get_display_window().get_gc().get_pixel_ratio();
-		pointer_pos -= window_view->geometry().content.get_top_left();
-		e.set_pos(window_view, pointer_pos);
-
 		std::shared_ptr<View> view_above_cursor = window_view->find_view_at(e.pos(window_view));
 
 		if (view_above_cursor != hot_view)

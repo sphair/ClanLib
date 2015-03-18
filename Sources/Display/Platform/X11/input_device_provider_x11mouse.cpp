@@ -60,15 +60,15 @@ void InputDeviceProvider_X11Mouse::on_dispose()
 
 float InputDeviceProvider_X11Mouse::get_x() const
 {
-	return static_cast<float>(this->get_position().x);
+	return get_position().x;
 }
 
 float InputDeviceProvider_X11Mouse::get_y() const
 {
-	return static_cast<float>(this->get_position().y);
+	return get_position().y;
 }
 
-Point InputDeviceProvider_X11Mouse::get_position() const
+Pointf InputDeviceProvider_X11Mouse::get_position() const
 {
 	Window root_return;
 	Window child_return;
@@ -80,7 +80,7 @@ Point InputDeviceProvider_X11Mouse::get_position() const
 
 	XQueryPointer(window->get_display(), window->get_window(), &root_return, &child_return,
 		&root_x_return, &root_y_return, &win_x_return, &win_y_return, &mask_return);
-	return { win_x_return, win_y_return };
+	return { win_x_return / window->get_pixel_ratio(), win_y_return / window->get_pixel_ratio() };
 }
 
 bool InputDeviceProvider_X11Mouse::get_keycode(int keycode) const
