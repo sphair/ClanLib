@@ -98,13 +98,13 @@ namespace clan
 			{
 				for (int dx = x; dx < (w + x); dx += image_width)
 				{
-					image.draw(canvas, Rect(dx, dy, dx + image_width, dy + image_height), Rect(sx, sy, sx + sw, sy + sh));
+					image.draw(canvas, Rect(sx, sy, sx + sw, sy + sh), Rect(dx, dy, dx + image_width, dy + image_height));
 				}
 			}
 		}
 		else
 		{
-			image.draw(canvas, Rect(x, y, x + w, y + h), Rect(sx, sy, sx + sw, sy + sh));
+			image.draw(canvas, Rect(sx, sy, sx + sw, sy + sh), Rect(x, y, x + w, y + h));
 			// Support me
 		}
 	}
