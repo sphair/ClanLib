@@ -647,6 +647,7 @@ namespace clan
 			setter->set_value("border-image-slice-right", border_image_slice_right);
 			setter->set_value("border-image-slice-bottom", border_image_slice_bottom);
 			setter->set_value("border-image-slice-left", border_image_slice_left);
+			setter->set_value("border-image-slice-center", border_image_slice_center);
 		}
 	}
 
