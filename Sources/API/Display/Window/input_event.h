@@ -95,8 +95,11 @@ public:
 	/// \brief Device that event originates from.
 	InputDevice device;
 
-	/// \brief Mouse position at event time.
-	Pointf mouse_pos;
+	/// \brief Mouse actual position at event time.
+	Point mouse_pos;
+
+	/// \brief Mouse device-independent position at event time.
+	Pointf mouse_dip_pos;
 
 	/// \brief Axis position.
 	double axis_pos;

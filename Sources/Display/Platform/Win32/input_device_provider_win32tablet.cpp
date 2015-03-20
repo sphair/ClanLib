@@ -77,14 +77,10 @@ InputDeviceProvider_Win32Tablet::~InputDeviceProvider_Win32Tablet()
 /////////////////////////////////////////////////////////////////////////////
 // InputDeviceProvider_Win32Tablet Attributes:
 
-float InputDeviceProvider_Win32Tablet::get_x() const
-{
-	return mouse_pos.x;
-}
 
-float InputDeviceProvider_Win32Tablet::get_y() const
+Point InputDeviceProvider_Win32Tablet::get_position() const
 {
-	return mouse_pos.y;
+	return mouse_pos;
 }
 
 bool InputDeviceProvider_Win32Tablet::get_keycode(int keycode) const
@@ -372,8 +368,8 @@ BOOL InputDeviceProvider_Win32Tablet::process_proximity( WPARAM wParam, LPARAM l
 	e.alt = false;
 	e.ctrl = false;
 	e.shift = false;
-	e.mouse_pos.x = get_x();
-	e.mouse_pos.y = get_y();
+	e.mouse_pos = get_position();
+	e.mouse_dip_pos = get_dip_position();
 
 	e.type = InputEvent::proximity_change;
 

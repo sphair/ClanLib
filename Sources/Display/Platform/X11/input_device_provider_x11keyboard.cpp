@@ -140,7 +140,8 @@ void InputDeviceProvider_X11Keyboard::received_keyboard_input(XKeyEvent &event)
 	else
 		key.type = InputEvent::released;
 
-	key.mouse_pos = Pointf(window->get_mouse_position());
+	key.mouse_pos = Point(window->get_mouse_position());
+	key.mouse_dip_pos = Pointf(window->get_mouse_position()) / window->get_pixel_ratio();
 
 	KeySym key_symbol = XkbKeycodeToKeysym(window->get_display(), key_code, 0, 0);
 

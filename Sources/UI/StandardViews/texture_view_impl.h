@@ -78,7 +78,7 @@ namespace clan
 		void transform_on_mouse_up(const clan::InputEvent &);
 		void transform_on_mouse_move(const clan::InputEvent &);
 
-		clan::InputEvent transform_input_event(const clan::InputEvent &event) { InputEvent e = event; e.mouse_pos = Vec2f(transform_mouse_matrix.get_transformed_point(Vec3f(e.mouse_pos.x, e.mouse_pos.y, 0))); return e; }
+		clan::InputEvent transform_input_event(const clan::InputEvent &event) { InputEvent e = event; e.mouse_dip_pos = Vec2f(transform_mouse_matrix.get_transformed_point(Vec3f(e.mouse_dip_pos.x, e.mouse_dip_pos.y, 0))); return e; }
 
 		int capture_down_counter = 0;
 		std::shared_ptr<View> captured_view;
