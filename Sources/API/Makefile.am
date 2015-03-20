@@ -326,6 +326,7 @@ clanUI_includes = \
 	UI/StandardViews/text_field_view.h \
 	UI/StandardViews/image_view.h \
 	UI/StandardViews/scrollbar_view.h \
+	UI/StandardViews/slider_view.h \
 	UI/StandardViews/window_view.h \
 	UI/StandardViews/spinner_view.h \
 	UI/StandardViews/texture_view.h \

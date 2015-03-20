@@ -137,6 +137,29 @@ HelloWorld::HelloWorld()
 	gradient_box->style()->set("box-shadow: 7px 7px 7px rgba(0,0,0,0.2)");
 	body->add_subview(gradient_box);
 
+	std::shared_ptr<clan::SliderView> slider = std::make_shared<clan::SliderView>();
+	slider->set_horizontal();
+	slider->style()->set("background: rgb(200, 200, 255)");
+	slider->track()->style()->set("background: rgb(255, 0, 0)");
+	slider->track()->style()->set("border-image-slice: 1 2 1 1 fill;");
+	slider->track()->style()->set("border-image-width:1px 2px 1px 1px;");
+	slider->track()->style()->set("border-image-repeat:stretch;");
+	slider->track()->style()->set("border-image-source:url('Resources/slider_track.png');");
+	slider->thumb()->style()->set("width:11px;");
+	slider->thumb()->style()->set("height:17px;");
+	slider->thumb()->style()->set("border-image-slice:9 3 9 2 fill;");
+	slider->thumb()->style()->set("border-image-width:9px 3px 9px 2px;");
+	slider->thumb()->style()->set("border-image-repeat:stretch;");
+	slider->thumb()->style()->set("border-image-source:url('Resources/slider_horizontal_thumb_normal.png');");
+	slider->set_min_position(0);
+	slider->set_max_position(1000);
+	slider->set_tick_count(100);
+	slider->set_page_step(100);
+	slider->set_lock_to_ticks(false);
+	slider->set_position(slider->max_position()/2);
+
+	body->add_subview(slider);
+
 	// Make our window visible
 	root->show();
 }
