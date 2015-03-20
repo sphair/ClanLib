@@ -58,17 +58,7 @@ void InputDeviceProvider_X11Mouse::on_dispose()
 /////////////////////////////////////////////////////////////////////////////
 // InputDeviceProvider_X11Mouse attributes:
 
-float InputDeviceProvider_X11Mouse::get_x() const
-{
-	return get_position().x;
-}
-
-float InputDeviceProvider_X11Mouse::get_y() const
-{
-	return get_position().y;
-}
-
-Pointf InputDeviceProvider_X11Mouse::get_position() const
+Point InputDeviceProvider_X11Mouse::get_position() const
 {
 	Window root_return;
 	Window child_return;
@@ -80,7 +70,13 @@ Pointf InputDeviceProvider_X11Mouse::get_position() const
 
 	XQueryPointer(window->get_display(), window->get_window(), &root_return, &child_return,
 		&root_x_return, &root_y_return, &win_x_return, &win_y_return, &mask_return);
-	return { win_x_return / window->get_pixel_ratio(), win_y_return / window->get_pixel_ratio() };
+
+	return { win_x_return, win_y_return };
+}
+
+Pointf InputDeviceProvider_X11Mouse::get_dip_position() const
+{
+	return Pointf(get_position()) / window->get_pixel_ratio();
 }
 
 bool InputDeviceProvider_X11Mouse::get_keycode(int keycode) const
@@ -131,12 +127,17 @@ int InputDeviceProvider_X11Mouse::get_button_count() const
 /////////////////////////////////////////////////////////////////////////////
 // InputDeviceProvider_X11Mouse operations:
 
-void InputDeviceProvider_X11Mouse::set_position(float x, float y)
+void InputDeviceProvider_X11Mouse::set_position(int x, int y)
+{
+	XWarpPointer(window->get_display(), None, window->get_window(), 0,0, 0,0, x,y);
+}
+
+void InputDeviceProvider_X11Mouse::set_dip_position(float x, float y)
 {
 	x *= window->get_pixel_ratio();
 	y *= window->get_pixel_ratio();
-
-	XWarpPointer(window->get_display(), None, window->get_window(), 0,0, 0,0, x,y);
+	
+	set_position(x, y);
 }
 
 void InputDeviceProvider_X11Mouse::received_mouse_input(XButtonEvent &event)
@@ -186,7 +187,8 @@ void InputDeviceProvider_X11Mouse::received_mouse_input(XButtonEvent &event)
 
 	// Prepare event to be emitted:
 	InputEvent key;
-	key.mouse_pos = Pointf(mouse_pos);
+	key.mouse_pos = mouse_pos;
+	key.mouse_dip_pos = Pointf(mouse_pos) / window->get_pixel_ratio();
 
 	key.id = (InputCode)id;
 	if (event.type == ButtonPress)
@@ -227,7 +229,8 @@ void InputDeviceProvider_X11Mouse::received_mouse_move(XMotionEvent &event)
 		// Prepare event to be emitted:
 		InputEvent key;
 		key.type = InputEvent::pointer_moved;
-		key.mouse_pos = Pointf(mouse_pos);
+		key.mouse_pos = mouse_pos;
+		key.mouse_dip_pos = Pointf(mouse_pos) / window->get_pixel_ratio();
 		window->get_keyboard_modifiers(key.shift, key.alt, key.ctrl);
 
 		// Fire off signal

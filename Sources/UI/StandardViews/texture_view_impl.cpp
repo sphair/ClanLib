@@ -191,12 +191,12 @@ namespace clan
 		Key key = decode_ic(e.id);
 		int repeat_count = e.repeat_count;
 		const std::string text = e.str;
-		const Pointf pointer_pos = e.mouse_pos;
+		const Pointf pointer_dip_pos = e.mouse_dip_pos;
 		bool alt_down = e.alt;
 		bool shift_down = e.shift;
 		bool ctrl_down = e.ctrl;
 		bool cmd_down = false;
-		KeyEvent key_event(type, key, repeat_count, text, pointer_pos, alt_down, shift_down, ctrl_down, cmd_down);
+		KeyEvent key_event(type, key, repeat_count, text, pointer_dip_pos, alt_down, shift_down, ctrl_down, cmd_down);
 		window_key_event(key_event);
 	}
 
@@ -206,12 +206,12 @@ namespace clan
 		Key key = decode_ic(e.id);
 		int repeat_count = e.repeat_count;
 		const std::string text = e.str;
-		const Pointf pointer_pos = e.mouse_pos;
+		const Pointf pointer_dip_pos = e.mouse_dip_pos;
 		bool alt_down = e.alt;
 		bool shift_down = e.shift;
 		bool ctrl_down = e.ctrl;
 		bool cmd_down = false;
-		KeyEvent key_event(type, key, repeat_count, text, pointer_pos, alt_down, shift_down, ctrl_down, cmd_down);
+		KeyEvent key_event(type, key, repeat_count, text, pointer_dip_pos, alt_down, shift_down, ctrl_down, cmd_down);
 		window_key_event(key_event);
 	}
 
@@ -219,12 +219,12 @@ namespace clan
 	{
 		PointerEventType type = PointerEventType::press;
 		PointerButton button = decode_id(e.id);
-		const Pointf pos = e.mouse_pos;
+		const Pointf dip_pos = e.mouse_dip_pos;
 		bool alt_down = e.alt;
 		bool shift_down = e.shift;
 		bool ctrl_down = e.ctrl;
 		bool cmd_down = false;
-		PointerEvent pointer_event(type, button, pos, alt_down, shift_down, ctrl_down, cmd_down);
+		PointerEvent pointer_event(type, button, dip_pos, alt_down, shift_down, ctrl_down, cmd_down);
 		window_pointer_event(pointer_event);
 	}
 
@@ -232,12 +232,12 @@ namespace clan
 	{
 		PointerEventType type = PointerEventType::double_click;
 		PointerButton button = decode_id(e.id);
-		const Pointf pos = e.mouse_pos;
+		const Pointf dip_pos = e.mouse_dip_pos;
 		bool alt_down = e.alt;
 		bool shift_down = e.shift;
 		bool ctrl_down = e.ctrl;
 		bool cmd_down = false;
-		PointerEvent pointer_event(type, button, pos, alt_down, shift_down, ctrl_down, cmd_down);
+		PointerEvent pointer_event(type, button, dip_pos, alt_down, shift_down, ctrl_down, cmd_down);
 		window_pointer_event(pointer_event);
 	}
 
@@ -245,18 +245,18 @@ namespace clan
 	{
 		PointerEventType type = PointerEventType::release;
 		PointerButton button = decode_id(e.id);
-		const Pointf pos = e.mouse_pos;
+		const Pointf dip_pos = e.mouse_dip_pos;
 		bool alt_down = e.alt;
 		bool shift_down = e.shift;
 		bool ctrl_down = e.ctrl;
 		bool cmd_down = false;
-		PointerEvent pointer_event(type, button, pos, alt_down, shift_down, ctrl_down, cmd_down);
+		PointerEvent pointer_event(type, button, dip_pos, alt_down, shift_down, ctrl_down, cmd_down);
 		window_pointer_event(pointer_event);
 	}
 
 	void TextureView_Impl::on_mouse_move(const clan::InputEvent &clan_event)
 	{
-		PointerEvent e(PointerEventType::move, PointerButton::none, clan_event.mouse_pos, clan_event.alt, clan_event.shift, clan_event.ctrl, false/*clan_event.cmd*/);
+		PointerEvent e(PointerEventType::move, PointerButton::none, clan_event.mouse_dip_pos, clan_event.alt, clan_event.shift, clan_event.ctrl, false/*clan_event.cmd*/);
 		window_pointer_event(e);
 	}
 

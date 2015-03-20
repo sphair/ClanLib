@@ -56,7 +56,7 @@ InputDeviceProvider_Win32Mouse::~InputDeviceProvider_Win32Mouse()
 /////////////////////////////////////////////////////////////////////////////
 // InputDeviceProvider_Win32Mouse attributes:
 
-float InputDeviceProvider_Win32Mouse::get_x() const
+Point InputDeviceProvider_Win32Mouse::get_position() const
 {
 	throw_if_disposed();
 	POINT cursor_pos;
@@ -65,10 +65,10 @@ float InputDeviceProvider_Win32Mouse::get_x() const
 	BOOL res = ScreenToClient(window->get_hwnd(), &cursor_pos);
 	if (res == FALSE) return 0;
 
-	return cursor_pos.x;
+	return Point{ cursor_pos.x, cursor_pos.y };
 }
 
-float InputDeviceProvider_Win32Mouse::get_y() const
+Pointf InputDeviceProvider_Win32Mouse::get_dip_position() const
 {
 	throw_if_disposed();
 	POINT cursor_pos;
@@ -76,8 +76,9 @@ float InputDeviceProvider_Win32Mouse::get_y() const
 
 	BOOL res = ScreenToClient(window->get_hwnd(), &cursor_pos);
 	if (res == FALSE) return 0;
-
-	return cursor_pos.y;
+	
+	Pointf pos = Pointf(cursor_pos.x, cursor_pos.y) / window->get_pixel_ratio();
+	return pos;
 }
 
 bool InputDeviceProvider_Win32Mouse::get_keycode(int keycode) const
@@ -135,15 +136,23 @@ int InputDeviceProvider_Win32Mouse::get_button_count() const
 /////////////////////////////////////////////////////////////////////////////
 // InputDeviceProvider_Win32Mouse operations:
 
-void InputDeviceProvider_Win32Mouse::set_position(float x, float y)
+void InputDeviceProvider_Win32Mouse::set_position(int x, int y)
 {
 	throw_if_disposed();
 	POINT pt;
-	pt.x = (int)std::round(x * window->get_pixel_ratio());
-	pt.y = (int)std::round(y * window->get_pixel_ratio());
+	pt.x = x;
+	pt.y = y;
 
 	ClientToScreen(window->get_hwnd(), &pt);
 	SetCursorPos(pt.x, pt.y);
+}
+
+void InputDeviceProvider_Win32Mouse::set_dip_position(float x, float y)
+{
+	set_position(
+		(int)std::round(x * window->get_pixel_ratio()),
+		(int)std::round(y * window->get_pixel_ratio())
+	);
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -64,44 +64,33 @@ public:
 /// \{
 
 public:
-	/// \brief Returns the input device type.
-	InputDevice::Type get_type() const { return InputDevice::tablet; }
+	InputDevice::Type get_type() const override { return InputDevice::tablet; }
 
-	/// \brief Returns the x position of the device.
-	float get_x() const;
+	Point get_position() const override;
 
-	/// \brief Returns the y position of the device.
-	float get_y() const;
+	/// Retrieves the device-independant x and y point of the device.
+	/// \warn Not implemented. TODO Query DPI from tablet?
+	/// \return An empty Pointf.
+	Pointf get_dip_position() const override { return Pointf(); }
 
-	/// \brief Returns true if the passed key code is down for this device.
-	bool get_keycode(int keycode) const;
+	bool get_keycode(int keycode) const override;
 
-	/// \brief Key name for specified identifier (A, B, C, Space, Enter, Backspace).
-	std::string get_key_name(int id) const;
+	std::string get_key_name(int id) const override;
 
-	/// \brief Returns the the current position of a joystick axis.
-	float get_axis(int index) const;
+	float get_axis(int index) const override;
 
-	/// \brief Returns the name of the device (i.e. 'Microsoft Sidewinder 3D').
-	std::string get_name() const;
+	std::string get_name() const override;
 
-	/// \brief Return the hardware id/device for this device (i.e. /dev/input/js0)
-	std::string get_device_name() const;
+	std::string get_device_name() const override;
 
-	/// \brief Returns the number of axes available on this device.
-	std::vector<int> get_axis_ids() const;
+	std::vector<int> get_axis_ids() const override;
 
-	/// \brief Returns the number of buttons available on this device.
-	/** <p>If used on a keyboard, this function returns -1.</p>*/
-	int get_button_count() const;
+	int get_button_count() const override;
 
-	/// \brief Returns true if a tablet device is connected and was initialised successfully.
-	bool device_present() const;
+	bool device_present() const override;
 
-	/// \brief Returns true if a tablet stylus is in proximity (hovering close enough over the tablet surface).
-	bool in_proximity() const;
+	bool in_proximity() const override;
 
-	/// \brief Returns true if the tablet context is currently enabled (enabled and on top in context overlap order).
 	bool is_context_on_top();
 
 /// \}
@@ -109,20 +98,17 @@ public:
 /// \{
 
 public:
-	/// \brief Initialize input device provider.
-	/** <p>The device field of InputEvent should not be set when emitting events.</p>*/
-	void init(Signal<void(const InputEvent &)> *new_sig_provider_event)
+	void init(Signal<void(const InputEvent &)> *new_sig_provider_event) override
 	{
 		sig_provider_event = new_sig_provider_event;
 	}
 
-	/// \brief Sets the position of the device.
-	void set_position(float x, float y);
+	void set_position(int x, int y) override;
 
-	/// \brief Raises the tablet context to the top of the tablet context stack and enables it, or disable the context if false.
+	void set_dip_position(float x, float y) override;
+
 	void set_context_on_top(bool enable);
 
-	/// \brief Checks if tablet context should be moved to another screen.
 	void check_monitor_changed();
 
 	BOOL process_packet(WPARAM wParam, LPARAM lParam);

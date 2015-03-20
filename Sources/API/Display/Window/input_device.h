@@ -111,20 +111,16 @@ public:
 	int string_to_keyid(const std::string &str) const;
 
 	/// \brief Returns true if the passed key code is down for this device.
-	/** <p>See keys.h for list of key codes.</p>*/
+	/// See `keys.h` for list of key codes.
 	bool get_keycode(int keycode) const;
 
-	/// \brief Returns the position (x,y) of the device.
-	/** <p>Only valid for pointer devices.</p>*/
-	Pointf get_position() const;
+	/// \brief Returns the actual x and y position of the device.
+	/// \note This function is currently only valid for mouse.
+	Point get_position() const;
 
-	/// \brief Returns the x position of the device.
-	/** <p>Only valid for pointer devices.</p>*/
-	float get_x() const;
-
-	/// \brief Returns the y position of the device.
-	/** <p>Only valid for pointer devices.</p>*/
-	float get_y() const;
+	/// \brief Returns the device-independent x and y position of the device.
+	/// \note This function is currently only valid for mouse.
+	Pointf get_dip_position() const;
 
 	/// \brief Returns the the current position of a joystick axis.
 	float get_axis(int axisid) const;
@@ -137,11 +133,11 @@ public:
 	int get_hat(int index) const;
 
 	/// \brief Returns the number of buttons available on this device.
-	/** <p>If used on a keyboard, this function returns -1.</p>*/
+	/// If used on a keyboard, this function returns -1.
 	int get_button_count() const;
 
-	/// \brief Returns true if the input device is in proximity (applicable for tablets).
-	/** <p>Always returns false for non-tablet devices</p>*/
+	/// \brief Returns the input device is in proximity mode. (Tablet only)
+	/// If used on devices other than the tablet, returns false.
 	bool in_proximity() const;
 
 /// \}
@@ -151,9 +147,11 @@ public:
 public:
 	InputDevice &operator =(const InputDevice &copy);
 
-	/// \brief Sets the position of the device.
-	/** <p>Only valid for mouse.</p>*/
-	void set_position(float x, float y);
+	/// \brief Sets the actual position of the device. (Pointing devices only)
+	void set_position(int x, int y);
+
+	/// \brief Sets the display-independent position of the device. (Pointing devices only)
+	void set_dip_position(float x, float y);
 
 /// \}
 /// \name Signals

@@ -63,9 +63,10 @@ public:
 	/// \brief Returns the input device type.
 	virtual InputDevice::Type get_type() const = 0;
 
-	/// \brief Friendly key name for specified identifier (A, B, Leertaste, Backspace, Mouse Left, ...).
-	/** <p>Note that this key name is localized, meaning it should only be used for menus
-	    where the user view key bindings, and not configuration files and such.</p>*/
+	/// \brief Returns the localized friendly key name for specified identifier (i.e. A, B, Leertaste, Backspace, Mouse Left, ...).
+	/// \note The returned name for the key is localized; it should only be used
+	///       to display the name of the key to the user and not as a key
+	///       identifier inside your key bindings configuration files and such.
 	virtual std::string get_key_name(int id) const = 0;
 
 	/// \brief Returns true if this provider implements keyid to/from string mapping.
@@ -78,16 +79,14 @@ public:
 	virtual int string_to_keyid(const std::string &/* str */) const { return 0; }
 
 	/// \brief Returns true if the passed key code is down for this device.
-	/** <p>See keys.h for list of key codes.</p>*/
+	/// See `keys.h` for list of key codes.
 	virtual bool get_keycode(int keycode) const = 0;
 
-	/// \brief Returns the x position of the device.
-	/** <p>Only valid for mouse.</p>*/
-	virtual float get_x() const = 0;
+	/// \brief Returns the actual x and y position of the device. (Pointing device only)
+	virtual Point get_position() const { return Point(0, 0); }
 
-	/// \brief Returns the y position of the device.
-	/** <p>Only valid for mouse.</p>*/
-	virtual float get_y() const = 0;
+	/// \brief Returns the device-independent x and y position of the device. (Pointing device only)
+	virtual Pointf get_dip_position() const { return Pointf(0.f, 0.f); }
 
 	/// \brief Returns the the current position of a joystick axis.
 	virtual float get_axis(int index) const = 0;
@@ -100,12 +99,12 @@ public:
 	virtual int get_hat(int /* index */) const { return -1; }
 
 	/// \brief Returns the number of buttons available on this device.
-	/** <p>If used on a keyboard, this function returns -1.</p>*/
+	/// If used on a keyboard, this function returns -1.
 	virtual int get_button_count() const = 0;
 
-	/// \brief Returns the input device is in proximity mode. (Atm applicapble only to tablet.)
-	/** <p>If used on other devices than tablet, returns false.</p>*/
-	virtual bool in_proximity() const = 0;
+	/// \brief Returns the input device is in proximity mode. (Tablet only)
+	/// If used on devices other than the tablet, returns false.
+	virtual bool in_proximity() const { return false; }
 
 /// \}
 /// \name Operations
@@ -113,12 +112,15 @@ public:
 
 public:
 	/// \brief Initialize input device provider.
-	/** <p>The device field of InputEvent should not be set when emitting events.</p>
-	    <p>Invoking sig_provider_event is thread safe.</p>*/
+	/// The device field of InputEvent should not be set when emitting events.<
+	/// Invoking sig_provider_event is thread safe.
 	virtual void init(Signal<void(const InputEvent &)> *sig_provider_event) = 0;
 
-	/// \brief Sets the position of the device.
-	virtual void set_position(float x, float y) = 0;
+	/// \brief Sets the actual position of the device. (Pointing devices only)
+	virtual void set_position(int x, int y) { }
+
+	/// \brief Sets the display-independent position of the device. (Pointing devices only)
+	virtual void set_dip_position(float x, float y) { }
 
 /// \}
 /// \name Implementation
