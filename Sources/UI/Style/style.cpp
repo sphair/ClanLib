@@ -140,7 +140,7 @@ namespace clan
 		case StyleValueType::percentage:
 			return StyleValue::from_percentage(impl->prop_number.find(property_name)->second);
 		case StyleValueType::number:
-			return StyleValue::from_percentage(impl->prop_number.find(property_name)->second);
+			return StyleValue::from_number(impl->prop_number.find(property_name)->second);
 		case StyleValueType::color:
 			return StyleValue::from_color(impl->prop_color.find(property_name)->second);
 		case StyleValueType::image:
