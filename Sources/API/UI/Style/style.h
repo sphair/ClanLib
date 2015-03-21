@@ -33,6 +33,7 @@
 #include <vector>
 #include <functional>
 #include <initializer_list>
+#include "../../Core/Text/string_format.h"
 #include "../../Display/2D/color.h"
 
 namespace clan
