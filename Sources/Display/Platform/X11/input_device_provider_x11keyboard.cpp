@@ -87,11 +87,6 @@ std::string InputDeviceProvider_X11Keyboard::get_key_name(int virtual_key) const
 	return buffer;
 }
 
-float InputDeviceProvider_X11Keyboard::get_axis(int index) const
-{
-	return 0.0f;
-}
-
 std::string InputDeviceProvider_X11Keyboard::get_name() const
 {
 	return "System Keyboard";
@@ -100,16 +95,6 @@ std::string InputDeviceProvider_X11Keyboard::get_name() const
 std::string InputDeviceProvider_X11Keyboard::get_device_name() const
 {
 	return "System Keyboard";
-}
-
-std::vector<int> InputDeviceProvider_X11Keyboard::get_axis_ids() const
-{
-	return std::vector<int>();
-}
-
-int InputDeviceProvider_X11Keyboard::get_button_count() const
-{
-	return -1;
 }
 
 void InputDeviceProvider_X11Keyboard::get_keyboard_modifiers(bool &key_shift, bool &key_alt, bool &key_ctrl) const
@@ -140,7 +125,8 @@ void InputDeviceProvider_X11Keyboard::received_keyboard_input(XKeyEvent &event)
 	else
 		key.type = InputEvent::released;
 
-	key.mouse_pos = Pointf(window->get_mouse_position());
+	key.mouse_pos = Pointf(window->get_mouse_position()) / window->get_pixel_ratio();
+	key.mouse_device_pos = window->get_mouse_position();
 
 	KeySym key_symbol = XkbKeycodeToKeysym(window->get_display(), key_code, 0, 0);
 

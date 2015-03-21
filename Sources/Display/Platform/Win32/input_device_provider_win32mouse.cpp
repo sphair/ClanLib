@@ -56,19 +56,12 @@ InputDeviceProvider_Win32Mouse::~InputDeviceProvider_Win32Mouse()
 /////////////////////////////////////////////////////////////////////////////
 // InputDeviceProvider_Win32Mouse attributes:
 
-float InputDeviceProvider_Win32Mouse::get_x() const
+Pointf InputDeviceProvider_Win32Mouse::get_position() const
 {
-	throw_if_disposed();
-	POINT cursor_pos;
-	GetCursorPos(&cursor_pos);
-
-	BOOL res = ScreenToClient(window->get_hwnd(), &cursor_pos);
-	if (res == FALSE) return 0;
-
-	return cursor_pos.x;
+	return Pointf(get_device_position()) / window->get_pixel_ratio();
 }
 
-float InputDeviceProvider_Win32Mouse::get_y() const
+Point InputDeviceProvider_Win32Mouse::get_device_position() const
 {
 	throw_if_disposed();
 	POINT cursor_pos;
@@ -77,7 +70,8 @@ float InputDeviceProvider_Win32Mouse::get_y() const
 	BOOL res = ScreenToClient(window->get_hwnd(), &cursor_pos);
 	if (res == FALSE) return 0;
 
-	return cursor_pos.y;
+	return cursor_pos;
+}
 }
 
 bool InputDeviceProvider_Win32Mouse::get_keycode(int keycode) const
@@ -102,12 +96,6 @@ std::string InputDeviceProvider_Win32Mouse::get_key_name(int id) const
 	return string_format("Mouse button %1", id);
 }
 
-float InputDeviceProvider_Win32Mouse::get_axis(int index) const
-{
-	throw_if_disposed();
-	return 0.0f;
-}
-
 std::string InputDeviceProvider_Win32Mouse::get_name() const
 {
 	throw_if_disposed();
@@ -118,12 +106,6 @@ std::string InputDeviceProvider_Win32Mouse::get_device_name() const
 {
 	throw_if_disposed();
 	return "System Mouse";
-}
-
-std::vector<int> InputDeviceProvider_Win32Mouse::get_axis_ids() const
-{
-	throw_if_disposed();
-	return std::vector<int>();
 }
 
 int InputDeviceProvider_Win32Mouse::get_button_count() const
@@ -137,10 +119,17 @@ int InputDeviceProvider_Win32Mouse::get_button_count() const
 
 void InputDeviceProvider_Win32Mouse::set_position(float x, float y)
 {
+	x *= window->get_pixel_ratio();
+	y *= window->get_pixel_ratio();
+	set_device_position(x, y);
+}
+
+void InputDeviceProvider_Win32Mouse::set_device_position(int x, int y)
+{
 	throw_if_disposed();
 	POINT pt;
-	pt.x = (int)std::round(x * window->get_pixel_ratio());
-	pt.y = (int)std::round(y * window->get_pixel_ratio());
+	pt.x = x;
+	pt.y = y;
 
 	ClientToScreen(window->get_hwnd(), &pt);
 	SetCursorPos(pt.x, pt.y);

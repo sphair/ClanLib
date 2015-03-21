@@ -63,9 +63,11 @@ public:
 	/// \brief Returns the input device type.
 	virtual InputDevice::Type get_type() const = 0;
 
-	/// \brief Friendly key name for specified identifier (A, B, Leertaste, Backspace, Mouse Left, ...).
-	/** <p>Note that this key name is localized, meaning it should only be used for menus
-	    where the user view key bindings, and not configuration files and such.</p>*/
+	/// \brief Retrieves the localized friendly key name for specified identifier (i.e. A, B, Leertaste, Backspace, Mouse Left, ...).
+	/// \note The returned name for the key may be localized by the system; it
+	//        should only be used to display the name of the key to the user
+	//        and not as a key identifier inside key binding configuration
+	//        files and such.
 	virtual std::string get_key_name(int id) const = 0;
 
 	/// \brief Returns true if this provider implements keyid to/from string mapping.
@@ -78,34 +80,33 @@ public:
 	virtual int string_to_keyid(const std::string &/* str */) const { return 0; }
 
 	/// \brief Returns true if the passed key code is down for this device.
-	/** <p>See keys.h for list of key codes.</p>*/
+	/// See `keys.h` for list of key codes.
 	virtual bool get_keycode(int keycode) const = 0;
 
-	/// \brief Returns the x position of the device.
-	/** <p>Only valid for mouse.</p>*/
-	virtual float get_x() const = 0;
+	/// \brief Returns the current device-independent x and y position (DIP) of the device. (Pointing devices only)
+	/// The returned positional value is scaled to the pixel ratio of the display.
+	virtual Pointf get_position() const { return Pointf(0.f, 0.f); }
 
-	/// \brief Returns the y position of the device.
-	/** <p>Only valid for mouse.</p>*/
-	virtual float get_y() const = 0;
+	/// \brief Returns the current device-supplied x and y position of the device. (Pointing devices only)
+	/// The returned positional value is in the scale of the physical pixel on the screen.
+	virtual Point get_device_position() const { return Point(0, 0); }
 
-	/// \brief Returns the the current position of a joystick axis.
-	virtual float get_axis(int index) const = 0;
+	/// \brief Returns the the current position of a joystick axis. (Joysticks only)
+	virtual float get_axis(int index) const { return 0.f; }
 
-	/// \brief Returns the number of axes available on this device.
-	virtual std::vector<int> get_axis_ids() const = 0;
+	/// \brief Returns the number of axes available on this device. (Joysticks only)
+	virtual std::vector<int> get_axis_ids() const { return std::vector<int>(); }
 
-	/// \brief Returns the current position of a joystick hat.
+	/// \brief Returns the current position of a joystick hat. (Joysticks only)
 	/// \return Hat direction in degrees (0-360), or -1 if the hat is centered.
 	virtual int get_hat(int /* index */) const { return -1; }
 
 	/// \brief Returns the number of buttons available on this device.
-	/** <p>If used on a keyboard, this function returns -1.</p>*/
+	/// \warn If used on a keyboard or mouse, this function returns -1.
 	virtual int get_button_count() const = 0;
 
-	/// \brief Returns the input device is in proximity mode. (Atm applicapble only to tablet.)
-	/** <p>If used on other devices than tablet, returns false.</p>*/
-	virtual bool in_proximity() const = 0;
+	/// \brief Returns true if the input device is in proximity mode. (Tablets only)
+	virtual bool in_proximity() const { return false; }
 
 /// \}
 /// \name Operations
@@ -113,12 +114,15 @@ public:
 
 public:
 	/// \brief Initialize input device provider.
-	/** <p>The device field of InputEvent should not be set when emitting events.</p>
-	    <p>Invoking sig_provider_event is thread safe.</p>*/
+	/// The device field of InputEvent should not be set when emitting events.
+	/// Invoking sig_provider_event is thread safe.
 	virtual void init(Signal<void(const InputEvent &)> *sig_provider_event) = 0;
 
-	/// \brief Sets the position of the device.
-	virtual void set_position(float x, float y) = 0;
+	/// \brief Sets the display-independent position of the device. (Pointing devices only)
+	virtual void set_position(float x, float y) { }
+
+	/// \brief Sets the actual position of the device. (Pointing devices only)
+	virtual void set_device_position(int x, int y) { }
 
 /// \}
 /// \name Implementation

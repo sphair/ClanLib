@@ -1643,7 +1643,7 @@ Point X11Window::get_mouse_position() const
 	{
 		return Point();
 	}
-	return get_mouse()->get_position();
+	return get_mouse()->get_device_position();
 }
 
 // Important: Use XFree() on the returned pointer (if not NULL)
