@@ -99,9 +99,11 @@ public:
 	/// \brief Returns the input device type.
 	Type get_type() const;
 
-	/// \brief Friendly key name for specified identifier (A, B, Leertaste, Backspace, Mouse Left, ...).
-	/** <p>Note that this key name is localized, meaning it should only be used for menus
-	    where the user view key bindings, and not configuration files and such.</p>*/
+	/// \brief Retrieves the localized friendly key name for specified identifier (i.e. A, B, Leertaste, Backspace, Mouse Left, ...).
+	/// \note The returned name for the key may be localized by the system; it
+	//        should only be used to display the name of the key to the user
+	//        and not as a key identifier inside key binding configuration
+	//        files and such.
 	std::string get_key_name(int id) const;
 
 	/// \brief Returns a generic string name for the specified key code.
@@ -111,37 +113,32 @@ public:
 	int string_to_keyid(const std::string &str) const;
 
 	/// \brief Returns true if the passed key code is down for this device.
-	/** <p>See keys.h for list of key codes.</p>*/
+	/// See `keys.h` for list of key codes.
 	bool get_keycode(int keycode) const;
 
-	/// \brief Returns the position (x,y) of the device.
-	/** <p>Only valid for pointer devices.</p>*/
+	/// \brief Returns the current device-independent x and y position (DIP) of the device. (Pointing devices only)
+	/// The returned positional value is scaled to the pixel ratio of the display.
 	Pointf get_position() const;
 
-	/// \brief Returns the x position of the device.
-	/** <p>Only valid for pointer devices.</p>*/
-	float get_x() const;
+	/// \brief Returns the current devicesice-supplied x and y position of the device. (Pointing devices only)
+	/// The returned positional value is in the scale of the physical pixel on the screen.
+	Point get_device_position() const;
 
-	/// \brief Returns the y position of the device.
-	/** <p>Only valid for pointer devices.</p>*/
-	float get_y() const;
-
-	/// \brief Returns the the current position of a joystick axis.
+	/// \brief Returns the the current position of a joystick axis. (Joysticks only)
 	float get_axis(int axisid) const;
 
-	/// \brief Returns the number of axes available on this device.
+	/// \brief Returns the number of axes available on this device. (Joysticks only)
 	std::vector<int> get_axis_ids() const;
 
-	/// \brief Returns the current position of a joystick hat.
+	/// \brief Returns the current position of a joystick hat. (Joysticks only)
 	/// \return Hat direction in degrees (0-360), or -1 if the hat is centered.
 	int get_hat(int index) const;
 
 	/// \brief Returns the number of buttons available on this device.
-	/** <p>If used on a keyboard, this function returns -1.</p>*/
+	/// \warn If used on a keyboard or mouse, this function returns -1.
 	int get_button_count() const;
 
-	/// \brief Returns true if the input device is in proximity (applicable for tablets).
-	/** <p>Always returns false for non-tablet devices</p>*/
+	/// \brief Returns true if the input device is in proximity mode. (Tablets only)
 	bool in_proximity() const;
 
 /// \}
@@ -151,9 +148,11 @@ public:
 public:
 	InputDevice &operator =(const InputDevice &copy);
 
-	/// \brief Sets the position of the device.
-	/** <p>Only valid for mouse.</p>*/
+	/// \brief Sets the display-independent position of the device. (Pointing devices only)
 	void set_position(float x, float y);
+
+	/// \brief Sets the actual position of the device. (Pointing devices only)
+	void set_device_position(int x, int y);
 
 /// \}
 /// \name Signals

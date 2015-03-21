@@ -54,7 +54,7 @@ InputDeviceProvider_Win32Tablet::InputDeviceProvider_Win32Tablet(Win32Window *wi
   packet_queue(0),
   init_successfull(0),
   button_count(0),
-  styuls_in_proximity(false)
+  stylus_in_proximity(false)
 {
 	if( load_wintab() == false )
 	{
@@ -77,14 +77,14 @@ InputDeviceProvider_Win32Tablet::~InputDeviceProvider_Win32Tablet()
 /////////////////////////////////////////////////////////////////////////////
 // InputDeviceProvider_Win32Tablet Attributes:
 
-float InputDeviceProvider_Win32Tablet::get_x() const
+Pointf InputDeviceProvider_Win32Tablet::get_position() const
 {
-	return mouse_pos.x;
+	return mouse_pos;
 }
 
-float InputDeviceProvider_Win32Tablet::get_y() const
+Point InputDeviceProvider_Win32Tablet::get_device_position() const
 {
-	return mouse_pos.y;
+	return mouse_pos;
 }
 
 bool InputDeviceProvider_Win32Tablet::get_keycode(int keycode) const
@@ -153,10 +153,6 @@ bool InputDeviceProvider_Win32Tablet::is_context_on_top()
 
 /////////////////////////////////////////////////////////////////////////////
 // InputDeviceProvider_Win32Tablet Operations:
-
-void InputDeviceProvider_Win32Tablet::set_position(float x, float y)
-{
-}
 
 void InputDeviceProvider_Win32Tablet::set_context_on_top(bool enable)
 {
@@ -325,6 +321,7 @@ BOOL InputDeviceProvider_Win32Tablet::process_packet(WPARAM wParam, LPARAM lPara
 				e.id_offset = keycode;
 				e.type         = InputEvent::pressed;
 				e.mouse_pos    = Pointf((pkt.pkX - winfo.rcClient.left) / window->get_pixel_ratio(), (pkt.pkY - winfo.rcClient.top) / window->get_pixel_ratio());
+				e.mouse_device_pos = Point(pkt.pkX - winfo.rcClient.left, pkt.pkY - winfo.rcClient.top);
 				e.axis_pos     = 0;
 				e.repeat_count = 0;
 				window->set_modifier_keys(e);
@@ -341,6 +338,7 @@ BOOL InputDeviceProvider_Win32Tablet::process_packet(WPARAM wParam, LPARAM lPara
 				e.id_offset = keycode;
 				e.type         = InputEvent::released;
 				e.mouse_pos    = Pointf((pkt.pkX - winfo.rcClient.left) / window->get_pixel_ratio(), (pkt.pkY - winfo.rcClient.top) / window->get_pixel_ratio());
+				e.mouse_device_pos = Point(pkt.pkX - winfo.rcClient.left, pkt.pkY - winfo.rcClient.top);
 				e.axis_pos     = 0;
 				e.repeat_count = 0;
 				window->set_modifier_keys(e);
@@ -354,6 +352,7 @@ BOOL InputDeviceProvider_Win32Tablet::process_packet(WPARAM wParam, LPARAM lPara
 				e.id           = tablet_z_axis; // TODO: support tilt, rotation.
 				e.type         = InputEvent::axis_moved; // x,y as pointer movements
 				e.mouse_pos    = Pointf((pkt.pkX - winfo.rcClient.left) / window->get_pixel_ratio(), (pkt.pkY - winfo.rcClient.top) / window->get_pixel_ratio());
+				e.mouse_device_pos = Point(pkt.pkX - winfo.rcClient.left, pkt.pkY - winfo.rcClient.top);
 				e.axis_pos     = get_axis(2);
 				e.repeat_count = 0;
 				window->set_modifier_keys(e);
@@ -372,20 +371,20 @@ BOOL InputDeviceProvider_Win32Tablet::process_proximity( WPARAM wParam, LPARAM l
 	e.alt = false;
 	e.ctrl = false;
 	e.shift = false;
-	e.mouse_pos.x = get_x();
-	e.mouse_pos.y = get_y();
+	e.mouse_pos = get_position();
+	e.mouse_device_pos = get_device_position();
 
 	e.type = InputEvent::proximity_change;
 
 	if (LOWORD(wParam) == 0)
 	{
 		e.id = tablet_proximity_exit;
-		styuls_in_proximity = false;
+		stylus_in_proximity = false;
 	}
 	else
 	{
 		e.id = tablet_proximity_enter;
-		styuls_in_proximity = true;
+		stylus_in_proximity = true;
 	}
 
 	(*sig_provider_event)(e);
@@ -453,7 +452,7 @@ bool InputDeviceProvider_Win32Tablet::load_wintab()
 
 bool InputDeviceProvider_Win32Tablet::in_proximity() const
 {
-	return styuls_in_proximity;
+	return stylus_in_proximity;
 }
 
 void InputDeviceProvider_Win32Tablet::on_dispose()

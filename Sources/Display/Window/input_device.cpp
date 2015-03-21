@@ -406,25 +406,17 @@ bool InputDevice::get_keycode(int keycode) const
 Pointf InputDevice::get_position() const
 {
 	if (impl->provider)
-		return Pointf(impl->provider->get_x(), impl->provider->get_y());
+		return impl->provider->get_position();
 	else
-		return Pointf();
+		return Pointf(0.f, 0.f);
 }
 
-float InputDevice::get_x() const
+Point InputDevice::get_device_position() const
 {
 	if (impl->provider)
-		return impl->provider->get_x();
+		return impl->provider->get_device_position();
 	else
-		return 0.0f;
-}
-
-float InputDevice::get_y() const
-{
-	if (impl->provider)
-		return impl->provider->get_y();
-	else
-		return 0.0f;
+		return Point(0, 0);
 }
 
 float InputDevice::get_axis(int index) const
@@ -482,6 +474,13 @@ void InputDevice::set_position(float x, float y)
 	if (impl->provider)
 		impl->provider->set_position(x, y);
 }
+
+void InputDevice::set_device_position(int x, int y)
+{
+	if (impl->provider)
+		impl->provider->set_device_position(x, y);
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 // InputDevice Signals:

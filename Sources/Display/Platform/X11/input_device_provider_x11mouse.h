@@ -56,57 +56,35 @@ public:
 /// \{
 
 public:
-	/// \brief Returns the input device type.
 	InputDevice::Type get_type() const override { return InputDevice::pointer; }
 
-	/// \brief Returns the x position of the device.
-	float get_x() const override;
+	Pointf get_position() const override;
 
-	/// \brief Returns the y position of the device.
-	float get_y() const override;
+	Point get_device_position() const override;
 
-	/// \brief Returns the x and y position of the device.
-	Pointf get_position() const;
-
-	/// \brief Returns true if the passed key code is down for this device.
 	bool get_keycode(int keycode) const override;
 
-	/// \brief Key name for specified identifier (A, B, C, Space, Enter, Backspace).
 	std::string get_key_name(int id) const override;
 
-	/// \brief Returns the the current position of a joystick axis.
-	float get_axis(int index) const override;
-
-	/// \brief Returns the name of the device (i.e. 'Microsoft Sidewinder 3D').
 	std::string get_name() const override;
 
-	/// \brief Return the hardware id/device for this device (i.e. /dev/input/js0)
 	std::string get_device_name() const override;
 
-	/// \brief Returns the number of axes available on this device.
-	std::vector<int> get_axis_ids() const override;
-
-	/// \brief Returns the number of buttons available on this device.
-	/** <p>If used on a keyboard, this function returns -1.</p>*/
 	int get_button_count() const override;
-
-	/// \brief Tablet specific functionality.
-	bool in_proximity() const override { return false; }
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
-	/// \brief Initialize input device provider.
-	/** <p>The device field of InputEvent should not be set when emitting events.</p>*/
 	void init(Signal<void(const InputEvent &)> *new_sig_provider_event) override
 	{
 		sig_provider_event = new_sig_provider_event;
 	}
 
-	/// \brief Sets the position of the device.
 	void set_position(float x, float y) override;
+
+	void set_device_position(int x, int y) override;
 
 	void received_mouse_input(XButtonEvent &event);
 	void received_mouse_move(XMotionEvent &event);
