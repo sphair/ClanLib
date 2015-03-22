@@ -33,67 +33,38 @@
 
 namespace clan
 {
+	class Win32Window;
 
-class Win32Window;
-
-class InputDeviceProvider_Win32Mouse : public InputDeviceProvider
-{
-/// \name Construction
-/// \{
-
-public:
-	InputDeviceProvider_Win32Mouse(Win32Window *window);
-
-	~InputDeviceProvider_Win32Mouse();
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	InputDevice::Type get_type() const override { return InputDevice::pointer; }
-
-	Pointf get_position() const override;
-
-	Point get_device_position() const override;
-
-	bool get_keycode(int keycode) const override;
-
-	std::string get_key_name(int id) const override;
-
-	std::string get_name() const override;
-
-	std::string get_device_name() const override;
-
-	int get_button_count() const override;
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	void init(Signal<void(const InputEvent &)> *new_sig_provider_event) override
+	class InputDeviceProvider_Win32Mouse : public InputDeviceProvider
 	{
-		sig_provider_event = new_sig_provider_event;
-	}
+	public:
+		InputDeviceProvider_Win32Mouse(Win32Window *window);
+		~InputDeviceProvider_Win32Mouse();
 
-	void set_position(float x, float y) override;
+		InputDevice::Type get_type() const override { return InputDevice::pointer; }
+		Pointf get_position() const override;
+		Point get_device_position() const override;
+		bool get_keycode(int keycode) const override;
+		std::string get_key_name(int id) const override;
+		std::string get_name() const override;
+		std::string get_device_name() const override;
+		int get_button_count() const override;
 
-	void set_device_position(int x, int y) override;
+		void init(Signal<void(const InputEvent &)> *new_sig_provider_event) override
+		{
+			sig_provider_event = new_sig_provider_event;
+		}
 
-/// \}
-/// \name Implementation
-/// \{
+		void set_position(float x, float y) override;
+		void set_device_position(int x, int y) override;
 
-private:
-	void on_dispose();
+	private:
+		void on_dispose();
 
-	Signal<void(const InputEvent &)> *sig_provider_event;
+		Signal<void(const InputEvent &)> *sig_provider_event;
+		bool key_states[32];
+		Win32Window *window;
 
-	bool key_states[32];
-
-	Win32Window *window;
-
-	friend class Win32Window;
-/// \}
-};
-
+		friend class Win32Window;
+	};
 }

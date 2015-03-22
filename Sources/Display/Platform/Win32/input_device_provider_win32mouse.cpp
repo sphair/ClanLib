@@ -68,10 +68,9 @@ Point InputDeviceProvider_Win32Mouse::get_device_position() const
 	GetCursorPos(&cursor_pos);
 
 	BOOL res = ScreenToClient(window->get_hwnd(), &cursor_pos);
-	if (res == FALSE) return 0;
+	if (res == FALSE) return Point();
 
-	return cursor_pos;
-}
+	return Point(cursor_pos.x, cursor_pos.y);
 }
 
 bool InputDeviceProvider_Win32Mouse::get_keycode(int keycode) const

@@ -153,7 +153,7 @@ private:
 	};
 
 	std::vector<AxisInfo> axis, old_axis;
-	bool styuls_in_proximity;
+	bool stylus_in_proximity;
 	int num_keys;
 	Point mouse_pos;
 	bool init_successfull;
