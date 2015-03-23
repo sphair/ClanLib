@@ -220,10 +220,10 @@ namespace clan
 		View::layout_subviews(canvas);
 
 		auto track_geometry = impl->track->geometry();
+		auto thumb_geometry = impl->thumb->geometry();
 
-		float content_size = impl->_max_position - impl->_min_position + impl->_page_step;
 		float track_length = vertical() ? track_geometry.content_box().get_height() : track_geometry.content_box().get_width();
-		float thumb_length = impl->_page_step / content_size * track_length;
+		float thumb_length = vertical() ? thumb_geometry.content_box().get_height() : thumb_geometry.content_box().get_width();;
 
 		float t = (float) (impl->_position - impl->_min_position) / (float) (impl->_max_position - impl->_min_position);
 		float thumb_pos = t * (track_length - thumb_length);
@@ -348,6 +348,12 @@ namespace clan
 			_position = _max_position;
 		if (_position < _min_position)
 			_position = _min_position;
+
+		if (_lock_to_ticks)
+		{
+			int remainder = (_position - _min_position) % _tick_count;
+			_position = _position - remainder;
+		}
 
 		if (last_position != _position)
 		{

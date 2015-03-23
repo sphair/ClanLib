@@ -154,8 +154,8 @@ HelloWorld::HelloWorld()
 	slider->set_min_position(0);
 	slider->set_max_position(1000);
 	slider->set_tick_count(100);
+	slider->set_lock_to_ticks(true);
 	slider->set_page_step(100);
-	slider->set_lock_to_ticks(false);
 	slider->set_position(slider->max_position()/2);
 
 	body->add_subview(slider);
