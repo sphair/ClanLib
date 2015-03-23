@@ -149,11 +149,13 @@ namespace clan
 	void SliderView::set_vertical()
 	{
 		impl->_vertical = true;
+		impl->thumb->style()->set("position: absolute; top: 0px; left: auto");
 	}
 
 	void SliderView::set_horizontal()
 	{
 		impl->_vertical = false;
+		impl->thumb->style()->set("position: absolute; left: 0px; top: auto");
 	}
 
 	int SliderView::max_position() const
@@ -221,11 +223,11 @@ namespace clan
 
 		if (vertical())
 		{
-			impl->thumb->style()->set("top: %1px; left: auto", thumb_pos);
+			impl->thumb->style()->set("top: %1px;", thumb_pos);
 		}
 		else
 		{
-			impl->thumb->style()->set("left: %1px; top: auto", thumb_pos);
+			impl->thumb->style()->set("left: %1px;", thumb_pos);
 		}
 	}
 
