@@ -149,20 +149,11 @@ namespace clan
 	void SliderView::set_vertical()
 	{
 		impl->_vertical = true;
-		//TODO: Enable and fix this, keeping in mind what happens when you switch from vertical to horizontal
-
-		//style()->set("flex-direction: column;");
-		//impl->track->style()->set("flex: 1 1 main-size;");
-		//impl->thumb->style()->set("position: absolute; height: 4px;  width: auto");
 	}
 
 	void SliderView::set_horizontal()
 	{
 		impl->_vertical = false;
-		//TODO: Where is the best place to have these? In this function, in another function, in the application...
-		style()->set("flex-direction: row;");
-		impl->track->style()->set("flex: 1 1 main-size; height: 4px; margin: 8px 0px");
-		impl->thumb->style()->set("position: absolute; width: 8px; height: 32px");
 	}
 
 	int SliderView::max_position() const
@@ -230,11 +221,11 @@ namespace clan
 
 		if (vertical())
 		{
-			impl->thumb->style()->set("top: %1px;", thumb_pos);
+			impl->thumb->style()->set("top: %1px; left: auto", thumb_pos);
 		}
 		else
 		{
-			impl->thumb->style()->set("left: %1px;", thumb_pos);
+			impl->thumb->style()->set("left: %1px; top: auto", thumb_pos);
 		}
 	}
 
