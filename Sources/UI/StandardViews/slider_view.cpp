@@ -68,7 +68,7 @@ namespace clan
 		std::shared_ptr<View> track;
 		std::shared_ptr<View> thumb;
 		Pointf mouse_drag_start_pos;
-		Signal<void()> sig_value_changed;
+		std::function<void()> _func_value_changed;
 		Timer scroll_timer;
 
 		int _min_position = 0;
@@ -231,9 +231,9 @@ namespace clan
 		}
 	}
 
-	Signal<void()> &SliderView::sig_value_changed()
+	std::function<void()> &SliderView::func_value_changed()
 	{
-		return impl->sig_value_changed;
+		return impl->_func_value_changed;
 	}
 
 	void SliderViewImpl::on_focus_gained(FocusChangeEvent &e)
@@ -350,7 +350,8 @@ namespace clan
 
 		if (last_position != _position)
 		{
-			sig_value_changed();
+			if (_func_value_changed)
+				_func_value_changed();
 			slider->set_needs_layout();
 		}
 	}
@@ -381,7 +382,8 @@ namespace clan
 
 		if (last_position != _position)
 		{
-			sig_value_changed();
+			if (_func_value_changed)
+				_func_value_changed();
 			slider->set_needs_layout();
 		}
 		scroll_timer.start(100, false);

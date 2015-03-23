@@ -61,7 +61,7 @@ namespace clan
 		void set_page_step(int page_step);
 		void set_lock_to_ticks(bool lock);
 
-		Signal<void()> &sig_value_changed();
+		std::function<void()> &func_value_changed();
 
 		void layout_subviews(Canvas &canvas) override;
 

@@ -28,42 +28,6 @@
 
 #pragma once
 
-class SliderView : public View
-{
-public:
-	SliderView()
-	{
-		style()->set("background: #efefef; height: 3px; border: 1px solid #aaa");
-	}
-
-	std::function<void()> &func_value_changed() { return _func_value_changed; }
-
-	int get_max() const { return _min_value; }
-	int get_position() const { return _value; }
-	int get_min() const { return _max_value; }
-
-	void set_max(int v) { _max_value = v; _min_value = std::min(_min_value, _max_value); _value = clamp(_value, _min_value, _max_value); set_needs_layout(); }
-	void set_position(int v) { _value = v; _value = clamp(_value, _min_value, _max_value); set_needs_layout(); set_needs_render(); }
-	void set_min(int v) { _min_value = v; _max_value = std::max(_max_value, _min_value); _value = clamp(_value, _min_value, _max_value); set_needs_layout(); }
-
-	void set_vertical(bool v) { _vertical = v; }
-	void set_horizontal(bool h) { set_vertical(!h); }
-
-	void set_tick_count(int tick_count) { _tick_count = tick_count; set_needs_layout(); }
-	void set_page_step(int page_step) { _page_step = page_step; set_needs_layout(); }
-	void set_lock_to_ticks(bool lock) { _lock_to_ticks = lock; }
-
-private:
-	std::function<void()> _func_value_changed;
-	int _min_value = 0;
-	int _max_value = 100;
-	int _value = 50;
-	bool _vertical = false;
-	int _tick_count = 1;
-	int _page_step = 1;
-	bool _lock_to_ticks = false;
-};
-
 class SliderOptionView : public View
 {
 public:
@@ -71,14 +35,34 @@ public:
 	{
 		style()->set("margin: 2px 0; flex-direction: row;");
 
-		slider->set_vertical(false);
-		slider->set_horizontal(true);
-		slider->set_min(0);
-		slider->set_max(1000);
+		slider->set_horizontal();
+
+		slider->style()->set("flex-direction: row;");
+		slider->style()->set("background: rgb(200, 200, 255)");
+
+		slider->track()->style()->set("flex: 1 1 main-size;");
+		slider->track()->style()->set("height: 4px;");
+		slider->track()->style()->set("margin: 7px 0px");
+		slider->track()->style()->set("background: rgb(255, 0, 0)");
+		slider->track()->style()->set("border-image-slice: 1 2 1 1 fill;");
+		slider->track()->style()->set("border-image-width:1px 2px 1px 1px;");
+		slider->track()->style()->set("border-image-repeat:stretch;");
+		slider->track()->style()->set("border-image-source:url('Resources/slider_track.png');");
+
+		slider->thumb()->style()->set("position: absolute;");
+		slider->thumb()->style()->set("width:11px;");
+		slider->thumb()->style()->set("height:19px;");
+		slider->thumb()->style()->set("border-image-slice:9 3 9 2 fill;");
+		slider->thumb()->style()->set("border-image-width:9px 3px 9px 2px;");
+		slider->thumb()->style()->set("border-image-repeat:stretch;");
+		slider->thumb()->style()->set("border-image-source:url('Resources/slider_horizontal_thumb_normal.png');");
+
+		slider->set_min_position(0);
+		slider->set_max_position(1000);
 		slider->set_tick_count(100);
 		slider->set_page_step(100);
 		slider->set_lock_to_ticks(false);
-		slider->set_position(slider->get_max());
+		slider->set_position(slider->max_position());
 
 		slider->style()->set("margin: auto 5px auto 0; flex: 1 1");
 		label->style()->set("margin: auto 0; flex: 1 1; font: 13px/1.5 'Segoe UI'");
@@ -89,8 +73,8 @@ public:
 
 	float get_value(float min_value, float max_value)
 	{
-		float value = (float)slider->get_position();
-		value /= (float)slider->get_max();
+		float value = (float)slider->position();
+		value /= (float)slider->max_position();
 		return (value * (max_value - min_value)) + min_value;
 	}
 
@@ -98,7 +82,7 @@ public:
 	{
 		value -= min_value;
 		value /= (max_value - min_value);
-		value *= (float)slider->get_max();
+		value *= (float)slider->max_position();
 		slider->set_position((int)value);
 	}
 
