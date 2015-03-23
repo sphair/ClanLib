@@ -84,9 +84,9 @@ Options::Options(Canvas &canvas) : TextureView(canvas)
 	rotation_y = Angle(0.0f, angle_degrees);
 	rotation_z = Angle(0.0f, angle_degrees);
 
-	target_x = Angle(45.0f, angle_degrees);
-	target_y = Angle(45.0f, angle_degrees);
-	target_z = Angle(45.0f, angle_degrees);
+	target_x = Angle(0.0f, angle_degrees);
+	target_y = Angle(0.0f, angle_degrees);
+	target_z = Angle(0.0f, angle_degrees);
 
 	rotation_y_view->slider->func_value_changed() = bind_member(this, &Options::slider_rotation_y_changed);
 	rotation_x_view->slider->func_value_changed() = bind_member(this, &Options::slider_rotation_x_changed);
@@ -264,7 +264,8 @@ void Options::update_euler()
 {
 	Mat4f matrix = quaternion.to_matrix();
 
-	Vec3f euler = matrix.get_euler(order_YXZ);
+//	Vec3f euler = matrix.get_euler(order_YXZ);
+	Vec3f euler = matrix.get_euler(order_ZXY);
 	rotation_x.set_radians(euler.x);
 	rotation_y.set_radians(euler.y);
 	rotation_z.set_radians(euler.z);
