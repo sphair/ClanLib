@@ -88,7 +88,12 @@ GUI::GUI()
 	// Create a label with some text to have some content
 	label = std::make_shared<clan::LabelView>();
 	label->style()->set("font: 20px/40px 'Ravie'");
+	label->style("amazing")->set("background: #ffaaaa; color: #031337");
+	label->style("cool")->set("background: #aaffaa; font-style: italic");
+	label->style("amazing cool")->set("background: #ffffaa");
 	label->set_text("Hello World!");
+	label->set_state("amazing", true);
+	label->set_state("cool", true);
 	root->add_subview(label);
 
 	// React to clicking
