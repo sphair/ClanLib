@@ -42,6 +42,7 @@
 namespace clan
 {
 	class Style;
+	class StyleCascade;
 	class Canvas;
 	class ActivationChangeEvent;
 	class CloseEvent;
@@ -59,6 +60,8 @@ namespace clan
 	public:
 		View();
 		~View();
+		
+		const StyleCascade &style_cascade() const;
 
 		const std::shared_ptr<Style> &style() const;
 		void set_style(const std::shared_ptr<Style> &style);

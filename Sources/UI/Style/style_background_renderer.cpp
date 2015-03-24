@@ -38,7 +38,7 @@
 
 namespace clan
 {
-	StyleBackgroundRenderer::StyleBackgroundRenderer(Canvas &canvas, const BoxGeometry &geometry, const Style &style) : canvas(canvas), geometry(geometry), style(style)
+	StyleBackgroundRenderer::StyleBackgroundRenderer(Canvas &canvas, const BoxGeometry &geometry, const StyleCascade &style) : canvas(canvas), geometry(geometry), style(style)
 	{
 	}
 

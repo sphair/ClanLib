@@ -38,14 +38,14 @@ namespace clan
 	class Colorf;
 	class Pointf;
 	class BrushGradientStop;
-	class Style;
+	class StyleCascade;
 	class StyleValue;
 	class BoxGeometry;
 
 	class StyleBackgroundRenderer
 	{
 	public:
-		StyleBackgroundRenderer(Canvas &canvas, const BoxGeometry &geometry, const Style &style);
+		StyleBackgroundRenderer(Canvas &canvas, const BoxGeometry &geometry, const StyleCascade &style);
 		void render_background();
 		void render_border();
 
@@ -88,7 +88,7 @@ namespace clan
 
 		Canvas &canvas;
 		const BoxGeometry &geometry;
-		const Style &style;
+		const StyleCascade &style;
 
 		//Rectf initial_containing_box;
 		//bool is_root = false;

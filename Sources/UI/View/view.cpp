@@ -57,6 +57,11 @@ namespace clan
 	{
 	}
 
+	const StyleCascade &View::style_cascade() const
+	{
+		return impl->style_cascade;
+	}
+
 	const std::shared_ptr<Style> &View::style() const
 	{
 		return impl->style;
@@ -65,6 +70,7 @@ namespace clan
 	void View::set_style(const std::shared_ptr<Style> &style)
 	{
 		impl->style = style;
+		impl->style_cascade = StyleCascade({ impl->style.get() });
 		set_needs_layout();
 		set_needs_render();
 	}
@@ -188,8 +194,8 @@ namespace clan
 
 	void View::render(Canvas &canvas)
 	{
-		style()->render_background(canvas, geometry());
-		style()->render_border(canvas, geometry());
+		style_cascade().render_background(canvas, geometry());
+		style_cascade().render_border(canvas, geometry());
 
 		Mat4f old_transform = canvas.get_transform();
 		Pointf translate = impl->_geometry.content.get_top_left();
@@ -241,45 +247,45 @@ namespace clan
 
 	float View::get_preferred_width(Canvas &canvas)
 	{
-		if (style()->computed_value("layout").is_keyword("block"))
+		if (style_cascade().computed_value("layout").is_keyword("block"))
 			return BlockLayout::get_preferred_width(canvas, this);
-		else if (style()->computed_value("layout").is_keyword("inline-block"))
+		else if (style_cascade().computed_value("layout").is_keyword("inline-block"))
 			return InlineLayout::get_preferred_width(canvas, this);
-		else if (style()->computed_value("layout").is_keyword("flex") && style()->computed_value("flex-direction").is_keyword("column"))
+		else if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("column"))
 			return VBoxLayout::get_preferred_width(canvas, this);
-		else if (style()->computed_value("layout").is_keyword("flex") && style()->computed_value("flex-direction").is_keyword("row"))
+		else if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("row"))
 			return HBoxLayout::get_preferred_width(canvas, this);
-		else if (style()->computed_value("width").is_keyword("auto"))
+		else if (style_cascade().computed_value("width").is_keyword("auto"))
 			return 0.0f;
 		else
-			return style()->computed_value("width").number;
+			return style_cascade().computed_value("width").number;
 	}
 
 	float View::get_preferred_height(Canvas &canvas, float width)
 	{
-		if (style()->computed_value("layout").is_keyword("block"))
+		if (style_cascade().computed_value("layout").is_keyword("block"))
 			return BlockLayout::get_preferred_height(canvas, this, width);
-		else if (style()->computed_value("layout").is_keyword("inline-block"))
+		else if (style_cascade().computed_value("layout").is_keyword("inline-block"))
 			return InlineLayout::get_preferred_height(canvas, this, width);
-		else if (style()->computed_value("layout").is_keyword("flex") && style()->computed_value("flex-direction").is_keyword("column"))
+		else if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("column"))
 			return VBoxLayout::get_preferred_height(canvas, this, width);
-		else if (style()->computed_value("layout").is_keyword("flex") && style()->computed_value("flex-direction").is_keyword("row"))
+		else if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("row"))
 			return HBoxLayout::get_preferred_height(canvas, this, width);
-		else if (style()->computed_value("height").is_keyword("auto"))
+		else if (style_cascade().computed_value("height").is_keyword("auto"))
 			return 0.0f;
 		else
-			return style()->computed_value("height").number;
+			return style_cascade().computed_value("height").number;
 	}
 
 	float View::get_first_baseline_offset(Canvas &canvas, float width)
 	{
-		if (style()->computed_value("layout").is_keyword("block"))
+		if (style_cascade().computed_value("layout").is_keyword("block"))
 			return BlockLayout::get_first_baseline_offset(canvas, this, width);
-		else if (style()->computed_value("layout").is_keyword("inline-block"))
+		else if (style_cascade().computed_value("layout").is_keyword("inline-block"))
 			return InlineLayout::get_first_baseline_offset(canvas, this, width);
-		else if (style()->computed_value("layout").is_keyword("flex") && style()->computed_value("flex-direction").is_keyword("column"))
+		else if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("column"))
 			return VBoxLayout::get_first_baseline_offset(canvas, this, width);
-		else if (style()->computed_value("layout").is_keyword("flex") && style()->computed_value("flex-direction").is_keyword("row"))
+		else if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("row"))
 			return HBoxLayout::get_first_baseline_offset(canvas, this, width);
 		else
 			return 0.0f;
@@ -287,13 +293,13 @@ namespace clan
 
 	float View::get_last_baseline_offset(Canvas &canvas, float width)
 	{
-		if (style()->computed_value("layout").is_keyword("block"))
+		if (style_cascade().computed_value("layout").is_keyword("block"))
 			return BlockLayout::get_last_baseline_offset(canvas, this, width);
-		else if (style()->computed_value("layout").is_keyword("inline-block"))
+		else if (style_cascade().computed_value("layout").is_keyword("inline-block"))
 			return InlineLayout::get_last_baseline_offset(canvas, this, width);
-		else if (style()->computed_value("layout").is_keyword("flex") && style()->computed_value("flex-direction").is_keyword("column"))
+		else if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("column"))
 			return VBoxLayout::get_last_baseline_offset(canvas, this, width);
-		else if (style()->computed_value("layout").is_keyword("flex") && style()->computed_value("flex-direction").is_keyword("row"))
+		else if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("row"))
 			return HBoxLayout::get_last_baseline_offset(canvas, this, width);
 		else
 			return 0.0f;
@@ -320,13 +326,13 @@ namespace clan
 
 	void View::layout_subviews(Canvas &canvas)
 	{
-		if (style()->computed_value("layout").is_keyword("block"))
+		if (style_cascade().computed_value("layout").is_keyword("block"))
 			BlockLayout::layout_subviews(canvas, this);
-		else if (style()->computed_value("layout").is_keyword("inline-block"))
+		else if (style_cascade().computed_value("layout").is_keyword("inline-block"))
 			InlineLayout::layout_subviews(canvas, this);
-		else if (style()->computed_value("layout").is_keyword("flex") && style()->computed_value("flex-direction").is_keyword("column"))
+		else if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("column"))
 			VBoxLayout::layout_subviews(canvas, this);
-		else if (style()->computed_value("layout").is_keyword("flex") && style()->computed_value("flex-direction").is_keyword("row"))
+		else if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("row"))
 			HBoxLayout::layout_subviews(canvas, this);
 	}
 

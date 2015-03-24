@@ -50,8 +50,14 @@ namespace clan
 	{
 		SpanObjectType type = SpanObjectType::text;
 		SpanFloatType float_type = SpanFloatType::none;
+		
+		StyleCascade style_cascade;
+		void set_style(const std::shared_ptr<Style> new_style)
+		{
+			style = new_style;
+			style_cascade = StyleCascade({ style.get() });
+		}
 
-		std::shared_ptr<Style> style;
 		size_t start = 0;
 		size_t end = 0;
 
@@ -63,12 +69,13 @@ namespace clan
 		Font &get_font(Canvas &canvas)
 		{
 			if (font.is_null())
-				font = style->get_font(canvas);
+				font = style_cascade.get_font(canvas);
 			return font;
 		}
 
 	private:
 		Font font;
+		std::shared_ptr<Style> style;
 	};
 
 	struct SpanLineMetrics

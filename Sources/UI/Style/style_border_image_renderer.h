@@ -33,14 +33,14 @@ namespace clan
 	class Canvas;
 	class Image;
 	class Colorf;
-	class Style;
+	class StyleCascade;
 	class StyleValue;
 	class BoxGeometry;
 
 	class StyleBorderImageRenderer
 	{
 	public:
-		StyleBorderImageRenderer(Canvas &canvas, const BoxGeometry &geometry, const Style &style);
+		StyleBorderImageRenderer(Canvas &canvas, const BoxGeometry &geometry, const StyleCascade &style);
 		void render();
 
 	private:
@@ -57,6 +57,6 @@ namespace clan
 
 		Canvas &canvas;
 		const BoxGeometry &geometry;
-		const Style &style;
+		const StyleCascade &style;
 	};
 }

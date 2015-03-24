@@ -38,6 +38,11 @@ namespace clan
 	class ViewImpl
 	{
 	public:
+		ViewImpl()
+		{
+			style_cascade = StyleCascade({ style.get() });
+		}
+
 		unsigned int find_next_tab_index(unsigned int tab_index) const;
 		unsigned int find_prev_tab_index(unsigned int tab_index) const;
 		unsigned int find_highest_tab_index() const;
@@ -52,6 +57,7 @@ namespace clan
 		unsigned int tab_index = 0;
 		FocusPolicy focus_policy = FocusPolicy::reject;
 
+		StyleCascade style_cascade;
 		std::shared_ptr<Style> style = std::make_shared<Style>();
 		std::map<std::string, bool> states;
 		

@@ -52,7 +52,7 @@ namespace clan
 		Font &get_font(LabelView *view, Canvas &canvas)
 		{
 			if (font.is_null())
-				font = view->style()->get_font(canvas);
+				font = view->style_cascade().get_font(canvas);
 			return font;
 		}
 	};
@@ -135,7 +135,7 @@ namespace clan
 				return; // Still no room.  Draw nothing!
 		}
 
-		Colorf color = style()->computed_value("color").color;
+		Colorf color = style_cascade().computed_value("color").color;
 
 		if (impl->text_alignment == TextAlignment::left)
 		{
@@ -153,24 +153,24 @@ namespace clan
 
 	float LabelView::get_preferred_width(Canvas &canvas)
 	{
-		if (style()->computed_value("width").is_keyword("auto"))
+		if (style_cascade().computed_value("width").is_keyword("auto"))
 		{
 			Font font = impl->get_font(this, canvas);
 			return font.measure_text(canvas, impl->_text).advance.width;
 		}
 		else
-			return style()->computed_value("width").number;
+			return style_cascade().computed_value("width").number;
 	}
 
 	float LabelView::get_preferred_height(Canvas &canvas, float width)
 	{
-		if (style()->computed_value("height").is_keyword("auto"))
+		if (style_cascade().computed_value("height").is_keyword("auto"))
 		{
 			Font font = impl->get_font(this, canvas);
 			return font.get_font_metrics(canvas).get_line_height();
 		}
 		else
-			return style()->computed_value("height").number;
+			return style_cascade().computed_value("height").number;
 	}
 
 	float LabelView::get_first_baseline_offset(Canvas &canvas, float width)

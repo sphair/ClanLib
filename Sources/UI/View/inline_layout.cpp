@@ -34,21 +34,21 @@ namespace clan
 {
 	float InlineLayout::get_preferred_width(Canvas &canvas, View *view)
 	{
-		if (!view->style()->computed_value("width").is_keyword("auto"))
-			return view->style()->computed_value("width").number;
+		if (!view->style_cascade().computed_value("width").is_keyword("auto"))
+			return view->style_cascade().computed_value("width").number;
 
 		float width = 0.0f;
 		for (const std::shared_ptr<View> &view : view->subviews())
 		{
-			if (view->style()->computed_value("position").is_keyword("static") && !view->hidden())
+			if (view->style_cascade().computed_value("position").is_keyword("static") && !view->hidden())
 			{
-				width += view->style()->computed_value("margin-left").number;
-				width += view->style()->computed_value("border-left-width").number;
-				width += view->style()->computed_value("padding-left").number;
+				width += view->style_cascade().computed_value("margin-left").number;
+				width += view->style_cascade().computed_value("border-left-width").number;
+				width += view->style_cascade().computed_value("padding-left").number;
 				width += view->get_preferred_width(canvas);
-				width += view->style()->computed_value("padding-right").number;
-				width += view->style()->computed_value("border-right-width").number;
-				width += view->style()->computed_value("margin-right").number;
+				width += view->style_cascade().computed_value("padding-right").number;
+				width += view->style_cascade().computed_value("border-right-width").number;
+				width += view->style_cascade().computed_value("margin-right").number;
 			}
 		}
 		return width;
@@ -56,8 +56,8 @@ namespace clan
 
 	float InlineLayout::get_preferred_height(Canvas &canvas, View *view, float width)
 	{
-		if (!view->style()->computed_value("height").is_keyword("auto"))
-			return view->style()->computed_value("height").number;
+		if (!view->style_cascade().computed_value("height").is_keyword("auto"))
+			return view->style_cascade().computed_value("height").number;
 
 		float x = 0.0f;
 		float y = 0.0f;
@@ -65,28 +65,28 @@ namespace clan
 
 		for (const std::shared_ptr<View> &subview : view->subviews())
 		{
-			if (subview->style()->computed_value("position").is_keyword("static") && !subview->hidden())
+			if (subview->style_cascade().computed_value("position").is_keyword("static") && !subview->hidden())
 			{
 				float subview_width = subview->get_preferred_width(canvas);
 				float subview_height = subview->get_preferred_height(canvas, subview_width);
 
 				float margin_box_width = 0.0f;
-				margin_box_width += subview->style()->computed_value("margin-left").number;
-				margin_box_width += subview->style()->computed_value("border-left-width").number;
-				margin_box_width += subview->style()->computed_value("padding-left").number;
+				margin_box_width += subview->style_cascade().computed_value("margin-left").number;
+				margin_box_width += subview->style_cascade().computed_value("border-left-width").number;
+				margin_box_width += subview->style_cascade().computed_value("padding-left").number;
 				margin_box_width += subview_width;
-				margin_box_width += subview->style()->computed_value("padding-right").number;
-				margin_box_width += subview->style()->computed_value("border-right-width").number;
-				margin_box_width += subview->style()->computed_value("margin-right").number;
+				margin_box_width += subview->style_cascade().computed_value("padding-right").number;
+				margin_box_width += subview->style_cascade().computed_value("border-right-width").number;
+				margin_box_width += subview->style_cascade().computed_value("margin-right").number;
 
 				float margin_box_height = 0.0f;
-				margin_box_height += subview->style()->computed_value("margin-top").number;
-				margin_box_height += subview->style()->computed_value("border-top-width").number;
-				margin_box_height += subview->style()->computed_value("padding-top").number;
+				margin_box_height += subview->style_cascade().computed_value("margin-top").number;
+				margin_box_height += subview->style_cascade().computed_value("border-top-width").number;
+				margin_box_height += subview->style_cascade().computed_value("padding-top").number;
 				margin_box_height += subview_height;
-				margin_box_height += subview->style()->computed_value("padding-bottom").number;
-				margin_box_height += subview->style()->computed_value("border-bottom-width").number;
-				margin_box_height += subview->style()->computed_value("margin-bottom").number;
+				margin_box_height += subview->style_cascade().computed_value("padding-bottom").number;
+				margin_box_height += subview->style_cascade().computed_value("border-bottom-width").number;
+				margin_box_height += subview->style_cascade().computed_value("margin-bottom").number;
 
 				if (x != 0.0f && x + margin_box_width > width)
 				{
@@ -133,28 +133,28 @@ namespace clan
 
 		for (const std::shared_ptr<View> &subview : view->subviews())
 		{
-			if (subview->style()->computed_value("position").is_keyword("static") && !subview->hidden())
+			if (subview->style_cascade().computed_value("position").is_keyword("static") && !subview->hidden())
 			{
 				float subview_width = subview->get_preferred_width(canvas);
 				float subview_height = subview->get_preferred_height(canvas, subview_width);
 
 				float margin_box_width = 0.0f;
-				margin_box_width += subview->style()->computed_value("margin-left").number;
-				margin_box_width += subview->style()->computed_value("border-left-width").number;
-				margin_box_width += subview->style()->computed_value("padding-left").number;
+				margin_box_width += subview->style_cascade().computed_value("margin-left").number;
+				margin_box_width += subview->style_cascade().computed_value("border-left-width").number;
+				margin_box_width += subview->style_cascade().computed_value("padding-left").number;
 				margin_box_width += subview_width;
-				margin_box_width += subview->style()->computed_value("padding-right").number;
-				margin_box_width += subview->style()->computed_value("border-right-width").number;
-				margin_box_width += subview->style()->computed_value("margin-right").number;
+				margin_box_width += subview->style_cascade().computed_value("padding-right").number;
+				margin_box_width += subview->style_cascade().computed_value("border-right-width").number;
+				margin_box_width += subview->style_cascade().computed_value("margin-right").number;
 
 				float margin_box_height = 0.0f;
-				margin_box_height += subview->style()->computed_value("margin-top").number;
-				margin_box_height += subview->style()->computed_value("border-top-width").number;
-				margin_box_height += subview->style()->computed_value("padding-top").number;
+				margin_box_height += subview->style_cascade().computed_value("margin-top").number;
+				margin_box_height += subview->style_cascade().computed_value("border-top-width").number;
+				margin_box_height += subview->style_cascade().computed_value("padding-top").number;
 				margin_box_height += subview_height;
-				margin_box_height += subview->style()->computed_value("padding-bottom").number;
-				margin_box_height += subview->style()->computed_value("border-bottom-width").number;
-				margin_box_height += subview->style()->computed_value("margin-bottom").number;
+				margin_box_height += subview->style_cascade().computed_value("padding-bottom").number;
+				margin_box_height += subview->style_cascade().computed_value("border-bottom-width").number;
+				margin_box_height += subview->style_cascade().computed_value("margin-bottom").number;
 
 				if (x != 0.0f && x + margin_box_width > view->geometry().content.get_width())
 				{
@@ -163,21 +163,21 @@ namespace clan
 					line_height = 0.0f;
 				}
 
-				x += subview->style()->computed_value("margin-left").number;
-				x += subview->style()->computed_value("border-left-width").number;
-				x += subview->style()->computed_value("padding-left").number;
+				x += subview->style_cascade().computed_value("margin-left").number;
+				x += subview->style_cascade().computed_value("border-left-width").number;
+				x += subview->style_cascade().computed_value("padding-left").number;
 
 				float content_y = y;
-				content_y += subview->style()->computed_value("margin-top").number;
-				content_y += subview->style()->computed_value("border-top-width").number;
-				content_y += subview->style()->computed_value("padding-top").number;
+				content_y += subview->style_cascade().computed_value("margin-top").number;
+				content_y += subview->style_cascade().computed_value("border-top-width").number;
+				content_y += subview->style_cascade().computed_value("padding-top").number;
 
-				subview->set_geometry(BoxGeometry::from_content_box(subview->style(), Rectf::xywh(x, content_y, subview_width, subview_height)));
+				subview->set_geometry(BoxGeometry::from_content_box(subview->style_cascade(), Rectf::xywh(x, content_y, subview_width, subview_height)));
 
 				x += subview_width;
-				x += subview->style()->computed_value("padding-right").number;
-				x += subview->style()->computed_value("border-right-width").number;
-				x += subview->style()->computed_value("margin-right").number;
+				x += subview->style_cascade().computed_value("padding-right").number;
+				x += subview->style_cascade().computed_value("border-right-width").number;
+				x += subview->style_cascade().computed_value("margin-right").number;
 
 				line_height = clan::max(line_height, margin_box_height);
 

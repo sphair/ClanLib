@@ -347,7 +347,7 @@ namespace clan
 			Path::rect(selection_rect).fill(canvas, focus_view() == this ? Brush::solid_rgb8(51, 153, 255) : Brush::solid_rgb8(200, 200, 200));
 		}
 
-		Colorf color = style()->computed_value("color").color;
+		Colorf color = style_cascade().computed_value("color").color;
 		font.draw_text(canvas, 0.0f, baseline, txt_before, color);
 		font.draw_text(canvas, advance_before, baseline, txt_selected, focus_view() == this ? Colorf(255, 255, 255) : color);
 		font.draw_text(canvas, advance_before + advance_selected, baseline, txt_after, color);
@@ -360,24 +360,24 @@ namespace clan
 
 	float TextFieldView::get_preferred_width(Canvas &canvas)
 	{
-		if (style()->computed_value("width").is_keyword("auto"))
+		if (style_cascade().computed_value("width").is_keyword("auto"))
 		{
 			Font font = impl->get_font(canvas);
 			return font.measure_text(canvas, impl->text).advance.width;
 		}
 		else
-			return style()->computed_value("width").number;
+			return style_cascade().computed_value("width").number;
 	}
 
 	float TextFieldView::get_preferred_height(Canvas &canvas, float width)
 	{
-		if (style()->computed_value("height").is_keyword("auto"))
+		if (style_cascade().computed_value("height").is_keyword("auto"))
 		{
 			Font font = impl->get_font(canvas);
 			return font.get_font_metrics(canvas).get_line_height();
 		}
 		else
-			return style()->computed_value("height").number;
+			return style_cascade().computed_value("height").number;
 	}
 
 	float TextFieldView::get_first_baseline_offset(Canvas &canvas, float width)
@@ -396,7 +396,7 @@ namespace clan
 	Font &TextFieldViewImpl::get_font(Canvas &canvas)
 	{
 		if (font.is_null())
-			font = textfield->style()->get_font(canvas);
+			font = textfield->style_cascade().get_font(canvas);
 		return font;
 	}
 

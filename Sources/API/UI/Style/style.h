@@ -38,6 +38,7 @@
 
 namespace clan
 {
+	class Style;
 	class StyleImpl;
 	class StyleProperty;
 	class BoxGeometry;
@@ -165,6 +166,33 @@ namespace clan
 		StyleValue image;
 		StyleGradient gradient;
 	};
+	
+	class StyleCascade
+	{
+	public:
+		StyleCascade() { }
+		StyleCascade(std::vector<Style *> cascade, StyleCascade *parent = nullptr) : cascade(std::move(cascade)), parent(parent) { }
+		
+		std::vector<Style *> cascade;
+		StyleCascade *parent = nullptr;
+		
+		StyleValue cascade_value(const std::string &property_name) const;
+		StyleValue specified_value(const std::string &property_name) const;
+		StyleValue computed_value(const std::string &property_name) const;
+		
+		StyleValue compute_length(const StyleValue &length) const;
+		StyleValue compute_angle(const StyleValue &angle) const;
+		StyleValue compute_time(const StyleValue &time) const;
+		StyleValue compute_frequency(const StyleValue &frequency) const;
+		StyleValue compute_resolution(const StyleValue &resolution) const;
+		
+		int array_size(const std::string &property_name) const;
+		
+		void render_background(Canvas &canvas, const BoxGeometry &geometry) const;
+		void render_border(Canvas &canvas, const BoxGeometry &geometry) const;
+		
+		Font get_font(Canvas &canvas) const;
+	};
 
 	class Style
 	{
@@ -188,23 +216,7 @@ namespace clan
 			set(string_format(properties, arg1, values...));
 		}
 
-		bool has(const std::string &property_name) const;
-		int array_size(const std::string &property_name) const;
-
-		StyleValue cascade_value(const std::string &property_name) const;
-		StyleValue specified_value(const std::string &property_name) const;
-		StyleValue computed_value(const std::string &property_name) const;
-
-		StyleValue compute_length(const StyleValue &length) const;
-		StyleValue compute_angle(const StyleValue &angle) const;
-		StyleValue compute_time(const StyleValue &time) const;
-		StyleValue compute_frequency(const StyleValue &frequency) const;
-		StyleValue compute_resolution(const StyleValue &resolution) const;
-
-		void render_background(Canvas &canvas, const BoxGeometry &geometry) const;
-		void render_border(Canvas &canvas, const BoxGeometry &geometry) const;
-
-		Font get_font(Canvas &canvas);
+		StyleValue declared_value(const std::string &property_name) const;
 
 		static std::string to_rgba(const Colorf &c)
 		{

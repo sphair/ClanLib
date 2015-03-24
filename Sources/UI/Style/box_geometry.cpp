@@ -32,25 +32,25 @@
 
 namespace clan
 {
-	BoxGeometry::BoxGeometry(const std::shared_ptr<Style> &style)
+	BoxGeometry::BoxGeometry(const StyleCascade &style_cascade)
 	{
-		margin_left = style->computed_value("margin-left").number;
-		margin_top = style->computed_value("margin-top").number;
-		margin_right = style->computed_value("margin-right").number;
-		margin_bottom = style->computed_value("margin-bottom").number;
+		margin_left = style_cascade.computed_value("margin-left").number;
+		margin_top = style_cascade.computed_value("margin-top").number;
+		margin_right = style_cascade.computed_value("margin-right").number;
+		margin_bottom = style_cascade.computed_value("margin-bottom").number;
 
-		border_left = style->computed_value("border-left-width").number;
-		border_top = style->computed_value("border-top-width").number;
-		border_right = style->computed_value("border-right-width").number;
-		border_bottom = style->computed_value("border-bottom-width").number;
+		border_left = style_cascade.computed_value("border-left-width").number;
+		border_top = style_cascade.computed_value("border-top-width").number;
+		border_right = style_cascade.computed_value("border-right-width").number;
+		border_bottom = style_cascade.computed_value("border-bottom-width").number;
 
-		padding_left = style->computed_value("padding-left").number;
-		padding_top = style->computed_value("padding-top").number;
-		padding_right = style->computed_value("padding-right").number;
-		padding_bottom = style->computed_value("padding-bottom").number;
+		padding_left = style_cascade.computed_value("padding-left").number;
+		padding_top = style_cascade.computed_value("padding-top").number;
+		padding_right = style_cascade.computed_value("padding-right").number;
+		padding_bottom = style_cascade.computed_value("padding-bottom").number;
 	}
 
-	BoxGeometry BoxGeometry::from_margin_box(const std::shared_ptr<Style> &style, const Rectf &box)
+	BoxGeometry BoxGeometry::from_margin_box(const StyleCascade &style, const Rectf &box)
 	{
 		BoxGeometry geometry(style);
 
@@ -63,7 +63,7 @@ namespace clan
 		return geometry;
 	}
 
-	BoxGeometry BoxGeometry::from_border_box(const std::shared_ptr<Style> &style, const Rectf &box)
+	BoxGeometry BoxGeometry::from_border_box(const StyleCascade &style, const Rectf &box)
 	{
 		BoxGeometry geometry(style);
 
@@ -76,7 +76,7 @@ namespace clan
 		return geometry;
 	}
 
-	BoxGeometry BoxGeometry::from_padding_box(const std::shared_ptr<Style> &style, const Rectf &box)
+	BoxGeometry BoxGeometry::from_padding_box(const StyleCascade &style, const Rectf &box)
 	{
 		BoxGeometry geometry(style);
 
@@ -89,7 +89,7 @@ namespace clan
 		return geometry;
 	}
 
-	BoxGeometry BoxGeometry::from_content_box(const std::shared_ptr<Style> &style, const Rectf &box)
+	BoxGeometry BoxGeometry::from_content_box(const StyleCascade &style, const Rectf &box)
 	{
 		BoxGeometry geometry(style);
 		geometry.content = box;

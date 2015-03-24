@@ -83,18 +83,18 @@ namespace clan
 
 	float SpanLayoutView::get_preferred_width(Canvas &canvas)
 	{
-		if (style()->computed_value("width").is_keyword("auto"))
+		if (style_cascade().computed_value("width").is_keyword("auto"))
 			return impl->get_preferred_width(canvas);
 		else
-			return style()->computed_value("width").number;
+			return style_cascade().computed_value("width").number;
 	}
 
 	float SpanLayoutView::get_preferred_height(Canvas &canvas, float width)
 	{
-		if (style()->computed_value("height").is_keyword("auto"))
+		if (style_cascade().computed_value("height").is_keyword("auto"))
 			return impl->get_preferred_height(canvas, width);
 		else
-			return style()->computed_value("height").number;
+			return style_cascade().computed_value("height").number;
 	}
 
 	float SpanLayoutView::get_first_baseline_offset(Canvas &canvas, float width)
