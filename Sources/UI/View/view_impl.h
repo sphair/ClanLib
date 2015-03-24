@@ -53,6 +53,8 @@ namespace clan
 		FocusPolicy focus_policy = FocusPolicy::reject;
 
 		std::shared_ptr<Style> style = std::make_shared<Style>();
+		std::map<std::string, bool> states;
+		
 		BoxGeometry _geometry;
 		bool hidden = false;
 

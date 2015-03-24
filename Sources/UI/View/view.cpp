@@ -68,6 +68,20 @@ namespace clan
 		set_needs_layout();
 		set_needs_render();
 	}
+	
+	bool View::state(const std::string &name) const
+	{
+		const auto it = impl->states.find(name);
+		if (it != impl->states.end())
+			return it->second;
+		else
+			return false;
+	}
+	
+	void View::set_state(const std::string &name, bool value)
+	{
+		impl->states[name] = value;
+	}
 
 	View *View::superview() const
 	{
