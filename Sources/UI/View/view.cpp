@@ -62,19 +62,18 @@ namespace clan
 		return impl->style_cascade;
 	}
 
-	const std::shared_ptr<Style> &View::style() const
+	const std::shared_ptr<Style> &View::style(const std::string &state) const
 	{
-		return impl->style;
+		const auto it = impl->styles.find(state);
+		if (it != impl->styles.end())
+			return it->second;
+
+		auto &style = impl->styles[state];
+		style = std::make_shared<Style>();
+		impl->update_style_cascade();
+		return style;
 	}
 
-	void View::set_style(const std::shared_ptr<Style> &style)
-	{
-		impl->style = style;
-		impl->style_cascade = StyleCascade({ impl->style.get() });
-		set_needs_layout();
-		set_needs_render();
-	}
-	
 	bool View::state(const std::string &name) const
 	{
 		const auto it = impl->states.find(name);
@@ -86,7 +85,11 @@ namespace clan
 	
 	void View::set_state(const std::string &name, bool value)
 	{
-		impl->states[name] = value;
+		if (impl->states[name] != value)
+		{
+			impl->states[name] = value;
+			impl->update_style_cascade();
+		}
 	}
 
 	View *View::superview() const
@@ -756,6 +759,36 @@ namespace clan
 	}
 
 	/////////////////////////////////////////////////////////////////////////
+
+	void ViewImpl::update_style_cascade() const
+	{
+		std::vector<std::pair<Style *, size_t>> matches;
+
+		for (auto it : styles)
+		{
+			auto &style_list = it.first;
+			auto &style = it.second;
+
+			auto style_classes = StringHelp::split_text(style_list, " ");
+
+			bool match = true;
+			for (const auto &state : style_classes)
+			{
+				auto search_it = states.find(state);
+				if (search_it == states.end() || !search_it->second)
+					match = false;
+			}
+
+			if (match)
+				matches.push_back({ style.get(), style_classes.size() });
+		}
+
+		std::stable_sort(matches.begin(), matches.end(), [](const std::pair<Style *, size_t> &a, const std::pair<Style *, size_t> &b) { return a.second != b.second ? a.second > b.second : a.first > b.first; });
+
+		style_cascade.cascade.clear();
+		for (auto &match : matches)
+			style_cascade.cascade.push_back(match.first);
+	}
 
 	void ViewImpl::inverse_bubble(EventUI *e)
 	{

@@ -63,8 +63,7 @@ namespace clan
 		
 		const StyleCascade &style_cascade() const;
 
-		const std::shared_ptr<Style> &style() const;
-		void set_style(const std::shared_ptr<Style> &style);
+		const std::shared_ptr<Style> &style(const std::string &state = std::string()) const;
 		
 		bool state(const std::string &name) const;
 		void set_state(const std::string &name, bool value);
