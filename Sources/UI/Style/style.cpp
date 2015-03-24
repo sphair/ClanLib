@@ -76,14 +76,24 @@ namespace clan
 	{
 	}
 
-	const std::shared_ptr<Style> &Style::get_base()
+	const std::shared_ptr<Style> &Style::get_parent()
 	{
-		return impl->base;
+		return impl->parent;
+	}
+	
+	void Style::set_parent(const std::shared_ptr<Style> &parent)
+	{
+		impl->parent = parent;
+	}
+	
+	const std::shared_ptr<Style> &Style::get_cascade_base()
+	{
+		return impl->cascade_base;
 	}
 
-	void Style::set_base(const std::shared_ptr<Style> &new_base)
+	void Style::set_cascade_base(const std::shared_ptr<Style> &base)
 	{
-		impl->base = new_base;
+		impl->cascade_base = base;
 	}
 
 	void Style::set(const std::string &properties)
@@ -109,42 +119,65 @@ namespace clan
 		}
 		return size;
 	}
+	
+	StyleValue Style::cascade_value(const std::string &property_name) const
+	{
+		const auto it = impl->prop_type.find(property_name);
+		if (it != impl->prop_type.end())
+		{
+			switch (it->second)
+			{
+				default:
+				case StyleValueType::undefined:
+					return StyleValue();
+				case StyleValueType::keyword:
+					return StyleValue::from_keyword(impl->prop_text.find(property_name)->second);
+				case StyleValueType::string:
+					return StyleValue::from_string(impl->prop_text.find(property_name)->second);
+				case StyleValueType::url:
+					return StyleValue::from_url(impl->prop_text.find(property_name)->second);
+				case StyleValueType::length:
+					return StyleValue::from_length(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
+				case StyleValueType::angle:
+					return StyleValue::from_angle(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
+				case StyleValueType::time:
+					return StyleValue::from_time(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
+				case StyleValueType::frequency:
+					return StyleValue::from_frequency(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
+				case StyleValueType::resolution:
+					return StyleValue::from_resolution(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
+				case StyleValueType::percentage:
+					return StyleValue::from_percentage(impl->prop_number.find(property_name)->second);
+				case StyleValueType::number:
+					return StyleValue::from_number(impl->prop_number.find(property_name)->second);
+				case StyleValueType::color:
+					return StyleValue::from_color(impl->prop_color.find(property_name)->second);
+				case StyleValueType::image:
+					return StyleValue::from_image(impl->prop_image.find(property_name)->second);
+			}
+		}
+
+		if (impl->cascade_base)
+			return impl->cascade_base->cascade_value(property_name);
+		else
+			return StyleValue();
+	}
 
 	StyleValue Style::specified_value(const std::string &property_name) const
 	{
-		const auto it = impl->prop_type.find(property_name);
-		if (it == impl->prop_type.end())
-			return StyleProperty::default_value(property_name);
-
-		switch (it->second)
+		StyleValue value = cascade_value(property_name);
+		bool inherit = (value.is_undefined() && StyleProperty::is_inherited(property_name)) || value.is_keyword("inherit");
+		if (inherit && impl->parent)
 		{
-		default:
-		case StyleValueType::undefined:
-			return StyleValue();
-		case StyleValueType::keyword:
-			return StyleValue::from_keyword(impl->prop_text.find(property_name)->second);
-		case StyleValueType::string:
-			return StyleValue::from_string(impl->prop_text.find(property_name)->second);
-		case StyleValueType::url:
-			return StyleValue::from_url(impl->prop_text.find(property_name)->second);
-		case StyleValueType::length:
-			return StyleValue::from_length(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
-		case StyleValueType::angle:
-			return StyleValue::from_angle(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
-		case StyleValueType::time:
-			return StyleValue::from_time(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
-		case StyleValueType::frequency:
-			return StyleValue::from_frequency(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
-		case StyleValueType::resolution:
-			return StyleValue::from_resolution(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
-		case StyleValueType::percentage:
-			return StyleValue::from_percentage(impl->prop_number.find(property_name)->second);
-		case StyleValueType::number:
-			return StyleValue::from_number(impl->prop_number.find(property_name)->second);
-		case StyleValueType::color:
-			return StyleValue::from_color(impl->prop_color.find(property_name)->second);
-		case StyleValueType::image:
-			return StyleValue::from_image(impl->prop_image.find(property_name)->second);
+			return impl->parent->computed_value(property_name);
+		}
+		else if (value.is_undefined() || value.is_keyword("initial") || value.is_keyword("inherit"))
+		{
+			return StyleProperty::default_value(property_name);
+		}
+		else
+		{
+			return value;
 		}
 	}
 

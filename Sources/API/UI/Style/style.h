@@ -174,8 +174,11 @@ namespace clan
 		~Style();
 		Style &operator=(const Style &) = delete;
 
-		const std::shared_ptr<Style> &get_base();
-		void set_base(const std::shared_ptr<Style> &base);
+		const std::shared_ptr<Style> &get_parent();
+		void set_parent(const std::shared_ptr<Style> &parent);
+		
+		const std::shared_ptr<Style> &get_cascade_base();
+		void set_cascade_base(const std::shared_ptr<Style> &base);
 
 		void set(const std::string &properties);
 
@@ -188,6 +191,7 @@ namespace clan
 		bool has(const std::string &property_name) const;
 		int array_size(const std::string &property_name) const;
 
+		StyleValue cascade_value(const std::string &property_name) const;
 		StyleValue specified_value(const std::string &property_name) const;
 		StyleValue computed_value(const std::string &property_name) const;
 

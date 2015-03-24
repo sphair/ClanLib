@@ -1089,6 +1089,11 @@ namespace clan
 
 	/////////////////////////////////////////////////////////////////////////
 
+	bool StyleProperty::is_inherited(const std::string &name)
+	{
+		return false; // TBD: do we want to support inherited properties at all?
+	}
+	
 	const StyleValue &StyleProperty::default_value(const std::string &name)
 	{
 		auto it = style_defaults().find(name);

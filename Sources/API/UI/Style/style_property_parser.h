@@ -104,6 +104,7 @@ namespace clan
 	{
 	public:
 		static const StyleValue &default_value(const std::string &name);
+		static bool is_inherited(const std::string &name);
 		static void parse(StylePropertySetter *setter, const std::string &styles);
 	};
 }
