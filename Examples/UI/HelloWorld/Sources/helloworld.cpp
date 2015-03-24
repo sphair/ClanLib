@@ -159,6 +159,11 @@ HelloWorld::HelloWorld()
 	slider->thumb()->style()->set("border-image-width:9px 3px 9px 2px;");
 	slider->thumb()->style()->set("border-image-repeat:stretch;");
 	slider->thumb()->style()->set("border-image-source:url('Resources/slider_horizontal_thumb_normal.png');");
+	slider->thumb()->style("hot")->set("border-image-source:url('Resources/slider_horizontal_thumb_hot.png');");
+	slider->thumb()->style("pressed")->set("border-image-source:url('Resources/slider_horizontal_thumb_pressed.png');");
+	slider->thumb()->style("disabled")->set("border-image-source:url('Resources/slider_horizontal_thumb_disabled.png');");
+
+	//slider->set_disabled();
 
 	slider->set_min_position(0);
 	slider->set_max_position(1000);

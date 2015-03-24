@@ -49,6 +49,10 @@ namespace clan
 		void set_vertical();
 		void set_horizontal();
 
+		bool disabled() const;
+		void set_disabled();
+		void set_enabled();
+
 		int max_position() const;
 		int position() const;
 		int min_position() const;

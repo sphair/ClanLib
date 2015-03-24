@@ -46,6 +46,8 @@ namespace clan
 		void on_pointer_track_release(PointerEvent &e);
 		void on_pointer_thumb_press(PointerEvent &e);
 		void on_pointer_thumb_release(PointerEvent &e);
+		void on_pointer_thumb_enter(PointerEvent &e);
+		void on_pointer_thumb_leave(PointerEvent &e);
 
 		void on_pointer_move(PointerEvent &e);
 		void on_focus_gained(FocusChangeEvent &e);
@@ -83,6 +85,8 @@ namespace clan
 		int timer_target_position = 0;
 		int thumb_move_start_position = 0;
 
+		bool _disabled = false;
+
 		void update_pos(SliderView *view, int new_pos, int new_min, int new_max);
 
 	};
@@ -114,6 +118,9 @@ namespace clan
 		slots.connect(impl->thumb->sig_pointer_press(), impl.get(), &SliderViewImpl::on_pointer_thumb_press);
 		slots.connect(impl->thumb->sig_pointer_release(), impl.get(), &SliderViewImpl::on_pointer_thumb_release);
 
+		slots.connect(impl->thumb->sig_pointer_enter(), impl.get(), &SliderViewImpl::on_pointer_thumb_enter);
+		slots.connect(impl->thumb->sig_pointer_leave(), impl.get(), &SliderViewImpl::on_pointer_thumb_leave);
+
 		slots.connect(impl->thumb->sig_pointer_move(), impl.get(), &SliderViewImpl::on_pointer_move);
 
 		slots.connect(sig_focus_gained(), impl.get(), &SliderViewImpl::on_focus_gained);
@@ -124,6 +131,35 @@ namespace clan
 		impl->scroll_timer.func_expired() = clan::bind_member(impl.get(), &SliderViewImpl::scroll_timer_expired);
 
 		set_vertical();
+	}
+
+	bool SliderView::disabled() const
+	{
+		return impl->_disabled;
+	}
+
+	void SliderView::set_disabled()
+	{
+		if (!impl->_disabled)
+		{
+			impl->_disabled = true;
+			impl->thumb->set_state("hot", false);
+			impl->thumb->set_state("pressed", false);
+			impl->thumb->set_state("disabled", true);
+			impl->mouse_down_mode = SliderViewImpl::mouse_down_none;
+			impl->scroll_timer.stop();
+
+		}
+	}
+	void SliderView::set_enabled()
+	{
+		if (impl->_disabled)
+		{
+			impl->_disabled = false;
+			impl->thumb->set_state("hot", false);
+			impl->thumb->set_state("pressed", false);
+			impl->thumb->set_state("disabled", false);
+		}
 	}
 
 	std::shared_ptr<View> SliderView::track() const
@@ -150,12 +186,15 @@ namespace clan
 	{
 		impl->_vertical = true;
 		impl->thumb->style()->set("position: absolute; top: 0px; left: auto");
+		set_needs_layout();
+
 	}
 
 	void SliderView::set_horizontal()
 	{
 		impl->_vertical = false;
 		impl->thumb->style()->set("position: absolute; left: 0px; top: auto");
+		set_needs_layout();
 	}
 
 	int SliderView::max_position() const
@@ -242,6 +281,8 @@ namespace clan
 
 	void SliderViewImpl::on_focus_lost(FocusChangeEvent &e)
 	{
+		if (_disabled)
+			return;
 		mouse_down_mode = mouse_down_none;
 		scroll_timer.stop();
 	}
@@ -253,12 +294,17 @@ namespace clan
 
 	void SliderViewImpl::on_deactivated(ActivationChangeEvent &e)
 	{
+		if (_disabled)
+			return;
+
 		mouse_down_mode = mouse_down_none;
 		scroll_timer.stop();
 	}
 
 	void SliderViewImpl::on_pointer_track_press(PointerEvent &e)
 	{
+		if (_disabled)
+			return;
 		if (e.target() == thumb)	// Thumb control handled elsewhere
 			return;
 
@@ -294,12 +340,17 @@ namespace clan
 
 	void SliderViewImpl::on_pointer_track_release(PointerEvent &e)
 	{
+		if (_disabled)
+			return;
 		mouse_down_mode = mouse_down_none;
 		scroll_timer.stop();
 	}
 
 	void SliderViewImpl::on_pointer_thumb_press(PointerEvent &e)
 	{
+		if (_disabled)
+			return;
+		thumb->set_state("pressed", true);
 		mouse_down_mode = mouse_down_thumb_drag;
 		thumb_move_start_position = _position;
 		mouse_drag_start_pos = e.pos(track.get());
@@ -307,13 +358,34 @@ namespace clan
 
 	void SliderViewImpl::on_pointer_thumb_release(PointerEvent &e)
 	{
+		if (_disabled)
+			return;
+		thumb->set_state("pressed", false);
 		mouse_down_mode = mouse_down_none;
+	}
+
+	void SliderViewImpl::on_pointer_thumb_enter(PointerEvent &e)
+	{
+		if (_disabled)
+			return;
+		thumb->set_state("hot", true);
+	}
+
+	void SliderViewImpl::on_pointer_thumb_leave(PointerEvent &e)
+	{
+		if (_disabled)
+			return;
+		thumb->set_state("hot", false);
 	}
 
 	void SliderViewImpl::on_pointer_move(PointerEvent &e)
 	{
-		if (mouse_down_mode != mouse_down_thumb_drag)
+		if (_disabled)
 			return;
+		if (mouse_down_mode != mouse_down_thumb_drag)
+		{
+			return;
+		}
 
 		Pointf mouse_pos(e.pos(track.get()));
 		Rectf track_geometry(track->geometry().content_box());
@@ -358,6 +430,8 @@ namespace clan
 	
 	void SliderViewImpl::scroll_timer_expired()
 	{
+		if (_disabled)
+			return;
 		if ((mouse_down_mode == mouse_down_none) || (mouse_down_mode == mouse_down_thumb_drag))
 			return;
 

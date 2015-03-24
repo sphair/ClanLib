@@ -89,6 +89,7 @@ namespace clan
 		{
 			impl->states[name] = value;
 			impl->update_style_cascade();
+			set_needs_layout();
 		}
 	}
 
