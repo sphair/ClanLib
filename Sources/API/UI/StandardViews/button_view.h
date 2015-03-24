@@ -45,6 +45,10 @@ namespace clan
 		std::shared_ptr<LabelView> label();
 		std::shared_ptr<ImageView> image_view();
 
+		bool disabled() const;
+		void set_disabled();
+		void set_enabled();
+
 		void move_label_before_image();
 		void move_label_after_image();
 

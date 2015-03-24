@@ -35,12 +35,21 @@ namespace clan
 	class ButtonViewImpl
 	{
 	public:
+		void on_pointer_press(PointerEvent &e);
+		void on_pointer_release(PointerEvent &e);
+		void on_pointer_enter(PointerEvent &e);
+		void on_pointer_leave(PointerEvent &e);
+
+		ButtonView *button = nullptr;
+		bool _disabled = false;
+
 		std::shared_ptr<LabelView> label;
 		std::shared_ptr<ImageView> image_view;
 	};
 
 	ButtonView::ButtonView() : impl(new ButtonViewImpl())
 	{
+		impl->button = this;
 		style()->set("flex-direction: row");
 
 		impl->image_view = std::make_shared<ImageView>();
@@ -51,11 +60,67 @@ namespace clan
 		impl->label->style()->set("margin: auto");
 		impl->label->style()->set("flex: 1 1 main-size");
 		add_subview(impl->label);
+
+		slots.connect(sig_pointer_press(), impl.get(), &ButtonViewImpl::on_pointer_press);
+		slots.connect(sig_pointer_release(), impl.get(), &ButtonViewImpl::on_pointer_release);
+
+		slots.connect(sig_pointer_enter(), impl.get(), &ButtonViewImpl::on_pointer_enter);
+		slots.connect(sig_pointer_leave(), impl.get(), &ButtonViewImpl::on_pointer_leave);
 	}
 
 	ButtonView::~ButtonView()
 	{
 	}
+
+	void ButtonViewImpl::on_pointer_press(PointerEvent &e)
+	{
+		if (_disabled)
+			return;
+		button->set_state("pressed", true);
+	}
+
+	void ButtonViewImpl::on_pointer_release(PointerEvent &e)
+	{
+		if (_disabled)
+			return;
+		button->set_state("pressed", false);
+	}
+
+	void ButtonViewImpl::on_pointer_enter(PointerEvent &e)
+	{
+		if (_disabled)
+			return;
+		button->set_state("hot", true);
+	}
+
+	void ButtonViewImpl::on_pointer_leave(PointerEvent &e)
+	{
+		if (_disabled)
+			return;
+		button->set_state("hot", false);
+	}
+
+	void ButtonView::set_disabled()
+	{
+		if (!impl->_disabled)
+		{
+			impl->_disabled = true;
+			set_state("hot", false);
+			set_state("pressed", false);
+			set_state("disabled", true);
+		}
+	}
+	void ButtonView::set_enabled()
+	{
+		if (impl->_disabled)
+		{
+			impl->_disabled = false;
+			set_state("hot", false);
+			set_state("pressed", false);
+			set_state("disabled", false);
+		}
+	}
+
 
 	std::shared_ptr<LabelView> ButtonView::label()
 	{

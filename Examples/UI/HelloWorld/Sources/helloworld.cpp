@@ -137,6 +137,22 @@ HelloWorld::HelloWorld()
 	gradient_box->style()->set("box-shadow: 7px 7px 7px rgba(0,0,0,0.2)");
 	body->add_subview(gradient_box);
 
+	auto button = std::make_shared<clan::ButtonView>();
+
+	button->style()->set("border-image-slice: 6 6 5 5 fill;");
+	button->style()->set("border-image-width:6px 6px 5px 5px;");
+	button->style()->set("border-image-repeat:stretch;");
+	button->style()->set("border-image-source:url('Resources/button_normal.png');");
+	button->style("hot")->set("border-image-source:url('Resources/button_hot.png');");
+	button->style("pressed")->set("border-image-source:url('Resources/button_pressed.png');");
+	button->style("disabled")->set("border-image-source:url('Resources/button_disabled.png');");
+	button->label()->style()->set("margin: 5px auto; font: 13px/1.5 'Segoe UI'; padding: 3px 10px");
+	button->label()->set_text_alignment(TextAlignment::center);
+	button->label()->set_text("This is a button");
+
+	body->add_subview(button);
+
+
 	std::shared_ptr<clan::SliderView> slider = std::make_shared<clan::SliderView>();
 	slider->set_horizontal();
 
