@@ -61,6 +61,12 @@ namespace clan
 	{
 	}
 
+	void LabelView::layout_subviews(Canvas &canvas)
+	{
+		View::layout_subviews(canvas);
+		impl->font = style_cascade().get_font(canvas);	// Reset the font on new layout
+	}
+
 	std::string LabelView::text() const
 	{
 		return impl->_text;
