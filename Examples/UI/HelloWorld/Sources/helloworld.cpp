@@ -147,6 +147,7 @@ HelloWorld::HelloWorld()
 	button->style("pressed")->set("border-image-source:url('Resources/button_pressed.png');");
 	button->style("disabled")->set("border-image-source:url('Resources/button_disabled.png');");
 	button->label()->style()->set("margin: 5px auto; font: 13px/1.5 'Segoe UI'; padding: 3px 10px");
+	button->label()->style("pressed")->set("background: #EDF6FF; font-weight: bold");
 	button->label()->set_text_alignment(TextAlignment::center);
 	button->label()->set_text("This is a button");
 

@@ -68,6 +68,9 @@ namespace clan
 		bool state(const std::string &name) const;
 		void set_state(const std::string &name, bool value);
 
+		/// Sets the state for this view and all siblings recursively, until a manually set state of the same name is found
+		void set_state_cascade(const std::string &name, bool value);
+
 		SlotContainer slots;
 
 		View *superview() const;

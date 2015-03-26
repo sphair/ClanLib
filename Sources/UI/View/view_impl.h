@@ -46,6 +46,8 @@ namespace clan
 		View *find_next_with_tab_index(unsigned int tab_index, const ViewImpl *search_from = nullptr, bool also_search_ancestors = true) const;
 		View *find_prev_with_tab_index(unsigned int tab_index, const ViewImpl *search_from = nullptr, bool also_search_ancestors = true) const;
 
+		void set_state_cascade_siblings(const std::string &name, bool value);
+
 		void inverse_bubble(EventUI *e);
 
 		View *_superview = nullptr;
@@ -57,7 +59,15 @@ namespace clan
 		mutable StyleCascade style_cascade;
 		mutable std::map<std::string, std::shared_ptr<Style>> styles;
 
-		std::map<std::string, bool> states;
+		struct StyleState
+		{
+			StyleState(){}
+			StyleState(bool is_inherited, bool is_enabled) : inherited(is_inherited), enabled(is_enabled){}
+			bool inherited = true;	// Set to true by set_state_cascade(), else false
+			bool enabled = false;
+		};
+
+		std::map<std::string, StyleState> states;
 		
 		BoxGeometry _geometry;
 		bool hidden = false;

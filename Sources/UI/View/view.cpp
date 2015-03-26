@@ -78,18 +78,43 @@ namespace clan
 	{
 		const auto it = impl->states.find(name);
 		if (it != impl->states.end())
-			return it->second;
+			return it->second.enabled;
 		else
 			return false;
 	}
 	
 	void View::set_state(const std::string &name, bool value)
 	{
-		if (impl->states[name] != value)
+		if (impl->states[name].enabled != value)
 		{
-			impl->states[name] = value;
+			impl->states[name] = ViewImpl::StyleState(false, value);
 			impl->update_style_cascade();
 			set_needs_layout();
+		}
+	}
+	void View::set_state_cascade(const std::string &name, bool value)
+	{
+		if (impl->states[name].enabled != value)
+		{
+			impl->states[name] = ViewImpl::StyleState(false, value);
+			impl->update_style_cascade();
+			set_needs_layout();
+			impl->set_state_cascade_siblings(name, value);
+		}
+	}
+
+	void ViewImpl::set_state_cascade_siblings(const std::string &name, bool value)
+	{
+		for (std::shared_ptr<View> &view : _subviews)
+		{
+			ViewImpl *impl = view->impl.get();
+			if (impl->states[name].inherited)
+			{
+				impl->states[name] = ViewImpl::StyleState(true, value);
+				impl->update_style_cascade();
+				view->set_needs_layout();
+				impl->set_state_cascade_siblings(name, value);
+			}
 		}
 	}
 
@@ -776,7 +801,7 @@ namespace clan
 			for (const auto &state : style_classes)
 			{
 				auto search_it = states.find(state);
-				if (search_it == states.end() || !search_it->second)
+				if (search_it == states.end() || !search_it->second.enabled)
 					match = false;
 			}
 

@@ -80,28 +80,28 @@ namespace clan
 	{
 		if (_disabled)
 			return;
-		button->set_state("pressed", true);
+		button->set_state_cascade("pressed", true);
 	}
 
 	void ButtonViewImpl::on_pointer_release(PointerEvent &e)
 	{
 		if (_disabled)
 			return;
-		button->set_state("pressed", false);
+		button->set_state_cascade("pressed", false);
 	}
 
 	void ButtonViewImpl::on_pointer_enter(PointerEvent &e)
 	{
 		if (_disabled)
 			return;
-		button->set_state("hot", true);
+		button->set_state_cascade("hot", true);
 	}
 
 	void ButtonViewImpl::on_pointer_leave(PointerEvent &e)
 	{
 		if (_disabled)
 			return;
-		button->set_state("hot", false);
+		button->set_state_cascade("hot", false);
 	}
 
 	void ButtonView::set_disabled()
@@ -109,9 +109,9 @@ namespace clan
 		if (!impl->_disabled)
 		{
 			impl->_disabled = true;
-			set_state("hot", false);
-			set_state("pressed", false);
-			set_state("disabled", true);
+			set_state_cascade("hot", false);
+			set_state_cascade("pressed", false);
+			set_state_cascade("disabled", true);
 		}
 	}
 	void ButtonView::set_enabled()
@@ -119,9 +119,9 @@ namespace clan
 		if (impl->_disabled)
 		{
 			impl->_disabled = false;
-			set_state("hot", false);
-			set_state("pressed", false);
-			set_state("disabled", false);
+			set_state_cascade("hot", false);
+			set_state_cascade("pressed", false);
+			set_state_cascade("disabled", false);
 		}
 	}
 

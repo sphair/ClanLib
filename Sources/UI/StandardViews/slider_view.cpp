@@ -143,9 +143,9 @@ namespace clan
 		if (!impl->_disabled)
 		{
 			impl->_disabled = true;
-			impl->thumb->set_state("hot", false);
-			impl->thumb->set_state("pressed", false);
-			impl->thumb->set_state("disabled", true);
+			impl->thumb->set_state_cascade("hot", false);
+			impl->thumb->set_state_cascade("pressed", false);
+			impl->thumb->set_state_cascade("disabled", true);
 			impl->mouse_down_mode = SliderViewImpl::mouse_down_none;
 			impl->scroll_timer.stop();
 
@@ -156,9 +156,9 @@ namespace clan
 		if (impl->_disabled)
 		{
 			impl->_disabled = false;
-			impl->thumb->set_state("hot", false);
-			impl->thumb->set_state("pressed", false);
-			impl->thumb->set_state("disabled", false);
+			impl->thumb->set_state_cascade("hot", false);
+			impl->thumb->set_state_cascade("pressed", false);
+			impl->thumb->set_state_cascade("disabled", false);
 		}
 	}
 
@@ -350,7 +350,7 @@ namespace clan
 	{
 		if (_disabled)
 			return;
-		thumb->set_state("pressed", true);
+		thumb->set_state_cascade("pressed", true);
 		mouse_down_mode = mouse_down_thumb_drag;
 		thumb_move_start_position = _position;
 		mouse_drag_start_pos = e.pos(track.get());
@@ -360,7 +360,7 @@ namespace clan
 	{
 		if (_disabled)
 			return;
-		thumb->set_state("pressed", false);
+		thumb->set_state_cascade("pressed", false);
 		mouse_down_mode = mouse_down_none;
 	}
 
@@ -368,14 +368,14 @@ namespace clan
 	{
 		if (_disabled)
 			return;
-		thumb->set_state("hot", true);
+		thumb->set_state_cascade("hot", true);
 	}
 
 	void SliderViewImpl::on_pointer_thumb_leave(PointerEvent &e)
 	{
 		if (_disabled)
 			return;
-		thumb->set_state("hot", false);
+		thumb->set_state_cascade("hot", false);
 	}
 
 	void SliderViewImpl::on_pointer_move(PointerEvent &e)
