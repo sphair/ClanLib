@@ -65,7 +65,11 @@ namespace clan
 		slots.connect(sig_pointer_release(), impl.get(), &ButtonViewImpl::on_pointer_release);
 
 		slots.connect(sig_pointer_enter(), impl.get(), &ButtonViewImpl::on_pointer_enter);
+		slots.connect(impl->label->sig_pointer_enter(), impl.get(), &ButtonViewImpl::on_pointer_enter);
+		slots.connect(impl->image_view->sig_pointer_enter(), impl.get(), &ButtonViewImpl::on_pointer_enter);
 		slots.connect(sig_pointer_leave(), impl.get(), &ButtonViewImpl::on_pointer_leave);
+		slots.connect(impl->label->sig_pointer_leave(), impl.get(), &ButtonViewImpl::on_pointer_leave);
+		slots.connect(impl->image_view->sig_pointer_leave(), impl.get(), &ButtonViewImpl::on_pointer_leave);
 	}
 
 	ButtonView::~ButtonView()
