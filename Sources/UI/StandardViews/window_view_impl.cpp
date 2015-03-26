@@ -58,8 +58,7 @@ namespace clan
 
 	void WindowView_Impl::on_lost_focus()
 	{
-		capture_down_counter = 0;
-		captured_view.reset();
+		release_capture();
 
 		ActivationChangeEvent e(ActivationChangeType::deactivated);
 		window_view->dispatch_event(&e);
@@ -67,6 +66,7 @@ namespace clan
 
 	void WindowView_Impl::on_got_focus()
 	{
+		release_capture();
 		ActivationChangeEvent e(ActivationChangeType::activated);
 		window_view->dispatch_event(&e);
 	}
@@ -112,16 +112,9 @@ namespace clan
 		}
 	}
 
-	void WindowView_Impl::window_pointer_event(PointerEvent &e_window)
+	void WindowView_Impl::dispatch_hot_event(std::shared_ptr<View> &view, PointerEvent &e)
 	{
-		PointerEvent e = e_window;
-		Pointf pointer_pos = e.pos(window_view);
-		pointer_pos -= window_view->geometry().content.get_top_left();
-		e.set_pos(window_view, pointer_pos);
-
-		std::shared_ptr<View> view_above_cursor = window_view->find_view_at(e.pos(window_view));
-
-		if (view_above_cursor != hot_view)
+		if (view != hot_view)
 		{
 			if (hot_view)
 			{
@@ -129,7 +122,7 @@ namespace clan
 				hot_view->dispatch_event(&e_exit, true);
 			}
 
-			hot_view = view_above_cursor;
+			hot_view = view;
 
 			if (hot_view)
 			{
@@ -141,22 +134,31 @@ namespace clan
 		if (hot_view)
 			hot_view->update_cursor(window);
 
-		if (e.type() == PointerEventType::enter || e.type() == PointerEventType::leave)
-			return;
+	}
 
+	void WindowView_Impl::release_capture()
+	{
+		if (captured_view)
+		{
+			window.capture_mouse(false);
+			captured_view.reset();
+			capture_down_counter = 0;
+		}
+	}
+
+	std::shared_ptr<View> WindowView_Impl::get_capture_view(PointerEvent &e, std::shared_ptr<View> &view_above_cursor)
+	{
 		if (e.type() == PointerEventType::press || e.type() == PointerEventType::double_click)
 		{
-			// To do: use flags for each mouse key rather than a counter - it is safer in case a release event is never sent
 			capture_down_counter++;
 			if (capture_down_counter == 1)
+			{
 				captured_view = view_above_cursor;
+				window.capture_mouse(true);
+			}
 		}
 
-		std::shared_ptr<View> view = captured_view ? captured_view : view_above_cursor;
-		if (view)
-			view->dispatch_event(&e);
-		else
-			window_view->dispatch_event(&e);
+		std::shared_ptr<View> view = captured_view;
 
 		if (e.type() == PointerEventType::release)
 		{
@@ -164,9 +166,35 @@ namespace clan
 			{
 				capture_down_counter--;
 				if (capture_down_counter == 0)
-					captured_view.reset();
+				{
+					release_capture();
+				}
 			}
 		}
+		return view;
+	}
+
+	void WindowView_Impl::window_pointer_event(PointerEvent &e_window)
+	{
+		PointerEvent e = e_window;
+		Pointf pointer_pos = e.pos(window_view);
+		pointer_pos -= window_view->geometry().content.get_top_left();
+		e.set_pos(window_view, pointer_pos);
+
+		std::shared_ptr<View> view_above_cursor = window_view->find_view_at(e.pos(window_view));
+		auto view = get_capture_view(e, view_above_cursor);
+		if (!view)
+			view = view_above_cursor;
+
+		dispatch_hot_event(view, e);
+
+		if (e.type() == PointerEventType::enter || e.type() == PointerEventType::leave)		// Ignore window enter/leave events
+			return;
+
+		if (view)
+			view->dispatch_event(&e);
+		else
+			window_view->dispatch_event(&e);
 	}
 
 	void WindowView_Impl::on_key_down(const clan::InputEvent &e)

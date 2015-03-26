@@ -68,6 +68,10 @@ namespace clan
 		void on_mouse_move(const clan::InputEvent &);
 
 	private:
+		void dispatch_hot_event(std::shared_ptr<View> &view, PointerEvent &e);
+		std::shared_ptr<View> get_capture_view(PointerEvent &e, std::shared_ptr<View> &view_above_cursor);
+		void release_capture();
+
 		PointerButton decode_id(clan::InputCode ic) const;
 		void window_key_event(KeyEvent &e);
 		void window_pointer_event(PointerEvent &e);

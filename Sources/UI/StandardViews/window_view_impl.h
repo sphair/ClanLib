@@ -51,9 +51,12 @@ namespace clan
 		std::shared_ptr<View> hot_view;
 
 	private:
+		void dispatch_hot_event(std::shared_ptr<View> &view, PointerEvent &e);
+		std::shared_ptr<View> get_capture_view(PointerEvent &e, std::shared_ptr<View> &view_above_cursor);
 
 		void window_key_event(KeyEvent &e);
 		void window_pointer_event(PointerEvent &e);
+		void release_capture();
 
 		void on_window_close();
 		void on_lost_focus();

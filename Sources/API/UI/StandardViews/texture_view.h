@@ -60,7 +60,7 @@ namespace clan
 		Pointf to_screen_pos(const Pointf &pos) override;
 		Pointf from_screen_pos(const Pointf &pos) override;
 
-		/// \brief Set the window to use to automatically set the cursor.
+		/// \brief Set the window to use to automatically set the cursor (including mouse capture)
 		///
 		/// Default = Don't change the cursor
 		void set_cursor_window(const DisplayWindow &cursor_window);
