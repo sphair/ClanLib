@@ -51,6 +51,10 @@ namespace clan
 		void set_vertical();
 		void set_horizontal();
 
+		bool disabled() const;
+		void set_disabled();
+		void set_enabled();
+
 		double line_step() const;
 		double page_step() const;
 

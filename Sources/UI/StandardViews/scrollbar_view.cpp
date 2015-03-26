@@ -120,6 +120,8 @@ namespace clan
 		void on_focus_lost(FocusChangeEvent &e);
 		void on_activated(ActivationChangeEvent &e);
 		void on_deactivated(ActivationChangeEvent &e);
+		void on_pointer_enter(PointerEvent &e);
+		void on_pointer_leave(PointerEvent &e);
 
 		void scroll_timer_expired();
 
@@ -151,6 +153,7 @@ namespace clan
 		Pointf mouse_drag_start_pos;
 		Signal<void()> sig_scroll;
 		Timer scroll_timer;
+		bool _disabled = false;
 
 		void update_pos(ScrollBarView *view, double new_pos, double new_min, double new_max)
 		{
@@ -215,9 +218,33 @@ namespace clan
 		slots.connect(sig_activated(), impl.get(), &ScrollBarViewImpl::on_activated);
 		slots.connect(sig_activated(), impl.get(), &ScrollBarViewImpl::on_deactivated);
 
+
+		slots.connect(impl->track->sig_pointer_enter(), impl.get(), &ScrollBarViewImpl::on_pointer_enter);
+		slots.connect(impl->track->sig_pointer_leave(), impl.get(), &ScrollBarViewImpl::on_pointer_leave);
+		slots.connect(impl->thumb->sig_pointer_enter(), impl.get(), &ScrollBarViewImpl::on_pointer_enter);
+		slots.connect(impl->thumb->sig_pointer_leave(), impl.get(), &ScrollBarViewImpl::on_pointer_leave);
+		slots.connect(impl->thumb_grip->sig_pointer_enter(), impl.get(), &ScrollBarViewImpl::on_pointer_enter);
+		slots.connect(impl->thumb_grip->sig_pointer_leave(), impl.get(), &ScrollBarViewImpl::on_pointer_leave);
+
 		impl->scroll_timer.func_expired() = clan::bind_member(impl.get(), &ScrollBarViewImpl::scroll_timer_expired);
 
 		set_vertical();
+	}
+
+	void ScrollBarViewImpl::on_pointer_enter(PointerEvent &e)
+	{
+		if (_disabled)
+			return;
+		track->set_state_cascade("hot", true);
+		thumb->set_state_cascade("hot", true);
+	}
+
+	void ScrollBarViewImpl::on_pointer_leave(PointerEvent &e)
+	{
+		if (_disabled)
+			return;
+		track->set_state_cascade("hot", false);
+		thumb->set_state_cascade("hot", false);
 	}
 
 	std::shared_ptr<View> ScrollBarView::button_decrement() const
@@ -314,6 +341,41 @@ namespace clan
 		return impl->pos;
 	}
 
+	bool ScrollBarView::disabled() const
+	{
+		return impl->_disabled;
+	}
+
+	void ScrollBarView::set_disabled()
+	{
+		if (!impl->_disabled)
+		{
+			impl->_disabled = true;
+			impl->track->set_state_cascade("hot", false);
+			impl->track->set_state_cascade("pressed", false);
+			impl->track->set_state_cascade("disabled", true);
+			impl->thumb->set_state_cascade("hot", false);
+			impl->thumb->set_state_cascade("pressed", false);
+			impl->thumb->set_state_cascade("disabled", true);
+			impl->mouse_down_mode = ScrollBarViewImpl::mouse_down_none;
+			impl->scroll_timer.stop();
+
+		}
+	}
+	void ScrollBarView::set_enabled()
+	{
+		if (impl->_disabled)
+		{
+			impl->_disabled = false;
+			impl->track->set_state_cascade("hot", false);
+			impl->track->set_state_cascade("pressed", false);
+			impl->track->set_state_cascade("disabled", false);
+			impl->thumb->set_state_cascade("hot", false);
+			impl->thumb->set_state_cascade("pressed", false);
+			impl->thumb->set_state_cascade("disabled", false);
+		}
+	}
+
 	void ScrollBarView::set_min_position(double value)
 	{
 		double new_min = value;
@@ -388,6 +450,8 @@ namespace clan
 
 	void ScrollBarViewImpl::on_focus_lost(FocusChangeEvent &e)
 	{
+		if (_disabled)
+			return;
 		mouse_down_mode = mouse_down_none;
 		scroll_timer.stop();
 	}
@@ -399,12 +463,16 @@ namespace clan
 
 	void ScrollBarViewImpl::on_deactivated(ActivationChangeEvent &e)
 	{
+		if (_disabled)
+			return;
 		mouse_down_mode = mouse_down_none;
 		scroll_timer.stop();
 	}
 
 	void ScrollBarViewImpl::on_pointer_track_press(PointerEvent &e)
 	{
+		if (_disabled)
+			return;
 		float mouse_pos;
 		Rectf thumb_geometry(thumb->geometry().content_box());
 		float thumb_position;
@@ -438,6 +506,8 @@ namespace clan
 
 	void ScrollBarViewImpl::on_pointer_track_release(PointerEvent &e)
 	{
+		if (_disabled)
+			return;
 		mouse_down_mode = mouse_down_none;
 		scroll_timer.stop();
 
@@ -445,6 +515,9 @@ namespace clan
 
 	void ScrollBarViewImpl::on_pointer_thumb_press(PointerEvent &e)
 	{
+		if (_disabled)
+			return;
+		thumb->set_state_cascade("pressed", true);
 		mouse_down_mode = mouse_down_thumb_drag;
 		thumb_move_start_position = pos;
 		mouse_drag_start_pos = e.pos(track.get());
@@ -452,12 +525,16 @@ namespace clan
 
 	void ScrollBarViewImpl::on_pointer_thumb_release(PointerEvent &e)
 	{
+		if (_disabled)
+			return;
+		thumb->set_state_cascade("pressed", false);
 		mouse_down_mode = mouse_down_none;
-
 	}
 
 	void ScrollBarViewImpl::on_pointer_decrement_press(PointerEvent &e)
 	{
+		if (_disabled)
+			return;
 		mouse_down_mode = mouse_down_button_decr;
 		timer_step_size = -line_step;
 		scroll_timer_expired();
@@ -465,12 +542,16 @@ namespace clan
 
 	void ScrollBarViewImpl::on_pointer_decrement_release(PointerEvent &e)
 	{
+		if (_disabled)
+			return;
 		mouse_down_mode = mouse_down_none;
 		scroll_timer.stop();
 	}
 
 	void ScrollBarViewImpl::on_pointer_increment_press(PointerEvent &e)
 	{
+		if (_disabled)
+			return;
 		mouse_down_mode = mouse_down_button_incr;
 		timer_step_size = line_step;
 		scroll_timer_expired();
@@ -478,12 +559,16 @@ namespace clan
 
 	void ScrollBarViewImpl::on_pointer_increment_release(PointerEvent &e)
 	{
+		if (_disabled)
+			return;
 		mouse_down_mode = mouse_down_none;
 		scroll_timer.stop();
 	}
 
 	void ScrollBarViewImpl::on_pointer_move(PointerEvent &e)
 	{
+		if (_disabled)
+			return;
 		if (mouse_down_mode != mouse_down_thumb_drag)
 			return;
 
@@ -526,6 +611,8 @@ namespace clan
 
 	void ScrollBarViewImpl::scroll_timer_expired()
 	{
+		if (_disabled)
+			return;
 		if ((mouse_down_mode == mouse_down_none) || (mouse_down_mode == mouse_down_thumb_drag))
 			return;
 

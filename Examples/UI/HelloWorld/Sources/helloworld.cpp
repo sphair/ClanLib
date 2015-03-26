@@ -50,6 +50,7 @@ HelloWorld::HelloWorld()
 	DisplayWindowDescription desc;
 	desc.set_title("UICore: Hello World");
 	desc.set_allow_resize(true);
+	desc.set_size(Sizef(640, 600), false);
 	root = std::make_shared<WindowView>(desc);
 
 	// Exit run loop when close is clicked.
@@ -136,6 +137,44 @@ HelloWorld::HelloWorld()
 	gradient_box->style()->set("background: linear-gradient(13.37deg, #f0f0f0, rgb(120,240,120) 50%, #f0f0f0)");
 	gradient_box->style()->set("box-shadow: 7px 7px 7px rgba(0,0,0,0.2)");
 	body->add_subview(gradient_box);
+
+	auto scrollbar = std::make_shared<clan::ScrollBarView>();
+	scrollbar->set_horizontal();
+	scrollbar->style()->set("flex: 0 0 main-size");
+	scrollbar->style()->set("background: rgb(232, 232, 236)");
+	scrollbar->track()->style()->set("border-image-slice: 4 0 3 0 fill;");
+	scrollbar->track()->style()->set("border-image-width:4px 0px 3px 0px;");
+	scrollbar->track()->style()->set("border-image-repeat:stretch;");
+	scrollbar->track()->style()->set("border-image-source:url('Resources/scrollbar_hori_track_normal.png');");
+	scrollbar->track()->style("hot")->set("border-image-source:url('Resources/scrollbar_hori_track_hot.png');");
+	scrollbar->track()->style("pressed")->set("border-image-source:url('Resources/scrollbar_hori_track_pressed.png');");
+	scrollbar->track()->style("disabled")->set("border-image-source:url('Resources/scrollbar_hori_track_disabled.png');");
+
+	scrollbar->thumb()->style()->set("border-image-slice: 5 5 5 5 fill;");
+	scrollbar->thumb()->style()->set("border-image-width:5px 5px 5px 5px;");
+	scrollbar->thumb()->style()->set("border-image-repeat:stretch;");
+	scrollbar->thumb()->style()->set("border-image-source:url('Resources/scrollbar_hori_thumb_normal.png');");
+	scrollbar->thumb()->style("hot")->set("border-image-source:url('Resources/scrollbar_hori_thumb_hot.png');");
+	scrollbar->thumb()->style("pressed")->set("border-image-source:url('Resources/scrollbar_hori_thumb_pressed.png');");
+	scrollbar->thumb()->style("disabled")->set("border-image-source:url('Resources/scrollbar_hori_thumb_disabled.png');");
+
+	scrollbar->thumb_grip()->style()->set("background-position:center center;");
+	scrollbar->thumb_grip()->style()->set("background-repeat:no-repeat;");
+	scrollbar->thumb_grip()->style()->set("background-attachment:scroll; ");
+	scrollbar->thumb_grip()->style()->set("background-image:url('Resources/scrollbar_hori_thumb_gripper_normal.png');");
+	scrollbar->thumb_grip()->style("hot")->set("background-image:url('Resources/scrollbar_hori_thumb_gripper_hot.png');");
+	scrollbar->thumb_grip()->style("pressed")->set("background-image:url('Resources/scrollbar_hori_thumb_gripper_pressed.png');");
+	scrollbar->thumb_grip()->style("disabled")->set("background-image:url('Resources/scrollbar_hori_thumb_gripper_disabled.png');");
+	scrollbar->thumb_grip()->style()->set("padding: 0 4px");	//FIXME - Implement Background
+	scrollbar->thumb_grip()->style()->set("background: rgb(0, 255, 0)");	//FIXME - Implement Background
+	//scrollbar->set_disabled();
+
+	scrollbar->set_range(0.0, 1.0);
+	scrollbar->set_position(0.5);
+	scrollbar->set_page_step(0.1);
+	scrollbar->set_line_step(0.01);
+	body->add_subview(scrollbar);
+
 
 	auto button = std::make_shared<clan::ButtonView>();
 
