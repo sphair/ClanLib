@@ -37,15 +37,40 @@ namespace clan
 	public:
 		void on_pointer_press(PointerEvent &e);
 		void on_pointer_release(PointerEvent &e);
-		void on_pointer_enter(PointerEvent &e);
-		void on_pointer_leave(PointerEvent &e);
+		void update_state();
 
 		ButtonView *button = nullptr;
-		bool _disabled = false;
+		bool _state_disabled = false;
+		bool _state_hot = false;
+		bool _state_pressed = false;
 
 		std::shared_ptr<LabelView> label;
 		std::shared_ptr<ImageView> image_view;
 	};
+
+	void ButtonViewImpl::update_state()
+	{
+		bool target_hot = false;
+		bool target_disabled = false;
+		bool target_pressed = false;
+
+		if (_state_disabled)
+		{
+			target_disabled = true;
+		}
+		else if (_state_pressed)
+		{
+			target_pressed = true;
+		}
+		else if (_state_hot)
+		{
+			target_hot = true;
+		}
+
+		button->set_state_cascade("hot", target_hot);
+		button->set_state_cascade("pressed", target_pressed);
+		button->set_state_cascade("disabled", target_disabled);
+	}
 
 	ButtonView::ButtonView() : impl(new ButtonViewImpl())
 	{
@@ -64,12 +89,14 @@ namespace clan
 		slots.connect(sig_pointer_press(), impl.get(), &ButtonViewImpl::on_pointer_press);
 		slots.connect(sig_pointer_release(), impl.get(), &ButtonViewImpl::on_pointer_release);
 
-		slots.connect(sig_pointer_enter(), impl.get(), &ButtonViewImpl::on_pointer_enter);
-		slots.connect(impl->label->sig_pointer_enter(), impl.get(), &ButtonViewImpl::on_pointer_enter);
-		slots.connect(impl->image_view->sig_pointer_enter(), impl.get(), &ButtonViewImpl::on_pointer_enter);
-		slots.connect(sig_pointer_leave(), impl.get(), &ButtonViewImpl::on_pointer_leave);
-		slots.connect(impl->label->sig_pointer_leave(), impl.get(), &ButtonViewImpl::on_pointer_leave);
-		slots.connect(impl->image_view->sig_pointer_leave(), impl.get(), &ButtonViewImpl::on_pointer_leave);
+		slots.connect(sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_hot = true;  impl->update_state(); });
+		slots.connect(sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_hot = false;  impl->update_state(); });
+		slots.connect(impl->label->sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_hot = true;  impl->update_state(); });
+		slots.connect(impl->label->sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_hot = false;  impl->update_state(); });
+		slots.connect(impl->image_view->sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_hot = true;  impl->update_state(); });
+		slots.connect(impl->image_view->sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_hot = false;  impl->update_state(); });
+
+
 	}
 
 	ButtonView::~ButtonView()
@@ -78,53 +105,36 @@ namespace clan
 
 	void ButtonViewImpl::on_pointer_press(PointerEvent &e)
 	{
-		if (_disabled)
+		if (_state_disabled)
 			return;
-		button->set_state_cascade("pressed", true);
+		_state_pressed = true;
+		update_state();
 	}
 
 	void ButtonViewImpl::on_pointer_release(PointerEvent &e)
 	{
-		if (_disabled)
+		if (_state_disabled)
 			return;
-		button->set_state_cascade("pressed", false);
-	}
-
-	void ButtonViewImpl::on_pointer_enter(PointerEvent &e)
-	{
-		if (_disabled)
-			return;
-		button->set_state_cascade("hot", true);
-	}
-
-	void ButtonViewImpl::on_pointer_leave(PointerEvent &e)
-	{
-		if (_disabled)
-			return;
-		button->set_state_cascade("hot", false);
+		_state_pressed = false;
+		update_state();
 	}
 
 	void ButtonView::set_disabled()
 	{
-		if (!impl->_disabled)
+		if (!impl->_state_disabled)
 		{
-			impl->_disabled = true;
-			set_state_cascade("hot", false);
-			set_state_cascade("pressed", false);
-			set_state_cascade("disabled", true);
+			impl->_state_disabled = true;
+			impl->update_state();
 		}
 	}
 	void ButtonView::set_enabled()
 	{
-		if (impl->_disabled)
+		if (impl->_state_disabled)
 		{
-			impl->_disabled = false;
-			set_state_cascade("hot", false);
-			set_state_cascade("pressed", false);
-			set_state_cascade("disabled", false);
+			impl->_state_disabled = false;
+			impl->update_state();
 		}
 	}
-
 
 	std::shared_ptr<LabelView> ButtonView::label()
 	{

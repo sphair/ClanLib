@@ -46,8 +46,6 @@ namespace clan
 		void on_pointer_track_release(PointerEvent &e);
 		void on_pointer_thumb_press(PointerEvent &e);
 		void on_pointer_thumb_release(PointerEvent &e);
-		void on_pointer_thumb_enter(PointerEvent &e);
-		void on_pointer_thumb_leave(PointerEvent &e);
 
 		void on_pointer_move(PointerEvent &e);
 		void on_focus_gained(FocusChangeEvent &e);
@@ -85,11 +83,37 @@ namespace clan
 		int timer_target_position = 0;
 		int thumb_move_start_position = 0;
 
-		bool _disabled = false;
+		bool _state_disabled = false;
+		bool _state_hot = false;
+		bool _state_pressed = false;
 
 		void update_pos(SliderView *view, int new_pos, int new_min, int new_max);
+		void update_state();
 
 	};
+	void SliderViewImpl::update_state()
+	{
+		bool target_hot = false;
+		bool target_disabled = false;
+		bool target_pressed = false;
+
+		if (_state_disabled)
+		{
+			target_disabled = true;
+		}
+		else if (_state_pressed)
+		{
+			target_pressed = true;
+		}
+		else if (_state_hot)
+		{
+			target_hot = true;
+		}
+
+		slider->set_state_cascade("hot", target_hot);
+		slider->set_state_cascade("pressed", target_pressed);
+		slider->set_state_cascade("disabled", target_disabled);
+	}
 
 	void SliderViewImpl::update_pos(SliderView *view, int new_pos, int new_min, int new_max)
 	{
@@ -118,8 +142,8 @@ namespace clan
 		slots.connect(impl->thumb->sig_pointer_press(), impl.get(), &SliderViewImpl::on_pointer_thumb_press);
 		slots.connect(impl->thumb->sig_pointer_release(), impl.get(), &SliderViewImpl::on_pointer_thumb_release);
 
-		slots.connect(impl->thumb->sig_pointer_enter(), impl.get(), &SliderViewImpl::on_pointer_thumb_enter);
-		slots.connect(impl->thumb->sig_pointer_leave(), impl.get(), &SliderViewImpl::on_pointer_thumb_leave);
+		slots.connect(impl->thumb->sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_hot = true;  impl->update_state(); });
+		slots.connect(impl->thumb->sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_hot = false;  impl->update_state(); });
 
 		slots.connect(impl->thumb->sig_pointer_move(), impl.get(), &SliderViewImpl::on_pointer_move);
 
@@ -135,30 +159,25 @@ namespace clan
 
 	bool SliderView::disabled() const
 	{
-		return impl->_disabled;
+		return impl->_state_disabled;
 	}
 
 	void SliderView::set_disabled()
 	{
-		if (!impl->_disabled)
+		if (!impl->_state_disabled)
 		{
-			impl->_disabled = true;
-			impl->thumb->set_state_cascade("hot", false);
-			impl->thumb->set_state_cascade("pressed", false);
-			impl->thumb->set_state_cascade("disabled", true);
+			impl->_state_disabled = true;
+			impl->update_state();
 			impl->mouse_down_mode = SliderViewImpl::mouse_down_none;
 			impl->scroll_timer.stop();
-
 		}
 	}
 	void SliderView::set_enabled()
 	{
-		if (impl->_disabled)
+		if (impl->_state_disabled)
 		{
-			impl->_disabled = false;
-			impl->thumb->set_state_cascade("hot", false);
-			impl->thumb->set_state_cascade("pressed", false);
-			impl->thumb->set_state_cascade("disabled", false);
+			impl->_state_disabled = false;
+			impl->update_state();
 		}
 	}
 
@@ -281,7 +300,7 @@ namespace clan
 
 	void SliderViewImpl::on_focus_lost(FocusChangeEvent &e)
 	{
-		if (_disabled)
+		if (_state_disabled)
 			return;
 		mouse_down_mode = mouse_down_none;
 		scroll_timer.stop();
@@ -294,7 +313,7 @@ namespace clan
 
 	void SliderViewImpl::on_deactivated(ActivationChangeEvent &e)
 	{
-		if (_disabled)
+		if (_state_disabled)
 			return;
 
 		mouse_down_mode = mouse_down_none;
@@ -303,7 +322,7 @@ namespace clan
 
 	void SliderViewImpl::on_pointer_track_press(PointerEvent &e)
 	{
-		if (_disabled)
+		if (_state_disabled)
 			return;
 		if (e.target() == thumb)	// Thumb control handled elsewhere
 			return;
@@ -340,7 +359,7 @@ namespace clan
 
 	void SliderViewImpl::on_pointer_track_release(PointerEvent &e)
 	{
-		if (_disabled)
+		if (_state_disabled)
 			return;
 		mouse_down_mode = mouse_down_none;
 		scroll_timer.stop();
@@ -348,9 +367,11 @@ namespace clan
 
 	void SliderViewImpl::on_pointer_thumb_press(PointerEvent &e)
 	{
-		if (_disabled)
+		if (_state_disabled)
 			return;
-		thumb->set_state_cascade("pressed", true);
+
+		_state_pressed = true;
+		update_state();
 		mouse_down_mode = mouse_down_thumb_drag;
 		thumb_move_start_position = _position;
 		mouse_drag_start_pos = e.pos(track.get());
@@ -358,29 +379,17 @@ namespace clan
 
 	void SliderViewImpl::on_pointer_thumb_release(PointerEvent &e)
 	{
-		if (_disabled)
+		if (_state_disabled)
 			return;
-		thumb->set_state_cascade("pressed", false);
+		_state_pressed = false;
+		update_state();
 		mouse_down_mode = mouse_down_none;
-	}
-
-	void SliderViewImpl::on_pointer_thumb_enter(PointerEvent &e)
-	{
-		if (_disabled)
-			return;
-		thumb->set_state_cascade("hot", true);
-	}
-
-	void SliderViewImpl::on_pointer_thumb_leave(PointerEvent &e)
-	{
-		if (_disabled)
-			return;
-		thumb->set_state_cascade("hot", false);
+		scroll_timer.stop();
 	}
 
 	void SliderViewImpl::on_pointer_move(PointerEvent &e)
 	{
-		if (_disabled)
+		if (_state_disabled)
 			return;
 		if (mouse_down_mode != mouse_down_thumb_drag)
 		{
@@ -430,7 +439,7 @@ namespace clan
 	
 	void SliderViewImpl::scroll_timer_expired()
 	{
-		if (_disabled)
+		if (_state_disabled)
 			return;
 		if ((mouse_down_mode == mouse_down_none) || (mouse_down_mode == mouse_down_thumb_drag))
 			return;
