@@ -39,12 +39,15 @@
 
 namespace clan
 {
-	ScrollBarButtonView::ScrollBarButtonView()
+	ScrollBarButtonView::ScrollBarButtonView(bool render_button_arrows) : _render_button_arrows(render_button_arrows)
 	{
 	}
 
 	void ScrollBarButtonView::render_content(Canvas &canvas)
 	{
+		if (!_render_button_arrows)
+			return;
+
 		Rectf box = geometry().content_box().get_size();
 		box.shrink(4.0f, 6.0f);
 

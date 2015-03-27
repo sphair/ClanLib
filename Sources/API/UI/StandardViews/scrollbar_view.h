@@ -37,7 +37,8 @@ namespace clan
 	class ScrollBarView : public View
 	{
 	public:
-		ScrollBarView();
+		// TODO: decide if "render_button_arrows" is this the best way of controlling rendering
+		ScrollBarView(bool render_button_arrows = true);
 
 		std::shared_ptr<View> button_decrement() const;
 		std::shared_ptr<View> button_increment() const;

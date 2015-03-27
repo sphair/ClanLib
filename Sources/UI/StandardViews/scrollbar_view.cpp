@@ -40,12 +40,12 @@
 namespace clan
 {
 
-	ScrollBarView::ScrollBarView() : impl(std::make_shared<ScrollBarViewImpl>())
+	ScrollBarView::ScrollBarView(bool render_button_arrows) : impl(std::make_shared<ScrollBarViewImpl>())
 	{
 		impl->scrollbar = this;
 
-		impl->button_decrement = std::make_shared<ScrollBarButtonView>();
-		impl->button_increment = std::make_shared<ScrollBarButtonView>();
+		impl->button_decrement = std::make_shared<ScrollBarButtonView>(render_button_arrows);
+		impl->button_increment = std::make_shared<ScrollBarButtonView>(render_button_arrows);
 		impl->track = std::make_shared<View>();
 		impl->thumb = std::make_shared<View>();
 		impl->thumb_grip = std::make_shared<View>();

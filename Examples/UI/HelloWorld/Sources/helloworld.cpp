@@ -138,7 +138,7 @@ HelloWorld::HelloWorld()
 	gradient_box->style()->set("box-shadow: 7px 7px 7px rgba(0,0,0,0.2)");
 	body->add_subview(gradient_box);
 
-	auto scrollbar = std::make_shared<clan::ScrollBarView>();
+	auto scrollbar = std::make_shared<clan::ScrollBarView>(false);
 	scrollbar->set_horizontal();
 	scrollbar->style()->set("flex: 0 0 main-size");
 	scrollbar->style()->set("background: rgb(232, 232, 236)");
@@ -167,6 +167,25 @@ HelloWorld::HelloWorld()
 	scrollbar->thumb_grip()->style("disabled")->set("background-image:url('Resources/scrollbar_hori_thumb_gripper_disabled.png');");
 	scrollbar->thumb_grip()->style()->set("padding: 0 4px");	//FIXME - Implement Background
 	scrollbar->thumb_grip()->style()->set("background: rgb(0, 255, 0)");	//FIXME - Implement Background
+
+	scrollbar->button_decrement()->style()->set("width:17px; height:17px");
+	scrollbar->button_decrement()->style()->set("border-image-slice: 3 3 3 3 fill;");
+	scrollbar->button_decrement()->style()->set("border-image-width:3px 3px 3px 3px;");
+	scrollbar->button_decrement()->style()->set("border-image-repeat:stretch;");
+	scrollbar->button_decrement()->style()->set("border-image-source:url('Resources/scrollbar_hori_button_left_normal_withglyph.png');");
+	scrollbar->button_decrement()->style("hot")->set("border-image-source:url('Resources/scrollbar_hori_button_left_hot_withglyph.png');");
+	scrollbar->button_decrement()->style("pressed")->set("border-image-source:url('Resources/scrollbar_hori_button_left_pressed_withglyph.png');");
+	scrollbar->button_decrement()->style("disabled")->set("border-image-source:url('Resources/scrollbar_hori_button_left_disabled_withglyph.png');");
+
+	scrollbar->button_increment()->style()->set("width:17px; height:17px");
+	scrollbar->button_increment()->style()->set("border-image-slice: 3 3 3 3 fill;");
+	scrollbar->button_increment()->style()->set("border-image-width:3px 3px 3px 3px;");
+	scrollbar->button_increment()->style()->set("border-image-repeat:stretch;");
+	scrollbar->button_increment()->style()->set("border-image-source:url('Resources/scrollbar_hori_button_right_normal_withglyph.png');");
+	scrollbar->button_increment()->style("hot")->set("border-image-source:url('Resources/scrollbar_hori_button_right_hot_withglyph.png');");
+	scrollbar->button_increment()->style("pressed")->set("border-image-source:url('Resources/scrollbar_hori_button_right_pressed_withglyph.png');");
+	scrollbar->button_increment()->style("disabled")->set("border-image-source:url('Resources/scrollbar_hori_button_right_disabled_withglyph.png');");
+
 	//scrollbar->set_disabled();
 
 	scrollbar->set_range(0.0, 1.0);

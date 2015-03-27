@@ -43,13 +43,14 @@ namespace clan
 	class ScrollBarButtonView : public View
 	{
 	public:
-		ScrollBarButtonView();
+		ScrollBarButtonView(bool render_button_arrows);
 
 		void render_content(Canvas &canvas) override;
 		void set_direction(ScrollBarButtonDirection new_dir);
 
 	private:
 		ScrollBarButtonDirection direction = ScrollBarButtonDirection::left;
+		bool _render_button_arrows = true;
 	};
 
 	class ScrollBarViewImpl
