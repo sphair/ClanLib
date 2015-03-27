@@ -29,6 +29,8 @@
 #include "UI/precomp.h"
 #include "background.h"
 
+#include "API/UI/Image/image_source.h"
+
 namespace clan
 {
 	void force_link_style_parser_background()
@@ -704,7 +706,7 @@ namespace clan
 				else if (token.type == StyleTokenType::ident && equals(token.value, "none"))
 					background_images.push_back(StyleValue::from_keyword("none"));
 				else if (token.type == StyleTokenType::uri)
-					background_images.push_back(StyleValue::from_url(token.value));
+					background_images.push_back(StyleValue::from_image(ImageSource::from_resource(token.value)));
 				else
 					return;
 

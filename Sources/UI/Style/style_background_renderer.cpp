@@ -35,6 +35,7 @@
 #include "API/Display/2D/image.h"
 #include "API/Display/2D/path.h"
 #include "API/Display/2D/brush.h"
+#include "API/UI/Image/image_source.h"
 
 namespace clan
 {
@@ -65,7 +66,7 @@ namespace clan
 			if (layer_image.is_keyword("none"))
 				continue;
 
-			if (layer_image.is_keyword("image"))
+			if (layer_image.is_image())
 			{
 				render_background_image(layer_image, index);
 			}
@@ -90,21 +91,10 @@ namespace clan
 
 	void StyleBackgroundRenderer::render_background_image(const StyleValue &layer_image, int index)
 	{
-		/*
-		if (background.image)
-		{
-			Brush brush;
-			brush.type = BrushType::image;
-			brush.image = background.image->get_image(canvas);
-			brush.transform = Mat3f::translate(border_box.left, border_box.top);
-			border_area_path.fill(canvas, brush);
-		}
-		*/
-
 		Image image;
 
 		if (layer_image.is_image())
-			image = Image::resource(canvas, layer_image.text, UIThread::get_resources());
+			image = layer_image.image->get_image(canvas);
 
 		if (!image.is_null())
 		{
@@ -112,7 +102,7 @@ namespace clan
 			Rectf origin_box = get_origin_box(index);
 			Sizef image_size = get_image_size(index, image, origin_box);
 
-			canvas.push_cliprect(clip_box);
+			//canvas.push_cliprect(clip_box);
 
 			StyleValue repeat_x = get_layer_repeat_x(index);
 			StyleValue repeat_y = get_layer_repeat_y(index);
@@ -167,7 +157,7 @@ namespace clan
 					break;
 			}
 
-			canvas.pop_cliprect();
+			//canvas.pop_cliprect();
 		}
 	}
 

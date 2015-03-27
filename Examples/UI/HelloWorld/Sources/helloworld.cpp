@@ -165,8 +165,6 @@ HelloWorld::HelloWorld()
 	scrollbar->thumb_grip()->style("hot")->set("background-image:url('Resources/scrollbar_hori_thumb_gripper_hot.png');");
 	scrollbar->thumb_grip()->style("pressed")->set("background-image:url('Resources/scrollbar_hori_thumb_gripper_pressed.png');");
 	scrollbar->thumb_grip()->style("disabled")->set("background-image:url('Resources/scrollbar_hori_thumb_gripper_disabled.png');");
-	scrollbar->thumb_grip()->style()->set("padding: 0 4px");	//FIXME - Implement Background
-	scrollbar->thumb_grip()->style()->set("background: rgb(0, 255, 0)");	//FIXME - Implement Background
 
 	scrollbar->button_decrement()->style()->set("width:17px; height:17px");
 	scrollbar->button_decrement()->style()->set("border-image-slice: 3 3 3 3 fill;");
