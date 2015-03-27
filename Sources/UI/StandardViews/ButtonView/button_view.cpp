@@ -24,53 +24,16 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #include "UI/precomp.h"
 #include "API/UI/StandardViews/button_view.h"
 #include "API/UI/StandardViews/image_view.h"
+#include "button_view_impl.h"
 
 namespace clan
 {
-	class ButtonViewImpl
-	{
-	public:
-		void on_pointer_press(PointerEvent &e);
-		void on_pointer_release(PointerEvent &e);
-		void update_state();
-
-		ButtonView *button = nullptr;
-		bool _state_disabled = false;
-		bool _state_hot = false;
-		bool _state_pressed = false;
-
-		std::shared_ptr<LabelView> label;
-		std::shared_ptr<ImageView> image_view;
-	};
-
-	void ButtonViewImpl::update_state()
-	{
-		bool target_hot = false;
-		bool target_disabled = false;
-		bool target_pressed = false;
-
-		if (_state_disabled)
-		{
-			target_disabled = true;
-		}
-		else if (_state_pressed)
-		{
-			target_pressed = true;
-		}
-		else if (_state_hot)
-		{
-			target_hot = true;
-		}
-
-		button->set_state_cascade("hot", target_hot);
-		button->set_state_cascade("pressed", target_pressed);
-		button->set_state_cascade("disabled", target_disabled);
-	}
 
 	ButtonView::ButtonView() : impl(new ButtonViewImpl())
 	{
@@ -95,28 +58,10 @@ namespace clan
 		slots.connect(impl->label->sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_hot = false;  impl->update_state(); });
 		slots.connect(impl->image_view->sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_hot = true;  impl->update_state(); });
 		slots.connect(impl->image_view->sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_hot = false;  impl->update_state(); });
-
-
 	}
 
 	ButtonView::~ButtonView()
 	{
-	}
-
-	void ButtonViewImpl::on_pointer_press(PointerEvent &e)
-	{
-		if (_state_disabled)
-			return;
-		_state_pressed = true;
-		update_state();
-	}
-
-	void ButtonViewImpl::on_pointer_release(PointerEvent &e)
-	{
-		if (_state_disabled)
-			return;
-		_state_pressed = false;
-		update_state();
 	}
 
 	void ButtonView::set_disabled()
