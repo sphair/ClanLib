@@ -100,6 +100,10 @@ namespace clan
 		slots.connect(spacer1->sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_thumb_hot = false;  impl->update_thumb_state(); });
 		slots.connect(spacer2->sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_thumb_hot = true;  impl->update_thumb_state(); });
 		slots.connect(spacer2->sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_thumb_hot = false;  impl->update_thumb_state(); });
+		slots.connect(impl->button_decrement->sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_decrement_hot = true;  impl->update_decrement_state(); });
+		slots.connect(impl->button_decrement->sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_decrement_hot = false;  impl->update_decrement_state(); });
+		slots.connect(impl->button_increment->sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_increment_hot = true;  impl->update_increment_state(); });
+		slots.connect(impl->button_increment->sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_increment_hot = false;  impl->update_increment_state(); });
 
 		impl->scroll_timer.func_expired() = clan::bind_member(impl.get(), &ScrollBarViewImpl::scroll_timer_expired);
 
@@ -212,6 +216,9 @@ namespace clan
 			impl->_state_disabled = true;
 			impl->update_thumb_state();
 			impl->update_track_state();
+			impl->update_increment_state();
+			impl->update_decrement_state();
+
 			impl->mouse_down_mode = ScrollBarViewImpl::mouse_down_none;
 			impl->scroll_timer.stop();
 
@@ -224,6 +231,8 @@ namespace clan
 			impl->_state_disabled = false;
 			impl->update_thumb_state();
 			impl->update_track_state();
+			impl->update_increment_state();
+			impl->update_decrement_state();
 		}
 	}
 

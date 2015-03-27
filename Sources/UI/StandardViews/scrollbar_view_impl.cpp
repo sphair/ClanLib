@@ -94,14 +94,22 @@ namespace clan
 
 	void ScrollBarViewImpl::update_thumb_state()
 	{
-		set_prioritised_state(thumb.get(), _state_disabled, _state_thumb_hot, _state_thumb_pressed);
+		set_standard_state(thumb.get(), _state_disabled, _state_thumb_hot, _state_thumb_pressed);
 	}
 	void ScrollBarViewImpl::update_track_state()
 	{
-		set_prioritised_state(track.get(), _state_disabled, _state_track_hot, _state_track_pressed);
+		set_standard_state(track.get(), _state_disabled, _state_track_hot, _state_track_pressed);
+	}
+	void ScrollBarViewImpl::update_decrement_state()
+	{
+		set_standard_state(button_decrement.get(), _state_disabled, _state_decrement_hot, _state_decrement_pressed);
+	}
+	void ScrollBarViewImpl::update_increment_state()
+	{
+		set_standard_state(button_increment.get(), _state_disabled, _state_increment_hot, _state_increment_pressed);
 	}
 
-	void ScrollBarViewImpl::set_prioritised_state(View *view, bool state_disabled, bool state_hot, bool state_pressed)
+	void ScrollBarViewImpl::set_standard_state(View *view, bool state_disabled, bool state_hot, bool state_pressed)
 	{
 		bool target_hot = false;
 		bool target_disabled = false;
@@ -214,6 +222,8 @@ namespace clan
 	{
 		if (_state_disabled)
 			return;
+		_state_decrement_pressed = true;
+		update_decrement_state();
 		mouse_down_mode = mouse_down_button_decr;
 		timer_step_size = -line_step;
 		scroll_timer_expired();
@@ -223,6 +233,8 @@ namespace clan
 	{
 		if (_state_disabled)
 			return;
+		_state_decrement_pressed = false;
+		update_decrement_state();
 		mouse_down_mode = mouse_down_none;
 		scroll_timer.stop();
 	}
@@ -231,6 +243,8 @@ namespace clan
 	{
 		if (_state_disabled)
 			return;
+		_state_increment_pressed = true;
+		update_increment_state();
 		mouse_down_mode = mouse_down_button_incr;
 		timer_step_size = line_step;
 		scroll_timer_expired();
@@ -240,6 +254,8 @@ namespace clan
 	{
 		if (_state_disabled)
 			return;
+		_state_increment_pressed = false;
+		update_increment_state();
 		mouse_down_mode = mouse_down_none;
 		scroll_timer.stop();
 	}

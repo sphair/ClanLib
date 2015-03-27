@@ -107,10 +107,17 @@ namespace clan
 		bool _state_thumb_pressed = false;
 		bool _state_track_hot = false;
 		bool _state_track_pressed = false;
+		bool _state_increment_hot = false;
+		bool _state_increment_pressed = false;
+		bool _state_decrement_hot = false;
+		bool _state_decrement_pressed = false;
 
 		void update_thumb_state();
 		void update_track_state();
-		void set_prioritised_state(View *view, bool state_disabled, bool state_hot, bool state_pressed);
+		void update_increment_state();
+		void update_decrement_state();
+
+		void set_standard_state(View *view, bool state_disabled, bool state_hot, bool state_pressed);
 
 		void update_pos(ScrollBarView *view, double new_pos, double new_min, double new_max);
 	};
