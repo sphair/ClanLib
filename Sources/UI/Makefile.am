@@ -29,6 +29,7 @@ libclan40UI_la_SOURCES = \
 ./StandardViews/span_layout_view.cpp \
 ./StandardViews/span_layout_view_impl.cpp \
 ./StandardViews/scrollbar_view.cpp \
+./StandardViews/scrollbar_view_impl.cpp \
 ./StandardViews/slider_view.cpp \
 ./StandardViews/window_view_impl.cpp \
 ./StandardViews/label_view.cpp \
