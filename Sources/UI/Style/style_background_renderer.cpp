@@ -66,7 +66,7 @@ namespace clan
 			if (layer_image.is_keyword("none"))
 				continue;
 
-			if (layer_image.is_image())
+			if (layer_image.is_url())
 			{
 				render_background_image(layer_image, index);
 			}
@@ -93,8 +93,8 @@ namespace clan
 	{
 		Image image;
 
-		if (layer_image.is_image())
-			image = layer_image.image->get_image(canvas);
+		if (layer_image.is_url())
+			image = ImageSource::from_resource(layer_image.text)->get_image(canvas);
 
 		if (!image.is_null())
 		{
