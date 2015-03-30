@@ -40,29 +40,65 @@
 
 namespace clan
 {
-
 	void RadioButtonView_Impl::update_state()
 	{
-		bool target_hot = false;
-		bool target_disabled = false;
-		bool target_pressed = false;
+		bool target_checked = false;
+		bool target_checked_hot = false;
+		bool target_checked_disabled = false;
+		bool target_checked_pressed = false;
+		bool target_unchecked = false;
+		bool target_unchecked_hot = false;
+		bool target_unchecked_disabled = false;
+		bool target_unchecked_pressed = false;
 
-		if (_state_disabled)
+		if (_state_selected)
 		{
-			target_disabled = true;
+			if (_state_disabled)
+			{
+				target_checked_disabled = true;
+			}
+			else if (_state_pressed)
+			{
+				target_checked_pressed = true;
+			}
+			else if (_state_hot)
+			{
+				target_checked_hot = true;
+			}
+			else
+			{
+				target_checked = true;
+			}
 		}
-		else if (_state_pressed)
+		else
 		{
-			target_pressed = true;
-		}
-		else if (_state_hot)
-		{
-			target_hot = true;
+			if (_state_disabled)
+			{
+				target_unchecked_disabled = true;
+			}
+			else if (_state_pressed)
+			{
+				target_unchecked_pressed = true;
+			}
+			else if (_state_hot)
+			{
+				target_unchecked_hot = true;
+			}
+			else
+			{
+				target_unchecked = true;
+			}
+
 		}
 
-		radio->set_state_cascade("hot", target_hot);
-		radio->set_state_cascade("pressed", target_pressed);
-		radio->set_state_cascade("disabled", target_disabled);
+		radio->set_state_cascade("checked", target_checked);
+		radio->set_state_cascade("checked_hot", target_checked_hot);
+		radio->set_state_cascade("checked_pressed", target_checked_pressed);
+		radio->set_state_cascade("checked_disabled", target_checked_disabled);
+		//radio->set_state_cascade("unchecked", target_unchecked);	(The default state)
+		radio->set_state_cascade("unchecked_hot", target_unchecked_hot);
+		radio->set_state_cascade("unchecked_pressed", target_unchecked_pressed);
+		radio->set_state_cascade("unchecked_disabled", target_unchecked_disabled);
 	}
 
 	void RadioButtonView_Impl::on_pointer_press(PointerEvent &e)
@@ -78,7 +114,37 @@ namespace clan
 		if (_state_disabled)
 			return;
 		_state_pressed = false;
+
+		if (!_state_selected)
+		{
+			_state_selected = true;
+			release_group_checked();
+		}
+
 		update_state();
+	}
+
+	void RadioButtonView_Impl::release_group_checked()
+	{
+		auto view = radio->superview();
+		if (view)
+		{
+			std::vector<std::shared_ptr<View>> subviews_copy = view->subviews();
+			for (auto &view : subviews_copy)
+			{
+				if (view.get() != radio)
+				{
+					RadioButtonView *alt_radio = dynamic_cast<RadioButtonView*>(view.get());
+					if (alt_radio)
+					{
+						if (alt_radio->impl->_group == _group)
+						{
+							alt_radio->set_selected(false);
+						}
+					}
+				}
+			}
+		}
 	}
 }
 

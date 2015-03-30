@@ -39,13 +39,13 @@ namespace clan
 		void on_pointer_press(PointerEvent &e);
 		void on_pointer_release(PointerEvent &e);
 		void update_state();
+		void release_group_checked();
 
 		RadioButtonView *radio = nullptr;
 		bool _state_disabled = false;
 		bool _state_hot = false;
 		bool _state_pressed = false;
 
-		bool _tri_state = false;
 		std::function<void()> _func_selected;
 
 		std::string _group;

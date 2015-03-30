@@ -73,7 +73,6 @@ namespace clan
 		return impl->_state_disabled;
 	}
 
-
 	int RadioButtonView::radio_id() const
 	{
 		return impl->_id;
@@ -99,6 +98,10 @@ namespace clan
 		if (impl->_state_selected != selected)
 		{
 			impl->_state_selected = selected;
+			if (selected)
+			{
+				impl->release_group_checked();
+			}
 			impl->update_state();
 		}
 	}
