@@ -29,6 +29,7 @@
 
 #include "precomp.h"
 #include "helloworld.h"
+#include "..\..\..\ThemeAero\Sources\theme.h"
 
 using namespace clan;
 
@@ -41,7 +42,8 @@ HelloWorld::HelloWorld()
 	clan::OpenGLTarget::enable();
 
 	// Create a source for our resources
-	ResourceManager resources = FileResourceManager::create();
+	FileResourceDocument doc(FileSystem("../../ThemeAero"));
+	ResourceManager resources = FileResourceManager::create(doc);
 
 	// Mark this thread as the UI thread
 	ui_thread = UIThread(resources);
@@ -138,162 +140,38 @@ HelloWorld::HelloWorld()
 	gradient_box->style()->set("box-shadow: 7px 7px 7px rgba(0,0,0,0.2)");
 	body->add_subview(gradient_box);
 
-	auto scrollbar = std::make_shared<clan::ScrollBarView>(false);
-	scrollbar->set_horizontal();
-	scrollbar->style()->set("flex: 0 0 main-size");
-	scrollbar->style()->set("background: rgb(232, 232, 236)");
-	scrollbar->track()->style()->set("border-image-slice: 4 0 3 0 fill;");
-	scrollbar->track()->style()->set("border-image-width:4px 0px 3px 0px;");
-	scrollbar->track()->style()->set("border-image-repeat:stretch;");
-	scrollbar->track()->style()->set("border-image-source:url('Resources/scrollbar_hori_track_normal.png');");
-	scrollbar->track()->style("hot")->set("border-image-source:url('Resources/scrollbar_hori_track_hot.png');");
-	scrollbar->track()->style("pressed")->set("border-image-source:url('Resources/scrollbar_hori_track_pressed.png');");
-	scrollbar->track()->style("disabled")->set("border-image-source:url('Resources/scrollbar_hori_track_disabled.png');");
-
-	scrollbar->thumb()->style()->set("border-image-slice: 5 5 5 5 fill;");
-	scrollbar->thumb()->style()->set("border-image-width:5px 5px 5px 5px;");
-	scrollbar->thumb()->style()->set("border-image-repeat:stretch;");
-	scrollbar->thumb()->style()->set("border-image-source:url('Resources/scrollbar_hori_thumb_normal.png');");
-	scrollbar->thumb()->style("hot")->set("border-image-source:url('Resources/scrollbar_hori_thumb_hot.png');");
-	scrollbar->thumb()->style("pressed")->set("border-image-source:url('Resources/scrollbar_hori_thumb_pressed.png');");
-	scrollbar->thumb()->style("disabled")->set("border-image-source:url('Resources/scrollbar_hori_thumb_disabled.png');");
-
-	scrollbar->thumb_grip()->style()->set("background-position:center center;");
-	scrollbar->thumb_grip()->style()->set("background-repeat:no-repeat;");
-	scrollbar->thumb_grip()->style()->set("background-attachment:scroll; ");
-	scrollbar->thumb_grip()->style()->set("background-image:url('Resources/scrollbar_hori_thumb_gripper_normal.png');");
-	scrollbar->thumb_grip()->style("hot")->set("background-image:url('Resources/scrollbar_hori_thumb_gripper_hot.png');");
-	scrollbar->thumb_grip()->style("pressed")->set("background-image:url('Resources/scrollbar_hori_thumb_gripper_pressed.png');");
-	scrollbar->thumb_grip()->style("disabled")->set("background-image:url('Resources/scrollbar_hori_thumb_gripper_disabled.png');");
-
-	scrollbar->button_decrement()->style()->set("width:17px; height:17px");
-	scrollbar->button_decrement()->style()->set("border-image-slice: 3 3 3 3 fill;");
-	scrollbar->button_decrement()->style()->set("border-image-width:3px 3px 3px 3px;");
-	scrollbar->button_decrement()->style()->set("border-image-repeat:stretch;");
-	scrollbar->button_decrement()->style()->set("border-image-source:url('Resources/scrollbar_hori_button_left_normal_withglyph.png');");
-	scrollbar->button_decrement()->style("hot")->set("border-image-source:url('Resources/scrollbar_hori_button_left_hot_withglyph.png');");
-	scrollbar->button_decrement()->style("pressed")->set("border-image-source:url('Resources/scrollbar_hori_button_left_pressed_withglyph.png');");
-	scrollbar->button_decrement()->style("disabled")->set("border-image-source:url('Resources/scrollbar_hori_button_left_disabled_withglyph.png');");
-
-	scrollbar->button_increment()->style()->set("width:17px; height:17px");
-	scrollbar->button_increment()->style()->set("border-image-slice: 3 3 3 3 fill;");
-	scrollbar->button_increment()->style()->set("border-image-width:3px 3px 3px 3px;");
-	scrollbar->button_increment()->style()->set("border-image-repeat:stretch;");
-	scrollbar->button_increment()->style()->set("border-image-source:url('Resources/scrollbar_hori_button_right_normal_withglyph.png');");
-	scrollbar->button_increment()->style("hot")->set("border-image-source:url('Resources/scrollbar_hori_button_right_hot_withglyph.png');");
-	scrollbar->button_increment()->style("pressed")->set("border-image-source:url('Resources/scrollbar_hori_button_right_pressed_withglyph.png');");
-	scrollbar->button_increment()->style("disabled")->set("border-image-source:url('Resources/scrollbar_hori_button_right_disabled_withglyph.png');");
-
+	auto scrollbar = Theme::create_scrollbar();
 	//scrollbar->set_disabled();
-
 	scrollbar->set_range(0.0, 1.0);
 	scrollbar->set_position(0.5);
 	scrollbar->set_page_step(0.1);
 	scrollbar->set_line_step(0.01);
 	body->add_subview(scrollbar);
 
-
-	auto button = std::make_shared<clan::ButtonView>();
-
-	button->style()->set("border-image-slice: 6 6 5 5 fill;");
-	button->style()->set("border-image-width:6px 6px 5px 5px;");
-	button->style()->set("border-image-repeat:stretch;");
-	button->style()->set("border-image-source:url('Resources/button_normal.png');");
-	button->style("hot")->set("border-image-source:url('Resources/button_hot.png');");
-	button->style("pressed")->set("border-image-source:url('Resources/button_pressed.png');");
-	button->style("disabled")->set("border-image-source:url('Resources/button_disabled.png');");
-	button->label()->style()->set("margin: 5px auto; font: 13px/1.5 'Segoe UI'; padding: 3px 10px");
-	button->label()->style("pressed")->set("font-weight: bold");
-	button->label()->set_text_alignment(TextAlignment::center);
+	auto button = Theme::create_button();
 	button->label()->set_text("This is a button");
-
 	body->add_subview(button);
 
-
-	std::shared_ptr<clan::SliderView> slider = std::make_shared<clan::SliderView>();
-	slider->set_horizontal();
-
-	slider->style()->set("flex-direction: row;");
-	slider->style()->set("background: rgb(200, 200, 255)");
-
-	slider->track()->style()->set("flex: 1 1 main-size;");
-	slider->track()->style()->set("height: 4px;");
-	slider->track()->style()->set("margin: 7px 0px");
-	slider->track()->style()->set("background: rgb(255, 0, 0)");
-	slider->track()->style()->set("border-image-slice: 1 2 1 1 fill;");
-	slider->track()->style()->set("border-image-width:1px 2px 1px 1px;");
-	slider->track()->style()->set("border-image-repeat:stretch;");
-	slider->track()->style()->set("border-image-source:url('Resources/slider_track.png');");
-
-	slider->thumb()->style()->set("position: absolute;");
-	slider->thumb()->style()->set("width:11px;");
-	slider->thumb()->style()->set("height:19px;");
-	slider->thumb()->style()->set("border-image-slice:9 3 9 2 fill;");
-	slider->thumb()->style()->set("border-image-width:9px 3px 9px 2px;");
-	slider->thumb()->style()->set("border-image-repeat:stretch;");
-	slider->thumb()->style()->set("border-image-source:url('Resources/slider_horizontal_thumb_normal.png');");
-	slider->thumb()->style("hot")->set("border-image-source:url('Resources/slider_horizontal_thumb_hot.png');");
-	slider->thumb()->style("pressed")->set("border-image-source:url('Resources/slider_horizontal_thumb_pressed.png');");
-	slider->thumb()->style("disabled")->set("border-image-source:url('Resources/slider_horizontal_thumb_disabled.png');");
-
+	std::shared_ptr<clan::SliderView> slider = Theme::create_slider();
 	//slider->set_disabled();
-
 	slider->set_min_position(0);
 	slider->set_max_position(1000);
 	slider->set_tick_count(100);
 	slider->set_lock_to_ticks(false);
 	slider->set_page_step(100);
 	slider->set_position(slider->max_position()/2);
-
 	body->add_subview(slider);
 
-	auto checkbox = std::make_shared<clan::CheckBoxView>();
-
-	checkbox->style()->set("background-position:center center;");
-	checkbox->style()->set("background-repeat:no-repeat;");
-	checkbox->style()->set("background-attachment:scroll;");
-	checkbox->style()->set("width:13px; height:13px");
-	checkbox->style()->set("background-image:url('Resources/checkbox_unchecked_normal.png');");
-	checkbox->style("unchecked_hot")->set("background-image:url('Resources/checkbox_unchecked_hot.png');");
-	checkbox->style("unchecked_pressed")->set("background-image:url('Resources/checkbox_unchecked_pressed.png');");
-	checkbox->style("unchecked_disabled")->set("background-image:url('Resources/checkbox_unchecked_disabled.png');");
-	checkbox->style("checked")->set("background-image:url('Resources/checkbox_checked_normal.png');");
-	checkbox->style("checked_hot")->set("background-image:url('Resources/checkbox_checked_hot.png');");
-	checkbox->style("checked_pressed")->set("background-image:url('Resources/checkbox_checked_pressed.png');");
-	checkbox->style("checked_disabled")->set("background-image:url('Resources/checkbox_checked_disabled.png');");
+	auto checkbox = Theme::create_checkbox();
 	//checkbox->set_disabled();
 	body->add_subview(checkbox);
 
 	for (int cnt = 0; cnt < 3; cnt++)
 	{
-		auto radio = std::make_shared<clan::RadioButtonView>();
-		radio->style()->set("background-position:center center;");
-		radio->style()->set("background-repeat:no-repeat;");
-		radio->style()->set("background-attachment:scroll;");
-		radio->style()->set("width:13px; height:13px");
-		radio->style()->set("background-image:url('Resources/radio_unchecked_normal.png');");
-		radio->style("unchecked_hot")->set("background-image:url('Resources/radio_unchecked_hot.png');");
-		radio->style("unchecked_pressed")->set("background-image:url('Resources/radio_unchecked_pressed.png');");
-		radio->style("unchecked_disabled")->set("background-image:url('Resources/radio_unchecked_disabled.png');");
-		radio->style("checked")->set("background-image:url('Resources/radio_checked_normal.png');");
-		radio->style("checked_hot")->set("background-image:url('Resources/radio_checked_hot.png');");
-		radio->style("checked_pressed")->set("background-image:url('Resources/radio_checked_pressed.png');");
-		radio->style("checked_disabled")->set("background-image:url('Resources/radio_checked_disabled.png');");
+		auto radio = Theme::create_radiobutton();
 		//radio->set_disabled(true);
 		body->add_subview(radio);
 	}
-
-/*	auto spin = std::make_shared<clan::SpinView>();
-
-	spin->style()->set("border-image-slice: 6 6 5 5 fill;");
-	spin->style()->set("border-image-width:6px 6px 5px 5px;");
-	spin->style()->set("border-image-repeat:stretch;");
-	spin->style()->set("border-image-source:url('Resources/spin_normal.png');");
-	spin->style("hot")->set("border-image-source:url('Resources/spin_hot.png');");
-	spin->style("pressed")->set("border-image-source:url('Resources/spin_pressed.png');");
-	spin->style("disabled")->set("border-image-source:url('Resources/spin_disabled.png');");
-	body->add_subview(spin);
-*/
 
 	// Make our window visible
 	root->show();
