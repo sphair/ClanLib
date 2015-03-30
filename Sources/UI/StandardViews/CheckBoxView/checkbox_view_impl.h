@@ -45,8 +45,7 @@ namespace clan
 		bool _state_hot = false;
 		bool _state_pressed = false;
 
-		bool _tri_state = false;
-		CheckBoxView::Check _check_state = CheckBoxView::Check::unchecked;
+		bool _checked_state = false;
 		std::function<void()> _func_state_changed;
 	};
 }

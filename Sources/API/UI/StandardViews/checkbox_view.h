@@ -42,13 +42,6 @@ namespace clan
 
 		CheckBoxView();
 
-		enum class Check
-		{
-			unchecked = 0,
-			checked = 1,
-			indeterminated = 2
-		};
-
 		bool disabled() const;
 		void set_disabled();
 		void set_enabled();
@@ -56,17 +49,12 @@ namespace clan
 		/// \brief Check
 		///
 		/// \return checked state
-		Check check() const;
+		bool checked() const;
 
 		/// \brief Set checked
 		///
 		/// \param enable = bool
-		void set_check(Check check_state = Check::checked);
-
-		/// \brief Set 3state
-		///
-		/// \param enable = bool
-		void set_tri_state(bool enable);
+		void set_check(bool checked_state);
 
 		/// \brief Func state changed
 		std::function<void()> &func_state_changed();

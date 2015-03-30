@@ -73,23 +73,18 @@ namespace clan
 		return impl->_state_disabled;
 	}
 
-	CheckBoxView::Check CheckBoxView::check() const
+	bool CheckBoxView::checked() const
 	{
-		return impl->_check_state;
+		return impl->_checked_state;
 	}
 
-	void CheckBoxView::set_check(Check check_state)
+	void CheckBoxView::set_check(bool checked_state)
 	{
-		if (impl->_check_state != check_state)
+		if (impl->_checked_state != checked_state)
 		{
-			impl->_check_state = check_state;
+			impl->_checked_state = checked_state;
 			impl->update_state();
 		}
-	}
-
-	void CheckBoxView::set_tri_state(bool enable)
-	{
-		impl->_tri_state = enable;
 	}
 
 	std::function<void()> &CheckBoxView::func_state_changed()
