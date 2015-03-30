@@ -64,6 +64,11 @@ namespace clan
 	{
 	}
 
+	bool ButtonView::disabled() const
+	{
+		return impl->_state_disabled;
+	}
+
 	void ButtonView::set_disabled()
 	{
 		if (!impl->_state_disabled)

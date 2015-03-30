@@ -23,36 +23,31 @@
 **
 **  File Author(s):
 **
+**    Harry Storbacka
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #pragma once
 
-#include <memory>
-#include <vector>
-#include <string>
-
 namespace clan
 {
-	class StyleToken;
-	class StyleTokenizer_Impl;
 
-	/// \brief Tokenizer class that breaks text into tokens
-	class StyleTokenizer
+	class CheckBoxView_Impl
 	{
 	public:
-		StyleTokenizer(const std::string &text);
+		void on_pointer_press(PointerEvent &e);
+		void on_pointer_release(PointerEvent &e);
+		void update_state();
 
-		/// \brief Reads the next token
-		void read(StyleToken &out_token, bool eat_whitespace, bool eat_comments = true);
+		CheckBoxView *checkbox = nullptr;
+		bool _state_disabled = false;
+		bool _state_hot = false;
+		bool _state_pressed = false;
 
-		/// \brief Reads all tokens belonging to a property value
-		std::vector<StyleToken> read_property_value(StyleToken &token, bool &out_important_flag);
-
-		/// \brief Returns all tokens except start/end whitespace and comments
-		static std::vector<StyleToken> tokenize(const std::string &text);
-
-	private:
-		std::shared_ptr<StyleTokenizer_Impl> impl;
+		bool _tri_state = false;
+		CheckBoxView::Check _check_state = CheckBoxView::Check::unchecked;
+		std::function<void()> _func_state_changed;
 	};
 }
+

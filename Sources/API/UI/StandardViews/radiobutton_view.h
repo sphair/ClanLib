@@ -24,35 +24,64 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Harry Storbacka
+**    Mark Page
 */
 
 #pragma once
 
-#include <memory>
-#include <vector>
-#include <string>
+#include "../View/view.h"
 
 namespace clan
 {
-	class StyleToken;
-	class StyleTokenizer_Impl;
+	class RadioButtonView_Impl;
 
-	/// \brief Tokenizer class that breaks text into tokens
-	class StyleTokenizer
+	/// \brief Radio button component.
+	class RadioButtonView : public View
 	{
 	public:
-		StyleTokenizer(const std::string &text);
 
-		/// \brief Reads the next token
-		void read(StyleToken &out_token, bool eat_whitespace, bool eat_comments = true);
+		RadioButtonView();
 
-		/// \brief Reads all tokens belonging to a property value
-		std::vector<StyleToken> read_property_value(StyleToken &token, bool &out_important_flag);
+		bool disabled() const;
+		void set_disabled();
+		void set_enabled();
 
-		/// \brief Returns all tokens except start/end whitespace and comments
-		static std::vector<StyleToken> tokenize(const std::string &text);
+		/// \brief Get Id
+		///
+		/// \return id
+		int radio_id() const;
+
+		/// \brief Is Selected
+		///
+		/// \return true = selected
+		bool selected() const;
+
+		/// \brief Get Group name
+		///
+		/// \return group_name
+		std::string group_name() const;
+
+		/// \brief Set id
+		///
+		/// \param id = value
+		void set_radio_id(int id);
+
+		/// \brief Set selected
+		///
+		/// \param selected = bool
+		void set_selected(bool selected);
+
+		/// \brief Set group name
+		void set_group_name(const std::string &str);
+
+		/// \brief Func selected
+		std::function<void()> &func_selected();
 
 	private:
-		std::shared_ptr<StyleTokenizer_Impl> impl;
+		std::shared_ptr<RadioButtonView_Impl> impl;
+
+		friend class RadioButtonView_Impl;
 	};
+
 }

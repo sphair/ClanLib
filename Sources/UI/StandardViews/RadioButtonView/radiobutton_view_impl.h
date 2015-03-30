@@ -23,36 +23,34 @@
 **
 **  File Author(s):
 **
+**    Harry Storbacka
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #pragma once
 
-#include <memory>
-#include <vector>
-#include <string>
-
 namespace clan
 {
-	class StyleToken;
-	class StyleTokenizer_Impl;
 
-	/// \brief Tokenizer class that breaks text into tokens
-	class StyleTokenizer
+	class RadioButtonView_Impl
 	{
 	public:
-		StyleTokenizer(const std::string &text);
+		void on_pointer_press(PointerEvent &e);
+		void on_pointer_release(PointerEvent &e);
+		void update_state();
 
-		/// \brief Reads the next token
-		void read(StyleToken &out_token, bool eat_whitespace, bool eat_comments = true);
+		RadioButtonView *radio = nullptr;
+		bool _state_disabled = false;
+		bool _state_hot = false;
+		bool _state_pressed = false;
 
-		/// \brief Reads all tokens belonging to a property value
-		std::vector<StyleToken> read_property_value(StyleToken &token, bool &out_important_flag);
+		bool _tri_state = false;
+		std::function<void()> _func_selected;
 
-		/// \brief Returns all tokens except start/end whitespace and comments
-		static std::vector<StyleToken> tokenize(const std::string &text);
+		std::string _group;
 
-	private:
-		std::shared_ptr<StyleTokenizer_Impl> impl;
+		int _id = 0;
+		bool _state_selected = false;
 	};
 }

@@ -23,36 +23,62 @@
 **
 **  File Author(s):
 **
+**    Harry Storbacka
 **    Magnus Norddahl
+**    Mark Page
 */
 
-#pragma once
-
-#include <memory>
-#include <vector>
-#include <string>
+#include "UI/precomp.h"
+#include "API/UI/StandardViews/checkbox_view.h"
+#include "API/UI/Style/style_property_parser.h"
+#include "API/Display/2D/path.h"
+#include "API/Display/System/timer.h"
+#include "API/Display/2D/brush.h"
+#include "API/UI/Events/pointer_event.h"
+#include <algorithm>
+#include "checkbox_view_impl.h"
 
 namespace clan
 {
-	class StyleToken;
-	class StyleTokenizer_Impl;
-
-	/// \brief Tokenizer class that breaks text into tokens
-	class StyleTokenizer
+	void CheckBoxView_Impl::update_state()
 	{
-	public:
-		StyleTokenizer(const std::string &text);
+		bool target_hot = false;
+		bool target_disabled = false;
+		bool target_pressed = false;
 
-		/// \brief Reads the next token
-		void read(StyleToken &out_token, bool eat_whitespace, bool eat_comments = true);
+		if (_state_disabled)
+		{
+			target_disabled = true;
+		}
+		else if (_state_pressed)
+		{
+			target_pressed = true;
+		}
+		else if (_state_hot)
+		{
+			target_hot = true;
+		}
 
-		/// \brief Reads all tokens belonging to a property value
-		std::vector<StyleToken> read_property_value(StyleToken &token, bool &out_important_flag);
+		checkbox->set_state_cascade("hot", target_hot);
+		checkbox->set_state_cascade("pressed", target_pressed);
+		checkbox->set_state_cascade("disabled", target_disabled);
+	}
 
-		/// \brief Returns all tokens except start/end whitespace and comments
-		static std::vector<StyleToken> tokenize(const std::string &text);
+	void CheckBoxView_Impl::on_pointer_press(PointerEvent &e)
+	{
+		if (_state_disabled)
+			return;
+		_state_pressed = true;
+		update_state();
+	}
 
-	private:
-		std::shared_ptr<StyleTokenizer_Impl> impl;
-	};
+	void CheckBoxView_Impl::on_pointer_release(PointerEvent &e)
+	{
+		if (_state_disabled)
+			return;
+		_state_pressed = false;
+		update_state();
+	}
+
 }
+

@@ -24,35 +24,58 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Harry Storbacka
+**    Mark Page
 */
 
 #pragma once
 
-#include <memory>
-#include <vector>
-#include <string>
+#include "../View/view.h"
 
 namespace clan
 {
-	class StyleToken;
-	class StyleTokenizer_Impl;
+	class CheckBoxView_Impl;
 
-	/// \brief Tokenizer class that breaks text into tokens
-	class StyleTokenizer
+	class CheckBoxView : public View
 	{
 	public:
-		StyleTokenizer(const std::string &text);
 
-		/// \brief Reads the next token
-		void read(StyleToken &out_token, bool eat_whitespace, bool eat_comments = true);
+		CheckBoxView();
 
-		/// \brief Reads all tokens belonging to a property value
-		std::vector<StyleToken> read_property_value(StyleToken &token, bool &out_important_flag);
+		enum class Check
+		{
+			unchecked = 0,
+			checked = 1,
+			indeterminated = 2
+		};
 
-		/// \brief Returns all tokens except start/end whitespace and comments
-		static std::vector<StyleToken> tokenize(const std::string &text);
+		bool disabled() const;
+		void set_disabled();
+		void set_enabled();
+
+		/// \brief Check
+		///
+		/// \return checked state
+		Check check() const;
+
+		/// \brief Set checked
+		///
+		/// \param enable = bool
+		void set_check(Check check_state = Check::checked);
+
+		/// \brief Set 3state
+		///
+		/// \param enable = bool
+		void set_tri_state(bool enable);
+
+		/// \brief Func state changed
+		std::function<void()> &func_state_changed();
 
 	private:
-		std::shared_ptr<StyleTokenizer_Impl> impl;
+		std::shared_ptr<CheckBoxView_Impl> impl;
+
 	};
+
 }
+
+

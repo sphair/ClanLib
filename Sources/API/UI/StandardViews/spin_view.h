@@ -24,35 +24,75 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Harry Storbacka
+**    Kenneth Gangstoe
+**    Mark Page
 */
+
 
 #pragma once
 
-#include <memory>
-#include <vector>
-#include <string>
+#include "../View/view.h"
 
 namespace clan
 {
-	class StyleToken;
-	class StyleTokenizer_Impl;
+	class SpinView_Impl;
 
-	/// \brief Tokenizer class that breaks text into tokens
-	class StyleTokenizer
+	/// \brief SpinView component.
+	class SpinView : public View
 	{
 	public:
-		StyleTokenizer(const std::string &text);
 
-		/// \brief Reads the next token
-		void read(StyleToken &out_token, bool eat_whitespace, bool eat_comments = true);
+		SpinView();
 
-		/// \brief Reads all tokens belonging to a property value
-		std::vector<StyleToken> read_property_value(StyleToken &token, bool &out_important_flag);
+		std::shared_ptr<View> button_decrement() const;
+		std::shared_ptr<View> button_increment() const;
 
-		/// \brief Returns all tokens except start/end whitespace and comments
-		static std::vector<StyleToken> tokenize(const std::string &text);
+		bool disabled() const;
+		void set_disabled();
+		void set_enabled();
+
+		/// \brief Get Value
+		///
+		/// \return value
+		double value() const;
+
+		/// \brief Get Min
+		///
+		/// \return min
+		double minimum() const;
+
+		/// \brief Get Max
+		///
+		/// \return max
+		double maximum() const;
+
+		/// \brief Set value
+		///
+		/// \param value = value
+		void set_value(double value);
+
+		/// \brief Set ranges
+		///
+		/// \param min = value
+		/// \param max = value
+		void set_ranges(double min, double max);
+
+		/// \brief Set step size
+		///
+		/// \param step_size = value
+		void set_step_size(double step_size);
+
+		/// \brief Set number of decimal places
+		///
+		/// \param decimal_places = value
+		void set_number_of_decimal_places(int decimal_places);
+
+		/// \brief Func value changed
+		std::function<void()> &func_value_changed();
 
 	private:
-		std::shared_ptr<StyleTokenizer_Impl> impl;
+		std::shared_ptr<SpinView_Impl> impl;
 	};
+
 }

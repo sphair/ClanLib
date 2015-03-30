@@ -39,6 +39,12 @@ libclan40UI_la_SOURCES = \
 ./StandardViews/ButtonView/button_view_impl.cpp \
 ./StandardViews/TextureView/texture_view.cpp \
 ./StandardViews/TextureView/texture_view_impl.cpp \
+./StandardViews/CheckBoxView/checkbox_view_impl.cpp \
+./StandardViews/CheckBoxView/checkbox_view.cpp \
+./StandardViews/RadioButtonView/radiobutton_view_impl.cpp \
+./StandardViews/RadioButtonView/radiobutton_view.cpp \
+./StandardViews/SpinView/spin_view_impl.cpp \
+./StandardViews/SpinView/spin_view.cpp \
 ./StandardViews/text_field_view.cpp \
 ./StandardViews/popup_view.cpp \
 ./StandardViews/image_view.cpp \
