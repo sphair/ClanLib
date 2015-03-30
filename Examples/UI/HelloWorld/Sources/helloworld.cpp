@@ -247,6 +247,52 @@ HelloWorld::HelloWorld()
 
 	body->add_subview(slider);
 
+	auto checkbox = std::make_shared<clan::CheckBoxView>();
+
+	checkbox->style()->set("background-position:center center;");
+	checkbox->style()->set("background-repeat:no-repeat;");
+	checkbox->style()->set("background-attachment:scroll;");
+	checkbox->style()->set("width:13px; height:13px");
+	checkbox->style()->set("background-image:url('Resources/checkbox_unchecked_normal.png');");
+	checkbox->style("unchecked_hot")->set("background-image:url('Resources/checkbox_unchecked_hot.png');");
+	checkbox->style("unchecked_pressed")->set("background-image:url('Resources/checkbox_unchecked_pressed.png');");
+	checkbox->style("unchecked_disabled")->set("background-image:url('Resources/checkbox_unchecked_disabled.png');");
+	checkbox->style("checked")->set("background-image:url('Resources/checkbox_checked_normal.png');");
+	checkbox->style("checked_hot")->set("background-image:url('Resources/checkbox_checked_hot.png');");
+	checkbox->style("checked_pressed")->set("background-image:url('Resources/checkbox_checked_pressed.png');");
+	checkbox->style("checked_disabled")->set("background-image:url('Resources/checkbox_checked_disabled.png');");
+	//checkbox->set_disabled();
+	body->add_subview(checkbox);
+
+	auto radio = std::make_shared<clan::RadioButtonView>();
+
+	radio->style()->set("background-position:center center;");
+	radio->style()->set("background-repeat:no-repeat;");
+	radio->style()->set("background-attachment:scroll;");
+	radio->style()->set("width:13px; height:13px");
+	radio->style()->set("background-image:url('Resources/radio_unchecked_normal.png');");
+	radio->style("unchecked_hot")->set("background-image:url('Resources/radio_unchecked_hot.png');");
+	radio->style("unchecked_pressed")->set("background-image:url('Resources/radio_unchecked_pressed.png');");
+	radio->style("unchecked_disabled")->set("background-image:url('Resources/radio_unchecked_disabled.png');");
+	radio->style("checked")->set("background-image:url('Resources/radio_checked_normal.png');");
+	radio->style("checked_hot")->set("background-image:url('Resources/radio_checked_hot.png');");
+	radio->style("checked_pressed")->set("background-image:url('Resources/radio_checked_pressed.png');");
+	radio->style("checked_disabled")->set("background-image:url('Resources/radio_checked_disabled.png');");
+	//radio->set_disabled(true);
+	body->add_subview(radio);
+
+/*	auto spin = std::make_shared<clan::SpinView>();
+
+	spin->style()->set("border-image-slice: 6 6 5 5 fill;");
+	spin->style()->set("border-image-width:6px 6px 5px 5px;");
+	spin->style()->set("border-image-repeat:stretch;");
+	spin->style()->set("border-image-source:url('Resources/spin_normal.png');");
+	spin->style("hot")->set("border-image-source:url('Resources/spin_hot.png');");
+	spin->style("pressed")->set("border-image-source:url('Resources/spin_pressed.png');");
+	spin->style("disabled")->set("border-image-source:url('Resources/spin_disabled.png');");
+	body->add_subview(spin);
+*/
+
 	// Make our window visible
 	root->show();
 }

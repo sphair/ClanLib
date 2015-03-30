@@ -42,26 +42,63 @@ namespace clan
 {
 	void CheckBoxView_Impl::update_state()
 	{
-		bool target_hot = false;
-		bool target_disabled = false;
-		bool target_pressed = false;
+		bool target_checked = false;
+		bool target_checked_hot = false;
+		bool target_checked_disabled = false;
+		bool target_checked_pressed = false;
+		bool target_unchecked = false;
+		bool target_unchecked_hot = false;
+		bool target_unchecked_disabled = false;
+		bool target_unchecked_pressed = false;
 
-		if (_state_disabled)
+		if (_checked_state)
 		{
-			target_disabled = true;
+			if (_state_disabled)
+			{
+				target_checked_disabled = true;
+			}
+			else if (_state_pressed)
+			{
+				target_checked_pressed = true;
+			}
+			else if (_state_hot)
+			{
+				target_checked_hot = true;
+			}
+			else
+			{
+				target_checked = true;
+			}
 		}
-		else if (_state_pressed)
+		else
 		{
-			target_pressed = true;
-		}
-		else if (_state_hot)
-		{
-			target_hot = true;
+			if (_state_disabled)
+			{
+				target_unchecked_disabled = true;
+			}
+			else if (_state_pressed)
+			{
+				target_unchecked_pressed = true;
+			}
+			else if (_state_hot)
+			{
+				target_unchecked_hot = true;
+			}
+			else
+			{
+				target_unchecked = true;
+			}
+
 		}
 
-		checkbox->set_state_cascade("hot", target_hot);
-		checkbox->set_state_cascade("pressed", target_pressed);
-		checkbox->set_state_cascade("disabled", target_disabled);
+		checkbox->set_state_cascade("checked", target_checked);
+		checkbox->set_state_cascade("checked_hot", target_checked_hot);
+		checkbox->set_state_cascade("checked_pressed", target_checked_pressed);
+		checkbox->set_state_cascade("checked_disabled", target_checked_disabled);
+		//checkbox->set_state_cascade("unchecked", target_unchecked);	(The default state)
+		checkbox->set_state_cascade("unchecked_hot", target_unchecked_hot);
+		checkbox->set_state_cascade("unchecked_pressed", target_unchecked_pressed);
+		checkbox->set_state_cascade("unchecked_disabled", target_unchecked_disabled);
 	}
 
 	void CheckBoxView_Impl::on_pointer_press(PointerEvent &e)
@@ -77,6 +114,7 @@ namespace clan
 		if (_state_disabled)
 			return;
 		_state_pressed = false;
+		_checked_state = !_checked_state;
 		update_state();
 	}
 
