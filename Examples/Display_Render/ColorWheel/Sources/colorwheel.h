@@ -89,7 +89,7 @@ class ColorWheelOverlay : public clan::View
 public:
 	ColorWheelOverlay()
 	{
-		//style()->set("position: absolute; left: 0; top: 0");
+		style()->set("position: absolute; left: 0; top: 0; right: 0");
 		style()->set("flex-direction: column");
 		add_subview(radio_row);
 		add_subview(saturation_outer);
