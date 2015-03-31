@@ -32,6 +32,7 @@
 
 ColorWheel::ColorWheel()
 {
+	style()->set("position: absolute; left: 0; top: 0; width:200px; height:200px;");
 	//style()->set("flex: 1 1 main-size");
 
 	add_subview(slider_saturation_outer);
@@ -51,10 +52,10 @@ ColorWheel::ColorWheel()
 	slider_value_outer->set_position(slider_value_outer->max_position());
 	slider_value_inner->set_position(0);
 
-	radiobutton_HSV->style()->set("position: absolute; left: 16px; top: 0px; width:64; height:16");
+	radiobutton_HSV->style()->set("position: absolute; left: 16px; top: 0px; width:64px; height:16px");
 	radiobutton_HSV->set_selected(true);
 	radiobutton_HSV->func_selected() = [&]() {is_hsl = false; set_needs_render(); };
-	radiobutton_HSL->style()->set("position: absolute; left: 100px; top: 0px; width:64; height:16");
+	radiobutton_HSL->style()->set("position: absolute; left: 100px; top: 0px; width:64px; height:16px");
 	radiobutton_HSL->func_selected() = [&]() {is_hsl = true; set_needs_render(); };
 
 	radiobutton_HSV->set_selected(true);
@@ -72,8 +73,8 @@ void ColorWheel::render_content(clan::Canvas &canvas)
 {
 	get_options();
 
-	clan::Pointf center((float)canvas.get_width() / 2.0f, (float)canvas.get_height() / 2.0f);
-	float radius = 200.0f;
+	clan::Pointf center = geometry().content_box().get_center();
+	float radius = std::min(geometry().content_box().get_width(), geometry().content_box().get_height()) * 0.5f;
 	draw(canvas, center, radius);
 
 	draw_labels(canvas);
