@@ -52,7 +52,7 @@ App::App()
 
 	canvas = clan::Canvas(window);
 
-	clan::Texture2D gui_texture = clan::Texture2D(canvas, 512, 512);
+	clan::Texture2D gui_texture = clan::Texture2D(canvas, (int)std::round(512 * canvas.get_pixel_ratio()), (int)std::round(512 * canvas.get_pixel_ratio()));
 	gui_texture.set_pixel_ratio(canvas.get_pixel_ratio());
 	gui_image = clan::Image(gui_texture, gui_texture.get_size());
 	clan::FrameBuffer gui_framebuffer = clan::FrameBuffer(canvas);
