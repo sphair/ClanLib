@@ -79,15 +79,12 @@ std::shared_ptr<clan::ScrollBarView> Theme::create_scrollbar()
 	scrollbar->button_increment()->style("hot")->set("border-image-source:url('Resources/scrollbar_hori_button_right_hot_withglyph.png');");
 	scrollbar->button_increment()->style("pressed")->set("border-image-source:url('Resources/scrollbar_hori_button_right_pressed_withglyph.png');");
 	scrollbar->button_increment()->style("disabled")->set("border-image-source:url('Resources/scrollbar_hori_button_right_disabled_withglyph.png');");
-
 	return scrollbar;
-
 }
 
 std::shared_ptr<clan::ButtonView> Theme::create_button()
 {
 	auto button = std::make_shared<clan::ButtonView>();
-
 	button->style()->set("border-image-slice: 6 6 5 5 fill;");
 	button->style()->set("border-image-width:6px 6px 5px 5px;");
 	button->style()->set("border-image-repeat:stretch;");
@@ -98,9 +95,7 @@ std::shared_ptr<clan::ButtonView> Theme::create_button()
 	button->label()->style()->set("margin: 5px auto; font: 13px/1.5 'Segoe UI'; padding: 3px 10px");
 	button->label()->style("pressed")->set("font-weight: bold");
 	button->label()->set_text_alignment(TextAlignment::center);
-
 	return button;
-
 }
 
 std::shared_ptr<clan::SliderView> Theme::create_slider()
@@ -109,12 +104,9 @@ std::shared_ptr<clan::SliderView> Theme::create_slider()
 	slider->set_horizontal();
 
 	slider->style()->set("flex-direction: row;");
-	slider->style()->set("background: rgb(200, 200, 255)");
-
 	slider->track()->style()->set("flex: 1 1 main-size;");
 	slider->track()->style()->set("height: 4px;");
 	slider->track()->style()->set("margin: 7px 0px");
-	slider->track()->style()->set("background: rgb(255, 0, 0)");
 	slider->track()->style()->set("border-image-slice: 1 2 1 1 fill;");
 	slider->track()->style()->set("border-image-width:1px 2px 1px 1px;");
 	slider->track()->style()->set("border-image-repeat:stretch;");
@@ -168,6 +160,5 @@ std::shared_ptr<clan::RadioButtonView> Theme::create_radiobutton()
 	radio->style("checked_hot")->set("background-image:url('Resources/radio_checked_hot.png');");
 	radio->style("checked_pressed")->set("background-image:url('Resources/radio_checked_pressed.png');");
 	radio->style("checked_disabled")->set("background-image:url('Resources/radio_checked_disabled.png');");
-
 	return radio;
 }

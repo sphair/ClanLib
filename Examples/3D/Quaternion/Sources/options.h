@@ -28,34 +28,14 @@
 
 #pragma once
 
+#include "..\..\..\ThemeAero\Sources\theme.h"
+
 class SliderOptionView : public View
 {
 public:
 	SliderOptionView()
 	{
 		style()->set("margin: 2px 0; flex-direction: row;");
-
-		slider->set_horizontal();
-
-		slider->style()->set("flex-direction: row;");
-		slider->style()->set("background: rgb(200, 200, 255)");
-
-		slider->track()->style()->set("flex: 1 1 main-size;");
-		slider->track()->style()->set("height: 4px;");
-		slider->track()->style()->set("margin: 7px 0px");
-		slider->track()->style()->set("background: rgb(255, 0, 0)");
-		slider->track()->style()->set("border-image-slice: 1 2 1 1 fill;");
-		slider->track()->style()->set("border-image-width:1px 2px 1px 1px;");
-		slider->track()->style()->set("border-image-repeat:stretch;");
-		slider->track()->style()->set("border-image-source:url('Resources/slider_track.png');");
-
-		slider->thumb()->style()->set("position: absolute;");
-		slider->thumb()->style()->set("width:11px;");
-		slider->thumb()->style()->set("height:19px;");
-		slider->thumb()->style()->set("border-image-slice:9 3 9 2 fill;");
-		slider->thumb()->style()->set("border-image-width:9px 3px 9px 2px;");
-		slider->thumb()->style()->set("border-image-repeat:stretch;");
-		slider->thumb()->style()->set("border-image-source:url('Resources/slider_horizontal_thumb_normal.png');");
 
 		slider->set_min_position(0);
 		slider->set_max_position(1000);
@@ -86,7 +66,7 @@ public:
 		slider->set_position((int)value);
 	}
 
-	std::shared_ptr<SliderView> slider = std::make_shared<SliderView>();
+	std::shared_ptr<SliderView> slider = Theme::create_slider();
 	std::shared_ptr<LabelView> label = std::make_shared<LabelView>();
 };
 
@@ -118,9 +98,9 @@ public:
 	bool button_slerp_clicked;
 	bool button_rotate_clicked;
 
-	std::shared_ptr<ButtonView> button_lerp = std::make_shared<ButtonView>();
-	std::shared_ptr<ButtonView> button_slerp = std::make_shared<ButtonView>();
-	std::shared_ptr<ButtonView> button_rotate = std::make_shared<ButtonView>();
+	std::shared_ptr<ButtonView> button_lerp = Theme::create_button();
+	std::shared_ptr<ButtonView> button_slerp = Theme::create_button();
+	std::shared_ptr<ButtonView> button_rotate = Theme::create_button();
 
 	float max_angle_value;
 

@@ -82,8 +82,10 @@ App::App()
 
 	canvas = Canvas(window);
 
-	resources = FileResourceManager::create();
+	FileResourceDocument doc(FileSystem("../../ThemeAero"));
+	ResourceManager resources = FileResourceManager::create(doc);
 	ui_thread = UIThread(resources);
+
 	options_view = std::make_shared<Options>(canvas);
 
 	options_view->set_event_window(window);

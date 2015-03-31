@@ -4,6 +4,9 @@
     <Filter Include="Sources">
       <UniqueIdentifier>{aaaa0278-de80-430b-bc9f-11cedb0db384}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Theme">
+      <UniqueIdentifier>{e36e9196-1aee-4e97-aa55-05adfff0744b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\example.cpp">
@@ -29,6 +32,9 @@
     </ClCompile>
     <ClCompile Include="Sources\shader_color.cpp">
       <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThemeAero\Sources\theme.cpp">
+      <Filter>Sources\Theme</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -58,6 +64,9 @@
     </ClInclude>
     <ClInclude Include="Sources\shader_color.h">
       <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThemeAero\Sources\theme.h">
+      <Filter>Sources\Theme</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

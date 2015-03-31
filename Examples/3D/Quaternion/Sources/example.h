@@ -61,7 +61,6 @@ private:
 	DepthStencilState depth_write_enabled;
 	clan::Font font;
 
-	ResourceManager resources;
 	UIThread ui_thread;
 	std::shared_ptr<Options> options_view;
 	

@@ -29,6 +29,7 @@
 
 #include "precomp.h"
 #include "gui.h"
+#include "..\..\..\ThemeAero\Sources\theme.h"
 
 clan::ApplicationInstance<GUI> clanapp;
 
@@ -63,10 +64,9 @@ GUI::GUI()
 	//gui_canvas = clan::Canvas(canvas);//, gui_framebuffer);
 	gui_canvas = clan::Canvas(canvas, gui_framebuffer);
 
-	// Create a source for our resources
-	clan::ResourceManager resources = clan::FileResourceManager::create();
-
 	// Mark this thread as the UI thread
+	clan::FileResourceDocument doc(clan::FileSystem("../../ThemeAero"));
+	clan::ResourceManager resources = clan::FileResourceManager::create(doc);
 	ui_thread = clan::UIThread(resources);
 
 	root = std::make_shared<clan::TextureView>(gui_canvas);
@@ -120,23 +120,17 @@ GUI::GUI()
 
 	span->add_subview(edit);
 	
-	std::shared_ptr<clan::ScrollBarView> scrollbar = std::make_shared<clan::ScrollBarView>();
-	scrollbar->set_horizontal();
-	scrollbar->style()->set("flex: 0 0 main-size");
-	scrollbar->style()->set("background: rgb(232, 232, 236)");
-	scrollbar->track()->style()->set("padding: 0 4px");
-	scrollbar->track()->style()->set("background: rgb(255, 0, 0)");
-	scrollbar->thumb()->style()->set("padding: 0 4px");
-	scrollbar->thumb()->style()->set("background: rgb(0, 0, 255)");
-	scrollbar->thumb_grip()->style()->set("padding: 0 4px");
-	scrollbar->thumb_grip()->style()->set("background: rgb(0, 255, 0)");
-
+	auto scrollbar = Theme::create_scrollbar();
 	scrollbar->set_range(0.0, 1.0);
 	scrollbar->set_position(0.5);
 	scrollbar->set_page_step(0.1);
 	scrollbar->set_line_step(0.01);
 	root->add_subview(scrollbar);
 	
+	auto button = Theme::create_button();
+	button->label()->set_text("This is a button");
+	root->add_subview(button);
+
 	std::shared_ptr<clan::Style> text_style2 = std::make_shared<clan::Style>();
 	text_style2->set("font: 16px/40px 'Segoe UI'; font-weight: 800");
 	span->add_text(" units!", text_style2);

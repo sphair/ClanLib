@@ -31,18 +31,8 @@
 
 Options::Options(Canvas &canvas) : TextureView(canvas)
 {
-	style()->set("background: rgb(153, 153, 204)");
 
-	std::string button_style = "box-shadow: 2px 2px 2px rgba(0,0,0,0.05); border: 1px solid #777; border-radius: 3px; background: linear-gradient(to bottom, rgba(226,226,226,1) 0%,rgba(219,219,219,1) 50%,rgba(209,209,209,1) 51%,rgba(254,254,254,1) 100%);";
-	button_lerp->style()->set(button_style);
-	button_lerp->label()->style()->set("margin: 5px auto; font: 13px/1.5 'Segoe UI'; padding: 3px 10px");
-	button_lerp->label()->set_text_alignment(TextAlignment::center);
-	button_slerp->style()->set(button_style);
-	button_slerp->label()->style()->set("margin: 5px auto; font: 13px/1.5 'Segoe UI'; padding: 3px 10px");
-	button_slerp->label()->set_text_alignment(TextAlignment::center);
-	button_rotate->style()->set(button_style);
-	button_rotate->label()->style()->set("margin: 5px auto; font: 13px/1.5 'Segoe UI'; padding: 3px 10px");
-	button_rotate->label()->set_text_alignment(TextAlignment::center);
+	style()->set("background: rgb(153, 153, 204)");
 
 	auto spacer1 = std::make_shared<View>();
 	auto spacer2 = std::make_shared<View>();
