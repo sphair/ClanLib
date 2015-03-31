@@ -89,7 +89,11 @@ namespace clan
 
 	void TextureView::set_rect(const Rect &rect)
 	{
-		impl->canvas_rect = rect;
+		if (rect != impl->canvas_rect)
+		{
+			impl->canvas_rect = rect;
+			set_needs_render();
+		}
 	}
 
 	void TextureView::set_cursor_window(const DisplayWindow &new_cursor_window)
