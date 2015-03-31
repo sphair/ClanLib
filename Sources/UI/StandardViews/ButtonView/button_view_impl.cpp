@@ -69,9 +69,9 @@ namespace clan
 
 	void ButtonViewImpl::on_pointer_release(PointerEvent &e)
 	{
+		_state_pressed = false;
 		if (_state_disabled)
 			return;
-		_state_pressed = false;
 		update_state();
 	}
 

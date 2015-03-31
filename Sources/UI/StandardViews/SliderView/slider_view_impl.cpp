@@ -160,9 +160,9 @@ namespace clan
 
 	void SliderViewImpl::on_pointer_thumb_release(PointerEvent &e)
 	{
+		_state_pressed = false;
 		if (_state_disabled)
 			return;
-		_state_pressed = false;
 		update_state();
 		mouse_down_mode = mouse_down_none;
 		scroll_timer.stop();

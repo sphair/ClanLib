@@ -111,9 +111,9 @@ namespace clan
 
 	void CheckBoxView_Impl::on_pointer_release(PointerEvent &e)
 	{
+		_state_pressed = false;
 		if (_state_disabled)
 			return;
-		_state_pressed = false;
 		_checked_state = !_checked_state;
 		update_state();
 	}
