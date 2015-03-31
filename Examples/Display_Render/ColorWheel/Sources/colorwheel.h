@@ -29,18 +29,88 @@
 #pragma once
 #include "..\..\..\ThemeAero\Sources\theme.h"
 
+class ColorWheelRadioRow : public clan::View
+{
+public:
+	ColorWheelRadioRow()
+	{
+		add_subview(radiobutton_HSV);
+		add_subview(label_HSV);
+		add_subview(radiobutton_HSL);
+		add_subview(label_HSL);
+
+		style()->set("margin: 5px 0");
+
+		radiobutton_HSV->style()->set("margin-right: 2px");
+		radiobutton_HSL->style()->set("margin-right: 2px; margin-left: 15px");
+
+		label_HSV->style()->set("font: 16px Tahoma; -clan-font-rendering: anti-alias; color: white");
+		label_HSL->style()->set("font: 16px Tahoma; -clan-font-rendering: anti-alias; color: white");
+
+		label_HSV->set_text("HSV");
+		label_HSL->set_text("HSL");
+	}
+
+	std::shared_ptr<clan::RadioButtonView> radiobutton_HSV = Theme::create_radiobutton();
+	std::shared_ptr<clan::LabelView> label_HSV = std::make_shared<clan::LabelView>();
+	std::shared_ptr<clan::RadioButtonView> radiobutton_HSL = Theme::create_radiobutton();
+	std::shared_ptr<clan::LabelView> label_HSL = std::make_shared<clan::LabelView>();
+};
+
+class ColorWheelSliderRow : public clan::View
+{
+public:
+	ColorWheelSliderRow(const std::string &name)
+	{
+		add_subview(slider);
+		add_subview(label);
+
+		style()->set("margin: 5px 0");
+
+		slider->style()->set("width: 200px; height: 17px; margin-right: 5px");
+		slider->set_horizontal();
+		slider->set_min_position(0);
+		slider->set_max_position(1000);
+		slider->set_tick_count(100);
+		slider->set_page_step(100);
+		slider->set_position(0);
+		slider->set_lock_to_ticks(false);
+
+		label->style()->set("font: 16px Tahoma; -clan-font-rendering: anti-alias; color: white");
+		label->set_text(name);
+	}
+
+	std::shared_ptr<clan::SliderView> slider = Theme::create_slider();
+	std::shared_ptr<clan::LabelView> label = std::make_shared<clan::LabelView>();
+};
+
+class ColorWheelOverlay : public clan::View
+{
+public:
+	ColorWheelOverlay()
+	{
+		//style()->set("position: absolute; left: 0; top: 0");
+		style()->set("flex-direction: column");
+		add_subview(radio_row);
+		add_subview(saturation_outer);
+		add_subview(saturation_inner);
+		add_subview(value_outer);
+		add_subview(value_inner);
+	}
+
+	std::shared_ptr<ColorWheelRadioRow> radio_row = std::make_shared<ColorWheelRadioRow>();
+	std::shared_ptr<ColorWheelSliderRow> saturation_outer = std::make_shared<ColorWheelSliderRow>("Saturation Outer");
+	std::shared_ptr<ColorWheelSliderRow> saturation_inner = std::make_shared<ColorWheelSliderRow>("Saturation Inner");
+	std::shared_ptr<ColorWheelSliderRow> value_outer = std::make_shared<ColorWheelSliderRow>("Value Outer");
+	std::shared_ptr<ColorWheelSliderRow> value_inner = std::make_shared<ColorWheelSliderRow>("Value Inner");
+};
+
 class ColorWheel : public clan::View
 {
 public:
 	ColorWheel();
-	virtual ~ColorWheel();
 
-	std::shared_ptr<clan::SliderView> slider_saturation_outer = Theme::create_slider();
-	std::shared_ptr<clan::SliderView> slider_saturation_inner = Theme::create_slider();
-	std::shared_ptr<clan::SliderView> slider_value_outer = Theme::create_slider();
-	std::shared_ptr<clan::SliderView> slider_value_inner = Theme::create_slider();
-	std::shared_ptr<clan::RadioButtonView> radiobutton_HSV = Theme::create_radiobutton();
-	std::shared_ptr<clan::RadioButtonView> radiobutton_HSL = Theme::create_radiobutton();
+	std::shared_ptr<ColorWheelOverlay> overlay = std::make_shared<ColorWheelOverlay>();
 
 	float saturation_outer = 1.0f;
 	float saturation_inner = 0.0f;
@@ -49,13 +119,10 @@ public:
 	bool is_hsl = false;
 
 private:
-	void draw_labels(clan::Canvas &canvas);
 	void draw(clan::Canvas &canvas, const clan::Pointf &center, float radius);
 	void render_content(clan::Canvas &canvas) override;
 	void get_options();
-	float get_value(clan::SliderView *slider);
+	float get_value(const std::shared_ptr<clan::SliderView> &slider);
 	void option_changed();
-	void set_slider(clan::SliderView *component, int xpos, int ypos);
-
-	clan::Font font;
+	void update_labels();
 };

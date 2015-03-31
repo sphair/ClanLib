@@ -27,46 +27,30 @@
 */
 
 #include "precomp.h"
-
 #include "colorwheel.h"
 
 ColorWheel::ColorWheel()
 {
-	style()->set("position: absolute; left: 0; top: 0; width:200px; height:200px;");
-	//style()->set("flex: 1 1 main-size");
+	add_subview(overlay);
 
-	add_subview(slider_saturation_outer);
-	add_subview(slider_saturation_inner);
-	add_subview(slider_value_outer);
-	add_subview(slider_value_inner);
-	add_subview(radiobutton_HSV);
-	add_subview(radiobutton_HSL);
+	style()->set("position: absolute; left: 0; top: 0; width:400px; height:400px;");
 
-	set_slider(slider_saturation_outer.get(), 16, 16);
-	set_slider(slider_saturation_inner.get(), 16, 48);
-	set_slider(slider_value_outer.get(), 16, 80);
-	set_slider(slider_value_inner.get(), 16, 112);
+	overlay->saturation_outer->slider->func_value_changed() = bind_member(this, &ColorWheel::option_changed);
+	overlay->saturation_inner->slider->func_value_changed() = bind_member(this, &ColorWheel::option_changed);
+	overlay->value_outer->slider->func_value_changed() = bind_member(this, &ColorWheel::option_changed);
+	overlay->value_inner->slider->func_value_changed() = bind_member(this, &ColorWheel::option_changed);
+	overlay->radio_row->radiobutton_HSV->func_selected() = bind_member(this, &ColorWheel::option_changed);
+	overlay->radio_row->radiobutton_HSL->func_selected() = bind_member(this, &ColorWheel::option_changed);
 
-	slider_saturation_outer->set_position(slider_saturation_outer->max_position());
-	slider_saturation_inner->set_position(0);
-	slider_value_outer->set_position(slider_value_outer->max_position());
-	slider_value_inner->set_position(0);
+	overlay->saturation_outer->slider->set_position(overlay->saturation_outer->slider->max_position());
+	overlay->saturation_inner->slider->set_position(0);
+	overlay->value_outer->slider->set_position(overlay->value_outer->slider->max_position());
+	overlay->value_inner->slider->set_position(0);
 
-	radiobutton_HSV->style()->set("position: absolute; left: 16px; top: 0px; width:64px; height:16px");
-	radiobutton_HSV->set_selected(true);
-	radiobutton_HSV->func_selected() = [&]() {is_hsl = false; set_needs_render(); };
-	radiobutton_HSL->style()->set("position: absolute; left: 100px; top: 0px; width:64px; height:16px");
-	radiobutton_HSL->func_selected() = [&]() {is_hsl = true; set_needs_render(); };
+	overlay->radio_row->radiobutton_HSV->set_selected(true);
+	overlay->radio_row->radiobutton_HSV->set_selected(true);
 
-	radiobutton_HSV->set_selected(true);
-
-	font = clan::Font( "tahoma", 16);
-
-}
-
-ColorWheel::~ColorWheel()
-{
-
+	update_labels();
 }
 
 void ColorWheel::render_content(clan::Canvas &canvas)
@@ -76,46 +60,29 @@ void ColorWheel::render_content(clan::Canvas &canvas)
 	clan::Pointf center = geometry().content_box().get_center();
 	float radius = std::min(geometry().content_box().get_width(), geometry().content_box().get_height()) * 0.5f;
 	draw(canvas, center, radius);
-
-	draw_labels(canvas);
-
 }
 
 void ColorWheel::get_options()
 {
-	saturation_outer = get_value(slider_saturation_outer.get());
-	saturation_inner = get_value(slider_saturation_inner.get());
-	value_outer = get_value(slider_value_outer.get());
-	value_inner = get_value(slider_value_inner.get());
+	is_hsl = overlay->radio_row->radiobutton_HSL->selected();
+	saturation_outer = get_value(overlay->saturation_outer->slider);
+	saturation_inner = get_value(overlay->saturation_inner->slider);
+	value_outer = get_value(overlay->value_outer->slider);
+	value_inner = get_value(overlay->value_inner->slider);
 }
 
-float ColorWheel::get_value(clan::SliderView *slider)
+float ColorWheel::get_value(const std::shared_ptr<clan::SliderView> &slider)
 {
 	float value = (float) slider->position();
 	value /= (float) slider->max_position();
 	return value;
 }
 
-void ColorWheel::set_slider(clan::SliderView *component, int xpos, int ypos)
-{
-	component->style()->set("position: absolute; left: %1px; top: %2px; width:256px; height:17px", xpos, ypos);
-
-	component->set_horizontal();
-	component->set_min_position(0);
-	component->set_max_position(1000);
-	component->set_tick_count(100);
-	component->set_page_step(100);
-	component->set_position(0);
-	component->set_lock_to_ticks(false);
-
-	component->func_value_changed() = bind_member(this, &ColorWheel::option_changed);
-}
-
 void ColorWheel::option_changed()
 {
 	set_needs_render();
+	update_labels();
 }
-
 
 void ColorWheel::draw(clan::Canvas &canvas, const clan::Pointf &center, float radius)
 {
@@ -179,41 +146,30 @@ void ColorWheel::draw(clan::Canvas &canvas, const clan::Pointf &center, float ra
 		colorwheel_colors[triangle_offset + 2] = work_color_dest;
 
 	}
+
 	canvas.fill_triangles(colorwheel_positions, colorwheel_colors, colorwheel_segments * 3);
-
 }
 
-void ColorWheel::draw_labels(clan::Canvas &canvas)
+void ColorWheel::update_labels()
 {
-
-	std::string text;
-	text = std::string(clan::string_format("Saturation Outer = %1", saturation_outer));
-	font.draw_text(canvas, slider_saturation_outer->geometry().content_box().right + 8, slider_saturation_outer->geometry().content_box().bottom - 4, text);
-	text = std::string(clan::string_format("Saturation Inner = %1", saturation_inner));
-	font.draw_text(canvas, slider_saturation_inner->geometry().content_box().right + 8, slider_saturation_inner->geometry().content_box().bottom - 4, text);
+	overlay->saturation_outer->label->set_text(clan::string_format("Saturation Outer = %1", saturation_outer));
+	overlay->saturation_inner->label->set_text(clan::string_format("Saturation Inner = %1", saturation_inner));
 
 	if (is_hsl)
 	{
-	text = std::string(clan::string_format("Lightness Outer = %1", value_outer));
+		overlay->value_outer->label->set_text(clan::string_format("Lightness Outer = %1", value_outer));
 	}
 	else
 	{
-	text = std::string(clan::string_format("Value Outer = %1", value_outer));
+		overlay->value_outer->label->set_text(clan::string_format("Value Outer = %1", value_outer));
 	}
-	font.draw_text(canvas, slider_value_outer->geometry().content_box().right + 8, slider_value_outer->geometry().content_box().bottom - 4, text);
 
 	if (is_hsl)
 	{
-	text = std::string(clan::string_format("Lightness Inner = %1", value_inner));
+		overlay->value_inner->label->set_text(clan::string_format("Lightness Inner = %1", value_inner));
 	}
 	else
 	{
-	text = std::string(clan::string_format("Value Inner = %1", value_inner));
+		overlay->value_inner->label->set_text(clan::string_format("Value Inner = %1", value_inner));
 	}
-	font.draw_text(canvas, slider_value_inner->geometry().content_box().right + 8, slider_value_inner->geometry().content_box().bottom - 4, text);
-
-	font.draw_text(canvas, radiobutton_HSV->geometry().content_box().left + 16, radiobutton_HSV->geometry().content_box().bottom - 2, "HSV");
-	font.draw_text(canvas, radiobutton_HSL->geometry().content_box().left + 16, radiobutton_HSL->geometry().content_box().bottom - 2, "HSL");
 }
-
-
