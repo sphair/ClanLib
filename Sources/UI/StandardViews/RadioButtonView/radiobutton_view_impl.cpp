@@ -119,6 +119,8 @@ namespace clan
 		{
 			_state_selected = true;
 			release_group_checked();
+			if (_func_selected)
+				_func_selected();
 		}
 
 		update_state();
