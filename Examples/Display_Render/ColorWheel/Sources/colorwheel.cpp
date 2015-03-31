@@ -29,42 +29,37 @@
 #include "precomp.h"
 
 #include "colorwheel.h"
-/*
-ColorWheel::ColorWheel(clan::Canvas &canvas, clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComponent(&gui, clan::GUITopLevelDescription("ColorWheel", gui_position, false))
+
+ColorWheel::ColorWheel()
 {
-	clan::CSSValueBackgroundColor color;
-	color.color = clan::Colorf::black;
-	set_style(color, true);	// We want a black background
+	//style()->set("flex: 1 1 main-size");
 
+	add_subview(slider_saturation_outer);
+	add_subview(slider_saturation_inner);
+	add_subview(slider_value_outer);
+	add_subview(slider_value_inner);
+	add_subview(radiobutton_HSV);
+	add_subview(radiobutton_HSL);
 
-	slider_saturation_outer = create_slider(16, 16);
-	slider_saturation_inner = create_slider(16, 48);
-	slider_value_outer = create_slider(16, 80);
-	slider_value_inner = create_slider(16, 112);
+	set_slider(slider_saturation_outer.get(), 16, 16);
+	set_slider(slider_saturation_inner.get(), 16, 48);
+	set_slider(slider_value_outer.get(), 16, 80);
+	set_slider(slider_value_inner.get(), 16, 112);
 
-	slider_saturation_outer->set_position(slider_saturation_outer->get_max());
+	slider_saturation_outer->set_position(slider_saturation_outer->max_position());
 	slider_saturation_inner->set_position(0);
-	slider_value_outer->set_position(slider_value_outer->get_max());
+	slider_value_outer->set_position(slider_value_outer->max_position());
 	slider_value_inner->set_position(0);
 
-	radiobutton_HSV = new clan::RadioButton(this);
-	radiobutton_HSV->set_geometry(clan::Rect(16, 0 , clan::Size(64, 16)));
-	radiobutton_HSV->set_text("         ");		// ** I'm got lazy to set the text color to white, so I draw it elsewhere
+	radiobutton_HSV->style()->set("position: absolute; left: 16px; top: 0px; width:64; height:16");
 	radiobutton_HSV->set_selected(true);
-	radiobutton_HSV->set_group_name("Main Group");
-	radiobutton_HSV->func_selected() = bind_member(this, &ColorWheel::on_selected, radiobutton_HSV);
-
-	radiobutton_HSL = new clan::RadioButton(this);
-	radiobutton_HSL->set_geometry(clan::Rect(100, 0, clan::Size(64, 16)));
-	radiobutton_HSL->set_text("         ");
-	radiobutton_HSL->set_group_name("Main Group");
-	radiobutton_HSL->func_selected() = bind_member(this, &ColorWheel::on_selected, radiobutton_HSL);
+	radiobutton_HSV->func_selected() = [&]() {is_hsl = false; set_needs_render(); };
+	radiobutton_HSL->style()->set("position: absolute; left: 100px; top: 0px; width:64; height:16");
+	radiobutton_HSL->func_selected() = [&]() {is_hsl = true; set_needs_render(); };
 
 	radiobutton_HSV->set_selected(true);
 
-	func_render() = bind_member(this, &ColorWheel::on_render);
-
-	font = clan::Font(canvas, "tahoma", 16);
+	font = clan::Font( "tahoma", 16);
 
 }
 
@@ -73,62 +68,151 @@ ColorWheel::~ColorWheel()
 
 }
 
-void ColorWheel::on_render(clan::Canvas &canvas, const clan::Rect &update_rect)
+void ColorWheel::render_content(clan::Canvas &canvas)
 {
 	get_options();
+
+	clan::Pointf center((float)canvas.get_width() / 2.0f, (float)canvas.get_height() / 2.0f);
+	float radius = 200.0f;
+	draw(canvas, center, radius);
+
+	draw_labels(canvas);
 
 }
 
 void ColorWheel::get_options()
 {
-	saturation_outer = get_value(slider_saturation_outer);
-	saturation_inner = get_value(slider_saturation_inner);
-	value_outer = get_value(slider_value_outer);
-	value_inner = get_value(slider_value_inner);
+	saturation_outer = get_value(slider_saturation_outer.get());
+	saturation_inner = get_value(slider_saturation_inner.get());
+	value_outer = get_value(slider_value_outer.get());
+	value_inner = get_value(slider_value_inner.get());
 }
 
-float ColorWheel::get_value(clan::Slider *slider)
+float ColorWheel::get_value(clan::SliderView *slider)
 {
-	float value = (float) slider->get_position();
-	value /= (float) slider->get_max();
+	float value = (float) slider->position();
+	value /= (float) slider->max_position();
 	return value;
 }
 
-clan::Slider *ColorWheel::create_slider(int xpos, int ypos)
+void ColorWheel::set_slider(clan::SliderView *component, int xpos, int ypos)
 {
-	clan::Slider *component = new clan::Slider(this);
-	component->set_geometry(clan::Rect(xpos, ypos, clan::Size(256, 17)));
-	component->set_vertical(false);
-	component->set_horizontal(true);
-	component->set_min(0);
-	component->set_max(1000);
+	component->style()->set("position: absolute; left: %1px; top: %2px; width:256px; height:17px", xpos, ypos);
+
+	component->set_horizontal();
+	component->set_min_position(0);
+	component->set_max_position(1000);
 	component->set_tick_count(100);
 	component->set_page_step(100);
 	component->set_position(0);
 	component->set_lock_to_ticks(false);
 
 	component->func_value_changed() = bind_member(this, &ColorWheel::option_changed);
-
-	return component;
-
 }
 
 void ColorWheel::option_changed()
 {
-	request_repaint();
+	set_needs_render();
 }
 
-void ColorWheel::on_selected(clan::RadioButton *radiobutton)
+
+void ColorWheel::draw(clan::Canvas &canvas, const clan::Pointf &center, float radius)
 {
-	if (radiobutton == radiobutton_HSL)
+	const int colorwheel_segments = 360 / 2;
+	clan::Vec2f colorwheel_positions[colorwheel_segments * 3];
+	clan::Colorf colorwheel_colors[colorwheel_segments * 3];
+
+	for (int segment = 0; segment < colorwheel_segments; segment++)
 	{
-		is_hsl = true;
+		int source_segment = segment;
+		int next_segment = segment + 1;
+
+		float src_angle = (source_segment * clan::PI*2.0f) / colorwheel_segments;
+		float dest_angle = (next_segment * clan::PI*2.0f) / colorwheel_segments;
+		src_angle -= clan::PI / 2.0f;	// So red is at the top
+		dest_angle -= clan::PI / 2.0f;
+		float src_x = cos(src_angle);
+		float src_y = sin(src_angle);
+		float dest_x = cos(dest_angle);
+		float dest_y = sin(dest_angle);
+
+		int triangle_offset = segment * 3;
+		colorwheel_positions[triangle_offset + 0].x = center.x;
+		colorwheel_positions[triangle_offset + 0].y = center.y;
+
+		colorwheel_positions[triangle_offset + 1].x = (src_x * radius) + center.x;
+		colorwheel_positions[triangle_offset + 1].y = (src_y * radius) + center.y;
+
+		colorwheel_positions[triangle_offset + 2].x = (dest_x * radius) + center.x;
+		colorwheel_positions[triangle_offset + 2].y = (dest_y * radius) + center.y;
+
+		clan::Colorf work_color_src;
+		clan::Colorf work_color_dest;
+		clan::Colorf work_color_center;
+
+		if (is_hsl)
+		{
+			clan::ColorHSLf color_src_hsv(source_segment * 360.0f / colorwheel_segments, saturation_outer, value_outer, 1.0f);
+			work_color_src = clan::Colorf(color_src_hsv);
+
+			clan::ColorHSLf color_dest_hsv(next_segment * 360.0f / colorwheel_segments, saturation_outer, value_outer, 1.0f);
+			work_color_dest = clan::Colorf(color_dest_hsv);
+
+			clan::ColorHSLf color_center_hsv(((source_segment + next_segment) / 2.0f) * 360.0f / colorwheel_segments, saturation_inner, value_inner, 1.0f);
+			work_color_center = clan::Colorf(color_center_hsv);
+		}
+		else
+		{
+			clan::ColorHSVf color_src_hsv(source_segment * 360.0f / colorwheel_segments, saturation_outer, value_outer, 1.0f);
+			work_color_src = clan::Colorf(color_src_hsv);
+
+			clan::ColorHSVf color_dest_hsv(next_segment * 360.0f / colorwheel_segments, saturation_outer, value_outer, 1.0f);
+			work_color_dest = clan::Colorf(color_dest_hsv);
+
+			clan::ColorHSVf color_center_hsv(((source_segment + next_segment) / 2.0f) * 360.0f / colorwheel_segments, saturation_inner, value_inner, 1.0f);
+			work_color_center = clan::Colorf(color_center_hsv);
+		}
+
+		colorwheel_colors[triangle_offset + 0] = work_color_center;
+		colorwheel_colors[triangle_offset + 1] = work_color_src;
+		colorwheel_colors[triangle_offset + 2] = work_color_dest;
+
+	}
+	canvas.fill_triangles(colorwheel_positions, colorwheel_colors, colorwheel_segments * 3);
+
+}
+
+void ColorWheel::draw_labels(clan::Canvas &canvas)
+{
+
+	std::string text;
+	text = std::string(clan::string_format("Saturation Outer = %1", saturation_outer));
+	font.draw_text(canvas, slider_saturation_outer->geometry().content_box().right + 8, slider_saturation_outer->geometry().content_box().bottom - 4, text);
+	text = std::string(clan::string_format("Saturation Inner = %1", saturation_inner));
+	font.draw_text(canvas, slider_saturation_inner->geometry().content_box().right + 8, slider_saturation_inner->geometry().content_box().bottom - 4, text);
+
+	if (is_hsl)
+	{
+	text = std::string(clan::string_format("Lightness Outer = %1", value_outer));
 	}
 	else
 	{
-		is_hsl = false;
+	text = std::string(clan::string_format("Value Outer = %1", value_outer));
 	}
-	request_repaint();
+	font.draw_text(canvas, slider_value_outer->geometry().content_box().right + 8, slider_value_outer->geometry().content_box().bottom - 4, text);
 
+	if (is_hsl)
+	{
+	text = std::string(clan::string_format("Lightness Inner = %1", value_inner));
+	}
+	else
+	{
+	text = std::string(clan::string_format("Value Inner = %1", value_inner));
+	}
+	font.draw_text(canvas, slider_value_inner->geometry().content_box().right + 8, slider_value_inner->geometry().content_box().bottom - 4, text);
+
+	font.draw_text(canvas, radiobutton_HSV->geometry().content_box().left + 16, radiobutton_HSV->geometry().content_box().bottom - 2, "HSV");
+	font.draw_text(canvas, radiobutton_HSL->geometry().content_box().left + 16, radiobutton_HSL->geometry().content_box().bottom - 2, "HSL");
 }
-*/
+
+

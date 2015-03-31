@@ -27,31 +27,35 @@
 */
 
 #pragma once
+#include "..\..\..\ThemeAero\Sources\theme.h"
 
-/*
-class ColorWheel : public clan::GUIComponent
+class ColorWheel : public clan::View
 {
 public:
-	ColorWheel(clan::Canvas &canvas, clan::GUIManager &gui, clan::Rect gui_position);
+	ColorWheel();
 	virtual ~ColorWheel();
 
-	clan::Slider *slider_saturation_outer;
-	clan::Slider *slider_saturation_inner;
-	clan::Slider *slider_value_outer;
-	clan::Slider *slider_value_inner;
-	clan::RadioButton *radiobutton_HSV;
-	clan::RadioButton *radiobutton_HSL;
+	std::shared_ptr<clan::SliderView> slider_saturation_outer = Theme::create_slider();
+	std::shared_ptr<clan::SliderView> slider_saturation_inner = Theme::create_slider();
+	std::shared_ptr<clan::SliderView> slider_value_outer = Theme::create_slider();
+	std::shared_ptr<clan::SliderView> slider_value_inner = Theme::create_slider();
+	std::shared_ptr<clan::RadioButtonView> radiobutton_HSV = Theme::create_radiobutton();
+	std::shared_ptr<clan::RadioButtonView> radiobutton_HSL = Theme::create_radiobutton();
+
+	float saturation_outer = 1.0f;
+	float saturation_inner = 0.0f;
+	float value_outer = 1.0f;
+	float value_inner = 0.0f;
+	bool is_hsl = false;
 
 private:
-	void on_render(clan::Canvas &canvas, const clan::Rect &update_rect);
-	clan::Slider *create_slider(int xpos, int ypos);
+	void draw_labels(clan::Canvas &canvas);
+	void draw(clan::Canvas &canvas, const clan::Pointf &center, float radius);
+	void render_content(clan::Canvas &canvas) override;
 	void get_options();
-	float get_value(clan::Slider *slider);
+	float get_value(clan::SliderView *slider);
 	void option_changed();
-	void on_selected(clan::RadioButton *radiobutton);
-
+	void set_slider(clan::SliderView *component, int xpos, int ypos);
 
 	clan::Font font;
 };
-
-*/

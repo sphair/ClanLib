@@ -28,6 +28,8 @@
 
 #pragma once
 
+#include "colorwheel.h"
+
 class App : public clan::Application
 {
 public:
@@ -37,19 +39,18 @@ public:
 private:
 	void on_input_up(const clan::InputEvent &key);
 	void on_window_close();
-	void draw(clan::Canvas &canvas, const clan::Pointf &center, float radius);
-	void draw_labels(clan::Canvas &canvas);
 private:
 	clan::DisplayWindow window;
 	clan::SlotContainer sc;
 	clan::Canvas canvas;
 
-	bool quit = false;
+	clan::Canvas gui_canvas;
+	clan::Image gui_image;
 
-	float saturation_outer = 1.0f;
-	float saturation_inner = 0.0f;
-	float value_outer = 1.0f;
-	float value_inner = 0.0f;
-	bool is_hsl = false;
+	clan::UIThread ui_thread;
+	std::shared_ptr<clan::TextureView> root;
+	std::shared_ptr<ColorWheel> color_wheel;
+
+	bool quit = false;
 
 };
