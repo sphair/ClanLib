@@ -152,6 +152,8 @@ void ColorWheel::draw(clan::Canvas &canvas, const clan::Pointf &center, float ra
 
 void ColorWheel::update_labels()
 {
+	get_options();
+
 	overlay->saturation_outer->label->set_text(clan::string_format("Saturation Outer = %1", saturation_outer));
 	overlay->saturation_inner->label->set_text(clan::string_format("Saturation Inner = %1", saturation_inner));
 
