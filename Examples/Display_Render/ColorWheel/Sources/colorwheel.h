@@ -39,7 +39,7 @@ public:
 		add_subview(radiobutton_HSL);
 		add_subview(label_HSL);
 
-		style()->set("margin: 5px 0");
+		style()->set("margin: 3px 0");
 
 		radiobutton_HSV->style()->set("margin-right: 2px");
 		radiobutton_HSL->style()->set("margin-right: 2px; margin-left: 15px");
@@ -65,7 +65,7 @@ public:
 		add_subview(slider);
 		add_subview(label);
 
-		style()->set("margin: 5px 0");
+		style()->set("margin: 3px 0");
 
 		slider->style()->set("width: 200px; height: 17px; margin-right: 5px");
 		slider->set_horizontal();
