@@ -352,9 +352,9 @@ void App::control_target(Options *options)
 		if (options->button_slerp_clicked)
 			active_slerp = true;
 
-		//FIXME: options->button_lerp->set_enabled(false);
+		options->button_lerp->set_disabled();
 		options->button_lerp_clicked = false;
-		//FIXME: options->button_slerp->set_enabled(false);
+		options->button_slerp->set_disabled();
 		options->button_slerp_clicked = false;
 
 		time_made_active = current_time;
@@ -390,8 +390,8 @@ void App::control_target(Options *options)
 
 		if (time_active >= 1.0f)
 		{
-			//FIXME: options->button_lerp->set_enabled(true);
-			//FIXME: options->button_slerp->set_enabled(true);
+			options->button_lerp->set_enabled();
+			options->button_slerp->set_enabled();
 			active_lerp = false;
 			active_slerp = false;
 		}

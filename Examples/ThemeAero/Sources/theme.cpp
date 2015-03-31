@@ -92,8 +92,9 @@ std::shared_ptr<clan::ButtonView> Theme::create_button()
 	button->style("hot")->set("border-image-source:url('Resources/button_hot.png');");
 	button->style("pressed")->set("border-image-source:url('Resources/button_pressed.png');");
 	button->style("disabled")->set("border-image-source:url('Resources/button_disabled.png');");
-	button->label()->style()->set("margin: 5px auto; font: 13px/1.5 'Segoe UI'; padding: 3px 10px");
-	button->label()->style("pressed")->set("font-weight: bold");
+	button->label()->style()->set("margin: 5px auto; font: 13px/1.5 'Segoe UI'; padding: 3px 10px; color: rgb(0,0,0);");
+	button->label()->style("disabled")->set("color: rgb(128,128,128);");
+	button->label()->style("pressed")->set("font-weight: bold;");
 	button->label()->set_text_alignment(TextAlignment::center);
 	return button;
 }
