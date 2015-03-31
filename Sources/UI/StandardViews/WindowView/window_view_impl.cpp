@@ -154,7 +154,8 @@ namespace clan
 			if (capture_down_counter == 1)
 			{
 				captured_view = view_above_cursor;
-				window.capture_mouse(true);
+				if (captured_view)
+					window.capture_mouse(true);
 			}
 		}
 
@@ -167,7 +168,8 @@ namespace clan
 				capture_down_counter--;
 				if (capture_down_counter == 0)
 				{
-					release_capture();
+					if (captured_view)
+						release_capture();
 				}
 			}
 		}
