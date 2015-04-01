@@ -76,6 +76,7 @@ namespace clan
 
 			canvas.set_blend_state(opaque_blend);
 			canvas.fill_rect(canvas_rect, Colorf::transparent);
+			canvas.reset_blend_state();
 			//canvas.clear(clan::Colorf::transparent);	<--- On d3d, this clears the entire canvas - It does not recognise the cliprect
 
 			needs_render = false;
@@ -83,7 +84,6 @@ namespace clan
 			window_view->layout(canvas);
 			window_view->render(canvas);
 			canvas.reset_cliprect();
-			canvas.reset_blend_state();
 		}
 	}
 
