@@ -10,6 +10,11 @@ namespace clan
 		return view->from_root_pos(_pos);
 	}
 
+	Pointf PointerEvent::local_pos() const
+	{
+		return _pos;
+	}
+
 	void PointerEvent::set_pos(View *view, const Pointf &pos)
 	{
 		_pos = view->to_root_pos(pos);
