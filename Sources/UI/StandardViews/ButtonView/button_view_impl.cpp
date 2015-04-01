@@ -73,6 +73,8 @@ namespace clan
 		if (_state_disabled)
 			return;
 		update_state();
+		if (_func_clicked)
+			_func_clicked();
 	}
 
 }

@@ -42,6 +42,8 @@ namespace clan
 		bool _state_hot = false;
 		bool _state_pressed = false;
 
+		std::function<void()> _func_clicked;
+
 		std::shared_ptr<LabelView> label;
 		std::shared_ptr<ImageView> image_view;
 	};

@@ -52,6 +52,8 @@ namespace clan
 		void move_label_before_image();
 		void move_label_after_image();
 
+		std::function<void()> &func_clicked();
+
 	private:
 		std::unique_ptr<ButtonViewImpl> impl;
 	};

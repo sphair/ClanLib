@@ -64,6 +64,11 @@ namespace clan
 	{
 	}
 
+	std::function<void()> &ButtonView::func_clicked()
+	{
+		return impl->_func_clicked;
+	}
+
 	bool ButtonView::disabled() const
 	{
 		return impl->_state_disabled;
