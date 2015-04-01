@@ -28,6 +28,8 @@
 
 #pragma once
 
+#include "../../../ThemeAero/Sources/theme.h"
+
 enum FontClass
 {
 	font_ttf,
@@ -74,6 +76,11 @@ private:
 	std::string font_filename;
 	FontDescription font_desc;
 	clan::SlotContainer slots;
+	clan::Canvas gui_canvas;
+	clan::Image gui_image;
+	clan::UIThread ui_thread;
+	std::shared_ptr<clan::TextureView> root;
+
 	Sizef font_size;
 	clan::Font small_font;
 	clan::Font selected_font;
@@ -81,7 +88,17 @@ private:
 	float last_fps;
 	ResourceManager resources;
 	GameTime game_time;
+
+	std::shared_ptr<clan::ButtonView> button_typeface_tahoma;
+	std::shared_ptr<clan::ButtonView> button_typeface_sans;
+	std::shared_ptr<clan::ButtonView> button_typeface_bitstream;
+	std::shared_ptr<clan::TextFieldView> lineedit_text;
+	std::shared_ptr<clan::CheckBoxView> checkbox_italic;
+	std::shared_ptr<clan::CheckBoxView> checkbox_antialias;
+	std::shared_ptr<clan::CheckBoxView> checkbox_subpixel;
+
 };
+
 
 
 

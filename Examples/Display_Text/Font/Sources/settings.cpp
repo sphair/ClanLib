@@ -125,8 +125,8 @@ void App::draw_font_info()
 
 void App::on_lineedit_changed(InputEvent &e)
 {
-	//FIXME: font_text = lineedit_text_ptr->get_text();
-	//FIXME: font_size = selected_font.get_text_size(canvas, font_text);
+	font_text = lineedit_text->text();
+	font_size = selected_font.measure_text(canvas, font_text).bbox_size;
 }
 
 void App::on_button_clicked_class_sprite()
@@ -134,18 +134,18 @@ void App::on_button_clicked_class_sprite()
 	selected_fontclass = font_sprite;
 	font_typeface = "ClanFont";
 	font_filename = "";
-	//FIXME: button_typeface_sans_ptr->set_enabled(false);
-	//FIXME: button_typeface_tahoma_ptr->set_enabled(false);
-	//FIXME: button_typeface_bitstream_ptr->set_enabled(false);
+	button_typeface_sans->set_disabled();
+	button_typeface_tahoma->set_disabled();
+	button_typeface_bitstream->set_disabled();
 	select_font();
 }
 void App::on_button_clicked_class_system()
 {
 	selected_fontclass = font_ttf;
-	//FIXME: button_typeface_tahoma_ptr->set_enabled();
-	//FIXME: button_typeface_sans_ptr->set_enabled();
-	//FIXME: button_typeface_bitstream_ptr->set_enabled();
-	//FIXME: on_button_clicked_typeface_tahoma(button_typeface_tahoma_ptr);
+	button_typeface_tahoma->set_enabled();
+	button_typeface_sans->set_enabled();
+	button_typeface_bitstream->set_enabled();
+	on_button_clicked_typeface_tahoma();
 }
 
 void App::on_button_clicked_typeface_tahoma()
@@ -171,19 +171,19 @@ void App::on_button_clicked_typeface_bitstream()
 
 void App::on_checkbox_state_italic()
 {
-	//FIXME: font_desc.set_italic(checkbox->is_checked());
+	font_desc.set_style(checkbox_italic->checked() ? clan::FontStyle::italic : clan::FontStyle::normal);
 	select_font();
 }
 
 void App::on_checkbox_state_subpixel()
 {
-	//FIXME: font_desc.set_subpixel(checkbox->is_checked());
+	font_desc.set_subpixel(checkbox_subpixel->checked());
 	select_font();
 }
 
 void App::on_checkbox_state_antialias()
 {
-	//FIXME: font_desc.set_anti_alias(checkbox->is_checked());
+	font_desc.set_anti_alias(checkbox_antialias->checked());
 	select_font();
 }
 
