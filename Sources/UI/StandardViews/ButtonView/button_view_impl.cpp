@@ -31,6 +31,7 @@
 #include "API/UI/StandardViews/button_view.h"
 #include "API/UI/StandardViews/image_view.h"
 #include "button_view_impl.h"
+#include "API/UI/Events/pointer_event.h"
 
 namespace clan
 {
@@ -74,7 +75,10 @@ namespace clan
 			return;
 		update_state();
 		if (_func_clicked)
-			_func_clicked();
+		{
+			if (button->geometry().border_box().contains(e.local_pos()))	// Only allow click when mouse released over component
+				_func_clicked();
+		}
 	}
 
 }

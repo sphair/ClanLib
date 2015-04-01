@@ -114,7 +114,12 @@ namespace clan
 		_state_pressed = false;
 		if (_state_disabled)
 			return;
-		_checked_state = !_checked_state;
+		if (checkbox->geometry().border_box().contains(e.local_pos()))	// Only allow click when mouse released over component
+		{
+			_checked_state = !_checked_state;
+			if (_func_state_changed)
+				_func_state_changed();
+		}
 		update_state();
 	}
 
