@@ -129,14 +129,21 @@ namespace clan
 		{
 			// Grab scanline
 			memcpy(scanline_orig.data() + bytes_per_pixel, image.get_line(y), scanline_orig.size() - bytes_per_pixel);
-			
+
 			// Filter scanline
+			/*
+			scanline_filtered[0] = 0; // None filter type
+			for (int i = bytes_per_pixel; i < scanline_orig.size(); i++)
+			{
+				scanline_filtered[i - bytes_per_pixel + 1] = scanline_orig[i];
+			}
+			*/
 			scanline_filtered[0] = 1; // Sub filter type
 			for (int i = bytes_per_pixel; i < scanline_orig.size(); i++)
 			{
 				unsigned char a = scanline_orig[i - bytes_per_pixel];
 				unsigned char x = scanline_orig[i];
-				scanline_filtered[i - bytes_per_pixel + 1] = a - x;
+				scanline_filtered[i - bytes_per_pixel + 1] = x - a;
 			}
 			
 			// Output scanline
