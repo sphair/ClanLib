@@ -59,12 +59,6 @@ Basic2D::Basic2D()
 	logo = clan::Image(canvas, "Resources/logo.png");
 	font = clan::Font("tahoma", 24);
 
-	auto pixels = clan::PNGProvider::load("Resources/logo.png");
-	clan::File file("test.png", clan::File::create_always, clan::File::access_read_write);
-	clan::PNGProvider::save(pixels, file);
-	file.close();
-	clan::PNGProvider::load("test.png");
-
 	game_time.reset();
 }
 
