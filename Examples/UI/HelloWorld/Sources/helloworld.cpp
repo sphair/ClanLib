@@ -85,6 +85,11 @@ HelloWorld::HelloWorld()
 		label->set_text(label->text() + " CLICK!");
 	});
 
+	auto scrollarea = std::make_shared<ScrollView>();
+	scrollarea->style()->set("margin: 5px 0; border: 1px solid black; padding: 5px 5px;");
+	scrollarea->content_view()->style()->set("flex-direction: column");
+	body->add_subview(scrollarea);
+
 	// Create a text field for our span layout
 	std::shared_ptr<TextFieldView> edit = std::make_shared<TextFieldView>();
 	edit->style()->set("font: 11px/20px 'Segoe UI'");
@@ -110,7 +115,7 @@ HelloWorld::HelloWorld()
 	p1->add_text("This is an example of why Sphair should never ever make fun of my ", normal);
 	p1->add_text("BEAUTIFUL", bold);
 	p1->add_text(" green 13.37deg gradients because he will never know what it is replaced with!", normal);
-	body->add_subview(p1);
+	scrollarea->content_view()->add_subview(p1);
 
 	std::shared_ptr<SpanLayoutView> p2 = std::make_shared<SpanLayoutView>();
 	p2->style()->set("margin: 15px 0 5px 0");
@@ -125,20 +130,20 @@ HelloWorld::HelloWorld()
 	p2->add_text(" in the text field: ", normal);
 	p2->add_subview(edit);
 	p2->add_text(" You know you want to!", bold);
-	body->add_subview(p2);
+	scrollarea->content_view()->add_subview(p2);
 	
 	std::shared_ptr<SpanLayoutView> p3 = std::make_shared<SpanLayoutView>();
 	p3->add_text("Since we both know you typed ", normal);
 	p3->add_text("Yes, yes, yes..", italic);
 	p3->add_text(" into the text field (who wouldn't!?), here's the amazing gradient:", normal);
-	body->add_subview(p3);
+	scrollarea->content_view()->add_subview(p3);
 	
 	std::shared_ptr<View> gradient_box = std::make_shared<View>();
 	gradient_box->style()->set("margin: 15px auto; width: 120px; height: 75px;");
 	gradient_box->style()->set("border: 1px solid #777");
 	gradient_box->style()->set("background: linear-gradient(13.37deg, #f0f0f0, rgb(120,240,120) 50%, #f0f0f0)");
 	gradient_box->style()->set("box-shadow: 7px 7px 7px rgba(0,0,0,0.2)");
-	body->add_subview(gradient_box);
+	scrollarea->content_view()->add_subview(gradient_box);
 
 	auto scrollbar = Theme::create_scrollbar();
 	//scrollbar->set_disabled();
@@ -146,11 +151,11 @@ HelloWorld::HelloWorld()
 	scrollbar->set_position(0.5);
 	scrollbar->set_page_step(0.1);
 	scrollbar->set_line_step(0.01);
-	body->add_subview(scrollbar);
+	scrollarea->content_view()->add_subview(scrollbar);
 
 	auto button = Theme::create_button();
 	button->label()->set_text("This is a button");
-	body->add_subview(button);
+	scrollarea->content_view()->add_subview(button);
 
 	std::shared_ptr<clan::SliderView> slider = Theme::create_slider();
 	//slider->set_disabled();
@@ -160,17 +165,17 @@ HelloWorld::HelloWorld()
 	slider->set_lock_to_ticks(false);
 	slider->set_page_step(100);
 	slider->set_position(slider->max_position()/2);
-	body->add_subview(slider);
+	scrollarea->content_view()->add_subview(slider);
 
 	auto checkbox = Theme::create_checkbox();
 	//checkbox->set_disabled();
-	body->add_subview(checkbox);
+	scrollarea->content_view()->add_subview(checkbox);
 
 	for (int cnt = 0; cnt < 3; cnt++)
 	{
 		auto radio = Theme::create_radiobutton();
 		//radio->set_disabled(true);
-		body->add_subview(radio);
+		scrollarea->content_view()->add_subview(radio);
 	}
 
 	// Make our window visible

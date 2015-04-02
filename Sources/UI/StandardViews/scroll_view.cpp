@@ -34,12 +34,32 @@
 
 namespace clan
 {
+	class ScrollViewContentContainer : public View
+	{
+	public:
+		void layout_subviews(Canvas &canvas) override
+		{
+			for (auto &view : subviews())
+			{
+				// To do: maybe we need a mode to specify if the X axis is locked or infinite
+				float width = geometry().content.get_width(); //view->get_preferred_width(canvas);
+				float height = view->get_preferred_height(canvas, width);
+				BoxGeometry geometry = BoxGeometry::from_content_box(style_cascade(), Rectf(0.0f, 0.0f, width, height));
+				geometry.content.translate(-geometry.content.get_top_left());
+				view->set_geometry(geometry);
+
+				view->layout_subviews(canvas); // Maybe this should be handled in View?
+			}
+		}
+	};
+
 	class ScrollViewImpl
 	{
 	public:
 		ScrollView *view = nullptr;
 		std::shared_ptr<ScrollBarView> scroll_x = std::make_shared<ScrollBarView>();
 		std::shared_ptr<ScrollBarView> scroll_y = std::make_shared<ScrollBarView>();
+		std::shared_ptr<ScrollViewContentContainer> content_container = std::make_shared<ScrollViewContentContainer>();
 		std::shared_ptr<View> content = std::make_shared<View>();
 		ContentOverflow overflow_x = ContentOverflow::hidden;
 		ContentOverflow overflow_y = ContentOverflow::automatic;
@@ -53,9 +73,20 @@ namespace clan
 		impl->scroll_x->set_hidden();
 		impl->scroll_y->set_hidden();
 
-		add_subview(impl->content);
+		impl->content_container->style()->set("flex: 1 1 main-size");
+
+		impl->content_container->set_content_clipped(true);
+		impl->content_container->add_subview(impl->content);
+
+		style()->set("flex-direction: column");
+
+		add_subview(impl->content_container);
 		add_subview(impl->scroll_x);
 		add_subview(impl->scroll_y);
+	}
+
+	ScrollView::~ScrollView()
+	{
 	}
 
 	std::shared_ptr<View> ScrollView::content_view() const
@@ -118,7 +149,7 @@ namespace clan
 			return;
 		
 		impl->content_offset = offset;
-		set_needs_render();
+		impl->content->set_view_transform(Mat4f::translate(-offset.x, -offset.y, 0.0f));
 	}
 	
 	void ScrollView::layout_subviews(Canvas &canvas)

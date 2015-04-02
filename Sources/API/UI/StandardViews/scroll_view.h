@@ -46,6 +46,7 @@ namespace clan
 	{
 	public:
 		ScrollView();
+		~ScrollView();
 		
 		std::shared_ptr<ScrollBarView> scrollbar_x_view() const;
 		std::shared_ptr<ScrollBarView> scrollbar_y_view() const;

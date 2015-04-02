@@ -232,7 +232,13 @@ namespace clan
 
 		bool clipped = impl->content_clipped;
 		if (clipped)
-			canvas.push_cliprect(Rectf(Pointf(), impl->_geometry.content.get_size()));
+		{
+			// Seems canvas cliprects are always in absolute coordinates - should this be changed?
+			// Note: this code isn't correct for rotated transforms (plus canvas cliprect can only clip AABB)
+			Vec4f tl_point = canvas.get_transform() * Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+			Vec4f br_point = canvas.get_transform() * Vec4f(impl->_geometry.content.get_width(), impl->_geometry.content.get_height(), 0.0f, 1.0f);
+			canvas.push_cliprect(Rectf(std::min(tl_point.x, br_point.x), std::min(tl_point.y, br_point.y), std::max(tl_point.x, br_point.x), std::max(tl_point.y, br_point.y)));
+		}
 
 		if (!render_exception_encountered())
 		{
