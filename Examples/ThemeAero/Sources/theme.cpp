@@ -163,3 +163,10 @@ std::shared_ptr<clan::RadioButtonView> Theme::create_radiobutton()
 	radio->style("checked_disabled")->set("background-image:url('Resources/radio_checked_disabled.png');");
 	return radio;
 }
+
+std::shared_ptr<clan::LabelView> Theme::create_label()
+{
+	auto label = std::make_shared<clan::LabelView>();
+	label->style()->set("font: 16px Tahoma; -clan-font-rendering: anti-alias; color: white");
+	return label;
+}

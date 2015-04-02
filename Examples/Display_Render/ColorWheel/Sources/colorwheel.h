@@ -76,12 +76,11 @@ public:
 		slider->set_position(0);
 		slider->set_lock_to_ticks(false);
 
-		label->style()->set("font: 16px Tahoma; -clan-font-rendering: anti-alias; color: white");
 		label->set_text(name);
 	}
 
 	std::shared_ptr<clan::SliderView> slider = Theme::create_slider();
-	std::shared_ptr<clan::LabelView> label = std::make_shared<clan::LabelView>();
+	std::shared_ptr<clan::LabelView> label = Theme::create_label();
 };
 
 class ColorWheelOverlay : public clan::View

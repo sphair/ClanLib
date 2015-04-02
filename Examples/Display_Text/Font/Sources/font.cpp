@@ -52,7 +52,7 @@ App::App()
 
 	canvas = Canvas(window);
 
-	clan::Texture2D gui_texture = clan::Texture2D(canvas, (int)std::round(250 * canvas.get_pixel_ratio()), (int)std::round(400 * canvas.get_pixel_ratio()));
+	clan::Texture2D gui_texture = clan::Texture2D(canvas, (int)std::round(250 * canvas.get_pixel_ratio()), (int)std::round(500 * canvas.get_pixel_ratio()));
 	gui_texture.set_pixel_ratio(canvas.get_pixel_ratio());
 	gui_image = clan::Image(gui_texture, gui_texture.get_size());
 	clan::FrameBuffer gui_framebuffer = clan::FrameBuffer(canvas);
@@ -115,23 +115,32 @@ App::App()
 	checkbox_italic = Theme::create_checkbox();
 	checkbox_italic->style()->set("position: absolute; left:%1px; top:%2px", offset_x, offset_y);
 	checkbox_italic->func_state_changed() = bind_member(this, &App::on_checkbox_state_italic);
-	//checkbox_italic.set_text("Italic");
 	root->add_subview(checkbox_italic);
+	auto label = Theme::create_label();
+	label->set_text("Italic");
+	label->style()->set("position: absolute; left:%1px; top:%2px", offset_x + 16, offset_y - 3);
+	root->add_subview(label);
 
 	checkbox_antialias = Theme::create_checkbox();
 	checkbox_antialias->set_check(true);
-	checkbox_antialias->style()->set("position: absolute; left:%1px; top:%2px", offset_x + 100, offset_y + 180);
+	checkbox_antialias->style()->set("position: absolute; left:%1px; top:%2px", offset_x + 100, offset_y);
 	checkbox_antialias->func_state_changed() = bind_member(this, &App::on_checkbox_state_antialias);
-	//checkbox_antialias.set_text("Anti Alias");
 	root->add_subview(checkbox_antialias);
+	label = Theme::create_label();
+	label->set_text("Anti Alias");
+	label->style()->set("position: absolute; left:%1px; top:%2px", offset_x + 100+ 16, offset_y - 3);
+	root->add_subview(label);
 	offset_y += gap;
 
 	checkbox_subpixel = Theme::create_checkbox();
 	checkbox_subpixel->set_check(true);
 	checkbox_subpixel->style()->set("position: absolute; left:%1px; top:%2px", offset_x, offset_y);
 	checkbox_subpixel->func_state_changed() = bind_member(this, &App::on_checkbox_state_subpixel);
-	//checkbox_subpixel.set_text("SubPixel Rendering");
 	root->add_subview(checkbox_subpixel);
+	label = Theme::create_label();
+	label->set_text("SubPixel Rendering");
+	label->style()->set("position: absolute; left:%1px; top:%2px", offset_x + 16, offset_y - 3);
+	root->add_subview(label);
 	offset_y += gap;
 
 	auto button_weight_light = Theme::create_button();
@@ -166,14 +175,22 @@ App::App()
 	button_size_64->func_clicked() = bind_member(this, &App::on_button_clicked_size_64);
 	button_size_64->label()->set_text("Size 64");
 	root->add_subview(button_size_64);
-	offset_y += gap;
+	offset_y += gap + 8;
 
 	lineedit_text = std::make_shared<clan::TextFieldView>();
+	lineedit_text->style()->set("font: 11px/20px 'Segoe UI'");
+	lineedit_text->style()->set("margin: 5px");
+	lineedit_text->style()->set("background: #efefef");
+	lineedit_text->style()->set("border: 1px solid black");
+	lineedit_text->style()->set("border-radius: 3px");
+	lineedit_text->style()->set("padding: 2px 5px 2px 5px");
+	lineedit_text->style()->set("width: 128px");
+	lineedit_text->style()->set("box-shadow: 0 0 5px rgba(100,100,200,0.2)");
 	lineedit_text->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:auto;", offset_x, offset_y, width);
-	lineedit_text->set_text(font_text);
-	//lineedit_text->func_after_edit_changed() = bind_member(this, &App::on_lineedit_changed);
-
 	font_text = "Ω(The quick brown fox 0123456789)";
+	lineedit_text->set_text(font_text);
+	slots.connect(lineedit_text->sig_selection_changed(), bind_member(this, &App::on_lineedit_changed));
+	root->add_subview(lineedit_text);
 
 	last_fps = 0.0f;
 	selected_fontclass = font_ttf;

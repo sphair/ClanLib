@@ -123,7 +123,7 @@ void App::draw_font_info()
 	offset_y += gap;
 }
 
-void App::on_lineedit_changed(InputEvent &e)
+void App::on_lineedit_changed()
 {
 	font_text = lineedit_text->text();
 	font_size = selected_font.measure_text(canvas, font_text).bbox_size;
