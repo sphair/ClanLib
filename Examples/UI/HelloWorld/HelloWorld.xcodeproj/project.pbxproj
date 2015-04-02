@@ -16,6 +16,7 @@
 		18D4BB681AAA9113005B9D81 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D4BB671AAA9113005B9D81 /* OpenGL.framework */; };
 		18DB18EE1AAD080000B3EADD /* helloworld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18DB18EC1AAD080000B3EADD /* helloworld.cpp */; };
 		18DB18F01AAD086400B3EADD /* libclanUI.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 18DB18EF1AAD086400B3EADD /* libclanUI.a */; };
+		18FEA79E1ACCCA7100C74A38 /* theme.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18FEA79D1ACCCA7100C74A38 /* theme.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		18DB18EC1AAD080000B3EADD /* helloworld.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = helloworld.cpp; sourceTree = "<group>"; };
 		18DB18ED1AAD080000B3EADD /* helloworld.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = helloworld.h; sourceTree = "<group>"; };
 		18DB18EF1AAD086400B3EADD /* libclanUI.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libclanUI.a; path = ../../../Build/lib/osx/libclanUI.a; sourceTree = "<group>"; };
+		18FEA79D1ACCCA7100C74A38 /* theme.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = theme.cpp; path = ../../../ThemeAero/Sources/theme.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +75,7 @@
 		186AF4121AAA7675007E3F0A /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				18FEA79D1ACCCA7100C74A38 /* theme.cpp */,
 				18DB18EC1AAD080000B3EADD /* helloworld.cpp */,
 				18DB18ED1AAD080000B3EADD /* helloworld.h */,
 				186AF4141AAA7675007E3F0A /* Info.plist */,
@@ -164,6 +167,7 @@
 			files = (
 				18077C8D1AAA781D00A2196B /* precomp.cpp in Sources */,
 				18DB18EE1AAD080000B3EADD /* helloworld.cpp in Sources */,
+				18FEA79E1ACCCA7100C74A38 /* theme.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
