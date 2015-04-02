@@ -41,7 +41,7 @@ namespace clan
 	PNGWriter::PNGWriter(IODevice iodevice, PixelBuffer src_image) : device(iodevice)
 	{
 		// This writer only supports RGBA format
-		if (src_image.get_bytes_per_pixel() < 64)
+		if (src_image.get_bytes_per_pixel() < 8)
 			image = src_image.to_format(tf_rgba8);
 		else
 			image = src_image.to_format(tf_rgba16);
@@ -69,7 +69,7 @@ namespace clan
 		
 		int width = image.get_width();
 		int height = image.get_height();
-		int bit_depth = image.get_bytes_per_pixel() == 64 ? 16 : 8;
+		int bit_depth = image.get_bytes_per_pixel() == 8 ? 16 : 8;
 		int color_type = 6;
 		int compression_method = 0;
 		int filter_method = 0;
@@ -129,6 +129,15 @@ namespace clan
 		{
 			// Grab scanline
 			memcpy(scanline_orig.data() + bytes_per_pixel, image.get_line(y), scanline_orig.size() - bytes_per_pixel);
+
+			// Convert to big endian for 16 bit
+			if (bytes_per_pixel == 8)
+			{
+				for (size_t x = 0; x < scanline_orig.size(); x+=2)
+				{
+					std::swap(scanline_orig[x], scanline_orig[x + 1]);
+				}
+			}
 
 			// Filter scanline
 			/*
