@@ -158,12 +158,8 @@ void InputDeviceProvider_OSXMouse::on_dispose()
 void InputDeviceProvider_OSXMouse::on_mouse_event(const clan::InputCode& keycode, const clan::InputEvent::Type& type,
                                                   const clan::Pointf& position)
 {
-    // Sanity.
-    assert(keycode < clan::mouse_count);
     if (keycode < clan::mouse_count)
     {
-        assert(type == InputEvent::doubleclick || type == clan::InputEvent::pressed ||
-               type == clan::InputEvent::released);
         if (type == InputEvent::doubleclick || type == clan::InputEvent::pressed)
         {
             mouse_down_map[keycode] = true;

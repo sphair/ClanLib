@@ -83,7 +83,7 @@
 	if (self)
 	{
 		window_provider = provider_impl;
-		
+		[self setAcceptsMouseMovedEvents:YES];
 		self.contentView = [[CocoaView alloc] initWithProvider:provider_impl];
 	}
 	return self;

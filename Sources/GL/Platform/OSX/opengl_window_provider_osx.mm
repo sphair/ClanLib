@@ -463,7 +463,6 @@ namespace clan
 
 			// Mouse movement events:
 			case NSMouseEntered: // see: NSTrackingArea
-			case NSMouseMoved: // requires setAcceptsMouseMovedEvents: to be called first
 				// TODO:
 				break;
 
@@ -475,6 +474,7 @@ namespace clan
 			case NSOtherMouseDown:
 			case NSOtherMouseUp:
 			case NSScrollWheel:
+			case NSMouseMoved: // requires setAcceptsMouseMovedEvents: to be called first
 				on_mouse_event(theEvent);
 				break;
 
@@ -654,6 +654,7 @@ namespace clan
 			case NSOtherMouseDown: id = mouse_middle; down = true; break;
 			case NSOtherMouseUp: id = mouse_middle; up = true; break;
 			case NSScrollWheel: id = ([theEvent deltaY] > 0) ? mouse_wheel_up : mouse_wheel_down; up = true; down = true; break;
+			case NSMouseMoved: break;
 			default:
 				return;
 		}
@@ -697,6 +698,17 @@ namespace clan
 			// Update our internal mouse state
 			self->get_mouse()->on_mouse_event(key.id, key.type, key.mouse_pos);
 
+			// Emit message.
+			(*self->get_mouse()->sig_provider_event)(key);
+		}
+		
+		if (type == NSMouseMoved)
+		{
+			key.type = InputEvent::pointer_moved;
+			
+			// Update our internal mouse state
+			self->get_mouse()->on_mouse_event(key.id, key.type, key.mouse_pos);
+			
 			// Emit message.
 			(*self->get_mouse()->sig_provider_event)(key);
 		}
