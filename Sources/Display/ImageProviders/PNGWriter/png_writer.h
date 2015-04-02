@@ -56,17 +56,20 @@ namespace clan
 	class PNGCRC32
 	{
 	public:
-		static unsigned long crc(const void *data, int len)
+		static unsigned long crc(const char name[4], const void *data, int len)
 		{
 			static PNGCRC32 impl;
 			
 			const unsigned char *buf = reinterpret_cast<const unsigned char*>(data);
 			
 			unsigned int c = 0xffffffff;
+
+			for (int n = 0; n < 4; n++)
+				c = impl.crc_table[(c ^ name[n]) & 0xff] ^ (c >> 8);
+
 			for (int n = 0; n < len; n++)
-			{
 				c = impl.crc_table[(c ^ buf[n]) & 0xff] ^ (c >> 8);
-			}
+
 			return c ^ 0xffffffff;
 		}
 		

@@ -128,7 +128,7 @@ namespace clan
 		for (int y = 0; y < height; y++)
 		{
 			// Grab scanline
-			memcpy(scanline_orig.data() + bytes_per_pixel, image.get_line(y), scanline_orig.size());
+			memcpy(scanline_orig.data() + bytes_per_pixel, image.get_line(y), scanline_orig.size() - bytes_per_pixel);
 			
 			// Filter scanline
 			scanline_filtered[0] = 1; // Sub filter type
@@ -143,16 +143,30 @@ namespace clan
 			memcpy(idat_uncompressed.get_data<unsigned char>() + y * scanline_filtered.size(), scanline_filtered.data(), scanline_filtered.size());
 		}
 		
-		DataBuffer idat = ZLibCompression::compress(idat_uncompressed);
+		DataBuffer idat = ZLibCompression::compress(idat_uncompressed, false);
 		
 		write_chunk("IDAT", idat.get_data(), idat.get_size());
 	}
 	
 	void PNGWriter::write_chunk(const char name[4], const void *data, int size)
 	{
+		unsigned char size_data[4];
+		size_data[0] = (size >> 24) & 0xff;
+		size_data[1] = (size >> 16) & 0xff;
+		size_data[2] = (size >> 8) & 0xff;
+		size_data[3] = size & 0xff;
+		device.write(size_data, 4);
+
 		device.write(name, 4);
+
 		device.write(data, size);
-		unsigned int crc32 = PNGCRC32::crc(data, size);
-		device.write_uint32(crc32);
+		unsigned int crc32 = PNGCRC32::crc(name, data, size);
+
+		unsigned char crc32_data[4];
+		crc32_data[0] = (crc32 >> 24) & 0xff;
+		crc32_data[1] = (crc32 >> 16) & 0xff;
+		crc32_data[2] = (crc32 >> 8) & 0xff;
+		crc32_data[3] = crc32 & 0xff;
+		device.write(crc32_data, 4);
 	}
 }
