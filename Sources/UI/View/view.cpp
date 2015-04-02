@@ -228,7 +228,11 @@ namespace clan
 
 		Mat4f old_transform = canvas.get_transform();
 		Pointf translate = impl->_geometry.content.get_top_left();
-		canvas.set_transform(old_transform * Mat4f::translate(translate.x, translate.y, 0));
+		canvas.set_transform(old_transform * Mat4f::translate(translate.x, translate.y, 0) * impl->view_transform);
+
+		bool clipped = impl->content_clipped;
+		if (clipped)
+			canvas.push_cliprect(Rectf(Pointf(), impl->_geometry.content.get_size()));
 
 		if (!render_exception_encountered())
 		{
@@ -257,6 +261,9 @@ namespace clan
 				view->render(canvas);
 		}
 
+		if (clipped)
+			canvas.pop_cliprect();
+
 		canvas.set_transform(old_transform);
 	}
 
@@ -270,6 +277,31 @@ namespace clan
 		if (impl->exception_encountered)
 		{
 			impl->exception_encountered = false;
+			set_needs_render();
+		}
+	}
+
+	const Mat4f &View::view_transform() const
+	{
+		return impl->view_transform;
+	}
+
+	void View::set_view_transform(const Mat4f &transform)
+	{
+		impl->view_transform = transform;
+		set_needs_render();
+	}
+
+	bool View::content_clipped() const
+	{
+		return impl->content_clipped;
+	}
+
+	void View::set_content_clipped(bool clipped)
+	{
+		if (impl->content_clipped != clipped)
+		{
+			impl->content_clipped = clipped;
 			set_needs_render();
 		}
 	}

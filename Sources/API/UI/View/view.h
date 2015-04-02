@@ -97,6 +97,12 @@ namespace clan
 		bool render_exception_encountered() const;
 		void clear_exception_encountered();
 
+		const Mat4f &view_transform() const;
+		void set_view_transform(const Mat4f &transform);
+
+		bool content_clipped() const;
+		void set_content_clipped(bool clipped);
+
 		virtual void render_content(Canvas &canvas) { }
 
 		virtual float get_preferred_width(Canvas &canvas);

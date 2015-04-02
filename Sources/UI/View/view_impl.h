@@ -72,6 +72,9 @@ namespace clan
 		BoxGeometry _geometry;
 		bool hidden = false;
 
+		Mat4f view_transform = Mat4f::identity();
+		bool content_clipped = false;
+
 		bool exception_encountered = false;
 
 		bool _needs_layout = true;
