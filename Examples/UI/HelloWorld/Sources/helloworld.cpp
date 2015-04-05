@@ -70,12 +70,12 @@ HelloWorld::HelloWorld()
 	body->style()->set("border-top: 5px solid #DD3B2A");
 	body->style()->set("border-bottom: 5px solid #DD3B2A");
 	body->style()->set("flex-direction: column");
-	body->style()->set("flex: 1 1 main-size");
+	body->style()->set("flex: auto");
 	root->add_subview(body);
 
 	// Create a label with some text to have some content
 	label = std::make_shared<LabelView>();
-	label->style()->set("flex: 0 0 main-size");
+	label->style()->set("flex: none");
 	label->style()->set("font: 20px/40px 'Ravie'");
 	label->style()->set("color: #DD3B2A");
 	label->set_text("Hello World!");
