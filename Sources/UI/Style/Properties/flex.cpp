@@ -73,6 +73,16 @@ namespace clan
 				setter->set_value("flex-shrink", flex_shrink);
 				setter->set_value("flex-basis", flex_basis);
 			}
+			else if (equals(token.value, "auto"))
+			{
+				flex_grow = StyleValue::from_number(1.0f);
+				flex_shrink = StyleValue::from_number(1.0f);
+				flex_basis = StyleValue::from_keyword("main-size");
+
+				setter->set_value("flex-grow", flex_grow);
+				setter->set_value("flex-shrink", flex_shrink);
+				setter->set_value("flex-basis", flex_basis);
+			}
 			else if (equals(token.value, "inherit"))
 			{
 				flex_grow = StyleValue::from_keyword("inherit");
