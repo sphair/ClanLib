@@ -65,10 +65,6 @@ namespace clan
 				layout = StyleValue::from_keyword("none");
 			else if (equals(token.value, "flex"))
 				layout = StyleValue::from_keyword("flex");
-			else if (equals(token.value, "block"))
-				layout = StyleValue::from_keyword("block");
-			else if (equals(token.value, "inline-block"))
-				layout = StyleValue::from_keyword("inline-block");
 			else if (equals(token.value, "inherit"))
 				layout = StyleValue::from_keyword("inherit");
 			else
