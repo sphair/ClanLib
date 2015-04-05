@@ -149,9 +149,35 @@ namespace clan
 				total_shrink_factor += subview->style_cascade().computed_value("flex-shrink").number;
 
 				if (subview->style_cascade().computed_value("flex-basis").is_keyword("main-size"))
-					basis_height += subview->get_preferred_height(canvas, view->geometry().content.get_width());
+				{
+					float left_noncontent = 0.0f;
+					left_noncontent += subview->style_cascade().computed_value("margin-left").number;
+					left_noncontent += subview->style_cascade().computed_value("border-left-width").number;
+					left_noncontent += subview->style_cascade().computed_value("padding-left").number;
+
+					float right_noncontent = 0.0f;
+					right_noncontent += subview->style_cascade().computed_value("margin-right").number;
+					right_noncontent += subview->style_cascade().computed_value("border-right-width").number;
+					right_noncontent += subview->style_cascade().computed_value("padding-right").number;
+
+					float subview_width = view->geometry().content.get_width() - left_noncontent - right_noncontent;
+					if (subview_width < 0.0f)
+					{
+						right_noncontent = 0.0f;
+						subview_width = view->geometry().content.get_width() - left_noncontent;
+						if (subview_width < 0.0f)
+						{
+							left_noncontent = 0.0f;
+							subview_width = view->geometry().content.get_width();
+						}
+					}
+
+					basis_height += subview->get_preferred_height(canvas, subview_width);
+				}
 				else
+				{
 					basis_height += subview->style_cascade().computed_value("flex-basis").number;
+				}
 			}
 		}
 
@@ -186,12 +212,14 @@ namespace clan
 					}
 				}
 
-				float subview_height = subview->style_cascade().computed_value("flex-basis").number;
+				float pref_subview_height = subview->style_cascade().computed_value("flex-basis").number;
 				if (subview->style_cascade().computed_value("flex-basis").is_keyword("main-size"))
-					subview_height = subview->get_preferred_height(canvas, subview_width);
+					pref_subview_height = subview->get_preferred_height(canvas, subview_width);
+				float subview_height = pref_subview_height;
 
+				float shrink = subview->style_cascade().computed_value("flex-shrink").number;
 				if (free_space < 0.0f && total_shrink_factor != 0.0f)
-					subview_height += subview->style_cascade().computed_value("flex-shrink").number * free_space / total_shrink_factor;
+					subview_height += shrink * free_space / total_shrink_factor;
 				else if (free_space > 0.0f && total_grow_factor != 0.0f)
 					subview_height += subview->style_cascade().computed_value("flex-grow").number * free_space / total_grow_factor;
 
