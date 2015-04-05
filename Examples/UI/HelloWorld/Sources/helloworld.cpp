@@ -75,6 +75,7 @@ HelloWorld::HelloWorld()
 
 	// Create a label with some text to have some content
 	label = std::make_shared<LabelView>();
+	label->style()->set("flex: 0 0 main-size");
 	label->style()->set("font: 20px/40px 'Ravie'");
 	label->style()->set("color: #DD3B2A");
 	label->set_text("Hello World!");
