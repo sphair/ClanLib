@@ -212,16 +212,14 @@ namespace clan
 					}
 				}
 
-				float pref_subview_height = subview->style_cascade().computed_value("flex-basis").number;
+				float subview_height = subview->style_cascade().computed_value("flex-basis").number;
 				if (subview->style_cascade().computed_value("flex-basis").is_keyword("main-size"))
-					pref_subview_height = subview->get_preferred_height(canvas, subview_width);
-				float subview_height = pref_subview_height;
+					subview_height = subview->get_preferred_height(canvas, subview_width);
 
-				float shrink = subview->style_cascade().computed_value("flex-shrink").number;
 				if (free_space < 0.0f && total_shrink_factor != 0.0f)
-					subview_height += shrink * free_space / total_shrink_factor;
+					subview_height += free_space * subview->style_cascade().computed_value("flex-shrink").number / total_shrink_factor;
 				else if (free_space > 0.0f && total_grow_factor != 0.0f)
-					subview_height += subview->style_cascade().computed_value("flex-grow").number * free_space / total_grow_factor;
+					subview_height += free_space * subview->style_cascade().computed_value("flex-grow").number / total_grow_factor;
 
 				subview_height = std::round(subview_height); // To do: this way of rounding may cause the total height to go beyond the available content height
 
