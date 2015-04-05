@@ -97,4 +97,32 @@ namespace clan
 		OrderPropertyParser() : StylePropertyParser({ "order" }) { }
 		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
+
+	class AlignContentPropertyParser : public StylePropertyParser
+	{
+	public:
+		AlignContentPropertyParser() : StylePropertyParser({ "align-content" }) { }
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
+	};
+
+	class AlignItemsPropertyParser : public StylePropertyParser
+	{
+	public:
+		AlignItemsPropertyParser() : StylePropertyParser({ "align-items" }) { }
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
+	};
+
+	class AlignSelfPropertyParser : public StylePropertyParser
+	{
+	public:
+		AlignSelfPropertyParser() : StylePropertyParser({ "align-self" }) { }
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
+	};
+
+	class JustifyContentPropertyParser : public StylePropertyParser
+	{
+	public:
+		JustifyContentPropertyParser() : StylePropertyParser({ "justify-content" }) { }
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
+	};
 }
