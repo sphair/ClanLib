@@ -30,10 +30,15 @@
 #include "precomp.h"
 #include "textfade.h"
 
-// The start of the Application
-int TextFade::start(const std::vector<std::string> &args)
+clan::ApplicationInstance<TextFade> clanapp;
+
+TextFade::TextFade()
 {
-	quit = false;
+	// We support all display targets, in order listed here
+#ifdef WIN32
+	clan::D3DTarget::enable();
+#endif
+	clan::OpenGLTarget::enable();
 
 	// Set the window
 	clan::DisplayWindowDescription desc;
@@ -41,45 +46,40 @@ int TextFade::start(const std::vector<std::string> &args)
 	desc.set_size(clan::Size(640, 480), true);
 	desc.set_allow_resize(true);
 
-	clan::DisplayWindow window(desc);
-    clan::SlotContainer cc;
+	window = clan::DisplayWindow(desc);
 
 	// Connect the Window close event
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &TextFade::on_window_close));
+	sc.connect(window.sig_window_close(), clan::bind_member(this, &TextFade::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &TextFade::on_input_up));
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &TextFade::on_input_up));
 
 	// Get the graphic context
-	clan::Canvas canvas(window);
+	canvas = clan::Canvas(window);
 
-	clan::Image background(canvas, "../../Display/Path/Resources/lobby_background2.png");
+	background = clan::Image(canvas, "../../Display/Path/Resources/lobby_background2.png");
 
 	clan::FontDescription font_description;
 	font_description.set_height(48);
 	font_description.set_subpixel(false);	// Fading only works with sub pixel off
-	clan::Font standard_font("arial", font_description);
+	standard_font = clan::Font("arial", font_description);
 
 	clan::ResourceManager resources = clan::XMLResourceManager::create(clan::XMLResourceDocument("../Font/Resources/resources.xml"));
-	clan::Font sprite_font = clan::Font::resource(canvas, "ClanFont", clan::FontDescription(), resources);
+	sprite_font = clan::Font::resource(canvas, "ClanFont", clan::FontDescription(), resources);
 	sprite_font.set_height(32);
+}
 
-	// Run until someone presses escape
-	while (!quit)
-	{
-		background.draw(canvas, canvas.get_size());
+bool TextFade::update()
+{
+	background.draw(canvas, canvas.get_size());
 
-		draw_text(canvas, standard_font, 100, "ABCDEFGHIJKLMNOPQRSTUVWXZ");
+	draw_text(canvas, standard_font, 100, "ABCDEFGHIJKLMNOPQRSTUVWXZ");
 
-		draw_text(canvas, sprite_font, 300, "ABCDEFGHIJKLMNOPQRSTUVWXZ");
+	draw_text(canvas, sprite_font, 300, "ABCDEFGHIJKLMNOPQRSTUVWXZ");
 
-		window.flip(1);
+	window.flip(1);
 
-		// This call processes user input and other events
-		clan::RunLoop::process(0);
-	}
-
-	return 0;
+	return !quit;
 }
 
 void TextFade::draw_text(clan::Canvas &canvas, clan::Font &font, int ypos, const char *text)

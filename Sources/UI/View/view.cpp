@@ -39,8 +39,6 @@
 #include "API/UI/Events/resize_event.h"
 #include "API/UI/UIThread/ui_thread.h"
 #include "view_impl.h"
-#include "block_layout.h"
-#include "inline_layout.h"
 #include "vbox_layout.h"
 #include "hbox_layout.h"
 #include "positioned_layout.h"
@@ -57,16 +55,65 @@ namespace clan
 	{
 	}
 
-	const std::shared_ptr<Style> &View::style() const
+	const StyleCascade &View::style_cascade() const
 	{
-		return impl->style;
+		return impl->style_cascade;
 	}
 
-	void View::set_style(const std::shared_ptr<Style> &style)
+	const std::shared_ptr<Style> &View::style(const std::string &state) const
 	{
-		impl->style = style;
-		set_needs_layout();
-		set_needs_render();
+		const auto it = impl->styles.find(state);
+		if (it != impl->styles.end())
+			return it->second;
+
+		auto &style = impl->styles[state];
+		style = std::make_shared<Style>();
+		impl->update_style_cascade();
+		return style;
+	}
+
+	bool View::state(const std::string &name) const
+	{
+		const auto it = impl->states.find(name);
+		if (it != impl->states.end())
+			return it->second.enabled;
+		else
+			return false;
+	}
+	
+	void View::set_state(const std::string &name, bool value)
+	{
+		if (impl->states[name].enabled != value)
+		{
+			impl->states[name] = ViewImpl::StyleState(false, value);
+			impl->update_style_cascade();
+			set_needs_layout();
+		}
+	}
+	void View::set_state_cascade(const std::string &name, bool value)
+	{
+		if (impl->states[name].enabled != value)
+		{
+			impl->states[name] = ViewImpl::StyleState(false, value);
+			impl->update_style_cascade();
+			set_needs_layout();
+			impl->set_state_cascade_siblings(name, value);
+		}
+	}
+
+	void ViewImpl::set_state_cascade_siblings(const std::string &name, bool value)
+	{
+		for (std::shared_ptr<View> &view : _subviews)
+		{
+			ViewImpl *impl = view->impl.get();
+			if (impl->states[name].inherited)
+			{
+				impl->states[name] = ViewImpl::StyleState(true, value);
+				impl->update_style_cascade();
+				view->set_needs_layout();
+				impl->set_state_cascade_siblings(name, value);
+			}
+		}
 	}
 
 	View *View::superview() const
@@ -174,12 +221,22 @@ namespace clan
 
 	void View::render(Canvas &canvas)
 	{
-		style()->render_background(canvas, geometry());
-		style()->render_border(canvas, geometry());
+		style_cascade().render_background(canvas, geometry());
+		style_cascade().render_border(canvas, geometry());
 
 		Mat4f old_transform = canvas.get_transform();
 		Pointf translate = impl->_geometry.content.get_top_left();
-		canvas.set_transform(old_transform * Mat4f::translate(translate.x, translate.y, 0));
+		canvas.set_transform(old_transform * Mat4f::translate(translate.x, translate.y, 0) * impl->view_transform);
+
+		bool clipped = impl->content_clipped;
+		if (clipped)
+		{
+			// Seems canvas cliprects are always in absolute coordinates - should this be changed?
+			// Note: this code isn't correct for rotated transforms (plus canvas cliprect can only clip AABB)
+			Vec4f tl_point = canvas.get_transform() * Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+			Vec4f br_point = canvas.get_transform() * Vec4f(impl->_geometry.content.get_width(), impl->_geometry.content.get_height(), 0.0f, 1.0f);
+			canvas.push_cliprect(Rectf(std::min(tl_point.x, br_point.x), std::min(tl_point.y, br_point.y), std::max(tl_point.x, br_point.x), std::max(tl_point.y, br_point.y)));
+		}
 
 		if (!render_exception_encountered())
 		{
@@ -208,6 +265,9 @@ namespace clan
 				view->render(canvas);
 		}
 
+		if (clipped)
+			canvas.pop_cliprect();
+
 		canvas.set_transform(old_transform);
 	}
 
@@ -225,47 +285,60 @@ namespace clan
 		}
 	}
 
+	const Mat4f &View::view_transform() const
+	{
+		return impl->view_transform;
+	}
+
+	void View::set_view_transform(const Mat4f &transform)
+	{
+		impl->view_transform = transform;
+		set_needs_render();
+	}
+
+	bool View::content_clipped() const
+	{
+		return impl->content_clipped;
+	}
+
+	void View::set_content_clipped(bool clipped)
+	{
+		if (impl->content_clipped != clipped)
+		{
+			impl->content_clipped = clipped;
+			set_needs_render();
+		}
+	}
+
 	float View::get_preferred_width(Canvas &canvas)
 	{
-		if (style()->computed_value("layout").is_keyword("block"))
-			return BlockLayout::get_preferred_width(canvas, this);
-		else if (style()->computed_value("layout").is_keyword("inline-block"))
-			return InlineLayout::get_preferred_width(canvas, this);
-		else if (style()->computed_value("layout").is_keyword("flex") && style()->computed_value("flex-direction").is_keyword("column"))
+		if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("column"))
 			return VBoxLayout::get_preferred_width(canvas, this);
-		else if (style()->computed_value("layout").is_keyword("flex") && style()->computed_value("flex-direction").is_keyword("row"))
+		else if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("row"))
 			return HBoxLayout::get_preferred_width(canvas, this);
-		else if (style()->computed_value("width").is_keyword("auto"))
+		else if (style_cascade().computed_value("width").is_keyword("auto"))
 			return 0.0f;
 		else
-			return style()->computed_value("width").number;
+			return style_cascade().computed_value("width").number;
 	}
 
 	float View::get_preferred_height(Canvas &canvas, float width)
 	{
-		if (style()->computed_value("layout").is_keyword("block"))
-			return BlockLayout::get_preferred_height(canvas, this, width);
-		else if (style()->computed_value("layout").is_keyword("inline-block"))
-			return InlineLayout::get_preferred_height(canvas, this, width);
-		else if (style()->computed_value("layout").is_keyword("flex") && style()->computed_value("flex-direction").is_keyword("column"))
+		if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("column"))
 			return VBoxLayout::get_preferred_height(canvas, this, width);
-		else if (style()->computed_value("layout").is_keyword("flex") && style()->computed_value("flex-direction").is_keyword("row"))
+		else if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("row"))
 			return HBoxLayout::get_preferred_height(canvas, this, width);
-		else if (style()->computed_value("height").is_keyword("auto"))
+		else if (style_cascade().computed_value("height").is_keyword("auto"))
 			return 0.0f;
 		else
-			return style()->computed_value("height").number;
+			return style_cascade().computed_value("height").number;
 	}
 
 	float View::get_first_baseline_offset(Canvas &canvas, float width)
 	{
-		if (style()->computed_value("layout").is_keyword("block"))
-			return BlockLayout::get_first_baseline_offset(canvas, this, width);
-		else if (style()->computed_value("layout").is_keyword("inline-block"))
-			return InlineLayout::get_first_baseline_offset(canvas, this, width);
-		else if (style()->computed_value("layout").is_keyword("flex") && style()->computed_value("flex-direction").is_keyword("column"))
+		if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("column"))
 			return VBoxLayout::get_first_baseline_offset(canvas, this, width);
-		else if (style()->computed_value("layout").is_keyword("flex") && style()->computed_value("flex-direction").is_keyword("row"))
+		else if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("row"))
 			return HBoxLayout::get_first_baseline_offset(canvas, this, width);
 		else
 			return 0.0f;
@@ -273,13 +346,9 @@ namespace clan
 
 	float View::get_last_baseline_offset(Canvas &canvas, float width)
 	{
-		if (style()->computed_value("layout").is_keyword("block"))
-			return BlockLayout::get_last_baseline_offset(canvas, this, width);
-		else if (style()->computed_value("layout").is_keyword("inline-block"))
-			return InlineLayout::get_last_baseline_offset(canvas, this, width);
-		else if (style()->computed_value("layout").is_keyword("flex") && style()->computed_value("flex-direction").is_keyword("column"))
+		if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("column"))
 			return VBoxLayout::get_last_baseline_offset(canvas, this, width);
-		else if (style()->computed_value("layout").is_keyword("flex") && style()->computed_value("flex-direction").is_keyword("row"))
+		else if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("row"))
 			return HBoxLayout::get_last_baseline_offset(canvas, this, width);
 		else
 			return 0.0f;
@@ -306,13 +375,9 @@ namespace clan
 
 	void View::layout_subviews(Canvas &canvas)
 	{
-		if (style()->computed_value("layout").is_keyword("block"))
-			BlockLayout::layout_subviews(canvas, this);
-		else if (style()->computed_value("layout").is_keyword("inline-block"))
-			InlineLayout::layout_subviews(canvas, this);
-		else if (style()->computed_value("layout").is_keyword("flex") && style()->computed_value("flex-direction").is_keyword("column"))
+		if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("column"))
 			VBoxLayout::layout_subviews(canvas, this);
-		else if (style()->computed_value("layout").is_keyword("flex") && style()->computed_value("flex-direction").is_keyword("row"))
+		else if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("row"))
 			HBoxLayout::layout_subviews(canvas, this);
 	}
 
@@ -351,8 +416,9 @@ namespace clan
 
 	std::shared_ptr<View> View::find_view_at(const Pointf &pos) const
 	{
-		for (const std::shared_ptr<View> &child : subviews())
+		for (unsigned int cnt = impl->_subviews.size(); cnt > 0; --cnt)	// Search the subviews in reverse order, as we want to search the view that was "last drawn" first
 		{
+			const std::shared_ptr<View> &child = impl->_subviews[cnt-1];
 			if (child->geometry().border_box().contains(pos) && !child->hidden())
 			{
 				std::shared_ptr<View> view = child->find_view_at(Pointf(pos.x - child->geometry().content.left, pos.y - child->geometry().content.top));
@@ -570,7 +636,9 @@ namespace clan
 		{
 			e->_phase = EventUIPhase::at_target;
 			e->_current_target = e->_target;
-			e->_current_target->process_event(e);
+			e->_current_target->process_event(e, true);
+			if (!e->propagation_stopped())
+				e->_current_target->process_event(e, false);
 		}
 		else
 		{
@@ -580,7 +648,9 @@ namespace clan
 			{
 				e->_phase = EventUIPhase::at_target;
 				e->_current_target = e->_target;
-				e->_current_target->process_event(e);
+				e->_current_target->process_event(e, true);
+				if (!e->propagation_stopped())
+					e->_current_target->process_event(e, false);
 
 				while (e->_current_target && !e->propagation_stopped())
 				{
@@ -588,7 +658,7 @@ namespace clan
 					e->_phase = EventUIPhase::bubbling;
 					e->_current_target = current_target_superview ? current_target_superview->shared_from_this() : std::shared_ptr<View>();
 					if (e->_current_target)
-						e->_current_target->process_event(e);
+						e->_current_target->process_event(e, false);
 				}
 			}
 		}
@@ -597,7 +667,7 @@ namespace clan
 		e->_phase = EventUIPhase::none;
 	}
 
-	void View::process_event(EventUI *e)
+	void View::process_event(EventUI *e, bool use_capture)
 	{
 		ActivationChangeEvent *activation_change = dynamic_cast<ActivationChangeEvent*>(e);
 		CloseEvent *close = dynamic_cast<CloseEvent*>(e);
@@ -610,37 +680,37 @@ namespace clan
 		{
 			switch (activation_change->type())
 			{
-			case ActivationChangeType::activated: sig_activated(e->phase())(*activation_change); break;
-			case ActivationChangeType::deactivated: sig_deactivated(e->phase())(*activation_change); break;
+			case ActivationChangeType::activated: sig_activated(use_capture)(*activation_change); break;
+			case ActivationChangeType::deactivated: sig_deactivated(use_capture)(*activation_change); break;
 			}
 		}
 		else if (close)
 		{
-			sig_close(e->phase())(*close);
+			sig_close(use_capture)(*close);
 		}
 		else if (resize)
 		{
-			sig_resize(e->phase())(*resize);
+			sig_resize(use_capture)(*resize);
 		}
 		else if (focus_change)
 		{
 			switch (focus_change->type())
 			{
-			case FocusChangeType::gained: sig_focus_gained(e->phase())(*focus_change); break;
-			case FocusChangeType::lost: sig_focus_lost(e->phase())(*focus_change); break;
+			case FocusChangeType::gained: sig_focus_gained(use_capture)(*focus_change); break;
+			case FocusChangeType::lost: sig_focus_lost(use_capture)(*focus_change); break;
 			}
 		}
 		else if (pointer)
 		{
 			switch (pointer->type())
 			{
-			case PointerEventType::enter: sig_pointer_enter(e->phase())(*pointer); break;
-			case PointerEventType::leave: sig_pointer_leave(e->phase())(*pointer); break;
-			case PointerEventType::move: sig_pointer_move(e->phase())(*pointer); break;
-			case PointerEventType::press: sig_pointer_press(e->phase())(*pointer); break;
-			case PointerEventType::release: sig_pointer_release(e->phase())(*pointer); break;
-			case PointerEventType::double_click: sig_pointer_double_click(e->phase())(*pointer); break;
-			case PointerEventType::promixity_change: sig_pointer_proximity_change(e->phase())(*pointer); break;
+			case PointerEventType::enter: sig_pointer_enter(use_capture)(*pointer); break;
+			case PointerEventType::leave: sig_pointer_leave(use_capture)(*pointer); break;
+			case PointerEventType::move: sig_pointer_move(use_capture)(*pointer); break;
+			case PointerEventType::press: sig_pointer_press(use_capture)(*pointer); break;
+			case PointerEventType::release: sig_pointer_release(use_capture)(*pointer); break;
+			case PointerEventType::double_click: sig_pointer_double_click(use_capture)(*pointer); break;
+			case PointerEventType::promixity_change: sig_pointer_proximity_change(use_capture)(*pointer); break;
 			case PointerEventType::none: break;
 			}
 		}
@@ -649,88 +719,118 @@ namespace clan
 			switch (key->type())
 			{
 			case KeyEventType::none: break;
-			case KeyEventType::press: sig_key_press(e->phase())(*key); break;
-			case KeyEventType::release: sig_key_release(e->phase())(*key); break;
+			case KeyEventType::press: sig_key_press(use_capture)(*key); break;
+			case KeyEventType::release: sig_key_release(use_capture)(*key); break;
 			}
 		}
 	}
 
-	Signal<void(ActivationChangeEvent &)> &View::sig_activated(EventUIPhase phase)
+	Signal<void(ActivationChangeEvent &)> &View::sig_activated(bool use_capture)
 	{
-		return impl->_sig_activated[static_cast<int>(phase)];
+		return impl->_sig_activated[use_capture ? 1 : 0];
 	}
 
-	Signal<void(ActivationChangeEvent &)> &View::sig_deactivated(EventUIPhase phase)
+	Signal<void(ActivationChangeEvent &)> &View::sig_deactivated(bool use_capture)
 	{
-		return impl->_sig_deactivated[static_cast<int>(phase)];
+		return impl->_sig_deactivated[use_capture ? 1 : 0];
 	}
 
-	Signal<void(CloseEvent &)> &View::sig_close(EventUIPhase phase)
+	Signal<void(CloseEvent &)> &View::sig_close(bool use_capture)
 	{
-		return impl->_sig_close[static_cast<int>(phase)];
+		return impl->_sig_close[use_capture ? 1 : 0];
 	}
 
-	Signal<void(ResizeEvent &)> &View::sig_resize(EventUIPhase phase)
+	Signal<void(ResizeEvent &)> &View::sig_resize(bool use_capture)
 	{
-		return impl->_sig_resize[static_cast<int>(phase)];
+		return impl->_sig_resize[use_capture ? 1 : 0];
 	}
 
-	Signal<void(FocusChangeEvent &)> &View::sig_focus_gained(EventUIPhase phase)
+	Signal<void(FocusChangeEvent &)> &View::sig_focus_gained(bool use_capture)
 	{
-		return impl->_sig_focus_gained[static_cast<int>(phase)];
+		return impl->_sig_focus_gained[use_capture ? 1 : 0];
 	}
 
-	Signal<void(FocusChangeEvent &)> &View::sig_focus_lost(EventUIPhase phase)
+	Signal<void(FocusChangeEvent &)> &View::sig_focus_lost(bool use_capture)
 	{
-		return impl->_sig_focus_lost[static_cast<int>(phase)];
+		return impl->_sig_focus_lost[use_capture ? 1 : 0];
 	}
 
-	Signal<void(PointerEvent &)> &View::sig_pointer_enter(EventUIPhase phase)
+	Signal<void(PointerEvent &)> &View::sig_pointer_enter(bool use_capture)
 	{
-		return impl->_sig_pointer_enter[static_cast<int>(phase)];
+		return impl->_sig_pointer_enter[use_capture ? 1 : 0];
 	}
 
-	Signal<void(PointerEvent &)> &View::sig_pointer_leave(EventUIPhase phase)
+	Signal<void(PointerEvent &)> &View::sig_pointer_leave(bool use_capture)
 	{
-		return impl->_sig_pointer_leave[static_cast<int>(phase)];
+		return impl->_sig_pointer_leave[use_capture ? 1 : 0];
 	}
 
-	Signal<void(PointerEvent &)> &View::sig_pointer_move(EventUIPhase phase)
+	Signal<void(PointerEvent &)> &View::sig_pointer_move(bool use_capture)
 	{
-		return impl->_sig_pointer_move[static_cast<int>(phase)];
+		return impl->_sig_pointer_move[use_capture ? 1 : 0];
 	}
 
-	Signal<void(PointerEvent &)> &View::sig_pointer_press(EventUIPhase phase)
+	Signal<void(PointerEvent &)> &View::sig_pointer_press(bool use_capture)
 	{
-		return impl->_sig_pointer_press[static_cast<int>(phase)];
+		return impl->_sig_pointer_press[use_capture ? 1 : 0];
 	}
 
-	Signal<void(PointerEvent &)> &View::sig_pointer_release(EventUIPhase phase)
+	Signal<void(PointerEvent &)> &View::sig_pointer_release(bool use_capture)
 	{
-		return impl->_sig_pointer_release[static_cast<int>(phase)];
+		return impl->_sig_pointer_release[use_capture ? 1 : 0];
 	}
 
-	Signal<void(PointerEvent &)> &View::sig_pointer_double_click(EventUIPhase phase)
+	Signal<void(PointerEvent &)> &View::sig_pointer_double_click(bool use_capture)
 	{
-		return impl->_sig_pointer_double_click[static_cast<int>(phase)];
+		return impl->_sig_pointer_double_click[use_capture ? 1 : 0];
 	}
 
-	Signal<void(PointerEvent &)> &View::sig_pointer_proximity_change(EventUIPhase phase)
+	Signal<void(PointerEvent &)> &View::sig_pointer_proximity_change(bool use_capture)
 	{
-		return impl->_sig_pointer_proximity_change[static_cast<int>(phase)];
+		return impl->_sig_pointer_proximity_change[use_capture ? 1 : 0];
 	}
 
-	Signal<void(KeyEvent &)> &View::sig_key_press(EventUIPhase phase)
+	Signal<void(KeyEvent &)> &View::sig_key_press(bool use_capture)
 	{
-		return impl->_sig_key_press[static_cast<int>(phase)];
+		return impl->_sig_key_press[use_capture ? 1 : 0];
 	}
 
-	Signal<void(KeyEvent &)> &View::sig_key_release(EventUIPhase phase)
+	Signal<void(KeyEvent &)> &View::sig_key_release(bool use_capture)
 	{
-		return impl->_sig_key_release[static_cast<int>(phase)];
+		return impl->_sig_key_release[use_capture ? 1 : 0];
 	}
 
 	/////////////////////////////////////////////////////////////////////////
+
+	void ViewImpl::update_style_cascade() const
+	{
+		std::vector<std::pair<Style *, size_t>> matches;
+
+		for (auto it : styles)
+		{
+			auto &style_list = it.first;
+			auto &style = it.second;
+
+			auto style_classes = StringHelp::split_text(style_list, " ");
+
+			bool match = true;
+			for (const auto &state : style_classes)
+			{
+				auto search_it = states.find(state);
+				if (search_it == states.end() || !search_it->second.enabled)
+					match = false;
+			}
+
+			if (match)
+				matches.push_back({ style.get(), style_classes.size() });
+		}
+
+		std::stable_sort(matches.begin(), matches.end(), [](const std::pair<Style *, size_t> &a, const std::pair<Style *, size_t> &b) { return a.second != b.second ? a.second > b.second : a.first > b.first; });
+
+		style_cascade.cascade.clear();
+		for (auto &match : matches)
+			style_cascade.cascade.push_back(match.first);
+	}
 
 	void ViewImpl::inverse_bubble(EventUI *e)
 	{
@@ -743,7 +843,7 @@ namespace clan
 				e->_phase = EventUIPhase::capturing;
 				e->_current_target = super;
 				if (e->_current_target)
-					e->_current_target->process_event(e);
+					e->_current_target->process_event(e, true);
 			}
 		}
 	}

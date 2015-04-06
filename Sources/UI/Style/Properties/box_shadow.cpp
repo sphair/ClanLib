@@ -39,7 +39,7 @@ namespace clan
 
 	BoxShadowPropertyParser style_parser_box_shadow;
 
-	void BoxShadowPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BoxShadowPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 

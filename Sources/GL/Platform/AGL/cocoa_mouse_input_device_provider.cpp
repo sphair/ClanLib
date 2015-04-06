@@ -22,20 +22,20 @@ bool CocoaMouseInputDeviceProvider::get_keycode(int keycode) const
     return false;
 }
 
-int CocoaMouseInputDeviceProvider::get_x() const
+float CocoaMouseInputDeviceProvider::get_x() const
 {
     if (touches.empty())
         return 0;
     else
-        return (int)touches[0].x;
+        return touches[0].x;
 }
 
-int CocoaMouseInputDeviceProvider::get_y() const
+float CocoaMouseInputDeviceProvider::get_y() const
 {
     if (touches.empty())
         return 0;
     else
-        return (int)touches[0].y;
+        return touches[0].y;
 }
 
 }

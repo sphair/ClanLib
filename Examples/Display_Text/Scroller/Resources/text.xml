@@ -1,7 +1,0 @@
-﻿<?xml version="1.0"?>
-<!-- This xml file was saved as UTF-8 on Notepad in Microsoft Windows. -->
-
-<CONFIG>
-	<TEXT>......This example demonstrates how to create scrolling text using ClanLib. The code handles UTF-8 text (Ậміģẵ Ŕơскŝ). If you only require ASCII,  then this code can be simplified. Try resizing this window. From α to Ω, all is complete. Looping text.....</TEXT2>
-
-</CONFIG>

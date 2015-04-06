@@ -30,7 +30,7 @@
 #include "soundoutput_directsound.h"
 #include "API/Core/System/exception.h"
 #include "API/Core/Text/logger.h"
-#include "Core/System/Win32/init_win32.h"
+#include "Core/System/Win32/system_win32.h"
 #include <mmreg.h>
 
 // KSDATAFORMAT_SUBTYPE_IEEE_FLOAT is not available on some old headers

@@ -1,6 +1,5 @@
 EXAMPLE_BIN=vertexbuffer
 OBJF = ./Sources/app.o \
-./Sources/program.o \
 ./Sources/precomp.o \
 ./Sources/shader.o
 

@@ -1,4 +1,10 @@
-#!/bin/sh
+#!/bin/bash
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+	echo "OS X detected. Generating Xcode project generator instead"
+	clang++ -std=c++11 Setup/Xcode/configure.cpp -o configure
+	exit
+fi
 
 echo "Generating ./configure script, this may take a while..."
 

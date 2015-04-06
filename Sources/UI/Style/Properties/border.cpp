@@ -59,7 +59,7 @@ namespace clan
 	BorderRadiusPropertyParser style_parser_border_radius;
 	BorderRadiusCornerPropertyParser style_parser_border_radius_corner;
 
-	void BorderPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BorderPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -216,7 +216,7 @@ namespace clan
 		setter->set_value("border-bottom-color", border_color);
 	}
 
-	void BorderColorPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BorderColorPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -304,7 +304,7 @@ namespace clan
 		}
 	}
 
-	void BorderStylePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BorderStylePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -423,7 +423,7 @@ namespace clan
 		}
 	}
 
-	void BorderWidthPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BorderWidthPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -521,7 +521,7 @@ namespace clan
 		}
 	}
 
-	void BorderLTRBPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BorderLTRBPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -655,7 +655,7 @@ namespace clan
 		setter->set_value(name + "-color", border_color);
 	}
 
-	void BorderLTRBColorPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BorderLTRBColorPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -682,7 +682,7 @@ namespace clan
 		}
 	}
 
-	void BorderLTRBStylePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BorderLTRBStylePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -721,7 +721,7 @@ namespace clan
 		}
 	}
 
-	void BorderLTRBWidthPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BorderLTRBWidthPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -756,7 +756,7 @@ namespace clan
 		}
 	}
 
-	void BorderRadiusPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BorderRadiusPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -880,7 +880,7 @@ namespace clan
 		setter->set_value("border-top-left-radius-y", radius_y[3]);
 	}
 
-	void BorderRadiusCornerPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BorderRadiusCornerPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 

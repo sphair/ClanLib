@@ -35,7 +35,9 @@
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/ImageProviders/png_provider.h"
 #include "Display/ImageProviders/PNGLoader/png_loader.h"
+#include "Display/ImageProviders/PNGWriter/png_writer.h"
 #include "Core/Zip/miniz.h"
+#include <stdlib.h>
 
 namespace clan
 {
@@ -86,6 +88,8 @@ void PNGProvider::save(
 
 void PNGProvider::save(PixelBuffer buffer, IODevice &iodev)
 {
+	PNGWriter::save(iodev, buffer);
+	/*
 	if (buffer.get_format() != tf_rgba8)
 	{
 		PixelBuffer newbuf(
@@ -110,6 +114,7 @@ void PNGProvider::save(PixelBuffer buffer, IODevice &iodev)
 			free(data);
 		throw;
 	}
+	*/
 }
 
 }

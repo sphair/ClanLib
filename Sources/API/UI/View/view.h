@@ -42,6 +42,7 @@
 namespace clan
 {
 	class Style;
+	class StyleCascade;
 	class Canvas;
 	class ActivationChangeEvent;
 	class CloseEvent;
@@ -59,9 +60,16 @@ namespace clan
 	public:
 		View();
 		~View();
+		
+		const StyleCascade &style_cascade() const;
 
-		const std::shared_ptr<Style> &style() const;
-		void set_style(const std::shared_ptr<Style> &style);
+		const std::shared_ptr<Style> &style(const std::string &state = std::string()) const;
+		
+		bool state(const std::string &name) const;
+		void set_state(const std::string &name, bool value);
+
+		/// Sets the state for this view and all siblings recursively, until a manually set state of the same name is found
+		void set_state_cascade(const std::string &name, bool value);
 
 		SlotContainer slots;
 
@@ -88,6 +96,12 @@ namespace clan
 
 		bool render_exception_encountered() const;
 		void clear_exception_encountered();
+
+		const Mat4f &view_transform() const;
+		void set_view_transform(const Mat4f &transform);
+
+		bool content_clipped() const;
+		void set_content_clipped(bool clipped);
 
 		virtual void render_content(Canvas &canvas) { }
 
@@ -132,21 +146,21 @@ namespace clan
 
 		void dispatch_event(EventUI *e, bool no_propagation = false);
 
-		Signal<void(ActivationChangeEvent &)> &sig_activated(EventUIPhase phase = EventUIPhase::at_target);
-		Signal<void(ActivationChangeEvent &)> &sig_deactivated(EventUIPhase phase = EventUIPhase::at_target);
-		Signal<void(CloseEvent &)> &sig_close(EventUIPhase phase = EventUIPhase::at_target);
-		Signal<void(ResizeEvent &)> &sig_resize(EventUIPhase phase = EventUIPhase::at_target);
-		Signal<void(FocusChangeEvent &)> &sig_focus_gained(EventUIPhase phase = EventUIPhase::at_target);
-		Signal<void(FocusChangeEvent &)> &sig_focus_lost(EventUIPhase phase = EventUIPhase::at_target);
-		Signal<void(PointerEvent &)> &sig_pointer_enter(EventUIPhase phase = EventUIPhase::at_target);
-		Signal<void(PointerEvent &)> &sig_pointer_leave(EventUIPhase phase = EventUIPhase::at_target);
-		Signal<void(PointerEvent &)> &sig_pointer_move(EventUIPhase phase = EventUIPhase::at_target);
-		Signal<void(PointerEvent &)> &sig_pointer_press(EventUIPhase phase = EventUIPhase::at_target);
-		Signal<void(PointerEvent &)> &sig_pointer_release(EventUIPhase phase = EventUIPhase::at_target);
-		Signal<void(PointerEvent &)> &sig_pointer_double_click(EventUIPhase phase = EventUIPhase::at_target);
-		Signal<void(PointerEvent &)> &sig_pointer_proximity_change(EventUIPhase phase = EventUIPhase::at_target);
-		Signal<void(KeyEvent &)> &sig_key_press(EventUIPhase phase = EventUIPhase::at_target);
-		Signal<void(KeyEvent &)> &sig_key_release(EventUIPhase phase = EventUIPhase::at_target);
+		Signal<void(ActivationChangeEvent &)> &sig_activated(bool use_capture = false);
+		Signal<void(ActivationChangeEvent &)> &sig_deactivated(bool use_capture = false);
+		Signal<void(CloseEvent &)> &sig_close(bool use_capture = false);
+		Signal<void(ResizeEvent &)> &sig_resize(bool use_capture = false);
+		Signal<void(FocusChangeEvent &)> &sig_focus_gained(bool use_capture = false);
+		Signal<void(FocusChangeEvent &)> &sig_focus_lost(bool use_capture = false);
+		Signal<void(PointerEvent &)> &sig_pointer_enter(bool use_capture = false);
+		Signal<void(PointerEvent &)> &sig_pointer_leave(bool use_capture = false);
+		Signal<void(PointerEvent &)> &sig_pointer_move(bool use_capture = false);
+		Signal<void(PointerEvent &)> &sig_pointer_press(bool use_capture = false);
+		Signal<void(PointerEvent &)> &sig_pointer_release(bool use_capture = false);
+		Signal<void(PointerEvent &)> &sig_pointer_double_click(bool use_capture = false);
+		Signal<void(PointerEvent &)> &sig_pointer_proximity_change(bool use_capture = false);
+		Signal<void(KeyEvent &)> &sig_key_press(bool use_capture = false);
+		Signal<void(KeyEvent &)> &sig_key_release(bool use_capture = false);
 
 		void update_cursor(DisplayWindow &window);
 
@@ -160,7 +174,7 @@ namespace clan
 		virtual void subview_added(const std::shared_ptr<View> &view) { }
 		virtual void subview_removed(const std::shared_ptr<View> &view) { }
 
-		virtual void process_event(EventUI *e);
+		virtual void process_event(EventUI *e, bool use_capture);
 
 	private:
 		View(const View &) = delete;

@@ -27,11 +27,15 @@
 
 #pragma once
 
-class App
+#include "framerate_counter.h"
+
+class App : public clan::Application
 {
 public:
+	App();
 	~App();
-	int start(const std::vector<std::string> &args);
+	bool update() override;
+
 	void window_close();
 
 private:
@@ -39,7 +43,13 @@ private:
 	void on_input_up(const clan::InputEvent &key);
 	void worker_thread();
 
-	bool quit;
+	clan::DisplayWindow window;
+	clan::InputDevice keyboard;
+	clan::Canvas canvas;
+	clan::SlotContainer sc;
+	clan::Font font;
+
+	bool quit = false;
 
 	static const int texture_size = 256;
 
@@ -65,6 +75,15 @@ private:
 
 	// Worker thead variables
 	float scale;
-	unsigned char *dest_pixels;	// Used by the worker thread to contain where to write the pixels to
+	unsigned char *dest_pixels = nullptr;	// Used by the worker thread to contain where to write the pixels to
+
+	FramerateCounter framerate_counter;
+	FramerateCounter worker_thread_framerate_counter;
+	uint64_t last_time;
+	uint64_t last_mandelbrot_time;
+
+	float angle = 0.0f;
+	bool texture_write_active = false;
+
 };
 

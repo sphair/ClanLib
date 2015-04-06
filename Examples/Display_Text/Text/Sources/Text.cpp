@@ -60,33 +60,38 @@ static const char *TextToShow[] = {
 NULL
 };
 
-int ExampleText::start(const std::vector<std::string> &args)
-{ 
-	quit = false;
+clan::ApplicationInstance<ExampleText> clanapp;
+
+ExampleText::ExampleText()
+{
+	// We support all display targets, in order listed here
+#ifdef WIN32
+	clan::D3DTarget::enable();
+#endif
+	clan::OpenGLTarget::enable();
 
 	// Set a videomode
 	clan::DisplayWindowDescription desc;
 	desc.set_allow_resize(false);
 	desc.set_title("ClanLib SpanLayout Example");
 	desc.set_size(clan::Size(800, 600), true);
-	clan::DisplayWindow window(desc);
-    clan::SlotContainer cc;
+	window = clan::DisplayWindow(desc);
 
 	// Connect the Window close event
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &ExampleText::on_window_close));
+	sc.connect(window.sig_window_close(), clan::bind_member(this, &ExampleText::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &ExampleText::on_keyboard_up));
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &ExampleText::on_keyboard_up));
 
-	clan::Canvas canvas(window);
+	canvas = clan::Canvas(window);
 
 	clan::FontDescription font_desc;
 	font_desc.set_height(32);
-	clan::Font font_normal("Tahoma", font_desc);
+	font_normal = clan::Font("Tahoma", font_desc);
 
 	font_desc.set_weight(clan::FontWeight::bold);
 	font_desc.set_height(40);
-	clan::Font font_bold("Tahoma", font_desc);
+	font_bold = clan::Font("Tahoma", font_desc);
 
 	clan::Texture2D texture_text(canvas, text_window_size, text_window_size);
 	texture_text.set_pixel_ratio(1.0f);
@@ -99,11 +104,7 @@ int ExampleText::start(const std::vector<std::string> &args)
 	fb_text = clan::FrameBuffer(canvas);
 	fb_text.attach_color(0, texture_text);
 
-	clan::Canvas canvas_fb(canvas, fb_text);
-
-	float angle = 0.0f;
-
-	std::vector<clan::SpanLayout> layout;
+	canvas_fb = clan::Canvas(canvas, fb_text);
 
 	// Count number of lines
 	int num_lines = 0;
@@ -144,51 +145,50 @@ int ExampleText::start(const std::vector<std::string> &args)
 		ypos += layout[line_count].get_size().height;
 
 	}
-	clan::GameTime game_time;
 
-	// Run until someone presses escape
-	while (!quit)
-	{
-		game_time.update();
+	texture_image = clan::Image(texture_text, texture_text.get_size());
 
-		canvas.set_map_mode(clan::map_2d_upper_left);
 
-		// Draw a nice blue gradient in the background
-		canvas.fill_rect(window.get_viewport(), clan::Gradient(clan::Colorf::lightblue, clan::Colorf::lightblue, clan::Colorf::darkblue, clan::Colorf::darkblue));
-
-		// Draw the text into the frame buffer
-		update_text(canvas_fb, fb_text, font_normal, layout);
-
-		angle += 0.5f;
-		if (angle >= 360.0f)
-			angle -= 360.0f;
-
-		// Draw the text
-		draw_text(canvas, texture_text, clan::Angle(angle, clan::angle_degrees));
-
-		last_fps = game_time.get_updates_per_second();
-		// Flip the display, showing on the screen what we have drawn
-		window.flip(1);
-
-		// This call updates input and performs other "housekeeping" call this each frame
-		clan::RunLoop::process();
-	}
-
-	return 0;
+	game_time.reset();
 }
 
-void ExampleText::draw_text(clan::Canvas &canvas, clan::Texture2D &texture, clan::Angle angle)
+bool ExampleText::update()
+{
+	game_time.update();
+
+	canvas.set_map_mode(clan::map_2d_upper_left);
+
+	// Draw a nice blue gradient in the background
+	canvas.fill_rect(window.get_viewport(), clan::Gradient(clan::Colorf::lightblue, clan::Colorf::lightblue, clan::Colorf::darkblue, clan::Colorf::darkblue));
+
+	// Draw the text into the frame buffer
+	update_text(canvas_fb, font_normal, layout);
+
+	angle += 0.5f;
+	if (angle >= 360.0f)
+		angle -= 360.0f;
+
+	// Draw the text
+	draw_text(canvas, clan::Angle(angle, clan::angle_degrees));
+
+	last_fps = game_time.get_updates_per_second();
+	// Flip the display, showing on the screen what we have drawn
+	window.flip(1);
+
+	return !quit;
+}
+
+void ExampleText::draw_text(clan::Canvas &canvas, clan::Angle angle)
 {
 	canvas.set_transform(clan::Mat4f::translate(canvas.get_width() / 2.0f, canvas.get_height() / 2.0f, 0.0f) * clan::Mat4f::rotate(angle, 0.0f, 0.0f, 1.0f));
 
-	clan::Image image(texture, texture.get_size());
-	image.set_alpha(0.7f);
-	image.draw(canvas, clan::Rectf(-300.0f, -300.0f, 300.0f, 300.0f));
+	texture_image.set_alpha(0.7f);
+	texture_image.draw(canvas, clan::Rectf(-300.0f, -300.0f, 300.0f, 300.0f));
 
 	canvas.set_transform(clan::Mat4f::identity());
 }
 
-void ExampleText::update_text(clan::Canvas &canvas_fb, clan::FrameBuffer &fb_text, clan::Font &font, std::vector<clan::SpanLayout> &layout)
+void ExampleText::update_text(clan::Canvas &canvas_fb, clan::Font &font, std::vector<clan::SpanLayout> &layout)
 {
 	canvas_fb.fill_rect( 0.0f, 0.0f, (float)text_window_size, (float)text_window_size, clan::Colorf(0.0f, 0.0f, 0.0f, 1.0f));
 

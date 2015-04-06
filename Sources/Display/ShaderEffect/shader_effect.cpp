@@ -54,7 +54,7 @@ namespace clan
 class ShaderEffect_Impl
 {
 public:
-	ShaderEffect_Impl(GraphicContext &gc) : elements_type(), num_vertices(0), program(gc) { }
+	ShaderEffect_Impl(GraphicContext &gc) : program(gc) { }
 
 	static std::string add_defines(GraphicContext &gc, const std::string * const code, const ShaderEffectDescription_Impl *description);
 
@@ -74,7 +74,7 @@ public:
 	PrimitivesArray prim_array;
 
 	ElementArrayBuffer elements;
-	VertexAttributeDataType elements_type;
+	VertexAttributeDataType elements_type = type_float;
 
 	std::map<int, Resource<UniformBuffer> > uniform_bindings;
 
@@ -83,7 +83,7 @@ public:
 
 	std::map<int, Resource<Texture> > texture_bindings;
 
-	int num_vertices;
+	int num_vertices = 0;
 };
 
 ShaderEffect::ShaderEffect()

@@ -28,65 +28,66 @@
 #include "precomp.h"
 #include "app.h"
 
-int App::start(const std::vector<std::string> &args)
+clan::ApplicationInstance<App> clanapp;
+
+App::App()
 {
+	clan::OpenGLTarget::enable();
 	clan::DisplayWindowDescription description;
 	description.set_title("Bloom Shader");
 	description.set_size(clan::Size(1024, 768), true);
 
-	clan::DisplayWindow window(description);
-	clan::InputDevice keyboard = window.get_ic().get_keyboard();
-	clan::Canvas canvas(window);
-    clan::SlotContainer cc;
+	window = clan::DisplayWindow(description);
+	canvas = clan::Canvas(window);
 
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &App::window_close));
+	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::window_close));
 
 	// Create offscreen texture
-	clan::Texture2D texture_offscreen1(canvas, canvas.get_width(), canvas.get_height());
+	texture_offscreen1 = clan::Texture2D(canvas, canvas.get_width(), canvas.get_height());
 	texture_offscreen1.set_min_filter(clan::filter_nearest);
 	texture_offscreen1.set_mag_filter(clan::filter_nearest);
 
-	clan::Texture2D texture_offscreen2(canvas, canvas.get_width(), canvas.get_height());
+	texture_offscreen2 = clan::Texture2D(canvas, canvas.get_width(), canvas.get_height());
 	texture_offscreen2.set_min_filter(clan::filter_nearest);
 	texture_offscreen2.set_mag_filter(clan::filter_nearest);
 
-	clan::Texture2D texture_offscreen3(canvas, canvas.get_width(), canvas.get_height());
+	texture_offscreen3 = clan::Texture2D(canvas, canvas.get_width(), canvas.get_height());
 	texture_offscreen3.set_min_filter(clan::filter_nearest);
 	texture_offscreen3.set_mag_filter(clan::filter_nearest);
 
 	// Create offscreen framebuffer
 	clan::FrameBuffer framebuffer_offscreen1(canvas);
 	framebuffer_offscreen1.attach_color(0, texture_offscreen1);
-	clan::Canvas canvas_offscreen1(canvas, framebuffer_offscreen1);
+	canvas_offscreen1 = clan::Canvas(canvas, framebuffer_offscreen1);
 
 	clan::FrameBuffer framebuffer_offscreen2(canvas);
 	framebuffer_offscreen2.attach_color(0, texture_offscreen2);
-	clan::Canvas canvas_offscreen2(canvas, framebuffer_offscreen2);
+	canvas_offscreen2 = clan::Canvas(canvas, framebuffer_offscreen2);
 
 	clan::FrameBuffer framebuffer_offscreen3(canvas);
 	framebuffer_offscreen3.attach_color(0, texture_offscreen3);
-	clan::Canvas canvas_offscreen3(canvas, framebuffer_offscreen3);
+	canvas_offscreen3 = clan::Canvas(canvas, framebuffer_offscreen3);
 
-	clan::Image background(canvas, "../PostProcessing/Resources/background.png");
+	background = clan::Image(canvas, "../PostProcessing/Resources/background.png");
 
 	// Load and link shaders
-	clan::ProgramObject gaussian_blur_shader = clan::ProgramObject::load(canvas, "Resources/gaussian_vs.glsl", "Resources/gaussian_fs.glsl");
+	gaussian_blur_shader = clan::ProgramObject::load(canvas, "Resources/gaussian_vs.glsl", "Resources/gaussian_fs.glsl");
 	gaussian_blur_shader.bind_attribute_location(0, "Position");
 	gaussian_blur_shader.bind_attribute_location(1, "TexCoord0");
 	gaussian_blur_shader.bind_frag_data_location(0, "cl_FragColor");
 	if (!gaussian_blur_shader.link())
 		throw clan::Exception("Unable to link gaussian shader program: Error:" + gaussian_blur_shader.get_info_log());
 
-	clan::ProgramObject extract_highlights_shader = clan::ProgramObject::load(canvas, "Resources/highlights_vs.glsl", "Resources/highlights_fs.glsl");
+	extract_highlights_shader = clan::ProgramObject::load(canvas, "Resources/highlights_vs.glsl", "Resources/highlights_fs.glsl");
 	extract_highlights_shader.bind_attribute_location(0, "Position");
 	extract_highlights_shader.bind_attribute_location(1, "TexCoord0");
 	//extract_highlights_shader.bind_frag_data_location(0, "cl_FragColor");
 	if (!extract_highlights_shader.link())
 		throw clan::Exception("Unable to link hightlights shader program: Error:" + extract_highlights_shader.get_info_log());
 
-	clan::ProgramObject bloom_combine_shader = clan::ProgramObject::load(canvas, "Resources/bloom_vs.glsl", "Resources/bloom_fs.glsl");
+	bloom_combine_shader = clan::ProgramObject::load(canvas, "Resources/bloom_vs.glsl", "Resources/bloom_fs.glsl");
 	bloom_combine_shader.bind_attribute_location(0, "Position");
 	bloom_combine_shader.bind_attribute_location(1, "TexCoord0");
 	//bloom_combine_shader.bind_frag_data_location(0, "cl_FragColor");
@@ -100,65 +101,49 @@ int App::start(const std::vector<std::string> &args)
 	gpu_primitives_array.set_attributes(0, gpu_positions);
 	gpu_primitives_array.set_attributes(1, gpu_tex1_coords);
 
-	quit = false;
-
-	float amount = 0.0f;
-	float timer = 0.0f;
-
-	float scale = 1.0f;
-
-	clan::Font font("tahoma", 32);
+	font = clan::Font("tahoma", 32);
 
 	select_text = "Default";
-	highlight_threshold = 0.25f;
-	blur_amount = 4;
-	bloom_intensity = 1.25f;
-	base_intensity = 1.0f;
-	bloom_saturation = 1.0f;
-	base_saturation = 1.0f;
 
-	uint64_t startTime = clan::System::get_time();
-
-	while (!quit)
-	{
-		timer = (clan::System::get_time() - startTime) / 1000.0f;
-
-		// Render standard image to offscreen buffer
-		background.set_color(clan::Colorf(0.5f, 0.5f, 0.5f, 1.0f));	// Half brightness
-		background.draw(canvas_offscreen1, 0, 0);
-		float xpos = canvas.get_width() / 2 + 200 * sinf(timer / 2.0f);
-		float ypos = canvas.get_height() / 2 + 200 * cosf(timer / 2.0f);
-		canvas_offscreen1.fill_circle(xpos, ypos, 64.0f, clan::Colorf(0.8f, 0.8f, 0.0f, 1.0f));	// Draw Sun
-
-		canvas_offscreen1.flush();
-		// Render highlights
-		render_extract_highlights(canvas_offscreen2, texture_offscreen1, extract_highlights_shader);
-		canvas_offscreen2.flush();
-
-		// Render horizontal blur
-		render_gaussian_blur(canvas_offscreen3, blur_amount, texture_offscreen2, gaussian_blur_shader, 1.0f / texture_offscreen2.get_width(), 0.0f);
-		canvas_offscreen3.flush();
-
-		// Render vertical blur
-		render_gaussian_blur(canvas_offscreen2, blur_amount, texture_offscreen3, gaussian_blur_shader, 0.0f, 1.0f / texture_offscreen3.get_height());
-		canvas_offscreen2.flush();
-
-		// Render bloom combine
-		render_bloom_combine(canvas, texture_offscreen1, texture_offscreen2, bloom_combine_shader);
-
-		std::string text( "Press 1 to 7 to select bloom. Currently it is :" + select_text );
-		font.draw_text(canvas, 10, 64, text);
-
-		window.flip();
-
-		clan::System::sleep(10);
-
-		clan::RunLoop::process();
-	}
-
-	return 0;
+	startTime = clan::System::get_time();
 }
 
+bool App::update()
+{
+	clan::InputDevice keyboard = window.get_ic().get_keyboard();
+	timer = (clan::System::get_time() - startTime) / 1000.0f;
+
+	// Render standard image to offscreen buffer
+	background.set_color(clan::Colorf(0.5f, 0.5f, 0.5f, 1.0f));	// Half brightness
+	background.draw(canvas_offscreen1, 0, 0);
+	float xpos = canvas.get_width() / 2 + 200 * sinf(timer / 2.0f);
+	float ypos = canvas.get_height() / 2 + 200 * cosf(timer / 2.0f);
+	canvas_offscreen1.fill_circle(xpos, ypos, 64.0f, clan::Colorf(0.8f, 0.8f, 0.0f, 1.0f));	// Draw Sun
+
+	canvas_offscreen1.flush();
+	// Render highlights
+	render_extract_highlights(canvas_offscreen2, texture_offscreen1, extract_highlights_shader);
+	canvas_offscreen2.flush();
+
+	// Render horizontal blur
+	render_gaussian_blur(canvas_offscreen3, blur_amount, texture_offscreen2, gaussian_blur_shader, 1.0f / texture_offscreen2.get_width(), 0.0f);
+	canvas_offscreen3.flush();
+
+	// Render vertical blur
+	render_gaussian_blur(canvas_offscreen2, blur_amount, texture_offscreen3, gaussian_blur_shader, 0.0f, 1.0f / texture_offscreen3.get_height());
+	canvas_offscreen2.flush();
+
+	// Render bloom combine
+	render_bloom_combine(canvas, texture_offscreen1, texture_offscreen2, bloom_combine_shader);
+
+	std::string text( "Press 1 to 7 to select bloom. Currently it is :" + select_text );
+	font.draw_text(canvas, 10, 64, text);
+
+	window.flip(1);
+
+
+	return !quit;
+}
 
 void App::window_close()
 {
@@ -381,4 +366,3 @@ void App::render_bloom_combine(clan::Canvas &canvas, clan::Texture2D &tex_base, 
 	gc.reset_texture(1);
 
 }
-

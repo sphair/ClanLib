@@ -39,17 +39,18 @@ namespace clan
 			if (subview->local_root())
 			{
 				subview->layout_local();
+				continue;
 			}
 			else if (subview->hidden())
 			{
 				continue;
 			}
-			else if (subview->style()->computed_value("position").is_keyword("absolute"))
+			else if (subview->style_cascade().computed_value("position").is_keyword("absolute"))
 			{
 				// To do: decide how we determine the containing box used for absolute positioning. For now, use the parent content box.
 				layout_from_containing_box(canvas, subview.get(), view->geometry().content);
 			}
-			else if (subview->style()->computed_value("position").is_keyword("fixed"))
+			else if (subview->style_cascade().computed_value("position").is_keyword("fixed"))
 			{
 				Rectf offset_initial_containing_box;
 				View *current = view->superview();
@@ -75,10 +76,8 @@ namespace clan
 
 				layout_from_containing_box(canvas, subview.get(), offset_initial_containing_box);
 			}
-			else
-			{
-				layout_subviews(canvas, subview.get());
-			}
+
+			layout_subviews(canvas, subview.get());
 		}
 	}
 
@@ -87,30 +86,30 @@ namespace clan
 		float x = 0.0f;
 		float width = 0.0f;
 
-		if (!view->style()->computed_value("left").is_keyword("auto") && !view->style()->computed_value("right").is_keyword("auto"))
+		if (!view->style_cascade().computed_value("left").is_keyword("auto") && !view->style_cascade().computed_value("right").is_keyword("auto"))
 		{
-			x = view->style()->computed_value("left").number;
-			width = clan::max(containing_box.get_width() - view->style()->computed_value("right").number - x, 0.0f);
+			x = view->style_cascade().computed_value("left").number;
+			width = clan::max(containing_box.get_width() - view->style_cascade().computed_value("right").number - x, 0.0f);
 		}
-		else if (!view->style()->computed_value("left").is_keyword("auto") && !view->style()->computed_value("width").is_keyword("auto"))
+		else if (!view->style_cascade().computed_value("left").is_keyword("auto") && !view->style_cascade().computed_value("width").is_keyword("auto"))
 		{
-			x = view->style()->computed_value("left").number;
-			width = view->style()->computed_value("width").number;
+			x = view->style_cascade().computed_value("left").number;
+			width = view->style_cascade().computed_value("width").number;
 		}
-		else if (!view->style()->computed_value("right").is_keyword("auto") && !view->style()->computed_value("width").is_keyword("auto"))
+		else if (!view->style_cascade().computed_value("right").is_keyword("auto") && !view->style_cascade().computed_value("width").is_keyword("auto"))
 		{
-			width = view->style()->computed_value("width").number;
-			x = containing_box.get_width() - view->style()->computed_value("right").number - width;
+			width = view->style_cascade().computed_value("width").number;
+			x = containing_box.get_width() - view->style_cascade().computed_value("right").number - width;
 		}
-		else if (!view->style()->computed_value("left").is_keyword("auto"))
+		else if (!view->style_cascade().computed_value("left").is_keyword("auto"))
 		{
-			x = view->style()->computed_value("left").number;
+			x = view->style_cascade().computed_value("left").number;
 			width = view->get_preferred_width(canvas);
 		}
-		else if (!view->style()->computed_value("right").is_keyword("auto"))
+		else if (!view->style_cascade().computed_value("right").is_keyword("auto"))
 		{
 			width = view->get_preferred_width(canvas);
-			x = containing_box.get_width() - view->style()->computed_value("right").number - width;
+			x = containing_box.get_width() - view->style_cascade().computed_value("right").number - width;
 		}
 		else
 		{
@@ -121,30 +120,30 @@ namespace clan
 		float y = 0.0f;
 		float height = 0.0f;
 
-		if (!view->style()->computed_value("top").is_keyword("auto") && !view->style()->computed_value("bottom").is_keyword("auto"))
+		if (!view->style_cascade().computed_value("top").is_keyword("auto") && !view->style_cascade().computed_value("bottom").is_keyword("auto"))
 		{
-			y = view->style()->computed_value("top").number;
-			height = clan::max(containing_box.get_height() - view->style()->computed_value("bottom").number - y, 0.0f);
+			y = view->style_cascade().computed_value("top").number;
+			height = clan::max(containing_box.get_height() - view->style_cascade().computed_value("bottom").number - y, 0.0f);
 		}
-		else if (!view->style()->computed_value("top").is_keyword("auto") && !view->style()->computed_value("height").is_keyword("auto"))
+		else if (!view->style_cascade().computed_value("top").is_keyword("auto") && !view->style_cascade().computed_value("height").is_keyword("auto"))
 		{
-			y = view->style()->computed_value("top").number;
-			height = view->style()->computed_value("height").number;
+			y = view->style_cascade().computed_value("top").number;
+			height = view->style_cascade().computed_value("height").number;
 		}
-		else if (!view->style()->computed_value("bottom").is_keyword("auto") && !view->style()->computed_value("height").is_keyword("auto"))
+		else if (!view->style_cascade().computed_value("bottom").is_keyword("auto") && !view->style_cascade().computed_value("height").is_keyword("auto"))
 		{
-			height = view->style()->computed_value("height").number;
-			y = containing_box.get_height() - view->style()->computed_value("bottom").number - height;
+			height = view->style_cascade().computed_value("height").number;
+			y = containing_box.get_height() - view->style_cascade().computed_value("bottom").number - height;
 		}
-		else if (!view->style()->computed_value("top").is_keyword("auto"))
+		else if (!view->style_cascade().computed_value("top").is_keyword("auto"))
 		{
-			y = view->style()->computed_value("top").number;
+			y = view->style_cascade().computed_value("top").number;
 			height = view->get_preferred_height(canvas, width);
 		}
-		else if (!view->style()->computed_value("bottom").is_keyword("auto"))
+		else if (!view->style_cascade().computed_value("bottom").is_keyword("auto"))
 		{
 			height = view->get_preferred_height(canvas, width);
-			y = containing_box.get_height() - view->style()->computed_value("bottom").number - height;
+			y = containing_box.get_height() - view->style_cascade().computed_value("bottom").number - height;
 		}
 		else
 		{
@@ -152,7 +151,7 @@ namespace clan
 			height = view->get_preferred_height(canvas, width);
 		}
 
-		return BoxGeometry::from_content_box(view->style(), Rectf::xywh(x, y, width, height));
+		return BoxGeometry::from_content_box(view->style_cascade(), Rectf::xywh(x, y, width, height));
 	}
 
 	void PositionedLayout::layout_from_containing_box(Canvas &canvas, View *view, const Rectf &containing_box)

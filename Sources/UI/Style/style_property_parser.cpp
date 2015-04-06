@@ -1089,6 +1089,11 @@ namespace clan
 
 	/////////////////////////////////////////////////////////////////////////
 
+	bool StyleProperty::is_inherited(const std::string &name)
+	{
+		return false; // TBD: do we want to support inherited properties at all?
+	}
+	
 	const StyleValue &StyleProperty::default_value(const std::string &name)
 	{
 		auto it = style_defaults().find(name);
@@ -1103,7 +1108,7 @@ namespace clan
 		}
 	}
 
-	void StyleProperty::parse(StylePropertySetter *setter, const std::string &properties, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void StyleProperty::parse(StylePropertySetter *setter, const std::string &properties)
 	{
 		StyleTokenizer tokenizer(properties);
 		StyleToken token;
@@ -1124,7 +1129,7 @@ namespace clan
 
 					auto it = style_parsers().find(name);
 					if (it != style_parsers().end())
-						it->second->parse(setter, name, parser, args);
+						it->second->parse(setter, name, parser);
 				}
 				else
 				{

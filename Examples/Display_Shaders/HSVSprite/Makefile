@@ -1,6 +1,5 @@
 EXAMPLE_BIN=hsvsprite
-OBJF = ./Sources/program.o \
-./Sources/hsv_sprite_batch.o \
+OBJF = ./Sources/hsv_sprite_batch.o \
 ./Sources/hsv_sprite.o \
 ./Sources/precomp.o \
 ./Sources/hsv.o

@@ -44,10 +44,15 @@
 #include <fribidi/fribidi.h>
 #endif
 
-// The start of the Application
-int Language::start(const std::vector<std::string> &args)
+clan::ApplicationInstance<Language> clanapp;
+
+Language::Language()
 {
-	quit = false;
+	// We support all display targets, in order listed here
+#ifdef WIN32
+	clan::D3DTarget::enable();
+#endif
+	clan::OpenGLTarget::enable();
 
 	// Set the window
 	clan::DisplayWindowDescription desc;
@@ -55,82 +60,78 @@ int Language::start(const std::vector<std::string> &args)
 	desc.set_size(clan::Size(640, 480), true);
 	desc.set_allow_resize(true);
 
-	clan::DisplayWindow window(desc);
+	window = clan::DisplayWindow(desc);
 
 	// Connect the Window close event
-    clan::SlotContainer cc;
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &Language::on_window_close));
+ 	sc.connect(window.sig_window_close(), clan::bind_member(this, &Language::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &Language::on_input_up));
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &Language::on_input_up));
 
 	// Get the graphic context
-	clan::Canvas canvas(window);
+	canvas = clan::Canvas(window);
 
 	clan::File file("Resources/test.xml");
-	clan::DomDocument document(file);
-	clan::DomElement document_element = document.get_document_element();
+	document = clan::DomDocument(file);
+	document_element = document.get_document_element();
 	if (document_element.is_null())
 		throw clan::Exception("Cannot obtain the document element");
 
-	clan::Font font_english("arial", 30);
+	font_english = clan::Font("arial", 30);
 
 	clan::FontDescription desc_chinese;
 	desc_chinese.set_height(30);
 	desc_chinese.set_charset(clan::FontDescription::charset_chinesebig5);
-	clan::Font font_chinese("simsun", desc_chinese);
+	font_chinese = clan::Font("simsun", desc_chinese);
 
 	clan::FontDescription desc_arabic;
 	desc_arabic.set_height(30);
 	desc_arabic.set_charset(clan::FontDescription::charset_arabic);
-	clan::Font font_arabic("arial", desc_arabic);
+	font_arabic = clan::Font("arial", desc_arabic);
 
-	// Run until someone presses escape
-	while (!quit)
-	{
+}
 
-		canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
+bool Language::update()
+{
+	canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
 		
-		std::string text;
+	std::string text;
 		
-		text = document_element.get_child_string("ENGLISH");
-		font_english.draw_text(canvas, 10, 60, text);
+	text = document_element.get_child_string("ENGLISH");
+	font_english.draw_text(canvas, 10, 60, text);
 
-		text = document_element.get_child_string("CHINESE");
-		font_chinese.draw_text(canvas, 10, 130, text);
+	text = document_element.get_child_string("CHINESE");
+	font_chinese.draw_text(canvas, 10, 130, text);
 
 #ifdef ENABLE_THIS_IF_YOU_WANT_TO_USE_FRIBIDI
-		text = document_element.get_child_string("ARABIC");
+	text = document_element.get_child_string("ARABIC");
 
-		/* input */
-		std::wstring text_16 = StringHelp::utf8_to_ucs2(text);
-		FriBidiChar *fri_str = (FriBidiChar *) text_16.c_str();
-		FriBidiStrIndex fri_len = text_16.length();
-		FriBidiCharType fri_base_dir = FRIBIDI_TYPE_ON;
-		FriBidiCharType *fri_pbase_dir = &fri_base_dir;
+	/* input */
+	std::wstring text_16 = StringHelp::utf8_to_ucs2(text);
+	FriBidiChar *fri_str = (FriBidiChar *) text_16.c_str();
+	FriBidiStrIndex fri_len = text_16.length();
+	FriBidiCharType fri_base_dir = FRIBIDI_TYPE_ON;
+	FriBidiCharType *fri_pbase_dir = &fri_base_dir;
 
-		/* output */
-		std::vector<wchar_t> output_buffer;
-		output_buffer.resize(text_16.length() + 1);
-		FriBidiChar *fri_visual_str = &output_buffer[0];
-		FriBidiStrIndex *fri_position_L_to_V_list = NULL;
-		FriBidiStrIndex *fri_position_V_to_L_list = NULL;
-		FriBidiLevel    *fri_embedding_level_list = NULL;
-		fribidi_boolean fri_result;
-		fri_result = fribidi_log2vis(fri_str,  fri_len, fri_pbase_dir, fri_visual_str, fri_position_L_to_V_list, fri_position_V_to_L_list, fri_embedding_level_list);
-		if (fri_result)
-		{
-			output_buffer[text_16.length()] = 0;
-			std::string new_text = clan::StringHelp::ucs2_to_utf8(&output_buffer[0]);
-			font_arabic.draw_text(gc, 10, 230, new_text);
-		}
-#endif
-		window.flip(1);
-
-		clan::RunLoop::process(0);
+	/* output */
+	std::vector<wchar_t> output_buffer;
+	output_buffer.resize(text_16.length() + 1);
+	FriBidiChar *fri_visual_str = &output_buffer[0];
+	FriBidiStrIndex *fri_position_L_to_V_list = NULL;
+	FriBidiStrIndex *fri_position_V_to_L_list = NULL;
+	FriBidiLevel    *fri_embedding_level_list = NULL;
+	fribidi_boolean fri_result;
+	fri_result = fribidi_log2vis(fri_str,  fri_len, fri_pbase_dir, fri_visual_str, fri_position_L_to_V_list, fri_position_V_to_L_list, fri_embedding_level_list);
+	if (fri_result)
+	{
+		output_buffer[text_16.length()] = 0;
+		std::string new_text = clan::StringHelp::ucs2_to_utf8(&output_buffer[0]);
+		font_arabic.draw_text(gc, 10, 230, new_text);
 	}
+#endif
+	window.flip(1);
 
-	return 0;
+	return !quit;
 }
 
 // A key was pressed

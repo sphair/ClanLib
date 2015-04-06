@@ -37,7 +37,7 @@
 #include "pixel_reader_norm.h"
 #include "pixel_reader_special.h"
 
-#if !defined CL_ANDROID && ! defined CL_DISABLE_SSE2
+#if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 #include "pixel_reader_sse.h"
 #endif
 
@@ -46,7 +46,7 @@
 #include "pixel_writer_norm.h"
 #include "pixel_writer_special.h"
 
-#if !defined CL_ANDROID && ! defined CL_DISABLE_SSE2
+#if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 #include "pixel_writer_sse.h"
 #endif
 
@@ -161,7 +161,7 @@ std::unique_ptr<PixelReader> PixelConverter_Impl::create_reader(TextureFormat fo
 	switch (format)
 	{
 	case tf_bgra8:
-#if !defined CL_ANDROID && ! defined CL_DISABLE_SSE2
+#if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 		if (sse2)
 			return std::unique_ptr<PixelReader>(new PixelReaderSSE2_bgra8());
 		else
@@ -217,7 +217,7 @@ std::unique_ptr<PixelReader> PixelConverter_Impl::create_reader(TextureFormat fo
 	case tf_rgb5_a1:
 		return std::unique_ptr<PixelReader>(new PixelReader_rgb5_a1());
 	case tf_rgba8:
-#if !defined CL_ANDROID && ! defined CL_DISABLE_SSE2
+#if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 		if (sse2)
 			return std::unique_ptr<PixelReader>(new PixelReaderSSE2_rgba8());
 		else
@@ -230,7 +230,7 @@ std::unique_ptr<PixelReader> PixelConverter_Impl::create_reader(TextureFormat fo
 	case tf_rgba12:
 		break;
 	case tf_rgba16:
-#if !defined CL_ANDROID && ! defined CL_DISABLE_SSE2
+#if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 		if (sse2)
 			return std::unique_ptr<PixelReader>(new PixelReaderSSE2_rgba16());
 		else
@@ -241,7 +241,7 @@ std::unique_ptr<PixelReader> PixelConverter_Impl::create_reader(TextureFormat fo
 	case tf_srgb8:
 		return std::unique_ptr<PixelReader>(new PixelReader_3norm<unsigned char>()); // TBD: should we add a 2.2 gamma filter?
 	case tf_srgb8_alpha8:
-#if !defined CL_ANDROID && ! defined CL_DISABLE_SSE2
+#if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 		if (sse2)
 			return std::unique_ptr<PixelReader>(new PixelReaderSSE2_rgba8());
 		else
@@ -348,7 +348,7 @@ std::unique_ptr<PixelWriter> PixelConverter_Impl::create_writer(TextureFormat fo
 	switch (format)
 	{
 	case tf_bgra8:
-#if !defined CL_ANDROID && ! defined CL_DISABLE_SSE2
+#if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 		if (sse2)
 			return std::unique_ptr<PixelWriter>(new PixelWriterSSE2_bgra8());
 		else
@@ -404,7 +404,7 @@ std::unique_ptr<PixelWriter> PixelConverter_Impl::create_writer(TextureFormat fo
 	case tf_rgb5_a1:
 		return std::unique_ptr<PixelWriter>(new PixelWriter_rgb5_a1());
 	case tf_rgba8:
-#if !defined CL_ANDROID && ! defined CL_DISABLE_SSE2
+#if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 		if (sse2)
 			return std::unique_ptr<PixelWriter>(new PixelWriterSSE2_rgba8());
 		else
@@ -430,7 +430,7 @@ std::unique_ptr<PixelWriter> PixelConverter_Impl::create_writer(TextureFormat fo
 	case tf_srgb8:
 		return std::unique_ptr<PixelWriter>(new PixelWriter_3norm<unsigned char>()); // TBD: should we add a 2.2 gamma filter?
 	case tf_srgb8_alpha8:
-#if !defined CL_ANDROID && ! defined CL_DISABLE_SSE2
+#if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 		if (sse2)
 			return std::unique_ptr<PixelWriter>(new PixelWriterSSE2_rgba8());
 		else
@@ -538,7 +538,7 @@ std::vector<std::shared_ptr<PixelFilter> > PixelConverter_Impl::create_filters(b
 
 	if (input_is_ycrcb)
 	{
-#if !defined CL_ANDROID && ! defined CL_DISABLE_SSE2
+#if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 		if (sse2)
 			filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterSSE2_YCrCbToRGB()));
 		else
@@ -548,7 +548,7 @@ std::vector<std::shared_ptr<PixelFilter> > PixelConverter_Impl::create_filters(b
 
 	if (premultiply_alpha)
 	{
-#if !defined CL_ANDROID && ! defined CL_DISABLE_SSE2
+#if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 		if (sse2)
 			filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterPremultiplyAlphaSSE2()));
 		else
@@ -558,7 +558,7 @@ std::vector<std::shared_ptr<PixelFilter> > PixelConverter_Impl::create_filters(b
 
 	if (gamma != 1.0f)
 	{
-#if !defined CL_ANDROID && ! defined CL_DISABLE_SSE2
+#if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 		if (sse2)
 			filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterGammaSSE2(gamma)));
 		else
@@ -568,7 +568,7 @@ std::vector<std::shared_ptr<PixelFilter> > PixelConverter_Impl::create_filters(b
 
 	if (swizzle != Vec4i(0,1,2,3))
 	{
-#if !defined CL_ANDROID && ! defined CL_DISABLE_SSE2
+#if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 		if (sse2)
 			filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterSwizzleSSE2(swizzle)));
 		else
@@ -578,7 +578,7 @@ std::vector<std::shared_ptr<PixelFilter> > PixelConverter_Impl::create_filters(b
 
 	if (output_is_ycrcb)
 	{
-#if !defined CL_ANDROID && ! defined CL_DISABLE_SSE2
+#if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 		if (sse2)
 			filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterSSE2_RGBToYCrCb()));
 		else

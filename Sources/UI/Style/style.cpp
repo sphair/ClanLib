@@ -76,79 +76,102 @@ namespace clan
 	{
 	}
 
-	const std::shared_ptr<Style> &Style::get_base()
+	const std::shared_ptr<Style> &Style::get_parent()
 	{
-		return impl->base;
+		return impl->parent;
+	}
+	
+	void Style::set_parent(const std::shared_ptr<Style> &parent)
+	{
+		impl->parent = parent;
+	}
+	
+	const std::shared_ptr<Style> &Style::get_cascade_base()
+	{
+		return impl->cascade_base;
 	}
 
-	void Style::set_base(const std::shared_ptr<Style> &new_base)
+	void Style::set_cascade_base(const std::shared_ptr<Style> &base)
 	{
-		impl->base = new_base;
+		impl->cascade_base = base;
 	}
 
-	void Style::set(const std::string &properties, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void Style::set(const std::string &properties)
 	{
-		StyleProperty::parse(impl.get(), properties, args);
+		StyleProperty::parse(impl.get(), properties);
 	}
 
-	bool Style::has(const std::string &property_name) const
+	StyleValue Style::declared_value(const std::string &property_name) const
 	{
 		const auto it = impl->prop_type.find(property_name);
-		return it != impl->prop_type.end() || !StyleProperty::default_value(property_name).is_undefined();
-	}
-
-	int Style::array_size(const std::string &property_name) const
-	{
-		int size = 0;
-		while (true)
+		if (it != impl->prop_type.end())
 		{
-			std::string prop_name = property_name + "[" + StringHelp::int_to_text(size) + "]";
-			if (!has(prop_name))
-				break;
-			size++;
+			switch (it->second)
+			{
+				default:
+				case StyleValueType::undefined:
+					return StyleValue();
+				case StyleValueType::keyword:
+					return StyleValue::from_keyword(impl->prop_text.find(property_name)->second);
+				case StyleValueType::string:
+					return StyleValue::from_string(impl->prop_text.find(property_name)->second);
+				case StyleValueType::url:
+					return StyleValue::from_url(impl->prop_text.find(property_name)->second);
+				case StyleValueType::length:
+					return StyleValue::from_length(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
+				case StyleValueType::angle:
+					return StyleValue::from_angle(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
+				case StyleValueType::time:
+					return StyleValue::from_time(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
+				case StyleValueType::frequency:
+					return StyleValue::from_frequency(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
+				case StyleValueType::resolution:
+					return StyleValue::from_resolution(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
+				case StyleValueType::percentage:
+					return StyleValue::from_percentage(impl->prop_number.find(property_name)->second);
+				case StyleValueType::number:
+					return StyleValue::from_number(impl->prop_number.find(property_name)->second);
+				case StyleValueType::color:
+					return StyleValue::from_color(impl->prop_color.find(property_name)->second);
+				case StyleValueType::image:
+					return StyleValue::from_image(impl->prop_image.find(property_name)->second);
+			}
 		}
-		return size;
+		return StyleValue();
+	}
+	
+	/////////////////////////////////////////////////////////////////////////
+	
+	StyleValue StyleCascade::cascade_value(const std::string &property_name) const
+	{
+		for (Style *style : cascade)
+		{
+			StyleValue value = style->declared_value(property_name);
+			if (!value.is_undefined())
+				return value;
+		}
+		return StyleValue();
 	}
 
-	StyleValue Style::specified_value(const std::string &property_name) const
+	StyleValue StyleCascade::specified_value(const std::string &property_name) const
 	{
-		const auto it = impl->prop_type.find(property_name);
-		if (it == impl->prop_type.end())
+		StyleValue value = cascade_value(property_name);
+		bool inherit = (value.is_undefined() && StyleProperty::is_inherited(property_name)) || value.is_keyword("inherit");
+		if (inherit && parent)
+		{
+			return parent->computed_value(property_name);
+		}
+		else if (value.is_undefined() || value.is_keyword("initial") || value.is_keyword("inherit"))
+		{
 			return StyleProperty::default_value(property_name);
-
-		switch (it->second)
+		}
+		else
 		{
-		default:
-		case StyleValueType::undefined:
-			return StyleValue();
-		case StyleValueType::keyword:
-			return StyleValue::from_keyword(impl->prop_text.find(property_name)->second);
-		case StyleValueType::string:
-			return StyleValue::from_string(impl->prop_text.find(property_name)->second);
-		case StyleValueType::url:
-			return StyleValue::from_url(impl->prop_text.find(property_name)->second);
-		case StyleValueType::length:
-			return StyleValue::from_length(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
-		case StyleValueType::angle:
-			return StyleValue::from_angle(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
-		case StyleValueType::time:
-			return StyleValue::from_time(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
-		case StyleValueType::frequency:
-			return StyleValue::from_frequency(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
-		case StyleValueType::resolution:
-			return StyleValue::from_resolution(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
-		case StyleValueType::percentage:
-			return StyleValue::from_percentage(impl->prop_number.find(property_name)->second);
-		case StyleValueType::number:
-			return StyleValue::from_percentage(impl->prop_number.find(property_name)->second);
-		case StyleValueType::color:
-			return StyleValue::from_color(impl->prop_color.find(property_name)->second);
-		case StyleValueType::image:
-			return StyleValue::from_image(impl->prop_image.find(property_name)->second);
+			return value;
 		}
 	}
 
-	StyleValue Style::computed_value(const std::string &property_name) const
+	StyleValue StyleCascade::computed_value(const std::string &property_name) const
 	{
 		// To do: pass on to property compute functions
 
@@ -170,7 +193,7 @@ namespace clan
 		}
 	}
 
-	StyleValue Style::compute_length(const StyleValue &length) const
+	StyleValue StyleCascade::compute_length(const StyleValue &length) const
 	{
 		switch (length.dimension)
 		{
@@ -194,7 +217,7 @@ namespace clan
 		}
 	}
 
-	StyleValue Style::compute_angle(const StyleValue &angle) const
+	StyleValue StyleCascade::compute_angle(const StyleValue &angle) const
 	{
 		switch (angle.dimension)
 		{
@@ -210,7 +233,7 @@ namespace clan
 		}
 	}
 
-	StyleValue Style::compute_time(const StyleValue &time) const
+	StyleValue StyleCascade::compute_time(const StyleValue &time) const
 	{
 		switch (time.dimension)
 		{
@@ -222,7 +245,7 @@ namespace clan
 		}
 	}
 
-	StyleValue Style::compute_frequency(const StyleValue &frequency) const
+	StyleValue StyleCascade::compute_frequency(const StyleValue &frequency) const
 	{
 		switch (frequency.dimension)
 		{
@@ -234,7 +257,7 @@ namespace clan
 		}
 	}
 
-	StyleValue Style::compute_resolution(const StyleValue &resolution) const
+	StyleValue StyleCascade::compute_resolution(const StyleValue &resolution) const
 	{
 		switch (resolution.dimension)
 		{
@@ -248,13 +271,13 @@ namespace clan
 		}
 	}
 
-	void Style::render_background(Canvas &canvas, const BoxGeometry &geometry) const
+	void StyleCascade::render_background(Canvas &canvas, const BoxGeometry &geometry) const
 	{
 		StyleBackgroundRenderer renderer(canvas, geometry, *this);
 		renderer.render_background();
 	}
 
-	void Style::render_border(Canvas &canvas, const BoxGeometry &geometry) const
+	void StyleCascade::render_border(Canvas &canvas, const BoxGeometry &geometry) const
 	{
 		StyleBackgroundRenderer renderer(canvas, geometry, *this);
 		renderer.render_border();
@@ -263,14 +286,14 @@ namespace clan
 		image_renderer.render();
 	}
 
-	Font Style::get_font(Canvas &canvas)
+	Font StyleCascade::get_font(Canvas &canvas) const
 	{
 		auto font_size = computed_value("font-size");
 		auto line_height = computed_value("line-height");
 		auto font_weight = computed_value("font-weight");
 		auto font_style = computed_value("font-style");
 		//auto font_variant = computed_value("font-variant"); // To do: needs FontDescription support
-		auto font_rendering = computed_value("font-rendering");
+		auto font_rendering = computed_value("-clan-font-rendering");
 		auto font_family_name = computed_value("font-family-names[0]");
 
 		FontDescription font_desc;
@@ -310,6 +333,19 @@ namespace clan
 		return Font::resource(canvas, family, font_desc, UIThread::get_resources());
 	}
 
+	int StyleCascade::array_size(const std::string &property_name) const
+	{
+		int size = 0;
+		while (true)
+		{
+			std::string prop_name = property_name + "[" + StringHelp::int_to_text(size) + "]";
+			if (specified_value(prop_name).is_undefined())
+				break;
+			size++;
+		}
+		return size;
+	}
+	
 	/////////////////////////////////////////////////////////////////////////
 
 	void StyleImpl::set_value(const std::string &name, const StyleValue &value)

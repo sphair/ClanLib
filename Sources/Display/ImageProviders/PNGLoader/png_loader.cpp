@@ -31,6 +31,7 @@
 #include "API/Display/Image/pixel_buffer_lock.h"
 #include "API/Core/Zip/zlib_compression.h"
 #include "API/Core/System/system.h"
+#include "Display/ImageProviders/PNGWriter/png_writer.h"
 
 namespace clan
 {
@@ -91,7 +92,9 @@ void PNGLoader::read_chunks()
 
 		unsigned int crc32 = file.read_uint32();
 
-		// To do: should we do a crc32 check on data or leave it out for performance reasons?
+		unsigned int compare_crc32 = PNGCRC32::crc(name, data.get_data(), data.get_size());
+		if (crc32 != compare_crc32)
+			throw Exception("CRC32 error");
 
 		if (name == std::string("IDAT")) // Concatenate all IDAT chunks to one big
 		{
@@ -389,7 +392,7 @@ void PNGLoader::predictor_sub(unsigned char *scanline, const unsigned char *prev
 
 void PNGLoader::predictor_up(unsigned char *scanline, const unsigned char *prev_scanline, int byte_length, int channels, int bit_depth)
 {
-	int bytes_per_pixel = channels * ((bit_depth + 7) / 8);
+	//int bytes_per_pixel = channels * ((bit_depth + 7) / 8);
 	for (int i = 0; i < byte_length; i++)
 	{
 		int x = scanline[i];

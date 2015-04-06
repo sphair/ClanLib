@@ -38,7 +38,7 @@
 #elif defined(__APPLE__)
 #include <OpenGL/gl.h>
 #include <OpenGL/glext.h>
-#elif defined(CL_ANDROID)
+#elif defined(__ANDROID__)
 #include <GLES/gl.h>
 #else
 #include <GL/gl.h>

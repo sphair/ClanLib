@@ -30,18 +30,29 @@
 #include "program.h"
 #include "target.h"
 
-int Program::main(const std::vector<std::string> &args)
+clan::ApplicationInstance<Program> clanapp;
+
+Program::Program()
 {
-
-	// We support all display targets
-	clan::OpenGLTarget::enable();
+	// We support all display targets, in order listed here
 	clan::D3DTarget::enable();
+	clan::OpenGLTarget::enable();
 
-	Target app;
-	int retval = app.start(args);
-	return retval;
-
+	target = clan::make_unique<Target>(Target::RenderTarget::legacy_gl);
 }
 
-// Instantiate Application, informing it where the Program is located
-clan::Application app(&Program::main);
+bool Program::update()
+{
+	Target::RenderTarget rt = target->render_target;
+	target->run_demo();
+	if (target->quit)
+		return false;
+
+	if (target->render_target != rt)
+	{
+		rt = target->render_target;
+		target.reset();	// This is important. Multiply Display targets cannot co-exist
+		target = clan::make_unique<Target>(rt);
+	}
+	return true;
+}

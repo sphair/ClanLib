@@ -39,15 +39,22 @@ GraphicStore::GraphicStore(GraphicContext &gc) : shader_color(gc)
 	//aiAttachLogStream(&stream);
 #endif
 
+#if defined(I_LOVE_ASSIMP_AND_PRECOMPILED_IT)
 	store = aiCreatePropertyStore();
 	aiSetImportPropertyFloat(store, AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE,89.53f);
+#endif
 
 }
 
 GraphicStore::~GraphicStore()
 {
-	aiReleasePropertyStore(store);
-	aiDetachAllLogStreams();
+#if defined(I_LOVE_ASSIMP_AND_PRECOMPILED_IT)
+	if (store)
+	{
+		aiReleasePropertyStore(store);
+		aiDetachAllLogStreams();
+	}
+#endif
 }
 
 void GraphicStore::LoadImages( GraphicContext &gc )

@@ -28,26 +28,29 @@
 
 #pragma once
 
-// This is the Application class (That is instantiated by the Program Class)
-class App
+#include "colorwheel.h"
+
+class App : public clan::Application
 {
 public:
 	App();
-
-	int start(const std::vector<std::string> &args);
+	bool update() override;
 
 private:
 	void on_input_up(const clan::InputEvent &key);
 	void on_window_close();
-	void draw(clan::Canvas &canvas, const clan::Pointf &center, float radius);
-	void draw_labels(clan::Canvas &canvas);
 private:
-	bool quit;
+	clan::DisplayWindow window;
+	clan::SlotContainer sc;
+	clan::Canvas canvas;
 
-	float saturation_outer;
-	float saturation_inner;
-	float value_outer;
-	float value_inner;
-	bool is_hsl;
+	clan::Canvas gui_canvas;
+	clan::Image gui_image;
+
+	clan::UIThread ui_thread;
+	std::shared_ptr<clan::TextureView> root;
+	std::shared_ptr<ColorWheel> color_wheel;
+
+	bool quit = false;
 
 };

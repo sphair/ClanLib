@@ -7,27 +7,28 @@ using namespace clan;
 
 WorkspaceView::WorkspaceView()
 {
-	box_style.set_layout_vbox();
+	style()->set("flex: 1 1 main-size");
+	style()->set("flex-direction: column");
 
 	labels_group = std::make_shared<View>();
-	labels_group->box_style.set_flex(0.0f, 0.0f);
-	labels_group->box_style.set_margin(-0.5f, 0.0f);
-	labels_group->box_style.set_padding(0.0f, 0.0f, 0.0f, 0.0f);
-	labels_group->box_style.set_height(30.0f);
-	labels_group->box_style.set_layout_hbox();
+	labels_group->style()->set("flex: 0 0 main-size");
+	labels_group->style()->set("margin: 0 -0.5px");
+	labels_group->style()->set("padding: 0");
+	labels_group->style()->set("height: 30px");
+	labels_group->style()->set("flex-direction: row");
 
 	toolbar = std::make_shared<View>();
-	toolbar->box_style.set_flex(0.0f, 0.0f);
-	toolbar->box_style.set_height(40.0f);
-	toolbar->box_style.set_margin(0.0f, 0.0f);
-	toolbar->box_style.set_background_gradient_to_bottom(Colorf(235, 243, 252), Colorf(219, 234, 249));
-	toolbar->box_style.set_border(Colorf::gray60, 0.0f, 0.0f, 0.0f, 1.0f);
+	toolbar->style()->set("flex: 0 0 main-size");
+	toolbar->style()->set("height: 40px");
+	toolbar->style()->set("margin: 0");
+	toolbar->style()->set("background: linear-gradient(to bottom, rgb(235, 243, 252), rgb(219, 234, 249))");
+	toolbar->style()->set("border-bottom: 1px solid rgb(153,153,153)");
 
 	pages_group = std::make_shared<View>();
-	pages_group->box_style.set_flex(1.0f, 1.0f);
-	pages_group->box_style.set_margin(0, 0, 0, 0);
-	pages_group->box_style.set_background(Colorf::white);
-	pages_group->box_style.set_layout_vbox();
+	pages_group->style()->set("flex: 1 1 main-size");
+	pages_group->style()->set("margin: 0");
+	pages_group->style()->set("background: white");
+	pages_group->style()->set("flex-direction: column");
 
 	add_subview(labels_group);
 	add_subview(toolbar);
@@ -51,8 +52,7 @@ void WorkspaceView::add_page(const std::string &id, const std::string &label_tex
 		}
 	};
 
-	slots.connect(page.tab->sig_pointer_press(EventUIPhase::at_target), on_click);
-	slots.connect(page.tab->sig_pointer_press(EventUIPhase::bubbling), on_click);
+	slots.connect(page.tab->sig_pointer_press(), on_click);
 
 	labels_group->add_subview(page.tab);
 
@@ -100,7 +100,7 @@ void WorkspaceView::set_selected(TabPage &page, bool selected, bool animated)
 		page.tab->message_count->set_text("");
 		page.tab->message_count->set_hidden();
 	}
-
+	
 	Colorf background(243, 240, 244, 160);
 	Colorf foreground1(239, 247, 255);
 	Colorf foreground2(235, 243, 252);
@@ -116,23 +116,23 @@ void WorkspaceView::set_selected(TabPage &page, bool selected, bool animated)
 
 		page.tab->animate(from, to, [=](float t)
 		{
-			page.tab->box_style.set_background_gradient_to_bottom(mix(background, foreground1, t), mix(background, foreground2, t));
-			page.tab->box_style.set_border(mix(background_border, foreground_border, t), 0.5f, 0.5f, 0.5f, 0.0f);
+			page.tab->style()->set("background: linear-gradient(to bottom, %1, %2)", Style::to_rgba(mix(background, foreground1, t)), Style::to_rgba(mix(background, foreground2, t)));
+			page.tab->style()->set("border: 0.5px solid %1; border-bottom: none", Style::to_rgba(mix(background_border, foreground_border, t)));
 		});
 	}
 	else
 	{
 		if (selected)
 		{
-			page.tab->box_style.set_background_gradient_to_bottom(foreground1, foreground2);
-			page.tab->box_style.set_border(foreground_border, 0.5f, 0.5f, 0.5f, 0.0f);
+			page.tab->style()->set("background: linear-gradient(to bottom, %1, %2)", Style::to_rgba(foreground1), Style::to_rgba(foreground2));
+			page.tab->style()->set("border: 0.5px solid %1; border-bottom: none", Style::to_rgba(foreground_border));
 		}
 		else
 		{
-			page.tab->box_style.set_background_gradient_to_bottom(background, background);
-			page.tab->box_style.set_border(background_border, 0.5f, 0.5f, 0.5f, 0.0f);
+			page.tab->style()->set("background: %1", Style::to_rgba(background));
+			page.tab->style()->set("border: 0.5px solid %1; border-bottom: none", Style::to_rgba(background_border));
 		}
 	}
-
+	
 	page.page->set_hidden(!selected);
 }

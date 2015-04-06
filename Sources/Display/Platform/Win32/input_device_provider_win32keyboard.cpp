@@ -75,12 +75,6 @@ std::string InputDeviceProvider_Win32Keyboard::get_key_name(int virtual_key) con
 	return std::string(StringHelp::ucs2_to_utf8(name), length);
 }
 
-float InputDeviceProvider_Win32Keyboard::get_axis(int index) const
-{
-	throw_if_disposed();
-	return 0.0f;
-}
-
 std::string InputDeviceProvider_Win32Keyboard::get_name() const
 {
 	throw_if_disposed();
@@ -91,12 +85,6 @@ std::string InputDeviceProvider_Win32Keyboard::get_device_name() const
 {
 	throw_if_disposed();
 	return "System Keyboard";
-}
-
-std::vector<int> InputDeviceProvider_Win32Keyboard::get_axis_ids() const
-{
-	throw_if_disposed();
-	return std::vector<int>();
 }
 
 int InputDeviceProvider_Win32Keyboard::get_button_count() const

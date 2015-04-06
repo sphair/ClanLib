@@ -46,7 +46,7 @@ class ExceptionDialog
 /// \{
 public:
 	/// \brief Displays a modal dialog with the details of the specified exception.
-	static void show(Exception &e);
+	static void show(const std::exception_ptr &exception);
 /// \}
 };
 

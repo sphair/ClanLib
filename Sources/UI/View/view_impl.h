@@ -38,11 +38,15 @@ namespace clan
 	class ViewImpl
 	{
 	public:
+		void update_style_cascade() const;
+
 		unsigned int find_next_tab_index(unsigned int tab_index) const;
 		unsigned int find_prev_tab_index(unsigned int tab_index) const;
 		unsigned int find_highest_tab_index() const;
 		View *find_next_with_tab_index(unsigned int tab_index, const ViewImpl *search_from = nullptr, bool also_search_ancestors = true) const;
 		View *find_prev_with_tab_index(unsigned int tab_index, const ViewImpl *search_from = nullptr, bool also_search_ancestors = true) const;
+
+		void set_state_cascade_siblings(const std::string &name, bool value);
 
 		void inverse_bubble(EventUI *e);
 
@@ -52,29 +56,44 @@ namespace clan
 		unsigned int tab_index = 0;
 		FocusPolicy focus_policy = FocusPolicy::reject;
 
-		std::shared_ptr<Style> style = std::make_shared<Style>();
+		mutable StyleCascade style_cascade;
+		mutable std::map<std::string, std::shared_ptr<Style>> styles;
+
+		struct StyleState
+		{
+			StyleState(){}
+			StyleState(bool is_inherited, bool is_enabled) : inherited(is_inherited), enabled(is_enabled){}
+			bool inherited = true;	// Set to true by set_state_cascade(), else false
+			bool enabled = false;
+		};
+
+		std::map<std::string, StyleState> states;
+		
 		BoxGeometry _geometry;
 		bool hidden = false;
+
+		Mat4f view_transform = Mat4f::identity();
+		bool content_clipped = false;
 
 		bool exception_encountered = false;
 
 		bool _needs_layout = true;
 
-		Signal<void(ActivationChangeEvent &)> _sig_activated[4];
-		Signal<void(ActivationChangeEvent &)> _sig_deactivated[4];
-		Signal<void(CloseEvent &)> _sig_close[4];
-		Signal<void(ResizeEvent &)> _sig_resize[4];
-		Signal<void(FocusChangeEvent &)> _sig_focus_gained[4];
-		Signal<void(FocusChangeEvent &)> _sig_focus_lost[4];
-		Signal<void(PointerEvent &)> _sig_pointer_enter[4];
-		Signal<void(PointerEvent &)> _sig_pointer_leave[4];
-		Signal<void(PointerEvent &)> _sig_pointer_move[4];
-		Signal<void(PointerEvent &)> _sig_pointer_press[4];
-		Signal<void(PointerEvent &)> _sig_pointer_release[4];
-		Signal<void(PointerEvent &)> _sig_pointer_double_click[4];
-		Signal<void(PointerEvent &)> _sig_pointer_proximity_change[4];
-		Signal<void(KeyEvent &)> _sig_key_press[4];
-		Signal<void(KeyEvent &)> _sig_key_release[4];
+		Signal<void(ActivationChangeEvent &)> _sig_activated[2];
+		Signal<void(ActivationChangeEvent &)> _sig_deactivated[2];
+		Signal<void(CloseEvent &)> _sig_close[2];
+		Signal<void(ResizeEvent &)> _sig_resize[2];
+		Signal<void(FocusChangeEvent &)> _sig_focus_gained[2];
+		Signal<void(FocusChangeEvent &)> _sig_focus_lost[2];
+		Signal<void(PointerEvent &)> _sig_pointer_enter[2];
+		Signal<void(PointerEvent &)> _sig_pointer_leave[2];
+		Signal<void(PointerEvent &)> _sig_pointer_move[2];
+		Signal<void(PointerEvent &)> _sig_pointer_press[2];
+		Signal<void(PointerEvent &)> _sig_pointer_release[2];
+		Signal<void(PointerEvent &)> _sig_pointer_double_click[2];
+		Signal<void(PointerEvent &)> _sig_pointer_proximity_change[2];
+		Signal<void(KeyEvent &)> _sig_key_press[2];
+		Signal<void(KeyEvent &)> _sig_key_release[2];
 
 		// Root view variables:
 		View *_owner_view = nullptr;

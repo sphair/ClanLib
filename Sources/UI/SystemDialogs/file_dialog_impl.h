@@ -95,10 +95,10 @@ namespace clan
 			filter_index = -1;
 		}
 
-		void set_filter_index(int filter_index)
+		void set_filter_index(int new_filter_index)
 		{
-			if (filter_index >= 0 && filter_index < filters.size())
-				this->filter_index = filter_index;
+			if (new_filter_index >= 0 && new_filter_index < filters.size())
+				filter_index = new_filter_index;
 		}
 
 		std::wstring get_filter_string() const

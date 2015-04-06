@@ -28,17 +28,19 @@
 
 #pragma once
 
+#include "../../../ThemeAero/Sources/theme.h"
+
 enum FontClass
 {
 	font_ttf,
 	font_sprite
 };
 
-// This is the Application class (That is instantiated by the Program Class)
-class App
+class App : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
+	App();
+	bool update() override;
 
 private:
 	void on_button_clicked_class_system();
@@ -58,27 +60,44 @@ private:
 
 	void on_input_up(const InputEvent &key);
 	void on_window_close();
-	void on_lineedit_changed(InputEvent &e);
+	void on_lineedit_changed();
 	void render(DisplayWindow &window, GameTime &game_time);
 	void select_font();
 	void draw_font_example();
 	void draw_font_info();
 
 private:
-	bool quit;
+	DisplayWindow window;
+	bool quit = false;
 	Canvas canvas;
 	std::string font_text;
 	FontMetrics font_metrics;
 	std::string font_typeface;
 	std::string font_filename;
 	FontDescription font_desc;
+	clan::SlotContainer slots;
+	clan::Canvas gui_canvas;
+	clan::Image gui_image;
+	clan::UIThread ui_thread;
+	std::shared_ptr<clan::TextureView> root;
+
 	Sizef font_size;
 	clan::Font small_font;
 	clan::Font selected_font;
 	FontClass selected_fontclass;
 	float last_fps;
 	ResourceManager resources;
+	GameTime game_time;
+
+	std::shared_ptr<clan::ButtonView> button_typeface_tahoma;
+	std::shared_ptr<clan::ButtonView> button_typeface_sans;
+	std::shared_ptr<clan::ButtonView> button_typeface_bitstream;
+	std::shared_ptr<clan::TextFieldView> lineedit_text;
+	std::shared_ptr<clan::CheckBoxView> checkbox_italic;
+	std::shared_ptr<clan::CheckBoxView> checkbox_antialias;
+	std::shared_ptr<clan::CheckBoxView> checkbox_subpixel;
 };
+
 
 
 

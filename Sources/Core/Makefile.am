@@ -176,7 +176,7 @@ IOData/Win32/directory_scanner_win32.cpp
 
 else
 libclan40Core_la_SOURCES += \
-System/Unix/init_linux.cpp \
+System/Unix/system_unix.cpp \
 System/Unix/service_unix.cpp \
 IOData/Unix/directory_scanner_unix.cpp
 

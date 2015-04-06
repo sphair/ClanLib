@@ -37,11 +37,11 @@ public:
 	clan::Colorf color;
 };
 
-// This is the Application class (That is instantiated by the Program Class)
-class Timing
+class Timing : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
+	Timing();
+	bool update() override;
 
 private:
 	void on_input_up(const clan::InputEvent &key);
@@ -49,8 +49,12 @@ private:
 	void draw_graphics(clan::Canvas &canvas, float time_delta);
 	void set_stars(clan::Canvas &canvas, int star_cnt);
 private:
-	bool quit;
+	bool quit = false;
 
 	std::vector<Star> stars;
+	clan::DisplayWindow window;
+	clan::SlotContainer sc;
+	clan::Canvas canvas;
+	clan::GameTime game_time;
 
 };

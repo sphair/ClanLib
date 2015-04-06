@@ -62,13 +62,13 @@ InputDeviceProvider_OSXMouse::~InputDeviceProvider_OSXMouse()
 /////////////////////////////////////////////////////////////////////////////
 // InputDeviceProvider_OSXMouse attributes:
 
-int InputDeviceProvider_OSXMouse::get_x() const
+float InputDeviceProvider_OSXMouse::get_x() const
 {
 	throw_if_disposed();
 	return mouse_position.x;
 }
 
-int InputDeviceProvider_OSXMouse::get_y() const
+float InputDeviceProvider_OSXMouse::get_y() const
 {
 	throw_if_disposed();
 	return mouse_position.y;
@@ -139,7 +139,7 @@ int InputDeviceProvider_OSXMouse::get_button_count() const
 /////////////////////////////////////////////////////////////////////////////
 // InputDeviceProvider_OSXMouse operations:
 
-void InputDeviceProvider_OSXMouse::set_position(int x, int y)
+void InputDeviceProvider_OSXMouse::set_position(float x, float y)
 {
     //
     // TODO: Reimplement.
@@ -156,14 +156,10 @@ void InputDeviceProvider_OSXMouse::on_dispose()
 }
 
 void InputDeviceProvider_OSXMouse::on_mouse_event(const clan::InputCode& keycode, const clan::InputEvent::Type& type,
-                                                  const clan::Point& position)
+                                                  const clan::Pointf& position)
 {
-    // Sanity.
-    assert(keycode < clan::mouse_count);
     if (keycode < clan::mouse_count)
     {
-        assert(type == InputEvent::doubleclick || type == clan::InputEvent::pressed ||
-               type == clan::InputEvent::released);
         if (type == InputEvent::doubleclick || type == clan::InputEvent::pressed)
         {
             mouse_down_map[keycode] = true;

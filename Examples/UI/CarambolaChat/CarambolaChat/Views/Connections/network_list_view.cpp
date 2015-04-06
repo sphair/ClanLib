@@ -7,17 +7,19 @@ using namespace clan;
 
 NetworkListView::NetworkListView()
 {
+	style()->set("flex-direction: column");
+
 	items_view = std::make_shared<View>();
-	items_view->box_style.set_layout_block();
-	items_view->box_style.set_margin(0.0f, 15.0f);
-	items_view->box_style.set_background(Colorf::white); // Bug: required to make the border work
-	items_view->box_style.set_border(Colorf::gray80, 0.0f, 0.0f, 0.0f, 1.0f);
+	items_view->style()->set("flex-direction: column");
+	items_view->style()->set("margin: 15px 0");
+	items_view->style()->set("background: white"); // Bug: required to make the border work
+	items_view->style()->set("border-bottom: 1px solid rgb(204,204,204)");
 	add_subview(items_view);
 
 	auto add_button = std::make_shared<ButtonView>();
 	add_button->label()->set_text("Add Network");
-	add_button->label()->text_style().set_font("Source Sans Pro", 13.0f, 16.0f);
-	add_button->label()->text_style().set_color(Colorf::navy);
+	add_button->label()->style()->set("font: 13px/16px 'Source Sans Pro'");
+	add_button->label()->style()->set("color: rgb(0,0,128)");
 	add_subview(add_button);
 }
 

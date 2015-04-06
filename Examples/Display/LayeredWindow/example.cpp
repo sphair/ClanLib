@@ -35,11 +35,11 @@
 #include <cmath>
 
 // This is the Application class (That is instantiated by the Program Class)
-class App
+class App : public clan::Application
 {
 public:
-	static int main(const std::vector<std::string> &args);
-	int start(const std::vector<std::string> &args);
+	App();
+	bool update() override;
 
 private:
 	void on_mouse_down(const clan::InputEvent &key);
@@ -50,36 +50,31 @@ private:
 	void on_input_up(const clan::InputEvent &key);
 
 private:
+	clan::SlotContainer sc;
+	clan::DisplayWindow window;
+	clan::Canvas canvas;
+	clan::Font font_large;
+	clan::Font font_small;
+	clan::Sprite tux;
+	clan::Image rock;
+	clan::BlendState blend_state_off;
+	float rotation = 0.0f;
+	clan::GameTime game_time;
+
 	int tux_radius;
 	clan::Pointf tux_position;
 	clan::Pointf last_mouse_pos;
-	bool drag_start;
+	bool drag_start = false;
 
-	bool quit;
+	bool quit = false;
 };
 
-int App::main(const std::vector<std::string> &args)
-{
+clan::ApplicationInstance<App> clanapp;
 
+App::App()
+{
 	// We support all display targets, in order listed here
-	//clan::D3DTarget::enable();
 	clan::OpenGLTarget::enable();
-
-	// Start the Application
-	App app;
-	int retval = app.start(args);
-	return retval;
-}
-
-
-// Instantiate Application, informing it where the Program is located
-clan::Application app(&App::main);
-
-// The start of the Application
-int App::start(const std::vector<std::string> &args)
-{
-	quit = false;
-	drag_start = false;
 
 	// Set the window description
 	clan::DisplayWindowDescription desc_window;
@@ -90,8 +85,7 @@ int App::start(const std::vector<std::string> &args)
 	desc_window.set_size(clan::Size(600, 600), false);
 
 	// Open the windows
-    clan::SlotContainer sc;
-	clan::DisplayWindow window(desc_window);
+	window = clan::DisplayWindow(desc_window);
 	sc.connect(window.sig_window_close(), [=](){on_window_close(); });
 	sc.connect(window.get_ic().get_mouse().sig_key_down(), clan::bind_member(this, &App::on_mouse_down));
 	sc.connect(window.get_ic().get_mouse().sig_key_dblclk(), clan::bind_member(this, &App::on_mouse_down));
@@ -100,82 +94,77 @@ int App::start(const std::vector<std::string> &args)
 	sc.connect(window.sig_lost_focus(), clan::bind_member(this, &App::on_lost_focus));
 	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 
-	clan::Canvas canvas(window);
+	canvas = clan::Canvas(window);
 
 	// Get the graphics
 	clan::FontDescription font_desc;
 	font_desc.set_height(48);
 	font_desc.set_subpixel(false);
-	clan::Font font_large("tahoma", font_desc);
+	font_large = clan::Font("tahoma", font_desc);
 
 	font_desc.set_height(30);
-	clan::Font font_small("tahoma", font_desc);
-	clan::Sprite tux(canvas, "round_tux.png");
-	tux_radius = tux.get_width()/2;
+	font_small = clan::Font("tahoma", font_desc);
+	tux = clan::Sprite(canvas, "round_tux.png");
+	tux_radius = tux.get_width() / 2;
 
-	clan::Image rock(canvas, "rock.png");
+	rock = clan::Image(canvas, "rock.png");
 
 	clan::BlendStateDescription blend_desc;
 	blend_desc.enable_blending(false);
-	clan::BlendState blend_state_off(canvas, blend_desc);
+	blend_state_off = clan::BlendState(canvas, blend_desc);
 
-	float rotation = 0.0f;
-	clan::GameTime game_time;
+	game_time.reset();
+}
 
-	// Run until someone presses escape
-	while (!quit)
-	{
-		game_time.update();
+bool App::update()
+{
+	game_time.update();
 
-		canvas.clear(clan::Colorf(0.0f,0.0f,0.0f, 0.0f));
-		rock.set_color(clan::Colorf(1.0f, 1.0f, 1.0f, 0.8f));
-		rock.draw(canvas, 0.0f, 0.0f);
+	canvas.clear(clan::Colorf(0.0f,0.0f,0.0f, 0.0f));
+	rock.set_color(clan::Colorf(1.0f, 1.0f, 1.0f, 0.8f));
+	rock.draw(canvas, 0.0f, 0.0f);
 
-		// Rotate tux
-		rotation += game_time.get_time_elapsed() * 100.0f;
-		clan::Angle angle;
-		angle.set_degrees(rotation);
-		tux.set_angle(angle);
+	// Rotate tux
+	rotation += game_time.get_time_elapsed() * 100.0f;
+	clan::Angle angle;
+	angle.set_degrees(rotation);
+	tux.set_angle(angle);
 
-		// Caculate tux position
-		clan::Pointf circle_center(  (float) (canvas.get_width()/2), (float) (canvas.get_height()/2) );
-		const float radius = 210.0f;
-		int tux_circle = 12;
-		tux_position.x = -(radius - tux_radius - tux_circle)  * cos( angle.to_radians() / 2.0f );
-		tux_position.y = (radius - tux_radius - tux_circle) * sin( angle.to_radians()/ 2.0f );
-		tux_position += circle_center;
-		tux_position.x -= tux.get_width()/2;
-		tux_position.y -= tux.get_height()/2;
+	// Caculate tux position
+	clan::Pointf circle_center(  (float) (canvas.get_width()/2), (float) (canvas.get_height()/2) );
+	const float radius = 210.0f;
+	int tux_circle = 12;
+	tux_position.x = -(radius - tux_radius - tux_circle)  * cos( angle.to_radians() / 2.0f );
+	tux_position.y = (radius - tux_radius - tux_circle) * sin( angle.to_radians()/ 2.0f );
+	tux_position += circle_center;
+	tux_position.x -= tux.get_width()/2;
+	tux_position.y -= tux.get_height()/2;
 
-		// Give tux circle blue outer outline, because it looks nice
-		canvas.fill_circle(tux_position.x + tux_radius, tux_position.y + tux_radius, tux_radius+tux_circle, clan::Colorf(0.0f, 0.0f, 1.0f, 1.0f));
+	// Give tux circle blue outer outline, because it looks nice
+	canvas.fill_circle(tux_position.x + tux_radius, tux_position.y + tux_radius, tux_radius+tux_circle, clan::Colorf(0.0f, 0.0f, 1.0f, 1.0f));
 
-		// Make see through border
-		canvas.set_blend_state(blend_state_off);
-		canvas.fill_circle(tux_position.x + tux_radius, tux_position.y + tux_radius, tux_radius+tux_circle-2, clan::Colorf(0.0f, 0.0f, 0.0f, 0.0f));
-		canvas.reset_blend_state();
+	// Make see through border
+	canvas.set_blend_state(blend_state_off);
+	canvas.fill_circle(tux_position.x + tux_radius, tux_position.y + tux_radius, tux_radius+tux_circle-2, clan::Colorf(0.0f, 0.0f, 0.0f, 0.0f));
+	canvas.reset_blend_state();
 
-		// Give tux circle blue outline, to mask the alpha channel
-		canvas.fill_circle(tux_position.x + tux_radius, tux_position.y + tux_radius, tux_radius+2, clan::Colorf(0.0f, 0.0f, 1.0f, 1.0f));
+	// Give tux circle blue outline, to mask the alpha channel
+	canvas.fill_circle(tux_position.x + tux_radius, tux_position.y + tux_radius, tux_radius+2, clan::Colorf(0.0f, 0.0f, 1.0f, 1.0f));
 
-		// Draw tux
-		tux.draw(canvas, tux_position.x, tux_position.y);
+	// Draw tux
+	tux.draw(canvas, tux_position.x, tux_position.y);
 
-		// Draw text
-		font_large.draw_text(canvas, 10-2, 50-2, "ClanLib Layered Window", clan::Colorf(0.1f, 0.1f, 0.1f, 1.0f));
-		font_large.draw_text(canvas, 10, 50, "ClanLib Layered Window", clan::Colorf::green);
-		font_small.draw_text(canvas, 60-2, 80-2, "Click mouse on the penguin to exit", clan::Colorf(0.1f, 0.1f, 0.1f, 1.0f));
-		font_small.draw_text(canvas, 60, 80, "Click mouse on the penguin to exit", clan::Colorf::green);
-		font_small.draw_text(canvas, 110-2, 110-2, "Drag rock to move window", clan::Colorf(0.1f, 0.1f, 0.1f, 1.0f));
-		font_small.draw_text(canvas, 110, 110, "Drag rock to move window", clan::Colorf::green);
+	// Draw text
+	font_large.draw_text(canvas, 10-2, 50-2, "ClanLib Layered Window", clan::Colorf(0.1f, 0.1f, 0.1f, 1.0f));
+	font_large.draw_text(canvas, 10, 50, "ClanLib Layered Window", clan::Colorf::green);
+	font_small.draw_text(canvas, 60-2, 80-2, "Click mouse on the penguin to exit", clan::Colorf(0.1f, 0.1f, 0.1f, 1.0f));
+	font_small.draw_text(canvas, 60, 80, "Click mouse on the penguin to exit", clan::Colorf::green);
+	font_small.draw_text(canvas, 110-2, 110-2, "Drag rock to move window", clan::Colorf(0.1f, 0.1f, 0.1f, 1.0f));
+	font_small.draw_text(canvas, 110, 110, "Drag rock to move window", clan::Colorf::green);
 
-		window.flip(1);
+	window.flip(1);
 
-		// This call processes user input and other events
-		clan::RunLoop::process();
-	}
-
-	return 0;
+	return !quit;
 }
 
 void App::on_mouse_down(const clan::InputEvent &key)

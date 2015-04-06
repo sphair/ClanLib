@@ -321,7 +321,7 @@ void GL1FrameBufferProvider::sync_texture()
 		if (glActiveTexture != nullptr)
 			glActiveTexture( GL_TEXTURE0 );
 
-#ifndef CL_ANDROID
+#ifndef __ANDROID__
 		glPixelZoom(1.0f, 1.0f);
 #endif
 

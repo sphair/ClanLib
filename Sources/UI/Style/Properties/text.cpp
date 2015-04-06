@@ -53,6 +53,8 @@ namespace clan
 	StylePropertyDefault style_default_font_family("font-family", StyleValue::from_keyword("array"));
 	StylePropertyDefault style_default_font_family_names("font-family-names[0]", StyleValue::from_keyword("sans-serif"));
 
+	StylePropertyDefault style_default_clan_font_rendering("-clan-font-rendering", StyleValue::from_keyword("auto"));
+
 	ColorPropertyParser style_parser_color;
 	TextAlignPropertyParser style_parser_text_align;
 	TextDecorationPropertyParser style_parser_text_decoration;
@@ -69,7 +71,9 @@ namespace clan
 	FontVariantPropertyParser style_parser_font_variant;
 	FontWeightPropertyParser style_parser_font_weight;
 
-	void ColorPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	ClanFontRenderingPropertyParser style_parser_clan_font_rendering;
+
+	void ColorPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -104,7 +108,7 @@ namespace clan
 		setter->set_value("color", color);
 	}
 
-	void TextAlignPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void TextAlignPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -135,7 +139,7 @@ namespace clan
 		setter->set_value("text-align", text_align);
 	}
 
-	void TextDecorationPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void TextDecorationPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -214,7 +218,7 @@ namespace clan
 		setter->set_value("text-decoration-blink", text_decoration_blink);
 	}
 
-	void TextIndentPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void TextIndentPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -275,7 +279,7 @@ namespace clan
 		setter->set_value("text-indent", text_indent);
 	}
 
-	void TextTransformPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void TextTransformPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -306,11 +310,11 @@ namespace clan
 		setter->set_value("text-transform", text_transform);
 	}
 
-	void TextShadowPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void TextShadowPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 	}
 
-	void WordSpacingPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void WordSpacingPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -368,7 +372,7 @@ namespace clan
 		setter->set_value("word-spacing", word_spacing);
 	}
 
-	void LetterSpacingPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void LetterSpacingPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -426,7 +430,7 @@ namespace clan
 		setter->set_value("letter-spacing", letter_spacing);
 	}
 
-	void FontPropertyParser::parse(StylePropertySetter *setter, const std::string &propname, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void FontPropertyParser::parse(StylePropertySetter *setter, const std::string &propname, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -800,7 +804,7 @@ namespace clan
 		setter->set_value_array("font-family-names", family_names);
 	}
 
-	void FontFamilyPropertyParser::parse(StylePropertySetter *setter, const std::string &propname, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void FontFamilyPropertyParser::parse(StylePropertySetter *setter, const std::string &propname, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -908,7 +912,7 @@ namespace clan
 		setter->set_value_array("font-family-names", family_names);
 	}
 
-	void FontSizePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void FontSizePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -965,7 +969,7 @@ namespace clan
 		setter->set_value("font-size", font_size);
 	}
 
-	void LineHeightPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void LineHeightPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -1010,7 +1014,7 @@ namespace clan
 		setter->set_value("line-height", line_height);
 	}
 
-	void FontStylePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void FontStylePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -1039,7 +1043,7 @@ namespace clan
 		setter->set_value("font-style", font_style);
 	}
 
-	void FontVariantPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void FontVariantPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -1066,7 +1070,7 @@ namespace clan
 		setter->set_value("font-variant", font_variant);
 	}
 
-	void FontWeightPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void FontWeightPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -1118,5 +1122,34 @@ namespace clan
 		}
 
 		setter->set_value("font-weight", font_weight);
+	}
+
+	void ClanFontRenderingPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
+	{
+		auto &tokens = parser.tokens;
+
+		StyleValue rendering;
+
+		size_t pos = 0;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && pos == tokens.size())
+		{
+			if (equals(token.value, "auto"))
+				rendering = StyleValue::from_keyword("auto");
+			else if (equals(token.value, "subpixel"))
+				rendering = StyleValue::from_keyword("subpixel");
+			else if (equals(token.value, "anti-alias"))
+				rendering = StyleValue::from_keyword("anti-alias");
+			else if (equals(token.value, "inherit"))
+				rendering = StyleValue::from_keyword("inherit");
+			else
+				return;
+		}
+		else
+		{
+			return;
+		}
+
+		setter->set_value("-clan-font-rendering", rendering);
 	}
 }

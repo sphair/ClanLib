@@ -64,6 +64,7 @@ public:
 	static OverlapResult aabb(const AxisAlignedBoundingBox &a, const AxisAlignedBoundingBox &b);
 	static Result frustum_aabb(const FrustumPlanes &frustum, const AxisAlignedBoundingBox &box);
 	static Result frustum_obb(const FrustumPlanes &frustum, const OrientedBoundingBox &box);
+	static OverlapResult ray_aabb(const Vec3f &ray_start, const Vec3f &ray_end, const AxisAlignedBoundingBox &box);
 };
 
 }

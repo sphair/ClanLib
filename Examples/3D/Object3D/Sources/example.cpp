@@ -54,10 +54,14 @@
 	#endif
 #endif
 
-// The start of the Application
-int App::start(const std::vector<std::string> &args)
+clan::ApplicationInstance<App> clanapp;
+
+App::App()
 {
-	quit = false;
+	// We support all display targets, in order listed here
+	clan::D3DTarget::enable();
+	clan::OpenGLTarget::enable();
+
     DisplayWindowDescription desc;
 
 	desc.set_title("ClanLib Object 3D Example");
@@ -66,77 +70,71 @@ int App::start(const std::vector<std::string> &args)
 	desc.set_allow_resize(true);
 	desc.set_depth_size(16);
 
-	DisplayWindow window(desc);
-    SlotContainer cc;
+	window = DisplayWindow(desc);
 
 	// Connect the Window close event
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
+	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 
-	Canvas canvas(window);
+	canvas = Canvas(window);
 
 	// Setup graphic store
-	GraphicStore graphic_store(canvas);
-	scene.gs = &graphic_store;
+	graphic_store = std::make_shared<GraphicStore>(canvas);
+	scene.gs = graphic_store.get();
 
 	// Prepare the display
 	RasterizerStateDescription rasterizer_state_desc;
 	rasterizer_state_desc.set_culled(true);
 	rasterizer_state_desc.set_face_cull_mode(cull_back);
 	rasterizer_state_desc.set_front_face(face_clockwise);
-	RasterizerState raster_state(canvas, rasterizer_state_desc);
+	raster_state = RasterizerState(canvas, rasterizer_state_desc);
 
 	DepthStencilStateDescription depth_state_desc;
 	depth_state_desc.enable_depth_write(true);
 	depth_state_desc.enable_depth_test(true);
 	depth_state_desc.enable_stencil_test(false);
 	depth_state_desc.set_depth_compare_function(compare_lequal);
-	DepthStencilState depth_write_enabled(canvas, depth_state_desc);
+	depth_write_enabled = DepthStencilState(canvas, depth_state_desc);
 	
   	create_scene(canvas);
 
-	clan::GameTime game_time;
+	game_time.reset();
+}
 
-	float angle = 0.0f;
-	// Run until someone presses escape
-	while (!quit)
-	{
-		game_time.update();
-		int time_delta_ms = game_time.get_time_elapsed_ms();
+bool App::update()
+{
+	game_time.update();
+	int time_delta_ms = game_time.get_time_elapsed_ms();
 
-		canvas.clear(Colorf::black);
-		canvas.clear_depth(1.0f);
+	canvas.clear(Colorf::black);
+	canvas.clear_depth(1.0f);
 
-		angle += time_delta_ms / 10.0f;
-		if (angle >= 360.0f)
-			angle -= 360.0f;
+	angle += time_delta_ms / 10.0f;
+	if (angle >= 360.0f)
+		angle -= 360.0f;
 
-		scene_teapot->rotation_y.set_degrees(angle);
-		scene_clanlib->rotation_y.set_degrees(angle);
-		scene_tuxball->rotation_y.set_degrees(angle);
+	scene_teapot->rotation_y.set_degrees(angle);
+	scene_clanlib->rotation_y.set_degrees(angle);
+	scene_tuxball->rotation_y.set_degrees(angle);
 
-		// Render the scene using euler angles
-		calculate_matricies(canvas);
-		update_light(canvas);
+	// Render the scene using euler angles
+	calculate_matricies(canvas);
+	update_light(canvas);
 
-		canvas.set_depth_stencil_state(depth_write_enabled);
-		canvas.set_rasterizer_state(raster_state);
-		render(canvas);
+	canvas.set_depth_stencil_state(depth_write_enabled);
+	canvas.set_rasterizer_state(raster_state);
+	render(canvas);
 
-		canvas.reset_rasterizer_state();
-		canvas.reset_depth_stencil_state();
+	canvas.reset_rasterizer_state();
+	canvas.reset_depth_stencil_state();
 		
-		// Flip the display, showing on the screen what we have drawed
-		// since last call to flip()
-		window.flip(1);
+	// Flip the display, showing on the screen what we have drawed
+	// since last call to flip()
+	window.flip(1);
 
-		// This call processes user input and other events
-		RunLoop::process();
-	}
-
-	return 0;
+	return !quit;
 }
 void App::render(GraphicContext &gc)
 {

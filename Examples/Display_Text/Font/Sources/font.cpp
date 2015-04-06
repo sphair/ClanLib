@@ -29,18 +29,22 @@
 #include "precomp.h"
 #include "font.h"
 
-// The start of the Application
-int App::start(const std::vector<std::string> &args)
-{
-	quit = false;
+clan::ApplicationInstance<App> clanapp;
 
-    clan::SlotContainer slots;
+App::App()
+{
+	// We support all display targets, in order listed here
+#ifdef WIN32
+	clan::D3DTarget::enable();
+#endif
+	clan::OpenGLTarget::enable();
+
 	DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("Font Example Application");
 	win_desc.set_size(Size( 1000, 700 ), false);
 
-	DisplayWindow window(win_desc);
+	window = DisplayWindow(win_desc);
 	slots.connect(window.sig_window_close(), this, &App::on_window_close);
 	slots.connect(window.get_ic().get_keyboard().sig_key_up(), this, &App::on_input_up);
 
@@ -48,108 +52,145 @@ int App::start(const std::vector<std::string> &args)
 
 	canvas = Canvas(window);
 
-	/* FIXME
-	GUITopLevelDescription gui_desc;
-	gui_desc.set_title("Options");
-	gui_desc.set_position(Rect(10, 10, 250, 400), false);
-	GUIComponent gui_window(&gui, gui_desc, "window");
+	clan::Texture2D gui_texture = clan::Texture2D(canvas, (int)std::round(250 * canvas.get_pixel_ratio()), (int)std::round(500 * canvas.get_pixel_ratio()));
+	gui_texture.set_pixel_ratio(canvas.get_pixel_ratio());
+	gui_image = clan::Image(gui_texture, gui_texture.get_size());
+	clan::FrameBuffer gui_framebuffer = clan::FrameBuffer(canvas);
+	gui_framebuffer.attach_color(0, gui_texture);
+	gui_canvas = clan::Canvas(canvas, gui_framebuffer);
+
+	clan::FileResourceDocument doc(clan::FileSystem("../../ThemeAero"));
+	clan::ResourceManager resources = clan::FileResourceManager::create(doc);
+	ui_thread = clan::UIThread(resources);
+
+	root = std::make_shared<clan::TextureView>(gui_canvas);
+
+	root->set_event_window(window);
+	root->set_cursor_window(window);
+
+	root->set_rect(clan::Rect(10, 10, clan::Size(gui_image.get_size())));
 
 	int offset_x = 10;
 	int offset_y = 8;
-	int width = 200;
+	int width = 220;
+	int small_width = 70;
 	int height = 20;
-	const int gap = 26;
+	const int gap = 38;
 
-	PushButton button_class_system(&gui_window);
-	button_class_system.set_geometry(Rect(offset_x, offset_y, offset_x + width, offset_y + height));
-	button_class_system.func_clicked() = bind_member(this, &App::on_button_clicked_class_system);
-	button_class_system.set_text("Class: System");
+	auto button_class_system = Theme::create_button();
+	button_class_system->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:auto;", offset_x, offset_y, width);
+	button_class_system->func_clicked() = clan::bind_member(this, &App::on_button_clicked_class_system);
+	button_class_system->label()->set_text("Class: System");
+	root->add_subview(button_class_system);
 	offset_y += gap;
 
-	PushButton button_class_sprite(&gui_window);
-	button_class_sprite.set_geometry(Rect(offset_x, offset_y, offset_x + width, offset_y + height));
-	button_class_sprite.func_clicked() = bind_member(this, &App::on_button_clicked_class_sprite);
-	button_class_sprite.set_text("Class: Sprite");
+	auto button_class_sprite = Theme::create_button();
+	button_class_sprite->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:auto;", offset_x, offset_y, width);
+	button_class_sprite->func_clicked() = bind_member(this, &App::on_button_clicked_class_sprite);
+	button_class_sprite->label()->set_text("Class: Sprite");
+	root->add_subview(button_class_sprite);
 	offset_y += gap;
 
-	PushButton button_typeface_tahoma(&gui_window);
-	button_typeface_tahoma_ptr = &button_typeface_tahoma;
-	button_typeface_tahoma.set_geometry(Rect(offset_x, offset_y, offset_x + width, offset_y + height));
-	button_typeface_tahoma.func_clicked() = bind_member(this, &App::on_button_clicked_typeface_tahoma);
-	button_typeface_tahoma.set_text("Typeface: Tahoma");
+	button_typeface_tahoma = Theme::create_button();
+	button_typeface_tahoma->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:auto;", offset_x, offset_y, width);
+	button_typeface_tahoma->func_clicked() = bind_member(this, &App::on_button_clicked_typeface_tahoma);
+	button_typeface_tahoma->label()->set_text("Typeface: Tahoma");
+	root->add_subview(button_typeface_tahoma);
 	offset_y += gap;
 
-	PushButton button_typeface_sans(&gui_window);
-	button_typeface_sans_ptr = &button_typeface_sans;
-	button_typeface_sans.set_geometry(Rect(offset_x, offset_y, offset_x + width, offset_y + height));
-	button_typeface_sans.func_clicked() = bind_member(this, &App::on_button_clicked_typeface_sans);
-	button_typeface_sans.set_text("Typeface: Microsoft Sans Serif");
+	button_typeface_sans = Theme::create_button();
+	button_typeface_sans->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:auto;", offset_x, offset_y, width);
+	button_typeface_sans->func_clicked() = bind_member(this, &App::on_button_clicked_typeface_sans);
+	button_typeface_sans->label()->set_text("Typeface: Microsoft Sans Serif");
+	root->add_subview(button_typeface_sans);
 	offset_y += gap;
 
-	PushButton button_typeface_bitstream(&gui_window);
-	button_typeface_bitstream_ptr = &button_typeface_bitstream;
-	button_typeface_bitstream.set_geometry(Rect(offset_x, offset_y, offset_x + width, offset_y + height));
-	button_typeface_bitstream.func_clicked() = bind_member(this, &App::on_button_clicked_typeface_bitstream);
-	button_typeface_bitstream.set_text("Typeface: Bitstream Vera Sans");
+	button_typeface_bitstream = Theme::create_button();
+	button_typeface_bitstream->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:auto;", offset_x, offset_y, width);
+	button_typeface_bitstream->func_clicked() = bind_member(this, &App::on_button_clicked_typeface_bitstream);
+	button_typeface_bitstream->label()->set_text("Typeface: Bitstream Vera Sans");
+	root->add_subview(button_typeface_bitstream);
 	offset_y += gap;
 
+	checkbox_italic = Theme::create_checkbox();
+	checkbox_italic->style()->set("position: absolute; left:%1px; top:%2px", offset_x, offset_y);
+	checkbox_italic->func_state_changed() = bind_member(this, &App::on_checkbox_state_italic);
+	root->add_subview(checkbox_italic);
+	auto label = Theme::create_label();
+	label->set_text("Italic");
+	label->style()->set("position: absolute; left:%1px; top:%2px", offset_x + 16, offset_y - 3);
+	root->add_subview(label);
 
-	CheckBox checkbox3(&gui_window);
-	checkbox3.set_geometry(Rect(offset_x, offset_y, offset_x + 80, offset_y + height));
-	checkbox3.func_state_changed() = bind_member(this, &App::on_checkbox_state_italic);
-	checkbox3.set_text("Italic");
-
-	CheckBox checkbox4(&gui_window);
-	checkbox4.set_checked(true);
-	checkbox4.set_geometry(Rect(offset_x+100, offset_y, offset_x + 180, offset_y + height));
-	checkbox4.func_state_changed() = bind_member(this, &App::on_checkbox_state_antialias);
-	checkbox4.set_text("Anti Alias");
+	checkbox_antialias = Theme::create_checkbox();
+	checkbox_antialias->set_check(true);
+	checkbox_antialias->style()->set("position: absolute; left:%1px; top:%2px", offset_x + 100, offset_y);
+	checkbox_antialias->func_state_changed() = bind_member(this, &App::on_checkbox_state_antialias);
+	root->add_subview(checkbox_antialias);
+	label = Theme::create_label();
+	label->set_text("Anti Alias");
+	label->style()->set("position: absolute; left:%1px; top:%2px", offset_x + 100+ 16, offset_y - 3);
+	root->add_subview(label);
 	offset_y += gap;
 
-	CheckBox checkbox5(&gui_window);
-	checkbox5.set_checked(true);
-	checkbox5.set_geometry(Rect(offset_x, offset_y, offset_x + 120, offset_y + height));
-	checkbox5.func_state_changed() = bind_member(this, &App::on_checkbox_state_subpixel);
-	checkbox5.set_text("SubPixel Rendering");
+	checkbox_subpixel = Theme::create_checkbox();
+	checkbox_subpixel->set_check(true);
+	checkbox_subpixel->style()->set("position: absolute; left:%1px; top:%2px", offset_x, offset_y);
+	checkbox_subpixel->func_state_changed() = bind_member(this, &App::on_checkbox_state_subpixel);
+	root->add_subview(checkbox_subpixel);
+	label = Theme::create_label();
+	label->set_text("SubPixel Rendering");
+	label->style()->set("position: absolute; left:%1px; top:%2px", offset_x + 16, offset_y - 3);
+	root->add_subview(label);
 	offset_y += gap;
 
-	PushButton button_weight_light(&gui_window);
-	button_weight_light.set_geometry(Rect(offset_x, offset_y, offset_x + 60, offset_y + height));
-	button_weight_light.func_clicked() = bind_member(this, &App::on_button_clicked_weight_light);
-	button_weight_light.set_text("Light");
-	PushButton button_weight_normal(&gui_window);
-	button_weight_normal.set_geometry(Rect(offset_x+70, offset_y, offset_x + 130, offset_y + height));
-	button_weight_normal.func_clicked() = bind_member(this, &App::on_button_clicked_weight_normal);
-	button_weight_normal.set_text("Normal");
-	PushButton button_weight_bold(&gui_window);
-	button_weight_bold.set_geometry(Rect(offset_x+140, offset_y, offset_x + 200, offset_y + height));
-	button_weight_bold.func_clicked() = bind_member(this, &App::on_button_clicked_weight_bold);
-	button_weight_bold.set_text("Bold");
+	auto button_weight_light = Theme::create_button();
+	button_weight_light->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:auto;", offset_x, offset_y, small_width);
+	button_weight_light->func_clicked() = bind_member(this, &App::on_button_clicked_weight_light);
+	button_weight_light->label()->set_text("Light");
+	root->add_subview(button_weight_light);
+	auto button_weight_normal = Theme::create_button();
+	button_weight_normal->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:auto;", offset_x + small_width + 5, offset_y, small_width);
+	button_weight_normal->func_clicked() = bind_member(this, &App::on_button_clicked_weight_normal);
+	button_weight_normal->label()->set_text("Normal");
+	root->add_subview(button_weight_normal);
+	auto button_weight_bold = Theme::create_button();
+	button_weight_bold->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:auto;", offset_x + (small_width + 5) * 2, offset_y, small_width);
+	button_weight_bold->func_clicked() = bind_member(this, &App::on_button_clicked_weight_bold);
+	button_weight_bold->label()->set_text("Bold");
+	root->add_subview(button_weight_bold);
 	offset_y += gap;
 
-	PushButton button_size_16(&gui_window);
-	button_size_16.set_geometry(Rect(offset_x, offset_y, offset_x + 60, offset_y + height));
-	button_size_16.func_clicked() = bind_member(this, &App::on_button_clicked_size_16);
-	button_size_16.set_text("Size 16");
-	PushButton button_size_32(&gui_window);
-	button_size_32.set_geometry(Rect(offset_x+70, offset_y, offset_x + 130, offset_y + height));
-	button_size_32.func_clicked() = bind_member(this, &App::on_button_clicked_size_32);
-	button_size_32.set_text("Size 32");
-	PushButton button_size_64(&gui_window);
-	button_size_64.set_geometry(Rect(offset_x+140, offset_y, offset_x + 200, offset_y + height));
-	button_size_64.func_clicked() = bind_member(this, &App::on_button_clicked_size_64);
-	button_size_64.set_text("Size 64");
-	offset_y += gap;
+	auto button_size_16 = Theme::create_button();
+	button_size_16->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:auto;", offset_x, offset_y, small_width);
+	button_size_16->func_clicked() = bind_member(this, &App::on_button_clicked_size_16);
+	button_size_16->label()->set_text("Size 16");
+	root->add_subview(button_size_16);
+	auto button_size_32 = Theme::create_button();
+	button_size_32->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:auto;", offset_x + small_width + 5, offset_y, small_width);
+	button_size_32->func_clicked() = bind_member(this, &App::on_button_clicked_size_32);
+	button_size_32->label()->set_text("Size 32");
+	root->add_subview(button_size_32);
+	auto button_size_64 = Theme::create_button();
+	button_size_64->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:auto;", offset_x + (small_width + 5) * 2, offset_y, small_width);
+	button_size_64->func_clicked() = bind_member(this, &App::on_button_clicked_size_64);
+	button_size_64->label()->set_text("Size 64");
+	root->add_subview(button_size_64);
+	offset_y += gap + 8;
 
-
-	LineEdit lineedit1(&gui_window);
-	lineedit_text_ptr = &lineedit1;
-	lineedit1.set_geometry(Rect(offset_x, offset_y, offset_x + width, offset_y + 30));
-	lineedit1.set_text(font_text); 
-	lineedit1.func_after_edit_changed() = bind_member(this, &App::on_lineedit_changed);
-	*/
-
+	lineedit_text = std::make_shared<clan::TextFieldView>();
+	lineedit_text->style()->set("font: 11px/20px 'Segoe UI'");
+	lineedit_text->style()->set("margin: 5px");
+	lineedit_text->style()->set("background: #efefef");
+	lineedit_text->style()->set("border: 1px solid black");
+	lineedit_text->style()->set("border-radius: 3px");
+	lineedit_text->style()->set("padding: 2px 5px 2px 5px");
+	lineedit_text->style()->set("width: 128px");
+	lineedit_text->style()->set("box-shadow: 0 0 5px rgba(100,100,200,0.2)");
+	lineedit_text->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:auto;", offset_x, offset_y, width);
 	font_text = "Ω(The quick brown fox 0123456789)";
+	lineedit_text->set_text(font_text);
+	slots.connect(lineedit_text->sig_selection_changed(), bind_member(this, &App::on_lineedit_changed));
+	root->add_subview(lineedit_text);
 
 	last_fps = 0.0f;
 	selected_fontclass = font_ttf;
@@ -161,14 +202,15 @@ int App::start(const std::vector<std::string> &args)
 
 	small_font = clan::Font("Tahoma", 16);
 
-	GameTime game_time;
-	while(!quit)
-	{
-		game_time.update();
-		render(window, game_time);
-	}
+	game_time.reset();
+}
 
-	return 0;
+bool App::update()
+{
+	game_time.update();
+	render(window, game_time);
+
+	return !quit;
 }
 
 // A key was pressed
@@ -188,9 +230,10 @@ void App::on_window_close()
 
 void App::render(DisplayWindow &window, GameTime &game_time)
 {
-	canvas.set_map_mode(MapMode(map_2d_upper_left));
-
 	canvas.clear(Colorf(0.0f,0.0f,0.2f, 1.0f));
+
+	root->update();
+	gui_image.draw(canvas, 0, 0);
 
 	draw_font_example();
 	draw_font_info();

@@ -71,7 +71,7 @@ public:
 	///
 	/// \param s = Size structure to construct this one from.
 	Sizex(const Sizex<Type> &s)
-	{ width = s.width; height = s.height; }
+	: width(s.width), height(s.height) {}
 
 /// \}
 /// \name Attributes

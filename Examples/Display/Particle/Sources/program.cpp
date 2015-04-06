@@ -29,18 +29,79 @@
 #include "precomp.h"
 #include "program.h"
 #include "particle.h"
+#include "Demos/simple.h"
+#include "Demos/circle.h"
+#include "Demos/circle2.h"
+#include "Demos/cmotion.h"
+#include "Demos/explosion.h"
+#include "Demos/msmall.h"
+#include "Demos/shooting.h"
+#include "Demos/usercollision.h"
 
-int Program::main(const std::vector<std::string> &args)
+clan::ApplicationInstance<Program> clanapp;
+
+DemoState Program::state = DemoState::menu;
+
+Program::Program()
 {
 	// We support all display targets, in order listed here
-	clan::OpenGLTarget::enable();
 	clan::D3DTarget::enable();
+	clan::OpenGLTarget::enable();
 
-	// Start the Application
-	Particle app;
-	int retval = app.start(args);
-	return retval;
+	window = clan::DisplayWindow("LinearParticle Example", 640, 480, false);
+
 }
 
-// Instantiate Application, informing it where the Program is located
-clan::Application app(&Program::main);
+bool Program::update()
+{
+	DemoState current_state = state;
+	if (!demo)
+	{
+		switch (current_state)
+		{
+		case DemoState::menu:
+			demo = clan::make_unique<Particle>(window);
+			break;
+		case DemoState::simple:
+			demo = clan::make_unique<DemoSimple>(window);
+			break;
+		case DemoState::circle:
+			demo = clan::make_unique<DemoCircle>(window);
+			break;
+		case DemoState::circle2:
+			demo = clan::make_unique<DemoCircle2>(window);
+			break;
+		case DemoState::msmall:
+			demo = clan::make_unique<DemoMSmall>(window);
+			break;
+		case DemoState::shooting:
+			demo = clan::make_unique<DemoShooting>(window);
+			break;
+		case DemoState::explosion:
+			demo = clan::make_unique<DemoExplosion>(window);
+			break;
+		case DemoState::cmotion:
+			demo = clan::make_unique<DemoCMotion>(window);
+			break;
+		case DemoState::usercollision:
+			demo = clan::make_unique<DemoUserCollision>(window);
+			break;
+		default:
+			throw clan::Exception("Invalid State");
+		}
+
+	}
+
+	bool result = demo->update();
+	if (result == false)
+	{
+		if (current_state == DemoState::menu)	// Main menu quit
+			return false;
+		state = DemoState::menu;	// Return to main menu
+	}
+
+	if (current_state != state)
+		demo.reset();
+
+	return true;
+}

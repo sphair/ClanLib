@@ -30,16 +30,15 @@
 #include "precomp.h"
 #include "basic2d.h"
 
-// The start of the Application
-int Basic2D::start(const std::vector<std::string> &args)
+clan::ApplicationInstance<Basic2D> clanapp;
+
+Basic2D::Basic2D()
 {
-	quit = false;
-
 	// We support all display targets, in order listed here
+#ifdef WIN32
 	clan::D3DTarget::enable();
+#endif
 	clan::OpenGLTarget::enable();
-
-    clan::SlotContainer sc;
 
 	// Set the window
 	clan::DisplayWindowDescription desc;
@@ -47,8 +46,8 @@ int Basic2D::start(const std::vector<std::string> &args)
 	desc.set_size(clan::Sizef(640.0f, 480.0f), true);
 	desc.set_allow_resize(true);
 
-	clan::DisplayWindow window(desc);
-	clan::Canvas canvas(window);
+	window = clan::DisplayWindow(desc);
+	canvas = clan::Canvas(window);
 
 	// Connect the Window close event
 	sc.connect(window.sig_window_close(), [&](){quit = true; });
@@ -57,65 +56,60 @@ int Basic2D::start(const std::vector<std::string> &args)
 	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &Basic2D::on_input_up));
 
 	// Load a sprite from a png-file
-	clan::Image spr_logo(canvas, "Resources/logo.png");
-	clan::Font font("tahoma", 24);
+	logo = clan::Image(canvas, "Resources/logo.png");
+	font = clan::Font("tahoma", 24);
 
-	float sin_count = 0.0f;
+	game_time.reset();
+}
 
-	clan::GameTime game_time;
+bool Basic2D::update()
+{
+	game_time.update();
 
-	// Run until someone presses escape
-	while (!quit)
-	{
-		game_time.update();
+	// Update the moving elements
+	sin_count += 4.0f * game_time.get_time_elapsed();
 
-		// Update the moving elements
-		sin_count += 4.0f * game_time.get_time_elapsed();
+	// Clear the display in a dark blue nuance
+	canvas.clear(clan::Colorf(0.0f, 0.0f, 0.2f));
 
-		// Clear the display in a dark blue nuance
-		canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
+	// Show the logo image.
+	clan::Sizef canvas_size = canvas.get_size();
+	logo.draw(canvas, canvas_size.width - logo.get_width(), canvas_size.height - logo.get_height());
 
-		// Show the logo image.
-		clan::Sizef canvas_size = canvas.get_size();
-		spr_logo.draw(canvas, canvas_size.width-spr_logo.get_width(), canvas_size.height-spr_logo.get_height());
+	std::string text("Welcome to the ClanLib SDK");
+	clan::Sizef text_size = font.measure_text(canvas, text).bbox_size;
+	canvas.draw_line(0, 32, (float)canvas_size.width, 32, clan::Colorf(0.5f, 0.0f, 0.0f));
+	font.draw_text(canvas, ((canvas.get_width() - text_size.width) / 2), 32, text, clan::Colorf::white);
 
-		std::string text("Welcome to the ClanLib SDK");
-		clan::Sizef text_size = font.measure_text(canvas, text).bbox_size;
-		font.draw_text(canvas, ( ( canvas.get_width() - text_size.width) / 2), 32, text, clan::Colorf::white);
+	// Draw moving lines
+	float ypos = sin(sin_count)*60.0f + 120.0f;
+	canvas.draw_line(0, ypos - 1.0f, (float)canvas_size.width, ypos - 1.0f, clan::Colorf(0.5f, 0.0f, 0.0f));
+	canvas.draw_line(0, ypos + 198.0f, (float)canvas_size.width, ypos + 198.0f, clan::Colorf(0.5f, 0.0f, 0.0f));
 
-		// Draw moving lines
-		float ypos = sin(sin_count)*60.0f + 120.0f;
-		canvas.draw_line(0, ypos-1.0f, (float) canvas_size.width, ypos-1.0f,clan::Colorf(0.5f, 0.0f, 0.0f));
-		canvas.draw_line(0, ypos+198.0f, (float) canvas_size.width, ypos+198.0f, clan::Colorf(0.5f, 0.0f, 0.0f));
+	// Add a clipping rect
+	canvas.push_cliprect(clan::Rectf(0, ypos, canvas_size.width, ypos + 198.0f));
 
-		// Add a clipping rect
-		canvas.push_cliprect(clan::Rectf(0, ypos, canvas_size.width, ypos+198.0f));
+	// Draw a rectangle in the center of the screen
+	// going from (240, 140) -> (440, 340) _not_ including the 
+	// pixels in the right-most column and bottom-most row (440, 340)
+	canvas.fill_rect(clan::Rectf(240.0f, 140.0f, 440.0f, 340.0f), clan::Colorf::white);
 
-		// Draw a rectangle in the center of the screen
-		// going from (240, 140) -> (440, 340) _not_ including the 
-		// pixels in the right-most column and bottom-most row (440, 340)
-		canvas.fill_rect(clan::Rectf(240.0f, 140.0f, 440.0f, 340.0f), clan::Colorf::white);
+	// Frame the rectangle with red lines
+	canvas.draw_box(240.0f, 140.0f, 440.0f, 340.0f, clan::Colorf(1.0f, 0.0f, 0.0f));
 
-		// Frame the rectangle with red lines
-		canvas.draw_box(240.0f, 140.0f, 440.0f, 340.0f, clan::Colorf(1.0f, 0.0f, 0.0f));
+	// Show a few alpha-blending moving rectangles that moves in circles
+	float x = cos(sin_count)*120.0f;
+	float y = sin(sin_count)*120.0f;
+	canvas.fill_rect(clan::Rectf(320.0f + x - 30.0f, 240.0f + y - 30.0f, clan::Sizef(30.0f, 30.0f)), clan::Colorf(0.0f, 1.0f, 0.0, 0.5f));
+	x = cos(sin_count + clan::PI)*120.0f;
+	y = sin(sin_count + clan::PI)*120.0f;
+	canvas.fill_rect(clan::Rectf(320.0f + x - 30.0f, 240 + y - 30.0f, clan::Sizef(30.0f, 30.0f)), clan::Colorf(1.0f, 1.0f, 0.0, 0.5f));
 
-		// Show a few alpha-blending moving rectangles that moves in circles
-		float x = cos(sin_count)*120.0f;
-		float y = sin(sin_count)*120.0f;
-		canvas.fill_rect(clan::Rectf( 320.0f + x -30.0f, 240.0f + y -30.0f, clan::Sizef(30.0f, 30.0f)), clan::Colorf(0.0f, 1.0f, 0.0, 0.5f));
-		x = cos(sin_count+clan::PI)*120.0f;
-		y = sin(sin_count+clan::PI)*120.0f;
-		canvas.fill_rect(clan::Rectf( 320.0f + x -30.0f, 240 + y -30.0f,clan:: Sizef(30.0f, 30.0f)), clan::Colorf(1.0f, 1.0f, 0.0, 0.5f));
+	canvas.pop_cliprect();
 
-		canvas.pop_cliprect();
+	window.flip(1);
 
-		window.flip(1);
-
-		// This call processes user input and other events
-		clan::RunLoop::process(0);
-	}
-
-	return 0;
+	return !quit;
 }
 
 // A key was pressed
@@ -126,5 +120,3 @@ void Basic2D::on_input_up(const clan::InputEvent &key)
 		quit = true;
 	}
 }
-
-

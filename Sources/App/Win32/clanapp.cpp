@@ -39,6 +39,7 @@
 #include "API/Core/System/console_window.h"
 #include "API/Core/Text/console.h"
 #include "API/Core/ErrorReporting/exception_dialog.h"
+#include "API/display.h"
 
 #ifdef _MSC_VER
 #include <crtdbg.h>
@@ -52,6 +53,33 @@
 namespace clan
 {
 	static void calc_commandline(std::vector<std::string> &out_args);
+
+	static ApplicationInstancePrivate *app_instance = 0;
+	static bool enable_catch_exceptions = false;
+	static int timing_timeout = 0;
+
+	static std::vector<std::string> command_line_args;
+
+	ApplicationInstancePrivate::ApplicationInstancePrivate(bool catch_exceptions)
+	{
+		app_instance = this;
+		enable_catch_exceptions = catch_exceptions;
+	}
+
+	const std::vector<std::string> &Application::main_args()
+	{
+		return command_line_args;
+	}
+
+	void Application::use_animation_frame_timing(int swap_interval)
+	{
+		timing_timeout = 0;
+	}
+
+	void Application::use_timeout_timing(int timeout)
+	{
+		timing_timeout = timeout;
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -65,8 +93,6 @@ int WINAPI WinMain(
 {
 	using namespace clan;
 
-	int retval;
-
 #if defined(_DEBUG) && defined(_MSC_VER)
 	// Visual C++ memoryleak debugging. By setting the _CRTDBG_LEAK_CHECK_DF
 	// flag, we produce a memory leak dump at exit in the visual c++ debug output
@@ -78,42 +104,58 @@ int WINAPI WinMain(
 
 	// Did the game developer remember to create one global application
 	// interface?
-	if (clan::Application::main == 0)
+	if (clan::app_instance == 0)
 	{
 		MessageBox(NULL, TEXT("No program instance found"), TEXT("ClanLib/Win32"), 32);
 		return 0;
 	}
 
-	// Get commandline arguments.
-	std::vector<std::string> args;
-	calc_commandline(args);
+	calc_commandline(command_line_args);
 
-	// Call clanapp main:
-	if (clan::Application::enable_catch_exceptions)
+	int retval = 0;
+
+	if (clan::enable_catch_exceptions)
 	{
 		try
 		{
-			retval = clan::Application::main(args);
+			std::unique_ptr<Application> app = app_instance->create();
+			while (true)
+			{
+				try
+				{
+					if (!app->update())
+						break;
+
+					if (!clan::RunLoop::process(timing_timeout))
+						break;
+				}
+				catch (...)
+				{
+					std::exception_ptr exception = std::current_exception();
+					ExceptionDialog::show(exception);
+					retval = -1;
+					break;
+				}
+			}
 		}
-		catch(clan::Exception &exception)
+		catch (...)
 		{
-			// Create a console window for text-output if not available
-			//std::string console_name("Console");
-			//if (!args.empty())
-			//	console_name = args[0];
-			//clan::ConsoleWindow console(console_name, 80, 160);
-			//clan::Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
-			//console.display_close_message();
-
+			std::exception_ptr exception = std::current_exception();
 			ExceptionDialog::show(exception);
-
 			retval = -1;
 		}
-
 	}
 	else
 	{
-		retval = clan::Application::main(args);
+		std::unique_ptr<Application> app = app_instance->create();
+		while (true)
+		{
+			if (!app->update())
+				break;
+
+			if (!clan::RunLoop::process(timing_timeout))
+				break;
+		}
 	}
 
 	return retval;
@@ -167,10 +209,3 @@ namespace clan
 		}
 	}
 }
-
-/////////////////////////////////////////////////////////////////////////////
-// clan::Application:
-
-clan::Application::MainFunction *clan::Application::main = 0;
-bool clan::Application::enable_catch_exceptions = true;
-

@@ -7,14 +7,14 @@ public:
 	ChatLine();
 	ChatLine(const std::string &nick, const clan::Colorf &nick_color);
 
-	void add_text(const clan::TextStyle &style, const std::string &text, int id = -1);
+	void add_text(const std::shared_ptr<clan::Style> &style, const std::string &text, int id = -1);
 
 private:
 	struct InlineText
 	{
-		InlineText(const clan::TextStyle &style, const std::string &text, int id) : style(style), text(text), id(id) { }
+		InlineText(const std::shared_ptr<clan::Style> &style, const std::string &text, int id) : style(style), text(text), id(id) { }
 
-		clan::TextStyle style;
+		std::shared_ptr<clan::Style> style;
 		std::string text;
 		int id;
 	};

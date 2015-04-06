@@ -33,8 +33,8 @@
 #include "API/Core/System/exception.h"
 #include "service_unix.h"
 #include <iostream>
-#include <signal.h>
 #include <thread>
+#include <signal.h>
 
 namespace clan
 {

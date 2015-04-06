@@ -41,6 +41,10 @@ namespace clan
 	StylePropertyDefault style_default_flex_direction("flex-direction", StyleValue::from_keyword("row"));
 	StylePropertyDefault style_default_flex_wrap("flex-wrap", StyleValue::from_keyword("nowrap"));
 	StylePropertyDefault style_default_order("order", StyleValue::from_number(0.0f));
+	StylePropertyDefault style_default_align_content("align-content", StyleValue::from_keyword("stretch"));
+	StylePropertyDefault style_default_align_items("align-items", StyleValue::from_keyword("stretch"));
+	StylePropertyDefault style_default_align_self("align-self", StyleValue::from_keyword("auto"));
+	StylePropertyDefault style_default_justify_content("justify-content", StyleValue::from_keyword("flex-start"));
 
 	FlexPropertyParser style_parser_flex;
 	FlexBasisPropertyParser style_parser_flex_basis;
@@ -50,8 +54,12 @@ namespace clan
 	FlexShrinkPropertyParser style_parser_flex_shrink;
 	FlexWrapPropertyParser style_parser_flex_wrap;
 	OrderPropertyParser style_parser_order;
+	AlignContentPropertyParser style_parser_align_content;
+	AlignItemsPropertyParser style_parser_align_items;
+	AlignSelfPropertyParser style_parser_align_self;
+	JustifyContentPropertyParser style_parser_justify_content;
 
-	void FlexPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void FlexPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -67,6 +75,16 @@ namespace clan
 			{
 				flex_grow = StyleValue::from_number(0.0f);
 				flex_shrink = StyleValue::from_number(0.0f);
+				flex_basis = StyleValue::from_keyword("main-size");
+
+				setter->set_value("flex-grow", flex_grow);
+				setter->set_value("flex-shrink", flex_shrink);
+				setter->set_value("flex-basis", flex_basis);
+			}
+			else if (equals(token.value, "auto"))
+			{
+				flex_grow = StyleValue::from_number(1.0f);
+				flex_shrink = StyleValue::from_number(1.0f);
 				flex_basis = StyleValue::from_keyword("main-size");
 
 				setter->set_value("flex-grow", flex_grow);
@@ -189,7 +207,7 @@ namespace clan
 		return true;
 	}
 
-	void FlexBasisPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void FlexBasisPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -234,7 +252,7 @@ namespace clan
 		setter->set_value("flex-basis", flex_basis);
 	}
 
-	void FlexDirectionPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void FlexDirectionPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -265,7 +283,7 @@ namespace clan
 		setter->set_value("flex-direction", flex_direction);
 	}
 
-	void FlexFlowPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void FlexFlowPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -354,7 +372,7 @@ namespace clan
 		return true;
 	}
 
-	void FlexGrowPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void FlexGrowPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -381,7 +399,7 @@ namespace clan
 		setter->set_value("flex-grow", flex_grow);
 	}
 
-	void FlexShrinkPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void FlexShrinkPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -406,7 +424,7 @@ namespace clan
 		}
 	}
 
-	void FlexWrapPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void FlexWrapPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -435,7 +453,7 @@ namespace clan
 		setter->set_value("flex-wrap", flex_wrap);
 	}
 
-	void OrderPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void OrderPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -468,5 +486,175 @@ namespace clan
 		}
 
 		setter->set_value("order", order);
+	}
+
+	void AlignContentPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
+	{
+		auto &tokens = parser.tokens;
+
+		size_t pos = 0;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && pos == tokens.size())
+		{
+			StyleValue align_content;
+			if (equals(token.value, "flex-start"))
+			{
+				align_content = StyleValue::from_keyword("flex-start");
+				setter->set_value("align-content", align_content);
+			}
+			else if (equals(token.value, "flex-end"))
+			{
+				align_content = StyleValue::from_keyword("flex-end");
+				setter->set_value("align-content", align_content);
+			}
+			else if (equals(token.value, "center"))
+			{
+				align_content = StyleValue::from_keyword("center");
+				setter->set_value("align-content", align_content);
+			}
+			else if (equals(token.value, "space-between"))
+			{
+				align_content = StyleValue::from_keyword("space-between");
+				setter->set_value("align-content", align_content);
+			}
+			else if (equals(token.value, "space-around"))
+			{
+				align_content = StyleValue::from_keyword("space-around");
+				setter->set_value("align-content", align_content);
+			}
+			else if (equals(token.value, "stretch"))
+			{
+				align_content = StyleValue::from_keyword("stretch");
+				setter->set_value("align-content", align_content);
+			}
+			else if (equals(token.value, "inherit"))
+			{
+				align_content = StyleValue::from_keyword("inherit");
+				setter->set_value("align-content", align_content);
+			}
+		}
+	}
+
+	void AlignItemsPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
+	{
+		auto &tokens = parser.tokens;
+
+		size_t pos = 0;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && pos == tokens.size())
+		{
+			StyleValue align_items;
+			if (equals(token.value, "flex-start"))
+			{
+				align_items = StyleValue::from_keyword("flex-start");
+				setter->set_value("align-items", align_items);
+			}
+			else if (equals(token.value, "flex-end"))
+			{
+				align_items = StyleValue::from_keyword("flex-end");
+				setter->set_value("align-items", align_items);
+			}
+			else if (equals(token.value, "center"))
+			{
+				align_items = StyleValue::from_keyword("center");
+				setter->set_value("align-items", align_items);
+			}
+			else if (equals(token.value, "baseline"))
+			{
+				align_items = StyleValue::from_keyword("baseline");
+				setter->set_value("align-items", align_items);
+			}
+			else if (equals(token.value, "stretch"))
+			{
+				align_items = StyleValue::from_keyword("stretch");
+				setter->set_value("align-items", align_items);
+			}
+			else if (equals(token.value, "inherit"))
+			{
+				align_items = StyleValue::from_keyword("inherit");
+				setter->set_value("align-items", align_items);
+			}
+		}
+	}
+
+	void AlignSelfPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
+	{
+		auto &tokens = parser.tokens;
+
+		size_t pos = 0;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && pos == tokens.size())
+		{
+			StyleValue align_self;
+
+			if (equals(token.value, "auto"))
+			{
+				align_self = StyleValue::from_keyword("auto");
+				setter->set_value("align-self", align_self);
+			}
+			else if (equals(token.value, "flex-start"))
+			{
+				align_self = StyleValue::from_keyword("flex-start");
+				setter->set_value("align-self", align_self);
+			}
+			else if (equals(token.value, "flex-end"))
+			{
+				align_self = StyleValue::from_keyword("flex-end");
+				setter->set_value("align-self", align_self);
+			}
+			else if (equals(token.value, "center"))
+			{
+				align_self = StyleValue::from_keyword("center");
+				setter->set_value("align-self", align_self);
+			}
+			else if (equals(token.value, "baseline"))
+			{
+				align_self = StyleValue::from_keyword("baseline");
+				setter->set_value("align-self", align_self);
+			}
+			else if (equals(token.value, "stretch"))
+			{
+				align_self = StyleValue::from_keyword("stretch");
+				setter->set_value("align-self", align_self);
+			}
+			else if (equals(token.value, "inherit"))
+			{
+				align_self = StyleValue::from_keyword("inherit");
+				setter->set_value("align-self", align_self);
+			}
+		}
+	}
+
+	void JustifyContentPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
+	{
+		auto &tokens = parser.tokens;
+
+		StyleValue justify_content;
+
+		size_t pos = 0;
+		StyleToken token = next_token(pos, tokens);
+		if (token.type == StyleTokenType::ident && pos == tokens.size())
+		{
+			if (equals(token.value, "flex-start"))
+				justify_content = StyleValue::from_keyword("flex-start");
+			else if (equals(token.value, "flex-end"))
+				justify_content = StyleValue::from_keyword("flex-end");
+			else if (equals(token.value, "center"))
+				justify_content = StyleValue::from_keyword("center");
+			else if (equals(token.value, "space-between"))
+				justify_content = StyleValue::from_keyword("space-between");
+			else if (equals(token.value, "space-around"))
+				justify_content = StyleValue::from_keyword("space-around");
+			else if (equals(token.value, "inherit"))
+				justify_content = StyleValue::from_keyword("inherit");
+			else
+				return;
+		}
+		else
+		{
+			return;
+		}
+
+		setter->set_value("justify-content", justify_content);
 	}
 }

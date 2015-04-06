@@ -29,13 +29,14 @@
 #include "precomp.h"
 #include "app.h"
 
-App::App() : quit(false)
-{
-}
+clan::ApplicationInstance<App> clanapp;
 
-// The start of the Application
-int App::start(const std::vector<std::string> &args)
+App::App()
 {
+	// We support all display targets, in order listed here
+	clan::D3DTarget::enable();
+	clan::OpenGLTarget::enable();
+
 	// Setup the window
 	DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
@@ -44,13 +45,12 @@ int App::start(const std::vector<std::string> &args)
 	window = DisplayWindow(win_desc);
 
 	// Connect the slots that we require
-	clan::SlotContainer sc;
 	sc.connect(window.sig_window_close(), this, &App::on_window_close);
 	sc.connect(window.get_ic().get_keyboard().sig_key_down(), this, &App::on_input_down);
 	sc.connect(window.get_ic().get_mouse().sig_key_down(), this, &App::on_mouse_down);
 	sc.connect(window.get_ic().get_mouse().sig_key_dblclk(), this, &App::on_mouse_down);
 
-	int max_joysticks = window.get_ic().get_joystick_count();
+	max_joysticks = window.get_ic().get_joystick_count();
 	for (int joystick_number=0; joystick_number < max_joysticks; joystick_number++)
 	{
 		window.get_ic().get_joystick(joystick_number).sig_key_down().connect([=](const clan::InputEvent &input_event){on_joystick_down(input_event, joystick_number); });
@@ -62,48 +62,46 @@ int App::start(const std::vector<std::string> &args)
 	clan::FontDescription font_desc;
 	font_desc.set_height(256);
 	vector_font = Font(font_desc, "../../Display_Text/Font/Resources/bitstream_vera_sans/VeraBd.ttf");
+}
 
-	while(!quit)
-	{
-		canvas.fill_rect(Rect(0, 0, canvas.get_width(), canvas.get_height()/2), Gradient(Colorf(0.2f, 0.2f, 0.8f, 1.0f), Colorf(0.0f, 0.0f, 0.2f, 1.0f)));
-		canvas.fill_rect(Rect(0, canvas.get_height()/2, canvas.get_width(), canvas.get_height()), Gradient(Colorf(0.0f, 0.0f, 0.2f, 1.0f), Colorf(0.2f, 0.2f, 0.8f, 1.0f)));
+bool App::update()
+{
+	canvas.fill_rect(Rect(0, 0, canvas.get_width(), canvas.get_height() / 2), Gradient(Colorf(0.2f, 0.2f, 0.8f, 1.0f), Colorf(0.0f, 0.0f, 0.2f, 1.0f)));
+	canvas.fill_rect(Rect(0, canvas.get_height()/2, canvas.get_width(), canvas.get_height()), Gradient(Colorf(0.0f, 0.0f, 0.2f, 1.0f), Colorf(0.2f, 0.2f, 0.8f, 1.0f)));
 
-		font.draw_text(canvas, 8, 20, "Press any key, mouse button or joystick button to fire text. Use mouse to control direction.");
+	font.draw_text(canvas, 8, 20, "Press any key, mouse button or joystick button to fire text. Use mouse to control direction.");
 
-		int yoffset = canvas.get_height() - 20;
-		const int y_gap = 20;
+	int yoffset = canvas.get_height() - 20;
+	const int y_gap = 20;
 
-		// Draw Keyboard Information
-		draw_keyboard_state(canvas, yoffset);
-		yoffset -= y_gap;
+	// Draw Keyboard Information
+	draw_keyboard_state(canvas, yoffset);
+	yoffset -= y_gap;
 
-		// Draw Mouse Information
-		draw_mouse_state(canvas, yoffset);
-		yoffset -= y_gap;
+	// Draw Mouse Information
+	draw_mouse_state(canvas, yoffset);
+	yoffset -= y_gap;
 	
-		// Draw Joysticks Information
-		for (int joystick_number=0; joystick_number < max_joysticks; joystick_number++)
-		{
-			draw_joystick_state(canvas, joystick_number, yoffset);
-			yoffset -= y_gap;
-		}
-
-		// Draw Tablet Information
-		int max_tablets = window.get_ic().get_tablet_count();
-		for (int tablet_number=0; tablet_number < max_tablets; tablet_number++)
-		{
-			draw_tablet_state(canvas, tablet_number, yoffset);
-			yoffset -= y_gap;
-		}
-
-		draw_text_shooter(canvas);
-
-		window.flip(1);
-
-		RunLoop::process();
+	// Draw Joysticks Information
+	for (int joystick_number=0; joystick_number < max_joysticks; joystick_number++)
+	{
+		draw_joystick_state(canvas, joystick_number, yoffset);
+		yoffset -= y_gap;
 	}
 
-	return 0;
+	// Draw Tablet Information
+	int max_tablets = window.get_ic().get_tablet_count();
+	for (int tablet_number=0; tablet_number < max_tablets; tablet_number++)
+	{
+		draw_tablet_state(canvas, tablet_number, yoffset);
+		yoffset -= y_gap;
+	}
+
+	draw_text_shooter(canvas);
+
+	window.flip(1);
+
+	return !quit;
 }
 
 void App::on_input_down(const InputEvent &key)
@@ -228,7 +226,7 @@ void App::draw_mouse_state(Canvas &canvas, int yoffset)
 	text = text + string_format("Right %1 : ", 
 		mouse.get_keycode(mouse_right) ? "Pressed" : "Released" );
 
-	Point position = mouse.get_position();
+	Pointf position = mouse.get_position();
 	text = text + string_format("Position (%1,%2)", 
 		 position.x, position.y);
 

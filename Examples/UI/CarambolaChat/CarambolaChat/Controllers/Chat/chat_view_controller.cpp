@@ -102,34 +102,36 @@ ChatViewController::~ChatViewController()
 void ChatViewController::create_layout()
 {
 	auto chat_users_group = std::make_shared<View>();
-	chat_users_group->box_style.set_layout_hbox();
-	chat_users_group->box_style.set_flex(1.0f, 1.0f);
+	chat_users_group->style()->set("flex-direction: row");
+	chat_users_group->style()->set("flex: 1 1 main-size");
 
 	chat_log = std::make_shared<ChatView>();
-	chat_log->box_style.set_flex(1.0f, 1.0f);
+	chat_log->style()->set("flex: 1 1 main-size");
 	chat_users_group->add_subview(chat_log);
 
 	user_list = std::make_shared<UserListView>();
-	user_list->box_style.set_width(200.0f);
-	user_list->box_style.set_flex(0.0f, 0.0f);
+	user_list->style()->set("width: 200px");
+	user_list->style()->set("flex: 0 0 main-size");
 	chat_users_group->add_subview(user_list);
 
 	auto input_bar = std::make_shared<View>();
-	input_bar->box_style.set_flex(0.0f, 0.0f);
-	input_bar->box_style.set_background_gradient_to_bottom(Colorf(235, 243, 252), Colorf(219, 234, 249));
-	input_bar->box_style.set_border(Colorf::gray60, 0.0f, 1.0f, 0.0f, 0.0f);
-	input_bar->box_style.set_padding(5.0f);
-	input_bar->box_style.set_layout_hbox();
+	input_bar->style()->set("flex: 0 0 main-size");
+	input_bar->style()->set("background: linear-gradient(to bottom, rgb(235,243,252), rgb(219,234,249))");
+	input_bar->style()->set("border-top: 1px solid rgb(153,153,153)");
+	input_bar->style()->set("padding: 5px");
+	input_bar->style()->set("flex-direction: row");
 
 	input_text = std::make_shared<TextFieldView>();
-	input_text->box_style.set_border(Colorf::gray60, 1.0f);
-	input_text->box_style.set_border_radius(2.0f);
-	input_text->box_style.set_background(Colorf::white);
-	input_text->box_style.set_padding(5.0f, 2.0f);
-	input_text->text_style().set_font("Source Sans Pro", 12.0f, 20.0f);
+	input_text->style()->set("flex: 1 1 main-size");
+	input_text->style()->set("border: 1px solid rgb(153,153,153)");
+	input_text->style()->set("border-radius: 2px");
+	input_text->style()->set("background: white");
+	input_text->style()->set("padding: 2px 5px");
+	input_text->style()->set("font: 12px/20px 'Source Sans Pro'");
 	input_bar->add_subview(input_text);
 
-	view->box_style.set_layout_vbox();
+	view->style()->set("flex: 1 1 main-size");
+	view->style()->set("flex-direction: column");
 	view->add_subview(chat_users_group);
 	view->add_subview(input_bar);
 }
@@ -202,14 +204,13 @@ void ChatViewController::add_line_text(ChatLine &line, const std::string &text, 
 	auto urls_begin = std::sregex_iterator(text.begin(), text.end(), regexp_url1);
 	auto urls_end = std::sregex_iterator();
 
-	TextStyle style;
-	style.set_font("Source Sans Pro", 14.0f, 20.0f);
-	style.set_color(color);
+	auto style = std::make_shared<Style>();
+	style->set("font: 14px/20px 'Source Sans Pro'");
+	style->set("color: %1", Style::to_rgba(color));
 
-	TextStyle url_style;
-	url_style.set_font("Source Sans Pro", 14.0f, 20.0f);
-	url_style.set_weight_bold();
-	url_style.set_color(chat_log->get_color_url());
+	auto url_style = std::make_shared<Style>();
+	url_style->set("font: bold 14px/20px 'Source Sans Pro'");
+	url_style->set("color: %1", Style::to_rgba(color));
 
 	size_t pos = 0;
 	for (auto it = urls_begin; it != urls_end; ++it)

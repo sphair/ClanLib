@@ -10,12 +10,12 @@ using namespace clan;
 
 ConnectionsViewController::ConnectionsViewController()
 {
-	view->box_style.set_layout_block();
-	view->box_style.set_margin(11.0f);
+	view->style()->set("flex: 1 1 main-size");
+	view->style()->set("flex-direction: column");
+	view->style()->set("margin: 11px");
 
 	auto title = std::make_shared<LabelView>();
-	title->text_style().set_font("Source Sans Pro", 20.0f, 25.0f);
-	title->text_style().set_weight_bold();
+	title->style()->set("font: bold 20px/25px 'Source Sans Pro'");
 	title->set_text("Chat Networks");
 	view->add_subview(title);
 
@@ -39,12 +39,9 @@ ConnectionsViewController::ConnectionsViewController()
 
 		auto item = networks->add_item(name);
 
-		slots.connect(item->connect_button->sig_pointer_release(EventUIPhase::at_target), [=](PointerEvent &) { connect_clicked(connection); });
-		slots.connect(item->connect_button->sig_pointer_release(EventUIPhase::bubbling), [=](PointerEvent &) { connect_clicked(connection); });
-		slots.connect(item->edit_button->sig_pointer_release(EventUIPhase::at_target), [=](PointerEvent &) { edit_clicked(connection); });
-		slots.connect(item->edit_button->sig_pointer_release(EventUIPhase::bubbling), [=](PointerEvent &) { edit_clicked(connection); });
-		slots.connect(item->remove_button->sig_pointer_release(EventUIPhase::at_target), [=](PointerEvent &) { remove_clicked(connection); });
-		slots.connect(item->remove_button->sig_pointer_release(EventUIPhase::bubbling), [=](PointerEvent &) { remove_clicked(connection); });
+		slots.connect(item->connect_button->sig_pointer_release(), [=](PointerEvent &) { connect_clicked(connection); });
+		slots.connect(item->edit_button->sig_pointer_release(), [=](PointerEvent &) { edit_clicked(connection); });
+		slots.connect(item->remove_button->sig_pointer_release(), [=](PointerEvent &) { remove_clicked(connection); });
 	}
 }
 

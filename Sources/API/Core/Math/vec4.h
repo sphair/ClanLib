@@ -164,8 +164,8 @@ public:
 /// \{
 
 public:
-	void set_xy(const Vec2<Type> &v) { x = v.x; y = v.y; }
-	void set_zw(const Vec2<Type> &v) { z = v.x; w = v.y; }
+	void set_xy(const Vec2<Type> &new_v) { x = new_v.x; y = new_v.y; }
+	void set_zw(const Vec2<Type> &new_v) { z = new_v.x; w = new_v.y; }
 
 	/// \brief Returns the length (magnitude) of this vector (not taking into account the w ordinate).
 	///

@@ -259,6 +259,7 @@ Workspace Wizard::create_workspace(bool target_android)
 	ignore_list.push_back("MacOSX");
 	ignore_list.push_back("Linux");
 	ignore_list.push_back("OSX");
+	ignore_list.push_back("Cocoa");
 	ignore_list.push_back("AGL");
 	ignore_list.push_back("font_engine_cocoa.h");
 	ignore_list.push_back("font_engine_cocoa.mm");

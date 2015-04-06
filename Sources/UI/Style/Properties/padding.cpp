@@ -43,7 +43,7 @@ namespace clan
 	PaddingPropertyParser style_parser_padding;
 	PaddingLTRBPropertyParser style_parser_padding_ltrb;
 
-	void PaddingPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void PaddingPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -152,7 +152,7 @@ namespace clan
 		}
 	}
 
-	void PaddingLTRBPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void PaddingLTRBPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 

@@ -27,14 +27,13 @@
 */
 
 #pragma once
+#include "shader.h"
 
-// This is the Application class (That is instantiated by the Program Class)
-class App
+class App : public clan::Application
 {
 public:
 	App();
-
-	int start(const std::vector<std::string> &args);
+	bool update() override;
 
 private:
 	void on_input_up(const InputEvent &key);
@@ -42,6 +41,21 @@ private:
 	void create_cube( std::vector<Vec3f> &object_positions, std::vector<Vec3f> &object_normals, std::vector<Vec4f> &object_material_ambient );
 
 private:
-	bool quit;
+
+	DisplayWindow window;
+	Canvas canvas;
+	Shader shader;
+	SlotContainer sc;
+	clan::Font fps_font;
+
+	VertexArrayBuffer vb_positions;
+	VertexArrayBuffer vb_normals;
+	VertexArrayBuffer vb_material_ambient;
+	RasterizerState raster_state;
+	DepthStencilState depth_write_enabled;
+	int num_vertex;
+	bool quit = false;
+	GameTime game_time;
+	float angle = 0.0f;
 
 };

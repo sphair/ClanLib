@@ -63,38 +63,32 @@ const char text_shader_fragment[] =
 	"}\n"
 	;
 
-
-App::App() : quit(false)
-{
-}
-
+clan::ApplicationInstance<App> clanapp;
 struct ProgramUniforms
 {
 	clan::Mat4f cl_ModelViewProjectionMatrix;
 };
 
-// The start of the Application
-int App::start(const std::vector<std::string> &args)
+App::App()
 {
+	clan::OpenGLTarget::enable();
+
 	clan::DisplayWindowDescription win_desc;
 	//win_desc.set_version(3, 2, false);
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("Point Sprite Example");
 	win_desc.set_size(clan::Size( 800, 480 ), false);
 
-	clan::DisplayWindow window(win_desc);
-    clan::SlotContainer cc;
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
-
-
-	clan::Canvas canvas(window);
+	window = clan::DisplayWindow(win_desc);
+	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	canvas = clan::Canvas(window);
 
 	// Deleted automatically by the GUI
 	//Options *options = new Options(gui, clan::Rect(0, 0, canvas.get_size()));
 
-	clan::Image image_grid(canvas, "../Blend/Resources/grid.png");
-	clan::Texture2D texture_particle(canvas, "Resources/particle.png");
+	image_grid = clan::Image(canvas, "../Blend/Resources/grid.png");
+	texture_particle = clan::Texture2D(canvas, "Resources/particle.png");
 	float grid_width = (float) image_grid.get_width();
 	float grid_height = (float) image_grid.get_height();
 
@@ -114,7 +108,7 @@ int App::start(const std::vector<std::string> &args)
 		throw clan::Exception(clan::string_format("Unable to compile fragment shader object: %1", fragment_shader.get_info_log()));
 	}
 
-	clan::ProgramObject program_object(canvas);
+	program_object = clan::ProgramObject(canvas);
 	program_object.attach(vertex_shader);
 	program_object.attach(fragment_shader);
 	program_object.bind_attribute_location(0, "InPosition");
@@ -128,89 +122,88 @@ int App::start(const std::vector<std::string> &args)
 	clan::BlendStateDescription blend_state_desc;
 	blend_state_desc.enable_blending(true);
 	blend_state_desc.set_blend_function(clan::blend_src_alpha, clan::blend_one, clan::blend_src_alpha, clan::blend_one);
-	clan::BlendState blend_state(canvas, blend_state_desc);
+	blend_state = clan::BlendState(canvas, blend_state_desc);
 
-	clan::GameTime game_time;
+	game_time.reset();
+}
 
-	while (!quit)
+bool App::update()
+{
+	game_time.update();
+
+	int num_particles = 100;	// options->num_particles;
+	if (num_particles > max_particles)
+		num_particles = max_particles;
+
+	move_particles(game_time.get_time_elapsed(), num_particles);
+
+	const float grid_xpos = 10.0f;
+	const float grid_ypos = 10.0f;
+
+	// Draw the grid
+	image_grid.draw(canvas, grid_xpos, grid_ypos);
+
+	if (num_particles > 0)
 	{
-		game_time.update();
+		std::vector<clan::Vec2f> positions;
+		std::vector<clan::Colorf> colors;
+		positions.resize(num_particles);
+		colors.resize(num_particles);
 
-		int num_particles = 100;	// options->num_particles;
-		if (num_particles > max_particles)
-			num_particles = max_particles;
-
-		move_particles(game_time.get_time_elapsed(), num_particles);
-
-		const float grid_xpos = 10.0f;
-		const float grid_ypos = 10.0f;
-
-		// Draw the grid
-		image_grid.draw(canvas, grid_xpos, grid_ypos);
-
-		if (num_particles > 0)
+		for (int cnt=0; cnt<num_particles; cnt++)
 		{
-			std::vector<clan::Vec2f> positions;
-			std::vector<clan::Colorf> colors;
-			positions.resize(num_particles);
-			colors.resize(num_particles);
-
-			for (int cnt=0; cnt<num_particles; cnt++)
+			positions[cnt] = clan::Vec2f(grid_xpos + particles[cnt].xpos, grid_ypos + particles[cnt].ypos);
+			switch (cnt % 3)
 			{
-				positions[cnt] = clan::Vec2f(grid_xpos + particles[cnt].xpos, grid_ypos + particles[cnt].ypos);
-				switch (cnt % 3)
-				{
-					case 0:
-						colors[cnt] = clan::Colorf(1.0f, 0.0f, 0.0f, 1.0f);
-						break;
-					case 1:
-						colors[cnt] = clan::Colorf(0.0f, 1.0f, 0.0f, 1.0f);
-						break;
-					case 2:
-						colors[cnt] = clan::Colorf(0.0f, 0.0f, 1.0f, 1.0f);
-						break;
-				}
-			};
+				case 0:
+					colors[cnt] = clan::Colorf(1.0f, 0.0f, 0.0f, 1.0f);
+					break;
+				case 1:
+					colors[cnt] = clan::Colorf(0.0f, 1.0f, 0.0f, 1.0f);
+					break;
+				case 2:
+					colors[cnt] = clan::Colorf(0.0f, 0.0f, 1.0f, 1.0f);
+					break;
+			}
+		};
 
-			canvas.flush();
-			clan::GraphicContext gc = canvas.get_gc();
+		canvas.flush();
+		clan::GraphicContext gc = canvas.get_gc();
 
-			canvas.set_blend_state(blend_state);
+		canvas.set_blend_state(blend_state);
 
-			clan::RasterizerStateDescription raster_state_desc;
-			raster_state_desc.set_point_size(64);	// (options->point_size);
-			raster_state_desc.set_point_sprite_origin(clan::origin_upper_left);
-			clan::RasterizerState raster_state(canvas, raster_state_desc);
-			canvas.set_rasterizer_state(raster_state);
+		clan::RasterizerStateDescription raster_state_desc;
+		raster_state_desc.set_point_size(64);	// (options->point_size);
+		raster_state_desc.set_point_sprite_origin(clan::origin_upper_left);
+		clan::RasterizerState raster_state(canvas, raster_state_desc);
+		canvas.set_rasterizer_state(raster_state);
 
-			clan::PrimitivesArray primarray(gc);
+		clan::PrimitivesArray primarray(gc);
 
-			clan::VertexArrayVector<clan::Vec2f> gpu_positions = clan::VertexArrayVector<clan::Vec2f>(gc, &positions[0], positions.size());
-			clan::VertexArrayVector<clan::Colorf> gpu_colors = clan::VertexArrayVector<clan::Colorf>(gc, &colors[0], colors.size());
+		clan::VertexArrayVector<clan::Vec2f> gpu_positions = clan::VertexArrayVector<clan::Vec2f>(gc, &positions[0], positions.size());
+		clan::VertexArrayVector<clan::Colorf> gpu_colors = clan::VertexArrayVector<clan::Colorf>(gc, &colors[0], colors.size());
 
-			primarray.set_attributes(0, gpu_positions);
-			primarray.set_attributes(1, gpu_colors);
+		primarray.set_attributes(0, gpu_positions);
+		primarray.set_attributes(1, gpu_colors);
 
-			ProgramUniforms buffer;
-			buffer.cl_ModelViewProjectionMatrix = canvas.get_projection() * canvas.get_transform();
-			clan::UniformVector<ProgramUniforms> uniform_vector(gc, &buffer, 1);
-			gc.set_uniform_buffer(0, uniform_vector);
+		ProgramUniforms buffer;
+		buffer.cl_ModelViewProjectionMatrix = canvas.get_projection() * canvas.get_transform();
+		clan::UniformVector<ProgramUniforms> uniform_vector(gc, &buffer, 1);
+		gc.set_uniform_buffer(0, uniform_vector);
 
-			gc.set_texture(0, texture_particle);
-			gc.set_program_object(program_object);
-			gc.draw_primitives(clan::type_points, num_particles, primarray);
-			gc.reset_program_object();
-			gc.reset_texture(0);
+		gc.set_texture(0, texture_particle);
+		gc.set_program_object(program_object);
+		gc.draw_primitives(clan::type_points, num_particles, primarray);
+		gc.reset_program_object();
+		gc.reset_texture(0);
 
-			gc.reset_blend_state();
-			gc.reset_rasterizer_state();
-		}
-
-		window.flip(1);
-
-		clan::RunLoop::process();
+		gc.reset_blend_state();
+		gc.reset_rasterizer_state();
 	}
-	return 0;
+
+	window.flip(1);
+
+	return !quit;
 }
 
 // A key was pressed

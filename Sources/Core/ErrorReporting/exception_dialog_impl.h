@@ -38,10 +38,10 @@ namespace clan
 class ExceptionDialog_Impl
 {
 public:
-	static void show(Exception &e);
+	static void show(const std::string &message_and_stack_trace);
 
 private:
-	ExceptionDialog_Impl(Exception &e, HWND owner);
+	ExceptionDialog_Impl(const std::string &message_and_stack_trace, HWND owner);
 	ExceptionDialog_Impl(const ExceptionDialog_Impl &);
 	ExceptionDialog_Impl &operator=(const ExceptionDialog_Impl &);
 	~ExceptionDialog_Impl();
@@ -60,7 +60,7 @@ private:
 class ExceptionDialog_Impl
 {
 public:
-	static void show(Exception &e);
+	static void show(const std::string &message_and_stack_trace);
 };
 
 #endif

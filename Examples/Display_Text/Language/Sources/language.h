@@ -28,16 +28,25 @@
 
 #pragma once
 
-// This is the Application class (That is instantiated by the Program Class)
-class Language
+class Language : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
+	Language();
+	bool update() override;
 
 private:
 	void on_input_up(const clan::InputEvent &key);
 	void on_window_close();
 
 private:
-	bool quit;
+	clan::DisplayWindow window;
+	clan::SlotContainer sc;
+	clan::Canvas canvas;
+	clan::Font font_english;
+	clan::Font font_chinese;
+	clan::Font font_arabic;
+	clan::DomDocument document;
+	clan::DomElement document_element;
+
+	bool quit = false;
 };

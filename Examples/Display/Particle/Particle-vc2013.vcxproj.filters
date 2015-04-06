@@ -75,6 +75,7 @@
     <ClInclude Include="Sources\particle.h" />
     <ClInclude Include="Sources\precomp.h" />
     <ClInclude Include="Sources\program.h" />
+    <ClInclude Include="Sources\state.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\LinearParticle\L_DroppingEffect.cpp">

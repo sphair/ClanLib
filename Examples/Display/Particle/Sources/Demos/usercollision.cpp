@@ -16,30 +16,29 @@ detection for particles.
 #include "usercollision.h"
 #include "framerate_counter.h"
 
-int DemoUserCollision::run(clan::DisplayWindow &window)
+DemoUserCollision::DemoUserCollision(clan::DisplayWindow &window) : window(window)
 {
-    clan::SlotContainer cc;
 	window.set_title("LinearParticle Example - UserCollision ");
 
-	cc.connect(window.sig_window_close(), clan::bind_member(this, &DemoUserCollision::on_window_close));
-	clan::Canvas canvas(window);
+	sc.connect(window.sig_window_close(), clan::bind_member(this, &DemoUserCollision::on_window_close));
+	canvas = clan::Canvas(window);
 
-	cc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &DemoUserCollision::on_key_up));
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &DemoUserCollision::on_key_up));
 
 	// initialize LinearParticle
 	srand(clan::System::get_time());
 	L_ParticleSystem::init();
 
 	// create surface to be used for particle and set the alignment
-	clan::Sprite particle_1_sur(canvas, "Resources/sketch.png");
+	particle_1_sur = clan::Sprite(canvas, "Resources/sketch.png");
 	particle_1_sur.set_alignment(clan::origin_center);
 
-	clan::Sprite particle_2_sur(canvas, "Resources/explosion.png");
+	particle_2_sur = clan::Sprite(canvas, "Resources/explosion.png");
 	particle_2_sur.set_alignment(clan::origin_center);
 
 	/* If L_INFINITE_LIFE is used, the system will not remove
 	the particle automatically. */
-	particle_1 = new L_Particle(&particle_1_sur, L_INFINITE_LIFE);
+	particle_1 = clan::make_unique<L_Particle>(&particle_1_sur, L_INFINITE_LIFE);
 	particle_1->set_color(L_Color(255,255,150,70));
 
 	// Set callback function.
@@ -49,8 +48,8 @@ int DemoUserCollision::run(clan::DisplayWindow &window)
 	// Setup shooting effect.
 	L_Vector shooting_vector;
 	shooting_vector.set2( 0.4, L_DEGREE_TO_RADIAN(-90) );
-	shooting_eff = new L_ShootingEffect(320,400,shooting_vector,40,1);
-	shooting_eff->add(particle_1);
+	shooting_eff = clan::make_unique<L_ShootingEffect>(320, 400, shooting_vector, 40, 1);
+	shooting_eff->add(particle_1.get());
 	shooting_eff->set_angle_interval(L_DEGREE_TO_RADIAN(25));
 	shooting_eff->set_follow_shooting();
 	shooting_eff->initialize();
@@ -58,14 +57,14 @@ int DemoUserCollision::run(clan::DisplayWindow &window)
 
 	// Setup explosion effect
 	motion_ctrl.set_1d_acceleration(-0.0004);
-	particle_2 = new L_Particle(&particle_2_sur,500);
+	particle_2 = clan::make_unique<L_Particle>(&particle_2_sur, 500);
 	particle_2->set_color( L_Color(255,110,60,255) );
 	particle_2->coloring2( L_Color(255,255,255,100), L_Color(0,255,60,60) );
 	particle_2->sizing2( 0.8, 1.5 );
 	particle_2->set_motion_controller(&motion_ctrl);
 
-	exp_effect = new L_ExplosionEffect(0,0,16,4,5,0.15f);
-	exp_effect->add(particle_2);
+	exp_effect = clan::make_unique<L_ExplosionEffect>(0, 0, 16, 4, 5, 0.15f);
+	exp_effect->add(particle_2.get());
 	exp_effect->set_life(100); //set life of this effect
 	exp_effect->set_rotation_distortion(L_2PI);
 	exp_effect->set_size_distortion(0.7);
@@ -73,93 +72,84 @@ int DemoUserCollision::run(clan::DisplayWindow &window)
 	exp_effect->set_speed_distortion(0.1f);
 	exp_effect->initialize();
 
-	exp_emitter  = new L_EffectEmitter(exp_effect);
+	exp_emitter = clan::make_unique<L_EffectEmitter>(exp_effect.get());
 
 	circle_pos.set( 320, 100 );
-	clan::Image circle_surface(canvas, "Resources/circle.png");
+	circle_surface = clan::Image(canvas, "Resources/circle.png");
 	circle_surface.set_alignment(clan::origin_center);
 
-	clan::Image cflight_surface(canvas, "Resources/cflight.png");
+	cflight_surface = clan::Image(canvas, "Resources/cflight.png");
 	cflight_surface.set_color( clan::Color(255,255,255,220) );
 	cflight_surface.set_alignment(clan::origin_center);
 
-	quit = false;
-	show_menu = true;
+	font = clan::Font("Arial", 16 );
+	last_time = clan::System::get_time();
 
-	clan::Font font("Arial", 16 );
-	FramerateCounter frameratecounter;
-	uint64_t last_time = clan::System::get_time();
+}
 
+bool DemoUserCollision::update()
+{
 	clan::InputDevice &keyboard = window.get_ic().get_keyboard();
-	while(!quit)
+	triggered = false;
+
+	canvas.clear();
+
+	L_Vector vel;
+	if( keyboard.get_keycode(clan::keycode_up) )
+		vel.y = -0.2;
+
+	else if( keyboard.get_keycode(clan::keycode_down))
+		vel.y  = 0.2;
+
+	if( keyboard.get_keycode(clan::keycode_left))
+		vel.x = -0.2;
+
+	else if( keyboard.get_keycode(clan::keycode_right))
+		vel.x = 0.2;
+
+	if( keyboard.get_keycode(clan::keycode_z))
+		triggered = true;
+
+	shooting_eff->set_velocity(vel);
+
+	uint64_t current_time = clan::System::get_time();
+	int time_run = current_time - last_time;
+	last_time = current_time;
+
+	while( time_run > 30 )
 	{
-		triggered = false;
-
-		canvas.clear();
-
-		L_Vector vel;
-		if( keyboard.get_keycode(clan::keycode_up) )
-			vel.y = -0.2;
-
-		else if( keyboard.get_keycode(clan::keycode_down))
-			vel.y  = 0.2;
-
-		if( keyboard.get_keycode(clan::keycode_left))
-			vel.x = -0.2;
-
-		else if( keyboard.get_keycode(clan::keycode_right))
-			vel.x = 0.2;
-
-		if( keyboard.get_keycode(clan::keycode_z))
-			triggered = true;
-
-		shooting_eff->set_velocity(vel);
-
-		uint64_t current_time = clan::System::get_time();
-		int time_run = current_time - last_time;
-		last_time = current_time;
-
-		while( time_run > 30 )
-		{
-			run_a_step(30);
-			time_run -= 30;
-		}
-
-		if( time_run > 0 )
-			run_a_step(time_run);
-
-		circle_surface.draw(canvas, circle_pos.x, circle_pos.y);
-		L_DrawParticle(canvas, shooting_eff);
-		L_DrawParticle(canvas, exp_emitter);
-		cflight_surface.draw(canvas, shooting_eff->x_pos, shooting_eff->y_pos);
-
-		if( show_menu )
-		{
-			frameratecounter.show_fps(canvas, font);
-
-			font.draw_text(canvas, 10,395,"F1 : hide/show menu");
-			font.draw_text(canvas, 10,410,"Space : trigger random sleep");
-			font.draw_text(canvas, 10,425,"Z Key : trigger shooting");
-			font.draw_text(canvas, 10,440,"Arrow keys : move the shooting source");
-		}
-
-		window.flip(0);	// Set to "1" to lock to screen refresh rate
-		frameratecounter.frame_shown();
-
-		clan::RunLoop::process(0);
+		run_a_step(30);
+		time_run -= 30;
 	}
 
+	if( time_run > 0 )
+		run_a_step(time_run);
 
-	// deinitialize LinearParticle
-	L_ParticleSystem::deinit();
+	circle_surface.draw(canvas, circle_pos.x, circle_pos.y);
+	L_DrawParticle(canvas, shooting_eff.get());
+	L_DrawParticle(canvas, exp_emitter.get());
+	cflight_surface.draw(canvas, shooting_eff->x_pos, shooting_eff->y_pos);
 
-	delete exp_emitter;
-	delete exp_effect;
-	delete particle_2;
-	delete shooting_eff;
-	delete particle_1;
+	if( show_menu )
+	{
+		frameratecounter.show_fps(canvas, font);
 
-	return 0;
+		font.draw_text(canvas, 10,395,"F1 : hide/show menu");
+		font.draw_text(canvas, 10,410,"Space : trigger random sleep");
+		font.draw_text(canvas, 10,425,"Z Key : trigger shooting");
+		font.draw_text(canvas, 10,440,"Arrow keys : move the shooting source");
+	}
+
+	window.flip(0);	// Set to "1" to lock to screen refresh rate
+	frameratecounter.frame_shown();
+
+	if (quit)
+	{
+		// deinitialize LinearParticle
+		L_ParticleSystem::deinit();
+	}
+
+	return !quit;
 }
 
 void DemoUserCollision::on_key_up(const clan::InputEvent& key)

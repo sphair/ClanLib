@@ -201,7 +201,7 @@ std::string InputDevice::keyid_to_string(int keycode) const
 		case keycode_numpad7: return "numpad7";
 		case keycode_numpad8: return "numpad8";
 		case keycode_numpad9: return "numpad9";
-#if !defined CL_ANDROID && ! defined __APPLE__ && ! defined WIN32
+#if !defined __ANDROID__ && ! defined __APPLE__ && ! defined WIN32
 		case keycode_numpad_enter: return "numpad_enter";
 #endif
 		case keycode_multiply: return "multiply";
@@ -406,25 +406,17 @@ bool InputDevice::get_keycode(int keycode) const
 Pointf InputDevice::get_position() const
 {
 	if (impl->provider)
-		return Pointf(impl->provider->get_x(), impl->provider->get_y());
+		return impl->provider->get_position();
 	else
-		return Pointf();
+		return Pointf(0.f, 0.f);
 }
 
-float InputDevice::get_x() const
+Point InputDevice::get_device_position() const
 {
 	if (impl->provider)
-		return impl->provider->get_x();
+		return impl->provider->get_device_position();
 	else
-		return 0.0f;
-}
-
-float InputDevice::get_y() const
-{
-	if (impl->provider)
-		return impl->provider->get_y();
-	else
-		return 0.0f;
+		return Point(0, 0);
 }
 
 float InputDevice::get_axis(int index) const
@@ -482,6 +474,13 @@ void InputDevice::set_position(float x, float y)
 	if (impl->provider)
 		impl->provider->set_position(x, y);
 }
+
+void InputDevice::set_device_position(int x, int y)
+{
+	if (impl->provider)
+		impl->provider->set_device_position(x, y);
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 // InputDevice Signals:

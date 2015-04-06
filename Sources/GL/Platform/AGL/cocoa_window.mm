@@ -31,7 +31,7 @@
 #include "API/Core/Math/point.h"
 #include "API/Core/Text/logger.h"
 #include "API/Core/System/databuffer.h"
-#include "API/Core/IOData/iodevice_memory.h"
+#include "API/Core/IOData/memory_device.h"
 #include "API/Display/Window/display_window_description.h"
 #include "API/Display/Window/input_event.h"
 #include "API/Display/display.h"

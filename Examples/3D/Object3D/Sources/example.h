@@ -31,11 +31,13 @@
 #include "scene.h"
 #include "model.h"
 
-// This is the Application class (That is instantiated by the Program Class)
-class App
+class GraphicStore;
+
+class App : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
+	App();
+	bool update() override;
 
 private:
 	void render(GraphicContext &gc);
@@ -44,6 +46,10 @@ private:
 	void create_scene(GraphicContext &gc);
 	void update_light(GraphicContext &gc);
 	void calculate_matricies(GraphicContext &gc);
+
+	DisplayWindow window;
+	SlotContainer sc;
+	Canvas canvas;
 
 	Scene scene;
 
@@ -57,6 +63,12 @@ private:
 	SceneObject *scene_clanlib;
 	SceneObject *scene_tuxball;
 
+	clan::GameTime game_time;
 
-	bool quit;
+	RasterizerState raster_state;
+	DepthStencilState depth_write_enabled;
+	std::shared_ptr<GraphicStore> graphic_store;
+	float angle = 0.0f;
+
+	bool quit = false;
 };

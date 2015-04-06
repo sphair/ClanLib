@@ -34,7 +34,7 @@
 #include "Platform/OSX/opengl_window_provider_osx.h"
 #elif defined(WIN32)
 #include "Platform/WGL/opengl_window_provider_wgl.h"
-#elif defined(CL_ANDROID)
+#elif defined(__ANDROID__)
 #include "Platform/Android/opengl_window_provider_android.h"
 #else
 #include "Platform/GLX/opengl_window_provider_glx.h"

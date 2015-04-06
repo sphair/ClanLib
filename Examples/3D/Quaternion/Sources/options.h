@@ -27,12 +27,62 @@
 */
 
 #pragma once
-/*
-class Options : public GUIComponent
+
+#include "..\..\..\ThemeAero\Sources\theme.h"
+
+class SliderOptionView : public View
 {
 public:
-	Options(GUIManager &gui, Rect gui_position);
-	virtual ~Options();
+	SliderOptionView()
+	{
+		style()->set("margin: 2px 0; flex-direction: row;");
+
+		slider->set_min_position(0);
+		slider->set_max_position(1000);
+		slider->set_tick_count(100);
+		slider->set_page_step(100);
+		slider->set_lock_to_ticks(false);
+		slider->set_position(slider->max_position());
+
+		slider->style()->set("margin: auto 5px auto 0; flex: 1 1");
+		label->style()->set("margin: auto 0; flex: 1 1; font: 13px/1.5 'Segoe UI'");
+
+		add_subview(slider);
+		add_subview(label);
+	}
+
+	float get_value(float min_value, float max_value)
+	{
+		float value = (float)slider->position();
+		value /= (float)slider->max_position();
+		return (value * (max_value - min_value)) + min_value;
+	}
+
+	void set_value(float value, float min_value, float max_value)
+	{
+		value -= min_value;
+		value /= (max_value - min_value);
+		value *= (float)slider->max_position();
+		slider->set_position((int)value);
+	}
+
+	std::shared_ptr<SliderView> slider = Theme::create_slider();
+	std::shared_ptr<LabelView> label = std::make_shared<LabelView>();
+};
+
+class OptionColumnView : public View
+{
+public:
+	OptionColumnView()
+	{
+		style()->set("flex-direction: column; flex: 1 1; margin: 7px;");
+	}
+};
+
+class Options : public TextureView
+{
+public:
+	Options(Canvas &canvas);
 
 	Angle rotation_x;
 	Angle rotation_y;
@@ -48,9 +98,9 @@ public:
 	bool button_slerp_clicked;
 	bool button_rotate_clicked;
 
-	PushButton *button_lerp;
-	PushButton *button_slerp;
-	PushButton *button_rotate;
+	std::shared_ptr<ButtonView> button_lerp = Theme::create_button();
+	std::shared_ptr<ButtonView> button_slerp = Theme::create_button();
+	std::shared_ptr<ButtonView> button_rotate = Theme::create_button();
 
 	float max_angle_value;
 
@@ -61,13 +111,6 @@ private:
 	void update_euler();
 	void update_quaternion();
 	void update_all_slider_text();
-	Label *create_slider_label(Slider *slider);
-	CheckBox *create_checkbox(int xpos, int ypos, const char *name, bool state);
-	void on_render(Canvas &canvas, const Rect &update_rect);
-	Slider *create_slider(int xpos, int ypos);
-	float get_value(Slider *slider, float min_value, float max_value);
-	void set_value(Slider *slider, float value, float min_value, float max_value);
-	Label *create_combobox_label(ComboBox *combo, const char *text);
 	void slider_rotation_x_changed();
 	void slider_rotation_y_changed();
 	void slider_rotation_z_changed();
@@ -78,39 +121,26 @@ private:
 	void slider_quaternion_i_changed();
 	void slider_quaternion_j_changed();
 	void slider_quaternion_k_changed();
-	void on_clicked_button_lerp();
-	void on_clicked_button_slerp();
-	void on_clicked_button_rotate();
+	void on_clicked_button_lerp(PointerEvent &event);
+	void on_clicked_button_slerp(PointerEvent &event);
+	void on_clicked_button_rotate(PointerEvent &event);
 	void set_all_sliders();
 
 private:
+	std::shared_ptr<OptionColumnView> column1 = std::make_shared<OptionColumnView>();
+	std::shared_ptr<OptionColumnView> column2 = std::make_shared<OptionColumnView>();
+	std::shared_ptr<OptionColumnView> column3 = std::make_shared<OptionColumnView>();
 
-	Slider *slider_rotation_x;
-	Slider *slider_rotation_y;
-	Slider *slider_rotation_z;
+	std::shared_ptr<SliderOptionView> rotation_x_view = std::make_shared<SliderOptionView>();
+	std::shared_ptr<SliderOptionView> rotation_y_view = std::make_shared<SliderOptionView>();
+	std::shared_ptr<SliderOptionView> rotation_z_view = std::make_shared<SliderOptionView>();
 
-	Label *label_rotation_x;
-	Label *label_rotation_y;
-	Label *label_rotation_z;
+	std::shared_ptr<SliderOptionView> target_x_view = std::make_shared<SliderOptionView>();
+	std::shared_ptr<SliderOptionView> target_y_view = std::make_shared<SliderOptionView>();
+	std::shared_ptr<SliderOptionView> target_z_view = std::make_shared<SliderOptionView>();
 
-	Slider *slider_target_x;
-	Slider *slider_target_y;
-	Slider *slider_target_z;
-
-	Label *label_target_x;
-	Label *label_target_y;
-	Label *label_target_z;
-
-	Slider *slider_quaternion_w;
-	Slider *slider_quaternion_i;
-	Slider *slider_quaternion_j;
-	Slider *slider_quaternion_k;
-
-	Label *label_quaternion_w;
-	Label *label_quaternion_i;
-	Label *label_quaternion_j;
-	Label *label_quaternion_k;
-
+	std::shared_ptr<SliderOptionView> quaternion_w_view = std::make_shared<SliderOptionView>();
+	std::shared_ptr<SliderOptionView> quaternion_i_view = std::make_shared<SliderOptionView>();
+	std::shared_ptr<SliderOptionView> quaternion_j_view = std::make_shared<SliderOptionView>();
+	std::shared_ptr<SliderOptionView> quaternion_k_view = std::make_shared<SliderOptionView>();
 };
-
-*/

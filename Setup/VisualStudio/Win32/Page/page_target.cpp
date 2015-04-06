@@ -66,6 +66,11 @@ PageTarget::PageTarget()
 			target_android = (value != 0);
 		}
 
+		if (target_version < 1400)	// Disable android target if visual studio does not support it
+		{
+			target_android = false;
+		}
+
 		size = sizeof(DWORD);
 		result = RegQueryValueEx(hKey, TEXT("IncludeMTDLL"), 0, &type, (LPBYTE) &value, &size);
 		if (result == ERROR_SUCCESS && type == REG_DWORD)
@@ -188,7 +193,10 @@ INT_PTR PageTarget::on_notify(HWND hWnd, NMHDR *header)
 	case PSN_WIZBACK:
 	case PSN_WIZNEXT:
 		if (IsDlgButtonChecked(hWnd, IDC_RADIO_VC120) == BST_CHECKED)
+		{
 			target_version = 1200;
+			target_android = false;
+		}
 		if (IsDlgButtonChecked(hWnd, IDC_RADIO_VC140) == BST_CHECKED)
 		{
 			target_version = 1400;

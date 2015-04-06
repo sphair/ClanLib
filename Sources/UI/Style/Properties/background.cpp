@@ -29,6 +29,8 @@
 #include "UI/precomp.h"
 #include "background.h"
 
+#include "API/UI/Image/image_source.h"
+
 namespace clan
 {
 	void force_link_style_parser_background()
@@ -63,7 +65,7 @@ namespace clan
 	BackgroundRepeatPropertyParser style_parser_background_repeat;
 	BackgroundSizePropertyParser style_parser_background_size;
 
-	void BackgroundPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BackgroundPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -544,7 +546,7 @@ namespace clan
 		return true;
 	}
 
-	void BackgroundAttachmentPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BackgroundAttachmentPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -593,7 +595,7 @@ namespace clan
 		}
 	}
 
-	void BackgroundClipPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BackgroundClipPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -650,7 +652,7 @@ namespace clan
 		}
 	}
 
-	void BackgroundColorPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BackgroundColorPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -677,7 +679,7 @@ namespace clan
 		}
 	}
 
-	void BackgroundImagePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BackgroundImagePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -755,7 +757,7 @@ namespace clan
 		}
 	}
 
-	void BackgroundOriginPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BackgroundOriginPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -812,7 +814,7 @@ namespace clan
 		setter->set_value_array("background-origin", background_origins);
 	}
 
-	void BackgroundPositionPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BackgroundPositionPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -1085,7 +1087,7 @@ namespace clan
 		setter->set_value_array("background-position-y", positions_y);
 	}
 
-	void BackgroundRepeatPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BackgroundRepeatPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 
@@ -1212,7 +1214,7 @@ namespace clan
 		setter->set_value_array("background-repeat-y", background_repeat_y);
 	}
 
-	void BackgroundSizePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args)
+	void BackgroundSizePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{
 		auto &tokens = parser.tokens;
 

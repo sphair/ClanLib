@@ -29,10 +29,17 @@
 
 #pragma once
 
-// This is the Program class that is called by Application
-class Program
+#include "state.h"
+
+class Program : public clan::Application
 {
 public:
-	static int main(const std::vector<std::string> &args);
+	Program();
+	bool update() override;
+
+	clan::DisplayWindow window;
+	static DemoState state;
+	std::unique_ptr<DemoScreen> demo;
+
 };
 

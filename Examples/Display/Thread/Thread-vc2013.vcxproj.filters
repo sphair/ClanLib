@@ -13,18 +13,12 @@
     <ClCompile Include="Sources\precomp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\program.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\app.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Sources\precomp.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\program.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Sources\framerate_counter.h">

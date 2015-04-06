@@ -38,41 +38,41 @@ namespace clan
 	{
 	public:
 		WidthPropertyParser() : StylePropertyParser({ "width" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 
 	class HeightPropertyParser : public StylePropertyParser
 	{
 	public:
 		HeightPropertyParser() : StylePropertyParser({ "height" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 
 	class MinWidthPropertyParser : public StylePropertyParser
 	{
 	public:
 		MinWidthPropertyParser() : StylePropertyParser({ "min-width" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 
 	class MinHeightPropertyParser : public StylePropertyParser
 	{
 	public:
 		MinHeightPropertyParser() : StylePropertyParser({ "min-height" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 
 	class MaxWidthPropertyParser : public StylePropertyParser
 	{
 	public:
 		MaxWidthPropertyParser() : StylePropertyParser({ "max-width" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 
 	class MaxHeightPropertyParser : public StylePropertyParser
 	{
 	public:
 		MaxHeightPropertyParser() : StylePropertyParser({ "max-height" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 }

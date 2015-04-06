@@ -76,6 +76,8 @@ namespace clan
 		float get_first_baseline_offset(Canvas &canvas, float width) override;
 		float get_last_baseline_offset(Canvas &canvas, float width) override;
 
+		void layout_subviews(Canvas &canvas) override;
+
 	private:
 		std::shared_ptr<LabelViewImpl> impl;
 	};

@@ -35,10 +35,11 @@
 #include "API/Display/2D/image.h"
 #include "API/Display/2D/path.h"
 #include "API/Display/2D/brush.h"
+#include "API/UI/Image/image_source.h"
 
 namespace clan
 {
-	StyleBackgroundRenderer::StyleBackgroundRenderer(Canvas &canvas, const BoxGeometry &geometry, const Style &style) : canvas(canvas), geometry(geometry), style(style)
+	StyleBackgroundRenderer::StyleBackgroundRenderer(Canvas &canvas, const BoxGeometry &geometry, const StyleCascade &style) : canvas(canvas), geometry(geometry), style(style)
 	{
 	}
 
@@ -65,7 +66,7 @@ namespace clan
 			if (layer_image.is_keyword("none"))
 				continue;
 
-			if (layer_image.is_keyword("image"))
+			if (layer_image.is_url())
 			{
 				render_background_image(layer_image, index);
 			}
@@ -90,21 +91,10 @@ namespace clan
 
 	void StyleBackgroundRenderer::render_background_image(const StyleValue &layer_image, int index)
 	{
-		/*
-		if (background.image)
-		{
-			Brush brush;
-			brush.type = BrushType::image;
-			brush.image = background.image->get_image(canvas);
-			brush.transform = Mat3f::translate(border_box.left, border_box.top);
-			border_area_path.fill(canvas, brush);
-		}
-		*/
-
 		Image image;
 
-		if (layer_image.is_image())
-			image = Image::resource(canvas, layer_image.text, UIThread::get_resources());
+		if (layer_image.is_url())
+			image = ImageSource::from_resource(layer_image.text)->get_image(canvas);
 
 		if (!image.is_null())
 		{
@@ -112,7 +102,7 @@ namespace clan
 			Rectf origin_box = get_origin_box(index);
 			Sizef image_size = get_image_size(index, image, origin_box);
 
-			canvas.push_cliprect(clip_box);
+			//canvas.push_cliprect(clip_box);
 
 			StyleValue repeat_x = get_layer_repeat_x(index);
 			StyleValue repeat_y = get_layer_repeat_y(index);
@@ -167,7 +157,7 @@ namespace clan
 					break;
 			}
 
-			canvas.pop_cliprect();
+			//canvas.pop_cliprect();
 		}
 	}
 
@@ -180,23 +170,73 @@ namespace clan
 		if (num_stops <= 0)
 			return;
 
-		// To do: support "top-left", "top-right", "bottom-left" and "bottom-right" keywords
-		if (!prop_angle.is_angle())
-			return;
-
 		Rectf clip_box = get_clip_box(index);
-
-		float angle = prop_angle.number;
 		Pointf center = clip_box.get_center();
-		Pointf length(
-			0.5f * clip_box.get_width() * std::sin(angle),
-			0.5f * clip_box.get_height() * -std::cos(angle)
-		);
 
 		Brush brush;
 		brush.type = BrushType::linear;
-		brush.start_point = center - length;
-		brush.end_point = center + length;
+
+		if (prop_angle.is_angle())
+		{
+			float angle = std::fmod(prop_angle.number, 2 * PI);
+			if (angle < 0.0f)
+				angle += 2 * PI;
+
+			float dx = std::sin(angle);
+			float dy = -std::cos(angle);
+
+			Pointf corner1, corner2;
+
+			int corner_index = (int)(angle * 2 / PI);
+			switch (corner_index)
+			{
+			default:
+			case 0:
+				corner1 = clip_box.get_bottom_left();
+				corner2 = clip_box.get_top_right();
+				break;
+			case 1:
+				corner1 = clip_box.get_top_left();
+				corner2 = clip_box.get_bottom_right();
+				break;
+			case 2:
+				corner1 = clip_box.get_top_right();
+				corner2 = clip_box.get_bottom_left();
+				break;
+			case 3:
+				corner1 = clip_box.get_bottom_right();
+				corner2 = clip_box.get_top_left();
+				break;
+			}
+
+			bool intersect = false;
+			brush.start_point = Line2f(center, center + Vec2f(dx, dy)).get_intersection(Line2f(corner1, corner1 + Vec2f(-dy, dx)), intersect);
+			brush.end_point = Line2f(center, center + Vec2f(dx, dy)).get_intersection(Line2f(corner2, corner2 + Vec2f(-dy, dx)), intersect);
+		}
+		else if (prop_angle.is_keyword("top-left"))
+		{
+			brush.end_point = Pointf(clip_box.right, clip_box.bottom);
+			brush.start_point = Pointf(clip_box.left, clip_box.top);
+		}
+		else if (prop_angle.is_keyword("top-right"))
+		{
+			brush.end_point = Pointf(clip_box.left, clip_box.bottom);
+			brush.start_point = Pointf(clip_box.right, clip_box.top);
+		}
+		else if (prop_angle.is_keyword("bottom-left"))
+		{
+			brush.start_point = Pointf(clip_box.right, clip_box.top);
+			brush.end_point = Pointf(clip_box.left, clip_box.bottom);
+		}
+		else if (prop_angle.is_keyword("bottom-right"))
+		{
+			brush.start_point = Pointf(clip_box.left, clip_box.top);
+			brush.end_point = Pointf(clip_box.right, clip_box.bottom);
+		}
+		else
+		{
+			return;
+		}
 
 		float gradient_length = (brush.end_point - brush.start_point).length();
 		if (gradient_length <= 0.0f)

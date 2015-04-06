@@ -28,14 +28,16 @@
 
 #pragma once
 
+#include "../state.h"
 #include "../LinearParticle/L_ParticleSystem.h"
+#include "framerate_counter.h"
 
-class DemoExplosion
+class DemoExplosion : public DemoScreen
 {
 public:
-	DemoExplosion(){}
+	DemoExplosion(clan::DisplayWindow &window);
 
-	int run(clan::DisplayWindow &window);
+	bool update() override;
 
 private:
 	void on_key_up(const clan::InputEvent& key);
@@ -43,9 +45,18 @@ private:
 	void on_window_close();
 
 private:
-	bool quit;
-	bool show_menu;
+	clan::DisplayWindow window;
+	clan::SlotContainer sc;
+	clan::Canvas canvas;
+	clan::Sprite surface;
+	clan::Font font;
+	clan::Sprite pointer_sur;
+	FramerateCounter frameratecounter;
+	bool quit = false;
+	bool show_menu = true;
 	L_MotionController motion_ctrl;
-	L_ExplosionEffect* effect;
-	L_EffectEmitter* emitter;
+	std::unique_ptr<L_ExplosionEffect> effect;
+	std::unique_ptr<L_EffectEmitter> emitter;
+	std::unique_ptr<L_Particle> particle;
+	uint64_t last_time;
 };

@@ -34,99 +34,100 @@
 #include "API/Display/Window/input_device.h"
 #include "API/GL/opengl_window_description.h"
 #include "API/GL/opengl_wrap.h"
-
 #include <memory>
 
 namespace clan
 {
+	class InputDeviceProvider_OSXKeyboard;
+	class InputDeviceProvider_OSXMouse;
+	class OpenGLWindowDescription;
+	class OpenGLWindowProvider_Impl;
 
-class InputDeviceProvider_OSXKeyboard;
-class InputDeviceProvider_OSXMouse;
-class OpenGLWindowDescription;
-class OpenGLWindowProvider_Impl;
+	class OpenGLWindowProvider : public DisplayWindowProvider
+	{
+	/// \name Construction
+	/// \{
+	public:
+		OpenGLWindowProvider(OpenGLWindowDescription &opengl_desc);
+		~OpenGLWindowProvider();
+	/// \}
 
-class OpenGLWindowProvider : public DisplayWindowProvider
-{
-/// \name Construction
-/// \{
-public:
-	OpenGLWindowProvider(OpenGLWindowDescription &opengl_desc);
-	~OpenGLWindowProvider();
-/// \}
+	/// \name Attributes
+	/// \{
+	public:
+		Rect get_geometry() const;
+		Rect get_viewport() const;
+		bool is_fullscreen() const;
+		bool has_focus() const;
+		bool is_minimized() const;
+		bool is_maximized() const;
+		bool is_visible() const;
+		std::string get_title() const;
+		Size get_minimum_size(bool client_area) const;
+		Size get_maximum_size(bool client_area) const;
+		DisplayWindowHandle get_handle() const override { DisplayWindowHandle handle; return handle; }
+		GraphicContext& get_gc();
+		InputContext get_ic();
+		bool is_clipboard_text_available() const;
+		bool is_clipboard_image_available() const;
+		std::string get_clipboard_text() const;
+		PixelBuffer get_clipboard_image() const;
+		bool is_double_buffered() const;
+		float get_pixel_ratio() const override;
+	/// \}
 
-/// \name Attributes
-/// \{
-public:
-	Rect get_geometry() const;
-	Rect get_viewport() const;
-	bool is_fullscreen() const;
-	bool has_focus() const;
-	bool is_minimized() const;
-	bool is_maximized() const;
-	bool is_visible() const;
-	std::string get_title() const;
-	Size get_minimum_size(bool client_area) const;
-	Size get_maximum_size(bool client_area) const;
-	GraphicContext& get_gc();
-	InputContext get_ic();
-	bool is_clipboard_text_available() const;
-	bool is_clipboard_image_available() const;
-	std::string get_clipboard_text() const;
-	PixelBuffer get_clipboard_image() const;
-    bool is_double_buffered() const;
-/// \}
+	/// \name Operations
+	/// \{
+	public:
+		void make_current() const;
+		Point client_to_screen(const Point &client);
+		Point screen_to_client(const Point &screen);
+		void create(DisplayWindowSite *site, const DisplayWindowDescription &description);
 
-/// \name Operations
-/// \{
-public:
-	void make_current() const;
-	Point client_to_screen(const Point &client);
-	Point screen_to_client(const Point &screen);
-	void create(DisplayWindowSite *site, const DisplayWindowDescription &description);
+		void show_system_cursor();
+		CursorProvider *create_cursor(const CursorDescription &cursor_description);
+		void set_cursor(CursorProvider *cursor);
+		void set_cursor(StandardCursor type);
+		void hide_system_cursor();
+		void set_title(const std::string &new_title);
+		void set_position(const Rect &pos, bool client_area);
+		void set_size(int width, int height, bool client_area);
+		void set_minimum_size(int width, int height, bool client_area);
+		void set_maximum_size( int width, int height, bool client_area);
+		void set_enabled(bool enable);
+		void minimize();
+		void restore();
+		void maximize();
+		void show(bool activate);
+		void hide();
+		void bring_to_front();
+		void flip(int interval);
+		void update(const Rect &rect);
+		void capture_mouse(bool capture);
+		void set_clipboard_text(const std::string &text);
+		void set_clipboard_image(const PixelBuffer &buf);
+		void request_repaint(const Rect &rect);
+		void set_large_icon(const PixelBuffer &image);
+		void set_small_icon(const PixelBuffer &image);
 
-	void show_system_cursor();
-	CursorProvider *create_cursor(const CursorDescription &cursor_description);
-	void set_cursor(CursorProvider *cursor);
-	void set_cursor(StandardCursor type);
-	void hide_system_cursor();
-	void set_title(const std::string &new_title);
-	void set_position(const Rect &pos, bool client_area);
-	void set_size(int width, int height, bool client_area);
-	void set_minimum_size(int width, int height, bool client_area);
-	void set_maximum_size( int width, int height, bool client_area);
-	void set_enabled(bool enable);
-	void minimize();
-	void restore();
-	void maximize();
-	void show(bool activate);
-	void hide();
-	void bring_to_front();
-	void flip(int interval);
-	void update(const Rect &rect);
-	void capture_mouse(bool capture);
-	void set_clipboard_text(const std::string &text);
-	void set_clipboard_image(const PixelBuffer &buf);
-	void request_repaint(const Rect &rect);
-	void set_large_icon(const PixelBuffer &image);
-	void set_small_icon(const PixelBuffer &image);
+		void enable_alpha_channel(const Rect &blur_rect);
+		void extend_frame_into_client_area(int left, int top, int right, int bottom);
 
-	void enable_alpha_channel(const Rect &blur_rect);
-	void extend_frame_into_client_area(int left, int top, int right, int bottom);
+		ProcAddress *get_proc_address(const std::string& function_name) const;
+		
+		void set_pixel_ratio(float ratio) override;
+	/// \}
 
-	ProcAddress *get_proc_address(const std::string& function_name) const;
-/// \}
+	/// \name Implementation
+	/// \{
+	private:
+		InputDevice keyboard, mouse;
 
-/// \name Implementation
-/// \{
-private:
-    InputDevice keyboard, mouse;
+		InputDeviceProvider_OSXKeyboard *get_keyboard();
+		InputDeviceProvider_OSXMouse *get_mouse();
 
-    InputDeviceProvider_OSXKeyboard *get_keyboard();
-    InputDeviceProvider_OSXMouse *get_mouse();
-
-	std::unique_ptr<OpenGLWindowProvider_Impl> impl;
-	friend class OpenGLWindowProvider_Impl;
-/// \}
-};
-
+		std::unique_ptr<OpenGLWindowProvider_Impl> impl;
+		friend class OpenGLWindowProvider_Impl;
+	/// \}
+	};
 }

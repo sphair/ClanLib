@@ -39,7 +39,7 @@ namespace clan
 // SoundProvider_Raw_Session construction:
 
 SoundProvider_Raw_Session::SoundProvider_Raw_Session(SoundProvider_Raw &source) :
-	source(source), position(0), reached_end(false)
+	source(source), position(0)
 {
 	frequency = source.impl->frequency;
 	num_samples = source.impl->num_samples;

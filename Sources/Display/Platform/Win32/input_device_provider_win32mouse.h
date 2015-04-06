@@ -33,88 +33,38 @@
 
 namespace clan
 {
+	class Win32Window;
 
-class Win32Window;
-
-class InputDeviceProvider_Win32Mouse : public InputDeviceProvider
-{
-/// \name Construction
-/// \{
-
-public:
-	InputDeviceProvider_Win32Mouse(Win32Window *window);
-
-	~InputDeviceProvider_Win32Mouse();
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	/// \brief Returns the input device type.
-	InputDevice::Type get_type() const { return InputDevice::pointer; }
-
-	/// \brief Returns the x position of the device.
-	float get_x() const;
-
-	/// \brief Returns the y position of the device.
-	float get_y() const;
-
-	/// \brief Returns true if the passed key code is down for this device.
-	bool get_keycode(int keycode) const;
-
-	/// \brief Key name for specified identifier (A, B, C, Space, Enter, Backspace).
-	std::string get_key_name(int id) const;
-
-	/// \brief Returns the the current position of a joystick axis.
-	float get_axis(int index) const;
-
-	/// \brief Returns the name of the device (i.e. 'Microsoft Sidewinder 3D').
-	std::string get_name() const;
-
-	/// \brief Return the hardware id/device for this device (i.e. /dev/input/js0)
-	std::string get_device_name() const;
-
-	/// \brief Returns the number of axes available on this device.
-	std::vector<int> get_axis_ids() const;
-
-	/// \brief Returns the number of buttons available on this device.
-	/** <p>If used on a keyboard, this function returns -1.</p>*/
-	int get_button_count() const;
-
-	/// \brief Returns true if a tablet stylus is in proximity (hovering close enough over the tablet surface).
-	bool in_proximity() const { return false; }
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	/// \brief Initialize input device provider.
-	/** <p>The device field of InputEvent should not be set when emitting events.</p>*/
-	void init(Signal<void(const InputEvent &)> *new_sig_provider_event)
+	class InputDeviceProvider_Win32Mouse : public InputDeviceProvider
 	{
-		sig_provider_event = new_sig_provider_event;
-	}
+	public:
+		InputDeviceProvider_Win32Mouse(Win32Window *window);
+		~InputDeviceProvider_Win32Mouse();
 
-	/// \brief Sets the position of the device.
-	void set_position(float x, float y);
+		InputDevice::Type get_type() const override { return InputDevice::pointer; }
+		Pointf get_position() const override;
+		Point get_device_position() const override;
+		bool get_keycode(int keycode) const override;
+		std::string get_key_name(int id) const override;
+		std::string get_name() const override;
+		std::string get_device_name() const override;
+		int get_button_count() const override;
 
-/// \}
-/// \name Implementation
-/// \{
+		void init(Signal<void(const InputEvent &)> *new_sig_provider_event) override
+		{
+			sig_provider_event = new_sig_provider_event;
+		}
 
-private:
-	void on_dispose();
+		void set_position(float x, float y) override;
+		void set_device_position(int x, int y) override;
 
-	Signal<void(const InputEvent &)> *sig_provider_event;
+	private:
+		void on_dispose();
 
-	bool key_states[32];
+		Signal<void(const InputEvent &)> *sig_provider_event;
+		bool key_states[32];
+		Win32Window *window;
 
-	Win32Window *window;
-
-	friend class Win32Window;
-/// \}
-};
-
+		friend class Win32Window;
+	};
 }

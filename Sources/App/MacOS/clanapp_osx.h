@@ -37,7 +37,7 @@
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
 @end
-
+/*
 namespace clan
 {
 	void* cl_app_on_thread_id();
@@ -49,3 +49,4 @@ namespace clan
     void* main_thread_wrapper(void*);
     void create_main_thread();
 }
+*/

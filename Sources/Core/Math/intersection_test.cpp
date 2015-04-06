@@ -142,5 +142,26 @@ IntersectionTest::Result IntersectionTest::frustum_obb(const FrustumPlanes &frus
 		return inside;
 }
 
+IntersectionTest::OverlapResult IntersectionTest::ray_aabb(const Vec3f &ray_start, const Vec3f &ray_end, const AxisAlignedBoundingBox &aabb)
+{
+	Vec3f c = (ray_start + ray_end) * 0.5f;
+	Vec3f w = ray_end - c;
+	Vec3f h = aabb.extents();
+
+	c -= aabb.center();
+
+	Vec3f v(std::abs(w.x), std::abs(w.y), std::abs(w.z));
+
+	if (std::abs(c.x) > v.x + h.x || std::abs(c.y) > v.y + h.y || std::abs(c.z) > v.z + h.z)
+		return disjoint;
+
+	if (std::abs(c.y * w.z - c.z * w.y) > h.y * v.z + h.z * v.y ||
+		std::abs(c.x * w.z - c.z * w.x) > h.x * v.z + h.z * v.x ||
+		std::abs(c.x * w.y - c.y * w.x) > h.x * v.y + h.y * v.x)
+		return disjoint;
+
+	return overlap;
+}
+
 }
 

@@ -48,6 +48,6 @@ public:
 	Mat4f camera_modelview;
 	Mat4f light_projection;
 	Mat4f light_modelview;
-	aiPropertyStore* store;
+	aiPropertyStore* store = nullptr;
 
 };

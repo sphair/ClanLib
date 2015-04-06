@@ -38,69 +38,69 @@ namespace clan
 	{
 	public:
 		BorderPropertyParser() : StylePropertyParser({ "border" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 
 	class BorderColorPropertyParser : public StylePropertyParser
 	{
 	public:
 		BorderColorPropertyParser() : StylePropertyParser({ "border-color" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 
 	class BorderStylePropertyParser : public StylePropertyParser
 	{
 	public:
 		BorderStylePropertyParser() : StylePropertyParser({ "border-style" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 
 	class BorderWidthPropertyParser : public StylePropertyParser
 	{
 	public:
 		BorderWidthPropertyParser() : StylePropertyParser({ "border-width" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 
 	class BorderLTRBPropertyParser : public StylePropertyParser
 	{
 	public:
 		BorderLTRBPropertyParser() : StylePropertyParser({ "border-left", "border-top", "border-right", "border-bottom" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 
 	class BorderLTRBColorPropertyParser : public StylePropertyParser
 	{
 	public:
 		BorderLTRBColorPropertyParser() : StylePropertyParser({ "border-left-color", "border-top-color", "border-right-color", "border-bottom-color" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 
 	class BorderLTRBStylePropertyParser : public StylePropertyParser
 	{
 	public:
 		BorderLTRBStylePropertyParser() : StylePropertyParser({ "border-left-style", "border-top-style", "border-right-style", "border-bottom-style" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 
 	class BorderLTRBWidthPropertyParser : public StylePropertyParser
 	{
 	public:
 		BorderLTRBWidthPropertyParser() : StylePropertyParser({ "border-left-width", "border-top-width", "border-right-width", "border-bottom-width" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 
 	class BorderRadiusPropertyParser : public StylePropertyParser
 	{
 	public:
 		BorderRadiusPropertyParser() : StylePropertyParser({ "border-radius" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 
 	class BorderRadiusCornerPropertyParser : public StylePropertyParser
 	{
 	public:
 		BorderRadiusCornerPropertyParser() : StylePropertyParser({ "border-top-right-radius", "border-bottom-right-radius", "border-bottom-left-radius", "border-top-left-radius" }) { }
-		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser, const std::initializer_list<StylePropertyInitializerValue> &args) override;
+		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 	};
 }
