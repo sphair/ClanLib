@@ -35,12 +35,17 @@
 #include "../display_target.h"
 #include <memory>
 
-#ifndef WIN32
+#if !defined(WIN32) && !defined(CL_ANDROID)
 // We prefer not to include Xlib.h in clanlib (to prevent namespace issues when "using namespace clan")
 struct _XDisplay;
 typedef struct _XDisplay Display;
 typedef unsigned long Window;
 #endif
+
+#if defined(CL_ANDROID)
+struct ANativeWindow;
+#endif
+
 
 namespace clan
 {
@@ -83,6 +88,8 @@ struct DisplayWindowHandle
 {
 #ifdef WIN32
 	HWND hwnd = 0;
+#elif defined(CL_ANDROID)
+	ANativeWindow *window = 0;
 #else
 	::Display *display = 0;
 	::Window window = 0;

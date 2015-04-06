@@ -34,7 +34,7 @@
 int Program::main(const std::vector<std::string> &args)
 {
 	// We support all display targets, in order listed here
-//	clan::D3DTarget::enable();
+	clan::D3DTarget::enable();
 	clan::OpenGLTarget::enable();
 	// Start the Application
 	HelloWorld app;

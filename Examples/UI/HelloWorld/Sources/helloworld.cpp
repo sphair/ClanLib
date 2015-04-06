@@ -91,21 +91,22 @@ int HelloWorld::start(const std::vector<std::string> &args)
 	span->add_text("This is the UI core ", text_style);
 
 	span->add_subview(edit);
-	/*
+
+	
 	std::shared_ptr<ScrollBarView> scrollbar = std::make_shared<ScrollBarView>();
 	scrollbar->set_horizontal();
 	scrollbar->style()->set("flex: 0 0 main-size");
 	scrollbar->style()->set("background: rgb(232, 232, 236)");
-	scrollbar->track()->set("padding: 0 4px");
-	scrollbar->track()->set("background: rgb(208, 209, 215)");
-	scrollbar->thumb()->set("padding: 0 4px");
-	scrollbar->thumb()->set("background: rgb(208, 209, 215)");
+	scrollbar->track()->style()->set("padding: 0 4px");
+	scrollbar->track()->style()->set("background: rgb(208, 209, 215)");
+	scrollbar->thumb()->style()->set("padding: 0 4px");
+	scrollbar->thumb()->style()->set("background: rgb(208, 209, 215)");
 	scrollbar->set_range(0.0, 1.0);
 	scrollbar->set_position(0.5);
 	scrollbar->set_page_step(0.1);
 	scrollbar->set_line_step(0.01);
 	root->add_subview(scrollbar);
-	*/
+	
 	std::shared_ptr<Style> text_style2 = std::make_shared<Style>();
 	text_style2->set("font: 16px/40px 'Segoe UI'; font-weight: 800");
 	span->add_text(" units!", text_style2);
