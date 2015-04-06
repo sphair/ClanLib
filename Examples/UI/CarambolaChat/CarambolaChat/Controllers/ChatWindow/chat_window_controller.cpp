@@ -15,8 +15,6 @@ ChatWindowViewController::ChatWindowViewController()
 	desc.set_title("Carambola Chat");
 	desc.set_allow_resize(true);
 	desc.set_size(Size(1536, 864), false);
-	desc.set_type(WindowType::normal);
-	desc.set_extend_frame(0, 30, 0, 0);
 
 	view = std::make_shared<WindowView>(desc);
 	view->style()->set("flex-direction: column");

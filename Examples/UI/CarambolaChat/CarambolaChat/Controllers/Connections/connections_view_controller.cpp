@@ -10,7 +10,7 @@ using namespace clan;
 
 ConnectionsViewController::ConnectionsViewController()
 {
-	view->style()->set("flex: 1 1 main-size");
+	view->style()->set("flex: auto");
 	view->style()->set("flex-direction: column");
 	view->style()->set("margin: 11px");
 

@@ -11,12 +11,12 @@ ChatView::ChatView()
 	style()->set("flex-direction: row");
 
 	text_view = std::make_shared<ChatTextView>(this);
-	text_view->style()->set("flex: 1 1 main-size");
+	text_view->style()->set("flex: auto");
 	text_view->set_focus_policy(FocusPolicy::accept);
 
 	scroll = std::make_shared<ScrollBarView>();
 	scroll->set_vertical();
-	scroll->style()->set("flex: 0 0 main-size");
+	scroll->style()->set("flex: none");
 	scroll->style()->set("background: rgb(232,232,236)");
 	scroll->track()->style()->set("padding: 0 4px");
 	scroll->thumb()->style()->set("background: rgb(208,209,215)");
@@ -77,7 +77,9 @@ void ChatView::render_text_content(ChatTextView *text_view, Canvas &canvas)
 		clan::Style style;
 		style.set("font: 14px/20px 'Source Sans Pro'");
 
-		font = style.get_font(canvas);
+		clan::StyleCascade cascade({ &style });
+
+		font = cascade.get_font(canvas);
 		font_url = font;
 		font_fixed = font;
 		baseline_offset1 = (int)(font.get_font_metrics(canvas).get_ascent() - font_fixed.get_font_metrics(canvas).get_ascent());
@@ -199,7 +201,8 @@ void ChatView::layout_line(Canvas &canvas, ChatLine &line, Rect &client_area, in
 		{
 			for (auto &i : line.inlines)
 			{
-				line.column3.add_text(i.text, i.style->get_font(canvas), i.style->computed_value("color").color, i.id);
+				StyleCascade cascade({ i.style.get() });
+				line.column3.add_text(i.text, cascade.get_font(canvas), cascade.computed_value("color").color, i.id);
 			}
 
 			line.column3_rendered = true;

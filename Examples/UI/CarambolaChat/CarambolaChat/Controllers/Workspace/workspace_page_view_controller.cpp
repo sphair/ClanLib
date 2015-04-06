@@ -7,7 +7,7 @@ using namespace clan;
 
 WorkspacePageViewController::WorkspacePageViewController()
 {
-	view->style()->set("flex: 1 1 main-size");
+	view->style()->set("flex: auto");
 }
 
 void WorkspacePageViewController::set_tab_title(const std::string &text)

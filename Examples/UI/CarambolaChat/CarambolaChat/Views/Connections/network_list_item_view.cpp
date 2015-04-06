@@ -12,13 +12,13 @@ NetworkListItemView::NetworkListItemView()
 	style()->set("border-top: 1px solid rgb(204,204,204)");
 
 	status_icon = std::make_shared<ImageView>();
-	status_icon->style()->set("flex: 0 0 main-size");
+	status_icon->style()->set("flex: none");
 	status_icon->style()->set("width: 32px");
 	status_icon->style()->set("margin: 0 7px");
 	add_subview(status_icon);
 
 	auto name_status_block = std::make_shared<View>();
-	name_status_block->style()->set("flex: 0 0 main-size");
+	name_status_block->style()->set("flex: none");
 	name_status_block->style()->set("width: 220px");
 	name_status_block->style()->set("flex-direction: column");
 
@@ -35,7 +35,7 @@ NetworkListItemView::NetworkListItemView()
 	connect_button = std::make_shared<ButtonView>();
 	connect_button->label()->style()->set("font: 13px/16px 'Source Sans Pro'");
 	connect_button->label()->style()->set("color: rgb(0,0,128)");
-	connect_button->style()->set("flex: 0 0 main-size");
+	connect_button->style()->set("flex: none");
 	connect_button->style()->set("margin: auto 15px auto 0");
 	add_subview(connect_button);
 
@@ -43,7 +43,7 @@ NetworkListItemView::NetworkListItemView()
 	edit_button->label()->set_text("Edit");
 	edit_button->label()->style()->set("font: 13px/16px 'Source Sans Pro'");
 	edit_button->label()->style()->set("color: rgb(0,0,128)");
-	edit_button->style()->set("flex: 0 0 main-size");
+	edit_button->style()->set("flex: none");
 	edit_button->style()->set("margin: auto 15px auto 0");
 	add_subview(edit_button);
 
@@ -51,7 +51,7 @@ NetworkListItemView::NetworkListItemView()
 	remove_button->label()->set_text("Remove");
 	remove_button->label()->style()->set("font: 13px/16px 'Source Sans Pro'");
 	remove_button->label()->style()->set("color: rgb(0,0,128)");
-	remove_button->style()->set("flex: 0 0 main-size");
+	remove_button->style()->set("flex: none");
 	remove_button->style()->set("margin: auto 0");
 	add_subview(remove_button);
 

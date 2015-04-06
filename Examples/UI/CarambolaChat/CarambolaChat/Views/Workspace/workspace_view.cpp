@@ -7,31 +7,32 @@ using namespace clan;
 
 WorkspaceView::WorkspaceView()
 {
-	style()->set("flex: 1 1 main-size");
+	style()->set("flex: auto");
 	style()->set("flex-direction: column");
 
 	labels_group = std::make_shared<View>();
-	labels_group->style()->set("flex: 0 0 main-size");
-	labels_group->style()->set("margin: 0 -0.5px");
-	labels_group->style()->set("padding: 0");
-	labels_group->style()->set("height: 30px");
+	labels_group->style()->set("flex: none");
+	labels_group->style()->set("padding: 5px 7px 0 7px");
+	labels_group->style()->set("height: 26px");
 	labels_group->style()->set("flex-direction: row");
+	labels_group->style()->set("border-top: 1px solid rgb(159, 174, 194)");
+	labels_group->style()->set("background: rgb(201, 210, 226)");
 
 	toolbar = std::make_shared<View>();
-	toolbar->style()->set("flex: 0 0 main-size");
+	toolbar->style()->set("flex: none");
 	toolbar->style()->set("height: 40px");
 	toolbar->style()->set("margin: 0");
-	toolbar->style()->set("background: linear-gradient(to bottom, rgb(235, 243, 252), rgb(219, 234, 249))");
-	toolbar->style()->set("border-bottom: 1px solid rgb(153,153,153)");
+	toolbar->style()->set("background: linear-gradient(to bottom, rgb(223, 239, 254), rgb(219, 234, 249))");
 
 	pages_group = std::make_shared<View>();
-	pages_group->style()->set("flex: 1 1 main-size");
+	pages_group->style()->set("flex: auto");
 	pages_group->style()->set("margin: 0");
+	pages_group->style()->set("border-top: 3px solid rgb(219, 234, 249)");
 	pages_group->style()->set("background: white");
 	pages_group->style()->set("flex-direction: column");
 
+	//add_subview(toolbar);
 	add_subview(labels_group);
-	add_subview(toolbar);
 	add_subview(pages_group);
 }
 
@@ -85,12 +86,12 @@ void WorkspaceView::set_label(const std::string &id, const std::string &text)
 void WorkspaceView::set_message_count(const std::string &id, const std::string &text)
 {
 	tabs[id].tab->message_count->set_text(text);
-	tabs[id].tab->message_count->set_hidden(text.empty());
+	tabs[id].tab->message_count->set_state("highlight", !text.empty());
 }
 
 bool WorkspaceView::is_message_count_hidden(const std::string &id) const
 {
-	return tabs.find(id)->second.tab->message_count->hidden();
+	return !tabs.find(id)->second.tab->message_count->state("highlight");
 }
 
 void WorkspaceView::set_selected(TabPage &page, bool selected, bool animated)
@@ -98,14 +99,17 @@ void WorkspaceView::set_selected(TabPage &page, bool selected, bool animated)
 	if (selected)
 	{
 		page.tab->message_count->set_text("");
-		page.tab->message_count->set_hidden();
+		page.tab->message_count->set_state("highlight", false);
 	}
-	
+
+	page.tab->set_state("selected", selected);
+
+	/*
 	Colorf background(243, 240, 244, 160);
 	Colorf foreground1(239, 247, 255);
 	Colorf foreground2(235, 243, 252);
-	Colorf foreground_border = Colorf::gray40;
-	Colorf background_border = Colorf::transparent;
+	//Colorf foreground_border = Colorf::gray40;
+	//Colorf background_border = Colorf::transparent;
 
 	if (animated)
 	{
@@ -117,7 +121,7 @@ void WorkspaceView::set_selected(TabPage &page, bool selected, bool animated)
 		page.tab->animate(from, to, [=](float t)
 		{
 			page.tab->style()->set("background: linear-gradient(to bottom, %1, %2)", Style::to_rgba(mix(background, foreground1, t)), Style::to_rgba(mix(background, foreground2, t)));
-			page.tab->style()->set("border: 0.5px solid %1; border-bottom: none", Style::to_rgba(mix(background_border, foreground_border, t)));
+			//page.tab->style()->set("border: 1px solid %1; border-bottom: none", Style::to_rgba(mix(background_border, foreground_border, t)));
 		});
 	}
 	else
@@ -125,14 +129,14 @@ void WorkspaceView::set_selected(TabPage &page, bool selected, bool animated)
 		if (selected)
 		{
 			page.tab->style()->set("background: linear-gradient(to bottom, %1, %2)", Style::to_rgba(foreground1), Style::to_rgba(foreground2));
-			page.tab->style()->set("border: 0.5px solid %1; border-bottom: none", Style::to_rgba(foreground_border));
+			//page.tab->style()->set("border: 1px solid %1; border-bottom: none", Style::to_rgba(foreground_border));
 		}
 		else
 		{
 			page.tab->style()->set("background: %1", Style::to_rgba(background));
-			page.tab->style()->set("border: 0.5px solid %1; border-bottom: none", Style::to_rgba(background_border));
+			//page.tab->style()->set("border: 1px solid %1; border-bottom: none", Style::to_rgba(background_border));
 		}
 	}
-	
+	*/
 	page.page->set_hidden(!selected);
 }

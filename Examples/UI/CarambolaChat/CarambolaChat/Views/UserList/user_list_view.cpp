@@ -18,12 +18,12 @@ void UserListView::update_user(const std::string &id, const std::string &name, c
 	if (!user.view)
 	{
 		user.view = std::make_shared<View>();
-		user.view->style()->set("flex: 0 0 main-size");
+		user.view->style()->set("flex: none");
 		user.view->style()->set("padding: 5px");
 		user.view->style()->set("flex-direction: row");
 		user.icon = std::make_shared<ImageView>();
 		user.icon->set_image(ImageSource::from_resource(icon));
-		user.icon->style()->set("flex: 0 0 main-size");
+		user.icon->style()->set("flex: none");
 		user.view->add_subview(user.icon);
 		user.label = std::make_shared<LabelView>();
 		user.label->set_text(name);
