@@ -29,7 +29,7 @@
 
 #include "precomp.h"
 #include "gui.h"
-#include "..\..\..\ThemeAero\Sources\theme.h"
+#include "../../../ThemeAero/Sources/theme.h"
 
 clan::ApplicationInstance<GUI> clanapp;
 
@@ -119,14 +119,14 @@ GUI::GUI()
 	span->add_text("This is the UI core ", text_style);
 
 	span->add_subview(edit);
-	
+
 	auto scrollbar = Theme::create_scrollbar();
 	scrollbar->set_range(0.0, 1.0);
 	scrollbar->set_position(0.5);
 	scrollbar->set_page_step(0.1);
 	scrollbar->set_line_step(0.01);
 	root->add_subview(scrollbar);
-	
+
 	auto button = Theme::create_button();
 	button->label()->set_text("This is a button");
 	root->add_subview(button);
