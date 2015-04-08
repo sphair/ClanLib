@@ -112,22 +112,23 @@ Window/cursor_description.cpp \
 Window/input_context.cpp \
 Window/input_device.cpp \
 Window/keys.cpp \
-ImageProviders/targa_provider.cpp \
-ImageProviders/PNGLoader/png_loader.cpp \
-ImageProviders/provider_type.cpp \
+ImageProviders/dds_provider.cpp \
 ImageProviders/JPEGLoader/jpeg_huffman_decoder.cpp \
 ImageProviders/JPEGLoader/jpeg_mcu_decoder.cpp \
 ImageProviders/JPEGLoader/jpeg_loader.cpp \
 ImageProviders/JPEGLoader/jpeg_rgb_decoder.cpp \
 ImageProviders/JPEGLoader/jpeg_bit_reader.cpp \
 ImageProviders/JPEGLoader/jpeg_file_reader.cpp \
-ImageProviders/TargaLoader/targa_loader.cpp \
+ImageProviders/JPEGWriter/jpge.cpp \
 ImageProviders/jpeg_provider.cpp \
+ImageProviders/PNGLoader/png_loader.cpp \
+ImageProviders/PNGWriter/png_writer.cpp \
 ImageProviders/png_output_description.cpp \
 ImageProviders/png_provider.cpp \
+ImageProviders/targa_provider.cpp \
+ImageProviders/TargaLoader/targa_loader.cpp \
 ImageProviders/provider_factory.cpp \
-ImageProviders/JPEGWriter/jpge.cpp \
-ImageProviders/dds_provider.cpp \
+ImageProviders/provider_type.cpp \
 display_target_impl.cpp \
 display.cpp
 
