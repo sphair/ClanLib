@@ -91,7 +91,10 @@ void Font_Impl::select_font_family(Canvas &canvas)
 			selected_pathfont = false;
 
 		// Deterimine if font scaling is required
-		scaled_height = selected_description.get_height() / font_engine->get_desc().get_height();
+		float font_engine_desc_height = font_engine->get_desc().get_height();
+		if (font_engine_desc_height == 0.0f)
+			font_engine_desc_height = 1.0f;
+		scaled_height = selected_description.get_height() / font_engine_desc_height;
 		if ((scaled_height >= 0.9999f) && (scaled_height <= 1.0001f))	// Allow for floating point accuracy issues when determining when scaling is not required
 			scaled_height = 1.0f;
 
