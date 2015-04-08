@@ -34,7 +34,6 @@ libclan40UI_la_SOURCES = \
 ./StandardViews/SliderView/slider_view_impl.cpp \
 ./StandardViews/WindowView/window_view_impl.cpp \
 ./StandardViews/WindowView/window_view.cpp \
-./StandardViews/label_view.cpp \
 ./StandardViews/ButtonView/button_view.cpp \
 ./StandardViews/ButtonView/button_view_impl.cpp \
 ./StandardViews/TextureView/texture_view.cpp \
@@ -45,18 +44,17 @@ libclan40UI_la_SOURCES = \
 ./StandardViews/RadioButtonView/radiobutton_view.cpp \
 ./StandardViews/SpinView/spin_view_impl.cpp \
 ./StandardViews/SpinView/spin_view.cpp \
-./StandardViews/text_field_view.cpp \
-./StandardViews/popup_view.cpp \
+./StandardViews/TextFieldView/text_field_view.cpp \
 ./StandardViews/image_view.cpp \
+./StandardViews/label_view.cpp \
+./StandardViews/popup_view.cpp \
+./StandardViews/scroll_view.cpp \
 ./precomp.cpp \
 ./ViewController/view_controller.cpp \
 ./View/positioned_layout.cpp \
 ./View/vbox_layout.cpp \
-./View/block_layout.cpp \
-./View/inline_layout.cpp \
 ./View/hbox_layout.cpp \
-./View/view.cpp \
-./View/grid_layout.cpp
+./View/view.cpp
 
 libclan40UI_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
