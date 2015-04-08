@@ -41,7 +41,7 @@ namespace clan
 		float width = 0.0f;
 		for (const std::shared_ptr<View> &subview : view->subviews())
 		{
-			if (subview->style_cascade().computed_value("position").is_keyword("static") && !subview->hidden())
+			if (subview->is_static_position_and_visible())
 			{
 				width += subview->style_cascade().computed_value("margin-left").number;
 				width += subview->style_cascade().computed_value("border-left-width").number;
@@ -71,7 +71,7 @@ namespace clan
 		float noncontent_width = 0.0f;
 		for (const std::shared_ptr<View> &subview : view->subviews())
 		{
-			if (subview->style_cascade().computed_value("position").is_keyword("static") && !subview->hidden())
+			if (subview->is_static_position_and_visible())
 			{
 				noncontent_width += subview->style_cascade().computed_value("margin-left").number;
 				noncontent_width += subview->style_cascade().computed_value("border-left-width").number;
@@ -97,7 +97,7 @@ namespace clan
 		float height = 0.0f;
 		for (const std::shared_ptr<View> &subview : view->subviews())
 		{
-			if (subview->style_cascade().computed_value("position").is_keyword("static") && !subview->hidden())
+			if (subview->is_static_position_and_visible())
 			{
 				float subview_width = subview->style_cascade().computed_value("flex-basis").number;
 				if (subview->style_cascade().computed_value("flex-basis").is_keyword("main-size"))
@@ -129,7 +129,7 @@ namespace clan
 		const auto &subviews = view->subviews();
 		for (const auto & subview : subviews)
 		{
-			if (!(subview)->hidden())
+			if (subview->is_static_position_and_visible())
 				return (subview)->get_first_baseline_offset(canvas, width);
 		}
 		return 0.0f;
@@ -140,7 +140,7 @@ namespace clan
 		const auto &subviews = view->subviews();
 		for (auto it = subviews.rbegin(); it != subviews.rend(); ++it)
 		{
-			if (!(*it)->hidden())
+			if ((*it)->is_static_position_and_visible())
 				return (*it)->get_last_baseline_offset(canvas, width);
 		}
 		return 0.0f;
@@ -156,7 +156,7 @@ namespace clan
 		float noncontent_width = 0.0f;
 		for (const std::shared_ptr<View> &subview : view->subviews())
 		{
-			if (subview->style_cascade().computed_value("position").is_keyword("static") && !subview->hidden())
+			if (subview->is_static_position_and_visible())
 			{
 				noncontent_width += subview->style_cascade().computed_value("margin-left").number;
 				noncontent_width += subview->style_cascade().computed_value("border-left-width").number;
@@ -182,7 +182,7 @@ namespace clan
 		float x = 0.0f;
 		for (const std::shared_ptr<View> &subview : view->subviews())
 		{
-			if (subview->style_cascade().computed_value("position").is_keyword("static") && !subview->hidden())
+			if (subview->is_static_position_and_visible())
 			{
 				float subview_width = subview->style_cascade().computed_value("flex-basis").number;
 				if (subview->style_cascade().computed_value("flex-basis").is_keyword("main-size"))

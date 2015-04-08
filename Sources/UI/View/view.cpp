@@ -173,6 +173,11 @@ namespace clan
 		}
 	}
 
+	bool View::is_static_position_and_visible() const
+	{
+		return style_cascade().computed_value("position").is_keyword("static") && !hidden();
+	}
+
 	bool View::needs_layout() const
 	{
 		return impl->_needs_layout;

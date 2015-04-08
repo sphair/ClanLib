@@ -82,6 +82,8 @@ namespace clan
 		virtual bool hidden() const;
 		virtual void set_hidden(bool value = true);
 
+		bool is_static_position_and_visible() const;
+
 		bool needs_layout() const;
 		void set_needs_layout();
 

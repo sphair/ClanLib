@@ -41,7 +41,7 @@ namespace clan
 		float width = 0.0f;
 		for (const std::shared_ptr<View> &subview : view->subviews())
 		{
-			if (subview->style_cascade().computed_value("position").is_keyword("static") && !subview->hidden())
+			if (subview->is_static_position_and_visible())
 			{
 				float margin_box_width = 0.0f;
 				margin_box_width += subview->style_cascade().computed_value("margin-left").number;
@@ -68,7 +68,7 @@ namespace clan
 		float height = 0.0f;
 		for (const std::shared_ptr<View> &subview : view->subviews())
 		{
-			if (subview->style_cascade().computed_value("position").is_keyword("static") && !subview->hidden())
+			if (subview->is_static_position_and_visible())
 			{
 				float left_noncontent = 0.0f;
 				left_noncontent += subview->style_cascade().computed_value("margin-left").number;
@@ -109,7 +109,7 @@ namespace clan
 		const auto &subviews = view->subviews();
 		for (const auto & subview : subviews)
 		{
-			if (!(subview)->hidden())
+			if (subview->is_static_position_and_visible())
 				return (subview)->get_first_baseline_offset(canvas, width);
 		}
 		return 0.0f;
@@ -120,7 +120,7 @@ namespace clan
 		const auto &subviews = view->subviews();
 		for (auto it = subviews.rbegin(); it != subviews.rend(); ++it)
 		{
-			if (!(*it)->hidden())
+			if ((*it)->is_static_position_and_visible())
 				return (*it)->get_last_baseline_offset(canvas, width);
 		}
 		return 0.0f;
@@ -136,7 +136,7 @@ namespace clan
 		float noncontent_height = 0.0f;
 		for (const std::shared_ptr<View> &subview : view->subviews())
 		{
-			if (subview->style_cascade().computed_value("position").is_keyword("static") && !subview->hidden())
+			if (subview->is_static_position_and_visible())
 			{
 				noncontent_height += subview->style_cascade().computed_value("margin-top").number;
 				noncontent_height += subview->style_cascade().computed_value("border-top-width").number;
@@ -188,7 +188,7 @@ namespace clan
 		float y = 0.0f;
 		for (const std::shared_ptr<View> &subview : view->subviews())
 		{
-			if (subview->style_cascade().computed_value("position").is_keyword("static") && !subview->hidden())
+			if (subview->is_static_position_and_visible())
 			{
 				float left_noncontent = 0.0f;
 				left_noncontent += subview->style_cascade().computed_value("margin-left").number;
