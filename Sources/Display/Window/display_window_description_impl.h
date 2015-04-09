@@ -36,85 +36,47 @@
 
 namespace clan
 {
-
-class DisplayWindowDescription_Impl
-{
-/// \name Construction
-/// \{
-public:
-	DisplayWindowDescription_Impl()
+	class DisplayWindowDescription_Impl
 	{
-		title = "Untitled Clanlib Window";
-		position = Rectf(-1.0f, -1.0f, 639.0f, 479.0f);
-		position_client_area = false;
-		caption = true;
-		topmost = false;
-		visible = true;
-		minimize_button = true;
-		maximize_button = true;
-		sysmenu = true;
-		drop_shadow = false;
-		fullscreen = false;
-		fullscreen_monitor = 0;
-		flipping_buffers = 2;
-		swap_interval = -1;
-		allow_resize = false;
-		refresh_rate = 0;
-		bpp = 0;
-		create_tablet_context = false;
-		layered = false;
-		depth_size = 0;
-		stencil_size = 0;
-		use_cached_window = false;
-		allow_screensaver = true;
-		update_supported = false;
-		multisampling = 0;
-	}
+	public:
+		virtual ~DisplayWindowDescription_Impl() { }
 
-	virtual ~DisplayWindowDescription_Impl() { return; }
+		std::string title = "Untitled Clanlib Window";
+		Rectf position = Rectf(-1.0f, -1.0f, 639.0f, 479.0f);
+		bool position_client_area = false;
+		bool caption = true;
+		bool minimize_button = true;
+		bool maximize_button = true;
+		bool sysmenu = true;
+		bool topmost = false;
+		bool no_activate = false;
+		bool visible = true;
+		bool drop_shadow = false;
+		bool fullscreen = false;
+		int fullscreen_monitor = 0;
+		bool allow_resize = false;
+		int flipping_buffers = 2;
+		int swap_interval = -1;
+		int bpp = 0;
+		int refresh_rate = 0;
+		DisplayWindow owner;
+		bool create_tablet_context = false;
+		bool use_cached_window = false;
+		bool layered = false;
 
-/// \}
-/// \name Attributes
-/// \{
-public:
-	std::string title;
-	Rectf position;
-	bool position_client_area;
-	bool caption;
-	bool minimize_button;
-	bool maximize_button;
-	bool sysmenu;
-	bool topmost;
-	bool visible;
-	bool drop_shadow;
-	bool fullscreen;
-	int fullscreen_monitor;
-	bool allow_resize;
-	int flipping_buffers;
-	int swap_interval;
-	int bpp;
-	int refresh_rate;
-	DisplayWindow owner;
-	bool create_tablet_context;
-	bool use_cached_window;
-	bool layered;
+		DisplayWindowHandle handle;
 
-	DisplayWindowHandle handle;
+		int depth_size = 0;
+		int stencil_size = 0;
+		bool allow_screensaver = true;
+		bool update_supported = false;
+		int multisampling = 0;
 
-	int depth_size;
-	int stencil_size;
-	bool allow_screensaver;
-	bool update_supported;
-	int multisampling;
+		float extend_frame_left = 0.0f;
+		float extend_frame_top = 0.0f;
+		float extend_frame_right = 0.0f;
+		float extend_frame_bottom = 0.0f;
 
-	float extend_frame_left = 0.0f;
-	float extend_frame_top = 0.0f;
-	float extend_frame_right = 0.0f;
-	float extend_frame_bottom = 0.0f;
-
-	WindowType type = WindowType::normal;
-
-/// \}
-};
-
+		WindowType type = WindowType::normal;
+	};
 }

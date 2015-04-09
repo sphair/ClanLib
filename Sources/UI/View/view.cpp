@@ -424,7 +424,7 @@ namespace clan
 		for (unsigned int cnt = impl->_subviews.size(); cnt > 0; --cnt)	// Search the subviews in reverse order, as we want to search the view that was "last drawn" first
 		{
 			const std::shared_ptr<View> &child = impl->_subviews[cnt-1];
-			if (child->geometry().border_box().contains(pos) && !child->hidden())
+			if (child->geometry().border_box().contains(pos) && !child->hidden() && !child->local_root())
 			{
 				std::shared_ptr<View> view = child->find_view_at(Pointf(pos.x - child->geometry().content.left, pos.y - child->geometry().content.top));
 				if (view)

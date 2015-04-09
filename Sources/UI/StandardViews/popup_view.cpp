@@ -41,6 +41,7 @@ namespace clan
 			desc.set_type(WindowType::popup);
 			desc.set_visible(false);
 			desc.set_topmost(true);
+			desc.set_no_activate(true);
 			return desc;
 		}
 	};
@@ -48,5 +49,16 @@ namespace clan
 	PopupView::PopupView() : WindowView(PopupViewImpl::get_window_desc())
 	{
 		get_display_window().enable_alpha_channel(Rect(-1, -1, 0, 0));
+	}
+
+	void PopupView::set_hidden(bool value)
+	{
+		if (value != hidden())
+		{
+			if (!value)
+				show(WindowShowType::show_no_activate);
+			else
+				hide();
+		}
 	}
 }

@@ -175,6 +175,11 @@ bool DisplayWindowDescription::has_maximize_button() const
 	return impl->maximize_button;
 }
 
+bool DisplayWindowDescription::has_no_activate() const
+{
+	return impl->no_activate;
+}
+
 bool DisplayWindowDescription::is_topmost() const
 {
 	return impl->topmost;
@@ -288,6 +293,11 @@ void DisplayWindowDescription::show_maximize_button(bool value)
 void DisplayWindowDescription::set_topmost(bool value)
 {
 	impl->topmost = value;
+}
+
+void DisplayWindowDescription::set_no_activate(bool value)
+{
+	impl->no_activate = value;
 }
 
 void DisplayWindowDescription::set_visible(bool value)

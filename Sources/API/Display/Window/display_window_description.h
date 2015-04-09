@@ -150,6 +150,9 @@ public:
 	/// \brief Returns true if the window should be placed above all non-topmost windows.
 	bool is_topmost() const;
 
+	/// \brief Indicates if window is automatically activated or not.
+	bool has_no_activate() const;
+
 	/// \brief Returns true if window from the window cache should be used. (GUI Only)
 	/** <p>This setting is ignored unless the GUI and GUIWindowManagerSystem are used.</p> */
 	bool get_using_gui_window_cache() const;
@@ -212,6 +215,9 @@ public:
 
 	/// \brief Sets if the window should be placed above all non-topmost windows.
 	void set_topmost(bool value = true);
+
+	/// \brief Prevents window from being automatically activated.
+	void set_no_activate(bool value = true);
 
 	/// \brief Enables a drop shadow effect on the window.
 	void set_drop_shadow(bool value = true);

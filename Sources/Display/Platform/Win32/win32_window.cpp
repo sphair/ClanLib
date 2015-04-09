@@ -271,7 +271,7 @@ void Win32Window::set_position(const Rect &pos, bool client_area)
 	}
 	else
 	{
-		SetWindowPos(hwnd, 0, pos.left, pos.top, pos.get_width(), pos.get_height(), SWP_NOACTIVATE|SWP_NOREPOSITION|SWP_NOZORDER);
+		SetWindowPos(hwnd, 0, pos.left, pos.top, pos.get_width(), pos.get_height(), SWP_NOACTIVATE | SWP_NOREPOSITION | SWP_NOZORDER);
 	}
 }
 
@@ -446,6 +446,11 @@ LRESULT Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lpara
 	case WM_MOUSEMOVE:
 		received_mouse_move(msg, wparam, lparam);
 		return 0;
+
+	case WM_MOUSEACTIVATE:
+		if (window_desc.has_no_activate())
+			return MA_NOACTIVATE;
+		break;
 
 	case WM_NCMOUSEMOVE:
 		if (get_tablet() && get_tablet()->device_present() && !get_tablet()->is_context_on_top())
@@ -1716,14 +1721,11 @@ void Win32Window::get_styles_from_description(const DisplayWindowDescription &de
 		}
 	}
 
+	if (desc.has_no_activate())
+		ex_style |= WS_EX_NOACTIVATE;
+
 	if (type == WindowType::tool)
 		ex_style |= WS_EX_TOOLWINDOW;
-
-	if (type == WindowType::popup)
-	{
-		ex_style |= WS_EX_DLGMODALFRAME;
-		ex_style |= WS_EX_WINDOWEDGE;
-	}
 }
 
 RECT Win32Window::get_window_geometry_from_description(const DisplayWindowDescription &desc, DWORD style, DWORD ex_style)

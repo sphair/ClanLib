@@ -96,6 +96,10 @@ namespace clan
 
 	void WindowView_Impl::window_key_event(KeyEvent &e)
 	{
+		Pointf pointer_pos = e.pointer_pos(window_view);
+		pointer_pos -= window_view->geometry().content.get_top_left();
+		window_view->to_root_pos(pointer_pos);
+
 		View *view = window_view->focus_view();
 		if (view)
 		{
@@ -104,11 +108,11 @@ namespace clan
 
 		if (!e.default_prevented() && e.type() == KeyEventType::press && e.shift_down() && e.key() == Key::tab)
 		{
-			window_view->root_view()->prev_focus();
+			window_view->prev_focus();
 		}
 		else if (!e.default_prevented() && e.type() == KeyEventType::press && e.key() == Key::tab)
 		{
-			window_view->root_view()->next_focus();
+			window_view->next_focus();
 		}
 	}
 
@@ -176,13 +180,8 @@ namespace clan
 		return view;
 	}
 
-	void WindowView_Impl::window_pointer_event(PointerEvent &e_window)
+	void WindowView_Impl::window_pointer_event(PointerEvent &e)
 	{
-		PointerEvent e = e_window;
-		Pointf pointer_pos = e.pos(window_view);
-		pointer_pos -= window_view->geometry().content.get_top_left();
-		e.set_pos(window_view, pointer_pos);
-
 		std::shared_ptr<View> view_above_cursor = window_view->find_view_at(e.pos(window_view));
 		auto view = get_capture_view(e, view_above_cursor);
 		if (!view)
@@ -199,13 +198,18 @@ namespace clan
 			window_view->dispatch_event(&e);
 	}
 
+	Pointf WindowView_Impl::to_root_pos(const Pointf &client_pos) const
+	{
+		return window_view->to_root_pos(client_pos - window_view->geometry().content.get_top_left());
+	}
+
 	void WindowView_Impl::on_key_down(const clan::InputEvent &e)
 	{
 		KeyEventType type = KeyEventType::press;
 		Key key = decode_ic(e.id);
 		int repeat_count = e.repeat_count;
 		const std::string text = e.str;
-		const Pointf pointer_pos = e.mouse_pos;
+		const Pointf pointer_pos = to_root_pos(e.mouse_pos);
 		bool alt_down = e.alt;
 		bool shift_down = e.shift;
 		bool ctrl_down = e.ctrl;
@@ -220,7 +224,7 @@ namespace clan
 		Key key = decode_ic(e.id);
 		int repeat_count = e.repeat_count;
 		const std::string text = e.str;
-		const Pointf pointer_pos = e.mouse_pos;
+		const Pointf pointer_pos = to_root_pos(e.mouse_pos);
 		bool alt_down = e.alt;
 		bool shift_down = e.shift;
 		bool ctrl_down = e.ctrl;
@@ -233,7 +237,7 @@ namespace clan
 	{
 		PointerEventType type = PointerEventType::press;
 		PointerButton button = decode_id(e.id);
-		const Pointf pos = e.mouse_pos;
+		const Pointf pos = to_root_pos(e.mouse_pos);
 		bool alt_down = e.alt;
 		bool shift_down = e.shift;
 		bool ctrl_down = e.ctrl;
@@ -246,7 +250,7 @@ namespace clan
 	{
 		PointerEventType type = PointerEventType::double_click;
 		PointerButton button = decode_id(e.id);
-		const Pointf pos = e.mouse_pos;
+		const Pointf pos = to_root_pos(e.mouse_pos);
 		bool alt_down = e.alt;
 		bool shift_down = e.shift;
 		bool ctrl_down = e.ctrl;
@@ -259,7 +263,7 @@ namespace clan
 	{
 		PointerEventType type = PointerEventType::release;
 		PointerButton button = decode_id(e.id);
-		const Pointf pos = e.mouse_pos;
+		const Pointf pos = to_root_pos(e.mouse_pos);
 		bool alt_down = e.alt;
 		bool shift_down = e.shift;
 		bool ctrl_down = e.ctrl;

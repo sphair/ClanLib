@@ -51,6 +51,8 @@ namespace clan
 		std::shared_ptr<View> hot_view;
 
 	private:
+		Pointf to_root_pos(const Pointf &client_pos) const;
+
 		void dispatch_hot_event(std::shared_ptr<View> &view, PointerEvent &e);
 		std::shared_ptr<View> get_capture_view(PointerEvent &e, std::shared_ptr<View> &view_above_cursor);
 

@@ -39,6 +39,8 @@ namespace clan
 	public:
 		PopupView();
 
+		void set_hidden(bool value = true) override;
+
 	private:
 		std::shared_ptr<PopupView_Impl> impl;
 	};
