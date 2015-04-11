@@ -88,6 +88,8 @@ HelloWorld::HelloWorld()
 
 	auto scrollarea = std::make_shared<ScrollView>();
 	scrollarea->style()->set("margin: 5px 0; border: 1px solid black; padding: 5px 5px;");
+	scrollarea->scrollbar_x_view()->thumb()->style()->set("background: #c8c8c8");
+	scrollarea->scrollbar_y_view()->thumb()->style()->set("background: #c8c8c8");
 	scrollarea->content_view()->style()->set("flex-direction: column");
 	body->add_subview(scrollarea);
 
