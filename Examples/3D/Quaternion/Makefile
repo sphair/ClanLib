@@ -6,6 +6,7 @@ OBJF = ./Sources/options.o \
 ./Sources/graphic_store.o \
 ./Sources/scene_object.o \
 ./Sources/scene.o \
+../../ThemeAero/Sources/theme.o \
 ./Sources/precomp.o
 
 LIBS=clanApp clanDisplay clanCore clanGL clanUI

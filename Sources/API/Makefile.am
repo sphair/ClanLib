@@ -322,17 +322,17 @@ clanUI_includes = \
 	UI/Events/activation_change_event.h \
 	UI/Events/resize_event.h \
 	UI/Events/focus_change_event.h \
+	UI/StandardViews/checkbox_view.h \
 	UI/StandardViews/label_view.h \
+	UI/StandardViews/spin_view.h \
+	UI/StandardViews/radiobutton_view.h \
 	UI/StandardViews/text_field_view.h \
 	UI/StandardViews/image_view.h \
-	UI/StandardViews/checkbox_view.h \
-	UI/StandardViews/radiobutton_view.h \
-	UI/StandardViews/spin_view.h \
 	UI/StandardViews/scrollbar_view.h \
-	UI/StandardViews/slider_view.h \
 	UI/StandardViews/window_view.h \
 	UI/StandardViews/texture_view.h \
 	UI/StandardViews/text_view.h \
+	UI/StandardViews/slider_view.h \
 	UI/StandardViews/button_view.h \
 	UI/StandardViews/scroll_view.h \
 	UI/StandardViews/progress_view.h \
