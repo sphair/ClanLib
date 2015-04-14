@@ -240,7 +240,7 @@ namespace clan
 	{
 		double new_min = value;
 		double new_max = std::max(impl->max_pos, value);
-		double new_pos = std::max(std::min(value, new_max), new_min);
+		double new_pos = std::max(std::min(impl->pos, new_max), new_min);
 		impl->update_pos(this, new_pos, new_min, new_max);
 	}
 
@@ -248,7 +248,7 @@ namespace clan
 	{
 		double new_min = std::min(impl->min_pos, value);
 		double new_max = value;
-		double new_pos = std::max(std::min(value, new_max), new_min);
+		double new_pos = std::max(std::min(impl->pos, new_max), new_min);
 		impl->update_pos(this, new_pos, new_min, new_max);
 	}
 
