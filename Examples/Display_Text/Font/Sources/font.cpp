@@ -202,6 +202,8 @@ App::App()
 
 	small_font = clan::Font("Tahoma", 16);
 
+	premultiply_src_blend = BlendState(canvas, BlendStateDescription::blend(true));
+
 	game_time.reset();
 }
 
@@ -233,7 +235,9 @@ void App::render(DisplayWindow &window, GameTime &game_time)
 	canvas.clear(Colorf(0.0f,0.0f,0.2f, 1.0f));
 
 	root->update();
+	canvas.set_blend_state(premultiply_src_blend);
 	gui_image.draw(canvas, 0, 0);
+	canvas.reset_blend_state();
 
 	draw_font_example();
 	draw_font_info();

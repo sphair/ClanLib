@@ -121,6 +121,41 @@ BlendStateDescription BlendStateDescription::clone() const
 	return copy;
 }
 
+BlendStateDescription BlendStateDescription::blend(bool src_premultiplied, bool dest_premultiplied)
+{
+	BlendStateDescription desc;
+	if (src_premultiplied)
+	{
+		desc.impl->func_src = blend_one;
+	}
+	else
+	{
+		desc.impl->func_src = blend_src_alpha;
+	}
+
+	desc.impl->func_dest = blend_one_minus_src_alpha;
+	if (dest_premultiplied)
+	{
+		desc.impl->func_src_alpha = blend_one;
+	}
+	else
+	{
+		desc.impl->func_src_alpha = blend_src_alpha;
+	}
+	desc.impl->func_dest_alpha = blend_one_minus_src_alpha;
+
+	return desc;
+
+}
+
+BlendStateDescription BlendStateDescription::opaque()
+{
+	BlendStateDescription desc;
+	desc.enable_blending(false);
+	return desc;
+}
+
+
 bool BlendStateDescription::is_blending_enabled() const
 {
 	return impl->enable_blending;

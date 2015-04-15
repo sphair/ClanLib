@@ -96,6 +96,9 @@ private:
 	std::shared_ptr<clan::CheckBoxView> checkbox_italic;
 	std::shared_ptr<clan::CheckBoxView> checkbox_antialias;
 	std::shared_ptr<clan::CheckBoxView> checkbox_subpixel;
+
+	clan::BlendState premultiply_src_blend;
+
 };
 
 

@@ -46,6 +46,10 @@ class BlendStateDescription
 public:
 	BlendStateDescription();
 	BlendStateDescription clone() const;
+
+	static BlendStateDescription blend(bool src_premultiplied, bool dest_premultiplied = true);
+	static BlendStateDescription opaque();
+
 /// \}
 
 /// \name Attributes
