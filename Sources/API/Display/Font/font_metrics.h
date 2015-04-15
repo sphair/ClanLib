@@ -56,7 +56,8 @@ public:
 		float descent,
 		float internal_leading,
 		float external_leading,
-		float line_height = 0.0f	// If 0, then line_height is calculated as height + external_leading
+		float line_height,		// If 0, then line_height is calculated as height + external_leading
+		float pixel_ratio
 	);
 
 	~FontMetrics();

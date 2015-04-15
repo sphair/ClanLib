@@ -35,10 +35,15 @@ namespace clan
 	{
 	}
 
-	FontMetrics_Impl::FontMetrics_Impl(float height, float ascent, float descent, float internal_leading, float external_leading, float line_height) : height(height), ascent(ascent), descent(descent), internal_leading(internal_leading), external_leading(external_leading), line_height(line_height)
+	FontMetrics_Impl::FontMetrics_Impl(float xheight, float xascent, float xdescent, float xinternal_leading, float xexternal_leading, float xline_height, float xpixel_ratio) : height(xheight), ascent(xascent), descent(xdescent), internal_leading(xinternal_leading), external_leading(xexternal_leading), line_height(xline_height)
 	{
+		// Calculate line_height when not specified
 		if (line_height == 0.0f)
-			this->line_height = height + external_leading;
+			line_height = height + external_leading;
+
+		// Precalculate the baseline offset
+		baseline_offset = (line_height - height) * 0.5f + ascent;
+		baseline_offset = std::round(baseline_offset / xpixel_ratio) * xpixel_ratio;
 	}
 
 	FontMetrics_Impl::~FontMetrics_Impl()

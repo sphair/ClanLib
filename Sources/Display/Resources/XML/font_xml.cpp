@@ -96,7 +96,7 @@ namespace clan
 			if (sprite_element.has_attribute("external_leading"))
 				external_leading = StringHelp::text_to_float(sprite_element.get_attribute("external_leading", "0"));
 
-			FontMetrics font_metrics(height, ascent, descent, internal_leading, external_leading, line_height);
+			FontMetrics font_metrics(height, ascent, descent, internal_leading, external_leading, line_height, canvas.get_pixel_ratio());
 
 			font_family.add(canvas, spr_glyphs.get(), letters, spacelen, monospace, font_metrics);
 

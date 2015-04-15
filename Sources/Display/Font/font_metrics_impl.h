@@ -34,7 +34,7 @@ namespace clan
 	{
 	public:
 		FontMetrics_Impl();
-		FontMetrics_Impl(float height, float ascent, float descent, float internal_leading, float external_leading, float line_height);
+		FontMetrics_Impl(float height, float ascent, float descent, float internal_leading, float external_leading, float line_height, float pixel_ratio);
 		~FontMetrics_Impl();
 
 		float height = 0.0f;
@@ -43,5 +43,6 @@ namespace clan
 		float internal_leading = 0.0f;
 		float external_leading = 0.0f;
 		float line_height = 0.0f;
+		float baseline_offset = 0.0f;
 	};
 }

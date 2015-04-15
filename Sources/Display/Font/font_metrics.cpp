@@ -38,9 +38,10 @@ namespace clan
 	{
 	}
 
-	FontMetrics::FontMetrics(float height, float ascent, float descent, float internal_leading, float external_leading, float line_height)
-		: impl(std::make_shared<FontMetrics_Impl>(height, ascent, descent, internal_leading, external_leading, line_height))
+	FontMetrics::FontMetrics(float height, float ascent, float descent, float internal_leading, float external_leading, float line_height, float pixel_ratio)
+		: impl(std::make_shared<FontMetrics_Impl>(height, ascent, descent, internal_leading, external_leading, line_height, pixel_ratio))
 	{
+
 	}
 
 	FontMetrics::~FontMetrics()
@@ -59,7 +60,7 @@ namespace clan
 
 	float FontMetrics::get_baseline_offset() const
 	{
-		return (get_line_height() - get_height()) * 0.5f + get_ascent();
+		return impl->baseline_offset;
 	}
 
 	float FontMetrics::get_ascent() const

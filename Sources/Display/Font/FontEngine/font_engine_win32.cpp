@@ -104,7 +104,7 @@ void FontEngine_Win32::load_font(const FontDescription &desc, const std::string 
 		metrics.tmDescent / pixel_ratio,
 		metrics.tmInternalLeading / pixel_ratio,
 		metrics.tmExternalLeading / pixel_ratio,
-		desc.get_line_height());		// Calculated in FontMetrics as tmHeight + tmExternalLeading if not specified
+		desc.get_line_height(), pixel_ratio);		// Calculated in FontMetrics as tmHeight + tmExternalLeading if not specified
 
  	font_description = desc.clone();
 }

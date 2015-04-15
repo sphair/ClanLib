@@ -129,7 +129,7 @@ void Font_Impl::select_font_family(Canvas &canvas)
 			metrics.get_descent() * scaled_height,
 			metrics.get_internal_leading() * scaled_height,
 			metrics.get_external_leading() * scaled_height,
-			selected_line_height	// Do not scale the line height
+			selected_line_height, pixel_ratio	// Do not scale the line height
 			);
 	}
 }
