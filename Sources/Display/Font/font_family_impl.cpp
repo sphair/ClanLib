@@ -220,7 +220,8 @@ namespace clan
 				font_metrics.get_descent(),
 				font_metrics.get_internal_leading(),
 				font_metrics.get_external_leading(),
-				font_metrics.get_line_height(), canvas.get_pixel_ratio());
+				font_metrics.get_line_height(),
+				canvas.get_pixel_ratio());
 		}
 
 		FontDescription desc;

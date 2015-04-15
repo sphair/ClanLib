@@ -554,7 +554,8 @@ void FontEngine_Freetype::calculate_font_metrics()
 		descent / pixel_ratio,
 		internal_leading / pixel_ratio,
 		external_leading / pixel_ratio,
-		font_description.get_line_height()		// Calculated in FontMetrics as height + metrics.tmExternalLeading if not specified
+		font_description.get_line_height(),		// Calculated in FontMetrics as height + metrics.tmExternalLeading if not specified
+		pixel_ratio
 		);
 }
 

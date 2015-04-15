@@ -80,7 +80,8 @@ namespace clan
 			(CTFontGetDescent(handle)) / pixel_ratio,
 			0.0f,
 			(CTFontGetLeading(handle)) / pixel_ratio,
-			desc.get_line_height());
+			desc.get_line_height(),
+			pixel_ratio);
 		
 		font_description = desc.clone();
 	}
@@ -124,7 +125,8 @@ namespace clan
 			(CTFontGetDescent(handle)) / pixel_ratio,
 			0.0f,
 			(CTFontGetLeading(handle)) / pixel_ratio,
-			desc.get_line_height());
+			desc.get_line_height(),
+			pixel_ratio);
 
 		font_description = desc.clone();
 	}
