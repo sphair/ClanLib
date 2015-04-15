@@ -76,7 +76,7 @@ namespace clan
 		update_state();
 		if (_func_clicked)
 		{
-			if (button->geometry().border_box().contains(e.local_pos()))	// Only allow click when mouse released over component
+			if (button->geometry().border_box().contains(e.pos(button) + button->geometry().content_box().get_top_left()))	// Only allow click when mouse released over component
 				_func_clicked();
 		}
 	}

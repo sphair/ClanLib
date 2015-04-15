@@ -117,7 +117,7 @@ namespace clan
 
 		if (!_state_selected)
 		{
-			if (radio->geometry().border_box().contains(e.local_pos()))	// Only allow click when mouse released over component
+			if (radio->geometry().border_box().contains(e.pos(radio) + radio->geometry().content_box().get_top_left()))	// Only allow click when mouse released over component
 			{
 				_state_selected = true;
 				release_group_checked();

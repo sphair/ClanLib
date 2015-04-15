@@ -72,7 +72,6 @@ namespace clan
 		PointerEventType type() const { return _type; }
 		PointerButton button() const { return _button; }
 		Pointf pos(View *view) const;
-		Pointf local_pos() const;
 		void set_pos(View *view, const Pointf &pos);
 
 		bool alt_down() const { return _alt_down; }
