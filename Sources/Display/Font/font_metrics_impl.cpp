@@ -28,6 +28,7 @@
 
 #include "Display/precomp.h"
 #include "font_metrics_impl.h"
+#include <cmath>
 
 namespace clan
 {
