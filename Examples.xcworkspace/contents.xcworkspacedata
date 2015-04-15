@@ -13,6 +13,13 @@
    </Group>
    <Group
       location = "container:"
+      name = "Sound">
+      <FileRef
+         location = "group:Examples/Sound/Sound/Sound.xcodeproj">
+      </FileRef>
+   </Group>
+   <Group
+      location = "container:"
       name = "UI">
       <FileRef
          location = "group:Examples/UI/HelloWorld/HelloWorld.xcodeproj">

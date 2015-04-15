@@ -34,7 +34,9 @@ clan::ApplicationInstance<App> clanapp;
 App::App()
 {
 	// We support all display targets, in order listed here
+#ifdef WIN32
 	clan::D3DTarget::enable();
+#endif
 	clan::OpenGLTarget::enable();
 	// Set the window
 	clan::DisplayWindowDescription desc;
@@ -52,7 +54,7 @@ App::App()
 	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 	sc.connect(window.get_ic().get_keyboard().sig_key_down(), clan::bind_member(this, &App::on_input_down));
 
-	sfx_pacman_start = clan::SoundBuffer("../../Game/Pacman/resources/start.wav");
+	sfx_pacman_start = clan::SoundBuffer("Resources/start.wav");
 	sfx_cheer = clan::SoundBuffer("Resources/cheer1.ogg");
 	sound_output = clan::SoundOutput(44100, 192);
 
