@@ -36,8 +36,6 @@
 #include "API/Display/Window/input_event.h"
 #include "API/Display/Window/keys.h"
 
-#include <assert.h>
-
 namespace clan
 {
 
@@ -47,7 +45,6 @@ namespace clan
 InputDeviceProvider_OSXKeyboard::InputDeviceProvider_OSXKeyboard(OpenGLWindowProvider *window)
     : sig_provider_event(nullptr), window(window)
 {
-    // Initialize the keyboard state.
     for (int i = 0; i < clan::keycode_count; ++i)
     {
         key_down_map[i] = false;
@@ -68,8 +65,6 @@ bool InputDeviceProvider_OSXKeyboard::get_keycode(int keycode) const
 
     bool result = false;
 
-    // Sanity.
-    assert(keycode < clan::keycode_count);
     if (keycode < clan::keycode_count)
     {
         result = key_down_map[keycode];
@@ -130,11 +125,8 @@ void InputDeviceProvider_OSXKeyboard::on_dispose()
 
 void InputDeviceProvider_OSXKeyboard::on_key_event(const clan::InputCode& keycode, const clan::InputEvent::Type& type)
 {
-    // Sanity.
-    assert(keycode < clan::keycode_count);
     if (keycode < clan::keycode_count)
     {
-        assert(type == clan::InputEvent::pressed || type == clan::InputEvent::released);
         if (type == clan::InputEvent::pressed)
         {
             key_down_map[keycode] = true;

@@ -36,7 +36,7 @@
 #include "API/Display/Window/input_event.h"
 #include "API/Display/Window/keys.h"
 
-#include <assert.h>
+#import <CoreGraphics/CoreGraphics.h>
 
 namespace clan
 {
@@ -47,7 +47,6 @@ namespace clan
 InputDeviceProvider_OSXMouse::InputDeviceProvider_OSXMouse(OpenGLWindowProvider *window)
     : mouse_position(0.0f, 0.0f), sig_provider_event(nullptr), window(window)
 {
-    // Initialize the mouse state.
     for (int i = 0; i < clan::mouse_count; ++i)
     {
         mouse_down_map[i] = false;
@@ -80,8 +79,6 @@ bool InputDeviceProvider_OSXMouse::get_keycode(int keycode) const
 
     bool result = false;
 
-    // Sanity.
-    assert(keycode < clan::mouse_count);
     if (keycode < clan::mouse_count)
     {
         result = mouse_down_map[keycode];
@@ -141,11 +138,8 @@ int InputDeviceProvider_OSXMouse::get_button_count() const
 
 void InputDeviceProvider_OSXMouse::set_position(float x, float y)
 {
-    //
-    // TODO: Reimplement.
-    //
-
     throw_if_disposed();
+	CGWarpMouseCursorPosition(CGPointMake(x, y));
 }
 
 /////////////////////////////////////////////////////////////////////////////

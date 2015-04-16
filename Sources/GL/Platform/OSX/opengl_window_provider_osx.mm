@@ -339,18 +339,14 @@ namespace clan
 	{
 		OpenGL::set_active(get_gc());
 		OpenGL::check_error();
-
 		[impl->opengl_context flushBuffer];
 	}
 
 	void OpenGLWindowProvider::update(const Rect &_rect)
 	{
 		OpenGL::set_active(get_gc());
-
-		// To do: copy rect from back to front buffer
-		glFlush();
-
 		OpenGL::check_error();
+		[impl->opengl_context flushBuffer];
 	}
 
 	void OpenGLWindowProvider::capture_mouse(bool capture)
@@ -508,11 +504,6 @@ namespace clan
 			key.type = clan::InputEvent::released;
 		}
 
-		NSPoint mouse_location = [window convertScreenToBase:[NSEvent mouseLocation]];
-		NSRect bounds = [window.contentView bounds];
-		clan::Pointf mouse_pos(mouse_location.x, bounds.size.height - mouse_location.y);
-		key.mouse_pos = mouse_pos;
-
 		// Handle modifier flags
 		NSUInteger flags = [NSEvent modifierFlags];
 
@@ -605,19 +596,24 @@ namespace clan
 
 		static InputEvent prevInput;
 		key.repeat_count = 0;  // TODO: Implement.
-		if(type == NSKeyDown || type == NSKeyUp){ // Can only call this on NSKeyUp or NSKeyDown type events
+		if(type == NSKeyDown || type == NSKeyUp) // Can only call this on NSKeyUp or NSKeyDown type events
+		{
 			NSString* text = [theEvent charactersIgnoringModifiers];
 			key.str = [text UTF8String];
 			// Emit message:
 			(*self->get_keyboard()->sig_provider_event)(key);
-		}else if(type == NSFlagsChanged){
+		}
+		else if(type == NSFlagsChanged)
+		{
 			// Translate flag changes of shift and ctrl into keypresses / releases
-			if(prevInput.shift != key.shift){
+			if(prevInput.shift != key.shift)
+			{
 				key.id = keycode_shift;
 				key.type = key.shift?clan::InputEvent::pressed:clan::InputEvent::released;
 				(*self->get_keyboard()->sig_provider_event)(key);
 			}
-			if(prevInput.ctrl != key.ctrl){
+			if(prevInput.ctrl != key.ctrl)
+			{
 				key.id = keycode_control;
 				key.type = key.ctrl?clan::InputEvent::pressed:clan::InputEvent::released;
 				(*self->get_keyboard()->sig_provider_event)(key);
@@ -637,21 +633,15 @@ namespace clan
 		InputCode id;
 		bool up = false;
 		bool down = false;
-
 		bool dblclk = false;
-		int click_count = [theEvent clickCount];
-		if (click_count >= 2)
-		{
-			dblclk = true;
-		}
 
 		switch (type)
 		{
-			case NSLeftMouseDown: id = mouse_left; down = true; break;
+			case NSLeftMouseDown: id = mouse_left; down = true; dblclk = theEvent.clickCount == 2; break;
 			case NSLeftMouseUp: id = mouse_left; up = true; break;
-			case NSRightMouseDown: id = mouse_right; down = true; break;
+			case NSRightMouseDown: id = mouse_right; down = true; dblclk = theEvent.clickCount == 2; break;
 			case NSRightMouseUp: id = mouse_right; up = true; break;
-			case NSOtherMouseDown: id = mouse_middle; down = true; break;
+			case NSOtherMouseDown: id = mouse_middle; down = true; dblclk = theEvent.clickCount == 2; break;
 			case NSOtherMouseUp: id = mouse_middle; up = true; break;
 			case NSScrollWheel: id = ([theEvent deltaY] > 0) ? mouse_wheel_up : mouse_wheel_down; up = true; down = true; break;
 			case NSMouseMoved: break;
@@ -659,13 +649,11 @@ namespace clan
 				return;
 		}
 
-		NSPoint mouse_location = [window convertScreenToBase:[NSEvent mouseLocation]];
-		NSRect bounds = [window.contentView bounds];
-		clan::Pointf mouse_pos(mouse_location.x, bounds.size.height - mouse_location.y);
-
+		NSPoint content_mouse_pos = [window.contentView convertPoint:[theEvent locationInWindow] fromView:nil];
+		
 		// Prepare event to be emitted:
 		InputEvent key;
-		key.mouse_pos = mouse_pos;
+		key.mouse_pos = clan::Pointf(content_mouse_pos.x, [window.contentView bounds].size.height - content_mouse_pos.y);
 		key.id = id;
 
 		if (dblclk)
@@ -678,8 +666,7 @@ namespace clan
 			// Emit message.
 			(*self->get_mouse()->sig_provider_event)(key);
 		}
-
-		if (down)
+		else if (down)
 		{
 			key.type = InputEvent::pressed;
 

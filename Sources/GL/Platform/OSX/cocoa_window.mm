@@ -152,7 +152,12 @@
 {
 	float width = ((NSView*)self.contentView).frame.size.width;
 	float height = ((NSView*)self.contentView).frame.size.height;
+	[window_provider->opengl_context update];
 	window_provider->site->sig_resize(width, height);
+	
+	clan::GL3GraphicContextProvider *gl_provider = dynamic_cast<clan::GL3GraphicContextProvider*>(window_provider->gc.get_provider());
+	if (gl_provider)
+		gl_provider->on_window_resized();
 }
 
 //- (void)windowWillMove:(NSNotification *)notification
