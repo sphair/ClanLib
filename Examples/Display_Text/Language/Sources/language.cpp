@@ -29,8 +29,8 @@
 #include "precomp.h"
 #include "language.h"
 
-//#define ENABLE_THIS_IF_YOU_WANT_TO_USE_FRIBIDI
-// See http://clanlib.org/wiki/ExternalLibraries - For Visual Studio download of fribidi
+// #define ENABLE_THIS_IF_YOU_WANT_TO_USE_FRIBIDI
+// See http://clanlib.org/external-libraries.html - For Visual Studio download of fribidi
 
 #ifdef ENABLE_THIS_IF_YOU_WANT_TO_USE_FRIBIDI
 #define DONT_HAVE_FRIBIDI_CONFIG_H 1
@@ -39,7 +39,11 @@
 #define FRIBIDI_NO_DEPRECATED 0
 #define FRIBIDI_ENTRY
 
+#ifdef DEBUG
 #pragma comment(lib, "fribidi-static-mt-debug.lib")
+#else
+#pragma comment(lib, "fribidi-static-mt.lib")
+#endif
 
 #include <fribidi/fribidi.h>
 #endif
@@ -107,7 +111,7 @@ bool Language::update()
 	text = document_element.get_child_string("ARABIC");
 
 	/* input */
-	std::wstring text_16 = StringHelp::utf8_to_ucs2(text);
+	std::wstring text_16 = clan::StringHelp::utf8_to_ucs2(text);
 	FriBidiChar *fri_str = (FriBidiChar *) text_16.c_str();
 	FriBidiStrIndex fri_len = text_16.length();
 	FriBidiCharType fri_base_dir = FRIBIDI_TYPE_ON;
@@ -126,7 +130,7 @@ bool Language::update()
 	{
 		output_buffer[text_16.length()] = 0;
 		std::string new_text = clan::StringHelp::ucs2_to_utf8(&output_buffer[0]);
-		font_arabic.draw_text(gc, 10, 230, new_text);
+		font_arabic.draw_text(canvas, 10, 230, new_text);
 	}
 #endif
 	window.flip(1);
