@@ -27,55 +27,37 @@
             <div id="page-body-wrapper">
                 <div id="page-body">
 
-                    <h1>Visual Studio Binaries</h1>
+                    <h1>Visual Studio Precompiled Libraries</h1>
 
-                    <h2>ClanLib 3 Precompiled Libraries</h2>
+                    <p>ClanLib 4.0 does not require external libraries. However some SDK examples use them.</p>
 
-                    <p>ClanLib comes in two editions, 32 bit (win32) and 64 bit (x64). We recommend using 32 bit version unless you have very specific needs.</p>
-                  <ul>
-                        <li><a href="download/binaries-win32-vc100/ClanLib-VC10Precompiled-static-mt-Win32-3.0.1.zip">ClanLib 3.0.1 for Visual Studio 2010 SP1 (32 bit)</a></li>
-                        <li><a href="download/binaries-win32-vc100/ClanLib-VC10Precompiled-static-mt-x64-3.0.1.zip">ClanLib 3.0.1 for Visual Studio 2010 SP1 (64 bit)</a></li>
-                    <li>
-                      <a href="download/binaries-win32-vc110/ClanLib-VC11Precompiled-static-mt-Win32-3.0.1.zip">ClanLib 3.0.1 for Visual Studio 2012 Update4 (32 bit)</a>
-                    </li>
-                    <li>
-                      <a href="download/binaries-win32-vc110/ClanLib-VC11Precompiled-static-mt-x64-3.0.1.zip">ClanLib 3.0.1 for Visual Studio 2012 Update4 (64 bit)</a>
-                    </li>
+                    <ul>
+                        <li><a href="http://assimp.sourceforge.net/">assimp</a>, required by some 3D examples.</li>
+                        <li><a href="http://fribidi.org/">fribidi</a>, required by the language example.</li>
+                        <li><a href="http://www.zlib.net/">zlib</a>, required by assimp for some 3D examples.</li>
+                    </ul>
 
-                  </ul>
+                        <h2>Visual Studio 2013 Update 4 Libraries</h2>
 
-                    <h2>External Precompiled Libraries</h2>
+                        <p>All the "Debug" versions of the precompiled libraries have the optimise for speed option enabled. Updated 16 April 2015.</p>
 
-                    <p>Some ClanLib 3 examples use <a href="external-libraries.html">libraries like assimp and zlib</a>. ClanLib 3 SDK does not require these libraries, unlike ClanLib 2.3. (Last Updated 13 June 2013)
-                    </p>
-         
+                        <ul>
+                            <li><a href="download/externals/apr2015/External-VC12Precompiled-static-mt-Win32.zip">Dependency Libraries Static Multithreaded 32 bit</a></li>
+                            <li><a href="download/externals/apr2015/External-VC12Precompiled-static-mt-x64.zip">Dependency Libraries Static Multithreaded 64 bit</a></li>
+                        </ul>
 
-                  <ul>
-                        <li><a href="download/externals/jun2013/External-VC9Precompiled-static-mt-Win32.zip">Dependency Libraries for Visual Studio 2008 SP1 (32 bit)</a></li>
-                        <li><a href="download/externals/jun2013/External-VC9Precompiled-static-mt-x64.zip">Dependency Libraries for Visual Studio 2008 SP1 (64 bit)</a></li>
-                        <li><a href="download/externals/jun2013/External-VC10Precompiled-static-mt-Win32.zip">Dependency Libraries for Visual Studio 2010 SP1 (32 bit)</a></li>
-                        <li><a href="download/externals/jun2013/External-VC10Precompiled-static-mt-x64.zip">Dependency Libraries for Visual Studio 2010 SP1 (64 bit)</a></li>
-                    <li>
-                      <a href="download/externals/jun2013/External-VC11Precompiled-static-mt-Win32.zip">Dependency Libraries for Visual Studio 2012 Update3 (32 bit)</a>
-                    </li>
-                    <li>
-                      <a href="download/externals/jun2013/External-VC11Precompiled-static-mt-x64.zip">Dependency Libraries for Visual Studio 2012 Update3 (64 bit)</a>
-                    </li>
-                  </ul>
+                        <h2>Source Code with Project Files</h2>
 
-                    <h2>Getting started</h2>
+                        <p>Source code for the externals containing standardised projects provided for convenience.</p>
 
-                    <p>Jump to the <a href="xdocumentation.html">Documentation</a> - it has installation guides and documentation on various sections of ClanLib. Note, if you want
-                        to look at the ClanLib Examples, you also need to download the <a href="download.html">source package</a>.</p>
+                        <ul>
+                            <li><a href="download/externals/zlib128.zip">zlib 1.2.8</a>, Updated 13 June 2013.</li>
+                            <li><a href="download/externals/assimp_16apr2015.zip">Assimp 16 April 2015</a>, Updated 16 April 2015.</li>
+                            <li><a href="download/externals/fribidi_0_19_5.zip">FriBidi 0.19.5</a>, Updated 13 June 2013. </li>
+                            <li><a href="download/externals/freetype2412.zip">FreeType 2.4.12</a>, Updated 13 June 2013 (for android build)</li>
+                        </ul>
 
-                    <p>If you are developing using Visual Studio 2010, download the Visual Studio 2010 Plugin that lets you create new ClanLib
-                        projects easily by using File-&gt;New-&gt;Project and selecting the ClanLib wizard.</p>
-
-                    <h2>Breaking changes</h2>
-
-                    <p>If you are updating from an older version, please read about the <a href="breaking-changes.html">breaking changes</a>.</p>
-
-                </div>
+</div>
             </div>
 
             <div id="page-footer-wrapper">
