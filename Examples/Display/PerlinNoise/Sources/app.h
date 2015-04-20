@@ -50,7 +50,6 @@ private:
 	clan::Image image_grid;
 	clan::Image noise_image;
 	clan::UIThread ui_thread;
-	std::shared_ptr<clan::TextureView> root;
 	std::shared_ptr<Options> options;
 	clan::Canvas gui_canvas;
 	clan::Image gui_image;

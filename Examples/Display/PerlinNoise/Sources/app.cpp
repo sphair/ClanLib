@@ -51,22 +51,19 @@ App::App()
 	clan::ResourceManager resources = clan::FileResourceManager::create(doc);
 	ui_thread = clan::UIThread(resources);
 
-	root = std::make_shared<clan::TextureView>(canvas);
-	root->set_event_window(window);
-	root->set_cursor_window(window);
+	options = std::make_shared<Options>(canvas);
+	options->set_event_window(window);
+	options->set_cursor_window(window);
 
-	options = std::make_shared<Options>();
-	root->add_subview(options);
-	
 	image_grid = clan::Image(canvas, "../../Display_Render/Blend/Resources/grid.png");
 	image_grid.set_color(clan::Colorf(0.4f, 0.4f, 1.0f, 1.0f));
 }
 
 bool App::update()
 {
-	root->set_needs_render();
-	root->set_rect(clan::Size(canvas.get_size()));
-	root->update(clan::Colorf(0.6f, 0.6f, 0.2f, 1.0f));
+	options->set_needs_render();
+	options->set_rect(clan::Size(canvas.get_size()));
+	options->update(clan::Colorf(0.6f, 0.6f, 0.2f, 1.0f));
 
 	if (last_dimension != options->dimension)
 	{

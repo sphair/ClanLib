@@ -38,10 +38,10 @@ enum PerlinDimension
 	perlin_4d
 };
 
-class Options : public clan::View
+class Options : public clan::TextureView
 {
 public:
-	Options();
+	Options(clan::Canvas &canvas);
 	virtual ~Options();
 
 	clan::TextureFormat sized_format;
