@@ -188,6 +188,7 @@ HelloWorld::HelloWorld()
 	// Create a popup window placed where the edit field is at
 	std::shared_ptr<PopupView> popup = std::make_shared<PopupView>();
 	root->add_subview(popup);
+	popup->style()->set("position: absolute; top: 15px; right: -50px");
 	popup->style()->set("background: #FFFFE0");
 	popup->style()->set("flex: auto");
 	popup->style()->set("margin: 5px");
