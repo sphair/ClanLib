@@ -43,7 +43,7 @@ namespace clan
 
 		void set_event_window(const DisplayWindow &event_window, const Mat4f &transform_mouse_matrix);
 
-		void update();
+		void update(const Colorf &background_color);
 
 		TextureView *window_view;
 		Canvas canvas;

@@ -68,7 +68,7 @@ namespace clan
 		}
 	}
 
-	void TextureView_Impl::update()
+	void TextureView_Impl::update(const Colorf &background_color)
 	{
 		if (needs_render)
 		{

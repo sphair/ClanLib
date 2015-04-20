@@ -60,9 +60,9 @@ namespace clan
 		return true;
 	}
 
-	void TextureView::update()
+	void TextureView::update(const Colorf &background_color)
 	{
-		impl->update();
+		impl->update(background_color);
 	}
 
 	void TextureView::layout_local()
