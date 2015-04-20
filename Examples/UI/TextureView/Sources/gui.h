@@ -50,5 +50,6 @@ private:
 	clan::SlotContainer sc;
 	clan::Image gui_image;
 	std::shared_ptr<clan::LabelView> label;
+	clan::BlendState premultiply_src_blend;
 
 };

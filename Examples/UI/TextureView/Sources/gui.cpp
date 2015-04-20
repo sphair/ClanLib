@@ -136,6 +136,8 @@ GUI::GUI()
 	span->add_text(" units!", text_style2);
 	root->add_subview(span);
 
+	premultiply_src_blend = clan::BlendState(canvas, clan::BlendStateDescription::blend(true));
+
 	game_time.reset();
 }
 
@@ -150,7 +152,9 @@ bool GUI::update()
 	root->update();
 	gui_canvas.flush();
 
+	canvas.set_blend_state(premultiply_src_blend);
 	gui_image.draw(canvas, 0, 0);
+	canvas.reset_blend_state();
 
 	std::string fps = clan::string_format("%1 fps", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1));
 	font.draw_text(canvas, canvas.get_width() - 200, 30, fps);
