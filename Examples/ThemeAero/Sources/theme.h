@@ -37,5 +37,5 @@ public:
 	static std::shared_ptr<clan::SliderView> create_slider();
 	static std::shared_ptr<clan::CheckBoxView> create_checkbox();
 	static std::shared_ptr<clan::RadioButtonView> create_radiobutton();
-	static std::shared_ptr<clan::LabelView> create_label();
+	static std::shared_ptr<clan::LabelView> create_label(bool subpixel = false);
 };

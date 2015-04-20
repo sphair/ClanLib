@@ -164,9 +164,11 @@ std::shared_ptr<clan::RadioButtonView> Theme::create_radiobutton()
 	return radio;
 }
 
-std::shared_ptr<clan::LabelView> Theme::create_label()
+std::shared_ptr<clan::LabelView> Theme::create_label(bool subpixel)
 {
 	auto label = std::make_shared<clan::LabelView>();
-	label->style()->set("font: 16px Tahoma; -clan-font-rendering: anti-alias; color: white");
+	label->style()->set("font: 16px Tahoma; color: white");
+	if (!subpixel)
+		label->style()->set("-clan-font-rendering: anti-alias;");
 	return label;
 }

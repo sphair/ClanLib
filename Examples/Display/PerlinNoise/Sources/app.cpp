@@ -40,24 +40,34 @@ App::App()
 	clan::DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("Perlin Noise Example");
-	win_desc.set_size(clan::Size(800, 520), false);
+	win_desc.set_size(clan::Size(900, 520), false);
 
 	window = clan::DisplayWindow(win_desc);
 	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
 	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 
 	canvas = clan::Canvas(window);
+	clan::FileResourceDocument doc(clan::FileSystem("../../ThemeAero"));
+	clan::ResourceManager resources = clan::FileResourceManager::create(doc);
+	ui_thread = clan::UIThread(resources);
 
-	// Deleted automatically by the GUI
-	//Options *options = new Options(gui, canvas.get_size());
+	root = std::make_shared<clan::TextureView>(canvas);
+	root->set_event_window(window);
+	root->set_cursor_window(window);
 
+	options = std::make_shared<Options>();
+	root->add_subview(options);
+	
 	image_grid = clan::Image(canvas, "../../Display_Render/Blend/Resources/grid.png");
 	image_grid.set_color(clan::Colorf(0.4f, 0.4f, 1.0f, 1.0f));
 }
 
 bool App::update()
 {
-	/*
+	root->set_needs_render();
+	root->set_rect(clan::Size(canvas.get_size()));
+	root->update(clan::Colorf(0.6f, 0.6f, 0.2f, 1.0f));
+
 	if (last_dimension != options->dimension)
 	{
 		changed_flag = true;
@@ -130,7 +140,7 @@ bool App::update()
 		changed_flag = true;
 		last_position_w = options->position_w;
 	}
-	*/
+
 	if (changed_flag)
 	{
 		changed_flag = false;
