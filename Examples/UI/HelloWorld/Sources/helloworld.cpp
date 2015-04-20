@@ -185,8 +185,24 @@ HelloWorld::HelloWorld()
 		scrollarea->content_view()->add_subview(radio);
 	}
 
+	// Create a popup window placed where the edit field is at
+	std::shared_ptr<PopupView> popup = std::make_shared<PopupView>();
+	root->add_subview(popup);
+	popup->style()->set("background: #FFFFE0");
+	popup->style()->set("flex: auto");
+	popup->style()->set("margin: 5px");
+	popup->style()->set("border: 1px solid black");
+	popup->style()->set("border-radius: 2px");
+	popup->style()->set("padding: 2px 5px 2px 5px");
+	popup->style()->set("box-shadow: 0 0 3px rgba(0,0,0,0.2)");
+	auto text = Theme::create_label(true);
+	popup->add_subview(text);
+	text->set_text("This is an awesome popup");
+	text->style()->set("font: 32px Tahoma; color: black");
+
 	// Make our window visible
 	root->show();
+	popup->show(WindowShowType::show_no_activate);
 }
 
 bool HelloWorld::update()
