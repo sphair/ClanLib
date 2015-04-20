@@ -245,8 +245,6 @@ void App::render(DisplayWindow &window, GameTime &game_time)
 	last_fps = game_time.get_updates_per_second();
 
 	window.flip(1);
-
-	RunLoop::process();
 }
 
 void App::select_font()
