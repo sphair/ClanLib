@@ -77,15 +77,20 @@ App::App()
 	//win_desc.set_version(3, 2, false);
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("Point Sprite Example");
-	win_desc.set_size(clan::Size( 800, 480 ), false);
+	win_desc.set_size(clan::Size( 900, 480 ), false);
 
 	window = clan::DisplayWindow(win_desc);
 	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
 	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 	canvas = clan::Canvas(window);
 
-	// Deleted automatically by the GUI
-	//Options *options = new Options(gui, clan::Rect(0, 0, canvas.get_size()));
+	clan::FileResourceDocument doc(clan::FileSystem("../../ThemeAero"));
+	clan::ResourceManager resources = clan::FileResourceManager::create(doc);
+	ui_thread = clan::UIThread(resources);
+
+	options = std::make_shared<Options>(canvas);
+	options->set_event_window(window);
+	options->set_cursor_window(window);
 
 	image_grid = clan::Image(canvas, "../Blend/Resources/grid.png");
 	texture_particle = clan::Texture2D(canvas, "Resources/particle.png");
@@ -131,7 +136,11 @@ bool App::update()
 {
 	game_time.update();
 
-	int num_particles = 100;	// options->num_particles;
+	options->set_needs_render();
+	options->set_rect(clan::Size(canvas.get_size()));
+	options->update(clan::Colorf(0.6f, 0.6f, 0.2f, 1.0f));
+
+	int num_particles = options->num_particles;
 	if (num_particles > max_particles)
 		num_particles = max_particles;
 
@@ -173,7 +182,7 @@ bool App::update()
 		canvas.set_blend_state(blend_state);
 
 		clan::RasterizerStateDescription raster_state_desc;
-		raster_state_desc.set_point_size(64);	// (options->point_size);
+		raster_state_desc.set_point_size(options->point_size);
 		raster_state_desc.set_point_sprite_origin(clan::origin_upper_left);
 		clan::RasterizerState raster_state(canvas, raster_state_desc);
 		canvas.set_rasterizer_state(raster_state);
