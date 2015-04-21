@@ -110,7 +110,7 @@ void Options::slider_outline_size_changed()
 void Options::slider_group_size_changed()
 {
 	group_size = slider_group_size->position();
-	std::string text(clan::string_format("Outline Size : %1", group_size));
+	std::string text(clan::string_format("Group Page Size : %1", group_size));
 	label_group_size->set_text(text);
 	options_changed = true;
 }

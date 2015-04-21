@@ -86,6 +86,7 @@ void Atlas::scan_folder(const std::string &folder_name)
 
 		int outline_size = options->outline_size;
 
+		// Add border is used to eliminate issues when scaling images, so that the GPU does not use the outline pixels in the adjacent image.
 		auto outline_pixelbuffer = clan::PixelBufferHelp::add_border(pixelbuffer, outline_size, pixelbuffer.get_size());
 
 		auto sub_texture = texture_group.add(canvas, outline_pixelbuffer.get_size());
@@ -129,6 +130,10 @@ bool Atlas::update()
 		test_image.draw(canvas, target_box);
 		font.draw_text(canvas, target_box.left, target_box.top - 4.0f, test_name);
 	}
+
+	font.draw_text(canvas, canvas.get_width() - 200, 32, clan::string_format("Texture Pages #%1", textures.size()));
+	font.draw_text(canvas, 8, canvas.get_height() - 24, "Note: It is advisable for compatibility and performance that the texture group page size");
+	font.draw_text(canvas, 16, canvas.get_height() - 4, "is a number that is a power of 2, for example: 256, 512, 1024 or 2048");
 
 	options->update();
 
