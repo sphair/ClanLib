@@ -80,7 +80,8 @@ bool App::update()
 
 	options->set_needs_render();
 	options->set_rect(clan::Size(canvas.get_size()));
-	options->update(clan::Colorf(0.6f, 0.6f, 0.2f, 1.0f));
+	options->set_background_color(clan::Colorf(0.6f, 0.6f, 0.2f, 1.0f));
+	options->update();
 
 	const float grid_xpos = 10.0f;
 	const float grid_ypos = 10.0f;

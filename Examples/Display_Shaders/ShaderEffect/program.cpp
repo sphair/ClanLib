@@ -45,7 +45,7 @@ bool Program::update()
 
 	float time = System::get_time() / 1000.0f;
 	uniforms.time = time;
-	uniforms.mouse = Vec4f(mouse.get_x() / 800.0f, mouse.get_y() / 600.0f, 0, 0);
+	uniforms.mouse = Vec4f(mouse.get_position().x / 800.0f, mouse.get_position().y / 600.0f, 0, 0);
 
 	for(int i=0; i< uniforms.xparticle_count; ++i)
 	{

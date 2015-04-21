@@ -79,7 +79,7 @@ bool DemoExplosion::update()
 	L_DrawParticle(canvas, emitter.get());
 
 	// draw cross pointer
-	pointer_sur.draw(canvas, mouse.get_x(), mouse.get_y());
+	pointer_sur.draw(canvas, mouse.get_position().x, mouse.get_position().y);
 
 
 	if( show_menu )

@@ -138,7 +138,8 @@ bool App::update()
 
 	options->set_needs_render();
 	options->set_rect(clan::Size(canvas.get_size()));
-	options->update(clan::Colorf(0.6f, 0.6f, 0.2f, 1.0f));
+	options->set_background_color(clan::Colorf(0.6f, 0.6f, 0.2f, 1.0f));
+	options->update();
 
 	int num_particles = options->num_particles;
 	if (num_particles > max_particles)
