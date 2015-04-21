@@ -29,8 +29,8 @@
 #include "precomp.h"
 
 #include "options.h"
-/*
-Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComponent(&gui, clan::GUITopLevelDescription("Options", gui_position, false))
+
+Options::Options(clan::Canvas &canvas) : clan::TextureView(canvas)
 {
 	// Note, when changing these, remember to change the popup menu defaults
 	compare_function = clan::compare_greater;
@@ -43,24 +43,22 @@ Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComp
 	compare_reference = 1;
 
 	int slider_xpos = 400;
+	int slider_label_xpos = slider_xpos + 200;
 	int slider_ypos = 250;
 	int slider_gap = 24;
-	slider_numballs = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
-	slider_ypos += 8;
-	slider_numballs->set_max(9);
+	slider_numballs = create_slider(slider_xpos, slider_ypos);
+	slider_numballs->set_max_position(9);
 	slider_numballs->set_position(num_balls);
 	slider_numballs->func_value_changed() = bind_member(this, &Options::slider_numballs_changed);
-	slider_ypos += 8;
-	label_numballs = create_slider_label(slider_numballs);
+	label_numballs = create_slider_label(slider_label_xpos, slider_ypos);
+	slider_ypos += slider_gap;
 
-	slider_ypos += 8;
-	slider_compare_reference = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
-	slider_ypos += 8;
-	slider_compare_reference->set_max(16);
+	slider_compare_reference = create_slider(slider_xpos, slider_ypos);
+	slider_compare_reference->set_max_position(16);
 	slider_compare_reference->set_position(compare_reference);
 	slider_compare_reference->func_value_changed() = bind_member(this, &Options::slider_compare_reference_changed);
-	slider_ypos += 8;
-	label_compare_reference = create_slider_label(slider_compare_reference);
+	label_compare_reference = create_slider_label(slider_label_xpos, slider_ypos);
+	slider_ypos += slider_gap;
 
 	int checkbox_xpos = slider_xpos;
 	int checkbox_ypos = slider_ypos;
@@ -72,21 +70,19 @@ Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComp
 	checkbox_circle->func_state_changed() = bind_member(this, &Options::checkbox_circle_changed);
 	checkbox_ypos += checkbox_gap + 8;
 
-	make_compare_menu(combo_compare_menu);
-	combo_comparefunc = create_compare_combo_box(600, 40, combo_compare_menu, 3);
-	label_comparefunc = create_combobox_label(combo_comparefunc, "Compare Function");
+	//make_compare_menu(combo_compare_menu);
+	//combo_comparefunc = create_compare_combo_box(600, 40, combo_compare_menu, 3);
+	//label_comparefunc = create_combobox_label(combo_comparefunc, "Compare Function");
 
-	make_passfail_menu(combo_pass_menu);
-	combo_pass = create_passfail_combo_box(600, 80, combo_pass_menu, 0);
-	label_pass = create_combobox_label(combo_pass, "Pass Operation");
+	//make_passfail_menu(combo_pass_menu);
+	//combo_pass = create_passfail_combo_box(600, 80, combo_pass_menu, 0);
+	//label_pass = create_combobox_label(combo_pass, "Pass Operation");
 
-	make_passfail_menu(combo_fail_menu);
-	combo_fail = create_passfail_combo_box(600, 120, combo_fail_menu, 3);
-	label_fail = create_combobox_label(combo_fail, "Fail Operation");
+	//make_passfail_menu(combo_fail_menu);
+	//combo_fail = create_passfail_combo_box(600, 120, combo_fail_menu, 3);
+	//label_fail = create_combobox_label(combo_fail, "Fail Operation");
 
 	update_all_slider_text();
-
-	func_render() = bind_member(this, &Options::on_render);
 }
 
 Options::~Options()
@@ -94,46 +90,46 @@ Options::~Options()
 
 }
 
-void Options::on_render(clan::Canvas &canvas, const clan::Rect &update_rect)
+float Options::get_value(std::shared_ptr<clan::SliderView> slider)
 {
-	clan::Rect rect = get_geometry();
-	canvas.fill_rect(update_rect, clan::Colorf(0.6f, 0.6f, 0.2f, 1.0f));
-}
-
-float Options::get_value(clan::Slider *slider)
-{
-	float value = (float) slider->get_position();
-	value /= (float) slider->get_max();
+	float value = (float)slider->position();
+	value /= (float)slider->max_position();
 	return value;
 }
 
-clan::Slider *Options::create_slider(int xpos, int ypos)
+std::shared_ptr<clan::SliderView> Options::create_slider(int xpos, int ypos)
 {
-	clan::Slider *component = new clan::Slider(this);
-	component->set_geometry(clan::Rect(xpos, ypos, clan::Size(128, 17)));
-	component->set_vertical(false);
-	component->set_horizontal(true);
-	component->set_min(0);
-	component->set_max(1000);
+	std::shared_ptr<clan::SliderView> component = Theme::create_slider();
+	add_subview(component);
+
+	component->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:auto;", xpos, ypos, 192);
+	component->set_horizontal();
+	component->set_min_position(0);
+	component->set_max_position(1000);
 	component->set_tick_count(100);
 	component->set_page_step(100);
 	component->set_lock_to_ticks(false);
-	component->set_position(component->get_max());
+	component->set_position(component->max_position());
 
 	return component;
-
 }
 
-clan::CheckBox *Options::create_checkbox(int xpos, int ypos, const char *name, bool state)
+std::shared_ptr<clan::CheckBoxView> Options::create_checkbox(int xpos, int ypos, const std::string &name, bool state)
 {
-	clan::CheckBox *checkbox = new clan::CheckBox(this);
-	checkbox->set_geometry(clan::Rect(xpos, ypos , clan::Size(300, 16)));
-	checkbox->set_text(name);
-	checkbox->set_checked(state);
+	std::shared_ptr<clan::CheckBoxView> checkbox = Theme::create_checkbox();
+	add_subview(checkbox);
+	checkbox->style()->set("position: absolute; left:%1px; top:%2px", xpos, ypos);
+	checkbox->set_check(state);
+
+	auto label = Theme::create_label(true);
+	label->set_text(name);
+	label->style()->set("position: absolute; left:%1px; top:%2px", xpos + 16, ypos - 3);
+	add_subview(label);
+
 	return checkbox;
 }
 
-
+/*
 void Options::on_compare_selected(int value, clan::ComboBox *combo)
 {
 	switch (value)
@@ -206,27 +202,27 @@ void Options::on_passfail_selected(int value, clan::ComboBox *combo)
 		stencil_fail = selected;
 	}
 }
+*/
 
-
-clan::Label *Options::create_slider_label(clan::Slider *slider)
+std::shared_ptr<clan::LabelView> Options::create_slider_label(int xpos, int ypos)
 {
-	clan::Label *component = new clan::Label(this);
-	clan::Rect slider_geometry = slider->get_geometry();
-	component->set_geometry(clan::Rect(slider_geometry.right + 4, slider_geometry.top - 2, clan::Size(256, 17)));
+	std::shared_ptr<clan::LabelView> component = Theme::create_label(true);
+	add_subview(component);
+	component->style()->set("position: absolute; left:%1px; top:%2px", xpos, ypos);
 	component->set_text("##################");
 	return component;
 }
 
 void Options::slider_numballs_changed()
 {
-	num_balls = slider_numballs->get_position();
+	num_balls = slider_numballs->position();
 	std::string text(clan::string_format("Number of Balls : %1", num_balls));
 	label_numballs->set_text(text);
 }
 
 void Options::slider_compare_reference_changed()
 {
-	compare_reference = slider_compare_reference->get_position();
+	compare_reference = slider_compare_reference->position();
 	std::string text(clan::string_format("Stencil Reference : %1", compare_reference));
 	label_compare_reference->set_text(text);
 }
@@ -239,13 +235,15 @@ void Options::update_all_slider_text()
 
 void Options::checkbox_moveballs_changed()
 {
-	is_moveballs_set = checkbox_moveballs->is_checked();
+	is_moveballs_set = checkbox_moveballs->checked();
 }
 
 void Options::checkbox_circle_changed()
 {
-	is_circle_set = checkbox_circle->is_checked();
+	is_circle_set = checkbox_circle->checked();
 }
+
+/*
 
 clan::ComboBox *Options::create_compare_combo_box(int xpos, int ypos, clan::PopupMenu &menu, int selected_item)
 {
@@ -299,9 +297,9 @@ void Options::make_passfail_menu(clan::PopupMenu &menu)
 	menu.insert_item("decr_wrap");
 }
 
-clan::Label *Options::create_combobox_label(clan::ComboBox *combo, const char *text)
+std::shared_ptr<clan::LabelView> Options::create_combobox_label(clan::ComboBox *combo, const char *text)
 {
-	clan::Label *component = new clan::Label(this);
+	std::shared_ptr<clan::LabelView> component = new clan::Label(this);
 	clan::Rect combo_geometry = combo->get_geometry();
 	component->set_geometry(clan::Rect(combo_geometry.left, combo_geometry.top - 20, clan::Size(256, 17)));
 	component->set_text(text);
@@ -309,3 +307,4 @@ clan::Label *Options::create_combobox_label(clan::ComboBox *combo, const char *t
 }
 
 */
+

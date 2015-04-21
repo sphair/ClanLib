@@ -35,7 +35,6 @@ clan::ApplicationInstance<App> clanapp;
 
 App::App()
 {
-	// We support all display targets, in order listed here
 	clan::OpenGLTarget::enable();
 
 	clan::DisplayWindowDescription win_desc;
@@ -51,8 +50,13 @@ App::App()
 	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 	canvas = clan::Canvas(window);
 
-	// Deleted automatically by the GUI
-	//Options *options = new Options(gui, clan::Rect(0, 0, canvas.get_size()));
+	clan::FileResourceDocument doc(clan::FileSystem("../../ThemeAero"));
+	clan::ResourceManager resources = clan::FileResourceManager::create(doc);
+	ui_thread = clan::UIThread(resources);
+
+	options = std::make_shared<Options>(canvas);
+	options->set_event_window(window);
+	options->set_cursor_window(window);
 
 	image_grid = clan::Image(canvas, "../Blend/Resources/grid.png");
 	image_ball = clan::Image(canvas, "../Blend/Resources/ball.png");
@@ -73,12 +77,15 @@ bool App::update()
 {
 	game_time.update();
 	
+	options->set_needs_render();
+	options->set_rect(clan::Size(canvas.get_size()));
+	options->update(clan::Colorf(0.6f, 0.6f, 0.2f, 1.0f));
 
-	int num_balls = 9;	// options->num_balls;
+	int num_balls = options->num_balls;
 	if (num_balls > max_balls)
 		num_balls = max_balls;
 
-	//if (options->is_moveballs_set)
+	if (options->is_moveballs_set)
 		move_balls(game_time.get_time_elapsed(), num_balls);
 
 	canvas.clear_stencil(0);
@@ -91,7 +98,7 @@ bool App::update()
 	clan::DepthStencilStateDescription stencil_desc;
 
 	// Draw the circle onto the stencil
-	//if (options->is_circle_set)
+	if (options->is_circle_set)
 	{
 		stencil_desc.enable_stencil_test(true);
 
@@ -112,10 +119,10 @@ bool App::update()
 	}
 
 	stencil_desc.enable_stencil_test(true);
-	//stencil_desc.set_stencil_compare_front(options->compare_function, options->compare_reference, 255);
-	//stencil_desc.set_stencil_compare_back(options->compare_function, options->compare_reference, 255);
-	//stencil_desc.set_stencil_op_front(options->stencil_fail, options->stencil_pass, options->stencil_pass);
-	//stencil_desc.set_stencil_op_back(options->stencil_fail, options->stencil_pass, options->stencil_pass);
+	stencil_desc.set_stencil_compare_front(options->compare_function, options->compare_reference, 255);
+	stencil_desc.set_stencil_compare_back(options->compare_function, options->compare_reference, 255);
+	stencil_desc.set_stencil_op_front(options->stencil_fail, options->stencil_pass, options->stencil_pass);
+	stencil_desc.set_stencil_op_back(options->stencil_fail, options->stencil_pass, options->stencil_pass);
 
 	// Note, depth testing disabled for this example
 	stencil_desc.enable_depth_write(false);
