@@ -52,7 +52,6 @@ App::App()
 
 	canvas = clan::Canvas(window);
 
-	canvas = clan::Canvas(window);
 	clan::FileResourceDocument doc(clan::FileSystem("../../ThemeAero"));
 	clan::ResourceManager resources = clan::FileResourceManager::create(doc);
 	ui_thread = clan::UIThread(resources);
