@@ -37,9 +37,13 @@ namespace clan
 	ListBoxView::ListBoxView() : impl(new ListBoxViewImpl())
 	{
 		impl->listbox = this;
-		style()->set("flex-direction: row");
+		content_view()->style()->set("flex-direction: column");
+		
+		set_focus_policy(FocusPolicy::accept);
 
-		slots.connect(sig_pointer_release(), impl.get(), &ListBoxViewImpl::on_pointer_release);
+		slots.connect(sig_key_press(), impl.get(), &ListBoxViewImpl::on_key_press);
+		slots.connect(content_view()->sig_pointer_press(), impl.get(), &ListBoxViewImpl::on_pointer_press);
+		slots.connect(content_view()->sig_pointer_release(), impl.get(), &ListBoxViewImpl::on_pointer_release);
 	}
 
 	ListBoxView::~ListBoxView()
@@ -66,7 +70,7 @@ namespace clan
 		impl->items = items;
 		impl->selected_item = -1;
 		
-		auto views = subviews();
+		auto views = content_view()->subviews();
 		while (!views.empty())
 			views.back()->remove_from_super();
 		
@@ -76,7 +80,7 @@ namespace clan
 			view->set_text(item);
 			if (impl->func_style_item)
 				impl->func_style_item(view.get());
-			add_subview(view);
+			content_view()->add_subview(view);
 		}
 	}
 	
@@ -94,10 +98,15 @@ namespace clan
 			throw Exception("Listbox index out of bounds");
 
 		if (impl->selected_item != -1)
-			subviews().at(impl->selected_item)->set_state("selected", false);
+			content_view()->subviews().at(impl->selected_item)->set_state("selected", false);
 		
 		if (index != -1)
-			subviews().at(index)->set_state("selected", true);
+		{
+			auto new_selected_item = content_view()->subviews().at(index);
+			new_selected_item->set_state("selected", true);
+			
+			// To do: call set_content_offset() if new_selected_item is not within range (maybe add a helper on ScrollView for this?)
+		}
 		
 		impl->selected_item = index;
 	}
