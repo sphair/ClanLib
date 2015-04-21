@@ -44,20 +44,22 @@ App::App()
 	clan::DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("MapMode Example");
-	win_desc.set_size(clan::Size( 800, 480 ), false);
+	win_desc.set_size(clan::Size( 980, 480 ), false);
 
 	window = clan::DisplayWindow(win_desc);
 	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
 	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 	canvas = clan::Canvas(window);
+	clan::FileResourceDocument doc(clan::FileSystem("../../ThemeAero"));
+	clan::ResourceManager resources = clan::FileResourceManager::create(doc);
+	ui_thread = clan::UIThread(resources);
 
-	// Deleted automatically by the GUI
-	//Options *options = new Options(gui, clan::Rect(0, 0, canvas.get_size()));
+	options = std::make_shared<Options>(canvas);
+	options->set_event_window(window);
+	options->set_cursor_window(window);
 
 	image_grid = clan::Image(canvas, "../Blend/Resources/grid.png");
 	image_ball = clan::Image(canvas, "../Blend/Resources/ball.png");
-	float grid_width = (float) image_grid.get_width();
-	float grid_height = (float) image_grid.get_height();
 
 	grid_space = (float) (image_grid.get_width() - image_ball.get_width());
 
@@ -70,24 +72,29 @@ bool App::update()
 {
 	game_time.update();
 
-	
-	int num_balls = 3;	// options->num_balls;
+	options->set_needs_render();
+	options->set_rect(clan::Size(canvas.get_size()));
+	options->update(clan::Colorf(0.6f, 0.6f, 0.2f, 1.0f));
+
+	int num_balls = options->num_balls;
 	if (num_balls > max_balls)
 		num_balls = max_balls;
 
-//	if (options->is_moveballs_set)
+	if (options->is_moveballs_set)
 		move_balls(game_time.get_time_elapsed(), num_balls);
 
-//	canvas.set_map_mode(options->current_mapmode);
+	canvas.set_map_mode(options->current_mapmode);
 
 	const float grid_xpos = 10.0f;
 	const float grid_ypos = 10.0f;
 
-//	if (options->current_mapmode == clan::map_user_projection)
-//	{
-//		clan::Sizef area_size(grid_width + (grid_xpos * 2.0f), grid_height + (grid_ypos * 2.0f));
-//		set_user_projection(canvas, area_size, options);
-//	}
+	if (options->current_mapmode == clan::map_user_projection)
+	{
+		float grid_width = (float)image_grid.get_width();
+		float grid_height = (float)image_grid.get_height();
+		clan::Sizef area_size(grid_width + (grid_xpos * 2.0f), grid_height + (grid_ypos * 2.0f));
+		set_user_projection(canvas, area_size, options.get());
+	}
 
 	// Draw the grid
 	image_grid.draw(canvas, grid_xpos, grid_ypos);
@@ -204,7 +211,7 @@ void App::set_user_projection(clan::Canvas &canvas, clan::Sizef &area_size, Opti
 	clan::Mat4f modelview_matrix = clan::Mat4f::identity();
 
 	modelview_matrix.translate_self(-1.0f, 1.0, lens_zoom);
-	//modelview_matrix = modelview_matrix * clan::Mat4f::rotate(clan::Angle((float) -options->grid_angle, clan::angle_degrees), 1.0f, 0.0f, 0.0f, false);
+	modelview_matrix = modelview_matrix * clan::Mat4f::rotate(clan::Angle((float) -options->grid_angle, clan::angle_degrees), 1.0f, 0.0f, 0.0f, false);
 	modelview_matrix.scale_self(2.0f / area_size.width, -2.0f / area_size.height, 1.0f);
 
 	canvas.set_transform(modelview_matrix);
