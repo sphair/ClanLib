@@ -30,9 +30,7 @@
 
 #include "options.h"
 
-/*
-
-Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComponent(&gui, clan::GUITopLevelDescription("Options", gui_position, false))
+Options::Options(clan::Canvas &canvas) : clan::TextureView(canvas)
 {
 	// If you change these, you also need to change the default selected combobox item
 	blendfunc[0] = clan::blend_src_alpha;
@@ -52,40 +50,47 @@ Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComp
 	is_blending_set = true;
 
 	int slider_xpos = 400;
+	int slider_label_xpos = slider_xpos + 200;
 	int slider_ypos = 200;
-	int slider_gap = 24;
-	slider_numballs = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
-	slider_ypos += 8;
-	slider_numballs->set_max(9);
+	int slider_gap = 32;
+	slider_numballs = create_slider(slider_xpos, slider_ypos);
+	slider_numballs->set_max_position(9);
 	slider_numballs->set_position(4);
 	slider_numballs->func_value_changed() = bind_member(this, &Options::slider_numballs_changed);
-	slider_primary_red = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
+	label_numballs = create_slider_label(slider_label_xpos, slider_ypos);
+	slider_ypos += slider_gap;
+	slider_primary_red = create_slider(slider_xpos, slider_ypos);
 	slider_primary_red->func_value_changed() = bind_member(this, &Options::slider_primary_red_changed);
-	slider_primary_green = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
+	label_primary_red = create_slider_label(slider_label_xpos, slider_ypos);
+	slider_ypos += slider_gap;
+	slider_primary_green = create_slider(slider_xpos, slider_ypos);
 	slider_primary_green->func_value_changed() = bind_member(this, &Options::slider_primary_green_changed);
-	slider_primary_blue = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
+	label_primary_green = create_slider_label(slider_label_xpos, slider_ypos);
+	slider_ypos += slider_gap;
+	slider_primary_blue = create_slider(slider_xpos, slider_ypos);
 	slider_primary_blue->func_value_changed() = bind_member(this, &Options::slider_primary_blue_changed);
-	slider_primary_alpha = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
+	label_primary_blue = create_slider_label(slider_label_xpos, slider_ypos);
+	slider_ypos += slider_gap;
+	slider_primary_alpha = create_slider(slider_xpos, slider_ypos);
 	slider_primary_alpha->func_value_changed() = bind_member(this, &Options::slider_primary_alpha_changed);
-	slider_ypos += 8;
-	slider_blend_red = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
+	label_primary_alpha = create_slider_label(slider_label_xpos, slider_ypos);
+	slider_ypos += slider_gap;
+	slider_blend_red = create_slider(slider_xpos, slider_ypos);
 	slider_blend_red->func_value_changed() = bind_member(this, &Options::slider_blend_red_changed);
-	slider_blend_green = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
+	label_blend_red = create_slider_label(slider_label_xpos, slider_ypos);
+	slider_ypos += slider_gap;
+	slider_blend_green = create_slider(slider_xpos, slider_ypos);
 	slider_blend_green->func_value_changed() = bind_member(this, &Options::slider_blend_green_changed);
-	slider_blend_blue = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
+	label_blend_green = create_slider_label(slider_label_xpos, slider_ypos);
+	slider_ypos += slider_gap;
+	slider_blend_blue = create_slider(slider_xpos, slider_ypos);
 	slider_blend_blue->func_value_changed() = bind_member(this, &Options::slider_blend_blue_changed);
-	slider_blend_alpha = create_slider(slider_xpos, slider_ypos); slider_ypos += slider_gap;
+	label_blend_blue = create_slider_label(slider_label_xpos, slider_ypos);
+	slider_ypos += slider_gap;
+	slider_blend_alpha = create_slider(slider_xpos, slider_ypos);
 	slider_blend_alpha->func_value_changed() = bind_member(this, &Options::slider_blend_alpha_changed);
-	slider_ypos += 8;
-	label_numballs = create_slider_label(slider_numballs);
-	label_primary_red = create_slider_label(slider_primary_red);
-	label_primary_green = create_slider_label(slider_primary_green);
-	label_primary_blue = create_slider_label(slider_primary_blue);
-	label_primary_alpha = create_slider_label(slider_primary_alpha);
-	label_blend_red = create_slider_label(slider_blend_red);
-	label_blend_green = create_slider_label(slider_blend_green);
-	label_blend_blue = create_slider_label(slider_blend_blue);
-	label_blend_alpha = create_slider_label(slider_blend_alpha);
+	label_blend_alpha = create_slider_label(slider_label_xpos, slider_ypos);
+	slider_ypos += slider_gap;
 
 	int checkbox_xpos = slider_xpos;
 	int checkbox_ypos = slider_ypos;
@@ -98,7 +103,7 @@ Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComp
 	checkbox_premult_alpha->func_state_changed() = bind_member(this, &Options::checkbox_premult_alpha_changed);
 	checkbox_ypos += checkbox_gap + 8;
 
-	make_equation_menu(combo_color_equation_menu);
+/*	make_equation_menu(combo_color_equation_menu);
 	make_equation_menu(combo_alpha_equation_menu);
 	combo_color_equation = create_equation_combo_box(400, 40, combo_color_equation_menu, 0);
 	combo_alpha_equation = create_equation_combo_box(550, 40, combo_alpha_equation_menu, 0);
@@ -121,56 +126,63 @@ Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComp
 	label_src_alpha = create_combobox_label(combo_src_alpha_blend, "SOURCE ALPHA FUNCTION");
 	combo_dest_alpha_blend = create_blend_combo_box(610, 160, combo_dest_alpha_blend_menu, 7);
 	label_dest_alpha = create_combobox_label(combo_dest_alpha_blend, "DEST ALPHA FUNCTION");
-
+*/
 	update_all_slider_text();
 
-	func_render() = bind_member(this, &Options::on_render);
 }
 
 Options::~Options()
 {
 
 }
-
-void Options::on_render(clan::Canvas &canvas, const clan::Rect &update_rect)
+float Options::get_value(std::shared_ptr<clan::SliderView> slider)
 {
-	clan::Rect rect = get_geometry();
-	canvas.fill_rect(update_rect, clan::Colorf(0.6f, 0.6f, 0.2f, 1.0f));
-}
-
-float Options::get_value(clan::Slider *slider)
-{
-	float value = (float) slider->get_position();
-	value /= (float) slider->get_max();
+	float value = (float)slider->position();
+	value /= (float)slider->max_position();
 	return value;
 }
 
-clan::Slider *Options::create_slider(int xpos, int ypos)
+void Options::set_value(std::shared_ptr<clan::SliderView> slider, float value, float max_value)
 {
-	clan::Slider *component = new clan::Slider(this);
-	component->set_geometry(clan::Rect(xpos, ypos, clan::Size(256, 17)));
-	component->set_vertical(false);
-	component->set_horizontal(true);
-	component->set_min(0);
-	component->set_max(1000);
+	value /= max_value;
+	value *= (float)slider->max_position();
+	slider->set_position(value);
+}
+
+std::shared_ptr<clan::SliderView> Options::create_slider(int xpos, int ypos)
+{
+	std::shared_ptr<clan::SliderView> component = Theme::create_slider();
+	add_subview(component);
+
+	component->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:auto;", xpos, ypos, 192);
+	component->set_horizontal();
+	component->set_min_position(0);
+	component->set_max_position(1000);
 	component->set_tick_count(100);
 	component->set_page_step(100);
 	component->set_lock_to_ticks(false);
-	component->set_position(component->get_max());
+	component->set_position(component->max_position());
 
 	return component;
 
 }
 
-clan::CheckBox *Options::create_checkbox(int xpos, int ypos, const char *name, bool state)
+std::shared_ptr<clan::CheckBoxView> Options::create_checkbox(int xpos, int ypos, const std::string &name, bool state)
 {
-	clan::CheckBox *checkbox = new clan::CheckBox(this);
-	checkbox->set_geometry(clan::Rect(xpos, ypos , clan::Size(140, 16)));
-	checkbox->set_text(name);
-	checkbox->set_checked(state);
+	std::shared_ptr<clan::CheckBoxView> checkbox = Theme::create_checkbox();
+	add_subview(checkbox);
+	checkbox->style()->set("position: absolute; left:%1px; top:%2px", xpos, ypos);
+	checkbox->set_check(state);
+
+	auto label = Theme::create_label(true);
+	label->set_text(name);
+	label->style()->set("position: absolute; left:%1px; top:%2px", xpos + 16, ypos - 3);
+	add_subview(label);
+
 	return checkbox;
 }
 
+/*
 void Options::on_equation_selected(int value, clan::ComboBox *combo)
 {
 	int offset = 0;
@@ -318,19 +330,20 @@ void Options::on_blend_selected(int value, clan::ComboBox *combo)
 			blendfunc[offset] = clan::blend_one_minus_constant_alpha;
 	}
 }
+*/
 
-clan::Label *Options::create_slider_label(clan::Slider *slider)
+std::shared_ptr<clan::LabelView> Options::create_slider_label(int xpos, int ypos)
 {
-	clan::Label *component = new clan::Label(this);
-	clan::Rect slider_geometry = slider->get_geometry();
-	component->set_geometry(clan::Rect(slider_geometry.right + 4, slider_geometry.top - 2, clan::Size(256, 17)));
+	std::shared_ptr<clan::LabelView> component = Theme::create_label(true);
+	add_subview(component);
+	component->style()->set("position: absolute; left:%1px; top:%2px", xpos, ypos);
 	component->set_text("##################");
 	return component;
 }
 
 void Options::slider_numballs_changed()
 {
-	num_balls = slider_numballs->get_position();
+	num_balls = slider_numballs->position();
 	std::string text(clan::string_format("Number of Balls : %1", num_balls));
 	label_numballs->set_text(text);
 }
@@ -406,19 +419,20 @@ void Options::update_all_slider_text()
 
 void Options::checkbox_moveballs_changed()
 {
-	is_moveballs_set = checkbox_moveballs->is_checked();
+	is_moveballs_set = checkbox_moveballs->checked();
 }
 
 void Options::checkbox_blending_changed()
 {
-	is_blending_set = checkbox_blending->is_checked();
+	is_blending_set = checkbox_blending->checked();
 }
 
 void Options::checkbox_premult_alpha_changed()
 {
-	is_premult_alpha_set = checkbox_premult_alpha->is_checked();
+	is_premult_alpha_set = checkbox_premult_alpha->checked();
 }
 
+/*
 clan::ComboBox *Options::create_equation_combo_box(int xpos, int ypos, clan::PopupMenu &menu, int selected_item)
 {
 	clan::ComboBox *combo = new clan::ComboBox(this);
@@ -510,9 +524,9 @@ void Options::make_logic_menu(clan::PopupMenu &menu)
 	menu.insert_item("set");
 }
 
-clan::Label *Options::create_combobox_label(clan::ComboBox *combo, const char *text)
+std::shared_ptr<clan::LabelView> Options::create_combobox_label(clan::ComboBox *combo, const char *text)
 {
-	clan::Label *component = new clan::Label(this);
+	std::shared_ptr<clan::LabelView> component = new clan::Label(this);
 	clan::Rect combo_geometry = combo->get_geometry();
 	component->set_geometry(clan::Rect(combo_geometry.left, combo_geometry.top - 20, clan::Size(256, 17)));
 	component->set_text(text);

@@ -37,14 +37,14 @@ App::App()
 {
 	// We support all display targets, in order listed here
 #ifdef WIN32
-	clan::D3DTarget::enable();
+	//clan::D3DTarget::enable();
 #endif
 	clan::OpenGLTarget::enable();
 
 	clan::DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("Blend Example");
-	win_desc.set_size(clan::Size( 900, 570 ), false);
+	win_desc.set_size(clan::Size( 900, 630 ), false);
 
 	window = clan::DisplayWindow(win_desc);
 	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
@@ -52,19 +52,23 @@ App::App()
 
 	canvas = clan::Canvas(window);
 
-	// Deleted automatically by the GUI
-	//Options *options = new Options(gui, clan::Rect(0, 0, canvas.get_size()));
+	canvas = clan::Canvas(window);
+	clan::FileResourceDocument doc(clan::FileSystem("../../ThemeAero"));
+	clan::ResourceManager resources = clan::FileResourceManager::create(doc);
+	ui_thread = clan::UIThread(resources);
+
+	options = std::make_shared<Options>(canvas);
+	options->set_event_window(window);
+	options->set_cursor_window(window);
 
 	image_grid = clan::Image(canvas, "Resources/grid.png");
 	image_ball = clan::Image(canvas, "Resources/ball.png");
 	clan::ImageImportDescription desc;
 	desc.set_premultiply_alpha(true);
-	clan::Image image_ball_premultiply_alpha(canvas, "Resources/ball.png", desc);
+	image_ball_premultiply_alpha = clan::Image(canvas, "Resources/ball.png", desc);
 	grid_space = (float) (image_grid.get_width() - image_ball.get_width());
 
 	setup_balls();
-
-	//options->request_repaint();
 
 	font = clan::Font("Tahoma", 16);
 
@@ -74,40 +78,42 @@ App::App()
 bool App::update()
 {
 	game_time.update();
-	
+
+	options->set_needs_render();
+	options->set_rect(clan::Size(canvas.get_size()));
+	options->update(clan::Colorf(0.6f, 0.6f, 0.2f, 1.0f));
+
 	const float grid_xpos = 10.0f;
 	const float grid_ypos = 10.0f;
 	image_grid.draw(canvas, grid_xpos, grid_ypos);
 
-	//image_ball.set_color(options->primary_color);
-	//image_ball_premultiply_alpha.set_color(options->primary_color);
+	image_ball.set_color(options->primary_color);
+	image_ball_premultiply_alpha.set_color(options->primary_color);
 
-	int num_balls = 4;	// options->num_balls;
+	int num_balls = options->num_balls;
 	if (num_balls > max_balls)
 		num_balls = max_balls;
 
-	//if (options->is_moveballs_set)
+	if (options->is_moveballs_set)
 		move_balls(game_time.get_time_elapsed(), num_balls);
 
 	clan::BlendStateDescription blend_desc;
-	//blend_desc.set_blend_function(options->blendfunc[0],options->blendfunc[1],options->blendfunc[2],options->blendfunc[3]);
-	//blend_desc.set_blend_equation(options->blendequation[0], options->blendequation[1]);
-	//blend_desc.enable_blending(options->is_blending_set);
-	//blend_desc.set_logic_op(options->logic_operation);
-	//blend_desc.enable_logic_op(options->logic_operation_enabled);
+	blend_desc.set_blend_function(options->blendfunc[0],options->blendfunc[1],options->blendfunc[2],options->blendfunc[3]);
+	blend_desc.set_blend_equation(options->blendequation[0], options->blendequation[1]);
+	blend_desc.enable_blending(options->is_blending_set);
+	blend_desc.set_logic_op(options->logic_operation);
+	blend_desc.enable_logic_op(options->logic_operation_enabled);
 
-	clan::RasterizerState raster_desc;
-	
 	clan::BlendState blend_state(canvas, blend_desc);
-	canvas.set_blend_state(blend_state);// , options->blend_color);
+	canvas.set_blend_state(blend_state, options->blend_color);
 
 	for (int cnt=0; cnt<num_balls; cnt++)
 	{
-	//	if (options->is_premult_alpha_set)
-	//	{
-	//		image_ball_premultiply_alpha.draw(canvas, grid_xpos + balls[cnt].xpos, grid_ypos + balls[cnt].ypos);
-	//	}
-	//	else
+		if (options->is_premult_alpha_set)
+		{
+			image_ball_premultiply_alpha.draw(canvas, grid_xpos + balls[cnt].xpos, grid_ypos + balls[cnt].ypos);
+		}
+		else
 		{
 			image_ball.draw(canvas, grid_xpos + balls[cnt].xpos, grid_ypos + balls[cnt].ypos);
 		}
@@ -115,7 +121,7 @@ bool App::update()
 
 	canvas.reset_blend_state();
 	
-	//draw_equation(canvas, font, options);
+	draw_equation(canvas, font, options);
 
 	window.flip(1);
 
@@ -198,8 +204,8 @@ void App::move_balls(float time_diff, int num_balls)
 
 	}
 }
-/*
-void App::draw_equation(clan::Canvas &canvas, clan::Font &font, Options *options)
+
+void App::draw_equation(clan::Canvas &canvas, clan::Font &font, std::shared_ptr<Options> &options)
 {
 	clan::Rect equation_rect(10, canvas.get_height() - 70, clan::Size(canvas.get_width() - 20, 60));
 	canvas.fill_rect(equation_rect, clan::Colorf::black);
@@ -234,7 +240,6 @@ void App::draw_equation(clan::Canvas &canvas, clan::Font &font, Options *options
 	}
 
 }
-*/
 
 std::string App::get_blendfunc(clan::BlendFunc blendfunc, const std::string &fragment_colour)
 {
