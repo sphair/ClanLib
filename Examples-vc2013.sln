@@ -93,6 +93,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ShaderEffect", "Examples\Di
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PathFont", "Examples\Display_Text\PathFont\PathFont-vc2013.vcxproj", "{AA25EBA5-F728-40CC-8E45-BA8D3577801B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TextureGroup", "Examples\Display\TextureGroup\TextureGroup-vc2013.vcxproj", "{7C8336A9-8BE4-473B-A17C-0171BAFE05B1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -327,6 +329,12 @@ Global
 		{AA25EBA5-F728-40CC-8E45-BA8D3577801B}.Release|Win32.ActiveCfg = Release|Win32
 		{AA25EBA5-F728-40CC-8E45-BA8D3577801B}.Release|Win32.Build.0 = Release|Win32
 		{AA25EBA5-F728-40CC-8E45-BA8D3577801B}.Release|x64.ActiveCfg = Release|Win32
+		{7C8336A9-8BE4-473B-A17C-0171BAFE05B1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7C8336A9-8BE4-473B-A17C-0171BAFE05B1}.Debug|Win32.Build.0 = Debug|Win32
+		{7C8336A9-8BE4-473B-A17C-0171BAFE05B1}.Debug|x64.ActiveCfg = Debug|Win32
+		{7C8336A9-8BE4-473B-A17C-0171BAFE05B1}.Release|Win32.ActiveCfg = Release|Win32
+		{7C8336A9-8BE4-473B-A17C-0171BAFE05B1}.Release|Win32.Build.0 = Release|Win32
+		{7C8336A9-8BE4-473B-A17C-0171BAFE05B1}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
