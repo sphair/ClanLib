@@ -115,7 +115,7 @@ bool Atlas::update()
 	{
 		clan::Image image(textures[0], textures[0].get_size());
 		canvas.fill_rect(clan::Rectf(1.0f, 1.0f, image.get_size()), clan::Colorf::grey);
-		canvas.draw_box(clan::Rectf(0.0f, 0.0f, image.get_size() + clan::Sizef(1.0f, 1.0f)), clan::Colorf::white);
+		canvas.draw_box(clan::Rectf(0.1f, 0.1f, image.get_size() + clan::Sizef(1.0f, 1.0f)), clan::Colorf::white);
 		image.draw(canvas, 1.0f, 1.0f);
 	}
 
