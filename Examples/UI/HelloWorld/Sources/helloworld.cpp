@@ -153,7 +153,7 @@ HelloWorld::HelloWorld()
 	scrollarea->content_view()->add_subview(gradient_box);
 	
 	auto listbox = std::make_shared<ListBoxView>();
-	listbox->style()->set("flex: none; height: 30px; margin: 7px 0; border: 1px solid black; padding: 5px; background: #f0f0f0");
+	listbox->style()->set("flex: none; height: 60px; margin: 7px 0; border: 1px solid black; padding: 5px; background: #f0f0f0");
 	listbox->func_style_item() = [](View *item)
 	{
 		item->style()->set("font: 13px/17px 'Segoe UI'; color: black; margin: 1px 0; padding: 0 2px");
