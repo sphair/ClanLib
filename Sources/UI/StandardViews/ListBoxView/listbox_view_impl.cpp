@@ -43,13 +43,13 @@ namespace clan
 		
 		if (e.key() == Key::up)
 		{
-			listbox->set_selected_item(std::max(selected_item - 1, 0));
+			listbox->set_selected_item(clan::max(selected_item - 1, 0));
 			if (func_selection_changed)
 				func_selection_changed();
 		}
 		else if (e.key() == Key::down)
 		{
-			listbox->set_selected_item(std::min(selected_item + 1, (int)listbox->content_view()->subviews().size() - 1));
+			listbox->set_selected_item(clan::min(selected_item + 1, (int)listbox->content_view()->subviews().size() - 1));
 			if (func_selection_changed)
 				func_selection_changed();
 		}
