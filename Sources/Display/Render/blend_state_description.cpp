@@ -222,7 +222,7 @@ void BlendStateDescription::enable_color_write(bool red, bool green, bool blue, 
 
 void BlendStateDescription::enable_logic_op(bool enabled)
 {
-	impl->logic_op_enabled = true;
+	impl->logic_op_enabled = enabled;
 }
 
 void BlendStateDescription::set_logic_op(LogicOp op)
