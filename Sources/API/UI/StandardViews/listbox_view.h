@@ -41,13 +41,23 @@ namespace clan
 		ListBoxView();
 		~ListBoxView();
 		
-		const std::vector<std::string> &items();
-		void set_items(const std::vector<std::string> &items);
+		void set_items(const std::vector<std::shared_ptr<View>> &items);
+		
+		template<typename T>
+		void set_items(const std::vector<T> &items, const std::function<std::shared_ptr<View>(const T &item)> &map_function)
+		{
+			std::vector<std::shared_ptr<View>> views;
+			views.reserve(items.size());
+			for (const auto &item : items)
+			{
+				views.push_back(map_function(item));
+			}
+			set_items(views);
+		}
 		
 		int selected_item() const;
 		void set_selected_item(int index);
 
-		std::function<void(View *)> &func_style_item();
 		std::function<void()> &func_selection_changed();
 
 	private:

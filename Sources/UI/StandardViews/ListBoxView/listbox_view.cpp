@@ -50,38 +50,21 @@ namespace clan
 	{
 	}
 	
-	std::function<void(View *)> &ListBoxView::func_style_item()
-	{
-		return impl->func_style_item;
-	}
-
 	std::function<void()> &ListBoxView::func_selection_changed()
 	{
 		return impl->func_selection_changed;
 	}
 	
-	const std::vector<std::string> &ListBoxView::items()
+	void ListBoxView::set_items(const std::vector<std::shared_ptr<View>> &items)
 	{
-		return impl->items;
-	}
-	
-	void ListBoxView::set_items(const std::vector<std::string> &items)
-	{
-		impl->items = items;
 		impl->selected_item = -1;
 		
 		auto views = content_view()->subviews();
 		while (!views.empty())
 			views.back()->remove_from_super();
 		
-		for (auto &item : impl->items)
-		{
-			auto view = std::make_shared<LabelView>();
-			view->set_text(item);
-			if (impl->func_style_item)
-				impl->func_style_item(view.get());
-			content_view()->add_subview(view);
-		}
+		for (auto &item : items)
+			content_view()->add_subview(item);
 	}
 	
 	int ListBoxView::selected_item() const
@@ -94,7 +77,7 @@ namespace clan
 		if (index == impl->selected_item)
 			return;
 		
-		if (index < -1 || index >= impl->items.size())
+		if (index < -1 || index >= content_view()->subviews().size())
 			throw Exception("Listbox index out of bounds");
 
 		if (impl->selected_item != -1)

@@ -154,12 +154,16 @@ HelloWorld::HelloWorld()
 	
 	auto listbox = std::make_shared<ListBoxView>();
 	listbox->style()->set("flex: none; height: 60px; margin: 7px 0; border: 1px solid black; padding: 5px; background: #f0f0f0");
-	listbox->func_style_item() = [](View *item)
-	{
-		item->style()->set("font: 13px/17px 'Segoe UI'; color: black; margin: 1px 0; padding: 0 2px");
-		item->style("selected")->set("background: #7777f0; color: white");
-	};
-	listbox->set_items({ "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "More items", "Even more items!!", "No more items!!!!!" });
+	listbox->set_items<std::string>(
+		{ "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "More items", "Even more items!!", "No more items!!!!!" },
+		[](const std::string &s) -> std::shared_ptr<View>
+		{
+			auto item = std::make_shared<LabelView>();
+			item->style()->set("font: 13px/17px 'Segoe UI'; color: black; margin: 1px 0; padding: 0 2px");
+			item->style("selected")->set("background: #7777f0; color: white");
+			item->set_text(s);
+			return item;
+		});
 	scrollarea->content_view()->add_subview(listbox);
 
 	auto scrollbar = Theme::create_scrollbar();

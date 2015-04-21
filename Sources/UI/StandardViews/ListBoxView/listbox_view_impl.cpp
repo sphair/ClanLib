@@ -38,7 +38,7 @@ namespace clan
 {
 	void ListBoxViewImpl::on_key_press(KeyEvent &e)
 	{
-		if (items.empty())
+		if (listbox->content_view()->subviews().empty())
 			return;
 		
 		if (e.key() == Key::up)
@@ -49,7 +49,7 @@ namespace clan
 		}
 		else if (e.key() == Key::down)
 		{
-			listbox->set_selected_item(std::min(selected_item + 1, (int)items.size() - 1));
+			listbox->set_selected_item(std::min(selected_item + 1, (int)listbox->content_view()->subviews().size() - 1));
 			if (func_selection_changed)
 				func_selection_changed();
 		}

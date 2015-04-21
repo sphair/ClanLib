@@ -38,10 +38,8 @@ namespace clan
 		void on_pointer_release(PointerEvent &e);
 
 		ListBoxView *listbox = nullptr;
-		std::vector<std::string> items;
 		int selected_item = -1;
 
-		std::function<void(View *)> func_style_item;
 		std::function<void()> func_selection_changed;
 	};
 }
