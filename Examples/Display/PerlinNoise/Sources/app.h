@@ -51,8 +51,6 @@ private:
 	clan::Image noise_image;
 	clan::UIThread ui_thread;
 	std::shared_ptr<Options> options;
-	clan::Canvas gui_canvas;
-	clan::Image gui_image;
 
 	clan::TextureFormat last_sized_format = clan::tf_rgb8;
 	float last_amplitude = 1.0f;

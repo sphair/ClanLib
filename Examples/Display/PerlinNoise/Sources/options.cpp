@@ -137,8 +137,6 @@ Options::Options(clan::Canvas &canvas) : clan::TextureView(canvas)
 	slider_ypos += slider_gap;
 
 	update_all_slider_text();
-
-	//func_render() = bind_member(this, &Options::on_render);
 }
 
 Options::~Options()
@@ -152,7 +150,6 @@ std::shared_ptr<clan::CheckBoxView> Options::create_checkbox(int xpos, int ypos,
 	add_subview(checkbox);
 	checkbox->style()->set("position: absolute; left:%1px; top:%2px", xpos, ypos);
 	checkbox->set_check(state);
-	//checkbox->func_state_changed() = bind_member(this, &App::on_checkbox_state_antialias);
 
 	auto label = Theme::create_label(true);
 	label->set_text(name);
