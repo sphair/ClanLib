@@ -29,13 +29,13 @@
 #pragma once
 
 #include "../View/view.h"
-#include "scrollbar_view.h"
+#include "scroll_view.h"
 
 namespace clan
 {
 	class ListBoxViewImpl;
 
-	class ListBoxView : public View
+	class ListBoxView : public ScrollView
 	{
 	public:
 		ListBoxView();

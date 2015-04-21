@@ -62,6 +62,7 @@
 #include "UI/StandardViews/checkbox_view.h"
 #include "UI/StandardViews/radiobutton_view.h"
 #include "UI/StandardViews/spin_view.h"
+#include "UI/StandardViews/listbox_view.h"
 #include "UI/Image/image_source.h"
 #include "UI/Style/box_geometry.h"
 #include "UI/Style/style.h"

@@ -151,6 +151,16 @@ HelloWorld::HelloWorld()
 	gradient_box->style()->set("background: linear-gradient(13.37deg, #f0f0f0, rgb(120,240,120) 50%, #f0f0f0)");
 	gradient_box->style()->set("box-shadow: 7px 7px 7px rgba(0,0,0,0.2)");
 	scrollarea->content_view()->add_subview(gradient_box);
+	
+	auto listbox = std::make_shared<ListBoxView>();
+	listbox->style()->set("flex: none; height: 30px; margin: 7px 0; border: 1px solid black; padding: 5px; background: #f0f0f0");
+	listbox->func_style_item() = [](View *item)
+	{
+		item->style()->set("font: 13px/17px 'Segoe UI'; color: black; margin: 1px 0; padding: 0 2px");
+		item->style("selected")->set("background: #7777f0; color: white");
+	};
+	listbox->set_items({ "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "More items", "Even more items!!", "No more items!!!!!" });
+	scrollarea->content_view()->add_subview(listbox);
 
 	auto scrollbar = Theme::create_scrollbar();
 	//scrollbar->set_disabled();

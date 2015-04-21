@@ -33,6 +33,8 @@ namespace clan
 	class ListBoxViewImpl
 	{
 	public:
+		void on_key_press(KeyEvent &e);
+		void on_pointer_press(PointerEvent &e);
 		void on_pointer_release(PointerEvent &e);
 
 		ListBoxView *listbox = nullptr;

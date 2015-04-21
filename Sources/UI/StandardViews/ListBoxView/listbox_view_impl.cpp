@@ -30,11 +30,36 @@
 #include "UI/precomp.h"
 #include "API/UI/StandardViews/listbox_view.h"
 #include "API/UI/StandardViews/text_field_view.h"
-#include "listbox_view_impl.h"
 #include "API/UI/Events/pointer_event.h"
+#include "API/UI/Events/key_event.h"
+#include "listbox_view_impl.h"
 
 namespace clan
 {
+	void ListBoxViewImpl::on_key_press(KeyEvent &e)
+	{
+		if (items.empty())
+			return;
+		
+		if (e.key() == Key::up)
+		{
+			listbox->set_selected_item(std::max(selected_item - 1, 0));
+			if (func_selection_changed)
+				func_selection_changed();
+		}
+		else if (e.key() == Key::down)
+		{
+			listbox->set_selected_item(std::min(selected_item + 1, (int)items.size() - 1));
+			if (func_selection_changed)
+				func_selection_changed();
+		}
+	}
+	
+	void ListBoxViewImpl::on_pointer_press(PointerEvent &e)
+	{
+		listbox->set_focus();
+	}
+	
 	void ListBoxViewImpl::on_pointer_release(PointerEvent &e)
 	{
 		if (e.phase() != EventUIPhase::bubbling)
@@ -42,7 +67,7 @@ namespace clan
 		
 		auto target = e.target();
 		int index = 0;
-		for (auto &view : listbox->subviews())
+		for (auto &view : listbox->content_view()->subviews())
 		{
 			if (view == target)
 			{
