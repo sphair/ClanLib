@@ -43,7 +43,7 @@ namespace clan
 
 		void set_event_window(const DisplayWindow &event_window, const Mat4f &transform_mouse_matrix);
 
-		void update(const Colorf &background_color);
+		void update();
 
 		TextureView *window_view;
 		Canvas canvas;
@@ -54,6 +54,8 @@ namespace clan
 		DisplayWindow event_window;
 		SlotContainer slots;
 		Mat4f transform_mouse_matrix;
+		Colorf background_color = Colorf::transparent;
+		bool clear_background_enable = true;
 
 		BlendState opaque_blend;
 
@@ -87,6 +89,7 @@ namespace clan
 		int capture_down_counter = 0;
 		std::shared_ptr<View> captured_view;
 		std::shared_ptr<View> hot_view;
+
 
 	};
 }

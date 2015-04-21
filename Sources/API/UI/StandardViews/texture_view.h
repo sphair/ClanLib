@@ -55,7 +55,10 @@ namespace clan
 		bool local_root() override;
 		void layout_local() override;
 
-		void update(const Colorf &background_color = Colorf::transparent);
+		void set_background_color(const Colorf &background_color = Colorf::transparent);
+		void set_clear_background(bool enable = true);
+
+		void update();
 
 		Pointf to_screen_pos(const Pointf &pos) override;
 		Pointf from_screen_pos(const Pointf &pos) override;

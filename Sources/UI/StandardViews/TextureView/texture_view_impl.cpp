@@ -68,16 +68,19 @@ namespace clan
 		}
 	}
 
-	void TextureView_Impl::update(const Colorf &background_color)
+	void TextureView_Impl::update()
 	{
 		if (needs_render)
 		{
 			canvas.set_cliprect(canvas_rect);
 
-			canvas.set_blend_state(opaque_blend);
-			canvas.fill_rect(canvas_rect, background_color);
-			canvas.reset_blend_state();
-			//canvas.clear(background_color);	<--- On d3d, this clears the entire canvas - It does not recognise the cliprect
+			if (clear_background_enable)
+			{
+				canvas.set_blend_state(opaque_blend);
+				canvas.fill_rect(canvas_rect, background_color);
+				canvas.reset_blend_state();
+				//canvas.clear(background_color);	<--- On d3d, this clears the entire canvas - It does not recognise the cliprect
+			}
 
 			needs_render = false;
 			window_view->set_geometry(BoxGeometry::from_margin_box(window_view->style_cascade(), canvas_rect));
@@ -86,7 +89,7 @@ namespace clan
 			canvas.reset_cliprect();
 		}
 	}
-
+	
 	void TextureView_Impl::on_lost_focus()
 	{
 		release_capture();
