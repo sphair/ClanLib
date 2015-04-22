@@ -38,5 +38,5 @@ public:
 	clan::UIThread ui_thread;
 	std::shared_ptr<clan::WindowView> root;
 	std::shared_ptr<clan::LabelView> label;
-	clan::Slot slot_close;
+	clan::SlotContainer slots;
 };

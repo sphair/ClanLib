@@ -57,7 +57,7 @@ HelloWorld::HelloWorld()
 
 	// Exit run loop when close is clicked.
 	// We have to store the return Slot because if it is destroyed the lambda function is disconnected from the signal.
-	slot_close = root->sig_close().connect([&](CloseEvent &e) { RunLoop::exit(); });
+	slots.connect(root->sig_close(), [&](CloseEvent &e) { RunLoop::exit(); });
 
 	// Style the root view to use rounded corners and a bit of drop shadow
 	root->style()->set("padding: 11px");
@@ -199,7 +199,7 @@ HelloWorld::HelloWorld()
 		scrollarea->content_view()->add_subview(radio);
 	}
 
-	// Create a popup window placed where the edit field is at
+	// Create a popup window
 	std::shared_ptr<PopupView> popup = std::make_shared<PopupView>();
 	root->add_subview(popup);
 	popup->style()->set("position: absolute; top: 15px; right: -50px");
@@ -213,11 +213,18 @@ HelloWorld::HelloWorld()
 	auto text = Theme::create_label(true);
 	popup->add_subview(text);
 	text->set_text("This is an awesome popup");
-	text->style()->set("font: 32px Tahoma; color: black");
+	text->style()->set("font: 12px Tahoma; color: black");
+	slots.connect(button->sig_pointer_enter(), [=](PointerEvent &e)
+	{
+		popup->show(WindowShowType::show_no_activate);
+	});
+	slots.connect(button->sig_pointer_leave(), [=](PointerEvent &e)
+	{
+		popup->hide();
+	});
 
 	// Make our window visible
 	root->show();
-	popup->show(WindowShowType::show_no_activate);
 }
 
 bool HelloWorld::update()
