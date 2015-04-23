@@ -84,7 +84,7 @@ namespace clan
 
 		Pointf screen_pos = superview()->to_screen_pos(geometry.margin_box().get_top_left());
 		Sizef screen_size = geometry.margin_box().get_size();
-		set_rect(Rectf(screen_pos, screen_size));
+		set_viewport(Rectf(screen_pos, screen_size));
 	}
 
 	Pointf TextureView::to_screen_pos(const Pointf &pos)
@@ -97,7 +97,7 @@ namespace clan
 		return Pointf(pos) - geometry().content_box().get_top_left();
 	}
 
-	void TextureView::set_rect(const Rect &rect)
+	void TextureView::set_viewport(const Rectf &rect)
 	{
 		if (rect != impl->canvas_rect)
 		{
@@ -116,7 +116,7 @@ namespace clan
 		impl->set_event_window(event_window, transform_mouse_matrix);
 	}
 
-	Rect TextureView::get_rect() const
+	Rectf TextureView::get_viewport() const
 	{
 		return impl->canvas_rect;
 	}

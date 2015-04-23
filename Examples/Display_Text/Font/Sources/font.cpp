@@ -68,7 +68,7 @@ App::App()
 	root->set_event_window(window);
 	root->set_cursor_window(window);
 
-	root->set_rect(clan::Rect(10, 10, clan::Size(gui_image.get_size())));
+	root->set_viewport(clan::Rectf(10.0f, 10.0f, gui_image.get_size()));
 
 	int offset_x = 10;
 	int offset_y = 8;

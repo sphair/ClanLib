@@ -68,7 +68,7 @@ App::App()
 	root->set_event_window(window);
 	root->set_cursor_window(window);
 
-	root->set_rect(clan::Rect(32, 32, clan::Size(gui_image.get_size())));
+	root->set_viewport(clan::Rectf(32.0f, 32.0f, gui_image.get_size()));
 
 	color_wheel = std::make_shared<ColorWheel>();
 	root->add_subview(color_wheel);

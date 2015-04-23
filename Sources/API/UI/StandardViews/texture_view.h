@@ -45,10 +45,10 @@ namespace clan
 		/// \brief Set position and size within the canvas
 		///
 		/// \param rect = position and size.
-		void set_rect(const Rect &rect);
+		void set_viewport(const Rectf &rect);
 
 		/// \brief Returns the position and size within the canvas
-		Rect get_rect() const;
+		Rectf get_viewport() const;
 
 		Canvas get_canvas() const override;
 		void set_needs_render() override;

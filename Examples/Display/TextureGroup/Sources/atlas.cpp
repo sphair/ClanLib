@@ -102,7 +102,7 @@ bool Atlas::update()
 
 	options->set_needs_render();
 	options->set_clear_background(false);
-	options->set_rect(clan::Size(canvas.get_size()));
+	options->set_viewport(canvas.get_size());
 
 	if (options->options_changed)
 	{
