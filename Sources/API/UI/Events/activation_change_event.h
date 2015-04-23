@@ -35,8 +35,8 @@ namespace clan
 	/// Window activation change
 	enum class ActivationChangeType
 	{
-		activated,  // Window was activated
-		deactivated // Window was deactivated
+		activated,  /// Window was activated
+		deactivated /// Window was deactivated
 	};
 
 	/// Window was activated or deactivated event

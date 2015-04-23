@@ -76,26 +76,6 @@ namespace clan
 	{
 	}
 
-	const std::shared_ptr<Style> &Style::get_parent()
-	{
-		return impl->parent;
-	}
-	
-	void Style::set_parent(const std::shared_ptr<Style> &parent)
-	{
-		impl->parent = parent;
-	}
-	
-	const std::shared_ptr<Style> &Style::get_cascade_base()
-	{
-		return impl->cascade_base;
-	}
-
-	void Style::set_cascade_base(const std::shared_ptr<Style> &base)
-	{
-		impl->cascade_base = base;
-	}
-
 	void Style::set(const std::string &properties)
 	{
 		StyleProperty::parse(impl.get(), properties);
