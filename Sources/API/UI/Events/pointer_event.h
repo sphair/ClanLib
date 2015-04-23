@@ -72,6 +72,8 @@ namespace clan
 		PointerEventType type() const { return _type; }
 		PointerButton button() const { return _button; }
 		Pointf pos(View *view) const;
+		Pointf pos(const std::shared_ptr<View> &view) const;
+
 		void set_pos(View *view, const Pointf &pos);
 
 		bool alt_down() const { return _alt_down; }
