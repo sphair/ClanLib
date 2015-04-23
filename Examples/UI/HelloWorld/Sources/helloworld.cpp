@@ -161,6 +161,8 @@ HelloWorld::HelloWorld()
 			auto item = std::make_shared<LabelView>();
 			item->style()->set("font: 13px/17px 'Segoe UI'; color: black; margin: 1px 0; padding: 0 2px");
 			item->style("selected")->set("background: #7777f0; color: white");
+			item->style("hot")->set("background: #ccccf0; color: black");
+
 			item->set_text(s);
 			return item;
 		});
