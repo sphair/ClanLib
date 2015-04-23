@@ -44,7 +44,7 @@ App::App()
 	clan::DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("Blend Example");
-	win_desc.set_size(clan::Size( 900, 630 ), false);
+	win_desc.set_size(clan::Size( 1400, 730 ), false);
 
 	window = clan::DisplayWindow(win_desc);
 	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));

@@ -51,7 +51,7 @@ Options::Options(clan::Canvas &canvas) : clan::TextureView(canvas)
 
 	int slider_xpos = 400;
 	int slider_label_xpos = slider_xpos + 200;
-	int slider_ypos = 200;
+	int slider_ypos = 300;
 	int slider_gap = 32;
 	slider_numballs = create_slider(slider_xpos, slider_ypos);
 	slider_numballs->set_max_position(9);
@@ -103,38 +103,85 @@ Options::Options(clan::Canvas &canvas) : clan::TextureView(canvas)
 	checkbox_premult_alpha->func_state_changed() = bind_member(this, &Options::checkbox_premult_alpha_changed);
 	checkbox_ypos += checkbox_gap + 8;
 
-/*	make_equation_menu(combo_color_equation_menu);
-	make_equation_menu(combo_alpha_equation_menu);
-	combo_color_equation = create_equation_combo_box(400, 40, combo_color_equation_menu, 0);
-	combo_alpha_equation = create_equation_combo_box(550, 40, combo_alpha_equation_menu, 0);
-	label_color = create_combobox_label(combo_color_equation, "COLOR EQUATION");
-	label_alpha = create_combobox_label(combo_alpha_equation, "ALPHA EQUATION");
+	listbox_logic = create_listbox(900, 40, "LOGIC OPERATION");
+	listbox_logic->set_items<std::string>(
+		{ 
+			"Disabled", "clear", "and", "and_reverse", "copy", "and_inverted", "noop", "xor", "or", "nor", "equiv", "invert", "or_reverse", "copy_inverted", "or_inverted", "nand", "set" 
+		}, Theme::create_listbox_label);
+	listbox_logic->func_selection_changed() = clan::bind_member(this, &Options::on_logic_selected);
+	listbox_logic->set_selected_item(0);
 
-	make_logic_menu(combo_logic_menu);
-	combo_logic = create_logic_combo_box(700, 40, combo_logic_menu, 0);
-	label_logic = create_combobox_label(combo_logic, "LOGIC OPERATION");
+	std::shared_ptr<clan::ListBoxView> listbox;
+	listbox = create_listbox(400, 40, "COLOR EQUATION");
+	insert_equation(listbox);
+	listbox->func_selection_changed() = [=](){on_equation_selected(listbox, 0); };
+	listbox->set_selected_item(0);
 
-	make_blend_menu(combo_src_blend_menu);
-	make_blend_menu(combo_dest_blend_menu);
-	make_blend_menu(combo_src_alpha_blend_menu);
-	make_blend_menu(combo_dest_alpha_blend_menu);
-	combo_src_blend = create_blend_combo_box(410, 100, combo_src_blend_menu, 6);
-	label_src = create_combobox_label(combo_src_blend, "SOURCE FUNCTION");
-	combo_dest_blend = create_blend_combo_box(610, 100, combo_dest_blend_menu, 7);
-	label_dest = create_combobox_label(combo_dest_blend, "DEST FUNCTION");
-	combo_src_alpha_blend = create_blend_combo_box(410, 160, combo_src_alpha_blend_menu, 6);
-	label_src_alpha = create_combobox_label(combo_src_alpha_blend, "SOURCE ALPHA FUNCTION");
-	combo_dest_alpha_blend = create_blend_combo_box(610, 160, combo_dest_alpha_blend_menu, 7);
-	label_dest_alpha = create_combobox_label(combo_dest_alpha_blend, "DEST ALPHA FUNCTION");
-*/
+	listbox = create_listbox(650, 40, "ALPHA EQUATION");
+	insert_equation(listbox);
+	listbox->func_selection_changed() = [=](){on_equation_selected(listbox, 1); };
+	listbox->set_selected_item(0);
+
+	listbox = create_listbox(400, 180, "SOURCE FUNCTION");
+	insert_blend(listbox);
+	listbox->func_selection_changed() = [=](){on_blend_selected(listbox, 0); };
+	listbox->set_selected_item(6);
+
+	listbox = create_listbox(650, 180, "DEST FUNCTION");
+	insert_blend(listbox);
+	listbox->func_selection_changed() = [=](){on_blend_selected(listbox, 1); };
+	listbox->set_selected_item(7);
+
+	listbox = create_listbox(900, 180, "SOURCE ALPHA FUNCTION");
+	insert_blend(listbox);
+	listbox->func_selection_changed() = [=](){on_blend_selected(listbox, 2); };
+	listbox->set_selected_item(6);
+
+	listbox = create_listbox(1150, 180, "DEST ALPHA FUNCTION");
+	insert_blend(listbox);
+	listbox->func_selection_changed() = [=](){on_blend_selected(listbox, 3); };
+	listbox->set_selected_item(7);
+
 	update_all_slider_text();
 
+}
+
+void Options::insert_equation(std::shared_ptr<clan::ListBoxView> &listbox)
+{
+	listbox->set_items<std::string>(
+	{
+		"Add", "Subtract", "Reverse Subtract", "Min", "Max"
+	}, Theme::create_listbox_label);
+
+}
+
+void Options::insert_blend(std::shared_ptr<clan::ListBoxView> &listbox)
+{
+	listbox->set_items<std::string>(
+	{
+		"Zero", "One", "Dest Color", "Src Color", "One Minus Dest Color", "One Minus Src Color", "Src Alpha",
+		"One Minus Src Alpha", "Dest Alpha", "One Minus Dest Alpha", "Src Alpha Saturate", "Constant Color",
+		"One Minus Constant Color", "Constant Alpha", "One Minus Constant Alpha"
+	}, Theme::create_listbox_label);
+
+}
+
+std::shared_ptr<clan::ListBoxView> Options::create_listbox(int xpos, int ypos, const std::string &title )
+{
+	auto listbox = Theme::create_listbox();
+	add_subview(listbox);
+	listbox->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:%4px;", xpos, ypos, 200, 100);
+	auto label_logic = create_slider_label(xpos, ypos - 30);
+	label_logic->set_text(title);
+	add_subview(listbox_logic);
+	return listbox;
 }
 
 Options::~Options()
 {
 
 }
+
 float Options::get_value(std::shared_ptr<clan::SliderView> slider)
 {
 	float value = (float)slider->position();
@@ -182,12 +229,9 @@ std::shared_ptr<clan::CheckBoxView> Options::create_checkbox(int xpos, int ypos,
 	return checkbox;
 }
 
-/*
-void Options::on_equation_selected(int value, clan::ComboBox *combo)
+void Options::on_equation_selected(std::shared_ptr<clan::ListBoxView> listbox, int offset)
 {
-	int offset = 0;
-	if (combo == combo_alpha_equation)
-		offset = 1;
+	int value = listbox->selected_item();
 
 	switch (value)
 	{
@@ -209,8 +253,9 @@ void Options::on_equation_selected(int value, clan::ComboBox *combo)
 	}
 }
 
-void Options::on_logic_selected(int value, clan::ComboBox *combo)
+void Options::on_logic_selected()
 {
+	int value = listbox_logic->selected_item();
 	logic_operation_enabled = (value==0) ? false : true;
 
 	switch (value)
@@ -266,21 +311,9 @@ void Options::on_logic_selected(int value, clan::ComboBox *combo)
 	}
 }
 
-void Options::on_blend_selected(int value, clan::ComboBox *combo)
+void Options::on_blend_selected(std::shared_ptr<clan::ListBoxView> listbox, int offset)
 {
-	int offset = -1;
-
-	if (combo == combo_src_blend)
-		offset = 0;
-	if (combo == combo_dest_blend)
-		offset = 1;
-	if (combo == combo_src_alpha_blend)
-		offset = 2;
-	if (combo == combo_dest_alpha_blend)
-		offset = 3;
-
-	if (offset < 0)
-		return;
+	int value = listbox->selected_item();
 
 	switch (value)
 	{
@@ -330,7 +363,6 @@ void Options::on_blend_selected(int value, clan::ComboBox *combo)
 			blendfunc[offset] = clan::blend_one_minus_constant_alpha;
 	}
 }
-*/
 
 std::shared_ptr<clan::LabelView> Options::create_slider_label(int xpos, int ypos)
 {
@@ -432,105 +464,3 @@ void Options::checkbox_premult_alpha_changed()
 	is_premult_alpha_set = checkbox_premult_alpha->checked();
 }
 
-/*
-clan::ComboBox *Options::create_equation_combo_box(int xpos, int ypos, clan::PopupMenu &menu, int selected_item)
-{
-	clan::ComboBox *combo = new clan::ComboBox(this);
-	combo->set_geometry(clan::Rect(xpos, ypos, clan::Size(140, 21)));
-	combo->set_editable(false);
-	combo->set_dropdown_height(128);
-	combo->set_dropdown_minimum_width(64);
-	combo->set_popup_menu(menu);
-	combo->set_selected_item(selected_item);
-	combo->func_item_selected() = [=](int value){on_equation_selected(value, combo); };
-
-	return combo;
-}
-
-clan::ComboBox *Options::create_blend_combo_box(int xpos, int ypos, clan::PopupMenu &menu, int selected_item)
-{
-	clan::ComboBox *combo = new clan::ComboBox(this);
-	combo->set_geometry(clan::Rect(xpos, ypos, clan::Size(180, 21)));
-	combo->set_editable(false);
-	combo->set_dropdown_height(128);
-	combo->set_dropdown_minimum_width(64);
-	combo->set_popup_menu(menu);
-	combo->set_selected_item(selected_item);
-	combo->func_item_selected() = [=](int value){on_blend_selected(value, combo); };
-
-	return combo;
-}
-
-clan::ComboBox *Options::create_logic_combo_box(int xpos, int ypos, clan::PopupMenu &menu, int selected_item)
-{
-	clan::ComboBox *combo = new clan::ComboBox(this);
-	combo->set_geometry(clan::Rect(xpos, ypos, clan::Size(180, 21)));
-	combo->set_editable(false);
-	combo->set_dropdown_height(128);
-	combo->set_dropdown_minimum_width(64);
-	combo->set_popup_menu(menu);
-	combo->set_selected_item(selected_item);
-	combo->func_item_selected() = [=](int value){on_logic_selected(value, combo); };
-
-	return combo;
-}
-
-void Options::make_equation_menu(clan::PopupMenu &menu)
-{
-	menu.insert_item("Add");
-	menu.insert_item("Subtract");
-	menu.insert_item("Reverse Subtract");
-	menu.insert_item("Min");
-	menu.insert_item("Max");
-}
-
-void Options::make_blend_menu(clan::PopupMenu &menu)
-{
-	menu.insert_item("Zero");
-	menu.insert_item("One");
-	menu.insert_item("Dest Color");
-	menu.insert_item("Src Color");
-	menu.insert_item("One Minus Dest Color");
-	menu.insert_item("One Minus Src Color");
-	menu.insert_item("Src Alpha");
-	menu.insert_item("One Minus Src Alpha");
-	menu.insert_item("Dest Alpha");
-	menu.insert_item("One Minus Dest Alpha");
-	menu.insert_item("Src Alpha Saturate");
-	menu.insert_item("Constant Color");
-	menu.insert_item("One Minus Constant Color");
-	menu.insert_item("Constant Alpha");
-	menu.insert_item("One Minus Constant Alpha");
-}
-
-void Options::make_logic_menu(clan::PopupMenu &menu)
-{
-	menu.insert_item("Disabled");
-	menu.insert_item("clear");
-	menu.insert_item("and"); 
-	menu.insert_item("and_reverse");
-	menu.insert_item("copy");
-	menu.insert_item("and_inverted");
-	menu.insert_item("noop");
-	menu.insert_item("xor");
-	menu.insert_item("or");
-	menu.insert_item("nor");
-	menu.insert_item("equiv");
-	menu.insert_item("invert");
-	menu.insert_item("or_reverse");
-	menu.insert_item("copy_inverted");
-	menu.insert_item("or_inverted");
-	menu.insert_item("nand");
-	menu.insert_item("set");
-}
-
-std::shared_ptr<clan::LabelView> Options::create_combobox_label(clan::ComboBox *combo, const char *text)
-{
-	std::shared_ptr<clan::LabelView> component = new clan::Label(this);
-	clan::Rect combo_geometry = combo->get_geometry();
-	component->set_geometry(clan::Rect(combo_geometry.left, combo_geometry.top - 20, clan::Size(256, 17)));
-	component->set_text(text);
-	return component;
-}
-
-*/

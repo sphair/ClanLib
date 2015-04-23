@@ -50,6 +50,14 @@ public:
 	bool is_premult_alpha_set;
 
 private:
+	std::shared_ptr<clan::ListBoxView> create_listbox(int xpos, int ypos, const std::string &title);
+
+	void insert_equation(std::shared_ptr<clan::ListBoxView> &listbox);
+	void insert_blend(std::shared_ptr<clan::ListBoxView> &listbox);
+
+	void on_logic_selected();
+	void on_equation_selected(std::shared_ptr<clan::ListBoxView> listbox, int offset);
+	void on_blend_selected(std::shared_ptr<clan::ListBoxView> listbox, int offset);
 	std::shared_ptr<clan::CheckBoxView> create_checkbox(int xpos, int ypos, const std::string &name, bool state);
 	std::shared_ptr<clan::SliderView> create_slider(int xpos, int ypos);
 	void set_value(std::shared_ptr<clan::SliderView> slider, float value, float max_value);
@@ -92,30 +100,7 @@ private:
 	std::shared_ptr<clan::CheckBoxView> checkbox_premult_alpha;
 	std::shared_ptr<clan::CheckBoxView> checkbox_blending;
 
-	std::shared_ptr<clan::LabelView> label_src;
-	std::shared_ptr<clan::LabelView> label_dest;
-	std::shared_ptr<clan::LabelView> label_src_alpha;
-	std::shared_ptr<clan::LabelView> label_dest_alpha;
-	std::shared_ptr<clan::LabelView> label_color;
-	std::shared_ptr<clan::LabelView> label_alpha;
-	std::shared_ptr<clan::LabelView> label_logic;
-
-	//clan::ComboBox *combo_logic;
-	//clan::PopupMenu combo_logic_menu;
-
-	//clan::ComboBox *combo_src_blend;
-	//clan::ComboBox *combo_dest_blend;
-	//clan::ComboBox *combo_src_alpha_blend;
-	//clan::ComboBox *combo_dest_alpha_blend;
-	//clan::PopupMenu combo_src_blend_menu;
-	//clan::PopupMenu combo_dest_blend_menu;
-	//clan::PopupMenu combo_src_alpha_blend_menu;
-	//clan::PopupMenu combo_dest_alpha_blend_menu;
-
-	//clan::ComboBox *combo_color_equation;
-	//clan::ComboBox *combo_alpha_equation;
-	//clan::PopupMenu combo_color_equation_menu;
-	//clan::PopupMenu combo_alpha_equation_menu;
+	std::shared_ptr<clan::ListBoxView> listbox_logic;
 
 };
 
