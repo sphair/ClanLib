@@ -182,7 +182,7 @@ namespace clan
 
 	void WindowView_Impl::window_pointer_event(PointerEvent &e)
 	{
-		std::shared_ptr<View> view_above_cursor = window_view->find_view_at(e.pos(window_view));
+		std::shared_ptr<View> view_above_cursor = window_view->find_view_at(e.pos(window_view) - window_view->geometry().content.get_top_left());
 		auto view = get_capture_view(e, view_above_cursor);
 		if (!view)
 			view = view_above_cursor;
