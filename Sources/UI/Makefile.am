@@ -4,7 +4,7 @@ libclan40UI_la_SOURCES = \
 ./Style/style_background_renderer.cpp \
 ./Style/style.cpp \
 ./Style/style_tokenizer.cpp \
-./Style/box_geometry.cpp \
+./View/view_geometry.cpp \
 ./Style/style_tokenizer_impl.cpp \
 ./Style/style_border_image_renderer.cpp \
 ./Style/Properties/layout.cpp \
@@ -30,6 +30,8 @@ libclan40UI_la_SOURCES = \
 ./StandardViews/SliderView/slider_view.cpp \
 ./StandardViews/SpinView/spin_view_impl.cpp \
 ./StandardViews/SpinView/spin_view.cpp \
+./StandardViews/ListBoxView/listbox_view.cpp \
+./StandardViews/ListBoxView/listbox_view_impl.cpp \
 ./StandardViews/TextFieldView/text_field_view.cpp \
 ./StandardViews/CheckBoxView/checkbox_view_impl.cpp \
 ./StandardViews/CheckBoxView/checkbox_view.cpp \

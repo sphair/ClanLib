@@ -305,7 +305,7 @@ clanDisplay_includes = \
 
 clanUI_includes = \
 	ui.h \
-	UI/Style/box_geometry.h \
+	UI/View/view_geometry.h \
 	UI/Style/style_token.h \
 	UI/Style/style.h \
 	UI/Style/style_property_parser.h \
@@ -324,6 +324,7 @@ clanUI_includes = \
 	UI/Events/focus_change_event.h \
 	UI/StandardViews/checkbox_view.h \
 	UI/StandardViews/label_view.h \
+	UI/StandardViews/listbox_view.h \
 	UI/StandardViews/spin_view.h \
 	UI/StandardViews/radiobutton_view.h \
 	UI/StandardViews/text_field_view.h \
