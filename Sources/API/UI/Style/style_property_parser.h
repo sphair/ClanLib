@@ -44,26 +44,39 @@ namespace clan
 	class ImageSource;
 	class StyleToken;
 
+	/// Interface used by style parsers to store values in a style property set
 	class StylePropertySetter
 	{
 	public:
 		virtual ~StylePropertySetter() { }
+
+		/// Set the value for the specified property name
 		virtual void set_value(const std::string &name, const StyleValue &value) = 0;
+
+		/// Set a value array for the specified property name
 		virtual void set_value_array(const std::string &name, const std::vector<StyleValue> &value_array) = 0;
 	};
 
+	/// Parser interface used during property parsing
 	class StyleParser
 	{
 	public:
+		/// Tokenized style string relevant for parsing a property
 		std::vector<StyleToken> tokens;
+
+		/// True if the !important flag was specified in the style string
 		bool important_flag = false;
 	};
 
+	/// Style property parser
 	class StylePropertyParser
 	{
 	public:
+		/// Constructs a property parser for the specified property names
 		StylePropertyParser(const std::vector<std::string> &property_names);
 		virtual ~StylePropertyParser() { }
+
+		/// Parse a property and set property values if successful
 		virtual void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) = 0;
 
 	protected:
@@ -94,17 +107,24 @@ namespace clan
 		static ColorType colors[];
 	};
 
+	/// Sets the default value for a property
 	class StylePropertyDefault
 	{
 	public:
 		StylePropertyDefault(const std::string &name, const StyleValue &value);
 	};
 
+	/// Style property interface used to parse or query properties by name
 	class StyleProperty
 	{
 	public:
+		/// Gets the default value for a given property
 		static const StyleValue &default_value(const std::string &name);
+
+		/// Indicates if this an inherited property or not
 		static bool is_inherited(const std::string &name);
+
+		/// Parses a string of styles and sets the values
 		static void parse(StylePropertySetter *setter, const std::string &styles);
 	};
 }
