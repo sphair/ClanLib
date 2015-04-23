@@ -34,35 +34,49 @@ namespace clan
 {
 	class View;
 
+	/// UI event dispatch phase
 	enum class EventUIPhase
 	{
-		none,
-		capturing,
-		at_target,
-		bubbling
+		none,      /// Event is not currently in any dispatch phase
+		capturing, /// Capture phase (inverse bubble from root to the target view)
+		at_target, /// Currently being dispatched to the target view
+		bubbling   /// Event bubbling up from target view to root
 	};
 
+	/// Base class for events being dispatched through the view hiarchy
 	class EventUI
 	{
 	public:
 		virtual ~EventUI() { }
 
+		/// Current active event phase during dispatch
 		EventUIPhase phase() const { return _phase; }
 
+		/// The target view the event is fired for
 		std::shared_ptr<View> target() { return _target; }
+
+		/// View the event is currently being dispatched to
 		std::shared_ptr<View> current_target() { return _current_target; }
 
+		/// Flag if the event default action should be executed after dispatch
 		bool default_prevented() const { return _default_prevented; }
+
+		/// Prevent default action from being executed after dispatch
 		void prevent_default() { _default_prevented = true; }
 
 		//bool immediate_propagation_stopped() const { return _immediate_propagation_stopped; }
 		//void stop_immediate_propagation() { _propagation_stopped = true; _immediate_propagation_stopped = true; }
 
+		/// Flag if event propagation should stop
 		bool propagation_stopped() const { return _propagation_stopped; }
+
+		/// Stops event from propagating further
 		void stop_propagation() { _propagation_stopped = true; }
 
-		/// \brief Milliseconds since 1970
+		/// Timestamp for event in milliseconds since 1970
 		long long timestamp() const { return _timestamp; }
+
+		/// Set event timestamp
 		void set_timestamp(long long ts) { _timestamp = ts; }
 
 	private:
@@ -77,6 +91,4 @@ namespace clan
 		friend class View;
 		friend class ViewImpl;
 	};
-
-	// To do: Signals do not support immediate propagation yet
 }

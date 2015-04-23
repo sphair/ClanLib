@@ -39,7 +39,11 @@ namespace clan
 
 		ListBoxView *listbox = nullptr;
 		int selected_item = -1;
+		int last_selected_item = -1;
 
 		std::function<void()> func_selection_changed;
+
+	private:
+		int get_selection_index(PointerEvent &e);
 	};
 }

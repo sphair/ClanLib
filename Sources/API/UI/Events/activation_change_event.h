@@ -32,17 +32,20 @@
 
 namespace clan
 {
+	/// Window activation change
 	enum class ActivationChangeType
 	{
-		activated,
-		deactivated
+		activated,  // Window was activated
+		deactivated // Window was deactivated
 	};
 
+	/// Window was activated or deactivated event
 	class ActivationChangeEvent : public EventUI
 	{
 	public:
 		ActivationChangeEvent(ActivationChangeType type) : _type(type) { }
 
+		/// Window activation type
 		ActivationChangeType type() const { return _type; }
 
 	private:

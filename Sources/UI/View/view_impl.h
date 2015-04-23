@@ -98,7 +98,6 @@ namespace clan
 		// Root view variables:
 		View *_owner_view = nullptr;
 		View *_focus_view = nullptr;
-		View *_proximity_view = nullptr;
 
 		AnimationGroup animation_group;
 

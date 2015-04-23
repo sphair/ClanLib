@@ -40,7 +40,7 @@ namespace clan
 	{
 		if (listbox->content_view()->subviews().empty())
 			return;
-		
+
 		if (e.key() == Key::up)
 		{
 			listbox->set_selected_item(clan::max(selected_item - 1, 0));
@@ -54,29 +54,45 @@ namespace clan
 				func_selection_changed();
 		}
 	}
-	
+
 	void ListBoxViewImpl::on_pointer_press(PointerEvent &e)
 	{
-		listbox->set_focus();
+		last_selected_item = selected_item;
+
+		int index = get_selection_index(e);
+		listbox->set_selected_item(index);
 	}
-	
+
 	void ListBoxViewImpl::on_pointer_release(PointerEvent &e)
 	{
 		if (e.phase() != EventUIPhase::bubbling)
 			return;
-		
-		auto target = e.target();
+
+		int index = get_selection_index(e);
+
+		// Only allow click when mouse released over component
+		if (index == selected_item)
+		{
+			if (func_selection_changed)
+				func_selection_changed();
+		}
+		else
+		{
+			listbox->set_selected_item(last_selected_item);
+		}
+	}
+
+	int ListBoxViewImpl::get_selection_index(PointerEvent &e)
+	{
 		int index = 0;
 		for (auto &view : listbox->content_view()->subviews())
 		{
-			if (view == target)
-			{
-				listbox->set_selected_item(index);
-				if (func_selection_changed)
-					func_selection_changed();
-				break;
-			}
+			if (view->geometry().border_box().contains(e.pos(listbox->content_view())))
+				return index;
 			index++;
 		}
+		return -1;
+
 	}
+
 }

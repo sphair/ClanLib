@@ -33,34 +33,37 @@
 
 namespace clan
 {
+	/// Pointer button
 	enum class PointerButton
 	{
-		none,
-		left,
-		right,
-		middle,
-		wheel_up,
-		wheel_down,
-		xbutton1,
-		xbutton2,
-		xbutton3,
-		xbutton4,
-		xbutton5,
-		xbutton6
+		none,       /// No button specified
+		left,       /// Left button
+		right,      /// Right button
+		middle,     /// Middle/wheel button
+		wheel_up,   /// Wheel up tick
+		wheel_down, /// Wheel down tick
+		xbutton1,   /// Extra button 1
+		xbutton2,   /// Extra button 2
+		xbutton3,   /// Extra button 3
+		xbutton4,   /// Extra button 4
+		xbutton5,   /// Extra button 5
+		xbutton6    /// Extra button 6
 	};
 
+	/// Pointer event type
 	enum class PointerEventType
 	{
-		none,
-		enter,
-		leave,
-		move,
-		press,
-		release,
-		double_click,
-		promixity_change
+		none,              /// No event type specified
+		enter,             /// Pointer entered area
+		leave,             /// Pointer left area
+		move,              /// Pointer moved above area
+		press,             /// Pointer pressed
+		release,           /// Pointer released
+		double_click,      /// Pointer double click pressed
+		promixity_change   /// Pen proximity changed
 	};
 
+	/// Pointer (mouse/tablet) event
 	class PointerEvent : public EventUI
 	{
 	public:
@@ -69,16 +72,29 @@ namespace clan
 		{
 		}
 
+		/// Pointer event type
 		PointerEventType type() const { return _type; }
+
+		/// Pointer button relevant for the event
 		PointerButton button() const { return _button; }
+
+		/// Pointer position relative to local view content coordinates
 		Pointf pos(View *view) const;
 		Pointf pos(const std::shared_ptr<View> &view) const;
 
+		/// Set event pointer position relative to local view content coordinates
 		void set_pos(View *view, const Pointf &pos);
 
+		/// True if the alt key was down
 		bool alt_down() const { return _alt_down; }
+
+		/// True if the shift key was down
 		bool shift_down() const { return _shift_down; }
+
+		/// True if the control key was down
 		bool ctrl_down() const { return _ctrl_down; }
+
+		/// True if the command key was down
 		bool cmd_down() const { return _cmd_down; }
 
 	private:
