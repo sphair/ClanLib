@@ -146,7 +146,7 @@ namespace clan
 		{
 			std::shared_ptr<View> view_ptr = shared_from_this();
 
-			// To do: clear owner_view, focus_view, proximity_view if it is this view or a child
+			// To do: clear owner_view, focus_view, if it is this view or a child
 
 			auto it = std::find_if(super->impl->_subviews.begin(), super->impl->_subviews.end(), [&](const std::shared_ptr<View> &view) { return view.get() == this; });
 			if (it != super->impl->_subviews.end())
@@ -412,11 +412,6 @@ namespace clan
 	View *View::focus_view() const
 	{
 		return root_view()->impl->_focus_view;
-	}
-
-	View *View::proximity_view() const
-	{
-		return root_view()->impl->_proximity_view;
 	}
 
 	std::shared_ptr<View> View::find_view_at(const Pointf &pos) const
