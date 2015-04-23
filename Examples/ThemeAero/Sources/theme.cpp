@@ -180,10 +180,12 @@ std::shared_ptr<clan::ListBoxView> Theme::create_listbox()
 	return listbox;
 }
 
-std::shared_ptr<clan::LabelView> Theme::create_listbox_label()
+std::shared_ptr<clan::LabelView> Theme::create_listbox_label(const std::string &text)
 {
 	auto label = std::make_shared<clan::LabelView>();
 	label->style()->set("font: 13px/17px 'Segoe UI'; color: black; margin: 1px 0; padding: 0 2px");
-	label->style("selected")->set("background: #7777f0; color: white");
+	label->style("selected")->set("background: #7777f0; color: white;");
+	label->style("hot")->set("background: #ccccf0; color: black");
+	label->set_text(text);
 	return label;
 }

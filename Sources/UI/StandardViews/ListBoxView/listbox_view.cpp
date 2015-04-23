@@ -44,6 +44,7 @@ namespace clan
 		slots.connect(sig_key_press(), impl.get(), &ListBoxViewImpl::on_key_press);
 		slots.connect(content_view()->sig_pointer_press(), impl.get(), &ListBoxViewImpl::on_pointer_press);
 		slots.connect(content_view()->sig_pointer_release(), impl.get(), &ListBoxViewImpl::on_pointer_release);
+
 	}
 
 	ListBoxView::~ListBoxView()
@@ -64,7 +65,13 @@ namespace clan
 			views.back()->remove_from_super();
 		
 		for (auto &item : items)
+		{
 			content_view()->add_subview(item);
+			slots.connect(item->sig_pointer_enter(), impl.get(), &ListBoxViewImpl::on_pointer_enter);
+			slots.connect(item->sig_pointer_leave(), impl.get(), &ListBoxViewImpl::on_pointer_leave);
+
+		}
+
 	}
 	
 	int ListBoxView::selected_item() const
@@ -77,7 +84,7 @@ namespace clan
 		if (index == impl->selected_item)
 			return;
 		
-		if (index < -1 || index >= content_view()->subviews().size())
+		if (index < -1 || index >= (int) content_view()->subviews().size())
 			throw Exception("Listbox index out of bounds");
 
 		if (impl->selected_item != -1)
@@ -85,6 +92,9 @@ namespace clan
 		
 		if (index != -1)
 		{
+			if (impl->hot_item == index)
+				impl->set_hot_item(-1);
+
 			auto new_selected_item = content_view()->subviews().at(index);
 			new_selected_item->set_state("selected", true);
 			

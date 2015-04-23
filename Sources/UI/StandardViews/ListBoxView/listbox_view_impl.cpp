@@ -95,4 +95,34 @@ namespace clan
 
 	}
 
+	void ListBoxViewImpl::set_hot_item(int index)
+	{
+		if ((index == hot_item) || (index == selected_item))		// Selected item state has priority
+			return;
+
+		if (index < -1 || index >= (int) listbox->content_view()->subviews().size())
+			throw Exception("Listbox index out of bounds");
+
+		if (hot_item != -1)
+			listbox->content_view()->subviews().at(hot_item)->set_state("hot", false);
+
+		if (index != -1)
+		{
+			auto new_selected_item = listbox->content_view()->subviews().at(index);
+			new_selected_item->set_state("hot", true);
+		}
+
+		hot_item = index;
+	}
+
+	void ListBoxViewImpl::on_pointer_enter(PointerEvent &e)
+	{
+		set_hot_item(get_selection_index(e));
+	}
+
+	void ListBoxViewImpl::on_pointer_leave(PointerEvent &e)
+	{
+		set_hot_item(-1);
+	}
+
 }

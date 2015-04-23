@@ -66,14 +66,8 @@ Options::Options(clan::Canvas &canvas) : clan::TextureView(canvas)
 	listbox_mapmode = Theme::create_listbox();
 	listbox_mapmode->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:auto;", checkbox_xpos, 10, 180);
 
-	listbox_mapmode->set_items<std::string>(
-		{ "2d Upper Left", "2d Lower Left", "User Projection" },
-		[](const std::string &s) -> std::shared_ptr<View>
-		{
-			auto item = Theme::create_listbox_label();
-			item->set_text(s);
-			return item;
-		});
+	listbox_mapmode->set_items<std::string>( { "2d Upper Left", "2d Lower Left", "User Projection" }, Theme::create_listbox_label);
+
 	listbox_mapmode->func_selection_changed() = bind_member(this, &Options::on_mapmode_selected);
 	listbox_mapmode->set_selected_item(0);
 	add_subview(listbox_mapmode);

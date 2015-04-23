@@ -36,9 +36,14 @@ namespace clan
 		void on_key_press(KeyEvent &e);
 		void on_pointer_press(PointerEvent &e);
 		void on_pointer_release(PointerEvent &e);
+		void on_pointer_enter(PointerEvent &e);
+		void on_pointer_leave(PointerEvent &e);
+
+		void set_hot_item(int index);
 
 		ListBoxView *listbox = nullptr;
 		int selected_item = -1;
+		int hot_item = -1;
 		int last_selected_item = -1;
 
 		std::function<void()> func_selection_changed;
