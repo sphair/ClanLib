@@ -28,7 +28,7 @@
 
 #include "UI/precomp.h"
 #include "API/UI/Style/style.h"
-#include "API/UI/Style/box_geometry.h"
+#include "API/UI/View/view_geometry.h"
 #include "API/UI/UIThread/ui_thread.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/2D/canvas.h"
@@ -271,13 +271,13 @@ namespace clan
 		}
 	}
 
-	void StyleCascade::render_background(Canvas &canvas, const BoxGeometry &geometry) const
+	void StyleCascade::render_background(Canvas &canvas, const ViewGeometry &geometry) const
 	{
 		StyleBackgroundRenderer renderer(canvas, geometry, *this);
 		renderer.render_background();
 	}
 
-	void StyleCascade::render_border(Canvas &canvas, const BoxGeometry &geometry) const
+	void StyleCascade::render_border(Canvas &canvas, const ViewGeometry &geometry) const
 	{
 		StyleBackgroundRenderer renderer(canvas, geometry, *this);
 		renderer.render_border();

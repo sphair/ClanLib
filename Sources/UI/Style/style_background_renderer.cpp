@@ -28,7 +28,7 @@
 
 #include "UI/precomp.h"
 #include "style_background_renderer.h"
-#include "API/UI/Style/box_geometry.h"
+#include "API/UI/View/view_geometry.h"
 #include "API/UI/Style/style.h"
 #include "API/UI/UIThread/ui_thread.h"
 #include "API/Display/2D/canvas.h"
@@ -39,7 +39,7 @@
 
 namespace clan
 {
-	StyleBackgroundRenderer::StyleBackgroundRenderer(Canvas &canvas, const BoxGeometry &geometry, const StyleCascade &style) : canvas(canvas), geometry(geometry), style(style)
+	StyleBackgroundRenderer::StyleBackgroundRenderer(Canvas &canvas, const ViewGeometry &geometry, const StyleCascade &style) : canvas(canvas), geometry(geometry), style(style)
 	{
 	}
 

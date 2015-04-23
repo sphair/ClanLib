@@ -64,7 +64,6 @@
 #include "UI/StandardViews/spin_view.h"
 #include "UI/StandardViews/listbox_view.h"
 #include "UI/Image/image_source.h"
-#include "UI/Style/box_geometry.h"
 #include "UI/Style/style.h"
 #include "UI/Style/style_property_parser.h"
 #include "UI/Style/style_token.h"
@@ -74,6 +73,7 @@
 #include "UI/SystemDialogs/folder_browse_dialog.h"
 #include "UI/View/focus_policy.h"
 #include "UI/View/view.h"
+#include "UI/View/view_geometry.h"
 #include "UI/ViewController/view_controller.h"
 #include "UI/UIThread/ui_thread.h"
 

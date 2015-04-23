@@ -41,7 +41,7 @@ namespace clan
 	class Style;
 	class StyleImpl;
 	class StyleProperty;
-	class BoxGeometry;
+	class ViewGeometry;
 	class Canvas;
 	class Font;
 	class Colorf;
@@ -188,8 +188,8 @@ namespace clan
 		
 		int array_size(const std::string &property_name) const;
 		
-		void render_background(Canvas &canvas, const BoxGeometry &geometry) const;
-		void render_border(Canvas &canvas, const BoxGeometry &geometry) const;
+		void render_background(Canvas &canvas, const ViewGeometry &geometry) const;
+		void render_border(Canvas &canvas, const ViewGeometry &geometry) const;
 		
 		Font get_font(Canvas &canvas) const;
 	};

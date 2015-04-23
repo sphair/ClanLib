@@ -81,7 +81,7 @@ namespace clan
 		}
 	}
 
-	BoxGeometry PositionedLayout::get_geometry(Canvas &canvas, View *view, const Rectf &containing_box)
+	ViewGeometry PositionedLayout::get_geometry(Canvas &canvas, View *view, const Rectf &containing_box)
 	{
 		float x = 0.0f;
 		float width = 0.0f;
@@ -151,7 +151,7 @@ namespace clan
 			height = view->get_preferred_height(canvas, width);
 		}
 
-		return BoxGeometry::from_content_box(view->style_cascade(), Rectf::xywh(x, y, width, height));
+		return ViewGeometry::from_content_box(view->style_cascade(), Rectf::xywh(x, y, width, height));
 	}
 
 	void PositionedLayout::layout_from_containing_box(Canvas &canvas, View *view, const Rectf &containing_box)

@@ -210,12 +210,12 @@ namespace clan
 			super->set_needs_render();
 	}
 
-	const BoxGeometry &View::geometry() const
+	const ViewGeometry &View::geometry() const
 	{
 		return impl->_geometry;
 	}
 
-	void View::set_geometry(const BoxGeometry &geometry)
+	void View::set_geometry(const ViewGeometry &geometry)
 	{
 		if (impl->_geometry.content != geometry.content)
 		{

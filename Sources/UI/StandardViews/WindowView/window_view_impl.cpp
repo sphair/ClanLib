@@ -80,7 +80,7 @@ namespace clan
 	{
 		canvas.clear(clan::Colorf::transparent);
 
-		window_view->set_geometry(BoxGeometry::from_margin_box(window_view->style_cascade(), window.get_viewport()));
+		window_view->set_geometry(ViewGeometry::from_margin_box(window_view->style_cascade(), window.get_viewport()));
 		window_view->layout(canvas);
 		window_view->render(canvas);
 

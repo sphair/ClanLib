@@ -32,7 +32,7 @@
 #include "../../Core/Math/easing.h"
 #include "../../Core/Signals/signal.h"
 #include "../../UI/Events/event.h"
-#include "../Style/box_geometry.h"
+#include "../View/view_geometry.h"
 #include "../Style/style.h"
 #include "focus_policy.h"
 #include <vector>
@@ -87,8 +87,8 @@ namespace clan
 		bool needs_layout() const;
 		void set_needs_layout();
 
-		const BoxGeometry &geometry() const;
-		void set_geometry(const BoxGeometry &geometry);
+		const ViewGeometry &geometry() const;
+		void set_geometry(const ViewGeometry &geometry);
 
 		virtual Canvas get_canvas() const;
 

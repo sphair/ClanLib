@@ -44,7 +44,7 @@ namespace clan
 				// To do: maybe we need a mode to specify if the X axis is locked or infinite
 				float width = geometry().content.get_width(); //view->get_preferred_width(canvas);
 				float height = view->get_preferred_height(canvas, width);
-				BoxGeometry geometry = BoxGeometry::from_content_box(style_cascade(), Rectf(0.0f, 0.0f, width, height));
+				ViewGeometry geometry = ViewGeometry::from_content_box(style_cascade(), Rectf(0.0f, 0.0f, width, height));
 				geometry.content.translate(-geometry.content.get_top_left());
 				view->set_geometry(geometry);
 
@@ -181,7 +181,7 @@ namespace clan
 			content_height = impl->content_container->get_preferred_height(canvas, width);
 			y_scroll_needed = impl->overflow_y == ContentOverflow::scroll || content_height > height;
 			if (y_scroll_needed)
-				y_scroll_width = BoxGeometry::from_content_box(impl->scroll_y->style_cascade(), Rectf(0.0f, 0.0f, impl->scroll_y->get_preferred_width(canvas), 0.0f)).margin_box().get_width();
+				y_scroll_width = ViewGeometry::from_content_box(impl->scroll_y->style_cascade(), Rectf(0.0f, 0.0f, impl->scroll_y->get_preferred_width(canvas), 0.0f)).margin_box().get_width();
 		}
 		
 		if (impl->overflow_x != ContentOverflow::hidden)
@@ -189,7 +189,7 @@ namespace clan
 			content_width = impl->content_container->get_preferred_width(canvas);
 			x_scroll_needed = impl->overflow_x == ContentOverflow::scroll || content_width > width;
 			if (x_scroll_needed)
-				x_scroll_height = BoxGeometry::from_content_box(impl->scroll_x->style_cascade(), Rectf(0.0f, 0.0f, 0.0f, impl->scroll_x->get_preferred_height(canvas, width))).margin_box().get_height();
+				x_scroll_height = ViewGeometry::from_content_box(impl->scroll_x->style_cascade(), Rectf(0.0f, 0.0f, 0.0f, impl->scroll_x->get_preferred_height(canvas, width))).margin_box().get_height();
 		}
 		
 		float content_view_width = width - y_scroll_width;
@@ -210,10 +210,10 @@ namespace clan
 		impl->scroll_x->set_hidden(!x_scroll_needed);
 		impl->scroll_y->set_hidden(!y_scroll_needed);
 		
-		impl->scroll_x->set_geometry(BoxGeometry::from_margin_box(impl->scroll_x->style_cascade(), Rectf(0.0f, content_view_height, width - y_scroll_width, height)));
-		impl->scroll_y->set_geometry(BoxGeometry::from_margin_box(impl->scroll_y->style_cascade(), Rectf(content_view_width, 0.0f, width, height - x_scroll_height)));
+		impl->scroll_x->set_geometry(ViewGeometry::from_margin_box(impl->scroll_x->style_cascade(), Rectf(0.0f, content_view_height, width - y_scroll_width, height)));
+		impl->scroll_y->set_geometry(ViewGeometry::from_margin_box(impl->scroll_y->style_cascade(), Rectf(content_view_width, 0.0f, width, height - x_scroll_height)));
 		
-		impl->content_container->set_geometry(BoxGeometry::from_margin_box(impl->content_container->style_cascade(), Rectf(0.0f, 0.0f, content_view_width, content_view_height)));
+		impl->content_container->set_geometry(ViewGeometry::from_margin_box(impl->content_container->style_cascade(), Rectf(0.0f, 0.0f, content_view_width, content_view_height)));
 
 		impl->scroll_x->layout_subviews(canvas);
 		impl->scroll_y->layout_subviews(canvas);

@@ -240,7 +240,7 @@ namespace clan
 				x += subview->style_cascade().computed_value("border-left-width").number;
 				x += subview->style_cascade().computed_value("padding-left").number;
 
-				subview->set_geometry(BoxGeometry::from_content_box(subview->style_cascade(), Rectf::xywh(x, top_noncontent, subview_width, subview_height)));
+				subview->set_geometry(ViewGeometry::from_content_box(subview->style_cascade(), Rectf::xywh(x, top_noncontent, subview_width, subview_height)));
 
 				x += subview_width;
 				x += subview->style_cascade().computed_value("padding-right").number;

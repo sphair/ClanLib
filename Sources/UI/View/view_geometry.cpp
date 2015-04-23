@@ -27,12 +27,12 @@
 */
 
 #include "UI/precomp.h"
-#include "API/UI/Style/box_geometry.h"
+#include "API/UI/View/view_geometry.h"
 #include "API/UI/Style/style.h"
 
 namespace clan
 {
-	BoxGeometry::BoxGeometry(const StyleCascade &style_cascade)
+	ViewGeometry::ViewGeometry(const StyleCascade &style_cascade)
 	{
 		margin_left = style_cascade.computed_value("margin-left").number;
 		margin_top = style_cascade.computed_value("margin-top").number;
@@ -50,9 +50,9 @@ namespace clan
 		padding_bottom = style_cascade.computed_value("padding-bottom").number;
 	}
 
-	BoxGeometry BoxGeometry::from_margin_box(const StyleCascade &style, const Rectf &box)
+	ViewGeometry ViewGeometry::from_margin_box(const StyleCascade &style, const Rectf &box)
 	{
-		BoxGeometry geometry(style);
+		ViewGeometry geometry(style);
 
 		geometry.content = Rectf::ltrb(
 			box.left + geometry.margin_left + geometry.border_left + geometry.padding_left,
@@ -63,9 +63,9 @@ namespace clan
 		return geometry;
 	}
 
-	BoxGeometry BoxGeometry::from_border_box(const StyleCascade &style, const Rectf &box)
+	ViewGeometry ViewGeometry::from_border_box(const StyleCascade &style, const Rectf &box)
 	{
-		BoxGeometry geometry(style);
+		ViewGeometry geometry(style);
 
 		geometry.content = Rectf::ltrb(
 			box.left + geometry.border_left + geometry.padding_left,
@@ -76,9 +76,9 @@ namespace clan
 		return geometry;
 	}
 
-	BoxGeometry BoxGeometry::from_padding_box(const StyleCascade &style, const Rectf &box)
+	ViewGeometry ViewGeometry::from_padding_box(const StyleCascade &style, const Rectf &box)
 	{
-		BoxGeometry geometry(style);
+		ViewGeometry geometry(style);
 
 		geometry.content = Rectf::ltrb(
 			box.left + geometry.padding_left,
@@ -89,14 +89,14 @@ namespace clan
 		return geometry;
 	}
 
-	BoxGeometry BoxGeometry::from_content_box(const StyleCascade &style, const Rectf &box)
+	ViewGeometry ViewGeometry::from_content_box(const StyleCascade &style, const Rectf &box)
 	{
-		BoxGeometry geometry(style);
+		ViewGeometry geometry(style);
 		geometry.content = box;
 		return geometry;
 	}
 
-	Rectf BoxGeometry::margin_box() const
+	Rectf ViewGeometry::margin_box() const
 	{
 		return Rectf::ltrb(
 			content.left - margin_left - border_left - padding_left,
@@ -105,7 +105,7 @@ namespace clan
 			content.bottom + margin_bottom + border_bottom + padding_bottom);
 	}
 
-	Rectf BoxGeometry::border_box() const
+	Rectf ViewGeometry::border_box() const
 	{
 		return Rectf::ltrb(
 			content.left - border_left - padding_left,
@@ -114,7 +114,7 @@ namespace clan
 			content.bottom + border_bottom + padding_bottom);
 	}
 
-	Rectf BoxGeometry::padding_box() const
+	Rectf ViewGeometry::padding_box() const
 	{
 		return Rectf::ltrb(
 			content.left - padding_left,
@@ -123,7 +123,7 @@ namespace clan
 			content.bottom + padding_bottom);
 	}
 
-	Rectf BoxGeometry::content_box() const
+	Rectf ViewGeometry::content_box() const
 	{
 		return content;
 	}

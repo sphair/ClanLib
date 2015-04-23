@@ -40,12 +40,12 @@ namespace clan
 	class BrushGradientStop;
 	class StyleCascade;
 	class StyleValue;
-	class BoxGeometry;
+	class ViewGeometry;
 
 	class StyleBackgroundRenderer
 	{
 	public:
-		StyleBackgroundRenderer(Canvas &canvas, const BoxGeometry &geometry, const StyleCascade &style);
+		StyleBackgroundRenderer(Canvas &canvas, const ViewGeometry &geometry, const StyleCascade &style);
 		void render_background();
 		void render_border();
 
@@ -87,7 +87,7 @@ namespace clan
 		static float mix(float a, float b, float t);
 
 		Canvas &canvas;
-		const BoxGeometry &geometry;
+		const ViewGeometry &geometry;
 		const StyleCascade &style;
 
 		//Rectf initial_containing_box;

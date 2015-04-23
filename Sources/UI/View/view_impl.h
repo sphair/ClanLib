@@ -69,7 +69,7 @@ namespace clan
 
 		std::map<std::string, StyleState> states;
 		
-		BoxGeometry _geometry;
+		ViewGeometry _geometry;
 		bool hidden = false;
 
 		Mat4f view_transform = Mat4f::identity();

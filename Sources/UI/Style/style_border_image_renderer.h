@@ -35,12 +35,12 @@ namespace clan
 	class Colorf;
 	class StyleCascade;
 	class StyleValue;
-	class BoxGeometry;
+	class ViewGeometry;
 
 	class StyleBorderImageRenderer
 	{
 	public:
-		StyleBorderImageRenderer(Canvas &canvas, const BoxGeometry &geometry, const StyleCascade &style);
+		StyleBorderImageRenderer(Canvas &canvas, const ViewGeometry &geometry, const StyleCascade &style);
 		void render();
 
 	private:
@@ -56,7 +56,7 @@ namespace clan
 		int get_bottom_slice_value(int image_height) const;
 
 		Canvas &canvas;
-		const BoxGeometry &geometry;
+		const ViewGeometry &geometry;
 		const StyleCascade &style;
 	};
 }

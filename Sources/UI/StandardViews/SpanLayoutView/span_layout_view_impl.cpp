@@ -213,7 +213,7 @@ namespace clan
 
 					obj_y -= obj_baseline_offset;
 
-					object.view->set_geometry(BoxGeometry::from_margin_box(object.view->style_cascade(), Rectf::xywh(obj_x, obj_y, obj_width, obj_height)));
+					object.view->set_geometry(ViewGeometry::from_margin_box(object.view->style_cascade(), Rectf::xywh(obj_x, obj_y, obj_width, obj_height)));
 
 					x += obj_width;
 				}
