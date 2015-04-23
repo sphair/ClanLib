@@ -51,7 +51,7 @@ private:
 	void update_all_slider_text();
 	void slider_numballs_changed();
 	void slider_grid_angle_changed();
-	void on_mapmode_selected(int value);
+	void on_mapmode_selected();
 private:
 	std::shared_ptr<clan::SliderView> slider_numballs;
 	std::shared_ptr<clan::LabelView> label_numballs;
@@ -61,8 +61,7 @@ private:
 	std::shared_ptr<clan::CheckBoxView> checkbox_moveballs;
 
 	std::shared_ptr<clan::LabelView> label_mapmode;
-	//clan::ComboBox *combo_mapmode;
-	//clan::PopupMenu combo_mapmode_menu;
+	std::shared_ptr<clan::ListBoxView> listbox_mapmode;
 
 };
 

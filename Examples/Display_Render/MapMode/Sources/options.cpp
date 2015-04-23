@@ -63,9 +63,25 @@ Options::Options(clan::Canvas &canvas) : clan::TextureView(canvas)
 	checkbox_moveballs = create_checkbox(checkbox_xpos, checkbox_ypos, "Moving Balls", is_moveballs_set);
 	checkbox_moveballs->func_state_changed() = bind_member(this, &Options::checkbox_moveballs_changed);
 
-	//make_mapmode_menu(combo_mapmode_menu);
-	//combo_mapmode = create_mapmode_combo_box(450, 40, combo_mapmode_menu, 0);
-	//label_mapmode = create_combobox_label(combo_mapmode, "Map Mode");
+	listbox_mapmode = Theme::create_listbox();
+	listbox_mapmode->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:auto;", checkbox_xpos, 10, 180);
+
+	listbox_mapmode->set_items<std::string>(
+		{ "2d Upper Left", "2d Lower Left", "User Projection" },
+		[](const std::string &s) -> std::shared_ptr<View>
+		{
+			auto item = Theme::create_listbox_label();
+			item->set_text(s);
+			return item;
+		});
+	listbox_mapmode->func_selection_changed() = bind_member(this, &Options::on_mapmode_selected);
+	listbox_mapmode->set_selected_item(0);
+	add_subview(listbox_mapmode);
+
+	label_mapmode = Theme::create_label(true);
+	add_subview(label_mapmode);
+	label_mapmode->style()->set("position: absolute; left:%1px; top:%2px", slider_label_xpos, 10);
+	label_mapmode->set_text("Map Mode");
 
 	update_all_slider_text();
 }
@@ -115,8 +131,9 @@ std::shared_ptr<clan::CheckBoxView> Options::create_checkbox(int xpos, int ypos,
 	return checkbox;
 }
 
-void Options::on_mapmode_selected(int value)
+void Options::on_mapmode_selected()
 {
+	int value = listbox_mapmode->selected_item();
 	switch (value)
 	{
 		case 0:

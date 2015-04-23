@@ -38,4 +38,6 @@ public:
 	static std::shared_ptr<clan::CheckBoxView> create_checkbox();
 	static std::shared_ptr<clan::RadioButtonView> create_radiobutton();
 	static std::shared_ptr<clan::LabelView> create_label(bool subpixel = false);
+	static std::shared_ptr<clan::ListBoxView> create_listbox();
+	static std::shared_ptr<clan::LabelView> create_listbox_label();
 };
