@@ -133,8 +133,6 @@ namespace clan
 					return StyleValue::from_number(impl->prop_number.find(property_name)->second);
 				case StyleValueType::color:
 					return StyleValue::from_color(impl->prop_color.find(property_name)->second);
-				case StyleValueType::image:
-					return StyleValue::from_image(impl->prop_image.find(property_name)->second);
 			}
 		}
 		return StyleValue();
@@ -378,9 +376,6 @@ namespace clan
 			case StyleValueType::color:
 				prop_color.erase(prop_color.find(name));
 				break;
-			case StyleValueType::image:
-				prop_image.erase(prop_image.find(name));
-				break;
 			}
 		}
 
@@ -413,9 +408,6 @@ namespace clan
 			break;
 		case StyleValueType::color:
 			prop_color[name] = value.color;
-			break;
-		case StyleValueType::image:
-			prop_image[name] = value.image;
 			break;
 		}
 	}

@@ -52,6 +52,5 @@ namespace clan
 		std::map<std::string, float> prop_number;
 		std::map<std::string, StyleDimension> prop_dimension;
 		std::map<std::string, Colorf> prop_color;
-		std::map<std::string, std::shared_ptr<ImageSource>> prop_image;
 	};
 }

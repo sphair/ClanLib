@@ -57,7 +57,6 @@ namespace clan
 		string,
 		url,
 		color,
-		image,
 		angle,
 		time,
 		frequency,
@@ -101,7 +100,6 @@ namespace clan
 		float number = 0.0f;
 		StyleDimension dimension = StyleDimension::px;
 		Colorf color;
-		std::shared_ptr<ImageSource> image;
 
 		bool is_undefined() const { return type == StyleValueType::undefined; }
 		bool is_keyword() const { return type == StyleValueType::keyword; }
@@ -117,7 +115,6 @@ namespace clan
 		bool is_string() const { return type == StyleValueType::string; }
 		bool is_url() const { return type == StyleValueType::url; }
 		bool is_color() const { return type == StyleValueType::color; }
-		bool is_image() const { return type == StyleValueType::image; }
 
 		static StyleValue from_keyword(const std::string &keyword) { StyleValue v; v.type = StyleValueType::keyword; v.text = keyword; return v; }
 		static StyleValue from_string(const std::string &text) { StyleValue v; v.type = StyleValueType::string; v.text = text; return v; }
@@ -130,7 +127,6 @@ namespace clan
 		static StyleValue from_number(float number) { StyleValue v; v.type = StyleValueType::number; v.number = number; return v; }
 		static StyleValue from_url(const std::string &url) { StyleValue v; v.type = StyleValueType::url; v.text = url; return v; }
 		static StyleValue from_color(const Colorf &color) { StyleValue v; v.type = StyleValueType::color; v.color = color; return v; }
-		static StyleValue from_image(const std::shared_ptr<ImageSource> &image) { StyleValue v; v.type = StyleValueType::image; v.image = image; return v; }
 	};
 
 	class StyleGradientStop
