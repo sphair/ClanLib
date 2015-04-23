@@ -32,6 +32,7 @@
 
 namespace clan
 {
+	/// Window resize event
 	class ResizeEvent : public EventUI
 	{
 	public:
