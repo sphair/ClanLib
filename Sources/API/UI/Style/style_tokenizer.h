@@ -41,6 +41,7 @@ namespace clan
 	class StyleTokenizer
 	{
 	public:
+		/// Construct tokenizer for a text string
 		StyleTokenizer(const std::string &text);
 
 		/// \brief Reads the next token

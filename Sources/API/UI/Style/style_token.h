@@ -32,42 +32,49 @@
 
 namespace clan
 {
+	/// Token types recognized by the style tokenzier
 	enum class StyleTokenType
 	{
-		null,
-		ident,
-		atkeyword,
-		string,
-		invalid,
-		hash,
-		number,
-		percentage,
-		dimension,
-		uri,
-		unicode_range,
-		cdo,
-		cdc,
-		colon,
-		semi_colon,
-		curly_brace_begin,
-		curly_brace_end,
-		bracket_begin,
-		bracket_end,
-		square_bracket_begin,
-		square_bracket_end,
-		whitespace,
-		comment,
-		function,
-		includes,
-		dashmatch,
-		delim
+		null,                 /// No more tokens
+		ident,                /// Identifier
+		atkeyword,            /// @ keyword
+		string,               /// String
+		invalid,              /// Syntax error
+		hash,                 /// # Hash
+		number,               /// Number
+		percentage,           /// Percentage number
+		dimension,            /// Number with dimension
+		uri,                  /// Url function
+		unicode_range,        /// Unicode range
+		cdo,                  /// HTLM comment begin <!--
+		cdc,                  /// HTML comment end -->
+		colon,                /// :
+		semi_colon,           /// ;
+		curly_brace_begin,    /// {
+		curly_brace_end,      /// }
+		bracket_begin,        /// (
+		bracket_end,          /// )
+		square_bracket_begin, /// [
+		square_bracket_end,   /// ]
+		whitespace,           /// Whitespace
+		comment,              /// C style comment block
+		function,             /// Function name
+		includes,             /// ~=
+		dashmatch,            /// |=
+		delim                 /// Any other character
 	};
 
+	/// Style token
 	class StyleToken
 	{
 	public:
+		/// Token type
 		StyleTokenType type = StyleTokenType::null;
+
+		/// Token value
 		std::string value;
+
+		/// Dimension for token value
 		std::string dimension;
 	};
 }
