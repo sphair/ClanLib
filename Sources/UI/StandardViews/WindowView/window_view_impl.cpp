@@ -96,10 +96,6 @@ namespace clan
 
 	void WindowView_Impl::window_key_event(KeyEvent &e)
 	{
-		Pointf pointer_pos = e.pointer_pos(window_view);
-		pointer_pos -= window_view->geometry().content.get_top_left();
-		window_view->to_root_pos(pointer_pos);
-
 		View *view = window_view->focus_view();
 		if (view)
 		{
