@@ -54,11 +54,16 @@ namespace clan
 	{
 		ViewGeometry geometry(style);
 
-		geometry.content = Rectf::ltrb(
+		Rectf content_box = Rectf::ltrb(
 			box.left + geometry.margin_left + geometry.border_left + geometry.padding_left,
 			box.top + geometry.margin_top + geometry.border_top + geometry.padding_top,
 			box.right - geometry.margin_right - geometry.border_right - geometry.padding_right,
 			box.bottom - geometry.margin_bottom - geometry.border_bottom - geometry.padding_bottom);
+
+		geometry.content_x = content_box.left;
+		geometry.content_y = content_box.top;
+		geometry.content_width = content_box.get_width();
+		geometry.content_height = content_box.get_height();
 
 		return geometry;
 	}
@@ -67,11 +72,16 @@ namespace clan
 	{
 		ViewGeometry geometry(style);
 
-		geometry.content = Rectf::ltrb(
+		Rectf content_box = Rectf::ltrb(
 			box.left + geometry.border_left + geometry.padding_left,
 			box.top + geometry.border_top + geometry.padding_top,
 			box.right - geometry.border_right - geometry.padding_right,
 			box.bottom - geometry.border_bottom - geometry.padding_bottom);
+
+		geometry.content_x = content_box.left;
+		geometry.content_y = content_box.top;
+		geometry.content_width = content_box.get_width();
+		geometry.content_height = content_box.get_height();
 
 		return geometry;
 	}
@@ -80,11 +90,16 @@ namespace clan
 	{
 		ViewGeometry geometry(style);
 
-		geometry.content = Rectf::ltrb(
+		Rectf content_box = Rectf::ltrb(
 			box.left + geometry.padding_left,
 			box.top + geometry.padding_top,
 			box.right - geometry.padding_right,
 			box.bottom - geometry.padding_bottom);
+
+		geometry.content_x = content_box.left;
+		geometry.content_y = content_box.top;
+		geometry.content_width = content_box.get_width();
+		geometry.content_height = content_box.get_height();
 
 		return geometry;
 	}
@@ -92,39 +107,47 @@ namespace clan
 	ViewGeometry ViewGeometry::from_content_box(const StyleCascade &style, const Rectf &box)
 	{
 		ViewGeometry geometry(style);
-		geometry.content = box;
+		geometry.content_x = box.left;
+		geometry.content_y = box.top;
+		geometry.content_width = box.get_width();
+		geometry.content_height = box.get_height();
 		return geometry;
 	}
 
 	Rectf ViewGeometry::margin_box() const
 	{
 		return Rectf::ltrb(
-			content.left - margin_left - border_left - padding_left,
-			content.top - margin_top - border_top - padding_top,
-			content.right + margin_right + border_right + padding_right,
-			content.bottom + margin_bottom + border_bottom + padding_bottom);
+			content_x - margin_left - border_left - padding_left,
+			content_y - margin_top - border_top - padding_top,
+			content_x + content_width + margin_right + border_right + padding_right,
+			content_y + content_height + margin_bottom + border_bottom + padding_bottom);
 	}
 
 	Rectf ViewGeometry::border_box() const
 	{
 		return Rectf::ltrb(
-			content.left - border_left - padding_left,
-			content.top - border_top - padding_top,
-			content.right + border_right + padding_right,
-			content.bottom + border_bottom + padding_bottom);
+			content_x - border_left - padding_left,
+			content_y - border_top - padding_top,
+			content_x + content_width + border_right + padding_right,
+			content_y + content_height + border_bottom + padding_bottom);
 	}
 
 	Rectf ViewGeometry::padding_box() const
 	{
 		return Rectf::ltrb(
-			content.left - padding_left,
-			content.top - padding_top,
-			content.right + padding_right,
-			content.bottom + padding_bottom);
+			content_x - padding_left,
+			content_y - padding_top,
+			content_x + content_width + padding_right,
+			content_y + content_height + padding_bottom);
 	}
 
 	Rectf ViewGeometry::content_box() const
 	{
-		return content;
+		return Rectf::xywh(content_x, content_y, content_width, content_height);
+	}
+
+	Pointf ViewGeometry::content_pos() const
+	{
+		return Pointf(content_x, content_y);
 	}
 }

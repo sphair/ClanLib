@@ -178,7 +178,7 @@ namespace clan
 
 	void WindowView_Impl::window_pointer_event(PointerEvent &e)
 	{
-		std::shared_ptr<View> view_above_cursor = window_view->find_view_at(e.pos(window_view) - window_view->geometry().content.get_top_left());
+		std::shared_ptr<View> view_above_cursor = window_view->find_view_at(e.pos(window_view));
 		auto view = get_capture_view(e, view_above_cursor);
 		if (!view)
 			view = view_above_cursor;
@@ -196,7 +196,7 @@ namespace clan
 
 	Pointf WindowView_Impl::to_root_pos(const Pointf &client_pos) const
 	{
-		return window_view->to_root_pos(client_pos - window_view->geometry().content.get_top_left());
+		return window_view->to_root_pos(client_pos - window_view->geometry().content_pos());
 	}
 
 	void WindowView_Impl::on_key_down(const clan::InputEvent &e)

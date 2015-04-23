@@ -78,7 +78,7 @@ namespace clan
 
 	void SpanLayoutView::render_content(Canvas &canvas)
 	{
-		return impl->render_content(canvas, geometry().content.get_width());
+		return impl->render_content(canvas, geometry().content_width);
 	}
 
 	float SpanLayoutView::get_preferred_width(Canvas &canvas)
@@ -110,6 +110,6 @@ namespace clan
 	void SpanLayoutView::layout_subviews(Canvas &canvas)
 	{
 		View::layout_subviews(canvas);
-		impl->layout_views(canvas, geometry().content.get_width());
+		impl->layout_views(canvas, geometry().content_width);
 	}
 }

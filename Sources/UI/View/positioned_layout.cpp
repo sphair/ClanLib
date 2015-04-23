@@ -48,7 +48,7 @@ namespace clan
 			else if (subview->style_cascade().computed_value("position").is_keyword("absolute"))
 			{
 				// To do: decide how we determine the containing box used for absolute positioning. For now, use the parent content box.
-				layout_from_containing_box(canvas, subview.get(), view->geometry().content);
+				layout_from_containing_box(canvas, subview.get(), view->geometry().content_box());
 			}
 			else if (subview->style_cascade().computed_value("position").is_keyword("fixed"))
 			{
@@ -56,10 +56,10 @@ namespace clan
 				View *current = view->superview();
 				if (current)
 				{
-					Pointf offset = view->geometry().content.get_top_left();
+					Pointf offset(view->geometry().content_x, view->geometry().content_y);
 					while (true)
 					{
-						offset = offset + view->geometry().content.get_top_left();
+						offset = offset + Pointf(current->geometry().content_x, current->geometry().content_y);
 						View *superview = current->superview();
 						if (!superview)
 						{
@@ -71,7 +71,7 @@ namespace clan
 				}
 				else
 				{
-					offset_initial_containing_box = view->geometry().content;
+					offset_initial_containing_box = view->geometry().content_box();
 				}
 
 				layout_from_containing_box(canvas, subview.get(), offset_initial_containing_box);

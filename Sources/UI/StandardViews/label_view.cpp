@@ -108,7 +108,7 @@ namespace clan
 		std::string clipped_text = impl->_text;
 		GlyphMetrics advance = font.measure_text(canvas, clipped_text);
 
-		if (advance.advance.width > geometry().content.get_width())
+		if (advance.advance.width > geometry().content_width)
 		{
 			std::string ellipsis = StringHelp::unicode_to_utf8(0x2026);
 			GlyphMetrics ellipsis_advance = font.measure_text(canvas, ellipsis);
@@ -116,20 +116,20 @@ namespace clan
 			switch (impl->_line_break_mode)
 			{
 			case LineBreakMode::clipping:
-				clipped_text = clipped_text.substr(0, font.clip_from_left(canvas, clipped_text, geometry().content.get_width()));
+				clipped_text = clipped_text.substr(0, font.clip_from_left(canvas, clipped_text, geometry().content_width));
 				break;
 			case LineBreakMode::truncating_head:
-				clipped_text = ellipsis + clipped_text.substr(font.clip_from_right(canvas, clipped_text, geometry().content.get_width() - ellipsis_advance.advance.width));
+				clipped_text = ellipsis + clipped_text.substr(font.clip_from_right(canvas, clipped_text, geometry().content_width - ellipsis_advance.advance.width));
 				break;
 			case LineBreakMode::truncating_middle:
 				{
-				std::string text_left = clipped_text.substr(0, font.clip_from_left(canvas, clipped_text, geometry().content.get_width() * 0.5f - ellipsis_advance.advance.width));
-				std::string text_right = clipped_text.substr(font.clip_from_right(canvas, clipped_text, geometry().content.get_width() * 0.5f - ellipsis_advance.advance.width));
-				clipped_text = text_left + ellipsis + text_right;
+					std::string text_left = clipped_text.substr(0, font.clip_from_left(canvas, clipped_text, geometry().content_width * 0.5f - ellipsis_advance.advance.width));
+					std::string text_right = clipped_text.substr(font.clip_from_right(canvas, clipped_text, geometry().content_width * 0.5f - ellipsis_advance.advance.width));
+					clipped_text = text_left + ellipsis + text_right;
 				}
 				break;
 			case LineBreakMode::truncating_tail:
-				clipped_text = clipped_text.substr(0, font.clip_from_left(canvas, clipped_text, geometry().content.get_width() - ellipsis_advance.advance.width)) + ellipsis;
+				clipped_text = clipped_text.substr(0, font.clip_from_left(canvas, clipped_text, geometry().content_width - ellipsis_advance.advance.width)) + ellipsis;
 				break;
 			default:
 				break;
@@ -137,7 +137,7 @@ namespace clan
 
 			advance = font.measure_text(canvas, clipped_text);
 			
-			if (advance.advance.width > geometry().content.get_width())
+			if (advance.advance.width > geometry().content_width)
 				return; // Still no room.  Draw nothing!
 		}
 
@@ -149,11 +149,11 @@ namespace clan
 		}
 		else if (impl->text_alignment == TextAlignment::right)
 		{
-			font.draw_text(canvas, Pointf(geometry().content.get_width() - advance.advance.width, baseline), clipped_text, color);
+			font.draw_text(canvas, Pointf(geometry().content_width - advance.advance.width, baseline), clipped_text, color);
 		}
 		else if (impl->text_alignment == TextAlignment::center)
 		{
-			font.draw_text(canvas, Pointf(std::round((geometry().content.get_width() - advance.advance.width) * 0.5f), baseline), clipped_text, color);
+			font.draw_text(canvas, Pointf(std::round((geometry().content_width - advance.advance.width) * 0.5f), baseline), clipped_text, color);
 		}
 	}
 

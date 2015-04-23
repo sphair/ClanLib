@@ -160,15 +160,15 @@ namespace clan
 					right_noncontent += subview->style_cascade().computed_value("border-right-width").number;
 					right_noncontent += subview->style_cascade().computed_value("padding-right").number;
 
-					float subview_width = view->geometry().content.get_width() - left_noncontent - right_noncontent;
+					float subview_width = view->geometry().content_width - left_noncontent - right_noncontent;
 					if (subview_width < 0.0f)
 					{
 						right_noncontent = 0.0f;
-						subview_width = view->geometry().content.get_width() - left_noncontent;
+						subview_width = view->geometry().content_height - left_noncontent;
 						if (subview_width < 0.0f)
 						{
 							left_noncontent = 0.0f;
-							subview_width = view->geometry().content.get_width();
+							subview_width = view->geometry().content_width;
 						}
 					}
 
@@ -181,7 +181,7 @@ namespace clan
 			}
 		}
 
-		float free_space = view->geometry().content.get_height() - noncontent_height - basis_height;
+		float free_space = view->geometry().content_height - noncontent_height - basis_height;
 
 		// Layout using flex properties:
 
@@ -200,15 +200,15 @@ namespace clan
 				right_noncontent += subview->style_cascade().computed_value("border-right-width").number;
 				right_noncontent += subview->style_cascade().computed_value("padding-right").number;
 
-				float subview_width = view->geometry().content.get_width() - left_noncontent - right_noncontent;
+				float subview_width = view->geometry().content_width - left_noncontent - right_noncontent;
 				if (subview_width < 0.0f)
 				{
 					right_noncontent = 0.0f;
-					subview_width = view->geometry().content.get_width() - left_noncontent;
+					subview_width = view->geometry().content_width - left_noncontent;
 					if (subview_width < 0.0f)
 					{
 						left_noncontent = 0.0f;
-						subview_width = view->geometry().content.get_width();
+						subview_width = view->geometry().content_width;
 					}
 				}
 

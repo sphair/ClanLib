@@ -203,7 +203,8 @@ namespace clan
 	{
 		PointerEvent e = e_window;
 		Pointf pointer_pos = e.pos(window_view);
-		pointer_pos -= window_view->geometry().content.get_top_left();
+		pointer_pos.x -= window_view->geometry().content_x;
+		pointer_pos.y -= window_view->geometry().content_y;
 		e.set_pos(window_view, pointer_pos);
 
 		std::shared_ptr<View> view_above_cursor = window_view->find_view_at(e.pos(window_view));

@@ -217,7 +217,7 @@ namespace clan
 
 	void View::set_geometry(const ViewGeometry &geometry)
 	{
-		if (impl->_geometry.content != geometry.content)
+		if (impl->_geometry.content_box() != geometry.content_box())
 		{
 			impl->_geometry = geometry;
 			set_needs_layout();
@@ -230,7 +230,7 @@ namespace clan
 		style_cascade().render_border(canvas, geometry());
 
 		Mat4f old_transform = canvas.get_transform();
-		Pointf translate = impl->_geometry.content.get_top_left();
+		Pointf translate = impl->_geometry.content_pos();
 		canvas.set_transform(old_transform * Mat4f::translate(translate.x, translate.y, 0) * impl->view_transform);
 
 		bool clipped = impl->content_clipped;
@@ -239,7 +239,7 @@ namespace clan
 			// Seems canvas cliprects are always in absolute coordinates - should this be changed?
 			// Note: this code isn't correct for rotated transforms (plus canvas cliprect can only clip AABB)
 			Vec4f tl_point = canvas.get_transform() * Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
-			Vec4f br_point = canvas.get_transform() * Vec4f(impl->_geometry.content.get_width(), impl->_geometry.content.get_height(), 0.0f, 1.0f);
+			Vec4f br_point = canvas.get_transform() * Vec4f(impl->_geometry.content_width, impl->_geometry.content_height, 0.0f, 1.0f);
 			canvas.push_cliprect(Rectf(std::min(tl_point.x, br_point.x), std::min(tl_point.y, br_point.y), std::max(tl_point.x, br_point.x), std::max(tl_point.y, br_point.y)));
 		}
 
@@ -259,9 +259,9 @@ namespace clan
 		if (render_exception_encountered())
 		{
 			canvas.set_transform(old_transform * Mat4f::translate(translate.x, translate.y, 0));
-			canvas.fill_rect(0.0f, 0.0f, impl->_geometry.content.get_width(), impl->_geometry.content.get_height(), Colorf(1.0f, 0.2f, 0.2f, 0.5f));
-			canvas.draw_line(0.0f, 0.0f, impl->_geometry.content.get_width(), impl->_geometry.content.get_height(), Colorf::black);
-			canvas.draw_line(impl->_geometry.content.get_width(), 0.0f, 0.0f, impl->_geometry.content.get_height(), Colorf::black);
+			canvas.fill_rect(0.0f, 0.0f, impl->_geometry.content_width, impl->_geometry.content_height, Colorf(1.0f, 0.2f, 0.2f, 0.5f));
+			canvas.draw_line(0.0f, 0.0f, impl->_geometry.content_width, impl->_geometry.content_height, Colorf::black);
+			canvas.draw_line(impl->_geometry.content_width, 0.0f, 0.0f, impl->_geometry.content_height, Colorf::black);
 		}
 
 		for (std::shared_ptr<View> &view : impl->_subviews)
@@ -426,7 +426,8 @@ namespace clan
 			const std::shared_ptr<View> &child = impl->_subviews[cnt-1];
 			if (child->geometry().border_box().contains(pos) && !child->hidden() && !child->local_root())
 			{
-				std::shared_ptr<View> view = child->find_view_at(Pointf(pos.x - child->geometry().content.left, pos.y - child->geometry().content.top));
+				Pointf child_content_pos(pos.x - child->geometry().content_x, pos.y - child->geometry().content_y);
+				std::shared_ptr<View> view = child->find_view_at(child_content_pos);
 				if (view)
 					return view;
 				else

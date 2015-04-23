@@ -175,7 +175,7 @@ namespace clan
 			}
 		}
 
-		float free_space = view->geometry().content.get_width() - noncontent_width - basis_width;
+		float free_space = view->geometry().content_width - noncontent_width - basis_width;
 
 		// Layout using flex properties:
 
@@ -206,7 +206,7 @@ namespace clan
 				bottom_noncontent += subview->style_cascade().computed_value("padding-bottom").number;
 
 				float subview_height = subview->get_preferred_height(canvas, subview_width);
-				float available_margin = view->geometry().content.get_height() - subview_height - top_noncontent - bottom_noncontent;
+				float available_margin = view->geometry().content_height - subview_height - top_noncontent - bottom_noncontent;
 
 				if (subview->style_cascade().computed_value("margin-top").is_keyword("auto") && subview->style_cascade().computed_value("margin-bottom").is_keyword("auto"))
 				{
@@ -223,15 +223,15 @@ namespace clan
 				}
 				else
 				{
-					subview_height = view->geometry().content.get_height() - top_noncontent - bottom_noncontent;
+					subview_height = view->geometry().content_height - top_noncontent - bottom_noncontent;
 					if (subview_height < 0.0f)
 					{
 						bottom_noncontent = 0.0f;
-						subview_height = view->geometry().content.get_height() - top_noncontent;
+						subview_height = view->geometry().content_height - top_noncontent;
 						if (subview_height < 0.0f)
 						{
 							top_noncontent = 0.0f;
-							subview_height = view->geometry().content.get_height();
+							subview_height = view->geometry().content_height;
 						}
 					}
 				}

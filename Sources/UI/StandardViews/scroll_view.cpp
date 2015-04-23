@@ -42,10 +42,11 @@ namespace clan
 			for (auto &view : subviews())
 			{
 				// To do: maybe we need a mode to specify if the X axis is locked or infinite
-				float width = geometry().content.get_width(); //view->get_preferred_width(canvas);
+				float width = geometry().content_width; //view->get_preferred_width(canvas);
 				float height = view->get_preferred_height(canvas, width);
 				ViewGeometry geometry = ViewGeometry::from_content_box(style_cascade(), Rectf(0.0f, 0.0f, width, height));
-				geometry.content.translate(-geometry.content.get_top_left());
+				geometry.content_x = 0.0f;
+				geometry.content_y = 0.0f;
 				view->set_geometry(geometry);
 
 				view->layout_subviews(canvas); // Maybe this should be handled in View?

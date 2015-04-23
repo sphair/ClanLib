@@ -77,7 +77,7 @@ namespace clan
 
 	void TextureView::layout_local()
 	{
-		Rectf containing_box = superview()->geometry().content;
+		Rectf containing_box = superview()->geometry().content_box();
 		ViewGeometry geometry = PositionedLayout::get_geometry(impl->canvas, this, containing_box);
 		set_geometry(ViewGeometry::from_margin_box(style_cascade(), impl->canvas_rect));
 		layout(impl->canvas);

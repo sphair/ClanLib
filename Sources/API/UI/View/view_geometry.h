@@ -33,7 +33,8 @@
 namespace clan
 {
 	class StyleCascade;
-
+	
+	// \brief View position and size after being laid out by layout functions
 	class ViewGeometry
 	{
 	public:
@@ -45,26 +46,67 @@ namespace clan
 		static ViewGeometry from_padding_box(const StyleCascade &style, const Rectf &box);
 		static ViewGeometry from_content_box(const StyleCascade &style, const Rectf &box);
 
+		// \brief Margin box relative to super view
 		Rectf margin_box() const;
+
+		// \brief Border box relative to super view
 		Rectf border_box() const;
+
+		// \brief Padding box relative to super view
 		Rectf padding_box() const;
+
+		// \brief Content box relative to super view
 		Rectf content_box() const;
 
+		// \brief Content offset relative to super view
+		Pointf content_pos() const;
+
+		// \brief Left margin width
 		float margin_left = 0.0f;
+
+		// \brief Top margin width
 		float margin_top = 0.0f;
+
+		// \brief Right margin width
 		float margin_right = 0.0f;
+
+		// \brief Bottom margin width
 		float margin_bottom = 0.0f;
 
+		// \brief Left border width
 		float border_left = 0.0f;
+
+		// \brief Top border width
 		float border_top = 0.0f;
+
+		// \brief Right border width
 		float border_right = 0.0f;
+
+		// \brief Bottom border width
 		float border_bottom = 0.0f;
 
+		// \brief Left padding width
 		float padding_left = 0.0f;
+
+		// \brief Top padding width
 		float padding_top = 0.0f;
+
+		// \brief Right padding width
 		float padding_right = 0.0f;
+
+		// \brief Bottom padding width
 		float padding_bottom = 0.0f;
 
-		Rectf content;
+		// \brief Content area horizontal offset relative to super view
+		float content_x = 0.0f;
+
+		// \brief Content area vertical offset relative to super view
+		float content_y = 0.0f;
+
+		// \brief Content area width
+		float content_width = 0.0f;
+
+		// \brief Content area height
+		float content_height = 0.0f;
 	};
 }

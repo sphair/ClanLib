@@ -274,7 +274,7 @@ namespace clan
 
 		if (impl->min_pos == impl->max_pos || impl->page_step == 0.0)
 		{
-			impl->thumb->style()->set("left: 0; top: 0; width: %1px; height: %2px", track_geometry.content.get_width(), track_geometry.content.get_height());
+			impl->thumb->style()->set("left: 0; top: 0; width: %1px; height: %2px", track_geometry.content_width, track_geometry.content_height);
 		}
 		else
 		{
@@ -289,11 +289,11 @@ namespace clan
 
 			if (vertical())
 			{
-				impl->thumb->style()->set("left: 0; top: %1px; width: %2px; height: %3px", (float)thumb_pos, track_geometry.content.get_width(), (float)thumb_length);
+				impl->thumb->style()->set("left: 0; top: %1px; width: %2px; height: %3px", (float)thumb_pos, track_geometry.content_width, (float)thumb_length);
 			}
 			else
 			{
-				impl->thumb->style()->set("left: %1px; top: 0; width: %2px; height: %3px", (float)thumb_pos, (float)thumb_length, track_geometry.content.get_height() );
+				impl->thumb->style()->set("left: %1px; top: 0; width: %2px; height: %3px", (float)thumb_pos, (float)thumb_length, track_geometry.content_height );
 			}
 		}
 	}

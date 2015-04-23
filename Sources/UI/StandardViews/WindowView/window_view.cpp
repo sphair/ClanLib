@@ -126,7 +126,7 @@ namespace clan
 	void WindowView::layout_local()
 	{
 		Canvas canvas(impl->window);
-		Rectf containing_box = superview()->geometry().content;
+		Rectf containing_box = superview()->geometry().content_box();
 		ViewGeometry geometry = PositionedLayout::get_geometry(canvas, this, containing_box);
 		set_geometry(ViewGeometry::from_margin_box(style_cascade(), impl->window.get_viewport()));
 		layout(canvas);
