@@ -422,6 +422,7 @@ namespace clan
 			if (child->geometry().border_box().contains(pos) && !child->hidden() && !child->local_root())
 			{
 				Pointf child_content_pos(pos.x - child->geometry().content_x, pos.y - child->geometry().content_y);
+				child_content_pos = Vec2f(Mat4f::inverse(child->view_transform()) * Vec4f(child_content_pos, 0.0f, 1.0f));
 				std::shared_ptr<View> view = child->find_view_at(child_content_pos);
 				if (view)
 					return view;
@@ -616,7 +617,7 @@ namespace clan
 	Pointf View::to_root_pos(const Pointf &pos)
 	{
 		if (superview())
-			return superview()->to_root_pos(geometry().content_box().get_top_left() + pos);
+			return superview()->to_root_pos(geometry().content_box().get_top_left() + Vec2f(view_transform() * Vec4f(pos, 0.0f, 1.0f)));
 		else
 			return pos;
 	}
@@ -624,7 +625,7 @@ namespace clan
 	Pointf View::from_root_pos(const Pointf &pos)
 	{
 		if (superview())
-			return superview()->from_root_pos(pos) - geometry().content_box().get_top_left();
+			return superview()->from_root_pos(Vec2f(Mat4f::inverse(view_transform()) * Vec4f(pos, 0.0f, 1.0f)) - geometry().content_box().get_top_left());
 		else
 			return pos;
 	}
