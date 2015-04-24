@@ -270,7 +270,7 @@ namespace clan
 
 	void WindowView_Impl::on_mouse_move(const clan::InputEvent &clan_event)
 	{
-		PointerEvent e(PointerEventType::move, PointerButton::none, clan_event.mouse_pos, clan_event.alt, clan_event.shift, clan_event.ctrl, false/*clan_event.cmd*/);
+		PointerEvent e(PointerEventType::move, PointerButton::none, to_root_pos(clan_event.mouse_pos), clan_event.alt, clan_event.shift, clan_event.ctrl, false/*clan_event.cmd*/);
 		window_pointer_event(e);
 	}
 
