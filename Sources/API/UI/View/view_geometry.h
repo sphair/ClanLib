@@ -61,6 +61,9 @@ namespace clan
 		// \brief Content offset relative to super view
 		Pointf content_pos() const;
 
+		// \brief Content box size
+		Sizef content_size() const;
+
 		// \brief Left margin width
 		float margin_left = 0.0f;
 

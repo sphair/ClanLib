@@ -150,4 +150,9 @@ namespace clan
 	{
 		return Pointf(content_x, content_y);
 	}
+
+	Sizef ViewGeometry::content_size() const
+	{
+		return Sizef(content_width, content_height);
+	}
 }
