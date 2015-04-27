@@ -45,7 +45,7 @@ namespace clan
 		if (!style.computed_value("border-image-source").is_url())
 			return;
 
-		Image &image = Image::resource(canvas, style.computed_value("border-image-source").text, UIThread::get_resources());
+		Image &image = Image::resource(canvas, style.computed_value("border-image-source").text(), UIThread::get_resources());
 		if (!image.is_null())
 		{
 			int slice_left = get_left_slice_value(image.get_width());
@@ -79,8 +79,8 @@ namespace clan
 
 	void StyleBorderImageRenderer::draw_area(Image &image, int x, int y, int w, int h, int sx, int sy, int sw, int sh)
 	{
-		StyleValue repeat_x = style.computed_value("border-image-repeat-x");
-		StyleValue repeat_y = style.computed_value("border-image-repeat-y");
+		StyleGetValue repeat_x = style.computed_value("border-image-repeat-x");
+		StyleGetValue repeat_y = style.computed_value("border-image-repeat-y");
 
 		if ((repeat_x.is_keyword("repeat") || repeat_x.is_keyword("stretch")) && (repeat_y.is_keyword("stretch") || repeat_y.is_keyword("repeat")))
 		{
@@ -113,119 +113,119 @@ namespace clan
 	{
 		Rect box = geometry.border_box();
 
-		StyleValue outset_left = style.computed_value("border-image-outset-left");
-		StyleValue outset_right = style.computed_value("border-image-outset-right");
-		StyleValue outset_top = style.computed_value("border-image-outset-top");
-		StyleValue outset_bottom = style.computed_value("border-image-outset-bottom");
+		StyleGetValue outset_left = style.computed_value("border-image-outset-left");
+		StyleGetValue outset_right = style.computed_value("border-image-outset-right");
+		StyleGetValue outset_top = style.computed_value("border-image-outset-top");
+		StyleGetValue outset_bottom = style.computed_value("border-image-outset-bottom");
 
 		if (outset_left.is_length() || outset_left.is_number())
-			box.left -= outset_left.number;
+			box.left -= outset_left.number();
 
 		if (outset_right.is_length() || outset_right.is_number())
-			box.right += outset_right.number;
+			box.right += outset_right.number();
 
 		if (outset_top.is_length() || outset_top.is_number())
-			box.top -= outset_top.number;
+			box.top -= outset_top.number();
 
 		if (outset_bottom.is_length() || outset_bottom.is_number())
-			box.bottom += outset_bottom.number;
+			box.bottom += outset_bottom.number();
 
 		return box;
 	}
 
 	float StyleBorderImageRenderer::get_left_grid(float image_area_width, float auto_width) const
 	{
-		StyleValue border_image_width = style.computed_value("border-image-width-left");
+		StyleGetValue border_image_width = style.computed_value("border-image-width-left");
 
 		if (border_image_width.is_percentage())
-			return border_image_width.number * image_area_width / 100.0f;
+			return border_image_width.number() * image_area_width / 100.0f;
 		else if (border_image_width.is_number())
-			return border_image_width.number * geometry.border_left;
+			return border_image_width.number() * geometry.border_left;
 		else
 			return auto_width;
 	}
 
 	float StyleBorderImageRenderer::get_right_grid(float image_area_width, float auto_width) const
 	{
-		StyleValue border_image_width = style.computed_value("border-image-width-right");
+		StyleGetValue border_image_width = style.computed_value("border-image-width-right");
 
 		if (border_image_width.is_percentage())
-			return border_image_width.number * image_area_width / 100.0f;
+			return border_image_width.number() * image_area_width / 100.0f;
 		else if (border_image_width.is_number())
-			return border_image_width.number * geometry.border_right;
+			return border_image_width.number() * geometry.border_right;
 		else
 			return auto_width;
 	}
 
 	float StyleBorderImageRenderer::get_top_grid(float image_area_height, float auto_height) const
 	{
-		StyleValue border_image_width = style.computed_value("border-image-width-top");
+		StyleGetValue border_image_width = style.computed_value("border-image-width-top");
 
 		if (border_image_width.is_percentage())
-			return border_image_width.number * image_area_height / 100.0f;
+			return border_image_width.number() * image_area_height / 100.0f;
 		else if (border_image_width.is_number())
-			return border_image_width.number * geometry.border_top;
+			return border_image_width.number() * geometry.border_top;
 		else
 			return auto_height;
 	}
 
 	float StyleBorderImageRenderer::get_bottom_grid(float image_area_height, float auto_height) const
 	{
-		StyleValue border_image_width = style.computed_value("border-image-width-bottom");
+		StyleGetValue border_image_width = style.computed_value("border-image-width-bottom");
 
 		if (border_image_width.is_percentage())
-			return border_image_width.number * image_area_height / 100.0f;
+			return border_image_width.number() * image_area_height / 100.0f;
 		else if (border_image_width.is_number())
-			return border_image_width.number * geometry.border_bottom;
+			return border_image_width.number() * geometry.border_bottom;
 		else
 			return auto_height;
 	}
 
 	int StyleBorderImageRenderer::get_left_slice_value(int image_width) const
 	{
-		StyleValue border_image_slice = style.computed_value("border-image-slice-left");
+		StyleGetValue border_image_slice = style.computed_value("border-image-slice-left");
 
 		int v = 0;
 		if (border_image_slice.is_percentage())
-			v = (int)std::round(border_image_slice.number * image_width / 100.0f);
+			v = (int)std::round(border_image_slice.number() * image_width / 100.0f);
 		else
-			v = (int)std::round(border_image_slice.number);
+			v = (int)std::round(border_image_slice.number());
 		return max(0, min(image_width, v));
 	}
 
 	int StyleBorderImageRenderer::get_right_slice_value(int image_width) const
 	{
-		StyleValue border_image_slice = style.computed_value("border-image-slice-right");
+		StyleGetValue border_image_slice = style.computed_value("border-image-slice-right");
 
 		int v = 0;
 		if (border_image_slice.is_percentage())
-			v = (int)std::round(border_image_slice.number * image_width / 100.0f);
+			v = (int)std::round(border_image_slice.number() * image_width / 100.0f);
 		else
-			v = (int)std::round(border_image_slice.number);
+			v = (int)std::round(border_image_slice.number());
 		return max(0, min(image_width, v));
 	}
 
 	int StyleBorderImageRenderer::get_top_slice_value(int image_height) const
 	{
-		StyleValue border_image_slice = style.computed_value("border-image-slice-top");
+		StyleGetValue border_image_slice = style.computed_value("border-image-slice-top");
 
 		int v = 0;
 		if (border_image_slice.is_percentage())
-			v = (int)std::round(border_image_slice.number * image_height / 100.0f);
+			v = (int)std::round(border_image_slice.number() * image_height / 100.0f);
 		else
-			v = (int)std::round(border_image_slice.number);
+			v = (int)std::round(border_image_slice.number());
 		return max(0, min(image_height, v));
 	}
 
 	int StyleBorderImageRenderer::get_bottom_slice_value(int image_height) const
 	{
-		StyleValue border_image_slice = style.computed_value("border-image-slice-bottom");
+		StyleGetValue border_image_slice = style.computed_value("border-image-slice-bottom");
 
 		int v = 0;
 		if (border_image_slice.is_percentage())
-			v = (int)std::round(border_image_slice.number * image_height / 100.0f);
+			v = (int)std::round(border_image_slice.number() * image_height / 100.0f);
 		else
-			v = (int)std::round(border_image_slice.number);
+			v = (int)std::round(border_image_slice.number());
 		return max(0, min(image_height, v));
 	}
 }

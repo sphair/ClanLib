@@ -102,16 +102,61 @@ namespace clan
 		StyleValueType type() const { return _type; }
 
 		/// Text when the type is a text string
-		const char *text() const { return _value.text; }
+		const char *text() const
+		{
+			switch (_type)
+			{
+			case StyleValueType::keyword:
+			case StyleValueType::url:
+			case StyleValueType::string:
+				return _value.text;
+			default:
+				return "";
+			}
+		}
 
 		/// Value number
-		float number() const { return _value.float_value.number; }
+		float number() const
+		{
+			switch (_type)
+			{
+			case StyleValueType::length:
+			case StyleValueType::percentage:
+			case StyleValueType::number:
+			case StyleValueType::angle:
+			case StyleValueType::time:
+			case StyleValueType::frequency:
+			case StyleValueType::resolution:
+				return _value.float_value.number;
+			default:
+				return 0.0f;
+			}
+		}
 
 		/// Dimension used by value
-		StyleDimension dimension() const { return _value.float_value.dimension; }
+		StyleDimension dimension() const
+		{
+			switch (_type)
+			{
+			case StyleValueType::length:
+			case StyleValueType::angle:
+			case StyleValueType::time:
+			case StyleValueType::frequency:
+			case StyleValueType::resolution:
+				return _value.float_value.dimension;
+			default:
+				return StyleDimension::px;
+			}
+		}
 
 		/// Value color
-		Colorf color() const { return Colorf(_value.color[0], _value.color[1], _value.color[2], _value.color[3]); }
+		Colorf color() const
+		{
+			if (_type == StyleValueType::color)
+				return Colorf(_value.color[0], _value.color[1], _value.color[2], _value.color[3]);
+			else
+				return Colorf();
+		}
 
 		/// Check if value is undefined
 		bool is_undefined() const { return _type == StyleValueType::undefined; }
@@ -341,30 +386,30 @@ namespace clan
 		StyleCascade *parent = nullptr;
 		
 		/// Find the first declared value in the cascade for the specified property
-		StyleValue cascade_value(const std::string &property_name) const;
+		StyleGetValue cascade_value(const std::string &property_name) const;
 
 		/// Resolve any inheritance or initial values for the cascade value
-		StyleValue specified_value(const std::string &property_name) const;
+		StyleGetValue specified_value(const std::string &property_name) const;
 
 		/// Find the computed value for the specified value
 		///
 		/// The computed value is a simplified value for the property. Lengths are resolved to device independent pixels and so on.
-		StyleValue computed_value(const std::string &property_name) const;
+		StyleGetValue computed_value(const std::string &property_name) const;
 		
 		/// Convert length into px (device independent pixel) units
-		StyleValue compute_length(const StyleValue &length) const;
+		StyleGetValue compute_length(const StyleGetValue &length) const;
 
 		/// Convert angle into radians
-		StyleValue compute_angle(const StyleValue &angle) const;
+		StyleGetValue compute_angle(const StyleGetValue &angle) const;
 
 		/// Convert time to seconds
-		StyleValue compute_time(const StyleValue &time) const;
+		StyleGetValue compute_time(const StyleGetValue &time) const;
 
 		/// Convert frequency to Hz
-		StyleValue compute_frequency(const StyleValue &frequency) const;
+		StyleGetValue compute_frequency(const StyleGetValue &frequency) const;
 
 		/// Convert resolution to dots per px unit (pixel ratio scale)
-		StyleValue compute_resolution(const StyleValue &resolution) const;
+		StyleGetValue compute_resolution(const StyleGetValue &resolution) const;
 		
 		/// Value array size for the property
 		int array_size(const std::string &property_name) const;
@@ -405,7 +450,7 @@ namespace clan
 		}
 
 		/// Retrieve the declared value for a property
-		StyleValue declared_value(const std::string &property_name) const;
+		StyleGetValue declared_value(const std::string &property_name) const;
 
 		/// Static helper that generates a "rgba(%1,%2,%3,%4)" string for the given color.
 		static std::string to_rgba(const Colorf &c)

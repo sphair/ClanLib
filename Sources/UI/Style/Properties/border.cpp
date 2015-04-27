@@ -35,18 +35,18 @@ namespace clan
 	{
 	}
 
-	StylePropertyDefault style_default_border_left_color("border-left-color", StyleValue::from_keyword("from-color"));
-	StylePropertyDefault style_default_border_top_color("border-top-color", StyleValue::from_keyword("from-color"));
-	StylePropertyDefault style_default_border_right_color("border-right-color", StyleValue::from_keyword("from-color"));
-	StylePropertyDefault style_default_border_bottom_color("border-bottom-color", StyleValue::from_keyword("from-color"));
-	StylePropertyDefault style_default_border_left_style("border-left-style", StyleValue::from_keyword("none"));
-	StylePropertyDefault style_default_border_top_style("border-top-style", StyleValue::from_keyword("none"));
-	StylePropertyDefault style_default_border_right_style("border-right-style", StyleValue::from_keyword("none"));
-	StylePropertyDefault style_default_border_bottom_style("border-bottom-style", StyleValue::from_keyword("none"));
-	StylePropertyDefault style_default_border_left_width("border-left-width", StyleValue::from_keyword("medium"));
-	StylePropertyDefault style_default_border_top_width("border-top-width", StyleValue::from_keyword("medium"));
-	StylePropertyDefault style_default_border_right_width("border-right-width", StyleValue::from_keyword("medium"));
-	StylePropertyDefault style_default_border_bottom_width("border-bottom-width", StyleValue::from_keyword("medium"));
+	StylePropertyDefault style_default_border_left_color("border-left-color", StyleGetValue::from_keyword("from-color"));
+	StylePropertyDefault style_default_border_top_color("border-top-color", StyleGetValue::from_keyword("from-color"));
+	StylePropertyDefault style_default_border_right_color("border-right-color", StyleGetValue::from_keyword("from-color"));
+	StylePropertyDefault style_default_border_bottom_color("border-bottom-color", StyleGetValue::from_keyword("from-color"));
+	StylePropertyDefault style_default_border_left_style("border-left-style", StyleGetValue::from_keyword("none"));
+	StylePropertyDefault style_default_border_top_style("border-top-style", StyleGetValue::from_keyword("none"));
+	StylePropertyDefault style_default_border_right_style("border-right-style", StyleGetValue::from_keyword("none"));
+	StylePropertyDefault style_default_border_bottom_style("border-bottom-style", StyleGetValue::from_keyword("none"));
+	StylePropertyDefault style_default_border_left_width("border-left-width", StyleGetValue::from_keyword("medium"));
+	StylePropertyDefault style_default_border_top_width("border-top-width", StyleGetValue::from_keyword("medium"));
+	StylePropertyDefault style_default_border_right_width("border-right-width", StyleGetValue::from_keyword("medium"));
+	StylePropertyDefault style_default_border_bottom_width("border-bottom-width", StyleGetValue::from_keyword("medium"));
 
 	BorderPropertyParser style_parser_border;
 	BorderColorPropertyParser style_parser_border_color;

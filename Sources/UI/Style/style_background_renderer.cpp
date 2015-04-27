@@ -49,20 +49,20 @@ namespace clan
 
 		int num_layers = style.array_size("background-image");
 
-		StyleValue bg_color = style.computed_value("background-color");
-		if (bg_color.is_color() && bg_color.color.a != 0.0f)
+		StyleGetValue bg_color = style.computed_value("background-color");
+		if (bg_color.is_color() && bg_color.color().a != 0.0f)
 		{
 			auto border_points = get_border_points();
 
 			// To do: take get_layer_clip(num_layers - 1) into account
 
 			Path background_area = get_border_area_path(border_points);
-			background_area.fill(canvas, Brush(bg_color.color));
+			background_area.fill(canvas, Brush(bg_color.color()));
 		}
 
 		for (int index = num_layers - 1; index >= 0; index--)
 		{
-			StyleValue layer_image = style.computed_value("background-image[" + StringHelp::int_to_text(index) + "]");
+			StyleGetValue layer_image = style.computed_value("background-image[" + StringHelp::int_to_text(index) + "]");
 			if (layer_image.is_keyword("none"))
 				continue;
 
@@ -89,12 +89,12 @@ namespace clan
 		}
 	}
 
-	void StyleBackgroundRenderer::render_background_image(const StyleValue &layer_image, int index)
+	void StyleBackgroundRenderer::render_background_image(const StyleGetValue &layer_image, int index)
 	{
 		Image image;
 
 		if (layer_image.is_url())
-			image = ImageSource::from_resource(layer_image.text)->get_image(canvas);
+			image = ImageSource::from_resource(layer_image.text())->get_image(canvas);
 
 		if (!image.is_null())
 		{
@@ -104,8 +104,8 @@ namespace clan
 
 			//canvas.push_cliprect(clip_box);
 
-			StyleValue repeat_x = get_layer_repeat_x(index);
-			StyleValue repeat_y = get_layer_repeat_y(index);
+			StyleGetValue repeat_x = get_layer_repeat_x(index);
+			StyleGetValue repeat_y = get_layer_repeat_y(index);
 
 			float y = get_start_y(index, clip_box, origin_box, image_size);
 			while (true)
@@ -178,7 +178,7 @@ namespace clan
 
 		if (prop_angle.is_angle())
 		{
-			float angle = std::fmod(prop_angle.number, 2 * PI);
+			float angle = std::fmod(prop_angle.number(), 2 * PI);
 			if (angle < 0.0f)
 				angle += 2 * PI;
 
@@ -254,11 +254,11 @@ namespace clan
 
 			float position = 0.0f;
 			if (prop_position.is_number())
-				position = prop_position.number;
+				position = prop_position.number();
 			else if (prop_position.is_percentage())
-				position = prop_position.number / 100.0f;
+				position = prop_position.number() / 100.0f;
 			else if (prop_position.is_length())
-				position = prop_position.number / gradient_length;
+				position = prop_position.number() / gradient_length;
 			else if (stop_index == 0)
 				position = 0.0f;
 			else if (stop_index + 1 == num_stops)
@@ -271,7 +271,7 @@ namespace clan
 
 			last_position = position;
 
-			brush.stops.push_back(BrushGradientStop(prop_color.color, position));
+			brush.stops.push_back(BrushGradientStop(prop_color.color(), position));
 		}
 
 		border_area_path.fill(canvas, brush);
@@ -298,10 +298,10 @@ namespace clan
 		if (!get_layer_clip(num_layers - 1).is_keyword("border-box"))
 			return;
 
-		StyleValue style_top = style.computed_value("border-top-style");
+		StyleGetValue style_top = style.computed_value("border-top-style");
 		if (style_top.is_keyword("solid"))
 		{
-			Colorf color = style.computed_value("border-top-color").color;
+			Colorf color = style.computed_value("border-top-color").color();
 			if (color.a > 0.0f)
 			{
 				auto border_points = get_border_points();
@@ -322,7 +322,7 @@ namespace clan
 		else
 		{
 			x = origin_box.left;
-			StyleValue pos_x = get_layer_position_x(index);
+			StyleGetValue pos_x = get_layer_position_x(index);
 			if (pos_x.is_keyword("left"))
 				x = origin_box.left;
 			else if (pos_x.is_keyword("center"))
@@ -330,12 +330,12 @@ namespace clan
 			else if (pos_x.is_keyword("right"))
 				x = origin_box.right - image_size.width;
 			else if (pos_x.is_percentage())
-				x = origin_box.left + (origin_box.get_width() - image_size.width) * pos_x.number / 100.0f;
+				x = origin_box.left + (origin_box.get_width() - image_size.width) * pos_x.number() / 100.0f;
 			else if (pos_x.is_length())
-				x = origin_box.left + pos_x.number;
+				x = origin_box.left + pos_x.number();
 		}
 
-		StyleValue repeat_x = get_layer_repeat_x(index);
+		StyleGetValue repeat_x = get_layer_repeat_x(index);
 		if (repeat_x.is_keyword("repeat") || repeat_x.is_keyword("space"))
 		{
 			if (x > clip_box.left)
@@ -355,7 +355,7 @@ namespace clan
 		else
 		{
 			y = origin_box.top;
-			StyleValue pos_y = get_layer_position_x(index);
+			StyleGetValue pos_y = get_layer_position_x(index);
 			if (pos_y.is_keyword("top"))
 				y = origin_box.top;
 			else if (pos_y.is_keyword("center"))
@@ -363,12 +363,12 @@ namespace clan
 			else if (pos_y.is_keyword("bottom"))
 				y = origin_box.bottom - image_size.height;
 			else if (pos_y.is_percentage())
-				y = origin_box.top + (origin_box.get_height() - image_size.height) * pos_y.number / 100.0f;
+				y = origin_box.top + (origin_box.get_height() - image_size.height) * pos_y.number() / 100.0f;
 			else if (pos_y.is_length())
-				y = origin_box.top + pos_y.number;
+				y = origin_box.top + pos_y.number();
 		}
 
-		StyleValue repeat_y = get_layer_repeat_y(index);
+		StyleGetValue repeat_y = get_layer_repeat_y(index);
 		if (repeat_y.is_keyword("repeat") || repeat_y.is_keyword("space"))
 		{
 			if (y > clip_box.top)
@@ -381,8 +381,8 @@ namespace clan
 	Sizef StyleBackgroundRenderer::get_image_size(int index, Image &image, Rectf origin_box)
 	{
 		Sizef size;
-		StyleValue size_x = get_layer_size_x(index);
-		StyleValue size_y = get_layer_size_y(index);
+		StyleGetValue size_x = get_layer_size_x(index);
+		StyleGetValue size_y = get_layer_size_y(index);
 		
 		if (size_x.is_keyword("contain"))
 		{
@@ -403,28 +403,28 @@ namespace clan
 			float width = image.get_width();
 			if (size_x.is_length())
 			{
-				width = size_x.number;
+				width = size_x.number();
 			}
 			else if (size_x.is_percentage())
 			{
-				width = size_x.number * width / 100.0f;
+				width = size_x.number() * width / 100.0f;
 			}
 
 			float height = image.get_height();
 			if (size_y.is_length())
 			{
-				height = size_y.number;
+				height = size_y.number();
 			}
 			else if (size_y.is_percentage())
 			{
-				height = size_y.number * height / 100.0f;
+				height = size_y.number() * height / 100.0f;
 			}
 
 			size = Sizef(width, height);
 		}
 
-		StyleValue repeat_x = get_layer_repeat_x(index);
-		StyleValue repeat_y = get_layer_repeat_y(index);
+		StyleGetValue repeat_x = get_layer_repeat_x(index);
+		StyleGetValue repeat_y = get_layer_repeat_y(index);
 
 		if (repeat_x.is_keyword("round"))
 		{
@@ -455,7 +455,7 @@ namespace clan
 		//if (is_root)
 		//	return initial_containing_box;
 
-		StyleValue clip = get_layer_clip(index);
+		StyleGetValue clip = get_layer_clip(index);
 		if (clip.is_keyword("border-box"))
 			return geometry.border_box();
 		else if (clip.is_keyword("padding-box"))
@@ -468,14 +468,14 @@ namespace clan
 
 	Rectf StyleBackgroundRenderer::get_origin_box(int index)
 	{
-		StyleValue attachment = get_layer_attachment(index);
+		StyleGetValue attachment = get_layer_attachment(index);
 		/*if (attachment.is_keyword("fixed"))
 		{
 			return initial_containing_box;
 		}
 		else*/ if (attachment.is_keyword("local") || attachment.is_keyword("scroll"))
 		{
-			StyleValue origin = get_layer_origin(index);
+			StyleGetValue origin = get_layer_origin(index);
 			if (origin.is_keyword("border-box"))
 				return geometry.border_box();
 			else if (origin.is_keyword("padding-box"))
@@ -491,55 +491,55 @@ namespace clan
 		}
 	}
 
-	StyleValue StyleBackgroundRenderer::get_layer_clip(int index)
+	StyleGetValue StyleBackgroundRenderer::get_layer_clip(int index)
 	{
 		int count = style.array_size("background-clip");
 		return style.computed_value("background-clip[" + StringHelp::int_to_text(index % count) + "]");
 	}
 
-	StyleValue StyleBackgroundRenderer::get_layer_origin(int index)
+	StyleGetValue StyleBackgroundRenderer::get_layer_origin(int index)
 	{
 		int count = style.array_size("background-origin");
 		return style.computed_value("background-origin[" + StringHelp::int_to_text(index % count) + "]");
 	}
 
-	StyleValue StyleBackgroundRenderer::get_layer_size_x(int index)
+	StyleGetValue StyleBackgroundRenderer::get_layer_size_x(int index)
 	{
 		int count = style.array_size("background-size-x");
 		return style.computed_value("background-size-x[" + StringHelp::int_to_text(index % count) + "]");
 	}
 
-	StyleValue StyleBackgroundRenderer::get_layer_size_y(int index)
+	StyleGetValue StyleBackgroundRenderer::get_layer_size_y(int index)
 	{
 		int count = style.array_size("background-size-y");
 		return style.computed_value("background-size-y[" + StringHelp::int_to_text(index % count) + "]");
 	}
 
-	StyleValue StyleBackgroundRenderer::get_layer_position_x(int index)
+	StyleGetValue StyleBackgroundRenderer::get_layer_position_x(int index)
 	{
 		int count = style.array_size("background-position-x");
 		return style.computed_value("background-position-x[" + StringHelp::int_to_text(index % count) + "]");
 	}
 
-	StyleValue StyleBackgroundRenderer::get_layer_position_y(int index)
+	StyleGetValue StyleBackgroundRenderer::get_layer_position_y(int index)
 	{
 		int count = style.array_size("background-position-y");
 		return style.computed_value("background-position-y[" + StringHelp::int_to_text(index % count) + "]");
 	}
 
-	StyleValue StyleBackgroundRenderer::get_layer_attachment(int index)
+	StyleGetValue StyleBackgroundRenderer::get_layer_attachment(int index)
 	{
 		int count = style.array_size("background-attachment");
 		return style.computed_value("background-attachment[" + StringHelp::int_to_text(index % count) + "]");
 	}
 
-	StyleValue StyleBackgroundRenderer::get_layer_repeat_x(int index)
+	StyleGetValue StyleBackgroundRenderer::get_layer_repeat_x(int index)
 	{
 		int count = style.array_size("background-repeat-x");
 		return style.computed_value("background-repeat-x[" + StringHelp::int_to_text(index % count) + "]");
 	}
 
-	StyleValue StyleBackgroundRenderer::get_layer_repeat_y(int index)
+	StyleGetValue StyleBackgroundRenderer::get_layer_repeat_y(int index)
 	{
 		int count = style.array_size("background-repeat-y");
 		return style.computed_value("background-repeat-y[" + StringHelp::int_to_text(index % count) + "]");
@@ -762,7 +762,7 @@ namespace clan
 				continue;
 
 			auto layer_color = style.computed_value("box-shadow-color[" + StringHelp::int_to_text(index) + "]");
-			if (layer_color.color.a <= 0.0f)
+			if (layer_color.color().a <= 0.0f)
 				continue;
 
 			auto layer_offset_x = style.computed_value("box-shadow-horizontal-offset[" + StringHelp::int_to_text(index) + "]");
@@ -772,9 +772,9 @@ namespace clan
 
 			// To do: support shadow_spread_distance
 
-			float shadow_blur_radius = layer_blur_radius.number;
-			Pointf shadow_offset(layer_offset_x.number, layer_offset_y.number);
-			Colorf shadow_color = layer_color.color;
+			float shadow_blur_radius = layer_blur_radius.number();
+			Pointf shadow_offset(layer_offset_x.number(), layer_offset_y.number());
+			Colorf shadow_color = layer_color.color();
 			Colorf transparent = shadow_color;
 			transparent.a = 0.0f;
 
@@ -951,38 +951,38 @@ namespace clan
 		return a * (1.0f - t) + b * t;
 	}
 
-	float StyleBackgroundRenderer::get_horizontal_radius(const StyleValue &border_radius) const
+	float StyleBackgroundRenderer::get_horizontal_radius(const StyleGetValue &border_radius) const
 	{
 		if (border_radius.is_length())
-			return border_radius.number;
+			return border_radius.number();
 		else if (border_radius.is_percentage())
-			return border_radius.number * geometry.border_box().get_width() / 100.0f;
+			return border_radius.number() * geometry.border_box().get_width() / 100.0f;
 		else
 			return 0.0f;
 	}
 
-	float StyleBackgroundRenderer::get_vertical_radius(const StyleValue &border_radius) const
+	float StyleBackgroundRenderer::get_vertical_radius(const StyleGetValue &border_radius) const
 	{
 		if (border_radius.is_length())
-			return border_radius.number;
+			return border_radius.number();
 		else if (border_radius.is_percentage())
-			return border_radius.number * geometry.border_box().get_height() / 100.0f;
+			return border_radius.number() * geometry.border_box().get_height() / 100.0f;
 		else
 			return 0.0f;
 	}
 
-	Colorf StyleBackgroundRenderer::get_light_color(const StyleValue &border_color) const
+	Colorf StyleBackgroundRenderer::get_light_color(const StyleGetValue &border_color) const
 	{
-		Colorf light = border_color.color;
+		Colorf light = border_color.color();
 		light.r = min(1.0f, light.r * 1.2f);
 		light.g = min(1.0f, light.g * 1.2f);
 		light.b = min(1.0f, light.b * 1.2f);
 		return light;
 	}
 
-	Colorf StyleBackgroundRenderer::get_dark_color(const StyleValue &border_color) const
+	Colorf StyleBackgroundRenderer::get_dark_color(const StyleGetValue &border_color) const
 	{
-		Colorf dark = border_color.color;
+		Colorf dark = border_color.color();
 		dark.r *= 0.8f;
 		dark.g *= 0.8f;
 		dark.b *= 0.8f;

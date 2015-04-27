@@ -35,22 +35,22 @@ namespace clan
 	{
 	}
 
-	StylePropertyDefault style_default_border_image_source("border-image-source", StyleValue::from_keyword("none"));
-	StylePropertyDefault style_default_border_image_slice_top("border-image-slice-top", StyleValue::from_percentage(100.0f));
-	StylePropertyDefault style_default_border_image_slice_right("border-image-slice-right", StyleValue::from_percentage(100.0f));
-	StylePropertyDefault style_default_border_image_slice_bottom("border-image-slice-bottom", StyleValue::from_percentage(100.0f));
-	StylePropertyDefault style_default_border_image_slice_left("border-image-slice-left", StyleValue::from_percentage(100.0f));
-	StylePropertyDefault style_default_border_image_slice_center("border-image-slice-center", StyleValue::from_keyword("none"));
-	StylePropertyDefault style_default_border_image_width_top("border-image-width-top", StyleValue::from_number(1.0f));
-	StylePropertyDefault style_default_border_image_width_right("border-image-width-right", StyleValue::from_number(1.0f));
-	StylePropertyDefault style_default_border_image_width_bottom("border-image-width-bottom", StyleValue::from_number(1.0f));
-	StylePropertyDefault style_default_border_image_width_left("border-image-width-left", StyleValue::from_number(1.0f));
-	StylePropertyDefault style_default_border_image_outset_top("border-image-outset-top", StyleValue::from_length(0.0f));
-	StylePropertyDefault style_default_border_image_outset_right("border-image-outset-right", StyleValue::from_length(0.0f));
-	StylePropertyDefault style_default_border_image_outset_bottom("border-image-outset-bottom", StyleValue::from_length(0.0f));
-	StylePropertyDefault style_default_border_image_outset_left("border-image-outset-left", StyleValue::from_length(0.0f));
-	StylePropertyDefault style_default_border_image_image_repeat_x("border-image-repeat-x", StyleValue::from_keyword("stretch"));
-	StylePropertyDefault style_default_border_image_image_repeat_y("border-image-repeat-y", StyleValue::from_keyword("stretch"));
+	StylePropertyDefault style_default_border_image_source("border-image-source", StyleGetValue::from_keyword("none"));
+	StylePropertyDefault style_default_border_image_slice_top("border-image-slice-top", StyleGetValue::from_percentage(100.0f));
+	StylePropertyDefault style_default_border_image_slice_right("border-image-slice-right", StyleGetValue::from_percentage(100.0f));
+	StylePropertyDefault style_default_border_image_slice_bottom("border-image-slice-bottom", StyleGetValue::from_percentage(100.0f));
+	StylePropertyDefault style_default_border_image_slice_left("border-image-slice-left", StyleGetValue::from_percentage(100.0f));
+	StylePropertyDefault style_default_border_image_slice_center("border-image-slice-center", StyleGetValue::from_keyword("none"));
+	StylePropertyDefault style_default_border_image_width_top("border-image-width-top", StyleGetValue::from_number(1.0f));
+	StylePropertyDefault style_default_border_image_width_right("border-image-width-right", StyleGetValue::from_number(1.0f));
+	StylePropertyDefault style_default_border_image_width_bottom("border-image-width-bottom", StyleGetValue::from_number(1.0f));
+	StylePropertyDefault style_default_border_image_width_left("border-image-width-left", StyleGetValue::from_number(1.0f));
+	StylePropertyDefault style_default_border_image_outset_top("border-image-outset-top", StyleGetValue::from_length(0.0f));
+	StylePropertyDefault style_default_border_image_outset_right("border-image-outset-right", StyleGetValue::from_length(0.0f));
+	StylePropertyDefault style_default_border_image_outset_bottom("border-image-outset-bottom", StyleGetValue::from_length(0.0f));
+	StylePropertyDefault style_default_border_image_outset_left("border-image-outset-left", StyleGetValue::from_length(0.0f));
+	StylePropertyDefault style_default_border_image_image_repeat_x("border-image-repeat-x", StyleGetValue::from_keyword("stretch"));
+	StylePropertyDefault style_default_border_image_image_repeat_y("border-image-repeat-y", StyleGetValue::from_keyword("stretch"));
 
 	BorderImagePropertyParser style_parser_border_image;
 	BorderImageOutsetPropertyParser style_parser_border_image_outset;

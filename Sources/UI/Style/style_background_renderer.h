@@ -39,7 +39,7 @@ namespace clan
 	class Pointf;
 	class BrushGradientStop;
 	class StyleCascade;
-	class StyleValue;
+	class StyleGetValue;
 	class ViewGeometry;
 
 	class StyleBackgroundRenderer
@@ -51,7 +51,7 @@ namespace clan
 
 	private:
 		void render_box_shadow();
-		void render_background_image(const StyleValue &layer_image, int index);
+		void render_background_image(const StyleGetValue &layer_image, int index);
 		void render_background_linear_gradient(int index);
 		void render_background_radial_gradient(int index);
 		void render_background_repeating_linear_gradient(int index);
@@ -62,20 +62,20 @@ namespace clan
 		Sizef get_image_size(int index, Image &image, Rectf origin_box);
 		Rectf get_clip_box(int index);
 		Rectf get_origin_box(int index);
-		StyleValue get_layer_clip(int index);
-		StyleValue get_layer_origin(int index);
-		StyleValue get_layer_size_x(int index);
-		StyleValue get_layer_size_y(int index);
-		StyleValue get_layer_position_x(int index);
-		StyleValue get_layer_position_y(int index);
-		StyleValue get_layer_attachment(int index);
-		StyleValue get_layer_repeat_x(int index);
-		StyleValue get_layer_repeat_y(int index);
+		StyleGetValue get_layer_clip(int index);
+		StyleGetValue get_layer_origin(int index);
+		StyleGetValue get_layer_size_x(int index);
+		StyleGetValue get_layer_size_y(int index);
+		StyleGetValue get_layer_position_x(int index);
+		StyleGetValue get_layer_position_y(int index);
+		StyleGetValue get_layer_attachment(int index);
+		StyleGetValue get_layer_repeat_x(int index);
+		StyleGetValue get_layer_repeat_y(int index);
 
-		float get_horizontal_radius(const StyleValue &border_radius) const;
-		float get_vertical_radius(const StyleValue &border_radius) const;
-		Colorf get_light_color(const StyleValue &border_color) const;
-		Colorf get_dark_color(const StyleValue &border_color) const;
+		float get_horizontal_radius(const StyleGetValue &border_radius) const;
+		float get_vertical_radius(const StyleGetValue &border_radius) const;
+		Colorf get_light_color(const StyleGetValue &border_color) const;
+		Colorf get_dark_color(const StyleGetValue &border_color) const;
 
 		std::array<Pointf, 2 * 4> get_border_points();
 		std::array<Pointf, 2 * 4> get_padding_points(const std::array<Pointf, 2 * 4> &border_points);

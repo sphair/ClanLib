@@ -33,9 +33,9 @@
 
 namespace clan
 {
-	std::map<std::string, StyleValue> &style_defaults()
+	std::map<std::string, StyleGetValue> &style_defaults()
 	{
-		static std::map<std::string, StyleValue> defaults;
+		static std::map<std::string, StyleGetValue> defaults;
 		return defaults;
 	}
 
@@ -47,7 +47,7 @@ namespace clan
 
 	/////////////////////////////////////////////////////////////////////////
 
-	StylePropertyDefault::StylePropertyDefault(const std::string &name, const StyleValue &value)
+	StylePropertyDefault::StylePropertyDefault(const std::string &name, const StyleGetValue &value)
 	{
 		style_defaults()[name] = value;
 	}
@@ -1094,7 +1094,7 @@ namespace clan
 		return false; // TBD: do we want to support inherited properties at all?
 	}
 	
-	const StyleValue &StyleProperty::default_value(const std::string &name)
+	const StyleGetValue &StyleProperty::default_value(const std::string &name)
 	{
 		auto it = style_defaults().find(name);
 		if (it != style_defaults().end())
@@ -1103,7 +1103,7 @@ namespace clan
 		}
 		else
 		{
-			static StyleValue undefined;
+			static StyleGetValue undefined;
 			return undefined;
 		}
 	}

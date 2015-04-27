@@ -81,7 +81,7 @@ namespace clan
 		StyleProperty::parse(impl.get(), properties);
 	}
 
-	StyleValue Style::declared_value(const std::string &property_name) const
+	StyleGetValue Style::declared_value(const std::string &property_name) const
 	{
 		const auto it = impl->prop_type.find(property_name);
 		if (it != impl->prop_type.end())
@@ -90,50 +90,50 @@ namespace clan
 			{
 				default:
 				case StyleValueType::undefined:
-					return StyleValue();
+					return StyleGetValue();
 				case StyleValueType::keyword:
-					return StyleValue::from_keyword(impl->prop_text.find(property_name)->second);
+					return StyleGetValue::from_keyword(impl->prop_text.find(property_name)->second.c_str());
 				case StyleValueType::string:
-					return StyleValue::from_string(impl->prop_text.find(property_name)->second);
+					return StyleGetValue::from_string(impl->prop_text.find(property_name)->second.c_str());
 				case StyleValueType::url:
-					return StyleValue::from_url(impl->prop_text.find(property_name)->second);
+					return StyleGetValue::from_url(impl->prop_text.find(property_name)->second.c_str());
 				case StyleValueType::length:
-					return StyleValue::from_length(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
+					return StyleGetValue::from_length(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
 				case StyleValueType::angle:
-					return StyleValue::from_angle(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
+					return StyleGetValue::from_angle(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
 				case StyleValueType::time:
-					return StyleValue::from_time(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
+					return StyleGetValue::from_time(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
 				case StyleValueType::frequency:
-					return StyleValue::from_frequency(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
+					return StyleGetValue::from_frequency(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
 				case StyleValueType::resolution:
-					return StyleValue::from_resolution(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
+					return StyleGetValue::from_resolution(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
 				case StyleValueType::percentage:
-					return StyleValue::from_percentage(impl->prop_number.find(property_name)->second);
+					return StyleGetValue::from_percentage(impl->prop_number.find(property_name)->second);
 				case StyleValueType::number:
-					return StyleValue::from_number(impl->prop_number.find(property_name)->second);
+					return StyleGetValue::from_number(impl->prop_number.find(property_name)->second);
 				case StyleValueType::color:
-					return StyleValue::from_color(impl->prop_color.find(property_name)->second);
+					return StyleGetValue::from_color(impl->prop_color.find(property_name)->second);
 			}
 		}
-		return StyleValue();
+		return StyleGetValue();
 	}
 	
 	/////////////////////////////////////////////////////////////////////////
 	
-	StyleValue StyleCascade::cascade_value(const std::string &property_name) const
+	StyleGetValue StyleCascade::cascade_value(const std::string &property_name) const
 	{
 		for (Style *style : cascade)
 		{
-			StyleValue value = style->declared_value(property_name);
+			StyleGetValue value = style->declared_value(property_name);
 			if (!value.is_undefined())
 				return value;
 		}
-		return StyleValue();
+		return StyleGetValue();
 	}
 
-	StyleValue StyleCascade::specified_value(const std::string &property_name) const
+	StyleGetValue StyleCascade::specified_value(const std::string &property_name) const
 	{
-		StyleValue value = cascade_value(property_name);
+		StyleGetValue value = cascade_value(property_name);
 		bool inherit = (value.is_undefined() && StyleProperty::is_inherited(property_name)) || value.is_keyword("inherit");
 		if (inherit && parent)
 		{
@@ -149,12 +149,12 @@ namespace clan
 		}
 	}
 
-	StyleValue StyleCascade::computed_value(const std::string &property_name) const
+	StyleGetValue StyleCascade::computed_value(const std::string &property_name) const
 	{
 		// To do: pass on to property compute functions
 
-		StyleValue specified = specified_value(property_name);
-		switch (specified.type)
+		StyleGetValue specified = specified_value(property_name);
+		switch (specified.type())
 		{
 		case StyleValueType::length:
 			return compute_length(specified);
@@ -171,81 +171,81 @@ namespace clan
 		}
 	}
 
-	StyleValue StyleCascade::compute_length(const StyleValue &length) const
+	StyleGetValue StyleCascade::compute_length(const StyleGetValue &length) const
 	{
-		switch (length.dimension)
+		switch (length.dimension())
 		{
 		default:
 		case StyleDimension::px:
 			return length;
 		case StyleDimension::pt:
-			return StyleValue::from_length(length.number * (float)(96.0 / 72.0));
+			return StyleGetValue::from_length(length.number() * (float)(96.0 / 72.0));
 		case StyleDimension::mm:
-			return StyleValue::from_length(length.number * (float)(96.0 / 25.4));
+			return StyleGetValue::from_length(length.number() * (float)(96.0 / 25.4));
 		case StyleDimension::cm:
-			return StyleValue::from_length(length.number * (float)(96.0 / 2.54));
+			return StyleGetValue::from_length(length.number() * (float)(96.0 / 2.54));
 		case StyleDimension::in:
-			return StyleValue::from_length(length.number * 96.0f);
+			return StyleGetValue::from_length(length.number() * 96.0f);
 		case StyleDimension::pc:
-			return StyleValue::from_length(length.number * (float)(12.0 * 96.0 / 72.0));
+			return StyleGetValue::from_length(length.number() * (float)(12.0 * 96.0 / 72.0));
 		case StyleDimension::em:
-			return StyleValue::from_length(computed_value("font-size").number * length.number);
+			return StyleGetValue::from_length(computed_value("font-size").number() * length.number());
 		case StyleDimension::ex:
-			return StyleValue::from_length(computed_value("font-size").number * length.number * 0.5f);
+			return StyleGetValue::from_length(computed_value("font-size").number() * length.number() * 0.5f);
 		}
 	}
 
-	StyleValue StyleCascade::compute_angle(const StyleValue &angle) const
+	StyleGetValue StyleCascade::compute_angle(const StyleGetValue &angle) const
 	{
-		switch (angle.dimension)
+		switch (angle.dimension())
 		{
 		default:
 		case StyleDimension::rad:
 			return angle;
 		case StyleDimension::deg:
-			return StyleValue::from_angle(angle.number * PI / 180.0f);
+			return StyleGetValue::from_angle(angle.number() * PI / 180.0f);
 		case StyleDimension::grad:
-			return StyleValue::from_angle(angle.number * PI / 400.0f);
+			return StyleGetValue::from_angle(angle.number() * PI / 400.0f);
 		case StyleDimension::turn:
-			return StyleValue::from_angle(angle.number * PI / 2.0f);
+			return StyleGetValue::from_angle(angle.number() * PI / 2.0f);
 		}
 	}
 
-	StyleValue StyleCascade::compute_time(const StyleValue &time) const
+	StyleGetValue StyleCascade::compute_time(const StyleGetValue &time) const
 	{
-		switch (time.dimension)
+		switch (time.dimension())
 		{
 		default:
 		case StyleDimension::s:
 			return time;
 		case StyleDimension::ms:
-			return StyleValue::from_time(time.number / 1000.0f);
+			return StyleGetValue::from_time(time.number() / 1000.0f);
 		}
 	}
 
-	StyleValue StyleCascade::compute_frequency(const StyleValue &frequency) const
+	StyleGetValue StyleCascade::compute_frequency(const StyleGetValue &frequency) const
 	{
-		switch (frequency.dimension)
+		switch (frequency.dimension())
 		{
 		default:
 		case StyleDimension::hz:
 			return frequency;
 		case StyleDimension::khz:
-			return StyleValue::from_frequency(frequency.number * 1000.0f);
+			return StyleGetValue::from_frequency(frequency.number() * 1000.0f);
 		}
 	}
 
-	StyleValue StyleCascade::compute_resolution(const StyleValue &resolution) const
+	StyleGetValue StyleCascade::compute_resolution(const StyleGetValue &resolution) const
 	{
-		switch (resolution.dimension)
+		switch (resolution.dimension())
 		{
 		default:
 		case StyleDimension::dppx:
 			return resolution;
 		case StyleDimension::dpi:
-			return StyleValue::from_resolution(resolution.number / 96.0f);
+			return StyleGetValue::from_resolution(resolution.number() / 96.0f);
 		case StyleDimension::dpcm:
-			return StyleValue::from_resolution(resolution.number / (float)(96.0 / 2.54));
+			return StyleGetValue::from_resolution(resolution.number() / (float)(96.0 / 2.54));
 		}
 	}
 
@@ -275,12 +275,12 @@ namespace clan
 		auto font_family_name = computed_value("font-family-names[0]");
 
 		FontDescription font_desc;
-		font_desc.set_height(font_size.number);
+		font_desc.set_height(font_size.number());
 
 		if (line_height.is_length())
-			font_desc.set_line_height(line_height.number);
+			font_desc.set_line_height(line_height.number());
 		else if (line_height.is_number())
-			font_desc.set_line_height(line_height.number * font_size.number);
+			font_desc.set_line_height(line_height.number() * font_size.number());
 
 		if (font_weight.is_keyword("normal"))
 			font_desc.set_weight(FontWeight::normal);
@@ -289,7 +289,7 @@ namespace clan
 		else if (font_weight.is_keyword("lighter"))
 			font_desc.set_weight(FontWeight::light);
 		else if (font_weight.is_number())
-			font_desc.set_weight((FontWeight)(int)font_weight.number);
+			font_desc.set_weight((FontWeight)(int)font_weight.number());
 
 		if (font_style.is_keyword("normal"))
 			font_desc.set_style(FontStyle::normal);
@@ -302,9 +302,9 @@ namespace clan
 
 		std::string family;
 		if (font_family_name.is_string())
-			family = font_family_name.text;
+			family = font_family_name.text();
 		else if (font_family_name.is_keyword())
-			family = font_family_name.text;
+			family = font_family_name.text();
 		else
 			family = "sans-serif";
 

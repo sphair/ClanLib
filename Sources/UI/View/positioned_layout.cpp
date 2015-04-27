@@ -88,28 +88,28 @@ namespace clan
 
 		if (!view->style_cascade().computed_value("left").is_keyword("auto") && !view->style_cascade().computed_value("right").is_keyword("auto"))
 		{
-			x = view->style_cascade().computed_value("left").number;
-			width = clan::max(containing_box.get_width() - view->style_cascade().computed_value("right").number - x, 0.0f);
+			x = view->style_cascade().computed_value("left").number();
+			width = clan::max(containing_box.get_width() - view->style_cascade().computed_value("right").number() - x, 0.0f);
 		}
 		else if (!view->style_cascade().computed_value("left").is_keyword("auto") && !view->style_cascade().computed_value("width").is_keyword("auto"))
 		{
-			x = view->style_cascade().computed_value("left").number;
-			width = view->style_cascade().computed_value("width").number;
+			x = view->style_cascade().computed_value("left").number();
+			width = view->style_cascade().computed_value("width").number();
 		}
 		else if (!view->style_cascade().computed_value("right").is_keyword("auto") && !view->style_cascade().computed_value("width").is_keyword("auto"))
 		{
-			width = view->style_cascade().computed_value("width").number;
-			x = containing_box.get_width() - view->style_cascade().computed_value("right").number - width;
+			width = view->style_cascade().computed_value("width").number();
+			x = containing_box.get_width() - view->style_cascade().computed_value("right").number() - width;
 		}
 		else if (!view->style_cascade().computed_value("left").is_keyword("auto"))
 		{
-			x = view->style_cascade().computed_value("left").number;
+			x = view->style_cascade().computed_value("left").number();
 			width = view->get_preferred_width(canvas);
 		}
 		else if (!view->style_cascade().computed_value("right").is_keyword("auto"))
 		{
 			width = view->get_preferred_width(canvas);
-			x = containing_box.get_width() - view->style_cascade().computed_value("right").number - width;
+			x = containing_box.get_width() - view->style_cascade().computed_value("right").number() - width;
 		}
 		else
 		{
@@ -122,28 +122,28 @@ namespace clan
 
 		if (!view->style_cascade().computed_value("top").is_keyword("auto") && !view->style_cascade().computed_value("bottom").is_keyword("auto"))
 		{
-			y = view->style_cascade().computed_value("top").number;
-			height = clan::max(containing_box.get_height() - view->style_cascade().computed_value("bottom").number - y, 0.0f);
+			y = view->style_cascade().computed_value("top").number();
+			height = clan::max(containing_box.get_height() - view->style_cascade().computed_value("bottom").number() - y, 0.0f);
 		}
 		else if (!view->style_cascade().computed_value("top").is_keyword("auto") && !view->style_cascade().computed_value("height").is_keyword("auto"))
 		{
-			y = view->style_cascade().computed_value("top").number;
-			height = view->style_cascade().computed_value("height").number;
+			y = view->style_cascade().computed_value("top").number();
+			height = view->style_cascade().computed_value("height").number();
 		}
 		else if (!view->style_cascade().computed_value("bottom").is_keyword("auto") && !view->style_cascade().computed_value("height").is_keyword("auto"))
 		{
-			height = view->style_cascade().computed_value("height").number;
-			y = containing_box.get_height() - view->style_cascade().computed_value("bottom").number - height;
+			height = view->style_cascade().computed_value("height").number();
+			y = containing_box.get_height() - view->style_cascade().computed_value("bottom").number() - height;
 		}
 		else if (!view->style_cascade().computed_value("top").is_keyword("auto"))
 		{
-			y = view->style_cascade().computed_value("top").number;
+			y = view->style_cascade().computed_value("top").number();
 			height = view->get_preferred_height(canvas, width);
 		}
 		else if (!view->style_cascade().computed_value("bottom").is_keyword("auto"))
 		{
 			height = view->get_preferred_height(canvas, width);
-			y = containing_box.get_height() - view->style_cascade().computed_value("bottom").number - height;
+			y = containing_box.get_height() - view->style_cascade().computed_value("bottom").number() - height;
 		}
 		else
 		{

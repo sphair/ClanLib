@@ -40,6 +40,7 @@
 namespace clan
 {
 	enum class StyleDimension;
+	class StyleGetValue;
 	class StyleValue;
 	class ImageSource;
 	class StyleToken;
@@ -111,7 +112,7 @@ namespace clan
 	class StylePropertyDefault
 	{
 	public:
-		StylePropertyDefault(const std::string &name, const StyleValue &value);
+		StylePropertyDefault(const std::string &name, const StyleGetValue &value);
 	};
 
 	/// Style property interface used to parse or query properties by name
@@ -119,7 +120,7 @@ namespace clan
 	{
 	public:
 		/// Gets the default value for a given property
-		static const StyleValue &default_value(const std::string &name);
+		static const StyleGetValue &default_value(const std::string &name);
 
 		/// Indicates if this an inherited property or not
 		static bool is_inherited(const std::string &name);

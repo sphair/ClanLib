@@ -224,7 +224,7 @@ namespace clan
 	float ScrollView::get_preferred_width(Canvas &canvas)
 	{
 		if (style_cascade().computed_value("width").is_length())
-			return style_cascade().computed_value("width").number;
+			return style_cascade().computed_value("width").number();
 		
 		float width = impl->content_container->get_preferred_width(canvas);
 		if (impl->overflow_x == ContentOverflow::scroll)
@@ -235,7 +235,7 @@ namespace clan
 	float ScrollView::get_preferred_height(Canvas &canvas, float width)
 	{
 		if (style_cascade().computed_value("height").is_length())
-			return style_cascade().computed_value("height").number;
+			return style_cascade().computed_value("height").number();
 		
 		float height = impl->content_container->get_preferred_height(canvas, width);
 		if (impl->overflow_y == ContentOverflow::scroll)

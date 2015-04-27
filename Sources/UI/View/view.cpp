@@ -324,7 +324,7 @@ namespace clan
 		else if (style_cascade().computed_value("width").is_keyword("auto"))
 			return 0.0f;
 		else
-			return style_cascade().computed_value("width").number;
+			return style_cascade().computed_value("width").number();
 	}
 
 	float View::get_preferred_height(Canvas &canvas, float width)
@@ -336,7 +336,7 @@ namespace clan
 		else if (style_cascade().computed_value("height").is_keyword("auto"))
 			return 0.0f;
 		else
-			return style_cascade().computed_value("height").number;
+			return style_cascade().computed_value("height").number();
 	}
 
 	float View::get_first_baseline_offset(Canvas &canvas, float width)

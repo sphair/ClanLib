@@ -35,25 +35,25 @@ namespace clan
 	{
 	}
 
-	StylePropertyDefault style_default_color("color", StyleValue::from_color(Colorf(0.0f, 0.0f, 0.0f, 1.0f)));
-	StylePropertyDefault style_default_text_align("text-align", StyleValue::from_keyword("left"));
-	StylePropertyDefault style_default_text_decoration_underline("text-decoration-underline", StyleValue::from_keyword("hidden"));
-	StylePropertyDefault style_default_text_decoration_overline("text-decoration-overline", StyleValue::from_keyword("hidden"));
-	StylePropertyDefault style_default_text_decoration_line_through("text-decoration-line-through", StyleValue::from_keyword("hidden"));
-	StylePropertyDefault style_default_text_decoration_blink("text-decoration-blink", StyleValue::from_keyword("hidden"));
-	StylePropertyDefault style_default_text_indent("text-indent", StyleValue::from_length(0.0f));
-	StylePropertyDefault style_default_text_transform("text-transform", StyleValue::from_keyword("none"));
-	StylePropertyDefault style_default_word_spacing("word-spacing", StyleValue::from_keyword("normal"));
-	StylePropertyDefault style_default_letter_spacing("letter-spacing", StyleValue::from_keyword("normal"));
-	StylePropertyDefault style_default_font_style("font-style", StyleValue::from_keyword("normal"));
-	StylePropertyDefault style_default_font_variant("font-variant", StyleValue::from_keyword("normal"));
-	StylePropertyDefault style_default_font_weight("font-weight", StyleValue::from_keyword("normal"));
-	StylePropertyDefault style_default_font_size("font-size", StyleValue::from_keyword("medium"));
-	StylePropertyDefault style_default_line_height("line-height", StyleValue::from_keyword("normal"));
-	StylePropertyDefault style_default_font_family("font-family", StyleValue::from_keyword("array"));
-	StylePropertyDefault style_default_font_family_names("font-family-names[0]", StyleValue::from_keyword("sans-serif"));
+	StylePropertyDefault style_default_color("color", StyleGetValue::from_color(Colorf(0.0f, 0.0f, 0.0f, 1.0f)));
+	StylePropertyDefault style_default_text_align("text-align", StyleGetValue::from_keyword("left"));
+	StylePropertyDefault style_default_text_decoration_underline("text-decoration-underline", StyleGetValue::from_keyword("hidden"));
+	StylePropertyDefault style_default_text_decoration_overline("text-decoration-overline", StyleGetValue::from_keyword("hidden"));
+	StylePropertyDefault style_default_text_decoration_line_through("text-decoration-line-through", StyleGetValue::from_keyword("hidden"));
+	StylePropertyDefault style_default_text_decoration_blink("text-decoration-blink", StyleGetValue::from_keyword("hidden"));
+	StylePropertyDefault style_default_text_indent("text-indent", StyleGetValue::from_length(0.0f));
+	StylePropertyDefault style_default_text_transform("text-transform", StyleGetValue::from_keyword("none"));
+	StylePropertyDefault style_default_word_spacing("word-spacing", StyleGetValue::from_keyword("normal"));
+	StylePropertyDefault style_default_letter_spacing("letter-spacing", StyleGetValue::from_keyword("normal"));
+	StylePropertyDefault style_default_font_style("font-style", StyleGetValue::from_keyword("normal"));
+	StylePropertyDefault style_default_font_variant("font-variant", StyleGetValue::from_keyword("normal"));
+	StylePropertyDefault style_default_font_weight("font-weight", StyleGetValue::from_keyword("normal"));
+	StylePropertyDefault style_default_font_size("font-size", StyleGetValue::from_keyword("medium"));
+	StylePropertyDefault style_default_line_height("line-height", StyleGetValue::from_keyword("normal"));
+	StylePropertyDefault style_default_font_family("font-family", StyleGetValue::from_keyword("array"));
+	StylePropertyDefault style_default_font_family_names("font-family-names[0]", StyleGetValue::from_keyword("sans-serif"));
 
-	StylePropertyDefault style_default_clan_font_rendering("-clan-font-rendering", StyleValue::from_keyword("auto"));
+	StylePropertyDefault style_default_clan_font_rendering("-clan-font-rendering", StyleGetValue::from_keyword("auto"));
 
 	ColorPropertyParser style_parser_color;
 	TextAlignPropertyParser style_parser_text_align;

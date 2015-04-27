@@ -141,7 +141,7 @@ namespace clan
 				return; // Still no room.  Draw nothing!
 		}
 
-		Colorf color = style_cascade().computed_value("color").color;
+		Colorf color = style_cascade().computed_value("color").color();
 
 		if (impl->text_alignment == TextAlignment::left)
 		{
@@ -165,7 +165,7 @@ namespace clan
 			return font.measure_text(canvas, impl->_text).advance.width;
 		}
 		else
-			return style_cascade().computed_value("width").number;
+			return style_cascade().computed_value("width").number();
 	}
 
 	float LabelView::get_preferred_height(Canvas &canvas, float width)
@@ -176,7 +176,7 @@ namespace clan
 			return font.get_font_metrics(canvas).get_line_height();
 		}
 		else
-			return style_cascade().computed_value("height").number;
+			return style_cascade().computed_value("height").number();
 	}
 
 	float LabelView::get_first_baseline_offset(Canvas &canvas, float width)

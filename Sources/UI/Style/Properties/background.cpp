@@ -37,23 +37,23 @@ namespace clan
 	{
 	}
 
-	StylePropertyDefault style_default_background_color("background-color", StyleValue::from_color(Colorf(0.0f, 0.0f, 0.0f, 0.0f)));
-	StylePropertyDefault style_default_background_image("background-image", StyleValue::from_keyword("none"));
-	StylePropertyDefault style_default_background_repeat("background-repeat", StyleValue::from_keyword("array"));
-	StylePropertyDefault style_default_background_repeats_x("background-repeat-x[0]", StyleValue::from_keyword("repeat"));
-	StylePropertyDefault style_default_background_repeats_y("background-repeat-y[0]", StyleValue::from_keyword("repeat"));
-	StylePropertyDefault style_default_background_attachment("background-attachment", StyleValue::from_keyword("array"));
-	StylePropertyDefault style_default_background_attachments("background-attachment[0]", StyleValue::from_keyword("scroll"));
-	StylePropertyDefault style_default_background_position("background-position", StyleValue::from_keyword("array"));
-	StylePropertyDefault style_default_background_positions_x("background-position-x[0]", StyleValue::from_length(0.0f));
-	StylePropertyDefault style_default_background_positions_y("background-position-y[0]", StyleValue::from_length(0.0f));
-	StylePropertyDefault style_default_background_origin("background-origin", StyleValue::from_keyword("array"));
-	StylePropertyDefault style_default_background_origins("background-origin[0]", StyleValue::from_keyword("padding-box"));
-	StylePropertyDefault style_default_background_clip("background-clip", StyleValue::from_keyword("array"));
-	StylePropertyDefault style_default_background_clips("background-clip[0]", StyleValue::from_keyword("border-box"));
-	StylePropertyDefault style_default_background_size("background-size", StyleValue::from_keyword("array"));
-	StylePropertyDefault style_default_background_sizes_x("background-size-x[0]", StyleValue::from_keyword("auto"));
-	StylePropertyDefault style_default_background_sizes_y("background-size-y[0]", StyleValue::from_keyword("auto"));
+	StylePropertyDefault style_default_background_color("background-color", StyleGetValue::from_color(Colorf(0.0f, 0.0f, 0.0f, 0.0f)));
+	StylePropertyDefault style_default_background_image("background-image", StyleGetValue::from_keyword("none"));
+	StylePropertyDefault style_default_background_repeat("background-repeat", StyleGetValue::from_keyword("array"));
+	StylePropertyDefault style_default_background_repeats_x("background-repeat-x[0]", StyleGetValue::from_keyword("repeat"));
+	StylePropertyDefault style_default_background_repeats_y("background-repeat-y[0]", StyleGetValue::from_keyword("repeat"));
+	StylePropertyDefault style_default_background_attachment("background-attachment", StyleGetValue::from_keyword("array"));
+	StylePropertyDefault style_default_background_attachments("background-attachment[0]", StyleGetValue::from_keyword("scroll"));
+	StylePropertyDefault style_default_background_position("background-position", StyleGetValue::from_keyword("array"));
+	StylePropertyDefault style_default_background_positions_x("background-position-x[0]", StyleGetValue::from_length(0.0f));
+	StylePropertyDefault style_default_background_positions_y("background-position-y[0]", StyleGetValue::from_length(0.0f));
+	StylePropertyDefault style_default_background_origin("background-origin", StyleGetValue::from_keyword("array"));
+	StylePropertyDefault style_default_background_origins("background-origin[0]", StyleGetValue::from_keyword("padding-box"));
+	StylePropertyDefault style_default_background_clip("background-clip", StyleGetValue::from_keyword("array"));
+	StylePropertyDefault style_default_background_clips("background-clip[0]", StyleGetValue::from_keyword("border-box"));
+	StylePropertyDefault style_default_background_size("background-size", StyleGetValue::from_keyword("array"));
+	StylePropertyDefault style_default_background_sizes_x("background-size-x[0]", StyleGetValue::from_keyword("auto"));
+	StylePropertyDefault style_default_background_sizes_y("background-size-y[0]", StyleGetValue::from_keyword("auto"));
 
 	BackgroundPropertyParser style_parser_background;
 	BackgroundAttachmentPropertyParser style_parser_background_attachment;

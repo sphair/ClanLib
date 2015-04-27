@@ -130,7 +130,7 @@ namespace clan
 
 					GlyphMetrics advance = object.get_font(canvas).measure_text(canvas, obj_text);
 
-					object.get_font(canvas).draw_text(canvas, x, y + metrics.ascent + object.baseline_offset, obj_text, object.style_cascade.computed_value("color").color);
+					object.get_font(canvas).draw_text(canvas, x, y + metrics.ascent + object.baseline_offset, obj_text, object.style_cascade.computed_value("color").color());
 
 					x += advance.advance.width;
 				}
@@ -193,23 +193,23 @@ namespace clan
 					if (obj_baseline_offset == 0.0f) // Hmm, do we need get_first_baseline_offset to be able to return that there is no baseline?
 						obj_baseline_offset = obj_height;
 
-					obj_width += object.view->style_cascade().computed_value("margin-left").number;
-					obj_width += object.view->style_cascade().computed_value("border-left-width").number;
-					obj_width += object.view->style_cascade().computed_value("padding-left").number;
-					obj_width += object.view->style_cascade().computed_value("margin-right").number;
-					obj_width += object.view->style_cascade().computed_value("border-right-width").number;
-					obj_width += object.view->style_cascade().computed_value("padding-right").number;
+					obj_width += object.view->style_cascade().computed_value("margin-left").number();
+					obj_width += object.view->style_cascade().computed_value("border-left-width").number();
+					obj_width += object.view->style_cascade().computed_value("padding-left").number();
+					obj_width += object.view->style_cascade().computed_value("margin-right").number();
+					obj_width += object.view->style_cascade().computed_value("border-right-width").number();
+					obj_width += object.view->style_cascade().computed_value("padding-right").number();
 
-					obj_height += object.view->style_cascade().computed_value("margin-top").number;
-					obj_height += object.view->style_cascade().computed_value("border-top-width").number;
-					obj_height += object.view->style_cascade().computed_value("padding-top").number;
-					obj_height += object.view->style_cascade().computed_value("margin-bottom").number;
-					obj_height += object.view->style_cascade().computed_value("border-bottom-width").number;
-					obj_height += object.view->style_cascade().computed_value("padding-bottom").number;
+					obj_height += object.view->style_cascade().computed_value("margin-top").number();
+					obj_height += object.view->style_cascade().computed_value("border-top-width").number();
+					obj_height += object.view->style_cascade().computed_value("padding-top").number();
+					obj_height += object.view->style_cascade().computed_value("margin-bottom").number();
+					obj_height += object.view->style_cascade().computed_value("border-bottom-width").number();
+					obj_height += object.view->style_cascade().computed_value("padding-bottom").number();
 
-					obj_baseline_offset += object.view->style_cascade().computed_value("margin-top").number;
-					obj_baseline_offset += object.view->style_cascade().computed_value("border-top-width").number;
-					obj_baseline_offset += object.view->style_cascade().computed_value("padding-top").number;
+					obj_baseline_offset += object.view->style_cascade().computed_value("margin-top").number();
+					obj_baseline_offset += object.view->style_cascade().computed_value("border-top-width").number();
+					obj_baseline_offset += object.view->style_cascade().computed_value("padding-top").number();
 
 					obj_y -= obj_baseline_offset;
 
@@ -352,23 +352,23 @@ namespace clan
 				if (obj_baseline_offset == 0.0f) // Hmm, do we need get_first_baseline_offset to be able to return that there is no baseline?
 					obj_baseline_offset = obj_height;
 
-				obj_width += object.view->style_cascade().computed_value("margin-left").number;
-				obj_width += object.view->style_cascade().computed_value("border-left-width").number;
-				obj_width += object.view->style_cascade().computed_value("padding-left").number;
-				obj_width += object.view->style_cascade().computed_value("margin-right").number;
-				obj_width += object.view->style_cascade().computed_value("border-right-width").number;
-				obj_width += object.view->style_cascade().computed_value("padding-right").number;
+				obj_width += object.view->style_cascade().computed_value("margin-left").number();
+				obj_width += object.view->style_cascade().computed_value("border-left-width").number();
+				obj_width += object.view->style_cascade().computed_value("padding-left").number();
+				obj_width += object.view->style_cascade().computed_value("margin-right").number();
+				obj_width += object.view->style_cascade().computed_value("border-right-width").number();
+				obj_width += object.view->style_cascade().computed_value("padding-right").number();
 
-				obj_height += object.view->style_cascade().computed_value("margin-top").number;
-				obj_height += object.view->style_cascade().computed_value("border-top-width").number;
-				obj_height += object.view->style_cascade().computed_value("padding-top").number;
-				obj_height += object.view->style_cascade().computed_value("margin-bottom").number;
-				obj_height += object.view->style_cascade().computed_value("border-bottom-width").number;
-				obj_height += object.view->style_cascade().computed_value("padding-bottom").number;
+				obj_height += object.view->style_cascade().computed_value("margin-top").number();
+				obj_height += object.view->style_cascade().computed_value("border-top-width").number();
+				obj_height += object.view->style_cascade().computed_value("padding-top").number();
+				obj_height += object.view->style_cascade().computed_value("margin-bottom").number();
+				obj_height += object.view->style_cascade().computed_value("border-bottom-width").number();
+				obj_height += object.view->style_cascade().computed_value("padding-bottom").number();
 
-				obj_baseline_offset += object.view->style_cascade().computed_value("margin-top").number;
-				obj_baseline_offset += object.view->style_cascade().computed_value("border-top-width").number;
-				obj_baseline_offset += object.view->style_cascade().computed_value("padding-top").number;
+				obj_baseline_offset += object.view->style_cascade().computed_value("margin-top").number();
+				obj_baseline_offset += object.view->style_cascade().computed_value("border-top-width").number();
+				obj_baseline_offset += object.view->style_cascade().computed_value("padding-top").number();
 
 				obj_ascent = obj_baseline_offset;
 				obj_descent = obj_height - obj_baseline_offset;

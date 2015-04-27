@@ -34,20 +34,20 @@ namespace clan
 {
 	ViewGeometry::ViewGeometry(const StyleCascade &style_cascade)
 	{
-		margin_left = style_cascade.computed_value("margin-left").number;
-		margin_top = style_cascade.computed_value("margin-top").number;
-		margin_right = style_cascade.computed_value("margin-right").number;
-		margin_bottom = style_cascade.computed_value("margin-bottom").number;
+		margin_left = style_cascade.computed_value("margin-left").number();
+		margin_top = style_cascade.computed_value("margin-top").number();
+		margin_right = style_cascade.computed_value("margin-right").number();
+		margin_bottom = style_cascade.computed_value("margin-bottom").number();
 
-		border_left = style_cascade.computed_value("border-left-width").number;
-		border_top = style_cascade.computed_value("border-top-width").number;
-		border_right = style_cascade.computed_value("border-right-width").number;
-		border_bottom = style_cascade.computed_value("border-bottom-width").number;
+		border_left = style_cascade.computed_value("border-left-width").number();
+		border_top = style_cascade.computed_value("border-top-width").number();
+		border_right = style_cascade.computed_value("border-right-width").number();
+		border_bottom = style_cascade.computed_value("border-bottom-width").number();
 
-		padding_left = style_cascade.computed_value("padding-left").number;
-		padding_top = style_cascade.computed_value("padding-top").number;
-		padding_right = style_cascade.computed_value("padding-right").number;
-		padding_bottom = style_cascade.computed_value("padding-bottom").number;
+		padding_left = style_cascade.computed_value("padding-left").number();
+		padding_top = style_cascade.computed_value("padding-top").number();
+		padding_right = style_cascade.computed_value("padding-right").number();
+		padding_bottom = style_cascade.computed_value("padding-bottom").number();
 	}
 
 	ViewGeometry ViewGeometry::from_margin_box(const StyleCascade &style, const Rectf &box)

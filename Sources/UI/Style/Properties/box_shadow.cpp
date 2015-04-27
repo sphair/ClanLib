@@ -35,7 +35,7 @@ namespace clan
 	{
 	}
 
-	StylePropertyDefault style_default_box_shadow("box-shadow", StyleValue::from_keyword("none"));
+	StylePropertyDefault style_default_box_shadow("box-shadow", StyleGetValue::from_keyword("none"));
 
 	BoxShadowPropertyParser style_parser_box_shadow;
 
