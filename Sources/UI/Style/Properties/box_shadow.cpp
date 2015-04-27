@@ -43,13 +43,13 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue box_shadow;
-		std::vector<StyleValue> box_shadow_styles;
-		std::vector<StyleValue> box_shadow_colors;
-		std::vector<StyleValue> box_shadow_horizontal_offsets;
-		std::vector<StyleValue> box_shadow_vertical_offsets;
-		std::vector<StyleValue> box_shadow_blur_radius;
-		std::vector<StyleValue> box_shadow_spread_distances;
+		StyleSetValue box_shadow;
+		std::vector<StyleSetValue> box_shadow_styles;
+		std::vector<StyleSetValue> box_shadow_colors;
+		std::vector<StyleSetValue> box_shadow_horizontal_offsets;
+		std::vector<StyleSetValue> box_shadow_vertical_offsets;
+		std::vector<StyleSetValue> box_shadow_blur_radius;
+		std::vector<StyleSetValue> box_shadow_spread_distances;
 
 		size_t pos = 0;
 		size_t last_pos = pos;
@@ -57,38 +57,38 @@ namespace clan
 
 		if (token.type == StyleTokenType::ident && pos == tokens.size() && equals(token.value, "inherit"))
 		{
-			box_shadow = StyleValue::from_keyword("inherit");
+			box_shadow = StyleSetValue::from_keyword("inherit");
 		}
 		else if (token.type == StyleTokenType::ident && pos == tokens.size() && equals(token.value, "none"))
 		{
-			box_shadow = StyleValue::from_keyword("none");
+			box_shadow = StyleSetValue::from_keyword("none");
 		}
 		else
 		{
-			box_shadow = StyleValue::from_keyword("array");
+			box_shadow = StyleSetValue::from_keyword("array");
 
 			while (true)
 			{
-				StyleValue style;
-				StyleValue color;
-				StyleValue horizontal_offset;
-				StyleValue vertical_offset;
-				StyleValue blur_radius;
-				StyleValue spread_distance;
+				StyleSetValue style;
+				StyleSetValue color;
+				StyleSetValue horizontal_offset;
+				StyleSetValue vertical_offset;
+				StyleSetValue blur_radius;
+				StyleSetValue spread_distance;
 
 				if (token.type == StyleTokenType::ident && equals(token.value, "inset"))
 				{
-					style = StyleValue::from_keyword("inset");
+					style = StyleSetValue::from_keyword("inset");
 					last_pos = pos;
 					token = next_token(pos, tokens);
 				}
 				else
 				{
-					style = StyleValue::from_keyword("outset");
+					style = StyleSetValue::from_keyword("outset");
 				}
 
 				int num_lengths;
-				StyleValue lengths[4];
+				StyleSetValue lengths[4];
 				for (num_lengths = 0; num_lengths < 4 && is_length(token); num_lengths++)
 				{
 					if (!parse_length(token, lengths[num_lengths]))
@@ -106,7 +106,7 @@ namespace clan
 					token = next_token(pos, tokens);
 				}
 
-				color = StyleValue::from_color(c);
+				color = StyleSetValue::from_color(c);
 
 				if (num_lengths == 2)
 				{

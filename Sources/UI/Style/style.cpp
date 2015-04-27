@@ -326,7 +326,7 @@ namespace clan
 	
 	/////////////////////////////////////////////////////////////////////////
 
-	void StyleImpl::set_value(const std::string &name, const StyleValue &value)
+	void StyleImpl::set_value(const std::string &name, const StyleSetValue &value)
 	{
 		auto type_it = prop_type.find(name);
 		if (type_it != prop_type.end() && type_it->second != value.type)
@@ -392,7 +392,7 @@ namespace clan
 		}
 	}
 
-	void StyleImpl::set_value_array(const std::string &name, const std::vector<StyleValue> &value_array)
+	void StyleImpl::set_value_array(const std::string &name, const std::vector<StyleSetValue> &value_array)
 	{
 		for (size_t i = 0; i < value_array.size(); i++)
 		{
@@ -405,7 +405,7 @@ namespace clan
 			auto index_name = name + "[" + StringHelp::int_to_text(i) + "]";
 			if (prop_type.find(index_name) == prop_type.end())
 				break;
-			set_value(index_name, StyleValue());
+			set_value(index_name, StyleSetValue());
 		}
 	}
 }

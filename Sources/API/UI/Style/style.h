@@ -245,7 +245,7 @@ namespace clan
 	};
 
 	/// Style value variable
-	class StyleValue
+	class StyleSetValue
 	{
 	public:
 		/// Variant type
@@ -302,37 +302,37 @@ namespace clan
 		bool is_color() const { return type == StyleValueType::color; }
 
 		/// Create style value from a keyword
-		static StyleValue from_keyword(const std::string &keyword) { StyleValue v; v.type = StyleValueType::keyword; v.text = keyword; return v; }
+		static StyleSetValue from_keyword(const std::string &keyword) { StyleSetValue v; v.type = StyleValueType::keyword; v.text = keyword; return v; }
 
 		/// Create style value from a string
-		static StyleValue from_string(const std::string &text) { StyleValue v; v.type = StyleValueType::string; v.text = text; return v; }
+		static StyleSetValue from_string(const std::string &text) { StyleSetValue v; v.type = StyleValueType::string; v.text = text; return v; }
 
 		/// Create style value from a length
-		static StyleValue from_length(float length, StyleDimension dimension = StyleDimension::px) { StyleValue v; v.type = StyleValueType::length; v.number = length; v.dimension = dimension; return v; }
+		static StyleSetValue from_length(float length, StyleDimension dimension = StyleDimension::px) { StyleSetValue v; v.type = StyleValueType::length; v.number = length; v.dimension = dimension; return v; }
 
 		/// Create style value from an angle
-		static StyleValue from_angle(float angle, StyleDimension dimension = StyleDimension::rad) { StyleValue v; v.type = StyleValueType::angle; v.number = angle; v.dimension = dimension; return v; }
+		static StyleSetValue from_angle(float angle, StyleDimension dimension = StyleDimension::rad) { StyleSetValue v; v.type = StyleValueType::angle; v.number = angle; v.dimension = dimension; return v; }
 
 		/// Create style value from a time
-		static StyleValue from_time(float t, StyleDimension dimension = StyleDimension::s) { StyleValue v; v.type = StyleValueType::time; v.number = t; v.dimension = dimension; return v; }
+		static StyleSetValue from_time(float t, StyleDimension dimension = StyleDimension::s) { StyleSetValue v; v.type = StyleValueType::time; v.number = t; v.dimension = dimension; return v; }
 
 		/// Create style value from a frequency
-		static StyleValue from_frequency(float freq, StyleDimension dimension = StyleDimension::hz) { StyleValue v; v.type = StyleValueType::frequency; v.number = freq; v.dimension = dimension; return v; }
+		static StyleSetValue from_frequency(float freq, StyleDimension dimension = StyleDimension::hz) { StyleSetValue v; v.type = StyleValueType::frequency; v.number = freq; v.dimension = dimension; return v; }
 
 		/// Create style value from a resolution
-		static StyleValue from_resolution(float resolution, StyleDimension dimension = StyleDimension::dppx) { StyleValue v; v.type = StyleValueType::resolution; v.number = resolution; v.dimension = dimension; return v; }
+		static StyleSetValue from_resolution(float resolution, StyleDimension dimension = StyleDimension::dppx) { StyleSetValue v; v.type = StyleValueType::resolution; v.number = resolution; v.dimension = dimension; return v; }
 
 		/// Create style value from a percentage
-		static StyleValue from_percentage(float percentage) { StyleValue v; v.type = StyleValueType::percentage; v.number = percentage; return v; }
+		static StyleSetValue from_percentage(float percentage) { StyleSetValue v; v.type = StyleValueType::percentage; v.number = percentage; return v; }
 
 		/// Create style value from a number
-		static StyleValue from_number(float number) { StyleValue v; v.type = StyleValueType::number; v.number = number; return v; }
+		static StyleSetValue from_number(float number) { StyleSetValue v; v.type = StyleValueType::number; v.number = number; return v; }
 
 		/// Create style value from an url
-		static StyleValue from_url(const std::string &url) { StyleValue v; v.type = StyleValueType::url; v.text = url; return v; }
+		static StyleSetValue from_url(const std::string &url) { StyleSetValue v; v.type = StyleValueType::url; v.text = url; return v; }
 
 		/// Create style value from a color
-		static StyleValue from_color(const Colorf &color) { StyleValue v; v.type = StyleValueType::color; v.color = color; return v; }
+		static StyleSetValue from_color(const Colorf &color) { StyleSetValue v; v.type = StyleValueType::color; v.color = color; return v; }
 	};
 
 	/// Gradient stop in a style gradient
@@ -340,23 +340,23 @@ namespace clan
 	{
 	public:
 		StyleGradientStop() { }
-		StyleGradientStop(const StyleValue &color, const StyleValue &position) : color(color), position(position) { }
+		StyleGradientStop(const StyleSetValue &color, const StyleSetValue &position) : color(color), position(position) { }
 
-		StyleValue color;
-		StyleValue position;
+		StyleSetValue color;
+		StyleSetValue position;
 	};
 
 	/// Linear or radial gradient
 	class StyleGradient
 	{
 	public:
-		StyleValue type;
-		StyleValue linear_angle;
-		StyleValue radial_shape;
-		StyleValue radial_size_x;
-		StyleValue radial_size_y;
-		StyleValue radial_position_x;
-		StyleValue radial_position_y;
+		StyleSetValue type;
+		StyleSetValue linear_angle;
+		StyleSetValue radial_shape;
+		StyleSetValue radial_size_x;
+		StyleSetValue radial_size_y;
+		StyleSetValue radial_position_x;
+		StyleSetValue radial_position_y;
 		std::vector<StyleGradientStop> stops;
 	};
 
@@ -365,10 +365,10 @@ namespace clan
 	{
 	public:
 		StyleImage() { }
-		StyleImage(const StyleValue &image) : image(image) { }
+		StyleImage(const StyleSetValue &image) : image(image) { }
 		StyleImage(const StyleGradient &gradient) : gradient(gradient) { }
 
-		StyleValue image;
+		StyleSetValue image;
 		StyleGradient gradient;
 	};
 	

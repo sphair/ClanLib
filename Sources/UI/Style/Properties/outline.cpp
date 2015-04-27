@@ -48,9 +48,9 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue outline_width;
-		StyleValue outline_style;
-		StyleValue outline_color;
+		StyleSetValue outline_width;
+		StyleSetValue outline_style;
+		StyleSetValue outline_color;
 		bool width_specified = false;
 		bool style_specified = false;
 		bool color_specified = false;
@@ -61,7 +61,7 @@ namespace clan
 			Colorf color;
 			if (!color_specified && parse_color(tokens, pos, color))
 			{
-				outline_color = StyleValue::from_color(color);
+				outline_color = StyleSetValue::from_color(color);
 				color_specified = true;
 			}
 			else
@@ -71,9 +71,9 @@ namespace clan
 				{
 					if (equals(token.value, "inherit") && tokens.size() == 1)
 					{
-						outline_width = StyleValue::from_keyword("inherit");
-						outline_style = StyleValue::from_keyword("inherit");
-						outline_color = StyleValue::from_keyword("inherit");
+						outline_width = StyleSetValue::from_keyword("inherit");
+						outline_style = StyleSetValue::from_keyword("inherit");
+						outline_color = StyleSetValue::from_keyword("inherit");
 						setter->set_value("outline-width", outline_width);
 						setter->set_value("outline-style", outline_style);
 						setter->set_value("outline-color", outline_color);
@@ -81,72 +81,72 @@ namespace clan
 					}
 					else if (!width_specified && equals(token.value, "thin"))
 					{
-						outline_width = StyleValue::from_keyword("thin");
+						outline_width = StyleSetValue::from_keyword("thin");
 						width_specified = true;
 					}
 					else if (!width_specified && equals(token.value, "medium"))
 					{
-						outline_width = StyleValue::from_keyword("medium");
+						outline_width = StyleSetValue::from_keyword("medium");
 						width_specified = true;
 					}
 					else if (!width_specified && equals(token.value, "thick"))
 					{
-						outline_width = StyleValue::from_keyword("thick");
+						outline_width = StyleSetValue::from_keyword("thick");
 						width_specified = true;
 					}
 					else if (!style_specified && equals(token.value, "none"))
 					{
-						outline_style = StyleValue::from_keyword("none");
+						outline_style = StyleSetValue::from_keyword("none");
 						style_specified = true;
 					}
 					else if (!style_specified && equals(token.value, "hidden"))
 					{
-						outline_style = StyleValue::from_keyword("hidden");
+						outline_style = StyleSetValue::from_keyword("hidden");
 						style_specified = true;
 					}
 					else if (!style_specified && equals(token.value, "dotted"))
 					{
-						outline_style = StyleValue::from_keyword("dotted");
+						outline_style = StyleSetValue::from_keyword("dotted");
 						style_specified = true;
 					}
 					else if (!style_specified && equals(token.value, "dashed"))
 					{
-						outline_style = StyleValue::from_keyword("dashed");
+						outline_style = StyleSetValue::from_keyword("dashed");
 						style_specified = true;
 					}
 					else if (!style_specified && equals(token.value, "solid"))
 					{
-						outline_style = StyleValue::from_keyword("solid");
+						outline_style = StyleSetValue::from_keyword("solid");
 						style_specified = true;
 					}
 					else if (!style_specified && equals(token.value, "double"))
 					{
-						outline_style = StyleValue::from_keyword("double");
+						outline_style = StyleSetValue::from_keyword("double");
 						style_specified = true;
 					}
 					else if (!style_specified && equals(token.value, "groove"))
 					{
-						outline_style = StyleValue::from_keyword("groove");
+						outline_style = StyleSetValue::from_keyword("groove");
 						style_specified = true;
 					}
 					else if (!style_specified && equals(token.value, "ridge"))
 					{
-						outline_style = StyleValue::from_keyword("ridge");
+						outline_style = StyleSetValue::from_keyword("ridge");
 						style_specified = true;
 					}
 					else if (!style_specified && equals(token.value, "inset"))
 					{
-						outline_style = StyleValue::from_keyword("inset");
+						outline_style = StyleSetValue::from_keyword("inset");
 						style_specified = true;
 					}
 					else if (!style_specified && equals(token.value, "outset"))
 					{
-						outline_style = StyleValue::from_keyword("outset");
+						outline_style = StyleSetValue::from_keyword("outset");
 						style_specified = true;
 					}
 					else if (!color_specified && equals(token.value, "invert"))
 					{
-						outline_color = StyleValue::from_keyword("invert");
+						outline_color = StyleSetValue::from_keyword("invert");
 						color_specified = true;
 					}
 					else
@@ -157,7 +157,7 @@ namespace clan
 				}
 				else if (is_length(token))
 				{
-					StyleValue length;
+					StyleSetValue length;
 					if (!width_specified && parse_length(token, length))
 					{
 						outline_width = length;
@@ -186,13 +186,13 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue outline_color;
+		StyleSetValue outline_color;
 
 		size_t pos = 0;
 		Colorf color;
 		if (parse_color(tokens, pos, color) && pos == tokens.size())
 		{
-			outline_color = StyleValue::from_color(color);
+			outline_color = StyleSetValue::from_color(color);
 		}
 		else
 		{
@@ -201,11 +201,11 @@ namespace clan
 			{
 				if (equals(token.value, "invert"))
 				{
-					outline_color = StyleValue::from_keyword("invert");
+					outline_color = StyleSetValue::from_keyword("invert");
 				}
 				else if (equals(token.value, "inherit"))
 				{
-					outline_color = StyleValue::from_keyword("inherit");
+					outline_color = StyleSetValue::from_keyword("inherit");
 				}
 				else
 				{
@@ -225,34 +225,34 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue outline_style;
+		StyleSetValue outline_style;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
 			if (equals(token.value, "none"))
-				outline_style = StyleValue::from_keyword("none");
+				outline_style = StyleSetValue::from_keyword("none");
 			else if (equals(token.value, "hidden"))
-				outline_style = StyleValue::from_keyword("hidden");
+				outline_style = StyleSetValue::from_keyword("hidden");
 			else if (equals(token.value, "dotted"))
-				outline_style = StyleValue::from_keyword("dotted");
+				outline_style = StyleSetValue::from_keyword("dotted");
 			else if (equals(token.value, "dashed"))
-				outline_style = StyleValue::from_keyword("dashed");
+				outline_style = StyleSetValue::from_keyword("dashed");
 			else if (equals(token.value, "solid"))
-				outline_style = StyleValue::from_keyword("solid");
+				outline_style = StyleSetValue::from_keyword("solid");
 			else if (equals(token.value, "double"))
-				outline_style = StyleValue::from_keyword("double");
+				outline_style = StyleSetValue::from_keyword("double");
 			else if (equals(token.value, "groove"))
-				outline_style = StyleValue::from_keyword("groove");
+				outline_style = StyleSetValue::from_keyword("groove");
 			else if (equals(token.value, "ridge"))
-				outline_style = StyleValue::from_keyword("ridge");
+				outline_style = StyleSetValue::from_keyword("ridge");
 			else if (equals(token.value, "inset"))
-				outline_style = StyleValue::from_keyword("inset");
+				outline_style = StyleSetValue::from_keyword("inset");
 			else if (equals(token.value, "outset"))
-				outline_style = StyleValue::from_keyword("outset");
+				outline_style = StyleSetValue::from_keyword("outset");
 			else if (equals(token.value, "inherit"))
-				outline_style = StyleValue::from_keyword("inherit");
+				outline_style = StyleSetValue::from_keyword("inherit");
 			else
 				return;
 		}
@@ -268,26 +268,26 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue outline_width;
+		StyleSetValue outline_width;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
 			if (equals(token.value, "thin"))
-				outline_width = StyleValue::from_keyword("thin");
+				outline_width = StyleSetValue::from_keyword("thin");
 			else if (equals(token.value, "medium"))
-				outline_width = StyleValue::from_keyword("medium");
+				outline_width = StyleSetValue::from_keyword("medium");
 			else if (equals(token.value, "thick"))
-				outline_width = StyleValue::from_keyword("thick");
+				outline_width = StyleSetValue::from_keyword("thick");
 			else if (equals(token.value, "inherit"))
-				outline_width = StyleValue::from_keyword("inherit");
+				outline_width = StyleSetValue::from_keyword("inherit");
 			else
 				return;
 		}
 		else if (is_length(token) && pos == tokens.size())
 		{
-			StyleValue length;
+			StyleSetValue length;
 			if (parse_length(token, length))
 			{
 				outline_width = length;

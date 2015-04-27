@@ -53,22 +53,22 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue width;
+		StyleSetValue width;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
 			if (equals(token.value, "auto"))
-				width = StyleValue::from_keyword("auto");
+				width = StyleSetValue::from_keyword("auto");
 			else if (equals(token.value, "inherit"))
-				width = StyleValue::from_keyword("inherit");
+				width = StyleSetValue::from_keyword("inherit");
 			else
 				return;
 		}
 		else if (is_length(token) && pos == tokens.size())
 		{
-			StyleValue length;
+			StyleSetValue length;
 			if (parse_length(token, length) && length.number >= 0.0f)
 			{
 				width = length;
@@ -83,7 +83,7 @@ namespace clan
 			float v = StringHelp::text_to_float(token.value);
 			if (v >= 0.0f)
 			{
-				width = StyleValue::from_percentage(v);
+				width = StyleSetValue::from_percentage(v);
 			}
 			else
 			{
@@ -102,22 +102,22 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue height;
+		StyleSetValue height;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
 			if (equals(token.value, "auto"))
-				height = StyleValue::from_keyword("auto");
+				height = StyleSetValue::from_keyword("auto");
 			else if (equals(token.value, "inherit"))
-				height = StyleValue::from_keyword("inherit");
+				height = StyleSetValue::from_keyword("inherit");
 			else
 				return;
 		}
 		else if (is_length(token) && pos == tokens.size())
 		{
-			StyleValue length;
+			StyleSetValue length;
 			if (parse_length(token, length) && length.number >= 0.0f)
 			{
 				height = length;
@@ -132,7 +132,7 @@ namespace clan
 			float v = StringHelp::text_to_float(token.value);
 			if (v >= 0.0f)
 			{
-				height = StyleValue::from_percentage(v);
+				height = StyleSetValue::from_percentage(v);
 			}
 			else
 			{
@@ -151,22 +151,22 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue min_width;
+		StyleSetValue min_width;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
 			if (equals(token.value, "inherit"))
-				min_width = StyleValue::from_keyword("inherit");
+				min_width = StyleSetValue::from_keyword("inherit");
 			else if (equals(token.value, "auto"))
-				min_width = StyleValue::from_keyword("auto");
+				min_width = StyleSetValue::from_keyword("auto");
 			else
 				return;
 		}
 		else if (is_length(token) && pos == tokens.size())
 		{
-			StyleValue length;
+			StyleSetValue length;
 			if (parse_length(token, length))
 			{
 				min_width = length;
@@ -178,7 +178,7 @@ namespace clan
 		}
 		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
 		{
-			min_width = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+			min_width = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
 		}
 		else
 		{
@@ -192,22 +192,22 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue min_height;
+		StyleSetValue min_height;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
 			if (equals(token.value, "inherit"))
-				min_height = StyleValue::from_keyword("inherit");
+				min_height = StyleSetValue::from_keyword("inherit");
 			else if (equals(token.value, "auto"))
-				min_height = StyleValue::from_keyword("auto");
+				min_height = StyleSetValue::from_keyword("auto");
 			else
 				return;
 		}
 		else if (is_length(token) && pos == tokens.size())
 		{
-			StyleValue length;
+			StyleSetValue length;
 			if (parse_length(token, length))
 			{
 				min_height = length;
@@ -219,7 +219,7 @@ namespace clan
 		}
 		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
 		{
-			min_height = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+			min_height = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
 		}
 		else
 		{
@@ -233,22 +233,22 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue max_width;
+		StyleSetValue max_width;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
 			if (equals(token.value, "none"))
-				max_width = StyleValue::from_keyword("none");
+				max_width = StyleSetValue::from_keyword("none");
 			else if (equals(token.value, "inherit"))
-				max_width = StyleValue::from_keyword("inherit");
+				max_width = StyleSetValue::from_keyword("inherit");
 			else
 				return;
 		}
 		else if (is_length(token) && pos == tokens.size())
 		{
-			StyleValue length;
+			StyleSetValue length;
 			if (parse_length(token, length))
 			{
 				max_width = length;
@@ -260,7 +260,7 @@ namespace clan
 		}
 		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
 		{
-			max_width = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+			max_width = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
 		}
 		else
 		{
@@ -274,22 +274,22 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue max_height;
+		StyleSetValue max_height;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
 			if (equals(token.value, "none"))
-				max_height = StyleValue::from_keyword("none");
+				max_height = StyleSetValue::from_keyword("none");
 			else if (equals(token.value, "inherit"))
-				max_height = StyleValue::from_keyword("inherit");
+				max_height = StyleSetValue::from_keyword("inherit");
 			else
 				return;
 		}
 		else if (is_length(token) && pos == tokens.size())
 		{
-			StyleValue length;
+			StyleSetValue length;
 			if (parse_length(token, length))
 			{
 				max_height = length;
@@ -301,7 +301,7 @@ namespace clan
 		}
 		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
 		{
-			max_height = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+			max_height = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
 		}
 		else
 		{

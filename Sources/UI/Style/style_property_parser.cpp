@@ -179,7 +179,7 @@ namespace clan
 			return false;
 	}
 
-	bool StylePropertyParser::parse_length(const StyleToken &token, StyleValue &out_length)
+	bool StylePropertyParser::parse_length(const StyleToken &token, StyleSetValue &out_length)
 	{
 		if (token.type == StyleTokenType::dimension)
 		{
@@ -187,12 +187,12 @@ namespace clan
 			if (it == length_dimensions.end())
 				return false;
 
-			out_length = StyleValue::from_length(StringHelp::text_to_float(token.value), it->second);
+			out_length = StyleSetValue::from_length(StringHelp::text_to_float(token.value), it->second);
 			return true;
 		}
 		else if (token.type == StyleTokenType::number && token.value == "0")
 		{
-			out_length = StyleValue::from_length(0.0f, StyleDimension::px);
+			out_length = StyleSetValue::from_length(0.0f, StyleDimension::px);
 			return true;
 		}
 		else
@@ -201,7 +201,7 @@ namespace clan
 		}
 	}
 
-	bool StylePropertyParser::parse_angle(const StyleToken &token, StyleValue &out_angle)
+	bool StylePropertyParser::parse_angle(const StyleToken &token, StyleSetValue &out_angle)
 	{
 		if (token.type == StyleTokenType::dimension)
 		{
@@ -209,12 +209,12 @@ namespace clan
 			if (it == angle_dimensions.end())
 				return false;
 
-			out_angle = StyleValue::from_angle(StringHelp::text_to_float(token.value), it->second);
+			out_angle = StyleSetValue::from_angle(StringHelp::text_to_float(token.value), it->second);
 			return true;
 		}
 		else if (token.type == StyleTokenType::number && token.value == "0")
 		{
-			out_angle = StyleValue::from_angle(0.0f, StyleDimension::px);
+			out_angle = StyleSetValue::from_angle(0.0f, StyleDimension::px);
 			return true;
 		}
 		else
@@ -223,7 +223,7 @@ namespace clan
 		}
 	}
 
-	bool StylePropertyParser::parse_time(const StyleToken &token, StyleValue &out_time)
+	bool StylePropertyParser::parse_time(const StyleToken &token, StyleSetValue &out_time)
 	{
 		if (token.type == StyleTokenType::dimension)
 		{
@@ -231,12 +231,12 @@ namespace clan
 			if (it == time_dimensions.end())
 				return false;
 
-			out_time = StyleValue::from_time(StringHelp::text_to_float(token.value), it->second);
+			out_time = StyleSetValue::from_time(StringHelp::text_to_float(token.value), it->second);
 			return true;
 		}
 		else if (token.type == StyleTokenType::number && token.value == "0")
 		{
-			out_time = StyleValue::from_time(0.0f, StyleDimension::px);
+			out_time = StyleSetValue::from_time(0.0f, StyleDimension::px);
 			return true;
 		}
 		else
@@ -245,7 +245,7 @@ namespace clan
 		}
 	}
 
-	bool StylePropertyParser::parse_frequency(const StyleToken &token, StyleValue &out_frequency)
+	bool StylePropertyParser::parse_frequency(const StyleToken &token, StyleSetValue &out_frequency)
 	{
 		if (token.type == StyleTokenType::dimension)
 		{
@@ -253,12 +253,12 @@ namespace clan
 			if (it == frequency_dimensions.end())
 				return false;
 
-			out_frequency = StyleValue::from_frequency(StringHelp::text_to_float(token.value), it->second);
+			out_frequency = StyleSetValue::from_frequency(StringHelp::text_to_float(token.value), it->second);
 			return true;
 		}
 		else if (token.type == StyleTokenType::number && token.value == "0")
 		{
-			out_frequency = StyleValue::from_frequency(0.0f, StyleDimension::px);
+			out_frequency = StyleSetValue::from_frequency(0.0f, StyleDimension::px);
 			return true;
 		}
 		else
@@ -267,7 +267,7 @@ namespace clan
 		}
 	}
 
-	bool StylePropertyParser::parse_resolution(const StyleToken &token, StyleValue &out_resolution)
+	bool StylePropertyParser::parse_resolution(const StyleToken &token, StyleSetValue &out_resolution)
 	{
 		if (token.type == StyleTokenType::dimension)
 		{
@@ -275,12 +275,12 @@ namespace clan
 			if (it == resolution_dimensions.end())
 				return false;
 
-			out_resolution = StyleValue::from_resolution(StringHelp::text_to_float(token.value), it->second);
+			out_resolution = StyleSetValue::from_resolution(StringHelp::text_to_float(token.value), it->second);
 			return true;
 		}
 		else if (token.type == StyleTokenType::number && token.value == "0")
 		{
-			out_resolution = StyleValue::from_resolution(0.0f, StyleDimension::px);
+			out_resolution = StyleSetValue::from_resolution(0.0f, StyleDimension::px);
 			return true;
 		}
 		else
@@ -313,7 +313,7 @@ namespace clan
 
 		if (equals(token.value, "linear-gradient") || equals(token.value, "repeating-linear-gradient"))
 		{
-			gradient.type = StyleValue::from_keyword(token.value);
+			gradient.type = StyleSetValue::from_keyword(token.value);
 
 			size_t peek_pos = pos;
 			token = next_token(pos, tokens);
@@ -365,23 +365,23 @@ namespace clan
 
 				if (y.empty() && x == "left")
 				{
-					gradient.linear_angle = StyleValue::from_angle(270.0f, StyleDimension::deg);
+					gradient.linear_angle = StyleSetValue::from_angle(270.0f, StyleDimension::deg);
 				}
 				else if (y.empty() && x == "right")
 				{
-					gradient.linear_angle = StyleValue::from_angle(90.0f, StyleDimension::deg);
+					gradient.linear_angle = StyleSetValue::from_angle(90.0f, StyleDimension::deg);
 				}
 				else if (x.empty() && y == "top")
 				{
-					gradient.linear_angle = StyleValue::from_angle(0.0f, StyleDimension::deg);
+					gradient.linear_angle = StyleSetValue::from_angle(0.0f, StyleDimension::deg);
 				}
 				else if (x.empty() && y == "bottom")
 				{
-					gradient.linear_angle = StyleValue::from_angle(180.0f, StyleDimension::deg);
+					gradient.linear_angle = StyleSetValue::from_angle(180.0f, StyleDimension::deg);
 				}
 				else
 				{
-					gradient.linear_angle = StyleValue::from_keyword(y + "-" + x);
+					gradient.linear_angle = StyleSetValue::from_keyword(y + "-" + x);
 				}
 
 				if (!(token.type == StyleTokenType::delim && token.value == ","))
@@ -390,19 +390,19 @@ namespace clan
 			else
 			{
 				pos = peek_pos;
-				gradient.linear_angle = StyleValue::from_angle(180.0f, StyleDimension::deg);
+				gradient.linear_angle = StyleSetValue::from_angle(180.0f, StyleDimension::deg);
 			}
 		}
 		else if (equals(token.value, "radial-gradient") || equals(token.value, "repeating-radial-gradient"))
 		{
-			gradient.type = StyleValue::from_keyword(token.value);
+			gradient.type = StyleSetValue::from_keyword(token.value);
 
 			size_t start_pos = pos;
 			token = next_token(pos, tokens);
 
 			bool shape_ellipse = false;
-			StyleValue size_x, size_y;
-			StyleValue position_x, position_y;
+			StyleSetValue size_x, size_y;
+			StyleSetValue position_x, position_y;
 
 			bool is_shape_known = false;
 			bool comma_required = false;
@@ -428,40 +428,40 @@ namespace clan
 			else if ((!is_shape_known || shape_ellipse) && token.type == StyleTokenType::percentage)
 			{
 				comma_required = true;
-				size_x = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+				size_x = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
 				token = next_token(pos, tokens);
 			}
 			else
 			{
-				size_x = StyleValue::from_keyword("farthest-corner");
+				size_x = StyleSetValue::from_keyword("farthest-corner");
 
 				if (is_shape_known && token.type == StyleTokenType::ident)
 				{
 					if (equals(token.value, "closest-side"))
 					{
 						comma_required = true;
-						size_x = StyleValue::from_keyword("closest-side");
+						size_x = StyleSetValue::from_keyword("closest-side");
 						size_y = size_x;
 						token = next_token(pos, tokens);
 					}
 					else if (equals(token.value, "farthest-side"))
 					{
 						comma_required = true;
-						size_x = StyleValue::from_keyword("farthest-side");
+						size_x = StyleSetValue::from_keyword("farthest-side");
 						size_y = size_x;
 						token = next_token(pos, tokens);
 					}
 					else if (equals(token.value, "closest-corner"))
 					{
 						comma_required = true;
-						size_x = StyleValue::from_keyword("closest-corner");
+						size_x = StyleSetValue::from_keyword("closest-corner");
 						size_y = size_x;
 						token = next_token(pos, tokens);
 					}
 					else if (equals(token.value, "farthest-corner"))
 					{
 						comma_required = true;
-						size_x = StyleValue::from_keyword("farthest-corner");
+						size_x = StyleSetValue::from_keyword("farthest-corner");
 						size_y = size_x;
 						token = next_token(pos, tokens);
 					}
@@ -480,7 +480,7 @@ namespace clan
 				}
 				else if (token.type == StyleTokenType::percentage)
 				{
-					size_y = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+					size_y = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
 					shape_ellipse = true;
 					is_shape_known = true;
 				}
@@ -509,7 +509,7 @@ namespace clan
 				pos = start_pos;
 			}
 
-			gradient.radial_shape = StyleValue::from_keyword(shape_ellipse ? "ellipse" : "circle");
+			gradient.radial_shape = StyleSetValue::from_keyword(shape_ellipse ? "ellipse" : "circle");
 			gradient.radial_size_x = size_x;
 			gradient.radial_size_y = size_y;
 			gradient.radial_position_x = position_x;
@@ -523,7 +523,7 @@ namespace clan
 		while (true)
 		{
 			Colorf stop_color;
-			StyleValue stop_pos;
+			StyleSetValue stop_pos;
 
 			if (!parse_color(tokens, pos, stop_color))
 				return false;
@@ -536,11 +536,11 @@ namespace clan
 			}
 			else if (token.type == StyleTokenType::percentage)
 			{
-				stop_pos = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+				stop_pos = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
 				token = next_token(pos, tokens);
 			}
 
-			gradient.stops.push_back(StyleGradientStop(StyleValue::from_color(stop_color), stop_pos));
+			gradient.stops.push_back(StyleGradientStop(StyleSetValue::from_color(stop_color), stop_pos));
 
 			if (!(token.type == StyleTokenType::delim && token.value == ","))
 				break;
@@ -554,13 +554,13 @@ namespace clan
 		return true;
 	}
 
-	bool StylePropertyParser::parse_position(const std::vector<StyleToken> &tokens, size_t &parse_pos, StyleValue &layer_position_x, StyleValue &layer_position_y)
+	bool StylePropertyParser::parse_position(const std::vector<StyleToken> &tokens, size_t &parse_pos, StyleSetValue &layer_position_x, StyleSetValue &layer_position_y)
 	{
 		size_t last_pos = parse_pos;
 		size_t pos = last_pos;
 		StyleToken token = next_token(pos, tokens);
 
-		StyleValue bg_pos_x, bg_pos_y;
+		StyleSetValue bg_pos_x, bg_pos_y;
 		bool x_specified = false;
 		bool y_specified = false;
 		bool center_specified = false;
@@ -570,48 +570,48 @@ namespace clan
 			{
 				if (!y_specified && equals(token.value, "top"))
 				{
-					bg_pos_y = StyleValue::from_keyword("top");
+					bg_pos_y = StyleSetValue::from_keyword("top");
 					y_specified = true;
 
 					if (center_specified)
 					{
-						bg_pos_x = StyleValue::from_keyword("center");
+						bg_pos_x = StyleSetValue::from_keyword("center");
 						x_specified = true;
 						center_specified = false;
 					}
 				}
 				else if (!y_specified && equals(token.value, "bottom"))
 				{
-					bg_pos_y = StyleValue::from_keyword("bottom");
+					bg_pos_y = StyleSetValue::from_keyword("bottom");
 					y_specified = true;
 
 					if (center_specified)
 					{
-						bg_pos_x = StyleValue::from_keyword("center");
+						bg_pos_x = StyleSetValue::from_keyword("center");
 						x_specified = true;
 						center_specified = false;
 					}
 				}
 				else if (!x_specified && equals(token.value, "left"))
 				{
-					bg_pos_x = StyleValue::from_keyword("left");
+					bg_pos_x = StyleSetValue::from_keyword("left");
 					x_specified = true;
 
 					if (center_specified)
 					{
-						bg_pos_y = StyleValue::from_keyword("center");
+						bg_pos_y = StyleSetValue::from_keyword("center");
 						y_specified = true;
 						center_specified = false;
 					}
 				}
 				else if (!x_specified && equals(token.value, "right"))
 				{
-					bg_pos_x = StyleValue::from_keyword("right");
+					bg_pos_x = StyleSetValue::from_keyword("right");
 					x_specified = true;
 
 					if (center_specified)
 					{
-						bg_pos_y = StyleValue::from_keyword("center");
+						bg_pos_y = StyleSetValue::from_keyword("center");
 						y_specified = true;
 						center_specified = false;
 					}
@@ -620,19 +620,19 @@ namespace clan
 				{
 					if (center_specified)
 					{
-						bg_pos_x = StyleValue::from_keyword("center");
+						bg_pos_x = StyleSetValue::from_keyword("center");
 						x_specified = true;
 						center_specified = false;
 					}
 
 					if (x_specified && !y_specified)
 					{
-						bg_pos_y = StyleValue::from_keyword("center");
+						bg_pos_y = StyleSetValue::from_keyword("center");
 						y_specified = true;
 					}
 					else if (y_specified && !x_specified)
 					{
-						bg_pos_x = StyleValue::from_keyword("center");
+						bg_pos_x = StyleSetValue::from_keyword("center");
 						x_specified = true;
 					}
 					else if (!x_specified && !y_specified)
@@ -651,12 +651,12 @@ namespace clan
 			}
 			else if (is_length(token))
 			{
-				StyleValue length;
+				StyleSetValue length;
 				if (parse_length(token, length))
 				{
 					if (center_specified)
 					{
-						bg_pos_x = StyleValue::from_keyword("center");
+						bg_pos_x = StyleSetValue::from_keyword("center");
 						x_specified = true;
 						center_specified = false;
 					}
@@ -685,19 +685,19 @@ namespace clan
 			{
 				if (center_specified)
 				{
-					bg_pos_x = StyleValue::from_keyword("center");
+					bg_pos_x = StyleSetValue::from_keyword("center");
 					x_specified = true;
 					center_specified = false;
 				}
 
 				if (!x_specified && !y_specified)
 				{
-					bg_pos_x = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+					bg_pos_x = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
 					x_specified = true;
 				}
 				else if (x_specified && !y_specified)
 				{
-					bg_pos_y = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+					bg_pos_y = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
 					y_specified = true;
 				}
 				else
@@ -710,13 +710,13 @@ namespace clan
 				token = next_token(pos, tokens);
 				if (is_length(token))
 				{
-					StyleValue length;
+					StyleSetValue length;
 					if (parse_length(token, length))
 					{
 						length.number = -length.number;
 						if (center_specified)
 						{
-							bg_pos_x = StyleValue::from_keyword("center");
+							bg_pos_x = StyleSetValue::from_keyword("center");
 							x_specified = true;
 							center_specified = false;
 						}
@@ -745,20 +745,20 @@ namespace clan
 				{
 					if (center_specified)
 					{
-						bg_pos_x = StyleValue::from_keyword("center");
+						bg_pos_x = StyleSetValue::from_keyword("center");
 						x_specified = true;
 						center_specified = false;
 					}
 
 					if (!x_specified && !y_specified)
 					{
-						bg_pos_x = StyleValue::from_percentage(-StringHelp::text_to_float(token.value));
+						bg_pos_x = StyleSetValue::from_percentage(-StringHelp::text_to_float(token.value));
 						x_specified = true;
 						parse_pos = pos;
 					}
 					else if (x_specified && !y_specified)
 					{
-						bg_pos_y = StyleValue::from_percentage(-StringHelp::text_to_float(token.value));
+						bg_pos_y = StyleSetValue::from_percentage(-StringHelp::text_to_float(token.value));
 						y_specified = true;
 						parse_pos = pos;
 					}
@@ -782,9 +782,9 @@ namespace clan
 		}
 
 		if (!x_specified)
-			bg_pos_x = StyleValue::from_keyword("center");
+			bg_pos_x = StyleSetValue::from_keyword("center");
 		else if (!y_specified)
-			bg_pos_y = StyleValue::from_keyword("center");
+			bg_pos_y = StyleSetValue::from_keyword("center");
 
 		parse_pos = last_pos;
 		layer_position_x = bg_pos_x;

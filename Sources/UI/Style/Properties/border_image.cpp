@@ -63,24 +63,24 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue border_image_source;
-		StyleValue border_image_slice[5];
-		StyleValue border_image_width[4];
-		StyleValue border_image_outset[4];
-		StyleValue border_image_repeat[2];
+		StyleSetValue border_image_source;
+		StyleSetValue border_image_slice[5];
+		StyleSetValue border_image_width[4];
+		StyleSetValue border_image_outset[4];
+		StyleSetValue border_image_repeat[2];
 
 		if (tokens.size() == 1 && tokens[0].type == StyleTokenType::ident && equals(tokens[0].value, "inherit"))
 		{
-			border_image_source = StyleValue::from_keyword("inherit");
+			border_image_source = StyleSetValue::from_keyword("inherit");
 			for (int i = 0; i < 4; i++)
 			{
-				border_image_slice[i] = StyleValue::from_keyword("inherit");
-				border_image_width[i] = StyleValue::from_keyword("inherit");
-				border_image_outset[i] = StyleValue::from_keyword("inherit");
+				border_image_slice[i] = StyleSetValue::from_keyword("inherit");
+				border_image_width[i] = StyleSetValue::from_keyword("inherit");
+				border_image_outset[i] = StyleSetValue::from_keyword("inherit");
 			}
-			border_image_slice[4] = StyleValue::from_keyword("inherit");
-			border_image_repeat[0] = StyleValue::from_keyword("inherit");
-			border_image_repeat[1] = StyleValue::from_keyword("inherit");
+			border_image_slice[4] = StyleSetValue::from_keyword("inherit");
+			border_image_repeat[0] = StyleSetValue::from_keyword("inherit");
+			border_image_repeat[1] = StyleSetValue::from_keyword("inherit");
 
 			setter->set_value("border-image-source", border_image_source);
 			setter->set_value("border-image-slice-top", border_image_slice[0]);
@@ -169,20 +169,20 @@ namespace clan
 		setter->set_value("border-image-repeat-y", border_image_repeat[1]);
 	}
 
-	bool BorderImagePropertyParser::parse_source(StyleValue &border_image_source, size_t &parse_pos, const std::vector<StyleToken> &tokens)
+	bool BorderImagePropertyParser::parse_source(StyleSetValue &border_image_source, size_t &parse_pos, const std::vector<StyleToken> &tokens)
 	{
 		size_t pos = parse_pos;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident)
 		{
 			if (equals(token.value, "none"))
-				border_image_source = StyleValue::from_keyword("none");
+				border_image_source = StyleSetValue::from_keyword("none");
 			else
 				return false;
 		}
 		else if (token.type == StyleTokenType::uri)
 		{
-			border_image_source = StyleValue::from_url(token.value);
+			border_image_source = StyleSetValue::from_url(token.value);
 		}
 		else
 		{
@@ -193,23 +193,23 @@ namespace clan
 		return true;
 	}
 
-	bool BorderImagePropertyParser::parse_slice(StyleValue *border_image_slice, size_t &parse_pos, const std::vector<StyleToken> &tokens)
+	bool BorderImagePropertyParser::parse_slice(StyleSetValue *border_image_slice, size_t &parse_pos, const std::vector<StyleToken> &tokens)
 	{
 		size_t pos = parse_pos;
 		size_t last_pos = pos;
 		StyleToken token = next_token(pos, tokens);
 
 		int num_lengths;
-		StyleValue values[4];
+		StyleSetValue values[4];
 		for (num_lengths = 0; num_lengths < 4; num_lengths++)
 		{
 			if (token.type == StyleTokenType::percentage)
 			{
-				values[num_lengths] = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+				values[num_lengths] = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
 			}
 			else if (token.type == StyleTokenType::number)
 			{
-				values[num_lengths] = StyleValue::from_number(StringHelp::text_to_float(token.value));
+				values[num_lengths] = StyleSetValue::from_number(StringHelp::text_to_float(token.value));
 			}
 			else
 			{
@@ -252,20 +252,20 @@ namespace clan
 
 		for (int i = 0; i < 4; i++)
 			border_image_slice[i] = values[i];
-		border_image_slice[4] = StyleValue::from_keyword(fill_center ? "fill" : "none");
+		border_image_slice[4] = StyleSetValue::from_keyword(fill_center ? "fill" : "none");
 
 		parse_pos = pos;
 		return true;
 	}
 
-	bool BorderImagePropertyParser::parse_width(StyleValue *border_image_width, size_t &parse_pos, const std::vector<StyleToken> &tokens)
+	bool BorderImagePropertyParser::parse_width(StyleSetValue *border_image_width, size_t &parse_pos, const std::vector<StyleToken> &tokens)
 	{
 		size_t pos = parse_pos;
 		size_t last_pos = pos;
 		StyleToken token = next_token(pos, tokens);
 
 		int num_lengths;
-		StyleValue values[4];
+		StyleSetValue values[4];
 		for (num_lengths = 0; num_lengths < 4; num_lengths++)
 		{
 			if (is_length(token))
@@ -275,15 +275,15 @@ namespace clan
 			}
 			else if (token.type == StyleTokenType::number)
 			{
-				values[num_lengths] = StyleValue::from_number(StringHelp::text_to_float(token.value));
+				values[num_lengths] = StyleSetValue::from_number(StringHelp::text_to_float(token.value));
 			}
 			else if (token.type == StyleTokenType::percentage)
 			{
-				values[num_lengths] = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+				values[num_lengths] = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
 			}
 			else if (token.type == StyleTokenType::ident && equals(token.value, "auto"))
 			{
-				values[num_lengths] = StyleValue::from_keyword("auto");
+				values[num_lengths] = StyleSetValue::from_keyword("auto");
 			}
 			else
 			{
@@ -322,14 +322,14 @@ namespace clan
 		return true;
 	}
 
-	bool BorderImagePropertyParser::parse_outset(StyleValue *border_image_outset, size_t &parse_pos, const std::vector<StyleToken> &tokens)
+	bool BorderImagePropertyParser::parse_outset(StyleSetValue *border_image_outset, size_t &parse_pos, const std::vector<StyleToken> &tokens)
 	{
 		size_t pos = parse_pos;
 		size_t last_pos = pos;
 		StyleToken token = next_token(pos, tokens);
 
 		int num_lengths;
-		StyleValue values[4];
+		StyleSetValue values[4];
 		for (num_lengths = 0; num_lengths < 4; num_lengths++)
 		{
 			if (is_length(token))
@@ -339,7 +339,7 @@ namespace clan
 			}
 			else if (token.type == StyleTokenType::number)
 			{
-				values[num_lengths] = StyleValue::from_number(StringHelp::text_to_float(token.value));
+				values[num_lengths] = StyleSetValue::from_number(StringHelp::text_to_float(token.value));
 			}
 			else
 			{
@@ -379,21 +379,21 @@ namespace clan
 		return true;
 	}
 
-	bool BorderImagePropertyParser::parse_repeat(StyleValue *border_image_repeat, size_t &parse_pos, const std::vector<StyleToken> &tokens)
+	bool BorderImagePropertyParser::parse_repeat(StyleSetValue *border_image_repeat, size_t &parse_pos, const std::vector<StyleToken> &tokens)
 	{
 		size_t pos = parse_pos;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && equals(token.value, "stretch"))
 		{
-			border_image_repeat[0] = StyleValue::from_keyword("stretch");
+			border_image_repeat[0] = StyleSetValue::from_keyword("stretch");
 		}
 		else if (token.type == StyleTokenType::ident && equals(token.value, "repeat"))
 		{
-			border_image_repeat[0] = StyleValue::from_keyword("repeat");
+			border_image_repeat[0] = StyleSetValue::from_keyword("repeat");
 		}
 		else if (token.type == StyleTokenType::ident && equals(token.value, "round"))
 		{
-			border_image_repeat[0] = StyleValue::from_keyword("round");
+			border_image_repeat[0] = StyleSetValue::from_keyword("round");
 		}
 		else
 		{
@@ -408,17 +408,17 @@ namespace clan
 			token = next_token(pos, tokens);
 			if (token.type == StyleTokenType::ident && equals(token.value, "stretch"))
 			{
-				border_image_repeat[1] = StyleValue::from_keyword("stretch");
+				border_image_repeat[1] = StyleSetValue::from_keyword("stretch");
 				parse_pos = pos;
 			}
 			else if (token.type == StyleTokenType::ident && equals(token.value, "repeat"))
 			{
-				border_image_repeat[1] = StyleValue::from_keyword("repeat");
+				border_image_repeat[1] = StyleSetValue::from_keyword("repeat");
 				parse_pos = pos;
 			}
 			else if (token.type == StyleTokenType::ident && equals(token.value, "round"))
 			{
-				border_image_repeat[1] = StyleValue::from_keyword("round");
+				border_image_repeat[1] = StyleSetValue::from_keyword("round");
 				parse_pos = pos;
 			}
 		}
@@ -429,25 +429,25 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue border_image_outset_left;
-		StyleValue border_image_outset_top;
-		StyleValue border_image_outset_right;
-		StyleValue border_image_outset_bottom;
+		StyleSetValue border_image_outset_left;
+		StyleSetValue border_image_outset_top;
+		StyleSetValue border_image_outset_right;
+		StyleSetValue border_image_outset_bottom;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 
 		if (token.type == StyleTokenType::ident && pos == tokens.size() && equals(token.value, "inherit"))
 		{
-			border_image_outset_left = StyleValue::from_keyword("inherit");
-			border_image_outset_top = StyleValue::from_keyword("inherit");
-			border_image_outset_right = StyleValue::from_keyword("inherit");
-			border_image_outset_bottom = StyleValue::from_keyword("inherit");
+			border_image_outset_left = StyleSetValue::from_keyword("inherit");
+			border_image_outset_top = StyleSetValue::from_keyword("inherit");
+			border_image_outset_right = StyleSetValue::from_keyword("inherit");
+			border_image_outset_bottom = StyleSetValue::from_keyword("inherit");
 		}
 		else
 		{
 			int num_lengths;
-			StyleValue values[4];
+			StyleSetValue values[4];
 			for (num_lengths = 0; num_lengths < 4; num_lengths++)
 			{
 				if (is_length(token))
@@ -457,7 +457,7 @@ namespace clan
 				}
 				else if (token.type == StyleTokenType::number)
 				{
-					values[num_lengths] = StyleValue::from_number(StringHelp::text_to_float(token.value));
+					values[num_lengths] = StyleSetValue::from_number(StringHelp::text_to_float(token.value));
 				}
 				else
 				{
@@ -502,29 +502,29 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue border_image_repeat_x, border_image_repeat_y;
+		StyleSetValue border_image_repeat_x, border_image_repeat_y;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size() && equals(token.value, "inherit"))
 		{
-			border_image_repeat_x = StyleValue::from_keyword("inherit");
-			border_image_repeat_y = StyleValue::from_keyword("inherit");
+			border_image_repeat_x = StyleSetValue::from_keyword("inherit");
+			border_image_repeat_y = StyleSetValue::from_keyword("inherit");
 			setter->set_value("border-image-repeat-x", border_image_repeat_x);
 			setter->set_value("border-image-repeat-y", border_image_repeat_y);
 			return;
 		}
 		else if (token.type == StyleTokenType::ident && equals(token.value, "stretch"))
 		{
-			border_image_repeat_x = StyleValue::from_keyword("stretch");
+			border_image_repeat_x = StyleSetValue::from_keyword("stretch");
 		}
 		else if (token.type == StyleTokenType::ident && equals(token.value, "repeat"))
 		{
-			border_image_repeat_x = StyleValue::from_keyword("repeat");
+			border_image_repeat_x = StyleSetValue::from_keyword("repeat");
 		}
 		else if (token.type == StyleTokenType::ident && equals(token.value, "round"))
 		{
-			border_image_repeat_x = StyleValue::from_keyword("round");
+			border_image_repeat_x = StyleSetValue::from_keyword("round");
 		}
 		else
 		{
@@ -542,15 +542,15 @@ namespace clan
 			token = next_token(pos, tokens);
 			if (token.type == StyleTokenType::ident && equals(token.value, "stretch"))
 			{
-				border_image_repeat_y = StyleValue::from_keyword("stretch");
+				border_image_repeat_y = StyleSetValue::from_keyword("stretch");
 			}
 			else if (token.type == StyleTokenType::ident && equals(token.value, "repeat"))
 			{
-				border_image_repeat_y = StyleValue::from_keyword("repeat");
+				border_image_repeat_y = StyleSetValue::from_keyword("repeat");
 			}
 			else if (token.type == StyleTokenType::ident && equals(token.value, "round"))
 			{
-				border_image_repeat_y = StyleValue::from_keyword("round");
+				border_image_repeat_y = StyleSetValue::from_keyword("round");
 			}
 			else
 			{
@@ -566,22 +566,22 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue border_image_slice_top;
-		StyleValue border_image_slice_right;
-		StyleValue border_image_slice_bottom;
-		StyleValue border_image_slice_left;
-		StyleValue border_image_slice_center;
+		StyleSetValue border_image_slice_top;
+		StyleSetValue border_image_slice_right;
+		StyleSetValue border_image_slice_bottom;
+		StyleSetValue border_image_slice_left;
+		StyleSetValue border_image_slice_center;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 
 		if (token.type == StyleTokenType::ident && pos == tokens.size() && equals(token.value, "inherit"))
 		{
-			border_image_slice_top = StyleValue::from_keyword("inherit");
-			border_image_slice_right = StyleValue::from_keyword("inherit");
-			border_image_slice_bottom = StyleValue::from_keyword("inherit");
-			border_image_slice_left = StyleValue::from_keyword("inherit");
-			border_image_slice_center = StyleValue::from_keyword("inherit");
+			border_image_slice_top = StyleSetValue::from_keyword("inherit");
+			border_image_slice_right = StyleSetValue::from_keyword("inherit");
+			border_image_slice_bottom = StyleSetValue::from_keyword("inherit");
+			border_image_slice_left = StyleSetValue::from_keyword("inherit");
+			border_image_slice_center = StyleSetValue::from_keyword("inherit");
 			setter->set_value("border-image-slice-top", border_image_slice_top);
 			setter->set_value("border-image-slice-right", border_image_slice_right);
 			setter->set_value("border-image-slice-bottom", border_image_slice_bottom);
@@ -591,16 +591,16 @@ namespace clan
 		else
 		{
 			int num_lengths;
-			StyleValue values[4];
+			StyleSetValue values[4];
 			for (num_lengths = 0; num_lengths < 4; num_lengths++)
 			{
 				if (token.type == StyleTokenType::percentage)
 				{
-					values[num_lengths] = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+					values[num_lengths] = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
 				}
 				else if (token.type == StyleTokenType::number)
 				{
-					values[num_lengths] = StyleValue::from_number(StringHelp::text_to_float(token.value));
+					values[num_lengths] = StyleSetValue::from_number(StringHelp::text_to_float(token.value));
 				}
 				else
 				{
@@ -637,7 +637,7 @@ namespace clan
 				values[3] = values[1];
 			}
 
-			border_image_slice_center = StyleValue::from_keyword(fill_center ? "fill" : "none");
+			border_image_slice_center = StyleSetValue::from_keyword(fill_center ? "fill" : "none");
 			border_image_slice_top = values[0];
 			border_image_slice_right = values[1];
 			border_image_slice_bottom = values[2];
@@ -655,7 +655,7 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue border_image_source;
+		StyleSetValue border_image_source;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
@@ -663,18 +663,18 @@ namespace clan
 		{
 			if (equals(token.value, "none"))
 			{
-				border_image_source = StyleValue::from_keyword("none");
+				border_image_source = StyleSetValue::from_keyword("none");
 				setter->set_value("border-image-source", border_image_source);
 			}
 			else if (equals(token.value, "inherit"))
 			{
-				border_image_source = StyleValue::from_keyword("inherit");
+				border_image_source = StyleSetValue::from_keyword("inherit");
 				setter->set_value("border-image-source", border_image_source);
 			}
 		}
 		else if (token.type == StyleTokenType::uri && pos == tokens.size())
 		{
-			border_image_source = StyleValue::from_url(token.value);
+			border_image_source = StyleSetValue::from_url(token.value);
 			setter->set_value("border-image-source", border_image_source);
 		}
 	}
@@ -683,20 +683,20 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue border_image_width_top;
-		StyleValue border_image_width_right;
-		StyleValue border_image_width_bottom;
-		StyleValue border_image_width_left;
+		StyleSetValue border_image_width_top;
+		StyleSetValue border_image_width_right;
+		StyleSetValue border_image_width_bottom;
+		StyleSetValue border_image_width_left;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 
 		if (token.type == StyleTokenType::ident && pos == tokens.size() && equals(token.value, "inherit"))
 		{
-			border_image_width_top = StyleValue::from_keyword("inherit");
-			border_image_width_right = StyleValue::from_keyword("inherit");
-			border_image_width_bottom = StyleValue::from_keyword("inherit");
-			border_image_width_left = StyleValue::from_keyword("inherit");
+			border_image_width_top = StyleSetValue::from_keyword("inherit");
+			border_image_width_right = StyleSetValue::from_keyword("inherit");
+			border_image_width_bottom = StyleSetValue::from_keyword("inherit");
+			border_image_width_left = StyleSetValue::from_keyword("inherit");
 			setter->set_value("border-image-width-top", border_image_width_top);
 			setter->set_value("border-image-width-right", border_image_width_right);
 			setter->set_value("border-image-width-bottom", border_image_width_bottom);
@@ -705,7 +705,7 @@ namespace clan
 		else
 		{
 			int num_lengths;
-			StyleValue values[4];
+			StyleSetValue values[4];
 			for (num_lengths = 0; num_lengths < 4; num_lengths++)
 			{
 				if (is_length(token))
@@ -715,15 +715,15 @@ namespace clan
 				}
 				else if (token.type == StyleTokenType::number)
 				{
-					values[num_lengths] = StyleValue::from_number(StringHelp::text_to_float(token.value));
+					values[num_lengths] = StyleSetValue::from_number(StringHelp::text_to_float(token.value));
 				}
 				else if (token.type == StyleTokenType::percentage)
 				{
-					values[num_lengths] = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+					values[num_lengths] = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
 				}
 				else if (token.type == StyleTokenType::ident && equals(token.value, "auto"))
 				{
-					values[num_lengths] = StyleValue::from_keyword("auto");
+					values[num_lengths] = StyleSetValue::from_keyword("auto");
 				}
 				else
 				{

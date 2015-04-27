@@ -41,12 +41,12 @@ namespace clan
 		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 
 	private:
-		bool parse_bgcolor(StyleValue &bgcolor, size_t &parse_pos, const std::vector<StyleToken> &tokens);
+		bool parse_bgcolor(StyleSetValue &bgcolor, size_t &parse_pos, const std::vector<StyleToken> &tokens);
 		bool parse_image(StyleImage &layer_image, size_t &parse_pos, const std::vector<StyleToken> &tokens);
-		bool parse_repeat(StyleValue &layer_repeat_x, StyleValue &layer_repeat_y, size_t &parse_pos, const std::vector<StyleToken> &tokens);
-		bool parse_attachment(StyleValue &layer_attachment, size_t &parse_pos, const std::vector<StyleToken> &tokens);
-		bool parse_size(StyleValue &layer_size_x, StyleValue &layer_size_y, size_t &parse_pos, const std::vector<StyleToken> &tokens);
-		bool parse_boxes(StyleValue &layer_origin, StyleValue &layer_clip, size_t &parse_pos, const std::vector<StyleToken> &tokens);
+		bool parse_repeat(StyleSetValue &layer_repeat_x, StyleSetValue &layer_repeat_y, size_t &parse_pos, const std::vector<StyleToken> &tokens);
+		bool parse_attachment(StyleSetValue &layer_attachment, size_t &parse_pos, const std::vector<StyleToken> &tokens);
+		bool parse_size(StyleSetValue &layer_size_x, StyleSetValue &layer_size_y, size_t &parse_pos, const std::vector<StyleToken> &tokens);
+		bool parse_boxes(StyleSetValue &layer_origin, StyleSetValue &layer_clip, size_t &parse_pos, const std::vector<StyleToken> &tokens);
 	};
 
 	class BackgroundAttachmentPropertyParser : public StylePropertyParser

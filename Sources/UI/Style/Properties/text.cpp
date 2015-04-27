@@ -77,13 +77,13 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue color;
+		StyleSetValue color;
 
 		size_t pos = 0;
 		Colorf colorf;
 		if (parse_color(tokens, pos, colorf) && pos == tokens.size())
 		{
-			color = StyleValue::from_color(colorf);
+			color = StyleSetValue::from_color(colorf);
 		}
 		else
 		{
@@ -92,7 +92,7 @@ namespace clan
 			{
 				if (equals(token.value, "inherit"))
 				{
-					color = StyleValue::from_keyword("inherit");
+					color = StyleSetValue::from_keyword("inherit");
 				}
 				else
 				{
@@ -112,22 +112,22 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue text_align;
+		StyleSetValue text_align;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
 			if (equals(token.value, "left"))
-				text_align = StyleValue::from_keyword("left");
+				text_align = StyleSetValue::from_keyword("left");
 			else if (equals(token.value, "right"))
-				text_align = StyleValue::from_keyword("right");
+				text_align = StyleSetValue::from_keyword("right");
 			else if (equals(token.value, "center"))
-				text_align = StyleValue::from_keyword("center");
+				text_align = StyleSetValue::from_keyword("center");
 			else if (equals(token.value, "justify"))
-				text_align = StyleValue::from_keyword("justify");
+				text_align = StyleSetValue::from_keyword("justify");
 			else if (equals(token.value, "inherit"))
-				text_align = StyleValue::from_keyword("inherit");
+				text_align = StyleSetValue::from_keyword("inherit");
 			else
 				return;
 		}
@@ -143,10 +143,10 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue text_decoration_underline;
-		StyleValue text_decoration_overline;
-		StyleValue text_decoration_line_through;
-		StyleValue text_decoration_blink;
+		StyleSetValue text_decoration_underline;
+		StyleSetValue text_decoration_overline;
+		StyleSetValue text_decoration_line_through;
+		StyleSetValue text_decoration_blink;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
@@ -154,17 +154,17 @@ namespace clan
 		{
 			if (equals(token.value, "none") && pos == tokens.size())
 			{
-				text_decoration_underline = StyleValue::from_keyword("hidden");
-				text_decoration_overline = StyleValue::from_keyword("hidden");
-				text_decoration_line_through = StyleValue::from_keyword("hidden");
-				text_decoration_blink = StyleValue::from_keyword("disabled");
+				text_decoration_underline = StyleSetValue::from_keyword("hidden");
+				text_decoration_overline = StyleSetValue::from_keyword("hidden");
+				text_decoration_line_through = StyleSetValue::from_keyword("hidden");
+				text_decoration_blink = StyleSetValue::from_keyword("disabled");
 			}
 			else if (equals(token.value, "inherit") && pos == tokens.size())
 			{
-				text_decoration_underline = StyleValue::from_keyword("inherit");
-				text_decoration_overline = StyleValue::from_keyword("inherit");
-				text_decoration_line_through = StyleValue::from_keyword("inherit");
-				text_decoration_blink = StyleValue::from_keyword("inherit");
+				text_decoration_underline = StyleSetValue::from_keyword("inherit");
+				text_decoration_overline = StyleSetValue::from_keyword("inherit");
+				text_decoration_line_through = StyleSetValue::from_keyword("inherit");
+				text_decoration_blink = StyleSetValue::from_keyword("inherit");
 			}
 			else
 			{
@@ -196,10 +196,10 @@ namespace clan
 
 				if (underline < 2 && overline < 2 && line_through < 2 && blink < 2)
 				{
-					text_decoration_underline = StyleValue::from_keyword((underline == 1) ? "visible" : "hidden");
-					text_decoration_overline = StyleValue::from_keyword((overline == 1) ? "visible" : "hidden");
-					text_decoration_line_through = StyleValue::from_keyword((line_through == 1) ? "visible" : "hidden");
-					text_decoration_blink = StyleValue::from_keyword((blink == 1) ? "enabled" : "disabled");
+					text_decoration_underline = StyleSetValue::from_keyword((underline == 1) ? "visible" : "hidden");
+					text_decoration_overline = StyleSetValue::from_keyword((overline == 1) ? "visible" : "hidden");
+					text_decoration_line_through = StyleSetValue::from_keyword((line_through == 1) ? "visible" : "hidden");
+					text_decoration_blink = StyleSetValue::from_keyword((blink == 1) ? "enabled" : "disabled");
 				}
 				else
 				{
@@ -222,17 +222,17 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue text_indent;
+		StyleSetValue text_indent;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size() && equals(token.value, "inherit"))
 		{
-			text_indent = StyleValue::from_keyword("inherit");
+			text_indent = StyleSetValue::from_keyword("inherit");
 		}
 		else if (is_length(token) && pos == tokens.size())
 		{
-			StyleValue length;
+			StyleSetValue length;
 			if (parse_length(token, length))
 			{
 				text_indent = length;
@@ -244,14 +244,14 @@ namespace clan
 		}
 		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
 		{
-			text_indent = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+			text_indent = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
 		}
 		else if (token.type == StyleTokenType::delim && token.value == "-")
 		{
 			token = next_token(pos, tokens);
 			if (is_length(token) && pos == tokens.size())
 			{
-				StyleValue length;
+				StyleSetValue length;
 				if (parse_length(token, length))
 				{
 					length.number = -length.number;
@@ -264,7 +264,7 @@ namespace clan
 			}
 			else if (token.type == StyleTokenType::percentage && pos == tokens.size())
 			{
-				text_indent = StyleValue::from_percentage(-StringHelp::text_to_float(token.value));
+				text_indent = StyleSetValue::from_percentage(-StringHelp::text_to_float(token.value));
 			}
 			else
 			{
@@ -283,22 +283,22 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue text_transform;
+		StyleSetValue text_transform;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
 			if (equals(token.value, "capitalize"))
-				text_transform = StyleValue::from_keyword("capitalize");
+				text_transform = StyleSetValue::from_keyword("capitalize");
 			else if (equals(token.value, "uppercase"))
-				text_transform = StyleValue::from_keyword("uppercase");
+				text_transform = StyleSetValue::from_keyword("uppercase");
 			else if (equals(token.value, "lowercase"))
-				text_transform = StyleValue::from_keyword("lowercase");
+				text_transform = StyleSetValue::from_keyword("lowercase");
 			else if (equals(token.value, "none"))
-				text_transform = StyleValue::from_keyword("none");
+				text_transform = StyleSetValue::from_keyword("none");
 			else if (equals(token.value, "inherit"))
-				text_transform = StyleValue::from_keyword("inherit");
+				text_transform = StyleSetValue::from_keyword("inherit");
 			else
 				return;
 		}
@@ -318,22 +318,22 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue word_spacing;
+		StyleSetValue word_spacing;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
 			if (equals(token.value, "normal"))
-				word_spacing = StyleValue::from_keyword("normal");
+				word_spacing = StyleSetValue::from_keyword("normal");
 			else if (equals(token.value, "inherit"))
-				word_spacing = StyleValue::from_keyword("inherit");
+				word_spacing = StyleSetValue::from_keyword("inherit");
 			else
 				return;
 		}
 		else if (is_length(token) && pos == tokens.size())
 		{
-			StyleValue length;
+			StyleSetValue length;
 			if (parse_length(token, length))
 			{
 				word_spacing = length;
@@ -348,7 +348,7 @@ namespace clan
 			token = next_token(pos, tokens);
 			if (is_length(token) && pos == tokens.size())
 			{
-				StyleValue length;
+				StyleSetValue length;
 				if (parse_length(token, length))
 				{
 					length.number = -length.number;
@@ -376,22 +376,22 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue letter_spacing;
+		StyleSetValue letter_spacing;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
 			if (equals(token.value, "normal"))
-				letter_spacing = StyleValue::from_keyword("normal");
+				letter_spacing = StyleSetValue::from_keyword("normal");
 			else if (equals(token.value, "inherit"))
-				letter_spacing = StyleValue::from_keyword("inherit");
+				letter_spacing = StyleSetValue::from_keyword("inherit");
 			else
 				return;
 		}
 		else if (is_length(token) && pos == tokens.size())
 		{
-			StyleValue length;
+			StyleSetValue length;
 			if (parse_length(token, length))
 			{
 				letter_spacing = length;
@@ -406,7 +406,7 @@ namespace clan
 			token = next_token(pos, tokens);
 			if (is_length(token) && pos == tokens.size())
 			{
-				StyleValue length;
+				StyleSetValue length;
 				if (parse_length(token, length))
 				{
 					length.number = -length.number;
@@ -434,14 +434,14 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue style = StyleValue::from_keyword("normal");
-		StyleValue variant = StyleValue::from_keyword("normal");
-		StyleValue weight = StyleValue::from_keyword("normal");
-		StyleValue size = StyleValue::from_keyword("medium");
-		StyleValue line_height = StyleValue::from_keyword("normal");
-		StyleValue family = StyleValue::from_keyword("array");
-		std::vector<StyleValue> family_names;
-		family_names.push_back(StyleValue::from_keyword("sans-serif"));
+		StyleSetValue style = StyleSetValue::from_keyword("normal");
+		StyleSetValue variant = StyleSetValue::from_keyword("normal");
+		StyleSetValue weight = StyleSetValue::from_keyword("normal");
+		StyleSetValue size = StyleSetValue::from_keyword("medium");
+		StyleSetValue line_height = StyleSetValue::from_keyword("normal");
+		StyleSetValue family = StyleSetValue::from_keyword("array");
+		std::vector<StyleSetValue> family_names;
+		family_names.push_back(StyleSetValue::from_keyword("sans-serif"));
 
 		bool font_style_set = false;
 		bool font_variant_set = false;
@@ -473,12 +473,12 @@ namespace clan
 				}
 				else if (equals(token.value, "inherit") && tokens.size() == 1)
 				{
-					style = StyleValue::from_keyword("inherit");
-					variant = StyleValue::from_keyword("inherit");
-					weight = StyleValue::from_keyword("inherit");
-					size = StyleValue::from_keyword("inherit");
-					line_height = StyleValue::from_keyword("inherit");
-					family = StyleValue::from_keyword("inherit");
+					style = StyleSetValue::from_keyword("inherit");
+					variant = StyleSetValue::from_keyword("inherit");
+					weight = StyleSetValue::from_keyword("inherit");
+					size = StyleSetValue::from_keyword("inherit");
+					line_height = StyleSetValue::from_keyword("inherit");
+					family = StyleSetValue::from_keyword("inherit");
 					family_names.clear();
 
 					setter->set_value("font-style", style);
@@ -505,77 +505,77 @@ namespace clan
 				else if (equals(token.value, "italic") && !font_style_set) // font-style
 				{
 					font_style_set = true;
-					style = StyleValue::from_keyword("italic");
+					style = StyleSetValue::from_keyword("italic");
 				}
 				else if (equals(token.value, "oblique") && !font_style_set) // font-style
 				{
 					font_style_set = true;
-					style = StyleValue::from_keyword("oblique");
+					style = StyleSetValue::from_keyword("oblique");
 				}
 				else if (equals(token.value, "small-caps") && !font_variant_set) // font-variant
 				{
 					font_style_set = true;
-					variant = StyleValue::from_keyword("small-caps");
+					variant = StyleSetValue::from_keyword("small-caps");
 				}
 				else if (equals(token.value, "bold") && !font_weight_set) // font-weight
 				{
 					font_weight_set = true;
-					weight = StyleValue::from_keyword("bold");
+					weight = StyleSetValue::from_keyword("bold");
 				}
 				else if (equals(token.value, "bolder") && !font_weight_set) // font-weight
 				{
 					font_weight_set = true;
-					weight = StyleValue::from_keyword("bolder");
+					weight = StyleSetValue::from_keyword("bolder");
 				}
 				else if (equals(token.value, "lighter") && !font_weight_set) // font-weight
 				{
 					font_weight_set = true;
-					weight = StyleValue::from_keyword("lighter");
+					weight = StyleSetValue::from_keyword("lighter");
 				}
 				else if (token.value == "100" && !font_weight_set) // font-weight
 				{
 					font_weight_set = true;
-					weight = StyleValue::from_number(100.0f);
+					weight = StyleSetValue::from_number(100.0f);
 				}
 				else if (token.value == "200" && !font_weight_set) // font-weight
 				{
 					font_weight_set = true;
-					weight = StyleValue::from_number(200.0f);
+					weight = StyleSetValue::from_number(200.0f);
 				}
 				else if (token.value == "300" && !font_weight_set) // font-weight
 				{
 					font_weight_set = true;
-					weight = StyleValue::from_number(300.0f);
+					weight = StyleSetValue::from_number(300.0f);
 				}
 				else if (token.value == "400" && !font_weight_set) // font-weight
 				{
 					font_weight_set = true;
-					weight = StyleValue::from_number(400.0f);
+					weight = StyleSetValue::from_number(400.0f);
 				}
 				else if (token.value == "500" && !font_weight_set) // font-weight
 				{
 					font_weight_set = true;
-					weight = StyleValue::from_number(500.0f);
+					weight = StyleSetValue::from_number(500.0f);
 				}
 				else if (token.value == "600" && !font_weight_set) // font-weight
 				{
 					font_weight_set = true;
-					weight = StyleValue::from_number(600.0f);
+					weight = StyleSetValue::from_number(600.0f);
 				}
 				else if (token.value == "700" && !font_weight_set) // font-weight
 				{
 					font_weight_set = true;
-					weight = StyleValue::from_number(700.0f);
+					weight = StyleSetValue::from_number(700.0f);
 				}
 				else if (token.value == "800" && !font_weight_set) // font-weight
 				{
 					font_weight_set = true;
-					weight = StyleValue::from_number(800.0f);
+					weight = StyleSetValue::from_number(800.0f);
 				}
 				else if (token.value == "900" && !font_weight_set) // font-weight
 				{
 					font_weight_set = true;
-					weight = StyleValue::from_number(900.0f);
+					weight = StyleSetValue::from_number(900.0f);
 				}
 				else
 				{
@@ -597,25 +597,25 @@ namespace clan
 		if (token.type == StyleTokenType::ident)
 		{
 			if (equals(token.value, "xx-small"))
-				size = StyleValue::from_keyword("xx-small");
+				size = StyleSetValue::from_keyword("xx-small");
 			else if (equals(token.value, "x-small"))
-				size = StyleValue::from_keyword("x-small");
+				size = StyleSetValue::from_keyword("x-small");
 			else if (equals(token.value, "small"))
-				size = StyleValue::from_keyword("small");
+				size = StyleSetValue::from_keyword("small");
 			else if (equals(token.value, "medium"))
-				size = StyleValue::from_keyword("medium");
+				size = StyleSetValue::from_keyword("medium");
 			else if (equals(token.value, "large"))
-				size = StyleValue::from_keyword("large");
+				size = StyleSetValue::from_keyword("large");
 			else if (equals(token.value, "x-large"))
-				size = StyleValue::from_keyword("x-large");
+				size = StyleSetValue::from_keyword("x-large");
 			else if (equals(token.value, "xx-large"))
-				size = StyleValue::from_keyword("xx-large");
+				size = StyleSetValue::from_keyword("xx-large");
 			else if (equals(token.value, "smaller"))
-				size = StyleValue::from_keyword("smaller");
+				size = StyleSetValue::from_keyword("smaller");
 			else if (equals(token.value, "larger"))
-				size = StyleValue::from_keyword("larger");
+				size = StyleSetValue::from_keyword("larger");
 			else if (equals(token.value, "inherit"))
-				size = StyleValue::from_keyword("inherit");
+				size = StyleSetValue::from_keyword("inherit");
 			else
 			{
 				debug_parse_error(propname, tokens);
@@ -624,7 +624,7 @@ namespace clan
 		}
 		else if (is_length(token))
 		{
-			StyleValue length;
+			StyleSetValue length;
 			if (parse_length(token, length))
 			{
 				size = length;
@@ -637,7 +637,7 @@ namespace clan
 		}
 		else if (token.type == StyleTokenType::percentage)
 		{
-			size = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+			size = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
 		}
 		else
 		{
@@ -653,9 +653,9 @@ namespace clan
 			if (token.type == StyleTokenType::ident)
 			{
 				if (equals(token.value, "normal"))
-					line_height = StyleValue::from_keyword("normal");
+					line_height = StyleSetValue::from_keyword("normal");
 				else if (equals(token.value, "inherit"))
-					line_height = StyleValue::from_keyword("inherit");
+					line_height = StyleSetValue::from_keyword("inherit");
 				else
 				{
 					debug_parse_error(propname, tokens);
@@ -664,11 +664,11 @@ namespace clan
 			}
 			else if (token.type == StyleTokenType::number)
 			{
-				line_height = StyleValue::from_number(StringHelp::text_to_float(token.value));
+				line_height = StyleSetValue::from_number(StringHelp::text_to_float(token.value));
 			}
 			else if (is_length(token))
 			{
-				StyleValue length;
+				StyleSetValue length;
 				if (parse_length(token, length))
 				{
 					line_height = length;
@@ -681,7 +681,7 @@ namespace clan
 			}
 			else if (token.type == StyleTokenType::percentage)
 			{
-				line_height = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+				line_height = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
 			}
 			else
 			{
@@ -697,27 +697,27 @@ namespace clan
 		{
 			if (token.type == StyleTokenType::ident)
 			{
-				StyleValue name;
+				StyleSetValue name;
 				bool parse_name = false;
 				if (equals(token.value, "serif"))
 				{
-					name = StyleValue::from_keyword("serif");
+					name = StyleSetValue::from_keyword("serif");
 				}
 				else if (equals(token.value, "sans-serif"))
 				{
-					name = StyleValue::from_keyword("sans-serif");
+					name = StyleSetValue::from_keyword("sans-serif");
 				}
 				else if (equals(token.value, "cursive"))
 				{
-					name = StyleValue::from_keyword("cursive");
+					name = StyleSetValue::from_keyword("cursive");
 				}
 				else if (equals(token.value, "fantasy"))
 				{
-					name = StyleValue::from_keyword("fantasy");
+					name = StyleSetValue::from_keyword("fantasy");
 				}
 				else if (equals(token.value, "monospace"))
 				{
-					name = StyleValue::from_keyword("monospace");
+					name = StyleSetValue::from_keyword("monospace");
 				}
 				else if (equals(token.value, "default"))
 				{
@@ -736,7 +736,7 @@ namespace clan
 
 				if (parse_name)
 				{
-					name = StyleValue::from_string(token.value);
+					name = StyleSetValue::from_string(token.value);
 					while (pos != tokens.size())
 					{
 						token = tokens[pos++];
@@ -775,7 +775,7 @@ namespace clan
 			}
 			else if (token.type == StyleTokenType::string)
 			{
-				StyleValue name = StyleValue::from_string(token.value);
+				StyleSetValue name = StyleSetValue::from_string(token.value);
 				family_names.push_back(name);
 
 				if (pos == tokens.size())
@@ -808,8 +808,8 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue family = StyleValue::from_keyword("array");
-		std::vector<StyleValue> family_names;
+		StyleSetValue family = StyleSetValue::from_keyword("array");
+		std::vector<StyleSetValue> family_names;
 
 		size_t pos = 0;
 		StyleToken token;
@@ -817,7 +817,7 @@ namespace clan
 
 		if (equals(token.value, "inherit") && tokens.size() == 1)
 		{
-			family = StyleValue::from_keyword("inherit");
+			family = StyleSetValue::from_keyword("inherit");
 			setter->set_value("font-family", family);
 			setter->set_value_array("font-family-names", family_names);
 			return;
@@ -831,27 +831,27 @@ namespace clan
 				return;
 			}
 
-			StyleValue name;
+			StyleSetValue name;
 			bool parse_name = false;
 			if (equals(token.value, "serif"))
 			{
-				name = StyleValue::from_keyword("serif");
+				name = StyleSetValue::from_keyword("serif");
 			}
 			else if (equals(token.value, "sans-serif"))
 			{
-				name = StyleValue::from_keyword("sans-serif");
+				name = StyleSetValue::from_keyword("sans-serif");
 			}
 			else if (equals(token.value, "cursive"))
 			{
-				name = StyleValue::from_keyword("cursive");
+				name = StyleSetValue::from_keyword("cursive");
 			}
 			else if (equals(token.value, "fantasy"))
 			{
-				name = StyleValue::from_keyword("fantasy");
+				name = StyleSetValue::from_keyword("fantasy");
 			}
 			else if (equals(token.value, "monospace"))
 			{
-				name = StyleValue::from_keyword("monospace");
+				name = StyleSetValue::from_keyword("monospace");
 			}
 			else if (equals(token.value, "default"))
 			{
@@ -870,7 +870,7 @@ namespace clan
 
 			if (parse_name)
 			{
-				name = StyleValue::from_string(token.value);
+				name = StyleSetValue::from_string(token.value);
 				while (pos != tokens.size())
 				{
 					token = tokens[pos++];
@@ -916,38 +916,38 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue font_size;
+		StyleSetValue font_size;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
 			if (equals(token.value, "xx-small"))
-				font_size = StyleValue::from_keyword("xx-small");
+				font_size = StyleSetValue::from_keyword("xx-small");
 			else if (equals(token.value, "x-small"))
-				font_size = StyleValue::from_keyword("x-small");
+				font_size = StyleSetValue::from_keyword("x-small");
 			else if (equals(token.value, "small"))
-				font_size = StyleValue::from_keyword("small");
+				font_size = StyleSetValue::from_keyword("small");
 			else if (equals(token.value, "medium"))
-				font_size = StyleValue::from_keyword("medium");
+				font_size = StyleSetValue::from_keyword("medium");
 			else if (equals(token.value, "large"))
-				font_size = StyleValue::from_keyword("large");
+				font_size = StyleSetValue::from_keyword("large");
 			else if (equals(token.value, "x-large"))
-				font_size = StyleValue::from_keyword("x-large");
+				font_size = StyleSetValue::from_keyword("x-large");
 			else if (equals(token.value, "xx-large"))
-				font_size = StyleValue::from_keyword("xx-large");
+				font_size = StyleSetValue::from_keyword("xx-large");
 			else if (equals(token.value, "smaller"))
-				font_size = StyleValue::from_keyword("smaller");
+				font_size = StyleSetValue::from_keyword("smaller");
 			else if (equals(token.value, "larger"))
-				font_size = StyleValue::from_keyword("larger");
+				font_size = StyleSetValue::from_keyword("larger");
 			else if (equals(token.value, "inherit"))
-				font_size = StyleValue::from_keyword("inherit");
+				font_size = StyleSetValue::from_keyword("inherit");
 			else
 				return;
 		}
 		else if (is_length(token) && pos == tokens.size())
 		{
-			StyleValue length;
+			StyleSetValue length;
 			if (parse_length(token, length))
 			{
 				font_size = length;
@@ -959,7 +959,7 @@ namespace clan
 		}
 		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
 		{
-			font_size = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+			font_size = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
 		}
 		else
 		{
@@ -973,26 +973,26 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue line_height;
+		StyleSetValue line_height;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
 			if (equals(token.value, "normal"))
-				line_height = StyleValue::from_keyword("normal");
+				line_height = StyleSetValue::from_keyword("normal");
 			else if (equals(token.value, "inherit"))
-				line_height = StyleValue::from_keyword("inherit");
+				line_height = StyleSetValue::from_keyword("inherit");
 			else
 				return;
 		}
 		else if (token.type == StyleTokenType::number && pos == tokens.size())
 		{
-			line_height = StyleValue::from_number(StringHelp::text_to_float(token.value));
+			line_height = StyleSetValue::from_number(StringHelp::text_to_float(token.value));
 		}
 		else if (is_length(token) && pos == tokens.size())
 		{
-			StyleValue length;
+			StyleSetValue length;
 			if (parse_length(token, length))
 			{
 				line_height = length;
@@ -1004,7 +1004,7 @@ namespace clan
 		}
 		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
 		{
-			line_height = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+			line_height = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
 		}
 		else
 		{
@@ -1018,20 +1018,20 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue font_style;
+		StyleSetValue font_style;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
 			if (equals(token.value, "normal"))
-				font_style = StyleValue::from_keyword("normal");
+				font_style = StyleSetValue::from_keyword("normal");
 			else if (equals(token.value, "italic"))
-				font_style = StyleValue::from_keyword("italic");
+				font_style = StyleSetValue::from_keyword("italic");
 			else if (equals(token.value, "oblique"))
-				font_style = StyleValue::from_keyword("oblique");
+				font_style = StyleSetValue::from_keyword("oblique");
 			else if (equals(token.value, "inherit"))
-				font_style = StyleValue::from_keyword("inherit");
+				font_style = StyleSetValue::from_keyword("inherit");
 			else
 				return;
 		}
@@ -1047,18 +1047,18 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue font_variant;
+		StyleSetValue font_variant;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
 			if (equals(token.value, "normal"))
-				font_variant = StyleValue::from_keyword("normal");
+				font_variant = StyleSetValue::from_keyword("normal");
 			else if (equals(token.value, "small-caps"))
-				font_variant = StyleValue::from_keyword("small-caps");
+				font_variant = StyleSetValue::from_keyword("small-caps");
 			else if (equals(token.value, "inherit"))
-				font_variant = StyleValue::from_keyword("inherit");
+				font_variant = StyleSetValue::from_keyword("inherit");
 			else
 				return;
 		}
@@ -1074,45 +1074,45 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue font_weight;
+		StyleSetValue font_weight;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
 			if (equals(token.value, "normal"))
-				font_weight = StyleValue::from_keyword("normal");
+				font_weight = StyleSetValue::from_keyword("normal");
 			else if (equals(token.value, "bold"))
-				font_weight = StyleValue::from_keyword("bold");
+				font_weight = StyleSetValue::from_keyword("bold");
 			else if (equals(token.value, "bolder"))
-				font_weight = StyleValue::from_keyword("bolder");
+				font_weight = StyleSetValue::from_keyword("bolder");
 			else if (equals(token.value, "lighter"))
-				font_weight = StyleValue::from_keyword("lighter");
+				font_weight = StyleSetValue::from_keyword("lighter");
 			else if (equals(token.value, "inherit"))
-				font_weight = StyleValue::from_keyword("inherit");
+				font_weight = StyleSetValue::from_keyword("inherit");
 			else
 				return;
 		}
 		else if (token.type == StyleTokenType::number && pos == tokens.size())
 		{
 			if (token.value == "100")
-				font_weight = StyleValue::from_number(100.0f);
+				font_weight = StyleSetValue::from_number(100.0f);
 			else if (token.value == "200")
-				font_weight = StyleValue::from_number(200.0f);
+				font_weight = StyleSetValue::from_number(200.0f);
 			else if (token.value == "300")
-				font_weight = StyleValue::from_number(300.0f);
+				font_weight = StyleSetValue::from_number(300.0f);
 			else if (token.value == "400")
-				font_weight = StyleValue::from_number(400.0f);
+				font_weight = StyleSetValue::from_number(400.0f);
 			else if (token.value == "500")
-				font_weight = StyleValue::from_number(500.0f);
+				font_weight = StyleSetValue::from_number(500.0f);
 			else if (token.value == "600")
-				font_weight = StyleValue::from_number(600.0f);
+				font_weight = StyleSetValue::from_number(600.0f);
 			else if (token.value == "700")
-				font_weight = StyleValue::from_number(700.0f);
+				font_weight = StyleSetValue::from_number(700.0f);
 			else if (token.value == "800")
-				font_weight = StyleValue::from_number(800.0f);
+				font_weight = StyleSetValue::from_number(800.0f);
 			else if (token.value == "900")
-				font_weight = StyleValue::from_number(900.0f);
+				font_weight = StyleSetValue::from_number(900.0f);
 			else
 				return;
 		}
@@ -1128,20 +1128,20 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue rendering;
+		StyleSetValue rendering;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
 			if (equals(token.value, "auto"))
-				rendering = StyleValue::from_keyword("auto");
+				rendering = StyleSetValue::from_keyword("auto");
 			else if (equals(token.value, "subpixel"))
-				rendering = StyleValue::from_keyword("subpixel");
+				rendering = StyleSetValue::from_keyword("subpixel");
 			else if (equals(token.value, "anti-alias"))
-				rendering = StyleValue::from_keyword("anti-alias");
+				rendering = StyleSetValue::from_keyword("anti-alias");
 			else if (equals(token.value, "inherit"))
-				rendering = StyleValue::from_keyword("inherit");
+				rendering = StyleSetValue::from_keyword("inherit");
 			else
 				return;
 		}

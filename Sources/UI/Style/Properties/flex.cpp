@@ -63,9 +63,9 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue flex_grow;
-		StyleValue flex_shrink;
-		StyleValue flex_basis;
+		StyleSetValue flex_grow;
+		StyleSetValue flex_shrink;
+		StyleSetValue flex_basis;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
@@ -73,9 +73,9 @@ namespace clan
 		{
 			if (equals(token.value, "none"))
 			{
-				flex_grow = StyleValue::from_number(0.0f);
-				flex_shrink = StyleValue::from_number(0.0f);
-				flex_basis = StyleValue::from_keyword("main-size");
+				flex_grow = StyleSetValue::from_number(0.0f);
+				flex_shrink = StyleSetValue::from_number(0.0f);
+				flex_basis = StyleSetValue::from_keyword("main-size");
 
 				setter->set_value("flex-grow", flex_grow);
 				setter->set_value("flex-shrink", flex_shrink);
@@ -83,9 +83,9 @@ namespace clan
 			}
 			else if (equals(token.value, "auto"))
 			{
-				flex_grow = StyleValue::from_number(1.0f);
-				flex_shrink = StyleValue::from_number(1.0f);
-				flex_basis = StyleValue::from_keyword("main-size");
+				flex_grow = StyleSetValue::from_number(1.0f);
+				flex_shrink = StyleSetValue::from_number(1.0f);
+				flex_basis = StyleSetValue::from_keyword("main-size");
 
 				setter->set_value("flex-grow", flex_grow);
 				setter->set_value("flex-shrink", flex_shrink);
@@ -93,9 +93,9 @@ namespace clan
 			}
 			else if (equals(token.value, "inherit"))
 			{
-				flex_grow = StyleValue::from_keyword("inherit");
-				flex_shrink = StyleValue::from_keyword("inherit");
-				flex_basis = StyleValue::from_keyword("inherit");
+				flex_grow = StyleSetValue::from_keyword("inherit");
+				flex_shrink = StyleSetValue::from_keyword("inherit");
+				flex_basis = StyleSetValue::from_keyword("inherit");
 
 				setter->set_value("flex-grow", flex_grow);
 				setter->set_value("flex-shrink", flex_shrink);
@@ -110,9 +110,9 @@ namespace clan
 		{
 			pos = 0;
 
-			flex_grow = StyleValue::from_number(1.0f);
-			flex_shrink = StyleValue::from_number(1.0f);
-			flex_basis = StyleValue::from_length(0.0f);
+			flex_grow = StyleSetValue::from_number(1.0f);
+			flex_shrink = StyleSetValue::from_number(1.0f);
+			flex_basis = StyleSetValue::from_length(0.0f);
 
 			bool grow_shrink_specified = false;
 			bool basis_specified = false;
@@ -139,14 +139,14 @@ namespace clan
 		}
 	}
 
-	bool FlexPropertyParser::parse_grow_shrink(StyleValue &grow, StyleValue &shrink, size_t &parse_pos, const std::vector<StyleToken> &tokens)
+	bool FlexPropertyParser::parse_grow_shrink(StyleSetValue &grow, StyleSetValue &shrink, size_t &parse_pos, const std::vector<StyleToken> &tokens)
 	{
 		size_t pos = parse_pos;
 		StyleToken token = next_token(pos, tokens);
 
 		if (token.type == StyleTokenType::number)
 		{
-			grow = StyleValue::from_number(StringHelp::text_to_float(token.value));
+			grow = StyleSetValue::from_number(StringHelp::text_to_float(token.value));
 		}
 		else
 		{
@@ -161,7 +161,7 @@ namespace clan
 
 			if (token.type == StyleTokenType::number)
 			{
-				shrink = StyleValue::from_number(StringHelp::text_to_float(token.value));
+				shrink = StyleSetValue::from_number(StringHelp::text_to_float(token.value));
 
 				parse_pos = pos;
 			}
@@ -170,7 +170,7 @@ namespace clan
 		return true;
 	}
 
-	bool FlexPropertyParser::parse_basis(StyleValue &basis, size_t &parse_pos, const std::vector<StyleToken> &tokens)
+	bool FlexPropertyParser::parse_basis(StyleSetValue &basis, size_t &parse_pos, const std::vector<StyleToken> &tokens)
 	{
 		size_t pos = parse_pos;
 		StyleToken token = next_token(pos, tokens);
@@ -178,13 +178,13 @@ namespace clan
 		if (token.type == StyleTokenType::ident)
 		{
 			if (equals(token.value, "main-size"))
-				basis = StyleValue::from_keyword("main-size");
+				basis = StyleSetValue::from_keyword("main-size");
 			else
 				return false;
 		}
 		else if (is_length(token))
 		{
-			StyleValue length;
+			StyleSetValue length;
 			if (parse_length(token, length) && length.number >= 0.0f)
 			{
 				basis = length;
@@ -195,7 +195,7 @@ namespace clan
 			float v = StringHelp::text_to_float(token.value);
 			if (v >= 0.0f)
 			{
-				basis = StyleValue::from_percentage(v);
+				basis = StyleSetValue::from_percentage(v);
 			}
 		}
 		else
@@ -211,22 +211,22 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue flex_basis;
+		StyleSetValue flex_basis;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
 			if (equals(token.value, "main-size"))
-				flex_basis = StyleValue::from_keyword("main-size");
+				flex_basis = StyleSetValue::from_keyword("main-size");
 			else if (equals(token.value, "inherit"))
-				flex_basis = StyleValue::from_keyword("inherit");
+				flex_basis = StyleSetValue::from_keyword("inherit");
 			else
 				return;
 		}
 		else if (is_length(token) && pos == tokens.size())
 		{
-			StyleValue length;
+			StyleSetValue length;
 			if (parse_length(token, length) && length.number >= 0.0f)
 			{
 				flex_basis = length;
@@ -241,7 +241,7 @@ namespace clan
 			float v = StringHelp::text_to_float(token.value);
 			if (v >= 0.0f)
 			{
-				flex_basis = StyleValue::from_percentage(v);
+				flex_basis = StyleSetValue::from_percentage(v);
 			}
 			else
 			{
@@ -256,22 +256,22 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue flex_direction;
+		StyleSetValue flex_direction;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
 			if (equals(token.value, "row"))
-				flex_direction = StyleValue::from_keyword("row");
+				flex_direction = StyleSetValue::from_keyword("row");
 			else if (equals(token.value, "row-reverse"))
-				flex_direction = StyleValue::from_keyword("row-reverse");
+				flex_direction = StyleSetValue::from_keyword("row-reverse");
 			else if (equals(token.value, "column"))
-				flex_direction = StyleValue::from_keyword("column");
+				flex_direction = StyleSetValue::from_keyword("column");
 			else if (equals(token.value, "column-reverse"))
-				flex_direction = StyleValue::from_keyword("column-reverse");
+				flex_direction = StyleSetValue::from_keyword("column-reverse");
 			else if (equals(token.value, "inherit"))
-				flex_direction = StyleValue::from_keyword("inherit");
+				flex_direction = StyleSetValue::from_keyword("inherit");
 			else
 				return;
 		}
@@ -290,8 +290,8 @@ namespace clan
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 
-		StyleValue direction = StyleValue::from_keyword("row");
-		StyleValue wrap = StyleValue::from_keyword("nowrap");
+		StyleSetValue direction = StyleSetValue::from_keyword("row");
+		StyleSetValue wrap = StyleSetValue::from_keyword("nowrap");
 
 		bool direction_specified = false;
 		bool wrap_specified = false;
@@ -316,7 +316,7 @@ namespace clan
 		setter->set_value("flex-wrap", wrap);
 	}
 
-	bool FlexFlowPropertyParser::parse_direction(StyleValue &direction, size_t &parse_pos, const std::vector<StyleToken> &tokens)
+	bool FlexFlowPropertyParser::parse_direction(StyleSetValue &direction, size_t &parse_pos, const std::vector<StyleToken> &tokens)
 	{
 		size_t pos = parse_pos;
 		StyleToken token = next_token(pos, tokens);
@@ -324,15 +324,15 @@ namespace clan
 		if (token.type == StyleTokenType::ident)
 		{
 			if (equals(token.value, "row"))
-				direction = StyleValue::from_keyword("row");
+				direction = StyleSetValue::from_keyword("row");
 			else if (equals(token.value, "row-reverse"))
-				direction = StyleValue::from_keyword("row-reverse");
+				direction = StyleSetValue::from_keyword("row-reverse");
 			else if (equals(token.value, "column"))
-				direction = StyleValue::from_keyword("column");
+				direction = StyleSetValue::from_keyword("column");
 			else if (equals(token.value, "column-reverse"))
-				direction = StyleValue::from_keyword("column-reverse");
+				direction = StyleSetValue::from_keyword("column-reverse");
 			else if (equals(token.value, "inherit"))
-				direction = StyleValue::from_keyword("inherit");
+				direction = StyleSetValue::from_keyword("inherit");
 			else
 				return false;
 		}
@@ -345,7 +345,7 @@ namespace clan
 		return true;
 	}
 
-	bool FlexFlowPropertyParser::parse_wrap(StyleValue &wrap, size_t &parse_pos, const std::vector<StyleToken> &tokens)
+	bool FlexFlowPropertyParser::parse_wrap(StyleSetValue &wrap, size_t &parse_pos, const std::vector<StyleToken> &tokens)
 	{
 		size_t pos = parse_pos;
 		StyleToken token = next_token(pos, tokens);
@@ -353,13 +353,13 @@ namespace clan
 		if (token.type == StyleTokenType::ident)
 		{
 			if (equals(token.value, "nowrap"))
-				wrap = StyleValue::from_keyword("nowrap");
+				wrap = StyleSetValue::from_keyword("nowrap");
 			else if (equals(token.value, "wrap"))
-				wrap = StyleValue::from_keyword("wrap");
+				wrap = StyleSetValue::from_keyword("wrap");
 			else if (equals(token.value, "wrap-reverse"))
-				wrap = StyleValue::from_keyword("wrap-reverse");
+				wrap = StyleSetValue::from_keyword("wrap-reverse");
 			else if (equals(token.value, "inherit"))
-				wrap = StyleValue::from_keyword("inherit");
+				wrap = StyleSetValue::from_keyword("inherit");
 			else
 				return false;
 		}
@@ -376,20 +376,20 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue flex_grow;
+		StyleSetValue flex_grow;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
 			if (equals(token.value, "inherit"))
-				flex_grow = StyleValue::from_keyword("inherit");
+				flex_grow = StyleSetValue::from_keyword("inherit");
 			else
 				return;
 		}
 		else if (token.type == StyleTokenType::number && pos == tokens.size())
 		{
-			flex_grow = StyleValue::from_number(StringHelp::text_to_float(token.value));
+			flex_grow = StyleSetValue::from_number(StringHelp::text_to_float(token.value));
 		}
 		else
 		{
@@ -403,20 +403,20 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue flex_shrink;
+		StyleSetValue flex_shrink;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
 			if (equals(token.value, "inherit"))
-				flex_shrink = StyleValue::from_keyword("inherit");
+				flex_shrink = StyleSetValue::from_keyword("inherit");
 			else
 				return;
 		}
 		else if (token.type == StyleTokenType::number && pos == tokens.size())
 		{
-			flex_shrink = StyleValue::from_number(StringHelp::text_to_float(token.value));
+			flex_shrink = StyleSetValue::from_number(StringHelp::text_to_float(token.value));
 		}
 		else
 		{
@@ -428,20 +428,20 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue flex_wrap;
+		StyleSetValue flex_wrap;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
 			if (equals(token.value, "nowrap"))
-				flex_wrap = StyleValue::from_keyword("nowrap");
+				flex_wrap = StyleSetValue::from_keyword("nowrap");
 			else if (equals(token.value, "wrap"))
-				flex_wrap = StyleValue::from_keyword("wrap");
+				flex_wrap = StyleSetValue::from_keyword("wrap");
 			else if (equals(token.value, "wrap-reverse"))
-				flex_wrap = StyleValue::from_keyword("wrap-reverse");
+				flex_wrap = StyleSetValue::from_keyword("wrap-reverse");
 			else if (equals(token.value, "inherit"))
-				flex_wrap = StyleValue::from_keyword("inherit");
+				flex_wrap = StyleSetValue::from_keyword("inherit");
 			else
 				return;
 		}
@@ -457,14 +457,14 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue order;
+		StyleSetValue order;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
 			if (equals(token.value, "inherit"))
-				order = StyleValue::from_keyword("inherit");
+				order = StyleSetValue::from_keyword("inherit");
 			else
 				return;
 		}
@@ -473,7 +473,7 @@ namespace clan
 			int value = 0;
 			if (parse_integer(token.value, value))
 			{
-				order = StyleValue::from_number((float)value);
+				order = StyleSetValue::from_number((float)value);
 			}
 			else
 			{
@@ -496,40 +496,40 @@ namespace clan
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
-			StyleValue align_content;
+			StyleSetValue align_content;
 			if (equals(token.value, "flex-start"))
 			{
-				align_content = StyleValue::from_keyword("flex-start");
+				align_content = StyleSetValue::from_keyword("flex-start");
 				setter->set_value("align-content", align_content);
 			}
 			else if (equals(token.value, "flex-end"))
 			{
-				align_content = StyleValue::from_keyword("flex-end");
+				align_content = StyleSetValue::from_keyword("flex-end");
 				setter->set_value("align-content", align_content);
 			}
 			else if (equals(token.value, "center"))
 			{
-				align_content = StyleValue::from_keyword("center");
+				align_content = StyleSetValue::from_keyword("center");
 				setter->set_value("align-content", align_content);
 			}
 			else if (equals(token.value, "space-between"))
 			{
-				align_content = StyleValue::from_keyword("space-between");
+				align_content = StyleSetValue::from_keyword("space-between");
 				setter->set_value("align-content", align_content);
 			}
 			else if (equals(token.value, "space-around"))
 			{
-				align_content = StyleValue::from_keyword("space-around");
+				align_content = StyleSetValue::from_keyword("space-around");
 				setter->set_value("align-content", align_content);
 			}
 			else if (equals(token.value, "stretch"))
 			{
-				align_content = StyleValue::from_keyword("stretch");
+				align_content = StyleSetValue::from_keyword("stretch");
 				setter->set_value("align-content", align_content);
 			}
 			else if (equals(token.value, "inherit"))
 			{
-				align_content = StyleValue::from_keyword("inherit");
+				align_content = StyleSetValue::from_keyword("inherit");
 				setter->set_value("align-content", align_content);
 			}
 		}
@@ -543,35 +543,35 @@ namespace clan
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
-			StyleValue align_items;
+			StyleSetValue align_items;
 			if (equals(token.value, "flex-start"))
 			{
-				align_items = StyleValue::from_keyword("flex-start");
+				align_items = StyleSetValue::from_keyword("flex-start");
 				setter->set_value("align-items", align_items);
 			}
 			else if (equals(token.value, "flex-end"))
 			{
-				align_items = StyleValue::from_keyword("flex-end");
+				align_items = StyleSetValue::from_keyword("flex-end");
 				setter->set_value("align-items", align_items);
 			}
 			else if (equals(token.value, "center"))
 			{
-				align_items = StyleValue::from_keyword("center");
+				align_items = StyleSetValue::from_keyword("center");
 				setter->set_value("align-items", align_items);
 			}
 			else if (equals(token.value, "baseline"))
 			{
-				align_items = StyleValue::from_keyword("baseline");
+				align_items = StyleSetValue::from_keyword("baseline");
 				setter->set_value("align-items", align_items);
 			}
 			else if (equals(token.value, "stretch"))
 			{
-				align_items = StyleValue::from_keyword("stretch");
+				align_items = StyleSetValue::from_keyword("stretch");
 				setter->set_value("align-items", align_items);
 			}
 			else if (equals(token.value, "inherit"))
 			{
-				align_items = StyleValue::from_keyword("inherit");
+				align_items = StyleSetValue::from_keyword("inherit");
 				setter->set_value("align-items", align_items);
 			}
 		}
@@ -585,41 +585,41 @@ namespace clan
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
-			StyleValue align_self;
+			StyleSetValue align_self;
 
 			if (equals(token.value, "auto"))
 			{
-				align_self = StyleValue::from_keyword("auto");
+				align_self = StyleSetValue::from_keyword("auto");
 				setter->set_value("align-self", align_self);
 			}
 			else if (equals(token.value, "flex-start"))
 			{
-				align_self = StyleValue::from_keyword("flex-start");
+				align_self = StyleSetValue::from_keyword("flex-start");
 				setter->set_value("align-self", align_self);
 			}
 			else if (equals(token.value, "flex-end"))
 			{
-				align_self = StyleValue::from_keyword("flex-end");
+				align_self = StyleSetValue::from_keyword("flex-end");
 				setter->set_value("align-self", align_self);
 			}
 			else if (equals(token.value, "center"))
 			{
-				align_self = StyleValue::from_keyword("center");
+				align_self = StyleSetValue::from_keyword("center");
 				setter->set_value("align-self", align_self);
 			}
 			else if (equals(token.value, "baseline"))
 			{
-				align_self = StyleValue::from_keyword("baseline");
+				align_self = StyleSetValue::from_keyword("baseline");
 				setter->set_value("align-self", align_self);
 			}
 			else if (equals(token.value, "stretch"))
 			{
-				align_self = StyleValue::from_keyword("stretch");
+				align_self = StyleSetValue::from_keyword("stretch");
 				setter->set_value("align-self", align_self);
 			}
 			else if (equals(token.value, "inherit"))
 			{
-				align_self = StyleValue::from_keyword("inherit");
+				align_self = StyleSetValue::from_keyword("inherit");
 				setter->set_value("align-self", align_self);
 			}
 		}
@@ -629,24 +629,24 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue justify_content;
+		StyleSetValue justify_content;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
 			if (equals(token.value, "flex-start"))
-				justify_content = StyleValue::from_keyword("flex-start");
+				justify_content = StyleSetValue::from_keyword("flex-start");
 			else if (equals(token.value, "flex-end"))
-				justify_content = StyleValue::from_keyword("flex-end");
+				justify_content = StyleSetValue::from_keyword("flex-end");
 			else if (equals(token.value, "center"))
-				justify_content = StyleValue::from_keyword("center");
+				justify_content = StyleSetValue::from_keyword("center");
 			else if (equals(token.value, "space-between"))
-				justify_content = StyleValue::from_keyword("space-between");
+				justify_content = StyleSetValue::from_keyword("space-between");
 			else if (equals(token.value, "space-around"))
-				justify_content = StyleValue::from_keyword("space-around");
+				justify_content = StyleSetValue::from_keyword("space-around");
 			else if (equals(token.value, "inherit"))
-				justify_content = StyleValue::from_keyword("inherit");
+				justify_content = StyleSetValue::from_keyword("inherit");
 			else
 				return;
 		}

@@ -69,35 +69,35 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue bgcolor;
-		StyleValue bgimage;
+		StyleSetValue bgcolor;
+		StyleSetValue bgimage;
 		std::vector<StyleImage> bgimages;
-		StyleValue bgrepeat;
-		std::vector<StyleValue> bgrepeatx;
-		std::vector<StyleValue> bgrepeaty;
-		StyleValue bgattachment;
-		std::vector<StyleValue> bgattachments;
-		StyleValue bgposition;
-		std::vector<StyleValue> bgpositionsx;
-		std::vector<StyleValue> bgpositionsy;
-		StyleValue bgorigin;
-		std::vector<StyleValue> bgorigins;
-		StyleValue bgclip;
-		std::vector<StyleValue> bgclips;
-		StyleValue bgsize;
-		std::vector<StyleValue> bgsizesx;
-		std::vector<StyleValue> bgsizesy;
+		StyleSetValue bgrepeat;
+		std::vector<StyleSetValue> bgrepeatx;
+		std::vector<StyleSetValue> bgrepeaty;
+		StyleSetValue bgattachment;
+		std::vector<StyleSetValue> bgattachments;
+		StyleSetValue bgposition;
+		std::vector<StyleSetValue> bgpositionsx;
+		std::vector<StyleSetValue> bgpositionsy;
+		StyleSetValue bgorigin;
+		std::vector<StyleSetValue> bgorigins;
+		StyleSetValue bgclip;
+		std::vector<StyleSetValue> bgclips;
+		StyleSetValue bgsize;
+		std::vector<StyleSetValue> bgsizesx;
+		std::vector<StyleSetValue> bgsizesy;
 
 		if (tokens.size() == 1 && tokens[0].type == StyleTokenType::ident && equals(tokens[0].value, "inherit"))
 		{
-			bgcolor = StyleValue::from_keyword("inherit");
-			bgimage = StyleValue::from_keyword("inherit");
-			bgrepeat = StyleValue::from_keyword("inherit");
-			bgattachment = StyleValue::from_keyword("inherit");
-			bgposition = StyleValue::from_keyword("inherit");
-			bgorigin = StyleValue::from_keyword("inherit");
-			bgclip = StyleValue::from_keyword("inherit");
-			bgsize = StyleValue::from_keyword("inherit");
+			bgcolor = StyleSetValue::from_keyword("inherit");
+			bgimage = StyleSetValue::from_keyword("inherit");
+			bgrepeat = StyleSetValue::from_keyword("inherit");
+			bgattachment = StyleSetValue::from_keyword("inherit");
+			bgposition = StyleSetValue::from_keyword("inherit");
+			bgorigin = StyleSetValue::from_keyword("inherit");
+			bgclip = StyleSetValue::from_keyword("inherit");
+			bgsize = StyleSetValue::from_keyword("inherit");
 
 			setter->set_value("background-color", bgcolor);
 			setter->set_value("background-image", bgimage);
@@ -119,13 +119,13 @@ namespace clan
 			return;
 		}
 
-		bgimage = StyleValue::from_keyword("array");
-		bgrepeat = StyleValue::from_keyword("array");
-		bgattachment = StyleValue::from_keyword("array");
-		bgposition = StyleValue::from_keyword("array");
-		bgorigin = StyleValue::from_keyword("array");
-		bgclip = StyleValue::from_keyword("array");
-		bgsize = StyleValue::from_keyword("array");
+		bgimage = StyleSetValue::from_keyword("array");
+		bgrepeat = StyleSetValue::from_keyword("array");
+		bgattachment = StyleSetValue::from_keyword("array");
+		bgposition = StyleSetValue::from_keyword("array");
+		bgorigin = StyleSetValue::from_keyword("array");
+		bgclip = StyleSetValue::from_keyword("array");
+		bgsize = StyleSetValue::from_keyword("array");
 
 		size_t pos = 0;
 		while (true) // for each layer
@@ -137,16 +137,16 @@ namespace clan
 			bool position_specified = false;
 			bool boxes_specified = false;
 
-			StyleImage layer_image = StyleValue::from_keyword("none");
-			StyleValue layer_repeat_x = StyleValue::from_keyword("repeat");
-			StyleValue layer_repeat_y = StyleValue::from_keyword("repeat");
-			StyleValue layer_attachment = StyleValue::from_keyword("scroll");
-			StyleValue layer_position_x = StyleValue::from_percentage(0.0f);
-			StyleValue layer_position_y = StyleValue::from_percentage(0.0f);
-			StyleValue layer_origin = StyleValue::from_keyword("padding-box");
-			StyleValue layer_clip = StyleValue::from_keyword("border-box");
-			StyleValue layer_size_x = StyleValue::from_keyword("auto");
-			StyleValue layer_size_y = StyleValue::from_keyword("auto");
+			StyleImage layer_image = StyleSetValue::from_keyword("none");
+			StyleSetValue layer_repeat_x = StyleSetValue::from_keyword("repeat");
+			StyleSetValue layer_repeat_y = StyleSetValue::from_keyword("repeat");
+			StyleSetValue layer_attachment = StyleSetValue::from_keyword("scroll");
+			StyleSetValue layer_position_x = StyleSetValue::from_percentage(0.0f);
+			StyleSetValue layer_position_y = StyleSetValue::from_percentage(0.0f);
+			StyleSetValue layer_origin = StyleSetValue::from_keyword("padding-box");
+			StyleSetValue layer_clip = StyleSetValue::from_keyword("border-box");
+			StyleSetValue layer_size_x = StyleSetValue::from_keyword("auto");
+			StyleSetValue layer_size_y = StyleSetValue::from_keyword("auto");
 
 			while (true) // for each declaration in layer
 			{
@@ -236,7 +236,7 @@ namespace clan
 			}
 			else
 			{
-				setter->set_value(prop_name, StyleValue::from_keyword("none"));
+				setter->set_value(prop_name, StyleSetValue::from_keyword("none"));
 			}
 		}
 		setter->set_value("background-repeat", bgrepeat);
@@ -256,13 +256,13 @@ namespace clan
 		setter->set_value_array("background-size-y", bgsizesy);
 	}
 
-	bool BackgroundPropertyParser::parse_bgcolor(StyleValue &bgcolor, size_t &parse_pos, const std::vector<StyleToken> &tokens)
+	bool BackgroundPropertyParser::parse_bgcolor(StyleSetValue &bgcolor, size_t &parse_pos, const std::vector<StyleToken> &tokens)
 	{
 		size_t pos = parse_pos;
 		Colorf color;
 		if (parse_color(tokens, pos, color))
 		{
-			bgcolor = StyleValue::from_color(color);
+			bgcolor = StyleSetValue::from_color(color);
 			parse_pos = pos;
 			return true;
 		}
@@ -292,14 +292,14 @@ namespace clan
 		else if (token.type == StyleTokenType::uri)
 		{
 			layer_image = StyleImage();
-			layer_image.image = StyleValue::from_url(token.value);
+			layer_image.image = StyleSetValue::from_url(token.value);
 			parse_pos = pos;
 			return true;
 		}
 		return false;
 	}
 
-	bool BackgroundPropertyParser::parse_repeat(StyleValue &layer_repeat_x, StyleValue &layer_repeat_y, size_t &parse_pos, const std::vector<StyleToken> &tokens)
+	bool BackgroundPropertyParser::parse_repeat(StyleSetValue &layer_repeat_x, StyleSetValue &layer_repeat_y, size_t &parse_pos, const std::vector<StyleToken> &tokens)
 	{
 		size_t pos = parse_pos;
 		StyleToken token = next_token(pos, tokens);
@@ -307,36 +307,36 @@ namespace clan
 		if (token.type != StyleTokenType::ident)
 			return false;
 
-		StyleValue repeat_x, repeat_y;
+		StyleSetValue repeat_x, repeat_y;
 		bool single_style = false;
 
 		if (equals(token.value, "repeat"))
 		{
-			repeat_x = StyleValue::from_keyword("repeat");
+			repeat_x = StyleSetValue::from_keyword("repeat");
 		}
 		else if (equals(token.value, "repeat-x"))
 		{
-			repeat_x = StyleValue::from_keyword("repeat");
-			repeat_y = StyleValue::from_keyword("no-repeat");
+			repeat_x = StyleSetValue::from_keyword("repeat");
+			repeat_y = StyleSetValue::from_keyword("no-repeat");
 			single_style = true;
 		}
 		else if (equals(token.value, "repeat-y"))
 		{
-			repeat_x = StyleValue::from_keyword("no-repeat");
-			repeat_y = StyleValue::from_keyword("repeat");
+			repeat_x = StyleSetValue::from_keyword("no-repeat");
+			repeat_y = StyleSetValue::from_keyword("repeat");
 			single_style = true;
 		}
 		else if (equals(token.value, "no-repeat"))
 		{
-			repeat_x = StyleValue::from_keyword("no-repeat");
+			repeat_x = StyleSetValue::from_keyword("no-repeat");
 		}
 		else if (equals(token.value, "space"))
 		{
-			repeat_x = StyleValue::from_keyword("space");
+			repeat_x = StyleSetValue::from_keyword("space");
 		}
 		else if (equals(token.value, "round"))
 		{
-			repeat_x = StyleValue::from_keyword("round");
+			repeat_x = StyleSetValue::from_keyword("round");
 		}
 		else
 		{
@@ -362,22 +362,22 @@ namespace clan
 		{
 			if (equals(token.value, "repeat"))
 			{
-				repeat_y = StyleValue::from_keyword("repeat");
+				repeat_y = StyleSetValue::from_keyword("repeat");
 				parse_pos = pos;
 			}
 			else if (equals(token.value, "no-repeat"))
 			{
-				repeat_y = StyleValue::from_keyword("no-repeat");
+				repeat_y = StyleSetValue::from_keyword("no-repeat");
 				parse_pos = pos;
 			}
 			else if (equals(token.value, "space"))
 			{
-				repeat_y = StyleValue::from_keyword("space");
+				repeat_y = StyleSetValue::from_keyword("space");
 				parse_pos = pos;
 			}
 			else if (equals(token.value, "round"))
 			{
-				repeat_y = StyleValue::from_keyword("round");
+				repeat_y = StyleSetValue::from_keyword("round");
 				parse_pos = pos;
 			}
 		}
@@ -387,7 +387,7 @@ namespace clan
 		return true;
 	}
 
-	bool BackgroundPropertyParser::parse_attachment(StyleValue &layer_attachment, size_t &parse_pos, const std::vector<StyleToken> &tokens)
+	bool BackgroundPropertyParser::parse_attachment(StyleSetValue &layer_attachment, size_t &parse_pos, const std::vector<StyleToken> &tokens)
 	{
 		size_t pos = parse_pos;
 		StyleToken token = next_token(pos, tokens);
@@ -395,9 +395,9 @@ namespace clan
 			return false;
 
 		if (equals(token.value, "scroll"))
-			layer_attachment = StyleValue::from_keyword("scroll");
+			layer_attachment = StyleSetValue::from_keyword("scroll");
 		else if (equals(token.value, "fixed"))
-			layer_attachment = StyleValue::from_keyword("fixed");
+			layer_attachment = StyleSetValue::from_keyword("fixed");
 		else
 			return false;
 
@@ -405,7 +405,7 @@ namespace clan
 		return true;
 	}
 
-	bool BackgroundPropertyParser::parse_size(StyleValue &layer_size_x, StyleValue &layer_size_y, size_t &parse_pos, const std::vector<StyleToken> &tokens)
+	bool BackgroundPropertyParser::parse_size(StyleSetValue &layer_size_x, StyleSetValue &layer_size_y, size_t &parse_pos, const std::vector<StyleToken> &tokens)
 	{
 		size_t pos = parse_pos;
 		StyleToken token = next_token(pos, tokens);
@@ -414,25 +414,25 @@ namespace clan
 
 		token = next_token(pos, tokens);
 
-		StyleValue size_x, size_y;
+		StyleSetValue size_x, size_y;
 		bool single_value = false;
 		if (token.type == StyleTokenType::ident)
 		{
 			if (equals(token.value, "contain"))
 			{
-				size_x = StyleValue::from_keyword("contain");
-				size_y = StyleValue::from_keyword("contain");
+				size_x = StyleSetValue::from_keyword("contain");
+				size_y = StyleSetValue::from_keyword("contain");
 				single_value = true;
 			}
 			else if (equals(token.value, "cover"))
 			{
-				size_x = StyleValue::from_keyword("cover");
-				size_y = StyleValue::from_keyword("cover");
+				size_x = StyleSetValue::from_keyword("cover");
+				size_y = StyleSetValue::from_keyword("cover");
 				single_value = true;
 			}
 			else if (equals(token.value, "auto"))
 			{
-				size_x = StyleValue::from_keyword("auto");
+				size_x = StyleSetValue::from_keyword("auto");
 			}
 			else
 			{
@@ -441,7 +441,7 @@ namespace clan
 		}
 		else if (is_length(token))
 		{
-			StyleValue length;
+			StyleSetValue length;
 			if (parse_length(token, length))
 			{
 				size_x = length;
@@ -453,7 +453,7 @@ namespace clan
 		}
 		else if (token.type == StyleTokenType::percentage)
 		{
-			size_x = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+			size_x = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
 		}
 		else
 		{
@@ -471,12 +471,12 @@ namespace clan
 		token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && equals(token.value, "auto"))
 		{
-			size_y = StyleValue::from_keyword("auto");
+			size_y = StyleSetValue::from_keyword("auto");
 			parse_pos = pos;
 		}
 		else if (is_length(token))
 		{
-			StyleValue length;
+			StyleSetValue length;
 			if (parse_length(token, length))
 			{
 				size_y = length;
@@ -485,7 +485,7 @@ namespace clan
 		}
 		else if (token.type == StyleTokenType::percentage)
 		{
-			size_y = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+			size_y = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
 			parse_pos = pos;
 		}
 
@@ -494,7 +494,7 @@ namespace clan
 		return true;
 	}
 
-	bool BackgroundPropertyParser::parse_boxes(StyleValue &layer_origin, StyleValue &layer_clip, size_t &parse_pos, const std::vector<StyleToken> &tokens)
+	bool BackgroundPropertyParser::parse_boxes(StyleSetValue &layer_origin, StyleSetValue &layer_clip, size_t &parse_pos, const std::vector<StyleToken> &tokens)
 	{
 		size_t pos = parse_pos;
 		StyleToken token = next_token(pos, tokens);
@@ -503,18 +503,18 @@ namespace clan
 
 		if (equals(token.value, "border-box"))
 		{
-			layer_origin = StyleValue::from_keyword("border-box");
-			layer_clip = StyleValue::from_keyword("border-box");
+			layer_origin = StyleSetValue::from_keyword("border-box");
+			layer_clip = StyleSetValue::from_keyword("border-box");
 		}
 		else if (equals(token.value, "padding-box"))
 		{
-			layer_origin = StyleValue::from_keyword("padding-box");
-			layer_clip = StyleValue::from_keyword("padding-box");
+			layer_origin = StyleSetValue::from_keyword("padding-box");
+			layer_clip = StyleSetValue::from_keyword("padding-box");
 		}
 		else if (equals(token.value, "content-box"))
 		{
-			layer_origin = StyleValue::from_keyword("content-box");
-			layer_clip = StyleValue::from_keyword("content-box");
+			layer_origin = StyleSetValue::from_keyword("content-box");
+			layer_clip = StyleSetValue::from_keyword("content-box");
 		}
 		else
 		{
@@ -528,17 +528,17 @@ namespace clan
 		{
 			if (equals(token.value, "border-box"))
 			{
-				layer_clip = StyleValue::from_keyword("border-box");
+				layer_clip = StyleSetValue::from_keyword("border-box");
 				parse_pos = pos;
 			}
 			else if (equals(token.value, "padding-box"))
 			{
-				layer_clip = StyleValue::from_keyword("padding-box");
+				layer_clip = StyleSetValue::from_keyword("padding-box");
 				parse_pos = pos;
 			}
 			else if (equals(token.value, "content-box"))
 			{
-				layer_clip = StyleValue::from_keyword("content-box");
+				layer_clip = StyleSetValue::from_keyword("content-box");
 				parse_pos = pos;
 			}
 		}
@@ -553,18 +553,18 @@ namespace clan
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 
-		StyleValue attachment;
-		std::vector<StyleValue> attachments;
+		StyleSetValue attachment;
+		std::vector<StyleSetValue> attachments;
 
 		if (token.type == StyleTokenType::ident && pos == tokens.size() && equals(token.value, "inherit"))
 		{
-			attachment = StyleValue::from_keyword("inherit");
+			attachment = StyleSetValue::from_keyword("inherit");
 			setter->set_value("background-attachment", attachment);
 			setter->set_value_array("background-attachment", attachments);
 		}
 		else
 		{
-			attachment = StyleValue::from_keyword("array");
+			attachment = StyleSetValue::from_keyword("array");
 			attachments.clear();
 			while (true)
 			{
@@ -572,9 +572,9 @@ namespace clan
 					return;
 
 				if (equals(token.value, "scroll"))
-					attachments.push_back(StyleValue::from_keyword("scroll"));
+					attachments.push_back(StyleSetValue::from_keyword("scroll"));
 				else if (equals(token.value, "fixed"))
-					attachments.push_back(StyleValue::from_keyword("fixed"));
+					attachments.push_back(StyleSetValue::from_keyword("fixed"));
 				else
 					return;
 
@@ -599,21 +599,21 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue background_clip;
-		std::vector<StyleValue> background_clips;
+		StyleSetValue background_clip;
+		std::vector<StyleSetValue> background_clips;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 
 		if (token.type == StyleTokenType::ident && pos == tokens.size() && equals(token.value, "inherit"))
 		{
-			background_clip = StyleValue::from_keyword("inherit");
+			background_clip = StyleSetValue::from_keyword("inherit");
 			setter->set_value("background-clip", background_clip);
 			setter->set_value_array("background-clip", background_clips);
 		}
 		else
 		{
-			background_clip = StyleValue::from_keyword("array");
+			background_clip = StyleSetValue::from_keyword("array");
 			background_clips.clear();
 			while (true)
 			{
@@ -622,15 +622,15 @@ namespace clan
 
 				if (equals(token.value, "border-box"))
 				{
-					background_clips.push_back(StyleValue::from_keyword("border-box"));
+					background_clips.push_back(StyleSetValue::from_keyword("border-box"));
 				}
 				else if (equals(token.value, "padding-box"))
 				{
-					background_clips.push_back(StyleValue::from_keyword("padding-box"));
+					background_clips.push_back(StyleSetValue::from_keyword("padding-box"));
 				}
 				else if (equals(token.value, "content-box"))
 				{
-					background_clips.push_back(StyleValue::from_keyword("content-box"));
+					background_clips.push_back(StyleSetValue::from_keyword("content-box"));
 				}
 				else
 				{
@@ -656,13 +656,13 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue background_color;
+		StyleSetValue background_color;
 
 		size_t pos = 0;
 		Colorf color;
 		if (parse_color(tokens, pos, color) && pos == tokens.size())
 		{
-			background_color = StyleValue::from_color(color);
+			background_color = StyleSetValue::from_color(color);
 			setter->set_value("background-color", background_color);
 		}
 		else
@@ -672,7 +672,7 @@ namespace clan
 			{
 				if (equals(token.value, "inherit"))
 				{
-					background_color = StyleValue::from_keyword("inherit");
+					background_color = StyleSetValue::from_keyword("inherit");
 					setter->set_value("background-color", background_color);
 				}
 			}
@@ -686,17 +686,17 @@ namespace clan
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 
-		StyleValue background_image;
+		StyleSetValue background_image;
 		std::vector<StyleImage> background_images;
 
 		if (token.type == StyleTokenType::ident && pos == tokens.size() && equals(token.value, "inherit"))
 		{
-			background_image = StyleValue::from_keyword("inherit");
+			background_image = StyleSetValue::from_keyword("inherit");
 			setter->set_value("background-image", background_image);
 		}
 		else
 		{
-			background_image = StyleValue::from_keyword("array");
+			background_image = StyleSetValue::from_keyword("array");
 			background_images.clear();
 			while (true)
 			{
@@ -704,9 +704,9 @@ namespace clan
 				if (parse_gradient(tokens, pos, gradient))
 					background_images.push_back(StyleImage(gradient));
 				else if (token.type == StyleTokenType::ident && equals(token.value, "none"))
-					background_images.push_back(StyleValue::from_keyword("none"));
+					background_images.push_back(StyleSetValue::from_keyword("none"));
 				else if (token.type == StyleTokenType::uri)
-					background_images.push_back(StyleValue::from_url(token.value));
+					background_images.push_back(StyleSetValue::from_url(token.value));
 				else
 					return;
 
@@ -752,7 +752,7 @@ namespace clan
 			}
 			else
 			{
-				setter->set_value(prop_name, StyleValue::from_keyword("none"));
+				setter->set_value(prop_name, StyleSetValue::from_keyword("none"));
 			}
 		}
 	}
@@ -761,21 +761,21 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue background_origin;
-		std::vector<StyleValue> background_origins;
+		StyleSetValue background_origin;
+		std::vector<StyleSetValue> background_origins;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 
 		if (token.type == StyleTokenType::ident && pos == tokens.size() && equals(token.value, "inherit"))
 		{
-			background_origin = StyleValue::from_keyword("inherit");
+			background_origin = StyleSetValue::from_keyword("inherit");
 			setter->set_value("background-origin", background_origin);
 			setter->set_value_array("background-origin", background_origins);
 		}
 		else
 		{
-			background_origin = StyleValue::from_keyword("array");
+			background_origin = StyleSetValue::from_keyword("array");
 			background_origins.clear();
 			while (true)
 			{
@@ -784,15 +784,15 @@ namespace clan
 
 				if (equals(token.value, "border-box"))
 				{
-					background_origin = StyleValue::from_keyword("border-box");
+					background_origin = StyleSetValue::from_keyword("border-box");
 				}
 				else if (equals(token.value, "padding-box"))
 				{
-					background_origin = StyleValue::from_keyword("padding-box");
+					background_origin = StyleSetValue::from_keyword("padding-box");
 				}
 				else if (equals(token.value, "content-box"))
 				{
-					background_origin = StyleValue::from_keyword("content-box");
+					background_origin = StyleSetValue::from_keyword("content-box");
 				}
 				else
 				{
@@ -818,28 +818,28 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue position;
-		std::vector<StyleValue> positions_x;
-		std::vector<StyleValue> positions_y;
+		StyleSetValue position;
+		std::vector<StyleSetValue> positions_x;
+		std::vector<StyleSetValue> positions_y;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 
 		if (token.type == StyleTokenType::ident && equals(token.value, "inherit") && tokens.size() == 1)
 		{
-			position = StyleValue::from_keyword("inherit");
+			position = StyleSetValue::from_keyword("inherit");
 			setter->set_value("background-position", position);
 			setter->set_value_array("background-position-x", positions_x);
 			setter->set_value_array("background-position-y", positions_y);
 			return;
 		}
 
-		position = StyleValue::from_keyword("array");
+		position = StyleSetValue::from_keyword("array");
 
 		bool done = false;
 		while (!done)
 		{
-			StyleValue bg_pos_x, bg_pos_y;
+			StyleSetValue bg_pos_x, bg_pos_y;
 			bool x_specified = false;
 			bool y_specified = false;
 			bool center_specified = false;
@@ -850,48 +850,48 @@ namespace clan
 				{
 					if (!y_specified && equals(token.value, "top"))
 					{
-						bg_pos_y = StyleValue::from_keyword("top");
+						bg_pos_y = StyleSetValue::from_keyword("top");
 						y_specified = true;
 
 						if (center_specified)
 						{
-							bg_pos_x = StyleValue::from_keyword("center");
+							bg_pos_x = StyleSetValue::from_keyword("center");
 							x_specified = true;
 							center_specified = false;
 						}
 					}
 					else if (!y_specified && equals(token.value, "bottom"))
 					{
-						bg_pos_y = StyleValue::from_keyword("bottom");
+						bg_pos_y = StyleSetValue::from_keyword("bottom");
 						y_specified = true;
 
 						if (center_specified)
 						{
-							bg_pos_x = StyleValue::from_keyword("center");
+							bg_pos_x = StyleSetValue::from_keyword("center");
 							x_specified = true;
 							center_specified = false;
 						}
 					}
 					else if (!x_specified && equals(token.value, "left"))
 					{
-						bg_pos_x = StyleValue::from_keyword("left");
+						bg_pos_x = StyleSetValue::from_keyword("left");
 						x_specified = true;
 
 						if (center_specified)
 						{
-							bg_pos_y = StyleValue::from_keyword("center");
+							bg_pos_y = StyleSetValue::from_keyword("center");
 							y_specified = true;
 							center_specified = false;
 						}
 					}
 					else if (!x_specified && equals(token.value, "right"))
 					{
-						bg_pos_x = StyleValue::from_keyword("right");
+						bg_pos_x = StyleSetValue::from_keyword("right");
 						x_specified = true;
 
 						if (center_specified)
 						{
-							bg_pos_y = StyleValue::from_keyword("center");
+							bg_pos_y = StyleSetValue::from_keyword("center");
 							y_specified = true;
 							center_specified = false;
 						}
@@ -900,19 +900,19 @@ namespace clan
 					{
 						if (center_specified)
 						{
-							bg_pos_x = StyleValue::from_keyword("center");
+							bg_pos_x = StyleSetValue::from_keyword("center");
 							x_specified = true;
 							center_specified = false;
 						}
 
 						if (x_specified && !y_specified)
 						{
-							bg_pos_y = StyleValue::from_keyword("center");
+							bg_pos_y = StyleSetValue::from_keyword("center");
 							y_specified = true;
 						}
 						else if (y_specified && !x_specified)
 						{
-							bg_pos_x = StyleValue::from_keyword("center");
+							bg_pos_x = StyleSetValue::from_keyword("center");
 							x_specified = true;
 						}
 						else if (!x_specified && !y_specified)
@@ -928,12 +928,12 @@ namespace clan
 				}
 				else if (is_length(token))
 				{
-					StyleValue length;
+					StyleSetValue length;
 					if (parse_length(token, length))
 					{
 						if (center_specified)
 						{
-							bg_pos_x = StyleValue::from_keyword("center");
+							bg_pos_x = StyleSetValue::from_keyword("center");
 							x_specified = true;
 							center_specified = false;
 						}
@@ -964,19 +964,19 @@ namespace clan
 				{
 					if (center_specified)
 					{
-						bg_pos_x = StyleValue::from_keyword("center");
+						bg_pos_x = StyleSetValue::from_keyword("center");
 						x_specified = true;
 						center_specified = false;
 					}
 
 					if (!x_specified && !y_specified)
 					{
-						bg_pos_x = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+						bg_pos_x = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
 						x_specified = true;
 					}
 					else if (x_specified && !y_specified)
 					{
-						bg_pos_y = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+						bg_pos_y = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
 						y_specified = true;
 					}
 					else
@@ -990,13 +990,13 @@ namespace clan
 					token = next_token(pos, tokens);
 					if (is_length(token))
 					{
-						StyleValue length;
+						StyleSetValue length;
 						if (parse_length(token, length))
 						{
 							length.number = -length.number;
 							if (center_specified)
 							{
-								bg_pos_x = StyleValue::from_keyword("center");
+								bg_pos_x = StyleSetValue::from_keyword("center");
 								x_specified = true;
 								center_specified = false;
 							}
@@ -1027,19 +1027,19 @@ namespace clan
 					{
 						if (center_specified)
 						{
-							bg_pos_x = StyleValue::from_keyword("center");
+							bg_pos_x = StyleSetValue::from_keyword("center");
 							x_specified = true;
 							center_specified = false;
 						}
 
 						if (!x_specified && !y_specified)
 						{
-							bg_pos_x = StyleValue::from_percentage(-StringHelp::text_to_float(token.value));
+							bg_pos_x = StyleSetValue::from_percentage(-StringHelp::text_to_float(token.value));
 							x_specified = true;
 						}
 						else if (x_specified && !y_specified)
 						{
-							bg_pos_y = StyleValue::from_percentage(-StringHelp::text_to_float(token.value));
+							bg_pos_y = StyleSetValue::from_percentage(-StringHelp::text_to_float(token.value));
 							y_specified = true;
 						}
 						else
@@ -1074,9 +1074,9 @@ namespace clan
 			}
 
 			if (!x_specified)
-				bg_pos_x = StyleValue::from_keyword("center");
+				bg_pos_x = StyleSetValue::from_keyword("center");
 			else if (!y_specified)
-				bg_pos_y = StyleValue::from_keyword("center");
+				bg_pos_y = StyleSetValue::from_keyword("center");
 
 			positions_x.push_back(bg_pos_x);
 			positions_y.push_back(bg_pos_y);
@@ -1091,23 +1091,23 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue background_repeat;
-		std::vector<StyleValue> background_repeat_x;
-		std::vector<StyleValue> background_repeat_y;
+		StyleSetValue background_repeat;
+		std::vector<StyleSetValue> background_repeat_x;
+		std::vector<StyleSetValue> background_repeat_y;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 
 		if (token.type == StyleTokenType::ident && pos == tokens.size() && equals(token.value, "inherit"))
 		{
-			background_repeat = StyleValue::from_keyword("inherit");
+			background_repeat = StyleSetValue::from_keyword("inherit");
 			setter->set_value("background-repeat", background_repeat);
 			setter->set_value_array("background-repeat-x", background_repeat_x);
 			setter->set_value_array("background-repeat-y", background_repeat_y);
 		}
 		else
 		{
-			background_repeat = StyleValue::from_keyword("array");
+			background_repeat = StyleSetValue::from_keyword("array");
 			background_repeat_x.clear();
 			background_repeat_y.clear();
 			while (true)
@@ -1115,36 +1115,36 @@ namespace clan
 				if (token.type != StyleTokenType::ident)
 					return;
 
-				StyleValue repeat_x, repeat_y;
+				StyleSetValue repeat_x, repeat_y;
 				bool single_style = false;
 
 				if (equals(token.value, "repeat"))
 				{
-					repeat_x = StyleValue::from_keyword("repeat");
+					repeat_x = StyleSetValue::from_keyword("repeat");
 				}
 				else if (equals(token.value, "repeat-x"))
 				{
-					repeat_x = StyleValue::from_keyword("repeat");
-					repeat_y = StyleValue::from_keyword("no-repeat");
+					repeat_x = StyleSetValue::from_keyword("repeat");
+					repeat_y = StyleSetValue::from_keyword("no-repeat");
 					single_style = true;
 				}
 				else if (equals(token.value, "repeat-y"))
 				{
-					repeat_x = StyleValue::from_keyword("no-repeat");
-					repeat_y = StyleValue::from_keyword("repeat");
+					repeat_x = StyleSetValue::from_keyword("no-repeat");
+					repeat_y = StyleSetValue::from_keyword("repeat");
 					single_style = true;
 				}
 				else if (equals(token.value, "no-repeat"))
 				{
-					repeat_x = StyleValue::from_keyword("no-repeat");
+					repeat_x = StyleSetValue::from_keyword("no-repeat");
 				}
 				else if (equals(token.value, "space"))
 				{
-					repeat_x = StyleValue::from_keyword("space");
+					repeat_x = StyleSetValue::from_keyword("space");
 				}
 				else if (equals(token.value, "round"))
 				{
-					repeat_x = StyleValue::from_keyword("round");
+					repeat_x = StyleSetValue::from_keyword("round");
 				}
 				else
 				{
@@ -1172,19 +1172,19 @@ namespace clan
 				{
 					if (equals(token.value, "repeat"))
 					{
-						repeat_y = StyleValue::from_keyword("repeat");
+						repeat_y = StyleSetValue::from_keyword("repeat");
 					}
 					else if (equals(token.value, "no-repeat"))
 					{
-						repeat_y = StyleValue::from_keyword("no-repeat");
+						repeat_y = StyleSetValue::from_keyword("no-repeat");
 					}
 					else if (equals(token.value, "space"))
 					{
-						repeat_y = StyleValue::from_keyword("space");
+						repeat_y = StyleSetValue::from_keyword("space");
 					}
 					else if (equals(token.value, "round"))
 					{
-						repeat_y = StyleValue::from_keyword("round");
+						repeat_y = StyleSetValue::from_keyword("round");
 					}
 					else
 					{
@@ -1218,45 +1218,45 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue background_size;
-		std::vector<StyleValue> background_sizes_x;
-		std::vector<StyleValue> background_sizes_y;
+		StyleSetValue background_size;
+		std::vector<StyleSetValue> background_sizes_x;
+		std::vector<StyleSetValue> background_sizes_y;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 
 		if (token.type == StyleTokenType::ident && pos == tokens.size() && equals(token.value, "inherit"))
 		{
-			background_size = StyleValue::from_keyword("inherit");
+			background_size = StyleSetValue::from_keyword("inherit");
 			setter->set_value("background-size", background_size);
 			setter->set_value_array("background-size-x", background_sizes_x);
 			setter->set_value_array("background-size-y", background_sizes_y);
 		}
 		else
 		{
-			background_size = StyleValue::from_keyword("array");
+			background_size = StyleSetValue::from_keyword("array");
 			while (true)
 			{
-				StyleValue size_x, size_y;
+				StyleSetValue size_x, size_y;
 
 				bool single_value = false;
 				if (token.type == StyleTokenType::ident)
 				{
 					if (equals(token.value, "contain"))
 					{
-						size_x = StyleValue::from_keyword("contain");
-						size_y = StyleValue::from_keyword("contain");
+						size_x = StyleSetValue::from_keyword("contain");
+						size_y = StyleSetValue::from_keyword("contain");
 						single_value = true;
 					}
 					else if (equals(token.value, "cover"))
 					{
-						size_x = StyleValue::from_keyword("cover");
-						size_y = StyleValue::from_keyword("cover");
+						size_x = StyleSetValue::from_keyword("cover");
+						size_y = StyleSetValue::from_keyword("cover");
 						single_value = true;
 					}
 					else if (equals(token.value, "auto"))
 					{
-						size_x = StyleValue::from_keyword("auto");
+						size_x = StyleSetValue::from_keyword("auto");
 					}
 					else
 					{
@@ -1265,7 +1265,7 @@ namespace clan
 				}
 				else if (is_length(token))
 				{
-					StyleValue length;
+					StyleSetValue length;
 					if (parse_length(token, length))
 					{
 						size_x = length;
@@ -1277,7 +1277,7 @@ namespace clan
 				}
 				else if (token.type == StyleTokenType::percentage)
 				{
-					size_x = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+					size_x = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
 				}
 				else
 				{
@@ -1300,11 +1300,11 @@ namespace clan
 					}
 					else if (token.type == StyleTokenType::ident && equals(token.value, "auto"))
 					{
-						size_y = StyleValue::from_keyword("auto");
+						size_y = StyleSetValue::from_keyword("auto");
 					}
 					else if (is_length(token))
 					{
-						StyleValue length;
+						StyleSetValue length;
 						if (parse_length(token, length))
 						{
 							size_y = length;
@@ -1316,7 +1316,7 @@ namespace clan
 					}
 					else if (token.type == StyleTokenType::percentage)
 					{
-						size_y = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+						size_y = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
 					}
 					else
 					{

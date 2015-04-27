@@ -47,7 +47,7 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue margin_widths[4];
+		StyleSetValue margin_widths[4];
 		int count;
 		size_t pos = 0;
 		for (count = 0; count < 4; count++)
@@ -55,11 +55,11 @@ namespace clan
 			StyleToken token = next_token(pos, tokens);
 			if (token.type == StyleTokenType::ident && equals(token.value, "auto"))
 			{
-				margin_widths[count] = StyleValue::from_keyword("auto");
+				margin_widths[count] = StyleSetValue::from_keyword("auto");
 			}
 			else if (token.type == StyleTokenType::ident && equals(token.value, "inherit") && count == 0 && pos == tokens.size())
 			{
-				margin_widths[0] = StyleValue::from_keyword("inherit");
+				margin_widths[0] = StyleSetValue::from_keyword("inherit");
 				setter->set_value("margin-left", margin_widths[0]);
 				setter->set_value("margin-top", margin_widths[0]);
 				setter->set_value("margin-right", margin_widths[0]);
@@ -68,7 +68,7 @@ namespace clan
 			}
 			else if (is_length(token))
 			{
-				StyleValue length;
+				StyleSetValue length;
 				if (parse_length(token, length))
 				{
 					margin_widths[count] = length;
@@ -81,14 +81,14 @@ namespace clan
 			}
 			else if (token.type == StyleTokenType::percentage)
 			{
-				margin_widths[count] = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+				margin_widths[count] = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
 			}
 			else if (token.type == StyleTokenType::delim && token.value == "-")
 			{
 				token = next_token(pos, tokens);
 				if (is_length(token))
 				{
-					StyleValue length;
+					StyleSetValue length;
 					if (parse_length(token, length))
 					{
 						length.number = -length.number;
@@ -102,7 +102,7 @@ namespace clan
 				}
 				else if (token.type == StyleTokenType::percentage)
 				{
-					margin_widths[count] = StyleValue::from_percentage(-StringHelp::text_to_float(token.value));
+					margin_widths[count] = StyleSetValue::from_percentage(-StringHelp::text_to_float(token.value));
 				}
 				else
 				{
@@ -159,22 +159,22 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue width;
+		StyleSetValue width;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
 			if (equals(token.value, "auto"))
-				width = StyleValue::from_keyword("auto");
+				width = StyleSetValue::from_keyword("auto");
 			else if (equals(token.value, "inherit"))
-				width = StyleValue::from_keyword("inherit");
+				width = StyleSetValue::from_keyword("inherit");
 			else
 				return;
 		}
 		else if (is_length(token) && pos == tokens.size())
 		{
-			StyleValue length;
+			StyleSetValue length;
 			if (parse_length(token, length))
 			{
 				width = length;
@@ -186,14 +186,14 @@ namespace clan
 		}
 		else if (token.type == StyleTokenType::percentage && pos == tokens.size())
 		{
-			width = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+			width = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
 		}
 		else if (token.type == StyleTokenType::delim && token.value == "-")
 		{
 			token = next_token(pos, tokens);
 			if (is_length(token) && pos == tokens.size())
 			{
-				StyleValue length;
+				StyleSetValue length;
 				if (parse_length(token, length))
 				{
 					length.number = -length.number;
@@ -206,7 +206,7 @@ namespace clan
 			}
 			else if (token.type == StyleTokenType::percentage && pos == tokens.size())
 			{
-				width = StyleValue::from_percentage(-StringHelp::text_to_float(token.value));
+				width = StyleSetValue::from_percentage(-StringHelp::text_to_float(token.value));
 			}
 			else
 			{

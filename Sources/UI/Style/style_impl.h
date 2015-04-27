@@ -41,8 +41,8 @@ namespace clan
 	class StyleImpl : public StylePropertySetter
 	{
 	public:
-		void set_value(const std::string &name, const StyleValue &value) override;
-		void set_value_array(const std::string &name, const std::vector<StyleValue> &value_array) override;
+		void set_value(const std::string &name, const StyleSetValue &value) override;
+		void set_value_array(const std::string &name, const std::vector<StyleSetValue> &value_array) override;
 
 		std::map<std::string, StyleValueType> prop_type;
 		std::map<std::string, std::string> prop_text;

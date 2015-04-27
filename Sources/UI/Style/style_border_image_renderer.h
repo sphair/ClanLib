@@ -34,7 +34,7 @@ namespace clan
 	class Image;
 	class Colorf;
 	class StyleCascade;
-	class StyleValue;
+	class StyleSetValue;
 	class ViewGeometry;
 
 	class StyleBorderImageRenderer

@@ -41,7 +41,7 @@ namespace clan
 {
 	enum class StyleDimension;
 	class StyleGetValue;
-	class StyleValue;
+	class StyleSetValue;
 	class ImageSource;
 	class StyleToken;
 
@@ -52,10 +52,10 @@ namespace clan
 		virtual ~StylePropertySetter() { }
 
 		/// Set the value for the specified property name
-		virtual void set_value(const std::string &name, const StyleValue &value) = 0;
+		virtual void set_value(const std::string &name, const StyleSetValue &value) = 0;
 
 		/// Set a value array for the specified property name
-		virtual void set_value_array(const std::string &name, const std::vector<StyleValue> &value_array) = 0;
+		virtual void set_value_array(const std::string &name, const std::vector<StyleSetValue> &value_array) = 0;
 	};
 
 	/// Parser interface used during property parsing
@@ -87,15 +87,15 @@ namespace clan
 		static bool is_time(const StyleToken &token);
 		static bool is_frequency(const StyleToken &token);
 		static bool is_resolution(const StyleToken &token);
-		static bool parse_length(const StyleToken &token, StyleValue &out_length);
-		static bool parse_angle(const StyleToken &token, StyleValue &out_angle);
-		static bool parse_time(const StyleToken &token, StyleValue &out_time);
-		static bool parse_frequency(const StyleToken &token, StyleValue &out_frequency);
-		static bool parse_resolution(const StyleToken &token, StyleValue &out_resolution);
+		static bool parse_length(const StyleToken &token, StyleSetValue &out_length);
+		static bool parse_angle(const StyleToken &token, StyleSetValue &out_angle);
+		static bool parse_time(const StyleToken &token, StyleSetValue &out_time);
+		static bool parse_frequency(const StyleToken &token, StyleSetValue &out_frequency);
+		static bool parse_resolution(const StyleToken &token, StyleSetValue &out_resolution);
 		static bool parse_integer(const std::string &value, int &out_int);
 		static bool parse_gradient(const std::vector<StyleToken> &tokens, size_t &in_out_pos, StyleGradient &out_gradient);
 		static bool parse_color(const std::vector<StyleToken> &tokens, size_t &in_out_pos, Colorf &out_color);
-		static bool parse_position(const std::vector<StyleToken> &tokens, size_t &in_out_pos, StyleValue &out_position_x, StyleValue &out_position_y);
+		static bool parse_position(const std::vector<StyleToken> &tokens, size_t &in_out_pos, StyleSetValue &out_position_x, StyleSetValue &out_position_y);
 		static bool equals(const std::string &s1, const std::string &s2);
 		static void debug_parse_error(const std::string &name, const std::vector<StyleToken> &tokens);
 

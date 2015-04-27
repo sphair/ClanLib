@@ -41,8 +41,8 @@ namespace clan
 		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 
 	private:
-		bool parse_grow_shrink(StyleValue &grow, StyleValue &shrink, size_t &parse_pos, const std::vector<StyleToken> &tokens);
-		bool parse_basis(StyleValue &basis, size_t &parse_pos, const std::vector<StyleToken> &tokens);
+		bool parse_grow_shrink(StyleSetValue &grow, StyleSetValue &shrink, size_t &parse_pos, const std::vector<StyleToken> &tokens);
+		bool parse_basis(StyleSetValue &basis, size_t &parse_pos, const std::vector<StyleToken> &tokens);
 	};
 
 	class FlexBasisPropertyParser : public StylePropertyParser
@@ -66,8 +66,8 @@ namespace clan
 		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 
 	private:
-		bool parse_direction(StyleValue &direction, size_t &parse_pos, const std::vector<StyleToken> &tokens);
-		bool parse_wrap(StyleValue &wrap, size_t &parse_pos, const std::vector<StyleToken> &tokens);
+		bool parse_direction(StyleSetValue &direction, size_t &parse_pos, const std::vector<StyleToken> &tokens);
+		bool parse_wrap(StyleSetValue &wrap, size_t &parse_pos, const std::vector<StyleToken> &tokens);
 	};
 
 	class FlexGrowPropertyParser : public StylePropertyParser

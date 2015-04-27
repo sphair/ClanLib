@@ -41,11 +41,11 @@ namespace clan
 		void parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser) override;
 
 	private:
-		bool parse_source(StyleValue &border_image_source, size_t &parse_pos, const std::vector<StyleToken> &tokens);
-		bool parse_slice(StyleValue *border_image_slice, size_t &parse_pos, const std::vector<StyleToken> &tokens);
-		bool parse_width(StyleValue *border_image_width, size_t &parse_pos, const std::vector<StyleToken> &tokens);
-		bool parse_outset(StyleValue *border_image_outset, size_t &parse_pos, const std::vector<StyleToken> &tokens);
-		bool parse_repeat(StyleValue *border_image_repeat, size_t &parse_pos, const std::vector<StyleToken> &tokens);
+		bool parse_source(StyleSetValue &border_image_source, size_t &parse_pos, const std::vector<StyleToken> &tokens);
+		bool parse_slice(StyleSetValue *border_image_slice, size_t &parse_pos, const std::vector<StyleToken> &tokens);
+		bool parse_width(StyleSetValue *border_image_width, size_t &parse_pos, const std::vector<StyleToken> &tokens);
+		bool parse_outset(StyleSetValue *border_image_outset, size_t &parse_pos, const std::vector<StyleToken> &tokens);
+		bool parse_repeat(StyleSetValue *border_image_repeat, size_t &parse_pos, const std::vector<StyleToken> &tokens);
 	};
 
 	class BorderImageOutsetPropertyParser : public StylePropertyParser

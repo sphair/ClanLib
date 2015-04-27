@@ -63,9 +63,9 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue border_width;
-		StyleValue border_style;
-		StyleValue border_color;
+		StyleSetValue border_width;
+		StyleSetValue border_style;
+		StyleSetValue border_color;
 		bool width_specified = false;
 		bool style_specified = false;
 		bool color_specified = false;
@@ -76,7 +76,7 @@ namespace clan
 			Colorf color;
 			if (!color_specified && parse_color(tokens, pos, color))
 			{
-				border_color = StyleValue::from_color(color);
+				border_color = StyleSetValue::from_color(color);
 				color_specified = true;
 			}
 			else
@@ -86,9 +86,9 @@ namespace clan
 				{
 					if (equals(token.value, "inherit") && tokens.size() == 1)
 					{
-						border_width = StyleValue::from_keyword("inherit");
-						border_style = StyleValue::from_keyword("inherit");
-						border_color = StyleValue::from_keyword("inherit");
+						border_width = StyleSetValue::from_keyword("inherit");
+						border_style = StyleSetValue::from_keyword("inherit");
+						border_color = StyleSetValue::from_keyword("inherit");
 
 						setter->set_value("border-left-width", border_width);
 						setter->set_value("border-top-width", border_width);
@@ -109,67 +109,67 @@ namespace clan
 					}
 					else if (!width_specified && equals(token.value, "thin"))
 					{
-						border_width = StyleValue::from_keyword("thin");
+						border_width = StyleSetValue::from_keyword("thin");
 						width_specified = true;
 					}
 					else if (!width_specified && equals(token.value, "medium"))
 					{
-						border_width = StyleValue::from_keyword("medium");
+						border_width = StyleSetValue::from_keyword("medium");
 						width_specified = true;
 					}
 					else if (!width_specified && equals(token.value, "thick"))
 					{
-						border_width = StyleValue::from_keyword("thick");
+						border_width = StyleSetValue::from_keyword("thick");
 						width_specified = true;
 					}
 					else if (!style_specified && equals(token.value, "none"))
 					{
-						border_style = StyleValue::from_keyword("none");
+						border_style = StyleSetValue::from_keyword("none");
 						style_specified = true;
 					}
 					else if (!style_specified && equals(token.value, "hidden"))
 					{
-						border_style = StyleValue::from_keyword("hidden");
+						border_style = StyleSetValue::from_keyword("hidden");
 						style_specified = true;
 					}
 					else if (!style_specified && equals(token.value, "dotted"))
 					{
-						border_style = StyleValue::from_keyword("dotted");
+						border_style = StyleSetValue::from_keyword("dotted");
 						style_specified = true;
 					}
 					else if (!style_specified && equals(token.value, "dashed"))
 					{
-						border_style = StyleValue::from_keyword("dashed");
+						border_style = StyleSetValue::from_keyword("dashed");
 						style_specified = true;
 					}
 					else if (!style_specified && equals(token.value, "solid"))
 					{
-						border_style = StyleValue::from_keyword("solid");
+						border_style = StyleSetValue::from_keyword("solid");
 						style_specified = true;
 					}
 					else if (!style_specified && equals(token.value, "double"))
 					{
-						border_style = StyleValue::from_keyword("double");
+						border_style = StyleSetValue::from_keyword("double");
 						style_specified = true;
 					}
 					else if (!style_specified && equals(token.value, "groove"))
 					{
-						border_style = StyleValue::from_keyword("groove");
+						border_style = StyleSetValue::from_keyword("groove");
 						style_specified = true;
 					}
 					else if (!style_specified && equals(token.value, "ridge"))
 					{
-						border_style = StyleValue::from_keyword("ridge");
+						border_style = StyleSetValue::from_keyword("ridge");
 						style_specified = true;
 					}
 					else if (!style_specified && equals(token.value, "inset"))
 					{
-						border_style = StyleValue::from_keyword("inset");
+						border_style = StyleSetValue::from_keyword("inset");
 						style_specified = true;
 					}
 					else if (!style_specified && equals(token.value, "outset"))
 					{
-						border_style = StyleValue::from_keyword("outset");
+						border_style = StyleSetValue::from_keyword("outset");
 						style_specified = true;
 					}
 					else
@@ -180,7 +180,7 @@ namespace clan
 				}
 				else if (is_length(token))
 				{
-					StyleValue length;
+					StyleSetValue length;
 					if (!width_specified && parse_length(token, length))
 					{
 						border_width = length;
@@ -220,7 +220,7 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue border_colors[4];
+		StyleSetValue border_colors[4];
 		int count;
 		size_t pos = 0;
 		for (count = 0; count < 4; count++)
@@ -228,7 +228,7 @@ namespace clan
 			Colorf color;
 			if (parse_color(tokens, pos, color))
 			{
-				border_colors[count] = StyleValue::from_color(color);
+				border_colors[count] = StyleSetValue::from_color(color);
 			}
 			else
 			{
@@ -239,7 +239,7 @@ namespace clan
 					{
 						if (count == 0 && pos == tokens.size())
 						{
-							border_colors[0] = StyleValue::from_keyword("inherit");
+							border_colors[0] = StyleSetValue::from_keyword("inherit");
 
 							setter->set_value("border-left-color", border_colors[0]);
 							setter->set_value("border-right-color", border_colors[0]);
@@ -308,7 +308,7 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue border_styles[4];
+		StyleSetValue border_styles[4];
 		int count;
 		size_t pos = 0;
 		for (count = 0; count < 4; count++)
@@ -318,49 +318,49 @@ namespace clan
 			{
 				if (equals(token.value, "none"))
 				{
-					border_styles[count] = StyleValue::from_keyword("none");
+					border_styles[count] = StyleSetValue::from_keyword("none");
 				}
 				else if (equals(token.value, "hidden"))
 				{
-					border_styles[count] = StyleValue::from_keyword("hidden");
+					border_styles[count] = StyleSetValue::from_keyword("hidden");
 				}
 				else if (equals(token.value, "dotted"))
 				{
-					border_styles[count] = StyleValue::from_keyword("dotted");
+					border_styles[count] = StyleSetValue::from_keyword("dotted");
 				}
 				else if (equals(token.value, "dashed"))
 				{
-					border_styles[count] = StyleValue::from_keyword("dashed");
+					border_styles[count] = StyleSetValue::from_keyword("dashed");
 				}
 				else if (equals(token.value, "solid"))
 				{
-					border_styles[count] = StyleValue::from_keyword("solid");
+					border_styles[count] = StyleSetValue::from_keyword("solid");
 				}
 				else if (equals(token.value, "double"))
 				{
-					border_styles[count] = StyleValue::from_keyword("double");
+					border_styles[count] = StyleSetValue::from_keyword("double");
 				}
 				else if (equals(token.value, "groove"))
 				{
-					border_styles[count] = StyleValue::from_keyword("groove");
+					border_styles[count] = StyleSetValue::from_keyword("groove");
 				}
 				else if (equals(token.value, "ridge"))
 				{
-					border_styles[count] = StyleValue::from_keyword("ridge");
+					border_styles[count] = StyleSetValue::from_keyword("ridge");
 				}
 				else if (equals(token.value, "inset"))
 				{
-					border_styles[count] = StyleValue::from_keyword("inset");
+					border_styles[count] = StyleSetValue::from_keyword("inset");
 				}
 				else if (equals(token.value, "outset"))
 				{
-					border_styles[count] = StyleValue::from_keyword("outset");
+					border_styles[count] = StyleSetValue::from_keyword("outset");
 				}
 				else if (equals(token.value, "inherit"))
 				{
 					if (count == 0 && pos == tokens.size())
 					{
-						border_styles[0] = StyleValue::from_keyword("inherit");
+						border_styles[0] = StyleSetValue::from_keyword("inherit");
 						setter->set_value("border-left-style", border_styles[0]);
 						setter->set_value("border-top-style", border_styles[0]);
 						setter->set_value("border-right-style", border_styles[0]);
@@ -427,7 +427,7 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue border_widths[4];
+		StyleSetValue border_widths[4];
 		int count;
 		size_t pos = 0;
 		for (count = 0; count < 4; count++)
@@ -437,19 +437,19 @@ namespace clan
 			{
 				if (equals(token.value, "thin"))
 				{
-					border_widths[count] = StyleValue::from_keyword("thin");
+					border_widths[count] = StyleSetValue::from_keyword("thin");
 				}
 				else if (equals(token.value, "medium"))
 				{
-					border_widths[count] = StyleValue::from_keyword("medium");
+					border_widths[count] = StyleSetValue::from_keyword("medium");
 				}
 				else if (equals(token.value, "thick"))
 				{
-					border_widths[count] = StyleValue::from_keyword("thick");
+					border_widths[count] = StyleSetValue::from_keyword("thick");
 				}
 				else if (equals(token.value, "inherit") && count == 0 && pos == tokens.size())
 				{
-					border_widths[0] = StyleValue::from_keyword("inherit");
+					border_widths[0] = StyleSetValue::from_keyword("inherit");
 
 					setter->set_value("border-left-width", border_widths[0]);
 					setter->set_value("border-top-width", border_widths[0]);
@@ -465,7 +465,7 @@ namespace clan
 			}
 			else if (is_length(token))
 			{
-				StyleValue length;
+				StyleSetValue length;
 				if (parse_length(token, length))
 				{
 					border_widths[count] = length;
@@ -525,9 +525,9 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue border_width;
-		StyleValue border_style;
-		StyleValue border_color;
+		StyleSetValue border_width;
+		StyleSetValue border_style;
+		StyleSetValue border_color;
 
 		bool width_specified = false;
 		bool style_specified = false;
@@ -539,7 +539,7 @@ namespace clan
 			Colorf color;
 			if (!color_specified && parse_color(tokens, pos, color))
 			{
-				border_color = StyleValue::from_color(color);
+				border_color = StyleSetValue::from_color(color);
 				color_specified = true;
 			}
 			else
@@ -549,9 +549,9 @@ namespace clan
 				{
 					if (equals(token.value, "inherit") && tokens.size() == 1)
 					{
-						border_width = StyleValue::from_keyword("inherit");
-						border_style = StyleValue::from_keyword("inherit");
-						border_color = StyleValue::from_keyword("inherit");
+						border_width = StyleSetValue::from_keyword("inherit");
+						border_style = StyleSetValue::from_keyword("inherit");
+						border_color = StyleSetValue::from_keyword("inherit");
 						setter->set_value(name + "-width", border_width);
 						setter->set_value(name + "-style", border_style);
 						setter->set_value(name + "-color", border_color);
@@ -559,67 +559,67 @@ namespace clan
 					}
 					else if (!width_specified && equals(token.value, "thin"))
 					{
-						border_width = StyleValue::from_keyword("thin");
+						border_width = StyleSetValue::from_keyword("thin");
 						width_specified = true;
 					}
 					else if (!width_specified && equals(token.value, "medium"))
 					{
-						border_width = StyleValue::from_keyword("medium");
+						border_width = StyleSetValue::from_keyword("medium");
 						width_specified = true;
 					}
 					else if (!width_specified && equals(token.value, "thick"))
 					{
-						border_width = StyleValue::from_keyword("thick");
+						border_width = StyleSetValue::from_keyword("thick");
 						width_specified = true;
 					}
 					else if (!style_specified && equals(token.value, "none"))
 					{
-						border_style = StyleValue::from_keyword("none");
+						border_style = StyleSetValue::from_keyword("none");
 						style_specified = true;
 					}
 					else if (!style_specified && equals(token.value, "hidden"))
 					{
-						border_style = StyleValue::from_keyword("hidden");
+						border_style = StyleSetValue::from_keyword("hidden");
 						style_specified = true;
 					}
 					else if (!style_specified && equals(token.value, "dotted"))
 					{
-						border_style = StyleValue::from_keyword("dotted");
+						border_style = StyleSetValue::from_keyword("dotted");
 						style_specified = true;
 					}
 					else if (!style_specified && equals(token.value, "dashed"))
 					{
-						border_style = StyleValue::from_keyword("dashed");
+						border_style = StyleSetValue::from_keyword("dashed");
 						style_specified = true;
 					}
 					else if (!style_specified && equals(token.value, "solid"))
 					{
-						border_style = StyleValue::from_keyword("solid");
+						border_style = StyleSetValue::from_keyword("solid");
 						style_specified = true;
 					}
 					else if (!style_specified && equals(token.value, "double"))
 					{
-						border_style = StyleValue::from_keyword("double");
+						border_style = StyleSetValue::from_keyword("double");
 						style_specified = true;
 					}
 					else if (!style_specified && equals(token.value, "groove"))
 					{
-						border_style = StyleValue::from_keyword("groove");
+						border_style = StyleSetValue::from_keyword("groove");
 						style_specified = true;
 					}
 					else if (!style_specified && equals(token.value, "ridge"))
 					{
-						border_style = StyleValue::from_keyword("ridge");
+						border_style = StyleSetValue::from_keyword("ridge");
 						style_specified = true;
 					}
 					else if (!style_specified && equals(token.value, "inset"))
 					{
-						border_style = StyleValue::from_keyword("inset");
+						border_style = StyleSetValue::from_keyword("inset");
 						style_specified = true;
 					}
 					else if (!style_specified && equals(token.value, "outset"))
 					{
-						border_style = StyleValue::from_keyword("outset");
+						border_style = StyleSetValue::from_keyword("outset");
 						style_specified = true;
 					}
 					else
@@ -630,7 +630,7 @@ namespace clan
 				}
 				else if (is_length(token))
 				{
-					StyleValue length;
+					StyleSetValue length;
 					if (!width_specified && parse_length(token, length))
 					{
 						border_width = length;
@@ -659,13 +659,13 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue border_color;
+		StyleSetValue border_color;
 
 		size_t pos = 0;
 		Colorf color;
 		if (parse_color(tokens, pos, color) && pos == tokens.size())
 		{
-			border_color = StyleValue::from_color(color);
+			border_color = StyleSetValue::from_color(color);
 			setter->set_value(name, border_color);
 		}
 		else
@@ -675,7 +675,7 @@ namespace clan
 			{
 				if (equals(token.value, "inherit"))
 				{
-					border_color = StyleValue::from_keyword("inherit");
+					border_color = StyleSetValue::from_keyword("inherit");
 					setter->set_value(name, border_color);
 				}
 			}
@@ -686,34 +686,34 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue style;
+		StyleSetValue style;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
 			if (equals(token.value, "none"))
-				style = StyleValue::from_keyword("none");
+				style = StyleSetValue::from_keyword("none");
 			else if (equals(token.value, "hidden"))
-				style = StyleValue::from_keyword("hidden");
+				style = StyleSetValue::from_keyword("hidden");
 			else if (equals(token.value, "dotted"))
-				style = StyleValue::from_keyword("dotted");
+				style = StyleSetValue::from_keyword("dotted");
 			else if (equals(token.value, "dashed"))
-				style = StyleValue::from_keyword("dashed");
+				style = StyleSetValue::from_keyword("dashed");
 			else if (equals(token.value, "solid"))
-				style = StyleValue::from_keyword("solid");
+				style = StyleSetValue::from_keyword("solid");
 			else if (equals(token.value, "double"))
-				style = StyleValue::from_keyword("double");
+				style = StyleSetValue::from_keyword("double");
 			else if (equals(token.value, "groove"))
-				style = StyleValue::from_keyword("groove");
+				style = StyleSetValue::from_keyword("groove");
 			else if (equals(token.value, "ridge"))
-				style = StyleValue::from_keyword("ridge");
+				style = StyleSetValue::from_keyword("ridge");
 			else if (equals(token.value, "inset"))
-				style = StyleValue::from_keyword("inset");
+				style = StyleSetValue::from_keyword("inset");
 			else if (equals(token.value, "outset"))
-				style = StyleValue::from_keyword("outset");
+				style = StyleSetValue::from_keyword("outset");
 			else if (equals(token.value, "inherit"))
-				style = StyleValue::from_keyword("inherit");
+				style = StyleSetValue::from_keyword("inherit");
 			else
 				return;
 
@@ -725,20 +725,20 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue width;
+		StyleSetValue width;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
 			if (equals(token.value, "thin"))
-				width = StyleValue::from_keyword("thin");
+				width = StyleSetValue::from_keyword("thin");
 			else if (equals(token.value, "medium"))
-				width = StyleValue::from_keyword("medium");
+				width = StyleSetValue::from_keyword("medium");
 			else if (equals(token.value, "thick"))
-				width = StyleValue::from_keyword("thick");
+				width = StyleSetValue::from_keyword("thick");
 			else if (equals(token.value, "inherit"))
-				width = StyleValue::from_keyword("inherit");
+				width = StyleSetValue::from_keyword("inherit");
 			else
 				return;
 
@@ -746,7 +746,7 @@ namespace clan
 		}
 		else if (is_length(token) && pos == tokens.size())
 		{
-			StyleValue length;
+			StyleSetValue length;
 			if (parse_length(token, length))
 			{
 				width = length;
@@ -760,15 +760,15 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue radius_x[4];
-		StyleValue radius_y[4];
+		StyleSetValue radius_x[4];
+		StyleSetValue radius_y[4];
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && equals(token.value, "inherit") && pos == tokens.size())
 		{
-			radius_x[0] = StyleValue::from_keyword("inherit");
-			radius_y[0] = StyleValue::from_keyword("inherit");
+			radius_x[0] = StyleSetValue::from_keyword("inherit");
+			radius_y[0] = StyleSetValue::from_keyword("inherit");
 			setter->set_value("border-top-left-radius-x", radius_x[0]);
 			setter->set_value("border-top-left-radius-y", radius_y[0]);
 			setter->set_value("border-top-right-radius-x", radius_x[0]);
@@ -795,7 +795,7 @@ namespace clan
 			}
 			else if (token.type == StyleTokenType::percentage)
 			{
-				radius_x[i] = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+				radius_x[i] = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
 				radius_y[i] = radius_x[i];
 			}
 			else
@@ -823,7 +823,7 @@ namespace clan
 				}
 				else if (token.type == StyleTokenType::percentage)
 				{
-					radius_y[i] = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+					radius_y[i] = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
 				}
 				else
 				{
@@ -884,15 +884,15 @@ namespace clan
 	{
 		auto &tokens = parser.tokens;
 
-		StyleValue radius_x;
-		StyleValue radius_y;
+		StyleSetValue radius_x;
+		StyleSetValue radius_y;
 
 		size_t pos = 0;
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && equals(token.value, "inherit") && pos == tokens.size())
 		{
-			radius_x = StyleValue::from_keyword("inherit");
-			radius_y = StyleValue::from_keyword("inherit");
+			radius_x = StyleSetValue::from_keyword("inherit");
+			radius_y = StyleSetValue::from_keyword("inherit");
 			setter->set_value(name + "-x", radius_x);
 			setter->set_value(name + "-y", radius_y);
 			return;
@@ -908,7 +908,7 @@ namespace clan
 		}
 		else if (token.type == StyleTokenType::percentage)
 		{
-			radius_x = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+			radius_x = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
 			radius_y = radius_x;
 		}
 		else
@@ -927,7 +927,7 @@ namespace clan
 			}
 			else if (token.type == StyleTokenType::percentage)
 			{
-				radius_y = StyleValue::from_percentage(StringHelp::text_to_float(token.value));
+				radius_y = StyleSetValue::from_percentage(StringHelp::text_to_float(token.value));
 
 				setter->set_value(name + "-x", radius_x);
 				setter->set_value(name + "-y", radius_y);
