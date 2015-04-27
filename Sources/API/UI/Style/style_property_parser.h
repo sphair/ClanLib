@@ -31,9 +31,10 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include <initializer_list>
 #include "../../Display/2D/color.h"
-#include "style.h"
+#include "style_get_value.h"
+#include "style_set_value.h"
+#include "style_set_image.h"
 #include "style_token.h"
 #include "style_tokenizer.h"
 

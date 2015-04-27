@@ -28,7 +28,6 @@
 
 #include "UI/precomp.h"
 #include "background.h"
-
 #include "API/UI/Image/image_source.h"
 
 namespace clan

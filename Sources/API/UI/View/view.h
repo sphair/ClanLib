@@ -34,6 +34,8 @@
 #include "../../UI/Events/event.h"
 #include "../View/view_geometry.h"
 #include "../Style/style.h"
+#include "../Style/style_cascade.h"
+#include "../Style/style_get_value.h"
 #include "focus_policy.h"
 #include <vector>
 #include <memory>

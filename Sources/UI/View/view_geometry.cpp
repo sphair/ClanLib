@@ -28,7 +28,8 @@
 
 #include "UI/precomp.h"
 #include "API/UI/View/view_geometry.h"
-#include "API/UI/Style/style.h"
+#include "API/UI/Style/style_cascade.h"
+#include "API/UI/Style/style_get_value.h"
 
 namespace clan
 {

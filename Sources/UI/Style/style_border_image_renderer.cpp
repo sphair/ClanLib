@@ -30,6 +30,8 @@
 #include "style_border_image_renderer.h"
 #include "API/UI/View/view_geometry.h"
 #include "API/UI/Style/style.h"
+#include "API/UI/Style/style_cascade.h"
+#include "API/UI/Style/style_get_value.h"
 #include "API/UI/UIThread/ui_thread.h"
 #include "API/Display/2D/canvas.h"
 #include "API/Display/2D/image.h"
