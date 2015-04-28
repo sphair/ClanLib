@@ -1,6 +1,6 @@
-EXAMPLE_BIN=helloworld
+EXAMPLE_BIN=textureview
 OBJF = \
-./Sources/helloworld.o \
+./Sources/gui.o \
 ../../ThemeAero/Sources/theme.o \
 ./Sources/precomp.o
 
