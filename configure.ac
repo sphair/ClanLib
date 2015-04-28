@@ -374,7 +374,7 @@ if test "$enable_clanDisplay" != "no"; then
 		if test "$WIN32" = "yes"; then
 			CLANLIB_CHECK_LIB(opengl32, [`cat $srcdir/Setup/Unix/Tests/opengl.cpp`], clanGL, [ *** Cannot find opengl32], [-lopengl32])
 		else
-			CLANLIB_CHECK_LIB(GL, [`cat $srcdir/Setup/Unix/Tests/opengl.cpp`], clanGL, [ *** Cannot find GL. Try installing libgl-mesa-dev], [ $LIBPTHREAD -lGL ])
+			CLANLIB_CHECK_LIB(GL, [`cat $srcdir/Setup/Unix/Tests/opengl.cpp`], clanGL, [ *** Cannot find GL. Try installing libgl1-mesa-dev], [ $LIBPTHREAD -lGL ])
 			if test "$enable_clanGL" != "no" && test "$X11" = "yes"; then
 			
 				dnl Check for optional usage of /X11/extensions/Xrender.h
