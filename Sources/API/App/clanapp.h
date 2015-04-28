@@ -51,9 +51,6 @@ namespace clan
 		/// If the function returns false the main loop will end and the application will exit.
 		virtual bool update() = 0;
 
-		/// \brief Set update handler to be called as often as possible and preferrably synchronized with the monitor
-		static void use_animation_frame_timing(int swap_interval = 1);
-
 		/// \brief Set update handler to wait a certain amount of milliseconds between each update
 		static void use_timeout_timing(int timeout_ms);
 

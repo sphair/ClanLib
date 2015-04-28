@@ -71,11 +71,6 @@ namespace clan
 		return command_line_args;
 	}
 
-	void Application::use_animation_frame_timing(int swap_interval)
-	{
-		timing_timeout = 0;
-	}
-
 	void Application::use_timeout_timing(int timeout)
 	{
 		timing_timeout = timeout;
