@@ -113,7 +113,7 @@ FontEngine_Freetype::FontEngine_Freetype(const FontDescription &description, Dat
 		height = height*face->units_per_EM/face->height;
 	}
 
-	float dpi = 96.0f * pixel_ratio;
+	float dpi = 72.0f * pixel_ratio;	// TODO: Why does this require setting to 72.0 to match the win32 rendered font size (instead of the expected 96dpi)
 
 	// if the device is 72 DCL_PI then 1 point becomes 1 pixel
 	FT_Set_Char_Size(face, (int)(description.get_average_width()*64.0f), (int)(height*64.0f), dpi, dpi);
