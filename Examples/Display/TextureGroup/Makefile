@@ -1,6 +1,12 @@
-EXAMPLE_BIN=basic2d
-OBJF = Sources/basic2d.o Sources/precomp.o
-LIBS=clanApp clanDisplay clanCore clanGL
+EXAMPLE_BIN=texturegroup
+OBJF = \
+./Sources/atlas.o \
+./Sources/precomp.o \
+../../ThemeAero/Sources/theme.o \
+./Sources/options.o
+
+CXXFLAGS += -I Sources -I ./
+LIBS=clanApp clanDisplay clanCore clanGL clanUI
 
 include ../../Makefile.conf
 

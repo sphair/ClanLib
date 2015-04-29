@@ -71,8 +71,8 @@ Atlas::Atlas()
 void Atlas::scan()
 {
 	texture_group = clan::TextureGroup(clan::Size(options->group_size, options->group_size));
-	scan_folder("../../ThemeAero/Resources/");
-	scan_folder("../../Display/Basic2D/Resources/");
+	scan_folder("../../ThemeAero/Resources");
+	scan_folder("../../Display/Basic2D/Resources");
 
 }
 void Atlas::scan_folder(const std::string &folder_name)
