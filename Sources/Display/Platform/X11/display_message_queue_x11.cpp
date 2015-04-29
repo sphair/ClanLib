@@ -34,6 +34,7 @@
 #include "x11_window.h"
 #include <dlfcn.h>
 #include "../../setup_display.h"
+#include "API/Core/System/system.h"
 
 namespace clan
 {
@@ -133,7 +134,8 @@ namespace clan
 
 	bool DisplayMessageQueue_X11::process(int timeout_ms)
 	{
-		auto end_time = std::chrono::steady_clock::now() + std::chrono::milliseconds(timeout_ms);
+		auto time_start = System::get_time();
+		int x11_handle = ConnectionNumber(display);
 
 		while (true)
 		{
@@ -141,25 +143,18 @@ namespace clan
 			process_queued_events(); // What is this? If its related to Event then it should be removed
 			process_window_sockets(); // Same for this thing
 
-			if (end_time <= std::chrono::steady_clock::now())
-				break;
-
-			int x11_handle = ConnectionNumber(display);
+			auto time_now = System::get_time();
+			int time_remaining_ms = timeout_ms - (time_now - time_start);
 
 			struct timeval tv;
-			if (timeout_ms > 0)
+			if (time_remaining_ms > 0)
 			{
-				tv.tv_sec = timeout_ms / 1000;
-				tv.tv_usec = (timeout_ms % 1000) * 1000;
-			}
-			else if (timeout_ms == 0)
-			{
-				tv.tv_sec = 0;
-				tv.tv_usec = 0;
+				tv.tv_sec = time_remaining_ms / 1000;
+				tv.tv_usec = (time_remaining_ms % 1000) * 1000;
 			}
 			else
 			{
-				tv.tv_sec = 0x7FFFFFFF;
+				tv.tv_sec = 0;
 				tv.tv_usec = 0;
 			}
 

@@ -57,7 +57,7 @@ Basic2D::Basic2D()
 
 	// Load a sprite from a png-file
 	logo = clan::Image(canvas, "Resources/logo.png");
-	font = clan::Font("tahoma", 48);
+	font = clan::Font("tahoma", 24);
 
 	game_time.reset();
 }
