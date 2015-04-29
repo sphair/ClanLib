@@ -49,8 +49,6 @@ class SoundProviderFactory
 /// \{
 
 public:
-	/// \brief Map of the class factories for each sound provider type.
-	static std::map<std::string, SoundProviderType *> types;
 
 /// \}
 /// \name Operations

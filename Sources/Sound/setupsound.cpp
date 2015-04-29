@@ -58,10 +58,15 @@ public:
 
 	static void add_cache_factory(ResourceManager &manager, const XMLResourceDocument &doc);
 
-	SoundProviderType *providertype_wave = nullptr;;
-	SoundProviderType *providertype_ogg = nullptr;;
+	SoundProviderType *providertype_wave = nullptr;
+	SoundProviderType *providertype_ogg = nullptr;
+
+	static SetupSound_Impl *instance;
+	std::map<std::string, SoundProviderType *> sound_provider_factory_types;
 
 };
+SetupSound_Impl *SetupSound_Impl::instance = nullptr;
+
 
 
 void SetupSound::start()
@@ -71,12 +76,13 @@ void SetupSound::start()
 	if (SetupCore::instance.module_sound)
 		return;
 
-	SetupCore::start();	// Display depends on core.
+	SetupCore::start();	// Sound depends on core.
 	SetupCore::instance.module_sound = clan::make_unique<SetupSound_Impl>();
 }
 
 SetupSound_Impl::SetupSound_Impl()
 {
+	instance = this;
 	providertype_wave = new SoundProviderType_Register<SoundProvider_Wave>("wav");
 	providertype_ogg = new SoundProviderType_Register<SoundProvider_Vorbis>("ogg");
 	XMLResourceManager::add_cache_factory(std::function<void(ResourceManager &, const XMLResourceDocument &)>(&SetupSound_Impl::add_cache_factory));
@@ -86,11 +92,19 @@ SetupSound_Impl::~SetupSound_Impl()
 {
 	delete providertype_wave;
 	delete providertype_ogg;
+	instance = nullptr;
 }
 
 void SetupSound_Impl::add_cache_factory(ResourceManager &manager, const XMLResourceDocument &doc)
 {
 	SoundCache::set(manager, std::shared_ptr<SoundCache>(new XMLSoundCache(doc)));
+}
+
+std::map<std::string, SoundProviderType *> *SetupSound::get_sound_provider_factory_types()
+{
+	if (!SetupSound_Impl::instance)
+		start();
+	return &SetupSound_Impl::instance->sound_provider_factory_types;
 }
 
 }

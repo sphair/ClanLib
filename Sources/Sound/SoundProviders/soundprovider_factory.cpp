@@ -45,11 +45,6 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// SoundProviderFactory attributes:
-
-std::map<std::string, SoundProviderType *> SoundProviderFactory::types;
-
-/////////////////////////////////////////////////////////////////////////////
 // SoundProviderFactory operations:
 
 SoundProvider *SoundProviderFactory::load(
@@ -59,6 +54,7 @@ SoundProvider *SoundProviderFactory::load(
 	const std::string &type)
 {
 	SetupSound::start();
+	auto &types = *SetupSound::get_sound_provider_factory_types();
 
 	if (!type.empty())
 	{
@@ -96,6 +92,8 @@ SoundProvider *SoundProviderFactory::load(
 	const std::string &type)
 {
 	SetupSound::start();
+	auto &types = *SetupSound::get_sound_provider_factory_types();
+
 	if (types.find(type) == types.end()) throw Exception("Unknown sound provider type " + type);
 
 	SoundProviderType *factory = types[type];

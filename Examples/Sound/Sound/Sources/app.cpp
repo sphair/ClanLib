@@ -65,13 +65,8 @@ App::App()
 
 bool App::update()
 {
-	game_time.update();
-
-	// Clear the display in a dark blue nuance
 	canvas.clear(clan::Colorf(0.0f, 0.0f, 0.2f));
-
 	font.draw_text(canvas, 32, 32, "Press 1 or 2", clan::Colorf::white);
-
 	window.flip(1);
 
 	return !quit;
@@ -89,7 +84,6 @@ void App::on_input_up(const clan::InputEvent &key)
 
 void App::on_input_down(const clan::InputEvent &key)
 {
-
 	if (key.str == "1")
 	{
 		sfx_pacman_start.play();

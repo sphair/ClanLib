@@ -34,6 +34,7 @@
 
 #include "API/Sound/SoundProviders/soundprovider_type.h"
 #include "API/Sound/SoundProviders/soundprovider_factory.h"
+#include "../setupsound.h"
 
 namespace clan
 {
@@ -43,18 +44,20 @@ namespace clan
 
 SoundProviderType::SoundProviderType(const std::string &type)
 {
-	SoundProviderFactory::types[type] = this;
+	auto &types = *SetupSound::get_sound_provider_factory_types();
+	types[type] = this;
 }
 
 SoundProviderType::~SoundProviderType()
 {
+	auto &types = *SetupSound::get_sound_provider_factory_types();
 	std::map<std::string, SoundProviderType *>::iterator it;
 	
-	for (it = SoundProviderFactory::types.begin(); it != SoundProviderFactory::types.end(); it++)
+	for (it = types.begin(); it != types.end(); it++)
 	{
 		if (it->second == this)
 		{
-			SoundProviderFactory::types.erase(it);
+			types.erase(it);
 			break;
 		}
 	}
