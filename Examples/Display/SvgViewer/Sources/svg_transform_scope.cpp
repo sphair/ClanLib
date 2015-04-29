@@ -37,7 +37,7 @@ SvgTransformScope::SvgTransformScope(clan::Canvas &canvas, clan::DomElement &e) 
 	canvas.mult_transform(parse_transform(e, transform_active));
 }
 
-SvgTransformScope::SvgTransformScope(clan::Canvas &canvas, clan::Mat4f &transform, bool transform_active) : canvas(canvas), transform_active(transform_active)
+SvgTransformScope::SvgTransformScope(clan::Canvas &canvas, const clan::Mat4f &transform, bool transform_active) : canvas(canvas), transform_active(transform_active)
 {
 	old_transform = canvas.get_transform();
 	canvas.mult_transform(transform);

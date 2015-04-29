@@ -33,7 +33,8 @@
 
 Svg::Svg(const std::string &filename)
 {
-	xml.load(clan::File(filename), false);
+	auto device = clan::File(filename);
+	xml.load(device, false);
 }
 
 void Svg::render(clan::Canvas &canvas)
@@ -41,7 +42,8 @@ void Svg::render(clan::Canvas &canvas)
 	if (!root_node)
 	{
 		SvgTreeBuilder builder(canvas);
-		builder.build(xml.get_document_element());
+		auto element = xml.get_document_element();
+		builder.build(element);
 		root_node = builder.node;
 	}
 

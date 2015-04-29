@@ -34,7 +34,7 @@ class SvgTransformScope
 {
 public:
 	SvgTransformScope(clan::Canvas &canvas, clan::DomElement &e);
-	SvgTransformScope(clan::Canvas &canvas, clan::Mat4f &transform, bool transform_active);
+	SvgTransformScope(clan::Canvas &canvas, const clan::Mat4f &transform, bool transform_active);
 	~SvgTransformScope();
 
 	static clan::Mat4f parse_transform(clan::DomElement &e, bool &transform_active);

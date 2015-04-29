@@ -64,7 +64,8 @@ void SvgRenderer::line(clan::DomElement &e)
 	float y0 = (float)SvgAttributeReader::single_length(e, "y0");
 	float x1 = (float)SvgAttributeReader::single_length(e, "x1");
 	float y1 = (float)SvgAttributeReader::single_length(e, "y1");
-	render_path(clan::Path::line(x0, y0, x1, y1), e);
+	auto path = clan::Path::line(x0, y0, x1, y1);
+	render_path(path, e);
 }
 
 void SvgRenderer::polyline(clan::DomElement &e)
@@ -81,7 +82,10 @@ void SvgRenderer::rect(clan::DomElement &e)
 	float width = (float)SvgAttributeReader::single_length(e, "width");
 	float height = (float)SvgAttributeReader::single_length(e, "height");
 	if (width != 0.0f && height != 0.0f)
-		render_path(clan::Path::rect(x, y, width, height), e);
+	{
+		auto path = clan::Path::rect(x, y, width, height);
+		render_path(path, e);
+	}
 }
 
 void SvgRenderer::circle(clan::DomElement &e)
@@ -92,7 +96,10 @@ void SvgRenderer::circle(clan::DomElement &e)
 	float cy = (float)SvgAttributeReader::single_length(e, "cy");
 	float r = (float)SvgAttributeReader::single_length(e, "r");
 	if (r != 0.0f)
-		render_path(clan::Path::circle(cx, cy, r), e);
+	{
+		auto path = clan::Path::circle(cx, cy, r);
+		render_path(path, e);
+	}
 }
 
 void SvgRenderer::ellipse(clan::DomElement &e)
@@ -104,7 +111,10 @@ void SvgRenderer::ellipse(clan::DomElement &e)
 	float rx = (float)SvgAttributeReader::single_length(e, "rx");
 	float ry = (float)SvgAttributeReader::single_length(e, "ry");
 	if (rx != 0.0f && ry != 0.0f)
-		render_path(clan::Path::ellipse(cx, cy, rx, ry), e);
+	{
+		auto path = clan::Path::ellipse(cx, cy, rx, ry);
+		render_path(path, e);
+	}
 }
 
 void SvgRenderer::polygon(clan::DomElement &e)
