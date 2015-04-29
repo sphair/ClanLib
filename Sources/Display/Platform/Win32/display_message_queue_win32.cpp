@@ -34,6 +34,7 @@
 #include "display_message_queue_win32.h"
 #include "win32_window.h"
 #include "../../setup_display.h"
+#include "API/Core/System/system.h"
 
 namespace clan
 {
@@ -77,8 +78,7 @@ namespace clan
 
 	bool DisplayMessageQueue_Win32::process(int timeout_ms)
 	{
-		auto end_time = std::chrono::steady_clock::now() + std::chrono::milliseconds(timeout_ms);
-
+		auto time_start = System::get_time();
 		while (true)
 		{
 			while (true)
@@ -96,10 +96,13 @@ namespace clan
 				}
 			}
 
-			if (end_time <= std::chrono::steady_clock::now())
+			auto time_now = System::get_time();
+			int64_t time_remaining_ms = timeout_ms - (time_now - time_start);
+
+			if (time_remaining_ms <= 0)
 				break;
 
-			if (MsgWaitForMultipleObjects(0, 0, FALSE, timeout_ms, QS_ALLEVENTS | QS_SENDMESSAGE | QS_RAWINPUT) == WAIT_TIMEOUT)
+			if (MsgWaitForMultipleObjects(0, 0, FALSE, time_remaining_ms, QS_ALLEVENTS | QS_SENDMESSAGE | QS_RAWINPUT) == WAIT_TIMEOUT)
 				break;
 		}
 
