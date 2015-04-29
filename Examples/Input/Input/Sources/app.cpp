@@ -53,7 +53,7 @@ App::App()
 	max_joysticks = window.get_ic().get_joystick_count();
 	for (int joystick_number=0; joystick_number < max_joysticks; joystick_number++)
 	{
-		window.get_ic().get_joystick(joystick_number).sig_key_down().connect([=](const clan::InputEvent &input_event){on_joystick_down(input_event, joystick_number); });
+		sc.connect(window.get_ic().get_joystick(joystick_number).sig_key_down(), [=](const clan::InputEvent &input_event){on_joystick_down(input_event, joystick_number); });
 	}
 
 	canvas = Canvas(window);
