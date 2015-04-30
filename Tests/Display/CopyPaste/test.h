@@ -30,15 +30,9 @@
 #include <ClanLib/core.h>
 #include <ClanLib/application.h>
 #include <ClanLib/display.h>
+#include <ClanLib/gl.h>
 using namespace clan;
 
-//#define USE_D3D
-
-#ifdef USE_D3D
-#include <ClanLib/d3d.h>
-#else
-#include <ClanLib/gl.h>
-#endif
 
 #ifndef WIN32
 #include <sys/types.h>
@@ -49,10 +43,11 @@ using namespace clan;
 
 extern Rect get_window_frame_size();
 
-class TestApp
+class TestApp : public clan::Application
 {
 public:
-	virtual int main(const std::vector<std::string> &args);
+	TestApp();
+	bool update() override;
 
 private:
 	void on_window_close();
@@ -70,5 +65,10 @@ private:
 
 private:
 	bool quit;
+	clan::SlotContainer sc;
+	clan::DisplayWindow window;
+	clan::Canvas canvas;
+	clan::Image image;
+
 };
 

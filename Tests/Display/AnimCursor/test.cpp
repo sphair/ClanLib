@@ -32,67 +32,48 @@
 #include <ClanLib/gl.h>
 using namespace clan;
 
-// This is the Application class (That is instantiated by the Program Class)
-class App
+class App : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
+	App();
+	bool update() override;
+
 
 private:
 	void on_input_up(const InputEvent &key);
 	void on_window_close();
 
 private:
+	clan::SlotContainer sc;
+	clan::DisplayWindow window;
+	clan::Canvas canvas;
+	clan::Font font;
+
 	bool quit;
 };
 
-// This is the Program class that is called by Application
-class Program
+App::App()
 {
-public:
-	static int main(const std::vector<std::string> &args)
-	{
-		// Initialize ClanLib base components
-		SetupCore setup_core;
+	clan::OpenGLTarget::enable();
 
-		// Initialize the ClanLib display component
-		SetupDisplay setup_display;
-
-		// Initilize the OpenGL drivers
-		SetupGL setup_gl;
-
-		// Start the Application
-		App app;
-		int retval = app.start(args);
-		return retval;
-	}
-};
-
-// Instantiate Application, informing it where the Program is located
-Application app(&Program::main);
-
-// The start of the Application
-int App::start(const std::vector<std::string> &args)
-{
 	quit = false;
 
 	DisplayWindowDescription desc;
 
 	desc.set_title("ClanLib AnimCursor Test");
 	desc.set_size(Size(800, 600), true);
-	DisplayWindow window(desc);
+	window = DisplayWindow(desc);
 
 	// Connect the Window close event
-	Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
+	sc.connect(window.sig_window_close(), this, &App::on_window_close);
 
 	// Connect a keyboard handler to on_key_up()
-	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), this, &App::on_input_up);
 
 	// Create the canvas and get the graphic context
-	Canvas canvas(window);
-	GraphicContext gc = canvas.get_gc();
+	canvas = Canvas(window);
 
-	Font font = Font("Tahoma", 20);
+	font = Font("Tahoma", 20);
 
 	PixelBuffer pacman = ImageProviderFactory::load("pacman.png");
 
@@ -114,23 +95,19 @@ int App::start(const std::vector<std::string> &args)
 	Cursor cursor(window, description);
 	window.set_cursor(cursor);
 
-	// Run until someone presses escape
-	while (!quit)
-	{
-		canvas.clear(Colorf(0.0f,0.0f,0.5f));
+}
 
-		font.draw_text(canvas, 32, 32, "Observe the animated cursor");
+bool App::update()
+{
+	canvas.clear(Colorf(0.0f,0.0f,0.5f));
 
-		canvas.flush();
-		// Flip the display, showing on the screen what we have drawed
-		// since last call to flip()
-		window.flip(1);
+	font.draw_text(canvas, 32, 32, "Observe the animated cursor");
 
-		// This call processes user input and other events
-		RunLoop::process();
-	}
+	// Flip the display, showing on the screen what we have drawed
+	// since last call to flip()
+	window.flip(1);
 
-	return 0;
+	return !quit;
 }
 
 // A key was pressed

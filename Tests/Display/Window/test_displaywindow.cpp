@@ -92,8 +92,8 @@ void TestApp::test_display_window(void)
 
 	Console::write_line("   Function: Point client_to_screen(const Point &client)");
 
-	Point point;
-	Point new_point;
+	Pointf point;
+	Pointf new_point;
 	point.x = 423;
 	point.y = 527;
 

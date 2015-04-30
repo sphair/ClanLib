@@ -29,27 +29,13 @@
 
 #include "test.h"
 
-// This is the Program class that is called by Application
-class Program
+int main(int argc, char** argv)
 {
-public:
-	static int main(const std::vector<std::string> &args)
-	{
-		SetupCore setup_core;
-		SetupDisplay setup_display;
-		SetupGL setup_gl;
+	TestApp program;
+	program.main();
+}
 
-		// Start the Application
-		TestApp app;
-		int retval = app.main(args);
-		return retval;
-	}
-};
-
-// Instantiate Application, informing it where the Program is located
-Application app(&Program::main);
-
-int TestApp::main(const std::vector<std::string> &args)
+int TestApp::main()
 {
 	// Create a console window for text-output if not available
 	ConsoleWindow console("Console");

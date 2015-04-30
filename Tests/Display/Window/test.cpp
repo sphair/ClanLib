@@ -29,28 +29,16 @@
 
 #include "test.h"
 
-// This is the Program class that is called by Application
-class Program
+int main(int argc, char** argv)
 {
-public:
-	static int main(const std::vector<std::string> &args)
-	{
-		SetupCore setup_core;
-		SetupDisplay setup_display;
-		SetupGL setup_gl;
+	TestApp program;
+	program.main();
+}
 
-		// Start the Application
-		TestApp app;
-		int retval = app.main(args);
-		return retval;
-	}
-};
-
-// Instantiate Application, informing it where the Program is located
-Application app(&Program::main);
-
-int TestApp::main(const std::vector<std::string> &args)
+int TestApp::main()
 {
+	clan::OpenGLTarget::enable();
+
 	// Create a console window for text-output if not available
 	ConsoleWindow console("Console");
 
@@ -77,19 +65,6 @@ int TestApp::main(const std::vector<std::string> &args)
 		Console::write_line("Exception caught:");
 		Console::write_line(error.message);
 
-/*
-		// Display the stack trace (if available)
-		std::vector<std::string> stacktrace = error.get_stack_trace();
-		int size = stacktrace.size();
-		if (size > 0)
-		{
-			Console::write_line("Stack Trace:");
-			for (int cnt=0; cnt < size; cnt++)
-			{
-				Console::write_line(stacktrace[cnt]);
-			}
-		}
-*/	
 		console.display_close_message();
 		return -1;
 	}

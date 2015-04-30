@@ -1,11 +1,28 @@
 
 #pragma once
 
-class Program
+using namespace clan;
+
+class Program : public clan::Application
 {
 public:
-	static int main(const std::vector<std::string> &args);
+	Program();
+	bool update() override;
 
-	static void exit_func();
-	static bool exit;
+	clan::SlotContainer sc;
+	clan::DisplayWindow window;
+
+	struct Uniforms
+	{
+		Vec3f resolution;
+		float time;
+		Vec4f mouse;
+	};
+
+	void exit_func();
+	bool exit = false;
+	Uniforms uniforms;
+	ShaderEffect effect;
+	UniformVector<Uniforms> uniformVector;
+
 };

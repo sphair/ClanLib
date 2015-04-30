@@ -28,25 +28,13 @@
 
 #include "test.h"
 
-// This is the Program class that is called by Application
-class Program
+int main(int argc, char** argv)
 {
-public:
-	static int main(const std::vector<std::string> &args)
-	{
-		SetupCore setup_core;
+	TestApp program;
+	program.main();
+}
 
-		// Start the Application
-		TestApp app;
-		int retval = app.main(args);
-		return retval;
-	}
-};
-
-// Instantiate Application, informing it where the Program is located
-Application app(&Program::main);
-
-int TestApp::main(const std::vector<std::string> &args)
+int TestApp::main()
 {
 	// Create a console window for text-output if not available
 	ConsoleWindow console("Console");
@@ -55,8 +43,8 @@ int TestApp::main(const std::vector<std::string> &args)
 	{
 		ScreenInfo screen_info;
 		int primary_screen;
-		std::vector<Rect> rects = screen_info.get_screen_geometries(primary_screen);
-		for (std::vector<Rect>::size_type i=0; i<rects.size(); i++)
+		std::vector<Rectf> rects = screen_info.get_screen_geometries(primary_screen);
+		for (std::vector<Rectf>::size_type i=0; i<rects.size(); i++)
 		{
 			Console::write_line("Screen geometry: l:%1 t:%2  r:%3 b:%4 %5", rects[i].left, rects[i].top, rects[i].right, rects[i].bottom, i == primary_screen ? string_format("- Primary (%1)", i) : "" );
 		}

@@ -27,7 +27,6 @@ void TestXMLFile(const std::string &filename)
 
 int main(int, char**)
 {
-	SetupCore setup_core;
 
 	TestXMLFile("test-emeditor-utf8-iso-8859-1.xml");
 	TestXMLFile("test-emeditor-utf8-withoutsignature.xml");

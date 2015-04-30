@@ -35,17 +35,18 @@ using namespace clan;
 #include <cmath>
 
 // This is the Application class (That is instantiated by the Program Class)
-class App
+class App : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
+	App();
+	bool update() override;
 
 private:
 	void on_mouse_down(const InputEvent &key);
 	void on_mouse_up(const InputEvent &key);
-	void on_mouse_move(const InputEvent &key, DisplayWindow *window);
-	void on_window_close(DisplayWindow *window);
-	void on_window_moved(DisplayWindow *window);
+	void on_mouse_move(const InputEvent &key, DisplayWindow &window);
+	void on_window_close();
+	void on_window_moved();
 	void on_window_resize(int xpos, int ypos);
 	void on_lost_focus();
 	void on_input_up(const InputEvent &key);
@@ -54,177 +55,135 @@ private:
 private:
 
 	bool drag_start;
-	Point last_mouse_pos;
+	Pointf last_mouse_pos;
 	bool quit;
 
-	DisplayWindow *window_2_ptr;
-	DisplayWindow *window_3_ptr;
-	DisplayWindow *window_4_ptr;
-	DisplayWindow *window_5_ptr;
-	DisplayWindow *window_main_ptr;
+	DisplayWindow window_2;
+	DisplayWindow window_3;
+	DisplayWindow window_4;
+	DisplayWindow window_5;
+	DisplayWindow window_main;
+
+	SlotContainer slots;
+
+	Canvas canvas_window_main;
+	Font font;
 
 	int num_mouse_multiple_move_events;
 	bool mouse_move_event_triggered;
 
+	DisplayWindowDescription desc_window_main;
+	DisplayWindowDescription desc_window_2;
+	DisplayWindowDescription desc_window_3;
+	DisplayWindowDescription desc_window_4;
+	DisplayWindowDescription desc_window_5;
+
 };
 
-// This is the Program class that is called by Application
-class Program
+clan::ApplicationInstance<App> clanapp;
+
+App::App()
 {
-public:
-	static int main(const std::vector<std::string> &args)
-	{
-		// Initialize ClanLib base components
-		SetupCore setup_core;
+	clan::OpenGLTarget::enable();
 
-		// Initialize the ClanLib display component
-		SetupDisplay setup_display;
-
-		// Initilize the OpenGL drivers
-		SetupGL setup_gl;
-
-		// Start the Application
-		App app;
-		int retval = app.start(args);
-		return retval;
-	}
-};
-
-// Instantiate Application, informing it where the Program is located
-Application app(&Program::main);
-
-// The start of the Application
-int App::start(const std::vector<std::string> &args)
-{
 	quit = false;
 	drag_start = false;
-	window_main_ptr = NULL;
 	num_mouse_multiple_move_events = 0;
 
-	try
-	{
+	desc_window_main.set_title("Main Window");
+	desc_window_main.set_allow_resize(true);
+	desc_window_main.show_caption(true);
+	desc_window_main.set_position(Rect(256, 128, Size(512, 128)), true);
 
-		DisplayWindowDescription desc_window_main;
-		desc_window_main.set_title("Main Window");
-		desc_window_main.set_allow_resize(true);
-		desc_window_main.show_caption(true);
-		desc_window_main.set_position(Rect(256, 128, Size(512, 128)), true);
+	window_main = DisplayWindow(desc_window_main);
 
-		DisplayWindow window_main(desc_window_main);
-		SlotContainer slots;
+	slots.connect(window_main.sig_window_close(), [&](){on_window_close(); });
+	slots.connect(window_main.sig_window_moved(), [&](){on_window_moved(); });
+	slots.connect(window_main.sig_resize(), bind_member(this, &App::on_window_resize));
+	slots.connect(window_main.get_ic().get_mouse().sig_key_down(), this, &App::on_mouse_down);
+	slots.connect(window_main.get_ic().get_mouse().sig_key_up(), this, &App::on_mouse_up);
+	slots.connect(window_main.get_ic().get_mouse().sig_pointer_move(), [&](const InputEvent &key){on_mouse_move(key, window_main); });
+	slots.connect(window_main.sig_lost_focus(), bind_member(this, &App::on_lost_focus));
+	slots.connect(window_main.get_ic().get_keyboard().sig_key_up(), this, &App::on_input_up);
 
-		slots.connect(window_main.sig_window_close(), [&](){on_window_close(&window_main); });
-		slots.connect(window_main.sig_window_moved(), [&](){on_window_moved(&window_main); });
-		slots.connect(window_main.sig_resize(), bind_member(this, &App::on_window_resize));
-		slots.connect(window_main.get_ic().get_mouse().sig_key_down(), this, &App::on_mouse_down);
-		slots.connect(window_main.get_ic().get_mouse().sig_key_up(), this, &App::on_mouse_up);
-		slots.connect(window_main.get_ic().get_mouse().sig_pointer_move(), [&](const InputEvent &key){on_mouse_move(key, &window_main); });
-		slots.connect(window_main.sig_lost_focus(), bind_member(this, &App::on_lost_focus));
-		slots.connect(window_main.get_ic().get_keyboard().sig_key_up(), this, &App::on_input_up);
+	desc_window_2.set_title("Window 2");
+	desc_window_2.set_allow_resize(true);
+	desc_window_2.show_caption(true);
+	desc_window_2.set_owner_window(window_main);
+	Rect rect = window_main.get_geometry();
+	desc_window_2.set_position(rect.translate(0, rect.get_height()), false);
+	window_2 = DisplayWindow(desc_window_2);
+	slots.connect(window_2.get_ic().get_keyboard().sig_key_up(), this, &App::on_input_up);
+	slots.connect(window_2.sig_window_close(), [&](){on_window_close(); });
 
-		DisplayWindowDescription desc_window_2;
-		desc_window_2.set_title("Window 2");
-		desc_window_2.set_allow_resize(true);
-		desc_window_2.show_caption(true);
-		desc_window_2.set_owner_window(window_main);
-		Rect rect = window_main.get_geometry();
-		desc_window_2.set_position(rect.translate(0, rect.get_height()), false);
-		DisplayWindow window_2(desc_window_2);
-		slots.connect(window_2.get_ic().get_keyboard().sig_key_up(), this, &App::on_input_up);
-		slots.connect(window_2.sig_window_close(), [&](){on_window_close(&window_2); });
+	desc_window_3.set_title("Window 3");
+	desc_window_3.set_allow_resize(true);
+	desc_window_3.show_caption(false);
+	desc_window_3.set_owner_window(window_2);
+	rect = window_2.get_geometry();
+	desc_window_3.set_position(rect.translate(0, rect.get_height()), false);
+	window_3 = DisplayWindow(desc_window_3);
+	slots.connect(window_3.get_ic().get_keyboard().sig_key_up(), this, &App::on_input_up);
+	slots.connect(window_3.sig_window_close(), [&](){on_window_close(); });
 
-		DisplayWindowDescription desc_window_3;
-		desc_window_3.set_title("Window 3");
-		desc_window_3.set_allow_resize(true);
-		desc_window_3.show_caption(false);
-		desc_window_3.set_owner_window(window_2);
-		rect = window_2.get_geometry();
-		desc_window_3.set_position(rect.translate(0, rect.get_height()), false);
-		DisplayWindow window_3(desc_window_3);
-		slots.connect(window_3.get_ic().get_keyboard().sig_key_up(), this, &App::on_input_up);
-		slots.connect(window_3.sig_window_close(), [&](){on_window_close(&window_3); });
+	desc_window_4.set_title("Window 4");
+	desc_window_4.set_allow_resize(false);
+	desc_window_4.show_caption(false);
+	desc_window_4.set_owner_window(window_3);
+	rect = window_3.get_geometry();
+	desc_window_4.set_position(rect.translate(0, rect.get_height()), true);
+	window_4 = DisplayWindow(desc_window_4);
+	slots.connect(window_4.get_ic().get_keyboard().sig_key_up(), this, &App::on_input_up);
+	slots.connect(window_4.sig_window_close(), [&](){on_window_close(); });
 
-		DisplayWindowDescription desc_window_4;
-		desc_window_4.set_title("Window 4");
-		desc_window_4.set_allow_resize(false);
-		desc_window_4.show_caption(false);
-		desc_window_4.set_owner_window(window_3);
-		rect = window_3.get_geometry();
-		desc_window_4.set_position(rect.translate(0, rect.get_height()), true);
-		DisplayWindow window_4(desc_window_4);
-		slots.connect(window_4.get_ic().get_keyboard().sig_key_up(), this, &App::on_input_up);
-		slots.connect(window_4.sig_window_close(), [&](){on_window_close(&window_4); });
+	desc_window_5.set_title("Window 5");
+	desc_window_5.set_allow_resize(true);
+	desc_window_5.show_caption(true);
+	rect = window_4.get_geometry();
+	desc_window_5.set_position(rect.translate(0, rect.get_height()), false);
+	window_5 = DisplayWindow(desc_window_5);
+	slots.connect(window_5.get_ic().get_keyboard().sig_key_up(), this, &App::on_input_up);
+	slots.connect(window_5.sig_window_close(), [&](){on_window_close(); });
 
-		DisplayWindowDescription desc_window_5;
-		desc_window_5.set_title("Window 5");
-		desc_window_5.set_allow_resize(true);
-		desc_window_5.show_caption(true);
-		rect = window_4.get_geometry();
-		desc_window_5.set_position(rect.translate(0, rect.get_height()), false);
-		DisplayWindow window_5(desc_window_5);
-		slots.connect(window_5.get_ic().get_keyboard().sig_key_up(), this, &App::on_input_up);
-		slots.connect(window_5.sig_window_close(), [&](){on_window_close(&window_5); });
+	canvas_window_main = Canvas(window_main);
+	font = Font("tahoma", 16);
+}
+bool App::update()
+{
+	mouse_move_event_triggered = false;
+	//
+	Canvas canvas(window_2);
+	canvas.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
+	font.draw_text(canvas, 8, 16, "Owned by Main Window");
+	draw_window_info(canvas, font, 16, desc_window_2, window_2);
+	window_2.flip(0);
+	//
+	canvas = Canvas(window_3);
+	canvas.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
+	font.draw_text(canvas, 8, 16, "Owned by Window 2");
+	draw_window_info(canvas, font, 16, desc_window_3, window_3);
+	window_3.flip(0);
 
-		window_main_ptr = &window_main;
-		window_2_ptr = &window_2;
-		window_3_ptr = &window_3;
-		window_4_ptr = &window_4;
-		window_5_ptr = &window_5;
+	//
+	canvas = Canvas(window_4);
+	canvas.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
+	font.draw_text(canvas, 8, 16, "Owned by Window 3");
+	draw_window_info(canvas, font, 16, desc_window_4, window_4);
+	window_4.flip(0);
 
-		Canvas canvas_window_main(window_main);
-		Font font("tahoma", 16);
+	//
+	canvas = Canvas(window_5);
+	canvas.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
+	draw_window_info(canvas, font, 16, desc_window_5, window_5);
+	window_5.flip(0);
 
-		// Run until someone presses escape
-		while (!quit)
-		{
-			mouse_move_event_triggered = false;
-			//
-			Canvas canvas(window_2);
-			canvas.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
-			font.draw_text(canvas, 8, 16, "Owned by Main Window");
-			draw_window_info(canvas, font, 16, desc_window_2, window_2);
-			window_2.flip(0);
-			//
-			canvas = Canvas(window_3);
-			canvas.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
-			font.draw_text(canvas, 8, 16, "Owned by Window 2");
-			draw_window_info(canvas, font, 16, desc_window_3, window_3);
-			window_3.flip(0);
+	//
+	canvas_window_main.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
+	font.draw_text(canvas_window_main, 8, 16, string_format("Hold down left mouse button inside this window to drag it. | MultipleMoveMove#%1", num_mouse_multiple_move_events));
+	draw_window_info(canvas_window_main, font, 16, desc_window_main, window_main);
+	window_main.flip(1);
 
-			//
-			canvas = Canvas(window_4);
-			canvas.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
-			font.draw_text(canvas, 8, 16, "Owned by Window 3");
-			draw_window_info(canvas, font, 16, desc_window_4, window_4);
-			window_4.flip(0);
-
-			//
-			canvas = Canvas(window_5);
-			canvas.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
-			draw_window_info(canvas, font, 16, desc_window_5, window_5);
-			window_5.flip(0);
-
-			//
-			canvas_window_main.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
-			font.draw_text(canvas_window_main, 8, 16, string_format("Hold down left mouse button inside this window to drag it. | MultipleMoveMove#%1", num_mouse_multiple_move_events));
-			draw_window_info(canvas_window_main, font, 16, desc_window_main, window_main);
-			window_main.flip(1);
-
-			// This call processes user input and other events
-			RunLoop::process();
-		}
-	}
-	catch(Exception &exception)
-	{
-		// Create a console window for text-output if not available
-		ConsoleWindow console("Console", 80, 160);
-		Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
-		console.display_close_message();
-
-		return -1;
-	}
-
-	return 0;
+	return !quit;
 }
 
 void App::draw_window_info(Canvas &canvas, Font &font, int ypos, DisplayWindowDescription &desc, DisplayWindow &window)
@@ -251,7 +210,7 @@ void App::draw_window_info(Canvas &canvas, Font &font, int ypos, DisplayWindowDe
 	ypos += ygap;
 
 	InputDevice &mouse = window.get_ic().get_mouse();
-	Point pos = mouse.get_position();
+	Pointf pos = mouse.get_position();
 	font.draw_text(canvas, 8, ypos, string_format("Mouse (Client Area): x=%1, y=%2", pos.x, pos.y));
 	ypos += ygap;
 	pos = window.client_to_screen(pos);
@@ -279,7 +238,7 @@ void App::on_lost_focus()
 	drag_start = false;
 }
 
-void App::on_mouse_move(const InputEvent &key, DisplayWindow *window)
+void App::on_mouse_move(const InputEvent &key, DisplayWindow &window)
 {
 	if (mouse_move_event_triggered)
 	{
@@ -291,9 +250,9 @@ void App::on_mouse_move(const InputEvent &key, DisplayWindow *window)
 	}
 	if (drag_start)
 	{
-		Rect geometry = window->get_geometry();
+		Rect geometry = window.get_geometry();
 		geometry.translate(key.mouse_pos.x - last_mouse_pos.x, key.mouse_pos.y - last_mouse_pos.y);
-		window->set_position(geometry.left, geometry.top);
+		window.set_position(geometry.left, geometry.top);
 
 		// This should update in on_window_moved()
 		//update_window_relative_positions();
@@ -302,26 +261,26 @@ void App::on_mouse_move(const InputEvent &key, DisplayWindow *window)
 
 void App::update_window_relative_positions()
 {
-	Rect geometry = window_main_ptr->get_geometry();
+	Rect geometry = window_main.get_geometry();
 
-	Rect other_rect = window_2_ptr->get_geometry();
-	window_2_ptr->set_position(Rect(geometry.left, geometry.bottom, other_rect.get_size()), false);
-
-	geometry = other_rect;
-	other_rect = window_3_ptr->get_geometry();
-	window_3_ptr->set_position(Rect(geometry.left, geometry.bottom, other_rect.get_size()), false);
+	Rect other_rect = window_2.get_geometry();
+	window_2.set_position(Rect(geometry.left, geometry.bottom, other_rect.get_size()), false);
 
 	geometry = other_rect;
-	other_rect = window_4_ptr->get_geometry();
-	window_4_ptr->set_position(Rect(geometry.left, geometry.bottom, other_rect.get_size()), false);
+	other_rect = window_3.get_geometry();
+	window_3.set_position(Rect(geometry.left, geometry.bottom, other_rect.get_size()), false);
 
 	geometry = other_rect;
-	other_rect = window_5_ptr->get_geometry();
-	window_5_ptr->set_position(Rect(geometry.left, geometry.bottom, other_rect.get_size()), false);
+	other_rect = window_4.get_geometry();
+	window_4.set_position(Rect(geometry.left, geometry.bottom, other_rect.get_size()), false);
+
+	geometry = other_rect;
+	other_rect = window_5.get_geometry();
+	window_5.set_position(Rect(geometry.left, geometry.bottom, other_rect.get_size()), false);
 
 }
 
-void App::on_window_moved(DisplayWindow *window)
+void App::on_window_moved()
 {
 	update_window_relative_positions();
 }
@@ -331,7 +290,7 @@ void App::on_window_resize(int xpos, int ypos)
 	update_window_relative_positions();
 }
 
-void App::on_window_close(DisplayWindow *window)
+void App::on_window_close()
 {
 	quit = true;
 }

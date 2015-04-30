@@ -28,7 +28,7 @@
 */
 
 #include <ClanLib/core.h>
-#include <ClanLib/application.h>
+
 using namespace clan;
 
 extern int g_bConstructor;
@@ -44,7 +44,7 @@ public:
 class TestApp
 {
 public:
-	virtual int main(const std::vector<std::string> &args);
+	int main();
 private:
 
 	void test_hsv();

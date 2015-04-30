@@ -28,7 +28,6 @@
 */
 
 #include <ClanLib/core.h>
-#include <ClanLib/application.h>
 #include <ClanLib/display.h>
 #include <ClanLib/gl.h>
 using namespace clan;
@@ -45,7 +44,7 @@ extern Rect get_window_frame_size();
 class TestApp
 {
 public:
-	virtual int main(const std::vector<std::string> &args);
+	int main();
 private:
 	void test_display_window(void);
 	void fail(void);

@@ -22,8 +22,13 @@ public:
 	clan::Vec3f uvw_cp[4];
 };
 
-class PathProgram
+class PathProgram : public clan::Application
 {
 public:
-	static int main(const std::vector<std::string> &args);
+	PathProgram();
+	bool update() override;
+	clan::SlotContainer sc;
+	clan::DisplayWindow window;
+	clan::Canvas canvas;
+
 };

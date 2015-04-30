@@ -30,13 +30,13 @@
 #define _header_test_
 
 #include <ClanLib/core.h>
-#include <ClanLib/application.h>
+
 using namespace clan;
 
 class TestApp
 {
 public:
-	int main(const std::vector<std::string> &args);
+	int main();
 
 private:
 	void run_test();

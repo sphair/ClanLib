@@ -4,26 +4,23 @@
 
 using namespace clan;
 
-Application app(&PathProgram::main);
+clan::ApplicationInstance<PathProgram> clanapp;
 
-int PathProgram::main(const std::vector<std::string> &args)
+PathProgram::PathProgram()
 {
-	OpenGLTarget::set_current();
+	clan::OpenGLTarget::enable();
 
-	SlotContainer slots;
-	DisplayWindow window("Path Test", 640.f, 480.0f);
-	slots.connect(window.sig_window_close(), []() { RunLoop::exit(); });
+	window = DisplayWindow("Path Test", 640.f, 480.0f);
+	sc.connect(window.sig_window_close(), []() { RunLoop::exit(); });
 
-	Canvas canvas(window);
+	canvas = Canvas(window);
+}
 
-	while (RunLoop::process(10))
-	{
-		canvas.clear(Colorf::whitesmoke);
-
-		window.flip();
-	}
-
-	return 0;
+bool PathProgram::update()
+{
+	canvas.clear(Colorf::whitesmoke);
+	window.flip(1);
+	return true;
 }
 
 CurveClassification::CurveClassification(const clan::Vec2f &cp0, const clan::Vec2f &cp1, const clan::Vec2f &cp2, const clan::Vec2f &cp3)

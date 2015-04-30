@@ -28,7 +28,6 @@
 */
 
 #include <ClanLib/core.h>
-#include <ClanLib/application.h>
 using namespace clan;
 
 #ifndef WIN32
@@ -59,7 +58,7 @@ using namespace clan;
 class TestApp
 {
 public:
-	virtual int main(const std::vector<std::string> &args);
+	int main();
 private:
 	void test_endian(void);
 	void test_path_help(void);

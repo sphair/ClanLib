@@ -30,11 +30,11 @@
 
 #include "tests.h"
 
-// This is the Application class (That is instantiated by the Program Class)
-class App
+class App : public clan::Application
 {
 public:
-	int start(const std::vector<std::string> &args);
+	App();
+	bool update() override;
 
 private:
 	void on_input_up(const clan::InputEvent &key);
@@ -63,5 +63,7 @@ private:
 	uint64_t tests_run_length_microseconds;
 	float target_test_run_length_seconds;
 	std::string priority_class;
+	clan::SlotContainer sc;
+
 
 };

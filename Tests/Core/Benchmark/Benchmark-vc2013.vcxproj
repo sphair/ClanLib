@@ -146,14 +146,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Sources\program.cpp" />
     <ClCompile Include="Sources\tests.cpp" />
     <ClCompile Include="Sources\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\app.h" />
     <ClInclude Include="Sources\precomp.h" />
-    <ClInclude Include="Sources\program.h" />
     <ClInclude Include="Sources\tests.h" />
     <ClInclude Include="Sources\utils.h" />
   </ItemGroup>

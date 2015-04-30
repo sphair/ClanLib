@@ -1,43 +1,28 @@
 
 #include "precomp.h"
 #include "program.h"
-#include <ClanLib/application.h>
-
-using namespace clan;
-
-Application clanapp(&Program::main);
-
-bool Program::exit = false;
 
 void Program::exit_func()
 {
 	exit = true;
 }
 
-int Program::main(const std::vector<std::string> &args)
-{
-	SetupCore setup_core;
-	SetupDisplay setup_display;
-	SetupGL setup_gl;
+clan::ApplicationInstance<Program> clanapp;
 
-	DisplayWindow window("Hello ShaderEffect", 800, 600, false, true);
-	Slot slot = window.sig_window_close().connect(&Program::exit_func);
+Program::Program()
+{
+
+	clan::OpenGLTarget::enable();
+
+	window = DisplayWindow("Hello ShaderEffect", 800, 600, false, true);
+	sc.connect(window.sig_window_close(), this, &Program::exit_func);
 
 	GraphicContext gc = window.get_gc();
-	InputDevice mouse = window.get_ic().get_mouse();
 	Texture2D texture(gc, "../../../Examples/3D/Object3D/Resources/tux.png");
 
-	struct Uniforms
-	{
-		Vec3f resolution;
-		float time;
-		Vec4f mouse;
-	};
-
-	Uniforms uniforms;
 	uniforms.time = 0.0f;
 	uniforms.resolution = Vec3f(800, 600, 0);
-	UniformVector<Uniforms> uniformVector(gc, &uniforms, 1);
+	uniformVector = UniformVector<Uniforms>(gc, &uniforms, 1);
 
 	ShaderEffectDescription effect_description;
 	effect_description.set_vertex_shader(File::read_text("Resources/vertex_shader.glsl"));
@@ -46,18 +31,22 @@ int Program::main(const std::vector<std::string> &args)
 	effect_description.set_frag_data_to_back_buffer("FragColor");
 	effect_description.set_uniform_block("Uniforms", uniformVector);
 	effect_description.set_texture("Tux", texture);
-	ShaderEffect effect(gc, effect_description);
+	effect = ShaderEffect(gc, effect_description);
 
-	while (!exit)
-	{
-		uniforms.time = System::get_time() / 1000.0f;
-		uniforms.mouse = Vec4f(mouse.get_x() / 800.0f, mouse.get_y() / 600.0f, 0, 0);
-		uniformVector.upload_data(gc, &uniforms, 1);
+}
 
-		effect.draw(gc);
-		window.flip(0);
-		RunLoop::process();
-	}
+bool Program::update()
+{
+	GraphicContext gc = window.get_gc();
+	InputDevice mouse = window.get_ic().get_mouse();
 
-	return 0;
+	uniforms.time = System::get_time() / 1000.0f;
+	auto pos = mouse.get_position();
+	uniforms.mouse = Vec4f(pos.x / 800.0f, pos.y / 600.0f, 0, 0);
+	uniformVector.upload_data(gc, &uniforms, 1);
+
+	effect.draw(gc);
+	window.flip(1);
+
+	return exit;
 }

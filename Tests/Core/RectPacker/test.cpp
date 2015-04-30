@@ -1,10 +1,8 @@
 #include <ClanLib/core.h>
 using namespace clan;
 
-int main(void)
+int main(int argc, char** argv)
 {
-	SetupCore setup_core;
-
 	try
 	{
 		std::cout << "Testing fail_if_full:" << std::endl;

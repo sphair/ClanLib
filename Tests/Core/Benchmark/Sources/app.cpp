@@ -29,9 +29,11 @@
 #include "precomp.h"
 #include "app.h"
 
-// The start of the Application
-int App::start(const std::vector<std::string> &args)
+clan::ApplicationInstance<App> clanapp;
+
+App::App()
 {
+	clan::OpenGLTarget::enable();
 	quit = false;
 
 	// Set the window
@@ -44,10 +46,10 @@ int App::start(const std::vector<std::string> &args)
 	canvas = clan::Canvas(window);
 
 	// Connect the Window close event
-	clan::Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
+	sc.connect(window.sig_window_close(), this, &App::on_window_close);
 
 	// Connect a keyboard handler to on_key_up()
-	clan::Slot slot_input_up = window.get_ic().get_keyboard().sig_key_up().connect(this, &App::on_input_up);
+	sc.connect(window.get_ic().get_keyboard().sig_key_up(), this, &App::on_input_up);
 
 	font = clan::Font("tahoma", 16);
 
@@ -88,66 +90,62 @@ int App::start(const std::vector<std::string> &args)
 
 	cb_main = clan::bind_member(this, &App::initial_pause);
 	game_time.reset();
+}
 
-	// Run until someone presses escape
-	while (!quit)
+bool App::update()
+{
+	game_time.update();
+
+	clan::Sizef canvas_size = canvas.get_size();
+
+	// Clear the display in a dark blue nuance
+	canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
+
+	std::string text("ClanLib Benchmark Utility");
+	clan::Size text_size = clan::Size(font.measure_text(canvas, text).bbox_size);
+	font.draw_text(canvas, ( ( canvas_size.width - text_size.width) / 2), 32, text, clan::Colorf::white);
+
+	int ypos = 96;
+	const int ygap = 18;
+
+	if (!priority_class.empty())
 	{
-		game_time.update();
-
-		clan::Size canvas_size = canvas.get_size();
-
-		// Clear the display in a dark blue nuance
-		canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
-
-		std::string text("ClanLib Benchmark Utility");
-		clan::Size text_size = clan::Size(font.measure_text(canvas, text).bbox_size);
-		font.draw_text(canvas, ( ( canvas_size.width - text_size.width) / 2), 32, text, clan::Colorf::white);
-
-		int ypos = 96;
-		const int ygap = 18;
-
-		if (!priority_class.empty())
-		{
-			font.draw_text(canvas, 10, ypos, priority_class);
-			ypos += ygap;
-		}
-
-		if (tests_run_length_microseconds)
-		{
-			double seconds = (double)tests_run_length_microseconds / 1000000.0;
-			font.draw_text(canvas, 10, ypos, clan::string_format("Simulation Test Run Length = %1 seconds", clan::StringHelp::float_to_text(seconds, 2)));
-			ypos += ygap;
-		}
-
-		if (num_iterations)
-		{
-			font.draw_text(canvas, 10, ypos, clan::string_format("Using %1 Iterations", num_iterations));
-			ypos += ygap;
-		}
-		font.draw_text(canvas, 10, ypos, "Time");
-		font.draw_text(canvas, 80, ypos, ":  Function");
+		font.draw_text(canvas, 10, ypos, priority_class);
 		ypos += ygap;
-		for (unsigned int cnt=0; cnt<testlist.size(); cnt++)
-		{
-			if (testlist[cnt].result != 0.0f)
-			{
-				clan::Colorf colour = clan::Colorf::white;
-				if (testlist_offset == cnt)
-					colour = clan::Colorf::green;
-
-				font.draw_text(canvas, 10, ypos, clan::StringHelp::float_to_text(testlist[cnt].result, 1), colour);
-				font.draw_text(canvas, 80, ypos, clan::string_format(":  %1", testlist[cnt].name), colour);
-				ypos += ygap;
-			}
-		}
-
-		cb_main();
-
-		// This call processes user input and other events
-		clan::RunLoop::process(0);
 	}
-	
-	return 0;
+
+	if (tests_run_length_microseconds)
+	{
+		double seconds = (double)tests_run_length_microseconds / 1000000.0;
+		font.draw_text(canvas, 10, ypos, clan::string_format("Simulation Test Run Length = %1 seconds", clan::StringHelp::float_to_text(seconds, 2)));
+		ypos += ygap;
+	}
+
+	if (num_iterations)
+	{
+		font.draw_text(canvas, 10, ypos, clan::string_format("Using %1 Iterations", num_iterations));
+		ypos += ygap;
+	}
+	font.draw_text(canvas, 10, ypos, "Time");
+	font.draw_text(canvas, 80, ypos, ":  Function");
+	ypos += ygap;
+	for (unsigned int cnt=0; cnt<testlist.size(); cnt++)
+	{
+		if (testlist[cnt].result != 0.0f)
+		{
+			clan::Colorf colour = clan::Colorf::white;
+			if (testlist_offset == cnt)
+				colour = clan::Colorf::green;
+
+			font.draw_text(canvas, 10, ypos, clan::StringHelp::float_to_text(testlist[cnt].result, 1), colour);
+			font.draw_text(canvas, 80, ypos, clan::string_format(":  %1", testlist[cnt].name), colour);
+			ypos += ygap;
+		}
+	}
+
+	cb_main();
+
+	return !quit;	
 }
 
 // A key was pressed

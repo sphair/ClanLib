@@ -29,30 +29,29 @@
 #include <ClanLib/application.h>
 #include <ClanLib/core.h>
 #include <ClanLib/display.h>
-#include <ClanLib/d3d.h>
+#include <ClanLib/gl.h>
 using namespace clan;
 
-class TestApp
+class TestApp : public clan::Application
 {
 public:
-	virtual int main(const std::vector<std::string> &args)
+	TestApp()
 	{
+		clan::OpenGLTarget::enable();
 
 		DisplayWindowDescription desc;
 		desc.set_size(Size(800,600), true);
 		desc.set_title("Span Layout Test");
-		DisplayWindow window(desc);
+		window = DisplayWindow(desc);
 
-		Canvas canvas(window);
-		GraphicContext gc = window.get_gc();
+		canvas = Canvas(window);
 
 		FontDescription font_desc1;
 		font_desc1.set_height(13);
-		Font font1("Verdana", font_desc1);
+		font1 = Font("Verdana", font_desc1);
 
-		Image smiley(canvas, "smiley.png");
+		smiley = Image(canvas, "smiley.png");
 
-		SpanLayout span;
 		span.add_text(" This is a ", font1, Colorf::white, 1);
 		span.add_text("red", font1, Colorf::red, 2);
 		span.add_text(" text! ", font1, Colorf::white, 3);
@@ -68,63 +67,59 @@ public:
 
 		span.layout(canvas, 200);
 		span.set_position(Point(10, 10));
-
-		while (!window.get_ic().get_keyboard().get_keycode(keycode_escape))
-		{
-			gc.clear(Colorf::gray70);
-
-			span.draw_layout(canvas);
-
-			Point mouse_pos = window.get_ic().get_mouse().get_position();
-			SpanLayout::HitTestResult result = span.hit_test(canvas, mouse_pos);
-
-			std::string type;
-			switch(result.type)
-			{
-				case SpanLayout::HitTestResult::no_objects_available:
-					type = "no_objects_available";
-					break;
-				case SpanLayout::HitTestResult::outside_top:
-					type = "outside_top";
-					break;
-				case SpanLayout::HitTestResult::outside_left:
-					type = "outside_left";
-					break;
-				case SpanLayout::HitTestResult::outside_right:
-					type = "outside_right";
-					break;
-				case SpanLayout::HitTestResult::outside_bottom:
-					type = "outside_bottom";
-					break;
-				case SpanLayout::HitTestResult::inside:
-					type = "inside";
-					break;
-			}
-			std::string result_text = string_format("HitTestResult: Type:%1 ID:%2 Offset:%3", type, result.object_id, result.offset);
-
-			font1.draw_text(canvas, 10, 300, result_text);
-
-			window.flip();
-			RunLoop::process();
-			System::sleep(50);
-		}
-
-		return 0;
 	}
-};
 
-class Program
-{
-public:
-	static int main(const std::vector<std::string> &args)
+	bool update()
 	{
-		SetupCore setup_core;
-		SetupDisplay setup_display;
-		SetupD3D setup_d3d;
+		if(window.get_ic().get_keyboard().get_keycode(keycode_escape))
+			return false;
 
-		TestApp app;
-		return app.main(args);
+		canvas.clear(Colorf::gray70);
+
+		span.draw_layout(canvas);
+
+		Point mouse_pos = window.get_ic().get_mouse().get_position();
+		SpanLayout::HitTestResult result = span.hit_test(canvas, mouse_pos);
+
+		std::string type;
+		switch(result.type)
+		{
+			case SpanLayout::HitTestResult::no_objects_available:
+				type = "no_objects_available";
+				break;
+			case SpanLayout::HitTestResult::outside_top:
+				type = "outside_top";
+				break;
+			case SpanLayout::HitTestResult::outside_left:
+				type = "outside_left";
+				break;
+			case SpanLayout::HitTestResult::outside_right:
+				type = "outside_right";
+				break;
+			case SpanLayout::HitTestResult::outside_bottom:
+				type = "outside_bottom";
+				break;
+			case SpanLayout::HitTestResult::inside:
+				type = "inside";
+				break;
+		}
+		std::string result_text = string_format("HitTestResult: Type:%1 ID:%2 Offset:%3", type, result.object_id, result.offset);
+
+		font1.draw_text(canvas, 10, 300, result_text);
+
+		window.flip(1);
+
+		return true;
 	}
+	clan::DisplayWindow window;
+	clan::Canvas canvas;
+	Font font1;
+	Image smiley;
+	SpanLayout span;
+
+
 };
 
-Application app(&Program::main);
+
+clan::ApplicationInstance<TestApp> clanapp;
+

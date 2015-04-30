@@ -41,7 +41,6 @@ void evaluate(const std::string &xpath, const DomDocument &document)
 
 int main(int, char**)
 {
-	SetupCore setup_core;
 	try
 	{
 		File file("test.xml", File::open_existing, File::access_read);

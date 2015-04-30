@@ -28,7 +28,6 @@
 */
 
 #include <ClanLib/core.h>
-#include <ClanLib/application.h>
 #include <ClanLib/display.h>
 #include <ClanLib/gl.h>
 using namespace clan;
@@ -36,7 +35,7 @@ using namespace clan;
 class TestApp
 {
 public:
-	virtual int main(const std::vector<std::string> &args);
+	int main();
 private:
 	void test_timer(void);
 	void fail(void);

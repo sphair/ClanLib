@@ -12,8 +12,6 @@ DataBuffer receive_response(TCPConnection &connection);
 
 int main(int, char**)
 {
-	SetupCore setup_core;
-	SetupNetwork setup_network;
 	try
 	{
 		test1();

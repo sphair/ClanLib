@@ -28,7 +28,6 @@
 */
 
 #include <ClanLib/core.h>
-#include <ClanLib/application.h>
 #include <ClanLib/sound.h>
 using namespace clan;
 
@@ -37,7 +36,7 @@ using namespace clan;
 class TestApp
 {
 public:
-	virtual int main(const std::vector<std::string> &args);
+	int main();
 
 private:
 	void do_test();

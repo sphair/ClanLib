@@ -28,7 +28,6 @@
 */
 
 #include <ClanLib/core.h>
-#include <ClanLib/application.h>
 using namespace clan;
 
 #ifndef WIN32
@@ -61,7 +60,7 @@ using namespace clan;
 class TestApp
 {
 public:
-	virtual int main(const std::vector<std::string> &args);
+	int main();
 private:
 	void test_aes128();
 	void test_aes128_helper(const char *key_ptr, const char *iv_ptr, const char *plaintext_ptr, const char *ciphertext_ptr);

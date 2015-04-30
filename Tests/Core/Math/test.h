@@ -28,7 +28,7 @@
 */
 
 #include <ClanLib/core.h>
-#include <ClanLib/application.h>
+
 using namespace clan;
 
 #ifndef WIN32
@@ -69,7 +69,7 @@ public:
 class TestApp
 {
 public:
-	virtual int main(const std::vector<std::string> &args);
+	int main();
 private:
 	void check_normalize_180(float input_angle, float output_angle);
 	void check_float(float value, float target);
