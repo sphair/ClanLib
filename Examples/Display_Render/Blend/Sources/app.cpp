@@ -123,6 +123,8 @@ bool App::update()
 	
 	draw_equation(canvas, font, options);
 
+	font.draw_text(canvas, canvas.get_width() - 100.0f, 20.0f, clan::string_format("FPS = %1", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1)));
+
 	window.flip(1);
 
 	return !quit;
