@@ -93,6 +93,8 @@ public:
 	void test_return_string_v2();
 	void test_return_string_v3();
 	void test_get_string();
+	void test_string_v8();
+	void test_string_v8b();
 
 	Utils utils;
 	std::string string;
@@ -111,4 +113,5 @@ public:
 	int *int_ptr;
 	std::shared_ptr<int> int_shared_ptr;
 	std::vector<int> std_vector_int_size16;
+	std::string string_15;
 };

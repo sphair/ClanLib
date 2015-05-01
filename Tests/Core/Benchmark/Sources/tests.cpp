@@ -33,7 +33,7 @@
 void Tests::Init(std::vector<TestInfo> &testlist)
 {
 	testlist.push_back(TestInfo("{}", &Tests::test_empty));
-	testlist.push_back(TestInfo("{i++;}", &Tests::test_i_plus_plus));
+/*	testlist.push_back(TestInfo("{i++;}", &Tests::test_i_plus_plus));
 	testlist.push_back(TestInfo("{float_value = (float) int_value;}", &Tests::test_int_to_float));
 	testlist.push_back(TestInfo("{int_value = (int) float_value;}", &Tests::test_float_to_int));
 	testlist.push_back(TestInfo("{double_value = (double) int_value;}", &Tests::test_int_to_double));
@@ -76,6 +76,9 @@ void Tests::Init(std::vector<TestInfo> &testlist)
 	testlist.push_back(TestInfo("{string = utils.function();}    : std::string &function() {return string_hello_world;}", &Tests::test_return_string_v2));
 	testlist.push_back(TestInfo("{string = utils.function();}    : std::string function() {return \"hello world\";}", &Tests::test_return_string_v3));
 	testlist.push_back(TestInfo("{utils.function(string);}    : void function(std::string &out_string) {out_string = string_hello_world;}", &Tests::test_get_string));
+*/
+	testlist.push_back(TestInfo("{int_value += utils.function(\"~15chars~\");}    : int function(const std::string &s) {return s.length();}", &Tests::test_string_v8));
+	testlist.push_back(TestInfo("{int_value += utils.function(string_15);}    : int function(const std::string &s) {return s.length();}", &Tests::test_string_v8b));
 
 }
 
@@ -94,6 +97,7 @@ Tests::Tests()
 	*int_shared_ptr = 123;
 
 	std_vector_int_size16.resize(16, 0);
+	string_15 = "123456789012345";
 }
 
 void Tests::test_empty()
@@ -289,4 +293,14 @@ void Tests::test_return_string_v3()
 void Tests::test_get_string()
 {
 	utils.test_get_string(string);
+}
+
+void Tests::test_string_v8()
+{
+	int_value += utils.test_string_v8("123456789012345");
+}
+
+void Tests::test_string_v8b()
+{
+	int_value += utils.test_string_v8(string_15);
 }

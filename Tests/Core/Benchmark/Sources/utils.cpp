@@ -65,3 +65,7 @@ void Utils::test_get_string(std::string &out_string)
 	out_string = string_hello_world;
 }
 
+int Utils::test_string_v8(const std::string &s)
+{
+	return s.length();
+}

@@ -40,6 +40,7 @@ public:
 	std::string &test_return_string2();
 	std::string test_return_string3();
 	void test_get_string(std::string &out_string);
+	int test_string_v8(const std::string &s);
 
 	std::string string_hello_world;
 	int five;
