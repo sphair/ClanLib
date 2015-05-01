@@ -77,7 +77,9 @@ App::App()
 bool App::update()
 {
 	game_time.update();
+	//canvas.clear();
 
+	options->set_needs_layout();	//TODO: Remove this line when completed optimising the GUI
 	options->set_needs_render();
 	options->set_viewport(canvas.get_size());
 	options->set_background_color(clan::Colorf(0.6f, 0.6f, 0.2f, 1.0f));
@@ -125,7 +127,7 @@ bool App::update()
 
 	font.draw_text(canvas, canvas.get_width() - 100.0f, 20.0f, clan::string_format("FPS = %1", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1)));
 
-	window.flip(1);
+	window.flip(0);
 
 	return !quit;
 }
