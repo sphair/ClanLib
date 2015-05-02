@@ -31,6 +31,7 @@
 #include "API/UI/Style/style_property_parser.h"
 #include <memory>
 #include <string>
+#include <unordered_map>
 
 namespace clan
 {
@@ -44,10 +45,10 @@ namespace clan
 		void set_value(const std::string &name, const StyleSetValue &value) override;
 		void set_value_array(const std::string &name, const std::vector<StyleSetValue> &value_array) override;
 
-		std::map<std::string, StyleValueType> prop_type;
-		std::map<std::string, std::string> prop_text;
-		std::map<std::string, float> prop_number;
-		std::map<std::string, StyleDimension> prop_dimension;
-		std::map<std::string, Colorf> prop_color;
+		std::unordered_map<std::string, StyleValueType> prop_type;
+		std::unordered_map<std::string, std::string> prop_text;
+		std::unordered_map<std::string, float> prop_number;
+		std::unordered_map<std::string, StyleDimension> prop_dimension;
+		std::unordered_map<std::string, Colorf> prop_color;
 	};
 }

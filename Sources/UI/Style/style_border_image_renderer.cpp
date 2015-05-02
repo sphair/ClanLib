@@ -35,6 +35,7 @@
 #include "API/UI/UIThread/ui_thread.h"
 #include "API/Display/2D/canvas.h"
 #include "API/Display/2D/image.h"
+#include <algorithm>
 
 namespace clan
 {
