@@ -34,7 +34,7 @@ namespace clan
 	class Image;
 	class Colorf;
 	class StyleCascade;
-	class StyleSetValue;
+	class StyleGetValue;
 	class ViewGeometry;
 
 	class StyleBorderImageRenderer
@@ -44,8 +44,18 @@ namespace clan
 		void render();
 
 	private:
-		void draw_area(Image &image, int x, int y, int w, int h, int sx, int sy, int sw, int sh);
-		Rect get_border_image_area() const;
+		struct TileRepeatInfo
+		{
+			float start = 0.0f;
+			float width = 0.0f;
+			float space = 0.0f;
+			int count = 1;
+		};
+		
+		TileRepeatInfo repeat_info(float x, float w, int sw, const StyleGetValue &repeat_x);
+		
+		void draw_area(Image &image, float x, float y, float w, float h, int sx, int sy, int sw, int sh, const StyleGetValue &repeat_x, const StyleGetValue &repeat_y);
+		Rectf get_border_image_area() const;
 		float get_left_grid(float image_area_width, float auto_width) const;
 		float get_right_grid(float image_area_width, float auto_width) const;
 		float get_top_grid(float image_area_height, float auto_height) const;

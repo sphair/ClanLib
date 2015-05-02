@@ -56,64 +56,109 @@ namespace clan
 			int slice_bottom = get_bottom_slice_value(image.get_height());
 			bool fill_center = style.computed_value("border-image-slice-center").is_keyword("fill");
 
-			Rect border_image_area = get_border_image_area();
+			Rectf border_image_area = get_border_image_area();
 
-			int grid_left = get_left_grid(border_image_area.get_width(), slice_left);
-			int grid_right = get_right_grid(border_image_area.get_width(), slice_right);
-			int grid_top = get_top_grid(border_image_area.get_height(), slice_top);
-			int grid_bottom = get_bottom_grid(border_image_area.get_height(), slice_bottom);
+			float grid_left = get_left_grid(border_image_area.get_width(), slice_left);
+			float grid_right = get_right_grid(border_image_area.get_width(), slice_right);
+			float grid_top = get_top_grid(border_image_area.get_height(), slice_top);
+			float grid_bottom = get_bottom_grid(border_image_area.get_height(), slice_bottom);
 
-			int x[4] = { border_image_area.left, border_image_area.left + grid_left, border_image_area.right - grid_right, border_image_area.right };
-			int y[4] = { border_image_area.top, border_image_area.top + grid_top, border_image_area.bottom - grid_bottom, border_image_area.bottom };
+			float x[4] = { border_image_area.left, border_image_area.left + grid_left, border_image_area.right - grid_right, border_image_area.right };
+			float y[4] = { border_image_area.top, border_image_area.top + grid_top, border_image_area.bottom - grid_bottom, border_image_area.bottom };
 			int sx[4] = { 0, slice_left, (int) image.get_width() - slice_right, (int)image.get_width() };
 			int sy[4] = { 0, slice_top, (int) image.get_height() - slice_bottom, (int)image.get_height() };
+			
+			StyleGetValue repeat_x = style.computed_value("border-image-repeat-x");
+			StyleGetValue repeat_y = style.computed_value("border-image-repeat-y");
 
 			for (int yy = 0; yy < 3; yy++)
 			{
 				for (int xx = 0; xx < 3; xx++)
 				{
 					if ((xx != 1 && yy != 1) || fill_center)
-						draw_area(image, x[xx], y[yy], x[xx + 1] - x[xx], y[yy + 1] - y[yy], sx[xx], sy[yy], sx[xx + 1] - sx[xx], sy[yy + 1] - sy[yy]);
+						draw_area(image, x[xx], y[yy], x[xx + 1] - x[xx], y[yy + 1] - y[yy], sx[xx], sy[yy], sx[xx + 1] - sx[xx], sy[yy + 1] - sy[yy], repeat_x, repeat_y);
 				}
 			}
 		}
 	}
-
-	void StyleBorderImageRenderer::draw_area(Image &image, int x, int y, int w, int h, int sx, int sy, int sw, int sh)
+	
+	StyleBorderImageRenderer::TileRepeatInfo StyleBorderImageRenderer::repeat_info(float x, float w, int sw, const StyleGetValue &repeat)
 	{
-		StyleGetValue repeat_x = style.computed_value("border-image-repeat-x");
-		StyleGetValue repeat_y = style.computed_value("border-image-repeat-y");
-
-		if ((repeat_x.is_keyword("repeat") || repeat_x.is_keyword("stretch")) && (repeat_y.is_keyword("stretch") || repeat_y.is_keyword("repeat")))
+		TileRepeatInfo info;
+		
+		if (sw <= 0)
+			return info;
+		
+		if (repeat.is_keyword("repeat"))
 		{
-			int image_width = w;
-			int image_height = h;
-			if (repeat_x.is_keyword("repeat"))
-				image_width = sw;
-			if (repeat_y.is_keyword("repeat"))
-				image_height = sh;
+			info.count = (int)std::ceil(w / sw);
+			info.start = x + (w - info.count * sw) * 0.5f;
+			info.width = sw;
+		}
+		else if (repeat.is_keyword("stretch"))
+		{
+			info.start = x;
+			info.width = w;
+			info.count = 1;
+		}
+		else if (repeat.is_keyword("round"))
+		{
+			info.start = x;
+			info.count = std::max((int)std::round(w / sw), 1);
+			info.width = sw * w / (sw * info.count);
+		}
+		else if (repeat.is_keyword("space"))
+		{
+			info.start = x;
+			info.width = sw;
+			info.count = (int)std::floor(w / sw);
+			if (info.count > 1)
+				info.space = w / (info.count - 1) - sw;
+			else if (info.count == 1)
+				info.start = x + (w - info.count * sw) * 0.5f;
+		}
+		
+		return info;
+	}
 
-			// This is wrong.  It is only a temporary hack so the focus almost works for clanGUI
-			// See specification http://www.w3.org/TR/style3-background/#the-border-image-repeat
-
-			for (int dy = y; dy < (h + y); dy += image_height)
+	void StyleBorderImageRenderer::draw_area(Image &image, float x, float y, float w, float h, int sx, int sy, int sw, int sh, const StyleGetValue &repeat_x, const StyleGetValue &repeat_y)
+	{
+		TileRepeatInfo tile_x = repeat_info(x, w, sw, repeat_x);
+		TileRepeatInfo tile_y = repeat_info(y, h, sh, repeat_y);
+		
+		Rectf clip = Rectf::xywh(x, y, w, h);
+		Rectf src = Rectf::xywh(sx, sy, sw, sh);
+		
+		for (int yy = 0; yy < tile_y.count; yy++)
+		{
+			float top = tile_y.start + (tile_y.width + tile_y.space) * yy;
+			float bottom = tile_y.start + (tile_y.width + tile_y.space) * (yy + 1) - tile_y.space;
+			
+			for (int xx = 0; xx < tile_x.count; xx++)
 			{
-				for (int dx = x; dx < (w + x); dx += image_width)
-				{
-					image.draw(canvas, Rect(sx, sy, sx + sw, sy + sh), Rect(dx, dy, dx + image_width, dy + image_height));
-				}
+				float left = tile_x.start + (tile_x.width + tile_x.space) * xx;
+				float right = tile_x.start + (tile_x.width + tile_x.space) * (xx + 1) - tile_x.space;
+				
+				Rectf dest(left, top, right, bottom);
+				
+				Rectf dest_clipped = dest;
+				dest_clipped.clip(clip);
+				
+				float tleft = (dest_clipped.left - dest.left) / dest.get_width();
+				float tright = (dest_clipped.right - dest.left) / dest.get_width();
+				float ttop = (dest_clipped.top - dest.top) / dest.get_height();
+				float tbottom = (dest_clipped.bottom - dest.top) / dest.get_height();
+				
+				Rectf src_clipped(mix(src.left, src.right, tleft), mix(src.top, src.bottom, ttop), mix(src.left, src.right, tright), mix(src.top, src.bottom, tbottom));
+				
+				image.draw(canvas, src_clipped, dest_clipped);
 			}
-		}
-		else
-		{
-			image.draw(canvas, Rect(sx, sy, sx + sw, sy + sh), Rect(x, y, x + w, y + h));
-			// Support me
 		}
 	}
 
-	Rect StyleBorderImageRenderer::get_border_image_area() const
+	Rectf StyleBorderImageRenderer::get_border_image_area() const
 	{
-		Rect box = geometry.border_box();
+		Rectf box = geometry.border_box();
 
 		StyleGetValue outset_left = style.computed_value("border-image-outset-left");
 		StyleGetValue outset_right = style.computed_value("border-image-outset-right");
