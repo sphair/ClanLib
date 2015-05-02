@@ -40,6 +40,26 @@ namespace clan
 	class Font;
 	class ViewGeometry;
 
+#if defined(MICROSOFT_FINALLY_IMPLEMENTED_CONSTEXPR_TEN_YEARS_AFTER_EVERYONE_ELSE)
+	/// Allows property name hashes to be evaluated at compile time
+	class PropertyNameConst
+	{
+	public:
+		template<std::size_t Length>
+		constexpr PropertyNameConst(const char(&text)[Length]) : text(text), length(Length - 1) { }
+
+		constexpr char operator[](std::size_t index) const { return index < length ? text[index] : throw std::out_of_range("PropertyNameConst operator[] out of bounds"); }
+		constexpr std::size_t size() const { return length; }
+		constexpr std::size_t hash() const { return hash(2166136261U, 0); }
+
+	private:
+		constexpr std::size_t hash(std::size_t value, std::size_t index) const { return index == length ? value : hash((value ^ (std::size_t)text[index]) * 16777619U, index + 1); }
+
+		const char * const text;
+		const std::size_t length;
+	};
+#endif
+
 	/// Style value resolver
 	class StyleCascade
 	{
