@@ -85,7 +85,7 @@ namespace clan
 		bool operator()(const std::string &a, const std::string &b) const { return StringHelp::compare(a, b, true) < 0; }
 	};
 
-	static std::unordered_map<std::string, StyleDimension, std::hash<std::string>, StyleDimensionLess> length_dimensions =
+	static std::map<std::string, StyleDimension, StyleDimensionLess> length_dimensions =
 	{
 		{ "px", StyleDimension::px },
 		{ "em", StyleDimension::em },
@@ -103,7 +103,7 @@ namespace clan
 		{ "vmax", StyleDimension::vmax }
 	};
 
-	static std::unordered_map<std::string, StyleDimension, std::hash<std::string>, StyleDimensionLess> angle_dimensions =
+	static std::map<std::string, StyleDimension, StyleDimensionLess> angle_dimensions =
 	{
 		{ "deg", StyleDimension::deg },
 		{ "grad", StyleDimension::grad },
@@ -111,19 +111,19 @@ namespace clan
 		{ "turn", StyleDimension::turn }
 	};
 
-	static std::unordered_map<std::string, StyleDimension, std::hash<std::string>, StyleDimensionLess> time_dimensions =
+	static std::map<std::string, StyleDimension, StyleDimensionLess> time_dimensions =
 	{
 		{ "s", StyleDimension::s },
 		{ "ms", StyleDimension::ms }
 	};
 
-	static std::unordered_map<std::string, StyleDimension, std::hash<std::string>, StyleDimensionLess> frequency_dimensions =
+	static std::map<std::string, StyleDimension, StyleDimensionLess> frequency_dimensions =
 	{
 		{ "hz", StyleDimension::hz },
 		{ "khz", StyleDimension::khz }
 	};
 
-	static std::unordered_map<std::string, StyleDimension, std::hash<std::string>, StyleDimensionLess> resolution_dimensions =
+	static std::map<std::string, StyleDimension, StyleDimensionLess> resolution_dimensions =
 	{
 		{ "dpi", StyleDimension::dpi },
 		{ "dpcm", StyleDimension::dpcm },
