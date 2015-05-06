@@ -39,7 +39,7 @@
 
 namespace clan
 {
-	StyleGetValue StyleCascade::cascade_value(const std::string &property_name) const
+	StyleGetValue StyleCascade::cascade_value(const char *property_name) const
 	{
 		for (Style *style : cascade)
 		{
@@ -50,7 +50,7 @@ namespace clan
 		return StyleGetValue();
 	}
 
-	StyleGetValue StyleCascade::specified_value(const std::string &property_name) const
+	StyleGetValue StyleCascade::specified_value(const char *property_name) const
 	{
 		StyleGetValue value = cascade_value(property_name);
 		bool inherit = (value.is_undefined() && StyleProperty::is_inherited(property_name)) || value.is_keyword("inherit");
@@ -68,7 +68,7 @@ namespace clan
 		}
 	}
 
-	StyleGetValue StyleCascade::computed_value(const std::string &property_name) const
+	StyleGetValue StyleCascade::computed_value(const char *property_name) const
 	{
 		// To do: pass on to property compute functions
 
@@ -230,12 +230,16 @@ namespace clan
 		return Font::resource(canvas, family, font_desc, UIThread::get_resources());
 	}
 
-	int StyleCascade::array_size(const std::string &property_name) const
+	int StyleCascade::array_size(const char *property_name) const
 	{
 		int size = 0;
 		while (true)
 		{
-			std::string prop_name = property_name + "[" + StringHelp::int_to_text(size) + "]";
+			StyleString prop_name;
+			prop_name.append(property_name);
+			prop_name.append("[");
+			prop_name.append(StringHelp::int_to_text(size));
+			prop_name.append("]");
 			if (specified_value(prop_name).is_undefined())
 				break;
 			size++;

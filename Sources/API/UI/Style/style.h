@@ -30,6 +30,7 @@
 
 #include "../../Core/Text/string_format.h"
 #include "../../Display/2D/color.h"
+#include "style_get_value.h"
 
 namespace clan
 {
@@ -62,7 +63,8 @@ namespace clan
 		}
 
 		/// Retrieve the declared value for a property
-		StyleGetValue declared_value(const std::string &property_name) const;
+		StyleGetValue declared_value(const char *property_name) const;
+		StyleGetValue declared_value(const std::string &property_name) const { return declared_value(property_name.c_str()); }
 
 		/// Static helper that generates a "rgba(%1,%2,%3,%4)" string for the given color.
 		static std::string to_rgba(const Colorf &c)

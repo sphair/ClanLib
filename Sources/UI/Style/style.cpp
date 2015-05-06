@@ -75,8 +75,9 @@ namespace clan
 		StyleProperty::parse(impl.get(), properties);
 	}
 
-	StyleGetValue Style::declared_value(const std::string &property_name) const
+	StyleGetValue Style::declared_value(const char *property_name_str) const
 	{
+		StyleString property_name = property_name_str;
 		const auto it = impl->prop_type.find(property_name);
 		if (it != impl->prop_type.end())
 		{

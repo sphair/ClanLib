@@ -30,19 +30,20 @@
 #include "API/UI/Style/style_property_parser.h"
 #include "API/UI/Style/style.h"
 #include "API/UI/Style/style_token.h"
+#include "style_impl.h"
 #include <unordered_map>
 
 namespace clan
 {
-	std::unordered_map<std::string, StyleGetValue> &style_defaults()
+	std::unordered_map<StyleString, StyleGetValue, StyleString::hash> &style_defaults()
 	{
-		static std::unordered_map<std::string, StyleGetValue> defaults;
+		static std::unordered_map<StyleString, StyleGetValue, StyleString::hash> defaults;
 		return defaults;
 	}
 
-	std::unordered_map<std::string, StylePropertyParser *> &style_parsers()
+	std::unordered_map<StyleString, StylePropertyParser *, StyleString::hash> &style_parsers()
 	{
-		static std::unordered_map<std::string, StylePropertyParser *> parsers;
+		static std::unordered_map<StyleString, StylePropertyParser *, StyleString::hash> parsers;
 		return parsers;
 	}
 
@@ -1090,12 +1091,12 @@ namespace clan
 
 	/////////////////////////////////////////////////////////////////////////
 
-	bool StyleProperty::is_inherited(const std::string &name)
+	bool StyleProperty::is_inherited(const char *name)
 	{
 		return false; // TBD: do we want to support inherited properties at all?
 	}
 	
-	const StyleGetValue &StyleProperty::default_value(const std::string &name)
+	const StyleGetValue &StyleProperty::default_value(const char *name)
 	{
 		auto it = style_defaults().find(name);
 		if (it != style_defaults().end())

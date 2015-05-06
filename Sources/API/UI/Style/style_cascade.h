@@ -31,6 +31,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include "style_get_value.h"
 
 namespace clan
 {
@@ -74,15 +75,18 @@ namespace clan
 		StyleCascade *parent = nullptr;
 		
 		/// Find the first declared value in the cascade for the specified property
-		StyleGetValue cascade_value(const std::string &property_name) const;
+		StyleGetValue cascade_value(const char *property_name) const;
+		StyleGetValue cascade_value(const std::string &property_name) const { return cascade_value(property_name.c_str()); }
 
 		/// Resolve any inheritance or initial values for the cascade value
-		StyleGetValue specified_value(const std::string &property_name) const;
+		StyleGetValue specified_value(const char *property_name) const;
+		StyleGetValue specified_value(const std::string &property_name) const { return specified_value(property_name.c_str()); }
 
 		/// Find the computed value for the specified value
 		///
 		/// The computed value is a simplified value for the property. Lengths are resolved to device independent pixels and so on.
-		StyleGetValue computed_value(const std::string &property_name) const;
+		StyleGetValue computed_value(const char *property_name) const;
+		StyleGetValue computed_value(const std::string &property_name) const { return computed_value(property_name.c_str()); }
 		
 		/// Convert length into px (device independent pixel) units
 		StyleGetValue compute_length(const StyleGetValue &length) const;
@@ -100,7 +104,8 @@ namespace clan
 		StyleGetValue compute_resolution(const StyleGetValue &resolution) const;
 		
 		/// Value array size for the property
-		int array_size(const std::string &property_name) const;
+		int array_size(const char *property_name) const;
+		int array_size(const std::string &property_name) const { return array_size(property_name.c_str()); }
 		
 		/// Render styled background
 		void render_background(Canvas &canvas, const ViewGeometry &geometry) const;

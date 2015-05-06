@@ -39,16 +39,76 @@ namespace clan
 	class ImageSource;
 	class Colorf;
 
+	class StyleString
+	{
+	public:
+		StyleString() { _buffer[0] = 0; }
+		StyleString(const char *str) { append(str); }
+		StyleString(const std::string &str) { append(str.c_str()); }
+
+		std::size_t size() const { return _size; }
+		const char *data() const { return _buffer; }
+		const char *c_str() const { return _buffer; }
+
+		StyleString &append(const char *str)
+		{
+			std::size_t len = strlen(str);
+			if (_size + len > max_size)
+				throw Exception("Style property name too long!");
+
+			strcpy(_buffer + _size, str);
+			_size += len;
+
+			return *this;
+		}
+
+		StyleString &append(const std::string &str)
+		{
+			return append(str.c_str());
+		}
+
+		operator const char *() const { return c_str(); }
+
+		bool operator==(const StyleString &that) const { return _size == that._size && strcmp(_buffer, that._buffer) == 0; }
+		bool operator!=(const StyleString &that) const { return _size != that._size || strcmp(_buffer, that._buffer) != 0; }
+		bool operator<(const StyleString &that) const { return strcmp(_buffer, that._buffer) < 0; }
+		bool operator<=(const StyleString &that) const { return strcmp(_buffer, that._buffer) <= 0; }
+		bool operator>(const StyleString &that) const { return strcmp(_buffer, that._buffer) > 0; }
+		bool operator>=(const StyleString &that) const { return strcmp(_buffer, that._buffer) >= 0; }
+
+		class hash
+		{
+		public:
+			typedef StyleString argument_type;
+			typedef std::size_t result_type;
+
+			std::size_t operator()(const StyleString &s)
+			{
+				std::size_t hash = 2166136261U;
+				for (std::size_t i = 0; i < s._size; i++)
+				{
+					hash ^= static_cast<std::size_t>(s._buffer[i]) * 16777619U;
+				}
+				return hash;
+			}
+		};
+
+	private:
+		enum { max_size = 31 };
+		char _buffer[max_size + 1];
+		std::size_t _size = 0;
+	};
+
 	class StyleImpl : public StylePropertySetter
 	{
 	public:
 		void set_value(const std::string &name, const StyleSetValue &value) override;
 		void set_value_array(const std::string &name, const std::vector<StyleSetValue> &value_array) override;
 
-		std::unordered_map<std::string, StyleValueType> prop_type;
-		std::unordered_map<std::string, std::string> prop_text;
-		std::unordered_map<std::string, float> prop_number;
-		std::unordered_map<std::string, StyleDimension> prop_dimension;
-		std::unordered_map<std::string, Colorf> prop_color;
+		std::unordered_map<StyleString, StyleValueType, StyleString::hash> prop_type;
+		std::unordered_map<StyleString, std::string, StyleString::hash> prop_text;
+		std::unordered_map<StyleString, float, StyleString::hash> prop_number;
+		std::unordered_map<StyleString, StyleDimension, StyleString::hash> prop_dimension;
+		std::unordered_map<StyleString, Colorf, StyleString::hash> prop_color;
 	};
 }
