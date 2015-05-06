@@ -42,18 +42,40 @@ namespace clan
 	class StyleString
 	{
 	public:
-		StyleString() { _buffer[0] = 0; }
-		StyleString(const char *str) { append(str); }
-		StyleString(const std::string &str) { append(str.c_str()); }
+		StyleString()
+		{
+			_buffer[0] = 0;
+			_ptr = _buffer;
+		}
+
+		StyleString(const char *str)
+		{
+			_ptr = str;
+			_size = strlen(str);
+		}
+
+		StyleString(const std::string &str)
+		{
+			_buffer[0] = 0;
+			_ptr = _buffer;
+			append(str.c_str());
+		}
+
+		StyleString(const StyleString &that)
+		{
+			_buffer[0] = 0;
+			_ptr = _buffer;
+			append(that.c_str());
+		}
 
 		std::size_t size() const { return _size; }
-		const char *data() const { return _buffer; }
-		const char *c_str() const { return _buffer; }
+		const char *data() const { return _ptr; }
+		const char *c_str() const { return _ptr; }
 
 		StyleString &append(const char *str)
 		{
 			std::size_t len = strlen(str);
-			if (_size + len > max_size)
+			if (_size + len > max_size || _ptr != _buffer)
 				throw Exception("Style property name too long!");
 
 			strcpy(_buffer + _size, str);
@@ -69,12 +91,23 @@ namespace clan
 
 		operator const char *() const { return c_str(); }
 
-		bool operator==(const StyleString &that) const { return _size == that._size && strcmp(_buffer, that._buffer) == 0; }
-		bool operator!=(const StyleString &that) const { return _size != that._size || strcmp(_buffer, that._buffer) != 0; }
-		bool operator<(const StyleString &that) const { return strcmp(_buffer, that._buffer) < 0; }
-		bool operator<=(const StyleString &that) const { return strcmp(_buffer, that._buffer) <= 0; }
-		bool operator>(const StyleString &that) const { return strcmp(_buffer, that._buffer) > 0; }
-		bool operator>=(const StyleString &that) const { return strcmp(_buffer, that._buffer) >= 0; }
+		bool operator==(const StyleString &that) const { return _size == that._size && strcmp(_ptr, that._ptr) == 0; }
+		bool operator!=(const StyleString &that) const { return _size != that._size || strcmp(_ptr, that._ptr) != 0; }
+		bool operator<(const StyleString &that) const { return strcmp(_ptr, that._ptr) < 0; }
+		bool operator<=(const StyleString &that) const { return strcmp(_ptr, that._ptr) <= 0; }
+		bool operator>(const StyleString &that) const { return strcmp(_ptr, that._ptr) > 0; }
+		bool operator>=(const StyleString &that) const { return strcmp(_ptr, that._ptr) >= 0; }
+
+		StyleString &operator=(const StyleString &that)
+		{
+			if (this != &that)
+			{
+				_ptr = _buffer;
+				_size = 0;
+				append(that.c_str());
+			}
+			return *this;
+		}
 
 		class hash
 		{
@@ -87,7 +120,7 @@ namespace clan
 				std::size_t hash = 2166136261U;
 				for (std::size_t i = 0; i < s._size; i++)
 				{
-					hash = (hash * 16777619U) ^ static_cast<std::size_t>(s._buffer[i]);
+					hash = (hash * 16777619U) ^ static_cast<std::size_t>(s._ptr[i]);
 				}
 				return hash;
 			}
@@ -95,6 +128,7 @@ namespace clan
 
 	private:
 		enum { max_size = 31 };
+		const char *_ptr = nullptr;
 		char _buffer[max_size + 1];
 		std::size_t _size = 0;
 	};
