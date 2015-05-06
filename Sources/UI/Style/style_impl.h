@@ -82,12 +82,12 @@ namespace clan
 			typedef StyleString argument_type;
 			typedef std::size_t result_type;
 
-			std::size_t operator()(const StyleString &s)
+			std::size_t operator()(const StyleString &s) const
 			{
 				std::size_t hash = 2166136261U;
 				for (std::size_t i = 0; i < s._size; i++)
 				{
-					hash ^= static_cast<std::size_t>(s._buffer[i]) * 16777619U;
+					hash = (hash * 16777619U) ^ static_cast<std::size_t>(s._buffer[i]);
 				}
 				return hash;
 			}
