@@ -127,7 +127,7 @@ namespace clan
 		};
 
 	private:
-		enum { max_size = 31 };
+		enum { max_size = 63 };
 		const char *_ptr = nullptr;
 		char _buffer[max_size + 1];
 		std::size_t _size = 0;
