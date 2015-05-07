@@ -173,7 +173,6 @@ std::shared_ptr<clan::ListBoxView> Options::create_listbox(int xpos, int ypos, c
 	listbox->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:%4px;", xpos, ypos, 200, 100);
 	auto label_logic = create_slider_label(xpos, ypos - 30);
 	label_logic->set_text(title);
-	add_subview(listbox_logic);
 	return listbox;
 }
 
