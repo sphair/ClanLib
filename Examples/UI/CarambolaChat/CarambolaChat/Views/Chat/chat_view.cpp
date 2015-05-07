@@ -202,7 +202,7 @@ void ChatView::layout_line(Canvas &canvas, ChatLine &line, Rect &client_area, in
 			for (auto &i : line.inlines)
 			{
 				StyleCascade cascade({ i.style.get() });
-				line.column3.add_text(i.text, cascade.get_font(canvas), cascade.computed_value("color").color, i.id);
+				line.column3.add_text(i.text, cascade.get_font(canvas), cascade.computed_value("color").color(), i.id);
 			}
 
 			line.column3_rendered = true;
