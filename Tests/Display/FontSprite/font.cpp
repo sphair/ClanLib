@@ -51,8 +51,8 @@ App::App()
 	font_desc.set_subpixel(false);
 	font_desc.set_line_height(26);
 
-	Font font1 = Font::resource(canvas, "Font1", font_desc, resources);
-	Font font2 = Font::resource(canvas, "Font2", font_desc, resources);
+	font1 = Font::resource(canvas, "Font1", font_desc, resources);
+	font2 = Font::resource(canvas, "Font2", font_desc, resources);
 }
 
 bool App::update()

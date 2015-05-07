@@ -1,5 +1,3 @@
-#version 330
-
 out vec4 FragColor;
 
 layout(std140) uniform Uniforms

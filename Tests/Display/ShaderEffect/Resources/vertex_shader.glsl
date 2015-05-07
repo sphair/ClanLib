@@ -1,5 +1,3 @@
-#version 330
-
 in vec4 PositionInProjection;
 out vec2 UV;
 

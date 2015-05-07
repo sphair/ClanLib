@@ -32,6 +32,7 @@
 #include <ClanLib/gl.h>
 using namespace clan;
 
+
 class App : public clan::Application
 {
 public:
@@ -51,6 +52,7 @@ private:
 
 	bool quit;
 };
+clan::ApplicationInstance<App> clanapp;
 
 App::App()
 {

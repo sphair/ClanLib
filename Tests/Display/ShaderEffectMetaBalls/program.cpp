@@ -35,6 +35,7 @@ Program::Program()
 	effect_description.set_attribute_screen_quad("PositionInProjection");
 	effect_description.set_frag_data_to_back_buffer("FragColor");
 	effect_description.set_uniform_block("Uniforms", uniformVector);
+	effect_description.set_glsl_version(330);
 
 	effect = ShaderEffect(gc, effect_description);
 }
@@ -59,5 +60,5 @@ bool Program::update()
 	effect.draw(gc);
 	window.flip(1);
 
-	return exit;
+	return !exit;
 }
