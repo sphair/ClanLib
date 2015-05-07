@@ -80,7 +80,9 @@ public:
 /// \{
 
 private:
-	std::shared_ptr<UTF8_Reader_Impl> impl;
+	std::string::size_type current_position = 0;
+	std::string::size_type length = 0;
+	const unsigned char *data = nullptr;
 /// \}
 };
 
