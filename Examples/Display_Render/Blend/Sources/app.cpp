@@ -79,7 +79,7 @@ bool App::update()
 	game_time.update();
 	//canvas.clear();
 
-	options->set_needs_layout();	//TODO: Remove this line when completed optimising the GUI
+	//options->set_needs_layout();	//Use this line when optimising the GUI
 	options->set_needs_render();
 	options->set_viewport(canvas.get_size());
 	options->set_background_color(clan::Colorf(0.6f, 0.6f, 0.2f, 1.0f));
