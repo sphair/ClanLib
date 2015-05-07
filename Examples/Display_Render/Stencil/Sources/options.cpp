@@ -44,7 +44,7 @@ Options::Options(clan::Canvas &canvas) : clan::TextureView(canvas)
 
 	int slider_xpos = 400;
 	int slider_label_xpos = slider_xpos + 200;
-	int slider_ypos = 250;
+	int slider_ypos = 300;
 	int slider_gap = 24;
 	slider_numballs = create_slider(slider_xpos, slider_ypos);
 	slider_numballs->set_max_position(9);
@@ -70,17 +70,22 @@ Options::Options(clan::Canvas &canvas) : clan::TextureView(canvas)
 	checkbox_circle->func_state_changed() = bind_member(this, &Options::checkbox_circle_changed);
 	checkbox_ypos += checkbox_gap + 8;
 
-	//make_compare_menu(combo_compare_menu);
-	//combo_comparefunc = create_compare_combo_box(600, 40, combo_compare_menu, 3);
-	//label_comparefunc = create_combobox_label(combo_comparefunc, "Compare Function");
+	std::shared_ptr<clan::ListBoxView> listbox;
+	listbox = create_listbox(600, 40, "Compare Function");
+	insert_compare(listbox);
+	listbox->func_selection_changed() = [=](){on_equation_compare(listbox); };
+	listbox->set_selected_item(3);
 
-	//make_passfail_menu(combo_pass_menu);
-	//combo_pass = create_passfail_combo_box(600, 80, combo_pass_menu, 0);
-	//label_pass = create_combobox_label(combo_pass, "Pass Operation");
+	listbox = create_listbox(600, 180, "Pass Operation");
+	insert_passfail(listbox);
+	listbox->func_selection_changed() = [=](){on_equation_passfail(listbox, true); };
+	listbox->set_selected_item(0);
 
-	//make_passfail_menu(combo_fail_menu);
-	//combo_fail = create_passfail_combo_box(600, 120, combo_fail_menu, 3);
-	//label_fail = create_combobox_label(combo_fail, "Fail Operation");
+	listbox = create_listbox(850, 180, "Fail Operation");
+	insert_passfail(listbox);
+	listbox->func_selection_changed() = [=](){on_equation_passfail(listbox, false); };
+	listbox->set_selected_item(3);
+
 
 	update_all_slider_text();
 }
@@ -88,6 +93,16 @@ Options::Options(clan::Canvas &canvas) : clan::TextureView(canvas)
 Options::~Options()
 {
 
+}
+
+std::shared_ptr<clan::ListBoxView> Options::create_listbox(int xpos, int ypos, const std::string &title)
+{
+	auto listbox = Theme::create_listbox();
+	add_subview(listbox);
+	listbox->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:%4px;", xpos, ypos, 200, 100);
+	auto label_logic = create_slider_label(xpos, ypos - 30);
+	label_logic->set_text(title);
+	return listbox;
 }
 
 float Options::get_value(std::shared_ptr<clan::SliderView> slider)
@@ -129,9 +144,9 @@ std::shared_ptr<clan::CheckBoxView> Options::create_checkbox(int xpos, int ypos,
 	return checkbox;
 }
 
-/*
-void Options::on_compare_selected(int value, clan::ComboBox *combo)
+void Options::on_equation_compare(std::shared_ptr<clan::ListBoxView> listbox)
 {
+	int value = listbox->selected_item();
 	switch (value)
 	{
 		case 0:
@@ -161,8 +176,9 @@ void Options::on_compare_selected(int value, clan::ComboBox *combo)
 	}
 }
 
-void Options::on_passfail_selected(int value, clan::ComboBox *combo)
+void Options::on_equation_passfail(std::shared_ptr<clan::ListBoxView> listbox, bool is_pass)
 {
+	int value = listbox->selected_item();
 	clan::StencilOp selected;
 	switch (value)
 	{
@@ -193,7 +209,7 @@ void Options::on_passfail_selected(int value, clan::ComboBox *combo)
 		default:
 			throw clan::Exception("ERROR");
 	}
-	if (combo == combo_pass)
+	if (is_pass)
 	{
 		stencil_pass = selected;
 	}
@@ -202,7 +218,6 @@ void Options::on_passfail_selected(int value, clan::ComboBox *combo)
 		stencil_fail = selected;
 	}
 }
-*/
 
 std::shared_ptr<clan::LabelView> Options::create_slider_label(int xpos, int ypos)
 {
@@ -243,68 +258,20 @@ void Options::checkbox_circle_changed()
 	is_circle_set = checkbox_circle->checked();
 }
 
-/*
-
-clan::ComboBox *Options::create_compare_combo_box(int xpos, int ypos, clan::PopupMenu &menu, int selected_item)
+void Options::insert_compare(std::shared_ptr<clan::ListBoxView> &listbox)
 {
-	clan::ComboBox *combo = new clan::ComboBox(this);
-	combo->set_geometry(clan::Rect(xpos, ypos, clan::Size(180, 21)));
-	combo->set_editable(false);
-	combo->set_dropdown_height(128);
-	combo->set_dropdown_minimum_width(64);
-	combo->set_popup_menu(menu);
-	combo->set_selected_item(selected_item);
-	combo->func_item_selected() = [=](int value){on_compare_selected(value, combo); };
+	listbox->set_items<std::string>(
+	{
+		"lequal", "gequal", "less", "greater", "equal", "notequal", "always", "never"
+	}, Theme::create_listbox_label);
 
-	return combo;
 }
 
-clan::ComboBox *Options::create_passfail_combo_box(int xpos, int ypos, clan::PopupMenu &menu, int selected_item)
+void Options::insert_passfail(std::shared_ptr<clan::ListBoxView> &listbox)
 {
-	clan::ComboBox *combo = new clan::ComboBox(this);
-	combo->set_geometry(clan::Rect(xpos, ypos, clan::Size(180, 21)));
-	combo->set_editable(false);
-	combo->set_dropdown_height(128);
-	combo->set_dropdown_minimum_width(64);
-	combo->set_popup_menu(menu);
-	combo->set_selected_item(selected_item);
-	combo->func_item_selected() = [=](int value){on_passfail_selected(value, combo); };
+	listbox->set_items<std::string>(
+	{
+		"keep", "zero", "replace", "incr", "decr", "invert", "incr_wrap", "decr_wrap"
+	}, Theme::create_listbox_label);
 
-	return combo;
 }
-
-void Options::make_compare_menu(clan::PopupMenu &menu)
-{
-	menu.insert_item("lequal");
-	menu.insert_item("gequal");
-	menu.insert_item("less");
-	menu.insert_item("greater");
-	menu.insert_item("equal");
-	menu.insert_item("notequal");
-	menu.insert_item("always");
-	menu.insert_item("never");
-}
-
-void Options::make_passfail_menu(clan::PopupMenu &menu)
-{
-	menu.insert_item("keep");
-	menu.insert_item("zero");
-	menu.insert_item("replace");
-	menu.insert_item("incr");
-	menu.insert_item("decr");
-	menu.insert_item("invert");
-	menu.insert_item("incr_wrap");
-	menu.insert_item("decr_wrap");
-}
-
-std::shared_ptr<clan::LabelView> Options::create_combobox_label(clan::ComboBox *combo, const char *text)
-{
-	std::shared_ptr<clan::LabelView> component = new clan::Label(this);
-	clan::Rect combo_geometry = combo->get_geometry();
-	component->set_geometry(clan::Rect(combo_geometry.left, combo_geometry.top - 20, clan::Size(256, 17)));
-	component->set_text(text);
-	return component;
-}
-
-*/
-

@@ -43,7 +43,7 @@ App::App()
 	// For simplicity this example does not use the depth components
 	//win_desc.set_depth_size(16);
 	win_desc.set_title("Stencil Example");
-	win_desc.set_size(clan::Size( 900, 570 ), false);
+	win_desc.set_size(clan::Size( 1200, 570 ), false);
 
 	window = clan::DisplayWindow(win_desc);
 	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));

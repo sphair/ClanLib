@@ -47,6 +47,11 @@ public:
 	clan::StencilOp stencil_fail;
 
 private:
+	void insert_compare(std::shared_ptr<clan::ListBoxView> &listbox);
+	void insert_passfail(std::shared_ptr<clan::ListBoxView> &listbox);
+	void on_equation_compare(std::shared_ptr<clan::ListBoxView> listbox);
+	void on_equation_passfail(std::shared_ptr<clan::ListBoxView> listbox, bool is_pass);
+	std::shared_ptr<clan::ListBoxView> create_listbox(int xpos, int ypos, const std::string &title);
 	void checkbox_moveballs_changed();
 	void checkbox_circle_changed();
 	void update_all_slider_text();
@@ -66,17 +71,9 @@ private:
 	std::shared_ptr<clan::CheckBoxView> checkbox_moveballs;
 	std::shared_ptr<clan::CheckBoxView> checkbox_circle;
 
-	//std::shared_ptr<clan::LabelView> label_comparefunc;
-	//clan::ComboBox *combo_comparefunc;
-	//clan::PopupMenu combo_compare_menu;
-
-	//std::shared_ptr<clan::LabelView> label_pass;
-	//clan::ComboBox *combo_pass;
-	//clan::PopupMenu combo_pass_menu;
-
-	//std::shared_ptr<clan::LabelView> label_fail;
-	//clan::ComboBox *combo_fail;
-	//clan::PopupMenu combo_fail_menu;
+	std::shared_ptr<clan::LabelView> label_comparefunc;
+	std::shared_ptr<clan::LabelView> label_pass;
+	std::shared_ptr<clan::LabelView> label_fail;
 
 };
 
