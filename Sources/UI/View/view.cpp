@@ -130,6 +130,8 @@ namespace clan
 	{
 		if (view)
 		{
+			view->remove_from_super();
+
 			impl->_subviews.push_back(view);
 			view->impl->_superview = this;
 			view->set_needs_layout();
