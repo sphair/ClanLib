@@ -1,7 +1,6 @@
 
 #pragma once
 
-class clan::IODevice;
 class XMLSettings;
 
 class XMLSettingsAppModel
@@ -19,3 +18,4 @@ public:
 private:
 	clan::DomDocument document;
 };
+
