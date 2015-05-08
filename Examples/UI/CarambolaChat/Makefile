@@ -1,4 +1,4 @@
-EXAMPLE_BIN=carambola
+EXAMPLE_BIN=CarambolaChat/carambola
 OBJF = CarambolaChat/Controllers/ChatWindow/chat_window_controller.o \
     CarambolaChat/Controllers/Chat/chat_view_controller.o \
     CarambolaChat/Controllers/Connections/connections_view_controller.o \
