@@ -74,7 +74,7 @@ GUI::GUI()
 	root->set_event_window(window);
 	root->set_cursor_window(window);
 
-	root->set_viewport(clan::Rectf(0.0f, 0.0f, clan::Sizef(256.0f, 256.0f)));
+	root->set_viewport(gui_texture.get_size());
 
 	// Style the root view to use rounded corners and a bit of drop shadow
 	root->style()->set("background: linear-gradient(13.37deg, #f0f0f0, rgb(120,240,120) 50%, #f0f0f0)");

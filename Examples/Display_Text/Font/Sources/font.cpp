@@ -68,7 +68,7 @@ App::App()
 	root->set_event_window(window);
 	root->set_cursor_window(window);
 
-	root->set_viewport(clan::Rectf(10.0f, 10.0f, gui_image.get_size()));
+	root->set_viewport(gui_image.get_size());
 
 	int offset_x = 10;
 	int offset_y = 8;
@@ -236,7 +236,7 @@ void App::render(DisplayWindow &window, GameTime &game_time)
 
 	root->update();
 	canvas.set_blend_state(premultiply_src_blend);
-	gui_image.draw(canvas, 0, 0);
+	gui_image.draw(canvas, 10, 10);
 	canvas.reset_blend_state();
 
 	draw_font_example();
