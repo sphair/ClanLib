@@ -90,5 +90,6 @@ namespace clan
 
 		friend class View;
 		friend class ViewImpl;
+		friend class RootView;
 	};
 }

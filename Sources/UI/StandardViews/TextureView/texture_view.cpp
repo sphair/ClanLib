@@ -42,22 +42,6 @@ namespace clan
 {
 	TextureView::TextureView(Canvas &canvas) : impl(std::make_shared<TextureView_Impl>(this, canvas))
 	{
-
-	}
-
-	Canvas TextureView::get_canvas() const
-	{
-		return impl->canvas;
-	}
-
-	void TextureView::set_needs_render()
-	{
-		impl->needs_render = true;
-	}
-
-	bool TextureView::local_root()
-	{
-		return true;
 	}
 
 	void TextureView::update()
@@ -75,6 +59,16 @@ namespace clan
 		impl->clear_background_enable = enable;
 	}
 
+	Canvas TextureView::get_root_canvas() const
+	{
+		return impl->canvas;
+	}
+
+	void TextureView::set_root_needs_render()
+	{
+		impl->needs_render = true;
+	}
+
 	void TextureView::layout_local()
 	{
 		Rectf containing_box = superview()->geometry().content_box();
@@ -87,12 +81,21 @@ namespace clan
 		set_viewport(Rectf(screen_pos, screen_size));
 	}
 
-	Pointf TextureView::to_screen_pos(const Pointf &pos)
+	bool TextureView::root_hidden() const
+	{
+		return false;
+	}
+
+	void TextureView::set_root_hidden(bool value)
+	{
+	}
+
+	Pointf TextureView::root_to_screen_pos(const Pointf &pos)
 	{
 		return geometry().content_box().get_top_left() + pos;
 	}
 
-	Pointf TextureView::from_screen_pos(const Pointf &pos)
+	Pointf TextureView::root_from_screen_pos(const Pointf &pos)
 	{
 		return Pointf(pos) - geometry().content_box().get_top_left();
 	}
@@ -125,38 +128,44 @@ namespace clan
 	{
 		impl->on_window_close();
 	}
+
 	void TextureView::on_lost_focus()
 	{
 		impl->on_lost_focus();
-
 	}
+
 	void TextureView::on_got_focus()
 	{
 		impl->on_got_focus();
 	}
+
 	void TextureView::on_key_down(const clan::InputEvent &e)
 	{
 		impl->on_key_down(e);
 	}
+
 	void TextureView::on_key_up(const clan::InputEvent &e)
 	{
 		impl->on_key_up(e);
 	}
+
 	void TextureView::on_mouse_down(const clan::InputEvent &e)
 	{
 		impl->on_mouse_down(e);
 	}
+
 	void TextureView::on_mouse_dblclk(const clan::InputEvent &e)
 	{
 		impl->on_mouse_dblclk(e);
 	}
+
 	void TextureView::on_mouse_up(const clan::InputEvent &e)
 	{
 		impl->on_mouse_up(e);
 	}
+
 	void TextureView::on_mouse_move(const clan::InputEvent &e)
 	{
 		impl->on_mouse_move(e);
 	}
-
 }

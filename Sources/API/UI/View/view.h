@@ -95,10 +95,10 @@ namespace clan
 		void remove_from_super();
 
 		/// Test if view is set to hidden
-		virtual bool hidden() const;
+		bool hidden() const;
 
 		/// Hides a view from layout and rendering
-		virtual void set_hidden(bool value = true);
+		void set_hidden(bool value = true);
 
 		/// Test if view should participate in static layout calculations (layout_subviews)
 		bool is_static_position_and_visible() const;
@@ -120,13 +120,10 @@ namespace clan
 		/// Gets the current canvas used to render this view
 		///
 		/// This function may return a null canvas if the view does not have a canvas attached to it yet.
-		virtual Canvas get_canvas() const;
+		Canvas get_canvas() const;
 
 		/// Signals this view needs to be rendered again
-		virtual void set_needs_render();
-
-		/// Renders view into the specified canvas
-		void render(Canvas &canvas);
+		void set_needs_render();
 
 		/// Test if this view generated an exception during rendering
 		bool render_exception_encountered() const;
@@ -148,9 +145,6 @@ namespace clan
 		/// Specifies if content should be clipped during rendering
 		void set_content_clipped(bool clipped);
 
-		/// Renders the content of a view
-		virtual void render_content(Canvas &canvas) { }
-
 		/// Calculates the preferred width of this view
 		virtual float get_preferred_width(Canvas &canvas);
 
@@ -162,19 +156,6 @@ namespace clan
 
 		/// Calculates the offset to the last baseline
 		virtual float get_last_baseline_offset(Canvas &canvas, float width);
-
-		/// Indicates if the view acts as a local root for layout and rendering
-		virtual bool local_root();
-
-		/// Layout root view
-		///
-		/// This function should only be called on root views.
-		void layout(Canvas &canvas);
-
-		/// Layout local root
-		///
-		/// This function should only be called on local roots.
-		virtual void layout_local();
 
 		/// Sets the view geometry for all subviews of this view
 		virtual void layout_subviews(Canvas &canvas);
@@ -188,6 +169,9 @@ namespace clan
 
 		/// The view receiving keyboard events or nullptr if no view has the focus
 		View *focus_view() const;
+
+		/// Indicates if the view acts as a local root for layout and rendering
+		bool local_root() const;
 
 		/// Find descendant view at the specified content relative position
 		std::shared_ptr<View> find_view_at(const Pointf &pos) const;
@@ -231,9 +215,6 @@ namespace clan
 
 		/// Specify that the cursor icon is inherited from the super view
 		void set_inherit_cursor();
-
-		/// Dispatch event to signals listening for events
-		void dispatch_event(EventUI *e, bool no_propagation = false);
 
 		/// Window activated event
 		Signal<void(ActivationChangeEvent &)> &sig_activated(bool use_capture = false);
@@ -284,10 +265,10 @@ namespace clan
 		void update_cursor(DisplayWindow &window);
 
 		/// Map from local content to screen coordinates
-		virtual Pointf to_screen_pos(const Pointf &pos);
+		Pointf to_screen_pos(const Pointf &pos);
 
 		/// Map from screen to local content coordinates
-		virtual Pointf from_screen_pos(const Pointf &pos);
+		Pointf from_screen_pos(const Pointf &pos);
 
 		/// Map from local content to root content coordinates
 		Pointf to_root_pos(const Pointf &pos);
@@ -295,15 +276,18 @@ namespace clan
 		/// Map from root content to local content coordinates
 		Pointf from_root_pos(const Pointf &pos);
 
+		/// Dispatch event to signals listening for events
+		static void dispatch_event(View *target, EventUI *e, bool no_propagation = false);
+
 	protected:
+		/// Renders the content of a view
+		virtual void render_content(Canvas &canvas) { }
+
 		/// Child view was added to this view
 		virtual void subview_added(const std::shared_ptr<View> &view) { }
 
 		/// Child view was removed from this view
 		virtual void subview_removed(const std::shared_ptr<View> &view) { }
-
-		/// Invoke view signals for the given event
-		virtual void process_event(EventUI *e, bool use_capture);
 
 	private:
 		View(const View &) = delete;
@@ -311,6 +295,7 @@ namespace clan
 
 		std::unique_ptr<ViewImpl> impl;
 
+		friend class RootView;
 		friend class ViewImpl;
 	};
 }

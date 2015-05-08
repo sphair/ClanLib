@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "../View/view.h"
+#include "../View/root_view.h"
 #include "../../Display/Window/display_window.h"
 #include "../../Display/Window/keys.h"
 
@@ -52,28 +52,31 @@ namespace clan
 	class InputEvent;
 	class WindowView_Impl;
 
-	class WindowView : public View
+	class WindowView : public RootView
 	{
 	public:
 		WindowView(const DisplayWindowDescription &desc);
-
-		bool hidden() const override;
-		void set_hidden(bool value = true) override;
 
 		void show(WindowShowType type = WindowShowType::show);
 		void hide();
 
 		DisplayWindow get_display_window();
-		Canvas get_canvas() const override;
 
-		void set_needs_render() override;
-		bool local_root() override;
+	protected:
+		bool root_hidden() const override;
+		void set_root_hidden(bool value) override;
+
+		Canvas get_root_canvas() const override;
+
+		void set_root_needs_render() override;
 		void layout_local() override;
 
-		Pointf to_screen_pos(const Pointf &pos) override;
-		Pointf from_screen_pos(const Pointf &pos) override;
+		Pointf root_to_screen_pos(const Pointf &pos) override;
+		Pointf root_from_screen_pos(const Pointf &pos) override;
 
 	private:
 		std::shared_ptr<WindowView_Impl> impl;
+
+		friend class WindowView_Impl;
 	};
 }

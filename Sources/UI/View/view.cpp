@@ -28,8 +28,8 @@
 
 #include "UI/precomp.h"
 #include "API/UI/View/view.h"
+#include "API/UI/View/root_view.h"
 #include "API/Display/2D/canvas.h"
-#include "API/Display/Window/display_window.h"
 #include "API/UI/Events/event.h"
 #include "API/UI/Events/activation_change_event.h"
 #include "API/UI/Events/close_event.h"
@@ -41,7 +41,6 @@
 #include "view_impl.h"
 #include "vbox_layout.h"
 #include "hbox_layout.h"
-#include "positioned_layout.h"
 #include <algorithm>
 
 namespace clan
@@ -163,15 +162,29 @@ namespace clan
 
 	bool View::hidden() const
 	{
-		return impl->hidden;
+		if (local_root())
+		{
+			return static_cast<const RootView *>(this)->root_hidden();
+		}
+		else
+		{
+			return impl->hidden;
+		}
 	}
 
 	void View::set_hidden(bool value)
 	{
-		if (value != impl->hidden)
+		if (local_root())
 		{
-			impl->hidden = value;
-			set_needs_layout();
+			return static_cast<RootView *>(this)->set_root_hidden(value);
+		}
+		else
+		{
+			if (value != impl->hidden)
+			{
+				impl->hidden = value;
+				set_needs_layout();
+			}
 		}
 	}
 
@@ -198,6 +211,9 @@ namespace clan
 
 	Canvas View::get_canvas() const
 	{
+		if (local_root())
+			return static_cast<const RootView *>(this)->get_root_canvas();
+
 		View *super = superview();
 		if (super)
 			return super->get_canvas();
@@ -207,9 +223,16 @@ namespace clan
 
 	void View::set_needs_render()
 	{
-		View *super = superview();
-		if (super)
-			super->set_needs_render();
+		if (local_root())
+		{
+			static_cast<RootView *>(this)->set_root_needs_render();
+		}
+		else
+		{
+			View *super = superview();
+			if (super)
+				super->set_needs_render();
+		}
 	}
 
 	const ViewGeometry &View::geometry() const
@@ -224,58 +247,6 @@ namespace clan
 			impl->_geometry = geometry;
 			set_needs_layout();
 		}
-	}
-
-	void View::render(Canvas &canvas)
-	{
-		style_cascade().render_background(canvas, geometry());
-		style_cascade().render_border(canvas, geometry());
-
-		Mat4f old_transform = canvas.get_transform();
-		Pointf translate = impl->_geometry.content_pos();
-		canvas.set_transform(old_transform * Mat4f::translate(translate.x, translate.y, 0) * impl->view_transform);
-
-		bool clipped = impl->content_clipped;
-		if (clipped)
-		{
-			// Seems canvas cliprects are always in absolute coordinates - should this be changed?
-			// Note: this code isn't correct for rotated transforms (plus canvas cliprect can only clip AABB)
-			Vec4f tl_point = canvas.get_transform() * Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
-			Vec4f br_point = canvas.get_transform() * Vec4f(impl->_geometry.content_width, impl->_geometry.content_height, 0.0f, 1.0f);
-			canvas.push_cliprect(Rectf(std::min(tl_point.x, br_point.x), std::min(tl_point.y, br_point.y), std::max(tl_point.x, br_point.x), std::max(tl_point.y, br_point.y)));
-		}
-
-		if (!render_exception_encountered())
-		{
-			bool success = UIThread::try_catch([&]
-			{
-				render_content(canvas);
-			});
-
-			if (!success)
-			{
-				impl->exception_encountered = true;
-			}
-		}
-
-		if (render_exception_encountered())
-		{
-			canvas.set_transform(old_transform * Mat4f::translate(translate.x, translate.y, 0));
-			canvas.fill_rect(0.0f, 0.0f, impl->_geometry.content_width, impl->_geometry.content_height, Colorf(1.0f, 0.2f, 0.2f, 0.5f));
-			canvas.draw_line(0.0f, 0.0f, impl->_geometry.content_width, impl->_geometry.content_height, Colorf::black);
-			canvas.draw_line(impl->_geometry.content_width, 0.0f, 0.0f, impl->_geometry.content_height, Colorf::black);
-		}
-
-		for (std::shared_ptr<View> &view : impl->_subviews)
-		{
-			if (!view->hidden() && !view->local_root())
-				view->render(canvas);
-		}
-
-		if (clipped)
-			canvas.pop_cliprect();
-
-		canvas.set_transform(old_transform);
 	}
 
 	bool View::render_exception_encountered() const
@@ -361,23 +332,9 @@ namespace clan
 			return 0.0f;
 	}
 
-	bool View::local_root()
+	bool View::local_root() const
 	{
-		return false;
-	}
-
-	void View::layout(Canvas &canvas)
-	{
-		if (needs_layout())
-		{
-			layout_subviews(canvas);
-			PositionedLayout::layout_subviews(canvas, this);
-		}
-		impl->_needs_layout = false;
-	}
-
-	void View::layout_local()
-	{
+		return dynamic_cast<const RootView *>(this) != nullptr;
 	}
 
 	void View::layout_subviews(Canvas &canvas)
@@ -469,11 +426,11 @@ namespace clan
 		if (old_focus_view)
 		{
 			FocusChangeEvent focus_loss(FocusChangeType::lost);
-			old_focus_view->dispatch_event(&focus_loss, true);
+			View::dispatch_event(old_focus_view, &focus_loss, true);
 		}
 
 		FocusChangeEvent focus_gain(FocusChangeType::gained);
-		dispatch_event(&focus_gain, true);
+		View::dispatch_event(this, &focus_gain, true);
 	}
 
 	void View::remove_focus()
@@ -486,7 +443,7 @@ namespace clan
 		if (old_focus_view)
 		{
 			FocusChangeEvent focus_loss(FocusChangeType::lost);
-			old_focus_view->dispatch_event(&focus_loss, true);
+			View::dispatch_event(old_focus_view, &focus_loss, true);
 		}
 	}
 
@@ -602,6 +559,9 @@ namespace clan
 
 	Pointf View::to_screen_pos(const Pointf &pos)
 	{
+		if (local_root())
+			return static_cast<RootView *>(this)->root_to_screen_pos(pos);
+
 		if (superview())
 			return superview()->to_screen_pos(geometry().content_box().get_top_left() + pos);
 		else
@@ -610,6 +570,9 @@ namespace clan
 
 	Pointf View::from_screen_pos(const Pointf &pos)
 	{
+		if (local_root())
+			return static_cast<RootView *>(this)->root_from_screen_pos(pos);
+
 		if (superview())
 			return superview()->from_screen_pos(pos) - geometry().content_box().get_top_left();
 		else
@@ -630,103 +593,6 @@ namespace clan
 			return superview()->from_root_pos(Vec2f(Mat4f::inverse(view_transform()) * Vec4f(pos, 0.0f, 1.0f)) - geometry().content_box().get_top_left());
 		else
 			return pos;
-	}
-
-	void View::dispatch_event(EventUI *e, bool no_propagation)
-	{
-		e->_target = shared_from_this();
-
-		if (no_propagation)
-		{
-			e->_phase = EventUIPhase::at_target;
-			e->_current_target = e->_target;
-			e->_current_target->process_event(e, true);
-			if (!e->propagation_stopped())
-				e->_current_target->process_event(e, false);
-		}
-		else
-		{
-			impl->inverse_bubble(e);
-
-			if (!e->propagation_stopped())
-			{
-				e->_phase = EventUIPhase::at_target;
-				e->_current_target = e->_target;
-				e->_current_target->process_event(e, true);
-				if (!e->propagation_stopped())
-					e->_current_target->process_event(e, false);
-
-				while (e->_current_target && !e->propagation_stopped())
-				{
-					View *current_target_superview = e->_current_target->superview();
-					e->_phase = EventUIPhase::bubbling;
-					e->_current_target = current_target_superview ? current_target_superview->shared_from_this() : std::shared_ptr<View>();
-					if (e->_current_target)
-						e->_current_target->process_event(e, false);
-				}
-			}
-		}
-
-		e->_current_target.reset();
-		e->_phase = EventUIPhase::none;
-	}
-
-	void View::process_event(EventUI *e, bool use_capture)
-	{
-		ActivationChangeEvent *activation_change = dynamic_cast<ActivationChangeEvent*>(e);
-		CloseEvent *close = dynamic_cast<CloseEvent*>(e);
-		ResizeEvent *resize = dynamic_cast<ResizeEvent*>(e);
-		FocusChangeEvent *focus_change = dynamic_cast<FocusChangeEvent*>(e);
-		PointerEvent *pointer = dynamic_cast<PointerEvent*>(e);
-		KeyEvent *key = dynamic_cast<KeyEvent*>(e);
-
-		if (activation_change)
-		{
-			switch (activation_change->type())
-			{
-			case ActivationChangeType::activated: sig_activated(use_capture)(*activation_change); break;
-			case ActivationChangeType::deactivated: sig_deactivated(use_capture)(*activation_change); break;
-			}
-		}
-		else if (close)
-		{
-			sig_close(use_capture)(*close);
-		}
-		else if (resize)
-		{
-			sig_resize(use_capture)(*resize);
-		}
-		else if (focus_change)
-		{
-			switch (focus_change->type())
-			{
-			case FocusChangeType::gained: sig_focus_gained(use_capture)(*focus_change); break;
-			case FocusChangeType::lost: sig_focus_lost(use_capture)(*focus_change); break;
-			}
-		}
-		else if (pointer)
-		{
-			switch (pointer->type())
-			{
-			case PointerEventType::enter: sig_pointer_enter(use_capture)(*pointer); break;
-			case PointerEventType::leave: sig_pointer_leave(use_capture)(*pointer); break;
-			case PointerEventType::move: sig_pointer_move(use_capture)(*pointer); break;
-			case PointerEventType::press: sig_pointer_press(use_capture)(*pointer); break;
-			case PointerEventType::release: sig_pointer_release(use_capture)(*pointer); break;
-			case PointerEventType::double_click: sig_pointer_double_click(use_capture)(*pointer); break;
-			case PointerEventType::promixity_change: sig_pointer_proximity_change(use_capture)(*pointer); break;
-			case PointerEventType::none: break;
-			}
-		}
-		else if (key)
-		{
-			switch (key->type())
-			{
-			case KeyEventType::none: break;
-			case KeyEventType::press: sig_key_press(use_capture)(*key); break;
-			case KeyEventType::release: sig_key_release(use_capture)(*key); break;
-			}
-		}
 	}
 
 	Signal<void(ActivationChangeEvent &)> &View::sig_activated(bool use_capture)
@@ -804,7 +670,98 @@ namespace clan
 		return impl->_sig_key_release[use_capture ? 1 : 0];
 	}
 
+	void View::dispatch_event(View *target, EventUI *e, bool no_propagation)
+	{
+		e->_target = target->shared_from_this();
+
+		if (no_propagation)
+		{
+			e->_phase = EventUIPhase::at_target;
+			e->_current_target = e->_target;
+			e->_current_target->impl->process_event(e->_current_target.get(), e, true);
+			if (!e->propagation_stopped())
+				e->_current_target->impl->process_event(e->_current_target.get(), e, false);
+		}
+		else
+		{
+			target->impl->inverse_bubble(e);
+
+			if (!e->propagation_stopped())
+			{
+				e->_phase = EventUIPhase::at_target;
+				e->_current_target = e->_target;
+				e->_current_target->impl->process_event(e->_current_target.get(), e, true);
+				if (!e->propagation_stopped())
+					e->_current_target->impl->process_event(e->_current_target.get(), e, false);
+
+				while (e->_current_target && !e->propagation_stopped())
+				{
+					View *current_target_superview = e->_current_target->superview();
+					e->_phase = EventUIPhase::bubbling;
+					e->_current_target = current_target_superview ? current_target_superview->shared_from_this() : std::shared_ptr<View>();
+					if (e->_current_target)
+						e->_current_target->impl->process_event(e->_current_target.get(), e, false);
+				}
+			}
+		}
+
+		e->_current_target.reset();
+		e->_phase = EventUIPhase::none;
+	}
+
 	/////////////////////////////////////////////////////////////////////////
+
+	void ViewImpl::render(View *self, Canvas &canvas)
+	{
+		style_cascade.render_background(canvas, _geometry);
+		style_cascade.render_border(canvas, _geometry);
+
+		Mat4f old_transform = canvas.get_transform();
+		Pointf translate = _geometry.content_pos();
+		canvas.set_transform(old_transform * Mat4f::translate(translate.x, translate.y, 0) * view_transform);
+
+		bool clipped = content_clipped;
+		if (clipped)
+		{
+			// Seems canvas cliprects are always in absolute coordinates - should this be changed?
+			// Note: this code isn't correct for rotated transforms (plus canvas cliprect can only clip AABB)
+			Vec4f tl_point = canvas.get_transform() * Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+			Vec4f br_point = canvas.get_transform() * Vec4f(_geometry.content_width, _geometry.content_height, 0.0f, 1.0f);
+			canvas.push_cliprect(Rectf(std::min(tl_point.x, br_point.x), std::min(tl_point.y, br_point.y), std::max(tl_point.x, br_point.x), std::max(tl_point.y, br_point.y)));
+		}
+
+		if (!self->render_exception_encountered())
+		{
+			bool success = UIThread::try_catch([&]
+			{
+				self->render_content(canvas);
+			});
+
+			if (!success)
+			{
+				exception_encountered = true;
+			}
+		}
+
+		if (self->render_exception_encountered())
+		{
+			canvas.set_transform(old_transform * Mat4f::translate(translate.x, translate.y, 0));
+			canvas.fill_rect(0.0f, 0.0f, _geometry.content_width, _geometry.content_height, Colorf(1.0f, 0.2f, 0.2f, 0.5f));
+			canvas.draw_line(0.0f, 0.0f, _geometry.content_width, _geometry.content_height, Colorf::black);
+			canvas.draw_line(_geometry.content_width, 0.0f, 0.0f, _geometry.content_height, Colorf::black);
+		}
+
+		for (std::shared_ptr<View> &view : _subviews)
+		{
+			if (!view->hidden() && !view->local_root())
+				view->impl->render(view.get(), canvas);
+		}
+
+		if (clipped)
+			canvas.pop_cliprect();
+
+		canvas.set_transform(old_transform);
+	}
 
 	void ViewImpl::update_style_cascade() const
 	{
@@ -836,6 +793,64 @@ namespace clan
 			style_cascade.cascade.push_back(match.first);
 	}
 
+	void ViewImpl::process_event(View *self, EventUI *e, bool use_capture)
+	{
+		ActivationChangeEvent *activation_change = dynamic_cast<ActivationChangeEvent*>(e);
+		CloseEvent *close = dynamic_cast<CloseEvent*>(e);
+		ResizeEvent *resize = dynamic_cast<ResizeEvent*>(e);
+		FocusChangeEvent *focus_change = dynamic_cast<FocusChangeEvent*>(e);
+		PointerEvent *pointer = dynamic_cast<PointerEvent*>(e);
+		KeyEvent *key = dynamic_cast<KeyEvent*>(e);
+
+		if (activation_change)
+		{
+			switch (activation_change->type())
+			{
+			case ActivationChangeType::activated: self->sig_activated(use_capture)(*activation_change); break;
+			case ActivationChangeType::deactivated: self->sig_deactivated(use_capture)(*activation_change); break;
+			}
+		}
+		else if (close)
+		{
+			self->sig_close(use_capture)(*close);
+		}
+		else if (resize)
+		{
+			self->sig_resize(use_capture)(*resize);
+		}
+		else if (focus_change)
+		{
+			switch (focus_change->type())
+			{
+			case FocusChangeType::gained: self->sig_focus_gained(use_capture)(*focus_change); break;
+			case FocusChangeType::lost: self->sig_focus_lost(use_capture)(*focus_change); break;
+			}
+		}
+		else if (pointer)
+		{
+			switch (pointer->type())
+			{
+			case PointerEventType::enter: self->sig_pointer_enter(use_capture)(*pointer); break;
+			case PointerEventType::leave: self->sig_pointer_leave(use_capture)(*pointer); break;
+			case PointerEventType::move: self->sig_pointer_move(use_capture)(*pointer); break;
+			case PointerEventType::press: self->sig_pointer_press(use_capture)(*pointer); break;
+			case PointerEventType::release: self->sig_pointer_release(use_capture)(*pointer); break;
+			case PointerEventType::double_click: self->sig_pointer_double_click(use_capture)(*pointer); break;
+			case PointerEventType::promixity_change: self->sig_pointer_proximity_change(use_capture)(*pointer); break;
+			case PointerEventType::none: break;
+			}
+		}
+		else if (key)
+		{
+			switch (key->type())
+			{
+			case KeyEventType::none: break;
+			case KeyEventType::press: self->sig_key_press(use_capture)(*key); break;
+			case KeyEventType::release: self->sig_key_release(use_capture)(*key); break;
+			}
+		}
+	}
+
 	void ViewImpl::inverse_bubble(EventUI *e)
 	{
 		if (_superview)
@@ -847,7 +862,7 @@ namespace clan
 				e->_phase = EventUIPhase::capturing;
 				e->_current_target = super;
 				if (e->_current_target)
-					e->_current_target->process_event(e, true);
+					e->_current_target->impl->process_event(e->_current_target.get(), e, true);
 			}
 		}
 	}

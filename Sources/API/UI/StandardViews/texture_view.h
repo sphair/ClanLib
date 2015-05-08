@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "../View/view.h"
+#include "../View/root_view.h"
 #include "../../Display/Window/display_window.h"
 #include "../../Display/Window/keys.h"
 
@@ -37,7 +37,7 @@ namespace clan
 	class InputEvent;
 	class TextureView_Impl;
 
-	class TextureView : public View
+	class TextureView : public RootView
 	{
 	public:
 		TextureView(Canvas &canvas);
@@ -50,18 +50,10 @@ namespace clan
 		/// \brief Returns the position and size within the canvas
 		Rectf get_viewport() const;
 
-		Canvas get_canvas() const override;
-		void set_needs_render() override;
-		bool local_root() override;
-		void layout_local() override;
-
 		void set_background_color(const Colorf &background_color = Colorf::transparent);
 		void set_clear_background(bool enable = true);
 
 		void update();
-
-		Pointf to_screen_pos(const Pointf &pos) override;
-		Pointf from_screen_pos(const Pointf &pos) override;
 
 		/// \brief Set the window to use to automatically set the cursor (including mouse capture)
 		///
@@ -86,7 +78,18 @@ namespace clan
 		void on_mouse_up(const clan::InputEvent &);
 		void on_mouse_move(const clan::InputEvent &);
 
+	protected:
+		bool root_hidden() const override;
+		void set_root_hidden(bool value) override;
+		Canvas get_root_canvas() const override;
+		void set_root_needs_render() override;
+		void layout_local() override;
+		Pointf root_to_screen_pos(const Pointf &pos) override;
+		Pointf root_from_screen_pos(const Pointf &pos) override;
+
 	private:
 		std::shared_ptr<TextureView_Impl> impl;
+
+		friend class TextureView_Impl;
 	};
 }

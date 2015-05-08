@@ -27,6 +27,7 @@
 */
 
 #include "UI/precomp.h"
+#include "API/UI/View/root_view.h"
 #include "positioned_layout.h"
 #include <algorithm>
 
@@ -38,7 +39,7 @@ namespace clan
 		{
 			if (subview->local_root())
 			{
-				subview->layout_local();
+				static_cast<RootView*>(subview.get())->layout_local();
 				continue;
 			}
 			else if (subview->hidden())

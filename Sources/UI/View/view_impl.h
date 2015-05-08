@@ -29,6 +29,7 @@
 #include "API/UI/View/view.h"
 #include "API/UI/View/focus_policy.h"
 #include "API/UI/Style/style.h"
+#include "API/Display/Window/display_window.h"
 #include "API/Display/Window/cursor.h"
 #include "API/Display/Window/cursor_description.h"
 #include "../Animation/animation_group.h"
@@ -38,6 +39,8 @@ namespace clan
 	class ViewImpl
 	{
 	public:
+		void render(View *self, Canvas &canvas);
+		void process_event(View *self, EventUI *e, bool use_capture);
 		void update_style_cascade() const;
 
 		unsigned int find_next_tab_index(unsigned int tab_index) const;

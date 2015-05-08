@@ -28,21 +28,48 @@
 
 #pragma once
 
-#include "window_view.h"
+#include "view.h"
 
 namespace clan
 {
-	class PopupView_Impl;
-
-	class PopupView : public WindowView
+	/// Base class for views participating as a root view in the user interface
+	class RootView : public View
 	{
 	public:
-		PopupView();
-
+		
 	protected:
-		void set_root_hidden(bool value) override;
+		/// Layout root view
+		void layout(Canvas &canvas);
+
+		/// Renders view into the specified canvas
+		void render(Canvas &canvas);
+
+		/// Test if view is set to hidden
+		virtual bool root_hidden() const = 0;
+
+		/// Hides a view from layout and rendering
+		virtual void set_root_hidden(bool value) = 0;
+
+		/// Gets the current canvas used to render this view
+		///
+		/// This function may return a null canvas if the view does not have a canvas attached to it yet.
+		virtual Canvas get_root_canvas() const = 0;
+
+		/// Signals this view needs to be rendered again
+		virtual void set_root_needs_render() = 0;
+
+		/// Layout local root
+		virtual void layout_local() = 0;
+
+		/// Map from local content to screen coordinates
+		virtual Pointf root_to_screen_pos(const Pointf &pos) = 0;
+
+		/// Map from screen to local content coordinates
+		virtual Pointf root_from_screen_pos(const Pointf &pos) = 0;
 
 	private:
-		std::shared_ptr<PopupView_Impl> impl;
+		friend class View;
+		friend class ViewImpl;
+		friend class PositionedLayout;
 	};
 }

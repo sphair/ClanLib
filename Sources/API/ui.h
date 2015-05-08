@@ -78,6 +78,7 @@
 #include "UI/SystemDialogs/save_file_dialog.h"
 #include "UI/SystemDialogs/folder_browse_dialog.h"
 #include "UI/View/focus_policy.h"
+#include "UI/View/root_view.h"
 #include "UI/View/view.h"
 #include "UI/View/view_geometry.h"
 #include "UI/ViewController/view_controller.h"

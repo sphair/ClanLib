@@ -26,23 +26,27 @@
 **    Magnus Norddahl
 */
 
-#pragma once
-
-#include "window_view.h"
+#include "UI/precomp.h"
+#include "API/UI/View/root_view.h"
+#include "API/UI/Events/event.h"
+#include "view_impl.h"
+#include "positioned_layout.h"
+#include <algorithm>
 
 namespace clan
 {
-	class PopupView_Impl;
-
-	class PopupView : public WindowView
+	void RootView::layout(Canvas &canvas)
 	{
-	public:
-		PopupView();
+		if (needs_layout())
+		{
+			layout_subviews(canvas);
+			PositionedLayout::layout_subviews(canvas, this);
+		}
+		impl->_needs_layout = false;
+	}
 
-	protected:
-		void set_root_hidden(bool value) override;
-
-	private:
-		std::shared_ptr<PopupView_Impl> impl;
-	};
+	void RootView::render(Canvas &canvas)
+	{
+		impl->render(this, canvas);
+	}
 }

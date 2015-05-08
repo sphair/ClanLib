@@ -49,26 +49,6 @@ namespace clan
 		return impl->window;
 	}
 
-	Canvas WindowView::get_canvas() const
-	{
-		return impl->canvas;
-	}
-
-	bool WindowView::hidden() const
-	{
-		return !impl->window.is_visible();
-	}
-
-	void WindowView::set_hidden(bool value)
-	{
-		if (hidden() != value)
-		{
-			set_needs_layout();
-			set_needs_render();
-			show(value ? WindowShowType::hide : WindowShowType::show);
-		}
-	}
-
 	void WindowView::show(WindowShowType type)
 	{
 		switch (type)
@@ -113,14 +93,29 @@ namespace clan
 		impl->window.hide();
 	}
 
-	void WindowView::set_needs_render()
+	Canvas WindowView::get_root_canvas() const
 	{
-		impl->window.request_repaint(impl->window.get_viewport());
+		return impl->canvas;
 	}
 
-	bool WindowView::local_root()
+	bool WindowView::root_hidden() const
 	{
-		return true;
+		return !impl->window.is_visible();
+	}
+
+	void WindowView::set_root_hidden(bool value)
+	{
+		if (hidden() != value)
+		{
+			set_needs_layout();
+			set_needs_render();
+			show(value ? WindowShowType::hide : WindowShowType::show);
+		}
+	}
+
+	void WindowView::set_root_needs_render()
+	{
+		impl->window.request_repaint(impl->window.get_viewport());
 	}
 
 	void WindowView::layout_local()
@@ -136,13 +131,13 @@ namespace clan
 		impl->window.set_position(Rectf(screen_pos, screen_size), false);
 	}
 
-	Pointf WindowView::to_screen_pos(const Pointf &pos)
+	Pointf WindowView::root_to_screen_pos(const Pointf &pos)
 	{
 		Pointf client_pos(geometry().content_box().get_top_left() + pos);
 		return Pointf(impl->window.client_to_screen(client_pos));
 	}
 
-	Pointf WindowView::from_screen_pos(const Pointf &pos)
+	Pointf WindowView::root_from_screen_pos(const Pointf &pos)
 	{
 		Pointf client_pos = impl->window.screen_to_client(Pointf(pos));
 		return Pointf(client_pos) - geometry().content_box().get_top_left();

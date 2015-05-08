@@ -61,14 +61,14 @@ namespace clan
 		release_capture();
 
 		ActivationChangeEvent e(ActivationChangeType::deactivated);
-		window_view->dispatch_event(&e);
+		View::dispatch_event(window_view, &e);
 	}
 
 	void WindowView_Impl::on_got_focus()
 	{
 		release_capture();
 		ActivationChangeEvent e(ActivationChangeType::activated);
-		window_view->dispatch_event(&e);
+		View::dispatch_event(window_view, &e);
 	}
 
 	void WindowView_Impl::on_resize(float, float)
@@ -91,7 +91,7 @@ namespace clan
 	void WindowView_Impl::on_window_close()
 	{
 		CloseEvent e;
-		window_view->dispatch_event(&e);
+		View::dispatch_event(window_view, &e);
 	}
 
 	void WindowView_Impl::window_key_event(KeyEvent &e)
@@ -99,7 +99,7 @@ namespace clan
 		View *view = window_view->focus_view();
 		if (view)
 		{
-			view->dispatch_event(&e);
+			View::dispatch_event(view, &e);
 		}
 
 		if (!e.default_prevented() && e.type() == KeyEventType::press && e.shift_down() && e.key() == Key::tab)
@@ -119,7 +119,7 @@ namespace clan
 			if (hot_view)
 			{
 				PointerEvent e_exit(PointerEventType::leave, PointerButton::none, e.pos(window_view->root_view()), e.alt_down(), e.shift_down(), e.ctrl_down(), e.cmd_down());
-				hot_view->dispatch_event(&e_exit, true);
+				View::dispatch_event(hot_view.get(), &e_exit, true);
 			}
 
 			hot_view = view;
@@ -127,7 +127,7 @@ namespace clan
 			if (hot_view)
 			{
 				PointerEvent e_enter(PointerEventType::enter, PointerButton::none, e.pos(window_view->root_view()), e.alt_down(), e.shift_down(), e.ctrl_down(), e.cmd_down());
-				hot_view->dispatch_event(&e_enter, true);
+				View::dispatch_event(hot_view.get(), &e_enter, true);
 			}
 		}
 
@@ -189,9 +189,9 @@ namespace clan
 			return;
 
 		if (view)
-			view->dispatch_event(&e);
+			View::dispatch_event(view.get(), &e);
 		else
-			window_view->dispatch_event(&e);
+			View::dispatch_event(window_view, &e);
 	}
 
 	Pointf WindowView_Impl::to_root_pos(const Pointf &client_pos) const

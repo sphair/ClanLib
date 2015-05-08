@@ -51,7 +51,7 @@ namespace clan
 		get_display_window().enable_alpha_channel(Rect(-1, -1, 0, 0));
 	}
 
-	void PopupView::set_hidden(bool value)
+	void PopupView::set_root_hidden(bool value)
 	{
 		if (value != hidden())
 		{
