@@ -174,7 +174,7 @@ int Service_Unix::run_daemon(std::vector<std::string> args)
 			return 0;
 		}
 	}
-	catch (Exception e)
+	catch (Exception &e)
 	{
 		std::cout << "Unhandled exception: " << e.message.c_str() << std::endl;
 	}
