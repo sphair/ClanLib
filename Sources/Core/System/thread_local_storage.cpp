@@ -51,7 +51,7 @@ ThreadLocalStorage::ThreadLocalStorage()
 		instance->cl_tls_index = TlsAlloc();
 	}
 
-	ThreadLocalStorage_Impl *tls_impl = static_cast<ThreadLocalStorage_Impl *> TlsGetValue(instance->cl_tls_index);
+	ThreadLocalStorage_Impl *tls_impl = static_cast<ThreadLocalStorage_Impl *>(TlsGetValue(instance->cl_tls_index));
 
 	if (!tls_impl)
 	{
@@ -157,11 +157,11 @@ void ThreadLocalStorage::set_variable(const std::string &name, std::shared_ptr<T
 #ifdef WIN32
 	if (instance->cl_tls_index == TLS_OUT_OF_INDEXES)
 		throw Exception("No ThreadLocalStorage object created for this thread.");
-	ThreadLocalStorage_Impl *tls_impl = static_cast<ThreadLocalStorage_Impl *> TlsGetValue(instance->cl_tls_index);
+	ThreadLocalStorage_Impl *tls_impl = static_cast<ThreadLocalStorage_Impl *>(TlsGetValue(instance->cl_tls_index));
 #elif !defined(HAVE_TLS)
 	if (!instance->cl_tls_index_created)
 		throw Exception("No ThreadLocalStorage object created for this thread.");
-	ThreadLocalStorage_Impl *tls_impl = static_cast<ThreadLocalStorage_Impl *> pthread_getspecific(instance->cl_tls_index);
+	ThreadLocalStorage_Impl *tls_impl = static_cast<ThreadLocalStorage_Impl *>(pthread_getspecific(instance->cl_tls_index));
 #else
 	ThreadLocalStorage_Impl *tls_impl = instance->cl_tls_impl;
 #endif

@@ -84,9 +84,9 @@ void OutlineTriangulator_Impl::triangulate()
 	num_triangles = triangles.size();
 	for (index_triangles = 0; index_triangles < num_triangles; index_triangles++)
 	{
-		OutlineTriangulator_Vertex *data_A = static_cast<OutlineTriangulator_Vertex *> triangles[index_triangles].vertex_A->data;
-		OutlineTriangulator_Vertex *data_B = static_cast<OutlineTriangulator_Vertex *> triangles[index_triangles].vertex_B->data;
-		OutlineTriangulator_Vertex *data_C = static_cast<OutlineTriangulator_Vertex *> triangles[index_triangles].vertex_C->data;
+		OutlineTriangulator_Vertex *data_A = static_cast<OutlineTriangulator_Vertex *>(triangles[index_triangles].vertex_A->data);
+		OutlineTriangulator_Vertex *data_B = static_cast<OutlineTriangulator_Vertex *>(triangles[index_triangles].vertex_B->data);
+		OutlineTriangulator_Vertex *data_C = static_cast<OutlineTriangulator_Vertex *>(triangles[index_triangles].vertex_C->data);
 		data_A->num_triangles++;
 		data_B->num_triangles++;
 		data_C->num_triangles++;
@@ -103,9 +103,9 @@ void OutlineTriangulator_Impl::triangulate()
 
 	for (index_triangles = 0; index_triangles < num_triangles; index_triangles++)
 	{
-		OutlineTriangulator_Vertex *data_A = static_cast<OutlineTriangulator_Vertex *> triangles[index_triangles].vertex_A->data;
-		OutlineTriangulator_Vertex *data_B = static_cast<OutlineTriangulator_Vertex *> triangles[index_triangles].vertex_B->data;
-		OutlineTriangulator_Vertex *data_C = static_cast<OutlineTriangulator_Vertex *> triangles[index_triangles].vertex_C->data;
+		OutlineTriangulator_Vertex *data_A = static_cast<OutlineTriangulator_Vertex *>(triangles[index_triangles].vertex_A->data);
+		OutlineTriangulator_Vertex *data_B = static_cast<OutlineTriangulator_Vertex *>(triangles[index_triangles].vertex_B->data);
+		OutlineTriangulator_Vertex *data_C = static_cast<OutlineTriangulator_Vertex *>(triangles[index_triangles].vertex_C->data);
 		data_A->triangles[data_A->num_triangles++] = &triangles[index_triangles];
 		data_B->triangles[data_B->num_triangles++] = &triangles[index_triangles];
 		data_C->triangles[data_C->num_triangles++] = &triangles[index_triangles];
@@ -230,9 +230,9 @@ DelauneyTriangulator_Triangle const **OutlineTriangulator_Impl::add_triangles(
 	num_triangles1 = triangles1.size();
 	for (index_triangles = 0; index_triangles < num_triangles1; index_triangles++)
 	{
-		OutlineTriangulator_Vertex *data_A = static_cast<OutlineTriangulator_Vertex *> triangles1[index_triangles].vertex_A->data;
-		OutlineTriangulator_Vertex *data_B = static_cast<OutlineTriangulator_Vertex *> triangles1[index_triangles].vertex_B->data;
-		OutlineTriangulator_Vertex *data_C = static_cast<OutlineTriangulator_Vertex *> triangles1[index_triangles].vertex_C->data;
+		OutlineTriangulator_Vertex *data_A = static_cast<OutlineTriangulator_Vertex *>(triangles1[index_triangles].vertex_A->data);
+		OutlineTriangulator_Vertex *data_B = static_cast<OutlineTriangulator_Vertex *>(triangles1[index_triangles].vertex_B->data);
+		OutlineTriangulator_Vertex *data_C = static_cast<OutlineTriangulator_Vertex *>(triangles1[index_triangles].vertex_C->data);
 		data_A->extra++;
 		data_B->extra++;
 		data_C->extra++;
@@ -240,9 +240,9 @@ DelauneyTriangulator_Triangle const **OutlineTriangulator_Impl::add_triangles(
 	num_triangles2 = triangles2.size();
 	for (index_triangles = 0; index_triangles < num_triangles2; index_triangles++)
 	{
-		OutlineTriangulator_Vertex *data_A = static_cast<OutlineTriangulator_Vertex *> triangles2[index_triangles].vertex_A->data;
-		OutlineTriangulator_Vertex *data_B = static_cast<OutlineTriangulator_Vertex *> triangles2[index_triangles].vertex_B->data;
-		OutlineTriangulator_Vertex *data_C = static_cast<OutlineTriangulator_Vertex *> triangles2[index_triangles].vertex_C->data;
+		OutlineTriangulator_Vertex *data_A = static_cast<OutlineTriangulator_Vertex *>(triangles2[index_triangles].vertex_A->data);
+		OutlineTriangulator_Vertex *data_B = static_cast<OutlineTriangulator_Vertex *>(triangles2[index_triangles].vertex_B->data);
+		OutlineTriangulator_Vertex *data_C = static_cast<OutlineTriangulator_Vertex *>(triangles2[index_triangles].vertex_C->data);
 		data_A->extra++;
 		data_B->extra++;
 		data_C->extra++;
@@ -257,12 +257,12 @@ DelauneyTriangulator_Triangle const **OutlineTriangulator_Impl::add_triangles(
 	int links_needed = 0;
 	for (index_vertices = 0; index_vertices < num_vertices1; index_vertices++)
 	{
-		OutlineTriangulator_Vertex *v = static_cast<OutlineTriangulator_Vertex *> vertices1[index_vertices].data;
+		OutlineTriangulator_Vertex *v = static_cast<OutlineTriangulator_Vertex *>(vertices1[index_vertices].data);
 		links_needed += v->num_triangles + v->extra;
 	}
 	for (index_vertices = 0; index_vertices < num_vertices2; index_vertices++)
 	{
-		OutlineTriangulator_Vertex *v = static_cast<OutlineTriangulator_Vertex *> vertices2[index_vertices].data;
+		OutlineTriangulator_Vertex *v = static_cast<OutlineTriangulator_Vertex *>(vertices2[index_vertices].data);
 		links_needed += v->num_triangles + v->extra;
 	}
 
@@ -270,7 +270,7 @@ DelauneyTriangulator_Triangle const **OutlineTriangulator_Impl::add_triangles(
 	int pos = 0;
 	for (index_vertices = 0; index_vertices < num_vertices1; index_vertices++)
 	{
-		OutlineTriangulator_Vertex *v = static_cast<OutlineTriangulator_Vertex *> vertices1[index_vertices].data;
+		OutlineTriangulator_Vertex *v = static_cast<OutlineTriangulator_Vertex *>(vertices1[index_vertices].data);
 		if (v->extra == 0)
 			continue;
 
@@ -283,7 +283,7 @@ DelauneyTriangulator_Triangle const **OutlineTriangulator_Impl::add_triangles(
 	}
 	for (index_vertices = 0; index_vertices < num_vertices2; index_vertices++)
 	{
-		OutlineTriangulator_Vertex *v = static_cast<OutlineTriangulator_Vertex *> vertices2[index_vertices].data;
+		OutlineTriangulator_Vertex *v = static_cast<OutlineTriangulator_Vertex *>(vertices2[index_vertices].data);
 		if (v->extra == 0)
 			continue;
 
@@ -297,18 +297,18 @@ DelauneyTriangulator_Triangle const **OutlineTriangulator_Impl::add_triangles(
 
 	for (index_triangles = 0; index_triangles < num_triangles1; index_triangles++)
 	{
-		OutlineTriangulator_Vertex *data_A = static_cast<OutlineTriangulator_Vertex *> triangles1[index_triangles].vertex_A->data;
-		OutlineTriangulator_Vertex *data_B = static_cast<OutlineTriangulator_Vertex *> triangles1[index_triangles].vertex_B->data;
-		OutlineTriangulator_Vertex *data_C = static_cast<OutlineTriangulator_Vertex *> triangles1[index_triangles].vertex_C->data;
+		OutlineTriangulator_Vertex *data_A = static_cast<OutlineTriangulator_Vertex *>(triangles1[index_triangles].vertex_A->data);
+		OutlineTriangulator_Vertex *data_B = static_cast<OutlineTriangulator_Vertex *>(triangles1[index_triangles].vertex_B->data);
+		OutlineTriangulator_Vertex *data_C = static_cast<OutlineTriangulator_Vertex *>(triangles1[index_triangles].vertex_C->data);
 		data_A->triangles[data_A->num_triangles++] = &triangles1[index_triangles];
 		data_B->triangles[data_B->num_triangles++] = &triangles1[index_triangles];
 		data_C->triangles[data_C->num_triangles++] = &triangles1[index_triangles];
 	}
 	for (index_triangles = 0; index_triangles < num_triangles2; index_triangles++)
 	{
-		OutlineTriangulator_Vertex *data_A = static_cast<OutlineTriangulator_Vertex *> triangles2[index_triangles].vertex_A->data;
-		OutlineTriangulator_Vertex *data_B = static_cast<OutlineTriangulator_Vertex *> triangles2[index_triangles].vertex_B->data;
-		OutlineTriangulator_Vertex *data_C = static_cast<OutlineTriangulator_Vertex *> triangles2[index_triangles].vertex_C->data;
+		OutlineTriangulator_Vertex *data_A = static_cast<OutlineTriangulator_Vertex *>(triangles2[index_triangles].vertex_A->data);
+		OutlineTriangulator_Vertex *data_B = static_cast<OutlineTriangulator_Vertex *>(triangles2[index_triangles].vertex_B->data);
+		OutlineTriangulator_Vertex *data_C = static_cast<OutlineTriangulator_Vertex *>(triangles2[index_triangles].vertex_C->data);
 		data_A->triangles[data_A->num_triangles++] = &triangles2[index_triangles];
 		data_B->triangles[data_B->num_triangles++] = &triangles2[index_triangles];
 		data_C->triangles[data_C->num_triangles++] = &triangles2[index_triangles];
@@ -325,9 +325,9 @@ OutlineTriangulator_Collision OutlineTriangulator_Impl::find_colliding_triangles
 
 	for (int index_triangles = 0; index_triangles < v1->num_triangles; index_triangles++)
 	{
-		OutlineTriangulator_Vertex *vA = static_cast<OutlineTriangulator_Vertex *> v1->triangles[index_triangles]->vertex_A->data;
-		OutlineTriangulator_Vertex *vB = static_cast<OutlineTriangulator_Vertex *> v1->triangles[index_triangles]->vertex_B->data;
-		OutlineTriangulator_Vertex *vC = static_cast<OutlineTriangulator_Vertex *> v1->triangles[index_triangles]->vertex_C->data;
+		OutlineTriangulator_Vertex *vA = static_cast<OutlineTriangulator_Vertex *>(v1->triangles[index_triangles]->vertex_A->data);
+		OutlineTriangulator_Vertex *vB = static_cast<OutlineTriangulator_Vertex *>(v1->triangles[index_triangles]->vertex_B->data);
+		OutlineTriangulator_Vertex *vC = static_cast<OutlineTriangulator_Vertex *>(v1->triangles[index_triangles]->vertex_C->data);
 
 		// If an edge is same line as the constrained line, there can be no colliding triangles:
 		if (
@@ -432,15 +432,15 @@ void OutlineTriangulator_Impl::remove_triangle(DelauneyTriangulator_Triangle con
 		switch (vertex)
 		{
 		case 0:
-			data = static_cast<OutlineTriangulator_Vertex *> t->vertex_A->data;
+			data = static_cast<OutlineTriangulator_Vertex *>(t->vertex_A->data);
 			break;
 
 		case 1:
-			data = static_cast<OutlineTriangulator_Vertex *> t->vertex_B->data;
+			data = static_cast<OutlineTriangulator_Vertex *>(t->vertex_B->data);
 			break;
 
 		case 2:
-			data = static_cast<OutlineTriangulator_Vertex *> t->vertex_C->data;
+			data = static_cast<OutlineTriangulator_Vertex *>(t->vertex_C->data);
 			break;
 		}
 
