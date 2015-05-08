@@ -138,7 +138,6 @@ std::vector<std::string> XMLResourceDocument::get_section_names() const
 std::vector<std::string> XMLResourceDocument::get_resource_names() const
 {
 	std::vector<std::string> names;
-	std::string last_section;
 	std::map<std::string, XMLResourceNode>::const_iterator it;
 	for (it = impl->resources.begin(); it != impl->resources.end(); ++it)
 	{
