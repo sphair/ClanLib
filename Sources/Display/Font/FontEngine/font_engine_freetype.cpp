@@ -108,8 +108,8 @@ FontEngine_Freetype::FontEngine_Freetype(const FontDescription &description, Dat
 		throw Exception("Freetype error: Font file could not be opened or read, or is corrupted.");
 	}
 
-	int pixel_width = (int)std::round(description.get_average_width() * pixel_ratio *64.0f);
-	int pixel_height = (int)std::round(height * pixel_ratio * 64.0f);
+	int pixel_width = (int)std::round(description.get_average_width() * pixel_ratio);
+	int pixel_height = (int)std::round(height * pixel_ratio);
 
 	FT_Set_Pixel_Sizes(face, pixel_width, pixel_height);
 
