@@ -125,7 +125,7 @@ void Service_Win32::service_thread_main(DWORD argc, LPTSTR *argv)
 	if (instance == 0)
 		return;
 
-	Service_Win32 *instance_win32 = (Service_Win32 *) instance;
+	Service_Win32 *instance_win32 = static_cast<Service_Win32 *> instance;
 
 	memset(&instance_win32->service_status, 0, sizeof(SERVICE_STATUS));
 	instance_win32->service_status.dwServiceType = SERVICE_WIN32_OWN_PROCESS;
@@ -163,7 +163,7 @@ BOOL Service_Win32::control_handler(DWORD ctrl_type)
 	if (instance == 0)
 		return FALSE;
 
-	Service_Win32 *instance_win32 = (Service_Win32 *) instance;
+	Service_Win32 *instance_win32 = static_cast<Service_Win32 *> instance;
 
 	switch(ctrl_type)
 	{
@@ -212,7 +212,7 @@ VOID WINAPI Service_Win32::service_ctrl(DWORD ctrl_code)
 	if (instance == 0)
 		return;
 
-	Service_Win32 *instance_win32 = (Service_Win32 *) instance;
+	Service_Win32 *instance_win32 = static_cast<Service_Win32 *> instance;
 
 	if (ctrl_code == SERVICE_CONTROL_STOP)
 	{

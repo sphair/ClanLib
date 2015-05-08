@@ -104,7 +104,7 @@ void Service_Unix::sig_term(int signal_code)
 {
 	if (instance)
 	{
-		Service_Unix *instance_unix = (Service_Unix *) instance;
+		Service_Unix *instance_unix = static_cast<Service_Unix *> instance;
 
 		{
 			std::unique_lock<std::mutex> lock(instance_unix->mutex);
@@ -119,7 +119,7 @@ void Service_Unix::sig_hup(int signal_code)
 {
 	if (instance)
 	{
-		Service_Unix *instance_unix = (Service_Unix *) instance;
+		Service_Unix *instance_unix = static_cast<Service_Unix *> instance;
 		{
 			std::unique_lock<std::mutex> lock(instance_unix->mutex);
 			instance_unix->reload_flag = true;
@@ -174,7 +174,7 @@ int Service_Unix::run_daemon(std::vector<std::string> args)
 			return 0;
 		}
 	}
-	catch (Exception e)
+	catch (Exception &e)
 	{
 		std::cout << "Unhandled exception: " << e.message.c_str() << std::endl;
 	}
