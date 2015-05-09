@@ -59,16 +59,13 @@ namespace clan
 	void WindowView_Impl::on_lost_focus()
 	{
 		release_capture();
-
-		ActivationChangeEvent e(ActivationChangeType::deactivated);
-		View::dispatch_event(window_view, &e);
+		window_view->dispatch_activation_change(ActivationChangeType::deactivated);
 	}
 
 	void WindowView_Impl::on_got_focus()
 	{
 		release_capture();
-		ActivationChangeEvent e(ActivationChangeType::activated);
-		View::dispatch_event(window_view, &e);
+		window_view->dispatch_activation_change(ActivationChangeType::activated);
 	}
 
 	void WindowView_Impl::on_resize(float, float)

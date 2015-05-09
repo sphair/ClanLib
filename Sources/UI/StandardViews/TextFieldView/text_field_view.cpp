@@ -60,7 +60,7 @@ namespace clan
 		slots.connect(sig_focus_gained(), impl.get(), &TextFieldViewImpl::on_focus_gained);
 		slots.connect(sig_focus_lost(), impl.get(), &TextFieldViewImpl::on_focus_lost);
 		slots.connect(sig_activated(), impl.get(), &TextFieldViewImpl::on_activated);
-		slots.connect(sig_activated(), impl.get(), &TextFieldViewImpl::on_deactivated);
+		slots.connect(sig_deactivated(), impl.get(), &TextFieldViewImpl::on_deactivated);
 
 		impl->scroll_timer.func_expired() = [&]()
 		{

@@ -35,6 +35,20 @@
 
 namespace clan
 {
+	class RootViewImpl
+	{
+	public:
+		static void dispatch_activation_change(View *view, ActivationChangeType type)
+		{
+			ActivationChangeEvent change(type);
+			View::dispatch_event(view, &change, true);
+			for (const auto &subview : view->subviews())
+			{
+				dispatch_activation_change(subview.get(), type);
+			}
+		}
+	};
+
 	void RootView::layout(Canvas &canvas)
 	{
 		if (needs_layout())
@@ -48,5 +62,10 @@ namespace clan
 	void RootView::render(Canvas &canvas)
 	{
 		impl->render(this, canvas);
+	}
+
+	void RootView::dispatch_activation_change(ActivationChangeType type)
+	{
+		RootViewImpl::dispatch_activation_change(this, type);
 	}
 }

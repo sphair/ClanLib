@@ -29,6 +29,7 @@
 #pragma once
 
 #include "view.h"
+#include "../Events/activation_change_event.h"
 
 namespace clan
 {
@@ -43,6 +44,9 @@ namespace clan
 
 		/// Renders view into the specified canvas
 		void render(Canvas &canvas);
+
+		/// Dispatch activation change event to all views
+		void dispatch_activation_change(ActivationChangeType type);
 
 		/// Test if view is set to hidden
 		virtual bool root_hidden() const = 0;

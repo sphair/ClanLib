@@ -93,15 +93,13 @@ namespace clan
 	void TextureView_Impl::on_lost_focus()
 	{
 		release_capture();
-		ActivationChangeEvent e(ActivationChangeType::deactivated);
-		View::dispatch_event(window_view, &e);
+		window_view->dispatch_activation_change(ActivationChangeType::deactivated);
 	}
 
 	void TextureView_Impl::on_got_focus()
 	{
 		release_capture();
-		ActivationChangeEvent e(ActivationChangeType::activated);
-		View::dispatch_event(window_view, &e);
+		window_view->dispatch_activation_change(ActivationChangeType::activated);
 	}
 
 	void TextureView_Impl::on_window_close()
