@@ -419,7 +419,6 @@ void XMLResourceDocument::load(const std::string &fullname)
 void XMLResourceDocument::load(const std::string &fullname, const FileSystem &fs)
 {
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_virtual);
-	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_virtual);
 	load(fs.open_file(fullname, File::open_existing, File::access_read, File::share_read), path, fs);
 }
 
