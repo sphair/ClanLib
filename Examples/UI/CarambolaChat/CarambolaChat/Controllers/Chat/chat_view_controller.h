@@ -38,6 +38,7 @@ private:
 	void add_notice_line(const IRCNick &nick, const IRCText &text);
 	void add_error_line(const IRCText &text);
 	void add_line_text(ChatLine &line, const std::string &text, const clan::Colorf &color);
+	void add_topic_text();
 
 	void on_channel_topic_updated(const IRCChannel &channel);
 	void on_channel_names_updated(const IRCChannel &channel);
@@ -85,7 +86,6 @@ private:
 /*
 	static std::string get_view_caption(IRCSession *session, const IRCEntity &filter);
 
-	void on_resize();
 	void on_visibility_change(bool new_visibility);
 
 	void on_inputbox_filter_message(CL_GUIMessage &message);
@@ -100,46 +100,12 @@ private:
 	void on_userlist_open_dcc_conversation();
     void on_userlist_whois();
 
-	CL_ListViewItem find_user_item(const IRCNick &nick);
-	int add_listview_icon(const std::string &filename);
-	void sort_userlist();
-
 	void on_toolbar_item_clicked(CL_ToolBarItem item);
 	void on_toolbar_disconnect_clicked();
 	void on_toolbar_set_topic_clicked();
 	void on_toolbar_leave_clicked();
 	void on_toolbar_moderate_clicked();
 	void on_toolbar_join_clicked();
-
-	CL_GUIThemePart part_background;
-	ChannelTopic *channel_topic = 0;
-	Chat *chat = 0;
-	TextFieldView *inputbox = 0;
-	CL_ListView *userlist = 0;
-	CL_SlotContainer slots;
-
-	const static int inputbox_min_height = 22;
-	int inputbox_height = inputbox_min_height;
-
-	int icon_normal_index, icon_operator_index, icon_voiced_index;
-	int next_icon_index = 1;
-
-	CL_Image icon_action;
-	CL_Image icon_notice;
-	CL_Image icon_error;
-	CL_Image icon_topic;
-
-	struct ListViewItemSortPosition
-	{
-		std::string text;
-		CL_ListViewItem item;
-
-		bool operator<(const ListViewItemSortPosition &other) const
-		{
-			return std::stringHelp::compare(text, other.text, true) < 0;
-		}
-	};
-	CL_PopupMenu userlist_popup_menu;
 
 	enum ToolbarButtonID
 	{

@@ -7,11 +7,15 @@ using namespace clan;
 UserListView::UserListView()
 {
 	style()->set("background: rgb(219, 234, 249)");
-	style()->set("padding: 5px 7px");
-	style()->set("flex-direction: column");
+	content_view()->style()->set("padding: 5px 7px");
+	content_view()->style()->set("flex-direction: column");
+	scrollbar_y_view()->style()->set("flex: none");
+	scrollbar_y_view()->style()->set("background: rgb(232,232,236)");
+	scrollbar_y_view()->track()->style()->set("padding: 0 4px");
+	scrollbar_y_view()->thumb()->style()->set("background: rgb(208,209,215)");
 }
 
-void UserListView::update_user(const std::string &id, const std::string &name, const std::string &icon)
+void UserListView::update_user(const std::string &id, const std::string &name, const std::string &icon, int sort_priority)
 {
 	User &user = users[id];
 
@@ -31,9 +35,10 @@ void UserListView::update_user(const std::string &id, const std::string &name, c
 		user.label->style()->set("font: 12px/15px 'Source Sans Pro'");
 		user.label->style()->set("margin: 0 0 0 5px");
 		user.view->add_subview(user.label);
-		add_subview(user.view);
+		content_view()->add_subview(user.view);
 	}
 
+	user.sort_priority = sort_priority;
 	user.label->set_text(name);
 	user.icon->set_image(ImageSource::from_resource(icon));
 }
@@ -64,6 +69,26 @@ void UserListView::rename_user(const std::string &old_id, const std::string &new
 
 void UserListView::sort()
 {
+	std::vector<std::string> keys;
+	for (auto &it : users)
+		keys.push_back(it.first);
+
+	std::stable_sort(keys.begin(), keys.end(), [this](const std::string &key1, const std::string &key2)
+	{
+		const auto &value1 = users.find(key1)->second;
+		const auto &value2 = users.find(key2)->second;
+		if (value1.sort_priority != value2.sort_priority)
+			return value1.sort_priority < value2.sort_priority;
+		else
+			return StringHelp::compare(value1.label->text(), value2.label->text(), true) < 0;
+	});
+
+	for (const auto &key : keys)
+	{
+		auto &value = users[key];
+		value.view->remove_from_super();
+		content_view()->add_subview(value.view);
+	}
 }
 
 void UserListView::clear()

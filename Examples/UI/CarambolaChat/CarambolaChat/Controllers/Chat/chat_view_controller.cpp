@@ -48,21 +48,6 @@ ChatViewController::ChatViewController(IRCSession *session, const IRCEntity &fil
 	slots.connect(input_text->sig_enter_pressed(), this, &ChatViewController::on_inputbox_return_pressed);
 
 	/*
-	set_type_name("chatview");
-	//set_class_name("black");
-
-	part_background = CL_GUIThemePart(this);
-
-	channel_topic = new ChannelTopic(this);
-	chat = new Chat(this);
-	inputbox = new TextFieldView(this);
-	inputbox->set_class_name("chatinput");
-	userlist = new CL_ListView(this);
-	userlist->set_class_name("chatusers");
-	inputbox->set_select_all_on_focus_gain(false);
-	inputbox->set_focus();
-
-	CL_GraphicContext gc = get_gc();
 	icon_action = CL_Image(gc, "Resources/Icons/chat_icon_action.png");
 	icon_notice = CL_Image(gc, "Resources/Icons/chat_icon_notice.png");
 	icon_error = CL_Image(gc, "Resources/Icons/chat_icon_error.png");
@@ -71,8 +56,6 @@ ChatViewController::ChatViewController(IRCSession *session, const IRCEntity &fil
 	icon_normal_index = add_listview_icon("Resources/Icons/user.png");
 	icon_operator_index = add_listview_icon("Resources/Icons/user_operator.png");
 	icon_voiced_index = add_listview_icon("Resources/Icons/user_voice.png");
-
-	userlist->get_header()->append(userlist->get_header()->create_column("nick", "Name"));
 
 	get_toolbar()->insert_item(CL_Sprite(get_gc(), "Resources/Icons/icon-delete.png"), 0, "Disconnect", id_disconnect);
 	if (get_filter().is_channel())
@@ -84,14 +67,11 @@ ChatViewController::ChatViewController(IRCSession *session, const IRCEntity &fil
 	get_toolbar()->insert_item(CL_Sprite(get_gc(), "Resources/Icons/icon-add.png"), 0, "Join channel", id_set_topic);
 	get_toolbar()->func_item_clicked().set(this, &ChatViewController::on_toolbar_item_clicked);
 
-	func_resized().set(this, &ChatViewController::on_resize);
 	func_visibility_change().set(this, &ChatViewController::on_visibility_change);
 	inputbox->func_filter_message().set(this, &ChatViewController::on_inputbox_filter_message);
 
 	userlist->func_key_pressed().set(this, &ChatViewController::on_userlist_key_pressed);
 	userlist->func_mouse_right_up().set(this, &ChatViewController::on_userlist_contextmenu);
-
-	on_resize();
 	*/
 }
 
@@ -128,6 +108,7 @@ void ChatViewController::create_layout()
 	input_text->style()->set("background: white");
 	input_text->style()->set("padding: 2px 5px");
 	input_text->style()->set("font: 12px/20px 'Source Sans Pro'");
+	input_text->set_select_all_on_focus_gain(false);
 	input_bar->add_subview(input_text);
 
 	view->style()->set("flex: auto");
@@ -235,6 +216,21 @@ void ChatViewController::add_line_text(ChatLine &line, const std::string &text, 
 		line.add_text(style, text.substr(pos));
 }
 
+void ChatViewController::add_topic_text()
+{
+	IRCJoinedChannel status = session->get_channel_status(get_filter());
+
+	ChatLine line;
+	// layout.add_image(icon_topic);
+	add_line_text(line, status.topic.get_text(), chat_log->get_color_channel());
+	add_line_text(line, " set by ", Colorf::gray);
+	add_line_text(line, status.topic_author.get_name(), chat_log->get_color_channel());
+	chat_log->add_line(line);
+
+	//channel_topic->set_topic("Unknown time", status.topic, status.topic_author);
+	//get_mainframe()->flag_activity(this, status.topic_author.get_name(), status.topic.get_text(), false);
+}
+
 void ChatViewController::irc_session_destroyed(IRCSession *destroyed_session)
 {
 	if (session == destroyed_session)
@@ -297,22 +293,10 @@ void ChatViewController::on_system_text(const IRCText &text)
 
 void ChatViewController::on_channel_topic_updated(const IRCChannel &channel)
 {
-	/*
 	if (get_filter() == channel)
 	{
-		IRCJoinedChannel status = session->get_channel_status(channel);
-		channel_topic->set_topic("Unknown time", status.topic, status.topic_author);
-		on_resize();
-
-		get_mainframe()->flag_activity(this, status.topic_author.get_name(), status.topic.get_text(), false);
-		CL_SpanLayout layout;
-		layout.add_image(icon_topic);
-		add_layout_text(layout, " " + status.topic.get_text(), chat->get_color_channel());
-		add_layout_text(layout, " set by ", CL_Colorf::gray);
-		add_layout_text(layout, status.topic_author.get_name(), chat->get_color_channel());
-		chat->add_line(layout);
+		add_topic_text();
 	}
-	*/
 }
 
 void ChatViewController::on_channel_names_updated(const IRCChannel &channel)
@@ -328,12 +312,19 @@ void ChatViewController::on_channel_names_updated(const IRCChannel &channel)
 			auto &nick = status.users[i];
 
 			std::string icon = icon_normal;
+			int sort_priority = 2;
 			if (nick.is_operator())
+			{
 				icon = icon_operator;
+				sort_priority = 0;
+			}
 			else if (nick.is_voiced())
+			{
 				icon = icon_voiced;
+				sort_priority = 1;
+			}
 
-			user_list->update_user(nick.get_label(), nick.get_name(), icon);
+			user_list->update_user(nick.get_name(), nick.get_name(), icon, sort_priority);
 		}
 
 		user_list->sort();
@@ -342,9 +333,9 @@ void ChatViewController::on_channel_names_updated(const IRCChannel &channel)
 
 void ChatViewController::on_nick_changed(const IRCNick &old_nick, const IRCNick &new_nick)
 {
-	if (user_list->has_user(old_nick.get_label()))
+	if (user_list->has_user(old_nick.get_name()))
 	{
-		user_list->rename_user(old_nick.get_label(), new_nick.get_label(), new_nick.get_name());
+		user_list->rename_user(old_nick.get_name(), new_nick.get_name(), new_nick.get_name());
 		user_list->sort();
 
 		add_line(IRCText::from_text(string_format("%1 is now known as %2", old_nick.get_name(), new_nick.get_name())), chat_log->get_color_channel(), true);
@@ -364,12 +355,19 @@ void ChatViewController::on_user_joined(const IRCChannel &channel, const IRCNick
 	if (get_filter() == channel)
 	{
 		std::string icon = icon_normal;
+		int sort_priority = 2;
 		if (nick.is_operator())
+		{
 			icon = icon_operator;
+			sort_priority = 0;
+		}
 		else if (nick.is_voiced())
+		{
 			icon = icon_voiced;
+			sort_priority = 1;
+		}
 
-		user_list->update_user(nick.get_label(), nick.get_name(), icon);
+		user_list->update_user(nick.get_name(), nick.get_name(), icon, sort_priority);
 		user_list->sort();
 
 		add_line(IRCText::from_text(string_format("%1 joined the channel", nick.get_name())), chat_log->get_color_channel(), true);
@@ -380,7 +378,7 @@ void ChatViewController::on_user_parted(const IRCChannel &channel, const IRCNick
 {
 	if (get_filter() == channel)
 	{
-		user_list->remove_user(nick.get_label());
+		user_list->remove_user(nick.get_name());
 
 		if (text.empty())
 			add_line(IRCText::from_text(string_format("%1 left the channel", nick.get_name())), chat_log->get_color_channel(), true);
@@ -393,7 +391,7 @@ void ChatViewController::on_user_kicked(const IRCNick &nick, const IRCChannel &c
 {
 	if (get_filter() == channel)
 	{
-		user_list->remove_user(nick.get_label());
+		user_list->remove_user(nick.get_name());
 
 		if (text.empty())
 			add_line(IRCText::from_text(string_format("%1 kicked %2 from the channel", nick.get_name(), target.get_name())), chat_log->get_color_channel(), false);
@@ -404,9 +402,9 @@ void ChatViewController::on_user_kicked(const IRCNick &nick, const IRCChannel &c
 
 void ChatViewController::on_user_quit(const IRCNick &nick, const IRCText &text)
 {
-	if (user_list->has_user(nick.get_label()))
+	if (user_list->has_user(nick.get_name()))
 	{
-		user_list->remove_user(nick.get_label());
+		user_list->remove_user(nick.get_name());
 
 		if (text.empty())
 			add_line(IRCText::from_text(string_format("%1 quit", nick.get_name())), chat_log->get_color_channel(), true);
@@ -433,12 +431,19 @@ void ChatViewController::on_channel_mode_change(const IRCNick &executing_nick, c
 			IRCNick nick = IRCNick::from_raw(command[1]);
 
 			std::string icon = icon_normal;
+			int sort_priority = 2;
 			if (command[0] == "+o")
+			{
 				icon = icon_operator;
+				sort_priority = 0;
+			}
 			else if (command[0] == "+v")
+			{
 				icon = icon_voiced;
+				sort_priority = 1;
+			}
 
-			user_list->update_user(nick.get_label(), nick.get_name(), icon);
+			user_list->update_user(nick.get_name(), nick.get_name(), icon, sort_priority);
 		}
 	}
 }
@@ -542,17 +547,6 @@ std::string ChatViewController::get_view_caption(IRCSession *session, const IRCE
 		return filter.get_name();
 }
 
-int ChatViewController::add_listview_icon(const std::string &filename)
-{
-	CL_GraphicContext gc = get_gc();
-	CL_Sprite sprite(gc, filename);
-	CL_ListViewIcon icon;
-	icon.set_sprite(sprite, listview_mode_details);
-	CL_ListViewIconList icon_list = userlist->get_icon_list();
-	icon_list.set_icon(next_icon_index, icon);
-	return next_icon_index++;
-}
-
 ChatViewController::~ChatViewController()
 {
 	if (filter.is_channel())
@@ -564,25 +558,6 @@ ChatViewController::~ChatViewController()
 		// What should we do if the Status window is closed?
 		session->disconnect_graceful("");
 	}
-}
-
-void ChatViewController::on_resize()
-{
-	CL_Rect contentbox = part_background.get_content_box(get_size());
-
-	int topic_height = channel_topic->get_topic_height(contentbox.get_width());
-	int userlist_width = 150;
-
-	if (!get_filter().is_channel())
-	{
-		topic_height = 0;
-		userlist_width = 0;
-	}
-
-	channel_topic->set_geometry(CL_Rect(contentbox.left, contentbox.top, contentbox.right, contentbox.top+topic_height));
-	chat->set_geometry(CL_Rect(contentbox.left, contentbox.top+topic_height, contentbox.right-userlist_width, contentbox.bottom-inputbox_height));
-	userlist->set_geometry(CL_Rect(contentbox.right-userlist_width, contentbox.top+topic_height, contentbox.right, contentbox.bottom-inputbox_height));
-	inputbox->set_geometry(CL_Rect(contentbox.left, contentbox.bottom-inputbox_height, contentbox.right, contentbox.bottom));
 }
 
 void ChatViewController::on_inputbox_filter_message(CL_GUIMessage &message)
@@ -746,38 +721,6 @@ void ChatViewController::add_private_text(const IRCNick &nick, const IRCText &te
 	{
 		add_line(nick, text, chat->get_color_text(), chat->get_color_nick_others());
 	}
-}
-
-void ChatViewController::sort_userlist()
-{
-//	std::vector<ListViewItemSortPosition> positions;
-//	CL_ListViewItem root = userlist->get_document_item();
-//	for (CL_ListViewItem cur = root.get_first_child(); !cur.is_null(); cur = cur.get_next_sibling())
-//	{
-//		ListViewItemSortPosition p;
-//		p.item = cur;
-//		p.text = cur.get_column("nick").get_text();
-//		positions.push_back(p);
-//	}
-//
-//	std::stable_sort(positions.begin(), positions.end());
-//
-//	root.remove_children();
-//	for (size_t i = 0; i < positions.size(); i++)
-//		root.append_child(positions[i].item);
-}
-
-CL_ListViewItem ChatViewController::find_user_item(const IRCNick &nick)
-{
-	CL_ListViewItem cur = userlist->get_document_item().get_first_child();
-	while (!cur.is_null())
-	{
-		if (clan::StringHelp::compare(cur.get_column("nick").get_text(), nick.get_name(), true) == 0)
-			return cur;
-
-		cur = cur.get_next_sibling();
-	}
-	return CL_ListViewItem();
 }
 
 void ChatViewController::on_visibility_change(bool new_visibility)
