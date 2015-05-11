@@ -52,21 +52,23 @@ Options::Options(clan::Canvas &canvas) : clan::TextureView(canvas)
 	position_z = 0.0f;
 	position_w = 0.0f;
 
-	//make_format_menu(combo_format_menu);
-	//combo_format = create_format_combo_box(450, 30, combo_format_menu, 0);
-	//label_format = create_combobox_label(combo_format, "Pixel Format");
+	std::shared_ptr<clan::ListBoxView> listbox;
+	listbox = create_listbox(450, 30, "Pixel Format");
+	listbox->set_items<std::string>( { "tf_rgb8", "tf_rgba8", "tf_r8", "tf_r32f" }, Theme::create_listbox_label);
+	listbox->func_selection_changed() = [=](){on_format_selected(listbox); };
+	listbox->set_selected_item(0);
 
-	checkbox_normals = create_checkbox(640, 35, "Draw Normals (rgb only)", is_normals_set);
+	checkbox_normals = create_checkbox(670, 35, "Draw Normals (rgb only)", is_normals_set);
 	checkbox_normals->func_state_changed() = bind_member(this, &Options::checkbox_normals_changed);
 
-	//make_dimension_menu(combo_dimension_menu);
-	//combo_dimension = create_dimension_combo_box(450, 80, combo_dimension_menu, 0);
-	//combo_dimension->set_selected_item(1);
-	//label_dimension = create_combobox_label(combo_dimension, "Dimension");
+	listbox = create_listbox(450, 180, "Dimension");
+	listbox->set_items<std::string>({ "1D", "2D", "3D", "4D" }, Theme::create_listbox_label);
+	listbox->func_selection_changed() = [=](){on_dimension_selected(listbox); };
+	listbox->set_selected_item(1);
 
 	int slider_xpos = 450;
 	int slider_label_xpos = slider_xpos + 200;
-	int slider_ypos = 120;
+	int slider_ypos = 320;
 	int slider_gap = 36;
 
 	slider_width = create_slider(slider_xpos, slider_ypos);
@@ -195,10 +197,21 @@ std::shared_ptr<clan::SliderView> Options::create_slider(int xpos, int ypos)
 	return component;
 
 }
-/*
 
-void Options::on_format_selected(int value, clan::ComboBox *combo)
+
+std::shared_ptr<clan::ListBoxView> Options::create_listbox(int xpos, int ypos, const std::string &title)
 {
+	auto listbox = Theme::create_listbox();
+	add_subview(listbox);
+	listbox->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:%4px;", xpos, ypos, 200, 100);
+	auto label_logic = create_slider_label(xpos, ypos - 30);
+	label_logic->set_text(title);
+	return listbox;
+}
+
+void Options::on_format_selected(std::shared_ptr<clan::ListBoxView> listbox)
+{
+	int value = listbox->selected_item();
 	switch (value)
 	{
 		case 0:
@@ -216,8 +229,9 @@ void Options::on_format_selected(int value, clan::ComboBox *combo)
 	}
 }
 
-void Options::on_dimension_selected(int value, clan::ComboBox *combo)
+void Options::on_dimension_selected(std::shared_ptr<clan::ListBoxView> listbox)
 {
+	int value = listbox->selected_item();
 	switch (value)
 	{
 		case 0:
@@ -234,7 +248,6 @@ void Options::on_dimension_selected(int value, clan::ComboBox *combo)
 			break;
 	}
 }
-*/
 
 std::shared_ptr<clan::LabelView> Options::create_slider_label(int xpos, int ypos)
 {
@@ -320,58 +333,3 @@ void Options::update_all_slider_text()
 	slider_position_z_changed();
 	slider_position_w_changed();
 }
-/*
-clan::ComboBox *Options::create_format_combo_box(int xpos, int ypos, clan::PopupMenu &menu, int selected_item)
-{
-	clan::ComboBox *combo = new clan::ComboBox(this);
-	combo->set_geometry(clan::Rect(xpos, ypos, clan::Size(180, 21)));
-	combo->set_editable(false);
-	combo->set_dropdown_height(128);
-	combo->set_dropdown_minimum_width(64);
-	combo->set_popup_menu(menu);
-	combo->set_selected_item(selected_item);
-	combo->func_item_selected() = bind_member(this, &Options::on_format_selected, combo);
-
-	return combo;
-}
-
-void Options::make_format_menu(clan::PopupMenu &menu)
-{
-	menu.insert_item("clan::tf_rgb8");
-	menu.insert_item("clan::tf_rgba8");
-	menu.insert_item("clan::tf_r8");
-	menu.insert_item("clan::tf_r32f");
-}
-
-clan::ComboBox *Options::create_dimension_combo_box(int xpos, int ypos, clan::PopupMenu &menu, int selected_item)
-{
-	clan::ComboBox *combo = new clan::ComboBox(this);
-	combo->set_geometry(clan::Rect(xpos, ypos, clan::Size(180, 21)));
-	combo->set_editable(false);
-	combo->set_dropdown_height(128);
-	combo->set_dropdown_minimum_width(64);
-	combo->set_popup_menu(menu);
-	combo->set_selected_item(selected_item);
-	combo->func_item_selected() = bind_member(this, &Options::on_dimension_selected, combo);
-
-	return combo;
-}
-
-void Options::make_dimension_menu(clan::PopupMenu &menu)
-{
-	menu.insert_item("1D");
-	menu.insert_item("2D");
-	menu.insert_item("3D");
-	menu.insert_item("4D");
-}
-
-std::shared_ptr<clan::LabelView> Options::create_combobox_label(clan::ComboBox *combo, const char *text)
-{
-	std::shared_ptr<clan::LabelView> component = new clan::Label(this);
-	clan::Rect combo_geometry = combo->get_geometry();
-	component->set_geometry(clan::Rect(combo_geometry.left, combo_geometry.top - 20, clan::Size(256, 17)));
-	component->set_text(text);
-	return component;
-}
-
-*/

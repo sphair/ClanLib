@@ -59,6 +59,10 @@ public:
 	bool is_normals_set;
 
 private:
+	void on_format_selected(std::shared_ptr<clan::ListBoxView> listbox);
+	void on_dimension_selected(std::shared_ptr<clan::ListBoxView> listbox);
+
+	std::shared_ptr<clan::ListBoxView> create_listbox(int xpos, int ypos, const std::string &title);
 	std::shared_ptr<clan::CheckBoxView> create_checkbox(int xpos, int ypos, const std::string &name, bool state);
 	std::shared_ptr<clan::SliderView> create_slider(int xpos, int ypos);
 	std::shared_ptr<clan::LabelView> create_slider_label(int xpos, int ypos);
@@ -102,12 +106,7 @@ private:
 	std::shared_ptr<clan::LabelView> label_amplitude;
 
 	std::shared_ptr<clan::LabelView> label_format;
-	//clan::ComboBox *combo_format;
-	//clan::PopupMenu combo_format_menu;
-
 	std::shared_ptr<clan::LabelView> label_dimension;
-	//clan::ComboBox *combo_dimension;
-	//clan::PopupMenu combo_dimension_menu;
 
 	std::shared_ptr<clan::CheckBoxView> checkbox_normals;
 

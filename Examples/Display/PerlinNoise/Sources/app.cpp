@@ -40,7 +40,7 @@ App::App()
 	clan::DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("Perlin Noise Example");
-	win_desc.set_size(clan::Size(900, 520), false);
+	win_desc.set_size(clan::Size(900, 720), false);
 
 	window = clan::DisplayWindow(win_desc);
 	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
