@@ -104,7 +104,7 @@ void Service_Unix::sig_term(int signal_code)
 {
 	if (instance)
 	{
-		Service_Unix *instance_unix = static_cast<Service_Unix *> instance;
+		Service_Unix *instance_unix = static_cast<Service_Unix *>(instance);
 
 		{
 			std::unique_lock<std::mutex> lock(instance_unix->mutex);
@@ -119,7 +119,7 @@ void Service_Unix::sig_hup(int signal_code)
 {
 	if (instance)
 	{
-		Service_Unix *instance_unix = static_cast<Service_Unix *> instance;
+		Service_Unix *instance_unix = static_cast<Service_Unix *>(instance);
 		{
 			std::unique_lock<std::mutex> lock(instance_unix->mutex);
 			instance_unix->reload_flag = true;
