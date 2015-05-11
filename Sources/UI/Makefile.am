@@ -55,6 +55,7 @@ libclan40UI_la_SOURCES = \
 ./Events/key_event.cpp \
 ./Events/pointer_event.cpp \
 ./View/view.cpp \
+./View/root_view.cpp \
 ./View/positioned_layout.cpp \
 ./View/view_geometry.cpp \
 ./View/vbox_layout.cpp \

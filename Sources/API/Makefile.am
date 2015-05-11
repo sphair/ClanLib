@@ -346,6 +346,7 @@ clanUI_includes = \
 	UI/Events/activation_change_event.h \
 	UI/Events/pointer_event.h \
 	UI/View/view.h \
+	UI/View/root_view.h \
 	UI/View/view_geometry.h \
 	UI/View/focus_policy.h
 
