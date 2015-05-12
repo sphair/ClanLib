@@ -751,10 +751,22 @@ namespace clan
 			canvas.draw_line(_geometry.content_width, 0.0f, 0.0f, _geometry.content_height, Colorf::black);
 		}
 
+		Rectf clip_box = canvas.get_cliprect();
+		clip_box.bottom = mix(clip_box.top, clip_box.bottom, 0.5f);
 		for (std::shared_ptr<View> &view : _subviews)
 		{
 			if (!view->hidden() && !view->local_root())
-				view->impl->render(view.get(), canvas);
+			{
+				// Note: this code isn't correct for rotated transforms (plus canvas cliprect can only clip AABB)
+				Rect border_box = view->geometry().border_box();
+				Vec4f tl_point = canvas.get_transform() * Vec4f(border_box.left, border_box.top, 0.0f, 1.0f);
+				Vec4f br_point = canvas.get_transform() * Vec4f(border_box.right, border_box.bottom, 0.0f, 1.0f);
+				Rectf transformed_border_box(std::min(tl_point.x, br_point.x), std::min(tl_point.y, br_point.y), std::max(tl_point.x, br_point.x), std::max(tl_point.y, br_point.y));
+				if (clip_box.is_overlapped(transformed_border_box))
+				{
+					view->impl->render(view.get(), canvas);
+				}
+			}
 		}
 
 		if (clipped)
