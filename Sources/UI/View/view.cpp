@@ -801,7 +801,6 @@ namespace clan
 		}
 
 		Rectf clip_box = canvas.get_cliprect();
-		clip_box.bottom = mix(clip_box.top, clip_box.bottom, 0.5f);
 		for (std::shared_ptr<View> &view : _subviews)
 		{
 			if (!view->hidden() && !view->local_root())
