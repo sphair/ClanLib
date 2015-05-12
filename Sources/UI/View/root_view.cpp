@@ -61,7 +61,9 @@ namespace clan
 
 	void RootView::render(Canvas &canvas)
 	{
-		impl->render(this, canvas);
+		impl->render(this, canvas, ViewRenderLayer::background);
+		impl->render(this, canvas, ViewRenderLayer::border);
+		impl->render(this, canvas, ViewRenderLayer::content);
 	}
 
 	void RootView::dispatch_activation_change(ActivationChangeType type)

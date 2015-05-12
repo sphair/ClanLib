@@ -55,10 +55,17 @@ namespace clan
 		}
 	};
 
+	enum class ViewRenderLayer
+	{
+		background,
+		border,
+		content
+	};
+
 	class ViewImpl
 	{
 	public:
-		void render(View *self, Canvas &canvas);
+		void render(View *self, Canvas &canvas, ViewRenderLayer layer);
 		void process_event(View *self, EventUI *e, bool use_capture);
 		void update_style_cascade() const;
 
