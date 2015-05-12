@@ -146,16 +146,16 @@ namespace clan
 		void set_content_clipped(bool clipped);
 
 		/// Calculates the preferred width of this view
-		virtual float get_preferred_width(Canvas &canvas);
+		float get_preferred_width(Canvas &canvas);
 
 		/// Calculates the preferred height of this view
-		virtual float get_preferred_height(Canvas &canvas, float width);
+		float get_preferred_height(Canvas &canvas, float width);
 
 		/// Calculates the offset to the first baseline
-		virtual float get_first_baseline_offset(Canvas &canvas, float width);
+		float get_first_baseline_offset(Canvas &canvas, float width);
 
 		/// Calculates the offset to the last baseline
-		virtual float get_last_baseline_offset(Canvas &canvas, float width);
+		float get_last_baseline_offset(Canvas &canvas, float width);
 
 		/// Sets the view geometry for all subviews of this view
 		virtual void layout_subviews(Canvas &canvas);
@@ -288,6 +288,18 @@ namespace clan
 
 		/// Child view was removed from this view
 		virtual void subview_removed(const std::shared_ptr<View> &view) { }
+
+		/// Calculates the preferred width of this view
+		virtual float calculate_preferred_width(Canvas &canvas);
+
+		/// Calculates the preferred height of this view
+		virtual float calculate_preferred_height(Canvas &canvas, float width);
+
+		/// Calculates the offset to the first baseline
+		virtual float calculate_first_baseline_offset(Canvas &canvas, float width);
+
+		/// Calculates the offset to the last baseline
+		virtual float calculate_last_baseline_offset(Canvas &canvas, float width);
 
 	private:
 		View(const View &) = delete;

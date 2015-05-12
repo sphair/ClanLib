@@ -157,7 +157,7 @@ namespace clan
 		}
 	}
 
-	float LabelView::get_preferred_width(Canvas &canvas)
+	float LabelView::calculate_preferred_width(Canvas &canvas)
 	{
 		if (style_cascade().computed_value("width").is_keyword("auto"))
 		{
@@ -168,7 +168,7 @@ namespace clan
 			return style_cascade().computed_value("width").number();
 	}
 
-	float LabelView::get_preferred_height(Canvas &canvas, float width)
+	float LabelView::calculate_preferred_height(Canvas &canvas, float width)
 	{
 		if (style_cascade().computed_value("height").is_keyword("auto"))
 		{
@@ -179,13 +179,13 @@ namespace clan
 			return style_cascade().computed_value("height").number();
 	}
 
-	float LabelView::get_first_baseline_offset(Canvas &canvas, float width)
+	float LabelView::calculate_first_baseline_offset(Canvas &canvas, float width)
 	{
 		Font font = impl->get_font(this, canvas);
 		return font.get_font_metrics(canvas).get_baseline_offset();
 	}
 
-	float LabelView::get_last_baseline_offset(Canvas &canvas, float width)
+	float LabelView::calculate_last_baseline_offset(Canvas &canvas, float width)
 	{
 		return get_first_baseline_offset(canvas, width);
 	}

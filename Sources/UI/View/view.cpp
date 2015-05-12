@@ -201,6 +201,7 @@ namespace clan
 	void View::set_needs_layout()
 	{
 		impl->_needs_layout = true;
+		impl->layout_cache.clear();
 
 		View *super = superview();
 		if (super)
@@ -290,6 +291,49 @@ namespace clan
 
 	float View::get_preferred_width(Canvas &canvas)
 	{
+		if (!impl->layout_cache.preferred_width_calculated)
+		{
+			impl->layout_cache.preferred_width = calculate_preferred_width(canvas);
+			impl->layout_cache.preferred_width_calculated = true;
+		}
+		return impl->layout_cache.preferred_width;
+	}
+
+	float View::get_preferred_height(Canvas &canvas, float width)
+	{
+		auto it = impl->layout_cache.preferred_height.find(width);
+		if (it != impl->layout_cache.preferred_height.end())
+			return it->second;
+
+		float height = calculate_preferred_height(canvas, width);
+		impl->layout_cache.preferred_height[width] = height;
+		return height;
+	}
+
+	float View::get_first_baseline_offset(Canvas &canvas, float width)
+	{
+		auto it = impl->layout_cache.first_baseline_offset.find(width);
+		if (it != impl->layout_cache.first_baseline_offset.end())
+			return it->second;
+
+		float baseline_offset = calculate_first_baseline_offset(canvas, width);
+		impl->layout_cache.first_baseline_offset[width] = baseline_offset;
+		return baseline_offset;
+	}
+
+	float View::get_last_baseline_offset(Canvas &canvas, float width)
+	{
+		auto it = impl->layout_cache.last_baseline_offset.find(width);
+		if (it != impl->layout_cache.last_baseline_offset.end())
+			return it->second;
+
+		float baseline_offset = calculate_last_baseline_offset(canvas, width);
+		impl->layout_cache.last_baseline_offset[width] = baseline_offset;
+		return baseline_offset;
+	}
+
+	float View::calculate_preferred_width(Canvas &canvas)
+	{
 		if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("column"))
 			return VBoxLayout::get_preferred_width(canvas, this);
 		else if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("row"))
@@ -300,7 +344,7 @@ namespace clan
 			return style_cascade().computed_value("width").number();
 	}
 
-	float View::get_preferred_height(Canvas &canvas, float width)
+	float View::calculate_preferred_height(Canvas &canvas, float width)
 	{
 		if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("column"))
 			return VBoxLayout::get_preferred_height(canvas, this, width);
@@ -312,7 +356,7 @@ namespace clan
 			return style_cascade().computed_value("height").number();
 	}
 
-	float View::get_first_baseline_offset(Canvas &canvas, float width)
+	float View::calculate_first_baseline_offset(Canvas &canvas, float width)
 	{
 		if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("column"))
 			return VBoxLayout::get_first_baseline_offset(canvas, this, width);
@@ -322,7 +366,7 @@ namespace clan
 			return 0.0f;
 	}
 
-	float View::get_last_baseline_offset(Canvas &canvas, float width)
+	float View::calculate_last_baseline_offset(Canvas &canvas, float width)
 	{
 		if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("column"))
 			return VBoxLayout::get_last_baseline_offset(canvas, this, width);

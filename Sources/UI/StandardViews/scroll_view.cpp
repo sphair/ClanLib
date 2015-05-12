@@ -221,7 +221,7 @@ namespace clan
 		impl->content_container->layout_subviews(canvas);
 	}
 	
-	float ScrollView::get_preferred_width(Canvas &canvas)
+	float ScrollView::calculate_preferred_width(Canvas &canvas)
 	{
 		if (style_cascade().computed_value("width").is_length())
 			return style_cascade().computed_value("width").number();
@@ -232,7 +232,7 @@ namespace clan
 		return width;
 	}
 	
-	float ScrollView::get_preferred_height(Canvas &canvas, float width)
+	float ScrollView::calculate_preferred_height(Canvas &canvas, float width)
 	{
 		if (style_cascade().computed_value("height").is_length())
 			return style_cascade().computed_value("height").number();
@@ -243,12 +243,12 @@ namespace clan
 		return height;
 	}
 	
-	float ScrollView::get_first_baseline_offset(Canvas &canvas, float width)
+	float ScrollView::calculate_first_baseline_offset(Canvas &canvas, float width)
 	{
 		return impl->content_container->get_first_baseline_offset(canvas, width);
 	}
 	
-	float ScrollView::get_last_baseline_offset(Canvas &canvas, float width)
+	float ScrollView::calculate_last_baseline_offset(Canvas &canvas, float width)
 	{
 		return impl->content_container->get_last_baseline_offset(canvas, width);
 	}

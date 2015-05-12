@@ -117,11 +117,15 @@ namespace clan
 
 			std::size_t operator()(const StyleString &s) const
 			{
+				if (s._hash != 0)
+					return s._hash;
+
 				std::size_t hash = 2166136261U;
 				for (std::size_t i = 0; i < s._size; i++)
 				{
 					hash = (hash * 16777619U) ^ static_cast<std::size_t>(s._ptr[i]);
 				}
+				s._hash = hash;
 				return hash;
 			}
 		};
@@ -131,6 +135,7 @@ namespace clan
 		const char *_ptr = nullptr;
 		char _buffer[max_size + 1];
 		std::size_t _size = 0;
+		mutable std::size_t _hash = 0;
 	};
 
 	class StyleImpl : public StylePropertySetter

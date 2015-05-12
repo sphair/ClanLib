@@ -81,7 +81,7 @@ namespace clan
 		return impl->render_content(canvas, geometry().content_width);
 	}
 
-	float SpanLayoutView::get_preferred_width(Canvas &canvas)
+	float SpanLayoutView::calculate_preferred_width(Canvas &canvas)
 	{
 		if (style_cascade().computed_value("width").is_keyword("auto"))
 			return impl->get_preferred_width(canvas);
@@ -89,7 +89,7 @@ namespace clan
 			return style_cascade().computed_value("width").number();
 	}
 
-	float SpanLayoutView::get_preferred_height(Canvas &canvas, float width)
+	float SpanLayoutView::calculate_preferred_height(Canvas &canvas, float width)
 	{
 		if (style_cascade().computed_value("height").is_keyword("auto"))
 			return impl->get_preferred_height(canvas, width);
@@ -97,12 +97,12 @@ namespace clan
 			return style_cascade().computed_value("height").number();
 	}
 
-	float SpanLayoutView::get_first_baseline_offset(Canvas &canvas, float width)
+	float SpanLayoutView::calculate_first_baseline_offset(Canvas &canvas, float width)
 	{
 		return impl->get_first_baseline_offset(canvas, width);
 	}
 
-	float SpanLayoutView::get_last_baseline_offset(Canvas &canvas, float width)
+	float SpanLayoutView::calculate_last_baseline_offset(Canvas &canvas, float width)
 	{
 		return impl->get_last_baseline_offset(canvas, width);
 	}

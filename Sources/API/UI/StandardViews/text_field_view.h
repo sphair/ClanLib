@@ -94,11 +94,12 @@ namespace clan
 		Signal<void()> &sig_selection_changed();
 		Signal<void()> &sig_enter_pressed();
 
+	protected:
 		void render_content(Canvas &canvas) override;
-		float get_preferred_width(Canvas &canvas) override;
-		float get_preferred_height(Canvas &canvas, float width) override;
-		float get_first_baseline_offset(Canvas &canvas, float width) override;
-		float get_last_baseline_offset(Canvas &canvas, float width) override;
+		float calculate_preferred_width(Canvas &canvas) override;
+		float calculate_preferred_height(Canvas &canvas, float width) override;
+		float calculate_first_baseline_offset(Canvas &canvas, float width) override;
+		float calculate_last_baseline_offset(Canvas &canvas, float width) override;
 
 	private:
 		std::unique_ptr<TextFieldViewImpl> impl;

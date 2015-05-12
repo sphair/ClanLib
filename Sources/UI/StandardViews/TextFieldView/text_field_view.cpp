@@ -358,7 +358,7 @@ namespace clan
 			Path::rect(cursor_advance, top_y, 1.0f, bottom_y - top_y).fill(canvas, Brush(color));
 	}
 
-	float TextFieldView::get_preferred_width(Canvas &canvas)
+	float TextFieldView::calculate_preferred_width(Canvas &canvas)
 	{
 		if (style_cascade().computed_value("width").is_keyword("auto"))
 		{
@@ -369,7 +369,7 @@ namespace clan
 			return style_cascade().computed_value("width").number();
 	}
 
-	float TextFieldView::get_preferred_height(Canvas &canvas, float width)
+	float TextFieldView::calculate_preferred_height(Canvas &canvas, float width)
 	{
 		if (style_cascade().computed_value("height").is_keyword("auto"))
 		{
@@ -380,13 +380,13 @@ namespace clan
 			return style_cascade().computed_value("height").number();
 	}
 
-	float TextFieldView::get_first_baseline_offset(Canvas &canvas, float width)
+	float TextFieldView::calculate_first_baseline_offset(Canvas &canvas, float width)
 	{
 		Font font = impl->get_font(canvas);
 		return font.get_font_metrics(canvas).get_baseline_offset();
 	}
 
-	float TextFieldView::get_last_baseline_offset(Canvas &canvas, float width)
+	float TextFieldView::calculate_last_baseline_offset(Canvas &canvas, float width)
 	{
 		return get_first_baseline_offset(canvas, width);
 	}

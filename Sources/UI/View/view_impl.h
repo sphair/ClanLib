@@ -36,6 +36,25 @@
 
 namespace clan
 {
+	class ViewLayoutCache
+	{
+	public:
+		bool preferred_width_calculated = false;
+		float preferred_width = 0.0f;
+		std::map<float, float> preferred_height;
+		std::map<float, float> first_baseline_offset;
+		std::map<float, float> last_baseline_offset;
+
+		void clear()
+		{
+			preferred_width_calculated = false;
+			preferred_width = 0.0f;
+			preferred_height.clear();
+			first_baseline_offset.clear();
+			last_baseline_offset.clear();
+		}
+	};
+
 	class ViewImpl
 	{
 	public:
@@ -109,6 +128,8 @@ namespace clan
 		Cursor cursor;
 		bool is_custom_cursor = false;
 		bool is_cursor_inherited = true;
+
+		ViewLayoutCache layout_cache;
 
 	private:
 		unsigned int find_prev_tab_index_helper(unsigned int tab_index) const;
