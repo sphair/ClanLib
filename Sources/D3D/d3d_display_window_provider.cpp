@@ -355,6 +355,12 @@ void D3DDisplayWindowProvider::maximize()
 	window.maximize();
 }
 
+void D3DDisplayWindowProvider::toggle_fullscreen()
+{
+	window.toggle_fullscreen();
+}
+
+
 void D3DDisplayWindowProvider::show(bool activate)
 {
 	window.show(activate);

@@ -319,6 +319,36 @@ void Win32Window::maximize()
 	ShowWindow(hwnd, SW_MAXIMIZE);
 }
 
+// ------------------------------------------------------------------------
+// Correct fullscreen implementation according to Raymond Chen:
+// http://blogs.msdn.com/b/oldnewthing/archive/2010/04/12/9994016.aspx
+// ------------------------------------------------------------------------
+void Win32Window::toggle_fullscreen()
+{
+	DWORD dwStyle = GetWindowLong(hwnd, GWL_STYLE);
+	if (dwStyle & WS_OVERLAPPEDWINDOW) 
+	{
+		window_style_before_fullscreen = GetWindowLong(hwnd, GWL_STYLE);
+		MONITORINFO mi = { sizeof(mi) };
+		if (GetWindowPlacement(hwnd, &window_positon_before_fullscreen) &&
+			GetMonitorInfo(MonitorFromWindow(hwnd,
+			MONITOR_DEFAULTTOPRIMARY), &mi)) 
+		{
+			SetWindowLong(hwnd, GWL_STYLE, dwStyle & ~WS_OVERLAPPEDWINDOW);
+			SetWindowPos(hwnd, HWND_TOP, 
+				mi.rcMonitor.left, mi.rcMonitor.top, 
+				mi.rcMonitor.right - mi.rcMonitor.left, mi.rcMonitor.bottom - mi.rcMonitor.top,
+				SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+		}
+	}
+	else
+	{
+		SetWindowLong(hwnd, GWL_STYLE, dwStyle | window_style_before_fullscreen);
+		SetWindowPos(hwnd, NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+		SetWindowPlacement(hwnd, &window_positon_before_fullscreen);
+	}
+}
+
 void Win32Window::show(bool activate)
 {
 	ShowWindow(hwnd, activate ? SW_SHOW : SW_SHOWNA);
@@ -707,13 +737,33 @@ void Win32Window::create_new_window()
 		if (hwnd == 0)
 			throw Exception("Unable to create window");
 
+		/// This should preceed HWND_TOP setting at fullscreen according to:
+		/// http://blogs.msdn.com/b/oldnewthing/archive/2005/11/21/495246.aspx
+		if (window_desc.is_topmost())
+			SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE);
+
 		if (window_desc.is_fullscreen())
 		{
-			SetWindowPos(hwnd, HWND_TOP, window_rect.left, window_rect.top, window_rect.right - window_rect.left, window_rect.bottom - window_rect.top, SWP_NOACTIVATE);
+			window_style_before_fullscreen = GetWindowLong(hwnd, GWL_STYLE);
+			MONITORINFO mi = { sizeof(mi) };
+			if (GetWindowPlacement(hwnd, &window_positon_before_fullscreen) &&
+				GetMonitorInfo(MonitorFromWindow(hwnd,
+				MONITOR_DEFAULTTOPRIMARY), &mi))
+			{
+				SetWindowPos(hwnd, HWND_TOP,
+					mi.rcMonitor.left, mi.rcMonitor.top,
+					mi.rcMonitor.right - mi.rcMonitor.left, mi.rcMonitor.bottom - mi.rcMonitor.top,
+					SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+			}
+			else
+			{
+				SetWindowPos(hwnd, HWND_TOP, 
+					window_rect.left, window_rect.top, 
+					window_rect.right - window_rect.left, window_rect.bottom - window_rect.top, 
+					SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+			}
+			SetWindowLong(hwnd, GWL_STYLE, window_style_before_fullscreen & ~WS_OVERLAPPEDWINDOW);
 		}
-
-		if (window_desc.is_topmost())
-			SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOACTIVATE|SWP_NOMOVE|SWP_NOSIZE);
 
 		//update_dwm_settings(); <-- set in WM_CREATE
 
@@ -1685,8 +1735,6 @@ void Win32Window::create_hid_devices()
 
 void Win32Window::get_styles_from_description(const DisplayWindowDescription &desc, DWORD &style, DWORD &ex_style)
 {
-	style = 0;
-	ex_style = 0;
 
 	WindowType type = desc.get_type();
 
