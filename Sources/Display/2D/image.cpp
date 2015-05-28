@@ -344,4 +344,16 @@ void Image::set_linear_filter(bool linear_filter)
 	impl->texture.set_min_filter(linear_filter ? filter_linear : filter_nearest);
 }
 
+
+void Image::set_subimage(
+	Canvas &canvas,
+	int x,
+	int y,
+	const PixelBuffer &image,
+	const Rect &src_rect,
+	int level)
+{
+	impl->texture.set_subimage(canvas, x, y, image, src_rect, level);
+}
+
 }

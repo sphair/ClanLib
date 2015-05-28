@@ -256,6 +256,23 @@ public:
 	/// \brief Set to true if a linear filter should be used for scaling up and down, false if a nearest-point filter should be used.
 	void set_linear_filter(bool linear_filter = true);
 
+	/** Upload image to sub-texture.
+	*  \param canvas Canvas to use for the request.
+	*  \param x       The horizontal point in the texture to write the new
+	*                 sub-texture image onto.
+	*  \param y       The vertical point in the texture to write the new
+	*                 sub-texture image onto.
+	*  \param image   Image to upload.
+	*  \param level   Mipmap level-of-detail number.
+	*/
+	void set_subimage(
+		Canvas &canvas,
+		int x,
+		int y,
+		const PixelBuffer &image,
+		const Rect &src_rect,
+		int level = 0);
+
 /// \}
 
 /// \name Implementation
