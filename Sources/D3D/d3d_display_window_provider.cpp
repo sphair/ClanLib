@@ -259,11 +259,11 @@ void D3DDisplayWindowProvider::create(DisplayWindowSite *new_site, const Display
 
 	// Prevent DXGI from responding to an alt-enter sequence.
 	ComPtr<IDXGIAdapter> dxgi_adapter;
-	result = dxgi_device->GetParent(__uuidof(IDXGIAdapter), (void **)&dxgi_adapter);
+	result = dxgi_device->GetParent(__uuidof(IDXGIAdapter), (void **)dxgi_adapter.output_variable());
 	if (!result)
 	{
 		ComPtr<IDXGIFactory> dxgi_factory;
-		result = dxgi_adapter->GetParent(__uuidof(IDXGIFactory), (void **)&dxgi_factory);
+		result = dxgi_adapter->GetParent(__uuidof(IDXGIFactory), (void **)dxgi_factory.output_variable());
 		if (!result)
 		{
 			dxgi_factory->MakeWindowAssociation(window.get_hwnd(), DXGI_MWA_NO_ALT_ENTER);
