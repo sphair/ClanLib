@@ -711,7 +711,7 @@ void Win32Window::create_new_window()
 	{
 		register_window_class();
 
-		DWORD style = 0, ex_style = 0;
+		DWORD style, ex_style;
 		get_styles_from_description(window_desc, style, ex_style);
 
 		RECT window_rect = get_window_geometry_from_description(window_desc, style, ex_style);
@@ -1733,31 +1733,34 @@ void Win32Window::create_hid_devices()
 	}
 }
 
-void Win32Window::get_styles_from_description(const DisplayWindowDescription &desc, DWORD &style, DWORD &ex_style)
+void Win32Window::get_styles_from_description(const DisplayWindowDescription &desc, DWORD &out_style, DWORD &out_ex_style)
 {
+
+	out_style = 0;
+	out_ex_style = 0;
 
 	WindowType type = desc.get_type();
 
 	if (desc.is_fullscreen() || type == WindowType::popup || !desc.has_caption())
-		style |= WS_POPUP;
+		out_style |= WS_POPUP;
 
 	if (desc.get_allow_resize() && !desc.is_fullscreen() && type != WindowType::popup)
-		style |= WS_SIZEBOX;
+		out_style |= WS_SIZEBOX;
 
 	if (desc.has_caption())
 	{
-		style |= WS_CAPTION;
+		out_style |= WS_CAPTION;
 
 		if (desc.has_sysmenu())
 		{
-			style |= WS_SYSMENU;
+			out_style |= WS_SYSMENU;
 		}
 		if (type != WindowType::popup)
 		{
 			if (desc.has_minimize_button())
-				style |= WS_MINIMIZEBOX;
+				out_style |= WS_MINIMIZEBOX;
 			if (desc.has_maximize_button() && desc.get_allow_resize())
-				style |= WS_MAXIMIZEBOX;
+				out_style |= WS_MAXIMIZEBOX;
 		}
 	}
 
@@ -1765,15 +1768,15 @@ void Win32Window::get_styles_from_description(const DisplayWindowDescription &de
 	{
 		if (!DwmFunctions::is_composition_enabled())
 		{
-			ex_style |= WS_EX_LAYERED;
+			out_ex_style |= WS_EX_LAYERED;
 		}
 	}
 
 	if (desc.has_no_activate())
-		ex_style |= WS_EX_NOACTIVATE;
+		out_ex_style |= WS_EX_NOACTIVATE;
 
 	if (type == WindowType::tool)
-		ex_style |= WS_EX_TOOLWINDOW;
+		out_ex_style |= WS_EX_TOOLWINDOW;
 }
 
 RECT Win32Window::get_window_geometry_from_description(const DisplayWindowDescription &desc, DWORD style, DWORD ex_style)

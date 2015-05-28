@@ -165,7 +165,7 @@ private:
 	/// \brief Creates the initial window based on the window description.
 	void create_new_window();
 
-	void get_styles_from_description( const DisplayWindowDescription &desc, DWORD &style, DWORD &ex_style  );
+	void get_styles_from_description( const DisplayWindowDescription &desc, DWORD &out_style, DWORD &out_ex_style  );
 	RECT get_window_geometry_from_description( const DisplayWindowDescription &desc, DWORD style, DWORD ex_style );
 	void connect_window_input( const DisplayWindowDescription &desc );
 	void register_window_class();
