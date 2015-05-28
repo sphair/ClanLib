@@ -114,6 +114,7 @@ public:
 	void minimize();
 	void restore();
 	void maximize();
+	void toggle_fullscreen();
 
 	void show(bool activate);
 	void hide();
@@ -233,6 +234,9 @@ private:
 	unsigned int update_window_max_region_rects;
 
 	float pixel_ratio   = 1.0f;
+
+	WINDOWPLACEMENT window_positon_before_fullscreen = {};
+	DWORD window_style_before_fullscreen;
 };
 
 }

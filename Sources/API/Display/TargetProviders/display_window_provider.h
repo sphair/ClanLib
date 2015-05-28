@@ -251,6 +251,10 @@ public:
 	/// Maximizes the window.
 	virtual void maximize() = 0;
 
+	/// Toggle fullscreen
+	/// Only Win32 implementation for now
+	virtual void toggle_fullscreen() = 0;
+
 	/// Displays the window in its current size and position.
 	virtual void show(bool activate) = 0;
 

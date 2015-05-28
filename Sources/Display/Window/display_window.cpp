@@ -431,6 +431,12 @@ void DisplayWindow::maximize()
 	impl->provider->maximize();
 }
 
+void DisplayWindow::toggle_fullscreen()
+{
+	impl->provider->toggle_fullscreen();
+}
+
+
 void DisplayWindow::show(bool activate)
 {
 	impl->provider->show(activate);

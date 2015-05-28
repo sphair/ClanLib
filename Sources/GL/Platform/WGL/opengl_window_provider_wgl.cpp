@@ -475,6 +475,11 @@ void OpenGLWindowProvider::maximize()
 	win32_window.maximize();
 }
 
+void OpenGLWindowProvider::toggle_fullscreen()
+{
+	win32_window.toggle_fullscreen();
+}
+
 void OpenGLWindowProvider::show(bool activate)
 {
 	win32_window.show(activate);
