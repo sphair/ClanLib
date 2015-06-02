@@ -161,6 +161,8 @@ bool NetGameConnection_Impl::write_connection_data(DataBuffer &send_buffer, int 
 		int bytes = connection.write(send_buffer.get_data() + bytes_sent, send_buffer.get_size() - bytes_sent);
 		if (bytes < 0)
 			return false;
+		else if (bytes == 0)
+			return true;
 
 		bytes_sent += bytes;
 
