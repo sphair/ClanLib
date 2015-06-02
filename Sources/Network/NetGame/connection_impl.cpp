@@ -161,8 +161,6 @@ bool NetGameConnection_Impl::write_connection_data(DataBuffer &send_buffer, int 
 		int bytes = connection.write(send_buffer.get_data() + bytes_sent, send_buffer.get_size() - bytes_sent);
 		if (bytes < 0)
 			return false;
-		else if (bytes == 0)
-			return true;
 
 		bytes_sent += bytes;
 
@@ -178,6 +176,8 @@ bool NetGameConnection_Impl::write_connection_data(DataBuffer &send_buffer, int 
 				bytes_sent = 0;
 				send_buffer.set_size(0);
 				send_graceful_close = write_data(send_buffer);
+				if (send_buffer.get_size() == 0)
+					return false;
 			}
 		}
 	}
