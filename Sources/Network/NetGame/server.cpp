@@ -94,7 +94,8 @@ void NetGameServer::stop()
 	impl->stop_flag = true;
 	lock.unlock();
 	impl->worker_event.notify();
-	impl->listen_thread.join();
+	if (impl->listen_thread.joinable())
+		impl->listen_thread.join();
 	impl->tcp_listen.reset();
 
 	for (auto & elem : impl->connections)

@@ -35,10 +35,6 @@ namespace clan
 				throw Exception("Unable to create event object for socket");
 		}
 
-		SocketHandle(SOCKET handle) : handle(handle)
-		{
-		}
-
 		~SocketHandle()
 		{
 			close();
@@ -76,14 +72,16 @@ namespace clan
 	public:
 		TCPSocket()
 		{
-			SetupNetwork::start();
 			handle = socket(AF_INET, SOCK_STREAM, 0);
 			if (handle == INVALID_SOCKET)
 				throw Exception("Unable to create socket handle");
 		}
 
-		TCPSocket(SOCKET handle) : SocketHandle(handle)
+		TCPSocket(SOCKET init_handle)
 		{
+			handle = init_handle;
+			if (handle == INVALID_SOCKET)
+				throw Exception("Invalid socket handle");
 		}
 	};
 

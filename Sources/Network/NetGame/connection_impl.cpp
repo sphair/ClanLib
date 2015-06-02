@@ -67,7 +67,8 @@ NetGameConnection_Impl::~NetGameConnection_Impl()
 	stop_flag = true;
 	mutex_lock.unlock();
 	worker_event.notify();
-	thread.join();
+	if (thread.joinable())
+		thread.join();
 }
 
 void NetGameConnection_Impl::set_data(const std::string &name, void *new_data)

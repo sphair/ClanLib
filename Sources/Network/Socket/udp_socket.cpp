@@ -30,14 +30,16 @@ namespace clan
 	public:
 		UDPSocketImpl()
 		{
-			SetupNetwork::start();
 			handle = socket(AF_INET, SOCK_DGRAM, 0);
 			if (handle == INVALID_SOCKET)
 				throw Exception("Unable to create socket handle");
 		}
 
-		UDPSocketImpl(SOCKET handle) : SocketHandle(handle)
+		UDPSocketImpl(SOCKET init_handle)
 		{
+			handle = init_handle;
+			if (handle == INVALID_SOCKET)
+				throw Exception("Invalid socket handle");
 		}
 	};
 
