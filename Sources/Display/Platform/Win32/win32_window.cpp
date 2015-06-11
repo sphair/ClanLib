@@ -1735,8 +1735,7 @@ void Win32Window::create_hid_devices()
 
 void Win32Window::get_styles_from_description(const DisplayWindowDescription &desc, DWORD &out_style, DWORD &out_ex_style)
 {
-
-	out_style = 0;
+	out_style = WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
 	out_ex_style = 0;
 
 	WindowType type = desc.get_type();
