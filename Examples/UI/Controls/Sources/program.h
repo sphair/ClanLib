@@ -47,11 +47,15 @@ public:
 		spacer->style()->set("flex: auto");
 		button_ok->style()->set("font-size: 10px; margin-right: 5px");
 		button_cancel->style()->set("font-size: 10px");
+		spacer2->style()->set("flex: auto");
+		statusbar->style()->set("font-size: 10px; margin: 5px -11px -11px -11px");
 
 		add_subview(headline);
 		add_subview(paragraph);
 		add_subview(datetime);
 		add_subview(button_bar);
+		add_subview(spacer2);
+		add_subview(statusbar);
 
 		headline->add_text("Common Controls Layout Example", headline->style());
 		paragraph->add_text("This is an example demonstrating how to make the Win32 common controls participate in layout.", paragraph->style());
@@ -64,6 +68,10 @@ public:
 		button_ok->set_default();
 
 		button_cancel->set_text("Cancel");
+
+		statusbar->set_simple();
+		//statusbar->set_parts({ 500 });
+		statusbar->set_text("READY FOR ACTION!");
 	}
 
 	std::shared_ptr<clan::SpanLayoutView> headline = std::make_shared<clan::SpanLayoutView>();
@@ -73,6 +81,8 @@ public:
 	std::shared_ptr<clan::View> spacer = std::make_shared<clan::View>();
 	std::shared_ptr<ButtonControl> button_ok = std::make_shared<ButtonControl>();
 	std::shared_ptr<ButtonControl> button_cancel = std::make_shared<ButtonControl>();
+	std::shared_ptr<clan::View> spacer2 = std::make_shared<clan::View>();
+	std::shared_ptr<StatusBarControl> statusbar = std::make_shared<StatusBarControl>();
 };
 
 class Program : public clan::Application

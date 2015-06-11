@@ -1,6 +1,7 @@
 
 #include <Windows.h>
 #include <CommCtrl.h>
+#include <Richedit.h>
 
 class Control : public clan::View
 {
@@ -28,6 +29,7 @@ private:
 //class ImageList;
 //class TaskDialog;
 //class ToolTip;
+//class PropertySheet;
 
 class AnimationControl : public Control
 {
@@ -84,34 +86,34 @@ protected:
 	HWND create_control(HWND parent, HINSTANCE instance) const override { return CreateWindowEx(0, L"EDIT", L"", WS_CHILD, 0, 0, 0, 0, parent, 0, instance, 0); }
 };
 
-class FlatScrollbarControl : public Control
-{
-public:
-};
-
 class HeaderControl : public Control
 {
-public:
+protected:
+	HWND create_control(HWND parent, HINSTANCE instance) const override { return CreateWindowEx(0, WC_HEADER, L"", WS_CHILD, 0, 0, 0, 0, parent, 0, instance, 0); }
 };
 
 class HotKeyControl : public Control
 {
-public:
+protected:
+	HWND create_control(HWND parent, HINSTANCE instance) const override { return CreateWindowEx(0, HOTKEY_CLASS, L"", WS_CHILD, 0, 0, 0, 0, parent, 0, instance, 0); }
 };
 
 class IpAddressControl : public Control
 {
-public:
+protected:
+	HWND create_control(HWND parent, HINSTANCE instance) const override { return CreateWindowEx(0, WC_IPADDRESS, L"", WS_CHILD, 0, 0, 0, 0, parent, 0, instance, 0); }
 };
 
 class ListBoxControl : public Control
 {
-public:
+protected:
+	HWND create_control(HWND parent, HINSTANCE instance) const override { return CreateWindowEx(0, WC_LISTBOX, L"", WS_CHILD, 0, 0, 0, 0, parent, 0, instance, 0); }
 };
 
 class ListViewControl : public Control
 {
-public:
+protected:
+	HWND create_control(HWND parent, HINSTANCE instance) const override { return CreateWindowEx(0, WC_LISTVIEW, L"", WS_CHILD, 0, 0, 0, 0, parent, 0, instance, 0); }
 };
 
 class MonthCalControl : public Control
@@ -122,70 +124,88 @@ protected:
 
 class PagerControl : public Control
 {
-public:
+protected:
+	HWND create_control(HWND parent, HINSTANCE instance) const override { return CreateWindowEx(0, WC_PAGESCROLLER, L"", WS_CHILD, 0, 0, 0, 0, parent, 0, instance, 0); }
 };
 
 class ProgressBarControl : public Control
 {
-public:
-};
-
-class PropertySheetControl : public Control
-{
-public:
+protected:
+	HWND create_control(HWND parent, HINSTANCE instance) const override { return CreateWindowEx(0, PROGRESS_CLASS, L"", WS_CHILD, 0, 0, 0, 0, parent, 0, instance, 0); }
 };
 
 class RebarControl : public Control
 {
-public:
+protected:
+	HWND create_control(HWND parent, HINSTANCE instance) const override { return CreateWindowEx(WS_EX_TOOLWINDOW, REBARCLASSNAME, L"", WS_CHILD | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, 0, 0, 0, 0, parent, 0, instance, 0); }
 };
 
 class RichEditControl : public Control
 {
-public:
+protected:
+	HWND create_control(HWND parent, HINSTANCE instance) const override
+	{
+		LoadLibrary(L"Msftedit.dll");
+		return CreateWindowEx(0, MSFTEDIT_CLASS, L"", WS_CHILD, 0, 0, 0, 0, parent, 0, instance, 0);
+	}
 };
 
 class ScrollBarControl : public Control
 {
-public:
+protected:
+	HWND create_control(HWND parent, HINSTANCE instance) const override { return CreateWindowEx(0, L"SCROLLBAR", L"", WS_CHILD, 0, 0, 0, 0, parent, 0, instance, 0); }
 };
 
 class StaticControl : public Control
 {
-public:
+protected:
+	HWND create_control(HWND parent, HINSTANCE instance) const override { return CreateWindowEx(0, L"STATIC", L"", WS_CHILD, 0, 0, 0, 0, parent, 0, instance, 0); }
 };
 
 class StatusBarControl : public Control
 {
 public:
+	void set_simple(bool enable = true) { SendMessage(control_handle(), SB_SIMPLE, enable ? TRUE : FALSE, 0); }
+	void set_parts(const std::vector<int> parts) { SendMessage(control_handle(), SB_SETPARTS, (WPARAM)parts.size(), (LPARAM)parts.data()); }
+	void set_text(const std::string &text) { SendMessage(control_handle(), SB_SETTEXT, SB_SIMPLEID, (LPARAM)clan::StringHelp::utf8_to_ucs2(text).c_str()); }
+	void set_text(int id, const std::string &text) { SendMessage(control_handle(), SB_SETTEXT, LOWORD(id), (LPARAM)clan::StringHelp::utf8_to_ucs2(text).c_str()); }
+
+protected:
+	HWND create_control(HWND parent, HINSTANCE instance) const override { return CreateWindowEx(0, STATUSCLASSNAME, L"", WS_CHILD | SBARS_SIZEGRIP, 0, 0, 0, 0, parent, 0, instance, 0); }
 };
 
 class SysLinkControl : public Control
 {
-public:
+protected:
+	HWND create_control(HWND parent, HINSTANCE instance) const override { return CreateWindowEx(0, WC_LINK, L"", WS_CHILD, 0, 0, 0, 0, parent, 0, instance, 0); }
 };
 
 class TabControl : public Control
 {
-public:
+protected:
+	HWND create_control(HWND parent, HINSTANCE instance) const override { return CreateWindowEx(0, WC_TABCONTROL, L"", WS_CHILD, 0, 0, 0, 0, parent, 0, instance, 0); }
 };
 
 class ToolbarControl : public Control
 {
-public:
+protected:
+	HWND create_control(HWND parent, HINSTANCE instance) const override { return CreateWindowEx(0, TOOLBARCLASSNAME, L"", WS_CHILD, 0, 0, 0, 0, parent, 0, instance, 0); }
 };
 
 class TrackbarControl : public Control
 {
-public:
+protected:
+	HWND create_control(HWND parent, HINSTANCE instance) const override { return CreateWindowEx(0, TRACKBAR_CLASS, L"", WS_CHILD, 0, 0, 0, 0, parent, 0, instance, 0); }
 };
 
 class TreeViewControl : public Control
 {
-public:
+protected:
+	HWND create_control(HWND parent, HINSTANCE instance) const override { return CreateWindowEx(0, WC_TREEVIEW, L"", WS_CHILD, 0, 0, 0, 0, parent, 0, instance, 0); }
 };
 
 class UpDownControl : public Control
 {
-public:
+protected:
+	HWND create_control(HWND parent, HINSTANCE instance) const override { return CreateWindowEx(0, UPDOWN_CLASS, L"", WS_CHILD, 0, 0, 0, 0, parent, 0, instance, 0); }
 };
