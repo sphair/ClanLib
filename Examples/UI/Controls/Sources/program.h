@@ -40,9 +40,9 @@ public:
 		style()->set("padding: 11px");
 		style()->set("background: #efefef");
 
-		headline->style()->set("font: bold 16px/20px Segoe UI, Tahoma, sans-serif; margin-bottom: 15px;");
-		paragraph->style()->set("font: 13px/16px Segoe UI, Tahoma, sans-serif; margin-bottom: 15px;");
-		datetime->style()->set("font: 13px/16px Segoe UI, Tahoma, sans-serif; margin-bottom: 15px; height: 200px; border: 1px solid #555; box-shadow: 0 0 2px rgba(0,0,0,0.1)");
+		headline->style()->set("font: bold 16px/20px Segoe UI, Tahoma, sans-serif; margin-bottom: 11px;");
+		paragraph->style()->set("font: 13px/16px Segoe UI, Tahoma, sans-serif; margin-bottom: 11px;");
+		datetime->style()->set("font: 13px/16px Segoe UI, Tahoma, sans-serif; margin-bottom: 11px; height: 200px; border: 1px solid #555; box-shadow: 0 0 2px rgba(0,0,0,0.1)");
 		button_bar->style()->set("flex-direction: row");
 		spacer->style()->set("flex: auto");
 		button_ok->style()->set("font-size: 10px; margin-right: 5px");
@@ -65,8 +65,6 @@ public:
 		button_bar->add_subview(button_cancel);
 
 		button_ok->set_text("OK");
-		button_ok->set_default();
-
 		button_cancel->set_text("Cancel");
 
 		statusbar->set_simple();
