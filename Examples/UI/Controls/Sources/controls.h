@@ -831,6 +831,235 @@ protected:
 
 class ListViewControl : public Control
 {
+public:
+	enum class Style : int
+	{
+		align_left = LVS_ALIGNLEFT,
+		align_top = LVS_ALIGNTOP,
+		auto_arrange = LVS_AUTOARRANGE,
+		edit_labels = LVS_EDITLABELS,
+		icon = LVS_ICON,
+		list = LVS_LIST,
+		no_column_header = LVS_NOCOLUMNHEADER,
+		no_label_wrap = LVS_NOLABELWRAP,
+		no_scroll = LVS_NOSCROLL,
+		no_sort_header = LVS_NOSORTHEADER,
+		owner_data = LVS_OWNERDATA,
+		owner_draw_fixed = LVS_OWNERDRAWFIXED,
+		report = LVS_REPORT,
+		share_imagelists = LVS_SHAREIMAGELISTS,
+		show_se_always = LVS_SHOWSELALWAYS,
+		single_sel = LVS_SINGLESEL,
+		small_icon = LVS_SMALLICON,
+		sort_ascending = LVS_SORTASCENDING,
+		sort_descending = LVS_SORTDESCENDING
+	};
+
+	enum class ExStyle : unsigned int
+	{
+		auto_autoarrange = LVS_EX_AUTOAUTOARRANGE,
+		auto_check_select = LVS_EX_AUTOCHECKSELECT,
+		auto_size_columns = LVS_EX_AUTOSIZECOLUMNS,
+		border_select = LVS_EX_BORDERSELECT,
+		checkboxes = LVS_EX_CHECKBOXES,
+		column_overflow = LVS_EX_COLUMNOVERFLOW,
+		columns_appoints = LVS_EX_COLUMNSNAPPOINTS,
+		doublebuffer = LVS_EX_DOUBLEBUFFER,
+		flatsb = LVS_EX_FLATSB,
+		fullrow_select = LVS_EX_FULLROWSELECT,
+		gridlines = LVS_EX_GRIDLINES,
+		header_dragdrop = LVS_EX_HEADERDRAGDROP,
+		header_in_all_views = LVS_EX_HEADERINALLVIEWS,
+		hide_labels = LVS_EX_HIDELABELS,
+		info_tip = LVS_EX_INFOTIP,
+		justify_columns = LVS_EX_JUSTIFYCOLUMNS,
+		label_tip = LVS_EX_LABELTIP,
+		multiworkareas = LVS_EX_MULTIWORKAREAS,
+		one_click_activate = LVS_EX_ONECLICKACTIVATE,
+		regional = LVS_EX_REGIONAL,
+		simple_select = LVS_EX_SIMPLESELECT,
+		snap_to_grid = LVS_EX_SNAPTOGRID,
+		subitem_images = LVS_EX_SUBITEMIMAGES,
+		track_select = LVS_EX_TRACKSELECT,
+		transparent_bkgnd = LVS_EX_TRANSPARENTBKGND,
+		transparent_shadow_text = LVS_EX_TRANSPARENTSHADOWTEXT,
+		two_click_activate = LVS_EX_TWOCLICKACTIVATE,
+		underline_cold = LVS_EX_UNDERLINECOLD,
+		underline_hot = LVS_EX_UNDERLINEHOT
+	};
+
+	// void approximate_view_rect() { ListView_ApproximateViewRect(control_handle()); }
+	// void arrange() { ListView_Arrange(control_handle()); }
+	// void cancel_edit_label() { ListView_CancelEditLabel(control_handle()); }
+	// void create_drag_image() { ListView_CreateDragImage(control_handle()); }
+	// void delete_all_items() { ListView_DeleteAllItems(control_handle()); }
+	// void delete_column() { ListView_DeleteColumn(control_handle()); }
+	// void delete_item() { ListView_DeleteItem(control_handle()); }
+	// void edit_label() { ListView_EditLabel(control_handle()); }
+	// void enable_group_view() { ListView_EnableGroupView(control_handle()); }
+	// void ensure_visible() { ListView_EnsureVisible(control_handle()); }
+	// void find_item() { ListView_FindItem(control_handle()); }
+	// void get_bk_color() { ListView_GetBkColor(control_handle()); }
+	// void get_bk_image() { ListView_GetBkImage(control_handle()); }
+	// void get_callback_mask() { ListView_GetCallbackMask(control_handle()); }
+	// void get_check_state() { ListView_GetCheckState(control_handle()); }
+	// void get_column() { ListView_GetColumn(control_handle()); }
+	// void get_column_order_array() { ListView_GetColumnOrderArray(control_handle()); }
+	// void get_column_width() { ListView_GetColumnWidth(control_handle()); }
+	// void get_count_per_page() { ListView_GetCountPerPage(control_handle()); }
+	// void get_edit_control() { ListView_GetEditControl(control_handle()); }
+	// void get_empty_text() { ListView_GetEmptyText(control_handle()); }
+	// void get_extended_listview_style() { ListView_GetExtendedListViewStyle(control_handle()); }
+	// void get_focused_group() { ListView_GetFocusedGroup(control_handle()); }
+	// void get_footer_info() { ListView_GetFooterInfo(control_handle()); }
+	// void get_footer_item() { ListView_GetFooterItem(control_handle()); }
+	// void get_footer_item_rect() { ListView_GetFooterItemRect(control_handle()); }
+	// void get_footer_rect() { ListView_GetFooterRect(control_handle()); }
+	// void get_group_count() { ListView_GetGroupCount(control_handle()); }
+	// void get_group_header_image_list() { ListView_GetGroupHeaderImageList(control_handle()); }
+	// void get_group_info() { ListView_GetGroupInfo(control_handle()); }
+	// void get_group_info_by_index() { ListView_GetGroupInfoByIndex(control_handle()); }
+	// void get_group_metrics() { ListView_GetGroupMetrics(control_handle()); }
+	// void get_group_rect() { ListView_GetGroupRect(control_handle()); }
+	// void get_group_state() { ListView_GetGroupState(control_handle()); }
+	// void get_header() { ListView_GetHeader(control_handle()); }
+	// void get_hot_cursor() { ListView_GetHotCursor(control_handle()); }
+	// void get_hot_item() { ListView_GetHotItem(control_handle()); }
+	// void get_hover_time() { ListView_GetHoverTime(control_handle()); }
+	// void get_image_list() { ListView_GetImageList(control_handle()); }
+	// void get_insert_mark() { ListView_GetInsertMark(control_handle()); }
+	// void get_insert_mark_color() { ListView_GetInsertMarkColor(control_handle()); }
+	// void get_insert_mark_rect() { ListView_GetInsertMarkRect(control_handle()); }
+	// void get_isearch_string() { ListView_GetISearchString(control_handle()); }
+	// void get_item() { ListView_GetItem(control_handle()); }
+	// void get_item_count() { ListView_GetItemCount(control_handle()); }
+	// void get_item_index_rect() { ListView_GetItemIndexRect(control_handle()); }
+	// void get_item_position() { ListView_GetItemPosition(control_handle()); }
+	// void get_item_rect() { ListView_GetItemRect(control_handle()); }
+	// void get_item_spacing() { ListView_GetItemSpacing(control_handle()); }
+	// void get_item_state() { ListView_GetItemState(control_handle()); }
+	// void get_item_text() { ListView_GetItemText(control_handle()); }
+	// void get_next_item() { ListView_GetNextItem(control_handle()); }
+	// void get_next_item_index() { ListView_GetNextItemIndex(control_handle()); }
+	// void get_number_of_work_areas() { ListView_GetNumberOfWorkAreas(control_handle()); }
+	// void get_origin() { ListView_GetOrigin(control_handle()); }
+	// void get_outline_color() { ListView_GetOutlineColor(control_handle()); }
+	// void get_selected_column() { ListView_GetSelectedColumn(control_handle()); }
+	// void get_selected_count() { ListView_GetSelectedCount(control_handle()); }
+	// void get_selection_mark() { ListView_GetSelectionMark(control_handle()); }
+	// void get_string_width() { ListView_GetStringWidth(control_handle()); }
+	// void get_sub_item_rect() { ListView_GetSubItemRect(control_handle()); }
+	// void get_text_bk_color() { ListView_GetTextBkColor(control_handle()); }
+	// void get_text_color() { ListView_GetTextColor(control_handle()); }
+	// void get_tile_info() { ListView_GetTileInfo(control_handle()); }
+	// void get_tile_view_info() { ListView_GetTileViewInfo(control_handle()); }
+	// void get_tool_tips() { ListView_GetToolTips(control_handle()); }
+	// void get_top_index() { ListView_GetTopIndex(control_handle()); }
+	// void get_view() { ListView_GetView(control_handle()); }
+	// void get_view_rect() { ListView_GetViewRect(control_handle()); }
+	// void get_work_areas() { ListView_GetWorkAreas(control_handle()); }
+	// void has_group() { ListView_HasGroup(control_handle()); }
+	// void hit_test() { ListView_HitTest(control_handle()); }
+	// void hit_test_ex() { ListView_HitTestEx(control_handle()); }
+	// void insert_column() { ListView_InsertColumn(control_handle()); }
+	// void insert_group() { ListView_InsertGroup(control_handle()); }
+	// void insert_group_sorted() { ListView_InsertGroupSorted(control_handle()); }
+	// void insert_item() { ListView_InsertItem(control_handle()); }
+	// void insert_mark_hit_test() { ListView_InsertMarkHitTest(control_handle()); }
+	// void is_group_view_enabled() { ListView_IsGroupViewEnabled(control_handle()); }
+	// void is_item_visible() { ListView_IsItemVisible(control_handle()); }
+	// void map_id_to_index() { ListView_MapIDToIndex(control_handle()); }
+	// void map_index_to_id() { ListView_MapIndexToID(control_handle()); }
+	// void move_group() { ListView_MoveGroup(control_handle()); }
+	// void move_item_to_group() { ListView_MoveItemToGroup(control_handle()); }
+	// void redraw_items() { ListView_RedrawItems(control_handle()); }
+	// void remove_all_groups() { ListView_RemoveAllGroups(control_handle()); }
+	// void remove_group() { ListView_RemoveGroup(control_handle()); }
+	// void scroll() { ListView_Scroll(control_handle()); }
+	// void set_bk_color() { ListView_SetBkColor(control_handle()); }
+	// void set_bk_image() { ListView_SetBkImage(control_handle()); }
+	// void set_callback_mask() { ListView_SetCallbackMask(control_handle()); }
+	// void set_check_state() { ListView_SetCheckState(control_handle()); }
+	// void set_column() { ListView_SetColumn(control_handle()); }
+	// void set_column_order_array() { ListView_SetColumnOrderArray(control_handle()); }
+	// void set_column_width() { ListView_SetColumnWidth(control_handle()); }
+	// void set_extended_listview_style() { ListView_SetExtendedListViewStyle(control_handle()); }
+	// void set_extended_listview_style_ex() { ListView_SetExtendedListViewStyleEx(control_handle()); }
+	// void set_group_header_image_list() { ListView_SetGroupHeaderImageList(control_handle()); }
+	// void set_group_info() { ListView_SetGroupInfo(control_handle()); }
+	// void set_group_metrics() { ListView_SetGroupMetrics(control_handle()); }
+	// void set_group_state() { ListView_SetGroupState(control_handle()); }
+	// void set_hot_cursor() { ListView_SetHotCursor(control_handle()); }
+	// void set_hot_item() { ListView_SetHotItem(control_handle()); }
+	// void set_hover_time() { ListView_SetHoverTime(control_handle()); }
+	// void set_icon_spacing() { ListView_SetIconSpacing(control_handle()); }
+	// void set_image_list() { ListView_SetImageList(control_handle()); }
+	// void set_info_tip() { ListView_SetInfoTip(control_handle()); }
+	// void set_insert_mark() { ListView_SetInsertMark(control_handle()); }
+	// void set_insert_mark_color() { ListView_SetInsertMarkColor(control_handle()); }
+	// void set_item() { ListView_SetItem(control_handle()); }
+	// void set_item_count() { ListView_SetItemCount(control_handle()); }
+	// void set_item_count_ex() { ListView_SetItemCountEx(control_handle()); }
+	// void set_item_index_state() { ListView_SetItemIndexState(control_handle()); }
+	// void set_item_position() { ListView_SetItemPosition(control_handle()); }
+	// void set_item_position32() { ListView_SetItemPosition32(control_handle()); }
+	// void set_item_state() { ListView_SetItemState(control_handle()); }
+	// void set_item_text() { ListView_SetItemText(control_handle()); }
+	// void set_outline_color() { ListView_SetOutlineColor(control_handle()); }
+	// void set_selected_column() { ListView_SetSelectedColumn(control_handle()); }
+	// void set_selection_mark() { ListView_SetSelectionMark(control_handle()); }
+	// void set_text_bk_color() { ListView_SetTextBkColor(control_handle()); }
+	// void set_text_color() { ListView_SetTextColor(control_handle()); }
+	// void set_tile_info() { ListView_SetTileInfo(control_handle()); }
+	// void set_tile_view_info() { ListView_SetTileViewInfo(control_handle()); }
+	// void set_tool_tips() { ListView_SetToolTips(control_handle()); }
+	// void set_view() { ListView_SetView(control_handle()); }
+	// void set_work_areas() { ListView_SetWorkAreas(control_handle()); }
+	// void set_groups() { ListView_SortGroups(control_handle()); }
+	// void sort_items() { ListView_SortItems(control_handle()); }
+	// void sort_items_ex() { ListView_SortItemsEx(control_handle()); }
+	void subitem_hit_test(LVHITTESTINFO &info) { ListView_SubItemHitTest(control_handle(), &info); }
+	void subitem_hit_text_ex(LVHITTESTINFO &info) { ListView_SubItemHitTestEx(control_handle(), &info); }
+	void update(int index) { ListView_Update(control_handle(), index); }
+
+	clan::Signal<void()> sig_begin_drag; // LVN_BEGINDRAG
+	clan::Signal<void()> sig_begin_label_edit; // LVN_BEGINLABELEDIT
+	clan::Signal<void()> sig_begin_rdrag; // LVN_BEGINRDRAG
+	clan::Signal<void()> sig_begin_scroll; // LVN_BEGINSCROLL
+	clan::Signal<void()> sig_column_click; // LVN_COLUMNCLICK
+	clan::Signal<void()> sig_column_dropdown; // LVN_COLUMNDROPDOWN
+	clan::Signal<void()> sig_column_overflow_click; // LVN_COLUMNOVERFLOWCLICK
+	clan::Signal<void()> sig_delete_all_items; // LVN_DELETEALLITEMS
+	clan::Signal<void()> sig_delete_item; // LVN_DELETEITEM
+	clan::Signal<void()> sig_end_label_edit; // LVN_ENDLABELEDIT
+	clan::Signal<void()> sig_end_scroll; // LVN_ENDSCROLL
+	clan::Signal<void()> sig_get_disp_info; // LVN_GETDISPINFO
+	clan::Signal<void()> sig_get_empty_markup; // LVN_GETEMPTYMARKUP
+	clan::Signal<void()> sig_get_info_tip; // LVN_GETINFOTIP
+	clan::Signal<void()> sig_hot_track; // LVN_HOTTRACK
+	clan::Signal<void()> sig_incremental_search; // LVN_INCREMENTALSEARCH
+	clan::Signal<void()> sig_insert_item; // LVN_INSERTITEM
+	clan::Signal<void()> sig_item_activate; // LVN_ITEMACTIVATE
+	clan::Signal<void()> sig_item_changed; // LVN_ITEMCHANGED
+	clan::Signal<void()> sig_item_changing; // LVN_ITEMCHANGING
+	clan::Signal<void()> sig_key_down; // LVN_KEYDOWN
+	clan::Signal<void()> sig_link_click; // LVN_LINKCLICK
+	clan::Signal<void()> sig_marquee_begin; // LVN_MARQUEEBEGIN
+	clan::Signal<void()> sig_od_cache_hint; // LVN_ODCACHEHINT
+	clan::Signal<void()> sig_od_find_item; // LVN_ODFINDITEM
+	clan::Signal<void()> sig_od_state_changed; // LVN_ODSTATECHANGED
+	clan::Signal<void()> sig_set_disp_info; // LVN_SETDISPINFO
+	clan::Signal<void()> sig_click; // NM_CLICK(list view)
+	clan::Signal<void()> sig_custom_draw; // NM_CUSTOMDRAW(list view)
+	clan::Signal<void()> sig_dblclk; // NM_DBLCLK(list view)
+	clan::Signal<void()> sig_hover; // NM_HOVER(list view)
+	clan::Signal<void()> sig_killfocus; // NM_KILLFOCUS(list view)
+	clan::Signal<void()> sig_rclick; // NM_RCLICK(list view)
+	clan::Signal<void()> sig_rdblclk; // NM_RDBLCLK(list view)
+	clan::Signal<void()> sig_released_capture; // NM_RELEASEDCAPTURE(list view)
+	clan::Signal<void()> sig_return; // NM_RETURN(list view)
+	clan::Signal<void()> sig_setfocus; // NM_SETFOCUS(list view)
+
 protected:
 	HWND create_control(HWND parent, HINSTANCE instance) const override { return CreateWindowEx(0, WC_LISTVIEW, L"", WS_CHILD, 0, 0, 0, 0, parent, 0, instance, 0); }
 };
