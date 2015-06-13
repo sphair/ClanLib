@@ -599,24 +599,232 @@ protected:
 
 class HeaderControl : public Control
 {
+public:
+	enum class Style : int
+	{
+		buttons = HDS_BUTTONS,
+		dragdrop = HDS_DRAGDROP,
+		filterbar = HDS_FILTERBAR,
+		flat = HDS_FLAT,
+		fulldrag = HDS_FULLDRAG,
+		hidden = HDS_HIDDEN,
+		horz = HDS_HORZ,
+		hottrack = HDS_HOTTRACK,
+		checkboxes = HDS_CHECKBOXES,
+		nosizing = HDS_NOSIZING,
+		overflow = HDS_OVERFLOW
+	};
+
+	void clear_all_filters() { Header_ClearAllFilters(control_handle()); }
+	void clear_filter(int index) { Header_ClearFilter(control_handle(), index); }
+	HIMAGELIST create_drag_image(int index) { return Header_CreateDragImage(control_handle(), index); }
+	void delete_item(int index) { Header_DeleteItem(control_handle(), index); }
+	void edit_filter(int column, bool discard_changes) { Header_EditFilter(control_handle(), column, discard_changes ? TRUE : FALSE); }
+	int get_bitmap_margin() const { return Header_GetBitmapMargin(control_handle()); }
+	int get_focused_item() const { return Header_GetFocusedItem(control_handle()); }
+	HIMAGELIST get_image_list() const { return Header_GetImageList(control_handle()); }
+	HDITEM get_item(int index, int mask) const { HDITEM item = { 0 }; item.mask = mask; Header_GetItem(control_handle(), index, &item); return item; }
+	int get_item_count() const { return Header_GetItemCount(control_handle()); }
+	clan::Rect get_item_dropdown_rect(int index) const { RECT rect = { 0 }; Header_GetItemDropDownRect(control_handle(), index, &rect); return clan::Rect(rect.left, rect.top, rect.right, rect.bottom); }
+	clan::Rect get_item_rect(int index) const { RECT rect = { 0 }; Header_GetItemRect(control_handle(), index, &rect); return clan::Rect(rect.left, rect.top, rect.right, rect.bottom); }
+	std::vector<int> get_order_array() const { std::vector<int> list; list.resize(get_item_count()); Header_GetOrderArray(control_handle(), list.size(), list.data()); return list; }
+	clan::Rect get_overflow_rect() const { RECT rect = { 0 }; Header_GetOverflowRect(control_handle(), &rect); return clan::Rect(rect.left, rect.top, rect.right, rect.bottom); }
+	HIMAGELIST get_state_image_list() const { return Header_GetStateImageList(control_handle()); }
+	void layout(RECT &out_rect, WINDOWPOS &out_windowpos) const { HDLAYOUT layout; layout.prc = &out_rect; layout.pwpos = &out_windowpos; Header_Layout(control_handle(), &layout); }
+	int order_to_index(int order) const { return Header_OrderToIndex(control_handle(), order); }
+
+	int insert_item(int index, const HDITEM *item) { return Header_InsertItem(control_handle(), index, item); }
+	void set_item(int index, const HDITEM *item) { Header_SetItem(control_handle(), index, item); }
+	void set_order_array(const std::vector<int> &order) { Header_SetOrderArray(control_handle(), order.size(), order.data()); }
+
+	void set_bitmap_margin(int width) { Header_SetBitmapMargin(control_handle(), width); }
+	void set_filter_change_timeout(int timeout_ms) { Header_SetFilterChangeTimeout(control_handle(), timeout_ms); }
+	void set_focused_item(int item) { Header_SetFocusedItem(control_handle(), item); }
+	void set_hot_divider(int divider_index) { Header_SetHotDivider(control_handle(), FALSE, divider_index); }
+	void set_hot_divider(int x, int y) { Header_SetHotDivider(control_handle(), TRUE, HIWORD(y)|LOWORD(x)); }
+	void set_image_list(HIMAGELIST image_list) { Header_SetImageList(control_handle(), image_list); }
+	void set_state_image_list(HIMAGELIST image_list) { Header_SetStateImageList(control_handle(), image_list); }
+
+	clan::Signal<void()> sig_begin_drag; // HDN_BEGINDRAG
+	clan::Signal<void()> sig_begin_filter_edit; // HDN_BEGINFILTEREDIT
+	clan::Signal<void()> sig_begin_track; // HDN_BEGINTRACK
+	clan::Signal<void()> sig_divider_dbl_click; // HDN_DIVIDERDBLCLICK
+	clan::Signal<void()> sig_dropdown; // HDN_DROPDOWN
+	clan::Signal<void()> sig_end_drag; // HDN_ENDDRAG
+	clan::Signal<void()> sig_end_filter_edit; // HDN_ENDFILTEREDIT
+	clan::Signal<void()> sig_filter_btn_click; // HDN_FILTERBTNCLICK
+	clan::Signal<void()> sig_filter_change; // HDN_FILTERCHANGE
+	clan::Signal<void()> sig_get_disp_info; // HDN_GETDISPINFO
+	clan::Signal<void()> sig_item_changed; // HDN_ITEMCHANGED
+	clan::Signal<void()> sig_item_changing; // HDN_ITEMCHANGING
+	clan::Signal<void()> sig_item_click; // HDN_ITEMCLICK
+	clan::Signal<void()> sig_item_dbl_click; // HDN_ITEMDBLCLICK
+	clan::Signal<void()> sig_item_key_down; // HDN_ITEMKEYDOWN
+	clan::Signal<void()> sig_item_state_icon_click; // HDN_ITEMSTATEICONCLICK
+	clan::Signal<void()> sig_overflow_click; // HDN_OVERFLOWCLICK
+	clan::Signal<void()> sig_track; // HDN_TRACK
+	clan::Signal<void()> sig_rclick; // NM_RCLICK(header)
+	clan::Signal<void()> sig_released_capture; // NM_RELEASEDCAPTURE(header)
+
 protected:
 	HWND create_control(HWND parent, HINSTANCE instance) const override { return CreateWindowEx(0, WC_HEADER, L"", WS_CHILD, 0, 0, 0, 0, parent, 0, instance, 0); }
 };
 
 class HotKeyControl : public Control
 {
+public:
+	struct HotKey
+	{
+		DWORD vkey = 0;
+		bool alt = false;
+		bool ctrl = false;
+		bool extended_key = false;
+		bool shift = false;
+	};
+
+	enum class Modifier : int
+	{
+		none = HKCOMB_NONE,
+		shift = HKCOMB_S,
+		ctrl = HKCOMB_C,
+		alt = HKCOMB_A,
+		shift_ctrl = HKCOMB_SC,
+		shift_alt = HKCOMB_SA,
+		ctrl_alt = HKCOMB_CA,
+		shift_ctrl_alt = HKCOMB_SCA
+	};
+
+	HotKey get_hotkey()
+	{
+		DWORD key = SendMessage(control_handle(), HKM_GETHOTKEY, 0, 0);
+		HotKey hk;
+		hk.vkey = LOBYTE(0);
+		hk.alt = (HIBYTE(0) & HOTKEYF_ALT) == HOTKEYF_ALT;
+		hk.ctrl = (HIBYTE(0) & HOTKEYF_CONTROL) == HOTKEYF_CONTROL;
+		hk.extended_key = (HIBYTE(0) & HOTKEYF_EXT) == HOTKEYF_EXT;
+		hk.shift = (HIBYTE(0) & HOTKEYF_SHIFT) == HOTKEYF_SHIFT;
+		return hk;
+	}
+
+	void set_hotkey(HotKey hk)
+	{
+		DWORD modifiers = 0;
+		if (hk.alt) modifiers |= HOTKEYF_ALT;
+		if (hk.ctrl) modifiers |= HOTKEYF_CONTROL;
+		if (hk.extended_key) modifiers |= HOTKEYF_EXT;
+		if (hk.shift) modifiers |= HOTKEYF_SHIFT;
+		SendMessage(control_handle(), HKM_SETHOTKEY, (modifiers << 8) | hk.vkey, 0);
+	}
+
+	void set_rules(Modifier invalid_combinations, Modifier bit_or_to_invalid)
+	{
+		SendMessage(control_handle(), HKM_SETRULES, (int)invalid_combinations, (int)bit_or_to_invalid);
+	}
+
 protected:
 	HWND create_control(HWND parent, HINSTANCE instance) const override { return CreateWindowEx(0, HOTKEY_CLASS, L"", WS_CHILD, 0, 0, 0, 0, parent, 0, instance, 0); }
 };
 
 class IpAddressControl : public Control
 {
+public:
+	void clear_address() { SendMessage(control_handle(), IPM_CLEARADDRESS, 0, 0); }
+	unsigned int get_address() const { DWORD address = 0; SendMessage(control_handle(), IPM_GETADDRESS, 0, (LPARAM)&address); return address; }
+	bool is_blank() const { return SendMessage(control_handle(), IPM_ISBLANK, 0, 0) != FALSE; }
+	void set_address(unsigned int addr) { SendMessage(control_handle(), IPM_SETADDRESS, 0, addr); }
+	void set_focus(int field_index) { SendMessage(control_handle(), IPM_SETFOCUS, field_index, 0); }
+	void set_range(int field_index, int min_value, int max_value) { SendMessage(control_handle(), IPM_SETRANGE, field_index, (max_value << 8) | min_value); }
+
+	clan::Signal<void()> sig_field_changed; // IPN_FIELDCHANGED
+
 protected:
 	HWND create_control(HWND parent, HINSTANCE instance) const override { return CreateWindowEx(0, WC_IPADDRESS, L"", WS_CHILD, 0, 0, 0, 0, parent, 0, instance, 0); }
 };
 
 class ListBoxControl : public Control
 {
+public:
+	enum class Style : int
+	{
+		combobox = LBS_COMBOBOX,
+		disable_noscroll = LBS_DISABLENOSCROLL,
+		extended_sel = LBS_EXTENDEDSEL,
+		has_strings = LBS_HASSTRINGS,
+		multicolumn = LBS_MULTICOLUMN,
+		multiple_sel = LBS_MULTIPLESEL,
+		no_data = LBS_NODATA,
+		no_integral_height = LBS_NOINTEGRALHEIGHT,
+		no_redraw = LBS_NOREDRAW,
+		no_sel = LBS_NOSEL,
+		notify = LBS_NOTIFY,
+		ownerdraw_fixed = LBS_OWNERDRAWFIXED,
+		ownerdraw_variable = LBS_OWNERDRAWVARIABLE,
+		sort = LBS_SORT,
+		standard = LBS_STANDARD,
+		use_tabstops = LBS_USETABSTOPS,
+		want_keyboard_input = LBS_WANTKEYBOARDINPUT
+	};
+
+	int get_caret_index() const { return ListBox_GetCaretIndex(control_handle()); }
+	int get_count() const { return ListBox_GetCount(control_handle()); }
+	int get_cur_sel() const { return ListBox_GetCurSel(control_handle()); }
+	int get_horizontal_extent() const { return ListBox_GetHorizontalExtent(control_handle()); }
+	void *get_item_data(int index) const { return (void*)ListBox_GetItemData(control_handle(), index); }
+	int get_item_height(int index) const { return ListBox_GetItemHeight(control_handle(), index); }
+	clan::Rect get_item_rect(int index) const { RECT rect = { 0 }; ListBox_GetItemRect(control_handle(), index, &rect); return clan::Rect(rect.left, rect.top, rect.right, rect.bottom); }
+	bool is_selected(int index) const { return ListBox_GetSel(control_handle(), index) != 0; }
+	int get_sel_count() const { return ListBox_GetSelCount(control_handle()); }
+	std::vector<int> get_sel_items() const { std::vector<int> list; list.resize(get_sel_count()); ListBox_GetSelItems(control_handle(), list.size(), list.data()); return list; }
+	std::string get_text(int index) const { std::vector<wchar_t> buffer; buffer.resize(get_text_len(index) + 1); ListBox_GetText(control_handle(), index, buffer.data()); buffer.push_back(0); return clan::StringHelp::ucs2_to_utf8(buffer.data()); }
+	int get_text_len(int index) const { return ListBox_GetTextLen(control_handle(), index); }
+	int get_top_index() const { return ListBox_GetTopIndex(control_handle()); }
+
+	int find_item_data(int index_start, const void *data) const { return ListBox_FindItemData(control_handle(), index_start, data); }
+	int find_string(int index_start, const std::string &text) const { return ListBox_FindString(control_handle(), index_start, clan::StringHelp::utf8_to_ucs2(text).c_str()); }
+	int find_string_exact(int index_start, const std::string &text) const { return ListBox_FindStringExact(control_handle(), index_start, clan::StringHelp::utf8_to_ucs2(text).c_str()); }
+
+	int add_string(const std::string &text) { return ListBox_AddString(control_handle(), clan::StringHelp::utf8_to_ucs2(text).c_str()); }
+	int add_item_data(const void *data) { return ListBox_AddItemData(control_handle(), data); }
+	int insert_item_data(int index, void *data) { return ListBox_InsertItemData(control_handle(), index, data); }
+	int insert_string(int index, const std::string &text) { ListBox_InsertString(control_handle(), index, clan::StringHelp::utf8_to_ucs2(text).c_str()); }
+	void delete_string(int index) { ListBox_DeleteString(control_handle(), index); }
+	void reset_content() { ListBox_ResetContent(control_handle()); }
+
+	void dir(unsigned int attrs, const std::string &file_spec) { ListBox_Dir(control_handle(), attrs, clan::StringHelp::utf8_to_ucs2(file_spec).c_str()); }
+
+	void enable(bool value = true) { ListBox_Enable(control_handle(), value ? TRUE : FALSE); }
+
+	int select_item_data(int index, const void *data) { return ListBox_SelectItemData(control_handle(), index, data); }
+	int select_string(int index, const std::string &text) { return ListBox_SelectString(control_handle(), index, clan::StringHelp::utf8_to_ucs2(text).c_str()); }
+	void select_item_range(int first, int last) { ListBox_SelItemRange(control_handle(), TRUE, first, last); }
+	void deselect_item_range(int first, int last) { ListBox_SelItemRange(control_handle(), FALSE, first, last); }
+	void set_current_selection(int index) { ListBox_SetCurSel(control_handle(), index); }
+	void select_item(int item) { ListBox_SetSel(control_handle(), TRUE, item); }
+	void deselect_item(int item) { ListBox_SetSel(control_handle(), FALSE, item); }
+
+	void set_caret_index(int index) { ListBox_SetCaretIndex(control_handle(), index); }
+	void set_column_width(int width) { ListBox_SetColumnWidth(control_handle(), width); }
+	void set_horizontal_extent(int extent) { ListBox_SetHorizontalExtent(control_handle(), extent); }
+	void set_item_data(int index, const void *data) { ListBox_SetItemData(control_handle(), index, data); }
+	void set_item_height(int index, int height) { ListBox_SetItemHeight(control_handle(), index, height); }
+	void set_tab_stops(const std::vector<int> &stops) { ListBox_SetTabStops(control_handle(), stops.size(), stops.data()); }
+	void set_top_index(int index) { ListBox_SetTopIndex(control_handle(), index); }
+
+	clan::Signal<void()> sig_begin_drag; // DL_BEGINDRAG
+	clan::Signal<void()> sig_cancel_drag; // DL_CANCELDRAG
+	clan::Signal<void()> sig_dragging; // DL_DRAGGING
+	clan::Signal<void()> sig_dropped; // DL_DROPPED
+	clan::Signal<void()> sig_dblclk; // LBN_DBLCLK
+	clan::Signal<void()> sig_errspace; // LBN_ERRSPACE
+	clan::Signal<void()> sig_killfocus; // LBN_KILLFOCUS
+	clan::Signal<void()> sig_sel_cancel; // LBN_SELCANCEL
+	clan::Signal<void()> sig_sel_change; // LBN_SELCHANGE
+	clan::Signal<void()> sig_setfocus; // LBN_SETFOCUS
+	clan::Signal<void()> sig_char_to_item; // WM_CHARTOITEM
+	clan::Signal<void()> sig_color_listbox; // WM_CTLCOLORLISTBOX
+	clan::Signal<void()> sig_delete_item; // WM_DELETEITEM
+	clan::Signal<void()> sig_vkey_to_item; // WM_VKEYTOITEM
+
 protected:
 	HWND create_control(HWND parent, HINSTANCE instance) const override { return CreateWindowEx(0, WC_LISTBOX, L"", WS_CHILD, 0, 0, 0, 0, parent, 0, instance, 0); }
 };
