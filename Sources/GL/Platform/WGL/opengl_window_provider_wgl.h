@@ -159,7 +159,7 @@ private:
 	HGLRC opengl_context;
 
 	/// \brief Device context for this window.
-    HDC device_context;
+	HDC device_context;
 	HWND shadow_hwnd = 0;
 	bool shadow_window;
 	bool dwm_layered;

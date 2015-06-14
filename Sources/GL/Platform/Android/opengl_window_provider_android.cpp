@@ -351,6 +351,10 @@ namespace clan
 	{
 	}
 
+	void OpenGLWindowProvider::toggle_fullscreen()
+	{
+	}
+
 	void OpenGLWindowProvider::show(bool activate)
 	{
 	}

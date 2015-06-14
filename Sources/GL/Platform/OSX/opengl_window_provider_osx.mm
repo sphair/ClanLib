@@ -317,6 +317,11 @@ namespace clan
 		[impl->window performZoom:impl->window];
 	}
 
+	void OpenGLWindowProvider::toggle_fullscreen()
+	{
+		// FIXME: real implementation
+	}
+
 	void OpenGLWindowProvider::show(bool activate)
 	{
 		if (activate)

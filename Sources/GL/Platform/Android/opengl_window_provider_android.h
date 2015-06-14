@@ -107,6 +107,7 @@ namespace clan
 		void minimize() override;
 		void restore() override;
 		void maximize() override;
+		void toggle_fullscreen() override;
 		void show(bool activate) override;
 		void hide() override;
 		void bring_to_front() override;

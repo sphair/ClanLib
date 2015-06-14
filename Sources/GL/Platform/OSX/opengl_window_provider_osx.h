@@ -98,6 +98,7 @@ namespace clan
 		void minimize();
 		void restore();
 		void maximize();
+		void toggle_fullscreen();
 		void show(bool activate);
 		void hide();
 		void bring_to_front();
