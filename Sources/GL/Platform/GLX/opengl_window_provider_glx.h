@@ -245,6 +245,7 @@ public:
 	void minimize() override { x11_window.minimize(); }
 	void restore() override { x11_window.restore(); }
 	void maximize() override { x11_window.maximize(); }
+	void toggle_fullscreen() override { } // FIXME: real implementation
 	void show(bool activate) override  { x11_window.show(activate); }
 	void hide() override { x11_window.hide(); }
 	void bring_to_front() override { x11_window.bring_to_front(); }

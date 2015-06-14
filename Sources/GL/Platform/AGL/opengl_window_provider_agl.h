@@ -114,6 +114,7 @@ public:
 	void minimize() { cocoa_window.minimize(); }
 	void restore() { cocoa_window.restore(); }
 	void maximize() { cocoa_window.maximize(); }
+	void toggle_fullscreen() { } // FIXME: real implementation
 	void show(bool activate)  { cocoa_window.show(activate); }
 	void hide() { cocoa_window.hide(); }
 	void bring_to_front() { cocoa_window.bring_to_front(); }
