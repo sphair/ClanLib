@@ -49,7 +49,7 @@ namespace clan
 		///
 		/// Once the target environment has been initialized this function is called continously to update and render the application.
 		/// If the function returns false the main loop will end and the application will exit.
-		virtual bool update() = 0;
+		virtual bool update() { return true; }
 
 		/// \brief Set update handler to wait a certain amount of milliseconds between each update
 		static void use_timeout_timing(int timeout_ms);
