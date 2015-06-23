@@ -91,6 +91,14 @@ namespace clan
 		/// Add a child view
 		void add_subview(const std::shared_ptr<View> &view);
 
+		template<typename T, typename... Types>
+		std::shared_ptr<T> add_subview(Types &&... args)
+		{
+			auto subview = std::make_shared<T>(std::forward<Types>(args)...);
+			add_subview(subview);
+			return subview;
+		}
+
 		/// Remove view from parent
 		void remove_from_super();
 
