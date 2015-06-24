@@ -63,13 +63,19 @@ namespace clan
 		virtual void set_root_needs_render() = 0;
 
 		/// Layout local root
-		virtual void layout_local() = 0;
+		virtual void layout_root() = 0;
 
 		/// Map from local content to screen coordinates
 		virtual Pointf root_to_screen_pos(const Pointf &pos) = 0;
 
 		/// Map from screen to local content coordinates
 		virtual Pointf root_from_screen_pos(const Pointf &pos) = 0;
+
+		/// Shows a popup view at the given content coordinates
+		virtual void root_present_popup(const Pointf &pos, const std::shared_ptr<View> &popup) = 0;
+
+		/// Hides a popup, if visible
+		virtual void root_dismiss_popup() = 0;
 
 	private:
 		friend class View;

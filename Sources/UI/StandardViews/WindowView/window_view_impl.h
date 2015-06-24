@@ -50,6 +50,9 @@ namespace clan
 
 		std::shared_ptr<View> hot_view;
 
+		WindowView *popup_owner = 0;
+		std::map<View *, std::shared_ptr<WindowView>> popups;
+
 	private:
 		Pointf to_root_pos(const Pointf &client_pos) const;
 

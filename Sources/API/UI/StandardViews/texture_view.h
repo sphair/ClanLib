@@ -81,11 +81,17 @@ namespace clan
 	protected:
 		bool root_hidden() const override;
 		void set_root_hidden(bool value) override;
+
 		Canvas get_root_canvas() const override;
+
 		void set_root_needs_render() override;
-		void layout_local() override;
+		void layout_root() override;
+
 		Pointf root_to_screen_pos(const Pointf &pos) override;
 		Pointf root_from_screen_pos(const Pointf &pos) override;
+
+		void root_present_popup(const Pointf &pos, const std::shared_ptr<View> &popup) override;
+		void root_dismiss_popup() override;
 
 	private:
 		std::shared_ptr<TextureView_Impl> impl;

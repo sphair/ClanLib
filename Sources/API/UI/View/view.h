@@ -99,8 +99,27 @@ namespace clan
 			return subview;
 		}
 
+		std::shared_ptr<View> add_subview()
+		{
+			return add_subview<View>();
+		}
+
 		/// Remove view from parent
 		void remove_from_super();
+
+		/// Shows view as a popup at the given content coordinates
+		void present_popup(const Pointf &pos, const std::shared_ptr<View> &popup);
+
+		template<typename T, typename... Types>
+		std::shared_ptr<View> present_popup(const Pointf &pos, Types &&... args)
+		{
+			auto popup = std::make_shared<T>(std::forward<Types>(args)...);
+			present_popup(pos, popup);
+			return popup;
+		}
+
+		/// Hides view if it is shown as a popup
+		void dismiss_popup();
 
 		/// Test if view is set to hidden
 		bool hidden() const;
@@ -178,8 +197,8 @@ namespace clan
 		/// The view receiving keyboard events or nullptr if no view has the focus
 		View *focus_view() const;
 
-		/// Indicates if the view acts as a local root for layout and rendering
-		bool local_root() const;
+		/// Indicates if the view is a root for layout and rendering
+		bool is_layout_root() const;
 
 		/// Find descendant view at the specified content relative position
 		std::shared_ptr<View> find_view_at(const Pointf &pos) const;

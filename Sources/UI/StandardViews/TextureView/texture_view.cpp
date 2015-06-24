@@ -69,7 +69,7 @@ namespace clan
 		impl->needs_render = true;
 	}
 
-	void TextureView::layout_local()
+	void TextureView::layout_root()
 	{
 		Rectf containing_box = superview()->geometry().content_box();
 		ViewGeometry geometry = PositionedLayout::get_geometry(impl->canvas, this, containing_box);
@@ -79,6 +79,14 @@ namespace clan
 		Pointf screen_pos = superview()->to_screen_pos(geometry.margin_box().get_top_left());
 		Sizef screen_size = geometry.margin_box().get_size();
 		set_viewport(Rectf(screen_pos, screen_size));
+	}
+
+	void TextureView::root_present_popup(const Pointf &pos, const std::shared_ptr<View> &popup)
+	{
+	}
+
+	void TextureView::root_dismiss_popup()
+	{
 	}
 
 	bool TextureView::root_hidden() const

@@ -32,6 +32,7 @@
 #include "API/UI/Events/pointer_event.h"
 #include "API/UI/Events/close_event.h"
 #include "API/UI/Events/activation_change_event.h"
+#include "API/Display/Window/display_window_description.h"
 #include "API/Display/Window/input_event.h"
 #include "API/Display/Window/input_context.h"
 #include "API/Display/2D/canvas.h"
@@ -118,7 +119,7 @@ namespace clan
 		impl->window.request_repaint(impl->window.get_viewport());
 	}
 
-	void WindowView::layout_local()
+	void WindowView::layout_root()
 	{
 		Canvas canvas(impl->window);
 		Rectf containing_box = superview()->geometry().content_box();
@@ -141,5 +142,42 @@ namespace clan
 	{
 		Pointf client_pos = impl->window.screen_to_client(Pointf(pos));
 		return Pointf(client_pos) - geometry().content_box().get_top_left();
+	}
+
+	void WindowView::root_present_popup(const Pointf &pos, const std::shared_ptr<View> &popup)
+	{
+		Pointf screen_pos = to_screen_pos(pos);
+
+		DisplayWindowDescription desc;
+		desc.set_type(WindowType::popup);
+		desc.set_visible(false);
+		desc.set_topmost(true);
+		desc.set_no_activate(true);
+		desc.show_caption(false);
+
+		auto popup_window = std::make_shared<WindowView>(desc);
+		popup_window->impl->popup_owner = this;
+		popup_window->add_subview(popup);
+		popup_window->style()->set("flex-direction: row");
+
+		impl->popups[popup_window.get()] = popup_window;
+
+		Canvas canvas = popup_window->get_canvas();
+		float width = popup_window->calculate_preferred_width(canvas);
+		float height = popup_window->calculate_preferred_height(canvas, width);
+		popup_window->get_display_window().set_position(Rectf(screen_pos.x, screen_pos.y, screen_pos.x + width, screen_pos.y + height), false);
+
+		popup_window->show(WindowShowType::show_no_activate);
+	}
+
+	void WindowView::root_dismiss_popup()
+	{
+		if (impl->popup_owner)
+		{
+			WindowView *popup_owner = impl->popup_owner;
+			auto it = popup_owner->impl->popups.find(this);
+			if (it != popup_owner->impl->popups.end())
+				popup_owner->impl->popups.erase(it);
+		}
 	}
 }

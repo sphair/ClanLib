@@ -160,9 +160,23 @@ namespace clan
 		}
 	}
 
+	void View::present_popup(const Pointf &pos, const std::shared_ptr<View> &popup)
+	{
+		RootView *root = dynamic_cast<RootView*>(root_view());
+		if (root)
+			root->root_present_popup(to_root_pos(pos), popup);
+	}
+
+	void View::dismiss_popup()
+	{
+		RootView *root = dynamic_cast<RootView*>(root_view());
+		if (root)
+			root->root_dismiss_popup();
+	}
+
 	bool View::hidden() const
 	{
-		if (local_root())
+		if (is_layout_root())
 		{
 			return static_cast<const RootView *>(this)->root_hidden();
 		}
@@ -174,7 +188,7 @@ namespace clan
 
 	void View::set_hidden(bool value)
 	{
-		if (local_root())
+		if (is_layout_root())
 		{
 			return static_cast<RootView *>(this)->set_root_hidden(value);
 		}
@@ -212,7 +226,7 @@ namespace clan
 
 	Canvas View::get_canvas() const
 	{
-		if (local_root())
+		if (is_layout_root())
 			return static_cast<const RootView *>(this)->get_root_canvas();
 
 		View *super = superview();
@@ -224,7 +238,7 @@ namespace clan
 
 	void View::set_needs_render()
 	{
-		if (local_root())
+		if (is_layout_root())
 		{
 			static_cast<RootView *>(this)->set_root_needs_render();
 		}
@@ -376,7 +390,7 @@ namespace clan
 			return 0.0f;
 	}
 
-	bool View::local_root() const
+	bool View::is_layout_root() const
 	{
 		return dynamic_cast<const RootView *>(this) != nullptr;
 	}
@@ -422,7 +436,7 @@ namespace clan
 		for (unsigned int cnt = impl->_subviews.size(); cnt > 0; --cnt)	// Search the subviews in reverse order, as we want to search the view that was "last drawn" first
 		{
 			const std::shared_ptr<View> &child = impl->_subviews[cnt-1];
-			if (child->geometry().border_box().contains(pos) && !child->hidden() && !child->local_root())
+			if (child->geometry().border_box().contains(pos) && !child->hidden())
 			{
 				Pointf child_content_pos(pos.x - child->geometry().content_x, pos.y - child->geometry().content_y);
 				child_content_pos = Vec2f(Mat4f::inverse(child->view_transform()) * Vec4f(child_content_pos, 0.0f, 1.0f));
@@ -603,7 +617,7 @@ namespace clan
 
 	Pointf View::to_screen_pos(const Pointf &pos)
 	{
-		if (local_root())
+		if (is_layout_root())
 			return static_cast<RootView *>(this)->root_to_screen_pos(pos);
 
 		if (superview())
@@ -614,7 +628,7 @@ namespace clan
 
 	Pointf View::from_screen_pos(const Pointf &pos)
 	{
-		if (local_root())
+		if (is_layout_root())
 			return static_cast<RootView *>(this)->root_from_screen_pos(pos);
 
 		if (superview())
@@ -716,6 +730,9 @@ namespace clan
 
 	void View::dispatch_event(View *target, EventUI *e, bool no_propagation)
 	{
+		// Make sure root view is not destroyed during event dispatching (needed for dismiss_popup)
+		auto pin_root = target->root_view()->shared_from_this();
+
 		e->_target = target->shared_from_this();
 
 		if (no_propagation)
@@ -803,7 +820,7 @@ namespace clan
 		Rectf clip_box = canvas.get_cliprect();
 		for (std::shared_ptr<View> &view : _subviews)
 		{
-			if (!view->hidden() && !view->local_root())
+			if (!view->hidden() && !view->is_layout_root())
 			{
 				// Note: this code isn't correct for rotated transforms (plus canvas cliprect can only clip AABB)
 				Rect border_box = view->geometry().border_box();

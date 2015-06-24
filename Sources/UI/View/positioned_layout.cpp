@@ -37,12 +37,7 @@ namespace clan
 	{
 		for (const std::shared_ptr<View> &subview : view->subviews())
 		{
-			if (subview->local_root())
-			{
-				static_cast<RootView*>(subview.get())->layout_local();
-				continue;
-			}
-			else if (subview->hidden())
+			if (subview->hidden())
 			{
 				continue;
 			}
