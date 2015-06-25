@@ -322,7 +322,6 @@ clanUI_includes = \
 	UI/StandardViews/image_view.h \
 	UI/StandardViews/scroll_view.h \
 	UI/StandardViews/slider_view.h \
-	UI/StandardViews/popup_view.h \
 	UI/StandardViews/button_view.h \
 	UI/StandardViews/spin_view.h \
 	UI/StandardViews/radiobutton_view.h \

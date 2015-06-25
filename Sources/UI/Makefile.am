@@ -24,7 +24,6 @@ libclan40UI_la_SOURCES = \
 ./StandardViews/ButtonView/button_view_impl.cpp \
 ./StandardViews/SpanLayoutView/span_layout_view.cpp \
 ./StandardViews/SpanLayoutView/span_layout_view_impl.cpp \
-./StandardViews/popup_view.cpp \
 ./StandardViews/TextFieldView/text_field_view.cpp \
 ./StandardViews/image_view.cpp \
 ./StandardViews/RadioButtonView/radiobutton_view.cpp \
