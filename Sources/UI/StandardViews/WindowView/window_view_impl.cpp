@@ -59,6 +59,7 @@ namespace clan
 	void WindowView_Impl::on_lost_focus()
 	{
 		release_capture();
+		popups.clear();
 		window_view->dispatch_activation_change(ActivationChangeType::deactivated);
 	}
 
