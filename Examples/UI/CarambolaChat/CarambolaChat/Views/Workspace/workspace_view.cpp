@@ -12,11 +12,9 @@ WorkspaceView::WorkspaceView()
 
 	labels_group = std::make_shared<View>();
 	labels_group->style()->set("flex: none");
-	labels_group->style()->set("padding: 5px 7px 0 7px");
-	labels_group->style()->set("height: 26px");
 	labels_group->style()->set("flex-direction: row");
 	labels_group->style()->set("border-top: 1px solid rgb(159, 174, 194)");
-	labels_group->style()->set("background: rgb(201, 210, 226)");
+	labels_group->style()->set("background: linear-gradient(to right, rgb(234,240,249), rgb(223,233,245))");
 
 	toolbar = std::make_shared<View>();
 	toolbar->style()->set("flex: none");
@@ -27,7 +25,7 @@ WorkspaceView::WorkspaceView()
 	pages_group = std::make_shared<View>();
 	pages_group->style()->set("flex: auto");
 	pages_group->style()->set("margin: 0");
-	pages_group->style()->set("border-top: 3px solid rgb(219, 234, 249)");
+	pages_group->style()->set("border-top: 3px solid white");
 	pages_group->style()->set("background: white");
 	pages_group->style()->set("flex-direction: column");
 
@@ -36,13 +34,13 @@ WorkspaceView::WorkspaceView()
 	add_subview(pages_group);
 }
 
-void WorkspaceView::add_page(const std::string &id, const std::string &label_text, std::shared_ptr<View> page_view)
+void WorkspaceView::add_page(const std::string &id, const std::string &label_text, std::shared_ptr<View> page_view, bool app_page)
 {
 	bool first_tab = tabs.empty();
 
 	TabPage &page = tabs[id];
 
-	page.tab = std::make_shared<WorkspaceTabView>(label_text);
+	page.tab = std::make_shared<WorkspaceTabView>(label_text, app_page);
 	page.page = page_view;
 
 	auto on_click = [=](PointerEvent &e)

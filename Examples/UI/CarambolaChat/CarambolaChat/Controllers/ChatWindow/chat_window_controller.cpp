@@ -27,7 +27,7 @@ ChatWindowViewController::ChatWindowViewController()
 
 	slots.connect(AppModel::instance()->cb_irc_session_created, this, &ChatWindowViewController::irc_session_created);
 
-	workspace->add_page("Connections", std::make_shared<ConnectionsViewController>());
+	workspace->add_page("Connection", std::make_shared<ConnectionsViewController>(), true);
 
 	window_view()->show(WindowShowType::show_default);
 }
@@ -36,10 +36,10 @@ void ChatWindowViewController::irc_session_created(IRCSession *session)
 {
 	slots.connect(session->cb_joined, [=](const IRCChannel &channel) { irc_channel_joined(session, channel); });
 
-	workspace->add_page(session->get_connection_name(), std::make_shared<ChatViewController>(session, IRCEntity()));
+	workspace->add_page(session->get_connection_name(), std::make_shared<ChatViewController>(session, IRCEntity()), false);
 }
 
 void ChatWindowViewController::irc_channel_joined(IRCSession *session, const IRCChannel &channel)
 {
-	workspace->add_page("#" + channel.get_name(), std::make_shared<ChatViewController>(session, channel));
+	workspace->add_page("#" + channel.get_name(), std::make_shared<ChatViewController>(session, channel), false);
 }

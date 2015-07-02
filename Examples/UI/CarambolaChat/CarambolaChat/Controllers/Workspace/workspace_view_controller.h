@@ -9,7 +9,7 @@ class WorkspaceViewController : public clan::ViewController
 public:
 	WorkspaceViewController();
 
-	void add_page(const std::string &label, std::shared_ptr<WorkspacePageViewController> controller);
+	void add_page(const std::string &label, std::shared_ptr<WorkspacePageViewController> controller, bool app_page);
 
 protected:
 	void child_controller_added(const std::shared_ptr<clan::ViewController> &view_controller) override;
