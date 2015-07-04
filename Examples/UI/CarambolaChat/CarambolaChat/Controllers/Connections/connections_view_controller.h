@@ -2,6 +2,7 @@
 #pragma once
 
 #include "Controllers/Workspace/workspace_page_view_controller.h"
+#include "Controllers/EditConnection/edit_connection_controller.h"
 #include "Models/IRCSession/irc_session.h"
 
 class XMLSettings;
@@ -29,5 +30,5 @@ private:
 	void on_session_connect_status_changed(IRCSession::ConnectStatus status, IRCSession *session);
 
 	std::shared_ptr<NetworkListView> networks;
-	clan::SlotContainer slots;
+	std::shared_ptr<EditConnectionController> edit_connection = std::make_shared<EditConnectionController>();
 };

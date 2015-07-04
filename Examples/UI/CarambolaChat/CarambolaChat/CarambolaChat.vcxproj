@@ -83,6 +83,7 @@
     <ClCompile Include="Controllers\ChatWindow\chat_window_controller.cpp" />
     <ClCompile Include="Controllers\Chat\chat_view_controller.cpp" />
     <ClCompile Include="Controllers\Connections\connections_view_controller.cpp" />
+    <ClCompile Include="Controllers\EditConnection\edit_connection_controller.cpp" />
     <ClCompile Include="Controllers\Workspace\workspace_page_view_controller.cpp" />
     <ClCompile Include="Controllers\Workspace\workspace_view_controller.cpp" />
     <ClCompile Include="Models\app_model.cpp" />
@@ -120,6 +121,7 @@
     <ClInclude Include="Controllers\Chat\chat_url.h" />
     <ClInclude Include="Controllers\Chat\chat_view_controller.h" />
     <ClInclude Include="Controllers\Connections\connections_view_controller.h" />
+    <ClInclude Include="Controllers\EditConnection\edit_connection_controller.h" />
     <ClInclude Include="Controllers\Workspace\workspace_page_view_controller.h" />
     <ClInclude Include="Controllers\Workspace\workspace_view_controller.h" />
     <ClInclude Include="Models\app_model.h" />
@@ -148,6 +150,7 @@
     <ClInclude Include="Views\Chat\chat_view.h" />
     <ClInclude Include="Views\Connections\network_list_item_view.h" />
     <ClInclude Include="Views\Connections\network_list_view.h" />
+    <ClInclude Include="Views\EditConnection\edit_connection_view.h" />
     <ClInclude Include="Views\UserList\user_list_view.h" />
     <ClInclude Include="Views\Workspace\workspace_tab_view.h" />
     <ClInclude Include="Views\Workspace\workspace_view.h" />

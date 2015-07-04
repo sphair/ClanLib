@@ -22,7 +22,5 @@ private:
 
 	WorkspaceView *workspace_view() const;
 
-	clan::SlotContainer slots;
-
 	friend class WorkspacePageViewController;
 };

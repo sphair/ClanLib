@@ -90,6 +90,9 @@
     <ClCompile Include="Controllers\Workspace\workspace_page_view_controller.cpp">
       <Filter>Controllers\Workspace</Filter>
     </ClCompile>
+    <ClCompile Include="Controllers\EditConnection\edit_connection_controller.cpp">
+      <Filter>Controllers\EditConnection</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="precomp.h" />
@@ -191,6 +194,12 @@
     <ClInclude Include="Controllers\Workspace\workspace_page_view_controller.h">
       <Filter>Controllers\Workspace</Filter>
     </ClInclude>
+    <ClInclude Include="Controllers\EditConnection\edit_connection_controller.h">
+      <Filter>Controllers\EditConnection</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\EditConnection\edit_connection_view.h">
+      <Filter>Views\EditConnection</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -243,6 +252,12 @@
     </Filter>
     <Filter Include="Views\Workspace">
       <UniqueIdentifier>{07de6001-a96c-44e9-8b28-5e6c68815ef1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\EditConnection">
+      <UniqueIdentifier>{3dcd28b0-1c6c-454a-b9c6-c405c2517a6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Views\EditConnection">
+      <UniqueIdentifier>{8523c622-b0b3-45a9-b448-256de9711b13}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

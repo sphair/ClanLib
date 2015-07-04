@@ -18,6 +18,4 @@ public:
 private:
 	void irc_session_created(IRCSession *session);
 	void irc_channel_joined(IRCSession *session, const IRCEntity &channel);
-
-	clan::SlotContainer slots;
 };

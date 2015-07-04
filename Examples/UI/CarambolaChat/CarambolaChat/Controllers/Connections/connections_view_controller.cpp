@@ -47,6 +47,7 @@ ConnectionsViewController::ConnectionsViewController()
 
 void ConnectionsViewController::add_clicked()
 {
+	view->present_modal("Add Connection", edit_connection->view);
 }
 
 void ConnectionsViewController::connect_clicked(XMLSettings connection)
@@ -56,6 +57,7 @@ void ConnectionsViewController::connect_clicked(XMLSettings connection)
 
 void ConnectionsViewController::edit_clicked(XMLSettings connection)
 {
+	view->present_modal("Edit Connection", edit_connection->view);
 }
 
 void ConnectionsViewController::remove_clicked(XMLSettings connection)
