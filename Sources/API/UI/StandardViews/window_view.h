@@ -77,6 +77,9 @@ namespace clan
 		void root_present_popup(const Pointf &pos, const std::shared_ptr<View> &popup) override;
 		void root_dismiss_popup() override;
 
+		void root_present_modal(const std::string &title, const std::shared_ptr<View> &modal) override;
+		void root_dismiss_modal() override;
+
 	private:
 		std::shared_ptr<WindowView_Impl> impl;
 

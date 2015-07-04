@@ -52,6 +52,10 @@ namespace clan
 
 	View::~View()
 	{
+		for (auto &subview : subviews())
+		{
+			subview->impl->_superview = nullptr;
+		}
 	}
 
 	const StyleCascade &View::style_cascade() const
@@ -172,6 +176,20 @@ namespace clan
 		RootView *root = dynamic_cast<RootView*>(root_view());
 		if (root)
 			root->root_dismiss_popup();
+	}
+
+	void View::present_modal(const std::string &title, const std::shared_ptr<View> &modal)
+	{
+		RootView *root = dynamic_cast<RootView*>(root_view());
+		if (root)
+			root->root_present_modal(title, modal);
+	}
+
+	void View::dismiss_modal()
+	{
+		RootView *root = dynamic_cast<RootView*>(root_view());
+		if (root)
+			root->root_dismiss_modal();
 	}
 
 	bool View::hidden() const

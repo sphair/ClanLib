@@ -53,6 +53,9 @@ namespace clan
 		WindowView *popup_owner = 0;
 		std::map<View *, std::shared_ptr<WindowView>> popups;
 
+		WindowView *modal_owner = 0;
+		std::shared_ptr<WindowView> modal;
+
 	private:
 		Pointf to_root_pos(const Pointf &client_pos) const;
 

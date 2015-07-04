@@ -121,6 +121,20 @@ namespace clan
 		/// Hides view if it is shown as a popup
 		void dismiss_popup();
 
+		/// Shows view as a modal dialog
+		void present_modal(const std::string &title, const std::shared_ptr<View> &modal);
+
+		template<typename T, typename... Types>
+		std::shared_ptr<View> present_modal(const std::string &title, Types &&... args)
+		{
+			auto modal = std::make_shared<T>(std::forward<Types>(args)...);
+			present_modal(title, modal);
+			return modal;
+		}
+
+		/// Hides view if it is shown as a modal
+		void dismiss_modal();
+
 		/// Test if view is set to hidden
 		bool hidden() const;
 

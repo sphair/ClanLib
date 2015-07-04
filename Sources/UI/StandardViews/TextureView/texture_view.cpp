@@ -89,6 +89,14 @@ namespace clan
 	{
 	}
 
+	void TextureView::root_present_modal(const std::string &title, const std::shared_ptr<View> &modal)
+	{
+	}
+
+	void TextureView::root_dismiss_modal()
+	{
+	}
+
 	bool TextureView::root_hidden() const
 	{
 		return false;

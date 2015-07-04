@@ -77,6 +77,12 @@ namespace clan
 		/// Hides a popup, if visible
 		virtual void root_dismiss_popup() = 0;
 
+		/// Shows a modal view
+		virtual void root_present_modal(const std::string &title, const std::shared_ptr<View> &modal) = 0;
+
+		/// Hides a modal, if visible
+		virtual void root_dismiss_modal() = 0;
+
 	private:
 		friend class View;
 		friend class ViewImpl;

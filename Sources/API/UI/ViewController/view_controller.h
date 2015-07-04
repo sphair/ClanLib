@@ -37,22 +37,36 @@ namespace clan
 	class View;
 	class ViewControllerImpl;
 
+	/// Controller for a view
 	class ViewController : public std::enable_shared_from_this<ViewController>
 	{
 	public:
 		ViewController();
 		~ViewController();
 
+		/// View the controller is managing
 		std::shared_ptr<View> view;
 
+		/// Slot container helping with automatic disconnection of connected slots when the controller is destroyed
+		SlotContainer slots;
+
+		/// Parent controller in the controller tree
 		ViewController *parent_controller() const;
+
+		/// Child controllers in the controller tree
 		const std::vector<std::shared_ptr<ViewController>> &child_controllers() const;
 
+		/// Adds a child controller to this controller
 		void add_child_controller(const std::shared_ptr<ViewController> &view_controller);
+
+		/// Removes the controller from its parent
 		void remove_from_parent_controller();
 
 	protected:
+		/// Called when a child controller is added
 		virtual void child_controller_added(const std::shared_ptr<ViewController> &view_controller);
+
+		/// Called when a child controller is removed
 		virtual void child_controller_removed(const std::shared_ptr<ViewController> &view_controller);
 
 	private:

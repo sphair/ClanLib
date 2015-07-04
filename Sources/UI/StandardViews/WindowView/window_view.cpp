@@ -180,4 +180,43 @@ namespace clan
 				popup_owner->impl->popups.erase(it);
 		}
 	}
+
+	void WindowView::root_present_modal(const std::string &title, const std::shared_ptr<View> &modal)
+	{
+		Pointf screen_pos = to_screen_pos(geometry().content_box().get_center());
+
+		DisplayWindowDescription desc;
+		desc.set_type(WindowType::normal);
+		desc.set_visible(false);
+		desc.set_owner_window(get_display_window());
+		desc.set_title(title);
+		desc.show_minimize_button(false);
+		desc.show_maximize_button(false);
+		// desc.show_sysmenu(false); // to do: fix that this also hides the close button
+
+		auto modal_window = std::make_shared<WindowView>(desc);
+		modal_window->impl->modal_owner = this;
+		modal_window->add_subview(modal);
+		modal_window->style()->set("flex-direction: row");
+
+		impl->modal = modal_window;
+
+		modal_window->slots.connect(modal_window->get_display_window().sig_window_close(), [this]() { impl->modal.reset(); });
+
+		Canvas canvas = modal_window->get_canvas();
+		float width = modal_window->calculate_preferred_width(canvas);
+		float height = modal_window->calculate_preferred_height(canvas, width);
+		modal_window->get_display_window().set_position(Rectf(screen_pos.x - width * 0.5f, screen_pos.y - height * 0.5f, screen_pos.x + width * 0.5f, screen_pos.y + height * 0.5f), false);
+
+		modal_window->show(WindowShowType::show);
+	}
+
+	void WindowView::root_dismiss_modal()
+	{
+		if (impl->modal_owner)
+		{
+			WindowView *modal_owner = impl->modal_owner;
+			modal_owner->impl->modal.reset();
+		}
+	}
 }
