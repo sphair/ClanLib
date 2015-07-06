@@ -70,6 +70,10 @@ public:
 		statusbar->set_simple();
 		//statusbar->set_parts({ 500 });
 		statusbar->set_text("READY FOR ACTION!");
+
+		slots.connect(button_ok->sig_clicked, [=]{statusbar->set_text("I am feeling okay!"); });
+		slots.connect(button_cancel->sig_clicked, [=]{statusbar->set_text("Why have you cancelled me?"); });
+
 	}
 
 	std::shared_ptr<clan::SpanLayoutView> headline = std::make_shared<clan::SpanLayoutView>();
