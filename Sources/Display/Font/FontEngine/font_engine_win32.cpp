@@ -38,14 +38,16 @@
 
 namespace clan
 {
-
 FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, const std::string &typeface_name, float pixel_ratio) : pixel_ratio(pixel_ratio)
 {
+	font_handle.engine = this;
 	load_font(desc, typeface_name, pixel_ratio);
 }
 
 FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, DataBuffer &font_databuffer, float pixel_ratio) : pixel_ratio(pixel_ratio)
 {
+	font_handle.engine = this;
+
 	if (font_databuffer.is_null())
 		throw Exception("Attempt to load an empty font buffer");
 
@@ -666,6 +668,18 @@ std::string FontEngine_Win32::get_ttf_typeface_name(DataBuffer &font_databuffer)
 
 	return std::string();
 
+}
+
+HFONT FontHandle_Win32::hfont()
+{
+	if (engine)
+		return engine->handle;
+	return HFONT(0);
+}
+
+FontHandle *FontEngine_Win32::get_handle()
+{
+	return &font_handle;
 }
 
 }

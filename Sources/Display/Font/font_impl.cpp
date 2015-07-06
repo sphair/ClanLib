@@ -249,6 +249,14 @@ void Font_Impl::get_glyph_path(Canvas &canvas, unsigned int glyph_index, Path &o
 	return font_engine->load_glyph_path(glyph_index, out_path, out_metrics);
 }
 
+FontHandle *Font_Impl::get_handle(Canvas &canvas)
+{
+	select_font_family(canvas);
+	if (font_engine)
+		return font_engine->get_handle();
+	return nullptr;
+}
+
 void Font_Impl::draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color)
 {
 	select_font_family(canvas);

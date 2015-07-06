@@ -77,6 +77,7 @@ public:
 	void set_line_height(float height);
 	void set_style(FontStyle setting);
 	void set_scalable(float height_threshold);
+	FontHandle *get_handle(Canvas &canvas);
 
 private:
 	void select_font_family(Canvas &canvas);

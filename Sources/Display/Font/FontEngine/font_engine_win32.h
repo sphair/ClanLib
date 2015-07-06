@@ -59,6 +59,8 @@ public:
 
 	void load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics) override;
 
+	FontHandle *get_handle() override;
+
 private:
 	void load_font(const FontDescription &desc, const std::string &typeface_name, float pixel_ratio);
 
@@ -134,6 +136,9 @@ private:
 	FontMetrics font_metrics;
 
 	float pixel_ratio = 1.0f;
+
+	FontHandle_Win32 font_handle;
+	friend class FontHandle_Win32;
 };
 
 }

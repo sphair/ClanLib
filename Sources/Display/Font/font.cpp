@@ -309,8 +309,19 @@ std::vector<Rectf> Font::get_character_indices(Canvas &canvas, const std::string
 	return std::vector<Rectf>();
 }
 
+FontHandle *Font::get_handle(Canvas &canvas)
+{
+	if (impl)
+		return impl->get_handle(canvas);
+	return nullptr;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // Font Implementation:
 
+FontHandle::~FontHandle()
+{
+
+}
 
 }

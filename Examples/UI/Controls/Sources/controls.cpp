@@ -11,10 +11,6 @@ Control::Control()
 
 Control::~Control()
 {
-	if (font_handle)
-		DeleteObject(font_handle);
-	font_handle = 0;
-
 	if (handle)
 		DestroyWindow(handle);
 	handle = 0;
@@ -35,15 +31,14 @@ void Control::layout_subviews(Canvas &canvas)
 {
 	if (control_handle())
 	{
+		font = style_cascade().get_font(canvas);
+		FontHandle_Win32 *font_handle = dynamic_cast<FontHandle_Win32 *>(font.get_handle(canvas));
 		if (font_handle)
-			DeleteObject(font_handle);
-		font_handle = 0;
-
-		// To do: implement style_cascade().get_font().get_handle() so the font style gets applied to common controls
-		int font_size = (int)std::round(style_cascade().computed_value("font-size").number() * canvas.get_pixel_ratio());
-		font_handle = CreateFont(-font_size, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, L"Segoe UI");
-		SendMessage(handle, WM_SETFONT, (WPARAM)font_handle, FALSE);
-
+		{
+			HFONT hfont = font_handle->hfont();
+			if (hfont)
+				SendMessage(handle, WM_SETFONT, (WPARAM)hfont, FALSE);
+		}
 
 		Pointf pos = canvas.grid_fit(to_root_pos(Pointf()) + root_view()->geometry().content_pos());
 

@@ -47,6 +47,12 @@ class Canvas;
 class Font_Impl;
 class GlyphMetrics;
 
+class FontHandle
+{
+public:
+	virtual ~FontHandle() = 0;
+};
+
 /// \brief Font class
 ///
 /// A Font is a collection of images that can be used to represent text on a screen.
@@ -183,6 +189,13 @@ public:
 	// Finds the offset for the first visible character when clipping the tail
 	size_t clip_from_right(Canvas &canvas, const std::string &text, float width);
 
+	/// \brief Get the font handle interface
+	///
+	/// For example, use auto handle = dynamic_cast<FontHandle_Win32>(font.get_handle()); if (handle) {...} to obtain a specific interface
+	///
+	/// \return The font handle interface
+	FontHandle *get_handle(Canvas &canvas);
+
 /// \}
 /// \name Implementation
 /// \{
@@ -194,6 +207,18 @@ private:
 
 /// \}
 };
+
+#ifdef WIN32
+class FontHandle_Win32 : public FontHandle
+{
+public:
+	/// \brief Get the font HFONT
+	HFONT hfont();
+private:
+	friend class FontEngine_Win32;
+	FontEngine_Win32 *engine = nullptr;
+};
+#endif
 
 }
 

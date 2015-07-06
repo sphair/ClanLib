@@ -24,7 +24,7 @@ protected:
 
 private:
 	mutable HWND handle = 0;
-	HFONT font_handle = 0;
+	clan::Font font;
 };
 
 //class ImageList;
