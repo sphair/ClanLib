@@ -81,8 +81,8 @@ public:
 	std::shared_ptr<MonthCalControl> datetime = std::make_shared<MonthCalControl>();
 	std::shared_ptr<clan::View> button_bar = std::make_shared<clan::View>();
 	std::shared_ptr<clan::View> spacer = std::make_shared<clan::View>();
-	std::shared_ptr<ButtonControl> button_ok = std::make_shared<ButtonControl>();
-	std::shared_ptr<ButtonControl> button_cancel = std::make_shared<ButtonControl>();
+	std::shared_ptr<ButtonControl> button_ok = std::make_shared<ButtonControl>(get_display_window());
+	std::shared_ptr<ButtonControl> button_cancel = std::make_shared<ButtonControl>(get_display_window());
 	std::shared_ptr<clan::View> spacer2 = std::make_shared<clan::View>();
 	std::shared_ptr<StatusBarControl> statusbar = std::make_shared<StatusBarControl>();
 };

@@ -62,6 +62,26 @@ protected:
 class ButtonControl : public Control
 {
 public:
+	ButtonControl(clan::DisplayWindow window)
+	{
+		window.func_window_message() = clan::bind_member(this, &ButtonControl::window_proc);
+	}
+
+	bool window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
+	{
+		if (control_handle() != (HWND)lparam)
+			return false;
+
+		if (msg == WM_COMMAND)
+		{
+			if (HIWORD(wparam) == BN_CLICKED)
+			{
+				sig_clicked();
+			}
+		}
+		return true;
+	}
+
 	enum class CheckState : int
 	{
 		checked = BST_CHECKED,
