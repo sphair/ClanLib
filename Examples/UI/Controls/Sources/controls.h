@@ -74,9 +74,18 @@ public:
 
 		if (msg == WM_COMMAND)
 		{
-			if (HIWORD(wparam) == BN_CLICKED)
+			switch (HIWORD(wparam))
 			{
-				sig_clicked();
+			case BCN_DROPDOWN:sig_dropdown(); break;
+			case BCN_HOTITEMCHANGE:sig_hot_item_change(); break;
+			case BN_CLICKED:sig_clicked(); break;
+			case BN_DBLCLK:sig_dblclk(); break;
+			case BN_DISABLE:sig_disable(); break;
+			case BN_KILLFOCUS:sig_kill_focus(); break;
+			case BN_PAINT:sig_paint(); break;
+			case BN_PUSHED:sig_pushed(); break;
+			case BN_SETFOCUS:sig_set_focus(); break;
+			case BN_UNPUSHED:sig_unpushed(); break;
 			}
 		}
 	}
@@ -224,16 +233,13 @@ public:
 	clan::Signal<void()> sig_dropdown; // BCN_DROPDOWN
 	clan::Signal<void()> sig_hot_item_change; // BCN_HOTITEMCHANGE
 	clan::Signal<void()> sig_clicked; // BN_CLICKED
-	clan::Signal<void()> sig_dblclk; // BN_DBLCLK
+	clan::Signal<void()> sig_dblclk; // BN_DBLCLK and BN_DOUBLECLICKED
 	clan::Signal<void()> sig_disable; // BN_DISABLE
-	clan::Signal<void()> sig_double_clicked; // BN_DOUBLECLICKED
-	clan::Signal<void()> sig_hilite; // BN_HILITE
 	clan::Signal<void()> sig_kill_focus; // BN_KILLFOCUS
 	clan::Signal<void()> sig_paint; // BN_PAINT
-	clan::Signal<void()> sig_pushed; // BN_PUSHED
+	clan::Signal<void()> sig_pushed; // BN_PUSHED and BN_HILITE
 	clan::Signal<void()> sig_set_focus; // BN_SETFOCUS
-	clan::Signal<void()> sig_unhilite; // BN_UNHILITE
-	clan::Signal<void()> sig_unpushed; // BN_UNPUSHED
+	clan::Signal<void()> sig_unpushed; // BN_UNPUSHED and BN_UNHILITE
 
 protected:
 	HWND create_control(HWND parent, HINSTANCE instance) const override { return CreateWindowEx(0, L"BUTTON", L"", WS_CHILD, 0, 0, 0, 0, parent, 0, instance, 0); }
