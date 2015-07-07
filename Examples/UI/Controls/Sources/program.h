@@ -36,6 +36,8 @@ class Form : public clan::WindowView
 public:
 	Form(const clan::DisplayWindowDescription &desc) : clan::WindowView(desc)
 	{
+		edit_control->set_window_style(WS_BORDER | (int) EditControl::Style::center);
+
 		style()->set("flex-direction: column");
 		style()->set("padding: 11px");
 		style()->set("background: #efefef");
@@ -49,8 +51,13 @@ public:
 		button_cancel->style()->set("font-size: 10px");
 		spacer2->style()->set("flex: auto");
 		statusbar->style()->set("font-size: 10px; margin: 5px -11px -11px -11px");
+		spacer3->style()->set("flex: auto;");
+
+		edit_control->style()->set("font: bold 16px/20px Segoe UI, Tahoma, sans-serif;");
 
 		add_subview(headline);
+		add_subview(edit_control);
+		add_subview(spacer3);
 		add_subview(paragraph);
 		add_subview(datetime);
 		add_subview(button_bar);
@@ -71,6 +78,8 @@ public:
 		//statusbar->set_parts({ 500 });
 		statusbar->set_text("READY FOR ACTION!");
 
+		edit_control->set_text("You can write a story here");
+
 		slots.connect(button_ok->sig_clicked, [=]{statusbar->set_text("I am feeling okay!"); });
 		slots.connect(button_cancel->sig_clicked, [=]{statusbar->set_text("Why have you cancelled me?"); });
 
@@ -85,6 +94,9 @@ public:
 	std::shared_ptr<ButtonControl> button_cancel = std::make_shared<ButtonControl>(get_display_window());
 	std::shared_ptr<clan::View> spacer2 = std::make_shared<clan::View>();
 	std::shared_ptr<StatusBarControl> statusbar = std::make_shared<StatusBarControl>();
+	std::shared_ptr<EditControl> edit_control = std::make_shared<EditControl>();
+	std::shared_ptr<clan::View> spacer3 = std::make_shared<clan::View>();
+
 };
 
 class Program : public clan::Application

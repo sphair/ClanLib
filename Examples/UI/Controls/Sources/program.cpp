@@ -54,7 +54,7 @@ Program::Program()
 	DisplayWindowDescription desc;
 	desc.set_title("Controls Example");
 	desc.set_allow_resize(true);
-	desc.set_size(Sizef(400, 400), false);
+	desc.set_size(Sizef(400, 500), false);
 	form = std::make_shared<Form>(desc);
 
 	// Exit run loop when close is clicked.

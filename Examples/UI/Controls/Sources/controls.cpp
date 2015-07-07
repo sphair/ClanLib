@@ -22,7 +22,7 @@ HWND Control::control_handle() const
 	{
 		WindowView *root = const_cast<WindowView*>(dynamic_cast<const WindowView*>(root_view()));
 		if (root)
-			handle = create_control(root->get_display_window().get_handle().hwnd, GetModuleHandle(0));
+			handle = create_control(root->get_display_window().get_handle().hwnd, GetModuleHandle(0), window_style);
 	}
 	return handle;
 }
