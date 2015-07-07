@@ -429,6 +429,10 @@ LRESULT Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lpara
 		if ((site->func_window_message)(wnd, msg, wparam, lparam))
 			return TRUE;
 	}
+	if (site)
+	{
+		site->sig_window_message(wnd, msg, wparam, lparam);
+	}
 
 	switch (msg)
 	{

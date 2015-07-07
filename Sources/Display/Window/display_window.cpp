@@ -223,6 +223,11 @@ std::function<bool(HWND, UINT, WPARAM, LPARAM)> &DisplayWindow::func_window_mess
 {
 	return impl->site.func_window_message;
 }
+Signal<void(HWND, UINT, WPARAM, LPARAM)> &DisplayWindow::sig_window_message()
+{
+	return impl->site.sig_window_message;
+}
+
 #endif
 
 Signal<void()> &DisplayWindow::sig_window_moved()

@@ -201,6 +201,9 @@ public:
 #ifdef WIN32
 	/// \brief Callback called when a windows messages is received.
 	std::function<bool(HWND, UINT, WPARAM, LPARAM)> &func_window_message();
+
+	/// \brief Signal called when a windows messages is received.
+	Signal<void(HWND, UINT, WPARAM, LPARAM)> &sig_window_message();
 #endif
 
 	/// \brief Returns true if this object is invalid.

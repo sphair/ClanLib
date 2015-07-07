@@ -64,13 +64,13 @@ class ButtonControl : public Control
 public:
 	ButtonControl(clan::DisplayWindow window)
 	{
-		window.func_window_message() = clan::bind_member(this, &ButtonControl::window_proc);
+		slots.connect(window.sig_window_message(), clan::bind_member(this, &ButtonControl::window_proc));
 	}
 
-	bool window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
+	void window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	{
 		if (control_handle() != (HWND)lparam)
-			return false;
+			return;
 
 		if (msg == WM_COMMAND)
 		{
@@ -79,7 +79,6 @@ public:
 				sig_clicked();
 			}
 		}
-		return true;
 	}
 
 	enum class CheckState : int

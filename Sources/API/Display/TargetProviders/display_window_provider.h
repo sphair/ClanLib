@@ -93,6 +93,7 @@ public:
 
 #ifdef WIN32
 	std::function<bool(HWND, UINT, WPARAM, LPARAM)> func_window_message;
+	Signal<void(HWND, UINT, WPARAM, LPARAM)> sig_window_message;
 #endif
 
 /// \}
