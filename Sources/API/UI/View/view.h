@@ -56,6 +56,7 @@ namespace clan
 	class CursorDescription;
 	enum class StandardCursor;
 	class DisplayWindow;
+	class ViewTree;
 
 	/// View for an area of the user interface
 	class View : public std::enable_shared_from_this<View>
@@ -201,18 +202,12 @@ namespace clan
 		/// Sets the view geometry for all subviews of this view
 		virtual void layout_subviews(Canvas &canvas);
 
-		/// Root view in view hierachy
-		const View *root_view() const;
-		View *root_view();
-
-		/// View hierachy owner or nullptr if there is no owner
-		View *owner_view() const;
+		/// Tree in view hierachy
+		const ViewTree *view_tree() const;
+		ViewTree *view_tree();
 
 		/// The view receiving keyboard events or nullptr if no view has the focus
 		View *focus_view() const;
-
-		/// Indicates if the view is a root for layout and rendering
-		bool is_layout_root() const;
 
 		/// Find descendant view at the specified content relative position
 		std::shared_ptr<View> find_view_at(const Pointf &pos) const;
@@ -320,16 +315,6 @@ namespace clan
 		/// Dispatch event to signals listening for events
 		static void dispatch_event(View *target, EventUI *e, bool no_propagation = false);
 
-	protected:
-		/// Renders the content of a view
-		virtual void render_content(Canvas &canvas) { }
-
-		/// Child view was added to this view
-		virtual void subview_added(const std::shared_ptr<View> &view) { }
-
-		/// Child view was removed from this view
-		virtual void subview_removed(const std::shared_ptr<View> &view) { }
-
 		/// Calculates the preferred width of this view
 		virtual float calculate_preferred_width(Canvas &canvas);
 
@@ -342,13 +327,23 @@ namespace clan
 		/// Calculates the offset to the last baseline
 		virtual float calculate_last_baseline_offset(Canvas &canvas, float width);
 
+	protected:
+		/// Renders the content of a view
+		virtual void render_content(Canvas &canvas) { }
+
+		/// Child view was added to this view
+		virtual void subview_added(const std::shared_ptr<View> &view) { }
+
+		/// Child view was removed from this view
+		virtual void subview_removed(const std::shared_ptr<View> &view) { }
+
 	private:
 		View(const View &) = delete;
 		View &operator=(const View &) = delete;
 
 		std::unique_ptr<ViewImpl> impl;
 
-		friend class RootView;
+		friend class ViewTree;
 		friend class ViewImpl;
 	};
 }

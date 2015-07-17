@@ -28,8 +28,7 @@
 
 #include "UI/precomp.h"
 #include "API/UI/View/view.h"
-#include "API/UI/View/root_view.h"
-#include "API/Display/2D/canvas.h"
+#include "API/UI/TopLevel/view_tree.h"
 #include "API/UI/Events/event.h"
 #include "API/UI/Events/activation_change_event.h"
 #include "API/UI/Events/close_event.h"
@@ -38,6 +37,7 @@
 #include "API/UI/Events/pointer_event.h"
 #include "API/UI/Events/resize_event.h"
 #include "API/UI/UIThread/ui_thread.h"
+#include "API/Display/2D/canvas.h"
 #include "view_impl.h"
 #include "vbox_layout.h"
 #include "hbox_layout.h"
@@ -166,57 +166,43 @@ namespace clan
 
 	void View::present_popup(const Pointf &pos, const std::shared_ptr<View> &popup)
 	{
-		RootView *root = dynamic_cast<RootView*>(root_view());
-		if (root)
-			root->root_present_popup(to_root_pos(pos), popup);
+		ViewTree *tree = view_tree();
+		if (tree)
+			tree->present_popup(to_root_pos(pos), popup);
 	}
 
 	void View::dismiss_popup()
 	{
-		RootView *root = dynamic_cast<RootView*>(root_view());
-		if (root)
-			root->root_dismiss_popup();
+		ViewTree *tree = view_tree();
+		if (tree)
+			tree->dismiss_popup();
 	}
 
 	void View::present_modal(const std::string &title, const std::shared_ptr<View> &modal)
 	{
-		RootView *root = dynamic_cast<RootView*>(root_view());
-		if (root)
-			root->root_present_modal(title, modal);
+		ViewTree *tree = view_tree();
+		if (tree)
+			tree->present_modal(title, modal);
 	}
 
 	void View::dismiss_modal()
 	{
-		RootView *root = dynamic_cast<RootView*>(root_view());
-		if (root)
-			root->root_dismiss_modal();
+		ViewTree *tree = view_tree();
+		if (tree)
+			tree->dismiss_modal();
 	}
 
 	bool View::hidden() const
 	{
-		if (is_layout_root())
-		{
-			return static_cast<const RootView *>(this)->root_hidden();
-		}
-		else
-		{
-			return impl->hidden;
-		}
+		return impl->hidden;
 	}
 
 	void View::set_hidden(bool value)
 	{
-		if (is_layout_root())
+		if (value != impl->hidden)
 		{
-			return static_cast<RootView *>(this)->set_root_hidden(value);
-		}
-		else
-		{
-			if (value != impl->hidden)
-			{
-				impl->hidden = value;
-				set_needs_layout();
-			}
+			impl->hidden = value;
+			set_needs_layout();
 		}
 	}
 
@@ -227,12 +213,12 @@ namespace clan
 
 	bool View::needs_layout() const
 	{
-		return impl->_needs_layout;
+		return impl->needs_layout;
 	}
 
 	void View::set_needs_layout()
 	{
-		impl->_needs_layout = true;
+		impl->needs_layout = true;
 		impl->layout_cache.clear();
 
 		View *super = superview();
@@ -244,28 +230,18 @@ namespace clan
 
 	Canvas View::get_canvas() const
 	{
-		if (is_layout_root())
-			return static_cast<const RootView *>(this)->get_root_canvas();
-
-		View *super = superview();
-		if (super)
-			return super->get_canvas();
+		const ViewTree *tree = view_tree();
+		if (tree)
+			return tree->get_canvas();
 		else
 			return Canvas();
 	}
 
 	void View::set_needs_render()
 	{
-		if (is_layout_root())
-		{
-			static_cast<RootView *>(this)->set_root_needs_render();
-		}
-		else
-		{
-			View *super = superview();
-			if (super)
-				super->set_needs_render();
-		}
+		ViewTree *tree = view_tree();
+		if (tree)
+			tree->set_needs_render();
 	}
 
 	const ViewGeometry &View::geometry() const
@@ -408,11 +384,6 @@ namespace clan
 			return 0.0f;
 	}
 
-	bool View::is_layout_root() const
-	{
-		return dynamic_cast<const RootView *>(this) != nullptr;
-	}
-
 	void View::layout_subviews(Canvas &canvas)
 	{
 		if (style_cascade().computed_value("layout").is_keyword("flex") && style_cascade().computed_value("flex-direction").is_keyword("column"))
@@ -421,32 +392,31 @@ namespace clan
 			HBoxLayout::layout_subviews(canvas, this);
 	}
 
-	View *View::root_view()
+	ViewTree *View::view_tree()
 	{
 		View *super = superview();
 		if (super)
-			return super->root_view();
+			return super->view_tree();
 		else
-			return this;
+			return impl->view_tree;
 	}
 
-	const View *View::root_view() const
+	const ViewTree *View::view_tree() const
 	{
 		View *super = superview();
 		if (super)
-			return super->root_view();
+			return super->view_tree();
 		else
-			return this;
-	}
-
-	View *View::owner_view() const
-	{
-		return root_view()->impl->_owner_view;
+			return impl->view_tree;
 	}
 
 	View *View::focus_view() const
 	{
-		return root_view()->impl->_focus_view;
+		const ViewTree *tree = view_tree();
+		if (tree)
+			return tree->focus_view();
+		else
+			return nullptr;
 	}
 
 	std::shared_ptr<View> View::find_view_at(const Pointf &pos) const
@@ -491,53 +461,43 @@ namespace clan
 
 	void View::set_focus()
 	{
-		View *root = root_view();
-		View *old_focus_view = root->impl->_focus_view;
-
-		if (old_focus_view == this)
+		ViewTree *tree = view_tree();
+		if (!tree)
 			return;
 
-		root->impl->_focus_view = this;
-
-		if (old_focus_view)
-		{
-			FocusChangeEvent focus_loss(FocusChangeType::lost);
-			View::dispatch_event(old_focus_view, &focus_loss, true);
-		}
-
-		FocusChangeEvent focus_gain(FocusChangeType::gained);
-		View::dispatch_event(this, &focus_gain, true);
+		tree->set_focus_view(this);
 	}
 
 	void View::remove_focus()
 	{
-		View *root = root_view();
-		View *old_focus_view = root->impl->_focus_view;
+		if (focus_view() != nullptr)
+			return;
 
-		root->impl->_focus_view = nullptr;
+		ViewTree *tree = view_tree();
+		if (!tree)
+			return;
 
-		if (old_focus_view)
-		{
-			FocusChangeEvent focus_loss(FocusChangeType::lost);
-			View::dispatch_event(old_focus_view, &focus_loss, true);
-		}
+		tree->set_focus_view(nullptr);
 	}
 
 	void View::prev_focus()
 	{
-		View *root = root_view();
-		View *cur_focus = root->impl->_focus_view;
+		ViewTree *tree = view_tree();
+		if (!tree)
+			return;
+
+		View *cur_focus = tree->focus_view();
 		View *prev_focus = nullptr;
 
 		if (cur_focus)
 		{
 			prev_focus = cur_focus->impl->find_prev_with_tab_index(cur_focus->tab_index());
 			if (prev_focus == nullptr)
-				prev_focus = cur_focus->impl->find_prev_with_tab_index(root->impl->find_prev_tab_index(cur_focus->tab_index()));
+				prev_focus = cur_focus->impl->find_prev_with_tab_index(tree->root()->impl->find_prev_tab_index(cur_focus->tab_index()));
 		}
 		else
 		{
-			prev_focus = root->impl->find_prev_with_tab_index(root->impl->find_prev_tab_index(0));
+			prev_focus = tree->root()->impl->find_prev_with_tab_index(tree->root()->impl->find_prev_tab_index(0));
 		}
 
 		if (prev_focus)
@@ -546,19 +506,22 @@ namespace clan
 
 	void View::next_focus()
 	{
-		View *root = root_view();
-		View *cur_focus = root->impl->_focus_view;
+		ViewTree *tree = view_tree();
+		if (!tree)
+			return;
+
+		View *cur_focus = tree->focus_view();
 		View *next_focus = nullptr;
 
 		if (cur_focus)
 		{
 			next_focus = cur_focus->impl->find_next_with_tab_index(cur_focus->tab_index());
 			if (next_focus == nullptr)
-				next_focus = cur_focus->impl->find_next_with_tab_index(root->impl->find_next_tab_index(cur_focus->tab_index()));
+				next_focus = cur_focus->impl->find_next_with_tab_index(tree->root()->impl->find_next_tab_index(cur_focus->tab_index()));
 		}
 		else
 		{
-			next_focus = root->impl->find_next_with_tab_index(root->impl->find_next_tab_index(0));
+			next_focus = tree->root()->impl->find_next_with_tab_index(tree->root()->impl->find_next_tab_index(0));
 		}
 
 		if (next_focus)
@@ -635,24 +598,18 @@ namespace clan
 
 	Pointf View::to_screen_pos(const Pointf &pos)
 	{
-		if (is_layout_root())
-			return static_cast<RootView *>(this)->root_to_screen_pos(pos);
-
-		if (superview())
-			return superview()->to_screen_pos(geometry().content_box().get_top_left() + pos);
-		else
-			return Pointf();
+		ViewTree *tree = view_tree();
+		Pointf root_content_pos = to_root_pos(pos);
+		Pointf root_pos = root_content_pos + geometry().content_box().get_top_left();
+		return tree ? tree->client_to_screen_pos(root_pos) : root_pos;
 	}
 
 	Pointf View::from_screen_pos(const Pointf &pos)
 	{
-		if (is_layout_root())
-			return static_cast<RootView *>(this)->root_from_screen_pos(pos);
-
-		if (superview())
-			return superview()->from_screen_pos(pos) - geometry().content_box().get_top_left();
-		else
-			return Pointf();
+		ViewTree *tree = view_tree();
+		Pointf root_pos = tree ? tree->screen_to_client_pos(pos) : pos;
+		Pointf root_content_pos = root_pos - geometry().content_box().get_top_left();
+		return from_root_pos(root_content_pos);
 	}
 
 	Pointf View::to_root_pos(const Pointf &pos)
@@ -749,7 +706,7 @@ namespace clan
 	void View::dispatch_event(View *target, EventUI *e, bool no_propagation)
 	{
 		// Make sure root view is not destroyed during event dispatching (needed for dismiss_popup)
-		auto pin_root = target->root_view()->shared_from_this();
+		auto pin_root = target->view_tree()->root()->shared_from_this();
 
 		e->_target = target->shared_from_this();
 
@@ -838,7 +795,7 @@ namespace clan
 		Rectf clip_box = canvas.get_cliprect();
 		for (std::shared_ptr<View> &view : _subviews)
 		{
-			if (!view->hidden() && !view->is_layout_root())
+			if (!view->hidden())
 			{
 				// Note: this code isn't correct for rotated transforms (plus canvas cliprect can only clip AABB)
 				Rect border_box = view->geometry().border_box();

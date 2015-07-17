@@ -29,9 +29,10 @@
 #include "UI/precomp.h"
 #include "API/UI/SystemDialogs/folder_browse_dialog.h"
 #include "API/UI/View/view.h"
-#include "API/UI/StandardViews/window_view.h"
+#include "API/UI/TopLevel/view_tree.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/System/system.h"
+#include "API/Display/Window/display_window.h"
 
 #if defined(WIN32)
 #include "API/Core/System/comptr.h"
@@ -101,8 +102,9 @@ namespace clan
 					}
 				}
 
-				if (owner && dynamic_cast<WindowView*>(owner->root_view()))
-					result = open_dialog->Show(static_cast<WindowView*>(owner->root_view())->get_display_window().get_handle().hwnd);
+				ViewTree *tree = owner->view_tree();
+				if (tree)
+					result = open_dialog->Show(tree->get_display_window().get_handle().hwnd);
 				else
 					result = open_dialog->Show(0);
 
@@ -146,8 +148,9 @@ namespace clan
 				WCHAR Buffer[MAX_PATH];
 				memset(Buffer, 0, sizeof(WCHAR) * MAX_PATH);
 
-				if (owner && dynamic_cast<WindowView*>(owner->root_view()))
-					bi.hwndOwner = static_cast<WindowView*>(owner->root_view())->get_display_window().get_handle().hwnd;
+				ViewTree *tree = owner->view_tree();
+				if (tree)
+					bi.hwndOwner = tree->get_display_window().get_handle().hwnd;
 				else
 					bi.hwndOwner = 0;
 

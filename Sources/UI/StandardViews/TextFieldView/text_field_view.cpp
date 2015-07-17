@@ -29,6 +29,8 @@
 #include "UI/precomp.h"
 #include "API/UI/StandardViews/text_field_view.h"
 #include "API/UI/Style/style.h"
+#include "API/UI/TopLevel/view_tree.h"
+#include "API/UI/Events/pointer_event.h"
 #include "API/Display/2D/canvas.h"
 #include "API/Display/2D/path.h"
 #include "API/Display/2D/brush.h"
@@ -36,12 +38,10 @@
 #include "API/Display/Font/font.h"
 #include "API/Display/Font/glyph_metrics.h"
 #include "API/Display/Font/font_metrics.h"
+#include "API/Display/Window/display_window.h"
 #include "text_field_view_impl.h"
 #include <algorithm>
 #include <cmath>
-#include "API/Display/Render/shared_gc_data.h"
-#include "API/UI/StandardViews/window_view.h"
-#include "API/UI/Events/pointer_event.h"
 
 namespace clan
 {
@@ -808,23 +808,23 @@ namespace clan
 	{
 		if (!password_mode)
 		{
-			WindowView *window_view = dynamic_cast<WindowView*>(textfield->root_view());
-			if (window_view)
+			ViewTree *tree = textfield->view_tree();
+			if (tree)
 			{
 				if (selection_length > 0)
-					window_view->get_display_window().set_clipboard_text(get_selected_text());
+					tree->get_display_window().set_clipboard_text(get_selected_text());
 				else
-					window_view->get_display_window().set_clipboard_text(text);
+					tree->get_display_window().set_clipboard_text(text);
 			}
 		}
 	}
 
 	void TextFieldViewImpl::paste()
 	{
-		WindowView *window_view = dynamic_cast<WindowView*>(textfield->root_view());
-		if (window_view)
+		ViewTree *tree = textfield->view_tree();
+		if (tree)
 		{
-			add(window_view->get_display_window().get_clipboard_text());
+			add(tree->get_display_window().get_clipboard_text());
 		}
 	}
 

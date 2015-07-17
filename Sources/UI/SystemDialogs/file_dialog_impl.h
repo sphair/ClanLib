@@ -31,7 +31,8 @@
 #include "API/Core/IOData/path_help.h"
 #include "API/Core/System/system.h"
 #include "API/UI/View/view.h"
-#include "API/UI/StandardViews/window_view.h"
+#include "API/UI/TopLevel/view_tree.h"
+#include "API/Display/Window/display_window.h"
 
 #if defined(WIN32)
 
@@ -129,8 +130,9 @@ namespace clan
 			ZeroMemory(&ofn, sizeof(ofn));
 			ofn.lStructSize = sizeof(ofn);
 
-			if (owner && dynamic_cast<WindowView*>(owner->root_view()))
-                ofn.hwndOwner = static_cast<WindowView*>(owner->root_view())->get_display_window().get_handle().hwnd;
+			ViewTree *tree = owner->view_tree();
+			if (tree)
+                ofn.hwndOwner = tree->get_display_window().get_handle().hwnd;
 			else
 				ofn.hwndOwner = 0;
 

@@ -106,7 +106,7 @@ namespace clan
 
 		bool exception_encountered = false;
 
-		bool _needs_layout = true;
+		bool needs_layout = true;
 
 		Signal<void(ActivationChangeEvent &)> _sig_activated[2];
 		Signal<void(ActivationChangeEvent &)> _sig_deactivated[2];
@@ -124,9 +124,7 @@ namespace clan
 		Signal<void(KeyEvent &)> _sig_key_press[2];
 		Signal<void(KeyEvent &)> _sig_key_release[2];
 
-		// Root view variables:
-		View *_owner_view = nullptr;
-		View *_focus_view = nullptr;
+		ViewTree *view_tree = nullptr;
 
 		AnimationGroup animation_group;
 
