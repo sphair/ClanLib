@@ -305,49 +305,49 @@ clanDisplay_includes = \
 
 clanUI_includes = \
 	ui.h \
-	UI/Image/image_source.h \
-	UI/ViewController/view_controller.h \
-	UI/SystemDialogs/save_file_dialog.h \
-	UI/SystemDialogs/open_file_dialog.h \
-	UI/SystemDialogs/folder_browse_dialog.h \
-	UI/StandardViews/listbox_view.h \
-	UI/StandardViews/scrollbar_view.h \
-	UI/StandardViews/progress_view.h \
-	UI/StandardViews/text_field_view.h \
-	UI/StandardViews/span_layout_view.h \
-	UI/StandardViews/checkbox_view.h \
-	UI/StandardViews/texture_view.h \
+	UI/TopLevel/texture_window.h \
+	UI/TopLevel/view_tree.h \
+	UI/TopLevel/window.h \
 	UI/StandardViews/label_view.h \
-	UI/StandardViews/window_view.h \
-	UI/StandardViews/image_view.h \
-	UI/StandardViews/scroll_view.h \
-	UI/StandardViews/slider_view.h \
-	UI/StandardViews/button_view.h \
+	UI/StandardViews/span_layout_view.h \
+	UI/StandardViews/scrollbar_view.h \
 	UI/StandardViews/spin_view.h \
+	UI/StandardViews/scroll_view.h \
+	UI/StandardViews/listbox_view.h \
+	UI/StandardViews/slider_view.h \
+	UI/StandardViews/progress_view.h \
 	UI/StandardViews/radiobutton_view.h \
+	UI/StandardViews/checkbox_view.h \
+	UI/StandardViews/text_field_view.h \
 	UI/StandardViews/text_view.h \
-	UI/UIThread/ui_thread.h \
-	UI/Style/style_property_parser.h \
-	UI/Style/style_token.h \
-	UI/Style/style_set_value.h \
-	UI/Style/style.h \
-	UI/Style/style_tokenizer.h \
-	UI/Style/style_cascade.h \
-	UI/Style/style_dimension.h \
-	UI/Style/style_value_type.h \
-	UI/Style/style_set_image.h \
-	UI/Style/style_get_value.h \
-	UI/Events/close_event.h \
-	UI/Events/event.h \
+	UI/StandardViews/image_view.h \
+	UI/StandardViews/button_view.h \
 	UI/Events/focus_change_event.h \
 	UI/Events/key_event.h \
+	UI/Events/close_event.h \
 	UI/Events/resize_event.h \
+	UI/Events/event.h \
 	UI/Events/activation_change_event.h \
 	UI/Events/pointer_event.h \
+	UI/ViewController/view_controller.h \
 	UI/View/view.h \
-	UI/View/root_view.h \
 	UI/View/view_geometry.h \
-	UI/View/focus_policy.h
+	UI/View/focus_policy.h \
+	UI/SystemDialogs/open_file_dialog.h \
+	UI/SystemDialogs/save_file_dialog.h \
+	UI/SystemDialogs/folder_browse_dialog.h \
+	UI/Style/style_set_value.h \
+	UI/Style/style_cascade.h \
+	UI/Style/style_tokenizer.h \
+	UI/Style/style_set_image.h \
+	UI/Style/style_get_value.h \
+	UI/Style/style.h \
+	UI/Style/style_token.h \
+	UI/Style/style_property_parser.h \
+	UI/Style/style_value_type.h \
+	UI/Style/style_dimension.h \
+	UI/UIThread/ui_thread.h \
+	UI/Image/image_source.h
 
 ClanLibincludedir=$(includedir)/ClanLib-@LT_RELEASE@/ClanLib
 nobase_ClanLibinclude_HEADERS = @ClanLib_API_Modules@
