@@ -56,7 +56,7 @@ namespace clan
 	public:
 		SpacerView()
 		{
-			style()->set("flex: 1 1 auto");
+			style()->set("flex: auto");
 		}
 	};
 }
