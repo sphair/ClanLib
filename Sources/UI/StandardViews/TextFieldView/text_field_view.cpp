@@ -75,6 +75,20 @@ namespace clan
 	{
 	}
 
+	int TextFieldView::preferred_length() const
+	{
+		return impl->preferred_length;
+	}
+
+	void TextFieldView::set_preferred_length(int num_characters)
+	{
+		if (impl->preferred_length != num_characters)
+		{
+			impl->preferred_length = num_characters;
+			set_needs_layout();
+		}
+	}
+
 	std::string TextFieldView::text() const
 	{
 		return impl->text;
@@ -356,6 +370,14 @@ namespace clan
 
 		if (impl->cursor_blink_visible)
 			Path::rect(cursor_advance, top_y, 1.0f, bottom_y - top_y).fill(canvas, Brush(color));
+
+		if (impl->text.empty())
+		{
+			color.r = color.r * 0.5f + 0.5f;
+			color.g = color.g * 0.5f + 0.5f;
+			color.b = color.b * 0.5f + 0.5f;
+			font.draw_text(canvas, 0.0f, baseline, impl->placeholder, color);
+		}
 	}
 
 	float TextFieldView::calculate_preferred_width(Canvas &canvas)
@@ -363,7 +385,7 @@ namespace clan
 		if (style_cascade().computed_value("width").is_keyword("auto"))
 		{
 			Font font = impl->get_font(canvas);
-			return font.measure_text(canvas, impl->text).advance.width;
+			return font.measure_text(canvas, " ").advance.width * impl->preferred_length;
 		}
 		else
 			return style_cascade().computed_value("width").number();
