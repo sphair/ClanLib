@@ -42,8 +42,8 @@ namespace clan
 		TextFieldView();
 		~TextFieldView();
 
-		int preferred_length() const;
-		void set_preferred_length(int num_characters);
+		int preferred_size() const;
+		void set_preferred_size(int num_characters);
 
 		std::string text() const;
 		void set_text(const std::string &value);

@@ -72,7 +72,7 @@ namespace clan
 		Font &get_font(Canvas &canvas);
 		Font font; // Do not use directly. Use get_font.
 
-		int preferred_length = 20;
+		int preferred_size = 20;
 		std::string text;
 		std::string placeholder;
 

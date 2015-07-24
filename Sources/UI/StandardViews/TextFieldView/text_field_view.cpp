@@ -75,16 +75,16 @@ namespace clan
 	{
 	}
 
-	int TextFieldView::preferred_length() const
+	int TextFieldView::preferred_size() const
 	{
-		return impl->preferred_length;
+		return impl->preferred_size;
 	}
 
-	void TextFieldView::set_preferred_length(int num_characters)
+	void TextFieldView::set_preferred_size(int num_characters)
 	{
-		if (impl->preferred_length != num_characters)
+		if (impl->preferred_size != num_characters)
 		{
-			impl->preferred_length = num_characters;
+			impl->preferred_size = num_characters;
 			set_needs_layout();
 		}
 	}
@@ -385,7 +385,7 @@ namespace clan
 		if (style_cascade().computed_value("width").is_keyword("auto"))
 		{
 			Font font = impl->get_font(canvas);
-			return font.measure_text(canvas, " ").advance.width * impl->preferred_length;
+			return font.measure_text(canvas, "X").advance.width * impl->preferred_size;
 		}
 		else
 			return style_cascade().computed_value("width").number();
