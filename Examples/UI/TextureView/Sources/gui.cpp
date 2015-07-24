@@ -56,7 +56,7 @@ GUI::GUI()
 
 	font = clan::Font("tahoma", 24);
 
-	clan::Texture2D gui_texture = clan::Texture2D(canvas, 512, 512);
+	clan::Texture2D gui_texture = clan::Texture2D(canvas, (int)std::round(512 * canvas.get_pixel_ratio()), (int)std::round(512 * canvas.get_pixel_ratio()));
 	gui_texture.set_pixel_ratio(canvas.get_pixel_ratio());
 	gui_image = clan::Image(gui_texture, gui_texture.get_size());
 	clan::FrameBuffer gui_framebuffer = clan::FrameBuffer(canvas);
@@ -69,21 +69,22 @@ GUI::GUI()
 	clan::ResourceManager resources = clan::FileResourceManager::create(doc);
 	ui_thread = clan::UIThread(resources);
 
-	root = std::make_shared<clan::TextureView>(gui_canvas);
+	ui_window = std::make_shared<clan::TextureWindow>(gui_canvas);
+	ui_window->set_event_window(window);
+	ui_window->set_cursor_window(window);
+	ui_window->set_viewport(gui_texture.get_size());
 
-	root->set_event_window(window);
-	root->set_cursor_window(window);
+	auto controller = std::make_shared<clan::ViewController>();
+	ui_window->set_view_controller(controller);
 
-	root->set_viewport(gui_texture.get_size());
-
-	// Style the root view to use rounded corners and a bit of drop shadow
-	root->style()->set("background: linear-gradient(13.37deg, #f0f0f0, rgb(120,240,120) 50%, #f0f0f0)");
-	root->style()->set("padding: 11px");
-	root->style()->set("border: 1px solid black");
-	root->style()->set("border-radius: 15px");
-	root->style()->set("margin: 35px 10px 10px 10px");
-	root->style()->set("box-shadow: 0 0 20px rgba(0,0,0,0.2)");
-	root->style()->set("flex-direction: column");
+	// Style the controller->view view to use rounded corners and a bit of drop shadow
+	controller->view->style()->set("background: linear-gradient(13.37deg, #f0f0f0, rgb(120,240,120) 50%, #f0f0f0)");
+	controller->view->style()->set("padding: 11px");
+	controller->view->style()->set("border: 1px solid black");
+	controller->view->style()->set("border-radius: 15px");
+	controller->view->style()->set("margin: 35px 10px 10px 10px");
+	controller->view->style()->set("box-shadow: 0 0 20px rgba(0,0,0,0.2)");
+	controller->view->style()->set("flex-direction: column");
 
 	// Create a label with some text to have some content
 	label = std::make_shared<clan::LabelView>();
@@ -94,7 +95,7 @@ GUI::GUI()
 	label->set_text("Hello World!");
 	label->set_state("amazing", true);
 	label->set_state("cool", true);
-	root->add_subview(label);
+	controller->view->add_subview(label);
 
 	// React to clicking
 	label->slots.connect(label->sig_pointer_press(), [&](clan::PointerEvent &e) {
@@ -125,16 +126,16 @@ GUI::GUI()
 	scrollbar->set_position(0.5);
 	scrollbar->set_page_step(0.1);
 	scrollbar->set_line_step(0.01);
-	root->add_subview(scrollbar);
+	controller->view->add_subview(scrollbar);
 
 	auto button = Theme::create_button();
 	button->label()->set_text("This is a button");
-	root->add_subview(button);
+	controller->view->add_subview(button);
 
 	std::shared_ptr<clan::Style> text_style2 = std::make_shared<clan::Style>();
 	text_style2->set("font: 16px/40px 'Segoe UI'; font-weight: 800");
 	span->add_text(" units!", text_style2);
-	root->add_subview(span);
+	controller->view->add_subview(span);
 
 	premultiply_src_blend = clan::BlendState(canvas, clan::BlendStateDescription::blend(true));
 
@@ -147,9 +148,9 @@ bool GUI::update()
 
 	canvas.clear(clan::Colorf(0.3f,0.7f,0.2f));
 
-	//root->set_needs_layout();
-	//root->set_needs_render();
-	root->update();
+	//ui_window->view_controller()->view->set_needs_layout();
+	//ui_window->view_controller()->view->set_needs_render();
+	ui_window->update();
 	gui_canvas.flush();
 
 	canvas.set_blend_state(premultiply_src_blend);
