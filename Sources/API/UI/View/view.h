@@ -120,9 +120,6 @@ namespace clan
 			return popup;
 		}
 
-		/// Hides view if it is shown as a popup
-		void dismiss_popup();
-
 		/// Shows modal dialog
 		void present_modal(const std::string &title, const std::shared_ptr<ViewController> &controller);
 
@@ -133,9 +130,6 @@ namespace clan
 			present_modal(title, modal);
 			return modal;
 		}
-
-		/// Hides view if it is shown as a modal
-		void dismiss_modal();
 
 		/// Test if view is set to hidden
 		bool hidden() const;
