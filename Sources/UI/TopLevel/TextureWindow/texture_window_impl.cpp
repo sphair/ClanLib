@@ -28,11 +28,12 @@
 
 #include "UI/precomp.h"
 #include "API/UI/TopLevel/texture_window.h"
-#include "API/Display/Render/blend_state_description.h"
+#include "API/UI/ViewController/view_controller.h"
 #include "API/UI/Events/key_event.h"
 #include "API/UI/Events/pointer_event.h"
 #include "API/UI/Events/close_event.h"
 #include "API/UI/Events/activation_change_event.h"
+#include "API/Display/Render/blend_state_description.h"
 #include "API/Display/Window/input_event.h"
 #include "API/Display/Window/input_context.h"
 #include "API/Display/2D/canvas.h"
@@ -103,7 +104,7 @@ namespace clan
 	void TextureWindow_Impl::on_window_close()
 	{
 		CloseEvent e;
-		View::dispatch_event(window_view->root().get(), &e);
+		View::dispatch_event(window_view->view_controller()->view.get(), &e);
 	}
 
 	void TextureWindow_Impl::window_key_event(KeyEvent &e)
@@ -116,11 +117,11 @@ namespace clan
 
 		if (!e.default_prevented() && e.type() == KeyEventType::press && e.shift_down() && e.key() == Key::tab)
 		{
-			window_view->root()->prev_focus();
+			window_view->view_controller()->view->prev_focus();
 		}
 		else if (!e.default_prevented() && e.type() == KeyEventType::press && e.key() == Key::tab)
 		{
-			window_view->root()->next_focus();
+			window_view->view_controller()->view->next_focus();
 		}
 	}
 
@@ -130,7 +131,7 @@ namespace clan
 		{
 			if (hot_view)
 			{
-				PointerEvent e_exit(PointerEventType::leave, PointerButton::none, e.pos(window_view->root()), e.alt_down(), e.shift_down(), e.ctrl_down(), e.cmd_down());
+				PointerEvent e_exit(PointerEventType::leave, PointerButton::none, e.pos(window_view->view_controller()->view), e.alt_down(), e.shift_down(), e.ctrl_down(), e.cmd_down());
 				View::dispatch_event(hot_view.get(), &e_exit, true);
 			}
 
@@ -138,7 +139,7 @@ namespace clan
 
 			if (hot_view)
 			{
-				PointerEvent e_enter(PointerEventType::enter, PointerButton::none, e.pos(window_view->root()), e.alt_down(), e.shift_down(), e.ctrl_down(), e.cmd_down());
+				PointerEvent e_enter(PointerEventType::enter, PointerButton::none, e.pos(window_view->view_controller()->view), e.alt_down(), e.shift_down(), e.ctrl_down(), e.cmd_down());
 				View::dispatch_event(hot_view.get(), &e_enter, true);
 			}
 		}
@@ -198,12 +199,12 @@ namespace clan
 	void TextureWindow_Impl::window_pointer_event(PointerEvent &e_window)
 	{
 		PointerEvent e = e_window;
-		Pointf pointer_pos = e.pos(window_view->root());
-		pointer_pos.x -= window_view->root()->geometry().content_x;
-		pointer_pos.y -= window_view->root()->geometry().content_y;
-		e.set_pos(window_view->root().get(), pointer_pos);
+		Pointf pointer_pos = e.pos(window_view->view_controller()->view);
+		pointer_pos.x -= window_view->view_controller()->view->geometry().content_x;
+		pointer_pos.y -= window_view->view_controller()->view->geometry().content_y;
+		e.set_pos(window_view->view_controller()->view.get(), pointer_pos);
 
-		std::shared_ptr<View> view_above_cursor = window_view->root()->find_view_at(e.pos(window_view->root()));
+		std::shared_ptr<View> view_above_cursor = window_view->view_controller()->view->find_view_at(e.pos(window_view->view_controller()->view));
 		auto view = get_capture_view(e, view_above_cursor);
 		if (!view)
 			view = view_above_cursor;
@@ -216,7 +217,7 @@ namespace clan
 		if (view)
 			View::dispatch_event(view.get(), &e);
 		else
-			View::dispatch_event(window_view->root().get(), &e);
+			View::dispatch_event(window_view->view_controller()->view.get(), &e);
 	}
 
 	void TextureWindow_Impl::on_key_down(const clan::InputEvent &e)

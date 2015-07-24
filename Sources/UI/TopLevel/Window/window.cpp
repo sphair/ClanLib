@@ -28,6 +28,7 @@
 
 #include "UI/precomp.h"
 #include "API/UI/TopLevel/window.h"
+#include "API/UI/ViewController/view_controller.h"
 #include "API/UI/Events/key_event.h"
 #include "API/UI/Events/pointer_event.h"
 #include "API/UI/Events/close_event.h"
@@ -114,7 +115,7 @@ namespace clan
 		return impl->window.screen_to_client(Pointf(pos));
 	}
 
-	void Window::present_popup(const Pointf &pos, const std::shared_ptr<View> &popup)
+	void Window::present_popup(const Pointf &pos, const std::shared_ptr<ViewController> &popup)
 	{
 		Pointf screen_pos = client_to_screen_pos(pos);
 
@@ -127,14 +128,13 @@ namespace clan
 
 		auto popup_window = std::make_shared<Window>(desc);
 		popup_window->impl->popup_owner = this;
-		popup_window->set_root(popup);
-		popup_window->root()->style()->set("flex-direction: row");
+		popup_window->set_view_controller(popup);
 
 		impl->popups[popup_window.get()] = popup_window;
 
 		Canvas canvas = popup_window->get_canvas();
-		float width = popup_window->root()->calculate_preferred_width(canvas);
-		float height = popup_window->root()->calculate_preferred_height(canvas, width);
+		float width = popup_window->view_controller()->view->calculate_preferred_width(canvas);
+		float height = popup_window->view_controller()->view->calculate_preferred_height(canvas, width);
 		popup_window->get_display_window().set_position(Rectf(screen_pos.x, screen_pos.y, screen_pos.x + width, screen_pos.y + height), false);
 
 		popup_window->show(WindowShowType::show_no_activate);
@@ -151,9 +151,9 @@ namespace clan
 		}
 	}
 
-	void Window::present_modal(const std::string &title, const std::shared_ptr<View> &modal)
+	void Window::present_modal(const std::string &title, const std::shared_ptr<ViewController> &modal)
 	{
-		Pointf screen_pos = client_to_screen_pos(root()->geometry().content_box().get_center());
+		Pointf screen_pos = client_to_screen_pos(view_controller()->view->geometry().content_box().get_center());
 
 		DisplayWindowDescription desc;
 		desc.set_type(WindowType::normal);
@@ -166,16 +166,16 @@ namespace clan
 
 		auto modal_window = std::make_shared<Window>(desc);
 		modal_window->impl->modal_owner = this;
-		modal_window->set_root(modal);
-		modal_window->root()->style()->set("flex-direction: row");
+		modal_window->set_view_controller(modal);
+		modal_window->view_controller()->view->style()->set("flex-direction: row");
 
 		impl->modal = modal_window;
 
 		modal_window->impl->slots.connect(modal_window->get_display_window().sig_window_close(), [this]() { impl->modal.reset(); });
 
 		Canvas canvas = modal_window->get_canvas();
-		float width = modal_window->root()->calculate_preferred_width(canvas);
-		float height = modal_window->root()->calculate_preferred_height(canvas, width);
+		float width = modal_window->view_controller()->view->calculate_preferred_width(canvas);
+		float height = modal_window->view_controller()->view->calculate_preferred_height(canvas, width);
 		modal_window->get_display_window().set_position(Rectf(screen_pos.x - width * 0.5f, screen_pos.y - height * 0.5f, screen_pos.x + width * 0.5f, screen_pos.y + height * 0.5f), false);
 
 		modal_window->show(WindowShowType::show);

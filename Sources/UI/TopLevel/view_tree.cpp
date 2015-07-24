@@ -28,6 +28,7 @@
 
 #include "UI/precomp.h"
 #include "API/UI/TopLevel/view_tree.h"
+#include "API/UI/ViewController/view_controller.h"
 #include "API/UI/Events/event.h"
 #include "API/UI/Events/focus_change_event.h"
 #include "../View/view_impl.h"
@@ -50,7 +51,7 @@ namespace clan
 		}
 
 		View *focus_view = nullptr;
-		std::shared_ptr<View> root;
+		std::shared_ptr<ViewController> root;
 	};
 
 	ViewTree::ViewTree() : impl(new ViewTreeImpl)
@@ -66,14 +67,14 @@ namespace clan
 		return impl->focus_view;
 	}
 
-	const std::shared_ptr<View> &ViewTree::root()
+	const std::shared_ptr<ViewController> &ViewTree::view_controller() const
 	{
 		return impl->root;
 	}
 
-	void ViewTree::set_root(const std::shared_ptr<View> &view)
+	void ViewTree::set_view_controller(std::shared_ptr<ViewController> controller)
 	{
-		impl->root = view;
+		impl->root = controller;
 	}
 
 	void ViewTree::set_focus_view(View *new_focus_view)
@@ -100,7 +101,7 @@ namespace clan
 
 	void ViewTree::render(Canvas &canvas, const Rectf &margin_box)
 	{
-		View *view = root().get();
+		View *view = impl->root->view.get();
 
 		view->set_geometry(ViewGeometry::from_margin_box(view->style_cascade(), margin_box));
 
@@ -118,6 +119,6 @@ namespace clan
 
 	void ViewTree::dispatch_activation_change(ActivationChangeType type)
 	{
-		ViewTreeImpl::dispatch_activation_change(root().get(), type);
+		ViewTreeImpl::dispatch_activation_change(impl->root->view.get(), type);
 	}
 }

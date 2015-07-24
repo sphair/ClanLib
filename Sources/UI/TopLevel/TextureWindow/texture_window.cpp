@@ -69,7 +69,7 @@ namespace clan
 		impl->needs_render = true;
 	}
 
-	void TextureWindow::present_popup(const Pointf &pos, const std::shared_ptr<View> &popup)
+	void TextureWindow::present_popup(const Pointf &pos, const std::shared_ptr<ViewController> &popup)
 	{
 	}
 
@@ -77,7 +77,7 @@ namespace clan
 	{
 	}
 
-	void TextureWindow::present_modal(const std::string &title, const std::shared_ptr<View> &modal)
+	void TextureWindow::present_modal(const std::string &title, const std::shared_ptr<ViewController> &modal)
 	{
 	}
 

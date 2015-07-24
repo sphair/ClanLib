@@ -35,6 +35,7 @@ namespace clan
 {
 	class DisplayWindow;
 	class Canvas;
+	class ViewController;
 	class ViewTreeImpl;
 
 	/// Base class for managing a tree of views
@@ -53,13 +54,13 @@ namespace clan
 		/// Gets the current canvas used to render
 		virtual Canvas get_canvas() const = 0;
 
+		/// Retrieves the view controller at the root of the view tree
+		const std::shared_ptr<ViewController> &view_controller() const;
+
+		/// Sets the root view controller for the view tree
+		void set_view_controller(std::shared_ptr<ViewController> controller);
+
 	protected:
-		/// Returns the root view node
-		const std::shared_ptr<View> &root();
-
-		/// Sets the root view node
-		void set_root(const std::shared_ptr<View> &view);
-
 		/// Set or clears the focus
 		void set_focus_view(View *view);
 
@@ -79,15 +80,15 @@ namespace clan
 		virtual Pointf screen_to_client_pos(const Pointf &pos) = 0;
 
 		/// Shows a popup view at the given content coordinates
-		virtual void present_popup(const Pointf &pos, const std::shared_ptr<View> &popup) = 0;
+		virtual void present_popup(const Pointf &pos, const std::shared_ptr<ViewController> &controller) = 0;
 
-		/// Hides a popup, if visible
+		/// Hides the view controller, if visible as a popup
 		virtual void dismiss_popup() = 0;
 
 		/// Shows a modal view
-		virtual void present_modal(const std::string &title, const std::shared_ptr<View> &modal) = 0;
+		virtual void present_modal(const std::string &title, const std::shared_ptr<ViewController> &controller) = 0;
 
-		/// Hides a modal, if visible
+		/// Hides the view controller, if visible as a modal
 		virtual void dismiss_modal() = 0;
 
 	private:
@@ -98,6 +99,7 @@ namespace clan
 
 		friend class View;
 		friend class ViewImpl;
+		friend class ViewController;
 		friend class PositionedLayout;
 	};
 }

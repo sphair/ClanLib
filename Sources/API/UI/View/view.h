@@ -52,6 +52,7 @@ namespace clan
 	class PointerEvent;
 	class ResizeEvent;
 	class KeyEvent;
+	class ViewController;
 	class ViewImpl;
 	class CursorDescription;
 	enum class StandardCursor;
@@ -108,11 +109,11 @@ namespace clan
 		/// Remove view from parent
 		void remove_from_super();
 
-		/// Shows view as a popup at the given content coordinates
-		void present_popup(const Pointf &pos, const std::shared_ptr<View> &popup);
+		/// Shows a popup at the given content coordinates
+		void present_popup(const Pointf &pos, const std::shared_ptr<ViewController> &controller);
 
 		template<typename T, typename... Types>
-		std::shared_ptr<View> present_popup(const Pointf &pos, Types &&... args)
+		std::shared_ptr<ViewController> present_popup(const Pointf &pos, Types &&... args)
 		{
 			auto popup = std::make_shared<T>(std::forward<Types>(args)...);
 			present_popup(pos, popup);
@@ -122,11 +123,11 @@ namespace clan
 		/// Hides view if it is shown as a popup
 		void dismiss_popup();
 
-		/// Shows view as a modal dialog
-		void present_modal(const std::string &title, const std::shared_ptr<View> &modal);
+		/// Shows modal dialog
+		void present_modal(const std::string &title, const std::shared_ptr<ViewController> &controller);
 
 		template<typename T, typename... Types>
-		std::shared_ptr<View> present_modal(const std::string &title, Types &&... args)
+		std::shared_ptr<ViewController> present_modal(const std::string &title, Types &&... args)
 		{
 			auto modal = std::make_shared<T>(std::forward<Types>(args)...);
 			present_modal(title, modal);

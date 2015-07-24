@@ -29,6 +29,7 @@
 #include "UI/precomp.h"
 #include "API/UI/ViewController/view_controller.h"
 #include "API/UI/View/view.h"
+#include "API/UI/TopLevel/view_tree.h"
 #include "view_controller_impl.h"
 #include <algorithm>
 
@@ -77,6 +78,16 @@ namespace clan
 
 			child_controller_removed(controller_ptr);
 		}
+	}
+
+	void ViewController::dismiss_popup()
+	{
+		view->view_tree()->dismiss_popup();
+	}
+
+	void ViewController::dismiss_modal()
+	{
+		view->view_tree()->dismiss_modal();
 	}
 
 	void ViewController::child_controller_added(const std::shared_ptr<ViewController> &view_controller)

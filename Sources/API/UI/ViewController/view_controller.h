@@ -62,6 +62,12 @@ namespace clan
 		/// Removes the controller from its parent
 		void remove_from_parent_controller();
 
+		/// Hides the view controller, if visible as a popup
+		void dismiss_popup();
+
+		/// Hides the view controller, if visible as a modal
+		void dismiss_modal();
+
 	protected:
 		/// Called when a child controller is added
 		virtual void child_controller_added(const std::shared_ptr<ViewController> &view_controller);
