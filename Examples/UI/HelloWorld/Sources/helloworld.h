@@ -33,10 +33,10 @@ class HelloWorld : public clan::Application
 {
 public:
 	HelloWorld();
-	bool update() override;
 
 	clan::UIThread ui_thread;
-	std::shared_ptr<clan::WindowView> root;
+	std::shared_ptr<clan::Window> window;
+	std::shared_ptr<clan::View> root;
 	std::shared_ptr<clan::LabelView> label;
 	clan::SlotContainer slots;
 };
