@@ -75,6 +75,7 @@ namespace clan
 	void ViewTree::set_view_controller(std::shared_ptr<ViewController> controller)
 	{
 		impl->root = controller;
+		impl->root->view->impl->view_tree = this;
 	}
 
 	void ViewTree::set_focus_view(View *new_focus_view)

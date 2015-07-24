@@ -135,7 +135,9 @@ namespace clan
 		Canvas canvas = popup_window->get_canvas();
 		float width = popup_window->view_controller()->view->calculate_preferred_width(canvas);
 		float height = popup_window->view_controller()->view->calculate_preferred_height(canvas, width);
-		popup_window->get_display_window().set_position(Rectf(screen_pos.x, screen_pos.y, screen_pos.x + width, screen_pos.y + height), false);
+		Rectf content_box(screen_pos.x, screen_pos.y, screen_pos.x + width, screen_pos.y + height);
+		Rectf margin_box = ViewGeometry::from_content_box(popup_window->view_controller()->view->style_cascade(), content_box).margin_box();
+		popup_window->get_display_window().set_position(margin_box, false);
 
 		popup_window->show(WindowShowType::show_no_activate);
 	}
@@ -167,7 +169,6 @@ namespace clan
 		auto modal_window = std::make_shared<Window>(desc);
 		modal_window->impl->modal_owner = this;
 		modal_window->set_view_controller(modal);
-		modal_window->view_controller()->view->style()->set("flex-direction: row");
 
 		impl->modal = modal_window;
 
@@ -176,7 +177,9 @@ namespace clan
 		Canvas canvas = modal_window->get_canvas();
 		float width = modal_window->view_controller()->view->calculate_preferred_width(canvas);
 		float height = modal_window->view_controller()->view->calculate_preferred_height(canvas, width);
-		modal_window->get_display_window().set_position(Rectf(screen_pos.x - width * 0.5f, screen_pos.y - height * 0.5f, screen_pos.x + width * 0.5f, screen_pos.y + height * 0.5f), false);
+		Rectf content_box(screen_pos.x - width * 0.5f, screen_pos.y - height * 0.5f, screen_pos.x + width * 0.5f, screen_pos.y + height * 0.5f);
+		Rectf margin_box = ViewGeometry::from_content_box(modal_window->view_controller()->view->style_cascade(), content_box).margin_box();
+		modal_window->get_display_window().set_position(margin_box, true);
 
 		modal_window->show(WindowShowType::show);
 	}
