@@ -184,12 +184,15 @@ namespace clan
 		modal_window->get_display_window().set_position(margin_box, true);
 
 		modal_window->show(WindowShowType::show);
+		impl->window.set_enabled(false);
 	}
 
 	void Window::dismiss_modal()
 	{
 		if (impl->modal_owner)
 		{
+			impl->modal_owner->impl->window.set_enabled(true);
+
 			Window *modal_owner = impl->modal_owner;
 			modal_owner->impl->modal.reset();
 		}
