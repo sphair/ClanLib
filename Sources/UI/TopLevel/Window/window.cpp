@@ -120,11 +120,14 @@ namespace clan
 		Pointf screen_pos = client_to_screen_pos(pos);
 
 		DisplayWindowDescription desc;
-		desc.set_type(WindowType::popup);
+		desc.set_popup_window();
 		desc.set_visible(false);
 		desc.set_topmost(true);
 		desc.set_no_activate(true);
 		desc.show_caption(false);
+		desc.show_sysmenu(false);
+		desc.show_minimize_button(false);
+		desc.show_maximize_button(false);
 
 		auto popup_window = std::make_shared<Window>(desc);
 		popup_window->impl->popup_owner = this;
@@ -158,13 +161,12 @@ namespace clan
 		Pointf screen_pos = client_to_screen_pos(view_controller()->view->geometry().content_box().get_center());
 
 		DisplayWindowDescription desc;
-		desc.set_type(WindowType::normal);
+		desc.set_dialog_window();
 		desc.set_visible(false);
 		desc.set_owner_window(get_display_window());
 		desc.set_title(title);
 		desc.show_minimize_button(false);
 		desc.show_maximize_button(false);
-		// desc.show_sysmenu(false); // to do: fix that this also hides the close button
 
 		auto modal_window = std::make_shared<Window>(desc);
 		modal_window->impl->modal_owner = this;

@@ -38,18 +38,6 @@ namespace clan
 /// \addtogroup clanDisplay_Window clanDisplay Window
 /// \{
 
-enum class WindowType
-{
-	// \brief Normal application window decorated by the windowing system
-	normal,
-	// \brief Popup window (not decorated)
-	popup,
-	// \brief Popup window registered as a tool window (not decorated)
-	tool,
-	// \brief Custom drawn application window
-	custom
-};
-
 class Sizef;
 class Rectf;
 class DisplayWindow;
@@ -184,12 +172,14 @@ public:
 	/// \brief Returns the number of samples per pixel.
 	int get_multisampling() const;
 
-	float get_extend_frame_left() const;
-	float get_extend_frame_top() const;
-	float get_extend_frame_right() const;
-	float get_extend_frame_bottom() const;
+	/// \brief Returns true if it is a main window
+	bool is_main() const;
 
-	WindowType get_type() const;
+	/// \brief Returns true if it is a dialog window
+	bool is_dialog() const;
+
+	/// \brief Returns true if it is a popup window
+	bool is_popup() const;
 
 /// \}
 /// \name Operations
@@ -197,6 +187,15 @@ public:
 public:
 	/// \brief Copy assignment operator.
 	DisplayWindowDescription &operator =(const DisplayWindowDescription &copy);
+
+	/// \brief Display this window as of the main windows of the application
+	void set_main_window();
+
+	/// \brief Display the window as a modal dialog
+	void set_dialog_window();
+
+	/// \brief Display the window as a popup 
+	void set_popup_window();
 
 	/// \brief Controls if a title bar (including frame) is shown or not.
 	void show_caption(bool value = true);
@@ -301,11 +300,6 @@ public:
 
 	/// \brief Sets the number of samples per pixel.
 	void set_multisampling(int value);
-
-	void set_extend_frame(float left, float top, float right, float bottom);
-
-	void set_type(WindowType type);
-
 
 /// \}
 /// \name Implementation

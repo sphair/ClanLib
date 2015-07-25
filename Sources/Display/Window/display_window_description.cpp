@@ -235,32 +235,6 @@ int DisplayWindowDescription::get_multisampling() const
 	return impl->multisampling;
 }
 
-float DisplayWindowDescription::get_extend_frame_left() const
-{
-	return impl->extend_frame_left;
-}
-
-float DisplayWindowDescription::get_extend_frame_top() const
-{
-	return impl->extend_frame_top;
-}
-
-float DisplayWindowDescription::get_extend_frame_right() const
-{
-	return impl->extend_frame_right;
-}
-
-float DisplayWindowDescription::get_extend_frame_bottom() const
-{
-	return impl->extend_frame_bottom;
-}
-
-WindowType DisplayWindowDescription::get_type() const
-{
-	return impl->type;
-}
-
-
 /////////////////////////////////////////////////////////////////////////////
 // DisplayWindowDescription operations:
 
@@ -268,6 +242,36 @@ DisplayWindowDescription &DisplayWindowDescription::operator =(const DisplayWind
 {
 	impl = copy.impl;
 	return *this;
+}
+
+bool DisplayWindowDescription::is_main() const
+{
+	return impl->type == WindowType::main;
+}
+
+bool DisplayWindowDescription::is_dialog() const
+{
+	return impl->type == WindowType::dialog;
+}
+
+bool DisplayWindowDescription::is_popup() const
+{
+	return impl->type == WindowType::popup;
+}
+
+void DisplayWindowDescription::set_main_window()
+{
+	impl->type = WindowType::main;
+}
+
+void DisplayWindowDescription::set_dialog_window()
+{
+	impl->type = WindowType::dialog;
+}
+
+void DisplayWindowDescription::set_popup_window()
+{
+	impl->type = WindowType::popup;
 }
 
 void DisplayWindowDescription::show_caption(bool value)
@@ -407,20 +411,6 @@ void DisplayWindowDescription::set_multisampling(int value)
 {
 	impl->multisampling = value;
 }
-
-void DisplayWindowDescription::set_extend_frame(float left, float top, float right, float bottom)
-{
-	impl->extend_frame_left = left;
-	impl->extend_frame_top = top;
-	impl->extend_frame_right = right;
-	impl->extend_frame_bottom = bottom;
-}
-
-void DisplayWindowDescription::set_type(WindowType type)
-{
-	impl->type = type;
-}
-
 
 /////////////////////////////////////////////////////////////////////////////
 // DisplayWindowDescription implementation:

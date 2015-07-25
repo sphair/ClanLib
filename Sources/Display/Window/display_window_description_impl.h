@@ -36,6 +36,13 @@
 
 namespace clan
 {
+	enum class WindowType
+	{
+		main,
+		dialog,
+		popup
+	};
+
 	class DisplayWindowDescription_Impl
 	{
 	public:
@@ -72,11 +79,6 @@ namespace clan
 		bool update_supported = false;
 		int multisampling = 0;
 
-		float extend_frame_left = 0.0f;
-		float extend_frame_top = 0.0f;
-		float extend_frame_right = 0.0f;
-		float extend_frame_bottom = 0.0f;
-
-		WindowType type = WindowType::normal;
+		WindowType type = WindowType::main;
 	};
 }

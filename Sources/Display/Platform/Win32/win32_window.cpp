@@ -782,13 +782,15 @@ void Win32Window::update_dwm_settings()
 {
 	if (DwmFunctions::is_composition_enabled())
 	{
+		/*
 		extend_frame_into_client_area(
 			(int)std::round(window_desc.get_extend_frame_left() * pixel_ratio),
 			(int)std::round(window_desc.get_extend_frame_top() * pixel_ratio),
 			(int)std::round(window_desc.get_extend_frame_right() * pixel_ratio),
 			(int)std::round(window_desc.get_extend_frame_bottom() * pixel_ratio));
+		*/
 
-		if ((window_desc.get_type() != WindowType::normal) || (window_desc.is_layered()))
+		if (window_desc.is_popup() || (window_desc.is_layered()))
 			set_alpha_channel();
 	}
 }
@@ -1742,30 +1744,27 @@ void Win32Window::get_styles_from_description(const DisplayWindowDescription &de
 	out_style = WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
 	out_ex_style = 0;
 
-	WindowType type = desc.get_type();
-
-	if (desc.is_fullscreen() || type == WindowType::popup || !desc.has_caption())
+	if (desc.is_fullscreen() || desc.is_popup())
 		out_style |= WS_POPUP;
-
-	if (desc.get_allow_resize() && !desc.is_fullscreen() && type != WindowType::popup)
-		out_style |= WS_SIZEBOX;
 
 	if (desc.has_caption())
 	{
 		out_style |= WS_CAPTION;
-
-		if (desc.has_sysmenu())
+		if (desc.is_popup())
 		{
-			out_style |= WS_SYSMENU;
-		}
-		if (type != WindowType::popup)
-		{
-			if (desc.has_minimize_button())
-				out_style |= WS_MINIMIZEBOX;
-			if (desc.has_maximize_button() && desc.get_allow_resize())
-				out_style |= WS_MAXIMIZEBOX;
+			out_ex_style |= WS_EX_TOOLWINDOW;
+			out_ex_style |= WS_EX_WINDOWEDGE;
 		}
 	}
+
+	if (desc.has_sysmenu())
+		out_style |= WS_SYSMENU;
+	if (desc.get_allow_resize() && !desc.is_fullscreen())
+		out_style |= WS_SIZEBOX;
+	if (desc.has_minimize_button())
+		out_style |= WS_MINIMIZEBOX;
+	if (desc.has_maximize_button() && desc.get_allow_resize())
+		out_style |= WS_MAXIMIZEBOX;
 
 	if (desc.is_layered())
 	{
@@ -1778,8 +1777,15 @@ void Win32Window::get_styles_from_description(const DisplayWindowDescription &de
 	if (desc.has_no_activate())
 		out_ex_style |= WS_EX_NOACTIVATE;
 
-	if (type == WindowType::tool)
-		out_ex_style |= WS_EX_TOOLWINDOW;
+	if (desc.is_main())
+	{
+		out_ex_style |= WS_EX_APPWINDOW;
+		out_ex_style |= WS_EX_WINDOWEDGE;
+	}
+	else if (desc.is_dialog())
+	{
+		out_ex_style |= WS_EX_DLGMODALFRAME;
+	}
 }
 
 RECT Win32Window::get_window_geometry_from_description(const DisplayWindowDescription &desc, DWORD style, DWORD ex_style)
@@ -2043,9 +2049,8 @@ void Win32Window::extend_frame_into_client_area(int left, int top, int right, in
 
 LRESULT Win32Window::wm_nc_hittest(WPARAM wparam, LPARAM lparam)
 {
-	if (window_desc.get_type() != WindowType::custom)
-		return DefWindowProc(hwnd, WM_NCHITTEST, wparam, lparam);
-
+	return DefWindowProc(hwnd, WM_NCHITTEST, wparam, lparam);
+	/*
 	// Hit test handling for the resize + caption draggable area
 	POINT mousePos = { LOWORD(lparam), HIWORD(lparam) };
 
@@ -2110,6 +2115,7 @@ LRESULT Win32Window::wm_nc_hittest(WPARAM wparam, LPARAM lparam)
 	}
 
 	return hit;
+	*/
 }
 
 LRESULT Win32Window::wm_nc_calcsize(WPARAM wparam, LPARAM lparam)
@@ -2127,8 +2133,9 @@ LRESULT Win32Window::wm_nc_calcsize(WPARAM wparam, LPARAM lparam)
 	}
 	else
 	{
-		if (window_desc.get_type() == WindowType::normal)
-			return DefWindowProc(hwnd, WM_NCCALCSIZE, wparam, lparam);
+		return DefWindowProc(hwnd, WM_NCCALCSIZE, wparam, lparam);
+		/*
+		// Full window layout (makes the client box cover the entire window box):
 
 		// On entry, the structure contains the proposed window rectangle for the window.
 		RECT window_box = *reinterpret_cast<RECT*>(lparam);
@@ -2139,6 +2146,7 @@ LRESULT Win32Window::wm_nc_calcsize(WPARAM wparam, LPARAM lparam)
 		*reinterpret_cast<RECT*>(lparam) = client_box;
 
 		return 0; // must always be 0
+		*/
 	}
 }
 
