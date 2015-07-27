@@ -135,16 +135,16 @@ display.cpp
 if WIN32
 libclan40Display_la_SOURCES += \
 Font/FontEngine/font_engine_win32.cpp \
-Win32/win32_window.cpp \
-Win32/screen_info_provider_win32.cpp \
-Win32/display_message_queue_win32.cpp \
-Win32/input_device_provider_win32tablet.cpp \
-Win32/input_device_provider_win32hid.cpp \
-Win32/hid.cpp \
-Win32/input_device_provider_win32mouse.cpp \
-Win32/cursor_provider_win32.cpp \
-Win32/input_device_provider_win32keyboard.cpp \
-Win32/dwm_functions.cpp
+Platform/Win32/win32_window.cpp \
+Platform/Win32/screen_info_provider_win32.cpp \
+Platform/Win32/display_message_queue_win32.cpp \
+Platform/Win32/input_device_provider_win32tablet.cpp \
+Platform/Win32/input_device_provider_win32hid.cpp \
+Platform/Win32/hid.cpp \
+Platform/Win32/input_device_provider_win32mouse.cpp \
+Platform/Win32/cursor_provider_win32.cpp \
+Platform/Win32/input_device_provider_win32keyboard.cpp \
+Platform/Win32/dwm_functions.cpp
 else
 libclan40Display_la_SOURCES += \
 Font/FontEngine/font_engine_freetype.cpp \
