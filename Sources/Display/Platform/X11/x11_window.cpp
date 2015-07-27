@@ -310,16 +310,15 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 	// Retrieve the frame size (emulating microsoft windows)
 	bool window_is_frameless = false;
 	bool window_has_thin_frame = false;
-	WindowType window_type = desc.get_type();
 	if (!desc.has_caption())
 	{
-		if (window_type == WindowType::tool)
-		{
-			window_is_frameless = true;
-		}
-		else
-		{
-			if (desc.get_allow_resize() || window_type == WindowType::popup)
+		//if (window_type == WindowType::tool)
+		//{
+		//	window_is_frameless = true;
+		//}
+		//else
+		//{
+			if (desc.get_allow_resize() || desc.is_popup())
 			{
 				window_has_thin_frame = true;
 			}
@@ -327,20 +326,20 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 			{
 				window_is_frameless = true;
 			}
-		}
+		//}
 	}
 
 	if (net_wm_window_type != None)
 	{
 		Atom decor;
-		if (window_type == WindowType::popup)
+		if (desc.is_dialog())
 		{
 			decor = net_wm_window_type_dialog;
 		}
-		else if (window_type == WindowType::tool)
-		{
-			decor = net_wm_window_type_toolbar;
-		}
+		//else if (window_type == WindowType::tool)
+		//{
+		//	decor = net_wm_window_type_toolbar;
+		//}
 		else if (window_is_frameless)
 		{
 			decor = net_wm_window_type_dropdown_menu;
