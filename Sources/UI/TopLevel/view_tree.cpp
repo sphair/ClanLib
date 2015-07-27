@@ -51,7 +51,7 @@ namespace clan
 		}
 
 		View *focus_view = nullptr;
-		std::shared_ptr<ViewController> root;
+		std::shared_ptr<ViewController> root = std::make_shared<clan::ViewController>();
 	};
 
 	ViewTree::ViewTree() : impl(new ViewTreeImpl)
