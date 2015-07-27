@@ -1,0 +1,19 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual C++ Express 2013
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IOData", "IOData-vc2015.vcxproj", "{95AE3D35-371F-4BF8-BD38-8F7FF7AD1BE1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{95AE3D35-371F-4BF8-BD38-8F7FF7AD1BE1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{95AE3D35-371F-4BF8-BD38-8F7FF7AD1BE1}.Debug|Win32.Build.0 = Debug|Win32
+		{95AE3D35-371F-4BF8-BD38-8F7FF7AD1BE1}.Release|Win32.ActiveCfg = Release|Win32
+		{95AE3D35-371F-4BF8-BD38-8F7FF7AD1BE1}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

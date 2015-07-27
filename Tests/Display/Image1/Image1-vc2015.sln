@@ -1,0 +1,19 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual C++ Express 2013
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Image1", "Image1-vc2015.vcxproj", "{5DA9D14B-F5D4-4CA0-94D3-44564BD426FA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5DA9D14B-F5D4-4CA0-94D3-44564BD426FA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5DA9D14B-F5D4-4CA0-94D3-44564BD426FA}.Debug|Win32.Build.0 = Debug|Win32
+		{5DA9D14B-F5D4-4CA0-94D3-44564BD426FA}.Release|Win32.ActiveCfg = Release|Win32
+		{5DA9D14B-F5D4-4CA0-94D3-44564BD426FA}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
