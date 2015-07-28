@@ -55,7 +55,7 @@ HelloWorld::HelloWorld()
 	desc.set_title("UICore: Hello World");
 	desc.set_allow_resize(true);
 	desc.set_size(Sizef(640, 600), false);
-	window = std::make_shared<Window>(desc);
+	window = std::make_shared<clan::Window>(desc);
 
 	// Create a view controller for our window:
 	auto controller = std::make_shared<ViewController>();
