@@ -30,6 +30,7 @@
 
 #include "../View/view.h"
 #include "../Events/activation_change_event.h"
+#include "../ViewController/view_controller.h"
 
 namespace clan
 {
@@ -44,7 +45,7 @@ namespace clan
 	public:
 		ViewTree();
 		~ViewTree();
-		
+
 		/// The view receiving keyboard events or nullptr if no view has the focus
 		View *focus_view() const;
 
@@ -59,6 +60,25 @@ namespace clan
 
 		/// Sets the root view controller for the view tree
 		void set_view_controller(std::shared_ptr<ViewController> controller);
+
+		/// Add a child view
+		void add_subview(const std::shared_ptr<View> &view)
+		{
+			view_controller()->view->add_subview(view);
+		}
+
+		template<typename T, typename... Types>
+		std::shared_ptr<T> add_subview(Types &&... args)
+		{
+			auto subview = std::make_shared<T>(std::forward<Types>(args)...);
+			add_subview(subview);
+			return subview;
+		}
+
+		std::shared_ptr<View> add_subview()
+		{
+			return add_subview<View>();
+		}
 
 	protected:
 		/// Set or clears the focus
