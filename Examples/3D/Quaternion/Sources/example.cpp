@@ -87,7 +87,7 @@ App::App()
 	ui_thread = UIThread(resources);
 
 	options_view = std::make_shared<Options>(canvas);
-
+	options_view->set_always_render();
 	options_view->set_event_window(window);
 	options_view->set_cursor_window(window);
 
@@ -168,7 +168,6 @@ bool App::update()
 
 	options_view->set_viewport(Rectf(8.0f, 8.0f, canvas.get_width() - 16.0f, 170.0f));
 	options_view->update();
-	options_view->render(canvas);
 	
 	std::string fps(string_format("%1 fps", framerate_counter.get_framerate()));
 	font.draw_text(canvas, 16-2, canvas.get_height()-16-2, fps, Colorf(0.0f, 0.0f, 0.0f, 1.0f));
