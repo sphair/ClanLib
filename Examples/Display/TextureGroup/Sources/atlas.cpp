@@ -55,6 +55,7 @@ Atlas::Atlas()
 	ui_thread = clan::UIThread(resources);
 
 	options = std::make_shared<Options>(canvas);
+	options->set_always_render();
 	options->set_event_window(window);
 	options->set_cursor_window(window);
 
@@ -100,7 +101,6 @@ bool Atlas::update()
 {
 	canvas.clear(clan::Colorf(0.0f, 0.0f, 0.2f));
 
-	options->set_needs_render();
 	options->set_clear_background(false);
 	options->set_viewport(canvas.get_size());
 

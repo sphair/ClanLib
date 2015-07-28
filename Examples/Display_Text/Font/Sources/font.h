@@ -79,7 +79,7 @@ private:
 	clan::Canvas gui_canvas;
 	clan::Image gui_image;
 	clan::UIThread ui_thread;
-	std::shared_ptr<clan::TextureView> root;
+	std::shared_ptr<clan::TextureWindow> root;
 
 	Sizef font_size;
 	clan::Font small_font;

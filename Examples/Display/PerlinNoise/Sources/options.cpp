@@ -35,7 +35,7 @@
 #define MAX_POSITION	255.0f
 #define MAX_LENGTH		64.0f
 
-Options::Options(clan::Canvas &canvas) : clan::TextureView(canvas)
+Options::Options(clan::Canvas &canvas) : clan::TextureWindow(canvas)
 {
 	is_normals_set = false;
 	sized_format = clan::tf_rgb8;

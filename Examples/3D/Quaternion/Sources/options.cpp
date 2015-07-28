@@ -29,7 +29,7 @@
 #include "precomp.h"
 #include "options.h"
 
-Options::Options(Canvas &canvas) : TextureView(canvas)
+Options::Options(Canvas &canvas) : TextureWindow(canvas)
 {
 
 	style()->set("background: rgb(153, 153, 204)");

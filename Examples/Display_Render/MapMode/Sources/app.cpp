@@ -55,6 +55,7 @@ App::App()
 	ui_thread = clan::UIThread(resources);
 
 	options = std::make_shared<Options>(canvas);
+	options->set_always_render();
 	options->set_event_window(window);
 	options->set_cursor_window(window);
 
@@ -72,7 +73,6 @@ bool App::update()
 {
 	game_time.update();
 
-	options->set_needs_render();
 	options->set_viewport(canvas.get_size());
 	options->set_background_color(clan::Colorf(0.6f, 0.6f, 0.2f, 1.0f));
 	options->update();

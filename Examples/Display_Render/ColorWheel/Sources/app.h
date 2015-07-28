@@ -48,7 +48,7 @@ private:
 	clan::Image gui_image;
 
 	clan::UIThread ui_thread;
-	std::shared_ptr<clan::TextureView> root;
+	std::shared_ptr<clan::TextureWindow> root;
 	std::shared_ptr<ColorWheel> color_wheel;
 
 	bool quit = false;

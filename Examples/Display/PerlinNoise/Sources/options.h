@@ -38,7 +38,7 @@ enum PerlinDimension
 	perlin_4d
 };
 
-class Options : public clan::TextureView
+class Options : public clan::TextureWindow
 {
 public:
 	Options(clan::Canvas &canvas);

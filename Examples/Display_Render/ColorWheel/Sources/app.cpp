@@ -63,7 +63,7 @@ App::App()
 	clan::ResourceManager resources = clan::FileResourceManager::create(doc);
 	ui_thread = clan::UIThread(resources);
 
-	root = std::make_shared<clan::TextureView>(gui_canvas);
+	root = std::make_shared<clan::TextureWindow>(gui_canvas);
 
 	root->set_event_window(window);
 	root->set_cursor_window(window);

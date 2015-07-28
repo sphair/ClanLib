@@ -30,7 +30,7 @@
 
 #include "options.h"
 
-Options::Options(clan::Canvas &canvas) : clan::TextureView(canvas)
+Options::Options(clan::Canvas &canvas) : clan::TextureWindow(canvas)
 {
 	// If you change these, you also need to change the default selected combobox item
 	blendfunc[0] = clan::blend_src_alpha;

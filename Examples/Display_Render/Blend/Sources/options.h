@@ -30,7 +30,7 @@
 
 #include "../../../ThemeAero/Sources/theme.h"
 
-class Options : public clan::TextureView
+class Options : public clan::TextureWindow
 {
 public:
 	Options(clan::Canvas &canvas);

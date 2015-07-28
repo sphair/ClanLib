@@ -30,7 +30,7 @@
 
 #include "options.h"
 
-Options::Options(clan::Canvas &canvas) : clan::TextureView(canvas)
+Options::Options(clan::Canvas &canvas) : clan::TextureWindow(canvas)
 {
 	// Note, when changing these, remember to change the popup menu defaults
 	current_mapmode = clan::map_2d_upper_left;

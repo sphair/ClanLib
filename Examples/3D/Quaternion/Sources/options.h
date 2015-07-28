@@ -79,7 +79,7 @@ public:
 	}
 };
 
-class Options : public TextureView
+class Options : public TextureWindow
 {
 public:
 	Options(Canvas &canvas);

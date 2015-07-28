@@ -41,7 +41,7 @@ GUI::GUI()
 
 	// Set the window
 	clan::DisplayWindowDescription desc;
-	desc.set_title("ClanLib TextureView GUI Example");
+	desc.set_title("ClanLib TextureWindow GUI Example");
 	desc.set_size(clan::Size(640, 640), true);
 	desc.set_allow_resize(true);
 
@@ -149,7 +149,7 @@ bool GUI::update()
 	canvas.clear(clan::Colorf(0.3f,0.7f,0.2f));
 
 	//ui_window->view_controller()->view->set_needs_layout();
-	//ui_window->view_controller()->view->set_needs_render();
+	//ui_window->set_always_render();
 	ui_window->update();
 	gui_canvas.flush();
 

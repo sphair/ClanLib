@@ -30,7 +30,7 @@
 
 #include "options.h"
 
-Options::Options(clan::Canvas &canvas) : clan::TextureView(canvas)
+Options::Options(clan::Canvas &canvas) : clan::TextureWindow(canvas)
 {
 	int slider_xpos = 400;
 	int slider_label_xpos = slider_xpos + 200;
