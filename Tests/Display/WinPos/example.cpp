@@ -118,6 +118,7 @@ App::App()
 
 	desc_window_3.set_title("Window 3");
 	desc_window_3.set_allow_resize(true);
+	desc_window_3.set_popup_window();
 	desc_window_3.show_caption(false);
 	desc_window_3.set_owner_window(window_2);
 	rect = window_2.get_geometry();
@@ -128,6 +129,7 @@ App::App()
 
 	desc_window_4.set_title("Window 4");
 	desc_window_4.set_allow_resize(false);
+	desc_window_4.set_popup_window();
 	desc_window_4.show_caption(false);
 	desc_window_4.set_owner_window(window_3);
 	rect = window_3.get_geometry();

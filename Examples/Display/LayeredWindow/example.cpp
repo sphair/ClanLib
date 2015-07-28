@@ -79,6 +79,7 @@ App::App()
 	// Set the window description
 	clan::DisplayWindowDescription desc_window;
 	desc_window.set_title("Layered Window Example");
+	desc_window.set_popup_window();
 	desc_window.set_allow_resize(false);
 	desc_window.set_layered(true);
 	desc_window.show_caption(false);
