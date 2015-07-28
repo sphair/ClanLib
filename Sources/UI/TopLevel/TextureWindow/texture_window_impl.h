@@ -56,6 +56,7 @@ namespace clan
 		Mat4f transform_mouse_matrix;
 		Colorf background_color = Colorf::transparent;
 		bool clear_background_enable = true;
+		bool always_render = false;
 
 		BlendState opaque_blend;
 
@@ -89,7 +90,6 @@ namespace clan
 		int capture_down_counter = 0;
 		std::shared_ptr<View> captured_view;
 		std::shared_ptr<View> hot_view;
-
 
 	};
 }

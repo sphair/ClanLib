@@ -69,6 +69,12 @@ namespace clan
 		impl->needs_render = true;
 	}
 
+	void TextureWindow::set_always_render(bool enable)
+	{
+		impl->always_render = enable;
+	}
+
+
 	void TextureWindow::present_popup(const Pointf &pos, const std::shared_ptr<ViewController> &popup)
 	{
 	}

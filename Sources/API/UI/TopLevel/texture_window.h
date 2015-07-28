@@ -53,6 +53,9 @@ namespace clan
 		void set_background_color(const Colorf &background_color = Colorf::transparent);
 		void set_clear_background(bool enable = true);
 
+		/// \brief Always redraw the entire gui
+		void set_always_render(bool enable = true);
+
 		void update();
 
 		/// \brief Set the window to use to automatically set the cursor (including mouse capture)

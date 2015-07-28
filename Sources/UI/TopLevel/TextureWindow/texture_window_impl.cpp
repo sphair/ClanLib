@@ -71,7 +71,7 @@ namespace clan
 
 	void TextureWindow_Impl::update()
 	{
-		if (needs_render)
+		if (needs_render || always_render)
 		{
 			canvas.set_cliprect(canvas_rect);
 
