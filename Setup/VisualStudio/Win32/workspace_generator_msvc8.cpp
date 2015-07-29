@@ -1086,7 +1086,8 @@ void MSVC8_Project::write(OutputWriter &output, int indent) const
 
 		if (target_android)
 		{
-			output.write_line(indent, "    <PlatformToolset>Clang_3_4</PlatformToolset>");
+			output.write_line(indent, "    <PlatformToolset>Clang_3_6</PlatformToolset>");
+			output.write_line(indent, "    <AndroidAPILevel>android-21</AndroidAPILevel>");
 			output.write_line(indent, "    <UseOfStl>gnustl_static</UseOfStl>");		// TODO: Optional dynamic (like -mtdll on windows)
 			if (!configurations[index]->android_debug_libraries.empty())
 			{
