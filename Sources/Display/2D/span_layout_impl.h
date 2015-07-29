@@ -172,66 +172,66 @@ private:
 
 	struct LineSegment
 	{
-		LineSegment() : type(object_text), start(0), end(0), x_position(0), width(0), ascender(0), descender(0), component(nullptr), baseline_offset(0), id(-1) { }
+		LineSegment() { }
 
-		ObjectType type;
+		ObjectType type = object_text;
 
 		Font font;
 		Colorf color;
-		int start, end;
-		int ascender;
-		int descender;
+		int start = 0, end = 0;
+		int ascender = 0;
+		int descender = 0;
 
-		int x_position;
-		int width;
+		int x_position = 0;
+		int width = 0;
 
 		Image image;
-		SpanComponent *component;
-		int baseline_offset;
+		SpanComponent *component = nullptr;
+		int baseline_offset = 0;
 
-		int id;
+		int id = -1;
 	};
 
 	struct Line
 	{
-		Line() : height(0), ascender(0), width(0) { }
+		Line() { }
 
-		int width;	// Width of the entire line (including spaces)
-		int height;
-		int ascender;
+		int width = 0;	// Width of the entire line (including spaces)
+		int height = 0;
+		int ascender = 0;
 		std::vector<LineSegment> segments;
 	};
 
 	struct TextSizeResult
 	{
-		TextSizeResult() : width(0),height(0),ascender(0),descender(0),objects_traversed(0) { }
-		int start, end;
-		int width;
-		int height;
-		int ascender, descender;
-		int objects_traversed;
+		TextSizeResult()  { }
+		int start = 0, end = 0;
+		int width = 0;
+		int height = 0;
+		int ascender = 0, descender = 0;
+		int objects_traversed = 0;
 		std::vector<LineSegment> segments;
 	};
 
 	struct CurrentLine
 	{
-		CurrentLine() : object_index(0), x_position(0), y_position(0) { }
+		CurrentLine() { }
 
-		std::vector<SpanObject>::size_type object_index;
+		std::vector<SpanObject>::size_type object_index = 0;
 		Line cur_line;
-		int x_position;
-		int y_position;
+		int x_position = 0;
+		int y_position = 0;
 	};
 
 	struct FloatBox
 	{
-		FloatBox() : type(object_image), component(nullptr), id(-1) { }
+		FloatBox() { }
 
 		Rect rect;
-		ObjectType type;
+		ObjectType type = object_image;
 		Image image;
-		SpanComponent *component;
-		int id;
+		SpanComponent *component = nullptr;
+		int id = 1;
 	};
 
 	TextSizeResult find_text_size(Canvas &canvas, const TextBlock &block, unsigned int object_index);

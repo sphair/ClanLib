@@ -67,8 +67,8 @@ namespace clan
 		bool is_maximized() const override;
 		bool is_visible() const override;
 		std::string get_title() const override;
-		Size get_minimum_size(bool client_area) const;
-		Size get_maximum_size(bool client_area) const;
+		Size get_minimum_size(bool client_area) const override;
+		Size get_maximum_size(bool client_area) const override;
 		DisplayWindowHandle get_handle() const override { return DisplayWindowHandle(); }
 		GraphicContext& get_gc() override { return gc; }
 		InputContext get_ic() override { return InputContext(); }

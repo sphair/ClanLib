@@ -114,7 +114,7 @@ namespace clan
 	
 	void PNGWriter::write_data()
 	{
-		int width = image.get_width();
+		//int width = image.get_width();
 		int height = image.get_height();
 		int bytes_per_pixel = image.get_bytes_per_pixel();
 		

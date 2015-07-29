@@ -36,7 +36,7 @@ namespace clan
 {
 
 OpenGLBlendState::OpenGLBlendState() 
-	: changed_desc(true), changed_blend_color(true), blend_color(Colorf::white)
+	: blend_color(Colorf::white), changed_desc(true), changed_blend_color(true)
 {
 }
 

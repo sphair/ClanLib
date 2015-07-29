@@ -678,7 +678,7 @@ namespace clan
 		int position = instance_position;
 
 		Pointf center_point = transform_point(brush.center_point, brush.transform, transform);
-		Pointf radius = transform_point(Pointf(brush.radius_x, brush.radius_y), brush.transform, transform) - transform_point(Pointf(), brush.transform, transform);
+		//Pointf radius = transform_point(Pointf(brush.radius_x, brush.radius_y), brush.transform, transform) - transform_point(Pointf(), brush.transform, transform);
 
 		Vec4f brush_data1;
 		Vec4f brush_data2;
