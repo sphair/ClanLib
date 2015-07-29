@@ -312,21 +312,15 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 	bool window_has_thin_frame = false;
 	if (!desc.has_caption())
 	{
-		//if (window_type == WindowType::tool)
-		//{
-		//	window_is_frameless = true;
-		//}
-		//else
-		//{
-			if (desc.get_allow_resize() || desc.is_popup())
-			{
-				window_has_thin_frame = true;
-			}
-			else
-			{
-				window_is_frameless = true;
-			}
-		//}
+		if (desc.get_allow_resize())
+		{
+			window_has_thin_frame = true;
+		}
+
+		if (desc.is_popup())
+		{
+			window_is_frameless = true;
+		}
 	}
 
 	if (net_wm_window_type != None)
@@ -336,10 +330,6 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 		{
 			decor = net_wm_window_type_dialog;
 		}
-		//else if (window_type == WindowType::tool)
-		//{
-		//	decor = net_wm_window_type_toolbar;
-		//}
 		else if (window_is_frameless)
 		{
 			decor = net_wm_window_type_dropdown_menu;

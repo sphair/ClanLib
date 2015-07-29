@@ -308,6 +308,7 @@ clanUI_includes = \
 	UI/TopLevel/texture_window.h \
 	UI/TopLevel/view_tree.h \
 	UI/TopLevel/window.h \
+	UI/StandardViews/layout_views.h \
 	UI/StandardViews/label_view.h \
 	UI/StandardViews/span_layout_view.h \
 	UI/StandardViews/scrollbar_view.h \
