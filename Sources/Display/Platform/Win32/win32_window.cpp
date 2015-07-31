@@ -77,7 +77,7 @@ Win32Window::Win32Window()
 	ReleaseDC(0, dc);
 	set_pixel_ratio(ppi / 96.0f);
 
-	memset(&paintstruct, 0, sizeof(PAINTSTRUCT));
+	//memset(&paintstruct, 0, sizeof(PAINTSTRUCT));
 	keyboard = InputDevice(new InputDeviceProvider_Win32Keyboard(this));
 	mouse = InputDevice(new InputDeviceProvider_Win32Mouse(this));
 
@@ -625,8 +625,7 @@ LRESULT Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lpara
 			RECT rect;
 			if (GetUpdateRect(hwnd, &rect, FALSE))
 			{
-				memset(&paintstruct, 0, sizeof(PAINTSTRUCT));
-				BeginPaint(hwnd, &paintstruct);
+				ValidateRect(hwnd, &rect);
 				try
 				{
 					Rect cl_rect;
@@ -639,14 +638,9 @@ LRESULT Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lpara
 
 					if (site)
 						(site->sig_paint)(cl_rect);
-
-					EndPaint(hwnd, &paintstruct);
-					memset(&paintstruct, 0, sizeof(PAINTSTRUCT));
 				}
 				catch (...)
 				{
-					EndPaint(hwnd, &paintstruct);
-					memset(&paintstruct, 0, sizeof(PAINTSTRUCT));
 					throw;
 				}
 			}
