@@ -82,8 +82,6 @@ public:
 	const InputContext get_ic() const { return ic; } // Important, do not return by reference, so the shared pointer exists if this window is destroyed
 	bool is_clipboard_text_available() const;
 	bool is_clipboard_image_available() const;
-	bool is_painting() const { return paintstruct.hdc != 0; }
-	const PAINTSTRUCT &get_paint_data() const { return paintstruct; }
 	bool is_layered() const { return window_desc.is_layered(); }
 
 public:
@@ -205,7 +203,6 @@ private:
 	std::map<int,int> repeat_count;
 	std::function<void()> callback_on_resized;
 	InputContext ic;
-	PAINTSTRUCT paintstruct;
 	Size minimum_size;
 	Size maximum_size;
 	UINT png_clipboard_format;

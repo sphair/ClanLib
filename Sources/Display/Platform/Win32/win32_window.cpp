@@ -77,7 +77,6 @@ Win32Window::Win32Window()
 	ReleaseDC(0, dc);
 	set_pixel_ratio(ppi / 96.0f);
 
-	//memset(&paintstruct, 0, sizeof(PAINTSTRUCT));
 	keyboard = InputDevice(new InputDeviceProvider_Win32Keyboard(this));
 	mouse = InputDevice(new InputDeviceProvider_Win32Mouse(this));
 
