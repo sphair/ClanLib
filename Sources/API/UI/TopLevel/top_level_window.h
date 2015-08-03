@@ -50,12 +50,12 @@ namespace clan
 	};
 
 	class InputEvent;
-	class Window_Impl;
+	class TopLevelWindow_Impl;
 
-	class Window : public ViewTree
+	class TopLevelWindow : public ViewTree
 	{
 	public:
-		Window(const DisplayWindowDescription &desc);
+		TopLevelWindow(const DisplayWindowDescription &desc);
 
 		void show(WindowShowType type = WindowShowType::show);
 		void hide();
@@ -76,8 +76,8 @@ namespace clan
 		void dismiss_modal() override;
 
 	private:
-		std::shared_ptr<Window_Impl> impl;
+		std::shared_ptr<TopLevelWindow_Impl> impl;
 
-		friend class Window_Impl;
+		friend class TopLevelWindow_Impl;
 	};
 }
