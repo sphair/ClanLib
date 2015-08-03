@@ -28,7 +28,6 @@
 
 #include "UI/precomp.h"
 #include "API/UI/View/view.h"
-#include "API/UI/ViewController/view_controller.h"
 #include "API/UI/TopLevel/view_tree.h"
 #include "API/UI/Events/event.h"
 #include "API/UI/Events/activation_change_event.h"
@@ -163,20 +162,6 @@ namespace clan
 
 			subview_removed(view_ptr);
 		}
-	}
-
-	void View::present_popup(const Pointf &pos, const std::shared_ptr<ViewController> &popup)
-	{
-		ViewTree *tree = view_tree();
-		if (tree)
-			tree->present_popup(to_root_pos(pos), popup);
-	}
-
-	void View::present_modal(const std::string &title, const std::shared_ptr<ViewController> &modal)
-	{
-		ViewTree *tree = view_tree();
-		if (tree)
-			tree->present_modal(title, modal);
 	}
 
 	bool View::hidden() const
@@ -480,11 +465,11 @@ namespace clan
 		{
 			prev_focus = cur_focus->impl->find_prev_with_tab_index(cur_focus->tab_index());
 			if (prev_focus == nullptr)
-				prev_focus = cur_focus->impl->find_prev_with_tab_index(tree->view_controller()->view->impl->find_prev_tab_index(cur_focus->tab_index()));
+				prev_focus = cur_focus->impl->find_prev_with_tab_index(tree->root_view()->impl->find_prev_tab_index(cur_focus->tab_index()));
 		}
 		else
 		{
-			prev_focus = tree->view_controller()->view->impl->find_prev_with_tab_index(tree->view_controller()->view->impl->find_prev_tab_index(0));
+			prev_focus = tree->root_view()->impl->find_prev_with_tab_index(tree->root_view()->impl->find_prev_tab_index(0));
 		}
 
 		if (prev_focus)
@@ -504,11 +489,11 @@ namespace clan
 		{
 			next_focus = cur_focus->impl->find_next_with_tab_index(cur_focus->tab_index());
 			if (next_focus == nullptr)
-				next_focus = cur_focus->impl->find_next_with_tab_index(tree->view_controller()->view->impl->find_next_tab_index(cur_focus->tab_index()));
+				next_focus = cur_focus->impl->find_next_with_tab_index(tree->root_view()->impl->find_next_tab_index(cur_focus->tab_index()));
 		}
 		else
 		{
-			next_focus = tree->view_controller()->view->impl->find_next_with_tab_index(tree->view_controller()->view->impl->find_next_tab_index(0));
+			next_focus = tree->root_view()->impl->find_next_with_tab_index(tree->root_view()->impl->find_next_tab_index(0));
 		}
 
 		if (next_focus)
@@ -693,7 +678,7 @@ namespace clan
 	void View::dispatch_event(View *target, EventUI *e, bool no_propagation)
 	{
 		// Make sure root view is not destroyed during event dispatching (needed for dismiss_popup)
-		auto pin_root = target->view_tree()->view_controller()->view;
+		auto pin_root = target->view_tree()->root_view();
 
 		e->_target = target->shared_from_this();
 

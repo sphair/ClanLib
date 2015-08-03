@@ -81,7 +81,6 @@
 #include "UI/View/focus_policy.h"
 #include "UI/View/view.h"
 #include "UI/View/view_geometry.h"
-#include "UI/ViewController/view_controller.h"
 #include "UI/UIThread/ui_thread.h"
 
 #ifdef __cplusplus_cli

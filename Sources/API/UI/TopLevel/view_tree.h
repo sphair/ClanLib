@@ -30,13 +30,11 @@
 
 #include "../View/view.h"
 #include "../Events/activation_change_event.h"
-#include "../ViewController/view_controller.h"
 
 namespace clan
 {
 	class DisplayWindow;
 	class Canvas;
-	class ViewController;
 	class ViewTreeImpl;
 
 	/// Base class for managing a tree of views
@@ -55,16 +53,16 @@ namespace clan
 		/// Gets the current canvas used to render
 		virtual Canvas get_canvas() const = 0;
 
-		/// Retrieves the view controller at the root of the view tree
-		const std::shared_ptr<ViewController> &view_controller() const;
+		/// Retrieves the root of the view tree
+		const std::shared_ptr<View> &root_view() const;
 
-		/// Sets the root view controller for the view tree
-		void set_view_controller(std::shared_ptr<ViewController> controller);
+		/// Sets a new root view controller for the view tree
+		void set_root_view(std::shared_ptr<View> root_view);
 
 		/// Add a child view
 		void add_subview(const std::shared_ptr<View> &view)
 		{
-			view_controller()->view->add_subview(view);
+			root_view()->add_subview(view);
 		}
 
 		template<typename T, typename... Types>
@@ -98,18 +96,6 @@ namespace clan
 
 		/// Map from screen to client coordinates
 		virtual Pointf screen_to_client_pos(const Pointf &pos) = 0;
-
-		/// Shows a popup view at the given content coordinates
-		virtual void present_popup(const Pointf &pos, const std::shared_ptr<ViewController> &controller) = 0;
-
-		/// Hides the view controller, if visible as a popup
-		virtual void dismiss_popup() = 0;
-
-		/// Shows a modal view
-		virtual void present_modal(const std::string &title, const std::shared_ptr<ViewController> &controller) = 0;
-
-		/// Hides the view controller, if visible as a modal
-		virtual void dismiss_modal() = 0;
 
 	private:
 		ViewTree(const ViewTree &) = delete;

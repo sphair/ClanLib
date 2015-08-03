@@ -69,12 +69,6 @@ namespace clan
 		Pointf client_to_screen_pos(const Pointf &pos) override;
 		Pointf screen_to_client_pos(const Pointf &pos) override;
 
-		void present_popup(const Pointf &pos, const std::shared_ptr<ViewController> &controller) override;
-		void dismiss_popup() override;
-
-		void present_modal(const std::string &title, const std::shared_ptr<ViewController> &controller) override;
-		void dismiss_modal() override;
-
 	private:
 		std::shared_ptr<TopLevelWindow_Impl> impl;
 

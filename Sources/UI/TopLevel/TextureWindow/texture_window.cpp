@@ -74,23 +74,6 @@ namespace clan
 		impl->always_render = enable;
 	}
 
-
-	void TextureWindow::present_popup(const Pointf &pos, const std::shared_ptr<ViewController> &popup)
-	{
-	}
-
-	void TextureWindow::dismiss_popup()
-	{
-	}
-
-	void TextureWindow::present_modal(const std::string &title, const std::shared_ptr<ViewController> &modal)
-	{
-	}
-
-	void TextureWindow::dismiss_modal()
-	{
-	}
-
 	Pointf TextureWindow::client_to_screen_pos(const Pointf &pos)
 	{
 		return pos;
