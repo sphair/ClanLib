@@ -307,7 +307,7 @@ clanUI_includes = \
 	ui.h \
 	UI/TopLevel/texture_window.h \
 	UI/TopLevel/view_tree.h \
-	UI/TopLevel/window.h \
+	UI/TopLevel/top_level_window.h \
 	UI/StandardViews/layout_views.h \
 	UI/StandardViews/label_view.h \
 	UI/StandardViews/span_layout_view.h \
@@ -330,7 +330,6 @@ clanUI_includes = \
 	UI/Events/event.h \
 	UI/Events/activation_change_event.h \
 	UI/Events/pointer_event.h \
-	UI/ViewController/view_controller.h \
 	UI/View/view.h \
 	UI/View/view_geometry.h \
 	UI/View/focus_policy.h \

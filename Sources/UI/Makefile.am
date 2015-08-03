@@ -5,8 +5,8 @@ libclan40UI_la_SOURCES = \
 ./TopLevel/view_tree.cpp \
 ./TopLevel/TextureWindow/texture_window.cpp \
 ./TopLevel/TextureWindow/texture_window_impl.cpp \
-./TopLevel/Window/window_impl.cpp \
-./TopLevel/Window/window.cpp \
+./TopLevel/TopLevelWindow/top_level_window_impl.cpp \
+./TopLevel/TopLevelWindow/top_level_window.cpp \
 ./StandardViews/ScrollBarView/scrollbar_view.cpp \
 ./StandardViews/ScrollBarView/scrollbar_view_impl.cpp \
 ./StandardViews/SpanLayoutView/span_layout_view_impl.cpp \
@@ -29,7 +29,6 @@ libclan40UI_la_SOURCES = \
 ./StandardViews/ListBoxView/listbox_view.cpp \
 ./Events/key_event.cpp \
 ./Events/pointer_event.cpp \
-./ViewController/view_controller.cpp \
 ./View/view.cpp \
 ./View/view_geometry.cpp \
 ./View/vbox_layout.cpp \
