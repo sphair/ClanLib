@@ -51,6 +51,7 @@ namespace clan
 
 		set_focus_policy(FocusPolicy::accept);
 		set_cursor(StandardCursor::ibeam);
+		set_content_clipped(true);
 
 		slots.connect(sig_key_press(), impl.get(), &TextFieldViewImpl::on_key_press);
 		slots.connect(sig_key_release(), impl.get(), &TextFieldViewImpl::on_key_release);
@@ -344,32 +345,41 @@ namespace clan
 		}
 
 		Font font = impl->get_font(canvas);
+
 		float advance_before = font.measure_text(canvas, txt_before).advance.width;
 		float advance_selected = font.measure_text(canvas, txt_selected).advance.width;
+		float cursor_advance = canvas.grid_fit({ font.measure_text(canvas, impl->text.substr(0, impl->cursor_pos)).advance.width, 0.0f }).x;
 
 		FontMetrics font_metrics = font.get_font_metrics(canvas);
 		float baseline = font_metrics.get_baseline_offset();
 		float top_y = baseline - font_metrics.get_ascent();
 		float bottom_y = baseline + font_metrics.get_descent();
 
+		// Keep cursor in view
+		impl->scroll_pos = std::min(impl->scroll_pos, cursor_advance);
+		impl->scroll_pos = std::max(impl->scroll_pos, cursor_advance - geometry().content_width + 1.0f);
+
 		// Measure text for get_character_index()
 		impl->last_measured_rects = font.get_character_indices(canvas, txt_before + txt_selected + txt_after);
+		for (auto &box : impl->last_measured_rects)
+			box.translate(-impl->scroll_pos, 0.0f);
 
 		if (!txt_selected.empty())
 		{
-			Rectf selection_rect = Rectf(advance_before, top_y, advance_before + advance_selected, bottom_y);
+			Rectf selection_rect = Rectf(advance_before - impl->scroll_pos, top_y, advance_before + advance_selected - impl->scroll_pos, bottom_y);
 			Path::rect(selection_rect).fill(canvas, focus_view() == this ? Brush::solid_rgb8(51, 153, 255) : Brush::solid_rgb8(200, 200, 200));
 		}
 
 		Colorf color = style_cascade().computed_value("color").color();
-		font.draw_text(canvas, 0.0f, baseline, txt_before, color);
-		font.draw_text(canvas, advance_before, baseline, txt_selected, focus_view() == this ? Colorf(255, 255, 255) : color);
-		font.draw_text(canvas, advance_before + advance_selected, baseline, txt_after, color);
-
-		float cursor_advance = std::round(font.measure_text(canvas, impl->text.substr(0, impl->cursor_pos)).advance.width);
+		font.draw_text(canvas, -impl->scroll_pos, baseline, txt_before, color);
+		font.draw_text(canvas, advance_before - impl->scroll_pos, baseline, txt_selected, focus_view() == this ? Colorf(255, 255, 255) : color);
+		font.draw_text(canvas, advance_before + advance_selected - impl->scroll_pos, baseline, txt_after, color);
 
 		if (impl->cursor_blink_visible)
-			Path::rect(cursor_advance, top_y, 1.0f, bottom_y - top_y).fill(canvas, Brush(color));
+		{
+			auto cursor_pos = canvas.grid_fit({ cursor_advance - impl->scroll_pos, top_y });
+			Path::rect(cursor_pos.x, cursor_pos.y, 1.0f, bottom_y - top_y).fill(canvas, Brush(color));
+		}
 
 		if (impl->text.empty())
 		{
