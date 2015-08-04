@@ -39,6 +39,8 @@
 #pragma managed(push, off)
 #endif
 
+#include "UI/Controller/window_controller.h"
+#include "UI/Controller/window_manager.h"
 #include "UI/Events/activation_change_event.h"
 #include "UI/Events/close_event.h"
 #include "UI/Events/event.h"
