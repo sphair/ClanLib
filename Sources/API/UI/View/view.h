@@ -63,7 +63,7 @@ namespace clan
 	{
 	public:
 		View();
-		~View();
+		virtual ~View();
 		
 		/// Style cascade currently active for this view
 		const StyleCascade &style_cascade() const;

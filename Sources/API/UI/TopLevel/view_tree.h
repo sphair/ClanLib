@@ -42,7 +42,7 @@ namespace clan
 	{
 	public:
 		ViewTree();
-		~ViewTree();
+		virtual ~ViewTree();
 
 		/// The view receiving keyboard events or nullptr if no view has the focus
 		View *focus_view() const;
