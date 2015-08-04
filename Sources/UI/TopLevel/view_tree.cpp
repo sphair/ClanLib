@@ -50,11 +50,12 @@ namespace clan
 		}
 
 		View *focus_view = nullptr;
-		std::shared_ptr<View> root = std::make_shared<View>();
+		std::shared_ptr<View> root;
 	};
 
 	ViewTree::ViewTree() : impl(new ViewTreeImpl)
 	{
+		set_root_view(std::make_shared<View>());
 	}
 
 	ViewTree::~ViewTree()
@@ -73,9 +74,11 @@ namespace clan
 
 	void ViewTree::set_root_view(std::shared_ptr<View> view)
 	{
-		impl->root->impl->view_tree = nullptr;
+		if (impl->root)
+			impl->root->impl->view_tree = nullptr;
 		impl->root = view;
-		impl->root->impl->view_tree = this;
+		if (impl->root)
+			impl->root->impl->view_tree = this;
 	}
 
 	void ViewTree::set_focus_view(View *new_focus_view)

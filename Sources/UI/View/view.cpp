@@ -572,7 +572,7 @@ namespace clan
 	{
 		ViewTree *tree = view_tree();
 		Pointf root_content_pos = to_root_pos(pos);
-		Pointf root_pos = root_content_pos + geometry().content_box().get_top_left();
+		Pointf root_pos = root_content_pos + tree->root_view()->geometry().content_box().get_top_left();
 		return tree ? tree->client_to_screen_pos(root_pos) : root_pos;
 	}
 
@@ -580,7 +580,7 @@ namespace clan
 	{
 		ViewTree *tree = view_tree();
 		Pointf root_pos = tree ? tree->screen_to_client_pos(pos) : pos;
-		Pointf root_content_pos = root_pos - geometry().content_box().get_top_left();
+		Pointf root_content_pos = root_pos - tree->root_view()->geometry().content_box().get_top_left();
 		return from_root_pos(root_content_pos);
 	}
 

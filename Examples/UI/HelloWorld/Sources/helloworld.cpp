@@ -55,20 +55,16 @@ HelloWorld::HelloWorld()
 	desc.set_title("UICore: Hello World");
 	desc.set_allow_resize(true);
 	desc.set_size(Sizef(640, 600), false);
-	window = std::make_shared<clan::Window>(desc);
-
-	// Create a view controller for our window:
-	auto controller = std::make_shared<ViewController>();
-	window->set_view_controller(controller);
+	window = std::make_shared<TopLevelWindow>(desc);
 
 	// Exit run loop when close is clicked.
 	// We have to store the return Slot because if it is destroyed the lambda function is disconnected from the signal.
-	slots.connect(controller->view->sig_close(), [&](CloseEvent &e) { RunLoop::exit(); });
+	slots.connect(window->root_view()->sig_close(), [&](CloseEvent &e) { RunLoop::exit(); });
 
 	// Style the root view to use rounded corners and a bit of drop shadow
-	controller->view->style()->set("padding: 11px");
-	controller->view->style()->set("background: #efefef");
-	controller->view->style()->set("flex-direction: column");
+	window->root_view()->style()->set("padding: 11px");
+	window->root_view()->style()->set("background: #efefef");
+	window->root_view()->style()->set("flex-direction: column");
 
 	auto body = std::make_shared<View>();
 	body->style()->set("background: white");
@@ -77,7 +73,7 @@ HelloWorld::HelloWorld()
 	body->style()->set("border-bottom: 5px solid #DD3B2A");
 	body->style()->set("flex-direction: column");
 	body->style()->set("flex: auto");
-	controller->view->add_subview(body);
+	window->root_view()->add_subview(body);
 
 	// Create a label with some text to have some content
 	label = std::make_shared<LabelView>();
@@ -210,59 +206,60 @@ HelloWorld::HelloWorld()
 	// Create a popup window
 	slots.connect(button->sig_pointer_enter(), [=](PointerEvent &e)
 	{
-		auto popup = std::make_shared<ViewController>();
-		popup->view->style()->set("flex-direction: column");
-		popup->view->style()->set("background: #FFFFE0");
-		popup->view->style()->set("margin: 5px");
-		popup->view->style()->set("border: 1px solid black");
-		popup->view->style()->set("border-radius: 2px");
-		popup->view->style()->set("padding: 2px 5px 2px 5px");
-		popup->view->style()->set("box-shadow: 0 0 3px rgba(0,0,0,0.2)");
+		auto popup = std::make_shared<WindowController>();
+		popup->root_view()->style()->set("flex-direction: column");
+		popup->root_view()->style()->set("background: #FFFFE0");
+		popup->root_view()->style()->set("margin: 5px");
+		popup->root_view()->style()->set("border: 1px solid black");
+		popup->root_view()->style()->set("border-radius: 2px");
+		popup->root_view()->style()->set("padding: 2px 5px 2px 5px");
+		popup->root_view()->style()->set("box-shadow: 0 0 3px rgba(0,0,0,0.2)");
 
 		auto text = Theme::create_label(true);
 		text->style()->set("font: 12px Tahoma; color: black");
 		text->set_text("This is an awesome popup");
-		popup->view->add_subview(text);
+		popup->root_view()->add_subview(text);
 
-		std::weak_ptr<ViewController> popup_weak = popup;
+		std::weak_ptr<WindowController> popup_weak = popup;
 		popup->slots.connect(button->sig_pointer_leave(), [=](PointerEvent &e)
 		{
 			auto p = popup_weak.lock();
 			if (p)
-				p->dismiss_popup();
+				p->dismiss();
 		});
 
-		button->present_popup(e.pos(button) + Pointf(10.0f, -10.0f), popup);
+		window_manager.present_popup(button.get(), e.pos(button) + Pointf(10.0f, -10.0f), popup);
 	});
 
 	// Show a modal dialog
 	button->func_clicked() = [=]()
 	{
-		auto dialog = std::make_shared<ViewController>();
-		dialog->view->style()->set("flex-direction: column");
-		dialog->view->style()->set("background: rgb(240,240,240)");
-		dialog->view->style()->set("padding: 11px");
-		dialog->view->style()->set("width: 250px");
+		auto dialog = std::make_shared<WindowController>();
+		dialog->set_title("Alarm!!");
+		dialog->root_view()->style()->set("flex-direction: column");
+		dialog->root_view()->style()->set("background: rgb(240,240,240)");
+		dialog->root_view()->style()->set("padding: 11px");
+		dialog->root_view()->style()->set("width: 250px");
 
 		auto text = Theme::create_label(true);
 		text->style()->set("margin-bottom: 7px");
 		text->style()->set("font: 12px Tahoma; color: black");
 		text->set_text("This a modal dialog");
-		dialog->view->add_subview(text);
+		dialog->root_view()->add_subview(text);
 
 		auto ok_button = Theme::create_button();
 		ok_button->label()->set_text("OK");
-		dialog->view->add_subview(ok_button);
+		dialog->root_view()->add_subview(ok_button);
 
-		std::weak_ptr<ViewController> dialog_weak = dialog;
+		std::weak_ptr<WindowController> dialog_weak = dialog;
 		ok_button->func_clicked() = [=]()
 		{
 			auto d = dialog_weak.lock();
 			if (d)
-				d->dismiss_modal();
+				d->dismiss();
 		};
 
-		controller->view->present_modal("Alarm!!", dialog);
+		window_manager.present_modal(window->root_view().get(), dialog);
 	};
 
 	// Make our window visible
