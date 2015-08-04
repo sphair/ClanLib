@@ -84,6 +84,7 @@ namespace clan
 		desc.show_minimize_button(false);
 		desc.show_maximize_button(false);
 
+		controller->impl->modal_owner = owner->shared_from_this();
 		controller->impl->manager = this;
 		controller->impl->window = std::make_shared<TopLevelWindow>(desc);
 		controller->impl->window->set_root_view(controller->root_view());
@@ -171,14 +172,17 @@ namespace clan
 			if (modal_owner && modal_owner->view_tree())
 				modal_owner->view_tree()->get_display_window().set_enabled(true);
 
-			auto &windows = impl->manager->impl->windows;
+			auto manager = impl->manager;
+
+			// Reset fields before erase because 'this' might be destroyed if 'windows' had the last reference
+			impl->manager = nullptr;
+			impl->window.reset();
+			impl->modal_owner.reset();
+
+			auto &windows = manager->impl->windows;
 			auto it = windows.find(this);
 			if (it != windows.end())
 				windows.erase(it);
 		}
-
-		impl->manager = nullptr;
-		impl->window.reset();
-		impl->modal_owner.reset();
 	}
 }
