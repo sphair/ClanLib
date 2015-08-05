@@ -677,6 +677,9 @@ namespace clan
 
 	void View::dispatch_event(View *target, EventUI *e, bool no_propagation)
 	{
+		if (!target->view_tree())
+			return;
+
 		// Make sure root view is not destroyed during event dispatching (needed for dismiss_popup)
 		auto pin_root = target->view_tree()->root_view();
 
