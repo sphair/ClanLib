@@ -32,12 +32,14 @@
 #include "API/Display/Window/display_window_description.h"
 #include "API/Display/Window/display_window.h"
 #include "API/Display/2D/canvas.h"
+#include "API/Display/System/run_loop.h"
 
 namespace clan
 {
 	class WindowManagerImpl
 	{
 	public:
+		bool exit_on_last_close = false;
 		std::map<WindowController *, std::shared_ptr<WindowController>> windows;
 	};
 
@@ -47,7 +49,7 @@ namespace clan
 	{
 	public:
 		std::string title;
-		std::shared_ptr<View> default_root_view = std::make_shared<View>();
+		std::shared_ptr<View> root_view = std::make_shared<View>();
 
 		WindowManager *manager = nullptr;
 		std::shared_ptr<TopLevelWindow> window;
@@ -64,9 +66,37 @@ namespace clan
 	{
 	}
 
+	void WindowManager::set_exit_on_last_close(bool enable)
+	{
+		impl->exit_on_last_close = enable;
+	}
+
 	void WindowManager::present_main(const std::shared_ptr<WindowController> &controller)
 	{
+		if (controller->impl->manager)
+			return;
 
+		DisplayWindowDescription desc;
+		desc.set_main_window();
+		desc.set_visible(false);
+		desc.set_title(controller->title());
+		desc.set_allow_resize();
+
+		controller->impl->manager = this;
+		controller->impl->window = std::make_shared<TopLevelWindow>(desc);
+		controller->impl->window->set_root_view(controller->root_view());
+		controller->slots.connect(controller->impl->window->get_display_window().sig_window_close(), bind_member(controller.get(), &WindowController::dismiss));
+
+		impl->windows[controller.get()] = controller;
+
+		Canvas canvas = controller->root_view()->get_canvas();
+		float width = controller->root_view()->calculate_preferred_width(canvas);
+		float height = controller->root_view()->calculate_preferred_height(canvas, width);
+		Rectf content_box(0.0f, 0.0f, width, height);
+		Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
+		controller->impl->window->get_display_window().set_size(margin_box.get_width(), margin_box.get_height(), true);
+
+		controller->impl->window->show(WindowShowType::show);
 	}
 
 	void WindowManager::present_modal(View *owner, const std::shared_ptr<WindowController> &controller)
@@ -83,6 +113,7 @@ namespace clan
 		desc.set_title(controller->title());
 		desc.show_minimize_button(false);
 		desc.show_maximize_button(false);
+		desc.set_allow_resize();
 
 		controller->impl->modal_owner = owner->shared_from_this();
 		controller->impl->manager = this;
@@ -149,7 +180,12 @@ namespace clan
 
 	const std::shared_ptr<View> &WindowController::root_view() const
 	{
-		return impl->default_root_view;
+		return impl->root_view;
+	}
+
+	void WindowController::set_root_view(std::shared_ptr<View> root_view)
+	{
+		impl->root_view = root_view;
 	}
 
 	const std::string &WindowController::title() const
@@ -183,6 +219,9 @@ namespace clan
 			auto it = windows.find(this);
 			if (it != windows.end())
 				windows.erase(it);
+
+			if (manager->impl->exit_on_last_close && windows.empty())
+				RunLoop::exit();
 		}
 	}
 }

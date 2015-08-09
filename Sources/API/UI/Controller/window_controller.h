@@ -43,7 +43,10 @@ namespace clan
 		virtual ~WindowController();
 
 		/// Returns the root view
-		virtual const std::shared_ptr<View> &root_view() const;
+		const std::shared_ptr<View> &root_view() const;
+
+		/// Changes the root view
+		void set_root_view(std::shared_ptr<View> root_view);
 
 		/// Returns the window title
 		const std::string &title() const;

@@ -44,6 +44,9 @@ namespace clan
 		WindowManager();
 		~WindowManager();
 
+		/// Notifices RunLoop to exit when last presented window is dismissed
+		void set_exit_on_last_close(bool enable = true);
+
 		/// Shows a main window
 		void present_main(const std::shared_ptr<WindowController> &controller);
 
