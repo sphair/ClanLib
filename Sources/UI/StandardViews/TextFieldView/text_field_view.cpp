@@ -48,6 +48,7 @@ namespace clan
 	TextFieldView::TextFieldView() : impl(new TextFieldViewImpl())
 	{
 		impl->textfield = this;
+		impl->selection.set_view(this);
 
 		set_focus_policy(FocusPolicy::accept);
 		set_cursor(StandardCursor::ibeam);
@@ -104,8 +105,7 @@ namespace clan
 		else
 			impl->text = text;
 
-		impl->selection_start = 0;
-		impl->selection_length = 0;
+		impl->selection.reset();
 		impl->cursor_pos = impl->text.size();
 		impl->scroll_pos = 0.0f;
 
@@ -216,12 +216,12 @@ namespace clan
 
 	size_t TextFieldView::selection_start() const
 	{
-		return impl->selection_start;
+		return impl->selection.start();
 	}
 
 	size_t TextFieldView::selection_length() const
 	{
-		return impl->selection_length;
+		return impl->selection.length();
 	}
 
 	void TextFieldView::set_selection(size_t start, size_t length)
@@ -229,13 +229,9 @@ namespace clan
 		start = std::min(start, impl->text.length());
 		length = std::min(length, impl->text.length() - start);
 		if (length == 0) start = 0;
-		if (impl->selection_start != start || impl->selection_length != length)
-		{
-			impl->selection_start = start;
-			impl->selection_length = length;
-			impl->cursor_pos = start + length;
-			set_needs_render();
-		}
+		impl->selection.set(start, length);
+		impl->cursor_pos = start + length;
+		set_needs_render();
 	}
 
 	void TextFieldView::clear_selection()
@@ -245,7 +241,7 @@ namespace clan
 
 	void TextFieldView::delete_selected_text()
 	{
-		if (impl->selection_length > 0)
+		if (impl->selection.length() > 0)
 			impl->del();
 	}
 
@@ -323,7 +319,7 @@ namespace clan
 
 	Signal<void()> &TextFieldView::sig_selection_changed()
 	{
-		return impl->sig_selection_changed;
+		return impl->selection.sig_selection_changed;
 	}
 
 	Signal<void()> &TextFieldView::sig_enter_pressed()
@@ -469,7 +465,7 @@ namespace clan
 			mouse_selecting = false;
 		}
 		stop_blink();
-		set_text_selection(0, 0);
+		selection.reset();
 	}
 
 	void TextFieldViewImpl::on_activated(ActivationChangeEvent &e)
@@ -592,7 +588,7 @@ namespace clan
 		{
 			mouse_selecting = true;
 			cursor_pos = get_character_index(e.pos(textfield).x);
-			set_text_selection(cursor_pos, 0);
+			selection.set(cursor_pos, 0);
 		}
 		else
 		{
@@ -615,13 +611,11 @@ namespace clan
 		{
 			scroll_timer.stop();
 			mouse_selecting = false;
-			int sel_end = get_character_index(e.pos(textfield).x);
-			selection_length = sel_end - selection_start;
-			cursor_pos = sel_end;
+			cursor_pos = get_character_index(e.pos(textfield).x);
+			selection.set_tail(cursor_pos);
 			textfield->set_focus();
 			textfield->set_needs_render();
 		}
-
 	}
 
 	void TextFieldViewImpl::on_pointer_move(PointerEvent &e)
@@ -647,15 +641,14 @@ namespace clan
 		{
 			scroll_timer.stop();
 			cursor_pos = get_character_index(xpos);
-			selection_length = cursor_pos - selection_start;
-			textfield->set_needs_render();
+			selection.set_tail(cursor_pos);
 		}
 
 	}
 
 	void TextFieldViewImpl::select_all()
 	{
-		set_text_selection(0, text.size());
+		selection.set(0, text.size());
 	}
 
 	void TextFieldViewImpl::move(int steps, bool ctrl, bool shift)
@@ -694,38 +687,13 @@ namespace clan
 			pos = utf8_reader.get_position();
 		}
 
-		if (shift)
-			select_to(pos);
+		if (shift || ctrl)
+			selection.set_tail(pos);
 		else
-			set_text_selection(0, 0);
+			selection.reset();
 
 		cursor_pos = pos;
 		textfield->set_needs_render();
-	}
-
-	void TextFieldViewImpl::select_to(size_t pos)
-	{
-		size_t anchor = cursor_pos;
-		if (selection_length > 0)
-		{
-			if (cursor_pos == selection_start)
-			{
-				anchor = selection_start + selection_length;
-			}
-			else
-			{
-				anchor = selection_start;
-			}
-		}
-
-		if (pos < anchor)
-		{
-			set_text_selection(pos, anchor - pos);
-		}
-		else
-		{
-			set_text_selection(anchor, pos - anchor);
-		}
 	}
 
 	void TextFieldViewImpl::home(bool shift)
@@ -735,11 +703,11 @@ namespace clan
 
 		if (shift)
 		{
-			select_to(0);
+			selection.set_tail(0);
 		}
 		else
 		{
-			set_text_selection(0, 0);
+			selection.reset();
 		}
 
 		cursor_pos = 0;
@@ -753,11 +721,11 @@ namespace clan
 
 		if (shift)
 		{
-			select_to(text.size());
+			selection.set_tail(text.size());
 		}
 		else
 		{
-			set_text_selection(0, 0);
+			selection.reset();
 		}
 
 		cursor_pos = text.size();
@@ -766,7 +734,7 @@ namespace clan
 
 	void TextFieldViewImpl::backspace()
 	{
-		if (selection_length > 0)
+		if (selection.length() > 0)
 		{
 			del();
 		}
@@ -793,12 +761,8 @@ namespace clan
 
 	void TextFieldViewImpl::del()
 	{
-		if (selection_length > 0)
+		if (selection.length() > 0)
 		{
-			size_t start = selection_start;
-			size_t length = selection_length;
-			set_text_selection(0, 0);
-
 			undo_info.first_erase = false;
 			if (undo_info.first_text_insert)
 			{
@@ -806,8 +770,9 @@ namespace clan
 				undo_info.first_text_insert = false;
 			}
 
-			cursor_pos = start;
-			text.erase(text.begin() + start, text.begin() + start + length);
+			cursor_pos = selection.start();
+			text.erase(text.begin() + selection.start(), text.begin() + selection.end());
+			selection.reset();
 
 			textfield->set_needs_render();
 		}
@@ -831,8 +796,8 @@ namespace clan
 	void TextFieldViewImpl::cut()
 	{
 		copy();
-		if (selection_length == 0)
-			set_text_selection(0, text.length());
+		if (selection.length() == 0)
+			selection.set(0, text.length());
 		del();
 	}
 
@@ -843,7 +808,7 @@ namespace clan
 			ViewTree *tree = textfield->view_tree();
 			if (tree)
 			{
-				if (selection_length > 0)
+				if (selection.length() > 0)
 					tree->get_display_window().set_clipboard_text(get_selected_text());
 				else
 					tree->get_display_window().set_clipboard_text(text);
@@ -864,7 +829,7 @@ namespace clan
 	{
 		if (!readonly)
 		{
-			set_text_selection(0, 0);
+			selection.reset();
 
 			std::string tmp = undo_info.undo_text;
 			undo_info.undo_text = text;
@@ -878,7 +843,7 @@ namespace clan
 
 	void TextFieldViewImpl::add(std::string new_text)
 	{
-		if (selection_length > 0)
+		if (selection.length() > 0)
 			del();
 
 		bool accepts_input = false;
@@ -933,38 +898,23 @@ namespace clan
 		textfield->set_needs_render();
 	}
 
-	void TextFieldViewImpl::set_text_selection(size_t start, size_t length)
-	{
-		start = std::min(start, text.length());
-		length = std::min(length, text.length() - start);
-		//if (length == 0) start = 0;
-		if (selection_length != length || selection_start != start)
-		{
-			selection_start = start;
-			selection_length = length;
-			textfield->set_needs_render();
-
-			sig_selection_changed();
-		}
-	}
-
 	std::string TextFieldViewImpl::get_text_before_selection() const
 	{
-		size_t start = std::min(selection_start, text.length());
+		size_t start = std::min(selection.start(), text.length());
 		return text.substr(0, start);
 	}
 
 	std::string TextFieldViewImpl::get_selected_text() const
 	{
-		size_t start = std::min(selection_start, text.length());
-		size_t length = std::min(selection_length, text.length() - start);
+		size_t start = std::min(selection.start(), text.length());
+		size_t length = std::min(selection.length(), text.length() - start);
 		return text.substr(start, length);
 	}
 
 	std::string TextFieldViewImpl::get_text_after_selection() const
 	{
-		size_t start = std::min(selection_start, text.length());
-		size_t length = std::min(selection_length, text.length() - start);
+		size_t start = std::min(selection.start(), text.length());
+		size_t length = std::min(selection.length(), text.length() - start);
 		return text.substr(start + length);
 	}
 

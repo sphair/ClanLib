@@ -35,6 +35,51 @@
 
 namespace clan
 {
+
+	class TextFieldViewSelection
+	{
+	public:
+		void reset()
+		{
+			set(0, 0);
+		}
+
+		void set(size_t start, size_t length)
+		{
+			set_head_and_tail(start, start + length);
+		}
+
+		void set_tail(size_t tail)
+		{
+			set_head_and_tail(selection_head, tail);
+		}
+
+		void set_view(View *new_view) { view = new_view; }
+
+		size_t start() const { return selection_head <= selection_tail ? selection_head : selection_tail; }
+		size_t length() const { return selection_head <= selection_tail ? selection_tail - selection_head : selection_head - selection_tail; }
+		size_t end() const { return selection_head <= selection_tail ? selection_tail : selection_head; }
+
+		Signal<void()> sig_selection_changed;
+
+	private:
+		void set_head_and_tail(size_t new_head, size_t new_tail)
+		{
+			if (selection_head != new_head || selection_tail != new_tail)
+			{
+				selection_head = new_head;
+				selection_tail = new_tail;
+				sig_selection_changed();
+				if (view)
+					view->set_needs_render();
+			}
+		}
+
+		View *view = nullptr;
+		size_t selection_head = 0;
+		size_t selection_tail = 0;
+	};
+
 	class TextFieldViewImpl
 	{
 	public:
@@ -47,8 +92,6 @@ namespace clan
 		void on_focus_lost(FocusChangeEvent &e);
 		void on_activated(ActivationChangeEvent &e);
 		void on_deactivated(ActivationChangeEvent &e);
-
-		void select_to(size_t pos);
 
 		void select_all();
 		void move(int direction, bool ctrl, bool shift);
@@ -78,7 +121,6 @@ namespace clan
 
 		Signal<void(KeyEvent &)> sig_before_edit_changed;
 		Signal<void(KeyEvent &)> sig_after_edit_changed;
-		Signal<void()> sig_selection_changed;
 		Signal<void()> sig_enter_pressed;
 
 		int max_length = -1;
@@ -93,8 +135,7 @@ namespace clan
 		std::string input_mask;
 		std::string decimal_char = std::string(".");
 
-		size_t selection_start = 0;
-		size_t selection_length = 0;
+		TextFieldViewSelection selection;
 		size_t cursor_pos = 0;
 
 		float scroll_pos = 0.0f;
@@ -124,8 +165,6 @@ namespace clan
 		static const std::string numeric_mode_characters;
 
 		std::vector<Rectf> last_measured_rects;
-
-		void set_text_selection(size_t start, size_t length);
 
 		std::string get_text_before_selection() const;
 		std::string get_selected_text() const;
