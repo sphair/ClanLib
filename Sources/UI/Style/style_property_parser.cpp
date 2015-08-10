@@ -35,9 +35,9 @@
 
 namespace clan
 {
-	std::unordered_map<StyleString, StyleGetValue, StyleString::hash> &style_defaults()
+	std::unordered_map<StyleString, std::pair<StyleGetValue, bool>, StyleString::hash> &style_defaults()
 	{
-		static std::unordered_map<StyleString, StyleGetValue, StyleString::hash> defaults;
+		static std::unordered_map<StyleString, std::pair<StyleGetValue, bool>, StyleString::hash> defaults;
 		return defaults;
 	}
 
@@ -49,9 +49,9 @@ namespace clan
 
 	/////////////////////////////////////////////////////////////////////////
 
-	StylePropertyDefault::StylePropertyDefault(const std::string &name, const StyleGetValue &value)
+	StylePropertyDefault::StylePropertyDefault(const std::string &name, const StyleGetValue &value, bool inherit)
 	{
-		style_defaults()[name] = value;
+		style_defaults()[name] = { value, inherit };
 	}
 
 	/////////////////////////////////////////////////////////////////////////
@@ -1093,7 +1093,15 @@ namespace clan
 
 	bool StyleProperty::is_inherited(const char *name)
 	{
-		return false; // TBD: do we want to support inherited properties at all?
+		auto it = style_defaults().find(name);
+		if (it != style_defaults().end())
+		{
+			return it->second.second;
+		}
+		else
+		{
+			return false;
+		}
 	}
 	
 	const StyleGetValue &StyleProperty::default_value(const char *name)
@@ -1101,7 +1109,7 @@ namespace clan
 		auto it = style_defaults().find(name);
 		if (it != style_defaults().end())
 		{
-			return it->second;
+			return it->second.first;
 		}
 		else
 		{

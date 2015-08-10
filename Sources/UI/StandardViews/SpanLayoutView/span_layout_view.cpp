@@ -34,6 +34,7 @@ namespace clan
 {
 	SpanLayoutView::SpanLayoutView() : impl(new SpanLayoutViewImpl())
 	{
+		impl->view = this;
 		style()->set("layout: none");
 	}
 

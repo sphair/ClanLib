@@ -66,13 +66,13 @@ namespace clan
 	{
 	public:
 		StyleCascade() { }
-		StyleCascade(std::vector<Style *> cascade, StyleCascade *parent = nullptr) : cascade(std::move(cascade)), parent(parent) { }
+		StyleCascade(std::vector<Style *> cascade, const StyleCascade *parent = nullptr) : cascade(std::move(cascade)), parent(parent) { }
 
 		/// Property sets to be examined
 		std::vector<Style *> cascade;
 
 		/// Parent cascade used for inheritance
-		StyleCascade *parent = nullptr;
+		const StyleCascade *parent = nullptr;
 		
 		/// Find the first declared value in the cascade for the specified property
 		StyleGetValue cascade_value(const char *property_name) const;

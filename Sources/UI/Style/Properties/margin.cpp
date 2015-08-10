@@ -35,10 +35,10 @@ namespace clan
 	{
 	}
 
-	StylePropertyDefault style_default_margin_left("margin-left", StyleGetValue::from_length(0.0f));
-	StylePropertyDefault style_default_margin_top("margin-top", StyleGetValue::from_length(0.0f));
-	StylePropertyDefault style_default_margin_right("margin-right", StyleGetValue::from_length(0.0f));
-	StylePropertyDefault style_default_margin_bottom("margin-bottom", StyleGetValue::from_length(0.0f));
+	StylePropertyDefault style_default_margin_left("margin-left", StyleGetValue::from_length(0.0f), false);
+	StylePropertyDefault style_default_margin_top("margin-top", StyleGetValue::from_length(0.0f), false);
+	StylePropertyDefault style_default_margin_right("margin-right", StyleGetValue::from_length(0.0f), false);
+	StylePropertyDefault style_default_margin_bottom("margin-bottom", StyleGetValue::from_length(0.0f), false);
 
 	MarginPropertyParser style_parser_margin;
 	MarginLTRBPropertyParser style_parser_margin_ltrb;

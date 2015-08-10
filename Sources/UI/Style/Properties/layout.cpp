@@ -35,13 +35,13 @@ namespace clan
 	{
 	}
 
-	StylePropertyDefault style_default_layout("layout", StyleGetValue::from_keyword("flex"));
-	StylePropertyDefault style_default_position("position", StyleGetValue::from_keyword("static"));
-	StylePropertyDefault style_default_left("left", StyleGetValue::from_keyword("auto"));
-	StylePropertyDefault style_default_top("top", StyleGetValue::from_keyword("auto"));
-	StylePropertyDefault style_default_right("right", StyleGetValue::from_keyword("auto"));
-	StylePropertyDefault style_default_bottom("bottom", StyleGetValue::from_keyword("auto"));
-	StylePropertyDefault style_default_zindex("z-index", StyleGetValue::from_keyword("auto"));
+	StylePropertyDefault style_default_layout("layout", StyleGetValue::from_keyword("flex"), false);
+	StylePropertyDefault style_default_position("position", StyleGetValue::from_keyword("static"), false);
+	StylePropertyDefault style_default_left("left", StyleGetValue::from_keyword("auto"), false);
+	StylePropertyDefault style_default_top("top", StyleGetValue::from_keyword("auto"), false);
+	StylePropertyDefault style_default_right("right", StyleGetValue::from_keyword("auto"), false);
+	StylePropertyDefault style_default_bottom("bottom", StyleGetValue::from_keyword("auto"), false);
+	StylePropertyDefault style_default_zindex("z-index", StyleGetValue::from_keyword("auto"), false);
 
 	LayoutPropertyParser style_parser_layout;
 	PositionPropertyParser style_parser_position;

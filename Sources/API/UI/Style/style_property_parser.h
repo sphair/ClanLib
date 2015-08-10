@@ -113,7 +113,7 @@ namespace clan
 	class StylePropertyDefault
 	{
 	public:
-		StylePropertyDefault(const std::string &name, const StyleGetValue &value);
+		StylePropertyDefault(const std::string &name, const StyleGetValue &value, bool inherit);
 	};
 
 	/// Style property interface used to parse or query properties by name

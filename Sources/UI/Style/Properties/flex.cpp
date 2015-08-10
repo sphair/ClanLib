@@ -35,16 +35,16 @@ namespace clan
 	{
 	}
 
-	StylePropertyDefault style_default_flex_grow("flex-grow", StyleGetValue::from_number(0.0f));
-	StylePropertyDefault style_default_flex_shrink("flex-shrink", StyleGetValue::from_number(1.0f));
-	StylePropertyDefault style_default_flex_basis("flex-basis", StyleGetValue::from_keyword("main-size"));
-	StylePropertyDefault style_default_flex_direction("flex-direction", StyleGetValue::from_keyword("row"));
-	StylePropertyDefault style_default_flex_wrap("flex-wrap", StyleGetValue::from_keyword("nowrap"));
-	StylePropertyDefault style_default_order("order", StyleGetValue::from_number(0.0f));
-	StylePropertyDefault style_default_align_content("align-content", StyleGetValue::from_keyword("stretch"));
-	StylePropertyDefault style_default_align_items("align-items", StyleGetValue::from_keyword("stretch"));
-	StylePropertyDefault style_default_align_self("align-self", StyleGetValue::from_keyword("auto"));
-	StylePropertyDefault style_default_justify_content("justify-content", StyleGetValue::from_keyword("flex-start"));
+	StylePropertyDefault style_default_flex_grow("flex-grow", StyleGetValue::from_number(0.0f), false);
+	StylePropertyDefault style_default_flex_shrink("flex-shrink", StyleGetValue::from_number(1.0f), false);
+	StylePropertyDefault style_default_flex_basis("flex-basis", StyleGetValue::from_keyword("main-size"), false);
+	StylePropertyDefault style_default_flex_direction("flex-direction", StyleGetValue::from_keyword("row"), false);
+	StylePropertyDefault style_default_flex_wrap("flex-wrap", StyleGetValue::from_keyword("nowrap"), false);
+	StylePropertyDefault style_default_order("order", StyleGetValue::from_number(0.0f), false);
+	StylePropertyDefault style_default_align_content("align-content", StyleGetValue::from_keyword("stretch"), false);
+	StylePropertyDefault style_default_align_items("align-items", StyleGetValue::from_keyword("stretch"), false);
+	StylePropertyDefault style_default_align_self("align-self", StyleGetValue::from_keyword("auto"), false);
+	StylePropertyDefault style_default_justify_content("justify-content", StyleGetValue::from_keyword("flex-start"), false);
 
 	FlexPropertyParser style_parser_flex;
 	FlexBasisPropertyParser style_parser_flex_basis;

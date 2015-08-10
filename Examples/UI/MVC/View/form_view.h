@@ -10,11 +10,11 @@ public:
 		textfield = add_subview<clan::TextFieldView>();
 
 		label->set_text(text);
-		textfield->set_preferred_size(50);
+		textfield->set_preferred_size(55);
 
-		style()->set("margin: 3px 0");
-		label->style()->set("flex: none; width: 100px; font: 13px/16px 'Segoe UI'; margin: auto 0");
-		textfield->style()->set("flex: auto; font: 13px/16px 'Segoe UI';");
+		style()->set("margin: 3px 0; line-height: 16px");
+		label->style()->set("flex: none; width: 100px; margin: auto 0");
+		textfield->style()->set("flex: auto");
 		textfield->style()->set("border: 1px solid #999; padding: 4px 8px; background: white");
 	}
 
@@ -29,8 +29,7 @@ public:
 	{
 		auto normal = std::make_shared<clan::Style>();
 		auto bold = std::make_shared<clan::Style>();
-		normal->set("font: 13px/16px 'Segoe UI'");
-		bold->set("font: bold 13px/16px 'Segoe UI'");
+		bold->set("font-weight: bold");
 
 		add_text("This is a silly model/view/controller example demonstrating of how the ", normal);
 		add_text("UI framework", bold);
@@ -52,6 +51,7 @@ public:
 
 		style()->set("padding: 11px");
 		style()->set("background: rgb(240,240,240)");
+		style()->set("font: 13px/20px 'Segoe UI'");
 	}
 
 	std::shared_ptr<FormEditView> name;

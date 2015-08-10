@@ -35,9 +35,9 @@ namespace clan
 	{
 	}
 
-	StylePropertyDefault style_default_outline_color("outline-color", StyleGetValue::from_keyword("invert"));
-	StylePropertyDefault style_default_outline_style("outline-style", StyleGetValue::from_keyword("none"));
-	StylePropertyDefault style_default_outline_width("outline-width", StyleGetValue::from_keyword("medium"));
+	StylePropertyDefault style_default_outline_color("outline-color", StyleGetValue::from_keyword("invert"), false);
+	StylePropertyDefault style_default_outline_style("outline-style", StyleGetValue::from_keyword("none"), false);
+	StylePropertyDefault style_default_outline_width("outline-width", StyleGetValue::from_keyword("medium"), false);
 
 	OutlinePropertyParser style_parser_outline;
 	OutlineColorPropertyParser style_parser_outline_color;

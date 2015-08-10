@@ -59,7 +59,7 @@ namespace clan
 		object.type = SpanObjectType::text;
 		object.start = text.length();
 		object.end = object.start + more_text.length();
-		object.set_style(style);
+		object.set_style(&view->style_cascade(), style);
 		object.id = id;
 		objects.push_back(object);
 		text += more_text;

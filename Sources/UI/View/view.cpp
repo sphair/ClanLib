@@ -55,6 +55,7 @@ namespace clan
 		for (auto &subview : subviews())
 		{
 			subview->impl->_superview = nullptr;
+			subview->impl->update_style_cascade();
 		}
 	}
 
@@ -137,6 +138,7 @@ namespace clan
 
 			impl->_subviews.push_back(view);
 			view->impl->_superview = this;
+			view->impl->update_style_cascade();
 			view->set_needs_layout();
 			set_needs_layout();
 
@@ -157,6 +159,7 @@ namespace clan
 			if (it != super->impl->_subviews.end())
 				super->impl->_subviews.erase(it);
 			impl->_superview = nullptr;
+			impl->update_style_cascade();
 
 			super->set_needs_layout();
 
@@ -814,6 +817,11 @@ namespace clan
 		}
 
 		std::stable_sort(matches.begin(), matches.end(), [](const std::pair<Style *, size_t> &a, const std::pair<Style *, size_t> &b) { return a.second != b.second ? a.second > b.second : a.first > b.first; });
+
+		if (_superview)
+			style_cascade.parent = &_superview->style_cascade();
+		else
+			style_cascade.parent = nullptr;
 
 		style_cascade.cascade.clear();
 		for (auto &match : matches)

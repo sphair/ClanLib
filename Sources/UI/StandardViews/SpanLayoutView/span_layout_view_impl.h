@@ -52,10 +52,10 @@ namespace clan
 		SpanFloatType float_type = SpanFloatType::none;
 		
 		StyleCascade style_cascade;
-		void set_style(const std::shared_ptr<Style> new_style)
+		void set_style(const StyleCascade *parent_cascade, const std::shared_ptr<Style> new_style)
 		{
 			style = new_style;
-			style_cascade = StyleCascade({ style.get() });
+			style_cascade = StyleCascade({ style.get() }, parent_cascade);
 		}
 
 		size_t start = 0;
@@ -99,6 +99,8 @@ namespace clan
 	{
 	public:
 		SpanLayoutViewImpl();
+
+		SpanLayoutView *view = nullptr;
 
 		void clear();
 		void add_text(const std::string &text, const std::shared_ptr<Style> &style, int id = -1);
