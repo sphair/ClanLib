@@ -111,19 +111,14 @@ HelloWorld::HelloWorld()
 	edit->style()->set("box-shadow: 0 0 5px rgba(100,100,200,0.2)");
 	edit->set_text("amazing!");
 
-	// Create some text styles for the text we will write
-	std::shared_ptr<Style> normal = std::make_shared<Style>();
-	std::shared_ptr<Style> bold = std::make_shared<Style>();
-	std::shared_ptr<Style> italic = std::make_shared<Style>();
-	normal->set("font: 13px/25px 'Segoe UI'");
-	bold->set("font: 13px/25px 'Segoe UI'; font-weight: bold");
-	italic->set("font: 13px/25px 'Segoe UI'; font-style: italic");
-
 	// Create a span layout views with some more complex inline formatting
 	std::shared_ptr<SpanLayoutView> p1 = std::make_shared<SpanLayoutView>();
-	p1->add_text("This is an example of why Sphair should never ever make fun of my ", normal);
-	p1->add_text("BEAUTIFUL", bold);
-	p1->add_text(" green 13.37deg gradients because he will never know what it is replaced with!", normal);
+	p1->style()->set("font: 13px/25px 'Segoe UI'");
+	p1->text_style("bold")->set("font-weight: bold");
+	p1->text_style("italic")->set("font-style: italic");
+	p1->add_text("This is an example of why Sphair should never ever make fun of my ");
+	p1->add_text("BEAUTIFUL", "bold");
+	p1->add_text(" green 13.37deg gradients because he will never know what it is replaced with!");
 	scrollarea->content_view()->add_subview(p1);
 
 	std::shared_ptr<SpanLayoutView> p2 = std::make_shared<SpanLayoutView>();
@@ -132,19 +127,25 @@ HelloWorld::HelloWorld()
 	p2->style()->set("border-top: 5px solid #CCE4FB");
 	p2->style()->set("border-bottom: 5px solid #CCE4FB");
 	p2->style()->set("background: #EDF6FF");
-	p2->add_text("If you also think Sphair made a ", normal);
-	p2->add_text("BIG MISTAKE", bold);
-	p2->add_text(" please consider typing ", normal);
-	p2->add_text("Yes, yes, yes, yes, yes, yes, yes yes, YES!", italic);
-	p2->add_text(" in the text field: ", normal);
+	p2->style()->set("font: 13px/25px 'Segoe UI'");
+	p2->text_style("bold")->set("font-weight: bold");
+	p2->text_style("italic")->set("font-style: italic");
+	p2->add_text("If you also think Sphair made a ");
+	p2->add_text("BIG MISTAKE", "bold");
+	p2->add_text(" please consider typing ");
+	p2->add_text("Yes, yes, yes, yes, yes, yes, yes yes, YES!", "italic");
+	p2->add_text(" in the text field: ");
 	p2->add_subview(edit);
-	p2->add_text(" You know you want to!", bold);
+	p2->add_text(" You know you want to!", "bold");
 	scrollarea->content_view()->add_subview(p2);
 	
 	std::shared_ptr<SpanLayoutView> p3 = std::make_shared<SpanLayoutView>();
-	p3->add_text("Since we both know you typed ", normal);
-	p3->add_text("Yes, yes, yes..", italic);
-	p3->add_text(" into the text field (who wouldn't!?), here's the amazing gradient:", normal);
+	p3->style()->set("font: 13px/25px 'Segoe UI'");
+	p3->text_style("bold")->set("font-weight: bold");
+	p3->text_style("italic")->set("font-style: italic");
+	p3->add_text("Since we both know you typed ");
+	p3->add_text("Yes, yes, yes..", "italic");
+	p3->add_text(" into the text field (who wouldn't!?), here's the amazing gradient:");
 	scrollarea->content_view()->add_subview(p3);
 	
 	std::shared_ptr<View> gradient_box = std::make_shared<View>();

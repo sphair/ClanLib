@@ -38,6 +38,17 @@ namespace clan
 		style()->set("layout: none");
 	}
 
+	const std::shared_ptr<Style> &SpanLayoutView::text_style(const std::string &text_class) const
+	{
+		const auto it = impl->text_classes.find(text_class);
+		if (it != impl->text_classes.end())
+			return it->second;
+
+		auto &style = impl->text_classes[text_class];
+		style = std::make_shared<Style>();
+		return style;
+	}
+
 	void SpanLayoutView::set_text_alignment(TextAlignment alignment)
 	{
 		impl->set_text_alignment(alignment);
@@ -54,9 +65,9 @@ namespace clan
 			view->remove_from_super();
 	}
 
-	void SpanLayoutView::add_text(const std::string &text, const std::shared_ptr<Style> &style)
+	void SpanLayoutView::add_text(const std::string &text, const std::string &text_class)
 	{
-		impl->add_text(text, style);
+		impl->add_text(text, text_style(text_class));
 		set_needs_layout();
 		set_needs_render();
 	}

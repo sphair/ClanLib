@@ -118,6 +118,8 @@ namespace clan
 
 		void set_text_alignment(TextAlignment alignment);
 
+		mutable std::map<std::string, std::shared_ptr<Style>> text_classes;
+
 	private:
 		SpanLineMetrics find_line_metrics(Canvas &canvas, size_t obj_start, size_t text_start, float width);
 

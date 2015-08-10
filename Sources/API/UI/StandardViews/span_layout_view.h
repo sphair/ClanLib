@@ -42,10 +42,12 @@ namespace clan
 	public:
 		SpanLayoutView();
 
+		const std::shared_ptr<Style> &text_style(const std::string &text_class = std::string()) const;
+
 		void set_text_alignment(TextAlignment alignment);
 
 		void clear();
-		void add_text(const std::string &text, const std::shared_ptr<Style> &style);
+		void add_text(const std::string &text, const std::string &text_class = std::string());
 		void add_subview(const std::shared_ptr<View> &view, float baseline_offset = 0.0f);
 
 		void layout_subviews(Canvas &canvas) override;

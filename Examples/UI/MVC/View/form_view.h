@@ -27,13 +27,11 @@ class FormInfoView : public clan::SpanLayoutView
 public:
 	FormInfoView()
 	{
-		auto normal = std::make_shared<clan::Style>();
-		auto bold = std::make_shared<clan::Style>();
-		bold->set("font-weight: bold");
+		text_style("bold")->set("font-weight: bold");
 
-		add_text("This is a silly model/view/controller example demonstrating of how the ", normal);
-		add_text("UI framework", bold);
-		add_text(" can be used with a model class, a controller class and a view tree.", normal);
+		add_text("This is a silly model/view/controller example demonstrating of how the ");
+		add_text("UI framework", "bold");
+		add_text(" can be used with a model class, a controller class and a view tree.");
 
 		style()->set("margin-top: 11px");
 		style()->set("flex: auto; width: 200px");
