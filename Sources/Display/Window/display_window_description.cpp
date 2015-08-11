@@ -190,11 +190,6 @@ bool DisplayWindowDescription::is_visible() const
 	return impl->visible;
 }
 
-bool DisplayWindowDescription::get_using_gui_window_cache() const
-{
-	return impl->use_cached_window;
-}
-
 bool DisplayWindowDescription::has_drop_shadow() const
 {
 	return impl->drop_shadow;
@@ -390,11 +385,6 @@ void DisplayWindowDescription::set_depth_size(int value)
 void DisplayWindowDescription::set_stencil_size(int value)
 {
 	impl->stencil_size = value;
-}
-
-void DisplayWindowDescription::set_using_gui_window_cache(bool value)
-{
-	impl->use_cached_window = value;
 }
 
 void DisplayWindowDescription::set_allow_screensaver(bool allow_screensaver)

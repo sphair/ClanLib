@@ -68,7 +68,6 @@ namespace clan
 		int refresh_rate = 0;
 		DisplayWindow owner;
 		bool create_tablet_context = false;
-		bool use_cached_window = false;
 		bool layered = false;
 
 		DisplayWindowHandle handle;

@@ -141,10 +141,6 @@ public:
 	/// \brief Indicates if window is automatically activated or not.
 	bool has_no_activate() const;
 
-	/// \brief Returns true if window from the window cache should be used. (GUI Only)
-	/** <p>This setting is ignored unless the GUI and GUIWindowManagerSystem are used.</p> */
-	bool get_using_gui_window_cache() const;
-
 	/// \brief Returns true if the window is drawn with a drop shadow effect.
 	bool has_drop_shadow() const;
 
@@ -262,13 +258,6 @@ public:
 
 	/// \brief Sets to true if a tablet input context should be created for this window.
 	void set_tablet_context(bool create);
-
-	/** Set to use a window from the window cache (GUI Only).
-	 *  Creating a window in Windows XP is slow (~100 ms). Using cached windows
-	 *  for menus and dialogs may make things run faster on Windows XP.
-	 *  This setting is ignored unless the GUI and GUIWindowManagerSystem are used.
-	 */
-	void set_using_gui_window_cache(bool value);
 
 	/// \brief Creates a layered window (complex shaped window)
 	void set_layered(bool layered);
