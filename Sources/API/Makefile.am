@@ -347,7 +347,9 @@ clanUI_includes = \
 	UI/Style/style_value_type.h \
 	UI/Style/style_dimension.h \
 	UI/UIThread/ui_thread.h \
-	UI/Image/image_source.h
+	UI/Image/image_source.h \
+	UI/Controller/window_controller.h \
+	UI/Controller/window_manager.h
 
 ClanLibincludedir=$(includedir)/ClanLib-@LT_RELEASE@/ClanLib
 nobase_ClanLibinclude_HEADERS = @ClanLib_API_Modules@

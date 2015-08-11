@@ -3,10 +3,10 @@ lib_LTLIBRARIES = libclan40UI.la
 libclan40UI_la_SOURCES = \
 ./precomp.cpp \
 ./TopLevel/view_tree.cpp \
+./TopLevel/TopLevelWindow/top_level_window.cpp \
+./TopLevel/TopLevelWindow/top_level_window_impl.cpp \
 ./TopLevel/TextureWindow/texture_window.cpp \
 ./TopLevel/TextureWindow/texture_window_impl.cpp \
-./TopLevel/TopLevelWindow/top_level_window_impl.cpp \
-./TopLevel/TopLevelWindow/top_level_window.cpp \
 ./StandardViews/ScrollBarView/scrollbar_view.cpp \
 ./StandardViews/ScrollBarView/scrollbar_view_impl.cpp \
 ./StandardViews/SpanLayoutView/span_layout_view_impl.cpp \
@@ -57,7 +57,8 @@ libclan40UI_la_SOURCES = \
 ./Style/style_tokenizer_impl.cpp \
 ./Style/style_property_parser.cpp \
 ./UIThread/ui_thread.cpp \
-./Image/image_source.cpp
+./Image/image_source.cpp \
+./Controller/window_manager.cpp
 
 libclan40UI_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
