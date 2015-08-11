@@ -107,18 +107,9 @@ bool App::update()
 	//[15:29] <Judas->ideally there would be a separate show_window_frame function for this
 
 	int ypos = 100;
-	show(ypos, "*) get_title()", test_desc.get_title());
-	show(ypos, "*) get_size()", test_desc.get_size());
-	show(ypos, "*) get_position()", test_desc.get_position());
-	show(ypos, "*) get_position_client_area()", test_desc.get_position_client_area());
 	show(ypos, "0) is_fullscreen()", test_desc.is_fullscreen());
-	show(ypos, "*) get_flipping_buffers()", test_desc.get_flipping_buffers());
-	show(ypos, "*) get_swap_interval()", test_desc.get_swap_interval());
 	show(ypos, "1) get_allow_resize()", test_desc.get_allow_resize());
-	show(ypos, "*) get_bpp()", test_desc.get_bpp());
-	show(ypos, "*) get_refresh_rate()", test_desc.get_refresh_rate());
 	show(ypos, "2) is_layered()", test_desc.is_layered());
-	show(ypos, "*) get_handle()", test_desc.get_handle());
 	show(ypos, "3) has_caption()", test_desc.has_caption());
 	show(ypos, "4) has_sysmenu()", test_desc.has_sysmenu());
 	show(ypos, "5) has_minimize_button()", test_desc.has_minimize_button());
@@ -127,18 +118,26 @@ bool App::update()
 	show(ypos, "8) is_topmost()", test_desc.is_topmost());
 	show(ypos, "9) has_no_activate()", test_desc.has_no_activate());
 	show(ypos, "a) has_drop_shadow()", test_desc.has_drop_shadow());
-	show(ypos, "*) get_owner()", test_desc.get_owner());
 	show(ypos, "b) get_tablet_context()", test_desc.get_tablet_context());
-	show(ypos, "*) get_depth_size()", test_desc.get_depth_size());
-	show(ypos, "*) get_stencil_size()", test_desc.get_stencil_size());
-	show(ypos, "*) get_fullscreen_monitor()", test_desc.get_fullscreen_monitor());
 	show(ypos, "c) get_allow_screensaver()", test_desc.get_allow_screensaver());
-	show(ypos, "*) get_owner()", test_desc.get_owner());
 	show(ypos, "d) is_update_supported()", test_desc.is_update_supported());
-	show(ypos, "*) get_multisampling()", test_desc.get_multisampling());
 	show(ypos, "e) is_main()", test_desc.is_main());
 	show(ypos, "f) is_dialog()", test_desc.is_dialog());
 	show(ypos, "g) is_popup()", test_desc.is_popup());
+	show(ypos, "h) get_owner()", test_desc.get_owner());
+	show(ypos, "*) get_title()", test_desc.get_title());
+	show(ypos, "*) get_size()", test_desc.get_size());
+	show(ypos, "*) get_position()", test_desc.get_position());
+	show(ypos, "*) get_position_client_area()", test_desc.get_position_client_area());
+	show(ypos, "*) get_flipping_buffers()", test_desc.get_flipping_buffers());
+	show(ypos, "*) get_swap_interval()", test_desc.get_swap_interval());
+	show(ypos, "*) get_bpp()", test_desc.get_bpp());
+	show(ypos, "*) get_refresh_rate()", test_desc.get_refresh_rate());
+	show(ypos, "*) get_handle()", test_desc.get_handle());
+	show(ypos, "*) get_depth_size()", test_desc.get_depth_size());
+	show(ypos, "*) get_stencil_size()", test_desc.get_stencil_size());
+	show(ypos, "*) get_fullscreen_monitor()", test_desc.get_fullscreen_monitor());
+	show(ypos, "*) get_multisampling()", test_desc.get_multisampling());
 
 	test_canvas.clear(clan::Colorf(0.0f, 0.0f, 0.2f));
 	font.draw_text(test_canvas, 0, 40, string_format("%1,%2", test_canvas.get_width(), test_canvas.get_height()), clan::Colorf::white);
@@ -177,6 +176,7 @@ void App::on_input_up(const clan::InputEvent &key)
 	if (key.id == clan::keycode_e) test_desc.set_main_window();
 	if (key.id == clan::keycode_f) test_desc.set_dialog_window();
 	if (key.id == clan::keycode_g) test_desc.set_popup_window();
+	if (key.id == clan::keycode_h) test_desc.set_owner_window(test_desc.get_owner().is_null() ? window : DisplayWindow());
 
 	build_test_window();
 
