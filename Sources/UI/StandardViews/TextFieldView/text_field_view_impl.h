@@ -49,6 +49,11 @@ namespace clan
 			set_head_and_tail(start, start + length);
 		}
 
+		void set_head(size_t head)
+		{
+			set_head_and_tail(head, selection_tail);
+		}
+
 		void set_tail(size_t tail)
 		{
 			set_head_and_tail(selection_head, tail);
