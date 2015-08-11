@@ -74,17 +74,14 @@ GUI::GUI()
 	ui_window->set_cursor_window(window);
 	ui_window->set_viewport(gui_texture.get_size());
 
-	auto controller = std::make_shared<clan::ViewController>();
-	ui_window->set_view_controller(controller);
-
 	// Style the controller->view view to use rounded corners and a bit of drop shadow
-	controller->view->style()->set("background: linear-gradient(13.37deg, #f0f0f0, rgb(120,240,120) 50%, #f0f0f0)");
-	controller->view->style()->set("padding: 11px");
-	controller->view->style()->set("border: 1px solid black");
-	controller->view->style()->set("border-radius: 15px");
-	controller->view->style()->set("margin: 35px 10px 10px 10px");
-	controller->view->style()->set("box-shadow: 0 0 20px rgba(0,0,0,0.2)");
-	controller->view->style()->set("flex-direction: column");
+	ui_window->root_view()->style()->set("background: linear-gradient(13.37deg, #f0f0f0, rgb(120,240,120) 50%, #f0f0f0)");
+	ui_window->root_view()->style()->set("padding: 11px");
+	ui_window->root_view()->style()->set("border: 1px solid black");
+	ui_window->root_view()->style()->set("border-radius: 15px");
+	ui_window->root_view()->style()->set("margin: 35px 10px 10px 10px");
+	ui_window->root_view()->style()->set("box-shadow: 0 0 20px rgba(0,0,0,0.2)");
+	ui_window->root_view()->style()->set("flex-direction: column");
 
 	// Create a label with some text to have some content
 	label = std::make_shared<clan::LabelView>();
@@ -95,7 +92,7 @@ GUI::GUI()
 	label->set_text("Hello World!");
 	label->set_state("amazing", true);
 	label->set_state("cool", true);
-	controller->view->add_subview(label);
+	ui_window->root_view()->add_subview(label);
 
 	// React to clicking
 	label->slots.connect(label->sig_pointer_press(), [&](clan::PointerEvent &e) {
@@ -115,9 +112,8 @@ GUI::GUI()
 
 	// Create a span layout view with some more complex inline formatting
 	std::shared_ptr<clan::SpanLayoutView> span = std::make_shared<clan::SpanLayoutView>();
-	std::shared_ptr<clan::Style> text_style = std::make_shared<clan::Style>();
-	text_style->set("font: 13px/40px 'Segoe UI'");
-	span->add_text("This is the UI core ", text_style);
+	span->style()->set("font: 13px/40px 'Segoe UI'");
+	span->add_text("This is the UI core ");
 
 	span->add_subview(edit);
 
@@ -126,16 +122,16 @@ GUI::GUI()
 	scrollbar->set_position(0.5);
 	scrollbar->set_page_step(0.1);
 	scrollbar->set_line_step(0.01);
-	controller->view->add_subview(scrollbar);
+	ui_window->root_view()->add_subview(scrollbar);
 
 	auto button = Theme::create_button();
 	button->label()->set_text("This is a button");
-	controller->view->add_subview(button);
+	ui_window->root_view()->add_subview(button);
 
-	std::shared_ptr<clan::Style> text_style2 = std::make_shared<clan::Style>();
-	text_style2->set("font: 16px/40px 'Segoe UI'; font-weight: 800");
-	span->add_text(" units!", text_style2);
-	controller->view->add_subview(span);
+	span->text_style("bold")->set("font: 16px/40px 'Segoe UI'; font-weight: 800");
+	span->add_text(" this is bold,", "bold");
+	span->add_text(" but this isn't bold.");
+	ui_window->root_view()->add_subview(span);
 
 	premultiply_src_blend = clan::BlendState(canvas, clan::BlendStateDescription::blend(true));
 

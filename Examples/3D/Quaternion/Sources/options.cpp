@@ -31,8 +31,7 @@
 
 Options::Options(Canvas &canvas) : TextureWindow(canvas)
 {
-
-	view_controller()->view->style()->set("background: rgb(153, 153, 204)");
+	root_view()->style()->set("background: rgb(153, 153, 204)");
 
 	auto spacer1 = std::make_shared<View>();
 	auto spacer2 = std::make_shared<View>();
