@@ -687,10 +687,16 @@ namespace clan
 			pos = utf8_reader.get_position();
 		}
 
-		if (shift || ctrl)
+		if (shift)
+		{
+			if (selection.length() == 0)
+				selection.set_head(cursor_pos);
 			selection.set_tail(pos);
+		}
 		else
+		{
 			selection.reset();
+		}
 
 		cursor_pos = pos;
 		textfield->set_needs_render();
@@ -703,6 +709,8 @@ namespace clan
 
 		if (shift)
 		{
+			if (selection.length() == 0)
+				selection.set_head(cursor_pos);
 			selection.set_tail(0);
 		}
 		else
@@ -721,6 +729,8 @@ namespace clan
 
 		if (shift)
 		{
+			if (selection.length() == 0)
+				selection.set_head(cursor_pos);
 			selection.set_tail(text.size());
 		}
 		else
