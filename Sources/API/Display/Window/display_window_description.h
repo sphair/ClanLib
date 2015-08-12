@@ -185,30 +185,44 @@ public:
 	DisplayWindowDescription &operator =(const DisplayWindowDescription &copy);
 
 	/// \brief Display this window as of the main windows of the application
+	///
+	/// Window is shown on the taskbar
 	void set_main_window();
 
 	/// \brief Display the window as a modal dialog
+	///
+	/// Window is shown on the taskbar
 	void set_dialog_window();
 
 	/// \brief Display the window as a popup 
 	void set_popup_window();
 
 	/// \brief Controls if a title bar (including frame) is shown or not.
+	///
+	/// This is only used for the popup window types (Not Main and Dialog)
 	void show_caption(bool value = true);
 
 	/// \brief Sets if the window has a window menu on its title bar.
+	///
+	/// This is only used for the main window type (not Dialog and Popup)
 	void show_sysmenu(bool value = true);
 
 	/// \brief Sets if the window has a minimize button.
+	///
+	/// This is only used for the main and dialog window types (Not Popup)
 	void show_minimize_button(bool value = true);
 
 	/// \brief Sets if the window has a maximize button.
+	///
+	/// This is only used for the main and dialog window types (Not Popup)
 	void show_maximize_button(bool value = true);
 
 	/// \brief Toggles whether the window is created as initially visible.
 	void set_visible(bool value = true);
 
 	/// \brief Sets if the window should be placed above all non-topmost windows.
+	///
+	/// This is used for all window types (Main, Dialog and Popup)
 	void set_topmost(bool value = true);
 
 	/// \brief Prevents window from being automatically activated.
@@ -246,6 +260,8 @@ public:
 	void set_swap_interval(int interval = -1);
 
 	/// \brief Sets if windows should be resizable.
+	///
+	/// This is used for all window types (Main, Dialog and Popup)
 	void set_allow_resize(bool allow_resize = true);
 
 	/// \brief Sets the number of bytes per pixel
