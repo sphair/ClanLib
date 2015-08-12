@@ -145,6 +145,9 @@ namespace clan
 		desc.set_popup_window();
 		desc.set_visible(false);
 		desc.set_topmost(true);
+#ifndef WIN32
+		desc.set_layered(true);
+#endif
 		desc.set_no_activate(true);
 		desc.show_caption(false);
 		desc.show_sysmenu(false);
