@@ -765,7 +765,9 @@ void Win32Window::create_new_window()
 		//update_dwm_settings(); <-- set in WM_CREATE
 
 		if (window_desc.is_visible())
-			ShowWindow(hwnd, SW_SHOW);
+		{
+			ShowWindow(hwnd, window_desc.has_no_activate() ? SW_SHOWNOACTIVATE : SW_SHOW);
+		}
 	}
 
 	connect_window_input(window_desc);
