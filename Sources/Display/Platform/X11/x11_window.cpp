@@ -170,7 +170,7 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 	memset(&attr, 0, sizeof(attr));
 
 	attr.border_pixel = 0;
-	attr.override_redirect = False;
+	attr.override_redirect = (desc.is_popup() && (!desc.has_caption()) && (!desc.get_allow_resize())) ? True : False;	// Only true for popup windows without caption and not resizable
 	attr.colormap = color_map;
 	attr.event_mask =
 		KeyPressMask |
@@ -307,32 +307,28 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 		}
 	}
 
-	// Retrieve the frame size (emulating microsoft windows)
-	bool window_is_frameless = false;
 	bool window_has_thin_frame = false;
-	if (!desc.has_caption())
-	{
-		if (desc.get_allow_resize())
-		{
-			window_has_thin_frame = true;
-		}
+	bool window_has_caption = true;
 
-		if (desc.is_popup())
+	if (desc.is_popup())
+	{
+		if (!desc.has_caption())
 		{
-			window_is_frameless = true;
+			window_has_caption = false;
 		}
 	}
 
 	if (net_wm_window_type != None)
 	{
+		// See http://standards.freedesktop.org/wm-spec/1.5/ar01s05.html
 		Atom decor;
 		if (desc.is_dialog())
 		{
 			decor = net_wm_window_type_dialog;
 		}
-		else if (window_is_frameless)
+		else if (!window_has_caption)
 		{
-			decor = net_wm_window_type_dropdown_menu;
+			decor = net_wm_window_type_popup_menu;
 		}
 		else
 		{
@@ -344,7 +340,7 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 			XChangeProperty(handle.display, handle.window, net_wm_window_type, XA_ATOM, 32, PropModeReplace, (unsigned char *)&decor, 1);
 		}
 
-		if (window_is_frameless)	// Attempt frameless windows for KDE 2 and 3, if dropdown menus are not supported
+		if (!window_has_caption)	// Attempt frameless windows for KDE 2 and 3, if dropdown menus are not supported
 		{
 			if (kde_net_wm_window_type_override)
 				XChangeProperty(handle.display, handle.window, net_wm_window_type, XA_ATOM, 32, PropModeReplace, (unsigned char *)&kde_net_wm_window_type_override, 1);
@@ -355,26 +351,25 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 	if ( motif_wm_hints != None )
 	{
 		long decor = 0;
-		if (!window_is_frameless)
+
+		if (desc.get_allow_resize())
+			decor |= MWM_DECOR_RESIZEH;
+
+		if (window_has_caption)
 		{
 			if (window_has_thin_frame)
-			{
 				decor |= MWM_DECOR_BORDER;
-			}
-			else
-			{
-				if (desc.get_allow_resize())
-					decor |= MWM_DECOR_RESIZEH;
 
-				if (desc.has_caption())
-					decor |= MWM_DECOR_TITLE | MWM_DECOR_MENU;
+			if (desc.is_main())
+				decor |= MWM_DECOR_MENU;
+ 
+			decor |= MWM_DECOR_TITLE;
 
-				if (desc.has_maximize_button())
-					decor |= MWM_DECOR_MAXIMIZE;
+			if (desc.has_maximize_button())
+				decor |= MWM_DECOR_MAXIMIZE;
 
-				if (desc.has_minimize_button())
-					decor |= MWM_DECOR_MINIMIZE;
-			}
+			if (desc.has_minimize_button())
+				decor |= MWM_DECOR_MINIMIZE;
 		}
 
 		ClanLib_MotifWmHints hints = { MWM_HINTS_DECORATIONS, 0, decor, 0, 0 };
@@ -384,7 +379,7 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 	else if (kwm_win_decoration != None)
 	{
 		long decor;
-		if (window_is_frameless)
+		if (!window_has_caption)
 		{
 			decor = KDE_noDecoration;
 		}
@@ -401,7 +396,7 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 	else if (win_hints)
 	{
 		long decor;
-		if (window_is_frameless)
+		if (!window_has_caption)
 		{
 			decor = 0;
 		}

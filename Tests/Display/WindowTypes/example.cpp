@@ -218,7 +218,11 @@ void App::show(int &inout_ypos, const std::string &prefix, int value)
 
 void App::show(int &inout_ypos, const std::string &prefix, const DisplayWindowHandle &handle)
 {
+#ifdef WIN32
 	font.draw_text(canvas, 0, inout_ypos, string_format("%1 = %2", prefix, (int) handle.hwnd));
+#else
+	font.draw_text(canvas, 0, inout_ypos, string_format("%1 = %2", prefix, (int) handle.window));
+#endif
 	inout_ypos += font_increment;
 }
 void App::show(int &inout_ypos, const std::string &prefix, const DisplayWindow &window)
