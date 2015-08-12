@@ -109,6 +109,9 @@ namespace clan
 		impl->cursor_pos = impl->text.size();
 		impl->scroll_pos = 0.0f;
 
+		impl->undo_buffer.clear();
+		impl->redo_buffer.clear();
+
 		set_needs_render();
 	}
 
@@ -569,6 +572,11 @@ namespace clan
 			undo();
 			e.stop_propagation();
 		}
+		else if (e.key() == Key::y && e.ctrl_down())
+		{
+			redo();
+			e.stop_propagation();
+		}
 		else if ((!e.text().empty() && !(e.text().front() >= 0 && e.text().front() < 32) && (!e.alt_down() && !e.ctrl_down())) || (e.ctrl_down() && e.alt_down())) // Alt Gr translates to Ctrl+Alt sometimes!
 		{
 			add(e.text());
@@ -699,6 +707,7 @@ namespace clan
 		}
 
 		cursor_pos = pos;
+		needs_new_undo_step = true;
 		textfield->set_needs_render();
 	}
 
@@ -750,12 +759,7 @@ namespace clan
 		}
 		else if (cursor_pos > 0)
 		{
-			undo_info.first_erase = false;
-			if (undo_info.first_text_insert)
-			{
-				undo_info.undo_text = text;
-				undo_info.first_text_insert = false;
-			}
+			save_undo();
 
 			UTF8_Reader utf8_reader(text.data(), text.length());
 			utf8_reader.set_position(cursor_pos);
@@ -773,12 +777,7 @@ namespace clan
 	{
 		if (selection.length() > 0)
 		{
-			undo_info.first_erase = false;
-			if (undo_info.first_text_insert)
-			{
-				undo_info.undo_text = text;
-				undo_info.first_text_insert = false;
-			}
+			save_undo();
 
 			cursor_pos = selection.start();
 			text.erase(text.begin() + selection.start(), text.begin() + selection.end());
@@ -788,12 +787,7 @@ namespace clan
 		}
 		else if (cursor_pos < text.length())
 		{
-			undo_info.first_erase = false;
-			if (undo_info.first_text_insert)
-			{
-				undo_info.undo_text = text;
-				undo_info.first_text_insert = false;
-			}
+			save_undo();
 
 			UTF8_Reader utf8_reader(text.data(), text.length());
 			utf8_reader.set_position(cursor_pos);
@@ -837,17 +831,59 @@ namespace clan
 
 	void TextFieldViewImpl::undo()
 	{
-		if (!readonly)
+		if (undo_buffer.empty())
+			return;
+
+		UndoInfo info;
+		info.text = text;
+		info.cursor_pos = cursor_pos;
+		info.selection_start = selection.start();
+		info.selection_length = selection.length();
+		redo_buffer.push_back(info);
+
+		text = undo_buffer.back().text;
+		cursor_pos = undo_buffer.back().cursor_pos;
+		selection.set(undo_buffer.back().selection_start, undo_buffer.back().selection_length);
+
+		undo_buffer.pop_back();
+
+		textfield->set_needs_render();
+	}
+
+	void TextFieldViewImpl::redo()
+	{
+		if (redo_buffer.empty())
+			return;
+
+		UndoInfo info;
+		info.text = text;
+		info.cursor_pos = cursor_pos;
+		info.selection_start = selection.start();
+		info.selection_length = selection.length();
+		undo_buffer.push_back(info);
+
+		text = redo_buffer.back().text;
+		cursor_pos = redo_buffer.back().cursor_pos;
+		selection.set(redo_buffer.back().selection_start, redo_buffer.back().selection_length);
+
+		redo_buffer.pop_back();
+
+		textfield->set_needs_render();
+	}
+
+	void TextFieldViewImpl::save_undo()
+	{
+		redo_buffer.clear();
+
+		if (undo_buffer.empty() || needs_new_undo_step)
 		{
-			selection.reset();
-
-			std::string tmp = undo_info.undo_text;
-			undo_info.undo_text = text;
-			text = tmp;
-
-			cursor_pos = std::min(cursor_pos, text.size());
-
-			textfield->set_needs_render();
+			UndoInfo info;
+			info.text = text;
+			info.cursor_pos = cursor_pos;
+			info.selection_start = selection.start();
+			info.selection_length = selection.length();
+			undo_buffer.push_back(info);
+			needs_new_undo_step = false;
 		}
 	}
 
@@ -890,12 +926,7 @@ namespace clan
 		if (max_length >= 0 && StringHelp::utf8_length(text) + StringHelp::utf8_length(new_text) > (size_t)max_length) // To do: clip rather than fully reject
 			return;
 
-		undo_info.first_erase = false;
-		if (undo_info.first_text_insert)
-		{
-			undo_info.undo_text = text;
-			undo_info.first_text_insert = false;
-		}
+		save_undo();
 
 		if (lowercase)
 			new_text = StringHelp::text_to_lower(new_text);

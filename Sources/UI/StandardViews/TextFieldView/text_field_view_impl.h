@@ -35,7 +35,6 @@
 
 namespace clan
 {
-
 	class TextFieldViewSelection
 	{
 	public:
@@ -108,10 +107,13 @@ namespace clan
 		void copy();
 		void paste();
 		void undo();
+		void redo();
 		void add(std::string new_text);
 
 		void start_blink();
 		void stop_blink();
+
+		void save_undo();
 
 		TextFieldView *textfield = nullptr;
 
@@ -154,17 +156,15 @@ namespace clan
 
 		struct UndoInfo
 		{
-			/* set undo text when:
-			- added char after moving
-			- destructive block operation (del, cut etc)
-			- beginning erase
-			*/
-			std::string undo_text;
-			bool first_erase = false;
-			bool first_text_insert = false;
+			std::string text;
+			size_t selection_start = 0;
+			size_t selection_length = 0;
+			size_t cursor_pos = 0;
 		};
 
-		UndoInfo undo_info;
+		std::vector<UndoInfo> undo_buffer;
+		std::vector<UndoInfo> redo_buffer;
+		bool needs_new_undo_step = true;
 
 		static const std::string break_characters;
 		static const std::string numeric_mode_characters;
