@@ -766,7 +766,7 @@ void Win32Window::create_new_window()
 
 		if (window_desc.is_visible())
 		{
-			ShowWindow(hwnd, window_desc.has_no_activate() ? SW_SHOWNOACTIVATE : SW_SHOW);
+			ShowWindow(hwnd, window_desc.has_no_activate() ? SW_SHOWNOACTIVATE : SW_SHOWNORMAL);
 		}
 	}
 
