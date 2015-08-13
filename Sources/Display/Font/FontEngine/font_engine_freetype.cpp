@@ -414,9 +414,9 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph_subpixel(int glyph)
 		unsigned char *dest_data = pixel_data;
 		for (int xcnt = 0; xcnt < src_width/3; xcnt++)
 		{
-			*(dest_data++)= src_data[xcnt*3+2];
-			*(dest_data++)= src_data[xcnt*3+1];
 			*(dest_data++)= src_data[xcnt*3+0];
+			*(dest_data++)= src_data[xcnt*3+1];
+			*(dest_data++)= src_data[xcnt*3+2];
 			*(dest_data++)= 0;
 		}
 		pixel_data += dest_pitch;
