@@ -360,7 +360,7 @@ void OpenGLWindowProvider::create_glx_1_3(DisplayWindowSite *new_site, const Dis
 	};
 
 #ifdef HAVE_X11_EXTENSIONS_XRENDER_H
-	bool use_layered = desc.is_layered();
+	bool use_layered = desc.is_layered() || desc.is_popup();
 	if (use_layered)
 	{
 		int render_event;
@@ -370,7 +370,7 @@ void OpenGLWindowProvider::create_glx_1_3(DisplayWindowSite *new_site, const Dis
 		{
 			use_layered = false;
 		}
-		if (use_layered)
+		if (desc.is_layered())	// Allow click through transparent areas
 		{
 			x11_window.func_on_clicked() = bind_member(this, &OpenGLWindowProvider::on_clicked);
 		}

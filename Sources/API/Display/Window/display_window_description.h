@@ -195,6 +195,9 @@ public:
 	void set_dialog_window();
 
 	/// \brief Display the window as a popup 
+	///
+	/// This is treated as a transparent window (without clickthrough).
+	/// If clickthrough is also required, use set_layered_window() as well
 	void set_popup_window();
 
 	/// \brief Controls if a title bar (including frame) is shown or not.
@@ -276,6 +279,8 @@ public:
 	void set_tablet_context(bool create);
 
 	/// \brief Creates a layered window (complex shaped window)
+	///
+	/// Use with set_popup_window()
 	void set_layered(bool layered);
 
 	/// \brief Allow the screensaver to appear
