@@ -27,6 +27,7 @@ libclan40UI_la_SOURCES = \
 ./StandardViews/label_view.cpp \
 ./StandardViews/ListBoxView/listbox_view_impl.cpp \
 ./StandardViews/ListBoxView/listbox_view.cpp \
+./StandardViews/TextView/text_view.cpp \
 ./Events/key_event.cpp \
 ./Events/pointer_event.cpp \
 ./View/view.cpp \
