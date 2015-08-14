@@ -106,7 +106,7 @@ namespace clan
 			impl->text = text;
 
 		impl->selection.reset();
-		impl->cursor_pos = impl->text.size();
+		impl->cursor_pos = 0;
 		impl->scroll_pos = 0.0f;
 
 		impl->undo_buffer.clear();
