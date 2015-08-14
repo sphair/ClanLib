@@ -68,9 +68,9 @@ namespace clan
 		impl->scroll_timer.func_expired() = [&]()
 		{
 			if (impl->mouse_moves_left)
-				impl->move(-1, false, false);
+				impl->move(-1, false, false, true);
 			else
-				impl->move(1, false, false);
+				impl->move(1, false, false, true);
 		};
 	}
 
@@ -239,7 +239,7 @@ namespace clan
 		return impl->selection.sig_selection_changed;
 	}
 
-	Signal<void()> &TextView::sig_enter_pressed()
+	Signal<void(KeyEvent &)> &TextView::sig_enter_pressed()
 	{
 		return impl->sig_enter_pressed;
 	}
@@ -407,13 +407,15 @@ namespace clan
 	{
 		if (e.key() == Key::key_return)
 		{
-			sig_enter_pressed();
+			sig_enter_pressed(e);
+			if (!e.default_prevented())
+				add("\n");
 			e.stop_propagation();
 			return;
 		}
 
 		sig_before_edit_changed(e);
-		if (e.propagation_stopped())
+		if (e.default_prevented())
 		{
 			e.stop_propagation();
 			return;
@@ -441,14 +443,24 @@ namespace clan
 			copy();
 			e.stop_propagation();
 		}
+		else if (e.key() == Key::up)
+		{
+			move_line(-1, e.ctrl_down(), e.shift_down(), false);
+			e.stop_propagation();
+		}
+		else if (e.key() == Key::down)
+		{
+			move_line(1, e.ctrl_down(), e.shift_down(), false);
+			e.stop_propagation();
+		}
 		else if (e.key() == Key::left)
 		{
-			move(-1, e.ctrl_down(), e.shift_down());
+			move(-1, e.ctrl_down(), e.shift_down(), false);
 			e.stop_propagation();
 		}
 		else if (e.key() == Key::right)
 		{
-			move(1, e.ctrl_down(), e.shift_down());
+			move(1, e.ctrl_down(), e.shift_down(), false);
 			e.stop_propagation();
 		}
 		else if (e.key() == Key::backspace)
@@ -463,12 +475,12 @@ namespace clan
 		}
 		else if (e.key() == Key::home)
 		{
-			home(e.shift_down());
+			home(e.ctrl_down(), e.shift_down());
 			e.stop_propagation();
 		}
 		else if (e.key() == Key::end)
 		{
-			end(e.shift_down());
+			end(e.ctrl_down(), e.shift_down());
 			e.stop_propagation();
 		}
 		else if (e.key() == Key::x && e.ctrl_down())
@@ -573,95 +585,187 @@ namespace clan
 		selection.set_head_and_tail(Vec2i(), Vec2i(text_lines.back().size(), text_lines.size()));
 	}
 
-	void TextViewImpl::move(int steps, bool ctrl, bool shift)
+	void TextViewImpl::move_line(int steps, bool ctrl, bool shift, bool stay_on_line)
 	{
-		int pos = cursor_pos.x;
+		// To do: if ctrl is down it scrolls up and down instead of moving cursor
+		// To do: allow cursor_pos.x to be out of bounds and only clamped into range when move or add/del/backspace is called
+
+		if (ctrl)
+			return;
+
+		Vec2i pos = cursor_pos;
+
+		if (steps > 0)
+		{
+			for (int i = 0; i < steps; i++)
+			{
+				if (pos.y + 1 != text_lines.size())
+				{
+					pos.y++;
+					pos.x = std::min(pos.x, (int)text_lines[pos.y].size());
+				}
+			}
+		}
+		else
+		{
+			for (int i = 0; i < -steps; i++)
+			{
+				if (pos.y > 0)
+				{
+					pos.y--;
+					pos.x = std::min(pos.x, (int)text_lines[pos.y].size());
+				}
+			}
+		}
+
+		if (shift)
+		{
+			if (selection.start() == selection.end())
+				selection.set_head(cursor_pos);
+			selection.set_tail(pos);
+		}
+		else
+		{
+			selection.reset();
+		}
+
+		cursor_pos = pos;
+		needs_new_undo_step = true;
+		textfield->set_needs_render();
+	}
+
+	void TextViewImpl::move(int steps, bool ctrl, bool shift, bool stay_on_line)
+	{
+		Vec2i pos = cursor_pos;
 
 		// Jump over words if control is pressed.
 		if (ctrl)
 		{
 			if (steps < 0)
-				steps = find_previous_break_character(pos - 1, cursor_pos.y) - pos;
+			{
+				if (!stay_on_line && pos.x == 0 && pos.y != 0)
+				{
+					pos.y--;
+					pos.x = text_lines[pos.y].size();
+				}
+				pos.x = find_previous_break_character(pos.x, pos.y);
+			}
 			else
-				steps = find_next_break_character(pos + 1, cursor_pos.y) - pos;
-
-			pos += steps;
-			if (pos < 0)
-				pos = 0;
-			if (pos >(int)text_lines[cursor_pos.y].size())
-				pos = text_lines[cursor_pos.y].size();
+			{
+				if (!stay_on_line && pos.x == text_lines[pos.y].size() && pos.y + 1 != text_lines.size())
+				{
+					pos.y++;
+					pos.x = 0;
+				}
+				pos.x = find_next_break_character(pos.x, pos.y);
+			}
 		}
 		else
 		{
-			UTF8_Reader utf8_reader(text_lines[cursor_pos.y].data(), text_lines[cursor_pos.y].length());
-			utf8_reader.set_position(pos);
+			UTF8_Reader utf8_reader(text_lines[pos.y].data(), text_lines[pos.y].length());
+			utf8_reader.set_position(pos.x);
+
 			if (steps > 0)
 			{
 				for (int i = 0; i < steps; i++)
-					utf8_reader.next();
+				{
+					if (!stay_on_line && utf8_reader.get_position() == text_lines[pos.y].size() && pos.y + 1 != text_lines.size())
+					{
+						pos.y++;
+						utf8_reader = UTF8_Reader(text_lines[pos.y].data(), text_lines[pos.y].length());
+						utf8_reader.set_position(0);
+					}
+					else
+					{
+						utf8_reader.next();
+					}
+				}
 			}
 			else if (steps < 0)
 			{
 				for (int i = 0; i < -steps; i++)
-					utf8_reader.prev();
+				{
+					if (!stay_on_line && utf8_reader.get_position() == 0 && pos.y != 0)
+					{
+						pos.y--;
+						utf8_reader = UTF8_Reader(text_lines[pos.y].data(), text_lines[pos.y].length());
+						utf8_reader.set_position(text_lines[pos.y].length());
+					}
+					else
+					{
+						utf8_reader.prev();
+					}
+				}
 			}
 
-			pos = utf8_reader.get_position();
+			pos.x = utf8_reader.get_position();
 		}
 
 		if (shift)
 		{
 			if (selection.start() == selection.end())
 				selection.set_head(cursor_pos);
-			selection.set_tail(Vec2i(pos, cursor_pos.y));
+			selection.set_tail(pos);
 		}
 		else
 		{
 			selection.reset();
 		}
 
-		cursor_pos.x = pos;
+		cursor_pos = pos;
 		needs_new_undo_step = true;
 		textfield->set_needs_render();
 	}
 
-	void TextViewImpl::home(bool shift)
+	void TextViewImpl::home(bool ctrl, bool shift)
 	{
-		if (cursor_pos.x == 0)
+		Vec2i pos = cursor_pos;
+
+		if (ctrl)
+			pos.y = 0;
+		pos.x = 0;
+
+		if (pos == cursor_pos)
 			return;
 
 		if (shift)
 		{
 			if (selection.start() == selection.end())
 				selection.set_head(cursor_pos);
-			selection.set_tail(Vec2i(0, cursor_pos.y));
+			selection.set_tail(pos);
 		}
 		else
 		{
 			selection.reset();
 		}
 
-		cursor_pos.x = 0;
+		cursor_pos = pos;
 		textfield->set_needs_render();
 	}
 
-	void TextViewImpl::end(bool shift)
+	void TextViewImpl::end(bool ctrl, bool shift)
 	{
-		if (cursor_pos.x == text_lines[cursor_pos.y].size())
+		Vec2i pos = cursor_pos;
+
+		if (ctrl)
+			pos.y = text_lines.size() - 1;
+		pos.x = text_lines[pos.y].size();
+
+		if (pos == cursor_pos)
 			return;
 
 		if (shift)
 		{
 			if (selection.start() == selection.end())
 				selection.set_head(cursor_pos);
-			selection.set_tail(Vec2i(text_lines[cursor_pos.y].size(), cursor_pos.y));
+			selection.set_tail(pos);
 		}
 		else
 		{
 			selection.reset();
 		}
 
-		cursor_pos.x = text_lines[cursor_pos.y].size();
+		cursor_pos = pos;
 		textfield->set_needs_render();
 	}
 
@@ -682,6 +786,18 @@ namespace clan
 
 			text_lines[cursor_pos.y].erase(text_lines[cursor_pos.y].begin() + new_cursor_pos, text_lines[cursor_pos.y].begin() + cursor_pos.x);
 			cursor_pos.x = new_cursor_pos;
+
+			textfield->set_needs_render();
+		}
+		else if (cursor_pos.y > 0)
+		{
+			save_undo();
+
+			cursor_pos.y--;
+			cursor_pos.x = text_lines[cursor_pos.y].length();
+
+			text_lines[cursor_pos.y] += text_lines[cursor_pos.y + 1];
+			text_lines.erase(text_lines.begin() + cursor_pos.y + 1);
 
 			textfield->set_needs_render();
 		}
@@ -719,6 +835,15 @@ namespace clan
 			UTF8_Reader utf8_reader(text_lines[cursor_pos.y].data(), text_lines[cursor_pos.y].length());
 			utf8_reader.set_position(cursor_pos.x);
 			text_lines[cursor_pos.y].erase(text_lines[cursor_pos.y].begin() + cursor_pos.x, text_lines[cursor_pos.y].begin() + cursor_pos.x + utf8_reader.get_char_length());
+
+			textfield->set_needs_render();
+		}
+		else if (cursor_pos.y + 1 < text_lines.size())
+		{
+			save_undo();
+
+			text_lines[cursor_pos.y] += text_lines[cursor_pos.y + 1];
+			text_lines.erase(text_lines.begin() + cursor_pos.y + 1);
 
 			textfield->set_needs_render();
 		}
@@ -878,9 +1003,10 @@ namespace clan
 	std::string TextViewImpl::get_text_before_selection(size_t line_index) const
 	{
 		Vec2i start = selection.start();
+
 		if ((size_t)start.y == line_index)
 			return text_lines[line_index].substr(0, start.x);
-		else if ((size_t)start.y < line_index)
+		else if ((size_t)start.y > line_index)
 			return text_lines[line_index];
 		else
 			return std::string();
@@ -906,9 +1032,10 @@ namespace clan
 	std::string TextViewImpl::get_text_after_selection(size_t line_index) const
 	{
 		Vec2i end = selection.end();
+
 		if ((size_t)end.y == line_index)
 			return text_lines[line_index].substr(end.x);
-		else if ((size_t)end.y > line_index)
+		else if ((size_t)end.y < line_index)
 			return text_lines[line_index];
 		else
 			return std::string();
@@ -916,10 +1043,10 @@ namespace clan
 
 	int TextViewImpl::find_next_break_character(int search_start, int line) const
 	{
-		if (search_start >= int(text_lines[line].size()) - 1)
-			return text_lines[line].size();
+		if (search_start == text_lines[line].size())
+			return search_start;
 
-		int pos = text_lines[line].find_first_of(break_characters, search_start);
+		size_t pos = text_lines[line].find_first_of(break_characters, search_start + 1);
 		if (pos == std::string::npos)
 			return text_lines[line].size();
 		return pos;
@@ -927,9 +1054,9 @@ namespace clan
 
 	int TextViewImpl::find_previous_break_character(int search_start, int line) const
 	{
-		if (search_start <= 0)
+		if (search_start == 0)
 			return 0;
-		int pos = text_lines[line].find_last_of(break_characters, search_start);
+		size_t pos = text_lines[line].find_last_of(break_characters, search_start - 1);
 		if (pos == std::string::npos)
 			return 0;
 		return pos;

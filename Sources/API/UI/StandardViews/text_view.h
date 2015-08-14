@@ -73,7 +73,7 @@ namespace clan
 		Signal<void(KeyEvent &)> &sig_before_edit_changed();
 		Signal<void(KeyEvent &)> &sig_after_edit_changed();
 		Signal<void()> &sig_selection_changed();
-		Signal<void()> &sig_enter_pressed();
+		Signal<void(KeyEvent &)> &sig_enter_pressed();
 
 	protected:
 		void render_content(Canvas &canvas) override;

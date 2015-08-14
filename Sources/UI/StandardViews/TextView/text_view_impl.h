@@ -94,11 +94,12 @@ namespace clan
 		void on_deactivated(ActivationChangeEvent &e);
 
 		void select_all();
-		void move(int direction, bool ctrl, bool shift);
+		void move_line(int direction, bool ctrl, bool shift, bool stay_on_line);
+		void move(int direction, bool ctrl, bool shift, bool stay_on_line);
 		void backspace();
 		void del();
-		void home(bool shift);
-		void end(bool shift);
+		void home(bool ctrl, bool shift);
+		void end(bool ctrl, bool shift);
 		void cut();
 		void copy();
 		void paste();
@@ -124,7 +125,7 @@ namespace clan
 
 		Signal<void(KeyEvent &)> sig_before_edit_changed;
 		Signal<void(KeyEvent &)> sig_after_edit_changed;
-		Signal<void()> sig_enter_pressed;
+		Signal<void(KeyEvent &)> sig_enter_pressed;
 
 		bool readonly = false;
 		bool cursor_drawing_enabled_when_parent_focused = false;
