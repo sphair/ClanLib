@@ -31,6 +31,7 @@
 #include "API/UI/UIThread/ui_thread.h"
 #include "API/Display/2D/image.h"
 #include "API/Display/2D/canvas.h"
+#include <algorithm>
 
 namespace clan
 {
@@ -99,8 +100,17 @@ namespace clan
 	{
 		impl->get_images(canvas);
 
-		if (!impl->canvas_image.is_null())
-			impl->canvas_image.draw(canvas, 0.0f, 0.0f);
+		if (!impl->canvas_image.is_null() && impl->canvas_image.get_width() != 0.0f && impl->canvas_image.get_height() != 0.0f)
+		{
+			float scale_x = geometry().content_width / impl->canvas_image.get_width();
+			float scale_y = geometry().content_height / impl->canvas_image.get_height();
+			float scale = std::min(scale_x, scale_y);
+
+			float width = impl->canvas_image.get_width() * scale;
+			float height = impl->canvas_image.get_width() * scale;
+
+			impl->canvas_image.draw(canvas, Rectf::xywh((geometry().content_width - width) * 0.5f, (geometry().content_height - height) * 0.5f, width, height));
+		}
 	}
 
 	float ImageView::calculate_preferred_width(Canvas &canvas)
@@ -117,8 +127,8 @@ namespace clan
 	{
 		impl->get_images(canvas);
 
-		if (!impl->canvas_image.is_null())
-			return impl->canvas_image.get_height();
+		if (!impl->canvas_image.is_null() && impl->canvas_image.get_width() != 0)
+			return impl->canvas_image.get_height() * width / impl->canvas_image.get_width();
 		else
 			return 0.0f;
 	}
