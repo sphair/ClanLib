@@ -80,15 +80,34 @@ namespace clan
 				right_noncontent += subview->style_cascade().computed_value("border-right-width").number();
 				right_noncontent += subview->style_cascade().computed_value("padding-right").number();
 
-				float subview_width = width - left_noncontent - right_noncontent;
-				if (subview_width < 0.0f)
+				float subview_width = subview->get_preferred_width(canvas);
+				float available_margin = view->geometry().content_width - subview_width - left_noncontent - right_noncontent;
+
+				if (subview->style_cascade().computed_value("margin-left").is_keyword("auto") && subview->style_cascade().computed_value("margin-right").is_keyword("auto"))
 				{
-					right_noncontent = 0.0f;
-					subview_width = width - left_noncontent;
+					left_noncontent += available_margin * 0.5f;
+					right_noncontent += available_margin * 0.5f;
+				}
+				else if (subview->style_cascade().computed_value("margin-left").is_keyword("auto"))
+				{
+					left_noncontent += available_margin;
+				}
+				else if (subview->style_cascade().computed_value("margin-right").is_keyword("auto"))
+				{
+					right_noncontent -= available_margin;
+				}
+				else
+				{
+					subview_width = width - left_noncontent - right_noncontent;
 					if (subview_width < 0.0f)
 					{
-						left_noncontent = 0.0f;
-						subview_width = width;
+						right_noncontent = 0.0f;
+						subview_width = width - left_noncontent;
+						if (subview_width < 0.0f)
+						{
+							left_noncontent = 0.0f;
+							subview_width = width;
+						}
 					}
 				}
 
@@ -160,15 +179,34 @@ namespace clan
 					right_noncontent += subview->style_cascade().computed_value("border-right-width").number();
 					right_noncontent += subview->style_cascade().computed_value("padding-right").number();
 
-					float subview_width = view->geometry().content_width - left_noncontent - right_noncontent;
-					if (subview_width < 0.0f)
+					float subview_width = subview->get_preferred_width(canvas);
+					float available_margin = view->geometry().content_width - subview_width - left_noncontent - right_noncontent;
+
+					if (subview->style_cascade().computed_value("margin-left").is_keyword("auto") && subview->style_cascade().computed_value("margin-right").is_keyword("auto"))
 					{
-						right_noncontent = 0.0f;
-						subview_width = view->geometry().content_height - left_noncontent;
+						left_noncontent += available_margin * 0.5f;
+						right_noncontent += available_margin * 0.5f;
+					}
+					else if (subview->style_cascade().computed_value("margin-left").is_keyword("auto"))
+					{
+						left_noncontent += available_margin;
+					}
+					else if (subview->style_cascade().computed_value("margin-right").is_keyword("auto"))
+					{
+						right_noncontent -= available_margin;
+					}
+					else
+					{
+						subview_width = view->geometry().content_width - left_noncontent - right_noncontent;
 						if (subview_width < 0.0f)
 						{
-							left_noncontent = 0.0f;
-							subview_width = view->geometry().content_width;
+							right_noncontent = 0.0f;
+							subview_width = view->geometry().content_height - left_noncontent;
+							if (subview_width < 0.0f)
+							{
+								left_noncontent = 0.0f;
+								subview_width = view->geometry().content_width;
+							}
 						}
 					}
 
@@ -200,15 +238,34 @@ namespace clan
 				right_noncontent += subview->style_cascade().computed_value("border-right-width").number();
 				right_noncontent += subview->style_cascade().computed_value("padding-right").number();
 
-				float subview_width = view->geometry().content_width - left_noncontent - right_noncontent;
-				if (subview_width < 0.0f)
+				float subview_width = subview->get_preferred_width(canvas);
+				float available_margin = view->geometry().content_width - subview_width - left_noncontent - right_noncontent;
+
+				if (subview->style_cascade().computed_value("margin-left").is_keyword("auto") && subview->style_cascade().computed_value("margin-right").is_keyword("auto"))
 				{
-					right_noncontent = 0.0f;
-					subview_width = view->geometry().content_width - left_noncontent;
+					left_noncontent += available_margin * 0.5f;
+					right_noncontent += available_margin * 0.5f;
+				}
+				else if (subview->style_cascade().computed_value("margin-left").is_keyword("auto"))
+				{
+					left_noncontent += available_margin;
+				}
+				else if (subview->style_cascade().computed_value("margin-right").is_keyword("auto"))
+				{
+					right_noncontent -= available_margin;
+				}
+				else
+				{
+					subview_width = view->geometry().content_width - left_noncontent - right_noncontent;
 					if (subview_width < 0.0f)
 					{
-						left_noncontent = 0.0f;
-						subview_width = view->geometry().content_width;
+						right_noncontent = 0.0f;
+						subview_width = view->geometry().content_height - left_noncontent;
+						if (subview_width < 0.0f)
+						{
+							left_noncontent = 0.0f;
+							subview_width = view->geometry().content_width;
+						}
 					}
 				}
 
