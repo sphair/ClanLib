@@ -65,8 +65,7 @@ App::App()
 
 	root = std::make_shared<clan::TextureWindow>(gui_canvas);
 
-	root->set_event_window(window);
-	root->set_cursor_window(window);
+	root->set_window(window);
 
 	root->set_viewport(gui_image.get_size());
 

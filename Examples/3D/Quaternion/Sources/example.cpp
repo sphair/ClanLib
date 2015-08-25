@@ -88,8 +88,7 @@ App::App()
 
 	options_view = std::make_shared<Options>(canvas);
 	options_view->set_always_render();
-	options_view->set_event_window(window);
-	options_view->set_cursor_window(window);
+	options_view->set_window(window);
 
 	// Setup graphic store
 	graphic_store = std::make_shared<GraphicStore>(canvas);

@@ -56,8 +56,7 @@ Atlas::Atlas()
 
 	options = std::make_shared<Options>(canvas);
 	options->set_always_render();
-	options->set_event_window(window);
-	options->set_cursor_window(window);
+	options->set_window(window);
 
 	// Connect the Window close event
 	sc.connect(window.sig_window_close(), [&](){quit = true; });

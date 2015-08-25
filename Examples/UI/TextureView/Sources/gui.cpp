@@ -70,8 +70,7 @@ GUI::GUI()
 	ui_thread = clan::UIThread(resources);
 
 	ui_window = std::make_shared<clan::TextureWindow>(gui_canvas);
-	ui_window->set_event_window(window);
-	ui_window->set_cursor_window(window);
+	ui_window->set_window(window);
 	ui_window->set_viewport(gui_texture.get_size());
 
 	// Style the controller->view view to use rounded corners and a bit of drop shadow

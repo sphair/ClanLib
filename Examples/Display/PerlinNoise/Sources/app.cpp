@@ -53,8 +53,7 @@ App::App()
 
 	options = std::make_shared<Options>(canvas);
 	options->set_always_render();
-	options->set_event_window(window);
-	options->set_cursor_window(window);
+	options->set_window(window);
 
 	image_grid = clan::Image(canvas, "../../Display_Render/Blend/Resources/grid.png");
 	image_grid.set_color(clan::Colorf(0.4f, 0.4f, 1.0f, 1.0f));

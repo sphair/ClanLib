@@ -90,8 +90,7 @@ App::App()
 
 	options = std::make_shared<Options>(canvas);
 	options->set_always_render();
-	options->set_event_window(window);
-	options->set_cursor_window(window);
+	options->set_window(window);
 
 	image_grid = clan::Image(canvas, "../Blend/Resources/grid.png");
 	texture_particle = clan::Texture2D(canvas, "Resources/particle.png");
