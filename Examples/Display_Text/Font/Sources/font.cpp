@@ -235,7 +235,7 @@ void App::render(DisplayWindow &window, GameTime &game_time)
 
 	root->update();
 	canvas.set_blend_state(premultiply_src_blend);
-	gui_image.draw(canvas, 10, 10);
+	gui_image.draw(canvas, 0, 0);
 	canvas.reset_blend_state();
 
 	draw_font_example();
