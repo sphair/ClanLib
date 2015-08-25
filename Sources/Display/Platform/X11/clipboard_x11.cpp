@@ -28,6 +28,7 @@
 
 #include "Display/precomp.h"
 #include "input_device_provider_x11keyboard.h"
+#include "API/Core/System/system.h"
 #include "x11_window.h"
 #include <X11/Xatom.h>
 
@@ -61,9 +62,17 @@ std::string Clipboard_X11::get_clipboard_text() const
 	XFlush(disp);
 
 	XEvent event;
-	if (!XCheckTypedWindowEvent(x11_window->get_display(), x11_window->get_window(), SelectionNotify, &event))
+
+	auto start_time = System::get_time();
+	while(true)
 	{
-		return std::string();
+		if (XCheckTypedWindowEvent(x11_window->get_display(), x11_window->get_window(), SelectionNotify, &event))
+			break;
+		if ((System::get_time() - start_time) >= 1000)	// Allow 1 second for target application to respond. TODO: What is the correct way to do this?
+		{
+			return std::string();
+		}
+		System::sleep(100);	// Sleep for 100ms
 	}
 
 	Atom actual_type;
