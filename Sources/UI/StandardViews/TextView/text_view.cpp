@@ -862,10 +862,14 @@ namespace clan
 		ViewTree *tree = textfield->view_tree();
 		if (tree)
 		{
-			if (selection.start() != selection.end())
-				tree->get_display_window().set_clipboard_text(get_all_selected_text());
-			else
-				tree->get_display_window().set_clipboard_text(textfield->text());
+			DisplayWindow window = tree->get_display_window();
+			if (!window.is_null())
+			{
+				if (selection.start() != selection.end())
+					window.set_clipboard_text(get_all_selected_text());
+				else
+					window.set_clipboard_text(textfield->text());
+			}
 		}
 	}
 
@@ -874,7 +878,9 @@ namespace clan
 		ViewTree *tree = textfield->view_tree();
 		if (tree)
 		{
-			add(tree->get_display_window().get_clipboard_text());
+			DisplayWindow window = tree->get_display_window();
+			if (!window.is_null())
+				add(window.get_clipboard_text());
 		}
 	}
 

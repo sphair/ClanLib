@@ -58,17 +58,14 @@ namespace clan
 
 		void update();
 
-		/// \brief Set the window to use to automatically set the cursor (including mouse capture)
+		/// \brief Set the window that will contain this canvas.
 		///
-		/// Default = Don't change the cursor
-		void set_cursor_window(const DisplayWindow &cursor_window);
-
-		/// \brief Set the window to use to automatically handle window events
+		/// This is used to set the mouse cursor and send events
 		///
-		/// Default = You need to call the user defined events instead (on_...)
 		/// \param event_window = The window to use
-		/// \param transform_mouse_matrix = Matrix to use to transform the mouse coordinates
-		void set_event_window(const DisplayWindow &event_window, const Mat4f &transform_mouse_matrix = Mat4f::identity());
+		/// \param enable_automatic_events = Automatically control the window events, passing to the on_...() functions
+		/// \param transform_mouse_matrix = Transform the mouse coordinates when enable_automatic_events is true
+		void set_window(const DisplayWindow &window, bool enable_automatic_events = true, const Mat4f &transform_mouse_matrix = Mat4f::identity());
 
 		/// User defined events. Call these if set_event_window() is not used
 		void on_window_close();
@@ -81,7 +78,7 @@ namespace clan
 		void on_mouse_up(const clan::InputEvent &);
 		void on_mouse_move(const clan::InputEvent &);
 
-		DisplayWindow get_display_window() override { return DisplayWindow(); }
+		DisplayWindow get_display_window() override;
 		Canvas get_canvas() const override;
 
 	protected:

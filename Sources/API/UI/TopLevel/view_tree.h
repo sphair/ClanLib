@@ -48,6 +48,8 @@ namespace clan
 		View *focus_view() const;
 
 		/// Gets the display window used
+		///
+		/// This may return a null DisplayWindow
 		virtual DisplayWindow get_display_window() = 0;
 
 		/// Gets the current canvas used to render

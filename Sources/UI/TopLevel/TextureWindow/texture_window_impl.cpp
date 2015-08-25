@@ -49,22 +49,22 @@ namespace clan
 		opaque_blend = BlendState(canvas, blend_desc);
 	}
 
-	void TextureWindow_Impl::set_event_window(const DisplayWindow &new_event_window, const Mat4f &new_transform_mouse_matrix)
+	void TextureWindow_Impl::set_window(const DisplayWindow &window, bool enable_automatic_events, const Mat4f &new_transform_mouse_matrix)
 	{
 		slots = SlotContainer();
-		event_window = new_event_window;
+		display_window = window;
 		transform_mouse_matrix = new_transform_mouse_matrix;
-		if (!event_window.is_null())
+		if (!display_window.is_null() && enable_automatic_events)
 		{
-			slots.connect(event_window.sig_lost_focus(), clan::bind_member(this, &TextureWindow_Impl::on_lost_focus));
-			slots.connect(event_window.sig_got_focus(), clan::bind_member(this, &TextureWindow_Impl::on_got_focus));
-			slots.connect(event_window.sig_window_close(), clan::bind_member(this, &TextureWindow_Impl::on_window_close));
-			slots.connect(event_window.get_ic().get_keyboard().sig_key_down(), clan::bind_member(this, &TextureWindow_Impl::transform_on_key_down));
-			slots.connect(event_window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &TextureWindow_Impl::transform_on_key_up));
-			slots.connect(event_window.get_ic().get_mouse().sig_key_down(), clan::bind_member(this, &TextureWindow_Impl::transform_on_mouse_down));
-			slots.connect(event_window.get_ic().get_mouse().sig_key_dblclk(), clan::bind_member(this, &TextureWindow_Impl::transform_on_mouse_dblclk));
-			slots.connect(event_window.get_ic().get_mouse().sig_key_up(), clan::bind_member(this, &TextureWindow_Impl::transform_on_mouse_up));
-			slots.connect(event_window.get_ic().get_mouse().sig_pointer_move(), clan::bind_member(this, &TextureWindow_Impl::transform_on_mouse_move));
+			slots.connect(display_window.sig_lost_focus(), clan::bind_member(this, &TextureWindow_Impl::on_lost_focus));
+			slots.connect(display_window.sig_got_focus(), clan::bind_member(this, &TextureWindow_Impl::on_got_focus));
+			slots.connect(display_window.sig_window_close(), clan::bind_member(this, &TextureWindow_Impl::on_window_close));
+			slots.connect(display_window.get_ic().get_keyboard().sig_key_down(), clan::bind_member(this, &TextureWindow_Impl::transform_on_key_down));
+			slots.connect(display_window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &TextureWindow_Impl::transform_on_key_up));
+			slots.connect(display_window.get_ic().get_mouse().sig_key_down(), clan::bind_member(this, &TextureWindow_Impl::transform_on_mouse_down));
+			slots.connect(display_window.get_ic().get_mouse().sig_key_dblclk(), clan::bind_member(this, &TextureWindow_Impl::transform_on_mouse_dblclk));
+			slots.connect(display_window.get_ic().get_mouse().sig_key_up(), clan::bind_member(this, &TextureWindow_Impl::transform_on_mouse_up));
+			slots.connect(display_window.get_ic().get_mouse().sig_pointer_move(), clan::bind_member(this, &TextureWindow_Impl::transform_on_mouse_move));
 		}
 	}
 
@@ -145,8 +145,8 @@ namespace clan
 
 		if (hot_view)
 		{
-			if (!cursor_window.is_null())
-				hot_view->update_cursor(cursor_window);
+			if (!display_window.is_null())
+				hot_view->update_cursor(display_window);
 		}
 
 	}
@@ -155,8 +155,8 @@ namespace clan
 	{
 		if (captured_view)
 		{
-			if (!cursor_window.is_null())
-				cursor_window.capture_mouse(false);
+			if (!display_window.is_null())
+				display_window.capture_mouse(false);
 			captured_view.reset();
 			capture_down_counter = 0;
 		}
@@ -172,8 +172,8 @@ namespace clan
 				captured_view = view_above_cursor;
 				if (captured_view)
 				{
-					if (!cursor_window.is_null())
-						cursor_window.capture_mouse(true);
+					if (!display_window.is_null())
+						display_window.capture_mouse(true);
 				}
 			}
 		}

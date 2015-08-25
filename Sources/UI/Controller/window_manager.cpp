@@ -85,7 +85,10 @@ namespace clan
 		controller->impl->manager = this;
 		controller->impl->window = std::make_shared<TopLevelWindow>(desc);
 		controller->impl->window->set_root_view(controller->root_view());
-		controller->slots.connect(controller->impl->window->get_display_window().sig_window_close(), bind_member(controller.get(), &WindowController::dismiss));
+
+		DisplayWindow display_window = controller->impl->window->get_display_window();
+		if (!display_window.is_null())
+			controller->slots.connect(display_window.sig_window_close(), bind_member(controller.get(), &WindowController::dismiss));
 
 		impl->windows[controller.get()] = controller;
 
@@ -94,7 +97,8 @@ namespace clan
 		float height = controller->root_view()->calculate_preferred_height(canvas, width);
 		Rectf content_box(0.0f, 0.0f, width, height);
 		Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
-		controller->impl->window->get_display_window().set_size(margin_box.get_width(), margin_box.get_height(), true);
+		if (!display_window.is_null())
+			display_window.set_size(margin_box.get_width(), margin_box.get_height(), true);
 
 		controller->impl->window->show(WindowShowType::show);
 	}
@@ -109,7 +113,10 @@ namespace clan
 		DisplayWindowDescription desc;
 		desc.set_dialog_window();
 		desc.set_visible(false);
-		desc.set_owner_window(owner->view_tree()->get_display_window());
+
+		DisplayWindow owner_display_window = owner->view_tree()->get_display_window();
+		if (!owner_display_window.is_null())
+			desc.set_owner_window(owner_display_window);
 		desc.set_title(controller->title());
 		desc.show_minimize_button(false);
 		desc.show_maximize_button(false);
@@ -119,7 +126,10 @@ namespace clan
 		controller->impl->manager = this;
 		controller->impl->window = std::make_shared<TopLevelWindow>(desc);
 		controller->impl->window->set_root_view(controller->root_view());
-		controller->slots.connect(controller->impl->window->get_display_window().sig_window_close(), bind_member(controller.get(), &WindowController::dismiss));
+
+		DisplayWindow controller_display_window = controller->impl->window->get_display_window();
+		if (!controller_display_window.is_null())
+			controller->slots.connect(controller_display_window.sig_window_close(), bind_member(controller.get(), &WindowController::dismiss));
 
 		impl->windows[controller.get()] = controller;
 
@@ -128,10 +138,12 @@ namespace clan
 		float height = controller->root_view()->calculate_preferred_height(canvas, width);
 		Rectf content_box(screen_pos.x - width * 0.5f, screen_pos.y - height * 0.5f, screen_pos.x + width * 0.5f, screen_pos.y + height * 0.5f);
 		Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
-		controller->impl->window->get_display_window().set_position(margin_box, true);
+		if (!controller_display_window.is_null())
+			controller_display_window.set_position(margin_box, true);
 
 		controller->impl->window->show(WindowShowType::show);
-		owner->view_tree()->get_display_window().set_enabled(false);
+		if (!owner_display_window.is_null())
+			owner_display_window.set_enabled(false);
 	}
 
 	void WindowManager::present_popup(View *owner, const Pointf &pos, const std::shared_ptr<WindowController> &controller)
@@ -154,7 +166,10 @@ namespace clan
 		controller->impl->manager = this;
 		controller->impl->window = std::make_shared<TopLevelWindow>(desc);
 		controller->impl->window->set_root_view(controller->root_view());
-		controller->slots.connect(owner->view_tree()->get_display_window().sig_lost_focus(), bind_member(controller.get(), &WindowController::dismiss));
+
+		DisplayWindow owner_display_window = owner->view_tree()->get_display_window();
+		if (!owner_display_window.is_null())
+			controller->slots.connect(owner_display_window.sig_lost_focus(), bind_member(controller.get(), &WindowController::dismiss));
 
 		impl->windows[controller.get()] = controller;
 
@@ -163,7 +178,10 @@ namespace clan
 		float height = controller->root_view()->calculate_preferred_height(canvas, width);
 		Rectf content_box(screen_pos.x, screen_pos.y, screen_pos.x + width, screen_pos.y + height);
 		Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
-		controller->impl->window->get_display_window().set_position(margin_box, false);
+
+		DisplayWindow controller_display_window = controller->impl->window->get_display_window();
+		if (!controller_display_window.is_null())
+			controller_display_window.set_position(margin_box, false);
 
 		controller->impl->window->show(WindowShowType::show_no_activate);
 	}
@@ -197,7 +215,11 @@ namespace clan
 	{
 		impl->title = title;
 		if (impl->window)
-			impl->window->get_display_window().set_title(title);
+		{
+			DisplayWindow display_window = impl->window->get_display_window();
+			if (!display_window.is_null())
+				display_window.set_title(title);
+		}
 	}
 
 	void WindowController::dismiss()
@@ -206,7 +228,11 @@ namespace clan
 		{
 			auto modal_owner = impl->modal_owner.lock();
 			if (modal_owner && modal_owner->view_tree())
-				modal_owner->view_tree()->get_display_window().set_enabled(true);
+			{
+				DisplayWindow display_window = modal_owner->view_tree()->get_display_window();
+				if (!display_window.is_null())
+					display_window.set_enabled(true);
+			}
 
 			auto manager = impl->manager;
 

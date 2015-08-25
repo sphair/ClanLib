@@ -64,6 +64,11 @@ namespace clan
 		return impl->canvas;
 	}
 
+	DisplayWindow TextureWindow::get_display_window()
+	{
+		return impl->display_window;
+	}
+
 	void TextureWindow::set_needs_render()
 	{
 		impl->needs_render = true;
@@ -93,14 +98,9 @@ namespace clan
 		}
 	}
 
-	void TextureWindow::set_cursor_window(const DisplayWindow &new_cursor_window)
+	void TextureWindow::set_window(const DisplayWindow &window, bool enable_automatic_events, const Mat4f &transform_mouse_matrix)
 	{
-		impl->cursor_window = new_cursor_window;
-	}
-
-	void TextureWindow::set_event_window(const DisplayWindow &event_window, const Mat4f &transform_mouse_matrix)
-	{
-		impl->set_event_window(event_window, transform_mouse_matrix);
+		impl->set_window(window, enable_automatic_events, transform_mouse_matrix);
 	}
 
 	Rectf TextureWindow::get_viewport() const
