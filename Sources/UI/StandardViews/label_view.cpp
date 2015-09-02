@@ -162,7 +162,7 @@ namespace clan
 		if (style_cascade().computed_value("width").is_keyword("auto"))
 		{
 			Font font = impl->get_font(this, canvas);
-			return font.measure_text(canvas, impl->_text).advance.width;
+			return font.measure_text(canvas, impl->_text).advance.width + 1.0f;
 		}
 		else
 			return style_cascade().computed_value("width").number();
