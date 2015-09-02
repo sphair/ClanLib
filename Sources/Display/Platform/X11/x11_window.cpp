@@ -54,6 +54,7 @@
 #include <dlfcn.h>
 #include <unistd.h>
 #include "../../setup_display.h"
+#include <algorithm>
 
 #ifndef MWM_HINTS_FUNCTIONS
 /* bit definitions for MwmHints.flags */
@@ -117,13 +118,13 @@ X11Window::X11Window()
   net_wm_state_maximized_horz(None), net_wm_state_hidden(None), net_wm_state_fullscreen(None), kwm_win_decoration(None), win_hints(None),
   net_wm_ping(None), net_frame_extents(None),
   is_window_mapped(false),
-  site(nullptr), clipboard(this),
-  always_send_window_position_changed_event(false), always_send_window_size_changed_event(false)
-
+  site(nullptr), clipboard(this)
 {
 	handle.display = SetupDisplay::get_message_queue()->get_display();
 
-	last_repaint_rect.reserve(32);
+	resize_event_rects.reserve(32);
+	repaint_event_rects.reserve(32);
+
 	keyboard = InputDevice(new InputDeviceProvider_X11Keyboard(this));
 	mouse = InputDevice(new InputDeviceProvider_X11Mouse(this));
 
@@ -362,7 +363,7 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 
 			if (desc.is_main())
 				decor |= MWM_DECOR_MENU;
- 
+
 			decor |= MWM_DECOR_TITLE;
 
 			if (desc.has_maximize_button())
@@ -461,8 +462,7 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 
 	// Guess the initial position (until the window is mapped)
 	requested_size_contains_frame = !desc.get_position_client_area();
-	requested_current_window_client_area = Rect(win_x, win_y, Size(win_width, win_height));
-	current_window_client_area = requested_current_window_client_area;
+	client_area = Rect::xywh(win_x, win_y, win_width, win_height);
 
 	// Set window visibility
 	if (desc.is_visible())
@@ -572,17 +572,14 @@ void X11Window::close_window()
 
 Rect X11Window::get_geometry() const
 {
-	Rect rect = requested_current_window_client_area;
-	rect.left -=frame_size_left;
-	rect.top -=frame_size_top;
-	rect.right += frame_size_right;
-	rect.bottom += frame_size_bottom;
-	return rect;
+	Rect geom = client_area;
+	geom.shrink(frame_size_left, frame_size_top, frame_size_right, frame_size_bottom);
+	return geom;
 }
 
 Rect X11Window::get_viewport() const
 {
-	return Rect(0, 0, requested_current_window_client_area.get_size());
+	return Rect(0, 0, client_area.get_size());
 }
 
 bool X11Window::has_focus() const
@@ -655,14 +652,12 @@ std::string X11Window::get_title() const
 
 Point X11Window::client_to_screen(const Point &client)
 {
-	Rect view = requested_current_window_client_area;
-	return Point(view.left + client.x, view.top + client.y);
+	return Point{ client_area.left + client.x, client_area.top + client.y };
 }
 
 Point X11Window::screen_to_client(const Point &screen)
 {
-	Rect view = requested_current_window_client_area;
-	return Point(screen.x - view.left, screen.y - view.top);
+	return Point{ screen.x - client_area.left, screen.y - client_area.top };
 }
 
 void X11Window::show_system_cursor()
@@ -733,18 +728,16 @@ void X11Window::set_title(const std::string &new_title)
 	XSetStandardProperties(handle.display, handle.window, new_title.c_str(), new_title.c_str(), None, nullptr, 0, nullptr);
 }
 
-void X11Window::set_position(const Rect &pos, bool client_area)
+void X11Window::set_position(const Rect &pos, bool pos_is_client_area)
 {
-	always_send_window_position_changed_event = true;
-	always_send_window_size_changed_event = true;
-
-	if (!frame_size_calculated)	// If the frame size has not yet been calculated, we delay setting the window position until later (when mapped)
+	if (!frame_size_calculated) // If frame size isn't available, delay setting window position until it has been mapped.
 	{
-		requested_current_window_client_area = pos;
-		requested_size_contains_frame = !client_area;
+		client_area = pos;
+		requested_size_contains_frame = !pos_is_client_area;
 		return;
 	}
-	if (!resize_enabled)	// If resize has been disabled, we have to temporary enable it
+
+	if (!resize_enabled) // If resize has been disabled, we have to temporary enable it
 	{
 		long user_hints;
 		XGetWMNormalHints(handle.display, handle.window, size_hints, &user_hints);
@@ -755,16 +748,16 @@ void X11Window::set_position(const Rect &pos, bool client_area)
 	int width = pos.get_width();
 	int height = pos.get_height();
 
-	if (client_area)
+	if (pos_is_client_area)
 	{
-		requested_current_window_client_area = pos;
+		client_area = pos;
 		XMoveResizeWindow(handle.display, handle.window, pos.left - frame_size_left, pos.top - frame_size_top, width, height);
 	}
 	else
 	{
 		width = width - frame_size_left - frame_size_right;
 		height = height - frame_size_top - frame_size_bottom;
-		requested_current_window_client_area = Rect(pos.left + frame_size_left, pos.top + frame_size_top, Size(width, height));
+		client_area = Rect(pos.left + frame_size_left, pos.top + frame_size_top, Size(width, height));
 		XMoveResizeWindow(handle.display, handle.window, pos.left, pos.top, width, height);
 	}
 
@@ -779,14 +772,12 @@ void X11Window::set_position(const Rect &pos, bool client_area)
 	}
 }
 
-void X11Window::set_size(int width, int height, bool client_area)
+void X11Window::set_size(int width, int height, bool size_is_client_area)
 {
-	always_send_window_size_changed_event = true;
-
 	if (!frame_size_calculated)	// If the frame size has not yet been calculated, we delay setting the window position until later (when mapped)
 	{
-		requested_current_window_client_area = Rect(requested_current_window_client_area.left, requested_current_window_client_area.top, Size(width, height));
-		requested_size_contains_frame = !client_area;
+		client_area = Rect(client_area.left, client_area.top, Size(width, height));
+		requested_size_contains_frame = !size_is_client_area;
 		return;
 	}
 
@@ -798,10 +789,9 @@ void X11Window::set_size(int width, int height, bool client_area)
 		XSetWMNormalHints(handle.display, handle.window, size_hints);
 	}
 
-	if (client_area)
+	if (size_is_client_area)
 	{
-		requested_current_window_client_area = Rect(requested_current_window_client_area.left, requested_current_window_client_area.top, Size(width, height));
-
+		client_area = Rect::xywh(client_area.left, client_area.top, width, height);
 		XResizeWindow(handle.display, handle.window, width, height);
 	}
 	else
@@ -813,8 +803,7 @@ void X11Window::set_size(int width, int height, bool client_area)
 		if (height < 1)
 			height = 1;
 
-		requested_current_window_client_area = Rect(requested_current_window_client_area.left, requested_current_window_client_area.top, Size(width, height));
-
+		client_area = Rect::xywh(client_area.left, client_area.top, width, height);
 		XResizeWindow(handle.display, handle.window, width, height);
 	}
 
@@ -835,12 +824,12 @@ void X11Window::set_enabled(bool enable)
 	XSetWindowAttributes attr;
 	attr.event_mask =
 		( enable
-			? KeyPressMask
-			| KeyReleaseMask
-			| ButtonPressMask
-			| ButtonReleaseMask
-			| PointerMotionMask
-			: 0
+		  ? KeyPressMask
+		  | KeyReleaseMask
+		  | ButtonPressMask
+		  | ButtonReleaseMask
+		  | PointerMotionMask
+		  : 0
 		)
 		| EnterWindowMask
 		| LeaveWindowMask
@@ -911,15 +900,11 @@ void X11Window::map_window()
 			if (!fullscreen)
 			{
 				// Now we know the frame size, nudge the window into the exact position
-				Rect frame_size = requested_current_window_client_area;	// Must copy as set_position() changes this variable, causing all sorts of problems
+				Rect frame_size = client_area;	// Must copy as set_position() changes this variable, causing all sorts of problems
 				set_position(frame_size, !requested_size_contains_frame);
 			}
-			current_window_client_area = get_screen_position();
-			requested_current_window_client_area = current_window_client_area;
+			client_area = get_screen_position();
 		}
-
-		always_send_window_position_changed_event = true;
-		always_send_window_size_changed_event = true;
 	}
 }
 
@@ -1087,22 +1072,22 @@ Rect X11Window::get_screen_position() const
 
 void X11Window::process_window_resize(const Rect &new_rect)
 {
-	Rect rect = current_window_client_area;
-	requested_current_window_client_area = current_window_client_area = new_rect;
+	Rect old_client_area = client_area;
+	client_area = new_rect;
 
 	if (site)
 	{
-		if ( (rect.left != current_window_client_area.left) || (rect.top != current_window_client_area.top) || always_send_window_position_changed_event )
+		if (old_client_area.left != client_area.left || old_client_area.top != client_area.top)
 		{
 			(site->sig_window_moved)();
 		}
 
-		if ( (rect.get_width() != current_window_client_area.get_width()) || (rect.get_height() != current_window_client_area.get_height()) || always_send_window_size_changed_event )
+		if (old_client_area.get_width() != client_area.get_width() || old_client_area.get_height() != client_area.get_height())
 		{
-			Rectf rectf = rect;
-			rectf.left   /= pixel_ratio,
-			rectf.top    /= pixel_ratio,
-			rectf.right  /= pixel_ratio,
+			Rectf rectf = old_client_area;
+			rectf.left   /= pixel_ratio;
+			rectf.top    /= pixel_ratio;
+			rectf.right  /= pixel_ratio;
 			rectf.bottom /= pixel_ratio;
 
 			if (site->func_window_resize)
@@ -1112,46 +1097,28 @@ void X11Window::process_window_resize(const Rect &new_rect)
 				callback_on_resized();
 
 			(site->sig_resize)(rectf.get_width(), rectf.get_height());
-			rect = rectf;
 		}
 	}
-	always_send_window_position_changed_event = false;
-
 }
 
 void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 {
-
-	Rect rect;
-
 	bool process_input_context = false;
 	switch(event.type)
 	{
-		//Resize or Move
 		case ConfigureNotify:
-		{
-			// From http://tronche.com/gui/x/icccm/sec-4.html
-			// (A client will receive a synthetic ConfigureNotify event that describes the (unchanged) geometry of the window)
-			// (The client will not receive a real ConfigureNotify event because no change has actually taken place.)
+			{	// Resize or Move
+				Rect new_geometry = (event.xany.send_event == 0)
+					? get_screen_position()
+					: Rect::xywh(
+							event.xconfigure.x + event.xconfigure.border_width,
+							event.xconfigure.y + event.xconfigure.border_width,
+							event.xconfigure.width, event.xconfigure.height
+							);
 
-			if (event.xany.send_event != 0)
-			{
-				int bw = event.xconfigure.border_width;
-				rect = Rect(
-					event.xconfigure.x + bw,
-					event.xconfigure.y + bw,
-					event.xconfigure.x + bw + event.xconfigure.width,
-					event.xconfigure.y + bw + event.xconfigure.height
-				);
+				resize_event_rects.push_back(new_geometry);
+				break;
 			}
-			else
-			{
-				rect = get_screen_position();
-			}
-			process_window_resize(rect);
-
-			break;
-		}
 		case ClientMessage:
 			// handle window manager messages
 			if (wm_protocols)
@@ -1177,35 +1144,19 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 			}
 			break;
 		case Expose:
-			// Repaint notification
+			{	// Repaint notification
+				if (!site)
+					break;
 
-			if (always_send_window_position_changed_event)	// Sometimes ConfigureNotify notifications are not sent, so make sure here that we are valid
-			{
-				rect = get_screen_position();
-				process_window_resize(rect);
-			}
+				Rect new_geometry = (event.xany.send_event == 0)
+					? get_screen_position()
+					: Rect::xywh(
+							event.xconfigure.x + event.xconfigure.border_width,
+							event.xconfigure.y + event.xconfigure.border_width,
+							event.xconfigure.width, event.xconfigure.height
+							);
 
-			if (!site)
-				break;
-
-			if (exposed_rects.empty())	// First call, reserve some additional memory as required
-			{
-				unsigned int num_exposed = event.xexpose.count;
-				exposed_rects.reserve(max_allowable_expose_events);
-			}
-
-			if (exposed_rects.size() < max_allowable_expose_events)
-			{
-				rect = Rect(event.xexpose.x, event.xexpose.y,
-					event.xexpose.x + event.xexpose.width, event.xexpose.y + event.xexpose.height);
-
-				exposed_rects.push_back(rect);
-
-				// For optimisation later on, calculate the largest exposed rect
-				if ((largest_exposed_rect.get_width() * largest_exposed_rect.get_height()) < (rect.get_width() * rect.get_height()))
-				{
-					largest_exposed_rect = rect;
-				}
+				request_repaint(new_geometry);
 			}
 			break;
 		case FocusIn:
@@ -1245,19 +1196,18 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 						{
 							// generate resize events for minimized -> maximized transition
 							Rectf rectf = get_geometry();
-							rectf.left   /= pixel_ratio,
-							rectf.top    /= pixel_ratio,
-							rectf.right  /= pixel_ratio,
+							rectf.left   /= pixel_ratio;
+							rectf.top    /= pixel_ratio;
+							rectf.right  /= pixel_ratio;
 							rectf.bottom /= pixel_ratio;
 
 							(site->sig_window_moved)();
 							if (site->func_window_resize)
-							{
 								(site->func_window_resize)(rectf);
-								rect = rectf;
-							}
+
 							if (callback_on_resized)
 								callback_on_resized();
+
 							(site->sig_resize)(rectf.get_width(), rectf.get_height());
 						}
 						minimized = false;
@@ -1311,13 +1261,13 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 				}
 
 				// Adjust to what clanlib client expects
-				event.xmotion.x = event.xmotion.x_root - requested_current_window_client_area.left;
-				event.xmotion.y = event.xmotion.y_root - requested_current_window_client_area.top;
+				event.xmotion.x = event.xmotion.x_root - client_area.left;
+				event.xmotion.y = event.xmotion.y_root - client_area.top;
 
 				if (this != mouse_capture_window)
 				{
-					Rect this_scr = current_window_client_area;
-					Rect capture_scr = mouse_capture_window->current_window_client_area;
+					Rect this_scr = client_area;
+					Rect capture_scr = mouse_capture_window->client_area;
 
 					event.xbutton.x += this_scr.left - capture_scr.left;
 					event.xbutton.y += this_scr.top - capture_scr.top;
@@ -1331,12 +1281,12 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 			if (mouse_capture_window->get_mouse() && event.xany.send_event==0)
 			{
 				// Adjust to what clanlib client expects
-				event.xmotion.x = event.xmotion.x_root - requested_current_window_client_area.left;
-				event.xmotion.y = event.xmotion.y_root - requested_current_window_client_area.top;
+				event.xmotion.x = event.xmotion.x_root - client_area.left;
+				event.xmotion.y = event.xmotion.y_root - client_area.top;
 				if (this != mouse_capture_window)
 				{
-					Rect this_scr = current_window_client_area;
-					Rect capture_scr = mouse_capture_window->current_window_client_area;
+					Rect this_scr = client_area;
+					Rect capture_scr = mouse_capture_window->client_area;
 
 					event.xmotion.x += this_scr.left - capture_scr.left;
 					event.xmotion.y += this_scr.top - capture_scr.top;
@@ -1357,8 +1307,8 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 		case SelectionRequest:	// Clipboard requests
 			clipboard.event_selection_request(event.xselectionrequest);
 			break;
-	default:
-		break;
+		default:
+			break;
 	}
 
 	if (process_input_context)
@@ -1368,57 +1318,23 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 		if (ic.is_disposed())
 			return;		// Disposed, thefore "this" is invalid, must exit now
 	}
-
 }
+
+// \todo Is current X11 message queue order relevant?
+// This function is called in between X11Window::process_message polling and
+// InputContext::process_message polling at X11MessageQueue::process_message().
+// If the order is irrelevant, consider moving the contents of this method to
+// X11Window::process_queued_events() and removing this method from this class.
 void X11Window::process_message_complete()
 {
-	process_window_sockets(false);		// Check input devices
+	process_window_sockets(false); // Check input devices
 
-	// Send any exposure events, unless they have already been sent
-	unsigned int max = exposed_rects.size();
-
-	if (max==1)	// Simple case, a single rect
+	if (!resize_event_rects.empty())
 	{
-		(site->sig_paint)(largest_exposed_rect);
+		process_window_resize(resize_event_rects.back());
+		request_repaint(get_viewport()); // Just repaint the entire screen.
+		resize_event_rects.clear();
 	}
-	else if (max >= max_allowable_expose_events)
-	{
-		Rect window_rect = get_viewport();
-		(site->sig_paint)(window_rect);
-	}
-	else if (max > 1)
-	{
-		// Send the largest rect first
-		(site->sig_paint)(largest_exposed_rect);
-		for (unsigned int cnt=0; cnt < max; cnt++)
-		{
-			Rect &rect = exposed_rects[cnt];
-
-			// Rect is the larged rect or is inside the largest rect
-			if (largest_exposed_rect.is_inside(rect))
-			{
-				continue;
-			}
-
-			// Search for later larger rects that contain this rect
-			bool inner_flag = false;
-			for (unsigned int inner_cnt=cnt+1; inner_cnt < max; inner_cnt++)
-			{
-				if (exposed_rects[inner_cnt].is_inside(rect))
-				{
-					inner_flag = true;
-					break;
-				}
-			}
-
-			if (!inner_flag)
-			{
-				(site->sig_paint)(rect);
-			}
-		}
-	}
-	exposed_rects.clear();
-	largest_exposed_rect = Rect();
 }
 
 void X11Window::setup_joysticks()
@@ -1501,64 +1417,41 @@ void X11Window::set_cursor(CursorProvider_X11 *cursor)
 	//TODO:
 }
 
-void X11Window::request_repaint( const Rect &cl_rect )
+void X11Window::request_repaint(const Rect &cl_rect)
 {
-
-	Rect rect = cl_rect;
-	Rect window_rect = get_viewport();
-
-	rect.clip(window_rect);
+	Rect paint_area = Rect(cl_rect).clip(get_viewport());
 
 	// Validate rect size (if outside clipping region)
-	if ((rect.get_width() <= 0) || (rect.get_height() <= 0) )
+	if (paint_area.get_width() <= 0 || paint_area.get_height() <= 0)
 		return;
 
 	// Search the repaint list
-	unsigned int max = last_repaint_rect.size();
-	for (unsigned int cnt=0; cnt < max; cnt++)
+	for (const Rect &elem : repaint_event_rects)
 	{
-		// Ensure request for exposure has not already been made
-		if (last_repaint_rect[cnt].is_inside(rect))
-		{
-			return;
-		}
-
-		// Does this esposure completely contain one already been made
-		if (rect.is_inside(last_repaint_rect[cnt]))
-		{
-			last_repaint_rect[cnt] = rect;
-
-			// We can also flag all others as free space to optimise further, but get_messages() indirectly does this (and probably faster)
-			return;
-		}
-
+		if (paint_area.is_inside(elem))
+			return; // Don't draw same sub-area twice
 	}
-	// Message sent in process_queued_events() because expose events need to contain a counter
-	last_repaint_rect.push_back(rect);
 
+	// Remove existing elements that are within new paint area.
+	std::remove_if(
+			repaint_event_rects.begin(),
+			repaint_event_rects.end(),
+			[&paint_area](const Rect &elem) -> bool {
+				return elem.is_inside(paint_area);
+			});
+
+	repaint_event_rects.push_back(paint_area);
 }
 
 void X11Window::process_queued_events()
 {
-	unsigned int max = last_repaint_rect.size();
-	for (unsigned int cnt=0; cnt < max; cnt++)
+	if (!repaint_event_rects.empty())
 	{
-		Rect &rect = last_repaint_rect[cnt];
+		for (const Rect &elem : repaint_event_rects)
+			(site->sig_paint)(elem);
 
-		XEvent event;
-		event.xexpose.type = Expose;
-		event.xexpose.serial = 0;
-		event.xexpose.send_event = True;
-		event.xexpose.display = handle.display;
-		event.xexpose.window = handle.window;
-		event.xexpose.x = rect.left;
-		event.xexpose.y = rect.top;
-		event.xexpose.width = rect.get_width();
-		event.xexpose.height = rect.get_height();
-		event.xexpose.count = (max -1) - cnt;
-		XSendEvent( handle.display, handle.window, False, 0, &event );
+		repaint_event_rects.clear();
 	}
-	last_repaint_rect.clear();
 }
 
 void X11Window::set_minimum_size(int width, int height, bool client_area)
@@ -1694,7 +1587,7 @@ void X11Window::set_large_icon(const PixelBuffer &image)
 	// set icon data
 	Atom property = XInternAtom(handle.display, "_NET_WM_ICON", 0);
 	XChangeProperty(handle.display, handle.window, property, XA_CARDINAL, 32, PropModeReplace,
-		(unsigned char*)data, size);
+			(unsigned char*)data, size);
 
 }
 

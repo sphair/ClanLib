@@ -208,7 +208,6 @@ private:
 	bool resize_enabled;
 	Clipboard_X11 clipboard;
 	std::vector<int> current_window_events;
-	std::vector<Rect> last_repaint_rect;
 	bool is_window_mapped;
 	XSizeHints *size_hints;
 
@@ -234,16 +233,22 @@ private:
 	int frame_size_bottom;
 	int border_width;
 
-	Rect current_window_client_area; // Set by ConfigureNotify event. Excludes window frame
-	Rect requested_current_window_client_area; // Excludes window frame. Requested from ClanLib before ConfigureNotify is called
+	Rect client_area; // Current window client area. Does not contain window frame.
 
-	const static int max_allowable_expose_events = 8;
+	/**
+	 * Contains `Rect`s obtained from X11 window resize events.
+	 * Elements stored are not used. Cleared on process_message_complete (once
+	 * all X11 events have been polled. Before it is cleared, a repaint of the
+	 * entire viewport is requested if it is not empty.
+	 */
+	std::vector<Rect> resize_event_rects;
 
-	bool always_send_window_position_changed_event;
-	bool always_send_window_size_changed_event;
-
-	std::vector<Rect> exposed_rects;
-	Rect largest_exposed_rect;
+	/**
+	 * Contains `Rect`s obtained from repaint request events.
+	 * Elements stored are used to call site->sig_paint().
+	 * Cleared on process_queued_events(), after process_message_complete().
+	 */
+	std::vector<Rect> repaint_event_rects;
 
 	float ppi           = 96.0f;
 	float pixel_ratio   = 0.0f;	// 0.0f = Unset
