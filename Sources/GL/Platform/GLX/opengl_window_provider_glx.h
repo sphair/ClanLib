@@ -51,6 +51,7 @@ namespace clan
 
 typedef int (*ptr_glXSwapIntervalSGI)(int interval);
 typedef int (*ptr_glXSwapIntervalMESA)(int interval);
+typedef void (*ptr_glXSwapIntervalEXT)(::Display *dptr, GLXDrawable drawable, int interval);
 typedef GLXContext (*ptr_glXCreateContextAttribs)(::Display *dpy, GLXFBConfig config, GLXContext share_list, Bool direct, const int *attrib_list);
 
 class OpenGLWindowProvider;
@@ -312,6 +313,7 @@ private:
 
 	ptr_glXSwapIntervalSGI glXSwapIntervalSGI;
 	ptr_glXSwapIntervalMESA glXSwapIntervalMESA;
+	ptr_glXSwapIntervalEXT glXSwapIntervalEXT = nullptr;
 	int swap_interval;
 
 	GLXFBConfig fbconfig;

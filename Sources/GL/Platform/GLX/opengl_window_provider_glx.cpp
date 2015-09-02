@@ -315,7 +315,10 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 	swap_interval = desc.get_swap_interval();
 	if (swap_interval != -1)
 	{
-		if (glXSwapIntervalSGI)
+		if (glXSwapIntervalEXT)
+		{
+			glXSwapIntervalEXT(disp, x11_window.get_window(), swap_interval);
+		}else if (glXSwapIntervalSGI)
 		{
 			glXSwapIntervalSGI(swap_interval);
 		}
@@ -604,8 +607,15 @@ void OpenGLWindowProvider::setup_extension_pointers()
 {
 	glXSwapIntervalSGI = (ptr_glXSwapIntervalSGI) OpenGL::get_proc_address("glXSwapIntervalSGI");
 	glXSwapIntervalMESA = (ptr_glXSwapIntervalMESA) OpenGL::get_proc_address("glXSwapIntervalMESA");
+	glXSwapIntervalEXT = (ptr_glXSwapIntervalEXT) OpenGL::get_proc_address("glXSwapIntervalEXT");
 
 	// See - http://dri.freedesktop.org/wiki/glXGetProcAddressNeverReturnsNULL ,get_proc_address() may return an invalid extension address
+
+	if ( !is_glx_extension_supported("GLX_EXT_swap_control") )
+	{
+		glXSwapIntervalEXT = nullptr;
+	}
+
 	if ( !is_glx_extension_supported("GLX_SGI_swap_control") )
 	{
 		glXSwapIntervalSGI = nullptr;
@@ -842,7 +852,11 @@ void OpenGLWindowProvider::flip(int interval)
 	if (interval != -1 && interval != swap_interval)
 	{
 		swap_interval = interval;
-		if (glXSwapIntervalSGI)
+		if (glXSwapIntervalEXT)
+		{
+			glXSwapIntervalEXT(x11_window.get_display(), x11_window.get_window(), swap_interval);
+		}
+		else if (glXSwapIntervalSGI)
 		{
 			glXSwapIntervalSGI(swap_interval);
 		}
