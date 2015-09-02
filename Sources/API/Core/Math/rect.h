@@ -110,6 +110,14 @@ public:
 	bool operator!=(const Rectx<Type> &r) const
 	{ return (left != r.left || top != r.top || right != r.right || bottom != r.bottom); }
 
+	/// \brief Rect *= operator.
+	Rectx<Type> &operator*=(const Type &s)
+	{ left *= s; top *= s; right *= s; bottom *= s; return *this; }
+
+	/// \brief Rect * operator.
+	Rectx<Type> operator*(const Type &s) const
+	{ return Rectx<Type>(left*s, top*s, right*s, bottom *s); }
+
 	static Rectx<Type> xywh(Type x, Type y, Type width, Type height) { return Rectx<Type>(x,y,x+width, y+height); }
 	static Rectx<Type> ltrb(Type left, Type top, Type right, Type bottom) { return Rectx<Type>(left, top, right, bottom); }
 

@@ -77,6 +77,7 @@ public:
 	void set_map_mode(MapMode map_mode);
 	void set_user_projection(const Mat4f &projection);
 	void update_viewport_size();
+	void set_viewport(const Rectf &viewport);
 
 	static void get_gradient_colors(const Vec2f *triangles, int num_vertex, const Gradient &gradient, std::vector<Colorf> &out_colors);
 	static Rectf get_triangles_bounding_box(const Vec2f *triangles, int num_vertex);
@@ -95,14 +96,14 @@ private:
 	void on_window_flip();
 
 	GraphicContext gc;
-    SlotContainer sc;
+	SlotContainer sc;
 
 	Mat4f canvas_transform;
 	bool canvas_inverse_transform_set = false;
 	Mat4f canvas_inverse_transform;
 	Mat4f canvas_projection;
 	MapMode canvas_map_mode;
-	Size canvas_size;
+	Rectf viewport_rect;
 
 	DisplayWindow current_window;
 

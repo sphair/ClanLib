@@ -107,7 +107,8 @@ bool App::update()
 	canvas.set_transform(clan::Mat4f::identity());
 	canvas.set_projection(clan::Mat4f::identity());
 	canvas.set_map_mode(clan::map_2d_upper_left);
-	canvas.get_gc().set_viewport(canvas.get_size());
+
+	canvas.set_viewport(canvas.get_size());
 
 	window.flip(1);
 
@@ -192,7 +193,7 @@ void App::move_balls(float time_diff, int num_balls)
 
 void App::set_user_projection(clan::Canvas &canvas, clan::Sizef &area_size, Options *options)
 {
-	canvas.get_gc().set_viewport(clan::Rectf(0, 0, area_size));
+	canvas.set_viewport(clan::Rectf(0, 0, area_size));
 
 	float lens_zoom = 3.2f;
 	float lens_near = 0.1f;
@@ -206,7 +207,11 @@ void App::set_user_projection(clan::Canvas &canvas, clan::Sizef &area_size, Opti
 
 	fov = (fov * 180.0f) / clan::PI;
 	clan::Mat4f projection_matrix = clan::Mat4f::perspective( fov, aspect, lens_near, lens_far, clan::handed_left, clan::clip_negative_positive_w);
-	canvas.set_projection(projection_matrix);
+
+	float ratio = 1.0f / canvas.get_gc().get_pixel_ratio();
+	clan::Mat4f pixel_scaling_matrix = clan::Mat4f::scale(ratio, ratio, 1.0f);
+
+	canvas.set_projection(pixel_scaling_matrix * projection_matrix);
 
 	clan::Mat4f modelview_matrix = clan::Mat4f::identity();
 
@@ -216,3 +221,4 @@ void App::set_user_projection(clan::Canvas &canvas, clan::Sizef &area_size, Opti
 
 	canvas.set_transform(modelview_matrix);
 }
+

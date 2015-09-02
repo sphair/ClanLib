@@ -198,6 +198,11 @@ public:
 	/// \brief Set the projection mapping mode.
 	void set_map_mode(MapMode mode);
 
+	/// Set the viewport to be used in user projection map mode.
+	///
+	/// \param viewport = The viewport to set
+	void set_viewport(const Rectf &viewport);
+
 	/// \brief Set the projection matrix to be used in user projection map mode.
 	void set_projection(const Mat4f &matrix);
 

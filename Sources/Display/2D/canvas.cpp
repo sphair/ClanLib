@@ -225,6 +225,12 @@ void Canvas::set_map_mode(MapMode mode)
 	impl->set_map_mode(mode);
 }
 
+void Canvas::set_viewport(const Rectf &viewport)
+{
+	flush();
+	impl->set_viewport(viewport);
+}
+
 void Canvas::set_projection(const Mat4f &matrix)
 {
 	impl->set_user_projection(matrix);

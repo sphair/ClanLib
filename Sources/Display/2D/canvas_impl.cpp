@@ -134,10 +134,10 @@ void Canvas_Impl::calculate_map_mode_matrices()
 	{
 	default:
 	case map_2d_upper_left:
-		matrix = Mat4f::ortho_2d(0.0f, canvas_size.width, canvas_size.height, 0.0f, handed_right, gc_clip_z_range) * pixel_scaling_matrix;
+		matrix = Mat4f::ortho_2d(viewport_rect.left, viewport_rect.right, viewport_rect.bottom, viewport_rect.top, handed_right, gc_clip_z_range) * pixel_scaling_matrix;
 		break;
 	case map_2d_lower_left:
-		matrix = Mat4f::ortho_2d(0.0f, canvas_size.width, 0.0f, canvas_size.height, handed_right, gc_clip_z_range) * pixel_scaling_matrix;
+		matrix = Mat4f::ortho_2d(viewport_rect.left, viewport_rect.right, viewport_rect.top, viewport_rect.bottom, handed_right, gc_clip_z_range) * pixel_scaling_matrix;
 		break;
 	case map_user_projection:
 		matrix = pixel_scaling_matrix * user_projection;
@@ -203,12 +203,19 @@ void Canvas_Impl::set_user_projection(const Mat4f &projection)
 
 void Canvas_Impl::update_viewport_size()
 {
-	Size size = gc.get_size();
-	if (size != canvas_size)
+	Rectf size(gc.get_size());
+	if (size != viewport_rect)
 	{
-		canvas_size = size;
+		viewport_rect = size;
 		calculate_map_mode_matrices();
 	}
+}
+
+void Canvas_Impl::set_viewport(const Rectf &viewport)
+{
+	viewport_rect = viewport * (1.0f * gc.get_pixel_ratio());
+	calculate_map_mode_matrices();
+	gc.set_viewport(viewport_rect);
 }
 
 void Canvas_Impl::clear(const Colorf &color)
