@@ -170,6 +170,9 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 	XSetWindowAttributes attr;
 	memset(&attr, 0, sizeof(attr));
 
+	attr.background_pixmap = None;
+	attr.background_pixel = 0;
+	attr.border_pixmap = CopyFromParent;
 	attr.border_pixel = 0;
 	attr.override_redirect = (desc.is_popup() && (!desc.has_caption()) && (!desc.get_allow_resize())) ? True : False;	// Only true for popup windows without caption and not resizable
 	attr.colormap = color_map;
@@ -774,7 +777,7 @@ void X11Window::set_position(const Rect &pos, bool pos_is_client_area)
 
 void X11Window::set_size(int width, int height, bool size_is_client_area)
 {
-	if (!frame_size_calculated)	// If the frame size has not yet been calculated, we delay setting the window position until later (when mapped)
+	if (!frame_size_calculated) // If the frame size has not yet been calculated, we delay setting the window position until later (when mapped)
 	{
 		client_area = Rect(client_area.left, client_area.top, Size(width, height));
 		requested_size_contains_frame = !size_is_client_area;
@@ -1051,7 +1054,7 @@ Rect X11Window::get_screen_position() const
 	}
 	XUnlockDisplay(handle.display);
 
-	return (Rect(xpos, ypos, width+xpos, height+ypos));
+	return Rect::xywh(xpos, ypos, width, height);
 
 }
 
@@ -1090,13 +1093,13 @@ void X11Window::process_window_resize(const Rect &new_rect)
 			rectf.right  /= pixel_ratio;
 			rectf.bottom /= pixel_ratio;
 
-			if (site->func_window_resize)
-				(site->func_window_resize)(rectf);
-
 			if (callback_on_resized)
-				callback_on_resized();
+				callback_on_resized(); // OpenGLWindowProvider::on_window_resized
 
-			(site->sig_resize)(rectf.get_width(), rectf.get_height());
+			(site->sig_resize)(rectf.get_width(), rectf.get_height()); // TopLevelWindow_Impl::on_resize
+
+			if (site->func_window_resize)
+				(site->func_window_resize)(rectf); // TopLevelWindow_Impl::on_paint
 		}
 	}
 }
@@ -1107,7 +1110,7 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 	switch(event.type)
 	{
 		case ConfigureNotify:
-			{	// Resize or Move
+			{	// Resize or Move. Repaint after polling all messages.
 				Rect new_geometry = (event.xany.send_event == 0)
 					? get_screen_position()
 					: Rect::xywh(
@@ -1116,7 +1119,7 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 							event.xconfigure.width, event.xconfigure.height
 							);
 
-				resize_event_rects.push_back(new_geometry);
+				resize_event_rects.push_back({0, 0, new_geometry.get_size()});
 				break;
 			}
 		case ClientMessage:
@@ -1144,7 +1147,7 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 			}
 			break;
 		case Expose:
-			{	// Repaint notification
+			{	// Window exposure. Immediate repaint.
 				if (!site)
 					break;
 
@@ -1156,7 +1159,8 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 							event.xconfigure.width, event.xconfigure.height
 							);
 
-				request_repaint(new_geometry);
+				repaint_event_rects.clear();
+				(site->sig_paint)(Rect{0, 0, new_geometry.get_size()});
 			}
 			break;
 		case FocusIn:
@@ -1332,7 +1336,7 @@ void X11Window::process_message_complete()
 	if (!resize_event_rects.empty())
 	{
 		process_window_resize(resize_event_rects.back());
-		request_repaint(get_viewport()); // Just repaint the entire screen.
+		(site->sig_paint)(get_viewport()); // Just repaint the entire screen.
 		resize_event_rects.clear();
 	}
 }
