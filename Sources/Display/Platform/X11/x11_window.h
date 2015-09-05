@@ -215,8 +215,6 @@ private:
 	Atom wm_delete_window;
 	Atom net_wm_ping;
 	Atom wm_state;
-	Atom motif_wm_hints;
-	Atom kwm_win_decoration;
 	Atom net_wm_state;
 	Atom net_wm_state_maximized_vert;
 	Atom net_wm_state_maximized_horz;

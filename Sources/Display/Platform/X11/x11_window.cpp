@@ -56,66 +56,20 @@
 #include "../../setup_display.h"
 #include <algorithm>
 
-#ifndef MWM_HINTS_FUNCTIONS
-/* bit definitions for MwmHints.flags */
-#define MWM_HINTS_FUNCTIONS	(1L << 0)
-#define MWM_HINTS_DECORATIONS	(1L << 1)
-#define MWM_HINTS_INPUT_MODE	(1L << 2)
-#define MWM_HINTS_STATUS	(1L << 3)
-#endif
-
-#ifndef MWM_FUNC_ALL
-/* bit definitions for MwmHints.functions */
-#define MWM_FUNC_ALL		(1L << 0)
-#define MWM_FUNC_RESIZE		(1L << 1)
-#define MWM_FUNC_MOVE		(1L << 2)
-#define MWM_FUNC_MINIMIZE	(1L << 3)
-#define MWM_FUNC_MAXIMIZE	(1L << 4)
-#define MWM_FUNC_CLOSE		(1L << 5)
-#endif
-
-#ifndef MWM_DECOR_ALL
-/* bit definitions for MwmHints.decorations */
-#define MWM_DECOR_ALL		(1L << 0)
-#define MWM_DECOR_BORDER	(1L << 1)
-#define MWM_DECOR_RESIZEH	(1L << 2)
-#define MWM_DECOR_TITLE		(1L << 3)
-#define MWM_DECOR_MENU		(1L << 4)
-#define MWM_DECOR_MINIMIZE	(1L << 5)
-#define MWM_DECOR_MAXIMIZE	(1L << 6)
-#endif
-
 #ifndef _NET_WM_STATE_REMOVE
 #define _NET_WM_STATE_REMOVE  0
 #define _NET_WM_STATE_ADD     1
 #define _NET_WM_STATE_TOGGLE  2
 #endif
 
-#ifndef KDE_noDecoration
-#define KDE_noDecoration              0
-#define KDE_normalDecoration          1
-#define KDE_tinyDecoration            2
-#endif
-
 namespace clan
 {
-
-// From Xm/MwmUtil.h
-typedef struct
-{
-	// These were "int", but only work at "long". Is this okay on a 32bit platform?
-	long flags;
-	long functions;
-	long decorations;
-	long input_mode;
-	long status;
-} ClanLib_MotifWmHints;
 
 X11Window::X11Window()
 : color_map(0), system_cursor(0), hidden_cursor(0), cursor_bitmap(0), size_hints(nullptr),
   minimized(false), maximized(false), restore_to_maximized(false), fullscreen(false),
-  wm_protocols(None), wm_delete_window(None), wm_state(None), motif_wm_hints(None), net_wm_state(None), net_wm_state_maximized_vert(None),
-  net_wm_state_maximized_horz(None), net_wm_state_hidden(None), net_wm_state_fullscreen(None), kwm_win_decoration(None), win_hints(None),
+  wm_protocols(None), wm_delete_window(None), wm_state(None), net_wm_state(None), net_wm_state_maximized_vert(None),
+  net_wm_state_maximized_horz(None), net_wm_state_hidden(None), net_wm_state_fullscreen(None), win_hints(None),
   net_wm_ping(None), net_frame_extents(None),
   is_window_mapped(false),
   site(nullptr), clipboard(this)
@@ -191,7 +145,6 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 		PropertyChangeMask;
 
 	// retrieve some useful atoms
-	motif_wm_hints = XInternAtom(handle.display, "_MOTIF_WM_HINTS", True);
 	wm_protocols = XInternAtom(handle.display, "WM_PROTOCOLS", True);
 	wm_delete_window = XInternAtom(handle.display, "WM_DELETE_WINDOW", True);
 	net_wm_ping = XInternAtom(handle.display, "_NET_WM_PING", True);
@@ -202,7 +155,6 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 	net_wm_state_hidden = XInternAtom(handle.display, "_NET_WM_STATE_HIDDEN", True);
 	net_wm_state_fullscreen = XInternAtom(handle.display, "_NET_WM_STATE_FULLSCREEN", True);
 	net_frame_extents = XInternAtom(handle.display, "_NET_FRAME_EXTENTS", True);
-	kwm_win_decoration = XInternAtom(handle.display, "KWM_WIN_DECORATION", True);
 	win_hints = XInternAtom(handle.display, "_WIN_HINTS", True);
 	Atom net_wm_window_type = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE", True);
 	Atom net_wm_window_type_desktop = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_DESKTOP", True);
@@ -219,7 +171,6 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 	Atom net_wm_window_type_combo = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_COMBO", True);
 	Atom net_wm_window_type_dnd = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_DND", True);
 	Atom net_wm_window_type_normal = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_NORMAL", True);
-	Atom kde_net_wm_window_type_override = XInternAtom(handle.display, "_KDE_NET_WM_WINDOW_TYPE_OVERRIDE", True);
 
 	size_hints = XAllocSizeHints();
 	if (!size_hints)
@@ -343,61 +294,10 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 		{
 			XChangeProperty(handle.display, handle.window, net_wm_window_type, XA_ATOM, 32, PropModeReplace, (unsigned char *)&decor, 1);
 		}
-
-		if (!window_has_caption)	// Attempt frameless windows for KDE 2 and 3, if dropdown menus are not supported
-		{
-			if (kde_net_wm_window_type_override)
-				XChangeProperty(handle.display, handle.window, net_wm_window_type, XA_ATOM, 32, PropModeReplace, (unsigned char *)&kde_net_wm_window_type_override, 1);
-		}
 	}
 
 	// Do not use an else clause here, because on the net_wm_window_type may not turn off the border
-	if ( motif_wm_hints != None )
-	{
-		long decor = 0;
-
-		if (desc.get_allow_resize())
-			decor |= MWM_DECOR_RESIZEH;
-
-		if (window_has_caption)
-		{
-			if (window_has_thin_frame)
-				decor |= MWM_DECOR_BORDER;
-
-			if (desc.is_main())
-				decor |= MWM_DECOR_MENU;
-
-			decor |= MWM_DECOR_TITLE;
-
-			if (desc.has_maximize_button())
-				decor |= MWM_DECOR_MAXIMIZE;
-
-			if (desc.has_minimize_button())
-				decor |= MWM_DECOR_MINIMIZE;
-		}
-
-		ClanLib_MotifWmHints hints = { MWM_HINTS_DECORATIONS, 0, decor, 0, 0 };
-		XChangeProperty(handle.display, handle.window, motif_wm_hints, XA_CARDINAL, 32, PropModeReplace, (unsigned char *)&hints, 5);
-
-	}
-	else if (kwm_win_decoration != None)
-	{
-		long decor;
-		if (!window_has_caption)
-		{
-			decor = KDE_noDecoration;
-		}
-		else
-		{
-			decor = window_has_thin_frame ? KDE_tinyDecoration : -1;
-		}
-
-		if (decor >= 0)
-		{
-			XChangeProperty(handle.display, handle.window, kwm_win_decoration, XA_CARDINAL, 32, PropModeReplace, (unsigned char *)&decor, 1);
-		}
-	}
-	else if (win_hints)
+	if (win_hints != None)
 	{
 		long decor;
 		if (!window_has_caption)
@@ -556,14 +456,12 @@ void X11Window::close_window()
 	wm_delete_window = None;
 	wm_state = None;
 	net_wm_ping = None;
-	motif_wm_hints = None;
 	net_wm_state = None;
 	net_wm_state_maximized_vert = None;
 	net_wm_state_maximized_horz = None;
 	net_wm_state_hidden = None;
 	net_wm_state_fullscreen = None;
 	net_frame_extents = None;
-	kwm_win_decoration = None;
 	win_hints = None;
 
 	frame_size_left = 0;
