@@ -1133,8 +1133,6 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 			break;
 		case ButtonPress:
 		case ButtonRelease:
-			log_event("debug", "clan::X11Window::process_message: ButtonEvent received.");
-			log_event("debug", "    ButtonEvent: se%1 x%2 y%3 xr%4 yr%5 b%6", event.xmotion.send_event, event.xbutton.x, event.xbutton.y, event.xbutton.x_root, event.xbutton.y_root, event.xbutton.button);
 			if (mouse_capture_window->get_mouse() && event.xany.send_event==0)
 			{
 				if (callback_on_clicked)
@@ -1158,9 +1156,6 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 			}
 			break;
 		case MotionNotify:
-			log_event("debug", "clan::X11Window::process_message: MotionNotify received.");
-			log_event("debug", "    MotionEvent: se%1 x%2 y%3 xr%4 yr%5", event.xmotion.send_event, event.xmotion.x, event.xmotion.y, event.xmotion.x_root, event.xmotion.y_root);
-
 			if (mouse_capture_window->get_mouse() && event.xany.send_event == 0)
 			{
 				if (this != mouse_capture_window) // TODO What is this ???
