@@ -151,6 +151,7 @@ Font/FontEngine/font_engine_freetype.cpp \
 Platform/X11/display_message_queue_x11.cpp \
 Platform/X11/input_device_provider_x11keyboard.cpp \
 Platform/X11/clipboard_x11.cpp \
+Platform/X11/x11_atoms.cpp \
 Platform/X11/x11_window.cpp \
 Platform/X11/input_device_provider_x11mouse.cpp \
 Platform/X11/cursor_provider_x11.cpp

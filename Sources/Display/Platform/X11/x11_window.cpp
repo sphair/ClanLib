@@ -26,20 +26,30 @@
 **    Magnus Norddahl
 **    Harry Storbacka
 **    Mark Page
+**    Chu Chin Kuan
 */
 
 #include "Display/precomp.h"
 #include "API/Core/Math/rect.h"
 #include "API/Core/Math/point.h"
+#include "API/Core/System/system.h"
 #include "API/Core/Text/logger.h"
-#include "API/Display/Window/display_window_description.h"
-#include "API/Display/Window/input_event.h"
 #include "API/Display/display.h"
 #include "API/Display/display_target.h"
-#include "API/Display/Window/display_window.h"
 #include "API/Display/Window/keys.h"
-#include "API/Display/TargetProviders/display_window_provider.h"
 #include "API/Display/Image/pixel_buffer.h"
+#include "API/Display/TargetProviders/display_window_provider.h"
+#include "API/Display/Window/display_window.h"
+#include "API/Display/Window/display_window_description.h"
+#include "API/Display/Window/input_event.h"
+
+#include <algorithm>
+#include <cstdio>
+#include <X11/Xatom.h>
+#include <X11/XKBlib.h>
+#include <dlfcn.h>
+#include <unistd.h>
+
 #include "x11_window.h"
 #include "input_device_provider_x11keyboard.h"
 #include "input_device_provider_x11mouse.h"
@@ -47,14 +57,8 @@
 #include "input_device_provider_linuxjoystick.h"
 #endif
 #include "display_message_queue_x11.h"
-#include <X11/Xatom.h>
-#include <cstdio>
 #include "../../Window/input_context_impl.h"
-#include <X11/XKBlib.h>
-#include <dlfcn.h>
-#include <unistd.h>
 #include "../../setup_display.h"
-#include <algorithm>
 
 #ifndef _NET_WM_STATE_REMOVE
 #define _NET_WM_STATE_REMOVE  0
@@ -62,22 +66,21 @@
 #define _NET_WM_STATE_TOGGLE  2
 #endif
 
+constexpr int _ResizeMinimumSize_ = 8;
+
 namespace clan
 {
 
 X11Window::X11Window()
-: color_map(0), system_cursor(0), hidden_cursor(0), cursor_bitmap(0), size_hints(nullptr),
+: handle(), color_map(0), system_cursor(0), hidden_cursor(0), cursor_bitmap(0), size_hints(nullptr),
   minimized(false), maximized(false), restore_to_maximized(false), fullscreen(false),
-  wm_protocols(None), wm_delete_window(None), wm_state(None), net_wm_state(None), net_wm_state_maximized_vert(None),
-  net_wm_state_maximized_horz(None), net_wm_state_hidden(None), net_wm_state_fullscreen(None), win_hints(None),
-  net_wm_ping(None), net_frame_extents(None),
   is_window_mapped(false),
   site(nullptr), clipboard(this)
 {
 	handle.display = SetupDisplay::get_message_queue()->get_display();
 
 	resize_event_rects.reserve(32);
-	repaint_event_rects.reserve(32);
+	repaint_request_rects.reserve(32);
 
 	keyboard = InputDevice(new InputDeviceProvider_X11Keyboard(this));
 	mouse = InputDevice(new InputDeviceProvider_X11Mouse(this));
@@ -105,13 +108,15 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 {
 	site = new_site;
 
-	close_window();		// Reset all variables
+	// Reset all variables
+	close_window();
 
-	current_screen = visual->screen;
+	handle.screen = visual->screen;
+	atoms = X11Atoms(handle.display);
 
-	int disp_width_px = XDisplayWidth(handle.display, current_screen);
-	int disp_height_px = XDisplayHeight(handle.display, current_screen);
-	int disp_width_mm = XDisplayWidthMM(handle.display, current_screen);
+	int disp_width_px = XDisplayWidth(handle.display, handle.screen);
+	int disp_height_px = XDisplayHeight(handle.display, handle.screen);
+	int disp_width_mm = XDisplayWidthMM(handle.display, handle.screen);
 
 	// Get DPI of screen or use 96.0f if Xlib doesn't have a value.
 	ppi = (disp_width_mm < 24) ? 96.0f : (25.4f * static_cast<float>(disp_width_px) / static_cast<float>(disp_width_mm));
@@ -119,100 +124,129 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 	// Update pixel ratio.
 	set_pixel_ratio(pixel_ratio);
 
-	color_map = XCreateColormap(handle.display, RootWindow(handle.display, visual->screen), visual->visual, AllocNone);
+	// Get X11 root window.
+	auto _root_window = RootWindow(handle.display, handle.screen);
 
-	XSetWindowAttributes attr;
-	memset(&attr, 0, sizeof(attr));
-
-	attr.background_pixmap = None;
-	attr.background_pixel = 0;
-	attr.border_pixmap = CopyFromParent;
-	attr.border_pixel = 0;
-	attr.override_redirect = (desc.is_popup() && (!desc.has_caption()) && (!desc.get_allow_resize())) ? True : False;	// Only true for popup windows without caption and not resizable
-	attr.colormap = color_map;
-	attr.event_mask =
-		KeyPressMask |
-		KeyReleaseMask |
-		ButtonPressMask |
-		ButtonReleaseMask |
-		EnterWindowMask |
-		LeaveWindowMask |
-		PointerMotionMask |
-		KeymapStateMask |
-		ExposureMask |
-		StructureNotifyMask |
-		FocusChangeMask |
-		PropertyChangeMask;
-
-	// retrieve some useful atoms
-	wm_protocols = XInternAtom(handle.display, "WM_PROTOCOLS", True);
-	wm_delete_window = XInternAtom(handle.display, "WM_DELETE_WINDOW", True);
-	net_wm_ping = XInternAtom(handle.display, "_NET_WM_PING", True);
-	wm_state = XInternAtom(handle.display, "WM_STATE", True);
-	net_wm_state = XInternAtom(handle.display, "_NET_WM_STATE", True);
-	net_wm_state_maximized_vert = XInternAtom(handle.display, "_NET_WM_STATE_MAXIMIZED_VERT", True);
-	net_wm_state_maximized_horz = XInternAtom(handle.display, "_NET_WM_STATE_MAXIMIZED_HORZ", True);
-	net_wm_state_hidden = XInternAtom(handle.display, "_NET_WM_STATE_HIDDEN", True);
-	net_wm_state_fullscreen = XInternAtom(handle.display, "_NET_WM_STATE_FULLSCREEN", True);
-	net_frame_extents = XInternAtom(handle.display, "_NET_FRAME_EXTENTS", True);
-	win_hints = XInternAtom(handle.display, "_WIN_HINTS", True);
-	Atom net_wm_window_type = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE", True);
-	Atom net_wm_window_type_desktop = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_DESKTOP", True);
-	Atom net_wm_window_type_dock = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_DOCK", True);
-	Atom net_wm_window_type_toolbar = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_TOOLBAR", True);
-	Atom net_wm_window_type_menu = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_MENU", True);
-	Atom net_wm_window_type_utility = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_UTILITY", True);
-	Atom net_wm_window_type_splash = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_SPLASH", True);
-	Atom net_wm_window_type_dialog = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_DIALOG", True);
-	Atom net_wm_window_type_dropdown_menu = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_DROPDOWN_MENU", True);
-	Atom net_wm_window_type_popup_menu = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_POPUP_MENU", True);
-	Atom net_wm_window_type_tooltip = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_TOOLTIP", True);
-	Atom net_wm_window_type_notification = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_NOTIFICATION", True);
-	Atom net_wm_window_type_combo = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_COMBO", True);
-	Atom net_wm_window_type_dnd = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_DND", True);
-	Atom net_wm_window_type_normal = XInternAtom(handle.display, "_NET_WM_WINDOW_TYPE_NORMAL", True);
-
-	size_hints = XAllocSizeHints();
-	if (!size_hints)
-		throw Exception("Cannot allocate X11 XSizeHints structure");
-
-	system_cursor = XCreateFontCursor(handle.display, XC_left_ptr); // This is allowed to fail
-
+	// Get and validate initial window position and size.
 	int win_x = desc.get_position().left * pixel_ratio;
 	int win_y = desc.get_position().top * pixel_ratio;
 	int win_width = desc.get_size().width * pixel_ratio;
 	int win_height = desc.get_size().height * pixel_ratio;
 
-	// Check for valid width and height
 	if (win_width <= 0)
-	{
 		throw Exception("Invalid window width.");
-		// win_width = 128;
-	}
 
 	if (win_height <= 0)
-	{
 		throw Exception("Invalid window height.");
-		// win_height = 128;
-	}
 
+	// Set values if fullscreen requested.
 	if (desc.is_fullscreen())
 	{
 		win_x = 0;
 		win_y = 0;
+		win_width = disp_width_px;
+		win_height = disp_height_px;
 	}
 
+	// Center window if position supplied is (-1, -1)
 	if (win_x == -1 && win_y == -1)
 	{
 		win_x = (disp_width_px - win_width)/2 - 1;
 		win_y = (disp_height_px - win_height)/2 - 1;
 	}
 
+	// Set minimum and maximum size
+	this->resize_allowed = desc.get_allow_resize() || desc.is_fullscreen(); // Fullscreen mode needs a resizable window.
+	if (resize_allowed)
+	{
+		minimum_size = Size(_ResizeMinimumSize_, _ResizeMinimumSize_);
+		maximum_size = Size(0, 0); // No maximum size by default.
+	}
+	else
+	{
+		minimum_size = Size(win_width, win_height);
+		maximum_size = Size(win_width, win_height);
+	}
+
+	// Setup X11 size hints.
+	this->size_hints = XAllocSizeHints();
+	if (size_hints == NULL)
+		throw Exception("Failed to allocate X11 XSizeHints structure.");
+
+	size_hints->flags       = PMinSize | (resize_allowed ? 0 : PMaxSize);
+	size_hints->flags      |= PResizeInc | PBaseSize | PWinGravity;
+	// x, y, width, height are obsolete.
+	size_hints->min_width   = minimum_size.width;
+	size_hints->min_height  = minimum_size.height;
+	size_hints->max_width   = maximum_size.width;
+	size_hints->max_height  = maximum_size.height;
+	size_hints->width_inc   = 1;
+	size_hints->height_inc  = 1;
+	size_hints->base_width  = win_width;
+	size_hints->base_height = win_height;
+	size_hints->win_gravity = NorthWestGravity;
+
+	// Setup X11 colormap.
+	//
+	// The X.Org XServer implementation used on most systems requires that
+	// a color-map be set for the window. Additionally, windows with a
+	// different color-depth than its parent must have the border-pixel flag
+	// set when creating them. Failure to do either will cause XCreateWindow()
+	// to result in a BadMatch error.
+	//
+	// Source: stackoverflow.com/questions/3645632
+	color_map = XCreateColormap(handle.display, _root_window, visual->visual, AllocNone);
+
+	// Static popups are unresizable captionless popup windows.
+	// These windows should not be decorated.
+	bool is_static_popup = desc.is_popup() && !desc.has_caption() && !desc.get_allow_resize();
+
+	// Tell X11 to perserve graphical content under small popup windows to avoid redraws.
+	bool save_under = desc.is_popup() && ( (win_width * win_height) < (256 * 256 * pixel_ratio * pixel_ratio) );
+
+	// Setup window attributes.
+	XSetWindowAttributes attr = XSetWindowAttributes {
+		.background_pixmap  = None, /* default */
+		.background_pixel   =  0ul, /* default: undefined */
+		.border_pixmap      = CopyFromParent, /* default */
+		.border_pixel       =  0ul, /* see color_map details above */
+		.bit_gravity        = ForgetGravity, /* default */
+		.win_gravity        = NorthWestGravity, /* default */
+		.backing_store      = NotUseful, /* default */
+		.backing_planes     = -1ul, /* default */
+		.backing_pixel      =  0ul, /* default */
+		.save_under         = save_under ? True : False,
+		.event_mask         = KeyPressMask
+		                    | KeyReleaseMask
+		                    | ButtonPressMask
+		                    | ButtonReleaseMask
+		                    | EnterWindowMask
+		                    | LeaveWindowMask
+		                    | PointerMotionMask
+		                    | KeymapStateMask
+		                    | ExposureMask
+		                    // | VisibilityChangeMask
+		                    | StructureNotifyMask
+		                    | FocusChangeMask
+		                    | PropertyChangeMask ,
+		.do_not_propagate_mask  = NoEventMask, /* default */
+		.override_redirect      = is_static_popup ? True : False,
+		.colormap               = color_map, /* see color_map details above */
+		.cursor                 = None /* default; Let X11 handle the cursor for now. */
+	};
+
+	this->system_cursor = XCreateFontCursor(handle.display, XC_left_ptr); // This is allowed to fail
+
+	log_event("debug", "clan::X11Window::create(): Creating window...");
+	log_event("debug", "    x%1 y%2 w%3 h%4 b%5 d%6", win_x, win_y, win_width, win_height, border_width, visual->depth);
+	log_event("debug", "    a.su%1, a.od%2", save_under, is_static_popup);
+
+	// Create window
 	handle.window = XCreateWindow(
-			handle.display, RootWindow(handle.display, current_screen),
-			win_x, win_y, win_width, win_height, 0, visual->depth,
-			InputOutput, visual->visual,
-			CWBorderPixel | CWColormap | CWOverrideRedirect | CWEventMask,
+			handle.display, _root_window,
+			win_x, win_y, win_width, win_height, border_width,
+			visual->depth, InputOutput, visual->visual,
+			CWBorderPixel | CWOverrideRedirect | CWSaveUnder | CWEventMask | CWColormap,
 			&attr
 			);
 
@@ -233,148 +267,122 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 	memset(&black_color, 0, sizeof(black_color));
 
 	cursor_bitmap = XCreateBitmapFromData(handle.display, handle.window, data, 8, 8);
-	hidden_cursor = XCreatePixmapCursor(handle.display, cursor_bitmap, cursor_bitmap, &black_color, &black_color, 0,0 );
+	hidden_cursor = XCreatePixmapCursor(handle.display, cursor_bitmap, cursor_bitmap, &black_color, &black_color, 0,0);
 
-	// set title of window:
+	// Set title of window:
 	set_title(desc.get_title());
 
-	// Inform the window manager who we are
-	char hostname[256];
-	if (gethostname(hostname, sizeof(hostname)) > -1)
-	{
-		hostname[sizeof(hostname)-1] = 0;
-		long pid = getpid();
+	{   // Inform the window manager who we are, so it can kill us if we're not good for its universe.
+		Atom atom;
+		int32_t pid = getpid();
 		if (pid > 0)
 		{
-			Atom atom = XInternAtom(handle.display, "_NET_WM_PID", False);
-			if (atom)
-			{
-				long pid = getpid();
-				XChangeProperty(handle.display, handle.window, atom, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &pid, 1);
-			}
-
-			atom = XInternAtom(handle.display, "WM_CLIENT_MACHINE", False);
-			if (atom)
-			{
-				long pid = getpid();
-				XChangeProperty(handle.display, handle.window, atom, XA_STRING, 8, PropModeReplace, (unsigned char *) hostname, strlen(hostname));
-			}
+			atom = atoms.get_atom(handle.display, "_NET_WM_PID", False);
+			XChangeProperty(handle.display, handle.window, atom, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &pid, 1);
 		}
-	}
 
-	bool window_has_thin_frame = false;
-	bool window_has_caption = true;
-
-	if (desc.is_popup())
-	{
-		if (!desc.has_caption())
+		char hostname[256];
+		if (gethostname(hostname, sizeof(hostname)) > -1)
 		{
-			window_has_caption = false;
+			hostname[255] = 0;
+			atom = atoms.get_atom(handle.display, "WM_CLIENT_MACHINE", False);
+			XChangeProperty(handle.display, handle.window, atom, XA_STRING, 8, PropModeReplace, (unsigned char *) hostname, strlen(hostname));
 		}
 	}
 
-	if (net_wm_window_type != None)
+	// Set-up window type/styling.
+	// TODO Support more window types, broaden ClanLib window type support, etc.
+	if (atoms["_NET_WM_WINDOW_TYPE"] != None)
 	{
-		// See http://standards.freedesktop.org/wm-spec/1.5/ar01s05.html
-		Atom decor;
+		Atom type = None;
+		std::string name;
+
 		if (desc.is_dialog())
 		{
-			decor = net_wm_window_type_dialog;
+			name = "_NET_WM_WINDOW_TYPE_DIALOG";
+			type = atoms[name];
 		}
-		else if (!window_has_caption)
+		else if (desc.is_popup())
 		{
-			decor = net_wm_window_type_popup_menu;
+			if (is_static_popup)
+			{
+				name = "_NET_WM_WINDOW_TYPE_TOOLTIP";
+				type = atoms[name];
+			}
+			else if (desc.has_caption()) // A pop-up with title bar -> utility
+			{
+				name = "_NET_WM_WINDOW_TYPE_UTILITY";
+				type = atoms[name];
+			} // else, a pop-up without a title bar -> popup-menu, combo, dropdown, tooltip, ...
+
+			if (type == None) { name = "_NET_WM_WINDOW_TYPE_POPUP_MENU"; type = atoms[name]; }
+			if (type == None) { name = "_NET_WM_WINDOW_TYPE_COMBO"; type = atoms[name]; }
+			if (type == None) { name = "_NET_WM_WINDOW_TYPE_DROPDOWN_MENU"; type = atoms[name]; }
+		} // else if (desc.is_normal())
+
+		// Fallback to normal window type if WM doesn't support what we want.
+		if (type == None) { name = "_NET_WM_WINDOW_TYPE_NORMAL"; type = atoms[name]; }
+
+		if (type != None) // Ensure selected type exists.
+		{
+			XChangeProperty(handle.display, handle.window, atoms["_NET_WM_WINDOW_TYPE"], XA_ATOM, 32, PropModeReplace, (unsigned char *)&type, 1);
+			log_event("debug", "clan::X11Window::create(): Creating window of type '%1'.", name);
 		}
 		else
 		{
-			decor = net_wm_window_type_normal;
+			log_event("debug", "clan::X11Window::create(): Failed to find a suitable window type.");
 		}
-
-		if (decor)	// Ensure the atom exists
-		{
-			XChangeProperty(handle.display, handle.window, net_wm_window_type, XA_ATOM, 32, PropModeReplace, (unsigned char *)&decor, 1);
-		}
-	}
-
-	// Do not use an else clause here, because on the net_wm_window_type may not turn off the border
-	if (win_hints != None)
-	{
-		long decor;
-		if (!window_has_caption)
-		{
-			decor = 0;
-		}
-		else
-		{
-			decor = window_has_thin_frame ? 0 : -1;
-		}
-
-		if (decor >= 0)
-		{
-			XChangeProperty(handle.display, handle.window, win_hints, XA_CARDINAL, 32, PropModeReplace, (unsigned char *)&decor, 1);
-		}
-	}
-
-	resize_enabled = desc.get_allow_resize() || desc.is_fullscreen(); // Fs needs resizable window
-
-	if (resize_enabled)
-	{
-		minimum_size = Size(32, 32);
-		maximum_size = Size(0, 0);	// No maximum size by default
 	}
 	else
 	{
-		minimum_size = Size(win_width, win_height);
-		maximum_size = Size(win_width, win_height);
+		log_event("debug", "clan::X11Window::create(): _NET_WM_WINDOW_TYPE does not exist.");
 	}
 
-	size_hints->x = win_x;
-	size_hints->y = win_y;
-	size_hints->width       = win_width;
-	size_hints->height      = win_height;
-	size_hints->base_width  = win_width;
-	size_hints->base_height = win_height;
-	size_hints->min_width   = minimum_size.width;
-	size_hints->min_height  = minimum_size.height;
-	size_hints->max_width   = maximum_size.width;
-	size_hints->max_height  = maximum_size.height;
-	size_hints->width_inc   = 1;
-	size_hints->height_inc  = 1;
-	size_hints->win_gravity = NorthWestGravity;
-	size_hints->flags       = PSize|PBaseSize|PPosition|PMinSize|PResizeInc|PWinGravity;
-
-	if (!resize_enabled)
-	{
-		size_hints->flags |= PMaxSize;
-	}
+	// Set size hints
 	XSetWMNormalHints(handle.display, handle.window, size_hints);
 
-	// subscribe to window manager events
-	XSetWMProtocols(handle.display, handle.window, &wm_delete_window, 1);
-
-	// Make auto repeat keys detectable
-	Bool supports_detectable_autorepeat;
-	XkbSetDetectableAutoRepeat(handle.display,1,&supports_detectable_autorepeat);
-
-	fullscreen = desc.is_fullscreen() && net_wm_state && net_wm_state_fullscreen;
-	if (fullscreen)
-	{
-		Atom atom1 = net_wm_state_fullscreen;
-		XChangeProperty(handle.display, handle.window, net_wm_state, XA_ATOM, 32, PropModeReplace, (unsigned char *)&atom1, 1);
+	{	// Subscribe to WM events.
+		Atom protocol = atoms["WM_DELETE_WINDOW"];
+		Status result = XSetWMProtocols(handle.display, handle.window, &protocol, 1);
+		if (result == 0)
+			log_event("debug", "clan::X11Window::create(): Failed to set WM_PROTOCOLS.");
 	}
 
-	// Guess the initial position (until the window is mapped)
-	requested_size_contains_frame = !desc.get_position_client_area();
-	client_area = Rect::xywh(win_x, win_y, win_width, win_height);
+	{	// Make auto-repeat keys detectable.
+		Bool supports_detectable_autorepeat;
+		XkbSetDetectableAutoRepeat(handle.display, True, &supports_detectable_autorepeat);
+	}
+
+	{	// Make window full-screen if requested.
+		if (atoms["_NET_WM_STATE"] == None && atoms["_NET_WM_STATE_FULLSCREEN"])
+		{
+			fullscreen = false;
+			log_event("debug", "clan::X11Window: Fullscreen not supported by WM.");
+		}
+		else
+		{
+			fullscreen = desc.is_fullscreen();
+		}
+
+		if (fullscreen)
+		{
+			Atom state = atoms["_NET_WM_STATE_FULLSCREEN"];
+			XChangeProperty(handle.display, handle.window, atoms["_NET_WM_STATE"], XA_ATOM, 32, PropModeReplace, (unsigned char *)&state, 1);
+		}
+	}
+
+	update_frame_extents();
+
+	client_area = desc.get_position_client_area() // supplied position is at ? client area : window area;
+		? Rect::xywh(win_x, win_y, win_width, win_height)
+		: Rect::xywh(win_x + frame_extents.left, win_y + frame_extents.right, win_width, win_height)
+		;
 
 	// Set window visibility
 	if (desc.is_visible())
 	{
 		show(false);
 	}
-	minimized = is_minimized();
-	maximized = is_maximized();
-	restore_to_maximized = maximized;
 
 	// Setup the clipboard
 	clipboard.setup();
@@ -388,28 +396,61 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 	setup_joysticks();
 }
 
-void X11Window::calculate_window_frame_size()
+void X11Window::update_frame_extents()
 {
-	if (!net_frame_extents)
+	frame_extents = Rect { border_width, border_width, border_width, border_width };
+
+	if (atoms["_NET_FRAME_EXTENTS"] == None)
 		return;
 
-	unsigned long number_items;
-	int actual_format;
-	Atom actual_type;
-
-	// _NET_FRAME_EXTENTS, left, right, top, bottom, CARDINAL[4]/32
-	unsigned char *data = get_property(handle.window, net_frame_extents, &number_items, &actual_format, &actual_type);
-	if (data != nullptr)
+	// Request frame extents from WM.
+	if (atoms["_NET_REQUEST_FRAME_EXTENTS"] != None)
 	{
-		if (number_items >= 4)
+		XEvent event;
+		memset(&event, 0, sizeof(event));
+
+		event.type = ClientMessage;
+		event.xclient.window = handle.window;
+		event.xclient.format = 32;
+		event.xclient.message_type = atoms["_NET_REQUEST_FRAME_EXTENTS"];
+
+		XSendEvent(handle.display, RootWindow(handle.display, handle.screen), False, SubstructureNotifyMask | SubstructureRedirectMask, &event);
+
+		int timer = 10;
+		while(true)
 		{
-			frame_size_left = ((long *)data)[0];
-			frame_size_right = ((long *)data)[1];
-			frame_size_top = ((long *)data)[2];
-			frame_size_bottom = ((long *)data)[3];
+			if (timer < 0)
+			{
+				log_event("debug", "clan::X11Window: Your window manager has a broken _NET_REQUEST_FRAME_EXTENTS implementation.");
+				break;
+			}
+
+			if (XCheckMaskEvent(handle.display, PropertyNotify, &event))
+			{
+				break;
+			}
+
+			clan::System::sleep(5);
+			timer--;
 		}
-		XFree(data);
 	}
+
+	unsigned long  item_count;
+	// _NET_FRAME_EXTENTS, left, right, top, bottom, CARDINAL[4]/32
+	unsigned char *data = atoms.get_property(handle.window, "_NET_FRAME_EXTENTS", item_count);
+	if (data == NULL)
+		return;
+
+	if (item_count >= 4)
+	{
+		long *cardinal = (long *)data;
+		frame_extents.left   = cardinal[0];
+		frame_extents.right  = cardinal[1];
+		frame_extents.top    = cardinal[2];
+		frame_extents.bottom = cardinal[3];
+	}
+
+	XFree(data);
 }
 
 void X11Window::close_window()
@@ -420,6 +461,7 @@ void X11Window::close_window()
 	{
 		XDestroyWindow(handle.display, handle.window);
 		handle.window = 0;
+		handle.screen = -1;
 	}
 
 	if (system_cursor)
@@ -452,74 +494,78 @@ void X11Window::close_window()
 		size_hints = nullptr;
 	}
 
-	wm_protocols = None;
-	wm_delete_window = None;
-	wm_state = None;
-	net_wm_ping = None;
-	net_wm_state = None;
-	net_wm_state_maximized_vert = None;
-	net_wm_state_maximized_horz = None;
-	net_wm_state_hidden = None;
-	net_wm_state_fullscreen = None;
-	net_frame_extents = None;
-	win_hints = None;
-
-	frame_size_left = 0;
-	frame_size_right = 0;
-	frame_size_top = 0;
-	frame_size_bottom = 0;
-	frame_size_calculated = false;
+	atoms.clear();
 }
 
 Rect X11Window::get_geometry() const
 {
 	Rect geom = client_area;
-	geom.shrink(frame_size_left, frame_size_top, frame_size_right, frame_size_bottom);
+	geom.expand(frame_extents.left, frame_extents.top, frame_extents.right, frame_extents.bottom);
 	return geom;
 }
 
 Rect X11Window::get_viewport() const
 {
-	return Rect(0, 0, client_area.get_size());
+	return Rect { 0, 0, client_area.get_size() };
 }
 
 bool X11Window::has_focus() const
 {
-	Window focus_return;
-	int revert_to_return;
-	XGetInputFocus(handle.display, &focus_return, &revert_to_return);
-	if (focus_return == handle.window) return true;
-	return false;
+	Window focus_window;
+	int    focus_state;
+	XGetInputFocus(handle.display, &focus_window, &focus_state);
+	return (focus_window == handle.window);
 }
 
 bool X11Window::is_minimized() const
 {
-	unsigned long number_items;
-	int actual_format;
-	Atom actual_type;
+	if (!is_window_mapped)
+		log_event("debug", "clan::X11Window::is_minimized(): Window is unmapped.");
 
-	// first check _NET_WM_STATE property if supported
-	if (net_wm_state != None)
-		return check_net_wm_state(net_wm_state_hidden);
-
-	// now check WM_STATE property
-	if (wm_state != None)
+	// Check FreeDeskop specified _NET_WM_STATE first.
+	if (atoms["_NET_WM_STATE"] != None)
 	{
-		unsigned char *data = get_property(handle.window, wm_state, &number_items, &actual_format, &actual_type);
-		if (data != nullptr)
+		if (atoms["_NET_WM_STATE_HIDDEN"] != None)
+		{
+			auto ret = atoms.check_net_wm_state(handle.window, { "_NET_WM_STATE_HIDDEN" } );
+			return ret.front();
+		}
+		else
+			log_event("debug", "clan::X11Window::is_minimized(): _NET_WM_STATE_HIDDEN not provided by WM.");
+	}
+	else
+		log_event("debug", "clan::X11Window::is_minimized(): _NET_WM_STATE not provided by WM.");
+
+	// If not available, check legacy WM_STATE property
+	if (atoms["WM_STATE"] != None)
+	{
+		unsigned long  item_count;
+		unsigned char *data = atoms.get_property(handle.window, "WM_STATE", item_count);
+		if (data != NULL)
 		{
 			long state = *(long *)data;
 			XFree(data);
 			return state == IconicState;
 		}
+		else
+			log_event("debug", "clan::X11Window::is_minimized(): Failed to query WM_STATE.");
 	}
+	else
+		log_event("debug", "clan::X11Window::is_minimized(): WM_STATE not provided by WM.");
 
 	return false;
 }
 
 bool X11Window::is_maximized() const
 {
-	return check_net_wm_state(net_wm_state_maximized_vert, net_wm_state_maximized_horz);
+	if (!is_window_mapped)
+		log_event("debug", "clan::X11Window::is_minimized(): Window is unmapped.");
+
+	auto ret = atoms.check_net_wm_state(handle.window, { "_NET_WM_STATE_MAXIMIZED_HORZ", "_NET_WM_STATE_MAXIMIZED_VERT" });
+	if (ret[0] != ret[1])
+		log_event("debug", "clan::X11Window::is_maximized(): Window is only maximized on the %1 side.", ret[0] ? "horizontal" : "vertical");
+
+	return ret[0] && ret[1];
 }
 
 bool X11Window::is_visible() const
@@ -530,25 +576,26 @@ bool X11Window::is_visible() const
 	return true;
 }
 
-Size X11Window::get_minimum_size(bool client_area) const
+Size X11Window::get_minimum_size(bool for_client_area) const
 {
-	if (!client_area)
-		return minimum_size;
+	if (for_client_area)
+		return minimum_size; // TODO This used to throw exceptions
 	else
-		throw Exception("X11Window::get_minimum_size() not implemented for client_area");
+		return Size{
+			minimum_size.width + frame_extents.left + frame_extents.right,
+			minimum_size.height + frame_extents.top + frame_extents.bottom
+		};
 }
 
-Size X11Window::get_maximum_size(bool client_area) const
+Size X11Window::get_maximum_size(bool for_client_area) const
 {
-	if (!client_area)
-		return maximum_size;
+	if (for_client_area)
+		return maximum_size; // TODO This used to throw exceptions
 	else
-		throw Exception("X11Window::get_maximum_size() not implemented for client_area");
-}
-
-std::string X11Window::get_title() const
-{
-	return window_title;
+		return Size{
+			maximum_size.width + frame_extents.left + frame_extents.right,
+			maximum_size.height + frame_extents.top + frame_extents.bottom
+		};
 }
 
 Point X11Window::client_to_screen(const Point &client)
@@ -564,6 +611,11 @@ Point X11Window::screen_to_client(const Point &screen)
 void X11Window::show_system_cursor()
 {
 	XDefineCursor(handle.display, handle.window, system_cursor);
+}
+
+void X11Window::hide_system_cursor()
+{
+	XDefineCursor(handle.display, handle.window, hidden_cursor);
 }
 
 void X11Window::set_cursor(StandardCursor type)
@@ -618,11 +670,6 @@ void X11Window::set_cursor(StandardCursor type)
 	XDefineCursor(handle.display, handle.window, system_cursor);
 }
 
-void X11Window::hide_system_cursor()
-{
-	XDefineCursor(handle.display, handle.window, hidden_cursor);
-}
-
 void X11Window::set_title(const std::string &new_title)
 {
 	window_title = new_title;
@@ -631,14 +678,9 @@ void X11Window::set_title(const std::string &new_title)
 
 void X11Window::set_position(const Rect &pos, bool pos_is_client_area)
 {
-	if (!frame_size_calculated) // If frame size isn't available, delay setting window position until it has been mapped.
-	{
-		client_area = pos;
-		requested_size_contains_frame = !pos_is_client_area;
-		return;
-	}
+	update_frame_extents();
 
-	if (!resize_enabled) // If resize has been disabled, we have to temporary enable it
+	if (!resize_allowed) // If resize has been disabled, we have to temporary enable it
 	{
 		long user_hints;
 		XGetWMNormalHints(handle.display, handle.window, size_hints, &user_hints);
@@ -652,17 +694,17 @@ void X11Window::set_position(const Rect &pos, bool pos_is_client_area)
 	if (pos_is_client_area)
 	{
 		client_area = pos;
-		XMoveResizeWindow(handle.display, handle.window, pos.left - frame_size_left, pos.top - frame_size_top, width, height);
+		XMoveResizeWindow(handle.display, handle.window, pos.left - frame_extents.left, pos.top - frame_extents.top, width, height);
 	}
 	else
 	{
-		width = width - frame_size_left - frame_size_right;
-		height = height - frame_size_top - frame_size_bottom;
-		client_area = Rect(pos.left + frame_size_left, pos.top + frame_size_top, Size(width, height));
+		width = width - frame_extents.left - frame_extents.right;
+		height = height - frame_extents.top - frame_extents.bottom;
+		client_area = Rect::xywh(pos.left + frame_extents.left, pos.top + frame_extents.top, width, height);
 		XMoveResizeWindow(handle.display, handle.window, pos.left, pos.top, width, height);
 	}
 
-	if (!resize_enabled)	// resize has been temporary enabled
+	if (!resize_allowed) // resize has been temporary enabled
 	{
 		size_hints->min_width   = width;
 		size_hints->min_height  = height;
@@ -675,14 +717,9 @@ void X11Window::set_position(const Rect &pos, bool pos_is_client_area)
 
 void X11Window::set_size(int width, int height, bool size_is_client_area)
 {
-	if (!frame_size_calculated) // If the frame size has not yet been calculated, we delay setting the window position until later (when mapped)
-	{
-		client_area = Rect(client_area.left, client_area.top, Size(width, height));
-		requested_size_contains_frame = !size_is_client_area;
-		return;
-	}
+	update_frame_extents();
 
-	if (!resize_enabled)	// If resize has been disabled, we have to temporary enable it
+	if (!resize_allowed) // If resize has been disabled, we have to temporary enable it
 	{
 		long user_hints;
 		XGetWMNormalHints(handle.display, handle.window, size_hints, &user_hints);
@@ -690,25 +727,16 @@ void X11Window::set_size(int width, int height, bool size_is_client_area)
 		XSetWMNormalHints(handle.display, handle.window, size_hints);
 	}
 
-	if (size_is_client_area)
+	if (!size_is_client_area)
 	{
-		client_area = Rect::xywh(client_area.left, client_area.top, width, height);
-		XResizeWindow(handle.display, handle.window, width, height);
-	}
-	else
-	{
-		width = width - frame_size_left - frame_size_right;
-		height = height - frame_size_top - frame_size_bottom;
-		if (width < 1)
-			width = 1;
-		if (height < 1)
-			height = 1;
-
-		client_area = Rect::xywh(client_area.left, client_area.top, width, height);
-		XResizeWindow(handle.display, handle.window, width, height);
+		width  = std::max(_ResizeMinimumSize_, width  - frame_extents.left - frame_extents.right);
+		height = std::max(_ResizeMinimumSize_, height - frame_extents.top - frame_extents.bottom);
 	}
 
-	if (!resize_enabled)	// resize has been temporary enabled
+	client_area = Rect::xywh(client_area.left, client_area.top, width, height);
+	XResizeWindow(handle.display, handle.window, width, height);
+
+	if (!resize_allowed) // resize has been temporary enabled
 	{
 		size_hints->min_width   = width;
 		size_hints->min_height  = height;
@@ -717,7 +745,6 @@ void X11Window::set_size(int width, int height, bool size_is_client_area)
 		size_hints->flags |= PMinSize | PMaxSize;
 		XSetWMNormalHints(handle.display, handle.window, size_hints);
 	}
-
 }
 
 void X11Window::set_enabled(bool enable)
@@ -745,101 +772,134 @@ void X11Window::set_enabled(bool enable)
 
 void X11Window::minimize()
 {
+	if (!is_window_mapped)
+		log_event("debug", "clan::X11Window::minimize(): Window is not yet mapped.");
+
 	if (!is_minimized())
+	{
+		log_event("debug", "clan::X11Window::minimize(): Minimizing.");
 		restore_to_maximized = is_maximized();
-	XIconifyWindow(handle.display, handle.window, current_screen);
+		XIconifyWindow(handle.display, handle.window, handle.screen);
+		minimized = true;
+	}
+	else
+	{
+		log_event("debug", "clan::X11Window::minimize(): Window already minimized.");
+	}
 }
 
 void X11Window::restore()
 {
+	if (!is_window_mapped)
+		log_event("debug", "clan::X11Window::restore(): Window is not yet mapped.");
+
 	if (is_minimized())
 	{
 		if (restore_to_maximized)
 		{
+			log_event("debug", "clan::X11Window::restore(): Restoring to maximized window.");
 			maximize();
 		}
 		else
 		{
+			log_event("debug", "clan::X11Window::restore(): Restoring minimized window.");
 			map_window();
+			maximized = false;
 		}
 	}
 	else if (is_maximized())
 	{
-		modify_net_wm_state(false, net_wm_state_maximized_vert, net_wm_state_maximized_horz);
+		log_event("debug", "clan::X11Window::restore(): Restoring window size.");
+		atoms.modify_net_wm_state(handle.window, _NET_WM_STATE_REMOVE, "_NET_WM_STATE_MAXIMIZED_HORZ", "_NET_WM_STATE_MAXIMIZED_VERT");
+		maximized = false;
 	}
 }
 
 void X11Window::map_window()
 {
-	clear_structurenotify_events();
+	// Clear exisitng StructureNofify events.
+	XEvent event;
+	while(XCheckMaskEvent(handle.display, StructureNotifyMask, &event));
 
-	if (!is_window_mapped)
+	if (is_window_mapped)
 	{
-		int result = XMapWindow(handle.display, handle.window);
-		if ( (result == BadValue) || (result == BadWindow) )
+		if (!is_minimized())
 		{
-			throw Exception("Failed to map window");
+			log_event("debug", "clan::X11Window::map_window(): Window already mapped.");
+			return;
 		}
 		else
-		{
-			XEvent event;
-			do {
-				XWindowEvent(handle.display, handle.window, StructureNotifyMask, &event);
-			}while ( event.type != MapNotify );
+			log_event("debug", "clan::X11Window::map_window(): Mapping minimized window.");
+	}
 
-			is_window_mapped = true;
+	log_event("debug", "clan::X11Window::map_window(): Mapping window...");
 
-			if (fullscreen)
-				XSetInputFocus(handle.display, handle.window, RevertToParent, CurrentTime);
-		}
+	int result = XMapWindow(handle.display, handle.window);
+	if ((result == BadValue) || (result == BadWindow))
+		throw Exception("Failed to map window.");
 
-		if (!frame_size_calculated)
-		{
-			frame_size_calculated = true;
-			calculate_window_frame_size();
+	XFlush(handle.display);
 
-			if (!fullscreen)
-			{
-				// Now we know the frame size, nudge the window into the exact position
-				Rect frame_size = client_area;	// Must copy as set_position() changes this variable, causing all sorts of problems
-				set_position(frame_size, !requested_size_contains_frame);
-			}
-			client_area = get_screen_position();
-		}
+	do {
+		XWindowEvent(handle.display, handle.window, StructureNotifyMask, &event);
+	} while (event.type != MapNotify);
+	XFlush(handle.display);
+
+	is_window_mapped = true;
+
+	if (fullscreen)
+	{
+		XSetInputFocus(handle.display, handle.window, RevertToParent, CurrentTime);
+		XFlush(handle.display);
+	}
+	else
+	{
+		update_frame_extents();
+		set_position(client_area, true);
 	}
 }
 
 void X11Window::unmap_window()
 {
-	clear_structurenotify_events();
-	if (is_window_mapped)
-	{
-		int result = XUnmapWindow(handle.display, handle.window);
-		if ( (result == BadValue) || (result == BadWindow) )
-		{
-			throw Exception("Failed to unmap window");
-		}
-		else
-		{
-			XEvent event;
-			do {
-				XWindowEvent(handle.display, handle.window, StructureNotifyMask, &event);
-			}while (event.type != UnmapNotify);
+	// Clear exisitng StructureNofify events.
+	XEvent event;
+	while(XCheckMaskEvent(handle.display, StructureNotifyMask, &event));
 
-			is_window_mapped = false;
-		}
+	if (!is_window_mapped)
+	{
+		log_event("debug", "clan::X11Window::unmap_window(): Window already unmapped.");
+		return;
 	}
+
+	log_event("debug", "clan::X11Window::map_window(): Unmapping window...");
+
+	int result = XUnmapWindow(handle.display, handle.window);
+	if ( (result == BadValue) || (result == BadWindow) )
+		throw Exception("Failed to unmap window.");
+
+	XFlush(handle.display);
+
+	do {
+		XWindowEvent(handle.display, handle.window, StructureNotifyMask, &event);
+	} while (event.type != UnmapNotify);
+	XFlush(handle.display);
+
+	is_window_mapped = false;
 }
 
 void X11Window::maximize()
 {
-	modify_net_wm_state(true, net_wm_state_maximized_vert, net_wm_state_maximized_horz);
+	log_event("debug", "clan::X11Window::maximize(): Maximizing window.");
+	atoms.modify_net_wm_state(handle.window, _NET_WM_STATE_ADD, "_NET_WM_STATE_MAXIMIZED_HORZ", "_NET_WM_STATE_MAXIMIZED_VERT");
+	maximized = true;
 }
 
 void X11Window::show(bool activate)
 {
+	log_event("debug", "clan::X11Window::show(): Mapping window.");
 	map_window();
-	if (activate) set_enabled(true);
+	if (activate)
+		set_enabled(true);
 }
 
 void X11Window::hide()
@@ -858,118 +918,32 @@ void X11Window::capture_mouse(bool capture)
 	SetupDisplay::get_message_queue()->set_mouse_capture(this, capture);
 }
 
-void X11Window::clear_structurenotify_events()
-{
-	XEvent event;
-	while( XCheckMaskEvent(handle.display, StructureNotifyMask, &event));
-
-}
-
-bool X11Window::check_net_wm_state(Atom atom1, Atom atom2) const
-{
-	unsigned long number_items;
-	int actual_format;
-	Atom actual_type;
-
-	// search for atom1 or atom2 in _NET_WM_STATE array
-	if (net_wm_state != None)
-	{
-		unsigned char *data = get_property(handle.window, net_wm_state, &number_items, &actual_format, &actual_type);
-		if (data != nullptr)
-		{
-			bool find = false;
-			for (unsigned i = 0; i < number_items; ++i)
-			{
-				long atom = ((long *)data)[i];
-				if (atom != None && (atom == atom1 || atom == atom2))
-				{
-					find = true;
-					break;
-				}
-			}
-			XFree(data);
-			return find;
-		}
-	}
-
-	return false;
-}
-
-bool X11Window::modify_net_wm_state(bool add, Atom atom1, Atom atom2)
-{
-	// change _NET_WM_STATE property, see: http://standards.freedesktop.org/wm-spec/wm-spec-latest.html
-	if (net_wm_state != None)
-	{
-		XEvent xev;
-		memset(&xev, 0, sizeof(xev));
-		xev.xclient.type = ClientMessage;
-		xev.xclient.window = handle.window;
-		xev.xclient.message_type = net_wm_state;
-		xev.xclient.format = 32;
-		xev.xclient.data.l[0] = add ? _NET_WM_STATE_ADD : _NET_WM_STATE_REMOVE;
-		xev.xclient.data.l[1] = atom1;
-		xev.xclient.data.l[2] = atom2;
-		xev.xclient.data.l[3] = None;
-		return XSendEvent(handle.display, DefaultRootWindow(handle.display), False, SubstructureRedirectMask | SubstructureNotifyMask, &xev) != 0;
-	}
-
-	return false;
-}
 
 Rect X11Window::get_screen_position() const
 {
-	int xpos;
-	int ypos;
-	unsigned int width;
-	unsigned int height;
-	Window *children_ptr;
-	unsigned int num_child;
-	Window temp_window;
-	XWindowAttributes attr;
-
 	XLockDisplay(handle.display);
 
+	Window  root;
+	Window  parent;
+	Window  child;
+	Window* children;
+	unsigned int children_count;
+
+	// Get parent Window
+	XQueryTree(handle.display, handle.window, &root, &parent, &children, &children_count);
+	XFree(children);
+
+	// Get this window's attributes.
+	XWindowAttributes attr;
 	XGetWindowAttributes(handle.display, handle.window, &attr);
 
-	xpos = attr.x;
-	ypos = attr.y;
-	width = attr.width;
-	height = attr.height;
+	int xpos;
+	int ypos;
+	// Get parent window's translation coordinates to root window.
+	XTranslateCoordinates(handle.display, parent, root, attr.x, attr.y, &xpos, &ypos, &child);
 
-	Window current_window = handle.window;
-	while(true)
-	{
-		children_ptr = nullptr;
-		XQueryTree(handle.display, current_window, &temp_window, &current_window, &children_ptr, &num_child);
-		if (children_ptr)
-			XFree(children_ptr);
-
-		if (!current_window) break;
-
-		XGetWindowAttributes(handle.display, current_window, &attr);
-		xpos += attr.x;
-		ypos += attr.y;
-	}
-	XUnlockDisplay(handle.display);
-
-	return Rect::xywh(xpos, ypos, width, height);
-
+	return Rect::xywh(xpos, ypos, attr.width, attr.height);
 }
-
-//Rect X11Window::get_client_position() const
-//{
-//	Window root_window;
-//	int x, y;
-//	unsigned int width, height;
-//	unsigned int depth, border_width;
-//	XGetGeometry(handle.display, handle.window, &root_window, &x, &y, &width, &height, &border_width, &depth);
-//
-//	Window child_return;
-//	int newx, newy;
-//	XTranslateCoordinates(handle.display, handle.window, root_window, x, y, &newx, &newy, &child_return);
-//
-//	return Rect(newx, newy, Size(width, height));
-//}
 
 void X11Window::process_window_resize(const Rect &new_rect)
 {
@@ -985,7 +959,7 @@ void X11Window::process_window_resize(const Rect &new_rect)
 
 		if (old_client_area.get_width() != client_area.get_width() || old_client_area.get_height() != client_area.get_height())
 		{
-			Rectf rectf = old_client_area;
+			Rectf rectf = client_area;
 			rectf.left   /= pixel_ratio;
 			rectf.top    /= pixel_ratio;
 			rectf.right  /= pixel_ratio;
@@ -1008,59 +982,66 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 	switch(event.type)
 	{
 		case ConfigureNotify:
-			{	// Resize or Move. Repaint after polling all messages.
-				Rect new_geometry = (event.xany.send_event == 0)
-					? get_screen_position()
-					: Rect::xywh(
-							event.xconfigure.x + event.xconfigure.border_width,
-							event.xconfigure.y + event.xconfigure.border_width,
-							event.xconfigure.width, event.xconfigure.height
-							);
+		{	// Resize or Move. Repaint after polling all messages.
+			Rect new_geometry = (event.xany.send_event == 0)
+				? get_screen_position()
+				: Rect::xywh(
+						event.xconfigure.x + event.xconfigure.border_width,
+						event.xconfigure.y + event.xconfigure.border_width,
+						event.xconfigure.width, event.xconfigure.height
+						);
 
-				resize_event_rects.push_back({0, 0, new_geometry.get_size()});
+			resize_event_rects.push_back({0, 0, new_geometry.get_size()});
+			break;
+		}
+		case ClientMessage:
+		{	// handle window manager messages
+			Atom WM_PROTOCOLS = atoms["WM_PROTOCOLS"];
+			if (WM_PROTOCOLS == None)
+			{
+				log_event("debug", "clan::X11Window::process_message: WM_PROTOCOLS not supported by WM.");
 				break;
 			}
-		case ClientMessage:
-			// handle window manager messages
-			if (wm_protocols)
+			else if (event.xclient.message_type == WM_PROTOCOLS)
 			{
-				if (event.xclient.message_type == wm_protocols)
+				unsigned long protocol = event.xclient.data.l[0];
+				if (protocol == None)
 				{
-					if (wm_delete_window)
-					{
-						if (event.xclient.data.l[0] == wm_delete_window)
-						{
-							if (site)
-								(site->sig_window_close)();
-						}
-					}
-					if (net_wm_ping)
-					{
-						if (event.xclient.data.l[0] == net_wm_ping)
-						{
-							XSendEvent( handle.display, RootWindow(handle.display, current_screen), False, SubstructureNotifyMask | SubstructureRedirectMask, &event );
-						}
-					}
+					log_event("debug", "clan::X11Window::process_message: WM_PROTOCOLS event protocol supplied is None.");
+					break;
+				}
+
+				Atom WM_DELETE_WINDOW = atoms["WM_DELETE_WINDOW"];
+				Atom _NET_WM_PING = atoms["_NET_WM_PING"];
+
+				if (protocol == WM_DELETE_WINDOW && site)
+				{
+					(site->sig_window_close)();
+				}
+				else if (protocol == _NET_WM_PING)
+				{
+					XSendEvent(handle.display, RootWindow(handle.display, handle.screen), False, SubstructureNotifyMask | SubstructureRedirectMask, &event);
 				}
 			}
 			break;
+		}
 		case Expose:
-			{	// Window exposure. Immediate repaint.
-				if (!site)
-					break;
+		{	// Window exposure. Immediate repaint.
+			if (!site)
+				break;
 
-				Rect new_geometry = (event.xany.send_event == 0)
-					? get_screen_position()
-					: Rect::xywh(
-							event.xconfigure.x + event.xconfigure.border_width,
-							event.xconfigure.y + event.xconfigure.border_width,
-							event.xconfigure.width, event.xconfigure.height
-							);
+			Rect new_geometry = (event.xany.send_event == 0)
+				? get_screen_position()
+				: Rect::xywh(
+						event.xconfigure.x + event.xconfigure.border_width,
+						event.xconfigure.y + event.xconfigure.border_width,
+						event.xconfigure.width, event.xconfigure.height
+						);
 
-				repaint_event_rects.clear();
-				(site->sig_paint)(Rect{0, 0, new_geometry.get_size()});
-			}
+			repaint_request_rects.clear();
+			(site->sig_paint)(Rect{0, 0, new_geometry.get_size()});
 			break;
+		}
 		case FocusIn:
 			if (site)
 				(site->sig_got_focus)();
@@ -1076,73 +1057,72 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 			}
 			break;
 		case PropertyNotify:
+		{	// Iconify, Maximized, ...
 			if (!site)
 				break;
 
-			if (net_wm_state != None)
+			Atom _NET_WM_STATE = atoms["_NET_WM_STATE"];
+			Atom WM_STATE = atoms["WM_STATE"]; // legacy.
+
+			if (_NET_WM_STATE != None && event.xproperty.atom == _NET_WM_STATE && event.xproperty.state == PropertyNewValue)
 			{
-				if (event.xproperty.atom == net_wm_state && event.xproperty.state == PropertyNewValue)
+				if (is_minimized())
 				{
-					if (is_minimized())
+					if (!minimized && site != nullptr)
+						(site->sig_window_minimized)();
+					minimized = true;
+					maximized = false;
+				}
+				else if (is_maximized())
+				{
+					if (!maximized && site != nullptr)
+						(site->sig_window_maximized)();
+					if (minimized && site != nullptr)
 					{
-						if (!minimized && site != nullptr)
-							(site->sig_window_minimized)();
-						minimized = true;
-						maximized = false;
-					}
-					else if (is_maximized())
-					{
-						if (!maximized && site != nullptr)
-							(site->sig_window_maximized)();
-						if (minimized && site != nullptr)
-						{
-							// generate resize events for minimized -> maximized transition
-							Rectf rectf = get_geometry();
-							rectf.left   /= pixel_ratio;
-							rectf.top    /= pixel_ratio;
-							rectf.right  /= pixel_ratio;
-							rectf.bottom /= pixel_ratio;
+						// generate resize events for minimized -> maximized transition
+						Rectf rectf = get_geometry();
+						rectf.left   /= pixel_ratio;
+						rectf.top    /= pixel_ratio;
+						rectf.right  /= pixel_ratio;
+						rectf.bottom /= pixel_ratio;
 
-							(site->sig_window_moved)();
-							if (site->func_window_resize)
-								(site->func_window_resize)(rectf);
+						(site->sig_window_moved)();
+						if (site->func_window_resize)
+							(site->func_window_resize)(rectf);
 
-							if (callback_on_resized)
-								callback_on_resized();
+						if (callback_on_resized)
+							callback_on_resized();
 
-							(site->sig_resize)(rectf.get_width(), rectf.get_height());
-						}
-						minimized = false;
-						maximized = true;
+						(site->sig_resize)(rectf.get_width(), rectf.get_height());
 					}
-					else
-					{
-						if ((minimized || maximized) && site != nullptr)
-							(site->sig_window_restored)();
-						minimized = false;
-						maximized = false;
-					}
+					minimized = false;
+					maximized = true;
+				}
+				else
+				{
+					if ((minimized || maximized) && site != nullptr)
+						(site->sig_window_restored)();
+					minimized = false;
+					maximized = false;
 				}
 			}
-			else
+			else if (WM_STATE != None && event.xproperty.atom == WM_STATE && event.xproperty.state == PropertyNewValue)
 			{
-				if (event.xproperty.atom == wm_state && event.xproperty.state == PropertyNewValue)
+				if (is_minimized())
 				{
-					if (is_minimized())
-					{
-						if (!minimized && site != nullptr)
-							(site->sig_window_minimized)();
-						minimized = true;
-					}
-					else
-					{
-						if (minimized && site != nullptr)
-							(site->sig_window_restored)();
-						minimized = false;
-					}
+					if (!minimized && site != nullptr)
+						(site->sig_window_minimized)();
+					minimized = true;
+				}
+				else
+				{
+					if (minimized && site != nullptr)
+						(site->sig_window_restored)();
+					minimized = false;
 				}
 			}
 			break;
+		}
 		case KeyRelease:
 		case KeyPress:
 			if (get_keyboard())
@@ -1153,6 +1133,8 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 			break;
 		case ButtonPress:
 		case ButtonRelease:
+			log_event("debug", "clan::X11Window::process_message: ButtonEvent received.");
+			log_event("debug", "    ButtonEvent: se%1 x%2 y%3 xr%4 yr%5 b%6", event.xmotion.send_event, event.xbutton.x, event.xbutton.y, event.xbutton.x_root, event.xbutton.y_root, event.xbutton.button);
 			if (mouse_capture_window->get_mouse() && event.xany.send_event==0)
 			{
 				if (callback_on_clicked)
@@ -1162,11 +1144,7 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 						break;
 				}
 
-				// Adjust to what clanlib client expects
-				event.xmotion.x = event.xmotion.x_root - client_area.left;
-				event.xmotion.y = event.xmotion.y_root - client_area.top;
-
-				if (this != mouse_capture_window)
+				if (this != mouse_capture_window) // TODO What is this ???
 				{
 					Rect this_scr = client_area;
 					Rect capture_scr = mouse_capture_window->client_area;
@@ -1180,12 +1158,12 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 			}
 			break;
 		case MotionNotify:
-			if (mouse_capture_window->get_mouse() && event.xany.send_event==0)
+			log_event("debug", "clan::X11Window::process_message: MotionNotify received.");
+			log_event("debug", "    MotionEvent: se%1 x%2 y%3 xr%4 yr%5", event.xmotion.send_event, event.xmotion.x, event.xmotion.y, event.xmotion.x_root, event.xmotion.y_root);
+
+			if (mouse_capture_window->get_mouse() && event.xany.send_event == 0)
 			{
-				// Adjust to what clanlib client expects
-				event.xmotion.x = event.xmotion.x_root - client_area.left;
-				event.xmotion.y = event.xmotion.y_root - client_area.top;
-				if (this != mouse_capture_window)
+				if (this != mouse_capture_window) // TODO What is this ???
 				{
 					Rect this_scr = client_area;
 					Rect capture_scr = mouse_capture_window->client_area;
@@ -1200,7 +1178,7 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 
 			break;
 
-		case SelectionClear:	// New clipboard selection owner
+		case SelectionClear: // New clipboard selection owner
 			clipboard.event_selection_clear(event.xselectionclear);
 			break;
 		case SelectionNotify:
@@ -1328,7 +1306,7 @@ void X11Window::request_repaint(const Rect &cl_rect)
 		return;
 
 	// Search the repaint list
-	for (const Rect &elem : repaint_event_rects)
+	for (const Rect &elem : repaint_request_rects)
 	{
 		if (paint_area.is_inside(elem))
 			return; // Don't draw same sub-area twice
@@ -1336,29 +1314,35 @@ void X11Window::request_repaint(const Rect &cl_rect)
 
 	// Remove existing elements that are within new paint area.
 	std::remove_if(
-			repaint_event_rects.begin(),
-			repaint_event_rects.end(),
+			repaint_request_rects.begin(),
+			repaint_request_rects.end(),
 			[&paint_area](const Rect &elem) -> bool {
 				return elem.is_inside(paint_area);
 			});
 
-	repaint_event_rects.push_back(paint_area);
+	repaint_request_rects.push_back(paint_area);
 }
 
 void X11Window::process_queued_events()
 {
-	if (!repaint_event_rects.empty())
+	if (!repaint_request_rects.empty())
 	{
-		for (const Rect &elem : repaint_event_rects)
+		for (const Rect &elem : repaint_request_rects)
 			(site->sig_paint)(elem);
 
-		repaint_event_rects.clear();
+		repaint_request_rects.clear();
 	}
 }
 
-void X11Window::set_minimum_size(int width, int height, bool client_area)
+void X11Window::set_minimum_size(int width, int height, bool size_is_client_area)
 {
-	minimum_size = Size(width,height);
+	minimum_size = Size(width, height);
+
+	if (!size_is_client_area)
+	{
+		minimum_size.width -= frame_extents.left + frame_extents.right;
+		minimum_size.height -= frame_extents.top + frame_extents.bottom;
+	}
 
 	long user_hints;
 	XGetWMNormalHints(handle.display, handle.window, size_hints, &user_hints);
@@ -1368,9 +1352,15 @@ void X11Window::set_minimum_size(int width, int height, bool client_area)
 	XSetWMNormalHints(handle.display, handle.window, size_hints);
 }
 
-void X11Window::set_maximum_size(int width, int height, bool client_area)
+void X11Window::set_maximum_size(int width, int height, bool size_is_client_area)
 {
 	maximum_size = Size(width,height);
+
+	if (!size_is_client_area)
+	{
+		maximum_size.width -= frame_extents.left + frame_extents.right;
+		maximum_size.height -= frame_extents.top + frame_extents.bottom;
+	}
 
 	long user_hints;
 	XGetWMNormalHints(handle.display, handle.window, size_hints, &user_hints);
@@ -1401,7 +1391,6 @@ void X11Window::set_pixel_ratio(float ratio)
 			pixel_ratio = static_cast<float>(s) / 6.0f;
 		}
 	}
-	// TODO Adjust everything related to pixel ratio.
 }
 
 void X11Window::get_keyboard_modifiers(bool &key_shift, bool &key_alt, bool &key_ctrl) const
@@ -1423,31 +1412,6 @@ Point X11Window::get_mouse_position() const
 		return Point();
 	}
 	return get_mouse()->get_device_position();
-}
-
-// Important: Use XFree() on the returned pointer (if not NULL)
-unsigned char *X11Window::get_property(Window use_window, Atom prop, unsigned long *number_items_ptr, int *actual_format_ptr, Atom *actual_type_ptr) const
-{
-	unsigned long bytes_after;
-	int read_bytes = 1024;
-	unsigned char *read_data = nullptr;
-	do
-	{
-		if(read_data != nullptr)
-		{
-			XFree(read_data);
-		}
-		int result = XGetWindowProperty(handle.display, use_window, prop, 0, read_bytes, False, AnyPropertyType, actual_type_ptr, actual_format_ptr, number_items_ptr, &bytes_after, &read_data);
-		if (result != Success)
-		{
-			*number_items_ptr = 0;
-			*actual_format_ptr = 0;
-			*actual_type_ptr = None;
-			return nullptr;
-		}
-		read_bytes += bytes_after;
-	}while(bytes_after != 0);
-	return read_data;
 }
 
 const std::vector<int> &X11Window::get_window_socket_messages() const

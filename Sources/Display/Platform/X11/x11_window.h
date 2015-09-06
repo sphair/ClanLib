@@ -26,6 +26,7 @@
 **    Magnus Norddahl
 **    Harry Storbacka
 **    Mark Page
+**    Chu Chin Kuan
 */
 
 #pragma once
@@ -42,10 +43,12 @@
 #include "API/Core/Math/point.h"
 #include "API/Core/Math/rect.h"
 #include "clipboard_x11.h"
+#include "x11_atoms.h"
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/cursorfont.h>
+
 
 //#include <X11/extensions/XInput.h>
 #include <sys/time.h>
@@ -92,11 +95,12 @@ public:
 	Size get_minimum_size(bool client_area) const;
 	Size get_maximum_size(bool client_area) const;
 
-	std::string get_title() const;
+	std::string get_title() const { return window_title; }
 
 	DisplayWindowHandle get_handle() const { return handle; }
 	::Display *get_display() const { return handle.display; }
 	::Window get_window() const { return handle.window; }
+	int get_screen() const { return handle.screen; }
 
 	InputContext get_ic() { return ic; } // Important: do not return by reference, so the shared pointer exists if this window is destroyed
 
@@ -108,8 +112,6 @@ public:
 
 	std::string get_clipboard_text() const;
 	PixelBuffer get_clipboard_image() const;
-
-	unsigned char *get_property(::Window use_window, Atom prop, unsigned long *number_items_ptr, int *actual_format_ptr, Atom *actual_type_ptr) const;
 
 	const std::vector<int> &get_window_socket_messages() const;
 
@@ -168,9 +170,8 @@ public:
 /// \{
 
 private:
-
 	void process_window_resize(const Rect &new_rect);
-	void calculate_window_frame_size();
+	void update_frame_extents();
 	void map_window();
 	void unmap_window();
 	Rect get_screen_position() const;
@@ -181,19 +182,18 @@ private:
 	void received_mouse_input(XButtonEvent &event);
 	void received_mouse_move(XMotionEvent &event);
 	void clear_structurenotify_events();
-	bool check_net_wm_state(Atom atom1, Atom atom2 = None) const;
+
 	bool modify_net_wm_state(bool add, Atom atom1, Atom atom2 = None);
 	InputDeviceProvider_X11Keyboard *get_keyboard() const;
 	InputDeviceProvider_X11Mouse *get_mouse() const;
 
 	InputContext ic;
 	DisplayWindowHandle handle;
-	Colormap color_map;
-	bool minimized;
-	bool maximized;
-	bool restore_to_maximized;
+	Colormap color_map; //!< X11 window color-map. See usage in .cpp file.
+	bool minimized; //!< Cached value. Do not use without calling is_minimized() to verify.
+	bool maximized; //!< Cached value. Do not use without calling is_maximized() to verify
+	bool restore_to_maximized; //!< When restoring from minimized, make window maximized?
 	bool fullscreen;
-	int current_screen;
 	::Cursor system_cursor;
 	::Cursor hidden_cursor;
 	Pixmap cursor_bitmap;
@@ -202,38 +202,29 @@ private:
 	DisplayWindowSite *site;
 	std::function<void()> callback_on_resized;
 	std::function<bool(XButtonEvent &)> callback_on_clicked;
-	Size minimum_size;
-	Size maximum_size;
+	Size minimum_size; //!< Minimum client area size.
+	Size maximum_size; //!< Maximum client area size.
 	std::string window_title;
-	bool resize_enabled;
+	bool resize_allowed; //!< Is the WM allowed to resize this window?
 	Clipboard_X11 clipboard;
 	std::vector<int> current_window_events;
 	bool is_window_mapped;
 	XSizeHints *size_hints;
 
-	Atom wm_protocols;
-	Atom wm_delete_window;
-	Atom net_wm_ping;
-	Atom wm_state;
-	Atom net_wm_state;
-	Atom net_wm_state_maximized_vert;
-	Atom net_wm_state_maximized_horz;
-	Atom net_wm_state_hidden;
-	Atom net_wm_state_fullscreen;
-	Atom net_frame_extents;
-	Atom win_hints;
+	X11Atoms atoms; //!< X11 Atom object container.
 
-	bool frame_size_calculated; // This is set when the window is mapped
-	bool requested_size_contains_frame; // true when requested_current_window_client_area contains the window frame (because the frame size is not yet known)
-	int frame_size_left;
-	int frame_size_right;
-	int frame_size_top;
-	int frame_size_bottom;
-	int border_width;
+	//! Legacy X11 border width attribute. Obsolete; Do not use.
+	//! Favour frame extents instead.
+	int border_width = 0;
 
-	Rect client_area; // Current window client area. Does not contain window frame.
+	//! Current window client area, which excludes the window frame.
+	Rect client_area;
 
-	/**
+	//! Window frame extents. Lengths on each side of the window used by the WM
+	//! to decorate the window. Never use size-related methods on this object.
+	Rect frame_extents;
+
+	/*!
 	 * Contains `Rect`s obtained from X11 window resize events.
 	 * Elements stored are not used. Cleared on process_message_complete (once
 	 * all X11 events have been polled. Before it is cleared, a repaint of the
@@ -242,11 +233,11 @@ private:
 	std::vector<Rect> resize_event_rects;
 
 	/**
-	 * Contains `Rect`s obtained from repaint request events.
+	 * Contains `Rect`s obtained from repaint requests.
 	 * Elements stored are used to call site->sig_paint().
 	 * Cleared on process_queued_events(), after process_message_complete().
 	 */
-	std::vector<Rect> repaint_event_rects;
+	std::vector<Rect> repaint_request_rects;
 
 	float ppi           = 96.0f;
 	float pixel_ratio   = 0.0f;	// 0.0f = Unset

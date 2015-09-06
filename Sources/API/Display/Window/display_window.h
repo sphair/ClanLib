@@ -94,6 +94,7 @@ struct DisplayWindowHandle
 #else
 	::Display *display = 0;
 	::Window window = 0;
+	int screen = -1;
 #endif
 };
 
