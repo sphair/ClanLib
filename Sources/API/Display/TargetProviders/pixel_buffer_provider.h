@@ -27,7 +27,6 @@
 **    Mark Page
 */
 
-
 #pragma once
 
 #include "../Render/element_array_buffer.h"
@@ -35,70 +34,48 @@
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-/// \brief Element Array Buffer provider.
-class PixelBufferProvider
-{
-/// \name Construction
-/// \{
+	/// \brief Element Array Buffer provider.
+	class PixelBufferProvider
+	{
+	public:
+		virtual ~PixelBufferProvider() { }
 
-public:
-	virtual ~PixelBufferProvider() { }
+		/// \brief Create
+		///
+		/// \param data = void
+		/// \param new_width = New width
+		/// \param new_height = New height
+		/// \param direction = Direction
+		/// \param new_format = New format
+		/// \param usage = Buffer Usage
+		virtual void create(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage) = 0;
 
-	/// \brief Create
-	///
-	/// \param data = void
-	/// \param new_width = New width
-	/// \param new_height = New height
-	/// \param direction = Direction
-	/// \param new_format = New format
-	/// \param usage = Buffer Usage
-	virtual void create(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage) = 0;
+		/// \brief Retrieves a pointer to the mapped buffer.
+		virtual void *get_data() = 0;
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief Retrieves the pitch of the mapped buffer. Use this after get_data()
+		virtual int get_pitch() const = 0;
 
-public:
-	/// \brief Retrieves a pointer to the mapped buffer.
-	virtual void *get_data() = 0;
+		virtual Size get_size() const = 0;
 
-	/// \brief Retrieves the pitch of the mapped buffer. Use this after get_data()
-	virtual int get_pitch() const = 0;
+		/// \brief Returns true if this pixel buffer is a GPU based one
+		virtual bool is_gpu() const = 0;
 
-	virtual Size get_size() const = 0;
+		/// \brief Returns the pixel format
+		virtual TextureFormat get_format() const = 0;
 
-	/// \brief Returns true if this pixel buffer is a GPU based one
-	virtual bool is_gpu() const = 0;
+		/// \brief Maps buffer into system memory.
+		virtual void lock(GraphicContext &gc, BufferAccess access) = 0;
 
-	/// \brief Returns the pixel format
-	virtual TextureFormat get_format() const = 0;
+		/// \brief Unmaps element buffer.
+		virtual void unlock() = 0;
 
+		/// \brief Uploads data to buffer.
+		virtual void upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data) = 0;
+	};
 
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	/// \brief Maps buffer into system memory.
-	virtual void lock(GraphicContext &gc, BufferAccess access) = 0;
-
-	/// \brief Unmaps element buffer.
-	virtual void unlock() = 0;
-
-	/// \brief Uploads data to buffer.
-	virtual void upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data) = 0;
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

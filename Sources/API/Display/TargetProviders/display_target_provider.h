@@ -27,50 +27,26 @@
 **    Harry Storbacka
 */
 
-
 #pragma once
 
 #include <memory>
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-class DisplayWindowProvider;
+	class DisplayWindowProvider;
 
-/// \brief Interface for implementing a DisplayTarget target.
-class DisplayTargetProvider
-{
-/// \name Construction
-/// \{
+	/// \brief Interface for implementing a DisplayTarget target.
+	class DisplayTargetProvider
+	{
+	public:
+		virtual ~DisplayTargetProvider() { return; }
 
-public:
-	virtual ~DisplayTargetProvider() { return; }
+		/// \brief Allocates a display window provider.
+		virtual DisplayWindowProvider *alloc_display_window() = 0;
+	};
 
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-
-	/// \brief Allocates a display window provider.
-	virtual DisplayWindowProvider *alloc_display_window() = 0;
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

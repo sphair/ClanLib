@@ -26,96 +26,77 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include "transfer_buffer.h"
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-/// \brief Transfer Vector
-///
-template<typename Type>
-class TransferVector : public TransferBuffer
-{
-/// \name Construction
-/// \{
-public:
-	/// \brief Constructs a null instance.
-	TransferVector()
-	{
-	}
-
-	/// \brief Constructs a TransferVector
+	/// \brief Transfer Vector
 	///
-	/// \param gc = Graphic Context
-	/// \param size = value
-	/// \param usage = Buffer Usage
-	TransferVector(GraphicContext &gc, int size, BufferUsage usage = usage_dynamic_copy)
-	: TransferBuffer(gc, size * sizeof(Type), usage)
+	template<typename Type>
+	class TransferVector : public TransferBuffer
 	{
-	}
+	public:
+		/// \brief Constructs a null instance.
+		TransferVector()
+		{
+		}
 
-	/// \brief Constructs a TransferVector
-	///
-	/// \param gc = Graphic Context
-	/// \param data = void
-	/// \param size = value
-	/// \param usage = Buffer Usage
-	TransferVector(GraphicContext &gc, Type *data, int size, BufferUsage usage = usage_dynamic_copy)
-	: TransferBuffer(gc, data, size * sizeof(Type), usage)
-	{
-	}
+		/// \brief Constructs a TransferVector
+		///
+		/// \param gc = Graphic Context
+		/// \param size = value
+		/// \param usage = Buffer Usage
+		TransferVector(GraphicContext &gc, int size, BufferUsage usage = usage_dynamic_copy)
+			: TransferBuffer(gc, size * sizeof(Type), usage)
+		{
+		}
 
-	TransferVector(GraphicContext &gc, const std::vector<Type> &data, BufferUsage usage = usage_dynamic_copy)
-	: TransferBuffer(gc, data.empty() ? (Type*)0 : &data[0], data.size() * sizeof(Type), usage)
-	{
-	}
+		/// \brief Constructs a TransferVector
+		///
+		/// \param gc = Graphic Context
+		/// \param data = void
+		/// \param size = value
+		/// \param usage = Buffer Usage
+		TransferVector(GraphicContext &gc, Type *data, int size, BufferUsage usage = usage_dynamic_copy)
+			: TransferBuffer(gc, data, size * sizeof(Type), usage)
+		{
+		}
 
-	/// \brief Constructs a TransferVector from an existing buffer
-	explicit TransferVector(const TransferBuffer &transfer_buffer)
-	: TransferBuffer(transfer_buffer)
-	{
-	}
+		TransferVector(GraphicContext &gc, const std::vector<Type> &data, BufferUsage usage = usage_dynamic_copy)
+			: TransferBuffer(gc, data.empty() ? (Type*)0 : &data[0], data.size() * sizeof(Type), usage)
+		{
+		}
 
-/// \}
+		/// \brief Constructs a TransferVector from an existing buffer
+		explicit TransferVector(const TransferBuffer &transfer_buffer)
+			: TransferBuffer(transfer_buffer)
+		{
+		}
 
-/// \name Attributes
-/// \{
-public:
-	/// \brief Retrieves a pointer to the mapped buffer.
-	Type *get_data() { return reinterpret_cast<Type*>(TransferBuffer::get_data()); }
+		/// \brief Retrieves a pointer to the mapped buffer.
+		Type *get_data() { return reinterpret_cast<Type*>(TransferBuffer::get_data()); }
 
-	Type &operator[](int index) { return get_data()[index]; }
-	Type &operator[](unsigned int index) { return get_data()[index]; }
-/// \}
+		Type &operator[](int index) { return get_data()[index]; }
+		Type &operator[](unsigned int index) { return get_data()[index]; }
 
-/// \name Operations
-/// \{
-public:
-	/// \brief Uploads data to transfer buffer.
-	void upload_data(GraphicContext &gc, int offset, const Type *data, int size)
-	{
-		TransferBuffer::upload_data(gc, offset * sizeof(Type), data, size * sizeof(Type));
-	}
+		/// \brief Uploads data to transfer buffer.
+		void upload_data(GraphicContext &gc, int offset, const Type *data, int size)
+		{
+			TransferBuffer::upload_data(gc, offset * sizeof(Type), data, size * sizeof(Type));
+		}
 
-	/// \brief Uploads data to transfer buffer.
-	void upload_data(GraphicContext &gc, int offset, const std::vector<Type> &data)
-	{
-		if (!data.empty())
-			TransferBuffer::upload_data(gc, offset * sizeof(Type), &data[0], data.size() * sizeof(Type));
-	}
-/// \}
+		/// \brief Uploads data to transfer buffer.
+		void upload_data(GraphicContext &gc, int offset, const std::vector<Type> &data)
+		{
+			if (!data.empty())
+				TransferBuffer::upload_data(gc, offset * sizeof(Type), &data[0], data.size() * sizeof(Type));
+		}
+	};
 
-/// \name Implementation
-/// \{
-private:
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

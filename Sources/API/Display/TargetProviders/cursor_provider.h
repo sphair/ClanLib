@@ -26,44 +26,19 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
-
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-/// \brief Interface for implementing a Cursor target.
-class CursorProvider
-{
-/// \name Construction
-/// \{
+	/// \brief Interface for implementing a Cursor target.
+	class CursorProvider
+	{
+	public:
+		virtual ~CursorProvider() { }
+	};
 
-public:
-	virtual ~CursorProvider() { return; }
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

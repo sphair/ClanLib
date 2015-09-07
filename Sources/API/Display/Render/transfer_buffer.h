@@ -26,7 +26,6 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include <memory>
@@ -34,81 +33,66 @@
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-class GraphicContext;
-class TransferBufferProvider;
-class TransferBuffer_Impl;
+	class GraphicContext;
+	class TransferBufferProvider;
+	class TransferBuffer_Impl;
 
-/// \brief Transfer Buffer
-class TransferBuffer
-{
-/// \name Construction
-/// \{
-public:
-	/// \brief Constructs a null instance.
-	TransferBuffer();
+	/// \brief Transfer Buffer
+	class TransferBuffer
+	{
+	public:
+		/// \brief Constructs a null instance.
+		TransferBuffer();
 
-	/// \brief Constructs a transfer buffer
-	///
-	/// \param gc = Graphic Context
-	/// \param size = value
-	/// \param usage = Buffer Usage
-	TransferBuffer(GraphicContext &gc, int size, BufferUsage usage = usage_dynamic_copy);
+		/// \brief Constructs a transfer buffer
+		///
+		/// \param gc = Graphic Context
+		/// \param size = value
+		/// \param usage = Buffer Usage
+		TransferBuffer(GraphicContext &gc, int size, BufferUsage usage = usage_dynamic_copy);
 
-	/// \brief Constructs a transfer buffer
-	///
-	/// \param gc = Graphic Context
-	/// \param data = void
-	/// \param size = value
-	/// \param usage = Buffer Usage
-	TransferBuffer(GraphicContext &gc, const void *data, int size, BufferUsage usage = usage_dynamic_copy);
+		/// \brief Constructs a transfer buffer
+		///
+		/// \param gc = Graphic Context
+		/// \param data = void
+		/// \param size = value
+		/// \param usage = Buffer Usage
+		TransferBuffer(GraphicContext &gc, const void *data, int size, BufferUsage usage = usage_dynamic_copy);
 
-	virtual ~TransferBuffer();
-/// \}
+		virtual ~TransferBuffer();
 
-/// \name Attributes
-/// \{
-public:
-	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return !impl; }
+		/// \brief Returns true if this object is invalid.
+		bool is_null() const { return !impl; }
 
-	/// \brief Throw an exception if this object is invalid.
-	void throw_if_null() const;
+		/// \brief Throw an exception if this object is invalid.
+		void throw_if_null() const;
 
-	/// \brief Retrieves a pointer to the mapped buffer.
-	void *get_data();
+		/// \brief Retrieves a pointer to the mapped buffer.
+		void *get_data();
 
-	/// \brief Get Provider
-	///
-	/// \return provider
-	TransferBufferProvider *get_provider() const;
-/// \}
+		/// \brief Get Provider
+		///
+		/// \return provider
+		TransferBufferProvider *get_provider() const;
 
-/// \name Operations
-/// \{
-public:
-	/// \brief Handle comparison operator.
-	bool operator==(const TransferBuffer &other) const;
+		/// \brief Handle comparison operator.
+		bool operator==(const TransferBuffer &other) const;
 
-	/// \brief Maps buffer into system memory.
-	void lock(GraphicContext &gc, BufferAccess access);
+		/// \brief Maps buffer into system memory.
+		void lock(GraphicContext &gc, BufferAccess access);
 
-	/// \brief Unmaps buffer.
-	void unlock();
+		/// \brief Unmaps buffer.
+		void unlock();
 
-	/// \brief Uploads data to transfer buffer.
-	void upload_data(GraphicContext &gc, int offset, const void *data, int size);
-/// \}
+		/// \brief Uploads data to transfer buffer.
+		void upload_data(GraphicContext &gc, int offset, const void *data, int size);
 
-/// \name Implementation
-/// \{
-private:
-	std::shared_ptr<TransferBuffer_Impl> impl;
-/// \}
-};
+	private:
+		std::shared_ptr<TransferBuffer_Impl> impl;
+	};
 
+	/// \}
 }
-
-/// \}

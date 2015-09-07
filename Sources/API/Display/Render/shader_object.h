@@ -28,7 +28,6 @@
 **    Kenneth Gangstoe
 */
 
-
 #pragma once
 
 #include <memory>
@@ -38,189 +37,170 @@
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-class GraphicContextProvider;
-class XMLResourceDocument;
-class ShaderObject_Impl;
-class ShaderObjectProvider;
+	class GraphicContextProvider;
+	class XMLResourceDocument;
+	class ShaderObject_Impl;
+	class ShaderObjectProvider;
 
-/// \brief Shader Type
-enum ShaderType
-{
-	shadertype_vertex,
-	shadertype_geometry,
-	shadertype_fragment,
-	shadertype_tess_evaluation,
-	shadertype_tess_control,
-	shadertype_compute,
-	shadertype_num_types
-};
+	/// \brief Shader Type
+	enum ShaderType
+	{
+		shadertype_vertex,
+		shadertype_geometry,
+		shadertype_fragment,
+		shadertype_tess_evaluation,
+		shadertype_tess_control,
+		shadertype_compute,
+		shadertype_num_types
+	};
 
-/// \brief Shader Object
-///
-///    <p>The source code that makes up a program that gets executed by one of
-///    the programmable stages is encapsulated in one or more shader
-///    objects. Shader objects are attached to a program objects to form a
-///    programmable setup. ShaderObject is ClanLib's C++ interface to OpenGL
-///    shader objects.</p> 
-class ShaderObject
-{
-/// \name Construction
-/// \{
-
-public:
-	/// \brief Constructs a null instance
-	ShaderObject();
-
-	/// \brief Constructs an OpenGL shader.
+	/// \brief Shader Object
 	///
-	/// \param type Shader type. Can be shadertype_vertex or shadertype_fragment.
-	/// \param source Shader source code, in OpenGL Shader Language (GLSL).
-	/// \param gc Graphics context in which to create the shader object
-	ShaderObject(GraphicContext &gc, ShaderType type, const std::string &source);
+	///    <p>The source code that makes up a program that gets executed by one of
+	///    the programmable stages is encapsulated in one or more shader
+	///    objects. Shader objects are attached to a program objects to form a
+	///    programmable setup. ShaderObject is ClanLib's C++ interface to OpenGL
+	///    shader objects.</p> 
+	class ShaderObject
+	{
+	public:
+		/// \brief Constructs a null instance
+		ShaderObject();
 
-	/// \brief Constructs a ShaderObject
-	ShaderObject(GraphicContext &gc, ShaderType type, const void *source, int source_size);
+		/// \brief Constructs an OpenGL shader.
+		///
+		/// \param type Shader type. Can be shadertype_vertex or shadertype_fragment.
+		/// \param source Shader source code, in OpenGL Shader Language (GLSL).
+		/// \param gc Graphics context in which to create the shader object
+		ShaderObject(GraphicContext &gc, ShaderType type, const std::string &source);
 
-	/// \brief Constructs a ShaderObject
-	///
-	/// \param gc = Graphic Context
-	/// \param type = Shader Type
-	/// \param sources = sources
-	ShaderObject(GraphicContext &gc, ShaderType type, const std::vector<std::string> &sources);
+		/// \brief Constructs a ShaderObject
+		ShaderObject(GraphicContext &gc, ShaderType type, const void *source, int source_size);
 
-	/// \brief Constructs a ShaderObject
-	///
-	/// \param gc_provider = Graphic Context Provider
-	/// \param type = Shader Type
-	/// \param source = String Ref
-	ShaderObject(GraphicContextProvider *gc_provider, ShaderType type, const std::string &source);
+		/// \brief Constructs a ShaderObject
+		///
+		/// \param gc = Graphic Context
+		/// \param type = Shader Type
+		/// \param sources = sources
+		ShaderObject(GraphicContext &gc, ShaderType type, const std::vector<std::string> &sources);
 
-	/// \brief Constructs a ShaderObject
-	///
-	/// \param gc_provider = Graphic Context Provider
-	/// \param type = Shader Type
-	/// \param sources = sources
-	ShaderObject(GraphicContextProvider *gc_provider, ShaderType type, const std::vector<std::string> &sources);
+		/// \brief Constructs a ShaderObject
+		///
+		/// \param gc_provider = Graphic Context Provider
+		/// \param type = Shader Type
+		/// \param source = String Ref
+		ShaderObject(GraphicContextProvider *gc_provider, ShaderType type, const std::string &source);
 
-	/// \brief Load
-	///
-	/// \param gc = Graphic Context
-	/// \param resource_id = String Ref
-	/// \param resources = Resource Manager
-	///
-	/// \return Shader Object
-	static ShaderObject load(GraphicContext &gc, const std::string &resource_id, const XMLResourceDocument &resources);
+		/// \brief Constructs a ShaderObject
+		///
+		/// \param gc_provider = Graphic Context Provider
+		/// \param type = Shader Type
+		/// \param sources = sources
+		ShaderObject(GraphicContextProvider *gc_provider, ShaderType type, const std::vector<std::string> &sources);
 
-	/// \brief Load
-	///
-	/// \param gc = Graphic Context
-	/// \param type = Shader Type
-	/// \param filename = String Ref
-	/// \param directory = Virtual Directory
-	///
-	/// \return Shader Object
-	static ShaderObject load(GraphicContext &gc, ShaderType type, const std::string &filename, const FileSystem &fs);
+		/// \brief Load
+		///
+		/// \param gc = Graphic Context
+		/// \param resource_id = String Ref
+		/// \param resources = Resource Manager
+		///
+		/// \return Shader Object
+		static ShaderObject load(GraphicContext &gc, const std::string &resource_id, const XMLResourceDocument &resources);
 
-	/// \brief Load
-	///
-	/// \param gc = Graphic Context
-	/// \param type = Shader Type
-	/// \param fullname = String Ref
-	///
-	/// \return Shader Object
-	static ShaderObject load(GraphicContext &gc, ShaderType type, const std::string &fullname);
+		/// \brief Load
+		///
+		/// \param gc = Graphic Context
+		/// \param type = Shader Type
+		/// \param filename = String Ref
+		/// \param directory = Virtual Directory
+		///
+		/// \return Shader Object
+		static ShaderObject load(GraphicContext &gc, ShaderType type, const std::string &filename, const FileSystem &fs);
 
-	/// \brief Load
-	///
-	/// \param gc = Graphic Context
-	/// \param type = Shader Type
-	/// \param file = IODevice
-	///
-	/// \return Shader Object
-	static ShaderObject load(GraphicContext &gc, ShaderType type, IODevice &file);
+		/// \brief Load
+		///
+		/// \param gc = Graphic Context
+		/// \param type = Shader Type
+		/// \param fullname = String Ref
+		///
+		/// \return Shader Object
+		static ShaderObject load(GraphicContext &gc, ShaderType type, const std::string &fullname);
 
-	/// \brief Load and compile
-	///
-	/// \param gc = Graphic Context
-	/// \param type = Shader Type
-	/// \param filename = String Ref
-	/// \param directory = Virtual Directory
-	///
-	/// \return Shader Object
-	static ShaderObject load_and_compile(GraphicContext &gc, ShaderType type, const std::string &filename, const FileSystem &fs);
+		/// \brief Load
+		///
+		/// \param gc = Graphic Context
+		/// \param type = Shader Type
+		/// \param file = IODevice
+		///
+		/// \return Shader Object
+		static ShaderObject load(GraphicContext &gc, ShaderType type, IODevice &file);
 
-	/// \brief Load and compile
-	///
-	/// \param gc = Graphic Context
-	/// \param type = Shader Type
-	/// \param filename = String Ref
-	///
-	/// \return Shader Object
-	static ShaderObject load_and_compile(GraphicContext &gc, ShaderType type, const std::string &filename);
+		/// \brief Load and compile
+		///
+		/// \param gc = Graphic Context
+		/// \param type = Shader Type
+		/// \param filename = String Ref
+		/// \param directory = Virtual Directory
+		///
+		/// \return Shader Object
+		static ShaderObject load_and_compile(GraphicContext &gc, ShaderType type, const std::string &filename, const FileSystem &fs);
 
-	/// \brief Load and compile
-	///
-	/// \param gc = Graphic Context
-	/// \param type = Shader Type
-	/// \param file = IODevice
-	///
-	/// \return Shader Object
-	static ShaderObject load_and_compile(GraphicContext &gc, ShaderType type, IODevice &file);
+		/// \brief Load and compile
+		///
+		/// \param gc = Graphic Context
+		/// \param type = Shader Type
+		/// \param filename = String Ref
+		///
+		/// \return Shader Object
+		static ShaderObject load_and_compile(GraphicContext &gc, ShaderType type, const std::string &filename);
 
-	virtual ~ShaderObject();
+		/// \brief Load and compile
+		///
+		/// \param gc = Graphic Context
+		/// \param type = Shader Type
+		/// \param file = IODevice
+		///
+		/// \return Shader Object
+		static ShaderObject load_and_compile(GraphicContext &gc, ShaderType type, IODevice &file);
 
-/// \}
-/// \name Attributes
-/// \{
+		virtual ~ShaderObject();
 
-public:
-	/// \brief Returns the OpenGL shader handle.
-	unsigned int get_handle() const;
+		/// \brief Returns the OpenGL shader handle.
+		unsigned int get_handle() const;
 
-	/// \brief Gets the shader type.
-	ShaderType get_shader_type() const;
+		/// \brief Gets the shader type.
+		ShaderType get_shader_type() const;
 
-	/// \brief Get shader object's info log.
-	std::string get_info_log() const;
+		/// \brief Get shader object's info log.
+		std::string get_info_log() const;
 
-	/// \brief Get shader source code.
-	std::string get_shader_source() const;
+		/// \brief Get shader source code.
+		std::string get_shader_source() const;
 
-	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return !impl; }
+		/// \brief Returns true if this object is invalid.
+		bool is_null() const { return !impl; }
 
-	/// \brief Throw an exception if this object is invalid.
-	void throw_if_null() const;
+		/// \brief Throw an exception if this object is invalid.
+		void throw_if_null() const;
 
-	/// \brief Get Provider
-	///
-	/// \return provider
-	ShaderObjectProvider *get_provider() const;
+		/// \brief Get Provider
+		///
+		/// \return provider
+		ShaderObjectProvider *get_provider() const;
 
-/// \}
-/// \name Operations
-/// \{
+		/// \brief Handle comparison operator.
+		bool operator==(const ShaderObject &other) const;
 
-public:
-	/// \brief Handle comparison operator.
-	bool operator==(const ShaderObject &other) const;
+		/// \brief Compile program.
+		/** <p>If the compiling fails, get_info_log() will return the compile log.</p>*/
+		bool compile();
 
-	/// \brief Compile program.
-	/** <p>If the compiling fails, get_info_log() will return the compile log.</p>*/
-	bool compile();
+	private:
+		std::shared_ptr<ShaderObject_Impl> impl;
+	};
 
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	std::shared_ptr<ShaderObject_Impl> impl;
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

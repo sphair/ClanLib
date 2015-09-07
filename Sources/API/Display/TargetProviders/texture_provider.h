@@ -27,7 +27,6 @@
 **    Harry Storbacka
 */
 
-
 #pragma once
 
 #include "../Render/texture.h"
@@ -35,121 +34,99 @@
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-enum TextureWrapMode;
-enum TextureFilter;
-enum TextureCompareMode;
-enum CompareFunction;
-class PixelBuffer;
-class PixelFormat;
-class GraphicContextProvider;
+	enum TextureWrapMode;
+	enum TextureFilter;
+	enum TextureCompareMode;
+	enum CompareFunction;
+	class PixelBuffer;
+	class PixelFormat;
+	class GraphicContextProvider;
 
-/// \brief Interface for implementing a Texture target.
-class TextureProvider
-{
-/// \name Construction
-/// \{
+	/// \brief Interface for implementing a Texture target.
+	class TextureProvider
+	{
+	public:
+		virtual ~TextureProvider() { return; }
 
-public:
-	virtual ~TextureProvider() { return; }
+		/// \brief Create texture.
+		virtual void create(int width, int height, int depth, int array_size, TextureFormat texture_format, int levels) = 0;
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief Retrieve image data from texture.
+		virtual PixelBuffer get_pixeldata(GraphicContext &gc, TextureFormat texture_format, int level) const = 0;
 
-public:
+		/// \brief Generate the mipmap
+		virtual void generate_mipmap() = 0;
 
-/// \}
-/// \name Operations
-/// \{
+		/// \brief Copy image data to texture.
+		virtual void copy_from(GraphicContext &gc, int x, int y, int slice, int level, const PixelBuffer &src, const Rect &src_rect) = 0;
 
-public:
-	/// \brief Create texture.
-	virtual void create(int width, int height, int depth, int array_size, TextureFormat texture_format, int levels) = 0;
+		/// \brief Copy image data from a graphic context.
+		virtual void copy_image_from(
+			int x,
+			int y,
+			int width,
+			int height,
+			int level,
+			TextureFormat texture_format,
+			GraphicContextProvider *gc) = 0;
 
-	/// \brief Retrieve image data from texture.
-	virtual PixelBuffer get_pixeldata(GraphicContext &gc, TextureFormat texture_format, int level) const = 0;
+		/// \brief Copy sub image data from a graphic context.
+		virtual void copy_subimage_from(
+			int offset_x,
+			int offset_y,
+			int x,
+			int y,
+			int width,
+			int height,
+			int level,
+			GraphicContextProvider *gc) = 0;
 
-	/// \brief Generate the mipmap
-	virtual void generate_mipmap() = 0;
+		/// \brief Set the minimum level of detail texture parameter.
+		virtual void set_min_lod(double min_lod) = 0;
 
-	/// \brief Copy image data to texture.
-	virtual void copy_from(GraphicContext &gc, int x, int y, int slice, int level, const PixelBuffer &src, const Rect &src_rect) = 0;
+		/// \brief Set the maximum level of detail texture parameter.
+		virtual void set_max_lod(double max_lod) = 0;
 
-	/// \brief Copy image data from a graphic context.
-	virtual void copy_image_from(
-		int x,
-		int y,
-		int width,
-		int height,
-		int level,
-		TextureFormat texture_format,
-		GraphicContextProvider *gc) = 0;
+		/// \brief Sets the level of detail bias constant.
+		virtual void set_lod_bias(double lod_bias) = 0;
 
-	/// \brief Copy sub image data from a graphic context.
-	virtual void copy_subimage_from(
-		int offset_x,
-		int offset_y,
-		int x,
-		int y,
-		int width,
-		int height,
-		int level,
-		GraphicContextProvider *gc) = 0;
+		/// \brief Sets the texture base level texture parameter.
+		virtual void set_base_level(int base_level) = 0;
 
-	/// \brief Set the minimum level of detail texture parameter.
-	virtual void set_min_lod(double min_lod) = 0;
+		/// \brief Sets the texture max level texture parameter.
+		virtual void set_max_level(int max_level) = 0;
 
-	/// \brief Set the maximum level of detail texture parameter.
-	virtual void set_max_lod(double max_lod) = 0;
+		/// \brief Set the texture wrapping mode.
+		virtual void set_wrap_mode(
+			TextureWrapMode wrap_s,
+			TextureWrapMode wrap_t,
+			TextureWrapMode wrap_r) = 0;
 
-	/// \brief Sets the level of detail bias constant.
-	virtual void set_lod_bias(double lod_bias) = 0;
+		virtual void set_wrap_mode(
+			TextureWrapMode wrap_s,
+			TextureWrapMode wrap_t) = 0;
 
-	/// \brief Sets the texture base level texture parameter.
-	virtual void set_base_level(int base_level) = 0;
+		virtual void set_wrap_mode(
+			TextureWrapMode wrap_s) = 0;
 
-	/// \brief Sets the texture max level texture parameter.
-	virtual void set_max_level(int max_level) = 0;
+		/// \brief Set the minification filter.
+		virtual void set_min_filter(TextureFilter filter) = 0;
 
-	/// \brief Set the texture wrapping mode.
-	virtual void set_wrap_mode(
-		TextureWrapMode wrap_s,
-		TextureWrapMode wrap_t,
-		TextureWrapMode wrap_r) = 0;
+		/// \brief Set the magnification filter.
+		virtual void set_mag_filter(TextureFilter filter) = 0;
 
-	virtual void set_wrap_mode(
-		TextureWrapMode wrap_s,
-		TextureWrapMode wrap_t) = 0;
+		/// \brief Set the maximum degree of anisotropy.
+		virtual void set_max_anisotropy(float v) = 0;
 
-	virtual void set_wrap_mode(
-		TextureWrapMode wrap_s) = 0;
+		/// \brief Sets the texture compare mode and compare function texture parameters.
+		virtual void set_texture_compare(TextureCompareMode mode, CompareFunction func) = 0;
 
-	/// \brief Set the minification filter.
-	virtual void set_min_filter(TextureFilter filter) = 0;
+		/// \breif Creates a texture view for this texture
+		virtual TextureProvider *create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers) = 0;
+	};
 
-	/// \brief Set the magnification filter.
-	virtual void set_mag_filter(TextureFilter filter) = 0;
-
-	/// \brief Set the maximum degree of anisotropy.
-	virtual void set_max_anisotropy(float v) = 0;
-
-	/// \brief Sets the texture compare mode and compare function texture parameters.
-	virtual void set_texture_compare(TextureCompareMode mode, CompareFunction func) = 0;
-
-	/// \breif Creates a texture view for this texture
-	virtual TextureProvider *create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers) = 0;
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

@@ -26,52 +26,40 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include <memory>
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-class GraphicContext;
-class DepthStencilStateDescription;
-class DepthStencilStateProvider;
+	class GraphicContext;
+	class DepthStencilStateDescription;
+	class DepthStencilStateProvider;
 
-/// \brief DepthStencil state setup.
-class DepthStencilState
-{
-/// \name Construction
-/// \{
-public:
-	/// \brief Constructs a null instance.
-	DepthStencilState();
+	/// \brief DepthStencil state setup.
+	class DepthStencilState
+	{
+	public:
+		/// \brief Constructs a null instance.
+		DepthStencilState();
 
-	/// \brief Constructs a Texture
-	///
-	/// \param context = Graphic context
-	/// \param desc = DepthStencil state description
-	DepthStencilState(GraphicContext &context, const DepthStencilStateDescription &desc);
-/// \}
+		/// \brief Constructs a Texture
+		///
+		/// \param context = Graphic context
+		/// \param desc = DepthStencil state description
+		DepthStencilState(GraphicContext &context, const DepthStencilStateDescription &desc);
 
-/// \name Attributes
-/// \{
-public:
-	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return !provider; }
+		/// \brief Returns true if this object is invalid.
+		bool is_null() const { return !provider; }
 
-	DepthStencilStateProvider *get_provider() const;
-/// \}
+		DepthStencilStateProvider *get_provider() const;
 
-/// \name Implementation
-/// \{
-private:
-	std::shared_ptr<DepthStencilStateProvider> provider;
-/// \}
-};
+	private:
+		std::shared_ptr<DepthStencilStateProvider> provider;
+	};
 
+	/// \}
 }
-
-/// \}

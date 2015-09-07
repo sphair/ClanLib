@@ -26,77 +26,58 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include "graphic_context.h"
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-class BlendStateDescription_Impl;
+	class BlendStateDescription_Impl;
 
-/// \brief Blend state description.
-class BlendStateDescription
-{
-/// \name Construction
-/// \{
-public:
-	BlendStateDescription();
-	BlendStateDescription clone() const;
+	/// \brief Blend state description.
+	class BlendStateDescription
+	{
+	public:
+		BlendStateDescription();
+		BlendStateDescription clone() const;
 
-	static BlendStateDescription blend(bool src_premultiplied, bool dest_premultiplied = true);
-	static BlendStateDescription opaque();
+		static BlendStateDescription blend(bool src_premultiplied, bool dest_premultiplied = true);
+		static BlendStateDescription opaque();
 
-/// \}
+		bool is_blending_enabled() const;
+		void get_blend_equation(BlendEquation &out_color, BlendEquation &out_alpha) const;
+		void get_blend_function(BlendFunc &out_src, BlendFunc &out_dest, BlendFunc &out_src_alpha, BlendFunc &out_dest_alpha) const;
+		void get_color_write(bool &out_red, bool &out_green, bool &out_blue, bool &out_alpha) const;
+		bool is_logic_op_enabled() const;
+		LogicOp get_logic_op() const;
 
-/// \name Attributes
-/// \{
-public:
-	bool is_blending_enabled() const;
-	void get_blend_equation(BlendEquation &out_color, BlendEquation &out_alpha) const;
-	void get_blend_function(BlendFunc &out_src, BlendFunc &out_dest, BlendFunc &out_src_alpha, BlendFunc &out_dest_alpha) const;
-	void get_color_write(bool &out_red, bool &out_green, bool &out_blue, bool &out_alpha) const;
-	bool is_logic_op_enabled() const;
-	LogicOp get_logic_op() const;
+		/// \brief Enable/Disable blending
+		void enable_blending(bool value);
 
-/// \}
+		/// \brief Set the constant color used in the blend equations
+		void set_blend_equation(BlendEquation color, BlendEquation alpha);
 
-/// \name Operations
-/// \{
-public:
-	/// \brief Enable/Disable blending
-	void enable_blending(bool value);
+		/// \brief Set the blend functions
+		void set_blend_function(BlendFunc src, BlendFunc dest, BlendFunc src_alpha, BlendFunc dest_alpha);
 
-	/// \brief Set the constant color used in the blend equations
-	void set_blend_equation(BlendEquation color, BlendEquation alpha);
+		/// \brief Enable/disable writing to the color buffer
+		void enable_color_write(bool red, bool green, bool blue, bool alpha);
 
-	/// \brief Set the blend functions
-	void set_blend_function(BlendFunc src, BlendFunc dest, BlendFunc src_alpha, BlendFunc dest_alpha);
+		/// \brief Enable/disable logic op. (clanGL only)
+		void enable_logic_op(bool enabled);
 
-	/// \brief Enable/disable writing to the color buffer
-	void enable_color_write(bool red, bool green, bool blue, bool alpha);
+		/// \brief Set logic operation. (clanGL only)
+		void set_logic_op(LogicOp op);
 
-	/// \brief Enable/disable logic op. (clanGL only)
-	void enable_logic_op(bool enabled);
+		bool operator==(const BlendStateDescription &other) const;
+		bool operator<(const BlendStateDescription &other) const;
 
-	/// \brief Set logic operation. (clanGL only)
-	void set_logic_op(LogicOp op);
+	private:
+		std::shared_ptr<BlendStateDescription_Impl> impl;
+	};
 
-/// \}
-
-	bool operator==(const BlendStateDescription &other) const;
-	bool operator<(const BlendStateDescription &other) const;
-
-/// \name Implementation
-/// \{
-private:
-	std::shared_ptr<BlendStateDescription_Impl> impl;
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

@@ -26,52 +26,40 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include <memory>
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-class GraphicContext;
-class RasterizerStateDescription;
-class RasterizerStateProvider;
+	class GraphicContext;
+	class RasterizerStateDescription;
+	class RasterizerStateProvider;
 
-/// \brief Rasterizer state setup.
-class RasterizerState
-{
-/// \name Construction
-/// \{
-public:
-	/// \brief Constructs a null instance.
-	RasterizerState();
+	/// \brief Rasterizer state setup.
+	class RasterizerState
+	{
+	public:
+		/// \brief Constructs a null instance.
+		RasterizerState();
 
-	/// \brief Constructs a Texture
-	///
-	/// \param context = Graphic context
-	/// \param desc = Rasterizer state description
-	RasterizerState(GraphicContext &context, const RasterizerStateDescription &desc);
-/// \}
+		/// \brief Constructs a Texture
+		///
+		/// \param context = Graphic context
+		/// \param desc = Rasterizer state description
+		RasterizerState(GraphicContext &context, const RasterizerStateDescription &desc);
 
-/// \name Attributes
-/// \{
-public:
-	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return !provider; }
+		/// \brief Returns true if this object is invalid.
+		bool is_null() const { return !provider; }
 
-	RasterizerStateProvider *get_provider() const;
-/// \}
+		RasterizerStateProvider *get_provider() const;
 
-/// \name Implementation
-/// \{
-private:
-	std::shared_ptr<RasterizerStateProvider> provider;
-/// \}
-};
+	private:
+		std::shared_ptr<RasterizerStateProvider> provider;
+	};
 
+	/// \}
 }
-
-/// \}

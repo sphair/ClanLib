@@ -26,7 +26,6 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include "../../Core/Math/mat4.h"
@@ -34,37 +33,33 @@
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-class GraphicContext;
-class Canvas;
-enum TextureImageYAxis;
+	class GraphicContext;
+	class Canvas;
+	enum TextureImageYAxis;
 
-/// \brief Render batching abstraction
-class RenderBatcher
-{
-/// \name Operations
-/// \{
-public:
-	virtual ~RenderBatcher() { }
+	/// \brief Render batching abstraction
+	class RenderBatcher
+	{
+	public:
+		virtual ~RenderBatcher() { }
 
-	/** Flush render batcher contents.
-	 *  \param gc Graphic context to flush contents to.
-	 */
-	virtual void flush(GraphicContext &gc) = 0;
+		/** Flush render batcher contents.
+		 *  \param gc Graphic context to flush contents to.
+		 */
+		virtual void flush(GraphicContext &gc) = 0;
 
-	/** Function to call when matrices are changed.
-	 *  \param modelview    New wodel view matrix.
-	 *  \param projection   New projection matrix.
-	 *  \param image_yaxis  The image Y axis to use where `projection` is not
-	 *                      used.
-	 *  \param pixel_ratio  The display pixel ratio to use when rendering.
-	 */
-	virtual void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis, float pixel_ratio) = 0;
-/// \}
-};
+		/** Function to call when matrices are changed.
+		 *  \param modelview    New wodel view matrix.
+		 *  \param projection   New projection matrix.
+		 *  \param image_yaxis  The image Y axis to use where `projection` is not
+		 *                      used.
+		 *  \param pixel_ratio  The display pixel ratio to use when rendering.
+		 */
+		virtual void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis, float pixel_ratio) = 0;
+	};
 
+	/// \}
 }
-
-/// \}

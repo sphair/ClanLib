@@ -26,7 +26,6 @@
 **    Harry Storbacka
 */
 
-
 #pragma once
 
 #include <memory>
@@ -34,70 +33,51 @@
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-class OcclusionQuery_Impl;
-class GraphicContext;
-class OcclusionQueryProvider;
+	class OcclusionQuery_Impl;
+	class GraphicContext;
+	class OcclusionQueryProvider;
 
-/// \brief Graphics occlusion query class.
-class OcclusionQuery
-{
-/// \name Construction
-/// \{
+	/// \brief Graphics occlusion query class.
+	class OcclusionQuery
+	{
+	public:
+		/// \brief Constructs a null instance.
+		OcclusionQuery();
 
-public:
-	/// \brief Constructs a null instance.
-	OcclusionQuery();
+		/// \brief Constructs an occlusion query object.
+		OcclusionQuery(GraphicContext &context);
 
-	/// \brief Constructs an occlusion query object.
-	OcclusionQuery(GraphicContext &context);
+		virtual ~OcclusionQuery();
 
-	virtual ~OcclusionQuery();
+		/// \brief Returns true if this object is invalid.
+		bool is_null() const { return !impl; }
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief Throw an exception if this object is invalid.
+		void throw_if_null() const;
 
-public:
-	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return !impl; }
+		/// \brief Returns the result of the occlusion query.
+		int get_result();
 
-	/// \brief Throw an exception if this object is invalid.
-	void throw_if_null() const;
+		/// \brief Returns true if the GPU is ready to return the result.
+		bool is_result_ready();
 
-	/// \brief Returns the result of the occlusion query.
-	int get_result();
+		/// \brief Get Provider
+		///
+		/// \return provider
+		OcclusionQueryProvider *get_provider() const;
 
-	/// \brief Returns true if the GPU is ready to return the result.
-	bool is_result_ready();
+		/// \brief Start occlusion query.
+		void begin();
 
-	/// \brief Get Provider
-	///
-	/// \return provider
-	OcclusionQueryProvider *get_provider() const;
+		/// \brief Finish occlusion query.
+		void end();
 
-/// \}
-/// \name Operations
-/// \{
+	private:
+		std::shared_ptr<OcclusionQuery_Impl> impl;
+	};
 
-public:
-	/// \brief Start occlusion query.
-	void begin();
-
-	/// \brief Finish occlusion query.
-	void end();
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	std::shared_ptr<OcclusionQuery_Impl> impl;
-/// \}
-};
-
+	/// \}
 }
-
-/// \}
