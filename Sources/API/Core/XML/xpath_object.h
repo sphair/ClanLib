@@ -35,105 +35,85 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_XML clanCore XML
-/// \{
+	/// \addtogroup clanCore_XML clanCore XML
+	/// \{
 
-class DomNode;
-class XPathObject_Impl;
+	class DomNode;
+	class XPathObject_Impl;
 
-/// \brief XPath result object.
-class XPathObject
-{
-/// \name Constuction
-/// \{
-
-public:
-	XPathObject();
-	XPathObject(bool value);
-	XPathObject(double value);
-	XPathObject(size_t value);
-	XPathObject(const std::string &value);
-	XPathObject(const std::vector<DomNode> &value);
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	enum Type
+	/// \brief XPath result object.
+	class XPathObject
 	{
-		type_null,
-		type_node_set,
-		type_boolean,
-		type_number,
-		type_string
+	public:
+		XPathObject();
+		XPathObject(bool value);
+		XPathObject(double value);
+		XPathObject(size_t value);
+		XPathObject(const std::string &value);
+		XPathObject(const std::vector<DomNode> &value);
+
+		enum Type
+		{
+			type_null,
+			type_node_set,
+			type_boolean,
+			type_number,
+			type_string
+		};
+
+		/// \brief Get Type
+		///
+		/// \return type
+		Type get_type() const;
+
+		/// \brief Is Null
+		///
+		/// \return true = null
+		bool is_null() const;
+
+		std::vector<DomNode> get_node_set() const;
+
+		/// \brief Get Boolean
+		///
+		/// \return boolean
+		bool get_boolean() const;
+
+		/// \brief Get Number
+		///
+		/// \return number
+		double get_number() const;
+
+		/// \brief Get String
+		///
+		/// \return string
+		std::string get_string() const;
+
+		/// \brief Set null
+		void set_null();
+
+		/// \brief Set node set
+		///
+		/// \param vector = Dom Node
+		void set_node_set(const std::vector<DomNode> &node_set);
+
+		/// \brief Set boolean
+		///
+		/// \param value = bool
+		void set_boolean(bool value);
+
+		/// \brief Set number
+		///
+		/// \param value = value
+		void set_number(double value);
+
+		/// \brief Set string
+		///
+		/// \param str = String Ref
+		void set_string(const std::string &str);
+
+	private:
+		std::shared_ptr<XPathObject_Impl> impl;
 	};
 
-	/// \brief Get Type
-	///
-	/// \return type
-	Type get_type() const;
-
-	/// \brief Is Null
-	///
-	/// \return true = null
-	bool is_null() const;
-
-	std::vector<DomNode> get_node_set() const;
-
-	/// \brief Get Boolean
-	///
-	/// \return boolean
-	bool get_boolean() const;
-
-	/// \brief Get Number
-	///
-	/// \return number
-	double get_number() const;
-
-	/// \brief Get String
-	///
-	/// \return string
-	std::string get_string() const;
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-
-	/// \brief Set null
-	void set_null();
-
-	/// \brief Set node set
-	///
-	/// \param vector = Dom Node
-	void set_node_set(const std::vector<DomNode> &node_set);
-
-	/// \brief Set boolean
-	///
-	/// \param value = bool
-	void set_boolean(bool value);
-
-	/// \brief Set number
-	///
-	/// \param value = value
-	void set_number(double value);
-
-	/// \brief Set string
-	///
-	/// \param str = String Ref
-	void set_string(const std::string &str);
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	std::shared_ptr<XPathObject_Impl> impl;
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

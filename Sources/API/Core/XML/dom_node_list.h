@@ -36,70 +36,51 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_XML clanCore XML
-/// \{
+	/// \addtogroup clanCore_XML clanCore XML
+	/// \{
 
-class DomNode;
-class DomNodeList_Impl;
-class DomDocument;
+	class DomNode;
+	class DomNodeList_Impl;
+	class DomDocument;
 
-/// \brief DOM Node List class.
-///
-///    <p>The NodeList interface provides the abstraction of an ordered collection of nodes,
-///    without defining or constraining how this collection is implemented.</p> 
-class DomNodeList
-{
-/// \name Construction
-/// \{
-
-public:
-	/// \brief Constructs a DOM NodeList handle.
-	DomNodeList();
-
-	/// \brief Constructs a DomNodeList
+	/// \brief DOM Node List class.
 	///
-	/// \param node = Dom Node
-	/// \param tag_name = Dom String
-	DomNodeList(DomNode &node, const DomString &tag_name);
+	///    <p>The NodeList interface provides the abstraction of an ordered collection of nodes,
+	///    without defining or constraining how this collection is implemented.</p> 
+	class DomNodeList
+	{
+	public:
+		/// \brief Constructs a DOM NodeList handle.
+		DomNodeList();
 
-	DomNodeList(
-		DomNode &node,
-		const DomString &namespace_uri,
-		const DomString &name,
-		bool local_name = false);
+		/// \brief Constructs a DomNodeList
+		///
+		/// \param node = Dom Node
+		/// \param tag_name = Dom String
+		DomNodeList(DomNode &node, const DomString &tag_name);
 
-	~DomNodeList();
+		DomNodeList(
+			DomNode &node,
+			const DomString &namespace_uri,
+			const DomString &name,
+			bool local_name = false);
 
-/// \}
-/// \name Attributes
-/// \{
+		~DomNodeList();
 
-public:
-	/// \brief The number of nodes in the list.
-	int get_length() const;
+		/// \brief The number of nodes in the list.
+		int get_length() const;
 
-/// \}
-/// \name Operations
-/// \{
+		/// \brief Returns the indexth item in the collection.
+		/** <p>If index is greater than or equal to the number of nodes in the list, this returns an empty node.</p>*/
+		DomNode item(unsigned long index) const;
 
-public:
-	/// \brief Returns the indexth item in the collection.
-	/** <p>If index is greater than or equal to the number of nodes in the list, this returns an empty node.</p>*/
-	DomNode item(unsigned long index) const;
+		/// \brief Adds a DomNode to the list.
+		void add_item(DomNode &to_add);
 
-	/// \brief Adds a DomNode to the list.
-	void add_item(DomNode &to_add);
+	private:
+		/** std::shared_ptr<DomNodeList_Impl> impl;*/
+		std::vector<DomNode> node_list;
+	};
 
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	/** std::shared_ptr<DomNodeList_Impl> impl;*/
-	std::vector<DomNode> node_list;
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

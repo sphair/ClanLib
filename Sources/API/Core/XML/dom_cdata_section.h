@@ -33,60 +33,43 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_XML clanCore XML
-/// \{
+	/// \addtogroup clanCore_XML clanCore XML
+	/// \{
 
-/// \brief DOM CDATA Section.
-///
-///   <p>CDATA sections are used to escape blocks of text containing characters that would
-///    otherwise be regarded as markup. The only delimiter that is recognized in a CDATA
-///    section is the "]]>" string that ends the CDATA section. CDATA sections can not be
-///    nested. The primary purpose is for including material such as XML fragments, without
-///    needing to escape all the delimiters.</p>
-///    <p>The DOMString attribute of the Text node holds the text that is contained by the
-///    CDATA section. Note that this may contain characters that need to be escaped outside
-///    of CDATA sections and that, depending on the character encoding ("charset") chosen
-///    for serialization, it may be impossible to write out some characters as part of a
-///    CDATA section.</p>
-///    <p>The CDATASection interface inherits the CharacterData interface through the Text
-///    interface. Adjacent CDATASections nodes are not merged by use of the Element.normalize()
-///    method.</p> 
-class DomCDATASection : public DomText
-{
-/// \name Construction
-/// \{
-
-public:
-	/// \brief Constructs a DOM CDATA Section handle.
-	DomCDATASection();
-
-	/// \brief Constructs a DomCDATASection
+	/// \brief DOM CDATA Section.
 	///
-	/// \param doc = Dom Document
-	/// \param data = Dom String
-	DomCDATASection(DomDocument &doc, const DomString &data);
+	///   <p>CDATA sections are used to escape blocks of text containing characters that would
+	///    otherwise be regarded as markup. The only delimiter that is recognized in a CDATA
+	///    section is the "]]>" string that ends the CDATA section. CDATA sections can not be
+	///    nested. The primary purpose is for including material such as XML fragments, without
+	///    needing to escape all the delimiters.</p>
+	///    <p>The DOMString attribute of the Text node holds the text that is contained by the
+	///    CDATA section. Note that this may contain characters that need to be escaped outside
+	///    of CDATA sections and that, depending on the character encoding ("charset") chosen
+	///    for serialization, it may be impossible to write out some characters as part of a
+	///    CDATA section.</p>
+	///    <p>The CDATASection interface inherits the CharacterData interface through the Text
+	///    interface. Adjacent CDATASections nodes are not merged by use of the Element.normalize()
+	///    method.</p> 
+	class DomCDATASection : public DomText
+	{
+	public:
+		/// \brief Constructs a DOM CDATA Section handle.
+		DomCDATASection();
 
-	/// \brief Constructs a DomCDATASection
-	///
-	/// \param impl = Shared Ptr
-	DomCDATASection(const std::shared_ptr<DomNode_Impl> &impl);
+		/// \brief Constructs a DomCDATASection
+		///
+		/// \param doc = Dom Document
+		/// \param data = Dom String
+		DomCDATASection(DomDocument &doc, const DomString &data);
 
-	~DomCDATASection();
+		/// \brief Constructs a DomCDATASection
+		///
+		/// \param impl = Shared Ptr
+		DomCDATASection(const std::shared_ptr<DomNode_Impl> &impl);
 
-/// \}
-/// \name Attributes
-/// \{
+		~DomCDATASection();
+	};
 
-public:
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

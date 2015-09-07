@@ -28,25 +28,22 @@
 
 #pragma once
 
-
 namespace clan
 {
+	/// \brief DisposableObject
+	class DisposableObject
+	{
+	public:
+		DisposableObject();
 
-/// \brief DisposableObject
-class DisposableObject
-{
-public:
-	DisposableObject();
+		void dispose();
+		void throw_if_disposed() const;
+		bool is_disposed() const;
 
-	void dispose();
-	void throw_if_disposed() const;
-	bool is_disposed() const;
+	protected:
+		virtual void on_dispose() = 0;
 
-protected:
-	virtual void on_dispose() = 0;
-
-private:
-	bool disposed;
-};
-
+	private:
+		bool disposed;
+	};
 }

@@ -33,79 +33,58 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_XML clanCore XML
-/// \{
+	/// \addtogroup clanCore_XML clanCore XML
+	/// \{
 
-/// \brief DOM Text class.
-///
-///    <p>The Text interface represents the textual content (termed character data
-///    in XML) of an Element or Attr. If there is no markup inside an element's content,
-///    the text is contained in a single object implementing the Text interface that is
-///    the only child of the element. If there is markup, it is parsed into a list of
-///    elements and Text nodes that form the list of children of the element.</p>
-///    <p>When a document is first made available via the DOM, there is only one Text
-///    node for each block of text. Users may create adjacent Text nodes that represent
-///    the contents of a given element without any intervening markup, but should be aware
-///    that there is no way to represent the separations between these nodes in XML or HTML,
-///    so they will not (in general) persist between DOM editing sessions. The normalize()
-///    method on Element merges any such adjacent Text objects into a single node for each
-///    block of text; this is recommended before employing operations that depend on a
-///    particular document structure, such as navigation with XPointers.</p>
-class DomText : public DomCharacterData
-{
-/// \name Construction
-/// \{
-
-public:
-	/// \brief Constructs a DOM Text handle.
-	DomText();
-
-	/// \brief Constructs a DomText
+	/// \brief DOM Text class.
 	///
-	/// \param doc = Dom Document
-	/// \param data = Dom String
-	DomText(DomDocument &doc, const DomString &data);
+	///    <p>The Text interface represents the textual content (termed character data
+	///    in XML) of an Element or Attr. If there is no markup inside an element's content,
+	///    the text is contained in a single object implementing the Text interface that is
+	///    the only child of the element. If there is markup, it is parsed into a list of
+	///    elements and Text nodes that form the list of children of the element.</p>
+	///    <p>When a document is first made available via the DOM, there is only one Text
+	///    node for each block of text. Users may create adjacent Text nodes that represent
+	///    the contents of a given element without any intervening markup, but should be aware
+	///    that there is no way to represent the separations between these nodes in XML or HTML,
+	///    so they will not (in general) persist between DOM editing sessions. The normalize()
+	///    method on Element merges any such adjacent Text objects into a single node for each
+	///    block of text; this is recommended before employing operations that depend on a
+	///    particular document structure, such as navigation with XPointers.</p>
+	class DomText : public DomCharacterData
+	{
+	public:
+		/// \brief Constructs a DOM Text handle.
+		DomText();
 
-	/// \brief Constructs a DomText
-	///
-	/// \param impl = Shared Ptr
-	DomText(const std::shared_ptr<DomNode_Impl> &impl);
+		/// \brief Constructs a DomText
+		///
+		/// \param doc = Dom Document
+		/// \param data = Dom String
+		DomText(DomDocument &doc, const DomString &data);
 
-	~DomText();
+		/// \brief Constructs a DomText
+		///
+		/// \param impl = Shared Ptr
+		DomText(const std::shared_ptr<DomNode_Impl> &impl);
 
-/// \}
-/// \name Attributes
-/// \{
+		~DomText();
 
-public:
+		/// \brief Breaks this Text node into two Text nodes at the specified offset, keeping both in the tree as siblings.
+		/** <p>node then only contains all the content up to the offset point. And a new Text node, which
+			is inserted as the next sibling of this node, contains all the content at and after the offset
+			point.</p>
+			\param offset The offset at which to split.
+			retval: The new Text node.*/
+		DomText split_text(unsigned long offset);
 
-/// \}
-/// \name Operations
-/// \{
+	protected:
+		/// \brief Constructs a DomText
+		///
+		/// \param doc = Dom Document
+		/// \param node_type = short
+		DomText(DomDocument &doc, unsigned short node_type);
+	};
 
-public:
-	/// \brief Breaks this Text node into two Text nodes at the specified offset, keeping both in the tree as siblings.
-	/** <p>node then only contains all the content up to the offset point. And a new Text node, which
-	    is inserted as the next sibling of this node, contains all the content at and after the offset
-	    point.</p>
-	    \param offset The offset at which to split.
-	    retval: The new Text node.*/
-	DomText split_text(unsigned long offset);
-
-/// \}
-/// \name Implementation
-/// \{
-
-protected:
-
-	/// \brief Constructs a DomText
-	///
-	/// \param doc = Dom Document
-	/// \param node_type = short
-	DomText(DomDocument &doc, unsigned short node_type);
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

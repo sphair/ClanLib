@@ -27,7 +27,6 @@
 **    Mark Page
 */
 
-
 #pragma once
 
 #include <string>
@@ -38,27 +37,26 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_Resources clanCore Resources
-/// \{
+	/// \addtogroup clanCore_Resources clanCore Resources
+	/// \{
 
-class ResourceManager;
+	class ResourceManager;
 
-/// \brief Resource manager loading from FileResourceDocument
-class FileResourceManager
-{
-public:
-	/// \brief Creates a resource manager
-	static ResourceManager create(const FileResourceDocument &doc = FileResourceDocument());
+	/// \brief Resource manager loading from FileResourceDocument
+	class FileResourceManager
+	{
+	public:
+		/// \brief Creates a resource manager
+		static ResourceManager create(const FileResourceDocument &doc = FileResourceDocument());
 
-	/// \brief Adds a cache factory callback
-	///
-	/// Each factory callback is invoked every time a resource manager is created.
-	static void add_cache_factory(std::function<void(ResourceManager &, const FileResourceDocument &)> factory_callback);
+		/// \brief Adds a cache factory callback
+		///
+		/// Each factory callback is invoked every time a resource manager is created.
+		static void add_cache_factory(std::function<void(ResourceManager &, const FileResourceDocument &)> factory_callback);
 
-	/// \brief Gets the XML resource document used by a resource manager.
-	static FileResourceDocument &get_doc(const ResourceManager &manager);
-};
+		/// \brief Gets the XML resource document used by a resource manager.
+		static FileResourceDocument &get_doc(const ResourceManager &manager);
+	};
 
+	/// \}
 }
-
-/// \}

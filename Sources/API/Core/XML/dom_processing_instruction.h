@@ -33,64 +33,48 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_XML clanCore XML
-/// \{
+	/// \addtogroup clanCore_XML clanCore XML
+	/// \{
 
-/// \brief DOM Processing Instruction class.
-///
-///    <p>The ProcessingInstruction interface represents a "processing instruction", used in
-///    XML as a way to keep processor-specific information in the text of the document.</p> 
-class DomProcessingInstruction : public DomNode
-{
-/// \name Construction
-/// \{
-
-public:
-	/// \brief Constructs a DOM Processing Instruction handle.
-	DomProcessingInstruction();
-
-	/// \brief Constructs a DomProcessingInstruction
+	/// \brief DOM Processing Instruction class.
 	///
-	/// \param doc = Dom Document
-	/// \param target = Dom String
-	/// \param data = Dom String
-	DomProcessingInstruction(DomDocument &doc, const DomString &target, const DomString &data);
+	///    <p>The ProcessingInstruction interface represents a "processing instruction", used in
+	///    XML as a way to keep processor-specific information in the text of the document.</p> 
+	class DomProcessingInstruction : public DomNode
+	{
+	public:
+		/// \brief Constructs a DOM Processing Instruction handle.
+		DomProcessingInstruction();
 
-	/// \brief Constructs a DomProcessingInstruction
-	///
-	/// \param impl = Shared Ptr
-	DomProcessingInstruction(const std::shared_ptr<DomNode_Impl> &impl);
+		/// \brief Constructs a DomProcessingInstruction
+		///
+		/// \param doc = Dom Document
+		/// \param target = Dom String
+		/// \param data = Dom String
+		DomProcessingInstruction(DomDocument &doc, const DomString &target, const DomString &data);
 
-	~DomProcessingInstruction();
+		/// \brief Constructs a DomProcessingInstruction
+		///
+		/// \param impl = Shared Ptr
+		DomProcessingInstruction(const std::shared_ptr<DomNode_Impl> &impl);
 
-/// \}
-/// \name Attributes
-/// \{
+		~DomProcessingInstruction();
 
-public:
-	/// \brief The target of this processing instruction.
-	/** <p>XML defines this as being the first token following the markup that begins
-	    the processing instruction.</p>*/
-	DomString get_target() const;
+		/// \brief The target of this processing instruction.
+		/** <p>XML defines this as being the first token following the markup that begins
+			the processing instruction.</p>*/
+		DomString get_target() const;
 
-	/// \brief The content of this processing instruction.
-	/** <p>This is from the first non white space character after the target to the
-	    character immediately preceding the ?&gt;.</p>*/
-	DomString get_data() const;
+		/// \brief The content of this processing instruction.
+		/** <p>This is from the first non white space character after the target to the
+			character immediately preceding the ?&gt;.</p>*/
+		DomString get_data() const;
 
-	/// \brief Set data
-	///
-	/// \param data = Dom String
-	void set_data(const DomString &data);
+		/// \brief Set data
+		///
+		/// \param data = Dom String
+		void set_data(const DomString &data);
+	};
 
-/// \}
-/// \name Operations
-/// \{
-
-public:
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

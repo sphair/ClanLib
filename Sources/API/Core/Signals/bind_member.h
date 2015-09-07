@@ -28,13 +28,16 @@
 */
 
 #pragma once
+
 #include <functional>
 
 namespace clan
 {
-/// \addtogroup clanCore_Signals clanCore Signals
-/// \{
+	/// \addtogroup clanCore_Signals clanCore Signals
+	/// \{
+
 	template<class R, class T, class... Args>
 	std::function<R(Args...)> bind_member(T* instance, R(T::*method)(Args...)) { return [=](Args && ... args) -> R { return (instance->*method)(std::forward<Args>(args)...); }; }
+
+	/// \}
 }
-/// \}

@@ -33,62 +33,43 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_XML clanCore XML
-/// \{
+	/// \addtogroup clanCore_XML clanCore XML
+	/// \{
 
-class IODevice;
-class XMLToken;
-class XMLWriter_Impl;
+	class IODevice;
+	class XMLToken;
+	class XMLWriter_Impl;
 
-/// \brief The XML Writer writes a XML file based on XML tokens.
-class XMLWriter
-{
-/// \name Construction
-/// \{
+	/// \brief The XML Writer writes a XML file based on XML tokens.
+	class XMLWriter
+	{
+	public:
+		XMLWriter();
 
-public:
-	XMLWriter();
+		/// \brief Constructs a XMLWriter
+		///
+		/// \param copy = XMLWriter
+		XMLWriter(const XMLWriter &copy);
 
-	/// \brief Constructs a XMLWriter
-	///
-	/// \param copy = XMLWriter
-	XMLWriter(const XMLWriter &copy);
+		/// \brief Constructs a XMLWriter
+		///
+		/// \param output = IODevice
+		XMLWriter(IODevice &output);
 
-	/// \brief Constructs a XMLWriter
-	///
-	/// \param output = IODevice
-	XMLWriter(IODevice &output);
+		virtual ~XMLWriter();
 
-	virtual ~XMLWriter();
+		/// \brief Returns the insert whitespace flag.
+		bool get_insert_whitespace() const;
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief Inserts whitespace between tags if enabled.
+		void set_insert_whitespace(bool enable);
 
-public:
-	/// \brief Returns the insert whitespace flag.
-	bool get_insert_whitespace() const;
+		/// \brief Write token to file.
+		void write(const XMLToken &token);
 
-	/// \brief Inserts whitespace between tags if enabled.
-	void set_insert_whitespace(bool enable);
+	private:
+		std::shared_ptr<XMLWriter_Impl> impl;
+	};
 
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	/// \brief Write token to file.
-	void write(const XMLToken &token);
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	std::shared_ptr<XMLWriter_Impl> impl;
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

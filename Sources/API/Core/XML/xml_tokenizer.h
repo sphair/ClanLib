@@ -33,67 +33,48 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_XML clanCore XML
-/// \{
+	/// \addtogroup clanCore_XML clanCore XML
+	/// \{
 
-class IODevice;
-class XMLToken;
-class XMLTokenizer_Impl;
+	class IODevice;
+	class XMLToken;
+	class XMLTokenizer_Impl;
 
-/// \brief The XML Tokenizer breaks a XML file into XML tokens.
-class XMLTokenizer
-{
-/// \name Construction
-/// \{
+	/// \brief The XML Tokenizer breaks a XML file into XML tokens.
+	class XMLTokenizer
+	{
+	public:
+		XMLTokenizer();
 
-public:
-	XMLTokenizer();
+		/// \brief Constructs a XMLTokenizer
+		///
+		/// \param copy = XMLTokenizer
+		XMLTokenizer(const XMLTokenizer &copy);
 
-	/// \brief Constructs a XMLTokenizer
-	///
-	/// \param copy = XMLTokenizer
-	XMLTokenizer(const XMLTokenizer &copy);
+		/// \brief Constructs a XMLTokenizer
+		///
+		/// \param input = IODevice
+		XMLTokenizer(IODevice &input);
 
-	/// \brief Constructs a XMLTokenizer
-	///
-	/// \param input = IODevice
-	XMLTokenizer(IODevice &input);
+		virtual ~XMLTokenizer();
 
-	virtual ~XMLTokenizer();
+		/// \brief Returns true if eat whitespace flag is set.
+		bool get_eat_whitespace() const;
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief If enabled, will eat any whitespace between tags.
+		void set_eat_whitespace(bool enable);
 
-public:
-	/// \brief Returns true if eat whitespace flag is set.
-	bool get_eat_whitespace() const;
+		/// \brief Returns the next token available in input stream.
+		XMLToken next();
 
-	/// \brief If enabled, will eat any whitespace between tags.
-	void set_eat_whitespace(bool enable);
+		/// \brief Next
+		///
+		/// \param out_token = XMLToken
+		void next(XMLToken *out_token);
 
-/// \}
-/// \name Operations
-/// \{
+	private:
+		std::shared_ptr<XMLTokenizer_Impl> impl;
+	};
 
-public:
-	/// \brief Returns the next token available in input stream.
-	XMLToken next();
-
-	/// \brief Next
-	///
-	/// \param out_token = XMLToken
-	void next(XMLToken *out_token);
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	std::shared_ptr<XMLTokenizer_Impl> impl;
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

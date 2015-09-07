@@ -32,60 +32,47 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_Text clanCore Text
-/// \{
+	/// \addtogroup clanCore_Text clanCore Text
+	/// \{
 
-class UTF8_Reader_Impl;
+	class UTF8_Reader_Impl;
 
-/// \brief UTF8 reader helper functions.
-class UTF8_Reader
-{
-public:
-/// \name Construction
-/// \{
-	/// Important: text is not copied by this class and must remain valid during its usage.
-	UTF8_Reader(const std::string::value_type *text, std::string::size_type length);
+	/// \brief UTF8 reader helper functions.
+	class UTF8_Reader
+	{
+	public:
+		/// Important: text is not copied by this class and must remain valid during its usage.
+		UTF8_Reader(const std::string::value_type *text, std::string::size_type length);
 
-/// \}
-/// \name Operations
-/// \{
+		/// \brief Returns true if the current position is at the end of the string
+		bool is_end();
 
-public:
-	/// \brief Returns true if the current position is at the end of the string
-	bool is_end();
+		/// \brief Get the character at the current position
+		unsigned int get_char();
 
-	/// \brief Get the character at the current position
-	unsigned int get_char();
+		/// \brief Returns the length of the current character
+		std::string::size_type get_char_length();
 
-	/// \brief Returns the length of the current character
-	std::string::size_type get_char_length();
+		/// \brief Moves position to the previous character
+		void prev();
 
-	/// \brief Moves position to the previous character
-	void prev();
+		/// \brief Moves position to the next character
+		void next();
 
-	/// \brief Moves position to the next character
-	void next();
+		/// \brief Moves position to the lead byte of the character
+		void move_to_leadbyte();
 
-	/// \brief Moves position to the lead byte of the character
-	void move_to_leadbyte();
+		/// \brief Get the current position of the reader
+		std::string::size_type get_position();
 
-	/// \brief Get the current position of the reader
-	std::string::size_type get_position();
+		/// \brief Set the current position of the reader
+		void set_position(std::string::size_type position);
 
-	/// \brief Set the current position of the reader
-	void set_position(std::string::size_type position);
+	private:
+		std::string::size_type current_position = 0;
+		std::string::size_type length = 0;
+		const unsigned char *data = nullptr;
+	};
 
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	std::string::size_type current_position = 0;
-	std::string::size_type length = 0;
-	const unsigned char *data = nullptr;
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

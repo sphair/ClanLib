@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-
-
 #pragma once
 
 #include <memory>
@@ -35,66 +33,43 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_System clanCore System
-/// \{
+	/// \addtogroup clanCore_System clanCore System
+	/// \{
 
-class Service_Impl;
+	class Service_Impl;
 
-/// \brief Service/daemon class.
-class Service
-{
-/// \name Construction
-/// \{
+	/// \brief Service/daemon class.
+	class Service
+	{
+	public:
+		/// \brief Constructs a service object.
+		Service(const std::string &service_name);
+		~Service();
 
-public:
-	/// \brief Constructs a service object.
-	Service(const std::string &service_name);
+		/// \brief Returns the service name.
+		const std::string &get_service_name() const;
 
-	~Service();
+		/// \brief Process command line and run service.
+		int main(int argc, char **argv);
 
+	protected:
+		/// \brief Called when the service is asked to start.
+		virtual void service_start(std::vector<std::string> &args) = 0;
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief Called when the service is asked to stop.
+		virtual void service_stop() = 0;
 
-public:
-	/// \brief Returns the service name.
-	const std::string &get_service_name() const;
+		/// \brief Called when the service is asked to reload its configuration.
+		virtual void service_reload() = 0;
 
+	private:
+		inline Service(const Service &/*copy*/) { }
+		inline Service &operator =(const Service &) { return *this; }
 
-/// \}
-/// \name Operations
-/// \{
+		std::shared_ptr<Service_Impl> impl;
 
-public:
-	/// \brief Process command line and run service.
-	int main(int argc, char **argv);
+		friend class Service_Impl;
+	};
 
-protected:
-	/// \brief Called when the service is asked to start.
-	virtual void service_start(std::vector<std::string> &args) = 0;
-
-	/// \brief Called when the service is asked to stop.
-	virtual void service_stop() = 0;
-
-	/// \brief Called when the service is asked to reload its configuration.
-	virtual void service_reload() = 0;
-
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	inline Service(const Service &/*copy*/) { }
-	inline Service &operator =(const Service &) { return *this; }
-
-	std::shared_ptr<Service_Impl> impl;
-
-	friend class Service_Impl;
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

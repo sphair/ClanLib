@@ -33,55 +33,39 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_XML clanCore XML
-/// \{
+	/// \addtogroup clanCore_XML clanCore XML
+	/// \{
 
-/// \brief DOM Notation class.
-///
-///    <p>This interface represents a notation declared in the DTD. A notation either declares,
-///    by name, the format of an unparsed entity (see section 4.7 of the XML 1.0 specification),
-///    or is used for formal declaration of Processing Instruction targets (see section 2.6 of
-///    the XML 1.0 specification). The node name attribute inherited from Node is set to the
-///    declared name of the notation.</p>
-///    <p>The DOM Level 1 does not support editing Notation nodes; they are therefore readonly.</p>
-///    <p>A Notation node does not have any parent.</p> 
-class DomNotation : public DomNode
-{
-/// \name Construction
-/// \{
-
-public:
-	/// \brief Constructs a DOM Notation handle.
-	DomNotation();
-
-	/// \brief Constructs a DomNotation
+	/// \brief DOM Notation class.
 	///
-	/// \param impl = Shared Ptr
-	DomNotation(const std::shared_ptr<DomNode_Impl> &impl);
+	///    <p>This interface represents a notation declared in the DTD. A notation either declares,
+	///    by name, the format of an unparsed entity (see section 4.7 of the XML 1.0 specification),
+	///    or is used for formal declaration of Processing Instruction targets (see section 2.6 of
+	///    the XML 1.0 specification). The node name attribute inherited from Node is set to the
+	///    declared name of the notation.</p>
+	///    <p>The DOM Level 1 does not support editing Notation nodes; they are therefore readonly.</p>
+	///    <p>A Notation node does not have any parent.</p> 
+	class DomNotation : public DomNode
+	{
+	public:
+		/// \brief Constructs a DOM Notation handle.
+		DomNotation();
 
-	~DomNotation();
+		/// \brief Constructs a DomNotation
+		///
+		/// \param impl = Shared Ptr
+		DomNotation(const std::shared_ptr<DomNode_Impl> &impl);
 
-/// \}
-/// \name Attributes
-/// \{
+		~DomNotation();
 
-public:
-	/// \brief The public identifier of this notation.
-	/** <p>If the public identifier was not specified, this is null.</p>*/
-	DomString get_public_id() const;
+		/// \brief The public identifier of this notation.
+		/** <p>If the public identifier was not specified, this is null.</p>*/
+		DomString get_public_id() const;
 
-	/// \brief The system identifier of this notation.
-	/** <p>If the system identifier was not specified, this is null.</p>*/
-	DomString get_system_id() const;
+		/// \brief The system identifier of this notation.
+		/** <p>If the system identifier was not specified, this is null.</p>*/
+		DomString get_system_id() const;
+	};
 
-/// \}
-/// \name Operations
-/// \{
-
-public:
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

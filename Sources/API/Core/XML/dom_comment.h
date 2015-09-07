@@ -33,50 +33,33 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_XML clanCore XML
-/// \{
+	/// \addtogroup clanCore_XML clanCore XML
+	/// \{
 
-/// \brief DOM Comment class.
-///
-///    <p>This represents the content of a comment, i.e., all the characters between the starting
-///    '&lt;!--' and ending '--&gt;'. Note that this is the definition of a comment in XML, and,
-///    in practice, HTML, although some HTML tools may implement the full SGML comment structure.</p>
-class DomComment : public DomCharacterData
-{
-/// \name Construction
-/// \{
-
-public:
-	/// \brief Constructs a DOM Comment handle.
-	DomComment();
-
-	/// \brief Constructs a DomComment
+	/// \brief DOM Comment class.
 	///
-	/// \param doc = Dom Document
-	/// \param data = Dom String
-	DomComment(DomDocument &doc, const DomString &data);
+	///    <p>This represents the content of a comment, i.e., all the characters between the starting
+	///    '&lt;!--' and ending '--&gt;'. Note that this is the definition of a comment in XML, and,
+	///    in practice, HTML, although some HTML tools may implement the full SGML comment structure.</p>
+	class DomComment : public DomCharacterData
+	{
+	public:
+		/// \brief Constructs a DOM Comment handle.
+		DomComment();
 
-	/// \brief Constructs a DomComment
-	///
-	/// \param impl = Shared Ptr
-	DomComment(const std::shared_ptr<DomNode_Impl> &impl);
+		/// \brief Constructs a DomComment
+		///
+		/// \param doc = Dom Document
+		/// \param data = Dom String
+		DomComment(DomDocument &doc, const DomString &data);
 
-	~DomComment();
+		/// \brief Constructs a DomComment
+		///
+		/// \param impl = Shared Ptr
+		DomComment(const std::shared_ptr<DomNode_Impl> &impl);
 
-/// \}
-/// \name Attributes
-/// \{
+		~DomComment();
+	};
 
-public:
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

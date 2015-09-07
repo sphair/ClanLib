@@ -26,7 +26,6 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include <memory>
@@ -34,81 +33,61 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_I_O_Data clanCore I/O Data
-/// \{
+	/// \addtogroup clanCore_I_O_Data clanCore I/O Data
+	/// \{
 
-class ZipFileEntry_Impl;
+	class ZipFileEntry_Impl;
 
-/// \brief File entry in zip file.
-class ZipFileEntry
-{
-/// \name Construction
-/// \{
+	/// \brief File entry in zip file.
+	class ZipFileEntry
+	{
+	public:
+		ZipFileEntry();
 
-public:
-	ZipFileEntry();
+		/// \brief Constructs a ZipFileEntry
+		///
+		/// \param copy = Zip File Entry
+		ZipFileEntry(const ZipFileEntry &copy);
 
-	/// \brief Constructs a ZipFileEntry
-	///
-	/// \param copy = Zip File Entry
-	ZipFileEntry(const ZipFileEntry &copy);
+		~ZipFileEntry();
 
-	~ZipFileEntry();
+		/// \brief Returns the filename of file entry.
+		std::string get_archive_filename() const;
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief Returns the filename of file entry.
+		std::string get_input_filename() const;
 
-public:
-	/// \brief Returns the filename of file entry.
-	std::string get_archive_filename() const;
+		/// \brief Returns the uncompressed size of file entry.
+		int64_t get_uncompressed_size();
 
-	/// \brief Returns the filename of file entry.
-	std::string get_input_filename() const;
+		/// \brief Returns the compressed size of file entry.
+		int64_t get_compressed_size();
 
-	/// \brief Returns the uncompressed size of file entry.
-	int64_t get_uncompressed_size();
+		/// \brief Is Directory
+		///
+		/// \return true = directory
+		bool is_directory() const;
 
-	/// \brief Returns the compressed size of file entry.
-	int64_t get_compressed_size();
+		/// \brief Copy assignment operator.
+		ZipFileEntry &operator =(const ZipFileEntry &copy);
 
-	/// \brief Is Directory
-	///
-	/// \return true = directory
-	bool is_directory() const;
+		/// \brief Sets the filename of the file to be added to the archive.
+		void set_input_filename(const std::string &filename);
 
-/// \}
-/// \name Operations
-/// \{
+		/// \brief Sets the filename of the file inside the archive.
+		void set_archive_filename(const std::string &filename);
 
-public:
-	/// \brief Copy assignment operator.
-	ZipFileEntry &operator =(const ZipFileEntry &copy);
+		/// \brief Set directory
+		///
+		/// \param is_directory = bool
+		void set_directory(bool is_directory);
 
-	/// \brief Sets the filename of the file to be added to the archive.
-	void set_input_filename(const std::string &filename);
+	private:
+		std::shared_ptr<ZipFileEntry_Impl> impl;
 
-	/// \brief Sets the filename of the file inside the archive.
-	void set_archive_filename(const std::string &filename);
+		friend class ZipArchive;
+		friend class ZipIODevice_FileEntry;
+	};
 
-	/// \brief Set directory
-	///
-	/// \param is_directory = bool
-	void set_directory(bool is_directory);
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	std::shared_ptr<ZipFileEntry_Impl> impl;
-
-	friend class ZipArchive;
-
-	friend class ZipIODevice_FileEntry;
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

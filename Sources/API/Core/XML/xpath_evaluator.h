@@ -34,44 +34,29 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_XML clanCore XML
-/// \{
+	/// \addtogroup clanCore_XML clanCore XML
+	/// \{
 
-class DomNode;
-class XPathEvaluator_Impl;
+	class DomNode;
+	class XPathEvaluator_Impl;
 
-/// \brief XPath evaluator.
-class XPathEvaluator
-{
-/// \name Construction
-/// \{
+	/// \brief XPath evaluator.
+	class XPathEvaluator
+	{
+	public:
+		XPathEvaluator();
 
-public:
-	XPathEvaluator();
+		/// \brief Evaluate
+		///
+		/// \param expression = String Ref
+		/// \param context_node = Dom Node
+		///
+		/// \return XPath Object
+		XPathObject evaluate(const std::string &expression, const DomNode &context_node) const;
 
-/// \}
-/// \name Operations
-/// \{
+	private:
+		std::shared_ptr<XPathEvaluator_Impl> impl;
+	};
 
-public:
-
-	/// \brief Evaluate
-	///
-	/// \param expression = String Ref
-	/// \param context_node = Dom Node
-	///
-	/// \return XPath Object
-	XPathObject evaluate(const std::string &expression, const DomNode &context_node) const;
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	std::shared_ptr<XPathEvaluator_Impl> impl;
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

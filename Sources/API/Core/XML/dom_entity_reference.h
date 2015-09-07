@@ -33,57 +33,40 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_XML clanCore XML
-/// \{
+	/// \addtogroup clanCore_XML clanCore XML
+	/// \{
 
-/// \brief DOM Entity Reference class.
-///
-///    <p>EntityReference objects may be inserted into the structure model when an entity reference
-///    is in the source document, or when the user wishes to insert an entity reference. Note that
-///    character references and references to predefined entities are considered to be expanded by
-///    the HTML or XML processor so that characters are represented by their Unicode equivalent rather
-///    than by an entity reference. Moreover, the XML processor may completely expand references to
-///    entities while building the structure model, instead of providing EntityReference objects. If
-///    it does provide such objects, then for a given EntityReference node, it may be that there is no
-///    Entity node representing the referenced entity; but if such an Entity exists, then the child list
-///    of the EntityReference node is the same as that of the Entity node. As with the Entity node, all
-///    descendants of the EntityReference are readonly.</p> 
-class DomEntityReference : public DomNode
-{
-/// \name Construction
-/// \{
-
-public:
-	/// \brief Constructs a DOM Entity Reference handle.
-	DomEntityReference();
-
-	/// \brief Constructs a DomEntityReference
+	/// \brief DOM Entity Reference class.
 	///
-	/// \param doc = Dom Document
-	/// \param name = Dom String
-	DomEntityReference(DomDocument &doc, const DomString &name);
+	///    <p>EntityReference objects may be inserted into the structure model when an entity reference
+	///    is in the source document, or when the user wishes to insert an entity reference. Note that
+	///    character references and references to predefined entities are considered to be expanded by
+	///    the HTML or XML processor so that characters are represented by their Unicode equivalent rather
+	///    than by an entity reference. Moreover, the XML processor may completely expand references to
+	///    entities while building the structure model, instead of providing EntityReference objects. If
+	///    it does provide such objects, then for a given EntityReference node, it may be that there is no
+	///    Entity node representing the referenced entity; but if such an Entity exists, then the child list
+	///    of the EntityReference node is the same as that of the Entity node. As with the Entity node, all
+	///    descendants of the EntityReference are readonly.</p> 
+	class DomEntityReference : public DomNode
+	{
+	public:
+		/// \brief Constructs a DOM Entity Reference handle.
+		DomEntityReference();
 
-	/// \brief Constructs a DomEntityReference
-	///
-	/// \param impl = Shared Ptr
-	DomEntityReference(const std::shared_ptr<DomNode_Impl> &impl);
+		/// \brief Constructs a DomEntityReference
+		///
+		/// \param doc = Dom Document
+		/// \param name = Dom String
+		DomEntityReference(DomDocument &doc, const DomString &name);
 
-	~DomEntityReference();
+		/// \brief Constructs a DomEntityReference
+		///
+		/// \param impl = Shared Ptr
+		DomEntityReference(const std::shared_ptr<DomNode_Impl> &impl);
 
-/// \}
-/// \name Attributes
-/// \{
+		~DomEntityReference();
+	};
 
-public:
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

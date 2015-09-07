@@ -26,61 +26,48 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
-
 
 namespace clan
 {
-/// \addtogroup clanCore_System clanCore System
-/// \{
+	/// \addtogroup clanCore_System clanCore System
+	/// \{
 
-class ConsoleWindow_Impl;
+	class ConsoleWindow_Impl;
 
-/// \brief Text console window.
-///
-///  Note: This class has no effect under Linux.
-class ConsoleWindow
-{
-/// \name Construction
-/// \{
-public:
-	/// \brief Console Window constructor.
+	/// \brief Text console window.
 	///
-	/// \param title Window title of console window.
-	/// \param width Columns in console window.
-	/// \param height Rows in console window.
-	ConsoleWindow(
-		const std::string &title,
-		int width = 80,
-		int height = 25);
+	///  Note: This class has no effect under Linux.
+	class ConsoleWindow
+	{
+	public:
+		/// \brief Console Window constructor.
+		///
+		/// \param title Window title of console window.
+		/// \param width Columns in console window.
+		/// \param height Rows in console window.
+		ConsoleWindow(
+			const std::string &title,
+			int width = 80,
+			int height = 25);
 
-	/// \brief Console Window destructor.
-	~ConsoleWindow();
+		/// \brief Console Window destructor.
+		~ConsoleWindow();
 
-/// \}
-/// \name Operations
-/// \{
-public:
-	/// \brief Waits until user hits a key.
-	///
-	/// This function does not do anything on Linux.
-	void wait_for_key();
+		/// \brief Waits until user hits a key.
+		///
+		/// This function does not do anything on Linux.
+		void wait_for_key();
 
-	/// \brief Displays 'press any key to close this console window',
-	/// \brief and waits until user hits a key.
-	///
-	/// This function does not do anything on Linux.
-	void display_close_message();
+		/// \brief Displays 'press any key to close this console window',
+		/// \brief and waits until user hits a key.
+		///
+		/// This function does not do anything on Linux.
+		void display_close_message();
 
-/// \}
-/// \name Implementation
-/// \{
-private:
-	ConsoleWindow_Impl *impl;
-/// \}
-};
+	private:
+		ConsoleWindow_Impl *impl;
+	};
 
+	/// \}
 }
-
-/// \}

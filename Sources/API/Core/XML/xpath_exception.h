@@ -33,22 +33,20 @@
 
 namespace clan
 {
+	class XPathToken;
 
-class XPathToken;
+	class XPathException : public Exception
+	{
+	public:
+		XPathException(const std::string &message) : Exception(message) {};
+		XPathException(const std::string &message, const std::string &expression);
+		XPathException(const std::string &message, const std::string &expression, const XPathToken &cur_token);
+		~XPathException() throw() {}
 
-class XPathException : public Exception
-{
-public:
-	XPathException(const std::string &message) : Exception(message) {};
-	XPathException(const std::string &message, const std::string &expression);
-	XPathException(const std::string &message, const std::string &expression, const XPathToken &cur_token);
-	~XPathException() throw() {}
+		std::string get_message() const;
 
-	std::string get_message() const;
-
-public:
-	std::string expression;
-	std::string::size_type error_position;
-};
-
+	public:
+		std::string expression;
+		std::string::size_type error_position;
+	};
 }

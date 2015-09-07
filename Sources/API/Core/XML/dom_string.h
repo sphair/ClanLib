@@ -31,11 +31,10 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_XML clanCore XML
-/// \{
+	/// \addtogroup clanCore_XML clanCore XML
+	/// \{
 
-typedef std::string DomString;
+	typedef std::string DomString;
 
+	/// \}
 }
-
-/// \}

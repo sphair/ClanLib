@@ -26,7 +26,6 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include "resource_object.h"
@@ -35,38 +34,37 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_Resources clanCore Resources
-/// \{
+	/// \addtogroup clanCore_Resources clanCore Resources
+	/// \{
 
-class ResourceContainer_Impl
-{
-public:
-	std::map<std::string, ResourceObject> resources;
-};
-
-class ResourceContainer
-{
-public:
-	ResourceContainer() : impl(std::make_shared<ResourceContainer_Impl>())
+	class ResourceContainer_Impl
 	{
-	}
+	public:
+		std::map<std::string, ResourceObject> resources;
+	};
 
-	template<typename Type>
-	Resource<Type> get(const std::string &name)
+	class ResourceContainer
 	{
-		auto it = impl->resources.find(name);
-		if (it != impl->resources.end())
-			return it->second.cast<Type>();
+	public:
+		ResourceContainer() : impl(std::make_shared<ResourceContainer_Impl>())
+		{
+		}
 
-		Resource<Type> resource;
-		impl->resources[name] = resource;
-		return resource;
-	}
+		template<typename Type>
+		Resource<Type> get(const std::string &name)
+		{
+			auto it = impl->resources.find(name);
+			if (it != impl->resources.end())
+				return it->second.cast<Type>();
 
-private:
-	std::shared_ptr<ResourceContainer_Impl> impl;
-};
+			Resource<Type> resource;
+			impl->resources[name] = resource;
+			return resource;
+		}
 
+	private:
+		std::shared_ptr<ResourceContainer_Impl> impl;
+	};
+
+	/// \}
 }
-
-/// \}

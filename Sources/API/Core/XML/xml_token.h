@@ -34,78 +34,56 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_XML clanCore XML
-/// \{
+	/// \addtogroup clanCore_XML clanCore XML
+	/// \{
 
-/// \brief XML token in a XML file.
-class XMLToken
-{
-/// \name Construction
-/// \{
-
-public:
-	XMLToken() : type(NULL_TOKEN), variant(SINGLE)
+	/// \brief XML token in a XML file.
+	class XMLToken
 	{
-	}
+	public:
+		XMLToken() : type(NULL_TOKEN), variant(SINGLE)
+		{
+		}
 
-/// \}
-/// \name Attributes
-/// \{
+		enum TokenType
+		{
+			NULL_TOKEN = 0,
+			ELEMENT_TOKEN = 1,
+			TEXT_TOKEN = 3,
+			CDATA_SECTION_TOKEN = 4,
+			ENTITY_REFERENCE_TOKEN = 5,
+			ENTITY_TOKEN = 6,
+			PROCESSING_INSTRUCTION_TOKEN = 7,
+			COMMENT_TOKEN = 8,
+			DOCUMENT_TYPE_TOKEN = 10,
+			NOTATION_TOKEN = 12
+		};
 
-public:
-	enum TokenType
-	{
-		NULL_TOKEN                     = 0,
-		ELEMENT_TOKEN                  = 1,
-		TEXT_TOKEN                     = 3,
-		CDATA_SECTION_TOKEN            = 4,
-		ENTITY_REFERENCE_TOKEN         = 5,
-		ENTITY_TOKEN                   = 6,
-		PROCESSING_INSTRUCTION_TOKEN   = 7,
-		COMMENT_TOKEN                  = 8,
-		DOCUMENT_TYPE_TOKEN            = 10,
-		NOTATION_TOKEN                 = 12
+		enum TokenVariant
+		{
+			BEGIN = 1,
+			END = 2,
+			SINGLE = 3
+		};
+
+		// Attribute name/value pair.
+		typedef std::pair<std::string, std::string> Attribute;
+
+		/// \brief The token type.
+		TokenType type;
+
+		/// \brief The token variant.
+		TokenVariant variant;
+
+		/// \brief The name of the token.
+		std::string name;
+
+		/// \brief Returns the value of the token.
+		std::string value;
+
+		/// \brief All the attributes attached to the token.
+		std::vector<Attribute> attributes;
 	};
 
-	enum TokenVariant
-	{
-		BEGIN  = 1,
-		END    = 2,
-		SINGLE = 3
-	};
-
-	// Attribute name/value pair.
-	typedef std::pair<std::string, std::string> Attribute;
-
-	/// \brief The token type.
-	TokenType type;
-
-	/// \brief The token variant.
-	TokenVariant variant;
-
-	/// \brief The name of the token.
-	std::string name;
-
-	/// \brief Returns the value of the token.
-	std::string value;
-
-	/// \brief All the attributes attached to the token.
-	std::vector<Attribute> attributes;
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

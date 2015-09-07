@@ -33,89 +33,65 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_XML clanCore XML
-/// \{
+	/// \addtogroup clanCore_XML clanCore XML
+	/// \{
 
-/// \brief DOM Character Data class.
-///
-///<p>The CharacterData interface extends Node with a set of attributes and methods
-///    for accessing character data in the DOM. For clarity this set is defined here
-///    rather than on each object that uses these attributes and methods. No DOM objects
-///    correspond directly to CharacterData, though Text and others do inherit the
-///    interface from it.</p> 
-class DomCharacterData : public DomNode
-{
-/// \name Construction
-/// \{
-
-public:
-	/// \brief Constructs a DOM CharacterData handle.
-	DomCharacterData();
-
-	/// \brief Constructs a DomCharacterData
+	/// \brief DOM Character Data class.
 	///
-	/// \param impl = Shared Ptr
-	DomCharacterData(const std::shared_ptr<DomNode_Impl> &impl);
+	///<p>The CharacterData interface extends Node with a set of attributes and methods
+	///    for accessing character data in the DOM. For clarity this set is defined here
+	///    rather than on each object that uses these attributes and methods. No DOM objects
+	///    correspond directly to CharacterData, though Text and others do inherit the
+	///    interface from it.</p> 
+	class DomCharacterData : public DomNode
+	{
+	public:
+		/// \brief Constructs a DOM CharacterData handle.
+		DomCharacterData();
 
-	~DomCharacterData();
+		/// \brief Constructs a DomCharacterData
+		///
+		/// \param impl = Shared Ptr
+		DomCharacterData(const std::shared_ptr<DomNode_Impl> &impl);
 
-/// \}
-/// \name Attributes
-/// \{
+		~DomCharacterData();
 
-public:
-	/// \brief The number of characters that are available through data and the substringData method below.
-	/** <p>This may have the value zero, i.e., CharacterData nodes may be empty.</p>*/
-	unsigned long get_length();
+		/// \brief The number of characters that are available through data and the substringData method below.
+		/** <p>This may have the value zero, i.e., CharacterData nodes may be empty.</p>*/
+		unsigned long get_length();
 
-/// \}
-/// \name Operations
-/// \{
+		/// \brief Extracts a range of data from the node.
+		///
+		/// \param offset Start offset of substring to extract.
+		/// \param count The number of characters to extract.
+		/// retval: The specified substring. If the sum of offset and count exceeds the length, then all characters to the end of the data are returned.
+		DomString substring_data(unsigned long offset, unsigned long count);
 
-public:
-	/// \brief Extracts a range of data from the node.
-	///
-	/// \param offset Start offset of substring to extract.
-	/// \param count The number of characters to extract.
-	/// retval: The specified substring. If the sum of offset and count exceeds the length, then all characters to the end of the data are returned.
-	DomString substring_data(unsigned long offset, unsigned long count);
+		/// \brief Append the string to the end of the character data of the node.
+		void append_data(const DomString &arg);
 
-	/// \brief Append the string to the end of the character data of the node.
-	void append_data(const DomString &arg);
+		/// \brief Insert a string at the specified character offset.
+		///
+		/// \param offset The character offset at which to insert.
+		/// \param arg The DOMString to insert.
+		void insert_data(unsigned long offset, const DomString &arg);
 
-	/// \brief Insert a string at the specified character offset.
-	///
-	/// \param offset The character offset at which to insert.
-	/// \param arg The DOMString to insert.
-	void insert_data(unsigned long offset, const DomString &arg);
+		/// \brief Remove a range of characters from the node.
+		///
+		/// \param offset The offset from which to remove characters.
+		/// \param count The number of characters to delete. If the sum of offset and count exceeds length then all characters from offset to the end of the data are deleted.
+		void delete_data(unsigned long offset, unsigned long count);
 
-	/// \brief Remove a range of characters from the node.
-	///
-	/// \param offset The offset from which to remove characters.
-	/// \param count The number of characters to delete. If the sum of offset and count exceeds length then all characters from offset to the end of the data are deleted.
-	void delete_data(unsigned long offset, unsigned long count);
+		/// \brief Replace the characters starting at the specified character offset with the specified string.
+		///
+		/// \param offset The offset from which to start replacing.
+		/// \param count The number of characters to replace. If the sum of offset and count exceeds length, then all characters to the end of the data are replaced (i.e., the effect is the same as a remove method call with the same range, followed by an append method invocation).
+		/// \param arg The DOMString with which the range must be replaced.
+		void replace_data(unsigned long offset, unsigned long count, const DomString &arg);
 
-	/// \brief Replace the characters starting at the specified character offset with the specified string.
-	///
-	/// \param offset The offset from which to start replacing.
-	/// \param count The number of characters to replace. If the sum of offset and count exceeds length, then all characters to the end of the data are replaced (i.e., the effect is the same as a remove method call with the same range, followed by an append method invocation).
-	/// \param arg The DOMString with which the range must be replaced.
-	void replace_data(unsigned long offset, unsigned long count, const DomString &arg);
+	protected:
+		DomCharacterData(DomDocument &doc, unsigned short node_type);
+	};
 
-/// \}
-/// \name Implementation
-/// \{
-
-protected:
-
-	/// \brief Constructs a DomCharacterData
-	///
-	/// \param doc = Dom Document
-	/// \param node_type = short
-	DomCharacterData(DomDocument &doc, unsigned short node_type);
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

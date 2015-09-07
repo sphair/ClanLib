@@ -26,59 +26,57 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include "resource.h"
 
 namespace clan
 {
-/// \addtogroup clanCore_Resources clanCore Resources
-/// \{
+	/// \addtogroup clanCore_Resources clanCore Resources
+	/// \{
 
-/// \brief Resource proxy of any type
-class ResourceObject
-{
-public:
-	ResourceObject()
+	/// \brief Resource proxy of any type
+	class ResourceObject
 	{
-	}
-
-	template<typename Type>
-	ResourceObject(const Resource<Type> &resource)
-		: object(resource.handle())
-	{
-	}
-
-	bool is_null() const { return !object; }
-
-	template<typename Type>
-	Resource<Type> cast()
-	{
-		if (object)
+	public:
+		ResourceObject()
 		{
-			std::shared_ptr<Resource_Impl<Type> > resource = std::dynamic_pointer_cast<Resource_Impl<Type> >(object);
-			if (!resource)
-				throw Exception("ResourceObject type mismatch");
-			return Resource<Type>(resource);
 		}
-		else
+
+		template<typename Type>
+		ResourceObject(const Resource<Type> &resource)
+			: object(resource.handle())
 		{
-			throw Exception("ResourceObject is null");
 		}
-	}
 
-	bool operator<(const ResourceObject &other) const { return object < other.object; }
-	bool operator<=(const ResourceObject &other) const { return object <= other.object; }
-	bool operator>(const ResourceObject &other) const { return object > other.object; }
-	bool operator>=(const ResourceObject &other) const { return object >= other.object; }
-	bool operator==(const ResourceObject &other) const { return object == other.object; }
-	bool operator!=(const ResourceObject &other) const { return object != other.object; }
+		bool is_null() const { return !object; }
 
-private:
-	std::shared_ptr<Resource_BaseImpl> object;
-};
+		template<typename Type>
+		Resource<Type> cast()
+		{
+			if (object)
+			{
+				std::shared_ptr<Resource_Impl<Type> > resource = std::dynamic_pointer_cast<Resource_Impl<Type>>(object);
+				if (!resource)
+					throw Exception("ResourceObject type mismatch");
+				return Resource<Type>(resource);
+			}
+			else
+			{
+				throw Exception("ResourceObject is null");
+			}
+		}
 
+		bool operator<(const ResourceObject &other) const { return object < other.object; }
+		bool operator<=(const ResourceObject &other) const { return object <= other.object; }
+		bool operator>(const ResourceObject &other) const { return object > other.object; }
+		bool operator>=(const ResourceObject &other) const { return object >= other.object; }
+		bool operator==(const ResourceObject &other) const { return object == other.object; }
+		bool operator!=(const ResourceObject &other) const { return object != other.object; }
+
+	private:
+		std::shared_ptr<Resource_BaseImpl> object;
+	};
+
+	/// \}
 }
-
-/// \}

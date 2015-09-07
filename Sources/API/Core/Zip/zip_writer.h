@@ -26,7 +26,6 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include <memory>
@@ -35,52 +34,37 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_I_O_Data clanCore I/O Data
-/// \{
+	/// \addtogroup clanCore_I_O_Data clanCore I/O Data
+	/// \{
 
-class IODevice;
-class ZipWriter_Impl;
+	class IODevice;
+	class ZipWriter_Impl;
 
-/// \brief Zip file writer.
-class ZipWriter
-{
-/// \name Construction
-/// \{
+	/// \brief Zip file writer.
+	class ZipWriter
+	{
+	public:
+		/// \brief Constructs a ZipWriter
+		///
+		/// \param output = IODevice
+		/// \param storeFilenamesAsUTF8 = bool
+		ZipWriter(IODevice &output, bool storeFilenamesAsUTF8 = false);
 
-public:
+		/// \brief Begins file entry in the zip file.
+		void begin_file(const std::string &filename, bool compress);
 
-	/// \brief Constructs a ZipWriter
-	///
-	/// \param output = IODevice
-	/// \param storeFilenamesAsUTF8 = bool
-	ZipWriter(IODevice &output, bool storeFilenamesAsUTF8 = false);
+		/// \brief Writes some file data to the zip file.
+		void write_file_data(const void *data, int64_t size);
 
-/// \}
-/// \name Operations
-/// \{
+		/// \brief Ends the file entry.
+		void end_file();
 
-public:
-	/// \brief Begins file entry in the zip file.
-	void begin_file(const std::string &filename, bool compress);
+		/// \brief Writes the table of contents part of the zip file.
+		void write_toc();
 
-	/// \brief Writes some file data to the zip file.
-	void write_file_data(const void *data, int64_t size);
+	private:
+		std::shared_ptr<ZipWriter_Impl> impl;
+	};
 
-	/// \brief Ends the file entry.
-	void end_file();
-
-	/// \brief Writes the table of contents part of the zip file.
-	void write_toc();
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	std::shared_ptr<ZipWriter_Impl> impl;
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

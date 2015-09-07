@@ -26,7 +26,6 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include "../Resources/xml_resource_document.h"
@@ -35,87 +34,66 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_Resources clanCore Resources
-/// \{
+	/// \addtogroup clanCore_Resources clanCore Resources
+	/// \{
 
-class DomElement;
-class XMLResourceDocument;
-class XMLResourceNode_Impl;
+	class DomElement;
+	class XMLResourceDocument;
+	class XMLResourceNode_Impl;
 
-/// \brief Resource node for a XMLResourceDocument
-class XMLResourceNode
-{
-/// \name Construction
-/// \{
+	/// \brief Resource node for a XMLResourceDocument
+	class XMLResourceNode
+	{
+	public:
+		XMLResourceNode();
+		~XMLResourceNode();
 
-public:
-	XMLResourceNode();
+		bool is_null() const;
 
-	~XMLResourceNode();
+		/// \brief Returns the resource type.
+		std::string get_type() const;
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief Returns the name of the resource.
+		std::string get_name() const;
 
-public:
-	bool is_null() const;
+		/// \brief Returns the DOM element describing the resource.
+		DomElement &get_element();
 
-	/// \brief Returns the resource type.
-	std::string get_type() const;
+		/// \brief Returns the resource document owning the resource.
+		XMLResourceDocument get_document();
 
-	/// \brief Returns the name of the resource.
-	std::string get_name() const;
+		/// \brief Returns the file system to load resource from.
+		FileSystem get_file_system() const;
 
-	/// \brief Returns the DOM element describing the resource.
-	DomElement &get_element();
+		/// \brief Returns the base path of the resource.
+		std::string get_base_path() const;
 
-	/// \brief Returns the resource document owning the resource.
-	XMLResourceDocument get_document();
+		/// \brief Opens a file relative to the resource base path.
+		/** param: mode = File::OpenMode modes
+			param: access = File::AccessFlags flags
+			param: share = File::ShareFlags flags
+			param: flags = File::Flags flags
+			\return The IODevice*/
+		IODevice open_file(const std::string &filename,
+			File::OpenMode mode = File::open_existing,
+			unsigned int access = File::access_read,
+			unsigned int share = File::share_all,
+			unsigned int flags = 0) const;
 
-	/// \brief Returns the file system to load resource from.
-	FileSystem get_file_system() const;
+		/// \brief Compares this resource to another resource.
+		bool operator ==(const XMLResourceNode &other) const;
 
-	/// \brief Returns the base path of the resource.
-	std::string get_base_path() const;
+	private:
+		/// \brief Constructs a Resource
+		///
+		/// \param element = Dom Element
+		/// \param resource_document = Resource Document
+		XMLResourceNode(DomElement element, XMLResourceDocument &resource_document);
 
-/// \}
-/// \name Operations
-/// \{
+		std::shared_ptr<XMLResourceNode_Impl> impl;
 
-public:
-	/// \brief Opens a file relative to the resource base path.
-	/** param: mode = File::OpenMode modes
-	    param: access = File::AccessFlags flags
-	    param: share = File::ShareFlags flags
-	    param: flags = File::Flags flags
-	    \return The IODevice*/
-	IODevice open_file(const std::string &filename,
-		File::OpenMode mode = File::open_existing,
-		unsigned int access = File::access_read,
-		unsigned int share = File::share_all,
-		unsigned int flags = 0) const;
+		friend class XMLResourceDocument;
+	};
 
-	/// \brief Compares this resource to another resource.
-	bool operator ==(const XMLResourceNode &other) const;
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-
-	/// \brief Constructs a Resource
-	///
-	/// \param element = Dom Element
-	/// \param resource_document = Resource Document
-	XMLResourceNode(DomElement element, XMLResourceDocument &resource_document);
-
-	std::shared_ptr<XMLResourceNode_Impl> impl;
-
-	friend class XMLResourceDocument;
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

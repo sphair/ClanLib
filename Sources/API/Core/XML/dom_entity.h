@@ -33,56 +33,40 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_XML clanCore XML
-/// \{
+	/// \addtogroup clanCore_XML clanCore XML
+	/// \{
 
-/// \brief DOM Entity class.
-///
-///   <p>This interface represents an entity, either parsed or unparsed, in an
-///    XML document. Note that this models the entity itself not the entity
-///    declaration. Entity declaration modeling has been left for a later Level
-///    of the DOM specification.</p>
-class DomEntity : public DomNode
-{
-/// \name Construction
-/// \{
-
-public:
-	/// \brief Constructs a DOM Entity handle.
-	DomEntity();
-
-	/// \brief Constructs a DomEntity
+	/// \brief DOM Entity class.
 	///
-	/// \param impl = Shared Ptr
-	DomEntity(const std::shared_ptr<DomNode_Impl> &impl);
+	///   <p>This interface represents an entity, either parsed or unparsed, in an
+	///    XML document. Note that this models the entity itself not the entity
+	///    declaration. Entity declaration modeling has been left for a later Level
+	///    of the DOM specification.</p>
+	class DomEntity : public DomNode
+	{
+	public:
+		/// \brief Constructs a DOM Entity handle.
+		DomEntity();
 
-	~DomEntity();
+		/// \brief Constructs a DomEntity
+		///
+		/// \param impl = Shared Ptr
+		DomEntity(const std::shared_ptr<DomNode_Impl> &impl);
 
-/// \}
-/// \name Attributes
-/// \{
+		~DomEntity();
 
-public:
-	/// \brief The public identifier associated with the entity.
-	/** <p>If the public identifier was not specified, this is null.</p>*/
-	DomString get_public_id() const;
+		/// \brief The public identifier associated with the entity.
+		/** <p>If the public identifier was not specified, this is null.</p>*/
+		DomString get_public_id() const;
 
-	/// \brief The system identifier associated with the entity.
-	/** <p>If the system identifier was not specified, this is null.</p>*/
-	DomString get_system_id() const;
+		/// \brief The system identifier associated with the entity.
+		/** <p>If the system identifier was not specified, this is null.</p>*/
+		DomString get_system_id() const;
 
-	/// \brief For unparsed entities, the name of the notation for the entity.
-	/** <p>For parsed entities, this is null.</p>*/
-	DomString get_notation_name() const;
+		/// \brief For unparsed entities, the name of the notation for the entity.
+		/** <p>For parsed entities, this is null.</p>*/
+		DomString get_notation_name() const;
+	};
 
-/// \}
-/// \name Operations
-/// \{
-
-public:
-/// \}
-};
-
+	/// \}
 }
-
-/// \}
