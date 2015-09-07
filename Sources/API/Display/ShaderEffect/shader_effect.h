@@ -27,7 +27,6 @@
 **    Kenneth Gangstoe
 */
 
-
 #pragma once
 
 #include <memory>
@@ -35,49 +34,33 @@
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-class ShaderEffect_Impl;
-class ShaderEffectDescription;
+	class ShaderEffect_Impl;
+	class ShaderEffectDescription;
 
-/// \brief Shader Feffect
-class ShaderEffect
-{
-/// \name Construction
-/// \{
-public:
-	/// \brief Constructs a null instance
-	ShaderEffect();
+	/// \brief Shader Feffect
+	class ShaderEffect
+	{
+	public:
+		/// \brief Constructs a null instance
+		ShaderEffect();
 
-	/// \brief Constructs a shader effect.
-	///
-	/// \param description Shader effect description.
-	/// \param gc Graphics context in which to create the shader effect.
-	ShaderEffect(GraphicContext &gc, const ShaderEffectDescription &description);
-/// \}
+		/// \brief Constructs a shader effect.
+		///
+		/// \param description Shader effect description.
+		/// \param gc Graphics context in which to create the shader effect.
+		ShaderEffect(GraphicContext &gc, const ShaderEffectDescription &description);
 
-/// \name Attributes
-/// \{
-public:
-	bool is_null() const;
-/// \}
+		bool is_null() const;
 
-/// \name Operations
-/// \{
-public:
-	void dispatch(GraphicContext &gc, int x, int y = 1, int z = 1);
-	
-	void draw(GraphicContext &gc);
-/// \}
+		void dispatch(GraphicContext &gc, int x, int y = 1, int z = 1);
+		void draw(GraphicContext &gc);
 
-/// \name Implementation
-/// \{
-private:
-	std::shared_ptr<ShaderEffect_Impl> impl;
-/// \}
-};
+	private:
+		std::shared_ptr<ShaderEffect_Impl> impl;
+	};
 
+	/// \}
 }
-
-/// \}

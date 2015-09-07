@@ -26,7 +26,6 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include <memory>
@@ -36,76 +35,61 @@
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-class PixelBuffer;
-class PixelBufferSet_Impl;
+	class PixelBuffer;
+	class PixelBufferSet_Impl;
 
-/// \brief Set of images that combined form a complete texture
-class PixelBufferSet
-{
-/// \name Construction
-/// \{
-public:
-	/// \brief Constructs a null instance
-	PixelBufferSet();
+	/// \brief Set of images that combined form a complete texture
+	class PixelBufferSet
+	{
+	public:
+		/// \brief Constructs a null instance
+		PixelBufferSet();
 
-	/// \brief Constructs an image set of the specified dimensions type and internal format
-	PixelBufferSet(TextureDimensions dimensions, TextureFormat format, int width, int height = 1, int slices = 1);
+		/// \brief Constructs an image set of the specified dimensions type and internal format
+		PixelBufferSet(TextureDimensions dimensions, TextureFormat format, int width, int height = 1, int slices = 1);
 
-	/// \brief Constructs an image set with a single image using the dimensions and internal format of the pixel buffer
-	PixelBufferSet(const PixelBuffer &image);
-/// \}
+		/// \brief Constructs an image set with a single image using the dimensions and internal format of the pixel buffer
+		PixelBufferSet(const PixelBuffer &image);
 
-/// \name Attributes
-/// \{
-public:
-	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return !impl; }
+		/// \brief Returns true if this object is invalid.
+		bool is_null() const { return !impl; }
 
-	/// \brief Throw an exception if this object is invalid.
-	void throw_if_null() const;
+		/// \brief Throw an exception if this object is invalid.
+		void throw_if_null() const;
 
-	/// \brief Returns the texture dimensions used by the image set
-	TextureDimensions get_dimensions() const;
+		/// \brief Returns the texture dimensions used by the image set
+		TextureDimensions get_dimensions() const;
 
-	/// \brief Returns the internal texture format used by the image
-	TextureFormat get_format() const;
+		/// \brief Returns the internal texture format used by the image
+		TextureFormat get_format() const;
 
-	/// \brief Returns the width of the image
-	int get_width() const;
+		/// \brief Returns the width of the image
+		int get_width() const;
 
-	/// \brief Returns the height of the image
-	int get_height() const;
+		/// \brief Returns the height of the image
+		int get_height() const;
 
-	/// \brief Returns the number of depth/array/cube slices in the set
-	int get_slice_count() const;
+		/// \brief Returns the number of depth/array/cube slices in the set
+		int get_slice_count() const;
 
-	/// \brief Returns the lowest mip level specified in the set
-	int get_base_level() const;
+		/// \brief Returns the lowest mip level specified in the set
+		int get_base_level() const;
 
-	/// \brief Returns the highest mip level specified in the set
-	int get_max_level() const;
+		/// \brief Returns the highest mip level specified in the set
+		int get_max_level() const;
 
-	/// \brief Returns the pixel buffer for a specific slice and level
-	PixelBuffer get_image(int slice, int level);
-/// \}
+		/// \brief Returns the pixel buffer for a specific slice and level
+		PixelBuffer get_image(int slice, int level);
 
-/// \name Operations
-/// \{
-public:
-	/// \brief Set the pixel buffer to be used for the specified slice and level
-	void set_image(int slice, int level, const PixelBuffer &image);
-/// \}
+		/// \brief Set the pixel buffer to be used for the specified slice and level
+		void set_image(int slice, int level, const PixelBuffer &image);
 
-/// \name Implementation
-/// \{
-private:
-	std::shared_ptr<PixelBufferSet_Impl> impl;
-/// \}
-};
+	private:
+		std::shared_ptr<PixelBufferSet_Impl> impl;
+	};
 
+	/// \}
 }
-
-/// \}

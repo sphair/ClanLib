@@ -26,55 +26,38 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include <memory>
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-class DataBuffer;
-class PixelBuffer;
-class IconSet_Impl;
+	class DataBuffer;
+	class PixelBuffer;
+	class IconSet_Impl;
 
-/// \brief Icon set class.
-class IconSet
-{
-/// \name Construction
-/// \{
-public:
-	/// \brief Constructs an icon set.
-	IconSet();
-/// \}
+	/// \brief Icon set class.
+	class IconSet
+	{
+	public:
+		/// \brief Constructs an icon set.
+		IconSet();
 
-/// \name Attributes
-/// \{
-public:
-	/// \brief Returns all the images in the icon set
-	std::vector<PixelBuffer> get_images() const;
-/// \}
+		/// \brief Returns all the images in the icon set
+		std::vector<PixelBuffer> get_images() const;
 
-/// \name Operations
-/// \{
-public:
-	/// \brief Adds an image to the icon set
-	void add_image(const PixelBuffer &image);
+		/// \brief Adds an image to the icon set
+		void add_image(const PixelBuffer &image);
 
-	/// \brief Generates a Windows .ICO format icon from the set
-	DataBuffer create_win32_icon();
-/// \}
+		/// \brief Generates a Windows .ICO format icon from the set
+		DataBuffer create_win32_icon();
 
-/// \name Implementation
-/// \{
-private:
-	std::shared_ptr<IconSet_Impl> impl;
-/// \}
-};
+	private:
+		std::shared_ptr<IconSet_Impl> impl;
+	};
 
+	/// \}
 }
-
-/// \}
-

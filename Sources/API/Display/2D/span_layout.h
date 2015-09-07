@@ -35,208 +35,190 @@
 
 namespace clan
 {
-/// \addtogroup clanDisplay_2D clanDisplay 2D
-/// \{
+	/// \addtogroup clanDisplay_2D clanDisplay 2D
+	/// \{
 
-class Font;
-class GraphicContext;
-class Point;
-class Size;
-class SpanLayout_Impl;
-class Image;
-class SpanComponent;
-class Canvas;
+	class Font;
+	class GraphicContext;
+	class Point;
+	class Size;
+	class SpanLayout_Impl;
+	class Image;
+	class SpanComponent;
+	class Canvas;
 
-/// \brief Span Align
-enum SpanAlign
-{
-	span_left,
-	span_right,
-	span_center,
-	span_justify
-};
-
-/// \brief Span layout class
-class SpanLayout
-{
-/// \name Construction
-/// \{
-public:
-	SpanLayout();
-	~SpanLayout();
-/// \}
-
-	struct HitTestResult
+	/// \brief Span Align
+	enum SpanAlign
 	{
-		HitTestResult() : object_id(-1), offset(0) {}
-
-		enum Type
-		{
-			no_objects_available,
-			outside_top,
-			outside_left,
-			outside_right,
-			outside_bottom,
-			inside
-		} type;
-
-		int object_id;
-		int offset;
+		span_left,
+		span_right,
+		span_center,
+		span_justify
 	};
 
-/// \name Operations
-/// \{
-public:
-	/// \brief Clear
-	void clear();
+	/// \brief Span layout class
+	class SpanLayout
+	{
+	public:
+		SpanLayout();
+		~SpanLayout();
 
-	/// \brief Add text
-	///
-	/// \param text = String
-	/// \param font = Font
-	/// \param color = Colorf
-	/// \param id = value
-	void add_text(const std::string &text, const Font &font, const Colorf &color = Colorf::white, int id = -1);
+		struct HitTestResult
+		{
+			HitTestResult() : object_id(-1), offset(0) {}
 
-	/// \brief Add image
-	///
-	/// \param image = Image
-	/// \param baseline_offset = value
-	/// \param id = value
-	void add_image(const Image &image, int baseline_offset = 0, int id = -1);
+			enum Type
+			{
+				no_objects_available,
+				outside_top,
+				outside_left,
+				outside_right,
+				outside_bottom,
+				inside
+			} type;
 
-	template<typename T>
+			int object_id;
+			int offset;
+		};
 
-	/// \brief Add component
-	///
-	/// \param component = T
-	/// \param baseline_offset = value
-	/// \param id = value
-	void add_component(T *component, int baseline_offset = 0, int id = -1);
+		/// \brief Clear
+		void clear();
 
-	/// \brief Layout
-	///
-	/// \param canvas = Canvas
-	/// \param max_width = value
-	void layout(Canvas &canvas, int max_width);
+		/// \brief Add text
+		///
+		/// \param text = String
+		/// \param font = Font
+		/// \param color = Colorf
+		/// \param id = value
+		void add_text(const std::string &text, const Font &font, const Colorf &color = Colorf::white, int id = -1);
 
-	/// \brief Set position
-	///
-	/// \param pos = Point
-	void set_position(const Point &pos);
+		/// \brief Add image
+		///
+		/// \param image = Image
+		/// \param baseline_offset = value
+		/// \param id = value
+		void add_image(const Image &image, int baseline_offset = 0, int id = -1);
 
-	/// \brief Get Size
-	///
-	/// \return size
-	Size get_size() const;
+		template<typename T>
 
-	/// \brief Get Rect
-	///
-	/// \return rect
-	Rect get_rect() const;
+		/// \brief Add component
+		///
+		/// \param component = T
+		/// \param baseline_offset = value
+		/// \param id = value
+		void add_component(T *component, int baseline_offset = 0, int id = -1);
 
-	/// \brief Get Rect By Id
-	///
-	/// \return rect
-	std::vector<Rect> get_rect_by_id(int id) const;
+		/// \brief Layout
+		///
+		/// \param canvas = Canvas
+		/// \param max_width = value
+		void layout(Canvas &canvas, int max_width);
 
-	/// \brief Hit test
-	///
-	/// \param canvas = Canvas
-	/// \param pos = Point
-	///
-	/// \return Hit Test Result
-	HitTestResult hit_test(Canvas &canvas, const Point &pos);
+		/// \brief Set position
+		///
+		/// \param pos = Point
+		void set_position(const Point &pos);
 
-	/// \brief Draw layout
-	///
-	/// \param canvas = Canvas
-	void draw_layout(Canvas &canvas);
+		/// \brief Get Size
+		///
+		/// \return size
+		Size get_size() const;
 
-	/// \brief Draw layout generating ellipsis for clipped text
-	///
-	/// \param canvas = Canvas
-	/// \param content_rect = Clipping rectangle
-	void draw_layout_ellipsis(Canvas &canvas, const Rect &content_rect);
+		/// \brief Get Rect
+		///
+		/// \return rect
+		Rect get_rect() const;
 
-	/// \brief Set component geometry
-	void set_component_geometry();
+		/// \brief Get Rect By Id
+		///
+		/// \return rect
+		std::vector<Rect> get_rect_by_id(int id) const;
 
-	/// \brief Find preferred size
-	///
-	/// \param canvas = Canvas
-	///
-	/// \return Size
-	Size find_preferred_size(Canvas &canvas);
+		/// \brief Hit test
+		///
+		/// \param canvas = Canvas
+		/// \param pos = Point
+		///
+		/// \return Hit Test Result
+		HitTestResult hit_test(Canvas &canvas, const Point &pos);
 
-	/// \brief Set selection range
-	///
-	/// \param size_type = String
-	/// \param size_type = String
-	void set_selection_range(std::string::size_type start, std::string::size_type end);
+		/// \brief Draw layout
+		///
+		/// \param canvas = Canvas
+		void draw_layout(Canvas &canvas);
 
-	/// \brief Set selection colors
-	///
-	/// \param foreground = Colorf
-	/// \param background = Colorf
-	void set_selection_colors(const Colorf &foreground, const Colorf &background);
+		/// \brief Draw layout generating ellipsis for clipped text
+		///
+		/// \param canvas = Canvas
+		/// \param content_rect = Clipping rectangle
+		void draw_layout_ellipsis(Canvas &canvas, const Rect &content_rect);
 
-	/// \brief Shows the cursor caret
-	void show_cursor();
+		/// \brief Set component geometry
+		void set_component_geometry();
 
-	/// \brief Hides the cursor caret
-	void hide_cursor();
+		/// \brief Find preferred size
+		///
+		/// \param canvas = Canvas
+		///
+		/// \return Size
+		Size find_preferred_size(Canvas &canvas);
 
-	/// \brief Sets the cursor position
-	///
-	/// \param pos = Index of cursor
-	void set_cursor_pos(std::string::size_type pos);
+		/// \brief Set selection range
+		///
+		/// \param size_type = String
+		/// \param size_type = String
+		void set_selection_range(std::string::size_type start, std::string::size_type end);
 
-	/// \brief Toggles whether the cursor caret is shown as a solid box or a line
-	///
-	/// \param enable = Shows the cursor as a solid box if set to true
-	void set_cursor_overwrite_mode(bool enable);
+		/// \brief Set selection colors
+		///
+		/// \param foreground = Colorf
+		/// \param background = Colorf
+		void set_selection_colors(const Colorf &foreground, const Colorf &background);
 
-	/// \brief Sets the cursor color
-	///
-	/// \param color = Color of cursor
-	void set_cursor_color(const Colorf &color);
+		/// \brief Shows the cursor caret
+		void show_cursor();
 
-	/// \brief Get Combined text
-	///
-	/// \return combined_text
-	std::string get_combined_text() const;
+		/// \brief Hides the cursor caret
+		void hide_cursor();
 
-	/// \brief Sets the text alignment
-	///
-	/// Alignment is applied when layout() is called
-	///
-	/// \param align = The alignment
-	void set_align(SpanAlign align);
+		/// \brief Sets the cursor position
+		///
+		/// \param pos = Index of cursor
+		void set_cursor_pos(std::string::size_type pos);
 
-	/// \brief Returns the baseline offset for the first baseline
-	int get_first_baseline_offset();
+		/// \brief Toggles whether the cursor caret is shown as a solid box or a line
+		///
+		/// \param enable = Shows the cursor as a solid box if set to true
+		void set_cursor_overwrite_mode(bool enable);
 
-	/// \brief Returns the baseline offset for the last baseline
-	int get_last_baseline_offset();
+		/// \brief Sets the cursor color
+		///
+		/// \param color = Color of cursor
+		void set_cursor_color(const Colorf &color);
 
-/// \}
+		/// \brief Get Combined text
+		///
+		/// \return combined_text
+		std::string get_combined_text() const;
 
-/// \name Implementation
-/// \{
-private:
+		/// \brief Sets the text alignment
+		///
+		/// Alignment is applied when layout() is called
+		///
+		/// \param align = The alignment
+		void set_align(SpanAlign align);
 
-	/// \brief Add component helper
-	///
-	/// \param component = Span Component
-	/// \param baseline_offset = value
-	/// \param id = value
-	void add_component_helper(SpanComponent *component, int baseline_offset, int id);
+		/// \brief Returns the baseline offset for the first baseline
+		int get_first_baseline_offset();
 
-	std::shared_ptr<SpanLayout_Impl> impl;
-/// \}
-};
+		/// \brief Returns the baseline offset for the last baseline
+		int get_last_baseline_offset();
 
+	private:
+		void add_component_helper(SpanComponent *component, int baseline_offset, int id);
+
+		std::shared_ptr<SpanLayout_Impl> impl;
+	};
+
+	/// \}
 }
-
-/// \}

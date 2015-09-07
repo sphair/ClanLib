@@ -24,9 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
-
 
 #pragma once
 
@@ -35,51 +33,45 @@
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Image_Providers clanDisplay Image Providers
-/// \{
+	/// \addtogroup clanDisplay_Image_Providers clanDisplay Image Providers
+	/// \{
 
-class FileSystem;
+	class FileSystem;
 
-/// \brief Surface provider that can load targa (.tga) files.
-class TargaProvider
-{
-/// \name Construction
-/// \{
+	/// \brief Surface provider that can load targa (.tga) files.
+	class TargaProvider
+	{
+	public:
+		/// \brief Called to load an image with this provider type.
+		///
+		/// \param name Name of the file to load.
+		/// \param directory Directory that file name is relative to.
+		static PixelBuffer load(
+			const std::string &filename,
+			const FileSystem &fs,
+			bool srgb = false);
 
-public:
-	/// \brief Called to load an image with this provider type.
-	///
-	/// \param name Name of the file to load.
-	/// \param directory Directory that file name is relative to.
-	static PixelBuffer load(
-		const std::string &filename,
-		const FileSystem &fs,
-		bool srgb = false);
+		static PixelBuffer load(
+			const std::string &fullname,
+			bool srgb = false);
 
-	static PixelBuffer load(
-		const std::string &fullname,
-		bool srgb = false);
+		static PixelBuffer load(
+			IODevice &file,
+			bool srgb = false);
 
-	static PixelBuffer load(
-		IODevice &file,
-		bool srgb = false);
+		static void save(
+			PixelBuffer buffer,
+			const std::string &filename,
+			FileSystem &fs);
 
-	static void save(
-		PixelBuffer buffer,
-		const std::string &filename,
-		FileSystem &fs);
+		static void save(
+			PixelBuffer buffer,
+			const std::string &fullname);
 
-	static void save(
-		PixelBuffer buffer,
-		const std::string &fullname);
+		static void save(
+			PixelBuffer buffer,
+			IODevice &file);
+	};
 
-	static void save(
-		PixelBuffer buffer,
-		IODevice &file);
-
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

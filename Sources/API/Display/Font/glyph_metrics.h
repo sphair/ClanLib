@@ -27,35 +27,32 @@
 **    Mark Page
 */
 
-
 #pragma once
 
 #include "../../Core/Math/rect.h"
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Font clanDisplay Font
-/// \{
+	/// \addtogroup clanDisplay_Font clanDisplay Font
+	/// \{
 
-/// \brief Glyph metrics class.
-class GlyphMetrics
-{
-public:
-	GlyphMetrics() { }
-	GlyphMetrics(const Pointf &bbox_offset, const Sizef &bbox_size, const Sizef &advance) : bbox_offset(bbox_offset), bbox_size(bbox_size), advance(advance) { }
+	/// \brief Glyph metrics class.
+	class GlyphMetrics
+	{
+	public:
+		GlyphMetrics() { }
+		GlyphMetrics(const Pointf &bbox_offset, const Sizef &bbox_size, const Sizef &advance) : bbox_offset(bbox_offset), bbox_size(bbox_size), advance(advance) { }
 
-	/// \brief Bounding box offset relative to the write cursor position
-	Pointf bbox_offset;
+		/// \brief Bounding box offset relative to the write cursor position
+		Pointf bbox_offset;
 
-	/// \brief Bounding box size
-	/// The bounding box is the smallest rectangle that completely encloses the glyph
-	Sizef bbox_size;
+		/// \brief Bounding box size
+		/// The bounding box is the smallest rectangle that completely encloses the glyph
+		Sizef bbox_size;
 
-	/// \brief Distance the write cursor is moved
-	Sizef advance;
-};
+		/// \brief Distance the write cursor is moved
+		Sizef advance;
+	};
 
+	/// \}
 }
-
-/// \}
-

@@ -24,9 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
-
 
 #pragma once
 
@@ -35,62 +33,51 @@
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Image_Providers clanDisplay Image Providers
-/// \{
+	/// \addtogroup clanDisplay_Image_Providers clanDisplay Image Providers
+	/// \{
 
-/// \brief Class template to register a provider type.
-///
-template<class ProviderClass>
-class ProviderType_Register : public ImageProviderType
-{
-/// \name Construction
-/// \{
-
-public:
-	/// \brief Registers provider type in the ProviderFactory.
-	ProviderType_Register(const std::string &type) : ImageProviderType(type)
+	/// \brief Class template to register a provider type.
+	///
+	template<class ProviderClass>
+	class ProviderType_Register : public ImageProviderType
 	{
-	}
+	public:
+		/// \brief Registers provider type in the ProviderFactory.
+		ProviderType_Register(const std::string &type) : ImageProviderType(type)
+		{
+		}
 
-/// \}
-/// \name Operations
-/// \{
+		/// \brief Called to load an image with this provider type.
+		virtual PixelBuffer load(
+			const std::string &filename,
+			const FileSystem &fs,
+			bool srgb) override
+		{
+			return ProviderClass::load(filename, fs, srgb);
+		}
 
-public:
-	/// \brief Called to load an image with this provider type.
-	virtual PixelBuffer load(
-		const std::string &filename,
-		const FileSystem &fs,
-		bool srgb) override
-	{
-		return ProviderClass::load(filename, fs, srgb);
-	}
+		virtual PixelBuffer load(
+			IODevice &file,
+			bool srgb) override
+		{
+			return ProviderClass::load(file, srgb);
+		}
 
-	virtual PixelBuffer load(
-		IODevice &file,
-		bool srgb) override
-	{
-		return ProviderClass::load(file, srgb);
-	}
+		virtual void save(
+			PixelBuffer buffer,
+			const std::string &filename,
+			FileSystem &fs) override
+		{
+			ProviderClass::save(buffer, filename, fs);
+		}
 
-	virtual void save(
-		PixelBuffer buffer,
-		const std::string &filename,
-		FileSystem &fs) override
-	{
-		ProviderClass::save(buffer, filename, fs);
-	}
+		virtual void save(
+			PixelBuffer buffer,
+			IODevice &file) override
+		{
+			ProviderClass::save(buffer, file);
+		}
+	};
 
-	virtual void save(
-		PixelBuffer buffer,
-		IODevice &file) override
-	{
-		ProviderClass::save(buffer, file);
-	}
-
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

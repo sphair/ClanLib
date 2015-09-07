@@ -28,74 +28,61 @@
 **    Mark Page
 */
 
-
 #pragma once
 
 #include <memory>
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Font clanDisplay Font
-/// \{
+	/// \addtogroup clanDisplay_Font clanDisplay Font
+	/// \{
 
-class FontMetrics_Impl;
+	class FontMetrics_Impl;
 
-/// \brief Font metrics class.
-///
-/// <img src="../../img/FontMetrics.png">
-class FontMetrics
-{
-/// \name Construction
-/// \{
-public:
-	FontMetrics();
+	/// \brief Font metrics class.
+	///
+	/// <img src="../../img/FontMetrics.png">
+	class FontMetrics
+	{
+	public:
+		FontMetrics();
 
-	FontMetrics(
-		float height,
-		float ascent,
-		float descent,
-		float internal_leading,
-		float external_leading,
-		float line_height,		// If 0, then line_height is calculated as height + external_leading
-		float pixel_ratio
-	);
+		FontMetrics(
+			float height,
+			float ascent,
+			float descent,
+			float internal_leading,
+			float external_leading,
+			float line_height,		// If 0, then line_height is calculated as height + external_leading
+			float pixel_ratio
+			);
 
-	~FontMetrics();
-/// \}
+		~FontMetrics();
 
-/// \name Attributes
-/// \{
-public:
-	/// \brief Returns the height of the font.
-	float get_height() const;
+		/// \brief Returns the height of the font.
+		float get_height() const;
 
-	/// \brief Return the distance between lines.
-	float get_line_height() const;
+		/// \brief Return the distance between lines.
+		float get_line_height() const;
 
-	/// \brief Returns the baseline offset from the top of a line
-	float get_baseline_offset() const;
+		/// \brief Returns the baseline offset from the top of a line
+		float get_baseline_offset() const;
 
-	/// \brief Returns the font ascender.
-	float get_ascent() const;
+		/// \brief Returns the font ascender.
+		float get_ascent() const;
 
-	/// \brief Returns the font descender.
-	float get_descent() const;
+		/// \brief Returns the font descender.
+		float get_descent() const;
 
-	/// \brief Returns the amount of leading (space) inside the bounds set by the get_height() function.
-	float get_internal_leading() const;
+		/// \brief Returns the amount of leading (space) inside the bounds set by the get_height() function.
+		float get_internal_leading() const;
 
-	/// \brief Returns the amount of extra leading (space) that to add between rows.
-	float get_external_leading() const;
-/// \}
+		/// \brief Returns the amount of extra leading (space) that to add between rows.
+		float get_external_leading() const;
 
-/// \name Implementation
-/// \{
-private:
-	std::shared_ptr<FontMetrics_Impl> impl;
-/// \}
-};
+	private:
+		std::shared_ptr<FontMetrics_Impl> impl;
+	};
 
+	/// \}
 }
-
-/// \}
-

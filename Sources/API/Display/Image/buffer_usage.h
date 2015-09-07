@@ -27,38 +27,35 @@
 **    Mark Page
 */
 
-
 #pragma once
-
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-/// \brief Array Buffer usage enum
-enum BufferUsage
-{
-	usage_stream_draw,
-	usage_stream_read,
-	usage_stream_copy,
-	usage_static_draw,
-	usage_static_read,
-	usage_static_copy,
-	usage_dynamic_draw,
-	usage_dynamic_read,
-	usage_dynamic_copy
-};
+	/// \brief Array Buffer usage enum
+	enum BufferUsage
+	{
+		usage_stream_draw,
+		usage_stream_read,
+		usage_stream_copy,
+		usage_static_draw,
+		usage_static_read,
+		usage_static_copy,
+		usage_dynamic_draw,
+		usage_dynamic_read,
+		usage_dynamic_copy
+	};
 
-/// \brief Array Buffer access enum
-enum BufferAccess
-{
-	access_read_only,
-	access_write_only,
-	access_read_write,
-	access_write_discard // TBD; requires usage usage_stream_draw on object
-};
+	/// \brief Array Buffer access enum
+	enum BufferAccess
+	{
+		access_read_only,
+		access_write_only,
+		access_read_write,
+		access_write_discard // TBD; requires usage usage_stream_draw on object
+	};
 
+	/// \}
 }
-
-/// \}

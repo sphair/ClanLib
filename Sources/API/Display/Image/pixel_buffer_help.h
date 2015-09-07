@@ -26,27 +26,22 @@
 **    Mark Page
 */
 
-
 #pragma once
 
 #include "pixel_buffer.h"
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-/// \brief Pixel data helper class
-class PixelBufferHelp
-{
-/// \name Operations
-/// \{
-public:
-	/// \brief Add a border around a pixelbuffer, duplicating the edge pixels
-	static PixelBuffer add_border(const PixelBuffer &pb, int border_size, const Rect &rect);
-/// \}
-};
+	/// \brief Pixel data helper class
+	class PixelBufferHelp
+	{
+	public:
+		/// \brief Add a border around a pixelbuffer, duplicating the edge pixels
+		static PixelBuffer add_border(const PixelBuffer &pb, int border_size, const Rect &rect);
+	};
 
+	/// \}
 }
-
-/// \}

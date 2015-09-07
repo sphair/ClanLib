@@ -24,9 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
-
 
 #pragma once
 
@@ -35,57 +33,41 @@
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Image_Providers clanDisplay Image Providers
-/// \{
+	/// \addtogroup clanDisplay_Image_Providers clanDisplay Image Providers
+	/// \{
 
-class PixelBuffer;
+	class PixelBuffer;
 
-/// \brief Provider type
-class ImageProviderType
-{
-/// \name Construction
-/// \{
+	/// \brief Provider type
+	class ImageProviderType
+	{
+	public:
+		/// \brief Registers a provider type in the ImageProviderFactory.
+		ImageProviderType(const std::string &type);
 
-public:
-	/// \brief Registers a provider type in the ImageProviderFactory.
-	ImageProviderType(const std::string &type);
+		/// \brief Unregisters a provider type in the ImageProviderFactory.
+		virtual ~ImageProviderType();
 
-	/// \brief Unregisters a provider type in the ImageProviderFactory.
-	virtual ~ImageProviderType();
+		/// \brief Called to load an image with this provider type.
+		virtual PixelBuffer load(
+			const std::string &filename,
+			const FileSystem &fs,
+			bool srgb) = 0;
 
-/// \}
-/// \name Operations
-/// \{
+		virtual PixelBuffer load(
+			IODevice &file,
+			bool srgb) = 0;
 
-public:
-	/// \brief Called to load an image with this provider type.
-	virtual PixelBuffer load(
-		const std::string &filename,
-		const FileSystem &fs,
-		bool srgb)=0;
+		/// \brief Called to save a given PixelBuffer to a file
+		virtual void save(
+			PixelBuffer buffer,
+			const std::string &filename,
+			FileSystem &fs) = 0;
 
-	virtual PixelBuffer load(
-		IODevice &file,
-		bool srgb)=0;
+		virtual void save(
+			PixelBuffer buffer,
+			IODevice &file) = 0;
+	};
 
-	/// \brief Called to save a given PixelBuffer to a file
-	virtual void save(
-		PixelBuffer buffer,
-		const std::string &filename,
-		FileSystem &fs)=0;
-
-	virtual void save(
-		PixelBuffer buffer,
-		IODevice &file)=0;
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

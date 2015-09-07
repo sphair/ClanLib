@@ -26,7 +26,6 @@
 **    Harry Storbacka
 */
 
-
 #pragma once
 
 #include <memory>
@@ -34,45 +33,25 @@
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-class ScreenInfo_Impl;
-class Rectf;
+	class ScreenInfo_Impl;
+	class Rectf;
 
-/// \brief Screen Information class.
-class ScreenInfo
-{
-/// \name Construction
-/// \{
+	/// \brief Screen Information class.
+	class ScreenInfo
+	{
+	public:
+		/// \brief Constructs a ScreenInfo object.
+		ScreenInfo();
 
-public:
-	/// \brief Constructs a ScreenInfo object.
-	ScreenInfo();
+		/// \brief Returns the geometries of the attached screens and the index of the primary screen in the returned array.
+		std::vector<Rectf> get_screen_geometries(int &primary_screen_index) const;
 
-/// \}
-/// \name Attributes
-/// \{
+	private:
+		std::shared_ptr<ScreenInfo_Impl> impl;
+	};
 
-public:
-	/// \brief Returns the geometries of the attached screens and the index of the primary screen in the returned array.
-	std::vector<Rectf> get_screen_geometries(int &primary_screen_index) const;
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	std::shared_ptr<ScreenInfo_Impl> impl;
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

@@ -38,82 +38,61 @@
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Font clanDisplay FontFamily
-/// \{
+	/// \addtogroup clanDisplay_Font clanDisplay FontFamily
+	/// \{
 
-class FontProvider;
-class Canvas;
-class FontFamily_Impl;
-class GlyphMetrics;
+	class FontProvider;
+	class Canvas;
+	class FontFamily_Impl;
+	class GlyphMetrics;
 
-/// \brief FontFamily class
-///
-/// A FontFamily is a collection of font descriptions
-class FontFamily
-{
-/// \name Construction
-/// \{
-
-public:
-	/// \brief Constructs a null font family
-	FontFamily();
-
-	/// \brief Constructs a font family with the given family name
-	FontFamily(const std::string &family_name);
-
-/// \}
-
-/// \name Attributes
-/// \{
-public:
-	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return !impl; }
-
-	/// \brief Throw an exception if this object is invalid.
-	void throw_if_null() const;
-
-	/// \brief Font family name used for this font family
-	const std::string &get_family_name() const;
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	/// \brief Add standard font
-	void add(const std::string &typeface_name, float height);
-
-	// \brief Add standard font
-	void add(const std::string &typeface_name, const FontDescription &desc);
-
-	// \brief Add standard font
-	void add(const FontDescription &desc, const std::string &ttf_filename);
-
-	// \brief Add standard font
-	void add(const FontDescription &desc, const std::string &ttf_filename, FileSystem fs);
-
-	/// \brief Add a Font based on a sprite
+	/// \brief FontFamily class
 	///
-	/// \param sprite = Sprite with glyphs
-	/// \param glyph_list = Letter to glyph mapping
-	/// \param spacelen = Width of space character
-	/// \param monospace = Force monospaced font (using widest sprite character)
-	/// \param metrics = Font metrics for the sprite font
-	void add(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, float spacelen, bool monospace, const FontMetrics &metrics);
+	/// A FontFamily is a collection of font descriptions
+	class FontFamily
+	{
+	public:
+		/// \brief Constructs a null font family
+		FontFamily();
 
-/// \}
-/// \name Implementation
-/// \{
+		/// \brief Constructs a font family with the given family name
+		FontFamily(const std::string &family_name);
 
-private:
-	std::shared_ptr<FontFamily_Impl> impl;
+		/// \brief Returns true if this object is invalid.
+		bool is_null() const { return !impl; }
 
-	friend class Font_Impl;
+		/// \brief Throw an exception if this object is invalid.
+		void throw_if_null() const;
 
-/// \}
-};
+		/// \brief Font family name used for this font family
+		const std::string &get_family_name() const;
 
+		/// \brief Add standard font
+		void add(const std::string &typeface_name, float height);
+
+		// \brief Add standard font
+		void add(const std::string &typeface_name, const FontDescription &desc);
+
+		// \brief Add standard font
+		void add(const FontDescription &desc, const std::string &ttf_filename);
+
+		// \brief Add standard font
+		void add(const FontDescription &desc, const std::string &ttf_filename, FileSystem fs);
+
+		/// \brief Add a Font based on a sprite
+		///
+		/// \param sprite = Sprite with glyphs
+		/// \param glyph_list = Letter to glyph mapping
+		/// \param spacelen = Width of space character
+		/// \param monospace = Force monospaced font (using widest sprite character)
+		/// \param metrics = Font metrics for the sprite font
+		void add(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, float spacelen, bool monospace, const FontMetrics &metrics);
+
+	private:
+		std::shared_ptr<FontFamily_Impl> impl;
+
+		friend class Font_Impl;
+	};
+
+	/// \}
 }
-
-/// \}
-

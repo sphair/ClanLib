@@ -27,108 +27,87 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include <memory>
 
 namespace clan
 {
-/// \addtogroup clanDisplay_2D clanDisplay 2D
-/// \{
+	/// \addtogroup clanDisplay_2D clanDisplay 2D
+	/// \{
 
-class Size;
-class Rect;
-class Texture2D;
-class Subtexture;
-class TextureGroup_Impl;
-class GraphicContext;
+	class Size;
+	class Rect;
+	class Texture2D;
+	class Subtexture;
+	class TextureGroup_Impl;
+	class GraphicContext;
 
-/// \brief Texture grouping class.
-class TextureGroup
-{
-/// \name Enumerations
-/// \{
-public:
-	/// \brief Texture allocation policy.
-	enum TextureAllocationPolicy
+	/// \brief Texture grouping class.
+	class TextureGroup
 	{
-		create_new_texture,
-		search_previous_textures
+	public:
+		/// \brief Texture allocation policy.
+		enum TextureAllocationPolicy
+		{
+			create_new_texture,
+			search_previous_textures
+		};
+
+		/// \brief Constructs a null instance
+		TextureGroup();
+
+		/// \brief Constructs a texture group
+		TextureGroup(const Size &texture_sizes);
+
+		~TextureGroup();
+
+		/// \brief Returns true if this object is invalid.
+		bool is_null() const { return !impl; }
+
+		/// \brief Throw an exception if this object is invalid.
+		void throw_if_null() const;
+
+		/// \brief Returns the amount of sub-textures allocated in group.
+		int get_subtexture_count() const;
+
+		/// \brief Returns the amount of sub-textures for a specific texture index.
+		int get_subtexture_count(unsigned int texture_index) const;
+
+		/// \brief Returns the amount of textures used by group.
+		int get_texture_count() const;
+
+		/// \brief Returns the texture allocation policy.
+		TextureAllocationPolicy get_texture_allocation_policy() const;
+
+		/// \brief Returns the size of the textures used by this texture group.
+		Size get_texture_sizes() const;
+
+		/// \brief Returns the textures.
+		std::vector<Texture2D> get_textures() const;
+
+		/// \brief Allocate space for another sub texture.
+		Subtexture add(GraphicContext &context, const Size &size);
+
+		/// \brief Deallocate space, from a previously allocated texture
+		///
+		/// Warning - It is advised to set TextureAllocationPolicy to search_previous_textures
+		/// if using this function.  Also be aware of texture fragmentation.
+		/// Empty textures are not removed.
+		void remove(Subtexture &subtexture);
+
+		/// \brief Set the texture allocation policy.
+		void set_texture_allocation_policy(TextureAllocationPolicy policy);
+
+		/// \brief Insert an existing texture into the texture group
+		///
+		/// \param texture = Texture to insert
+		/// \param texture_rect = Free space within the texture that the texture group can use
+		void insert_texture(Texture2D &texture, const Rect &texture_rect);
+
+	private:
+		std::shared_ptr<TextureGroup_Impl> impl;
 	};
 
-/// \}
-/// \name Construction
-/// \{
-public:
-	/// \brief Constructs a null instance
-	TextureGroup();
-
-	/// \brief Constructs a texture group
-	TextureGroup(const Size &texture_sizes);
-
-	~TextureGroup();
-
-/// \}
-/// \name Attributes
-/// \{
-public:
-
-	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return !impl; }
-
-	/// \brief Throw an exception if this object is invalid.
-	void throw_if_null() const;
-
-	/// \brief Returns the amount of sub-textures allocated in group.
-	int get_subtexture_count() const;
-
-	/// \brief Returns the amount of sub-textures for a specific texture index.
-	int get_subtexture_count(unsigned int texture_index) const;
-
-	/// \brief Returns the amount of textures used by group.
-	int get_texture_count() const;
-
-	/// \brief Returns the texture allocation policy.
-	TextureAllocationPolicy get_texture_allocation_policy() const;
-
-	/// \brief Returns the size of the textures used by this texture group.
-	Size get_texture_sizes() const;
-
-	/// \brief Returns the textures.
-	std::vector<Texture2D> get_textures() const;
-
-/// \}
-/// \name Operations
-/// \{
-public:
-	/// \brief Allocate space for another sub texture.
-	Subtexture add(GraphicContext &context, const Size &size);
-
-	/// \brief Deallocate space, from a previously allocated texture
-	///
-	/// Warning - It is advised to set TextureAllocationPolicy to search_previous_textures
-	/// if using this function.  Also be aware of texture fragmentation.
-	/// Empty textures are not removed.
-	void remove(Subtexture &subtexture);
-
-	/// \brief Set the texture allocation policy.
-	void set_texture_allocation_policy(TextureAllocationPolicy policy);
-
-	/// \brief Insert an existing texture into the texture group
-	///
-	/// \param texture = Texture to insert
-	/// \param texture_rect = Free space within the texture that the texture group can use
-	void insert_texture(Texture2D &texture, const Rect &texture_rect);
-
-/// \}
-/// \name Implementation
-/// \{
-private:
-	std::shared_ptr<TextureGroup_Impl> impl;
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

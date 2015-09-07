@@ -26,7 +26,6 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include <memory>
@@ -50,6 +49,6 @@ namespace clan
 		/// \brief Sets the currently selected display target.
 		static void set_current_target(const std::shared_ptr<DisplayTargetProvider> &target);
 	};
-}
 
-/// \}
+	/// \}
+}
