@@ -26,68 +26,47 @@
 **    Mark Page
 */
 
-
 #pragma once
 
 #include <memory>
 
 namespace clan
 {
-/// \addtogroup clanCore_Crypto clanCore Crypto
-/// \{
+	/// \addtogroup clanCore_Crypto clanCore Crypto
+	/// \{
 
-class DataBuffer;
-class Secret_Impl;
+	class DataBuffer;
+	class Secret_Impl;
 
-/// \brief Key class
-///
-/// This class zero's the key from memory when the class is destroyed
-class Secret
-{
-/// \name Construction
-/// \{
-
-public:
-	/// \brief Constructs a key (unset)
-	Secret();
-
-	/// \brief Constructs a key to a specified length
+	/// \brief Key class
 	///
-	/// The data is not initialised
-	///
-	/// \param new_key_length = Length of the key
-	Secret(unsigned int new_key_length);
+	/// This class zero's the key from memory when the class is destroyed
+	class Secret
+	{
+	public:
+		/// \brief Constructs a key (unset)
+		Secret();
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief Constructs a key to a specified length
+		///
+		/// The data is not initialised
+		///
+		/// \param new_key_length = Length of the key
+		Secret(unsigned int new_key_length);
 
-public:
-	/// \brief Get the key size
-	///
-	/// \return The key size
-	unsigned int get_size() const;
+		/// \brief Get the key size
+		///
+		/// \return The key size
+		unsigned int get_size() const;
 
-	/// \brief Get the key data
-	///
-	/// \return The key
-	unsigned char *get_data() const;
+		/// \brief Get the key data
+		///
+		/// \return The key
+		unsigned char *get_data() const;
 
-/// \}
-/// \name Operations
-/// \{
+	private:
+		std::shared_ptr<Secret_Impl> impl;
+	};
 
-public:
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	std::shared_ptr<Secret_Impl> impl;
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

@@ -83,23 +83,17 @@ namespace clan
 	template<typename ApplicationClass>
 	class ApplicationInstance : ApplicationInstancePrivate
 	{
-	/// \name Construction
-	/// \{
 	public:
-		/// \brief Clan Application constructor
+		/// \brief Constructor
 		ApplicationInstance(bool catch_exceptions = true) : ApplicationInstancePrivate(catch_exceptions)
 		{
 		}
 
-	/// \}
-	/// \name Implementation
-	/// \{
 	private:
 		std::unique_ptr<Application> create() override
 		{
 			return std::unique_ptr<Application>(new ApplicationClass());
 		}
-	/// \}
 	};
 
 	/// \}
