@@ -81,6 +81,8 @@ X11Window::X11Window()
 	keyboard = InputDevice(new InputDeviceProvider_X11Keyboard(this));
 	mouse = InputDevice(new InputDeviceProvider_X11Mouse(this));
 
+	repaint_request_rects.reserve(32);
+
 	SetupDisplay::get_message_queue()->add_client(this);
 }
 
@@ -1020,18 +1022,13 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 			break;
 		}
 		case Expose:
-		{	// Window exposure. Immediate repaint.
-			if (!site)
-				break;
-			
-			Rect new_geometry = Rect::xywh(event.xexpose.x, event.xexpose.y, event.xexpose.width, event.xexpose.height);
-			(site->sig_paint)(new_geometry);
+		{	// Window exposure
+			process_expose_area( Rect::xywh(event.xexpose.x, event.xexpose.y, event.xexpose.width, event.xexpose.height) );
 			break;
 		}
 		case FocusIn:
 			if (site)
 				(site->sig_got_focus)();
-
 			break;
 		case FocusOut:
 			if (site)
@@ -1169,6 +1166,46 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 
 }
 
+// We do not require to send expose events immediately. So we can optimise requests here, removing duplicates
+void X11Window::process_expose_area(Rect paint_area)
+{
+	paint_area = paint_area.clip(client_area.get_size());
+	// Validate rect size (if outside clipping region)
+	if (paint_area.get_width() <= 0 || paint_area.get_height() <= 0)
+		return;
+
+	// Search the repaint list
+	for (const Rect &elem : repaint_request_rects)
+	{
+		if (paint_area.is_inside(elem))
+			return; // Don't draw same sub-area twice
+	}
+
+	// Remove existing elements that are within new paint area.
+	std::remove_if(
+			repaint_request_rects.begin(),
+			repaint_request_rects.end(),
+			[&paint_area](const Rect &elem) -> bool {
+				return elem.is_inside(paint_area);
+			});
+
+	repaint_request_rects.push_back(paint_area);
+}
+
+void X11Window::process_window()
+{
+	if (site)
+	{
+		for (const Rect &elem : repaint_request_rects)
+		{
+			(site->sig_paint)(elem);
+		}
+		repaint_request_rects.clear();
+	}
+	process_window_sockets();
+
+}
+
 void X11Window::setup_joysticks()
 {
 	for (auto & elem : joysticks)
@@ -1208,11 +1245,6 @@ void X11Window::setup_joysticks()
 	}
 #endif
 }
-
-//void X11Window::set_fullscreen()
-//{
-//	modify_net_wm_state(true, net_wm_state_fullscreen);
-//}
 
 void X11Window::set_clipboard_text(const std::string &text)
 {

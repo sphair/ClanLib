@@ -157,17 +157,18 @@ public:
 	void set_small_icon(const PixelBuffer &image);
 
 	void process_message(XEvent &event, X11Window *mouse_capture_window);
+	void process_window();
 
 	void get_keyboard_modifiers(bool &key_shift, bool &key_alt, bool &key_ctrl) const;
 	Point get_mouse_position() const;
-
-	void process_window_sockets();
 
 /// \}
 /// \name Implementation
 /// \{
 
 private:
+	void process_expose_area(Rect paint_area);
+	void process_window_sockets();
 	void process_window_resize(const Rect &new_rect);
 	void update_frame_extents();
 	void map_window();
@@ -221,6 +222,13 @@ private:
 	//! Window frame extents. Lengths on each side of the window used by the WM
 	//! to decorate the window. Never use size-related methods on this object.
 	Rect frame_extents;
+
+	/**
+	 * Contains `Rect`s obtained from repaint requests.
+	 * Elements stored are used to call site->sig_paint().
+	 * Cleared on process_window().
+	 */
+	std::vector<Rect> repaint_request_rects;
 
 	float ppi           = 96.0f;
 	float pixel_ratio   = 0.0f;	// 0.0f = Unset

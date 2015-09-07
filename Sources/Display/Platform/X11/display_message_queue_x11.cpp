@@ -137,6 +137,8 @@ namespace clan
 		auto time_start = System::get_time();
 		int x11_handle = ConnectionNumber(display);
 
+
+
 		while (true)
 		{
 			process_message();
@@ -193,6 +195,7 @@ namespace clan
 	void DisplayMessageQueue_X11::process_message()
 	{
 		std::shared_ptr<ThreadData> data = get_thread_data();
+
 		::Display *display = get_display();
 		XEvent event;
 		while (XPending(display) > 0)
@@ -215,7 +218,7 @@ namespace clan
 
 		for (auto & elem : data->windows)
 		{
-			elem->process_window_sockets();
+			elem->process_window();
 		}
 
 		// Process all input context messages (done seperately, because of the mouse_capture hack)
