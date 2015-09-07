@@ -28,8 +28,8 @@
 
 #include "GL/precomp.h"
 #include "opengl_creation_helper.h"
-#include "../../opengl_window_description_impl.h"
-#include "API/GL/opengl_window_description.h"
+#include "../../opengl_context_description_impl.h"
+#include "API/GL/opengl_context_description.h"
 #include <commctrl.h>
 
 namespace clan
@@ -171,7 +171,7 @@ void OpenGLCreationHelper::set_multisampling_pixel_format(const DisplayWindowDes
 	}
 }
 
-HGLRC OpenGLCreationHelper::create_opengl3_context(HGLRC share_context, int major_version, int minor_version, const OpenGLWindowDescription &gldesc)
+HGLRC OpenGLCreationHelper::create_opengl3_context(HGLRC share_context, int major_version, int minor_version, const OpenGLContextDescription &gldesc)
 {
 	set_active();
 	ptr_wglCreateContextAttribsARB wglCreateContextAttribsARB = (ptr_wglCreateContextAttribsARB) wglGetProcAddress("wglCreateContextAttribsARB");

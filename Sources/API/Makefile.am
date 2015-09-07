@@ -3,7 +3,7 @@ clanGL_includes = \
 	GL/opengl_wrap.h \
 	GL/opengl.h \
 	GL/opengl_defines.h \
-	GL/opengl_window_description.h \
+	GL/opengl_context_description.h \
 	GL/opengl_target.h
 
 clanApp_includes = \

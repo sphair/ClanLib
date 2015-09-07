@@ -28,68 +28,68 @@
 */
 
 #include "GL/precomp.h"
-#include "API/GL/opengl_window_description.h"
-#include "opengl_window_description_impl.h"
+#include "API/GL/opengl_context_description.h"
+#include "opengl_context_description_impl.h"
 
 namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLWindowDescription construction:
+// OpenGLContextDescription construction:
 
-OpenGLWindowDescription::OpenGLWindowDescription() : impl(std::make_shared<OpenGLWindowDescription_Impl>())
+OpenGLContextDescription::OpenGLContextDescription() : impl(std::make_shared<OpenGLContextDescription_Impl>())
 {
 }
 
-OpenGLWindowDescription::~OpenGLWindowDescription()
+OpenGLContextDescription::~OpenGLContextDescription()
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLWindowDescription attributes:
+// OpenGLContextDescription attributes:
 
-int OpenGLWindowDescription::get_version_major() const
+int OpenGLContextDescription::get_version_major() const
 {
 	return impl->version_major;
 }
 
-int OpenGLWindowDescription::get_version_minor() const
+int OpenGLContextDescription::get_version_minor() const
 {
 	return impl->version_minor;
 }
 
-bool OpenGLWindowDescription::get_allow_lower_versions() const
+bool OpenGLContextDescription::get_allow_lower_versions() const
 {
 	return impl->allow_lower_versions;
 }
 
-bool OpenGLWindowDescription::get_debug() const
+bool OpenGLContextDescription::get_debug() const
 {
 	return impl->debug_flag;
 }
-bool OpenGLWindowDescription::get_forward_compatible() const
+bool OpenGLContextDescription::get_forward_compatible() const
 {
 	return impl->forward_compatible_flag;
 }
-bool OpenGLWindowDescription::get_core_profile() const
+bool OpenGLContextDescription::get_core_profile() const
 {
 	return impl->core_profile_flag;
 }
-bool OpenGLWindowDescription::get_compatibility_profile() const
+bool OpenGLContextDescription::get_compatibility_profile() const
 {
 	return impl->compatibility_profile_flag;
 }
 
-int OpenGLWindowDescription::get_layer_plane() const
+int OpenGLContextDescription::get_layer_plane() const
 {
 	return impl->layer_plane;
 }
 
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLWindowDescription operations:
+// OpenGLContextDescription operations:
 
-void OpenGLWindowDescription::set_version(int major, int minor, bool allow_lower_versions)
+void OpenGLContextDescription::set_version(int major, int minor, bool allow_lower_versions)
 {
 	impl->version_major = major;
 	impl->version_minor = minor;
@@ -97,29 +97,29 @@ void OpenGLWindowDescription::set_version(int major, int minor, bool allow_lower
 	
 }
 
-void OpenGLWindowDescription::set_debug(bool enable)
+void OpenGLContextDescription::set_debug(bool enable)
 {
 	impl->debug_flag = enable;
 }
-void OpenGLWindowDescription::set_forward_compatible(bool enable)
+void OpenGLContextDescription::set_forward_compatible(bool enable)
 {
 	impl->forward_compatible_flag = enable;
 }
-void OpenGLWindowDescription::set_core_profile(bool enable)
+void OpenGLContextDescription::set_core_profile(bool enable)
 {
 	impl->core_profile_flag = enable;
 }
-void OpenGLWindowDescription::set_compatibility_profile(bool enable)
+void OpenGLContextDescription::set_compatibility_profile(bool enable)
 {
 	impl->compatibility_profile_flag = enable;
 }
 
-void OpenGLWindowDescription::set_layer_plane(int value)
+void OpenGLContextDescription::set_layer_plane(int value)
 {
 	impl->layer_plane = value;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLWindowDescription implementation:
+// OpenGLContextDescription implementation:
 
 }

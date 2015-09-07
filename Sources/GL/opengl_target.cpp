@@ -29,7 +29,7 @@
 
 #include "GL/precomp.h"
 #include "API/Display/display.h"
-#include "API/GL/opengl_window_description.h"
+#include "API/GL/opengl_context_description.h"
 #include "API/GL/opengl_target.h"
 #include "opengl_graphic_context_provider.h"
 #include "opengl_target_provider.h"
@@ -74,7 +74,7 @@ void OpenGLTarget::enable()
 	SetupGL::start();
 }
 
-OpenGLWindowDescription OpenGLTarget::get_description()
+OpenGLContextDescription OpenGLTarget::get_description()
 {
 	SetupGL::start();
 
@@ -86,10 +86,10 @@ OpenGLWindowDescription OpenGLTarget::get_description()
 			return provider->get_description();
 		}
 	}
-	return OpenGLWindowDescription();
+	return OpenGLContextDescription();
 }
 
-void OpenGLTarget::set_description(OpenGLWindowDescription &desc)
+void OpenGLTarget::set_description(OpenGLContextDescription &desc)
 {
 	SetupGL::start();
 	if (SetupGL_Impl::instance)

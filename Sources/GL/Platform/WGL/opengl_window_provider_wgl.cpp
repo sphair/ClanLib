@@ -40,11 +40,11 @@
 #include "API/Display/Render/shared_gc_data.h"
 #include "API/GL/opengl.h"
 #include "API/GL/opengl_wrap.h"
-#include "API/GL/opengl_window_description.h"
+#include "API/GL/opengl_context_description.h"
 #include "API/Core/Text/logger.h"
 #include "Display/Platform/Win32/cursor_provider_win32.h"
 #include "Display/Platform/Win32/dwm_functions.h"
-#include "../../opengl_window_description_impl.h"
+#include "../../opengl_context_description_impl.h"
 #include "../../GL3/gl3_graphic_context_provider.h"
 #include "../../GL1/gl1_graphic_context_provider.h"
 #include "opengl_creation_helper.h"
@@ -56,7 +56,7 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // OpenGLWindowProvider Construction:
 
-OpenGLWindowProvider::OpenGLWindowProvider(OpenGLWindowDescription &opengl_desc)
+OpenGLWindowProvider::OpenGLWindowProvider(OpenGLContextDescription &opengl_desc)
 : win32_window(),
   opengl_context(0), device_context(0), shadow_hwnd(0), shadow_window(false), dwm_layered(false), site(0), fullscreen(false),
   wglSwapIntervalEXT(0), swap_interval(-1), opengl_desc(opengl_desc), using_gl3(true), double_buffered(true)

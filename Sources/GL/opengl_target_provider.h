@@ -31,7 +31,7 @@
 #pragma once
 
 #include "API/Display/TargetProviders/display_target_provider.h"
-#include "API/GL/opengl_window_description.h"
+#include "API/GL/opengl_context_description.h"
 
 namespace clan
 {
@@ -52,7 +52,7 @@ public:
 /// \{
 
 public:
-	OpenGLWindowDescription get_description() {return description;}
+	OpenGLContextDescription get_description() {return description;}
 
 /// \}
 /// \name Operations
@@ -61,7 +61,7 @@ public:
 public:
 	DisplayWindowProvider *alloc_display_window() override;
 
-	void set_description(OpenGLWindowDescription &desc) {description = desc;}
+	void set_description(OpenGLContextDescription &desc) {description = desc;}
 
 /// \}
 /// \name Implementation
@@ -73,7 +73,7 @@ private:
 #else
 	friend class OpenGLWindowProvider;
 #endif
-	OpenGLWindowDescription description;
+	OpenGLContextDescription description;
 
 /// \}
 };

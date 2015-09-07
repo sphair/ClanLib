@@ -33,13 +33,13 @@
 namespace clan
 {
 
-class OpenGLWindowDescription_Impl
+class OpenGLContextDescription_Impl
 {
 /// \name Construction
 /// \{
 
 public:
-	OpenGLWindowDescription_Impl()
+	OpenGLContextDescription_Impl()
 	{
 		version_major = 3;
 		version_minor = 2;

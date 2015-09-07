@@ -57,7 +57,7 @@ class FrameBufferProvider;
 class RenderBufferProvider;
 class GL3FrameBufferProvider;
 class DisposableObject;
-class OpenGLWindowDescription;
+class OpenGLContextDescription;
 class OpenGLWindowProvider;
 
 

@@ -35,7 +35,7 @@ GL1/gl1_graphic_context_provider.cpp \
 GL1/gl1_texture_provider.cpp \
 GL1/gl1_primitives_array_provider.cpp \
 opengl_target_provider.cpp \
-opengl_window_description.cpp
+opengl_context_description.cpp
 
 if WIN32
 libclan40GL_la_SOURCES += \

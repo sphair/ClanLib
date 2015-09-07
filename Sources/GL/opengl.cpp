@@ -31,6 +31,7 @@
 #include "GL/precomp.h"
 #include "API/GL/opengl.h"
 #include "API/GL/opengl_wrap.h"
+#include "API/GL/opengl_target.h"
 #include "API/Core/System/exception.h"
 #include "API/Core/IOData/cl_endian.h"
 #include "API/Core/Text/string_format.h"
@@ -60,8 +61,6 @@
 #include <GL/glx.h>
 #include "Platform/GLX/opengl_window_provider_glx.h"
 #endif
-
-#include "API/GL/opengl_graphic_context.h"
 
 namespace clan
 {
@@ -296,9 +295,7 @@ ProcAddress *OpenGL::get_proc_address(const std::string& function_name)
 void OpenGL::set_active(GraphicContext &gc)
 {
 	gc.impl->set_active();
-
-	GraphicContext_GL gc_gl(gc);
-	gc_gl.set_active();
+	OpenGLTarget::set_active_context(gc);
 }
 
 bool OpenGL::set_active()

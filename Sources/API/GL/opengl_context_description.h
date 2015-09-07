@@ -36,21 +36,21 @@ namespace clan
 /// \addtogroup clanGL_Display clanGL Display
 /// \{
 
-class OpenGLWindowDescription_Impl;
+class OpenGLContextDescription_Impl;
 
 /// \brief OpenGL context specific settings.
-class OpenGLWindowDescription
+class OpenGLContextDescription
 {
 /// \name Construction
 /// \{
 public:
 	/// \brief Constructs a window description with default values.
-	OpenGLWindowDescription();
+	OpenGLContextDescription();
 
-	/// \brief Constructs a OpenGLWindowDescription
+	/// \brief Constructs a OpenGLContextDescription
 	///
 	/// \param desc = Display Window Description
-	virtual ~OpenGLWindowDescription();
+	virtual ~OpenGLContextDescription();
 
 /// \}
 /// \name Attributes
@@ -137,7 +137,7 @@ public:
 /// \name Implementation
 /// \{
 private:
-	std::shared_ptr<OpenGLWindowDescription_Impl> impl;
+	std::shared_ptr<OpenGLContextDescription_Impl> impl;
 /// \}
 };
 

@@ -106,7 +106,7 @@ public:
 	/// \brief Get the OpenGL message log
 	///
 	/// This is required for this function to operate
-	/// OpenGLWindowDescription gldesc;
+	/// OpenGLContextDescription gldesc;
 	/// gldesc.set_debug(true);
 	/// OpenGLTarget::set_description(gldesc);
 	static std::vector<MessageLog_GL> get_message_log(GLuint numMsgs);

@@ -33,7 +33,7 @@
 namespace clan
 {
 
-class OpenGLWindowDescription;
+class OpenGLContextDescription;
 class DisplayWindowDescription;
 
 class OpenGLCreationHelper
@@ -43,7 +43,7 @@ public:
 	~OpenGLCreationHelper();
 
 	void set_multisampling_pixel_format(const DisplayWindowDescription &desc);
-	HGLRC create_opengl3_context(HGLRC share_context, int major_version, int minor_version, const OpenGLWindowDescription &gldesc);
+	HGLRC create_opengl3_context(HGLRC share_context, int major_version, int minor_version, const OpenGLContextDescription &gldesc);
 	HGLRC create_opengl2_context(HGLRC share_context);
 
 private:

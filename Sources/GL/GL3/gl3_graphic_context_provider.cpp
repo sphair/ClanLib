@@ -62,7 +62,7 @@
 #include "API/GL/opengl.h"
 #include "API/GL/opengl_wrap.h"
 #include "API/Display/2D/image.h"
-#include "API/GL/opengl_window_description.h"
+#include "API/GL/opengl_context_description.h"
 #ifdef __APPLE__
 #include "../Platform/OSX/opengl_window_provider_osx.h"
 #elif !defined(WIN32)

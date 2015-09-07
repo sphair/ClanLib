@@ -41,7 +41,7 @@ namespace clan
 class GraphicContext;
 class OpenGLTargetProvider;
 class OpenGLTarget_Impl;
-class OpenGLWindowDescription;
+class OpenGLContextDescription;
 
 /// \brief Display target for clanDisplay.
 class OpenGLTarget : public DisplayTarget
@@ -55,7 +55,7 @@ public:
 	/// This may change after a display window has been created
 	static bool is_current();
 
-	static OpenGLWindowDescription get_description();
+	static OpenGLContextDescription get_description();
 
 /// \}
 /// \name Operations
@@ -68,7 +68,7 @@ public:
 	/// \brief Set this display target to be the current target
 	static void set_current();
 
-	static void set_description(OpenGLWindowDescription &desc);
+	static void set_description(OpenGLContextDescription &desc);
 
 	/// \brief Get the opengl version
 	///

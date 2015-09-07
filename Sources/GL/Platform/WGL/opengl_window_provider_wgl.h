@@ -35,7 +35,7 @@
 #include "API/Display/Window/input_context.h"
 #include "Display/Platform/Win32/win32_window.h"
 #include <memory>
-#include "API/GL/opengl_window_description.h"
+#include "API/GL/opengl_context_description.h"
 #include "API/GL/opengl_wrap.h"
 
 namespace clan
@@ -43,7 +43,7 @@ namespace clan
 
 typedef BOOL (APIENTRY *ptr_wglSwapIntervalEXT)(int interval);
 
-class OpenGLWindowDescription;
+class OpenGLContextDescription;
 
 class OpenGLWindowProvider : public DisplayWindowProvider
 {
@@ -51,7 +51,7 @@ class OpenGLWindowProvider : public DisplayWindowProvider
 /// \{
 
 public:
-	OpenGLWindowProvider(OpenGLWindowDescription &opengl_desc);
+	OpenGLWindowProvider(OpenGLContextDescription &opengl_desc);
 	~OpenGLWindowProvider();
 
 
@@ -169,7 +169,7 @@ private:
 	ptr_wglSwapIntervalEXT wglSwapIntervalEXT;
 	int swap_interval;
 
-	OpenGLWindowDescription opengl_desc;
+	OpenGLContextDescription opengl_desc;
 
 	bool using_gl3;
 	bool double_buffered;
