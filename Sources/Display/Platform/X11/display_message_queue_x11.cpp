@@ -247,7 +247,8 @@ namespace clan
 		for (auto & elem : data->windows)
 		{
 			InputContext context = elem->get_ic();
-			context.process_messages();
+			if (!context.is_disposed())
+				context.process_messages();
 		}
 	}
 
