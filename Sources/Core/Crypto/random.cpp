@@ -23,7 +23,6 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
 **    Mark Page
 */
 
@@ -34,36 +33,22 @@
 
 namespace clan
 {
+	Random::Random(int cache_size) : impl(std::make_shared<Random_Impl>(cache_size))
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// Random Construction:
+	void Random::get_random_bytes(unsigned char *out_dest_ptr, int num_bytes)
+	{
+		impl->get_random_bytes(out_dest_ptr, num_bytes);
+	}
 
-Random::Random(int cache_size) : impl(std::make_shared<Random_Impl>(cache_size))
-{
-}
+	void Random::get_random_bytes_nzero(unsigned char *out_dest_ptr, int num_bytes)
+	{
+		impl->get_random_bytes_nzero(out_dest_ptr, num_bytes);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// Random Attributes:
-
-/////////////////////////////////////////////////////////////////////////////
-// Random Operations:
-
-void Random::get_random_bytes(unsigned char *out_dest_ptr, int num_bytes)
-{
-	impl->get_random_bytes(out_dest_ptr, num_bytes);
-}
-
-void Random::get_random_bytes_nzero(unsigned char *out_dest_ptr, int num_bytes)
-{
-	impl->get_random_bytes_nzero(out_dest_ptr, num_bytes);
-}
-
-bool Random::get_random_bool()
-{
-	return impl->get_random_bool();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Random Implementation:
-
+	bool Random::get_random_bool()
+	{
+		return impl->get_random_bool();
+	}
 }

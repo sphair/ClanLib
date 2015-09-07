@@ -23,7 +23,7 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
+**    Mark Page
 */
 
 #pragma once
@@ -32,67 +32,35 @@
 
 namespace clan
 {
-
-class SHA1_Impl : private SHA
-{
-/// \name Construction
-/// \{
-
-public:
-	SHA1_Impl();
-
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	std::string get_hash(bool uppercase = false) const;
-
-	void get_hash(unsigned char out_hash[20]) const;
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	void reset();
-
-	void set_hmac(const void *key_data, int key_size);
-
-	void add(const void *data, int size);
-
-	void calculate();
-
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	void process_chunk();
-
-	inline unsigned int leftrotate_uint32(unsigned int value, int shift) const
+	class SHA1_Impl : private SHA
 	{
-		return (value << shift) + (value >> (32-shift));
-	}
+	public:
+		SHA1_Impl();
 
-	uint32_t h0, h1, h2, h3, h4;
+		std::string get_hash(bool uppercase = false) const;
+		void get_hash(unsigned char out_hash[20]) const;
 
-	const static int block_size = 64;
+		void reset();
+		void set_hmac(const void *key_data, int key_size);
+		void add(const void *data, int size);
+		void calculate();
 
-	unsigned char chunk[block_size];
+	private:
+		void process_chunk();
 
-	int chunk_filled;
+		inline unsigned int leftrotate_uint32(unsigned int value, int shift) const
+		{
+			return (value << shift) + (value >> (32 - shift));
+		}
 
-	uint64_t length_message;
+		uint32_t h0, h1, h2, h3, h4;
+		const static int block_size = 64;
+		unsigned char chunk[block_size];
+		int chunk_filled;
+		uint64_t length_message;
+		bool calculated;
 
-	bool calculated;
-
-	bool hmac_enabled;
-	unsigned char hmac_key_chunk[block_size];
-/// \}
-};
-
+		bool hmac_enabled;
+		unsigned char hmac_key_chunk[block_size];
+	};
 }

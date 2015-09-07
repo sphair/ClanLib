@@ -23,7 +23,6 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
 **    Mark Page
 */
 
@@ -34,54 +33,29 @@
 
 namespace clan
 {
-/// \addtogroup clanNetwork_Socket clanNetwork TLS
-/// \{
+	class X509_Impl;
+	class Secret;
+	class DataBuffer;
 
-class X509_Impl;
-class Secret;
-class DataBuffer;
+	/// \brief X509 certificate class.
+	class X509
+	{
+	public:
+		/// \brief Constructs a null object.
+		X509();
 
-/// \brief X509 certificate class.
-class X509
-{
-/// \name Construction
-/// \{
+		/// \brief Constructs a X509 object.
+		X509(unsigned char *base_ptr, unsigned int length);
 
-public:
-	/// \brief Constructs a null object.
-	X509();
+		/// \brief Returns true if this object is invalid.
+		bool is_null() const { return !impl; }
 
-	/// \brief Constructs a X509 object.
-	X509(unsigned char *base_ptr, unsigned int length);
+		/// \brief Throw an exception if this object is invalid.
+		void throw_if_null() const;
 
-/// \}
-/// \name Attributes
-/// \{
+		void get_rsa_public_key(DataBuffer &output_exponent, DataBuffer &output_modulus) const;
 
-public:
-	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return !impl; }
-
-	/// \brief Throw an exception if this object is invalid.
-	void throw_if_null() const;
-
-	void get_rsa_public_key(DataBuffer &output_exponent, DataBuffer &output_modulus) const;
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	std::shared_ptr<X509_Impl> impl;
-/// \}
-};
-
+	private:
+		std::shared_ptr<X509_Impl> impl;
+	};
 }
-
-/// \}

@@ -23,7 +23,6 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
 **    Mark Page
 */
 
@@ -34,57 +33,43 @@
 
 namespace clan
 {
+	SHA512::SHA512()
+		: impl(std::make_shared<SHA512_Impl>(cl_sha_512))
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// SHA512 Construction:
+	std::string SHA512::get_hash(bool uppercase) const
+	{
+		return impl->get_hash(uppercase);
+	}
 
-SHA512::SHA512()
-: impl(std::make_shared<SHA512_Impl>(cl_sha_512))
-{
-}
+	void SHA512::get_hash(unsigned char out_hash[64]) const
+	{
+		impl->get_hash(out_hash);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// SHA512 Attributes:
+	void SHA512::reset()
+	{
+		impl->reset();
+	}
 
-std::string SHA512::get_hash(bool uppercase) const
-{
-	return impl->get_hash(uppercase);
-}
+	void SHA512::add(const void *data, int size)
+	{
+		impl->add(data, size);
+	}
 
-void SHA512::get_hash(unsigned char out_hash[64]) const
-{
-	impl->get_hash(out_hash);
-}
+	void SHA512::add(const DataBuffer &data)
+	{
+		add(data.get_data(), data.get_size());
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// SHA512 Operations:
+	void SHA512::calculate()
+	{
+		impl->calculate();
+	}
 
-void SHA512::reset()
-{
-	impl->reset();
-}
-
-void SHA512::add(const void *data, int size)
-{
-	impl->add(data, size);
-}
-
-void SHA512::add(const DataBuffer &data)
-{
-	add(data.get_data(), data.get_size());
-}
-
-void SHA512::calculate()
-{
-	impl->calculate();
-}
-
-void SHA512::set_hmac(const void *key_data, int key_size)
-{
-	impl->set_hmac(key_data, key_size);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// SHA512 Implementation:
-
+	void SHA512::set_hmac(const void *key_data, int key_size)
+	{
+		impl->set_hmac(key_data, key_size);
+	}
 }

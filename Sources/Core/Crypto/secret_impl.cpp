@@ -29,8 +29,7 @@
 
 #include "Core/precomp.h"
 #include "secret_impl.h"
-
-#include "../../API/Core/Math/cl_math.h"
+#include "API/Core/Math/cl_math.h"
 
 #ifndef WIN32
 #include <cstring>
@@ -38,55 +37,39 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// Secret_Impl Construction:
-
-Secret_Impl::Secret_Impl() : key(nullptr), key_length(0)
-{
-
-}
-
-Secret_Impl::~Secret_Impl()
-{
-	free();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Secret_Impl Attributes:
-
-
-/////////////////////////////////////////////////////////////////////////////
-// Secret_Impl Operations:
-
-void Secret_Impl::create(unsigned int new_key_length)
-{
-	free();
-	if (new_key_length)
+	Secret_Impl::Secret_Impl() : key(nullptr), key_length(0)
 	{
-		key = new unsigned char[new_key_length];
-		key_length = new_key_length;
 	}
-}
 
-/////////////////////////////////////////////////////////////////////////////
-// Secret_Impl Implementation:
-
-void Secret_Impl::free()
-{
-	if (key)
+	Secret_Impl::~Secret_Impl()
 	{
+		free();
+	}
+
+	void Secret_Impl::create(unsigned int new_key_length)
+	{
+		free();
+		if (new_key_length)
+		{
+			key = new unsigned char[new_key_length];
+			key_length = new_key_length;
+		}
+	}
+
+	void Secret_Impl::free()
+	{
+		if (key)
+		{
 #ifdef WIN32
-		SecureZeroMemory(key, key_length);
+			SecureZeroMemory(key, key_length);
 #else
-		volatile unsigned char *p = key;
-		while (key_length--)
-			*p++ = 0;
+			volatile unsigned char *p = key;
+			while (key_length--)
+				*p++ = 0;
 #endif
-		delete[] key;
-		key = nullptr;
-		key_length = 0;
+			delete[] key;
+			key = nullptr;
+			key_length = 0;
+		}
 	}
-}
-
 }

@@ -23,7 +23,6 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
 **    Mark Page
 */
 
@@ -34,38 +33,24 @@
 
 namespace clan
 {
+	Secret::Secret()
+		: impl(std::make_shared<Secret_Impl>())
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// Secret Construction:
+	Secret::Secret(unsigned int new_key_length)
+		: impl(std::make_shared<Secret_Impl>())
+	{
+		impl->create(new_key_length);
+	}
 
-Secret::Secret()
-: impl(std::make_shared<Secret_Impl>())
-{
-}
+	unsigned int Secret::get_size() const
+	{
+		return impl->get_size();
+	}
 
-Secret::Secret(unsigned int new_key_length)
-: impl(std::make_shared<Secret_Impl>())
-{
-	impl->create(new_key_length);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Secret Attributes:
-
-unsigned int Secret::get_size() const
-{
-	return impl->get_size();
-}
-
-unsigned char *Secret::get_data() const
-{
-	return impl->get_data();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Secret Operations:
-
-/////////////////////////////////////////////////////////////////////////////
-// Secret Implementation:
-
+	unsigned char *Secret::get_data() const
+	{
+		return impl->get_data();
+	}
 }

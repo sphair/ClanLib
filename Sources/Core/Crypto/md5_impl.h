@@ -23,7 +23,6 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
 **    Mark Page
 */
 
@@ -33,66 +32,35 @@
 
 namespace clan
 {
-
-class MD5_Impl : private SHA
-{
-/// \name Construction
-/// \{
-
-public:
-	MD5_Impl();
-
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	std::string get_hash(bool uppercase = false) const;
-
-	void get_hash(unsigned char out_hash[16]) const;
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	void reset();
-
-	void add(const void *data, int size);
-
-	void calculate();
-
-	void set_hmac(const void *key_data, int key_size);
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	void process_chunk();
-
-	const static int block_size = 64;
-
-	inline uint32_t leftrotate_uint32(uint32_t value, int shift) const
+	class MD5_Impl : private SHA
 	{
-		return (value << shift) | (value >> (32-shift));
-	}
+	public:
+		MD5_Impl();
 
-	uint32_t h0, h1, h2, h3;
+		std::string get_hash(bool uppercase = false) const;
+		void get_hash(unsigned char out_hash[16]) const;
+		void reset();
+		void add(const void *data, int size);
+		void calculate();
+		void set_hmac(const void *key_data, int key_size);
 
-	unsigned char chunk[block_size];
+	private:
+		void process_chunk();
 
-	int chunk_filled;
+		const static int block_size = 64;
 
-	unsigned int length_message;
+		inline uint32_t leftrotate_uint32(uint32_t value, int shift) const
+		{
+			return (value << shift) | (value >> (32 - shift));
+		}
 
-	bool calculated;
+		uint32_t h0, h1, h2, h3;
+		unsigned char chunk[block_size];
+		int chunk_filled;
+		unsigned int length_message;
+		bool calculated;
 
-	bool hmac_enabled;
-	unsigned char hmac_key_chunk[block_size];
-
-/// \}
-};
-
+		bool hmac_enabled;
+		unsigned char hmac_key_chunk[block_size];
+	};
 }

@@ -23,7 +23,6 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
 **    Mark Page
 */
 
@@ -34,83 +33,60 @@
 
 namespace clan
 {
+	class ASN1;
 
-class ASN1;
-
-typedef struct 
-{
-	std::string id_at_commonName;
-	std::string id_at_surname;
-	std::string id_at_countryName;
-	std::string id_at_localityName;
-	std::string id_at_stateOrProvinceName;
-	std::string id_at_organizationName;
-	std::string id_at_organizationalUnitName;
-	std::string id_at_title;
-	std::string id_at_name;
-	std::string id_at_givenName;
-	std::string id_at_initials;
-	std::string id_at_generationQualifier;
-	std::string id_at_dnQualifier;
-	std::string id_at_emailAddress;
-	std::string id_at_domainComponent;
-} X509_BasicInfo;
-
-class X509_Impl
-{
-/// \name Construction
-/// \{
-
-public:
-	X509_Impl();
-
-	enum X509_Version
+	typedef struct
 	{
-		x509_cert_v1 = 0,
-		x509_cert_v2 = 1,
-		x509_cert_v3 = 2
+		std::string id_at_commonName;
+		std::string id_at_surname;
+		std::string id_at_countryName;
+		std::string id_at_localityName;
+		std::string id_at_stateOrProvinceName;
+		std::string id_at_organizationName;
+		std::string id_at_organizationalUnitName;
+		std::string id_at_title;
+		std::string id_at_name;
+		std::string id_at_givenName;
+		std::string id_at_initials;
+		std::string id_at_generationQualifier;
+		std::string id_at_dnQualifier;
+		std::string id_at_emailAddress;
+		std::string id_at_domainComponent;
+	} X509_BasicInfo;
+
+	class X509_Impl
+	{
+	public:
+		X509_Impl();
+
+		enum X509_Version
+		{
+			x509_cert_v1 = 0,
+			x509_cert_v2 = 1,
+			x509_cert_v3 = 2
+		};
+
+		void parse(const unsigned char *base_ptr, unsigned int length);
+		void get_rsa_public_key(DataBuffer &output_exponent, DataBuffer &output_modulus) const;
+
+	private:
+		void set_string(const ASN1 &input, std::string &output);
+		void parse_tbs_certificate(ASN1 &asn1);
+		void parse_name(ASN1 &tbs, X509_BasicInfo &output);
+		void parse_subject_public_key(ASN1 &tbs);
+		void parse_validity(ASN1 &tbs);
+		void throw_invalid() const;
+
+		X509_Version version;
+		std::vector<unsigned char> serial_number;
+		std::vector<uint32_t> signature;
+
+		std::vector<uint32_t> public_key_algorithm_identifier;
+		std::vector<unsigned char> public_key;
+
+		X509_BasicInfo subject;
+		X509_BasicInfo issuer;
+		DateTime valid_not_before;
+		DateTime valid_not_after;
 	};
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	void parse(const unsigned char *base_ptr, unsigned int length);
-	void get_rsa_public_key(DataBuffer &output_exponent, DataBuffer &output_modulus) const;
-
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	void set_string(const ASN1 &input, std::string &output);
-	void parse_tbs_certificate(ASN1 &asn1);
-	void parse_name(ASN1 &tbs, X509_BasicInfo &output);
-	void parse_subject_public_key(ASN1 &tbs);
-	void parse_validity(ASN1 &tbs);
-	void throw_invalid() const;
-
-	X509_Version version;
-	std::vector<unsigned char> serial_number;
-	std::vector<uint32_t> signature;
-
-	std::vector<uint32_t> public_key_algorithm_identifier;
-	std::vector<unsigned char> public_key;
-
-	X509_BasicInfo subject;
-	X509_BasicInfo issuer;
-	DateTime valid_not_before;
-	DateTime valid_not_after;
-
-/// \}
-};
-
 }

@@ -23,7 +23,6 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
 **    Mark Page
 */
 
@@ -34,62 +33,48 @@
 
 namespace clan
 {
+	AES192_Encrypt::AES192_Encrypt()
+		: impl(std::make_shared<AES192_Encrypt_Impl>())
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// AES192_Encrypt Construction:
+	DataBuffer AES192_Encrypt::get_data() const
+	{
+		return impl->get_data();
+	}
 
-AES192_Encrypt::AES192_Encrypt()
-: impl(std::make_shared<AES192_Encrypt_Impl>())
-{
-}
+	void AES192_Encrypt::reset()
+	{
+		impl->reset();
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// AES192_Encrypt Attributes:
+	void AES192_Encrypt::set_iv(const unsigned char iv[16])
+	{
+		impl->set_iv(iv);
+	}
 
-DataBuffer AES192_Encrypt::get_data() const
-{
-	return impl->get_data();
-}
+	void AES192_Encrypt::set_key(const unsigned char key[24])
+	{
+		impl->set_key(key);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// AES192_Encrypt Operations:
+	void AES192_Encrypt::set_padding(bool value, bool use_pkcs7, unsigned int num_additional_padded_blocks)
+	{
+		impl->set_padding(value, use_pkcs7, num_additional_padded_blocks);
+	}
 
-void AES192_Encrypt::reset()
-{
-	impl->reset();
-}
+	void AES192_Encrypt::add(const void *data, int size)
+	{
+		impl->add(data, size);
+	}
 
-void AES192_Encrypt::set_iv(const unsigned char iv[16])
-{
-	impl->set_iv(iv);
-}
+	void AES192_Encrypt::add(const DataBuffer &data)
+	{
+		add(data.get_data(), data.get_size());
+	}
 
-void AES192_Encrypt::set_key(const unsigned char key[24])
-{
-	impl->set_key(key);
-}
-
-void AES192_Encrypt::set_padding(bool value, bool use_pkcs7, unsigned int num_additional_padded_blocks)
-{
-	impl->set_padding(value, use_pkcs7, num_additional_padded_blocks);
-}
-
-void AES192_Encrypt::add(const void *data, int size)
-{
-	impl->add(data, size);
-}
-
-void AES192_Encrypt::add(const DataBuffer &data)
-{
-	add(data.get_data(), data.get_size());
-}
-
-void AES192_Encrypt::calculate()
-{
-	impl->calculate();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// AES192_Encrypt Implementation:
-
+	void AES192_Encrypt::calculate()
+	{
+		impl->calculate();
+	}
 }

@@ -23,7 +23,6 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
 **    Mark Page
 */
 
@@ -34,63 +33,48 @@
 
 namespace clan
 {
+	AES192_Decrypt::AES192_Decrypt()
+		: impl(std::make_shared<AES192_Decrypt_Impl>())
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// AES192_Decrypt Construction:
+	DataBuffer AES192_Decrypt::get_data() const
+	{
+		return impl->get_data();
+	}
 
-AES192_Decrypt::AES192_Decrypt()
-: impl(std::make_shared<AES192_Decrypt_Impl>())
-{
-}
+	void AES192_Decrypt::reset()
+	{
+		impl->reset();
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// AES192_Decrypt Attributes:
+	void AES192_Decrypt::set_iv(const unsigned char iv[16])
+	{
+		impl->set_iv(iv);
+	}
 
-DataBuffer AES192_Decrypt::get_data() const
-{
-	return impl->get_data();
-}
+	void AES192_Decrypt::set_key(const unsigned char key[24])
+	{
+		impl->set_key(key);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// AES192_Decrypt Operations:
+	void AES192_Decrypt::set_padding(bool value, bool use_pkcs7)
+	{
+		impl->set_padding(value, use_pkcs7);
+	}
 
-void AES192_Decrypt::reset()
-{
-	impl->reset();
-}
+	void AES192_Decrypt::add(const void *data, int size)
+	{
+		impl->add(data, size);
+	}
 
-void AES192_Decrypt::set_iv(const unsigned char iv[16])
-{
-	impl->set_iv(iv);
-}
+	void AES192_Decrypt::add(const DataBuffer &data)
+	{
+		add(data.get_data(), data.get_size());
+	}
 
-void AES192_Decrypt::set_key(const unsigned char key[24])
-{
-	impl->set_key(key);
-}
-
-void AES192_Decrypt::set_padding(bool value, bool use_pkcs7)
-{
-	impl->set_padding(value, use_pkcs7);
-}
-
-
-void AES192_Decrypt::add(const void *data, int size)
-{
-	impl->add(data, size);
-}
-
-void AES192_Decrypt::add(const DataBuffer &data)
-{
-	add(data.get_data(), data.get_size());
-}
-
-bool AES192_Decrypt::calculate()
-{
-	return impl->calculate();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// AES192_Decrypt Implementation:
-
+	bool AES192_Decrypt::calculate()
+	{
+		return impl->calculate();
+	}
 }

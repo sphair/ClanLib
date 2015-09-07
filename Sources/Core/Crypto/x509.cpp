@@ -23,7 +23,6 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
 **    Mark Page
 */
 
@@ -34,40 +33,25 @@
 
 namespace clan
 {
+	X509::X509()
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// X509 Construction:
+	X509::X509(unsigned char *base_ptr, unsigned int length)
+		: impl(std::make_shared<X509_Impl>())
+	{
+		impl->parse(base_ptr, length);
+	}
 
-X509::X509()
-{
-}
+	void X509::throw_if_null() const
+	{
+		if (!impl)
+			throw Exception("X509 is null");
+	}
 
-X509::X509(unsigned char *base_ptr, unsigned int length)
-: impl(std::make_shared<X509_Impl>())
-{
-	impl->parse(base_ptr, length);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// X509 Attributes:
-
-void X509::throw_if_null() const
-{
-	if (!impl)
-		throw Exception("X509 is null");
-}
-
-void X509::get_rsa_public_key(DataBuffer &output_exponent, DataBuffer &output_modulus) const
-{
-	throw_if_null();
-	impl->get_rsa_public_key(output_exponent, output_modulus);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// X509 Operations:
-
-
-/////////////////////////////////////////////////////////////////////////////
-// X509 Implementation:
-
+	void X509::get_rsa_public_key(DataBuffer &output_exponent, DataBuffer &output_modulus) const
+	{
+		throw_if_null();
+		impl->get_rsa_public_key(output_exponent, output_modulus);
+	}
 }

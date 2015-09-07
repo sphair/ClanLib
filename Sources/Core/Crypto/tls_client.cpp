@@ -32,50 +32,48 @@
 
 namespace clan
 {
+	TLSClient::TLSClient()
+		: impl(std::make_shared<TLSClient_Impl>())
+	{
+	}
 
-TLSClient::TLSClient()
-	: impl(std::make_shared<TLSClient_Impl>())
-{
-}
+	const void *TLSClient::get_decrypted_data() const
+	{
+		return impl->get_decrypted_data();
+	}
 
-const void *TLSClient::get_decrypted_data() const
-{
-	return impl->get_decrypted_data();
-}
+	int TLSClient::get_decrypted_data_available() const
+	{
+		return impl->get_decrypted_data_available();
+	}
 
-int TLSClient::get_decrypted_data_available() const
-{
-	return impl->get_decrypted_data_available();
-}
+	const void *TLSClient::get_encrypted_data() const
+	{
+		return impl->get_encrypted_data();
+	}
 
-const void *TLSClient::get_encrypted_data() const
-{
-	return impl->get_encrypted_data();
-}
+	int TLSClient::get_encrypted_data_available() const
+	{
+		return impl->get_encrypted_data_available();
+	}
 
-int TLSClient::get_encrypted_data_available() const
-{
-	return impl->get_encrypted_data_available();
-}
+	int TLSClient::encrypt(const void *data, int size)
+	{
+		return impl->encrypt(data, size);
+	}
 
-int TLSClient::encrypt(const void *data, int size)
-{
-	return impl->encrypt(data, size);
-}
+	int TLSClient::decrypt(const void *data, int size)
+	{
+		return impl->decrypt(data, size);
+	}
 
-int TLSClient::decrypt(const void *data, int size)
-{
-	return impl->decrypt(data, size);
-}
+	void TLSClient::decrypted_data_consumed(int size)
+	{
+		impl->decrypted_data_consumed(size);
+	}
 
-void TLSClient::decrypted_data_consumed(int size)
-{
-	impl->decrypted_data_consumed(size);
-}
-
-void TLSClient::encrypted_data_consumed(int size)
-{
-	impl->encrypted_data_consumed(size);
-}
-
+	void TLSClient::encrypted_data_consumed(int size)
+	{
+		impl->encrypted_data_consumed(size);
+	}
 }

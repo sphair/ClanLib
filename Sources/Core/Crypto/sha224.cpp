@@ -23,7 +23,6 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
 **    Mark Page
 */
 
@@ -34,56 +33,43 @@
 
 namespace clan
 {
+	SHA224::SHA224()
+		: impl(std::make_shared<SHA256_Impl>(cl_sha_224))
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// SHA224 Construction:
+	std::string SHA224::get_hash(bool uppercase) const
+	{
+		return impl->get_hash(uppercase);
+	}
 
-SHA224::SHA224()
-: impl(std::make_shared<SHA256_Impl>(cl_sha_224))
-{
-}
+	void SHA224::get_hash(unsigned char out_hash[28]) const
+	{
+		impl->get_hash(out_hash);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// SHA224 Attributes:
+	void SHA224::reset()
+	{
+		impl->reset();
+	}
 
-std::string SHA224::get_hash(bool uppercase) const
-{
-	return impl->get_hash(uppercase);
-}
+	void SHA224::add(const void *data, int size)
+	{
+		impl->add(data, size);
+	}
 
-void SHA224::get_hash(unsigned char out_hash[28]) const
-{
-	impl->get_hash(out_hash);
-}
+	void SHA224::add(const DataBuffer &data)
+	{
+		add(data.get_data(), data.get_size());
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// SHA224 Operations:
+	void SHA224::calculate()
+	{
+		impl->calculate();
+	}
 
-void SHA224::reset()
-{
-	impl->reset();
-}
-
-void SHA224::add(const void *data, int size)
-{
-	impl->add(data, size);
-}
-
-void SHA224::add(const DataBuffer &data)
-{
-	add(data.get_data(), data.get_size());
-}
-
-void SHA224::calculate()
-{
-	impl->calculate();
-}
-
-void SHA224::set_hmac(const void *key_data, int key_size)
-{
-	impl->set_hmac(key_data, key_size);
-}
-/////////////////////////////////////////////////////////////////////////////
-// SHA224 Implementation:
-
+	void SHA224::set_hmac(const void *key_data, int key_size)
+	{
+		impl->set_hmac(key_data, key_size);
+	}
 }

@@ -23,7 +23,6 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
 **    Mark Page
 */
 
@@ -31,94 +30,74 @@
 
 #include "API/Core/System/cl_platform.h"
 #include "API/Core/System/databuffer.h"
-
 #include "aes_impl.h"
 
 namespace clan
 {
+	class AES256_Encrypt_Impl : public AES_Impl
+	{
+	public:
+		AES256_Encrypt_Impl();
 
-class AES256_Encrypt_Impl : public AES_Impl
-{
-/// \name Construction
-/// \{
+		/// \brief Get encrypted data
+		///
+		/// This is the databuffer used internally to store the encrypted data.
+		/// You may call "set_size()" to clear the buffer, inbetween calls to "add()"
+		/// You may call "set_capacity()" to optimise storage requirements before the add() call
+		DataBuffer get_data() const;
 
-public:
-	AES256_Encrypt_Impl();
+		/// \brief Resets the encryption
+		void reset();
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief Purge the databuffer
+		///
+		/// See get_data()\n
+		/// reset() calls this function
+		void purge_data();
 
-	/// \brief Get encrypted data
-	///
-	/// This is the databuffer used internally to store the encrypted data.
-	/// You may call "set_size()" to clear the buffer, inbetween calls to "add()"
-	/// You may call "set_capacity()" to optimise storage requirements before the add() call
-	DataBuffer get_data() const;
+		/// \brief Sets the initialisation vector
+		///
+		/// This must be called before the initial add()
+		void set_iv(const unsigned char iv[16]);
 
-/// \}
-/// \name Operations
-/// \{
+		/// \brief Sets the cipher key
+		///
+		/// This must be called before the initial add()
+		void set_key(const unsigned char key[32]);
 
-public:
-	/// \brief Resets the encryption
-	void reset();
+		void set_padding(bool value, bool use_pkcs7, unsigned int num_additional_padded_blocks);
 
-	/// \brief Purge the databuffer
-	///
-	/// See get_data()\n
-	/// reset() calls this function
-	void purge_data();
+		/// \brief Adds data to be encrypted
+		void add(const void *data, int size);
 
-	/// \brief Sets the initialisation vector
-	///
-	/// This must be called before the initial add()
-	void set_iv(const unsigned char iv[16]);
+		/// \brief Add data to be encrypted
+		///
+		/// \param data = Data Buffer
+		void add(const DataBuffer &data);
 
-	/// \brief Sets the cipher key
-	///
-	/// This must be called before the initial add()
-	void set_key(const unsigned char key[32]);
+		/// \brief Finalize decryption
+		void calculate();
 
-	void set_padding(bool value, bool use_pkcs7, unsigned int num_additional_padded_blocks);
+	private:
+		void process_chunk();
 
-	/// \brief Adds data to be encrypted
-	void add(const void *data, int size);
+		uint32_t key_expanded[aes256_nb_mult_nr_plus1];
 
-	/// \brief Add data to be encrypted
-	///
-	/// \param data = Data Buffer
-	void add(const DataBuffer &data);
+		unsigned char chunk[aes256_block_size_bytes];
+		uint32_t initialisation_vector_1;
+		uint32_t initialisation_vector_2;
+		uint32_t initialisation_vector_3;
+		uint32_t initialisation_vector_4;
 
-	/// \brief Finalize decryption
-	void calculate();
+		int chunk_filled;
 
-/// \}
-/// \name Implementation
-/// \{
+		bool initialisation_vector_set;
+		bool cipher_key_set;
+		bool calculated;
+		bool padding_enabled;
+		bool padding_pkcs7;
+		unsigned int padding_num_additional_padded_blocks;
 
-private:
-	void process_chunk();
-
-	uint32_t key_expanded[aes256_nb_mult_nr_plus1];
-
-	unsigned char chunk[aes256_block_size_bytes];
-	uint32_t initialisation_vector_1;
-	uint32_t initialisation_vector_2;
-	uint32_t initialisation_vector_3;
-	uint32_t initialisation_vector_4;
-	
-	int chunk_filled;
-
-	bool initialisation_vector_set;
-	bool cipher_key_set;
-	bool calculated;
-	bool padding_enabled;
-	bool padding_pkcs7;
-	unsigned int padding_num_additional_padded_blocks;
-
-	DataBuffer databuffer;
-/// \}
-};
-
+		DataBuffer databuffer;
+	};
 }
