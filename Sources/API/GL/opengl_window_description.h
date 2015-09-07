@@ -38,16 +38,7 @@ namespace clan
 
 class OpenGLWindowDescription_Impl;
 
-/// \brief OpenGL specific display window description.
-///
-///   <p>Use this class to setup OpenGL specific settings for a top level
-///    window:</p>
-///    <pre>
-///    OpenGLWindowDescription desc;
-///    desc.set_stereo(true);
-///    desc.set_stencil_size(4);
-///    OpenGLWindow window(desc);
-///    </pre> 
+/// \brief OpenGL context specific settings.
 class OpenGLWindowDescription
 {
 /// \name Construction
