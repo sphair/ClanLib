@@ -60,12 +60,10 @@ void SetupD3D::start()
 SetupD3D_Impl::SetupD3D_Impl()
 {
 	instance = this;
-	cl_d3d_target = new D3DTarget();
 }
 
 SetupD3D_Impl::~SetupD3D_Impl()
 {
-	delete cl_d3d_target;
 	instance = nullptr;
 }
 

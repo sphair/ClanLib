@@ -28,61 +28,21 @@
 
 #include "Display/precomp.h"
 #include "API/Display/display_target.h"
-#include "display_target_impl.h"
-#include "API/Display/TargetProviders/display_target_provider.h"
-#include "API/Display/display.h"
 
 namespace clan
 {
+	namespace
+	{
+		std::shared_ptr<DisplayTargetProvider> current_target;
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// DisplayTarget Construction:
+	const std::shared_ptr<DisplayTargetProvider> &DisplayTarget::get_current_target()
+	{
+		return current_target;
+	}
 
-DisplayTarget::DisplayTarget()
-{
-}
-
-DisplayTarget::DisplayTarget(DisplayTargetProvider *provider)
-: impl(std::make_shared<DisplayTarget_Impl>())
-{
-	impl->set_provider(provider, impl);
-}
-
-DisplayTarget::DisplayTarget(const std::weak_ptr<DisplayTarget_Impl> impl)
-: impl(impl.lock())
-{
-}
-
-DisplayTarget::~DisplayTarget()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// DisplayTarget Attributes:
-
-DisplayTargetProvider *DisplayTarget::get_provider()
-{
-	if (impl)
-		return impl->get_provider();
-	else
-		return nullptr;
-}
-
-void DisplayTarget::throw_if_null() const
-{
-	if (!impl)
-		throw Exception("DisplayTarget is null");
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// DisplayTarget Operations:
-
-void DisplayTarget::set_current()
-{
-	Display::set_current_target(*this);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// DisplayTarget Implementation:
-
+	void DisplayTarget::set_current_target(const std::shared_ptr<DisplayTargetProvider> &target)
+	{
+		current_target = target;
+	}
 }

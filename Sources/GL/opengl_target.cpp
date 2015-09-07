@@ -28,7 +28,7 @@
 */
 
 #include "GL/precomp.h"
-#include "API/Display/display.h"
+#include "API/Display/display_target.h"
 #include "API/GL/opengl_context_description.h"
 #include "API/GL/opengl_target.h"
 #include "opengl_graphic_context_provider.h"
@@ -36,138 +36,101 @@
 #include "GL3/gl3_graphic_context_provider.h"
 #include "setup_gl_impl.h"
 #include "setup_gl.h"
+
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// OpenGLTarget Construction:
-
-OpenGLTarget::OpenGLTarget()
-: DisplayTarget(new OpenGLTargetProvider)
-{
-}
-
-OpenGLTarget::~OpenGLTarget()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// OpenGLTarget Attributes:
-
-bool OpenGLTarget::is_current()
-{
-	DisplayTarget target = Display::get_current_target();
-	DisplayTargetProvider *ptr = target.get_provider();
-	if (!ptr)
-		return false;
-
-	OpenGLTargetProvider *provider = dynamic_cast<OpenGLTargetProvider*>(ptr);
-	return (provider != nullptr);
-
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// OpenGLTarget Operations:
-
-void OpenGLTarget::enable()
-{
-	SetupGL::start();
-}
-
-OpenGLContextDescription OpenGLTarget::get_description()
-{
-	SetupGL::start();
-
-	if (SetupGL_Impl::instance)
+	namespace
 	{
-		OpenGLTargetProvider *provider = dynamic_cast<OpenGLTargetProvider*>(SetupGL_Impl::instance->cl_opengl_target->get_provider());
-		if (provider)
-		{
-			return provider->get_description();
-		}
+		OpenGLContextDescription context_description;
 	}
-	return OpenGLContextDescription();
-}
 
-void OpenGLTarget::set_description(OpenGLContextDescription &desc)
-{
-	SetupGL::start();
-	if (SetupGL_Impl::instance)
+	bool OpenGLTarget::is_current()
 	{
-		OpenGLTargetProvider *provider = dynamic_cast<OpenGLTargetProvider*>(SetupGL_Impl::instance->cl_opengl_target->get_provider());
-		if (provider)
-		{
-			provider->set_description(desc);
-		}
+		return std::dynamic_pointer_cast<OpenGLTargetProvider>(DisplayTarget::get_current_target()) ? true : false;
 	}
-}
 
-void OpenGLTarget::set_current()
-{
-	SetupGL::start();
-	if (!SetupGL_Impl::instance)
-		throw Exception("clanGL has not been initialised");
-	SetupGL_Impl::instance->cl_opengl_target->DisplayTarget::set_current();
-}
+	void OpenGLTarget::enable()
+	{
+		SetupGL::start();
+	}
 
-void OpenGLTarget::get_opengl_version(const GraphicContext &gc, int &version_major, int &version_minor)
-{
-	const OpenGLGraphicContextProvider *provider = dynamic_cast<const OpenGLGraphicContextProvider *>(gc.get_provider());
-	if (provider == nullptr)
-		throw Exception("Graphic Context is not from a GL target");
-	provider->get_opengl_version(version_major, version_minor);
-}
+	OpenGLContextDescription OpenGLTarget::get_description()
+	{
+		SetupGL::start();
+		return context_description;
+	}
 
-void OpenGLTarget::get_opengl_version(const GraphicContext &gc, int &version_major, int &version_minor, int &version_release)
-{
-	const OpenGLGraphicContextProvider *provider = dynamic_cast<const OpenGLGraphicContextProvider *>(gc.get_provider());
-	if (provider == nullptr)
-		throw Exception("Graphic Context is not from a GL target");
-	provider->get_opengl_version(version_major, version_minor, version_release);
-}
+	void OpenGLTarget::set_description(OpenGLContextDescription &desc)
+	{
+		SetupGL::start();
+		context_description = desc;
+	}
 
-void OpenGLTarget::get_opengl_shading_language_version(const GraphicContext &gc, int &version_major, int &version_minor)
-{
-	const OpenGLGraphicContextProvider *provider = dynamic_cast<const OpenGLGraphicContextProvider *>(gc.get_provider());
-	if (provider == nullptr)
-		throw Exception("Graphic Context is not from a GL target");
-	provider->get_opengl_shading_language_version(version_major, version_minor);
-}
+	void OpenGLTarget::set_current()
+	{
+		SetupGL::start();
+		if (!SetupGL_Impl::instance)
+			throw Exception("clanGL has not been initialised");
 
-std::string OpenGLTarget::get_renderer_string(const GraphicContext &gc)
-{
-	set_active_context(gc);
-	std::string renderer = (char*)glGetString(GL_RENDERER);
-	return renderer;
-}
+		static std::shared_ptr<OpenGLTargetProvider> provider = std::make_shared<OpenGLTargetProvider>();
+		DisplayTarget::set_current_target(provider);
+	}
 
-std::string OpenGLTarget::get_vendor_string(const GraphicContext &gc)
-{
-	set_active_context(gc);
-	std::string vendor = (char*)glGetString(GL_VENDOR);
-	return vendor;
-}
+	void OpenGLTarget::get_opengl_version(const GraphicContext &gc, int &version_major, int &version_minor)
+	{
+		const OpenGLGraphicContextProvider *provider = dynamic_cast<const OpenGLGraphicContextProvider *>(gc.get_provider());
+		if (provider == nullptr)
+			throw Exception("Graphic Context is not from a GL target");
+		provider->get_opengl_version(version_major, version_minor);
+	}
 
-std::vector<std::string> OpenGLTarget::get_extensions(const GraphicContext &gc)
-{
-	set_active_context(gc);
-	std::string extension_string = (char*)glGetString(GL_EXTENSIONS);
-	std::vector<std::string> tmp = StringHelp::split_text(extension_string, " ");
-	std::vector<std::string> extensions;
-	for (auto & elem : tmp)
-		extensions.push_back(elem);
-	return extensions;
-}
+	void OpenGLTarget::get_opengl_version(const GraphicContext &gc, int &version_major, int &version_minor, int &version_release)
+	{
+		const OpenGLGraphicContextProvider *provider = dynamic_cast<const OpenGLGraphicContextProvider *>(gc.get_provider());
+		if (provider == nullptr)
+			throw Exception("Graphic Context is not from a GL target");
+		provider->get_opengl_version(version_major, version_minor, version_release);
+	}
 
-void OpenGLTarget::set_active_context(const GraphicContext &gc)
-{
-	const OpenGLGraphicContextProvider *provider = dynamic_cast<const OpenGLGraphicContextProvider *>(gc.get_provider());
-	if (provider == nullptr)
-		throw Exception("Graphic Context is not from a GL target");
-	OpenGL::set_active(provider);
-}
+	void OpenGLTarget::get_opengl_shading_language_version(const GraphicContext &gc, int &version_major, int &version_minor)
+	{
+		const OpenGLGraphicContextProvider *provider = dynamic_cast<const OpenGLGraphicContextProvider *>(gc.get_provider());
+		if (provider == nullptr)
+			throw Exception("Graphic Context is not from a GL target");
+		provider->get_opengl_shading_language_version(version_major, version_minor);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// OpenGLTarget Implementation:
+	std::string OpenGLTarget::get_renderer_string(const GraphicContext &gc)
+	{
+		set_active_context(gc);
+		std::string renderer = (char*)glGetString(GL_RENDERER);
+		return renderer;
+	}
+
+	std::string OpenGLTarget::get_vendor_string(const GraphicContext &gc)
+	{
+		set_active_context(gc);
+		std::string vendor = (char*)glGetString(GL_VENDOR);
+		return vendor;
+	}
+
+	std::vector<std::string> OpenGLTarget::get_extensions(const GraphicContext &gc)
+	{
+		set_active_context(gc);
+		std::string extension_string = (char*)glGetString(GL_EXTENSIONS);
+		std::vector<std::string> tmp = StringHelp::split_text(extension_string, " ");
+		std::vector<std::string> extensions;
+		for (auto & elem : tmp)
+			extensions.push_back(elem);
+		return extensions;
+	}
+
+	void OpenGLTarget::set_active_context(const GraphicContext &gc)
+	{
+		const OpenGLGraphicContextProvider *provider = dynamic_cast<const OpenGLGraphicContextProvider *>(gc.get_provider());
+		if (provider == nullptr)
+			throw Exception("Graphic Context is not from a GL target");
+		OpenGL::set_active(provider);
+	}
 
 }

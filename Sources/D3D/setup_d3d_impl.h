@@ -33,14 +33,12 @@
 
 namespace clan
 {
-	class D3DTarget;
 	class SetupD3D_Impl : public SetupModule
 	{
 	public:
 		SetupD3D_Impl();
 		virtual ~SetupD3D_Impl();
 
-		D3DTarget *cl_d3d_target = nullptr;
 		static SetupD3D_Impl *instance;
 
 	};

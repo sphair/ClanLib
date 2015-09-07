@@ -67,43 +67,17 @@ DisplayWindow::DisplayWindow(
 	*this = DisplayWindow(description);
 }
 
-DisplayWindow::DisplayWindow(
-	const DisplayWindowDescription &description)
+DisplayWindow::DisplayWindow(const DisplayWindowDescription &description)
 {
 	SetupDisplay::start();
 
-	std::string exception_text;
+	auto target = DisplayTarget::get_current_target();
+	if (!target)
+		throw Exception("No display target set");
 
-	while(true)		// Try each display provider
-	{
-		DisplayTarget target = Display::get_current_target();
-		if (target.is_null())
-			throw Exception("No display targets are available : " + exception_text);
-
-		impl = std::shared_ptr<DisplayWindow_Impl>(new DisplayWindow_Impl);
-		try
-		{
-			DisplayTargetProvider *provider =  target.get_provider();
-			if (!provider)
-			throw Exception("Target provider is invalid : " + exception_text);
-
-			impl->provider = provider->alloc_display_window();
-			impl->provider->create(&impl->site, description);
-			break;
-		}
-		catch(const Exception &exception)
-		{
-			exception_text = exception_text + " \"" + exception.message + "\"";
-			Display::remove_target(target);
-		}
-		catch(...)
-		{
-			exception_text = exception_text + " \"Unknown Error\"";
-			Display::remove_target(target);
-		}
-	}
-
-
+	impl = std::shared_ptr<DisplayWindow_Impl>(new DisplayWindow_Impl);
+	impl->provider = target->alloc_display_window();
+	impl->provider->create(&impl->site, description);
 }
 
 DisplayWindow::DisplayWindow(DisplayWindowProvider *provider)

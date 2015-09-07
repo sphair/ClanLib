@@ -129,8 +129,7 @@ ImageProviders/targa_provider.cpp \
 ImageProviders/TargaLoader/targa_loader.cpp \
 ImageProviders/provider_factory.cpp \
 ImageProviders/provider_type.cpp \
-display_target_impl.cpp \
-display.cpp
+display_target_impl.cpp
 
 if WIN32
 libclan40Display_la_SOURCES += \

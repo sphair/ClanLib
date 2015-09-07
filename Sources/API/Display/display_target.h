@@ -33,68 +33,23 @@
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-class DisplayTargetProvider;
-class DisplayTarget_Impl;
+	class DisplayTargetProvider;
 
-/// \brief Display target for clanDisplay.
-class DisplayTarget
-{
-/// \name Construction
-/// \{
-
-public:
-	/// \brief Constructs a DisplayTarget
+	/// \brief Display target for clanDisplay.
 	///
-	/// \param provider = Display Target Provider
-	DisplayTarget(DisplayTargetProvider *provider);
+	/// Controls which target is used for window creation
+	class DisplayTarget
+	{
+	public:
+		/// \brief Returns the currently selected display target
+		static const std::shared_ptr<DisplayTargetProvider> &get_current_target();
 
-	virtual ~DisplayTarget();
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	/// \brief Returns the provider for the display target.
-	DisplayTargetProvider *get_provider();
-
-	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return !impl; }
-
-	/// \brief Throw an exception if this object is invalid.
-	void throw_if_null() const;
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	/// \brief Set this display target to be the current target
-	void set_current();
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-
-	/// \brief Constructs a null DisplayTarget
-	DisplayTarget();
-
-	/// \brief Constructs a DisplayTarget
-	///
-	/// \param DisplayTarget_Impl = Weak Ptr
-	DisplayTarget(const std::weak_ptr<DisplayTarget_Impl> impl);
-
-	std::shared_ptr<DisplayTarget_Impl> impl;
-
-	friend class DisplayTarget_Impl;
-/// \}
-};
-
+		/// \brief Sets the currently selected display target.
+		static void set_current_target(const std::shared_ptr<DisplayTargetProvider> &target);
+	};
 }
 
 /// \}

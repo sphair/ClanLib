@@ -216,7 +216,6 @@ clanDisplay_includes = \
 	Display/Image/pixel_buffer_set.h \
 	Display/Image/icon_set.h \
 	Display/Image/pixel_buffer_lock.h \
-	Display/display.h \
 	Display/2D/path.h \
 	Display/2D/canvas.h \
 	Display/2D/color.h \

@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../Display/display_target.h"
 #include <memory>
 
 namespace clan
@@ -44,7 +43,7 @@ class OpenGLTarget_Impl;
 class OpenGLContextDescription;
 
 /// \brief Display target for clanDisplay.
-class OpenGLTarget : public DisplayTarget
+class OpenGLTarget
 {
 /// \name Attributes
 /// \{
@@ -101,15 +100,6 @@ public:
 	/// \brief Set OpenGL context used by this GraphicContext to be active
 	static void set_active_context(const GraphicContext &gc);
 
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	/// \brief Constructs an OpenGL target.
-	OpenGLTarget();
-	~OpenGLTarget();
-	friend class SetupGL_Impl;
 /// \}
 };
 

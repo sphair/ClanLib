@@ -34,7 +34,6 @@
 #include "API/Display/Render/texture.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/Font/font_metrics.h"
-#include "API/Display/display.h"
 #include "API/Display/Window/display_window.h"
 #include "API/Display/Render/element_array_buffer.h"
 #include "API/Display/Render/primitives_array.h"

@@ -33,7 +33,6 @@
 #include "opengl_window_provider_wgl.h"
 #include "API/Core/Math/rect.h"
 #include "API/Display/Window/display_window_description.h"
-#include "API/Display/display.h"
 #include "API/Display/display_target.h"
 #include "API/Display/TargetProviders/display_window_provider.h"
 #include "API/Display/Window/display_window.h"

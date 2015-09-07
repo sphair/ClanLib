@@ -37,7 +37,6 @@
 #include "API/Display/Render/graphic_context.h"
 #include "API/Display/Window/input_context.h"
 #include "API/Display/Window/cursor.h"
-#include "API/Display/display.h"
 #include "API/Display/Render/shared_gc_data.h"
 
 namespace clan

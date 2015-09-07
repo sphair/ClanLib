@@ -55,12 +55,10 @@ void SetupGL::start()
 SetupGL_Impl::SetupGL_Impl()
 {
 	instance = this;
-	cl_opengl_target = new OpenGLTarget();
 }
 
 SetupGL_Impl::~SetupGL_Impl()
 {
-	delete cl_opengl_target;
 	instance = nullptr;
 }
 

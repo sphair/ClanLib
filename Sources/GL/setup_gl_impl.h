@@ -32,7 +32,6 @@
 
 namespace clan
 {
-
 	class OpenGLTarget;
 
 	class SetupGL_Impl : public SetupModule
@@ -41,10 +40,7 @@ namespace clan
 		SetupGL_Impl();
 		virtual ~SetupGL_Impl();
 
-		OpenGLTarget *cl_opengl_target = nullptr;
 		static SetupGL_Impl *instance;
-
 	};
-
 }
 

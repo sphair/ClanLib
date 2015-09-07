@@ -47,7 +47,7 @@ class UniformBuffer;
 class GraphicContext;
 
 /// \brief Display target for clanDisplay.
-class D3DTarget : public DisplayTarget
+class D3DTarget
 {
 /// \name Attributes
 /// \{
@@ -62,7 +62,6 @@ public:
 /// \name Operations
 /// \{
 public:
-
 	/// \brief Enable this target
 	static void enable();
 
@@ -126,17 +125,6 @@ public:
 
 	/// \brief Set this display target to be the current target
 	static void set_current();
-
-/// \}
-
-/// \name Implementation
-/// \{
-private:
-public:
-	/// \brief Constructs a D3DTarget target.
-	D3DTarget();
-	~D3DTarget();
-	friend class SetupD3D_Impl;
 
 /// \}
 };

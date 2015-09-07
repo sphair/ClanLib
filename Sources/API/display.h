@@ -37,7 +37,6 @@
 #pragma managed(push, off)
 #endif
 
-#include "Display/display.h"
 #include "Display/display_target.h"
 #include "Display/screen_info.h"
 #include "Display/Resources/display_cache.h"
