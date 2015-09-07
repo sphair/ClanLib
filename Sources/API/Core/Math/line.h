@@ -26,181 +26,156 @@
 **    Mark Page
 */
 
-
 #pragma once
-
 
 namespace clan
 {
-/// \addtogroup clanCore_Math clanCore Math
-/// \{
+	/// \addtogroup clanCore_Math clanCore Math
+	/// \{
 
-template<typename Type>
-class Line2x;
+	template<typename Type>
+	class Line2x;
 
-template<typename Type>
-class Line3x;
+	template<typename Type>
+	class Line3x;
 
-template<typename Type>
-class Rectx;
+	template<typename Type>
+	class Rectx;
 
-template<typename Type>
-class Vec2;
+	template<typename Type>
+	class Vec2;
 
-class Angle;
+	class Angle;
 
-/// \brief 3D line
-///
-/// These line templates are defined for: int (Line3), float (Line3f), double (Line3d)
-template<typename Type>
-class Line3x
-{
-public:
-	Vec3<Type> p;
-	Vec3<Type> q;
-
-	Line3x(): p(), q() {}
-	Line3x(const Line3x<Type> &copy): p(copy.p), q(copy.q) {}
-	Line3x(const Vec3<Type> &point_p, const Vec3<Type> &point_q): p(point_p), q(point_q) {}
-
-/// \name Attributes
-/// \{
-public:
-	/// \brief Return the intersection of this and other line
+	/// \brief 3D line
 	///
-	/// \param second = The second line to use
-	/// \param intersect = On Return: true if the lines intersect, false if the lines are parallel
-	/// \param range = Rounding error delta, to use to judge whether of not the lines intersect
-	/// \return The point
-	Vec3<Type> get_intersection( const Line3x<Type> &second, bool &intersect, Type range = (Type) 0.5 ) const;
+	/// These line templates are defined for: int (Line3), float (Line3f), double (Line3d)
+	template<typename Type>
+	class Line3x
+	{
+	public:
+		Vec3<Type> p;
+		Vec3<Type> q;
 
-/// \}
-/// \name Operators
-/// \{
-public:
-	/// \brief = operator.
-	Line3x<Type> &operator = (const Line3x<Type>& copy) { p = copy.p; q = copy.q; return *this; }
+		Line3x() : p(), q() {}
+		Line3x(const Line3x<Type> &copy) : p(copy.p), q(copy.q) {}
+		Line3x(const Vec3<Type> &point_p, const Vec3<Type> &point_q) : p(point_p), q(point_q) {}
 
-	/// \brief == operator.
-	bool operator == (const Line3x<Type>& line) const {return ((p == line.p) && (q == line.q));}
+		/// \brief Return the intersection of this and other line
+		///
+		/// \param second = The second line to use
+		/// \param intersect = On Return: true if the lines intersect, false if the lines are parallel
+		/// \param range = Rounding error delta, to use to judge whether of not the lines intersect
+		/// \return The point
+		Vec3<Type> get_intersection(const Line3x<Type> &second, bool &intersect, Type range = (Type) 0.5) const;
 
-	/// \brief != operator.
-	bool operator != (const Line3x<Type>& line) const {return ((p != line.p) || (q != line.q));}
-/// \}
-};
+		/// \brief = operator.
+		Line3x<Type> &operator = (const Line3x<Type>& copy) { p = copy.p; q = copy.q; return *this; }
 
-/// \brief 2D line
-///
-/// These line templates are defined for: int (Line2i), float (Line2f), double (Line2d)
-template<typename Type>
-class Line2x
-{
-public:
-	/// \brief First point on the line
-	Vec2<Type> p;
+		/// \brief == operator.
+		bool operator == (const Line3x<Type>& line) const { return ((p == line.p) && (q == line.q)); }
 
-	// \brief Another point on the line
-	Vec2<Type> q;
+		/// \brief != operator.
+		bool operator != (const Line3x<Type>& line) const { return ((p != line.p) || (q != line.q)); }
+	};
 
-	Line2x(): p(), q() { }
-	Line2x(const Line2x<Type> &copy): p(copy.p), q(copy.q) {}
-	Line2x(const Vec2<Type> &point_p, const Vec2<Type> &point_q): p(point_p), q(point_q) {}
-	Line2x(const Vec2<Type> &point_p, Type gradient): p(point_p), q(static_cast<Type> (1), gradient) {}
-
-/// \name Attributes
-/// \{
-public:
-	/// \brief Return the intersection of this and other line
+	/// \brief 2D line
 	///
-	/// \param second = The second line to use
-	/// \param intersect = On Return: true if the lines intersect, false if the lines are parallel
-	/// \return The point
-	Vec2<Type> get_intersection( const Line2x<Type> &second, bool &intersect ) const;
+	/// These line templates are defined for: int (Line2i), float (Line2f), double (Line2d)
+	template<typename Type>
+	class Line2x
+	{
+	public:
+		/// \brief First point on the line
+		Vec2<Type> p;
 
-	/// \brief Return [<0, 0, >0] if the Point P is right, on or left of the line trough A,B
-	///
-	/// \param point = The point
-	/// \return Value representing - left (>0), centre (=0), or right (<0)
-	Type point_right_of_line( Vec2<Type> point ) const {return (q.x - p.x) * (point.y - p.y) - (point.x - p.x) * (q.y - p.y);}
+		// \brief Another point on the line
+		Vec2<Type> q;
 
-/// \}
-/// \name Operations
-/// \{
+		Line2x() : p(), q() { }
+		Line2x(const Line2x<Type> &copy) : p(copy.p), q(copy.q) {}
+		Line2x(const Vec2<Type> &point_p, const Vec2<Type> &point_q) : p(point_p), q(point_q) {}
+		Line2x(const Vec2<Type> &point_p, Type gradient) : p(point_p), q(static_cast<Type> (1), gradient) {}
 
-public:
+		/// \brief Return the intersection of this and other line
+		///
+		/// \param second = The second line to use
+		/// \param intersect = On Return: true if the lines intersect, false if the lines are parallel
+		/// \return The point
+		Vec2<Type> get_intersection(const Line2x<Type> &second, bool &intersect) const;
 
-/// \}
-/// \name Operators
-/// \{
-public:
-	/// \brief = operator.
-	Line2x<Type> &operator = (const Line2x<Type>& copy) { p = copy.p; q = copy.q; return *this; }
+		/// \brief Return [<0, 0, >0] if the Point P is right, on or left of the line trough A,B
+		///
+		/// \param point = The point
+		/// \return Value representing - left (>0), centre (=0), or right (<0)
+		Type point_right_of_line(Vec2<Type> point) const { return (q.x - p.x) * (point.y - p.y) - (point.x - p.x) * (q.y - p.y); }
 
-	/// \brief == operator.
-	bool operator == (const Line2x<Type>& line) const {return ((p == line.p) && (q == line.q));}
+		/// \brief = operator.
+		Line2x<Type> &operator = (const Line2x<Type>& copy) { p = copy.p; q = copy.q; return *this; }
 
-	/// \brief != operator.
-	bool operator != (const Line2x<Type>& line) const {return ((p != line.p) || (q != line.q));}
-/// \}
-};
+		/// \brief == operator.
+		bool operator == (const Line2x<Type>& line) const { return ((p == line.p) && (q == line.q)); }
 
-/// \brief 2D line - Integer
-class Line2 : public Line2x<int>
-{
-public:
-	Line2() : Line2x<int>() { }
-	Line2(const Line2x<int> &copy) : Line2x<int>(copy) { }
-	Line2(const Vec2<int> &point_p, const Vec2<int> &point_q) : Line2x<int>(point_p, point_q) { }
-	Line2(const Vec2<int> &point_p, int gradient) : Line2x<int>(point_p, gradient) { }
-};
+		/// \brief != operator.
+		bool operator != (const Line2x<Type>& line) const { return ((p != line.p) || (q != line.q)); }
+	};
 
-/// \brief 2D line - Float
-class Line2f : public Line2x<float>
-{
-public:
-	Line2f() : Line2x<float>() { }
-	Line2f(const Line2x<float> &copy) : Line2x<float>(copy) { }
-	Line2f(const Vec2<float> &point_p, const Vec2<float> &point_q) : Line2x<float>(point_p, point_q) { }
-	Line2f(const Vec2<float> &point_p, float gradient) : Line2x<float>(point_p, gradient) { }
-};
+	/// \brief 2D line - Integer
+	class Line2 : public Line2x<int>
+	{
+	public:
+		Line2() : Line2x<int>() { }
+		Line2(const Line2x<int> &copy) : Line2x<int>(copy) { }
+		Line2(const Vec2<int> &point_p, const Vec2<int> &point_q) : Line2x<int>(point_p, point_q) { }
+		Line2(const Vec2<int> &point_p, int gradient) : Line2x<int>(point_p, gradient) { }
+	};
 
-/// \brief 2D line - Double
-class Line2d : public Line2x<double>
-{
-public:
-	Line2d() : Line2x<double>() { }
-	Line2d(const Line2x<double> &copy) : Line2x<double>(copy) { }
-	Line2d(const Vec2<double> &point_p, const Vec2<double> &point_q) : Line2x<double>(point_p, point_q) { }
-	Line2d(const Vec2<double> &point_p, double gradient) : Line2x<double>(point_p, gradient) { }
-};
+	/// \brief 2D line - Float
+	class Line2f : public Line2x<float>
+	{
+	public:
+		Line2f() : Line2x<float>() { }
+		Line2f(const Line2x<float> &copy) : Line2x<float>(copy) { }
+		Line2f(const Vec2<float> &point_p, const Vec2<float> &point_q) : Line2x<float>(point_p, point_q) { }
+		Line2f(const Vec2<float> &point_p, float gradient) : Line2x<float>(point_p, gradient) { }
+	};
 
-/// \brief 3D line - Integer
-class Line3 : public Line3x<int>
-{
-public:
-	Line3() : Line3x<int>() { }
-	Line3(const Line3x<int> &copy) : Line3x<int>(copy) { }
-	Line3(const Vec3<int> &point_p, const Vec3<int> &point_q) : Line3x<int>(point_p, point_q) { }
-};
+	/// \brief 2D line - Double
+	class Line2d : public Line2x<double>
+	{
+	public:
+		Line2d() : Line2x<double>() { }
+		Line2d(const Line2x<double> &copy) : Line2x<double>(copy) { }
+		Line2d(const Vec2<double> &point_p, const Vec2<double> &point_q) : Line2x<double>(point_p, point_q) { }
+		Line2d(const Vec2<double> &point_p, double gradient) : Line2x<double>(point_p, gradient) { }
+	};
 
-/// \brief 3D line - Float
-class Line3f : public Line3x<float>
-{
-public:
-	Line3f() : Line3x<float>() { }
-	Line3f(const Line3x<float> &copy) : Line3x<float>(copy) { }
-	Line3f(const Vec3<float> &point_p, const Vec3<float> &point_q) : Line3x<float>(point_p, point_q) { }
-};
+	/// \brief 3D line - Integer
+	class Line3 : public Line3x<int>
+	{
+	public:
+		Line3() : Line3x<int>() { }
+		Line3(const Line3x<int> &copy) : Line3x<int>(copy) { }
+		Line3(const Vec3<int> &point_p, const Vec3<int> &point_q) : Line3x<int>(point_p, point_q) { }
+	};
 
-/// \brief 3D line - Double
-class Line3d : public Line3x<double>
-{
-public:
-	Line3d() : Line3x<double>() { }
-	Line3d(const Line3x<double> &copy) : Line3x<double>(copy) { }
-	Line3d(const Vec3<double> &podouble_p, const Vec3<double> &podouble_q) : Line3x<double>(podouble_p, podouble_q) { }
-};
+	/// \brief 3D line - Float
+	class Line3f : public Line3x<float>
+	{
+	public:
+		Line3f() : Line3x<float>() { }
+		Line3f(const Line3x<float> &copy) : Line3x<float>(copy) { }
+		Line3f(const Vec3<float> &point_p, const Vec3<float> &point_q) : Line3x<float>(point_p, point_q) { }
+	};
 
+	/// \brief 3D line - Double
+	class Line3d : public Line3x<double>
+	{
+	public:
+		Line3d() : Line3x<double>() { }
+		Line3d(const Line3x<double> &copy) : Line3x<double>(copy) { }
+		Line3d(const Vec3<double> &podouble_p, const Vec3<double> &podouble_q) : Line3x<double>(podouble_p, podouble_q) { }
+	};
+
+	/// \}
 }
-
-/// \}

@@ -25,9 +25,7 @@
 **
 **    Harry Storbacka
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
-
 
 #pragma once
 
@@ -35,71 +33,68 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_Math clanCore Math
-/// \{
+	/// \addtogroup clanCore_Math clanCore Math
+	/// \{
 
-/// \brief Math operations on 2D lines.
-///
-/// Obsolete - Use Line, LineRay, LineSegment
-class LineMath
-{
-public:
-// Operations:
+	/// \brief Math operations on 2D lines.
+	///
+	/// Obsolete - Use Line, LineRay, LineSegment
+	class LineMath
+	{
+	public:
+		/// \brief Return [<0, 0, >0] if the Point P is right, on or left of the line trough A,B
+		///
+		/// Also See Line and LineSegment
+		///
+		/// \param x = x coordinate of the point being tested.
+		/// \param y = y coordinate of the point being tested.
+		/// \param line = The line. A pointer to a float array with the elements {x1,y1,x2,y2}.
+		static float point_right_of_line(float x, float y, float *line);
 
-	/// \brief Return [<0, 0, >0] if the Point P is right, on or left of the line trough A,B
-	///
-	/// Also See Line and LineSegment
-	///
-	/// \param x = x coordinate of the point being tested.
-	/// \param y = y coordinate of the point being tested.
-	/// \param line = The line. A pointer to a float array with the elements {x1,y1,x2,y2}.
-	static float point_right_of_line( float x, float y, float *line );
+		/// \brief Point right of line
+		///
+		/// \param x = value
+		/// \param y = value
+		/// \param line_x1 = value
+		/// \param line_y1 = value
+		/// \param line_x2 = value
+		/// \param line_y2 = value
+		///
+		/// \return float
+		static float point_right_of_line(float x, float y, float line_x1, float line_y1, float line_x2, float line_y2);
 
-	/// \brief Point right of line
-	///
-	/// \param x = value
-	/// \param y = value
-	/// \param line_x1 = value
-	/// \param line_y1 = value
-	/// \param line_x2 = value
-	/// \param line_y2 = value
-	///
-	/// \return float
-	static float point_right_of_line( float x, float y, float line_x1, float line_y1, float line_x2, float line_y2 );
+		/// \brief Point right of line
+		///
+		/// \param A = Pointf
+		/// \param B = Pointf
+		/// \param P = Pointf
+		///
+		/// \return float
+		static float point_right_of_line(const Pointf &A, const Pointf &B, const Pointf &P);
 
-	/// \brief Point right of line
-	///
-	/// \param A = Pointf
-	/// \param B = Pointf
-	/// \param P = Pointf
-	///
-	/// \return float
-	static float point_right_of_line( const Pointf &A, const Pointf &B, const Pointf &P );
+		/// \brief Return the midpoint of the line from point A to point B.
+		///
+		/// Also See LineSegment
+		///
+		/// \param A = point A
+		/// \param B = point B
+		/// \return The point
+		static Pointf midpoint(const Pointf &A, const Pointf &B);
 
-	/// \brief Return the midpoint of the line from point A to point B.
-	///
-	/// Also See LineSegment
-	///
-	/// \param A = point A
-	/// \param B = point B
-	/// \return The point
-	static Pointf midpoint( const Pointf &A, const Pointf &B );
+		/// \brief Return the Point on the line from A to B closest to point P
+		///
+		/// \param P point P
+		/// \param A point A
+		/// \param B point B
+		static Pointf closest_point(const Pointf &P, const Pointf &A, const Pointf &B);
 
-	/// \brief Return the Point on the line from A to B closest to point P
-	///
-	/// \param P point P
-	/// \param A point A
-	/// \param B point B
-	static Pointf closest_point( const Pointf &P, const Pointf &A, const Pointf &B );
+		/// \brief Return the relative position (0-1) of the point R on the line from A to B closest to point P
+		///
+		/// \param P point P
+		/// \param A point A
+		/// \param B point B
+		static float closest_point_relative(const Pointf &P, const Pointf &A, const Pointf &B);
+	};
 
-	/// \brief Return the relative position (0-1) of the point R on the line from A to B closest to point P
-	///
-	/// \param P point P
-	/// \param A point A
-	/// \param B point B
-	static float closest_point_relative( const Pointf &P, const Pointf &A, const Pointf &B );
-};
-
+	/// \}
 }
-
-/// \}

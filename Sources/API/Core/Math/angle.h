@@ -26,157 +26,132 @@
 **    Harry Storbacka
 */
 
-
 #pragma once
 
 #include <memory>
 
 namespace clan
 {
-/// \addtogroup clanCore_Math clanCore Math
-/// \{
+	/// \addtogroup clanCore_Math clanCore Math
+	/// \{
 
-class Angle_Impl;
+	class Angle_Impl;
 
+	/// \brief Angle unit
+	enum AngleUnit
+	{
+		angle_degrees,
+		angle_radians
+	};
 
-/// \brief Angle unit
-enum AngleUnit
-{
-	angle_degrees,
-	angle_radians
-};
+	/// \brief Euler angle rotation order
+	enum EulerOrder
+	{
+		order_XYZ,
+		order_XZY,
+		order_YZX,
+		order_YXZ,
+		order_ZXY,
+		order_ZYX
+	};
 
-/// \brief Euler angle rotation order
-enum EulerOrder
-{
-	order_XYZ,
-	order_XZY,
-	order_YZX,
-	order_YXZ,
-	order_ZXY,
-	order_ZYX
-};
+	/// \brief Angle class.
+	class Angle
+	{
+	public:
+		/// \brief Constructs a null Angle object.
+		Angle();
 
+		/// \brief Constructs an Angle object.
+		Angle(float value, AngleUnit unit);
 
-/// \brief Angle class.
-class Angle
-{
-/// \name Construction
-/// \{
-public:
+		/// \brief From radians
+		///
+		/// \param value = value
+		///
+		/// \return Angle
+		static Angle from_radians(float value);
 
+		/// \brief From degrees
+		///
+		/// \param value = value
+		///
+		/// \return Angle
+		static Angle from_degrees(float value);
 
-	/// \brief Constructs an NULL Angle object.
-	Angle();
+		/// \brief Returns the angle as degrees.
+		float to_degrees() const;
 
-	/// \brief Constructs an Angle object.
-	Angle(float value, AngleUnit unit);
+		/// \brief Returns the angle as radians.
+		float to_radians() const;
 
-	/// \brief From radians
-	///
-	/// \param value = value
-	///
-	/// \return Angle
-	static Angle from_radians(float value);
+		/// \brief Set the angle value in degrees.
+		void set_degrees(float value_degrees);
 
-	/// \brief From degrees
-	///
-	/// \param value = value
-	///
-	/// \return Angle
-	static Angle from_degrees(float value);
+		/// \brief Set the angle value in radians.
+		void set_radians(float value_radians);
 
-/// \}
-/// \name Attributes
-/// \{
-public:
-	/// \brief Returns the angle as degrees.
-	float to_degrees() const;
+		/// \brief Converts angle to range [0,360] degrees.
+		///
+		/// \return reference to this object
+		Angle &normalize();
 
-	/// \brief Returns the angle as radians.
-	float to_radians() const;
+		/// \brief Converts angle to range [-180,180] degrees.
+		///
+		/// \return reference to this object
+		Angle &normalize_180();
 
-/// \}
-/// \name Operations
-/// \{
-public:
-	/// \brief Set the angle value in degrees.
-	void set_degrees(float value_degrees);
+		/// \brief += operator.
+		void operator += (const Angle &angle);
 
-	/// \brief Set the angle value in radians.
-	void set_radians(float value_radians);
+		/// \brief -= operator.
+		void operator -= (const Angle &angle);
 
-	/// \brief Converts angle to range [0,360] degrees.
-	///
-	/// \return reference to this object
-	Angle &normalize();
+		/// \brief *= operator.
+		void operator *= (const Angle &angle);
 
-	/// \brief Converts angle to range [-180,180] degrees.
-	///
-	/// \return reference to this object
-	Angle &normalize_180();
+		/// \brief /= operator.
+		void operator /= (const Angle &angle);
 
-/// \}
-/// \name Operators
-/// \{
-public:
-	/// \brief += operator.
-	void operator += (const Angle &angle);
+		/// \brief + operator.
+		Angle operator + (const Angle &angle) const;
 
-	/// \brief -= operator.
-	void operator -= (const Angle &angle);
+		/// \brief - operator.
+		Angle operator - (const Angle &angle) const;
 
-	/// \brief *= operator.
-	void operator *= (const Angle &angle);
+		/// \brief * operator.
+		Angle operator * (const Angle &angle) const;
 
-	/// \brief /= operator.
-	void operator /= (const Angle &angle);
+		/// \brief * operator.
+		Angle operator * (float value) const;
 
-	/// \brief + operator.
-	Angle operator + (const Angle &angle) const;
+		/// \brief / operator.
+		Angle operator / (const Angle &angle) const;
 
-	/// \brief - operator.
-	Angle operator - (const Angle &angle) const;
+		/// \brief / operator.
+		Angle operator / (float value) const;
 
-	/// \brief * operator.
-	Angle operator * (const Angle &angle) const;
+		/// \brief < operator.
+		bool operator < (const Angle &angle) const;
 
-	/// \brief * operator.
-	Angle operator * (float value) const;
+		/// \brief < operator.
+		bool operator <= (const Angle &angle) const;
 
-	/// \brief / operator.
-	Angle operator / (const Angle &angle) const;
+		/// \brief > operator.
+		bool operator > (const Angle &angle) const;
 
-	/// \brief / operator.
-	Angle operator / (float value) const;
+		/// \brief > operator.
+		bool operator >= (const Angle &angle) const;
 
-	/// \brief < operator.
-	bool operator < (const Angle &angle) const;
+		/// \brief == operator.
+		bool operator== (const Angle &angle) const;
 
-	/// \brief < operator.
-	bool operator <= (const Angle &angle) const;
+		/// \brief != operator.
+		bool operator!= (const Angle &angle) const;
 
-	/// \brief > operator.
-	bool operator > (const Angle &angle) const;
+	private:
+		float value_rad;
+	};
 
-	/// \brief > operator.
-	bool operator >= (const Angle &angle) const;
-
-	/// \brief == operator.
-	bool operator== (const Angle &angle) const;
-
-	/// \brief != operator.
-	bool operator!= (const Angle &angle) const;
-
-/// \}
-/// \name Implementation
-/// \{
-private:
-	float value_rad;
-
-/// \}
-};
-
+	/// \}
 }
-
-/// \}
