@@ -78,9 +78,6 @@ X11Window::X11Window()
   site(nullptr), clipboard(this)
 {
 	handle.display = SetupDisplay::get_message_queue()->get_display();
-
-	repaint_request_rects.reserve(32);
-
 	keyboard = InputDevice(new InputDeviceProvider_X11Keyboard(this));
 	mouse = InputDevice(new InputDeviceProvider_X11Mouse(this));
 
@@ -917,7 +914,6 @@ void X11Window::capture_mouse(bool capture)
 	SetupDisplay::get_message_queue()->set_mouse_capture(this, capture);
 }
 
-
 Rect X11Window::get_screen_position() const
 {
 	XLockDisplay(handle.display);
@@ -977,14 +973,11 @@ void X11Window::process_window_resize(const Rect &new_rect)
 
 void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 {
-	bool new_resize_geometry = false;
-	Rect new_client_area;
-
 	switch(event.type)
 	{
 		case ConfigureNotify:
-		{	// Resize or Move. Repaint after polling all messages.
-			new_client_area = (event.xany.send_event == 0)
+		{	// Resize or Move
+			Rect new_client_area = (event.xany.send_event == 0)
 				? get_screen_position()
 				: Rect::xywh(
 						event.xconfigure.x + event.xconfigure.border_width,
@@ -992,7 +985,7 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 						event.xconfigure.width, event.xconfigure.height
 						);
 
-			new_resize_geometry = true;
+			process_window_resize(new_client_area);
 			break;
 		}
 		case ClientMessage:
@@ -1030,17 +1023,9 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 		{	// Window exposure. Immediate repaint.
 			if (!site)
 				break;
-
-			Rect new_geometry = (event.xany.send_event == 0)
-				? get_screen_position()
-				: Rect::xywh(
-						event.xconfigure.x + event.xconfigure.border_width,
-						event.xconfigure.y + event.xconfigure.border_width,
-						event.xconfigure.width, event.xconfigure.height
-						);
-
-			repaint_request_rects.clear();
-			(site->sig_paint)(Rect{0, 0, new_geometry.get_size()});
+			
+			Rect new_geometry = Rect::xywh(event.xexpose.x, event.xexpose.y, event.xexpose.width, event.xexpose.height);
+			(site->sig_paint)(new_geometry);
 			break;
 		}
 		case FocusIn:
@@ -1168,9 +1153,7 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 
 				mouse_capture_window->get_mouse()->received_mouse_move(event.xmotion);
 			}
-
 			break;
-
 		case SelectionClear: // New clipboard selection owner
 			clipboard.event_selection_clear(event.xselectionclear);
 			break;
@@ -1182,12 +1165,6 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 			break;
 		default:
 			break;
-	}
-
-	if (new_resize_geometry)	// We repaint at the end, so that we treat multiple resize at a single call
-	{
-		process_window_resize(new_client_area);
-		(site->sig_paint)(get_viewport()); // Just repaint the entire screen.
 	}
 
 }
@@ -1274,39 +1251,16 @@ void X11Window::set_cursor(CursorProvider_X11 *cursor)
 
 void X11Window::request_repaint(const Rect &cl_rect)
 {
-	Rect paint_area = Rect(cl_rect).clip(get_viewport());
-
-	// Validate rect size (if outside clipping region)
-	if (paint_area.get_width() <= 0 || paint_area.get_height() <= 0)
-		return;
-
-	// Search the repaint list
-	for (const Rect &elem : repaint_request_rects)
-	{
-		if (paint_area.is_inside(elem))
-			return; // Don't draw same sub-area twice
-	}
-
-	// Remove existing elements that are within new paint area.
-	std::remove_if(
-			repaint_request_rects.begin(),
-			repaint_request_rects.end(),
-			[&paint_area](const Rect &elem) -> bool {
-				return elem.is_inside(paint_area);
-			});
-
-	repaint_request_rects.push_back(paint_area);
-}
-
-void X11Window::process_queued_events()
-{
-	if (!repaint_request_rects.empty())
-	{
-		for (const Rect &elem : repaint_request_rects)
-			(site->sig_paint)(elem);
-
-		repaint_request_rects.clear();
-	}
+	XExposeEvent expose = {Expose, 0};
+	expose.send_event = true;
+	expose.display = handle.display;
+	expose.window = handle.window;
+	expose.x = cl_rect.left;
+	expose.y = cl_rect.top;
+	expose.width = cl_rect.get_width();
+	expose.height = cl_rect.get_height();
+	expose.count = 0;
+	XSendEvent(handle.display, handle.window, False, 0, (XEvent *) &expose);
 }
 
 void X11Window::set_minimum_size(int width, int height, bool size_is_client_area)

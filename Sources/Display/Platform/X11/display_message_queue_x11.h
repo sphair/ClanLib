@@ -73,8 +73,6 @@ namespace clan
 
 	private:
 		void process_message();
-		void process_queued_events();
-		bool process_window_sockets();
 
 		X11Window *current_mouse_capture_window = nullptr;
 		::Display *display = nullptr;

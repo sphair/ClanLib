@@ -140,8 +140,6 @@ namespace clan
 		while (true)
 		{
 			process_message();
-			process_queued_events(); // What is this? If its related to Event then it should be removed
-			process_window_sockets(); // Same for this thing
 
 			auto time_now = System::get_time();
 			int time_remaining_ms = timeout_ms - (time_now - time_start);
@@ -192,29 +190,6 @@ namespace clan
 		async_work_event.set();
 	}
 
-	bool DisplayMessageQueue_X11::process_window_sockets()
-	{
-		bool message_flag = false;
-
-		if (display)
-		{
-			if (XPending(display) > 0)
-			{
-				message_flag = true;
-			}
-		}
-
-		std::shared_ptr<ThreadData> thread_data = get_thread_data();
-		std::vector<X11Window *>::size_type index, size;
-		size = thread_data->windows.size();
-		for (index = 0; index < size; index++)
-		{
-			if (thread_data->windows[index]->process_window_sockets(true))
-				message_flag = true;
-		}
-		return message_flag;
-	}
-
 	void DisplayMessageQueue_X11::process_message()
 	{
 		std::shared_ptr<ThreadData> data = get_thread_data();
@@ -251,15 +226,5 @@ namespace clan
 				context.process_messages();
 		}
 	}
-
-	void DisplayMessageQueue_X11::process_queued_events()
-	{
-		std::shared_ptr<ThreadData> thread_data = get_thread_data();
-		std::vector<X11Window *>::size_type index, size;
-		size = thread_data->windows.size();
-		for (index = 0; index < size; index++)
-		{
-			thread_data->windows[index]->process_queued_events();
-		}
-	}
 }
+
