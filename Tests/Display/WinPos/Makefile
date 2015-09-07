@@ -1,8 +1,8 @@
 EXAMPLE_BIN=test
 OBJF = example.o
-LIBS=clanApp clanDisplay clanCore clanGL clanGL1
+LIBS=clanApp clanDisplay clanCore clanGL
 
-include ../../Makefile.conf
+include ../../../Examples/Makefile.conf
 
 # EOF #
 

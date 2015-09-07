@@ -79,7 +79,6 @@ X11Window::X11Window()
 {
 	handle.display = SetupDisplay::get_message_queue()->get_display();
 
-	resize_event_rects.reserve(32);
 	repaint_request_rects.reserve(32);
 
 	keyboard = InputDevice(new InputDeviceProvider_X11Keyboard(this));
@@ -978,12 +977,14 @@ void X11Window::process_window_resize(const Rect &new_rect)
 
 void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 {
-	bool process_input_context = false;
+	bool new_resize_geometry = false;
+	Rect new_client_area;
+
 	switch(event.type)
 	{
 		case ConfigureNotify:
 		{	// Resize or Move. Repaint after polling all messages.
-			Rect new_geometry = (event.xany.send_event == 0)
+			new_client_area = (event.xany.send_event == 0)
 				? get_screen_position()
 				: Rect::xywh(
 						event.xconfigure.x + event.xconfigure.border_width,
@@ -991,7 +992,7 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 						event.xconfigure.width, event.xconfigure.height
 						);
 
-			resize_event_rects.push_back({0, 0, new_geometry.get_size()});
+			new_resize_geometry = true;
 			break;
 		}
 		case ClientMessage:
@@ -1128,7 +1129,6 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 			if (get_keyboard())
 			{
 				get_keyboard()->received_keyboard_input(event.xkey);
-				process_input_context = true;
 			}
 			break;
 		case ButtonPress:
@@ -1142,7 +1142,7 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 						break;
 				}
 
-				if (this != mouse_capture_window) // TODO What is this ???
+				if (this != mouse_capture_window) // This is so you can capture mouse events in another window, as if it was this window (Set by capture_mouse())
 				{
 					Rect this_scr = client_area;
 					Rect capture_scr = mouse_capture_window->client_area;
@@ -1152,13 +1152,12 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 				}
 
 				mouse_capture_window->get_mouse()->received_mouse_input(event.xbutton);
-				process_input_context = true;
 			}
 			break;
 		case MotionNotify:
 			if (mouse_capture_window->get_mouse() && event.xany.send_event == 0)
 			{
-				if (this != mouse_capture_window) // TODO What is this ???
+				if (this != mouse_capture_window) // This is so you can capture mouse events in another window, as if it was this window (Set by capture_mouse())
 				{
 					Rect this_scr = client_area;
 					Rect capture_scr = mouse_capture_window->client_area;
@@ -1168,7 +1167,6 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 				}
 
 				mouse_capture_window->get_mouse()->received_mouse_move(event.xmotion);
-				process_input_context = true;
 			}
 
 			break;
@@ -1186,30 +1184,12 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 			break;
 	}
 
-	if (process_input_context)
+	if (new_resize_geometry)	// We repaint at the end, so that we treat multiple resize at a single call
 	{
-		// Immediately dispatch any messages queued (to ensure any later event is adjusted for window geometry or cursor changes)
-		ic.process_messages();
-		if (ic.is_disposed())
-			return;		// Disposed, thefore "this" is invalid, must exit now
-	}
-}
-
-// \todo Is current X11 message queue order relevant?
-// This function is called in between X11Window::process_message polling and
-// InputContext::process_message polling at X11MessageQueue::process_message().
-// If the order is irrelevant, consider moving the contents of this method to
-// X11Window::process_queued_events() and removing this method from this class.
-void X11Window::process_message_complete()
-{
-	process_window_sockets(false); // Check input devices
-
-	if (!resize_event_rects.empty())
-	{
-		process_window_resize(resize_event_rects.back());
+		process_window_resize(new_client_area);
 		(site->sig_paint)(get_viewport()); // Just repaint the entire screen.
-		resize_event_rects.clear();
 	}
+
 }
 
 void X11Window::setup_joysticks()

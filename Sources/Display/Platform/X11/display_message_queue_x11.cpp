@@ -240,7 +240,7 @@ namespace clan
 
 		for (auto & elem : data->windows)
 		{
-			elem->process_message_complete();
+			elem->process_window_sockets(false);
 		}
 
 		// Process all input context messages (done seperately, because of the mouse_capture hack)

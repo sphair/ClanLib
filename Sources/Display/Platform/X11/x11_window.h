@@ -157,7 +157,6 @@ public:
 	void set_small_icon(const PixelBuffer &image);
 
 	void process_message(XEvent &event, X11Window *mouse_capture_window);
-	void process_message_complete();
 
 	void get_keyboard_modifiers(bool &key_shift, bool &key_alt, bool &key_ctrl) const;
 	Point get_mouse_position() const;
@@ -223,14 +222,6 @@ private:
 	//! Window frame extents. Lengths on each side of the window used by the WM
 	//! to decorate the window. Never use size-related methods on this object.
 	Rect frame_extents;
-
-	/*!
-	 * Contains `Rect`s obtained from X11 window resize events.
-	 * Elements stored are not used. Cleared on process_message_complete (once
-	 * all X11 events have been polled. Before it is cleared, a repaint of the
-	 * entire viewport is requested if it is not empty.
-	 */
-	std::vector<Rect> resize_event_rects;
 
 	/**
 	 * Contains `Rect`s obtained from repaint requests.
