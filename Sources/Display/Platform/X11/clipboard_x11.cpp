@@ -27,8 +27,8 @@
 */
 
 #include "Display/precomp.h"
-#include "input_device_provider_x11keyboard.h"
 #include "API/Core/System/system.h"
+#include "input_device_provider_x11keyboard.h"
 #include "x11_window.h"
 #include <X11/Xatom.h>
 
@@ -39,7 +39,7 @@ namespace clan
 // Clipboard_X11 construction:
 
 Clipboard_X11::Clipboard_X11(X11Window *x11_window)
-:x11_window(x11_window), atom_CLIPBOARD(None), clipboard_available(false)
+: x11_window(x11_window), atom_CLIPBOARD(None), clipboard_available(false)
 {
 }
 
@@ -52,62 +52,63 @@ Clipboard_X11::~Clipboard_X11()
 
 std::string Clipboard_X11::get_clipboard_text() const
 {
-	if ( ( atom_CLIPBOARD == None ) )
+	auto handle = x11_window->get_handle();
+
+	if (atom_CLIPBOARD == None)
 	{
 		// X Server does not have clipboard support
 		return std::string();
 	}
 
-	XConvertSelection(disp, atom_CLIPBOARD, XA_STRING, atom_CLIPBOARD, window, CurrentTime);
-	XFlush(disp);
+	XConvertSelection(handle.display, atom_CLIPBOARD, XA_STRING, atom_CLIPBOARD, handle.window, CurrentTime);
+	XFlush(handle.display);
 
 	XEvent event;
 
 	auto start_time = System::get_time();
 	while(true)
 	{
-		if (XCheckTypedWindowEvent(x11_window->get_display(), x11_window->get_window(), SelectionNotify, &event))
+		if (XCheckTypedWindowEvent(handle.display, handle.window, SelectionNotify, &event))
 			break;
-		if ((System::get_time() - start_time) >= 1000)	// Allow 1 second for target application to respond. TODO: What is the correct way to do this?
+
+		// Allow target application half a second of time to respond to this event.
+		// TODO What is the correct way to do this?
+		if ((System::get_time() - start_time) >= 500)
 		{
 			return std::string();
 		}
-		System::sleep(100);	// Sleep for 100ms
+		System::sleep(50); // Sleep for 50ms
 	}
 
 	Atom actual_type;
-	int actual_format;
-	unsigned long number_items;
-	unsigned char *read_data = x11_window->get_property(window, atom_CLIPBOARD, &number_items, &actual_format, &actual_type);
-
-	if ( (actual_format != 8) || (actual_type != XA_STRING) || (number_items <=0) || (read_data==nullptr) )
+	int  actual_format;
+	unsigned long item_count;
+	unsigned char *read_data = X11Atoms::get_property(handle.display, handle.window, atom_CLIPBOARD, actual_type, actual_format, item_count);
+	if (actual_type != XA_STRING || actual_format != 8 || item_count <= 0 || read_data == nullptr)
 	{
-		if (read_data)
-		{
-			XFree(read_data);
-		}
+		log_event("debug", "Failed to get X11 CLIPBOARD text.");
+		if (read_data != nullptr) XFree(read_data);
 		return std::string();
 	}
 
-	std::string buffer( (char *) read_data);
+	std::string buffer((char *)read_data);
 	XFree(read_data);
 	return buffer;
 }
 
 bool Clipboard_X11::is_clipboard_text_available() const
 {
-	if (get_clipboard_text().size() > 0)
-	{
-		return true;
-	}
-
-	return false;
+	return get_clipboard_text().size() > 0;
 }
 
 bool Clipboard_X11::is_clipboard_image_available() const
 {
+	// TODO Support ICCCM PRIMARY selection and FreeDesktop clipboards-spec
+#if DEBUG
+	throw Exception("Clipboard_X11::is_clipboard_image_available() unimplemented.");
+#else
 	return false;
-//	throw Exception("Clipboard_X11::is_clipboard_image_available() not implemented");
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -116,10 +117,8 @@ bool Clipboard_X11::is_clipboard_image_available() const
 void Clipboard_X11::setup()
 {
 	clipboard_available = false;
-	disp = x11_window->get_display();
-	window = x11_window->get_window();
-	atom_CLIPBOARD = XInternAtom(disp, "CLIPBOARD", False);
-
+	clipboard_current = std::string();
+	atom_CLIPBOARD = XInternAtom(x11_window->get_display(), "CLIPBOARD", False);
 }
 
 void Clipboard_X11::event_selection_clear(XSelectionClearEvent &xselectionclear)
@@ -130,13 +129,15 @@ void Clipboard_X11::event_selection_clear(XSelectionClearEvent &xselectionclear)
 
 void Clipboard_X11::event_selection_notify()
 {
-	// Data was sent to use (this is handled in get_clipboard_text() )
+	// Data was sent to use (this is handled in get_clipboard_text())
 }
 
 void Clipboard_X11::event_selection_request(XSelectionRequestEvent &xselectionrequest)
 {
+	auto handle = x11_window->get_handle();
+
 	XSelectionRequestEvent *rptr = &xselectionrequest;
-	if (rptr->requestor == window) return;	// Ignore request if from self
+	if (rptr->requestor == handle.window) return; // Ignore request if from self
 
 	XEvent new_event;
 	new_event.xselection.type = SelectionNotify;
@@ -147,29 +148,29 @@ void Clipboard_X11::event_selection_request(XSelectionRequestEvent &xselectionre
 	new_event.xselection.property = None;
 	new_event.xselection.time = rptr->time;
 
-	Atom xa_targets = XInternAtom(disp, "TARGETS", False);
-	Atom xa_multiple = XInternAtom(disp, "MULTIPLE", False);
+	Atom xa_targets  = XInternAtom(handle.display, "TARGETS", False);
+	Atom xa_multiple = XInternAtom(handle.display, "MULTIPLE", False);
 
 	struct AtomPair { Atom target; Atom property; } *multi_ptr = nullptr;
 
-	unsigned char *data_ptr = nullptr;
-	int num_multi = 0;
+	unsigned char *data_ptr = NULL;
+	int num_multi   =  0;
 	int index_multi = -1;
 	if (rptr->target == xa_multiple)
 	{
-		unsigned long number_items;
-		int actual_format;
-		Atom actual_type;
-		data_ptr = x11_window->get_property( rptr->requestor, rptr->property, &number_items, &actual_format, &actual_type );
-		if ( data_ptr )
+		unsigned long item_count;
+		data_ptr = X11Atoms::get_property(handle.display, rptr->requestor, rptr->property, item_count);
+
+		if (data_ptr != NULL)
 		{
-			num_multi = number_items / 2;
+			num_multi = item_count / 2;
 			multi_ptr = (struct AtomPair *) data_ptr;
 		}
+
 		index_multi = 0;
 	}
 
-	while( index_multi < num_multi)
+	while(index_multi < num_multi)
 	{
 		Window xtarget;
 		Atom xproperty;
@@ -189,19 +190,19 @@ void Clipboard_X11::event_selection_request(XSelectionRequestEvent &xselectionre
 		{
 			long new_targets[1];
 			new_targets[0] = XA_STRING;
-			XChangeProperty( disp, rptr->requestor, xproperty, xa_targets, 32, PropModeReplace, (unsigned char *) new_targets, 1);
+			XChangeProperty(handle.display, rptr->requestor, xproperty, xa_targets, 32, PropModeReplace, (unsigned char *) new_targets, 1);
 			new_event.xselection.property = xproperty;
 		}else
 		{
 
 			if (xtarget == XA_STRING)
 			{
-				XChangeProperty(disp, rptr->requestor, xproperty, xtarget, 8, PropModeReplace, (const unsigned char*) clipboard_current.c_str(), clipboard_current.size());
+				XChangeProperty(handle.display, rptr->requestor, xproperty, xtarget, 8, PropModeReplace, (const unsigned char*) clipboard_current.c_str(), clipboard_current.size());
 				new_event.xselection.property = xproperty;
 
 			}
 		}
-		XSendEvent( disp, rptr->requestor, False, 0, &new_event );
+		XSendEvent(handle.display, rptr->requestor, False, 0, &new_event);
 		if (!num_multi) break;
 	}
 	if (data_ptr)
@@ -212,11 +213,10 @@ void Clipboard_X11::event_selection_request(XSelectionRequestEvent &xselectionre
 
 void Clipboard_X11::set_clipboard_text(const std::string &text)
 {
+	// The clipboard only works while the message queue is being processed as
+	// get_message() processes clipboard (selection) events.
 
-	// **** README ****
-	// The clipboard only works while the message queue is being processed as get_message() processes clipboard (selection) events
-
-	if ( atom_CLIPBOARD == None )
+	if (atom_CLIPBOARD == None)
 	{
 		// X Server does not have clipboard support
 		return;
@@ -224,8 +224,10 @@ void Clipboard_X11::set_clipboard_text(const std::string &text)
 	clipboard_current = text;
 	clipboard_available = true;
 
-	XSetSelectionOwner(disp, XA_PRIMARY, window, CurrentTime );
-	XSetSelectionOwner(disp, atom_CLIPBOARD, window, CurrentTime );
+	auto handle = x11_window->get_handle();
+
+	XSetSelectionOwner(handle.display, XA_PRIMARY, handle.window, CurrentTime);
+	XSetSelectionOwner(handle.display, atom_CLIPBOARD, handle.window, CurrentTime);
 }
 
 /////////////////////////////////////////////////////////////////////////////

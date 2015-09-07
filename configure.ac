@@ -89,16 +89,11 @@ AC_PROG_LIBTOOL
 
 dnl Using C++
 AC_LANG(C++)
-dnl AC_LANG(C)
-
-dnl Checks for header files.
-AC_HEADER_STDC
-AC_HEADER_STDBOOL
 
 dnl Find absolute name to pkg-config
 AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
 
-CXXFLAGS="$CXXFLAGS -std=c++0x"
+CXXFLAGS="$CXXFLAGS -std=c++11"
 
 case $target in
 	*cygwin* )
@@ -180,17 +175,13 @@ if test -n "$use_extra_libs" && test "$use_extra_libs" != "NO"; then
 	IFS=$ac_save_ifs
 fi
 
-AC_CHECK_HEADERS(unistd.h fcntl.h sys/kd.h sys/vt.h sys/sysctl.h)
-AC_EGREP_HEADER(fcvt, stdlib.h,,AC_DEFINE(NEED_FCVT))
-
-dnl -----------------------------------------------------
-dnl Check commandline parameters to the configure script:
-dnl -----------------------------------------------------
-
+dnl -------------------------------------
+dnl Check system headers and definitions:
+dnl -------------------------------------
+AC_CHECK_HEADERS(unistd.h fcntl.h sys/times.h sys/types.h sys/stat.h sys/sysctl.h)
 AC_CHECK_HEADER(libgen.h)
-AC_CHECK_HEADER(sys/types.h)
-AC_CHECK_HEADER(fstab.h, AC_DEFINE([HAVE_FSTAB_H]))
 
+dnl Check if "extern const char *__progname" is available
 AC_MSG_CHECKING([for extern *__progname])
 AC_TRY_COMPILE([],
 [extern const char *__progname;],
@@ -200,6 +191,9 @@ AC_MSG_RESULT(no))
 dnl Check for GNU extensions
 AC_CHECK_FUNCS(wcscasecmp)
 
+dnl -----------------------------------------------------
+dnl Check commandline parameters to the configure script:
+dnl -----------------------------------------------------
 
 dnl -----------------------------------------------------
 dnl Check for optional SSE2 support:
@@ -437,8 +431,8 @@ if test "$enable_clanSound" != "no"; then
 	fi
 	
 	if test "$enable_clanSound" = "auto"; then enable_clanSound=yes; fi
-	AM_CONDITIONAL(ALSA, test x$have_alsa = xyes)
 fi
+AM_CONDITIONAL(ALSA, test "x$have_alsa" = "xyes")
 
 if test "$enable_clanNetwork" != "no"; then
 	echo "Checking for clanNetwork stuff"

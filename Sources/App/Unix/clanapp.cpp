@@ -32,6 +32,7 @@
 #include "API/Core/System/exception.h"
 #include "API/Core/System/console_window.h"
 #include "API/Core/Text/console.h"
+#include "API/Core/Text/console_logger.h"
 #include "API/display.h"
 
 namespace clan
@@ -39,20 +40,20 @@ namespace clan
 	static ApplicationInstancePrivate *app_instance = 0;
 	static bool enable_catch_exceptions = false;
 	static int timing_timeout = 0;
-	
+
 	static std::vector<std::string> command_line_args;
-	
+
 	ApplicationInstancePrivate::ApplicationInstancePrivate(bool catch_exceptions)
 	{
 		app_instance = this;
 		enable_catch_exceptions = catch_exceptions;
 	}
-	
+
 	const std::vector<std::string> &Application::main_args()
 	{
 		return command_line_args;
 	}
-	
+
 	void Application::use_timeout_timing(int timeout)
 	{
 		timing_timeout = timeout;
@@ -71,9 +72,14 @@ int main(int argc, char **argv)
 	for (int i = 0; i < argc; i++)
 		args.push_back(argv[i]);
 	clan::command_line_args = args;
-	
+
+#ifdef DEBUG
+	clan::ConsoleLogger console_logger;
+	console_logger.enable();
+#endif
+
 	int retval = 0;
-	
+
 	if (clan::enable_catch_exceptions)
 	{
 		try
@@ -85,7 +91,7 @@ int main(int argc, char **argv)
 				{
 					if (!app->update())
 						break;
-					
+
 					if (!clan::RunLoop::process(clan::timing_timeout))
 						break;
 				}
@@ -94,7 +100,7 @@ int main(int argc, char **argv)
 					std::string console_name("Console");
 					if (!args.empty())
 						console_name = args[0];
-					
+
 					clan::ConsoleWindow console(console_name, 80, 160);
 					clan::Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
 					console.display_close_message();
@@ -109,7 +115,7 @@ int main(int argc, char **argv)
 			std::string console_name("Console");
 			if (!args.empty())
 				console_name = args[0];
-			
+
 			clan::ConsoleWindow console(console_name, 80, 160);
 			clan::Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
 			console.display_close_message();
@@ -124,7 +130,7 @@ int main(int argc, char **argv)
 		{
 			if (!app->update())
 				break;
-			
+
 			if (!clan::RunLoop::process(clan::timing_timeout))
 				break;
 		}

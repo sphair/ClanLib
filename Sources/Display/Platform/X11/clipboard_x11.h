@@ -70,9 +70,6 @@ private:
 	Atom atom_CLIPBOARD;
 	std::string clipboard_current;
 	bool clipboard_available;
-
-	::Display *disp;
-	::Window window;
 /// \}
 };
 
