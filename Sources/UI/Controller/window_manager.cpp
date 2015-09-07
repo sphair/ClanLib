@@ -231,7 +231,11 @@ namespace clan
 			{
 				DisplayWindow display_window = modal_owner->view_tree()->get_display_window();
 				if (!display_window.is_null())
+				{
 					display_window.set_enabled(true);
+					if (impl->window->get_display_window().has_focus())
+						display_window.show(true); // activate parent to workaround bug in Windows in some situations
+				}
 			}
 
 			auto manager = impl->manager;
