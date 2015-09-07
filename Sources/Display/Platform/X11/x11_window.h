@@ -161,7 +161,7 @@ public:
 	void get_keyboard_modifiers(bool &key_shift, bool &key_alt, bool &key_ctrl) const;
 	Point get_mouse_position() const;
 
-	bool process_window_sockets(bool peek_only);
+	void process_window_sockets();
 
 /// \}
 /// \name Implementation

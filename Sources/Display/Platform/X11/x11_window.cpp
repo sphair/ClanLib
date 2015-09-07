@@ -1401,16 +1401,14 @@ InputDeviceProvider_X11Mouse *X11Window::get_mouse() const
 	return static_cast<InputDeviceProvider_X11Mouse *>(mouse.get_provider());
 }
 
-bool X11Window::process_window_sockets(bool peek_only)
+void X11Window::process_window_sockets()
 {
-	bool message = false;
 	for (auto & elem : joysticks)
 	{
 		InputDeviceProvider_LinuxJoystick *joystick_provider = dynamic_cast<InputDeviceProvider_LinuxJoystick *>(elem.get_provider());
 		if (joystick_provider)
-			message = joystick_provider->poll(peek_only);
+			joystick_provider->poll(false);
 	}
-	return message;
 }
 
 }
