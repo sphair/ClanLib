@@ -31,7 +31,7 @@
 
 Target::Target(RenderTarget new_target) : render_target(new_target)
 {
-	clan::OpenGLWindowDescription opengl_desc;
+	clan::OpenGLContextDescription opengl_desc;
 
 	switch (render_target)
 	{
@@ -101,11 +101,10 @@ void Target::run_demo()
 
 	if (clan::OpenGLTarget::is_current())
 	{
-		clan::GraphicContext_GL gc(canvas);
 		int major,minor, version_release;
-		gc.get_opengl_version(major, minor, version_release);
+		clan::OpenGLTarget::get_opengl_version(canvas, major, minor, version_release);
 
-		if (gc.get_shader_language() == clan::shader_fixed_function)
+		if (canvas.get_gc().get_shader_language() == clan::shader_fixed_function)
 		{
 			target_font.draw_text(canvas, font_xpos, font_ypos, clan::string_format("1) OpenGL 1.3 Compatable. Context = %1.%2 (clanGL)", major, minor));
 		}
