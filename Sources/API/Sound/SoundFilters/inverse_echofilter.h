@@ -27,47 +27,30 @@
 **    Mark Page
 */
 
-
 #pragma once
 
 #include "../soundfilter.h"
 
 namespace clan
 {
-/// \addtogroup clanSound_Filters clanSound Filters
-/// \{
+	/// \addtogroup clanSound_Filters clanSound Filters
+	/// \{
 
-class InverseEchoFilterProvider;
+	class InverseEchoFilterProvider;
 
-/// \brief Inverse Echo Filter Class
-class InverseEchoFilter : public SoundFilter
-{
-/// \name Construction
-/// \{
+	/// \brief Inverse Echo Filter Class
+	class InverseEchoFilter : public SoundFilter
+	{
+	public:
+		/// \brief Inverse Echo Filter Constructor
+		InverseEchoFilter(int buffer_size = 64 * 1024);
 
-public:
-	/// \brief Inverse Echo Filter Constructor
-	InverseEchoFilter(int buffer_size = 64*1024);
+		/// \brief Inverse Echo Filter Destructor
+		virtual ~InverseEchoFilter();
 
-	/// \brief Inverse Echo Filter Destructor
-	virtual ~InverseEchoFilter();
+		/// \brief Retrieves the provider.
+		InverseEchoFilterProvider *get_provider() const;
+	};
 
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	/// \brief Retrieves the provider.
-	InverseEchoFilterProvider *get_provider() const;
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

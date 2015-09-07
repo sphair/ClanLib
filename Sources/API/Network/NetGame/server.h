@@ -35,60 +35,58 @@
 
 namespace clan
 {
-/// \addtogroup clanNetwork_NetGame clanNetwork NetGame
-/// \{
+	/// \addtogroup clanNetwork_NetGame clanNetwork NetGame
+	/// \{
 
-class NetGameEvent;
-class NetGameConnection;
-class NetGameServer_Impl;
+	class NetGameEvent;
+	class NetGameConnection;
+	class NetGameServer_Impl;
 
-/// \brief NetGameServer
-class NetGameServer : NetGameConnectionSite
-{
-public:
-	NetGameServer();
-	~NetGameServer();
+	/// \brief NetGameServer
+	class NetGameServer : NetGameConnectionSite
+	{
+	public:
+		NetGameServer();
+		~NetGameServer();
 
-	/// \brief Start
-	///
-	/// \param port = String
-	void start(const std::string &port);
+		/// \brief Start
+		///
+		/// \param port = String
+		void start(const std::string &port);
 
-	/// \brief Start
-	///
-	/// \param address = String
-	/// \param port = String
-	void start(const std::string &address, const std::string &port);
+		/// \brief Start
+		///
+		/// \param address = String
+		/// \param port = String
+		void start(const std::string &address, const std::string &port);
 
-	/// \brief Process events
-	void process_events();
+		/// \brief Process events
+		void process_events();
 
-	/// \brief Stop
-	void stop();
+		/// \brief Stop
+		void stop();
 
-	/// \brief Send event
-	///
-	/// \param game_event = Net Game Event
-	void send_event(const NetGameEvent &game_event);
+		/// \brief Send event
+		///
+		/// \param game_event = Net Game Event
+		void send_event(const NetGameEvent &game_event);
 
-	Signal<void(NetGameConnection *)> &sig_client_connected();
-	Signal<void(NetGameConnection *, const std::string &)> &sig_client_disconnected();
-	Signal<void(NetGameConnection *, const NetGameEvent &)> &sig_event_received();
+		Signal<void(NetGameConnection *)> &sig_client_connected();
+		Signal<void(NetGameConnection *, const std::string &)> &sig_client_disconnected();
+		Signal<void(NetGameConnection *, const NetGameEvent &)> &sig_event_received();
 
-private:
+	private:
 
-	/// \brief Listen thread main
-	void listen_thread_main();
+		/// \brief Listen thread main
+		void listen_thread_main();
 
-	/// \brief Add network event
-	///
-	/// \param e = Net Game Network Event
-	void add_network_event(const NetGameNetworkEvent &e) override;
+		/// \brief Add network event
+		///
+		/// \param e = Net Game Network Event
+		void add_network_event(const NetGameNetworkEvent &e) override;
 
-	std::shared_ptr<NetGameServer_Impl> impl;
-};
+		std::shared_ptr<NetGameServer_Impl> impl;
+	};
 
+	/// \}
 }
-
-/// \}
-

@@ -26,22 +26,19 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
-
 
 namespace clan
 {
-/// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
-/// \{
+	/// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
+	/// \{
 
-/// \brief Sound Format Enums
-enum SoundFormat
-{
-	sf_8bit_unsigned,
-	sf_16bit_signed
-};
+	/// \brief Sound Format Enums
+	enum SoundFormat
+	{
+		sf_8bit_unsigned,
+		sf_16bit_signed
+	};
 
+	/// \}
 }
-
-/// \}

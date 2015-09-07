@@ -35,22 +35,21 @@
 
 namespace clan
 {
-/// \addtogroup clanSound_Resources clanSound Resources
-/// \{
+	/// \addtogroup clanSound_Resources clanSound Resources
+	/// \{
 
-class ResourceManager;
-class SoundBuffer;
+	class ResourceManager;
+	class SoundBuffer;
 
-class SoundCache
-{
-public:
-	virtual ~SoundCache() { }
-	virtual Resource<SoundBuffer> get_sound(const std::string &id) = 0;
+	class SoundCache
+	{
+	public:
+		virtual ~SoundCache() { }
+		virtual Resource<SoundBuffer> get_sound(const std::string &id) = 0;
 
-	static SoundCache &get(const ResourceManager &resources);
-	static void set(ResourceManager &resources, const std::shared_ptr<SoundCache> &cache);
-};
+		static SoundCache &get(const ResourceManager &resources);
+		static void set(ResourceManager &resources, const std::shared_ptr<SoundCache> &cache);
+	};
 
+	/// \}
 }
-
-/// \}

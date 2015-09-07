@@ -74,22 +74,22 @@
 namespace clan
 {
 
-class SetupD3D
-{
-public:
-	SetupD3D() {}
-	~SetupD3D() {}
-};
+	class SetupD3D
+	{
+	public:
+		SetupD3D() {}
+		~SetupD3D() {}
+	};
 
-class D3DTarget
-{
-public:
-	D3DTarget() {};
-	~D3DTarget() {};
-	static bool is_current() {return false;}
-	static void set_current() {};
-	static void enable() {};
-};
+	class D3DTarget
+	{
+	public:
+		D3DTarget() {};
+		~D3DTarget() {};
+		static bool is_current() {return false;}
+		static void set_current() {};
+		static void enable() {};
+	};
 
 }
 

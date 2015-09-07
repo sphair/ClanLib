@@ -27,48 +27,30 @@
 **    Mark Page
 */
 
-
 #pragma once
 
 #include "../soundfilter.h"
 
 namespace clan
 {
-/// \addtogroup clanSound_Filters clanSound Filters
-/// \{
+	/// \addtogroup clanSound_Filters clanSound Filters
+	/// \{
 
-class EchoFilterProvider;
+	class EchoFilterProvider;
 
-/// \brief Echo Filter Class
-class EchoFilter : public SoundFilter
-{
-/// \name Construction
-/// \{
+	/// \brief Echo Filter Class
+	class EchoFilter : public SoundFilter
+	{
+	public:
+		/// \brief Echo Filter Constructor
+		EchoFilter(int buffer_size = 32 * 1024, float shift_factor = 2.0f);
 
-public:
-	/// \brief Echo Filter Constructor
-	EchoFilter(int buffer_size = 32*1024, float shift_factor = 2.0f);
+		/// \brief Echo Filter Destructor
+		virtual ~EchoFilter();
 
-	/// \brief Echo Filter Destructor
-	virtual ~EchoFilter();
+		/// \brief Retrieves the provider.
+		EchoFilterProvider *get_provider() const;
+	};
 
-/// \}
-/// \name Operations
-/// \{
-
-public:
-
-	/// \brief Retrieves the provider.
-	EchoFilterProvider *get_provider() const;
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

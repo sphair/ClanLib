@@ -26,61 +26,40 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include <memory>
 
 namespace clan
 {
-/// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
-/// \{
+	/// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
+	/// \{
 
-class SoundOutput_Description_Impl;
+	class SoundOutput_Description_Impl;
 
-/// \brief Sound output description class.
-class SoundOutput_Description
-{
-/// \name Construction
-/// \{
+	/// \brief Sound output description class.
+	class SoundOutput_Description
+	{
+	public:
+		/// \brief Constructs a sound output description.
+		SoundOutput_Description();
+		~SoundOutput_Description();
 
-public:
-	/// \brief Constructs a sound output description.
-	SoundOutput_Description();
+		/// \brief Returns the mixing frequency for the sound output device.
+		int get_mixing_frequency() const;
 
-	~SoundOutput_Description();
+		/// \brief Returns the mixing latency in milliseconds.
+		int get_mixing_latency() const;
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief Sets the mixing frequency for the sound output device.
+		void set_mixing_frequency(int frequency);
 
-public:
-	/// \brief Returns the mixing frequency for the sound output device.
-	int get_mixing_frequency() const;
+		/// \brief Sets the mixing latency in milliseconds.
+		void set_mixing_latency(int latency);
 
-	/// \brief Returns the mixing latency in milliseconds.
-	int get_mixing_latency() const;
+	private:
+		std::shared_ptr<SoundOutput_Description_Impl> impl;
+	};
 
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	/// \brief Sets the mixing frequency for the sound output device.
-	void set_mixing_frequency(int frequency);
-
-	/// \brief Sets the mixing latency in milliseconds.
-	void set_mixing_latency(int latency);
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	std::shared_ptr<SoundOutput_Description_Impl> impl;
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

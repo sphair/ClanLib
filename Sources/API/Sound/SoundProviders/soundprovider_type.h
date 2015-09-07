@@ -26,55 +26,38 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include "../../Core/IOData/file_system.h"
 
 namespace clan
 {
-/// \addtogroup clanSound_Sound_Providers clanSound Sound Providers
-/// \{
+	/// \addtogroup clanSound_Sound_Providers clanSound Sound Providers
+	/// \{
 
-class SoundProvider;
-class InputSourceProvider;
-class FileSystem;
+	class SoundProvider;
+	class InputSourceProvider;
+	class FileSystem;
 
-/// \brief Sound provider type
-class SoundProviderType
-{
-/// \name Construction
-/// \{
+	/// \brief Sound provider type
+	class SoundProviderType
+	{
+	public:
+		/// \brief Registers a sound provider type in the SoundProviderFactory.
+		SoundProviderType(const std::string &type);
 
-public:
-	/// \brief Registers a sound provider type in the SoundProviderFactory.
-	SoundProviderType(const std::string &type);
+		/// \brief Unregisters a sound provider type in the SoundProviderFactory.
+		virtual ~SoundProviderType();
 
-	/// \brief Unregisters a sound provider type in the SoundProviderFactory.
-	virtual ~SoundProviderType();
+		/// \brief Called to load with this sound provider type.
+		virtual SoundProvider *load(
+			const std::string &filename,
+			bool streamed,
+			const FileSystem &file_system) = 0;
 
-/// \}
-/// \name Operations
-/// \{
+		virtual SoundProvider *load(
+			IODevice &file, bool streamed) = 0;
+	};
 
-public:
-	/// \brief Called to load with this sound provider type.
-	virtual SoundProvider *load(
-		const std::string &filename,
-		bool streamed,
-		const FileSystem &file_system) = 0;
-
-	virtual SoundProvider *load(
-		IODevice &file, bool streamed)=0;
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

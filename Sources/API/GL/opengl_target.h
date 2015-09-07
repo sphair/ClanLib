@@ -34,75 +34,64 @@
 
 namespace clan
 {
-/// \addtogroup clanGL_Display clanGL Display
-/// \{
+	/// \addtogroup clanGL_Display clanGL Display
+	/// \{
 
-class GraphicContext;
-class OpenGLTargetProvider;
-class OpenGLTarget_Impl;
-class OpenGLContextDescription;
+	class GraphicContext;
+	class OpenGLTargetProvider;
+	class OpenGLTarget_Impl;
+	class OpenGLContextDescription;
 
-/// \brief Display target for clanDisplay.
-class OpenGLTarget
-{
-/// \name Attributes
-/// \{
+	/// \brief Display target for clanDisplay.
+	class OpenGLTarget
+	{
+	public:
+		/// \brief Returns true if this display target is the current target
+		///
+		/// This may change after a display window has been created
+		static bool is_current();
 
-public:
-	/// \brief Returns true if this display target is the current target
-	///
-	/// This may change after a display window has been created
-	static bool is_current();
+		static OpenGLContextDescription get_description();
 
-	static OpenGLContextDescription get_description();
+		/// \brief Enable this target
+		static void enable();
 
-/// \}
-/// \name Operations
-/// \{
+		/// \brief Set this display target to be the current target
+		static void set_current();
 
-public:
-	/// \brief Enable this target
-	static void enable();
+		static void set_description(OpenGLContextDescription &desc);
 
-	/// \brief Set this display target to be the current target
-	static void set_current();
+		/// \brief Get the opengl version
+		///
+		/// \param version_major = On Return: Major
+		/// \param version_minor = On Return: Minor
+		static void get_opengl_version(const GraphicContext &gc, int &version_major, int &version_minor);
 
-	static void set_description(OpenGLContextDescription &desc);
+		/// \brief Get the opengl version
+		///
+		/// \param version_major = On Return: Major
+		/// \param version_minor = On Return: Minor
+		/// \param version_release = On Return: Release
+		static void get_opengl_version(const GraphicContext &gc, int &version_major, int &version_minor, int &version_release);
 
-	/// \brief Get the opengl version
-	///
-	/// \param version_major = On Return: Major
-	/// \param version_minor = On Return: Minor
-	static void get_opengl_version(const GraphicContext &gc, int &version_major, int &version_minor);
+		/// \brief Get the opengl shading language version
+		///
+		/// \param version_major = On Return: Major
+		/// \param version_minor = On Return: Minor
+		static void get_opengl_shading_language_version(const GraphicContext &gc, int &version_major, int &version_minor);
 
-	/// \brief Get the opengl version
-	///
-	/// \param version_major = On Return: Major
-	/// \param version_minor = On Return: Minor
-	/// \param version_release = On Return: Release
-	static void get_opengl_version(const GraphicContext &gc, int &version_major, int &version_minor, int &version_release);
+		/// \brief Get the opengl renderer string
+		static std::string get_renderer_string(const GraphicContext &gc);
 
-	/// \brief Get the opengl shading language version
-	///
-	/// \param version_major = On Return: Major
-	/// \param version_minor = On Return: Minor
-	static void get_opengl_shading_language_version(const GraphicContext &gc, int &version_major, int &version_minor);
+		/// \brief Get the opengl vendor string
+		static std::string get_vendor_string(const GraphicContext &gc);
 
-	/// \brief Get the opengl renderer string
-	static std::string get_renderer_string(const GraphicContext &gc);
+		/// \brief Get the list of opengl extensions.
+		static std::vector<std::string> get_extensions(const GraphicContext &gc);
 
-	/// \brief Get the opengl vendor string
-	static std::string get_vendor_string(const GraphicContext &gc);
+		/// \brief Set OpenGL context used by this GraphicContext to be active
+		static void set_active_context(const GraphicContext &gc);
+	};
 
-	/// \brief Get the list of opengl extensions.
-	static std::vector<std::string> get_extensions(const GraphicContext &gc);
-
-	/// \brief Set OpenGL context used by this GraphicContext to be active
-	static void set_active_context(const GraphicContext &gc);
-
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

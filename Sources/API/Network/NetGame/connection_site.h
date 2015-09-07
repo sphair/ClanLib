@@ -26,29 +26,24 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
-
 
 namespace clan
 {
-/// \addtogroup clanNetwork_NetGame clanNetwork NetGame
-/// \{
+	/// \addtogroup clanNetwork_NetGame clanNetwork NetGame
+	/// \{
 
-class NetGameNetworkEvent;
+	class NetGameNetworkEvent;
 
-/// \brief NetGameConnectionSite
-class NetGameConnectionSite
-{
-public:
+	/// \brief NetGameConnectionSite
+	class NetGameConnectionSite
+	{
+	public:
+		/// \brief Add network event
+		///
+		/// \param e = Net Game Network Event
+		virtual void add_network_event(const NetGameNetworkEvent &e) = 0;
+	};
 
-	/// \brief Add network event
-	///
-	/// \param e = Net Game Network Event
-	virtual void add_network_event(const NetGameNetworkEvent &e) = 0;
-};
-
+	/// \}
 }
-
-/// \}
-

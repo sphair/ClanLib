@@ -27,84 +27,62 @@
 **    Mark Page
 */
 
-
 #pragma once
 
 #include <memory>
 
 namespace clan
 {
-/// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
-/// \{
+	/// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
+	/// \{
 
-class SoundFilter_Impl;
-class SoundFilterProvider;
+	class SoundFilter_Impl;
+	class SoundFilterProvider;
 
-/// \brief Sound Filter Class
-class SoundFilter
-{
-/// \name Construction
-/// \{
-
-public:
-
-	/// \brief Constructs a NULL instance
-	SoundFilter() {};
-
-	/// \brief Constructs a sound filter
-	///
-	/// \param provider = The provider
-	SoundFilter(SoundFilterProvider *provider);
-
-	~SoundFilter();
-
-/// \}
-/// \name Operators
-/// \{
-public:
-	/// \brief Equality operator
-	bool operator==(const SoundFilter &other) const
+	/// \brief Sound Filter Class
+	class SoundFilter
 	{
-		return impl==other.impl;
-	}
+	public:
+		/// \brief Constructs a NULL instance
+		SoundFilter() { }
 
-	/// \brief Inequality operator
-	bool operator!=(const SoundFilter &other) const
-	{
-		return impl!=other.impl;
-	}
+		/// \brief Constructs a sound filter
+		///
+		/// \param provider = The provider
+		SoundFilter(SoundFilterProvider *provider);
 
-/// \}
-/// \name Operations
-/// \{
+		~SoundFilter();
 
-public:
+		/// \brief Equality operator
+		bool operator==(const SoundFilter &other) const
+		{
+			return impl == other.impl;
+		}
 
-	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return !impl; }
+		/// \brief Inequality operator
+		bool operator!=(const SoundFilter &other) const
+		{
+			return impl != other.impl;
+		}
 
-	/// \brief Throw an exception if this object is invalid.
-	void throw_if_null() const;
+		/// \brief Returns true if this object is invalid.
+		bool is_null() const { return !impl; }
 
-	/// \brief Retrieves the provider.
-	SoundFilterProvider *get_provider() const;
+		/// \brief Throw an exception if this object is invalid.
+		void throw_if_null() const;
 
-	/// \brief Filter callback.
-	/** <p>All sound data is passed through this function,
-	    which modifies the sample data accordingly to the function of the
-	    filter.</p>
-	    <p>The format of the sample data is always 16 bit stereo. </p>*/
-	void filter(float **sample_data, int num_samples, int channels);
+		/// \brief Retrieves the provider.
+		SoundFilterProvider *get_provider() const;
 
-/// \}
-/// \name Implementation
-/// \{
+		/// \brief Filter callback.
+		/** <p>All sound data is passed through this function,
+			which modifies the sample data accordingly to the function of the
+			filter.</p>
+			<p>The format of the sample data is always 16 bit stereo. </p>*/
+		void filter(float **sample_data, int num_samples, int channels);
 
-public:
-	std::shared_ptr<SoundFilter_Impl> impl;
-/// \}
-};
+		std::shared_ptr<SoundFilter_Impl> impl;
+	};
 
+	/// \}
 }
-
-/// \}

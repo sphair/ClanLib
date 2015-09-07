@@ -34,31 +34,29 @@
 
 namespace clan
 {
+	class ResourceManager;
+	class SoundBuffer;
+	class AudioWorld_Impl;
 
-class ResourceManager;
-class SoundBuffer;
-class AudioWorld_Impl;
+	class AudioWorld
+	{
+	public:
+		AudioWorld(const ResourceManager &resources);
 
-class AudioWorld
-{
-public:
-	AudioWorld(const ResourceManager &resources);
+		void update();
 
-	void update();
+		void set_listener(const Vec3f &position, const Quaternionf &orientation);
 
-	void set_listener(const Vec3f &position, const Quaternionf &orientation);
+		void enable_ambience(bool enable);
+		bool is_ambience_enabled() const;
 
-	void enable_ambience(bool enable);
-	bool is_ambience_enabled() const;
+		void enable_reverse_stereo(bool enable);
+		bool is_reverse_stereo_enabled() const;
 
-	void enable_reverse_stereo(bool enable);
-	bool is_reverse_stereo_enabled() const;
+	private:
+		std::shared_ptr<AudioWorld_Impl> impl;
 
-private:
-	std::shared_ptr<AudioWorld_Impl> impl;
-
-	friend class AudioObject;
-	friend class AudioObject_Impl;
-};
-
+		friend class AudioObject;
+		friend class AudioObject_Impl;
+	};
 }
