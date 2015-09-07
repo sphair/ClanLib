@@ -95,7 +95,7 @@ public:
 	float get_pixel_ratio() const override;
 	void get_opengl_version(int &version_major, int &version_minor) const override;
 	void get_opengl_version(int &version_major, int &version_minor, int &version_release) const override { get_opengl_version(version_major, version_minor); version_release = 0; }
-	void get_opengl_shading_language_version(int &version_major, int &version_minor) override { version_major = shader_version_major; version_minor = shader_version_minor; }
+	void get_opengl_shading_language_version(int &version_major, int &version_minor) const override { version_major = shader_version_major; version_minor = shader_version_minor; }
 
 	Signal<void(const Size &)> &sig_window_resized() override { return window_resized_signal; }
 

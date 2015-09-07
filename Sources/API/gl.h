@@ -41,7 +41,6 @@
 #include "GL/opengl_target.h"
 #include "GL/opengl_window_description.h"
 #include "GL/opengl_wrap.h"
-#include "GL/opengl_graphic_context.h"
 
 #ifdef __cplusplus_cli
 #pragma managed(pop)
