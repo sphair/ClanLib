@@ -180,7 +180,7 @@ std::string Win32Window::get_title() const
 
 void Win32Window::create(DisplayWindowSite *new_site, const DisplayWindowDescription &description)
 {
-	window_desc = description.clone();
+	window_desc = description;
 	site = new_site;
 	create_new_window();
 }

@@ -71,16 +71,12 @@ public:
 	/// \param copy = Display Window Description
 	DisplayWindowDescription(const DisplayWindowDescription &copy);
 
-	// \brief Copy the entire description (not just the implementation)
-	DisplayWindowDescription clone() const;
-
-	virtual ~DisplayWindowDescription();
+	~DisplayWindowDescription();
 
 /// \}
 /// \name Attributes
 /// \{
 public:
-
 	/// \brief Returns the window title stored in the description.
 	const std::string &get_title() const;
 
@@ -315,7 +311,7 @@ public:
 /// \name Implementation
 /// \{
 private:
-	std::shared_ptr<DisplayWindowDescription_Impl> impl;
+	std::unique_ptr<DisplayWindowDescription_Impl> impl;
 /// \}
 };
 
