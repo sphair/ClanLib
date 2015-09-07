@@ -24,49 +24,37 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
-
 
 #pragma once
 
-
 namespace clan
 {
-/// \addtogroup clanCore_I_O_Data clanCore I/O Data
-/// \{
+	/// \addtogroup clanCore_I_O_Data clanCore I/O Data
+	/// \{
 
-/// \brief Endianess management class.
-class Endian
-{
-public:
-/// \name Operations
-/// \{
+	/// \brief Endianess management class.
+	class Endian
+	{
+	public:
+		/// \brief Swaps larger amounts of data between little and big endian.
+		///
+		/// \param data Data to be swapped.
+		/// \param type_size Size of datatype to be swapped. (Must be an even number)
+		/// \param total_times Number of 'type_size' size data chunks to be swapped.
+		static void swap(void *data, int type_size, int total_times = 1);
 
-	/// \brief Swaps larger amounts of data between little and big endian.
-	///
-	/// \param data Data to be swapped.
-	/// \param type_size Size of datatype to be swapped. (Must be an even number)
-	/// \param total_times Number of 'type_size' size data chunks to be swapped.
-	static void swap(void *data, int type_size, int total_times=1);
+		static void swap_if_big(void *data, int type_size, int total_times = 1) { if (is_system_big()) swap(data, type_size, total_times); }
+		static void swap_if_little(void *data, int type_size, int total_times = 1) { if (!is_system_big()) swap(data, type_size, total_times); }
 
-	static void swap_if_big(void *data, int type_size, int total_times=1) { if (is_system_big()) swap(data, type_size, total_times); }
-	static void swap_if_little(void *data, int type_size, int total_times=1) { if (!is_system_big()) swap(data, type_size, total_times); }
+		/// \brief Returns true if big endian system.
+		/** \return True if big endian system, false otherwise.*/
+		static bool is_system_big();
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief Returns true if 64 bit system.
+		/** \return True if 64 bit, false otherwise.*/
+		static bool is_system_64bit();
+	};
 
-	/// \brief Returns true if big endian system.
-	/** \return True if big endian system, false otherwise.*/
-	static bool is_system_big();
-
-	/// \brief Returns true if 64 bit system.
-	/** \return True if 64 bit, false otherwise.*/
-	static bool is_system_64bit();
-/// \}
-};
-
+	/// \}
 }
-
-/// \}
