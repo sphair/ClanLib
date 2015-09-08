@@ -37,56 +37,39 @@
 
 namespace clan
 {
+	class GL3GraphicContextProvider;
 
-class GL3GraphicContextProvider;
+	class GL3PixelBufferProvider : public PixelBufferProvider
+	{
+	public:
+		GL3PixelBufferProvider();
+		~GL3PixelBufferProvider();
+		void create(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage) override;
 
-class GL3PixelBufferProvider : public PixelBufferProvider
-{
-/// \name Construction
-/// \{
-public:
-	GL3PixelBufferProvider();
-	~GL3PixelBufferProvider();
-	void create(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage) override;
-/// \}
+		void *get_data() override;
+		int get_pitch() const override { return pitch; }
+		Size get_size() const override { return size; }
 
-/// \name Attributes
-/// \{
-public:
-	void *get_data() override;
-	int get_pitch() const override {return pitch; }
-	Size get_size() const override { return size; }
+		bool is_gpu() const override { return true; }
 
-	bool is_gpu() const override { return true; }
+		TextureFormat get_format() const override { return texture_format; };
 
-	TextureFormat get_format() const override { return texture_format; };
+		GLuint get_handle() const { return buffer.get_handle(); }
+		GLenum get_binding() const { return buffer.get_binding(); }
+		GLenum get_target() const { return buffer.get_target(); }
 
-	GLuint get_handle() const { return buffer.get_handle(); }
-	GLenum get_binding() const { return buffer.get_binding(); }
-	GLenum get_target() const { return buffer.get_target(); }
-/// \}
+		void lock(GraphicContext &gc, BufferAccess access) override { data_locked = true; buffer.lock(gc, access); }
+		void unlock() override { data_locked = false; buffer.unlock(); }
+		void upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data) override;
 
-/// \name Operations
-/// \{
-public:
-	void lock(GraphicContext &gc, BufferAccess access) override { 	data_locked = true; buffer.lock(gc, access); }
-	void unlock() override { data_locked = false; buffer.unlock(); }
-	void upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data) override;
-/// \}
-
-/// \name Implementation
-/// \{
-private:
-	GL3BufferObjectProvider buffer;
-	Size size;
-	TextureFormat texture_format;
-	int pitch;
-	int bytes_per_pixel;
-	GLenum selected_binding;
-	GLenum selected_target;
-	bool data_locked;	// lock() has been called
-
-/// \}
-};
-
+	private:
+		GL3BufferObjectProvider buffer;
+		Size size;
+		TextureFormat texture_format;
+		int pitch;
+		int bytes_per_pixel;
+		GLenum selected_binding;
+		GLenum selected_target;
+		bool data_locked;	// lock() has been called
+	};
 }

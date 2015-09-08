@@ -32,39 +32,22 @@
 
 namespace clan
 {
+	class GL1VertexArrayBufferProvider : public VertexArrayBufferProvider
+	{
+	public:
+		GL1VertexArrayBufferProvider();
+		~GL1VertexArrayBufferProvider();
+		void create(int size, BufferUsage usage) override;
+		void create(void *data, int size, BufferUsage usage) override;
 
-class GL1VertexArrayBufferProvider : public VertexArrayBufferProvider
-{
-/// \name Construction
-/// \{
-public:
-	GL1VertexArrayBufferProvider();
-	~GL1VertexArrayBufferProvider();
-	void create(int size, BufferUsage usage) override;
-	void create(void *data, int size, BufferUsage usage) override;
+		void *get_data() const { return data; }
 
-/// \}
+		void upload_data(GraphicContext &gc, int offset, const void *data, int size) override;
+		void copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) override;
+		void copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) override;
 
-/// \name Attributes
-/// \{
-public:
-	void *get_data() const { return data; }
-/// \}
-
-/// \name Operations
-/// \{
-public:
-	void upload_data(GraphicContext &gc, int offset, const void *data, int size) override;
-	void copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) override;
-	void copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) override;
-/// \}
-
-/// \name Implementation
-/// \{
-private:
-	char *data;
-	int size;
-/// \}
-};
-
+	private:
+		char *data;
+		int size;
+	};
 }

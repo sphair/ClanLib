@@ -36,39 +36,23 @@
 
 namespace clan
 {
+	class GL3GraphicContextProvider;
 
-class GL3GraphicContextProvider;
+	class GL3ElementArrayBufferProvider : public ElementArrayBufferProvider
+	{
+	public:
+		GL3ElementArrayBufferProvider();
+		~GL3ElementArrayBufferProvider();
+		void create(int size, BufferUsage usage) override;
+		void create(void *data, int size, BufferUsage usage) override;
 
-class GL3ElementArrayBufferProvider : public ElementArrayBufferProvider
-{
-/// \name Construction
-/// \{
-public:
-	GL3ElementArrayBufferProvider();
-	~GL3ElementArrayBufferProvider();
-	void create(int size, BufferUsage usage) override;
-	void create(void *data, int size, BufferUsage usage) override;
-/// \}
+		GLuint get_handle() const { return buffer.get_handle(); }
 
-/// \name Attributes
-/// \{
-public:
-	GLuint get_handle() const { return buffer.get_handle(); }
-/// \}
+		void upload_data(GraphicContext &gc, const void *data, int size) override { buffer.upload_data(gc, data, size); }
+		void copy_from(GraphicContext &gc, TransferBuffer &transfer_buffer, int dest_pos, int src_pos, int size) override { buffer.copy_from(gc, transfer_buffer, dest_pos, src_pos, size); }
+		void copy_to(GraphicContext &gc, TransferBuffer &transfer_buffer, int dest_pos, int src_pos, int size) override { buffer.copy_to(gc, transfer_buffer, dest_pos, src_pos, size); }
 
-/// \name Operations
-/// \{
-public:
-	void upload_data(GraphicContext &gc, const void *data, int size) override { buffer.upload_data(gc, data, size); }
-	void copy_from(GraphicContext &gc, TransferBuffer &transfer_buffer, int dest_pos, int src_pos, int size) override { buffer.copy_from(gc, transfer_buffer, dest_pos, src_pos, size); }
-	void copy_to(GraphicContext &gc, TransferBuffer &transfer_buffer, int dest_pos, int src_pos, int size) override { buffer.copy_to(gc, transfer_buffer, dest_pos, src_pos, size); }
-/// \}
-
-/// \name Implementation
-/// \{
-private:
-	GL3BufferObjectProvider buffer;
-/// \}
-};
-
+	private:
+		GL3BufferObjectProvider buffer;
+	};
 }

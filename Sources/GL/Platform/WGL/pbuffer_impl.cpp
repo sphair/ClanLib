@@ -37,113 +37,109 @@
 
 namespace clan
 {
-
-PBuffer_GL1_Impl::PBuffer_GL1_Impl(GL1GraphicContextProvider *gc_provider) : gc_provider(gc_provider)
-, pbuffer(0), pbuffer_context(0), pbuffer_dc(0)
-{
-	if (!gc_provider)
-		throw Exception("Unexpected provider");
-
-}
-
-PBuffer_GL1_Impl::~PBuffer_GL1_Impl()
-{
-	reset();
-}
-
-void PBuffer_GL1_Impl::reset()
-{
-	OpenGL::set_active(gc_provider);
-
-	if (pbuffer_context) wglDeleteContext(pbuffer_context);
-	if (pbuffer_dc) glWglReleasePbufferDCARB(pbuffer, pbuffer_dc);
-	if (pbuffer) glWglDestroyPbufferARB(pbuffer);
-
-	// Note: glWglReleasePbufferDCARB does not delete the GDI object associated with the pbuffer DC
-	// DeleteDC must be called to prevent GDI object leaks
-	if (pbuffer_dc) DeleteDC(pbuffer_dc);
-
-	pbuffer_context = 0;
-	pbuffer_dc = 0;
-	pbuffer = 0;
-	OpenGL::remove_active(this);
-}
-
-void PBuffer_GL1_Impl::create(OpenGLWindowProvider &window_provider, const Size &size)
-{
-	reset();
-
-	OpenGL::set_active(gc_provider);
-
-	if (glWglCreatePbufferARB == 0)
+	PBuffer_GL1_Impl::PBuffer_GL1_Impl(GL1GraphicContextProvider *gc_provider) : gc_provider(gc_provider), pbuffer(0), pbuffer_context(0), pbuffer_dc(0)
 	{
-		throw Exception("WGL_ARB_pbuffer OpenGL extension not supported by this card");
+		if (!gc_provider)
+			throw Exception("Unexpected provider");
 	}
 
-	int attribList[1] = { 0 };
-
-	PIXELFORMATDESCRIPTOR pfd =
+	PBuffer_GL1_Impl::~PBuffer_GL1_Impl()
 	{
-		sizeof(PIXELFORMATDESCRIPTOR),  // size of this pfd 
-		1,                              // version number
-		// PFD_DRAW_TO_WINDOW |            // support window
-		PFD_SUPPORT_OPENGL //|            // support OpenGL
-		//PFD_DOUBLEBUFFER |              // double buffered
-		//PFD_DEPTH_DONTCARE
-		,             // do you care about a zbuffer?
-		PFD_TYPE_RGBA,                  // RGBA type
-		24,                             // 24-bit color depth
-		0, 0, 0, 0, 0, 0,               // color bits ignored
-		8,                              // alpha buffer
-		0,                              // shift bit ignored
-		0,                              // no accumulation buffer
-		0, 0, 0, 0,                     // accum bits ignored
-		0,                              // z-buffer
-		0,                              // no stencil buffer
-		0,                              // no auxiliary buffer
-		PFD_MAIN_PLANE,                 // main layer
-		0,                              // reserved
-		0, 0, 0                         // layer masks ignored
-	};
+		reset();
+	}
 
-	int pixelformat = ChoosePixelFormat(wglGetCurrentDC(), &pfd);
+	void PBuffer_GL1_Impl::reset()
+	{
+		OpenGL::set_active(gc_provider);
 
-	pbuffer = glWglCreatePbufferARB(
-		wglGetCurrentDC(),
-		pixelformat,
-		size.width,
-		size.height,
-		attribList);
-	pbuffer_dc = glWglGetPbufferDCARB(pbuffer);
-	pbuffer_context = wglCreateContext(pbuffer_dc);
+		if (pbuffer_context) wglDeleteContext(pbuffer_context);
+		if (pbuffer_dc) glWglReleasePbufferDCARB(pbuffer, pbuffer_dc);
+		if (pbuffer) glWglDestroyPbufferARB(pbuffer);
 
-	HGLRC share_context = window_provider.get_share_context();
-	if (share_context == 0)
-		throw Exception("Shared OpenGL Context is not valid");
+		// Note: glWglReleasePbufferDCARB does not delete the GDI object associated with the pbuffer DC
+		// DeleteDC must be called to prevent GDI object leaks
+		if (pbuffer_dc) DeleteDC(pbuffer_dc);
 
-	wglShareLists(share_context, pbuffer_context);
+		pbuffer_context = 0;
+		pbuffer_dc = 0;
+		pbuffer = 0;
+		OpenGL::remove_active(this);
+	}
 
-	pbuffer_size = size;
-}
+	void PBuffer_GL1_Impl::create(OpenGLWindowProvider &window_provider, const Size &size)
+	{
+		reset();
 
-void PBuffer_GL1_Impl::make_current() const
-{
-	wglMakeCurrent(pbuffer_dc, pbuffer_context);
-}
+		OpenGL::set_active(gc_provider);
 
-ProcAddress *PBuffer_GL1_Impl::get_proc_address(const std::string& function_name) const
-{
-	return (void (*)())wglGetProcAddress(function_name.c_str());
-}
+		if (glWglCreatePbufferARB == 0)
+		{
+			throw Exception("WGL_ARB_pbuffer OpenGL extension not supported by this card");
+		}
 
-void PBuffer_GL1_Impl::get_opengl_version(int &version_major, int &version_minor) const
-{
-	gc_provider->get_opengl_version(version_major, version_minor);
-}
+		int attribList[1] = { 0 };
 
-void PBuffer_GL1_Impl::get_opengl_version(int &version_major, int &version_minor, int &version_release) const
-{
-	gc_provider->get_opengl_version(version_major, version_minor, version_release);
-}
+		PIXELFORMATDESCRIPTOR pfd =
+		{
+			sizeof(PIXELFORMATDESCRIPTOR),  // size of this pfd 
+			1,                              // version number
+			// PFD_DRAW_TO_WINDOW |            // support window
+			PFD_SUPPORT_OPENGL //|            // support OpenGL
+			//PFD_DOUBLEBUFFER |              // double buffered
+			//PFD_DEPTH_DONTCARE
+			,             // do you care about a zbuffer?
+			PFD_TYPE_RGBA,                  // RGBA type
+			24,                             // 24-bit color depth
+			0, 0, 0, 0, 0, 0,               // color bits ignored
+			8,                              // alpha buffer
+			0,                              // shift bit ignored
+			0,                              // no accumulation buffer
+			0, 0, 0, 0,                     // accum bits ignored
+			0,                              // z-buffer
+			0,                              // no stencil buffer
+			0,                              // no auxiliary buffer
+			PFD_MAIN_PLANE,                 // main layer
+			0,                              // reserved
+			0, 0, 0                         // layer masks ignored
+		};
 
+		int pixelformat = ChoosePixelFormat(wglGetCurrentDC(), &pfd);
+
+		pbuffer = glWglCreatePbufferARB(
+			wglGetCurrentDC(),
+			pixelformat,
+			size.width,
+			size.height,
+			attribList);
+		pbuffer_dc = glWglGetPbufferDCARB(pbuffer);
+		pbuffer_context = wglCreateContext(pbuffer_dc);
+
+		HGLRC share_context = window_provider.get_share_context();
+		if (share_context == 0)
+			throw Exception("Shared OpenGL Context is not valid");
+
+		wglShareLists(share_context, pbuffer_context);
+
+		pbuffer_size = size;
+	}
+
+	void PBuffer_GL1_Impl::make_current() const
+	{
+		wglMakeCurrent(pbuffer_dc, pbuffer_context);
+	}
+
+	ProcAddress *PBuffer_GL1_Impl::get_proc_address(const std::string& function_name) const
+	{
+		return (void(*)())wglGetProcAddress(function_name.c_str());
+	}
+
+	void PBuffer_GL1_Impl::get_opengl_version(int &version_major, int &version_minor) const
+	{
+		gc_provider->get_opengl_version(version_major, version_minor);
+	}
+
+	void PBuffer_GL1_Impl::get_opengl_version(int &version_major, int &version_minor, int &version_release) const
+	{
+		gc_provider->get_opengl_version(version_major, version_minor, version_release);
+	}
 }

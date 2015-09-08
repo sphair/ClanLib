@@ -32,66 +32,52 @@
 
 namespace clan
 {
+	GL1VertexArrayBufferProvider::GL1VertexArrayBufferProvider()
+		: data(nullptr), size(0)
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// GL1VertexArrayBufferProvider Construction:
+	GL1VertexArrayBufferProvider::~GL1VertexArrayBufferProvider()
+	{
+		delete[] data;
+	}
 
-GL1VertexArrayBufferProvider::GL1VertexArrayBufferProvider()
-: data(nullptr), size(0)
-{
-}
+	void GL1VertexArrayBufferProvider::create(int new_size, BufferUsage usage)
+	{
+		delete[] data;
+		data = nullptr;
+		size = 0;
+		data = new char[new_size];
+		size = new_size;
+	}
 
-GL1VertexArrayBufferProvider::~GL1VertexArrayBufferProvider()
-{
-	delete[] data;
-}
+	void GL1VertexArrayBufferProvider::create(void *init_data, int new_size, BufferUsage usage)
+	{
+		delete[] data;
+		data = nullptr;
+		size = 0;
+		data = new char[new_size];
+		size = new_size;
+		memcpy(data, init_data, size);
+	}
 
-void GL1VertexArrayBufferProvider::create(int new_size, BufferUsage usage)
-{
-	delete[] data;
-	data = nullptr;
-	size = 0;
-	data = new char[new_size];
-	size = new_size;
-}
+	void GL1VertexArrayBufferProvider::upload_data(GraphicContext &gc, int offset, const void *new_data, int new_size)
+	{
+		if ((offset < 0) || (new_size < 0) || ((new_size + offset) > size))
+			throw Exception("Vertex array buffer, invalid size");
 
-void GL1VertexArrayBufferProvider::create(void *init_data, int new_size, BufferUsage usage)
-{
-	delete[] data;
-	data = nullptr;
-	size = 0;
-	data = new char[new_size];
-	size = new_size;
-	memcpy(data, init_data, size);
-}
+		memcpy(data + offset, new_data, new_size);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// GL1VertexArrayBufferProvider Attributes:
+	void GL1VertexArrayBufferProvider::copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
+	{
+		buffer.lock(gc, access_read_only);
+		memcpy(this->data + dest_pos, (char *)buffer.get_data() + src_pos, size);
+		buffer.unlock();
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// GL1VertexArrayBufferProvider Operations:
-
-void GL1VertexArrayBufferProvider::upload_data(GraphicContext &gc, int offset, const void *new_data, int new_size)
-{
-	if ( (offset < 0) || (new_size < 0) || ((new_size+offset) > size) )
-		throw Exception("Vertex array buffer, invalid size");
-
-	memcpy(data + offset, new_data, new_size);
-}
-
-void GL1VertexArrayBufferProvider::copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
-{
-	buffer.lock(gc, access_read_only);
-	memcpy(this->data + dest_pos, (char *) buffer.get_data() + src_pos, size);
-	buffer.unlock();
-}
-
-void GL1VertexArrayBufferProvider::copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
-{
-	buffer.upload_data(gc, dest_pos, this->data + src_pos, size);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// GL1VertexArrayBufferProvider Implementation:
-
+	void GL1VertexArrayBufferProvider::copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
+	{
+		buffer.upload_data(gc, dest_pos, this->data + src_pos, size);
+	}
 }

@@ -33,38 +33,31 @@
 
 namespace clan
 {
+	class GL1GraphicContextProvider;
+	class OpenGLWindowProvider;
 
-class GL1GraphicContextProvider;
-class OpenGLWindowProvider;
+	class PBuffer_GL1_Impl : public OpenGLGraphicContextProvider
+	{
+	public:
+		PBuffer_GL1_Impl(GL1GraphicContextProvider *gc_provider);
+		~PBuffer_GL1_Impl();
 
-class PBuffer_GL1_Impl : public OpenGLGraphicContextProvider
-{
+		void make_current() const;
 
-public:
-	PBuffer_GL1_Impl(GL1GraphicContextProvider *gc_provider);
+		void get_opengl_version(int &version_major, int &version_minor) const;
+		void get_opengl_version(int &version_major, int &version_minor, int &version_release) const;
 
-	~PBuffer_GL1_Impl();
+		void create(OpenGLWindowProvider &window_provider, const Size &size);
+		ProcAddress *get_proc_address(const std::string& function_name) const;
 
-public:
-	void make_current() const;
+	private:
+		void reset();
 
-	void get_opengl_version(int &version_major, int &version_minor) const;
-	void get_opengl_version(int &version_major, int &version_minor, int &version_release) const;
+		GL1GraphicContextProvider *gc_provider;
+		GLFunctions::HPBUFFERARB pbuffer;
+		HGLRC pbuffer_context;
+		HDC pbuffer_dc;
 
-	void create(OpenGLWindowProvider &window_provider, const Size &size);
-	ProcAddress *get_proc_address(const std::string& function_name) const;
-
-private:
-	void reset();
-
-	GL1GraphicContextProvider *gc_provider;
-	GLFunctions::HPBUFFERARB pbuffer;
-	HGLRC pbuffer_context;
-	HDC pbuffer_dc;
-
-	Size pbuffer_size;
-
-
-};
-
+		Size pbuffer_size;
+	};
 }

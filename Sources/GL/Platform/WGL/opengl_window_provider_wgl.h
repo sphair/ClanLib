@@ -40,141 +40,119 @@
 
 namespace clan
 {
+	typedef BOOL(APIENTRY *ptr_wglSwapIntervalEXT)(int interval);
 
-typedef BOOL (APIENTRY *ptr_wglSwapIntervalEXT)(int interval);
+	class OpenGLContextDescription;
 
-class OpenGLContextDescription;
+	class OpenGLWindowProvider : public DisplayWindowProvider
+	{
+	public:
+		OpenGLWindowProvider(OpenGLContextDescription &opengl_desc);
+		~OpenGLWindowProvider();
 
-class OpenGLWindowProvider : public DisplayWindowProvider
-{
-/// \name Construction
-/// \{
+		bool is_double_buffered() const { return double_buffered; }
+		Rect get_geometry() const;
+		Rect get_viewport() const;
+		bool is_fullscreen() const;
+		bool has_focus() const;
+		bool is_minimized() const;
+		bool is_maximized() const;
+		bool is_visible() const;
+		std::string get_title() const;
+		Size get_minimum_size(bool client_area) const;
+		Size get_maximum_size(bool client_area) const;
+		DisplayWindowHandle get_handle() const override { DisplayWindowHandle handle; handle.hwnd = win32_window.get_hwnd(); return handle; }
+		HDC get_device_context() const { return device_context; }
+		HGLRC get_opengl_context() const { return opengl_context; }
+		GraphicContext& get_gc() { return gc; }
+		InputContext get_ic() { return win32_window.get_ic(); }
+		bool is_clipboard_text_available() const;
+		bool is_clipboard_image_available() const;
+		std::string get_clipboard_text() const;
+		PixelBuffer get_clipboard_image() const;
+		float get_pixel_ratio() const override;
 
-public:
-	OpenGLWindowProvider(OpenGLContextDescription &opengl_desc);
-	~OpenGLWindowProvider();
+		void make_current() const;
+		Point client_to_screen(const Point &client);
+		Point screen_to_client(const Point &screen);
+		void create(DisplayWindowSite *site, const DisplayWindowDescription &description);
 
+		HGLRC get_share_context();
+		void show_system_cursor();
+		CursorProvider *create_cursor(const CursorDescription &cursor_description);
+		void set_cursor(CursorProvider *cursor);
+		void set_cursor(StandardCursor type);
+		void set_cursor_handle(HCURSOR cursor);
+		void hide_system_cursor();
+		void set_title(const std::string &new_title);
+		void set_position(const Rect &pos, bool client_area);
+		void set_size(int width, int height, bool client_area);
+		void set_minimum_size(int width, int height, bool client_area);
+		void set_maximum_size(int width, int height, bool client_area);
+		void set_enabled(bool enable);
+		void minimize();
+		void restore();
+		void maximize();
+		void toggle_fullscreen();
+		void show(bool activate);
+		void hide();
+		void bring_to_front();
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief Flip OpenGL buffers.
+		void flip(int interval);
 
-public:
-	bool is_double_buffered() const { return double_buffered; }
-	Rect get_geometry() const;
-	Rect get_viewport() const;
-	bool is_fullscreen() const;
-	bool has_focus() const;
-	bool is_minimized() const;
-	bool is_maximized() const;
-	bool is_visible() const;
-	std::string get_title() const;
-	Size get_minimum_size(bool client_area) const;
-	Size get_maximum_size(bool client_area) const;
-	DisplayWindowHandle get_handle() const override { DisplayWindowHandle handle; handle.hwnd = win32_window.get_hwnd(); return handle; }
-	HDC get_device_context() const { return device_context; }
-	HGLRC get_opengl_context() const { return opengl_context; }
-	GraphicContext& get_gc() { return gc; }
-	InputContext get_ic() { return win32_window.get_ic(); }
-	bool is_clipboard_text_available() const;
-	bool is_clipboard_image_available() const;
-	std::string get_clipboard_text() const;
-	PixelBuffer get_clipboard_image() const;
-	float get_pixel_ratio() const override;
+		/// \brief Copy a region of the back buffer to the front buffer.
+		void update(const Rect &rect);
 
-/// \}
-/// \name Operations
-/// \{
+		/// \brief Capture/Release the mouse.
+		void capture_mouse(bool capture);
 
-public:
-	void make_current() const;
-	Point client_to_screen(const Point &client);
-	Point screen_to_client(const Point &screen);
-	void create(DisplayWindowSite *site, const DisplayWindowDescription &description);
+		/// \brief Stores text in the clipboard.
+		void set_clipboard_text(const std::string &text);
 
-	HGLRC get_share_context();
-	void show_system_cursor();
-	CursorProvider *create_cursor(const CursorDescription &cursor_description);
-	void set_cursor(CursorProvider *cursor);
-	void set_cursor(StandardCursor type);
-	void set_cursor_handle(HCURSOR cursor);
-	void hide_system_cursor();
-	void set_title(const std::string &new_title);
-	void set_position(const Rect &pos, bool client_area);
-	void set_size(int width, int height, bool client_area);
-	void set_minimum_size(int width, int height, bool client_area);
-	void set_maximum_size( int width, int height, bool client_area);
-	void set_enabled(bool enable);
-	void minimize();
-	void restore();
-	void maximize();
-	void toggle_fullscreen();
-	void show(bool activate);
-	void hide();
-	void bring_to_front();
+		void set_clipboard_image(const PixelBuffer &buf);
 
-	/// \brief Flip OpenGL buffers.
-	void flip(int interval);
+		/// \brief Invalidates a region of a screen, causing a repaint.
+		void request_repaint(const Rect &rect);
 
-	/// \brief Copy a region of the back buffer to the front buffer.
-	void update(const Rect &rect);
+		void set_large_icon(const PixelBuffer &image);
+		void set_small_icon(const PixelBuffer &image);
 
-	/// \brief Capture/Release the mouse.
-	void capture_mouse(bool capture);
+		void enable_alpha_channel(const Rect &blur_rect);
+		void extend_frame_into_client_area(int left, int top, int right, int bottom);
 
-	/// \brief Stores text in the clipboard.
-	void set_clipboard_text(const std::string &text);
+		ProcAddress *get_proc_address(const std::string& function_name) const;
 
-	void set_clipboard_image(const PixelBuffer &buf);
+		void set_pixel_ratio(float ratio) override;
 
-	/// \brief Invalidates a region of a screen, causing a repaint.
-	void request_repaint(const Rect &rect);
+	private:
+		static BOOL CALLBACK enum_windows_callback_save(HWND hwnd, LPARAM lParam);
+		static BOOL CALLBACK enum_windows_callback_restore(HWND hwnd, LPARAM lParam);
+		void create_shadow_window(HWND wnd);
+		void on_window_resized();
+		void get_opengl_version(int &version_major, int &version_minor);
+		void update_helper(const Rect &_rect);
 
-	void set_large_icon(const PixelBuffer &image);
-	void set_small_icon(const PixelBuffer &image);
+		GraphicContext gc;
+		Win32Window win32_window;
 
-	void enable_alpha_channel(const Rect &blur_rect);
-	void extend_frame_into_client_area(int left, int top, int right, int bottom);
+		/// \brief OpenGL rendering context for this window.
+		HGLRC opengl_context;
 
-	ProcAddress *get_proc_address(const std::string& function_name) const;
+		/// \brief Device context for this window.
+		HDC device_context;
+		HWND shadow_hwnd = 0;
+		bool shadow_window;
+		bool dwm_layered;
+		DisplayWindowSite *site;
+		bool fullscreen;
 
-	void set_pixel_ratio(float ratio) override;
+		ptr_wglSwapIntervalEXT wglSwapIntervalEXT;
+		int swap_interval;
 
-/// \}
-/// \name Implementation
-/// \{
+		OpenGLContextDescription opengl_desc;
 
-private:
-	static BOOL CALLBACK enum_windows_callback_save(HWND hwnd, LPARAM lParam);
-	static BOOL CALLBACK enum_windows_callback_restore(HWND hwnd, LPARAM lParam);
-	void create_shadow_window(HWND wnd);
-	void on_window_resized();
-	void get_opengl_version(int &version_major, int &version_minor);
-	void update_helper(const Rect &_rect);
-
-	GraphicContext gc;
-	Win32Window win32_window;
-
-	/// \brief OpenGL rendering context for this window.
-	HGLRC opengl_context;
-
-	/// \brief Device context for this window.
-	HDC device_context;
-	HWND shadow_hwnd = 0;
-	bool shadow_window;
-	bool dwm_layered;
-	DisplayWindowSite *site;
-	bool fullscreen;
-
-	ptr_wglSwapIntervalEXT wglSwapIntervalEXT;
-	int swap_interval;
-
-	OpenGLContextDescription opengl_desc;
-
-	bool using_gl3;
-	bool double_buffered;
-
-/// \}
-};
-
+		bool using_gl3;
+		bool double_buffered;
+	};
 }

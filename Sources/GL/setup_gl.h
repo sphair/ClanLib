@@ -27,16 +27,13 @@
 **    Mark Page
 */
 
-
 #pragma once
 
 namespace clan
 {
-
 	class SetupGL
 	{
 	public:
 		static void start();
 	};
-
 }

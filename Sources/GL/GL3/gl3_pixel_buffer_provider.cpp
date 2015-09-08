@@ -35,68 +35,59 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// GL3PixelBufferProvider Construction:
-
-GL3PixelBufferProvider::GL3PixelBufferProvider()
-{
-}
-
-GL3PixelBufferProvider::~GL3PixelBufferProvider()
-{
-}
-
-void GL3PixelBufferProvider::create(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage)
-{
-	data_locked = false;
-	texture_format = new_format;
-	size = new_size;
-	if (direction == data_from_gpu)
+	GL3PixelBufferProvider::GL3PixelBufferProvider()
 	{
-		selected_binding = GL_PIXEL_PACK_BUFFER_BINDING;
-		selected_target = GL_PIXEL_PACK_BUFFER;
-	}
-	else
-	{
-		selected_binding = GL_PIXEL_UNPACK_BUFFER_BINDING;
-		selected_target = GL_PIXEL_UNPACK_BUFFER;
 	}
 
-	int total_size = PixelBuffer::get_bytes_per_pixel(new_format);
-	bytes_per_pixel = total_size;
-	pitch = bytes_per_pixel * size.width;
-	total_size = pitch * size.height;
-
-	buffer.create(data, total_size, usage, selected_binding, selected_target);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// GL3PixelBufferProvider Operations:
-
-void GL3PixelBufferProvider::upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data)
-{
-	// Handle the simple base
-	if ( (dest_rect.left == 0) && (dest_rect.get_width() == size.width) )
+	GL3PixelBufferProvider::~GL3PixelBufferProvider()
 	{
-		int offset = dest_rect.top * pitch;
-		int total_size = dest_rect.get_height() * pitch;
-		buffer.upload_data(gc, offset, data, total_size);
 	}
-	else
+
+	void GL3PixelBufferProvider::create(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage)
 	{
-		// Need to upload in blocks here
-		throw Exception("GL3PixelBufferProvider::upload_data() Implement me for this situation");
+		data_locked = false;
+		texture_format = new_format;
+		size = new_size;
+		if (direction == data_from_gpu)
+		{
+			selected_binding = GL_PIXEL_PACK_BUFFER_BINDING;
+			selected_target = GL_PIXEL_PACK_BUFFER;
+		}
+		else
+		{
+			selected_binding = GL_PIXEL_UNPACK_BUFFER_BINDING;
+			selected_target = GL_PIXEL_UNPACK_BUFFER;
+		}
+
+		int total_size = PixelBuffer::get_bytes_per_pixel(new_format);
+		bytes_per_pixel = total_size;
+		pitch = bytes_per_pixel * size.width;
+		total_size = pitch * size.height;
+
+		buffer.create(data, total_size, usage, selected_binding, selected_target);
 	}
-}
 
+	void GL3PixelBufferProvider::upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data)
+	{
+		// Handle the simple base
+		if ((dest_rect.left == 0) && (dest_rect.get_width() == size.width))
+		{
+			int offset = dest_rect.top * pitch;
+			int total_size = dest_rect.get_height() * pitch;
+			buffer.upload_data(gc, offset, data, total_size);
+		}
+		else
+		{
+			// Need to upload in blocks here
+			throw Exception("GL3PixelBufferProvider::upload_data() Implement me for this situation");
+		}
+	}
 
-void *GL3PixelBufferProvider::get_data()
-{
-	if (!data_locked)
-		throw Exception("lock() not called before get_data()");
+	void *GL3PixelBufferProvider::get_data()
+	{
+		if (!data_locked)
+			throw Exception("lock() not called before get_data()");
 
-	return buffer.get_data();
-}
-
+		return buffer.get_data();
+	}
 }

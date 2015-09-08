@@ -35,49 +35,27 @@
 
 namespace clan
 {
+	class GL3GraphicContextProvider;
 
-class GL3GraphicContextProvider;
+	class GL3OcclusionQueryProvider : public OcclusionQueryProvider, DisposableObject
+	{
+	public:
+		GL3OcclusionQueryProvider(GL3GraphicContextProvider *gc_provider);
+		~GL3OcclusionQueryProvider();
 
-class GL3OcclusionQueryProvider : public OcclusionQueryProvider, DisposableObject
-{
-/// \name Construction
-/// \{
+		GLint get_result() const override;
+		bool is_result_ready() const override;
 
-public:
-	GL3OcclusionQueryProvider(GL3GraphicContextProvider *gc_provider);
+		void begin() override;
+		void end() override;
+		void create() override;
 
-	~GL3OcclusionQueryProvider();
+	private:
+		void on_dispose() override;
 
+		/// \brief OpenGL occlusion query handle.
+		GLuint handle;
 
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	GLint get_result() const override;
-	bool is_result_ready() const override;
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	void begin() override;
-	void end() override;
-	void create() override;
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	void on_dispose() override;
-	/// \brief OpenGL occlusion query handle.
-	GLuint handle;
-
-	GL3GraphicContextProvider *gc_provider;
-/// \}
-};
-
+		GL3GraphicContextProvider *gc_provider;
+	};
 }

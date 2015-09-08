@@ -34,83 +34,68 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// GL3OcclusionQueryProvider Construction:
-
-GL3OcclusionQueryProvider::GL3OcclusionQueryProvider(GL3GraphicContextProvider *gc_provider)
-: handle(0), gc_provider(gc_provider)
-{
-	SharedGCData::add_disposable(this);
-	create();
-}
-
-GL3OcclusionQueryProvider::~GL3OcclusionQueryProvider()
-{
-	dispose();
-	SharedGCData::remove_disposable(this);
-}
-
-void GL3OcclusionQueryProvider::on_dispose()
-{
-	if (handle)
+	GL3OcclusionQueryProvider::GL3OcclusionQueryProvider(GL3GraphicContextProvider *gc_provider)
+		: handle(0), gc_provider(gc_provider)
 	{
-		if (OpenGL::set_active())
+		SharedGCData::add_disposable(this);
+		create();
+	}
+
+	GL3OcclusionQueryProvider::~GL3OcclusionQueryProvider()
+	{
+		dispose();
+		SharedGCData::remove_disposable(this);
+	}
+
+	void GL3OcclusionQueryProvider::on_dispose()
+	{
+		if (handle)
 		{
-			glDeleteQueries(1, &handle);
+			if (OpenGL::set_active())
+			{
+				glDeleteQueries(1, &handle);
+			}
 		}
 	}
-}
 
-/////////////////////////////////////////////////////////////////////////////
-// GL3OcclusionQueryProvider Attributes:
-
-bool GL3OcclusionQueryProvider::is_result_ready() const
-{
-	OpenGL::set_active(gc_provider);
-	int available;
-	glGetQueryObjectiv(handle, GL_QUERY_RESULT_AVAILABLE, &available);
-	return (available != 0);
-}
-
-GLint GL3OcclusionQueryProvider::get_result() const
-{
-	OpenGL::set_active(gc_provider);
-	GLint result;
-	glGetQueryObjectiv(handle, GL_QUERY_RESULT, &result);
-	return result;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// GL3OcclusionQueryProvider Operations:
-
-void GL3OcclusionQueryProvider::create()
-{
-	OpenGL::set_active(gc_provider);
-
-	if (handle)
+	bool GL3OcclusionQueryProvider::is_result_ready() const
 	{
-		glDeleteQueries(1, &handle);
-		handle = 0;
+		OpenGL::set_active(gc_provider);
+		int available;
+		glGetQueryObjectiv(handle, GL_QUERY_RESULT_AVAILABLE, &available);
+		return (available != 0);
 	}
 
-	glGenQueries(1, &handle);
-}
+	GLint GL3OcclusionQueryProvider::get_result() const
+	{
+		OpenGL::set_active(gc_provider);
+		GLint result;
+		glGetQueryObjectiv(handle, GL_QUERY_RESULT, &result);
+		return result;
+	}
 
-void GL3OcclusionQueryProvider::begin()
-{
-	OpenGL::set_active(gc_provider);
-	glBeginQuery(GL_SAMPLES_PASSED, handle);
-}
+	void GL3OcclusionQueryProvider::create()
+	{
+		OpenGL::set_active(gc_provider);
 
-void GL3OcclusionQueryProvider::end()
-{
-	OpenGL::set_active(gc_provider);
-	glEndQuery(GL_SAMPLES_PASSED);
-}
+		if (handle)
+		{
+			glDeleteQueries(1, &handle);
+			handle = 0;
+		}
 
+		glGenQueries(1, &handle);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// GL3OcclusionQueryProvider Implementation:
+	void GL3OcclusionQueryProvider::begin()
+	{
+		OpenGL::set_active(gc_provider);
+		glBeginQuery(GL_SAMPLES_PASSED, handle);
+	}
 
+	void GL3OcclusionQueryProvider::end()
+	{
+		OpenGL::set_active(gc_provider);
+		glEndQuery(GL_SAMPLES_PASSED);
+	}
 }

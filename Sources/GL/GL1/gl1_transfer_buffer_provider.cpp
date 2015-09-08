@@ -32,47 +32,40 @@
 
 namespace clan
 {
+	GL1TransferBufferProvider::GL1TransferBufferProvider()
+		: data(nullptr), size(0)
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// GL1TransferBufferProvider Construction:
+	GL1TransferBufferProvider::~GL1TransferBufferProvider()
+	{
+		delete[] data;
+	}
 
-GL1TransferBufferProvider::GL1TransferBufferProvider()
-: data(nullptr), size(0)
-{
-}
+	void GL1TransferBufferProvider::create(int new_size, BufferUsage usage)
+	{
+		delete[] data;
+		data = nullptr;
+		size = 0;
+		data = new char[new_size];
+		size = new_size;
+	}
 
-GL1TransferBufferProvider::~GL1TransferBufferProvider()
-{
-	delete[] data;
-}
+	void GL1TransferBufferProvider::create(void *init_data, int new_size, BufferUsage usage)
+	{
+		delete[] data;
+		data = nullptr;
+		size = 0;
+		data = new char[new_size];
+		size = new_size;
+		memcpy(data, init_data, size);
+	}
 
+	void GL1TransferBufferProvider::upload_data(GraphicContext &gc, int offset, const void *data, int size)
+	{
+		if ((size < 0) || (offset < 0) || ((size + offset) > this->size))
+			throw Exception("Transfer buffer, invalid size");
 
-void GL1TransferBufferProvider::create(int new_size, BufferUsage usage)
-{
-	delete[] data;
-	data = nullptr;
-	size = 0;
-	data = new char[new_size];
-	size = new_size;
-}
-
-void GL1TransferBufferProvider::create(void *init_data, int new_size, BufferUsage usage)
-{
-	delete[] data;
-	data = nullptr;
-	size = 0;
-	data = new char[new_size];
-	size = new_size;
-	memcpy(data, init_data, size);
-}
-
-void GL1TransferBufferProvider::upload_data(GraphicContext &gc, int offset, const void *data, int size)
-{
-	if ( (size < 0) ||  (offset < 0) || ((size+offset) > this->size) )
-		throw Exception("Transfer buffer, invalid size");
-
-	memcpy(this->data + offset, data, size);
-
-}
-
+		memcpy(this->data + offset, data, size);
+	}
 }

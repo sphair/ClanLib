@@ -36,55 +36,39 @@
 
 namespace clan
 {
+	class GraphicContext;
+	class TransferBuffer;
+	class GL3GraphicContextProvider;
 
-class GraphicContext;
-class TransferBuffer;
-class GL3GraphicContextProvider;
+	class GL3BufferObjectProvider : public DisposableObject
+	{
+	public:
+		GL3BufferObjectProvider();
+		~GL3BufferObjectProvider();
+		void create(const void *data, int size, BufferUsage usage, GLenum new_binding, GLenum new_target);
 
-class GL3BufferObjectProvider : public DisposableObject
-{
-/// \name Construction
-/// \{
-public:
-	GL3BufferObjectProvider();
-	~GL3BufferObjectProvider();
-	void create(const void *data, int size, BufferUsage usage, GLenum new_binding, GLenum new_target);
-/// \}
+		void *get_data();
 
-/// \name Attributes
-/// \{
-public:
-	void *get_data();
+		GLuint get_handle() const { return handle; }
+		GLenum get_binding() const { return binding; }
+		GLenum get_target() const { return target; }
 
-	GLuint get_handle() const { return handle; }
-	GLenum get_binding() const { return binding; }
-	GLenum get_target() const { return target; }
-/// \}
+		void lock(GraphicContext &gc, BufferAccess access);
+		void unlock();
+		void upload_data(GraphicContext &gc, int offset, const void *data, int size);
 
-/// \name Operations
-/// \{
-public:
-	void lock(GraphicContext &gc, BufferAccess access);
-	void unlock();
-	void upload_data(GraphicContext &gc, int offset, const void *data, int size);
+		void upload_data(GraphicContext &gc, const void *data, int size);
+		void copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size);
+		void copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size);
 
-	void upload_data(GraphicContext &gc, const void *data, int size);
-	void copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size);
-	void copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size);
-/// \}
+	private:
+		void on_dispose() override;
 
-/// \name Implementation
-/// \{
-private:
-	void on_dispose() override;
+		GLuint handle;
+		GLenum binding;
+		GLenum target;
 
-	GLuint handle;
-	GLenum binding;
-	GLenum target;
-
-	void *data_ptr;
-	GraphicContext lock_gc;
-/// \}
-};
-
+		void *data_ptr;
+		GraphicContext lock_gc;
+	};
 }

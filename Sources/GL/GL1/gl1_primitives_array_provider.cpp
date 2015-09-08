@@ -31,38 +31,24 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// GL1PrimitivesArrayProvider Construction:
-
-GL1PrimitivesArrayProvider::GL1PrimitivesArrayProvider()
-{
-}
-
-GL1PrimitivesArrayProvider::~GL1PrimitivesArrayProvider()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// GL1PrimitivesArrayProvider Attributes:
-
-/////////////////////////////////////////////////////////////////////////////
-// GL1PrimitivesArrayProvider Operations:
-
-void GL1PrimitivesArrayProvider::set_attribute(int index, const VertexData &data, bool normalize)
-{
-	if ((int)attributes.size() <= index)
+	GL1PrimitivesArrayProvider::GL1PrimitivesArrayProvider()
 	{
-		attributes.resize(index+1);
-		normalize_attributes.resize(index+1);
-		attribute_set.resize(index+1);
 	}
-	attributes[index] = data;
-	normalize_attributes[index] = normalize;
-	attribute_set[index] = true;
-}
 
-/////////////////////////////////////////////////////////////////////////////
-// GL1PrimitivesArrayProvider Implementation:
+	GL1PrimitivesArrayProvider::~GL1PrimitivesArrayProvider()
+	{
+	}
 
+	void GL1PrimitivesArrayProvider::set_attribute(int index, const VertexData &data, bool normalize)
+	{
+		if ((int)attributes.size() <= index)
+		{
+			attributes.resize(index + 1);
+			normalize_attributes.resize(index + 1);
+			attribute_set.resize(index + 1);
+		}
+		attributes[index] = data;
+		normalize_attributes[index] = normalize;
+		attribute_set[index] = true;
+	}
 }

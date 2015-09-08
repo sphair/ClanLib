@@ -35,41 +35,14 @@
 
 namespace clan
 {
+	class GL1RenderBufferProvider : public RenderBufferProvider
+	{
+	public:
+		GL1RenderBufferProvider(GL1GraphicContextProvider *gc_provider);
+		~GL1RenderBufferProvider();
 
-class GL1RenderBufferProvider : public RenderBufferProvider
-{
-/// \name Construction
-/// \{
-
-public:
-	GL1RenderBufferProvider(GL1GraphicContextProvider *gc_provider);
-
-	~GL1RenderBufferProvider();
-
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	GLuint get_handle();
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	/// \brief Creates a render buffer image of the specified dimensions.
-	virtual void create(int width, int height, TextureFormat texture_format, int multisample_samples) override;
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-
-/// \}
-};
-
+		GLuint get_handle();
+		/// \brief Creates a render buffer image of the specified dimensions.
+		virtual void create(int width, int height, TextureFormat texture_format, int multisample_samples) override;
+	};
 }

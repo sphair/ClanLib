@@ -37,102 +37,85 @@
 
 namespace clan
 {
+	class GL3FrameBufferProvider : public FrameBufferProvider, DisposableObject
+	{
+	public:
+		GL3FrameBufferProvider(GL3GraphicContextProvider *gc_provider);
+		~GL3FrameBufferProvider();
 
-class GL3FrameBufferProvider : public FrameBufferProvider, DisposableObject
-{
-/// \name Construction
-/// \{
-public:
-	GL3FrameBufferProvider(GL3GraphicContextProvider *gc_provider);
-	~GL3FrameBufferProvider();
-/// \}
+		GLuint get_handle();
+		Size get_size() const override;
+		FrameBufferBindTarget get_bind_target() const override;
+		GL3GraphicContextProvider *get_gc_provider() { return gc_provider; }
 
-/// \name Attributes
-/// \{
-public:
-	GLuint get_handle();
-	Size get_size() const override;
-	FrameBufferBindTarget get_bind_target() const override;
-	GL3GraphicContextProvider *get_gc_provider() { return gc_provider; }
-/// \}
+		void attach_color(int attachment_index, const RenderBuffer &render_buffer) override;
+		void attach_color(int attachment_index, const Texture1D &texture, int level) override;
+		void attach_color(int attachment_index, const Texture1DArray &texture, int array_index, int level) override;
+		void attach_color(int attachment_index, const Texture2D &texture, int level) override;
+		void attach_color(int attachment_index, const Texture2DArray &texture, int array_index, int level) override;
+		void attach_color(int attachment_index, const Texture3D &texture, int depth, int level) override;
+		void attach_color(int attachment_index, const TextureCube &texture, TextureSubtype subtype, int level) override;
+		void detach_color(int attachment_index) override;
 
-/// \name Operations
-/// \{
-public:
+		void attach_stencil(const RenderBuffer &render_buffer) override;
+		void attach_stencil(const Texture2D &texture, int level) override;
+		void attach_stencil(const TextureCube &texture, TextureSubtype subtype, int level) override;
+		void detach_stencil() override;
 
-	void attach_color(int attachment_index, const RenderBuffer &render_buffer) override;
-	void attach_color(int attachment_index, const Texture1D &texture, int level) override;
-	void attach_color(int attachment_index, const Texture1DArray &texture, int array_index, int level) override;
-	void attach_color(int attachment_index, const Texture2D &texture, int level) override;
-	void attach_color(int attachment_index, const Texture2DArray &texture, int array_index, int level) override;
-	void attach_color(int attachment_index, const Texture3D &texture, int depth, int level) override;
-	void attach_color(int attachment_index, const TextureCube &texture, TextureSubtype subtype, int level) override;
-	void detach_color(int attachment_index) override;
+		void attach_depth(const RenderBuffer &render_buffer) override;
+		void attach_depth(const Texture2D &texture, int level) override;
+		void attach_depth(const TextureCube &texture, TextureSubtype subtype, int level) override;
+		void detach_depth() override;
 
-	void attach_stencil(const RenderBuffer &render_buffer) override;
-	void attach_stencil(const Texture2D &texture, int level) override;
-	void attach_stencil(const TextureCube &texture, TextureSubtype subtype, int level) override;
-	void detach_stencil() override;
+		void attach_depth_stencil(const RenderBuffer &render_buffer) override;
+		void attach_depth_stencil(const Texture2D &texture, int level) override;
+		void attach_depth_stencil(const TextureCube &texture, TextureSubtype subtype, int level) override;
+		void detach_depth_stencil() override;
 
-	void attach_depth(const RenderBuffer &render_buffer) override;
-	void attach_depth(const Texture2D &texture, int level) override;
-	void attach_depth(const TextureCube &texture, TextureSubtype subtype, int level) override;
-	void detach_depth() override;
+		void set_bind_target(FrameBufferBindTarget target) override;
 
-	void attach_depth_stencil(const RenderBuffer &render_buffer) override;
-	void attach_depth_stencil(const Texture2D &texture, int level) override;
-	void attach_depth_stencil(const TextureCube &texture, TextureSubtype subtype, int level) override;
-	void detach_depth_stencil() override;
+		void check_framebuffer_complete();
+		void bind_framebuffer(bool write_only);
 
-	void set_bind_target(FrameBufferBindTarget target) override;
+	private:
+		void on_dispose() override;
+		static std::string get_error_message(int error_code);
 
-	void check_framebuffer_complete();
-	void bind_framebuffer(bool write_only);
-/// \}
+		GLuint decode_texture_subtype(TextureSubtype subtype);
+		void detach_object(GLenum opengl_attachment);
 
-/// \name Implementation
-/// \{
-private:
-	void on_dispose() override;
-	static std::string get_error_message(int error_code);
+		// Returns true if the object was replaced
+		bool attach_object(GLenum opengl_attachment, const Texture &texture, int level, int zoffset, GLuint texture_target);
+		bool attach_object(GLenum opengl_attachment, const RenderBuffer &render_buffer);
 
-	GLuint decode_texture_subtype(TextureSubtype subtype);
-	void detach_object(GLenum opengl_attachment);
+		int decode_internal_attachment_offset(GLenum opengl_attachment);
 
-	// Returns true if the object was replaced
-	bool attach_object(GLenum opengl_attachment, const Texture &texture, int level, int zoffset, GLuint texture_target);
-	bool attach_object(GLenum opengl_attachment, const RenderBuffer &render_buffer);
+		static const int depth_attachment_offset = 0;
+		static const int stencil_attachment_offset = 1;
+		static const int depth_stencil_attachment_offset = 2;
+		static const int color_attachment_offset = 3;
+		static const int max_color_attachments = 16;
+		static const int num_attachment_offsets = color_attachment_offset + max_color_attachments;
 
-	int decode_internal_attachment_offset(GLenum opengl_attachment);
+		Texture attached_textures[num_attachment_offsets];
+		RenderBuffer attached_renderbuffers[num_attachment_offsets];
 
-	static const int depth_attachment_offset = 0;
-	static const int stencil_attachment_offset = 1;
-	static const int depth_stencil_attachment_offset = 2;
-	static const int color_attachment_offset = 3;
-	static const int max_color_attachments = 16;
-	static const int num_attachment_offsets = color_attachment_offset + max_color_attachments;
+		int count_color_attachments = 0;
+		GLuint handle = 0;
+		FrameBufferBindTarget bind_target = framebuffer_draw;
 
-	Texture attached_textures[num_attachment_offsets];
-	RenderBuffer attached_renderbuffers[num_attachment_offsets];
+		GL3GraphicContextProvider *gc_provider;
+	};
 
-	int count_color_attachments = 0;
-	GLuint handle = 0;
-	FrameBufferBindTarget bind_target = framebuffer_draw;
+	class FrameBufferStateTracker
+	{
+	public:
+		FrameBufferStateTracker(FrameBufferBindTarget target, GLuint handle, GL3GraphicContextProvider *gc_provider);
+		~FrameBufferStateTracker();
 
-	GL3GraphicContextProvider *gc_provider;
-/// \}
-};
-
-class FrameBufferStateTracker
-{
-public:
-	FrameBufferStateTracker(FrameBufferBindTarget target, GLuint handle, GL3GraphicContextProvider *gc_provider);
-	~FrameBufferStateTracker();
-
-private:
-	FrameBufferBindTarget bind_target;
-	GLint last_bound;
-	bool handle_and_bound_equal;
-};
-
+	private:
+		FrameBufferBindTarget bind_target;
+		GLint last_bound;
+		bool handle_and_bound_equal;
+	};
 }

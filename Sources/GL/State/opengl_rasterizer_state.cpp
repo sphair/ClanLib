@@ -34,35 +34,34 @@
 
 namespace clan
 {
-
-OpenGLRasterizerState::OpenGLRasterizerState() 
-	: changed_desc(true)
-{
-}
-
-void OpenGLRasterizerState::set(const RasterizerStateDescription &new_state)
-{
-	if (!(new_state == desc))
+	OpenGLRasterizerState::OpenGLRasterizerState()
+		: changed_desc(true)
 	{
-		desc = new_state.clone();
-		changed_desc = true;
 	}
-}
-void OpenGLRasterizerState::set(const OpenGLRasterizerState &new_state)
-{
-	set(new_state.desc);
-}
 
-void OpenGLRasterizerState::apply()
-{
-	if (changed_desc)
+	void OpenGLRasterizerState::set(const RasterizerStateDescription &new_state)
 	{
-		changed_desc = false;
-
-		desc.get_culled() ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
-		desc.get_enable_line_antialiasing() ? glEnable(GL_LINE_SMOOTH) : glDisable(GL_LINE_SMOOTH);
-		switch (desc.get_face_cull_mode())
+		if (!(new_state == desc))
 		{
+			desc = new_state.clone();
+			changed_desc = true;
+		}
+	}
+	void OpenGLRasterizerState::set(const OpenGLRasterizerState &new_state)
+	{
+		set(new_state.desc);
+	}
+
+	void OpenGLRasterizerState::apply()
+	{
+		if (changed_desc)
+		{
+			changed_desc = false;
+
+			desc.get_culled() ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
+			desc.get_enable_line_antialiasing() ? glEnable(GL_LINE_SMOOTH) : glDisable(GL_LINE_SMOOTH);
+			switch (desc.get_face_cull_mode())
+			{
 			case cull_front:
 				glCullFace(GL_FRONT);
 				break;
@@ -72,49 +71,46 @@ void OpenGLRasterizerState::apply()
 			case cull_front_and_back:
 				glCullFace(GL_FRONT_AND_BACK);
 				break;
-		}
-		if (glPolygonMode)
-	        glPolygonMode(GL_FRONT_AND_BACK, OpenGL::to_enum(desc.get_face_fill_mode()));
+			}
+			if (glPolygonMode)
+				glPolygonMode(GL_FRONT_AND_BACK, OpenGL::to_enum(desc.get_face_fill_mode()));
 
-		desc.get_front_face() == face_counter_clockwise ? glFrontFace(GL_CCW) : glFrontFace(GL_CW);
+			desc.get_front_face() == face_counter_clockwise ? glFrontFace(GL_CCW) : glFrontFace(GL_CW);
 
-		// Note, enabled in GraphicContextProvider::set_scissor()
-		if (!desc.get_enable_scissor())
-			glDisable(GL_SCISSOR_TEST);
+			// Note, enabled in GraphicContextProvider::set_scissor()
+			if (!desc.get_enable_scissor())
+				glDisable(GL_SCISSOR_TEST);
 
-		if (glPointSize)
-			glPointSize((GLfloat)desc.get_point_size());
-		if (glPointParameterf)
-			glPointParameterf(GL_POINT_FADE_THRESHOLD_SIZE, (GLfloat)desc.get_point_fade_treshold_size());
-		desc.is_point_size() ? glEnable(GL_VERTEX_PROGRAM_POINT_SIZE) : glDisable(GL_VERTEX_PROGRAM_POINT_SIZE);
+			if (glPointSize)
+				glPointSize((GLfloat)desc.get_point_size());
+			if (glPointParameterf)
+				glPointParameterf(GL_POINT_FADE_THRESHOLD_SIZE, (GLfloat)desc.get_point_fade_treshold_size());
+			desc.is_point_size() ? glEnable(GL_VERTEX_PROGRAM_POINT_SIZE) : glDisable(GL_VERTEX_PROGRAM_POINT_SIZE);
 
-		if(glPointParameterf)
-		{
-			switch (desc.get_point_sprite_origin())
+			if (glPointParameterf)
 			{
-			case origin_upper_left:
-				glPointParameterf(GL_POINT_SPRITE_COORD_ORIGIN, GL_UPPER_LEFT);
-				break;
-			case origin_lower_left:
-				glPointParameterf(GL_POINT_SPRITE_COORD_ORIGIN, GL_LOWER_LEFT);
-				break;
+				switch (desc.get_point_sprite_origin())
+				{
+				case origin_upper_left:
+					glPointParameterf(GL_POINT_SPRITE_COORD_ORIGIN, GL_UPPER_LEFT);
+					break;
+				case origin_lower_left:
+					glPointParameterf(GL_POINT_SPRITE_COORD_ORIGIN, GL_LOWER_LEFT);
+					break;
+				}
+			}
+#ifndef __ANDROID__
+			desc.get_antialiased() ? glEnable(GL_POLYGON_SMOOTH) : glDisable(GL_POLYGON_SMOOTH);
+			desc.get_offset_point() ? glEnable(GL_POLYGON_OFFSET_POINT) : glDisable(GL_POLYGON_OFFSET_POINT);
+			desc.get_offset_line() ? glEnable(GL_POLYGON_OFFSET_LINE) : glDisable(GL_POLYGON_OFFSET_LINE);
+#endif
+			desc.get_offset_fill() ? glEnable(GL_POLYGON_OFFSET_FILL) : glDisable(GL_POLYGON_OFFSET_FILL);
+			if (glPolygonOffset)
+			{
+				float factor, units;
+				desc.get_polygon_offset(factor, units);
+				glPolygonOffset(factor, units);
 			}
 		}
-#ifndef __ANDROID__
-		desc.get_antialiased() ? glEnable(GL_POLYGON_SMOOTH) : glDisable(GL_POLYGON_SMOOTH);
-		desc.get_offset_point() ? glEnable(GL_POLYGON_OFFSET_POINT) : glDisable(GL_POLYGON_OFFSET_POINT);
-		desc.get_offset_line() ? glEnable(GL_POLYGON_OFFSET_LINE) : glDisable(GL_POLYGON_OFFSET_LINE);
-#endif
-		desc.get_offset_fill() ? glEnable(GL_POLYGON_OFFSET_FILL) : glDisable(GL_POLYGON_OFFSET_FILL);
-		if (glPolygonOffset)
-		{
-			float factor,units;
-			desc.get_polygon_offset(factor, units);
-			glPolygonOffset(factor, units);
-		}
-
 	}
-
-}
-
 }

@@ -35,29 +35,21 @@
 
 namespace clan
 {
+	GL1RenderBufferProvider::GL1RenderBufferProvider(GL1GraphicContextProvider *gc_provider)
+	{
+		throw Exception("GL1RenderBuffer is not supported");
+	}
 
-GL1RenderBufferProvider::GL1RenderBufferProvider(GL1GraphicContextProvider *gc_provider)
-{
-	throw Exception("GL1RenderBuffer is not supported");
-}
+	GL1RenderBufferProvider::~GL1RenderBufferProvider()
+	{
+	}
 
-GL1RenderBufferProvider::~GL1RenderBufferProvider()
-{
-}
+	GLuint GL1RenderBufferProvider::get_handle()
+	{
+		return 0;
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// GL1RenderBufferProvider Attributes:
-
-GLuint GL1RenderBufferProvider::get_handle()
-{
-	return 0;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// GL1RenderBufferProvider Operations:
-
-void GL1RenderBufferProvider::create(int width, int height, TextureFormat texture_format, int multisample_samples)
-{
-}
-
+	void GL1RenderBufferProvider::create(int width, int height, TextureFormat texture_format, int multisample_samples)
+	{
+	}
 }

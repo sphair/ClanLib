@@ -36,40 +36,24 @@
 
 namespace clan
 {
+	class GL3GraphicContextProvider;
 
-class GL3GraphicContextProvider;
+	class GL3TransferBufferProvider : public TransferBufferProvider
+	{
+	public:
+		GL3TransferBufferProvider();
+		~GL3TransferBufferProvider();
+		void create(int size, BufferUsage usage) override;
+		void create(void *data, int size, BufferUsage usage) override;
 
-class GL3TransferBufferProvider : public TransferBufferProvider
-{
-/// \name Construction
-/// \{
-public:
-	GL3TransferBufferProvider();
-	~GL3TransferBufferProvider();
-	void create(int size, BufferUsage usage) override;
-	void create(void *data, int size, BufferUsage usage) override;
-/// \}
+		void *get_data() override { return buffer.get_data(); }
+		GLuint get_handle() const { return buffer.get_handle(); }
 
-/// \name Attributes
-/// \{
-public:
-	void *get_data() override { return buffer.get_data(); }
-	GLuint get_handle() const { return buffer.get_handle(); }
-/// \}
+		void lock(GraphicContext &gc, BufferAccess access) override { buffer.lock(gc, access); }
+		void unlock() override { buffer.unlock(); }
+		void upload_data(GraphicContext &gc, int offset, const void *data, int size) override { buffer.upload_data(gc, offset, data, size); }
 
-/// \name Operations
-/// \{
-public:
-	void lock(GraphicContext &gc, BufferAccess access) override { buffer.lock(gc, access); }
-	void unlock() override { buffer.unlock(); }
-	void upload_data(GraphicContext &gc, int offset, const void *data, int size) override { buffer.upload_data(gc, offset, data, size); }
-/// \}
-
-/// \name Implementation
-/// \{
-private:
-	GL3BufferObjectProvider buffer;
-/// \}
-};
-
+	private:
+		GL3BufferObjectProvider buffer;
+	};
 }

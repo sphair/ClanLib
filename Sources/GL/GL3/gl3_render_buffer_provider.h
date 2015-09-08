@@ -36,44 +36,20 @@
 
 namespace clan
 {
+	class GL3RenderBufferProvider : public RenderBufferProvider, DisposableObject
+	{
+	public:
+		GL3RenderBufferProvider();
+		~GL3RenderBufferProvider();
 
-class GL3RenderBufferProvider : public RenderBufferProvider, DisposableObject
-{
-/// \name Construction
-/// \{
+		GLuint get_handle();
 
-public:
-	GL3RenderBufferProvider();
+		/// \brief Creates a render buffer image of the specified dimensions.
+		void create(int width, int height, TextureFormat texture_format, int multisample_samples) override;
 
-	~GL3RenderBufferProvider();
+	private:
+		void on_dispose() override;
 
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	GLuint get_handle();
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	/// \brief Creates a render buffer image of the specified dimensions.
-	virtual void create(int width, int height, TextureFormat texture_format, int multisample_samples) override;
-
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	void on_dispose() override;
-
-	GLuint handle;
-/// \}
-};
-
+		GLuint handle;
+	};
 }

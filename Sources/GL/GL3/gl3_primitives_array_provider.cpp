@@ -34,77 +34,63 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// GL3PrimitivesArrayProvider Construction:
-
-GL3PrimitivesArrayProvider::GL3PrimitivesArrayProvider(GL3GraphicContextProvider *gc_provider)
-: handle(0), gc_provider(gc_provider)
-{
-	gc_provider->add_disposable(this);
-	OpenGL::set_active(gc_provider);
-	glGenVertexArrays(1, &handle);
-}
-
-GL3PrimitivesArrayProvider::~GL3PrimitivesArrayProvider()
-{
-	dispose();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// GL3PrimitivesArrayProvider Attributes:
-
-/////////////////////////////////////////////////////////////////////////////
-// GL3PrimitivesArrayProvider Operations:
-
-void GL3PrimitivesArrayProvider::set_attribute(int attrib_index, const VertexData &attribute, bool normalize)
-{
-	PrimitivesArrayStateTracker tracker(gc_provider, handle);
-
-	glBindBuffer(GL_ARRAY_BUFFER, static_cast<GL3VertexArrayBufferProvider *>(attribute.array_provider)->get_handle());
-	glEnableVertexAttribArray(attrib_index);
-
-	if (attribute.type == type_float)
+	GL3PrimitivesArrayProvider::GL3PrimitivesArrayProvider(GL3GraphicContextProvider *gc_provider)
+		: handle(0), gc_provider(gc_provider)
 	{
-		glVertexAttribPointer( attrib_index, attribute.size, OpenGL::to_enum(attribute.type),
-			normalize ? GL_TRUE : GL_FALSE, attribute.stride, (GLvoid *) attribute.offset);
+		gc_provider->add_disposable(this);
+		OpenGL::set_active(gc_provider);
+		glGenVertexArrays(1, &handle);
 	}
-	else
+
+	GL3PrimitivesArrayProvider::~GL3PrimitivesArrayProvider()
 	{
-		glVertexAttribIPointer( attrib_index, attribute.size, OpenGL::to_enum(attribute.type), attribute.stride, (GLvoid *) attribute.offset);
+		dispose();
 	}
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
 
-/////////////////////////////////////////////////////////////////////////////
-// GL3PrimitivesArrayProvider Implementation:
+	void GL3PrimitivesArrayProvider::set_attribute(int attrib_index, const VertexData &attribute, bool normalize)
+	{
+		PrimitivesArrayStateTracker tracker(gc_provider, handle);
 
-void GL3PrimitivesArrayProvider::on_dispose()
-{
-	if (handle)
+		glBindBuffer(GL_ARRAY_BUFFER, static_cast<GL3VertexArrayBufferProvider *>(attribute.array_provider)->get_handle());
+		glEnableVertexAttribArray(attrib_index);
+
+		if (attribute.type == type_float)
+		{
+			glVertexAttribPointer(attrib_index, attribute.size, OpenGL::to_enum(attribute.type),
+				normalize ? GL_TRUE : GL_FALSE, attribute.stride, (GLvoid *)attribute.offset);
+		}
+		else
+		{
+			glVertexAttribIPointer(attrib_index, attribute.size, OpenGL::to_enum(attribute.type), attribute.stride, (GLvoid *)attribute.offset);
+		}
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+
+	void GL3PrimitivesArrayProvider::on_dispose()
+	{
+		if (handle)
+		{
+			OpenGL::set_active(gc_provider);
+			glDeleteVertexArrays(1, &handle);
+		}
+		gc_provider->remove_disposable(this);
+	}
+
+	PrimitivesArrayStateTracker::PrimitivesArrayStateTracker(GL3GraphicContextProvider *gc_provider, GLuint handle) : vao_set(false)
 	{
 		OpenGL::set_active(gc_provider);
-		glDeleteVertexArrays(1, &handle);
+
+		glGetIntegerv(GL_VERTEX_ARRAY_BINDING, (GLint *)&last_vao);
+		if (handle != last_vao)
+		{
+			vao_set = true;
+			glBindVertexArray(handle);
+		}
 	}
-	gc_provider->remove_disposable(this);
-}
 
-PrimitivesArrayStateTracker::PrimitivesArrayStateTracker(GL3GraphicContextProvider *gc_provider, GLuint handle) : vao_set(false)
-{
-	OpenGL::set_active(gc_provider);
-
-	glGetIntegerv(GL_VERTEX_ARRAY_BINDING, (GLint *) &last_vao);
-	if (handle != last_vao)
+	PrimitivesArrayStateTracker::~PrimitivesArrayStateTracker()
 	{
-		vao_set = true;
-		glBindVertexArray(handle);
+		if (vao_set)
+			glBindVertexArray(last_vao);
 	}
-}
-
-PrimitivesArrayStateTracker::~PrimitivesArrayStateTracker()
-{
-	if (vao_set)
-		glBindVertexArray(last_vao);
-}
-
 }

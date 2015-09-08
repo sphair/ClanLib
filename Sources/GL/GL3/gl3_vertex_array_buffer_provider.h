@@ -36,39 +36,23 @@
 
 namespace clan
 {
+	class GL3GraphicContextProvider;
 
-class GL3GraphicContextProvider;
+	class GL3VertexArrayBufferProvider : public VertexArrayBufferProvider
+	{
+	public:
+		GL3VertexArrayBufferProvider();
+		~GL3VertexArrayBufferProvider();
+		void create(int size, BufferUsage usage) override;
+		void create(void *data, int size, BufferUsage usage) override;
 
-class GL3VertexArrayBufferProvider : public VertexArrayBufferProvider
-{
-/// \name Construction
-/// \{
-public:
-	GL3VertexArrayBufferProvider();
-	~GL3VertexArrayBufferProvider();
-	void create(int size, BufferUsage usage) override;
-	void create(void *data, int size, BufferUsage usage) override;
-/// \}
+		GLuint get_handle() const { return buffer.get_handle(); }
 
-/// \name Attributes
-/// \{
-public:
-	GLuint get_handle() const { return buffer.get_handle(); }
-/// \}
+		void upload_data(GraphicContext &gc, int offset, const void *data, int size) override { buffer.upload_data(gc, offset, data, size); }
+		void copy_from(GraphicContext &gc, TransferBuffer &transfer_buffer, int dest_pos, int src_pos, int size) override { buffer.copy_from(gc, transfer_buffer, dest_pos, src_pos, size); }
+		void copy_to(GraphicContext &gc, TransferBuffer &transfer_buffer, int dest_pos, int src_pos, int size) override { buffer.copy_to(gc, transfer_buffer, dest_pos, src_pos, size); }
 
-/// \name Operations
-/// \{
-public:
-	void upload_data(GraphicContext &gc, int offset, const void *data, int size) override { buffer.upload_data(gc, offset, data, size); }
-	void copy_from(GraphicContext &gc, TransferBuffer &transfer_buffer, int dest_pos, int src_pos, int size) override { buffer.copy_from(gc, transfer_buffer, dest_pos, src_pos, size); }
-	void copy_to(GraphicContext &gc, TransferBuffer &transfer_buffer, int dest_pos, int src_pos, int size) override { buffer.copy_to(gc, transfer_buffer, dest_pos, src_pos, size); }
-/// \}
-
-/// \name Implementation
-/// \{
-private:
-	GL3BufferObjectProvider buffer;
-/// \}
-};
-
+	private:
+		GL3BufferObjectProvider buffer;
+	};
 }

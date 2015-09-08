@@ -37,33 +37,28 @@
 
 namespace clan
 {
+	class OpenGLBlendStateProvider : public BlendStateProvider
+	{
+	public:
+		OpenGLBlendStateProvider(const BlendStateDescription &desc) : desc(desc.clone()) {}
+		virtual ~OpenGLBlendStateProvider() {};
 
-class OpenGLBlendStateProvider : public BlendStateProvider
-{
-public:
-	OpenGLBlendStateProvider(const BlendStateDescription &desc) : desc(desc.clone()) {}
-	virtual ~OpenGLBlendStateProvider() {};
+		BlendStateDescription desc;
+	};
 
-	BlendStateDescription desc;
+	class OpenGLBlendState
+	{
+	public:
+		OpenGLBlendState();
 
-};
+		void set(const BlendStateDescription &new_state, const Vec4f &new_blend_color);
+		void set(const OpenGLBlendState &new_state);
+		void apply();
 
-class OpenGLBlendState
-{
-public:
-	OpenGLBlendState();
-
-	void set(const BlendStateDescription &new_state, const Vec4f &new_blend_color);
-	void set(const OpenGLBlendState &new_state);
-	void apply();
-
-private:
-	BlendStateDescription desc;
-	Vec4f blend_color;
-	bool changed_desc;
-	bool changed_blend_color;
-
-};
-
-
+	private:
+		BlendStateDescription desc;
+		Vec4f blend_color;
+		bool changed_desc;
+		bool changed_blend_color;
+	};
 }

@@ -36,56 +36,48 @@
 
 namespace clan
 {
-
-GL3RenderBufferProvider::GL3RenderBufferProvider()
-: handle(0)
-{
-	SharedGCData::add_disposable(this);
-
-}
-
-GL3RenderBufferProvider::~GL3RenderBufferProvider()
-{
-	dispose();
-	SharedGCData::remove_disposable(this);
-}
-
-void GL3RenderBufferProvider::on_dispose()
-{
-	if (handle)
+	GL3RenderBufferProvider::GL3RenderBufferProvider()
+		: handle(0)
 	{
-		if (OpenGL::set_active())
+		SharedGCData::add_disposable(this);
+	}
+
+	GL3RenderBufferProvider::~GL3RenderBufferProvider()
+	{
+		dispose();
+		SharedGCData::remove_disposable(this);
+	}
+
+	void GL3RenderBufferProvider::on_dispose()
+	{
+		if (handle)
 		{
-			glDeleteRenderbuffers(1, &handle);
+			if (OpenGL::set_active())
+			{
+				glDeleteRenderbuffers(1, &handle);
+			}
 		}
 	}
-}
-/////////////////////////////////////////////////////////////////////////////
-// GL3RenderBufferProvider Attributes:
 
-GLuint GL3RenderBufferProvider::get_handle()
-{
-	return handle;
-}
+	GLuint GL3RenderBufferProvider::get_handle()
+	{
+		return handle;
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// GL3RenderBufferProvider Operations:
+	void GL3RenderBufferProvider::create(int width, int height, TextureFormat texture_format, int multisample_samples)
+	{
+		OpenGL::set_active();
+		GLuint last_render_buffer = 0;
+		glGetIntegerv(GL_RENDERBUFFER_BINDING, (GLint *)&last_render_buffer);
 
-void GL3RenderBufferProvider::create(int width, int height, TextureFormat texture_format, int multisample_samples)
-{
-	OpenGL::set_active();
-	GLuint last_render_buffer = 0;
-	glGetIntegerv(GL_RENDERBUFFER_BINDING, (GLint *) &last_render_buffer);
+		TextureFormat_GL tf = OpenGL::get_textureformat(texture_format);
+		if (!tf.valid)
+			throw Exception("Texture format not supported by OpenGL");
 
-	TextureFormat_GL tf = OpenGL::get_textureformat(texture_format);
-	if (!tf.valid)
-		throw Exception("Texture format not supported by OpenGL");
+		glGenRenderbuffers(1, &handle);
+		glBindRenderbuffer(GL_RENDERBUFFER, handle);
+		glRenderbufferStorageMultisample(GL_RENDERBUFFER, multisample_samples, tf.pixel_format, width, height);
 
-	glGenRenderbuffers(1, &handle);
-	glBindRenderbuffer(GL_RENDERBUFFER, handle);
-	glRenderbufferStorageMultisample(GL_RENDERBUFFER, multisample_samples, tf.pixel_format, width, height);
-
-	glBindRenderbuffer(GL_RENDERBUFFER, last_render_buffer);
-}
-
+		glBindRenderbuffer(GL_RENDERBUFFER, last_render_buffer);
+	}
 }

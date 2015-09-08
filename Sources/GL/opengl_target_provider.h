@@ -35,47 +35,22 @@
 
 namespace clan
 {
+	class OpenGLTargetProvider : public DisplayTargetProvider
+	{
+	public:
+		OpenGLTargetProvider();
+		~OpenGLTargetProvider();
 
-class OpenGLTargetProvider : public DisplayTargetProvider
-{
-/// \name Construction
-/// \{
+		OpenGLContextDescription get_description() { return description; }
+		DisplayWindowProvider *alloc_display_window() override;
+		void set_description(OpenGLContextDescription &desc) { description = desc; }
 
-public:
-	OpenGLTargetProvider();
-
-	~OpenGLTargetProvider();
-
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	OpenGLContextDescription get_description() {return description;}
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	DisplayWindowProvider *alloc_display_window() override;
-
-	void set_description(OpenGLContextDescription &desc) {description = desc;}
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
+	private:
 #ifdef WIN32
-	friend class OpenGLWindowProvider;
+		friend class OpenGLWindowProvider;
 #else
-	friend class OpenGLWindowProvider;
+		friend class OpenGLWindowProvider;
 #endif
-	OpenGLContextDescription description;
-
-/// \}
-};
-
+		OpenGLContextDescription description;
+	};
 }

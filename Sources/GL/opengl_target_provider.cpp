@@ -43,30 +43,16 @@ namespace clan { DisplayWindowProvider *newOpenGLWindowProvider(); }
 
 namespace clan
 {
+	OpenGLTargetProvider::OpenGLTargetProvider()
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// OpenGLTargetProvider Construction:
+	OpenGLTargetProvider::~OpenGLTargetProvider()
+	{
+	}
 
-OpenGLTargetProvider::OpenGLTargetProvider()
-{
-}
-
-OpenGLTargetProvider::~OpenGLTargetProvider()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// OpenGLTargetProvider Attributes:
-
-/////////////////////////////////////////////////////////////////////////////
-// OpenGLTargetProvider Operations:
-
-DisplayWindowProvider *OpenGLTargetProvider::alloc_display_window()
-{
-	return new OpenGLWindowProvider(description);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// OpenGLTargetProvider Implementation:
-
+	DisplayWindowProvider *OpenGLTargetProvider::alloc_display_window()
+	{
+		return new OpenGLWindowProvider(description);
+	}
 }

@@ -34,39 +34,22 @@
 
 namespace clan
 {
+	class GL1TransferBufferProvider : public TransferBufferProvider
+	{
+	public:
+		GL1TransferBufferProvider();
+		~GL1TransferBufferProvider();
+		void create(int size, BufferUsage usage) override;
+		void create(void *data, int size, BufferUsage usage) override;
 
-class GL1TransferBufferProvider : public TransferBufferProvider
-{
-/// \name Construction
-/// \{
-public:
-	GL1TransferBufferProvider();
-	~GL1TransferBufferProvider();
-	void create(int size, BufferUsage usage) override;
-	void create(void *data, int size, BufferUsage usage) override;
-/// \}
+		void *get_data() override { return data; }
 
-/// \name Attributes
-/// \{
-public:
-	void *get_data() override { return data; }
-/// \}
+		void lock(GraphicContext &gc, BufferAccess access) override {}
+		void unlock() override {}
+		void upload_data(GraphicContext &gc, int offset, const void *data, int size) override;
 
-/// \name Operations
-/// \{
-public:
-	void lock(GraphicContext &gc, BufferAccess access) override {}
-	void unlock() override {}
-	void upload_data(GraphicContext &gc, int offset, const void *data, int size) override;
-/// \}
-
-/// \name Implementation
-/// \{
-private:
-	char *data;
-	int size;
-
-/// \}
-};
-
+	private:
+		char *data;
+		int size;
+	};
 }

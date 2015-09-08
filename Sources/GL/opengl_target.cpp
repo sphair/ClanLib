@@ -127,5 +127,4 @@ namespace clan
 			throw Exception("Graphic Context is not from a GL target");
 		OpenGL::set_active(provider);
 	}
-
 }

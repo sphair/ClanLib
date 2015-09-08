@@ -35,50 +35,34 @@
 
 namespace clan
 {
-class GL3GraphicContextProvider;
+	class GL3GraphicContextProvider;
 
-class GL3PrimitivesArrayProvider : public PrimitivesArrayProvider, DisposableObject
-{
-/// \name Construction
-/// \{
-public:
-	GL3PrimitivesArrayProvider(GL3GraphicContextProvider *gc_provider);
-	~GL3PrimitivesArrayProvider();
-/// \}
+	class GL3PrimitivesArrayProvider : public PrimitivesArrayProvider, DisposableObject
+	{
+	public:
+		GL3PrimitivesArrayProvider(GL3GraphicContextProvider *gc_provider);
+		~GL3PrimitivesArrayProvider();
 
-/// \name Attributes
-/// \{
-public:
-	GLuint handle;
+		GLuint handle;
 
-	GL3GraphicContextProvider *get_gc_provider() { return gc_provider; }
-/// \}
+		GL3GraphicContextProvider *get_gc_provider() { return gc_provider; }
 
-/// \name Operations
-/// \{
-public:
-	void set_attribute(int index, const VertexData &data, bool normalize) override;
+		void set_attribute(int index, const VertexData &data, bool normalize) override;
 
-/// \}
+	private:
+		void on_dispose() override;
 
-/// \name Implementation
-/// \{
-private:
-	void on_dispose() override;
+		GL3GraphicContextProvider *gc_provider;
+	};
 
-	GL3GraphicContextProvider *gc_provider;
-/// \}
-};
+	class PrimitivesArrayStateTracker
+	{
+	public:
+		PrimitivesArrayStateTracker(GL3GraphicContextProvider *gc_provider, GLuint handle);
+		~PrimitivesArrayStateTracker();
 
-class PrimitivesArrayStateTracker
-{
-public:
-	PrimitivesArrayStateTracker(GL3GraphicContextProvider *gc_provider, GLuint handle);
-	~PrimitivesArrayStateTracker();
-
-private:
-	GLuint last_vao;
-	bool vao_set;
-};
-
+	private:
+		GLuint last_vao;
+		bool vao_set;
+	};
 }

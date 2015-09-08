@@ -33,16 +33,13 @@
 
 namespace clan
 {
-
-class OpenGLGraphicContextProvider
-{
-public:
-	virtual void get_opengl_version(int &version_major, int &version_minor) const = 0;
-	virtual void get_opengl_version(int &version_major, int &version_minor, int &version_release) const = 0;
-	virtual void get_opengl_shading_language_version(int &version_major, int &version_minor) const { version_major = 0; version_minor = 0; }
-	virtual void make_current() const = 0;
-	virtual ProcAddress *get_proc_address(const std::string& function_name) const = 0;
-
-};
-
+	class OpenGLGraphicContextProvider
+	{
+	public:
+		virtual void get_opengl_version(int &version_major, int &version_minor) const = 0;
+		virtual void get_opengl_version(int &version_major, int &version_minor, int &version_release) const = 0;
+		virtual void get_opengl_shading_language_version(int &version_major, int &version_minor) const { version_major = 0; version_minor = 0; }
+		virtual void make_current() const = 0;
+		virtual ProcAddress *get_proc_address(const std::string& function_name) const = 0;
+	};
 }

@@ -35,26 +35,21 @@
 
 namespace clan
 {
+	GL3StorageBufferProvider::GL3StorageBufferProvider()
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// GL3StorageBufferProvider Construction:
+	GL3StorageBufferProvider::~GL3StorageBufferProvider()
+	{
+	}
 
-GL3StorageBufferProvider::GL3StorageBufferProvider()
-{
-}
+	void GL3StorageBufferProvider::create(int size, int stride, BufferUsage usage)
+	{
+		buffer.create(nullptr, size, usage, GL_UNIFORM_BUFFER_BINDING, GL_UNIFORM_BUFFER);
+	}
 
-GL3StorageBufferProvider::~GL3StorageBufferProvider()
-{
-}
-
-void GL3StorageBufferProvider::create(int size, int stride, BufferUsage usage)
-{
-	buffer.create(nullptr, size, usage, GL_UNIFORM_BUFFER_BINDING, GL_UNIFORM_BUFFER);
-}
-
-void GL3StorageBufferProvider::create(const void *data, int size, int stride, BufferUsage usage)
-{
-	buffer.create(data, size, usage, GL_UNIFORM_BUFFER_BINDING, GL_UNIFORM_BUFFER);
-}
-
+	void GL3StorageBufferProvider::create(const void *data, int size, int stride, BufferUsage usage)
+	{
+		buffer.create(data, size, usage, GL_UNIFORM_BUFFER_BINDING, GL_UNIFORM_BUFFER);
+	}
 }

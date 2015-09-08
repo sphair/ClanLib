@@ -32,56 +32,27 @@
 
 namespace clan
 {
+	class PBuffer_GL1_Impl;
+	class OpenGLWindowProvider;
+	class GL1GraphicContextProvider;
 
-class PBuffer_GL1_Impl;
+	class PBuffer_GL1
+	{
+	public:
+		PBuffer_GL1();
+		PBuffer_GL1(GL1GraphicContextProvider *gc_provider);
+		~PBuffer_GL1();
 
-class OpenGLWindowProvider;
+		/// \brief Returns true if this object is invalid.
+		bool is_null() const { return !impl; }
 
-class GL1GraphicContextProvider;
+		/// \brief Throw an exception if this object is invalid.
+		void throw_if_null() const;
 
-class PBuffer_GL1
-{
-/// \name Construction
-/// \{
+		void create(OpenGLWindowProvider &window_provider, Size &size);
+		void set_active();
 
-public:
-	// Construct a null instance
-	PBuffer_GL1();
-
-	PBuffer_GL1(GL1GraphicContextProvider *gc_provider);
-	~PBuffer_GL1();
-
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return !impl; }
-
-	/// \brief Throw an exception if this object is invalid.
-	void throw_if_null() const;
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	void create(OpenGLWindowProvider &window_provider, Size &size);
-
-	void set_active();
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	std::shared_ptr<PBuffer_GL1_Impl> impl;
-
-/// \}
-};
-
-
+	private:
+		std::shared_ptr<PBuffer_GL1_Impl> impl;
+	};
 }

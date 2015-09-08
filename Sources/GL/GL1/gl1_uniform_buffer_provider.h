@@ -34,38 +34,22 @@
 
 namespace clan
 {
+	class GL1UniformBufferProvider : public UniformBufferProvider
+	{
+	public:
+		GL1UniformBufferProvider();
+		~GL1UniformBufferProvider();
+		void create(int size, BufferUsage usage) override;
+		void create(const void *data, int size, BufferUsage usage) override;
 
-class GL1UniformBufferProvider : public UniformBufferProvider
-{
-/// \name Construction
-/// \{
-public:
-	GL1UniformBufferProvider();
-	~GL1UniformBufferProvider();
-	void create(int size, BufferUsage usage) override;
-	void create(const void *data, int size, BufferUsage usage) override;
-/// \}
+		void *get_data() const { return data; }
 
-/// \name Attributes
-/// \{
-public:
-	void *get_data() const { return data; }
-/// \}
+		void upload_data(GraphicContext &gc, const void *data, int size) override;
+		void copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) override;
+		void copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) override;
 
-/// \name Operations
-/// \{
-public:
-	void upload_data(GraphicContext &gc, const void *data, int size) override;
-	void copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) override;
-	void copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) override;
-/// \}
-
-/// \name Implementation
-/// \{
-private:
-	char *data;
-	int size;
-/// \}
-};
-
+	private:
+		char *data;
+		int size;
+	};
 }

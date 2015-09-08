@@ -37,69 +37,43 @@
 
 namespace clan
 {
+	class GL3GraphicContextProvider;
 
-class GL3GraphicContextProvider;
+	class GL3ShaderObjectProvider : public ShaderObjectProvider, DisposableObject
+	{
+	public:
+		GL3ShaderObjectProvider();
+		virtual ~GL3ShaderObjectProvider();
 
-class GL3ShaderObjectProvider : public ShaderObjectProvider, DisposableObject
-{
-/// \name Construction
-/// \{
+		void create(ShaderType type, const std::string &source) override;
+		void create(ShaderType type, const void *source, int source_size) override;
+		void create(ShaderType type, const std::vector<std::string> &sources) override;
 
-public:
-	GL3ShaderObjectProvider();
+		/// \brief Returns the OpenGL shader handle.
+		unsigned int get_handle() const override;
 
-	virtual ~GL3ShaderObjectProvider();
+		/// \brief Returns true if compile succeeded.
+		bool get_compile_status() const override;
 
-	virtual void create(ShaderType type, const std::string &source) override;
+		/// \brief Gets the shader type.
+		ShaderType get_shader_type() const override;
 
-	virtual void create(ShaderType type, const void *source, int source_size) override;
+		/// \brief Get shader object's info log.
+		std::string get_info_log() const override;
 
-	virtual void create(ShaderType type, const std::vector<std::string> &sources) override;
-	
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief Get shader source code.
+		std::string get_shader_source() const override;
 
-public:
-	/// \brief Returns the OpenGL shader handle.
-	virtual unsigned int get_handle() const override;
+		/// \brief Compile program.
+		/** <p>If the compilation fails, get_compile_status() will return false and
+			get_info_log() will return the compile log.</p>*/
+		void compile() override;
 
-	/// \brief Returns true if compile succeeded.
-	virtual bool get_compile_status() const override;
+	private:
+		void on_dispose() override;
+		GLenum shadertype_to_opengl(ShaderType type);
 
-	/// \brief Gets the shader type.
-	virtual ShaderType get_shader_type() const override;
-
-	/// \brief Get shader object's info log.
-	virtual std::string get_info_log() const override;
-
-	/// \brief Get shader source code.
-	virtual std::string get_shader_source() const override;
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	/// \brief Compile program.
-	/** <p>If the compilation fails, get_compile_status() will return false and
-	    get_info_log() will return the compile log.</p>*/
-	virtual void compile() override;
-
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	void on_dispose() override;
-	GLenum shadertype_to_opengl(ShaderType type);
-
-	GLuint handle;
-
-	ShaderType type;
-/// \}
-};
-
+		GLuint handle;
+		ShaderType type;
+	};
 }

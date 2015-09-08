@@ -34,104 +34,101 @@
 
 namespace clan
 {
-
-OpenGLBlendState::OpenGLBlendState() 
-	: blend_color(Colorf::white), changed_desc(true), changed_blend_color(true)
-{
-}
-
-void OpenGLBlendState::set(const BlendStateDescription &new_state, const Vec4f &new_blend_color)
-{
-	if (!(new_state == desc))
+	OpenGLBlendState::OpenGLBlendState()
+		: blend_color(Colorf::white), changed_desc(true), changed_blend_color(true)
 	{
-		desc = new_state.clone();
-		changed_desc = true;
 	}
 
-	if (new_blend_color != blend_color)
+	void OpenGLBlendState::set(const BlendStateDescription &new_state, const Vec4f &new_blend_color)
 	{
-		blend_color = new_blend_color;
-		changed_blend_color = true;
+		if (!(new_state == desc))
+		{
+			desc = new_state.clone();
+			changed_desc = true;
+		}
+
+		if (new_blend_color != blend_color)
+		{
+			blend_color = new_blend_color;
+			changed_blend_color = true;
+		}
 	}
-}
 
-void OpenGLBlendState::set(const OpenGLBlendState &new_state)
-{
-	set(new_state.desc, new_state.blend_color);
-}
-
-
-void OpenGLBlendState::apply()
-{
-	if (changed_desc)
+	void OpenGLBlendState::set(const OpenGLBlendState &new_state)
 	{
-		changed_desc = false;
+		set(new_state.desc, new_state.blend_color);
+	}
 
-		BlendEquation equation_color, equation_alpha;
-		BlendFunc src, dest, src_alpha, dest_alpha;
-		desc.get_blend_equation(equation_color, equation_alpha);
-		desc.get_blend_function(src, dest, src_alpha, dest_alpha);
 
-		desc.is_blending_enabled() ? glEnable(GL_BLEND) : glDisable(GL_BLEND);
-
-		if (glColorMask)
+	void OpenGLBlendState::apply()
+	{
+		if (changed_desc)
 		{
-			bool red, green, blue, alpha;
-			desc.get_color_write(red, green, blue, alpha);
-			glColorMask(red,green,blue,alpha);
-		}
+			changed_desc = false;
 
+			BlendEquation equation_color, equation_alpha;
+			BlendFunc src, dest, src_alpha, dest_alpha;
+			desc.get_blend_equation(equation_color, equation_alpha);
+			desc.get_blend_function(src, dest, src_alpha, dest_alpha);
 
-		if (equation_color == equation_alpha)
-		{
-			if (glBlendEquation)
-				glBlendEquation(OpenGL::to_enum(equation_color));
-		}
-		else
-		{
-			if (glBlendEquationSeparate)
+			desc.is_blending_enabled() ? glEnable(GL_BLEND) : glDisable(GL_BLEND);
+
+			if (glColorMask)
 			{
-				glBlendEquationSeparate( OpenGL::to_enum(equation_color), OpenGL::to_enum(equation_alpha) );
+				bool red, green, blue, alpha;
+				desc.get_color_write(red, green, blue, alpha);
+				glColorMask(red, green, blue, alpha);
 			}
-			else
+
+
+			if (equation_color == equation_alpha)
 			{
 				if (glBlendEquation)
 					glBlendEquation(OpenGL::to_enum(equation_color));
 			}
-		}
-
-		if( src == src_alpha && dest == dest_alpha )
-		{
-			if (glBlendFunc)
-				glBlendFunc(OpenGL::to_enum(src), OpenGL::to_enum(dest));
-		}
-		else
-		{
-			if (glBlendFuncSeparate)
-			{
-				glBlendFuncSeparate( OpenGL::to_enum(src), OpenGL::to_enum(dest), OpenGL::to_enum(src_alpha), OpenGL::to_enum(dest_alpha) );
-			}
 			else
+			{
+				if (glBlendEquationSeparate)
+				{
+					glBlendEquationSeparate(OpenGL::to_enum(equation_color), OpenGL::to_enum(equation_alpha));
+				}
+				else
+				{
+					if (glBlendEquation)
+						glBlendEquation(OpenGL::to_enum(equation_color));
+				}
+			}
+
+			if (src == src_alpha && dest == dest_alpha)
 			{
 				if (glBlendFunc)
 					glBlendFunc(OpenGL::to_enum(src), OpenGL::to_enum(dest));
 			}
+			else
+			{
+				if (glBlendFuncSeparate)
+				{
+					glBlendFuncSeparate(OpenGL::to_enum(src), OpenGL::to_enum(dest), OpenGL::to_enum(src_alpha), OpenGL::to_enum(dest_alpha));
+				}
+				else
+				{
+					if (glBlendFunc)
+						glBlendFunc(OpenGL::to_enum(src), OpenGL::to_enum(dest));
+				}
+			}
+
+			desc.is_logic_op_enabled() ? glEnable(GL_COLOR_LOGIC_OP) : glDisable(GL_COLOR_LOGIC_OP);
+
+			if (glLogicOp)
+				glLogicOp(OpenGL::to_enum(desc.get_logic_op()));
+
 		}
 
-		desc.is_logic_op_enabled() ? glEnable(GL_COLOR_LOGIC_OP) : glDisable(GL_COLOR_LOGIC_OP);
-
-		if (glLogicOp)
-			glLogicOp(OpenGL::to_enum(desc.get_logic_op()));
-
-	}
-
-	if (changed_blend_color)
-	{
-		changed_blend_color = false;
-		if (glBlendColor)
+		if (changed_blend_color)
+		{
+			changed_blend_color = false;
+			if (glBlendColor)
 				glBlendColor(blend_color.r, blend_color.g, blend_color.b, blend_color.a);
+		}
 	}
-
-}
-
 }

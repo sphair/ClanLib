@@ -38,183 +38,169 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// GL3ShaderObjectProvider Construction:
-
-GL3ShaderObjectProvider::GL3ShaderObjectProvider()
-: handle(0)
-{
-	SharedGCData::add_disposable(this);
-}
-void GL3ShaderObjectProvider::create(
-	ShaderType shader_type,
-	const void *source, int source_size )
-{
-	throw Exception("Fixme");
-}
-
-void GL3ShaderObjectProvider::create(
-	ShaderType shader_type,
-	const std::string &source)
-{
-	OpenGL::set_active();
-	if (handle)
-		glDeleteShader(handle);
-
-	type = shader_type;
-	handle = glCreateShader(shadertype_to_opengl(type));
-
-	std::string source8 = StringHelp::text_to_local8(source);
-	const GLchar *sources[1];
-	GLint source_lengths[1];
-	source_lengths[0] = source.length();
-	sources[0] = source8.c_str();
-	glShaderSource(handle, 1, sources, source_lengths);
-}
-
-void GL3ShaderObjectProvider::create(
-	ShaderType shader_type,
-	const std::vector<std::string> &sources)
-{
-	OpenGL::set_active();
-	if (handle)
-		glDeleteShader(handle);
-
-	type = shader_type;
-	handle = glCreateShader(shadertype_to_opengl(type));
-
-	GLchar ** array_sources = nullptr;
-	GLint *array_source_lengths = nullptr;
-	try
+	GL3ShaderObjectProvider::GL3ShaderObjectProvider()
+		: handle(0)
 	{
-		array_sources = new GLchar*[sources.size()];
-		array_source_lengths = new GLint[sources.size()];
-	
-		for (std::vector<std::string>::size_type i = 0; i < sources.size(); i++)
-		{
-			array_source_lengths[i] = sources[i].length();
-			array_sources[i] = (GLchar*) sources[i].c_str();
-		}
-		glShaderSource(handle, sources.size(), (const GLchar**) array_sources, array_source_lengths);
+		SharedGCData::add_disposable(this);
 	}
-	catch (...)
+	void GL3ShaderObjectProvider::create(
+		ShaderType shader_type,
+		const void *source, int source_size)
 	{
-		delete[] array_source_lengths;
-		delete[] array_sources;
-		throw;
+		throw Exception("Fixme");
 	}
-}
 
-GL3ShaderObjectProvider::~GL3ShaderObjectProvider()
-{
-	dispose();
-	SharedGCData::remove_disposable(this);
-}
-
-void GL3ShaderObjectProvider::on_dispose()
-{
-	if (handle)
+	void GL3ShaderObjectProvider::create(
+		ShaderType shader_type,
+		const std::string &source)
 	{
-		if (OpenGL::set_active())
-		{
+		OpenGL::set_active();
+		if (handle)
 			glDeleteShader(handle);
+
+		type = shader_type;
+		handle = glCreateShader(shadertype_to_opengl(type));
+
+		std::string source8 = StringHelp::text_to_local8(source);
+		const GLchar *sources[1];
+		GLint source_lengths[1];
+		source_lengths[0] = source.length();
+		sources[0] = source8.c_str();
+		glShaderSource(handle, 1, sources, source_lengths);
+	}
+
+	void GL3ShaderObjectProvider::create(
+		ShaderType shader_type,
+		const std::vector<std::string> &sources)
+	{
+		OpenGL::set_active();
+		if (handle)
+			glDeleteShader(handle);
+
+		type = shader_type;
+		handle = glCreateShader(shadertype_to_opengl(type));
+
+		GLchar ** array_sources = nullptr;
+		GLint *array_source_lengths = nullptr;
+		try
+		{
+			array_sources = new GLchar*[sources.size()];
+			array_source_lengths = new GLint[sources.size()];
+
+			for (std::vector<std::string>::size_type i = 0; i < sources.size(); i++)
+			{
+				array_source_lengths[i] = sources[i].length();
+				array_sources[i] = (GLchar*)sources[i].c_str();
+			}
+			glShaderSource(handle, sources.size(), (const GLchar**)array_sources, array_source_lengths);
+		}
+		catch (...)
+		{
+			delete[] array_source_lengths;
+			delete[] array_sources;
+			throw;
 		}
 	}
-}
 
-/////////////////////////////////////////////////////////////////////////////
-// GL3ShaderObjectProvider Attributes:
-
-unsigned int GL3ShaderObjectProvider::get_handle() const
-{
-	return (unsigned int) handle;
-}
-
-bool GL3ShaderObjectProvider::get_compile_status() const
-{
-	OpenGL::set_active();
-	GLint status = 0;
-	glGetShaderiv(handle, GL_COMPILE_STATUS, &status);
-	return (status != GL_FALSE);
-}
-
-ShaderType GL3ShaderObjectProvider::get_shader_type() const
-{
-	return type;
-}
-
-std::string GL3ShaderObjectProvider::get_info_log() const
-{
-	OpenGL::set_active();
-	std::string result;
-	GLsizei buffer_size = 16*1024;
-	while (buffer_size < 2*1024*1024)
+	GL3ShaderObjectProvider::~GL3ShaderObjectProvider()
 	{
-		auto info_log = new GLchar[buffer_size];
-		GLsizei length = 0;
-		glGetShaderInfoLog(handle, buffer_size, &length, info_log);
-		if (length < buffer_size-1)
-			result = StringHelp::local8_to_text(std::string(info_log, length));
-		delete[] info_log;
-		if (length < buffer_size-1)
-			break;
-		buffer_size *= 2;
+		dispose();
+		SharedGCData::remove_disposable(this);
 	}
-	return result;
-}
 
-std::string GL3ShaderObjectProvider::get_shader_source() const
-{
-	OpenGL::set_active();
-	std::string result;
-	GLsizei buffer_size = 16*1024;
-	while (buffer_size < 2*1024*1024)
+	void GL3ShaderObjectProvider::on_dispose()
 	{
-		auto shader_source = new GLchar[buffer_size];
-		GLsizei length = 0;
-		glGetShaderSource(handle, buffer_size, &length, shader_source);
-		if (length < buffer_size-1)
-			result = StringHelp::local8_to_text(std::string(shader_source, length));
-		delete[] shader_source;
-		if (length < buffer_size-1)
-			break;
-		buffer_size *= 2;
+		if (handle)
+		{
+			if (OpenGL::set_active())
+			{
+				glDeleteShader(handle);
+			}
+		}
 	}
-	return result;
-}
 
-/////////////////////////////////////////////////////////////////////////////	
-// GL3ShaderObjectProvider Operations:
-
-void GL3ShaderObjectProvider::compile()
-{
-	OpenGL::set_active();
-	glCompileShader(handle);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// GL3ShaderObjectProvider Implementation:
-
-GLenum GL3ShaderObjectProvider::shadertype_to_opengl(ShaderType type)
-{
-	switch (type)
+	unsigned int GL3ShaderObjectProvider::get_handle() const
 	{
-	case shadertype_vertex:
-		return GL_VERTEX_SHADER;
-	case shadertype_geometry:
-		return GL_GEOMETRY_SHADER;
-	case shadertype_fragment:
-		return GL_FRAGMENT_SHADER;
-	case shadertype_tess_evaluation:
-		return GL_TESS_EVALUATION_SHADER;
-	case shadertype_tess_control:
-		return GL_TESS_CONTROL_SHADER;
-	case shadertype_compute:
-		return GL_COMPUTE_SHADER;
-	default:
-		throw Exception(string_format("GL3ShaderObjectProvider: Unknown shader type: %1", (int)type));
+		return (unsigned int)handle;
 	}
-}
 
+	bool GL3ShaderObjectProvider::get_compile_status() const
+	{
+		OpenGL::set_active();
+		GLint status = 0;
+		glGetShaderiv(handle, GL_COMPILE_STATUS, &status);
+		return (status != GL_FALSE);
+	}
+
+	ShaderType GL3ShaderObjectProvider::get_shader_type() const
+	{
+		return type;
+	}
+
+	std::string GL3ShaderObjectProvider::get_info_log() const
+	{
+		OpenGL::set_active();
+		std::string result;
+		GLsizei buffer_size = 16 * 1024;
+		while (buffer_size < 2 * 1024 * 1024)
+		{
+			auto info_log = new GLchar[buffer_size];
+			GLsizei length = 0;
+			glGetShaderInfoLog(handle, buffer_size, &length, info_log);
+			if (length < buffer_size - 1)
+				result = StringHelp::local8_to_text(std::string(info_log, length));
+			delete[] info_log;
+			if (length < buffer_size - 1)
+				break;
+			buffer_size *= 2;
+		}
+		return result;
+	}
+
+	std::string GL3ShaderObjectProvider::get_shader_source() const
+	{
+		OpenGL::set_active();
+		std::string result;
+		GLsizei buffer_size = 16 * 1024;
+		while (buffer_size < 2 * 1024 * 1024)
+		{
+			auto shader_source = new GLchar[buffer_size];
+			GLsizei length = 0;
+			glGetShaderSource(handle, buffer_size, &length, shader_source);
+			if (length < buffer_size - 1)
+				result = StringHelp::local8_to_text(std::string(shader_source, length));
+			delete[] shader_source;
+			if (length < buffer_size - 1)
+				break;
+			buffer_size *= 2;
+		}
+		return result;
+	}
+
+	void GL3ShaderObjectProvider::compile()
+	{
+		OpenGL::set_active();
+		glCompileShader(handle);
+	}
+
+	GLenum GL3ShaderObjectProvider::shadertype_to_opengl(ShaderType type)
+	{
+		switch (type)
+		{
+		case shadertype_vertex:
+			return GL_VERTEX_SHADER;
+		case shadertype_geometry:
+			return GL_GEOMETRY_SHADER;
+		case shadertype_fragment:
+			return GL_FRAGMENT_SHADER;
+		case shadertype_tess_evaluation:
+			return GL_TESS_EVALUATION_SHADER;
+		case shadertype_tess_control:
+			return GL_TESS_CONTROL_SHADER;
+		case shadertype_compute:
+			return GL_COMPUTE_SHADER;
+		default:
+			throw Exception(string_format("GL3ShaderObjectProvider: Unknown shader type: %1", (int)type));
+		}
+	}
 }

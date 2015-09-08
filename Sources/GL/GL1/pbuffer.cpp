@@ -43,40 +43,38 @@
 
 namespace clan
 {
+	PBuffer_GL1::PBuffer_GL1()
+	{
+	}
 
-PBuffer_GL1::PBuffer_GL1()
-{
-}
+	PBuffer_GL1::PBuffer_GL1(GL1GraphicContextProvider *gc_provider) : impl(std::make_shared<PBuffer_GL1_Impl>(gc_provider))
+	{
+	}
 
-PBuffer_GL1::PBuffer_GL1(GL1GraphicContextProvider *gc_provider) : impl(std::make_shared<PBuffer_GL1_Impl>(gc_provider))
-{
-}
+	PBuffer_GL1::~PBuffer_GL1()
+	{
+	}
 
-PBuffer_GL1::~PBuffer_GL1()
-{
-}
+	void PBuffer_GL1::create(OpenGLWindowProvider &window_provider, Size &size)
+	{
+		impl->create(window_provider, size);
+		set_active();
 
-void PBuffer_GL1::create(OpenGLWindowProvider &window_provider, Size &size)
-{
-	impl->create(window_provider, size);
-	set_active();
+		glEnable(GL_POINT_SPRITE);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+	}
 
-	glEnable(GL_POINT_SPRITE);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-}
+	void PBuffer_GL1::set_active()
+	{
+		OpenGL::set_active(impl.get());
+	}
 
-void PBuffer_GL1::set_active()
-{
-	OpenGL::set_active(impl.get());
-}
-
-void PBuffer_GL1::throw_if_null() const
-{
-	if (!impl)
-		throw Exception("is null");
-}
-
+	void PBuffer_GL1::throw_if_null() const
+	{
+		if (!impl)
+			throw Exception("is null");
+	}
 }

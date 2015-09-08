@@ -43,4 +43,3 @@ namespace clan
 		static SetupGL_Impl *instance;
 	};
 }
-

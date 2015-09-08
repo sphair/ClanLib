@@ -41,37 +41,19 @@
 
 namespace clan
 {
+	class GL3StandardPrograms_Impl;
+	class GL3GraphicContextProvider;
 
-class GL3StandardPrograms_Impl;
-class GL3GraphicContextProvider;
+	class GL3StandardPrograms
+	{
+	public:
+		GL3StandardPrograms();
+		GL3StandardPrograms(GL3GraphicContextProvider *provider);
+		~GL3StandardPrograms();
 
-class GL3StandardPrograms
-{
-/// \name Construction
-/// \{
-public:
-	GL3StandardPrograms();
-	GL3StandardPrograms(GL3GraphicContextProvider *provider);
+		ProgramObject get_program_object(StandardProgram standard_program) const;
 
-	~GL3StandardPrograms();
-
-/// \}
-/// \name Attributes
-/// \{
-public:
-	ProgramObject get_program_object(StandardProgram standard_program) const;
-/// \}
-/// \name Operations
-/// \{
-public:
-
-/// \}
-/// \name Implementation
-/// \{
-private:
-	std::shared_ptr<GL3StandardPrograms_Impl> impl;
-
-/// \}
-};
-
+	private:
+		std::shared_ptr<GL3StandardPrograms_Impl> impl;
+	};
 }

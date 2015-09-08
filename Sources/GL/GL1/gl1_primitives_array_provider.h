@@ -32,36 +32,16 @@
 
 namespace clan
 {
+	class GL1PrimitivesArrayProvider : public PrimitivesArrayProvider
+	{
+	public:
+		GL1PrimitivesArrayProvider();
+		~GL1PrimitivesArrayProvider();
 
-class GL1PrimitivesArrayProvider : public PrimitivesArrayProvider
-{
-/// \name Construction
-/// \{
-public:
-	GL1PrimitivesArrayProvider();
-	~GL1PrimitivesArrayProvider();
-/// \}
+		std::vector<PrimitivesArrayProvider::VertexData> attributes;
+		std::vector<bool> normalize_attributes;
+		std::vector<bool> attribute_set;
 
-/// \name Attributes
-/// \{
-public:
-	std::vector<PrimitivesArrayProvider::VertexData> attributes;
-	std::vector<bool> normalize_attributes;
-	std::vector<bool> attribute_set;
-
-/// \}
-
-/// \name Operations
-/// \{
-public:
-	void set_attribute(int index, const VertexData &data, bool normalize) override;
-
-/// \}
-
-/// \name Implementation
-/// \{
-private:
-/// \}
-};
-
+		void set_attribute(int index, const VertexData &data, bool normalize) override;
+	};
 }

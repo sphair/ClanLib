@@ -35,31 +35,26 @@
 
 namespace clan
 {
+	SetupGL_Impl *SetupGL_Impl::instance = nullptr;
 
-SetupGL_Impl *SetupGL_Impl::instance = nullptr;
+	void SetupGL::start()
+	{
+		std::lock_guard<std::recursive_mutex> lock(SetupCore::instance.mutex);
 
-/////////////////////////////////////////////////////////////////////////////
-// SetupGL Construction:
+		if (SetupCore::instance.module_gl)
+			return;
 
-void SetupGL::start()
-{
-	std::lock_guard<std::recursive_mutex> lock(SetupCore::instance.mutex);
+		SetupDisplay::start();	// GL depends on display
+		SetupCore::instance.module_gl = clan::make_unique<SetupGL_Impl>();
+	}
 
-	if (SetupCore::instance.module_gl)
-		return;
+	SetupGL_Impl::SetupGL_Impl()
+	{
+		instance = this;
+	}
 
-	SetupDisplay::start();	// GL depends on display
-	SetupCore::instance.module_gl = clan::make_unique<SetupGL_Impl>();
-}
-
-SetupGL_Impl::SetupGL_Impl()
-{
-	instance = this;
-}
-
-SetupGL_Impl::~SetupGL_Impl()
-{
-	instance = nullptr;
-}
-
+	SetupGL_Impl::~SetupGL_Impl()
+	{
+		instance = nullptr;
+	}
 }
