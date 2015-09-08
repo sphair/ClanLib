@@ -33,89 +33,75 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// DomNodeList construction:
-
-DomNodeList::DomNodeList()
-{
-}
-
-DomNodeList::DomNodeList(DomNode &node, const DomString &tag_name)
-{
-	DomNode current_child = node.get_first_child();
-	while(!current_child.is_null())
+	DomNodeList::DomNodeList()
 	{
-		if(current_child.get_node_name() == tag_name)
-		{
-			add_item(current_child);
-		}
-		current_child = current_child.get_next_sibling();
 	}
-}
 
-DomNodeList::DomNodeList(
-	DomNode &node,
-	const DomString &namespace_uri,
-	const DomString &name,
-	bool local_name)
-{
-	DomNode current_child = node.get_first_child();
-	while(!current_child.is_null())
+	DomNodeList::DomNodeList(DomNode &node, const DomString &tag_name)
 	{
-		if (local_name)
+		DomNode current_child = node.get_first_child();
+		while (!current_child.is_null())
 		{
-			if (current_child.get_namespace_uri() == namespace_uri &&
-				current_child.get_local_name() == name)
+			if (current_child.get_node_name() == tag_name)
 			{
 				add_item(current_child);
 			}
+			current_child = current_child.get_next_sibling();
 		}
-		else
-		{
-			if (current_child.get_namespace_uri() == namespace_uri &&
-				current_child.get_node_name() == name)
-			{
-				add_item(current_child);
-			}
-		}
-		current_child = current_child.get_next_sibling();
 	}
-}
 
-DomNodeList::~DomNodeList()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// DomNodeList attributes:
-
-int DomNodeList::get_length() const
-{
-	return (node_list.size());
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// DomNodeList operations:
-
-DomNode DomNodeList::item(unsigned long index) const
-{
-	if (index >= node_list.size())
+	DomNodeList::DomNodeList(
+		DomNode &node,
+		const DomString &namespace_uri,
+		const DomString &name,
+		bool local_name)
 	{
-		//if the given index is not valid
-		DomNode empty_node;
-		return(empty_node);
+		DomNode current_child = node.get_first_child();
+		while (!current_child.is_null())
+		{
+			if (local_name)
+			{
+				if (current_child.get_namespace_uri() == namespace_uri &&
+					current_child.get_local_name() == name)
+				{
+					add_item(current_child);
+				}
+			}
+			else
+			{
+				if (current_child.get_namespace_uri() == namespace_uri &&
+					current_child.get_node_name() == name)
+				{
+					add_item(current_child);
+				}
+			}
+			current_child = current_child.get_next_sibling();
+		}
 	}
-	auto i=node_list.begin()+index;
-	return(*i);
-}
 
-void DomNodeList::add_item(DomNode &to_add)
-{
-	node_list.push_back(to_add);
-}
+	DomNodeList::~DomNodeList()
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// DomNodeList implementation:
+	int DomNodeList::get_length() const
+	{
+		return (node_list.size());
+	}
 
+	DomNode DomNodeList::item(unsigned long index) const
+	{
+		if (index >= node_list.size())
+		{
+			//if the given index is not valid
+			DomNode empty_node;
+			return(empty_node);
+		}
+		auto i = node_list.begin() + index;
+		return(*i);
+	}
+
+	void DomNodeList::add_item(DomNode &to_add)
+	{
+		node_list.push_back(to_add);
+	}
 }

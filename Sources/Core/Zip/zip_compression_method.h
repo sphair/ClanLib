@@ -30,20 +30,18 @@
 
 namespace clan
 {
-
-enum ZipCompressionMethod
-{
-	zip_compress_store, // no compression
-	zip_compress_shrunk,
-	zip_compress_expand_factor_1,
-	zip_compress_expand_factor_2,
-	zip_compress_expand_factor_3,
-	zip_compress_expand_factor_4,
-	zip_compress_implode,
-	zip_compress_tokenize,
-	zip_compress_deflate,
-	zip_compress_deflate64,
-	zip_compress_pkware_implode
-};
-
+	enum ZipCompressionMethod
+	{
+		zip_compress_store, // no compression
+		zip_compress_shrunk,
+		zip_compress_expand_factor_1,
+		zip_compress_expand_factor_2,
+		zip_compress_expand_factor_3,
+		zip_compress_expand_factor_4,
+		zip_compress_implode,
+		zip_compress_tokenize,
+		zip_compress_deflate,
+		zip_compress_deflate64,
+		zip_compress_pkware_implode
+	};
 }

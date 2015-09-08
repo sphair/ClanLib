@@ -33,76 +33,62 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// ZipEndOfCentralDirectoryRecord construction:
-
-ZipEndOfCentralDirectoryRecord::ZipEndOfCentralDirectoryRecord()
-{	
+	ZipEndOfCentralDirectoryRecord::ZipEndOfCentralDirectoryRecord()
+	{
 #ifdef USE_BIG_ENDIAN
-	signature = 0x504b0506;
+		signature = 0x504b0506;
 #else
-	signature = 0x06054b50;
+		signature = 0x06054b50;
 #endif			
-}
-	
-ZipEndOfCentralDirectoryRecord::~ZipEndOfCentralDirectoryRecord()
-{
-}
-	
-/////////////////////////////////////////////////////////////////////////////
-// ZipEndOfCentralDirectoryRecord attributes:
-
-/////////////////////////////////////////////////////////////////////////////
-// ZipEndOfCentralDirectoryRecord operations:
-
-void ZipEndOfCentralDirectoryRecord::load(IODevice &input)
-{
-	signature = input.read_int32();
-	if (signature != 0x06054b50)
-	{
-		throw Exception("Incorrect End of Central Directory Record signature");
 	}
-	
-	number_of_this_disk = input.read_int16();
-	number_of_disk_with_start_of_central_directory = input.read_int16();
-	number_of_entries_on_this_disk = input.read_int16();
-	number_of_entries_in_central_directory = input.read_int16();
-	size_of_central_directory = input.read_int32();
-	offset_to_start_of_central_directory = input.read_int32();
-	file_comment_length = input.read_int16();
 
-	auto str = new char[file_comment_length];
-	try
+	ZipEndOfCentralDirectoryRecord::~ZipEndOfCentralDirectoryRecord()
 	{
-		input.read(str, file_comment_length);
-		file_comment = StringHelp::local8_to_text(std::string(str, file_comment_length));
-
-		delete[] str;
 	}
-	catch (...)
+
+	void ZipEndOfCentralDirectoryRecord::load(IODevice &input)
 	{
-		delete[] str;
-		throw;
+		signature = input.read_int32();
+		if (signature != 0x06054b50)
+		{
+			throw Exception("Incorrect End of Central Directory Record signature");
+		}
+
+		number_of_this_disk = input.read_int16();
+		number_of_disk_with_start_of_central_directory = input.read_int16();
+		number_of_entries_on_this_disk = input.read_int16();
+		number_of_entries_in_central_directory = input.read_int16();
+		size_of_central_directory = input.read_int32();
+		offset_to_start_of_central_directory = input.read_int32();
+		file_comment_length = input.read_int16();
+
+		auto str = new char[file_comment_length];
+		try
+		{
+			input.read(str, file_comment_length);
+			file_comment = StringHelp::local8_to_text(std::string(str, file_comment_length));
+
+			delete[] str;
+		}
+		catch (...)
+		{
+			delete[] str;
+			throw;
+		}
 	}
-}
 
-void ZipEndOfCentralDirectoryRecord::save(IODevice &output)
-{
-	std::string str = StringHelp::text_to_cp437(file_comment);
-	file_comment_length = str.length();
-	output.write_int32(signature);
-	output.write_int16(number_of_this_disk);
-	output.write_int16(number_of_disk_with_start_of_central_directory);
-	output.write_int16(number_of_entries_on_this_disk);
-	output.write_int16(number_of_entries_in_central_directory);
-	output.write_int32(size_of_central_directory);
-	output.write_int32(offset_to_start_of_central_directory);
-	output.write_int16(file_comment_length);
-	output.write(str.data(), str.length());
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// ZipEndOfCentralDirectoryRecord implementation:
-
+	void ZipEndOfCentralDirectoryRecord::save(IODevice &output)
+	{
+		std::string str = StringHelp::text_to_cp437(file_comment);
+		file_comment_length = str.length();
+		output.write_int32(signature);
+		output.write_int16(number_of_this_disk);
+		output.write_int16(number_of_disk_with_start_of_central_directory);
+		output.write_int16(number_of_entries_on_this_disk);
+		output.write_int16(number_of_entries_in_central_directory);
+		output.write_int32(size_of_central_directory);
+		output.write_int32(offset_to_start_of_central_directory);
+		output.write_int16(file_comment_length);
+		output.write(str.data(), str.length());
+	}
 }

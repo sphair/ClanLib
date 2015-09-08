@@ -31,52 +31,38 @@
 
 namespace clan
 {
+	ThreadLocalStorage_Impl::ThreadLocalStorage_Impl()
+		: reference_count(1)
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// ThreadLocalStorage_Impl Construction:
+	ThreadLocalStorage_Impl::~ThreadLocalStorage_Impl()
+	{
+	}
 
-ThreadLocalStorage_Impl::ThreadLocalStorage_Impl()
-: reference_count(1)
-{
-}
+	std::shared_ptr<ThreadLocalStorageData> ThreadLocalStorage_Impl::get_variable(const std::string &name)
+	{
+		std::map<std::string, std::shared_ptr<ThreadLocalStorageData> >::const_iterator it = data.find(name);
+		if (it != data.end())
+			return it->second;
+		else
+			return std::shared_ptr<ThreadLocalStorageData>();
+	}
 
-ThreadLocalStorage_Impl::~ThreadLocalStorage_Impl()
-{
-}
+	void ThreadLocalStorage_Impl::set_variable(const std::string &name, std::shared_ptr<ThreadLocalStorageData> ptr)
+	{
+		data[name] = ptr;
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// ThreadLocalStorage_Impl Attributes:
+	void ThreadLocalStorage_Impl::add_reference()
+	{
+		reference_count++;
+	}
 
-std::shared_ptr<ThreadLocalStorageData> ThreadLocalStorage_Impl::get_variable(const std::string &name)
-{
-	std::map<std::string, std::shared_ptr<ThreadLocalStorageData> >::const_iterator it = data.find(name);
-	if (it != data.end())
-		return it->second;
-	else
-		return std::shared_ptr<ThreadLocalStorageData>();	
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// ThreadLocalStorage_Impl Operations:
-
-void ThreadLocalStorage_Impl::set_variable(const std::string &name, std::shared_ptr<ThreadLocalStorageData> ptr)
-{
-	data[name] = ptr;
-}
-
-void ThreadLocalStorage_Impl::add_reference()
-{
-	reference_count++;
-}
-
-void ThreadLocalStorage_Impl::release_reference()
-{
-	reference_count--;
-	if (reference_count == 0)
-		delete this;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// ThreadLocalStorage_Impl Implementation:
-
+	void ThreadLocalStorage_Impl::release_reference()
+	{
+		reference_count--;
+		if (reference_count == 0)
+			delete this;
+	}
 }

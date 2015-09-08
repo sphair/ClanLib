@@ -33,11 +33,9 @@
 
 namespace clan
 {
-
-class FileResourceDocument_Impl
-{
-public:
-	FileSystem fs;
-};
-
+	class FileResourceDocument_Impl
+	{
+	public:
+		FileSystem fs;
+	};
 }

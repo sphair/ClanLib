@@ -32,50 +32,20 @@
 
 namespace clan
 {
+	class IODevice;
 
-class IODevice;
+	class Zip64EndOfCentralDirectoryLocator
+	{
+	public:
+		Zip64EndOfCentralDirectoryLocator();
+		~Zip64EndOfCentralDirectoryLocator();
 
-class Zip64EndOfCentralDirectoryLocator
-{
-/// \name Construction
-/// \{
+		int32_t signature; // 0x07064b50
+		int32_t number_of_disk_with_zip64_end_of_central_directory;
+		int64_t relative_offset_of_zip64_end_of_central_directory;
+		int32_t total_number_of_disks;
 
-public:
-	Zip64EndOfCentralDirectoryLocator();
-
-	~Zip64EndOfCentralDirectoryLocator();
-
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	int32_t signature; // 0x07064b50
-
-	int32_t number_of_disk_with_zip64_end_of_central_directory;
-
-	int64_t relative_offset_of_zip64_end_of_central_directory;
-
-	int32_t total_number_of_disks;
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	void load(IODevice &input);
-
-	void save(IODevice &output);
-
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-};
-
+		void load(IODevice &input);
+		void save(IODevice &output);
+	};
 }

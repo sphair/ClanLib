@@ -33,146 +33,129 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// XPathObject_Impl Class:
-
-class XPathObject_Impl
-{
-public:
-	XPathObject_Impl()
-	: type(XPathObject::type_null), boolean(false), number(0.0)
+	class XPathObject_Impl
 	{
+	public:
+		XPathObject_Impl()
+			: type(XPathObject::type_null), boolean(false), number(0.0)
+		{
+		}
+
+		XPathObject::Type type;
+		std::vector<DomNode> node_set;
+		bool boolean;
+		double number;
+		std::string string;
+	};
+
+	XPathObject::XPathObject()
+		: impl(std::make_shared<XPathObject_Impl>())
+	{
+		impl->type = XPathObject::type_null;
 	}
 
-	XPathObject::Type type;
-	std::vector<DomNode> node_set;
-	bool boolean;
-	double number;
-	std::string string;
-};
+	XPathObject::XPathObject(bool value)
+		: impl(std::make_shared<XPathObject_Impl>())
+	{
+		set_boolean(value);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// XPathObject Constuction:
+	XPathObject::XPathObject(double value)
+		: impl(std::make_shared<XPathObject_Impl>())
+	{
+		set_number(value);
+	}
 
-XPathObject::XPathObject()
-: impl(std::make_shared<XPathObject_Impl>())
-{
-	impl->type = XPathObject::type_null;
-}
+	XPathObject::XPathObject(size_t value)
+		: impl(std::make_shared<XPathObject_Impl>())
+	{
+		set_number(value);
+	}
 
-XPathObject::XPathObject(bool value)
-: impl(std::make_shared<XPathObject_Impl>())
-{
-	set_boolean(value);
-}
+	XPathObject::XPathObject(const std::string &value)
+		: impl(std::make_shared<XPathObject_Impl>())
+	{
+		set_string(value);
+	}
 
-XPathObject::XPathObject(double value)
-: impl(std::make_shared<XPathObject_Impl>())
-{
-	set_number(value);
-}
+	XPathObject::XPathObject(const std::vector<DomNode> &value)
+		: impl(std::make_shared<XPathObject_Impl>())
+	{
+		set_node_set(value);
+	}
 
-XPathObject::XPathObject(size_t value)
-: impl(std::make_shared<XPathObject_Impl>())
-{
-	set_number(value);
-}
+	XPathObject::Type XPathObject::get_type() const
+	{
+		return impl->type;
+	}
 
-XPathObject::XPathObject(const std::string &value)
-: impl(std::make_shared<XPathObject_Impl>())
-{
-	set_string(value);
-}
+	bool XPathObject::is_null() const
+	{
+		return impl->type == type_null;
+	}
 
-XPathObject::XPathObject(const std::vector<DomNode> &value)
-: impl(std::make_shared<XPathObject_Impl>())
-{
-	set_node_set(value);
-}
+	std::vector<DomNode> XPathObject::get_node_set() const
+	{
+		if (impl->type == type_node_set)
+			return impl->node_set;
+		else
+			return std::vector<DomNode>();
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// XPathObject Attributes:
+	bool XPathObject::get_boolean() const
+	{
+		if (impl->type == type_boolean)
+			return impl->boolean;
+		else
+			return false;
+	}
 
-XPathObject::Type XPathObject::get_type() const
-{
-	return impl->type;
-}
+	double XPathObject::get_number() const
+	{
+		if (impl->type == type_number)
+			return impl->number;
+		else
+			return 0.0;
+	}
 
-bool XPathObject::is_null() const
-{
-	return impl->type == type_null;
-}
+	std::string XPathObject::get_string() const
+	{
+		if (impl->type == type_string)
+			return impl->string;
+		else
+			return std::string();
+	}
 
-std::vector<DomNode> XPathObject::get_node_set() const
-{
-	if (impl->type == type_node_set)
-		return impl->node_set;
-	else
-		return std::vector<DomNode>();
-}
+	void XPathObject::set_null()
+	{
+		impl->type = type_null;
+		impl->node_set.clear();
+	}
 
-bool XPathObject::get_boolean() const
-{
-	if (impl->type == type_boolean)
-		return impl->boolean;
-	else
-		return false;
-}
+	void XPathObject::set_node_set(const std::vector<DomNode> &node_set)
+	{
+		impl->type = type_node_set;
+		impl->node_set = node_set;
+	}
 
-double XPathObject::get_number() const
-{
-	if (impl->type == type_number)
-		return impl->number;
-	else
-		return 0.0;
-}
+	void XPathObject::set_boolean(bool value)
+	{
+		impl->type = type_boolean;
+		impl->boolean = value;
+		impl->node_set.clear();
+	}
 
-std::string XPathObject::get_string() const
-{
-	if (impl->type == type_string)
-		return impl->string;
-	else
-		return std::string();
-}
+	void XPathObject::set_number(double value)
+	{
+		impl->type = type_number;
+		impl->number = value;
+		impl->node_set.clear();
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// XPathObject Operations:
-
-void XPathObject::set_null()
-{
-	impl->type = type_null;
-	impl->node_set.clear();
-}
-
-void XPathObject::set_node_set(const std::vector<DomNode> &node_set)
-{
-	impl->type = type_node_set;
-	impl->node_set = node_set;
-}
-
-void XPathObject::set_boolean(bool value)
-{
-	impl->type = type_boolean;
-	impl->boolean = value;
-	impl->node_set.clear();
-}
-
-void XPathObject::set_number(double value)
-{
-	impl->type = type_number;
-	impl->number = value;
-	impl->node_set.clear();
-}
-
-void XPathObject::set_string(const std::string &str)
-{
-	impl->type = type_string;
-	impl->string = str;
-	impl->node_set.clear();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// XPathObject Implementation:
-
+	void XPathObject::set_string(const std::string &str)
+	{
+		impl->type = type_string;
+		impl->string = str;
+		impl->node_set.clear();
+	}
 }

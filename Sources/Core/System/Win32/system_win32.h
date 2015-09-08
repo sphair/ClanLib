@@ -24,7 +24,6 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #pragma once

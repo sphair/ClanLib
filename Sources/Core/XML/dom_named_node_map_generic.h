@@ -35,57 +35,28 @@
 
 namespace clan
 {
+	class DomNode_Impl;
+	class DomTreeNode;
 
-class DomNode_Impl;
-class DomTreeNode;
-
-class DomNamedNodeMap_Impl : public BlockAllocated
-{
-/// \name Construction
-/// \{
-
-public:
-	DomNamedNodeMap_Impl();
-
-	~DomNamedNodeMap_Impl();
-
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	enum MapType
+	class DomNamedNodeMap_Impl : public BlockAllocated
 	{
-		type_null,
-		type_attributes,
-		type_entities,
-		type_notations
+	public:
+		DomNamedNodeMap_Impl();
+		~DomNamedNodeMap_Impl();
+
+		enum MapType
+		{
+			type_null,
+			type_attributes,
+			type_entities,
+			type_notations
+		};
+
+		MapType map_type;
+		unsigned int node_index;
+		std::weak_ptr<DomNode_Impl> owner_document;
+
+		DomTreeNode *get_tree_node();
+		const DomTreeNode *get_tree_node() const;
 	};
-
-	MapType map_type;
-
-	unsigned int node_index;
-
-	std::weak_ptr<DomNode_Impl> owner_document;
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	DomTreeNode *get_tree_node();
-
-	const DomTreeNode *get_tree_node() const;
-
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-};
-
 }

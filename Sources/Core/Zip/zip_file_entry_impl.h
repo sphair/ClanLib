@@ -34,40 +34,34 @@
 
 namespace clan
 {
-
-class ZipFileEntry_Impl
-{
-/// \name Attributes
-/// \{
-
-public:
-	/// \brief Zip file entry type enum.
-	enum Type
+	class ZipFileEntry_Impl
 	{
-		type_file,
-		type_removed,
-		type_added_memory,
-		type_added_file
+	public:
+		/// \brief Zip file entry type enum.
+		enum Type
+		{
+			type_file,
+			type_removed,
+			type_added_memory,
+			type_added_file
+		};
+
+		/// \brief Central directory record attributes for entry:
+		ZipFileHeader record;
+
+		/// \brief File entry type.
+		Type type;
+
+		/// \brief Offset to zip data in zip file (type_file).
+		// int64_t offset;
+
+		/// \brief Filename of file, if added from file (type_added_file).
+		std::string filename;
+
+		/// \brief Data of zip file entry, if added from memory (type_added_memory).
+		DataBuffer data;
+
+		/// \brief True, if this entry is a directory.
+		bool is_directory;
 	};
-
-	/// \brief Central directory record attributes for entry:
-	ZipFileHeader record;
-
-	/// \brief File entry type.
-	Type type;
-
-	/// \brief Offset to zip data in zip file (type_file).
-	// int64_t offset;
-
-	/// \brief Filename of file, if added from file (type_added_file).
-	std::string filename;
-
-	/// \brief Data of zip file entry, if added from memory (type_added_memory).
-	DataBuffer data;
-
-	/// \brief True, if this entry is a directory.
-	bool is_directory;
-/// \}
-};
-
 }

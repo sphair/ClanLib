@@ -33,28 +33,20 @@
 
 namespace clan
 {
+	DomDocumentFragment::DomDocumentFragment()
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// DomDocumentFragment construction:
+	DomDocumentFragment::DomDocumentFragment(DomDocument &doc)
+		: DomNode(doc, DOCUMENT_FRAGMENT_NODE)
+	{
+	}
 
-DomDocumentFragment::DomDocumentFragment()
-{
-}
+	DomDocumentFragment::DomDocumentFragment(const std::shared_ptr<DomNode_Impl> &impl) : DomNode(impl)
+	{
+	}
 
-DomDocumentFragment::DomDocumentFragment(DomDocument &doc)
-: DomNode(doc, DOCUMENT_FRAGMENT_NODE)
-{
-}
-
-DomDocumentFragment::DomDocumentFragment(const std::shared_ptr<DomNode_Impl> &impl) : DomNode(impl)
-{
-}
-
-DomDocumentFragment::~DomDocumentFragment()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// DomDocumentFragment implementation:
-
+	DomDocumentFragment::~DomDocumentFragment()
+	{
+	}
 }

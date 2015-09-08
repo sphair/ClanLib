@@ -32,40 +32,25 @@
 
 namespace clan
 {
+	ZipLocalFileDescriptor::ZipLocalFileDescriptor()
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// ZipLocalFileDescriptor construction:
+	ZipLocalFileDescriptor::~ZipLocalFileDescriptor()
+	{
+	}
 
-ZipLocalFileDescriptor::ZipLocalFileDescriptor()
-{
-}
-	
-ZipLocalFileDescriptor::~ZipLocalFileDescriptor()
-{
-}
+	void ZipLocalFileDescriptor::load(IODevice &input)
+	{
+		crc32 = input.read_int32();
+		compressed_size = input.read_int32();
+		uncompressed_size = input.read_int32();
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// ZipLocalFileDescriptor attributes:
-
-
-/////////////////////////////////////////////////////////////////////////////
-// ZipLocalFileDescriptor operations:
-
-void ZipLocalFileDescriptor::load(IODevice &input)
-{
-	crc32 = input.read_int32();
-	compressed_size = input.read_int32();
-	uncompressed_size = input.read_int32();
-}
-	
-void ZipLocalFileDescriptor::save(IODevice &output)
-{
-	output.write_int32(crc32);
-	output.write_int32(compressed_size);
-	output.write_int32(uncompressed_size);
-}
-	
-/////////////////////////////////////////////////////////////////////////////
-// ZipLocalFileDescriptor implementation:
-
+	void ZipLocalFileDescriptor::save(IODevice &output)
+	{
+		output.write_int32(crc32);
+		output.write_int32(compressed_size);
+		output.write_int32(uncompressed_size);
+	}
 }

@@ -35,22 +35,18 @@
 
 namespace clan
 {
+	class XMLResourceDocument_Impl
+	{
+	public:
+		XMLResourceNode get_resource(const std::string &resource_id) const;
 
-class XMLResourceDocument_Impl
-{
-public:
-	XMLResourceNode get_resource(const std::string &resource_id) const;
+		FileSystem fs;
+		std::string base_path;
 
-	FileSystem fs;
-	std::string base_path;
+		DomDocument document;
 
-	DomDocument document;
-
-	std::map<std::string, XMLResourceNode> resources;
-
-	std::vector<XMLResourceDocument> additional_resources;
-
-	std::string ns_resources;
-};
-
+		std::map<std::string, XMLResourceNode> resources;
+		std::vector<XMLResourceDocument> additional_resources;
+		std::string ns_resources;
+	};
 }

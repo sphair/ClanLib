@@ -32,48 +32,19 @@
 
 namespace clan
 {
+	class IODevice;
 
-class IODevice;
+	class ZipLocalFileDescriptor
+	{
+	public:
+		ZipLocalFileDescriptor();
+		~ZipLocalFileDescriptor();
 
-class ZipLocalFileDescriptor
-{
-/// \name Construction
-/// \{
+		int32_t crc32;
+		int32_t compressed_size;
+		int32_t uncompressed_size;
 
-public:
-	ZipLocalFileDescriptor();
-
-	~ZipLocalFileDescriptor();
-
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	int32_t crc32;
-
-	int32_t compressed_size;
-
-	int32_t uncompressed_size;
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	void load(IODevice &input);
-
-	void save(IODevice &output);
-
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-};
-
+		void load(IODevice &input);
+		void save(IODevice &output);
+	};
 }

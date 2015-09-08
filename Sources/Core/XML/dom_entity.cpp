@@ -31,44 +31,30 @@
 
 namespace clan
 {
+	DomEntity::DomEntity()
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// DomEntity construction:
+	DomEntity::DomEntity(const std::shared_ptr<DomNode_Impl> &impl) : DomNode(impl)
+	{
+	}
 
-DomEntity::DomEntity()
-{
-}
+	DomEntity::~DomEntity()
+	{
+	}
 
-DomEntity::DomEntity(const std::shared_ptr<DomNode_Impl> &impl) : DomNode(impl)
-{
-}
-	
-DomEntity::~DomEntity()
-{
-}
+	DomString DomEntity::get_public_id() const
+	{
+		return DomString();
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// DomEntity attributes:
+	DomString DomEntity::get_system_id() const
+	{
+		return DomString();
+	}
 
-DomString DomEntity::get_public_id() const
-{
-	return DomString();
-}
-	
-DomString DomEntity::get_system_id() const
-{
-	return DomString();
-}
-	
-DomString DomEntity::get_notation_name() const
-{
-	return DomString();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// DomEntity operations:
-
-/////////////////////////////////////////////////////////////////////////////
-// DomEntity implementation:
-
+	DomString DomEntity::get_notation_name() const
+	{
+		return DomString();
+	}
 }

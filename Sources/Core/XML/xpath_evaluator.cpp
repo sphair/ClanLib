@@ -36,26 +36,18 @@
 
 namespace clan
 {
+	XPathEvaluator::XPathEvaluator()
+		: impl(std::make_shared<XPathEvaluator_Impl>())
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// XPathEvaluator Construction:
-
-XPathEvaluator::XPathEvaluator()
-: impl(std::make_shared<XPathEvaluator_Impl>())
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// XPathEvaluator Operations:
-
-XPathObject XPathEvaluator::evaluate(const std::string &expression, const DomNode &context_node) const
-{
-	XPathToken prev_token;
-	std::vector<DomNode> nodelist(1, context_node);
-	XPathEvaluateResult result = impl->evaluate(expression, nodelist, 0, prev_token);
-	if (result.next_token.type != XPathToken::type_none)
-		throw XPathException("Expected end of expression", expression, result.next_token);
-	return result.result;
-}
-
+	XPathObject XPathEvaluator::evaluate(const std::string &expression, const DomNode &context_node) const
+	{
+		XPathToken prev_token;
+		std::vector<DomNode> nodelist(1, context_node);
+		XPathEvaluateResult result = impl->evaluate(expression, nodelist, 0, prev_token);
+		if (result.next_token.type != XPathToken::type_none)
+			throw XPathException("Expected end of expression", expression, result.next_token);
+		return result.result;
+	}
 }

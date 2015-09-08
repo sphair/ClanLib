@@ -33,175 +33,161 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// StringFormat Construction:
-
-StringFormat::StringFormat(const std::string &format_string)
-: string(format_string)
-{
-	bool arg_mode = false;
-	unsigned int arg_start = 0;
-	int arg_value = 0;
-	std::string::size_type index, size;
-	size = string.size();
-	for (index = 0; index < size; index++)
+	StringFormat::StringFormat(const std::string &format_string)
+		: string(format_string)
 	{
-		if (!arg_mode)
+		bool arg_mode = false;
+		unsigned int arg_start = 0;
+		int arg_value = 0;
+		std::string::size_type index, size;
+		size = string.size();
+		for (index = 0; index < size; index++)
 		{
-			if (string[index] == '%')
+			if (!arg_mode)
 			{
-				arg_mode = true;
-				arg_value = 0;
-				arg_start = index;
-			}
-		}
-		else
-		{
-			switch (string[index])
-			{
-			case '%':
-				if (arg_start == index-1)
+				if (string[index] == '%')
 				{
-					arg_mode = false;
-					string = string.substr(0, index) + string.substr(index + 1);
-					index--;
-					size--;
-				}
-				else
-				{
-					create_arg(arg_value, arg_start, index-arg_start);
-					arg_start = index;
+					arg_mode = true;
 					arg_value = 0;
+					arg_start = index;
 				}
-				break;
-			case '0':
-			case '1':
-			case '2':
-			case '3':
-			case '4':
-			case '5':
-			case '6':
-			case '7':
-			case '8':
-			case '9':
-				arg_value *= 10;
-				arg_value += string[index]-'0';
-				break;
-			default:
-				if (arg_start != index-1)
-					create_arg(arg_value, arg_start, index-arg_start);
-				arg_mode = false;
-				break;
+			}
+			else
+			{
+				switch (string[index])
+				{
+				case '%':
+					if (arg_start == index - 1)
+					{
+						arg_mode = false;
+						string = string.substr(0, index) + string.substr(index + 1);
+						index--;
+						size--;
+					}
+					else
+					{
+						create_arg(arg_value, arg_start, index - arg_start);
+						arg_start = index;
+						arg_value = 0;
+					}
+					break;
+				case '0':
+				case '1':
+				case '2':
+				case '3':
+				case '4':
+				case '5':
+				case '6':
+				case '7':
+				case '8':
+				case '9':
+					arg_value *= 10;
+					arg_value += string[index] - '0';
+					break;
+				default:
+					if (arg_start != index - 1)
+						create_arg(arg_value, arg_start, index - arg_start);
+					arg_mode = false;
+					break;
+				}
 			}
 		}
+
+		if (arg_mode && arg_start != size - 1)
+			create_arg(arg_value, arg_start, size - arg_start);
 	}
-	
-	if (arg_mode && arg_start != size-1)
-		create_arg(arg_value, arg_start, size-arg_start);
-}
 
-StringFormat::~StringFormat()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// StringFormat Attributes:
-
-const std::string &StringFormat::get_result() const
-{
-	return string;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// StringFormat Operations:
-
-void StringFormat::set_arg(int index, const std::string &text)
-{
-	if (index >= (int) args.size())
-		return;
-		
-	ArgPosition pos = args[index];
-	if (pos.length == -1)
-		return;
-		
-	int delta_size = ((int) text.length()) - pos.length;
-	string = string.substr(0, pos.start) + text + string.substr(pos.start + pos.length);
-	args[index].length = text.length();
-	
-	std::vector<ArgPosition>::size_type i, size;
-	size = args.size();
-	for (i = 0; i < size; i++)
+	StringFormat::~StringFormat()
 	{
-		if (args[i].start > pos.start)
-			args[i].start += delta_size;
 	}
-}
-	
-void StringFormat::set_arg(int index, int value, int min_length)
-{
-	std::string t = StringHelp::int_to_text(value);
-	if ((int) t.length() < min_length)
-		t = std::string(min_length-t.length(), '0') + t;
-	set_arg(index, t);
-}
 
-void StringFormat::set_arg(int index, unsigned int value, int min_length)
-{
-	std::string t = StringHelp::uint_to_text(value);
-	if ((int) t.length() < min_length)
-		t = std::string(min_length-t.length(), '0') + t;
-	set_arg(index, t);
-}
+	const std::string &StringFormat::get_result() const
+	{
+		return string;
+	}
 
-void StringFormat::set_arg(int index, long long value, int min_length)
-{
-	std::string t = StringHelp::ll_to_text(value);
-	if ((int) t.length() < min_length)
-		t = std::string(min_length-t.length(), '0') + t;
-	set_arg(index, t);
-}
+	void StringFormat::set_arg(int index, const std::string &text)
+	{
+		if (index >= (int)args.size())
+			return;
 
-void StringFormat::set_arg(int index, unsigned long long value, int min_length)
-{
-	std::string t = StringHelp::ull_to_text(value);
-	if ((int) t.length() < min_length)
-		t = std::string(min_length-t.length(), '0') + t;
-	set_arg(index, t);
-}
+		ArgPosition pos = args[index];
+		if (pos.length == -1)
+			return;
 
-void StringFormat::set_arg(int index, long unsigned int value, int min_length)
-{
-	std::string t = StringHelp::ull_to_text(value);
-	if ((int) t.length() < min_length)
-		t = std::string(min_length-t.length(), '0') + t;
-	set_arg(index, t);
-}
+		int delta_size = ((int)text.length()) - pos.length;
+		string = string.substr(0, pos.start) + text + string.substr(pos.start + pos.length);
+		args[index].length = text.length();
 
-void StringFormat::set_arg(int index, float value)
-{
-	set_arg(index, StringHelp::float_to_text(value));
-}
+		std::vector<ArgPosition>::size_type i, size;
+		size = args.size();
+		for (i = 0; i < size; i++)
+		{
+			if (args[i].start > pos.start)
+				args[i].start += delta_size;
+		}
+	}
 
-void StringFormat::set_arg(int index, double value)
-{
-	set_arg(index, StringHelp::double_to_text(value));
-}
+	void StringFormat::set_arg(int index, int value, int min_length)
+	{
+		std::string t = StringHelp::int_to_text(value);
+		if ((int)t.length() < min_length)
+			t = std::string(min_length - t.length(), '0') + t;
+		set_arg(index, t);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// StringFormat Implementation:
+	void StringFormat::set_arg(int index, unsigned int value, int min_length)
+	{
+		std::string t = StringHelp::uint_to_text(value);
+		if ((int)t.length() < min_length)
+			t = std::string(min_length - t.length(), '0') + t;
+		set_arg(index, t);
+	}
 
-void StringFormat::create_arg(int index, int start, int length)
-{
-	if (index > 256)
-		throw Exception("Encountered more than 256 indexes in a formatted string!");
+	void StringFormat::set_arg(int index, long long value, int min_length)
+	{
+		std::string t = StringHelp::ll_to_text(value);
+		if ((int)t.length() < min_length)
+			t = std::string(min_length - t.length(), '0') + t;
+		set_arg(index, t);
+	}
 
-	ArgPosition pos(start, length);
-	while (index >= (int) args.size())
-		args.push_back(ArgPosition());
-	
-	args[index].start = start;
-	args[index].length = length;
-}
+	void StringFormat::set_arg(int index, unsigned long long value, int min_length)
+	{
+		std::string t = StringHelp::ull_to_text(value);
+		if ((int)t.length() < min_length)
+			t = std::string(min_length - t.length(), '0') + t;
+		set_arg(index, t);
+	}
 
+	void StringFormat::set_arg(int index, long unsigned int value, int min_length)
+	{
+		std::string t = StringHelp::ull_to_text(value);
+		if ((int)t.length() < min_length)
+			t = std::string(min_length - t.length(), '0') + t;
+		set_arg(index, t);
+	}
+
+	void StringFormat::set_arg(int index, float value)
+	{
+		set_arg(index, StringHelp::float_to_text(value));
+	}
+
+	void StringFormat::set_arg(int index, double value)
+	{
+		set_arg(index, StringHelp::double_to_text(value));
+	}
+
+	void StringFormat::create_arg(int index, int start, int length)
+	{
+		if (index > 256)
+			throw Exception("Encountered more than 256 indexes in a formatted string!");
+
+		ArgPosition pos(start, length);
+		while (index >= (int)args.size())
+			args.push_back(ArgPosition());
+
+		args[index].start = start;
+		args[index].length = length;
+	}
 }

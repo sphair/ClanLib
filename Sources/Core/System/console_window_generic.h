@@ -34,37 +34,13 @@
 
 namespace clan
 {
+	class ConsoleWindow_Impl
+	{
+	public:
+		ConsoleWindow_Impl(const std::string &title, int width, int height);
+		~ConsoleWindow_Impl();
 
-class ConsoleWindow_Impl
-{
-/// \name Construction
-/// \{
-
-public:
-	ConsoleWindow_Impl(
-		const std::string &title,
-		int width,
-		int height);
-
-	~ConsoleWindow_Impl();
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	void wait_for_key();
-
-	void display_close_message();
-
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-};
-
+		void wait_for_key();
+		void display_close_message();
+	};
 }

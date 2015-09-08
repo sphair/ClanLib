@@ -39,28 +39,23 @@
 
 namespace clan
 {
+	FileResourceDocument::FileResourceDocument()
+		: impl(std::make_shared<FileResourceDocument_Impl>())
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// FileResourceDocument Construction:
+	FileResourceDocument::FileResourceDocument(const FileSystem &fs)
+		: impl(std::make_shared<FileResourceDocument_Impl>())
+	{
+		impl->fs = fs;
+	}
 
-FileResourceDocument::FileResourceDocument()
-: impl(std::make_shared<FileResourceDocument_Impl>())
-{
-}
+	FileResourceDocument::~FileResourceDocument()
+	{
+	}
 
-FileResourceDocument::FileResourceDocument(const FileSystem &fs)
-: impl(std::make_shared<FileResourceDocument_Impl>())
-{
-	impl->fs = fs;
-}
-
-FileResourceDocument::~FileResourceDocument()
-{
-}
-
-FileSystem FileResourceDocument::get_file_system() const
-{
-	return impl->fs;
-}
-
+	FileSystem FileResourceDocument::get_file_system() const
+	{
+		return impl->fs;
+	}
 }

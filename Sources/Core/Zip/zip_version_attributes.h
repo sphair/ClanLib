@@ -30,27 +30,25 @@
 
 namespace clan
 {
-
-enum ZipVersionAttributes
-{
-	zip_version_msdos,
-	zip_version_amiga,
-	zip_version_openvms,
-	zip_version_unix,
-	zip_version_vm_cms,
-	zip_version_atari_st,
-	zip_version_os2,
-	zip_version_macintosh,
-	zip_version_zsystem,
-	zip_version_cpm,
-	zip_version_winnt,
-	zip_version_mvs,
-	zip_version_vse,
-	zip_version_acorn_risc,
-	zip_version_vfat,
-	zip_version_alternate_mvs,
-	zip_version_beos,
-	zip_version_tandem
-};
-
+	enum ZipVersionAttributes
+	{
+		zip_version_msdos,
+		zip_version_amiga,
+		zip_version_openvms,
+		zip_version_unix,
+		zip_version_vm_cms,
+		zip_version_atari_st,
+		zip_version_os2,
+		zip_version_macintosh,
+		zip_version_zsystem,
+		zip_version_cpm,
+		zip_version_winnt,
+		zip_version_mvs,
+		zip_version_vse,
+		zip_version_acorn_risc,
+		zip_version_vfat,
+		zip_version_alternate_mvs,
+		zip_version_beos,
+		zip_version_tandem
+	};
 }

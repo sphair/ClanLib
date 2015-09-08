@@ -35,136 +35,134 @@
 
 namespace clan
 {
-
-class XPathEvaluateResult
-{
-public:
-	XPathObject result;
-	XPathToken next_token;
-};
-
-class XPathEvaluator_Impl
-{
-public:
-	typedef std::vector<DomNode> XPathNodeSet;
-
-public:
-	XPathEvaluateResult evaluate(
-		const std::string &expression,
-		const XPathNodeSet &context,
-		XPathNodeSet::size_type context_node_index,
-		XPathToken prev_token) const;
-
-private:
-	typedef XPathToken::Operator Operator;
-	typedef XPathObject Operand;
-	enum ErrorType
+	class XPathEvaluateResult
 	{
-		syntax_error,
-		expression_error
+	public:
+		XPathObject result;
+		XPathToken next_token;
 	};
 
-	bool do_npr(
-		std::vector<Operator> &operator_stack,
-		std::vector<Operand> &operand_stack) const;
+	class XPathEvaluator_Impl
+	{
+	public:
+		typedef std::vector<DomNode> XPathNodeSet;
 
-	template<typename T>
-	bool compare(const T &a, const T &b, Operator oper) const;
-	bool compare_operands(const Operand &a, const Operand &b, Operator oper) const;
-	bool compare_node_set(const Operand &a, const Operand &b, Operator oper) const;
-	bool compare_boolean(const Operand &a, const Operand &b, Operator oper) const;
-	bool compare_number(const Operand &a, const Operand &b, Operator oper) const;
-	bool compare_string(const Operand &a, const Operand &b, Operator oper) const;
+	public:
+		XPathEvaluateResult evaluate(
+			const std::string &expression,
+			const XPathNodeSet &context,
+			XPathNodeSet::size_type context_node_index,
+			XPathToken prev_token) const;
 
-	XPathToken read_location_path(
-		const std::string &expression,
-		XPathToken cur_token,
-		const XPathNodeSet &context,
-		XPathNodeSet::size_type context_node_index,
-		std::vector<Operand> &operand_stack) const;
+	private:
+		typedef XPathToken::Operator Operator;
+		typedef XPathObject Operand;
+		enum ErrorType
+		{
+			syntax_error,
+			expression_error
+		};
 
-	XPathToken read_location_steps(
-		const std::string &expression,
-		XPathToken cur_token,
-		const XPathNodeSet &context,
-		XPathNodeSet::size_type context_node_index,
-		std::vector<XPathEvaluator_Impl::Operand> &operand_stack) const;
+		bool do_npr(
+			std::vector<Operator> &operator_stack,
+			std::vector<Operand> &operand_stack) const;
 
-	XPathToken read_location_step(
-		const std::string &expression,
-		XPathToken cur_token,
-		XPathLocationStep &step) const;
+		template<typename T>
+		bool compare(const T &a, const T &b, Operator oper) const;
+		bool compare_operands(const Operand &a, const Operand &b, Operator oper) const;
+		bool compare_node_set(const Operand &a, const Operand &b, Operator oper) const;
+		bool compare_boolean(const Operand &a, const Operand &b, Operator oper) const;
+		bool compare_number(const Operand &a, const Operand &b, Operator oper) const;
+		bool compare_string(const Operand &a, const Operand &b, Operator oper) const;
 
-	XPathToken read_token(
-		const std::string &expression,
-		const XPathToken &previous_token = XPathToken()) const;
+		XPathToken read_location_path(
+			const std::string &expression,
+			XPathToken cur_token,
+			const XPathNodeSet &context,
+			XPathNodeSet::size_type context_node_index,
+			std::vector<Operand> &operand_stack) const;
 
-	XPathToken skip_predicate_expression(
-		const std::string &expression,
-		const XPathToken &previous_token = XPathToken()) const;
+		XPathToken read_location_steps(
+			const std::string &expression,
+			XPathToken cur_token,
+			const XPathNodeSet &context,
+			XPathNodeSet::size_type context_node_index,
+			std::vector<XPathEvaluator_Impl::Operand> &operand_stack) const;
 
-	void evaluate_location_step(const XPathNodeSet &context, XPathNodeSet::size_type context_node_index, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string &expression, XPathNodeSet &out_nodeset) const;
-	void evaluate_location_step_predicates(const XPathNodeSet &context, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string & expression, XPathNodeSet & nodes) const;
+		XPathToken read_location_step(
+			const std::string &expression,
+			XPathToken cur_token,
+			XPathLocationStep &step) const;
 
-	void select_nodes_ancestor(const XPathNodeSet &context, XPathNodeSet::size_type context_node_index, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string &expression, XPathNodeSet &out_nodeset) const;
-	void select_nodes_ancestor_or_self(const XPathNodeSet &context, XPathNodeSet::size_type context_node_index, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string &expression, XPathNodeSet &out_nodeset) const;
-	void select_nodes_attribute(const XPathNodeSet &context, XPathNodeSet::size_type context_node_index, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string &expression, XPathNodeSet &out_nodeset) const;
-	void select_nodes_child(const XPathNodeSet &context, XPathNodeSet::size_type context_node_index, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string &expression, XPathNodeSet &out_nodeset) const;
-	void select_nodes_descendant(const XPathNodeSet &context, XPathNodeSet::size_type context_node_index, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string &expression, XPathNodeSet &out_nodeset) const;
-	void select_nodes_descendant_or_self(const XPathNodeSet &context, XPathNodeSet::size_type context_node_index, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string &expression, XPathNodeSet &out_nodeset) const;
-	void select_nodes_following(const XPathNodeSet &context, XPathNodeSet::size_type context_node_index, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string &expression, XPathNodeSet &out_nodeset) const;
-	void select_nodes_following_sibling(const XPathNodeSet &context, XPathNodeSet::size_type context_node_index, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string &expression, XPathNodeSet &out_nodeset) const;
-	void select_nodes_namespace(const XPathNodeSet &context, XPathNodeSet::size_type context_node_index, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string &expression, XPathNodeSet &out_nodeset) const;
-	void select_nodes_parent(const XPathNodeSet &context, XPathNodeSet::size_type context_node_index, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string &expression, XPathNodeSet &out_nodeset) const;
-	void select_nodes_preceding(const XPathNodeSet &context, XPathNodeSet::size_type context_node_index, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string &expression, XPathNodeSet &out_nodeset) const;
-	void select_nodes_preceding_sibling(const XPathNodeSet &context, XPathNodeSet::size_type context_node_index, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string &expression, XPathNodeSet &out_nodeset) const;
-	void select_nodes_self(const XPathNodeSet &context, XPathNodeSet::size_type context_node_index, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string &expression, XPathNodeSet &out_nodeset) const;
-	bool confirm_step_requirements(const DomNode &node, const XPathLocationStep &step, const std::string &expression) const;
-	bool confirm_step_predicate(XPathNodeSet &context, XPathNodeSet::size_type context_node_index, const XPathLocationStep::Predicate &predicate, const std::string &expression) const;
+		XPathToken read_token(
+			const std::string &expression,
+			const XPathToken &previous_token = XPathToken()) const;
 
-	XPathObject call_function(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::string &name, const std::vector<XPathObject> &parameters) const;
-	XPathObject get_variable(const std::string &name) const;
+		XPathToken skip_predicate_expression(
+			const std::string &expression,
+			const XPathToken &previous_token = XPathToken()) const;
 
-	XPathObject function_last(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
-	XPathObject function_position(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
-	XPathObject function_count(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
-	XPathObject function_id(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
-	XPathObject function_local_name(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
-	XPathObject function_namespace_uri(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
-	XPathObject function_name(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
-	XPathObject function_string(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
-	XPathObject function_concat(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
-	XPathObject function_starts_with(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
-	XPathObject function_contains(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
-	XPathObject function_substring_before(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
-	XPathObject function_substring_after(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
-	XPathObject function_substring(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
-	XPathObject function_string_length(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
-	XPathObject function_normalize_space(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
-	XPathObject function_translate(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
-	XPathObject function_boolean(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
-	XPathObject function_not(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
-	XPathObject function_true(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
-	XPathObject function_false(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
-	XPathObject function_lang(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
-	XPathObject function_number(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
-	XPathObject function_sum(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
-	XPathObject function_floor(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
-	XPathObject function_ceiling(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
-	XPathObject function_round(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
+		void evaluate_location_step(const XPathNodeSet &context, XPathNodeSet::size_type context_node_index, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string &expression, XPathNodeSet &out_nodeset) const;
+		void evaluate_location_step_predicates(const XPathNodeSet &context, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string & expression, XPathNodeSet & nodes) const;
 
-	static inline bool is_letter(const std::string::value_type &c);
-	static inline bool is_combining_char(const std::string::value_type &c);
-	static inline bool is_digit(const std::string::value_type &c);
-	static inline bool is_extender(const std::string::value_type &c);
+		void select_nodes_ancestor(const XPathNodeSet &context, XPathNodeSet::size_type context_node_index, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string &expression, XPathNodeSet &out_nodeset) const;
+		void select_nodes_ancestor_or_self(const XPathNodeSet &context, XPathNodeSet::size_type context_node_index, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string &expression, XPathNodeSet &out_nodeset) const;
+		void select_nodes_attribute(const XPathNodeSet &context, XPathNodeSet::size_type context_node_index, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string &expression, XPathNodeSet &out_nodeset) const;
+		void select_nodes_child(const XPathNodeSet &context, XPathNodeSet::size_type context_node_index, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string &expression, XPathNodeSet &out_nodeset) const;
+		void select_nodes_descendant(const XPathNodeSet &context, XPathNodeSet::size_type context_node_index, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string &expression, XPathNodeSet &out_nodeset) const;
+		void select_nodes_descendant_or_self(const XPathNodeSet &context, XPathNodeSet::size_type context_node_index, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string &expression, XPathNodeSet &out_nodeset) const;
+		void select_nodes_following(const XPathNodeSet &context, XPathNodeSet::size_type context_node_index, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string &expression, XPathNodeSet &out_nodeset) const;
+		void select_nodes_following_sibling(const XPathNodeSet &context, XPathNodeSet::size_type context_node_index, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string &expression, XPathNodeSet &out_nodeset) const;
+		void select_nodes_namespace(const XPathNodeSet &context, XPathNodeSet::size_type context_node_index, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string &expression, XPathNodeSet &out_nodeset) const;
+		void select_nodes_parent(const XPathNodeSet &context, XPathNodeSet::size_type context_node_index, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string &expression, XPathNodeSet &out_nodeset) const;
+		void select_nodes_preceding(const XPathNodeSet &context, XPathNodeSet::size_type context_node_index, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string &expression, XPathNodeSet &out_nodeset) const;
+		void select_nodes_preceding_sibling(const XPathNodeSet &context, XPathNodeSet::size_type context_node_index, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string &expression, XPathNodeSet &out_nodeset) const;
+		void select_nodes_self(const XPathNodeSet &context, XPathNodeSet::size_type context_node_index, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string &expression, XPathNodeSet &out_nodeset) const;
+		bool confirm_step_requirements(const DomNode &node, const XPathLocationStep &step, const std::string &expression) const;
+		bool confirm_step_predicate(XPathNodeSet &context, XPathNodeSet::size_type context_node_index, const XPathLocationStep::Predicate &predicate, const std::string &expression) const;
 
-	static inline XPathObject boolean(const XPathObject &object);
-	static inline XPathObject number(XPathObject object);
-	static inline XPathObject string(const XPathObject &object);
+		XPathObject call_function(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::string &name, const std::vector<XPathObject> &parameters) const;
+		XPathObject get_variable(const std::string &name) const;
 
-	static inline bool boolean(const DomNode &node);
-	static inline double number(const DomNode &node);
-	static inline std::string string(const DomNode &node);
-};
+		XPathObject function_last(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
+		XPathObject function_position(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
+		XPathObject function_count(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
+		XPathObject function_id(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
+		XPathObject function_local_name(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
+		XPathObject function_namespace_uri(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
+		XPathObject function_name(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
+		XPathObject function_string(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
+		XPathObject function_concat(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
+		XPathObject function_starts_with(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
+		XPathObject function_contains(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
+		XPathObject function_substring_before(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
+		XPathObject function_substring_after(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
+		XPathObject function_substring(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
+		XPathObject function_string_length(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
+		XPathObject function_normalize_space(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
+		XPathObject function_translate(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
+		XPathObject function_boolean(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
+		XPathObject function_not(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
+		XPathObject function_true(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
+		XPathObject function_false(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
+		XPathObject function_lang(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
+		XPathObject function_number(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
+		XPathObject function_sum(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
+		XPathObject function_floor(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
+		XPathObject function_ceiling(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
+		XPathObject function_round(const XPathNodeSet& context, XPathNodeSet::size_type context_node_index, const std::vector<XPathObject> &parameters) const;
 
+		static inline bool is_letter(const std::string::value_type &c);
+		static inline bool is_combining_char(const std::string::value_type &c);
+		static inline bool is_digit(const std::string::value_type &c);
+		static inline bool is_extender(const std::string::value_type &c);
+
+		static inline XPathObject boolean(const XPathObject &object);
+		static inline XPathObject number(XPathObject object);
+		static inline XPathObject string(const XPathObject &object);
+
+		static inline bool boolean(const DomNode &node);
+		static inline double number(const DomNode &node);
+		static inline std::string string(const DomNode &node);
+	};
 }

@@ -34,62 +34,48 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// DomProcessingInstruction construction:
-
-DomProcessingInstruction::DomProcessingInstruction()
-{
-}
-
-DomProcessingInstruction::DomProcessingInstruction(DomDocument &doc, const DomString &target, const DomString &data)
-: DomNode(doc, PROCESSING_INSTRUCTION_NODE)
-{
-	DomDocument_Impl *doc_impl = (DomDocument_Impl *) impl->owner_document.lock().get();
-	impl->get_tree_node()->set_node_name(doc_impl, target);
-	impl->get_tree_node()->set_node_value(doc_impl, data);
-}
-
-DomProcessingInstruction::DomProcessingInstruction(const std::shared_ptr<DomNode_Impl> &impl) : DomNode(impl)
-{
-}
-
-DomProcessingInstruction::~DomProcessingInstruction()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// DomProcessingInstruction attributes:
-
-DomString DomProcessingInstruction::get_target() const
-{
-	if (impl)
-		return impl->get_tree_node()->get_node_name();
-	else
-		return DomString();
-}
-
-DomString DomProcessingInstruction::get_data() const
-{
-	if (impl)
-		return impl->get_tree_node()->get_node_value();
-	else
-		return DomString();
-}
-
-void DomProcessingInstruction::set_data(const DomString &data)
-{
-	if (impl)
+	DomProcessingInstruction::DomProcessingInstruction()
 	{
-		DomDocument_Impl *doc_impl = (DomDocument_Impl *) impl->owner_document.lock().get();
+	}
+
+	DomProcessingInstruction::DomProcessingInstruction(DomDocument &doc, const DomString &target, const DomString &data)
+		: DomNode(doc, PROCESSING_INSTRUCTION_NODE)
+	{
+		DomDocument_Impl *doc_impl = (DomDocument_Impl *)impl->owner_document.lock().get();
+		impl->get_tree_node()->set_node_name(doc_impl, target);
 		impl->get_tree_node()->set_node_value(doc_impl, data);
 	}
-}
 
-/////////////////////////////////////////////////////////////////////////////
-// DomProcessingInstruction operations:
+	DomProcessingInstruction::DomProcessingInstruction(const std::shared_ptr<DomNode_Impl> &impl) : DomNode(impl)
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// DomProcessingInstruction implementation:
+	DomProcessingInstruction::~DomProcessingInstruction()
+	{
+	}
 
+	DomString DomProcessingInstruction::get_target() const
+	{
+		if (impl)
+			return impl->get_tree_node()->get_node_name();
+		else
+			return DomString();
+	}
+
+	DomString DomProcessingInstruction::get_data() const
+	{
+		if (impl)
+			return impl->get_tree_node()->get_node_value();
+		else
+			return DomString();
+	}
+
+	void DomProcessingInstruction::set_data(const DomString &data)
+	{
+		if (impl)
+		{
+			DomDocument_Impl *doc_impl = (DomDocument_Impl *)impl->owner_document.lock().get();
+			impl->get_tree_node()->set_node_value(doc_impl, data);
+		}
+	}
 }

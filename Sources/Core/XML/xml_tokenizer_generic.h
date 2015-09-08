@@ -32,44 +32,26 @@
 
 namespace clan
 {
+	class XMLTokenizer_Impl
+	{
+	public:
+		XMLTokenizer_Impl() : pos(0), size(0), eat_whitespace(true) { }
 
-class XMLTokenizer_Impl
-{
-/// \name Construction
-/// \{
-public:
-	XMLTokenizer_Impl() : pos(0), size(0), eat_whitespace(true) { }
-/// \}
+		IODevice input;
+		std::string::size_type pos, size;
+		std::string data;
+		bool eat_whitespace;
 
-/// \name Attributes
-/// \{
-public:
-	IODevice input;
-	std::string::size_type pos, size;
-	std::string data;
-	bool eat_whitespace;
-/// \}
+		static void throw_exception(const std::string &str);
+		bool next_text_node(XMLToken *out_token);
+		bool next_tag_node(XMLToken *out_token);
+		bool next_exclamation_mark_node(XMLToken *out_token);
 
-/// \name Operations
-/// \{
-public:
-	static void throw_exception(const std::string &str);
-	bool next_text_node(XMLToken *out_token);
-	bool next_tag_node(XMLToken *out_token);
-	bool next_exclamation_mark_node(XMLToken *out_token);
+		// used to get the line number when there is an error in the xml file
+		int get_line_number();
 
-	// used to get the line number when there is an error in the xml file
-	int get_line_number();
-
-	void unescape(std::string &text_out, const std::string &text_in);
-	void unescape(std::string &text, const std::string &search, std::string::value_type replace);
-	std::string trim_whitespace(const std::string &text);
-/// \}
-
-/// \name Implementation
-/// \{
-private:
-/// \}
-};
-
+		void unescape(std::string &text_out, const std::string &text_in);
+		void unescape(std::string &text, const std::string &search, std::string::value_type replace);
+		std::string trim_whitespace(const std::string &text);
+	};
 }

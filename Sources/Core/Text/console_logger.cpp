@@ -34,44 +34,30 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// ConsoleLogger Construction:
-
-ConsoleLogger::ConsoleLogger()
-{
+	ConsoleLogger::ConsoleLogger()
+	{
 #ifdef WIN32
-	AllocConsole();
+		AllocConsole();
 #endif
-}
+	}
 
-ConsoleLogger::~ConsoleLogger()
-{
-}
+	ConsoleLogger::~ConsoleLogger()
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// ConsoleLogger Attributes:
-
-/////////////////////////////////////////////////////////////////////////////
-// ConsoleLogger Operations:
-
-void ConsoleLogger::log(const std::string &type, const std::string &text)
-{
-	StringFormat format = get_log_string(type, text);
+	void ConsoleLogger::log(const std::string &type, const std::string &text)
+	{
+		StringFormat format = get_log_string(type, text);
 
 #ifdef WIN32
-	std::wstring log_line = StringHelp::utf8_to_ucs2(format.get_result());
+		std::wstring log_line = StringHelp::utf8_to_ucs2(format.get_result());
 
-	DWORD bytesWritten = 0;
+		DWORD bytesWritten = 0;
 
-	WriteConsole(GetStdHandle(STD_OUTPUT_HANDLE), log_line.data(), log_line.size(), &bytesWritten, 0);
+		WriteConsole(GetStdHandle(STD_OUTPUT_HANDLE), log_line.data(), log_line.size(), &bytesWritten, 0);
 #else
-	std::string log_line = StringHelp::text_to_local8(format.get_result());
-	write(1, log_line.data(), log_line.length());
+		std::string log_line = StringHelp::text_to_local8(format.get_result());
+		write(1, log_line.data(), log_line.length());
 #endif
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// FileLogger Implementation:
-
+	}
 }

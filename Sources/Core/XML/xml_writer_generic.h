@@ -32,51 +32,20 @@
 
 namespace clan
 {
+	class XMLWriter_Impl
+	{
+	public:
+		XMLWriter_Impl() : insert_whitespace(true), indent(0), first_token(true), single_line_tag(true) { }
 
-class XMLWriter_Impl
-{
-/// \name Construction
-/// \{
+		IODevice output;
+		bool insert_whitespace;
+		int indent;
+		//XXX:	StringAllocator string_allocator;
+		std::string str;
+		std::string escaped_string;
+		bool first_token;
+		bool single_line_tag;
 
-public:
-	XMLWriter_Impl() : insert_whitespace(true), indent(0), first_token(true), single_line_tag(true) { }
-
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	IODevice output;
-
-	bool insert_whitespace;
-
-	int indent;
-
-//XXX:	StringAllocator string_allocator;
-
-	std::string str;
-
-	std::string escaped_string;
-
-	bool first_token;
-	bool single_line_tag;
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	std::string insert_escapes_fast(const std::string &str);
-
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-};
-
+		std::string insert_escapes_fast(const std::string &str);
+	};
 }

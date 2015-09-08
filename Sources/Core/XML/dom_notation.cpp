@@ -31,39 +31,25 @@
 
 namespace clan
 {
+	DomNotation::DomNotation()
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// DomNotation construction:
+	DomNotation::DomNotation(const std::shared_ptr<DomNode_Impl> &impl) : DomNode(impl)
+	{
+	}
 
-DomNotation::DomNotation()
-{
-}
+	DomNotation::~DomNotation()
+	{
+	}
 
-DomNotation::DomNotation(const std::shared_ptr<DomNode_Impl> &impl) : DomNode(impl)
-{
-}
-	
-DomNotation::~DomNotation()
-{
-}
-	
-/////////////////////////////////////////////////////////////////////////////
-// DomNotation attributes:
+	DomString DomNotation::get_public_id() const
+	{
+		return DomString();
+	}
 
-DomString DomNotation::get_public_id() const
-{
-	return DomString();
-}
-
-DomString DomNotation::get_system_id() const
-{
-	return DomString();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// DomNotation operations:
-
-/////////////////////////////////////////////////////////////////////////////
-// DomNotation implementation:
-
+	DomString DomNotation::get_system_id() const
+	{
+		return DomString();
+	}
 }

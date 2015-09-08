@@ -34,52 +34,38 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// Exception Construction:
-
-Exception::Exception(const std::string &message) : message(message)
-{
-	num_frames = System::capture_stack_trace(1, max_frames, frames);
-	for (int i = num_frames; i < max_frames; i++)
-		frames[i] = nullptr;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Exception Attributes:
-
-const char* Exception::what() const throw()
-{
-	// Note, buffer is mutable
-	buffer = StringHelp::text_to_local8(message);
-	return buffer.c_str();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Exception Operations:
-
-std::vector<std::string> Exception::get_stack_trace() const
-{
-	return System::get_stack_frames_text(frames, num_frames);
-}
-
-std::string Exception::get_message_and_stack_trace() const
-{
-	std::vector<std::string> stack_trace = get_stack_trace();
-	std::string text = message;
-	for (auto & elem : stack_trace)
+	Exception::Exception(const std::string &message) : message(message)
 	{
-	#ifdef WIN32
-		text += string_format("\r\n    at %1", elem);
-	#else
-		text += string_format("\n    at %1", elem);
-	#endif
+		num_frames = System::capture_stack_trace(1, max_frames, frames);
+		for (int i = num_frames; i < max_frames; i++)
+			frames[i] = nullptr;
 	}
 
-	return text;
-}
+	const char* Exception::what() const throw()
+	{
+		// Note, buffer is mutable
+		buffer = StringHelp::text_to_local8(message);
+		return buffer.c_str();
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// Exception Implementation:
+	std::vector<std::string> Exception::get_stack_trace() const
+	{
+		return System::get_stack_frames_text(frames, num_frames);
+	}
 
+	std::string Exception::get_message_and_stack_trace() const
+	{
+		std::vector<std::string> stack_trace = get_stack_trace();
+		std::string text = message;
+		for (auto & elem : stack_trace)
+		{
+#ifdef WIN32
+			text += string_format("\r\n    at %1", elem);
+#else
+			text += string_format("\n    at %1", elem);
+#endif
+		}
+
+		return text;
+	}
 }

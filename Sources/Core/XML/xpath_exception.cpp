@@ -34,40 +34,38 @@
 
 namespace clan
 {
-
-XPathException::XPathException(const std::string &message, const std::string &expression)
-: Exception(message), expression(expression), error_position(std::string::npos)
-{
-}
-
-XPathException::XPathException(const std::string &message, const std::string &expression, const XPathToken &cur_token)
-: Exception(message), expression(expression), error_position(cur_token.pos)
-{
-}
-
-std::string XPathException::get_message() const
-{
-	std::string result = "Syntax error in XPath expression";
-	if (error_position != std::string::npos)
-		result += string_format(" at position %1.", error_position);
-	else
-		result += ".";
-
-	if (!message.empty())
-		result += " " + message + ".";
-
-	if (!expression.empty() && error_position != std::string::npos)
+	XPathException::XPathException(const std::string &message, const std::string &expression)
+		: Exception(message), expression(expression), error_position(std::string::npos)
 	{
-		std::string exp = "Expression: ";
-		std::string::size_type start_pos = exp.length();
-		exp += expression;
-
-		std::string failure_location(start_pos + error_position, '-');
-		failure_location += "^";
-
-		result += string_format("\n%1\n%2", exp, failure_location);
 	}
-	return result;
-}
 
+	XPathException::XPathException(const std::string &message, const std::string &expression, const XPathToken &cur_token)
+		: Exception(message), expression(expression), error_position(cur_token.pos)
+	{
+	}
+
+	std::string XPathException::get_message() const
+	{
+		std::string result = "Syntax error in XPath expression";
+		if (error_position != std::string::npos)
+			result += string_format(" at position %1.", error_position);
+		else
+			result += ".";
+
+		if (!message.empty())
+			result += " " + message + ".";
+
+		if (!expression.empty() && error_position != std::string::npos)
+		{
+			std::string exp = "Expression: ";
+			std::string::size_type start_pos = exp.length();
+			exp += expression;
+
+			std::string failure_location(start_pos + error_position, '-');
+			failure_location += "^";
+
+			result += string_format("\n%1\n%2", exp, failure_location);
+		}
+		return result;
+	}
 }

@@ -32,28 +32,26 @@
 
 namespace clan
 {
+	DisposableObject::DisposableObject()
+		: disposed(false)
+	{
+	}
 
-DisposableObject::DisposableObject()
-: disposed(false)
-{
-}
+	void DisposableObject::dispose()
+	{
+		if (!disposed)
+			on_dispose();
+		disposed = true;
+	}
 
-void DisposableObject::dispose()
-{
-	if (!disposed)
-		on_dispose();
-	disposed = true;
-}
+	void DisposableObject::throw_if_disposed() const
+	{
+		if (is_disposed())
+			throw Exception("Object was disposed");
+	}
 
-void DisposableObject::throw_if_disposed() const
-{
-	if (is_disposed())
-		throw Exception("Object was disposed");
-}
-
-bool DisposableObject::is_disposed() const
-{
-	return disposed;
-}
-
+	bool DisposableObject::is_disposed() const
+	{
+		return disposed;
+	}
 }

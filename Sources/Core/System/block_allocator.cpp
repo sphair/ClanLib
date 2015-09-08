@@ -34,72 +34,50 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// BlockAllocator_Impl class:
-
-class BlockAllocator_Impl
-{
-public:
-	std::vector<DataBuffer> blocks;
-
-	int block_pos;
-};
-
-/////////////////////////////////////////////////////////////////////////////
-// BlockAllocator construction:
-
-BlockAllocator::BlockAllocator()
-: impl(std::make_shared<BlockAllocator_Impl>())
-{
-	impl->block_pos = 0;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// BlockAllocator attributes:
-
-/////////////////////////////////////////////////////////////////////////////
-// BlockAllocator operations:
-
-void *BlockAllocator::allocate(int size)
-{
-	if (impl->blocks.empty())
-		impl->blocks.push_back(DataBuffer(size*10));
-	DataBuffer &cur = impl->blocks.back();
-	if (impl->block_pos + size <= cur.get_size())
+	class BlockAllocator_Impl
 	{
-		void *data = cur.get_data() + impl->block_pos;
-		impl->block_pos += size;
-		return data;
+	public:
+		std::vector<DataBuffer> blocks;
+		int block_pos = 0;
+	};
+
+	BlockAllocator::BlockAllocator()
+		: impl(std::make_shared<BlockAllocator_Impl>())
+	{
 	}
-	impl->blocks.push_back(DataBuffer(max(cur.get_size()*2, size)));
-	impl->block_pos = size;
-	return impl->blocks.back().get_data();
-}
 
-void BlockAllocator::free()
-{
-	impl->blocks.clear();
-	impl->block_pos = 0;
-}
+	void *BlockAllocator::allocate(int size)
+	{
+		if (impl->blocks.empty())
+			impl->blocks.push_back(DataBuffer(size * 10));
+		DataBuffer &cur = impl->blocks.back();
+		if (impl->block_pos + size <= cur.get_size())
+		{
+			void *data = cur.get_data() + impl->block_pos;
+			impl->block_pos += size;
+			return data;
+		}
+		impl->blocks.push_back(DataBuffer(max(cur.get_size() * 2, size)));
+		impl->block_pos = size;
+		return impl->blocks.back().get_data();
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// BlockAllocator implementation:
+	void BlockAllocator::free()
+	{
+		impl->blocks.clear();
+		impl->block_pos = 0;
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// BlockAllocated operations:
+	void *BlockAllocated::operator new(size_t size, BlockAllocator *allocator)
+	{
+		return allocator->allocate(size);
+	}
 
-void *BlockAllocated::operator new(size_t size, BlockAllocator *allocator)
-{
-	return allocator->allocate(size);
-}
+	void BlockAllocated::operator delete(void *data, size_t size)
+	{
+	}
 
-void BlockAllocated::operator delete(void *data, size_t size)
-{
-}
-
-void BlockAllocated::operator delete(void *data, BlockAllocator *allocator)
-{
-}
-
+	void BlockAllocated::operator delete(void *data, BlockAllocator *allocator)
+	{
+	}
 }

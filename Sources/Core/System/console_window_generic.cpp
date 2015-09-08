@@ -46,69 +46,58 @@ static HANDLE scrbuf = NULL;
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// ConsoleWindow_Impl Construction:
-
-ConsoleWindow_Impl::ConsoleWindow_Impl(
-	const std::string &title,
-	int width,
-	int height)
-{
+	ConsoleWindow_Impl::ConsoleWindow_Impl(
+		const std::string &title,
+		int width,
+		int height)
+	{
 #ifdef WIN32
-	AllocConsole();
-	SetConsoleTitle(StringHelp::utf8_to_ucs2(title).c_str());
-	COORD coord;
-	coord.X = width;
-	coord.Y = height;
-	scrbuf =
-		CreateConsoleScreenBuffer(
+		AllocConsole();
+		SetConsoleTitle(StringHelp::utf8_to_ucs2(title).c_str());
+		COORD coord;
+		coord.X = width;
+		coord.Y = height;
+		scrbuf =
+			CreateConsoleScreenBuffer(
 			GENERIC_READ | GENERIC_WRITE,
 			FILE_SHARE_READ | FILE_SHARE_WRITE,
 			NULL,
 			CONSOLE_TEXTMODE_BUFFER,
 			NULL);
 
-	if(scrbuf == INVALID_HANDLE_VALUE)
-		throw Exception("Unable to allocate console screen buffer");
+		if (scrbuf == INVALID_HANDLE_VALUE)
+			throw Exception("Unable to allocate console screen buffer");
 
-	SetStdHandle(STD_OUTPUT_HANDLE, scrbuf);
-	SetConsoleActiveScreenBuffer(scrbuf);
-	SetConsoleScreenBufferSize(scrbuf, coord);
+		SetStdHandle(STD_OUTPUT_HANDLE, scrbuf);
+		SetConsoleActiveScreenBuffer(scrbuf);
+		SetConsoleScreenBufferSize(scrbuf, coord);
 
 #endif
-}
+	}
 
-ConsoleWindow_Impl::~ConsoleWindow_Impl()
-{
+	ConsoleWindow_Impl::~ConsoleWindow_Impl()
+	{
 #ifdef WIN32
-	CloseHandle(scrbuf);
+		CloseHandle(scrbuf);
 #endif
-}
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// ConsoleWindow_Impl Operations:
-
-void ConsoleWindow_Impl::wait_for_key()
-{
+	void ConsoleWindow_Impl::wait_for_key()
+	{
 #ifdef WIN32
-	// If your application crashes here, you are linking with a single threaded
-	// libc in your application! -- mbn 13. Jan 2001.
-	#ifdef _CRT_INSECURE_DEPRECATE
+#ifdef _CRT_INSECURE_DEPRECATE
 		while (!_kbhit()) Sleep(250);
-	#else
+#else
 		while (!kbhit()) Sleep(250);
-	#endif
-
 #endif
-}
+#endif
+	}
 
-void ConsoleWindow_Impl::display_close_message()
-{
+	void ConsoleWindow_Impl::display_close_message()
+	{
 #ifdef WIN32
-	Console::write_line("(press any key to close this console window)");
-	Console::wait_for_key();
+		Console::write_line("(press any key to close this console window)");
+		Console::wait_for_key();
 #endif
-}
-
+	}
 }

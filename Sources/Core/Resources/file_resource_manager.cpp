@@ -39,25 +39,24 @@ namespace clan
 		std::vector<std::function<void(ResourceManager &, const FileResourceDocument &)>> file_cache_factories;
 	}
 
-ResourceManager FileResourceManager::create(const FileResourceDocument &doc)
-{
-	ResourceManager manager;
-	manager.set_cache<FileResourceDocument>("clan.filedoc", std::shared_ptr<FileResourceDocument>(new FileResourceDocument(doc)));
-	for (auto & xml_cache_factory : file_cache_factories)
+	ResourceManager FileResourceManager::create(const FileResourceDocument &doc)
 	{
-		xml_cache_factory(manager, doc);
+		ResourceManager manager;
+		manager.set_cache<FileResourceDocument>("clan.filedoc", std::shared_ptr<FileResourceDocument>(new FileResourceDocument(doc)));
+		for (auto & xml_cache_factory : file_cache_factories)
+		{
+			xml_cache_factory(manager, doc);
+		}
+		return manager;
 	}
-	return manager;
-}
 
-void FileResourceManager::add_cache_factory(std::function<void(ResourceManager &, const FileResourceDocument &)> factory_callback)
-{
-	file_cache_factories.push_back(factory_callback);
-}
+	void FileResourceManager::add_cache_factory(std::function<void(ResourceManager &, const FileResourceDocument &)> factory_callback)
+	{
+		file_cache_factories.push_back(factory_callback);
+	}
 
-FileResourceDocument &FileResourceManager::get_doc(const ResourceManager &manager)
-{
-	return *manager.get_cache<FileResourceDocument>("clan.filedoc").get();
-}
-
+	FileResourceDocument &FileResourceManager::get_doc(const ResourceManager &manager)
+	{
+		return *manager.get_cache<FileResourceDocument>("clan.filedoc").get();
+	}
 }

@@ -32,52 +32,23 @@
 
 namespace clan
 {
+	class Service;
 
-class Service;
+	class Service_Impl
+	{
+	public:
+		Service_Impl(Service *service, const std::string &service_name);
+		virtual ~Service_Impl();
 
-class Service_Impl
-{
-/// \name Construction
-/// \{
+		std::string service_name;
+		Service *service;
 
-public:
-	Service_Impl(Service *service, const std::string &service_name);
+		static Service_Impl *instance;
 
-	virtual ~Service_Impl();
+		virtual int main(int argc, char **argv) = 0;
 
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	std::string service_name;
-
-	Service *service;
-
-	static Service_Impl *instance;
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	virtual int main(int argc, char **argv) = 0;
-
-	void service_start(std::vector<std::string> &args);
-
-	void service_stop();
-
-	void service_reload();
-
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-};
-
+		void service_start(std::vector<std::string> &args);
+		void service_stop();
+		void service_reload();
+	};
 }

@@ -34,58 +34,43 @@
 
 namespace clan
 {
+	DomImplementation::DomImplementation()
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// DomImplementation construction:
+	DomImplementation::DomImplementation(DomDocument &doc)
+	{
+		throw Exception("FIXME: Create impl and handle doc");
+	}
 
-DomImplementation::DomImplementation()
-{
-}
+	DomImplementation::~DomImplementation()
+	{
+	}
 
-DomImplementation::DomImplementation(DomDocument &doc)
-{
-	throw Exception("FIXME: Create impl and handle doc"); 
-}
+	bool DomImplementation::has_feature(
+		const DomString &feature,
+		const DomString &version)
+	{
+		if (StringHelp::compare(feature, "xml") == 0 && (version == "1.0" || version.empty()))
+			return true;
+		if (StringHelp::compare(feature, "xml") == 0 && (version == "2.0" || version.empty()))
+			return true;
+		return false;
+	}
 
-DomImplementation::~DomImplementation()
-{
-}
+	DomDocumentType DomImplementation::create_document_type(
+		const DomString &qualified_name,
+		const DomString &public_id,
+		const DomString &system_id)
+	{
+		return DomDocumentType(qualified_name, public_id, system_id);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// DomImplementation attributes:
-
-
-/////////////////////////////////////////////////////////////////////////////
-// DomImplementation operations:
-
-bool DomImplementation::has_feature(
-	const DomString &feature,
-	const DomString &version)
-{
-	if (StringHelp::compare(feature, "xml") == 0 && (version == "1.0" || version.empty()))
-		return true;
-	if (StringHelp::compare(feature, "xml") == 0 && (version == "2.0" || version.empty()))
-		return true;
-	return false;
-}
-
-DomDocumentType DomImplementation::create_document_type(
-	const DomString &qualified_name,
-	const DomString &public_id,
-	const DomString &system_id)
-{
-	return DomDocumentType(qualified_name, public_id, system_id);
-}
-
-DomDocument DomImplementation::create_document(
-	const DomString &namespace_uri,
-	const DomString &qualified_name,
-	const DomDocumentType &doctype)
-{
-	return DomDocument(namespace_uri, qualified_name, doctype);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// DomImplementation implementation:
-
+	DomDocument DomImplementation::create_document(
+		const DomString &namespace_uri,
+		const DomString &qualified_name,
+		const DomDocumentType &doctype)
+	{
+		return DomDocument(namespace_uri, qualified_name, doctype);
+	}
 }

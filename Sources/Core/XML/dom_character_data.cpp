@@ -35,96 +35,82 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// DomCharacterData construction:
-
-DomCharacterData::DomCharacterData()
-{
-}
-
-DomCharacterData::DomCharacterData(const std::shared_ptr<DomNode_Impl> &impl) : DomNode(impl)
-{
-}
-
-DomCharacterData::DomCharacterData(DomDocument &doc, unsigned short node_type)
-: DomNode(doc, node_type)
-{
-}
-
-DomCharacterData::~DomCharacterData()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// DomCharacterData attributes:
-
-unsigned long DomCharacterData::get_length()
-{
-	return 0;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// DomCharacterData operations:
-
-DomString DomCharacterData::substring_data(unsigned long offset, unsigned long count)
-{
-	if (impl)
-		return get_node_value().substr(offset, count);
-	return DomString();
-}
-
-void DomCharacterData::append_data(const DomString &arg)
-{
-	if (impl)
+	DomCharacterData::DomCharacterData()
 	{
-		DomString value = impl->get_tree_node()->get_node_value();
-		impl->get_tree_node()->node_value += arg;
 	}
-}
 
-void DomCharacterData::insert_data(unsigned long offset, const DomString &arg)
-{
-	if (impl)
+	DomCharacterData::DomCharacterData(const std::shared_ptr<DomNode_Impl> &impl) : DomNode(impl)
 	{
-		DomString value = impl->get_tree_node()->get_node_value();
-		if (offset > value.length())
-			offset = value.length();
-		impl->get_tree_node()->node_value = value.substr(0, offset) + arg + value.substr(offset);
 	}
-}
 
-void DomCharacterData::delete_data(unsigned long offset, unsigned long count)
-{
-	if (impl)
+	DomCharacterData::DomCharacterData(DomDocument &doc, unsigned short node_type)
+		: DomNode(doc, node_type)
 	{
-		DomString value = impl->get_tree_node()->get_node_value();
-		if (offset > value.length())
-			offset = value.length();
-		if (offset + count > value.length())
-			count = value.length() - offset;
-		if (count == 0)
-			return;
+	}
 
-		if (count < value.length())
+	DomCharacterData::~DomCharacterData()
+	{
+	}
+
+	unsigned long DomCharacterData::get_length()
+	{
+		return 0;
+	}
+
+	DomString DomCharacterData::substring_data(unsigned long offset, unsigned long count)
+	{
+		if (impl)
+			return get_node_value().substr(offset, count);
+		return DomString();
+	}
+
+	void DomCharacterData::append_data(const DomString &arg)
+	{
+		if (impl)
 		{
-			value = value.substr(0, offset) + value.substr(offset + count);
+			DomString value = impl->get_tree_node()->get_node_value();
+			impl->get_tree_node()->node_value += arg;
 		}
-		else
-		{
-			value = DomString();
-		}
-		impl->get_tree_node()->node_value = value;
 	}
-}
 
-void DomCharacterData::replace_data(unsigned long offset, unsigned long count, const DomString &arg)
-{
-	delete_data(offset, count);
-	insert_data(offset, arg);
-}
+	void DomCharacterData::insert_data(unsigned long offset, const DomString &arg)
+	{
+		if (impl)
+		{
+			DomString value = impl->get_tree_node()->get_node_value();
+			if (offset > value.length())
+				offset = value.length();
+			impl->get_tree_node()->node_value = value.substr(0, offset) + arg + value.substr(offset);
+		}
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// DomCharacterData implementation:
+	void DomCharacterData::delete_data(unsigned long offset, unsigned long count)
+	{
+		if (impl)
+		{
+			DomString value = impl->get_tree_node()->get_node_value();
+			if (offset > value.length())
+				offset = value.length();
+			if (offset + count > value.length())
+				count = value.length() - offset;
+			if (count == 0)
+				return;
 
+			if (count < value.length())
+			{
+				value = value.substr(0, offset) + value.substr(offset + count);
+			}
+			else
+			{
+				value = DomString();
+			}
+			impl->get_tree_node()->node_value = value;
+		}
+	}
+
+	void DomCharacterData::replace_data(unsigned long offset, unsigned long count, const DomString &arg)
+	{
+		delete_data(offset, count);
+		insert_data(offset, arg);
+	}
 }

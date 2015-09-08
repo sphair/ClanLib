@@ -24,7 +24,6 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Core/precomp.h"
@@ -33,35 +32,27 @@
 
 namespace clan
 {
+	ConsoleWindow::ConsoleWindow(
+		const std::string &title,
+		int width,
+		int height)
+		: impl(nullptr)
+	{
+		impl = new ConsoleWindow_Impl(title, width, height);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// ConsoleWindow construction:
+	ConsoleWindow::~ConsoleWindow()
+	{
+		delete impl;
+	}
 
-ConsoleWindow::ConsoleWindow(
-	const std::string &title,
-	int width,
-	int height)
-: impl(nullptr)
-{
-	impl = new ConsoleWindow_Impl(title, width, height);
-}
+	void ConsoleWindow::wait_for_key()
+	{
+		impl->wait_for_key();
+	}
 
-ConsoleWindow::~ConsoleWindow()
-{
-	delete impl;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// ConsoleWindow operations:
-
-void ConsoleWindow::wait_for_key()
-{
-	impl->wait_for_key();
-}
-
-void ConsoleWindow::display_close_message()
-{
-	impl->display_close_message();
-}
-
+	void ConsoleWindow::display_close_message()
+	{
+		impl->display_close_message();
+	}
 }

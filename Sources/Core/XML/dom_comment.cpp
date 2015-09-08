@@ -33,36 +33,22 @@
 
 namespace clan
 {
+	DomComment::DomComment()
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// DomComment construction:
+	DomComment::DomComment(DomDocument &doc, const DomString &data)
+		: DomCharacterData(doc, COMMENT_NODE)
+	{
+		DomDocument_Impl *doc_impl = (DomDocument_Impl *)impl->owner_document.lock().get();
+		impl->get_tree_node()->set_node_value(doc_impl, data);
+	}
 
-DomComment::DomComment()
-{
-}
+	DomComment::DomComment(const std::shared_ptr<DomNode_Impl> &impl) : DomCharacterData(impl)
+	{
+	}
 
-DomComment::DomComment(DomDocument &doc, const DomString &data)
-: DomCharacterData(doc, COMMENT_NODE)
-{
-	DomDocument_Impl *doc_impl = (DomDocument_Impl *) impl->owner_document.lock().get();
-	impl->get_tree_node()->set_node_value(doc_impl, data);
-}
-
-DomComment::DomComment(const std::shared_ptr<DomNode_Impl> &impl) : DomCharacterData(impl)
-{
-}
-
-DomComment::~DomComment()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// DomComment attributes:
-
-/////////////////////////////////////////////////////////////////////////////
-// DomComment operations:
-
-/////////////////////////////////////////////////////////////////////////////
-// DomComment implementation:
-
+	DomComment::~DomComment()
+	{
+	}
 }

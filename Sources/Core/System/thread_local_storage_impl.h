@@ -34,48 +34,23 @@
 
 namespace clan
 {
+	class ThreadLocalStorage_Impl
+	{
+	public:
+		ThreadLocalStorage_Impl();
 
-class ThreadLocalStorage_Impl
-{
-/// \name Construction
-/// \{
+	private:
+		~ThreadLocalStorage_Impl();
 
-public:
-	ThreadLocalStorage_Impl();
+	public:
+		std::shared_ptr<ThreadLocalStorageData> get_variable(const std::string &name);
 
-private:
-	~ThreadLocalStorage_Impl();
+		void set_variable(const std::string &name, std::shared_ptr<ThreadLocalStorageData> ptr);
+		void add_reference();
+		void release_reference();
 
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	std::shared_ptr<ThreadLocalStorageData> get_variable(const std::string &name);
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	void set_variable(const std::string &name, std::shared_ptr<ThreadLocalStorageData> ptr);
-
-	void add_reference();
-
-	void release_reference();
-
-
-/// \}
-/// \name Implementation
-/// \{
-
-protected:
-	int reference_count;
-
-	std::map<std::string, std::shared_ptr<ThreadLocalStorageData> > data;
-/// \}
-};
-
+	protected:
+		int reference_count;
+		std::map<std::string, std::shared_ptr<ThreadLocalStorageData> > data;
+	};
 }

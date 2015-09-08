@@ -34,97 +34,82 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// ZipLocalFileHeader construction:
-
-ZipLocalFileHeader::ZipLocalFileHeader()
-{
-	signature = 0x04034b50;
-}
-	
-ZipLocalFileHeader::~ZipLocalFileHeader()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// ZipLocalFileHeader attributes:
-
-	
-/////////////////////////////////////////////////////////////////////////////
-// ZipLocalFileHeader operations:
-
-void ZipLocalFileHeader::load(IODevice &input)
-{
-	signature = input.read_int32();
-	if (signature != 0x04034b50)
+	ZipLocalFileHeader::ZipLocalFileHeader()
 	{
-		throw Exception("Incorrect Local File Header signature");
+		signature = 0x04034b50;
 	}
-	version_needed_to_extract = input.read_int16();
-	general_purpose_bit_flag = input.read_int16();
-	compression_method = input.read_int16();
-	last_mod_file_time = input.read_int16();
-	last_mod_file_date = input.read_int16();
-	crc32 = input.read_uint32();
-	compressed_size = input.read_int32();
-	uncompressed_size = input.read_int32();
-	file_name_length = input.read_int16();
-	extra_field_length = input.read_int16();
-	auto str1 = new char[file_name_length];
-	auto str2 = new char[extra_field_length];
-	try
+
+	ZipLocalFileHeader::~ZipLocalFileHeader()
 	{
-		input.read(str1, file_name_length);
-		input.read(str2, extra_field_length);
+	}
+
+	void ZipLocalFileHeader::load(IODevice &input)
+	{
+		signature = input.read_int32();
+		if (signature != 0x04034b50)
+		{
+			throw Exception("Incorrect Local File Header signature");
+		}
+		version_needed_to_extract = input.read_int16();
+		general_purpose_bit_flag = input.read_int16();
+		compression_method = input.read_int16();
+		last_mod_file_time = input.read_int16();
+		last_mod_file_date = input.read_int16();
+		crc32 = input.read_uint32();
+		compressed_size = input.read_int32();
+		uncompressed_size = input.read_int32();
+		file_name_length = input.read_int16();
+		extra_field_length = input.read_int16();
+		auto str1 = new char[file_name_length];
+		auto str2 = new char[extra_field_length];
+		try
+		{
+			input.read(str1, file_name_length);
+			input.read(str2, extra_field_length);
+			if (general_purpose_bit_flag & ZIP_USE_UTF8)
+				filename = StringHelp::utf8_to_text(std::string(str1, file_name_length));
+			else
+				filename = StringHelp::cp437_to_text(std::string(str1, file_name_length));
+
+			extra_field = DataBuffer(str2, extra_field_length);
+
+			delete[] str1;
+			delete[] str2;
+		}
+		catch (...)
+		{
+			delete[] str1;
+			delete[] str2;
+			throw;
+		}
+	}
+
+	void ZipLocalFileHeader::save(IODevice &output)
+	{
+		std::string str_filename;
 		if (general_purpose_bit_flag & ZIP_USE_UTF8)
-			filename = StringHelp::utf8_to_text(std::string(str1, file_name_length));
+			str_filename = StringHelp::text_to_utf8(filename);
 		else
-			filename = StringHelp::cp437_to_text(std::string(str1, file_name_length));
+			str_filename = StringHelp::text_to_cp437(filename);
 
-		extra_field = DataBuffer(str2, extra_field_length);
+		file_name_length = str_filename.length();
 
-		delete[] str1;
-		delete[] str2;
+		output.write_int32(signature); // 0x04034b50
+		output.write_int16(version_needed_to_extract);
+		output.write_int16(general_purpose_bit_flag);
+		output.write_int16(compression_method);
+		output.write_int16(last_mod_file_time);
+		output.write_int16(last_mod_file_date);
+		output.write_uint32(crc32);
+		output.write_int32(compressed_size);
+		output.write_int32(uncompressed_size);
+		output.write_int16(file_name_length);
+		output.write_int16(extra_field_length);
+
+		if (file_name_length > 0)
+			output.write(str_filename.data(), file_name_length);
+
+		if (extra_field_length > 0)
+			output.write(extra_field.get_data(), extra_field_length);
 	}
-	catch (...)
-	{
-		delete[] str1;
-		delete[] str2;
-		throw;
-	}
-}
-	
-void ZipLocalFileHeader::save(IODevice &output)
-{
-	std::string str_filename;
-	if (general_purpose_bit_flag & ZIP_USE_UTF8)
-		str_filename = StringHelp::text_to_utf8(filename);
-	else
-		str_filename = StringHelp::text_to_cp437(filename);
-
-	file_name_length = str_filename.length();
-
-	output.write_int32(signature); // 0x04034b50
-	output.write_int16(version_needed_to_extract);
-	output.write_int16(general_purpose_bit_flag);
-	output.write_int16(compression_method);
-	output.write_int16(last_mod_file_time);
-	output.write_int16(last_mod_file_date);
-	output.write_uint32(crc32);
-	output.write_int32(compressed_size);
-	output.write_int32(uncompressed_size);
-	output.write_int16(file_name_length);
-	output.write_int16(extra_field_length);
-
-	if (file_name_length > 0)
-		output.write(str_filename.data(), file_name_length);
-
-	if (extra_field_length > 0)
-		output.write(extra_field.get_data(), extra_field_length);
-}
-	
-/////////////////////////////////////////////////////////////////////////////
-// ZipLocalFileHeader implementation:
-
 }

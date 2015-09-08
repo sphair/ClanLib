@@ -37,71 +37,35 @@
 
 namespace clan
 {
+	class ZipIODevice_FileEntry : public IODeviceProvider
+	{
+	public:
+		ZipIODevice_FileEntry(IODevice iodevice, const ZipFileEntry &entry);
+		~ZipIODevice_FileEntry();
 
-class ZipIODevice_FileEntry : public IODeviceProvider
-{
-/// \name Construction
-/// \{
+		virtual int get_size() const override;
+		virtual int get_position() const override;
 
-public:
-	ZipIODevice_FileEntry(IODevice iodevice, const ZipFileEntry &entry);
+		virtual int send(const void *data, int len, bool send_all) override;
+		virtual int receive(void *data, int len, bool receive_all) override;
+		virtual int peek(void *data, int len) override;
 
-	~ZipIODevice_FileEntry();
+		virtual bool seek(int position, IODevice::SeekMode mode) override;
 
+		IODeviceProvider *duplicate() override;
 
-/// \}
-/// \name Attributes
-/// \{
+	private:
+		void init();
+		void deinit();
+		int lowlevel_read(void *buffer, int size, bool read_all);
 
-public:
-	virtual int get_size() const override;
-
-	virtual int get_position() const override;
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	virtual int send(const void *data, int len, bool send_all) override;
-
-	virtual int receive(void *data, int len, bool receive_all) override;
-
-	virtual int peek(void *data, int len) override;
-
-	virtual bool seek(int position, IODevice::SeekMode mode) override;
-
-	IODeviceProvider *duplicate() override;
-
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	void init();
-
-	void deinit();
-
-	int lowlevel_read(void *buffer, int size, bool read_all);
-
-	IODevice iodevice;
-
-	ZipFileEntry file_entry;
-
-	ZipLocalFileHeader file_header;
-
-	int64_t pos, compressed_pos;
-
-	mz_stream zs;
-
-	char zbuffer[16*1024];
-
-	bool zstream_open;
-
-	DataBuffer peeked_data;
-/// \}
-};
-
+		IODevice iodevice;
+		ZipFileEntry file_entry;
+		ZipLocalFileHeader file_header;
+		int64_t pos, compressed_pos;
+		mz_stream zs;
+		char zbuffer[16 * 1024];
+		bool zstream_open;
+		DataBuffer peeked_data;
+	};
 }

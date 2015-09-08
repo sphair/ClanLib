@@ -32,64 +32,27 @@
 
 namespace clan
 {
+	class IODevice;
 
-class IODevice;
+	class Zip64EndOfCentralDirectoryRecord
+	{
+	public:
+		Zip64EndOfCentralDirectoryRecord();
+		~Zip64EndOfCentralDirectoryRecord();
 
-class Zip64EndOfCentralDirectoryRecord
-{
-/// \name Construction
-/// \{
+		int32_t signature; // 0x06064b50
+		int64_t size_of_record;
+		int16_t version_made_by;
+		int16_t version_needed_to_extract;
+		int32_t number_of_this_disk;
+		int32_t number_of_disk_with_central_directory_start;
+		int64_t number_of_entries_on_this_disk;
+		int64_t number_of_entries_in_central_directory;
+		int64_t size_of_central_directory;
+		int64_t offset_to_start_of_central_directory;
+		std::string extensible_data_sector;
 
-public:
-	Zip64EndOfCentralDirectoryRecord();
-
-	~Zip64EndOfCentralDirectoryRecord();
-
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	int32_t signature; // 0x06064b50
-
-	int64_t size_of_record;
-
-	int16_t version_made_by;
-
-	int16_t version_needed_to_extract;
-
-	int32_t number_of_this_disk;
-
-	int32_t number_of_disk_with_central_directory_start;
-
-	int64_t number_of_entries_on_this_disk;
-
-	int64_t number_of_entries_in_central_directory;
-
-	int64_t size_of_central_directory;
-
-	int64_t offset_to_start_of_central_directory;
-
-	std::string extensible_data_sector;
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	void load(IODevice &input);
-
-	void save(IODevice &output);
-
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-};
-
+		void load(IODevice &input);
+		void save(IODevice &output);
+	};
 }

@@ -36,51 +36,46 @@ namespace clan
 #ifdef WIN32
 #elif !defined(HAVE_TLS)
 #else
-__thread ThreadLocalStorage_Impl *ThreadLocalStorage_Instance::cl_tls_impl = nullptr;
+	__thread ThreadLocalStorage_Impl *ThreadLocalStorage_Instance::cl_tls_impl = nullptr;
 #endif
 
-// This class controls the destruction order of clanCore global variables
+	// This class controls the destruction order of clanCore global variables
 
-/////////////////////////////////////////////////////////////////////////////
-// ThreadLocalStorage_Instance Construction:
-
-ThreadLocalStorage_Instance::ThreadLocalStorage_Instance()
-{
-#ifdef WIN32
-	cl_tls_index = TLS_OUT_OF_INDEXES;
-#elif !defined(HAVE_TLS)
-	cl_tls_index_created = false;
-	cl_tls_index = 0;
-#else
-	cl_tls_impl = nullptr;
-#endif
-
-	ThreadLocalStorage::instance = this;
-	cl_tls = clan::make_unique<ThreadLocalStorage>();	// create initial instance
-}
-
-ThreadLocalStorage_Instance::~ThreadLocalStorage_Instance()
-{
-	cl_tls = std::unique_ptr<ThreadLocalStorage>();
-#ifdef WIN32
-
-	if (cl_tls_index != TLS_OUT_OF_INDEXES)
+	ThreadLocalStorage_Instance::ThreadLocalStorage_Instance()
 	{
-		TlsFree(cl_tls_index);
+#ifdef WIN32
 		cl_tls_index = TLS_OUT_OF_INDEXES;
-	}
-
 #elif !defined(HAVE_TLS)
-
-	if (cl_tls_index_created)
-	{
-		pthread_key_delete(cl_tls_index);
 		cl_tls_index_created = false;
 		cl_tls_index = 0;
-	}
+#else
+		cl_tls_impl = nullptr;
 #endif
-	ThreadLocalStorage::instance = nullptr;
 
-}
+		ThreadLocalStorage::instance = this;
+		cl_tls = clan::make_unique<ThreadLocalStorage>();	// create initial instance
+	}
 
+	ThreadLocalStorage_Instance::~ThreadLocalStorage_Instance()
+	{
+		cl_tls = std::unique_ptr<ThreadLocalStorage>();
+#ifdef WIN32
+
+		if (cl_tls_index != TLS_OUT_OF_INDEXES)
+		{
+			TlsFree(cl_tls_index);
+			cl_tls_index = TLS_OUT_OF_INDEXES;
+		}
+
+#elif !defined(HAVE_TLS)
+
+		if (cl_tls_index_created)
+		{
+			pthread_key_delete(cl_tls_index);
+			cl_tls_index_created = false;
+			cl_tls_index = 0;
+		}
+#endif
+		ThreadLocalStorage::instance = nullptr;
+	}
 }

@@ -35,48 +35,23 @@
 
 namespace clan
 {
-
-void Console::write(const std::string &text)
-{
+	void Console::write(const std::string &text)
+	{
 #ifdef WIN32
-	/*
-		Do not replace WriteConsole with the commented WriteFile code unless you
-		really know what you are doing and understand when ANSI code pages are used and
-		when OEM code pages are used.  -- mbn 29. jan 2008
-
-	std::string t = StringHelp::text_to_local8(text);
-	DWORD written = 0;
-	WriteFile(GetStdHandle(STD_OUTPUT_HANDLE), t.data(), t.length(), &written, 0);
-	*/
-
-	DWORD written = 0;
-
-	std::wstring str = StringHelp::utf8_to_ucs2(text);
-	WriteConsole(GetStdHandle(STD_OUTPUT_HANDLE), str.c_str(), str.length(), &written, 0);
+		DWORD written = 0;
+		std::wstring str = StringHelp::utf8_to_ucs2(text);
+		WriteConsole(GetStdHandle(STD_OUTPUT_HANDLE), str.c_str(), str.length(), &written, 0);
 
 #else
-	::write(1, text.data(), text.length());
+		::write(1, text.data(), text.length());
 #endif
-}
+	}
 
-/// \brief Block until a key is pressed in the console window.
-void Console::wait_for_key()
-{
-	#ifdef WIN32
+	void Console::wait_for_key()
+	{
+#ifdef WIN32
 		while (!_kbhit()) Sleep(250);
 		_getch();	// Required, else the next call to wait_for_key would fail
-	#endif
-/*
-		write_line("Press any key");
-	#ifdef WIN32
-		WCHAR buffer[1];
-		DWORD written = 0;
-		BOOL result = ReadConsole(GetStdHandle(STD_INPUT_HANDLE), buffer, 1, &written, 0);
-	#else
-		char buffer[1];
-		read(0, buffer, 1);
-	#endif
-*/	
-}
-
+#endif
+	}
 }

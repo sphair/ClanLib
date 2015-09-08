@@ -35,72 +35,58 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// DomAttr construction:
-
-DomAttr::DomAttr()
-{
-}
-
-DomAttr::DomAttr(DomDocument doc, const DomString &name, const DomString &namespace_uri)
-: DomNode(doc, ATTRIBUTE_NODE)
-{
-	DomDocument_Impl *doc_impl = (DomDocument_Impl *) impl->owner_document.lock().get();
-	impl->get_tree_node()->set_node_name(doc_impl, name);
-	impl->get_tree_node()->set_namespace_uri(doc_impl, namespace_uri);
-}
-
-DomAttr::DomAttr(const std::shared_ptr<DomNode_Impl> &impl) : DomNode(impl)
-{
-}
-
-DomAttr::~DomAttr()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// DomAttr attributes:
-
-DomString DomAttr::get_name() const
-{
-	if (impl)
-		return impl->get_tree_node()->get_node_name();
-	return DomString();
-}
-	
-bool DomAttr::get_specified() const
-{
-	return false;
-}
-	
-DomString DomAttr::get_value() const
-{
-	if (impl)
-		return impl->get_tree_node()->get_node_value();
-	return DomString();
-}
-	
-void DomAttr::set_value(const DomString &value)
-{
-	if (impl)
+	DomAttr::DomAttr()
 	{
-		DomDocument_Impl *doc_impl = (DomDocument_Impl *) impl->owner_document.lock().get();
-		impl->get_tree_node()->set_node_value(doc_impl, value);
 	}
-}
 
-DomElement DomAttr::get_owner_element() const
-{
-	if (impl)
-		return get_parent_node().to_element();
-	return DomElement();
-}
+	DomAttr::DomAttr(DomDocument doc, const DomString &name, const DomString &namespace_uri)
+		: DomNode(doc, ATTRIBUTE_NODE)
+	{
+		DomDocument_Impl *doc_impl = (DomDocument_Impl *)impl->owner_document.lock().get();
+		impl->get_tree_node()->set_node_name(doc_impl, name);
+		impl->get_tree_node()->set_namespace_uri(doc_impl, namespace_uri);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// DomAttr operations:
+	DomAttr::DomAttr(const std::shared_ptr<DomNode_Impl> &impl) : DomNode(impl)
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// DomAttr implementation:
+	DomAttr::~DomAttr()
+	{
+	}
 
+	DomString DomAttr::get_name() const
+	{
+		if (impl)
+			return impl->get_tree_node()->get_node_name();
+		return DomString();
+	}
+
+	bool DomAttr::get_specified() const
+	{
+		return false;
+	}
+
+	DomString DomAttr::get_value() const
+	{
+		if (impl)
+			return impl->get_tree_node()->get_node_value();
+		return DomString();
+	}
+
+	void DomAttr::set_value(const DomString &value)
+	{
+		if (impl)
+		{
+			DomDocument_Impl *doc_impl = (DomDocument_Impl *)impl->owner_document.lock().get();
+			impl->get_tree_node()->set_node_value(doc_impl, value);
+		}
+	}
+
+	DomElement DomAttr::get_owner_element() const
+	{
+		if (impl)
+			return get_parent_node().to_element();
+		return DomElement();
+	}
 }

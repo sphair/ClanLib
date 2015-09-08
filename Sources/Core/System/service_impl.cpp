@@ -32,47 +32,33 @@
 
 namespace clan
 {
+	Service_Impl::Service_Impl(Service *service, const std::string &service_name)
+		: service_name(service_name), service(service)
+	{
+		if (instance != nullptr)
+			throw Exception("More than one instance of Service not allowed");
+		instance = this;
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// Service_Impl Construction:
+	Service_Impl::~Service_Impl()
+	{
+		instance = nullptr;
+	}
 
-Service_Impl::Service_Impl(Service *service, const std::string &service_name)
-: service_name(service_name), service(service)
-{
-	if (instance != nullptr)
-		throw Exception("More than one instance of Service not allowed");
-	instance = this;
-}
+	Service_Impl *Service_Impl::instance = nullptr;
 
-Service_Impl::~Service_Impl()
-{
-	instance = nullptr;
-}
+	void Service_Impl::service_start(std::vector<std::string> &args)
+	{
+		service->service_start(args);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// Service_Impl Attributes:
+	void Service_Impl::service_stop()
+	{
+		service->service_stop();
+	}
 
-Service_Impl *Service_Impl::instance = nullptr;
-
-/////////////////////////////////////////////////////////////////////////////
-// Service_Impl Operations:
-
-void Service_Impl::service_start(std::vector<std::string> &args)
-{
-	service->service_start(args);
-}
-
-void Service_Impl::service_stop()
-{
-	service->service_stop();
-}
-
-void Service_Impl::service_reload()
-{
-	service->service_reload();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Service_Impl Implementation:
-
+	void Service_Impl::service_reload()
+	{
+		service->service_reload();
+	}
 }

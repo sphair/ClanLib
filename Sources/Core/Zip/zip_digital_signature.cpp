@@ -33,60 +33,45 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// ZipDigitalSignature construction:
-
-ZipDigitalSignature::ZipDigitalSignature()
-{
-	signature = 0x05054b50;
-}
-
-ZipDigitalSignature::~ZipDigitalSignature()
-{
-}
-	
-/////////////////////////////////////////////////////////////////////////////
-// ZipDigitalSignature attributes:
-
-	
-/////////////////////////////////////////////////////////////////////////////
-// ZipDigitalSignature operations:
-
-void ZipDigitalSignature::load(IODevice &input)
-{
-	signature = input.read_int32();
-	if (signature != 0x05054b50)
+	ZipDigitalSignature::ZipDigitalSignature()
 	{
-		throw Exception("Incorrect Digital Signature signature!");
+		signature = 0x05054b50;
 	}
 
-	size_of_data = input.read_int16();
-
-	auto str = new char[size_of_data];
-	try
+	ZipDigitalSignature::~ZipDigitalSignature()
 	{
-		input.read(str, size_of_data);
-		signature_data = StringHelp::local8_to_text(std::string(str, size_of_data));
-
-		delete[] str;
 	}
-	catch (...)
+
+	void ZipDigitalSignature::load(IODevice &input)
 	{
-		delete[] str;
+		signature = input.read_int32();
+		if (signature != 0x05054b50)
+		{
+			throw Exception("Incorrect Digital Signature signature!");
+		}
+
+		size_of_data = input.read_int16();
+
+		auto str = new char[size_of_data];
+		try
+		{
+			input.read(str, size_of_data);
+			signature_data = StringHelp::local8_to_text(std::string(str, size_of_data));
+
+			delete[] str;
+		}
+		catch (...)
+		{
+			delete[] str;
+		}
 	}
-}
-	
-void ZipDigitalSignature::save(IODevice &output)
-{
-	std::string str = StringHelp::text_to_cp437(signature_data);
-	size_of_data = str.length();
-	output.write_int32(signature);
-	output.write_int16(size_of_data);
-	output.write(str.data(), size_of_data);
-}
 
-/////////////////////////////////////////////////////////////////////////////
-// ZipDigitalSignature implementation:
-
+	void ZipDigitalSignature::save(IODevice &output)
+	{
+		std::string str = StringHelp::text_to_cp437(signature_data);
+		size_of_data = str.length();
+		output.write_int32(signature);
+		output.write_int16(size_of_data);
+		output.write(str.data(), size_of_data);
+	}
 }

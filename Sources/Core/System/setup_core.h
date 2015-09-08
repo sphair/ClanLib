@@ -28,8 +28,6 @@
 **    Mark Page
 */
 
-
-
 #pragma once
 
 #include <vector>

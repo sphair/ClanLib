@@ -37,91 +37,72 @@
 
 namespace clan
 {
+	class XMLResourceDocument_Impl;
 
-/////////////////////////////////////////////////////////////////////////////
-// XMLResourceNode_Impl Class:
+	class XMLResourceNode_Impl
+	{
+	public:
+		std::weak_ptr<XMLResourceDocument_Impl> resource_document;
+		DomElement element;
+	};
 
-class XMLResourceDocument_Impl;
+	XMLResourceNode::XMLResourceNode()
+	{
+	}
 
-class XMLResourceNode_Impl
-{
-//! Attributes:
-public:
-	std::weak_ptr<XMLResourceDocument_Impl> resource_document;
+	XMLResourceNode::XMLResourceNode(DomElement element, XMLResourceDocument &resource_document)
+		: impl(std::make_shared<XMLResourceNode_Impl>())
+	{
+		impl->element = element;
+		impl->resource_document = std::weak_ptr<XMLResourceDocument_Impl>(resource_document.impl);
+	}
 
-	DomElement element;
-};
+	XMLResourceNode::~XMLResourceNode()
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// XMLResourceNode Construction:
+	bool XMLResourceNode::is_null() const
+	{
+		return !impl;
+	}
 
-XMLResourceNode::XMLResourceNode()
-{
-}
+	std::string XMLResourceNode::get_type() const
+	{
+		return impl->element.get_local_name();
+	}
 
-XMLResourceNode::XMLResourceNode(DomElement element, XMLResourceDocument &resource_document)
-: impl(std::make_shared<XMLResourceNode_Impl>())
-{
-	impl->element = element;
-	impl->resource_document = std::weak_ptr<XMLResourceDocument_Impl>(resource_document.impl);
-}
+	std::string XMLResourceNode::get_name() const
+	{
+		return impl->element.get_attribute("name");
+	}
 
-XMLResourceNode::~XMLResourceNode()
-{
-}
+	DomElement &XMLResourceNode::get_element()
+	{
+		return impl->element;
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// XMLResourceNode Attributes:
+	XMLResourceDocument XMLResourceNode::get_document()
+	{
+		return XMLResourceDocument(impl->resource_document);
+	}
 
-bool XMLResourceNode::is_null() const
-{
-	return !impl;
-}
+	FileSystem XMLResourceNode::get_file_system() const
+	{
+		return impl->resource_document.lock()->fs;
+	}
 
-std::string XMLResourceNode::get_type() const
-{
-	return impl->element.get_local_name();
-}
+	std::string XMLResourceNode::get_base_path() const
+	{
+		return impl->resource_document.lock()->base_path;
+	}
 
-std::string XMLResourceNode::get_name() const
-{
-	return impl->element.get_attribute("name");
-}
+	IODevice XMLResourceNode::open_file(const std::string &filename, File::OpenMode mode, unsigned int access, unsigned int share, unsigned int flags) const
+	{
+		return get_file_system().open_file(PathHelp::combine(get_base_path(), filename), mode, access, share, flags);
+	}
 
-DomElement &XMLResourceNode::get_element()
-{
-	return impl->element;
-}
-
-XMLResourceDocument XMLResourceNode::get_document()
-{
-	return XMLResourceDocument(impl->resource_document);
-}
-
-FileSystem XMLResourceNode::get_file_system() const
-{
-	return impl->resource_document.lock()->fs;
-}
-
-std::string XMLResourceNode::get_base_path() const
-{
-	return impl->resource_document.lock()->base_path;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// XMLResourceNode Operations:
-
-IODevice XMLResourceNode::open_file(const std::string &filename, File::OpenMode mode, unsigned int access, unsigned int share, unsigned int flags) const
-{
-	return get_file_system().open_file(PathHelp::combine(get_base_path(), filename), mode, access, share, flags);
-}
-
-bool XMLResourceNode::operator ==(const XMLResourceNode &other) const
-{
-	return impl == other.impl;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Resource Implementation:
-
+	bool XMLResourceNode::operator ==(const XMLResourceNode &other) const
+	{
+		return impl == other.impl;
+	}
 }

@@ -30,76 +30,74 @@
 
 namespace clan
 {
-
-class XPathToken
-{
-public:
-	enum Type
+	class XPathToken
 	{
-		type_none,
-		type_bracket_begin,
-		type_bracket_end,
-		type_dot,
-		type_double_dot,
-		type_at_sign,
-		type_comma,
-		type_double_colon,
-		type_name_test,
-		type_node_type,
-		type_operator,
-		type_function_name,
-		type_axis_name,
-		type_literal,
-		type_number,
-		type_variable_reference
+	public:
+		enum Type
+		{
+			type_none,
+			type_bracket_begin,
+			type_bracket_end,
+			type_dot,
+			type_double_dot,
+			type_at_sign,
+			type_comma,
+			type_double_colon,
+			type_name_test,
+			type_node_type,
+			type_operator,
+			type_function_name,
+			type_axis_name,
+			type_literal,
+			type_number,
+			type_variable_reference
+		};
+
+		enum NodeType
+		{
+			node_type_comment,
+			node_type_text,
+			node_type_processing_instruction,
+			node_type_node
+		};
+
+		enum Operator
+		{
+			operator_parenthesis_begin,
+			operator_mod,
+			operator_div,
+			operator_multiply,
+			operator_union,
+			operator_slash,
+			operator_double_slash,
+			operator_plus,
+			operator_minus,
+			operator_assign,
+			operator_greater_equal,
+			operator_greater,
+			operator_less_equal,
+			operator_less,
+			operator_compare_not_equal,
+			operator_compare_equal,
+			operator_and,
+			operator_or,
+			operator_parenthesis_end
+		};
+
+		struct Value
+		{
+			NodeType node_type;
+			Operator oper;
+			std::string str;
+		};
+
+		Type type;
+		Value value;
+		std::string::size_type pos, length;
+
+		XPathToken()
+			: type(type_none), pos(0), length(0)
+		{
+		}
 	};
-
-	enum NodeType
-	{
-		node_type_comment,
-		node_type_text,
-		node_type_processing_instruction,
-		node_type_node
-	};
-
-	enum Operator
-	{
-		operator_parenthesis_begin,
-		operator_mod,
-		operator_div,
-		operator_multiply,
-		operator_union,
-		operator_slash,
-		operator_double_slash,
-		operator_plus,
-		operator_minus,
-		operator_assign,
-		operator_greater_equal,
-		operator_greater,
-		operator_less_equal,
-		operator_less,
-		operator_compare_not_equal,
-		operator_compare_equal,
-		operator_and,
-		operator_or,
-		operator_parenthesis_end
-	};
-
-	struct Value
-	{
-		NodeType node_type;
-		Operator oper;
-		std::string str;
-	};
-
-	Type type;
-	Value value;
-	std::string::size_type pos, length;
-
-	XPathToken()
-	: type(type_none), pos(0), length(0)
-	{
-	}
-};
-
 }

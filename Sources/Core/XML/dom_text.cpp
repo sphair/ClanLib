@@ -32,45 +32,31 @@
 
 namespace clan
 {
+	DomText::DomText()
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// DomText construction:
+	DomText::DomText(DomDocument &doc, const DomString &data)
+		: DomCharacterData(doc, TEXT_NODE)
+	{
+		set_node_value(data);
+	}
 
-DomText::DomText()
-{
-}
+	DomText::DomText(DomDocument &doc, unsigned short node_type)
+		: DomCharacterData(doc, node_type)
+	{
+	}
 
-DomText::DomText(DomDocument &doc, const DomString &data)
-: DomCharacterData(doc, TEXT_NODE)
-{
-	set_node_value(data);
-}
+	DomText::DomText(const std::shared_ptr<DomNode_Impl> &impl) : DomCharacterData(impl)
+	{
+	}
 
-DomText::DomText(DomDocument &doc, unsigned short node_type)
-: DomCharacterData(doc, node_type)
-{
-}
+	DomText::~DomText()
+	{
+	}
 
-DomText::DomText(const std::shared_ptr<DomNode_Impl> &impl) : DomCharacterData(impl)
-{
-}
-	
-DomText::~DomText()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// DomText attributes:
-
-/////////////////////////////////////////////////////////////////////////////
-// DomText operations:
-
-DomText DomText::split_text(unsigned long offset)
-{
-	throw Exception("Implement me");
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// DomText implementation:
-
+	DomText DomText::split_text(unsigned long offset)
+	{
+		throw Exception("Implement me");
+	}
 }

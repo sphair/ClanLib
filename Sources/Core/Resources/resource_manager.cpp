@@ -33,30 +33,28 @@
 
 namespace clan
 {
+	ResourceManager::ResourceManager()
+		: impl(std::make_shared<ResourceManager_Impl>())
+	{
+	}
 
-ResourceManager::ResourceManager()
-	: impl(std::make_shared<ResourceManager_Impl>())
-{
-}
+	ResourceManager::~ResourceManager()
+	{
+	}
 
-ResourceManager::~ResourceManager()
-{
-}
+	UserDataOwner &ResourceManager::get_cache_owner(const std::string &name) const
+	{
+		auto it = impl->caches.find(name);
+		if (it == impl->caches.end())
+			throw Exception(string_format("ResourceManager has no cache named %1", name));
+		return *it->second.get();
+	}
 
-UserDataOwner &ResourceManager::get_cache_owner(const std::string &name) const
-{
-	auto it = impl->caches.find(name);
-	if (it == impl->caches.end())
-		throw Exception(string_format("ResourceManager has no cache named %1", name));
-	return *it->second.get();
-}
-
-UserDataOwner &ResourceManager::set_cache_owner(const std::string &name)
-{
-	std::shared_ptr<UserDataOwner> &cache = impl->caches[name];
-	if (!cache)
-		cache = std::shared_ptr<UserDataOwner>(new UserDataOwner());
-	return *cache.get();
-}
-
+	UserDataOwner &ResourceManager::set_cache_owner(const std::string &name)
+	{
+		std::shared_ptr<UserDataOwner> &cache = impl->caches[name];
+		if (!cache)
+			cache = std::shared_ptr<UserDataOwner>(new UserDataOwner());
+		return *cache.get();
+	}
 }

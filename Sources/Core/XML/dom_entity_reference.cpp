@@ -34,36 +34,22 @@
 
 namespace clan
 {
+	DomEntityReference::DomEntityReference()
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// DomEntityReference construction:
+	DomEntityReference::DomEntityReference(DomDocument &doc, const DomString &name)
+		: DomNode(doc, ENTITY_REFERENCE_NODE)
+	{
+		DomDocument_Impl *doc_impl = (DomDocument_Impl *)impl->owner_document.lock().get();
+		impl->get_tree_node()->set_node_name(doc_impl, name);
+	}
 
-DomEntityReference::DomEntityReference()
-{
-}
+	DomEntityReference::DomEntityReference(const std::shared_ptr<DomNode_Impl> &impl) : DomNode(impl)
+	{
+	}
 
-DomEntityReference::DomEntityReference(DomDocument &doc, const DomString &name)
-: DomNode(doc, ENTITY_REFERENCE_NODE)
-{
-	DomDocument_Impl *doc_impl = (DomDocument_Impl *) impl->owner_document.lock().get();
-	impl->get_tree_node()->set_node_name(doc_impl, name);
-}
-
-DomEntityReference::DomEntityReference(const std::shared_ptr<DomNode_Impl> &impl) : DomNode(impl)
-{
-}
-
-DomEntityReference::~DomEntityReference()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// DomEntityReference attributes:
-
-/////////////////////////////////////////////////////////////////////////////
-// DomEntityReference operations:
-
-/////////////////////////////////////////////////////////////////////////////
-// DomEntityReference implementation:
-
+	DomEntityReference::~DomEntityReference()
+	{
+	}
 }

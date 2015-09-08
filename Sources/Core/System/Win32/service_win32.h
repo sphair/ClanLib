@@ -34,61 +34,38 @@
 
 namespace clan
 {
+	class Service_Win32 : public Service_Impl
+	{
+	public:
+		Service_Win32(Service *service, const std::string &service_name);
+		virtual ~Service_Win32();
 
-class Service_Win32 : public Service_Impl
-{
-/// \name Construction
-/// \{
+		int main(int argc, char **argv);
 
-public:
-	Service_Win32(Service *service, const std::string &service_name);
-	virtual ~Service_Win32();
+		int run_debug(std::vector<std::string> args);
+		int run_service();
+		int run_install();
+		int run_uninstall();
+		void print_help();
 
+	private:
+		static void WINAPI service_thread_main(DWORD argc, LPTSTR *argv);
+		static BOOL WINAPI control_handler(DWORD ctrl_type);
+		static VOID WINAPI service_ctrl(DWORD ctrl_code);
 
-/// \}
-/// \name Attributes
-/// \{
+		BOOL report_status(
+			DWORD current_state,
+			DWORD win32_exitcode,
+			DWORD wait_hint);
 
-public:
+		std::mutex mutex;
+		std::condition_variable event_condition;
+		bool stop_flag = false;
+		bool reload_flag = false;
 
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	int main(int argc, char **argv);
-
-	int run_debug(std::vector<std::string> args);
-	int run_service();
-	int run_install();
-	int run_uninstall();
-	void print_help();
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	static void WINAPI service_thread_main(DWORD argc, LPTSTR *argv);
-	static BOOL WINAPI control_handler(DWORD ctrl_type);
-	static VOID WINAPI service_ctrl(DWORD ctrl_code);
-
-	BOOL report_status(
-		DWORD current_state,
-		DWORD win32_exitcode,
-		DWORD wait_hint);
-
-	std::mutex mutex;
-	std::condition_variable event_condition;
-	bool stop_flag = false;
-	bool reload_flag = false;
-
-	bool debug_mode;
-	int check_point;
-	SERVICE_STATUS_HANDLE handle_service_status;
-	SERVICE_STATUS service_status;
-/// \}
-};
-
+		bool debug_mode;
+		int check_point;
+		SERVICE_STATUS_HANDLE handle_service_status;
+		SERVICE_STATUS service_status;
+	};
 }

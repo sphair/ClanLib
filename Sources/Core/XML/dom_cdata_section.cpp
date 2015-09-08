@@ -33,36 +33,22 @@
 
 namespace clan
 {
+	DomCDATASection::DomCDATASection()
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// DomCDATASection construction:
+	DomCDATASection::DomCDATASection(DomDocument &doc, const DomString &data)
+		: DomText(doc, CDATA_SECTION_NODE)
+	{
+		DomDocument_Impl *doc_impl = (DomDocument_Impl *)impl->owner_document.lock().get();
+		impl->get_tree_node()->set_node_value(doc_impl, data);
+	}
 
-DomCDATASection::DomCDATASection()
-{
-}
+	DomCDATASection::DomCDATASection(const std::shared_ptr<DomNode_Impl> &impl) : DomText(impl)
+	{
+	}
 
-DomCDATASection::DomCDATASection(DomDocument &doc, const DomString &data)
-: DomText(doc, CDATA_SECTION_NODE)
-{
-	DomDocument_Impl *doc_impl = (DomDocument_Impl *) impl->owner_document.lock().get();
-	impl->get_tree_node()->set_node_value(doc_impl, data);
-}
-
-DomCDATASection::DomCDATASection(const std::shared_ptr<DomNode_Impl> &impl) : DomText(impl)
-{
-}
-
-DomCDATASection::~DomCDATASection()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// DomCDATASection attributes:
-
-/////////////////////////////////////////////////////////////////////////////
-// DomCDATASection operations:
-
-/////////////////////////////////////////////////////////////////////////////
-// DomCDATASection implementation:
-
+	DomCDATASection::~DomCDATASection()
+	{
+	}
 }

@@ -32,48 +32,19 @@
 
 namespace clan
 {
+	class IODevice;
 
-class IODevice;
+	class ZipDigitalSignature
+	{
+	public:
+		ZipDigitalSignature();
+		~ZipDigitalSignature();
 
-class ZipDigitalSignature
-{
-/// \name Construction
-/// \{
+		int32_t signature; // 0x05054b50
+		int16_t size_of_data;
+		std::string signature_data;
 
-public:
-	ZipDigitalSignature();
-
-	~ZipDigitalSignature();
-
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	int32_t signature; // 0x05054b50
-
-	int16_t size_of_data;
-
-	std::string signature_data;
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	void load(IODevice &input);
-
-	void save(IODevice &output);
-
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-};
-
+		void load(IODevice &input);
+		void save(IODevice &output);
+	};
 }

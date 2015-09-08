@@ -34,47 +34,19 @@
 
 namespace clan
 {
+	class DomTreeNode;
+	class DomDocument_Impl;
 
-class DomTreeNode;
-class DomDocument_Impl;
+	class DomNode_Impl
+	{
+	public:
+		DomNode_Impl();
+		virtual ~DomNode_Impl();
 
-class DomNode_Impl
-{
-/// \name Construction
-/// \{
+		unsigned int node_index;
+		std::weak_ptr<DomNode_Impl> owner_document;
 
-public:
-	DomNode_Impl();
-
-	virtual ~DomNode_Impl();
-
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	unsigned int node_index;
-
-	std::weak_ptr<DomNode_Impl> owner_document;
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	DomTreeNode *get_tree_node();
-
-	const DomTreeNode *get_tree_node() const;
-
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-};
-
+		DomTreeNode *get_tree_node();
+		const DomTreeNode *get_tree_node() const;
+	};
 }

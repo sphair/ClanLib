@@ -37,62 +37,54 @@
 
 namespace clan
 {
+	SetupCore SetupCore::instance;
 
-SetupCore SetupCore::instance;
-
-class SetupCore_Impl : public SetupModule
-{
-public:
-	SetupCore_Impl();
-	virtual ~SetupCore_Impl();
-
-	ThreadLocalStorage_Instance tls_instance;
-
-};
-
-/////////////////////////////////////////////////////////////////////////////
-// SetupCore Construction:
-
-SetupCore::SetupCore()
-{
-
-}
-
-SetupCore::~SetupCore()
-{
-}
-
-void SetupCore::start()
-{
-	std::lock_guard<std::recursive_mutex> lock(instance.mutex);
-
-	if (instance.module_core)
-		return;
-
-	instance.module_core = clan::make_unique<SetupCore_Impl>();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// SetupCore Implementation:
-SetupCore_Impl::SetupCore_Impl()
-{
-#ifndef CL_DISABLE_SSE2
-	if (!System::detect_cpu_extension(System::sse2))
+	class SetupCore_Impl : public SetupModule
 	{
-		throw Exception("Sorry, A processor capable of SSE2 instructions is required. (Update your CPU)");
+	public:
+		SetupCore_Impl();
+		virtual ~SetupCore_Impl();
+
+		ThreadLocalStorage_Instance tls_instance;
+
+	};
+
+	SetupCore::SetupCore()
+	{
 	}
+
+	SetupCore::~SetupCore()
+	{
+	}
+
+	void SetupCore::start()
+	{
+		std::lock_guard<std::recursive_mutex> lock(instance.mutex);
+
+		if (instance.module_core)
+			return;
+
+		instance.module_core = clan::make_unique<SetupCore_Impl>();
+	}
+
+	SetupCore_Impl::SetupCore_Impl()
+	{
+#ifndef CL_DISABLE_SSE2
+		if (!System::detect_cpu_extension(System::sse2))
+		{
+			throw Exception("Sorry, A processor capable of SSE2 instructions is required. (Update your CPU)");
+		}
 #endif
 
 #ifdef WIN32
-	::CoInitialize(0);
+		::CoInitialize(0);
 #endif
-}
+	}
 
-SetupCore_Impl::~SetupCore_Impl()
-{
+	SetupCore_Impl::~SetupCore_Impl()
+	{
 #ifdef WIN32
-	::CoUninitialize();
+		::CoUninitialize();
 #endif
-}
-
+	}
 }

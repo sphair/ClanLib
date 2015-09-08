@@ -32,60 +32,25 @@
 
 namespace clan
 {
+	class IODevice;
 
-class IODevice;
+	class ZipEndOfCentralDirectoryRecord
+	{
+	public:
+		ZipEndOfCentralDirectoryRecord();
+		~ZipEndOfCentralDirectoryRecord();
 
-class ZipEndOfCentralDirectoryRecord
-{
-/// \name Construction
-/// \{
+		int32_t signature; // 0x06054b50
+		int16_t number_of_this_disk;
+		int16_t number_of_disk_with_start_of_central_directory;
+		int16_t number_of_entries_on_this_disk;
+		int16_t number_of_entries_in_central_directory;
+		int32_t size_of_central_directory;
+		int32_t offset_to_start_of_central_directory;
+		int16_t file_comment_length;
+		std::string file_comment;
 
-public:
-	ZipEndOfCentralDirectoryRecord();
-
-	~ZipEndOfCentralDirectoryRecord();
-
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	int32_t signature; // 0x06054b50
-
-	int16_t number_of_this_disk;
-
-	int16_t number_of_disk_with_start_of_central_directory;
-
-	int16_t number_of_entries_on_this_disk;
-
-	int16_t number_of_entries_in_central_directory;
-
-	int32_t size_of_central_directory;
-
-	int32_t offset_to_start_of_central_directory;
-
-	int16_t file_comment_length;
-
-	std::string file_comment;
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	void load(IODevice &input);
-
-	void save(IODevice &output);
-
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-};
-
+		void load(IODevice &input);
+		void save(IODevice &output);
+	};
 }

@@ -35,70 +35,52 @@
 
 namespace clan
 {
+	class DomTreeNode;
+	class XMLToken;
+	class DomNamedNodeMap_Impl;
 
-class DomTreeNode;
-class XMLToken;
-class DomNamedNodeMap_Impl;
-
-class DomDocument_Impl : public DomNode_Impl
-{
-/// \name Construction
-/// \{
-
-public:
-	DomDocument_Impl();
-	~DomDocument_Impl();
-
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	std::string qualified_name;
-	std::string public_id;
-	std::string system_id;
-	std::string internal_subset;
-	BlockAllocator node_allocator;
-	std::vector<DomTreeNode *> nodes;
-	std::vector<int> free_nodes;
-	std::vector<DomNode_Impl *> free_dom_nodes;
-	std::vector<DomNamedNodeMap_Impl *> free_named_node_maps;
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	static DomString find_namespace_uri(
-		const DomString &qualified_name,
-		const XMLToken &search_token,
-		const DomNode &search_node);
-
-	unsigned int allocate_tree_node();
-	void free_tree_node(unsigned int node_index);
-	DomNode_Impl *allocate_dom_node();
-	void free_dom_node(DomNode_Impl *node);
-	DomNamedNodeMap_Impl *allocate_named_node_map();
-	void free_named_node_map(DomNamedNodeMap_Impl *map);
-
-	struct NodeDeleter
+	class DomDocument_Impl : public DomNode_Impl
 	{
-		DomDocument_Impl *doc;
+	public:
+		DomDocument_Impl();
+		~DomDocument_Impl();
 
-		NodeDeleter(DomDocument_Impl *doc) : doc(doc) { }
-		void operator()(DomNode_Impl *node) { doc->free_dom_node(node); }
+		std::string qualified_name;
+		std::string public_id;
+		std::string system_id;
+		std::string internal_subset;
+		BlockAllocator node_allocator;
+		std::vector<DomTreeNode *> nodes;
+		std::vector<int> free_nodes;
+		std::vector<DomNode_Impl *> free_dom_nodes;
+		std::vector<DomNamedNodeMap_Impl *> free_named_node_maps;
+
+		static DomString find_namespace_uri(
+			const DomString &qualified_name,
+			const XMLToken &search_token,
+			const DomNode &search_node);
+
+		unsigned int allocate_tree_node();
+		void free_tree_node(unsigned int node_index);
+		DomNode_Impl *allocate_dom_node();
+		void free_dom_node(DomNode_Impl *node);
+		DomNamedNodeMap_Impl *allocate_named_node_map();
+		void free_named_node_map(DomNamedNodeMap_Impl *map);
+
+		struct NodeDeleter
+		{
+			DomDocument_Impl *doc;
+
+			NodeDeleter(DomDocument_Impl *doc) : doc(doc) { }
+			void operator()(DomNode_Impl *node) { doc->free_dom_node(node); }
+		};
+
+		struct NamedNodeMapDeleter
+		{
+			DomDocument_Impl *doc;
+
+			NamedNodeMapDeleter(DomDocument_Impl *doc) : doc(doc) { }
+			void operator()(DomNamedNodeMap_Impl *map) { doc->free_named_node_map(map); }
+		};
 	};
-
-	struct NamedNodeMapDeleter
-	{
-		DomDocument_Impl *doc;
-
-		NamedNodeMapDeleter(DomDocument_Impl *doc) : doc(doc) { }
-		void operator()(DomNamedNodeMap_Impl *map) { doc->free_named_node_map(map); }
-	};
-
-/// \}
-};
-
 }

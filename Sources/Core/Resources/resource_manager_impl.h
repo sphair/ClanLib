@@ -33,11 +33,9 @@
 
 namespace clan
 {
-
-class ResourceManager_Impl
-{
-public:
-	mutable std::map<std::string, std::shared_ptr<UserDataOwner> > caches;
-};
-
+	class ResourceManager_Impl
+	{
+	public:
+		mutable std::map<std::string, std::shared_ptr<UserDataOwner> > caches;
+	};
 }

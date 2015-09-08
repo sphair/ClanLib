@@ -33,68 +33,29 @@
 
 namespace clan
 {
+	class IODevice;
 
-class IODevice;
+	class ZipLocalFileHeader
+	{
+	public:
+		ZipLocalFileHeader();
+		~ZipLocalFileHeader();
 
-class ZipLocalFileHeader
-{
-/// \name Construction
-/// \{
+		int32_t signature; // 0x04034b50
+		int16_t version_needed_to_extract;
+		int16_t general_purpose_bit_flag;
+		int16_t compression_method;
+		int16_t last_mod_file_time;
+		int16_t last_mod_file_date;
+		uint32_t crc32;
+		int32_t compressed_size;
+		int32_t uncompressed_size;
+		int16_t file_name_length;
+		int16_t extra_field_length;
+		std::string filename;
+		DataBuffer extra_field;
 
-public:
-	ZipLocalFileHeader();
-
-	~ZipLocalFileHeader();
-
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	int32_t signature; // 0x04034b50
-
-	int16_t version_needed_to_extract;
-
-	int16_t general_purpose_bit_flag;
-
-	int16_t compression_method;
-
-	int16_t last_mod_file_time;
-
-	int16_t last_mod_file_date;
-
-	uint32_t crc32;
-
-	int32_t compressed_size;
-
-	int32_t uncompressed_size;
-
-	int16_t file_name_length;
-
-	int16_t extra_field_length;
-
-	std::string filename;
-
-	DataBuffer extra_field;
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	void load(IODevice &input);
-
-	void save(IODevice &output);
-
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-};
-
+		void load(IODevice &input);
+		void save(IODevice &output);
+	};
 }

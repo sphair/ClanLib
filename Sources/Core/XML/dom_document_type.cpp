@@ -35,100 +35,86 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// DomDocumentType construction:
-
-DomDocumentType::DomDocumentType()
-{
-}
-
-DomDocumentType::DomDocumentType(
-	const DomString &qualified_name,
-	const DomString &public_id,
-	const DomString &system_id)
-: DomNode(DomDocument(), DOCUMENT_TYPE_NODE)
-{
-	DomDocument_Impl *doc = dynamic_cast<DomDocument_Impl *>(impl->owner_document.lock().get());
-	doc->qualified_name = qualified_name;
-	doc->public_id = public_id;
-	doc->system_id = system_id;
-}
-
-DomDocumentType::DomDocumentType(DomDocument &doc)
-: DomNode(doc, DOCUMENT_TYPE_NODE)
-{
-}
-
-DomDocumentType::DomDocumentType(const std::shared_ptr<DomNode_Impl> &impl) : DomNode(impl)
-{
-}
-	
-DomDocumentType::~DomDocumentType()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// DomDocumentType attributes:
-
-DomString DomDocumentType::get_name() const
-{
-	if (impl)
+	DomDocumentType::DomDocumentType()
 	{
-		const DomDocument_Impl *doc = dynamic_cast<const DomDocument_Impl *>(impl->owner_document.lock().get());
-		if (doc)
-			return doc->qualified_name;
 	}
-	return DomString();
-}
-	
-DomNamedNodeMap DomDocumentType::get_entities() const
-{
-	return DomNamedNodeMap();
-}
-	
-DomNamedNodeMap DomDocumentType::get_notations() const
-{
-	return DomNamedNodeMap();
-}
 
-DomString DomDocumentType::get_public_id() const
-{
-	if (impl)
+	DomDocumentType::DomDocumentType(
+		const DomString &qualified_name,
+		const DomString &public_id,
+		const DomString &system_id)
+		: DomNode(DomDocument(), DOCUMENT_TYPE_NODE)
 	{
-		const DomDocument_Impl *doc = dynamic_cast<const DomDocument_Impl *>(impl->owner_document.lock().get());
-		if (doc)
-			return doc->public_id;
+		DomDocument_Impl *doc = dynamic_cast<DomDocument_Impl *>(impl->owner_document.lock().get());
+		doc->qualified_name = qualified_name;
+		doc->public_id = public_id;
+		doc->system_id = system_id;
 	}
-	return DomString();
-}
 
-DomString DomDocumentType::get_system_id() const
-{
-	if (impl)
+	DomDocumentType::DomDocumentType(DomDocument &doc)
+		: DomNode(doc, DOCUMENT_TYPE_NODE)
 	{
-		const DomDocument_Impl *doc = dynamic_cast<const DomDocument_Impl *>(impl->owner_document.lock().get());
-		if (doc)
-			return doc->system_id;
 	}
-	return DomString();
-}
 
-DomString DomDocumentType::get_internal_subset() const
-{
-	if (impl)
+	DomDocumentType::DomDocumentType(const std::shared_ptr<DomNode_Impl> &impl) : DomNode(impl)
 	{
-		const DomDocument_Impl *doc = dynamic_cast<const DomDocument_Impl *>(impl->owner_document.lock().get());
-		if (doc)
-			return doc->internal_subset;
 	}
-	return DomString();
-}
 
-/////////////////////////////////////////////////////////////////////////////
-// DomDocumentType operations:
+	DomDocumentType::~DomDocumentType()
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// DomDocumentType implementation:
+	DomString DomDocumentType::get_name() const
+	{
+		if (impl)
+		{
+			const DomDocument_Impl *doc = dynamic_cast<const DomDocument_Impl *>(impl->owner_document.lock().get());
+			if (doc)
+				return doc->qualified_name;
+		}
+		return DomString();
+	}
 
+	DomNamedNodeMap DomDocumentType::get_entities() const
+	{
+		return DomNamedNodeMap();
+	}
+
+	DomNamedNodeMap DomDocumentType::get_notations() const
+	{
+		return DomNamedNodeMap();
+	}
+
+	DomString DomDocumentType::get_public_id() const
+	{
+		if (impl)
+		{
+			const DomDocument_Impl *doc = dynamic_cast<const DomDocument_Impl *>(impl->owner_document.lock().get());
+			if (doc)
+				return doc->public_id;
+		}
+		return DomString();
+	}
+
+	DomString DomDocumentType::get_system_id() const
+	{
+		if (impl)
+		{
+			const DomDocument_Impl *doc = dynamic_cast<const DomDocument_Impl *>(impl->owner_document.lock().get());
+			if (doc)
+				return doc->system_id;
+		}
+		return DomString();
+	}
+
+	DomString DomDocumentType::get_internal_subset() const
+	{
+		if (impl)
+		{
+			const DomDocument_Impl *doc = dynamic_cast<const DomDocument_Impl *>(impl->owner_document.lock().get());
+			if (doc)
+				return doc->internal_subset;
+		}
+		return DomString();
+	}
 }

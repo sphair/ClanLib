@@ -33,82 +33,36 @@
 
 namespace clan
 {
+	class IODevice;
 
-class IODevice;
+	class ZipFileHeader
+	{
+	public:
+		ZipFileHeader();
+		~ZipFileHeader();
 
-class ZipFileHeader
-{
-/// \name Construction
-/// \{
+		int32_t signature; // 0x02014b50
+		int16_t version_made_by;
+		int16_t version_needed_to_extract;
+		int16_t general_purpose_bit_flag;
+		int16_t compression_method;
+		int16_t last_mod_file_time;
+		int16_t last_mod_file_date;
+		uint32_t crc32;
+		int32_t compressed_size;
+		int32_t uncompressed_size;
+		int16_t file_name_length;
+		int16_t extra_field_length;
+		int16_t file_comment_length;
+		int16_t disk_number_start;
+		int16_t internal_file_attributes;
+		int32_t external_file_attributes;
+		int32_t relative_offset_of_local_header;
+		std::string filename;
+		DataBuffer extra_field;
+		std::string file_comment;
 
-public:
-	ZipFileHeader();
-
-	~ZipFileHeader();
-
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	int32_t signature; // 0x02014b50
-
-	int16_t version_made_by;
-
-	int16_t version_needed_to_extract;
-
-	int16_t general_purpose_bit_flag;
-
-	int16_t compression_method;
-
-	int16_t last_mod_file_time;
-
-	int16_t last_mod_file_date;
-
-	uint32_t crc32;
-
-	int32_t compressed_size;
-
-	int32_t uncompressed_size;
-
-	int16_t file_name_length;
-
-	int16_t extra_field_length;
-
-	int16_t file_comment_length;
-
-	int16_t disk_number_start;
-
-	int16_t internal_file_attributes;
-
-	int32_t external_file_attributes;
-
-	int32_t relative_offset_of_local_header;
-
-	std::string filename;
-
-	DataBuffer extra_field;
-
-	std::string file_comment;
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	void load(IODevice &input);
-
-	void save(IODevice &output);
-
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-};
-
+		void load(IODevice &input);
+		void save(IODevice &output);
+	};
 }

@@ -32,63 +32,48 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// Zip64EndOfCentralDirectoryRecord construction:
-
-Zip64EndOfCentralDirectoryRecord::Zip64EndOfCentralDirectoryRecord()
-{
-	signature = 0x06064b50;
-}
-	
-Zip64EndOfCentralDirectoryRecord::~Zip64EndOfCentralDirectoryRecord()
-{
-}
-	
-/////////////////////////////////////////////////////////////////////////////
-// Zip64EndOfCentralDirectoryRecord attributes:
-
-
-/////////////////////////////////////////////////////////////////////////////
-// Zip64EndOfCentralDirectoryRecord operations:
-
-void Zip64EndOfCentralDirectoryRecord::load(IODevice &input)
-{
-	signature = input.read_int32();
-	if (signature != 0x06064b50)
+	Zip64EndOfCentralDirectoryRecord::Zip64EndOfCentralDirectoryRecord()
 	{
-		throw Exception("Incorrect Zip64 End of Central Directory Record signature");
+		signature = 0x06064b50;
 	}
-	
-	size_of_record = input.read_int64();
-	version_made_by = input.read_int16();
-	version_needed_to_extract = input.read_int16();
-	number_of_this_disk = input.read_int32();
-	number_of_disk_with_central_directory_start = input.read_int32();
-	number_of_entries_on_this_disk = input.read_int64();
-	number_of_entries_in_central_directory = input.read_int64();
-	size_of_central_directory = input.read_int64();
-	offset_to_start_of_central_directory = input.read_int64();
-	
-	// todo: read extensible data sector
-}
-	
-void Zip64EndOfCentralDirectoryRecord::save(IODevice &output)
-{
-	output.write_int32(signature);
-	output.write_int64(size_of_record);
-	output.write_int16(version_made_by);
-	output.write_int16(version_needed_to_extract);
-	output.write_int32(number_of_this_disk);
-	output.write_int32(number_of_disk_with_central_directory_start);
-	output.write_int64(number_of_entries_on_this_disk);
-	output.write_int64(number_of_entries_in_central_directory);
-	output.write_int64(size_of_central_directory);
-	output.write_int64(offset_to_start_of_central_directory);
-	output.write(extensible_data_sector.data(), extensible_data_sector.size());
-}
 
-/////////////////////////////////////////////////////////////////////////////
-// Zip64EndOfCentralDirectoryRecord implementation:
+	Zip64EndOfCentralDirectoryRecord::~Zip64EndOfCentralDirectoryRecord()
+	{
+	}
 
+	void Zip64EndOfCentralDirectoryRecord::load(IODevice &input)
+	{
+		signature = input.read_int32();
+		if (signature != 0x06064b50)
+		{
+			throw Exception("Incorrect Zip64 End of Central Directory Record signature");
+		}
+
+		size_of_record = input.read_int64();
+		version_made_by = input.read_int16();
+		version_needed_to_extract = input.read_int16();
+		number_of_this_disk = input.read_int32();
+		number_of_disk_with_central_directory_start = input.read_int32();
+		number_of_entries_on_this_disk = input.read_int64();
+		number_of_entries_in_central_directory = input.read_int64();
+		size_of_central_directory = input.read_int64();
+		offset_to_start_of_central_directory = input.read_int64();
+
+		// todo: read extensible data sector
+	}
+
+	void Zip64EndOfCentralDirectoryRecord::save(IODevice &output)
+	{
+		output.write_int32(signature);
+		output.write_int64(size_of_record);
+		output.write_int16(version_made_by);
+		output.write_int16(version_needed_to_extract);
+		output.write_int32(number_of_this_disk);
+		output.write_int32(number_of_disk_with_central_directory_start);
+		output.write_int64(number_of_entries_on_this_disk);
+		output.write_int64(number_of_entries_in_central_directory);
+		output.write_int64(size_of_central_directory);
+		output.write_int64(offset_to_start_of_central_directory);
+		output.write(extensible_data_sector.data(), extensible_data_sector.size());
+	}
 }

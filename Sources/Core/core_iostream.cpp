@@ -23,8 +23,7 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
-**    (if your name is missing here, please add it)
+**    Ingo Ruhnke
 */
 
 #include "Core/precomp.h"
@@ -35,71 +34,69 @@
 
 namespace clan
 {
+	std::ostream& operator<<(std::ostream& s, const Rect& rect)
+	{
+		s << "["
+			<< rect.left << ", "
+			<< rect.top << ", "
+			<< rect.right << ", "
+			<< rect.bottom << "]";
+		return s;
+	}
 
-std::ostream& operator<<(std::ostream& s, const Rect& rect)
-{
-	s << "["
-	  << rect.left   << ", "
-	  << rect.top    << ", "
-	  << rect.right  << ", "
-	  << rect.bottom << "]";
-	return s;
-}
+	std::ostream& operator<<(std::ostream& s, const Rectf& rect)
+	{
+		s << "["
+			<< rect.left << ", "
+			<< rect.top << ", "
+			<< rect.right << ", "
+			<< rect.bottom << "]";
+		return s;
+	}
 
-std::ostream& operator<<(std::ostream& s, const Rectf& rect)
-{
-	s << "["
-	  << rect.left   << ", "
-	  << rect.top    << ", "
-	  << rect.right  << ", "
-	  << rect.bottom << "]";
-	return s;
-}
+	std::ostream& operator<<(std::ostream& s, const Rectd& rect)
+	{
+		s << "["
+			<< rect.left << ", "
+			<< rect.top << ", "
+			<< rect.right << ", "
+			<< rect.bottom << "]";
+		return s;
+	}
 
-std::ostream& operator<<(std::ostream& s, const Rectd& rect)
-{
-	s << "["
-	  << rect.left   << ", "
-	  << rect.top    << ", "
-	  << rect.right  << ", "
-	  << rect.bottom << "]";
-	return s;
-}
+	std::ostream& operator<<(std::ostream& s, const Point& point)
+	{
+		s << "["
+			<< point.x << ", "
+			<< point.y << "]";
+		return s;
+	}
 
-std::ostream& operator<<(std::ostream& s, const Point& point)
-{
-	s << "["
-	  << point.x << ", "
-	  << point.y << "]";
-	return s;
-}
+	std::ostream& operator<<(std::ostream& s, const Pointf& point)
+	{
+		s << "["
+			<< point.x << ", "
+			<< point.y << "]";
+		return s;
+	}
 
-std::ostream& operator<<(std::ostream& s, const Pointf& point)
-{
-	s << "["
-	  << point.x << ", "
-	  << point.y << "]";
-	return s;
-}
+	std::ostream& operator<<(std::ostream& s, const Pointd& point)
+	{
+		s << "["
+			<< point.x << ", "
+			<< point.y << "]";
+		return s;
+	}
 
-std::ostream& operator<<(std::ostream& s, const Pointd& point)
-{
-	s << "["
-	  << point.x << ", "
-	  << point.y << "]";
-	return s;
-}
+	std::ostream& operator<<(std::ostream& s, const Size& size)
+	{
+		s << size.width << "x" << size.height;
+		return s;
+	}
 
-std::ostream& operator<<(std::ostream& s, const Size& size)
-{
-	s << size.width << "x" << size.height;
-	return s;
-}
-
-std::ostream& operator<<(std::ostream& s, const Sizef& size)
-{
-	s << size.width << "x" << size.height;
-	return s;
-}
-
+	std::ostream& operator<<(std::ostream& s, const Sizef& size)
+	{
+		s << size.width << "x" << size.height;
+		return s;
+	}
 }

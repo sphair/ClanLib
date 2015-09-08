@@ -32,33 +32,31 @@
 
 namespace clan
 {
-
-class XPathLocationStep
-{
-public:
-	XPathLocationStep()
-	: test_type(type_none)
+	class XPathLocationStep
 	{
-	}
+	public:
+		XPathLocationStep()
+			: test_type(type_none)
+		{
+		}
 
-	enum TestType
-	{
-		type_none,
-		type_name,
-		type_node,
+		enum TestType
+		{
+			type_none,
+			type_name,
+			type_node,
+		};
+
+		std::string axis;
+		TestType test_type;
+		std::string test_str;
+
+		struct Predicate
+		{
+			std::string::size_type pos, length;
+		};
+
+		XPathToken::NodeType node_type;
+		std::vector<Predicate> predicates;
 	};
-
-	std::string axis;
-	TestType test_type;
-	std::string test_str;
-
-	struct Predicate
-	{
-		std::string::size_type pos, length;
-	};
-
-	XPathToken::NodeType node_type;
-	std::vector<Predicate> predicates;
-};
-
 }

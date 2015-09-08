@@ -54,51 +54,49 @@
 
 namespace clan
 {
+	// Win32 implementation of System functions:
 
-// Win32 implementation of System functions:
-
-uint64_t System::get_time()
-{
-	return (get_microseconds() / 1000);
-}
-
-uint64_t System::get_microseconds()
-{
-	static LARGE_INTEGER perf_counter;
-	static double perf_frequency;
-	static bool first_time = true;
-
-	if (first_time)
+	uint64_t System::get_time()
 	{
-		LARGE_INTEGER perf_frequency_int64;
-		QueryPerformanceFrequency(&perf_frequency_int64);
-		perf_frequency = (double) perf_frequency_int64.QuadPart;
-		first_time = false;
+		return (get_microseconds() / 1000);
 	}
 
-	// Note on Win32, this looses accuracy after approx 9 days (by 1 to 4 microseconds), due to the precision of a 64bit double.
-	// If you require ultra precision, modify this function to use clan::BigInt
+	uint64_t System::get_microseconds()
+	{
+		static LARGE_INTEGER perf_counter;
+		static double perf_frequency;
+		static bool first_time = true;
 
-	QueryPerformanceCounter(&perf_counter);
-	double quad_part = (double) perf_counter.QuadPart;
-	return (uint64_t) (((1000000.0 * quad_part) / perf_frequency) + 0.5);
-}
+		if (first_time)
+		{
+			LARGE_INTEGER perf_frequency_int64;
+			QueryPerformanceFrequency(&perf_frequency_int64);
+			perf_frequency = (double)perf_frequency_int64.QuadPart;
+			first_time = false;
+		}
 
-std::string System::get_exe_path()
-{
-	WCHAR exe_filename[_MAX_PATH];
-	DWORD len = GetModuleFileName(NULL, exe_filename, _MAX_PATH);
-	if (len == 0 || len == _MAX_PATH)
-		throw Exception("GetModuleFileName failed!");
+		// Note on Win32, this looses accuracy after approx 9 days (by 1 to 4 microseconds), due to the precision of a 64bit double.
+		// If you require ultra precision, modify this function to use clan::BigInt
 
-	WCHAR drive[_MAX_DRIVE], dir[_MAX_DIR];
+		QueryPerformanceCounter(&perf_counter);
+		double quad_part = (double)perf_counter.QuadPart;
+		return (uint64_t)(((1000000.0 * quad_part) / perf_frequency) + 0.5);
+	}
+
+	std::string System::get_exe_path()
+	{
+		WCHAR exe_filename[_MAX_PATH];
+		DWORD len = GetModuleFileName(NULL, exe_filename, _MAX_PATH);
+		if (len == 0 || len == _MAX_PATH)
+			throw Exception("GetModuleFileName failed!");
+
+		WCHAR drive[_MAX_DRIVE], dir[_MAX_DIR];
 #ifdef _CRT_INSECURE_DEPRECATE
-	_wsplitpath_s(exe_filename, drive, _MAX_DRIVE, dir, _MAX_DIR, NULL, 0, NULL, 0);
+		_wsplitpath_s(exe_filename, drive, _MAX_DRIVE, dir, _MAX_DIR, NULL, 0, NULL, 0);
 #else
-	_wsplitpath(exe_filename, drive, dir, NULL, NULL);
+		_wsplitpath(exe_filename, drive, dir, NULL, NULL);
 #endif
 
-	return StringHelp::ucs2_to_utf8(drive) + StringHelp::ucs2_to_utf8(dir);
-}
-
+		return StringHelp::ucs2_to_utf8(drive) + StringHelp::ucs2_to_utf8(dir);
+	}
 }

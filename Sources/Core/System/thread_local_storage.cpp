@@ -34,143 +34,129 @@
 
 namespace clan
 {
+	ThreadLocalStorage_Instance *ThreadLocalStorage::instance = nullptr;
 
-ThreadLocalStorage_Instance *ThreadLocalStorage::instance = nullptr;
-
-/////////////////////////////////////////////////////////////////////////////
-// ThreadLocalStorage Construction:
-
-ThreadLocalStorage::ThreadLocalStorage()
-{
-	init_core();
+	ThreadLocalStorage::ThreadLocalStorage()
+	{
+		init_core();
 
 #ifdef WIN32
-	if (instance->cl_tls_index == TLS_OUT_OF_INDEXES)
-	{
-		std::unique_lock<std::recursive_mutex> mutex_lock(instance->cl_tls_mutex);
-		instance->cl_tls_index = TlsAlloc();
-	}
+		if (instance->cl_tls_index == TLS_OUT_OF_INDEXES)
+		{
+			std::unique_lock<std::recursive_mutex> mutex_lock(instance->cl_tls_mutex);
+			instance->cl_tls_index = TlsAlloc();
+		}
 
-	ThreadLocalStorage_Impl *tls_impl = static_cast<ThreadLocalStorage_Impl *>(TlsGetValue(instance->cl_tls_index));
+		ThreadLocalStorage_Impl *tls_impl = static_cast<ThreadLocalStorage_Impl *>(TlsGetValue(instance->cl_tls_index));
 
-	if (!tls_impl)
-	{
-		tls_impl = new ThreadLocalStorage_Impl;
-		TlsSetValue(instance->cl_tls_index, tls_impl);
-	}
-	else
-	{
-		tls_impl->add_reference();
-	}
+		if (!tls_impl)
+		{
+			tls_impl = new ThreadLocalStorage_Impl;
+			TlsSetValue(instance->cl_tls_index, tls_impl);
+		}
+		else
+		{
+			tls_impl->add_reference();
+		}
 
 #elif !defined(HAVE_TLS)
-	if (!instance->cl_tls_index_created)
-	{
-		std::unique_lock<std::recursive_mutex> mutex_lock(instance->cl_tls_mutex);
-		pthread_key_create(&instance->cl_tls_index, 0);
-		instance->cl_tls_index_created = true;
-	}
+		if (!instance->cl_tls_index_created)
+		{
+			std::unique_lock<std::recursive_mutex> mutex_lock(instance->cl_tls_mutex);
+			pthread_key_create(&instance->cl_tls_index, 0);
+			instance->cl_tls_index_created = true;
+		}
 
-	ThreadLocalStorage_Impl *tls_impl = (ThreadLocalStorage_Impl *) pthread_getspecific(instance->cl_tls_index);
+		ThreadLocalStorage_Impl *tls_impl = (ThreadLocalStorage_Impl *) pthread_getspecific(instance->cl_tls_index);
 
-	if (!tls_impl)
-	{
-		tls_impl = new ThreadLocalStorage_Impl;
-		pthread_setspecific(instance->cl_tls_index, tls_impl);
-	}
-	else
-	{
-		tls_impl->add_reference();
-	}
+		if (!tls_impl)
+		{
+			tls_impl = new ThreadLocalStorage_Impl;
+			pthread_setspecific(instance->cl_tls_index, tls_impl);
+		}
+		else
+		{
+			tls_impl->add_reference();
+		}
 #else
 
-	if (!instance->cl_tls_impl)
-	{
-		instance->cl_tls_impl = new ThreadLocalStorage_Impl;
-	}
-	else
-	{
-		instance->cl_tls_impl->add_reference();
-	}
+		if (!instance->cl_tls_impl)
+		{
+			instance->cl_tls_impl = new ThreadLocalStorage_Impl;
+		}
+		else
+		{
+			instance->cl_tls_impl->add_reference();
+		}
 #endif
-}
+	}
 
-ThreadLocalStorage::~ThreadLocalStorage()
-{
-	if (!instance)
-		return;
+	ThreadLocalStorage::~ThreadLocalStorage()
+	{
+		if (!instance)
+			return;
 #ifdef WIN32
-	if (instance->cl_tls_index == TLS_OUT_OF_INDEXES)
-		return;
-	ThreadLocalStorage_Impl *tls_impl = (ThreadLocalStorage_Impl *) TlsGetValue(instance->cl_tls_index);
-	if (tls_impl)
-		tls_impl->release_reference();
+		if (instance->cl_tls_index == TLS_OUT_OF_INDEXES)
+			return;
+		ThreadLocalStorage_Impl *tls_impl = (ThreadLocalStorage_Impl *)TlsGetValue(instance->cl_tls_index);
+		if (tls_impl)
+			tls_impl->release_reference();
 #elif !defined(HAVE_TLS)
-	if (!instance->cl_tls_index_created)
-		return;
-	ThreadLocalStorage_Impl *tls_impl = (ThreadLocalStorage_Impl *) pthread_getspecific(instance->cl_tls_index);
-	if (tls_impl)
-		tls_impl->release_reference();
+		if (!instance->cl_tls_index_created)
+			return;
+		ThreadLocalStorage_Impl *tls_impl = (ThreadLocalStorage_Impl *) pthread_getspecific(instance->cl_tls_index);
+		if (tls_impl)
+			tls_impl->release_reference();
 #else
-	if (instance->cl_tls_impl)
-		instance->cl_tls_impl->release_reference();
+		if (instance->cl_tls_impl)
+			instance->cl_tls_impl->release_reference();
 #endif
-}
+	}
 
-void ThreadLocalStorage::init_core()
-{
-	if (!instance)
-		SetupCore::start();
-	if (!instance)
-		throw Exception("No ThreadLocalStorage instance");
-}
+	void ThreadLocalStorage::init_core()
+	{
+		if (!instance)
+			SetupCore::start();
+		if (!instance)
+			throw Exception("No ThreadLocalStorage instance");
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// ThreadLocalStorage Attributes:
-
-std::shared_ptr<ThreadLocalStorageData> ThreadLocalStorage::get_variable(const std::string &name)
-{
-	init_core();
+	std::shared_ptr<ThreadLocalStorageData> ThreadLocalStorage::get_variable(const std::string &name)
+	{
+		init_core();
 
 #ifdef WIN32
-	if (instance->cl_tls_index == TLS_OUT_OF_INDEXES)
-		throw Exception("No ThreadLocalStorage object created for this thread.");
-	ThreadLocalStorage_Impl *tls_impl = (ThreadLocalStorage_Impl *) TlsGetValue(instance->cl_tls_index);
+		if (instance->cl_tls_index == TLS_OUT_OF_INDEXES)
+			throw Exception("No ThreadLocalStorage object created for this thread.");
+		ThreadLocalStorage_Impl *tls_impl = (ThreadLocalStorage_Impl *)TlsGetValue(instance->cl_tls_index);
 #elif !defined(HAVE_TLS)
-	if (!instance->cl_tls_index_created)
-		throw Exception("No ThreadLocalStorage object created for this thread.");
-	ThreadLocalStorage_Impl *tls_impl = (ThreadLocalStorage_Impl *) pthread_getspecific(instance->cl_tls_index);
+		if (!instance->cl_tls_index_created)
+			throw Exception("No ThreadLocalStorage object created for this thread.");
+		ThreadLocalStorage_Impl *tls_impl = (ThreadLocalStorage_Impl *) pthread_getspecific(instance->cl_tls_index);
 #else
-	ThreadLocalStorage_Impl *tls_impl = instance->cl_tls_impl;
+		ThreadLocalStorage_Impl *tls_impl = instance->cl_tls_impl;
 #endif
-	if (tls_impl == nullptr)
-		throw Exception("No ThreadLocalStorage object created for this thread.");
-	return tls_impl->get_variable(name);
-}
+		if (tls_impl == nullptr)
+			throw Exception("No ThreadLocalStorage object created for this thread.");
+		return tls_impl->get_variable(name);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// ThreadLocalStorage Operations:
-
-void ThreadLocalStorage::set_variable(const std::string &name, std::shared_ptr<ThreadLocalStorageData> ptr)
-{
-	init_core();
+	void ThreadLocalStorage::set_variable(const std::string &name, std::shared_ptr<ThreadLocalStorageData> ptr)
+	{
+		init_core();
 #ifdef WIN32
-	if (instance->cl_tls_index == TLS_OUT_OF_INDEXES)
-		throw Exception("No ThreadLocalStorage object created for this thread.");
-	ThreadLocalStorage_Impl *tls_impl = static_cast<ThreadLocalStorage_Impl *>(TlsGetValue(instance->cl_tls_index));
+		if (instance->cl_tls_index == TLS_OUT_OF_INDEXES)
+			throw Exception("No ThreadLocalStorage object created for this thread.");
+		ThreadLocalStorage_Impl *tls_impl = static_cast<ThreadLocalStorage_Impl *>(TlsGetValue(instance->cl_tls_index));
 #elif !defined(HAVE_TLS)
-	if (!instance->cl_tls_index_created)
-		throw Exception("No ThreadLocalStorage object created for this thread.");
-	ThreadLocalStorage_Impl *tls_impl = static_cast<ThreadLocalStorage_Impl *>(pthread_getspecific(instance->cl_tls_index));
+		if (!instance->cl_tls_index_created)
+			throw Exception("No ThreadLocalStorage object created for this thread.");
+		ThreadLocalStorage_Impl *tls_impl = static_cast<ThreadLocalStorage_Impl *>(pthread_getspecific(instance->cl_tls_index));
 #else
-	ThreadLocalStorage_Impl *tls_impl = instance->cl_tls_impl;
+		ThreadLocalStorage_Impl *tls_impl = instance->cl_tls_impl;
 #endif
-	if (tls_impl == nullptr)
-		throw Exception("No ThreadLocalStorage object created for this thread.");
-	tls_impl->set_variable(name,ptr);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// ThreadLocalStorage Implementation:
-
+		if (tls_impl == nullptr)
+			throw Exception("No ThreadLocalStorage object created for this thread.");
+		tls_impl->set_variable(name, ptr);
+	}
 }

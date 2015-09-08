@@ -32,48 +32,33 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// Zip64EndOfCentralDirectoryLocator construction:
-
-Zip64EndOfCentralDirectoryLocator::Zip64EndOfCentralDirectoryLocator()
-{
-	signature = 0x07064b50;
-}
-	
-Zip64EndOfCentralDirectoryLocator::~Zip64EndOfCentralDirectoryLocator()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////	
-// Zip64EndOfCentralDirectoryLocator attributes:
-
-
-/////////////////////////////////////////////////////////////////////////////
-// Zip64EndOfCentralDirectoryLocator operations:
-
-void Zip64EndOfCentralDirectoryLocator::load(IODevice &input)
-{
-	signature = input.read_int32();
-	if (signature != 0x07064b50)
+	Zip64EndOfCentralDirectoryLocator::Zip64EndOfCentralDirectoryLocator()
 	{
-		throw Exception("Incorrect Zip64 End of central directory locator signature!");
+		signature = 0x07064b50;
 	}
-	
-	number_of_disk_with_zip64_end_of_central_directory = input.read_int32();
-	relative_offset_of_zip64_end_of_central_directory = input.read_int64();
-	total_number_of_disks = input.read_int32();
-}
-	
-void Zip64EndOfCentralDirectoryLocator::save(IODevice &output)
-{
-	output.write_int32(signature);
-	output.write_int32(number_of_disk_with_zip64_end_of_central_directory);
-	output.write_int64(relative_offset_of_zip64_end_of_central_directory);
-	output.write_int32(total_number_of_disks);
-}
 
-/////////////////////////////////////////////////////////////////////////////
-// Zip64EndOfCentralDirectoryLocator implementation:
+	Zip64EndOfCentralDirectoryLocator::~Zip64EndOfCentralDirectoryLocator()
+	{
+	}
 
+	void Zip64EndOfCentralDirectoryLocator::load(IODevice &input)
+	{
+		signature = input.read_int32();
+		if (signature != 0x07064b50)
+		{
+			throw Exception("Incorrect Zip64 End of central directory locator signature!");
+		}
+
+		number_of_disk_with_zip64_end_of_central_directory = input.read_int32();
+		relative_offset_of_zip64_end_of_central_directory = input.read_int64();
+		total_number_of_disks = input.read_int32();
+	}
+
+	void Zip64EndOfCentralDirectoryLocator::save(IODevice &output)
+	{
+		output.write_int32(signature);
+		output.write_int32(number_of_disk_with_zip64_end_of_central_directory);
+		output.write_int64(relative_offset_of_zip64_end_of_central_directory);
+		output.write_int32(total_number_of_disks);
+	}
 }

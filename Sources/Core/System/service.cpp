@@ -37,40 +37,26 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// Service Construction:
-
-Service::Service(const std::string &service_name)
-{
+	Service::Service(const std::string &service_name)
+	{
 #ifdef WIN32
-	impl = std::shared_ptr<Service_Impl>(new Service_Win32(this, service_name));
+		impl = std::shared_ptr<Service_Impl>(new Service_Win32(this, service_name));
 #else
-	impl = std::shared_ptr<Service_Impl>(new Service_Unix(this, service_name));
+		impl = std::shared_ptr<Service_Impl>(new Service_Unix(this, service_name));
 #endif
-}
+	}
 
-Service::~Service()
-{
-}
+	Service::~Service()
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// Service Attributes:
+	const std::string &Service::get_service_name() const
+	{
+		return impl->service_name;
+	}
 
-const std::string &Service::get_service_name() const
-{
-	return impl->service_name;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Service Operations:
-
-int Service::main(int argc, char **argv)
-{
-	return impl->main(argc, argv);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Service Implementation:
-
+	int Service::main(int argc, char **argv)
+	{
+		return impl->main(argc, argv);
+	}
 }

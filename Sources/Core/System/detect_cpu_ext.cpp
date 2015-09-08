@@ -24,7 +24,6 @@
 **  File Author(s):
 **
 **    Animehunter
-**    (if your name is missing here, please add it)
 */
 
 #include "Core/precomp.h"
@@ -34,15 +33,15 @@ namespace clan
 {
 
 #if defined(ARM_PLATFORM) || defined(CL_ARM)
-bool System::detect_cpu_extension(CPU_ExtensionPPC ext)
-{
-	throw ("Congratulations, you've just been selected to code this feature!");
-}
+	bool System::detect_cpu_extension(CPU_ExtensionPPC ext)
+	{
+		throw ("Congratulations, you've just been selected to code this feature!");
+	}
 
-bool System::detect_cpu_extension(CPU_ExtensionX86 ext)
-{
-    return false;
-}
+	bool System::detect_cpu_extension(CPU_ExtensionX86 ext)
+	{
+		return false;
+	}
 #else
 
 #if (defined(WIN32) || defined(_WIN32) || defined(_WIN64)) && !defined __MINGW32__
@@ -68,122 +67,122 @@ bool System::detect_cpu_extension(CPU_ExtensionX86 ext)
 
 #endif
 
-bool System::detect_cpu_extension(CPU_ExtensionPPC ext)
-{
-	throw ("Congratulations, you've just been selected to code this feature!");
-}
-
-bool System::detect_cpu_extension(CPU_ExtensionX86 ext)
-{
-	unsigned int cpuinfo[4] = {0};
-
-	if(ext == mmx)
+	bool System::detect_cpu_extension(CPU_ExtensionPPC ext)
 	{
-		__cpuid((int*)cpuinfo, 0x1);
-		return ((cpuinfo[3] & (1 << 23)) != 0);
-	}
-	else if(ext == mmx_ex)
-	{
-		__cpuid((int*)cpuinfo, 0x80000000);
-		if(cpuinfo[0] < 0x80000001)
-			return false;
-
-		__cpuid((int*)cpuinfo, 0x80000001);
-		return ((cpuinfo[3] & (1 << 22)) != 0);
-	}
-	else if(ext == _3d_now)
-	{
-		__cpuid((int*)cpuinfo, 0x80000000);
-		if(cpuinfo[0] < 0x80000001)
-			return false;
-
-		__cpuid((int*)cpuinfo, 0x80000001);
-		return ((cpuinfo[3] & (1 << 31)) != 0);
-	}
-	else if(ext == _3d_now_ex)
-	{
-		__cpuid((int*)cpuinfo, 0x80000000);
-		if(cpuinfo[0] < 0x80000001)
-			return false;
-
-		__cpuid((int*)cpuinfo, 0x80000001);
-		return ((cpuinfo[3] & (1 << 30)) != 0);
-	}
-	else if(ext == sse)
-	{
-		__cpuid((int*)cpuinfo, 0x1);
-		return ((cpuinfo[3] & (1 << 25)) != 0);
-	}
-	else if(ext == sse2)
-	{
-		__cpuid((int*)cpuinfo, 0x1);
-		return ((cpuinfo[3] & (1 << 26)) != 0);
-	}
-	else if(ext == sse3)
-	{
-		__cpuid((int*)cpuinfo, 0x1);
-		return ((cpuinfo[2] & (1 << 0)) != 0);
-	}
-	else if(ext == ssse3)
-	{
-		__cpuid((int*)cpuinfo, 0x1);
-		return ((cpuinfo[2] & (1 << 9)) != 0);
+		throw ("Congratulations, you've just been selected to code this feature!");
 	}
 
-	else if(ext == sse4_a)
+	bool System::detect_cpu_extension(CPU_ExtensionX86 ext)
 	{
-		__cpuid((int*)cpuinfo, 0x80000000);
-		if(cpuinfo[0] < 0x80000001)
-			return false;
+		unsigned int cpuinfo[4] = { 0 };
 
-		__cpuid((int*)cpuinfo, 0x80000001);
-		return ((cpuinfo[2] & (1 << 6)) != 0);
-	}
-	else if(ext == sse4_1)
-	{
-		__cpuid((int*)cpuinfo, 0x1);
-		return ((cpuinfo[2] & (1 << 19)) != 0);
-	}
-	else if(ext == sse4_2)
-	{
-		__cpuid((int*)cpuinfo, 0x1);
-		return ((cpuinfo[2] & (1 << 20)) != 0);
-	}
-	else if(ext == xop)
-	{
-		__cpuid((int*)cpuinfo, 0x80000000);
-		if(cpuinfo[0] < 0x80000001)
-			return false;
+		if (ext == mmx)
+		{
+			__cpuid((int*)cpuinfo, 0x1);
+			return ((cpuinfo[3] & (1 << 23)) != 0);
+		}
+		else if (ext == mmx_ex)
+		{
+			__cpuid((int*)cpuinfo, 0x80000000);
+			if (cpuinfo[0] < 0x80000001)
+				return false;
 
-		__cpuid((int*)cpuinfo, 0x80000001);
-		return ((cpuinfo[2] & (1 << 11)) != 0);
-	}
-	else if(ext == avx)
-	{
-		__cpuid((int*)cpuinfo, 0x1);
-		return ((cpuinfo[2] & (1 << 28)) != 0);
-	}
-	else if(ext == aes)
-	{
-		__cpuid((int*)cpuinfo, 0x1);
-		return ((cpuinfo[2] & (1 << 25)) != 0);
-	}
-	else if(ext == fma3)
-	{
-		__cpuid((int*)cpuinfo, 0x1);
-		return ((cpuinfo[2] & (1 << 12)) != 0);
-	}
-	else if(ext == fma4)
-	{
-		__cpuid((int*)cpuinfo, 0x80000000);
-		if(cpuinfo[0] < 0x80000001)
-			return false;
+			__cpuid((int*)cpuinfo, 0x80000001);
+			return ((cpuinfo[3] & (1 << 22)) != 0);
+		}
+		else if (ext == _3d_now)
+		{
+			__cpuid((int*)cpuinfo, 0x80000000);
+			if (cpuinfo[0] < 0x80000001)
+				return false;
 
-		__cpuid((int*)cpuinfo, 0x80000001);
-		return ((cpuinfo[2] & (1 << 16)) != 0);
+			__cpuid((int*)cpuinfo, 0x80000001);
+			return ((cpuinfo[3] & (1 << 31)) != 0);
+		}
+		else if (ext == _3d_now_ex)
+		{
+			__cpuid((int*)cpuinfo, 0x80000000);
+			if (cpuinfo[0] < 0x80000001)
+				return false;
+
+			__cpuid((int*)cpuinfo, 0x80000001);
+			return ((cpuinfo[3] & (1 << 30)) != 0);
+		}
+		else if (ext == sse)
+		{
+			__cpuid((int*)cpuinfo, 0x1);
+			return ((cpuinfo[3] & (1 << 25)) != 0);
+		}
+		else if (ext == sse2)
+		{
+			__cpuid((int*)cpuinfo, 0x1);
+			return ((cpuinfo[3] & (1 << 26)) != 0);
+		}
+		else if (ext == sse3)
+		{
+			__cpuid((int*)cpuinfo, 0x1);
+			return ((cpuinfo[2] & (1 << 0)) != 0);
+		}
+		else if (ext == ssse3)
+		{
+			__cpuid((int*)cpuinfo, 0x1);
+			return ((cpuinfo[2] & (1 << 9)) != 0);
+		}
+
+		else if (ext == sse4_a)
+		{
+			__cpuid((int*)cpuinfo, 0x80000000);
+			if (cpuinfo[0] < 0x80000001)
+				return false;
+
+			__cpuid((int*)cpuinfo, 0x80000001);
+			return ((cpuinfo[2] & (1 << 6)) != 0);
+		}
+		else if (ext == sse4_1)
+		{
+			__cpuid((int*)cpuinfo, 0x1);
+			return ((cpuinfo[2] & (1 << 19)) != 0);
+		}
+		else if (ext == sse4_2)
+		{
+			__cpuid((int*)cpuinfo, 0x1);
+			return ((cpuinfo[2] & (1 << 20)) != 0);
+		}
+		else if (ext == xop)
+		{
+			__cpuid((int*)cpuinfo, 0x80000000);
+			if (cpuinfo[0] < 0x80000001)
+				return false;
+
+			__cpuid((int*)cpuinfo, 0x80000001);
+			return ((cpuinfo[2] & (1 << 11)) != 0);
+		}
+		else if (ext == avx)
+		{
+			__cpuid((int*)cpuinfo, 0x1);
+			return ((cpuinfo[2] & (1 << 28)) != 0);
+		}
+		else if (ext == aes)
+		{
+			__cpuid((int*)cpuinfo, 0x1);
+			return ((cpuinfo[2] & (1 << 25)) != 0);
+		}
+		else if (ext == fma3)
+		{
+			__cpuid((int*)cpuinfo, 0x1);
+			return ((cpuinfo[2] & (1 << 12)) != 0);
+		}
+		else if (ext == fma4)
+		{
+			__cpuid((int*)cpuinfo, 0x80000000);
+			if (cpuinfo[0] < 0x80000001)
+				return false;
+
+			__cpuid((int*)cpuinfo, 0x80000001);
+			return ((cpuinfo[2] & (1 << 16)) != 0);
+		}
+		return false;
 	}
-	return false;
-}
 
 #endif
 

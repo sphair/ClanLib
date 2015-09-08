@@ -35,105 +35,90 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// Logger Construction:
-
-Logger::Logger()
-{
-	enable();
-}
-	
-Logger::~Logger()
-{
-	disable();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Logger Attributes:
-
-std::vector<Logger*> Logger::instances;
-
-std::recursive_mutex Logger::mutex;
-
-/////////////////////////////////////////////////////////////////////////////
-// Logger Operations:
-
-void Logger::enable()
-{
-	std::unique_lock<std::recursive_mutex> mutex_lock(Logger::mutex);
-	if (std::find(instances.begin(), instances.end(), this) == instances.end())
-		instances.push_back(this);
-}
-
-void Logger::disable()
-{
-	std::unique_lock<std::recursive_mutex> mutex_lock(Logger::mutex);
-	auto il = std::find(instances.begin(), instances.end(), this);
-	if(il != instances.end())
-		instances.erase(il);
-}
-
-StringFormat Logger::get_log_string(const std::string &type, const std::string &text)
-{
-	std::string months[] =
+	Logger::Logger()
 	{
-		"Jan",
-		"Feb",
-		"Mar",
-		"Apr",
-		"May",
-		"Jun",
-		"Jul",
-		"Aug",
-		"Sep",
-		"Oct",
-		"Nov",
-		"Dec"
-	};
+		enable();
+	}
 
-	std::string days[] =
+	Logger::~Logger()
 	{
-		"Sun",
-		"Mon",
-		"Tue",
-		"Wed",
-		"Thu",
-		"Fri",
-		"Sat"
-	};
+		disable();
+	}
 
-	// Tue Nov 16 11:34:15 CET 2004
-	DateTime cur_time = DateTime::get_current_utc_time();
+	std::vector<Logger*> Logger::instances;
+	std::recursive_mutex Logger::mutex;
+
+	void Logger::enable()
+	{
+		std::unique_lock<std::recursive_mutex> mutex_lock(Logger::mutex);
+		if (std::find(instances.begin(), instances.end(), this) == instances.end())
+			instances.push_back(this);
+	}
+
+	void Logger::disable()
+	{
+		std::unique_lock<std::recursive_mutex> mutex_lock(Logger::mutex);
+		auto il = std::find(instances.begin(), instances.end(), this);
+		if (il != instances.end())
+			instances.erase(il);
+	}
+
+	StringFormat Logger::get_log_string(const std::string &type, const std::string &text)
+	{
+		std::string months[] =
+		{
+			"Jan",
+			"Feb",
+			"Mar",
+			"Apr",
+			"May",
+			"Jun",
+			"Jul",
+			"Aug",
+			"Sep",
+			"Oct",
+			"Nov",
+			"Dec"
+		};
+
+		std::string days[] =
+		{
+			"Sun",
+			"Mon",
+			"Tue",
+			"Wed",
+			"Thu",
+			"Fri",
+			"Sat"
+		};
+
+		// Tue Nov 16 11:34:15 CET 2004
+		DateTime cur_time = DateTime::get_current_utc_time();
 
 #ifdef WIN32
-	StringFormat format("%1 %2 %3 %4:%5:%6 %7 UTC [%8] %9\r\n");
+		StringFormat format("%1 %2 %3 %4:%5:%6 %7 UTC [%8] %9\r\n");
 #else
-	StringFormat format("%1 %2 %3 %4:%5:%6 %7 UTC [%8] %9\n");
+		StringFormat format("%1 %2 %3 %4:%5:%6 %7 UTC [%8] %9\n");
 #endif
-	format.set_arg(1, days[cur_time.get_day_of_week()]);
-	format.set_arg(2, months[cur_time.get_month() - 1]);
-	format.set_arg(3, cur_time.get_day());
-	format.set_arg(4, cur_time.get_hour(), 2);
-	format.set_arg(5, cur_time.get_minutes(), 2);
-	format.set_arg(6, cur_time.get_seconds(), 2);
-	format.set_arg(7, cur_time.get_year());
-	format.set_arg(8, type);
-	format.set_arg(9, text);
+		format.set_arg(1, days[cur_time.get_day_of_week()]);
+		format.set_arg(2, months[cur_time.get_month() - 1]);
+		format.set_arg(3, cur_time.get_day());
+		format.set_arg(4, cur_time.get_hour(), 2);
+		format.set_arg(5, cur_time.get_minutes(), 2);
+		format.set_arg(6, cur_time.get_seconds(), 2);
+		format.set_arg(7, cur_time.get_year());
+		format.set_arg(8, type);
+		format.set_arg(9, text);
 
-	return format;
-}
+		return format;
+	}
 
-void log_event(const std::string &type, const std::string &text)
-{
-	std::unique_lock<std::recursive_mutex> mutex_lock(Logger::mutex);
-	if (Logger::instances.empty())
-		return;
-	for(auto & instance : Logger::instances)
-		(instance)->log(type, text);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Logger Implementation:
-
+	void log_event(const std::string &type, const std::string &text)
+	{
+		std::unique_lock<std::recursive_mutex> mutex_lock(Logger::mutex);
+		if (Logger::instances.empty())
+			return;
+		for (auto & instance : Logger::instances)
+			(instance)->log(type, text);
+	}
 }
