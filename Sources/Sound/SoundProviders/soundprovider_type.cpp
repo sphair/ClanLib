@@ -38,36 +38,24 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// SoundProviderType construction:
-
-SoundProviderType::SoundProviderType(const std::string &type)
-{
-	auto &types = *SetupSound::get_sound_provider_factory_types();
-	types[type] = this;
-}
-
-SoundProviderType::~SoundProviderType()
-{
-	auto &types = *SetupSound::get_sound_provider_factory_types();
-	std::map<std::string, SoundProviderType *>::iterator it;
-	
-	for (it = types.begin(); it != types.end(); it++)
+	SoundProviderType::SoundProviderType(const std::string &type)
 	{
-		if (it->second == this)
+		auto &types = *SetupSound::get_sound_provider_factory_types();
+		types[type] = this;
+	}
+
+	SoundProviderType::~SoundProviderType()
+	{
+		auto &types = *SetupSound::get_sound_provider_factory_types();
+		std::map<std::string, SoundProviderType *>::iterator it;
+
+		for (it = types.begin(); it != types.end(); it++)
 		{
-			types.erase(it);
-			break;
+			if (it->second == this)
+			{
+				types.erase(it);
+				break;
+			}
 		}
 	}
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// SoundProviderType operations:
-
-
-/////////////////////////////////////////////////////////////////////////////
-// SoundProviderType implementation:
-
 }

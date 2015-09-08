@@ -30,15 +30,9 @@
 
 namespace clan
 {
-
-class SocketError
-{
-/// \name Attributes
-/// \{
-
-public:
-	static std::string get_last_error_message();
-/// \}
-};
-
+	class SocketError
+	{
+	public:
+		static std::string get_last_error_message();
+	};
 }

@@ -33,46 +33,44 @@
 
 namespace clan
 {
-
-EchoFilterProvider::EchoFilterProvider(int new_buffer_size, float new_shift_factor) : buffer_size(new_buffer_size), shift_factor(new_shift_factor)
-{
-	pos = 0;
-
-	buffer[0] = new float[buffer_size];
-	memset(buffer[0], 0, sizeof(float)*buffer_size);
-
-	buffer[1] = new float[buffer_size];
-	memset(buffer[1], 0, sizeof(float)*buffer_size);
-}
-
-EchoFilterProvider::~EchoFilterProvider()
-{
-	delete[] buffer[0];
-	delete[] buffer[1];
-}
-
-void EchoFilterProvider::filter(float **sample_data, int num_samples, int channels)
-{
-	int start_pos = pos;
-
-	for (int c=0; c<2; c++)
+	EchoFilterProvider::EchoFilterProvider(int new_buffer_size, float new_shift_factor) : buffer_size(new_buffer_size), shift_factor(new_shift_factor)
 	{
-		if (c == channels) break;
+		pos = 0;
 
-		float *data = sample_data[c];
-		float *work_buffer = buffer[c];
+		buffer[0] = new float[buffer_size];
+		memset(buffer[0], 0, sizeof(float)*buffer_size);
 
-		pos = start_pos;
+		buffer[1] = new float[buffer_size];
+		memset(buffer[1], 0, sizeof(float)*buffer_size);
+	}
 
-		for (int i=0; i<num_samples; i++)
+	EchoFilterProvider::~EchoFilterProvider()
+	{
+		delete[] buffer[0];
+		delete[] buffer[1];
+	}
+
+	void EchoFilterProvider::filter(float **sample_data, int num_samples, int channels)
+	{
+		int start_pos = pos;
+
+		for (int c = 0; c < 2; c++)
 		{
-			work_buffer[pos] /= shift_factor;
-			work_buffer[pos] += data[i];
-			data[i] = work_buffer[pos];
-			pos++;
-			if (pos == buffer_size) pos = 0;
+			if (c == channels) break;
+
+			float *data = sample_data[c];
+			float *work_buffer = buffer[c];
+
+			pos = start_pos;
+
+			for (int i = 0; i < num_samples; i++)
+			{
+				work_buffer[pos] /= shift_factor;
+				work_buffer[pos] += data[i];
+				data[i] = work_buffer[pos];
+				pos++;
+				if (pos == buffer_size) pos = 0;
+			}
 		}
 	}
-}
-
 }

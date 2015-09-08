@@ -33,20 +33,18 @@
 
 namespace clan
 {
+	class EchoFilterProvider : public SoundFilterProvider
+	{
+	public:
+		EchoFilterProvider(int buffer_size, float shift_factor);
+		~EchoFilterProvider();
 
-class EchoFilterProvider : public SoundFilterProvider
-{
-public:
-	EchoFilterProvider(int buffer_size, float shift_factor);
-	~EchoFilterProvider();
+		void filter(float **sample_data, int num_samples, int channels) override;
 
-	void filter(float **sample_data, int num_samples, int channels) override;
-
-private:
-	int buffer_size;
-	float *buffer[2];
-	float shift_factor;
-	int pos;
-};
-
+	private:
+		int buffer_size;
+		float *buffer[2];
+		float shift_factor;
+		int pos;
+	};
 }

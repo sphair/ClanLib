@@ -37,128 +37,127 @@
 
 namespace clan
 {
-
-NetGameServer::NetGameServer()
-: impl(std::make_shared<NetGameServer_Impl>())
-{
-}
-
-NetGameServer::~NetGameServer()
-{
-	stop();
-}
-
-void NetGameServer::process_events()
-{
-	impl->process();
-}
-
-void NetGameServer::add_network_event(const NetGameNetworkEvent &e)
-{
-	std::unique_lock<std::mutex> mutex_lock(impl->mutex);
-	impl->events.push_back(e);
-}
-
-void NetGameServer::send_event(const NetGameEvent &game_event)
-{
-	std::unique_lock<std::mutex> mutex_lock(impl->mutex);
-	for (auto & elem : impl->connections)
+	NetGameServer::NetGameServer()
+		: impl(std::make_shared<NetGameServer_Impl>())
 	{
-		elem->send_event(game_event);
 	}
-}
 
-void NetGameServer::start(const std::string &port)
-{
-	stop();
-	std::unique_lock<std::mutex> lock(impl->mutex);
-	impl->stop_flag = false;
-	lock.unlock();
-	impl->tcp_listen.reset(new TCPListen(SocketName(port)));
-	impl->listen_thread = std::thread(&NetGameServer::listen_thread_main, this);
-}
-
-void NetGameServer::start(const std::string &address, const std::string &port)
-{
-	stop();
-	std::unique_lock<std::mutex> lock(impl->mutex);
-	impl->stop_flag = false;
-	lock.unlock();
-	impl->tcp_listen.reset(new TCPListen(SocketName(address, port)));
-	impl->listen_thread = std::thread(&NetGameServer::listen_thread_main, this);
-}
-
-void NetGameServer::stop()
-{
-	std::unique_lock<std::mutex> lock(impl->mutex);
-	impl->stop_flag = true;
-	lock.unlock();
-	impl->worker_event.notify();
-	if (impl->listen_thread.joinable())
-		impl->listen_thread.join();
-	impl->tcp_listen.reset();
-
-	for (auto & elem : impl->connections)
+	NetGameServer::~NetGameServer()
 	{
-		delete elem;
+		stop();
 	}
-	impl->connections.clear();
-}
 
-void NetGameServer::listen_thread_main()
-{
-	while (true)
+	void NetGameServer::process_events()
 	{
-		std::unique_lock<std::mutex> lock(impl->mutex);
-		if (impl->stop_flag)
-			break;
+		impl->process();
+	}
 
-		NetworkEvent *events[] = { impl->tcp_listen.get() };
-		impl->worker_event.wait(lock, 1, events);
+	void NetGameServer::add_network_event(const NetGameNetworkEvent &e)
+	{
+		std::unique_lock<std::mutex> mutex_lock(impl->mutex);
+		impl->events.push_back(e);
+	}
 
-		SocketName peer_endpoint;
-		TCPConnection connection = impl->tcp_listen->accept(peer_endpoint);
-		if (!connection.is_null())
+	void NetGameServer::send_event(const NetGameEvent &game_event)
+	{
+		std::unique_lock<std::mutex> mutex_lock(impl->mutex);
+		for (auto & elem : impl->connections)
 		{
-			std::unique_ptr<NetGameConnection> game_connection(new NetGameConnection(this, connection));
-			impl->connections.push_back(game_connection.release());
+			elem->send_event(game_event);
 		}
 	}
-}
 
-Signal<void(NetGameConnection *)> &NetGameServer::sig_client_connected()
-{
-	return impl->sig_game_client_connected;
-}
-
-Signal<void(NetGameConnection *, const std::string &)> &NetGameServer::sig_client_disconnected()
-{
-	return impl->sig_game_client_disconnected;
-}
-
-Signal<void(NetGameConnection *, const NetGameEvent &)> &NetGameServer::sig_event_received()
-{
-	return impl->sig_game_event_received;
-}
-
-void NetGameServer_Impl::process()
-{
-	std::unique_lock<std::mutex> mutex_lock(mutex);
-	std::vector<NetGameNetworkEvent> new_events;
-	new_events.swap(events);
-	mutex_lock.unlock();
-
-	for (auto & new_event : new_events)
+	void NetGameServer::start(const std::string &port)
 	{
-		switch (new_event.type)
+		stop();
+		std::unique_lock<std::mutex> lock(impl->mutex);
+		impl->stop_flag = false;
+		lock.unlock();
+		impl->tcp_listen.reset(new TCPListen(SocketName(port)));
+		impl->listen_thread = std::thread(&NetGameServer::listen_thread_main, this);
+	}
+
+	void NetGameServer::start(const std::string &address, const std::string &port)
+	{
+		stop();
+		std::unique_lock<std::mutex> lock(impl->mutex);
+		impl->stop_flag = false;
+		lock.unlock();
+		impl->tcp_listen.reset(new TCPListen(SocketName(address, port)));
+		impl->listen_thread = std::thread(&NetGameServer::listen_thread_main, this);
+	}
+
+	void NetGameServer::stop()
+	{
+		std::unique_lock<std::mutex> lock(impl->mutex);
+		impl->stop_flag = true;
+		lock.unlock();
+		impl->worker_event.notify();
+		if (impl->listen_thread.joinable())
+			impl->listen_thread.join();
+		impl->tcp_listen.reset();
+
+		for (auto & elem : impl->connections)
 		{
-		case NetGameNetworkEvent::client_connected:
-			sig_game_client_connected(new_event.connection);
-			break;
-		case NetGameNetworkEvent::event_received:
-			sig_game_event_received(new_event.connection, new_event.game_event);
-			break;
-		case NetGameNetworkEvent::client_disconnected:
+			delete elem;
+		}
+		impl->connections.clear();
+	}
+
+	void NetGameServer::listen_thread_main()
+	{
+		while (true)
+		{
+			std::unique_lock<std::mutex> lock(impl->mutex);
+			if (impl->stop_flag)
+				break;
+
+			NetworkEvent *events[] = { impl->tcp_listen.get() };
+			impl->worker_event.wait(lock, 1, events);
+
+			SocketName peer_endpoint;
+			TCPConnection connection = impl->tcp_listen->accept(peer_endpoint);
+			if (!connection.is_null())
+			{
+				std::unique_ptr<NetGameConnection> game_connection(new NetGameConnection(this, connection));
+				impl->connections.push_back(game_connection.release());
+			}
+		}
+	}
+
+	Signal<void(NetGameConnection *)> &NetGameServer::sig_client_connected()
+	{
+		return impl->sig_game_client_connected;
+	}
+
+	Signal<void(NetGameConnection *, const std::string &)> &NetGameServer::sig_client_disconnected()
+	{
+		return impl->sig_game_client_disconnected;
+	}
+
+	Signal<void(NetGameConnection *, const NetGameEvent &)> &NetGameServer::sig_event_received()
+	{
+		return impl->sig_game_event_received;
+	}
+
+	void NetGameServer_Impl::process()
+	{
+		std::unique_lock<std::mutex> mutex_lock(mutex);
+		std::vector<NetGameNetworkEvent> new_events;
+		new_events.swap(events);
+		mutex_lock.unlock();
+
+		for (auto & new_event : new_events)
+		{
+			switch (new_event.type)
+			{
+			case NetGameNetworkEvent::client_connected:
+				sig_game_client_connected(new_event.connection);
+				break;
+			case NetGameNetworkEvent::event_received:
+				sig_game_event_received(new_event.connection, new_event.game_event);
+				break;
+			case NetGameNetworkEvent::client_disconnected:
 			{
 				std::string reason = new_event.game_event.get_name();
 				sig_game_client_disconnected(new_event.connection, reason);
@@ -171,15 +170,14 @@ void NetGameServer_Impl::process()
 				connection_it = std::find(connections.begin(), connections.end(), new_event.connection);
 				if (connection_it != connections.end())
 				{
-					connections.erase( connection_it );
+					connections.erase(connection_it);
 				}
 				delete new_event.connection;
 			}
 			break;
-		default:
-			throw Exception("Unknown server event type");
+			default:
+				throw Exception("Unknown server event type");
+			}
 		}
 	}
-}
-
 }

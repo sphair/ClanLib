@@ -32,23 +32,21 @@
 
 namespace clan
 {
+	class SoundMixer : public SoundSampleSource
+	{
+	public:
+		SoundMixer(int frequency, SoundMixerProgram *program);
 
-class SoundMixer : public SoundSampleSource
-{
-public:
-	SoundMixer(int frequency, SoundMixerProgram *program);
+		void add_input_source(SoundSampleSource *input_source);
+		void remove_input_source(SoundSampleSource *input_source);
 
-	void add_input_source(SoundSampleSource *input_source);
-	void remove_input_source(SoundSampleSource *input_source);
+		int get_frequency() const { return frequency; }
+		void get_data(SoundMixingBuffersData &output, int sample_count);
 
-	int get_frequency() const { return frequency; }
-	void get_data(SoundMixingBuffersData &output, int sample_count);
-
-private:
-	int frequency;
-	SoundMixerProgram *program;
-	std::vector<SoundMixingBuffersContainer *> inputs;
-	std::vector<SoundSampleSource *> sources;
-};
-
+	private:
+		int frequency;
+		SoundMixerProgram *program;
+		std::vector<SoundMixingBuffersContainer *> inputs;
+		std::vector<SoundSampleSource *> sources;
+	};
 }

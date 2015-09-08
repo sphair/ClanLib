@@ -30,13 +30,11 @@
 
 namespace clan
 {
+	class SoundMixingBuffersData
+	{
+	public:
+		SoundMixingBuffersData() { for (auto & elem : channels) elem = nullptr; }
 
-class SoundMixingBuffersData
-{
-public:
-	SoundMixingBuffersData() { for (auto & elem : channels) elem = nullptr; }
-
-	float *channels[32];
-};
-
+		float *channels[32];
+	};
 }

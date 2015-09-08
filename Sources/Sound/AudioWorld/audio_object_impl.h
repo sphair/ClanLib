@@ -35,26 +35,24 @@
 
 namespace clan
 {
+	class AudioWorld_Impl;
 
-class AudioWorld_Impl;
+	class AudioObject_Impl
+	{
+	public:
+		AudioObject_Impl(AudioWorld_Impl *world);
+		~AudioObject_Impl();
 
-class AudioObject_Impl
-{
-public:
-	AudioObject_Impl(AudioWorld_Impl *world);
-	~AudioObject_Impl();
+		AudioWorld_Impl *world;
+		std::list<AudioObject_Impl *>::iterator it;
 
-	AudioWorld_Impl *world;
-	std::list<AudioObject_Impl *>::iterator it;
-
-	Vec3f position;
-	float attenuation_begin;
-	float attenuation_end;
-	float volume;
-	bool looping;
-	bool ambience;
-	SoundBuffer sound;
-	SoundBuffer_Session session;
-};
-
+		Vec3f position;
+		float attenuation_begin;
+		float attenuation_end;
+		float volume;
+		bool looping;
+		bool ambience;
+		SoundBuffer sound;
+		SoundBuffer_Session session;
+	};
 }

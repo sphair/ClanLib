@@ -35,68 +35,67 @@
 
 namespace clan
 {
-
-NetGameEvent NetGameNetworkData::receive_data(const void *data, int size, int &out_bytes_consumed)
-{
-	if (size >= 2)
+	NetGameEvent NetGameNetworkData::receive_data(const void *data, int size, int &out_bytes_consumed)
 	{
-		int payload_size = *static_cast<const unsigned short *>(data);
-		if (payload_size > packet_limit)
-			throw Exception("Incoming message too big");
-
-		if (size >= 2 + payload_size)
+		if (size >= 2)
 		{
-			out_bytes_consumed = 2 + payload_size;
-			DataBuffer buffer(static_cast<const char*>(data) + 2, payload_size);
-			return decode_event(buffer);
+			int payload_size = *static_cast<const unsigned short *>(data);
+			if (payload_size > packet_limit)
+				throw Exception("Incoming message too big");
+
+			if (size >= 2 + payload_size)
+			{
+				out_bytes_consumed = 2 + payload_size;
+				DataBuffer buffer(static_cast<const char*>(data)+2, payload_size);
+				return decode_event(buffer);
+			}
 		}
+
+		out_bytes_consumed = 0;
+		return NetGameEvent(std::string());
 	}
 
-	out_bytes_consumed = 0;
-	return NetGameEvent(std::string());
-}
-
-DataBuffer NetGameNetworkData::send_data(const NetGameEvent &e)
-{
-	DataBuffer buffer = encode_event(e);
-	if (buffer.get_size() > packet_limit + 2)
-		throw Exception("Outgoing message too big");
-	return buffer;
-}
-
-NetGameEvent NetGameNetworkData::decode_event(const DataBuffer &data)
-{
-	const unsigned char *d = data.get_data<unsigned char>();
-	unsigned int length = data.get_size();
-	if (length < 3)
-		throw Exception("Invalid network data");
-
-	unsigned int name_length = *reinterpret_cast<const unsigned short*>(d);
-	if (length < 2 + name_length + 1)
-		throw Exception("Invalid network data");
-	std::string name = std::string(reinterpret_cast<const char*>(d + 2), name_length);
-
-	NetGameEvent e(name);
-	unsigned int pos = 2 + name_length;
-	while (true)
+	DataBuffer NetGameNetworkData::send_data(const NetGameEvent &e)
 	{
-		if (pos >= length)
+		DataBuffer buffer = encode_event(e);
+		if (buffer.get_size() > packet_limit + 2)
+			throw Exception("Outgoing message too big");
+		return buffer;
+	}
+
+	NetGameEvent NetGameNetworkData::decode_event(const DataBuffer &data)
+	{
+		const unsigned char *d = data.get_data<unsigned char>();
+		unsigned int length = data.get_size();
+		if (length < 3)
 			throw Exception("Invalid network data");
-		unsigned char type = d[pos++];
-		if (type == 0)
-			break;
-		e.add_argument(decode_value(type, d, length, pos));
-	}
-	return e;
-}
 
-NetGameEventValue NetGameNetworkData::decode_value(unsigned char type, const unsigned char *d, unsigned int length, unsigned int &pos)
-{
-	switch (type)
+		unsigned int name_length = *reinterpret_cast<const unsigned short*>(d);
+		if (length < 2 + name_length + 1)
+			throw Exception("Invalid network data");
+		std::string name = std::string(reinterpret_cast<const char*>(d + 2), name_length);
+
+		NetGameEvent e(name);
+		unsigned int pos = 2 + name_length;
+		while (true)
+		{
+			if (pos >= length)
+				throw Exception("Invalid network data");
+			unsigned char type = d[pos++];
+			if (type == 0)
+				break;
+			e.add_argument(decode_value(type, d, length, pos));
+		}
+		return e;
+	}
+
+	NetGameEventValue NetGameNetworkData::decode_value(unsigned char type, const unsigned char *d, unsigned int length, unsigned int &pos)
 	{
-	case 1: // null
-		return NetGameEventValue(NetGameEventValue::null);
-	case 2: // uint
+		switch (type)
+		{
+		case 1: // null
+			return NetGameEventValue(NetGameEventValue::null);
+		case 2: // uint
 		{
 			if (pos + 4 > length)
 				throw Exception("Invalid network data");
@@ -104,7 +103,7 @@ NetGameEventValue NetGameNetworkData::decode_value(unsigned char type, const uns
 			pos += 4;
 			return NetGameEventValue(v);
 		}
-	case 3: // int
+		case 3: // int
 		{
 			if (pos + 4 > length)
 				throw Exception("Invalid network data");
@@ -112,7 +111,7 @@ NetGameEventValue NetGameNetworkData::decode_value(unsigned char type, const uns
 			pos += 4;
 			return NetGameEventValue(v);
 		}
-	case 4: // number
+		case 4: // number
 		{
 			if (pos + 4 > length)
 				throw Exception("Invalid network data");
@@ -120,11 +119,11 @@ NetGameEventValue NetGameNetworkData::decode_value(unsigned char type, const uns
 			pos += 4;
 			return NetGameEventValue(v);
 		}
-	case 5: // false boolean
-		return NetGameEventValue(false);
-	case 6: // true boolean
-		return NetGameEventValue(true);
-	case 7: // string
+		case 5: // false boolean
+			return NetGameEventValue(false);
+		case 6: // true boolean
+			return NetGameEventValue(true);
+		case 7: // string
 		{
 			if (pos + 2 > length)
 				throw Exception("Invalid network data");
@@ -136,7 +135,7 @@ NetGameEventValue NetGameNetworkData::decode_value(unsigned char type, const uns
 			pos += name_length;
 			return NetGameEventValue(value);
 		}
-	case 8: // complex
+		case 8: // complex
 		{
 			NetGameEventValue value(NetGameEventValue::complex);
 			while (true)
@@ -150,7 +149,7 @@ NetGameEventValue NetGameNetworkData::decode_value(unsigned char type, const uns
 			}
 			return value;
 		}
-	case 9: // uchar
+		case 9: // uchar
 		{
 			if (pos + 1 > length)
 				throw Exception("Invalid network data");
@@ -158,7 +157,7 @@ NetGameEventValue NetGameNetworkData::decode_value(unsigned char type, const uns
 			pos += 1;
 			return NetGameEventValue(v);
 		}
-	case 10: // char
+		case 10: // char
 		{
 			if (pos + 1 > length)
 				throw Exception("Invalid network data");
@@ -166,7 +165,7 @@ NetGameEventValue NetGameNetworkData::decode_value(unsigned char type, const uns
 			pos += 1;
 			return NetGameEventValue(v);
 		}
-	case 11: // binary
+		case 11: // binary
 		{
 			if (pos + 2 > length)
 				throw Exception("Invalid network data");
@@ -178,62 +177,62 @@ NetGameEventValue NetGameNetworkData::decode_value(unsigned char type, const uns
 			pos += binary_length;
 			return NetGameEventValue(value);
 		}
-	default:
-		throw Exception("Invalid network data");
+		default:
+			throw Exception("Invalid network data");
+		}
 	}
-}
 
-DataBuffer NetGameNetworkData::encode_event(const NetGameEvent &e)
-{
-	unsigned int length = 3 + e.get_name().length();
-	for (unsigned int i = 0; i < e.get_argument_count(); i++)
-		length += get_encoded_length(e.get_argument(i));
-
-	DataBuffer data(length + 2);
-
-	*data.get_data<unsigned short>() = length;
-
-	unsigned char *d = data.get_data<unsigned char>() + 2;
-
-	// Write name (2 + name length)
-	unsigned int name_length = e.get_name().length();
-	*reinterpret_cast<unsigned short*>(d) = name_length;
-	d += 2;
-	memcpy(d, e.get_name().data(), name_length);
-	d += name_length;
-
-	for (unsigned int i = 0; i < e.get_argument_count(); i++)
-		d += encode_value(d, e.get_argument(i));
-
-	// Write end marker
-	*d = 0;
-
-	return data;
-}
-
-unsigned int NetGameNetworkData::encode_value(unsigned char *d, const NetGameEventValue &value)
-{
-	switch (value.get_type())
+	DataBuffer NetGameNetworkData::encode_event(const NetGameEvent &e)
 	{
-	case NetGameEventValue::null:
-		*d = 1;
-		return 1;
-	case NetGameEventValue::uinteger:
-		*d = 2;
-		*reinterpret_cast<unsigned int*>(d + 1) = value.get_uinteger();
-		return 5;
-	case NetGameEventValue::integer:
-		*d = 3;
-		*reinterpret_cast<int*>(d + 1) = value.get_integer();
-		return 5;
-	case NetGameEventValue::number:
-		*d = 4;
-		*reinterpret_cast<float*>(d + 1) = value.get_number();
-		return 5;
-	case NetGameEventValue::boolean:
-		*d = value.get_boolean() ? 6 : 5;
-		return 1;
-	case NetGameEventValue::string:
+		unsigned int length = 3 + e.get_name().length();
+		for (unsigned int i = 0; i < e.get_argument_count(); i++)
+			length += get_encoded_length(e.get_argument(i));
+
+		DataBuffer data(length + 2);
+
+		*data.get_data<unsigned short>() = length;
+
+		unsigned char *d = data.get_data<unsigned char>() + 2;
+
+		// Write name (2 + name length)
+		unsigned int name_length = e.get_name().length();
+		*reinterpret_cast<unsigned short*>(d) = name_length;
+		d += 2;
+		memcpy(d, e.get_name().data(), name_length);
+		d += name_length;
+
+		for (unsigned int i = 0; i < e.get_argument_count(); i++)
+			d += encode_value(d, e.get_argument(i));
+
+		// Write end marker
+		*d = 0;
+
+		return data;
+	}
+
+	unsigned int NetGameNetworkData::encode_value(unsigned char *d, const NetGameEventValue &value)
+	{
+		switch (value.get_type())
+		{
+		case NetGameEventValue::null:
+			*d = 1;
+			return 1;
+		case NetGameEventValue::uinteger:
+			*d = 2;
+			*reinterpret_cast<unsigned int*>(d + 1) = value.get_uinteger();
+			return 5;
+		case NetGameEventValue::integer:
+			*d = 3;
+			*reinterpret_cast<int*>(d + 1) = value.get_integer();
+			return 5;
+		case NetGameEventValue::number:
+			*d = 4;
+			*reinterpret_cast<float*>(d + 1) = value.get_number();
+			return 5;
+		case NetGameEventValue::boolean:
+			*d = value.get_boolean() ? 6 : 5;
+			return 1;
+		case NetGameEventValue::string:
 		{
 			std::string s = value.get_string();
 			*d = 7;
@@ -241,7 +240,7 @@ unsigned int NetGameNetworkData::encode_value(unsigned char *d, const NetGameEve
 			memcpy(d + 3, s.data(), s.length());
 			return 3 + s.length();
 		}
-	case NetGameEventValue::complex:
+		case NetGameEventValue::complex:
 		{
 			d[0] = 8;
 			unsigned l = 1;
@@ -251,15 +250,15 @@ unsigned int NetGameNetworkData::encode_value(unsigned char *d, const NetGameEve
 			l++;
 			return l;
 		}
-	case NetGameEventValue::ucharacter:
-		*d = 9;
-		*reinterpret_cast<unsigned char*>(d + 1) = value.get_ucharacter();
-		return 2;
-	case NetGameEventValue::character:
-		*d = 10;
-		*reinterpret_cast<char*>(d + 1) = value.get_character();
-		return 2;
-	case NetGameEventValue::binary:
+		case NetGameEventValue::ucharacter:
+			*d = 9;
+			*reinterpret_cast<unsigned char*>(d + 1) = value.get_ucharacter();
+			return 2;
+		case NetGameEventValue::character:
+			*d = 10;
+			*reinterpret_cast<char*>(d + 1) = value.get_character();
+			return 2;
+		case NetGameEventValue::binary:
 		{
 			DataBuffer s = value.get_binary();
 			*d = 11;
@@ -267,39 +266,38 @@ unsigned int NetGameNetworkData::encode_value(unsigned char *d, const NetGameEve
 			memcpy(d + 3, s.get_data(), s.get_size());
 			return 3 + s.get_size();
 		}
-	default:
-		throw Exception("Unknown game event value type");
+		default:
+			throw Exception("Unknown game event value type");
+		}
 	}
-}
 
-unsigned int NetGameNetworkData::get_encoded_length(const NetGameEventValue &value)
-{
-	switch (value.get_type())
+	unsigned int NetGameNetworkData::get_encoded_length(const NetGameEventValue &value)
 	{
-	case NetGameEventValue::null:
-	case NetGameEventValue::boolean:
-		return 1;
-	case NetGameEventValue::character:
-	case NetGameEventValue::ucharacter:
-		return 2;
-	case NetGameEventValue::uinteger:
-	case NetGameEventValue::integer:
-	case NetGameEventValue::number:
-		return 5;
-	case NetGameEventValue::string:
-		return 1 + 2 + value.get_string().length();
-	case NetGameEventValue::binary:
-		return 1 + 2 + value.get_binary().get_size();
-	case NetGameEventValue::complex:
+		switch (value.get_type())
+		{
+		case NetGameEventValue::null:
+		case NetGameEventValue::boolean:
+			return 1;
+		case NetGameEventValue::character:
+		case NetGameEventValue::ucharacter:
+			return 2;
+		case NetGameEventValue::uinteger:
+		case NetGameEventValue::integer:
+		case NetGameEventValue::number:
+			return 5;
+		case NetGameEventValue::string:
+			return 1 + 2 + value.get_string().length();
+		case NetGameEventValue::binary:
+			return 1 + 2 + value.get_binary().get_size();
+		case NetGameEventValue::complex:
 		{
 			unsigned l = 2;
 			for (unsigned int i = 0; i < value.get_member_count(); i++)
 				l += get_encoded_length(value.get_member(i));
 			return l;
 		}
-	default:
-		throw Exception("Unknown game event value type");
+		default:
+			throw Exception("Unknown game event value type");
+		}
 	}
-}
-
 }

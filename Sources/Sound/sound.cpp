@@ -34,30 +34,25 @@
 
 namespace clan
 {
+	static std::weak_ptr<SoundOutput_Impl> cl_current_output;
 
-/////////////////////////////////////////////////////////////////////////////
-// SoundOutput accessors:
+	const std::string &Sound::get_name()
+	{
+		return get_current_output().get_name();
+	}
 
-static std::weak_ptr<SoundOutput_Impl> cl_current_output;
+	int Sound::get_mixing_frequency()
+	{
+		return get_current_output().get_mixing_frequency();
+	}
 
-const std::string &Sound::get_name()
-{
-	return get_current_output().get_name();
-}
+	SoundOutput Sound::get_current_output()
+	{
+		return SoundOutput(cl_current_output);
+	}
 
-int Sound::get_mixing_frequency()
-{
-	return get_current_output().get_mixing_frequency();
-}
-
-SoundOutput Sound::get_current_output()
-{
-	return SoundOutput(cl_current_output);
-}
-
-void Sound::select_output(const SoundOutput &output)
-{
-	cl_current_output = output.impl;
-}
-
+	void Sound::select_output(const SoundOutput &output)
+	{
+		cl_current_output = output.impl;
+	}
 }

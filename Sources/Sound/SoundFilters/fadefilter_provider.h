@@ -33,22 +33,20 @@
 
 namespace clan
 {
+	class FadeFilterProvider : public SoundFilterProvider
+	{
+	public:
+		FadeFilterProvider(float initial_volume);
+		~FadeFilterProvider();
 
-class FadeFilterProvider : public SoundFilterProvider
-{
-public:
-	FadeFilterProvider(float initial_volume);
-	~FadeFilterProvider();
+		void filter(float **sample_data, int num_samples, int channels) override;
 
-	void filter(float **sample_data, int num_samples, int channels) override;
+		float get_volume() const;
+		void set_volume(float new_volume);
+		void fade_to_volume(float new_volume, int duration);
 
-	float get_volume() const;
-	void set_volume(float new_volume);
-	void fade_to_volume(float new_volume, int duration);
-
-private:
-	float cur_volume, new_volume;
-	float speed;
-};
-
+	private:
+		float cur_volume, new_volume;
+		float speed;
+	};
 }

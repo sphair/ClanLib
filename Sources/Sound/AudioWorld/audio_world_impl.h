@@ -35,26 +35,24 @@
 
 namespace clan
 {
+	class AudioObject_Impl;
 
-class AudioObject_Impl;
+	class AudioWorld_Impl
+	{
+	public:
+		AudioWorld_Impl(const ResourceManager &resources);
+		~AudioWorld_Impl();
 
-class AudioWorld_Impl
-{
-public:
-	AudioWorld_Impl(const ResourceManager &resources);
-	~AudioWorld_Impl();
+		void update_session(AudioObject_Impl *obj);
 
-	void update_session(AudioObject_Impl *obj);
+		std::list<AudioObject_Impl *> objects;
+		std::list<AudioObject> active_objects;
 
-	std::list<AudioObject_Impl *> objects;
-	std::list<AudioObject> active_objects;
+		Vec3f listener_position;
+		Quaternionf listener_orientation;
+		bool play_ambience;
+		bool reverse_stereo;
 
-	Vec3f listener_position;
-	Quaternionf listener_orientation;
-	bool play_ambience;
-	bool reverse_stereo;
-
-	ResourceManager resources;
-};
-
+		ResourceManager resources;
+	};
 }

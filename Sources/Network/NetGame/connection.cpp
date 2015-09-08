@@ -35,47 +35,45 @@
 
 namespace clan
 {
+	NetGameConnection::NetGameConnection(NetGameConnectionSite *site, const TCPConnection &connection)
+		: impl(new NetGameConnection_Impl)
+	{
+		impl->start(this, site, connection);
+	}
 
-NetGameConnection::NetGameConnection(NetGameConnectionSite *site, const TCPConnection &connection)
-: impl(new NetGameConnection_Impl)
-{
-	impl->start(this, site, connection);
-}
+	NetGameConnection::NetGameConnection(NetGameConnectionSite *site, const SocketName &socket_name)
+		: impl(new NetGameConnection_Impl)
+	{
+		impl->start(this, site, socket_name);
+	}
 
-NetGameConnection::NetGameConnection(NetGameConnectionSite *site, const SocketName &socket_name)
-: impl(new NetGameConnection_Impl)
-{
-	impl->start(this, site, socket_name);
-}
+	NetGameConnection::~NetGameConnection()
+	{
+		delete impl;
+	}
 
-NetGameConnection::~NetGameConnection()
-{
-	delete impl;
-}
+	void NetGameConnection::set_data(const std::string &name, void *new_data)
+	{
+		impl->set_data(name, new_data);
+	}
 
-void NetGameConnection::set_data(const std::string &name, void *new_data)
-{
-	impl->set_data(name, new_data);
-}
+	void *NetGameConnection::get_data(const std::string &name) const
+	{
+		return impl->get_data(name);
+	}
 
-void *NetGameConnection::get_data(const std::string &name) const
-{
-	return impl->get_data(name);
-}
+	void NetGameConnection::send_event(const NetGameEvent &game_event)
+	{
+		impl->send_event(game_event);
+	}
 
-void NetGameConnection::send_event(const NetGameEvent &game_event)
-{
-	impl->send_event(game_event);
-}
+	void NetGameConnection::disconnect()
+	{
+		impl->disconnect();
+	}
 
-void NetGameConnection::disconnect()
-{
-	impl->disconnect();
-}
-
-SocketName NetGameConnection::get_remote_name() const
-{
-	return impl->get_remote_name();
-}
-
+	SocketName NetGameConnection::get_remote_name() const
+	{
+		return impl->get_remote_name();
+	}
 }

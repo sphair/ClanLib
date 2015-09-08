@@ -31,59 +31,40 @@
 
 namespace clan
 {
+	class SoundOutput_Description_Impl
+	{
+	public:
+		int mixing_frequency;
+		int mixing_latency;
+	};
 
-/////////////////////////////////////////////////////////////////////////////
-// SoundOutput_Description_Impl:
+	SoundOutput_Description::SoundOutput_Description() : impl(std::make_shared<SoundOutput_Description_Impl>())
+	{
+		impl->mixing_frequency = 44100;
+		impl->mixing_latency = 50;
+	}
 
-class SoundOutput_Description_Impl
-{
-//! Attributes:
-public:
-	int mixing_frequency;
+	SoundOutput_Description::~SoundOutput_Description()
+	{
+	}
 
-	int mixing_latency;
-};
+	int SoundOutput_Description::get_mixing_frequency() const
+	{
+		return impl->mixing_frequency;
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// SoundOutput_Description construction:
+	int SoundOutput_Description::get_mixing_latency() const
+	{
+		return impl->mixing_latency;
+	}
 
-SoundOutput_Description::SoundOutput_Description() : impl(std::make_shared<SoundOutput_Description_Impl>())
-{
-	impl->mixing_frequency = 44100;
-	impl->mixing_latency = 50;
-}
+	void SoundOutput_Description::set_mixing_frequency(int frequency)
+	{
+		impl->mixing_frequency = frequency;
+	}
 
-SoundOutput_Description::~SoundOutput_Description()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// SoundOutput_Description attributes:
-
-int SoundOutput_Description::get_mixing_frequency() const
-{
-	return impl->mixing_frequency;
-}
-
-int SoundOutput_Description::get_mixing_latency() const
-{
-	return impl->mixing_latency;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// SoundOutput_Description operations:
-
-void SoundOutput_Description::set_mixing_frequency(int frequency)
-{
-	impl->mixing_frequency = frequency;
-}
-
-void SoundOutput_Description::set_mixing_latency(int latency)
-{
-	impl->mixing_latency = latency;
-}
-
-// SoundOutput_Description implementation:
-/////////////////////////////////////////////////////////////////////////////
-
+	void SoundOutput_Description::set_mixing_latency(int latency)
+	{
+		impl->mixing_latency = latency;
+	}
 }

@@ -51,166 +51,153 @@
 
 namespace clan
 {
+	SoundOutput::SoundOutput()
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// SoundOutput construction:
+	SoundOutput::SoundOutput(int mixing_frequency, int latency)
+	{
+		SoundOutput_Description desc;
+		desc.set_mixing_frequency(mixing_frequency);
+		desc.set_mixing_latency(latency);
+		operator =(SoundOutput(desc));
+	}
 
-SoundOutput::SoundOutput()
-{
-}
-
-SoundOutput::SoundOutput(int mixing_frequency, int latency)
-{
-	SoundOutput_Description desc;
-	desc.set_mixing_frequency(mixing_frequency);
-	desc.set_mixing_latency(latency);
-	operator =(SoundOutput(desc));
-}
-
-SoundOutput::SoundOutput(const SoundOutput_Description &desc)
-{
-	SetupSound::start();
+	SoundOutput::SoundOutput(const SoundOutput_Description &desc)
+	{
+		SetupSound::start();
 #ifdef WIN32
-	try
-	{
-		std::shared_ptr<SoundOutput_Impl> soundoutput_impl(std::make_shared<SoundOutput_Win32>(desc.get_mixing_frequency(), desc.get_mixing_latency()));
-		impl = soundoutput_impl;
-	}
-	catch (...)
-	{
-		std::shared_ptr<SoundOutput_Impl> soundoutput_impl(std::make_shared<SoundOutput_DirectSound>(desc.get_mixing_frequency(), desc.get_mixing_latency()));
-		impl = soundoutput_impl;
-	}
+		try
+		{
+			std::shared_ptr<SoundOutput_Impl> soundoutput_impl(std::make_shared<SoundOutput_Win32>(desc.get_mixing_frequency(), desc.get_mixing_latency()));
+			impl = soundoutput_impl;
+		}
+		catch (...)
+		{
+			std::shared_ptr<SoundOutput_Impl> soundoutput_impl(std::make_shared<SoundOutput_DirectSound>(desc.get_mixing_frequency(), desc.get_mixing_latency()));
+			impl = soundoutput_impl;
+		}
 #else
 #ifdef __APPLE__
-	std::shared_ptr<SoundOutput_Impl> soundoutput_impl(std::make_shared<SoundOutput_MacOSX>(desc.get_mixing_frequency(), desc.get_mixing_latency()));
-	impl = soundoutput_impl;
+		std::shared_ptr<SoundOutput_Impl> soundoutput_impl(std::make_shared<SoundOutput_MacOSX>(desc.get_mixing_frequency(), desc.get_mixing_latency()));
+		impl = soundoutput_impl;
 #else
 #if defined(__linux__) && defined(HAVE_ALSA_ASOUNDLIB_H)
-	// Try building ALSA
+		// Try building ALSA
 
-	std::shared_ptr<SoundOutput_Impl> alsa_impl(std::make_shared<SoundOutput_alsa>(desc.get_mixing_frequency(), desc.get_mixing_latency()));
-	if ( ( (SoundOutput_alsa *) (alsa_impl.get()))->handle)
-	{
-		impl = alsa_impl;
-	}
-	else
-	{
-		alsa_impl.reset();
-	}
+		std::shared_ptr<SoundOutput_Impl> alsa_impl(std::make_shared<SoundOutput_alsa>(desc.get_mixing_frequency(), desc.get_mixing_latency()));
+		if ( ( (SoundOutput_alsa *) (alsa_impl.get()))->handle)
+		{
+			impl = alsa_impl;
+		}
+		else
+		{
+			alsa_impl.reset();
+		}
 
-	if (!impl)
-	{
+		if (!impl)
+		{
+			std::shared_ptr<SoundOutput_Impl> soundoutput_impl(std::make_shared<SoundOutput_OSS>(desc.get_mixing_frequency(), desc.get_mixing_latency()));
+			impl = soundoutput_impl;
+		}
+#else
 		std::shared_ptr<SoundOutput_Impl> soundoutput_impl(std::make_shared<SoundOutput_OSS>(desc.get_mixing_frequency(), desc.get_mixing_latency()));
 		impl = soundoutput_impl;
-	}
-#else
-    std::shared_ptr<SoundOutput_Impl> soundoutput_impl(std::make_shared<SoundOutput_OSS>(desc.get_mixing_frequency(), desc.get_mixing_latency()));
-    impl = soundoutput_impl;
 #endif
 #endif
 #endif
-	Sound::select_output(*this);
-}
-
-SoundOutput::~SoundOutput()
-{
-}
-
-SoundOutput::SoundOutput(const std::weak_ptr<SoundOutput_Impl> impl)
-: impl(impl.lock())
-{
-}
-/////////////////////////////////////////////////////////////////////////////
-// SoundOutput attributes:
-
-void SoundOutput::throw_if_null() const
-{
-	if (!impl)
-		throw Exception("SoundOutput is null");
-}
-
-const std::string &SoundOutput::get_name() const
-{
-	std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
-	return impl->name;
-}
-
-int SoundOutput::get_mixing_frequency() const
-{
-	std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
-	return impl->mixing_frequency;
-}
-
-int SoundOutput::get_mixing_latency() const
-{
-	std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
-	return impl->mixing_latency;
-}
-
-float SoundOutput::get_global_volume() const
-{
-	std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
-	return impl->volume;
-}
-
-float SoundOutput::get_global_pan() const
-{
-	std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
-	return impl->pan;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// SoundOutput operations:
-
-void SoundOutput::stop_all()
-{
-}
-	
-void SoundOutput::set_global_volume(float volume)
-{
-	if (impl)
-	{
-		std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
-		impl->volume = volume;
+		Sound::select_output(*this);
 	}
-}
 
-void SoundOutput::set_global_pan(float pan)
-{
-	if (impl)
+	SoundOutput::~SoundOutput()
 	{
-		std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
-		impl->pan = pan;
 	}
-}
 
-void SoundOutput::add_filter(SoundFilter &filter)
-{
-	if (impl)
+	SoundOutput::SoundOutput(const std::weak_ptr<SoundOutput_Impl> impl)
+		: impl(impl.lock())
 	{
-		std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
-		impl->filters.push_back(filter);
 	}
-}
 
-void SoundOutput::remove_filter(SoundFilter &filter)
-{
-	if (impl)
+	void SoundOutput::throw_if_null() const
+	{
+		if (!impl)
+			throw Exception("SoundOutput is null");
+	}
+
+	const std::string &SoundOutput::get_name() const
 	{
 		std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
-		for (std::vector<SoundFilter>::size_type i=0; i<impl->filters.size(); i++)
+		return impl->name;
+	}
+
+	int SoundOutput::get_mixing_frequency() const
+	{
+		std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
+		return impl->mixing_frequency;
+	}
+
+	int SoundOutput::get_mixing_latency() const
+	{
+		std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
+		return impl->mixing_latency;
+	}
+
+	float SoundOutput::get_global_volume() const
+	{
+		std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
+		return impl->volume;
+	}
+
+	float SoundOutput::get_global_pan() const
+	{
+		std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
+		return impl->pan;
+	}
+
+	void SoundOutput::stop_all()
+	{
+	}
+
+	void SoundOutput::set_global_volume(float volume)
+	{
+		if (impl)
 		{
-			if (impl->filters[i] == filter)
+			std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
+			impl->volume = volume;
+		}
+	}
+
+	void SoundOutput::set_global_pan(float pan)
+	{
+		if (impl)
+		{
+			std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
+			impl->pan = pan;
+		}
+	}
+
+	void SoundOutput::add_filter(SoundFilter &filter)
+	{
+		if (impl)
+		{
+			std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
+			impl->filters.push_back(filter);
+		}
+	}
+
+	void SoundOutput::remove_filter(SoundFilter &filter)
+	{
+		if (impl)
+		{
+			std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
+			for (std::vector<SoundFilter>::size_type i = 0; i < impl->filters.size(); i++)
 			{
-				impl->filters.erase(impl->filters.begin()+i);
-				break;
+				if (impl->filters[i] == filter)
+				{
+					impl->filters.erase(impl->filters.begin() + i);
+					break;
+				}
 			}
 		}
 	}
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// SoundOutput implementation:
-
 }

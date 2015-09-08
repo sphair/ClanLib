@@ -68,6 +68,5 @@ namespace clan
 	SetupNetwork_Impl::~SetupNetwork_Impl()
 	{
 	}
-
 }
 

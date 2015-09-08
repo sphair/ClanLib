@@ -32,71 +32,69 @@
 
 namespace clan
 {
-
-FadeFilterProvider::FadeFilterProvider(float initial_volume)
-{
-	if(initial_volume < 0.0f)
-		initial_volume = 0.0f;
-	if(initial_volume > 1.0f)
-		initial_volume = 1.0f;
-
-	cur_volume = initial_volume;
-	new_volume = initial_volume;
-	speed = 0;
-}
-
-FadeFilterProvider::~FadeFilterProvider()
-{
-}
-
-float FadeFilterProvider::get_volume() const
-{
-	return cur_volume;
-}
-
-void FadeFilterProvider::set_volume(float new_volume)
-{
-	if(new_volume < 0.0f)
-		new_volume = 0.0f;
-	if(new_volume > 1.0f)
-		new_volume = 1.0f;
-
-	cur_volume = new_volume;
-	speed = 0.0f;
-}
-
-void FadeFilterProvider::fade_to_volume(float volume, int duration)
-{
-	if(volume < 0.0f)
-		volume = 0.0f;
-	if(volume > 1.0f)
-		volume = 1.0f;
-
-	new_volume = volume;
-
-	float delta_volume = new_volume - cur_volume;
-	speed = delta_volume / 22.05f / duration;
-}
-
-void FadeFilterProvider::filter(float **sample_data, int num_samples, int channels)
-{
-	for (int i=0; i<num_samples; i++)
+	FadeFilterProvider::FadeFilterProvider(float initial_volume)
 	{
-		for (int j=0; j<channels; j++)
-		{
-			sample_data[j][i] = (sample_data[j][i] * cur_volume);
-		}
+		if (initial_volume < 0.0f)
+			initial_volume = 0.0f;
+		if (initial_volume > 1.0f)
+			initial_volume = 1.0f;
 
-		// change volume for every second sample (because data is in stereo).
-		cur_volume += speed;
-		if (
-			(speed > 0 && cur_volume > new_volume) ||
-			(speed < 0 && cur_volume < new_volume))
+		cur_volume = initial_volume;
+		new_volume = initial_volume;
+		speed = 0;
+	}
+
+	FadeFilterProvider::~FadeFilterProvider()
+	{
+	}
+
+	float FadeFilterProvider::get_volume() const
+	{
+		return cur_volume;
+	}
+
+	void FadeFilterProvider::set_volume(float new_volume)
+	{
+		if (new_volume < 0.0f)
+			new_volume = 0.0f;
+		if (new_volume > 1.0f)
+			new_volume = 1.0f;
+
+		cur_volume = new_volume;
+		speed = 0.0f;
+	}
+
+	void FadeFilterProvider::fade_to_volume(float volume, int duration)
+	{
+		if (volume < 0.0f)
+			volume = 0.0f;
+		if (volume > 1.0f)
+			volume = 1.0f;
+
+		new_volume = volume;
+
+		float delta_volume = new_volume - cur_volume;
+		speed = delta_volume / 22.05f / duration;
+	}
+
+	void FadeFilterProvider::filter(float **sample_data, int num_samples, int channels)
+	{
+		for (int i = 0; i < num_samples; i++)
 		{
-			cur_volume = new_volume;
-			speed = 0;
+			for (int j = 0; j < channels; j++)
+			{
+				sample_data[j][i] = (sample_data[j][i] * cur_volume);
+			}
+
+			// change volume for every second sample (because data is in stereo).
+			cur_volume += speed;
+			if (
+				(speed > 0 && cur_volume > new_volume) ||
+				(speed < 0 && cur_volume < new_volume))
+			{
+				cur_volume = new_volume;
+				speed = 0;
+			}
 		}
 	}
-}
-
 }

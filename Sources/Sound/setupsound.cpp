@@ -44,67 +44,61 @@
 
 namespace clan
 {
-class ResourceManager;
-class XMLResourceDocument;
+	class ResourceManager;
+	class XMLResourceDocument;
 
-/////////////////////////////////////////////////////////////////////////////
-// SetupSound operations:
+	class SetupSound_Impl : public SetupModule
+	{
+	public:
+		SetupSound_Impl();
+		virtual ~SetupSound_Impl();
 
-class SetupSound_Impl : public SetupModule
-{
-public:
-	SetupSound_Impl();
-	virtual ~SetupSound_Impl();
+		static void add_cache_factory(ResourceManager &manager, const XMLResourceDocument &doc);
 
-	static void add_cache_factory(ResourceManager &manager, const XMLResourceDocument &doc);
+		SoundProviderType *providertype_wave = nullptr;
+		SoundProviderType *providertype_ogg = nullptr;
 
-	SoundProviderType *providertype_wave = nullptr;
-	SoundProviderType *providertype_ogg = nullptr;
+		static SetupSound_Impl *instance;
+		std::map<std::string, SoundProviderType *> sound_provider_factory_types;
 
-	static SetupSound_Impl *instance;
-	std::map<std::string, SoundProviderType *> sound_provider_factory_types;
+	};
+	SetupSound_Impl *SetupSound_Impl::instance = nullptr;
 
-};
-SetupSound_Impl *SetupSound_Impl::instance = nullptr;
+	void SetupSound::start()
+	{
+		std::lock_guard<std::recursive_mutex> lock(SetupCore::instance.mutex);
 
+		if (SetupCore::instance.module_sound)
+			return;
 
+		SetupCore::start();	// Sound depends on core.
+		SetupCore::instance.module_sound = clan::make_unique<SetupSound_Impl>();
+	}
 
-void SetupSound::start()
-{
-	std::lock_guard<std::recursive_mutex> lock(SetupCore::instance.mutex);
+	SetupSound_Impl::SetupSound_Impl()
+	{
+		instance = this;
+		providertype_wave = new SoundProviderType_Register<SoundProvider_Wave>("wav");
+		providertype_ogg = new SoundProviderType_Register<SoundProvider_Vorbis>("ogg");
+		XMLResourceManager::add_cache_factory(std::function<void(ResourceManager &, const XMLResourceDocument &)>(&SetupSound_Impl::add_cache_factory));
+	}
 
-	if (SetupCore::instance.module_sound)
-		return;
+	SetupSound_Impl::~SetupSound_Impl()
+	{
+		delete providertype_wave;
+		delete providertype_ogg;
+		instance = nullptr;
+	}
 
-	SetupCore::start();	// Sound depends on core.
-	SetupCore::instance.module_sound = clan::make_unique<SetupSound_Impl>();
-}
+	void SetupSound_Impl::add_cache_factory(ResourceManager &manager, const XMLResourceDocument &doc)
+	{
+		SoundCache::set(manager, std::shared_ptr<SoundCache>(new XMLSoundCache(doc)));
+	}
 
-SetupSound_Impl::SetupSound_Impl()
-{
-	instance = this;
-	providertype_wave = new SoundProviderType_Register<SoundProvider_Wave>("wav");
-	providertype_ogg = new SoundProviderType_Register<SoundProvider_Vorbis>("ogg");
-	XMLResourceManager::add_cache_factory(std::function<void(ResourceManager &, const XMLResourceDocument &)>(&SetupSound_Impl::add_cache_factory));
-}
-
-SetupSound_Impl::~SetupSound_Impl()
-{
-	delete providertype_wave;
-	delete providertype_ogg;
-	instance = nullptr;
-}
-
-void SetupSound_Impl::add_cache_factory(ResourceManager &manager, const XMLResourceDocument &doc)
-{
-	SoundCache::set(manager, std::shared_ptr<SoundCache>(new XMLSoundCache(doc)));
-}
-
-std::map<std::string, SoundProviderType *> *SetupSound::get_sound_provider_factory_types()
-{
-	if (!SetupSound_Impl::instance)
-		start();
-	return &SetupSound_Impl::instance->sound_provider_factory_types;
-}
-
+	std::map<std::string, SoundProviderType *> *SetupSound::get_sound_provider_factory_types()
+	{
+		if (!SetupSound_Impl::instance)
+			start();
+		return &SetupSound_Impl::instance->sound_provider_factory_types;
+	}
 }

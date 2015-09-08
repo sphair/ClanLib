@@ -33,19 +33,17 @@
 
 namespace clan
 {
+	class InverseEchoFilterProvider : public SoundFilterProvider
+	{
+	public:
+		InverseEchoFilterProvider(int buffer_size);
+		~InverseEchoFilterProvider();
 
-class InverseEchoFilterProvider : public SoundFilterProvider
-{
-public:
-	InverseEchoFilterProvider(int buffer_size);
-	~InverseEchoFilterProvider();
+		void filter(float **sample_data, int num_samples, int channels) override;
 
-	void filter(float **sample_data, int num_samples, int channels) override;
-
-private:
-	float *buffer[2];
-	int buffer_size;
-	int pos;
-};
-
+	private:
+		float *buffer[2];
+		int buffer_size;
+		int pos;
+	};
 }

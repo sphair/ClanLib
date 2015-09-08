@@ -33,19 +33,17 @@
 
 namespace clan
 {
+	class NetGameClient_Impl
+	{
+	public:
+		void process();
 
-class NetGameClient_Impl
-{
-public:
-	void process();
+		std::recursive_mutex mutex;
+		std::vector<NetGameNetworkEvent> events;
 
-	std::recursive_mutex mutex;
-	std::vector<NetGameNetworkEvent> events;
-
-	std::unique_ptr<NetGameConnection> connection;
-	Signal<void(const NetGameEvent &)> sig_game_event_received;
-	Signal<void()> sig_game_connected;
-	Signal<void()> sig_game_disconnected;
-};
-
+		std::unique_ptr<NetGameConnection> connection;
+		Signal<void(const NetGameEvent &)> sig_game_event_received;
+		Signal<void()> sig_game_connected;
+		Signal<void()> sig_game_disconnected;
+	};
 }

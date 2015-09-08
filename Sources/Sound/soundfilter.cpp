@@ -33,59 +33,48 @@
 
 namespace clan
 {
+	class SoundFilter_Impl
+	{
+	public:
+		SoundFilter_Impl()
+			: provider(nullptr)
+		{
+		}
 
-class SoundFilter_Impl
-{
-public:
-	SoundFilter_Impl()
-	: provider(nullptr)
+		~SoundFilter_Impl()
+		{
+			if (provider)
+				delete provider;
+		}
+
+		SoundFilterProvider *provider;
+	};
+
+	SoundFilter::SoundFilter(SoundFilterProvider *provider)
+		: impl(std::make_shared<SoundFilter_Impl>())
+	{
+		impl->provider = provider;
+	}
+
+	SoundFilter::~SoundFilter()
 	{
 	}
 
-	~SoundFilter_Impl()
+	void SoundFilter::throw_if_null() const
 	{
-		if (provider)
-			delete provider;
+		if (!impl)
+			throw Exception("SoundFilter is null");
 	}
 
-	SoundFilterProvider *provider;
-};
+	SoundFilterProvider *SoundFilter::get_provider() const
+	{
+		if (!impl)
+			return nullptr;
+		return impl->provider;
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// SoundFilter construction:
-
-SoundFilter::SoundFilter(SoundFilterProvider *provider)
-: impl(std::make_shared<SoundFilter_Impl>())
-{
-	impl->provider = provider;
-}
-
-SoundFilter::~SoundFilter()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// SoundFilter operations:
-
-void SoundFilter::throw_if_null() const
-{
-	if (!impl)
-		throw Exception("SoundFilter is null");
-}
-
-SoundFilterProvider *SoundFilter::get_provider() const
-{
-	if (!impl)
-		return nullptr;
-	return impl->provider;
-}
-
-void SoundFilter::filter(float **sample_data, int num_samples, int channels)
-{
-	impl->provider->filter(sample_data, num_samples, channels);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// SoundFilter implementation:
-
+	void SoundFilter::filter(float **sample_data, int num_samples, int channels)
+	{
+		impl->provider->filter(sample_data, num_samples, channels);
+	}
 }

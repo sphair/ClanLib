@@ -33,33 +33,31 @@
 
 namespace clan
 {
+	FadeFilter::FadeFilter(float initial_volume) : SoundFilter(new FadeFilterProvider(initial_volume))
+	{
+	}
 
-FadeFilter::FadeFilter(float initial_volume) : SoundFilter( new FadeFilterProvider(initial_volume))
-{
-}
+	FadeFilter::~FadeFilter()
+	{
+	}
 
-FadeFilter::~FadeFilter()
-{
-}
+	FadeFilterProvider *FadeFilter::get_provider() const
+	{
+		return static_cast <FadeFilterProvider *> (SoundFilter::get_provider());
+	}
 
-FadeFilterProvider *FadeFilter::get_provider() const
-{
-	return static_cast <FadeFilterProvider *> (SoundFilter::get_provider());
-}
+	float FadeFilter::get_volume() const
+	{
+		return get_provider()->get_volume();
+	}
 
-float FadeFilter::get_volume() const
-{
-	return get_provider()->get_volume();
-}
+	void FadeFilter::set_volume(float new_volume)
+	{
+		get_provider()->set_volume(new_volume);
+	}
 
-void FadeFilter::set_volume(float new_volume)
-{
-	get_provider()->set_volume(new_volume);
-}
-
-void FadeFilter::fade_to_volume(float new_volume, int duration)
-{
-	get_provider()->fade_to_volume(new_volume, duration);
-}
-
+	void FadeFilter::fade_to_volume(float new_volume, int duration)
+	{
+		get_provider()->fade_to_volume(new_volume, duration);
+	}
 }

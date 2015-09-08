@@ -34,18 +34,16 @@
 
 namespace clan
 {
+	InverseEchoFilter::InverseEchoFilter(int buffer_size) : SoundFilter(new InverseEchoFilterProvider(buffer_size))
+	{
+	}
 
-InverseEchoFilter::InverseEchoFilter(int buffer_size) : SoundFilter( new InverseEchoFilterProvider(buffer_size))
-{
-}
+	InverseEchoFilter::~InverseEchoFilter()
+	{
+	}
 
-InverseEchoFilter::~InverseEchoFilter()
-{
-}
-
-InverseEchoFilterProvider *InverseEchoFilter::get_provider() const
-{
-	return static_cast <InverseEchoFilterProvider *> (SoundFilter::get_provider());
-}
-
+	InverseEchoFilterProvider *InverseEchoFilter::get_provider() const
+	{
+		return static_cast <InverseEchoFilterProvider *> (SoundFilter::get_provider());
+	}
 }

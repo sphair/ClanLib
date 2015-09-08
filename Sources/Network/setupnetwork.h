@@ -27,18 +27,15 @@
 **    Mark Page
 */
 
-
 #pragma once
 
 namespace clan
 {
-
 	class SetupNetwork
 	{
 	public:
 		static void start();
 	};
-
 }
 
 

@@ -126,5 +126,4 @@ namespace clan
 
 		friend class SoundOutput;
 	};
-
 }

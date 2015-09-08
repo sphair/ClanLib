@@ -34,19 +34,17 @@
 
 namespace clan
 {
+	class XMLSoundCache : public SoundCache
+	{
+	public:
+		XMLSoundCache(const XMLResourceDocument &doc);
+		~XMLSoundCache();
 
-class XMLSoundCache : public SoundCache
-{
-public:
-	XMLSoundCache(const XMLResourceDocument &doc);
-	~XMLSoundCache();
+		Resource<SoundBuffer> get_sound(const std::string &id) override;
 
-	Resource<SoundBuffer> get_sound(const std::string &id) override;
+	private:
+		XMLResourceDocument doc;
 
-private:
-	XMLResourceDocument doc;
-
-	std::map<std::string, Resource<SoundBuffer> > sounds;
-};
-
+		std::map<std::string, Resource<SoundBuffer> > sounds;
+	};
 }

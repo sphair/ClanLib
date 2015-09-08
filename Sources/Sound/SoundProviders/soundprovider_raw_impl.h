@@ -30,35 +30,23 @@
 
 namespace clan
 {
-
-class SoundProvider_Raw_Impl
-{
-public:
-	SoundProvider_Raw_Impl() : sound_data(nullptr)
+	class SoundProvider_Raw_Impl
 	{
+	public:
+		SoundProvider_Raw_Impl() : sound_data(nullptr)
+		{
+		}
 
-	}
+		~SoundProvider_Raw_Impl()
+		{
+			if (sound_data)
+				delete[] sound_data;
+		}
 
-	~SoundProvider_Raw_Impl()
-	{
-		if (sound_data)
-			delete[] sound_data;
-	}
-
-/// \name Attributes
-/// \{
-
-public:
-	unsigned char *sound_data;
-
-	int num_samples;
-
-	int bytes_per_sample;
-
-	bool stereo;
-
-	int frequency;
-/// \}
-};
-
+		unsigned char *sound_data;
+		int num_samples;
+		int bytes_per_sample;
+		bool stereo;
+		int frequency;
+	};
 }

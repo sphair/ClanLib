@@ -36,58 +36,56 @@
 
 namespace clan
 {
-
-class NetGameConnection_Impl
-{
-public:
-	NetGameConnection_Impl();
-	~NetGameConnection_Impl();
-	void start(NetGameConnection *base, NetGameConnectionSite *site, const TCPConnection &connection);
-	void start(NetGameConnection *base, NetGameConnectionSite *site, const SocketName &socket_name);
-	void set_data(const std::string &name, void *data);
-	void *get_data(const std::string &name) const;
-	void send_event(const NetGameEvent &game_event);
-	void disconnect();
-	SocketName get_remote_name() const;
-
-private:
-	void connection_main();
-
-	bool read_connection_data(DataBuffer &receive_buffer, int &bytes_received);
-	bool write_connection_data(DataBuffer &send_buffer, int &bytes_sent, bool &send_graceful_close);
-
-	bool read_data(const void *data, int size, int &out_bytes_consumed);
-	bool write_data(DataBuffer &buffer);
-
-	NetGameConnection *base;
-
-	NetGameConnectionSite *site;
-
-	NetworkConditionVariable worker_event;
-	TCPConnection connection;
-	SocketName socket_name;
-	bool is_connected;
-	std::thread thread;
-	bool stop_flag = false;
-	std::mutex mutex;
-	struct Message
+	class NetGameConnection_Impl
 	{
-		Message() : type(type_message), event(std::string()) { }
-		enum Type
+	public:
+		NetGameConnection_Impl();
+		~NetGameConnection_Impl();
+		void start(NetGameConnection *base, NetGameConnectionSite *site, const TCPConnection &connection);
+		void start(NetGameConnection *base, NetGameConnectionSite *site, const SocketName &socket_name);
+		void set_data(const std::string &name, void *data);
+		void *get_data(const std::string &name) const;
+		void send_event(const NetGameEvent &game_event);
+		void disconnect();
+		SocketName get_remote_name() const;
+
+	private:
+		void connection_main();
+
+		bool read_connection_data(DataBuffer &receive_buffer, int &bytes_received);
+		bool write_connection_data(DataBuffer &send_buffer, int &bytes_sent, bool &send_graceful_close);
+
+		bool read_data(const void *data, int size, int &out_bytes_consumed);
+		bool write_data(DataBuffer &buffer);
+
+		NetGameConnection *base;
+
+		NetGameConnectionSite *site;
+
+		NetworkConditionVariable worker_event;
+		TCPConnection connection;
+		SocketName socket_name;
+		bool is_connected;
+		std::thread thread;
+		bool stop_flag = false;
+		std::mutex mutex;
+		struct Message
 		{
-			type_message,
-			type_disconnect
+			Message() : type(type_message), event(std::string()) { }
+			enum Type
+			{
+				type_message,
+				type_disconnect
+			};
+			Type type;
+			NetGameEvent event;
 		};
-		Type type;
-		NetGameEvent event;
+		std::vector<Message> send_queue;
+		struct AttachedData
+		{
+			std::string name;
+			void *data;
+		};
+		std::vector<AttachedData> data;
 	};
-	std::vector<Message> send_queue;
-	struct AttachedData
-	{
-		std::string name;
-		void *data;
-	};
-	std::vector<AttachedData> data;
-};
-
 }

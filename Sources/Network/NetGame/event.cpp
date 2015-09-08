@@ -32,45 +32,43 @@
 
 namespace clan
 {
-
-NetGameEvent::NetGameEvent(const std::string &name, std::vector<NetGameEventValue> arg)
-: name(name)
-, arguments(arg)
-{
-}
-
-unsigned int NetGameEvent::get_argument_count() const
-{
-	return arguments.size();
-}
-
-NetGameEventValue NetGameEvent::get_argument(unsigned int index) const
-{
-	if (index >= arguments.size())
-		throw Exception(string_format("Arguments out of bounds for game event %1", name));
-	return arguments[index];
-}
-
-void NetGameEvent::add_argument(const NetGameEventValue &value)
-{
-	arguments.push_back(value);
-}
-
-std::string NetGameEvent::to_string() const
-{
-	std::string event_info = string_format("%1(", name);
-
-	for(unsigned int i = 0; i < arguments.size(); ++i)
+	NetGameEvent::NetGameEvent(const std::string &name, std::vector<NetGameEventValue> arg)
+		: name(name)
+		, arguments(arg)
 	{
-		if(i > 0)
-			event_info += ",";
-
-		event_info += NetGameEventValue::to_string(arguments[i]);
 	}
 
-	event_info += ")";
+	unsigned int NetGameEvent::get_argument_count() const
+	{
+		return arguments.size();
+	}
 
-	return event_info;
-}
+	NetGameEventValue NetGameEvent::get_argument(unsigned int index) const
+	{
+		if (index >= arguments.size())
+			throw Exception(string_format("Arguments out of bounds for game event %1", name));
+		return arguments[index];
+	}
 
+	void NetGameEvent::add_argument(const NetGameEventValue &value)
+	{
+		arguments.push_back(value);
+	}
+
+	std::string NetGameEvent::to_string() const
+	{
+		std::string event_info = string_format("%1(", name);
+
+		for (unsigned int i = 0; i < arguments.size(); ++i)
+		{
+			if (i > 0)
+				event_info += ",";
+
+			event_info += NetGameEventValue::to_string(arguments[i]);
+		}
+
+		event_info += ")";
+
+		return event_info;
+	}
 }

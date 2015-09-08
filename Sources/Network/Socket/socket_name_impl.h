@@ -30,17 +30,10 @@
 
 namespace clan
 {
-
-class SocketName_Impl
-{
-/// \name Attributes
-/// \{
-
-public:
-	std::string address;
-
-	std::string port;
-/// \}
-};
-
+	class SocketName_Impl
+	{
+	public:
+		std::string address;
+		std::string port;
+	};
 }

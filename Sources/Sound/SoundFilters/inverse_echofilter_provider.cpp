@@ -38,56 +38,54 @@
 
 namespace clan
 {
-
-InverseEchoFilterProvider::InverseEchoFilterProvider(int new_buffer_size) : buffer_size(new_buffer_size)
-{
-	pos = 0;
-
-	buffer[0] = new float[buffer_size];
-	memset(buffer[0], 0, sizeof(float)*buffer_size);
-
-	buffer[1] = new float[buffer_size];
-	memset(buffer[1], 0, sizeof(float)*buffer_size);
-}
-
-InverseEchoFilterProvider::~InverseEchoFilterProvider()
-{
-	delete[] buffer[0];
-	delete[] buffer[1];
-}
-
-void InverseEchoFilterProvider::filter(float **sample_data, int num_samples, int channels)
-{
-	int start_pos = pos;
-
-	for (int c=0; c<2; c++)
+	InverseEchoFilterProvider::InverseEchoFilterProvider(int new_buffer_size) : buffer_size(new_buffer_size)
 	{
-		if (c == channels) break;
+		pos = 0;
 
-		float *work_buffer = buffer[c];
+		buffer[0] = new float[buffer_size];
+		memset(buffer[0], 0, sizeof(float)*buffer_size);
 
-		pos = start_pos;
+		buffer[1] = new float[buffer_size];
+		memset(buffer[1], 0, sizeof(float)*buffer_size);
+	}
 
-		int delay = buffer_size / 4;
-		for (int i=0; i<num_samples; i++)
+	InverseEchoFilterProvider::~InverseEchoFilterProvider()
+	{
+		delete[] buffer[0];
+		delete[] buffer[1];
+	}
+
+	void InverseEchoFilterProvider::filter(float **sample_data, int num_samples, int channels)
+	{
+		int start_pos = pos;
+
+		for (int c = 0; c < 2; c++)
 		{
-			work_buffer[pos] = sample_data[c][i];
+			if (c == channels) break;
 
-			int res = 0;
-			for (int j=0; j<4; j++)
+			float *work_buffer = buffer[c];
+
+			pos = start_pos;
+
+			int delay = buffer_size / 4;
+			for (int i = 0; i < num_samples; i++)
 			{
-				int p = pos+delay*j;
-				if (p >= buffer_size) p -= buffer_size;
+				work_buffer[pos] = sample_data[c][i];
 
-				res += work_buffer[p] / (5-j);
+				int res = 0;
+				for (int j = 0; j < 4; j++)
+				{
+					int p = pos + delay*j;
+					if (p >= buffer_size) p -= buffer_size;
+
+					res += work_buffer[p] / (5 - j);
+				}
+
+				sample_data[c][i] = res;
+
+				pos++;
+				if (pos == buffer_size) pos = 0;
 			}
-
-			sample_data[c][i] = res;
-
-			pos++;
-			if (pos == buffer_size) pos = 0;
 		}
 	}
-}
-
 }

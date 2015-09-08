@@ -37,25 +37,23 @@
 
 namespace clan
 {
+	XMLSoundCache::XMLSoundCache(const XMLResourceDocument &doc)
+		: doc(doc)
+	{
+	}
 
-XMLSoundCache::XMLSoundCache(const XMLResourceDocument &doc)
-	: doc(doc)
-{
-}
+	XMLSoundCache::~XMLSoundCache()
+	{
+	}
 
-XMLSoundCache::~XMLSoundCache()
-{
-}
+	Resource<SoundBuffer> XMLSoundCache::get_sound(const std::string &id)
+	{
+		auto it = sounds.find(id);
+		if (it != sounds.end())
+			return it->second;
 
-Resource<SoundBuffer> XMLSoundCache::get_sound(const std::string &id)
-{
-	auto it = sounds.find(id);
-	if (it != sounds.end())
-		return it->second;
-
-	Resource<SoundBuffer> sound = SoundBuffer::load(id, doc);
-	sounds[id] = sound;
-	return sound;
-}
-
+		Resource<SoundBuffer> sound = SoundBuffer::load(id, doc);
+		sounds[id] = sound;
+		return sound;
+	}
 }

@@ -35,24 +35,22 @@
 
 namespace clan
 {
+	class NetGameServer_Impl
+	{
+	public:
+		void process();
 
-class NetGameServer_Impl
-{
-public:
-	void process();
+		std::unique_ptr<TCPListen> tcp_listen;
+		std::thread listen_thread;
 
-	std::unique_ptr<TCPListen> tcp_listen;
-	std::thread listen_thread;
+		NetworkConditionVariable worker_event;
+		std::mutex mutex;
+		bool stop_flag = false;
+		std::vector<NetGameConnection *> connections;
+		std::vector<NetGameNetworkEvent> events;
 
-	NetworkConditionVariable worker_event;
-	std::mutex mutex;
-	bool stop_flag = false;
-	std::vector<NetGameConnection *> connections;
-	std::vector<NetGameNetworkEvent> events;
-
-	Signal<void(NetGameConnection *)> sig_game_client_connected;
-	Signal<void(NetGameConnection *, const std::string &)> sig_game_client_disconnected;
-	Signal<void(NetGameConnection *, const NetGameEvent &)> sig_game_event_received;
-};
-
+		Signal<void(NetGameConnection *)> sig_game_client_connected;
+		Signal<void(NetGameConnection *, const std::string &)> sig_game_client_disconnected;
+		Signal<void(NetGameConnection *, const NetGameEvent &)> sig_game_event_received;
+	};
 }

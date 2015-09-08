@@ -34,25 +34,23 @@
 
 namespace clan
 {
+	class DataBuffer;
 
-class DataBuffer;
+	class NetGameNetworkData
+	{
+	public:
+		static NetGameEvent receive_data(const void *data, int size, int &out_bytes_consumed);
+		static DataBuffer send_data(const NetGameEvent &e);
 
-class NetGameNetworkData
-{
-public:
-	static NetGameEvent receive_data(const void *data, int size, int &out_bytes_consumed);
-	static DataBuffer send_data(const NetGameEvent &e);
+	private:
+		static NetGameEvent decode_event(const DataBuffer &data);
+		static DataBuffer encode_event(const NetGameEvent &e);
 
-private:
-	static NetGameEvent decode_event(const DataBuffer &data);
-	static DataBuffer encode_event(const NetGameEvent &e);
+		static unsigned int get_encoded_length(const NetGameEventValue &value);
+		static unsigned int encode_value(unsigned char *d, const NetGameEventValue &value);
 
-	static unsigned int get_encoded_length(const NetGameEventValue &value);
-	static unsigned int encode_value(unsigned char *d, const NetGameEventValue &value);
+		static NetGameEventValue decode_value(unsigned char type, const unsigned char *d, unsigned int length, unsigned int &pos);
 
-	static NetGameEventValue decode_value(unsigned char type, const unsigned char *d, unsigned int length, unsigned int &pos);
-
-	enum { packet_limit = 32000 };
-};
-
+		enum { packet_limit = 32000 };
+	};
 }

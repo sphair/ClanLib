@@ -34,17 +34,11 @@
 
 namespace clan
 {
+	class SoundProvider_Vorbis_Impl
+	{
+	public:
+		void load(IODevice &input);
 
-class SoundProvider_Vorbis_Impl
-{
-/// \name Attributes
-/// \{
-public:
-	void load(IODevice &input);
-
-public:
-	DataBuffer buffer;
-/// \}
-};
-
+		DataBuffer buffer;
+	};
 }

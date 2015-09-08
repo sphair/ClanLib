@@ -34,17 +34,15 @@
 
 namespace clan
 {
+	SoundBuffer SoundBuffer::load(const std::string &id, const XMLResourceDocument &doc)
+	{
+		XMLResourceNode resource = doc.get_resource(id);
+		DomElement &element = resource.get_element();
 
-SoundBuffer SoundBuffer::load(const std::string &id, const XMLResourceDocument &doc)
-{
-	XMLResourceNode resource = doc.get_resource(id);
-	DomElement &element = resource.get_element();
+		std::string name = resource.get_element().get_attribute("file");
+		std::string sound_format = resource.get_element().get_attribute("format");
+		bool streamed = (element.get_attribute("stream", "no") == "yes");
 
-	std::string name = resource.get_element().get_attribute("file");
-	std::string sound_format = resource.get_element().get_attribute("format");
-	bool streamed = (element.get_attribute("stream", "no") == "yes");
-
-	return SoundBuffer(name, streamed, sound_format);
-}
-
+		return SoundBuffer(name, streamed, sound_format);
+	}
 }

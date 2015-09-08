@@ -33,50 +33,19 @@
 
 namespace clan
 {
+	class SoundProvider;
+	class SoundFilter;
 
-class SoundProvider;
-class SoundFilter;
+	class SoundBuffer_Impl
+	{
+	public:
+		SoundBuffer_Impl();
+		virtual ~SoundBuffer_Impl();
 
-class SoundBuffer_Impl
-{
-/// \name Construction
-/// \{
-
-public:
-	SoundBuffer_Impl();
-
-	virtual ~SoundBuffer_Impl();
-
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	SoundProvider *provider;
-
-	float volume;
-
-	float pan;
-
-	std::vector<SoundFilter> filters;
-
-	mutable std::recursive_mutex mutex;
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-};
-
+		SoundProvider *provider;
+		float volume;
+		float pan;
+		std::vector<SoundFilter> filters;
+		mutable std::recursive_mutex mutex;
+	};
 }

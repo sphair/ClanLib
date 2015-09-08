@@ -37,87 +37,65 @@
 
 namespace clan
 {
+	class SoundFilter;
+	class SoundBuffer_Impl;
+	class SoundProvider_Session;
+	class SoundOutput_Impl;
 
-class SoundFilter;
-class SoundBuffer_Impl;
-class SoundProvider_Session;
-class SoundOutput_Impl;
+	class SoundBuffer_Session_Impl
+	{
+	public:
+		SoundBuffer_Session_Impl(
+			SoundBuffer &soundbuffer,
+			bool looping,
+			SoundOutput &output);
 
-class SoundBuffer_Session_Impl
-{
-/// \name Construction
-/// \{
+		virtual ~SoundBuffer_Session_Impl();
 
-public:
-	SoundBuffer_Session_Impl(
-		SoundBuffer &soundbuffer,
-		bool looping,
-		SoundOutput &output);
+		SoundBuffer soundbuffer;
+		SoundProvider_Session *provider_session;
+		SoundOutput output;
+		float volume;
+		float frequency;
+		float pan;
+		bool looping;
+		bool playing;
+		std::vector<SoundFilter> filters;
+		mutable std::recursive_mutex mutex;
 
-	virtual ~SoundBuffer_Session_Impl();
+		bool mix_to(float **sample_data, float **temp_data, int num_samples, int num_channels);
 
+	private:
+		/// \brief Mixes the sample data from 'temp_data' into 'sample_data'
+		void mix_channels(int num_channels, int num_samples, float ** sample_data, float ** temp_data);
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief Returns the volume of left and right channel
+		void get_channel_volume(float *out_volume);
 
-public:
-	SoundBuffer soundbuffer;
-	SoundProvider_Session *provider_session;
-	SoundOutput output;
-	float volume;
-	float frequency;
-	float pan;
-	bool looping;
-	bool playing;
-	std::vector<SoundFilter> filters;
-	mutable std::recursive_mutex mutex;
+		/// \brief Reads data into temp_data in the mixers native frequency
+		void get_data_in_mixer_frequency(int num_samples, float **temp_data);
 
+		/// \brief Runs the sample data through attached filters
+		void run_filters(float ** temp_data, int num_samples);
 
-/// \}
-/// \name Operations
-/// \{
+		/// \brief Fills temporary buffers with data from provider.
+		void get_data();
 
-public:
-	bool mix_to(float **sample_data, float **temp_data, int num_samples, int num_channels);
+		/// \brief Temporary channel buffers containing sound data in provider frequency.
+		float **float_buffer_data;
 
-/// \}
-/// \name Implementation
-/// \{
+		std::vector<float*> float_buffer_data_offsetted;
 
-private:
-	/// \brief Mixes the sample data from 'temp_data' into 'sample_data'
-	void mix_channels( int num_channels, int num_samples, float ** sample_data, float ** temp_data );
+		/// \brief Size of temporary channel buffers.
+		int num_buffer_samples;
 
-	/// \brief Returns the volume of left and right channel
-	void get_channel_volume(float *out_volume);
+		/// \brief Number of temporary channel buffers;
+		int num_buffer_channels;
 
-	/// \brief Reads data into temp_data in the mixers native frequency
-	void get_data_in_mixer_frequency( int num_samples, float **temp_data );
+		/// \brief Current playback position in temporary buffers.
+		double buffer_position;
 
-	/// \brief Runs the sample data through attached filters
-	void run_filters( float ** temp_data, int num_samples );
-
-	/// \brief Fills temporary buffers with data from provider.
-	void get_data();
-
-	/// \brief Temporary channel buffers containing sound data in provider frequency.
-	float **float_buffer_data;
-
-	std::vector<float*> float_buffer_data_offsetted;
-
-	/// \brief Size of temporary channel buffers.
-	int num_buffer_samples;
-
-	/// \brief Number of temporary channel buffers;
-	int num_buffer_channels;
-
-	/// \brief Current playback position in temporary buffers.
-	double buffer_position;
-
-	/// \brief Number of samples currently written to buffer_data.
-	int buffer_samples_written;
-/// \}
-};
-
+		/// \brief Number of samples currently written to buffer_data.
+		int buffer_samples_written;
+	};
 }

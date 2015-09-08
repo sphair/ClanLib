@@ -33,15 +33,13 @@
 
 namespace clan
 {
+	SoundCache &SoundCache::get(const ResourceManager &resources)
+	{
+		return *resources.get_cache<SoundCache>("clan.sound").get();
+	}
 
-SoundCache &SoundCache::get(const ResourceManager &resources)
-{
-	return *resources.get_cache<SoundCache>("clan.sound").get();
-}
-
-void SoundCache::set(ResourceManager &resources, const std::shared_ptr<SoundCache> &cache)
-{
-	resources.set_cache("clan.sound", cache);
-}
-
+	void SoundCache::set(ResourceManager &resources, const std::shared_ptr<SoundCache> &cache)
+	{
+		resources.set_cache("clan.sound", cache);
+	}
 }

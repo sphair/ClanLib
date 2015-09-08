@@ -33,30 +33,15 @@
 
 namespace clan
 {
+	SoundBuffer_Impl::SoundBuffer_Impl() :
+		provider(nullptr),
+		volume(1.0f), pan(0.0f)
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// SoundBuffer_Impl construction:
-
-SoundBuffer_Impl::SoundBuffer_Impl() :
-	provider(nullptr),
-	volume(1.0f), pan(0.0f)
-{
-}
-	
-SoundBuffer_Impl::~SoundBuffer_Impl()
-{
-	if(provider)
-		delete provider;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// SoundBuffer_Impl attributes:
-
-	
-/////////////////////////////////////////////////////////////////////////////
-// SoundBuffer_Impl operations:
-
-/////////////////////////////////////////////////////////////////////////////
-// SoundBuffer_Impl implementation:
-
+	SoundBuffer_Impl::~SoundBuffer_Impl()
+	{
+		if (provider)
+			delete provider;
+	}
 }

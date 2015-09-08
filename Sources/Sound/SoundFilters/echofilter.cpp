@@ -34,18 +34,16 @@
 
 namespace clan
 {
+	EchoFilter::EchoFilter(int buffer_size, float shift_factor) : SoundFilter(new EchoFilterProvider(buffer_size, shift_factor))
+	{
+	}
 
-EchoFilter::EchoFilter(int buffer_size, float shift_factor) : SoundFilter( new EchoFilterProvider(buffer_size, shift_factor))
-{
-}
+	EchoFilter::~EchoFilter()
+	{
+	}
 
-EchoFilter::~EchoFilter()
-{
-}
-
-EchoFilterProvider *EchoFilter::get_provider() const
-{
-	return static_cast <EchoFilterProvider *> (SoundFilter::get_provider());
-}
-
+	EchoFilterProvider *EchoFilter::get_provider() const
+	{
+		return static_cast <EchoFilterProvider *> (SoundFilter::get_provider());
+	}
 }

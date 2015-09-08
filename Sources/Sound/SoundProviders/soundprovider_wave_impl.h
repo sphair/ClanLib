@@ -32,39 +32,31 @@
 
 namespace clan
 {
+	class InputSourceProvider;
+	class IODevice;
 
-class InputSourceProvider;
-class IODevice;
-
-class SoundProvider_Wave_Impl
-{
-public:
-	SoundProvider_Wave_Impl()
-	: data(nullptr)
+	class SoundProvider_Wave_Impl
 	{
-	}
+	public:
+		SoundProvider_Wave_Impl()
+			: data(nullptr)
+		{
+		}
 
-	~SoundProvider_Wave_Impl()
-	{
-		delete[] data;
-	}
+		~SoundProvider_Wave_Impl()
+		{
+			delete[] data;
+		}
 
-	void load(IODevice &source);
+		void load(IODevice &source);
 
-/// \name Attributes
-/// \{
+		char *data;
+		SoundFormat format;
+		int num_channels;
+		int num_samples;
+		int frequency;
 
-public:
-	char *data;
-	SoundFormat format;
-	int num_channels;
-	int num_samples;
-	int frequency;
-/// \}
-
-private:
-	uint32_t find_subchunk(const char *chunk, IODevice &source, uint32_t file_offset, uint32_t max_offset );
-
-};
-
+	private:
+		uint32_t find_subchunk(const char *chunk, IODevice &source, uint32_t file_offset, uint32_t max_offset);
+	};
 }

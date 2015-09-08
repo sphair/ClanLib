@@ -32,37 +32,35 @@
 
 namespace clan
 {
+	class NetGameConnection;
 
-class NetGameConnection;
-
-class NetGameNetworkEvent
-{
-public:
-	enum Type
+	class NetGameNetworkEvent
 	{
-		client_connected,
-		event_received,
-		client_disconnected
+	public:
+		enum Type
+		{
+			client_connected,
+			event_received,
+			client_disconnected
+		};
+
+		NetGameNetworkEvent(NetGameConnection *connection, Type type)
+			: connection(connection), type(type), game_event(std::string())
+		{
+		}
+
+		NetGameNetworkEvent(NetGameConnection *connection, Type type, const NetGameEvent &game_event)
+			: connection(connection), type(type), game_event(game_event)
+		{
+		}
+
+		NetGameNetworkEvent(NetGameConnection *connection, const NetGameEvent &game_event)
+			: connection(connection), type(event_received), game_event(game_event)
+		{
+		}
+
+		NetGameConnection *connection;
+		Type type;
+		NetGameEvent game_event;
 	};
-
-	NetGameNetworkEvent(NetGameConnection *connection, Type type)
-	: connection(connection), type(type), game_event(std::string())
-	{
-	}
-
-	NetGameNetworkEvent(NetGameConnection *connection, Type type, const NetGameEvent &game_event)
-	: connection(connection), type(type), game_event(game_event)
-	{
-	}
-
-	NetGameNetworkEvent(NetGameConnection *connection, const NetGameEvent &game_event)
-	: connection(connection), type(event_received), game_event(game_event)
-	{
-	}
-
-	NetGameConnection *connection;
-	Type type;
-	NetGameEvent game_event;
-};
-
 }

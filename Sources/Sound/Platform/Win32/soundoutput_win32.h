@@ -36,51 +36,34 @@
 
 namespace clan
 {
+	class SoundOutput_Win32 : public SoundOutput_Impl
+	{
+	public:
+		SoundOutput_Win32(int mixing_frequency, int mixing_latency = 50);
+		~SoundOutput_Win32();
 
-class SoundOutput_Win32 : public SoundOutput_Impl
-{
-/// \name Construction
-/// \{
-public:
-	SoundOutput_Win32(int mixing_frequency, int mixing_latency = 50);
-	~SoundOutput_Win32();
-/// \}
+		/// \brief Called when we have no samples to play - and wants to tell the sound card
+		/// \brief about this possible event.
+		void silence() override;
 
-/// \name Attributes
-/// \{
-public:
-/// \}
+		/// \brief Returns the buffer size used by device (returned as number of [stereo] samples).
+		int get_fragment_size() override;
 
-/// \name Operations
-/// \{
-public:
-	/// \brief Called when we have no samples to play - and wants to tell the sound card
-	/// \brief about this possible event.
-	void silence() override;
+		/// \brief Writes a fragment to the sound card.
+		void write_fragment(float *data) override;
 
-	/// \brief Returns the buffer size used by device (returned as number of [stereo] samples).
-	int get_fragment_size() override;
+		/// \brief Waits until output source isn't full anymore.
+		void wait() override;
 
-	/// \brief Writes a fragment to the sound card.
-	void write_fragment(float *data) override;
-
-	/// \brief Waits until output source isn't full anymore.
-	void wait() override;
-/// \}
-
-/// \name Implementation
-/// \{
-private:
-	ComPtr<IMMDevice> mmdevice;
-	ComPtr<IAudioClient> audio_client;
-	ComPtr<IAudioRenderClient> audio_render_client;
-	DataBuffer next_fragment;
-	HANDLE audio_buffer_ready_event;
-	bool is_playing;
-	UINT32 fragment_size;
-	int wait_timeout;
-	int write_pos;
-/// \}
-};
-
+	private:
+		ComPtr<IMMDevice> mmdevice;
+		ComPtr<IAudioClient> audio_client;
+		ComPtr<IAudioRenderClient> audio_render_client;
+		DataBuffer next_fragment;
+		HANDLE audio_buffer_ready_event;
+		bool is_playing;
+		UINT32 fragment_size;
+		int wait_timeout;
+		int write_pos;
+	};
 }
