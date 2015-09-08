@@ -32,7 +32,6 @@
 
 namespace clan
 {
-
 	class PathCache;
 
 	class Font_DrawPath : public Font_Draw
@@ -48,5 +47,4 @@ namespace clan
 		FontEngine *font_engine = nullptr;
 		float scaled_height = 1.0f;
 	};
-
 }

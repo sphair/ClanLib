@@ -43,31 +43,29 @@
 
 namespace clan
 {
-class RenderBatchBuffer;
+	class RenderBatchBuffer;
 
+	class RenderBatchPath : public RenderBatcher
+	{
+	public:
+		RenderBatchPath(GraphicContext &gc, RenderBatchBuffer *batch_buffer);
 
-class RenderBatchPath : public RenderBatcher
-{
-public:
-	RenderBatchPath(GraphicContext &gc, RenderBatchBuffer *batch_buffer);
+		void fill(Canvas &canvas, const Path &path, const Brush &brush);
+		void stroke(Canvas &canvas, const Path &path, const Pen &pen);
 
-	void fill(Canvas &canvas, const Path &path, const Brush &brush);
-	void stroke(Canvas &canvas, const Path &path, const Pen &pen);
+	private:
+		void render(const Path &path, PathRenderer *renderer);
 
-private:
-	void render(const Path &path, PathRenderer *renderer);
+		int set_batcher_active(Canvas &canvas);
+		void flush(GraphicContext &gc) override;
+		void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis, float pixel_ratio) override;
 
-	int set_batcher_active(Canvas &canvas);
-	void flush(GraphicContext &gc) override;
-	void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis, float pixel_ratio) override;
+		inline Pointf to_position(const clan::Pointf &point) const;
 
-	inline Pointf to_position(const clan::Pointf &point) const;
+		Mat4f modelview_matrix;
+		RenderBatchBuffer *batch_buffer;
 
-	Mat4f modelview_matrix;
-	RenderBatchBuffer *batch_buffer;
-
-	PathFillRenderer fill_renderer;
-	PathStrokeRenderer stroke_renderer;
-};
-
+		PathFillRenderer fill_renderer;
+		PathStrokeRenderer stroke_renderer;
+	};
 }

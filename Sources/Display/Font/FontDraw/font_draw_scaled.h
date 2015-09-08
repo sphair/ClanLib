@@ -32,7 +32,6 @@
 
 namespace clan
 {
-
 	class Font_DrawScaled : public Font_Draw
 	{
 	public:
@@ -46,5 +45,4 @@ namespace clan
 		FontEngine *font_engine = nullptr;
 		float scaled_height = 1.0f;
 	};
-
 }

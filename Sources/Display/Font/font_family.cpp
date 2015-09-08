@@ -113,5 +113,4 @@ namespace clan
 		if (!impl)
 			throw Exception("FontFamily is null");
 	}
-
 }

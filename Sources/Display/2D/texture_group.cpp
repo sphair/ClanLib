@@ -33,87 +33,73 @@
 
 namespace clan
 {
+	TextureGroup::TextureGroup()
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// TextureGroup Construction:
+	TextureGroup::TextureGroup(const Size &texture_sizes)
+		: impl(std::make_shared<TextureGroup_Impl>(texture_sizes))
+	{
+		set_texture_allocation_policy(create_new_texture);
+	}
 
-TextureGroup::TextureGroup()
-{
-}
+	TextureGroup::~TextureGroup()
+	{
+	}
 
-TextureGroup::TextureGroup(const Size &texture_sizes)
-: impl(std::make_shared<TextureGroup_Impl>(texture_sizes))
-{
-	set_texture_allocation_policy(create_new_texture);
-}
+	void TextureGroup::throw_if_null() const
+	{
+		if (!impl)
+			throw Exception("TextureGroup is null");
+	}
 
-TextureGroup::~TextureGroup()
-{
-}
+	int TextureGroup::get_subtexture_count() const
+	{
+		return impl->get_subtexture_count();
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// TextureGroup Attributes:
+	int TextureGroup::get_subtexture_count(unsigned int texture_index) const
+	{
+		return impl->get_subtexture_count(texture_index);
+	}
 
-void TextureGroup::throw_if_null() const
-{
-	if (!impl)
-		throw Exception("TextureGroup is null");
-}
+	int TextureGroup::get_texture_count() const
+	{
+		return impl->root_nodes.size();
+	}
 
-int TextureGroup::get_subtexture_count() const
-{
-	return impl->get_subtexture_count();
-}
+	TextureGroup::TextureAllocationPolicy TextureGroup::get_texture_allocation_policy() const
+	{
+		return impl->texture_allocation_policy;
+	}
 
-int TextureGroup::get_subtexture_count(unsigned int texture_index) const
-{
-	return impl->get_subtexture_count(texture_index);
-}
+	Size TextureGroup::get_texture_sizes() const
+	{
+		return impl->initial_texture_size;
+	}
 
-int TextureGroup::get_texture_count() const
-{
-	return impl->root_nodes.size();
-}
+	std::vector<Texture2D> TextureGroup::get_textures() const
+	{
+		return impl->get_textures();
+	}
 
-TextureGroup::TextureAllocationPolicy TextureGroup::get_texture_allocation_policy() const
-{
-	return impl->texture_allocation_policy;
-}
+	Subtexture TextureGroup::add(GraphicContext &context, const Size &size)
+	{
+		return impl->add_new_node(context, size);
+	}
 
-Size TextureGroup::get_texture_sizes() const
-{
-	return impl->initial_texture_size;
-}
+	void TextureGroup::remove(Subtexture &subtexture)
+	{
+		impl->remove(subtexture);
+	}
 
-std::vector<Texture2D> TextureGroup::get_textures() const
-{
-	return impl->get_textures();
-}
+	void TextureGroup::set_texture_allocation_policy(TextureAllocationPolicy policy)
+	{
+		impl->texture_allocation_policy = policy;
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// TextureGroup Operations:
-
-Subtexture TextureGroup::add(GraphicContext &context, const Size &size)
-{
-	return impl->add_new_node(context, size);
-}
-
-void TextureGroup::remove(Subtexture &subtexture)
-{
-	impl->remove(subtexture);
-}
-
-void TextureGroup::set_texture_allocation_policy(TextureAllocationPolicy policy)
-{
-	impl->texture_allocation_policy = policy;
-}
-
-void TextureGroup::insert_texture(Texture2D &texture, const Rect &texture_rect)
-{
-	impl->insert_texture(texture, texture_rect);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// TextureGroup Implementation:
-
+	void TextureGroup::insert_texture(Texture2D &texture, const Rect &texture_rect)
+	{
+		impl->insert_texture(texture, texture_rect);
+	}
 }

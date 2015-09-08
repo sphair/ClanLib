@@ -38,47 +38,40 @@
 
 namespace clan
 {
+	class RenderBatchBuffer
+	{
+	public:
+		RenderBatchBuffer(GraphicContext &gc);
 
-class RenderBatchBuffer
-{
-public:
-	RenderBatchBuffer(GraphicContext &gc);
+		VertexArrayBuffer get_vertex_buffer(GraphicContext &gc, int &out_index);
+		Texture2D get_texture_rgba32f(GraphicContext &gc);
+		Texture2D get_texture_r8(GraphicContext &gc);
+		TransferTexture get_transfer_rgba32f(GraphicContext &gc);
 
-	VertexArrayBuffer get_vertex_buffer(GraphicContext &gc, int &out_index);
-	Texture2D get_texture_rgba32f(GraphicContext &gc);
-	Texture2D get_texture_r8(GraphicContext &gc);
-	TransferTexture get_transfer_rgba32f(GraphicContext &gc);
+		TransferTexture get_transfer_r8(GraphicContext &gc, int &out_index);
+		static const int num_vertex_buffers = 4;
+		enum { vertex_buffer_size = 1024 * 1024 };
+		char buffer[vertex_buffer_size];
 
-	TransferTexture get_transfer_r8(GraphicContext &gc, int &out_index);
-	static const int num_vertex_buffers = 4;
-	enum { vertex_buffer_size = 1024*1024 };
-	char buffer[vertex_buffer_size];
+		static const int rgba32f_width = 512;	// *** If changing this, remember to modify the path shaders ***
+		static const int rgba32f_height = 4;
+		static const int r8_size = 1024;	// *** If changing this, remember to modify the path shaders ***
+		static const int num_rgba32f_buffers = 2;
+		static const int num_r8_buffers = 2;
 
-	
-	static const int rgba32f_width = 512;	// *** If changing this, remember to modify the path shaders ***
-	static const int rgba32f_height = 4;
-	static const int r8_size = 1024;	// *** If changing this, remember to modify the path shaders ***
-	static const int num_rgba32f_buffers = 2;
-	static const int num_r8_buffers = 2;
+	private:
+		VertexArrayBuffer vertex_buffers[num_vertex_buffers];
+		int current_vertex_buffer = 0;
 
+		Texture2D textures_rgba32f[num_rgba32f_buffers];
+		int current_rgba32f_texture = 0;
 
-private:
+		Texture2D textures_r8[num_r8_buffers];
+		int current_r8_texture = 0;
 
-	VertexArrayBuffer vertex_buffers[num_vertex_buffers];
-	int current_vertex_buffer = 0;
-
-	Texture2D textures_rgba32f[num_rgba32f_buffers];
-	int current_rgba32f_texture = 0;
-
-	Texture2D textures_r8[num_r8_buffers];
-	int current_r8_texture = 0;
-
-	TransferTexture transfers_rgba32f[num_rgba32f_buffers];
-	int current_rgba32f_transfer = 0;
-	TransferTexture transfers_r8[num_r8_buffers];
-	int current_r8_transfer = 0;
-
-
-};
-
+		TransferTexture transfers_rgba32f[num_rgba32f_buffers];
+		int current_rgba32f_transfer = 0;
+		TransferTexture transfers_r8[num_r8_buffers];
+		int current_r8_transfer = 0;
+	};
 }

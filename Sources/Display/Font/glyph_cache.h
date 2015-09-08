@@ -40,85 +40,64 @@
 
 namespace clan
 {
+	class Colorf;
+	class TextureGroup;
+	class FontEngine;
+	class Font_TextureGlyph;
+	class Subtexture;
+	class FontPixelBuffer;
+	class Path;
+	class RenderBatchTriangle;
 
-class Colorf;
-class TextureGroup;
-class FontEngine;
-class Font_TextureGlyph;
-class Subtexture;
-class FontPixelBuffer;
-class Path;
-class RenderBatchTriangle;
+	/// \brief Font texture format (holds a pixel buffer containing a glyph)
+	class Font_TextureGlyph
+	{
+	public:
+		Font_TextureGlyph() : glyph(0) { };
 
-/// \brief Font texture format (holds a pixel buffer containing a glyph)
-class Font_TextureGlyph
-{
-public:
-	Font_TextureGlyph() : glyph(0) { };
+		/// \brief Glyph this pixel buffer refers to.
+		unsigned int glyph;
 
-	/// \brief Glyph this pixel buffer refers to.
-	unsigned int glyph;
+		/// \brief The pixel buffer containing the glyph.
+		///
+		/// This maybe a null texture
+		Texture2D texture;
 
-	/// \brief The pixel buffer containing the glyph.
-	///
-	/// This maybe a null texture
-	Texture2D texture;
+		/// \brief Geometry of the glyph inside the subtexture (excluding the border)
+		Rect geometry;
 
-	/// \brief Geometry of the glyph inside the subtexture (excluding the border)
-	Rect geometry;
+		/// \brief Offset to draw the font to buffer
+		/** For example:
+			x = pos_x + pixelbuffer.offset.x
+			y = pos_y + pixelbuffer.offset.y*/
+		Pointf offset;
 
-	/// \brief Offset to draw the font to buffer
-	/** For example:
-	    x = pos_x + pixelbuffer.offset.x
-	    y = pos_y + pixelbuffer.offset.y*/
-	Pointf offset;
+		/// \brief Glyph size in device independent pixels (96 dpi)
+		Sizef size;
 
-	/// \brief Glyph size in device independent pixels (96 dpi)
-	Sizef size;
+		GlyphMetrics metrics;
+	};
 
-	GlyphMetrics metrics;
+	class GlyphCache
+	{
+	public:
+		GlyphCache();
+		virtual ~GlyphCache();
 
-};
+		/// \brief Get a glyph. Returns NULL if the glyph was not found
+		Font_TextureGlyph *get_glyph(Canvas &canvas, FontEngine *font_engine, unsigned int glyph);
 
-class GlyphCache
-{
-/// \name Construction
-/// \{
-public:
-	GlyphCache();
-	virtual ~GlyphCache();
+		GlyphMetrics get_metrics(FontEngine *font_engine, Canvas &canvas, unsigned int glyph);
 
-/// \}
-/// \name Attributes
-/// \{
+		void insert_glyph(Canvas &canvas, unsigned int glyph, Subtexture &sub_texture, const Pointf &offset, const Sizef &size, const GlyphMetrics &glyph_metrics);
+		void insert_glyph(Canvas &canvas, FontPixelBuffer &pb);
 
-public:
-	/// \brief Get a glyph. Returns NULL if the glyph was not found
-	Font_TextureGlyph *get_glyph(Canvas &canvas, FontEngine *font_engine, unsigned int glyph);
+		void set_texture_group(TextureGroup &new_texture_group);
 
-/// \}
-/// \name Operations
-/// \{
-public:
-	GlyphMetrics get_metrics(FontEngine *font_engine, Canvas &canvas, unsigned int glyph);
+	private:
+		std::vector<std::unique_ptr<Font_TextureGlyph>> glyph_list;
+		TextureGroup texture_group;
 
-	void insert_glyph(Canvas &canvas, unsigned int glyph, Subtexture &sub_texture, const Pointf &offset, const Sizef &size, const GlyphMetrics &glyph_metrics);
-	void insert_glyph(Canvas &canvas, FontPixelBuffer &pb);
-
-	void set_texture_group(TextureGroup &new_texture_group);
-
-/// \}
-/// \name Implementation
-/// \{
-private:
-
-	std::vector<std::unique_ptr<Font_TextureGlyph>> glyph_list;
-
-	TextureGroup texture_group;
-
-	static const int glyph_border_size = 1;
-
-/// \}
-};
-
+		static const int glyph_border_size = 1;
+	};
 }

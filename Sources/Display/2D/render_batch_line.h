@@ -36,35 +36,32 @@
 
 namespace clan
 {
-class RenderBatchBuffer;
+	class RenderBatchBuffer;
 
-class RenderBatchLine : public RenderBatcher
-{
-public:
-	RenderBatchLine(GraphicContext &gc, RenderBatchBuffer *batch_buffer);
-	void draw_line_strip(Canvas &canvas, const Vec2f *line_positions, const Vec4f &line_color, int num_vertices);
-	void draw_lines(Canvas &canvas, const Vec2f *line_positions, const Vec4f &line_color, int num_vertices);
-
-private:
-	struct LineVertex
+	class RenderBatchLine : public RenderBatcher
 	{
-		Vec4f position;
-		Vec4f color;
+	public:
+		RenderBatchLine(GraphicContext &gc, RenderBatchBuffer *batch_buffer);
+		void draw_line_strip(Canvas &canvas, const Vec2f *line_positions, const Vec4f &line_color, int num_vertices);
+		void draw_lines(Canvas &canvas, const Vec2f *line_positions, const Vec4f &line_color, int num_vertices);
+
+	private:
+		struct LineVertex
+		{
+			Vec4f position;
+			Vec4f color;
+		};
+
+		inline Vec4f to_position(float x, float y) const;
+		void set_batcher_active(Canvas &canvas, int num_vertices);
+		void flush(GraphicContext &gc) override;
+		void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis, float pixel_ratio) override;
+
+		enum { max_vertices = RenderBatchBuffer::vertex_buffer_size / sizeof(LineVertex) };
+		LineVertex *vertices;
+		RenderBatchBuffer *batch_buffer;
+		PrimitivesArray prim_array[RenderBatchBuffer::num_vertex_buffers];
+		int position;
+		Mat4f modelview_projection_matrix;
 	};
-
-	inline Vec4f to_position(float x, float y) const;
-	void set_batcher_active(Canvas &canvas, int num_vertices);
-	void flush(GraphicContext &gc) override;
-	void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis, float pixel_ratio) override;
-
-	enum { max_vertices = RenderBatchBuffer::vertex_buffer_size / sizeof(LineVertex) };
-	LineVertex *vertices;
-	RenderBatchBuffer *batch_buffer;
-	PrimitivesArray prim_array[RenderBatchBuffer::num_vertex_buffers];
-	int position;
-	Mat4f modelview_projection_matrix;
-
-
-};
-
 }

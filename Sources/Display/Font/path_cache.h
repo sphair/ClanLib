@@ -38,58 +38,38 @@
 
 namespace clan
 {
+	class Colorf;
+	class TextureGroup;
+	class FontEngine;
+	class Subtexture;
+	class FontPixelBuffer;
+	class Path;
+	class RenderBatchTriangle;
 
-class Colorf;
-class TextureGroup;
-class FontEngine;
-class Subtexture;
-class FontPixelBuffer;
-class Path;
-class RenderBatchTriangle;
+	class Font_PathGlyph
+	{
+	public:
+		Font_PathGlyph() : glyph(0) { };
 
-class Font_PathGlyph
-{
-public:
-	Font_PathGlyph() : glyph(0) { };
+		/// \brief Glyph this buffer refers to.
+		unsigned int glyph;
 
-	/// \brief Glyph this buffer refers to.
-	unsigned int glyph;
+		Path path;
+		GlyphMetrics metrics;
+	};
 
-	Path path;
-	GlyphMetrics metrics;
+	class PathCache
+	{
+	public:
+		PathCache();
+		virtual ~PathCache();
 
-};
+		/// \brief Get a glyph. Returns NULL if the glyph was not found
+		Font_PathGlyph *get_glyph(Canvas &canvas, FontEngine *font_engine, unsigned int glyph);
 
-class PathCache
-{
-/// \name Construction
-/// \{
-public:
-	PathCache();
-	virtual ~PathCache();
+		GlyphMetrics get_metrics(FontEngine *font_engine, Canvas &canvas, unsigned int glyph);
 
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	/// \brief Get a glyph. Returns NULL if the glyph was not found
-	Font_PathGlyph *get_glyph(Canvas &canvas, FontEngine *font_engine, unsigned int glyph);
-
-/// \}
-/// \name Operations
-/// \{
-public:
-	GlyphMetrics get_metrics(FontEngine *font_engine, Canvas &canvas, unsigned int glyph);
-
-/// \}
-/// \name Implementation
-/// \{
-private:
-
-	std::vector<Font_PathGlyph* > glyph_list;
-
-/// \}
-};
-
+	private:
+		std::vector<Font_PathGlyph* > glyph_list;
+	};
 }

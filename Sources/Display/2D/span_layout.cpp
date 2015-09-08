@@ -32,145 +32,143 @@
 
 namespace clan
 {
+	SpanLayout::SpanLayout()
+		: impl(std::make_shared<SpanLayout_Impl>())
+	{
+	}
 
-SpanLayout::SpanLayout()
-: impl(std::make_shared<SpanLayout_Impl>())
-{
-}
+	SpanLayout::~SpanLayout()
+	{
+	}
 
-SpanLayout::~SpanLayout()
-{
-}
+	void SpanLayout::clear()
+	{
+		impl->clear();
+	}
 
-void SpanLayout::clear()
-{
-	impl->clear();
-}
+	template<typename T>
+	void SpanLayout::add_component(T *component, int baseline_offset, int id)
+	{
+		add_component_helper(new SpanComponentBinder<T>(component), baseline_offset, id);
+	}
 
-template<typename T>
-void SpanLayout::add_component(T *component, int baseline_offset, int id)
-{
-	add_component_helper(new SpanComponentBinder<T>(component), baseline_offset, id);
-}
+	void SpanLayout::add_text(const std::string &text, const Font &font, const Colorf &color, int id)
+	{
+		impl->add_text(text, font, color, id);
+	}
 
-void SpanLayout::add_text(const std::string &text, const Font &font, const Colorf &color, int id)
-{
-	impl->add_text(text, font, color, id);
-}
+	void SpanLayout::add_image(const Image &image, int baseline_offset, int id)
+	{
+		impl->add_image(image, baseline_offset, id);
+	}
 
-void SpanLayout::add_image(const Image &image, int baseline_offset, int id)
-{
-	impl->add_image(image, baseline_offset, id);
-}
+	void SpanLayout::add_component_helper(SpanComponent *component, int baseline_offset, int id)
+	{
+		impl->add_component(component, baseline_offset, id);
+	}
 
-void SpanLayout::add_component_helper(SpanComponent *component, int baseline_offset, int id)
-{
-	impl->add_component(component, baseline_offset, id);
-}
+	void SpanLayout::layout(Canvas &canvas, int max_width)
+	{
+		impl->layout(canvas, max_width);
+	}
 
-void SpanLayout::layout(Canvas &canvas, int max_width)
-{
-	impl->layout(canvas, max_width);
-}
+	SpanLayout::HitTestResult SpanLayout::hit_test(Canvas &canvas, const Point &pos)
+	{
+		return impl->hit_test(canvas, pos);
+	}
 
-SpanLayout::HitTestResult SpanLayout::hit_test(Canvas &canvas, const Point &pos)
-{
-	return impl->hit_test(canvas, pos);
-}
+	void SpanLayout::draw_layout(Canvas &canvas)
+	{
+		impl->draw_layout(canvas);
+	}
 
-void SpanLayout::draw_layout(Canvas &canvas)
-{
-	impl->draw_layout(canvas);
-}
+	void SpanLayout::draw_layout_ellipsis(Canvas &canvas, const Rect &content_rect)
+	{
+		impl->draw_layout_ellipsis(canvas, content_rect);
+	}
 
-void SpanLayout::draw_layout_ellipsis(Canvas &canvas, const Rect &content_rect)
-{
-	impl->draw_layout_ellipsis(canvas, content_rect);
-}
+	void SpanLayout::set_position(const Point &pos)
+	{
+		impl->set_position(pos);
+	}
 
-void SpanLayout::set_position(const Point &pos)
-{
-	impl->set_position(pos);
-}
+	Size SpanLayout::get_size() const
+	{
+		return impl->get_rect().get_size();
+	}
 
-Size SpanLayout::get_size() const
-{
-	return impl->get_rect().get_size();
-}
+	Rect SpanLayout::get_rect() const
+	{
+		return impl->get_rect();
+	}
 
-Rect SpanLayout::get_rect() const
-{
-	return impl->get_rect();
-}
+	std::vector<Rect> SpanLayout::get_rect_by_id(int id) const
+	{
+		return impl->get_rect_by_id(id);
+	}
 
-std::vector<Rect> SpanLayout::get_rect_by_id(int id) const
-{
-	return impl->get_rect_by_id(id);
-}
+	void SpanLayout::set_align(SpanAlign align)
+	{
+		impl->set_align(align);
+	}
 
-void SpanLayout::set_align(SpanAlign align)
-{
-	impl->set_align(align);
-}
+	Size SpanLayout::find_preferred_size(Canvas &canvas)
+	{
+		return impl->find_preferred_size(canvas);
+	}
 
-Size SpanLayout::find_preferred_size(Canvas &canvas)
-{
-	return impl->find_preferred_size(canvas);
-}
+	void SpanLayout::set_selection_range(std::string::size_type start, std::string::size_type end)
+	{
+		impl->set_selection_range(start, end);
+	}
 
-void SpanLayout::set_selection_range(std::string::size_type start, std::string::size_type end)
-{
-	impl->set_selection_range(start, end);
-}
+	void SpanLayout::set_selection_colors(const Colorf &foreground, const Colorf &background)
+	{
+		impl->set_selection_colors(foreground, background);
+	}
 
-void SpanLayout::set_selection_colors(const Colorf &foreground, const Colorf &background)
-{
-	impl->set_selection_colors(foreground, background);
-}
+	std::string SpanLayout::get_combined_text() const
+	{
+		return impl->get_combined_text();
+	}
 
-std::string SpanLayout::get_combined_text() const
-{
-	return impl->get_combined_text();
-}
+	void SpanLayout::set_component_geometry()
+	{
+		impl->set_component_geometry();
+	}
 
-void SpanLayout::set_component_geometry()
-{
-	impl->set_component_geometry();
-}
+	void SpanLayout::show_cursor()
+	{
+		impl->cursor_visible = true;
+	}
 
-void SpanLayout::show_cursor()
-{
-	impl->cursor_visible = true;
-}
+	void SpanLayout::hide_cursor()
+	{
+		impl->cursor_visible = false;
+	}
 
-void SpanLayout::hide_cursor()
-{
-	impl->cursor_visible = false;
-}
+	void SpanLayout::set_cursor_pos(std::string::size_type pos)
+	{
+		impl->cursor_pos = pos;
+	}
 
-void SpanLayout::set_cursor_pos(std::string::size_type pos)
-{
-	impl->cursor_pos = pos;
-}
+	void SpanLayout::set_cursor_overwrite_mode(bool enable)
+	{
+		impl->cursor_overwrite_mode = enable;
+	}
 
-void SpanLayout::set_cursor_overwrite_mode(bool enable)
-{
-	impl->cursor_overwrite_mode = enable;
-}
+	void SpanLayout::set_cursor_color(const Colorf &color)
+	{
+		impl->cursor_color = color;
+	}
 
-void SpanLayout::set_cursor_color(const Colorf &color)
-{
-	impl->cursor_color = color;
-}
+	int SpanLayout::get_first_baseline_offset()
+	{
+		return impl->get_first_baseline_offset();
+	}
 
-int SpanLayout::get_first_baseline_offset()
-{
-	return impl->get_first_baseline_offset();
-}
-
-int SpanLayout::get_last_baseline_offset()
-{
-	return impl->get_last_baseline_offset();
-}
-
+	int SpanLayout::get_last_baseline_offset()
+	{
+		return impl->get_last_baseline_offset();
+	}
 }

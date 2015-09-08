@@ -34,64 +34,61 @@
 
 namespace clan
 {
+	class GraphicContext;
 
-class GraphicContext;
-
-/// \brief Texture group implementation interface.
-class TextureGroup_Impl
-{
-public:
-	class Node
+	/// \brief Texture group implementation interface.
+	class TextureGroup_Impl
 	{
 	public:
-		Node();
-		Node(const Rect &rect);
-		~Node();
+		class Node
+		{
+		public:
+			Node();
+			Node(const Rect &rect);
+			~Node();
+
+			int get_subtexture_count() const;
+
+			Node *insert(const Size &texture_size, int texture_id);
+			Node *find_image_rect(const Rect &new_rect);
+
+			void clear();
+
+			Node *child[2];
+			Rect node_rect;
+
+			int id;
+			Rect image_rect;
+		};
+
+		struct RootNode
+		{
+		public:
+			Texture2D texture;
+			Node node;
+		};
+
+		TextureGroup_Impl(const Size &texture_sizes);
+		~TextureGroup_Impl();
 
 		int get_subtexture_count() const;
+		int get_subtexture_count(unsigned int texture_index) const;
+		void insert_texture(Texture2D &texture, const Rect &texture_rect);
+		void remove(Subtexture &subtexture);
 
-		Node *insert(const Size &texture_size, int texture_id);
-		Node *find_image_rect(const Rect &new_rect);
+		std::vector<Texture2D> get_textures() const;
 
-		void clear();
+		Subtexture add_new_node(GraphicContext &context, const Size &texture_size);
 
-		Node *child[2];
-		Rect node_rect;
+		std::vector<RootNode *> root_nodes;
 
-	    int id;
-	    Rect image_rect;
+		Size initial_texture_size;
+		TextureGroup::TextureAllocationPolicy texture_allocation_policy;
+
+	private:
+		RootNode *add_new_root(GraphicContext &context, const Size &texture_size);
+
+		RootNode *active_root;
+		int next_id;
 	};
-
-	struct RootNode
-	{
-	public:
-		Texture2D texture;
-		Node node;
-	};
-
-public:
-	TextureGroup_Impl(const Size &texture_sizes);
-	~TextureGroup_Impl();
-
-	int get_subtexture_count() const;
-	int get_subtexture_count(unsigned int texture_index) const;
-	void insert_texture(Texture2D &texture, const Rect &texture_rect);
-	void remove(Subtexture &subtexture);
-
-	std::vector<Texture2D> get_textures() const;
-
-	Subtexture add_new_node(GraphicContext &context, const Size &texture_size);
-
-	std::vector<RootNode *> root_nodes;
-
-	Size initial_texture_size;
-	TextureGroup::TextureAllocationPolicy texture_allocation_policy;
-
-private:
-	RootNode *add_new_root(GraphicContext &context, const Size &texture_size);
-
-	RootNode *active_root;
-	int next_id;
-};
-
 }

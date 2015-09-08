@@ -39,22 +39,20 @@
 #include "API/Display/2D/path.h"
 #include "API/Display/Resources/display_cache.h"
 #include "API/Core/IOData/path_help.h"
-#include "../../2D/canvas_impl.h"
-#include "../FontEngine/font_engine.h"
-#include "../../2D/sprite_impl.h"
+#include "Display/2D/canvas_impl.h"
+#include "Display/Font/FontEngine/font_engine.h"
+#include "Display/2D/sprite_impl.h"
 #include "font_draw_flat.h"
-#include "../glyph_cache.h"
-#include "../path_cache.h"
+#include "Display/Font/glyph_cache.h"
+#include "Display/Font/path_cache.h"
 
 namespace clan
 {
-
 	void Font_DrawFlat::init(GlyphCache *cache, FontEngine *engine)
 	{
 		glyph_cache = cache;
 		font_engine = engine;
 	}
-
 
 	GlyphMetrics Font_DrawFlat::get_metrics(Canvas &canvas, unsigned int glyph)
 	{

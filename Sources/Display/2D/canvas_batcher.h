@@ -41,33 +41,29 @@
 
 namespace clan
 {
+	class CanvasBatcher_Impl;
 
-class CanvasBatcher_Impl;
+	class CanvasBatcher
+	{
+	public:
+		CanvasBatcher();
+		CanvasBatcher(GraphicContext &gc);
+		~CanvasBatcher();
 
-class CanvasBatcher
-{
-public:
-	CanvasBatcher();
-	CanvasBatcher(GraphicContext &gc);
-	~CanvasBatcher();
+		/// \brief Returns true if this object is invalid.
+		bool is_null() const { return !impl; }
 
-	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return !impl; }
+		void flush();
+		bool set_batcher(GraphicContext &gc, RenderBatcher *batcher);
+		void update_batcher_matrix(GraphicContext &gc, const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis);
 
-	void flush();
-	bool set_batcher(GraphicContext &gc, RenderBatcher *batcher);
-	void update_batcher_matrix(GraphicContext &gc, const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis);
+		RenderBatchTriangle *get_triangle_batcher();
+		RenderBatchLine *get_line_batcher();
+		RenderBatchLineTexture *get_line_texture_batcher();
+		RenderBatchPoint *get_point_batcher();
+		RenderBatchPath *get_path_batcher();
 
-	RenderBatchTriangle *get_triangle_batcher();
-	RenderBatchLine *get_line_batcher();
-	RenderBatchLineTexture *get_line_texture_batcher();
-	RenderBatchPoint *get_point_batcher();
-	RenderBatchPath *get_path_batcher();
-
-private:
-
-	std::shared_ptr<CanvasBatcher_Impl> impl;
-
-};
-
+	private:
+		std::shared_ptr<CanvasBatcher_Impl> impl;
+	};
 }

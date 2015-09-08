@@ -42,7 +42,8 @@
 #include "API/Display/2D/path.h"
 #include "API/Display/Resources/display_cache.h"
 #include "API/Core/IOData/path_help.h"
-#include "../2D/canvas_impl.h"
+#include "Display/2D/canvas_impl.h"
+#include "Display/2D/sprite_impl.h"
 
 #ifdef WIN32
 #include "FontEngine/font_engine_win32.h"
@@ -57,12 +58,8 @@
 
 #endif
 
-#include "../2D/sprite_impl.h"
-
-
 namespace clan
 {
-
 	class FontEngine_Sprite : public FontEngine
 	{
 	public:
@@ -377,5 +374,4 @@ namespace clan
 
 		return font_cache.back();
 	}
-
 }

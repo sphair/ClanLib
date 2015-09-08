@@ -35,56 +35,53 @@
 
 namespace clan
 {
+	class FontMetrics;
+	class FontPixelBuffer;
+	class Colorf;
+	class Path;
+	class FontDescription;
+	class DataBuffer;
+	class FontHandle;
 
-class FontMetrics;
-class FontPixelBuffer;
-class Colorf;
-class Path;
-class FontDescription;
-class DataBuffer;
-class FontHandle;
+	/// \brief Font pixel buffer format (holds a pixel buffer containing a glyph)
+	class FontPixelBuffer
+	{
+	public:
+		FontPixelBuffer() : glyph(0), empty_buffer(true) { };
 
-/// \brief Font pixel buffer format (holds a pixel buffer containing a glyph)
-class FontPixelBuffer
-{
-public:
-	FontPixelBuffer() : glyph(0), empty_buffer(true) { };
+		/// \brief Glyph this pixel buffer refers to. 0 = Glyph if not valid
+		unsigned int glyph;
 
-	/// \brief Glyph this pixel buffer refers to. 0 = Glyph if not valid
-	unsigned int glyph;
+		/// \brief True when the pixel buffer is empty
+		bool empty_buffer;
 
-	/// \brief True when the pixel buffer is empty
-	bool empty_buffer;
+		/// \brief The pixel buffer containing the glyph
+		PixelBuffer buffer;
 
-	/// \brief The pixel buffer containing the glyph
-	PixelBuffer buffer;
+		/// \brief The rect containing the image inside "buffer"
+		Rect buffer_rect;
 
-	/// \brief The rect containing the image inside "buffer"
-	Rect buffer_rect;
+		/// \brief Offset to draw the font to buffer
+		/** For example:
+			x = pos_x + pixelbuffer.offset.x
+			y = pos_y + pixelbuffer.offset.y*/
+		Pointf offset;
 
-	/// \brief Offset to draw the font to buffer
-	/** For example:
-	    x = pos_x + pixelbuffer.offset.x
-	    y = pos_y + pixelbuffer.offset.y*/
-	Pointf offset;
+		/// \brief Size of the glyph
+		Sizef size;
 
-	/// \brief Size of the glyph
-	Sizef size;
+		GlyphMetrics metrics;
+	};
 
-	GlyphMetrics metrics;
-};
-
-class FontEngine
-{
-public:
-	virtual ~FontEngine() { }
-	virtual bool is_automatic_recreation_allowed() const = 0;		// true if the engine supports dynamic recreation of the font (false for sprite fonts)
-	virtual const FontMetrics &get_metrics() const = 0;
-	virtual FontPixelBuffer get_font_glyph(int glyph) = 0;
-	virtual const FontDescription &get_desc() const = 0;
-	virtual void load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics) = 0;
-	virtual FontHandle *get_handle() { return nullptr; }
-
-};
-
+	class FontEngine
+	{
+	public:
+		virtual ~FontEngine() { }
+		virtual bool is_automatic_recreation_allowed() const = 0;		// true if the engine supports dynamic recreation of the font (false for sprite fonts)
+		virtual const FontMetrics &get_metrics() const = 0;
+		virtual FontPixelBuffer get_font_glyph(int glyph) = 0;
+		virtual const FontDescription &get_desc() const = 0;
+		virtual void load_glyph_path(unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics) = 0;
+		virtual FontHandle *get_handle() { return nullptr; }
+	};
 }

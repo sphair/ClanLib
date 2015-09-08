@@ -41,76 +41,74 @@
 
 namespace clan
 {
+	class RenderBatcher;
+	class RenderBatchTriangle;
 
-class RenderBatcher;
-class RenderBatchTriangle;
+	class Canvas_Impl
+	{
+	public:
+		Canvas_Impl();
+		~Canvas_Impl();
 
-class Canvas_Impl
-{
-public:
-	Canvas_Impl();
-	~Canvas_Impl();
+		void init(Canvas_Impl *canvas);
+		void init(Canvas_Impl *canvas, FrameBuffer &framebuffer);
+		void init(DisplayWindow &window);
 
-	void init(Canvas_Impl *canvas);
-	void init(Canvas_Impl *canvas, FrameBuffer &framebuffer);
-	void init(DisplayWindow &window);
+		void clear(const Colorf &color);
 
-	void clear(const Colorf &color);
+		void flush();
+		void set_batcher(Canvas &canvas, RenderBatcher *batcher);
 
-	void flush();
-	void set_batcher(Canvas &canvas, RenderBatcher *batcher);
+		void set_cliprect(const Rectf &rect);
+		void push_cliprect(const Rectf &rect);
+		void push_cliprect();
+		void pop_cliprect();
+		void reset_cliprect();
 
-	void set_cliprect(const Rectf &rect);
-	void push_cliprect(const Rectf &rect);
-	void push_cliprect();
-	void pop_cliprect();
-	void reset_cliprect();
+		GraphicContext get_gc() const { return gc; }
+		GraphicContext& get_gc() { return gc; }
 
-	GraphicContext get_gc() const { return gc; }
-	GraphicContext& get_gc() { return gc; }
+		void set_transform(const Mat4f &matrix);
+		const Mat4f &get_transform() const;
+		Mat4f &get_inverse_transform();
+		const Mat4f &get_projection() const;
 
-	void set_transform(const Mat4f &matrix);
-	const Mat4f &get_transform() const;
-	Mat4f &get_inverse_transform();
-	const Mat4f &get_projection() const;
+		void set_map_mode(MapMode map_mode);
+		void set_user_projection(const Mat4f &projection);
+		void update_viewport_size();
+		void set_viewport(const Rectf &viewport);
 
-	void set_map_mode(MapMode map_mode);
-	void set_user_projection(const Mat4f &projection);
-	void update_viewport_size();
-	void set_viewport(const Rectf &viewport);
+		static void get_gradient_colors(const Vec2f *triangles, int num_vertex, const Gradient &gradient, std::vector<Colorf> &out_colors);
+		static Rectf get_triangles_bounding_box(const Vec2f *triangles, int num_vertex);
+		static void get_texture_coords(const Vec2f *triangles, int num_vertex, const Texture2D &texture, const Rect &texture_rect, std::vector<Vec2f> &out_texture_positions);
 
-	static void get_gradient_colors(const Vec2f *triangles, int num_vertex, const Gradient &gradient, std::vector<Colorf> &out_colors);
-	static Rectf get_triangles_bounding_box(const Vec2f *triangles, int num_vertex);
-	static void get_texture_coords(const Vec2f *triangles, int num_vertex, const Texture2D &texture, const Rect &texture_rect, std::vector<Vec2f> &out_texture_positions);
+		std::vector<Rectf> cliprects;
+		CanvasBatcher batcher;
 
-	std::vector<Rectf> cliprects;
-	CanvasBatcher batcher;
+	private:
+		void setup(GraphicContext &new_gc);
+		void calculate_map_mode_matrices();
+		MapMode get_top_down_map_mode() const;
+		void on_window_resized(const Size &size);
+		void update_batcher_matrix();
+		void write_cliprect(const Rectf &rect);
+		void on_window_flip();
 
-private:
-	void setup(GraphicContext &new_gc);
-	void calculate_map_mode_matrices();
-	MapMode get_top_down_map_mode() const;
-	void on_window_resized(const Size &size);
-	void update_batcher_matrix();
-	void write_cliprect(const Rectf &rect);
-	void on_window_flip();
+		GraphicContext gc;
+		SlotContainer sc;
 
-	GraphicContext gc;
-	SlotContainer sc;
+		Mat4f canvas_transform;
+		bool canvas_inverse_transform_set = false;
+		Mat4f canvas_inverse_transform;
+		Mat4f canvas_projection;
+		MapMode canvas_map_mode;
+		Rectf viewport_rect;
 
-	Mat4f canvas_transform;
-	bool canvas_inverse_transform_set = false;
-	Mat4f canvas_inverse_transform;
-	Mat4f canvas_projection;
-	MapMode canvas_map_mode;
-	Rectf viewport_rect;
+		DisplayWindow current_window;
 
-	DisplayWindow current_window;
+		TextureImageYAxis canvas_y_axis;
 
-	TextureImageYAxis canvas_y_axis;
-
-	Mat4f user_projection;
-	ClipZRange gc_clip_z_range;
-};
-
+		Mat4f user_projection;
+		ClipZRange gc_clip_z_range;
+	};
 }

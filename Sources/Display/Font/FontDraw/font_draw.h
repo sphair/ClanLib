@@ -30,13 +30,10 @@
 
 namespace clan
 {
-
-class Font_Draw
-{
-public:
-	virtual GlyphMetrics get_metrics(Canvas &canvas, unsigned int glyph) = 0;
-	virtual void draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color, float line_spacing) = 0;
-
-};
-
+	class Font_Draw
+	{
+	public:
+		virtual GlyphMetrics get_metrics(Canvas &canvas, unsigned int glyph) = 0;
+		virtual void draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color, float line_spacing) = 0;
+	};
 }

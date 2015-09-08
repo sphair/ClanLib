@@ -36,36 +36,35 @@
 
 namespace clan
 {
-class RenderBatchBuffer;
+	class RenderBatchBuffer;
 
-class RenderBatchLineTexture : public RenderBatcher
-{
-public:
-	RenderBatchLineTexture(GraphicContext &gc, RenderBatchBuffer *batch_buffer);
-	void draw_lines(Canvas &canvas, const Vec2f *line_positions, const Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Vec4f &line_color);
-
-private:
-	struct LineTextureVertex
+	class RenderBatchLineTexture : public RenderBatcher
 	{
-		Vec4f position;
-		Vec2f texcoord;
-		Vec4f color;
+	public:
+		RenderBatchLineTexture(GraphicContext &gc, RenderBatchBuffer *batch_buffer);
+		void draw_lines(Canvas &canvas, const Vec2f *line_positions, const Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Vec4f &line_color);
+
+	private:
+		struct LineTextureVertex
+		{
+			Vec4f position;
+			Vec2f texcoord;
+			Vec4f color;
+		};
+
+		inline Vec4f to_position(float x, float y) const;
+		void set_batcher_active(Canvas &canvas, int num_vertices, const Texture2D &texture);
+		void flush(GraphicContext &gc) override;
+		void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis, float pixel_ratio) override;
+
+		enum { max_vertices = RenderBatchBuffer::vertex_buffer_size / sizeof(LineTextureVertex) };
+		LineTextureVertex *vertices;
+		RenderBatchBuffer *batch_buffer;
+
+		PrimitivesArray prim_array[RenderBatchBuffer::num_vertex_buffers];
+		int position = 0;
+		Mat4f modelview_projection_matrix;
+		Texture2D current_texture;
+
 	};
-
-	inline Vec4f to_position(float x, float y) const;
-	void set_batcher_active(Canvas &canvas, int num_vertices, const Texture2D &texture);
-	void flush(GraphicContext &gc) override;
-	void matrix_changed(const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis, float pixel_ratio) override;
-
-	enum { max_vertices = RenderBatchBuffer::vertex_buffer_size / sizeof(LineTextureVertex) };
-	LineTextureVertex *vertices;
-	RenderBatchBuffer *batch_buffer;
-
-	PrimitivesArray prim_array[RenderBatchBuffer::num_vertex_buffers];
-	int position = 0;
-	Mat4f modelview_projection_matrix;
-	Texture2D current_texture;
-
-};
-
 }

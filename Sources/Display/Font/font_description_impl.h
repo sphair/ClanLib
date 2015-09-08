@@ -30,29 +30,18 @@
 
 namespace clan
 {
-
-class FontDescription_Impl
-{
-/// \name Construction
-/// \{
-public:
-	virtual ~FontDescription_Impl() { }
-/// \}
-
-/// \name Attributes
-/// \{
-public:
-	float height = 20.0f;
-	float line_height = 0.0f;
-	float average_width = 0.0f;
-	float escapement = 0.0f;
-	float orientation = 0.0f;
-	FontWeight weight = FontWeight::normal;
-	FontStyle style = FontStyle::normal;
-	bool anti_alias = true;
-	bool subpixel = true;
-	FontDescription::Charset charset = FontDescription::charset_default;
-/// \}
-};
-
+	class FontDescription_Impl
+	{
+	public:
+		float height = 20.0f;
+		float line_height = 0.0f;
+		float average_width = 0.0f;
+		float escapement = 0.0f;
+		float orientation = 0.0f;
+		FontWeight weight = FontWeight::normal;
+		FontStyle style = FontStyle::normal;
+		bool anti_alias = true;
+		bool subpixel = true;
+		FontDescription::Charset charset = FontDescription::charset_default;
+	};
 }

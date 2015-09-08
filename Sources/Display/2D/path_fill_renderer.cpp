@@ -268,6 +268,7 @@ namespace clan
 			mask_blocks.reset(mask_buffer.get_data_uint8(), mask_buffer.get_pitch());
 		}
 	}
+
 	/////////////////////////////////////////////////////////////////////////////
 
 	void PathRasterRange::begin(const PathScanline *new_scanline, PathFillMode new_mode)

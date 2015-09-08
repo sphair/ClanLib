@@ -48,59 +48,56 @@
 
 namespace clan
 {
+	class FontEngine;
+	class XMLResourceNode;
+	class DomElement;
 
-class FontEngine;
-class XMLResourceNode;
-class DomElement;
+	class Font_Impl
+	{
+	public:
+		Font_Impl(FontFamily &new_font_family, const FontDescription &description);
+		~Font_Impl();
 
-class Font_Impl
-{
-public:
-	Font_Impl(FontFamily &new_font_family, const FontDescription &description);
-	~Font_Impl();
+		const FontMetrics &get_font_metrics(Canvas &canvas);
 
-	const FontMetrics &get_font_metrics(Canvas &canvas);
+		int get_character_index(Canvas &canvas, const std::string &text, const Pointf &point);
+		std::vector<Rectf> get_character_indices(Canvas &canvas, const std::string &text);
 
-	int get_character_index(Canvas &canvas, const std::string &text, const Pointf &point);
-	std::vector<Rectf> get_character_indices(Canvas &canvas, const std::string &text);
+		GlyphMetrics get_metrics(Canvas &canvas, unsigned int glyph);
 
-	GlyphMetrics get_metrics(Canvas &canvas, unsigned int glyph);
+		GlyphMetrics measure_text(Canvas &canvas, const std::string &string);
 
-	GlyphMetrics measure_text(Canvas &canvas, const std::string &string);
+		void draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color);
 
-	void draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color);
+		void get_glyph_path(Canvas &canvas, unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics);
 
-	void get_glyph_path(Canvas &canvas, unsigned int glyph_index, Path &out_path, GlyphMetrics &out_metrics);
+		void set_height(float value);
+		void set_weight(FontWeight value);
+		void set_line_height(float height);
+		void set_style(FontStyle setting);
+		void set_scalable(float height_threshold);
+		FontHandle *get_handle(Canvas &canvas);
 
-	void set_height(float value);
-	void set_weight(FontWeight value);
-	void set_line_height(float height);
-	void set_style(FontStyle setting);
-	void set_scalable(float height_threshold);
-	FontHandle *get_handle(Canvas &canvas);
+	private:
+		void select_font_family(Canvas &canvas);
 
-private:
-	void select_font_family(Canvas &canvas);
+		FontDescription selected_description;
+		float selected_line_height = 0.0f;
+		float selected_pixel_ratio = 1.0f;
+		float scaled_height = 1.0f;
+		float selected_height_threshold = 64.0f;		// Values greater or equal to this value can be drawn scaled
+		bool selected_pathfont = false;
 
-	FontDescription selected_description;
-	float selected_line_height = 0.0f;
-	float selected_pixel_ratio = 1.0f;
-	float scaled_height = 1.0f;	
-	float selected_height_threshold = 64.0f;		// Values greater or equal to this value can be drawn scaled
-	bool selected_pathfont = false;
+		FontMetrics selected_metrics;
 
-	FontMetrics selected_metrics;
+		FontEngine *font_engine = nullptr;	// If null, use select_font_family() to update
+		FontFamily font_family;
 
-	FontEngine *font_engine = nullptr;	// If null, use select_font_family() to update
-	FontFamily font_family;
+		Font_Draw *font_draw = nullptr;
 
-	Font_Draw *font_draw = nullptr;
-
-	Font_DrawSubPixel font_draw_subpixel;
-	Font_DrawFlat font_draw_flat;
-	Font_DrawScaled font_draw_scaled;
-	Font_DrawPath font_draw_path;
-
-};
-
+		Font_DrawSubPixel font_draw_subpixel;
+		Font_DrawFlat font_draw_flat;
+		Font_DrawScaled font_draw_scaled;
+		Font_DrawPath font_draw_path;
+	};
 }

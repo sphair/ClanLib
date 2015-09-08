@@ -34,77 +34,73 @@
 
 namespace clan
 {
-
-RenderBatchPoint::RenderBatchPoint(GraphicContext &gc, RenderBatchBuffer *batch_buffer)
-: batch_buffer(batch_buffer)
-{
-	vertices = (PointVertex *) batch_buffer->buffer;
-}
-
-void RenderBatchPoint::draw_point(Canvas &canvas, Vec2f *line_positions, const Vec4f &point_color, int num_vertices)
-{
-	set_batcher_active(canvas, num_vertices);
-
-
-	for (; num_vertices > 0; num_vertices--)
+	RenderBatchPoint::RenderBatchPoint(GraphicContext &gc, RenderBatchBuffer *batch_buffer)
+		: batch_buffer(batch_buffer)
 	{
-		vertices[position].color = point_color;
-		vertices[position].position = to_position(line_positions->x, line_positions->y);
-		line_positions++;
-		position++;
+		vertices = (PointVertex *)batch_buffer->buffer;
 	}
 
-}
-
-inline Vec4f RenderBatchPoint::to_position(float x, float y) const
-{
-	return Vec4f(
-		modelview_projection_matrix.matrix[0*4+0]*x + modelview_projection_matrix.matrix[1*4+0]*y + modelview_projection_matrix.matrix[3*4+0],
-		modelview_projection_matrix.matrix[0*4+1]*x + modelview_projection_matrix.matrix[1*4+1]*y + modelview_projection_matrix.matrix[3*4+1],
-		modelview_projection_matrix.matrix[0*4+2]*x + modelview_projection_matrix.matrix[1*4+2]*y + modelview_projection_matrix.matrix[3*4+2],
-		modelview_projection_matrix.matrix[0*4+3]*x + modelview_projection_matrix.matrix[1*4+3]*y + modelview_projection_matrix.matrix[3*4+3]);
-}
-
-void RenderBatchPoint::set_batcher_active(Canvas &canvas, int num_vertices)
-{
-	if (position+num_vertices > max_vertices)
-		canvas.flush();
-
-	if (num_vertices > max_vertices)
-		throw Exception("Too many vertices for RenderBatchPoint");
-
-	canvas.set_batcher(this);
-}
-
-void RenderBatchPoint::flush(GraphicContext &gc)
-{
-	if (position > 0)
+	void RenderBatchPoint::draw_point(Canvas &canvas, Vec2f *line_positions, const Vec4f &point_color, int num_vertices)
 	{
-		gc.set_program_object(program_color_only);
+		set_batcher_active(canvas, num_vertices);
 
-		int gpu_index;
-		VertexArrayVector<PointVertex> gpu_vertices(batch_buffer->get_vertex_buffer(gc, gpu_index));
-
-		if (prim_array[gpu_index].is_null())
+		for (; num_vertices > 0; num_vertices--)
 		{
-			prim_array[gpu_index] = PrimitivesArray(gc);
-			prim_array[gpu_index].set_attributes(0, gpu_vertices, cl_offsetof(PointVertex, position));
-			prim_array[gpu_index].set_attributes(1, gpu_vertices, cl_offsetof(PointVertex, color));
+			vertices[position].color = point_color;
+			vertices[position].position = to_position(line_positions->x, line_positions->y);
+			line_positions++;
+			position++;
 		}
-
-		gpu_vertices.upload_data(gc, 0, vertices, position);
-
-		gc.draw_primitives(type_points, position, prim_array[gpu_index]);
-
-		gc.reset_program_object();
-
-		position = 0;
 	}
-}
 
-void RenderBatchPoint::matrix_changed(const Mat4f &new_modelview, const Mat4f &new_projection, TextureImageYAxis image_yaxis, float pixel_ratio)
-{
-	modelview_projection_matrix = new_projection * new_modelview;
-}
+	inline Vec4f RenderBatchPoint::to_position(float x, float y) const
+	{
+		return Vec4f(
+			modelview_projection_matrix.matrix[0 * 4 + 0] * x + modelview_projection_matrix.matrix[1 * 4 + 0] * y + modelview_projection_matrix.matrix[3 * 4 + 0],
+			modelview_projection_matrix.matrix[0 * 4 + 1] * x + modelview_projection_matrix.matrix[1 * 4 + 1] * y + modelview_projection_matrix.matrix[3 * 4 + 1],
+			modelview_projection_matrix.matrix[0 * 4 + 2] * x + modelview_projection_matrix.matrix[1 * 4 + 2] * y + modelview_projection_matrix.matrix[3 * 4 + 2],
+			modelview_projection_matrix.matrix[0 * 4 + 3] * x + modelview_projection_matrix.matrix[1 * 4 + 3] * y + modelview_projection_matrix.matrix[3 * 4 + 3]);
+	}
 
+	void RenderBatchPoint::set_batcher_active(Canvas &canvas, int num_vertices)
+	{
+		if (position + num_vertices > max_vertices)
+			canvas.flush();
+
+		if (num_vertices > max_vertices)
+			throw Exception("Too many vertices for RenderBatchPoint");
+
+		canvas.set_batcher(this);
+	}
+
+	void RenderBatchPoint::flush(GraphicContext &gc)
+	{
+		if (position > 0)
+		{
+			gc.set_program_object(program_color_only);
+
+			int gpu_index;
+			VertexArrayVector<PointVertex> gpu_vertices(batch_buffer->get_vertex_buffer(gc, gpu_index));
+
+			if (prim_array[gpu_index].is_null())
+			{
+				prim_array[gpu_index] = PrimitivesArray(gc);
+				prim_array[gpu_index].set_attributes(0, gpu_vertices, cl_offsetof(PointVertex, position));
+				prim_array[gpu_index].set_attributes(1, gpu_vertices, cl_offsetof(PointVertex, color));
+			}
+
+			gpu_vertices.upload_data(gc, 0, vertices, position);
+
+			gc.draw_primitives(type_points, position, prim_array[gpu_index]);
+
+			gc.reset_program_object();
+
+			position = 0;
+		}
+	}
+
+	void RenderBatchPoint::matrix_changed(const Mat4f &new_modelview, const Mat4f &new_projection, TextureImageYAxis image_yaxis, float pixel_ratio)
+	{
+		modelview_projection_matrix = new_projection * new_modelview;
+	}
 }

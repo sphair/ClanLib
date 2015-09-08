@@ -46,38 +46,37 @@
 
 namespace clan
 {
-
-class Image_Impl
-{
-public:
-	Image_Impl() :
-		color(1.0f, 1.0f, 1.0f, 1.0f),
-		scale_x(1.0f),
-		scale_y(1.0f),
-		translation_hotspot(0,0),
-		translated_hotspot(0,0),
-		translation_origin(origin_top_left) {};
-	~Image_Impl() {};
-
-	void calc_hotspot();
-
-	Colorf color;
-
-	float scale_x, scale_y;
-
-	Pointf translation_hotspot;
-	Origin translation_origin;
-
-	Pointf translated_hotspot;	// Precalculated from calc_hotspot()
-
-	Texture2D texture;
-	Rect texture_rect;
-};
-
-void Image_Impl::calc_hotspot()
-{
-	switch(translation_origin)
+	class Image_Impl
 	{
+	public:
+		Image_Impl() :
+			color(1.0f, 1.0f, 1.0f, 1.0f),
+			scale_x(1.0f),
+			scale_y(1.0f),
+			translation_hotspot(0, 0),
+			translated_hotspot(0, 0),
+			translation_origin(origin_top_left) {};
+		~Image_Impl() {};
+
+		void calc_hotspot();
+
+		Colorf color;
+
+		float scale_x, scale_y;
+
+		Pointf translation_hotspot;
+		Origin translation_origin;
+
+		Pointf translated_hotspot;	// Precalculated from calc_hotspot()
+
+		Texture2D texture;
+		Rect texture_rect;
+	};
+
+	void Image_Impl::calc_hotspot()
+	{
+		switch (translation_origin)
+		{
 		case origin_top_left:
 		default:
 			translated_hotspot = Pointf(translation_hotspot.x, translation_hotspot.y);
@@ -106,254 +105,240 @@ void Image_Impl::calc_hotspot()
 		case origin_bottom_right:
 			translated_hotspot = Pointf(translation_hotspot.x - texture_rect.get_width() * scale_x, translation_hotspot.y - texture_rect.get_height() * scale_y);
 			break;
+		}
+
+		if (texture.get_pixel_ratio() != 0.0f)
+		{
+			translated_hotspot.x /= texture.get_pixel_ratio();
+			translated_hotspot.y /= texture.get_pixel_ratio();
+		}
 	}
 
-	if (texture.get_pixel_ratio() != 0.0f)
+	Image::Image()
 	{
-		translated_hotspot.x /= texture.get_pixel_ratio();
-		translated_hotspot.y /= texture.get_pixel_ratio();
 	}
-}
 
-/////////////////////////////////////////////////////////////////////////////
-// Image Construction:
+	Image::Image(Canvas &canvas, const PixelBuffer &pb, const Rect &rect)
+		: impl(std::make_shared<Image_Impl>())
+	{
+		impl->texture = Texture2D(canvas, pb.get_width(), pb.get_height(), pb.get_format());
+		impl->texture.set_subimage(canvas, 0, 0, pb, rect);
+		impl->texture_rect = Rect(0, 0, pb.get_width(), pb.get_height());
+	}
 
-Image::Image()
-{
-}
+	Image::Image(Texture2D texture, const Rect &rect)
+		: impl(std::make_shared<Image_Impl>())
+	{
+		impl->texture = texture;
+		impl->texture_rect = rect;
+	}
 
-Image::Image(Canvas &canvas, const PixelBuffer &pb, const Rect &rect)
-: impl(std::make_shared<Image_Impl>())
-{
-	impl->texture = Texture2D(canvas, pb.get_width(), pb.get_height(), pb.get_format());
-	impl->texture.set_subimage(canvas, 0, 0, pb, rect);
-	impl->texture_rect = Rect(0, 0, pb.get_width(), pb.get_height());
-}
+	Image::Image(Subtexture &sub_texture)
+		: impl(std::make_shared<Image_Impl>())
+	{
+		impl->texture = sub_texture.get_texture();
+		impl->texture_rect = sub_texture.get_geometry();
+	}
 
-Image::Image(Texture2D texture, const Rect &rect)
-: impl(std::make_shared<Image_Impl>())
-{
-	impl->texture = texture;
-	impl->texture_rect = rect;
-}
+	Image::Image(Canvas &canvas, const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc)
+		: impl(std::make_shared<Image_Impl>())
+	{
+		impl->texture = Texture2D(canvas, filename, fs, import_desc);
+		impl->texture_rect = impl->texture.get_size();
+	}
 
-Image::Image(Subtexture &sub_texture)
-: impl(std::make_shared<Image_Impl>())
-{
-	impl->texture = sub_texture.get_texture();
-	impl->texture_rect = sub_texture.get_geometry();
-}
+	Image::Image(Canvas &canvas, const std::string &fullname, const ImageImportDescription &import_desc)
+		: impl(std::make_shared<Image_Impl>())
+	{
+		std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
+		std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
+		FileSystem vfs(path);
 
-Image::Image(Canvas &canvas, const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc)
-: impl(std::make_shared<Image_Impl>())
-{
-	impl->texture = Texture2D(canvas, filename, fs, import_desc);
-	impl->texture_rect = impl->texture.get_size();
-}
+		impl->texture = Texture2D(canvas, filename, vfs, import_desc);
+		impl->texture_rect = impl->texture.get_size();
+	}
 
-Image::Image(Canvas &canvas, const std::string &fullname, const ImageImportDescription &import_desc)
-: impl(std::make_shared<Image_Impl>())
-{
-	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
-	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	FileSystem vfs(path);
-
-	impl->texture = Texture2D(canvas, filename, vfs, import_desc);
-	impl->texture_rect = impl->texture.get_size();
-}
-
-Image::~Image()
-{
-}
+	Image::~Image()
+	{
+	}
 
 
-Image Image::clone() const
-{
-	Image copy;
-	copy.impl = std::shared_ptr<Image_Impl>(new Image_Impl());
-	*(copy.impl) = *impl;
-	return copy;
-}
+	Image Image::clone() const
+	{
+		Image copy;
+		copy.impl = std::shared_ptr<Image_Impl>(new Image_Impl());
+		*(copy.impl) = *impl;
+		return copy;
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// Image Resources:
+	Resource<Image> Image::resource(Canvas &canvas, const std::string &id, const ResourceManager &resources)
+	{
+		return DisplayCache::get(resources).get_image(canvas, id);
+	}
 
-Resource<Image> Image::resource(Canvas &canvas, const std::string &id, const ResourceManager &resources)
-{
-	return DisplayCache::get(resources).get_image(canvas, id);
-}
+	Subtexture Image::get_texture() const
+	{
+		return Subtexture(impl->texture, impl->texture_rect);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// Image Attributes:
+	void Image::throw_if_null() const
+	{
+		if (!impl)
+			throw Exception("Image is null");
+	}
 
-Subtexture Image::get_texture() const
-{
-	return Subtexture(impl->texture, impl->texture_rect);
-}
+	float Image::get_scale_x() const
+	{
+		return impl->scale_x;
+	}
 
-void Image::throw_if_null() const
-{
-	if (!impl)
-		throw Exception("Image is null");
-}
+	float Image::get_scale_y() const
+	{
+		return impl->scale_y;
+	}
 
-float Image::get_scale_x() const
-{
-	return impl->scale_x;
-}
+	float Image::get_alpha() const
+	{
+		return impl->color.a;
+	}
 
-float Image::get_scale_y() const
-{
-	return impl->scale_y;
-}
+	Colorf Image::get_color() const
+	{
+		return impl->color;
+	}
 
-float Image::get_alpha() const
-{
-	return impl->color.a;
-}
+	void Image::get_alignment(Origin &origin, float &x, float &y) const
+	{
+		origin = impl->translation_origin;
+		x = impl->translation_hotspot.x;
+		y = impl->translation_hotspot.y;
+	}
 
-Colorf Image::get_color() const
-{
-	return impl->color;
-}
+	float Image::get_width() const
+	{
+		if (impl->texture.get_pixel_ratio() != 0.0f)
+			return impl->texture_rect.get_width() / impl->texture.get_pixel_ratio();
+		else
+			return impl->texture_rect.get_width();
+	}
 
-void Image::get_alignment(Origin &origin, float &x, float &y) const
-{
-	origin = impl->translation_origin;
-	x = impl->translation_hotspot.x;
-	y = impl->translation_hotspot.y;
-}
+	float Image::get_height() const
+	{
+		if (impl->texture.get_pixel_ratio() != 0.0f)
+			return impl->texture_rect.get_height() / impl->texture.get_pixel_ratio();
+		else
+			return impl->texture_rect.get_height();
+	}
 
-float Image::get_width() const
-{
-	if (impl->texture.get_pixel_ratio() != 0.0f)
-		return impl->texture_rect.get_width() / impl->texture.get_pixel_ratio();
-	else
-		return impl->texture_rect.get_width();
-}
+	Sizef Image::get_size() const
+	{
+		return Sizef(get_width(), get_height());
+	}
 
-float Image::get_height() const
-{
-	if (impl->texture.get_pixel_ratio() != 0.0f)
-		return impl->texture_rect.get_height() / impl->texture.get_pixel_ratio();
-	else
-		return impl->texture_rect.get_height();
-}
+	void Image::draw(Canvas &canvas, float x, float y) const
+	{
+		Rectf dest(
+			x + impl->translated_hotspot.x, y + impl->translated_hotspot.y,
+			Sizef(get_width() * impl->scale_x, get_height() * impl->scale_y));
 
-Sizef Image::get_size() const
-{
-	return Sizef(get_width(), get_height());
-}
+		RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
+		batcher->draw_image(canvas, impl->texture_rect, dest, impl->color, impl->texture);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// Image Operations:
+	void Image::draw(Canvas &canvas, const Rectf &src, const Rectf &dest) const
+	{
+		Rectf new_src = src;
+		new_src.translate(impl->texture_rect.left, impl->texture_rect.top);
 
-void Image::draw(Canvas &canvas, float x, float y) const
-{
-	Rectf dest(
-		x + impl->translated_hotspot.x, y + impl->translated_hotspot.y,
-		Sizef(get_width() * impl->scale_x, get_height() * impl->scale_y));
+		Rectf new_dest = dest;
+		new_dest.translate(impl->translated_hotspot);
 
-	RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
-	batcher->draw_image(canvas, impl->texture_rect, dest, impl->color, impl->texture);
-}
+		RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
+		batcher->draw_image(canvas, new_src, new_dest, impl->color, impl->texture);
+	}
 
-void Image::draw(Canvas &canvas, const Rectf &src, const Rectf &dest) const
-{
-	Rectf new_src = src;
-	new_src.translate( impl->texture_rect.left, impl->texture_rect.top );
+	void Image::draw(Canvas &canvas, const Rectf &dest) const
+	{
+		Rectf new_dest = dest;
+		new_dest.translate(impl->translated_hotspot);
 
-	Rectf new_dest = dest;
-	new_dest.translate(impl->translated_hotspot);
+		RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
+		batcher->draw_image(canvas, impl->texture_rect, new_dest, impl->color, impl->texture);
+	}
 
-	RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
-	batcher->draw_image(canvas, new_src, new_dest, impl->color, impl->texture);
-}
+	void Image::draw(Canvas &canvas, const Rectf &src, const Quadf &dest) const
+	{
+		Rectf new_src = src;
+		new_src.translate(impl->texture_rect.left, impl->texture_rect.top);
 
-void Image::draw(Canvas &canvas, const Rectf &dest) const
-{
-	Rectf new_dest = dest;
-	new_dest.translate(impl->translated_hotspot);
+		Quadf new_dest = dest;
+		new_dest.p += impl->translated_hotspot;
+		new_dest.q += impl->translated_hotspot;
+		new_dest.r += impl->translated_hotspot;
+		new_dest.s += impl->translated_hotspot;
 
-	RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
-	batcher->draw_image(canvas, impl->texture_rect, new_dest, impl->color, impl->texture);
-}
+		RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
+		batcher->draw_image(canvas, new_src, new_dest, impl->color, impl->texture);
+	}
 
-void Image::draw(Canvas &canvas, const Rectf &src, const Quadf &dest) const
-{
-	Rectf new_src = src;
-	new_src.translate( impl->texture_rect.left, impl->texture_rect.top );
+	void Image::draw(Canvas &canvas, const Quadf &dest) const
+	{
+		Quadf new_dest = dest;
+		new_dest.p += impl->translated_hotspot;
+		new_dest.q += impl->translated_hotspot;
+		new_dest.r += impl->translated_hotspot;
+		new_dest.s += impl->translated_hotspot;
 
-	Quadf new_dest = dest;
-	new_dest.p+=impl->translated_hotspot;
-	new_dest.q+=impl->translated_hotspot;
-	new_dest.r+=impl->translated_hotspot;
-	new_dest.s+=impl->translated_hotspot;
+		RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
+		batcher->draw_image(canvas, impl->texture_rect, new_dest, impl->color, impl->texture);
+	}
 
-	RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
-	batcher->draw_image(canvas, new_src, new_dest, impl->color, impl->texture);
-}
+	void Image::set_scale(float x, float y)
+	{
+		impl->scale_x = x;
+		impl->scale_y = y;
+		impl->calc_hotspot();
+	}
 
-void Image::draw(Canvas &canvas, const Quadf &dest) const
-{
-	Quadf new_dest = dest;
-	new_dest.p+=impl->translated_hotspot;
-	new_dest.q+=impl->translated_hotspot;
-	new_dest.r+=impl->translated_hotspot;
-	new_dest.s+=impl->translated_hotspot;
+	void Image::set_alpha(float alpha)
+	{
+		impl->color.a = alpha;
+	}
 
-	RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
-	batcher->draw_image(canvas, impl->texture_rect, new_dest, impl->color, impl->texture);
-}
+	void Image::set_color(const Colorf &color)
+	{
+		impl->color = color;
+	}
 
-void Image::set_scale(float x, float y)
-{
-	impl->scale_x = x;
-	impl->scale_y = y;
-	impl->calc_hotspot();
-}
+	void Image::set_alignment(Origin origin, float x, float y)
+	{
+		impl->translation_origin = origin;
+		impl->translation_hotspot.x = x;
+		impl->translation_hotspot.y = y;
+		impl->calc_hotspot();
+	}
 
-void Image::set_alpha(float alpha)
-{
-	impl->color.a = alpha;
-}
+	void Image::set_wrap_mode(
+		TextureWrapMode wrap_s,
+		TextureWrapMode wrap_t)
+	{
+		impl->texture.set_wrap_mode(wrap_s, wrap_t);
+	}
 
-void Image::set_color(const Colorf &color)
-{
-	impl->color = color;
-}
+	void Image::set_linear_filter(bool linear_filter)
+	{
+		impl->texture.set_mag_filter(linear_filter ? filter_linear : filter_nearest);
+		impl->texture.set_min_filter(linear_filter ? filter_linear : filter_nearest);
+	}
 
-void Image::set_alignment(Origin origin, float x, float y)
-{
-	impl->translation_origin = origin;
-	impl->translation_hotspot.x = x;
-	impl->translation_hotspot.y = y;
-	impl->calc_hotspot();
-}
-
-void Image::set_wrap_mode(
-	TextureWrapMode wrap_s,
-	TextureWrapMode wrap_t)
-{
-	impl->texture.set_wrap_mode(wrap_s, wrap_t);
-}
-
-void Image::set_linear_filter(bool linear_filter)
-{
-	impl->texture.set_mag_filter(linear_filter ? filter_linear : filter_nearest);
-	impl->texture.set_min_filter(linear_filter ? filter_linear : filter_nearest);
-}
-
-
-void Image::set_subimage(
-	Canvas &canvas,
-	int x,
-	int y,
-	const PixelBuffer &image,
-	const Rect &src_rect,
-	int level)
-{
-	impl->texture.set_subimage(canvas, x, y, image, src_rect, level);
-}
-
+	void Image::set_subimage(
+		Canvas &canvas,
+		int x,
+		int y,
+		const PixelBuffer &image,
+		const Rect &src_rect,
+		int level)
+	{
+		impl->texture.set_subimage(canvas, x, y, image, src_rect, level);
+	}
 }

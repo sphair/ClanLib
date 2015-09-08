@@ -39,23 +39,21 @@
 #include "API/Display/2D/path.h"
 #include "API/Display/Resources/display_cache.h"
 #include "API/Core/IOData/path_help.h"
-#include "../../2D/canvas_impl.h"
-#include "../FontEngine/font_engine.h"
-#include "../../2D/sprite_impl.h"
+#include "Display/2D/canvas_impl.h"
+#include "Display/Font/FontEngine/font_engine.h"
+#include "Display/2D/sprite_impl.h"
 #include "font_draw_path.h"
-#include "../glyph_cache.h"
-#include "../path_cache.h"
+#include "Display/Font/glyph_cache.h"
+#include "Display/Font/path_cache.h"
 
 namespace clan
 {
-
 	void Font_DrawPath::init(PathCache *cache, FontEngine *engine, float new_scaled_height)
 	{
 		path_cache = cache;
 		font_engine = engine;
 		scaled_height = new_scaled_height;
 	}
-
 
 	GlyphMetrics Font_DrawPath::get_metrics(Canvas &canvas, unsigned int glyph)
 	{
@@ -96,5 +94,4 @@ namespace clan
 		}
 		canvas.set_transform(original_transform);
 	}
-
 }

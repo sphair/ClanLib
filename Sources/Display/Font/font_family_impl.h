@@ -41,55 +41,53 @@
 
 namespace clan
 {
+	class FontEngine;
 
-class FontEngine;
+	class Font_Cache
+	{
+	public:
+		Font_Cache() {}
+		Font_Cache(std::shared_ptr<FontEngine> &new_engine) : engine(new_engine), glyph_cache(std::make_shared<GlyphCache>()), path_cache(std::make_shared<PathCache>()) {}
+		std::shared_ptr<FontEngine> engine;
+		std::shared_ptr<GlyphCache> glyph_cache;
+		std::shared_ptr<PathCache> path_cache;
+		float pixel_ratio = 1.0f;	// The pixel ratio this font was created for.
+	};
 
-class Font_Cache
-{
-public:
-	Font_Cache() {}
-	Font_Cache(std::shared_ptr<FontEngine> &new_engine) : engine(new_engine), glyph_cache(std::make_shared<GlyphCache>()), path_cache(std::make_shared<PathCache>()) {}
-	std::shared_ptr<FontEngine> engine;
-	std::shared_ptr<GlyphCache> glyph_cache;
-	std::shared_ptr<PathCache> path_cache;
-	float pixel_ratio = 1.0f;	// The pixel ratio this font was created for.
-};
+	class FontFamily_Definition
+	{
+	public:
+		FontDescription desc;
+		std::string typeface_name;	// Empty = use font_databuffer instead
+		DataBuffer font_databuffer;	// Empty = use typeface_name instead
+	};
 
-class FontFamily_Definition
-{
-public:
-	FontDescription desc;
-	std::string typeface_name;	// Empty = use font_databuffer instead
-	DataBuffer font_databuffer;	// Empty = use typeface_name instead
-};
+	class FontFamily_Impl
+	{
+	public:
+		FontFamily_Impl(const std::string &family_name);
+		~FontFamily_Impl();
 
-class FontFamily_Impl
-{
-public:
-	FontFamily_Impl(const std::string &family_name);
-	~FontFamily_Impl();
+		const std::string &get_family_name() const { return family_name; }
 
-	const std::string &get_family_name() const { return family_name; }
+		void add(const FontDescription &desc, const std::string &typeface_name);
+		void add(const FontDescription &desc, DataBuffer &font_databuffer);
 
-	void add(const FontDescription &desc, const std::string &typeface_name);
-	void add(const FontDescription &desc, DataBuffer &font_databuffer);
+		void font_face_load(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, float spacelen, bool monospace, const FontMetrics &metrics);
 
-	void font_face_load(Canvas &canvas, Sprite &sprite, const std::string &glyph_list, float spacelen, bool monospace, const FontMetrics &metrics);
+		// Returns null engine if font not found
+		Font_Cache get_font(const FontDescription &desc, float pixel_ratio);
 
-	// Returns null engine if font not found
-	Font_Cache get_font(const FontDescription &desc, float pixel_ratio);
+		// Find font and copy it using the revised description
+		Font_Cache copy_font(const FontDescription &desc, float pixel_ratio);
 
-	// Find font and copy it using the revised description
-	Font_Cache copy_font(const FontDescription &desc, float pixel_ratio);
+	private:
+		void font_face_load(const FontDescription &desc, const std::string &typeface_name, float pixel_ratio);
+		void font_face_load(const FontDescription &desc, DataBuffer &font_databuffer, float pixel_ratio);
 
-private:
-	void font_face_load(const FontDescription &desc, const std::string &typeface_name, float pixel_ratio);
-	void font_face_load(const FontDescription &desc, DataBuffer &font_databuffer, float pixel_ratio);
-
-	std::string family_name;
-	TextureGroup texture_group;		// Shared texture group between glyph cache's
-	std::vector<Font_Cache> font_cache;
-	std::vector<FontFamily_Definition> font_definitions;
-};
-
+		std::string family_name;
+		TextureGroup texture_group;		// Shared texture group between glyph cache's
+		std::vector<Font_Cache> font_cache;
+		std::vector<FontFamily_Definition> font_definitions;
+	};
 }

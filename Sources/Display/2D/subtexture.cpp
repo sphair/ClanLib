@@ -33,67 +33,50 @@
 
 namespace clan
 {
+	class Subtexture_Impl
+	{
+	public:
+		Subtexture_Impl()
+		{
+		}
 
-/////////////////////////////////////////////////////////////////////////////
-// Subtexture_Impl Class:
+		~Subtexture_Impl()
+		{
+		}
 
-class Subtexture_Impl
-{
-public:
-	Subtexture_Impl()
+		Texture2D texture;
+
+		Rect geometry;
+	};
+
+	Subtexture::Subtexture()
 	{
 	}
 
-	~Subtexture_Impl()
+	Subtexture::Subtexture(Texture2D texture, const Rect &geometry)
+		: impl(std::make_shared<Subtexture_Impl>())
+	{
+		impl->texture = texture;
+		impl->geometry = geometry;
+	}
+
+	Subtexture::~Subtexture()
 	{
 	}
 
-	Texture2D texture;
+	void Subtexture::throw_if_null() const
+	{
+		if (!impl)
+			throw Exception("Subtexture is null");
+	}
 
-	Rect geometry;
-};
+	Texture2D Subtexture::get_texture()
+	{
+		return impl->texture;
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// Subtexture Construction:
-
-Subtexture::Subtexture()
-{
-}
-
-Subtexture::Subtexture(Texture2D texture, const Rect &geometry)
-: impl(std::make_shared<Subtexture_Impl>())
-{
-	impl->texture = texture;
-	impl->geometry = geometry;
-}
-
-Subtexture::~Subtexture()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Subtexture Attributes:
-
-void Subtexture::throw_if_null() const
-{
-	if (!impl)
-		throw Exception("Subtexture is null");
-}
-
-Texture2D Subtexture::get_texture()
-{
-	return impl->texture;
-}
-
-Rect Subtexture::get_geometry() const
-{
-	return impl->geometry;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Subtexture Operations:
-
-/////////////////////////////////////////////////////////////////////////////
-// Subtexture Implementation:
-
+	Rect Subtexture::get_geometry() const
+	{
+		return impl->geometry;
+	}
 }

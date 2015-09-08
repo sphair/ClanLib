@@ -32,7 +32,6 @@
 
 namespace clan
 {
-
 	class Font_DrawFlat : public Font_Draw
 	{
 	public:
@@ -45,5 +44,4 @@ namespace clan
 		GlyphCache *glyph_cache = nullptr;
 		FontEngine *font_engine = nullptr;
 	};
-
 }

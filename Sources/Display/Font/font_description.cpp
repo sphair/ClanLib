@@ -35,180 +35,165 @@
 
 namespace clan
 {
+	FontDescription::FontDescription() : impl(std::make_shared<FontDescription_Impl>())
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// FontDescription construction:
+	FontDescription::~FontDescription()
+	{
+	}
 
-FontDescription::FontDescription() : impl(std::make_shared<FontDescription_Impl>())
-{
-}
+	FontDescription FontDescription::create_null_object()
+	{
+		FontDescription fd;
+		fd.impl = std::shared_ptr<FontDescription_Impl>();
+		return fd;
+	}
 
-FontDescription::~FontDescription()
-{
-}
+	void FontDescription::throw_if_null() const
+	{
+		if (!impl)
+			throw Exception("is null");
+	}
 
-FontDescription FontDescription::create_null_object()
-{
-	FontDescription fd;
-	fd.impl = std::shared_ptr<FontDescription_Impl>();
-	return fd;
-}
+	float FontDescription::get_height() const
+	{
+		return impl->height;
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// FontDescription attributes:
+	float FontDescription::get_line_height() const
+	{
+		return impl->line_height;
+	}
 
+	float FontDescription::get_average_width() const
+	{
+		return impl->average_width;
+	}
 
-void FontDescription::throw_if_null() const
-{
-	if (!impl)
-		throw Exception("is null");
-}
+	float FontDescription::get_escapement() const
+	{
+		return impl->escapement;
+	}
 
-float FontDescription::get_height() const
-{
-	return impl->height;
-}
+	float FontDescription::get_orientation() const
+	{
+		return impl->orientation;
+	}
 
-float FontDescription::get_line_height() const
-{
-	return impl->line_height;
-}
+	FontWeight FontDescription::get_weight() const
+	{
+		return impl->weight;
+	}
 
-float FontDescription::get_average_width() const
-{
-	return impl->average_width;
-}
+	FontStyle FontDescription::get_style() const
+	{
+		return impl->style;
+	}
 
-float FontDescription::get_escapement() const
-{
-	return impl->escapement;
-}
+	bool FontDescription::get_anti_alias() const
+	{
+		return impl->anti_alias;
+	}
 
-float FontDescription::get_orientation() const
-{
-	return impl->orientation;
-}
+	bool FontDescription::get_subpixel() const
+	{
+		return impl->subpixel;
+	}
 
-FontWeight FontDescription::get_weight() const
-{
-	return impl->weight;
-}
+	FontDescription::Charset FontDescription::get_charset() const
+	{
+		return impl->charset;
+	}
 
-FontStyle FontDescription::get_style() const
-{
-	return impl->style;
-}
+	std::string FontDescription::get_unique_id() const
+	{
+		StringFormat format("%1-%2-%3-%4-%5-%6-%7-%8-%9");
+		format.set_arg(1, impl->anti_alias ? 1 : 0);
+		format.set_arg(2, impl->subpixel ? 1 : 0);
+		format.set_arg(3, static_cast<int>(impl->height * 10.0f + 0.5f));
+		format.set_arg(4, static_cast<int>(impl->average_width * 10.0f + 0.5f));
+		format.set_arg(5, static_cast<int>(impl->escapement * 10.0f + 0.5f));
+		format.set_arg(6, static_cast<int>(impl->orientation * 10.0f + 0.5f));
+		format.set_arg(7, static_cast<int>(impl->weight));
+		format.set_arg(8, static_cast<int>(impl->style));
+		format.set_arg(9, impl->charset);
+		return format.get_result();
+	}
 
-bool FontDescription::get_anti_alias() const
-{
-	return impl->anti_alias;
-}
-
-bool FontDescription::get_subpixel() const
-{
-	return impl->subpixel;
-}
-
-FontDescription::Charset FontDescription::get_charset() const
-{
-	return impl->charset;
-}
-
-std::string FontDescription::get_unique_id() const
-{
-	StringFormat format("%1-%2-%3-%4-%5-%6-%7-%8-%9");
-	format.set_arg(1, impl->anti_alias ? 1 : 0);
-	format.set_arg(2, impl->subpixel ? 1 : 0);
-	format.set_arg(3, static_cast<int>(impl->height * 10.0f + 0.5f));
-	format.set_arg(4, static_cast<int>(impl->average_width * 10.0f + 0.5f));
-	format.set_arg(5, static_cast<int>(impl->escapement * 10.0f + 0.5f));
-	format.set_arg(6, static_cast<int>(impl->orientation * 10.0f + 0.5f));
-	format.set_arg(7, static_cast<int>(impl->weight));
-	format.set_arg(8, static_cast<int>(impl->style));
-	format.set_arg(9, impl->charset);
-	return format.get_result();
-}
-
-bool FontDescription::operator==(const FontDescription &other) const
-{
-	return 	impl->anti_alias == other.impl->anti_alias && 
-			impl->subpixel == other.impl->subpixel && 
-			impl->height == other.impl->height && 
-			impl->average_width == other.impl->average_width && 
-			impl->escapement == other.impl->escapement && 
-			impl->orientation == other.impl->orientation && 
-			impl->weight == other.impl->weight && 
-			impl->style == other.impl->style && 
+	bool FontDescription::operator==(const FontDescription &other) const
+	{
+		return 	impl->anti_alias == other.impl->anti_alias &&
+			impl->subpixel == other.impl->subpixel &&
+			impl->height == other.impl->height &&
+			impl->average_width == other.impl->average_width &&
+			impl->escapement == other.impl->escapement &&
+			impl->orientation == other.impl->orientation &&
+			impl->weight == other.impl->weight &&
+			impl->style == other.impl->style &&
 			impl->charset == other.impl->charset;
-}
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// FontDescription operations:
+	FontDescription &FontDescription::operator =(const FontDescription &copy)
+	{
+		impl = copy.impl;
+		return *this;
+	}
 
-FontDescription &FontDescription::operator =(const FontDescription &copy)
-{
-	impl = copy.impl;
-	return *this;
-}
+	FontDescription FontDescription::clone() const
+	{
+		FontDescription copy;
+		*copy.impl = *impl;
+		return copy;
+	}
 
-FontDescription FontDescription::clone() const
-{
-	FontDescription copy;
-	*copy.impl = *impl;
-	return copy;
-}
+	void FontDescription::set_height(float value)
+	{
+		impl->height = value;
+	}
 
-void FontDescription::set_height(float value)
-{
-	impl->height = value;
-}
+	void FontDescription::set_line_height(float value)
+	{
+		impl->line_height = value;
+	}
 
-void FontDescription::set_line_height(float value)
-{
-	impl->line_height = value;
-}
+	void FontDescription::set_average_width(float value)
+	{
+		impl->average_width = value;
+	}
 
-void FontDescription::set_average_width(float value)
-{
-	impl->average_width = value;
-}
+	void FontDescription::set_escapement(float value)
+	{
+		impl->escapement = value;
+	}
 
-void FontDescription::set_escapement(float value)
-{
-	impl->escapement = value;
-}
+	void FontDescription::set_orientation(float value)
+	{
+		impl->orientation = value;
+	}
 
-void FontDescription::set_orientation(float value)
-{
-	impl->orientation = value;
-}
+	void FontDescription::set_weight(FontWeight value)
+	{
+		impl->weight = value;
+	}
 
-void FontDescription::set_weight(FontWeight value)
-{
-	impl->weight = value;
-}
+	void FontDescription::set_style(FontStyle setting)
+	{
+		impl->style = setting;
+	}
 
-void FontDescription::set_style(FontStyle setting)
-{
-	impl->style = setting;
-}
+	void FontDescription::set_anti_alias(bool setting)
+	{
+		impl->anti_alias = setting;
+	}
 
-void FontDescription::set_anti_alias(bool setting)
-{
-	impl->anti_alias = setting;
-}
+	void FontDescription::set_subpixel(bool setting)
+	{
+		impl->subpixel = setting;
+	}
 
-void FontDescription::set_subpixel(bool setting)
-{
-	impl->subpixel = setting;
-}
-
-void FontDescription::set_charset(Charset new_charset)
-{
-	impl->charset = new_charset;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// FontDescription implementation:
-
+	void FontDescription::set_charset(Charset new_charset)
+	{
+		impl->charset = new_charset;
+	}
 }
