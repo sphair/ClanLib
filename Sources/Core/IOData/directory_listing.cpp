@@ -33,154 +33,121 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// DirectoryListing_Impl Class:
-
-class DirectoryListing_Impl
-{
-/// \name Construction
-/// \{
-public:
-	DirectoryListing_Impl(FileSystemProvider *provider, const std::string &path) : index(0) 
+	class DirectoryListing_Impl
 	{
-		bool init_ok = provider->initialize_directory_listing(path);
-		if (!init_ok)
+	public:
+		DirectoryListing_Impl(FileSystemProvider *provider, const std::string &path) : index(0)
 		{
-			throw Exception("Cannot scan directory to initialize DirectoryListing");
+			bool init_ok = provider->initialize_directory_listing(path);
+			if (!init_ok)
+			{
+				throw Exception("Cannot scan directory to initialize DirectoryListing");
+			}
+
+			bool next;
+			do
+			{
+				DirectoryListingEntry vdir_entry;
+				next = provider->next_file(vdir_entry);
+				if (next)
+					list_entries.push_back(vdir_entry);
+			} while (next);
 		}
 
-		bool next;
-		do 
+		~DirectoryListing_Impl()
 		{
-			DirectoryListingEntry vdir_entry;
-			next = provider->next_file(vdir_entry);
-			if(next)
-				list_entries.push_back(vdir_entry);
-		} while (next);
-	}
-
-	~DirectoryListing_Impl()
-	{
-	}
-
-/// \}
-/// \name Attributes
-/// \{
-public:
-	std::string get_filename()
-	{
-		return current_entry.get_filename();	
-	}
-
-	bool is_hidden()
-	{
-		return current_entry.is_hidden();	
-	}
-
-	bool is_readable()
-	{
-		return current_entry.is_readable();	
-	}
-
-	bool is_writable()
-	{
-		return current_entry.is_writable();	
-	}
-
-	bool is_directory()
-	{
-		return current_entry.is_directory();	
-	}
-
-/// \}
-/// \name Operations
-/// \{
-public:
-	bool next()
-	{
-		if (index < list_entries.size())
-		{
-			current_entry = list_entries[index];
-			index++;
-			return true;
 		}
-		return false;
+
+		std::string get_filename()
+		{
+			return current_entry.get_filename();
+		}
+
+		bool is_hidden()
+		{
+			return current_entry.is_hidden();
+		}
+
+		bool is_readable()
+		{
+			return current_entry.is_readable();
+		}
+
+		bool is_writable()
+		{
+			return current_entry.is_writable();
+		}
+
+		bool is_directory()
+		{
+			return current_entry.is_directory();
+		}
+
+		bool next()
+		{
+			if (index < list_entries.size())
+			{
+				current_entry = list_entries[index];
+				index++;
+				return true;
+			}
+			return false;
+		}
+
+	private:
+		DirectoryListingEntry current_entry;
+		std::vector<DirectoryListingEntry> list_entries;
+		unsigned int index;
+	};
+
+	DirectoryListing::DirectoryListing(FileSystemProvider *provider, const std::string &path)
+		: impl(std::make_shared<DirectoryListing_Impl>(provider, path))
+	{
 	}
 
-/// \}
-/// \name Implementation
-/// \{
-private:
-	DirectoryListingEntry current_entry;
-
-	std::vector<DirectoryListingEntry> list_entries;
-
-	unsigned int index;
-/// \}
-};
-
-/////////////////////////////////////////////////////////////////////////////
-// DirectoryListing Construction:
-
-DirectoryListing::DirectoryListing(FileSystemProvider *provider, const std::string &path)
-: impl(std::make_shared<DirectoryListing_Impl>(provider, path))
-{
-}
-
-DirectoryListing::DirectoryListing()
-{
-	// NULL instance
-}
+	DirectoryListing::DirectoryListing()
+	{
+		// NULL instance
+	}
 
 
-DirectoryListing::~DirectoryListing()
-{
-}
+	DirectoryListing::~DirectoryListing()
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// DirectoryListing Attributes:
+	void DirectoryListing::throw_if_null() const
+	{
+		if (!impl)
+			throw Exception("DirectoryListing is null");
+	}
 
-void DirectoryListing::throw_if_null() const
-{
-	if (!impl)
-		throw Exception("DirectoryListing is null");
-}
+	std::string DirectoryListing::get_filename()
+	{
+		return impl->get_filename();
+	}
 
-std::string DirectoryListing::get_filename()
-{
-	return impl->get_filename();
-}
+	bool DirectoryListing::is_directory()
+	{
+		return impl->is_directory();
+	}
 
-bool DirectoryListing::is_directory()
-{
-	return impl->is_directory();
-}
+	bool DirectoryListing::is_hidden()
+	{
+		return impl->is_hidden();
+	}
 
-bool DirectoryListing::is_hidden()
-{
-	return impl->is_hidden();
-}
+	bool DirectoryListing::is_writable()
+	{
+		return impl->is_writable();
+	}
 
-bool DirectoryListing::is_writable()
-{
-	return impl->is_writable();
-}
+	bool DirectoryListing::is_readable()
+	{
+		return impl->is_readable();
+	}
 
-bool DirectoryListing::is_readable()
-{
-	return impl->is_readable();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// DirectoryListing Operations:
-
-bool DirectoryListing::next()
-{
-	return impl->next();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// DirectoryListing Implementation:
-
+	bool DirectoryListing::next()
+	{
+		return impl->next();
+	}
 }

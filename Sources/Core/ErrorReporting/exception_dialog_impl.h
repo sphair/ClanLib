@@ -35,33 +35,33 @@ namespace clan
 
 #ifdef WIN32
 
-class ExceptionDialog_Impl
-{
-public:
-	static void show(const std::string &message_and_stack_trace);
+	class ExceptionDialog_Impl
+	{
+	public:
+		static void show(const std::string &message_and_stack_trace);
 
-private:
-	ExceptionDialog_Impl(const std::string &message_and_stack_trace, HWND owner);
-	ExceptionDialog_Impl(const ExceptionDialog_Impl &);
-	ExceptionDialog_Impl &operator=(const ExceptionDialog_Impl &);
-	~ExceptionDialog_Impl();
-	LRESULT window_proc(HWND window_handle, UINT message_id, WPARAM wparam, LPARAM lparam);
-	static LRESULT CALLBACK static_window_proc(HWND window_handle, UINT message_id, WPARAM wparam, LPARAM lparam);
+	private:
+		ExceptionDialog_Impl(const std::string &message_and_stack_trace, HWND owner);
+		ExceptionDialog_Impl(const ExceptionDialog_Impl &);
+		ExceptionDialog_Impl &operator=(const ExceptionDialog_Impl &);
+		~ExceptionDialog_Impl();
+		LRESULT window_proc(HWND window_handle, UINT message_id, WPARAM wparam, LPARAM lparam);
+		static LRESULT CALLBACK static_window_proc(HWND window_handle, UINT message_id, WPARAM wparam, LPARAM lparam);
 
-	HWND window_handle;
-	HWND frame;
-	HWND text_label;
-	HWND ok_button;
-	HFONT font;
-};
+		HWND window_handle;
+		HWND frame;
+		HWND text_label;
+		HWND ok_button;
+		HFONT font;
+	};
 
 #else
 
-class ExceptionDialog_Impl
-{
-public:
-	static void show(const std::string &message_and_stack_trace);
-};
+	class ExceptionDialog_Impl
+	{
+	public:
+		static void show(const std::string &message_and_stack_trace);
+	};
 
 #endif
 

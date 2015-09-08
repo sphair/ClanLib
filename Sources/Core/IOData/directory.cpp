@@ -23,7 +23,7 @@
 **
 **  File Author(s):
 **
-**    (if your name is missing here, please add it)
+**    Magnus Norddahl
 */
 
 #include "Core/precomp.h"
@@ -67,213 +67,210 @@
 namespace clan
 {
 
-/////////////////////////////////////////////////////////////////////////////
-// Operations
-
-bool Directory::create(const std::string &dir_name, bool recursive)
-{
-	if (dir_name.empty())
-		return false;
-
-	std::string full_path = PathHelp::add_trailing_slash(dir_name);
-
-	bool result = true;
-	if (recursive)
+	bool Directory::create(const std::string &dir_name, bool recursive)
 	{
-		for (std::string::size_type pos = full_path.find_first_of("\\/"); pos != std::string::npos; pos = full_path.find_first_of("\\/", pos + 1))
-		{
-			std::string path = full_path.substr(0, pos);
-#ifdef WIN32
-			result = CreateDirectory(StringHelp::utf8_to_ucs2(path).c_str(), NULL) != 0;
-#else
-			result = mkdir(path.c_str(), S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) == 0;
-#endif
-		}
-	}
-	else
-	{
-#ifdef WIN32
-		result = CreateDirectory(StringHelp::utf8_to_ucs2(full_path).c_str(), NULL) != 0;
-#else
-		result = mkdir(full_path.c_str(), S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) == 0;
-#endif
-	}
-
-	return result;
-}
-
-bool Directory::remove(const std::string &dir_name, bool delete_files, bool delete_sub_directories)
-{
-	if (dir_name.empty())
-		return false;
-
-	std::string full_path = PathHelp::add_trailing_slash(dir_name);
-
-	if (delete_files || delete_sub_directories)
-	{
-		DirectoryScanner scanner;
-
-		if (!scanner.scan(full_path))
+		if (dir_name.empty())
 			return false;
 
-		bool scan_successful = scanner.next();
-		while (scan_successful)
-		{
-			// if found subdirectory, try remove it, also checking for "." and "..", because they are unremovable
-			if (scanner.is_directory() && delete_sub_directories && scanner.get_name() != "." && scanner.get_name() != "..")
-			{
-				// FIXME: directory scanner locks directory, so it can't be removed, this is workaround
-				std::string sub_dir_path = scanner.get_pathname();
-				scan_successful = scanner.next();
+		std::string full_path = PathHelp::add_trailing_slash(dir_name);
 
-				// delete files in subdirectory
-				if (!Directory::remove(sub_dir_path, delete_files, delete_sub_directories))
-					return false;
-			}
-			else if (!scanner.is_directory() && delete_files)
+		bool result = true;
+		if (recursive)
+		{
+			for (std::string::size_type pos = full_path.find_first_of("\\/"); pos != std::string::npos; pos = full_path.find_first_of("\\/", pos + 1))
 			{
+				std::string path = full_path.substr(0, pos);
 #ifdef WIN32
-				if (DeleteFile(StringHelp::utf8_to_ucs2(scanner.get_pathname()).c_str()) == 0)
-					return false;
+				result = CreateDirectory(StringHelp::utf8_to_ucs2(path).c_str(), NULL) != 0;
 #else
-				if (::remove(scanner.get_pathname().c_str()) != 0)
-					return false;
+				result = mkdir(path.c_str(), S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) == 0;
 #endif
-				scan_successful = scanner.next();
-			}
-			else
-			{
-				scan_successful = scanner.next();
 			}
 		}
+		else
+		{
+#ifdef WIN32
+			result = CreateDirectory(StringHelp::utf8_to_ucs2(full_path).c_str(), NULL) != 0;
+#else
+			result = mkdir(full_path.c_str(), S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) == 0;
+#endif
+		}
+
+		return result;
 	}
 
-	// finally remove the directory (or subdirectory if in recursion)
-#ifdef WIN32
-	return RemoveDirectory(StringHelp::utf8_to_ucs2(full_path).c_str()) != 0;
-#else
-	return rmdir(full_path.c_str()) == 0;
-#endif
-}
-
-bool Directory::rename(const std::string &old_name, const std::string &new_name)
-{
-#ifdef WIN32
-	return MoveFile(StringHelp::utf8_to_ucs2(old_name).c_str(), StringHelp::utf8_to_ucs2(new_name).c_str()) != 0;
-#else
-	return ::rename(old_name.c_str(), new_name.c_str()) == 0;
-#endif
-}
-
-bool Directory::set_current(const std::string &dir_name)
-{
-#ifdef WIN32
-	return SetCurrentDirectory(StringHelp::utf8_to_ucs2(dir_name).c_str()) != 0;
-#else
-	return chdir(dir_name.c_str()) == 0;
-#endif
-}
-
-std::string Directory::get_current()
-{
-#ifdef WIN32
-	DWORD len = GetCurrentDirectory(0, NULL);
-	if (len == 0)
-		throw Exception("GetCurrentDirectory failed!");
-
-	std::vector<TCHAR> path(len);
-	if (GetCurrentDirectory(len, &path[0]) == 0)
-		throw Exception("GetCurrentDirectory failed!");
-	return StringHelp::ucs2_to_utf8(&path[0]);
-#else
-	char cwd_buffer[MAX_PATH];
-	if (getcwd(cwd_buffer, MAX_PATH) == nullptr)
-		throw Exception("Working dir is more than legal length !");
-	return cwd_buffer;
-#endif
-}
-
-std::string Directory::get_appdata(const std::string &company_name, const std::string &application_name, const std::string &version, bool create_dirs_if_missing)
-{
-	std::string configuration_path;
-
-#if defined(WIN32)
-	TCHAR app_data[MAX_PATH];
-	if (FAILED(SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, SHGFP_TYPE_DEFAULT, app_data)))
-		throw Exception("SHGetFolderPath failed!");
-	configuration_path = PathHelp::add_trailing_slash(StringHelp::ucs2_to_utf8(app_data));
-#elif defined(__APPLE__)
-	throw Exception("Congratulations, you got the task to implement Directory::get_appdata on this platform.");
-#else
-	struct passwd *pwd = getpwuid(getuid());
-	if (pwd == nullptr || pwd->pw_dir == nullptr)
-		throw Exception("getpwuid failed!");
-	configuration_path = PathHelp::add_trailing_slash(pwd->pw_dir) + ".";
-#endif
-
-	if (!company_name.empty())
-		configuration_path += PathHelp::add_trailing_slash(company_name);
-	if (!application_name.empty())
-		configuration_path += PathHelp::add_trailing_slash(application_name);
-	if (!version.empty())
-		configuration_path += PathHelp::add_trailing_slash(version);
-
-	if (create_dirs_if_missing)
-		create(configuration_path, true);
-
-	return configuration_path;
-}
-
-std::string Directory::get_local_appdata(const std::string &company_name, const std::string &application_name, const std::string &version, bool create_dirs_if_missing)
-{
-	std::string configuration_path;
-
-#if defined(WIN32)
-	TCHAR app_data[MAX_PATH];
-	if (FAILED(SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, SHGFP_TYPE_DEFAULT, app_data)))
-		throw Exception("SHGetFolderPath failed!");
-	configuration_path = PathHelp::add_trailing_slash(StringHelp::ucs2_to_utf8(app_data));
-#elif defined(__APPLE__)
-	throw Exception("Congratulations, you got the task to implement Directory::get_local_appdata on this platform.");
-#else
-	return get_appdata(company_name, application_name, version, create_dirs_if_missing);
-#endif
-
-	if (!company_name.empty())
-		configuration_path += PathHelp::add_trailing_slash(company_name);
-	if (!application_name.empty())
-		configuration_path += PathHelp::add_trailing_slash(application_name);
-	if (!version.empty())
-		configuration_path += PathHelp::add_trailing_slash(version);
-
-	if (create_dirs_if_missing)
-		create(configuration_path, true);
-
-	return configuration_path;
-}
-
-std::string Directory::get_resourcedata(const std::string &application_name, const std::string &data_dir_name)
-{
-#if defined(WIN32)
-	std::string exe_path = System::get_exe_path();
-	if (!data_dir_name.empty())
-		exe_path += data_dir_name + '\\';
-	return exe_path;
-#elif defined(__APPLE__)
-	throw Exception("Congratulations, you got the task to implement Directory::get_resourcedata on this platform.");
-#else
-	std::string exe_path = System::get_exe_path();
-	if (exe_path.length() > 1)
+	bool Directory::remove(const std::string &dir_name, bool delete_files, bool delete_sub_directories)
 	{
-		std::string::size_type pos = exe_path.rfind('/', exe_path.length() - 2);
-		if (pos != std::string::npos)
-			return exe_path.substr(0, pos + 1) + "share/" + application_name + '/';
+		if (dir_name.empty())
+			return false;
+
+		std::string full_path = PathHelp::add_trailing_slash(dir_name);
+
+		if (delete_files || delete_sub_directories)
+		{
+			DirectoryScanner scanner;
+
+			if (!scanner.scan(full_path))
+				return false;
+
+			bool scan_successful = scanner.next();
+			while (scan_successful)
+			{
+				// if found subdirectory, try remove it, also checking for "." and "..", because they are unremovable
+				if (scanner.is_directory() && delete_sub_directories && scanner.get_name() != "." && scanner.get_name() != "..")
+				{
+					// FIXME: directory scanner locks directory, so it can't be removed, this is workaround
+					std::string sub_dir_path = scanner.get_pathname();
+					scan_successful = scanner.next();
+
+					// delete files in subdirectory
+					if (!Directory::remove(sub_dir_path, delete_files, delete_sub_directories))
+						return false;
+				}
+				else if (!scanner.is_directory() && delete_files)
+				{
+#ifdef WIN32
+					if (DeleteFile(StringHelp::utf8_to_ucs2(scanner.get_pathname()).c_str()) == 0)
+						return false;
+#else
+					if (::remove(scanner.get_pathname().c_str()) != 0)
+						return false;
+#endif
+					scan_successful = scanner.next();
+				}
+				else
+				{
+					scan_successful = scanner.next();
+				}
+			}
+		}
+
+		// finally remove the directory (or subdirectory if in recursion)
+#ifdef WIN32
+		return RemoveDirectory(StringHelp::utf8_to_ucs2(full_path).c_str()) != 0;
+#else
+		return rmdir(full_path.c_str()) == 0;
+#endif
 	}
 
-	if (!data_dir_name.empty())
-		exe_path += data_dir_name + '/';
-	return exe_path;
+	bool Directory::rename(const std::string &old_name, const std::string &new_name)
+	{
+#ifdef WIN32
+		return MoveFile(StringHelp::utf8_to_ucs2(old_name).c_str(), StringHelp::utf8_to_ucs2(new_name).c_str()) != 0;
+#else
+		return ::rename(old_name.c_str(), new_name.c_str()) == 0;
 #endif
-}
+	}
+
+	bool Directory::set_current(const std::string &dir_name)
+	{
+#ifdef WIN32
+		return SetCurrentDirectory(StringHelp::utf8_to_ucs2(dir_name).c_str()) != 0;
+#else
+		return chdir(dir_name.c_str()) == 0;
+#endif
+	}
+
+	std::string Directory::get_current()
+	{
+#ifdef WIN32
+		DWORD len = GetCurrentDirectory(0, NULL);
+		if (len == 0)
+			throw Exception("GetCurrentDirectory failed!");
+
+		std::vector<TCHAR> path(len);
+		if (GetCurrentDirectory(len, &path[0]) == 0)
+			throw Exception("GetCurrentDirectory failed!");
+		return StringHelp::ucs2_to_utf8(&path[0]);
+#else
+		char cwd_buffer[MAX_PATH];
+		if (getcwd(cwd_buffer, MAX_PATH) == nullptr)
+			throw Exception("Working dir is more than legal length !");
+		return cwd_buffer;
+#endif
+	}
+
+	std::string Directory::get_appdata(const std::string &company_name, const std::string &application_name, const std::string &version, bool create_dirs_if_missing)
+	{
+		std::string configuration_path;
+
+#if defined(WIN32)
+		TCHAR app_data[MAX_PATH];
+		if (FAILED(SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, SHGFP_TYPE_DEFAULT, app_data)))
+			throw Exception("SHGetFolderPath failed!");
+		configuration_path = PathHelp::add_trailing_slash(StringHelp::ucs2_to_utf8(app_data));
+#elif defined(__APPLE__)
+		throw Exception("Congratulations, you got the task to implement Directory::get_appdata on this platform.");
+#else
+		struct passwd *pwd = getpwuid(getuid());
+		if (pwd == nullptr || pwd->pw_dir == nullptr)
+			throw Exception("getpwuid failed!");
+		configuration_path = PathHelp::add_trailing_slash(pwd->pw_dir) + ".";
+#endif
+
+		if (!company_name.empty())
+			configuration_path += PathHelp::add_trailing_slash(company_name);
+		if (!application_name.empty())
+			configuration_path += PathHelp::add_trailing_slash(application_name);
+		if (!version.empty())
+			configuration_path += PathHelp::add_trailing_slash(version);
+
+		if (create_dirs_if_missing)
+			create(configuration_path, true);
+
+		return configuration_path;
+	}
+
+	std::string Directory::get_local_appdata(const std::string &company_name, const std::string &application_name, const std::string &version, bool create_dirs_if_missing)
+	{
+		std::string configuration_path;
+
+#if defined(WIN32)
+		TCHAR app_data[MAX_PATH];
+		if (FAILED(SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, SHGFP_TYPE_DEFAULT, app_data)))
+			throw Exception("SHGetFolderPath failed!");
+		configuration_path = PathHelp::add_trailing_slash(StringHelp::ucs2_to_utf8(app_data));
+#elif defined(__APPLE__)
+		throw Exception("Congratulations, you got the task to implement Directory::get_local_appdata on this platform.");
+#else
+		return get_appdata(company_name, application_name, version, create_dirs_if_missing);
+#endif
+
+		if (!company_name.empty())
+			configuration_path += PathHelp::add_trailing_slash(company_name);
+		if (!application_name.empty())
+			configuration_path += PathHelp::add_trailing_slash(application_name);
+		if (!version.empty())
+			configuration_path += PathHelp::add_trailing_slash(version);
+
+		if (create_dirs_if_missing)
+			create(configuration_path, true);
+
+		return configuration_path;
+	}
+
+	std::string Directory::get_resourcedata(const std::string &application_name, const std::string &data_dir_name)
+	{
+#if defined(WIN32)
+		std::string exe_path = System::get_exe_path();
+		if (!data_dir_name.empty())
+			exe_path += data_dir_name + '\\';
+		return exe_path;
+#elif defined(__APPLE__)
+		throw Exception("Congratulations, you got the task to implement Directory::get_resourcedata on this platform.");
+#else
+		std::string exe_path = System::get_exe_path();
+		if (exe_path.length() > 1)
+		{
+			std::string::size_type pos = exe_path.rfind('/', exe_path.length() - 2);
+			if (pos != std::string::npos)
+				return exe_path.substr(0, pos + 1) + "share/" + application_name + '/';
+		}
+
+		if (!data_dir_name.empty())
+			exe_path += data_dir_name + '/';
+		return exe_path;
+#endif
+	}
 
 }

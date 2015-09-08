@@ -33,39 +33,25 @@
 
 namespace clan
 {
+	MemoryDevice::MemoryDevice()
+		: IODevice(new IODeviceProvider_Memory())
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// MemoryDevice Construction:
+	MemoryDevice::MemoryDevice(DataBuffer &data)
+		: IODevice(new IODeviceProvider_Memory(data))
+	{
+	}
 
-MemoryDevice::MemoryDevice()
-: IODevice(new IODeviceProvider_Memory())
-{
-}
+	const DataBuffer &MemoryDevice::get_data() const
+	{
+		const IODeviceProvider_Memory *provider = dynamic_cast<const IODeviceProvider_Memory*>(impl->provider);
+		return provider->get_data();
+	}
 
-MemoryDevice::MemoryDevice(DataBuffer &data)
-: IODevice(new IODeviceProvider_Memory(data))
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// MemoryDevice Attributes:
-
-const DataBuffer &MemoryDevice::get_data() const
-{
-	const IODeviceProvider_Memory *provider = dynamic_cast<const IODeviceProvider_Memory*>(impl->provider);
-	return provider->get_data();
-}
-
-DataBuffer &MemoryDevice::get_data()
-{
-	IODeviceProvider_Memory *provider = dynamic_cast<IODeviceProvider_Memory*>(impl->provider);
-	return provider->get_data();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// MemoryDevice Operations:
-
-/////////////////////////////////////////////////////////////////////////////
-// MemoryDevice Implementation:
-
+	DataBuffer &MemoryDevice::get_data()
+	{
+		IODeviceProvider_Memory *provider = dynamic_cast<IODeviceProvider_Memory*>(impl->provider);
+		return provider->get_data();
+	}
 }

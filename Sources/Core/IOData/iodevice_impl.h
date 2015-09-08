@@ -32,46 +32,15 @@
 
 namespace clan
 {
-
-class IODevice_Impl
-{
-/// \name Construction
-/// \{
-
-public:
-	IODevice_Impl() : little_endian_mode(true), provider(nullptr)
+	class IODevice_Impl
 	{
-	}
+	public:
+		~IODevice_Impl()
+		{
+			delete provider;
+		}
 
-	~IODevice_Impl()
-	{
-		delete provider;
-	}
-
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	bool little_endian_mode;
-
-	IODeviceProvider *provider;
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-};
-
+		bool little_endian_mode = true;
+		IODeviceProvider *provider = nullptr;
+	};
 }

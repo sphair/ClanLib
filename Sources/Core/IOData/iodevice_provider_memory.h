@@ -33,59 +33,28 @@
 
 namespace clan
 {
+	class IODeviceProvider_Memory : public IODeviceProvider
+	{
+	public:
+		IODeviceProvider_Memory();
+		IODeviceProvider_Memory(DataBuffer &data);
 
-class IODeviceProvider_Memory : public IODeviceProvider
-{
-/// \name Construction
-/// \{
+		virtual int get_size() const override;
+		virtual int get_position() const override;
 
-public:
-	IODeviceProvider_Memory();
+		const DataBuffer &get_data() const;
+		DataBuffer &get_data();
 
-	IODeviceProvider_Memory(DataBuffer &data);
+		virtual int send(const void *data, int len, bool send_all = true) override;
+		virtual int receive(void *data, int len, bool receive_all = true) override;
+		virtual int peek(void *data, int len) override;
+		virtual bool seek(int position, IODevice::SeekMode mode) override;
+		IODeviceProvider *duplicate() override;
 
+	private:
+		void validate_position() const;
 
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	virtual int get_size() const override;
-
-	virtual int get_position() const override;
-
-	const DataBuffer &get_data() const;
-
-	DataBuffer &get_data();
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	virtual int send(const void *data, int len, bool send_all = true) override;
-
-	virtual int receive(void *data, int len, bool receive_all = true) override;
-
-	virtual int peek(void *data, int len) override;
-
-	virtual bool seek(int position, IODevice::SeekMode mode) override;
-
-	IODeviceProvider *duplicate() override;
-
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	void validate_position() const;
-
-	DataBuffer data;
-
-	mutable int position;
-/// \}
-};
-
+		DataBuffer data;
+		mutable int position;
+	};
 }

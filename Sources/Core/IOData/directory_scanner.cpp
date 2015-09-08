@@ -24,7 +24,6 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Core/precomp.h"
@@ -43,81 +42,71 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// DirectoryScanner construction:
-
-DirectoryScanner::DirectoryScanner()
-{
+	DirectoryScanner::DirectoryScanner()
+	{
 #ifdef WIN32
-	impl = std::shared_ptr<DirectoryScanner_Impl>(new DirectoryScanner_Win32());
+		impl = std::shared_ptr<DirectoryScanner_Impl>(new DirectoryScanner_Win32());
 #else
-	impl = std::shared_ptr<DirectoryScanner_Impl>(new DirectoryScanner_Unix());
+		impl = std::shared_ptr<DirectoryScanner_Impl>(new DirectoryScanner_Unix());
 #endif
-}
+	}
 
-DirectoryScanner::~DirectoryScanner()
-{
-}
+	DirectoryScanner::~DirectoryScanner()
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// DirectoryScanner attributes:
+	bool DirectoryScanner::scan(const std::string& pathname)
+	{
+		return impl->scan(pathname);
+	}
 
-bool DirectoryScanner::scan(const std::string& pathname) 
-{
-	return impl->scan (pathname);
-}
+	bool DirectoryScanner::scan(const std::string& pathname, const std::string& pattern)
+	{
+		return impl->scan(pathname, pattern);
+	}
 
-bool DirectoryScanner::scan(const std::string& pathname, const std::string& pattern)
-{
-	return impl->scan (pathname, pattern);
-}
+	std::string DirectoryScanner::get_directory_path()
+	{
+		return impl->get_directory_path();
+	}
 
-std::string DirectoryScanner::get_directory_path()
-{
-	return impl->get_directory_path();
-}
+	int DirectoryScanner::get_size()
+	{
+		return impl->get_size();
+	}
 
-int DirectoryScanner::get_size()
-{
-	return impl->get_size();
-}
+	std::string DirectoryScanner::get_name()
+	{
+		return impl->get_name();
+	}
 
-std::string DirectoryScanner::get_name()
-{
-	return impl->get_name();
-}
-	
-std::string DirectoryScanner::get_pathname()
-{
-	return impl->get_pathname();
-}
-	
-bool DirectoryScanner::is_directory()
-{
-	return impl->is_directory();
-}
+	std::string DirectoryScanner::get_pathname()
+	{
+		return impl->get_pathname();
+	}
 
-bool DirectoryScanner::is_hidden()
-{
-	return impl->is_hidden();
-}     
+	bool DirectoryScanner::is_directory()
+	{
+		return impl->is_directory();
+	}
 
-bool DirectoryScanner::is_readable()
-{
-	return impl->is_readable();
-}
+	bool DirectoryScanner::is_hidden()
+	{
+		return impl->is_hidden();
+	}
 
- bool DirectoryScanner::is_writable()
-{
-	return impl->is_writable();
-}
-/////////////////////////////////////////////////////////////////////////////
-// DirectoryScanner operations:
+	bool DirectoryScanner::is_readable()
+	{
+		return impl->is_readable();
+	}
 
-bool DirectoryScanner::next() 
-{ 
-	return impl->next(); 
-}
+	bool DirectoryScanner::is_writable()
+	{
+		return impl->is_writable();
+	}
 
+	bool DirectoryScanner::next()
+	{
+		return impl->next();
+	}
 }

@@ -35,66 +35,52 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// FileSystemProvider_File Construction:
-
-FileSystemProvider_File::FileSystemProvider_File(const std::string &path)
-: path(PathHelp::add_trailing_slash(path, PathHelp::path_type_file))
-{
-}
-
-FileSystemProvider_File::~FileSystemProvider_File()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// FileSystemProvider_File Attributes:
-
-std::string FileSystemProvider_File::get_path() const
-{
-	return path;
-}
-
-std::string FileSystemProvider_File::get_identifier() const
-{
-	return path;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// FileSystemProvider_File Operations:
-
-IODevice FileSystemProvider_File::open_file(const std::string &filename,
-	File::OpenMode mode,
-	unsigned int access,
-	unsigned int share,
-	unsigned int flags)
-{
-	return File(path + filename, mode, access, share, flags);
-}
-
-bool FileSystemProvider_File::initialize_directory_listing(const std::string &additionalpath)
-{
-	return dir_scanner.scan(PathHelp::combine(this->path, additionalpath));
-}
-
-bool FileSystemProvider_File::next_file(DirectoryListingEntry &entry)
-{
-	bool next = dir_scanner.next();
-
-	if( next )
+	FileSystemProvider_File::FileSystemProvider_File(const std::string &path)
+		: path(PathHelp::add_trailing_slash(path, PathHelp::path_type_file))
 	{
-		entry.set_directory(dir_scanner.is_directory());
-		entry.set_filename(dir_scanner.get_name());
-		entry.set_hidden(dir_scanner.is_hidden());
-		entry.set_readable(dir_scanner.is_readable());
-		entry.set_writable(dir_scanner.is_writable());
 	}
 
-	return next;
-}
+	FileSystemProvider_File::~FileSystemProvider_File()
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// FileSystemProvider_File Implementation:
+	std::string FileSystemProvider_File::get_path() const
+	{
+		return path;
+	}
 
+	std::string FileSystemProvider_File::get_identifier() const
+	{
+		return path;
+	}
+
+	IODevice FileSystemProvider_File::open_file(const std::string &filename,
+		File::OpenMode mode,
+		unsigned int access,
+		unsigned int share,
+		unsigned int flags)
+	{
+		return File(path + filename, mode, access, share, flags);
+	}
+
+	bool FileSystemProvider_File::initialize_directory_listing(const std::string &additionalpath)
+	{
+		return dir_scanner.scan(PathHelp::combine(this->path, additionalpath));
+	}
+
+	bool FileSystemProvider_File::next_file(DirectoryListingEntry &entry)
+	{
+		bool next = dir_scanner.next();
+
+		if (next)
+		{
+			entry.set_directory(dir_scanner.is_directory());
+			entry.set_filename(dir_scanner.get_name());
+			entry.set_hidden(dir_scanner.is_hidden());
+			entry.set_readable(dir_scanner.is_readable());
+			entry.set_writable(dir_scanner.is_writable());
+		}
+
+		return next;
+	}
 }
