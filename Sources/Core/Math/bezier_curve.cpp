@@ -34,51 +34,37 @@
 
 namespace clan
 {
+	BezierCurve::BezierCurve()
+		: impl(std::make_shared<BezierCurve_Impl>())
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// BezierCurve Construction:
+	BezierCurve::~BezierCurve()
+	{
+	}
 
-BezierCurve::BezierCurve()
-: impl(std::make_shared<BezierCurve_Impl>())
-{
-}
+	std::vector<Pointf> BezierCurve::get_control_points() const
+	{
+		return impl->control_points;
+	}
 
-BezierCurve::~BezierCurve()
-{
-}
+	void BezierCurve::add_control_point(float x, float y)
+	{
+		impl->control_points.push_back(Pointf(x, y));
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// BezierCurve Attributes:
+	void BezierCurve::add_control_point(const Pointf &value)
+	{
+		impl->control_points.push_back(value);
+	}
 
-std::vector<Pointf> BezierCurve::get_control_points() const
-{
-	return impl->control_points;
-}
+	std::vector<Pointf> BezierCurve::generate_curve_points(const Angle &split_angle)
+	{
+		return impl->generate_curve_points(split_angle);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// BezierCurve Operations:
-
-void BezierCurve::add_control_point(float x, float y)
-{
-	impl->control_points.push_back(Pointf(x, y));
-}
-
-void BezierCurve::add_control_point(const Pointf &value)
-{
-	impl->control_points.push_back(value);
-}
-
-std::vector<Pointf> BezierCurve::generate_curve_points(const Angle &split_angle)
-{
-	return impl->generate_curve_points(split_angle);
-}
-
-Pointf BezierCurve::get_point_relative(float pos_0_to_1) const
-{
-	return impl->get_point_relative(pos_0_to_1);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// BezierCurve Implementation:
-
+	Pointf BezierCurve::get_point_relative(float pos_0_to_1) const
+	{
+		return impl->get_point_relative(pos_0_to_1);
+	}
 }

@@ -24,7 +24,6 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Core/precomp.h"
@@ -33,56 +32,42 @@
 
 namespace clan
 {
+	OutlineTriangulator::OutlineTriangulator() : impl(std::make_shared<OutlineTriangulator_Impl>())
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// OutlineTriangulator construction:
+	OutlineTriangulator::~OutlineTriangulator()
+	{
+	}
 
-OutlineTriangulator::OutlineTriangulator() : impl(std::make_shared<OutlineTriangulator_Impl>())
-{
-}
+	void OutlineTriangulator::next_contour()
+	{
+		if (impl->current_contour.vertices.empty()) return;
+		impl->current_polygon.contours.push_back(impl->current_contour);
+		impl->current_contour = OutlineTriangulator_Contour();
+	}
 
-OutlineTriangulator::~OutlineTriangulator()
-{
-}
+	void OutlineTriangulator::next_polygon()
+	{
+		next_contour();
+		if (impl->current_polygon.contours.empty()) return;
+		impl->polygons.push_back(impl->current_polygon);
+		impl->current_polygon = OutlineTriangulator_Polygon();
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// OutlineTriangulator attributes:
+	void OutlineTriangulator::add_vertex(float x, float y, void *data)
+	{
+		OutlineTriangulator_Vertex vertex;
+		vertex.x = x;
+		vertex.y = y;
+		vertex.data = data;
+		impl->current_contour.vertices.push_back(vertex);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// OutlineTriangulator operations:
-
-void OutlineTriangulator::next_contour()
-{
-	if (impl->current_contour.vertices.empty()) return;
-	impl->current_polygon.contours.push_back(impl->current_contour);
-	impl->current_contour = OutlineTriangulator_Contour();
-}
-
-void OutlineTriangulator::next_polygon()
-{
-	next_contour();
-	if (impl->current_polygon.contours.empty()) return;
-	impl->polygons.push_back(impl->current_polygon);
-	impl->current_polygon = OutlineTriangulator_Polygon();
-}
-
-void OutlineTriangulator::add_vertex(float x, float y, void *data)
-{
-	OutlineTriangulator_Vertex vertex;
-	vertex.x = x;
-	vertex.y = y;
-	vertex.data = data;
-	impl->current_contour.vertices.push_back(vertex);
-}
-
-void OutlineTriangulator::generate()
-{
-	next_polygon();
-	if (impl->polygons.empty()) return;
-	impl->triangulate();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// OutlineTriangulator implementation:
-
+	void OutlineTriangulator::generate()
+	{
+		next_polygon();
+		if (impl->polygons.empty()) return;
+		impl->triangulate();
+	}
 }

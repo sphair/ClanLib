@@ -32,87 +32,83 @@
 
 namespace clan
 {
+	FrustumPlanes::FrustumPlanes()
+	{
+	}
 
+	FrustumPlanes::FrustumPlanes(const Mat4f &world_to_projection)
+	{
+		planes[0] = near_frustum_plane(world_to_projection);
+		planes[1] = far_frustum_plane(world_to_projection);
+		planes[2] = left_frustum_plane(world_to_projection);
+		planes[3] = right_frustum_plane(world_to_projection);
+		planes[4] = top_frustum_plane(world_to_projection);
+		planes[5] = bottom_frustum_plane(world_to_projection);
+	}
 
-FrustumPlanes::FrustumPlanes()
-{
+	Vec4f FrustumPlanes::left_frustum_plane(const Mat4f &matrix)
+	{
+		Vec4f plane(
+			matrix[3 + 0 * 4] + matrix[0 + 0 * 4],
+			matrix[3 + 1 * 4] + matrix[0 + 1 * 4],
+			matrix[3 + 2 * 4] + matrix[0 + 2 * 4],
+			matrix[3 + 3 * 4] + matrix[0 + 3 * 4]);
+		plane /= plane.length3();
+		return plane;
+	}
+
+	Vec4f FrustumPlanes::right_frustum_plane(const Mat4f &matrix)
+	{
+		Vec4f plane(
+			matrix[3 + 0 * 4] - matrix[0 + 0 * 4],
+			matrix[3 + 1 * 4] - matrix[0 + 1 * 4],
+			matrix[3 + 2 * 4] - matrix[0 + 2 * 4],
+			matrix[3 + 3 * 4] - matrix[0 + 3 * 4]);
+		plane /= plane.length3();
+		return plane;
+	}
+
+	Vec4f FrustumPlanes::top_frustum_plane(const Mat4f &matrix)
+	{
+		Vec4f plane(
+			matrix[3 + 0 * 4] - matrix[1 + 0 * 4],
+			matrix[3 + 1 * 4] - matrix[1 + 1 * 4],
+			matrix[3 + 2 * 4] - matrix[1 + 2 * 4],
+			matrix[3 + 3 * 4] - matrix[1 + 3 * 4]);
+		plane /= plane.length3();
+		return plane;
+	}
+
+	Vec4f FrustumPlanes::bottom_frustum_plane(const Mat4f &matrix)
+	{
+		Vec4f plane(
+			matrix[3 + 0 * 4] + matrix[1 + 0 * 4],
+			matrix[3 + 1 * 4] + matrix[1 + 1 * 4],
+			matrix[3 + 2 * 4] + matrix[1 + 2 * 4],
+			matrix[3 + 3 * 4] + matrix[1 + 3 * 4]);
+		plane /= plane.length3();
+		return plane;
+	}
+
+	Vec4f FrustumPlanes::near_frustum_plane(const Mat4f &matrix)
+	{
+		Vec4f plane(
+			matrix[3 + 0 * 4] + matrix[2 + 0 * 4],
+			matrix[3 + 1 * 4] + matrix[2 + 1 * 4],
+			matrix[3 + 2 * 4] + matrix[2 + 2 * 4],
+			matrix[3 + 3 * 4] + matrix[2 + 3 * 4]);
+		plane /= plane.length3();
+		return plane;
+	}
+
+	Vec4f FrustumPlanes::far_frustum_plane(const Mat4f &matrix)
+	{
+		Vec4f plane(
+			matrix[3 + 0 * 4] - matrix[2 + 0 * 4],
+			matrix[3 + 1 * 4] - matrix[2 + 1 * 4],
+			matrix[3 + 2 * 4] - matrix[2 + 2 * 4],
+			matrix[3 + 3 * 4] - matrix[2 + 3 * 4]);
+		plane /= plane.length3();
+		return plane;
+	}
 }
-
-FrustumPlanes::FrustumPlanes(const Mat4f &world_to_projection)
-{
-	planes[0] = near_frustum_plane(world_to_projection);
-	planes[1] = far_frustum_plane(world_to_projection);
-	planes[2] = left_frustum_plane(world_to_projection);
-	planes[3] = right_frustum_plane(world_to_projection);
-	planes[4] = top_frustum_plane(world_to_projection);
-	planes[5] = bottom_frustum_plane(world_to_projection);
-}
-
-Vec4f FrustumPlanes::left_frustum_plane(const Mat4f &matrix)
-{
-	Vec4f plane(
-		matrix[3+0*4] + matrix[0+0*4],
-		matrix[3+1*4] + matrix[0+1*4],
-		matrix[3+2*4] + matrix[0+2*4],
-		matrix[3+3*4] + matrix[0+3*4]);
-	plane /= plane.length3();
-	return plane;
-}
-
-Vec4f FrustumPlanes::right_frustum_plane(const Mat4f &matrix)
-{
-	Vec4f plane(
-		matrix[3+0*4] - matrix[0+0*4],
-		matrix[3+1*4] - matrix[0+1*4],
-		matrix[3+2*4] - matrix[0+2*4],
-		matrix[3+3*4] - matrix[0+3*4]);
-	plane /= plane.length3();
-	return plane;
-}
-
-Vec4f FrustumPlanes::top_frustum_plane(const Mat4f &matrix)
-{
-	Vec4f plane(
-		matrix[3+0*4] - matrix[1+0*4],
-		matrix[3+1*4] - matrix[1+1*4],
-		matrix[3+2*4] - matrix[1+2*4],
-		matrix[3+3*4] - matrix[1+3*4]);
-	plane /= plane.length3();
-	return plane;
-}
-
-Vec4f FrustumPlanes::bottom_frustum_plane(const Mat4f &matrix)
-{
-	Vec4f plane(
-		matrix[3+0*4] + matrix[1+0*4],
-		matrix[3+1*4] + matrix[1+1*4],
-		matrix[3+2*4] + matrix[1+2*4],
-		matrix[3+3*4] + matrix[1+3*4]);
-	plane /= plane.length3();
-	return plane;
-}
-
-Vec4f FrustumPlanes::near_frustum_plane(const Mat4f &matrix)
-{
-	Vec4f plane(
-		matrix[3+0*4] + matrix[2+0*4],
-		matrix[3+1*4] + matrix[2+1*4],
-		matrix[3+2*4] + matrix[2+2*4],
-		matrix[3+3*4] + matrix[2+3*4]);
-	plane /= plane.length3();
-	return plane;
-}
-
-Vec4f FrustumPlanes::far_frustum_plane(const Mat4f &matrix)
-{
-	Vec4f plane(
-		matrix[3+0*4] - matrix[2+0*4],
-		matrix[3+1*4] - matrix[2+1*4],
-		matrix[3+2*4] - matrix[2+2*4],
-		matrix[3+3*4] - matrix[2+3*4]);
-	plane /= plane.length3();
-	return plane;
-}
-
-}
-

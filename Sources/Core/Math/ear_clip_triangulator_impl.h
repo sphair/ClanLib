@@ -32,91 +32,67 @@
 
 namespace clan
 {
-
-class LinkedVertice
-{
-public:
-	LinkedVertice() : x(0), y(0), is_ear(0), previous(nullptr), next(nullptr)
+	class LinkedVertice
 	{
-		return;
-	}
+	public:
+		LinkedVertice() : x(0), y(0), is_ear(0), previous(nullptr), next(nullptr)
+		{
+			return;
+		}
 
-	LinkedVertice(float x, float y) : x(x), y(y), is_ear(0), previous(nullptr), next(nullptr)
+		LinkedVertice(float x, float y) : x(x), y(y), is_ear(0), previous(nullptr), next(nullptr)
+		{
+			return;
+		}
+
+		float x, y;
+		bool is_ear;
+		LinkedVertice *previous;
+		LinkedVertice *next;
+	};
+
+	class EarClipTriangulator_Impl
 	{
-		return;
-	}
+	public:
+		EarClipTriangulator_Impl();
+		virtual ~EarClipTriangulator_Impl();
 
-	float x, y;
-	bool is_ear;
-	LinkedVertice *previous;
-	LinkedVertice *next;
-};
+		std::vector<Pointf> get_vertices();
 
+		int get_vertice_count() { return vertex_count; }
 
-class EarClipTriangulator_Impl
-{
-/// \name Construction
-/// \{
+		/// \brief Determine the orientation of the polygon.
+		PolygonOrientation calculate_polygon_orientation();
 
-public:
-	EarClipTriangulator_Impl();
-	virtual ~EarClipTriangulator_Impl();
+		void add_vertex(float x, float y);
+		void set_orientation(PolygonOrientation orientation);
 
+		void clear();
 
-/// \}
-/// \name Attributes
-/// \{
+		EarClipResult triangulate();
 
-public:
-	std::vector<Pointf> get_vertices();
+		void begin_hole();
+		void end_hole();
 
-	int get_vertice_count() {return vertex_count;}
+	private:
+		bool is_reflex(const LinkedVertice &v);
+		bool is_ear(const LinkedVertice &v);
+		void create_lists(bool create_ear_list);
 
-	/// \brief Determine the orientation of the polygon.
-	PolygonOrientation calculate_polygon_orientation();
+		void set_bridge_vertice_offset(
+			LinkedVertice *target,
+			Pointf split_point,
+			float split_point_rel,
+			LinkedVertice *segment_start,
+			LinkedVertice *segment_end,
+			int direction);
+		PolygonOrientation orientation;
+		std::vector<LinkedVertice *> vertices;
+		std::vector<LinkedVertice *> hole;
+		std::vector<LinkedVertice *> *target_array;
 
+		std::vector<LinkedVertice *> ear_list;
 
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	void add_vertex(float x, float y);
-	void set_orientation(PolygonOrientation orientation);
-
-	void clear();
-
-	EarClipResult triangulate();
-
-	void begin_hole();
-	void end_hole();
-
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	bool is_reflex(const LinkedVertice &v);
-	bool is_ear(const LinkedVertice &v);
-	void create_lists(bool create_ear_list);
-
-	void set_bridge_vertice_offset(
-		LinkedVertice *target,
-		Pointf split_point,
-		float split_point_rel,
-		LinkedVertice *segment_start,
-		LinkedVertice *segment_end,
-		int direction);
-	PolygonOrientation orientation;
-	std::vector<LinkedVertice *> vertices;
-	std::vector<LinkedVertice *> hole;
-	std::vector<LinkedVertice *> *target_array;
-
-	std::vector<LinkedVertice *> ear_list;
-
-	int vertex_count;
-/// \}
-};
-
+		int vertex_count;
+	};
 }

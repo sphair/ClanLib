@@ -32,54 +32,52 @@
 
 namespace clan
 {
-
-class RectPacker_Impl
-{
-public:
-	class Node
+	class RectPacker_Impl
 	{
 	public:
-		Node();
-		Node(const Rect &rect);
-		~Node();
+		class Node
+		{
+		public:
+			Node();
+			Node(const Rect &rect);
+			~Node();
 
-		int get_rect_count() const;
+			int get_rect_count() const;
 
-		Node *insert(const Size &rect_size, int rect_id);
+			Node *insert(const Size &rect_size, int rect_id);
 
-		void clear();
+			void clear();
 
-		Node *child[2];
-		Rect node_rect;
+			Node *child[2];
+			Rect node_rect;
 
-	    int id;
-	};
+			int id;
+		};
 
-	struct RootNode
-	{
+		struct RootNode
+		{
+		public:
+			int group_id;
+			Node node;
+		};
+
 	public:
-		int group_id;
-		Node node;
+		RectPacker_Impl(const Size &max_group_size);
+		~RectPacker_Impl();
+
+		int get_total_rect_count() const;
+		int get_rect_count(unsigned int group_index) const;
+
+		RectPacker::AllocatedRect add_new_node(const Size &rect_size);
+		RootNode *add_new_root();
+
+		std::vector<RootNode *> root_nodes;
+		RootNode *active_root_node;
+
+		int next_node_id;
+
+		RectPacker::AllocationPolicy allocation_policy;
+
+		Size max_group_size;
 	};
-
-public:
-	RectPacker_Impl(const Size &max_group_size);
-	~RectPacker_Impl();
-
-	int get_total_rect_count() const;
-	int get_rect_count(unsigned int group_index) const;
-
-	RectPacker::AllocatedRect add_new_node(const Size &rect_size);
-	RootNode *add_new_root();
-
-	std::vector<RootNode *> root_nodes;
-	RootNode *active_root_node;
-
-	int next_node_id;
-
-	RectPacker::AllocationPolicy allocation_policy;
-
-	Size max_group_size;
-};
-
 }

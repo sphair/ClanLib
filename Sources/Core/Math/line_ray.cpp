@@ -24,7 +24,6 @@
 **  File Author(s):
 **
 **    Mark Page
-**    (if your name is missing here, please add it)
 */
 
 #include "Core/precomp.h"
@@ -34,15 +33,13 @@
 
 namespace clan
 {
+	// Explicit instantiate the versions we use:
 
-// Explicit instantiate the versions we use:
+	template class LineRay2x<int>;
+	template class LineRay2x<float>;
+	template class LineRay2x<double>;
 
-template class LineRay2x<int>;
-template class LineRay2x<float>;
-template class LineRay2x<double>;
-
-template class LineRay3x<int>;
-template class LineRay3x<float>;
-template class LineRay3x<double>;
-
+	template class LineRay3x<int>;
+	template class LineRay3x<float>;
+	template class LineRay3x<double>;
 }

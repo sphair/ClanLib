@@ -24,21 +24,17 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Core/precomp.h"
-
 #include "API/Core/Math/point.h"
 #include "API/Core/Math/size.h"
 
 namespace clan
 {
+	// Explicit instantiate the versions we use:
 
-// Explicit instantiate the versions we use:
-
-template class Pointx<int>;
-template class Pointx<float>;
-template class Pointx<double>;
-
+	template class Pointx<int>;
+	template class Pointx<float>;
+	template class Pointx<double>;
 }

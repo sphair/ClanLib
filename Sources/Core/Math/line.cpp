@@ -24,7 +24,6 @@
 **  File Author(s):
 **
 **    Mark Page
-**    (if your name is missing here, please add it)
 */
 
 #include "Core/precomp.h"
@@ -35,73 +34,71 @@
 
 namespace clan
 {
-
-template<typename Type>
-Vec2<Type> Line2x<Type>::get_intersection( const Line2x<Type> &second, bool &intersect ) const
-{
-	Type denominator = (q.x - p.x) * (second.q.y - second.p.y) - (second.q.x - second.p.x) * (q.y - p.y );
-	if (denominator == ((Type) 0))
+	template<typename Type>
+	Vec2<Type> Line2x<Type>::get_intersection(const Line2x<Type> &second, bool &intersect) const
 	{
-		intersect = false;
-		return Vec2<Type>();
-	}
-	intersect = true;
-
-	Type numerator = (second.p.x - p.x) * (q.y - p.y) - (q.x - p.x) * (second.p.y - p.y);
-
-	Vec2<Type> result;
-	result.x = (second.p.x) + ( numerator * ( second.q.x - second.p.x ) ) / denominator;
-	result.y = (second.p.y) + ( numerator * ( second.q.y - second.p.y ) ) / denominator;
-	return result;
-}
-
-template<typename Type>
-Vec3<Type> Line3x<Type>::get_intersection( const Line3x<Type> &second, bool &intersect, Type range ) const
-{
-	Type denominator = (q.x - p.x) * (second.q.y - second.p.y) - (second.q.x - second.p.x) * (q.y - p.y );
-	if (denominator == ((Type) 0))
-	{
-		intersect = false;
-		return Vec3<Type>();
-	}
-
-	Type numerator = (second.p.x - p.x) * (q.y - p.y) - (q.x - p.x) * (second.p.y - p.y);
-
-	Vec3<Type> result;
-	result.x = (second.p.x) + ( numerator * ( second.q.x - second.p.x ) ) / denominator;
-	result.y = (second.p.y) + ( numerator * ( second.q.y - second.p.y ) ) / denominator;
-	result.z = (second.p.z) + ( numerator * ( second.q.z - second.p.z ) ) / denominator;
-
-	// Check for intersection
-	Type difference = (q.x - p.x) * (second.p.z - p.z) - (q.z - p.z) * (second.p.x - p.x);
-	difference += numerator * ( (second.q.z - second.p.z) * (q.x - p.x) - (q.z - p.z) * (second.q.x - second.p.x) ) / denominator;
-	difference /= (q.x - p.x);
-
-	// Ensure positive difference
-	if (difference < ((Type) 0))
-	{
-		difference = -difference;
-	}
-
-	if (difference <= range)
-	{
+		Type denominator = (q.x - p.x) * (second.q.y - second.p.y) - (second.q.x - second.p.x) * (q.y - p.y);
+		if (denominator == ((Type)0))
+		{
+			intersect = false;
+			return Vec2<Type>();
+		}
 		intersect = true;
+
+		Type numerator = (second.p.x - p.x) * (q.y - p.y) - (q.x - p.x) * (second.p.y - p.y);
+
+		Vec2<Type> result;
+		result.x = (second.p.x) + (numerator * (second.q.x - second.p.x)) / denominator;
+		result.y = (second.p.y) + (numerator * (second.q.y - second.p.y)) / denominator;
+		return result;
 	}
-	else
+
+	template<typename Type>
+	Vec3<Type> Line3x<Type>::get_intersection(const Line3x<Type> &second, bool &intersect, Type range) const
 	{
-		intersect = false;
+		Type denominator = (q.x - p.x) * (second.q.y - second.p.y) - (second.q.x - second.p.x) * (q.y - p.y);
+		if (denominator == ((Type)0))
+		{
+			intersect = false;
+			return Vec3<Type>();
+		}
+
+		Type numerator = (second.p.x - p.x) * (q.y - p.y) - (q.x - p.x) * (second.p.y - p.y);
+
+		Vec3<Type> result;
+		result.x = (second.p.x) + (numerator * (second.q.x - second.p.x)) / denominator;
+		result.y = (second.p.y) + (numerator * (second.q.y - second.p.y)) / denominator;
+		result.z = (second.p.z) + (numerator * (second.q.z - second.p.z)) / denominator;
+
+		// Check for intersection
+		Type difference = (q.x - p.x) * (second.p.z - p.z) - (q.z - p.z) * (second.p.x - p.x);
+		difference += numerator * ((second.q.z - second.p.z) * (q.x - p.x) - (q.z - p.z) * (second.q.x - second.p.x)) / denominator;
+		difference /= (q.x - p.x);
+
+		// Ensure positive difference
+		if (difference < ((Type)0))
+		{
+			difference = -difference;
+		}
+
+		if (difference <= range)
+		{
+			intersect = true;
+		}
+		else
+		{
+			intersect = false;
+		}
+		return result;
 	}
-	return result;
-}
 
-// Explicit instantiate the versions we use:
+	// Explicit instantiate the versions we use:
 
-template class Line2x<int>;
-template class Line2x<float>;
-template class Line2x<double>;
+	template class Line2x<int>;
+	template class Line2x<float>;
+	template class Line2x<double>;
 
-template class Line3x<int>;
-template class Line3x<float>;
-template class Line3x<double>;
-
+	template class Line3x<int>;
+	template class Line3x<float>;
+	template class Line3x<double>;
 }

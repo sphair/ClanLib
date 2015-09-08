@@ -24,7 +24,6 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #pragma once
@@ -33,93 +32,70 @@
 
 namespace clan
 {
+	class DelauneyTriangulator;
+	class DelauneyTriangulator_Triangle;
 
-class DelauneyTriangulator;
-class DelauneyTriangulator_Triangle;
+	struct OutlineTriangulator_Vertex
+	{
+		void *data;
+		float x, y;
+		int num_triangles;
+		int extra;
+		DelauneyTriangulator_Triangle const **triangles;
+	};
 
-struct OutlineTriangulator_Vertex
-{
-	void *data;
-	float x, y;
-	int num_triangles;
-	int extra;
-	DelauneyTriangulator_Triangle const **triangles;
-};
+	struct OutlineTriangulator_Contour
+	{
+		std::vector<OutlineTriangulator_Vertex> vertices;
+	};
 
-struct OutlineTriangulator_Contour
-{
-	std::vector<OutlineTriangulator_Vertex> vertices;
-};
+	struct OutlineTriangulator_Polygon
+	{
+		std::vector<OutlineTriangulator_Contour> contours;
+	};
 
-struct OutlineTriangulator_Polygon
-{
-	std::vector<OutlineTriangulator_Contour> contours;
-};
+	struct OutlineTriangulator_Collision
+	{
+		std::vector<OutlineTriangulator_Vertex *> first;
+		std::vector<OutlineTriangulator_Vertex *> second;
+		std::vector<DelauneyTriangulator_Triangle const *> triangles;
+	};
 
-struct OutlineTriangulator_Collision
-{
-	std::vector<OutlineTriangulator_Vertex *> first;
-	std::vector<OutlineTriangulator_Vertex *> second;
-	std::vector<DelauneyTriangulator_Triangle const *> triangles;
-};
+	class OutlineTriangulator_Impl
+	{
+	public:
+		OutlineTriangulator_Impl();
+		~OutlineTriangulator_Impl();
 
-class OutlineTriangulator_Impl
-{
-/// \name Construction
-/// \{
+		OutlineTriangulator_Polygon current_polygon;
+		OutlineTriangulator_Contour current_contour;
+		std::vector<OutlineTriangulator_Polygon> polygons;
+		//std::vector<OutlineTriangulator_Triangle> triangles;
 
-public:
-	OutlineTriangulator_Impl();
+		void insert_points();
+		void triangulate();
 
-	~OutlineTriangulator_Impl();
+		void create_ordered_vertex_list(
+			std::vector<OutlineTriangulator_Vertex *> &vertices);
 
+		OutlineTriangulator_Collision find_colliding_triangles(
+			OutlineTriangulator_Vertex *v1,
+			OutlineTriangulator_Vertex *v2);
 
-/// \}
-/// \name Attributes
-/// \{
+		void remove_triangle(DelauneyTriangulator_Triangle const *t);
 
-public:
-	OutlineTriangulator_Polygon current_polygon;
+		DelauneyTriangulator_Triangle const **add_triangles(
+			DelauneyTriangulator &d1,
+			DelauneyTriangulator &d2);
 
-	OutlineTriangulator_Contour current_contour;
-
-	std::vector<OutlineTriangulator_Polygon> polygons;
-
-//	std::vector<OutlineTriangulator_Triangle> triangles;
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	void insert_points();
-
-	void triangulate();
-
-	void create_ordered_vertex_list(
-		std::vector<OutlineTriangulator_Vertex *> &vertices);
-
-	OutlineTriangulator_Collision find_colliding_triangles(
-		OutlineTriangulator_Vertex *v1,
-		OutlineTriangulator_Vertex *v2);
-
-	void remove_triangle(DelauneyTriangulator_Triangle const *t);
-
-	DelauneyTriangulator_Triangle const **add_triangles(
-		DelauneyTriangulator &d1,
-		DelauneyTriangulator &d2);
-
-	bool intersects(
-		float Ax,
-		float Ay,
-		float Bx,
-		float By,
-		float Cx,
-		float Cy,
-		float Dx,
-		float Dy);
-/// \}
-};
-
+		bool intersects(
+			float Ax,
+			float Ay,
+			float Bx,
+			float By,
+			float Cx,
+			float Cy,
+			float Dx,
+			float Dy);
+	};
 }

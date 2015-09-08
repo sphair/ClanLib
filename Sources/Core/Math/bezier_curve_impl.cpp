@@ -35,100 +35,85 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// BezierCurve_Impl Construction:
-
-BezierCurve_Impl::BezierCurve_Impl()
-{
-}
-
-BezierCurve_Impl::~BezierCurve_Impl()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// BezierCurve_Impl Attributes:
-
-/////////////////////////////////////////////////////////////////////////////
-// BezierCurve_Impl Operations:
-
-std::vector<Pointf> BezierCurve_Impl::subdivide_bezier(float t_start, float t_end ) const
-{
-	std::vector<Pointf> points;
-
-	float t_center = (t_start+t_end)/2.0f;
-
-	Pointf sp = get_point_relative(t_start);
-	Pointf ep = get_point_relative(t_end);
-	Pointf cp = get_point_relative(t_center);
-
-	Vec4f sp2cp( (cp.x-sp.x), (cp.y-sp.y), 0.0f, 0.0f );
-	Vec4f cp2ep( (ep.x-cp.x), (ep.y-cp.y), 0.0f, 0.0f );
-
-	if (sp2cp.angle3(cp2ep).to_radians() > split_angle_rad)
+	BezierCurve_Impl::BezierCurve_Impl()
 	{
-		points = subdivide_bezier(t_start, t_center);
-		std::vector<Pointf> subpoints = subdivide_bezier(t_center, t_end);
-		points.insert(points.end(), subpoints.begin(), subpoints.end());
-	}
-	else
-	{
-		points.push_back(cp);
-		points.push_back(ep);
 	}
 
-	return points;
-}
-
-Pointf BezierCurve_Impl::get_point_relative(float pos) const
-{
-	// Perform deCasteljau iterations:
-	// (linear interpolate between the control points)
-	std::vector<Pointf>::size_type j, N, i;
-	float a = pos;
-	float b = 1.0f - pos;
-	P = control_points;
-	N = control_points.size();
-	if (N == 0)
-		return Pointf();
-	for (j = N-1; j > 0; j--)
+	BezierCurve_Impl::~BezierCurve_Impl()
 	{
-		for (i = 0; i < j; i++)
+	}
+
+	std::vector<Pointf> BezierCurve_Impl::subdivide_bezier(float t_start, float t_end) const
+	{
+		std::vector<Pointf> points;
+
+		float t_center = (t_start + t_end) / 2.0f;
+
+		Pointf sp = get_point_relative(t_start);
+		Pointf ep = get_point_relative(t_end);
+		Pointf cp = get_point_relative(t_center);
+
+		Vec4f sp2cp((cp.x - sp.x), (cp.y - sp.y), 0.0f, 0.0f);
+		Vec4f cp2ep((ep.x - cp.x), (ep.y - cp.y), 0.0f, 0.0f);
+
+		if (sp2cp.angle3(cp2ep).to_radians() > split_angle_rad)
 		{
-			P[i].x = b*P[i].x + a*P[i+1].x;
-			P[i].y = b*P[i].y + a*P[i+1].y;
+			points = subdivide_bezier(t_start, t_center);
+			std::vector<Pointf> subpoints = subdivide_bezier(t_center, t_end);
+			points.insert(points.end(), subpoints.begin(), subpoints.end());
 		}
-	}
-	return P[0];
-}
+		else
+		{
+			points.push_back(cp);
+			points.push_back(ep);
+		}
 
-std::vector<Pointf> BezierCurve_Impl::generate_curve_points(const Angle &split_angle)
-{
-	std::vector<Pointf> points;
-/*
-	for (float i = 0.0; i < 1.0; i += 0.01)
+		return points;
+	}
+
+	Pointf BezierCurve_Impl::get_point_relative(float pos) const
 	{
-		points.push_back(get_point_relative(i));
+		// Perform deCasteljau iterations:
+		// (linear interpolate between the control points)
+		std::vector<Pointf>::size_type j, N, i;
+		float a = pos;
+		float b = 1.0f - pos;
+		P = control_points;
+		N = control_points.size();
+		if (N == 0)
+			return Pointf();
+		for (j = N - 1; j > 0; j--)
+		{
+			for (i = 0; i < j; i++)
+			{
+				P[i].x = b*P[i].x + a*P[i + 1].x;
+				P[i].y = b*P[i].y + a*P[i + 1].y;
+			}
+		}
+		return P[0];
 	}
-	points.push_back(get_point_relative(1.0));
-*/
 
-	split_angle_rad = split_angle.to_radians(); 
+	std::vector<Pointf> BezierCurve_Impl::generate_curve_points(const Angle &split_angle)
+	{
+		std::vector<Pointf> points;
+		/*
+			for (float i = 0.0; i < 1.0; i += 0.01)
+			{
+			points.push_back(get_point_relative(i));
+			}
+			points.push_back(get_point_relative(1.0));
+			*/
 
-	points.push_back( get_point_relative(0.0) );
+		split_angle_rad = split_angle.to_radians();
 
-	std::vector<Pointf> sub_points = subdivide_bezier(0.0, 0.5);
-	points.insert( points.end(), sub_points.begin(), sub_points.end() );
+		points.push_back(get_point_relative(0.0));
 
-	sub_points = subdivide_bezier(0.5, 1.0);
-	points.insert( points.end(), sub_points.begin(), sub_points.end() );
+		std::vector<Pointf> sub_points = subdivide_bezier(0.0, 0.5);
+		points.insert(points.end(), sub_points.begin(), sub_points.end());
 
-	return points;
-}
+		sub_points = subdivide_bezier(0.5, 1.0);
+		points.insert(points.end(), sub_points.begin(), sub_points.end());
 
-
-/////////////////////////////////////////////////////////////////////////////
-// BezierCurve_Impl Implementation:
-
+		return points;
+	}
 }

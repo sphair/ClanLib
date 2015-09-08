@@ -32,25 +32,23 @@
 
 namespace clan
 {
+	template<typename Type>
+	bool Trianglex<Type>::point_inside(const Vec2<Type> &point) const
+	{
+		Type b0 = (q.x - p.x) * (r.y - p.y) - (r.x - p.x) * (q.y - p.y);
+		Type b1 = ((q.x - point.x)  * (r.y - point.y) - (r.x - point.x)  * (q.y - point.y)) / b0;
+		Type b2 = ((r.x - point.x)  * (p.y - point.y) - (p.x - point.x)  * (r.y - point.y)) / b0;
+		Type b3 = ((p.x - point.x)  * (q.y - point.y) - (q.x - point.x)  * (p.y - point.y)) / b0;
 
-template<typename Type>
-bool Trianglex<Type>::point_inside( const Vec2<Type> &point ) const
-{
-	Type b0 =  (q.x - p.x) * (r.y - p.y) - (r.x - p.x) * (q.y - p.y);
-	Type b1 = ((q.x - point.x)  * (r.y - point.y)  - (r.x - point.x)  * (q.y - point.y)) / b0;
-	Type b2 = ((r.x - point.x)  * (p.y - point.y)  - (p.x - point.x)  * (r.y - point.y)) / b0;
-	Type b3 = ((p.x - point.x)  * (q.y - point.y)  - (q.x - point.x)  * (p.y - point.y)) / b0;
-	
-	Type zero = (Type) 0;
-	if( (b1>zero && b2>zero && b3>zero) || ((b1>=zero && b2>=zero && b3>=zero) && b1+b2+b3 > zero) )
-		return true;
-	
-	return false;
-}
+		Type zero = (Type)0;
+		if ((b1 > zero && b2 > zero && b3 > zero) || ((b1 >= zero && b2 >= zero && b3 >= zero) && b1 + b2 + b3 > zero))
+			return true;
 
-// Explicit instantiate the versions we use:
-template class Trianglex<int>;
-template class Trianglex<float>;
-template class Trianglex<double>;
+		return false;
+	}
 
+	// Explicit instantiate the versions we use:
+	template class Trianglex<int>;
+	template class Trianglex<float>;
+	template class Trianglex<double>;
 }

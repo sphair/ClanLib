@@ -24,7 +24,6 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Core/precomp.h"
@@ -33,50 +32,36 @@
 
 namespace clan
 {
+	DelauneyTriangulator::DelauneyTriangulator() : impl(std::make_shared<DelauneyTriangulator_Impl>())
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// Delauney_Triangulator construction:
+	DelauneyTriangulator::~DelauneyTriangulator()
+	{
+	}
 
-DelauneyTriangulator::DelauneyTriangulator() : impl(std::make_shared<DelauneyTriangulator_Impl>())
-{
-}
+	const std::vector<DelauneyTriangulator_Vertex> &DelauneyTriangulator::get_vertices() const
+	{
+		return impl->input_vertices;
+	}
 
-DelauneyTriangulator::~DelauneyTriangulator()
-{
-}
+	const std::vector<DelauneyTriangulator_Triangle> &DelauneyTriangulator::get_triangles() const
+	{
+		return impl->triangles;
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// DelauneyTriangulator attributes:
+	void DelauneyTriangulator::add_vertex(float x, float y, void *data)
+	{
+		DelauneyTriangulator_Vertex vertex;
+		vertex.x = x;
+		vertex.y = y;
+		vertex.data = data;
+		impl->input_vertices.push_back(vertex);
+	}
 
-const std::vector<DelauneyTriangulator_Vertex> &DelauneyTriangulator::get_vertices() const
-{
-	return impl->input_vertices;
-}
-
-const std::vector<DelauneyTriangulator_Triangle> &DelauneyTriangulator::get_triangles() const
-{
-	return impl->triangles;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// DelauneyTriangulator operations:
-
-void DelauneyTriangulator::add_vertex(float x, float y, void *data)
-{
-	DelauneyTriangulator_Vertex vertex;
-	vertex.x = x;
-	vertex.y = y;
-	vertex.data = data;
-	impl->input_vertices.push_back(vertex);
-}
-
-void DelauneyTriangulator::generate()
-{
-	if (impl->input_vertices.empty()) return;
-	impl->triangulate();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// DelauneyTriangulator implementation:
-
+	void DelauneyTriangulator::generate()
+	{
+		if (impl->input_vertices.empty()) return;
+		impl->triangulate();
+	}
 }

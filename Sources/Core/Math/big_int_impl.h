@@ -51,132 +51,128 @@
 
 namespace clan
 {
-class BigInt_Impl;
+	class BigInt_Impl;
 
-class BigInt_Impl
-{
-
-public:
-	BigInt_Impl(unsigned int prec = default_allocated_precision);
-	BigInt_Impl(const BigInt_Impl &other);
-	~BigInt_Impl();
-
-	void read_unsigned_octets( const unsigned char *input_str, unsigned int input_length);
-	void zero();
-	bool make_prime(unsigned int num_bits);
-	int cmp_z() const;
-	void set_bit(unsigned int bit_number, unsigned int value);
-	int significant_bits() const;
-	void sieve(const uint32_t *primes, unsigned int num_primes, std::vector<unsigned char> &sieve);
-	uint32_t mod_d(uint32_t d) const;
-	void div_d(uint32_t d, BigInt_Impl *q, uint32_t *r) const;
-	void copy(BigInt_Impl *to) const;
-	void add_d(uint32_t d, BigInt_Impl *out_b) const;
-	bool fermat(uint32_t w) const;
-	bool pprime(int nt) const;
-	void set(uint32_t d);
-	void set(int32_t d);
-	void set(uint64_t d);
-	void set(int64_t d);
-	void get(uint32_t &d);
-	void get(int32_t &d);
-	void get(uint64_t &d);
-	void get(int64_t &d);
-	void exptmod(const BigInt_Impl *b, const BigInt_Impl *m, BigInt_Impl *c) const;
-	void mod(const BigInt_Impl *m, BigInt_Impl *c) const;
-	void div(const BigInt_Impl *b, BigInt_Impl *q, BigInt_Impl *r) const;
-	void add(const BigInt_Impl *b, BigInt_Impl *c) const;
-	void sub(const BigInt_Impl *b, BigInt_Impl *c) const;
-	int cmp(const BigInt_Impl *b) const;
-	int cmp_d(uint32_t d) const;
-	void sub_d(uint32_t d, BigInt_Impl *b) const;
-	void neg(BigInt_Impl *b) const;
-	unsigned int trailing_zeros() const;
-	void div_2d(uint32_t d, BigInt_Impl *q, BigInt_Impl *r) const;
-	void sqrmod(const BigInt_Impl *m, BigInt_Impl *c) const;
-	void sqr(BigInt_Impl *b) const;
-	void random();
-	void exch(BigInt_Impl *mp2);
-	void mul(const BigInt_Impl *b, BigInt_Impl *c) const;
-	void mul_d(uint32_t d, BigInt_Impl *c) const;
-	bool invmod(const BigInt_Impl *m, BigInt_Impl *c) const;
-	void xgcd(const BigInt_Impl *b, BigInt_Impl *g, BigInt_Impl *x, BigInt_Impl *y) const;
-	void abs(BigInt_Impl *b) const;
-	int iseven() const;
-	int isodd() const;
-	void div_2(BigInt_Impl *c) const;
-	void to_unsigned_octets( unsigned char *output_str, unsigned int output_length) const;
-	int unsigned_octet_size() const;
-
-	static const int default_allocated_precision;
-
-private:
-	static const int num_bits_in_digit = (8*sizeof(uint32_t));
-	static const int num_bits_in_word = (8*sizeof(uint64_t));
-	static const uint64_t digit_radix = 1ULL << (8*sizeof(uint32_t));
-	static const uint32_t digit_half_radix = 1U << (8*sizeof(uint32_t) - 1);
-	static const uint64_t word_maximim_value = ~0;
-
-	static const int prime_tab_size = 6542;
-	static std::vector<uint32_t> prime_tab;
-
-	static void build_primes();
-
-	static inline uint32_t internal_carryout(uint64_t w)
+	class BigInt_Impl
 	{
-		return w >> num_bits_in_digit;
-	}
+	public:
+		BigInt_Impl(unsigned int prec = default_allocated_precision);
+		BigInt_Impl(const BigInt_Impl &other);
+		~BigInt_Impl();
 
-	static inline uint32_t internal_accum(uint64_t w)
-	{
-		return (uint32_t) w;
-	}
+		void read_unsigned_octets(const unsigned char *input_str, unsigned int input_length);
+		void zero();
+		bool make_prime(unsigned int num_bits);
+		int cmp_z() const;
+		void set_bit(unsigned int bit_number, unsigned int value);
+		int significant_bits() const;
+		void sieve(const uint32_t *primes, unsigned int num_primes, std::vector<unsigned char> &sieve);
+		uint32_t mod_d(uint32_t d) const;
+		void div_d(uint32_t d, BigInt_Impl *q, uint32_t *r) const;
+		void copy(BigInt_Impl *to) const;
+		void add_d(uint32_t d, BigInt_Impl *out_b) const;
+		bool fermat(uint32_t w) const;
+		bool pprime(int nt) const;
+		void set(uint32_t d);
+		void set(int32_t d);
+		void set(uint64_t d);
+		void set(int64_t d);
+		void get(uint32_t &d);
+		void get(int32_t &d);
+		void get(uint64_t &d);
+		void get(int64_t &d);
+		void exptmod(const BigInt_Impl *b, const BigInt_Impl *m, BigInt_Impl *c) const;
+		void mod(const BigInt_Impl *m, BigInt_Impl *c) const;
+		void div(const BigInt_Impl *b, BigInt_Impl *q, BigInt_Impl *r) const;
+		void add(const BigInt_Impl *b, BigInt_Impl *c) const;
+		void sub(const BigInt_Impl *b, BigInt_Impl *c) const;
+		int cmp(const BigInt_Impl *b) const;
+		int cmp_d(uint32_t d) const;
+		void sub_d(uint32_t d, BigInt_Impl *b) const;
+		void neg(BigInt_Impl *b) const;
+		unsigned int trailing_zeros() const;
+		void div_2d(uint32_t d, BigInt_Impl *q, BigInt_Impl *r) const;
+		void sqrmod(const BigInt_Impl *m, BigInt_Impl *c) const;
+		void sqr(BigInt_Impl *b) const;
+		void random();
+		void exch(BigInt_Impl *mp2);
+		void mul(const BigInt_Impl *b, BigInt_Impl *c) const;
+		void mul_d(uint32_t d, BigInt_Impl *c) const;
+		bool invmod(const BigInt_Impl *m, BigInt_Impl *c) const;
+		void xgcd(const BigInt_Impl *b, BigInt_Impl *g, BigInt_Impl *x, BigInt_Impl *y) const;
+		void abs(BigInt_Impl *b) const;
+		int iseven() const;
+		int isodd() const;
+		void div_2(BigInt_Impl *c) const;
+		void to_unsigned_octets(unsigned char *output_str, unsigned int output_length) const;
+		int unsigned_octet_size() const;
 
-	void internal_init_size(unsigned int prec);
-	void internal_free();
-	void internal_lshd(unsigned int p);
-	void internal_pad(unsigned int min);
-	void internal_grow(unsigned int min);
-	void internal_clamp();
-	int internal_ispow2d(uint32_t d) const;
-	void internal_div_2d(uint32_t d);
-	void internal_rshd(unsigned int p);
-	int  internal_ispow2() const;
-	void internal_mod_2d(uint32_t d);
-	void internal_mul_2d(uint32_t d);
+		static const int default_allocated_precision;
 
-	// Exchange the data for a and b; (b, a) = (a, b)
-	void internal_exch(BigInt_Impl *b);
+	private:
+		static const int num_bits_in_digit = (8 * sizeof(uint32_t));
+		static const int num_bits_in_word = (8 * sizeof(uint64_t));
+		static const uint64_t digit_radix = 1ULL << (8 * sizeof(uint32_t));
+		static const uint32_t digit_half_radix = 1U << (8 * sizeof(uint32_t) - 1);
+		static const uint64_t word_maximim_value = ~0;
 
-	// Compare |a| <=> d, return 0 if equal, <0 if a<d, >0 if a>d
-	int internal_cmp_d(uint32_t d) const;
+		static const int prime_tab_size = 6542;
+		static std::vector<uint32_t> prime_tab;
 
-	void internal_div_d(uint32_t d, uint32_t *r);
+		static void build_primes();
 
-	void internal_add_d(uint32_t d);
-	void internal_sub_d(uint32_t d);
-	uint32_t internal_norm(BigInt_Impl *b);
-	void internal_sub(const BigInt_Impl *b);
+		static inline uint32_t internal_carryout(uint64_t w)
+		{
+			return w >> num_bits_in_digit;
+		}
 
-	int internal_cmp(const BigInt_Impl *b) const;
-	void internal_div(BigInt_Impl *b);
-	void internal_mul_d(uint32_t d);
-	void internal_add(const BigInt_Impl *b);
-	void internal_mul(const BigInt_Impl *b);
-	void internal_div_2();
-	void internal_mul_2();
+		static inline uint32_t internal_accum(uint64_t w)
+		{
+			return (uint32_t)w;
+		}
 
-	void internal_reduce(const BigInt_Impl *m, BigInt_Impl *mu);
-	void internal_sqr();
+		void internal_init_size(unsigned int prec);
+		void internal_free();
+		void internal_lshd(unsigned int p);
+		void internal_pad(unsigned int min);
+		void internal_grow(unsigned int min);
+		void internal_clamp();
+		int internal_ispow2d(uint32_t d) const;
+		void internal_div_2d(uint32_t d);
+		void internal_rshd(unsigned int p);
+		int  internal_ispow2() const;
+		void internal_mod_2d(uint32_t d);
+		void internal_mul_2d(uint32_t d);
 
-	bool digits_negative;	// True if the value is negative
-	unsigned int digits_alloc;		// How many digits allocated
-	unsigned int digits_used;		// How many digits used
-	uint32_t *digits;	// The digits themselves
+		// Exchange the data for a and b; (b, a) = (a, b)
+		void internal_exch(BigInt_Impl *b);
 
-	BigInt_Impl &operator=(const BigInt_Impl& other);	// Not defined
+		// Compare |a| <=> d, return 0 if equal, <0 if a<d, >0 if a>d
+		int internal_cmp_d(uint32_t d) const;
 
-};
+		void internal_div_d(uint32_t d, uint32_t *r);
 
+		void internal_add_d(uint32_t d);
+		void internal_sub_d(uint32_t d);
+		uint32_t internal_norm(BigInt_Impl *b);
+		void internal_sub(const BigInt_Impl *b);
+
+		int internal_cmp(const BigInt_Impl *b) const;
+		void internal_div(BigInt_Impl *b);
+		void internal_mul_d(uint32_t d);
+		void internal_add(const BigInt_Impl *b);
+		void internal_mul(const BigInt_Impl *b);
+		void internal_div_2();
+		void internal_mul_2();
+
+		void internal_reduce(const BigInt_Impl *m, BigInt_Impl *mu);
+		void internal_sqr();
+
+		bool digits_negative;	// True if the value is negative
+		unsigned int digits_alloc;		// How many digits allocated
+		unsigned int digits_used;		// How many digits used
+		uint32_t *digits;	// The digits themselves
+
+		BigInt_Impl &operator=(const BigInt_Impl& other);	// Not defined
+	};
 }
-

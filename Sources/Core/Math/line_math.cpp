@@ -25,7 +25,6 @@
 **
 **    Harry Storbacka
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Core/precomp.h"
@@ -35,50 +34,48 @@
 
 namespace clan
 {
+	float LineMath::point_right_of_line(float x, float y, float *line)
+	{
+		const float &Ax = line[0];
+		const float &Ay = line[1];
+		const float &Bx = line[2];
+		const float &By = line[3];
 
-float LineMath::point_right_of_line( float x, float y, float *line )
-{
-	const float &Ax = line[0];
-	const float &Ay = line[1];
-	const float &Bx = line[2];
-	const float &By = line[3];
+		return (Bx - Ax) * (y - Ay) - (x - Ax) * (By - Ay);
+	}
 
-	return (Bx-Ax) * (y-Ay) - (x-Ax) * (By-Ay);
-}
+	float LineMath::point_right_of_line(float x, float y, float Ax, float Ay, float Bx, float By)
+	{
+		return (Bx - Ax) * (y - Ay) - (x - Ax) * (By - Ay);
+	}
 
-float LineMath::point_right_of_line(float x, float y, float Ax, float Ay, float Bx, float By)
-{
-	return (Bx-Ax) * (y-Ay) - (x-Ax) * (By-Ay);
-}
+	float LineMath::point_right_of_line(const Pointf &A, const Pointf &B, const Pointf &P)
+	{
+		return (B.x - A.x) * (P.y - A.y) - (P.x - A.x) * (B.y - A.y);
+	}
 
-float LineMath::point_right_of_line( const Pointf &A, const Pointf &B, const Pointf &P )
-{
-	return (B.x-A.x) * (P.y-A.y) - (P.x-A.x) * (B.y-A.y);
-}
+	// return the midpoint on the line from A to B
+	Pointf LineMath::midpoint(const Pointf &A, const Pointf &B)
+	{
+		return Pointf((A.x + B.x) / 2.0f, (A.y + B.y) / 2.0f);
+	}
 
-// return the midpoint on the line from A to B
-Pointf LineMath::midpoint( const Pointf &A, const Pointf &B )
-{
-	return Pointf( (A.x+B.x)/2.0f, (A.y+B.y)/2.0f );
-}
+	Pointf LineMath::closest_point(const Pointf &P, const Pointf &A, const Pointf &B)
+	{
+		float u = closest_point_relative(P, A, B);
+		return Pointf(A.x + u*(B.x - A.x), A.y + u*(B.y - A.y));
+	}
 
-Pointf LineMath::closest_point( const Pointf &P, const Pointf &A, const Pointf &B)
-{
-	float u = closest_point_relative(P,A,B);
-	return Pointf( A.x + u*(B.x-A.x), A.y + u*(B.y-A.y) );
-}
+	float LineMath::closest_point_relative(const Pointf &P, const Pointf &A, const Pointf &B)
+	{
+		if (A == B)
+			return 1.0;
 
-float LineMath::closest_point_relative( const Pointf &P, const Pointf &A, const Pointf &B)
-{
-	if( A == B )
-		return 1.0;
+		float u = ((P.x - A.x)*(B.x - A.x) + (P.y - A.y)*(B.y - A.y)) / (pow2(B.x - A.x) + pow2(B.y - A.y));
 
-	float u = ((P.x - A.x)*(B.x - A.x) + (P.y - A.y)*(B.y - A.y)) / (pow2(B.x-A.x) + pow2(B.y-A.y));
+		if (u < 0.0) return 0.0;
+		if (u > 1.0) return 1.0;
 
-	if( u < 0.0 ) return 0.0;
-	if( u > 1.0 ) return 1.0;
-
-	return u;
-}
-
+		return u;
+	}
 }
