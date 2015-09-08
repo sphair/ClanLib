@@ -33,13 +33,11 @@
 
 namespace clan
 {
+	class D3DRasterizerStateProvider : public RasterizerStateProvider
+	{
+	public:
+		D3DRasterizerStateProvider(const ComPtr<ID3D11Device> &device, const RasterizerStateDescription &desc);
 
-class D3DRasterizerStateProvider : public RasterizerStateProvider
-{
-public:
-	D3DRasterizerStateProvider(const ComPtr<ID3D11Device> &device, const RasterizerStateDescription &desc);
-
-	ComPtr<ID3D11RasterizerState> state;
-};
-
+		ComPtr<ID3D11RasterizerState> state;
+	};
 }

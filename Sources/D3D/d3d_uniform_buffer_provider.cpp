@@ -35,182 +35,168 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// D3DUniformBufferProvider Construction:
-
-D3DUniformBufferProvider::D3DUniformBufferProvider(const ComPtr<ID3D11Device> &device)
-: size(0)
-{
-	handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device)));
-}
-
-D3DUniformBufferProvider::~D3DUniformBufferProvider()
-{
-}
-
-void D3DUniformBufferProvider::create(int new_size, BufferUsage usage)
-{
-	size = new_size;
-
-	D3D11_BUFFER_DESC desc;
-	desc.ByteWidth = new_size;
-	desc.Usage = D3D11_USAGE_DEFAULT;
-	desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	desc.CPUAccessFlags = 0;
-	desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED;
-	desc.StructureByteStride = 0;
-	HRESULT result = handles.front()->device->CreateBuffer(&desc, 0, handles.front()->buffer.output_variable());
-	D3DTarget::throw_if_failed("Unable to create program uniform block", result);
-}
-
-void D3DUniformBufferProvider::create(const void *data, int new_size, BufferUsage usage)
-{
-	size = new_size;
-
-	D3D11_SUBRESOURCE_DATA resource_data;
-	resource_data.pSysMem = data;
-	resource_data.SysMemPitch = 0;
-	resource_data.SysMemSlicePitch = 0;
-
-	D3D11_BUFFER_DESC desc;
-	desc.ByteWidth = new_size;
-	desc.Usage = D3D11_USAGE_DEFAULT;
-	desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	desc.CPUAccessFlags = 0;
-	desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED;
-	desc.StructureByteStride = 0;
-	HRESULT result = handles.front()->device->CreateBuffer(&desc, &resource_data, handles.front()->buffer.output_variable());
-	D3DTarget::throw_if_failed("Unable to create program uniform block", result);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// D3DUniformBufferProvider Attributes:
-
-ComPtr<ID3D11Buffer> &D3DUniformBufferProvider::get_buffer(const ComPtr<ID3D11Device> &device)
-{
-	if (device)
-		return get_handles(device).buffer;
-	else
-		return handles.front()->buffer;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// D3DUniformBufferProvider Operations:
-
-void D3DUniformBufferProvider::upload_data(GraphicContext &gc, const void *data, int data_size)
-{
-	if (data_size != size)
-		throw Exception("Upload data size does not match vertex array buffer");
-
-	const ComPtr<ID3D11Device> &device = static_cast<D3DGraphicContextProvider*>(gc.get_provider())->get_window()->get_device();
-	ComPtr<ID3D11DeviceContext> device_context;
-	device->GetImmediateContext(device_context.output_variable());
-	device_context->UpdateSubresource(get_handles(device).buffer, 0, 0, data, 0, 0);
-}
-
-void D3DUniformBufferProvider::copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int copy_size)
-{
-	const ComPtr<ID3D11Device> &device = static_cast<D3DGraphicContextProvider*>(gc.get_provider())->get_window()->get_device();
-	ComPtr<ID3D11Buffer> &transfer_buffer = static_cast<D3DTransferBufferProvider*>(buffer.get_provider())->get_buffer(device);
-	int transfer_buffer_size = static_cast<D3DTransferBufferProvider*>(buffer.get_provider())->get_size();
-
-	if (copy_size == -1)
-		copy_size = transfer_buffer_size;
-
-	if (dest_pos < 0 || copy_size < 0 || dest_pos + copy_size > size || src_pos < 0 || src_pos + copy_size > transfer_buffer_size)
-		throw Exception("Out of bounds!");
-
-	ComPtr<ID3D11DeviceContext> device_context;
-	device->GetImmediateContext(device_context.output_variable());
-
-	D3D11_BOX box;
-	box.left = src_pos;
-	box.right = src_pos + copy_size;
-	box.top = 0;
-	box.bottom = 1;
-	box.front = 0;
-	box.back = 1;
-	device_context->CopySubresourceRegion(get_handles(device).buffer, 0, dest_pos, 0, 0, transfer_buffer, 0, &box);
-}
-
-void D3DUniformBufferProvider::copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int copy_size)
-{
-	const ComPtr<ID3D11Device> &device = static_cast<D3DGraphicContextProvider*>(gc.get_provider())->get_window()->get_device();
-	ComPtr<ID3D11Buffer> &transfer_buffer = static_cast<D3DTransferBufferProvider*>(buffer.get_provider())->get_buffer(device);
-	int transfer_buffer_size = static_cast<D3DTransferBufferProvider*>(buffer.get_provider())->get_size();
-
-	if (copy_size == -1)
-		copy_size = transfer_buffer_size;
-
-	if (dest_pos < 0 || copy_size < 0 || dest_pos + copy_size > transfer_buffer_size || src_pos < 0 || src_pos + copy_size > size)
-		throw Exception("Out of bounds!");
-
-	ComPtr<ID3D11DeviceContext> device_context;
-	device->GetImmediateContext(device_context.output_variable());
-
-	D3D11_BOX box;
-	box.left = dest_pos;
-	box.right = dest_pos + copy_size;
-	box.top = 0;
-	box.bottom = 1;
-	box.front = 0;
-	box.back = 1;
-	device_context->CopySubresourceRegion(transfer_buffer, 0, src_pos, 0, 0, get_handles(device).buffer, 0, &box);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// D3DUniformBufferProvider Implementation:
-
-void D3DUniformBufferProvider::device_destroyed(ID3D11Device *device)
-{
-	for (size_t i = 0; i < handles.size(); i++)
+	D3DUniformBufferProvider::D3DUniformBufferProvider(const ComPtr<ID3D11Device> &device)
+		: size(0)
 	{
-		if (handles[i]->device.get() == device)
+		handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device)));
+	}
+
+	D3DUniformBufferProvider::~D3DUniformBufferProvider()
+	{
+	}
+
+	void D3DUniformBufferProvider::create(int new_size, BufferUsage usage)
+	{
+		size = new_size;
+
+		D3D11_BUFFER_DESC desc;
+		desc.ByteWidth = new_size;
+		desc.Usage = D3D11_USAGE_DEFAULT;
+		desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		desc.CPUAccessFlags = 0;
+		desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED;
+		desc.StructureByteStride = 0;
+		HRESULT result = handles.front()->device->CreateBuffer(&desc, 0, handles.front()->buffer.output_variable());
+		D3DTarget::throw_if_failed("Unable to create program uniform block", result);
+	}
+
+	void D3DUniformBufferProvider::create(const void *data, int new_size, BufferUsage usage)
+	{
+		size = new_size;
+
+		D3D11_SUBRESOURCE_DATA resource_data;
+		resource_data.pSysMem = data;
+		resource_data.SysMemPitch = 0;
+		resource_data.SysMemSlicePitch = 0;
+
+		D3D11_BUFFER_DESC desc;
+		desc.ByteWidth = new_size;
+		desc.Usage = D3D11_USAGE_DEFAULT;
+		desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		desc.CPUAccessFlags = 0;
+		desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED;
+		desc.StructureByteStride = 0;
+		HRESULT result = handles.front()->device->CreateBuffer(&desc, &resource_data, handles.front()->buffer.output_variable());
+		D3DTarget::throw_if_failed("Unable to create program uniform block", result);
+	}
+
+	ComPtr<ID3D11Buffer> &D3DUniformBufferProvider::get_buffer(const ComPtr<ID3D11Device> &device)
+	{
+		if (device)
+			return get_handles(device).buffer;
+		else
+			return handles.front()->buffer;
+	}
+
+	void D3DUniformBufferProvider::upload_data(GraphicContext &gc, const void *data, int data_size)
+	{
+		if (data_size != size)
+			throw Exception("Upload data size does not match vertex array buffer");
+
+		const ComPtr<ID3D11Device> &device = static_cast<D3DGraphicContextProvider*>(gc.get_provider())->get_window()->get_device();
+		ComPtr<ID3D11DeviceContext> device_context;
+		device->GetImmediateContext(device_context.output_variable());
+		device_context->UpdateSubresource(get_handles(device).buffer, 0, 0, data, 0, 0);
+	}
+
+	void D3DUniformBufferProvider::copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int copy_size)
+	{
+		const ComPtr<ID3D11Device> &device = static_cast<D3DGraphicContextProvider*>(gc.get_provider())->get_window()->get_device();
+		ComPtr<ID3D11Buffer> &transfer_buffer = static_cast<D3DTransferBufferProvider*>(buffer.get_provider())->get_buffer(device);
+		int transfer_buffer_size = static_cast<D3DTransferBufferProvider*>(buffer.get_provider())->get_size();
+
+		if (copy_size == -1)
+			copy_size = transfer_buffer_size;
+
+		if (dest_pos < 0 || copy_size < 0 || dest_pos + copy_size > size || src_pos < 0 || src_pos + copy_size > transfer_buffer_size)
+			throw Exception("Out of bounds!");
+
+		ComPtr<ID3D11DeviceContext> device_context;
+		device->GetImmediateContext(device_context.output_variable());
+
+		D3D11_BOX box;
+		box.left = src_pos;
+		box.right = src_pos + copy_size;
+		box.top = 0;
+		box.bottom = 1;
+		box.front = 0;
+		box.back = 1;
+		device_context->CopySubresourceRegion(get_handles(device).buffer, 0, dest_pos, 0, 0, transfer_buffer, 0, &box);
+	}
+
+	void D3DUniformBufferProvider::copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int copy_size)
+	{
+		const ComPtr<ID3D11Device> &device = static_cast<D3DGraphicContextProvider*>(gc.get_provider())->get_window()->get_device();
+		ComPtr<ID3D11Buffer> &transfer_buffer = static_cast<D3DTransferBufferProvider*>(buffer.get_provider())->get_buffer(device);
+		int transfer_buffer_size = static_cast<D3DTransferBufferProvider*>(buffer.get_provider())->get_size();
+
+		if (copy_size == -1)
+			copy_size = transfer_buffer_size;
+
+		if (dest_pos < 0 || copy_size < 0 || dest_pos + copy_size > transfer_buffer_size || src_pos < 0 || src_pos + copy_size > size)
+			throw Exception("Out of bounds!");
+
+		ComPtr<ID3D11DeviceContext> device_context;
+		device->GetImmediateContext(device_context.output_variable());
+
+		D3D11_BOX box;
+		box.left = dest_pos;
+		box.right = dest_pos + copy_size;
+		box.top = 0;
+		box.bottom = 1;
+		box.front = 0;
+		box.back = 1;
+		device_context->CopySubresourceRegion(transfer_buffer, 0, src_pos, 0, 0, get_handles(device).buffer, 0, &box);
+	}
+
+	void D3DUniformBufferProvider::device_destroyed(ID3D11Device *device)
+	{
+		for (size_t i = 0; i < handles.size(); i++)
 		{
-			handles.erase(handles.begin() + i);
-			return;
+			if (handles[i]->device.get() == device)
+			{
+				handles.erase(handles.begin() + i);
+				return;
+			}
 		}
 	}
-}
 
-D3DUniformBufferProvider::DeviceHandles &D3DUniformBufferProvider::get_handles(const ComPtr<ID3D11Device> &device)
-{
-	for (size_t i = 0; i < handles.size(); i++)
-		if (handles[i]->device == device)
-			return *handles[i];
-
-	ComPtr<IDXGIResource> resource;
-	HRESULT result = handles.front()->buffer->QueryInterface(__uuidof(IDXGIResource), (void**)resource.output_variable());
-	D3DTarget::throw_if_failed("ID3D11Buffer.QueryInterface(IDXGIResource) failed", result);
-
-	HANDLE handle = 0;
-	result = resource->GetSharedHandle(&handle);
-	D3DTarget::throw_if_failed("IDXGIResource.GetSharedHandle failed", result);
-
-	ComPtr<ID3D11Buffer> buffer_handle;
-	result = device->OpenSharedResource(handle, __uuidof(ID3D11Buffer), (void**)buffer_handle.output_variable());
-	D3DTarget::throw_if_failed("ID3D11Device.OpenSharedResource failed", result);
-
-	handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device)));
-	handles.back()->buffer = buffer_handle;
-	return *handles.back();
-}
-
-D3D11_MAP D3DUniformBufferProvider::to_d3d_map_type(BufferAccess access)
-{
-	switch (access)
+	D3DUniformBufferProvider::DeviceHandles &D3DUniformBufferProvider::get_handles(const ComPtr<ID3D11Device> &device)
 	{
-	case access_read_only:
-		return D3D11_MAP_READ;
-	case access_write_only:
-		return D3D11_MAP_WRITE;
-	case access_write_discard:
-		return D3D11_MAP_WRITE_DISCARD;
-	case access_read_write:
-		return D3D11_MAP_READ_WRITE;
-	}
-	throw Exception("Unsupported access type");
-}
+		for (size_t i = 0; i < handles.size(); i++)
+			if (handles[i]->device == device)
+				return *handles[i];
 
+		ComPtr<IDXGIResource> resource;
+		HRESULT result = handles.front()->buffer->QueryInterface(__uuidof(IDXGIResource), (void**)resource.output_variable());
+		D3DTarget::throw_if_failed("ID3D11Buffer.QueryInterface(IDXGIResource) failed", result);
+
+		HANDLE handle = 0;
+		result = resource->GetSharedHandle(&handle);
+		D3DTarget::throw_if_failed("IDXGIResource.GetSharedHandle failed", result);
+
+		ComPtr<ID3D11Buffer> buffer_handle;
+		result = device->OpenSharedResource(handle, __uuidof(ID3D11Buffer), (void**)buffer_handle.output_variable());
+		D3DTarget::throw_if_failed("ID3D11Device.OpenSharedResource failed", result);
+
+		handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device)));
+		handles.back()->buffer = buffer_handle;
+		return *handles.back();
+	}
+
+	D3D11_MAP D3DUniformBufferProvider::to_d3d_map_type(BufferAccess access)
+	{
+		switch (access)
+		{
+		case access_read_only:
+			return D3D11_MAP_READ;
+		case access_write_only:
+			return D3D11_MAP_WRITE;
+		case access_write_discard:
+			return D3D11_MAP_WRITE_DISCARD;
+		case access_read_write:
+			return D3D11_MAP_READ_WRITE;
+		}
+		throw Exception("Unsupported access type");
+	}
 }

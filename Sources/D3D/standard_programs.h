@@ -34,31 +34,29 @@
 
 namespace clan
 {
+	class StandardPrograms_Impl;
 
-class StandardPrograms_Impl;
+	class StandardPrograms
+	{
+	public:
+		StandardPrograms();
+		StandardPrograms(GraphicContext &gc);
 
-class StandardPrograms
-{
-public:
-	StandardPrograms();
-	StandardPrograms(GraphicContext &gc);
+		ProgramObject get_program_object(StandardProgram standard_program) const;
 
-	ProgramObject get_program_object(StandardProgram standard_program) const;
+	private:
+		ProgramObject compile(GraphicContext &gc, const void *vertex_code, int vertex_code_size, const void *fragment_code, int fragment_code_size);
+		void link(ProgramObject &program, const std::string &error_message);
 
-private:
-	ProgramObject compile(GraphicContext &gc, const void *vertex_code, int vertex_code_size, const void *fragment_code, int fragment_code_size);
-	void link(ProgramObject &program, const std::string &error_message);
+		std::shared_ptr<StandardPrograms_Impl> impl;
 
-	std::shared_ptr<StandardPrograms_Impl> impl;
-
-	static const BYTE color_only_vertex[];
-	static const BYTE color_only_fragment[];
-	static const BYTE single_texture_vertex[];
-	static const BYTE single_texture_fragment[];
-	static const BYTE sprite_vertex[];
-	static const BYTE sprite_fragment[];
-	static const BYTE path_vertex[];
-	static const BYTE path_fragment[];
-};
-
+		static const BYTE color_only_vertex[];
+		static const BYTE color_only_fragment[];
+		static const BYTE single_texture_vertex[];
+		static const BYTE single_texture_fragment[];
+		static const BYTE sprite_vertex[];
+		static const BYTE sprite_fragment[];
+		static const BYTE path_vertex[];
+		static const BYTE path_fragment[];
+	};
 }

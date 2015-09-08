@@ -33,46 +33,30 @@
 
 namespace clan
 {
-
-class D3DRenderBufferProvider : public RenderBufferProvider
-{
-/// \name Construction
-/// \{
-public:
-	D3DRenderBufferProvider(const ComPtr<ID3D11Device> &device);
-	~D3DRenderBufferProvider();
-/// \}
-
-/// \name Attributes
-/// \{
-public:
-	ComPtr<ID3D11Texture2D> &get_texture(const ComPtr<ID3D11Device> &device);
-	ComPtr<ID3D11RenderTargetView> create_rtv(const ComPtr<ID3D11Device> &device);
-	ComPtr<ID3D11DepthStencilView> create_dsv(const ComPtr<ID3D11Device> &device);
-/// \}
-
-/// \name Operations
-/// \{
-public:
-	void create(int width, int height, TextureFormat texture_format, int multisample_samples);
-/// \}
-
-/// \name Implementation
-/// \{
-private:
-	struct DeviceHandles
+	class D3DRenderBufferProvider : public RenderBufferProvider
 	{
-		DeviceHandles(const ComPtr<ID3D11Device> &device) : device(device) { }
+	public:
+		D3DRenderBufferProvider(const ComPtr<ID3D11Device> &device);
+		~D3DRenderBufferProvider();
 
-		ComPtr<ID3D11Device> device;
-		ComPtr<ID3D11Texture2D> texture;
+		ComPtr<ID3D11Texture2D> &get_texture(const ComPtr<ID3D11Device> &device);
+		ComPtr<ID3D11RenderTargetView> create_rtv(const ComPtr<ID3D11Device> &device);
+		ComPtr<ID3D11DepthStencilView> create_dsv(const ComPtr<ID3D11Device> &device);
+
+		void create(int width, int height, TextureFormat texture_format, int multisample_samples);
+
+	private:
+		struct DeviceHandles
+		{
+			DeviceHandles(const ComPtr<ID3D11Device> &device) : device(device) { }
+
+			ComPtr<ID3D11Device> device;
+			ComPtr<ID3D11Texture2D> texture;
+		};
+
+		void device_destroyed(ID3D11Device *device);
+		DeviceHandles &get_handles(const ComPtr<ID3D11Device> &device);
+
+		std::vector<std::shared_ptr<DeviceHandles> > handles;
 	};
-
-	void device_destroyed(ID3D11Device *device);
-	DeviceHandles &get_handles(const ComPtr<ID3D11Device> &device);
-
-	std::vector<std::shared_ptr<DeviceHandles> > handles;
-/// \}
-};
-
 }

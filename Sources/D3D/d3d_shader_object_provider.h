@@ -30,98 +30,81 @@
 
 #include "API/Display/TargetProviders/shader_object_provider.h"
 #include <map>
-
 #include <D3Dcompiler.h>
 #include <mutex>
 
 namespace clan
 {
+	class D3DShaderObjectProvider : public ShaderObjectProvider
+	{
+	public:
+		D3DShaderObjectProvider(const ComPtr<ID3D11Device> &device, D3D_FEATURE_LEVEL feature_level);
+		~D3DShaderObjectProvider();
+		void create(ShaderType type, const std::string &source);
+		void create(ShaderType type, const void *source, int source_size);
+		void create(ShaderType type, const std::vector<std::string> &sources);
 
-class D3DShaderObjectProvider : public ShaderObjectProvider
-{
-/// \name Construction
-/// \{
-public:
-	D3DShaderObjectProvider(const ComPtr<ID3D11Device> &device, D3D_FEATURE_LEVEL feature_level);
-	~D3DShaderObjectProvider();
-	void create(ShaderType type, const std::string &source);
-	void create(ShaderType type, const void *source, int source_size);
-	void create(ShaderType type, const std::vector<std::string> &sources);
-/// \}
+		unsigned int get_handle() const;
+		bool get_compile_status() const;
+		ShaderType get_shader_type() const;
+		std::string get_info_log() const;
+		std::string get_shader_source() const;
 
-/// \name Attributes
-/// \{
-public:
-	unsigned int get_handle() const;
-	bool get_compile_status() const;
-	ShaderType get_shader_type() const;
-	std::string get_info_log() const;
-	std::string get_shader_source() const;
+		ID3D11VertexShader *get_vertex() { return static_cast<ID3D11VertexShader*>(shader.get()); }
+		ID3D11PixelShader *get_pixel() { return static_cast<ID3D11PixelShader*>(shader.get()); }
+		ID3D11GeometryShader *get_geometry() { return static_cast<ID3D11GeometryShader*>(shader.get()); }
+		ID3D11DomainShader *get_domain() { return static_cast<ID3D11DomainShader*>(shader.get()); }
+		ID3D11HullShader *get_hull() { return static_cast<ID3D11HullShader*>(shader.get()); }
+		ID3D11ComputeShader *get_compute() { return static_cast<ID3D11ComputeShader*>(shader.get()); }
 
-	ID3D11VertexShader *get_vertex() { return static_cast<ID3D11VertexShader*>(shader.get()); }
-	ID3D11PixelShader *get_pixel() { return static_cast<ID3D11PixelShader*>(shader.get()); }
-	ID3D11GeometryShader *get_geometry() { return static_cast<ID3D11GeometryShader*>(shader.get()); }
-	ID3D11DomainShader *get_domain() { return static_cast<ID3D11DomainShader*>(shader.get()); }
-	ID3D11HullShader *get_hull() { return static_cast<ID3D11HullShader*>(shader.get()); }
-	ID3D11ComputeShader *get_compute() { return static_cast<ID3D11ComputeShader*>(shader.get()); }
+		ComPtr<ID3D11Device> device;
+		DataBuffer bytecode;
+		ComPtr<ID3D11DeviceChild> shader;
 
-	ComPtr<ID3D11Device> device;
-	DataBuffer bytecode;
-	ComPtr<ID3D11DeviceChild> shader;
+		std::map<std::string, int> sampler_locations;
+		std::map<std::string, int> texture_locations;
+		std::map<std::string, int> image_locations;
+		std::map<std::string, int> uniform_buffer_locations;
+		std::map<std::string, int> storage_buffer_srv_locations;
+		std::map<std::string, int> storage_buffer_uav_locations;
 
-	std::map<std::string, int> sampler_locations;
-	std::map<std::string, int> texture_locations;
-	std::map<std::string, int> image_locations;
-	std::map<std::string, int> uniform_buffer_locations;
-	std::map<std::string, int> storage_buffer_srv_locations;
-	std::map<std::string, int> storage_buffer_uav_locations;
-/// \}
+		void compile();
 
-/// \name Operations
-/// \{
-public:
-	void compile();
-/// \}
+	private:
+		void set_binding(D3D11_SHADER_INPUT_BIND_DESC &binding);
+		void create_shader();
+		void find_locations();
+		std::string get_shader_model() const;
+		void load_compiler_dll();
 
-/// \name Implementation
-/// \{
-private:
-	void set_binding(D3D11_SHADER_INPUT_BIND_DESC &binding);
-	void create_shader();
-	void find_locations();
-	std::string get_shader_model() const;
-	void load_compiler_dll();
+		std::string info_log;
+		bool compile_status;
+		std::string shader_source;
+		ShaderType type;
+		D3D_FEATURE_LEVEL feature_level;
 
-	std::string info_log;
-	bool compile_status;
-	std::string shader_source;
-	ShaderType type;
-	D3D_FEATURE_LEVEL feature_level;
+		typedef HRESULT(WINAPI *FuncD3DCompile)(
+			LPCVOID pSrcData,
+			SIZE_T SrcDataSize,
+			LPCSTR pSourceName,
+			CONST D3D_SHADER_MACRO* pDefines,
+			ID3DInclude* pInclude,
+			LPCSTR pEntrypoint,
+			LPCSTR pTarget,
+			UINT Flags1,
+			UINT Flags2,
+			ID3DBlob** ppCode,
+			ID3DBlob** ppErrorMsgs);
 
-	typedef HRESULT (WINAPI *FuncD3DCompile)(
-		LPCVOID pSrcData,
-		SIZE_T SrcDataSize,
-		LPCSTR pSourceName,
-		CONST D3D_SHADER_MACRO* pDefines,
-		ID3DInclude* pInclude,
-		LPCSTR pEntrypoint,
-		LPCSTR pTarget,
-		UINT Flags1,
-		UINT Flags2,
-		ID3DBlob** ppCode,
-		ID3DBlob** ppErrorMsgs);
+		typedef HRESULT(WINAPI *FuncD3DReflect)(
+			LPCVOID pSrcData,
+			SIZE_T SrcDataSize,
+			REFIID pInterface,
+			void** ppReflector);
 
-	typedef HRESULT (WINAPI *FuncD3DReflect)(
-		LPCVOID pSrcData,
-		SIZE_T SrcDataSize,
-		REFIID pInterface,
-		void** ppReflector);
-
-	static std::recursive_mutex d3dcompiler_mutex;
-	static HMODULE d3dcompiler_dll;
-	static FuncD3DCompile d3dcompile;
-	static FuncD3DReflect d3dreflect;
-/// \}
-};
-
+		static std::recursive_mutex d3dcompiler_mutex;
+		static HMODULE d3dcompiler_dll;
+		static FuncD3DCompile d3dcompile;
+		static FuncD3DReflect d3dreflect;
+	};
 }

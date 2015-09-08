@@ -33,67 +33,49 @@
 
 namespace clan
 {
+	class D3DGraphicContextProvider;
 
-class D3DGraphicContextProvider;
-
-class D3DPixelBufferProvider : public PixelBufferProvider, D3DSharedResource
-{
-/// \name Construction
-/// \{
-public:
-	D3DPixelBufferProvider(const ComPtr<ID3D11Device> &device);
-	~D3DPixelBufferProvider();
-	void create(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage);
-/// \}
-
-/// \name Attributes
-/// \{
-public:
-	void *get_data();
-	int get_pitch() const;
-
-	ComPtr<ID3D11Texture2D> &get_texture_2d(const ComPtr<ID3D11Device> &device);
-	Size get_size() const { return size; }
-	bool is_gpu() const { return true; }
-
-	TextureFormat get_format() const { return texture_format; };
-
-/// \}
-
-/// \name Operations
-/// \{
-public:
-	void lock(GraphicContext &gc, BufferAccess access);
-	void unlock();
-	void upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data);
-/// \}
-
-/// \name Implementation
-/// \{
-private:
-	struct DeviceHandles
+	class D3DPixelBufferProvider : public PixelBufferProvider, D3DSharedResource
 	{
-		DeviceHandles(const ComPtr<ID3D11Device> &device) : device(device) { }
+	public:
+		D3DPixelBufferProvider(const ComPtr<ID3D11Device> &device);
+		~D3DPixelBufferProvider();
+		void create(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage);
 
-		ComPtr<ID3D11Device> device;
-		ComPtr<ID3D11Texture2D> texture;
+		void *get_data();
+		int get_pitch() const;
+
+		ComPtr<ID3D11Texture2D> &get_texture_2d(const ComPtr<ID3D11Device> &device);
+		Size get_size() const { return size; }
+		bool is_gpu() const { return true; }
+
+		TextureFormat get_format() const { return texture_format; };
+
+		void lock(GraphicContext &gc, BufferAccess access);
+		void unlock();
+		void upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data);
+
+	private:
+		struct DeviceHandles
+		{
+			DeviceHandles(const ComPtr<ID3D11Device> &device) : device(device) { }
+
+			ComPtr<ID3D11Device> device;
+			ComPtr<ID3D11Texture2D> texture;
+		};
+
+		void device_destroyed(ID3D11Device *device);
+		DeviceHandles &get_handles(const ComPtr<ID3D11Device> &device);
+
+		static D3D11_MAP to_d3d_map_type(BufferAccess access);
+		static UINT to_d3d_cpu_access(PixelBufferDirection direction);
+
+		std::vector<std::shared_ptr<DeviceHandles> > handles;
+		D3D11_MAPPED_SUBRESOURCE map_data;
+		D3DGraphicContextProvider *map_gc_provider;
+
+		Size size;
+		TextureFormat texture_format;
+		bool data_locked;	// lock() has been called
 	};
-
-	void device_destroyed(ID3D11Device *device);
-	DeviceHandles &get_handles(const ComPtr<ID3D11Device> &device);
-
-	static D3D11_MAP to_d3d_map_type(BufferAccess access);
-	static UINT to_d3d_cpu_access(PixelBufferDirection direction);
-
-	std::vector<std::shared_ptr<DeviceHandles> > handles;
-	D3D11_MAPPED_SUBRESOURCE map_data;
-	D3DGraphicContextProvider *map_gc_provider;
-
-	Size size;
-	TextureFormat texture_format;
-	bool data_locked;	// lock() has been called
-
-/// \}
-};
-
 }

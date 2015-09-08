@@ -32,30 +32,16 @@
 
 namespace clan
 {
+	D3DTargetProvider::D3DTargetProvider()
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// D3DTargetProvider Construction:
+	D3DTargetProvider::~D3DTargetProvider()
+	{
+	}
 
-D3DTargetProvider::D3DTargetProvider()
-{
-}
-
-D3DTargetProvider::~D3DTargetProvider()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// D3DTargetProvider Attributes:
-
-/////////////////////////////////////////////////////////////////////////////
-// D3DTargetProvider Operations:
-
-DisplayWindowProvider *D3DTargetProvider::alloc_display_window()
-{
-	return new D3DDisplayWindowProvider;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// D3DTargetProvider Implementation:
-
+	DisplayWindowProvider *D3DTargetProvider::alloc_display_window()
+	{
+		return new D3DDisplayWindowProvider;
+	}
 }

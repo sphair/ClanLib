@@ -32,54 +32,38 @@
 
 namespace clan
 {
-
-class D3DStorageBufferProvider : public StorageBufferProvider
-{
-/// \name Construction
-/// \{
-public:
-	D3DStorageBufferProvider(const ComPtr<ID3D11Device> &device);
-	~D3DStorageBufferProvider();
-	void create(int size, int stride, BufferUsage usage);
-	void create(const void *data, int size, int stride, BufferUsage usage);
-/// \}
-
-/// \name Attributes
-/// \{
-public:
-	ComPtr<ID3D11Buffer> &get_buffer(const ComPtr<ID3D11Device> &device);
-	ComPtr<ID3D11UnorderedAccessView> &get_uav(const ComPtr<ID3D11Device> &device);
-	ComPtr<ID3D11ShaderResourceView> &get_srv(const ComPtr<ID3D11Device> &device);
-/// \}
-
-/// \name Operations
-/// \{
-public:
-	void upload_data(GraphicContext &gc, const void *data, int size);
-	void copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size);
-	void copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size);
-/// \}
-
-/// \name Implementation
-/// \{
-private:
-	struct DeviceHandles
+	class D3DStorageBufferProvider : public StorageBufferProvider
 	{
-		DeviceHandles(const ComPtr<ID3D11Device> &device) : device(device) { }
-		ComPtr<ID3D11Device> device;
-		ComPtr<ID3D11Buffer> buffer;
-		ComPtr<ID3D11ShaderResourceView> srv;
-		ComPtr<ID3D11UnorderedAccessView> uav;
+	public:
+		D3DStorageBufferProvider(const ComPtr<ID3D11Device> &device);
+		~D3DStorageBufferProvider();
+		void create(int size, int stride, BufferUsage usage);
+		void create(const void *data, int size, int stride, BufferUsage usage);
+
+		ComPtr<ID3D11Buffer> &get_buffer(const ComPtr<ID3D11Device> &device);
+		ComPtr<ID3D11UnorderedAccessView> &get_uav(const ComPtr<ID3D11Device> &device);
+		ComPtr<ID3D11ShaderResourceView> &get_srv(const ComPtr<ID3D11Device> &device);
+
+		void upload_data(GraphicContext &gc, const void *data, int size);
+		void copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size);
+		void copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size);
+
+	private:
+		struct DeviceHandles
+		{
+			DeviceHandles(const ComPtr<ID3D11Device> &device) : device(device) { }
+			ComPtr<ID3D11Device> device;
+			ComPtr<ID3D11Buffer> buffer;
+			ComPtr<ID3D11ShaderResourceView> srv;
+			ComPtr<ID3D11UnorderedAccessView> uav;
+		};
+
+		void device_destroyed(ID3D11Device *device);
+		DeviceHandles &get_handles(const ComPtr<ID3D11Device> &device);
+
+		static D3D11_MAP to_d3d_map_type(BufferAccess access);
+
+		std::vector<std::shared_ptr<DeviceHandles> > handles;
+		int size;
 	};
-
-	void device_destroyed(ID3D11Device *device);
-	DeviceHandles &get_handles(const ComPtr<ID3D11Device> &device);
-
-	static D3D11_MAP to_d3d_map_type(BufferAccess access);
-
-	std::vector<std::shared_ptr<DeviceHandles> > handles;
-	int size;
-/// \}
-};
-
 }

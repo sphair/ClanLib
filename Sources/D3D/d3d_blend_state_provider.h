@@ -33,17 +33,15 @@
 
 namespace clan
 {
+	class D3DBlendStateProvider : public BlendStateProvider
+	{
+	public:
+		D3DBlendStateProvider(const ComPtr<ID3D11Device> &device, const BlendStateDescription &desc);
 
-class D3DBlendStateProvider : public BlendStateProvider
-{
-public:
-	D3DBlendStateProvider(const ComPtr<ID3D11Device> &device, const BlendStateDescription &desc);
+		ComPtr<ID3D11BlendState> state;
 
-	ComPtr<ID3D11BlendState> state;
-
-private:
-	static D3D11_BLEND_OP to_d3d_blend_op(BlendEquation op);
-	static D3D11_BLEND to_d3d_blend_func(BlendFunc func);
-};
-
+	private:
+		static D3D11_BLEND_OP to_d3d_blend_op(BlendEquation op);
+		static D3D11_BLEND to_d3d_blend_func(BlendFunc func);
+	};
 }

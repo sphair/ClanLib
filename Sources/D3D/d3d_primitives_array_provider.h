@@ -33,46 +33,30 @@
 
 namespace clan
 {
+	class D3DProgramObjectProvider;
 
-class D3DProgramObjectProvider;
+	class D3DPrimitivesArrayProvider : public PrimitivesArrayProvider
+	{
+	public:
+		D3DPrimitivesArrayProvider(const ComPtr<ID3D11Device> &device);
+		~D3DPrimitivesArrayProvider();
 
-class D3DPrimitivesArrayProvider : public PrimitivesArrayProvider
-{
-/// \name Construction
-/// \{
-public:
-	D3DPrimitivesArrayProvider(const ComPtr<ID3D11Device> &device);
-	~D3DPrimitivesArrayProvider();
-/// \}
+		ComPtr<ID3D11Device> &get_device() { return device; }
+		void get_vertex_buffers(std::vector<ID3D11Buffer *> &out_buffers, std::vector<UINT> &out_strides, std::vector<UINT> &out_offsets);
+		size_t get_vertex_buffers_range() const;
 
-/// \name Attributes
-/// \{
-public:
-	ComPtr<ID3D11Device> &get_device() { return device; }
-	void get_vertex_buffers(std::vector<ID3D11Buffer *> &out_buffers, std::vector<UINT> &out_strides, std::vector<UINT> &out_offsets);
-	size_t get_vertex_buffers_range() const;
-/// \}
+		void set_attribute(int index, const VertexData &data, bool normalize);
 
-/// \name Operations
-/// \{
-public:
-	void set_attribute(int index, const VertexData &data, bool normalize);
+		ID3D11InputLayout *get_input_layout(D3DProgramObjectProvider *program);
 
-	ID3D11InputLayout *get_input_layout(D3DProgramObjectProvider *program);
-/// \}
+	private:
+		ComPtr<ID3D11InputLayout> create_input_layout(D3DProgramObjectProvider *program);
+		static DXGI_FORMAT to_d3d_format(const VertexData &data, bool normalize);
 
-/// \name Implementation
-/// \{
-private:
-	ComPtr<ID3D11InputLayout> create_input_layout(D3DProgramObjectProvider *program);
-	static DXGI_FORMAT to_d3d_format(const VertexData &data, bool normalize);
-
-	ComPtr<ID3D11Device> device;
-	std::vector<VertexData> attributes_data;
-	std::vector<bool> attributes_normalize;
-	std::vector<bool> attributes_set;
-	std::map<void *, ComPtr<ID3D11InputLayout> > input_layouts;
-/// \}
-};
-
+		ComPtr<ID3D11Device> device;
+		std::vector<VertexData> attributes_data;
+		std::vector<bool> attributes_normalize;
+		std::vector<bool> attributes_set;
+		std::map<void *, ComPtr<ID3D11InputLayout> > input_layouts;
+	};
 }

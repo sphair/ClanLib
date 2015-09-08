@@ -33,29 +33,27 @@
 
 namespace clan
 {
+	class D3DSharedResource;
 
-class D3DSharedResource;
+	class D3DShareList
+	{
+	public:
+		static void device_destroyed(ID3D11Device *device);
+		static std::list<D3DSharedResource *>::iterator resource_created(D3DSharedResource *resource);
+		static void resource_destroyed(std::list<D3DSharedResource *>::iterator it);
 
-class D3DShareList
-{
-public:
-	static void device_destroyed(ID3D11Device *device);
-	static std::list<D3DSharedResource *>::iterator resource_created(D3DSharedResource *resource);
-	static void resource_destroyed(std::list<D3DSharedResource *>::iterator it);
+	private:
+		static std::list<D3DSharedResource *> resources;
+	};
 
-private:
-	static std::list<D3DSharedResource *> resources;
-};
+	class D3DSharedResource
+	{
+	public:
+		D3DSharedResource() { shared_it = D3DShareList::resource_created(this); }
+		virtual ~D3DSharedResource() { D3DShareList::resource_destroyed(shared_it); }
+		virtual void device_destroyed(ID3D11Device *device) = 0;
 
-class D3DSharedResource
-{
-public:
-	D3DSharedResource() { shared_it = D3DShareList::resource_created(this); }
-	virtual ~D3DSharedResource() { D3DShareList::resource_destroyed(shared_it); }
-	virtual void device_destroyed(ID3D11Device *device) = 0;
-
-private:
-	std::list<D3DSharedResource *>::iterator shared_it;
-};
-
+	private:
+		std::list<D3DSharedResource *>::iterator shared_it;
+	};
 }

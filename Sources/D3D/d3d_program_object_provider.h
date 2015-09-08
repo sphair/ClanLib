@@ -38,119 +38,103 @@
 
 namespace clan
 {
+	class D3DShaderObjectProvider;
+	class D3DUniformBufferProvider;
 
-class D3DShaderObjectProvider;
-class D3DUniformBufferProvider;
-
-class D3DUniform
-{
-public:
-	enum Type { type_sampler, type_texture, type_image };
-
-	D3DUniform() : type(type_sampler), value(0) { for (int i = 0; i < shadertype_num_types; i++) shader_index[i] = -1; }
-	D3DUniform(Type type) : type(type), value(0) { for (int i = 0; i < shadertype_num_types; i++) shader_index[i] = -1; }
-
-	Type type;
-	int shader_index[shadertype_num_types];
-	int value;
-};
-
-class D3DUniformBlock
-{
-public:
-	D3DUniformBlock() : value(0) { for (int i = 0; i < shadertype_num_types; i++) shader_index[i] = -1; }
-
-	int shader_index[shadertype_num_types];
-	int value;
-};
-
-class D3DStorageBlock
-{
-public:
-	D3DStorageBlock() : value(0) { for (int i = 0; i < shadertype_num_types; i++) { shader_srv_index[i] = -1; shader_uav_index[i] = -1; } }
-
-	int shader_uav_index[shadertype_num_types];
-	int shader_srv_index[shadertype_num_types];
-	int value;
-};
-
-class D3DProgramObjectProvider : public ProgramObjectProvider
-{
-/// \name Construction
-/// \{
-public:
-	D3DProgramObjectProvider(const ComPtr<ID3D11Device> &device, const ComPtr<ID3D11DeviceContext> &device_context);
-	~D3DProgramObjectProvider();
-/// \}
-
-/// \name Attributes
-/// \{
-public:
-	unsigned int get_handle() const;
-	bool get_link_status() const;
-	bool get_validate_status() const;
-	std::string get_info_log() const;
-	std::vector<ShaderObject> get_shaders() const;
-	int get_attribute_location(const std::string &name) const;
-	int get_uniform_location(const std::string &name) const;
-
-	int get_uniform_buffer_size(int block_index) const;
-	int get_uniform_buffer_index(const std::string &block_name) const;
-	int get_storage_buffer_index(const std::string &name) const;
-
-	DataBuffer &get_shader_bytecode(ShaderType shader_type);
-	D3DShaderObjectProvider *get_shader_provider(ShaderType shader_type);
-
-	struct AttributeBinding
+	class D3DUniform
 	{
-		AttributeBinding() : semantic_index(0) { }
-		std::string semantic_name;
-		int semantic_index;
+	public:
+		enum Type { type_sampler, type_texture, type_image };
+
+		D3DUniform() : type(type_sampler), value(0) { for (int i = 0; i < shadertype_num_types; i++) shader_index[i] = -1; }
+		D3DUniform(Type type) : type(type), value(0) { for (int i = 0; i < shadertype_num_types; i++) shader_index[i] = -1; }
+
+		Type type;
+		int shader_index[shadertype_num_types];
+		int value;
 	};
-	std::map<int, AttributeBinding> attribute_bindings;
 
-	std::vector<D3DUniform> uniforms;
-	std::map<std::string, int> uniform_names;
+	class D3DUniformBlock
+	{
+	public:
+		D3DUniformBlock() : value(0) { for (int i = 0; i < shadertype_num_types; i++) shader_index[i] = -1; }
 
-	std::vector<D3DUniformBlock> uniform_blocks;
-	std::map<std::string, int> uniform_block_names;
+		int shader_index[shadertype_num_types];
+		int value;
+	};
 
-	std::vector<D3DStorageBlock> storage_blocks;
-	std::map<std::string, int> storage_block_names;
-/// \}
+	class D3DStorageBlock
+	{
+	public:
+		D3DStorageBlock() : value(0) { for (int i = 0; i < shadertype_num_types; i++) { shader_srv_index[i] = -1; shader_uav_index[i] = -1; } }
 
-/// \name Operations
-/// \{
-public:
-	void attach(const ShaderObject &obj);
-	void detach(const ShaderObject &obj);
-	void bind_attribute_location(int index, const std::string &name);
-	void bind_frag_data_location(int color_number, const std::string &name);
-	void link();
-	void validate();
+		int shader_uav_index[shadertype_num_types];
+		int shader_srv_index[shadertype_num_types];
+		int value;
+	};
 
-	void set_uniform1i(int location, int);
-	void set_uniform2i(int location, int, int);
-	void set_uniform3i(int location, int, int, int);
-	void set_uniform4i(int location, int, int, int, int);
-	void set_uniformiv(int location, int size, int count, const int *data);
-	void set_uniform1f(int location, float);
-	void set_uniform2f(int location, float, float);
-	void set_uniform3f(int location, float, float, float);
-	void set_uniform4f(int location, float, float, float, float);
-	void set_uniformfv(int location, int size, int count, const float *data);
-	void set_uniform_matrix(int location, int size, int count, bool transpose, const float *data);
-	void set_uniform_buffer_index(int block_index, int bind_index);
-	void set_storage_buffer_index(int buffer_index, int bind_unit_index);
-/// \}
+	class D3DProgramObjectProvider : public ProgramObjectProvider
+	{
+	public:
+		D3DProgramObjectProvider(const ComPtr<ID3D11Device> &device, const ComPtr<ID3D11DeviceContext> &device_context);
+		~D3DProgramObjectProvider();
 
-/// \name Implementation
-/// \{
-private:
-	ComPtr<ID3D11Device> device;
-	ComPtr<ID3D11DeviceContext> device_context;
-	ShaderObject shaders[shadertype_num_types];
-/// \}
-};
+		unsigned int get_handle() const;
+		bool get_link_status() const;
+		bool get_validate_status() const;
+		std::string get_info_log() const;
+		std::vector<ShaderObject> get_shaders() const;
+		int get_attribute_location(const std::string &name) const;
+		int get_uniform_location(const std::string &name) const;
 
+		int get_uniform_buffer_size(int block_index) const;
+		int get_uniform_buffer_index(const std::string &block_name) const;
+		int get_storage_buffer_index(const std::string &name) const;
+
+		DataBuffer &get_shader_bytecode(ShaderType shader_type);
+		D3DShaderObjectProvider *get_shader_provider(ShaderType shader_type);
+
+		struct AttributeBinding
+		{
+			AttributeBinding() : semantic_index(0) { }
+			std::string semantic_name;
+			int semantic_index;
+		};
+		std::map<int, AttributeBinding> attribute_bindings;
+
+		std::vector<D3DUniform> uniforms;
+		std::map<std::string, int> uniform_names;
+
+		std::vector<D3DUniformBlock> uniform_blocks;
+		std::map<std::string, int> uniform_block_names;
+
+		std::vector<D3DStorageBlock> storage_blocks;
+		std::map<std::string, int> storage_block_names;
+
+		void attach(const ShaderObject &obj);
+		void detach(const ShaderObject &obj);
+		void bind_attribute_location(int index, const std::string &name);
+		void bind_frag_data_location(int color_number, const std::string &name);
+		void link();
+		void validate();
+
+		void set_uniform1i(int location, int);
+		void set_uniform2i(int location, int, int);
+		void set_uniform3i(int location, int, int, int);
+		void set_uniform4i(int location, int, int, int, int);
+		void set_uniformiv(int location, int size, int count, const int *data);
+		void set_uniform1f(int location, float);
+		void set_uniform2f(int location, float, float);
+		void set_uniform3f(int location, float, float, float);
+		void set_uniform4f(int location, float, float, float, float);
+		void set_uniformfv(int location, int size, int count, const float *data);
+		void set_uniform_matrix(int location, int size, int count, bool transpose, const float *data);
+		void set_uniform_buffer_index(int block_index, int bind_index);
+		void set_storage_buffer_index(int buffer_index, int bind_unit_index);
+
+	private:
+		ComPtr<ID3D11Device> device;
+		ComPtr<ID3D11DeviceContext> device_context;
+		ShaderObject shaders[shadertype_num_types];
+	};
 }

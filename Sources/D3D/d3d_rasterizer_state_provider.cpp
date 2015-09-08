@@ -32,41 +32,39 @@
 
 namespace clan
 {
-
-D3DRasterizerStateProvider::D3DRasterizerStateProvider(const ComPtr<ID3D11Device> &device, const RasterizerStateDescription &desc)
-{
-	D3D11_RASTERIZER_DESC d3d_desc;
-	d3d_desc.FrontCounterClockwise = (desc.get_front_face() == face_counter_clockwise) ? TRUE : FALSE;
-	d3d_desc.DepthBias = 0;
-	d3d_desc.SlopeScaledDepthBias = 0.0f;
-	d3d_desc.DepthBiasClamp = 0.0f;
-	d3d_desc.ScissorEnable = desc.get_enable_scissor() ? TRUE : FALSE;
-	d3d_desc.MultisampleEnable = FALSE;
-	d3d_desc.AntialiasedLineEnable = desc.get_enable_line_antialiasing() ? TRUE : FALSE;
-
-	if (desc.get_culled())
+	D3DRasterizerStateProvider::D3DRasterizerStateProvider(const ComPtr<ID3D11Device> &device, const RasterizerStateDescription &desc)
 	{
-		switch (desc.get_face_cull_mode())
+		D3D11_RASTERIZER_DESC d3d_desc;
+		d3d_desc.FrontCounterClockwise = (desc.get_front_face() == face_counter_clockwise) ? TRUE : FALSE;
+		d3d_desc.DepthBias = 0;
+		d3d_desc.SlopeScaledDepthBias = 0.0f;
+		d3d_desc.DepthBiasClamp = 0.0f;
+		d3d_desc.ScissorEnable = desc.get_enable_scissor() ? TRUE : FALSE;
+		d3d_desc.MultisampleEnable = FALSE;
+		d3d_desc.AntialiasedLineEnable = desc.get_enable_line_antialiasing() ? TRUE : FALSE;
+
+		if (desc.get_culled())
 		{
-		case cull_front: d3d_desc.CullMode = D3D11_CULL_FRONT; break;
-		case cull_back: d3d_desc.CullMode = D3D11_CULL_BACK; break;
-		case cull_front_and_back: d3d_desc.CullMode = D3D11_CULL_NONE; break;
+			switch (desc.get_face_cull_mode())
+			{
+			case cull_front: d3d_desc.CullMode = D3D11_CULL_FRONT; break;
+			case cull_back: d3d_desc.CullMode = D3D11_CULL_BACK; break;
+			case cull_front_and_back: d3d_desc.CullMode = D3D11_CULL_NONE; break;
+			}
 		}
-	}
-	else
-	{
-		d3d_desc.CullMode = D3D11_CULL_NONE;
-	}
+		else
+		{
+			d3d_desc.CullMode = D3D11_CULL_NONE;
+		}
 
-	switch (desc.get_face_fill_mode())
-	{
-	case fill_point: throw Exception("Point fill mode not supported by D3D target");
-	case fill_line: d3d_desc.FillMode = D3D11_FILL_WIREFRAME; break;
-	case fill_polygon: d3d_desc.FillMode = D3D11_FILL_SOLID; break;
+		switch (desc.get_face_fill_mode())
+		{
+		case fill_point: throw Exception("Point fill mode not supported by D3D target");
+		case fill_line: d3d_desc.FillMode = D3D11_FILL_WIREFRAME; break;
+		case fill_polygon: d3d_desc.FillMode = D3D11_FILL_SOLID; break;
+		}
+
+		HRESULT result = device->CreateRasterizerState(&d3d_desc, state.output_variable());
+		D3DTarget::throw_if_failed("D3D11Device.CreateRasterizerState failed", result);
 	}
-
-	HRESULT result = device->CreateRasterizerState(&d3d_desc, state.output_variable());
-	D3DTarget::throw_if_failed("D3D11Device.CreateRasterizerState failed", result);
-}
-
 }

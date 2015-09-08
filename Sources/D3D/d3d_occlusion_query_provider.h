@@ -32,35 +32,17 @@
 
 namespace clan
 {
+	class D3DOcclusionQueryProvider : public OcclusionQueryProvider
+	{
+	public:
+		D3DOcclusionQueryProvider();
+		~D3DOcclusionQueryProvider();
 
-class D3DOcclusionQueryProvider : public OcclusionQueryProvider
-{
-/// \name Construction
-/// \{
-public:
-	D3DOcclusionQueryProvider();
-	~D3DOcclusionQueryProvider();
-/// \}
+		bool is_result_ready() const;
+		int get_result() const;
 
-/// \name Attributes
-/// \{
-public:
-	bool is_result_ready() const;
-	int get_result() const;
-/// \}
-
-/// \name Operations
-/// \{
-public:
-	void begin();
-	void end();
-	void create();
-/// \}
-
-/// \name Implementation
-/// \{
-private:
-/// \}
-};
-
+		void begin();
+		void end();
+		void create();
+	};
 }

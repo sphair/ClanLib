@@ -33,17 +33,15 @@
 
 namespace clan
 {
+	class D3DDepthStencilStateProvider : public DepthStencilStateProvider
+	{
+	public:
+		D3DDepthStencilStateProvider(const ComPtr<ID3D11Device> &device, const DepthStencilStateDescription &desc);
 
-class D3DDepthStencilStateProvider : public DepthStencilStateProvider
-{
-public:
-	D3DDepthStencilStateProvider(const ComPtr<ID3D11Device> &device, const DepthStencilStateDescription &desc);
+		ComPtr<ID3D11DepthStencilState> state;
 
-	ComPtr<ID3D11DepthStencilState> state;
-
-private:
-	static D3D11_STENCIL_OP to_d3d_stencil_op(StencilOp stencil_op);
-	static D3D11_COMPARISON_FUNC to_d3d_compare_func(CompareFunction func);
-};
-
+	private:
+		static D3D11_STENCIL_OP to_d3d_stencil_op(StencilOp stencil_op);
+		static D3D11_COMPARISON_FUNC to_d3d_compare_func(CompareFunction func);
+	};
 }

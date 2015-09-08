@@ -33,62 +33,60 @@
 
 namespace clan
 {
-
-class SamplerState
-{
-public:
-	SamplerState(const ComPtr<ID3D11Device> &device);
-	~SamplerState();
-
-	void set_min_lod(double min_lod);
-	void set_max_lod(double max_lod);
-	void set_lod_bias(double lod_bias);
-	void set_border_color(float r, float g, float b, float a);
-
-	void set_wrap_mode(
-		TextureWrapMode wrap_s,
-		TextureWrapMode wrap_t,
-		TextureWrapMode wrap_r);
-
-	void set_wrap_mode(
-		TextureWrapMode wrap_s,
-		TextureWrapMode wrap_t);
-
-	void set_wrap_mode(
-		TextureWrapMode wrap_s);
-
-	void set_min_filter(TextureFilter filter);
-	void set_mag_filter(TextureFilter filter);
-	void set_max_anisotropy(float v);
-	void set_texture_compare(TextureCompareMode mode, CompareFunction func);
-
-	ComPtr<ID3D11SamplerState> &get_sampler_state();
-
-	bool uses_mipmaps() const;
-
-private:
-	void sampler_state_changed();
-	void update_filter();
-	static D3D11_FILTER to_d3d_filter(TextureFilter min_filter, TextureFilter mag_filter, TextureCompareMode compare_mode, float max_anisotropy);
-	static D3D11_TEXTURE_ADDRESS_MODE to_d3d_texture_address(TextureWrapMode wrap);
-	static D3D11_COMPARISON_FUNC to_d3d_compare_func(CompareFunction func);
-
-	ComPtr<ID3D11Device> device;
-	D3D11_SAMPLER_DESC sampler_desc;
-	ComPtr<ID3D11SamplerState> sampler_state;
-	float max_anisotropy;
-	TextureCompareMode compare_mode;
-	TextureFilter min_filter, mag_filter;
-
-	struct D3D11SamplerDescLess
+	class SamplerState
 	{
-		bool operator()(const D3D11_SAMPLER_DESC &a, const D3D11_SAMPLER_DESC &b) const
+	public:
+		SamplerState(const ComPtr<ID3D11Device> &device);
+		~SamplerState();
+
+		void set_min_lod(double min_lod);
+		void set_max_lod(double max_lod);
+		void set_lod_bias(double lod_bias);
+		void set_border_color(float r, float g, float b, float a);
+
+		void set_wrap_mode(
+			TextureWrapMode wrap_s,
+			TextureWrapMode wrap_t,
+			TextureWrapMode wrap_r);
+
+		void set_wrap_mode(
+			TextureWrapMode wrap_s,
+			TextureWrapMode wrap_t);
+
+		void set_wrap_mode(
+			TextureWrapMode wrap_s);
+
+		void set_min_filter(TextureFilter filter);
+		void set_mag_filter(TextureFilter filter);
+		void set_max_anisotropy(float v);
+		void set_texture_compare(TextureCompareMode mode, CompareFunction func);
+
+		ComPtr<ID3D11SamplerState> &get_sampler_state();
+
+		bool uses_mipmaps() const;
+
+	private:
+		void sampler_state_changed();
+		void update_filter();
+		static D3D11_FILTER to_d3d_filter(TextureFilter min_filter, TextureFilter mag_filter, TextureCompareMode compare_mode, float max_anisotropy);
+		static D3D11_TEXTURE_ADDRESS_MODE to_d3d_texture_address(TextureWrapMode wrap);
+		static D3D11_COMPARISON_FUNC to_d3d_compare_func(CompareFunction func);
+
+		ComPtr<ID3D11Device> device;
+		D3D11_SAMPLER_DESC sampler_desc;
+		ComPtr<ID3D11SamplerState> sampler_state;
+		float max_anisotropy;
+		TextureCompareMode compare_mode;
+		TextureFilter min_filter, mag_filter;
+
+		struct D3D11SamplerDescLess
 		{
-			return memcmp(&a, &b, sizeof(D3D11_SAMPLER_DESC)) < 0;
-		}
+			bool operator()(const D3D11_SAMPLER_DESC &a, const D3D11_SAMPLER_DESC &b) const
+			{
+				return memcmp(&a, &b, sizeof(D3D11_SAMPLER_DESC)) < 0;
+			}
+		};
+
+		std::map<D3D11_SAMPLER_DESC, ComPtr<ID3D11SamplerState>, D3D11SamplerDescLess> state_cache;
 	};
-
-	std::map<D3D11_SAMPLER_DESC, ComPtr<ID3D11SamplerState>, D3D11SamplerDescLess> state_cache;
-};
-
 }

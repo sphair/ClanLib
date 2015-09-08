@@ -40,31 +40,26 @@
 
 namespace clan
 {
+	SetupD3D_Impl *SetupD3D_Impl::instance = nullptr;
 
-SetupD3D_Impl *SetupD3D_Impl::instance = nullptr;
+	void SetupD3D::start()
+	{
+		std::lock_guard<std::recursive_mutex> lock(SetupCore::instance.mutex);
 
-/////////////////////////////////////////////////////////////////////////////
-// SetupSWRender Construction:
+		if (SetupCore::instance.module_d3d)
+			return;
 
-void SetupD3D::start()
-{
-	std::lock_guard<std::recursive_mutex> lock(SetupCore::instance.mutex);
+		SetupDisplay::start();	// D3D depends on display
+		SetupCore::instance.module_d3d = clan::make_unique<SetupD3D_Impl>();
+	}
 
-	if (SetupCore::instance.module_d3d)
-		return;
+	SetupD3D_Impl::SetupD3D_Impl()
+	{
+		instance = this;
+	}
 
-	SetupDisplay::start();	// D3D depends on display
-	SetupCore::instance.module_d3d = clan::make_unique<SetupD3D_Impl>();
-}
-
-SetupD3D_Impl::SetupD3D_Impl()
-{
-	instance = this;
-}
-
-SetupD3D_Impl::~SetupD3D_Impl()
-{
-	instance = nullptr;
-}
-
+	SetupD3D_Impl::~SetupD3D_Impl()
+	{
+		instance = nullptr;
+	}
 }

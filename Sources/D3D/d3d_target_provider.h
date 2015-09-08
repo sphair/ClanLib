@@ -32,32 +32,12 @@
 
 namespace clan
 {
+	class D3DTargetProvider : public DisplayTargetProvider
+	{
+	public:
+		D3DTargetProvider();
+		~D3DTargetProvider();
 
-class D3DTargetProvider : public DisplayTargetProvider
-{
-/// \name Construction
-/// \{
-public:
-	D3DTargetProvider();
-	~D3DTargetProvider();
-/// \}
-
-/// \name Attributes
-/// \{
-public:
-/// \}
-
-/// \name Operations
-/// \{
-public:
-	DisplayWindowProvider *alloc_display_window();
-/// \}
-
-/// \name Implementation
-/// \{
-private:
-	friend class D3DDisplayWindowProvider;
-/// \}
-};
-
+		DisplayWindowProvider *alloc_display_window();
+	};
 }

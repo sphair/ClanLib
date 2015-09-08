@@ -31,24 +31,22 @@
 
 namespace clan
 {
+	void D3DShareList::device_destroyed(ID3D11Device *device)
+	{
+		std::list<D3DSharedResource *>::iterator it;
+		for (it = resources.begin(); it != resources.end(); ++it)
+			(*it)->device_destroyed(device);
+	}
 
-void D3DShareList::device_destroyed(ID3D11Device *device)
-{
-	std::list<D3DSharedResource *>::iterator it;
-	for (it = resources.begin(); it != resources.end(); ++it)
-		(*it)->device_destroyed(device);
-}
+	std::list<D3DSharedResource *>::iterator D3DShareList::resource_created(D3DSharedResource *resource)
+	{
+		return resources.insert(resources.end(), resource);
+	}
 
-std::list<D3DSharedResource *>::iterator D3DShareList::resource_created(D3DSharedResource *resource)
-{
-	return resources.insert(resources.end(), resource);
-}
+	void D3DShareList::resource_destroyed(std::list<D3DSharedResource *>::iterator it)
+	{
+		resources.erase(it);
+	}
 
-void D3DShareList::resource_destroyed(std::list<D3DSharedResource *>::iterator it)
-{
-	resources.erase(it);
-}
-
-std::list<D3DSharedResource *> D3DShareList::resources;
-
+	std::list<D3DSharedResource *> D3DShareList::resources;
 }

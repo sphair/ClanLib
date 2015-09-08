@@ -40,7 +40,6 @@ namespace clan
 		virtual ~SetupD3D_Impl();
 
 		static SetupD3D_Impl *instance;
-
 	};
 }
 

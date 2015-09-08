@@ -31,47 +31,33 @@
 
 namespace clan
 {
+	D3DOcclusionQueryProvider::D3DOcclusionQueryProvider()
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// D3DOcclusionQueryProvider Construction:
+	D3DOcclusionQueryProvider::~D3DOcclusionQueryProvider()
+	{
+	}
 
-D3DOcclusionQueryProvider::D3DOcclusionQueryProvider()
-{
-}
+	bool D3DOcclusionQueryProvider::is_result_ready() const
+	{
+		return false;
+	}
 
-D3DOcclusionQueryProvider::~D3DOcclusionQueryProvider()
-{
-}
+	int D3DOcclusionQueryProvider::get_result() const
+	{
+		return 0;
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// D3DOcclusionQueryProvider Attributes:
+	void D3DOcclusionQueryProvider::begin()
+	{
+	}
 
-bool D3DOcclusionQueryProvider::is_result_ready() const
-{
-	return false;
-}
+	void D3DOcclusionQueryProvider::end()
+	{
+	}
 
-int D3DOcclusionQueryProvider::get_result() const
-{
-	return 0;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// D3DOcclusionQueryProvider Operations:
-
-void D3DOcclusionQueryProvider::begin()
-{
-}
-
-void D3DOcclusionQueryProvider::end()
-{
-}
-
-void D3DOcclusionQueryProvider::create()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// D3DOcclusionQueryProvider Implementation:
-
+	void D3DOcclusionQueryProvider::create()
+	{
+	}
 }

@@ -33,58 +33,56 @@
 
 namespace clan
 {
-
-class D3DTextureData : D3DSharedResource
-{
-public:
-	D3DTextureData(const ComPtr<ID3D11Device> &device, D3D_FEATURE_LEVEL feature_level, TextureDimensions texture_dimensions);
-	~D3DTextureData();
-
-	enum DeviceTextureType
+	class D3DTextureData : D3DSharedResource
 	{
-		cl_ID3D11Texture1D,
-		cl_ID3D11Texture2D,
-		cl_ID3D11Texture3D
+	public:
+		D3DTextureData(const ComPtr<ID3D11Device> &device, D3D_FEATURE_LEVEL feature_level, TextureDimensions texture_dimensions);
+		~D3DTextureData();
+
+		enum class DeviceTextureType
+		{
+			ID3D11Texture1D,
+			ID3D11Texture2D,
+			ID3D11Texture3D
+		};
+
+		struct DeviceHandles
+		{
+			DeviceHandles(const ComPtr<ID3D11Device> &device, DeviceTextureType texture_type) : device(device), texture_type(texture_type) { }
+
+			ID3D11Texture1D *get_texture_1d()
+			{
+				if (texture_type != DeviceTextureType::ID3D11Texture1D)
+					throw Exception("texture_type not ID3D11Texture1D");
+				return static_cast<ID3D11Texture1D *>(texture.get());
+			}
+
+			ID3D11Texture2D *get_texture_2d()
+			{
+				if (texture_type != DeviceTextureType::ID3D11Texture2D)
+					throw Exception("texture_type not ID3D11Texture2D");
+				return static_cast<ID3D11Texture2D *>(texture.get());
+			}
+
+			ID3D11Texture3D *get_texture_3d()
+			{
+				if (texture_type != DeviceTextureType::ID3D11Texture3D)
+					throw Exception("texture_type not ID3D11Texture3D");
+				return static_cast<ID3D11Texture3D *>(texture.get());
+			}
+
+			ComPtr<ID3D11Device> device;
+			ComPtr<ID3D11Resource> texture;
+			DeviceTextureType texture_type;
+		};
+
+		void device_destroyed(ID3D11Device *device);
+		DeviceHandles &get_handles(const ComPtr<ID3D11Device> &device) const;
+		DeviceTextureType decode_texture_type(TextureDimensions texture_dimensions) const;
+		void attach_to_another_device(ID3D11Device *not_this_device);
+
+		mutable std::vector<std::shared_ptr<DeviceHandles> > handles;
+		D3D_FEATURE_LEVEL feature_level;
+		TextureDimensions texture_dimensions;
 	};
-
-	struct DeviceHandles
-	{
-		DeviceHandles(const ComPtr<ID3D11Device> &device, DeviceTextureType texture_type) : device(device), texture_type(texture_type) { }
-
-		ID3D11Texture1D *get_texture_1d()
-		{
-			if (texture_type != cl_ID3D11Texture1D)
-				throw Exception("texture_type not cl_ID3D11Texture1D");
-			return static_cast<ID3D11Texture1D *>(texture.get());
-		}
-
-		ID3D11Texture2D *get_texture_2d()
-		{
-			if (texture_type != cl_ID3D11Texture2D)
-				throw Exception("texture_type not cl_ID3D11Texture2D");
-			return static_cast<ID3D11Texture2D *>(texture.get());
-		}
-
-		ID3D11Texture3D *get_texture_3d()
-		{
-			if (texture_type != cl_ID3D11Texture3D)
-				throw Exception("texture_type not cl_ID3D11Texture3D");
-			return static_cast<ID3D11Texture3D *>(texture.get());
-		}
-
-		ComPtr<ID3D11Device> device;
-		ComPtr<ID3D11Resource> texture;
-		DeviceTextureType texture_type;
-	};
-
-	void device_destroyed(ID3D11Device *device);
-	DeviceHandles &get_handles(const ComPtr<ID3D11Device> &device) const;
-	DeviceTextureType decode_texture_type(TextureDimensions texture_dimensions) const;
-	void attach_to_another_device(ID3D11Device *not_this_device);
-
-	mutable std::vector<std::shared_ptr<DeviceHandles> > handles;
-	D3D_FEATURE_LEVEL feature_level;
-	TextureDimensions texture_dimensions;
-};
-
 }

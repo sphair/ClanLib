@@ -27,18 +27,13 @@
 **    Mark Page
 */
 
-
 #pragma once
-
 
 namespace clan
 {
-
 	class SetupD3D
 	{
 	public:
 		static void start();
 	};
-
 }
-

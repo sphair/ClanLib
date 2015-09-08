@@ -32,56 +32,39 @@
 
 namespace clan
 {
-
-class D3DTransferBufferProvider : public TransferBufferProvider
-{
-/// \name Construction
-/// \{
-public:
-	D3DTransferBufferProvider(const ComPtr<ID3D11Device> &device);
-	~D3DTransferBufferProvider();
-	void create(int size, BufferUsage usage);
-	void create(void *data, int size, BufferUsage usage);
-/// \}
-
-/// \name Attributes
-/// \{
-public:
-	void *get_data();
-	ComPtr<ID3D11Buffer> &get_buffer(const ComPtr<ID3D11Device> &device);
-
-	int get_size() const { return size; }
-/// \}
-
-/// \name Operations
-/// \{
-public:
-	void lock(GraphicContext &gc, BufferAccess access);
-	void unlock();
-	void upload_data(GraphicContext &gc, int offset, const void *data, int size);
-/// \}
-
-/// \name Implementation
-
-/// \{
-private:
-	struct DeviceHandles
+	class D3DTransferBufferProvider : public TransferBufferProvider
 	{
-		DeviceHandles(const ComPtr<ID3D11Device> &device) : device(device) { }
-		ComPtr<ID3D11Device> device;
-		ComPtr<ID3D11Buffer> buffer;
+	public:
+		D3DTransferBufferProvider(const ComPtr<ID3D11Device> &device);
+		~D3DTransferBufferProvider();
+		void create(int size, BufferUsage usage);
+		void create(void *data, int size, BufferUsage usage);
+
+		void *get_data();
+		ComPtr<ID3D11Buffer> &get_buffer(const ComPtr<ID3D11Device> &device);
+
+		int get_size() const { return size; }
+
+		void lock(GraphicContext &gc, BufferAccess access);
+		void unlock();
+		void upload_data(GraphicContext &gc, int offset, const void *data, int size);
+
+	private:
+		struct DeviceHandles
+		{
+			DeviceHandles(const ComPtr<ID3D11Device> &device) : device(device) { }
+			ComPtr<ID3D11Device> device;
+			ComPtr<ID3D11Buffer> buffer;
+		};
+
+		void device_destroyed(ID3D11Device *device);
+		DeviceHandles &get_handles(const ComPtr<ID3D11Device> &device);
+
+		static D3D11_MAP to_d3d_map_type(BufferAccess access);
+
+		std::vector<std::shared_ptr<DeviceHandles> > handles;
+		D3D11_MAPPED_SUBRESOURCE map_data;
+		ComPtr<ID3D11Device> map_device;
+		int size;
 	};
-
-	void device_destroyed(ID3D11Device *device);
-	DeviceHandles &get_handles(const ComPtr<ID3D11Device> &device);
-
-	static D3D11_MAP to_d3d_map_type(BufferAccess access);
-
-	std::vector<std::shared_ptr<DeviceHandles> > handles;
-	D3D11_MAPPED_SUBRESOURCE map_data;
-	ComPtr<ID3D11Device> map_device;
-	int size;
-/// \}
-};
-
 }
