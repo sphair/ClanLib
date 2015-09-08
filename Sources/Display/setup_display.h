@@ -27,7 +27,6 @@
 **    Mark Page
 */
 
-
 #pragma once
 
 #include <map>
@@ -49,8 +48,5 @@ namespace clan
 		static DisplayMessageQueue_X11* get_message_queue();
 #endif
 		static std::map<std::string, ImageProviderType *> *get_image_provider_factory_types();
-
 	};
-
 }
-

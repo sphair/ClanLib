@@ -38,35 +38,33 @@
 
 namespace clan
 {
+	ShaderObject ShaderObject::load(GraphicContext &gc, const std::string &resource_id, const XMLResourceDocument &resources)
+	{
+		XMLResourceNode resource = resources.get_resource(resource_id);
+		std::string filename = resource.get_element().get_attribute("file");
+		std::string type = resource.get_element().get_tag_name();
 
-ShaderObject ShaderObject::load(GraphicContext &gc, const std::string &resource_id, const XMLResourceDocument &resources)
-{
-	XMLResourceNode resource = resources.get_resource(resource_id);
-	std::string filename = resource.get_element().get_attribute("file");
-	std::string type = resource.get_element().get_tag_name();
-	
-	ShaderType shader_type;
-	if (type == "fragment-shader")
-		shader_type = shadertype_fragment;
-	else if (type == "vertex-shader")
-		shader_type = shadertype_vertex;
-	else
-		throw Exception("ShaderObject: Unknown shader type: " + type);
+		ShaderType shader_type;
+		if (type == "fragment-shader")
+			shader_type = shadertype_fragment;
+		else if (type == "vertex-shader")
+			shader_type = shadertype_vertex;
+		else
+			throw Exception("ShaderObject: Unknown shader type: " + type);
 
-	FileSystem fs = resource.get_file_system();
+		FileSystem fs = resource.get_file_system();
 
-	IODevice file = fs.open_file(PathHelp::combine(resource.get_base_path(), filename), File::open_existing, File::access_read, File::share_read);
-	int size = file.get_size();
-	std::string source(size, 0);
-	file.read(&source[0], size);
+		IODevice file = fs.open_file(PathHelp::combine(resource.get_base_path(), filename), File::open_existing, File::access_read, File::share_read);
+		int size = file.get_size();
+		std::string source(size, 0);
+		file.read(&source[0], size);
 
-	ShaderObject shader_object(gc, shader_type, StringHelp::local8_to_text(source));
+		ShaderObject shader_object(gc, shader_type, StringHelp::local8_to_text(source));
 
-	if (resource.get_element().get_attribute("compile", "true") == "true")
-		if(!shader_object.compile())
-			throw Exception(string_format("Unable to compile shader program %1: %2", resource_id, shader_object.get_info_log()));
+		if (resource.get_element().get_attribute("compile", "true") == "true")
+			if (!shader_object.compile())
+				throw Exception(string_format("Unable to compile shader program %1: %2", resource_id, shader_object.get_info_log()));
 
-	return shader_object;
-}
-
+		return shader_object;
+	}
 }

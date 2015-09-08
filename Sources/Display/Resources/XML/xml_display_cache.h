@@ -33,26 +33,25 @@
 
 namespace clan
 {
-class FontFamily;
+	class FontFamily;
 
-class XMLDisplayCache : public DisplayCache
-{
-public:
-	XMLDisplayCache(const XMLResourceDocument &doc);
-	~XMLDisplayCache();
+	class XMLDisplayCache : public DisplayCache
+	{
+	public:
+		XMLDisplayCache(const XMLResourceDocument &doc);
+		~XMLDisplayCache();
 
-	Resource<Sprite> get_sprite(Canvas &canvas, const std::string &id) override;
-	Resource<Image> get_image(Canvas &canvas, const std::string &id) override;
-	Resource<Texture> get_texture(GraphicContext &gc, const std::string &id) override;
-	Resource<Font> get_font(Canvas &canvas, const std::string &family_name, const FontDescription &desc) override;
+		Resource<Sprite> get_sprite(Canvas &canvas, const std::string &id) override;
+		Resource<Image> get_image(Canvas &canvas, const std::string &id) override;
+		Resource<Texture> get_texture(GraphicContext &gc, const std::string &id) override;
+		Resource<Font> get_font(Canvas &canvas, const std::string &family_name, const FontDescription &desc) override;
 
-private:
-	XMLResourceDocument doc;
+	private:
+		XMLResourceDocument doc;
 
-	std::map<std::string, Resource<Sprite> > sprites;
-	std::map<std::string, Resource<Image> > images;
-	std::map<std::string, Resource<Texture> > textures;
-	std::map<std::string, FontFamily > fonts;
-};
-
+		std::map<std::string, Resource<Sprite> > sprites;
+		std::map<std::string, Resource<Image> > images;
+		std::map<std::string, Resource<Texture> > textures;
+		std::map<std::string, FontFamily > fonts;
+	};
 }

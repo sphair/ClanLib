@@ -44,73 +44,71 @@
 
 namespace clan
 {
-
-FileDisplayCache::FileDisplayCache(const FileResourceDocument &doc)
-	: doc(doc)
-{
-}
-
-FileDisplayCache::~FileDisplayCache()
-{
-}
-
-Resource<Sprite> FileDisplayCache::get_sprite(Canvas &canvas, const std::string &id)
-{
-	auto it = sprites.find(id);
-	if (it != sprites.end())
+	FileDisplayCache::FileDisplayCache(const FileResourceDocument &doc)
+		: doc(doc)
 	{
-		Resource<Sprite> sprite = it->second;
+	}
+
+	FileDisplayCache::~FileDisplayCache()
+	{
+	}
+
+	Resource<Sprite> FileDisplayCache::get_sprite(Canvas &canvas, const std::string &id)
+	{
+		auto it = sprites.find(id);
+		if (it != sprites.end())
+		{
+			Resource<Sprite> sprite = it->second;
+			sprite.get() = sprite.get().clone();
+			return sprite;
+		}
+
+		Resource<Sprite> sprite = Sprite(canvas, id, doc.get_file_system());
+		sprites[id] = sprite;
 		sprite.get() = sprite.get().clone();
 		return sprite;
 	}
 
-	Resource<Sprite> sprite = Sprite(canvas, id, doc.get_file_system());
-	sprites[id] = sprite;
-	sprite.get() = sprite.get().clone();
-	return sprite;
-}
-
-Resource<Image> FileDisplayCache::get_image(Canvas &canvas, const std::string &id)
-{
-	auto it = images.find(id);
-	if (it != images.end())
+	Resource<Image> FileDisplayCache::get_image(Canvas &canvas, const std::string &id)
 	{
-		Resource<Image> image = it->second;
+		auto it = images.find(id);
+		if (it != images.end())
+		{
+			Resource<Image> image = it->second;
+			image.get() = image.get().clone();
+			return image;
+		}
+
+		Resource<Image> image = Image(canvas, id, doc.get_file_system());
+		images[id] = image;
 		image.get() = image.get().clone();
 		return image;
 	}
-	
-	Resource<Image> image = Image(canvas, id, doc.get_file_system());
-	images[id] = image;
-	image.get() = image.get().clone();
-	return image;
-}
 
-Resource<Texture> FileDisplayCache::get_texture(GraphicContext &gc, const std::string &id)
-{
-	auto it = textures.find(id);
-	if (it != textures.end())
-		return it->second;
+	Resource<Texture> FileDisplayCache::get_texture(GraphicContext &gc, const std::string &id)
+	{
+		auto it = textures.find(id);
+		if (it != textures.end())
+			return it->second;
 
-	Resource<Texture> texture = Texture2D(gc, id, doc.get_file_system());
-	textures[id] = texture;
-	return texture;
-}
+		Resource<Texture> texture = Texture2D(gc, id, doc.get_file_system());
+		textures[id] = texture;
+		return texture;
+	}
 
-Resource<Font> FileDisplayCache::get_font(Canvas &canvas, const std::string &family_name, const FontDescription &desc)
-{
-	auto it = fonts.find(family_name);
-	if (it != fonts.end())
-		return Font(it->second, desc);
+	Resource<Font> FileDisplayCache::get_font(Canvas &canvas, const std::string &family_name, const FontDescription &desc)
+	{
+		auto it = fonts.find(family_name);
+		if (it != fonts.end())
+			return Font(it->second, desc);
 
-	//TODO: Maybe allow loading of fonts from the doc filesystem?
+		//TODO: Maybe allow loading of fonts from the doc filesystem?
 
-	FontFamily font_family(family_name);
-	fonts[family_name] = font_family;
+		FontFamily font_family(family_name);
+		fonts[family_name] = font_family;
 
-	Font font = Font(font_family, desc);
+		Font font = Font(font_family, desc);
 
-	return font;
-}
-
+		return font;
+	}
 }

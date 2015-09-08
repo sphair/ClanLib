@@ -34,74 +34,72 @@
 
 namespace clan
 {
-
-class ShaderEffectDescription_Impl
-{
-public:
-	ShaderEffectDescription_Impl()
-	: glsl_version(0), elements_type(), draw_count(0)
+	class ShaderEffectDescription_Impl
 	{
-	}
+	public:
+		ShaderEffectDescription_Impl()
+			: glsl_version(0), elements_type(), draw_count(0)
+		{
+		}
 
-	int glsl_version;
+		int glsl_version;
 
-	std::map<std::string, std::string> defines;
+		std::map<std::string, std::string> defines;
 
-	std::string vertex_shader_code[num_shader_languages];
-	std::string fragment_shader_code[num_shader_languages];
-	std::string compute_shader_code[num_shader_languages];
+		std::string vertex_shader_code[num_shader_languages];
+		std::string fragment_shader_code[num_shader_languages];
+		std::string compute_shader_code[num_shader_languages];
 
-	RasterizerStateDescription rasterizer_state;
-	BlendStateDescription blend_state;
-	DepthStencilStateDescription depth_stencil_state;
+		RasterizerStateDescription rasterizer_state;
+		BlendStateDescription blend_state;
+		DepthStencilStateDescription depth_stencil_state;
 
-	struct FragDataDescription
-	{
-		FragDataDescription() : use_back_buffer(false) { }
+		struct FragDataDescription
+		{
+			FragDataDescription() : use_back_buffer(false) { }
 
-		RenderBuffer buffer;
-		Texture texture;
-		bool use_back_buffer;
+			RenderBuffer buffer;
+			Texture texture;
+			bool use_back_buffer;
+		};
+
+		std::map<std::string, FragDataDescription> frag_data;
+
+		RenderBuffer depth_buffer;
+		Texture depth_texture;
+
+		RenderBuffer stencil_buffer;
+		Texture stencil_texture;
+
+		std::map<std::string, Resource<UniformBuffer >> uniform_buffers;
+		std::map<std::string, Resource<Texture> > textures;
+		std::map<std::string, Resource<Texture> > images;
+		std::map<std::string, Resource<StorageBuffer> > storage_buffers;
+
+		ElementArrayBuffer elements;
+		VertexAttributeDataType elements_type;
+
+		enum VertexAttributeType
+		{
+			attribute_type_buffer,
+			attribute_type_screen_quad,
+			attribute_type_uv_quad
+		};
+
+		struct VertexAttributeDescription
+		{
+			VertexAttributeDescription() : attribute_type(attribute_type_buffer), size(0), type(), offset(0), stride(0), normalize(false) { }
+
+			VertexAttributeType attribute_type;
+			VertexArrayBuffer buffer;
+			int size;
+			VertexAttributeDataType type;
+			size_t offset;
+			int stride;
+			bool normalize;
+		};
+		std::map<std::string, VertexAttributeDescription> attributes;
+
+		int draw_count;
 	};
-
-	std::map<std::string, FragDataDescription> frag_data;
-
-	RenderBuffer depth_buffer;
-	Texture depth_texture;
-
-	RenderBuffer stencil_buffer;
-	Texture stencil_texture;
-
-	std::map<std::string, Resource<UniformBuffer >> uniform_buffers;
-	std::map<std::string, Resource<Texture> > textures;
-	std::map<std::string, Resource<Texture> > images;
-	std::map<std::string, Resource<StorageBuffer> > storage_buffers;
-
-	ElementArrayBuffer elements;
-	VertexAttributeDataType elements_type;
-
-	enum VertexAttributeType
-	{
-		attribute_type_buffer,
-		attribute_type_screen_quad,
-		attribute_type_uv_quad
-	};
-
-	struct VertexAttributeDescription
-	{
-		VertexAttributeDescription() : attribute_type(attribute_type_buffer), size(0), type(), offset(0), stride(0), normalize(false) { }
-
-		VertexAttributeType attribute_type;
-		VertexArrayBuffer buffer;
-		int size;
-		VertexAttributeDataType type;
-		size_t offset;
-		int stride;
-		bool normalize;
-	};
-	std::map<std::string, VertexAttributeDescription> attributes;
-
-	int draw_count;
-};
-
 }

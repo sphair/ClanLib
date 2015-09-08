@@ -34,53 +34,36 @@
 
 namespace clan
 {
+	class Cursor_Impl
+	{
+	public:
+		Cursor_Impl() : provider(nullptr) { }
+		~Cursor_Impl() { if (provider) delete provider; }
 
-/////////////////////////////////////////////////////////////////////////////
-// Cursor_Impl class:
+		CursorProvider *provider;
+	};
 
-class Cursor_Impl
-{
-public:
-	Cursor_Impl() : provider(nullptr) { }
-	~Cursor_Impl() { if (provider) delete provider; }
+	Cursor::Cursor()
+	{
+	}
 
-	CursorProvider *provider;
-};
+	Cursor::Cursor(const DisplayWindow &window, const CursorDescription &cursor_description)
+		: impl(std::make_shared<Cursor_Impl>())
+	{
+		impl->provider = window.get_provider()->create_cursor(cursor_description);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// Cursor Construction:
+	void Cursor::throw_if_null() const
+	{
+		if (!impl)
+			throw Exception("Cursor is null");
+	}
 
-Cursor::Cursor()
-{
-}
-
-Cursor::Cursor(const DisplayWindow &window, const CursorDescription &cursor_description)
-: impl(std::make_shared<Cursor_Impl>())
-{
-	impl->provider = window.get_provider()->create_cursor(cursor_description);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Cursor Attributes:
-
-void Cursor::throw_if_null() const
-{
-	if (!impl)
-		throw Exception("Cursor is null");
-}
-
-CursorProvider *Cursor::get_provider() const
-{
-	if (impl)
-		return impl->provider;
-	else
-		return nullptr;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Cursor Operations:
-
-/////////////////////////////////////////////////////////////////////////////
-// Cursor Implementation:
-
+	CursorProvider *Cursor::get_provider() const
+	{
+		if (impl)
+			return impl->provider;
+		else
+			return nullptr;
+	}
 }

@@ -40,200 +40,196 @@
 
 namespace clan
 {
-
-CursorDescription CursorDescription::load(GraphicContext &gc, const std::string &resource_id, const XMLResourceDocument &resources, const ImageImportDescription &import_desc)
-{
-	CursorDescription desc;
-
-	XMLResourceNode resource = resources.get_resource(resource_id);
-	if (resource.get_type() != "cursor" && resource.get_type() != "cursor_description" && resource.get_type() != "image")
-		throw Exception(string_format("Resource '%1' is not of type 'cursor' or 'cursor_description' or 'image'", resource_id));
-
-	DomNode cur_node = resource.get_element().get_first_child();
-
-	while(!cur_node.is_null())
+	CursorDescription CursorDescription::load(GraphicContext &gc, const std::string &resource_id, const XMLResourceDocument &resources, const ImageImportDescription &import_desc)
 	{
-		if (!cur_node.is_element())
-		{
-			cur_node = cur_node.get_next_sibling();
-			continue;
-		}
+		CursorDescription desc;
 
-		DomElement cur_element = cur_node.to_element();
-		std::string tag_name = cur_element.get_tag_name();
-		if (tag_name == "image" || tag_name == "image-file")
+		XMLResourceNode resource = resources.get_resource(resource_id);
+		if (resource.get_type() != "cursor" && resource.get_type() != "cursor_description" && resource.get_type() != "image")
+			throw Exception(string_format("Resource '%1' is not of type 'cursor' or 'cursor_description' or 'image'", resource_id));
+
+		DomNode cur_node = resource.get_element().get_first_child();
+
+		while (!cur_node.is_null())
 		{
-			if (cur_element.has_attribute("fileseq"))
+			if (!cur_node.is_element())
 			{
-				int start_index = 0;
-				if (cur_element.has_attribute("start_index"))
-					start_index = StringHelp::text_to_int(cur_element.get_attribute("start_index"));
-
-				int skip_index = 1;
-				if (cur_element.has_attribute("skip_index"))
-					skip_index = StringHelp::text_to_int(cur_element.get_attribute("skip_index"));
-
-				int leading_zeroes = 0;
-				if (cur_element.has_attribute("leading_zeroes"))
-					leading_zeroes =  StringHelp::text_to_int(cur_element.get_attribute("leading_zeroes"));
-
-				std::string prefix = cur_element.get_attribute("fileseq");
-				std::string suffix = "." + PathHelp::get_extension(prefix);
-				prefix.erase(prefix.length() - suffix.length(), prefix.length()); //remove the extension
-
-				FileSystem fs = resource.get_file_system();
-
-				for (int i = start_index;; i += skip_index)
-				{
-					std::string file_name = prefix;
-
-					std::string frame_text = StringHelp::int_to_text(i);
-					for (int zeroes_to_add = (leading_zeroes+1) - frame_text.length(); zeroes_to_add > 0; zeroes_to_add--)
-						file_name += "0";
-
-					file_name += frame_text + suffix;
-
-					try
-					{
-						desc.add_frame(PathHelp::combine(resource.get_base_path(), file_name), fs, import_desc);
-					}
-					catch (const Exception&)
-					{
-						if (desc.get_frames().empty())
-						{
-							//must have been an error, pass it down
-							throw;
-						}
-						//can't find anymore pics
-						break;
-					}
-				}
+				cur_node = cur_node.get_next_sibling();
+				continue;
 			}
-			else
+
+			DomElement cur_element = cur_node.to_element();
+			std::string tag_name = cur_element.get_tag_name();
+			if (tag_name == "image" || tag_name == "image-file")
 			{
-				std::string image_name = cur_element.get_attribute("file");
-				FileSystem fs = resource.get_file_system();
-				PixelBuffer pixelbuffer = ImageProviderFactory::load(PathHelp::combine(resource.get_base_path(), image_name), fs);
-				pixelbuffer = import_desc.process(pixelbuffer);
+				if (cur_element.has_attribute("fileseq"))
+				{
+					int start_index = 0;
+					if (cur_element.has_attribute("start_index"))
+						start_index = StringHelp::text_to_int(cur_element.get_attribute("start_index"));
 
-				DomNode cur_child(cur_element.get_first_child());
-				if(cur_child.is_null()) 
-				{
-					desc.add_frame(pixelbuffer);
-				}
-				else 
-				{
-					do {
-						DomElement cur_child_elemnt = cur_child.to_element();
-						if(cur_child.get_node_name() == "grid")
+					int skip_index = 1;
+					if (cur_element.has_attribute("skip_index"))
+						skip_index = StringHelp::text_to_int(cur_element.get_attribute("skip_index"));
+
+					int leading_zeroes = 0;
+					if (cur_element.has_attribute("leading_zeroes"))
+						leading_zeroes = StringHelp::text_to_int(cur_element.get_attribute("leading_zeroes"));
+
+					std::string prefix = cur_element.get_attribute("fileseq");
+					std::string suffix = "." + PathHelp::get_extension(prefix);
+					prefix.erase(prefix.length() - suffix.length(), prefix.length()); //remove the extension
+
+					FileSystem fs = resource.get_file_system();
+
+					for (int i = start_index;; i += skip_index)
+					{
+						std::string file_name = prefix;
+
+						std::string frame_text = StringHelp::int_to_text(i);
+						for (int zeroes_to_add = (leading_zeroes + 1) - frame_text.length(); zeroes_to_add > 0; zeroes_to_add--)
+							file_name += "0";
+
+						file_name += frame_text + suffix;
+
+						try
 						{
-							int xpos = 0;
-							int ypos = 0;
-							int xarray = 1;
-							int yarray = 1;
-							int array_skipframes = 0;
-							int xspacing = 0;
-							int yspacing = 0;
-							int width = 0;
-							int height = 0;
-
-							std::vector<std::string> image_size = StringHelp::split_text(cur_child_elemnt.get_attribute("size"), ",");
-							if (image_size.size() > 0)
-								width = StringHelp::text_to_int(image_size[0]);
-							if (image_size.size() > 1)
-								height = StringHelp::text_to_int(image_size[1]);
-
-							if (cur_child_elemnt.has_attribute("pos"))
+							desc.add_frame(PathHelp::combine(resource.get_base_path(), file_name), fs, import_desc);
+						}
+						catch (const Exception&)
+						{
+							if (desc.get_frames().empty())
 							{
-								std::vector<std::string> image_pos = StringHelp::split_text(cur_child_elemnt.get_attribute("pos"), ",");
-								if (image_pos.size() > 0)
-									xpos = StringHelp::text_to_int(image_pos[0]);
-								if (image_pos.size() > 1)
-									ypos = StringHelp::text_to_int(image_pos[1]);
+								//must have been an error, pass it down
+								throw;
 							}
+							//can't find anymore pics
+							break;
+						}
+					}
+				}
+				else
+				{
+					std::string image_name = cur_element.get_attribute("file");
+					FileSystem fs = resource.get_file_system();
+					PixelBuffer pixelbuffer = ImageProviderFactory::load(PathHelp::combine(resource.get_base_path(), image_name), fs);
+					pixelbuffer = import_desc.process(pixelbuffer);
 
-							if (cur_child_elemnt.has_attribute("array"))
+					DomNode cur_child(cur_element.get_first_child());
+					if (cur_child.is_null())
+					{
+						desc.add_frame(pixelbuffer);
+					}
+					else
+					{
+						do {
+							DomElement cur_child_elemnt = cur_child.to_element();
+							if (cur_child.get_node_name() == "grid")
 							{
-								std::vector<std::string> image_array = StringHelp::split_text(cur_child_elemnt.get_attribute("array"), ",");
-								if (image_array.size() == 2)
+								int xpos = 0;
+								int ypos = 0;
+								int xarray = 1;
+								int yarray = 1;
+								int array_skipframes = 0;
+								int xspacing = 0;
+								int yspacing = 0;
+								int width = 0;
+								int height = 0;
+
+								std::vector<std::string> image_size = StringHelp::split_text(cur_child_elemnt.get_attribute("size"), ",");
+								if (image_size.size() > 0)
+									width = StringHelp::text_to_int(image_size[0]);
+								if (image_size.size() > 1)
+									height = StringHelp::text_to_int(image_size[1]);
+
+								if (cur_child_elemnt.has_attribute("pos"))
 								{
-									xarray = StringHelp::text_to_int(image_array[0]);
-									yarray = StringHelp::text_to_int(image_array[1]);
+									std::vector<std::string> image_pos = StringHelp::split_text(cur_child_elemnt.get_attribute("pos"), ",");
+									if (image_pos.size() > 0)
+										xpos = StringHelp::text_to_int(image_pos[0]);
+									if (image_pos.size() > 1)
+										ypos = StringHelp::text_to_int(image_pos[1]);
+								}
+
+								if (cur_child_elemnt.has_attribute("array"))
+								{
+									std::vector<std::string> image_array = StringHelp::split_text(cur_child_elemnt.get_attribute("array"), ",");
+									if (image_array.size() == 2)
+									{
+										xarray = StringHelp::text_to_int(image_array[0]);
+										yarray = StringHelp::text_to_int(image_array[1]);
+									}
+									else
+									{
+										throw Exception("Resource '" + resource.get_name() + "' has incorrect array attribute, must be \"X,Y\"!");
+									}
+								}
+
+								if (cur_child_elemnt.has_attribute("array_skipframes"))
+								{
+									array_skipframes = StringHelp::text_to_int(cur_child_elemnt.get_attribute("array_skipframes"));
+								}
+
+								if (cur_child_elemnt.has_attribute("spacing"))
+								{
+									std::vector<std::string> image_spacing = StringHelp::split_text(cur_child_elemnt.get_attribute("spacing"), ",");
+									xspacing = StringHelp::text_to_int(image_spacing[0]);
+									yspacing = StringHelp::text_to_int(image_spacing[1]);
+								}
+
+								desc.add_gridclipped_frames(pixelbuffer,
+									xpos, ypos,
+									width, height,
+									xarray, yarray,
+									array_skipframes,
+									xspacing, yspacing);
+							}
+							else if (cur_child.get_node_name() == "palette")
+							{
+								throw Exception("Resource '" + resource.get_name() + "' uses palette cutter - which is not supported anymore");
+							}
+							else if (cur_child.get_node_name() == "alpha")
+							{
+								int xpos = 0;
+								int ypos = 0;
+								float trans_limit = 0.05f;
+
+								if (cur_child_elemnt.has_attribute("pos"))
+								{
+									std::vector<std::string> image_pos = StringHelp::split_text(cur_child_elemnt.get_attribute("pos"), ",");
+									xpos = StringHelp::text_to_int(image_pos[0]);
+									ypos = StringHelp::text_to_int(image_pos[1]);
+								}
+
+								if (cur_child_elemnt.has_attribute("trans_limit"))
+								{
+									trans_limit = StringHelp::text_to_float(cur_child_elemnt.get_attribute("trans_limit"));
+								}
+
+								if (cur_child_elemnt.has_attribute("free"))
+								{
+									desc.add_alphaclipped_frames_free(pixelbuffer,
+										xpos, ypos,
+										trans_limit);
 								}
 								else
 								{
-									throw Exception("Resource '" + resource.get_name() + "' has incorrect array attribute, must be \"X,Y\"!"); 
+									desc.add_alphaclipped_frames(pixelbuffer,
+										xpos, ypos,
+										trans_limit);
 								}
 							}
 
-							if (cur_child_elemnt.has_attribute("array_skipframes"))
-							{
-								array_skipframes = StringHelp::text_to_int(cur_child_elemnt.get_attribute("array_skipframes"));
-							}
-
-							if (cur_child_elemnt.has_attribute("spacing"))
-							{
-								std::vector<std::string> image_spacing = StringHelp::split_text(cur_child_elemnt.get_attribute("spacing"), ",");
-								xspacing = StringHelp::text_to_int(image_spacing[0]);
-								yspacing = StringHelp::text_to_int(image_spacing[1]);
-							}
-
-							desc.add_gridclipped_frames(pixelbuffer,
-								xpos, ypos,
-								width, height,
-								xarray, yarray,
-								array_skipframes,
-								xspacing, yspacing);
-						}
-						else if( cur_child.get_node_name() == "palette")
-						{
-							throw Exception("Resource '" + resource.get_name() + "' uses palette cutter - which is not supported anymore"); 
-						}
-						else if( cur_child.get_node_name() == "alpha")
-						{
-							int xpos = 0;
-							int ypos = 0;
-							float trans_limit = 0.05f;
-
-							if (cur_child_elemnt.has_attribute("pos"))
-							{
-								std::vector<std::string> image_pos = StringHelp::split_text(cur_child_elemnt.get_attribute("pos"), ",");
-								xpos = StringHelp::text_to_int(image_pos[0]);
-								ypos = StringHelp::text_to_int(image_pos[1]);
-							}
-
-							if (cur_child_elemnt.has_attribute("trans_limit"))
-							{
-								trans_limit = StringHelp::text_to_float(cur_child_elemnt.get_attribute("trans_limit"));
-							}
-
-							if (cur_child_elemnt.has_attribute("free"))
-							{
-								desc.add_alphaclipped_frames_free(pixelbuffer,
-									xpos, ypos,
-									trans_limit);
-							}
-							else
-							{
-								desc.add_alphaclipped_frames(pixelbuffer,
-									xpos, ypos,
-									trans_limit);
-							}
-						}
-
-						cur_child = cur_child.get_next_sibling();
-					} while(!cur_child.is_null());
+							cur_child = cur_child.get_next_sibling();
+						} while (!cur_child.is_null());
+					}
 				}
 			}
+			cur_node = cur_node.get_next_sibling();
 		}
-		cur_node = cur_node.get_next_sibling();
+
+		if (desc.get_frames().empty())
+			throw Exception("Cursor resource contained no frames!");
+		return desc;
 	}
-
-	if (desc.get_frames().empty())
-		throw Exception("Cursor resource contained no frames!");
-	return desc;
-
-}
-
-
 }

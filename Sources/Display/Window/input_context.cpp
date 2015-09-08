@@ -34,138 +34,124 @@
 
 namespace clan
 {
+	InputContext::InputContext()
+		: impl(std::make_shared<InputContext_Impl>())
+	{
+		impl->input_context = impl;
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// InputContext Construction:
+	InputContext::~InputContext()
+	{
+	}
 
-InputContext::InputContext()
-: impl(std::make_shared<InputContext_Impl>())
-{
-	impl->input_context = impl;
-}
+	int InputContext::get_keyboard_count() const
+	{
+		impl->throw_if_disposed();
+		return impl->keyboards.size();
+	}
 
-InputContext::~InputContext()
-{
-}
+	int InputContext::get_mouse_count() const
+	{
+		impl->throw_if_disposed();
+		return impl->mice.size();
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// InputContext Attributes:
+	int InputContext::get_joystick_count() const
+	{
+		impl->throw_if_disposed();
+		return impl->joysticks.size();
+	}
 
-int InputContext::get_keyboard_count() const
-{
-	impl->throw_if_disposed();
-	return impl->keyboards.size();
-}
+	int InputContext::get_tablet_count() const
+	{
+		impl->throw_if_disposed();
+		return impl->tablets.size();
+	}
 
-int InputContext::get_mouse_count() const
-{
-	impl->throw_if_disposed();
-	return impl->mice.size();
-}
+	InputDevice &InputContext::get_keyboard(int keyboard)
+	{
+		impl->throw_if_disposed();
+		return impl->keyboards[keyboard];
+	}
 
-int InputContext::get_joystick_count() const
-{
-	impl->throw_if_disposed();
-	return impl->joysticks.size();
-}
+	InputDevice &InputContext::get_mouse(int mouse)
+	{
+		impl->throw_if_disposed();
+		return impl->mice[mouse];
+	}
 
-int InputContext::get_tablet_count() const
-{
-	impl->throw_if_disposed();
-	return impl->tablets.size();
-}
+	InputDevice &InputContext::get_joystick(int joystick)
+	{
+		impl->throw_if_disposed();
+		return impl->joysticks[joystick];
+	}
 
-InputDevice &InputContext::get_keyboard(int keyboard)
-{
-	impl->throw_if_disposed();
-	return impl->keyboards[keyboard];
-}
+	InputDevice &InputContext::get_tablet(int tablet)
+	{
+		impl->throw_if_disposed();
+		return impl->tablets[tablet];
+	}
 
-InputDevice &InputContext::get_mouse(int mouse)
-{
-	impl->throw_if_disposed();
-	return impl->mice[mouse];
-}
+	InputDevice &InputContext::get_device(const std::string& devicename)
+	{
+		impl->throw_if_disposed();
+		size_t i;
+		for (i = 0; i < impl->joysticks.size(); ++i)
+			if (impl->joysticks[i].get_device_name() == devicename)
+				return impl->joysticks[i];
 
-InputDevice &InputContext::get_joystick(int joystick)
-{
-	impl->throw_if_disposed();
-	return impl->joysticks[joystick];
-}
+		for (i = 0; i < impl->keyboards.size(); ++i)
+			if (impl->keyboards[i].get_device_name() == devicename)
+				return impl->keyboards[i];
 
-InputDevice &InputContext::get_tablet(int tablet)
-{
-	impl->throw_if_disposed();
-	return impl->tablets[tablet];
-}
+		for (i = 0; i < impl->mice.size(); ++i)
+			if (impl->mice[i].get_device_name() == devicename)
+				return impl->mice[i];
 
-InputDevice &InputContext::get_device(const std::string& devicename)
-{
-	impl->throw_if_disposed();
-	size_t i;
-	for (i = 0; i < impl->joysticks.size(); ++i)
-		if (impl->joysticks[i].get_device_name() == devicename)
-			return impl->joysticks[i];
+		for (i = 0; i < impl->tablets.size(); ++i)
+			if (impl->tablets[i].get_device_name() == devicename)
+				return impl->tablets[i];
 
-	for (i = 0; i < impl->keyboards.size(); ++i)
-		if (impl->keyboards[i].get_device_name() == devicename)
-			return impl->keyboards[i];
+		throw Exception("Couldn't find InputDevice named '" + devicename + "'");
+	}
 
-	for (i = 0; i < impl->mice.size(); ++i)
-		if (impl->mice[i].get_device_name() == devicename)
-			return impl->mice[i];
+	void InputContext::clear()
+	{
+		impl->clear();
+	}
 
-	for (i = 0; i < impl->tablets.size(); ++i)
-		if (impl->tablets[i].get_device_name() == devicename)
-			return impl->tablets[i];
+	void InputContext::add_keyboard(InputDevice keyboard)
+	{
+		impl->add_keyboard(keyboard);
+	}
 
-	throw Exception("Couldn't find InputDevice named '" + devicename + "'");
-}
+	void InputContext::add_mouse(InputDevice mouse)
+	{
+		impl->add_mouse(mouse);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// InputContext operations:
+	void InputContext::add_joystick(InputDevice joystick)
+	{
+		impl->add_joystick(joystick);
+	}
 
-void InputContext::clear()
-{
-	impl->clear();
-}
+	void InputContext::add_tablet(InputDevice tablet)
+	{
+		impl->add_tablet(tablet);
+	}
 
-void InputContext::add_keyboard(InputDevice keyboard)
-{
-	impl->add_keyboard(keyboard);
-}
+	void InputContext::process_messages()
+	{
+		impl->process_messages();
+	}
 
-void InputContext::add_mouse(InputDevice mouse)
-{
-	impl->add_mouse(mouse);
-}
+	void InputContext::dispose()
+	{
+		impl->dispose();
+	}
 
-void InputContext::add_joystick(InputDevice joystick)
-{
-	impl->add_joystick(joystick);
-}
-
-void InputContext::add_tablet(InputDevice tablet)
-{
-	impl->add_tablet(tablet);
-}
-
-void InputContext::process_messages()
-{
-	impl->process_messages();
-}
-
-void InputContext::dispose()
-{
-	impl->dispose();
-}
-
-bool InputContext::is_disposed() const
-{
-	return impl->is_disposed();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// InputContext implementation:
-
+	bool InputContext::is_disposed() const
+	{
+		return impl->is_disposed();
+	}
 }

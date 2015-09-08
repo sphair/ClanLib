@@ -31,26 +31,12 @@
 
 namespace clan
 {
+	InputEvent::InputEvent()
+		: id(keycode_unknown), id_offset(0), type(InputEvent::no_key), repeat_count(0)
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// InputEvent Construction:
-
-InputEvent::InputEvent()
-: id(keycode_unknown), id_offset(0), type(InputEvent::no_key), repeat_count(0)
-{
-}
-
-InputEvent::~InputEvent()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// InputEvent Attributes:
-
-/////////////////////////////////////////////////////////////////////////////
-// InputEvent Operations:
-
-/////////////////////////////////////////////////////////////////////////////
-// InputEvent Implementation:
-
+	InputEvent::~InputEvent()
+	{
+	}
 }

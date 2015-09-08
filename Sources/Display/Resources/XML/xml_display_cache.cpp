@@ -44,91 +44,89 @@
 
 namespace clan
 {
-
-XMLDisplayCache::XMLDisplayCache(const XMLResourceDocument &doc)
-	: doc(doc)
-{
-}
-
-XMLDisplayCache::~XMLDisplayCache()
-{
-}
-
-Resource<Sprite> XMLDisplayCache::get_sprite(Canvas &canvas, const std::string &id)
-{
-	auto it = sprites.find(id);
-	if (it != sprites.end())
+	XMLDisplayCache::XMLDisplayCache(const XMLResourceDocument &doc)
+		: doc(doc)
 	{
-		Resource<Sprite> sprite = it->second;
+	}
+
+	XMLDisplayCache::~XMLDisplayCache()
+	{
+	}
+
+	Resource<Sprite> XMLDisplayCache::get_sprite(Canvas &canvas, const std::string &id)
+	{
+		auto it = sprites.find(id);
+		if (it != sprites.end())
+		{
+			Resource<Sprite> sprite = it->second;
+			sprite.get() = sprite.get().clone();
+			return sprite;
+		}
+
+		Resource<Sprite> sprite = Sprite::load(canvas, id, doc);
+		sprites[id] = sprite;
 		sprite.get() = sprite.get().clone();
 		return sprite;
 	}
 
-	Resource<Sprite> sprite = Sprite::load(canvas, id, doc);
-	sprites[id] = sprite;
-	sprite.get() = sprite.get().clone();
-	return sprite;
-}
-
-Resource<Image> XMLDisplayCache::get_image(Canvas &canvas, const std::string &id)
-{
-	auto it = images.find(id);
-	if (it != images.end())
+	Resource<Image> XMLDisplayCache::get_image(Canvas &canvas, const std::string &id)
 	{
-		Resource<Image> image = it->second;
+		auto it = images.find(id);
+		if (it != images.end())
+		{
+			Resource<Image> image = it->second;
+			image.get() = image.get().clone();
+			return image;
+		}
+
+		Resource<Image> image = Image::load(canvas, id, doc);
+		images[id] = image;
 		image.get() = image.get().clone();
 		return image;
 	}
-	
-	Resource<Image> image = Image::load(canvas, id, doc);
-	images[id] = image;
-	image.get() = image.get().clone();
-	return image;
-}
 
-Resource<Texture> XMLDisplayCache::get_texture(GraphicContext &gc, const std::string &id)
-{
-	auto it = textures.find(id);
-	if (it != textures.end())
-		return it->second;
-
-	Resource<Texture> texture = Texture::load(gc, id, doc);
-	textures[id] = texture;
-	return texture;
-}
-
-Resource<Font> XMLDisplayCache::get_font(Canvas &canvas, const std::string &family_name, const FontDescription &desc)
-{
-	auto it = fonts.find(family_name);
-	if (it != fonts.end())
-		return Font(it->second, desc);
-
-	bool is_resource_font = false;
-
-	if (doc.resource_exists(family_name))
+	Resource<Texture> XMLDisplayCache::get_texture(GraphicContext &gc, const std::string &id)
 	{
-		XMLResourceNode resource = doc.get_resource(family_name);
-		if (resource.get_element().get_tag_name() == "font")
+		auto it = textures.find(id);
+		if (it != textures.end())
+			return it->second;
+
+		Resource<Texture> texture = Texture::load(gc, id, doc);
+		textures[id] = texture;
+		return texture;
+	}
+
+	Resource<Font> XMLDisplayCache::get_font(Canvas &canvas, const std::string &family_name, const FontDescription &desc)
+	{
+		auto it = fonts.find(family_name);
+		if (it != fonts.end())
+			return Font(it->second, desc);
+
+		bool is_resource_font = false;
+
+		if (doc.resource_exists(family_name))
 		{
-			is_resource_font = true;
+			XMLResourceNode resource = doc.get_resource(family_name);
+			if (resource.get_element().get_tag_name() == "font")
+			{
+				is_resource_font = true;
+			}
 		}
+
+		Font font;
+
+		FontFamily font_family(family_name);
+		fonts[family_name] = font_family;
+
+		if (is_resource_font)
+		{
+			font = Font::load(canvas, family_name, desc, font_family, doc, bind_member(this, &XMLDisplayCache::get_sprite));
+		}
+		else
+		{
+			font = Font(font_family, desc);
+		}
+
+		return font;
 	}
-
-	Font font;
-
-	FontFamily font_family(family_name);
-	fonts[family_name] = font_family;
-
-	if (is_resource_font)
-	{
-		font = Font::load(canvas, family_name, desc, font_family, doc, bind_member(this, &XMLDisplayCache::get_sprite));
-	}
-	else
-	{
-		font = Font(font_family, desc);
-	}
-
-	return font;
-}
-
 }

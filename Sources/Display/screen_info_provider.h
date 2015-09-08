@@ -30,17 +30,15 @@
 
 namespace clan
 {
+	class Rectf;
 
-class Rectf;
-
-class ScreenInfoProvider
-{
-public:
-	virtual ~ScreenInfoProvider() 
+	class ScreenInfoProvider
 	{
-	}
+	public:
+		virtual ~ScreenInfoProvider()
+		{
+		}
 
-	virtual std::vector<Rectf> get_screen_geometries(int &primary_screen_index) const=0;
-};
-
+		virtual std::vector<Rectf> get_screen_geometries(int &primary_screen_index) const = 0;
+	};
 }

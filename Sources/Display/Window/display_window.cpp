@@ -35,481 +35,466 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// DisplayWindow Construction:
-
-DisplayWindow::DisplayWindow()
-{
-}
-
-DisplayWindow::DisplayWindow(
-	const std::string &title,
-	float width,
-	float height,
-	bool start_fullscreen,
-	bool allow_resize,
-	int flipping_buffers)
-{
-	DisplayWindowDescription description;
-	description.set_title(title);
-	description.set_size(Size(width, height), false);
-	description.set_fullscreen(start_fullscreen);
-
-	if (start_fullscreen)
+	DisplayWindow::DisplayWindow()
 	{
-		description.show_caption(false);
 	}
 
-	description.set_allow_resize(allow_resize);
-	description.set_flipping_buffers(flipping_buffers);
+	DisplayWindow::DisplayWindow(
+		const std::string &title,
+		float width,
+		float height,
+		bool start_fullscreen,
+		bool allow_resize,
+		int flipping_buffers)
+	{
+		DisplayWindowDescription description;
+		description.set_title(title);
+		description.set_size(Size(width, height), false);
+		description.set_fullscreen(start_fullscreen);
 
-	*this = DisplayWindow(description);
-}
+		if (start_fullscreen)
+		{
+			description.show_caption(false);
+		}
 
-DisplayWindow::DisplayWindow(const DisplayWindowDescription &description)
-{
-	SetupDisplay::start();
+		description.set_allow_resize(allow_resize);
+		description.set_flipping_buffers(flipping_buffers);
 
-	auto target = DisplayTarget::get_current_target();
-	if (!target)
-		throw Exception("No display target set");
+		*this = DisplayWindow(description);
+	}
 
-	impl = std::shared_ptr<DisplayWindow_Impl>(new DisplayWindow_Impl);
-	impl->provider = target->alloc_display_window();
-	impl->provider->create(&impl->site, description);
-}
+	DisplayWindow::DisplayWindow(const DisplayWindowDescription &description)
+	{
+		SetupDisplay::start();
 
-DisplayWindow::DisplayWindow(DisplayWindowProvider *provider)
-: impl(std::make_shared<DisplayWindow_Impl>())
-{
-	impl->provider = provider;
-}
+		auto target = DisplayTarget::get_current_target();
+		if (!target)
+			throw Exception("No display target set");
 
-DisplayWindow::~DisplayWindow()
-{
-}
+		impl = std::shared_ptr<DisplayWindow_Impl>(new DisplayWindow_Impl);
+		impl->provider = target->alloc_display_window();
+		impl->provider->create(&impl->site, description);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// DisplayWindow Attributes:
+	DisplayWindow::DisplayWindow(DisplayWindowProvider *provider)
+		: impl(std::make_shared<DisplayWindow_Impl>())
+	{
+		impl->provider = provider;
+	}
 
-DisplayWindowHandle DisplayWindow::get_handle() const
-{
-	return impl->provider->get_handle();
-}
+	DisplayWindow::~DisplayWindow()
+	{
+	}
 
-Rectf DisplayWindow::get_geometry() const
-{
-	Rect geometryi = impl->provider->get_geometry();
-	Rectf geometry;
-	geometry.left = geometryi.left / impl->provider->get_pixel_ratio();
-	geometry.top = geometryi.top / impl->provider->get_pixel_ratio();
-	geometry.right = geometryi.right / impl->provider->get_pixel_ratio();
-	geometry.bottom = geometryi.bottom / impl->provider->get_pixel_ratio();
-	return geometry;
-}
+	DisplayWindowHandle DisplayWindow::get_handle() const
+	{
+		return impl->provider->get_handle();
+	}
 
-Rectf DisplayWindow::get_viewport() const
-{
-	Rect viewporti = impl->provider->get_viewport();
-	Rectf viewport;
-	viewport.left = viewporti.left / impl->provider->get_pixel_ratio();
-	viewport.top = viewporti.top / impl->provider->get_pixel_ratio();
-	viewport.right = viewporti.right / impl->provider->get_pixel_ratio();
-	viewport.bottom = viewporti.bottom / impl->provider->get_pixel_ratio();
-	return viewport;
-}
+	Rectf DisplayWindow::get_geometry() const
+	{
+		Rect geometryi = impl->provider->get_geometry();
+		Rectf geometry;
+		geometry.left = geometryi.left / impl->provider->get_pixel_ratio();
+		geometry.top = geometryi.top / impl->provider->get_pixel_ratio();
+		geometry.right = geometryi.right / impl->provider->get_pixel_ratio();
+		geometry.bottom = geometryi.bottom / impl->provider->get_pixel_ratio();
+		return geometry;
+	}
 
-bool DisplayWindow::has_focus() const
-{
-	return impl->provider->has_focus();
-}
+	Rectf DisplayWindow::get_viewport() const
+	{
+		Rect viewporti = impl->provider->get_viewport();
+		Rectf viewport;
+		viewport.left = viewporti.left / impl->provider->get_pixel_ratio();
+		viewport.top = viewporti.top / impl->provider->get_pixel_ratio();
+		viewport.right = viewporti.right / impl->provider->get_pixel_ratio();
+		viewport.bottom = viewporti.bottom / impl->provider->get_pixel_ratio();
+		return viewport;
+	}
 
-GraphicContext& DisplayWindow::get_gc() const
-{
-	throw_if_null();
-	return impl->provider->get_gc();
-}
+	bool DisplayWindow::has_focus() const
+	{
+		return impl->provider->has_focus();
+	}
 
-InputContext DisplayWindow::get_ic() const
-{
-	throw_if_null();
-	return impl->provider->get_ic();
-}
+	GraphicContext& DisplayWindow::get_gc() const
+	{
+		throw_if_null();
+		return impl->provider->get_gc();
+	}
 
-Signal<void()> &DisplayWindow::sig_lost_focus()
-{
-	return impl->site.sig_lost_focus;
-}
+	InputContext DisplayWindow::get_ic() const
+	{
+		throw_if_null();
+		return impl->provider->get_ic();
+	}
 
-Signal<void()> &DisplayWindow::sig_got_focus()
-{
-	return impl->site.sig_got_focus;
-}
+	Signal<void()> &DisplayWindow::sig_lost_focus()
+	{
+		return impl->site.sig_lost_focus;
+	}
 
-Signal<void(float, float)> &DisplayWindow::sig_resize()
-{
-	return impl->site.sig_resize;
-}
+	Signal<void()> &DisplayWindow::sig_got_focus()
+	{
+		return impl->site.sig_got_focus;
+	}
 
-Signal<void(const Rectf &)> &DisplayWindow::sig_paint()
-{
-	return impl->site.sig_paint;
-}
+	Signal<void(float, float)> &DisplayWindow::sig_resize()
+	{
+		return impl->site.sig_resize;
+	}
 
-Signal<void()> &DisplayWindow::sig_window_close()
-{
-	return impl->site.sig_window_close;
-}
+	Signal<void(const Rectf &)> &DisplayWindow::sig_paint()
+	{
+		return impl->site.sig_paint;
+	}
 
-Signal<void()> &DisplayWindow::sig_window_destroy()
-{
-	return impl->site.sig_window_destroy;
-}
+	Signal<void()> &DisplayWindow::sig_window_close()
+	{
+		return impl->site.sig_window_close;
+	}
 
-Signal<void()> &DisplayWindow::sig_window_minimized()
-{
-	return impl->site.sig_window_minimized;
-}
+	Signal<void()> &DisplayWindow::sig_window_destroy()
+	{
+		return impl->site.sig_window_destroy;
+	}
 
-Signal<void()> &DisplayWindow::sig_window_maximized()
-{
-	return impl->site.sig_window_maximized;
-}
+	Signal<void()> &DisplayWindow::sig_window_minimized()
+	{
+		return impl->site.sig_window_minimized;
+	}
 
-Signal<void()> &DisplayWindow::sig_window_restored()
-{
-	return impl->site.sig_window_restored;
-}
+	Signal<void()> &DisplayWindow::sig_window_maximized()
+	{
+		return impl->site.sig_window_maximized;
+	}
 
-std::function<void(Rectf &)> &DisplayWindow::func_window_resize()
-{
-	return impl->site.func_window_resize;
-}
+	Signal<void()> &DisplayWindow::sig_window_restored()
+	{
+		return impl->site.sig_window_restored;
+	}
 
-std::function<bool()> &DisplayWindow::func_minimize_clicked()
-{
-	return impl->site.func_minimize_clicked;
-}
+	std::function<void(Rectf &)> &DisplayWindow::func_window_resize()
+	{
+		return impl->site.func_window_resize;
+	}
+
+	std::function<bool()> &DisplayWindow::func_minimize_clicked()
+	{
+		return impl->site.func_minimize_clicked;
+	}
 
 #ifdef WIN32
-std::function<bool(HWND, UINT, WPARAM, LPARAM)> &DisplayWindow::func_window_message()
-{
-	return impl->site.func_window_message;
-}
-Signal<void(HWND, UINT, WPARAM, LPARAM)> &DisplayWindow::sig_window_message()
-{
-	return impl->site.sig_window_message;
-}
+	std::function<bool(HWND, UINT, WPARAM, LPARAM)> &DisplayWindow::func_window_message()
+	{
+		return impl->site.func_window_message;
+	}
+	Signal<void(HWND, UINT, WPARAM, LPARAM)> &DisplayWindow::sig_window_message()
+	{
+		return impl->site.sig_window_message;
+	}
 
 #endif
 
-Signal<void()> &DisplayWindow::sig_window_moved()
-{
-	return impl->site.sig_window_moved;
-}
+	Signal<void()> &DisplayWindow::sig_window_moved()
+	{
+		return impl->site.sig_window_moved;
+	}
 
-Signal<void()> &DisplayWindow::sig_window_flip()
-{
-	return impl->sig_window_flip;
-}
+	Signal<void()> &DisplayWindow::sig_window_flip()
+	{
+		return impl->sig_window_flip;
+	}
 
-void DisplayWindow::throw_if_null() const
-{
-	if (!impl)
-		throw Exception("DisplayWindow is null");
-}
+	void DisplayWindow::throw_if_null() const
+	{
+		if (!impl)
+			throw Exception("DisplayWindow is null");
+	}
 
 
-bool DisplayWindow::is_minimized() const
-{
-	return impl->provider->is_minimized();
-}
+	bool DisplayWindow::is_minimized() const
+	{
+		return impl->provider->is_minimized();
+	}
 
-bool DisplayWindow::is_maximized() const
-{
-	return impl->provider->is_maximized();
-}
+	bool DisplayWindow::is_maximized() const
+	{
+		return impl->provider->is_maximized();
+	}
 
-bool DisplayWindow::is_visible() const
-{
-	return impl->provider->is_visible();
-}
+	bool DisplayWindow::is_visible() const
+	{
+		return impl->provider->is_visible();
+	}
 
-bool DisplayWindow::is_fullscreen() const
-{
-	return impl->provider->is_fullscreen();
-}
+	bool DisplayWindow::is_fullscreen() const
+	{
+		return impl->provider->is_fullscreen();
+	}
 
-DisplayWindowProvider *DisplayWindow::get_provider() const
-{
-	return impl->provider;
-}
+	DisplayWindowProvider *DisplayWindow::get_provider() const
+	{
+		return impl->provider;
+	}
 
-bool DisplayWindow::is_clipboard_text_available() const
-{
-	return impl->provider->is_clipboard_text_available();
-}
+	bool DisplayWindow::is_clipboard_text_available() const
+	{
+		return impl->provider->is_clipboard_text_available();
+	}
 
-bool DisplayWindow::is_clipboard_image_available() const
-{
-	return impl->provider->is_clipboard_image_available();
-}
+	bool DisplayWindow::is_clipboard_image_available() const
+	{
+		return impl->provider->is_clipboard_image_available();
+	}
 
-std::string DisplayWindow::get_clipboard_text() const
-{
-	return impl->provider->get_clipboard_text();
-}
+	std::string DisplayWindow::get_clipboard_text() const
+	{
+		return impl->provider->get_clipboard_text();
+	}
 
-PixelBuffer DisplayWindow::get_clipboard_image() const
-{
-	return impl->provider->get_clipboard_image();
-}
+	PixelBuffer DisplayWindow::get_clipboard_image() const
+	{
+		return impl->provider->get_clipboard_image();
+	}
 
-Sizef DisplayWindow::get_minimum_size( bool client_area )
-{
-	Size sizei = impl->provider->get_minimum_size(client_area);
-	Sizef sizef;
-	sizef.width = sizei.width / impl->provider->get_pixel_ratio();
-	sizef.height = sizei.height / impl->provider->get_pixel_ratio();
-	return sizef;
-}
+	Sizef DisplayWindow::get_minimum_size(bool client_area)
+	{
+		Size sizei = impl->provider->get_minimum_size(client_area);
+		Sizef sizef;
+		sizef.width = sizei.width / impl->provider->get_pixel_ratio();
+		sizef.height = sizei.height / impl->provider->get_pixel_ratio();
+		return sizef;
+	}
 
-Sizef DisplayWindow::get_maximum_size( bool client_area )
-{
-	Size sizei = impl->provider->get_maximum_size(client_area);
-	Sizef sizef;
-	sizef.width = sizei.width / impl->provider->get_pixel_ratio();
-	sizef.height = sizei.height / impl->provider->get_pixel_ratio();
-	return sizef;
-}
+	Sizef DisplayWindow::get_maximum_size(bool client_area)
+	{
+		Size sizei = impl->provider->get_maximum_size(client_area);
+		Sizef sizef;
+		sizef.width = sizei.width / impl->provider->get_pixel_ratio();
+		sizef.height = sizei.height / impl->provider->get_pixel_ratio();
+		return sizef;
+	}
 
-std::string DisplayWindow::get_title() const
-{
-	return impl->provider->get_title();
-}
+	std::string DisplayWindow::get_title() const
+	{
+		return impl->provider->get_title();
+	}
 
 #ifdef WIN32
-void DisplayWindow::set_cursor_handle(HCURSOR cursor)
-{
-	impl->provider->set_cursor_handle(cursor);
-}
+	void DisplayWindow::set_cursor_handle(HCURSOR cursor)
+	{
+		impl->provider->set_cursor_handle(cursor);
+	}
 #endif
 
-/////////////////////////////////////////////////////////////////////////////
-// DisplayWindow Operations:
+	Pointf DisplayWindow::client_to_screen(const Pointf &client)
+	{
+		Point clienti;
+		clienti.x = (int)std::round(client.x * impl->provider->get_pixel_ratio());
+		clienti.y = (int)std::round(client.y * impl->provider->get_pixel_ratio());
+		Point screeni = impl->provider->client_to_screen(clienti);
+		Pointf screen;
+		screen.x = screeni.x / impl->provider->get_pixel_ratio();
+		screen.y = screeni.y / impl->provider->get_pixel_ratio();
+		return screen;
+	}
 
-Pointf DisplayWindow::client_to_screen(const Pointf &client)
-{
-	Point clienti;
-	clienti.x = (int)std::round(client.x * impl->provider->get_pixel_ratio());
-	clienti.y = (int)std::round(client.y * impl->provider->get_pixel_ratio());
-	Point screeni = impl->provider->client_to_screen(clienti);
-	Pointf screen;
-	screen.x = screeni.x / impl->provider->get_pixel_ratio();
-	screen.y = screeni.y / impl->provider->get_pixel_ratio();
-	return screen;
-}
+	Pointf DisplayWindow::screen_to_client(const Pointf &screen)
+	{
+		Point screeni;
+		screeni.x = (int)std::round(screen.x * impl->provider->get_pixel_ratio());
+		screeni.y = (int)std::round(screen.y * impl->provider->get_pixel_ratio());
+		Point clienti = impl->provider->screen_to_client(screeni);
+		Pointf client;
+		client.x = clienti.x / impl->provider->get_pixel_ratio();
+		client.y = clienti.y / impl->provider->get_pixel_ratio();
+		return client;
+	}
 
-Pointf DisplayWindow::screen_to_client(const Pointf &screen)
-{
-	Point screeni;
-	screeni.x = (int)std::round(screen.x * impl->provider->get_pixel_ratio());
-	screeni.y = (int)std::round(screen.y * impl->provider->get_pixel_ratio());
-	Point clienti = impl->provider->screen_to_client(screeni);
-	Pointf client;
-	client.x = clienti.x / impl->provider->get_pixel_ratio();
-	client.y = clienti.y / impl->provider->get_pixel_ratio();
-	return client;
-}
+	void DisplayWindow::capture_mouse(bool capture)
+	{
+		impl->provider->capture_mouse(capture);
+	}
 
-void DisplayWindow::capture_mouse(bool capture)
-{
-	impl->provider->capture_mouse(capture);
-}
+	void DisplayWindow::request_repaint(const Rectf &rect)
+	{
+		Rect recti;
+		recti.left = (int)std::floor(rect.left * impl->provider->get_pixel_ratio());
+		recti.top = (int)std::floor(rect.top * impl->provider->get_pixel_ratio());
+		recti.right = (int)std::ceil(rect.right * impl->provider->get_pixel_ratio());
+		recti.bottom = (int)std::ceil(rect.bottom * impl->provider->get_pixel_ratio());
+		impl->provider->request_repaint(recti);
+	}
 
-void DisplayWindow::request_repaint(const Rectf &rect)
-{
-	Rect recti;
-	recti.left = (int)std::floor(rect.left * impl->provider->get_pixel_ratio());
-	recti.top = (int)std::floor(rect.top * impl->provider->get_pixel_ratio());
-	recti.right = (int)std::ceil(rect.right * impl->provider->get_pixel_ratio());
-	recti.bottom = (int)std::ceil(rect.bottom * impl->provider->get_pixel_ratio());
-	impl->provider->request_repaint(recti);
-}
+	void DisplayWindow::set_title(const std::string &title)
+	{
+		impl->provider->set_title(title);
+	}
 
-void DisplayWindow::set_title(const std::string &title)
-{
-	impl->provider->set_title(title);
-}
+	void DisplayWindow::set_position(const Rectf &rect, bool client_area)
+	{
+		Rect recti;
+		recti.left = (int)std::round(rect.left * impl->provider->get_pixel_ratio());
+		recti.top = (int)std::round(rect.top * impl->provider->get_pixel_ratio());
+		recti.right = (int)std::round(rect.right * impl->provider->get_pixel_ratio());
+		recti.bottom = (int)std::round(rect.bottom * impl->provider->get_pixel_ratio());
+		impl->provider->set_position(recti, client_area);
+	}
 
-void DisplayWindow::set_position(const Rectf &rect, bool client_area)
-{
-	Rect recti;
-	recti.left = (int)std::round(rect.left * impl->provider->get_pixel_ratio());
-	recti.top = (int)std::round(rect.top * impl->provider->get_pixel_ratio());
-	recti.right = (int)std::round(rect.right * impl->provider->get_pixel_ratio());
-	recti.bottom = (int)std::round(rect.bottom * impl->provider->get_pixel_ratio());
-	impl->provider->set_position(recti, client_area);
-}
+	void DisplayWindow::set_position(float x, float y)
+	{
+		int xi = (int)std::round(x * impl->provider->get_pixel_ratio());
+		int yi = (int)std::round(y * impl->provider->get_pixel_ratio());
+		Rect geometry = impl->provider->get_geometry();
+		impl->provider->set_position(Rect(xi, yi, xi + geometry.get_width(), yi + geometry.get_height()), false);
+	}
 
-void DisplayWindow::set_position(float x, float y)
-{
-	int xi = (int)std::round(x * impl->provider->get_pixel_ratio());
-	int yi = (int)std::round(y * impl->provider->get_pixel_ratio());
-	Rect geometry = impl->provider->get_geometry();
-	impl->provider->set_position(Rect(xi, yi, xi + geometry.get_width(), yi + geometry.get_height()), false);
-}
+	void DisplayWindow::set_size(float width, float height, bool client_area)
+	{
+		int widthi = (int)std::round(width * impl->provider->get_pixel_ratio());
+		int heighti = (int)std::round(height * impl->provider->get_pixel_ratio());
+		impl->provider->set_size(widthi, heighti, client_area);
+	}
 
-void DisplayWindow::set_size(float width, float height, bool client_area)
-{
-	int widthi = (int)std::round(width * impl->provider->get_pixel_ratio());
-	int heighti = (int)std::round(height * impl->provider->get_pixel_ratio());
-	impl->provider->set_size(widthi, heighti, client_area);
-}
+	void DisplayWindow::set_minimum_size(float width, float height, bool client_area)
+	{
+		int widthi = (int)std::round(width * impl->provider->get_pixel_ratio());
+		int heighti = (int)std::round(height * impl->provider->get_pixel_ratio());
+		impl->provider->set_minimum_size(widthi, heighti, client_area);
+	}
 
-void DisplayWindow::set_minimum_size(float width, float height, bool client_area)
-{
-	int widthi = (int)std::round(width * impl->provider->get_pixel_ratio());
-	int heighti = (int)std::round(height * impl->provider->get_pixel_ratio());
-	impl->provider->set_minimum_size(widthi, heighti, client_area);
-}
+	void DisplayWindow::set_maximum_size(float width, float height, bool client_area)
+	{
+		int widthi = (int)std::round(width * impl->provider->get_pixel_ratio());
+		int heighti = (int)std::round(height * impl->provider->get_pixel_ratio());
+		impl->provider->set_maximum_size(widthi, heighti, client_area);
+	}
 
-void DisplayWindow::set_maximum_size(float width, float height, bool client_area)
-{
-	int widthi = (int)std::round(width * impl->provider->get_pixel_ratio());
-	int heighti = (int)std::round(height * impl->provider->get_pixel_ratio());
-	impl->provider->set_maximum_size(widthi, heighti, client_area);
-}
+	void DisplayWindow::set_enabled(bool enable)
+	{
+		impl->provider->set_enabled(enable);
+	}
 
-void DisplayWindow::set_enabled(bool enable)
-{
-	impl->provider->set_enabled(enable);
-}
+	void DisplayWindow::set_visible(bool visible, bool activate)
+	{
+		if (visible)
+			impl->provider->show(activate);
+		else
+			impl->provider->hide();
+	}
 
-void DisplayWindow::set_visible(bool visible, bool activate)
-{
-	if (visible)
+	void DisplayWindow::minimize()
+	{
+		impl->provider->minimize();
+	}
+
+	void DisplayWindow::restore()
+	{
+		impl->provider->restore();
+	}
+
+	void DisplayWindow::maximize()
+	{
+		impl->provider->maximize();
+	}
+
+	void DisplayWindow::toggle_fullscreen()
+	{
+		impl->provider->toggle_fullscreen();
+	}
+
+
+	void DisplayWindow::show(bool activate)
+	{
 		impl->provider->show(activate);
-	else
+	}
+
+	void DisplayWindow::hide()
+	{
 		impl->provider->hide();
-}
+	}
 
-void DisplayWindow::minimize()
-{
-	impl->provider->minimize();
-}
+	void DisplayWindow::bring_to_front()
+	{
+		impl->provider->bring_to_front();
+	}
 
-void DisplayWindow::restore()
-{
-	impl->provider->restore();
-}
+	void DisplayWindow::update(const Rectf &rect)
+	{
+		Rect recti;
+		recti.left = (int)std::round(rect.left * impl->provider->get_pixel_ratio());
+		recti.top = (int)std::round(rect.top * impl->provider->get_pixel_ratio());
+		recti.right = (int)std::round(rect.right * impl->provider->get_pixel_ratio());
+		recti.bottom = (int)std::round(rect.bottom * impl->provider->get_pixel_ratio());
+		impl->provider->update(recti);
+	}
 
-void DisplayWindow::maximize()
-{
-	impl->provider->maximize();
-}
+	void DisplayWindow::flip(int interval)
+	{
+		impl->sig_window_flip();
+		impl->provider->flip(interval);
+	}
 
-void DisplayWindow::toggle_fullscreen()
-{
-	impl->provider->toggle_fullscreen();
-}
+	void DisplayWindow::show_cursor()
+	{
+		impl->provider->show_system_cursor();
+	}
 
+	void DisplayWindow::set_cursor(const Cursor &cursor)
+	{
+		impl->current_cursor = cursor;
+		impl->provider->set_cursor(cursor.get_provider());
+	}
 
-void DisplayWindow::show(bool activate)
-{
-	impl->provider->show(activate);
-}
+	void DisplayWindow::set_cursor(StandardCursor type)
+	{
+		impl->current_cursor = Cursor();
+		impl->provider->set_cursor(type);
+	}
 
-void DisplayWindow::hide()
-{
-	impl->provider->hide();
-}
+	void DisplayWindow::hide_cursor()
+	{
+		impl->provider->hide_system_cursor();
+	}
 
-void DisplayWindow::bring_to_front()
-{
-	impl->provider->bring_to_front();
-}
+	void DisplayWindow::set_clipboard_text(const std::string &text)
+	{
+		impl->provider->set_clipboard_text(text);
+	}
 
-void DisplayWindow::update(const Rectf &rect)
-{
-	Rect recti;
-	recti.left = (int)std::round(rect.left * impl->provider->get_pixel_ratio());
-	recti.top = (int)std::round(rect.top * impl->provider->get_pixel_ratio());
-	recti.right = (int)std::round(rect.right * impl->provider->get_pixel_ratio());
-	recti.bottom = (int)std::round(rect.bottom * impl->provider->get_pixel_ratio());
-	impl->provider->update(recti);
-}
+	void DisplayWindow::set_clipboard_image(const PixelBuffer &buf)
+	{
+		impl->provider->set_clipboard_image(buf);
+	}
 
-void DisplayWindow::flip(int interval)
-{
-	impl->sig_window_flip();
-	impl->provider->flip(interval);
-}
+	void DisplayWindow::set_large_icon(const PixelBuffer &image)
+	{
+		impl->provider->set_large_icon(image);
+	}
 
-void DisplayWindow::show_cursor()
-{
-	impl->provider->show_system_cursor();
-}
+	void DisplayWindow::set_small_icon(const PixelBuffer &image)
+	{
+		impl->provider->set_small_icon(image);
+	}
 
-void DisplayWindow::set_cursor(const Cursor &cursor)
-{
-	impl->current_cursor = cursor;
-	impl->provider->set_cursor(cursor.get_provider());
-}
+	void DisplayWindow::enable_alpha_channel(const Rectf &blur_rect)
+	{
+		Rect blur_recti;
+		blur_recti.left = (int)std::round(blur_rect.left * impl->provider->get_pixel_ratio());
+		blur_recti.top = (int)std::round(blur_rect.top * impl->provider->get_pixel_ratio());
+		blur_recti.right = (int)std::round(blur_rect.right * impl->provider->get_pixel_ratio());
+		blur_recti.bottom = (int)std::round(blur_rect.bottom * impl->provider->get_pixel_ratio());
+		impl->provider->enable_alpha_channel(blur_recti);
+	}
 
-void DisplayWindow::set_cursor(StandardCursor type)
-{
-	impl->current_cursor = Cursor();
-	impl->provider->set_cursor(type);
-}
-
-void DisplayWindow::hide_cursor()
-{
-	impl->provider->hide_system_cursor();
-}
-
-void DisplayWindow::set_clipboard_text(const std::string &text)
-{
-	impl->provider->set_clipboard_text(text);
-}
-
-void DisplayWindow::set_clipboard_image( const PixelBuffer &buf )
-{
-	impl->provider->set_clipboard_image(buf);
-}
-
-void DisplayWindow::set_large_icon(const PixelBuffer &image)
-{
-	impl->provider->set_large_icon(image);
-}
-
-void DisplayWindow::set_small_icon(const PixelBuffer &image)
-{
-	impl->provider->set_small_icon(image);
-}
-
-void DisplayWindow::enable_alpha_channel(const Rectf &blur_rect)
-{
-	Rect blur_recti;
-	blur_recti.left = (int)std::round(blur_rect.left * impl->provider->get_pixel_ratio());
-	blur_recti.top = (int)std::round(blur_rect.top * impl->provider->get_pixel_ratio());
-	blur_recti.right = (int)std::round(blur_rect.right * impl->provider->get_pixel_ratio());
-	blur_recti.bottom = (int)std::round(blur_rect.bottom * impl->provider->get_pixel_ratio());
-	impl->provider->enable_alpha_channel(blur_recti);
-}
-
-void DisplayWindow::extend_frame_into_client_area(float left, float top, float right, float bottom)
-{
-	int lefti = (int)std::round(left * impl->provider->get_pixel_ratio());
-	int topi = (int)std::round(top * impl->provider->get_pixel_ratio());
-	int righti = (int)std::round(right * impl->provider->get_pixel_ratio());
-	int bottomi = (int)std::round(bottom * impl->provider->get_pixel_ratio());
-	impl->provider->extend_frame_into_client_area(lefti, topi, righti, bottomi);
-}
-
-
-/////////////////////////////////////////////////////////////////////////////
-// DisplayWindow Implementation:
-
+	void DisplayWindow::extend_frame_into_client_area(float left, float top, float right, float bottom)
+	{
+		int lefti = (int)std::round(left * impl->provider->get_pixel_ratio());
+		int topi = (int)std::round(top * impl->provider->get_pixel_ratio());
+		int righti = (int)std::round(right * impl->provider->get_pixel_ratio());
+		int bottomi = (int)std::round(bottom * impl->provider->get_pixel_ratio());
+		impl->provider->extend_frame_into_client_area(lefti, topi, righti, bottomi);
+	}
 }

@@ -37,50 +37,33 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// ScreenInfo_Impl class:
-
-class ScreenInfo_Impl
-{
-public:
-	ScreenInfo_Impl()
+	class ScreenInfo_Impl
 	{
+	public:
+		ScreenInfo_Impl()
+		{
 #ifdef WIN32
-		provider = new ScreenInfoProvider_Win32;
+			provider = new ScreenInfoProvider_Win32;
 #else
-		provider = nullptr;
+			provider = nullptr;
 #endif
-	}
+		}
 
-	~ScreenInfo_Impl() 
+		~ScreenInfo_Impl()
+		{
+			delete provider;
+		}
+
+		ScreenInfoProvider *provider;
+	};
+
+	ScreenInfo::ScreenInfo()
+		: impl(std::make_shared<ScreenInfo_Impl>())
 	{
-		delete provider;
 	}
 
-	ScreenInfoProvider *provider;
-};
-
-/////////////////////////////////////////////////////////////////////////////
-// ScreenInfo Construction:
-
-ScreenInfo::ScreenInfo()
-: impl(std::make_shared<ScreenInfo_Impl>())
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// ScreenInfo Attributes:
-
-std::vector<Rectf> ScreenInfo::get_screen_geometries(int &primary_screen_index) const
-{
-	return impl->provider->get_screen_geometries(primary_screen_index);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// ScreenInfo Operations:
-
-/////////////////////////////////////////////////////////////////////////////
-// ScreenInfo Implementation:
-
+	std::vector<Rectf> ScreenInfo::get_screen_geometries(int &primary_screen_index) const
+	{
+		return impl->provider->get_screen_geometries(primary_screen_index);
+	}
 }

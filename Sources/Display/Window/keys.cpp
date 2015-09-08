@@ -31,34 +31,33 @@
 
 namespace clan
 {
-
-Key decode_ic(InputCode ic)
-{
-    switch(ic)
-    {
+	Key decode_ic(InputCode ic)
+	{
+		switch (ic)
+		{
 		case keycode_backspace: return Key::backspace;
-		case keycode_tab    : return Key::tab;
-		case keycode_clear  : return Key::clear;
-		case keycode_scroll : return Key::scroll;
-		case keycode_return : return Key::key_return;
-		case keycode_select : return Key::select;
+		case keycode_tab: return Key::tab;
+		case keycode_clear: return Key::clear;
+		case keycode_scroll: return Key::scroll;
+		case keycode_return: return Key::key_return;
+		case keycode_select: return Key::select;
 		case keycode_execute: return Key::execute;
-		case keycode_escape : return Key::escape;
-		case keycode_pause  : return Key::pause;
-		case keycode_print  : return Key::print;
-		case keycode_space  : return Key::space;
+		case keycode_escape: return Key::escape;
+		case keycode_pause: return Key::pause;
+		case keycode_print: return Key::print;
+		case keycode_space: return Key::space;
 
 		case keycode_prior: return Key::prior;
-		case keycode_next : return Key::next;
-		case keycode_home : return Key::home;
-		case keycode_end  : return Key::end;
-		case keycode_left : return Key::left;
-		case keycode_up   : return Key::up;
+		case keycode_next: return Key::next;
+		case keycode_home: return Key::home;
+		case keycode_end: return Key::end;
+		case keycode_left: return Key::left;
+		case keycode_up: return Key::up;
 		case keycode_right: return Key::right;
-		case keycode_down : return Key::down;
+		case keycode_down: return Key::down;
 
-		case keycode_kanji     : return Key::kanji;
-		case keycode_convert   : return Key::convert;
+		case keycode_kanji: return Key::kanji;
+		case keycode_convert: return Key::convert;
 		case keycode_nonconvert: return Key::nonconvert;
 
 		case keycode_help: return Key::help;
@@ -112,12 +111,12 @@ Key decode_ic(InputCode ic)
 		case keycode_numpad8: return Key::numpad_8;
 		case keycode_numpad9: return Key::numpad_9;
 
-		case keycode_multiply : return Key::multiply;
-		case keycode_add      : return Key::add;
+		case keycode_multiply: return Key::multiply;
+		case keycode_add: return Key::add;
 		case keycode_separator: return Key::separator;
-		case keycode_subtract : return Key::subtract;
-		case keycode_decimal  : return Key::decimal;
-		case keycode_divide   : return Key::divide;
+		case keycode_subtract: return Key::subtract;
+		case keycode_decimal: return Key::decimal;
+		case keycode_divide: return Key::divide;
 
 		case keycode_f1: return Key::f1;
 		case keycode_f2: return Key::f2;
@@ -165,9 +164,9 @@ Key decode_ic(InputCode ic)
 
 		// Platform-specific aliases
 #if defined(WIN32)
-		case keycode_shift  : return Key::lshift;
+		case keycode_shift: return Key::lshift;
 		case keycode_control: return Key::lcontrol;
-		case keycode_menu   : return Key::lmenu;
+		case keycode_menu: return Key::lmenu;
 #elif defined(__APPLE__)
 		case keycode_shift  : return Key::lshift;
 		case keycode_control: return Key::lcontrol;
@@ -185,7 +184,6 @@ Key decode_ic(InputCode ic)
 		case keycode_unknown:
 		default:
 			return Key::none;
-    }
-}
-
+		}
+	}
 }

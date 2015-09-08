@@ -42,7 +42,6 @@ namespace clan
 {
 	Font Font::load(Canvas &canvas, const std::string &family_name, const FontDescription &reference_desc, FontFamily &font_family, const XMLResourceDocument &doc, std::function<Resource<Sprite>(Canvas &, const std::string &)> cb_get_sprite)
 	{
-
 		DomElement font_element;
 		XMLResourceNode resource;
 
@@ -148,6 +147,5 @@ namespace clan
 		}
 
 		throw Exception(string_format("Font resource %1 did not have a <sprite> or <ttf> child element", resource.get_name()));
-
 	}
 }

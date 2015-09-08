@@ -40,146 +40,144 @@
 
 namespace clan
 {
-
-Image Image::load(Canvas &canvas, const std::string &id, const XMLResourceDocument &doc)
-{
-	Image image;
-
-	XMLResourceNode resource = doc.get_resource(id);
-
-	DomNode cur_node = resource.get_element().get_first_child();
-	while(!cur_node.is_null())
+	Image Image::load(Canvas &canvas, const std::string &id, const XMLResourceDocument &doc)
 	{
-		if (!cur_node.is_element())
-		{
-			cur_node = cur_node.get_next_sibling();
-			continue;
-		}
+		Image image;
 
-		DomElement cur_element = cur_node.to_element();
-		std::string tag_name = cur_element.get_tag_name();
-		if (tag_name == "image" || tag_name == "image-file")
-		{
-			std::string image_name = cur_element.get_attribute("file");
-			Texture2D texture = Texture2D(canvas, PathHelp::combine(resource.get_base_path(), image_name), resource.get_file_system());
+		XMLResourceNode resource = doc.get_resource(id);
 
-			DomNode cur_child(cur_element.get_first_child());
-			if(cur_child.is_null())
+		DomNode cur_node = resource.get_element().get_first_child();
+		while (!cur_node.is_null())
+		{
+			if (!cur_node.is_element())
 			{
-				image = Image(texture, texture.get_size());
+				cur_node = cur_node.get_next_sibling();
+				continue;
 			}
-			else
+
+			DomElement cur_element = cur_node.to_element();
+			std::string tag_name = cur_element.get_tag_name();
+			if (tag_name == "image" || tag_name == "image-file")
 			{
-				do {
-					DomElement cur_child_elemnt = cur_child.to_element();
-					if(cur_child.get_node_name() == "grid")
-					{
-						Point position;
-						Size texture_size = texture.get_size();
-						Size size = texture_size;
+				std::string image_name = cur_element.get_attribute("file");
+				Texture2D texture = Texture2D(canvas, PathHelp::combine(resource.get_base_path(), image_name), resource.get_file_system());
 
-						std::vector<std::string> image_size = StringHelp::split_text(cur_child_elemnt.get_attribute("size"), ",");
-						if (image_size.size() > 0)
-							size.width = StringHelp::text_to_int(image_size[0]);
-						if (image_size.size() > 1)
-							size.height = StringHelp::text_to_int(image_size[1]);
-
-						if (cur_child_elemnt.has_attribute("pos"))
+				DomNode cur_child(cur_element.get_first_child());
+				if (cur_child.is_null())
+				{
+					image = Image(texture, texture.get_size());
+				}
+				else
+				{
+					do {
+						DomElement cur_child_elemnt = cur_child.to_element();
+						if (cur_child.get_node_name() == "grid")
 						{
-							std::vector<std::string> image_pos = StringHelp::split_text(cur_child_elemnt.get_attribute("pos"), ",");
-							if (image_pos.size() > 0)
-								position.x = StringHelp::text_to_int(image_pos[0]);
-							if (image_pos.size() > 1)
-								position.y = StringHelp::text_to_int(image_pos[1]);
+							Point position;
+							Size texture_size = texture.get_size();
+							Size size = texture_size;
+
+							std::vector<std::string> image_size = StringHelp::split_text(cur_child_elemnt.get_attribute("size"), ",");
+							if (image_size.size() > 0)
+								size.width = StringHelp::text_to_int(image_size[0]);
+							if (image_size.size() > 1)
+								size.height = StringHelp::text_to_int(image_size[1]);
+
+							if (cur_child_elemnt.has_attribute("pos"))
+							{
+								std::vector<std::string> image_pos = StringHelp::split_text(cur_child_elemnt.get_attribute("pos"), ",");
+								if (image_pos.size() > 0)
+									position.x = StringHelp::text_to_int(image_pos[0]);
+								if (image_pos.size() > 1)
+									position.y = StringHelp::text_to_int(image_pos[1]);
+							}
+							if ((size.width + position.x) > texture_size.width)
+								size.width = (texture_size.width - position.x);
+							if ((size.height + position.y) > texture_size.height)
+								size.height = (texture_size.height - position.y);
+
+							image = Image(texture, Rect(position, size));
 						}
-						if ((size.width + position.x) > texture_size.width)
-							size.width = (texture_size.width - position.x);
-						if ((size.height + position.y) > texture_size.height)
-							size.height = (texture_size.height - position.y);
 
-						image = Image(texture, Rect(position, size));
-					}
+						cur_child = cur_child.get_next_sibling();
+					} while (!cur_child.is_null());
+				}
 
-					cur_child = cur_child.get_next_sibling();
-				} while(!cur_child.is_null());
+				break;
+			}
+			cur_node = cur_node.get_next_sibling();
+		}
+		if (image.is_null())
+			throw Exception("Image resource contained no frames!");
+
+		cur_node = resource.get_element().get_first_child();
+		while (!cur_node.is_null())
+		{
+			if (!cur_node.is_element())
+			{
+				cur_node = cur_node.get_next_sibling();
+				continue;
 			}
 
-			break;
-		}
-		cur_node = cur_node.get_next_sibling();
-	}
-	if (image.is_null())
-		throw Exception("Image resource contained no frames!");
+			DomElement cur_element = cur_node.to_element();
 
-	cur_node = resource.get_element().get_first_child();
-	while (!cur_node.is_null())
-	{
-		if (!cur_node.is_element())
-		{
+			std::string tag_name = cur_element.get_tag_name();
+
+			// <color red="float" green="float" blue="float" alpha="float" />
+			if (tag_name == "color")
+			{
+				Colorf color;
+				color.r = (float)StringHelp::text_to_float(cur_element.get_attribute("red", "1.0"));
+				color.g = (float)StringHelp::text_to_float(cur_element.get_attribute("green", "1.0"));
+				color.b = (float)StringHelp::text_to_float(cur_element.get_attribute("blue", "1.0"));
+				color.a = (float)StringHelp::text_to_float(cur_element.get_attribute("alpha", "1.0"));
+				image.set_color(color);
+			}
+			// <scale x="float" y="float />
+			else if (tag_name == "scale")
+			{
+				float scale_x = StringHelp::text_to_float(cur_element.get_attribute("x", "1.0"));
+				float scale_y = StringHelp::text_to_float(cur_element.get_attribute("y", "1.0"));
+				image.set_scale(scale_x, scale_y);
+			}
+			// <translation origin="string" x="integer" y="integer" />
+			else if (tag_name == "translation")
+			{
+				std::string hotspot = cur_element.get_attribute("origin", "top_left");
+				Origin origin;
+
+				if (hotspot == "center")
+					origin = origin_center;
+				else if (hotspot == "top_center")
+					origin = origin_top_center;
+				else if (hotspot == "top_right")
+					origin = origin_top_right;
+				else if (hotspot == "center_left")
+					origin = origin_center_left;
+				else if (hotspot == "center_right")
+					origin = origin_center_right;
+				else if (hotspot == "bottom_left")
+					origin = origin_bottom_left;
+				else if (hotspot == "bottom_center")
+					origin = origin_bottom_center;
+				else if (hotspot == "bottom_right")
+					origin = origin_bottom_right;
+				else
+					origin = origin_top_left;
+
+				int xoffset = StringHelp::text_to_int(cur_element.get_attribute("x", "0"));
+				int yoffset = StringHelp::text_to_int(cur_element.get_attribute("y", "0"));
+
+				// TODO Find out what is going on here...
+				xoffset /= image.get_texture().get_texture().get_pixel_ratio();
+				yoffset /= image.get_texture().get_texture().get_pixel_ratio();
+
+				image.set_alignment(origin, xoffset, yoffset);
+			}
+
 			cur_node = cur_node.get_next_sibling();
-			continue;
 		}
 
-		DomElement cur_element = cur_node.to_element();
-
-		std::string tag_name = cur_element.get_tag_name();
-
-		// <color red="float" green="float" blue="float" alpha="float" />
-		if (tag_name == "color")
-		{
-			Colorf color;
-			color.r = (float)StringHelp::text_to_float(cur_element.get_attribute("red", "1.0"));
-			color.g = (float)StringHelp::text_to_float(cur_element.get_attribute("green", "1.0"));
-			color.b = (float)StringHelp::text_to_float(cur_element.get_attribute("blue", "1.0"));
-			color.a = (float)StringHelp::text_to_float(cur_element.get_attribute("alpha", "1.0"));
-			image.set_color(color);
-		}
-		// <scale x="float" y="float />
-		else if (tag_name == "scale")
-		{
-			float scale_x = StringHelp::text_to_float(cur_element.get_attribute("x", "1.0"));
-			float scale_y = StringHelp::text_to_float(cur_element.get_attribute("y", "1.0"));
-			image.set_scale(scale_x, scale_y);
-		}
-		// <translation origin="string" x="integer" y="integer" />
-		else if (tag_name == "translation")
-		{
-			std::string hotspot = cur_element.get_attribute("origin", "top_left");
-			Origin origin;
-
-			if(hotspot == "center")
-				origin = origin_center;
-			else if(hotspot == "top_center")
-				origin = origin_top_center;
-			else if(hotspot == "top_right")
-				origin = origin_top_right;
-			else if(hotspot == "center_left")
-				origin = origin_center_left;
-			else if(hotspot == "center_right")
-				origin = origin_center_right;
-			else if(hotspot == "bottom_left")
-				origin = origin_bottom_left;
-			else if(hotspot == "bottom_center")
-				origin = origin_bottom_center;
-			else if(hotspot == "bottom_right")
-				origin = origin_bottom_right;
-			else
-				origin = origin_top_left;
-
-			int xoffset = StringHelp::text_to_int(cur_element.get_attribute("x", "0"));
-			int yoffset = StringHelp::text_to_int(cur_element.get_attribute("y", "0"));
-
-			// TODO Find out what is going on here...
-			xoffset /= image.get_texture().get_texture().get_pixel_ratio();
-			yoffset /= image.get_texture().get_texture().get_pixel_ratio();
-
-			image.set_alignment(origin, xoffset, yoffset);
-		}
-
-		cur_node = cur_node.get_next_sibling();
+		return image;
 	}
-
-	return image;
-}
-
 }

@@ -41,27 +41,25 @@
 
 namespace clan
 {
-
-class DisplayWindow_Impl
-{
-public:
-	DisplayWindow_Impl()
+	class DisplayWindow_Impl
 	{
-		SharedGCData::add_ref();
-	}
+	public:
+		DisplayWindow_Impl()
+		{
+			SharedGCData::add_ref();
+		}
 
-	~DisplayWindow_Impl()
-	{
-		if (provider)
-			delete provider;
-		provider = nullptr;
-		SharedGCData::release_ref();
-	}
+		~DisplayWindow_Impl()
+		{
+			if (provider)
+				delete provider;
+			provider = nullptr;
+			SharedGCData::release_ref();
+		}
 
-	Signal<void()> sig_window_flip;
-	DisplayWindowProvider *provider = nullptr;
-	DisplayWindowSite site;
-	Cursor current_cursor;
-};
-
+		Signal<void()> sig_window_flip;
+		DisplayWindowProvider *provider = nullptr;
+		DisplayWindowSite site;
+		Cursor current_cursor;
+	};
 }

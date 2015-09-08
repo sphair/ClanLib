@@ -41,7 +41,6 @@
 
 namespace clan
 {
-
 	Texture Texture::load(GraphicContext &gc, const std::string &id, const XMLResourceDocument &doc, const ImageImportDescription &import_desc)
 	{
 		XMLResourceNode resource = doc.get_resource(id);

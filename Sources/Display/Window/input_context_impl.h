@@ -36,74 +36,47 @@
 
 namespace clan
 {
+	class InputEvent;
 
-class InputEvent;
+	class InputContext_Impl : public DisposableObject
+	{
+	public:
+		InputContext_Impl();
+		~InputContext_Impl();
 
-/// \brief Input events interface.
-class InputContext_Impl : public DisposableObject
-{
-/// \name Construction
-/// \{
+		static std::recursive_mutex mutex;
 
-public:
-	InputContext_Impl();
+		std::vector<InputDevice> keyboards;
+		std::vector<InputDevice> mice;
+		std::vector<InputDevice> joysticks;
+		std::vector<InputDevice> tablets;
 
-	~InputContext_Impl();
+		std::weak_ptr<InputContext_Impl> input_context;
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief Removes all devices from this input context.
+		void clear();
 
-public:
-	static std::recursive_mutex mutex;
+		/// \brief Adds a new keyboard to the input context.
+		void add_keyboard(InputDevice &keyboard);
 
-	std::vector<InputDevice> keyboards;
+		/// \brief Adds a new mouse to the input context.
+		void add_mouse(InputDevice &mouse);
 
-	std::vector<InputDevice> mice;
+		/// \brief Adds a new joystick to the input context.
+		void add_joystick(InputDevice &joystick);
 
-	std::vector<InputDevice> joysticks;
+		/// \brief Adds a new tablet to the input context.
+		void add_tablet(InputDevice &tablet);
 
-	std::vector<InputDevice> tablets;
-	
-	std::weak_ptr<InputContext_Impl> input_context;
+		/// \brief Process and dispatch messages to signals.
+		void process_messages();
 
+		/// \brief Called by input devices when events are received.
+		void received_event(const InputEvent &e, std::weak_ptr<InputDevice_Impl> &input_device);
 
-/// \}
-/// \name Operations
-/// \{
+	private:
+		void on_dispose() override;
 
-public:
-	/// \brief Removes all devices from this input context.
-	void clear();
-
-	/// \brief Adds a new keyboard to the input context.
-	void add_keyboard(InputDevice &keyboard);
-
-	/// \brief Adds a new mouse to the input context.
-	void add_mouse(InputDevice &mouse);
-
-	/// \brief Adds a new joystick to the input context.
-	void add_joystick(InputDevice &joystick);
-
-	/// \brief Adds a new tablet to the input context.
-	void add_tablet(InputDevice &tablet);
-
-	/// \brief Process and dispatch messages to signals.
-	void process_messages();
-
-	/// \brief Called by input devices when events are received.
-	void received_event(const InputEvent &e, std::weak_ptr<InputDevice_Impl> &input_device);
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	void on_dispose() override;
-
-	std::vector< std::pair<InputEvent, std::weak_ptr<InputDevice_Impl> > > events;
-/// \}
-
-};
-
+		std::vector< std::pair<InputEvent, std::weak_ptr<InputDevice_Impl> > > events;
+	};
 }

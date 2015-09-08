@@ -41,282 +41,271 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// CursorDescription construction:
-
-CursorDescription::CursorDescription()
-: impl(std::make_shared<CursorDescription_Impl>())
-{
-}
-
-CursorDescription::CursorDescription(const CursorDescription &copy)
-: impl(copy.impl) 
-{
-}
-
-CursorDescription::~CursorDescription()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// CursorDescription attributes:
-
-const std::vector<CursorDescriptionFrame> &CursorDescription::get_frames() const
-{
-	return impl->frames;
-}
-
-Point CursorDescription::get_hotspot() const
-{
-	return impl->hotspot;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// CursorDescription operations:
-
-CursorDescription &CursorDescription::operator =(const CursorDescription &copy)
-{
-	impl = copy.impl;
-	return *this;
-}
-
-void CursorDescription::add_frame(const PixelBuffer &pixelbuffer)
-{
-	impl->frames.push_back(CursorDescriptionFrame(pixelbuffer, Rect(0, 0, pixelbuffer.get_width(), pixelbuffer.get_height())));
-}
-
-void CursorDescription::add_frame(const std::string &filename, FileSystem &fs, const ImageImportDescription &import_desc)
-{
-	PixelBuffer image = ImageProviderFactory::load(filename, fs, "");
-	image = import_desc.process(image);
-	add_frame(image);
-}
-
-void CursorDescription::add_frame(const std::string &fullname, const ImageImportDescription &import_desc)
-{
-	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
-	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	FileSystem vfs(path);
-	add_frame(filename, vfs, import_desc );
-}
-
-void CursorDescription::add_frame(IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc)
-{
-	PixelBuffer image = ImageProviderFactory::load(file, image_type);
-	image = import_desc.process(image);
-	add_frame(image);
-}
-
-void CursorDescription::add_gridclipped_frames(
-	const PixelBuffer &pixelbuffer,
-	int xpos, int ypos,
-	int width, int height,
-	int xarray, int yarray,
-	int array_skipframes,
-	int xspace, int yspace)
-{
-	int ystart = ypos;
-	for(int y = 0; y < yarray; y++)
+	CursorDescription::CursorDescription()
+		: impl(std::make_shared<CursorDescription_Impl>())
 	{
-		int xstart = xpos;
-		for(int x = 0; x < xarray; x++)
-		{
-			if (y == yarray -1 && x >= xarray - array_skipframes)
-				break;
-
-			if(xstart + width > pixelbuffer.get_width() || ystart + height > pixelbuffer.get_height())
-				throw Exception("add_gridclipped_frames: Outside pixelbuffer bounds");
-
-			impl->frames.push_back(CursorDescriptionFrame(pixelbuffer, Rect(xstart, ystart, xstart + width, ystart + height)));
-			xstart += width + xspace;
-		}
-		ystart += height + yspace;
 	}
-}
 
-void CursorDescription::add_alphaclipped_frames(
-	const PixelBuffer &pixelbuffer, 
-	int xpos, int ypos, 
-	float trans_limit)
-{
-	PixelBuffer alpha_buffer = pixelbuffer.to_format(tf_rgba8);
-
-	int begin = 0;
-	bool prev_trans = true;
-
-	int alpha_width = alpha_buffer.get_width();
-	int alpha_height = alpha_buffer.get_height();
-	bool found_opaque = false;
-	bool found_trans = false;
-
-	std::vector<int> opaque_row_vector;
-	opaque_row_vector.resize(alpha_width);
-
-	int *opaque_row = &(opaque_row_vector[0]);
-	memset(opaque_row, 0, alpha_width*sizeof(int));
-
-	int cut_top = ypos;
-	int cut_bottom = alpha_height;
-		
-	char *data = (char *) alpha_buffer.get_data();
-		
-	for (int y=ypos; y < alpha_height; y++)
+	CursorDescription::CursorDescription(const CursorDescription &copy)
+		: impl(copy.impl)
 	{
-		bool opaque_line = false;
-		Vec4ub *line = (Vec4ub *) (data + alpha_buffer.get_pitch()*y);
-		for (int x=0; x < alpha_width; x++)
+	}
+
+	CursorDescription::~CursorDescription()
+	{
+	}
+
+	const std::vector<CursorDescriptionFrame> &CursorDescription::get_frames() const
+	{
+		return impl->frames;
+	}
+
+	Point CursorDescription::get_hotspot() const
+	{
+		return impl->hotspot;
+	}
+
+	CursorDescription &CursorDescription::operator =(const CursorDescription &copy)
+	{
+		impl = copy.impl;
+		return *this;
+	}
+
+	void CursorDescription::add_frame(const PixelBuffer &pixelbuffer)
+	{
+		impl->frames.push_back(CursorDescriptionFrame(pixelbuffer, Rect(0, 0, pixelbuffer.get_width(), pixelbuffer.get_height())));
+	}
+
+	void CursorDescription::add_frame(const std::string &filename, FileSystem &fs, const ImageImportDescription &import_desc)
+	{
+		PixelBuffer image = ImageProviderFactory::load(filename, fs, "");
+		image = import_desc.process(image);
+		add_frame(image);
+	}
+
+	void CursorDescription::add_frame(const std::string &fullname, const ImageImportDescription &import_desc)
+	{
+		std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
+		std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
+		FileSystem vfs(path);
+		add_frame(filename, vfs, import_desc);
+	}
+
+	void CursorDescription::add_frame(IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc)
+	{
+		PixelBuffer image = ImageProviderFactory::load(file, image_type);
+		image = import_desc.process(image);
+		add_frame(image);
+	}
+
+	void CursorDescription::add_gridclipped_frames(
+		const PixelBuffer &pixelbuffer,
+		int xpos, int ypos,
+		int width, int height,
+		int xarray, int yarray,
+		int array_skipframes,
+		int xspace, int yspace)
+	{
+		int ystart = ypos;
+		for (int y = 0; y < yarray; y++)
 		{
-			if (line[x].a > trans_limit*255)
+			int xstart = xpos;
+			for (int x = 0; x < xarray; x++)
 			{
-				opaque_row[x] = 1;
-				opaque_line = true;
-				found_opaque = true;
+				if (y == yarray - 1 && x >= xarray - array_skipframes)
+					break;
+
+				if (xstart + width > pixelbuffer.get_width() || ystart + height > pixelbuffer.get_height())
+					throw Exception("add_gridclipped_frames: Outside pixelbuffer bounds");
+
+				impl->frames.push_back(CursorDescriptionFrame(pixelbuffer, Rect(xstart, ystart, xstart + width, ystart + height)));
+				xstart += width + xspace;
 			}
-		}
-			
-		if (opaque_line == false) // cut something of top or bottom
-		{
-			if (found_opaque)
-			{
-				cut_bottom--;
-				found_trans = true;
-			}
-			else
-				cut_top ++;
-		}
-		else if (found_trans)
-		{
-			found_trans = false;
-			cut_bottom = alpha_height;
+			ystart += height + yspace;
 		}
 	}
-	
-	if (cut_top >= cut_bottom)
-		throw Exception("add_alphaclipped_frames: Image contained only alpha!");
 
-	for(int x=xpos; x < alpha_width; x++)
+	void CursorDescription::add_alphaclipped_frames(
+		const PixelBuffer &pixelbuffer,
+		int xpos, int ypos,
+		float trans_limit)
 	{
-		if(opaque_row[x] && prev_trans)
+		PixelBuffer alpha_buffer = pixelbuffer.to_format(tf_rgba8);
+
+		int begin = 0;
+		bool prev_trans = true;
+
+		int alpha_width = alpha_buffer.get_width();
+		int alpha_height = alpha_buffer.get_height();
+		bool found_opaque = false;
+		bool found_trans = false;
+
+		std::vector<int> opaque_row_vector;
+		opaque_row_vector.resize(alpha_width);
+
+		int *opaque_row = &(opaque_row_vector[0]);
+		memset(opaque_row, 0, alpha_width*sizeof(int));
+
+		int cut_top = ypos;
+		int cut_bottom = alpha_height;
+
+		char *data = (char *)alpha_buffer.get_data();
+
+		for (int y = ypos; y < alpha_height; y++)
 		{
-			begin = x;
-			prev_trans = false;
+			bool opaque_line = false;
+			Vec4ub *line = (Vec4ub *)(data + alpha_buffer.get_pitch()*y);
+			for (int x = 0; x < alpha_width; x++)
+			{
+				if (line[x].a > trans_limit * 255)
+				{
+					opaque_row[x] = 1;
+					opaque_line = true;
+					found_opaque = true;
+				}
+			}
+
+			if (opaque_line == false) // cut something of top or bottom
+			{
+				if (found_opaque)
+				{
+					cut_bottom--;
+					found_trans = true;
+				}
+				else
+					cut_top++;
+			}
+			else if (found_trans)
+			{
+				found_trans = false;
+				cut_bottom = alpha_height;
+			}
 		}
-		else if (!opaque_row[x] && !prev_trans)
+
+		if (cut_top >= cut_bottom)
+			throw Exception("add_alphaclipped_frames: Image contained only alpha!");
+
+		for (int x = xpos; x < alpha_width; x++)
+		{
+			if (opaque_row[x] && prev_trans)
+			{
+				begin = x;
+				prev_trans = false;
+			}
+			else if (!opaque_row[x] && !prev_trans)
+			{
+				impl->frames.push_back(
+					CursorDescriptionFrame(pixelbuffer, Rect(begin, cut_top, x + 1, cut_bottom)));
+
+				prev_trans = true;
+			}
+		}
+
+		if (!prev_trans)
 		{
 			impl->frames.push_back(
-				CursorDescriptionFrame(pixelbuffer, Rect(begin, cut_top, x+1, cut_bottom)));
-
-			prev_trans = true;
+				CursorDescriptionFrame(pixelbuffer, Rect(begin, cut_top, alpha_width, cut_bottom)));
 		}
 	}
-		
-	if (!prev_trans)
+
+	void CursorDescription::add_alphaclipped_frames_free(
+		const PixelBuffer &pixelbuffer,
+		int xpos, int ypos,
+		float trans_limit)
 	{
-		impl->frames.push_back(
-			CursorDescriptionFrame(pixelbuffer, Rect(begin, cut_top, alpha_width, cut_bottom)));
-	}
-}
+		PixelBuffer alpha_buffer = pixelbuffer.to_format(tf_rgba8);
 
-void CursorDescription::add_alphaclipped_frames_free(
-	const PixelBuffer &pixelbuffer, 
-	int xpos, int ypos, 
-	float trans_limit)
-{
-	PixelBuffer alpha_buffer = pixelbuffer.to_format(tf_rgba8);
+		int width = alpha_buffer.get_width();
+		int height = alpha_buffer.get_height();
 
-	int width = alpha_buffer.get_width();
-	int height = alpha_buffer.get_height();
+		std::vector<int> explored_vector;
+		explored_vector.resize(width * height);
+		int *explored = &(explored_vector[0]);
+		memset(explored, 0, width * height * sizeof(int));
 
-	std::vector<int> explored_vector;
-	explored_vector.resize(width * height);
-	int *explored = &(explored_vector[0]);
-	memset(explored, 0, width * height * sizeof(int));
+		Vec4ub *data = alpha_buffer.get_data<Vec4ub>();
+		int x1, y1, x2, y2;
+		bool more;
 
-	Vec4ub *data = alpha_buffer.get_data<Vec4ub>();
-	int x1, y1, x2, y2;
-	bool more;
-
-	for (int y=ypos; y < height; y++)
-	{
-		for (int x=xpos; x < width; x++)
+		for (int y = ypos; y < height; y++)
 		{
-			if (explored[y*width+x] == 1) continue;
-			explored[y*width+x] = 1;
-			if (data[y*width+x].a <= trans_limit*255) 
-				continue;
-
-			// Initialize the bounding box to the current pixel
-			x1 = x2 = x;
-			y1 = y2 = y;
-			more = true;
-			while (more)
+			for (int x = xpos; x < width; x++)
 			{
-				// Assume that there are NO opaque pixels around the current bounding box
-				more = false;
+				if (explored[y*width + x] == 1) continue;
+				explored[y*width + x] = 1;
+				if (data[y*width + x].a <= trans_limit * 255)
+					continue;
 
-				// Scan under the current bounding box and see if there any non-transparent pixels
+				// Initialize the bounding box to the current pixel
+				x1 = x2 = x;
+				y1 = y2 = y;
+				more = true;
+				while (more)
+				{
+					// Assume that there are NO opaque pixels around the current bounding box
+					more = false;
+
+					// Scan under the current bounding box and see if there any non-transparent pixels
+					for (int i = x1; i <= x2; i++)
+					{
+						if (y2 + 1 < height)
+						{
+							explored[(y2 + 1)*width + i] = 1;
+							if (data[(y2 + 1)*width + i].a > trans_limit * 255)
+							{
+								more = true;
+								y2 = y2 + 1;
+							}
+						}
+					}
+
+					// Now scan the left and right sides of the current bounding box
+					for (int j = y1; j <= y2; j++)
+					{
+						// Scan the right side
+						if (x2 + 1 < width)
+						{
+							explored[j*width + x2 + 1] = 1;
+							if (data[j*width + x2 + 1].a > trans_limit * 255)
+							{
+								more = true;
+								x2 = x2 + 1;
+							}
+						}
+						// Scan the left side
+						if (x1 - 1 >= 0)
+						{
+							explored[j*width + x1 - 1] = 1;
+							if (data[j*width + x1 - 1].a > trans_limit * 255)
+							{
+								more = true;
+								x1 = x1 - 1;
+							}
+						}
+					}
+				}
+
+				// Mark all pixels in the bounding box as being explored
 				for (int i = x1; i <= x2; i++)
 				{
-					if (y2 + 1 < height)
+					for (int j = y1; j <= y2; j++)
 					{
-						explored[(y2+1)*width+i] = 1;
-						if (data[(y2+1)*width+i].a > trans_limit*255)
-						{
-							more = true; 
-							y2 = y2 + 1;
-						}
+						explored[j*width + i] = 1;
 					}
 				}
 
-				// Now scan the left and right sides of the current bounding box
-				for (int j = y1; j <= y2; j++)
-				{
-					// Scan the right side
-					if (x2 + 1 < width)
-					{
-						explored[j*width + x2+1] = 1;
-						if (data[j*width + x2+1].a > trans_limit*255)
-						{
-							more = true; 
-							x2 = x2 + 1;
-						}
-					}
-					// Scan the left side
-					if (x1 - 1 >= 0)
-					{
-						explored[j*width + x1-1] = 1;
-						if (data[j*width + x1-1].a > trans_limit*255)
-						{
-							more = true; 
-							x1 = x1 - 1;
-						}
-					}
-				}
-			} 
-
-			// Mark all pixels in the bounding box as being explored
-			for (int i = x1; i <= x2; i++)
-			{
-				for (int j = y1; j <= y2; j++)
-				{
-					explored[j*width+i] = 1;
-				}
+				impl->frames.push_back(CursorDescriptionFrame(pixelbuffer, Rect(x1, y1, x2, y2)));
 			}
-
-			impl->frames.push_back(CursorDescriptionFrame(pixelbuffer, Rect(x1, y1, x2, y2)));
 		}
 	}
-}
 
-void CursorDescription::set_frame_delay(int frame, double delay)
-{
-	impl->frames[frame].delay = delay;
-}
+	void CursorDescription::set_frame_delay(int frame, double delay)
+	{
+		impl->frames[frame].delay = delay;
+	}
 
-void CursorDescription::set_hotspot(const Point &hotspot)
-{
-	impl->hotspot = hotspot;
-}
-
+	void CursorDescription::set_hotspot(const Point &hotspot)
+	{
+		impl->hotspot = hotspot;
+	}
 }

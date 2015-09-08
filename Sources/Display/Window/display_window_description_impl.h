@@ -46,8 +46,6 @@ namespace clan
 	class DisplayWindowDescription_Impl
 	{
 	public:
-		virtual ~DisplayWindowDescription_Impl() { }
-
 		std::string title = "Untitled Clanlib Window";
 		Rectf position = Rectf(-1.0f, -1.0f, 639.0f, 479.0f);
 		bool position_client_area = false;

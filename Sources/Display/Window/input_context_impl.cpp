@@ -34,144 +34,129 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// InputContext_Impl construction:
-
-InputContext_Impl::InputContext_Impl()
-{
-}
-
-InputContext_Impl::~InputContext_Impl()
-{
-	dispose();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// InputContext_Impl attributes:
-
-std::recursive_mutex InputContext_Impl::mutex;
-
-/////////////////////////////////////////////////////////////////////////////
-// InputContext_Impl operations:
-
-void InputContext_Impl::clear()
-{
-	throw_if_disposed();
-
-	keyboards.clear();
-	mice.clear();
-	joysticks.clear();
-	tablets.clear();
-}
-
-void InputContext_Impl::add_keyboard(InputDevice &keyboard)
-{
-	throw_if_disposed();
-
-	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
-	keyboards.push_back(keyboard);
-	keyboard.impl->input_contexts.push_back(input_context);
-}
-
-void InputContext_Impl::add_mouse(InputDevice &mouse)
-{
-	throw_if_disposed();
-
-	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
-	mice.push_back(mouse);
-	mouse.impl->input_contexts.push_back(input_context);
-}
-
-void InputContext_Impl::add_joystick(InputDevice &joystick)
-{
-	throw_if_disposed();
-
-	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
-	joysticks.push_back(joystick);
-	joystick.impl->input_contexts.push_back(input_context);
-}
-
-void InputContext_Impl::add_tablet(InputDevice &tablet)
-{
-	throw_if_disposed();
-
-	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
-	tablets.push_back(tablet);
-	tablet.impl->input_contexts.push_back(input_context);
-}
-
-void InputContext_Impl::process_messages()
-{
-	throw_if_disposed();
-
-	std::vector< std::pair<InputEvent, std::weak_ptr<InputDevice_Impl> > >::size_type pos, size;
-
-	// Fetch latest events received:
-	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
-	std::vector< std::pair<InputEvent, std::weak_ptr<InputDevice_Impl> > > cur_events  = events;
-	events.clear();
-	mutex_lock.unlock();
-
-	size = cur_events.size();
-	for (pos = 0; pos < size; pos++)
+	InputContext_Impl::InputContext_Impl()
 	{
-		if (is_disposed())	// Exit the function now if a previous input event has caused the input context to be disposed
-			break;
+	}
 
-		InputEvent event = cur_events[pos].first;
-		if (cur_events[pos].second.expired())
-			continue;
-		event.device = InputDevice(cur_events[pos].second);
+	InputContext_Impl::~InputContext_Impl()
+	{
+		dispose();
+	}
 
-		switch (event.type)
+	std::recursive_mutex InputContext_Impl::mutex;
+
+	void InputContext_Impl::clear()
+	{
+		throw_if_disposed();
+
+		keyboards.clear();
+		mice.clear();
+		joysticks.clear();
+		tablets.clear();
+	}
+
+	void InputContext_Impl::add_keyboard(InputDevice &keyboard)
+	{
+		throw_if_disposed();
+
+		std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
+		keyboards.push_back(keyboard);
+		keyboard.impl->input_contexts.push_back(input_context);
+	}
+
+	void InputContext_Impl::add_mouse(InputDevice &mouse)
+	{
+		throw_if_disposed();
+
+		std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
+		mice.push_back(mouse);
+		mouse.impl->input_contexts.push_back(input_context);
+	}
+
+	void InputContext_Impl::add_joystick(InputDevice &joystick)
+	{
+		throw_if_disposed();
+
+		std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
+		joysticks.push_back(joystick);
+		joystick.impl->input_contexts.push_back(input_context);
+	}
+
+	void InputContext_Impl::add_tablet(InputDevice &tablet)
+	{
+		throw_if_disposed();
+
+		std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
+		tablets.push_back(tablet);
+		tablet.impl->input_contexts.push_back(input_context);
+	}
+
+	void InputContext_Impl::process_messages()
+	{
+		throw_if_disposed();
+
+		std::vector< std::pair<InputEvent, std::weak_ptr<InputDevice_Impl> > >::size_type pos, size;
+
+		// Fetch latest events received:
+		std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
+		std::vector< std::pair<InputEvent, std::weak_ptr<InputDevice_Impl> > > cur_events = events;
+		events.clear();
+		mutex_lock.unlock();
+
+		size = cur_events.size();
+		for (pos = 0; pos < size; pos++)
 		{
-		case InputEvent::pressed:
-			event.device.sig_key_down()(event);
-			break;
-		case InputEvent::released:
-			event.device.sig_key_up()(event);
-			break;
-		case InputEvent::doubleclick:
-			event.device.sig_key_dblclk()(event);
-			break;
-		case InputEvent::pointer_moved:
-			event.device.sig_pointer_move()(event);
-			break;
-		case InputEvent::axis_moved:
-			event.device.sig_axis_move()(event);
-			break;
-		case InputEvent::proximity_change:
-			event.device.sig_proximity_change()(event);
-			break;
-		default:	// Added to stop the compiler warning about "no_key" not handled in switch
-			break;
+			if (is_disposed())	// Exit the function now if a previous input event has caused the input context to be disposed
+				break;
+
+			InputEvent event = cur_events[pos].first;
+			if (cur_events[pos].second.expired())
+				continue;
+			event.device = InputDevice(cur_events[pos].second);
+
+			switch (event.type)
+			{
+			case InputEvent::pressed:
+				event.device.sig_key_down()(event);
+				break;
+			case InputEvent::released:
+				event.device.sig_key_up()(event);
+				break;
+			case InputEvent::doubleclick:
+				event.device.sig_key_dblclk()(event);
+				break;
+			case InputEvent::pointer_moved:
+				event.device.sig_pointer_move()(event);
+				break;
+			case InputEvent::axis_moved:
+				event.device.sig_axis_move()(event);
+				break;
+			case InputEvent::proximity_change:
+				event.device.sig_proximity_change()(event);
+				break;
+			default:	// Added to stop the compiler warning about "no_key" not handled in switch
+				break;
+			}
 		}
 	}
-}
 
-void InputContext_Impl::received_event(
-	const InputEvent &e,
-	std::weak_ptr<InputDevice_Impl> &input_device)
-{
-	throw_if_disposed();
+	void InputContext_Impl::received_event(
+		const InputEvent &e,
+		std::weak_ptr<InputDevice_Impl> &input_device)
+	{
+		throw_if_disposed();
 
-	events.push_back(
-		std::pair<InputEvent, std::weak_ptr<InputDevice_Impl> >(
+		events.push_back(
+			std::pair<InputEvent, std::weak_ptr<InputDevice_Impl> >(
 			e,
 			input_device));
+	}
+
+	void InputContext_Impl::on_dispose()
+	{
+		keyboards.clear();
+		mice.clear();
+		joysticks.clear();
+		tablets.clear();
+	}
 }
-
-/////////////////////////////////////////////////////////////////////////////
-// InputContext_Impl implementation:
-
-void InputContext_Impl::on_dispose()
-{
-	keyboards.clear();
-	mice.clear();
-	joysticks.clear();
-	tablets.clear();
-}
-
-}
-

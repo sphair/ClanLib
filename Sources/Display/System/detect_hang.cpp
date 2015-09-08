@@ -32,10 +32,8 @@
 
 namespace clan
 {
-
-DetectHang::DetectHang()
-	: impl(std::make_shared<DetectHang_Impl>())
-{
-}
-
+	DetectHang::DetectHang()
+		: impl(std::make_shared<DetectHang_Impl>())
+	{
+	}
 }

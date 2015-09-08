@@ -43,7 +43,6 @@
 #include "Display/Resources/file_display_cache.h"
 #include "../Core/System/setup_core.h"
 
-
 #ifdef WIN32
 #include "Platform/Win32/display_message_queue_win32.h"
 #elif defined(__APPLE__)
@@ -52,14 +51,12 @@
 #include "Platform/X11/display_message_queue_x11.h"
 #endif
 
-
 #if !defined __ANDROID__ && ! defined __APPLE__ && ! defined WIN32
 #include <X11/Xlib.h>
 #endif
 
 namespace clan
 {
-
 	class ImageProviderType;
 	class SetupDisplay_Impl : public SetupModule
 	{
@@ -91,9 +88,6 @@ namespace clan
 	};
 	SetupDisplay_Impl *SetupDisplay_Impl::instance = nullptr;
 
-	/////////////////////////////////////////////////////////////////////////////
-	// SetupDisplay Construction:
-
 	void SetupDisplay::start()
 	{
 		std::lock_guard<std::recursive_mutex> lock(SetupCore::instance.mutex);
@@ -104,7 +98,6 @@ namespace clan
 		SetupCore::start();	// Display depends on core.
 		SetupCore::instance.module_display = clan::make_unique<SetupDisplay_Impl>();
 	}
-
 
 	SetupDisplay_Impl::SetupDisplay_Impl()
 	{
@@ -170,6 +163,4 @@ namespace clan
 			start();
 		return &SetupDisplay_Impl::instance->image_provider_factory_types;
 	}
-
 }
-
