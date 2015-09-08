@@ -216,16 +216,12 @@ namespace clan
 			}
 		}
 
-		for (auto & elem : data->windows)
-		{
-			elem->process_window();
-		}
-
-		// Process all input context messages (done seperately, because of the mouse_capture hack)
+		data = get_thread_data();	// We must update the thread data, since "window->process_message" above might have deleted a window
 		for (auto & elem : data->windows)
 		{
 			InputContext context = elem->get_ic();
-			if (!context.is_disposed())
+			elem->process_window();
+			if (!context.is_disposed())	// Call if window was not destroyed
 				context.process_messages();
 		}
 	}
