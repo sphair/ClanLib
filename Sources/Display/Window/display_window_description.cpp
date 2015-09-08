@@ -39,18 +39,18 @@ namespace clan
 // DisplayWindowDescription construction:
 
 DisplayWindowDescription::DisplayWindowDescription()
-	: impl(std::make_unique<DisplayWindowDescription_Impl>())
+	: impl(clan::make_unique<DisplayWindowDescription_Impl>())
 {
 }
 
 DisplayWindowDescription::DisplayWindowDescription(const std::string &title)
-	: impl(std::make_unique<DisplayWindowDescription_Impl>())
+	: impl(clan::make_unique<DisplayWindowDescription_Impl>())
 {
 	impl->title = title;
 }
 
 DisplayWindowDescription::DisplayWindowDescription(const std::string &title, const Rectf &position, bool client_area)
-	: impl(std::make_unique<DisplayWindowDescription_Impl>())
+	: impl(clan::make_unique<DisplayWindowDescription_Impl>())
 {
 	impl->title = title;
 	impl->position = position;
@@ -58,7 +58,7 @@ DisplayWindowDescription::DisplayWindowDescription(const std::string &title, con
 }
 
 DisplayWindowDescription::DisplayWindowDescription(const std::string &title, const Sizef &size, bool client_area)
-	: impl(std::make_unique<DisplayWindowDescription_Impl>())
+	: impl(clan::make_unique<DisplayWindowDescription_Impl>())
 {
 	impl->title = title;
 	impl->position.set_size(size);
@@ -66,14 +66,14 @@ DisplayWindowDescription::DisplayWindowDescription(const std::string &title, con
 }
 
 DisplayWindowDescription::DisplayWindowDescription(const Rectf &position, bool client_area)
-	: impl(std::make_unique<DisplayWindowDescription_Impl>())
+	: impl(clan::make_unique<DisplayWindowDescription_Impl>())
 {
 	impl->position = position;
 	impl->position_client_area = client_area;
 }
 
 DisplayWindowDescription::DisplayWindowDescription(const DisplayWindowDescription &copy)
-	: impl(std::make_unique<DisplayWindowDescription_Impl>(*copy.impl.get()))
+	: impl(clan::make_unique<DisplayWindowDescription_Impl>(*copy.impl.get()))
 {
 }
 

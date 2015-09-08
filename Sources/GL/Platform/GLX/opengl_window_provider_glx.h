@@ -34,7 +34,7 @@
 #include "API/Display/Window/input_context.h"
 #include "Display/Platform/X11/x11_window.h"
 #include "API/Display/Image/pixel_buffer.h"
-#include "API/GL/opengl_window_description.h"
+#include "API/GL/opengl_context_description.h"
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -55,7 +55,7 @@ typedef void (*ptr_glXSwapIntervalEXT)(::Display *dptr, GLXDrawable drawable, in
 typedef GLXContext (*ptr_glXCreateContextAttribs)(::Display *dpy, GLXFBConfig config, GLXContext share_list, Bool direct, const int *attrib_list);
 
 class OpenGLWindowProvider;
-class OpenGLWindowDescription;
+class OpenGLContextDescription;
 class DisplayWindowDescription;
 
 #define GL_USE_DLOPEN		// Using dlopen for linux by default
@@ -166,7 +166,7 @@ class OpenGLWindowProvider : public DisplayWindowProvider
 /// \{
 
 public:
-	OpenGLWindowProvider(OpenGLWindowDescription &opengl_desc);
+	OpenGLWindowProvider(OpenGLContextDescription &opengl_desc);
 
 	~OpenGLWindowProvider();
 
@@ -322,7 +322,7 @@ private:
 	void *opengl_lib_handle;
 #endif
 	bool glx_1_3;
-	OpenGLWindowDescription opengl_desc;
+	OpenGLContextDescription opengl_desc;
 	bool using_gl3;
 
 	friend class PBuffer_GL1_Impl;

@@ -34,17 +34,16 @@
 #include "API/Core/Math/rect.h"
 #include "API/Core/Text/logger.h"
 #include "API/Display/Window/display_window_description.h"
-#include "API/Display/display.h"
 #include "API/Display/display_target.h"
 #include "API/Display/Window/cursor_description.h"
 #include "API/Display/Window/display_window.h"
 #include "API/Display/Render/shared_gc_data.h"
 #include "API/GL/opengl.h"
 #include "API/GL/opengl_wrap.h"
-#include "API/GL/opengl_window_description.h"
+#include "API/GL/opengl_context_description.h"
 #include "Display/Platform/X11/cursor_provider_x11.h"
 #include "Display/Platform/X11/display_message_queue_x11.h"
-#include "GL/opengl_window_description_impl.h"
+#include "GL/opengl_context_description_impl.h"
 #include "GL/opengl_graphic_context_provider.h"
 #include "GL/opengl_target_provider.h"
 #include "GL/GL3/gl3_graphic_context_provider.h"
@@ -73,7 +72,7 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // OpenGLWindowProvider Construction:
 
-OpenGLWindowProvider::OpenGLWindowProvider(OpenGLWindowDescription &opengl_desc)
+OpenGLWindowProvider::OpenGLWindowProvider(OpenGLContextDescription &opengl_desc)
 : x11_window(),
  opengl_context(nullptr), opengl_visual_info(nullptr), glXSwapIntervalSGI(nullptr), glXSwapIntervalMESA(nullptr), swap_interval(-1), opengl_desc(opengl_desc), using_gl3(true)
 #ifdef GL_USE_DLOPEN

@@ -34,7 +34,6 @@
 #include "API/Core/Math/point.h"
 #include "API/Core/System/system.h"
 #include "API/Core/Text/logger.h"
-#include "API/Display/display.h"
 #include "API/Display/display_target.h"
 #include "API/Display/Window/keys.h"
 #include "API/Display/Image/pixel_buffer.h"
