@@ -35,8 +35,8 @@ clan::ApplicationInstance<Program> clanapp;
 Program::Program()
 {
 	// We support all display targets, in order listed here
-	clan::D3DTarget::enable();
-	clan::OpenGLTarget::enable();
+	clan::D3DTarget::set_current();
+	clan::OpenGLTarget::set_current();
 
 	target = clan::make_unique<Target>(Target::RenderTarget::legacy_gl);
 }

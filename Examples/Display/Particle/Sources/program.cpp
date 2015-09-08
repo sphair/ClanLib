@@ -45,8 +45,8 @@ DemoState Program::state = DemoState::menu;
 Program::Program()
 {
 	// We support all display targets, in order listed here
-	clan::D3DTarget::enable();
-	clan::OpenGLTarget::enable();
+	clan::D3DTarget::set_current();
+	clan::OpenGLTarget::set_current();
 
 	window = clan::DisplayWindow("LinearParticle Example", 640, 480, false);
 

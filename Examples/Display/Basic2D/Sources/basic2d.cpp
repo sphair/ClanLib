@@ -36,9 +36,10 @@ Basic2D::Basic2D()
 {
 	// We support all display targets, in order listed here
 #ifdef WIN32
-	clan::D3DTarget::enable();
+	clan::D3DTarget::set_current();
+#else
+	clan::OpenGLTarget::set_current();
 #endif
-	clan::OpenGLTarget::enable();
 
 	// Set the window
 	clan::DisplayWindowDescription desc;

@@ -93,7 +93,7 @@ App::App()
 {
 
 	// We support all display targets, in order listed here
-	clan::OpenGLTarget::enable();
+	clan::OpenGLTarget::set_current();
 
 	// (See README.TXT for more documentation)
 

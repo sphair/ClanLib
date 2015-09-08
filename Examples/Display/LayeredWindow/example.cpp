@@ -74,7 +74,7 @@ clan::ApplicationInstance<App> clanapp;
 App::App()
 {
 	// We support all display targets, in order listed here
-	clan::OpenGLTarget::enable();
+	clan::OpenGLTarget::set_current();
 
 	// Set the window description
 	clan::DisplayWindowDescription desc_window;

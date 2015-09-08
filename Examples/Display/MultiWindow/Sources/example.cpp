@@ -34,8 +34,8 @@ clan::ApplicationInstance<Example> clanapp;
 Example::Example()
 {
 	// We support all display targets, in order listed here
-	clan::D3DTarget::enable();
-	clan::OpenGLTarget::enable();
+	clan::D3DTarget::set_current();
+	clan::OpenGLTarget::set_current();
 	
 	// Set the window 1 description
 	clan::DisplayWindowDescription desc_window_1;

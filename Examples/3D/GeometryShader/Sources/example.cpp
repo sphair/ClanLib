@@ -36,7 +36,7 @@ clan::ApplicationInstance<App> clanapp;
 
 App::App()
 {
-	clan::OpenGLTarget::enable();
+	clan::OpenGLTarget::set_current();
 
 	quit = false;
 

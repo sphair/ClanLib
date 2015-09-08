@@ -36,9 +36,9 @@ Test::Test()
 {
 	// We support all display targets, in order listed here
 #ifdef WIN32
-//	clan::D3DTarget::enable();
+//	clan::D3DTarget::set_current();
 #endif
-	clan::OpenGLTarget::enable();
+	clan::OpenGLTarget::set_current();
 
 	// Set the window
 	clan::DisplayWindowDescription desc;

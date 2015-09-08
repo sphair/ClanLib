@@ -49,11 +49,6 @@ namespace clan
 		return std::dynamic_pointer_cast<OpenGLTargetProvider>(DisplayTarget::get_current_target()) ? true : false;
 	}
 
-	void OpenGLTarget::enable()
-	{
-		SetupGL::start();
-	}
-
 	OpenGLContextDescription OpenGLTarget::get_description()
 	{
 		SetupGL::start();

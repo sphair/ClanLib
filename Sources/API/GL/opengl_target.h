@@ -53,9 +53,6 @@ namespace clan
 
 		static OpenGLContextDescription get_description();
 
-		/// \brief Enable this target
-		static void enable();
-
 		/// \brief Set this display target to be the current target
 		static void set_current();
 

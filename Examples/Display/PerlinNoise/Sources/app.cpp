@@ -35,7 +35,7 @@ clan::ApplicationInstance<App> clanapp;
 App::App()
 {
 	// We support all display targets, in order listed here
-	clan::OpenGLTarget::enable();
+	clan::OpenGLTarget::set_current();
 
 	clan::DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);

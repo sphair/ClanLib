@@ -35,8 +35,8 @@ clan::ApplicationInstance<FullScreen> clanapp;
 FullScreen::FullScreen()
 {
 	// We support all display targets, in order listed here
-	clan::D3DTarget::enable();
-	clan::OpenGLTarget::enable();
+	clan::D3DTarget::set_current();
+	clan::OpenGLTarget::set_current();
 
 	DisplayWindowDescription window_description;
 	window_description.set_title("ClanLib FullScreen Example");

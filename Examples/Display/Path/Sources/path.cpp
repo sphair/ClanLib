@@ -35,8 +35,8 @@ clan::ApplicationInstance<PathApp> clanapp;
 PathApp::PathApp()
 {
 	// We support all display targets, in order listed here
-	clan::D3DTarget::enable();
-	clan::OpenGLTarget::enable();
+	clan::D3DTarget::set_current();
+	clan::OpenGLTarget::set_current();
 
 	// Set the window
 	clan::DisplayWindowDescription desc;

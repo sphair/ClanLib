@@ -10,7 +10,7 @@ clan::ApplicationInstance<Program> clanapp;
 Program::Program()
 {
 	// We support all display targets, in order listed here
-	clan::OpenGLTarget::enable();
+	clan::OpenGLTarget::set_current();
 
 	window = DisplayWindow("Hello ShaderEffect", 1024, 1024, false, true);
 	sc.connect(window.sig_window_close(), [&](){exit = true; });

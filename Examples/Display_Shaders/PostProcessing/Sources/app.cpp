@@ -32,7 +32,7 @@ clan::ApplicationInstance<App> clanapp;
 
 App::App()
 {
-	clan::OpenGLTarget::enable();
+	clan::OpenGLTarget::set_current();
 
 	clan::DisplayWindowDescription description;
 	description.set_title("Postprocessing");

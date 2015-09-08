@@ -54,9 +54,6 @@ namespace clan
 		/// This may change after a display window has been created
 		static bool is_current();
 
-		/// \brief Enable this target
-		static void enable();
-
 		/// \brief Returns the Direct3D handle used by the texture object
 		///
 		/// The reference count on the COM object is not increased (AddRef is not called).

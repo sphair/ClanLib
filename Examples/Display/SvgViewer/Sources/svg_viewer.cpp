@@ -35,8 +35,8 @@ clan::ApplicationInstance<SvgViewer> clanapp;
 SvgViewer::SvgViewer()
 {
 	// We support all display targets, in order listed here
-	clan::D3DTarget::enable();
-	clan::OpenGLTarget::enable();
+	clan::D3DTarget::set_current();
+	clan::OpenGLTarget::set_current();
 
 	clan::DisplayWindowDescription desc;
 	desc.set_title("ClanLib SVG Viewer Example");

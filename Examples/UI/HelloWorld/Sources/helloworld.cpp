@@ -40,8 +40,8 @@ HelloWorld::HelloWorld()
 	clan::Application::use_timeout_timing(std::numeric_limits<int>::max());	// The update() loop is not required for this application
 
 	// We support all display targets, in order listed here
-	//clan::D3DTarget::enable();
-	clan::OpenGLTarget::enable();
+	//clan::D3DTarget::set_current();
+	clan::OpenGLTarget::set_current();
 
 	// Create a source for our resources
 	FileResourceDocument doc(FileSystem("../../ThemeAero"));

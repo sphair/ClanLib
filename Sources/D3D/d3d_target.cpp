@@ -52,11 +52,6 @@ namespace clan
 		return std::dynamic_pointer_cast<D3DTargetProvider>(DisplayTarget::get_current_target()) ? true : false;
 	}
 
-	void D3DTarget::enable()
-	{
-		SetupD3D::start();
-	}
-
 	void D3DTarget::set_current()
 	{
 		SetupD3D::start();

@@ -35,7 +35,7 @@ clan::ApplicationInstance<HSV> clanapp;
 
 HSV::HSV()
 {
-	clan::OpenGLTarget::enable();
+	clan::OpenGLTarget::set_current();
 
 	window = DisplayWindow("ClanLib HSV Sprite", 1024, 768);
 	sc.connect(window.sig_window_close(), clan::bind_member(this, &HSV::on_close));

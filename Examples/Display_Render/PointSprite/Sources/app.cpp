@@ -71,7 +71,7 @@ struct ProgramUniforms
 
 App::App()
 {
-	clan::OpenGLTarget::enable();
+	clan::OpenGLTarget::set_current();
 
 	clan::DisplayWindowDescription win_desc;
 	//win_desc.set_version(3, 2, false);
