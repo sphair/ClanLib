@@ -373,10 +373,12 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 
 	update_frame_extents();
 
-	client_area = desc.get_position_client_area() // supplied position is at ? client area : window area;
+	auto new_client_area = desc.get_position_client_area() // supplied position is at ? client area : window area;
 		? Rect::xywh(win_x, win_y, win_width, win_height)
 		: Rect::xywh(win_x + frame_extents.left, win_y + frame_extents.right, win_width, win_height)
 		;
+
+	process_window_resize(new_client_area);
 
 	// Set window visibility
 	if (desc.is_visible())
@@ -691,16 +693,18 @@ void X11Window::set_position(const Rect &pos, bool pos_is_client_area)
 	int width = pos.get_width();
 	int height = pos.get_height();
 
+	Rect new_client_area;
+
 	if (pos_is_client_area)
 	{
-		client_area = pos;
+		new_client_area = pos;
 		XMoveResizeWindow(handle.display, handle.window, pos.left - frame_extents.left, pos.top - frame_extents.top, width, height);
 	}
 	else
 	{
 		width = width - frame_extents.left - frame_extents.right;
 		height = height - frame_extents.top - frame_extents.bottom;
-		client_area = Rect::xywh(pos.left + frame_extents.left, pos.top + frame_extents.top, width, height);
+		new_client_area = Rect::xywh(pos.left + frame_extents.left, pos.top + frame_extents.top, width, height);
 		XMoveResizeWindow(handle.display, handle.window, pos.left, pos.top, width, height);
 	}
 
@@ -713,6 +717,7 @@ void X11Window::set_position(const Rect &pos, bool pos_is_client_area)
 		size_hints->flags |= PMinSize | PMaxSize;
 		XSetWMNormalHints(handle.display, handle.window, size_hints);
 	}
+	process_window_resize(new_client_area);
 }
 
 void X11Window::set_size(int width, int height, bool size_is_client_area)
@@ -733,7 +738,7 @@ void X11Window::set_size(int width, int height, bool size_is_client_area)
 		height = std::max(_ResizeMinimumSize_, height - frame_extents.top - frame_extents.bottom);
 	}
 
-	client_area = Rect::xywh(client_area.left, client_area.top, width, height);
+	auto new_client_area = Rect::xywh(client_area.left, client_area.top, width, height);
 	XResizeWindow(handle.display, handle.window, width, height);
 
 	if (!resize_allowed) // resize has been temporary enabled
@@ -745,6 +750,8 @@ void X11Window::set_size(int width, int height, bool size_is_client_area)
 		size_hints->flags |= PMinSize | PMaxSize;
 		XSetWMNormalHints(handle.display, handle.window, size_hints);
 	}
+	process_window_resize(new_client_area);
+
 }
 
 void X11Window::set_enabled(bool enable)
@@ -857,6 +864,7 @@ void X11Window::map_window()
 		update_frame_extents();
 		set_position(client_area, true);
 	}
+	process_expose_area(client_area);
 }
 
 void X11Window::unmap_window()
