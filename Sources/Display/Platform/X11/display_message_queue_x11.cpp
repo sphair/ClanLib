@@ -80,6 +80,7 @@ namespace clan
 	{
 		std::shared_ptr<ThreadData> thread_data = get_thread_data();
 		thread_data->windows.push_back(window);
+		thread_data->modified = true;
 	}
 
 	void DisplayMessageQueue_X11::remove_client(X11Window *window)
@@ -95,6 +96,7 @@ namespace clan
 				break;
 			}
 		}
+		thread_data->modified = true;
 	}
 
 	std::shared_ptr<DisplayMessageQueue_X11::ThreadData> DisplayMessageQueue_X11::get_thread_data()
@@ -136,8 +138,6 @@ namespace clan
 	{
 		auto time_start = System::get_time();
 		int x11_handle = ConnectionNumber(display);
-
-
 
 		while (true)
 		{
@@ -216,14 +216,17 @@ namespace clan
 			}
 		}
 
-		data = get_thread_data();	// We must update the thread data, since "window->process_message" above might have deleted a window
-		for (auto & elem : data->windows)
+		do
 		{
-			InputContext context = elem->get_ic();
-			elem->process_window();
-			if (!context.is_disposed())	// Call if window was not destroyed
-				context.process_messages();
-		}
+			data->modified = false;
+
+			for (auto & elem : data->windows)
+			{
+				elem->process_window();
+				if (data->modified)
+					break;
+			}
+		}while(data->modified);
 	}
 }
 

@@ -55,6 +55,7 @@ namespace clan
 		public:
 			ThreadData() {}
 			std::vector<X11Window *> windows;
+			bool modified = false;	// Set by add_client and remove_client
 		};
 
 		std::shared_ptr<ThreadData> get_thread_data();
@@ -73,10 +74,12 @@ namespace clan
 
 	private:
 		void process_message();
+		void prune_clients();
 
 		X11Window *current_mouse_capture_window = nullptr;
 		::Display *display = nullptr;
 		void *dlopen_lib_handle = nullptr;
+		bool client_modified = false;
 
 		class NotifyEvent
 		{
@@ -124,82 +127,4 @@ namespace clan
 	};
 }
 
-/*
-namespace clan
-{
 
-class Event;
-
-class SocketMessage_X11
-{
-public:
-	SocketMessage_X11() {}
-
-	EventProvider::EventType type;
-	int handle;
-};
-
-class X11Window;
-
-class DisplayMessageQueue_X11
-{
-/// \name Construction
-/// \{
-
-public:
-	DisplayMessageQueue_X11();
-
-	~DisplayMessageQueue_X11();
-
-	static DisplayMessageQueue_X11 message_queue;
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	int wait(const std::vector<Event> &events, int timeout);
-
-	::Display *get_display();
-	void add_client(X11Window *window);
-	void remove_client(X11Window *window);
-
-	void set_mouse_capture(X11Window *window, bool state);
-
-	// The library will be opened / closed by this class
-	// Returns 0 if the library could not be found
-	// Currently, only supports a single library
-	void *dlopen_opengl(const char *filename, int flag);
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	void process_message();
-
-	class ThreadData : public ThreadLocalStorageData
-	{
-	public:
-		ThreadData() {}
-		std::vector<X11Window *> windows;
-	};
-
-	 std::shared_ptr<ThreadData> get_thread_data();
-	bool has_internal_messages();
-	int msg_wait_for_multiple_objects(std::vector<SocketMessage_X11> &event_handles, int timeout);
-	void process_queued_events();
-	X11Window *current_mouse_capture_window;
-
-	::Display *display;
-	void *dlopen_lib_handle;
-/// \}
-};
-
-}
-*/

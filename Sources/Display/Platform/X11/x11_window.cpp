@@ -972,6 +972,7 @@ void X11Window::process_window_resize(const Rect &new_rect)
 	}
 }
 
+// Danger: This function could delete "this"
 void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 {
 	switch(event.type)
@@ -1191,8 +1192,11 @@ void X11Window::process_expose_area(Rect paint_area)
 	repaint_request_rects.push_back(paint_area);
 }
 
+// Danger: This function could delete "this"
 void X11Window::process_window()
 {
+	InputContext context = ic;
+
 	if (site)
 	{
 		for (const Rect &elem : repaint_request_rects)
@@ -1203,6 +1207,8 @@ void X11Window::process_window()
 	}
 	process_window_sockets();
 
+	if (!context.is_disposed())	// Call if window was not destroyed (i.e "this" is valid)
+		context.process_messages();	// This might delete "this"
 }
 
 void X11Window::setup_joysticks()
