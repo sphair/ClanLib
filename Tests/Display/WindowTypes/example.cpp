@@ -88,7 +88,7 @@ App::App()
 	sc.connect(window.sig_window_close(), [&]() {quit = true; });
 
 	// Connect a keyboard handler to on_key_up()
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	sc.connect(window.get_ic().get_keyboard().sig_key_down(), clan::bind_member(this, &App::on_input_up));
 
 	font = clan::Font("tahoma", 18);
 
@@ -154,7 +154,7 @@ void App::build_test_window()
 	test_window = clan::DisplayWindow(test_desc);
 	test_canvas = clan::Canvas(test_window);
 	test_sc.connect(test_window.sig_window_close(), [&]() {quit = true; });
-	test_sc.connect(test_window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	test_sc.connect(test_window.get_ic().get_keyboard().sig_key_down(), clan::bind_member(this, &App::on_input_up));
 }
 
 void App::on_input_up(const clan::InputEvent &key)

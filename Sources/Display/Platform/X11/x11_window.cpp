@@ -172,7 +172,10 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 
 	size_hints->flags       = PMinSize | (resize_allowed ? 0 : PMaxSize);
 	size_hints->flags      |= PResizeInc | PBaseSize | PWinGravity;
+
 	// x, y, width, height are obsolete.
+	size_hints->flags      |= USSize | USPosition;	// See http://standards.freedesktop.org/wm-spec/wm-spec-latest.html#idm140200472522864
+
 	size_hints->min_width   = minimum_size.width;
 	size_hints->min_height  = minimum_size.height;
 	size_hints->max_width   = maximum_size.width;
