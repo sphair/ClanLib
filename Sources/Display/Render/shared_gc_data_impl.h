@@ -35,33 +35,31 @@
 
 namespace clan
 {
+	class SharedGCData_Impl
+	{
+	public:
+		SharedGCData_Impl();
+		~SharedGCData_Impl();
 
-class SharedGCData_Impl
-{
-public:
-	SharedGCData_Impl();
-	~SharedGCData_Impl();
+		void add_provider(GraphicContextProvider *provider);
+		void remove_provider(GraphicContextProvider *provider);
+		std::vector<GraphicContextProvider*> &get_gc_providers();
+		GraphicContextProvider *get_provider();
 
-	void add_provider(GraphicContextProvider *provider);
-	void remove_provider(GraphicContextProvider *provider);
-	std::vector<GraphicContextProvider*> &get_gc_providers();
-	GraphicContextProvider *get_provider();
+		void dispose_objects();
+		void add_disposable(DisposableObject *disposable);
+		void remove_disposable(DisposableObject *disposable);
 
-	void dispose_objects();
-	void add_disposable(DisposableObject *disposable);
-	void remove_disposable(DisposableObject *disposable);
+		Canvas &get_resource_canvas();
 
-	Canvas &get_resource_canvas();
+		int reference_count;
+		static std::recursive_mutex cl_sharedgc_mutex;
+		static SharedGCData *cl_sharedgc;
 
-	int reference_count;
-	static std::recursive_mutex cl_sharedgc_mutex;
-	static SharedGCData *cl_sharedgc;
+	private:
+		Signal<void()> sig_destruction_imminent;
 
-private:
-	Signal<void()> sig_destruction_imminent;
-
-	std::vector<GraphicContextProvider*> graphic_context_providers;
-	std::vector<DisposableObject*> disposable_objects;
-};
-
+		std::vector<GraphicContextProvider*> graphic_context_providers;
+		std::vector<DisposableObject*> disposable_objects;
+	};
 }

@@ -24,7 +24,6 @@
 **  File Author(s):
 **
 **    Mark Page
-**    (if your name is missing here, please add it)
 */
 
 #include "Display/precomp.h"
@@ -40,123 +39,118 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// ImageProviderFactory operations:
-
-PixelBuffer ImageProviderFactory::try_load(
-	const std::string &filename,
-	const std::string &type,
-	const FileSystem &fs,
-	std::string *out_failure_reason,
-	bool srgb)
-{
-	SetupDisplay::start();
-	try
+	PixelBuffer ImageProviderFactory::try_load(
+		const std::string &filename,
+		const std::string &type,
+		const FileSystem &fs,
+		std::string *out_failure_reason,
+		bool srgb)
 	{
-		return load(filename, fs, type, srgb);
+		SetupDisplay::start();
+		try
+		{
+			return load(filename, fs, type, srgb);
+		}
+		catch (const Exception& e)
+		{
+			if (out_failure_reason)
+				*out_failure_reason = e.message;
+			return PixelBuffer();
+		}
 	}
-	catch (const Exception& e)
-	{
-		if (out_failure_reason)
-			*out_failure_reason = e.message;
-		return PixelBuffer();
-	}
-}
 
-PixelBuffer ImageProviderFactory::load(
-	const std::string &filename,
-	const FileSystem &fs,
-	const std::string &type,
-	bool srgb)
-{
-	SetupDisplay::start();
-	auto &types = *SetupDisplay::get_image_provider_factory_types();
-	if (type != "")
+	PixelBuffer ImageProviderFactory::load(
+		const std::string &filename,
+		const FileSystem &fs,
+		const std::string &type,
+		bool srgb)
 	{
-		if (types.find(type) == types.end()) throw Exception("Unknown image provider type " + type);
+		SetupDisplay::start();
+		auto &types = *SetupDisplay::get_image_provider_factory_types();
+		if (type != "")
+		{
+			if (types.find(type) == types.end()) throw Exception("Unknown image provider type " + type);
 
-		ImageProviderType *factory = types[type];
+			ImageProviderType *factory = types[type];
+			return factory->load(filename, fs, srgb);
+		}
+
+		// Determine file extension and use it to lookup type.
+		std::string ext = PathHelp::get_extension(filename, PathHelp::path_type_virtual);
+		ext = StringHelp::text_to_lower(ext);
+		if (types.find(ext) == types.end()) throw Exception(std::string("Unknown image provider type ") + ext);
+
+		ImageProviderType *factory = types[ext];
 		return factory->load(filename, fs, srgb);
 	}
 
-	// Determine file extension and use it to lookup type.
-	std::string ext = PathHelp::get_extension(filename, PathHelp::path_type_virtual);
-	ext = StringHelp::text_to_lower(ext);
-	if (types.find(ext) == types.end()) throw Exception(std::string("Unknown image provider type ") + ext);
+	PixelBuffer ImageProviderFactory::load(
+		IODevice &file,
+		const std::string &type,
+		bool srgb)
+	{
+		SetupDisplay::start();
+		auto &types = *SetupDisplay::get_image_provider_factory_types();
+		if (types.find(type) == types.end()) throw Exception("Unknown image provider type " + type);
 
-	ImageProviderType *factory = types[ext];
-	return factory->load(filename, fs, srgb);
-}
+		ImageProviderType *factory = types[type];
+		return factory->load(file, srgb);
+	}
 
-PixelBuffer ImageProviderFactory::load(
-	IODevice &file,
-	const std::string &type,
-	bool srgb)
-{
-	SetupDisplay::start();
-	auto &types = *SetupDisplay::get_image_provider_factory_types();
-	if (types.find(type) == types.end()) throw Exception("Unknown image provider type " + type);
+	PixelBuffer ImageProviderFactory::load(
+		const std::string &fullname,
+		const std::string &type,
+		bool srgb)
+	{
+		SetupDisplay::start();
+		std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
+		std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
+		FileSystem vfs(path);
+		return ImageProviderFactory::load(filename, vfs, type, srgb);
+	}
 
-	ImageProviderType *factory = types[type];
-	return factory->load(file, srgb);
-}
+	void ImageProviderFactory::save(
+		PixelBuffer buffer,
+		const std::string &filename,
+		FileSystem &fs,
+		const std::string &type_)
+	{
+		SetupDisplay::start();
+		std::string type = type_;
 
-PixelBuffer ImageProviderFactory::load(
-	const std::string &fullname,
-	const std::string &type,
-	bool srgb)
-{
-	SetupDisplay::start();
-	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
-	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	FileSystem vfs(path);
-	return ImageProviderFactory::load(filename, vfs, type, srgb);
-}
+		if (type.empty())
+			type = PathHelp::get_extension(filename, PathHelp::path_type_virtual);
 
-void ImageProviderFactory::save(
-	PixelBuffer buffer,
-	const std::string &filename,
-	FileSystem &fs,
-	const std::string &type_)
-{
-	SetupDisplay::start();
-	std::string type = type_;
+		auto &types = *SetupDisplay::get_image_provider_factory_types();
+		if (types.find(type) == types.end()) throw Exception("Unknown image provider type " + type);
 
-	if (type.empty())
-		type = PathHelp::get_extension(filename, PathHelp::path_type_virtual);
-	
-	auto &types = *SetupDisplay::get_image_provider_factory_types();
-	if (types.find(type) == types.end()) throw Exception("Unknown image provider type " + type);
-	
-	ImageProviderType *factory = types[type];
-	factory->save(buffer, filename, fs);
-}
+		ImageProviderType *factory = types[type];
+		factory->save(buffer, filename, fs);
+	}
 
-void ImageProviderFactory::save(
-	PixelBuffer buffer,
-	const std::string &fullname,
-	const std::string &type)
-{
-	SetupDisplay::start();
-	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
-	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	FileSystem vfs(path);
-	return ImageProviderFactory::save(buffer, filename, vfs, type);
-}
+	void ImageProviderFactory::save(
+		PixelBuffer buffer,
+		const std::string &fullname,
+		const std::string &type)
+	{
+		SetupDisplay::start();
+		std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
+		std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
+		FileSystem vfs(path);
+		return ImageProviderFactory::save(buffer, filename, vfs, type);
+	}
 
-void ImageProviderFactory::save(
-	PixelBuffer buffer,
-	IODevice &file,
-	const std::string &type)
-{
-	SetupDisplay::start();
+	void ImageProviderFactory::save(
+		PixelBuffer buffer,
+		IODevice &file,
+		const std::string &type)
+	{
+		SetupDisplay::start();
 
-	auto &types = *SetupDisplay::get_image_provider_factory_types();
-	if (types.find(type) == types.end()) throw Exception("Unknown image provider type " + type);
+		auto &types = *SetupDisplay::get_image_provider_factory_types();
+		if (types.find(type) == types.end()) throw Exception("Unknown image provider type " + type);
 
-	ImageProviderType *factory = types[type];
-	factory->save(buffer, file);
-}
-
+		ImageProviderType *factory = types[type];
+		factory->save(buffer, file);
+	}
 }

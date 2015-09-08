@@ -34,78 +34,48 @@
 
 namespace clan
 {
+	class GraphicContext;
+	class PixelBufferProvider;
 
-class GraphicContext;
-class PixelBufferProvider;
+	/// \brief Pixel data implementation interface.
+	class PixelBuffer_Impl
+	{
+	public:
+		PixelBuffer_Impl();
+		PixelBuffer_Impl(PixelBufferProvider *provider);
 
-/// \brief Pixel data implementation interface.
-class PixelBuffer_Impl
-{
-/// \name Construction
-/// \{
+		PixelBuffer_Impl(int width, int height, TextureFormat texture_format, const void *data_ptr, bool only_reference_data);
+		~PixelBuffer_Impl();
 
-public:
-	PixelBuffer_Impl();
-	PixelBuffer_Impl(PixelBufferProvider *provider);
+		Colorf get_pixel(int x, int y);
 
-	PixelBuffer_Impl(int width, int height, TextureFormat texture_format, const void *data_ptr, bool only_reference_data);
-	~PixelBuffer_Impl();
+		PixelBufferProvider *provider;
 
-/// \}
-/// \name Attributes
-/// \{
+		float pixel_ratio = 0.0f;
 
-public:
-	Colorf get_pixel(int x, int y);
+		/// \brief Returns the pixel format
+		TextureFormat get_format() const { return provider->get_format(); }
 
-	PixelBufferProvider *provider;
+		/// \brief Returns the number of bytes per pixel
+		unsigned int get_bytes_per_pixel() const { return get_bytes_per_pixel(get_format()); }
 
-	float pixel_ratio = 0.0f;
+		/// \brief Returns the number of bytes per compression block
+		unsigned int get_bytes_per_block() const { return get_bytes_per_block(get_format()); }
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief Returns the number of bytes per pixel
+		///
+		/// \return Bytes per pixel. Exception thrown if not available (hint, use is_compressed() )
+		static unsigned int get_bytes_per_pixel(TextureFormat texture_format);
 
-public:
+		static unsigned int get_data_size(const Size &size, TextureFormat texture_format);
 
-	/// \brief Returns the pixel format
-	TextureFormat get_format() const { return provider->get_format(); }
+		/// \brief Returns the number of bytes per compression block
+		///
+		/// \return Bytes per block. Exception thrown if not available (hint, use is_compressed() )
+		static unsigned int get_bytes_per_block(TextureFormat texture_format);
 
-	/// \brief Returns the number of bytes per pixel
-	unsigned int get_bytes_per_pixel() const { return get_bytes_per_pixel(get_format()); }
+		static bool is_compressed(TextureFormat texture_format);
 
-	/// \brief Returns the number of bytes per compression block
-	unsigned int get_bytes_per_block() const { return get_bytes_per_block(get_format()); }
-
-	/// \brief Returns the number of bytes per pixel
-	///
-	/// \return Bytes per pixel. Exception thrown if not available (hint, use is_compressed() )
-	static unsigned int get_bytes_per_pixel(TextureFormat texture_format);
-
-	static unsigned int get_data_size(const Size &size, TextureFormat texture_format);
-
-	/// \brief Returns the number of bytes per compression block
-	///
-	/// \return Bytes per block. Exception thrown if not available (hint, use is_compressed() )
-	static unsigned int get_bytes_per_block(TextureFormat texture_format);
-
-	static bool is_compressed(TextureFormat texture_format);
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-
-	void convert(PixelBuffer &target, const Rect &dest_rect, const Rect &src_rect, PixelConverter &converter) const;
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-
-/// \}
-};
-
+		void convert(PixelBuffer &target, const Rect &dest_rect, const Rect &src_rect, PixelConverter &converter) const;
+	};
 }

@@ -35,191 +35,189 @@
 
 namespace clan
 {
-
-class IconSet_Impl
-{
-public:
-	std::vector<PixelBuffer> images;
-
-	static DataBuffer create_ico_helper(const std::vector<PixelBuffer> &images, int type, const std::vector<Point> &hotspots);
-	static PixelBuffer create_bitmap_data(const PixelBuffer &image);
-
-	struct IconHeader
+	class IconSet_Impl
 	{
-		uint16_t idReserved;
-		uint16_t idType; // 1 = ICO, 2 = CUR
-		uint16_t idCount;
-	};
+	public:
+		std::vector<PixelBuffer> images;
 
-	struct IconDirectoryEntry
-	{
-		uint8_t bWidth;
-		uint8_t bHeight;
-		uint8_t bColorCount;
-		uint8_t bReserved;
-		union
+		static DataBuffer create_ico_helper(const std::vector<PixelBuffer> &images, int type, const std::vector<Point> &hotspots);
+		static PixelBuffer create_bitmap_data(const PixelBuffer &image);
+
+		struct IconHeader
 		{
-			uint16_t wPlanes;   // ICO format
-			int16_t XHotspot;   // CUR format
+			uint16_t idReserved;
+			uint16_t idType; // 1 = ICO, 2 = CUR
+			uint16_t idCount;
 		};
-		union
+
+		struct IconDirectoryEntry
 		{
-			uint16_t wBitCount; // ICO format
-			int16_t YHotspot;   // CUR format
+			uint8_t bWidth;
+			uint8_t bHeight;
+			uint8_t bColorCount;
+			uint8_t bReserved;
+			union
+			{
+				uint16_t wPlanes;   // ICO format
+				int16_t XHotspot;   // CUR format
+			};
+			union
+			{
+				uint16_t wBitCount; // ICO format
+				int16_t YHotspot;   // CUR format
+			};
+			uint32_t dwBytesInRes;
+			uint32_t dwImageOffset;
+			/** uint16_t nID; // Mentioned by http://msdn2.microsoft.com/en-us/library/ms997538.aspx but not in other ICO docs.*/
 		};
-		uint32_t dwBytesInRes;
-		uint32_t dwImageOffset;
-		/** uint16_t nID; // Mentioned by http://msdn2.microsoft.com/en-us/library/ms997538.aspx but not in other ICO docs.*/
+
+		struct IconBitmapInfoHeader
+		{
+			uint32_t biSize;
+			int32_t biWidth;
+			int32_t biHeight;
+			uint16_t biPlanes;
+			uint16_t biBitCount;
+			uint32_t biCompression;
+			uint32_t biSizeImage;
+			int32_t biXPelsPerMeter;
+			int32_t biYPelsPerMeter;
+			uint32_t biClrUsed;
+			uint32_t biClrImportant;
+		};
+
+		enum IconBitmapInfoCompressionType
+		{
+			bi_rgb = 0,
+			bi_rle8 = 1,
+			bi_rle4 = 2,
+			bi_bitfields = 3,
+			bi_jpeg = 4,
+			bi_png = 5
+		};
+
+		enum { size_header = 6, size_direntry = 16, size_bitmap_info = 40 };
 	};
 
-	struct IconBitmapInfoHeader
+	IconSet::IconSet()
+		: impl(std::make_shared<IconSet_Impl>())
 	{
-        uint32_t biSize;
-        int32_t biWidth;
-        int32_t biHeight;
-        uint16_t biPlanes;
-        uint16_t biBitCount;
-        uint32_t biCompression;
-        uint32_t biSizeImage;
-        int32_t biXPelsPerMeter;
-        int32_t biYPelsPerMeter;
-        uint32_t biClrUsed;
-        uint32_t biClrImportant;
-	};
+	}
 
-	enum IconBitmapInfoCompressionType
+	std::vector<PixelBuffer> IconSet::get_images() const
 	{
-		bi_rgb = 0,
-		bi_rle8 = 1,
-		bi_rle4 = 2,
-		bi_bitfields = 3,
-		bi_jpeg = 4,
-		bi_png = 5
-	};
+		return impl->images;
+	}
 
-	enum { size_header = 6, size_direntry = 16, size_bitmap_info = 40 };
-};
-
-IconSet::IconSet()
-: impl(std::make_shared<IconSet_Impl>())
-{
-}
-
-std::vector<PixelBuffer> IconSet::get_images() const
-{
-	return impl->images;
-}
-
-void IconSet::add_image(const PixelBuffer &image)
-{
-	impl->images.push_back(image);
-}
-
-DataBuffer IconSet::create_win32_icon()
-{
-	return impl->create_ico_helper(impl->images, 1, std::vector<Point>());
-}
-
-DataBuffer IconSet_Impl::create_ico_helper(const std::vector<PixelBuffer> &images, int type, const std::vector<Point> &hotspots)
-{
-	DataBuffer buf;
-	buf.set_capacity(32*1024);
-	MemoryDevice device(buf);
-
-	IconHeader header;
-	memset(&header, 0, sizeof(IconHeader));
-	header.idType = type;
-	header.idCount = images.size();
-	device.write(&header, sizeof(IconHeader));
-
-	std::vector<PixelBuffer> bmp_images;
-	for (auto & image : images)
-		bmp_images.push_back(create_bitmap_data(image));
-
-	int image_offset = size_header + size_direntry*bmp_images.size();
-	for (size_t i = 0; i < bmp_images.size(); i++)
+	void IconSet::add_image(const PixelBuffer &image)
 	{
-		IconDirectoryEntry entry;
-		memset(&entry, 0, sizeof(IconDirectoryEntry));
-		entry.bWidth = bmp_images[i].get_width();
-		entry.bHeight = bmp_images[i].get_height();
-		entry.bColorCount = 0;
-		entry.wPlanes = 1;
-		entry.wBitCount = 32;
-		entry.dwBytesInRes = size_bitmap_info + bmp_images[i].get_pitch() * bmp_images[i].get_height();
-		entry.dwImageOffset = image_offset;
-		if (type == 2)
+		impl->images.push_back(image);
+	}
+
+	DataBuffer IconSet::create_win32_icon()
+	{
+		return impl->create_ico_helper(impl->images, 1, std::vector<Point>());
+	}
+
+	DataBuffer IconSet_Impl::create_ico_helper(const std::vector<PixelBuffer> &images, int type, const std::vector<Point> &hotspots)
+	{
+		DataBuffer buf;
+		buf.set_capacity(32 * 1024);
+		MemoryDevice device(buf);
+
+		IconHeader header;
+		memset(&header, 0, sizeof(IconHeader));
+		header.idType = type;
+		header.idCount = images.size();
+		device.write(&header, sizeof(IconHeader));
+
+		std::vector<PixelBuffer> bmp_images;
+		for (auto & image : images)
+			bmp_images.push_back(create_bitmap_data(image));
+
+		int image_offset = size_header + size_direntry*bmp_images.size();
+		for (size_t i = 0; i < bmp_images.size(); i++)
 		{
-			entry.XHotspot = hotspots[i].x;
-			entry.YHotspot = hotspots[i].y;
+			IconDirectoryEntry entry;
+			memset(&entry, 0, sizeof(IconDirectoryEntry));
+			entry.bWidth = bmp_images[i].get_width();
+			entry.bHeight = bmp_images[i].get_height();
+			entry.bColorCount = 0;
+			entry.wPlanes = 1;
+			entry.wBitCount = 32;
+			entry.dwBytesInRes = size_bitmap_info + bmp_images[i].get_pitch() * bmp_images[i].get_height();
+			entry.dwImageOffset = image_offset;
+			if (type == 2)
+			{
+				entry.XHotspot = hotspots[i].x;
+				entry.YHotspot = hotspots[i].y;
+			}
+			device.write(&entry, size_direntry);
+			image_offset += entry.dwBytesInRes;
 		}
-		device.write(&entry, size_direntry);
-		image_offset += entry.dwBytesInRes;
-	}
 
-	for (auto & bmp_image : bmp_images)
-	{
-		IconBitmapInfoHeader bmp_header;
-		memset(&bmp_header, 0, sizeof(IconBitmapInfoHeader));
-		bmp_header.biSize = size_bitmap_info;
-		bmp_header.biWidth = bmp_image.get_width();
-		bmp_header.biHeight = bmp_image.get_height() * 2; // why on earth do I have to multiply this by two??
-		bmp_header.biPlanes = 1;
-		bmp_header.biBitCount = 32;
-		bmp_header.biCompression = bi_rgb;
-		device.write(&bmp_header, size_bitmap_info);
-		device.write(bmp_image.get_data(), bmp_image.get_pitch() * bmp_image.get_height());
-	}
-
-	return device.get_data();
-}
-
-PixelBuffer IconSet_Impl::create_bitmap_data(const PixelBuffer &image)
-{
-	// Convert pixel buffer to DIB compatible format:
-
-	PixelBuffer bmp_image = image.to_format(tf_bgra8);
-
-	// Note that the APIs use pre-multiplied alpha, which means that the red,
-	// green and blue channel values in the bitmap must be pre-multiplied with
-	// the alpha channel value. For example, if the alpha channel value is x,
-	// the red, green and blue channels must be multiplied by x and divided by
-	// 0xff prior to the call.
-	int w = bmp_image.get_width();
-	int h = bmp_image.get_height();
-	unsigned int *p = (unsigned int *) bmp_image.get_data();
-	for (int y = 0; y < h; y++)
-	{
-		int index = y * w;
-		unsigned int *line = p + index;
-		for (int x = 0; x < w; x++)
+		for (auto & bmp_image : bmp_images)
 		{
-			unsigned int a = ((line[x] >> 24) & 0xff);
-			unsigned int r = ((line[x] >> 16) & 0xff);
-			unsigned int g = ((line[x] >> 8) & 0xff);
-			unsigned int b = (line[x] & 0xff);
-
-			r = r * a / 255;
-			g = g * a / 255;
-			b = b * a / 255;
-
-			line[x] = (a << 24) + (r << 16) + (g << 8) + b;
+			IconBitmapInfoHeader bmp_header;
+			memset(&bmp_header, 0, sizeof(IconBitmapInfoHeader));
+			bmp_header.biSize = size_bitmap_info;
+			bmp_header.biWidth = bmp_image.get_width();
+			bmp_header.biHeight = bmp_image.get_height() * 2; // why on earth do I have to multiply this by two??
+			bmp_header.biPlanes = 1;
+			bmp_header.biBitCount = 32;
+			bmp_header.biCompression = bi_rgb;
+			device.write(&bmp_header, size_bitmap_info);
+			device.write(bmp_image.get_data(), bmp_image.get_pitch() * bmp_image.get_height());
 		}
+
+		return device.get_data();
 	}
 
-	// Flip image upside down
-	for (int y = 0; y < h/2; y++)
+	PixelBuffer IconSet_Impl::create_bitmap_data(const PixelBuffer &image)
 	{
-		for (int x = 0; x < w; x++)
+		// Convert pixel buffer to DIB compatible format:
+
+		PixelBuffer bmp_image = image.to_format(tf_bgra8);
+
+		// Note that the APIs use pre-multiplied alpha, which means that the red,
+		// green and blue channel values in the bitmap must be pre-multiplied with
+		// the alpha channel value. For example, if the alpha channel value is x,
+		// the red, green and blue channels must be multiplied by x and divided by
+		// 0xff prior to the call.
+		int w = bmp_image.get_width();
+		int h = bmp_image.get_height();
+		unsigned int *p = (unsigned int *)bmp_image.get_data();
+		for (int y = 0; y < h; y++)
 		{
-			unsigned int l1 = p[y*w+x];
-			unsigned int l2 = p[(w-1-y)*w+x];
-			p[(w-1-y)*w+x] = l1;
-			p[y*w+x] = l2;
+			int index = y * w;
+			unsigned int *line = p + index;
+			for (int x = 0; x < w; x++)
+			{
+				unsigned int a = ((line[x] >> 24) & 0xff);
+				unsigned int r = ((line[x] >> 16) & 0xff);
+				unsigned int g = ((line[x] >> 8) & 0xff);
+				unsigned int b = (line[x] & 0xff);
+
+				r = r * a / 255;
+				g = g * a / 255;
+				b = b * a / 255;
+
+				line[x] = (a << 24) + (r << 16) + (g << 8) + b;
+			}
 		}
+
+		// Flip image upside down
+		for (int y = 0; y < h / 2; y++)
+		{
+			for (int x = 0; x < w; x++)
+			{
+				unsigned int l1 = p[y*w + x];
+				unsigned int l2 = p[(w - 1 - y)*w + x];
+				p[(w - 1 - y)*w + x] = l1;
+				p[y*w + x] = l2;
+			}
+		}
+
+		return bmp_image;
 	}
-
-	return bmp_image;
-}
-
 }

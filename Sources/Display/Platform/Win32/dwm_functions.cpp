@@ -31,77 +31,74 @@
 
 namespace clan
 {
-
-bool DwmFunctions::is_composition_enabled()
-{
-	if (IsCompositionEnabled)
+	bool DwmFunctions::is_composition_enabled()
 	{
-		BOOL is_enabled = FALSE;
-		HRESULT result = IsCompositionEnabled(&is_enabled);
-		return SUCCEEDED(result) && is_enabled == TRUE;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-void DwmFunctions::enable_alpha_channel(HWND hwnd, HRGN rgn)
-{
-	if (EnableBlurBehindWindow)
-	{
-		DWM_BLURBEHIND blur_behind = { 0 };
-		blur_behind.dwFlags = DWM_BB_ENABLE | DWM_BB_BLURREGION | DWM_BB_TRANSITIONONMAXIMIZED;
-		blur_behind.fEnable = TRUE;
-		blur_behind.fTransitionOnMaximized = TRUE;
-		blur_behind.hRgnBlur = rgn;
-
-		EnableBlurBehindWindow(hwnd, &blur_behind);
-	}
-}
-
-void DwmFunctions::extend_frame_into_client_area(HWND hwnd, int left, int top, int right, int bottom)
-{
-	if (ExtendFrameIntoClientArea)
-	{
-		MARGINS margins = { 0 };
-		margins.cxLeftWidth = left;
-		margins.cxRightWidth = right;
-		margins.cyBottomHeight = bottom;
-		margins.cyTopHeight = top;
-		ExtendFrameIntoClientArea(hwnd, &margins);
-	}
-}
-
-
-bool DwmFunctions::is_vista_or_later()
-{ 
-	OSVERSIONINFO info = { 0 }; 
-	info.dwOSVersionInfoSize = sizeof(OSVERSIONINFO); 
-	GetVersionEx(&info); 
-	return info.dwMajorVersion >= 6; 
-}
-
-void DwmFunctions::open_dll()
-{
-	if (dll_handle == 0 && is_vista_or_later())
-	{
-		dll_handle = LoadLibrary(L"dwmapi.dll");
-		if (dll_handle)
+		if (IsCompositionEnabled)
 		{
-			IsCompositionEnabled = (FuncDwmIsCompositionEnabled *)GetProcAddress(dll_handle, "DwmIsCompositionEnabled");
-			EnableBlurBehindWindow = (FuncDwmEnableBlurBehindWindow *)GetProcAddress(dll_handle, "DwmEnableBlurBehindWindow");
-			ExtendFrameIntoClientArea = (FuncDwmExtendFrameIntoClientArea *)GetProcAddress(dll_handle, "DwmExtendFrameIntoClientArea");
-			ExtendFrameIntoClientArea = (FuncDwmExtendFrameIntoClientArea *)GetProcAddress(dll_handle, "DwmExtendFrameIntoClientArea");
-			Dwm_DefWindowProc = (FuncDwmDefWindowProc *)GetProcAddress(dll_handle, "DwmDefWindowProc");
+			BOOL is_enabled = FALSE;
+			HRESULT result = IsCompositionEnabled(&is_enabled);
+			return SUCCEEDED(result) && is_enabled == TRUE;
+		}
+		else
+		{
+			return false;
 		}
 	}
-}
 
-HMODULE DwmFunctions::dll_handle = 0;
-DwmFunctions::FuncDwmIsCompositionEnabled *DwmFunctions::IsCompositionEnabled = 0;
-DwmFunctions::FuncDwmEnableBlurBehindWindow *DwmFunctions::EnableBlurBehindWindow = 0;
-DwmFunctions::FuncDwmExtendFrameIntoClientArea *DwmFunctions::ExtendFrameIntoClientArea = 0;
-DwmFunctions::FuncDwmDefWindowProc *DwmFunctions::Dwm_DefWindowProc = 0;
+	void DwmFunctions::enable_alpha_channel(HWND hwnd, HRGN rgn)
+	{
+		if (EnableBlurBehindWindow)
+		{
+			DWM_BLURBEHIND blur_behind = { 0 };
+			blur_behind.dwFlags = DWM_BB_ENABLE | DWM_BB_BLURREGION | DWM_BB_TRANSITIONONMAXIMIZED;
+			blur_behind.fEnable = TRUE;
+			blur_behind.fTransitionOnMaximized = TRUE;
+			blur_behind.hRgnBlur = rgn;
 
+			EnableBlurBehindWindow(hwnd, &blur_behind);
+		}
+	}
+
+	void DwmFunctions::extend_frame_into_client_area(HWND hwnd, int left, int top, int right, int bottom)
+	{
+		if (ExtendFrameIntoClientArea)
+		{
+			MARGINS margins = { 0 };
+			margins.cxLeftWidth = left;
+			margins.cxRightWidth = right;
+			margins.cyBottomHeight = bottom;
+			margins.cyTopHeight = top;
+			ExtendFrameIntoClientArea(hwnd, &margins);
+		}
+	}
+
+	bool DwmFunctions::is_vista_or_later()
+	{
+		OSVERSIONINFO info = { 0 };
+		info.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+		GetVersionEx(&info);
+		return info.dwMajorVersion >= 6;
+	}
+
+	void DwmFunctions::open_dll()
+	{
+		if (dll_handle == 0 && is_vista_or_later())
+		{
+			dll_handle = LoadLibrary(L"dwmapi.dll");
+			if (dll_handle)
+			{
+				IsCompositionEnabled = (FuncDwmIsCompositionEnabled *)GetProcAddress(dll_handle, "DwmIsCompositionEnabled");
+				EnableBlurBehindWindow = (FuncDwmEnableBlurBehindWindow *)GetProcAddress(dll_handle, "DwmEnableBlurBehindWindow");
+				ExtendFrameIntoClientArea = (FuncDwmExtendFrameIntoClientArea *)GetProcAddress(dll_handle, "DwmExtendFrameIntoClientArea");
+				ExtendFrameIntoClientArea = (FuncDwmExtendFrameIntoClientArea *)GetProcAddress(dll_handle, "DwmExtendFrameIntoClientArea");
+				Dwm_DefWindowProc = (FuncDwmDefWindowProc *)GetProcAddress(dll_handle, "DwmDefWindowProc");
+			}
+		}
+	}
+
+	HMODULE DwmFunctions::dll_handle = 0;
+	DwmFunctions::FuncDwmIsCompositionEnabled *DwmFunctions::IsCompositionEnabled = 0;
+	DwmFunctions::FuncDwmEnableBlurBehindWindow *DwmFunctions::EnableBlurBehindWindow = 0;
+	DwmFunctions::FuncDwmExtendFrameIntoClientArea *DwmFunctions::ExtendFrameIntoClientArea = 0;
+	DwmFunctions::FuncDwmDefWindowProc *DwmFunctions::Dwm_DefWindowProc = 0;
 }

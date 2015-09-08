@@ -23,45 +23,34 @@
 **
 **  File Author(s):
 **
-**    (if your name is missing here, please add it)
+**    Magnus Norddahl
 */
 
 #include "Display/precomp.h"
 #include "API/Display/ImageProviders/provider_type.h"
 #include "API/Display/ImageProviders/provider_factory.h"
-#include "../setup_display.h"
+#include "Display/setup_display.h"
+
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// ImageProviderType construction:
-
-ImageProviderType::ImageProviderType(const std::string &type)
-{
-	auto &types = *SetupDisplay::get_image_provider_factory_types();
-	types[type] = this;
-}
-
-ImageProviderType::~ImageProviderType()
-{
-	auto &types = *SetupDisplay::get_image_provider_factory_types();
-	std::map<std::string, ImageProviderType *>::iterator it;
-	
-	for (it = types.begin(); it != types.end(); it++)
+	ImageProviderType::ImageProviderType(const std::string &type)
 	{
-		if (it->second == this)
+		auto &types = *SetupDisplay::get_image_provider_factory_types();
+		types[type] = this;
+	}
+
+	ImageProviderType::~ImageProviderType()
+	{
+		auto &types = *SetupDisplay::get_image_provider_factory_types();
+		std::map<std::string, ImageProviderType *>::iterator it;
+
+		for (it = types.begin(); it != types.end(); it++)
 		{
-			types.erase(it);
-			break;
+			if (it->second == this)
+			{
+				types.erase(it);
+				break;
+			}
 		}
 	}
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// ProviderType operations:
-
-
-/////////////////////////////////////////////////////////////////////////////
-// ProviderType implementation:
-
 }

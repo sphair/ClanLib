@@ -30,27 +30,25 @@
 
 namespace clan
 {
+	class JPEGLoader;
 
-class JPEGLoader;
+	class JPEGMCUDecoder
+	{
+	public:
+		JPEGMCUDecoder(JPEGLoader *loader);
+		~JPEGMCUDecoder();
 
-class JPEGMCUDecoder
-{
-public:
-	JPEGMCUDecoder(JPEGLoader *loader);
-	~JPEGMCUDecoder();
+		void decode(int block);
+		int get_channel_count() const { return (int)channels.size(); }
+		const unsigned char *get_channel(int c) const { return channels[c]; }
 
-	void decode(int block);
-	int get_channel_count() const { return (int) channels.size(); }
-	const unsigned char *get_channel(int c) const { return channels[c]; }
+	private:
+		void idct(short *inptr, unsigned char *outptr, int pitch, float *quantptr);
+		void idct_sse(short *inptr, unsigned char *outptr, int pitch, float *quantptr);
+		static inline unsigned char float_to_int(float v);
 
-private:
-	void idct(short *inptr, unsigned char *outptr, int pitch, float *quantptr);
-	void idct_sse(short *inptr, unsigned char *outptr, int pitch, float *quantptr);
-	static inline unsigned char float_to_int(float v);
-
-	JPEGLoader *loader;
-	std::vector<unsigned char *> channels;
-	std::vector<float *> quant;
-};
-
+		JPEGLoader *loader;
+		std::vector<unsigned char *> channels;
+		std::vector<float *> quant;
+	};
 }

@@ -36,43 +36,41 @@
 
 namespace clan
 {
+	class PixelReader
+	{
+	public:
+		virtual ~PixelReader() { }
+		virtual void read(const void *input, Vec4f *output, int num_pixels) = 0;
+	};
 
-class PixelReader
-{
-public:
-	virtual ~PixelReader() { }
-	virtual void read(const void *input, Vec4f *output, int num_pixels) = 0;
-};
+	class PixelWriter
+	{
+	public:
+		virtual ~PixelWriter() { }
+		virtual void write(void *output, Vec4f *input, int num_pixels) = 0;
+	};
 
-class PixelWriter
-{
-public:
-	virtual ~PixelWriter() { }
-	virtual void write(void *output, Vec4f *input, int num_pixels) = 0;
-};
+	class PixelFilter
+	{
+	public:
+		virtual ~PixelFilter() { }
+		virtual void filter(Vec4f *pixels, int num_pixels) = 0;
+	};
 
-class PixelFilter
-{
-public:
-	virtual ~PixelFilter() { }
-	virtual void filter(Vec4f *pixels, int num_pixels) = 0;
-};
+	class PixelConverter_Impl
+	{
+	public:
+		PixelConverter_Impl() : premultiply_alpha(false), flip_vertical(false), gamma(1.0f), swizzle(0, 1, 2, 3), input_is_ycrcb(false), output_is_ycrcb(false) { }
 
-class PixelConverter_Impl
-{
-public:
-	PixelConverter_Impl() : premultiply_alpha(false), flip_vertical(false), gamma(1.0f), swizzle(0,1,2,3), input_is_ycrcb(false), output_is_ycrcb(false) { }
+		std::unique_ptr<PixelReader> create_reader(TextureFormat format, bool sse2);
+		std::unique_ptr<PixelWriter> create_writer(TextureFormat format, bool sse2, bool sse4);
+		std::vector<std::shared_ptr<PixelFilter> > create_filters(bool sse2);
 
-	std::unique_ptr<PixelReader> create_reader(TextureFormat format, bool sse2);
-	std::unique_ptr<PixelWriter> create_writer(TextureFormat format, bool sse2, bool sse4);
-	std::vector<std::shared_ptr<PixelFilter> > create_filters(bool sse2);
-
-	bool premultiply_alpha;
-	bool flip_vertical;
-	float gamma;
-	Vec4i swizzle;
-	bool input_is_ycrcb;
-	bool output_is_ycrcb;
-};
-
+		bool premultiply_alpha;
+		bool flip_vertical;
+		float gamma;
+		Vec4i swizzle;
+		bool input_is_ycrcb;
+		bool output_is_ycrcb;
+	};
 }

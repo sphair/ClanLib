@@ -34,72 +34,65 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// CPUPixelBufferProvider Construction:
-
-CPUPixelBufferProvider::CPUPixelBufferProvider() : delete_data(false), data(nullptr)
-{
-}
-
-CPUPixelBufferProvider::~CPUPixelBufferProvider()
-{
-	if (delete_data)
-		System::aligned_free(data);
-}
-
-void CPUPixelBufferProvider::create(TextureFormat new_format, const Size &new_size, const void *data_ptr, bool only_reference_data)
-{
-	size = new_size;
-	texture_format = new_format;
-
-	unsigned int data_size = PixelBuffer::get_data_size(size, new_format);
-
-	if (only_reference_data)
+	CPUPixelBufferProvider::CPUPixelBufferProvider() : delete_data(false), data(nullptr)
 	{
-		if (!data_ptr)
-			throw Exception("PixelBuffer only_reference_data set without data");
-
-		data = (unsigned char *) data_ptr;
-		delete_data = false;
 	}
-	else
+
+	CPUPixelBufferProvider::~CPUPixelBufferProvider()
 	{
-		if (data_ptr)
+		if (delete_data)
+			System::aligned_free(data);
+	}
+
+	void CPUPixelBufferProvider::create(TextureFormat new_format, const Size &new_size, const void *data_ptr, bool only_reference_data)
+	{
+		size = new_size;
+		texture_format = new_format;
+
+		unsigned int data_size = PixelBuffer::get_data_size(size, new_format);
+
+		if (only_reference_data)
 		{
-			delete_data = true;
-			data = (unsigned char *) System::aligned_alloc(data_size, 16);
-			memcpy(data, data_ptr, data_size);
+			if (!data_ptr)
+				throw Exception("PixelBuffer only_reference_data set without data");
+
+			data = (unsigned char *)data_ptr;
+			delete_data = false;
 		}
 		else
 		{
-			delete_data = true;
-			data = (unsigned char *) System::aligned_alloc(data_size, 16);
+			if (data_ptr)
+			{
+				delete_data = true;
+				data = (unsigned char *)System::aligned_alloc(data_size, 16);
+				memcpy(data, data_ptr, data_size);
+			}
+			else
+			{
+				delete_data = true;
+				data = (unsigned char *)System::aligned_alloc(data_size, 16);
+			}
 		}
 	}
-}
 
-void CPUPixelBufferProvider::create(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage)
-{
-	// GPU only, this is never called
-	throw Exception("Never call me");
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// CPUPixelBufferProvider Operations:
-void CPUPixelBufferProvider::upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data)
-{
-	// Handle the simple base
-	if ( (dest_rect.left == 0) && (dest_rect.get_width() == size.width) )
+	void CPUPixelBufferProvider::create(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage)
 	{
-		unsigned int data_size = PixelBuffer::get_data_size(Size(size.width, dest_rect.get_height()), texture_format);
-		memcpy(this->data, data, data_size); 
+		// GPU only, this is never called
+		throw Exception("Never call me");
 	}
-	else
-	{
-		// Need to upload in blocks here
-		throw Exception("CPUPixelBufferProvider::upload_data() Implement me for this situation");
-	}
-}
 
+	void CPUPixelBufferProvider::upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data)
+	{
+		// Handle the simple base
+		if ((dest_rect.left == 0) && (dest_rect.get_width() == size.width))
+		{
+			unsigned int data_size = PixelBuffer::get_data_size(Size(size.width, dest_rect.get_height()), texture_format);
+			memcpy(this->data, data, data_size);
+		}
+		else
+		{
+			// Need to upload in blocks here
+			throw Exception("CPUPixelBufferProvider::upload_data() Implement me for this situation");
+		}
+	}
 }

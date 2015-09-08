@@ -33,86 +33,71 @@
 
 namespace clan
 {
+	ImageImportDescription::ImageImportDescription()
+		: impl(std::make_shared<ImageImportDescription_Impl>())
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// ImageImportDescription construction:
+	ImageImportDescription::~ImageImportDescription()
+	{
+	}
 
-ImageImportDescription::ImageImportDescription() 
-: impl(std::make_shared<ImageImportDescription_Impl>())
-{
-}
+	bool ImageImportDescription::get_premultiply_alpha() const
+	{
+		return impl->premultiply_alpha;
+	}
 
-ImageImportDescription::~ImageImportDescription()
-{
-}
+	bool ImageImportDescription::flip_vertical() const
+	{
+		return impl->flip_vertical;
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// ImageImportDescription attributes:
-bool ImageImportDescription::get_premultiply_alpha() const
-{
-	return impl->premultiply_alpha;
-}
+	bool ImageImportDescription::is_srgb() const
+	{
+		return impl->srgb;
+	}
 
-bool ImageImportDescription::flip_vertical() const
-{
-	return impl->flip_vertical;
-}
+	bool ImageImportDescription::is_cached() const
+	{
+		return impl->cached;
+	}
 
-bool ImageImportDescription::is_srgb() const
-{
-	return impl->srgb;
-}
+	void ImageImportDescription::set_premultiply_alpha(bool enable)
+	{
+		impl->premultiply_alpha = enable;
+	}
 
-bool ImageImportDescription::is_cached() const
-{
-	return impl->cached;
-}
+	void ImageImportDescription::set_flip_vertical(bool enable)
+	{
+		impl->flip_vertical = enable;
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// ImageImportDescription operations:
+	void ImageImportDescription::set_srgb(bool enable)
+	{
+		impl->srgb = enable;
+	}
 
-void ImageImportDescription::set_premultiply_alpha(bool enable)
-{
-	impl->premultiply_alpha = enable;
-}
+	void ImageImportDescription::set_cached(bool enable)
+	{
+		impl->cached = enable;
+	}
 
-void ImageImportDescription::set_flip_vertical(bool enable)
-{
-	impl->flip_vertical = enable;
-}
+	PixelBuffer ImageImportDescription::process(PixelBuffer &image) const
+	{
+		if (impl->premultiply_alpha)
+			image.premultiply_alpha();
 
-void ImageImportDescription::set_srgb(bool enable)
-{
-	impl->srgb = enable;
-}
+		if (impl->flip_vertical)
+			image.flip_vertical();
 
-void ImageImportDescription::set_cached(bool enable)
-{
-	impl->cached = enable;
-}
+		if (impl->func_process)
+			image = impl->func_process(image);
 
-PixelBuffer ImageImportDescription::process(PixelBuffer &image) const
-{
-	if (impl->premultiply_alpha)
-		image.premultiply_alpha();
+		return image;
+	}
 
-	if (impl->flip_vertical)
-		image.flip_vertical();
-
-	if (impl->func_process)
-		image = impl->func_process(image);
-
-	return image;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// ImageImportDescription callbacks:
-
-std::function<PixelBuffer(PixelBuffer &)> &ImageImportDescription::func_process()
-{
-	return impl->func_process;
-}
-/////////////////////////////////////////////////////////////////////////////
-// ImageImportDescription implementation:
-
+	std::function<PixelBuffer(PixelBuffer &)> &ImageImportDescription::func_process()
+	{
+		return impl->func_process;
+	}
 }

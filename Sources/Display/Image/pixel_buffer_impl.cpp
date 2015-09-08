@@ -39,121 +39,111 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// PixelBuffer_Impl construction:
-
-PixelBuffer_Impl::PixelBuffer_Impl()
-: provider(nullptr)
-{
-}
-
-PixelBuffer_Impl::PixelBuffer_Impl(PixelBufferProvider *provider)
-: provider(provider)
-{
-}
-
-PixelBuffer_Impl::PixelBuffer_Impl(int width, int height, TextureFormat texture_format, const void *data_ptr, bool only_reference_data)
-: provider(nullptr)	// Default to locked for CPU buffer
-{
-	auto cpu_provider = new CPUPixelBufferProvider;
-	provider = cpu_provider;
-
-	cpu_provider->create(texture_format, Size(width, height), data_ptr, only_reference_data);
-
-}
-
-PixelBuffer_Impl::~PixelBuffer_Impl()
-{
-	if (provider)
-		delete provider;
-}
-
-//////////////////////////////////////////////////////////////////////////
-// PixelBuffer_Impl attributes:
-
-Colorf PixelBuffer_Impl::get_pixel(int x, int y)
-{
-	Colorf color(0.0f, 0.0f, 0.0f, 0.0f);
-
-	if (provider->get_format() == tf_rgba8)
+	PixelBuffer_Impl::PixelBuffer_Impl()
+		: provider(nullptr)
 	{
-		const uint8_t* buf = static_cast<const uint8_t*>(provider->get_data());
-		const uint8_t *pos = &buf[y * provider->get_pitch() + x * get_bytes_per_pixel()];
-
-		uint32_t value = *((const uint32_t*)pos);
-
-		float rcp_255 = 1.0f / 255.0f;
-		color = Colorf (((value & 0xFF) >> 0) * rcp_255,
-			((value & 0xFF00) >> 8) * rcp_255,
-			((value & 0xFF0000) >> 16) * rcp_255,
-			((value & 0xFF000000) >> 24) * rcp_255);
-	}
-	else
-	{
-		throw Exception("Implement me using PixelConverter!");
 	}
 
-	return color;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// PixelBuffer_Impl operations:
-
-unsigned int PixelBuffer_Impl::get_bytes_per_block(TextureFormat texture_format)
-{
-	switch (texture_format)
+	PixelBuffer_Impl::PixelBuffer_Impl(PixelBufferProvider *provider)
+		: provider(provider)
 	{
-	case tf_compressed_rgb_s3tc_dxt1:
-	case tf_compressed_rgba_s3tc_dxt1:
-	case tf_compressed_rgba_s3tc_dxt3:
-	case tf_compressed_srgb_s3tc_dxt1:
-	case tf_compressed_srgb_alpha_s3tc_dxt1:
-	case tf_compressed_srgb_alpha_s3tc_dxt3:
-		return 8;
-	case tf_compressed_rgba_s3tc_dxt5:
-	case tf_compressed_srgb_alpha_s3tc_dxt5:
-		return 16;
-	default:
-		throw Exception("cannot obtain block count for this TextureFormat");
 	}
-}
 
-bool PixelBuffer_Impl::is_compressed(TextureFormat texture_format)
-{
-	switch (texture_format)
+	PixelBuffer_Impl::PixelBuffer_Impl(int width, int height, TextureFormat texture_format, const void *data_ptr, bool only_reference_data)
+		: provider(nullptr)	// Default to locked for CPU buffer
 	{
-	case tf_compressed_rgb_s3tc_dxt1:
-	case tf_compressed_rgba_s3tc_dxt1:
-	case tf_compressed_rgba_s3tc_dxt3:
-	case tf_compressed_srgb_s3tc_dxt1:
-	case tf_compressed_srgb_alpha_s3tc_dxt1:
-	case tf_compressed_srgb_alpha_s3tc_dxt3:
-	case tf_compressed_rgba_s3tc_dxt5:
-	case tf_compressed_srgb_alpha_s3tc_dxt5:
-		return true;
-	default:
-		return false;
-	}
-}
+		auto cpu_provider = new CPUPixelBufferProvider;
+		provider = cpu_provider;
 
-unsigned int PixelBuffer_Impl::get_data_size(const Size &size, TextureFormat texture_format)
-{
-	if (is_compressed(texture_format))
-	{
-		return ((size.width + 3) / 4) * ((size.height + 3) / 4) * get_bytes_per_block(texture_format);
-	}
-	else
-	{
-		return size.width * size.height * get_bytes_per_pixel(texture_format);
-	}
-}
+		cpu_provider->create(texture_format, Size(width, height), data_ptr, only_reference_data);
 
-unsigned int PixelBuffer_Impl::get_bytes_per_pixel(TextureFormat texture_format)
-{
-	unsigned int count;
-	switch (texture_format)
+	}
+
+	PixelBuffer_Impl::~PixelBuffer_Impl()
 	{
+		if (provider)
+			delete provider;
+	}
+
+	Colorf PixelBuffer_Impl::get_pixel(int x, int y)
+	{
+		Colorf color(0.0f, 0.0f, 0.0f, 0.0f);
+
+		if (provider->get_format() == tf_rgba8)
+		{
+			const uint8_t* buf = static_cast<const uint8_t*>(provider->get_data());
+			const uint8_t *pos = &buf[y * provider->get_pitch() + x * get_bytes_per_pixel()];
+
+			uint32_t value = *((const uint32_t*)pos);
+
+			float rcp_255 = 1.0f / 255.0f;
+			color = Colorf(((value & 0xFF) >> 0) * rcp_255,
+				((value & 0xFF00) >> 8) * rcp_255,
+				((value & 0xFF0000) >> 16) * rcp_255,
+				((value & 0xFF000000) >> 24) * rcp_255);
+		}
+		else
+		{
+			throw Exception("Implement me using PixelConverter!");
+		}
+
+		return color;
+	}
+
+	unsigned int PixelBuffer_Impl::get_bytes_per_block(TextureFormat texture_format)
+	{
+		switch (texture_format)
+		{
+		case tf_compressed_rgb_s3tc_dxt1:
+		case tf_compressed_rgba_s3tc_dxt1:
+		case tf_compressed_rgba_s3tc_dxt3:
+		case tf_compressed_srgb_s3tc_dxt1:
+		case tf_compressed_srgb_alpha_s3tc_dxt1:
+		case tf_compressed_srgb_alpha_s3tc_dxt3:
+			return 8;
+		case tf_compressed_rgba_s3tc_dxt5:
+		case tf_compressed_srgb_alpha_s3tc_dxt5:
+			return 16;
+		default:
+			throw Exception("cannot obtain block count for this TextureFormat");
+		}
+	}
+
+	bool PixelBuffer_Impl::is_compressed(TextureFormat texture_format)
+	{
+		switch (texture_format)
+		{
+		case tf_compressed_rgb_s3tc_dxt1:
+		case tf_compressed_rgba_s3tc_dxt1:
+		case tf_compressed_rgba_s3tc_dxt3:
+		case tf_compressed_srgb_s3tc_dxt1:
+		case tf_compressed_srgb_alpha_s3tc_dxt1:
+		case tf_compressed_srgb_alpha_s3tc_dxt3:
+		case tf_compressed_rgba_s3tc_dxt5:
+		case tf_compressed_srgb_alpha_s3tc_dxt5:
+			return true;
+		default:
+			return false;
+		}
+	}
+
+	unsigned int PixelBuffer_Impl::get_data_size(const Size &size, TextureFormat texture_format)
+	{
+		if (is_compressed(texture_format))
+		{
+			return ((size.width + 3) / 4) * ((size.height + 3) / 4) * get_bytes_per_block(texture_format);
+		}
+		else
+		{
+			return size.width * size.height * get_bytes_per_pixel(texture_format);
+		}
+	}
+
+	unsigned int PixelBuffer_Impl::get_bytes_per_pixel(TextureFormat texture_format)
+	{
+		unsigned int count;
+		switch (texture_format)
+		{
 		case tf_r8: count = 8;	break; //RED 8
 		case tf_r8_snorm: count = 8; break; //RED, s8
 		case tf_r16: count = 16; break; //RED, 16
@@ -226,30 +216,27 @@ unsigned int PixelBuffer_Impl::get_bytes_per_pixel(TextureFormat texture_format)
 		case tf_depth32f_stencil8: count = 32 + 8; break; //DEPTH_STENCIL, f32, 8
 		default:
 			throw Exception("cannot obtain pixel count for this TextureFormat");
+		}
+
+		return (count + 7) / 8;
 	}
 
-	return (count + 7) / 8;
-
-}
-
-void PixelBuffer_Impl::convert(PixelBuffer &target, const Rect &dest_rect, const Rect &src_rect, PixelConverter &converter) const
-{
-	if ( dest_rect.get_size() != src_rect.get_size())
+	void PixelBuffer_Impl::convert(PixelBuffer &target, const Rect &dest_rect, const Rect &src_rect, PixelConverter &converter) const
 	{
-		throw Exception("Source and destination rects must have same size. Scaled converting not supported.");
+		if (dest_rect.get_size() != src_rect.get_size())
+		{
+			throw Exception("Source and destination rects must have same size. Scaled converting not supported.");
+		}
+
+		char *src_data = (char *)provider->get_data();
+		char *dest_data = (char *)target.get_data();
+
+		int src_pitch = provider->get_size().width * get_bytes_per_pixel();
+		int dest_pitch = target.get_width() * target.get_bytes_per_pixel();
+
+		src_data += src_rect.top*src_pitch + src_rect.left*get_bytes_per_pixel();
+		dest_data += dest_rect.top*dest_pitch + dest_rect.left*target.get_bytes_per_pixel();
+
+		converter.convert(dest_data, dest_pitch, target.get_format(), src_data, src_pitch, get_format(), dest_rect.get_width(), dest_rect.get_height());
 	}
-
-	char *src_data = (char *) provider->get_data();
-	char *dest_data = (char *) target.get_data();
-
-	int src_pitch = provider->get_size().width * get_bytes_per_pixel();
-	int dest_pitch = target.get_width() * target.get_bytes_per_pixel();
-
-	src_data += src_rect.top*src_pitch + src_rect.left*get_bytes_per_pixel();
-	dest_data += dest_rect.top*dest_pitch + dest_rect.left*target.get_bytes_per_pixel();
-
-	converter.convert(dest_data, dest_pitch, target.get_format(), src_data, src_pitch, get_format(), dest_rect.get_width(), dest_rect.get_height());
-
-}
-
 }

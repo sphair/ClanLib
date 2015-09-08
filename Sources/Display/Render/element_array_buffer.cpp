@@ -35,85 +35,68 @@
 
 namespace clan
 {
+	class ElementArrayBuffer_Impl
+	{
+	public:
+		ElementArrayBuffer_Impl() : lock_count(0), provider(nullptr) { }
+		~ElementArrayBuffer_Impl() { if (provider) delete provider; }
 
-/////////////////////////////////////////////////////////////////////////////
-// ElementArrayBuffer_Impl class:
+		int lock_count;
+		ElementArrayBufferProvider *provider;
+	};
 
-class ElementArrayBuffer_Impl
-{
-public:
-	ElementArrayBuffer_Impl() : lock_count(0), provider(nullptr) { }
-	~ElementArrayBuffer_Impl() { if (provider) delete provider; }
+	ElementArrayBuffer::ElementArrayBuffer()
+	{
+	}
 
-	int lock_count;
-	ElementArrayBufferProvider *provider;
-};
+	ElementArrayBuffer::ElementArrayBuffer(GraphicContext &gc, int size, BufferUsage usage)
+		: impl(std::make_shared<ElementArrayBuffer_Impl>())
+	{
+		GraphicContextProvider *gc_provider = gc.get_provider();
+		impl->provider = gc_provider->alloc_element_array_buffer();
+		impl->provider->create(size, usage);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// ElementArrayBuffer Construction:
+	ElementArrayBuffer::ElementArrayBuffer(GraphicContext &gc, const void *data, int size, BufferUsage usage)
+		: impl(std::make_shared<ElementArrayBuffer_Impl>())
+	{
+		GraphicContextProvider *gc_provider = gc.get_provider();
+		impl->provider = gc_provider->alloc_element_array_buffer();
+		impl->provider->create((void*)data, size, usage);
+	}
 
-ElementArrayBuffer::ElementArrayBuffer()
-{
-}
+	ElementArrayBuffer::~ElementArrayBuffer()
+	{
+	}
 
-ElementArrayBuffer::ElementArrayBuffer(GraphicContext &gc, int size, BufferUsage usage)
-: impl(std::make_shared<ElementArrayBuffer_Impl>())
-{
-	GraphicContextProvider *gc_provider = gc.get_provider();
-	impl->provider = gc_provider->alloc_element_array_buffer();
-	impl->provider->create(size, usage);
-}
+	void ElementArrayBuffer::throw_if_null() const
+	{
+		if (!impl)
+			throw Exception("ElementArrayBuffer is null");
+	}
 
-ElementArrayBuffer::ElementArrayBuffer(GraphicContext &gc, const void *data, int size, BufferUsage usage)
-: impl(std::make_shared<ElementArrayBuffer_Impl>())
-{
-	GraphicContextProvider *gc_provider = gc.get_provider();
-	impl->provider = gc_provider->alloc_element_array_buffer();
-	impl->provider->create((void*)data, size, usage);
-}
+	ElementArrayBufferProvider *ElementArrayBuffer::get_provider() const
+	{
+		return impl->provider;
+	}
 
-ElementArrayBuffer::~ElementArrayBuffer()
-{
-}
+	bool ElementArrayBuffer::operator==(const ElementArrayBuffer &other) const
+	{
+		return impl == other.impl;
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// ElementArrayBuffer Attributes:
+	void ElementArrayBuffer::upload_data(GraphicContext &gc, const void *data, int size)
+	{
+		impl->provider->upload_data(gc, data, size);
+	}
 
-void ElementArrayBuffer::throw_if_null() const
-{
-	if (!impl)
-		throw Exception("ElementArrayBuffer is null");
-}
+	void ElementArrayBuffer::copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
+	{
+		impl->provider->copy_from(gc, buffer, dest_pos, src_pos, size);
+	}
 
-ElementArrayBufferProvider *ElementArrayBuffer::get_provider() const
-{
-	return impl->provider;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// ElementArrayBuffer Operations:
-
-bool ElementArrayBuffer::operator==(const ElementArrayBuffer &other) const
-{
-	return impl == other.impl;
-}
-
-void ElementArrayBuffer::upload_data(GraphicContext &gc, const void *data, int size)
-{
-	impl->provider->upload_data(gc, data, size);
-}
-
-void ElementArrayBuffer::copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
-{
-	impl->provider->copy_from(gc, buffer, dest_pos, src_pos, size);
-}
-
-void ElementArrayBuffer::copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
-{
-	impl->provider->copy_to(gc, buffer, dest_pos, src_pos, size);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// ElementArrayBuffer Implementation:
-
+	void ElementArrayBuffer::copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
+	{
+		impl->provider->copy_to(gc, buffer, dest_pos, src_pos, size);
+	}
 }

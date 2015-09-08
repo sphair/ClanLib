@@ -35,66 +35,61 @@
 
 namespace clan
 {
-
-class Texture_Impl
-{
-public:
-	Texture_Impl()
-	: provider(nullptr),
-	width(0),
-	height(0),
-	depth(0),
-	array_size(0),
-	min_lod(0),
-	max_lod(0),
-	lod_bias(0),
-	base_level(0),
-	max_level(0),
-	wrap_mode_s(wrap_clamp_to_edge),
-	wrap_mode_t(wrap_clamp_to_edge),
-	wrap_mode_r(wrap_clamp_to_edge),
-	min_filter(filter_linear),
-	mag_filter(filter_linear),
-	max_anisotropy(1.0f),
-	resident(0),
-	compare_mode(comparemode_none),
-	compare_function(compare_lequal)
+	class Texture_Impl
 	{
-	}
+	public:
+		Texture_Impl()
+			: provider(nullptr),
+			width(0),
+			height(0),
+			depth(0),
+			array_size(0),
+			min_lod(0),
+			max_lod(0),
+			lod_bias(0),
+			base_level(0),
+			max_level(0),
+			wrap_mode_s(wrap_clamp_to_edge),
+			wrap_mode_t(wrap_clamp_to_edge),
+			wrap_mode_r(wrap_clamp_to_edge),
+			min_filter(filter_linear),
+			mag_filter(filter_linear),
+			max_anisotropy(1.0f),
+			resident(0),
+			compare_mode(comparemode_none),
+			compare_function(compare_lequal)
+		{
+		}
 
-	~Texture_Impl()
-	{
-		if (provider)
-			delete provider;
-	}
+		~Texture_Impl()
+		{
+			if (provider)
+				delete provider;
+		}
 
-	bool operator<(const Texture_Impl &other) const
-	{
-		return provider < other.provider;
-	}
+		bool operator<(const Texture_Impl &other) const
+		{
+			return provider < other.provider;
+		}
 
-	TextureProvider *provider;
-	int width, height, depth;
-	int array_size;
-	float min_lod;
-	float max_lod;
-	float lod_bias;
-	int base_level;
-	int max_level;
-	TextureWrapMode wrap_mode_s;
-	TextureWrapMode wrap_mode_t;
-	TextureWrapMode wrap_mode_r;
-	TextureFilter min_filter;
-	TextureFilter mag_filter;
-	float max_anisotropy;
-	bool resident;
-	TextureCompareMode compare_mode;
-	CompareFunction compare_function;
+		TextureProvider *provider;
+		int width, height, depth;
+		int array_size;
+		float min_lod;
+		float max_lod;
+		float lod_bias;
+		int base_level;
+		int max_level;
+		TextureWrapMode wrap_mode_s;
+		TextureWrapMode wrap_mode_t;
+		TextureWrapMode wrap_mode_r;
+		TextureFilter min_filter;
+		TextureFilter mag_filter;
+		float max_anisotropy;
+		bool resident;
+		TextureCompareMode compare_mode;
+		CompareFunction compare_function;
 
-	float pixel_ratio = 0.0f;
-
-private:
-
-};
-
+		float pixel_ratio = 0.0f;
+	};
 }

@@ -30,33 +30,31 @@
 
 namespace clan
 {
+	class JPEGLoader;
+	class JPEGMCUDecoder;
 
-class JPEGLoader;
-class JPEGMCUDecoder;
+	class JPEGRGBDecoder
+	{
+	public:
+		JPEGRGBDecoder(JPEGLoader *loader);
+		~JPEGRGBDecoder();
 
-class JPEGRGBDecoder
-{
-public:
-	JPEGRGBDecoder(JPEGLoader *loader);
-	~JPEGRGBDecoder();
+		void decode(JPEGMCUDecoder *mcu_decoder);
 
-	void decode(JPEGMCUDecoder *mcu_decoder);
+		int get_width() const { return mcu_x * 8; }
+		int get_height() const { return mcu_y * 8; }
+		const unsigned int *get_pixels() const { return pixels; }
 
-	int get_width() const { return mcu_x*8; }
-	int get_height() const { return mcu_y*8; }
-	const unsigned int *get_pixels() const { return pixels; }
+	private:
+		void upsample(JPEGMCUDecoder *mcu_decoder);
+		void convert_monochrome();
+		void convert_ycrcb_sse();
+		void convert_ycrcb_float();
+		void convert_rgb();
 
-private:
-	void upsample(JPEGMCUDecoder *mcu_decoder);
-	void convert_monochrome();
-	void convert_ycrcb_sse();
-	void convert_ycrcb_float();
-	void convert_rgb();
-
-	JPEGLoader *loader;
-	int mcu_x, mcu_y;
-	unsigned int *pixels;
-	std::vector<unsigned char *> channels;
-};
-
+		JPEGLoader *loader;
+		int mcu_x, mcu_y;
+		unsigned int *pixels;
+		std::vector<unsigned char *> channels;
+	};
 }

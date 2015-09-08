@@ -32,33 +32,29 @@
 
 namespace clan
 {
+	class DwmFunctions
+	{
+	public:
+		static void open_dll();
 
-class DwmFunctions
-{
-public:
-	static void open_dll();
+		static bool is_composition_enabled();
+		static void enable_alpha_channel(HWND hwnd, HRGN rgn);
+		static bool is_vista_or_later();
 
-	static bool is_composition_enabled();
-	static void enable_alpha_channel(HWND hwnd, HRGN rgn);
-	static bool is_vista_or_later();
+		static void extend_frame_into_client_area(HWND hwnd, int left, int top, int right, int bottom);
 
-	static void extend_frame_into_client_area(HWND hwnd, int left, int top, int right, int bottom);
+	private:
+		typedef HRESULT(WINAPI FuncDwmIsCompositionEnabled)(BOOL *pfEnabled);
+		typedef HRESULT(WINAPI FuncDwmEnableBlurBehindWindow)(HWND hwnd, const DWM_BLURBEHIND *pBlurBehind);
+		typedef HRESULT(WINAPI FuncDwmExtendFrameIntoClientArea)(HWND hwnd, const MARGINS *pMarInset);
+		typedef HRESULT(WINAPI FuncDwmDefWindowProc)(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam, LRESULT *plResult);
 
-private:
-	typedef HRESULT (WINAPI FuncDwmIsCompositionEnabled)(BOOL *pfEnabled);
-	typedef HRESULT (WINAPI FuncDwmEnableBlurBehindWindow)(HWND hwnd, const DWM_BLURBEHIND *pBlurBehind);
-	typedef HRESULT (WINAPI FuncDwmExtendFrameIntoClientArea)(HWND hwnd, const MARGINS *pMarInset);
-	typedef HRESULT( WINAPI FuncDwmDefWindowProc)(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam, LRESULT *plResult);
+		static HMODULE dll_handle;
+		static FuncDwmIsCompositionEnabled *IsCompositionEnabled;
+		static FuncDwmEnableBlurBehindWindow *EnableBlurBehindWindow;
+		static FuncDwmExtendFrameIntoClientArea *ExtendFrameIntoClientArea;
 
-	static HMODULE dll_handle;
-	static FuncDwmIsCompositionEnabled *IsCompositionEnabled;
-	static FuncDwmEnableBlurBehindWindow *EnableBlurBehindWindow;
-	static FuncDwmExtendFrameIntoClientArea *ExtendFrameIntoClientArea;
-
-public:
-	static FuncDwmDefWindowProc *Dwm_DefWindowProc;
-
-
-};
-
+	public:
+		static FuncDwmDefWindowProc *Dwm_DefWindowProc;
+	};
 }

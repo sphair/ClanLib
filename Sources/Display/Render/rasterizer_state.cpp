@@ -33,19 +33,17 @@
 
 namespace clan
 {
+	RasterizerState::RasterizerState()
+	{
+	}
 
-RasterizerState::RasterizerState()
-{
-}
+	RasterizerState::RasterizerState(GraphicContext &context, const RasterizerStateDescription &desc)
+		: provider(context.get_provider()->create_rasterizer_state(desc))
+	{
+	}
 
-RasterizerState::RasterizerState(GraphicContext &context, const RasterizerStateDescription &desc)
-: provider(context.get_provider()->create_rasterizer_state(desc))
-{
-}
-
-RasterizerStateProvider *RasterizerState::get_provider() const
-{
-	return provider.get();
-}
-
+	RasterizerStateProvider *RasterizerState::get_provider() const
+	{
+		return provider.get();
+	}
 }

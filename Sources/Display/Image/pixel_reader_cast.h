@@ -33,61 +33,59 @@
 
 namespace clan
 {
-
-template<typename Type>
-class PixelReader_4cast : public PixelReader
-{
-public:
-	void read(const void *input, Vec4f *output, int num_pixels) override
+	template<typename Type>
+	class PixelReader_4cast : public PixelReader
 	{
-		const Vec4<Type> *d = static_cast<const Vec4<Type> *>(input);
-		for (int i = 0; i < num_pixels; i++)
+	public:
+		void read(const void *input, Vec4f *output, int num_pixels) override
 		{
-			output[i] = Vec4f(static_cast<float>(d[i].x), static_cast<float>(d[i].y), static_cast<float>(d[i].z), static_cast<float>(d[i].w));
+			const Vec4<Type> *d = static_cast<const Vec4<Type> *>(input);
+			for (int i = 0; i < num_pixels; i++)
+			{
+				output[i] = Vec4f(static_cast<float>(d[i].x), static_cast<float>(d[i].y), static_cast<float>(d[i].z), static_cast<float>(d[i].w));
+			}
 		}
-	}
-};
+	};
 
-template<typename Type>
-class PixelReader_3cast : public PixelReader
-{
-public:
-	void read(const void *input, Vec4f *output, int num_pixels) override
+	template<typename Type>
+	class PixelReader_3cast : public PixelReader
 	{
-		const Vec3<Type> *d = static_cast<const Vec3<Type> *>(input);
-		for (int i = 0; i < num_pixels; i++)
+	public:
+		void read(const void *input, Vec4f *output, int num_pixels) override
 		{
-			output[i] = Vec4f(static_cast<float>(d[i].x), static_cast<float>(d[i].y), static_cast<float>(d[i].z), 1.0f);
+			const Vec3<Type> *d = static_cast<const Vec3<Type> *>(input);
+			for (int i = 0; i < num_pixels; i++)
+			{
+				output[i] = Vec4f(static_cast<float>(d[i].x), static_cast<float>(d[i].y), static_cast<float>(d[i].z), 1.0f);
+			}
 		}
-	}
-};
+	};
 
-template<typename Type>
-class PixelReader_2cast : public PixelReader
-{
-public:
-	void read(const void *input, Vec4f *output, int num_pixels) override
+	template<typename Type>
+	class PixelReader_2cast : public PixelReader
 	{
-		const Vec2<Type> *d = static_cast<const Vec2<Type> *>(input);
-		for (int i = 0; i < num_pixels; i++)
+	public:
+		void read(const void *input, Vec4f *output, int num_pixels) override
 		{
-			output[i] = Vec4f(static_cast<float>(d[i].x), static_cast<float>(d[i].y), 0.0f, 1.0f);
+			const Vec2<Type> *d = static_cast<const Vec2<Type> *>(input);
+			for (int i = 0; i < num_pixels; i++)
+			{
+				output[i] = Vec4f(static_cast<float>(d[i].x), static_cast<float>(d[i].y), 0.0f, 1.0f);
+			}
 		}
-	}
-};
+	};
 
-template<typename Type>
-class PixelReader_1cast : public PixelReader
-{
-public:
-	void read(const void *input, Vec4f *output, int num_pixels) override
+	template<typename Type>
+	class PixelReader_1cast : public PixelReader
 	{
-		const Type *d = static_cast<const Type *>(input);
-		for (int i = 0; i < num_pixels; i++)
+	public:
+		void read(const void *input, Vec4f *output, int num_pixels) override
 		{
-			output[i] = Vec4f(static_cast<float>(d[i]), 0.0f, 0.0f, 1.0f);
+			const Type *d = static_cast<const Type *>(input);
+			for (int i = 0; i < num_pixels; i++)
+			{
+				output[i] = Vec4f(static_cast<float>(d[i]), 0.0f, 0.0f, 1.0f);
+			}
 		}
-	}
-};
-
+	};
 }

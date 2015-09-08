@@ -39,78 +39,73 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// JPEGProvider construction:
-
-PixelBuffer JPEGProvider::load(
-	const std::string &filename,
-	const FileSystem &fs,
-	bool srgb)
-{
-	return JPEGLoader::load(fs.open_file(filename), srgb);
-}
-
-PixelBuffer JPEGProvider::load(
-	IODevice &file,
-	bool srgb)
-{
-	return JPEGLoader::load(file, srgb);
-}
-
-PixelBuffer JPEGProvider::load(
-	const std::string &fullname,
-	bool srgb)
-{
-	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
-	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	FileSystem vfs(path);
-	return JPEGProvider::load(filename, vfs, srgb);
-}
-
-void JPEGProvider::save(
-	PixelBuffer buffer,
-	const std::string &fullname,
-	int quality)
-{
-	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
-	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	FileSystem vfs(path);
-	return JPEGProvider::save(buffer, filename, vfs, quality);
-}
-
-void JPEGProvider::save(
-	PixelBuffer buffer,
-	IODevice &file,
-	int quality)
-{
-	if (buffer.get_format() != tf_rgb8)
+	PixelBuffer JPEGProvider::load(
+		const std::string &filename,
+		const FileSystem &fs,
+		bool srgb)
 	{
-		PixelBuffer newbuf(buffer.get_width(), buffer.get_height(), tf_rgb8);
-		newbuf.set_image(buffer);
-		buffer = newbuf;
+		return JPEGLoader::load(fs.open_file(filename), srgb);
 	}
 
-	DataBuffer output(buffer.get_width() * buffer.get_height() * 5);
-	int size = output.get_size();
+	PixelBuffer JPEGProvider::load(
+		IODevice &file,
+		bool srgb)
+	{
+		return JPEGLoader::load(file, srgb);
+	}
 
-	clan_jpge::params desc;
-	desc.m_quality = quality;
-	bool result = clan_jpge::compress_image_to_jpeg_file_in_memory(output.get_data(), size, buffer.get_width(), buffer.get_height(), 3, output.get_data<clan_jpge::uint8>(), desc);
-	if (!result)
-		throw Exception("Unable to compress JPEG image");
+	PixelBuffer JPEGProvider::load(
+		const std::string &fullname,
+		bool srgb)
+	{
+		std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
+		std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
+		FileSystem vfs(path);
+		return JPEGProvider::load(filename, vfs, srgb);
+	}
 
-	file.write(output.get_data(), size);
-}
+	void JPEGProvider::save(
+		PixelBuffer buffer,
+		const std::string &fullname,
+		int quality)
+	{
+		std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
+		std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
+		FileSystem vfs(path);
+		return JPEGProvider::save(buffer, filename, vfs, quality);
+	}
 
-void JPEGProvider::save(
-	PixelBuffer buffer,
-	const std::string &filename,
-	FileSystem &fs,
-	int quality)
-{
-	IODevice iodev = fs.open_file(filename, File::create_always, File::access_read_write);
-	save(buffer, iodev, quality);
-}
+	void JPEGProvider::save(
+		PixelBuffer buffer,
+		IODevice &file,
+		int quality)
+	{
+		if (buffer.get_format() != tf_rgb8)
+		{
+			PixelBuffer newbuf(buffer.get_width(), buffer.get_height(), tf_rgb8);
+			newbuf.set_image(buffer);
+			buffer = newbuf;
+		}
 
+		DataBuffer output(buffer.get_width() * buffer.get_height() * 5);
+		int size = output.get_size();
+
+		clan_jpge::params desc;
+		desc.m_quality = quality;
+		bool result = clan_jpge::compress_image_to_jpeg_file_in_memory(output.get_data(), size, buffer.get_width(), buffer.get_height(), 3, output.get_data<clan_jpge::uint8>(), desc);
+		if (!result)
+			throw Exception("Unable to compress JPEG image");
+
+		file.write(output.get_data(), size);
+	}
+
+	void JPEGProvider::save(
+		PixelBuffer buffer,
+		const std::string &filename,
+		FileSystem &fs,
+		int quality)
+	{
+		IODevice iodev = fs.open_file(filename, File::create_always, File::access_read_write);
+		save(buffer, iodev, quality);
+	}
 }

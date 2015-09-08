@@ -41,80 +41,74 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// PNGProvider construction:
-
-PixelBuffer PNGProvider::load(
-	const std::string &filename,
-	const FileSystem &fs,
-	bool srgb)
-{
-	return PNGLoader::load(fs.open_file(filename), srgb);
-}
-
-PixelBuffer PNGProvider::load(
-	const std::string &fullname,
-	bool srgb)
-{
-	File file(fullname);
-	return PNGLoader::load(file, srgb);
-}
-
-PixelBuffer PNGProvider::load(IODevice &file, bool srgb)
-{
-	return PNGLoader::load(file, srgb);
-}
-
-void PNGProvider::save(
-	PixelBuffer buffer,
-	const std::string &filename,
-	FileSystem &fs)
-{
-	IODevice file = fs.open_file(filename, File::create_always, File::access_read_write);
-	save(buffer, file);
-}
-
-void PNGProvider::save(
-	PixelBuffer buffer,
-	const std::string &fullname)
-{
-	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
-	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	FileSystem vfs(path);
-	PNGProvider::save(buffer, filename, vfs);
-
-}
-
-void PNGProvider::save(PixelBuffer buffer, IODevice &iodev)
-{
-	PNGWriter::save(iodev, buffer);
-	/*
-	if (buffer.get_format() != tf_rgba8)
+	PixelBuffer PNGProvider::load(
+		const std::string &filename,
+		const FileSystem &fs,
+		bool srgb)
 	{
-		PixelBuffer newbuf(
+		return PNGLoader::load(fs.open_file(filename), srgb);
+	}
+
+	PixelBuffer PNGProvider::load(
+		const std::string &fullname,
+		bool srgb)
+	{
+		File file(fullname);
+		return PNGLoader::load(file, srgb);
+	}
+
+	PixelBuffer PNGProvider::load(IODevice &file, bool srgb)
+	{
+		return PNGLoader::load(file, srgb);
+	}
+
+	void PNGProvider::save(
+		PixelBuffer buffer,
+		const std::string &filename,
+		FileSystem &fs)
+	{
+		IODevice file = fs.open_file(filename, File::create_always, File::access_read_write);
+		save(buffer, file);
+	}
+
+	void PNGProvider::save(
+		PixelBuffer buffer,
+		const std::string &fullname)
+	{
+		std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
+		std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
+		FileSystem vfs(path);
+		PNGProvider::save(buffer, filename, vfs);
+	}
+
+	void PNGProvider::save(PixelBuffer buffer, IODevice &iodev)
+	{
+		PNGWriter::save(iodev, buffer);
+		/*
+		if (buffer.get_format() != tf_rgba8)
+		{
+			PixelBuffer newbuf(
 			buffer.get_width(),
-			buffer.get_height(), 
+			buffer.get_height(),
 			tf_rgba8);
-		newbuf.set_image(buffer);
-		buffer = newbuf;
-	}
+			newbuf.set_image(buffer);
+			buffer = newbuf;
+		}
 
-	size_t size = 0;
-	void *data = tdefl_write_image_to_png_file_in_memory(buffer.get_data(), buffer.get_width(), buffer.get_height(), 4, &size);
-	try
-	{
-		iodev.write(data, size);
-		if (data)
+		size_t size = 0;
+		void *data = tdefl_write_image_to_png_file_in_memory(buffer.get_data(), buffer.get_width(), buffer.get_height(), 4, &size);
+		try
+		{
+			iodev.write(data, size);
+			if (data)
 			free(data);
-	}
-	catch (...)
-	{
-		if (data)
+		}
+		catch (...)
+		{
+			if (data)
 			free(data);
-		throw;
+			throw;
+		}
+		*/
 	}
-	*/
-}
-
 }

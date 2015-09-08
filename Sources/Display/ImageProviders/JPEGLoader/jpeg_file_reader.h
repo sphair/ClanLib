@@ -35,33 +35,31 @@
 
 namespace clan
 {
+	class JPEGStartOfFrame;
+	class JPEGStartOfScan;
 
-class JPEGStartOfFrame;
-class JPEGStartOfScan;
+	typedef uint16_t JPEGDefineRestartInterval;
+	typedef uint16_t JPEGDefineNumberOfLines;
 
-typedef uint16_t JPEGDefineRestartInterval;
-typedef uint16_t JPEGDefineNumberOfLines;
+	class JPEGFileReader
+	{
+	public:
+		JPEGFileReader(IODevice iodevice);
 
-class JPEGFileReader
-{
-public:
-	JPEGFileReader(IODevice iodevice);
+		JPEGMarker read_marker();
+		void skip_unknown();
+		bool try_read_app0_jfif();
+		bool try_read_app14_adobe(int &out_transform);
+		JPEGStartOfFrame read_sof();
+		JPEGDefineQuantizationTable read_dqt();
+		JPEGDefineHuffmanTable read_dht();
+		JPEGDefineRestartInterval read_dri();
+		JPEGStartOfScan read_sos();
+		JPEGDefineNumberOfLines read_dnl();
+		std::string read_comment();
+		int read_entropy_data(void *d, int size);
 
-	JPEGMarker read_marker();
-	void skip_unknown();
-	bool try_read_app0_jfif();
-	bool try_read_app14_adobe(int &out_transform);
-	JPEGStartOfFrame read_sof();
-	JPEGDefineQuantizationTable read_dqt();
-	JPEGDefineHuffmanTable read_dht();
-	JPEGDefineRestartInterval read_dri();
-	JPEGStartOfScan read_sos();
-	JPEGDefineNumberOfLines read_dnl();
-	std::string read_comment();
-	int read_entropy_data(void *d, int size);
-
-private:
-	IODevice iodevice;
-};
-
+	private:
+		IODevice iodevice;
+	};
 }

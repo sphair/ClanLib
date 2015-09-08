@@ -30,27 +30,25 @@
 
 namespace clan
 {
+	class JPEGComponentDCTs
+	{
+	public:
+		void resize(size_t size);
+		short *get(size_t index);
 
-class JPEGComponentDCTs
-{
-public:
-	void resize(size_t size);
-	short *get(size_t index);
+	private:
+		std::vector<short> dcts;
+	};
 
-private:
-	std::vector<short> dcts;
-};
+	inline void JPEGComponentDCTs::resize(size_t size)
+	{
+		dcts.resize(size * 64, 0);
+	}
 
-inline void JPEGComponentDCTs::resize(size_t size)
-{
-	dcts.resize(size * 64, 0);
-}
-
-inline short *JPEGComponentDCTs::get(size_t index)
-{
-	if (dcts.size() < (index+1) * 64)
-		dcts.resize((index+1) * 64, 0);
-	return &dcts[index * 64];
-}
-
+	inline short *JPEGComponentDCTs::get(size_t index)
+	{
+		if (dcts.size() < (index + 1) * 64)
+			dcts.resize((index + 1) * 64, 0);
+		return &dcts[index * 64];
+	}
 }

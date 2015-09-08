@@ -34,81 +34,65 @@
 
 namespace clan
 {
+	class OcclusionQuery_Impl
+	{
+	public:
+		OcclusionQuery_Impl() : provider(nullptr)
+		{
+		}
 
-/////////////////////////////////////////////////////////////////////////////
-// OcclusionQuery_Impl Class:
+		~OcclusionQuery_Impl()
+		{
+			if (provider)
+				delete provider;
+		}
 
-class OcclusionQuery_Impl
-{
-public:
-	OcclusionQuery_Impl() : provider(nullptr)
+		OcclusionQueryProvider *provider;
+	};
+
+	OcclusionQuery::OcclusionQuery(GraphicContext &context)
+		: impl(std::make_shared<OcclusionQuery_Impl>())
+	{
+		GraphicContextProvider *gc_provider = context.get_provider();
+		impl->provider = gc_provider->alloc_occlusion_query();
+	}
+
+	OcclusionQuery::~OcclusionQuery()
 	{
 	}
 
-	~OcclusionQuery_Impl()
+	OcclusionQuery::OcclusionQuery()
 	{
-		if( provider )
-			delete provider;
 	}
 
-	OcclusionQueryProvider *provider;
-};
-/////////////////////////////////////////////////////////////////////////////
-// OcclusionQuery Construction:
+	void OcclusionQuery::throw_if_null() const
+	{
+		if (!impl)
+			throw Exception("OcclusionQuery is null");
+	}
 
-OcclusionQuery::OcclusionQuery(GraphicContext &context)
-: impl(std::make_shared<OcclusionQuery_Impl>())
-{
-	GraphicContextProvider *gc_provider = context.get_provider();
-	impl->provider = gc_provider->alloc_occlusion_query();
-}
+	int OcclusionQuery::get_result()
+	{
+		return impl->provider->get_result();
+	}
 
-OcclusionQuery::~OcclusionQuery()
-{
-}
+	bool OcclusionQuery::is_result_ready()
+	{
+		return impl->provider->is_result_ready();
+	}
 
-OcclusionQuery::OcclusionQuery()
-{
-}
+	OcclusionQueryProvider *OcclusionQuery::get_provider() const
+	{
+		return impl->provider;
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// OcclusionQuery Attributes:
+	void OcclusionQuery::begin()
+	{
+		impl->provider->begin();
+	}
 
-void OcclusionQuery::throw_if_null() const
-{
-	if (!impl)
-		throw Exception("OcclusionQuery is null");
-}
-
-int OcclusionQuery::get_result()
-{
-	return impl->provider->get_result();
-}
-
-bool OcclusionQuery::is_result_ready()
-{
-	return impl->provider->is_result_ready();
-}
-
-OcclusionQueryProvider *OcclusionQuery::get_provider() const
-{
-	return impl->provider;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// OcclusionQuery Operations:
-
-void OcclusionQuery::begin()
-{
-	impl->provider->begin();
-}
-
-void OcclusionQuery::end()
-{
-	impl->provider->end();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// OcclusionQuery Implementation:
-
+	void OcclusionQuery::end()
+	{
+		impl->provider->end();
+	}
 }

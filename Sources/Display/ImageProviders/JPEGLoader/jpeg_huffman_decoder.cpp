@@ -33,31 +33,29 @@
 
 namespace clan
 {
-
-unsigned int JPEGHuffmanDecoder::decode(JPEGBitReader &reader, const JPEGHuffmanTable &table)
-{
-	int node = 0;
-	while (true)
+	unsigned int JPEGHuffmanDecoder::decode(JPEGBitReader &reader, const JPEGHuffmanTable &table)
 	{
-		unsigned int bit = reader.get_bit();
-		node = table.tree[node].children[bit];
-		if (node == 0 || node == table.tree.size())
-			break;
-		else if (table.tree[node].leaf)
-			return table.tree[node].value;
+		int node = 0;
+		while (true)
+		{
+			unsigned int bit = reader.get_bit();
+			node = table.tree[node].children[bit];
+			if (node == 0 || node == table.tree.size())
+				break;
+			else if (table.tree[node].leaf)
+				return table.tree[node].value;
+		}
+		throw Exception("Invalid JPEG Huffman encoding");
 	}
-	throw Exception("Invalid JPEG Huffman encoding");
-}
 
-short JPEGHuffmanDecoder::decode_number(JPEGBitReader &reader, int length)
-{
-	if (length == 0)
-		return 0;
-	int v = reader.get_bits(length);
-	if ((v) < (1 << ((length) - 1)))
-		return (v) + (((-1) << (length)) + 1);
-	else
-		return v;
-}
-
+	short JPEGHuffmanDecoder::decode_number(JPEGBitReader &reader, int length)
+	{
+		if (length == 0)
+			return 0;
+		int v = reader.get_bits(length);
+		if ((v) < (1 << ((length)-1)))
+			return (v)+(((-1) << (length)) + 1);
+		else
+			return v;
+	}
 }

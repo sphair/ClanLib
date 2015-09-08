@@ -34,71 +34,69 @@
 
 namespace clan
 {
-
-class PixelReader_norm : public PixelReader
-{
-public:
-	inline static float normalize(unsigned char v)  { return v * (1.0f / 0xff); }
-	inline static float normalize(unsigned short v) { return v * (1.0f / 0xffff); }
-
-	inline static float normalize(char v)  { return min(v * (1.0f / 0x7f), 1.0f); }
-	inline static float normalize(short v) { return min(v * (1.0f / 0x7fff), 1.0f); }
-};
-
-template<typename Type>
-class PixelReader_4norm : public PixelReader_norm
-{
-public:
-	void read(const void *input, Vec4f *output, int num_pixels) override
+	class PixelReader_norm : public PixelReader
 	{
-		const Vec4<Type> *d = static_cast<const Vec4<Type> *>(input);
-		for (int i = 0; i < num_pixels; i++)
-		{
-			output[i] = Vec4f(normalize(d[i].x), normalize(d[i].y), normalize(d[i].z), normalize(d[i].w));
-		}
-	}
-};
+	public:
+		inline static float normalize(unsigned char v)  { return v * (1.0f / 0xff); }
+		inline static float normalize(unsigned short v) { return v * (1.0f / 0xffff); }
 
-template<typename Type>
-class PixelReader_3norm : public PixelReader_norm
-{
-public:
-	void read(const void *input, Vec4f *output, int num_pixels) override
+		inline static float normalize(char v)  { return min(v * (1.0f / 0x7f), 1.0f); }
+		inline static float normalize(short v) { return min(v * (1.0f / 0x7fff), 1.0f); }
+	};
+
+	template<typename Type>
+	class PixelReader_4norm : public PixelReader_norm
 	{
-		const Vec3<Type> *d = static_cast<const Vec3<Type> *>(input);
-		for (int i = 0; i < num_pixels; i++)
+	public:
+		void read(const void *input, Vec4f *output, int num_pixels) override
 		{
-			output[i] = Vec4f(normalize(d[i].x), normalize(d[i].y), normalize(d[i].z), 1.0f);
+			const Vec4<Type> *d = static_cast<const Vec4<Type> *>(input);
+			for (int i = 0; i < num_pixels; i++)
+			{
+				output[i] = Vec4f(normalize(d[i].x), normalize(d[i].y), normalize(d[i].z), normalize(d[i].w));
+			}
 		}
-	}
-};
+	};
 
-template<typename Type>
-class PixelReader_2norm : public PixelReader_norm
-{
-public:
-	void read(const void *input, Vec4f *output, int num_pixels) override
+	template<typename Type>
+	class PixelReader_3norm : public PixelReader_norm
 	{
-		const Vec2<Type> *d = static_cast<const Vec2<Type> *>(input);
-		for (int i = 0; i < num_pixels; i++)
+	public:
+		void read(const void *input, Vec4f *output, int num_pixels) override
 		{
-			output[i] = Vec4f(normalize(d[i].x), normalize(d[i].y), 0.0f, 1.0f);
+			const Vec3<Type> *d = static_cast<const Vec3<Type> *>(input);
+			for (int i = 0; i < num_pixels; i++)
+			{
+				output[i] = Vec4f(normalize(d[i].x), normalize(d[i].y), normalize(d[i].z), 1.0f);
+			}
 		}
-	}
-};
+	};
 
-template<typename Type>
-class PixelReader_1norm : public PixelReader_norm
-{
-public:
-	void read(const void *input, Vec4f *output, int num_pixels) override
+	template<typename Type>
+	class PixelReader_2norm : public PixelReader_norm
 	{
-		const Type *d = static_cast<const Type *>(input);
-		for (int i = 0; i < num_pixels; i++)
+	public:
+		void read(const void *input, Vec4f *output, int num_pixels) override
 		{
-			output[i] = Vec4f(normalize(d[i]), 0.0f, 0.0f, 1.0f);
+			const Vec2<Type> *d = static_cast<const Vec2<Type> *>(input);
+			for (int i = 0; i < num_pixels; i++)
+			{
+				output[i] = Vec4f(normalize(d[i].x), normalize(d[i].y), 0.0f, 1.0f);
+			}
 		}
-	}
-};
+	};
 
+	template<typename Type>
+	class PixelReader_1norm : public PixelReader_norm
+	{
+	public:
+		void read(const void *input, Vec4f *output, int num_pixels) override
+		{
+			const Type *d = static_cast<const Type *>(input);
+			for (int i = 0; i < num_pixels; i++)
+			{
+				output[i] = Vec4f(normalize(d[i]), 0.0f, 0.0f, 1.0f);
+			}
+		}
+	};
 }

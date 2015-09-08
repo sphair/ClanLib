@@ -35,93 +35,68 @@
 
 namespace clan
 {
+	class DataBuffer;
 
-class DataBuffer;
-
-class InputDeviceProvider_Win32Hid : public InputDeviceProvider
-{
-/// \name Construction
-/// \{
-public:
-	InputDeviceProvider_Win32Hid(HANDLE rawinput_device);
-	~InputDeviceProvider_Win32Hid();
-/// \}
-
-/// \name Attributes
-/// \{
-public:
-	std::string get_name() const override;
-
-	std::string get_device_name() const override;
-
-	InputDevice::Type get_type() const override;
-
-	std::string get_key_name(int id) const override;
-
-	bool get_keycode(int keycode) const override;
-
-	float get_axis(int index) const override;
-
-	std::vector<int> get_axis_ids() const override;
-
-	int get_hat(int index) const override;
-
-	int get_button_count() const override;
-/// \}
-
-/// \name Operations
-/// \{
-public:
-	void init(Signal<void(const InputEvent &)> *new_sig_provider_event)
+	class InputDeviceProvider_Win32Hid : public InputDeviceProvider
 	{
-		sig_provider_event = new_sig_provider_event;
-	}
+	public:
+		InputDeviceProvider_Win32Hid(HANDLE rawinput_device);
+		~InputDeviceProvider_Win32Hid();
 
-	void update(RAWINPUT *raw_input);
+		std::string get_name() const override;
+		std::string get_device_name() const override;
+		InputDevice::Type get_type() const override;
+		std::string get_key_name(int id) const override;
+		bool get_keycode(int keycode) const override;
+		float get_axis(int index) const override;
+		std::vector<int> get_axis_ids() const override;
+		int get_hat(int index) const override;
+		int get_button_count() const override;
 
-/// \}
+		void init(Signal<void(const InputEvent &)> *new_sig_provider_event)
+		{
+			sig_provider_event = new_sig_provider_event;
+		}
 
-/// \name Implementation
-/// \{
-private:
-	void on_dispose();
+		void update(RAWINPUT *raw_input);
 
-	HANDLE open_device();
-	DataBuffer get_preparse_data();
+	private:
+		void on_dispose();
 
-	void find_names(HANDLE device);
-	void find_button_names(HANDLE device, void *preparse_data);
-	void find_value_names(HANDLE device, void *preparse_data);
+		HANDLE open_device();
+		DataBuffer get_preparse_data();
 
-	void update(void *preparse_data, void *report, int report_size);
-	void update_buttons(void *preparse_data, void *report, int report_size);
-	void update_values(void *preparse_data, void *report, int report_size);
+		void find_names(HANDLE device);
+		void find_button_names(HANDLE device, void *preparse_data);
+		void find_value_names(HANDLE device, void *preparse_data);
 
-	Hid hid;
-	HANDLE rawinput_device;
+		void update(void *preparse_data, void *report, int report_size);
+		void update_buttons(void *preparse_data, void *report, int report_size);
+		void update_values(void *preparse_data, void *report, int report_size);
 
-	Signal<void(const InputEvent &)> *sig_provider_event;
+		Hid hid;
+		HANDLE rawinput_device;
 
-	std::string product_name;
-	std::string manufacturer_name;
-	std::string serial_number;
+		Signal<void(const InputEvent &)> *sig_provider_event;
 
-	std::vector<bool> buttons;
-	std::vector<float> axis_values;
-	std::vector<int> hat_values;
+		std::string product_name;
+		std::string manufacturer_name;
+		std::string serial_number;
 
-	std::vector<int> axis_ids;
+		std::vector<bool> buttons;
+		std::vector<float> axis_values;
+		std::vector<int> hat_values;
 
-	std::vector<std::string> button_names;
-	std::vector<std::string> axis_names;
-	std::vector<std::string> hat_names;
+		std::vector<int> axis_ids;
 
-	std::map<Hid::USAGE, int> usage_to_button_index;
-	std::map<Hid::USAGE, int> usage_to_axis_index;
-	std::map<Hid::USAGE, int> usage_to_hat_index;
+		std::vector<std::string> button_names;
+		std::vector<std::string> axis_names;
+		std::vector<std::string> hat_names;
 
-	friend class Win32Window;
-/// \}
-};
+		std::map<Hid::USAGE, int> usage_to_button_index;
+		std::map<Hid::USAGE, int> usage_to_axis_index;
+		std::map<Hid::USAGE, int> usage_to_hat_index;
 
+		friend class Win32Window;
+	};
 }

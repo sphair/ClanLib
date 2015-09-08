@@ -39,40 +39,37 @@
 
 namespace clan
 {
+	class GraphicContext_State
+	{
+	public:
+		GraphicContext_State();
+		void copy_state(const GraphicContext_State *other);
 
-class GraphicContext_State
-{
-public:
-	GraphicContext_State();
-	void copy_state(const GraphicContext_State *other);
+		FrameBuffer read_frame_buffer;
+		FrameBuffer write_frame_buffer;
 
-	FrameBuffer read_frame_buffer;
-	FrameBuffer write_frame_buffer;
+		std::vector<Texture> textures;
+		std::vector<Texture> image_textures;
+		std::vector<UniformBuffer> uniform_buffers;
+		std::vector<StorageBuffer> storage_buffers;
 
-	std::vector<Texture> textures;
-	std::vector<Texture> image_textures;
-	std::vector<UniformBuffer> uniform_buffers;
-	std::vector<StorageBuffer> storage_buffers;
+		Rect scissor;
+		bool scissor_set;
 
-	Rect scissor;
-	bool scissor_set;
+		std::vector<Rectf> viewport;
+		std::vector<Sizef> depth_range;
 
-	std::vector<Rectf> viewport;
-	std::vector<Sizef> depth_range;
+		StandardProgram program_standard;
+		bool program_standard_set;
+		ProgramObject program;	//<-- Note this is valid when program_standard_set is true
 
-	StandardProgram program_standard;
-	bool program_standard_set;
-	ProgramObject program;	//<-- Note this is valid when program_standard_set is true
+		RasterizerState rasterizer_state;
+		BlendState blend_state;
+		Colorf blend_color;
+		unsigned int sample_mask;
+		DepthStencilState depth_stencil_state;
+		int stencil_ref;
 
-	RasterizerState rasterizer_state;
-	BlendState blend_state;
-	Colorf blend_color;
-	unsigned int sample_mask;
-	DepthStencilState depth_stencil_state;
-	int stencil_ref;
-
-	DrawBuffer draw_buffer;
-
-};
-
+		DrawBuffer draw_buffer;
+	};
 }

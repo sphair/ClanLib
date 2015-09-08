@@ -35,62 +35,60 @@
 
 namespace clan
 {
+	class GraphicContext_Impl : GraphicContext_State
+	{
+	public:
+		GraphicContext_Impl(GraphicContextProvider *provider);
+		GraphicContext_Impl(const GraphicContext_Impl *from_gc, bool clone);
+		~GraphicContext_Impl();
 
-class GraphicContext_Impl : GraphicContext_State
-{
-public:
-	GraphicContext_Impl(GraphicContextProvider *provider);
-	GraphicContext_Impl(const GraphicContext_Impl *from_gc, bool clone);
-	~GraphicContext_Impl();
+		void set_active();
 
-	void set_active();
+		void set_scissor(const Rect &rect);
+		void reset_scissor();
 
-	void set_scissor(const Rect &rect);
-	void reset_scissor();
+		Size get_size();
 
-	Size get_size();
+		void set_frame_buffer(const FrameBuffer &write_buffer, const FrameBuffer &read_buffer);
+		void set_viewport(int index, const Rectf &viewport);
+		void set_depth_range(int viewport, float n, float f);
 
-	void set_frame_buffer(const FrameBuffer &write_buffer, const FrameBuffer &read_buffer);
-	void set_viewport(int index, const Rectf &viewport);
-	void set_depth_range(int viewport, float n, float f);
+		void set_texture(int unit_index, const Texture &texture);
+		void set_textures(std::vector<Texture> &textures);
 
-	void set_texture(int unit_index, const Texture &texture);
-	void set_textures(std::vector<Texture> &textures);
+		void set_image_texture(int unit_index, const Texture &texture);
+		void set_image_textures(std::vector<Texture> &textures);
 
-	void set_image_texture(int unit_index, const Texture &texture);
-	void set_image_textures(std::vector<Texture> &textures);
+		void set_uniform_buffer(int index, const UniformBuffer &buffer);
+		void set_storage_buffer(int index, const StorageBuffer &buffer);
 
-	void set_uniform_buffer(int index, const UniformBuffer &buffer);
-	void set_storage_buffer(int index, const StorageBuffer &buffer);
+		void set_program_object(StandardProgram standard_program);
+		void set_program_object(const ProgramObject &program);
+		void reset_program_object();
 
-	void set_program_object(StandardProgram standard_program);
-	void set_program_object(const ProgramObject &program);
-	void reset_program_object();
+		ProgramObject get_program_object() const;
 
-	ProgramObject get_program_object() const;
+		void set_rasterizer_state(const RasterizerState &state);
+		void set_blend_state(const BlendState &state, const Colorf &blend_color, unsigned int sample_mask);
+		void set_depth_stencil_state(const DepthStencilState &state, int stencil_ref);
 
-	void set_rasterizer_state(const RasterizerState &state);
-	void set_blend_state(const BlendState &state, const Colorf &blend_color, unsigned int sample_mask);
-	void set_depth_stencil_state(const DepthStencilState &state, int stencil_ref);
+		void set_draw_buffer(DrawBuffer buffer);
 
-	void set_draw_buffer(DrawBuffer buffer);
-	
-	void flush();
+		void flush();
 
-private:
-	void on_window_resized(const Size &size);
+	private:
+		void on_window_resized(const Size &size);
 
-	std::shared_ptr<GraphicScreen> graphic_screen;
+		std::shared_ptr<GraphicScreen> graphic_screen;
 
-	Size display_window_size;
-    Slot resize_slot;
+		Size display_window_size;
+		Slot resize_slot;
 
-	RasterizerState default_rasterizer_state;
-	BlendState default_blend_state;
-	DepthStencilState default_depth_stencil_state;
+		RasterizerState default_rasterizer_state;
+		BlendState default_blend_state;
+		DepthStencilState default_depth_stencil_state;
 
-	friend class GraphicScreen;
-	friend class GraphicContext;
-};
-
+		friend class GraphicScreen;
+		friend class GraphicContext;
+	};
 }

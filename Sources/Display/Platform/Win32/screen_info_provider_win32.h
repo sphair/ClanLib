@@ -32,13 +32,11 @@
 
 namespace clan
 {
+	class ScreenInfoProvider_Win32 : public ScreenInfoProvider
+	{
+	public:
+		ScreenInfoProvider_Win32();
 
-class ScreenInfoProvider_Win32 : public ScreenInfoProvider 
-{
-public:
-	ScreenInfoProvider_Win32();
-
-	virtual std::vector<Rectf> get_screen_geometries(int &primary_screen_index) const;
-};
-
+		virtual std::vector<Rectf> get_screen_geometries(int &primary_screen_index) const;
+	};
 }

@@ -37,71 +37,56 @@
 
 namespace clan
 {
+	InputDeviceProvider_Win32Keyboard::InputDeviceProvider_Win32Keyboard(Win32Window *window)
+		: sig_provider_event(0), window(window)
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// InputDeviceProvider_Win32Keyboard construction:
+	InputDeviceProvider_Win32Keyboard::~InputDeviceProvider_Win32Keyboard()
+	{
+		dispose();
+	}
 
-InputDeviceProvider_Win32Keyboard::InputDeviceProvider_Win32Keyboard(Win32Window *window)
-: sig_provider_event(0), window(window)
-{
-}
+	bool InputDeviceProvider_Win32Keyboard::get_keycode(int keycode) const
+	{
+		throw_if_disposed();
 
-InputDeviceProvider_Win32Keyboard::~InputDeviceProvider_Win32Keyboard()
-{
-	dispose();
-}
+		// Ignore all key events when we don't have focus
+		if (!window->has_focus())
+			return false;
 
-/////////////////////////////////////////////////////////////////////////////
-// InputDeviceProvider_Win32Keyboard attributes:
+		return (GetKeyState(keycode) & 0xfe) != 0;
+	}
 
-bool InputDeviceProvider_Win32Keyboard::get_keycode(int keycode) const
-{
-	throw_if_disposed();
+	std::string InputDeviceProvider_Win32Keyboard::get_key_name(int virtual_key) const
+	{
+		throw_if_disposed();
 
-	// Ignore all key events when we don't have focus
-	if (!window->has_focus())
-		return false;
+		WCHAR name[1024];
+		UINT scancode = MapVirtualKey(virtual_key, 0);
+		int length = GetKeyNameText(scancode << 16, name, 1024);
+		return std::string(StringHelp::ucs2_to_utf8(name), length);
+	}
 
-	return (GetKeyState(keycode) & 0xfe) != 0;
-}
+	std::string InputDeviceProvider_Win32Keyboard::get_name() const
+	{
+		throw_if_disposed();
+		return "System Keyboard";
+	}
 
-std::string InputDeviceProvider_Win32Keyboard::get_key_name(int virtual_key) const
-{
-	throw_if_disposed();
+	std::string InputDeviceProvider_Win32Keyboard::get_device_name() const
+	{
+		throw_if_disposed();
+		return "System Keyboard";
+	}
 
-	WCHAR name[1024];
-	UINT scancode = MapVirtualKey(virtual_key, 0);
-	int length = GetKeyNameText(scancode << 16, name, 1024);
-	return std::string(StringHelp::ucs2_to_utf8(name), length);
-}
+	int InputDeviceProvider_Win32Keyboard::get_button_count() const
+	{
+		throw_if_disposed();
+		return -1;
+	}
 
-std::string InputDeviceProvider_Win32Keyboard::get_name() const
-{
-	throw_if_disposed();
-	return "System Keyboard";
-}
-
-std::string InputDeviceProvider_Win32Keyboard::get_device_name() const
-{
-	throw_if_disposed();
-	return "System Keyboard";
-}
-
-int InputDeviceProvider_Win32Keyboard::get_button_count() const
-{
-	throw_if_disposed();
-	return -1;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// InputDeviceProvider_Win32Keyboard operations:
-
-/////////////////////////////////////////////////////////////////////////////
-// InputDeviceProvider_Win32Keyboard implementation:
-
-
-void InputDeviceProvider_Win32Keyboard::on_dispose()
-{
-}
-
+	void InputDeviceProvider_Win32Keyboard::on_dispose()
+	{
+	}
 }

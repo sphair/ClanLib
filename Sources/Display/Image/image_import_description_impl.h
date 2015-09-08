@@ -32,31 +32,14 @@
 
 namespace clan
 {
-
-class ImageImportDescription_Impl
-{
-/// \name Construction
-/// \{
-public:
-	ImageImportDescription_Impl()
-		: premultiply_alpha(false), flip_vertical(false), srgb(false)
+	class ImageImportDescription_Impl
 	{
-	}
+	public:
+		bool premultiply_alpha = false;
+		bool flip_vertical = false;
+		bool srgb = false;
+		bool cached = false;
 
-	~ImageImportDescription_Impl() {}
-
-/// \}
-/// \name Attributes
-/// \{
-public:
-	bool premultiply_alpha;
-	bool flip_vertical;
-	bool srgb;
-	bool cached;
-
-	std::function<PixelBuffer(PixelBuffer &)> func_process;
-
-/// \}
-};
-
+		std::function<PixelBuffer(PixelBuffer &)> func_process;
+	};
 }

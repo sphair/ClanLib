@@ -35,78 +35,76 @@
 
 namespace clan
 {
-
-TextureCube::TextureCube()
-{
-}
-
-TextureCube::TextureCube(GraphicContext &context, int width, int height, TextureFormat texture_format, int levels)
-: Texture(std::shared_ptr<Texture_Impl>(new Texture_Impl))
-{
-	if ( (width<=0) || (height<=0) )
+	TextureCube::TextureCube()
 	{
-		throw Exception("An attempt was made to create a Texture with an invalid size");
 	}
 
-	GraphicContextProvider *gc_provider = context.get_provider();
-
-	impl->provider = gc_provider->alloc_texture(texture_cube);
-	impl->provider->create(width, height, 1, 1, texture_format, levels);
-	impl->width = width;
-	impl->height = height;
-
-	impl->provider->set_wrap_mode(impl->wrap_mode_s, impl->wrap_mode_t);
-}
-
-TextureCube::TextureCube(GraphicContext &context, const Size &size, TextureFormat texture_format, int levels)
-: Texture(std::shared_ptr<Texture_Impl>(new Texture_Impl))
-{
-	if ( (size.width<=0) || (size.height<=0) )
+	TextureCube::TextureCube(GraphicContext &context, int width, int height, TextureFormat texture_format, int levels)
+		: Texture(std::shared_ptr<Texture_Impl>(new Texture_Impl))
 	{
-		throw Exception("An attempt was made to create a Texture with an invalid size");
+		if ((width <= 0) || (height <= 0))
+		{
+			throw Exception("An attempt was made to create a Texture with an invalid size");
+		}
+
+		GraphicContextProvider *gc_provider = context.get_provider();
+
+		impl->provider = gc_provider->alloc_texture(texture_cube);
+		impl->provider->create(width, height, 1, 1, texture_format, levels);
+		impl->width = width;
+		impl->height = height;
+
+		impl->provider->set_wrap_mode(impl->wrap_mode_s, impl->wrap_mode_t);
 	}
 
-	GraphicContextProvider *gc_provider = context.get_provider();
+	TextureCube::TextureCube(GraphicContext &context, const Size &size, TextureFormat texture_format, int levels)
+		: Texture(std::shared_ptr<Texture_Impl>(new Texture_Impl))
+	{
+		if ((size.width <= 0) || (size.height <= 0))
+		{
+			throw Exception("An attempt was made to create a Texture with an invalid size");
+		}
 
-	impl->provider = gc_provider->alloc_texture(texture_cube);
-	impl->provider->create(size.width, size.height, 1, 1, texture_format, levels);
-	impl->width = size.width;
-	impl->height = size.height;
+		GraphicContextProvider *gc_provider = context.get_provider();
 
-	impl->provider->set_wrap_mode(impl->wrap_mode_s, impl->wrap_mode_t);
-}
+		impl->provider = gc_provider->alloc_texture(texture_cube);
+		impl->provider->create(size.width, size.height, 1, 1, texture_format, levels);
+		impl->width = size.width;
+		impl->height = size.height;
 
-int TextureCube::get_width() const
-{
-	return impl->width;
-}
+		impl->provider->set_wrap_mode(impl->wrap_mode_s, impl->wrap_mode_t);
+	}
 
-int TextureCube::get_height() const
-{
-	return impl->height;
-}
+	int TextureCube::get_width() const
+	{
+		return impl->width;
+	}
 
-Size TextureCube::get_size() const
-{
-	return Size(impl->width, impl->height);
-}
+	int TextureCube::get_height() const
+	{
+		return impl->height;
+	}
 
-void TextureCube::set_image(GraphicContext &context, TextureCubeDirection cube_direction, PixelBuffer &image, int level)
-{
-	int array_index = static_cast<int>(cube_direction);
-	impl->provider->copy_from(context, 0, 0, array_index, level, image, image.get_size());
-}
+	Size TextureCube::get_size() const
+	{
+		return Size(impl->width, impl->height);
+	}
 
-void TextureCube::set_subimage(GraphicContext &context, TextureCubeDirection cube_direction, int x, int y, const PixelBuffer &image, const Rect &src_rect, int level)
-{
-	int array_index = static_cast<int>(cube_direction);
-	impl->provider->copy_from(context, x, y, array_index, level, image, src_rect);
-}
+	void TextureCube::set_image(GraphicContext &context, TextureCubeDirection cube_direction, PixelBuffer &image, int level)
+	{
+		int array_index = static_cast<int>(cube_direction);
+		impl->provider->copy_from(context, 0, 0, array_index, level, image, image.get_size());
+	}
 
-void TextureCube::set_subimage(GraphicContext &context, TextureCubeDirection cube_direction, const Point &point, const PixelBuffer &image, const Rect &src_rect, int level)
-{
-	int array_index = static_cast<int>(cube_direction);
-	impl->provider->copy_from(context, point.x, point.y, array_index, level, image, src_rect);
-}
+	void TextureCube::set_subimage(GraphicContext &context, TextureCubeDirection cube_direction, int x, int y, const PixelBuffer &image, const Rect &src_rect, int level)
+	{
+		int array_index = static_cast<int>(cube_direction);
+		impl->provider->copy_from(context, x, y, array_index, level, image, src_rect);
+	}
 
+	void TextureCube::set_subimage(GraphicContext &context, TextureCubeDirection cube_direction, const Point &point, const PixelBuffer &image, const Rect &src_rect, int level)
+	{
+		int array_index = static_cast<int>(cube_direction);
+		impl->provider->copy_from(context, point.x, point.y, array_index, level, image, src_rect);
+	}
 }

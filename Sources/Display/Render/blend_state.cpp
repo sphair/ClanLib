@@ -33,19 +33,17 @@
 
 namespace clan
 {
+	BlendState::BlendState()
+	{
+	}
 
-BlendState::BlendState()
-{
-}
+	BlendState::BlendState(GraphicContext &context, const BlendStateDescription &desc)
+		: provider(context.get_provider()->create_blend_state(desc))
+	{
+	}
 
-BlendState::BlendState(GraphicContext &context, const BlendStateDescription &desc)
-: provider(context.get_provider()->create_blend_state(desc))
-{
-}
-
-BlendStateProvider *BlendState::get_provider() const
-{
-	return provider.get();
-}
-
+	BlendStateProvider *BlendState::get_provider() const
+	{
+		return provider.get();
+	}
 }

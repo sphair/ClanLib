@@ -30,19 +30,17 @@
 
 namespace clan
 {
+	class JPEGQuantizationTable
+	{
+	public:
+		JPEGQuantizationTable() : table_index(0) { for (auto & elem : values) elem = 0; }
 
-class JPEGQuantizationTable
-{
-public:
-	JPEGQuantizationTable() : table_index(0) { for (auto & elem : values) elem = 0; }
+		// Specifies one of four possible destinations at the decoder into which the quantization table shall be installed.
+		uint8_t table_index;
 
-	// Specifies one of four possible destinations at the decoder into which the quantization table shall be installed.
-	uint8_t table_index;
+		// Quantization element values in zig-zag scan order.
+		uint16_t values[64];
+	};
 
-	// Quantization element values in zig-zag scan order.
-	uint16_t values[64];
-};
-
-typedef std::vector<JPEGQuantizationTable> JPEGDefineQuantizationTable;
-
+	typedef std::vector<JPEGQuantizationTable> JPEGDefineQuantizationTable;
 }

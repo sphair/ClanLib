@@ -36,80 +36,63 @@
 
 namespace clan
 {
+	class StorageBuffer_Impl
+	{
+	public:
+		StorageBuffer_Impl() : provider(nullptr) { }
+		~StorageBuffer_Impl() { if (provider) delete provider; }
 
-/////////////////////////////////////////////////////////////////////////////
-// StorageBuffer_Impl class:
+		StorageBufferProvider *provider;
+	};
 
-class StorageBuffer_Impl
-{
-public:
-	StorageBuffer_Impl() : provider(nullptr) { }
-	~StorageBuffer_Impl() { if (provider) delete provider; }
+	StorageBuffer::StorageBuffer()
+	{
+	}
 
-	StorageBufferProvider *provider;
-};
+	StorageBuffer::StorageBuffer(GraphicContext &gc, int size, int stride, BufferUsage usage)
+		: impl(std::make_shared<StorageBuffer_Impl>())
+	{
+		GraphicContextProvider *gc_provider = gc.get_provider();
+		impl->provider = gc_provider->alloc_storage_buffer();
+		impl->provider->create(size, stride, usage);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// StorageBuffer Construction:
+	StorageBuffer::StorageBuffer(GraphicContext &gc, const void *data, int size, int stride, BufferUsage usage)
+		: impl(std::make_shared<StorageBuffer_Impl>())
+	{
+		GraphicContextProvider *gc_provider = gc.get_provider();
+		impl->provider = gc_provider->alloc_storage_buffer();
+		impl->provider->create(data, size, stride, usage);
+	}
 
-StorageBuffer::StorageBuffer()
-{
-}
+	void StorageBuffer::throw_if_null() const
+	{
+		if (!impl)
+			throw Exception("StorageBuffer is null");
+	}
 
-StorageBuffer::StorageBuffer(GraphicContext &gc, int size, int stride, BufferUsage usage)
-: impl(std::make_shared<StorageBuffer_Impl>())
-{
-	GraphicContextProvider *gc_provider = gc.get_provider();
-	impl->provider = gc_provider->alloc_storage_buffer();
-	impl->provider->create(size, stride, usage);
-}
+	StorageBufferProvider *StorageBuffer::get_provider() const
+	{
+		return impl->provider;
+	}
 
-StorageBuffer::StorageBuffer(GraphicContext &gc, const void *data, int size, int stride, BufferUsage usage)
-: impl(std::make_shared<StorageBuffer_Impl>())
-{
-	GraphicContextProvider *gc_provider = gc.get_provider();
-	impl->provider = gc_provider->alloc_storage_buffer();
-	impl->provider->create(data, size, stride, usage);
-}
+	bool StorageBuffer::operator==(const StorageBuffer &other) const
+	{
+		return impl == other.impl;
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// StorageBuffer Attributes:
+	void StorageBuffer::upload_data(GraphicContext &gc, const void *data, int size)
+	{
+		impl->provider->upload_data(gc, data, size);
+	}
 
-void StorageBuffer::throw_if_null() const
-{
-	if (!impl)
-		throw Exception("StorageBuffer is null");
-}
+	void StorageBuffer::copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
+	{
+		impl->provider->copy_from(gc, buffer, dest_pos, src_pos, size);
+	}
 
-StorageBufferProvider *StorageBuffer::get_provider() const
-{
-	return impl->provider;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// StorageBuffer Operations:
-
-bool StorageBuffer::operator==(const StorageBuffer &other) const
-{
-	return impl == other.impl;
-}
-
-void StorageBuffer::upload_data(GraphicContext &gc, const void *data, int size)
-{
-	impl->provider->upload_data(gc, data, size);
-}
-
-void StorageBuffer::copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
-{
-	impl->provider->copy_from(gc, buffer, dest_pos, src_pos, size);
-}
-
-void StorageBuffer::copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
-{
-	impl->provider->copy_to(gc, buffer, dest_pos, src_pos, size);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// StorageBuffer Implementation:
-
+	void StorageBuffer::copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
+	{
+		impl->provider->copy_to(gc, buffer, dest_pos, src_pos, size);
+	}
 }

@@ -36,65 +36,49 @@
 
 namespace clan
 {
+	class RenderBuffer_Impl
+	{
+	public:
+		RenderBuffer_Impl() : provider(nullptr)
+		{
+		}
 
-class RenderBuffer_Impl
-{
-public:
-	RenderBuffer_Impl() : provider(nullptr)
+		RenderBufferProvider *provider;
+		Size size;
+	};
+
+	RenderBuffer::RenderBuffer()
 	{
 	}
 
-	RenderBufferProvider *provider;
-	Size size;
-};
+	RenderBuffer::RenderBuffer(GraphicContext &context, int width, int height, TextureFormat texture_format, int multisample_samples)
+		: impl(std::make_shared<RenderBuffer_Impl>())
+	{
+		GraphicContextProvider *gc_provider = context.get_provider();
+		impl->provider = gc_provider->alloc_render_buffer();
+		impl->provider->create(width, height, texture_format, multisample_samples);
+		impl->size.width = width;
+		impl->size.height = height;
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// RenderBuffer Construction:
+	void RenderBuffer::throw_if_null() const
+	{
+		if (!impl)
+			throw Exception("RenderBuffer is null");
+	}
 
-RenderBuffer::RenderBuffer()
-{
-}
+	RenderBufferProvider *RenderBuffer::get_provider() const
+	{
+		return impl->provider;
+	}
 
-RenderBuffer::RenderBuffer(GraphicContext &context, int width, int height, TextureFormat texture_format, int multisample_samples)
-: impl(std::make_shared<RenderBuffer_Impl>())
-{
-	GraphicContextProvider *gc_provider = context.get_provider();
-	impl->provider = gc_provider->alloc_render_buffer();
-	impl->provider->create(width, height, texture_format, multisample_samples);
-	impl->size.width = width;
-	impl->size.height = height; 
-}
+	const Size &RenderBuffer::get_size() const
+	{
+		return impl->size;
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// RenderBuffer Attributes:
-
-void RenderBuffer::throw_if_null() const
-{
-	if (!impl)
-		throw Exception("RenderBuffer is null");
-}
-
-RenderBufferProvider *RenderBuffer::get_provider() const
-{
-	return impl->provider;
-}
-
-const Size &RenderBuffer::get_size() const
-{
-	return impl->size;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// RenderBuffer Operations:
-
-bool RenderBuffer::operator==(const RenderBuffer &other) const
-{
-	return impl == other.impl;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// RenderBuffer Implementation:
-
-
-
+	bool RenderBuffer::operator==(const RenderBuffer &other) const
+	{
+		return impl == other.impl;
+	}
 }

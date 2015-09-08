@@ -30,24 +30,22 @@
 
 namespace clan
 {
+	class JPEGFileReader;
 
-class JPEGFileReader;
+	class JPEGBitReader
+	{
+	public:
+		JPEGBitReader(JPEGFileReader *reader);
 
-class JPEGBitReader
-{
-public:
-	JPEGBitReader(JPEGFileReader *reader);
+		void reset();
+		unsigned int get_bit();
+		unsigned int get_bits(int count);
 
-	void reset();
-	unsigned int get_bit();
-	unsigned int get_bits(int count);
-
-private:
-	JPEGFileReader *reader;
-	std::vector<unsigned char> buffer;
-	int length;
-	int pos;
-	int bitpos;
-};
-
+	private:
+		JPEGFileReader *reader;
+		std::vector<unsigned char> buffer;
+		int length;
+		int pos;
+		int bitpos;
+	};
 }

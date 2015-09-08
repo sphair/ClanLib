@@ -35,46 +35,33 @@
 
 namespace clan
 {
+	TransferTexture::TransferTexture()
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// TransferTexture Construction:
+	TransferTexture::TransferTexture(PixelBufferProvider *provider) : PixelBuffer(provider)
+	{
+	}
 
-TransferTexture::TransferTexture()
-{
-}
+	TransferTexture::TransferTexture(GraphicContext &gc, int width, int height, PixelBufferDirection direction, TextureFormat texture_format, const void *data, BufferUsage usage)
+	{
+		GraphicContextProvider *gc_provider = gc.get_provider();
+		PixelBufferProvider *provider = gc_provider->alloc_pixel_buffer();
+		*this = TransferTexture(provider);
 
-TransferTexture::TransferTexture(PixelBufferProvider *provider) : PixelBuffer(provider)
-{
-}
+		provider->create(data, Size(width, height), direction, texture_format, usage);
+	}
 
-TransferTexture::TransferTexture(GraphicContext &gc, int width, int height, PixelBufferDirection direction, TextureFormat texture_format, const void *data, BufferUsage usage)
-{
-	GraphicContextProvider *gc_provider = gc.get_provider();
-	PixelBufferProvider *provider = gc_provider->alloc_pixel_buffer();
-	*this = TransferTexture(provider);
+	TransferTexture::TransferTexture(GraphicContext &gc, const PixelBuffer &pbuff, PixelBufferDirection direction, BufferUsage usage)
+	{
+		GraphicContextProvider *gc_provider = gc.get_provider();
+		PixelBufferProvider *provider = gc_provider->alloc_pixel_buffer();
+		*this = TransferTexture(provider);
 
-	provider->create(data, Size(width, height), direction, texture_format, usage);
-}
+		provider->create(pbuff.get_data(), pbuff.get_size(), direction, pbuff.get_format(), usage);
+	}
 
-TransferTexture::TransferTexture(GraphicContext &gc, const PixelBuffer &pbuff, PixelBufferDirection direction, BufferUsage usage)
-{
-	GraphicContextProvider *gc_provider = gc.get_provider();
-	PixelBufferProvider *provider = gc_provider->alloc_pixel_buffer();
-	*this = TransferTexture(provider);
-
-	provider->create(pbuff.get_data(), pbuff.get_size(), direction, pbuff.get_format(), usage);
-}
-
-TransferTexture::~TransferTexture()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// TransferTexture Attributes:
-
-
-
-/////////////////////////////////////////////////////////////////////////////
-// TransferTexture Operations:
-
+	TransferTexture::~TransferTexture()
+	{
+	}
 }

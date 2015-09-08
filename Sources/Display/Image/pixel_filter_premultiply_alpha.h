@@ -34,37 +34,37 @@
 namespace clan
 {
 
-class PixelFilterPremultiplyAlpha : public PixelFilter
-{
-public:
-	void filter(Vec4f *pixels, int num_pixels) override
+	class PixelFilterPremultiplyAlpha : public PixelFilter
 	{
-		for (int i = 0; i < num_pixels; i++)
+	public:
+		void filter(Vec4f *pixels, int num_pixels) override
 		{
-			pixels[i] = Vec4f(pixels[i].r * pixels[i].a, pixels[i].g * pixels[i].a, pixels[i].b * pixels[i].a, pixels[i].a);
+			for (int i = 0; i < num_pixels; i++)
+			{
+				pixels[i] = Vec4f(pixels[i].r * pixels[i].a, pixels[i].g * pixels[i].a, pixels[i].b * pixels[i].a, pixels[i].a);
+			}
 		}
-	}
-};
+	};
 
 #if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 
-class PixelFilterPremultiplyAlphaSSE2 : public PixelFilter
-{
-public:
-	void filter(Vec4f *pixels, int num_pixels) override
+	class PixelFilterPremultiplyAlphaSSE2 : public PixelFilter
 	{
-		__m128 alpha_mask = _mm_castsi128_ps(_mm_set_epi32(0,0,0,0xffffffff));
-		for (int i = 0; i < num_pixels; i++)
+	public:
+		void filter(Vec4f *pixels, int num_pixels) override
 		{
-			__m128 pixel = _mm_loadu_ps(reinterpret_cast<float*>(pixels + i));
+			__m128 alpha_mask = _mm_castsi128_ps(_mm_set_epi32(0, 0, 0, 0xffffffff));
+			for (int i = 0; i < num_pixels; i++)
+			{
+				__m128 pixel = _mm_loadu_ps(reinterpret_cast<float*>(pixels + i));
 
-			__m128 alpha = _mm_shuffle_ps(pixel, pixel, _MM_SHUFFLE(3,3,3,3));
-			pixel = _mm_or_ps(_mm_and_ps(pixel, alpha_mask), _mm_andnot_ps(_mm_mul_ps(pixel, alpha), alpha_mask));
+				__m128 alpha = _mm_shuffle_ps(pixel, pixel, _MM_SHUFFLE(3, 3, 3, 3));
+				pixel = _mm_or_ps(_mm_and_ps(pixel, alpha_mask), _mm_andnot_ps(_mm_mul_ps(pixel, alpha), alpha_mask));
 
-			_mm_storeu_ps(reinterpret_cast<float*>(pixels + i), pixel);
+				_mm_storeu_ps(reinterpret_cast<float*>(pixels + i), pixel);
+			}
 		}
-	}
-};
+	};
 #endif
 
 }

@@ -35,61 +35,59 @@
 
 namespace clan
 {
-
-Texture1DArray::Texture1DArray()
-{
-}
-
-Texture1DArray::Texture1DArray(GraphicContext &context, int size, int array_size, TextureFormat texture_format, int levels)
-: Texture(std::shared_ptr<Texture_Impl>(new Texture_Impl))
-{
-	if ( (size<=0) )
+	Texture1DArray::Texture1DArray()
 	{
-		throw Exception("An attempt was made to create a Texture with an invalid size");
 	}
 
-	GraphicContextProvider *gc_provider = context.get_provider();
-
-	impl->provider = gc_provider->alloc_texture(texture_1d_array);
-	impl->provider->create(size, 1, 1, array_size, texture_format, levels);
-	impl->width = size;
-	impl->array_size = array_size;
-
-	impl->provider->set_wrap_mode(impl->wrap_mode_s);
-}
-
-int Texture1DArray::get_size() const
-{
-	return impl->width;
-}
-
-int Texture1DArray::get_array_size() const
-{
-	return impl->array_size;
-}
-
-TextureWrapMode Texture1DArray::get_wrap_mode_s() const
-{
-	return impl->wrap_mode_s;
-}
-
-void Texture1DArray::set_image(GraphicContext &context, int array_index, PixelBuffer &image, int level)
-{
-	impl->provider->copy_from(context, 0, 0, array_index, level, image, image.get_size());
-}
-
-void Texture1DArray::set_subimage(GraphicContext &context, int array_index, int x, const PixelBuffer &image, const int src_x, const int src_width, int level)
-{
-	impl->provider->copy_from(context, x, 0, array_index, level, image, Rect(src_x, 0, src_x + src_width, 1));
-}
-
-void Texture1DArray::set_wrap_mode(TextureWrapMode wrap_s)
-{
-	if( impl->wrap_mode_s != wrap_s )
+	Texture1DArray::Texture1DArray(GraphicContext &context, int size, int array_size, TextureFormat texture_format, int levels)
+		: Texture(std::shared_ptr<Texture_Impl>(new Texture_Impl))
 	{
-		impl->provider->set_wrap_mode(wrap_s);
-		impl->wrap_mode_s = wrap_s;
-	}
-}
+		if ((size <= 0))
+		{
+			throw Exception("An attempt was made to create a Texture with an invalid size");
+		}
 
+		GraphicContextProvider *gc_provider = context.get_provider();
+
+		impl->provider = gc_provider->alloc_texture(texture_1d_array);
+		impl->provider->create(size, 1, 1, array_size, texture_format, levels);
+		impl->width = size;
+		impl->array_size = array_size;
+
+		impl->provider->set_wrap_mode(impl->wrap_mode_s);
+	}
+
+	int Texture1DArray::get_size() const
+	{
+		return impl->width;
+	}
+
+	int Texture1DArray::get_array_size() const
+	{
+		return impl->array_size;
+	}
+
+	TextureWrapMode Texture1DArray::get_wrap_mode_s() const
+	{
+		return impl->wrap_mode_s;
+	}
+
+	void Texture1DArray::set_image(GraphicContext &context, int array_index, PixelBuffer &image, int level)
+	{
+		impl->provider->copy_from(context, 0, 0, array_index, level, image, image.get_size());
+	}
+
+	void Texture1DArray::set_subimage(GraphicContext &context, int array_index, int x, const PixelBuffer &image, const int src_x, const int src_width, int level)
+	{
+		impl->provider->copy_from(context, x, 0, array_index, level, image, Rect(src_x, 0, src_x + src_width, 1));
+	}
+
+	void Texture1DArray::set_wrap_mode(TextureWrapMode wrap_s)
+	{
+		if (impl->wrap_mode_s != wrap_s)
+		{
+			impl->provider->set_wrap_mode(wrap_s);
+			impl->wrap_mode_s = wrap_s;
+		}
+	}
 }

@@ -36,57 +36,52 @@
 
 namespace clan
 {
+	PixelBuffer TargaProvider::load(
+		const std::string &filename,
+		const FileSystem &fs,
+		bool srgb)
+	{
+		IODevice datafile = fs.open_file(filename);
+		return TargaLoader::load(datafile, srgb);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// TargaProvider construction:
+	PixelBuffer TargaProvider::load(
+		const std::string &fullname,
+		bool srgb)
+	{
+		File file(fullname);
+		return TargaLoader::load(file, srgb);
+	}
 
-PixelBuffer TargaProvider::load(
-	const std::string &filename,
-	const FileSystem &fs,
-	bool srgb)
-{
-	IODevice datafile = fs.open_file(filename);
-	return TargaLoader::load(datafile, srgb);
-}
+	PixelBuffer TargaProvider::load(
+		IODevice &file,
+		bool srgb)
+	{
+		return TargaLoader::load(file, srgb);
+	}
 
-PixelBuffer TargaProvider::load(
-	const std::string &fullname,
-	bool srgb)
-{
-	File file(fullname);
-	return TargaLoader::load(file, srgb);
-}
+	void TargaProvider::save(
+		PixelBuffer buffer,
+		const std::string &filename,
+		FileSystem &fs)
+	{
+		throw Exception("TargaProvider doesn't support saving");
+	}
 
-PixelBuffer TargaProvider::load(
-	IODevice &file,
-	bool srgb)
-{
-	return TargaLoader::load(file, srgb);
-}
+	void TargaProvider::save(
+		PixelBuffer buffer,
+		IODevice &file)
+	{
+		throw Exception("TargaProvider doesn't support saving");
+	}
 
-void TargaProvider::save(
-	PixelBuffer buffer,
-	const std::string &filename,
-	FileSystem &fs)
-{
-	throw Exception("TargaProvider doesn't support saving");
-}
-
-void TargaProvider::save(
-	PixelBuffer buffer,
-	IODevice &file)
-{
-	throw Exception("TargaProvider doesn't support saving");
-}
-
-void TargaProvider::save(
-	PixelBuffer buffer,
-	const std::string &fullname)
-{
-	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
-	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	FileSystem vfs(path);
-	TargaProvider::save(buffer, filename, vfs);
-}
-
+	void TargaProvider::save(
+		PixelBuffer buffer,
+		const std::string &fullname)
+	{
+		std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
+		std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
+		FileSystem vfs(path);
+		TargaProvider::save(buffer, filename, vfs);
+	}
 }

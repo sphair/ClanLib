@@ -36,190 +36,176 @@
 
 namespace clan
 {
+	class FrameBuffer_Impl
+	{
+	public:
+		FrameBuffer_Impl() : provider(nullptr)
+		{
+		}
 
-class FrameBuffer_Impl
-{
-public:
-	FrameBuffer_Impl() : provider(nullptr)
+		~FrameBuffer_Impl()
+		{
+			if (provider)
+				delete provider;
+		}
+
+		FrameBufferProvider *provider;
+		float pixel_ratio = 0.0f;
+	};
+
+	FrameBuffer::FrameBuffer()
 	{
 	}
 
-	~FrameBuffer_Impl()
+	FrameBuffer::FrameBuffer(GraphicContext &context)
+		: impl(std::make_shared<FrameBuffer_Impl>())
 	{
-		if (provider)
-			delete provider;
+		GraphicContextProvider *gc_provider = context.get_provider();
+		impl->provider = gc_provider->alloc_frame_buffer();
 	}
 
-	FrameBufferProvider *provider;
-	float pixel_ratio = 0.0f;
-};
+	float FrameBuffer::get_pixel_ratio() const
+	{
+		return impl->pixel_ratio;
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// FrameBuffer Construction:
+	void FrameBuffer::throw_if_null() const
+	{
+		if (!impl)
+			throw Exception("FrameBuffer is null");
+	}
 
-FrameBuffer::FrameBuffer()
-{
-}
+	FrameBufferProvider *FrameBuffer::get_provider() const
+	{
+		return impl->provider;
+	}
 
-FrameBuffer::FrameBuffer(GraphicContext &context)
-: impl(std::make_shared<FrameBuffer_Impl>())
-{
-	GraphicContextProvider *gc_provider = context.get_provider();
-	impl->provider = gc_provider->alloc_frame_buffer();
-}
+	Size FrameBuffer::get_size() const
+	{
+		return impl->provider->get_size();
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// FrameBuffer Attributes:
+	FrameBufferBindTarget FrameBuffer::get_bind_target() const
+	{
+		return impl->provider->get_bind_target();
+	}
 
-float FrameBuffer::get_pixel_ratio() const
-{
-	return impl->pixel_ratio;
-}
+	bool FrameBuffer::operator==(const FrameBuffer &other) const
+	{
+		return impl == other.impl;
+	}
 
-void FrameBuffer::throw_if_null() const
-{
-	if (!impl)
-		throw Exception("FrameBuffer is null");
-}
+	void FrameBuffer::attach_color(int attachment_index, const RenderBuffer &render_buffer)
+	{
+		impl->provider->attach_color(attachment_index, render_buffer);
+	}
 
-FrameBufferProvider *FrameBuffer::get_provider() const
-{
-	return impl->provider;
-}
+	void FrameBuffer::attach_color(int attachment_index, const Texture1D &texture, int level)
+	{
+		impl->provider->attach_color(attachment_index, texture, level);
+	}
 
-Size FrameBuffer::get_size() const
-{
-	return impl->provider->get_size();
-}
+	void FrameBuffer::attach_color(int attachment_index, const Texture1DArray &texture, int array_index, int level)
+	{
+		impl->provider->attach_color(attachment_index, texture, array_index, level);
+	}
 
-FrameBufferBindTarget FrameBuffer::get_bind_target() const
-{
-	return impl->provider->get_bind_target();
-}
+	void FrameBuffer::attach_color(int attachment_index, const Texture2D &texture, int level)
+	{
+		if (impl->pixel_ratio == 0.0f)
+			impl->pixel_ratio = texture.get_pixel_ratio();
 
-/////////////////////////////////////////////////////////////////////////////
-// FrameBuffer Operations:
+		impl->provider->attach_color(attachment_index, texture, level);
+	}
 
-bool FrameBuffer::operator==(const FrameBuffer &other) const
-{
-	return impl == other.impl;
-}
+	void FrameBuffer::attach_color(int attachment_index, const Texture2DArray &texture, int array_index, int level)
+	{
+		impl->provider->attach_color(attachment_index, texture, array_index, level);
+	}
 
-void FrameBuffer::attach_color(int attachment_index, const RenderBuffer &render_buffer)
-{
-	impl->provider->attach_color(attachment_index, render_buffer);
-}
+	void FrameBuffer::attach_color(int attachment_index, const Texture3D &texture, int depth, int level)
+	{
+		impl->provider->attach_color(attachment_index, texture, depth, level);
+	}
 
-void FrameBuffer::attach_color(int attachment_index, const Texture1D &texture, int level)
-{
-	impl->provider->attach_color(attachment_index, texture, level);
-}
+	void FrameBuffer::attach_color(int attachment_index, const TextureCube &texture, TextureSubtype subtype, int level)
+	{
+		impl->provider->attach_color(attachment_index, texture, subtype, level);
+	}
 
-void FrameBuffer::attach_color(int attachment_index, const Texture1DArray &texture, int array_index, int level)
-{
-	impl->provider->attach_color(attachment_index, texture, array_index, level);
-}
+	void FrameBuffer::detach_color(int attachment_index)
+	{
+		impl->provider->detach_color(attachment_index);
+	}
 
-void FrameBuffer::attach_color(int attachment_index, const Texture2D &texture, int level)
-{
-	if (impl->pixel_ratio == 0.0f)
-		impl->pixel_ratio = texture.get_pixel_ratio();
+	void FrameBuffer::attach_stencil(const RenderBuffer &render_buffer)
+	{
+		impl->provider->attach_stencil(render_buffer);
+	}
 
-	impl->provider->attach_color(attachment_index, texture, level);
-}
+	void FrameBuffer::attach_stencil(const Texture2D &texture, int level)
+	{
+		if (impl->pixel_ratio == 0.0f)
+			impl->pixel_ratio = texture.get_pixel_ratio();
+		impl->provider->attach_stencil(texture, level);
+	}
 
-void FrameBuffer::attach_color(int attachment_index, const Texture2DArray &texture, int array_index, int level)
-{
-	impl->provider->attach_color(attachment_index, texture, array_index, level);
-}
+	void FrameBuffer::attach_stencil(const TextureCube &texture, TextureSubtype subtype, int level)
+	{
+		impl->provider->attach_stencil(texture, subtype, level);
+	}
 
-void FrameBuffer::attach_color(int attachment_index, const Texture3D &texture, int depth, int level)
-{
-	impl->provider->attach_color(attachment_index, texture, depth, level);
-}
+	void FrameBuffer::detach_stencil()
+	{
+		impl->provider->detach_stencil();
+	}
 
-void FrameBuffer::attach_color(int attachment_index, const TextureCube &texture, TextureSubtype subtype, int level)
-{
-	impl->provider->attach_color(attachment_index, texture, subtype, level);
-}
+	void FrameBuffer::attach_depth(const RenderBuffer &render_buffer)
+	{
+		impl->provider->attach_depth(render_buffer);
+	}
 
-void FrameBuffer::detach_color(int attachment_index)
-{
-	impl->provider->detach_color(attachment_index);
-}
+	void FrameBuffer::attach_depth(const Texture2D &texture, int level)
+	{
+		if (impl->pixel_ratio == 0.0f)
+			impl->pixel_ratio = texture.get_pixel_ratio();
+		impl->provider->attach_depth(texture, level);
+	}
 
-void FrameBuffer::attach_stencil(const RenderBuffer &render_buffer)
-{
-	impl->provider->attach_stencil(render_buffer);
-}
+	void FrameBuffer::attach_depth(const TextureCube &texture, TextureSubtype subtype, int level)
+	{
+		impl->provider->attach_depth(texture, subtype, level);
+	}
 
-void FrameBuffer::attach_stencil(const Texture2D &texture, int level)
-{
-	if (impl->pixel_ratio == 0.0f)
-		impl->pixel_ratio = texture.get_pixel_ratio();
-	impl->provider->attach_stencil(texture, level);
-}
+	void FrameBuffer::detach_depth()
+	{
+		impl->provider->detach_depth();
+	}
 
-void FrameBuffer::attach_stencil(const TextureCube &texture, TextureSubtype subtype, int level)
-{
-	impl->provider->attach_stencil(texture, subtype, level);
-}
+	void FrameBuffer::attach_depth_stencil(const RenderBuffer &render_buffer)
+	{
+		impl->provider->attach_depth_stencil(render_buffer);
+	}
 
-void FrameBuffer::detach_stencil()
-{
-	impl->provider->detach_stencil();
-}
+	void FrameBuffer::attach_depth_stencil(const Texture2D &texture, int level)
+	{
+		if (impl->pixel_ratio == 0.0f)
+			impl->pixel_ratio = texture.get_pixel_ratio();
+		impl->provider->attach_depth_stencil(texture, level);
+	}
 
-void FrameBuffer::attach_depth(const RenderBuffer &render_buffer)
-{
-	impl->provider->attach_depth(render_buffer);
-}
+	void FrameBuffer::attach_depth_stencil(const TextureCube &texture, TextureSubtype subtype, int level)
+	{
+		impl->provider->attach_depth_stencil(texture, subtype, level);
+	}
 
-void FrameBuffer::attach_depth(const Texture2D &texture, int level)
-{
-	if (impl->pixel_ratio == 0.0f)
-		impl->pixel_ratio = texture.get_pixel_ratio();
-	impl->provider->attach_depth(texture, level);
-}
+	void FrameBuffer::detach_depth_stencil()
+	{
+		impl->provider->detach_depth_stencil();
+	}
 
-void FrameBuffer::attach_depth(const TextureCube &texture, TextureSubtype subtype, int level)
-{
-	impl->provider->attach_depth(texture, subtype, level);
-}
-
-void FrameBuffer::detach_depth()
-{
-	impl->provider->detach_depth();
-}
-
-void FrameBuffer::attach_depth_stencil(const RenderBuffer &render_buffer)
-{
-	impl->provider->attach_depth_stencil(render_buffer);
-}
-
-void FrameBuffer::attach_depth_stencil(const Texture2D &texture, int level)
-{
-	if (impl->pixel_ratio == 0.0f)
-		impl->pixel_ratio = texture.get_pixel_ratio();
-	impl->provider->attach_depth_stencil(texture, level);
-}
-
-void FrameBuffer::attach_depth_stencil(const TextureCube &texture, TextureSubtype subtype, int level)
-{
-	impl->provider->attach_depth_stencil(texture, subtype, level);
-}
-
-void FrameBuffer::detach_depth_stencil()
-{
-	impl->provider->detach_depth_stencil();
-}
-
-void FrameBuffer::set_bind_target(FrameBufferBindTarget target)
-{
-	impl->provider->set_bind_target(target);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// FrameBuffer Implementation:
-
+	void FrameBuffer::set_bind_target(FrameBufferBindTarget target)
+	{
+		impl->provider->set_bind_target(target);
+	}
 }

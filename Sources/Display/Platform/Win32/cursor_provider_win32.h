@@ -34,142 +34,119 @@
 
 namespace clan
 {
+	class PixelBuffer;
+	class Point;
+	class Rect;
+	class DataBuffer;
+	class CursorDescription;
 
-class PixelBuffer;
-class Point;
-class Rect;
-class DataBuffer;
-class CursorDescription;
-
-class CursorProvider_Win32 : public CursorProvider
-{
-/// \name Construction
-/// \{
-
-public:
-	CursorProvider_Win32(const CursorDescription &cursor_description);
-	~CursorProvider_Win32();
-
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	HCURSOR handle;
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	static HCURSOR create_cursor(const CursorDescription &cursor_description);
-	static DataBuffer create_ico_file(const PixelBuffer &image);
-	static DataBuffer create_cur_file(const PixelBuffer &image, const Rect &rect, const Point &hotspot);
-	static DataBuffer create_ani_file(const CursorDescription &cursor_description);
-	static DataBuffer create_ico_helper(const PixelBuffer &image, const Rect &rect, WORD type, const Point &hotspot);
-	static DataBuffer create_ico_helper(const std::vector<PixelBuffer> &images, const std::vector<Rect> &rect, WORD type, const std::vector<Point> &hotspots);
-	static void set_riff_header(char *data, const char *type, DWORD size);
-
-	struct ANIHeader
+	class CursorProvider_Win32 : public CursorProvider
 	{
-		DWORD cbSizeOf;              // Number of bytes in AniHeader (36 bytes)
-		DWORD cFrames;               // Number of unique Icons in this cursor
-		DWORD cSteps;                // Number of Blits before the animation cycles
-		DWORD cx, cy;                // reserved, must be zero.
-		DWORD cBitCount, cPlanes;    // reserved, must be zero.
-		DWORD JifRate;               // Default Jiffies (1/60th of a second) if rate chunk not present.
-		DWORD flags;                 // Animation Flag (see AF_ constants)
-	};
+	public:
+		CursorProvider_Win32(const CursorDescription &cursor_description);
+		~CursorProvider_Win32();
 
-	#define AF_ICON 0x0001L // Windows format icon/cursor animation
+		HCURSOR handle;
 
-	struct ICONHEADER
-	{
-		WORD idReserved;
-		WORD idType; // 1 = ICO, 2 = CUR
-		WORD idCount;
-	};
+	private:
+		static HCURSOR create_cursor(const CursorDescription &cursor_description);
+		static DataBuffer create_ico_file(const PixelBuffer &image);
+		static DataBuffer create_cur_file(const PixelBuffer &image, const Rect &rect, const Point &hotspot);
+		static DataBuffer create_ani_file(const CursorDescription &cursor_description);
+		static DataBuffer create_ico_helper(const PixelBuffer &image, const Rect &rect, WORD type, const Point &hotspot);
+		static DataBuffer create_ico_helper(const std::vector<PixelBuffer> &images, const std::vector<Rect> &rect, WORD type, const std::vector<Point> &hotspots);
+		static void set_riff_header(char *data, const char *type, DWORD size);
 
-	struct IconDirectoryEntry
-	{
-		BYTE bWidth;
-		BYTE bHeight;
-		BYTE bColorCount;
-		BYTE bReserved;
-		union
+		struct ANIHeader
 		{
-			WORD wPlanes;	// ICO format
-			SHORT XHotspot; // CUR format
+			DWORD cbSizeOf;              // Number of bytes in AniHeader (36 bytes)
+			DWORD cFrames;               // Number of unique Icons in this cursor
+			DWORD cSteps;                // Number of Blits before the animation cycles
+			DWORD cx, cy;                // reserved, must be zero.
+			DWORD cBitCount, cPlanes;    // reserved, must be zero.
+			DWORD JifRate;               // Default Jiffies (1/60th of a second) if rate chunk not present.
+			DWORD flags;                 // Animation Flag (see AF_ constants)
 		};
-		union
+
+		#define AF_ICON 0x0001L // Windows format icon/cursor animation
+
+		struct ICONHEADER
 		{
-			WORD wBitCount; // ICO format
-			SHORT YHotspot; // CUR format
+			WORD idReserved;
+			WORD idType; // 1 = ICO, 2 = CUR
+			WORD idCount;
 		};
-		DWORD dwBytesInRes;
-		DWORD dwImageOffset;
-		/** WORD nID; // Mentioned by http://msdn2.microsoft.com/en-us/library/ms997538.aspx but not in other ICO docs.*/
-	};
 
-	struct ANIInfo
-	{
-		int length() const
+		struct IconDirectoryEntry
 		{
-			// todo: dword align string lengths
-			return 5*4 + title.length()+1 + author.length()+1;
-		}
-
-		void write(char *d)
-		{
-			memcpy(d, "INFOINAM", 8);
-			*(DWORD *)(d+8) = title.length()+1;
-			memcpy(d + 12, title.c_str(), title.length()+1);
-			int offset_art = 12 + title.length() + 1;
-			memcpy(d + offset_art, "IART", 4);
-			*(DWORD *)(d + offset_art + 4) = author.length()+1;
-			memcpy(d + offset_art + 8, author.c_str(), author.length()+1);
-		}
-
-		std::string title;
-		std::string author;
-	};
-
-	struct ANIFrames
-	{
-		int length() const
-		{
-			int s = 4 + 8 * icons.size();
-			for (unsigned int i = 0; i < icons.size(); i++)
-				s += icons[i].get_size();
-			return s;
-		}
-
-		void write(char *d)
-		{
-			memcpy(d, "fram", 4);
-			int p = 4;
-			for (unsigned int i = 0; i < icons.size(); i++)
+			BYTE bWidth;
+			BYTE bHeight;
+			BYTE bColorCount;
+			BYTE bReserved;
+			union
 			{
-				memcpy(d+p, "icon", 4);
-				*(DWORD *)(d+p+4) = icons[i].get_size();
-				memcpy(d+p+8, icons[i].get_data(), icons[i].get_size());
-				p += 8 + icons[i].get_size();
+				WORD wPlanes;	// ICO format
+				SHORT XHotspot; // CUR format
+			};
+			union
+			{
+				WORD wBitCount; // ICO format
+				SHORT YHotspot; // CUR format
+			};
+			DWORD dwBytesInRes;
+			DWORD dwImageOffset;
+			/** WORD nID; // Mentioned by http://msdn2.microsoft.com/en-us/library/ms997538.aspx but not in other ICO docs.*/
+		};
+
+		struct ANIInfo
+		{
+			int length() const
+			{
+				// todo: dword align string lengths
+				return 5 * 4 + title.length() + 1 + author.length() + 1;
 			}
-		}
 
-		std::vector<DataBuffer> icons;
+			void write(char *d)
+			{
+				memcpy(d, "INFOINAM", 8);
+				*(DWORD *)(d + 8) = title.length() + 1;
+				memcpy(d + 12, title.c_str(), title.length() + 1);
+				int offset_art = 12 + title.length() + 1;
+				memcpy(d + offset_art, "IART", 4);
+				*(DWORD *)(d + offset_art + 4) = author.length() + 1;
+				memcpy(d + offset_art + 8, author.c_str(), author.length() + 1);
+			}
+
+			std::string title;
+			std::string author;
+		};
+
+		struct ANIFrames
+		{
+			int length() const
+			{
+				int s = 4 + 8 * icons.size();
+				for (unsigned int i = 0; i < icons.size(); i++)
+					s += icons[i].get_size();
+				return s;
+			}
+
+			void write(char *d)
+			{
+				memcpy(d, "fram", 4);
+				int p = 4;
+				for (unsigned int i = 0; i < icons.size(); i++)
+				{
+					memcpy(d + p, "icon", 4);
+					*(DWORD *)(d + p + 4) = icons[i].get_size();
+					memcpy(d + p + 8, icons[i].get_data(), icons[i].get_size());
+					p += 8 + icons[i].get_size();
+				}
+			}
+
+			std::vector<DataBuffer> icons;
+		};
+
+		enum { size_header = 6, size_direntry = 16 };
 	};
-
-	enum { size_header = 6, size_direntry = 16 };
-/// \}
-};
-
 }

@@ -37,48 +37,34 @@
 
 namespace clan
 {
+	PrimitivesArray::PrimitivesArray()
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// PrimitivesArray Construction:
+	PrimitivesArray::PrimitivesArray(GraphicContext &gc)
+		: impl(std::make_shared<PrimitivesArray_Impl>())
+	{
+		impl->provider = gc.get_provider()->alloc_primitives_array();
+	}
 
-PrimitivesArray::PrimitivesArray()
-{
-}
+	PrimitivesArray::~PrimitivesArray()
+	{
+	}
 
-PrimitivesArray::PrimitivesArray(GraphicContext &gc)
-: impl(std::make_shared<PrimitivesArray_Impl>())
-{
-	impl->provider = gc.get_provider()->alloc_primitives_array();
-}
+	void PrimitivesArray::throw_if_null() const
+	{
+		if (!impl)
+			throw Exception("is null");
+	}
 
-PrimitivesArray::~PrimitivesArray()
-{
-}
+	PrimitivesArrayProvider *PrimitivesArray::get_provider() const
+	{
+		return impl->provider;
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// PrimitivesArray Attributes:
-
-void PrimitivesArray::throw_if_null() const
-{
-	if (!impl)
-		throw Exception("is null");
-}
-
-PrimitivesArrayProvider *PrimitivesArray::get_provider() const
-{
-	return impl->provider;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// PrimitivesArray Operations:
-
-void PrimitivesArray::set_attributes(int index, VertexArrayBuffer &buffer, int size, VertexAttributeDataType type, size_t offset, int stride, bool normalize)
-{
-	PrimitivesArrayProvider::VertexData data( buffer.get_provider(), type, offset, size, stride);
-	impl->provider->set_attribute(index, data, normalize);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// PrimitivesArray Implementation:
-
+	void PrimitivesArray::set_attributes(int index, VertexArrayBuffer &buffer, int size, VertexAttributeDataType type, size_t offset, int stride, bool normalize)
+	{
+		PrimitivesArrayProvider::VertexData data(buffer.get_provider(), type, offset, size, stride);
+		impl->provider->set_attribute(index, data, normalize);
+	}
 }

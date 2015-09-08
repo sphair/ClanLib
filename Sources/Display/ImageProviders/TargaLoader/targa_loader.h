@@ -35,55 +35,53 @@
 
 namespace clan
 {
+	class TargaLoader
+	{
+	public:
+		static PixelBuffer load(IODevice iodevice, bool srgb);
 
-class TargaLoader
-{
-public:
-	static PixelBuffer load(IODevice iodevice, bool srgb);
+	private:
+		TargaLoader(IODevice iodevice, bool srgb);
+		void read_header();
+		void read_image_id();
+		void read_color_map();
+		void read_image_data();
+		void decode_palette();
+		void decode_image();
+		void decode_color_mapped();
+		void decode_true_color();
+		void decode_grayscale();
 
-private:
-	TargaLoader(IODevice iodevice, bool srgb);
-	void read_header();
-	void read_image_id();
-	void read_color_map();
-	void read_image_data();
-	void decode_palette();
-	void decode_image();
-	void decode_color_mapped();
-	void decode_true_color();
-	void decode_grayscale();
+		IODevice file;
+		bool srgb;
 
-	IODevice file;
-	bool srgb;
+		unsigned char id_length;
+		unsigned char colormap_type;
+		unsigned char image_type;
 
-	unsigned char id_length;
-	unsigned char colormap_type;
-	unsigned char image_type;
+		unsigned short colormap_orig;
+		unsigned short colormap_length;
+		unsigned short colormap_entry_size;
 
-	unsigned short colormap_orig;
-	unsigned short colormap_length;
-	unsigned short colormap_entry_size;
+		unsigned short image_x_orig;
+		unsigned short image_y_orig;
+		unsigned short image_width;
+		unsigned short image_height;
+		unsigned char image_pixel_size;
+		unsigned char image_descriptor;
 
-	unsigned short image_x_orig;
-	unsigned short image_y_orig;
-	unsigned short image_width;
-	unsigned short image_height;
-	unsigned char image_pixel_size;
-	unsigned char image_descriptor;
+		int bytes_per_colormap_entry;
+		int bytes_per_pixel_entry;
 
-	int bytes_per_colormap_entry;
-	int bytes_per_pixel_entry;
+		unsigned int num_alpha_bits;
+		bool right_to_left;
+		bool top_down;
 
-	unsigned int num_alpha_bits;
-	bool right_to_left;
-	bool top_down;
+		DataBuffer image_id;
+		DataBuffer colormap_data;
+		std::vector<Vec4ub> palette;
+		DataBuffer image_data;
 
-	DataBuffer image_id;
-	DataBuffer colormap_data;
-	std::vector<Vec4ub> palette;
-	DataBuffer image_data;
-
-	PixelBuffer image;
-};
-
+		PixelBuffer image;
+	};
 }

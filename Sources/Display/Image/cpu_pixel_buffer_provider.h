@@ -33,65 +33,36 @@
 
 namespace clan
 {
+	class PixelBuffer_Impl;
 
-class PixelBuffer_Impl;
+	class CPUPixelBufferProvider : public PixelBufferProvider
+	{
+	public:
+		CPUPixelBufferProvider();
+		~CPUPixelBufferProvider();
 
-class CPUPixelBufferProvider : public PixelBufferProvider
-{
-/// \name Construction
-/// \{
+		void create(TextureFormat new_format, const Size &new_size, const void *data_ptr, bool only_reference_data);
+		void create(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage) override;
 
-public:
-	CPUPixelBufferProvider();
+		void *get_data() override { return data; }
+		int get_pitch() const override { return size.width * PixelBuffer::get_bytes_per_pixel(texture_format); }
+		Size get_size() const override { return size; }
+		bool is_gpu() const override { return false; }
+		TextureFormat get_format() const override { return texture_format; };
 
-	~CPUPixelBufferProvider();
+		void lock(GraphicContext &gc, BufferAccess access) override { }
+		void unlock() override { }
 
-	void create(TextureFormat new_format, const Size &new_size, const void *data_ptr, bool only_reference_data);
+		void upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data) override;
 
-	void create(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage) override;
+	private:
+		/// \brief Boolean indicating if pixel data should be deleted on destruction.
+		bool delete_data;
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief Pixel data.
+		unsigned char *data;
 
-public:
-	void *get_data() override { return data; }
-
-	int get_pitch() const override {return size.width * PixelBuffer::get_bytes_per_pixel(texture_format); }
-
-	Size get_size() const override { return size; }
-
-	bool is_gpu() const override { return false; }
-
-	TextureFormat get_format() const override { return texture_format; };
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	void lock(GraphicContext &gc, BufferAccess access) override { }
-
-	void unlock() override { }
-
-	void upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data) override;
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	/// \brief Boolean indicating if pixel data should be deleted on destruction.
-	bool delete_data;
-
-	/// \brief Pixel data.
-	unsigned char *data;
-
-	Size size;
-	TextureFormat texture_format;
-
-/// \}
-};
-
+		Size size;
+		TextureFormat texture_format;
+	};
 }

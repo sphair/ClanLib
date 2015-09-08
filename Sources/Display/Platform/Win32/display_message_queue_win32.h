@@ -84,7 +84,6 @@ namespace clan
 		static HMODULE moduleKernel32;
 		static FuncSetProcessUserModeExceptionPolicy *ptrSetProcessUserModeExceptionPolicy;
 		static FuncGetProcessUserModeExceptionPolicy *ptrGetProcessUserModeExceptionPolicy;
-		/// \}
 	};
 
 	struct WIN32_EXCEPTION_REGISTRATION_RECORD

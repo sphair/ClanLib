@@ -36,64 +36,62 @@
 
 namespace clan
 {
-
-SharedGCData_Impl::SharedGCData_Impl() : reference_count(0)
-{
-}
-
-SharedGCData_Impl::~SharedGCData_Impl()
-{
-}
-
-std::vector<GraphicContextProvider*> &SharedGCData_Impl::get_gc_providers()
-{
-	return graphic_context_providers;
-}
-
-void SharedGCData_Impl::add_provider(GraphicContextProvider *provider)
-{
-	graphic_context_providers.push_back(provider);
-}
-void SharedGCData_Impl::remove_provider(GraphicContextProvider *provider)
-{
-	if (graphic_context_providers.size() == 1)
-		dispose_objects();
-
-	for (auto it=graphic_context_providers.begin(); it != graphic_context_providers.end(); ++it)
+	SharedGCData_Impl::SharedGCData_Impl() : reference_count(0)
 	{
-		if (provider == (*it))
+	}
+
+	SharedGCData_Impl::~SharedGCData_Impl()
+	{
+	}
+
+	std::vector<GraphicContextProvider*> &SharedGCData_Impl::get_gc_providers()
+	{
+		return graphic_context_providers;
+	}
+
+	void SharedGCData_Impl::add_provider(GraphicContextProvider *provider)
+	{
+		graphic_context_providers.push_back(provider);
+	}
+	void SharedGCData_Impl::remove_provider(GraphicContextProvider *provider)
+	{
+		if (graphic_context_providers.size() == 1)
+			dispose_objects();
+
+		for (auto it = graphic_context_providers.begin(); it != graphic_context_providers.end(); ++it)
 		{
-			graphic_context_providers.erase(it);
-			break;
+			if (provider == (*it))
+			{
+				graphic_context_providers.erase(it);
+				break;
+			}
 		}
 	}
-}
 
-GraphicContextProvider *SharedGCData_Impl::get_provider()
-{
-	if (graphic_context_providers.empty())
-		return nullptr;
-	return graphic_context_providers.back();
-}
+	GraphicContextProvider *SharedGCData_Impl::get_provider()
+	{
+		if (graphic_context_providers.empty())
+			return nullptr;
+		return graphic_context_providers.back();
+	}
 
-void SharedGCData_Impl::dispose_objects()
-{
-	std::vector<DisposableObject*>::iterator it;
-	for (it = disposable_objects.begin(); it != disposable_objects.end(); ++it)
-		(*it)->dispose();
-}
+	void SharedGCData_Impl::dispose_objects()
+	{
+		std::vector<DisposableObject*>::iterator it;
+		for (it = disposable_objects.begin(); it != disposable_objects.end(); ++it)
+			(*it)->dispose();
+	}
 
-void SharedGCData_Impl::add_disposable(DisposableObject *disposable)
-{
-	disposable_objects.push_back(disposable);
-}
+	void SharedGCData_Impl::add_disposable(DisposableObject *disposable)
+	{
+		disposable_objects.push_back(disposable);
+	}
 
-void SharedGCData_Impl::remove_disposable(DisposableObject *disposable)
-{
-	std::vector<DisposableObject*>::iterator it;
-	it = std::find(disposable_objects.begin(), disposable_objects.end(), disposable);
-	if (it != disposable_objects.end())
-		disposable_objects.erase(it);
-}
-
+	void SharedGCData_Impl::remove_disposable(DisposableObject *disposable)
+	{
+		std::vector<DisposableObject*>::iterator it;
+		it = std::find(disposable_objects.begin(), disposable_objects.end(), disposable);
+		if (it != disposable_objects.end())
+			disposable_objects.erase(it);
+	}
 }

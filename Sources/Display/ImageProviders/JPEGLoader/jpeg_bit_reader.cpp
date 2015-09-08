@@ -32,52 +32,50 @@
 
 namespace clan
 {
-
-JPEGBitReader::JPEGBitReader(JPEGFileReader *reader)
-: reader(reader), length(0), pos(0), bitpos(0)
-{
-	buffer.resize(16*1024);
-}
-
-void JPEGBitReader::reset()
-{
-	length = 0;
-	pos = 0;
-	bitpos = 0;
-	buffer.resize(16*1024);
-}
-
-unsigned int JPEGBitReader::get_bit()
-{
-	if (bitpos == 8)
+	JPEGBitReader::JPEGBitReader(JPEGFileReader *reader)
+		: reader(reader), length(0), pos(0), bitpos(0)
 	{
-		pos++;
-		bitpos = 0;
+		buffer.resize(16 * 1024);
 	}
-	if (pos == length)
+
+	void JPEGBitReader::reset()
 	{
-		length = reader->read_entropy_data(&buffer[0], buffer.size());
-		if (length == 0)
-		{
-			//JPEGMarker marker = reader->read_marker();
-			throw Exception("Premature end of JPEG entropy data");
-		}
+		length = 0;
 		pos = 0;
+		bitpos = 0;
+		buffer.resize(16 * 1024);
 	}
 
-	unsigned int v = (buffer[pos] >> (7-bitpos)) & 0x01;
-	bitpos++;
-	return v;
-}
-
-unsigned int JPEGBitReader::get_bits(int count)
-{
-	int v = 0;
-	for (int i = 0; i < count; i++)
+	unsigned int JPEGBitReader::get_bit()
 	{
-		v = (v << 1)|get_bit();
-	}
-	return v;
-}
+		if (bitpos == 8)
+		{
+			pos++;
+			bitpos = 0;
+		}
+		if (pos == length)
+		{
+			length = reader->read_entropy_data(&buffer[0], buffer.size());
+			if (length == 0)
+			{
+				//JPEGMarker marker = reader->read_marker();
+				throw Exception("Premature end of JPEG entropy data");
+			}
+			pos = 0;
+		}
 
+		unsigned int v = (buffer[pos] >> (7 - bitpos)) & 0x01;
+		bitpos++;
+		return v;
+	}
+
+	unsigned int JPEGBitReader::get_bits(int count)
+	{
+		int v = 0;
+		for (int i = 0; i < count; i++)
+		{
+			v = (v << 1) | get_bit();
+		}
+		return v;
+	}
 }

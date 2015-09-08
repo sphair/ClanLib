@@ -33,57 +33,55 @@
 
 namespace clan
 {
-
-class PixelWriter_4hf : public PixelWriter
-{
-public:
-	void write(void *output, Vec4f *input, int num_pixels) override
+	class PixelWriter_4hf : public PixelWriter
 	{
-		Vec4hf *d = static_cast<Vec4hf *>(output);
-		for (int i = 0; i < num_pixels; i++)
+	public:
+		void write(void *output, Vec4f *input, int num_pixels) override
 		{
-			d[i] = Vec4hf(input[i]);
+			Vec4hf *d = static_cast<Vec4hf *>(output);
+			for (int i = 0; i < num_pixels; i++)
+			{
+				d[i] = Vec4hf(input[i]);
+			}
 		}
-	}
-};
+	};
 
-class PixelWriter_3hf : public PixelWriter
-{
-public:
-	void write(void *output, Vec4f *input, int num_pixels) override
+	class PixelWriter_3hf : public PixelWriter
 	{
-		Vec3hf *d = static_cast<Vec3hf *>(output);
-		for (int i = 0; i < num_pixels; i++)
+	public:
+		void write(void *output, Vec4f *input, int num_pixels) override
 		{
-			d[i] = Vec3hf(input[i]);
+			Vec3hf *d = static_cast<Vec3hf *>(output);
+			for (int i = 0; i < num_pixels; i++)
+			{
+				d[i] = Vec3hf(input[i]);
+			}
 		}
-	}
-};
+	};
 
-class PixelWriter_2hf : public PixelWriter
-{
-public:
-	void write(void *output, Vec4f *input, int num_pixels) override
+	class PixelWriter_2hf : public PixelWriter
 	{
-		Vec2hf *d = static_cast<Vec2hf *>(output);
-		for (int i = 0; i < num_pixels; i++)
+	public:
+		void write(void *output, Vec4f *input, int num_pixels) override
 		{
-			d[i] = Vec2hf(input[i]);
+			Vec2hf *d = static_cast<Vec2hf *>(output);
+			for (int i = 0; i < num_pixels; i++)
+			{
+				d[i] = Vec2hf(input[i]);
+			}
 		}
-	}
-};
+	};
 
-class PixelWriter_1hf : public PixelWriter
-{
-public:
-	void write(void *output, Vec4f *input, int num_pixels) override
+	class PixelWriter_1hf : public PixelWriter
 	{
-		HalfFloat *d = static_cast<HalfFloat *>(output);
-		for (int i = 0; i < num_pixels; i++)
+	public:
+		void write(void *output, Vec4f *input, int num_pixels) override
 		{
-			d[i] = HalfFloat(input[i].x);
+			HalfFloat *d = static_cast<HalfFloat *>(output);
+			for (int i = 0; i < num_pixels; i++)
+			{
+				d[i] = HalfFloat(input[i].x);
+			}
 		}
-	}
-};
-
+	};
 }

@@ -48,325 +48,311 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// Texture Construction:
-
-Texture::Texture()
-{
-}
-
-Texture::Texture(GraphicContext &gc, PixelBufferSet pixelbuffer_set)
-{
-	if (pixelbuffer_set.get_dimensions() == texture_1d)
+	Texture::Texture()
 	{
-		Texture1D texture(gc, pixelbuffer_set.get_width(), pixelbuffer_set.get_format(), pixelbuffer_set.get_max_level() + 1);
-		for (int level = 0; level <= pixelbuffer_set.get_max_level(); level++)
-		{
-			PixelBuffer buffer = pixelbuffer_set.get_image(0, level);
-			texture.set_image(gc, buffer, level);
-		}
-		*this = texture;
 	}
-	else if (pixelbuffer_set.get_dimensions() == texture_1d_array)
+
+	Texture::Texture(GraphicContext &gc, PixelBufferSet pixelbuffer_set)
 	{
-		Texture1DArray texture(gc, pixelbuffer_set.get_width(), pixelbuffer_set.get_slice_count(), pixelbuffer_set.get_format(), pixelbuffer_set.get_max_level() + 1);
-		for (int slice = 0; slice < pixelbuffer_set.get_slice_count(); slice++)
+		if (pixelbuffer_set.get_dimensions() == texture_1d)
 		{
+			Texture1D texture(gc, pixelbuffer_set.get_width(), pixelbuffer_set.get_format(), pixelbuffer_set.get_max_level() + 1);
 			for (int level = 0; level <= pixelbuffer_set.get_max_level(); level++)
 			{
-				PixelBuffer buffer = pixelbuffer_set.get_image(slice, level);
-				texture.set_image(gc, slice, buffer, level);
+				PixelBuffer buffer = pixelbuffer_set.get_image(0, level);
+				texture.set_image(gc, buffer, level);
 			}
+			*this = texture;
 		}
-		*this = texture;
-	}
-	else if (pixelbuffer_set.get_dimensions() == texture_2d)
-	{
-		Texture2D texture(gc, pixelbuffer_set.get_width(), pixelbuffer_set.get_height(), pixelbuffer_set.get_format(), pixelbuffer_set.get_max_level() + 1);
-		for (int level = 0; level <= pixelbuffer_set.get_max_level(); level++)
+		else if (pixelbuffer_set.get_dimensions() == texture_1d_array)
 		{
-			PixelBuffer buffer = pixelbuffer_set.get_image(0, level);
-			texture.set_image(gc, buffer, level);
+			Texture1DArray texture(gc, pixelbuffer_set.get_width(), pixelbuffer_set.get_slice_count(), pixelbuffer_set.get_format(), pixelbuffer_set.get_max_level() + 1);
+			for (int slice = 0; slice < pixelbuffer_set.get_slice_count(); slice++)
+			{
+				for (int level = 0; level <= pixelbuffer_set.get_max_level(); level++)
+				{
+					PixelBuffer buffer = pixelbuffer_set.get_image(slice, level);
+					texture.set_image(gc, slice, buffer, level);
+				}
+			}
+			*this = texture;
 		}
-		*this = texture;
-	}
-	else if (pixelbuffer_set.get_dimensions() == texture_2d_array)
-	{
-		Texture2DArray texture(gc, pixelbuffer_set.get_width(), pixelbuffer_set.get_height(), pixelbuffer_set.get_slice_count(), pixelbuffer_set.get_format(), pixelbuffer_set.get_max_level() + 1);
-		for (int slice = 0; slice < pixelbuffer_set.get_slice_count(); slice++)
+		else if (pixelbuffer_set.get_dimensions() == texture_2d)
 		{
+			Texture2D texture(gc, pixelbuffer_set.get_width(), pixelbuffer_set.get_height(), pixelbuffer_set.get_format(), pixelbuffer_set.get_max_level() + 1);
 			for (int level = 0; level <= pixelbuffer_set.get_max_level(); level++)
 			{
-				PixelBuffer buffer = pixelbuffer_set.get_image(slice, level);
-				texture.set_image(gc, slice, buffer, level);
+				PixelBuffer buffer = pixelbuffer_set.get_image(0, level);
+				texture.set_image(gc, buffer, level);
 			}
+			*this = texture;
 		}
-		*this = texture;
-	}
-	else if (pixelbuffer_set.get_dimensions() == texture_3d)
-	{
-		Texture3D texture(gc, pixelbuffer_set.get_width(), pixelbuffer_set.get_height(), pixelbuffer_set.get_slice_count(), pixelbuffer_set.get_format(), pixelbuffer_set.get_max_level() + 1);
-		for (int slice = 0; slice < pixelbuffer_set.get_slice_count(); slice++)
+		else if (pixelbuffer_set.get_dimensions() == texture_2d_array)
 		{
-			for (int level = 0; level <= pixelbuffer_set.get_max_level(); level++)
+			Texture2DArray texture(gc, pixelbuffer_set.get_width(), pixelbuffer_set.get_height(), pixelbuffer_set.get_slice_count(), pixelbuffer_set.get_format(), pixelbuffer_set.get_max_level() + 1);
+			for (int slice = 0; slice < pixelbuffer_set.get_slice_count(); slice++)
 			{
-				PixelBuffer buffer = pixelbuffer_set.get_image(slice, level);
-				texture.set_image(gc, buffer, slice, level);
+				for (int level = 0; level <= pixelbuffer_set.get_max_level(); level++)
+				{
+					PixelBuffer buffer = pixelbuffer_set.get_image(slice, level);
+					texture.set_image(gc, slice, buffer, level);
+				}
 			}
+			*this = texture;
 		}
-		*this = texture;
-	}
-	else if (pixelbuffer_set.get_dimensions() == texture_cube)
-	{
-		TextureCube texture(gc, pixelbuffer_set.get_width(), pixelbuffer_set.get_height(), pixelbuffer_set.get_format(), pixelbuffer_set.get_max_level() + 1);
-		for (int slice = 0; slice < pixelbuffer_set.get_slice_count(); slice++)
+		else if (pixelbuffer_set.get_dimensions() == texture_3d)
 		{
-			for (int level = 0; level <= pixelbuffer_set.get_max_level(); level++)
+			Texture3D texture(gc, pixelbuffer_set.get_width(), pixelbuffer_set.get_height(), pixelbuffer_set.get_slice_count(), pixelbuffer_set.get_format(), pixelbuffer_set.get_max_level() + 1);
+			for (int slice = 0; slice < pixelbuffer_set.get_slice_count(); slice++)
 			{
-				PixelBuffer buffer = pixelbuffer_set.get_image(slice, level);
-				texture.set_image(gc, (TextureCubeDirection)slice, buffer, level);
+				for (int level = 0; level <= pixelbuffer_set.get_max_level(); level++)
+				{
+					PixelBuffer buffer = pixelbuffer_set.get_image(slice, level);
+					texture.set_image(gc, buffer, slice, level);
+				}
 			}
+			*this = texture;
 		}
-		*this = texture;
-	}
-	else if (pixelbuffer_set.get_dimensions() == texture_cube_array)
-	{
-		TextureCubeArray texture(gc, pixelbuffer_set.get_width(), pixelbuffer_set.get_height(), pixelbuffer_set.get_slice_count(), pixelbuffer_set.get_format(), pixelbuffer_set.get_max_level() + 1);
-		for (int slice = 0; slice < pixelbuffer_set.get_slice_count(); slice++)
+		else if (pixelbuffer_set.get_dimensions() == texture_cube)
 		{
-			for (int level = 0; level <= pixelbuffer_set.get_max_level(); level++)
+			TextureCube texture(gc, pixelbuffer_set.get_width(), pixelbuffer_set.get_height(), pixelbuffer_set.get_format(), pixelbuffer_set.get_max_level() + 1);
+			for (int slice = 0; slice < pixelbuffer_set.get_slice_count(); slice++)
 			{
-				PixelBuffer buffer = pixelbuffer_set.get_image(slice, level);
-				texture.set_image(gc, slice / 6, (TextureCubeDirection)(slice % 6), buffer, level);
+				for (int level = 0; level <= pixelbuffer_set.get_max_level(); level++)
+				{
+					PixelBuffer buffer = pixelbuffer_set.get_image(slice, level);
+					texture.set_image(gc, (TextureCubeDirection)slice, buffer, level);
+				}
 			}
+			*this = texture;
 		}
-		*this = texture;
+		else if (pixelbuffer_set.get_dimensions() == texture_cube_array)
+		{
+			TextureCubeArray texture(gc, pixelbuffer_set.get_width(), pixelbuffer_set.get_height(), pixelbuffer_set.get_slice_count(), pixelbuffer_set.get_format(), pixelbuffer_set.get_max_level() + 1);
+			for (int slice = 0; slice < pixelbuffer_set.get_slice_count(); slice++)
+			{
+				for (int level = 0; level <= pixelbuffer_set.get_max_level(); level++)
+				{
+					PixelBuffer buffer = pixelbuffer_set.get_image(slice, level);
+					texture.set_image(gc, slice / 6, (TextureCubeDirection)(slice % 6), buffer, level);
+				}
+			}
+			*this = texture;
+		}
+		else
+		{
+			throw Exception("Unsupported texture dimensions");
+		}
 	}
-	else
+
+	Texture::Texture(TextureProvider *provider)
+		: impl(std::make_shared<Texture_Impl>())
 	{
-		throw Exception("Unsupported texture dimensions");
+		impl->provider = provider;
 	}
-}
 
-Texture::Texture(TextureProvider *provider)
-: impl(std::make_shared<Texture_Impl>())
-{
-	impl->provider = provider;
-}
-
-Texture::Texture(const std::shared_ptr<Texture_Impl> &impl)
-: impl(impl)
-{
-}
-
-Texture::~Texture()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Sprite Resources:
-
-Resource<Texture> Texture::resource(GraphicContext &gc, const std::string &id, const ResourceManager &resources)
-{
-	return DisplayCache::get(resources).get_texture(gc, id);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Texture Attributes:
-
-void Texture::throw_if_null() const
-{
-	if (!impl)
-		throw Exception("Texture is null");
-}
-
-float Texture::get_min_lod() const
-{
-	return impl->min_lod;
-}
-
-float Texture::get_max_lod() const
-{
-	return impl->max_lod;
-}
-
-float Texture::get_lod_bias() const
-{
-	return impl->lod_bias;
-}
-
-int Texture::get_base_level() const
-{
-	return impl->base_level;
-}
-
-int Texture::get_max_level() const
-{
-	return impl->max_level;
-}
-
-TextureFilter Texture::get_min_filter() const
-{
-	return impl->min_filter;
-}
-
-TextureFilter Texture::get_mag_filter() const
-{
-	return impl->mag_filter;
-}
-
-bool Texture::is_resident() const
-{
-	return impl->resident;
-}
-
-TextureCompareMode Texture::get_compare_mode() const
-{
-	return impl->compare_mode;
-}
-
-CompareFunction Texture::get_compare_function() const
-{
-	return impl->compare_function;
-}
-
-TextureProvider *Texture::get_provider() const
-{
-	if (!impl)
-		return nullptr;
-	else
-		return impl->provider;
-}
-
-std::weak_ptr<Texture_Impl> Texture::get_impl() const
-{
-	return std::weak_ptr<Texture_Impl>(impl);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Texture Operations:
-
-void Texture::generate_mipmap()
-{
-	impl->provider->generate_mipmap();
-}
-
-void Texture::set_min_lod(float min_lod)
-{
-	if( impl->min_lod != min_lod )
+	Texture::Texture(const std::shared_ptr<Texture_Impl> &impl)
+		: impl(impl)
 	{
-		impl->provider->set_min_lod(min_lod);
-		impl->min_lod = min_lod;
 	}
-}
 
-void Texture::set_max_lod(float max_lod)
-{
-	if( impl->max_lod != max_lod )
+	Texture::~Texture()
 	{
-		impl->provider->set_max_lod(max_lod);
-		impl->max_lod = max_lod;
 	}
-}
 
-void Texture::set_lod_bias(float lod_bias)
-{
-	if( impl->lod_bias != lod_bias )
+	Resource<Texture> Texture::resource(GraphicContext &gc, const std::string &id, const ResourceManager &resources)
 	{
-		impl->provider->set_lod_bias(lod_bias);
-		impl->lod_bias = lod_bias;
+		return DisplayCache::get(resources).get_texture(gc, id);
 	}
-}
 
-void Texture::set_base_level(int base_level)
-{
-	if( impl->base_level != base_level )
+	void Texture::throw_if_null() const
 	{
-		impl->provider->set_base_level(base_level);
-		impl->base_level = base_level;
+		if (!impl)
+			throw Exception("Texture is null");
 	}
-}
 
-void Texture::set_max_level(int max_level)
-{
-	if( impl->max_level != max_level )
+	float Texture::get_min_lod() const
 	{
-		impl->provider->set_max_level(max_level);
-		impl->max_level = max_level;
+		return impl->min_lod;
 	}
-}
 
-void Texture::set_min_filter(TextureFilter min_filter)
-{
-	if( impl->min_filter != min_filter )
+	float Texture::get_max_lod() const
 	{
-		impl->provider->set_min_filter(min_filter);
-		impl->min_filter = min_filter;
+		return impl->max_lod;
 	}
-}
 
-void Texture::set_mag_filter(TextureFilter mag_filter)
-{
-	if( impl->mag_filter != mag_filter )
+	float Texture::get_lod_bias() const
 	{
-		impl->provider->set_mag_filter(mag_filter);
-		impl->mag_filter = mag_filter;
+		return impl->lod_bias;
 	}
-}
 
-void Texture::set_max_anisotropy(float max_anisotropy)
-{
-	if( impl->max_anisotropy != max_anisotropy )
+	int Texture::get_base_level() const
 	{
-		impl->provider->set_max_anisotropy(max_anisotropy);
-		impl->max_anisotropy = max_anisotropy;
+		return impl->base_level;
 	}
-}
 
-void Texture::set_texture_compare(TextureCompareMode mode, CompareFunction func)
-{
-	if( impl->compare_mode != mode || impl->compare_function != func )
+	int Texture::get_max_level() const
 	{
-		impl->compare_mode = mode;
-		impl->compare_function = func;
-		impl->provider->set_texture_compare(mode,func);
+		return impl->max_level;
 	}
-}
 
-Texture1D Texture::to_texture_1d() const
-{
-	return Texture1D(impl);
-}
+	TextureFilter Texture::get_min_filter() const
+	{
+		return impl->min_filter;
+	}
 
-Texture1DArray Texture::to_texture_1d_array() const
-{
-	return Texture1DArray(impl);
-}
+	TextureFilter Texture::get_mag_filter() const
+	{
+		return impl->mag_filter;
+	}
 
-Texture2D Texture::to_texture_2d() const
-{
-	return Texture2D(impl);
-}
+	bool Texture::is_resident() const
+	{
+		return impl->resident;
+	}
 
-Texture2DArray Texture::to_texture_2d_array() const
-{
-	return Texture2DArray(impl);
-}
+	TextureCompareMode Texture::get_compare_mode() const
+	{
+		return impl->compare_mode;
+	}
 
-Texture3D Texture::to_texture_3d() const
-{
-	return Texture3D(impl);
-}
+	CompareFunction Texture::get_compare_function() const
+	{
+		return impl->compare_function;
+	}
 
-TextureCube Texture::to_texture_cube() const
-{
-	return TextureCube(impl);
-}
+	TextureProvider *Texture::get_provider() const
+	{
+		if (!impl)
+			return nullptr;
+		else
+			return impl->provider;
+	}
 
-TextureCubeArray Texture::to_texture_cube_array() const
-{
-	return TextureCubeArray(impl);
-}
+	std::weak_ptr<Texture_Impl> Texture::get_impl() const
+	{
+		return std::weak_ptr<Texture_Impl>(impl);
+	}
 
+	void Texture::generate_mipmap()
+	{
+		impl->provider->generate_mipmap();
+	}
+
+	void Texture::set_min_lod(float min_lod)
+	{
+		if (impl->min_lod != min_lod)
+		{
+			impl->provider->set_min_lod(min_lod);
+			impl->min_lod = min_lod;
+		}
+	}
+
+	void Texture::set_max_lod(float max_lod)
+	{
+		if (impl->max_lod != max_lod)
+		{
+			impl->provider->set_max_lod(max_lod);
+			impl->max_lod = max_lod;
+		}
+	}
+
+	void Texture::set_lod_bias(float lod_bias)
+	{
+		if (impl->lod_bias != lod_bias)
+		{
+			impl->provider->set_lod_bias(lod_bias);
+			impl->lod_bias = lod_bias;
+		}
+	}
+
+	void Texture::set_base_level(int base_level)
+	{
+		if (impl->base_level != base_level)
+		{
+			impl->provider->set_base_level(base_level);
+			impl->base_level = base_level;
+		}
+	}
+
+	void Texture::set_max_level(int max_level)
+	{
+		if (impl->max_level != max_level)
+		{
+			impl->provider->set_max_level(max_level);
+			impl->max_level = max_level;
+		}
+	}
+
+	void Texture::set_min_filter(TextureFilter min_filter)
+	{
+		if (impl->min_filter != min_filter)
+		{
+			impl->provider->set_min_filter(min_filter);
+			impl->min_filter = min_filter;
+		}
+	}
+
+	void Texture::set_mag_filter(TextureFilter mag_filter)
+	{
+		if (impl->mag_filter != mag_filter)
+		{
+			impl->provider->set_mag_filter(mag_filter);
+			impl->mag_filter = mag_filter;
+		}
+	}
+
+	void Texture::set_max_anisotropy(float max_anisotropy)
+	{
+		if (impl->max_anisotropy != max_anisotropy)
+		{
+			impl->provider->set_max_anisotropy(max_anisotropy);
+			impl->max_anisotropy = max_anisotropy;
+		}
+	}
+
+	void Texture::set_texture_compare(TextureCompareMode mode, CompareFunction func)
+	{
+		if (impl->compare_mode != mode || impl->compare_function != func)
+		{
+			impl->compare_mode = mode;
+			impl->compare_function = func;
+			impl->provider->set_texture_compare(mode, func);
+		}
+	}
+
+	Texture1D Texture::to_texture_1d() const
+	{
+		return Texture1D(impl);
+	}
+
+	Texture1DArray Texture::to_texture_1d_array() const
+	{
+		return Texture1DArray(impl);
+	}
+
+	Texture2D Texture::to_texture_2d() const
+	{
+		return Texture2D(impl);
+	}
+
+	Texture2DArray Texture::to_texture_2d_array() const
+	{
+		return Texture2DArray(impl);
+	}
+
+	Texture3D Texture::to_texture_3d() const
+	{
+		return Texture3D(impl);
+	}
+
+	TextureCube Texture::to_texture_cube() const
+	{
+		return TextureCube(impl);
+	}
+
+	TextureCubeArray Texture::to_texture_cube_array() const
+	{
+		return TextureCubeArray(impl);
+	}
 }

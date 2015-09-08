@@ -32,58 +32,56 @@
 
 namespace clan
 {
+	class GraphicContextProvider;
 
-class GraphicContextProvider;
+	class GraphicScreen
+	{
+	public:
+		GraphicScreen(GraphicContextProvider *provider);
+		~GraphicScreen();
+		GraphicContextProvider *get_provider() { return provider; }
+		int get_max_attributes() const { return max_attributes; }
 
-class GraphicScreen
-{
-public:
-	GraphicScreen(GraphicContextProvider *provider);
-	~GraphicScreen();
-	GraphicContextProvider *get_provider() { return provider; }
-	int get_max_attributes() const { return max_attributes; }
+		void set_active(GraphicContext_State *state);
+		void state_destroyed(GraphicContext_State *state);
 
-	void set_active(GraphicContext_State *state);
-	void state_destroyed(GraphicContext_State *state);
+		void on_rasterizer_state_changed(GraphicContext_State *state);
+		void on_blend_state_changed(GraphicContext_State *state);
+		void on_depth_stencil_state_changed(GraphicContext_State *state);
 
-	void on_rasterizer_state_changed(GraphicContext_State *state);
-	void on_blend_state_changed(GraphicContext_State *state);
-	void on_depth_stencil_state_changed(GraphicContext_State *state);
-
-	void on_texture_changed(GraphicContext_State *state, int unit_index);
-	void on_textures_changed(GraphicContext_State *state);
-	void on_image_texture_changed(GraphicContext_State *state, int unit_index);
-	void on_image_textures_changed(GraphicContext_State *state);
-	void on_uniform_buffer_changed(GraphicContext_State *state, int index);
-	void on_storage_buffer_changed(GraphicContext_State *state, int index);
-	void on_scissor_changed(GraphicContext_State *state);
-	void on_viewport_changed(GraphicContext_State *state);
-	void on_depth_range_changed(GraphicContext_State *state, int viewport);
-	void on_framebuffer_changed(GraphicContext_State *state);
-	void on_program_changed(GraphicContext_State *state);
-	void on_draw_buffer_changed(GraphicContext_State *state);
+		void on_texture_changed(GraphicContext_State *state, int unit_index);
+		void on_textures_changed(GraphicContext_State *state);
+		void on_image_texture_changed(GraphicContext_State *state, int unit_index);
+		void on_image_textures_changed(GraphicContext_State *state);
+		void on_uniform_buffer_changed(GraphicContext_State *state, int index);
+		void on_storage_buffer_changed(GraphicContext_State *state, int index);
+		void on_scissor_changed(GraphicContext_State *state);
+		void on_viewport_changed(GraphicContext_State *state);
+		void on_depth_range_changed(GraphicContext_State *state, int viewport);
+		void on_framebuffer_changed(GraphicContext_State *state);
+		void on_program_changed(GraphicContext_State *state);
+		void on_draw_buffer_changed(GraphicContext_State *state);
 
 
-private:
-	void set_default_state();
-	void set_active_pen(GraphicContext_State *state);
-	void set_active_buffer_control(GraphicContext_State *state);
-	void set_active_polygon_rasterizer(GraphicContext_State *state);
-	void set_active_frame_buffer(GraphicContext_State *state);
-	void set_active_textures(GraphicContext_State *state);
-	void set_active_image_textures(GraphicContext_State *state);
-	void set_active_uniform_buffers(GraphicContext_State *state);
-	void set_active_storage_buffers(GraphicContext_State *state);
-	void set_active_scissor(GraphicContext_State *state);
-	void set_active_viewport(GraphicContext_State *state);
-	void set_active_program(GraphicContext_State *state);
-	void set_active_standard_shader(GraphicContext_State *state);
-	void set_active_depth_range(GraphicContext_State *state);
+	private:
+		void set_default_state();
+		void set_active_pen(GraphicContext_State *state);
+		void set_active_buffer_control(GraphicContext_State *state);
+		void set_active_polygon_rasterizer(GraphicContext_State *state);
+		void set_active_frame_buffer(GraphicContext_State *state);
+		void set_active_textures(GraphicContext_State *state);
+		void set_active_image_textures(GraphicContext_State *state);
+		void set_active_uniform_buffers(GraphicContext_State *state);
+		void set_active_storage_buffers(GraphicContext_State *state);
+		void set_active_scissor(GraphicContext_State *state);
+		void set_active_viewport(GraphicContext_State *state);
+		void set_active_program(GraphicContext_State *state);
+		void set_active_standard_shader(GraphicContext_State *state);
+		void set_active_depth_range(GraphicContext_State *state);
 
-	int max_attributes;
-	GraphicContextProvider *provider;
-	GraphicContext_State *current;
-	GraphicContext_State active_state;
-};
-
+		int max_attributes;
+		GraphicContextProvider *provider;
+		GraphicContext_State *current;
+		GraphicContext_State active_state;
+	};
 }

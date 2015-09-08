@@ -37,108 +37,93 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// InputDeviceProvider_Win32Mouse construction:
-
-InputDeviceProvider_Win32Mouse::InputDeviceProvider_Win32Mouse(Win32Window *window)
-: sig_provider_event(0), window(window)
-{
-	for (int i=0; i<32; i++) key_states[i] = false;
-}
-
-InputDeviceProvider_Win32Mouse::~InputDeviceProvider_Win32Mouse()
-{
-	dispose();
-}
-
-
-/////////////////////////////////////////////////////////////////////////////
-// InputDeviceProvider_Win32Mouse attributes:
-
-Pointf InputDeviceProvider_Win32Mouse::get_position() const
-{
-	return Pointf(get_device_position()) / window->get_pixel_ratio();
-}
-
-Point InputDeviceProvider_Win32Mouse::get_device_position() const
-{
-	throw_if_disposed();
-	POINT cursor_pos;
-	GetCursorPos(&cursor_pos);
-
-	BOOL res = ScreenToClient(window->get_hwnd(), &cursor_pos);
-	if (res == FALSE) return Point();
-
-	return Point(cursor_pos.x, cursor_pos.y);
-}
-
-bool InputDeviceProvider_Win32Mouse::get_keycode(int keycode) const
-{
-	throw_if_disposed();
-	if (keycode < 0 || keycode >= 32) return false;
-	return key_states[keycode];
-}
-
-std::string InputDeviceProvider_Win32Mouse::get_key_name(int id) const
-{
-	throw_if_disposed();
-	switch (id)
+	InputDeviceProvider_Win32Mouse::InputDeviceProvider_Win32Mouse(Win32Window *window)
+		: sig_provider_event(0), window(window)
 	{
-	case 0: return "Mouse left";
-	case 1: return "Mouse right";
-	case 2: return "Mouse middle";
-	case 3: return "Mouse wheel up";
-	case 4: return "Mouse wheel down";
+		for (int i = 0; i < 32; i++) key_states[i] = false;
 	}
 
-	return string_format("Mouse button %1", id);
-}
+	InputDeviceProvider_Win32Mouse::~InputDeviceProvider_Win32Mouse()
+	{
+		dispose();
+	}
 
-std::string InputDeviceProvider_Win32Mouse::get_name() const
-{
-	throw_if_disposed();
-	return "System Mouse";
-}
+	Pointf InputDeviceProvider_Win32Mouse::get_position() const
+	{
+		return Pointf(get_device_position()) / window->get_pixel_ratio();
+	}
 
-std::string InputDeviceProvider_Win32Mouse::get_device_name() const
-{
-	throw_if_disposed();
-	return "System Mouse";
-}
+	Point InputDeviceProvider_Win32Mouse::get_device_position() const
+	{
+		throw_if_disposed();
+		POINT cursor_pos;
+		GetCursorPos(&cursor_pos);
 
-int InputDeviceProvider_Win32Mouse::get_button_count() const
-{
-	throw_if_disposed();
-	return -1;
-}
+		BOOL res = ScreenToClient(window->get_hwnd(), &cursor_pos);
+		if (res == FALSE) return Point();
 
-/////////////////////////////////////////////////////////////////////////////
-// InputDeviceProvider_Win32Mouse operations:
+		return Point(cursor_pos.x, cursor_pos.y);
+	}
 
-void InputDeviceProvider_Win32Mouse::set_position(float x, float y)
-{
-	x *= window->get_pixel_ratio();
-	y *= window->get_pixel_ratio();
-	set_device_position(x, y);
-}
+	bool InputDeviceProvider_Win32Mouse::get_keycode(int keycode) const
+	{
+		throw_if_disposed();
+		if (keycode < 0 || keycode >= 32) return false;
+		return key_states[keycode];
+	}
 
-void InputDeviceProvider_Win32Mouse::set_device_position(int x, int y)
-{
-	throw_if_disposed();
-	POINT pt;
-	pt.x = x;
-	pt.y = y;
+	std::string InputDeviceProvider_Win32Mouse::get_key_name(int id) const
+	{
+		throw_if_disposed();
+		switch (id)
+		{
+		case 0: return "Mouse left";
+		case 1: return "Mouse right";
+		case 2: return "Mouse middle";
+		case 3: return "Mouse wheel up";
+		case 4: return "Mouse wheel down";
+		}
 
-	ClientToScreen(window->get_hwnd(), &pt);
-	SetCursorPos(pt.x, pt.y);
-}
+		return string_format("Mouse button %1", id);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// InputDeviceProvider_Win32Mouse implementation:
+	std::string InputDeviceProvider_Win32Mouse::get_name() const
+	{
+		throw_if_disposed();
+		return "System Mouse";
+	}
 
-void InputDeviceProvider_Win32Mouse::on_dispose()
-{
-}
+	std::string InputDeviceProvider_Win32Mouse::get_device_name() const
+	{
+		throw_if_disposed();
+		return "System Mouse";
+	}
 
+	int InputDeviceProvider_Win32Mouse::get_button_count() const
+	{
+		throw_if_disposed();
+		return -1;
+	}
+
+	void InputDeviceProvider_Win32Mouse::set_position(float x, float y)
+	{
+		x *= window->get_pixel_ratio();
+		y *= window->get_pixel_ratio();
+		set_device_position(x, y);
+	}
+
+	void InputDeviceProvider_Win32Mouse::set_device_position(int x, int y)
+	{
+		throw_if_disposed();
+		POINT pt;
+		pt.x = x;
+		pt.y = y;
+
+		ClientToScreen(window->get_hwnd(), &pt);
+		SetCursorPos(pt.x, pt.y);
+	}
+
+	void InputDeviceProvider_Win32Mouse::on_dispose()
+	{
+	}
 }

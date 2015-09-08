@@ -41,177 +41,159 @@
 
 namespace clan
 {
+	class ShaderObject_Impl
+	{
+	public:
+		ShaderObject_Impl() : provider(nullptr)
+		{
+		}
 
-/////////////////////////////////////////////////////////////////////////////
-// ShaderObject_Impl Class:
+		~ShaderObject_Impl()
+		{
+			if (provider)
+				delete provider;
+		}
 
-class ShaderObject_Impl
-{
-public:
-	ShaderObject_Impl() : provider(nullptr)
+		ShaderObjectProvider *provider;
+	};
+
+	ShaderObject::ShaderObject()
 	{
 	}
 
-	~ShaderObject_Impl()
+	ShaderObject::ShaderObject(GraphicContext &gc, ShaderType type, const void *source, int source_size)
+		: impl(std::make_shared<ShaderObject_Impl>())
 	{
-		if (provider)
-			delete provider;
+		GraphicContextProvider *gc_provider = gc.get_provider();
+		impl->provider = gc_provider->alloc_shader_object();
+		impl->provider->create(type, source, source_size);
 	}
 
-	ShaderObjectProvider *provider;
-};
-
-/////////////////////////////////////////////////////////////////////////////
-// ShaderObject Construction:
-
-ShaderObject::ShaderObject()
-{
-	// empty
-}
-
-ShaderObject::ShaderObject(GraphicContext &gc, ShaderType type, const void *source, int source_size)
-: impl(std::make_shared<ShaderObject_Impl>())
-{
-	GraphicContextProvider *gc_provider = gc.get_provider();
-	impl->provider = gc_provider->alloc_shader_object();
-	impl->provider->create(type, source, source_size);
-}
-
-ShaderObject::ShaderObject(GraphicContext &gc, ShaderType type, const std::string &source)
-: impl(std::make_shared<ShaderObject_Impl>())
-{
-	GraphicContextProvider *gc_provider = gc.get_provider();
-	impl->provider = gc_provider->alloc_shader_object();
-	impl->provider->create(type, source);
-}
+	ShaderObject::ShaderObject(GraphicContext &gc, ShaderType type, const std::string &source)
+		: impl(std::make_shared<ShaderObject_Impl>())
+	{
+		GraphicContextProvider *gc_provider = gc.get_provider();
+		impl->provider = gc_provider->alloc_shader_object();
+		impl->provider->create(type, source);
+	}
 
 
-ShaderObject::ShaderObject(GraphicContext &gc, ShaderType type, const std::vector<std::string> &sources)
-: impl(std::make_shared<ShaderObject_Impl>())
-{
-	GraphicContextProvider *gc_provider = gc.get_provider();
-	impl->provider = gc_provider->alloc_shader_object();
-	impl->provider->create(type, sources);
-}
+	ShaderObject::ShaderObject(GraphicContext &gc, ShaderType type, const std::vector<std::string> &sources)
+		: impl(std::make_shared<ShaderObject_Impl>())
+	{
+		GraphicContextProvider *gc_provider = gc.get_provider();
+		impl->provider = gc_provider->alloc_shader_object();
+		impl->provider->create(type, sources);
+	}
 
-ShaderObject::ShaderObject(GraphicContextProvider *gc_provider, ShaderType type, const std::string &source)
-: impl(std::make_shared<ShaderObject_Impl>())
-{
-	impl->provider = gc_provider->alloc_shader_object();
-	impl->provider->create(type, source);
-}
+	ShaderObject::ShaderObject(GraphicContextProvider *gc_provider, ShaderType type, const std::string &source)
+		: impl(std::make_shared<ShaderObject_Impl>())
+	{
+		impl->provider = gc_provider->alloc_shader_object();
+		impl->provider->create(type, source);
+	}
 
-ShaderObject::ShaderObject(GraphicContextProvider *gc_provider, ShaderType type, const std::vector<std::string> &sources)
-: impl(std::make_shared<ShaderObject_Impl>())
-{
-	impl->provider = gc_provider->alloc_shader_object();
-	impl->provider->create(type, sources);
-}
+	ShaderObject::ShaderObject(GraphicContextProvider *gc_provider, ShaderType type, const std::vector<std::string> &sources)
+		: impl(std::make_shared<ShaderObject_Impl>())
+	{
+		impl->provider = gc_provider->alloc_shader_object();
+		impl->provider->create(type, sources);
+	}
 
-ShaderObject ShaderObject::load(GraphicContext &gc, ShaderType shader_type, const std::string &filename, const FileSystem &fs)
-{
-	IODevice file = fs.open_file(filename);
-	return ShaderObject::load(gc, shader_type, file);
-}
+	ShaderObject ShaderObject::load(GraphicContext &gc, ShaderType shader_type, const std::string &filename, const FileSystem &fs)
+	{
+		IODevice file = fs.open_file(filename);
+		return ShaderObject::load(gc, shader_type, file);
+	}
 
-ShaderObject ShaderObject::load(GraphicContext &gc, ShaderType shader_type, IODevice &file)
-{
-	int size = file.get_size();
-	std::string source(size, 0);
-	file.read(&source[0], size);
+	ShaderObject ShaderObject::load(GraphicContext &gc, ShaderType shader_type, IODevice &file)
+	{
+		int size = file.get_size();
+		std::string source(size, 0);
+		file.read(&source[0], size);
 
-	return ShaderObject(gc, shader_type, StringHelp::local8_to_text(source));
-}
+		return ShaderObject(gc, shader_type, StringHelp::local8_to_text(source));
+	}
 
-ShaderObject ShaderObject::load(GraphicContext &gc, ShaderType shader_type, const std::string &fullname)
-{
-	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
-	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	FileSystem vfs(path);
-	return ShaderObject::load(gc, shader_type, filename, vfs);
-}
+	ShaderObject ShaderObject::load(GraphicContext &gc, ShaderType shader_type, const std::string &fullname)
+	{
+		std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
+		std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
+		FileSystem vfs(path);
+		return ShaderObject::load(gc, shader_type, filename, vfs);
+	}
 
-ShaderObject ShaderObject::load_and_compile(GraphicContext &gc, ShaderType shader_type, const std::string &filename, const FileSystem &fs)
-{
-	ShaderObject shader_object = ShaderObject::load(gc, shader_type, filename, fs);
+	ShaderObject ShaderObject::load_and_compile(GraphicContext &gc, ShaderType shader_type, const std::string &filename, const FileSystem &fs)
+	{
+		ShaderObject shader_object = ShaderObject::load(gc, shader_type, filename, fs);
 
-	if(!shader_object.compile())
-		throw Exception(string_format("Unable to compile shader program %1: %2", filename, shader_object.get_info_log()));
+		if (!shader_object.compile())
+			throw Exception(string_format("Unable to compile shader program %1: %2", filename, shader_object.get_info_log()));
 
-	return shader_object;
-}
+		return shader_object;
+	}
 
-ShaderObject ShaderObject::load_and_compile(GraphicContext &gc, ShaderType shader_type, IODevice &file)
-{
-	ShaderObject shader_object = ShaderObject::load(gc, shader_type, file);
+	ShaderObject ShaderObject::load_and_compile(GraphicContext &gc, ShaderType shader_type, IODevice &file)
+	{
+		ShaderObject shader_object = ShaderObject::load(gc, shader_type, file);
 
-	if(!shader_object.compile())
-		throw Exception(string_format("Unable to compile shader program : %1", shader_object.get_info_log()));
+		if (!shader_object.compile())
+			throw Exception(string_format("Unable to compile shader program : %1", shader_object.get_info_log()));
 
-	return shader_object;
-}
+		return shader_object;
+	}
 
-ShaderObject ShaderObject::load_and_compile(GraphicContext &gc, ShaderType shader_type, const std::string &fullname)
-{
-	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
-	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	FileSystem vfs(path);
-	return ShaderObject::load_and_compile(gc, shader_type, filename, vfs);
-}
+	ShaderObject ShaderObject::load_and_compile(GraphicContext &gc, ShaderType shader_type, const std::string &fullname)
+	{
+		std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
+		std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
+		FileSystem vfs(path);
+		return ShaderObject::load_and_compile(gc, shader_type, filename, vfs);
+	}
 
-ShaderObject::~ShaderObject()
-{
-}
+	ShaderObject::~ShaderObject()
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// ShaderObject Attributes:
+	unsigned int ShaderObject::get_handle() const
+	{
+		return impl->provider->get_handle();
+	}
 
-unsigned int ShaderObject::get_handle() const
-{
-	return impl->provider->get_handle();
-}
+	ShaderType ShaderObject::get_shader_type() const
+	{
+		return impl->provider->get_shader_type();
+	}
 
-ShaderType ShaderObject::get_shader_type() const
-{
-	return impl->provider->get_shader_type();
-}
+	std::string ShaderObject::get_info_log() const
+	{
+		return impl->provider->get_info_log();
+	}
 
-std::string ShaderObject::get_info_log() const
-{
-	return impl->provider->get_info_log();
-}
+	std::string ShaderObject::get_shader_source() const
+	{
+		return impl->provider->get_shader_source();
+	}
 
-std::string ShaderObject::get_shader_source() const
-{
-	return impl->provider->get_shader_source();
-}
+	void ShaderObject::throw_if_null() const
+	{
+		if (!impl)
+			throw Exception("ShaderObject is null");
+	}
 
-void ShaderObject::throw_if_null() const
-{
-	if (!impl)
-		throw Exception("ShaderObject is null");
-}
+	ShaderObjectProvider *ShaderObject::get_provider() const
+	{
+		return impl->provider;
+	}
 
-ShaderObjectProvider *ShaderObject::get_provider() const
-{
-	return impl->provider;
-}
+	bool ShaderObject::operator==(const ShaderObject &other) const
+	{
+		return impl == other.impl;
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// ShaderObject Operations:
-
-bool ShaderObject::operator==(const ShaderObject &other) const
-{
-	return impl == other.impl;
-}
-
-bool ShaderObject::compile()
-{
-	impl->provider->compile();
-	return impl->provider->get_compile_status();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// ShaderObject Implementation:
-
+	bool ShaderObject::compile()
+	{
+		impl->provider->compile();
+		return impl->provider->get_compile_status();
+	}
 }

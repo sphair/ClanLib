@@ -32,136 +32,122 @@
 
 namespace clan
 {
+	class PixelBufferSet_Impl
+	{
+	public:
+		PixelBufferSet_Impl(TextureDimensions dimensions, TextureFormat format, int width, int height, int slices)
+			: dimensions(dimensions), format(format), width(width), height(height), slices(slices), base_level(-1), max_level(-1)
+		{
+		}
 
-/////////////////////////////////////////////////////////////////////////////
-/// PixelBufferSet implementation
+		TextureDimensions dimensions;
+		TextureFormat format;
+		int width;
+		int height;
+		std::vector<std::vector<PixelBuffer> > slices;
+		int base_level;
+		int max_level;
+	};
 
-class PixelBufferSet_Impl
-{
-public:
-	PixelBufferSet_Impl(TextureDimensions dimensions, TextureFormat format, int width, int height, int slices)
-		: dimensions(dimensions), format(format), width(width), height(height), slices(slices), base_level(-1), max_level(-1)
+	PixelBufferSet::PixelBufferSet()
 	{
 	}
 
-	TextureDimensions dimensions;
-	TextureFormat format;
-	int width;
-	int height;
-	std::vector<std::vector<PixelBuffer> > slices;
-	int base_level;
-	int max_level;
-};
-
-/////////////////////////////////////////////////////////////////////////////
-/// PixelBufferSet construction
-
-PixelBufferSet::PixelBufferSet()
-{
-}
-
-PixelBufferSet::PixelBufferSet(TextureDimensions dimensions, TextureFormat format, int width, int height, int slices)
-	: impl(std::make_shared<PixelBufferSet_Impl>(dimensions, format, width, height, slices))
-{
-}
-
-PixelBufferSet::PixelBufferSet(const PixelBuffer &image)
-	: impl(std::make_shared<PixelBufferSet_Impl>(texture_2d, image.get_format(), image.get_width(), image.get_height(), 1))
-{
-	set_image(0, 0, image);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-/// PixelBufferSet attributes
-
-void PixelBufferSet::throw_if_null() const
-{
-	if (!impl)
-		throw Exception("PixelBufferSet is null");
-}
-
-TextureDimensions PixelBufferSet::get_dimensions() const
-{
-	throw_if_null();
-	return impl->dimensions;
-}
-
-TextureFormat PixelBufferSet::get_format() const
-{
-	throw_if_null();
-	return impl->format;
-}
-
-int PixelBufferSet::get_width() const
-{
-	throw_if_null();
-	return impl->width;
-}
-
-int PixelBufferSet::get_height() const
-{
-	throw_if_null();
-	return impl->height;
-}
-
-int PixelBufferSet::get_slice_count() const
-{
-	throw_if_null();
-	return impl->slices.size();
-}
-
-int PixelBufferSet::get_base_level() const
-{
-	throw_if_null();
-	return impl->base_level;
-}
-
-int PixelBufferSet::get_max_level() const
-{
-	throw_if_null();
-	return impl->max_level;
-}
-
-PixelBuffer PixelBufferSet::get_image(int slice, int level)
-{
-	throw_if_null();
-
-	if (slice < 0 || slice >= (int)impl->slices.size() || level < 0)
-		throw Exception("Out of bounds");
-
-	if (impl->slices[slice].size() > (size_t)level)
+	PixelBufferSet::PixelBufferSet(TextureDimensions dimensions, TextureFormat format, int width, int height, int slices)
+		: impl(std::make_shared<PixelBufferSet_Impl>(dimensions, format, width, height, slices))
 	{
-		return impl->slices[slice][level];
 	}
-	else
+
+	PixelBufferSet::PixelBufferSet(const PixelBuffer &image)
+		: impl(std::make_shared<PixelBufferSet_Impl>(texture_2d, image.get_format(), image.get_width(), image.get_height(), 1))
 	{
-		return PixelBuffer();
+		set_image(0, 0, image);
 	}
-}
 
-/////////////////////////////////////////////////////////////////////////////
-/// PixelBufferSet operations
+	void PixelBufferSet::throw_if_null() const
+	{
+		if (!impl)
+			throw Exception("PixelBufferSet is null");
+	}
 
-void PixelBufferSet::set_image(int slice, int level, const PixelBuffer &image)
-{
-	throw_if_null();
+	TextureDimensions PixelBufferSet::get_dimensions() const
+	{
+		throw_if_null();
+		return impl->dimensions;
+	}
 
-	if (slice < 0 || slice >= (int)impl->slices.size() || level < 0)
-		throw Exception("Out of bounds");
+	TextureFormat PixelBufferSet::get_format() const
+	{
+		throw_if_null();
+		return impl->format;
+	}
 
-	if (impl->slices[slice].size() <= (size_t)level)
-		impl->slices[slice].resize(level + 1);
-	impl->slices[slice][level] = image;
+	int PixelBufferSet::get_width() const
+	{
+		throw_if_null();
+		return impl->width;
+	}
 
-	if (impl->base_level == -1)
-		impl->base_level = level;
-	else
-		impl->base_level = min(impl->base_level, level);
+	int PixelBufferSet::get_height() const
+	{
+		throw_if_null();
+		return impl->height;
+	}
 
-	if (impl->max_level == -1)
-		impl->max_level = level;
-	else
-		impl->max_level = max(impl->max_level, level);
-}
+	int PixelBufferSet::get_slice_count() const
+	{
+		throw_if_null();
+		return impl->slices.size();
+	}
 
+	int PixelBufferSet::get_base_level() const
+	{
+		throw_if_null();
+		return impl->base_level;
+	}
+
+	int PixelBufferSet::get_max_level() const
+	{
+		throw_if_null();
+		return impl->max_level;
+	}
+
+	PixelBuffer PixelBufferSet::get_image(int slice, int level)
+	{
+		throw_if_null();
+
+		if (slice < 0 || slice >= (int)impl->slices.size() || level < 0)
+			throw Exception("Out of bounds");
+
+		if (impl->slices[slice].size() > (size_t)level)
+		{
+			return impl->slices[slice][level];
+		}
+		else
+		{
+			return PixelBuffer();
+		}
+	}
+
+	void PixelBufferSet::set_image(int slice, int level, const PixelBuffer &image)
+	{
+		throw_if_null();
+
+		if (slice < 0 || slice >= (int)impl->slices.size() || level < 0)
+			throw Exception("Out of bounds");
+
+		if (impl->slices[slice].size() <= (size_t)level)
+			impl->slices[slice].resize(level + 1);
+		impl->slices[slice][level] = image;
+
+		if (impl->base_level == -1)
+			impl->base_level = level;
+		else
+			impl->base_level = min(impl->base_level, level);
+
+		if (impl->max_level == -1)
+			impl->max_level = level;
+		else
+			impl->max_level = max(impl->max_level, level);
+	}
 }

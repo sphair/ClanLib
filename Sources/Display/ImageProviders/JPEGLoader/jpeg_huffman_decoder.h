@@ -30,39 +30,37 @@
 
 namespace clan
 {
+	class JPEGBitReader;
+	class JPEGHuffmanTable;
 
-class JPEGBitReader;
-class JPEGHuffmanTable;
+	class JPEGHuffmanDecoder
+	{
+	public:
+		static unsigned int decode(JPEGBitReader &reader, const JPEGHuffmanTable &table);
+		static short decode_number(JPEGBitReader &reader, int length);
+	};
 
-class JPEGHuffmanDecoder
-{
-public:
-	static unsigned int decode(JPEGBitReader &reader, const JPEGHuffmanTable &table);
-	static short decode_number(JPEGBitReader &reader, int length);
-};
+	enum JPEGHuffmanCodes
+	{
+		// Sequential Huffman
+		huffman_eob = 0x00,
 
-enum JPEGHuffmanCodes
-{
-	// Sequential Huffman
-	huffman_eob = 0x00,
-
-	// Progressive Huffman
-	huffman_eob0 = 0x00,
-	huffman_eob1 = 0x01,
-	huffman_eob2 = 0x02,
-	huffman_eob3 = 0x03,
-	huffman_eob4 = 0x04,
-	huffman_eob5 = 0x05,
-	huffman_eob6 = 0x06,
-	huffman_eob7 = 0x07,
-	huffman_eob8 = 0x08,
-	huffman_eob9 = 0x09,
-	huffman_eob10 = 0x0a,
-	huffman_eob11 = 0x0b,
-	huffman_eob12 = 0x0c,
-	huffman_eob13 = 0x0d,
-	huffman_eob14 = 0x0e,
-	huffman_zrl = 0x0f
-};
-
+		// Progressive Huffman
+		huffman_eob0 = 0x00,
+		huffman_eob1 = 0x01,
+		huffman_eob2 = 0x02,
+		huffman_eob3 = 0x03,
+		huffman_eob4 = 0x04,
+		huffman_eob5 = 0x05,
+		huffman_eob6 = 0x06,
+		huffman_eob7 = 0x07,
+		huffman_eob8 = 0x08,
+		huffman_eob9 = 0x09,
+		huffman_eob10 = 0x0a,
+		huffman_eob11 = 0x0b,
+		huffman_eob12 = 0x0c,
+		huffman_eob13 = 0x0d,
+		huffman_eob14 = 0x0e,
+		huffman_zrl = 0x0f
+	};
 }

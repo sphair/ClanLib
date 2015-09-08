@@ -33,57 +33,55 @@
 
 namespace clan
 {
-
-class PixelReader_4hf : public PixelReader
-{
-public:
-	void read(const void *input, Vec4f *output, int num_pixels) override
+	class PixelReader_4hf : public PixelReader
 	{
-		const Vec4hf *d = static_cast<const Vec4hf *>(input);
-		for (int i = 0; i < num_pixels; i++)
+	public:
+		void read(const void *input, Vec4f *output, int num_pixels) override
 		{
-			output[i] = Vec4f(d[i]);
+			const Vec4hf *d = static_cast<const Vec4hf *>(input);
+			for (int i = 0; i < num_pixels; i++)
+			{
+				output[i] = Vec4f(d[i]);
+			}
 		}
-	}
-};
+	};
 
-class PixelReader_3hf : public PixelReader
-{
-public:
-	void read(const void *input, Vec4f *output, int num_pixels) override
+	class PixelReader_3hf : public PixelReader
 	{
-		const Vec3hf *d = static_cast<const Vec3hf *>(input);
-		for (int i = 0; i < num_pixels; i++)
+	public:
+		void read(const void *input, Vec4f *output, int num_pixels) override
 		{
-			output[i] = Vec4f(d[i], 1.0f);
+			const Vec3hf *d = static_cast<const Vec3hf *>(input);
+			for (int i = 0; i < num_pixels; i++)
+			{
+				output[i] = Vec4f(d[i], 1.0f);
+			}
 		}
-	}
-};
+	};
 
-class PixelReader_2hf : public PixelReader
-{
-public:
-	void read(const void *input, Vec4f *output, int num_pixels) override
+	class PixelReader_2hf : public PixelReader
 	{
-		const Vec2hf *d = static_cast<const Vec2hf *>(input);
-		for (int i = 0; i < num_pixels; i++)
+	public:
+		void read(const void *input, Vec4f *output, int num_pixels) override
 		{
-			output[i] = Vec4f(d[i], 0.0f, 1.0f);
+			const Vec2hf *d = static_cast<const Vec2hf *>(input);
+			for (int i = 0; i < num_pixels; i++)
+			{
+				output[i] = Vec4f(d[i], 0.0f, 1.0f);
+			}
 		}
-	}
-};
+	};
 
-class PixelReader_1hf : public PixelReader
-{
-public:
-	void read(const void *input, Vec4f *output, int num_pixels) override
+	class PixelReader_1hf : public PixelReader
 	{
-		const HalfFloat *d = static_cast<const HalfFloat *>(input);
-		for (int i = 0; i < num_pixels; i++)
+	public:
+		void read(const void *input, Vec4f *output, int num_pixels) override
 		{
-			output[i] = Vec4f(d[i], 0.0f, 0.0f, 1.0f);
+			const HalfFloat *d = static_cast<const HalfFloat *>(input);
+			for (int i = 0; i < num_pixels; i++)
+			{
+				output[i] = Vec4f(d[i], 0.0f, 0.0f, 1.0f);
+			}
 		}
-	}
-};
-
+	};
 }

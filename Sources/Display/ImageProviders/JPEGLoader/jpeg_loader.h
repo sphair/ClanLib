@@ -40,62 +40,60 @@
 
 namespace clan
 {
+	class JPEGBitReader;
 
-class JPEGBitReader;
-
-class JPEGLoader
-{
-public:
-	static PixelBuffer load(IODevice iodevice, bool srgb);
-
-private:
-	enum ColorSpace
+	class JPEGLoader
 	{
-		colorspace_ycrcb,
-		colorspace_rgb,
-		colorspace_ycck,
-		colorspace_cmyk,
-		colorspace_grayscale
+	public:
+		static PixelBuffer load(IODevice iodevice, bool srgb);
+
+	private:
+		enum ColorSpace
+		{
+			colorspace_ycrcb,
+			colorspace_rgb,
+			colorspace_ycck,
+			colorspace_cmyk,
+			colorspace_grayscale
+		};
+
+		JPEGLoader(IODevice iodevice);
+
+		void process_app0(JPEGFileReader &reader);
+		void process_app14(JPEGFileReader &reader);
+		void process_dnl(JPEGFileReader &reader);
+		void process_sos(JPEGFileReader &reader);
+		void process_sos_sequential(JPEGStartOfScan &start_of_scan, std::vector<int> component_to_sof, JPEGFileReader &reader);
+		void process_sos_progressive(JPEGStartOfScan &start_of_scan, std::vector<int> component_to_sof, JPEGFileReader &reader);
+		void process_dqt(JPEGFileReader &reader);
+		void process_dht(JPEGFileReader &reader);
+		void process_sof(JPEGMarker marker, JPEGFileReader &reader);
+		void verify_dc_table_selector(const JPEGStartOfScan &start_of_scan);
+		void verify_ac_table_selector(const JPEGStartOfScan &start_of_scan);
+		ColorSpace get_colorspace() const;
+
+		JPEGStartOfFrame start_of_frame;
+		JPEGHuffmanTable huffman_dc_tables[4];
+		JPEGHuffmanTable huffman_ac_tables[4];
+		JPEGQuantizationTable quantization_tables[4];
+		std::vector<JPEGComponentDCTs> component_dcts;
+		bool progressive;
+		int scan_count;
+		int mcu_x;
+		int mcu_y;
+		int mcu_width;
+		int mcu_height;
+		int restart_interval;
+		int eobrun;
+		std::vector<short> last_dc_values;
+
+		bool is_jfif_jpeg;
+		bool is_adobe_jpeg;
+		int adobe_app14_transform;
+
+		static int zigzag_map[64];
+
+		friend class JPEGMCUDecoder;
+		friend class JPEGRGBDecoder;
 	};
-
-	JPEGLoader(IODevice iodevice);
-
-	void process_app0(JPEGFileReader &reader);
-	void process_app14(JPEGFileReader &reader);
-	void process_dnl(JPEGFileReader &reader);
-	void process_sos(JPEGFileReader &reader);
-	void process_sos_sequential(JPEGStartOfScan &start_of_scan, std::vector<int> component_to_sof, JPEGFileReader &reader);
-	void process_sos_progressive(JPEGStartOfScan &start_of_scan, std::vector<int> component_to_sof, JPEGFileReader &reader);
-	void process_dqt(JPEGFileReader &reader);
-	void process_dht(JPEGFileReader &reader);
-	void process_sof(JPEGMarker marker, JPEGFileReader &reader);
-	void verify_dc_table_selector(const JPEGStartOfScan &start_of_scan);
-	void verify_ac_table_selector(const JPEGStartOfScan &start_of_scan);
-	ColorSpace get_colorspace() const;
-
-	JPEGStartOfFrame start_of_frame;
-	JPEGHuffmanTable huffman_dc_tables[4];
-	JPEGHuffmanTable huffman_ac_tables[4];
-	JPEGQuantizationTable quantization_tables[4];
-	std::vector<JPEGComponentDCTs> component_dcts;
-	bool progressive;
-	int scan_count;
-	int mcu_x;
-	int mcu_y;
-	int mcu_width;
-	int mcu_height;
-	int restart_interval;
-	int eobrun;
-	std::vector<short> last_dc_values;
-
-	bool is_jfif_jpeg;
-	bool is_adobe_jpeg;
-	int adobe_app14_transform;
-
-	static int zigzag_map[64];
-
-	friend class JPEGMCUDecoder;
-	friend class JPEGRGBDecoder;
-};
-
 }

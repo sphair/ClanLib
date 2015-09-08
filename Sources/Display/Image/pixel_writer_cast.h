@@ -34,122 +34,120 @@
 
 namespace clan
 {
+	class PixelWriter_cast : public PixelWriter
+	{
+	public:
+		template<typename Type>
+		Type saturate(float v); // Intentionally not implemented (we only use specializations)
+	};
 
-class PixelWriter_cast : public PixelWriter
-{
-public:
+	template<>
+	inline unsigned char PixelWriter_cast::saturate(float v)
+	{
+		return clamp(v + 0.5f, 0.0f, 255.0f);
+	}
+
+	template<>
+	inline unsigned short PixelWriter_cast::saturate(float v)
+	{
+		return clamp(v + 0.5f, 0.0f, 65535.0f);
+	}
+
+	template<>
+	inline unsigned int PixelWriter_cast::saturate(float v)
+	{
+		if (v < 0)
+			return 0;
+		else if (v > 0xffffffff)
+			return 0xffffffff;
+		else
+			return static_cast<unsigned int>(v + 0.5f);
+	}
+
+	template<>
+	inline char PixelWriter_cast::saturate(float v)
+	{
+		float sign = v >= 0.0f ? 0.5f : -0.5f;
+		return clamp(v + sign, -127.0f, 127.0f);
+	}
+
+	template<>
+	inline short PixelWriter_cast::saturate(float v)
+	{
+		float sign = v >= 0.0f ? 0.5f : -0.5f;
+		return clamp(v + sign, -32767.0f, 32767.0f);
+	}
+
+	template<>
+	inline int PixelWriter_cast::saturate(float v)
+	{
+		if (v < -0x7fffffff)
+			return -0x7fffffff;
+		else if (v > 0x7fffffff)
+			return 0x7fffffff;
+		else
+			return static_cast<int>(v + 0.5f);
+	}
+
+	template<>
+	inline float PixelWriter_cast::saturate(float v)
+	{
+		return v;
+	}
+
 	template<typename Type>
-	Type saturate(float v); // Intentionally not implemented (we only use specializations)
-};
-
-template<>
-inline unsigned char PixelWriter_cast::saturate(float v)
-{
-	return clamp(v + 0.5f, 0.0f, 255.0f);
-}
-    
-template<>
-inline unsigned short PixelWriter_cast::saturate(float v)
-{
-	return clamp(v + 0.5f, 0.0f, 65535.0f);
-}
-    
-template<>
-inline unsigned int PixelWriter_cast::saturate(float v)
-{
-	if (v < 0)
-		return 0;
-	else if (v > 0xffffffff)
-		return 0xffffffff;
-	else
-		return static_cast<unsigned int>(v + 0.5f);
-}
-    
-template<>
-inline char PixelWriter_cast::saturate(float v)
-{
-	float sign = v >= 0.0f ? 0.5f : -0.5f;
-	return clamp(v + sign, -127.0f, 127.0f);
-}
-    
-template<>
-inline short PixelWriter_cast::saturate(float v)
-{
-	float sign = v >= 0.0f ? 0.5f : -0.5f;
-	return clamp(v + sign, -32767.0f, 32767.0f);
-}
-    
-template<>
-inline int PixelWriter_cast::saturate(float v)
-{
-	if (v < -0x7fffffff)
-		return -0x7fffffff;
-	else if (v > 0x7fffffff)
-		return 0x7fffffff;
-	else
-		return static_cast<int>(v + 0.5f);
-}
-    
-template<>
-inline float PixelWriter_cast::saturate(float v)
-{
-	return v;
-}
-    
-template<typename Type>
-class PixelWriter_4cast : public PixelWriter_cast
-{
-public:
-	void write(void *output, Vec4f *input, int num_pixels) override
+	class PixelWriter_4cast : public PixelWriter_cast
 	{
-		Vec4<Type> *d = static_cast<Vec4<Type> *>(output);
-		for (int i = 0; i < num_pixels; i++)
+	public:
+		void write(void *output, Vec4f *input, int num_pixels) override
 		{
-			d[i] = Vec4<Type>(saturate<Type>(input[i].x), saturate<Type>(input[i].y), saturate<Type>(input[i].z), saturate<Type>(input[i].w));
+			Vec4<Type> *d = static_cast<Vec4<Type> *>(output);
+			for (int i = 0; i < num_pixels; i++)
+			{
+				d[i] = Vec4<Type>(saturate<Type>(input[i].x), saturate<Type>(input[i].y), saturate<Type>(input[i].z), saturate<Type>(input[i].w));
+			}
 		}
-	}
-};
+	};
 
-template<typename Type>
-class PixelWriter_3cast : public PixelWriter_cast
-{
-public:
-	void write(void *output, Vec4f *input, int num_pixels) override
+	template<typename Type>
+	class PixelWriter_3cast : public PixelWriter_cast
 	{
-		Vec3<Type> *d = static_cast<Vec3<Type> *>(output);
-		for (int i = 0; i < num_pixels; i++)
+	public:
+		void write(void *output, Vec4f *input, int num_pixels) override
 		{
-			d[i] = Vec3<Type>(saturate<Type>(input[i].x), saturate<Type>(input[i].y), saturate<Type>(input[i].z));
+			Vec3<Type> *d = static_cast<Vec3<Type> *>(output);
+			for (int i = 0; i < num_pixels; i++)
+			{
+				d[i] = Vec3<Type>(saturate<Type>(input[i].x), saturate<Type>(input[i].y), saturate<Type>(input[i].z));
+			}
 		}
-	}
-};
+	};
 
-template<typename Type>
-class PixelWriter_2cast : public PixelWriter_cast
-{
-public:
-	void write(void *output, Vec4f *input, int num_pixels) override
+	template<typename Type>
+	class PixelWriter_2cast : public PixelWriter_cast
 	{
-		Vec2<Type> *d = static_cast<Vec2<Type> *>(output);
-		for (int i = 0; i < num_pixels; i++)
+	public:
+		void write(void *output, Vec4f *input, int num_pixels) override
 		{
-			d[i] = Vec2<Type>(saturate<Type>(input[i].x), saturate<Type>(input[i].y));
+			Vec2<Type> *d = static_cast<Vec2<Type> *>(output);
+			for (int i = 0; i < num_pixels; i++)
+			{
+				d[i] = Vec2<Type>(saturate<Type>(input[i].x), saturate<Type>(input[i].y));
+			}
 		}
-	}
-};
+	};
 
-template<typename Type>
-class PixelWriter_1cast : public PixelWriter_cast
-{
-public:
-	void write(void *output, Vec4f *input, int num_pixels) override
+	template<typename Type>
+	class PixelWriter_1cast : public PixelWriter_cast
 	{
-		Type *d = static_cast< Type *>(output);
-		for (int i = 0; i < num_pixels; i++)
+	public:
+		void write(void *output, Vec4f *input, int num_pixels) override
 		{
-			d[i] = saturate<Type>(input[i].x);
+			Type *d = static_cast<Type *>(output);
+			for (int i = 0; i < num_pixels; i++)
+			{
+				d[i] = saturate<Type>(input[i].x);
+			}
 		}
-	}
-};
-
+	};
 }

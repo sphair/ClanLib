@@ -33,58 +33,32 @@
 
 namespace clan
 {
+	class Win32Window;
 
-class Win32Window;
-
-class InputDeviceProvider_Win32Keyboard : public InputDeviceProvider
-{
-/// \name Construction
-/// \{
-
-public:
-	InputDeviceProvider_Win32Keyboard(Win32Window *window);
-
-	~InputDeviceProvider_Win32Keyboard();
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	InputDevice::Type get_type() const override { return InputDevice::keyboard; }
-
-	bool get_keycode(int keycode) const override;
-
-	std::string get_key_name(int id) const override;
-
-	std::string get_name() const override;
-
-	std::string get_device_name() const override;
-
-	int get_button_count() const override;
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	void init(Signal<void(const InputEvent &)> *new_sig_provider_event) override
+	class InputDeviceProvider_Win32Keyboard : public InputDeviceProvider
 	{
-		sig_provider_event = new_sig_provider_event;
-	}
+	public:
+		InputDeviceProvider_Win32Keyboard(Win32Window *window);
+		~InputDeviceProvider_Win32Keyboard();
 
-/// \}
-/// \name Implementation
-/// \{
+		InputDevice::Type get_type() const override { return InputDevice::keyboard; }
+		bool get_keycode(int keycode) const override;
+		std::string get_key_name(int id) const override;
+		std::string get_name() const override;
+		std::string get_device_name() const override;
+		int get_button_count() const override;
 
-private:
-	void on_dispose();
+		void init(Signal<void(const InputEvent &)> *new_sig_provider_event) override
+		{
+			sig_provider_event = new_sig_provider_event;
+		}
 
-	Signal<void(const InputEvent &)> *sig_provider_event;
+	private:
+		void on_dispose();
 
-	Win32Window *window;
+		Signal<void(const InputEvent &)> *sig_provider_event;
+		Win32Window *window;
 
-	friend class Win32Window;
-/// \}
-};
-
+		friend class Win32Window;
+	};
 }
