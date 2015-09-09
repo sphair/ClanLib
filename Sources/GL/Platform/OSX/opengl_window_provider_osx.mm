@@ -347,13 +347,6 @@ namespace clan
 		[impl->opengl_context flushBuffer];
 	}
 
-	void OpenGLWindowProvider::update(const Rect &_rect)
-	{
-		OpenGL::set_active(get_gc());
-		OpenGL::check_error();
-		[impl->opengl_context flushBuffer];
-	}
-
 	void OpenGLWindowProvider::capture_mouse(bool capture)
 	{
 	}

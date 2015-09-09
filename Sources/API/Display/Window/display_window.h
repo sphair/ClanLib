@@ -161,8 +161,8 @@ namespace clan
 		/// \brief Signal emitted when window is resized.
 		Signal<void(float, float)> &sig_resize();
 
-		/// \brief Signal emitted when an area of the window is invalidated.
-		Signal<void(const Rectf &)> &sig_paint();
+		/// \brief Signal emitted when the window is invalidated.
+		Signal<void()> &sig_paint();
 
 		/// \brief Signal emitted when window is closed.
 		Signal<void()> &sig_window_close();
@@ -315,11 +315,6 @@ namespace clan
 
 		/// \brief Raises the window on top of other windows.
 		void bring_to_front();
-
-		/// \brief Copy the specified rectangle area from back buffer to front buffer.
-		///
-		/// \param rect Area that should be copied.
-		void update(const Rectf &rect);
 
 		/// \brief Flip back buffer to front, making changes visible on screen.
 		///

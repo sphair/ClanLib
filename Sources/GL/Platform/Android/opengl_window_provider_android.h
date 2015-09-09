@@ -115,9 +115,6 @@ namespace clan
 		/// \brief Flip OpenGL buffers.
 		void flip(int interval) override;
 
-		/// \brief Copy a region of the back buffer to the front buffer.
-		void update(const Rect &rect) override;
-
 		/// \brief Capture/Release the mouse.
 		void capture_mouse(bool capture) override;
 

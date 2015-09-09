@@ -119,7 +119,6 @@ public:
 	void hide() { cocoa_window.hide(); }
 	void bring_to_front() { cocoa_window.bring_to_front(); }
 	void flip(int interval);
-	void update(const Rect &rect);
 	void capture_mouse(bool capture) { cocoa_window.capture_mouse(capture); }
 	void process_messages();
 

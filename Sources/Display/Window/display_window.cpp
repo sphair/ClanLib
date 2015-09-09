@@ -145,7 +145,7 @@ namespace clan
 		return impl->site.sig_resize;
 	}
 
-	Signal<void(const Rectf &)> &DisplayWindow::sig_paint()
+	Signal<void()> &DisplayWindow::sig_paint()
 	{
 		return impl->site.sig_paint;
 	}
@@ -419,16 +419,6 @@ namespace clan
 	void DisplayWindow::bring_to_front()
 	{
 		impl->provider->bring_to_front();
-	}
-
-	void DisplayWindow::update(const Rectf &rect)
-	{
-		Rect recti;
-		recti.left = (int)std::round(rect.left * impl->provider->get_pixel_ratio());
-		recti.top = (int)std::round(rect.top * impl->provider->get_pixel_ratio());
-		recti.right = (int)std::round(rect.right * impl->provider->get_pixel_ratio());
-		recti.bottom = (int)std::round(rect.bottom * impl->provider->get_pixel_ratio());
-		impl->provider->update(recti);
 	}
 
 	void DisplayWindow::flip(int interval)

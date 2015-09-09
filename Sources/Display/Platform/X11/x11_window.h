@@ -167,7 +167,6 @@ public:
 /// \{
 
 private:
-	void process_expose_area(Rect paint_area);
 	void process_window_sockets();
 	void process_window_resize(const Rect &new_rect);
 	void update_frame_extents();
@@ -224,11 +223,11 @@ private:
 	Rect frame_extents;
 
 	/**
-	 * Contains `Rect`s obtained from repaint requests.
-	 * Elements stored are used to call site->sig_paint().
+	 * True when there is a repaint requests.
+	 * Used to call site->sig_paint().
 	 * Cleared on process_window().
 	 */
-	std::vector<Rect> repaint_request_rects;
+	bool repaint_request = false;
 
 	float ppi           = 96.0f;
 	float pixel_ratio   = 0.0f;	// 0.0f = Unset

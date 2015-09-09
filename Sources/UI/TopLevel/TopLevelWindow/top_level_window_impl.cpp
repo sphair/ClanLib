@@ -73,7 +73,7 @@ namespace clan
 		window.request_repaint(window.get_viewport());
 	}
 
-	void TopLevelWindow_Impl::on_paint(const clan::Rect &box)
+	void TopLevelWindow_Impl::on_paint()
 	{
 		canvas.clear(clan::Colorf::transparent);
 		window_view->render(canvas, window.get_viewport());

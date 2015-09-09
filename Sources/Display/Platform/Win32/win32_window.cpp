@@ -619,16 +619,8 @@ namespace clan
 					ValidateRect(hwnd, &rect);
 					try
 					{
-						Rect cl_rect;
-						cl_rect.left = rect.left;
-						cl_rect.top = rect.top;
-						cl_rect.right = rect.right;
-						cl_rect.bottom = rect.bottom;
-
-						// log_event(string_format("Dirty %1", has_drop_shadow ? " Pop" : ""), string_format("Rect: l: %1  t: %2  r: %3  b: %4", cl_rect.left, cl_rect.top, cl_rect.right, cl_rect.bottom));
-
 						if (site)
-							(site->sig_paint)(cl_rect);
+							(site->sig_paint)();
 					}
 					catch (...)
 					{

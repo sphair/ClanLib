@@ -62,7 +62,7 @@ namespace clan
 		Signal<void(float, float)> sig_resize;
 
 		/// Paint signal.
-		Signal<void(const Rectf &)> sig_paint;
+		Signal<void()> sig_paint;
 
 		/// Window close signal.
 		Signal<void()> sig_window_close;
@@ -251,9 +251,6 @@ namespace clan
 
 		/// Flip the window display buffers.
 		virtual void flip(int interval) = 0;
-
-		/// Copy a region of the backbuffer to the frontbuffer.
-		virtual void update(const Rect &rect) = 0;
 
 		/// Stores text in the clipboard.
 		virtual void set_clipboard_text(const std::string &text) = 0;

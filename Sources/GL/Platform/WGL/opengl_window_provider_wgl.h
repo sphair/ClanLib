@@ -101,9 +101,6 @@ namespace clan
 		/// \brief Flip OpenGL buffers.
 		void flip(int interval);
 
-		/// \brief Copy a region of the back buffer to the front buffer.
-		void update(const Rect &rect);
-
 		/// \brief Capture/Release the mouse.
 		void capture_mouse(bool capture);
 
@@ -131,7 +128,6 @@ namespace clan
 		void create_shadow_window(HWND wnd);
 		void on_window_resized();
 		void get_opengl_version(int &version_major, int &version_minor);
-		void update_helper(const Rect &_rect);
 
 		GraphicContext gc;
 		Win32Window win32_window;

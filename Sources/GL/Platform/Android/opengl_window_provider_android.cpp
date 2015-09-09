@@ -385,12 +385,6 @@ namespace clan
 		OpenGL::check_error();
 	}
 
-	void OpenGLWindowProvider::update(const Rect &_rect)
-	{
-		// Implement me, if possible
-		flip(0);
-	}
-
 	void OpenGLWindowProvider::capture_mouse(bool capture)
 	{
 	}

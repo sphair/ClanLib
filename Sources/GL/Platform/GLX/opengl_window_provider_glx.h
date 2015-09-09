@@ -254,9 +254,6 @@ public:
 	/// \brief Flip opengl buffers.
 	void flip(int interval) override;
 
-	/// \brief Copy a region of the backbuffer to the frontbuffer.
-	void update(const Rect &rect) override;
-
 	/// \brief Capture/Release the mouse.
 	void capture_mouse(bool capture) override { x11_window.capture_mouse(capture); }
 
@@ -294,7 +291,6 @@ private:
 	void create_glx_1_2(DisplayWindowSite *new_site, const DisplayWindowDescription &desc, ::Display *disp);
 	GLXContext create_context_glx_1_3_helper(GLXContext shared_context, int major_version, int minor_version, const DisplayWindowDescription &desc, ptr_glXCreateContextAttribs glXCreateContextAttribs);
 	void get_opengl_version(int &version_major, int &version_minor);
-	void update_helper(const Rect &_rect);
 
 	void on_window_resized();
 

@@ -266,63 +266,6 @@ void OpenGLWindowProvider::flip(int interval)
 	OpenGL::check_error();
 }
 
-void OpenGLWindowProvider::update(const Rect &_rect)
-{
-	int width = get_viewport().get_width();
-	int height = get_viewport().get_height();
-
-	Rect rect = _rect;
-	if (rect.left < 0)
-		rect.left = 0;
-	if (rect.top < 0)
-		rect.top = 0;
-	if (rect.right > width)
-		rect.right = width;
-	if (rect.bottom > height)
-		rect.bottom = height;
-	if (rect.right <= rect.left || rect.bottom <= rect.top)
-		return;
-
-	OpenGL::set_active(gc);
-	glFlush();
-
-	GLboolean isDoubleBuffered = GL_TRUE;
-	glGetBooleanv(GL_DOUBLEBUFFER, &isDoubleBuffered);
-	if (isDoubleBuffered)
-	{
-		GLint read_last_bound;
-		GLint draw_last_bound;
-
-		glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &read_last_bound);
-		glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &draw_last_bound);
-
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-	    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-
-		glReadBuffer(GL_BACK);
-		glDrawBuffer(GL_FRONT);
-
-		glBlitFramebuffer(
-			rect.left, height - rect.bottom,
-			rect.right, height - rect.top,
-			rect.left, height - rect.bottom,
-			rect.right, height - rect.top,
-			GL_COLOR_BUFFER_BIT, GL_LINEAR);
-
-		glDrawBuffer(GL_BACK);
-		glReadBuffer(GL_FRONT);
-
-		if (read_last_bound)
-			glBindFramebuffer(GL_READ_FRAMEBUFFER, read_last_bound);
-
-		if (draw_last_bound)
-			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, draw_last_bound);
-
-		glFlush();
-	}
-	OpenGL::check_error();
-}
-
 CursorProvider *OpenGLWindowProvider::create_cursor(const SpriteDescription &sprite_description, const Point &hotspot)
 {
 //	return new CursorProvider_Cocoa(sprite_description, hotspot);

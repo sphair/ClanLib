@@ -103,7 +103,6 @@ namespace clan
 		void hide();
 		void bring_to_front();
 		void flip(int interval);
-		void update(const Rect &rect);
 		void capture_mouse(bool capture);
 		void set_clipboard_text(const std::string &text);
 		void set_clipboard_image(const PixelBuffer &buf);
