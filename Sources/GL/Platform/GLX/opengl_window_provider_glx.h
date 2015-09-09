@@ -31,7 +31,7 @@
 
 #include "API/Display/TargetProviders/display_window_provider.h"
 #include "API/Display/Render/graphic_context.h"
-#include "API/Display/Window/input_context.h"
+#include "API/Display/Window/input_device.h"
 #include "Display/Platform/X11/x11_window.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/GL/opengl_context_description.h"
@@ -206,7 +206,10 @@ public:
 
 	GraphicContext& get_gc() override { return gc; }
 
-	InputContext get_ic() override { return x11_window.get_ic(); }
+	InputDevice &get_keyboard() override { return x11_window.get_keyboard(); }
+	InputDevice &get_mouse() override { return x11_window.get_mouse(); }
+	int get_game_controller_count() const override { return x11_window.get_game_controller_count(); }
+	InputDevice &get_game_controller(int index) override { return x11_window.get_game_controller(index); }
 
 	GraphicContext gc;
 

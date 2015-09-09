@@ -34,7 +34,6 @@
 #include "API/UI/Events/activation_change_event.h"
 #include "API/Display/Window/display_window_description.h"
 #include "API/Display/Window/input_event.h"
-#include "API/Display/Window/input_context.h"
 #include "API/Display/2D/canvas.h"
 #include "UI/View/positioned_layout.h"
 #include "top_level_window_impl.h"

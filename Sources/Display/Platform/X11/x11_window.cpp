@@ -56,7 +56,6 @@
 #include "input_device_provider_linuxjoystick.h"
 #endif
 #include "display_message_queue_x11.h"
-#include "../../Window/input_context_impl.h"
 #include "../../setup_display.h"
 
 #ifndef _NET_WM_STATE_REMOVE
@@ -87,10 +86,8 @@ namespace clan
 		SetupDisplay::get_message_queue()->remove_client(this);
 		SetupDisplay::get_message_queue()->set_mouse_capture(this, false);
 
-		ic.dispose();
-
-		get_keyboard()->dispose();
-		get_mouse()->dispose();
+		get_keyboard_provider()->dispose();
+		get_mouse_provider()->dispose();
 
 		for (auto & elem : joysticks)
 			elem.get_provider()->dispose();
@@ -385,11 +382,6 @@ namespace clan
 
 		// Setup the clipboard
 		clipboard.setup();
-
-		// Create input devices for window:
-		ic.clear();
-		ic.add_keyboard(keyboard);
-		ic.add_mouse(mouse);
 
 		// Go looking for joysticks:
 		setup_joysticks();
@@ -1116,14 +1108,14 @@ namespace clan
 			}
 			case KeyRelease:
 			case KeyPress:
-				if (get_keyboard())
+				if (get_keyboard_provider())
 				{
-					get_keyboard()->received_keyboard_input(keyboard, event.xkey);
+					get_keyboard_provider()->received_keyboard_input(keyboard, event.xkey);
 				}
 				break;
 			case ButtonPress:
 			case ButtonRelease:
-				if (mouse_capture_window->get_mouse() && event.xany.send_event==0)
+				if (mouse_capture_window->get_mouse_provider() && event.xany.send_event==0)
 				{
 					if (callback_on_clicked)
 					{
@@ -1141,11 +1133,11 @@ namespace clan
 						event.xbutton.y += this_scr.top - capture_scr.top;
 					}
 
-					mouse_capture_window->get_mouse()->received_mouse_input(mouse_capture_window->mouse, event.xbutton);
+					mouse_capture_window->get_mouse_provider()->received_mouse_input(mouse_capture_window->mouse, event.xbutton);
 				}
 				break;
 			case MotionNotify:
-				if (mouse_capture_window->get_mouse() && event.xany.send_event == 0)
+				if (mouse_capture_window->get_mouse_provider() && event.xany.send_event == 0)
 				{
 					if (this != mouse_capture_window) // This is so you can capture mouse events in another window, as if it was this window (Set by capture_mouse())
 					{
@@ -1156,7 +1148,7 @@ namespace clan
 						event.xmotion.y += this_scr.top - capture_scr.top;
 					}
 
-					mouse_capture_window->get_mouse()->received_mouse_move(mouse_capture_window->mouse, event.xmotion);
+					mouse_capture_window->get_mouse_provider()->received_mouse_move(mouse_capture_window->mouse, event.xmotion);
 				}
 				break;
 			case SelectionClear: // New clipboard selection owner
@@ -1214,7 +1206,6 @@ namespace clan
 					auto joystick_provider = new InputDeviceProvider_LinuxJoystick(this, pathname);
 					InputDevice device(joystick_provider);
 					joysticks.push_back(device);
-					ic.add_joystick(device);
 
 					current_window_events.push_back(joystick_provider->get_fd());
 
@@ -1338,23 +1329,23 @@ namespace clan
 
 	void X11Window::get_keyboard_modifiers(bool &key_shift, bool &key_alt, bool &key_ctrl) const
 	{
-		if (!get_keyboard())
+		if (!get_keyboard_provider())
 		{
 			key_shift = false;
 			key_alt = false;
 			key_ctrl = false;
 			return;
 		}
-		return get_keyboard()->get_keyboard_modifiers(key_shift, key_alt, key_ctrl);
+		return get_keyboard_provider()->get_keyboard_modifiers(key_shift, key_alt, key_ctrl);
 	}
 
 	Point X11Window::get_mouse_position() const
 	{
-		if (!get_mouse())
+		if (!get_mouse_provider())
 		{
 			return Point();
 		}
-		return get_mouse()->get_device_position();
+		return get_mouse_provider()->get_device_position();
 	}
 
 	const std::vector<int> &X11Window::get_window_socket_messages() const
@@ -1405,12 +1396,12 @@ namespace clan
 		set_large_icon(image);
 	}
 
-	InputDeviceProvider_X11Keyboard *X11Window::get_keyboard() const
+	InputDeviceProvider_X11Keyboard *X11Window::get_keyboard_provider() const
 	{
 		return static_cast<InputDeviceProvider_X11Keyboard *>(keyboard.get_provider());
 	}
 
-	InputDeviceProvider_X11Mouse *X11Window::get_mouse() const
+	InputDeviceProvider_X11Mouse *X11Window::get_mouse_provider() const
 	{
 		return static_cast<InputDeviceProvider_X11Mouse *>(mouse.get_provider());
 	}

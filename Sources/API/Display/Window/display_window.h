@@ -57,7 +57,7 @@ namespace clan
 	class DisplayWindowMode;
 	class DisplayWindowDescription;
 	struct DisplayWindowHandle;
-	class InputContext;
+	class InputDevice;
 	class Pointf;
 	class Cursor;
 	class DisplayWindowProvider;
@@ -149,8 +149,20 @@ namespace clan
 		/// \brief Return the graphic context for the window.
 		GraphicContext& get_gc() const;
 
-		/// \brief Return the input context for the window.
-		InputContext get_ic() const;
+		/// \brief Returns the keyboard input device.
+		InputDevice &get_keyboard();
+
+		/// \brief Returns the mouse input device.
+		InputDevice &get_mouse();
+
+		/// \brief Returns the number of game controllers available.
+		int get_game_controller_count() const;
+
+		/// \brief Returns the specified game controller input device.
+		InputDevice &get_game_controller(int index = 0);
+
+		/// \brief Returns the input device with the given device name
+		InputDevice &get_input_device(const std::string &device_name);
 
 		/// \brief Signal emitted when window lost focus.
 		Signal<void()> &sig_lost_focus();

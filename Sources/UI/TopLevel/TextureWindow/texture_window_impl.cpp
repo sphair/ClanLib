@@ -34,7 +34,6 @@
 #include "API/UI/Events/activation_change_event.h"
 #include "API/Display/Render/blend_state_description.h"
 #include "API/Display/Window/input_event.h"
-#include "API/Display/Window/input_context.h"
 #include "API/Display/2D/canvas.h"
 #include "texture_window_impl.h"
 
@@ -59,12 +58,12 @@ namespace clan
 			slots.connect(display_window.sig_lost_focus(), clan::bind_member(this, &TextureWindow_Impl::on_lost_focus));
 			slots.connect(display_window.sig_got_focus(), clan::bind_member(this, &TextureWindow_Impl::on_got_focus));
 			slots.connect(display_window.sig_window_close(), clan::bind_member(this, &TextureWindow_Impl::on_window_close));
-			slots.connect(display_window.get_ic().get_keyboard().sig_key_down(), clan::bind_member(this, &TextureWindow_Impl::transform_on_key_down));
-			slots.connect(display_window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &TextureWindow_Impl::transform_on_key_up));
-			slots.connect(display_window.get_ic().get_mouse().sig_key_down(), clan::bind_member(this, &TextureWindow_Impl::transform_on_mouse_down));
-			slots.connect(display_window.get_ic().get_mouse().sig_key_dblclk(), clan::bind_member(this, &TextureWindow_Impl::transform_on_mouse_dblclk));
-			slots.connect(display_window.get_ic().get_mouse().sig_key_up(), clan::bind_member(this, &TextureWindow_Impl::transform_on_mouse_up));
-			slots.connect(display_window.get_ic().get_mouse().sig_pointer_move(), clan::bind_member(this, &TextureWindow_Impl::transform_on_mouse_move));
+			slots.connect(display_window.get_keyboard().sig_key_down(), clan::bind_member(this, &TextureWindow_Impl::transform_on_key_down));
+			slots.connect(display_window.get_keyboard().sig_key_up(), clan::bind_member(this, &TextureWindow_Impl::transform_on_key_up));
+			slots.connect(display_window.get_mouse().sig_key_down(), clan::bind_member(this, &TextureWindow_Impl::transform_on_mouse_down));
+			slots.connect(display_window.get_mouse().sig_key_dblclk(), clan::bind_member(this, &TextureWindow_Impl::transform_on_mouse_dblclk));
+			slots.connect(display_window.get_mouse().sig_key_up(), clan::bind_member(this, &TextureWindow_Impl::transform_on_mouse_up));
+			slots.connect(display_window.get_mouse().sig_pointer_move(), clan::bind_member(this, &TextureWindow_Impl::transform_on_mouse_move));
 		}
 	}
 

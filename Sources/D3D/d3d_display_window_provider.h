@@ -55,7 +55,11 @@ namespace clan
 		Size get_maximum_size(bool client_area = false) const;
 
 		GraphicContext& get_gc();
-		InputContext get_ic();
+
+		InputDevice &get_keyboard() override { return window.get_keyboard(); }
+		InputDevice &get_mouse() override { return window.get_mouse(); }
+		int get_game_controller_count() const override { return window.get_game_controller_count(); }
+		InputDevice &get_game_controller(int index) override { return window.get_game_controller(index); }
 
 		DisplayWindowHandle get_handle() const override;
 

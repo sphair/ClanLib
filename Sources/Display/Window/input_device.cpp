@@ -30,7 +30,6 @@
 #include "Display/precomp.h"
 #include "API/Display/Window/input_device.h"
 #include "API/Display/TargetProviders/input_device_provider.h"
-#include "API/Display/Window/input_context.h"
 #include "API/Display/Window/keys.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/string_help.h"

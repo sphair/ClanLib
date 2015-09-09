@@ -30,14 +30,12 @@
 
 #include "API/Core/Signals/signal.h"
 #include "API/Display/TargetProviders/input_device_provider.h"
-#include "input_context_impl.h"
 
 namespace clan
 {
 	class InputDevice_Impl : public std::enable_shared_from_this<InputDevice_Impl>
 	{
 	public:
-		std::vector< std::weak_ptr<InputContext_Impl> > input_contexts;
 		std::unique_ptr<InputDeviceProvider> provider;
 
 		SlotContainer sc;

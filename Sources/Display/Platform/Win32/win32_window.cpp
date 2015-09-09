@@ -52,7 +52,6 @@
 #include "display_message_queue_win32.h"
 #include "cursor_provider_win32.h"
 #include "dwm_functions.h"
-#include "../../Window/input_context_impl.h"
 #include "../../setup_display.h"
 
 #include <emmintrin.h>
@@ -93,9 +92,8 @@ namespace clan
 		if (update_window_region)
 			DeleteObject(update_window_region);
 
-		ic.dispose();
-		get_keyboard()->dispose();
-		get_mouse()->dispose();
+		get_keyboard_provider()->dispose();
+		get_mouse_provider()->dispose();
 
 		for (size_t i = 0; i < joysticks.size(); i++)
 			joysticks[i].get_provider()->dispose();
@@ -874,7 +872,7 @@ namespace clan
 
 			// Emit message:
 			if (id >= 0 && id < 32)
-				get_mouse()->key_states[id] = true;
+				get_mouse_provider()->key_states[id] = true;
 
 			mouse.sig_key_dblclk()(key);
 		}
@@ -885,7 +883,7 @@ namespace clan
 
 			// Emit message:
 			if (id >= 0 && id < 32)
-				get_mouse()->key_states[id] = true;
+				get_mouse_provider()->key_states[id] = true;
 
 			mouse.sig_key_down()(key);
 		}
@@ -897,7 +895,7 @@ namespace clan
 
 			// Emit message:
 			if (id >= 0 && id < 32)
-				get_mouse()->key_states[id] = false;
+				get_mouse_provider()->key_states[id] = false;
 
 			mouse.sig_key_up()(key);
 		}
@@ -1450,8 +1448,6 @@ namespace clan
 		return pixelbuffer;
 	}
 
-
-
 	void Win32Window::flip_pixelbuffer_vertical(PixelBuffer &pbuf) const
 	{
 		uint8_t *data = (uint8_t*)pbuf.get_data();
@@ -1512,12 +1508,12 @@ namespace clan
 		key.ctrl = (GetKeyState(VK_CONTROL) & 0xfe) != 0;
 	}
 
-	InputDeviceProvider_Win32Keyboard *Win32Window::get_keyboard()
+	InputDeviceProvider_Win32Keyboard *Win32Window::get_keyboard_provider()
 	{
 		return static_cast<InputDeviceProvider_Win32Keyboard *>(keyboard.get_provider());
 	}
 
-	InputDeviceProvider_Win32Mouse *Win32Window::get_mouse()
+	InputDeviceProvider_Win32Mouse *Win32Window::get_mouse_provider()
 	{
 		return static_cast<InputDeviceProvider_Win32Mouse *>(mouse.get_provider());
 	}
@@ -1616,17 +1612,12 @@ namespace clan
 		Rid[2].hwndTarget = hwnd;
 		BOOL result = RegisterRawInputDevices(Rid, 3, sizeof(RAWINPUTDEVICE));
 	*/
-		ic.clear();
 
 		for (size_t i = 0; i < joysticks.size(); i++)
 			joysticks[i].get_provider()->dispose();
 		joysticks.clear();
 
-		ic.add_keyboard(keyboard);
-		ic.add_mouse(mouse);
-
 		create_hid_devices();
-
 	}
 
 	void Win32Window::create_hid_devices()
@@ -1657,7 +1648,6 @@ namespace clan
 						{
 							InputDevice device(new InputDeviceProvider_Win32Hid(device_list[i].hDevice));
 							joysticks.push_back(device);
-							ic.add_joystick(device);
 						}
 						catch (const Exception& error)
 						{

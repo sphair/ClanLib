@@ -32,7 +32,7 @@
 
 #include "API/Display/TargetProviders/display_window_provider.h"
 #include "API/Display/Render/graphic_context.h"
-#include "API/Display/Window/input_context.h"
+#include "API/Display/Window/input_device.h"
 #include "Display/Platform/Win32/win32_window.h"
 #include <memory>
 #include "API/GL/opengl_context_description.h"
@@ -65,7 +65,10 @@ namespace clan
 		HDC get_device_context() const { return device_context; }
 		HGLRC get_opengl_context() const { return opengl_context; }
 		GraphicContext& get_gc() { return gc; }
-		InputContext get_ic() { return win32_window.get_ic(); }
+		InputDevice &get_keyboard() override { return win32_window.get_keyboard(); }
+		InputDevice &get_mouse() override { return win32_window.get_mouse(); }
+		int get_game_controller_count() const override { return win32_window.get_game_controller_count(); }
+		InputDevice &get_game_controller(int index) override { return win32_window.get_game_controller(index); }
 		bool is_clipboard_text_available() const;
 		bool is_clipboard_image_available() const;
 		std::string get_clipboard_text() const;

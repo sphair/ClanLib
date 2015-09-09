@@ -34,7 +34,6 @@
 #include "API/Core/Math/rect.h"
 #include "API/Core/Text/logger.h"
 #include "API/Display/Render/graphic_context.h"
-#include "API/Display/Window/input_context.h"
 #include "API/Display/Window/display_window_description.h"
 #include "API/D3D/d3d_target.h"
 #include "Display/Platform/Win32/cursor_provider_win32.h"
@@ -97,11 +96,6 @@ namespace clan
 	GraphicContext& D3DDisplayWindowProvider::get_gc()
 	{
 		return gc;
-	}
-
-	InputContext D3DDisplayWindowProvider::get_ic()
-	{
-		return window.get_ic();
 	}
 
 	DisplayWindowHandle D3DDisplayWindowProvider::get_handle() const

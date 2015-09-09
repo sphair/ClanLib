@@ -32,6 +32,7 @@
 #include "display_window_impl.h"
 #include "../Render/graphic_context_impl.h"
 #include "../setup_display.h"
+#include "API/Display/Window/input_device.h"
 
 namespace clan
 {
@@ -124,10 +125,48 @@ namespace clan
 		return impl->provider->get_gc();
 	}
 
-	InputContext DisplayWindow::get_ic() const
+	InputDevice &DisplayWindow::get_keyboard()
 	{
 		throw_if_null();
-		return impl->provider->get_ic();
+		return impl->provider->get_keyboard();
+	}
+
+	InputDevice &DisplayWindow::get_mouse()
+	{
+		throw_if_null();
+		return impl->provider->get_mouse();
+	}
+
+	int DisplayWindow::get_game_controller_count() const
+	{
+		throw_if_null();
+		return impl->provider->get_game_controller_count();
+	}
+
+	InputDevice &DisplayWindow::get_game_controller(int index)
+	{
+		throw_if_null();
+		return impl->provider->get_game_controller(index);
+	}
+
+	InputDevice &DisplayWindow::get_input_device(const std::string &device_name)
+	{
+		throw_if_null();
+
+		if (device_name == get_keyboard().get_device_name())
+			return get_keyboard();
+		else if (device_name == get_mouse().get_device_name())
+			return get_mouse();
+
+		int count = get_game_controller_count();
+		for (int i = 0; i < count; i++)
+		{
+			if (get_game_controller(i).get_device_name() == device_name)
+				return get_game_controller(i);
+		}
+
+		static InputDevice null_device;
+		return null_device;
 	}
 
 	Signal<void()> &DisplayWindow::sig_lost_focus()

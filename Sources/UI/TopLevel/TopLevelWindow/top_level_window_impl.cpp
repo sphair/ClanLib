@@ -33,7 +33,6 @@
 #include "API/UI/Events/close_event.h"
 #include "API/UI/Events/activation_change_event.h"
 #include "API/Display/Window/input_event.h"
-#include "API/Display/Window/input_context.h"
 #include "API/Display/2D/canvas.h"
 #include "top_level_window_impl.h"
 
@@ -48,12 +47,12 @@ namespace clan
 		slots.connect(window.sig_resize(), clan::bind_member(this, &TopLevelWindow_Impl::on_resize));
 		slots.connect(window.sig_paint(), clan::bind_member(this, &TopLevelWindow_Impl::on_paint));
 		slots.connect(window.sig_window_close(), clan::bind_member(this, &TopLevelWindow_Impl::on_window_close));
-		slots.connect(window.get_ic().get_keyboard().sig_key_down(), clan::bind_member(this, &TopLevelWindow_Impl::on_key_down));
-		slots.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &TopLevelWindow_Impl::on_key_up));
-		slots.connect(window.get_ic().get_mouse().sig_key_down(), clan::bind_member(this, &TopLevelWindow_Impl::on_mouse_down));
-		slots.connect(window.get_ic().get_mouse().sig_key_dblclk(), clan::bind_member(this, &TopLevelWindow_Impl::on_mouse_dblclk));
-		slots.connect(window.get_ic().get_mouse().sig_key_up(), clan::bind_member(this, &TopLevelWindow_Impl::on_mouse_up));
-		slots.connect(window.get_ic().get_mouse().sig_pointer_move(), clan::bind_member(this, &TopLevelWindow_Impl::on_mouse_move));
+		slots.connect(window.get_keyboard().sig_key_down(), clan::bind_member(this, &TopLevelWindow_Impl::on_key_down));
+		slots.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &TopLevelWindow_Impl::on_key_up));
+		slots.connect(window.get_mouse().sig_key_down(), clan::bind_member(this, &TopLevelWindow_Impl::on_mouse_down));
+		slots.connect(window.get_mouse().sig_key_dblclk(), clan::bind_member(this, &TopLevelWindow_Impl::on_mouse_dblclk));
+		slots.connect(window.get_mouse().sig_key_up(), clan::bind_member(this, &TopLevelWindow_Impl::on_mouse_up));
+		slots.connect(window.get_mouse().sig_pointer_move(), clan::bind_member(this, &TopLevelWindow_Impl::on_mouse_move));
 	}
 
 	void TopLevelWindow_Impl::on_lost_focus()

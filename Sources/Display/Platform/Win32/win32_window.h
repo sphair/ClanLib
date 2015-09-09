@@ -34,7 +34,6 @@
 #include <map>
 #include "API/Display/Window/display_window.h"
 #include "API/Display/Window/display_window_description.h"
-#include "API/Display/Window/input_context.h"
 #include "API/Display/Window/input_device.h"
 #include "API/Display/TargetProviders/input_device_provider.h"
 #include "API/Core/Math/point.h"
@@ -76,11 +75,14 @@ namespace clan
 		Size get_maximum_size(bool client_area) const;
 		std::string get_title() const;
 		std::function<void()> &func_on_resized() { return callback_on_resized; }
-		InputContext get_ic() { return ic; } // Important, do not return by reference, so the shared pointer exists if this window is destroyed
-		const InputContext get_ic() const { return ic; } // Important, do not return by reference, so the shared pointer exists if this window is destroyed
 		bool is_clipboard_text_available() const;
 		bool is_clipboard_image_available() const;
 		bool is_layered() const { return window_desc.is_layered(); }
+
+		InputDevice &get_keyboard() { return keyboard; }
+		InputDevice &get_mouse() { return mouse; }
+		int get_game_controller_count() const { return joysticks.size(); }
+		InputDevice &get_game_controller(int index) { return joysticks.at(index); }
 
 	public:
 		void create(DisplayWindowSite *site, const DisplayWindowDescription &description);
@@ -183,8 +185,8 @@ namespace clan
 		void add_dib_to_clipboard(const PixelBuffer &image);
 		void register_clipboard_formats();
 
-		InputDeviceProvider_Win32Keyboard *get_keyboard();
-		InputDeviceProvider_Win32Mouse *get_mouse();
+		InputDeviceProvider_Win32Keyboard *get_keyboard_provider();
+		InputDeviceProvider_Win32Mouse *get_mouse_provider();
 
 		HWND hwnd;
 		bool destroy_hwnd;
@@ -198,7 +200,6 @@ namespace clan
 		Point mouse_pos;
 		std::map<int, int> repeat_count;
 		std::function<void()> callback_on_resized;
-		InputContext ic;
 		Size minimum_size;
 		Size maximum_size;
 		UINT png_clipboard_format;

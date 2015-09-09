@@ -155,8 +155,6 @@ namespace clan
 
 	private:
 		std::shared_ptr<InputDevice_Impl> impl;
-
-		friend class InputContext_Impl;
 	};
 
 	/// \}

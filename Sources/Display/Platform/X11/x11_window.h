@@ -35,7 +35,6 @@
 #include <list>
 #include <map>
 #include "API/Core/Signals/signal.h"
-#include "API/Display/Window/input_context.h"
 #include "API/Display/Window/input_device.h"
 #include "API/Display/TargetProviders/input_device_provider.h"
 #include "API/Display/Window/display_window.h"
@@ -91,7 +90,10 @@ namespace clan
 		::Window get_window() const { return handle.window; }
 		int get_screen() const { return handle.screen; }
 
-		InputContext get_ic() { return ic; } // Important: do not return by reference, so the shared pointer exists if this window is destroyed
+		InputDevice &get_keyboard() { return keyboard; }
+		InputDevice &get_mouse() { return mouse; }
+		int get_game_controller_count() const { return joysticks.size(); }
+		InputDevice &get_game_controller(int index) { return joysticks.at(index); }
 
 		std::function<void()> &func_on_resized() { return callback_on_resized; }
 		std::function<bool(XButtonEvent &)> &func_on_clicked() { return callback_on_clicked; }
@@ -162,10 +164,9 @@ namespace clan
 		void clear_structurenotify_events();
 
 		bool modify_net_wm_state(bool add, Atom atom1, Atom atom2 = None);
-		InputDeviceProvider_X11Keyboard *get_keyboard() const;
-		InputDeviceProvider_X11Mouse *get_mouse() const;
+		InputDeviceProvider_X11Keyboard *get_keyboard_provider() const;
+		InputDeviceProvider_X11Mouse *get_mouse_provider() const;
 
-		InputContext ic;
 		DisplayWindowHandle handle;
 		Colormap color_map; //!< X11 window color-map. See usage in .cpp file.
 		bool minimized; //!< Cached value. Do not use without calling is_minimized() to verify.
