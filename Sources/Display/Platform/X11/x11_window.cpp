@@ -862,7 +862,7 @@ void X11Window::map_window()
 		update_frame_extents();
 		set_position(client_area, true);
 	}
-	process_expose_area(client_area);
+	request_repaint(client_area);
 }
 
 void X11Window::unmap_window()
@@ -1187,7 +1187,6 @@ void X11Window::process_window()
 			(site->sig_paint)();
 			repaint_request = false;
 		}
-		repaint_request_rects.clear();
 	}
 	process_window_sockets();
 
