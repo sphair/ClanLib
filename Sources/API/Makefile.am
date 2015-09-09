@@ -201,7 +201,6 @@ clanDisplay_includes = \
 	Display/Window/input_device.h \
 	Display/Window/keys.h \
 	Display/Window/display_window_description.h \
-	Display/Window/input_context.h \
 	Display/Window/input_event.h \
 	Display/Window/display_window.h \
 	Display/Window/cursor.h \
