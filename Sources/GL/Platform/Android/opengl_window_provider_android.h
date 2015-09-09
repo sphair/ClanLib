@@ -124,7 +124,7 @@ namespace clan
 		void set_clipboard_image(const PixelBuffer &buf) override;
 
 		/// \brief Invalidates a region of a screen, causing a repaint.
-		void request_repaint(const Rect &rect) override;
+		void request_repaint() override;
 
 		void set_large_icon(const PixelBuffer &image) override;
 		void set_small_icon(const PixelBuffer &image) override;

@@ -416,9 +416,9 @@ namespace clan
 		return window.get_clipboard_image();
 	}
 
-	void D3DDisplayWindowProvider::request_repaint(const Rect &rect)
+	void D3DDisplayWindowProvider::request_repaint()
 	{
-		window.request_repaint(rect);
+		window.request_repaint();
 	}
 
 	void D3DDisplayWindowProvider::set_large_icon(const PixelBuffer &image)

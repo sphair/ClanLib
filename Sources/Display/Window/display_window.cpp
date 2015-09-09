@@ -318,14 +318,9 @@ namespace clan
 		impl->provider->capture_mouse(capture);
 	}
 
-	void DisplayWindow::request_repaint(const Rectf &rect)
+	void DisplayWindow::request_repaint()
 	{
-		Rect recti;
-		recti.left = (int)std::floor(rect.left * impl->provider->get_pixel_ratio());
-		recti.top = (int)std::floor(rect.top * impl->provider->get_pixel_ratio());
-		recti.right = (int)std::ceil(rect.right * impl->provider->get_pixel_ratio());
-		recti.bottom = (int)std::ceil(rect.bottom * impl->provider->get_pixel_ratio());
-		impl->provider->request_repaint(recti);
+		impl->provider->request_repaint();
 	}
 
 	void DisplayWindow::set_title(const std::string &title)

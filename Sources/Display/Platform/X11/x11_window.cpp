@@ -862,7 +862,7 @@ void X11Window::map_window()
 		update_frame_extents();
 		set_position(client_area, true);
 	}
-	request_repaint(client_area);
+	request_repaint();
 }
 
 void X11Window::unmap_window()
@@ -1269,16 +1269,16 @@ void X11Window::set_cursor(CursorProvider_X11 *cursor)
 	//TODO:
 }
 
-void X11Window::request_repaint(const Rect &cl_rect)
+void X11Window::request_repaint()
 {
 	XExposeEvent expose = {Expose, 0};
 	expose.send_event = true;
 	expose.display = handle.display;
 	expose.window = handle.window;
-	expose.x = cl_rect.left;
-	expose.y = cl_rect.top;
-	expose.width = cl_rect.get_width();
-	expose.height = cl_rect.get_height();
+	expose.x = 0;
+	expose.y = 0;
+	expose.width = client_rect.get_width();
+	expose.height = client_rect.get_height();
 	expose.count = 0;
 	XSendEvent(handle.display, handle.window, False, 0, (XEvent *) &expose);
 }

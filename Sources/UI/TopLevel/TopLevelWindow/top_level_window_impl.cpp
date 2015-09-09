@@ -70,7 +70,7 @@ namespace clan
 
 	void TopLevelWindow_Impl::on_resize(float, float)
 	{
-		window.request_repaint(window.get_viewport());
+		window.request_repaint();
 	}
 
 	void TopLevelWindow_Impl::on_paint()

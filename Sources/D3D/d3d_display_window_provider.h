@@ -111,7 +111,7 @@ namespace clan
 		void set_clipboard_text(const std::string &text);
 		void set_clipboard_image(const PixelBuffer &buf);
 
-		void request_repaint(const Rect &rect);
+		void request_repaint();
 
 		void set_large_icon(const PixelBuffer &image);
 		void set_small_icon(const PixelBuffer &image);

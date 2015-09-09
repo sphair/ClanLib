@@ -398,7 +398,7 @@ namespace clan
 		return std::string();
 	}
 
-	void OpenGLWindowProvider::request_repaint(const Rect &rect)
+	void OpenGLWindowProvider::request_repaint()
 	{
 	}
 

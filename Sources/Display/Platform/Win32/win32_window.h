@@ -129,7 +129,7 @@ namespace clan
 		static HBITMAP create_bitmap(HDC hdc, const PixelBuffer &image);
 		HICON create_icon(const PixelBuffer &image) const;
 
-		void request_repaint(const Rect &rect);
+		void request_repaint();
 
 		void set_modifier_keys(InputEvent &key);
 

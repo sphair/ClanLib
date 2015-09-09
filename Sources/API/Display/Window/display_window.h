@@ -252,8 +252,8 @@ namespace clan
 		/// \brief Capture/Release the mouse.
 		void capture_mouse(bool capture);
 
-		/// \brief Invalidates a region of a screen, causing a repaint.
-		void request_repaint(const Rectf &rect);
+		/// \brief Invalidates the screen, causing a repaint.
+		void request_repaint();
 
 		/// \brief Change window title.
 		void set_title(const std::string &title);

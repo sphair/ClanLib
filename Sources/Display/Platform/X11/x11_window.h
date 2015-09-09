@@ -125,7 +125,7 @@ public:
 
 	void capture_mouse(bool capture);
 
-	void request_repaint(const Rect &rect);
+	void request_repaint();
 
 	void create(XVisualInfo *visual, DisplayWindowSite *site, const DisplayWindowDescription &description);
 

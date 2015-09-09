@@ -101,7 +101,7 @@ namespace clan
 
 	void TopLevelWindow::set_needs_render()
 	{
-		impl->window.request_repaint(impl->window.get_viewport());
+		impl->window.request_repaint();
 	}
 
 	Pointf TopLevelWindow::client_to_screen_pos(const Pointf &client_pos)

@@ -1276,15 +1276,9 @@ namespace clan
 		return icon;
 	}
 
-	void Win32Window::request_repaint( const Rect &cl_rect )
+	void Win32Window::request_repaint()
 	{
-		RECT rect;
-		rect.left = cl_rect.left;
-		rect.right = cl_rect.right;
-		rect.top = cl_rect.top;
-		rect.bottom = cl_rect.bottom;
-
-		InvalidateRect(hwnd, &rect, false);
+		InvalidateRect(hwnd, NULL, false);
 	}
 
 	void Win32Window::set_minimum_size( int width, int height, bool client_area)

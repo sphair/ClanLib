@@ -128,7 +128,7 @@ public:
 
 	void set_clipboard_text(const std::string &text) { cocoa_window.set_clipboard_text(text); }
 	void set_clipboard_image(const PixelBuffer &buf) { cocoa_window.set_clipboard_image(buf); }
-	void request_repaint(const Rect &rect) { cocoa_window.request_repaint(rect); }
+	void request_repaint() { cocoa_window.request_repaint(); }
 
 	void set_large_icon(const PixelBuffer &image);
 	void set_small_icon(const PixelBuffer &image);

@@ -166,8 +166,8 @@ namespace clan
 		/// Capture/Release the mouse.
 		virtual void capture_mouse(bool capture) = 0;
 
-		/// Invalidates a region of a screen, causing a repaint.
-		virtual void request_repaint(const Rect &rect) = 0;
+		/// Invalidates the screen, causing a repaint.
+		virtual void request_repaint() = 0;
 
 		/// Creates window, assigning site and description to provider.
 		virtual void create(DisplayWindowSite *site, const DisplayWindowDescription &description) = 0;

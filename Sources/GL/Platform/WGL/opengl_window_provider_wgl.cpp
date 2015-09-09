@@ -615,9 +615,9 @@ namespace clan
 		return win32_window.get_clipboard_text();
 	}
 
-	void OpenGLWindowProvider::request_repaint(const Rect &rect)
+	void OpenGLWindowProvider::request_repaint()
 	{
-		win32_window.request_repaint(rect);
+		win32_window.request_repaint();
 	}
 
 	void OpenGLWindowProvider::set_large_icon(const PixelBuffer &image)

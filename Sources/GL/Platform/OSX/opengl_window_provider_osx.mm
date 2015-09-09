@@ -360,9 +360,9 @@ namespace clan
 		return std::string();
 	}
 
-	void OpenGLWindowProvider::request_repaint(const Rect &rect)
+	void OpenGLWindowProvider::request_repaint()
 	{
-		[impl->window.contentView setNeedsDisplayInRect:NSMakeRect(rect.left, rect.top, rect.get_width(), rect.get_height())];
+		[impl->window.contentView setNeedsDisplayInRect:NSMakeRect()];
 	}
 
 	void OpenGLWindowProvider::set_large_icon(const PixelBuffer &image)

@@ -269,7 +269,7 @@ public:
 
 	void set_clipboard_image(const PixelBuffer &buf) override { x11_window.set_clipboard_image(buf); }
 
-	void request_repaint(const Rect &rect) override { x11_window.request_repaint(rect); }
+	void request_repaint() override { x11_window.request_repaint(); }
 
 	void set_large_icon(const PixelBuffer &image) override;
 	void set_small_icon(const PixelBuffer &image) override;
