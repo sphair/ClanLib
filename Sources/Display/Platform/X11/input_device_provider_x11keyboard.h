@@ -39,67 +39,35 @@
 
 namespace clan
 {
+	class X11Window;
 
-class X11Window;
-
-class InputDeviceProvider_X11Keyboard : public InputDeviceProvider
-{
-/// \name Construction
-/// \{
-
-public:
-	InputDeviceProvider_X11Keyboard(X11Window *window);
-
-	~InputDeviceProvider_X11Keyboard();
-
-	void destroy() { delete this; }
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	InputDevice::Type get_type() const override { return InputDevice::keyboard; }
-
-	bool get_keycode(int keycode) const override;
-
-	std::string get_key_name(int id) const override;
-
-	std::string get_name() const override;
-
-	std::string get_device_name() const override;
-
-	int get_button_count() const override { return -1; }
-
-	void get_keyboard_modifiers(bool &key_shift, bool &key_alt, bool &key_ctrl) const;
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	void init(Signal<void(const InputEvent &)> *new_sig_provider_event) override
+	class InputDeviceProvider_X11Keyboard : public InputDeviceProvider
 	{
-		sig_provider_event = new_sig_provider_event;
-	}
+	public:
+		InputDeviceProvider_X11Keyboard(X11Window *window);
+		~InputDeviceProvider_X11Keyboard();
 
-	void received_keyboard_input(XKeyEvent &event);
+		void destroy() { delete this; }
 
-/// \}
-/// \name Implementation
-/// \{
+		InputDevice::Type get_type() const override { return InputDevice::keyboard; }
+		bool get_keycode(int keycode) const override;
+		std::string get_key_name(int id) const override;
+		std::string get_name() const override;
+		std::string get_device_name() const override;
+		int get_button_count() const override { return -1; }
 
-private:
-	void on_dispose() override;
-	Signal<void(const InputEvent &)> *sig_provider_event;
+		void get_keyboard_modifiers(bool &key_shift, bool &key_alt, bool &key_ctrl) const;
 
-	X11Window *window;
+		void received_keyboard_input(InputDevice &keyboard, XKeyEvent &event);
 
-	std::map<int,int> repeat_count;
-	bool ctrl_down, shift_down, alt_down;
+	private:
+		void on_dispose() override;
 
-	std::map<KeySym,int> current_keys_down;
-/// \}
-};
+		X11Window *window;
 
+		std::map<int, int> repeat_count;
+		bool ctrl_down, shift_down, alt_down;
+
+		std::map<KeySym, int> current_keys_down;
+	};
 }

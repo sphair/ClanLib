@@ -83,6 +83,7 @@ namespace clan
 
 	void InputContext_Impl::process_messages()
 	{
+		/*
 		throw_if_disposed();
 
 		std::vector< std::pair<InputEvent, std::weak_ptr<InputDevice_Impl> > >::size_type pos, size;
@@ -128,18 +129,7 @@ namespace clan
 				break;
 			}
 		}
-	}
-
-	void InputContext_Impl::received_event(
-		const InputEvent &e,
-		std::weak_ptr<InputDevice_Impl> &input_device)
-	{
-		throw_if_disposed();
-
-		events.push_back(
-			std::pair<InputEvent, std::weak_ptr<InputDevice_Impl> >(
-			e,
-			input_device));
+		*/
 	}
 
 	void InputContext_Impl::on_dispose()

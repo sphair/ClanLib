@@ -37,8 +37,7 @@
 
 namespace clan
 {
-	InputDeviceProvider_Win32Mouse::InputDeviceProvider_Win32Mouse(Win32Window *window)
-		: sig_provider_event(0), window(window)
+	InputDeviceProvider_Win32Mouse::InputDeviceProvider_Win32Mouse(Win32Window *window) : window(window)
 	{
 		for (int i = 0; i < 32; i++) key_states[i] = false;
 	}

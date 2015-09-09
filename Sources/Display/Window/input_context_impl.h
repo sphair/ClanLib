@@ -68,11 +68,11 @@ namespace clan
 		void process_messages();
 
 		/// \brief Called by input devices when events are received.
-		void received_event(const InputEvent &e, std::weak_ptr<InputDevice_Impl> &input_device);
+		//void received_event(const InputEvent &e, std::weak_ptr<InputDevice_Impl> &input_device);
 
 	private:
 		void on_dispose() override;
 
-		std::vector< std::pair<InputEvent, std::weak_ptr<InputDevice_Impl> > > events;
+		//std::vector< std::pair<InputEvent, std::weak_ptr<InputDevice_Impl> > > events;
 	};
 }

@@ -34,42 +34,13 @@
 
 namespace clan
 {
-	class InputDevice_Impl
+	class InputDevice_Impl : public std::enable_shared_from_this<InputDevice_Impl>
 	{
 	public:
-		InputDevice_Impl()
-			: provider(nullptr)
-		{
-			sc.connect(sig_provider_event, bind_member(this, &InputDevice_Impl::on_provider_event));
-		}
-
-		~InputDevice_Impl()
-		{
-			if (provider)
-				delete provider;
-		}
-
-		void on_provider_event(const InputEvent &e)
-		{
-			std::unique_lock<std::recursive_mutex> mutex_lock(InputContext_Impl::mutex);
-			std::vector< std::weak_ptr<InputContext_Impl> >::size_type pos, size;
-			size = input_contexts.size();
-			for (pos = 0; pos < size; pos++)
-			{
-				std::weak_ptr<InputContext_Impl> &ic = input_contexts[pos];
-				if (!ic.expired())
-					ic.lock()->received_event(e, input_device);
-			}
-		}
-
 		std::vector< std::weak_ptr<InputContext_Impl> > input_contexts;
-
-		std::weak_ptr<InputDevice_Impl> input_device;
-
-		InputDeviceProvider *provider;
+		std::unique_ptr<InputDeviceProvider> provider;
 
 		SlotContainer sc;
-		Signal<void(const InputEvent &)> sig_provider_event;
 		Signal<void(const InputEvent &)> sig_key_down;
 		Signal<void(const InputEvent &)> sig_key_up;
 		Signal<void(const InputEvent &)> sig_pointer_move;

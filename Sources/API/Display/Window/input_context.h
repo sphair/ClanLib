@@ -80,9 +80,6 @@ namespace clan
 		/// \brief Adds a new joystick to the input context.
 		void add_joystick(const InputDevice joystick);
 
-		/// \brief Process and dispatch messages to signals.
-		void process_messages();
-
 		/// \brief Stop anyone accessing this input context
 		///
 		/// This should is only called internally by the display window destructor

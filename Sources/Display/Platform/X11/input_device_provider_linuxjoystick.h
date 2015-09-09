@@ -36,85 +36,47 @@ struct js_event;
 
 namespace clan
 {
+	class X11Window;
 
-class X11Window;
-
-class InputDeviceProvider_LinuxJoystick : public InputDeviceProvider
-{
-/// \name Construction
-/// \{
-
-public:
-	InputDeviceProvider_LinuxJoystick(X11Window *window, const std::string &device);
-
-	~InputDeviceProvider_LinuxJoystick();
-
-	void destroy() { delete this; }
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	/// \brief Get the file descriptor of the joystick
-	int get_fd() const;
-
-	InputDevice::Type get_type() const override { return InputDevice::joystick; }
-
-	bool get_keycode(int keycode) const override;
-
-	std::string get_key_name(int id) const override;
-
-	float get_axis(int index) const override;
-
-	std::string get_name() const override;
-
-	std::string get_device_name() const override;
-
-	std::vector<int> get_axis_ids() const override;
-
-	int get_button_count() const override;
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	void init(Signal<void(const InputEvent &)> *new_sig_provider_event) override
+	class InputDeviceProvider_LinuxJoystick : public InputDeviceProvider
 	{
-		sig_provider_event = new_sig_provider_event;
-	}
+	public:
+		InputDeviceProvider_LinuxJoystick(X11Window *window, const std::string &device);
+		~InputDeviceProvider_LinuxJoystick();
 
-	/// \brief Update device
-	/// \param peek_only Treat as a request to see if an event would occur
-	/// \return true when the device event has occurred
-	bool poll(bool peek_only);
+		void destroy() { delete this; }
 
-/// \}
-/// \name Implementation
-/// \{
+		/// \brief Get the file descriptor of the joystick
+		int get_fd() const;
 
-private:
-	void on_dispose() override;
-	void process_event(js_event event) const;
-	void update_states() const;
+		InputDevice::Type get_type() const override { return InputDevice::joystick; }
+		bool get_keycode(int keycode) const override;
+		std::string get_key_name(int id) const override;
+		float get_axis(int index) const override;
+		std::string get_name() const override;
+		std::string get_device_name() const override;
+		std::vector<int> get_axis_ids() const override;
+		int get_button_count() const override;
 
-	Signal<void(const InputEvent &)> *sig_provider_event;
+		/// \brief Update device
+		/// \param peek_only Treat as a request to see if an event would occur
+		/// \return true when the device event has occurred
+		bool poll(InputDevice &joystick, bool peek_only);
 
-	X11Window *window;
+	private:
+		void on_dispose() override;
+		void process_event(InputDevice &joystick, js_event event) const;
+		void update_states(InputDevice &joystick) const;
 
-	std::string device;
+		X11Window *window;
+		std::string device;
+		int fd;
 
-	int fd;
+		mutable std::vector<float> axis_states;
+		mutable std::vector<bool>  button_states;
 
-	mutable std::vector<float> axis_states;
-	mutable std::vector<bool>  button_states;
+		std::string name;
 
-	std::string name;
-
-	mutable bool new_event;
-
-/// \}
-};
-
+		mutable bool new_event;
+	};
 }

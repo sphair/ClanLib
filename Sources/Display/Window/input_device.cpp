@@ -46,9 +46,7 @@ namespace clan
 	InputDevice::InputDevice(InputDeviceProvider *provider)
 		: impl(std::make_shared<InputDevice_Impl>())
 	{
-		impl->input_device = impl;
-		impl->provider = provider;
-		provider->init(&impl->sig_provider_event);
+		impl->provider.reset(provider);
 	}
 
 	InputDevice::InputDevice(std::weak_ptr<InputDevice_Impl> impl)
@@ -71,7 +69,7 @@ namespace clan
 		if (!impl)
 			return nullptr;
 		else
-			return impl->provider;
+			return impl->provider.get();
 	}
 
 	std::string InputDevice::get_name() const

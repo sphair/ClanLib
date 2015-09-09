@@ -119,11 +119,6 @@ namespace clan
 		impl->add_joystick(joystick);
 	}
 
-	void InputContext::process_messages()
-	{
-		impl->process_messages();
-	}
-
 	void InputContext::dispose()
 	{
 		impl->dispose();

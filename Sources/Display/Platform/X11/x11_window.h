@@ -48,191 +48,168 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/cursorfont.h>
-
-
 //#include <X11/extensions/XInput.h>
+
 #include <sys/time.h>
 
 namespace clan
 {
+	class InputDeviceProvider_X11Keyboard;
+	class InputDeviceProvider_X11Mouse;
+	class InputDeviceProvider_LinuxJoystick;
+	class DisplayMessageQueue_X11;
+	class Rect;
+	class DisplayWindowSite;
+	class DisplayWindowDescription;
+	class CursorProvider_X11;
 
-class InputDeviceProvider_X11Keyboard;
-class InputDeviceProvider_X11Mouse;
-class InputDeviceProvider_LinuxJoystick;
-class DisplayMessageQueue_X11;
-class Rect;
-class DisplayWindowSite;
-class DisplayWindowDescription;
-class CursorProvider_X11;
+	class X11Window
+	{
+	public:
+		X11Window();
+		~X11Window();
 
-class X11Window
-{
-/// \name Construction
-/// \{
+		Rect get_geometry() const;
+		Rect get_viewport() const;
 
-public:
-	X11Window();
+		float get_ppi() const { return ppi; }
+		float get_pixel_ratio() const { return pixel_ratio; }
 
-	~X11Window();
+		bool has_focus() const;
+		bool is_minimized() const;
+		bool is_maximized() const;
+		bool is_visible() const;
+		bool is_fullscreen() const { return fullscreen; }
 
-/// \}
-/// \name Attributes
-/// \{
+		Size get_minimum_size(bool client_area) const;
+		Size get_maximum_size(bool client_area) const;
 
-public:
-	Rect get_geometry() const;
-	Rect get_viewport() const;
+		std::string get_title() const { return window_title; }
 
-	float get_ppi() const { return ppi; }
-	float get_pixel_ratio() const { return pixel_ratio; }
+		DisplayWindowHandle get_handle() const { return handle; }
+		::Display *get_display() const { return handle.display; }
+		::Window get_window() const { return handle.window; }
+		int get_screen() const { return handle.screen; }
 
-	bool has_focus() const;
-	bool is_minimized() const;
-	bool is_maximized() const;
-	bool is_visible() const;
-	bool is_fullscreen() const { return fullscreen; }
+		InputContext get_ic() { return ic; } // Important: do not return by reference, so the shared pointer exists if this window is destroyed
 
-	Size get_minimum_size(bool client_area) const;
-	Size get_maximum_size(bool client_area) const;
+		std::function<void()> &func_on_resized() { return callback_on_resized; }
+		std::function<bool(XButtonEvent &)> &func_on_clicked() { return callback_on_clicked; }
 
-	std::string get_title() const { return window_title; }
+		bool is_clipboard_text_available() const;
+		bool is_clipboard_image_available() const;
 
-	DisplayWindowHandle get_handle() const { return handle; }
-	::Display *get_display() const { return handle.display; }
-	::Window get_window() const { return handle.window; }
-	int get_screen() const { return handle.screen; }
+		std::string get_clipboard_text() const;
+		PixelBuffer get_clipboard_image() const;
 
-	InputContext get_ic() { return ic; } // Important: do not return by reference, so the shared pointer exists if this window is destroyed
+		const std::vector<int> &get_window_socket_messages() const;
 
-	std::function<void()> &func_on_resized() { return callback_on_resized; }
-	std::function<bool(XButtonEvent &)> &func_on_clicked() { return callback_on_clicked; }
+		Point client_to_screen(const Point &client);
+		Point screen_to_client(const Point &screen);
 
-	bool is_clipboard_text_available() const;
-	bool is_clipboard_image_available() const;
+		void capture_mouse(bool capture);
 
-	std::string get_clipboard_text() const;
-	PixelBuffer get_clipboard_image() const;
+		void request_repaint();
 
-	const std::vector<int> &get_window_socket_messages() const;
+		void create(XVisualInfo *visual, DisplayWindowSite *site, const DisplayWindowDescription &description);
 
-/// \}
-/// \name Operations
-/// \{
+		void show_system_cursor();
+		void hide_system_cursor();
+		void set_cursor(CursorProvider_X11 *cursor);
+		void set_cursor(enum StandardCursor type);
 
-public:
-	Point client_to_screen(const Point &client);
-	Point screen_to_client(const Point &screen);
+		void set_title(const std::string &new_title);
+		void set_position(const Rect &pos, bool client_area);
+		void set_size(int width, int height, bool client_area);
+		void set_minimum_size(int width, int height, bool client_area);
+		void set_maximum_size(int width, int height, bool client_area);
 
-	void capture_mouse(bool capture);
+		void set_pixel_ratio(float ratio);
 
-	void request_repaint();
+		void set_enabled(bool enable);
+		void minimize();
+		void restore();
+		void maximize();
+		void show(bool activate);
+		void hide();
+		void bring_to_front();
 
-	void create(XVisualInfo *visual, DisplayWindowSite *site, const DisplayWindowDescription &description);
+		void set_clipboard_text(const std::string &text);
+		void set_clipboard_image(const PixelBuffer &buf);
 
-	void show_system_cursor();
-	void hide_system_cursor();
-	void set_cursor(CursorProvider_X11 *cursor);
-	void set_cursor(enum StandardCursor type);
+		void set_large_icon(const PixelBuffer &image);
+		void set_small_icon(const PixelBuffer &image);
 
-	void set_title(const std::string &new_title);
-	void set_position(const Rect &pos, bool client_area);
-	void set_size(int width, int height, bool client_area);
-	void set_minimum_size(int width, int height, bool client_area);
-	void set_maximum_size(int width, int height, bool client_area);
+		void process_message(XEvent &event, X11Window *mouse_capture_window);
+		void process_window();
 
-	void set_pixel_ratio(float ratio);
+		void get_keyboard_modifiers(bool &key_shift, bool &key_alt, bool &key_ctrl) const;
+		Point get_mouse_position() const;
 
-	void set_enabled(bool enable);
-	void minimize();
-	void restore();
-	void maximize();
-	void show(bool activate);
-	void hide();
-	void bring_to_front();
+	private:
+		void process_window_sockets();
+		void process_window_resize(const Rect &new_rect);
+		void update_frame_extents();
+		void map_window();
+		void unmap_window();
+		Rect get_screen_position() const;
+		void setup_swap_interval_pointers();
+		void setup_joysticks();
+		void close_window();
+		void received_keyboard_input(XKeyEvent &event);
+		void received_mouse_input(XButtonEvent &event);
+		void received_mouse_move(XMotionEvent &event);
+		void clear_structurenotify_events();
 
-	void set_clipboard_text(const std::string &text);
-	void set_clipboard_image(const PixelBuffer &buf);
+		bool modify_net_wm_state(bool add, Atom atom1, Atom atom2 = None);
+		InputDeviceProvider_X11Keyboard *get_keyboard() const;
+		InputDeviceProvider_X11Mouse *get_mouse() const;
 
-	void set_large_icon(const PixelBuffer &image);
-	void set_small_icon(const PixelBuffer &image);
+		InputContext ic;
+		DisplayWindowHandle handle;
+		Colormap color_map; //!< X11 window color-map. See usage in .cpp file.
+		bool minimized; //!< Cached value. Do not use without calling is_minimized() to verify.
+		bool maximized; //!< Cached value. Do not use without calling is_maximized() to verify
+		bool restore_to_maximized; //!< When restoring from minimized, make window maximized?
+		bool fullscreen;
+		::Cursor system_cursor;
+		::Cursor hidden_cursor;
+		Pixmap cursor_bitmap;
+		InputDevice keyboard, mouse;
+		std::vector<InputDevice> joysticks;
+		DisplayWindowSite *site;
+		std::function<void()> callback_on_resized;
+		std::function<bool(XButtonEvent &)> callback_on_clicked;
+		Size minimum_size; //!< Minimum client area size.
+		Size maximum_size; //!< Maximum client area size.
+		std::string window_title;
+		bool resize_allowed; //!< Is the WM allowed to resize this window?
+		Clipboard_X11 clipboard;
+		std::vector<int> current_window_events;
+		bool is_window_mapped;
+		XSizeHints *size_hints;
 
-	void process_message(XEvent &event, X11Window *mouse_capture_window);
-	void process_window();
+		X11Atoms atoms; //!< X11 Atom object container.
 
-	void get_keyboard_modifiers(bool &key_shift, bool &key_alt, bool &key_ctrl) const;
-	Point get_mouse_position() const;
+		//! Legacy X11 border width attribute. Obsolete; Do not use.
+		//! Favour frame extents instead.
+		int border_width = 0;
 
-/// \}
-/// \name Implementation
-/// \{
+		//! Current window client area, which excludes the window frame.
+		Rect client_area;
 
-private:
-	void process_window_sockets();
-	void process_window_resize(const Rect &new_rect);
-	void update_frame_extents();
-	void map_window();
-	void unmap_window();
-	Rect get_screen_position() const;
-	void setup_swap_interval_pointers();
-	void setup_joysticks();
-	void close_window();
-	void received_keyboard_input(XKeyEvent &event);
-	void received_mouse_input(XButtonEvent &event);
-	void received_mouse_move(XMotionEvent &event);
-	void clear_structurenotify_events();
+		//! Window frame extents. Lengths on each side of the window used by the WM
+		//! to decorate the window. Never use size-related methods on this object.
+		Rect frame_extents;
 
-	bool modify_net_wm_state(bool add, Atom atom1, Atom atom2 = None);
-	InputDeviceProvider_X11Keyboard *get_keyboard() const;
-	InputDeviceProvider_X11Mouse *get_mouse() const;
+		/**
+		 * True when there is a repaint requests.
+		 * Used to call site->sig_paint().
+		 * Cleared on process_window().
+		 */
+		bool repaint_request = false;
 
-	InputContext ic;
-	DisplayWindowHandle handle;
-	Colormap color_map; //!< X11 window color-map. See usage in .cpp file.
-	bool minimized; //!< Cached value. Do not use without calling is_minimized() to verify.
-	bool maximized; //!< Cached value. Do not use without calling is_maximized() to verify
-	bool restore_to_maximized; //!< When restoring from minimized, make window maximized?
-	bool fullscreen;
-	::Cursor system_cursor;
-	::Cursor hidden_cursor;
-	Pixmap cursor_bitmap;
-	InputDevice keyboard, mouse;
-	std::vector<InputDevice> joysticks;
-	DisplayWindowSite *site;
-	std::function<void()> callback_on_resized;
-	std::function<bool(XButtonEvent &)> callback_on_clicked;
-	Size minimum_size; //!< Minimum client area size.
-	Size maximum_size; //!< Maximum client area size.
-	std::string window_title;
-	bool resize_allowed; //!< Is the WM allowed to resize this window?
-	Clipboard_X11 clipboard;
-	std::vector<int> current_window_events;
-	bool is_window_mapped;
-	XSizeHints *size_hints;
-
-	X11Atoms atoms; //!< X11 Atom object container.
-
-	//! Legacy X11 border width attribute. Obsolete; Do not use.
-	//! Favour frame extents instead.
-	int border_width = 0;
-
-	//! Current window client area, which excludes the window frame.
-	Rect client_area;
-
-	//! Window frame extents. Lengths on each side of the window used by the WM
-	//! to decorate the window. Never use size-related methods on this object.
-	Rect frame_extents;
-
-	/**
-	 * True when there is a repaint requests.
-	 * Used to call site->sig_paint().
-	 * Cleared on process_window().
-	 */
-	bool repaint_request = false;
-
-	float ppi           = 96.0f;
-	float pixel_ratio   = 0.0f;	// 0.0f = Unset
-
-/// \}
-};
-
+		float ppi = 96.0f;
+		float pixel_ratio = 0.0f;	// 0.0f = Unset
+	};
 }

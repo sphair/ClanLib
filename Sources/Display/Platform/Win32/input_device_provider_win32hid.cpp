@@ -40,8 +40,7 @@
 
 namespace clan
 {
-	InputDeviceProvider_Win32Hid::InputDeviceProvider_Win32Hid(HANDLE rawinput_device)
-		: sig_provider_event(0), rawinput_device(rawinput_device)
+	InputDeviceProvider_Win32Hid::InputDeviceProvider_Win32Hid(HANDLE rawinput_device) : rawinput_device(rawinput_device)
 	{
 		DataBuffer preparse_data = get_preparse_data();
 		HANDLE device = open_device();

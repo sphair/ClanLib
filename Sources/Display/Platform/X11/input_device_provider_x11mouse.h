@@ -36,76 +36,41 @@
 
 namespace clan
 {
+	class X11Window;
 
-class X11Window;
-
-class InputDeviceProvider_X11Mouse : public InputDeviceProvider
-{
-/// \name Construction
-/// \{
-
-public:
-	InputDeviceProvider_X11Mouse(X11Window *window);
-
-	~InputDeviceProvider_X11Mouse();
-
-	void destroy() { delete this; }
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	InputDevice::Type get_type() const override { return InputDevice::pointer; }
-
-	Pointf get_position() const override;
-
-	Point get_device_position() const override;
-
-	bool get_keycode(int keycode) const override;
-
-	std::string get_key_name(int id) const override;
-
-	std::string get_name() const override;
-
-	std::string get_device_name() const override;
-
-	int get_button_count() const override;
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	void init(Signal<void(const InputEvent &)> *new_sig_provider_event) override
+	class InputDeviceProvider_X11Mouse : public InputDeviceProvider
 	{
-		sig_provider_event = new_sig_provider_event;
-	}
+	public:
+		InputDeviceProvider_X11Mouse(X11Window *window);
+		~InputDeviceProvider_X11Mouse();
 
-	void set_position(float x, float y) override;
+		void destroy() { delete this; }
 
-	void set_device_position(int x, int y) override;
+		InputDevice::Type get_type() const override { return InputDevice::pointer; }
+		Pointf get_position() const override;
+		Point get_device_position() const override;
+		bool get_keycode(int keycode) const override;
+		std::string get_key_name(int id) const override;
+		std::string get_name() const override;
+		std::string get_device_name() const override;
+		int get_button_count() const override;
 
-	void received_mouse_input(XButtonEvent &event);
-	void received_mouse_move(XMotionEvent &event);
+		void set_position(float x, float y) override;
+		void set_device_position(int x, int y) override;
 
-/// \}
-/// \name Implementation
-/// \{
+		void received_mouse_input(InputDevice &mouse, XButtonEvent &event);
+		void received_mouse_move(InputDevice &mouse, XMotionEvent &event);
 
-private:
-	void on_dispose() override;
-	Signal<void(const InputEvent &)> *sig_provider_event;
+	private:
+		void on_dispose() override;
 
-	bool key_states[32];
+		bool key_states[32];
 
-	X11Window *window;
+		X11Window *window;
 
-	Point mouse_pos;
+		Point mouse_pos;
 
-	Time time_at_last_press;
-	int last_press_id;
-/// \}
-};
-
+		Time time_at_last_press;
+		int last_press_id;
+	};
 }

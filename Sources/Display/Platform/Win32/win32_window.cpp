@@ -77,8 +77,6 @@ namespace clan
 		keyboard = InputDevice(new InputDeviceProvider_Win32Keyboard(this));
 		mouse = InputDevice(new InputDeviceProvider_Win32Mouse(this));
 
-		SetupDisplay::get_message_queue()->add_client(this);
-
 		register_clipboard_formats();
 	}
 
@@ -95,7 +93,6 @@ namespace clan
 		if (update_window_region)
 			DeleteObject(update_window_region);
 
-		SetupDisplay::get_message_queue()->remove_client(this);
 		ic.dispose();
 		get_keyboard()->dispose();
 		get_mouse()->dispose();
@@ -832,7 +829,10 @@ namespace clan
 		set_modifier_keys(key);
 
 		// Emit message:
-		(*get_keyboard()->sig_provider_event)(key);
+		if (keydown)
+			keyboard.sig_key_down()(key);
+		else
+			keyboard.sig_key_up()(key);
 	}
 
 	void Win32Window::received_mouse_input(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -876,7 +876,7 @@ namespace clan
 			if (id >= 0 && id < 32)
 				get_mouse()->key_states[id] = true;
 
-			(*get_mouse()->sig_provider_event)(key);
+			mouse.sig_key_dblclk()(key);
 		}
 
 		if (down)
@@ -887,7 +887,7 @@ namespace clan
 			if (id >= 0 && id < 32)
 				get_mouse()->key_states[id] = true;
 
-			(*get_mouse()->sig_provider_event)(key);
+			mouse.sig_key_down()(key);
 		}
 
 		// It is possible for 2 events to be called when the wheelmouse is used
@@ -899,7 +899,7 @@ namespace clan
 			if (id >= 0 && id < 32)
 				get_mouse()->key_states[id] = false;
 
-			(*get_mouse()->sig_provider_event)(key);
+			mouse.sig_key_up()(key);
 		}
 	}
 
@@ -924,7 +924,7 @@ namespace clan
 			set_modifier_keys(key);
 
 			// Fire off signal
-			(*get_mouse()->sig_provider_event)(key);
+			mouse.sig_pointer_move()(key);
 		}
 
 		if (!cursor_set && !cursor_hidden)

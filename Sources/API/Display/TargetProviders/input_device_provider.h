@@ -96,11 +96,6 @@ namespace clan
 		/// \warn If used on a keyboard or mouse, this function returns -1.
 		virtual int get_button_count() const = 0;
 
-		/// \brief Initialize input device provider.
-		/// The device field of InputEvent should not be set when emitting events.
-		/// Invoking sig_provider_event is thread safe.
-		virtual void init(Signal<void(const InputEvent &)> *sig_provider_event) = 0;
-
 		/// \brief Sets the display-independent position of the device. (Pointing devices only)
 		virtual void set_position(float x, float y) { }
 

@@ -37,8 +37,7 @@
 
 namespace clan
 {
-	InputDeviceProvider_Win32Keyboard::InputDeviceProvider_Win32Keyboard(Win32Window *window)
-		: sig_provider_event(0), window(window)
+	InputDeviceProvider_Win32Keyboard::InputDeviceProvider_Win32Keyboard(Win32Window *window) : window(window)
 	{
 	}
 

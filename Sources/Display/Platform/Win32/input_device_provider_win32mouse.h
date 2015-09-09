@@ -50,18 +50,12 @@ namespace clan
 		std::string get_device_name() const override;
 		int get_button_count() const override;
 
-		void init(Signal<void(const InputEvent &)> *new_sig_provider_event) override
-		{
-			sig_provider_event = new_sig_provider_event;
-		}
-
 		void set_position(float x, float y) override;
 		void set_device_position(int x, int y) override;
 
 	private:
 		void on_dispose();
 
-		Signal<void(const InputEvent &)> *sig_provider_event;
 		bool key_states[32];
 		Win32Window *window;
 

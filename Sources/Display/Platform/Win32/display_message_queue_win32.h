@@ -48,9 +48,6 @@ namespace clan
 		bool process(int timeout_ms) override;
 		void post_async_work_needed() override;
 
-		void add_client(Win32Window *window);
-		void remove_client(Win32Window *window);
-
 		static bool should_apply_vista_x64_workaround()
 		{
 #ifdef _M_X86
@@ -64,19 +61,10 @@ namespace clan
 		static LRESULT WINAPI async_message_window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		static void allow_exceptions();
-		void process_input_contexts();
 		bool process_message(MSG &msg);
 
 		bool exit_loop = false;
 		HWND async_message_window_handle;
-
-		class ThreadData : public ThreadLocalStorageData
-		{
-		public:
-			std::vector<Win32Window *> windows;
-		};
-
-		std::shared_ptr<ThreadData> get_thread_data();
 
 #define WIN32_PROCESS_CALLBACK_FILTER_ENABLED 0x1
 		typedef BOOL(WINAPI FuncSetProcessUserModeExceptionPolicy)(DWORD dwFlags);

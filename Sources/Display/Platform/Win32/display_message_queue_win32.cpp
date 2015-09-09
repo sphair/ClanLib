@@ -138,8 +138,6 @@ namespace clan
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 
-		process_input_contexts();
-
 		if (exit_loop)
 		{
 			exit_loop = false;
@@ -147,37 +145,6 @@ namespace clan
 		}
 
 		return true;
-	}
-
-	void DisplayMessageQueue_Win32::add_client(Win32Window *window)
-	{
-		std::shared_ptr<ThreadData> thread_data = get_thread_data();
-		thread_data->windows.push_back(window);
-	}
-
-	void DisplayMessageQueue_Win32::remove_client(Win32Window *window)
-	{
-		std::shared_ptr<ThreadData> thread_data = get_thread_data();
-		std::vector<Win32Window *>::size_type index, size;
-		size = thread_data->windows.size();
-		for (index = 0; index < size; index++)
-		{
-			if (thread_data->windows[index] == window)
-			{
-				thread_data->windows.erase(thread_data->windows.begin() + index);
-				break;
-			}
-		}
-	}
-
-	void DisplayMessageQueue_Win32::process_input_contexts()
-	{
-		std::shared_ptr<ThreadData> data = get_thread_data();
-		for (std::vector<Win32Window *>::size_type i = 0; i < data->windows.size(); i++)
-		{
-			InputContext context = data->windows[i]->get_ic();
-			context.process_messages();
-		}
 	}
 
 	void DisplayMessageQueue_Win32::allow_exceptions()
@@ -196,17 +163,6 @@ namespace clan
 					ptrSetProcessUserModeExceptionPolicy(flags & ~WIN32_PROCESS_CALLBACK_FILTER_ENABLED);
 			}
 		}
-	}
-
-	std::shared_ptr<DisplayMessageQueue_Win32::ThreadData> DisplayMessageQueue_Win32::get_thread_data()
-	{
-		std::shared_ptr<ThreadData> data = std::dynamic_pointer_cast<ThreadData>(ThreadLocalStorage::get_variable("DisplayMessageQueue_Win32::thread_data"));
-		if (!data)
-		{
-			data = std::shared_ptr<ThreadData>(new ThreadData);
-			ThreadLocalStorage::set_variable("DisplayMessageQueue_Win32::thread_data", data);
-		}
-		return data;
 	}
 
 	HMODULE DisplayMessageQueue_Win32::moduleKernel32 = 0;
