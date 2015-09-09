@@ -33,37 +33,21 @@
 
 namespace clan
 {
+	class Point;
+	class CursorDescription;
 
-class Point;
-class CursorDescription;
+	class CursorProvider_X11 : public CursorProvider
+	{
+	public:
+		CursorProvider_X11(const CursorDescription &cursor_description, const Point &hotspot);
+		~CursorProvider_X11();
 
-class CursorProvider_X11 : public CursorProvider
-{
-/// \name Construction
-/// \{
-public:
-	CursorProvider_X11(const CursorDescription &cursor_description, const Point &hotspot);
-	~CursorProvider_X11();
-/// \}
+		int handle;
 
-/// \name Attributes
-/// \{
-public:
-	int handle;
-/// \}
+		/// \brief Destroys the cursor provider.
+		void destroy() { delete this; }
 
-/// \name Operations
-/// \{
-public:
-	/// \brief Destroys the cursor provider.
-	void destroy() { delete this; }
-/// \}
-
-/// \name Implementation
-/// \{
-private:
-	int create_cursor(const CursorDescription &cursor_description, const Point &hotspot) const;
-/// \}
-};
-
+	private:
+		int create_cursor(const CursorDescription &cursor_description, const Point &hotspot) const;
+	};
 }

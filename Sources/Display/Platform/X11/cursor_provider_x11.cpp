@@ -33,33 +33,19 @@
 
 namespace clan
 {
+	CursorProvider_X11::CursorProvider_X11(const CursorDescription &cursor_description, const Point &hotspot)
+		: handle(0)
+	{
+		handle = create_cursor(cursor_description, hotspot);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// CursorProvider_X11 Construction:
+	CursorProvider_X11::~CursorProvider_X11()
+	{
+	}
 
-CursorProvider_X11::CursorProvider_X11(const CursorDescription &cursor_description, const Point &hotspot)
-: handle(0)
-{
-	handle = create_cursor(cursor_description, hotspot);
-}
-
-CursorProvider_X11::~CursorProvider_X11()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// CursorProvider_X11 Attributes:
-
-/////////////////////////////////////////////////////////////////////////////
-// CursorProvider_X11 Operations:
-
-/////////////////////////////////////////////////////////////////////////////
-// CursorProvider_X11 Implementation:
-
-int CursorProvider_X11::create_cursor(const CursorDescription &cursor_description, const Point &hotspot) const
-{
-	// TODO: Implement me :)
-	return 0;
-}
-
+	int CursorProvider_X11::create_cursor(const CursorDescription &cursor_description, const Point &hotspot) const
+	{
+		// TODO: Implement me :)
+		return 0;
+	}
 }

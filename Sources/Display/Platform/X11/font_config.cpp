@@ -35,95 +35,81 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// FontConfig Construction:
-
-FontConfig::FontConfig()
-{
-        if (!fc_config)
-        {
-		fc_config = FcInitLoadConfigAndFonts();
-        }
-        if  (!fc_config)
+	FontConfig::FontConfig()
 	{
-		throw Exception("CL_FontConfig: Initializing FontConfig library failed.");
+		if (!fc_config)
+		{
+			fc_config = FcInitLoadConfigAndFonts();
+		}
+		if (!fc_config)
+		{
+			throw Exception("CL_FontConfig: Initializing FontConfig library failed.");
+		}
 	}
-}
 
-FontConfig::~FontConfig()
-{
-	// For some reason calling FcFini() throws an internal FC assert.*/
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// FontConfig Attributes:
-
-FontConfig &FontConfig::instance()
-{
-	static FontConfig fc;
-	return fc;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// FontConfig Operations:
-
-std::string FontConfig::match_font(const std::string &typeface_name, const FontDescription &desc) const
-{
-	FcPattern * fc_pattern = nullptr;
-	FcPattern * fc_match = nullptr;
-	try
+	FontConfig::~FontConfig()
 	{
-		int weight = static_cast<int>(desc.get_weight());
-
-		// Build font matching pattern.
-		fc_pattern = FcPatternBuild (nullptr,
-			FC_FAMILY    , FcTypeString , typeface_name.c_str(),
-			FC_PIXEL_SIZE, FcTypeDouble , (double) std::abs(desc.get_height()),
-			FC_WEIGHT    , FcTypeInteger, (weight > 0) ? (int)(weight * (FC_WEIGHT_HEAVY/900.0)) : FC_WEIGHT_NORMAL,
-			FC_SLANT     , FcTypeInteger, (desc.get_style() == clan::FontStyle::italic) ? FC_SLANT_ITALIC : ((desc.get_style() == clan::FontStyle::oblique) ? FC_SLANT_OBLIQUE : FC_SLANT_ROMAN),
-			FC_SPACING   , FcTypeInteger, FC_PROPORTIONAL,
-			(char*) nullptr
-			);
-		if (!fc_pattern)
-		{
-			throw Exception("CL_FontConfig: Building FontConfig pattern failed.");
-		}
-
-		// Execute any needed param substitutions required by the system config.
-		if (FcTrue !=  FcConfigSubstitute(fc_config, fc_pattern, FcMatchPattern))
-		{
-			throw Exception("CL_FontConfig: Font config substitutions failed.");
-		}
-
-		// Supply default values for underspecified font patterns. Never fails.
-		FcDefaultSubstitute(fc_pattern);
-
-		// Find best match for pattern and extract filename.
-		FcResult match_result; // Doesn't appear to be actually updated.
-		fc_match = FcFontMatch(fc_config, fc_pattern, &match_result);
-		FcChar8 * fc_font_file_path = nullptr;
-		if (FcResultMatch != FcPatternGetString (fc_match, FC_FILE, 0, &fc_font_file_path))
-		{
-			throw Exception("CL_FontConfig: Could not resolve font pattern to a font file.");
-		}
-
-		// Release resources and return results.
-		std::string cl_font_file_path((char*) fc_font_file_path);
-		FcPatternDestroy(fc_match);
-		FcPatternDestroy(fc_pattern);
-		return cl_font_file_path;
+		// For some reason calling FcFini() throws an internal FC assert.*/
 	}
-	catch(...)
+
+	FontConfig &FontConfig::instance()
 	{
-		// If any exceptions thrown, ensure fontconfig resources are released.
-		if (fc_match) FcPatternDestroy(fc_match);
-		if (fc_pattern) FcPatternDestroy(fc_pattern);
-		throw;
+		static FontConfig fc;
+		return fc;
 	}
-}
 
-/////////////////////////////////////////////////////////////////////////////
-// FontConfig Implementation:
+	std::string FontConfig::match_font(const std::string &typeface_name, const FontDescription &desc) const
+	{
+		FcPattern * fc_pattern = nullptr;
+		FcPattern * fc_match = nullptr;
+		try
+		{
+			int weight = static_cast<int>(desc.get_weight());
 
+			// Build font matching pattern.
+			fc_pattern = FcPatternBuild(nullptr,
+				FC_FAMILY, FcTypeString, typeface_name.c_str(),
+				FC_PIXEL_SIZE, FcTypeDouble, (double)std::abs(desc.get_height()),
+				FC_WEIGHT, FcTypeInteger, (weight > 0) ? (int)(weight * (FC_WEIGHT_HEAVY / 900.0)) : FC_WEIGHT_NORMAL,
+				FC_SLANT, FcTypeInteger, (desc.get_style() == clan::FontStyle::italic) ? FC_SLANT_ITALIC : ((desc.get_style() == clan::FontStyle::oblique) ? FC_SLANT_OBLIQUE : FC_SLANT_ROMAN),
+				FC_SPACING, FcTypeInteger, FC_PROPORTIONAL,
+				(char*) nullptr
+				);
+			if (!fc_pattern)
+			{
+				throw Exception("CL_FontConfig: Building FontConfig pattern failed.");
+			}
+
+			// Execute any needed param substitutions required by the system config.
+			if (FcTrue != FcConfigSubstitute(fc_config, fc_pattern, FcMatchPattern))
+			{
+				throw Exception("CL_FontConfig: Font config substitutions failed.");
+			}
+
+			// Supply default values for underspecified font patterns. Never fails.
+			FcDefaultSubstitute(fc_pattern);
+
+			// Find best match for pattern and extract filename.
+			FcResult match_result; // Doesn't appear to be actually updated.
+			fc_match = FcFontMatch(fc_config, fc_pattern, &match_result);
+			FcChar8 * fc_font_file_path = nullptr;
+			if (FcResultMatch != FcPatternGetString(fc_match, FC_FILE, 0, &fc_font_file_path))
+			{
+				throw Exception("CL_FontConfig: Could not resolve font pattern to a font file.");
+			}
+
+			// Release resources and return results.
+			std::string cl_font_file_path((char*)fc_font_file_path);
+			FcPatternDestroy(fc_match);
+			FcPatternDestroy(fc_pattern);
+			return cl_font_file_path;
+		}
+		catch (...)
+		{
+			// If any exceptions thrown, ensure fontconfig resources are released.
+			if (fc_match) FcPatternDestroy(fc_match);
+			if (fc_pattern) FcPatternDestroy(fc_pattern);
+			throw;
+		}
+	}
 }

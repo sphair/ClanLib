@@ -34,39 +34,23 @@
 
 namespace clan
 {
+	class FontDescription;
 
-class FontDescription;
+	class FontConfig
+	{
+	private:
+		FontConfig();
+		~FontConfig();
+		FontConfig(const FontConfig &);
+		FontConfig operator=(const FontConfig &);
 
-class FontConfig
-{
-/// \name Construction
-/// \{
-private:
-	FontConfig();
-	~FontConfig();
-	FontConfig(const FontConfig &);
-	FontConfig operator=(const FontConfig &);
-/// \}
+		static FontConfig &instance();
 
-/// \name Attributes
-/// \{
-public:
-	static FontConfig &instance();
-/// \}
+		std::string match_font(const std::string &typeface_name, const FontDescription &desc) const;
 
-/// \name Operations
-/// \{
-public:
-	std::string match_font( const std::string &typeface_name, const FontDescription &desc) const;
-/// \}
-
-/// \name Implementation
-/// \{
-private:
+	private:
 #ifndef __APPLE__
-	FcConfig * fc_config;
+		FcConfig * fc_config;
 #endif
-/// \}
-};
-
+	};
 }

@@ -33,44 +33,29 @@
 
 namespace clan
 {
+	class X11Window;
 
-class X11Window;
+	class Clipboard_X11
+	{
+	public:
+		Clipboard_X11(X11Window *x11_window);
+		~Clipboard_X11();
 
-class Clipboard_X11
-{
-/// \name Construction
-/// \{
-public:
-	Clipboard_X11(X11Window *x11_window);
-	~Clipboard_X11();
-/// \}
+		std::string get_clipboard_text() const;
+		bool is_clipboard_text_available() const;
+		bool is_clipboard_image_available() const;
 
-/// \name Attributes
-/// \{
-	std::string get_clipboard_text() const;
-	bool is_clipboard_text_available() const;
-	bool is_clipboard_image_available() const;
-/// \}
+		void set_clipboard_text(const std::string &text);
+		void setup();
+		void event_selection_clear(XSelectionClearEvent &xselectionclear);
+		void event_selection_notify();
+		void event_selection_request(XSelectionRequestEvent &xselectionrequest);
 
-/// \name Operations
-/// \{
-public:
-	void set_clipboard_text(const std::string &text);
-	void setup();
-	void event_selection_clear(XSelectionClearEvent &xselectionclear);
-	void event_selection_notify();
-	void event_selection_request(XSelectionRequestEvent &xselectionrequest);
-/// \}
+	private:
+		X11Window *x11_window;
 
-/// \name Implementation
-/// \{
-private:
-	X11Window *x11_window;
-
-	Atom atom_CLIPBOARD;
-	std::string clipboard_current;
-	bool clipboard_available;
-/// \}
-};
-
+		Atom atom_CLIPBOARD;
+		std::string clipboard_current;
+		bool clipboard_available;
+	};
 }
