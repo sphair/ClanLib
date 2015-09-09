@@ -373,7 +373,7 @@ namespace clan
 
 	void OpenGLWindowProvider::request_repaint()
 	{
-		[impl->window.contentView setNeedsDisplay];
+		[impl->window.contentView setNeedsDisplay:TRUE];
 	}
 
 	void OpenGLWindowProvider::set_large_icon(const PixelBuffer &image)
