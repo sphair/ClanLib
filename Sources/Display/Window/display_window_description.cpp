@@ -182,11 +182,6 @@ namespace clan
 		return impl->drop_shadow;
 	}
 
-	bool DisplayWindowDescription::get_tablet_context() const
-	{
-		return impl->create_tablet_context;
-	}
-
 	int DisplayWindowDescription::get_depth_size() const
 	{
 		return impl->depth_size;
@@ -344,11 +339,6 @@ namespace clan
 	void DisplayWindowDescription::set_refresh_rate(int refresh_rate)
 	{
 		impl->refresh_rate = refresh_rate;
-	}
-
-	void DisplayWindowDescription::set_tablet_context(bool create)
-	{
-		impl->create_tablet_context = create;
 	}
 
 	void DisplayWindowDescription::set_layered(bool layered)

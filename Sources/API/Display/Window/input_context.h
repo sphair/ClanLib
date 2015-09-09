@@ -56,9 +56,6 @@ namespace clan
 		/// \brief Returns the number of joysticks available.
 		int get_joystick_count() const;
 
-		/// \brief Returns the number of tablets available.
-		int get_tablet_count() const;
-
 		/// \brief Returns the input device for the specified keyboard.
 		InputDevice &get_keyboard(int keyboard = 0);
 
@@ -67,9 +64,6 @@ namespace clan
 
 		/// \brief Returns the input device for the specified joystick.
 		InputDevice &get_joystick(int joystick = 0);
-
-		/// \brief Returns the input device for the specified tablet.
-		InputDevice &get_tablet(int tablet = 0);
 
 		/// \brief Returns the input device with the given devicename
 		InputDevice &get_device(const std::string &device_name);
@@ -85,9 +79,6 @@ namespace clan
 
 		/// \brief Adds a new joystick to the input context.
 		void add_joystick(const InputDevice joystick);
-
-		/// \brief Adds a new tablet to the input context.
-		void add_tablet(const InputDevice tablet);
 
 		/// \brief Process and dispatch messages to signals.
 		void process_messages();

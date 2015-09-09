@@ -136,9 +136,6 @@ namespace clan
 		/// \brief Returns the window owning this one.
 		DisplayWindow get_owner() const;
 
-		/// \brief Returns true if a tablet context is to be created for the window.
-		bool get_tablet_context() const;
-
 		/// \brief Returns the minimum required depth buffer.
 		int get_depth_size() const;
 
@@ -259,9 +256,6 @@ namespace clan
 		 *  This value is also known as the vertical refresh rate.
 		 */
 		void set_refresh_rate(int refresh_rate);
-
-		/// \brief Sets to true if a tablet input context should be created for this window.
-		void set_tablet_context(bool create);
 
 		/// \brief Creates a layered window (complex shaped window)
 		///

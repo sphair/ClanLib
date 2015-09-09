@@ -48,7 +48,6 @@
 #include "win32_window.h"
 #include "input_device_provider_win32keyboard.h"
 #include "input_device_provider_win32mouse.h"
-#include "input_device_provider_win32tablet.h"
 #include "input_device_provider_win32hid.h"
 #include "display_message_queue_win32.h"
 #include "cursor_provider_win32.h"
@@ -477,14 +476,7 @@ namespace clan
 				return MA_NOACTIVATE;
 			break;
 
-		case WM_NCMOUSEMOVE:
-			if (get_tablet() && get_tablet()->device_present() && !get_tablet()->is_context_on_top())
-				get_tablet()->set_context_on_top(true);
-			return 0;
-
 		case WM_MOVE:
-			if (get_tablet() && get_tablet()->device_present())
-				get_tablet()->check_monitor_changed();
 			if (site)
 			{
 				(site->sig_window_moved)();
@@ -589,14 +581,10 @@ namespace clan
 				if (LOWORD(wparam) == WA_INACTIVE)
 				{
 					(site->sig_lost_focus)();
-					if (get_tablet() && get_tablet()->device_present())
-						get_tablet()->set_context_on_top(false);
 				}
 				else
 				{
 					(site->sig_got_focus)();
-					if (get_tablet() && get_tablet()->device_present())
-						get_tablet()->set_context_on_top(true);
 				}
 			}
 			return 0;
@@ -629,16 +617,6 @@ namespace clan
 				}
 			}
 			return 0;
-
-		case WT_PACKET:
-			if (get_tablet() && get_tablet()->device_present())
-				return get_tablet()->process_packet(lparam, wparam);
-			return FALSE;
-
-		case WT_PROXIMITY:
-			if (get_tablet() && get_tablet()->device_present())
-				return get_tablet()->process_proximity(lparam, wparam);
-			return FALSE;
 
 		case WM_SYSCOMMAND:
 			switch (wparam)
@@ -927,9 +905,6 @@ namespace clan
 
 	void Win32Window::received_mouse_move(UINT msg, WPARAM wparam, LPARAM lparam)
 	{
-		if (get_tablet() && get_tablet()->device_present() && !get_tablet()->is_context_on_top())
-			get_tablet()->set_context_on_top(true);
-
 		cursor_set = false;
 
 		// Fetch coordinates
@@ -991,17 +966,6 @@ namespace clan
 				}
 			}
 		}
-	}
-
-	void Win32Window::setup_tablet()
-	{
-		if (get_tablet())
-			get_tablet()->dispose();
-
-		tablet = InputDevice(new InputDeviceProvider_Win32Tablet(this));
-
-		if (get_tablet()->device_present())
-			ic.add_tablet(tablet);
 	}
 
 	void Win32Window::set_clipboard_text(const std::string &text)
@@ -1558,11 +1522,6 @@ namespace clan
 		return static_cast<InputDeviceProvider_Win32Mouse *>(mouse.get_provider());
 	}
 
-	InputDeviceProvider_Win32Tablet *Win32Window::get_tablet()
-	{
-		return static_cast<InputDeviceProvider_Win32Tablet *>(tablet.get_provider());
-	}
-
 	void Win32Window::register_window_class()
 	{
 		static bool first_call = true;
@@ -1668,8 +1627,6 @@ namespace clan
 
 		create_hid_devices();
 
-		if (desc.get_tablet_context())
-			setup_tablet();
 	}
 
 	void Win32Window::create_hid_devices()

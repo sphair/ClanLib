@@ -49,7 +49,6 @@ namespace clan
 		std::vector<InputDevice> keyboards;
 		std::vector<InputDevice> mice;
 		std::vector<InputDevice> joysticks;
-		std::vector<InputDevice> tablets;
 
 		std::weak_ptr<InputContext_Impl> input_context;
 
@@ -64,9 +63,6 @@ namespace clan
 
 		/// \brief Adds a new joystick to the input context.
 		void add_joystick(InputDevice &joystick);
-
-		/// \brief Adds a new tablet to the input context.
-		void add_tablet(InputDevice &tablet);
 
 		/// \brief Process and dispatch messages to signals.
 		void process_messages();

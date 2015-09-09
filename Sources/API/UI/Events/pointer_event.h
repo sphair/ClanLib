@@ -63,7 +63,7 @@ namespace clan
 		promixity_change   /// Pen proximity changed
 	};
 
-	/// Pointer (mouse/tablet) event
+	/// Pointer event
 	class PointerEvent : public EventUI
 	{
 	public:

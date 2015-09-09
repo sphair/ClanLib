@@ -52,7 +52,6 @@ namespace clan
 			keyboard,
 			pointer,
 			joystick,
-			tablet,
 			unknown
 		};
 
@@ -127,9 +126,6 @@ namespace clan
 		/// \brief Returns the number of buttons available on this device.
 		/// \warn If used on a keyboard or mouse, this function returns -1.
 		int get_button_count() const;
-
-		/// \brief Returns true if the input device is in proximity mode. (Tablets only)
-		bool in_proximity() const;
 
 		InputDevice &operator =(const InputDevice &copy);
 

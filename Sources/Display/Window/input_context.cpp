@@ -62,12 +62,6 @@ namespace clan
 		return impl->joysticks.size();
 	}
 
-	int InputContext::get_tablet_count() const
-	{
-		impl->throw_if_disposed();
-		return impl->tablets.size();
-	}
-
 	InputDevice &InputContext::get_keyboard(int keyboard)
 	{
 		impl->throw_if_disposed();
@@ -86,12 +80,6 @@ namespace clan
 		return impl->joysticks[joystick];
 	}
 
-	InputDevice &InputContext::get_tablet(int tablet)
-	{
-		impl->throw_if_disposed();
-		return impl->tablets[tablet];
-	}
-
 	InputDevice &InputContext::get_device(const std::string& devicename)
 	{
 		impl->throw_if_disposed();
@@ -107,10 +95,6 @@ namespace clan
 		for (i = 0; i < impl->mice.size(); ++i)
 			if (impl->mice[i].get_device_name() == devicename)
 				return impl->mice[i];
-
-		for (i = 0; i < impl->tablets.size(); ++i)
-			if (impl->tablets[i].get_device_name() == devicename)
-				return impl->tablets[i];
 
 		throw Exception("Couldn't find InputDevice named '" + devicename + "'");
 	}
@@ -133,11 +117,6 @@ namespace clan
 	void InputContext::add_joystick(InputDevice joystick)
 	{
 		impl->add_joystick(joystick);
-	}
-
-	void InputContext::add_tablet(InputDevice tablet)
-	{
-		impl->add_tablet(tablet);
 	}
 
 	void InputContext::process_messages()

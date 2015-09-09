@@ -444,14 +444,6 @@ namespace clan
 			return 0;
 	}
 
-	bool InputDevice::in_proximity() const
-	{
-		if (impl->provider)
-			return impl->provider->in_proximity();
-		else
-			return 0;
-	}
-
 	InputDevice &InputDevice::operator =(const InputDevice &copy)
 	{
 		impl = copy.impl;

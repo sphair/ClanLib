@@ -65,7 +65,6 @@ namespace clan
 		int bpp = 0;
 		int refresh_rate = 0;
 		DisplayWindow owner;
-		bool create_tablet_context = false;
 		bool layered = false;
 
 		DisplayWindowHandle handle;

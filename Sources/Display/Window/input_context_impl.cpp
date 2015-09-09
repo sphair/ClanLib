@@ -52,7 +52,6 @@ namespace clan
 		keyboards.clear();
 		mice.clear();
 		joysticks.clear();
-		tablets.clear();
 	}
 
 	void InputContext_Impl::add_keyboard(InputDevice &keyboard)
@@ -80,15 +79,6 @@ namespace clan
 		std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 		joysticks.push_back(joystick);
 		joystick.impl->input_contexts.push_back(input_context);
-	}
-
-	void InputContext_Impl::add_tablet(InputDevice &tablet)
-	{
-		throw_if_disposed();
-
-		std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
-		tablets.push_back(tablet);
-		tablet.impl->input_contexts.push_back(input_context);
 	}
 
 	void InputContext_Impl::process_messages()
@@ -157,6 +147,5 @@ namespace clan
 		keyboards.clear();
 		mice.clear();
 		joysticks.clear();
-		tablets.clear();
 	}
 }

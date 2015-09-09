@@ -96,9 +96,6 @@ namespace clan
 		/// \warn If used on a keyboard or mouse, this function returns -1.
 		virtual int get_button_count() const = 0;
 
-		/// \brief Returns true if the input device is in proximity mode. (Tablets only)
-		virtual bool in_proximity() const { return false; }
-
 		/// \brief Initialize input device provider.
 		/// The device field of InputEvent should not be set when emitting events.
 		/// Invoking sig_provider_event is thread safe.

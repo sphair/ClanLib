@@ -49,7 +49,6 @@ namespace clan
 {
 	class InputDeviceProvider_Win32Keyboard;
 	class InputDeviceProvider_Win32Mouse;
-	class InputDeviceProvider_Win32Tablet;
 	class DisplayMessageQueue_Win32;
 	class DisplayWindowSite;
 	class PixelBuffer;
@@ -174,7 +173,6 @@ namespace clan
 		void received_joystick_input(UINT msg, WPARAM wparam, LPARAM lparam);
 
 		void create_hid_devices();
-		void setup_tablet();
 
 		PixelBuffer get_argb8888_from_png(uint8_t *data, size_t size) const;
 		PixelBuffer get_argb8888_from_rgb_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const;
@@ -187,7 +185,6 @@ namespace clan
 
 		InputDeviceProvider_Win32Keyboard *get_keyboard();
 		InputDeviceProvider_Win32Mouse *get_mouse();
-		InputDeviceProvider_Win32Tablet *get_tablet();
 
 		HWND hwnd;
 		bool destroy_hwnd;
@@ -196,7 +193,7 @@ namespace clan
 		HICON small_icon;
 		bool cursor_set, cursor_hidden;
 		DisplayWindowSite *site;
-		InputDevice keyboard, mouse, tablet;
+		InputDevice keyboard, mouse;
 		std::vector<InputDevice> joysticks;
 		Point mouse_pos;
 		std::map<int, int> repeat_count;

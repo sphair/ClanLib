@@ -54,18 +54,6 @@ namespace clan
 		mouse_xbutton2 = 6,
 		mouse_count = 7,
 
-		tablet_x_axis = 0x10000,
-		tablet_y_axis,
-		tablet_z_axis,
-		tablet_tilt_x,
-		tablet_tilt_y,
-		tablet_rotation_pitch,
-		tablet_rotation_roll,
-		tablet_rotation_yaw,
-		tablet_proximity_enter,
-		tablet_proximity_exit,
-		tablet_key,		// "id_offset" set
-
 		joystick_x = 0,
 		joystick_y,
 		joystick_z,
