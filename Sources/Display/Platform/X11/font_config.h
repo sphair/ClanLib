@@ -38,7 +38,7 @@ namespace clan
 
 	class FontConfig
 	{
-	private:
+	public:
 		FontConfig();
 		~FontConfig();
 		FontConfig(const FontConfig &);
