@@ -211,7 +211,7 @@ namespace clan
 			key.mouse_device_pos = mouse_pos;
 			window->get_keyboard_modifiers(key.shift, key.alt, key.ctrl);
 
-			mouse.sig_pointer_moved()(key);
+			mouse.sig_pointer_move()(key);
 		}
 	}
 }
