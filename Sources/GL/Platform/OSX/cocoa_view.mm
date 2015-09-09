@@ -46,13 +46,7 @@
 
 - (void)drawRect:(NSRect)dirtyRect
 {
-	clan::Rectf update_box(dirtyRect.origin.x, dirtyRect.origin.y, dirtyRect.origin.x + dirtyRect.size.width, dirtyRect.origin.y + dirtyRect.size.height);
-	
-	CGFloat view_height = self.frame.size.height;
-	update_box.top = view_height - update_box.top;
-	update_box.bottom = view_height - update_box.bottom;
-	
-	window_provider->site->sig_paint(update_box);
+	window_provider->site->sig_paint();
 }
 
 @end

@@ -39,7 +39,7 @@
 
 namespace clan
 {
-	OpenGLWindowProvider::OpenGLWindowProvider(OpenGLWindowDescription &opengl_desc)
+	OpenGLWindowProvider::OpenGLWindowProvider(OpenGLContextDescription &opengl_desc)
 	{
 		impl.reset(new OpenGLWindowProvider_Impl(this, opengl_desc));
 
@@ -49,9 +49,8 @@ namespace clan
 
 	OpenGLWindowProvider::~OpenGLWindowProvider()
 	{
-		impl->ic.dispose();
-		get_keyboard()->dispose();
-		get_mouse()->dispose();
+		get_keyboard_provider()->dispose();
+		get_mouse_provider()->dispose();
 	}
 
 	ProcAddress *OpenGLWindowProvider::get_proc_address(const std::string& function_name) const
@@ -121,10 +120,26 @@ namespace clan
 	{
 		return impl->gc;
 	}
-
-	InputContext OpenGLWindowProvider::get_ic()
+	
+	InputDevice &OpenGLWindowProvider::get_keyboard()
 	{
-		return impl->ic;
+		return keyboard;
+	}
+	
+	InputDevice &OpenGLWindowProvider::get_mouse()
+	{
+		return mouse;
+	}
+	
+	int OpenGLWindowProvider::get_game_controller_count() const
+	{
+		return 0;
+	}
+	
+	InputDevice &OpenGLWindowProvider::get_game_controller(int index)
+	{
+		static InputDevice null_device;
+		return null_device;
 	}
 
 	std::string OpenGLWindowProvider::get_title() const
@@ -207,10 +222,6 @@ namespace clan
 		[impl->opengl_context setView:impl->window.contentView];
 
 		impl->gc = GraphicContext(new GL3GraphicContextProvider(this));
-
-		impl->ic.clear();
-		impl->ic.add_keyboard(keyboard);
-		impl->ic.add_mouse(mouse);
 
 		[impl->window setDelegate:impl->window];
 		
@@ -362,7 +373,7 @@ namespace clan
 
 	void OpenGLWindowProvider::request_repaint()
 	{
-		[impl->window.contentView setNeedsDisplayInRect:NSMakeRect()];
+		[impl->window.contentView setNeedsDisplay];
 	}
 
 	void OpenGLWindowProvider::set_large_icon(const PixelBuffer &image)
@@ -406,19 +417,19 @@ namespace clan
 	{
 	}
 
-	InputDeviceProvider_OSXKeyboard *OpenGLWindowProvider::get_keyboard()
+	InputDeviceProvider_OSXKeyboard *OpenGLWindowProvider::get_keyboard_provider()
 	{
 		return static_cast<InputDeviceProvider_OSXKeyboard*>(keyboard.get_provider());
 	}
 
-	InputDeviceProvider_OSXMouse *OpenGLWindowProvider::get_mouse()
+	InputDeviceProvider_OSXMouse *OpenGLWindowProvider::get_mouse_provider()
 	{
 		return static_cast<InputDeviceProvider_OSXMouse*>(mouse.get_provider());
 	}
 
 	/////////////////////////////////////////////////////////////////////
 
-	OpenGLWindowProvider_Impl::OpenGLWindowProvider_Impl(OpenGLWindowProvider *self, OpenGLWindowDescription &opengl_desc)
+	OpenGLWindowProvider_Impl::OpenGLWindowProvider_Impl(OpenGLWindowProvider *self, OpenGLContextDescription &opengl_desc)
 	: self(self), site(0), opengl_desc(opengl_desc)
 	{
 	}
@@ -475,9 +486,6 @@ namespace clan
 			default:
 				break;
 		}
-
-		// TODO: Seems like a hack.
-		ic.process_messages();
 	}
 
 	void OpenGLWindowProvider_Impl::on_keyboard_event(NSEvent *theEvent)
@@ -598,8 +606,11 @@ namespace clan
 		{
 			NSString* text = [theEvent charactersIgnoringModifiers];
 			key.str = [text UTF8String];
-			// Emit message:
-			(*self->get_keyboard()->sig_provider_event)(key);
+			
+			if (type == NSKeyDown)
+				self->keyboard.sig_key_down()(key);
+			else
+				self->keyboard.sig_key_up()(key);
 		}
 		else if(type == NSFlagsChanged)
 		{
@@ -607,19 +618,25 @@ namespace clan
 			if(prevInput.shift != key.shift)
 			{
 				key.id = keycode_shift;
-				key.type = key.shift?clan::InputEvent::pressed:clan::InputEvent::released;
-				(*self->get_keyboard()->sig_provider_event)(key);
+				key.type = key.shift ? clan::InputEvent::pressed : clan::InputEvent::released;
+				if (key.shift)
+					self->keyboard.sig_key_down()(key);
+				else
+					self->keyboard.sig_key_up()(key);
 			}
 			if(prevInput.ctrl != key.ctrl)
 			{
 				key.id = keycode_control;
-				key.type = key.ctrl?clan::InputEvent::pressed:clan::InputEvent::released;
-				(*self->get_keyboard()->sig_provider_event)(key);
+				key.type = key.ctrl ? clan::InputEvent::pressed : clan::InputEvent::released;
+				if (key.ctrl)
+					self->keyboard.sig_key_down()(key);
+				else
+					self->keyboard.sig_key_up()(key);
 			}
 		}
 
 		// Update our internal keyboard state
-		self->get_keyboard()->on_key_event(key.id, key.type);
+		self->get_keyboard_provider()->on_key_event(key.id, key.type);
 
 		prevInput = key;
 	}
@@ -659,20 +676,18 @@ namespace clan
 			key.type = InputEvent::doubleclick;
 
 			// Update our internal mouse state
-			self->get_mouse()->on_mouse_event(key.id, key.type, key.mouse_pos);
+			self->get_mouse_provider()->on_mouse_event(key.id, key.type, key.mouse_pos);
 
-			// Emit message.
-			(*self->get_mouse()->sig_provider_event)(key);
+			self->mouse.sig_key_dblclk()(key);
 		}
 		else if (down)
 		{
 			key.type = InputEvent::pressed;
 
 			// Update our internal mouse state
-			self->get_mouse()->on_mouse_event(key.id, key.type, key.mouse_pos);
+			self->get_mouse_provider()->on_mouse_event(key.id, key.type, key.mouse_pos);
 
-			// Emit message.
-			(*self->get_mouse()->sig_provider_event)(key);
+			self->mouse.sig_key_down()(key);
 		}
 
 		// It is possible for 2 events to be called when the wheelmouse is used.
@@ -681,10 +696,9 @@ namespace clan
 			key.type = InputEvent::released;
 
 			// Update our internal mouse state
-			self->get_mouse()->on_mouse_event(key.id, key.type, key.mouse_pos);
+			self->get_mouse_provider()->on_mouse_event(key.id, key.type, key.mouse_pos);
 
-			// Emit message.
-			(*self->get_mouse()->sig_provider_event)(key);
+			self->mouse.sig_key_up()(key);
 		}
 		
 		if (type == NSMouseMoved)
@@ -692,10 +706,9 @@ namespace clan
 			key.type = InputEvent::pointer_moved;
 			
 			// Update our internal mouse state
-			self->get_mouse()->on_mouse_event(key.id, key.type, key.mouse_pos);
+			self->get_mouse_provider()->on_mouse_event(key.id, key.type, key.mouse_pos);
 			
-			// Emit message.
-			(*self->get_mouse()->sig_provider_event)(key);
+			self->mouse.sig_pointer_move()(key);
 		}
 	}
 }

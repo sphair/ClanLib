@@ -27,7 +27,7 @@
 */
 
 #include "GL/precomp.h"
-#include "API/GL/opengl_window_description.h"
+#include "API/GL/opengl_context_description.h"
 #include "opengl_window_provider_osx_impl.h"
 
 #import <CoreFoundation/CoreFoundation.h>
