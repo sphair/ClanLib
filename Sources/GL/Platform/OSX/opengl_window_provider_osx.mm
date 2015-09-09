@@ -71,16 +71,22 @@ namespace clan
 
 	Rect OpenGLWindowProvider::get_geometry() const
 	{
-		NSRect frame = [impl->window convertRectToBacking:impl->window.frame];
-		return Rect(frame.origin.x, frame.origin.y, frame.origin.x + frame.size.width, frame.origin.y + frame.size.height);
+		NSRect frame = impl->window.frame;
+		NSRect screen_frame = [[NSScreen mainScreen] frame];
+		
+		// Make frame relative to mainScreen:
+		frame.origin.x -= screen_frame.origin.x;
+		frame.origin.y -= screen_frame.origin.y;
+		
+		return from_cocoa_rect(frame, screen_frame) * get_pixel_ratio();
 	}
 
 	Rect OpenGLWindowProvider::get_viewport() const
 	{
-		NSRect bounds = [impl->window convertRectToBacking:[impl->window.contentView frame]];
-		return Rect(bounds.origin.x, bounds.origin.y, bounds.origin.x + bounds.size.width, bounds.origin.y + bounds.size.height);
+		NSRect client = [impl->window.contentView frame];
+		return Rectf::xywh(0.0f, 0.0f, client.size.width, client.size.height) * get_pixel_ratio();
 	}
-
+	
 	bool OpenGLWindowProvider::is_fullscreen() const
 	{
 		return false;
@@ -162,16 +168,32 @@ namespace clan
 		[impl->opengl_context makeCurrentContext];
 	}
 
-	Point OpenGLWindowProvider::client_to_screen(const Point &client)
+	Point OpenGLWindowProvider::client_to_screen(const Point &client_pos)
 	{
-		NSRect screen = [impl->window convertRectFromScreen:[impl->window convertRectFromBacking:NSMakeRect(client.x, client.y, 1, 1)]];
-		return Point(screen.origin.x, screen.origin.y);
+		Rectf client_box = Rectf::xywh(client_pos.x / get_pixel_ratio(), client_pos.y / get_pixel_ratio(), 1.0f, 1.0f);
+		
+		NSRect client = to_cocoa_rect(client_box, [impl->window.contentView bounds]);
+		NSRect window = [impl->window.contentView convertRect:client toView:nil];
+		
+		NSRect screen_frame = [[NSScreen mainScreen] frame];
+		NSRect screen = [impl->window convertRectToScreen: window];
+		screen.origin.x -= screen_frame.origin.x;
+		screen.origin.y -= screen_frame.origin.y;
+		
+		return Rect(from_cocoa_rect(screen, screen_frame) * get_pixel_ratio()).get_top_left();
 	}
 
-	Point OpenGLWindowProvider::screen_to_client(const Point &screen)
+	Point OpenGLWindowProvider::screen_to_client(const Point &screen_pos)
 	{
-		NSRect client = [impl->window convertRectToBacking:[impl->window convertRectToScreen:NSMakeRect(screen.x, screen.y, 1, 1)]];
-		return Point(client.origin.x, client.origin.y);
+		NSRect screen_frame = [[NSScreen mainScreen] frame];
+		NSRect screen = to_cocoa_rect(Rectf::xywh(screen_pos.x / get_pixel_ratio(), screen_pos.y / get_pixel_ratio(), 1.0f, 1.0f), screen_frame);
+		screen.origin.x += screen_frame.origin.x;
+		screen.origin.y += screen_frame.origin.y;
+		
+		NSRect window = [impl->window convertRectFromScreen:screen];
+		NSRect client = [impl->window.contentView convertRect:window fromView:nil];
+		
+		return Rect(from_cocoa_rect(client, [impl->window.contentView bounds]) * get_pixel_ratio()).get_top_left();
 	}
 
 	void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWindowDescription &desc)
@@ -220,6 +242,20 @@ namespace clan
 
 		[impl->window.contentView setWantsBestResolutionOpenGLSurface:true];
 		[impl->opengl_context setView:impl->window.contentView];
+		
+		if (desc.is_popup())
+		{
+			// Make window transparent:
+			[impl->window setOpaque:FALSE];
+			impl->window.backgroundColor = [NSColor clearColor];
+			
+			// The view transparent:
+			[[impl->window.contentView layer] setOpaque: FALSE];
+			
+			// And the OpenGL context transparent:
+			GLint opaque = 0;
+			[impl->opengl_context setValues:&opaque forParameter:NSOpenGLCPSurfaceOpacity];
+		}
 
 		impl->gc = GraphicContext(new GL3GraphicContextProvider(this));
 
@@ -266,34 +302,50 @@ namespace clan
 
 	void OpenGLWindowProvider::set_position(const Rect &pos, bool client_area)
 	{
-		NSRect frame = NSMakeRect(pos.left, pos.top, pos.get_width(), pos.get_height());
-
 		if (client_area)
-			frame = [impl->window frameRectForContentRect:frame];
+		{
+			NSRect frame = [impl->window frameRectForContentRect:to_cocoa_rect(Rectf(pos) * (1.0f / get_pixel_ratio()), impl->window.frame)];
+			[impl->window setFrame:frame display:NO animate:NO];
+		}
+		else
+		{
+			NSRect screen_frame = [[NSScreen mainScreen] frame];
+			
+			NSRect frame = to_cocoa_rect(Rectf(pos) * (1.0f / get_pixel_ratio()), screen_frame);
+			frame.origin.x += screen_frame.origin.x;
+			frame.origin.y += screen_frame.origin.y;
 
-		[impl->window setFrame:frame display:NO animate:NO];
+			[impl->window setFrame:frame display:NO animate:NO];
+		}
 	}
 
 	void OpenGLWindowProvider::set_size(int width, int height, bool client_area)
 	{
-		NSRect old_frame = impl->window.frame;
-		NSRect frame = NSMakeRect(old_frame.origin.x, old_frame.origin.y, width, height);
-
 		if (client_area)
-			frame = [impl->window frameRectForContentRect:frame];
-
-		[impl->window setFrame:frame display:NO animate:NO];
+		{
+			auto box = get_geometry();
+			box.right = box.left + width;
+			box.bottom = box.top + height;
+			set_position(box, false);
+		}
+		else
+		{
+			auto box = get_viewport();
+			box.right = box.left + width;
+			box.bottom = box.top + height;
+			set_position(box, true);
+		}
 	}
 
 	void OpenGLWindowProvider::set_minimum_size( int width, int height, bool client_area )
 	{
 		if (client_area)
 		{
-			[impl->window setContentMinSize:NSMakeSize(width, height)];
+			[impl->window setContentMinSize:NSMakeSize(width/ get_pixel_ratio(), height/ get_pixel_ratio())];
 		}
 		else
 		{
-			[impl->window setMinSize:NSMakeSize(width, height)];
+			[impl->window setMinSize:NSMakeSize(width/ get_pixel_ratio(), height/ get_pixel_ratio())];
 		}
 	}
 
@@ -301,11 +353,11 @@ namespace clan
 	{
 		if (client_area)
 		{
-			[impl->window setContentMaxSize:NSMakeSize(width, height)];
+			[impl->window setContentMaxSize:NSMakeSize(width/ get_pixel_ratio(), height/ get_pixel_ratio())];
 		}
 		else
 		{
-			[impl->window setMaxSize:NSMakeSize(width, height)];
+			[impl->window setMaxSize:NSMakeSize(width/ get_pixel_ratio(), height/ get_pixel_ratio())];
 		}
 	}
 
@@ -403,8 +455,6 @@ namespace clan
 
 	bool OpenGLWindowProvider::is_double_buffered() const
 	{
-		// The OpenGL attributes are hard coded for double buffering at the moment.
-		// So, we always return true here.
 		return true;
 	}
 		

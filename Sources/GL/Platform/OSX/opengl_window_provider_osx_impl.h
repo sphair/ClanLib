@@ -51,25 +51,35 @@
 namespace clan
 {
 
-class OpenGLWindowProvider_Impl
-{
-public:
-	OpenGLWindowProvider_Impl(OpenGLWindowProvider *self, OpenGLContextDescription &opengl_desc);
+	class OpenGLWindowProvider_Impl
+	{
+	public:
+		OpenGLWindowProvider_Impl(OpenGLWindowProvider *self, OpenGLContextDescription &opengl_desc);
 
-	NSOpenGLContext *get_share_context();
-	void on_input_event(NSEvent *theEvent);
+		NSOpenGLContext *get_share_context();
+		void on_input_event(NSEvent *theEvent);
 
-	OpenGLWindowProvider *self;
-	GraphicContext gc;
-	DisplayWindowSite *site;
-	OpenGLContextDescription opengl_desc;
+		OpenGLWindowProvider *self;
+		GraphicContext gc;
+		DisplayWindowSite *site;
+		OpenGLContextDescription opengl_desc;
 
-	CocoaWindow *window;
-    NSOpenGLContext *opengl_context;
+		CocoaWindow *window;
+		NSOpenGLContext *opengl_context;
 
-private:
-    void on_keyboard_event(NSEvent *theEvent);
-    void on_mouse_event(NSEvent *theEvent);
-};
+	private:
+		void on_keyboard_event(NSEvent *theEvent);
+		void on_mouse_event(NSEvent *theEvent);
+	};
 
+	inline NSRect to_cocoa_rect(const Rectf &rect, NSRect parent_frame)
+	{
+		return NSMakeRect(rect.left, parent_frame.size.height - rect.bottom, rect.get_width(), rect.get_height());
+	}
+	
+	inline Rectf from_cocoa_rect(NSRect rect, NSRect parent_frame)
+	{
+		return Rectf::xywh(rect.origin.x, parent_frame.size.height - rect.origin.y - rect.size.height, rect.size.width, rect.size.height);
+	}
+	
 }

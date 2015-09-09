@@ -57,8 +57,8 @@
 	else
 	{
 		NSRect screen_frame = [screen frame];
-		float screen_top = screen_frame.origin.y + screen_frame.size.height;
-		frame.origin.y = screen_top - frame.origin.y - frame.size.height;
+		frame.origin.x = screen_frame.origin.x + frame.origin.x;
+		frame.origin.y = screen_frame.origin.y + screen_frame.size.height - frame.origin.y - frame.size.height;
 	}
 	
 	NSUInteger styles = 0;

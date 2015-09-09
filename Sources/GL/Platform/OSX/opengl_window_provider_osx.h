@@ -110,7 +110,7 @@ namespace clan
 		ProcAddress *get_proc_address(const std::string& function_name) const;
 		
 		void set_pixel_ratio(float ratio) override;
-
+		
 	private:
 		InputDevice keyboard, mouse;
 
