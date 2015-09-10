@@ -33,9 +33,11 @@ clan::ApplicationInstance<Example> clanapp;
 
 Example::Example()
 {
-	// We support all display targets, in order listed here
+#ifdef WIN32
 	clan::D3DTarget::set_current();
+#else
 	clan::OpenGLTarget::set_current();
+#endif
 	
 	// Set the window 1 description
 	clan::DisplayWindowDescription desc_window_1;
@@ -58,8 +60,8 @@ Example::Example()
 	sc.connect(window_2.sig_window_close(), [&](){on_window_close(&window_2); });
 
 	// Connect a keyboard handler to on_key_up() - to both windows
-	sc.connect(window_1.get_ic().get_keyboard().sig_key_up(), [=](const clan::InputEvent &input_event){on_input_up(input_event, 1); });
-	sc.connect(window_2.get_ic().get_keyboard().sig_key_up(), [=](const clan::InputEvent &input_event){on_input_up(input_event, 2); });
+	sc.connect(window_1.get_keyboard().sig_key_up(), [=](const clan::InputEvent &input_event){on_input_up(input_event, 1); });
+	sc.connect(window_2.get_keyboard().sig_key_up(), [=](const clan::InputEvent &input_event){on_input_up(input_event, 2); });
 
 	// Get the canvas - for both windows
 	canvas_1 = clan::Canvas(window_1);

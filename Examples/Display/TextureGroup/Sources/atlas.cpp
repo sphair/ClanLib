@@ -35,11 +35,11 @@ clan::ApplicationInstance<Atlas> clanapp;
 
 Atlas::Atlas()
 {
-	// We support all display targets, in order listed here
 #ifdef WIN32
 	clan::D3DTarget::set_current();
-#endif
+#else
 	clan::OpenGLTarget::set_current();
+#endif
 
 	// Set the window
 	clan::DisplayWindowDescription desc;
@@ -62,7 +62,7 @@ Atlas::Atlas()
 	sc.connect(window.sig_window_close(), [&](){quit = true; });
 
 	// Connect a keyboard handler to on_key_up()
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &Atlas::on_input_up));
+	sc.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &Atlas::on_input_up));
 
 	font = clan::Font("tahoma", 14);
 

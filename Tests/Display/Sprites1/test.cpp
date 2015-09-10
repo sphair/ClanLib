@@ -10,7 +10,7 @@ class App : public clan::Application
 public:
 	App()
 	{
-		clan::OpenGLTarget::enable();
+		clan::OpenGLTarget::set_current();
 		window = DisplayWindow("über sprite test", 1024, 1024);
 		canvas = Canvas(window);
 	
@@ -22,10 +22,10 @@ public:
 	}
 	bool update()
 	{
-		if (window.get_ic().get_keyboard().get_keycode(keycode_escape))
+		if (window.get_keyboard().get_keycode(keycode_escape))
 			return false;
 
-		if(window.get_ic().get_keyboard().get_keycode(keycode_space))
+		if(window.get_keyboard().get_keycode(keycode_space))
 		{
 			test1_facit.draw(canvas, 0, 0);
 		}

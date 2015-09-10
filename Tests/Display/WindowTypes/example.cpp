@@ -88,7 +88,7 @@ App::App()
 	sc.connect(window.sig_window_close(), [&]() {quit = true; });
 
 	// Connect a keyboard handler to on_key_up()
-	sc.connect(window.get_ic().get_keyboard().sig_key_down(), clan::bind_member(this, &App::on_input_up));
+	sc.connect(window.get_keyboard().sig_key_down(), clan::bind_member(this, &App::on_input_up));
 
 	font = clan::Font("tahoma", 18);
 
@@ -118,7 +118,6 @@ bool App::update()
 	show(ypos, "8) is_topmost()", test_desc.is_topmost());
 	show(ypos, "9) has_no_activate()", test_desc.has_no_activate());
 	show(ypos, "a) has_drop_shadow()", test_desc.has_drop_shadow());
-	show(ypos, "b) get_tablet_context()", test_desc.get_tablet_context());
 	show(ypos, "c) get_allow_screensaver()", test_desc.get_allow_screensaver());
 	show(ypos, "d) is_update_supported()", test_desc.is_update_supported());
 	show(ypos, "e) is_main()", test_desc.is_main());
@@ -154,7 +153,7 @@ void App::build_test_window()
 	test_window = clan::DisplayWindow(test_desc);
 	test_canvas = clan::Canvas(test_window);
 	test_sc.connect(test_window.sig_window_close(), [&]() {quit = true; });
-	test_sc.connect(test_window.get_ic().get_keyboard().sig_key_down(), clan::bind_member(this, &App::on_input_up));
+	test_sc.connect(test_window.get_keyboard().sig_key_down(), clan::bind_member(this, &App::on_input_up));
 }
 
 void App::on_input_up(const clan::InputEvent &key)
@@ -170,7 +169,6 @@ void App::on_input_up(const clan::InputEvent &key)
 	if (key.id == clan::keycode_8) test_desc.set_topmost(!test_desc.is_topmost());
 	if (key.id == clan::keycode_9) test_desc.set_no_activate(!test_desc.has_no_activate());
 	if (key.id == clan::keycode_a) test_desc.set_drop_shadow(!test_desc.has_drop_shadow());
-	if (key.id == clan::keycode_b) test_desc.set_tablet_context(!test_desc.get_tablet_context());
 	if (key.id == clan::keycode_c) test_desc.set_allow_screensaver(!test_desc.get_allow_screensaver());
 	if (key.id == clan::keycode_d) test_desc.set_update_supported(!test_desc.is_update_supported());
 	if (key.id == clan::keycode_e) test_desc.set_main_window();

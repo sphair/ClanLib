@@ -21,7 +21,7 @@ DemoMSmall::DemoMSmall(clan::DisplayWindow &window) : window(window)
 	window.set_title("LinearParticle Example - MSmall ");
 	sc.connect(window.sig_window_close(), clan::bind_member(this, &DemoMSmall::on_window_close));
 	canvas = clan::Canvas(window);
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &DemoMSmall::on_key_up));
+	sc.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &DemoMSmall::on_key_up));
 
 	// initialize LinearParticle
 	L_ParticleSystem::init();
@@ -55,7 +55,7 @@ DemoMSmall::DemoMSmall(clan::DisplayWindow &window) : window(window)
 bool DemoMSmall::update()
 {
 	canvas.clear();
-	clan::InputDevice &keyboard = window.get_ic().get_keyboard();
+	clan::InputDevice &keyboard = window.get_keyboard();
 	static L_REAL x_pos = 320;
 	static L_REAL y_pos = 240;
 

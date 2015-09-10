@@ -61,7 +61,7 @@ Target::Target(RenderTarget new_target) : render_target(new_target)
 	sc.connect(window.sig_window_close(), clan::bind_member(this, &Target::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &Target::on_input_up));
+	sc.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &Target::on_input_up));
 
 	canvas = clan::Canvas(window);
 
@@ -141,19 +141,19 @@ void Target::run_demo()
 
 	window.flip(0);
 
-	if (window.get_ic().get_keyboard().get_keycode(clan::keycode_1))
+	if (window.get_keyboard().get_keycode(clan::keycode_1))
 	{
 		render_target = legacy_gl;
 	}
-	if (window.get_ic().get_keyboard().get_keycode(clan::keycode_2))
+	if (window.get_keyboard().get_keycode(clan::keycode_2))
 	{
 		render_target = opengl;
 	}
-	if (window.get_ic().get_keyboard().get_keycode(clan::keycode_3))
+	if (window.get_keyboard().get_keycode(clan::keycode_3))
 	{
 		render_target = d3d;
 	}
-	if (window.get_ic().get_keyboard().get_keycode(clan::keycode_escape))
+	if (window.get_keyboard().get_keycode(clan::keycode_escape))
 	{
 		quit = true;
 	}

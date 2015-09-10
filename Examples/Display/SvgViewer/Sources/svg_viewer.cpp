@@ -34,9 +34,11 @@ clan::ApplicationInstance<SvgViewer> clanapp;
 
 SvgViewer::SvgViewer()
 {
-	// We support all display targets, in order listed here
+#ifdef WIN32
 	clan::D3DTarget::set_current();
+#else
 	clan::OpenGLTarget::set_current();
+#endif
 
 	clan::DisplayWindowDescription desc;
 	desc.set_title("ClanLib SVG Viewer Example");
@@ -47,7 +49,7 @@ SvgViewer::SvgViewer()
 	canvas = clan::Canvas(window);
 
 	sc.connect(window.sig_window_close(), [&](){quit = true; });
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), [&](const clan::InputEvent &key)
+	sc.connect(window.get_keyboard().sig_key_up(), [&](const clan::InputEvent &key)
 	{
 		if (key.id == clan::keycode_escape)
 		{
@@ -58,7 +60,7 @@ SvgViewer::SvgViewer()
 	font = clan::Font("Tahoma", 24);
 
 	svg = Svg("Resources/tiger.svg");
-	sc.connect(window.get_ic().get_mouse().sig_key_up(), [&](const clan::InputEvent &key)
+	sc.connect(window.get_mouse().sig_key_up(), [&](const clan::InputEvent &key)
 	{
 		if (key.id == clan::mouse_wheel_up)
 			scale += 0.1f;
@@ -75,12 +77,12 @@ bool SvgViewer::update()
 
 	canvas.clear(clan::Colorf(0.9f, 0.9f, 0.9f));
 
-	if (window.get_ic().get_mouse().get_keycode(clan::mouse_left))
+	if (window.get_mouse().get_keycode(clan::mouse_left))
 	{
 		angle += time.get_time_elapsed() * 64.0f;
 		if (angle >= 360.0f) angle = -360.0f;
 	}
-	if (window.get_ic().get_mouse().get_keycode(clan::mouse_right))
+	if (window.get_mouse().get_keycode(clan::mouse_right))
 	{
 		angle -= time.get_time_elapsed() * 64.0f;
 		if (angle < 0.0f) angle += 360.0f;

@@ -34,9 +34,11 @@ clan::ApplicationInstance<FullScreen> clanapp;
 
 FullScreen::FullScreen()
 {
-	// We support all display targets, in order listed here
+#ifdef WIN32
 	clan::D3DTarget::set_current();
+#else
 	clan::OpenGLTarget::set_current();
+#endif
 
 	DisplayWindowDescription window_description;
 	window_description.set_title("ClanLib FullScreen Example");
@@ -46,7 +48,7 @@ FullScreen::FullScreen()
 	window = DisplayWindow(window_description);
 
 	sc.connect(window.sig_window_close(), clan::bind_member(this, &FullScreen::on_window_close));
-	sc.connect(window.get_ic().get_keyboard().sig_key_down(), clan::bind_member(this, &FullScreen::on_input_down));
+	sc.connect(window.get_keyboard().sig_key_down(), clan::bind_member(this, &FullScreen::on_input_down));
 	canvas = Canvas(window);
 
 	spr_logo = Sprite(canvas, "../Basic2D/Resources/logo.png");

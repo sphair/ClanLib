@@ -41,7 +41,7 @@ Program::Program()
 
 bool Program::update()
 {
-	InputDevice mouse = window.get_ic().get_mouse();
+	InputDevice mouse = window.get_mouse();
 
 	float time = System::get_time() / 1000.0f;
 	uniforms.time = time;

@@ -34,11 +34,11 @@ clan::ApplicationInstance<ExampleCanvas> clanapp;
 
 ExampleCanvas::ExampleCanvas()
 {
-	// We support all display targets, in order listed here
 #ifdef WIN32
 	clan::D3DTarget::set_current();
-#endif
+#else
 	clan::OpenGLTarget::set_current();
+#endif
 
 	quit = false;
 
@@ -52,11 +52,11 @@ ExampleCanvas::ExampleCanvas()
 	sc.connect(window.sig_window_close(), clan::bind_member(this, &ExampleCanvas::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &ExampleCanvas::on_keyboard_up));
+	sc.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &ExampleCanvas::on_keyboard_up));
 
 	// Connect a mouse handler to on_key_down()
-	sc.connect(window.get_ic().get_mouse().sig_key_up(), clan::bind_member(this, &ExampleCanvas::on_mouse_down));
-	sc.connect(window.get_ic().get_mouse().sig_pointer_move(), clan::bind_member(this, &ExampleCanvas::on_mouse_move));
+	sc.connect(window.get_mouse().sig_key_up(), clan::bind_member(this, &ExampleCanvas::on_mouse_down));
+	sc.connect(window.get_mouse().sig_pointer_move(), clan::bind_member(this, &ExampleCanvas::on_mouse_move));
 
 	canvas_window = Canvas(window);
 

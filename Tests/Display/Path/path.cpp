@@ -8,7 +8,7 @@ clan::ApplicationInstance<PathProgram> clanapp;
 
 PathProgram::PathProgram()
 {
-	clan::OpenGLTarget::enable();
+	clan::OpenGLTarget::set_current();
 
 	window = DisplayWindow("Path Test", 640.f, 480.0f);
 	sc.connect(window.sig_window_close(), []() { RunLoop::exit(); });

@@ -34,7 +34,6 @@ clan::ApplicationInstance<Basic2D> clanapp;
 
 Basic2D::Basic2D()
 {
-	// We support all display targets, in order listed here
 #ifdef WIN32
 	clan::D3DTarget::set_current();
 #else
@@ -54,7 +53,7 @@ Basic2D::Basic2D()
 	sc.connect(window.sig_window_close(), [&](){quit = true; });
 
 	// Connect a keyboard handler to on_key_up()
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &Basic2D::on_input_up));
+	sc.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &Basic2D::on_input_up));
 
 	// Load a sprite from a png-file
 	logo = clan::Image(canvas, "Resources/logo.png");

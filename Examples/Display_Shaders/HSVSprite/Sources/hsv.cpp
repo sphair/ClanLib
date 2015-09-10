@@ -39,7 +39,7 @@ HSV::HSV()
 
 	window = DisplayWindow("ClanLib HSV Sprite", 1024, 768);
 	sc.connect(window.sig_window_close(), clan::bind_member(this, &HSV::on_close));
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &HSV::on_input_up));
+	sc.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &HSV::on_input_up));
 	canvas = Canvas(window);
 
 	font = clan::Font("Tahoma", 11);
@@ -56,14 +56,13 @@ bool HSV::update()
 {
 	HSVSprite *cars[] = { car1.get(), car2.get() };
 
-	InputContext ic = window.get_ic();
 	uint64_t current_time = System::get_time();
 	float time_delta_ms = static_cast<float> (current_time - last_time);
 	last_time = current_time;
 
-	if (ic.get_keyboard().get_keycode(keycode_left))
+	if (window.get_keyboard().get_keycode(keycode_left))
 		hue_offset += 0.0005f * time_delta_ms;
-	else if (ic.get_keyboard().get_keycode(keycode_right))
+	else if (window.get_keyboard().get_keycode(keycode_right))
 		hue_offset -= 0.0005f * time_delta_ms;
 	if (hue_offset < -1.0f)
 		hue_offset += 1.0f;

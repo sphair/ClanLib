@@ -27,7 +27,7 @@ private:
 public:
 	App()
 	{
-		clan::OpenGLTarget::enable();
+		clan::OpenGLTarget::set_current();
 
 		window = DisplayWindow("Image test", 1024, 768);
 
@@ -59,7 +59,7 @@ public:
 	}
 	bool update()
 	{
-		if (window.get_ic().get_keyboard().get_keycode(keycode_escape))
+		if (window.get_keyboard().get_keycode(keycode_escape))
 			quit = true;
 
 		canvas.clear(Colorf(0.5f,0.5f,0.5f));
