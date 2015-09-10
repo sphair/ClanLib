@@ -190,6 +190,7 @@ namespace clan
 #endif
 	}
 
+#ifndef __APPLE__
 	std::string Directory::get_appdata(const std::string &company_name, const std::string &application_name, const std::string &version, bool create_dirs_if_missing)
 	{
 		std::string configuration_path;
@@ -199,8 +200,6 @@ namespace clan
 		if (FAILED(SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, SHGFP_TYPE_DEFAULT, app_data)))
 			throw Exception("SHGetFolderPath failed!");
 		configuration_path = PathHelp::add_trailing_slash(StringHelp::ucs2_to_utf8(app_data));
-#elif defined(__APPLE__)
-		throw Exception("Congratulations, you got the task to implement Directory::get_appdata on this platform.");
 #else
 		struct passwd *pwd = getpwuid(getuid());
 		if (pwd == nullptr || pwd->pw_dir == nullptr)
@@ -231,6 +230,9 @@ namespace clan
 			throw Exception("SHGetFolderPath failed!");
 		configuration_path = PathHelp::add_trailing_slash(StringHelp::ucs2_to_utf8(app_data));
 #elif defined(__APPLE__)
+		NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+		NSString *libraryDirectory = [paths objectAtIndex:0];
+		const char *s = [libraryDirectory UTF8String];
 		throw Exception("Congratulations, you got the task to implement Directory::get_local_appdata on this platform.");
 #else
 		return get_appdata(company_name, application_name, version, create_dirs_if_missing);
@@ -257,7 +259,26 @@ namespace clan
 			exe_path += data_dir_name + '\\';
 		return exe_path;
 #elif defined(__APPLE__)
-		throw Exception("Congratulations, you got the task to implement Directory::get_resourcedata on this platform.");
+		
+		CFBundleRef bundle = CFBundleGetMainBundle();
+		CFURLRef url = CFBundleCopyResourcesDirectoryURL(bundle);
+		CFStringRef str = CFURLCopyPath(url);
+		
+		char buffer[4096];
+		Boolean result = CFStringGetCString(str, buffer, 4096, kCFStringEncodingUTF8);
+		if (!result)
+		{
+			CFRelease(str);
+			CFRelease(url);
+			throw Exception("Bundle resource path is too long!");
+		}
+		
+		std::string resource_path = PathHelp::combine(buffer, data_dir_name);
+		
+		CFRelease(str);
+		CFRelease(url);
+		
+		return resource_path;
 #else
 		std::string exe_path = System::get_exe_path();
 		if (exe_path.length() > 1)
@@ -272,5 +293,5 @@ namespace clan
 		return exe_path;
 #endif
 	}
-
+#endif
 }
