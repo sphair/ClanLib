@@ -66,7 +66,6 @@ namespace clan
 	private:
 		void on_dispose() override;
 		void process_event(InputDevice &joystick, js_event event) const;
-		void update_states(InputDevice &joystick) const;
 
 		X11Window *window;
 		std::string device;
