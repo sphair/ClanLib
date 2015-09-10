@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Model">
+      <UniqueIdentifier>{3eb6600f-3175-4714-817a-9a85a8ebba3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="View">
+      <UniqueIdentifier>{5946b5ee-4e86-48c3-a7ba-8794443f3046}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controller">
+      <UniqueIdentifier>{3f4d325d-554d-4db4-93bf-1c5be25e5897}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="precomp.cpp" />
+    <ClCompile Include="app.cpp" />
+    <ClCompile Include="Controller\main_window_controller.cpp">
+      <Filter>Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\app_model.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="precomp.h" />
+    <ClInclude Include="app.h" />
+    <ClInclude Include="Controller\main_window_controller.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\app_model.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="View\form_view.h">
+      <Filter>View</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
