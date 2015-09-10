@@ -40,7 +40,7 @@ public:
 private:
 	void on_input_down(const InputEvent &key);
 	void on_mouse_down(const InputEvent &key);
-	void on_joystick_down(const InputEvent &key, int joystick_number);
+	void on_controller_down(const InputEvent &key, int controller_number);
 	void on_window_close();
 
 	void create_shooter( const InputEvent &key, const std::string &str, bool use_red, bool use_green, bool use_blue);
@@ -48,8 +48,7 @@ private:
 
 	void draw_keyboard_state(Canvas &canvas, int yoffset);
 	void draw_mouse_state(Canvas &canvas, int yoffset);
-	void draw_joystick_state(Canvas &canvas, int joystick_number, int yoffset);
-	void draw_tablet_state(Canvas &canvas, int tablet_number, int yoffset);
+	void draw_controller_state(Canvas &canvas, InputDevice controller, int controller_number, int yoffset);
 
 private:
 	bool quit = false;
@@ -59,7 +58,6 @@ private:
 
 	Font vector_font;
 	clan::Font font;
-	int max_joysticks;
 	
 	std::list<TextShooter> text_shooter;
 

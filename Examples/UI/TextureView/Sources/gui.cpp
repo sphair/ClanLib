@@ -35,7 +35,6 @@ clan::ApplicationInstance<GUI> clanapp;
 
 GUI::GUI()
 {
-	// We support all display targets, in order listed here
 	//clan::D3DTarget::set_current();
 	clan::OpenGLTarget::set_current();
 
@@ -52,7 +51,7 @@ GUI::GUI()
 	sc.connect(window.sig_window_close(), [&](){quit = true; });
 
 	// Connect a keyboard handler to on_key_up()
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &GUI::on_input_up));
+	sc.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &GUI::on_input_up));
 
 	font = clan::Font("tahoma", 24);
 

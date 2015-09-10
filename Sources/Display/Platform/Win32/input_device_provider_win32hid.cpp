@@ -67,8 +67,12 @@ namespace clan
 	{
 	}
 
-	void InputDeviceProvider_Win32Hid::update(RAWINPUT *raw_input)
+	void InputDeviceProvider_Win32Hid::update(InputDevice &joystick, RAWINPUT *raw_input)
 	{
+		auto previous_buttons = buttons;
+		auto previous_axis = axis_values;
+		//auto previous_hat = hat_values;  // TODO: What about this
+
 		if (raw_input->header.hDevice == rawinput_device)
 		{
 			DataBuffer preparse_data = get_preparse_data();
@@ -81,6 +85,28 @@ namespace clan
 				void *report = raw_data + offset;
 				int report_size = raw_input->data.hid.dwSizeHid;
 				update(preparse_data.get_data(), report, report_size);
+			}
+		}
+
+		for (unsigned int cnt = 0; cnt < previous_buttons.size(); cnt++)
+		{
+			if (previous_buttons[cnt] != buttons[cnt])
+			{
+				InputEvent input_event;
+				input_event.type = buttons[cnt] ? InputEvent::pressed : InputEvent::released;
+				input_event.id = (InputCode) cnt;
+				buttons[cnt] ? joystick.sig_key_down()(input_event) : joystick.sig_key_up()(input_event);
+			}
+		}
+		for (unsigned int cnt = 0; cnt < previous_axis.size(); cnt++)
+		{
+			if (previous_axis[cnt] != axis_values[cnt])
+			{
+				InputEvent input_event;
+				input_event.type = InputEvent::axis_moved;
+				input_event.id = (InputCode) cnt;
+				input_event.axis_pos = axis_values[cnt];
+				joystick.sig_axis_move()(input_event);
 			}
 		}
 	}
@@ -365,6 +391,7 @@ namespace clan
 				}
 			}
 		}
+
 	}
 
 	void InputDeviceProvider_Win32Hid::update_values(void *preparse_data, void *report, int report_size)

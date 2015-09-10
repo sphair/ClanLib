@@ -63,7 +63,7 @@ bool Particle::update()
 	ypos += ygap;
 	font.draw_text(canvas, 32, ypos, "Press Escape to exit the example and return to this screen."); ypos += ygap;
 
-	clan::InputDevice keyboard = window.get_ic().get_keyboard();
+	clan::InputDevice keyboard = window.get_keyboard();
 	if (keyboard.get_keycode(clan::keycode_escape))
 		quit = true;
 

@@ -22,7 +22,7 @@ DemoCMotion::DemoCMotion(clan::DisplayWindow &window) : window(window), fontColo
 	sc.connect(window.sig_window_close(), clan::bind_member(this, &DemoCMotion::on_window_close));
 	canvas = clan::Canvas(window);
 
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), [&](const clan::InputEvent &input){on_key_up(input, canvas); });
+	sc.connect(window.get_keyboard().sig_key_up(), [&](const clan::InputEvent &input){on_key_up(input, canvas); });
 
 	// initialize LinearParticle
 	L_ParticleSystem::init();

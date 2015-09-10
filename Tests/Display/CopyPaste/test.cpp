@@ -33,7 +33,7 @@ clan::ApplicationInstance<TestApp> clanapp;
 
 TestApp::TestApp()
 {
-	clan::OpenGLTarget::enable();
+	clan::OpenGLTarget::set_current();
 
 	quit = false;
 
@@ -47,7 +47,7 @@ TestApp::TestApp()
 	sc.connect(window.sig_window_close(), this, &TestApp::on_window_close);
 
 	// Connect a keyboard handler to on_key_up()
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), this, &TestApp::on_input_up);
+	sc.connect(window.get_keyboard().sig_key_up(), this, &TestApp::on_input_up);
 		
 	//Create the Canvas
 	canvas = Canvas(window);
@@ -55,7 +55,7 @@ TestApp::TestApp()
 	PixelBuffer to_clipboard = ImageProviderFactory::load("copy.png");
 	window.set_clipboard_image(to_clipboard);
 
-	/*		while (!window.get_ic().get_keyboard().get_keycode(KEY_ESCAPE))
+	/*		while (!window.get_keyboard().get_keycode(KEY_ESCAPE))
 	{
 		window.get_gc().clear(Colorf::gray70);
 		window.flip();

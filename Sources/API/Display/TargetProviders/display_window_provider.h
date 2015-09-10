@@ -144,11 +144,8 @@ namespace clan
 		/// \brief Returns the mouse input device.
 		virtual InputDevice &get_mouse() = 0;
 
-		/// \brief Returns the number of game controllers available.
-		virtual int get_game_controller_count() const = 0;
-
-		/// \brief Returns the specified game controller input device.
-		virtual InputDevice &get_game_controller(int index) = 0;
+		/// \brief Returns the game controller input device.
+		virtual std::vector<InputDevice> &get_game_controllers() = 0;
 
 		/** Returns an platform-specific internal display window handle object.
 		 */

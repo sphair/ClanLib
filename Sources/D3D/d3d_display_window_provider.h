@@ -58,8 +58,7 @@ namespace clan
 
 		InputDevice &get_keyboard() override { return window.get_keyboard(); }
 		InputDevice &get_mouse() override { return window.get_mouse(); }
-		int get_game_controller_count() const override { return window.get_game_controller_count(); }
-		InputDevice &get_game_controller(int index) override { return window.get_game_controller(index); }
+		std::vector<InputDevice> &get_game_controllers() override { return window.get_game_controllers(); }
 
 		DisplayWindowHandle get_handle() const override;
 

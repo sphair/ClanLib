@@ -37,7 +37,7 @@ int main(int argc, char** argv)
 
 int TestApp::main()
 {
-	clan::OpenGLTarget::enable();
+	clan::OpenGLTarget::set_current();
 
 	// Create a console window for text-output if not available
 	ConsoleWindow console("Console");

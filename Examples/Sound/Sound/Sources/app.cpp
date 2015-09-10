@@ -33,11 +33,11 @@ clan::ApplicationInstance<App> clanapp;
 
 App::App()
 {
-	// We support all display targets, in order listed here
 #ifdef WIN32
 	clan::D3DTarget::set_current();
-#endif
+#else
 	clan::OpenGLTarget::set_current();
+#endif
 	// Set the window
 	clan::DisplayWindowDescription desc;
 	desc.set_title("ClanLib Basic Sound Example");
@@ -51,8 +51,8 @@ App::App()
 	sc.connect(window.sig_window_close(), [&](){quit = true; });
 
 	// Connect a keyboard handler to on_key_up()
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
-	sc.connect(window.get_ic().get_keyboard().sig_key_down(), clan::bind_member(this, &App::on_input_down));
+	sc.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	sc.connect(window.get_keyboard().sig_key_down(), clan::bind_member(this, &App::on_input_down));
 
 	sfx_pacman_start = clan::SoundBuffer("Resources/start.wav");
 	sfx_cheer = clan::SoundBuffer("Resources/cheer1.ogg");

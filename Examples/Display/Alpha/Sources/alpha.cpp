@@ -34,9 +34,11 @@ clan::ApplicationInstance<Alpha> clanapp;
 
 Alpha::Alpha()
 {
-	// We support all display targets, in order listed here
+#ifdef WIN32
 	clan::D3DTarget::set_current();
+#else
 	clan::OpenGLTarget::set_current();
+#endif
 
 	// Set the window
 	clan::DisplayWindowDescription desc;
@@ -50,7 +52,7 @@ Alpha::Alpha()
 	sc.connect(window.sig_window_close(), clan::bind_member(this, &Alpha::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &Alpha::on_input_up));
+	sc.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &Alpha::on_input_up));
 
 	// Get the graphic context
 	canvas = clan::Canvas(window);

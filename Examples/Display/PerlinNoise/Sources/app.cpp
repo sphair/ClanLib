@@ -44,7 +44,7 @@ App::App()
 
 	window = clan::DisplayWindow(win_desc);
 	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	sc.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 
 	canvas = clan::Canvas(window);
 	clan::FileResourceDocument doc(clan::FileSystem("../../ThemeAero"));

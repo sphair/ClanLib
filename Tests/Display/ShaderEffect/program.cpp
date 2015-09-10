@@ -12,7 +12,7 @@ clan::ApplicationInstance<Program> clanapp;
 Program::Program()
 {
 
-	clan::OpenGLTarget::enable();
+	clan::OpenGLTarget::set_current();
 
 	window = DisplayWindow("Hello ShaderEffect", 800, 600, false, true);
 	sc.connect(window.sig_window_close(), this, &Program::exit_func);
@@ -39,7 +39,7 @@ Program::Program()
 bool Program::update()
 {
 	GraphicContext gc = window.get_gc();
-	InputDevice mouse = window.get_ic().get_mouse();
+	InputDevice mouse = window.get_mouse();
 
 	uniforms.time = System::get_time() / 1000.0f;
 	auto pos = mouse.get_position();

@@ -129,9 +129,9 @@ App::App()
 
 	// Setup the slots
 	sc.connect(window_center.sig_window_close(), clan::bind_member(this, &App::on_window_close));
-	sc.connect(window_center.get_ic().get_mouse().sig_key_down(), clan::bind_member(this, &App::on_mouse_down));
-	sc.connect(window_center.get_ic().get_mouse().sig_key_dblclk(), clan::bind_member(this, &App::on_mouse_down));
-	sc.connect(window_center.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	sc.connect(window_center.get_mouse().sig_key_down(), clan::bind_member(this, &App::on_mouse_down));
+	sc.connect(window_center.get_mouse().sig_key_dblclk(), clan::bind_member(this, &App::on_mouse_down));
+	sc.connect(window_center.get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 
 	// Get the canvas
 	canvas_center = clan::Canvas(window_center);

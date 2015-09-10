@@ -33,7 +33,7 @@ clan::ApplicationInstance<App> clanapp;
 
 App::App()
 {
-	clan::OpenGLTarget::enable();
+	clan::OpenGLTarget::set_current();
 	quit = false;
 
 	// Set the window
@@ -49,7 +49,7 @@ App::App()
 	sc.connect(window.sig_window_close(), this, &App::on_window_close);
 
 	// Connect a keyboard handler to on_key_up()
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), this, &App::on_input_up);
+	sc.connect(window.get_keyboard().sig_key_up(), this, &App::on_input_up);
 
 	font = clan::Font("tahoma", 16);
 

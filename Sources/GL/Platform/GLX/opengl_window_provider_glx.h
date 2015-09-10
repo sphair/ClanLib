@@ -208,8 +208,7 @@ public:
 
 	InputDevice &get_keyboard() override { return x11_window.get_keyboard(); }
 	InputDevice &get_mouse() override { return x11_window.get_mouse(); }
-	int get_game_controller_count() const override { return x11_window.get_game_controller_count(); }
-	InputDevice &get_game_controller(int index) override { return x11_window.get_game_controller(index); }
+	std::vector<InputDevice> &get_game_controllers() override { return x11_window.get_game_controllers(); }
 
 	GraphicContext gc;
 

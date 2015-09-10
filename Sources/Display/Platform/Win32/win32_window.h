@@ -81,8 +81,7 @@ namespace clan
 
 		InputDevice &get_keyboard() { return keyboard; }
 		InputDevice &get_mouse() { return mouse; }
-		int get_game_controller_count() const { return joysticks.size(); }
-		InputDevice &get_game_controller(int index) { return joysticks.at(index); }
+		std::vector<InputDevice> &get_game_controllers() { return joysticks; }
 
 	public:
 		void create(DisplayWindowSite *site, const DisplayWindowDescription &description);

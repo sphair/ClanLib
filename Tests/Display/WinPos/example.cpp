@@ -84,7 +84,7 @@ clan::ApplicationInstance<App> clanapp;
 
 App::App()
 {
-	clan::OpenGLTarget::enable();
+	clan::OpenGLTarget::set_current();
 
 	quit = false;
 	drag_start = false;
@@ -100,11 +100,11 @@ App::App()
 	slots.connect(window_main.sig_window_close(), [&](){on_window_close(); });
 	slots.connect(window_main.sig_window_moved(), [&](){on_window_moved(); });
 	slots.connect(window_main.sig_resize(), bind_member(this, &App::on_window_resize));
-	slots.connect(window_main.get_ic().get_mouse().sig_key_down(), this, &App::on_mouse_down);
-	slots.connect(window_main.get_ic().get_mouse().sig_key_up(), this, &App::on_mouse_up);
-	slots.connect(window_main.get_ic().get_mouse().sig_pointer_move(), [&](const InputEvent &key){on_mouse_move(key, window_main); });
+	slots.connect(window_main.get_mouse().sig_key_down(), this, &App::on_mouse_down);
+	slots.connect(window_main.get_mouse().sig_key_up(), this, &App::on_mouse_up);
+	slots.connect(window_main.get_mouse().sig_pointer_move(), [&](const InputEvent &key){on_mouse_move(key, window_main); });
 	slots.connect(window_main.sig_lost_focus(), bind_member(this, &App::on_lost_focus));
-	slots.connect(window_main.get_ic().get_keyboard().sig_key_up(), this, &App::on_input_up);
+	slots.connect(window_main.get_keyboard().sig_key_up(), this, &App::on_input_up);
 
 	desc_window_2.set_title("Window 2");
 	desc_window_2.set_allow_resize(true);
@@ -113,7 +113,7 @@ App::App()
 	Rect rect = window_main.get_geometry();
 	desc_window_2.set_position(rect.translate(0, rect.get_height()), false);
 	window_2 = DisplayWindow(desc_window_2);
-	slots.connect(window_2.get_ic().get_keyboard().sig_key_up(), this, &App::on_input_up);
+	slots.connect(window_2.get_keyboard().sig_key_up(), this, &App::on_input_up);
 	slots.connect(window_2.sig_window_close(), [&](){on_window_close(); });
 
 	desc_window_3.set_title("Window 3");
@@ -124,7 +124,7 @@ App::App()
 	rect = window_2.get_geometry();
 	desc_window_3.set_position(rect.translate(0, rect.get_height()), false);
 	window_3 = DisplayWindow(desc_window_3);
-	slots.connect(window_3.get_ic().get_keyboard().sig_key_up(), this, &App::on_input_up);
+	slots.connect(window_3.get_keyboard().sig_key_up(), this, &App::on_input_up);
 	slots.connect(window_3.sig_window_close(), [&](){on_window_close(); });
 
 	desc_window_4.set_title("Window 4");
@@ -135,7 +135,7 @@ App::App()
 	rect = window_3.get_geometry();
 	desc_window_4.set_position(rect.translate(0, rect.get_height()), true);
 	window_4 = DisplayWindow(desc_window_4);
-	slots.connect(window_4.get_ic().get_keyboard().sig_key_up(), this, &App::on_input_up);
+	slots.connect(window_4.get_keyboard().sig_key_up(), this, &App::on_input_up);
 	slots.connect(window_4.sig_window_close(), [&](){on_window_close(); });
 
 	desc_window_5.set_title("Window 5");
@@ -144,7 +144,7 @@ App::App()
 	rect = window_4.get_geometry();
 	desc_window_5.set_position(rect.translate(0, rect.get_height()), false);
 	window_5 = DisplayWindow(desc_window_5);
-	slots.connect(window_5.get_ic().get_keyboard().sig_key_up(), this, &App::on_input_up);
+	slots.connect(window_5.get_keyboard().sig_key_up(), this, &App::on_input_up);
 	slots.connect(window_5.sig_window_close(), [&](){on_window_close(); });
 
 	canvas_window_main = Canvas(window_main);
@@ -211,7 +211,7 @@ void App::draw_window_info(Canvas &canvas, Font &font, int ypos, DisplayWindowDe
 	font.draw_text(canvas, 8, ypos, string_format("Geometry (Window Area): x=%1, y=%2, width=%3, height=%4", rect.left, rect.top, rect.get_width(), rect.get_height()));
 	ypos += ygap;
 
-	InputDevice &mouse = window.get_ic().get_mouse();
+	InputDevice &mouse = window.get_mouse();
 	Pointf pos = mouse.get_position();
 	font.draw_text(canvas, 8, ypos, string_format("Mouse (Client Area): x=%1, y=%2", pos.x, pos.y));
 	ypos += ygap;

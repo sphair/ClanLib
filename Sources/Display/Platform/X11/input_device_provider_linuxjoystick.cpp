@@ -88,7 +88,6 @@ namespace clan
 	{
 		int size = button_states.size();
 		if (keycode < 0 || keycode >= size) return false;
-		update_states();
 		return button_states[keycode];
 	}
 
@@ -101,7 +100,6 @@ namespace clan
 	{
 		int size = axis_states.size();
 		if (index < 0 || index >= size) return 0.0f;
-		update_states();
 		return axis_states[index];
 	}
 
@@ -182,27 +180,15 @@ namespace clan
 		}
 	}
 
-	void InputDeviceProvider_LinuxJoystick::update_states(InputDevice &joystick) const
-	{
-		throw_if_disposed();
 
+	bool InputDeviceProvider_LinuxJoystick::poll(InputDevice &joystick, bool peek_only)
+	{
 		struct js_event event;
 
 		while (read(fd, &event, sizeof(struct js_event)) != -1)
 		{
 			process_event(joystick, event);
 		}
-
-		/* EAGAIN is returned when the queue is empty */
-		// Ignore errors
-		//if (errno != EAGAIN) {
-		//	throw Error(strerror(errno));
-		//}
-	}
-
-	bool InputDeviceProvider_LinuxJoystick::poll(InputDevice &joystick, bool peek_only)
-	{
-		update_states(joystick);
 
 		bool joy_event = new_event;
 		if (!peek_only)

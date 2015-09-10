@@ -88,12 +88,12 @@ App::App()
 	// Open the windows
 	window = clan::DisplayWindow(desc_window);
 	sc.connect(window.sig_window_close(), [=](){on_window_close(); });
-	sc.connect(window.get_ic().get_mouse().sig_key_down(), clan::bind_member(this, &App::on_mouse_down));
-	sc.connect(window.get_ic().get_mouse().sig_key_dblclk(), clan::bind_member(this, &App::on_mouse_down));
-	sc.connect(window.get_ic().get_mouse().sig_key_up(), clan::bind_member(this, &App::on_mouse_up));
-	sc.connect(window.get_ic().get_mouse().sig_pointer_move(), [&](const clan::InputEvent &input){on_mouse_move(input, window); });
+	sc.connect(window.get_mouse().sig_key_down(), clan::bind_member(this, &App::on_mouse_down));
+	sc.connect(window.get_mouse().sig_key_dblclk(), clan::bind_member(this, &App::on_mouse_down));
+	sc.connect(window.get_mouse().sig_key_up(), clan::bind_member(this, &App::on_mouse_up));
+	sc.connect(window.get_mouse().sig_pointer_move(), [&](const clan::InputEvent &input){on_mouse_move(input, window); });
 	sc.connect(window.sig_lost_focus(), clan::bind_member(this, &App::on_lost_focus));
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	sc.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 
 	canvas = clan::Canvas(window);
 

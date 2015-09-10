@@ -37,7 +37,7 @@ class TestApp : public clan::Application
 public:
 	TestApp()
 	{
-		clan::OpenGLTarget::enable();
+		clan::OpenGLTarget::set_current();
 
 		DisplayWindowDescription desc;
 		desc.set_size(Size(800,600), true);
@@ -71,14 +71,14 @@ public:
 
 	bool update()
 	{
-		if(window.get_ic().get_keyboard().get_keycode(keycode_escape))
+		if(window.get_keyboard().get_keycode(keycode_escape))
 			return false;
 
 		canvas.clear(Colorf::gray70);
 
 		span.draw_layout(canvas);
 
-		Point mouse_pos = window.get_ic().get_mouse().get_position();
+		Point mouse_pos = window.get_mouse().get_position();
 		SpanLayout::HitTestResult result = span.hit_test(canvas, mouse_pos);
 
 		std::string type;

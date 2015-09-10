@@ -33,11 +33,11 @@ clan::ApplicationInstance<App> clanapp;
 
 App::App()
 {
-	// We support all display targets, in order listed here
 #ifdef WIN32
 	clan::D3DTarget::set_current();
-#endif
+#else
 	clan::OpenGLTarget::set_current();
+#endif
 
 	DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
@@ -46,7 +46,7 @@ App::App()
 
 	window = DisplayWindow(win_desc);
 	slots.connect(window.sig_window_close(), this, &App::on_window_close);
-	slots.connect(window.get_ic().get_keyboard().sig_key_up(), this, &App::on_input_up);
+	slots.connect(window.get_keyboard().sig_key_up(), this, &App::on_input_up);
 
 	resources = clan::XMLResourceManager::create(clan::XMLResourceDocument("Resources/resources.xml"));
 

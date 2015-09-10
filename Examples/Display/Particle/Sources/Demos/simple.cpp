@@ -32,7 +32,7 @@ DemoSimple::DemoSimple(clan::DisplayWindow &window) : window(window)
 	sc.connect(window.sig_window_close(), clan::bind_member(this, &DemoSimple::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &DemoSimple::on_input_up));
+	sc.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &DemoSimple::on_input_up));
 
 	// Get the graphic context
 	canvas = clan::Canvas(window);

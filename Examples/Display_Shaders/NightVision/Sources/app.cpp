@@ -41,7 +41,7 @@ App::App()
 	window = clan::DisplayWindow(description);
 	canvas = clan::Canvas(window);
  
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	sc.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::window_close));
 
 	// Create offscreen texture
@@ -114,7 +114,7 @@ App::App()
 
 bool App::update()
 {
-	clan::InputDevice keyboard = window.get_ic().get_keyboard();
+	clan::InputDevice keyboard = window.get_keyboard();
 	timer = (clan::System::get_time() - startTime) / 1000.0f;
 
 	uniforms.elapsedTime = timer;

@@ -1262,8 +1262,8 @@ namespace clan
 		expose.window = handle.window;
 		expose.x = 0;
 		expose.y = 0;
-		expose.width = client_rect.get_width();
-		expose.height = client_rect.get_height();
+		expose.width = client_area.get_width();
+		expose.height = client_area.get_height();
 		expose.count = 0;
 		XSendEvent(handle.display, handle.window, False, 0, (XEvent *) &expose);
 	}

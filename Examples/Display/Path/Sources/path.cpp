@@ -34,9 +34,11 @@ clan::ApplicationInstance<PathApp> clanapp;
 
 PathApp::PathApp()
 {
-	// We support all display targets, in order listed here
+#ifdef WIN32
 	clan::D3DTarget::set_current();
+#else
 	clan::OpenGLTarget::set_current();
+#endif
 
 	// Set the window
 	clan::DisplayWindowDescription desc;
@@ -51,7 +53,7 @@ PathApp::PathApp()
 	sc.connect(window.sig_window_close(), clan::bind_member(this, &PathApp::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &PathApp::on_input_up));
+	sc.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &PathApp::on_input_up));
 
 	rounded_rect_shape = clan::Path::rect(clan::Rectf(0.0f, 0.0f, clan::Sizef(256, 256)), clan::Sizef(64.0f, 64.0f));
 

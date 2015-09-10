@@ -23,7 +23,7 @@ DemoUserCollision::DemoUserCollision(clan::DisplayWindow &window) : window(windo
 	sc.connect(window.sig_window_close(), clan::bind_member(this, &DemoUserCollision::on_window_close));
 	canvas = clan::Canvas(window);
 
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &DemoUserCollision::on_key_up));
+	sc.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &DemoUserCollision::on_key_up));
 
 	// initialize LinearParticle
 	srand(clan::System::get_time());
@@ -89,7 +89,7 @@ DemoUserCollision::DemoUserCollision(clan::DisplayWindow &window) : window(windo
 
 bool DemoUserCollision::update()
 {
-	clan::InputDevice &keyboard = window.get_ic().get_keyboard();
+	clan::InputDevice &keyboard = window.get_keyboard();
 	triggered = false;
 
 	canvas.clear();

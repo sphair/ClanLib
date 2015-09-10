@@ -35,11 +35,11 @@ clan::ApplicationInstance<App> clanapp;
 
 App::App()
 {
-	// We support all display targets, in order listed here
 #ifdef WIN32
 	clan::D3DTarget::set_current();
-#endif
+#else
 	clan::OpenGLTarget::set_current();
+#endif
 
 	clan::DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
@@ -48,7 +48,7 @@ App::App()
 
 	window = clan::DisplayWindow(win_desc);
 	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	sc.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 	canvas = clan::Canvas(window);
 	clan::FileResourceDocument doc(clan::FileSystem("../../ThemeAero"));
 	clan::ResourceManager resources = clan::FileResourceManager::create(doc);

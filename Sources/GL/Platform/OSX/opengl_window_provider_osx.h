@@ -62,8 +62,7 @@ namespace clan
 		GraphicContext& get_gc() override;
 		InputDevice &get_keyboard() override;
 		InputDevice &get_mouse() override;
-		int get_game_controller_count() const override;
-		InputDevice &get_game_controller(int index) override;
+		std::vector<InputDevice> &get_game_controllers() override;
 		bool is_clipboard_text_available() const override;
 		bool is_clipboard_image_available() const override;
 		std::string get_clipboard_text() const override;
