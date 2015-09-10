@@ -92,8 +92,7 @@ namespace clan
 
 		InputDevice &get_keyboard() { return keyboard; }
 		InputDevice &get_mouse() { return mouse; }
-		int get_game_controller_count() const { return joysticks.size(); }
-		InputDevice &get_game_controller(int index) { return joysticks.at(index); }
+		std::vector<InputDevice> &get_game_controllers() { return joysticks; }
 
 		std::function<void()> &func_on_resized() { return callback_on_resized; }
 		std::function<bool(XButtonEvent &)> &func_on_clicked() { return callback_on_clicked; }

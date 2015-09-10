@@ -67,8 +67,7 @@ namespace clan
 		GraphicContext& get_gc() { return gc; }
 		InputDevice &get_keyboard() override { return win32_window.get_keyboard(); }
 		InputDevice &get_mouse() override { return win32_window.get_mouse(); }
-		int get_game_controller_count() const override { return win32_window.get_game_controller_count(); }
-		InputDevice &get_game_controller(int index) override { return win32_window.get_game_controller(index); }
+		std::vector<InputDevice> &get_game_controllers() override { return win32_window.get_game_controllers(); }
 		bool is_clipboard_text_available() const;
 		bool is_clipboard_image_available() const;
 		std::string get_clipboard_text() const;

@@ -137,16 +137,11 @@ namespace clan
 		return impl->provider->get_mouse();
 	}
 
-	int DisplayWindow::get_game_controller_count() const
-	{
-		throw_if_null();
-		return impl->provider->get_game_controller_count();
-	}
 
-	InputDevice &DisplayWindow::get_game_controller(int index)
+	std::vector<InputDevice> &DisplayWindow::get_game_controllers()
 	{
 		throw_if_null();
-		return impl->provider->get_game_controller(index);
+		return impl->provider->get_game_controllers();
 	}
 
 	InputDevice &DisplayWindow::get_input_device(const std::string &device_name)
@@ -158,11 +153,11 @@ namespace clan
 		else if (device_name == get_mouse().get_device_name())
 			return get_mouse();
 
-		int count = get_game_controller_count();
-		for (int i = 0; i < count; i++)
+		auto &game = get_game_controllers();
+		for (auto &elem : game)
 		{
-			if (get_game_controller(i).get_device_name() == device_name)
-				return get_game_controller(i);
+			if (elem.get_device_name() == device_name)
+				return elem;
 		}
 
 		static InputDevice null_device;

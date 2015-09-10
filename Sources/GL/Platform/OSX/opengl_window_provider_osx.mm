@@ -137,12 +137,7 @@ namespace clan
 		return mouse;
 	}
 	
-	int OpenGLWindowProvider::get_game_controller_count() const
-	{
-		return 0;
-	}
-	
-	InputDevice &OpenGLWindowProvider::get_game_controller(int index)
+	std::vector<InputDevice> &OpenGLWindowProvider::get_game_controllers()
 	{
 		static InputDevice null_device;
 		return null_device;
