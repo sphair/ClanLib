@@ -53,7 +53,7 @@ namespace clan
 		int get_hat(int index) const override;
 		int get_button_count() const override;
 
-		void update(RAWINPUT *raw_input);
+		void update(InputDevice &joystick, RAWINPUT *raw_input);
 
 	private:
 		void on_dispose();

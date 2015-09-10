@@ -958,7 +958,7 @@ namespace clan
 						{
 							InputDeviceProvider_Win32Hid *hid_provider = dynamic_cast<InputDeviceProvider_Win32Hid*>(joysticks[i].get_provider());
 							if (hid_provider)
-								hid_provider->update(rawinput);
+								hid_provider->update(joysticks[i], rawinput);
 						}
 					}
 				}
