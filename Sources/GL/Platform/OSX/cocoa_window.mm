@@ -85,6 +85,16 @@
 		window_provider = provider_impl;
 		[self setAcceptsMouseMovedEvents:YES];
 		self.contentView = [[CocoaView alloc] initWithProvider:provider_impl];
+		
+		if (!desc.get_owner().is_null())
+		{
+			// To do: Cocoa doesn't have owner window ordering (only z-order levels are supported).
+			//        We need to set the level back to NSNormalWindowLevel whenever the parent window is not key.
+			
+			//auto parent_provider = static_cast<clan::OpenGLWindowProvider*>(desc.get_owner().get_provider());
+			
+			self.level = NSFloatingWindowLevel;
+		}
 	}
 	return self;
 }
@@ -112,7 +122,6 @@
 		case NSMouseMoved: // requires setAcceptsMouseMovedEvents: to be called first
 		case NSScrollWheel:
 			window_provider->on_input_event(theEvent);
-            [super sendEvent:theEvent];
 			break;
 
 		default:

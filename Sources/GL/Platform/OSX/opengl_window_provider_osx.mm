@@ -139,8 +139,8 @@ namespace clan
 	
 	std::vector<InputDevice> &OpenGLWindowProvider::get_game_controllers()
 	{
-		static InputDevice null_device;
-		return null_device;
+		static std::vector<InputDevice> empty;
+		return empty;
 	}
 
 	std::string OpenGLWindowProvider::get_title() const
@@ -570,7 +570,7 @@ namespace clan
 			case 0x24: key.id = keycode_return; break;
 			case 0x30: key.id = keycode_tab; break;
 			case 0x31: key.id = keycode_space; break;
-			case 0x33: key.id = keycode_delete; break;
+			case 0x33: key.id = keycode_backspace; break;
 			case 0x35: key.id = keycode_escape; break;
 			case 0x73: key.id = keycode_home; break;
 			case 0x77: key.id = keycode_end; break;

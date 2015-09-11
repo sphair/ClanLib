@@ -110,6 +110,8 @@ namespace clan
 		
 		void set_pixel_ratio(float ratio) override;
 		
+		OpenGLWindowProvider_Impl *get_impl() { return impl.get(); }
+		
 	private:
 		InputDevice keyboard, mouse;
 
