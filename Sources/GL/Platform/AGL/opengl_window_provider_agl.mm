@@ -36,10 +36,10 @@
 #include "API/Display/Render/shared_gc_data.h"
 #include "API/GL/opengl.h"
 #include "API/GL/opengl_wrap.h"
-#include "API/GL/opengl_window_description.h"
+#include "API/GL/opengl_context_description.h"
 #include "API/Core/Text/logger.h"
 //#include "Display/Cocoa/cursor_provider_cocoa.h"
-#include "../../opengl_window_description_impl.h"
+#include "../../opengl_context_description_impl.h"
 #include "../../opengl_graphic_context_provider.h"
 #include "../opengl_target_provider.h"
 
@@ -146,7 +146,7 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 	{
         opengl_context = create_context();
 
-		OpenGLWindowDescription gldesc(desc);
+		OpenGLContextDescription gldesc(desc);
    		gc = GraphicContext(new OpenGLGraphicContextProvider(new CL_GL_RenderWindowProvider_AGL(*this, opengl_context, false), gldesc ));
         setup_default_framebuffer();
 	}

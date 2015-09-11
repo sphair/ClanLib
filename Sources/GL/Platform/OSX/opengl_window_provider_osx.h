@@ -39,7 +39,7 @@ namespace clan
 {
 	class InputDeviceProvider_OSXKeyboard;
 	class InputDeviceProvider_OSXMouse;
-	class OpenGLWindowDescription;
+	class OpenGLContextDescription;
 	class OpenGLWindowProvider_Impl;
 
 	class OpenGLWindowProvider : public DisplayWindowProvider

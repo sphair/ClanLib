@@ -31,9 +31,8 @@
 
 #include "API/Display/TargetProviders/display_window_provider.h"
 #include "API/Display/Render/graphic_context.h"
-#include "API/Display/Window/input_context.h"
 #include <memory>
-#include "API/GL/opengl_window_description.h"
+#include "API/GL/opengl_context_description.h"
 #include "API/GL/opengl_wrap.h"
 
 #include <EGL/egl.h>
@@ -42,7 +41,7 @@
 namespace clan
 {
 
-	class OpenGLWindowDescription;
+	class OpenGLContextDescription;
 
 	class OpenGLWindowProvider : public DisplayWindowProvider
 	{
@@ -50,7 +49,7 @@ namespace clan
 /// \{
 
 	public:
-		OpenGLWindowProvider(OpenGLWindowDescription &opengl_desc);
+		OpenGLWindowProvider(OpenGLContextDescription &opengl_desc);
 		~OpenGLWindowProvider();
 
 
@@ -71,7 +70,6 @@ namespace clan
 		Size get_maximum_size(bool client_area) const override;
 		DisplayWindowHandle get_handle() const override { return DisplayWindowHandle(); }
 		GraphicContext& get_gc() override { return gc; }
-		InputContext get_ic() override { return InputContext(); }
 		bool is_clipboard_text_available() const override;
 		bool is_clipboard_image_available() const override;
 		std::string get_clipboard_text() const override;
@@ -134,6 +132,10 @@ namespace clan
 
 		void set_pixel_ratio(float ratio) override;
 
+		InputDevice &get_keyboard() override;
+		InputDevice &get_mouse() override;
+		std::vector<InputDevice> &get_game_controllers() override;
+
 /// \}
 /// \name Implementation
 /// \{
@@ -146,7 +148,7 @@ namespace clan
 		bool double_buffered = false;
 		int swap_interval = 0;
 
-		OpenGLWindowDescription opengl_desc;
+		OpenGLContextDescription opengl_desc;
 		DisplayWindowHandle window_handle;
 		EGLDisplay display = EGL_NO_DISPLAY;
 		EGLSurface surface = EGL_NO_SURFACE;
