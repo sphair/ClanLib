@@ -36,15 +36,15 @@ Target::Target(RenderTarget new_target) : render_target(new_target)
 	switch (render_target)
 	{
 	case (legacy_gl) :
+		clan::OpenGLTarget::set_current();
 		opengl_desc.set_version(1, 3, true);
 		clan::OpenGLTarget::set_description(opengl_desc);
-		clan::OpenGLTarget::set_current();
 		break;
 
 	case (opengl) :
+		clan::OpenGLTarget::set_current();
 		opengl_desc.set_version(4, 3, true);
 		clan::OpenGLTarget::set_description(opengl_desc);
-		clan::OpenGLTarget::set_current();
 		break;
 	case (d3d) :
 		clan::D3DTarget::set_current();

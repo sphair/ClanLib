@@ -39,11 +39,6 @@
 
 namespace clan
 {
-	namespace
-	{
-		OpenGLContextDescription context_description;
-	}
-
 	bool OpenGLTarget::is_current()
 	{
 		return std::dynamic_pointer_cast<OpenGLTargetProvider>(DisplayTarget::get_current_target()) ? true : false;
@@ -52,13 +47,22 @@ namespace clan
 	OpenGLContextDescription OpenGLTarget::get_description()
 	{
 		SetupGL::start();
-		return context_description;
+
+		auto target = std::dynamic_pointer_cast<OpenGLTargetProvider>(DisplayTarget::get_current_target());
+		if (!target)
+			throw Exception("OpenGLTarget not current");
+
+		return target->get_description();
 	}
 
 	void OpenGLTarget::set_description(OpenGLContextDescription &desc)
 	{
 		SetupGL::start();
-		context_description = desc;
+		auto target = std::dynamic_pointer_cast<OpenGLTargetProvider>(DisplayTarget::get_current_target());
+		if (!target)
+			throw Exception("OpenGLTarget not current");
+
+		return target->set_description(desc);
 	}
 
 	void OpenGLTarget::set_current()

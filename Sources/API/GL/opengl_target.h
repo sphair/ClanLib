@@ -51,11 +51,13 @@ namespace clan
 		/// This may change after a display window has been created
 		static bool is_current();
 
+		/// Target should be current (using set_current() ) before using this function
 		static OpenGLContextDescription get_description();
 
 		/// \brief Set this display target to be the current target
 		static void set_current();
 
+		/// Target should be current (using set_current() ) before using this function
 		static void set_description(OpenGLContextDescription &desc);
 
 		/// \brief Get the opengl version
