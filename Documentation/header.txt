@@ -19,10 +19,10 @@
                 <div id="page-header">
                     <a id="page-header-logo" href="/"></a>
                     <div id="page-header-menu">
-                        <a class="page-header-menu-item" href="index.html">Overview</a>
-                        <a class="page-header-menu-item" href="download.html">Download</a>
-                        <a class="page-header-menu-item active" href="documentation.html">Documentation</a>
-                        <a class="page-header-menu-item" href="contact.html">Contact</a>
+                        <a class="page-header-menu-item" href="/index.html">Overview</a>
+                        <a class="page-header-menu-item" href="/download.html">Download</a>
+                        <a class="page-header-menu-item active" href="/documentation.html">Documentation</a>
+                        <a class="page-header-menu-item" href="/contact.html">Contact</a>
 
                     </div>
                 </div>
