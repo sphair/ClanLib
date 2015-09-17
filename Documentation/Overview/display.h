@@ -8,7 +8,6 @@
         <li>clan::DisplayWindowDescription - Allows you to setup a more advanced description when creating a display window</li>
         <li>clan::Cursor - Mouse cursor class</li>
         <li>clan::CursorDescription - Allows you to setup a more advanced description when creating a mouse cursor</li>
-        <li>clan::InputContext - Container class for all input devices connected to a window</li>
         <li>clan::InputDevice - Interface for keyboards, mice and game controllers</li>
         <li>clan::InputEvent - Describes an input event, such as key down, key up, mouse movement, etc</li>
         <li>clan::InputCode - This enumeration contains all the input IDs for well-known buttons</li>
@@ -20,8 +19,7 @@
         <li>clan::Canvas - Main 2D drawing class</li>
         <li>clan::Image - 2D image</li>
         <li>clan::Sprite - More advanced version of a 2D image with multiple frames for animation</li>
-        <li>clan::Path2D - Describes a 2D path</li>
-        <li>clan::Shape2D - A complex 2D shape made out of paths</li>
+        <li>clan::Path - Describes a 2D path</li>
         <li>clan::Color, clan::Colorf - Specifies a color using red, green, blue and alpha components</li>
         <li>clan::ColorHSLi, clan::ColorHSLf - Specifies a color using hue, saturation, lightness and alpha components</li>
         <li>clan::ColorHSVi, clan::ColorHSVf - Specifies a color using hue, saturation, value and alpha components</li>
@@ -36,7 +34,6 @@
         <li>clan::Font - Font class for System / TrueType / OpenType fonts and fonts using sprite image frames as glyphs</li>
         <li>clan::FontDescription - Allows you to setup a more advanced description when creating a font</li>
         <li>clan::FontMetrics - The metrics of a font</li>
-        <li>clan::VectorFont - Vector font drawing</li>
     </ul>
 
     <h2>Image Pixels</h2>
@@ -86,5 +83,12 @@
     <ul>
         <li>clan::DisplayCache - Resource cache interface for clanDisplay resources</li>
     </ul>
+
+	<h2>Thread run-loop</h2>
+
+	<ul>
+	<li>clan::RunLoop - Application loop helper</li>
+	<li>clan::Timer - Timer class that invokes a callback on a specified interval</li>
+	</ul>
 
 */

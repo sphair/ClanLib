@@ -11,7 +11,6 @@
 <li>clan::CheckBoxView - </li>
 <li>clan::ImageView - </li>
 <li>clan::LabelView - </li>
-<li>clan::PopupView - </li>
 <li>clan::ProgressView - </li>
 <li>clan::RadioButtonView - </li>
 <li>clan::ScrollView - </li>
@@ -21,12 +20,14 @@
 <li>clan::SpinView - </li>
 <li>clan::TextFieldView - </li>
 <li>clan::TextView - </li>
-<li>clan::TextureView - </li>
-<li>clan::WindowView - </li>
+</ul>
+<h2>Top Level</h2>
+<ul>
+<li>clan::TopLevelWindow - </li>
+<li>clan::TextureWindow - </li>
 </ul>
 <h2>Style</h2>
 <ul>
-<li>clan::BoxGeometry - </li>
 <li>clan::Style - </li>
 </ul>
 <h2>System Dialogs</h2>
@@ -42,7 +43,6 @@
 <h2>View</h2>
 <ul>
 <li>clan::View - </li>
-<li>clan::ViewController - </li>
 </ul>
 
 <h2>Events</h2>
