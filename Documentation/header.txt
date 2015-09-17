@@ -19,13 +19,11 @@
                 <div id="page-header">
                     <a id="page-header-logo" href="/"></a>
                     <div id="page-header-menu">
-                        <a class="page-header-menu-item" href="/download.html">Download</a>
-                        <a class="page-header-menu-item active" href="/documentation.html">Documentation</a>
-                        <a class="page-header-menu-item" href="/development.html">Development</a>
-                        <a class="page-header-menu-item" href="/examples.html">Examples</a>
-                        <a class="page-header-menu-item" href="/donations.html">Donations</a>
-                        <a class="page-header-menu-item" href="/contributions.html">Contributions</a>
-                        <a class="page-header-menu-item" href="http://www.rtsoft.com/clanlib">Forum</a>
+                        <a class="page-header-menu-item" href="index.html">Overview</a>
+                        <a class="page-header-menu-item" href="download.html">Download</a>
+                        <a class="page-header-menu-item active" href="documentation.html">Documentation</a>
+                        <a class="page-header-menu-item" href="contact.html">Contact</a>
+
                     </div>
                 </div>
             </div>
