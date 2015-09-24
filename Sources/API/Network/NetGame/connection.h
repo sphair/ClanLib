@@ -83,8 +83,8 @@ namespace clan
 
 	private:
 		/// \brief Disallow copy constructors
-		NetGameConnection(NetGameConnection &other);
-		NetGameConnection &operator =(const NetGameConnection &other);
+		NetGameConnection(NetGameConnection &other) = delete;
+		NetGameConnection &operator =(const NetGameConnection &other) = delete;
 
 		NetGameConnection_Impl *impl;
 	};

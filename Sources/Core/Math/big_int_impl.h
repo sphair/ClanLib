@@ -173,6 +173,6 @@ namespace clan
 		unsigned int digits_used;		// How many digits used
 		uint32_t *digits;	// The digits themselves
 
-		BigInt_Impl &operator=(const BigInt_Impl& other);	// Not defined
+		BigInt_Impl &operator=(const BigInt_Impl& other) = delete;	// Not defined
 	};
 }
