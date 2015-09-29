@@ -61,7 +61,7 @@ namespace clan
 		static JsonValue null() { JsonValue v; v._type = JsonType::null; return v; }
 		static JsonValue object() { JsonValue v; v._type = JsonType::object; return v; }
 		static JsonValue array() { JsonValue v; v._type = JsonType::array; return v; }
-		static JsonValue number(double value) { JsonValue v; v._type = JsonType::number; return v; }
+		static JsonValue number(double value) { JsonValue v; v._type = JsonType::number; v._number = value; return v; }
 		static JsonValue number(float value) { return JsonValue::number(static_cast<double>(value)); }
 		static JsonValue number(int value) { return JsonValue::number(static_cast<double>(value)); }
 		static JsonValue number(unsigned int value) { return JsonValue::number(static_cast<double>(value)); }
@@ -69,8 +69,8 @@ namespace clan
 		static JsonValue number(unsigned short value) { return JsonValue::number(static_cast<double>(value)); }
 		static JsonValue number(char value) { return JsonValue::number(static_cast<double>(value)); }
 		static JsonValue number(unsigned char value) { return JsonValue::number(static_cast<double>(value)); }
-		static JsonValue boolean(bool value) { JsonValue v; v._type = JsonType::boolean; return v; }
-		static JsonValue string(const std::string &value) { JsonValue v; v._type = JsonType::string; return v; }
+		static JsonValue boolean(bool value) { JsonValue v; v._type = JsonType::boolean; v._boolean = value; return v; }
+		static JsonValue string(const std::string &value) { JsonValue v; v._type = JsonType::string; v._string = value; return v; }
 
 		static JsonValue parse(const std::string &json);
 		std::string to_json() const;
