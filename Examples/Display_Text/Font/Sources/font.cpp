@@ -48,6 +48,7 @@ App::App()
 	slots.connect(window.sig_window_close(), this, &App::on_window_close);
 	slots.connect(window.get_keyboard().sig_key_up(), this, &App::on_input_up);
 
+	clan::XMLResourceFactory::set_display();
 	resources = clan::XMLResourceManager::create(clan::XMLResourceDocument("Resources/resources.xml"));
 
 	canvas = Canvas(window);

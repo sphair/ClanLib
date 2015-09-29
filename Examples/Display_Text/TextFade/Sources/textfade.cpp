@@ -64,6 +64,7 @@ TextFade::TextFade()
 	font_description.set_subpixel(false);	// Fading only works with sub pixel off
 	standard_font = clan::Font("arial", font_description);
 
+	clan::XMLResourceFactory::set_display();
 	clan::ResourceManager resources = clan::XMLResourceManager::create(clan::XMLResourceDocument("../Font/Resources/resources.xml"));
 	sprite_font = clan::Font::resource(canvas, "ClanFont", clan::FontDescription(), resources);
 	sprite_font.set_height(32);
