@@ -35,7 +35,7 @@
 
 namespace clan
 {
-	/// \addtogroup clanCore_Resources clanCore Resources
+	/// \addtogroup clanXML_Resources clanXML Resources
 	/// \{
 
 	class IODevice;

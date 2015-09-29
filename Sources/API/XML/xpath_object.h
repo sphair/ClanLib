@@ -35,7 +35,7 @@
 
 namespace clan
 {
-	/// \addtogroup clanCore_XML clanCore XML
+	/// \addtogroup clanXML_XML clanXML XML
 	/// \{
 
 	class DomNode;
