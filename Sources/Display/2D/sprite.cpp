@@ -31,8 +31,6 @@
 #include "Display/precomp.h"
 #include "API/Core/IOData/file_system.h"
 #include "API/Core/IOData/path_help.h"
-#include "API/Core/Resources/xml_resource_node.h"
-#include "API/Core/XML/dom_element.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Display/2D/sprite.h"

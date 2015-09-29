@@ -35,11 +35,8 @@
 #include "API/Display/ImageProviders/png_provider.h"
 #include "API/Display/Resources/display_cache.h"
 #include "API/Core/Resources/resource_manager.h"
-#include "API/Core/Resources/xml_resource_manager.h"
-#include "API/Core/Resources/xml_resource_document.h"
 #include "API/Core/Resources/file_resource_manager.h"
 #include "API/Core/Resources/file_resource_document.h"
-#include "Display/Resources/XML/xml_display_cache.h"
 #include "Display/Resources/file_display_cache.h"
 #include "../Core/System/setup_core.h"
 
@@ -64,7 +61,6 @@ namespace clan
 		SetupDisplay_Impl();
 		virtual ~SetupDisplay_Impl();
 
-		static void add_cache_factory_xml(ResourceManager &manager, const XMLResourceDocument &doc);
 		static void add_cache_factory_file(ResourceManager &manager, const FileResourceDocument &doc);
 
 		static SetupDisplay_Impl *instance;
@@ -117,7 +113,6 @@ namespace clan
 		targa_provider = new ProviderType_Register<TargaProvider>("targa");
 		tga_provider = new ProviderType_Register<TargaProvider>("tga");
 
-		XMLResourceManager::add_cache_factory(std::function<void(ResourceManager &, const XMLResourceDocument &)>(&SetupDisplay_Impl::add_cache_factory_xml));
 		FileResourceManager::add_cache_factory(std::function<void(ResourceManager &, const FileResourceDocument &)>(&SetupDisplay_Impl::add_cache_factory_file));
 	}
 
@@ -130,11 +125,6 @@ namespace clan
 		delete tga_provider;
 
 		instance = nullptr;
-	}
-
-	void SetupDisplay_Impl::add_cache_factory_xml(ResourceManager &manager, const XMLResourceDocument &doc)
-	{
-		DisplayCache::set(manager, std::shared_ptr<DisplayCache>(new XMLDisplayCache(doc)));
 	}
 
 	void SetupDisplay_Impl::add_cache_factory_file(ResourceManager &manager, const FileResourceDocument &doc)

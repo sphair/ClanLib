@@ -299,7 +299,7 @@ CLANLIB_ARG_ENABLE(clanGL,        auto, [Build clanGL module],             [whet
 CLANLIB_ARG_ENABLE(clanSound,     auto, [Build clanSound module],          [whether we should try to build clanSound])
 CLANLIB_ARG_ENABLE(clanNetwork,   auto, [Build clanNetwork module],        [whether we should try to build clanNetwork])
 CLANLIB_ARG_ENABLE(clanUI,        auto, [Build clanUI module],             [whether we should try to build clanUI])
-
+CLANLIB_ARG_ENABLE(clanXML,       auto, [Build clanXML module],            [whether we should try to build clanXML])
 
 has_linux_joystick=no
 has_linux_input=no
@@ -464,6 +464,11 @@ if test "$enable_clanUI" != "no"; then
 	echo ""
 fi
 
+if test "$enable_clanCML" != "no"; then
+	enable_clanXML=yes
+	echo ""
+fi
+
 
 dnl -----------------------------------------------------------------------
 dnl Store cflags for Setup/Unix/pkgconfig/clan*.in pkg-config files
@@ -475,6 +480,7 @@ AC_SUBST(extra_CFLAGS_clanGL)
 AC_SUBST(extra_CFLAGS_clanSound)
 AC_SUBST(extra_CFLAGS_clanNetwork)
 AC_SUBST(extra_CFLAGS_clanUI)
+AC_SUBST(extra_CFLAGS_clanXML)
 
 AC_SUBST(clanGUI_CXXFLAGS)
 
@@ -489,6 +495,7 @@ AC_SUBST(extra_LIBS_clanGL)
 AC_SUBST(extra_LIBS_clanSound)
 AC_SUBST(extra_LIBS_clanNetwork)
 AC_SUBST(extra_LIBS_clanUI)
+AC_SUBST(extra_LIBS_clanXML)
 
 dnl ----------------------------------------------------
 dnl Which clan subprojects should be compiled?
@@ -526,6 +533,10 @@ fi
 
 if test "$enable_clanUI" = "yes"; then
 	CLANLIB_ENABLE_MODULES(UI)
+fi
+
+if test "$enable_clanXML" = "yes"; then
+	CLANLIB_ENABLE_MODULES(XML)
 fi
 
 dnl ----------------------------------------
@@ -707,6 +718,7 @@ fi
 echo "                  clanSound = $enable_clanSound$sound_options"
 echo "                clanNetwork = $enable_clanNetwork"
 echo "                     clanUI = $enable_clanUI"
+echo "                    clanXML = $enable_clanXML"
 
 display_options=""
 if test "$enable_clanDisplay" != "no"; then

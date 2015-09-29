@@ -32,10 +32,7 @@
 #include "API/Sound/SoundProviders/soundprovider_wave.h"
 #include "API/Sound/SoundProviders/soundprovider_vorbis.h"
 #include "API/Sound/SoundProviders/soundprovider_type_register.h"
-#include "API/Core/Resources/xml_resource_document.h"
 #include "API/Core/Resources/resource_manager.h"
-#include "API/Core/Resources/xml_resource_manager.h"
-#include "Sound/Resources/XML/xml_sound_cache.h"
 #include "../Core/System/setup_core.h"
 #include "API/Core/Math/cl_math.h"
 
@@ -52,8 +49,6 @@ namespace clan
 	public:
 		SetupSound_Impl();
 		virtual ~SetupSound_Impl();
-
-		static void add_cache_factory(ResourceManager &manager, const XMLResourceDocument &doc);
 
 		SoundProviderType *providertype_wave = nullptr;
 		SoundProviderType *providertype_ogg = nullptr;
@@ -80,7 +75,6 @@ namespace clan
 		instance = this;
 		providertype_wave = new SoundProviderType_Register<SoundProvider_Wave>("wav");
 		providertype_ogg = new SoundProviderType_Register<SoundProvider_Vorbis>("ogg");
-		XMLResourceManager::add_cache_factory(std::function<void(ResourceManager &, const XMLResourceDocument &)>(&SetupSound_Impl::add_cache_factory));
 	}
 
 	SetupSound_Impl::~SetupSound_Impl()
@@ -88,11 +82,6 @@ namespace clan
 		delete providertype_wave;
 		delete providertype_ogg;
 		instance = nullptr;
-	}
-
-	void SetupSound_Impl::add_cache_factory(ResourceManager &manager, const XMLResourceDocument &doc)
-	{
-		SoundCache::set(manager, std::shared_ptr<SoundCache>(new XMLSoundCache(doc)));
 	}
 
 	std::map<std::string, SoundProviderType *> *SetupSound::get_sound_provider_factory_types()

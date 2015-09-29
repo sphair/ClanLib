@@ -79,14 +79,6 @@ Image/cpu_pixel_buffer_provider.cpp \
 Image/pixel_buffer_impl.cpp \
 Resources/file_display_cache.cpp \
 Resources/display_cache.cpp \
-Resources/XML/xml_display_cache.cpp \
-Resources/XML/cursor_description_xml.cpp \
-Resources/XML/image_xml.cpp \
-Resources/XML/program_object_xml.cpp \
-Resources/XML/shader_object_xml.cpp \
-Resources/XML/sprite_xml.cpp \
-Resources/XML/texture_xml.cpp \
-Resources/XML/font_xml.cpp \
 precomp.cpp \
 Font/font.cpp \
 Font/font_family.cpp \

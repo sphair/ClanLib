@@ -8,5 +8,6 @@ DIST_SUBDIRS = \
   GL             \
   Network        \
   Sound          \
+  XML            \
   UI
 # EOF #

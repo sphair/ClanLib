@@ -34,7 +34,6 @@
 #include "API/Core/Math/cl_math.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/Text/string_format.h"
-#include "API/Core/XML/dom_element.h"
 #include "API/Core/System/system.h"
 #include "Display/Render/graphic_context_impl.h"
 #include <list>

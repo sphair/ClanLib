@@ -38,7 +38,6 @@
 #include "API/Core/System/exception.h"
 #include "API/Core/IOData/file_system.h"
 #include "API/Core/IOData/path_help.h"
-#include "API/Core/Resources/xml_resource_node.h"
 #include "API/Display/ImageProviders/provider_factory.h"
 #include "API/Display/TargetProviders/pixel_buffer_provider.h"
 #include "API/Display/Render/transfer_texture.h"

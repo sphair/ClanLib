@@ -34,7 +34,6 @@
 #include "API/Core/Text/string_help.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/utf8_reader.h"
-#include "API/Core/XML/dom_element.h"
 #include "API/Display/2D/canvas.h"
 #include "API/Display/2D/path.h"
 #include "API/Display/Resources/display_cache.h"
