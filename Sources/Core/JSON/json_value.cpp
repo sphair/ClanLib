@@ -32,74 +32,94 @@
 
 namespace clan
 {
+	class JsonValueImpl
+	{
+	public:
+		static void write(const JsonValue &value, std::string &json);
+		static void write_array(const JsonValue &value, std::string &json);
+		static void write_object(const JsonValue &value, std::string &json);
+		static void write_string(const std::string &str, std::string &json);
+		static void write_number(const JsonValue &value, std::string &json);
+
+		static JsonValue read(const std::string &json, size_t &pos);
+		static JsonValue read_object(const std::string &json, size_t &pos);
+		static JsonValue read_array(const std::string &json, size_t &pos);
+		static std::string read_string(const std::string &json, size_t &pos);
+		static JsonValue read_number(const std::string &json, size_t &pos);
+		static JsonValue read_boolean(const std::string &json, size_t &pos);
+		static void read_whitespace(const std::string &json, size_t &pos);
+	};
+
 	std::string JsonValue::to_json() const
 	{
 		std::string result;
-		to_json(result);
+		JsonValueImpl::write(*this, result);
 		return result;
 	}
 
-	void JsonValue::to_json(std::string &result) const
+	JsonValue JsonValue::parse(const std::string &json)
 	{
-		result.clear();
-		write(result);
+		size_t pos = 0;
+		return JsonValueImpl::read(json, pos);
 	}
 
-	void JsonValue::write(std::string &json) const
+	/////////////////////////////////////////////////////////////////////////
+
+	void JsonValueImpl::write(const JsonValue &value, std::string &json)
 	{
-		switch (type)
+		switch (value.type())
 		{
-		case Type::null:
+		case JsonType::null:
 			json += "null";
 			break;
-		case Type::object:
-			write_object(json);
+		case JsonType::object:
+			write_object(value, json);
 			break;
-		case Type::array:
-			write_array(json);
+		case JsonType::array:
+			write_array(value, json);
 			break;
-		case Type::string:
-			write_string(value_string, json);
+		case JsonType::string:
+			write_string(value.to_string(), json);
 			break;
-		case Type::number:
-			write_number(json);
+		case JsonType::number:
+			write_number(value, json);
 			break;
-		case Type::boolean:
-			json += value_boolean ? "true" : "false";
+		case JsonType::boolean:
+			json += value.to_boolean() ? "true" : "false";
 			break;
-		case Type::undefined:
+		case JsonType::undefined:
 			break;
 		}
 	}
 
-	void JsonValue::write_array(std::string &json) const
+	void JsonValueImpl::write_array(const JsonValue &value, std::string &json)
 	{
 		json += "[";
-		for (size_t i = 0; i < items.size(); i++)
+		for (size_t i = 0; i < value.items().size(); i++)
 		{
 			if (i > 0)
 				json += ",";
-			items[i].write(json);
+			write(value.items()[i], json);
 		}
 		json += "]";
 	}
 
-	void JsonValue::write_object(std::string &json) const
+	void JsonValueImpl::write_object(const JsonValue &value, std::string &json)
 	{
 		json += "{";
 		std::map<std::string, JsonValue>::const_iterator it;
-		for (it = members.begin(); it != members.end(); ++it)
+		for (it = value.properties().begin(); it != value.properties().end(); ++it)
 		{
-			if (it != members.begin())
+			if (it != value.properties().begin())
 				json += ",";
 			write_string(it->first, json);
 			json += ":";
-			it->second.write(json);
+			write(it->second, json);
 		}
 		json += "}";
 	}
 
-	void JsonValue::write_string(const std::string &str, std::string &json)
+	void JsonValueImpl::write_string(const std::string &str, std::string &json)
 	{
 		json.push_back('"');
 
@@ -160,47 +180,41 @@ namespace clan
 				{
 					json.push_back('a' + (c - 10));
 				}
-			}
+				}
 			else
 			{
 				json.push_back(c);
 			}
-		}
+			}
 
 		json.push_back('"');
-	}
+		}
 
-	void JsonValue::write_number(std::string &json) const
+	void JsonValueImpl::write_number(const JsonValue &value, std::string &json)
 	{
 		char buf[64];
 		buf[0] = 0;
-		if (static_cast<double>(static_cast<int>(value_number)) == value_number)
+		if (static_cast<double>(static_cast<int>(value.to_number())) == value.to_number())
 		{
 #ifdef WIN32
-			_snprintf(buf, 63, "%d", (int)value_number);
+			_snprintf(buf, 63, "%d", (int)value.to_number());
 #else
-			snprintf(buf, 63, "%d", (int)value_number);
+			snprintf(buf, 63, "%d", (int)value.to_number());
 #endif
 		}
 		else
 		{
 #ifdef WIN32
-			_snprintf(buf, 63, "%f", value_number);
+			_snprintf(buf, 63, "%f", value.to_number());
 #else
-			snprintf(buf, 63, "%f", value_number);
+			snprintf(buf, 63, "%f", value.to_number());
 #endif
 		}
 		buf[63] = 0;
 		json += buf;
 	}
 
-	JsonValue JsonValue::from_json(const std::string &json)
-	{
-		size_t pos = 0;
-		return read(json, pos);
-	}
-
-	JsonValue JsonValue::read(const std::string &json, size_t &pos)
+	JsonValue JsonValueImpl::read(const std::string &json, size_t &pos)
 	{
 		read_whitespace(json, pos);
 
@@ -214,7 +228,7 @@ namespace clan
 		case '[':
 			return read_array(json, pos);
 		case '"':
-			return read_string(json, pos);
+			return JsonValue::string(read_string(json, pos));
 		case '-':
 		case '0':
 		case '1':
@@ -235,9 +249,9 @@ namespace clan
 		}
 	}
 
-	JsonValue JsonValue::read_object(const std::string &json, size_t &pos)
+	JsonValue JsonValueImpl::read_object(const std::string &json, size_t &pos)
 	{
-		JsonValue result(Type::object);
+		JsonValue result = JsonValue::object();
 
 		pos++;
 
@@ -260,7 +274,7 @@ namespace clan
 
 			read_whitespace(json, pos);
 
-			result.members[key] = read(json, pos);
+			result.prop(key) = read(json, pos);
 
 			read_whitespace(json, pos);
 
@@ -287,9 +301,9 @@ namespace clan
 		return result;
 	}
 
-	JsonValue JsonValue::read_array(const std::string &json, size_t &pos)
+	JsonValue JsonValueImpl::read_array(const std::string &json, size_t &pos)
 	{
-		JsonValue result(Type::array);
+		JsonValue result = JsonValue::array();
 
 		pos++;
 
@@ -301,7 +315,7 @@ namespace clan
 		while (json[pos] != ']')
 		{
 			read_whitespace(json, pos);
-			result.items.push_back(read(json, pos));
+			result.items().push_back(read(json, pos));
 			read_whitespace(json, pos);
 
 			if (pos == json.length())
@@ -327,7 +341,7 @@ namespace clan
 		return result;
 	}
 
-	std::string JsonValue::read_string(const std::string &json, size_t &pos)
+	std::string JsonValueImpl::read_string(const std::string &json, size_t &pos)
 	{
 		pos++;
 		if (pos == json.length())
@@ -423,7 +437,7 @@ namespace clan
 		return result;
 	}
 
-	JsonValue JsonValue::read_number(const std::string &json, size_t &pos)
+	JsonValue JsonValueImpl::read_number(const std::string &json, size_t &pos)
 	{
 		int start_pos = pos;
 		if (json[pos] == '-')
@@ -450,10 +464,10 @@ namespace clan
 
 		double result = 0.0;
 		sscanf(number_string.c_str(), "%lf", &result);
-		return result;
+		return JsonValue::number(result);
 	}
 
-	JsonValue JsonValue::read_boolean(const std::string &json, size_t &pos)
+	JsonValue JsonValueImpl::read_boolean(const std::string &json, size_t &pos)
 	{
 		if (json[pos] == 't')
 		{
@@ -471,9 +485,12 @@ namespace clan
 		}
 	}
 
-	void JsonValue::read_whitespace(const std::string &json, size_t &pos)
+	void JsonValueImpl::read_whitespace(const std::string &json, size_t &pos)
 	{
 		while (pos != json.length() && (json[pos] == ' ' || json[pos] == '\r' || json[pos] == '\n' || json[pos] == '\t' || json[pos] == '\f'))
 			pos++;
 	}
+	
 }
+
+
