@@ -31,7 +31,6 @@ XML/xpath_evaluator_impl.cpp \
 Resources/xml_resource_node.cpp \
 Resources/xml_resource_manager.cpp \
 Resources/xml_resource_document.cpp \
-SoundResources/sound_cache.cpp \
 SoundResources/XML/xml_sound_cache.cpp \
 SoundResources/XML/soundbuffer_xml.cpp \
 DisplayResources/XML/xml_display_cache.cpp \
