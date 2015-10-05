@@ -98,7 +98,6 @@ IOData/directory.cpp \
 IOData/directory_scanner.cpp \
 IOData/iodevice_provider_file.cpp \
 IOData/file_system.cpp \
-Resources/xml_resource_node.cpp \
 Resources/file_resource_manager.cpp \
 Resources/resource_manager.cpp \
 Resources/file_resource_document.cpp \
