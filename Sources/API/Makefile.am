@@ -140,10 +140,7 @@ clanCore_includes = \
 	Core/IOData/html_url.h \
 	Core/Resources/file_resource_manager.h \
 	Core/Resources/resource_object.h \
-	Core/Resources/xml_resource_node.h \
-	Core/Resources/xml_resource_document.h \
 	Core/Resources/resource_manager.h \
-	Core/Resources/xml_resource_manager.h \
 	Core/Resources/resource_container.h \
 	Core/Resources/file_resource_document.h \
 	Core/Resources/resource.h \
@@ -169,32 +166,35 @@ clanCore_includes = \
 
 clanXML_includes = \
 	xml.h \
-	XML/xml_tokenizer.h \
-	XML/dom_named_node_map.h \
-	XML/dom_node_list.h \
-	XML/dom_attr.h \
-	XML/dom_notation.h \
-	XML/dom_comment.h \
-	XML/dom_string.h \
-	XML/dom_character_data.h \
-	XML/xpath_evaluator.h \
-	XML/xpath_exception.h \
-	XML/dom_entity_reference.h \
-	XML/xml_token.h \
-	XML/dom_processing_instruction.h \
-	XML/dom_document_fragment.h \
-	XML/xml_writer.h \
-	XML/dom_document_type.h \
-	XML/dom_element.h \
-	XML/dom_entity.h \
-	XML/dom_exception.h \
-	XML/xpath_object.h \
 	XML/dom_cdata_section.h \
-	XML/dom_node.h \
+	XML/dom_entity.h \
+	XML/dom_node_list.h \
+	XML/dom_document_type.h \
 	XML/dom_text.h \
-	XML/dom_implementation.h \
+	XML/dom_comment.h \
+	XML/xpath_evaluator.h \
+	XML/dom_attr.h \
+	XML/xml_tokenizer.h \
+	XML/dom_entity_reference.h \
+	XML/dom_character_data.h \
+	XML/xml_token.h \
+	XML/xml_writer.h \
 	XML/dom_document.h \
-	XML/resource_factory.h
+	XML/dom_implementation.h \
+	XML/xpath_exception.h \
+	XML/Resources/xml_resource_node.h \
+	XML/Resources/xml_resource_document.h \
+	XML/Resources/xml_resource_manager.h \
+	XML/Resources/resource_factory.h \
+	XML/dom_processing_instruction.h \
+	XML/xpath_object.h \
+	XML/dom_named_node_map.h \
+	XML/dom_notation.h \
+	XML/dom_node.h \
+	XML/dom_document_fragment.h \
+	XML/dom_string.h \
+	XML/dom_element.h \
+	XML/dom_exception.h
 
 clanDisplay_includes = \
 	display.h \
