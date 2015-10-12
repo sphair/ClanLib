@@ -51,6 +51,8 @@ namespace clan
 
 	void PathFillRenderer::set_size(Canvas &canvas, int new_width, int new_height)
 	{
+		clear();
+
 		// For simplicity of the code, ensure the mask is always a multiple of mask_block_size
 		new_width = mask_block_size * ((new_width + mask_block_size - 1) / mask_block_size);
 		new_height = mask_block_size * ((new_height + mask_block_size - 1) / mask_block_size);
