@@ -1,9 +1,16 @@
 clanGL_includes = \
 	gl.h \
 	GL/opengl_wrap.h \
+<<<<<<< HEAD
+	GL/opengl_graphic_context.h \
+	GL/opengl.h \
+	GL/opengl_defines.h \
+	GL/opengl_window_description.h \
+=======
 	GL/opengl.h \
 	GL/opengl_defines.h \
 	GL/opengl_context_description.h \
+>>>>>>> refs/remotes/sphair/master
 	GL/opengl_target.h
 
 clanApp_includes = \
@@ -69,6 +76,34 @@ clanCore_includes = \
 	Core/System/userdata.h \
 	Core/System/work_queue.h \
 	Core/System/comptr.h \
+<<<<<<< HEAD
+	Core/XML/xml_tokenizer.h \
+	Core/XML/dom_named_node_map.h \
+	Core/XML/dom_node_list.h \
+	Core/XML/dom_attr.h \
+	Core/XML/dom_notation.h \
+	Core/XML/dom_comment.h \
+	Core/XML/dom_string.h \
+	Core/XML/dom_character_data.h \
+	Core/XML/xpath_evaluator.h \
+	Core/XML/xpath_exception.h \
+	Core/XML/dom_entity_reference.h \
+	Core/XML/xml_token.h \
+	Core/XML/dom_processing_instruction.h \
+	Core/XML/dom_document_fragment.h \
+	Core/XML/xml_writer.h \
+	Core/XML/dom_document_type.h \
+	Core/XML/dom_element.h \
+	Core/XML/dom_entity.h \
+	Core/XML/dom_exception.h \
+	Core/XML/xpath_object.h \
+	Core/XML/dom_cdata_section.h \
+	Core/XML/dom_node.h \
+	Core/XML/dom_text.h \
+	Core/XML/dom_implementation.h \
+	Core/XML/dom_document.h \
+=======
+>>>>>>> refs/remotes/sphair/master
 	Core/Zip/zip_reader.h \
 	Core/Zip/zlib_compression.h \
 	Core/Zip/zip_archive.h \
@@ -140,7 +175,14 @@ clanCore_includes = \
 	Core/IOData/html_url.h \
 	Core/Resources/file_resource_manager.h \
 	Core/Resources/resource_object.h \
+<<<<<<< HEAD
+	Core/Resources/xml_resource_node.h \
+	Core/Resources/xml_resource_document.h \
 	Core/Resources/resource_manager.h \
+	Core/Resources/xml_resource_manager.h \
+=======
+	Core/Resources/resource_manager.h \
+>>>>>>> refs/remotes/sphair/master
 	Core/Resources/resource_container.h \
 	Core/Resources/file_resource_document.h \
 	Core/Resources/resource.h \
@@ -164,6 +206,8 @@ clanCore_includes = \
 	Core/Crypto/sha224.h \
 	Core/Crypto/sha512.h
 
+<<<<<<< HEAD
+=======
 clanXML_includes = \
 	xml.h \
 	XML/dom_cdata_section.h \
@@ -196,6 +240,7 @@ clanXML_includes = \
 	XML/dom_element.h \
 	XML/dom_exception.h
 
+>>>>>>> refs/remotes/sphair/master
 clanDisplay_includes = \
 	display.h \
 	d3d.h \
@@ -205,6 +250,10 @@ clanDisplay_includes = \
 	Display/Window/input_device.h \
 	Display/Window/keys.h \
 	Display/Window/display_window_description.h \
+<<<<<<< HEAD
+	Display/Window/input_context.h \
+=======
+>>>>>>> refs/remotes/sphair/master
 	Display/Window/input_event.h \
 	Display/Window/display_window.h \
 	Display/Window/cursor.h \
@@ -219,6 +268,10 @@ clanDisplay_includes = \
 	Display/Image/pixel_buffer_set.h \
 	Display/Image/icon_set.h \
 	Display/Image/pixel_buffer_lock.h \
+<<<<<<< HEAD
+	Display/display.h \
+=======
+>>>>>>> refs/remotes/sphair/master
 	Display/2D/path.h \
 	Display/2D/canvas.h \
 	Display/2D/color.h \
@@ -306,6 +359,44 @@ clanDisplay_includes = \
 
 clanUI_includes = \
 	ui.h \
+<<<<<<< HEAD
+	UI/Style/box_geometry.h \
+	UI/Style/style_token.h \
+	UI/Style/style.h \
+	UI/Style/style_property_parser.h \
+	UI/Style/style_tokenizer.h \
+	UI/Image/image_source.h \
+	UI/SystemDialogs/open_file_dialog.h \
+	UI/SystemDialogs/save_file_dialog.h \
+	UI/SystemDialogs/folder_browse_dialog.h \
+	UI/UIThread/ui_thread.h \
+	UI/Events/key_event.h \
+	UI/Events/close_event.h \
+	UI/Events/event.h \
+	UI/Events/pointer_event.h \
+	UI/Events/activation_change_event.h \
+	UI/Events/resize_event.h \
+	UI/Events/focus_change_event.h \
+	UI/StandardViews/label_view.h \
+	UI/StandardViews/text_field_view.h \
+	UI/StandardViews/image_view.h \
+	UI/StandardViews/checkbox_view.h \
+	UI/StandardViews/radiobutton_view.h \
+	UI/StandardViews/spin_view.h \
+	UI/StandardViews/scrollbar_view.h \
+	UI/StandardViews/slider_view.h \
+	UI/StandardViews/window_view.h \
+	UI/StandardViews/texture_view.h \
+	UI/StandardViews/text_view.h \
+	UI/StandardViews/button_view.h \
+	UI/StandardViews/scroll_view.h \
+	UI/StandardViews/progress_view.h \
+	UI/StandardViews/span_layout_view.h \
+	UI/StandardViews/popup_view.h \
+	UI/ViewController/view_controller.h \
+	UI/View/focus_policy.h \
+	UI/View/view.h
+=======
 	UI/TopLevel/texture_window.h \
 	UI/TopLevel/view_tree.h \
 	UI/TopLevel/top_level_window.h \
@@ -351,6 +442,7 @@ clanUI_includes = \
 	UI/Image/image_source.h \
 	UI/Controller/window_controller.h \
 	UI/Controller/window_manager.h
+>>>>>>> refs/remotes/sphair/master
 
 ClanLibincludedir=$(includedir)/ClanLib-@LT_RELEASE@/ClanLib
 nobase_ClanLibinclude_HEADERS = @ClanLib_API_Modules@

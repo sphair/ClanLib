@@ -71,3 +71,13 @@ Makefile.in
 xcuserdata
 xcshareddata
 *.opensdf
+*.idb
+*.exe
+*.tlog
+*.pdb
+*.log
+*.vcxproj
+*.ilk
+*.obj
+*.pch
+*.vcxproj

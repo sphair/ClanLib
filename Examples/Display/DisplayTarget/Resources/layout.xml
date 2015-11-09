@@ -1,7 +1,0 @@
-<gui xmlns="http://clanlib.org/xmlns/gui-1.0">
-	<button class="" id="button_gl" text="OpenGL 3.2 +" anchor_tl="0" anchor_br="0" dist_tl_x="19" dist_tl_y="41" dist_br_x="175" dist_br_y="64" geom="19,41,175,64"/>
-	<button class="" id="button_gl1" text="OpenGL 1.3" anchor_tl="0" anchor_br="0" dist_tl_x="19" dist_tl_y="69" dist_br_x="175" dist_br_y="92" geom="19,69,175,92"/>
-	<button class="" id="button_d3d" text="Direct 3D" anchor_tl="0" anchor_br="0" dist_tl_x="19" dist_tl_y="97" dist_br_x="175" dist_br_y="120" geom="19,97,175,120"/>
-	<label class="" id="label1" text="Choose Display Target" anchor_tl="0" anchor_br="0" dist_tl_x="25" dist_tl_y="11" dist_br_x="175" dist_br_y="24" geom="25,11,175,24"/>
-	<dialog width="320" height="200"/>
-</gui>
