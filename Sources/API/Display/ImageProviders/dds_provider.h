@@ -26,7 +26,6 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include "../Image/pixel_buffer_set.h"
@@ -34,27 +33,23 @@
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Image_Providers clanDisplay Image Providers
-/// \{
+	/// \addtogroup clanDisplay_Image_Providers clanDisplay Image Providers
+	/// \{
 
-class FileSystem;
+	class FileSystem;
 
-/// \brief Image provider that can load Direct3D texture (.dds) files.
-class DDSProvider
-{
-/// \name Construction
-/// \{
-public:
-	/// \brief Called to load an image with this provider type.
-	///
-	/// \param filename Name of the file to load.
-	/// \param directory Directory that file name is relative to.
-	static PixelBufferSet load(const std::string &filename, const FileSystem &file_system);
-	static PixelBufferSet load(const std::string &fullname);
-	static PixelBufferSet load(IODevice &file);
-/// \}
-};
+	/// \brief Image provider that can load Direct3D texture (.dds) files.
+	class DDSProvider
+	{
+	public:
+		/// \brief Called to load an image with this provider type.
+		///
+		/// \param filename Name of the file to load.
+		/// \param directory Directory that file name is relative to.
+		static PixelBufferSet load(const std::string &filename, const FileSystem &file_system);
+		static PixelBufferSet load(const std::string &fullname);
+		static PixelBufferSet load(IODevice &file);
+	};
 
+	/// \}
 }
-
-/// \}

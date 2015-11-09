@@ -24,7 +24,6 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #pragma once
@@ -33,50 +32,30 @@
 
 namespace clan
 {
+	class DelauneyTriangulator_Impl
+	{
+	public:
+		DelauneyTriangulator_Impl();
+		~DelauneyTriangulator_Impl();
 
-class DelauneyTriangulator_Impl
-{
-/// \name Construction
-/// \{
+		std::vector<DelauneyTriangulator_Vertex> input_vertices;
+		std::vector<DelauneyTriangulator_Triangle> triangles;
 
-public:
-	DelauneyTriangulator_Impl();
+		void triangulate();
 
-	~DelauneyTriangulator_Impl();
+		void create_ordered_vertex_list(
+			std::vector<DelauneyTriangulator_Vertex *> &vertices);
 
+		void calculate_supertriangle(
+			std::vector<DelauneyTriangulator_Vertex *> &vertices,
+			DelauneyTriangulator_Triangle &super_triangle);
 
-/// \}
-/// \name Attributes
-/// \{
+		void perform_delauney_triangulation(
+			const std::vector<DelauneyTriangulator_Vertex *> &vertices,
+			const DelauneyTriangulator_Triangle &super_triangle,
+			std::vector<DelauneyTriangulator_Triangle> &triangles);
 
-public:
-	std::vector<DelauneyTriangulator_Vertex> input_vertices;
-
-	std::vector<DelauneyTriangulator_Triangle> triangles;
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	void triangulate();
-
-	void create_ordered_vertex_list(
-		std::vector<DelauneyTriangulator_Vertex *> &vertices);
-
-	void calculate_supertriangle(
-		std::vector<DelauneyTriangulator_Vertex *> &vertices,
-		DelauneyTriangulator_Triangle &super_triangle);
-
-	void perform_delauney_triangulation(
-		const std::vector<DelauneyTriangulator_Vertex *> &vertices,
-		const DelauneyTriangulator_Triangle &super_triangle,
-		std::vector<DelauneyTriangulator_Triangle> &triangles);
-
-	DelauneyTriangulator_Vertex find_circumcenter(
-		const DelauneyTriangulator_Triangle &triangle);
-/// \}
-};
-
+		DelauneyTriangulator_Vertex find_circumcenter(
+			const DelauneyTriangulator_Triangle &triangle);
+	};
 }

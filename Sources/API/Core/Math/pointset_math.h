@@ -27,7 +27,6 @@
 **    Harry Storbacka
 */
 
-
 #pragma once
 
 #include <vector>
@@ -37,62 +36,55 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_Math clanCore Math
-/// \{
+	/// \addtogroup clanCore_Math clanCore Math
+	/// \{
 
-/// \brief Math operations related to point sets.
-class PointSetMath
-{
-/// \name Operations
-/// \{
-public:
-	/// \brief Find minimum spanning circle for the set of points
-	///
-	/// \param points the points to calulate on
-	static Circlef minimum_enclosing_disc(
-		const std::vector<Pointf> &points);
+	/// \brief Math operations related to point sets.
+	class PointSetMath
+	{
+	public:
+		/// \brief Find minimum spanning circle for the set of points
+		///
+		/// \param points the points to calulate on
+		static Circlef minimum_enclosing_disc(
+			const std::vector<Pointf> &points);
 
-	/// \brief Return the convex hull of the given set of points
-	///
-	/// \param points the set of points
-	static std::vector<Pointf> convex_hull_from_polygon(std::vector<Pointf> &points);
+		/// \brief Return the convex hull of the given set of points
+		///
+		/// \param points the set of points
+		static std::vector<Pointf> convex_hull_from_polygon(std::vector<Pointf> &points);
 
-	static Rect bounding_box(const std::vector<Pointf> &points);
+		static Rect bounding_box(const std::vector<Pointf> &points);
 
-/// \}
-/// \name Implementation
-/// \{
-private:
-	static void calculate_minimum_enclosing_disc(
-		Circlef &smalldisc,
-		const std::vector<Pointf> &points,
-		int start,
-		int end);
+	private:
+		static void calculate_minimum_enclosing_disc(
+			Circlef &smalldisc,
+			const std::vector<Pointf> &points,
+			int start,
+			int end);
 
-	static void minimum_disc_with_1point(
-		Circlef &smalldisc,
-		const std::vector<Pointf> &points,
-		int start,
-		unsigned int i);
+		static void minimum_disc_with_1point(
+			Circlef &smalldisc,
+			const std::vector<Pointf> &points,
+			int start,
+			unsigned int i);
 
-	static void minimum_disc_with_2points(
-		Circlef &smalldisc,
-		const std::vector<Pointf> &points,
-		int start,
-		unsigned int i,
-		unsigned int j);
+		static void minimum_disc_with_2points(
+			Circlef &smalldisc,
+			const std::vector<Pointf> &points,
+			int start,
+			unsigned int i,
+			unsigned int j);
 
-	static void minimum_disc_with_3points(
-		Circlef &smalldisc,
-		const std::vector<Pointf> &points,
-		unsigned int i,
-		unsigned int j,
-		unsigned int k);
+		static void minimum_disc_with_3points(
+			Circlef &smalldisc,
+			const std::vector<Pointf> &points,
+			unsigned int i,
+			unsigned int j,
+			unsigned int k);
 
-	friend class OutlineMath;
-/// \}
-};
+		friend class OutlineMath;
+	};
 
+	/// \}
 }
-
-/// \}

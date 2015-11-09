@@ -32,64 +32,41 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// EarClipResults_Impl Class:
-
-class EarClipResult_Impl
-{
-public:
-	EarClipResult_Impl(int num_triangles)
+	class EarClipResult_Impl
 	{
-		if( num_triangles <= 0 )
-			return;
+	public:
+		EarClipResult_Impl(int num_triangles)
+		{
+			if (num_triangles <= 0)
+				return;
 
-		triangles.reserve(num_triangles);
+			triangles.reserve(num_triangles);
+		}
+
+		void add_triangle(const EarClipTriangulator_Triangle &tri)
+		{
+			triangles.push_back(tri);
+		}
+
+		std::vector<EarClipTriangulator_Triangle> triangles;
+	};
+
+	EarClipResult::EarClipResult(int num_triangles)
+		: impl(std::make_shared<EarClipResult_Impl>(num_triangles))
+	{
 	}
 
-	~EarClipResult_Impl()
+	EarClipResult::~EarClipResult()
 	{
 	}
 
-	void add_triangle(const EarClipTriangulator_Triangle &tri)
+	std::vector<EarClipTriangulator_Triangle> &EarClipResult::get_triangles()
 	{
-		triangles.push_back(tri);
+		return impl->triangles;
 	}
 
-	std::vector<EarClipTriangulator_Triangle> triangles;
-};
-
-/////////////////////////////////////////////////////////////////////////////
-// EarClipResult Construction:
-
-EarClipResult::EarClipResult(int num_triangles)
-: impl(std::make_shared<EarClipResult_Impl>(num_triangles))
-{
-}
-
-EarClipResult::~EarClipResult()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// EarClipResult Attributes:
-
-std::vector<EarClipTriangulator_Triangle> &EarClipResult::get_triangles()
-{
-	return impl->triangles;
-}
-
-
-EarClipTriangulator_Triangle &EarClipResult::get_triangle(int index)
-{
-	return impl->triangles[index];
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// EarClipResults Operations:
-
-
-/////////////////////////////////////////////////////////////////////////////
-// EarClipResults Implementation:
-
+	EarClipTriangulator_Triangle &EarClipResult::get_triangle(int index)
+	{
+		return impl->triangles[index];
+	}
 }

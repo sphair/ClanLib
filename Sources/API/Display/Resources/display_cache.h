@@ -26,7 +26,6 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include "../../Core/Resources/resource.h"
@@ -34,31 +33,30 @@
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Resources clanDisplay Resources
-/// \{
+	/// \addtogroup clanDisplay_Resources clanDisplay Resources
+	/// \{
 
-class ResourceManager;
-class GraphicContext;
-class Canvas;
-class Sprite;
-class Image;
-class Texture;
-class Font;
-class FontDescription;
+	class ResourceManager;
+	class GraphicContext;
+	class Canvas;
+	class Sprite;
+	class Image;
+	class Texture;
+	class Font;
+	class FontDescription;
 
-class DisplayCache
-{
-public:
-	virtual ~DisplayCache() { }
-	virtual Resource<Sprite> get_sprite(Canvas &canvas, const std::string &id) = 0;
-	virtual Resource<Image> get_image(Canvas &canvas, const std::string &id) = 0;
-	virtual Resource<Texture> get_texture(GraphicContext &gc, const std::string &id) = 0;
-	virtual Resource<Font> get_font(Canvas &canvas, const std::string &family_name, const FontDescription &desc) = 0;
+	class DisplayCache
+	{
+	public:
+		virtual ~DisplayCache() { }
+		virtual Resource<Sprite> get_sprite(Canvas &canvas, const std::string &id) = 0;
+		virtual Resource<Image> get_image(Canvas &canvas, const std::string &id) = 0;
+		virtual Resource<Texture> get_texture(GraphicContext &gc, const std::string &id) = 0;
+		virtual Resource<Font> get_font(Canvas &canvas, const std::string &family_name, const FontDescription &desc) = 0;
 
-	static DisplayCache &get(const ResourceManager &resources);
-	static void set(ResourceManager &resources, const std::shared_ptr<DisplayCache> &cache);
-};
+		static DisplayCache &get(const ResourceManager &resources);
+		static void set(ResourceManager &resources, const std::shared_ptr<DisplayCache> &cache);
+	};
 
+	/// \}
 }
-
-/// \}

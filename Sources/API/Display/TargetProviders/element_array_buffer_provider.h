@@ -26,62 +26,42 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include "../Render/element_array_buffer.h"
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-/// \brief Element Array Buffer provider.
-class ElementArrayBufferProvider
-{
-/// \name Construction
-/// \{
-public:
-	virtual ~ElementArrayBufferProvider() { }
+	/// \brief Element Array Buffer provider.
+	class ElementArrayBufferProvider
+	{
+	public:
+		virtual ~ElementArrayBufferProvider() { }
 
-	/// \brief Constructs a element array buffer.
-	virtual void create(int size, BufferUsage usage) = 0;
+		/// \brief Constructs a element array buffer.
+		virtual void create(int size, BufferUsage usage) = 0;
 
-	/// \brief Create
-	///
-	/// \param data = void
-	/// \param size = value
-	/// \param usage = Buffer Usage
-	virtual void create(void *data, int size, BufferUsage usage) = 0;
+		/// \brief Create
+		///
+		/// \param data = void
+		/// \param size = value
+		/// \param usage = Buffer Usage
+		virtual void create(void *data, int size, BufferUsage usage) = 0;
 
-/// \}
+		/// \brief Uploads data to element array buffer.
+		///
+		/// The size specified must match the size of the buffer and is only included to help guard against buffer overruns.
+		virtual void upload_data(GraphicContext &gc, const void *data, int size) = 0;
 
-/// \name Attributes
-/// \{
-public:
-/// \}
+		/// \brief Copies data from transfer buffer
+		virtual void copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) = 0;
 
-/// \name Operations
-/// \{
-public:
-	/// \brief Uploads data to element array buffer.
-	///
-	/// The size specified must match the size of the buffer and is only included to help guard against buffer overruns.
-	virtual void upload_data(GraphicContext &gc, const void *data, int size) = 0;
+		/// \brief Copies data to transfer buffer
+		virtual void copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) = 0;
+	};
 
-	/// \brief Copies data from transfer buffer
-	virtual void copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) = 0;
-
-	/// \brief Copies data to transfer buffer
-	virtual void copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) = 0;
-/// \}
-
-/// \name Implementation
-/// \{
-private:
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

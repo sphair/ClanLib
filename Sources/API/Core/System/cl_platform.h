@@ -25,9 +25,7 @@
 **
 **    Magnus Norddahl
 **    Mark Page
-**    (if your name is missing here, please add it)
 */
-
 
 #pragma once
 
@@ -42,15 +40,14 @@
 #endif
 #endif
 
-
 namespace clan
 {
-/// \addtogroup clanCore_System clanCore System
-/// \{
+	/// \addtogroup clanCore_System clanCore System
+	/// \{
 
-const float  PI_F =		   3.14159274101257f;
-const double PI_D =	 3.141592653589793115998;
-const float  PI =		   3.14159274101257f;
+	const float  PI_F = 3.14159274101257f;
+	const double PI_D = 3.141592653589793115998;
+	const float  PI = 3.14159274101257f;
+
+	/// \}
 }
-
-/// \}

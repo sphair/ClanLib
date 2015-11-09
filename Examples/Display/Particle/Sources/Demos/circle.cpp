@@ -20,7 +20,7 @@ DemoCircle::DemoCircle(clan::DisplayWindow &window) : window(window)
 	window.set_title("LinearParticle Example - Circle ");
 	sc.connect(window.sig_window_close(), clan::bind_member(this, &DemoCircle::on_window_close));
 	canvas = clan::Canvas(window);
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &DemoCircle::on_key_up));
+	sc.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &DemoCircle::on_key_up));
 
 	// initialize LinearParticle
 	L_ParticleSystem::init();

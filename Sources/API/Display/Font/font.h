@@ -38,164 +38,162 @@
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Font clanDisplay Font
-/// \{
+	/// \addtogroup clanDisplay_Font clanDisplay Font
+	/// \{
 
-class FontProvider;
-class FontFamily;
-class Canvas;
-class Font_Impl;
-class GlyphMetrics;
+	class FontProvider;
+	class FontFamily;
+	class Canvas;
+	class Font_Impl;
+	class GlyphMetrics;
 
-/// \brief Font class
-///
-/// A Font is a collection of images that can be used to represent text on a screen.
-class Font
-{
-/// \name Construction
-/// \{
+	class FontHandle
+	{
+	public:
+		virtual ~FontHandle() = 0;
+	};
 
-public:
-	/// \brief Constructs a null font.
-	Font();
-
-	// \brief Create font using the specified font family
-	Font(FontFamily &font_family, float height);
-
-	// \brief Create font using the specified font family
-	Font(FontFamily &font_family, const FontDescription &desc);
-
-	/// \brief Constructs standard font
-	Font(const std::string &typeface_name, float height);
-
-	// \brief Constructs standard font
-	Font(const std::string &typeface_name, const FontDescription &desc);
-
-	// \brief Constructs standard font
-	Font(const FontDescription &desc, const std::string &ttf_filename);
-
-	// \brief Constructs standard font
-	Font(const FontDescription &desc, const std::string &ttf_filename, FileSystem fs);
-
-	/// \brief Constructs a Font based on a sprite
+	/// \brief Font class
 	///
-	/// \param sprite = Sprite with glyphs
-	/// \param glyph_list = Letter to glyph mapping
-	/// \param spacelen = Width of space character
-	/// \param monospace = Force monospaced font (using widest sprite character)
-	/// \param metrics = Font metrics for the sprite font
-	Font(Canvas &canvas, const std::string &typeface_name, Sprite &sprite, const std::string &glyph_list, float spacelen, bool monospace, const FontMetrics &metrics);
+	/// A Font is a collection of images that can be used to represent text on a screen.
+	class Font
+	{
+	public:
+		/// \brief Constructs a null font.
+		Font();
 
-/// \}
+		// \brief Create font using the specified font family
+		Font(FontFamily &font_family, float height);
 
-/// \name Resources
-/// \{
-public:
-	/// \brief Retrieves a Font resource from the resource manager
-	///
-	/// \param canvas = Canvas
-	/// \param resources = Resource manager
-	/// \param id = id
-	static Resource<Font> resource(Canvas &canvas, const std::string &family_name, const FontDescription &desc, const ResourceManager &resources);
+		// \brief Create font using the specified font family
+		Font(FontFamily &font_family, const FontDescription &desc);
 
-	/// \brief Loads a Font from a XML resource definition
-	static Font load(Canvas &canvas, const std::string &family_name, const FontDescription &reference_desc, FontFamily &font_family, const XMLResourceDocument &doc, std::function<Resource<Sprite>(Canvas &, const std::string &)> cb_get_sprite = std::function<Resource<Sprite>(Canvas &, const std::string &)>());
+		/// \brief Constructs standard font
+		Font(const std::string &typeface_name, float height);
 
-/// \}
+		// \brief Constructs standard font
+		Font(const std::string &typeface_name, const FontDescription &desc);
 
-/// \name Attributes
-/// \{
-public:
+		// \brief Constructs standard font
+		Font(const FontDescription &desc, const std::string &ttf_filename);
 
-	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return !impl; }
+		// \brief Constructs standard font
+		Font(const FontDescription &desc, const std::string &ttf_filename, FileSystem fs);
 
-	/// \brief Throw an exception if this object is invalid.
-	void throw_if_null() const;
+		/// \brief Constructs a Font based on a sprite
+		///
+		/// \param sprite = Sprite with glyphs
+		/// \param glyph_list = Letter to glyph mapping
+		/// \param spacelen = Width of space character
+		/// \param monospace = Force monospaced font (using widest sprite character)
+		/// \param metrics = Font metrics for the sprite font
+		Font(Canvas &canvas, const std::string &typeface_name, Sprite &sprite, const std::string &glyph_list, float spacelen, bool monospace, const FontMetrics &metrics);
 
-/// \}
-/// \name Operations
-/// \{
+		/// \brief Retrieves a Font resource from the resource manager
+		///
+		/// \param canvas = Canvas
+		/// \param resources = Resource manager
+		/// \param id = id
+		static Resource<Font> resource(Canvas &canvas, const std::string &family_name, const FontDescription &desc, const ResourceManager &resources);
 
-public:
-	/// \brief Sets the font height
-	void set_height(float value);
+		/// \brief Loads a Font from a XML resource definition
+		static Font load(Canvas &canvas, const std::string &family_name, const FontDescription &reference_desc, FontFamily &font_family, const XMLResourceDocument &doc, std::function<Resource<Sprite>(Canvas &, const std::string &)> cb_get_sprite = std::function<Resource<Sprite>(Canvas &, const std::string &)>());
 
-	/// \brief Sets the font weight
-	void set_weight(FontWeight value = FontWeight::normal);
+		/// \brief Returns true if this object is invalid.
+		bool is_null() const { return !impl; }
 
-	/// \brief Sets the distance between each line
-	void set_line_height(float height);
+		/// \brief Throw an exception if this object is invalid.
+		void throw_if_null() const;
 
-	/// \brief Sets the font style setting
-	void set_style(FontStyle setting = FontStyle::normal);
+		/// \brief Sets the font height
+		void set_height(float value);
 
-	/// \brief Sets the threshold to determine if the font can be drawn scaled
-	///
-	/// All font sizes are scalable when using sprite fonts
-	void set_scalable(float height_threshold = 64.0f);
+		/// \brief Sets the font weight
+		void set_weight(FontWeight value = FontWeight::normal);
 
-	/// \brief Print text
-	///
-	/// \param canvas = Canvas
-	/// \param position = Dest position
-	/// \param text = The text to draw
-	/// \param color = The text color
-	void draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color = Colorf::white);
-	void draw_text(Canvas &canvas, float xpos, float ypos, const std::string &text, const Colorf &color = Colorf::white) { draw_text(canvas, Pointf(xpos, ypos), text, color); }
+		/// \brief Sets the distance between each line
+		void set_line_height(float height);
 
-	/// \brief Gets the glyph metrics
-	///
-	/// \param glyph = The glyph to get
-	/// \return The glyph metrics
-	GlyphMetrics get_metrics(Canvas &canvas, unsigned int glyph);
+		/// \brief Sets the font style setting
+		void set_style(FontStyle setting = FontStyle::normal);
 
-	/// \brief Measure text size
-	///
-	/// \param string = The text to use
-	/// \return The metrics
-	GlyphMetrics measure_text(Canvas &canvas, const std::string &string);
+		/// \brief Sets the threshold to determine if the font can be drawn scaled
+		///
+		/// All font sizes are scalable when using sprite fonts
+		void set_scalable(float height_threshold = 64.0f);
 
-	/// \brief Retrieves font metrics description for the selected font.
-	FontMetrics get_font_metrics(Canvas &canvas);
+		/// \brief Print text
+		///
+		/// \param canvas = Canvas
+		/// \param position = Dest position
+		/// \param text = The text to draw
+		/// \param color = The text color
+		void draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color = Colorf::white);
+		void draw_text(Canvas &canvas, float xpos, float ypos, const std::string &text, const Colorf &color = Colorf::white) { draw_text(canvas, Pointf(xpos, ypos), text, color); }
 
-	/// \brief Retrieves clipped version of the text that will fit into a box
-	///
-	/// \return The string
-	std::string get_clipped_text(Canvas &canvas, const Sizef &box_size, const std::string &text, const std::string &ellipsis_text = "...");
+		/// \brief Gets the glyph metrics
+		///
+		/// \param glyph = The glyph to get
+		/// \return The glyph metrics
+		GlyphMetrics get_metrics(Canvas &canvas, unsigned int glyph);
 
-	/// \brief Get the character index at a specified point
-	///
-	/// \param canvas = Canvas
-	/// \param text = The string
-	/// \param point = The point
-	/// \return The character index. -1 = Not at specified point
-	int get_character_index(Canvas &canvas, const std::string &text, const Pointf &point);
+		/// \brief Measure text size
+		///
+		/// \param string = The text to use
+		/// \return The metrics
+		GlyphMetrics measure_text(Canvas &canvas, const std::string &string);
 
-	/// \brief Get the rectangles of each glyph in a string of text
-	///
-	/// \return A list of Rects for every glyph
-	std::vector<Rectf> get_character_indices(Canvas &canvas, const std::string &text);
+		/// \brief Retrieves font metrics description for the selected font.
+		FontMetrics get_font_metrics(Canvas &canvas);
 
-	// Finds the offset for the last visible character when clipping the head
-	size_t clip_from_left(Canvas &canvas, const std::string &text, float width);
+		/// \brief Retrieves clipped version of the text that will fit into a box
+		///
+		/// \return The string
+		std::string get_clipped_text(Canvas &canvas, const Sizef &box_size, const std::string &text, const std::string &ellipsis_text = "...");
 
-	// Finds the offset for the first visible character when clipping the tail
-	size_t clip_from_right(Canvas &canvas, const std::string &text, float width);
+		/// \brief Get the character index at a specified point
+		///
+		/// \param canvas = Canvas
+		/// \param text = The string
+		/// \param point = The point
+		/// \return The character index. -1 = Not at specified point
+		int get_character_index(Canvas &canvas, const std::string &text, const Pointf &point);
 
-/// \}
-/// \name Implementation
-/// \{
+		/// \brief Get the rectangles of each glyph in a string of text
+		///
+		/// \return A list of Rects for every glyph
+		std::vector<Rectf> get_character_indices(Canvas &canvas, const std::string &text);
 
-private:
-	std::shared_ptr<Font_Impl> impl;
+		// Finds the offset for the last visible character when clipping the head
+		size_t clip_from_left(Canvas &canvas, const std::string &text, float width);
 
-	friend class Path;
+		// Finds the offset for the first visible character when clipping the tail
+		size_t clip_from_right(Canvas &canvas, const std::string &text, float width);
 
-/// \}
-};
+		/// \brief Get the font handle interface
+		///
+		/// For example, use auto handle = dynamic_cast<FontHandle_Win32>(font.get_handle()); if (handle) {...} to obtain a specific interface
+		///
+		/// \return The font handle interface
+		FontHandle *get_handle(Canvas &canvas);
 
+	private:
+		std::shared_ptr<Font_Impl> impl;
+
+		friend class Path;
+	};
+
+	#ifdef WIN32
+	class FontHandle_Win32 : public FontHandle
+	{
+	public:
+		/// \brief Get the font HFONT
+		HFONT hfont();
+	private:
+		friend class FontEngine_Win32;
+		FontEngine_Win32 *engine = nullptr;
+	};
+	#endif
+
+	/// \}
 }
-
-/// \}
-

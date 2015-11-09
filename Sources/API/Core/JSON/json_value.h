@@ -33,234 +33,120 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_JSON clanCore JSON
-/// \{
+	/// \addtogroup clanCore_JSON clanCore JSON
+	/// \{
 
-/// \brief Exception class thrown for JSON exceptions.
-class JsonException : public Exception
-{
-public:
-	JsonException(const std::string &message) : Exception(message) { }
-};
+	/// \brief Exception class thrown for JSON exceptions.
+	class JsonException : public Exception
+	{
+	public:
+		JsonException(const std::string &message) : Exception(message) { }
+	};
 
-/// \brief Class representing a JSON value
-class JsonValue
-{
-public:
-	/// \brief value type
-	enum class Type
+	enum class JsonType
 	{
 		undefined,
 		null,
 		object,
 		array,
-		string,
 		number,
-		boolean
+		boolean,
+		string
 	};
 
-/// \name Construction
-/// \{
-public:
-	/// \brief Create a object value
-	static JsonValue object() { return JsonValue(Type::object); }
-
-	/// \brief Create a array value
-	static JsonValue array() { return JsonValue(Type::array); }
-
-	/// \brief Create a null value
-	static JsonValue null() { return JsonValue(Type::null); }
-
-	/// \brief Create a string value
-	static JsonValue string(const std::string &value) { return JsonValue(value); }
-
-	/// \brief Create a boolean value
-	static JsonValue boolean(bool value) { return JsonValue(value); }
-
-	/// \brief Create a number value
-	static JsonValue number(int value) { return JsonValue(value); }
-	static JsonValue number(double value) { return JsonValue(value); }
-
-	/// \brief Create a value from UTF-8 JSON string
-	static JsonValue from_json(const std::string &json);
-
-	/// \brief Constructs a value
-	JsonValue() : type(Type::undefined), value_number(), value_boolean() { }
-	JsonValue(Type type) : type(type), value_number(), value_boolean() { }
-	JsonValue(bool value) : type(Type::boolean), value_number(), value_boolean(value) { }
-	JsonValue(int value) : type(Type::number), value_number((double)value), value_boolean() { }
-	JsonValue(double value) : type(Type::number), value_number(value), value_boolean() { }
-	JsonValue(const char *value) : type(Type::string), value_string(value), value_number(), value_boolean() { }
-	JsonValue(const std::string &value) : type(Type::string), value_string(value), value_number(), value_boolean() { }
-/// \}
-
-/// \name Attributes
-/// \{
-public:
-	/// \brief Convert value to a different type
-	explicit operator bool() const { return to_boolean(); }
-	operator std::string() const { return to_string(); }
-	operator float() const { return to_float(); }
-	operator double() const { return to_double(); }
-	operator int() const { return to_int(); }
-
-	/// \brief Indexers for object members or array items
-	JsonValue &operator[](const char *key) { return members[key]; }
-	JsonValue &operator[](const std::string &key) { return members[key]; }
-	const JsonValue &operator[](const char *key) const
+	class JsonValue
 	{
-		static JsonValue undefined;
-		auto it = members.find(key);
-		if (it == members.end()) return undefined;
-		else return it->second;
-	}
-	const JsonValue &operator[](const std::string &key) const
-	{
-		static JsonValue undefined;
-		auto it = members.find(key);
-		if (it == members.end()) return undefined;
-		else return it->second;
-	}
+	public:
+		static JsonValue undefined() { JsonValue v; v._type = JsonType::undefined; return v; }
+		static JsonValue null() { JsonValue v; v._type = JsonType::null; return v; }
+		static JsonValue object() { JsonValue v; v._type = JsonType::object; return v; }
+		static JsonValue array() { JsonValue v; v._type = JsonType::array; return v; }
+		static JsonValue number(double value) { JsonValue v; v._type = JsonType::number; v._number = value; return v; }
+		static JsonValue number(float value) { return JsonValue::number(static_cast<double>(value)); }
+		static JsonValue number(int value) { return JsonValue::number(static_cast<double>(value)); }
+		static JsonValue number(unsigned int value) { return JsonValue::number(static_cast<double>(value)); }
+		static JsonValue number(short value) { return JsonValue::number(static_cast<double>(value)); }
+		static JsonValue number(unsigned short value) { return JsonValue::number(static_cast<double>(value)); }
+		static JsonValue number(char value) { return JsonValue::number(static_cast<double>(value)); }
+		static JsonValue number(unsigned char value) { return JsonValue::number(static_cast<double>(value)); }
+		static JsonValue boolean(bool value) { JsonValue v; v._type = JsonType::boolean; v._boolean = value; return v; }
+		static JsonValue string(const std::string &value) { JsonValue v; v._type = JsonType::string; v._string = value; return v; }
 
-	const JsonValue &operator[](int index) const { return items[index]; }
-	JsonValue &operator[](int index) { return items[index]; }
+		static JsonValue parse(const std::string &json);
+		std::string to_json() const;
 
-	/// \brief Get value type
-	Type get_type() const { return type; }
+		const JsonValue &prop(const std::string &name) const { auto it = _properties.find(name); if (it != _properties.end()) return it->second; static JsonValue undef; return undef; }
+		const JsonValue &prop(const char *name) const { auto it = _properties.find(name); if (it != _properties.end()) return it->second; static JsonValue undef; return undef; }
+		JsonValue &prop(const std::string &name) { return _properties[name]; }
+		JsonValue &prop(const char *name) { return _properties[name]; }
 
-	/// \brief Get size of value
-	size_t get_size() const
-	{
-		switch (type)
-		{
-		case Type::object: return members.size();
-		case Type::array: return items.size();
-		case Type::string: return value_string.size();
-		default: return 0;
-		}
-	}
+		void remove(const std::string &name) { auto it = _properties.find(name); if (it != _properties.end()) _properties.erase(it); }
+		void remove(const char *name) { auto it = _properties.find(name); if (it != _properties.end()) _properties.erase(it); }
 
-	/// \brief Get object members
-	std::map<std::string, JsonValue> &get_members() { return members; }
-	const std::map<std::string, JsonValue> &get_members() const { return members; }
+		size_t size() const { return _items.size(); }
+		JsonValue &at(size_t index) { return _items.at(index); }
+		const JsonValue &at(size_t index) const { return _items.at(index); }
+		void erase(size_t offset, size_t length) { _items.erase(_items.begin() + offset, _items.begin() + offset + length); }
 
-	/// \brief Get array items
-	std::vector<JsonValue> &get_items() { return items; }
-	const std::vector<JsonValue> &get_items() const { return items; }
+		void clear() { _items.clear(); _properties.clear(); }
 
-	/// \brief Return true if value is undefined
-	bool is_undefined() const { return type == Type::undefined; }
+		JsonType type() const { return _type; }
+		bool is_undefined() const { return type() == JsonType::undefined; }
+		bool is_null() const { return type() == JsonType::null; }
+		bool is_object() const { return type() == JsonType::object; }
+		bool is_array() const { return type() == JsonType::array; }
+		bool is_number() const { return type() == JsonType::number; }
+		bool is_boolean() const { return type() == JsonType::boolean; }
 
-	/// \brief Return true if value is null
-	bool is_null() const { return type == Type::null; }
+		std::map<std::string, JsonValue> &properties() { return _properties; }
+		const std::map<std::string, JsonValue> &properties() const { return _properties; }
 
-	/// \brief Return true if value is an object
-	bool is_object() const { return type == Type::object; }
+		std::vector<JsonValue> &items() { return _items; }
+		const std::vector<JsonValue> &items() const { return _items; }
 
-	/// \brief Return true if value is an array
-	bool is_array() const { return type == Type::array; }
+		double to_number() const { return _number; }
+		bool to_boolean() const { return _boolean; }
+		const std::string &to_string() const { return _string; }
 
-	/// \brief Return true if value is a string
-	bool is_string() const { return type == Type::string; }
+		double to_double() const { return to_number(); }
+		float to_float() const { return static_cast<float>(to_number()); }
+		int to_int() const { return static_cast<int>(to_number()); }
+		unsigned int to_uint() const { return static_cast<unsigned int>(to_number()); }
+		short to_short() const { return static_cast<short>(to_number()); }
+		unsigned short to_ushort() const { return static_cast<unsigned short>(to_number()); }
+		char to_char() const { return static_cast<char>(to_number()); }
+		unsigned char to_uchar() const { return static_cast<unsigned char>(to_number()); }
 
-	/// \brief Return true if value is a number
-	bool is_number() const { return type == Type::number; }
+		void set_undefined() { *this = JsonValue::undefined(); }
+		void set_null() { *this = JsonValue::null(); }
+		void set_object() { *this = JsonValue::object(); }
+		void set_array() { *this = JsonValue::array(); }
+		void set_string(const std::string &v) { *this = JsonValue::string(v); }
+		void set_string(const char *v) { *this = JsonValue::string(v); }
+		void set_number(double v) { *this = JsonValue::number(v); }
+		void set_number(float v) { *this = JsonValue::number(v); }
+		void set_number(int v) { *this = JsonValue::number(v); }
+		void set_number(unsigned int v) { *this = JsonValue::number(v); }
+		void set_number(short v) { *this = JsonValue::number(v); }
+		void set_number(unsigned short v) { *this = JsonValue::number(v); }
+		void set_number(char v) { *this = JsonValue::number(v); }
+		void set_number(unsigned char v) { *this = JsonValue::number(v); }
+		void set_boolean(bool v) { *this = JsonValue::boolean(v); }
 
-	/// \brief Return true if value is a boolean
-	bool is_boolean() const { return type == Type::boolean; }
+		JsonValue &operator[](const std::string &name) { return prop(name); }
+		JsonValue &operator[](const char *name) { return prop(name); }
+		const JsonValue &operator[](const std::string &name) const { return prop(name); }
+		const JsonValue &operator[](const char *name) const { return prop(name); }
 
-	/// \brief Convert value object to a string
-	std::string to_string() const { if (type != Type::string) throw JsonException("JSON Value is not a string"); return value_string; }
+		JsonValue &operator[](size_t index) { return at(index); }
+		const JsonValue &operator[](size_t index) const { return at(index); }
 
-	/// \brief Convert value object to an int
-	int to_int() const { if (type != Type::number) throw JsonException("JSON Value is not a number"); return (int)value_number; }
-
-	/// \brief Convert value object to a float
-	float to_float() const { if (type != Type::number) throw JsonException("JSON Value is not a number"); return (float)value_number; }
-
-	/// \brief Convert value object to a double
-	double to_double() const { if (type != Type::number) throw JsonException("JSON Value is not a number"); return value_number; }
-
-	/// \brief Convert value object to a boolean
-	bool to_boolean() const { if (type != Type::boolean) throw JsonException("JSON Value is not a boolean"); return value_boolean; }
-/// \}
-
-/// \name Operations
-/// \{
-public:
-	/// \brief Assign a new value
-	template<typename T>
-	JsonValue &operator =(const T &value) { *this = JsonValue(value); return *this; }
-
-	JsonValue &operator =(const JsonValue &value)
-	{
-		type = value.type;
-		members = value.members;
-		items = value.items;
-		value_string = value.value_string;
-		value_number = value.value_number;
-		value_boolean = value.value_boolean;
-		return *this;
-	}
-
-	/// \brief Convert value object to a std::map with the template specified value type
-	template<typename Type>
-	std::map<std::string, Type> to_map() const
-	{
-		if (type != Type::object)
-			throw JsonException("JSON Value is not an object");
-
-		std::map<std::string, Type> object;
-		std::map<std::string, JsonValue>::const_iterator it;
-		for (it = members.begin(); it != members.end(); ++it)
-			object[it->first] = it->second;
-		return object;
-	}
-
-	/// \brief Convert value array to a std::vector with the template specified value type
-	template<typename Type>
-	std::vector<Type> to_vector() const
-	{
-		if (type != Type::array)
-			throw JsonException("JSON Value is not an array");
-
-		std::vector<Type> list;
-		list.reserve(items.size());
-		for (auto & elem : items)
-			list.push_back(elem);
-		return list;
-	}
-
-	/// \brief Create an UTF-8 JSON string for the value
-	std::string to_json() const;
-	void to_json(std::string &result) const;
-/// \}
-
-/// \name Implementation
-/// \{
-private:
-	void write(std::string &json) const;
-	void write_array(std::string &json) const;
-	void write_object(std::string &json) const;
-	static void write_string(const std::string &str, std::string &json);
-	void write_number(std::string &json) const;
-
-	static JsonValue read(const std::string &json, size_t &pos);
-	static JsonValue read_object(const std::string &json, size_t &pos);
-	static JsonValue read_array(const std::string &json, size_t &pos);
-	static std::string read_string(const std::string &json, size_t &pos);
-	static JsonValue read_number(const std::string &json, size_t &pos);
-	static JsonValue read_boolean(const std::string &json, size_t &pos);
-	static void read_whitespace(const std::string &json, size_t &pos);
-
-	Type type;
-	std::map<std::string, JsonValue> members;
-	std::vector<JsonValue> items;
-	std::string value_string;
-	double value_number;
-	bool value_boolean;
-/// \}
-};
-
-/// \}
+	private:
+		JsonType _type = JsonType::undefined;
+		std::vector<JsonValue> _items;
+		std::map<std::string, JsonValue> _properties;
+		std::string _string;
+		double _number = 0.0;
+		bool _boolean = false;
+	};
 }

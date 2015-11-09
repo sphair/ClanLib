@@ -8,10 +8,6 @@
 
 	<ul>
 		<li>clan::System - General system helper functions</li>
-		<li>clan::Thread, clan::Runnable - Threading support</li>
-		<li>clan::Mutex, clan::MutexSection - Simple mutex support</li>
-		<li>clan::InterlockedVariable - Atomic integer operations</li>
-		<li>clan::Event - OS level waitable event</li>
 		<li>clan::RegistryKey - C++ class for accessing the Windows registry</li>
 		<li>clan::ComPtr - Smart pointer template for Component Object Model (COM) objects</li>
 	</ul>
@@ -24,14 +20,6 @@
 		<li>clan::DisposableObject - Helper for objects that may outlive their disposable resources</li>
 		<li>clan::UserDataOwner - Allows storing any std::shared_ptr as user data on an object</li>
 		<li>clan::DateTime - Date/time handling class</li>
-	</ul>
-		
-	<h2>Thread run-loop</h2>
-		
-	<ul>
-		<li>clan::KeepAlive - Application loop helper</li>
-		<li>clan::KeepAliveObject - Interface for objects participating in the thread keep-alive processing loop</li>
-		<li>clan::Timer - Timer class that invokes a callback on a specified interval</li>
 	</ul>
 		
 	<h2>Signals</h2>
@@ -83,9 +71,7 @@
 	<ul>
 		<li>clan::IODevice - Input/Output stream abstraction</li>
 		<li>clan::File - Class for opening files</li>
-		<li>clan::IODevice_Memory - IODevice for memory buffers</li>
-		<li>clan::PipeConnection - IODevice for pipes</li>
-		<li>clan::PipeListen - Accepts incoming pipe connections</li>
+		<li>clan::MemoryDevice - IODevice for memory buffers</li>
 	</ul>
 		
 	<h2>File systems</h2>

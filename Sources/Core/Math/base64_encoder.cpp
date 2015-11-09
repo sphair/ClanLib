@@ -32,186 +32,169 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// Base64Encoder_Impl class:
-
-static unsigned char cl_base64char[64] =
-{
-	'A','B','C','D','E','F','G','H','I','J','K','L','M',
-	'N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
-	'a','b','c','d','e','f','g','h','i','j','k','l','m',
-	'n','o','p','q','r','s','t','u','v','w','x','y','z',
-	'0','1','2','3','4','5','6','7','8','9','+','/'
-};
-
-class Base64Encoder_Impl
-{
-//! Construction:
-public:
-	Base64Encoder_Impl() : chunk_filled(0)
+	static unsigned char cl_base64char[64] =
 	{
-	}
+		'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+		'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+		'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+		'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'
+	};
 
-//! Attributes:
-public:
-	DataBuffer result;
-
-	unsigned char chunk[3];
-
-	int chunk_filled;
-
-//! Operations:
-public:
-	static void encode(unsigned char *output, const unsigned char *input, int size_input)
+	class Base64Encoder_Impl
 	{
-		int i, o;
-		for (i = 0, o = 0; i < size_input; i+=3, o+=4)
+		//! Construction:
+	public:
+		Base64Encoder_Impl() : chunk_filled(0)
 		{
-			unsigned int v1 = input[i+0];
-			unsigned int v2 = input[i+1];
-			unsigned int v3 = input[i+2];
-			unsigned int value = (v1 << 16) + (v2 << 8) + v3;
-
-			output[o+0] = cl_base64char[(value >> 18) & 63];
-			output[o+1] = cl_base64char[(value >> 12) & 63];
-			output[o+2] = cl_base64char[(value >> 6) & 63];
-			output[o+3] = cl_base64char[value & 63];
 		}
+
+		//! Attributes:
+	public:
+		DataBuffer result;
+
+		unsigned char chunk[3];
+
+		int chunk_filled;
+
+		//! Operations:
+	public:
+		static void encode(unsigned char *output, const unsigned char *input, int size_input)
+		{
+			int i, o;
+			for (i = 0, o = 0; i < size_input; i += 3, o += 4)
+			{
+				unsigned int v1 = input[i + 0];
+				unsigned int v2 = input[i + 1];
+				unsigned int v3 = input[i + 2];
+				unsigned int value = (v1 << 16) + (v2 << 8) + v3;
+
+				output[o + 0] = cl_base64char[(value >> 18) & 63];
+				output[o + 1] = cl_base64char[(value >> 12) & 63];
+				output[o + 2] = cl_base64char[(value >> 6) & 63];
+				output[o + 3] = cl_base64char[value & 63];
+			}
+		}
+	};
+
+	Base64Encoder::Base64Encoder()
+		: impl(std::make_shared<Base64Encoder_Impl>())
+	{
 	}
-};
 
-/////////////////////////////////////////////////////////////////////////////
-// Base64Encoder Construction:
+	DataBuffer &Base64Encoder::get_result()
+	{
+		return impl->result;
+	}
 
-Base64Encoder::Base64Encoder()
-: impl(std::make_shared<Base64Encoder_Impl>())
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Base64Encoder Attributes:
-
-DataBuffer &Base64Encoder::get_result()
-{
-	return impl->result;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Base64Encoder Operations:
-
-void Base64Encoder::reset()
-{
-	impl->result.set_size(0);
-	impl->chunk_filled = 0;
-}
-
-void Base64Encoder::feed(const void *_data, int size, bool append_result)
-{
-	int pos = 0;
-	const unsigned char *data = (const unsigned char *) _data;
-
-	if (!append_result)
+	void Base64Encoder::reset()
+	{
 		impl->result.set_size(0);
+		impl->chunk_filled = 0;
+	}
 
-	// Handle any left-over data from last encode:
-
-	if (impl->chunk_filled > 0)
+	void Base64Encoder::feed(const void *_data, int size, bool append_result)
 	{
-		int needed = 3 - impl->chunk_filled;
-		if (size >= needed)
+		int pos = 0;
+		const unsigned char *data = (const unsigned char *)_data;
+
+		if (!append_result)
+			impl->result.set_size(0);
+
+		// Handle any left-over data from last encode:
+
+		if (impl->chunk_filled > 0)
 		{
-			memcpy(impl->chunk + impl->chunk_filled, data, needed);
-			int out_pos = impl->result.get_size();
-			impl->result.set_size(out_pos + 4);
-			Base64Encoder_Impl::encode((unsigned char *) impl->result.get_data() + out_pos, impl->chunk, 3);
-			pos += needed;
-			impl->chunk_filled = 0;
+			int needed = 3 - impl->chunk_filled;
+			if (size >= needed)
+			{
+				memcpy(impl->chunk + impl->chunk_filled, data, needed);
+				int out_pos = impl->result.get_size();
+				impl->result.set_size(out_pos + 4);
+				Base64Encoder_Impl::encode((unsigned char *)impl->result.get_data() + out_pos, impl->chunk, 3);
+				pos += needed;
+				impl->chunk_filled = 0;
+			}
+			else
+			{
+				memcpy(impl->chunk + impl->chunk_filled, data, size);
+				impl->chunk_filled += size;
+				return;
+			}
 		}
-		else
-		{
-			memcpy(impl->chunk + impl->chunk_filled, data, size);
-			impl->chunk_filled += size;
+
+		// Base64 encode what's available to us now:
+
+		int blocks = (size - pos) / 3;
+		int out_pos = impl->result.get_size();
+		impl->result.set_size(out_pos + blocks * 4);
+		Base64Encoder_Impl::encode((unsigned char *)impl->result.get_data() + out_pos, data + pos, blocks * 3);
+		pos += blocks * 3;
+
+		// Save data for last incomplete block:
+
+		int leftover = size - pos;
+		if (leftover > 3)
+			throw Exception("Base64 encoder is broken!");
+		impl->chunk_filled = leftover;
+		memcpy(impl->chunk, data + pos, leftover);
+	}
+
+	void Base64Encoder::finalize(bool append_result)
+	{
+		if (!append_result)
+			impl->result.set_size(0);
+		if (impl->chunk_filled == 0)
 			return;
+
+		// Allocate memory for last block:
+
+		int pos = impl->result.get_size();
+		impl->result.set_size(pos + 4);
+		unsigned char *output = (unsigned char *)impl->result.get_data() + pos;
+		unsigned char *input = impl->chunk;
+		int size = impl->chunk_filled;
+
+		// Base64 last block:
+
+		memset(input + size, 0, 3 - size);
+
+		unsigned int v1 = input[0];
+		unsigned int v2 = input[1];
+		unsigned int v3 = input[2];
+		unsigned int value = (v1 << 16) + (v2 << 8) + v3;
+
+		output[0] = cl_base64char[(value >> 18) & 63];
+		output[1] = cl_base64char[(value >> 12) & 63];
+		output[2] = cl_base64char[(value >> 6) & 63];
+		output[3] = cl_base64char[value & 63];
+
+		if (impl->chunk_filled == 1)
+		{
+			output[2] = '=';
+			output[3] = '=';
+		}
+		else if (impl->chunk_filled == 2)
+		{
+			output[3] = '=';
 		}
 	}
 
-	// Base64 encode what's available to us now:
-
-	int blocks = (size-pos) / 3;
-	int out_pos = impl->result.get_size();
-	impl->result.set_size(out_pos + blocks*4);
-	Base64Encoder_Impl::encode((unsigned char *) impl->result.get_data() + out_pos, data + pos, blocks*3);
-	pos += blocks*3;
-
-	// Save data for last incomplete block:
-
-	int leftover = size-pos;
-	if (leftover > 3)
-		throw Exception("Base64 encoder is broken!");
-	impl->chunk_filled = leftover;
-	memcpy(impl->chunk, data + pos, leftover);
-}
-
-void Base64Encoder::finalize(bool append_result)
-{
-	if (!append_result)
-		impl->result.set_size(0);
-	if (impl->chunk_filled == 0)
-		return;
-
-	// Allocate memory for last block:
-
-	int pos = impl->result.get_size();
-	impl->result.set_size(pos + 4);
-	unsigned char *output = (unsigned char *) impl->result.get_data() + pos;
-	unsigned char *input = impl->chunk;
-	int size = impl->chunk_filled;
-
-	// Base64 last block:
-
-	memset(input + size, 0, 3-size);
-
-	unsigned int v1 = input[0];
-	unsigned int v2 = input[1];
-	unsigned int v3 = input[2];
-	unsigned int value = (v1 << 16) + (v2 << 8) + v3;
-
-	output[0] = cl_base64char[(value >> 18) & 63];
-	output[1] = cl_base64char[(value >> 12) & 63];
-	output[2] = cl_base64char[(value >> 6) & 63];
-	output[3] = cl_base64char[value & 63];
-
-	if (impl->chunk_filled == 1)
+	std::string Base64Encoder::encode(const void *data, int size)
 	{
-		output[2] = '=';
-		output[3] = '=';
+		Base64Encoder encoder;
+		encoder.feed(data, size);
+		encoder.finalize(true);
+		return std::string(encoder.get_result().get_data(), encoder.get_result().get_size());
 	}
-	else if (impl->chunk_filled == 2)
+
+	std::string Base64Encoder::encode(const std::string &data)
 	{
-		output[3] = '=';
+		return encode(data.data(), data.length());
 	}
-}
 
-std::string Base64Encoder::encode(const void *data, int size)
-{
-	Base64Encoder encoder;
-	encoder.feed(data, size);
-	encoder.finalize(true);
-	return std::string(encoder.get_result().get_data(), encoder.get_result().get_size());
-}
-
-std::string Base64Encoder::encode(const std::string &data)
-{
-	return encode(data.data(), data.length());
-}
-	
-std::string Base64Encoder::encode(const DataBuffer &data)
-{
-	return encode(data.get_data(), data.get_size());
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Base64Encoder Implementation:
-
+	std::string Base64Encoder::encode(const DataBuffer &data)
+	{
+		return encode(data.get_data(), data.get_size());
+	}
 }

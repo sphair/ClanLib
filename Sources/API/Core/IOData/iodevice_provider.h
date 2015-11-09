@@ -26,66 +26,44 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include "iodevice.h"
 
 namespace clan
 {
-/// \addtogroup clanCore_I_O_Data clanCore I/O Data
-/// \{
+	/// \addtogroup clanCore_I_O_Data clanCore I/O Data
+	/// \{
 
-/// \brief I/O device provider interface.
-class IODeviceProvider
-{
-/// \name Construction
-/// \{
+	/// \brief I/O device provider interface.
+	class IODeviceProvider
+	{
+	public:
+		virtual ~IODeviceProvider() { return; }
 
-public:
-	virtual ~IODeviceProvider() { return; }
+		/// \brief Returns the size of data stream.
+		/** <p>Returns -1 if the size is unknown.</p>*/
+		virtual int get_size() const { return -1; }
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief Returns the position in the data stream.
+		/** <p>Returns -1 if the position is unknown.</p>*/
+		virtual int get_position() const { return -1; }
 
-public:
-	/// \brief Returns the size of data stream.
-	/** <p>Returns -1 if the size is unknown.</p>*/
-	virtual int get_size() const { return -1; }
+		/// \brief Send data to device.
+		virtual int send(const void *data, int len, bool send_all = true) = 0;
 
-	/// \brief Returns the position in the data stream.
-	/** <p>Returns -1 if the position is unknown.</p>*/
-	virtual int get_position() const { return -1; }
+		/// \brief Receive data from device.
+		virtual int receive(void *data, int len, bool receive_all = true) = 0;
 
-/// \}
-/// \name Operations
-/// \{
+		/// \brief Peek data from device.
+		virtual int peek(void *data, int len) = 0;
 
-public:
-	/// \brief Send data to device.
-	virtual int send(const void *data, int len, bool send_all = true) = 0;
+		/// \brief Returns a new provider to the same resource.
+		virtual IODeviceProvider *duplicate() = 0;
 
-	/// \brief Receive data from device.
-	virtual int receive(void *data, int len, bool receive_all = true) = 0;
+		/// \brief Seek in data stream.
+		virtual bool seek(int /*position*/, IODevice::SeekMode /*mode*/) { return false; }
+	};
 
-	/// \brief Peek data from device.
-	virtual int peek(void *data, int len) = 0;
-
-	/// \brief Returns a new provider to the same resource.
-	virtual IODeviceProvider *duplicate() = 0;
-
-	/// \brief Seek in data stream.
-	virtual bool seek(int /*position*/, IODevice::SeekMode /*mode*/) { return false; }
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

@@ -26,7 +26,6 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include "../System/userdata.h"
@@ -35,53 +34,37 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_Resources clanCore Resources
-/// \{
+	/// \addtogroup clanCore_Resources clanCore Resources
+	/// \{
 
-class ResourceManager_Impl;
+	class ResourceManager_Impl;
 
-/// \brief Resource manager.
-class ResourceManager
-{
-/// \name Construction
-/// \{
-public:
-	/// \brief Construct a ResourceManager.
-	ResourceManager();
-
-	~ResourceManager();
-/// \}
-
-/// \name Attributes
-/// \{
-public:
-	template<typename Type>
-	std::shared_ptr<Type> get_cache(const std::string &name) const
+	/// \brief Resource manager.
+	class ResourceManager
 	{
-		return get_cache_owner(name).get_data<Type>();
-	}
-/// \}
+	public:
+		/// \brief Construct a ResourceManager.
+		ResourceManager();
+		~ResourceManager();
 
-/// \name Operations
-/// \{
-public:
-	template<typename Type>
-	void set_cache(const std::string &name, const std::shared_ptr<Type> &cache)
-	{
-		set_cache_owner(name).set_data<Type>(cache);
-	}
-/// \}
+		template<typename Type>
+		std::shared_ptr<Type> get_cache(const std::string &name) const
+		{
+			return get_cache_owner(name).get_data<Type>();
+		}
 
-/// \name Implementation
-/// \{
-private:
-	UserDataOwner &get_cache_owner(const std::string &name) const;
-	UserDataOwner &set_cache_owner(const std::string &name);
+		template<typename Type>
+		void set_cache(const std::string &name, const std::shared_ptr<Type> &cache)
+		{
+			set_cache_owner(name).set_data<Type>(cache);
+		}
 
-	std::shared_ptr<ResourceManager_Impl> impl;
-/// \}
-};
+	private:
+		UserDataOwner &get_cache_owner(const std::string &name) const;
+		UserDataOwner &set_cache_owner(const std::string &name);
 
+		std::shared_ptr<ResourceManager_Impl> impl;
+	};
+
+	/// \}
 }
-
-/// \}

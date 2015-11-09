@@ -35,78 +35,62 @@
 
 namespace clan
 {
+	EarClipTriangulator::EarClipTriangulator()
+		: impl(std::make_shared<EarClipTriangulator_Impl>())
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// EarClipTriangulator Construction:
+	EarClipTriangulator::~EarClipTriangulator()
+	{
+	}
 
-EarClipTriangulator::EarClipTriangulator()
-: impl(std::make_shared<EarClipTriangulator_Impl>())
-{
-}
+	std::vector<Pointf> EarClipTriangulator::get_vertices()
+	{
+		return impl->get_vertices();
+	}
 
-EarClipTriangulator::~EarClipTriangulator()
-{
-}
+	int EarClipTriangulator::get_vertice_count()
+	{
+		return impl->get_vertice_count();
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// EarClipTriangulator Attributes:
+	PolygonOrientation EarClipTriangulator::calculate_polygon_orientation()
+	{
+		return impl->calculate_polygon_orientation();
+	}
 
-std::vector<Pointf> EarClipTriangulator::get_vertices()
-{
-	return impl->get_vertices();
-}
+	void EarClipTriangulator::add_vertex(float x, float y)
+	{
+		impl->add_vertex(x, y);
+	}
 
-int EarClipTriangulator::get_vertice_count()
-{
-	return impl->get_vertice_count();
-}
+	void EarClipTriangulator::add_vertex(const Pointf &P)
+	{
+		impl->add_vertex(P.x, P.y);
+	}
 
-PolygonOrientation EarClipTriangulator::calculate_polygon_orientation()
-{
-	return impl->calculate_polygon_orientation();
-}
+	void EarClipTriangulator::clear()
+	{
+		impl->clear();
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// EarClipTriangulator Operations:
+	void EarClipTriangulator::set_orientation(PolygonOrientation orientation)
+	{
+		impl->set_orientation(orientation);
+	}
 
-void EarClipTriangulator::add_vertex(float x, float y)
-{
-	impl->add_vertex(x,y);
-}
+	EarClipResult EarClipTriangulator::triangulate()
+	{
+		return impl->triangulate();
+	}
 
-void EarClipTriangulator::add_vertex(const Pointf &P)
-{
-	impl->add_vertex(P.x,P.y);
-}
+	void EarClipTriangulator::begin_hole()
+	{
+		impl->begin_hole();
+	}
 
-void EarClipTriangulator::clear()
-{
-	impl->clear();
-}
-
-
-void EarClipTriangulator::set_orientation(PolygonOrientation orientation)
-{
-	impl->set_orientation(orientation);
-}
-
-
-EarClipResult EarClipTriangulator::triangulate()
-{
-	return impl->triangulate();
-}
-
-void EarClipTriangulator::begin_hole()
-{
-	impl->begin_hole();
-}
-
-void EarClipTriangulator::end_hole()
-{
-	impl->end_hole();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// EarClipTriangulator Implementation:
-
+	void EarClipTriangulator::end_hole()
+	{
+		impl->end_hole();
+	}
 }

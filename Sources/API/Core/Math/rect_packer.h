@@ -26,7 +26,6 @@
 **    Kenneth Gangstoe
 */
 
-
 #pragma once
 
 #include <memory>
@@ -34,89 +33,70 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_Math clanCore Math
-/// \{
+	/// \addtogroup clanCore_Math clanCore Math
+	/// \{
 
-class Size;
-class RectPacker_Impl;
+	class Size;
+	class RectPacker_Impl;
 
-/// \brief Generic rect packer class. Implements an algorithm to pack rects into groups efficiently.
-class RectPacker
-{
-/// \name Enumerations and structs
-/// \{
-public:
-	/// \brief Allocation policy.
-	enum AllocationPolicy
-	{
-		create_new_group,
-		search_previous_groups,
-		fail_if_full
-	};
-
-	struct AllocatedRect
+	/// \brief Generic rect packer class. Implements an algorithm to pack rects into groups efficiently.
+	class RectPacker
 	{
 	public:
-		AllocatedRect(int group_index, Rect rect) : group_index(group_index), rect(rect) {}
-		int group_index;
-		Rect rect;
+		/// \brief Allocation policy.
+		enum AllocationPolicy
+		{
+			create_new_group,
+			search_previous_groups,
+			fail_if_full
+		};
+
+		struct AllocatedRect
+		{
+		public:
+			AllocatedRect(int group_index, Rect rect) : group_index(group_index), rect(rect) {}
+			int group_index;
+			Rect rect;
+		};
+
+		/// \brief Constructs a null instance.
+		RectPacker();
+
+		/// \brief Constructs a rect group.
+		RectPacker(const Size &max_group_size, AllocationPolicy policy = create_new_group);
+
+		~RectPacker();
+
+		/// \brief Returns true if this object is invalid.
+		bool is_null() const { return !impl; }
+
+		/// \brief Throw an exception if this object is invalid.
+		void throw_if_null() const;
+
+		/// \brief Returns the allocation policy.
+		AllocationPolicy get_allocation_policy() const;
+
+		/// \brief Returns the max group size.
+		Size get_max_group_size() const;
+
+		/// \brief Returns the total amount of rects.
+		int get_total_rect_count() const;
+
+		/// \brief Returns the amount of rects in a group.
+		int get_rect_count(unsigned int group_index = 0) const;
+
+		/// \brief Returns the amount of rects used by group.
+		int get_group_count() const;
+
+		/// \brief Set the allocation policy.
+		void set_allocation_policy(AllocationPolicy policy);
+
+		/// \brief Allocate space for another rect.
+		AllocatedRect add(const Size &size);
+
+	private:
+		std::shared_ptr<RectPacker_Impl> impl;
 	};
 
-/// \}
-/// \name Construction
-/// \{
-public:
-	/// \brief Constructs a null instance.
-	RectPacker();
-
-	/// \brief Constructs a rect group.
-	RectPacker(const Size &max_group_size, AllocationPolicy policy = create_new_group);
-
-	~RectPacker();
-
-/// \}
-/// \name Attributes
-/// \{
-public:
-	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return !impl; }
-
-	/// \brief Throw an exception if this object is invalid.
-	void throw_if_null() const;
-
-	/// \brief Returns the allocation policy.
-	AllocationPolicy get_allocation_policy() const;
-
-	/// \brief Returns the max group size.
-	Size get_max_group_size() const;
-
-	/// \brief Returns the total amount of rects.
-	int get_total_rect_count() const;
-
-	/// \brief Returns the amount of rects in a group.
-	int get_rect_count(unsigned int group_index = 0) const;
-
-	/// \brief Returns the amount of rects used by group.
-	int get_group_count() const;
-
-/// \}
-/// \name Operations
-/// \{
-public:
-	/// \brief Set the allocation policy.
-	void set_allocation_policy(AllocationPolicy policy);
-
-	/// \brief Allocate space for another rect.
-	AllocatedRect add(const Size &size);
-
-/// \}
-/// \name Implementation
-/// \{
-private:
-	std::shared_ptr<RectPacker_Impl> impl;
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

@@ -27,29 +27,26 @@
 **    Kenneth Gangstoe
 */
 
-
 #pragma once
-
 
 namespace clan
 {
-/// \addtogroup clanCore_Math clanCore Math
-/// \{
+	/// \addtogroup clanCore_Math clanCore Math
+	/// \{
 
-/// \brief Alignment origins.
-enum Origin
-{
-	origin_top_left,
-	origin_top_center,
-	origin_top_right,
-	origin_center_left,
-	origin_center,
-	origin_center_right,
-	origin_bottom_left,
-	origin_bottom_center,
-	origin_bottom_right
-};
+	/// \brief Alignment origins.
+	enum Origin
+	{
+		origin_top_left,
+		origin_top_center,
+		origin_top_right,
+		origin_center_left,
+		origin_center,
+		origin_center_right,
+		origin_bottom_left,
+		origin_bottom_center,
+		origin_bottom_right
+	};
 
+	/// \}
 }
-
-/// \}

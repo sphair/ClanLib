@@ -26,7 +26,6 @@
 **    Mark Page
 */
 
-
 #pragma once
 
 #include <memory>
@@ -34,92 +33,72 @@
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-class Size;
-class Rect;
-class ImageImportDescription_Impl;
-class PixelBuffer;
+	class Size;
+	class Rect;
+	class ImageImportDescription_Impl;
+	class PixelBuffer;
 
-/// \brief Image Import Description Class.
-///
-/// This class allows you to setup a more advanced description when importing images.
-class ImageImportDescription
-{
-/// \name Construction
-/// \{
-public:
-	/// \brief Constructs a image import description with default values.
-	ImageImportDescription();
-
-	~ImageImportDescription();
-
-/// \}
-/// \name Attributes
-/// \{
-public:
-
-	/// \brief Returns the premultiply alpha setting
-	bool get_premultiply_alpha() const;
-
-	/// \brief Returns the flip vertical setting
-	bool flip_vertical() const;
-
-	/// \brief Returns the sRGB setting
-	bool is_srgb() const;
-
-	/// \brief Returns if this image should be cached
-	bool is_cached() const;
-/// \}
-/// \name Operations
-/// \{
-public:
-	/// \brief Process the pixel buffers depending of the chosen settings
+	/// \brief Image Import Description Class.
 	///
-	/// Note, the output may point to a different pixel buffer than the input\n
-	/// The input image may be written to.
-	PixelBuffer process(PixelBuffer &image) const;
+	/// This class allows you to setup a more advanced description when importing images.
+	class ImageImportDescription
+	{
+	public:
+		/// \brief Constructs a image import description with default values.
+		ImageImportDescription();
+		~ImageImportDescription();
 
-	/// \brief Set the premultiply alpha setting
-	///
-	/// (This defaults to off)
-	void set_premultiply_alpha(bool enable);
+		/// \brief Returns the premultiply alpha setting
+		bool get_premultiply_alpha() const;
 
-	/// \brief Set the flip vertical setting
-	///
-	/// (This defaults to off)
-	void set_flip_vertical(bool enable);
+		/// \brief Returns the flip vertical setting
+		bool flip_vertical() const;
 
-	/// \brief Controls if the image is uploaded as a sRGB texture or not
-	///
-	/// (This defaults to off)
-	void set_srgb(bool enable);
+		/// \brief Returns the sRGB setting
+		bool is_srgb() const;
 
-	/// \brief Controls if this image can be cached
-	///
-	/// (This defaults to true)
-	void set_cached(bool enable);
+		/// \brief Returns if this image should be cached
+		bool is_cached() const;
 
-/// \}
-/// \name Callbacks
-/// \{
-public:
-	/// \brief User defined fine control of the pixel buffer
-	///
-	/// Note, the output maybe different to the input, if desired\n
-	/// \n
-	/// PixelBuffer func_process(PixelBuffer &input)
-	std::function<PixelBuffer(PixelBuffer &)> &func_process();
+		/// \brief Process the pixel buffers depending of the chosen settings
+		///
+		/// Note, the output may point to a different pixel buffer than the input\n
+		/// The input image may be written to.
+		PixelBuffer process(PixelBuffer &image) const;
 
-/// \}
-/// \name Implementation
-/// \{
-private:
-	std::shared_ptr<ImageImportDescription_Impl> impl;
-/// \}
-};
+		/// \brief Set the premultiply alpha setting
+		///
+		/// (This defaults to off)
+		void set_premultiply_alpha(bool enable);
 
+		/// \brief Set the flip vertical setting
+		///
+		/// (This defaults to off)
+		void set_flip_vertical(bool enable);
+
+		/// \brief Controls if the image is uploaded as a sRGB texture or not
+		///
+		/// (This defaults to off)
+		void set_srgb(bool enable);
+
+		/// \brief Controls if this image can be cached
+		///
+		/// (This defaults to true)
+		void set_cached(bool enable);
+
+		/// \brief User defined fine control of the pixel buffer
+		///
+		/// Note, the output maybe different to the input, if desired\n
+		/// \n
+		/// PixelBuffer func_process(PixelBuffer &input)
+		std::function<PixelBuffer(PixelBuffer &)> &func_process();
+
+	private:
+		std::shared_ptr<ImageImportDescription_Impl> impl;
+	};
+
+	/// \}
 }
-
-/// \}

@@ -26,7 +26,6 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include <memory>
@@ -34,95 +33,94 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_Resources clanCore Resources
-/// \{
+	/// \addtogroup clanCore_Resources clanCore Resources
+	/// \{
 
-class Resource_BaseImpl
-{
-public:
-	virtual ~Resource_BaseImpl() { }
-};
-
-template<typename Type>
-class Resource_Impl : public Resource_BaseImpl
-{
-public:
-	Resource_Impl() : value(), generation(0) { }
-	Resource_Impl(const Type &initial_value) : value(initial_value), generation(0) { }
-	Type value;
-	int generation;
-};
-
-/// \brief Resource proxy of a specific type
-template<typename Type>
-class Resource
-{
-public:
-	Resource()
-	: object(new Resource_Impl<Type>()), generation(-1)
+	class Resource_BaseImpl
 	{
-	}
+	public:
+		virtual ~Resource_BaseImpl() { }
+	};
 
-	Resource(std::shared_ptr<Resource_Impl<Type> > object)
-	: object(object), generation(-1)
+	template<typename Type>
+	class Resource_Impl : public Resource_BaseImpl
 	{
-	}
+	public:
+		Resource_Impl() : value(), generation(0) { }
+		Resource_Impl(const Type &initial_value) : value(initial_value), generation(0) { }
+		Type value;
+		int generation;
+	};
 
-	Resource(const Type &initial_value)
-	: object(new Resource_Impl<Type>(initial_value)), generation(-1)
+	/// \brief Resource proxy of a specific type
+	template<typename Type>
+	class Resource
 	{
-	}
+	public:
+		Resource()
+			: object(new Resource_Impl<Type>()), generation(-1)
+		{
+		}
 
-	Type *operator->()
-	{
-		return &object->value;
-	}
+		Resource(std::shared_ptr<Resource_Impl<Type> > object)
+			: object(object), generation(-1)
+		{
+		}
 
-	const Type *operator->() const
-	{
-		return &object->value;
-	}
+		Resource(const Type &initial_value)
+			: object(new Resource_Impl<Type>(initial_value)), generation(-1)
+		{
+		}
 
-	bool updated()
-	{
-		bool updated = (generation != object->generation);
-		generation = object->generation;
-		return updated;
-	}
+		Type *operator->()
+		{
+			return &object->value;
+		}
 
-	void set(const Type &value)
-	{
-		object->value = value;
-		generation = ++object->generation;
-	}
+		const Type *operator->() const
+		{
+			return &object->value;
+		}
 
-	Type &get()
-	{
-		return object->value;
-	}
+		bool updated()
+		{
+			bool updated = (generation != object->generation);
+			generation = object->generation;
+			return updated;
+		}
 
-	const Type &get() const
-	{
-		return object->value;
-	}
+		void set(const Type &value)
+		{
+			object->value = value;
+			generation = ++object->generation;
+		}
 
-	operator Type&() {return object->value;}
-	operator const Type&() const {return object->value;}
+		Type &get()
+		{
+			return object->value;
+		}
 
-	const std::shared_ptr<Resource_Impl<Type> > &handle() const { return object; }
+		const Type &get() const
+		{
+			return object->value;
+		}
 
-	bool operator<(const Resource &other) const { return object < other.object; }
-	bool operator<=(const Resource &other) const { return object <= other.object; }
-	bool operator>(const Resource &other) const { return object > other.object; }
-	bool operator>=(const Resource &other) const { return object >= other.object; }
-	bool operator==(const Resource &other) const { return object == other.object; }
-	bool operator!=(const Resource &other) const { return object != other.object; }
+		operator Type&() { return object->value; }
+		operator const Type&() const { return object->value; }
 
-private:
-	std::shared_ptr<Resource_Impl<Type> > object;
-	int generation;
-};
+		const std::shared_ptr<Resource_Impl<Type> > &handle() const { return object; }
 
+		bool operator<(const Resource &other) const { return object < other.object; }
+		bool operator<=(const Resource &other) const { return object <= other.object; }
+		bool operator>(const Resource &other) const { return object > other.object; }
+		bool operator>=(const Resource &other) const { return object >= other.object; }
+		bool operator==(const Resource &other) const { return object == other.object; }
+		bool operator!=(const Resource &other) const { return object != other.object; }
+
+	private:
+		std::shared_ptr<Resource_Impl<Type> > object;
+		int generation;
+	};
+
+	/// \}
 }
-
-/// \}

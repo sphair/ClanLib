@@ -69,6 +69,7 @@ Makefile.in
 *.mode1v3
 *.mode2v3
 xcuserdata
+xcshareddata
 *.opensdf
 *.idb
 *.exe

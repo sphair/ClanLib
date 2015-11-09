@@ -34,11 +34,8 @@ clan::ApplicationInstance<Test> clanapp;
 
 Test::Test()
 {
-	// We support all display targets, in order listed here
-#ifdef WIN32
-//	clan::D3DTarget::enable();
-#endif
-	clan::OpenGLTarget::enable();
+//	clan::D3DTarget::set_current();
+	clan::OpenGLTarget::set_current();
 
 	// Set the window
 	clan::DisplayWindowDescription desc;
@@ -53,7 +50,7 @@ Test::Test()
  	sc.connect(window.sig_window_close(), [&](){quit = true; });
 
 	// Connect a keyboard handler to on_key_up()
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &Test::on_input_up));
+	sc.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &Test::on_input_up));
 
 	// Describe a custom font face:
 
@@ -83,7 +80,7 @@ Test::Test()
 	brush = clan::Brush::solid(clan::Colorf::white);
 
 	elapsed = 0.0f;
-	sc.connect(window.get_ic().get_mouse().sig_key_up(), [&](const clan::InputEvent &key)
+	sc.connect(window.get_mouse().sig_key_up(), [&](const clan::InputEvent &key)
 	{
 		float delta = 50.0f * elapsed;
 		if (key.id == clan::mouse_wheel_up)
@@ -106,8 +103,8 @@ bool Test::update()
 	game_time.update();
 
 	path_font.set_height(font_height);
-	path_font.set_weight(window.get_ic().get_keyboard().get_keycode(clan::keycode_b) ? clan::FontWeight::bold : clan::FontWeight::normal);
-	path_font.set_style(window.get_ic().get_keyboard().get_keycode(clan::keycode_i) ? clan::FontStyle::italic : clan::FontStyle::normal);
+	path_font.set_weight(window.get_keyboard().get_keycode(clan::keycode_b) ? clan::FontWeight::bold : clan::FontWeight::normal);
+	path_font.set_style(window.get_keyboard().get_keycode(clan::keycode_i) ? clan::FontStyle::italic : clan::FontStyle::normal);
 
 	elapsed = game_time.get_tick_time_elapsed();
 
@@ -140,7 +137,7 @@ bool Test::update()
 	// Text bounding box:
 	clan::Rectf bbox(text_metrics.bbox_offset + clan::Pointf(100.0f, baseline_y), text_metrics.bbox_size);
 
-	bool disable_information = window.get_ic().get_mouse().get_keycode(clan::mouse_left);
+	bool disable_information = window.get_mouse().get_keycode(clan::mouse_left);
 
 	if (!disable_information)
 	{

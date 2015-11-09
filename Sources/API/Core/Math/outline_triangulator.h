@@ -26,64 +26,43 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include <memory>
 
 namespace clan
 {
-/// \addtogroup clanCore_Math clanCore Math
-/// \{
+	/// \addtogroup clanCore_Math clanCore Math
+	/// \{
 
-class OutlineTriangulator_Impl;
+	class OutlineTriangulator_Impl;
 
-/// \brief Polygon Tesselator.
-///
-/// This class uses constrained delauney triangulation to convert polygon outlines into triangles.
-class OutlineTriangulator
-{
-/// \name Construction
-/// \{
+	/// \brief Polygon Tesselator.
+	///
+	/// This class uses constrained delauney triangulation to convert polygon outlines into triangles.
+	class OutlineTriangulator
+	{
+	public:
+		/// \brief Creates a tessellation object.
+		OutlineTriangulator();
 
-public:
-	/// \brief Creates a tessellation object.
-	OutlineTriangulator();
+		virtual ~OutlineTriangulator();
 
-	virtual ~OutlineTriangulator();
+		/// \brief This function specifies a vertex on a polygon.
+		void add_vertex(float x, float y, void *data);
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief Mark next contour in polygon path.
+		void next_contour();
 
-public:
+		/// \brief Mark next polygon.
+		void next_polygon();
 
-/// \}
-/// \name Operations
-/// \{
+		/// \brief Converts passed polygons into triangles.
+		void generate();
 
-public:
-	/// \brief This function specifies a vertex on a polygon.
-	void add_vertex(float x, float y, void *data);
+	private:
+		std::shared_ptr<OutlineTriangulator_Impl> impl;
+	};
 
-	/// \brief Mark next contour in polygon path.
-	void next_contour();
-
-	/// \brief Mark next polygon.
-	void next_polygon();
-
-	/// \brief Converts passed polygons into triangles.
-	void generate();
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	std::shared_ptr<OutlineTriangulator_Impl> impl;
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

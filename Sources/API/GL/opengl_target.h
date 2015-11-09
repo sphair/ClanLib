@@ -30,57 +30,67 @@
 
 #pragma once
 
-#include "../Display/display_target.h"
 #include <memory>
 
 namespace clan
 {
-/// \addtogroup clanGL_Display clanGL Display
-/// \{
+	/// \addtogroup clanGL_Display clanGL Display
+	/// \{
 
-class OpenGLTargetProvider;
-class OpenGLTarget_Impl;
-class OpenGLWindowDescription;
+	class GraphicContext;
+	class OpenGLTargetProvider;
+	class OpenGLTarget_Impl;
+	class OpenGLContextDescription;
 
-/// \brief Display target for clanDisplay.
-class OpenGLTarget : public DisplayTarget
-{
-/// \name Attributes
-/// \{
+	/// \brief Display target for clanDisplay.
+	class OpenGLTarget
+	{
+	public:
+		/// \brief Returns true if this display target is the current target
+		///
+		/// This may change after a display window has been created
+		static bool is_current();
 
-public:
-	/// \brief Returns true if this display target is the current target
-	///
-	/// This may change after a display window has been created
-	static bool is_current();
+		/// Target should be current (using set_current() ) before using this function
+		static OpenGLContextDescription get_description();
 
-	static OpenGLWindowDescription get_description();
+		/// \brief Set this display target to be the current target
+		static void set_current();
 
-/// \}
-/// \name Operations
-/// \{
+		/// Target should be current (using set_current() ) before using this function
+		static void set_description(OpenGLContextDescription &desc);
 
-public:
-	/// \brief Enable this target
-	static void enable();
+		/// \brief Get the opengl version
+		///
+		/// \param version_major = On Return: Major
+		/// \param version_minor = On Return: Minor
+		static void get_opengl_version(const GraphicContext &gc, int &version_major, int &version_minor);
 
-	/// \brief Set this display target to be the current target
-	static void set_current();
+		/// \brief Get the opengl version
+		///
+		/// \param version_major = On Return: Major
+		/// \param version_minor = On Return: Minor
+		/// \param version_release = On Return: Release
+		static void get_opengl_version(const GraphicContext &gc, int &version_major, int &version_minor, int &version_release);
 
-	static void set_description(OpenGLWindowDescription &desc);
+		/// \brief Get the opengl shading language version
+		///
+		/// \param version_major = On Return: Major
+		/// \param version_minor = On Return: Minor
+		static void get_opengl_shading_language_version(const GraphicContext &gc, int &version_major, int &version_minor);
 
-/// \}
-/// \name Implementation
-/// \{
+		/// \brief Get the opengl renderer string
+		static std::string get_renderer_string(const GraphicContext &gc);
 
-private:
-	/// \brief Constructs an OpenGL target.
-	OpenGLTarget();
-	~OpenGLTarget();
-	friend class SetupGL_Impl;
-/// \}
-};
+		/// \brief Get the opengl vendor string
+		static std::string get_vendor_string(const GraphicContext &gc);
 
+		/// \brief Get the list of opengl extensions.
+		static std::vector<std::string> get_extensions(const GraphicContext &gc);
+
+		/// \brief Set OpenGL context used by this GraphicContext to be active
+		static void set_active_context(const GraphicContext &gc);
+	};
+
+	/// \}
 }
-
-/// \}

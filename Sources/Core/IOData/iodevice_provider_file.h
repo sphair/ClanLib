@@ -28,90 +28,62 @@
 
 #pragma once
 
-
 #include "API/Core/IOData/iodevice_provider.h"
 #include "API/Core/IOData/file.h"
 #include "API/Core/System/databuffer.h"
 
 namespace clan
 {
+	class IODeviceProvider_File : public IODeviceProvider
+	{
+	public:
+		IODeviceProvider_File();
 
-class IODeviceProvider_File : public IODeviceProvider
-{
-/// \name Construction
-/// \{
+		IODeviceProvider_File(
+			const std::string &filename,
+			File::OpenMode mode,
+			unsigned int access,
+			unsigned int share,
+			unsigned int flags);
 
-public:
-	IODeviceProvider_File();
+		~IODeviceProvider_File();
 
-	IODeviceProvider_File(
-		const std::string &filename,
-		File::OpenMode mode,
-		unsigned int access,
-		unsigned int share,
-		unsigned int flags);
+		int get_size() const override;
+		int get_position() const override;
 
-	~IODeviceProvider_File();
+		bool open(
+			const std::string &filename,
+			File::OpenMode mode,
+			unsigned int access,
+			unsigned int share,
+			unsigned int flags);
 
+		void close();
 
-/// \}
-/// \name Attributes
-/// \{
+		int read(void *buffer, int size, bool read_all);
+		int write(const void *buffer, int size, bool write_all);
+		int send(const void *data, int len, bool send_all) override;
+		int receive(void *data, int len, bool receive_all) override;
+		int peek(void *data, int len) override;
 
-public:
-	int get_size() const override;
+		bool seek(int position, IODevice::SeekMode mode) override;
 
-	int get_position() const override;
+		IODeviceProvider *duplicate() override;
 
-/// \}
-/// \name Operations
-/// \{
+	private:
+		int lowlevel_read(void *buffer, int size, bool read_all);
 
-public:
-	bool open(
-		const std::string &filename,
-		File::OpenMode mode,
-		unsigned int access,
-		unsigned int share,
-		unsigned int flags);
-
-	void close();
-
-	int read(void *buffer, int size, bool read_all);
-
-	int write(const void *buffer, int size, bool write_all);
-
-	int send(const void *data, int len, bool send_all) override;
-
-	int receive(void *data, int len, bool receive_all) override;
-
-	int peek(void *data, int len) override;
-
-	bool seek(int position, IODevice::SeekMode mode) override;
-
-	IODeviceProvider *duplicate() override;
-
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	int lowlevel_read(void *buffer, int size, bool read_all);
-
-	std::string filename;
-	File::OpenMode open_mode;
-	unsigned int access;
-	unsigned int share;
-	unsigned int flags;
+		std::string filename;
+		File::OpenMode open_mode;
+		unsigned int access;
+		unsigned int share;
+		unsigned int flags;
 
 #ifdef WIN32
-	HANDLE handle;
+		HANDLE handle;
 #else
-	int handle;
+		int handle;
 #endif
-	DataBuffer peeked_data;
-/// \}
-};
-
+		DataBuffer peeked_data;
+	};
 }

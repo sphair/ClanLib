@@ -37,485 +37,468 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// EarClipTriangulator_Impl Construction:
-
-EarClipTriangulator_Impl::EarClipTriangulator_Impl()
-: orientation(cl_clockwise), vertex_count(0)
-{
-	target_array = &vertices;
-}
-
-EarClipTriangulator_Impl::~EarClipTriangulator_Impl()
-{
-	for (auto & elem : vertices)
+	EarClipTriangulator_Impl::EarClipTriangulator_Impl()
+		: orientation(cl_clockwise), vertex_count(0)
 	{
-		delete elem;
+		target_array = &vertices;
 	}
 
-	for (auto & elem : hole)
+	EarClipTriangulator_Impl::~EarClipTriangulator_Impl()
 	{
-		delete elem;
-	}
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// EarClipTriangulator_Impl Attributes:
-
-std::vector<Pointf> EarClipTriangulator_Impl::get_vertices()
-{
-	std::vector<Pointf> points;
-
-	for (auto & elem : vertices)
-	{
-		points.push_back( Pointf(elem->x, elem->y));
-	}
-
-	return points;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// EarClipTriangulator_Impl Operations:
-
-void EarClipTriangulator_Impl::set_orientation(PolygonOrientation orient)
-{
-	orientation = orient;
-}
-
-void EarClipTriangulator_Impl::add_vertex(float x, float y)
-{
-	// Check for duplicated vertice
-	std::vector<LinkedVertice *>::size_type size = target_array->size();
-	if (size)
-	{
-		LinkedVertice *last_vertice = (*target_array)[(size-1)];
-		if ((last_vertice->x == x) && (last_vertice->y == y) )
+		for (auto & elem : vertices)
 		{
-			return;	// Ignore this vertice
+			delete elem;
+		}
+
+		for (auto & elem : hole)
+		{
+			delete elem;
 		}
 	}
-	target_array->push_back(new LinkedVertice(x,y));
-	vertex_count++;
-}
 
-void EarClipTriangulator_Impl::clear()
-{
-	for (auto & elem : vertices)
+	std::vector<Pointf> EarClipTriangulator_Impl::get_vertices()
 	{
-		delete elem;
+		std::vector<Pointf> points;
+
+		for (auto & elem : vertices)
+		{
+			points.push_back(Pointf(elem->x, elem->y));
+		}
+
+		return points;
 	}
 
-	vertices.clear();
-	hole.clear();
-	ear_list.clear();
-	vertex_count = 0;
-}
-
-EarClipResult EarClipTriangulator_Impl::triangulate()
-{
-	create_lists(true);
-
-	int num_triangles = vertices.size()-2;
-	int tri_count = 0;
-	
-	EarClipResult result(num_triangles);
-	
-	while( tri_count < num_triangles )
+	void EarClipTriangulator_Impl::set_orientation(PolygonOrientation orient)
 	{
-		if( ear_list.empty() ) // something went wrong, but lets not crash anyway. 
-			break;
+		orientation = orient;
+	}
 
-		LinkedVertice *v = ear_list.back();
-		ear_list.pop_back();
- 
-		EarClipTriangulator_Triangle tri;
-
-		tri.x1 = v->x;
-		tri.y1 = v->y;
-
-		tri.x2 = v->previous->x;
-		tri.y2 = v->previous->y;
-
-		tri.x3 = v->next->x;
-		tri.y3 = v->next->y;
-
-		result.get_triangles().push_back(tri);
-
-		v->next->previous = v->previous;
-		v->previous->next = v->next;
-
-		if( is_ear(*v->next) )
+	void EarClipTriangulator_Impl::add_vertex(float x, float y)
+	{
+		// Check for duplicated vertice
+		std::vector<LinkedVertice *>::size_type size = target_array->size();
+		if (size)
 		{
-			if( v->next->is_ear == false ) // not marked as an ear yet. Mark it, and add to the list.
+			LinkedVertice *last_vertice = (*target_array)[(size - 1)];
+			if ((last_vertice->x == x) && (last_vertice->y == y))
 			{
-				v->next->is_ear = true;
-				ear_list.push_back(v->next);
+				return;	// Ignore this vertice
 			}
 		}
-		else
+		target_array->push_back(new LinkedVertice(x, y));
+		vertex_count++;
+	}
+
+	void EarClipTriangulator_Impl::clear()
+	{
+		for (auto & elem : vertices)
 		{
-			if( v->next->is_ear == true ) // Not an ear any more. Delete from ear list.
+			delete elem;
+		}
+
+		vertices.clear();
+		hole.clear();
+		ear_list.clear();
+		vertex_count = 0;
+	}
+
+	EarClipResult EarClipTriangulator_Impl::triangulate()
+	{
+		create_lists(true);
+
+		int num_triangles = vertices.size() - 2;
+		int tri_count = 0;
+
+		EarClipResult result(num_triangles);
+
+		while (tri_count < num_triangles)
+		{
+			if (ear_list.empty()) // something went wrong, but lets not crash anyway. 
+				break;
+
+			LinkedVertice *v = ear_list.back();
+			ear_list.pop_back();
+
+			EarClipTriangulator_Triangle tri;
+
+			tri.x1 = v->x;
+			tri.y1 = v->y;
+
+			tri.x2 = v->previous->x;
+			tri.y2 = v->previous->y;
+
+			tri.x3 = v->next->x;
+			tri.y3 = v->next->y;
+
+			result.get_triangles().push_back(tri);
+
+			v->next->previous = v->previous;
+			v->previous->next = v->next;
+
+			if (is_ear(*v->next))
 			{
-				v->next->is_ear = false;
-				
-				std::vector<LinkedVertice*>::iterator it;
-				for( it = ear_list.begin(); it != ear_list.end(); ++it )
+				if (v->next->is_ear == false) // not marked as an ear yet. Mark it, and add to the list.
 				{
-					if( (*it) == v->next )
+					v->next->is_ear = true;
+					ear_list.push_back(v->next);
+				}
+			}
+			else
+			{
+				if (v->next->is_ear == true) // Not an ear any more. Delete from ear list.
+				{
+					v->next->is_ear = false;
+
+					std::vector<LinkedVertice*>::iterator it;
+					for (it = ear_list.begin(); it != ear_list.end(); ++it)
 					{
-						ear_list.erase(it);
-						break;
+						if ((*it) == v->next)
+						{
+							ear_list.erase(it);
+							break;
+						}
 					}
+				}
+			}
+
+			if (is_ear(*v->previous))
+			{
+				if (v->previous->is_ear == false) // not marked as an ear yet. Mark it, and add to the list.
+				{
+					v->previous->is_ear = true;
+					ear_list.push_back(v->previous);
+				}
+			}
+			else
+			{
+				if (v->previous->is_ear == true) // Not an ear any more. Delete from ear list.
+				{
+					v->previous->is_ear = false;
+
+					std::vector<LinkedVertice*>::iterator it;
+					for (it = ear_list.begin(); it != ear_list.end(); ++it)
+					{
+						if ((*it) == v->previous)
+						{
+							ear_list.erase(it);
+							break;
+						}
+					}
+				}
+			}
+
+			/*		cl_write_console_line("Ear list:");
+					for( std::vector<LinkedVertice*>::iterator it = ear_list.begin(); it != ear_list.end(); ++it )
+					{
+					cl_write_console_line("    (%1,%2)", (*it)->x, (*it)->y );
+					}
+					cl_write_console_line("");
+					*/
+
+			tri_count++;
+
+		}
+
+		// cl_write_console_line("num triangles - final: %1", tri_count ); 
+
+		return result;
+	}
+
+
+	void EarClipTriangulator_Impl::begin_hole()
+	{
+		target_array = &hole;
+	}
+
+	void EarClipTriangulator_Impl::end_hole()
+	{
+		create_lists(false);
+
+		target_array = &vertices;
+
+		// To be able to triangulate holes the inner and outer vertice arrays are connected
+		// so that there isn't actually any hole, just a single polygon with a small gap
+		// eliminating the hole.
+		//
+		// 1. find point on inner contour closest to a vertice on the outer contour.
+		//
+		// 2. Create bridge start and end points by offsetting the new vertices a bit along the edges to the next and prev vertices.
+		// 
+
+		LinkedVertice *outer_vertice = nullptr;
+		LinkedVertice *segment_start;
+		LinkedVertice *segment_end;
+		Pointf inner_point;
+		float inner_point_rel;
+		float distance = FLT_MAX;
+
+		for (auto & elem : vertices)
+		{
+			Pointf tmp_outer_point = Pointf(elem->x, elem->y);
+
+			for (auto & _hole_cnt : hole)
+			{
+
+				Pointf tmp_line_start(_hole_cnt->x, _hole_cnt->y);
+				Pointf tmp_line_end(_hole_cnt->next->x, _hole_cnt->next->y);
+
+				Pointf tmp_inner_point = LineMath::closest_point(tmp_outer_point, tmp_line_start, tmp_line_end);
+
+				float tmp_distance = tmp_inner_point.distance(tmp_outer_point);
+
+				if (tmp_distance < distance)
+				{
+					inner_point_rel = LineMath::closest_point_relative(tmp_outer_point, tmp_line_start, tmp_line_end);
+					distance = tmp_distance;
+					outer_vertice = elem;
+					inner_point = tmp_inner_point;
+					segment_start = _hole_cnt;
+					segment_end = _hole_cnt->next;
 				}
 			}
 		}
 
-		if( is_ear(*v->previous) )
+		auto outer_bridge_start = new LinkedVertice();
+		auto outer_bridge_end = new LinkedVertice();
+		auto inner_bridge_start = new LinkedVertice();
+		auto inner_bridge_end = new LinkedVertice();
+
+		//  offset new points along old edges
+		Pointf outer_point(outer_vertice->x, outer_vertice->y);
+
+		set_bridge_vertice_offset(outer_bridge_start, outer_point, 0.0, outer_vertice, outer_vertice->previous, 1);
+		set_bridge_vertice_offset(outer_bridge_end, outer_point, 0.0, outer_vertice, outer_vertice->next, 1);
+		set_bridge_vertice_offset(inner_bridge_start, inner_point, inner_point_rel, segment_start, segment_end, 1);
+		set_bridge_vertice_offset(inner_bridge_end, inner_point, inner_point_rel, segment_start, segment_end, -1);
+
+		// update next pointers to ignore old vertices
+
+		// connections between inner and outer contours
+		outer_bridge_start->next = inner_bridge_start;
+		inner_bridge_end->next = outer_bridge_end;
+
+		// connections between new and old vertices: outer contour
+		outer_bridge_end->next = outer_vertice->next;
+		outer_vertice->previous->next = outer_bridge_start;
+
+		// connections between new and old vertices: inner contour
+		inner_bridge_start->next = segment_end;
+		segment_start->next = inner_bridge_end;
+
+		delete outer_vertice;
+		outer_vertice = nullptr;
+
+		if (inner_point_rel == 0.0) // if split point is at line end, remove inner vertex
 		{
-			if( v->previous->is_ear == false ) // not marked as an ear yet. Mark it, and add to the list.
-			{
-				v->previous->is_ear = true;
-				ear_list.push_back(v->previous);
-			}
+			segment_start->previous->next = inner_bridge_end;
+			delete segment_start;
+			segment_start = nullptr;
 		}
-		else
+		if (inner_point_rel == 1.0) // if split point is at line end, remove inner vertex
 		{
-			if( v->previous->is_ear == true ) // Not an ear any more. Delete from ear list.
+			inner_bridge_start->next = segment_end->next;
+			delete segment_end;
+			segment_end = nullptr;
+		}
+
+		hole.clear();
+
+		// rebuild the vector...
+		vertices.clear();
+
+		LinkedVertice *test = inner_bridge_start;
+		do
+		{
+			vertices.push_back(test);
+			test = test->next;
+		} while (test != inner_bridge_start);
+
+		// print the bridge start and end points:
+		/*	cl_write_console_line("outer_point: %1 %2", outer_point.x, outer_point.y );
+			cl_write_console_line("inner_point: %1 %2", inner_point.x, inner_point.y );
+			cl_write_console_line("inner_bridge_end: %1 %2", inner_bridge_end->x, inner_bridge_end->y );
+			cl_write_console_line("outer_bridge_end: %1 %2", outer_bridge_end->x, outer_bridge_end->y );
+			cl_write_console_line("inner_bridge_start: %1 %2", inner_bridge_start->x, inner_bridge_start->y );
+			cl_write_console_line("outer_bridge_start: %1 %2", outer_bridge_start->x, outer_bridge_start->y );
+			*/
+	}
+
+	PolygonOrientation EarClipTriangulator_Impl::calculate_polygon_orientation()
+	{
+		float sum = 0;
+
+		unsigned int size = vertices.size();
+
+		for (unsigned int i = 0; i < size; i++)
+		{
+			LinkedVertice *p1 = vertices[i];
+			LinkedVertice *p2 = vertices[(i + 1) % size];
+
+			sum += (p1->x*p2->y - p2->x*p1->y);
+		}
+
+		if (sum < 0.0)
+			return cl_counter_clockwise;
+
+		return cl_clockwise;
+	}
+
+	void EarClipTriangulator_Impl::create_lists(bool create_ear_list)
+	{
+		int vert_size = vertices.size();
+
+		for (int i = 0; i < vert_size; ++i)
+		{
+			LinkedVertice *v = vertices[i];
+
+			if (i == 0)
+				v->previous = vertices.back();
+			else
+				v->previous = vertices[i - 1];
+
+			if (i == (vert_size - 1))
+				v->next = vertices.front();
+			else
+				v->next = vertices[i + 1];
+		}
+
+		unsigned int hole_size = hole.size();
+
+		for (unsigned int j = 0; j < hole.size(); ++j)
+		{
+			if (j == 0)
+				hole[j]->previous = hole.back();
+			else
+				hole[j]->previous = hole[j - 1];
+
+			if (j == (hole_size - 1))
+				hole[j]->next = hole.front();
+			else
+				hole[j]->next = hole[j + 1];
+		}
+
+		if (create_ear_list)
+		{
+			//		cl_write_console_line("Ear list:");
+
+			for (auto & elem : vertices)
 			{
-				v->previous->is_ear = false;
-				
-				std::vector<LinkedVertice*>::iterator it;
-				for( it = ear_list.begin(); it != ear_list.end(); ++it )
+				if (is_ear(*(elem)))
 				{
-					if( (*it) == v->previous )
-					{
-						ear_list.erase(it);
-						break;
-					}
+					ear_list.push_back((elem));
+					(elem)->is_ear = true;
+
+					//				cl_write_console_line(string_format("    (%1,%2)", (*it)->x, (*it)->y ) );
 				}
+
 			}
 		}
-
-/*		cl_write_console_line("Ear list:");
-		for( std::vector<LinkedVertice*>::iterator it = ear_list.begin(); it != ear_list.end(); ++it )
-		{
-			cl_write_console_line("    (%1,%2)", (*it)->x, (*it)->y );
-		}
-		cl_write_console_line("");
-*/
-
-		tri_count++;
-
 	}
 
-	// cl_write_console_line("num triangles - final: %1", tri_count ); 
-
-	return result;
-}
-
-
-void EarClipTriangulator_Impl::begin_hole()
-{
-	target_array = &hole;
-}
-
-void EarClipTriangulator_Impl::end_hole()
-{
-	create_lists(false);
-
-	target_array = &vertices;
-
-	// To be able to triangulate holes the inner and outer vertice arrays are connected
-	// so that there isn't actually any hole, just a single polygon with a small gap
-	// eliminating the hole.
-	//
-	// 1. find point on inner contour closest to a vertice on the outer contour.
-	//
-	// 2. Create bridge start and end points by offsetting the new vertices a bit along the edges to the next and prev vertices.
-	// 
-
-	LinkedVertice *outer_vertice = nullptr;
-	LinkedVertice *segment_start;
-	LinkedVertice *segment_end;
-	Pointf inner_point;
-	float inner_point_rel;
-	float distance = FLT_MAX;
-
-	for (auto & elem : vertices)
+	bool EarClipTriangulator_Impl::is_ear(const LinkedVertice &v)
 	{
-		Pointf tmp_outer_point = Pointf(elem->x,elem->y);
+		if (is_reflex(v)) return false;
 
-		for (auto & _hole_cnt : hole)
+		Trianglef triangle(Pointf(v.x, v.y), Pointf(v.next->x, v.next->y), Pointf(v.previous->x, v.previous->y));
+
+		LinkedVertice *v_check = v.next->next;
+
+		while (v_check != v.previous)
 		{
-
-			Pointf tmp_line_start(_hole_cnt->x, _hole_cnt->y);
-			Pointf tmp_line_end(_hole_cnt->next->x, _hole_cnt->next->y);
-			
-			Pointf tmp_inner_point = LineMath::closest_point(tmp_outer_point, tmp_line_start, tmp_line_end);
-			
-			float tmp_distance = tmp_inner_point.distance(tmp_outer_point);
-			
-			if( tmp_distance < distance  )
+			if (v_check == v.next || v_check == v.previous)
 			{
-				inner_point_rel = LineMath::closest_point_relative(tmp_outer_point, tmp_line_start, tmp_line_end);
-				distance = tmp_distance;
-				outer_vertice = elem;
-				inner_point = tmp_inner_point;
-				segment_start = _hole_cnt;
-				segment_end = _hole_cnt->next;
-			}
-		}
-	}
-
-	auto outer_bridge_start = new LinkedVertice();
-	auto outer_bridge_end = new LinkedVertice();
-	auto inner_bridge_start = new LinkedVertice();
-	auto inner_bridge_end = new LinkedVertice();
-
-	//  offset new points along old edges
-	Pointf outer_point(outer_vertice->x, outer_vertice->y);
-
-	set_bridge_vertice_offset( outer_bridge_start, outer_point, 0.0,             outer_vertice, outer_vertice->previous, 1 );
-	set_bridge_vertice_offset( outer_bridge_end,   outer_point, 0.0,             outer_vertice, outer_vertice->next, 1 );
-	set_bridge_vertice_offset( inner_bridge_start, inner_point, inner_point_rel, segment_start, segment_end, 1 );
-	set_bridge_vertice_offset( inner_bridge_end,   inner_point, inner_point_rel, segment_start, segment_end, -1 );
-
-	// update next pointers to ignore old vertices
-
-	// connections between inner and outer contours
-	outer_bridge_start->next = inner_bridge_start;
-	inner_bridge_end->next = outer_bridge_end;
-
-	// connections between new and old vertices: outer contour
-	outer_bridge_end->next = outer_vertice->next;
-	outer_vertice->previous->next = outer_bridge_start;
-
-	// connections between new and old vertices: inner contour
-	inner_bridge_start->next = segment_end;
-	segment_start->next = inner_bridge_end;
-
-	delete outer_vertice;
-	outer_vertice = nullptr;
-
-	if( inner_point_rel == 0.0 ) // if split point is at line end, remove inner vertex
-	{
-		segment_start->previous->next = inner_bridge_end;
-		delete segment_start;
-		segment_start = nullptr;
-	}
-	if( inner_point_rel == 1.0 ) // if split point is at line end, remove inner vertex
-	{
-		inner_bridge_start->next = segment_end->next;
-		delete segment_end;
-		segment_end = nullptr;
-	}
-
-	hole.clear();
-
-	// rebuild the vector...
-	vertices.clear();
-
-	LinkedVertice *test = inner_bridge_start;
-	do
-	{
-		vertices.push_back(test);
-		test = test->next;
-	} while( test != inner_bridge_start );
-
-	// print the bridge start and end points:
-/*	cl_write_console_line("outer_point: %1 %2", outer_point.x, outer_point.y );
-	cl_write_console_line("inner_point: %1 %2", inner_point.x, inner_point.y );
-	cl_write_console_line("inner_bridge_end: %1 %2", inner_bridge_end->x, inner_bridge_end->y );
-	cl_write_console_line("outer_bridge_end: %1 %2", outer_bridge_end->x, outer_bridge_end->y );
-	cl_write_console_line("inner_bridge_start: %1 %2", inner_bridge_start->x, inner_bridge_start->y );
-	cl_write_console_line("outer_bridge_start: %1 %2", outer_bridge_start->x, outer_bridge_start->y );
-*/
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// EarClipTriangulator_Impl Implementation:
-
-
-PolygonOrientation EarClipTriangulator_Impl::calculate_polygon_orientation()
-{
-	float sum = 0;
-
-	unsigned int size = vertices.size();
-
-	for( unsigned int i = 0; i < size; i++ )
-	{
-		LinkedVertice *p1 = vertices[ i ];
-		LinkedVertice *p2 = vertices[ (i+1) % size ];
-
-		sum += (p1->x*p2->y - p2->x*p1->y);
-	}
-
-	if( sum < 0.0 )
-		return cl_counter_clockwise;
-
-	return cl_clockwise;
-}
-
-
-
-void EarClipTriangulator_Impl::create_lists(bool create_ear_list)
-{
-	int vert_size = vertices.size();
-
-	for( int i=0; i < vert_size; ++i )
-	{
-		LinkedVertice *v = vertices[i];
-
-		if( i == 0 )
-			v->previous = vertices.back();
-		else
-			v->previous = vertices[i-1];
-
-		if( i == (vert_size-1) )
-			v->next = vertices.front();
-		else
-			v->next = vertices[i+1];
-	}
- 
-	unsigned int hole_size = hole.size();
-
-	for( unsigned int j = 0; j < hole.size(); ++j )
-	{
-		if( j == 0 )
-			hole[j]->previous = hole.back();
-		else
-			hole[j]->previous = hole[j-1];
- 
-		if( j == (hole_size-1) )
-			hole[j]->next = hole.front();
-		else
-			hole[j]->next = hole[j+1];
-	}
-
-	if( create_ear_list )
-	{
-//		cl_write_console_line("Ear list:");
-
-		for(auto & elem : vertices)
-		{
-			if( is_ear(*(elem)) )
-			{
-				ear_list.push_back((elem));
-				(elem)->is_ear = true;
-
-//				cl_write_console_line(string_format("    (%1,%2)", (*it)->x, (*it)->y ) );
+				v_check = v_check->next;
+				continue;
 			}
 
-		}
-	}
-}
+			if (triangle.point_inside(Pointf(v_check->x, v_check->y)))
+				return false;
 
-bool EarClipTriangulator_Impl::is_ear(const LinkedVertice &v)
-{
-	if( is_reflex(v) ) return false;
-
-	Trianglef triangle( Pointf(v.x, v.y), Pointf(v.next->x, v.next->y), Pointf(v.previous->x, v.previous->y) );
-
-	LinkedVertice *v_check = v.next->next;
-
-	while( v_check != v.previous )
-	{
-		if( v_check == v.next || v_check == v.previous )
-		{
 			v_check = v_check->next;
-			continue;
 		}
 
-		if( triangle.point_inside( Pointf(v_check->x, v_check->y) ) )
-			return false;
-
-		v_check = v_check->next;
+		return true;
 	}
 
-	return true;
-}
-
-bool EarClipTriangulator_Impl::is_reflex(const LinkedVertice &v)
-{
-	float x = v.x;
-	float y = v.y;
-	float nx = v.next->x;
-	float ny = v.next->y;
-	float px = v.previous->x;
-	float py = v.previous->y;
-
-	// Taking the crossproduct (v-1,v)x(v,v+1) tells if the edges sharing vertex v, are concave or convex.
-
-	if( orientation == cl_clockwise )
+	bool EarClipTriangulator_Impl::is_reflex(const LinkedVertice &v)
 	{
-		if ( ((x-px)*(ny-y) - (y-py)*(nx-x)) < FLT_EPSILON ) 
-			return true;
-	}
-	else
-	{
-		if ( ((x-px)*(ny-y) - (y-py)*(nx-x)) > FLT_EPSILON ) 
-			return true;
-	}
+		float x = v.x;
+		float y = v.y;
+		float nx = v.next->x;
+		float ny = v.next->y;
+		float px = v.previous->x;
+		float py = v.previous->y;
 
-	return false;
-}
+		// Taking the crossproduct (v-1,v)x(v,v+1) tells if the edges sharing vertex v, are concave or convex.
 
+		if (orientation == cl_clockwise)
+		{
+			if (((x - px)*(ny - y) - (y - py)*(nx - x)) < FLT_EPSILON)
+				return true;
+		}
+		else
+		{
+			if (((x - px)*(ny - y) - (y - py)*(nx - x)) > FLT_EPSILON)
+				return true;
+		}
 
-void EarClipTriangulator_Impl::set_bridge_vertice_offset(
-	LinkedVertice *target,
-	Pointf split_point,
-	float split_point_rel,
-	LinkedVertice *segment_start,
-	LinkedVertice *segment_end,
-	int direction )
-{
-	if( direction == -1 && split_point_rel == 0.0 )
-	{
-		LinkedVertice *tmp = segment_start;
-		segment_start = segment_start->previous;
-		segment_end = tmp;
-	}
-	else if( direction == 1 && split_point_rel == 1.0 )
-	{
-		segment_start = segment_end;
-		segment_end = segment_end->next;
+		return false;
 	}
 
-	while( segment_start->x == segment_end->x && segment_start->y == segment_end->y )
+
+	void EarClipTriangulator_Impl::set_bridge_vertice_offset(
+		LinkedVertice *target,
+		Pointf split_point,
+		float split_point_rel,
+		LinkedVertice *segment_start,
+		LinkedVertice *segment_end,
+		int direction)
 	{
-		// Sometimes there are multiple points at exactly the same location. (Bug in font?)
-		if( direction == 1 )
+		if (direction == -1 && split_point_rel == 0.0)
+		{
+			LinkedVertice *tmp = segment_start;
+			segment_start = segment_start->previous;
+			segment_end = tmp;
+		}
+		else if (direction == 1 && split_point_rel == 1.0)
 		{
 			segment_start = segment_end;
 			segment_end = segment_end->next;
 		}
+
+		while (segment_start->x == segment_end->x && segment_start->y == segment_end->y)
+		{
+			// Sometimes there are multiple points at exactly the same location. (Bug in font?)
+			if (direction == 1)
+			{
+				segment_start = segment_end;
+				segment_end = segment_end->next;
+			}
+			else
+			{
+				segment_end = segment_start;
+				segment_start = segment_start->previous;
+			}
+		}
+
+		float dir_x = direction * (segment_end->x - segment_start->x);
+		float dir_y = direction * (segment_end->y - segment_start->y);
+
+		// normalize the vector
+		float len = sqrt(dir_x*dir_x + dir_y*dir_y);
+
+		if (len != 0)  // if len is zero something is wrong (duplicated end points on cyclic curve?)
+		{
+			dir_x /= len;
+			dir_y /= len;
+		}
 		else
 		{
-			segment_end = segment_start;
-			segment_start = segment_start->previous;
+			throw Exception("Error: EarClipTriangulator: division by zero in function set_bridge_vertice_offset. Duplicated end points on a cyclic curve?");
 		}
+
+		// Changed from 0.01f to 0.001f (13 Jan 2009) to stop pixel sized gaps in a font [rombust]
+		target->x = split_point.x + 0.001f * dir_x;
+		target->y = split_point.y + 0.001f * dir_y;
 	}
-
-	float dir_x = direction * (segment_end->x - segment_start->x);
-	float dir_y = direction * (segment_end->y - segment_start->y);
-
-	// normalize the vector
-	float len = sqrt(dir_x*dir_x+dir_y*dir_y);
-
-	if( len != 0 )  // if len is zero something is wrong (duplicated end points on cyclic curve?)
-	{
-		dir_x /= len;
-		dir_y /= len;
-	}
-	else
-	{
-		throw Exception("Error: EarClipTriangulator: division by zero in function set_bridge_vertice_offset. Duplicated end points on a cyclic curve?");
-	}
-	
-	// Changed from 0.01f to 0.001f (13 Jan 2009) to stop pixel sized gaps in a font [rombust]
-	target->x = split_point.x + 0.001f * dir_x;
-	target->y = split_point.y + 0.001f * dir_y;
-}
-
 }

@@ -26,55 +26,43 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include "soundprovider_type.h"
 
 namespace clan
 {
-/// \addtogroup clanSound_Sound_Providers clanSound Sound Providers
-/// \{
+	/// \addtogroup clanSound_Sound_Providers clanSound Sound Providers
+	/// \{
 
-/// \brief Class template to register a sound provider type.
-///
-template<class SoundProviderClass>
-class SoundProviderType_Register : public SoundProviderType
-{
-/// \name Construction
-/// \{
-
-public:
-	/// \brief Registers sound provider type in the SoundProviderFactory.
-	SoundProviderType_Register(const std::string &type) : SoundProviderType(type)
+	/// \brief Class template to register a sound provider type.
+	///
+	template<class SoundProviderClass>
+	class SoundProviderType_Register : public SoundProviderType
 	{
-	}
+	public:
+		/// \brief Registers sound provider type in the SoundProviderFactory.
+		SoundProviderType_Register(const std::string &type) : SoundProviderType(type)
+		{
+		}
 
-/// \}
-/// \name Operations
-/// \{
+		/// \brief Called to load static with this sound provider type.
+		virtual SoundProvider *load(
+			const std::string &filename,
+			bool stream,
+			const FileSystem &fs) override
+		{
+			return new SoundProviderClass(filename, fs, stream);
+		}
 
-public:
-	/// \brief Called to load static with this sound provider type.
-	virtual SoundProvider *load(
-		const std::string &filename,
-		bool stream,
-		const FileSystem &fs) override
-	{
-		return new SoundProviderClass(filename, fs, stream);
-	}
+		/// \brief Called to load static with this sound provider type.
+		virtual SoundProvider *load(
+			IODevice &file,
+			bool stream) override
+		{
+			return new SoundProviderClass(file, stream);
+		}
+	};
 
-	/// \brief Called to load static with this sound provider type.
-	virtual SoundProvider *load(
-		IODevice &file,
-		bool stream) override
-	{
-		return new SoundProviderClass(file, stream);
-	}
-
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

@@ -27,7 +27,6 @@
 **    Mark Page
 */
 
-
 #pragma once
 
 #include <memory>
@@ -36,86 +35,70 @@
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-class PixelConverter_Impl;
+	class PixelConverter_Impl;
 
-/// \brief Low level pixel format converter class.
-class PixelConverter
-{
-/// \name Construction
-/// \{
-public:
-	/// \brief Constructs a pixel format converter
-	PixelConverter();
-	~PixelConverter();
-/// \}
+	/// \brief Low level pixel format converter class.
+	class PixelConverter
+	{
+	public:
+		/// \brief Constructs a pixel format converter
+		PixelConverter();
+		~PixelConverter();
 
-/// \name Attributes
-/// \{
-public:
-	/// \brief Returns the premultiply alpha setting
-	bool get_premultiply_alpha() const;
+		/// \brief Returns the premultiply alpha setting
+		bool get_premultiply_alpha() const;
 
-	/// \brief Returns the flip vertical setting
-	bool flip_vertical() const;
+		/// \brief Returns the flip vertical setting
+		bool flip_vertical() const;
 
-	/// \brief Returns the gamma setting
-	float get_gamma() const;
+		/// \brief Returns the gamma setting
+		float get_gamma() const;
 
-	/// \brief Returns the input channel used for each output channel
-	Vec4i get_swizzle() const;
+		/// \brief Returns the input channel used for each output channel
+		Vec4i get_swizzle() const;
 
-	/// \brief Returns the JPEG JFIF YCrCb input setting
-	bool get_input_is_ycrcb() const;
+		/// \brief Returns the JPEG JFIF YCrCb input setting
+		bool get_input_is_ycrcb() const;
 
-	/// \brief Returns the JPEG JFIF YCrCb output setting
-	bool get_output_is_ycrcb() const;
+		/// \brief Returns the JPEG JFIF YCrCb output setting
+		bool get_output_is_ycrcb() const;
 
-/// \}
+		/// \brief Set the premultiply alpha setting
+		///
+		/// This defaults to off.
+		void set_premultiply_alpha(bool enable);
 
-/// \name Operations
-/// \{
-public:
-	/// \brief Set the premultiply alpha setting
-	///
-	/// This defaults to off.
-	void set_premultiply_alpha(bool enable);
+		/// \brief Set the flip vertical setting
+		///
+		/// This defaults to off.
+		void set_flip_vertical(bool enable);
 
-	/// \brief Set the flip vertical setting
-	///
-	/// This defaults to off.
-	void set_flip_vertical(bool enable);
+		/// \brief Set the gamma applied when converting
+		///
+		/// This defaults to 1.0 (off).
+		void set_gamma(float gamma);
 
-	/// \brief Set the gamma applied when converting
-	///
-	/// This defaults to 1.0 (off).
-	void set_gamma(float gamma);
+		/// \brief Set the input channel used for each output channel
+		///
+		/// Values 0-3 accepted. 0 = red, 1 = green, 2 = blue, 3 = alpha.
+		void set_swizzle(int red_source, int green_source, int blue_source, int alpha_source);
+		void set_swizzle(const Vec4i &swizzle);
 
-	/// \brief Set the input channel used for each output channel
-	///
-	/// Values 0-3 accepted. 0 = red, 1 = green, 2 = blue, 3 = alpha.
-	void set_swizzle(int red_source, int green_source, int blue_source, int alpha_source);
-	void set_swizzle(const Vec4i &swizzle);
+		/// \brief Converts from JPEG JFIF YCrCb
+		void set_input_is_ycrcb(bool enable);
 
-	/// \brief Converts from JPEG JFIF YCrCb
-	void set_input_is_ycrcb(bool enable);
+		/// \brief Converts to JPEG JFIF YCrCb
+		void set_output_is_ycrcb(bool enable);
 
-	/// \brief Converts to JPEG JFIF YCrCb
-	void set_output_is_ycrcb(bool enable);
+		/// \brief Convert some pixel data
+		void convert(void *output, int output_pitch, TextureFormat output_format, const void *input, int input_pitch, TextureFormat input_format, int width, int height);
 
-	/// \brief Convert some pixel data
-	void convert(void *output, int output_pitch, TextureFormat output_format, const void *input, int input_pitch, TextureFormat input_format, int width, int height);
-/// \}
+	private:
+		std::shared_ptr<PixelConverter_Impl> impl;
+	};
 
-/// \name Implementation
-/// \{
-private:
-	std::shared_ptr<PixelConverter_Impl> impl;
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

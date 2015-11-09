@@ -23,9 +23,9 @@ DemoExplosion::DemoExplosion(clan::DisplayWindow &window) : window(window)
 	sc.connect(window.sig_window_close(), clan::bind_member(this, &DemoExplosion::on_window_close));
 	canvas = clan::Canvas(window);
 
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &DemoExplosion::on_key_up));
-	sc.connect(window.get_ic().get_mouse().sig_key_down(), clan::bind_member(this, &DemoExplosion::on_mouse_down));
-	sc.connect(window.get_ic().get_mouse().sig_key_dblclk(), clan::bind_member(this, &DemoExplosion::on_mouse_down));
+	sc.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &DemoExplosion::on_key_up));
+	sc.connect(window.get_mouse().sig_key_down(), clan::bind_member(this, &DemoExplosion::on_mouse_down));
+	sc.connect(window.get_mouse().sig_key_dblclk(), clan::bind_member(this, &DemoExplosion::on_mouse_down));
 
 	window.hide_cursor();
 
@@ -68,7 +68,7 @@ DemoExplosion::DemoExplosion(clan::DisplayWindow &window) : window(window)
 
 bool DemoExplosion::update()
 {
-	clan::InputDevice &mouse = window.get_ic().get_mouse();
+	clan::InputDevice &mouse = window.get_mouse();
 
 	canvas.clear();
 	uint64_t current_time = clan::System::get_time();
@@ -79,7 +79,7 @@ bool DemoExplosion::update()
 	L_DrawParticle(canvas, emitter.get());
 
 	// draw cross pointer
-	pointer_sur.draw(canvas, mouse.get_x(), mouse.get_y());
+	pointer_sur.draw(canvas, mouse.get_position().x, mouse.get_position().y);
 
 
 	if( show_menu )

@@ -156,5 +156,5 @@ namespace clan
 		std::vector<Slot> slots;
 	};
 
+	/// \}
 }
-/// \}

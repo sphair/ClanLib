@@ -33,9 +33,11 @@ clan::ApplicationInstance<App> clanapp;
 
 App::App()
 {
-	// We support all display targets, in order listed here
-	clan::D3DTarget::enable();
-	clan::OpenGLTarget::enable();
+#ifdef WIN32
+	clan::D3DTarget::set_current();
+#else
+	clan::OpenGLTarget::set_current();
+#endif
 	// Set the window
 	clan::DisplayWindowDescription desc;
 	desc.set_title("ClanLib Basic Sound Example");
@@ -49,10 +51,10 @@ App::App()
 	sc.connect(window.sig_window_close(), [&](){quit = true; });
 
 	// Connect a keyboard handler to on_key_up()
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
-	sc.connect(window.get_ic().get_keyboard().sig_key_down(), clan::bind_member(this, &App::on_input_down));
+	sc.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	sc.connect(window.get_keyboard().sig_key_down(), clan::bind_member(this, &App::on_input_down));
 
-	sfx_pacman_start = clan::SoundBuffer("../../Game/Pacman/resources/start.wav");
+	sfx_pacman_start = clan::SoundBuffer("Resources/start.wav");
 	sfx_cheer = clan::SoundBuffer("Resources/cheer1.ogg");
 	sound_output = clan::SoundOutput(44100, 192);
 
@@ -63,13 +65,8 @@ App::App()
 
 bool App::update()
 {
-	game_time.update();
-
-	// Clear the display in a dark blue nuance
 	canvas.clear(clan::Colorf(0.0f, 0.0f, 0.2f));
-
 	font.draw_text(canvas, 32, 32, "Press 1 or 2", clan::Colorf::white);
-
 	window.flip(1);
 
 	return !quit;
@@ -87,7 +84,6 @@ void App::on_input_up(const clan::InputEvent &key)
 
 void App::on_input_down(const clan::InputEvent &key)
 {
-
 	if (key.str == "1")
 	{
 		sfx_pacman_start.play();

@@ -27,11 +27,13 @@
 */
 
 #pragma once
-/*
-class Options : public clan::GUIComponent
+
+#include "../../../ThemeAero/Sources/theme.h"
+
+class Options : public clan::TextureWindow
 {
 public:
-	Options(clan::GUIManager &gui, clan::Rect gui_position);
+	Options(clan::Canvas &canvas);
 	virtual ~Options();
 
 	bool logic_operation_enabled;
@@ -45,45 +47,33 @@ public:
 	clan::StencilOp stencil_fail;
 
 private:
+	void insert_compare(std::shared_ptr<clan::ListBoxView> &listbox);
+	void insert_passfail(std::shared_ptr<clan::ListBoxView> &listbox);
+	void on_equation_compare(std::shared_ptr<clan::ListBoxView> listbox);
+	void on_equation_passfail(std::shared_ptr<clan::ListBoxView> listbox, bool is_pass);
+	std::shared_ptr<clan::ListBoxView> create_listbox(int xpos, int ypos, const std::string &title);
 	void checkbox_moveballs_changed();
 	void checkbox_circle_changed();
 	void update_all_slider_text();
 	void slider_numballs_changed();
 	void slider_compare_reference_changed();
-	clan::Label *create_slider_label(clan::Slider *slider);
-	void on_passfail_selected(int value, clan::ComboBox *combo);
-	void on_compare_selected(int value, clan::ComboBox *combo);
-	clan::CheckBox *create_checkbox(int xpos, int ypos, const char *name, bool state);
-	void on_render(clan::Canvas &canvas, const clan::Rect &update_rect);
-	clan::Slider *create_slider(int xpos, int ypos);
-	float get_value(clan::Slider *slider);
-	clan::ComboBox *create_compare_combo_box(int xpos, int ypos, clan::PopupMenu &menu, int selected_item);
-	clan::ComboBox *create_passfail_combo_box(int xpos, int ypos, clan::PopupMenu &menu, int selected_item);
-	void make_compare_menu(clan::PopupMenu &menu);
-	void make_passfail_menu(clan::PopupMenu &menu);
-	clan::Label *create_combobox_label(clan::ComboBox *combo, const char *text);
+	std::shared_ptr<clan::LabelView> create_slider_label(int xpos, int ypos);
+	std::shared_ptr<clan::CheckBoxView> create_checkbox(int xpos, int ypos, const std::string &name, bool state);
+	std::shared_ptr<clan::SliderView> create_slider(int xpos, int ypos);
+	float get_value(std::shared_ptr<clan::SliderView> slider);
 private:
-	clan::Slider *slider_numballs;
-	clan::Label *label_numballs;
+	std::shared_ptr<clan::SliderView> slider_numballs;
+	std::shared_ptr<clan::LabelView> label_numballs;
 
-	clan::Slider *slider_compare_reference;
-	clan::Label *label_compare_reference;
+	std::shared_ptr<clan::SliderView> slider_compare_reference;
+	std::shared_ptr<clan::LabelView> label_compare_reference;
 
-	clan::CheckBox *checkbox_moveballs;
-	clan::CheckBox *checkbox_circle;
+	std::shared_ptr<clan::CheckBoxView> checkbox_moveballs;
+	std::shared_ptr<clan::CheckBoxView> checkbox_circle;
 
-	clan::Label *label_comparefunc;
-	clan::ComboBox *combo_comparefunc;
-	clan::PopupMenu combo_compare_menu;
-
-	clan::Label *label_pass;
-	clan::ComboBox *combo_pass;
-	clan::PopupMenu combo_pass_menu;
-
-	clan::Label *label_fail;
-	clan::ComboBox *combo_fail;
-	clan::PopupMenu combo_fail_menu;
+	std::shared_ptr<clan::LabelView> label_comparefunc;
+	std::shared_ptr<clan::LabelView> label_pass;
+	std::shared_ptr<clan::LabelView> label_fail;
 
 };
 
-*/

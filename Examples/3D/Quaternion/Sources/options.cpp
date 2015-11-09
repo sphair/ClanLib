@@ -29,10 +29,9 @@
 #include "precomp.h"
 #include "options.h"
 
-Options::Options(Canvas &canvas) : TextureView(canvas)
+Options::Options(Canvas &canvas) : TextureWindow(canvas)
 {
-
-	style()->set("background: rgb(153, 153, 204)");
+	root_view()->style()->set("background: rgb(153, 153, 204)");
 
 	auto spacer1 = std::make_shared<View>();
 	auto spacer2 = std::make_shared<View>();

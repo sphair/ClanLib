@@ -26,63 +26,45 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include "../Render/transfer_buffer.h"
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-class GraphicContext;
+	class GraphicContext;
 
-/// \brief Transfer Buffer provider.
-class TransferBufferProvider
-{
-/// \name Construction
-/// \{
-public:
-	virtual ~TransferBufferProvider() { }
+	/// \brief Transfer Buffer provider.
+	class TransferBufferProvider
+	{
+	public:
+		virtual ~TransferBufferProvider() { }
 
-	/// \brief Constructs a array buffer.
-	virtual void create(int size, BufferUsage usage) = 0;
+		/// \brief Constructs a array buffer.
+		virtual void create(int size, BufferUsage usage) = 0;
 
-	/// \brief Create
-	///
-	/// \param data = void
-	/// \param size = value
-	/// \param usage = Buffer Usage
-	virtual void create(void *data, int size, BufferUsage usage) = 0;
-/// \}
+		/// \brief Create
+		///
+		/// \param data = void
+		/// \param size = value
+		/// \param usage = Buffer Usage
+		virtual void create(void *data, int size, BufferUsage usage) = 0;
 
-/// \name Attributes
-/// \{
-public:
-	/// \brief Retrieves a pointer to the mapped buffer.
-	virtual void *get_data() = 0;
-/// \}
+		/// \brief Retrieves a pointer to the mapped buffer.
+		virtual void *get_data() = 0;
 
-/// \name Operations
-/// \{
-public:
-	/// \brief Maps buffer into system memory.
-	virtual void lock(GraphicContext &gc, BufferAccess access) = 0;
+		/// \brief Maps buffer into system memory.
+		virtual void lock(GraphicContext &gc, BufferAccess access) = 0;
 
-	/// \brief Unmaps buffer.
-	virtual void unlock() = 0;
+		/// \brief Unmaps buffer.
+		virtual void unlock() = 0;
 
-	/// \brief Uploads data to buffer.
-	virtual void upload_data(GraphicContext &gc, int offset, const void *data, int size) = 0;
-/// \}
+		/// \brief Uploads data to buffer.
+		virtual void upload_data(GraphicContext &gc, int offset, const void *data, int size) = 0;
+	};
 
-/// \name Implementation
-/// \{
-private:
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

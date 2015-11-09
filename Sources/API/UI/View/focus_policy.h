@@ -30,9 +30,10 @@
 
 namespace clan
 {
+	/// Automatic focus policy
 	enum class FocusPolicy
 	{
-		reject,
-		accept
+		reject, /// Only gain focus if set_focus is called directly
+		accept  /// Accept focus when the user tabs with the keyboard
 	};
 }

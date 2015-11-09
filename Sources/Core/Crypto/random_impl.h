@@ -33,45 +33,26 @@
 
 namespace clan
 {
+	class Random_Impl
+	{
+	public:
+		Random_Impl(int cache_size);
+		~Random_Impl();
 
-class Random_Impl
-{
-/// \name Construction
-/// \{
+		void get_random_bytes(unsigned char *out_dest_ptr, int num_bytes);
+		void get_random_bytes_nzero(unsigned char *out_dest_ptr, int num_bytes);
+		bool get_random_bool();
 
-public:
-	Random_Impl(int cache_size);
-	~Random_Impl();
-/// \}
-/// \name Attributes
-/// \{
+	private:
+		void fill_random_pool();
 
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	void get_random_bytes(unsigned char *out_dest_ptr, int num_bytes);
-	void get_random_bytes_nzero(unsigned char *out_dest_ptr, int num_bytes);
-	bool get_random_bool();
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	void fill_random_pool();
-
-	int random_pool_size;
-	int random_pool_free;
-	unsigned char *random_pool;
+		int random_pool_size;
+		int random_pool_free;
+		unsigned char *random_pool;
 #ifdef WIN32
-	HCRYPTPROV hProvider;
+		HCRYPTPROV hProvider;
 #endif
-	unsigned char random_bool;
-	int random_bool_bits_free;
-/// \}
-};
-
+		unsigned char random_bool;
+		int random_bool_bits_free;
+	};
 }

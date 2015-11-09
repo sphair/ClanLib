@@ -35,82 +35,67 @@
 
 namespace clan
 {
+	int FileSystemProvider_Zip::zip_source_unique_id = 0;
 
-int FileSystemProvider_Zip::zip_source_unique_id = 0;
+	FileSystemProvider_Zip::FileSystemProvider_Zip(const ZipArchive &zip_archive)
+		: zip_archive(zip_archive), index(0)
+	{
+		zip_source_unique_id++;
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// FileSystemProvider_Zip Construction:
+	FileSystemProvider_Zip::~FileSystemProvider_Zip()
+	{
+	}
 
-FileSystemProvider_Zip::FileSystemProvider_Zip(const ZipArchive &zip_archive)
-: zip_archive(zip_archive), index(0)
-{
-	zip_source_unique_id++;
-}
+	std::string FileSystemProvider_Zip::get_path() const
+	{
+		return path;
+	}
 
-FileSystemProvider_Zip::~FileSystemProvider_Zip()
-{
-}
+	std::string FileSystemProvider_Zip::get_identifier() const
+	{
+		// Ideally we should identify from the archive source (checksum etc)
+		// I'm sure someone will implement it if it is required
+		return path + string_format("/%1", zip_source_unique_id);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// FileSystemProvider_Zip Attributes:
+	IODevice FileSystemProvider_Zip::open_file(const std::string &filename,
+		File::OpenMode mode,
+		unsigned int access,
+		unsigned int share,
+		unsigned int flags)
+	{
+		return zip_archive.open_file(filename);
+	}
 
-std::string FileSystemProvider_Zip::get_path() const
-{
-	return path;
-}
+	bool FileSystemProvider_Zip::initialize_directory_listing(const std::string &path)
+	{
+		file_list = zip_archive.get_file_list(path);
+		directory_list_path = path;
+		index = 0;
 
-std::string FileSystemProvider_Zip::get_identifier() const
-{
-	// Ideally we should identify from the archive source (checksum etc)
-	// I'm sure someone will implement it if it is required
-	return path + string_format("/%1", zip_source_unique_id);
-}
+		return true;	// Empty directories should be valid
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// FileSystemProvider_Zip Operations:
+	bool FileSystemProvider_Zip::next_file(DirectoryListingEntry &entry)
+	{
+		if (file_list.empty())
+			return false;
 
-IODevice FileSystemProvider_Zip::open_file(const std::string &filename,
-	File::OpenMode mode,
-	unsigned int access,
-	unsigned int share,
-	unsigned int flags)
-{
-	return zip_archive.open_file(filename);
-}
+		if (index > file_list.size() - 1)
+			return false;
 
+		std::string filename = file_list[index].get_archive_filename();
+		if (filename[0] == '/')
+			filename = filename.substr(1, std::string::npos);
 
-bool FileSystemProvider_Zip::initialize_directory_listing(const std::string &path)
-{
-	file_list = zip_archive.get_file_list(path);
-	directory_list_path = path;
-	index = 0;
-	
-	return true;	// Empty directories should be valid
-}
+		entry.set_filename(filename);
+		entry.set_readable(true);
+		entry.set_directory(file_list[index].is_directory());
+		entry.set_hidden(false); // todo
+		entry.set_writable(false); // todo
+		index++;
 
-bool FileSystemProvider_Zip::next_file(DirectoryListingEntry &entry)
-{
-	if( file_list.empty() ) 
-		return false;
-
-	if( index > file_list.size() - 1 )
-		return false;
-
-	std::string filename = file_list[index].get_archive_filename();
-	if (filename[0] == '/')
-		filename = filename.substr(1, std::string::npos);
-
-	entry.set_filename(filename);
-	entry.set_readable(true);
-	entry.set_directory(file_list[index].is_directory());
-	entry.set_hidden(false); // todo
-	entry.set_writable(false); // todo
-	index++;
-
-	return true;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// FileSystemProvider_Zip Implementation:
-
+		return true;
+	}
 }

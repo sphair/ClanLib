@@ -28,6 +28,8 @@
 
 #pragma once
 
+#include "../../../ThemeAero/Sources/theme.h"
+
 enum PerlinDimension
 {
 	perlin_1d,
@@ -35,11 +37,11 @@ enum PerlinDimension
 	perlin_3d,
 	perlin_4d
 };
-/*
-class Options : public clan::GUIComponent
+
+class Options : public clan::TextureWindow
 {
 public:
-	Options(clan::GUIManager &gui, clan::Rect gui_position);
+	Options(clan::Canvas &canvas);
 	virtual ~Options();
 
 	clan::TextureFormat sized_format;
@@ -57,6 +59,16 @@ public:
 	bool is_normals_set;
 
 private:
+	void on_format_selected(std::shared_ptr<clan::ListBoxView> listbox);
+	void on_dimension_selected(std::shared_ptr<clan::ListBoxView> listbox);
+
+	std::shared_ptr<clan::ListBoxView> create_listbox(int xpos, int ypos, const std::string &title);
+	std::shared_ptr<clan::CheckBoxView> create_checkbox(int xpos, int ypos, const std::string &name, bool state);
+	std::shared_ptr<clan::SliderView> create_slider(int xpos, int ypos);
+	std::shared_ptr<clan::LabelView> create_slider_label(int xpos, int ypos);
+	void set_value(std::shared_ptr<clan::SliderView> slider, float value, float max_value);
+	float get_value(std::shared_ptr<clan::SliderView> slider, float max_value);
+
 	void checkbox_normals_changed();
 	void update_all_slider_text();
 	void slider_amplitude_changed();
@@ -70,52 +82,33 @@ private:
 	void slider_position_z_changed();
 	void slider_position_w_changed();
 	void checkbox_normal_changed();
-	void set_value(clan::Slider *slider, float value, float max_value);
-	clan::Label *create_slider_label(clan::Slider *slider);
-	void on_format_selected(int value, clan::ComboBox *combo);
-	void on_dimension_selected(int value, clan::ComboBox *combo);
-	void on_render(clan::Canvas &canvas, const clan::Rect &update_rect);
-	clan::Slider *create_slider(int xpos, int ypos);
-	float get_value(clan::Slider *slider, float max_value);
 
-	clan::CheckBox *create_checkbox(int xpos, int ypos, const char *name, bool state);
-	clan::ComboBox *create_dimension_combo_box(int xpos, int ypos, clan::PopupMenu &menu, int selected_item);
-	void make_dimension_menu(clan::PopupMenu &menu);
-	clan::ComboBox *create_format_combo_box(int xpos, int ypos, clan::PopupMenu &menu, int selected_item);
-	void make_format_menu(clan::PopupMenu &menu);
-	clan::Label *create_combobox_label(clan::ComboBox *combo, const char *text);
 private:
-	clan::Slider *slider_width;
-	clan::Label *label_width;
-	clan::Slider *slider_height;
-	clan::Label *label_height;
-	clan::Slider *slider_start_x;
-	clan::Label *label_start_x;
-	clan::Slider *slider_start_y;
-	clan::Label *label_start_y;
-	clan::Slider *slider_length_x;
-	clan::Label *label_length_x;
-	clan::Slider *slider_length_y;
-	clan::Label *label_length_y;
-	clan::Slider *slider_position_z;
-	clan::Label *label_position_z;
-	clan::Slider *slider_position_w;
-	clan::Label *label_position_w;
-	clan::Slider *slider_octaves;
-	clan::Label *label_octaves;
-	clan::Slider *slider_amplitude;
-	clan::Label *label_amplitude;
+	std::shared_ptr<clan::SliderView> slider_width;
+	std::shared_ptr<clan::LabelView> label_width;
+	std::shared_ptr<clan::SliderView> slider_height;
+	std::shared_ptr<clan::LabelView> label_height;
+	std::shared_ptr<clan::SliderView> slider_start_x;
+	std::shared_ptr<clan::LabelView> label_start_x;
+	std::shared_ptr<clan::SliderView> slider_start_y;
+	std::shared_ptr<clan::LabelView> label_start_y;
+	std::shared_ptr<clan::SliderView> slider_length_x;
+	std::shared_ptr<clan::LabelView> label_length_x;
+	std::shared_ptr<clan::SliderView> slider_length_y;
+	std::shared_ptr<clan::LabelView> label_length_y;
+	std::shared_ptr<clan::SliderView> slider_position_z;
+	std::shared_ptr<clan::LabelView> label_position_z;
+	std::shared_ptr<clan::SliderView> slider_position_w;
+	std::shared_ptr<clan::LabelView> label_position_w;
+	std::shared_ptr<clan::SliderView> slider_octaves;
+	std::shared_ptr<clan::LabelView> label_octaves;
+	std::shared_ptr<clan::SliderView> slider_amplitude;
+	std::shared_ptr<clan::LabelView> label_amplitude;
 
-	clan::Label *label_format;
-	clan::ComboBox *combo_format;
-	clan::PopupMenu combo_format_menu;
+	std::shared_ptr<clan::LabelView> label_format;
+	std::shared_ptr<clan::LabelView> label_dimension;
 
-	clan::Label *label_dimension;
-	clan::ComboBox *combo_dimension;
-	clan::PopupMenu combo_dimension_menu;
-
-	clan::CheckBox *checkbox_normals;
+	std::shared_ptr<clan::CheckBoxView> checkbox_normals;
 
 };
 
-*/

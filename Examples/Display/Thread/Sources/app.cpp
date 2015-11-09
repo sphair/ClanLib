@@ -32,19 +32,21 @@ clan::ApplicationInstance<App> clanapp;
 
 App::App()
 {
-	// We support all display targets, in order listed here
-	clan::D3DTarget::enable();
-	clan::OpenGLTarget::enable();
+#ifdef WIN32
+	clan::D3DTarget::set_current();
+#else
+	clan::OpenGLTarget::set_current();
+#endif
 
 	clan::DisplayWindowDescription description;
 	description.set_title("Thread Example");
 	description.set_size(clan::Size(1024, 768), true);
 
 	window = clan::DisplayWindow(description);
-	keyboard = window.get_ic().get_keyboard();
+	keyboard = window.get_keyboard();
 	canvas = clan::Canvas(window);
 
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	sc.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::window_close));
 
 	// Load the font

@@ -29,7 +29,6 @@
 **    Mark Page
 */
 
-
 #pragma once
 
 #include "vec2.h"
@@ -39,56 +38,54 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_Math clanCore Math
-/// \{
+	/// \addtogroup clanCore_Math clanCore Math
+	/// \{
 
-class Pointf;
-class Pointd;
+	class Pointf;
+	class Pointd;
 
-/// \brief 2D (x,y) point structure.
-///
-/// These point templates are defined for: int (Point), float (Pointf), double (Pointd)
-template<typename Type>
-class Pointx : public Vec2<Type>
-{
-public:
-	Pointx() : Vec2<Type>() {}
-	Pointx(Type x, Type y) : Vec2<Type>(x, y) {}
-	Pointx(const Pointx<Type> &p) : Vec2<Type>(p.x, p.y) {}
-	Pointx(const Vec2<Type> &p) : Vec2<Type>(p.x, p.y) {}
-};
+	/// \brief 2D (x,y) point structure.
+	///
+	/// These point templates are defined for: int (Point), float (Pointf), double (Pointd)
+	template<typename Type>
+	class Pointx : public Vec2<Type>
+	{
+	public:
+		Pointx() : Vec2<Type>() {}
+		Pointx(Type x, Type y) : Vec2<Type>(x, y) {}
+		Pointx(const Pointx<Type> &p) : Vec2<Type>(p.x, p.y) {}
+		Pointx(const Vec2<Type> &p) : Vec2<Type>(p.x, p.y) {}
+	};
 
-/// \brief 2D (x,y) point structure - Integer
-class Point : public Pointx<int>
-{
-public:
-	Point() : Pointx<int>() {}
-	Point(int x, int y) : Pointx<int>(x, y) {}
-	Point(const Pointx<int> &p) : Pointx<int>(p.x, p.y) {}
-	Point(const Vec2<int> &p) : Pointx<int>(p.x, p.y) {}
-};
+	/// \brief 2D (x,y) point structure - Integer
+	class Point : public Pointx<int>
+	{
+	public:
+		Point() : Pointx<int>() {}
+		Point(int x, int y) : Pointx<int>(x, y) {}
+		Point(const Pointx<int> &p) : Pointx<int>(p.x, p.y) {}
+		Point(const Vec2<int> &p) : Pointx<int>(p.x, p.y) {}
+	};
 
-/// \brief 2D (x,y) point structure - Float
-class Pointf : public Pointx<float>
-{
-public:
-	Pointf() : Pointx<float>() {}
-	Pointf(float x, float y) : Pointx<float>(x, y) {}
-	Pointf(const Pointx<float> &p) : Pointx<float>(p.x, p.y) {}
-	Pointf(const Vec2<float> &p) : Pointx<float>(p.x, p.y) {}
-};
+	/// \brief 2D (x,y) point structure - Float
+	class Pointf : public Pointx<float>
+	{
+	public:
+		Pointf() : Pointx<float>() {}
+		Pointf(float x, float y) : Pointx<float>(x, y) {}
+		Pointf(const Pointx<float> &p) : Pointx<float>(p.x, p.y) {}
+		Pointf(const Vec2<float> &p) : Pointx<float>(p.x, p.y) {}
+	};
 
-/// \brief 2D (x,y) point structure - Double
-class Pointd : public Pointx<double>
-{
-public:
-	Pointd() : Pointx<double>() {}
-	Pointd(double x, double y) : Pointx<double>(x, y) {}
-	Pointd(const Pointx<double> &p) : Pointx<double>(p.x, p.y) {}
-	Pointd(const Vec2<double> &p) : Pointx<double>(p.x, p.y) {}
-};
+	/// \brief 2D (x,y) point structure - Double
+	class Pointd : public Pointx<double>
+	{
+	public:
+		Pointd() : Pointx<double>() {}
+		Pointd(double x, double y) : Pointx<double>(x, y) {}
+		Pointd(const Pointx<double> &p) : Pointx<double>(p.x, p.y) {}
+		Pointd(const Vec2<double> &p) : Pointx<double>(p.x, p.y) {}
+	};
 
+	/// \}
 }
-
-/// \}
-

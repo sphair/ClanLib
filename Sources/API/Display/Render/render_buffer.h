@@ -27,7 +27,6 @@
 **    Harry Storbacka
 */
 
-
 #pragma once
 
 #include <memory>
@@ -35,68 +34,49 @@
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-class RenderBuffer;
-class GraphicContext;
-class RenderBufferProvider;
-class RenderBuffer_Impl;
+	class RenderBuffer;
+	class GraphicContext;
+	class RenderBufferProvider;
+	class RenderBuffer_Impl;
 
-/// \brief Render-buffer object class.
-class RenderBuffer
-{
-/// \name Construction
-/// \{
+	/// \brief Render-buffer object class.
+	class RenderBuffer
+	{
+	public:
+		/// \brief Constructs a null instance.
+		RenderBuffer();
 
-public:
-	/// \brief Constructs a null instance.
-	RenderBuffer();
+		/// \brief Constructs a RenderBuffer
+		///
+		/// \param context = Graphic Context
+		/// \param width = value
+		/// \param height = value
+		/// \param internal_format = Texture Format
+		RenderBuffer(GraphicContext &context, int width, int height, TextureFormat texture_format = tf_rgba8, int multisample_samples = 0);
 
-	/// \brief Constructs a RenderBuffer
-	///
-	/// \param context = Graphic Context
-	/// \param width = value
-	/// \param height = value
-	/// \param internal_format = Texture Format
-	RenderBuffer(GraphicContext &context, int width, int height, TextureFormat texture_format = tf_rgba8, int multisample_samples=0);
+		/// \brief Returns true if this object is invalid.
+		bool is_null() const { return !impl; }
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief Throw an exception if this object is invalid.
+		void throw_if_null() const;
 
-public:
-	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return !impl; }
+		/// \brief Returns the render buffer size.
+		const Size &get_size() const;
 
-	/// \brief Throw an exception if this object is invalid.
-	void throw_if_null() const;
+		/// \brief Get Provider
+		///
+		/// \return provider
+		RenderBufferProvider *get_provider() const;
 
-	/// \brief Returns the render buffer size.
-	const Size &get_size() const;
+		/// \brief Equality operator
+		bool operator==(const RenderBuffer &other) const;
 
-	/// \brief Get Provider
-	///
-	/// \return provider
-	RenderBufferProvider *get_provider() const;
+	private:
+		std::shared_ptr<RenderBuffer_Impl> impl;
+	};
 
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	/// \brief Equality operator
-	bool operator==(const RenderBuffer &other) const;
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	std::shared_ptr<RenderBuffer_Impl> impl;
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

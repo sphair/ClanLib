@@ -37,9 +37,10 @@ clan::ApplicationInstance<HelloWorld> clanapp;
 
 HelloWorld::HelloWorld()
 {
-	// We support all display targets, in order listed here
-	//clan::D3DTarget::enable();
-	clan::OpenGLTarget::enable();
+	clan::Application::use_timeout_timing(std::numeric_limits<int>::max());	// The update() loop is not required for this application
+
+	//clan::D3DTarget::set_current();
+	clan::OpenGLTarget::set_current();
 
 	// Create a source for our resources
 	FileResourceDocument doc(FileSystem("../../ThemeAero"));
@@ -48,21 +49,21 @@ HelloWorld::HelloWorld()
 	// Mark this thread as the UI thread
 	ui_thread = UIThread(resources);
 
-	// Create root view and window:
+	// Create a window:
 	DisplayWindowDescription desc;
 	desc.set_title("UICore: Hello World");
 	desc.set_allow_resize(true);
 	desc.set_size(Sizef(640, 600), false);
-	root = std::make_shared<WindowView>(desc);
+	window = std::make_shared<TopLevelWindow>(desc);
 
 	// Exit run loop when close is clicked.
 	// We have to store the return Slot because if it is destroyed the lambda function is disconnected from the signal.
-	slot_close = root->sig_close().connect([&](CloseEvent &e) { RunLoop::exit(); });
+	slots.connect(window->root_view()->sig_close(), [&](CloseEvent &e) { RunLoop::exit(); });
 
 	// Style the root view to use rounded corners and a bit of drop shadow
-	root->style()->set("padding: 11px");
-	root->style()->set("background: #efefef");
-	root->style()->set("flex-direction: column");
+	window->root_view()->style()->set("padding: 11px");
+	window->root_view()->style()->set("background: #efefef");
+	window->root_view()->style()->set("flex-direction: column");
 
 	auto body = std::make_shared<View>();
 	body->style()->set("background: white");
@@ -71,7 +72,7 @@ HelloWorld::HelloWorld()
 	body->style()->set("border-bottom: 5px solid #DD3B2A");
 	body->style()->set("flex-direction: column");
 	body->style()->set("flex: auto");
-	root->add_subview(body);
+	window->root_view()->add_subview(body);
 
 	// Create a label with some text to have some content
 	label = std::make_shared<LabelView>();
@@ -88,6 +89,12 @@ HelloWorld::HelloWorld()
 
 	auto scrollarea = std::make_shared<ScrollView>();
 	scrollarea->style()->set("margin: 5px 0; border: 1px solid black; padding: 5px 5px;");
+	scrollarea->scrollbar_x_view()->style()->set("background: rgb(232,232,236); margin-top: 5px");
+	scrollarea->scrollbar_x_view()->track()->style()->set("padding: 0 4px");
+	scrollarea->scrollbar_x_view()->thumb()->style()->set("background: rgb(208,209,215)");
+	scrollarea->scrollbar_y_view()->style()->set("background: rgb(232,232,236); margin-left: 5px");
+	scrollarea->scrollbar_y_view()->track()->style()->set("padding: 0 4px");
+	scrollarea->scrollbar_y_view()->thumb()->style()->set("background: rgb(208,209,215)");
 	scrollarea->content_view()->style()->set("flex-direction: column");
 	body->add_subview(scrollarea);
 
@@ -103,19 +110,14 @@ HelloWorld::HelloWorld()
 	edit->style()->set("box-shadow: 0 0 5px rgba(100,100,200,0.2)");
 	edit->set_text("amazing!");
 
-	// Create some text styles for the text we will write
-	std::shared_ptr<Style> normal = std::make_shared<Style>();
-	std::shared_ptr<Style> bold = std::make_shared<Style>();
-	std::shared_ptr<Style> italic = std::make_shared<Style>();
-	normal->set("font: 13px/25px 'Segoe UI'");
-	bold->set("font: 13px/25px 'Segoe UI'; font-weight: bold");
-	italic->set("font: 13px/25px 'Segoe UI'; font-style: italic");
-
 	// Create a span layout views with some more complex inline formatting
 	std::shared_ptr<SpanLayoutView> p1 = std::make_shared<SpanLayoutView>();
-	p1->add_text("This is an example of why Sphair should never ever make fun of my ", normal);
-	p1->add_text("BEAUTIFUL", bold);
-	p1->add_text(" green 13.37deg gradients because he will never know what it is replaced with!", normal);
+	p1->style()->set("font: 13px/25px 'Segoe UI'");
+	p1->text_style("bold")->set("font-weight: bold");
+	p1->text_style("italic")->set("font-style: italic");
+	p1->add_text("This is an example of why Sphair should never ever make fun of my ");
+	p1->add_text("BEAUTIFUL", "bold");
+	p1->add_text(" green 13.37deg gradients because he will never know what it is replaced with!");
 	scrollarea->content_view()->add_subview(p1);
 
 	std::shared_ptr<SpanLayoutView> p2 = std::make_shared<SpanLayoutView>();
@@ -124,19 +126,25 @@ HelloWorld::HelloWorld()
 	p2->style()->set("border-top: 5px solid #CCE4FB");
 	p2->style()->set("border-bottom: 5px solid #CCE4FB");
 	p2->style()->set("background: #EDF6FF");
-	p2->add_text("If you also think Sphair made a ", normal);
-	p2->add_text("BIG MISTAKE", bold);
-	p2->add_text(" please consider typing ", normal);
-	p2->add_text("Yes, yes, yes, yes, yes, yes, yes yes, YES!", italic);
-	p2->add_text(" in the text field: ", normal);
+	p2->style()->set("font: 13px/25px 'Segoe UI'");
+	p2->text_style("bold")->set("font-weight: bold");
+	p2->text_style("italic")->set("font-style: italic");
+	p2->add_text("If you also think Sphair made a ");
+	p2->add_text("BIG MISTAKE", "bold");
+	p2->add_text(" please consider typing ");
+	p2->add_text("Yes, yes, yes, yes, yes, yes, yes yes, YES!", "italic");
+	p2->add_text(" in the text field: ");
 	p2->add_subview(edit);
-	p2->add_text(" You know you want to!", bold);
+	p2->add_text(" You know you want to!", "bold");
 	scrollarea->content_view()->add_subview(p2);
 	
 	std::shared_ptr<SpanLayoutView> p3 = std::make_shared<SpanLayoutView>();
-	p3->add_text("Since we both know you typed ", normal);
-	p3->add_text("Yes, yes, yes..", italic);
-	p3->add_text(" into the text field (who wouldn't!?), here's the amazing gradient:", normal);
+	p3->style()->set("font: 13px/25px 'Segoe UI'");
+	p3->text_style("bold")->set("font-weight: bold");
+	p3->text_style("italic")->set("font-style: italic");
+	p3->add_text("Since we both know you typed ");
+	p3->add_text("Yes, yes, yes..", "italic");
+	p3->add_text(" into the text field (who wouldn't!?), here's the amazing gradient:");
 	scrollarea->content_view()->add_subview(p3);
 	
 	std::shared_ptr<View> gradient_box = std::make_shared<View>();
@@ -145,6 +153,22 @@ HelloWorld::HelloWorld()
 	gradient_box->style()->set("background: linear-gradient(13.37deg, #f0f0f0, rgb(120,240,120) 50%, #f0f0f0)");
 	gradient_box->style()->set("box-shadow: 7px 7px 7px rgba(0,0,0,0.2)");
 	scrollarea->content_view()->add_subview(gradient_box);
+	
+	auto listbox = std::make_shared<ListBoxView>();
+	listbox->style()->set("flex: none; height: 60px; margin: 7px 0; border: 1px solid black; padding: 5px; background: #f0f0f0");
+	listbox->set_items<std::string>(
+		{ "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "More items", "Even more items!!", "No more items!!!!!" },
+		[](const std::string &s) -> std::shared_ptr<View>
+		{
+			auto item = std::make_shared<LabelView>();
+			item->style()->set("font: 13px/17px 'Segoe UI'; color: black; margin: 1px 0; padding: 0 2px");
+			item->style("selected")->set("background: #7777f0; color: white");
+			item->style("hot")->set("background: #ccccf0; color: black");
+
+			item->set_text(s);
+			return item;
+		});
+	scrollarea->content_view()->add_subview(listbox);
 
 	auto scrollbar = Theme::create_scrollbar();
 	//scrollbar->set_disabled();
@@ -179,11 +203,65 @@ HelloWorld::HelloWorld()
 		scrollarea->content_view()->add_subview(radio);
 	}
 
-	// Make our window visible
-	root->show();
-}
+	// Create a popup window
+	slots.connect(button->sig_pointer_enter(), [=](PointerEvent &e)
+	{
+		auto popup = std::make_shared<WindowController>();
+		popup->root_view()->style()->set("flex-direction: column");
+		popup->root_view()->style()->set("background: #FFFFE0");
+		popup->root_view()->style()->set("margin: 5px");
+		popup->root_view()->style()->set("border: 1px solid black");
+		popup->root_view()->style()->set("border-radius: 2px");
+		popup->root_view()->style()->set("padding: 2px 5px 2px 5px");
+		popup->root_view()->style()->set("box-shadow: 0 0 3px rgba(0,0,0,0.2)");
 
-bool HelloWorld::update()
-{
-	return true;
+		auto text = Theme::create_label(true);
+		text->style()->set("font: 12px Tahoma; color: black");
+		text->set_text("This is an awesome popup");
+		popup->root_view()->add_subview(text);
+
+		std::weak_ptr<WindowController> popup_weak = popup;
+		popup->slots.connect(button->sig_pointer_leave(), [=](PointerEvent &e)
+		{
+			auto p = popup_weak.lock();
+			if (p)
+				p->dismiss();
+		});
+
+		window_manager.present_popup(button.get(), e.pos(button) + Pointf(10.0f, -10.0f), popup);
+	});
+
+	// Show a modal dialog
+	button->func_clicked() = [=]()
+	{
+		auto dialog = std::make_shared<WindowController>();
+		dialog->set_title("Alarm!!");
+		dialog->root_view()->style()->set("flex-direction: column");
+		dialog->root_view()->style()->set("background: rgb(240,240,240)");
+		dialog->root_view()->style()->set("padding: 11px");
+		dialog->root_view()->style()->set("width: 250px");
+
+		auto text = Theme::create_label(true);
+		text->style()->set("margin-bottom: 7px");
+		text->style()->set("font: 12px Tahoma; color: black");
+		text->set_text("This a modal dialog");
+		dialog->root_view()->add_subview(text);
+
+		auto ok_button = Theme::create_button();
+		ok_button->label()->set_text("OK");
+		dialog->root_view()->add_subview(ok_button);
+
+		std::weak_ptr<WindowController> dialog_weak = dialog;
+		ok_button->func_clicked() = [=]()
+		{
+			auto d = dialog_weak.lock();
+			if (d)
+				d->dismiss();
+		};
+
+		window_manager.present_modal(window->root_view().get(), dialog);
+	};
+
+	// Make our window visible
+	window->show();
 }

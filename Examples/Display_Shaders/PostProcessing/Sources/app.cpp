@@ -32,7 +32,7 @@ clan::ApplicationInstance<App> clanapp;
 
 App::App()
 {
-	clan::OpenGLTarget::enable();
+	clan::OpenGLTarget::set_current();
 
 	clan::DisplayWindowDescription description;
 	description.set_title("Postprocessing");
@@ -81,7 +81,7 @@ App::App()
 
 bool App::update()
 {
-	clan::InputDevice keyboard = window.get_ic().get_keyboard();
+	clan::InputDevice keyboard = window.get_keyboard();
 
 	if (keyboard.get_keycode(clan::keycode_escape))
 		quit = true;

@@ -34,37 +34,34 @@
 
 namespace clan
 {
-
-template<class... Params>
-class NetGameEventDispatcher
-{
-public:
-	typedef std::function< void (const NetGameEvent &, Params... ) > CallbackClass;
-
-	CallbackClass &func_event(const std::string &name) { return event_handlers[name]; }
-
-	/** \brief Dispatches the event object.
-	 *  \return true if the event handler is invoked and false if the
-	 *          event handler is not found.
-	 */
-	bool dispatch(const NetGameEvent &game_event, Params... params)
+	template<class... Params>
+	class NetGameEventDispatcher
 	{
-		auto it = event_handlers.find(game_event.get_name());
-		if (it != event_handlers.end() && (bool)it->second)
+	public:
+		typedef std::function< void(const NetGameEvent &, Params...) > CallbackClass;
+
+		CallbackClass &func_event(const std::string &name) { return event_handlers[name]; }
+
+		/** \brief Dispatches the event object.
+		 *  \return true if the event handler is invoked and false if the
+		 *          event handler is not found.
+		 */
+		bool dispatch(const NetGameEvent &game_event, Params... params)
 		{
-			it->second(game_event, params...);
-			return true;
+			auto it = event_handlers.find(game_event.get_name());
+			if (it != event_handlers.end() && (bool)it->second)
+			{
+				it->second(game_event, params...);
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
-		else
-		{
-			return false;
-		}
-	}
 
-private:
-	std::map<std::string, CallbackClass> event_handlers;
+	private:
+		std::map<std::string, CallbackClass> event_handlers;
 
-};
-
+	};
 }
-

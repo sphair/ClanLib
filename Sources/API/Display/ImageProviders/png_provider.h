@@ -24,9 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
-
 
 #pragma once
 
@@ -35,53 +33,48 @@
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Image_Providers clanDisplay Image Providers
-/// \{
+	/// \addtogroup clanDisplay_Image_Providers clanDisplay Image Providers
+	/// \{
 
-class FileSystem;
+	class FileSystem;
 
-/// \brief Surface provider that can load PNG (.png) files.
-class PNGProvider
-{
-/// \name Construction
-/// \{
+	/// \brief Surface provider that can load PNG (.png) files.
+	class PNGProvider
+	{
+	public:
+		/// \brief Called to load an image with this provider type.
+		///
+		/// \param name Name of the file to load.
+		/// \param directory Directory that file name is relative to.
+		static PixelBuffer load(
+			const std::string &filename,
+			const FileSystem &fs,
+			bool srgb = false);
 
-public:
-	/// \brief Called to load an image with this provider type.
-	///
-	/// \param name Name of the file to load.
-	/// \param directory Directory that file name is relative to.
-	static PixelBuffer load(
-		const std::string &filename,
-		const FileSystem &fs,
-		bool srgb = false);
+		static PixelBuffer load(
+			const std::string &fullname,
+			bool srgb = false);
 
-	static PixelBuffer load(
-		const std::string &fullname,
-		bool srgb = false);
+		/// \brief Load
+		///
+		/// \param dev = IODevice
+		///
+		/// \return Pixel Buffer
+		static PixelBuffer load(IODevice &dev, bool srgb = false);
 
-	/// \brief Load
-	///
-	/// \param dev = IODevice
-	///
-	/// \return Pixel Buffer
-	static PixelBuffer load(IODevice &dev, bool srgb = false);
+		/// \brief Called to save a given PixelBuffer to a file
+		static void save(
+			PixelBuffer buffer,
+			const std::string &filename,
+			FileSystem &fs);
 
-	/// \brief Called to save a given PixelBuffer to a file
-	static void save(
-		PixelBuffer buffer,
-		const std::string &filename,
-		FileSystem &fs);
+		static void save(
+			PixelBuffer buffer,
+			const std::string &fullname);
 
-	static void save(
-		PixelBuffer buffer,
-		const std::string &fullname);
+		/// \brief Save the given PixelBuffer to an output device.
+		static void save(PixelBuffer buffer, IODevice &iodev);
+	};
 
-	/// \brief Save the given PixelBuffer to an output device.
-	static void save(PixelBuffer buffer, IODevice &iodev);
 	/// \}
-};
-
 }
-
-/// \}

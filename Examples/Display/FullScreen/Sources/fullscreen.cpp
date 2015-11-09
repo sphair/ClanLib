@@ -34,11 +34,22 @@ clan::ApplicationInstance<FullScreen> clanapp;
 
 FullScreen::FullScreen()
 {
-	// We support all display targets, in order listed here
-	clan::D3DTarget::enable();
-	clan::OpenGLTarget::enable();
+#ifdef WIN32
+	clan::D3DTarget::set_current();
+#else
+	clan::OpenGLTarget::set_current();
+#endif
 
-	create_window();
+	DisplayWindowDescription window_description;
+	window_description.set_title("ClanLib FullScreen Example");
+	window_description.set_size(Size(700, 600), true);
+	window_description.set_allow_resize(true);
+
+	window = DisplayWindow(window_description);
+
+	sc.connect(window.sig_window_close(), clan::bind_member(this, &FullScreen::on_window_close));
+	sc.connect(window.get_keyboard().sig_key_down(), clan::bind_member(this, &FullScreen::on_input_down));
+	canvas = Canvas(window);
 
 	spr_logo = Sprite(canvas, "../Basic2D/Resources/logo.png");
 	spr_background = Sprite(canvas, "../../Display/Path/Resources/lobby_background2.png");
@@ -58,12 +69,7 @@ bool FullScreen::update()
 	if (fullscreen_requested != is_fullscreen)
 	{
 		is_fullscreen = fullscreen_requested;
-		create_window();
-	}
-
-	if (window.get_gc() != canvas.get_gc()) 
-	{
-		canvas = Canvas(window); // Always get the graphic context, the window may have been recreated
+		window.toggle_fullscreen();
 	}
 
 	canvas.clear(Colorf(0.0f,0.0f,0.2f));
@@ -123,27 +129,3 @@ void FullScreen::on_window_close()
 {
 	quit = true;
 }
-
-void FullScreen::create_window()
-{
-	DisplayWindowDescription window_description;
-	window_description.set_title("ClanLib FullScreen Example");
-	window_description.set_size(Size(700, 600), true);
-
-	if (is_fullscreen)
-	{
-		window_description.set_fullscreen(true);
-		window_description.show_caption(false);
-	}
-	else
-	{
-		window_description.set_allow_resize(true);
-	}
-
-	window = DisplayWindow(window_description);
-
-	sc.connect(window.sig_window_close(), clan::bind_member(this, &FullScreen::on_window_close));
-	sc.connect(window.get_ic().get_keyboard().sig_key_down(), clan::bind_member(this, &FullScreen::on_input_down));
-	canvas = Canvas(window);
-}
-

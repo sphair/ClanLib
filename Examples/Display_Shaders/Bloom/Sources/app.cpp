@@ -32,7 +32,7 @@ clan::ApplicationInstance<App> clanapp;
 
 App::App()
 {
-	clan::OpenGLTarget::enable();
+	clan::OpenGLTarget::set_current();
 	clan::DisplayWindowDescription description;
 	description.set_title("Bloom Shader");
 	description.set_size(clan::Size(1024, 768), true);
@@ -40,7 +40,7 @@ App::App()
 	window = clan::DisplayWindow(description);
 	canvas = clan::Canvas(window);
 
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	sc.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 
 	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::window_close));
 
@@ -110,7 +110,7 @@ App::App()
 
 bool App::update()
 {
-	clan::InputDevice keyboard = window.get_ic().get_keyboard();
+	clan::InputDevice keyboard = window.get_keyboard();
 	timer = (clan::System::get_time() - startTime) / 1000.0f;
 
 	// Render standard image to offscreen buffer

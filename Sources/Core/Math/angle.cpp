@@ -32,163 +32,145 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// Angle Construction:
-
-Angle::Angle() : value_rad(0)
-{
-}
-
-Angle::Angle(float value, AngleUnit unit)
-{
-	if (unit == angle_radians)
+	Angle::Angle() : value_rad(0)
 	{
-		value_rad = value;
 	}
-	else
+
+	Angle::Angle(float value, AngleUnit unit)
 	{
-		value_rad = value * float(PI) / 180.0f;
+		if (unit == angle_radians)
+		{
+			value_rad = value;
+		}
+		else
+		{
+			value_rad = value * float(PI) / 180.0f;
+		}
 	}
-}
 
-Angle Angle::from_radians(float value)
-{
-	return Angle(value, angle_radians);
-}
+	Angle Angle::from_radians(float value)
+	{
+		return Angle(value, angle_radians);
+	}
 
-Angle Angle::from_degrees(float value)
-{
-	return Angle(value, angle_degrees);
-}
+	Angle Angle::from_degrees(float value)
+	{
+		return Angle(value, angle_degrees);
+	}
 
+	float Angle::to_degrees() const
+	{
+		return value_rad * 180.0f / float(PI);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// Angle Attributes:
+	float Angle::to_radians() const
+	{
+		return value_rad;
+	}
 
-float Angle::to_degrees() const
-{
-	return value_rad * 180.0f / float(PI);
-}
+	void Angle::set_degrees(float value_degrees)
+	{
+		value_rad = value_degrees * float(PI) / 180.0f;
+	}
 
-float Angle::to_radians() const
-{
-	return value_rad;
-}
+	void Angle::set_radians(float value_radians)
+	{
+		value_rad = value_radians;
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// Angle Operations:
+	Angle &Angle::normalize()
+	{
+		value_rad = fmod(value_rad, PI*2.0f);
+		if (value_rad < 0.0f)
+			value_rad += PI*2.0f;
+		return *this;
+	}
 
-void Angle::set_degrees(float value_degrees)
-{
-	value_rad = value_degrees * float(PI) / 180.0f;
-}
+	Angle &Angle::normalize_180()
+	{
+		normalize();
+		if (value_rad > PI)
+			value_rad -= PI * 2.0f;
+		return *this;
+	}
 
-void Angle::set_radians(float value_radians)
-{
-	value_rad = value_radians;
-}
+	void Angle::operator+=(const Angle &angle)
+	{
+		value_rad += angle.value_rad;
+	}
 
-Angle &Angle::normalize()
-{
-	value_rad = fmod(value_rad, PI*2.0f);
-	if (value_rad < 0.0f)
-		value_rad += PI*2.0f;
-	return *this;
-}
+	void Angle::operator-=(const Angle &angle)
+	{
+		value_rad -= angle.value_rad;
+	}
 
-Angle &Angle::normalize_180()
-{
-	normalize();
-	if (value_rad > PI)
-		value_rad -= PI * 2.0f;
-	return *this;
-}
+	void Angle::operator*=(const Angle &angle)
+	{
+		value_rad *= angle.value_rad;
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// Angle Operators:
+	void Angle::operator/=(const Angle &angle)
+	{
+		value_rad /= angle.value_rad;
+	}
 
-void Angle::operator+=( const Angle &angle )
-{
-	value_rad += angle.value_rad;
-}
+	Angle Angle::operator+(const Angle &angle) const
+	{
+		return Angle(value_rad + angle.value_rad, angle_radians);
+	}
 
-void Angle::operator-=( const Angle &angle )
-{
-	value_rad -= angle.value_rad;
-}
+	Angle Angle::operator-(const Angle &angle) const
+	{
+		return Angle(value_rad - angle.value_rad, angle_radians);
+	}
 
-void Angle::operator*=( const Angle &angle )
-{
-	value_rad *= angle.value_rad;
-}
+	Angle Angle::operator*(const Angle &angle) const
+	{
+		return Angle(value_rad * angle.value_rad, angle_radians);
+	}
 
-void Angle::operator/=( const Angle &angle )
-{
-	value_rad /= angle.value_rad;
-}
+	Angle Angle::operator*(float value) const
+	{
+		return Angle(value_rad * value, angle_radians);
+	}
 
-Angle Angle::operator+( const Angle &angle ) const
-{
-	return Angle(value_rad + angle.value_rad, angle_radians);
-}
+	Angle Angle::operator/(const Angle &angle) const
+	{
+		return Angle(value_rad / angle.value_rad, angle_radians);
+	}
 
-Angle Angle::operator-( const Angle &angle ) const
-{
-	return Angle(value_rad - angle.value_rad, angle_radians);
-}
+	Angle Angle::operator/(float value) const
+	{
+		return Angle(value_rad / value, angle_radians);
+	}
 
-Angle Angle::operator*( const Angle &angle ) const
-{
-	return Angle(value_rad * angle.value_rad, angle_radians);
-}
+	bool Angle::operator<(const Angle &angle) const
+	{
+		return value_rad < angle.value_rad;
+	}
 
-Angle Angle::operator*( float value ) const
-{
-	return Angle(value_rad * value, angle_radians);
-}
+	bool Angle::operator>(const Angle &angle) const
+	{
+		return value_rad > angle.value_rad;
+	}
 
-Angle Angle::operator/( const Angle &angle ) const
-{
-	return Angle(value_rad / angle.value_rad, angle_radians);
-}
+	bool Angle::operator<=(const Angle &angle) const
+	{
+		return value_rad <= angle.value_rad;
+	}
 
-Angle Angle::operator/( float value ) const
-{
-	return Angle(value_rad / value, angle_radians);
-}
+	bool Angle::operator>=(const Angle &angle) const
+	{
+		return value_rad >= angle.value_rad;
+	}
 
-bool Angle::operator<( const Angle &angle ) const
-{
-	return value_rad < angle.value_rad;
-}
+	bool Angle::operator==(const Angle &angle) const
+	{
+		return value_rad == angle.value_rad;
+	}
 
-bool Angle::operator>( const Angle &angle ) const
-{
-	return value_rad > angle.value_rad;
-}
-
-bool Angle::operator<=( const Angle &angle ) const
-{
-	return value_rad <= angle.value_rad;
-}
-
-bool Angle::operator>=( const Angle &angle ) const
-{
-	return value_rad >= angle.value_rad;
-}
-
-bool Angle::operator==( const Angle &angle ) const
-{
-	return value_rad == angle.value_rad;
-}
-
-bool Angle::operator!=( const Angle &angle ) const
-{
-	return value_rad != angle.value_rad;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Angle Implementation:
-
+	bool Angle::operator!=(const Angle &angle) const
+	{
+		return value_rad != angle.value_rad;
+	}
 }

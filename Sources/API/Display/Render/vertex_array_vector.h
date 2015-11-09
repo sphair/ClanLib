@@ -26,7 +26,6 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include "vertex_array_buffer.h"
@@ -34,98 +33,80 @@
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-/// \brief Vertex Array Vector
-///
-template<typename Type>
-class VertexArrayVector : public VertexArrayBuffer
-{
-/// \name Construction
-/// \{
-public:
-	/// \brief Constructs a null instance.
-	VertexArrayVector()
-	{
-	}
-
-	/// \brief Constructs a VertexArrayBuffer using an existing VertexArrayBuffer
-	explicit VertexArrayVector(const VertexArrayBuffer &buffer) : VertexArrayBuffer(buffer)
-	{
-	}
-
-	/// \brief Constructs a VertexArrayBuffer
+	/// \brief Vertex Array Vector
 	///
-	/// \param gc = Graphic Context
-	/// \param size = value
-	/// \param usage = Buffer Usage
-	VertexArrayVector(GraphicContext &gc, int size, BufferUsage usage = usage_static_draw)
-	: VertexArrayBuffer(gc, size * sizeof(Type), usage)
+	template<typename Type>
+	class VertexArrayVector : public VertexArrayBuffer
 	{
-	}
+	public:
+		/// \brief Constructs a null instance.
+		VertexArrayVector()
+		{
+		}
 
-	/// \brief Constructs a VertexArrayBuffer
-	///
-	/// \param gc = Graphic Context
-	/// \param data = void
-	/// \param size = value
-	/// \param usage = Buffer Usage
-	VertexArrayVector(GraphicContext &gc, Type *data, int size, BufferUsage usage = usage_static_draw)
-	: VertexArrayBuffer(gc, data, size * sizeof(Type), usage)
-	{
-	}
+		/// \brief Constructs a VertexArrayBuffer using an existing VertexArrayBuffer
+		explicit VertexArrayVector(const VertexArrayBuffer &buffer) : VertexArrayBuffer(buffer)
+		{
+		}
 
-	VertexArrayVector(GraphicContext &gc, const std::vector<Type> &data, BufferUsage usage = usage_static_draw)
-	: VertexArrayBuffer(gc, data.empty() ? (Type*)0 : &data[0], data.size() * sizeof(Type), usage)
-	{
-	}
-/// \}
+		/// \brief Constructs a VertexArrayBuffer
+		///
+		/// \param gc = Graphic Context
+		/// \param size = value
+		/// \param usage = Buffer Usage
+		VertexArrayVector(GraphicContext &gc, int size, BufferUsage usage = usage_static_draw)
+			: VertexArrayBuffer(gc, size * sizeof(Type), usage)
+		{
+		}
 
-/// \name Attributes
-/// \{
-public:
-/// \}
+		/// \brief Constructs a VertexArrayBuffer
+		///
+		/// \param gc = Graphic Context
+		/// \param data = void
+		/// \param size = value
+		/// \param usage = Buffer Usage
+		VertexArrayVector(GraphicContext &gc, Type *data, int size, BufferUsage usage = usage_static_draw)
+			: VertexArrayBuffer(gc, data, size * sizeof(Type), usage)
+		{
+		}
 
-/// \name Operations
-/// \{
-public:
-	/// \brief Uploads data to vertex array buffer.
-	void upload_data(GraphicContext &gc, int offset, const Type *data, int size)
-	{
-		VertexArrayBuffer::upload_data(gc, offset * sizeof(Type), data, size * sizeof(Type));
-	}
+		VertexArrayVector(GraphicContext &gc, const std::vector<Type> &data, BufferUsage usage = usage_static_draw)
+			: VertexArrayBuffer(gc, data.empty() ? (Type*)0 : &data[0], data.size() * sizeof(Type), usage)
+		{
+		}
 
-	/// \brief Uploads data to vertex array buffer.
-	void upload_data(GraphicContext &gc, int offset, const std::vector<Type> &data)
-	{
-		if (!data.empty())
-			VertexArrayBuffer::upload_data(gc, offset, &data[0], data.size() * sizeof(Type));
-	}
+		/// \brief Uploads data to vertex array buffer.
+		void upload_data(GraphicContext &gc, int offset, const Type *data, int size)
+		{
+			VertexArrayBuffer::upload_data(gc, offset * sizeof(Type), data, size * sizeof(Type));
+		}
 
-	/// \brief Copies data from transfer buffer
-	void copy_from(GraphicContext &gc, TransferVector<Type> &buffer, int dest_pos = 0, int src_pos = 0, int size = -1)
-	{
-		if (size != -1)
-			size = size * sizeof(Type);
-		VertexArrayBuffer::copy_from(gc, buffer, dest_pos * sizeof(Type), src_pos * sizeof(Type), size);
-	}
+		/// \brief Uploads data to vertex array buffer.
+		void upload_data(GraphicContext &gc, int offset, const std::vector<Type> &data)
+		{
+			if (!data.empty())
+				VertexArrayBuffer::upload_data(gc, offset, &data[0], data.size() * sizeof(Type));
+		}
 
-	/// \brief Copies data to transfer buffer
-	void copy_to(GraphicContext &gc, TransferVector<Type> &buffer, int dest_pos = 0, int src_pos = 0, int size = -1)
-	{
-		if (size != -1)
-			size = size * sizeof(Type);
-		VertexArrayBuffer::copy_to(gc, buffer, dest_pos * sizeof(Type), src_pos * sizeof(Type), size);
-	}
-/// \}
+		/// \brief Copies data from transfer buffer
+		void copy_from(GraphicContext &gc, TransferVector<Type> &buffer, int dest_pos = 0, int src_pos = 0, int size = -1)
+		{
+			if (size != -1)
+				size = size * sizeof(Type);
+			VertexArrayBuffer::copy_from(gc, buffer, dest_pos * sizeof(Type), src_pos * sizeof(Type), size);
+		}
 
-/// \name Implementation
-/// \{
-private:
-/// \}
-};
+		/// \brief Copies data to transfer buffer
+		void copy_to(GraphicContext &gc, TransferVector<Type> &buffer, int dest_pos = 0, int src_pos = 0, int size = -1)
+		{
+			if (size != -1)
+				size = size * sizeof(Type);
+			VertexArrayBuffer::copy_to(gc, buffer, dest_pos * sizeof(Type), src_pos * sizeof(Type), size);
+		}
+	};
 
+	/// \}
 }
-
-/// \}

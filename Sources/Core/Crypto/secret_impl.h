@@ -33,39 +33,21 @@
 
 namespace clan
 {
+	class Secret_Impl
+	{
+	public:
+		Secret_Impl();
+		~Secret_Impl();
 
-class Secret_Impl
-{
-/// \name Construction
-/// \{
+		unsigned int get_size() const { return key_length; }
+		unsigned char *get_data() const { return key; }
 
-public:
-	Secret_Impl();
+		void create(unsigned int new_key_length);
 
-	~Secret_Impl();
-/// \}
-/// \name Attributes
-/// \{
-	unsigned int get_size() const {return key_length;}
-	unsigned char *get_data() const {return key;}
-/// \}
-/// \name Operations
-/// \{
+	private:
+		void free();
 
-public:
-	void create(unsigned int new_key_length);
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	void free();
-
-	unsigned char *key;
-	unsigned int key_length;
-
-/// \}
-};
-
+		unsigned char *key;
+		unsigned int key_length;
+	};
 }

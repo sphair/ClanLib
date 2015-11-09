@@ -26,45 +26,38 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
-
 
 namespace clan
 {
-/// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
-/// \{
+	/// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
+	/// \{
 
-class SoundOutput;
+	class SoundOutput;
 
-/// \brief Sound interface in ClanLib.
-///
-//    <p>All the functions that share name with those in SoundOutput have the
-//    same functionality. The only difference is, that the ones Sound
-//    operate on a selected sound output. This saves the trouble of passing around
-//    a pointer to the sound output, when only a single one is used anyway.</p>
-class Sound
-{
-/// \name Selected SoundOutput accessors
-/// \{
-
-public:
-	/// \brief Returns the name of the current sound output:
-	static const std::string &get_name();
-
-	/// \brief Returns the mixing frequency of the current sound output.
-	static int get_mixing_frequency();
-
-	/// \brief Returns the current selected sound output.
-	static SoundOutput get_current_output();
-
-	/// \brief Change the current selected sound output.
+	/// \brief Sound interface in ClanLib.
 	///
-	/// \param output The new current selected sound output.
-	static void select_output(const SoundOutput &output);
-/// \}
-};
+	//    <p>All the functions that share name with those in SoundOutput have the
+	//    same functionality. The only difference is, that the ones Sound
+	//    operate on a selected sound output. This saves the trouble of passing around
+	//    a pointer to the sound output, when only a single one is used anyway.</p>
+	class Sound
+	{
+	public:
+		/// \brief Returns the name of the current sound output:
+		static const std::string &get_name();
 
+		/// \brief Returns the mixing frequency of the current sound output.
+		static int get_mixing_frequency();
+
+		/// \brief Returns the current selected sound output.
+		static SoundOutput get_current_output();
+
+		/// \brief Change the current selected sound output.
+		///
+		/// \param output The new current selected sound output.
+		static void select_output(const SoundOutput &output);
+	};
+
+	/// \}
 }
-
-/// \}

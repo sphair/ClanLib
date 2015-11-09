@@ -10,7 +10,7 @@ clan::ApplicationInstance<Program> clanapp;
 Program::Program()
 {
 	// We support all display targets, in order listed here
-	clan::OpenGLTarget::enable();
+	clan::OpenGLTarget::set_current();
 
 	window = DisplayWindow("Hello ShaderEffect", 1024, 1024, false, true);
 	sc.connect(window.sig_window_close(), [&](){exit = true; });
@@ -41,11 +41,11 @@ Program::Program()
 
 bool Program::update()
 {
-	InputDevice mouse = window.get_ic().get_mouse();
+	InputDevice mouse = window.get_mouse();
 
 	float time = System::get_time() / 1000.0f;
 	uniforms.time = time;
-	uniforms.mouse = Vec4f(mouse.get_x() / 800.0f, mouse.get_y() / 600.0f, 0, 0);
+	uniforms.mouse = Vec4f(mouse.get_position().x / 800.0f, mouse.get_position().y / 600.0f, 0, 0);
 
 	for(int i=0; i< uniforms.xparticle_count; ++i)
 	{

@@ -32,57 +32,37 @@
 
 namespace clan
 {
+	class DirectoryListingEntry_Impl;
 
-class DirectoryListingEntry_Impl;
+	/// \brief Virtual File System (VFS) directory listing entry class.
+	class DirectoryListingEntry
+	{
+	public:
+		DirectoryListingEntry();
+		virtual ~DirectoryListingEntry();
 
-/// \brief Virtual File System (VFS) directory listing entry class.
-class DirectoryListingEntry
-{
-/// \name Construction
-/// \{
+		/// \brief Returns the file name of the item in the listing.
+		std::string get_filename();
 
-public:
-	DirectoryListingEntry();
-	virtual ~DirectoryListingEntry();
+		/// \brief Returns true if item is a directory.
+		bool is_directory();
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief Returns true if item is hidden.
+		bool is_hidden();
 
-public:
-	/// \brief Returns the file name of the item in the listing.
-	std::string get_filename();
+		/// \brief Returns true if item is writable.
+		bool is_writable();
 
-	/// \brief Returns true if item is a directory.
-	bool is_directory();
+		/// \brief Returns true if item is readable.
+		bool is_readable();
 
-	/// \brief Returns true if item is hidden.
-	bool is_hidden();
+		void set_filename(const std::string &);
+		void set_directory(bool);
+		void set_hidden(bool);
+		void set_writable(bool);
+		void set_readable(bool);
 
-	/// \brief Returns true if item is writable.
-	bool is_writable();
-
-	/// \brief Returns true if item is readable.
-	bool is_readable();
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	void set_filename(const std::string &);
-	void set_directory(bool );
-	void set_hidden(bool );
-	void set_writable(bool );
-	void set_readable(bool );
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	std::shared_ptr<DirectoryListingEntry_Impl> impl;
-/// \}
-};
-
+	private:
+		std::shared_ptr<DirectoryListingEntry_Impl> impl;
+	};
 }

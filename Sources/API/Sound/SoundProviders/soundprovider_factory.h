@@ -26,64 +26,50 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include <map>
 
 namespace clan
 {
-/// \addtogroup clanSound_Sound_Providers clanSound Sound Providers
-/// \{
+	/// \addtogroup clanSound_Sound_Providers clanSound Sound Providers
+	/// \{
 
-class SoundProvider;
-class InputSourceProvider;
-class SoundProviderType;
-class FileSystem;
-class IODevice;
+	class SoundProvider;
+	class InputSourceProvider;
+	class SoundProviderType;
+	class FileSystem;
+	class IODevice;
 
-/// \brief Sound Provider Factor class.
-class SoundProviderFactory
-{
-/// \name Attributes
-/// \{
+	/// \brief Sound Provider Factor class.
+	class SoundProviderFactory
+	{
+	public:
+		/// \brief Loads an sample file from 'filename', using the provider identified by 'type'.
+		/** <p>If the type is an empty string, it
+			uses the extension of the filename to determine what type
+			it is.</p>
+			<p>The input provider will be used as a the source for filename,
+			if specified.</p>*/
+		static SoundProvider *load(
+			const std::string &filename,
+			bool streamed,
+			const FileSystem &fs,
+			const std::string &type = std::string()
+			);
 
-public:
-	/// \brief Map of the class factories for each sound provider type.
-	static std::map<std::string, SoundProviderType *> types;
+		/// \brief Loads an sample file from 'filename', using the provider identified by 'type'.
+		static SoundProvider *load(
+			const std::string &fullname,
+			bool streamed,
+			const std::string &type = std::string());
 
-/// \}
-/// \name Operations
-/// \{
+		/// \brief Loads an sample file from 'file', using the provider identified by 'type'.
+		static SoundProvider *load(
+			IODevice &file,
+			bool streamed,
+			const std::string &type);
+	};
 
-public:
-	/// \brief Loads an sample file from 'filename', using the provider identified by 'type'.
-	/** <p>If the type is an empty string, it
-	    uses the extension of the filename to determine what type
-	    it is.</p>
-	    <p>The input provider will be used as a the source for filename,
-	    if specified.</p>*/
-	static SoundProvider *load(
-		const std::string &filename,
-		bool streamed,
-		const FileSystem &fs,
-		const std::string &type = std::string()
-		);
-
-	/// \brief Loads an sample file from 'filename', using the provider identified by 'type'.
-	static SoundProvider *load(
-		const std::string &fullname,
-		bool streamed,
-		const std::string &type = std::string());
-
-	/// \brief Loads an sample file from 'file', using the provider identified by 'type'.
-	static SoundProvider *load(
-		IODevice &file,
-		bool streamed,
-		const std::string &type);
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

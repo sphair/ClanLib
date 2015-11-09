@@ -60,6 +60,8 @@ private:
 	clan::ProgramObject program_object;
 	clan::Image image_grid;
 	clan::Texture2D texture_particle;
+	clan::UIThread ui_thread;
+	std::shared_ptr<Options> options;
 
 	bool quit = false;
 	float grid_space;

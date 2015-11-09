@@ -26,16 +26,9 @@
 **    Harry Storbacka
 */
 
-
-
 #pragma once
 
 #include <memory>
-
-namespace clan
-{
-/// \addtogroup clanCore_System clanCore System
-/// \{
 
 #if defined(_MSC_VER)
 #define cl_tls_variable _declspec(thread)
@@ -45,59 +38,40 @@ namespace clan
 #define cl_tls_variable __thread
 #endif
 
-class ThreadLocalStorage_Instance;
-
-class ThreadLocalStorageData
+namespace clan
 {
-public:
-	virtual ~ThreadLocalStorageData() { }
-};
+	/// \addtogroup clanCore_System clanCore System
+	/// \{
 
-class ThreadLocalStorage_Impl;
+	class ThreadLocalStorage_Instance;
 
-/// \brief ThreadLocalStorage class.
-class ThreadLocalStorage
-{
-/// \name Construction
-/// \{
+	class ThreadLocalStorageData
+	{
+	public:
+		virtual ~ThreadLocalStorageData() { }
+	};
 
-public:
-	/// \brief Constructs a Thread Local Storage object.
-	ThreadLocalStorage();
+	class ThreadLocalStorage_Impl;
 
-	~ThreadLocalStorage();
+	/// \brief ThreadLocalStorage class.
+	class ThreadLocalStorage
+	{
+	public:
+		/// \brief Constructs a Thread Local Storage object.
+		ThreadLocalStorage();
+		~ThreadLocalStorage();
 
-private:
+		/// \brief Get a variable.
+		static std::shared_ptr<ThreadLocalStorageData> get_variable(const std::string &name);
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief Set a variable.
+		static void set_variable(const std::string &name, std::shared_ptr<ThreadLocalStorageData> ptr);
 
-public:
-	/// \brief Get a variable.
-	static std::shared_ptr<ThreadLocalStorageData> get_variable(const std::string &name);
+	private:
+		static void init_core();
+		static ThreadLocalStorage_Instance *instance;
+		friend class ThreadLocalStorage_Instance;
+	};
 
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	/// \brief Set a variable.
-	static void set_variable(const std::string &name, std::shared_ptr<ThreadLocalStorageData> ptr);
-
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-	static void init_core();
-	static ThreadLocalStorage_Instance *instance;
-	friend class ThreadLocalStorage_Instance;
-};
-
+	/// \}
 }
-
-/// \}

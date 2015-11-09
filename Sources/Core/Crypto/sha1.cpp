@@ -23,7 +23,7 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
+**    Mark Page
 */
 
 #include "Core/precomp.h"
@@ -33,57 +33,43 @@
 
 namespace clan
 {
+	SHA1::SHA1()
+		: impl(std::make_shared<SHA1_Impl>())
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// SHA1 Construction:
+	std::string SHA1::get_hash(bool uppercase) const
+	{
+		return impl->get_hash(uppercase);
+	}
 
-SHA1::SHA1()
-: impl(std::make_shared<SHA1_Impl>())
-{
-}
+	void SHA1::get_hash(unsigned char out_hash[20]) const
+	{
+		impl->get_hash(out_hash);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// SHA1 Attributes:
+	void SHA1::reset()
+	{
+		impl->reset();
+	}
 
-std::string SHA1::get_hash(bool uppercase) const
-{
-	return impl->get_hash(uppercase);
-}
+	void SHA1::add(const void *data, int size)
+	{
+		impl->add(data, size);
+	}
 
-void SHA1::get_hash(unsigned char out_hash[20]) const
-{
-	impl->get_hash(out_hash);
-}
+	void SHA1::add(const DataBuffer &data)
+	{
+		add(data.get_data(), data.get_size());
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// SHA1 Operations:
+	void SHA1::set_hmac(const void *key_data, int key_size)
+	{
+		impl->set_hmac(key_data, key_size);
+	}
 
-void SHA1::reset()
-{
-	impl->reset();
-}
-
-void SHA1::add(const void *data, int size)
-{
-	impl->add(data, size);
-}
-
-void SHA1::add(const DataBuffer &data)
-{
-	add(data.get_data(), data.get_size());
-}
-
-void SHA1::set_hmac(const void *key_data, int key_size)
-{
-	impl->set_hmac(key_data, key_size);
-}
-
-void SHA1::calculate()
-{
-	impl->calculate();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// SHA1 Implementation:
-
+	void SHA1::calculate()
+	{
+		impl->calculate();
+	}
 }

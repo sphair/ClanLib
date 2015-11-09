@@ -35,21 +35,25 @@ clan::ApplicationInstance<App> clanapp;
 App::App()
 {
 	// We support all display targets, in order listed here
-	clan::OpenGLTarget::enable();
+	clan::OpenGLTarget::set_current();
 
 	clan::DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("Perlin Noise Example");
-	win_desc.set_size(clan::Size(800, 520), false);
+	win_desc.set_size(clan::Size(900, 720), false);
 
 	window = clan::DisplayWindow(win_desc);
 	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	sc.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 
 	canvas = clan::Canvas(window);
+	clan::FileResourceDocument doc(clan::FileSystem("../../ThemeAero"));
+	clan::ResourceManager resources = clan::FileResourceManager::create(doc);
+	ui_thread = clan::UIThread(resources);
 
-	// Deleted automatically by the GUI
-	//Options *options = new Options(gui, canvas.get_size());
+	options = std::make_shared<Options>(canvas);
+	options->set_always_render();
+	options->set_window(window);
 
 	image_grid = clan::Image(canvas, "../../Display_Render/Blend/Resources/grid.png");
 	image_grid.set_color(clan::Colorf(0.4f, 0.4f, 1.0f, 1.0f));
@@ -57,7 +61,10 @@ App::App()
 
 bool App::update()
 {
-	/*
+	options->set_viewport(canvas.get_size());
+	options->set_background_color(clan::Colorf(0.6f, 0.6f, 0.2f, 1.0f));
+	options->update();
+
 	if (last_dimension != options->dimension)
 	{
 		changed_flag = true;
@@ -130,7 +137,7 @@ bool App::update()
 		changed_flag = true;
 		last_position_w = options->position_w;
 	}
-	*/
+
 	if (changed_flag)
 	{
 		changed_flag = false;

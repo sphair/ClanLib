@@ -1,8 +1,26 @@
 language: cpp
-before_install: sudo apt-get install libfreetype6-dev libjpeg-dev libmikmod2-dev libpng12-0-dev libvorbis-dev doxygen
+
 compiler:
   - gcc
   - clang
+
+addons:
+    apt:
+        sources:
+            - ubuntu-toolchain-r-test
+        packages:
+            - gcc-4.8
+            - g++-4.8
+            - clang
+            - libfreetype6-dev
+            - libjpeg-dev
+            - libmikmod2-dev
+            - libpng12-0-dev
+            - libvorbis-dev
+            - doxygen
+
+install:
+- if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
 
 script:
   - ./autogen.sh

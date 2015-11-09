@@ -53,225 +53,206 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_Math clanCore Math
-/// \{
-class BigInt_Impl;
+	/// \addtogroup clanCore_Math clanCore Math
+	/// \{
 
-/// \brief Big Integer class
-class BigInt
-{
-/// \name Construction
-/// \{
-public:
-	/// \brief Constructs a big integer (initialised to zero)
-	BigInt();
+	class BigInt_Impl;
 
-	/// \brief Constructs a big integer (initialised to value)
-	explicit BigInt(uint32_t value);
+	/// \brief Big Integer class
+	class BigInt
+	{
+	public:
+		/// \brief Constructs a big integer (initialised to zero)
+		BigInt();
 
-	/// \brief Constructs a big integer (initialised to value)
-	explicit BigInt(int32_t value);
+		/// \brief Constructs a big integer (initialised to value)
+		explicit BigInt(uint32_t value);
 
-	/// \brief Constructs a big integer (initialised to value)
-	explicit BigInt(uint64_t value);
+		/// \brief Constructs a big integer (initialised to value)
+		explicit BigInt(int32_t value);
 
-	/// \brief Constructs a big integer (initialised to value)
-	explicit BigInt(int64_t value);
+		/// \brief Constructs a big integer (initialised to value)
+		explicit BigInt(uint64_t value);
 
-	/// \brief Copy constructor
-	BigInt(const BigInt &other);
+		/// \brief Constructs a big integer (initialised to value)
+		explicit BigInt(int64_t value);
 
-	/// \brief Destructor
-	~BigInt();
+		/// \brief Copy constructor
+		BigInt(const BigInt &other);
 
-	BigInt &operator=(const BigInt& other);
+		/// \brief Destructor
+		~BigInt();
 
-/// \}
-/// \name Attributes
-/// \{
+		BigInt &operator=(const BigInt& other);
 
-public:
+		void read_unsigned_octets(const unsigned char *input_str, unsigned int input_length);
 
-/// \}
-/// \name Operations
-/// \{
+		void zero();
 
-public:
-	void read_unsigned_octets( const unsigned char *input_str, unsigned int input_length);
+		bool make_prime(unsigned int num_bits);
 
-	void zero();
+		/// \brief  Compare a <=> 0.  Returns <0 if a<0, 0 if a=0, >0 if a>0.
+		int cmp_z() const;
 
-	bool make_prime(unsigned int num_bits);
+		void set_bit(unsigned int bit_number, unsigned int value);
 
-	/// \brief  Compare a <=> 0.  Returns <0 if a<0, 0 if a=0, >0 if a>0.
-	int cmp_z() const;
+		int significant_bits() const;
 
-	void set_bit(unsigned int bit_number, unsigned int value);
+		void sieve(const uint32_t *primes, unsigned int num_primes, std::vector<unsigned char> &sieve);
 
-	int significant_bits() const;
+		/// \brief  Compute c = a (mod d).  Result will always be 0 <= c < d
+		uint32_t mod_d(uint32_t d) const;
 
-	void sieve(const uint32_t *primes, unsigned int num_primes, std::vector<unsigned char> &sieve);
+		/// \brief  Compute the quotient q = a / d and remainder r = a mod d, for a single digit d.  Respects the sign of its divisor (single digits are unsigned anyway).
+		void div_d(uint32_t d, BigInt *q, uint32_t *r) const;
 
-	/// \brief  Compute c = a (mod d).  Result will always be 0 <= c < d
-	uint32_t mod_d(uint32_t d) const;
+		/// \brief  Using w as a witness, try pseudo-primality testing based on Fermat's little theorem. 
+		///
+		/// If a is prime, and (w, a) = 1, then w^a == w (mod a).
+		/// So, we compute z = w^a (mod a) and compare z to w; if they are
+		/// equal, the test passes and we return true.  Otherwise, we return false.
+		bool fermat(uint32_t w) const;
 
-	/// \brief  Compute the quotient q = a / d and remainder r = a mod d, for a single digit d.  Respects the sign of its divisor (single digits are unsigned anyway).
-	void div_d(uint32_t d, BigInt *q, uint32_t *r) const;
+		/// \brief  Performs nt iteration of the Miller-Rabin probabilistic primality test on a.
+		///
+		/// Returns true if the tests pass, false if one fails.
+		/// If false is returned, the number is definitely composite.  If true
+		bool pprime(int nt) const;
 
-	/// \brief  Using w as a witness, try pseudo-primality testing based on Fermat's little theorem. 
-	///
-	/// If a is prime, and (w, a) = 1, then w^a == w (mod a).
-	/// So, we compute z = w^a (mod a) and compare z to w; if they are
-	/// equal, the test passes and we return true.  Otherwise, we return false.
-	bool fermat(uint32_t w) const;
+		/// \brief Sets a value
+		void set(int32_t d);
+		void set(uint32_t d);
+		void set(uint64_t d);
+		void set(int64_t d);
 
-	/// \brief  Performs nt iteration of the Miller-Rabin probabilistic primality test on a.
-	///
-	/// Returns true if the tests pass, false if one fails.
-	/// If false is returned, the number is definitely composite.  If true
-	bool pprime(int nt) const;
+		/// \brief Gets a value.
+		///
+		/// Throws exception if number exceeds datatype bounds
+		void get(uint32_t &d);
+		void get(uint64_t &d);
+		void get(int64_t &d);
+		void get(int32_t &d);
 
-	/// \brief Sets a value
-	void set(int32_t d);
-	void set(uint32_t d);
-	void set(uint64_t d);
-	void set(int64_t d);
+		/// \brief  Compute c = (a ** b) mod m.
+		///
+		/// Uses a standard square-and-multiply
+		/// method with modular reductions at each step. (This is basically the
+		/// same code as expt(), except for the addition of the reductions)
+		///
+		/// The modular reductions are done using Barrett's algorithm (see reduce() for details)
+		void exptmod(const BigInt *b, const BigInt *m, BigInt *c) const;
 
-	/// \brief Gets a value.
-	///
-	/// Throws exception if number exceeds datatype bounds
-	void get(uint32_t &d);
-	void get(uint64_t &d);
-	void get(int64_t &d);
-	void get(int32_t &d);
+		/// \brief  Compute c = a (mod m).  Result will always be 0 <= c < m.
+		void mod(const BigInt *m, BigInt *c) const;
 
-	/// \brief  Compute c = (a ** b) mod m.
-	///
-	/// Uses a standard square-and-multiply
-	/// method with modular reductions at each step. (This is basically the
-	/// same code as expt(), except for the addition of the reductions)
-	///
-	/// The modular reductions are done using Barrett's algorithm (see reduce() for details)
-	void exptmod(const BigInt *b, const BigInt *m, BigInt *c) const;
+		/// \brief  Compute q = a / b and r = a mod b.
+		///
+		/// Input parameters may be re-used
+		/// as output parameters.  If q or r is NULL, that portion of the
+		/// computation will be discarded (although it will still be computed)
+		void div(const BigInt &b, BigInt *q, BigInt *r) const;
+		void div(uint32_t d, BigInt *q, BigInt *r) const;
 
-	/// \brief  Compute c = a (mod m).  Result will always be 0 <= c < m.
-	void mod(const BigInt *m, BigInt *c) const;
+		/// \brief Compute result = this + b.
+		BigInt operator + (const BigInt& b);
+		BigInt operator + (uint32_t d);
 
-	/// \brief  Compute q = a / b and r = a mod b.
-	///
-	/// Input parameters may be re-used
-	/// as output parameters.  If q or r is NULL, that portion of the
-	/// computation will be discarded (although it will still be computed)
-	void div(const BigInt &b, BigInt *q, BigInt *r) const;
-	void div(uint32_t d, BigInt *q, BigInt *r) const;
+		/// \brief Compute this += b.
+		BigInt operator += (const BigInt& b);
+		BigInt operator += (uint32_t d);
 
-	/// \brief Compute result = this + b.
-	BigInt operator + (const BigInt& b);
-	BigInt operator + (uint32_t d);
+		/// \brief Compute result = this - b.
+		BigInt operator - (const BigInt& b);
+		BigInt operator - (uint32_t d);
 
-	/// \brief Compute this += b.
-	BigInt operator += (const BigInt& b);
-	BigInt operator += (uint32_t d);
+		/// \brief Compute this -= b.
+		BigInt operator -= (const BigInt& b);
+		BigInt operator -= (uint32_t d);
 
-	/// \brief Compute result = this - b.
-	BigInt operator - (const BigInt& b);
-	BigInt operator - (uint32_t d);
+		/// \brief Compute result = this * b.
+		BigInt operator * (const BigInt& b);
+		BigInt operator * (uint32_t d);
 
-	/// \brief Compute this -= b.
-	BigInt operator -= (const BigInt& b);
-	BigInt operator -= (uint32_t d);
+		/// \brief Compute this *= b.
+		BigInt operator *= (const BigInt& b);
+		BigInt operator *= (uint32_t d);
 
-	/// \brief Compute result = this * b.
-	BigInt operator * (const BigInt& b);
-	BigInt operator * (uint32_t d);
+		/// \brief Compute result = this / b.
+		BigInt operator / (const BigInt& b);
+		BigInt operator / (uint32_t d);
 
-	/// \brief Compute this *= b.
-	BigInt operator *= (const BigInt& b);
-	BigInt operator *= (uint32_t d);
+		/// \brief Compute this /= b.
+		BigInt operator /= (const BigInt& b);
+		BigInt operator /= (uint32_t d);
 
-	/// \brief Compute result = this / b.
-	BigInt operator / (const BigInt& b);
-	BigInt operator / (uint32_t d);
+		/// \brief Compute result = this % b.
+		BigInt operator % (const BigInt& b);
+		BigInt operator % (uint32_t d);
 
-	/// \brief Compute this /= b.
-	BigInt operator /= (const BigInt& b);
-	BigInt operator /= (uint32_t d);
+		/// \brief Compute this %= b.
+		BigInt operator %= (const BigInt& b);
+		BigInt operator %= (uint32_t d);
 
-	/// \brief Compute result = this % b.
-	BigInt operator % (const BigInt& b);
-	BigInt operator % (uint32_t d);
+		int cmp(const BigInt *b) const;
 
-	/// \brief Compute this %= b.
-	BigInt operator %= (const BigInt& b);
-	BigInt operator %= (uint32_t d);
+		/// \brief  Compare a <=> d.  Returns <0 if a<d, 0 if a=d, >0 if a>d
+		int cmp_d(uint32_t d) const;
 
-	int cmp(const BigInt *b) const;
+		/// \brief  Compute b = -a.  'a' and 'b' may be identical.
+		void neg(BigInt *b) const;
 
-	/// \brief  Compare a <=> d.  Returns <0 if a<d, 0 if a=d, >0 if a>d
-	int cmp_d(uint32_t d) const;
+		unsigned int trailing_zeros() const;
 
-	/// \brief  Compute b = -a.  'a' and 'b' may be identical.
-	void neg(BigInt *b) const;
+		void sqrmod(const BigInt *m, BigInt *c) const;
+		void sqr(BigInt *b) const;
 
-	unsigned int trailing_zeros() const;
+		/// \brief Assigns a random value to a.
+		///
+		/// This value is generated using the
+		/// standard C library's rand() function, so it should not be used for
+		/// cryptographic purposes, but it should be fine for primality testing,
+		/// since all we really care about there is reasonable statistical
+		/// properties.
+		/// As many digits as a currently has are filled with random digits.
+		void random();
 
-	void sqrmod(const BigInt *m, BigInt *c) const;
-	void sqr(BigInt *b) const;
+		/// \brief Exchange mp1 and mp2 without allocating any intermediate memory
+		///
+		/// (well, unless you count the stack space needed for this call and the
+		/// locals it creates...).  This cannot fail.
+		void exch(BigInt *mp2);
 
-	/// \brief Assigns a random value to a.
-	///
-	/// This value is generated using the
-	/// standard C library's rand() function, so it should not be used for
-	/// cryptographic purposes, but it should be fine for primality testing,
-	/// since all we really care about there is reasonable statistical
-	/// properties.
-	/// As many digits as a currently has are filled with random digits.
-	void random();
+		/// \brief  Compute c = a^-1 (mod m), if there is an inverse for a (mod m).
+		///
+		/// This is equivalent to the question of whether (a, m) = 1.  If not,
+		/// false is returned, and there is no inverse.
+		bool invmod(const BigInt *m, BigInt *c) const;
 
-	/// \brief Exchange mp1 and mp2 without allocating any intermediate memory
-	///
-	/// (well, unless you count the stack space needed for this call and the
-	/// locals it creates...).  This cannot fail.
-	void exch(BigInt *mp2);
+		/// \brief  Compute g = (a, b) and values x and y satisfying Bezout's identity
+		///
+		/// (that is, ax + by = g).  This uses the extended binary GCD algorithm
+		/// based on the Stein algorithm used for mp_gcd()
+		void xgcd(const BigInt *b, BigInt *g, BigInt *x, BigInt *y) const;
 
-	/// \brief  Compute c = a^-1 (mod m), if there is an inverse for a (mod m).
-	///
-	/// This is equivalent to the question of whether (a, m) = 1.  If not,
-	/// false is returned, and there is no inverse.
-	bool invmod(const BigInt *m, BigInt *c) const;
+		/// \brief   Compute b = |a|.  'a' and 'b' may be identical.
+		void abs(BigInt *b) const;
 
-	/// \brief  Compute g = (a, b) and values x and y satisfying Bezout's identity
-	///
-	/// (that is, ax + by = g).  This uses the extended binary GCD algorithm
-	/// based on the Stein algorithm used for mp_gcd()
-	void xgcd(const BigInt *b, BigInt *g, BigInt *x, BigInt *y) const;
+		///  \brief  Returns a true if number is even
+		bool is_even() const;
 
-	/// \brief   Compute b = |a|.  'a' and 'b' may be identical.
-	void abs(BigInt *b) const;
+		///  \brief  Returns a true if number is odd
+		bool is_odd() const;
 
-	///  \brief  Returns a true if number is even
-	bool is_even() const;
+		/// \brief  Compute c = a / 2, disregarding the remainder.
+		void div_2(BigInt *c) const;
 
-	///  \brief  Returns a true if number is odd
-	bool is_odd() const;
+		void to_unsigned_octets(unsigned char *output_str, unsigned int output_length) const;
 
-	/// \brief  Compute c = a / 2, disregarding the remainder.
-	void div_2(BigInt *c) const;
+		int unsigned_octet_size() const;
 
-	void to_unsigned_octets( unsigned char *output_str, unsigned int output_length) const;
+	private:
+		std::unique_ptr<BigInt_Impl> impl;
+	};
 
-	int unsigned_octet_size() const;
-/// \}
-/// \name Implementation
-/// \{
-private:
-	std::unique_ptr<BigInt_Impl> impl;
-
-/// \}
-
-};
-
+	/// \}
 }
-
-/// \}
-

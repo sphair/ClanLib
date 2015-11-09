@@ -26,61 +26,42 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include "../Render/vertex_array_buffer.h"
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-class GraphicContext;
+	class GraphicContext;
 
-/// \brief Vertex Array Buffer provider.
-class VertexArrayBufferProvider
-{
-/// \name Construction
-/// \{
-public:
-	virtual ~VertexArrayBufferProvider() { }
+	/// \brief Vertex Array Buffer provider.
+	class VertexArrayBufferProvider
+	{
+	public:
+		virtual ~VertexArrayBufferProvider() { }
 
-	/// \brief Constructs a vertex array buffer.
-	virtual void create(int size, BufferUsage usage) = 0;
+		/// \brief Constructs a vertex array buffer.
+		virtual void create(int size, BufferUsage usage) = 0;
 
-	/// \brief Create
-	///
-	/// \param data = void
-	/// \param size = value
-	/// \param usage = Buffer Usage
-	virtual void create(void *data, int size, BufferUsage usage) = 0;
-/// \}
+		/// \brief Create
+		///
+		/// \param data = void
+		/// \param size = value
+		/// \param usage = Buffer Usage
+		virtual void create(void *data, int size, BufferUsage usage) = 0;
 
-/// \name Attributes
-/// \{
-public:
-/// \}
+		/// \brief Uploads data to vertex array buffer.
+		virtual void upload_data(GraphicContext &gc, int offset, const void *data, int size) = 0;
 
-/// \name Operations
-/// \{
-public:
-	/// \brief Uploads data to vertex array buffer.
-	virtual void upload_data(GraphicContext &gc, int offset, const void *data, int size) = 0;
+		/// \brief Copies data from transfer buffer
+		virtual void copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) = 0;
 
-	/// \brief Copies data from transfer buffer
-	virtual void copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) = 0;
+		/// \brief Copies data to transfer buffer
+		virtual void copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) = 0;
+	};
 
-	/// \brief Copies data to transfer buffer
-	virtual void copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) = 0;
-/// \}
-
-/// \name Implementation
-/// \{
-private:
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

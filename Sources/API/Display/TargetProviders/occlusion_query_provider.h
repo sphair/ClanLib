@@ -26,58 +26,36 @@
 **    Harry Storbacka
 */
 
-
 #pragma once
 
 #include <memory>
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Input clanDisplay Input
-/// \{
+	/// \addtogroup clanDisplay_Input clanDisplay Input
+	/// \{
 
-/// \brief Occlusion query provider.
-class OcclusionQueryProvider
-{
-/// \name Construction
-/// \{
+	/// \brief Occlusion query provider.
+	class OcclusionQueryProvider
+	{
+	public:
+		virtual ~OcclusionQueryProvider() { return; }
 
-public:
-	virtual ~OcclusionQueryProvider() { return; }
+		/// \brief Returns true if the GPU is ready to return the result.
+		virtual bool is_result_ready() const = 0;
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief Returns the result of the occlusion query.
+		virtual int get_result() const = 0;
 
-public:
-	/// \brief Returns true if the GPU is ready to return the result.
-	virtual bool is_result_ready() const = 0;
+		/// \brief Start occlusion query.
+		virtual void begin() = 0;
 
-	/// \brief Returns the result of the occlusion query.
-	virtual int get_result() const = 0;
+		/// \brief Finish occlusion query.
+		virtual void end() = 0;
 
-/// \}
-/// \name Operations
-/// \{
+		/// \brief Create occlusion query object.
+		virtual void create() = 0;
+	};
 
-public:
-	/// \brief Start occlusion query.
-	virtual void begin() = 0;
-
-	/// \brief Finish occlusion query.
-	virtual void end() = 0;
-
-	/// \brief Create occlusion query object.
-	virtual void create() = 0;
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

@@ -26,26 +26,24 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include "vec3.h"
 
 namespace clan
 {
-/// \addtogroup clanCore_Math clanCore Math
-/// \{
+	/// \addtogroup clanCore_Math clanCore Math
+	/// \{
 
-class OrientedBoundingBox
-{
-public:
-	Vec3f center;
-	Vec3f extents;
-	Vec3f axis_x;
-	Vec3f axis_y;
-	Vec3f axis_z;
-};
+	class OrientedBoundingBox
+	{
+	public:
+		Vec3f center;
+		Vec3f extents;
+		Vec3f axis_x;
+		Vec3f axis_y;
+		Vec3f axis_z;
+	};
 
+	/// \}
 }
-
-/// \}

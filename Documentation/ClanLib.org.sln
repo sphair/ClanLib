@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{67526D1E-B801-4460-A8D3-F5C604037478}"
 	ProjectSection(SolutionItems) = preProject
@@ -11,17 +11,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		build-environment-windows-msvc.html = build-environment-windows-msvc.html
 		compile-clanlib.html = compile-clanlib.html
 		contact.html = contact.html
-		contributions.html = contributions.html
 		debugging-msvc.html = debugging-msvc.html
-		development.html = development.html
 		documentation.html = documentation.html
 		download.html = download.html
 		doxygen-extra.css = doxygen-extra.css
 		doxygen.css = doxygen.css
-		example-console.html = example-console.html
-		example-display.html = example-display.html
-		examples.html = examples.html
-		external-libraries.html = external-libraries.html
+		example-dependencies.html = example-dependencies.html
 		global-includes-vs2010.html = global-includes-vs2010.html
 		index.html = index.html
 		license.html = license.html
@@ -29,7 +24,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		release-notes-2.3.7.html = release-notes-2.3.7.html
 		release-notes-3.0.0.html = release-notes-3.0.0.html
 		release-notes-3.0.1.html = release-notes-3.0.1.html
-		visual-studio-binaries.html = visual-studio-binaries.html
 		wiki-retired.html = wiki-retired.html
 	EndProjectSection
 EndProject
@@ -58,32 +52,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "external", "external", "{5C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Overview", "Overview", "{0F8BA8C7-6826-4E88-9FF2-DAF310464CD8}"
 	ProjectSection(SolutionItems) = preProject
-		Overview\compute.h = Overview\compute.h
 		Overview\core.h = Overview\core.h
-		Overview\csslayout.h = Overview\csslayout.h
-		Overview\database.h = Overview\database.h
-		Overview\database_services.h = Overview\database_services.h
 		Overview\display.h = Overview\display.h
 		Overview\font_resource.h = Overview\font_resource.h
-		Overview\gameide.h = Overview\gameide.h
-		Overview\gui.h = Overview\gui.h
-		Overview\gui_framework.h = Overview\gui_framework.h
 		Overview\intro.h = Overview\intro.h
 		Overview\main-page.h = Overview\main-page.h
 		Overview\netgame_engine.h = Overview\netgame_engine.h
 		Overview\network.h = Overview\network.h
-		Overview\physics2d.h = Overview\physics2d.h
-		Overview\physics3d.h = Overview\physics3d.h
 		Overview\resource_management.h = Overview\resource_management.h
-		Overview\scene3d.h = Overview\scene3d.h
-		Overview\sockets.h = Overview\sockets.h
 		Overview\sound.h = Overview\sound.h
 		Overview\sound_overview.h = Overview\sound_overview.h
 		Overview\sprite_resource.h = Overview\sprite_resource.h
 		Overview\template_callbacks.h = Overview\template_callbacks.h
 		Overview\texture_resource.h = Overview\texture_resource.h
-		Overview\threading.h = Overview\threading.h
 		Overview\timing.h = Overview\timing.h
+		Overview\ui.h = Overview\ui.h
 		Overview\user_input.h = Overview\user_input.h
 	EndProjectSection
 EndProject

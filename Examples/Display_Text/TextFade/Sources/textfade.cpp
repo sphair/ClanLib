@@ -34,11 +34,11 @@ clan::ApplicationInstance<TextFade> clanapp;
 
 TextFade::TextFade()
 {
-	// We support all display targets, in order listed here
 #ifdef WIN32
-	clan::D3DTarget::enable();
+	clan::D3DTarget::set_current();
+#else
+	clan::OpenGLTarget::set_current();
 #endif
-	clan::OpenGLTarget::enable();
 
 	// Set the window
 	clan::DisplayWindowDescription desc;
@@ -52,7 +52,7 @@ TextFade::TextFade()
 	sc.connect(window.sig_window_close(), clan::bind_member(this, &TextFade::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &TextFade::on_input_up));
+	sc.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &TextFade::on_input_up));
 
 	// Get the graphic context
 	canvas = clan::Canvas(window);
@@ -64,6 +64,7 @@ TextFade::TextFade()
 	font_description.set_subpixel(false);	// Fading only works with sub pixel off
 	standard_font = clan::Font("arial", font_description);
 
+	clan::XMLResourceFactory::set_display();
 	clan::ResourceManager resources = clan::XMLResourceManager::create(clan::XMLResourceDocument("../Font/Resources/resources.xml"));
 	sprite_font = clan::Font::resource(canvas, "ClanFont", clan::FontDescription(), resources);
 	sprite_font.set_height(32);

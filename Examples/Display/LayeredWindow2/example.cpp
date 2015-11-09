@@ -93,7 +93,7 @@ App::App()
 {
 
 	// We support all display targets, in order listed here
-	clan::OpenGLTarget::enable();
+	clan::OpenGLTarget::set_current();
 
 	// (See README.TXT for more documentation)
 
@@ -104,6 +104,7 @@ App::App()
 
 	// Set the window description
 	clan::DisplayWindowDescription desc_window;
+	desc_window.set_popup_window();
 	desc_window.set_title("Layered Example");
 	desc_window.set_allow_resize(false);
 	desc_window.show_caption(false);
@@ -128,9 +129,9 @@ App::App()
 
 	// Setup the slots
 	sc.connect(window_center.sig_window_close(), clan::bind_member(this, &App::on_window_close));
-	sc.connect(window_center.get_ic().get_mouse().sig_key_down(), clan::bind_member(this, &App::on_mouse_down));
-	sc.connect(window_center.get_ic().get_mouse().sig_key_dblclk(), clan::bind_member(this, &App::on_mouse_down));
-	sc.connect(window_center.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	sc.connect(window_center.get_mouse().sig_key_down(), clan::bind_member(this, &App::on_mouse_down));
+	sc.connect(window_center.get_mouse().sig_key_dblclk(), clan::bind_member(this, &App::on_mouse_down));
+	sc.connect(window_center.get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 
 	// Get the canvas
 	canvas_center = clan::Canvas(window_center);

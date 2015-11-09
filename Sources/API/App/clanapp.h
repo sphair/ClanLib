@@ -49,10 +49,7 @@ namespace clan
 		///
 		/// Once the target environment has been initialized this function is called continously to update and render the application.
 		/// If the function returns false the main loop will end and the application will exit.
-		virtual bool update() = 0;
-
-		/// \brief Set update handler to be called as often as possible and preferrably synchronized with the monitor
-		static void use_animation_frame_timing(int swap_interval = 1);
+		virtual bool update() { return true; }
 
 		/// \brief Set update handler to wait a certain amount of milliseconds between each update
 		static void use_timeout_timing(int timeout_ms);
@@ -86,23 +83,17 @@ namespace clan
 	template<typename ApplicationClass>
 	class ApplicationInstance : ApplicationInstancePrivate
 	{
-	/// \name Construction
-	/// \{
 	public:
-		/// \brief Clan Application constructor
+		/// \brief Constructor
 		ApplicationInstance(bool catch_exceptions = true) : ApplicationInstancePrivate(catch_exceptions)
 		{
 		}
 
-	/// \}
-	/// \name Implementation
-	/// \{
 	private:
 		std::unique_ptr<Application> create() override
 		{
 			return std::unique_ptr<Application>(new ApplicationClass());
 		}
-	/// \}
 	};
 
 	/// \}

@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "..\..\..\ThemeAero\Sources\theme.h"
+#include "../../../ThemeAero/Sources/theme.h"
 
 class SliderOptionView : public View
 {
@@ -79,7 +79,7 @@ public:
 	}
 };
 
-class Options : public TextureView
+class Options : public TextureWindow
 {
 public:
 	Options(Canvas &canvas);

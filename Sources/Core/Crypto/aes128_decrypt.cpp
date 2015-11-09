@@ -23,7 +23,6 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
 **    Mark Page
 */
 
@@ -34,62 +33,48 @@
 
 namespace clan
 {
+	AES128_Decrypt::AES128_Decrypt()
+		: impl(std::make_shared<AES128_Decrypt_Impl>())
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// AES128_Decrypt Construction:
+	DataBuffer AES128_Decrypt::get_data() const
+	{
+		return impl->get_data();
+	}
 
-AES128_Decrypt::AES128_Decrypt()
-: impl(std::make_shared<AES128_Decrypt_Impl>())
-{
-}
+	void AES128_Decrypt::reset()
+	{
+		impl->reset();
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// AES128_Decrypt Attributes:
+	void AES128_Decrypt::set_iv(const unsigned char iv[16])
+	{
+		impl->set_iv(iv);
+	}
 
-DataBuffer AES128_Decrypt::get_data() const
-{
-	return impl->get_data();
-}
+	void AES128_Decrypt::set_key(const unsigned char key[16])
+	{
+		impl->set_key(key);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// AES128_Decrypt Operations:
+	void AES128_Decrypt::set_padding(bool value, bool use_pkcs7)
+	{
+		impl->set_padding(value, use_pkcs7);
+	}
 
-void AES128_Decrypt::reset()
-{
-	impl->reset();
-}
+	void AES128_Decrypt::add(const void *data, int size)
+	{
+		impl->add(data, size);
+	}
 
-void AES128_Decrypt::set_iv(const unsigned char iv[16])
-{
-	impl->set_iv(iv);
-}
+	void AES128_Decrypt::add(const DataBuffer &data)
+	{
+		add(data.get_data(), data.get_size());
+	}
 
-void AES128_Decrypt::set_key(const unsigned char key[16])
-{
-	impl->set_key(key);
-}
-
-void AES128_Decrypt::set_padding(bool value, bool use_pkcs7)
-{
-	impl->set_padding(value, use_pkcs7);
-}
-
-void AES128_Decrypt::add(const void *data, int size)
-{
-	impl->add(data, size);
-}
-
-void AES128_Decrypt::add(const DataBuffer &data)
-{
-	add(data.get_data(), data.get_size());
-}
-
-bool AES128_Decrypt::calculate()
-{
-	return impl->calculate();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// AES128_Decrypt Implementation:
-
+	bool AES128_Decrypt::calculate()
+	{
+		return impl->calculate();
+	}
 }

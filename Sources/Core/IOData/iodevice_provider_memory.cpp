@@ -33,131 +33,117 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// IODeviceProvider_Memory Construction:
-
-IODeviceProvider_Memory::IODeviceProvider_Memory()
-: position(0)
-{
-}
-
-IODeviceProvider_Memory::IODeviceProvider_Memory(DataBuffer &data)
-: data(data), position(0)
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// IODeviceProvider_Memory Attributes:
-
-int IODeviceProvider_Memory::get_size() const
-{
-	return data.get_size();
-}
-	
-int IODeviceProvider_Memory::get_position() const
-{
-	validate_position();
-	return position;
-}
-
-const DataBuffer &IODeviceProvider_Memory::get_data() const
-{
-	return data;
-}
-
-DataBuffer &IODeviceProvider_Memory::get_data()
-{
-	return data;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// IODeviceProvider_Memory Operations:
-
-int IODeviceProvider_Memory::send(const void *send_data, int len, bool send_all)
-{
-	validate_position();
-	int size_needed = position + len;
-	if (size_needed > data.get_size())
+	IODeviceProvider_Memory::IODeviceProvider_Memory()
+		: position(0)
 	{
-		if (size_needed > data.get_capacity())	// Capacity exceeded
+	}
+
+	IODeviceProvider_Memory::IODeviceProvider_Memory(DataBuffer &data)
+		: data(data), position(0)
+	{
+	}
+
+	int IODeviceProvider_Memory::get_size() const
+	{
+		return data.get_size();
+	}
+
+	int IODeviceProvider_Memory::get_position() const
+	{
+		validate_position();
+		return position;
+	}
+
+	const DataBuffer &IODeviceProvider_Memory::get_data() const
+	{
+		return data;
+	}
+
+	DataBuffer &IODeviceProvider_Memory::get_data()
+	{
+		return data;
+	}
+
+	int IODeviceProvider_Memory::send(const void *send_data, int len, bool send_all)
+	{
+		validate_position();
+		int size_needed = position + len;
+		if (size_needed > data.get_size())
 		{
-			// Estimate the optimum databuffer capacity. TODO: Maybe adjust this class to be link list based, thus removing reallocation and block movement of the DataBuffer
-			data.set_capacity(clan::max(size_needed + clan::min(size_needed, 16 * 1024 * 1024), 16 * 1024));
+			if (size_needed > data.get_capacity())	// Capacity exceeded
+			{
+				// Estimate the optimum databuffer capacity. TODO: Maybe adjust this class to be link list based, thus removing reallocation and block movement of the DataBuffer
+				data.set_capacity(clan::max(size_needed + clan::min(size_needed, 16 * 1024 * 1024), 16 * 1024));
+			}
+
+			data.set_size(size_needed);
+		}
+		memcpy(data.get_data() + position, send_data, len);
+		position += len;
+		return len;
+	}
+
+	int IODeviceProvider_Memory::receive(void *recv_data, int len, bool receive_all)
+	{
+		validate_position();
+		int data_available = data.get_size() - position;
+		if (len > data_available)
+			len = data_available;
+		memcpy(recv_data, data.get_data() + position, len);
+		position += len;
+		return len;
+	}
+
+	int IODeviceProvider_Memory::peek(void *recv_data, int len)
+	{
+		validate_position();
+		int data_available = data.get_size() - position;
+		if (len > data_available)
+			len = data_available;
+		memcpy(recv_data, data.get_data() + position, len);
+		return len;
+	}
+
+	bool IODeviceProvider_Memory::seek(int requested_position, IODevice::SeekMode mode)
+	{
+		validate_position();
+		int new_position = position;
+		switch (mode)
+		{
+		case IODevice::seek_set:
+			new_position = requested_position;
+			break;
+		case IODevice::seek_cur:
+			new_position += requested_position;
+			break;
+		case IODevice::seek_end:
+			new_position = data.get_size() + requested_position;
+			break;
+		default:
+			return false;
 		}
 
-		data.set_size(size_needed);
+		if (new_position >= 0 && new_position <= data.get_size())
+		{
+			position = new_position;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
-	memcpy(data.get_data() + position, send_data, len);
-	position += len;
-	return len;
-}
 
-int IODeviceProvider_Memory::receive(void *recv_data, int len, bool receive_all)
-{
-	validate_position();
-	int data_available = data.get_size() - position;
-	if (len > data_available)
-		len = data_available;
-	memcpy(recv_data, data.get_data() + position, len);
-	position += len;
-	return len;
-}
-
-int IODeviceProvider_Memory::peek(void *recv_data, int len)
-{
-	validate_position();
-	int data_available = data.get_size() - position;
-	if (len > data_available)
-		len = data_available;
-	memcpy(recv_data, data.get_data() + position, len);
-	return len;
-}
-
-bool IODeviceProvider_Memory::seek(int requested_position, IODevice::SeekMode mode)
-{
-	validate_position();
-	int new_position = position;
-	switch (mode)
+	IODeviceProvider *IODeviceProvider_Memory::duplicate()
 	{
-	case IODevice::seek_set:
-		new_position = requested_position;
-		break;
-	case IODevice::seek_cur:
-		new_position += requested_position;
-		break;
-	case IODevice::seek_end:
-		new_position = data.get_size() + requested_position;
-		break;
-	default:
-		return false;
+		return new IODeviceProvider_Memory(data);
 	}
 
-	if (new_position >= 0 && new_position <= data.get_size())
+	void IODeviceProvider_Memory::validate_position() const
 	{
-		position = new_position;
-		return true;
+		if (position < 0)
+			position = 0;
+		else if (position > data.get_size())
+			position = data.get_size();
 	}
-	else
-	{
-		return false;
-	}
-}
-
-IODeviceProvider *IODeviceProvider_Memory::duplicate()
-{
-	return new IODeviceProvider_Memory(data);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// IODeviceProvider_Memory Implementation:
-
-void IODeviceProvider_Memory::validate_position() const
-{
-	if (position < 0)
-		position = 0;
-	else if (position > data.get_size())
-		position = data.get_size();
-}
-
 }

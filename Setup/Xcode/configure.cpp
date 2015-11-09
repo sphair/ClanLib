@@ -269,6 +269,7 @@ std::shared_ptr<Solution> generate_solution()
     auto clanDisplay = add_project("Display", "display.h", solution, sources, api);
     auto clanGL = add_project("GL", "gl.h", solution, sources, api);
     auto clanNetwork = add_project("Network", "network.h", solution, sources, api);
+    auto clanSound = add_project("Sound", "sound.h", solution, sources, api);
     auto clanUI = add_project("UI", "ui.h", solution, sources, api);
     auto clanApp = add_project("App", "application.h", solution, sources, api);
     

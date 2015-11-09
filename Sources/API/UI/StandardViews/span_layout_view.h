@@ -42,20 +42,22 @@ namespace clan
 	public:
 		SpanLayoutView();
 
+		const std::shared_ptr<Style> &text_style(const std::string &text_class = std::string()) const;
+
 		void set_text_alignment(TextAlignment alignment);
 
 		void clear();
-		void add_text(const std::string &text, const std::shared_ptr<Style> &style);
+		void add_text(const std::string &text, const std::string &text_class = std::string());
 		void add_subview(const std::shared_ptr<View> &view, float baseline_offset = 0.0f);
 
-		void render_content(Canvas &canvas) override;
-		float get_preferred_width(Canvas &canvas) override;
-		float get_preferred_height(Canvas &canvas, float width) override;
-		float get_first_baseline_offset(Canvas &canvas, float width) override;
-		float get_last_baseline_offset(Canvas &canvas, float width) override;
 		void layout_subviews(Canvas &canvas) override;
 
 	protected:
+		void render_content(Canvas &canvas) override;
+		float calculate_preferred_width(Canvas &canvas) override;
+		float calculate_preferred_height(Canvas &canvas, float width) override;
+		float calculate_first_baseline_offset(Canvas &canvas, float width) override;
+		float calculate_last_baseline_offset(Canvas &canvas, float width) override;
 		void subview_added(const std::shared_ptr<View> &view) override;
 		void subview_removed(const std::shared_ptr<View> &view) override;
 

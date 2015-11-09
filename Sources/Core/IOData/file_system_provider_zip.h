@@ -35,70 +35,40 @@
 
 namespace clan
 {
+	class DirectoryListingEntry;
 
-class DirectoryListingEntry;
+	class FileSystemProvider_Zip : public FileSystemProvider
+	{
+	public:
+		FileSystemProvider_Zip(const ZipArchive &zip_archive);
+		~FileSystemProvider_Zip();
 
-class FileSystemProvider_Zip : public FileSystemProvider
-{
-/// \name Construction
-/// \{
+		std::string get_path() const override;
+		std::string get_identifier() const override;
 
-public:
-	FileSystemProvider_Zip(const ZipArchive &zip_archive);
+		/// \brief Open a zip file
+		/** param: filename = The filename to use
+			param: mode = File::OpenMode modes
+			param: access = File::AccessFlags flags
+			param: share = File::ShareFlags flags
+			param: flags = File::Flags flags
+			\return The IODevice*/
+		IODevice open_file(const std::string &filename,
+			File::OpenMode mode = File::open_existing,
+			unsigned int access = File::access_read | File::access_write,
+			unsigned int share = File::share_all,
+			unsigned int flags = 0) override;
 
-	~FileSystemProvider_Zip();
+		bool initialize_directory_listing(const std::string &path) override;
 
+		bool next_file(DirectoryListingEntry &entry) override;
 
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	std::string get_path() const override;
-
-	std::string get_identifier() const override;
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	/// \brief Open a zip file
-	/** param: filename = The filename to use
-	    param: mode = File::OpenMode modes
-	    param: access = File::AccessFlags flags
-	    param: share = File::ShareFlags flags
-	    param: flags = File::Flags flags
-	    \return The IODevice*/
-	IODevice open_file(const std::string &filename,
-		File::OpenMode mode = File::open_existing,
-		unsigned int access = File::access_read | File::access_write,
-		unsigned int share = File::share_all,
-		unsigned int flags = 0) override;
-
-	bool initialize_directory_listing(const std::string &path) override;
-
-	bool next_file(DirectoryListingEntry &entry) override;
-
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	std::string path;
-
-	ZipArchive zip_archive;
-
-	std::vector<ZipFileEntry> file_list;
-
-	unsigned int index;
-
-	std::string directory_list_path;
-
-	static int zip_source_unique_id;
-
-/// \}
-};
-
+	private:
+		std::string path;
+		ZipArchive zip_archive;
+		std::vector<ZipFileEntry> file_list;
+		unsigned int index;
+		std::string directory_list_path;
+		static int zip_source_unique_id;
+	};
 }

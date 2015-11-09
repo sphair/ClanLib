@@ -27,11 +27,13 @@
 */
 
 #pragma once
-/*
-class Options : public clan::GUIComponent
+
+#include "../../../ThemeAero/Sources/theme.h"
+
+class Options : public clan::TextureWindow
 {
 public:
-	Options(clan::GUIManager &gui, clan::Rect gui_position);
+	Options(clan::Canvas &canvas);
 	virtual ~Options();
 
 	clan::MapMode current_mapmode;
@@ -41,31 +43,26 @@ public:
 	int grid_angle;
 
 private:
+	float get_value(std::shared_ptr<clan::SliderView> slider);
+	std::shared_ptr<clan::SliderView> create_slider(int xpos, int ypos);
+	std::shared_ptr<clan::CheckBoxView> create_checkbox(int xpos, int ypos, const std::string &name, bool state);
+	std::shared_ptr<clan::LabelView> create_slider_label(int xpos, int ypos);
 	void checkbox_moveballs_changed();
 	void update_all_slider_text();
 	void slider_numballs_changed();
 	void slider_grid_angle_changed();
-	clan::Label *create_slider_label(clan::Slider *slider);
-	void on_mapmode_selected(int value);
-	clan::CheckBox *create_checkbox(int xpos, int ypos, const char *name, bool state);
-	void on_render(clan::Canvas &canvas, const clan::Rect &update_rect);
-	clan::Slider *create_slider(int xpos, int ypos);
-	float get_value(clan::Slider *slider);
-	clan::ComboBox *create_mapmode_combo_box(int xpos, int ypos, clan::PopupMenu &menu, int selected_item);
-	void make_mapmode_menu(clan::PopupMenu &menu);
-	clan::Label *create_combobox_label(clan::ComboBox *combo, const char *text);
+	void on_mapmode_selected();
 private:
-	clan::Slider *slider_numballs;
-	clan::Label *label_numballs;
-	clan::Slider *slider_grid_angle;
-	clan::Label *label_grid_angle;
+	std::shared_ptr<clan::SliderView> slider_numballs;
+	std::shared_ptr<clan::LabelView> label_numballs;
+	std::shared_ptr<clan::SliderView> slider_grid_angle;
+	std::shared_ptr<clan::LabelView> label_grid_angle;
 
-	clan::CheckBox *checkbox_moveballs;
+	std::shared_ptr<clan::CheckBoxView> checkbox_moveballs;
 
-	clan::Label *label_mapmode;
-	clan::ComboBox *combo_mapmode;
-	clan::PopupMenu combo_mapmode_menu;
+	std::shared_ptr<clan::LabelView> label_mapmode;
+	std::shared_ptr<clan::ListBoxView> listbox_mapmode;
 
 };
 
-*/
+

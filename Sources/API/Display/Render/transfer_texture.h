@@ -27,7 +27,6 @@
 **    Mark Page
 */
 
-
 #pragma once
 
 #include <memory>
@@ -38,80 +37,51 @@
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-class Color;
-class Point;
-class PixelBuffer;
-class PixelFormat;
-class DataBuffer;
-class PixelBufferProvider;
-class TransferTexture_Impl;
-class SharedGCData_Impl;
+	class Color;
+	class Point;
+	class PixelBuffer;
+	class PixelFormat;
+	class DataBuffer;
+	class PixelBufferProvider;
+	class TransferTexture_Impl;
+	class SharedGCData_Impl;
 
-/// \brief Texture Transfer class.
-class TransferTexture : public PixelBuffer
-{
-/// \name Construction
-/// \{
-public:
-	/// \brief Constructs a null instance.
-	TransferTexture();
+	/// \brief Texture Transfer class.
+	class TransferTexture : public PixelBuffer
+	{
+	public:
+		/// \brief Constructs a null instance.
+		TransferTexture();
 
-	/// \brief Constructs a GPU Transfer Buffer
-	///
-	/// \param provider = Font Provider
-	TransferTexture(PixelBufferProvider *provider);
+		/// \brief Constructs a GPU Transfer Buffer
+		///
+		/// \param provider = Font Provider
+		TransferTexture(PixelBufferProvider *provider);
 
-	/// \brief Constructs a GPU Transfer Buffer
-	///
-	/// \param gc = Graphic Context
-	/// \param width = value
-	/// \param height = value
-	/// \param direction = prefered direction that you will use tranferring the pixel buffer data
-	/// \param sized_format = Texture Format
-	/// \param data = data to copy from (May be NULL)
-	/// \param usage = Buffer Usage
-	TransferTexture(GraphicContext &gc, int width, int height, PixelBufferDirection direction = data_to_gpu, TextureFormat texture_format = tf_rgba8, const void *data = nullptr, BufferUsage usage = usage_stream_draw);
+		/// \brief Constructs a GPU Transfer Buffer
+		///
+		/// \param gc = Graphic Context
+		/// \param width = value
+		/// \param height = value
+		/// \param direction = prefered direction that you will use tranferring the pixel buffer data
+		/// \param sized_format = Texture Format
+		/// \param data = data to copy from (May be NULL)
+		/// \param usage = Buffer Usage
+		TransferTexture(GraphicContext &gc, int width, int height, PixelBufferDirection direction = data_to_gpu, TextureFormat texture_format = tf_rgba8, const void *data = nullptr, BufferUsage usage = usage_stream_draw);
 
-	/// \brief Constructs a GPU Transfer Buffer from an existing pixelbuffer
-	///
-	/// \param gc = Graphic Context
-	/// \param pbuff = The pixelbuffer to copy from
-	/// \param direction = prefered direction that you will use tranferring the pixel buffer data
-	/// \param usage = Buffer Usage
-	TransferTexture(GraphicContext &gc, const PixelBuffer &pbuff, PixelBufferDirection direction = data_to_gpu, BufferUsage usage = usage_stream_draw);
+		/// \brief Constructs a GPU Transfer Buffer from an existing pixelbuffer
+		///
+		/// \param gc = Graphic Context
+		/// \param pbuff = The pixelbuffer to copy from
+		/// \param direction = prefered direction that you will use tranferring the pixel buffer data
+		/// \param usage = Buffer Usage
+		TransferTexture(GraphicContext &gc, const PixelBuffer &pbuff, PixelBufferDirection direction = data_to_gpu, BufferUsage usage = usage_stream_draw);
 
-	~TransferTexture();
-/// \}
+		~TransferTexture();
+	};
 
-/// \name Operators
-/// \{
-public:
-
-/// \}
-
-/// \name Attributes
-/// \{
-public:
-
-/// \}
-
-/// \name Operations
-/// \{
-public:
-
-/// \}
-
-/// \name Implementation
-/// \{
-protected:
-
-
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

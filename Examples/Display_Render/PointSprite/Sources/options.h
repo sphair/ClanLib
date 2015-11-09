@@ -27,11 +27,13 @@
 */
 
 #pragma once
-/*
-class Options : public clan::GUIComponent
+
+#include "../../../ThemeAero/Sources/theme.h"
+
+class Options : public clan::TextureWindow
 {
 public:
-	Options(clan::GUIManager &gui, clan::Rect gui_position);
+	Options(clan::Canvas &canvas);
 	virtual ~Options();
 
 	int num_particles;
@@ -41,17 +43,16 @@ private:
 	void update_all_slider_text();
 	void slider_num_particles_changed();
 	void slider_point_size_changed();
-	clan::Label *create_slider_label(clan::Slider *slider);
-	void on_render(clan::Canvas &canvas, const clan::Rect &update_rect);
-	clan::Slider *create_slider(int xpos, int ypos);
-	float get_value(clan::Slider *slider);
+	std::shared_ptr<clan::LabelView> create_slider_label(int xpos, int ypos);
+	std::shared_ptr<clan::SliderView> create_slider(int xpos, int ypos);
+	float get_value(std::shared_ptr<clan::SliderView> slider);
 private:
-	clan::Slider *slider_num_particles;
-	clan::Label *label_num_particles;
+	std::shared_ptr<clan::SliderView> slider_num_particles;
+	std::shared_ptr<clan::LabelView> label_num_particles;
 
-	clan::Slider *slider_point_size;
-	clan::Label *label_point_size;
+	std::shared_ptr<clan::SliderView> slider_point_size;
+	std::shared_ptr<clan::LabelView> label_point_size;
 
 
 };
-*/
+

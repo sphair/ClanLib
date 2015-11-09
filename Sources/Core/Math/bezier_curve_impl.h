@@ -29,28 +29,25 @@
 
 #pragma once
 
-
 #include "Core/precomp.h"
 #include <vector>
 #include "API/Core/Math/point.h"
 
 namespace clan
 {
+	class BezierCurve_Impl
+	{
+	public:
+		BezierCurve_Impl();
+		~BezierCurve_Impl();
 
-class BezierCurve_Impl
-{
-public:
-	BezierCurve_Impl();
-	~BezierCurve_Impl();
+		std::vector<Pointf> generate_curve_points(const Angle &split_angle);
+		std::vector<Pointf> subdivide_bezier(float start_pos, float end_pos)  const;
+		Pointf get_point_relative(float) const;
 
-	std::vector<Pointf> generate_curve_points(const Angle &split_angle);
-	std::vector<Pointf> subdivide_bezier(float start_pos, float end_pos)  const;
-	Pointf get_point_relative(float) const;
+		std::vector<Pointf> control_points;
+		mutable std::vector<Pointf> P;
 
-	std::vector<Pointf> control_points;
-	mutable std::vector<Pointf> P;
-
-	float split_angle_rad;
-};
-
+		float split_angle_rad;
+	};
 }

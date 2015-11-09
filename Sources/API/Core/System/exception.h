@@ -26,7 +26,6 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include <vector>
@@ -35,54 +34,39 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_System clanCore System
-/// \{
+	/// \addtogroup clanCore_System clanCore System
+	/// \{
 
-/// \brief Top-level exception class.
-class Exception : public std::exception
-{
-/// \name Construction
-/// \{
-public:
-	/// \brief Constructs an exception object.
-	Exception(const std::string &message);
+	/// \brief Top-level exception class.
+	class Exception : public std::exception
+	{
+	public:
+		/// \brief Constructs an exception object.
+		Exception(const std::string &message);
 
-	/// \brief Destructs an exception object
-	virtual ~Exception() throw() {}
+		/// \brief Destructs an exception object
+		virtual ~Exception() throw() {}
 
-/// \}
-/// \name Attributes
-/// \{
-public:
-	/// \brief Description of exception.
-	std::string message;
+		/// \brief Description of exception.
+		std::string message;
 
-	/// \brief Returns description of exception
-	virtual const char* what() const throw() override;
+		/// \brief Returns description of exception
+		virtual const char* what() const throw() override;
 
-/// \}
-/// \name Operations
-/// \{
-public:
-	/// \brief Returns the call stack present when the exception object was created.
-	/** <p>On Linux, to obtain function names, remember to link with the -rdynamic flag </p>*/
-	std::vector<std::string> get_stack_trace() const;
+		/// \brief Returns the call stack present when the exception object was created.
+		/** <p>On Linux, to obtain function names, remember to link with the -rdynamic flag </p>*/
+		std::vector<std::string> get_stack_trace() const;
 
-	/// \brief Returns the message and call stack present when the exception object was created, formatted using newlines.
-	/** <p>On Linux, to obtain function names, remember to link with the -rdynamic flag </p>*/
-	std::string get_message_and_stack_trace() const;
+		/// \brief Returns the message and call stack present when the exception object was created, formatted using newlines.
+		/** <p>On Linux, to obtain function names, remember to link with the -rdynamic flag </p>*/
+		std::string get_message_and_stack_trace() const;
 
-/// \}
-/// \name Implementation
-/// \{
-private:
-	enum { max_frames = 32 };
-	mutable void *frames[max_frames];
-	int num_frames;
-	mutable std::string buffer;
-/// \}
-};
+	private:
+		enum { max_frames = 32 };
+		mutable void *frames[max_frames];
+		int num_frames;
+		mutable std::string buffer;
+	};
 
+	/// \}
 }
-
-/// \}

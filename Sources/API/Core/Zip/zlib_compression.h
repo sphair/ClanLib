@@ -26,45 +26,40 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 namespace clan
 {
-/// \addtogroup clanCore_I_O_Data clanCore I/O Data
-/// \{
+	/// \addtogroup clanCore_I_O_Data clanCore I/O Data
+	/// \{
 
-class DataBuffer;
+	class DataBuffer;
 
-/// \brief Deflate compressor
-class ZLibCompression
-{
-/// \name Operations
-/// \{
-public:
-	enum CompressionMode
+	/// \brief Deflate compressor
+	class ZLibCompression
 	{
-		default_strategy,
-		filtered,
-		huffman_only,
-		rle,
-		fixed
+	public:
+		enum CompressionMode
+		{
+			default_strategy,
+			filtered,
+			huffman_only,
+			rle,
+			fixed
+		};
+
+		// \brief Compress data
+		// \param data Data to compress
+		// \param raw Skips header if true
+		// \param compression_level Compression level in range 0-9. 0 = no compression, 1 = best speed, 6 = default, 9 = best compression.
+		// \param mode Compression strategy
+		static DataBuffer compress(const DataBuffer &data, bool raw = true, int compression_level = 6, CompressionMode mode = default_strategy);
+
+		// \brief Decompress data
+		// \param data Data to compress
+		// \param raw Skips header if true
+		static DataBuffer decompress(const DataBuffer &data, bool raw = true);
 	};
 
-	// \brief Compress data
-	// \param data Data to compress
-	// \param raw Skips header if true
-	// \param compression_level Compression level in range 0-9. 0 = no compression, 1 = best speed, 6 = default, 9 = best compression.
-	// \param mode Compression strategy
-	static DataBuffer compress(const DataBuffer &data, bool raw = true, int compression_level = 6, CompressionMode mode = default_strategy);
-
-	// \brief Decompress data
-	// \param data Data to compress
-	// \param raw Skips header if true
-	static DataBuffer decompress(const DataBuffer &data, bool raw = true);
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

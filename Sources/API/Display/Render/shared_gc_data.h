@@ -28,7 +28,6 @@
 **    Mark Page
 */
 
-
 #pragma once
 
 #include <vector>
@@ -37,63 +36,60 @@
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-class GraphicContext;
-class GraphicContextProvider;
-class DisposableObject;
-class SharedGCData_Impl;
+	class GraphicContext;
+	class GraphicContextProvider;
+	class DisposableObject;
+	class SharedGCData_Impl;
 
-/// \brief Shared Graphic Context Data
-class SharedGCData
-{
-public:
+	/// \brief Shared Graphic Context Data
+	class SharedGCData
+	{
+	public:
+		/// \brief Add ref
+		static void add_ref();
 
-	/// \brief Add ref
-	static void add_ref();
+		/// \brief Release ref
+		static void release_ref();
 
-	/// \brief Release ref
-	static void release_ref();
+		/// \brief Add a provider
+		static void add_provider(GraphicContextProvider *provider);
 
-	/// \brief Add a provider
-	static void add_provider(GraphicContextProvider *provider);
+		/// \brief Remove a provider
+		static void remove_provider(GraphicContextProvider *provider);
 
-	/// \brief Remove a provider
-	static void remove_provider(GraphicContextProvider *provider);
+		/// \brief Get a provider
+		///
+		/// \param mutex_section : Returns the mutex section for the provider lock
+		///
+		/// \return NULL = None available
+		static GraphicContextProvider *get_provider(std::unique_ptr<std::unique_lock<std::recursive_mutex>> &mutex_section);
 
-	/// \brief Get a provider
-	///
-	/// \param mutex_section : Returns the mutex section for the provider lock
-	///
-	/// \return NULL = None available
-	static GraphicContextProvider *get_provider(std::unique_ptr<std::unique_lock<std::recursive_mutex>> &mutex_section);
+		/// \brief Get the providers
+		///
+		/// \param mutex_section : Returns the mutex section for the provider lock
+		///
+		/// \return NULL = None available
+		static std::vector<GraphicContextProvider*> &get_gc_providers(std::unique_ptr<std::unique_lock<std::recursive_mutex>> &mutex_section);
 
-	/// \brief Get the providers
-	///
-	/// \param mutex_section : Returns the mutex section for the provider lock
-	///
-	/// \return NULL = None available
-	static std::vector<GraphicContextProvider*> &get_gc_providers(std::unique_ptr<std::unique_lock<std::recursive_mutex>> &mutex_section);
+		/// \brief Add disposable
+		///
+		/// \param disposable = Disposable Object
+		static void add_disposable(DisposableObject *disposable);
 
-	/// \brief Add disposable
-	///
-	/// \param disposable = Disposable Object
-	static void add_disposable(DisposableObject *disposable);
+		/// \brief Remove disposable
+		///
+		/// \param disposable = Disposable Object
+		static void remove_disposable(DisposableObject *disposable);
 
-	/// \brief Remove disposable
-	///
-	/// \param disposable = Disposable Object
-	static void remove_disposable(DisposableObject *disposable);
+	private:
+		SharedGCData();
+		~SharedGCData();
 
-private:
-	SharedGCData();
-	~SharedGCData();
+		std::shared_ptr<SharedGCData_Impl> impl;
+	};
 
-	std::shared_ptr<SharedGCData_Impl> impl;
-};
-
+	/// \}
 }
-
-/// \}
-

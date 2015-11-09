@@ -32,6 +32,7 @@
 
 namespace clan
 {
+	/// Window close button was clicked event
 	class CloseEvent : public EventUI
 	{
 	public:

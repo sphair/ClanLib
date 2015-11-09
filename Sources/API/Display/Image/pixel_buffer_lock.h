@@ -26,7 +26,6 @@
 **    Mark Page
 */
 
-
 #pragma once
 
 #include <memory>
@@ -39,163 +38,148 @@
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-/// \brief PixelBuffer locking helper.
-///
-template<typename Type>
-class PixelBufferLock
-{
-/// \name Construction
-/// \{
-public:
-	/// \brief Constructs a gpu pixel buffer lock
-	PixelBufferLock(GraphicContext &gc, PixelBuffer &pixel_buffer, BufferAccess access, bool lock_pixelbuffer = true)
-	: pixel_buffer(pixel_buffer), lock_count(0), pitch(0), data(nullptr)
+	/// \brief PixelBuffer locking helper.
+	///
+	template<typename Type>
+	class PixelBufferLock
 	{
-		width = pixel_buffer.get_width();
-		height = pixel_buffer.get_height();
-		if (lock_pixelbuffer)
-			lock(gc, access);
-	}
-
-	/// \brief Constructs a system pixel buffer lock
-	PixelBufferLock(PixelBuffer &pixel_buffer, bool lock_pixelbuffer = true)
-	: pixel_buffer(pixel_buffer), lock_count(0), pitch(0), data(nullptr)
-	{
-		width = pixel_buffer.get_width();
-		height = pixel_buffer.get_height();
-		if (lock_pixelbuffer)
-			lock();
-	}
-
-	~PixelBufferLock()
-	{
-		if (lock_count > 0 && !(pixel_buffer.is_null()))
-			pixel_buffer.unlock();
-		lock_count = 0;
-	}
-/// \}
-
-/// \name Attributes
-/// \{
-public:
-	/// \brief Returns the amounts of recursive pixel_buffer locks performed by this section.
-	int get_lock_count() const
-	{
-		return lock_count;
-	}
-
-	Type *get_data() { return reinterpret_cast<Type*>(data); }
-	Type *get_row(int y) { return reinterpret_cast<Type*>(data + pitch * y); }
-	Type &get_pixel(int x, int y) { return *(reinterpret_cast<Type*>(data + pitch * y) + x); }
-	int get_width() const { return width; }
-	int get_height() const { return height; }
-	int get_pitch() const { return pitch; }
-/// \}
-
-/// \name Operations
-/// \{
-public:
-	/// \brief Lock the gpu pixel_buffer.
-	void lock(GraphicContext &gc, BufferAccess access)
-	{
-		if (!pixel_buffer.is_null())
+	public:
+		/// \brief Constructs a gpu pixel buffer lock
+		PixelBufferLock(GraphicContext &gc, PixelBuffer &pixel_buffer, BufferAccess access, bool lock_pixelbuffer = true)
+			: pixel_buffer(pixel_buffer), lock_count(0), pitch(0), data(nullptr)
 		{
-			pixel_buffer.lock(gc, access);
-			data = static_cast<unsigned char*>(pixel_buffer.get_data());
-			pitch = pixel_buffer.get_pitch();
+			width = pixel_buffer.get_width();
+			height = pixel_buffer.get_height();
+			if (lock_pixelbuffer)
+				lock(gc, access);
 		}
-		lock_count++;
-	}
 
-	/// \brief Lock the system pixel_buffer.
-	void lock()
-	{
-		if (!pixel_buffer.is_null())
+		/// \brief Constructs a system pixel buffer lock
+		PixelBufferLock(PixelBuffer &pixel_buffer, bool lock_pixelbuffer = true)
+			: pixel_buffer(pixel_buffer), lock_count(0), pitch(0), data(nullptr)
 		{
-			if (pixel_buffer.is_gpu())
-				throw Exception("Incorrect PixelBufferLock constructor called with a GPU pixelbuffer");
-
-			// lock() does not do anything on system pixel buffers, so we do not call it
-
-			data = static_cast<unsigned char*>(pixel_buffer.get_data());
-			pitch = pixel_buffer.get_pitch();
+			width = pixel_buffer.get_width();
+			height = pixel_buffer.get_height();
+			if (lock_pixelbuffer)
+				lock();
 		}
-		lock_count++;
-	}
 
-	/// \brief Unlock pixel_buffer.
-	void unlock()
-	{
-		if (lock_count <= 0)
-			return;
-
-		if (!pixel_buffer.is_null())
+		~PixelBufferLock()
 		{
-			pixel_buffer.unlock();
-			pitch = 0;
-			data = 0;
+			if (lock_count > 0 && !(pixel_buffer.is_null()))
+				pixel_buffer.unlock();
+			lock_count = 0;
 		}
-		lock_count--;
-	}
-/// \}
 
-/// \name Implementation
-/// \{
-private:
-	PixelBuffer pixel_buffer;
-	int lock_count;
-	int width;
-	int height;
-	int pitch;
-	unsigned char *data;
-/// \}
-};
+		/// \brief Returns the amounts of recursive pixel_buffer locks performed by this section.
+		int get_lock_count() const
+		{
+			return lock_count;
+		}
 
-typedef PixelBufferLock<unsigned char> PixelBufferLock1ub;
-typedef PixelBufferLock<Vec2ub> PixelBufferLock2ub;
-typedef PixelBufferLock<Vec3ub> PixelBufferLock3ub;
-typedef PixelBufferLock<Vec4ub> PixelBufferLock4ub;
-typedef PixelBufferLock<unsigned short> PixelBufferLock1us;
-typedef PixelBufferLock<Vec2us> PixelBufferLock2us;
-typedef PixelBufferLock<Vec3us> PixelBufferLock3us;
-typedef PixelBufferLock<Vec4us> PixelBufferLock4us;
-typedef PixelBufferLock<unsigned int> PixelBufferLock1ui;
-typedef PixelBufferLock<Vec2ui> PixelBufferLock2ui;
-typedef PixelBufferLock<Vec3ui> PixelBufferLock3ui;
-typedef PixelBufferLock<Vec4ui> PixelBufferLock4ui;
+		Type *get_data() { return reinterpret_cast<Type*>(data); }
+		Type *get_row(int y) { return reinterpret_cast<Type*>(data + pitch * y); }
+		Type &get_pixel(int x, int y) { return *(reinterpret_cast<Type*>(data + pitch * y) + x); }
+		int get_width() const { return width; }
+		int get_height() const { return height; }
+		int get_pitch() const { return pitch; }
 
-typedef PixelBufferLock<signed char> PixelBufferLock1b;
-typedef PixelBufferLock<Vec2b> PixelBufferLock2b;
-typedef PixelBufferLock<Vec3b> PixelBufferLock3b;
-typedef PixelBufferLock<Vec4b> PixelBufferLock4b;
-typedef PixelBufferLock<signed short> PixelBufferLock1s;
-typedef PixelBufferLock<Vec2s> PixelBufferLock2s;
-typedef PixelBufferLock<Vec3s> PixelBufferLock3s;
-typedef PixelBufferLock<Vec4s> PixelBufferLock4s;
-typedef PixelBufferLock<signed int> PixelBufferLock1i;
-typedef PixelBufferLock<Vec2i> PixelBufferLock2i;
-typedef PixelBufferLock<Vec3i> PixelBufferLock3i;
-typedef PixelBufferLock<Vec4i> PixelBufferLock4i;
+		/// \brief Lock the gpu pixel_buffer.
+		void lock(GraphicContext &gc, BufferAccess access)
+		{
+			if (!pixel_buffer.is_null())
+			{
+				pixel_buffer.lock(gc, access);
+				data = static_cast<unsigned char*>(pixel_buffer.get_data());
+				pitch = pixel_buffer.get_pitch();
+			}
+			lock_count++;
+		}
 
-typedef PixelBufferLock<HalfFloat> PixelBufferLock1hf;
-typedef PixelBufferLock<Vec2hf> PixelBufferLock2hf;
-typedef PixelBufferLock<Vec3hf> PixelBufferLock3hf;
-typedef PixelBufferLock<Vec4hf> PixelBufferLock4hf;
+		/// \brief Lock the system pixel_buffer.
+		void lock()
+		{
+			if (!pixel_buffer.is_null())
+			{
+				if (pixel_buffer.is_gpu())
+					throw Exception("Incorrect PixelBufferLock constructor called with a GPU pixelbuffer");
 
-typedef PixelBufferLock<float> PixelBufferLock1f;
-typedef PixelBufferLock<Vec2f> PixelBufferLock2f;
-typedef PixelBufferLock<Vec3f> PixelBufferLock3f;
-typedef PixelBufferLock<Vec4f> PixelBufferLock4f;
-typedef PixelBufferLock<double> PixelBufferLock1d;
-typedef PixelBufferLock<Vec2d> PixelBufferLock2d;
-typedef PixelBufferLock<Vec3d> PixelBufferLock3d;
-typedef PixelBufferLock<Vec4d> PixelBufferLock4d;
+				// lock() does not do anything on system pixel buffers, so we do not call it
 
-typedef PixelBufferLock<unsigned char> PixelBufferLockAny;
+				data = static_cast<unsigned char*>(pixel_buffer.get_data());
+				pitch = pixel_buffer.get_pitch();
+			}
+			lock_count++;
+		}
 
+		/// \brief Unlock pixel_buffer.
+		void unlock()
+		{
+			if (lock_count <= 0)
+				return;
+
+			if (!pixel_buffer.is_null())
+			{
+				pixel_buffer.unlock();
+				pitch = 0;
+				data = 0;
+			}
+			lock_count--;
+		}
+
+	private:
+		PixelBuffer pixel_buffer;
+		int lock_count;
+		int width;
+		int height;
+		int pitch;
+		unsigned char *data;
+	};
+
+	typedef PixelBufferLock<unsigned char> PixelBufferLock1ub;
+	typedef PixelBufferLock<Vec2ub> PixelBufferLock2ub;
+	typedef PixelBufferLock<Vec3ub> PixelBufferLock3ub;
+	typedef PixelBufferLock<Vec4ub> PixelBufferLock4ub;
+	typedef PixelBufferLock<unsigned short> PixelBufferLock1us;
+	typedef PixelBufferLock<Vec2us> PixelBufferLock2us;
+	typedef PixelBufferLock<Vec3us> PixelBufferLock3us;
+	typedef PixelBufferLock<Vec4us> PixelBufferLock4us;
+	typedef PixelBufferLock<unsigned int> PixelBufferLock1ui;
+	typedef PixelBufferLock<Vec2ui> PixelBufferLock2ui;
+	typedef PixelBufferLock<Vec3ui> PixelBufferLock3ui;
+	typedef PixelBufferLock<Vec4ui> PixelBufferLock4ui;
+
+	typedef PixelBufferLock<signed char> PixelBufferLock1b;
+	typedef PixelBufferLock<Vec2b> PixelBufferLock2b;
+	typedef PixelBufferLock<Vec3b> PixelBufferLock3b;
+	typedef PixelBufferLock<Vec4b> PixelBufferLock4b;
+	typedef PixelBufferLock<signed short> PixelBufferLock1s;
+	typedef PixelBufferLock<Vec2s> PixelBufferLock2s;
+	typedef PixelBufferLock<Vec3s> PixelBufferLock3s;
+	typedef PixelBufferLock<Vec4s> PixelBufferLock4s;
+	typedef PixelBufferLock<signed int> PixelBufferLock1i;
+	typedef PixelBufferLock<Vec2i> PixelBufferLock2i;
+	typedef PixelBufferLock<Vec3i> PixelBufferLock3i;
+	typedef PixelBufferLock<Vec4i> PixelBufferLock4i;
+
+	typedef PixelBufferLock<HalfFloat> PixelBufferLock1hf;
+	typedef PixelBufferLock<Vec2hf> PixelBufferLock2hf;
+	typedef PixelBufferLock<Vec3hf> PixelBufferLock3hf;
+	typedef PixelBufferLock<Vec4hf> PixelBufferLock4hf;
+
+	typedef PixelBufferLock<float> PixelBufferLock1f;
+	typedef PixelBufferLock<Vec2f> PixelBufferLock2f;
+	typedef PixelBufferLock<Vec3f> PixelBufferLock3f;
+	typedef PixelBufferLock<Vec4f> PixelBufferLock4f;
+	typedef PixelBufferLock<double> PixelBufferLock1d;
+	typedef PixelBufferLock<Vec2d> PixelBufferLock2d;
+	typedef PixelBufferLock<Vec3d> PixelBufferLock3d;
+	typedef PixelBufferLock<Vec4d> PixelBufferLock4d;
+
+	typedef PixelBufferLock<unsigned char> PixelBufferLockAny;
+
+	/// \}
 }
-
-/// \}

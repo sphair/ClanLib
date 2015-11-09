@@ -34,8 +34,8 @@
 #pragma once
 
 #define CLANLIB_VERSION(x,y,z)	( (x << 16) | (y << 8) | (z) )
-#define CLANLIB_CURRENT_VERSION	CLANLIB_VERSION(4,0,0)
-#define CLANLIB_VERSION_STRING "4.0.0"
+#define CLANLIB_CURRENT_VERSION	CLANLIB_VERSION(4,0,1)
+#define CLANLIB_VERSION_STRING "4.0.1"
 
 #ifdef _MSC_VER
 #pragma warning( disable : 4786)
@@ -80,36 +80,9 @@
 #include "Core/Resources/resource_container.h"
 #include "Core/Resources/resource_object.h"
 #include "Core/Resources/resource_manager.h"
-#include "Core/Resources/xml_resource_node.h"
-#include "Core/Resources/xml_resource_document.h"
-#include "Core/Resources/xml_resource_manager.h"
 #include "Core/Resources/file_resource_document.h"
 #include "Core/Resources/file_resource_manager.h"
 #include "Core/JSON/json_value.h"
-#include "Core/XML/dom_processing_instruction.h"
-#include "Core/XML/dom_entity_reference.h"
-#include "Core/XML/dom_notation.h"
-#include "Core/XML/dom_exception.h"
-#include "Core/XML/dom_cdata_section.h"
-#include "Core/XML/dom_document_fragment.h"
-#include "Core/XML/dom_comment.h"
-#include "Core/XML/dom_attr.h"
-#include "Core/XML/dom_entity.h"
-#include "Core/XML/dom_document_type.h"
-#include "Core/XML/dom_document.h"
-#include "Core/XML/dom_implementation.h"
-#include "Core/XML/dom_node_list.h"
-#include "Core/XML/dom_text.h"
-#include "Core/XML/dom_node.h"
-#include "Core/XML/dom_character_data.h"
-#include "Core/XML/dom_named_node_map.h"
-#include "Core/XML/dom_element.h"
-#include "Core/XML/dom_string.h"
-#include "Core/XML/xml_tokenizer.h"
-#include "Core/XML/xml_writer.h"
-#include "Core/XML/xml_token.h"
-#include "Core/XML/xpath_evaluator.h"
-#include "Core/XML/xpath_object.h"
 #include "Core/IOData/file.h"
 #include "Core/IOData/file_help.h"
 #include "Core/IOData/path_help.h"

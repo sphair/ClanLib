@@ -26,7 +26,6 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include <memory>
@@ -35,156 +34,129 @@
 
 namespace clan
 {
-/// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
-/// \{
+	/// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
+	/// \{
 
-class XMLResourceDocument;
-class SoundOutput;
-class SoundProvider;
-class SoundBuffer_Session;
-class SoundFilter;
-class SoundBuffer_Impl;
-class IODevice;
-class FileSystem;
-class ResourceManager;
+	class XMLResourceDocument;
+	class SoundOutput;
+	class SoundProvider;
+	class SoundBuffer_Session;
+	class SoundFilter;
+	class SoundBuffer_Impl;
+	class IODevice;
+	class FileSystem;
+	class ResourceManager;
 
-/// \brief Sample interface in ClanLib.
-///
-///    <p>The SoundBuffer class represents a sample in ClanLib. It can
-///    either be static or streamed. The soundbuffer gets its sample data from
-///    a soundprovider, that is passed during construction.</p>
-class SoundBuffer
-{
-/// \name Construction
-/// \{
-
-public:
-	/// \brief Construct a null instance
-	SoundBuffer();
-
-	/// \brief Construct sound buffer.
-	/** <p>A sound buffer can be constructed either as static or
-	    streamed. If the sound buffer is loaded from resources, the
-	    buffer type is determined by the resource option 'stream'
-	    associated with the resource.</p>
-	    -
-	    <p>SoundBuffer's internals are reference counted, so the copy
-	    constructor will create a new soundbuffer object which shares
-	    the same buffer as the original one. This means that if the copy
-	    is modified, the original is affected as well.</p>
-	    -
-	    <p>If <i>delete_provider</i> is true, the provider will be
-	    deleted when the soundbuffer is deleted.</p>*/
-
-	SoundBuffer(
-		SoundProvider *provider);
-
-	SoundBuffer(
-		const std::string &fullname,
-		bool streamed = false,
-		const std::string &format = "");
-
-	SoundBuffer(
-		const std::string &filename,
-		bool streamed,
-		const FileSystem &fs,
-		const std::string &type = "");
-
-	SoundBuffer(
-		IODevice &file,
-		bool streamed,
-		const std::string &type);
-
-/// \}
-
-/// \name Resources
-/// \{
-public:
-
-
-	/// \brief Retrieves a SoundBuffer resource from the resource manager
+	/// \brief Sample interface in ClanLib.
 	///
-	/// \param gc = Graphic Context
-	/// \param resources = Resource manager
-	/// \param id = id
-	static Resource<SoundBuffer> resource(const std::string &id, const ResourceManager &resources);
+	///    <p>The SoundBuffer class represents a sample in ClanLib. It can
+	///    either be static or streamed. The soundbuffer gets its sample data from
+	///    a soundprovider, that is passed during construction.</p>
+	class SoundBuffer
+	{
+	public:
+		/// \brief Construct a null instance
+		SoundBuffer();
 
-	/// \brief Loads a SoundBuffer from a XML resource definition
-	static SoundBuffer load(const std::string &id, const XMLResourceDocument &doc);
+		/// \brief Construct sound buffer.
+		/** <p>A sound buffer can be constructed either as static or
+			streamed. If the sound buffer is loaded from resources, the
+			buffer type is determined by the resource option 'stream'
+			associated with the resource.</p>
+			-
+			<p>SoundBuffer's internals are reference counted, so the copy
+			constructor will create a new soundbuffer object which shares
+			the same buffer as the original one. This means that if the copy
+			is modified, the original is affected as well.</p>
+			-
+			<p>If <i>delete_provider</i> is true, the provider will be
+			deleted when the soundbuffer is deleted.</p>*/
 
-	virtual ~SoundBuffer();
+		SoundBuffer(
+			SoundProvider *provider);
 
-/// \}
-/// \name Attributes
-/// \{
+		SoundBuffer(
+			const std::string &fullname,
+			bool streamed = false,
+			const std::string &format = "");
 
-public:
-	/// \brief Returns the sound provider to be used for playback.
-	SoundProvider *get_provider() const;
+		SoundBuffer(
+			const std::string &filename,
+			bool streamed,
+			const FileSystem &fs,
+			const std::string &type = "");
 
-	/// \brief Returns the start/default volume used when the buffer is played.
-	float get_volume() const;
+		SoundBuffer(
+			IODevice &file,
+			bool streamed,
+			const std::string &type);
 
-	/// \brief Returns the default panning position when the buffer is played.
-	float get_pan() const;
+		/// \brief Retrieves a SoundBuffer resource from the resource manager
+		///
+		/// \param gc = Graphic Context
+		/// \param resources = Resource manager
+		/// \param id = id
+		static Resource<SoundBuffer> resource(const std::string &id, const ResourceManager &resources);
 
-	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return !impl; }
+		/// \brief Loads a SoundBuffer from a XML resource definition
+		static SoundBuffer load(const std::string &id, const XMLResourceDocument &doc);
 
-	/// \brief Throw an exception if this object is invalid.
-	void throw_if_null() const;
+		virtual ~SoundBuffer();
 
-/// \}
-/// \name Operations
-/// \{
+		/// \brief Returns the sound provider to be used for playback.
+		SoundProvider *get_provider() const;
 
-public:
+		/// \brief Returns the start/default volume used when the buffer is played.
+		float get_volume() const;
 
-	/// \brief Sets the volume of the sound buffer in a relative measure (0->1)
-	/** <p>A value of 0 will effectively mute the sound (although it will
-	    still be sampled), and a value of 1 will set the volume to "max".</p>
-	    \param new_volume New volume of sound buffer. */
-	void set_volume(float new_volume);
+		/// \brief Returns the default panning position when the buffer is played.
+		float get_pan() const;
 
-	/// \brief Sets the panning of the sound buffer played in measures from -1 -> 1
-	/** <p>Setting the pan with a value of -1 will pan the sound buffer to the
-	    extreme left (left speaker only), 1 will pan the sound buffer to the
-	    extreme right (right speaker only).</p>
-	    \param new_pan New pan of the sound buffer played.*/
-	void set_pan(float new_pan);
+		/// \brief Returns true if this object is invalid.
+		bool is_null() const { return !impl; }
 
-	/// \brief Adds the sound filter to the sound buffer.
-	///
-	/// \param filter Sound filter to pass sound through.
-	void add_filter(SoundFilter &filter);
+		/// \brief Throw an exception if this object is invalid.
+		void throw_if_null() const;
 
-	/// \brief Remove the sound filter from the sound buffer.
-	void remove_filter(SoundFilter &filter);
+		/// \brief Sets the volume of the sound buffer in a relative measure (0->1)
+		/** <p>A value of 0 will effectively mute the sound (although it will
+			still be sampled), and a value of 1 will set the volume to "max".</p>
+			\param new_volume New volume of sound buffer. */
+		void set_volume(float new_volume);
 
-	/// \brief Plays the soundbuffer on the specified soundcard.
-	///
-	/// \param looping looping
-	/// \param output Sound output to be used - NULL means use the current selected sound output (Sound::get_selected_output().
-	///
-	/// \return The playback session.
-	SoundBuffer_Session play(bool looping = false, SoundOutput *output = nullptr);
+		/// \brief Sets the panning of the sound buffer played in measures from -1 -> 1
+		/** <p>Setting the pan with a value of -1 will pan the sound buffer to the
+			extreme left (left speaker only), 1 will pan the sound buffer to the
+			extreme right (right speaker only).</p>
+			\param new_pan New pan of the sound buffer played.*/
+		void set_pan(float new_pan);
 
-	/// \brief Prepares the soundbuffer for playback on the specified soundcard.
-	///
-	/// \param output Sound output to be used - NULL means use the current selected sound output (Sound::get_selected_output().
-	///
-	/// \return The playback session.
-	SoundBuffer_Session prepare(bool looping = false, SoundOutput *output = nullptr);
+		/// \brief Adds the sound filter to the sound buffer.
+		///
+		/// \param filter Sound filter to pass sound through.
+		void add_filter(SoundFilter &filter);
 
-/// \}
-/// \name Implementation
-/// \{
+		/// \brief Remove the sound filter from the sound buffer.
+		void remove_filter(SoundFilter &filter);
 
-private:
-	std::shared_ptr<SoundBuffer_Impl> impl;
-/// \}
-};
+		/// \brief Plays the soundbuffer on the specified soundcard.
+		///
+		/// \param looping looping
+		/// \param output Sound output to be used - NULL means use the current selected sound output (Sound::get_selected_output().
+		///
+		/// \return The playback session.
+		SoundBuffer_Session play(bool looping = false, SoundOutput *output = nullptr);
 
+		/// \brief Prepares the soundbuffer for playback on the specified soundcard.
+		///
+		/// \param output Sound output to be used - NULL means use the current selected sound output (Sound::get_selected_output().
+		///
+		/// \return The playback session.
+		SoundBuffer_Session prepare(bool looping = false, SoundOutput *output = nullptr);
+
+	private:
+		std::shared_ptr<SoundBuffer_Impl> impl;
+	};
+
+	/// \}
 }
-
-/// \}

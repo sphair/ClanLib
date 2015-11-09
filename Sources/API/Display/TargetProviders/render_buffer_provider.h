@@ -27,49 +27,26 @@
 **    Harry Storbacka
 */
 
-
 #pragma once
 
 #include "../Render/texture.h"
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-enum TextureFormat;
+	enum TextureFormat;
 
-/// \brief Interface for implementing a RenderBuffer target.
-class RenderBufferProvider
-{
-/// \name Construction
-/// \{
+	/// \brief Interface for implementing a RenderBuffer target.
+	class RenderBufferProvider
+	{
+	public:
+		virtual ~RenderBufferProvider() {}
 
-public:
-	virtual ~RenderBufferProvider() {}
+		/// \brief Create a render buffer image with the specified dimensions.
+		virtual void create(int width, int height, TextureFormat texture_format, int multisample_samples) = 0;
+	};
 
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	/// \brief Create a render buffer image with the specified dimensions.
-	virtual void create(int width, int height, TextureFormat texture_format, int multisample_samples) = 0;
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

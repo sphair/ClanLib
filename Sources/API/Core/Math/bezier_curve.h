@@ -27,7 +27,6 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include <memory>
@@ -35,58 +34,39 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_Math clanCore Math
-/// \{
+	/// \addtogroup clanCore_Math clanCore Math
+	/// \{
 
-class BezierCurve_Impl;
-class Pointf;
-class Angle;
+	class BezierCurve_Impl;
+	class Pointf;
+	class Angle;
 
-/// \brief Bezier curve generator.
-class BezierCurve
-{
-/// \name Construction
-/// \{
+	/// \brief Bezier curve generator.
+	class BezierCurve
+	{
+	public:
+		/// \brief Constructs a bezier curve generator.
+		BezierCurve();
 
-public:
-	/// \brief Constructs a bezier curve generator.
-	BezierCurve();
+		virtual ~BezierCurve();
 
-	virtual ~BezierCurve();
+		/// \brief Returns the control points of the bezier.
+		std::vector<Pointf> get_control_points() const;
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief Adds a control point to bezier.
+		void add_control_point(float x, float y);
 
-public:
-	/// \brief Returns the control points of the bezier.
-	std::vector<Pointf> get_control_points() const;
+		void add_control_point(const Pointf &);
 
-/// \}
-/// \name Operations
-/// \{
+		/// \brief Generates points on the bezier curve.
+		std::vector<Pointf> generate_curve_points(const Angle &split_angle);
 
-public:
-	/// \brief Adds a control point to bezier.
-	void add_control_point(float x, float y);
+		/// \brief Get a point on the bezier curve.
+		Pointf get_point_relative(float pos_0_to_1) const;
 
-	void add_control_point(const Pointf &);
+	private:
+		std::shared_ptr<BezierCurve_Impl> impl;
+	};
 
-	/// \brief Generates points on the bezier curve.
-	std::vector<Pointf> generate_curve_points(const Angle &split_angle);
-
-	/// \brief Get a point on the bezier curve.
-	Pointf get_point_relative(float pos_0_to_1) const;
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	std::shared_ptr<BezierCurve_Impl> impl;
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

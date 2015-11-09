@@ -23,7 +23,6 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
 **    Mark Page
 */
 
@@ -34,57 +33,43 @@
 
 namespace clan
 {
+	SHA384::SHA384()
+		: impl(std::make_shared<SHA512_Impl>(cl_sha_384))
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// SHA384 Construction:
+	std::string SHA384::get_hash(bool uppercase) const
+	{
+		return impl->get_hash(uppercase);
+	}
 
-SHA384::SHA384()
-: impl(std::make_shared<SHA512_Impl>(cl_sha_384))
-{
-}
+	void SHA384::get_hash(unsigned char out_hash[48]) const
+	{
+		impl->get_hash(out_hash);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// SHA384 Attributes:
+	void SHA384::reset()
+	{
+		impl->reset();
+	}
 
-std::string SHA384::get_hash(bool uppercase) const
-{
-	return impl->get_hash(uppercase);
-}
+	void SHA384::add(const void *data, int size)
+	{
+		impl->add(data, size);
+	}
 
-void SHA384::get_hash(unsigned char out_hash[48]) const
-{
-	impl->get_hash(out_hash);
-}
+	void SHA384::add(const DataBuffer &data)
+	{
+		add(data.get_data(), data.get_size());
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// SHA384 Operations:
+	void SHA384::calculate()
+	{
+		impl->calculate();
+	}
 
-void SHA384::reset()
-{
-	impl->reset();
-}
-
-void SHA384::add(const void *data, int size)
-{
-	impl->add(data, size);
-}
-
-void SHA384::add(const DataBuffer &data)
-{
-	add(data.get_data(), data.get_size());
-}
-
-void SHA384::calculate()
-{
-	impl->calculate();
-}
-
-void SHA384::set_hmac(const void *key_data, int key_size)
-{
-	impl->set_hmac(key_data, key_size);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// SHA384 Implementation:
-
+	void SHA384::set_hmac(const void *key_data, int key_size)
+	{
+		impl->set_hmac(key_data, key_size);
+	}
 }

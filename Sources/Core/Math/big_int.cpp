@@ -53,380 +53,381 @@
 
 namespace clan
 {
-
-BigInt::BigInt() : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
-{
-}
-
-BigInt::BigInt(uint32_t value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
-{
-	set(value);
-}
-
-BigInt::BigInt(int32_t value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
-{
-	set(value);
-}
-
-BigInt::BigInt(uint64_t value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
-{
-	set(value);
-}
-
-BigInt::BigInt(int64_t value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
-{
-	set(value);
-}
-
-BigInt::BigInt(const BigInt &other)
-{
-	if (&other != this)
+	BigInt::BigInt() : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
 	{
-		impl = std::unique_ptr<BigInt_Impl>(new BigInt_Impl(*other.impl.get()));
 	}
-}
 
-BigInt &BigInt::operator=(const BigInt& other)
-{
-	if (&other != this)
+	BigInt::BigInt(uint32_t value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
 	{
-		other.impl->copy(this->impl.get());
+		set(value);
 	}
-	return *this;
-}
 
-BigInt::~BigInt()
-{
-}
+	BigInt::BigInt(int32_t value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
+	{
+		set(value);
+	}
 
-void BigInt::zero()
-{
-	impl->zero();
-}
+	BigInt::BigInt(uint64_t value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
+	{
+		set(value);
+	}
 
-int BigInt::cmp_z() const
-{
-	return impl->cmp_z();
-}
+	BigInt::BigInt(int64_t value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
+	{
+		set(value);
+	}
 
-void BigInt::read_unsigned_octets( const unsigned char *input_str, unsigned int input_length)
-{
-	impl->read_unsigned_octets(input_str, input_length);
-}
+	BigInt::BigInt(const BigInt &other)
+	{
+		if (&other != this)
+		{
+			impl = std::unique_ptr<BigInt_Impl>(new BigInt_Impl(*other.impl.get()));
+		}
+	}
 
-void BigInt::set_bit(unsigned int bit_number, unsigned int value)
-{
-	impl->set_bit(bit_number, value);
-}
+	BigInt &BigInt::operator=(const BigInt& other)
+	{
+		if (&other != this)
+		{
+			other.impl->copy(this->impl.get());
+		}
+		return *this;
+	}
 
-int BigInt::significant_bits() const
-{
-	return impl->significant_bits();
-}
+	BigInt::~BigInt()
+	{
+	}
 
-void BigInt::div_d(uint32_t d, BigInt *q, uint32_t *r) const
-{
-	impl->div_d(d, q->impl.get(), r);
-}
+	void BigInt::zero()
+	{
+		impl->zero();
+	}
 
-uint32_t BigInt::mod_d(uint32_t d) const
-{
-	return impl->mod_d(d);
-}
+	int BigInt::cmp_z() const
+	{
+		return impl->cmp_z();
+	}
 
-void BigInt::sieve(const uint32_t *primes, unsigned int num_primes, std::vector<unsigned char> &sieve)
-{
-	impl->sieve(primes, num_primes, sieve);
-}
+	void BigInt::read_unsigned_octets(const unsigned char *input_str, unsigned int input_length)
+	{
+		impl->read_unsigned_octets(input_str, input_length);
+	}
 
-void BigInt::set(uint32_t d)
-{
-	impl->set(d);
-}
+	void BigInt::set_bit(unsigned int bit_number, unsigned int value)
+	{
+		impl->set_bit(bit_number, value);
+	}
 
-void BigInt::set(int32_t d)
-{
-	impl->set(d);
-}
+	int BigInt::significant_bits() const
+	{
+		return impl->significant_bits();
+	}
 
-void BigInt::set(uint64_t d)
-{
-	impl->set(d);
-}
+	void BigInt::div_d(uint32_t d, BigInt *q, uint32_t *r) const
+	{
+		impl->div_d(d, q->impl.get(), r);
+	}
 
-void BigInt::set(int64_t d)
-{
-	impl->set(d);
-}
+	uint32_t BigInt::mod_d(uint32_t d) const
+	{
+		return impl->mod_d(d);
+	}
 
+	void BigInt::sieve(const uint32_t *primes, unsigned int num_primes, std::vector<unsigned char> &sieve)
+	{
+		impl->sieve(primes, num_primes, sieve);
+	}
 
-void BigInt::get(uint32_t &d)
-{
-	impl->get(d);
-}
+	void BigInt::set(uint32_t d)
+	{
+		impl->set(d);
+	}
 
-void BigInt::get(int32_t &d)
-{
-	impl->get(d);
-}
+	void BigInt::set(int32_t d)
+	{
+		impl->set(d);
+	}
 
+	void BigInt::set(uint64_t d)
+	{
+		impl->set(d);
+	}
 
-void BigInt::get(uint64_t &d)
-{
-	impl->get(d);
-}
+	void BigInt::set(int64_t d)
+	{
+		impl->set(d);
+	}
 
-void BigInt::get(int64_t &d)
-{
-	impl->get(d);
-}
+	void BigInt::get(uint32_t &d)
+	{
+		impl->get(d);
+	}
 
-void BigInt::div(uint32_t d, BigInt *q, BigInt *r) const
-{
-	impl->div_2d(d, q->impl.get(), r->impl.get());
-}
+	void BigInt::get(int32_t &d)
+	{
+		impl->get(d);
+	}
 
-void BigInt::mod(const BigInt *m, BigInt *c) const
-{
-	impl->mod(m->impl.get(), c->impl.get());
-}
+	void BigInt::get(uint64_t &d)
+	{
+		impl->get(d);
+	}
 
+	void BigInt::get(int64_t &d)
+	{
+		impl->get(d);
+	}
 
-BigInt BigInt::operator + (const BigInt& b)
-{
-	BigInt c;
-	impl->add(b.impl.get(), c.impl.get());
-	return c;
-}
-BigInt BigInt::operator + (uint32_t d)
-{
-	BigInt c;
-	impl->add_d(d, c.impl.get());
-	return c;
-}
+	void BigInt::div(uint32_t d, BigInt *q, BigInt *r) const
+	{
+		impl->div_2d(d, q->impl.get(), r->impl.get());
+	}
 
-BigInt BigInt::operator += (const BigInt& b)
-{
-	BigInt c;
-	impl->add(b.impl.get(), impl.get());
-	return *this;
-}
+	void BigInt::mod(const BigInt *m, BigInt *c) const
+	{
+		impl->mod(m->impl.get(), c->impl.get());
+	}
 
-BigInt BigInt::operator += (uint32_t d)
-{
-	BigInt c;
-	impl->add_d(d, impl.get());
-	return *this;
-}
+	BigInt BigInt::operator + (const BigInt& b)
+	{
+		BigInt c;
+		impl->add(b.impl.get(), c.impl.get());
+		return c;
+	}
+	BigInt BigInt::operator + (uint32_t d)
+	{
+		BigInt c;
+		impl->add_d(d, c.impl.get());
+		return c;
+	}
 
-BigInt BigInt::operator - (const BigInt& b)
-{
-	BigInt c;
-	impl->sub(b.impl.get(), c.impl.get());
-	return c;
-}
+	BigInt BigInt::operator += (const BigInt& b)
+	{
+		BigInt c;
+		impl->add(b.impl.get(), impl.get());
+		return *this;
+	}
 
-BigInt BigInt::operator - (uint32_t d)
-{
-	BigInt c;
-	impl->sub_d(d, c.impl.get());
-	return c;
-}
+	BigInt BigInt::operator += (uint32_t d)
+	{
+		BigInt c;
+		impl->add_d(d, impl.get());
+		return *this;
+	}
 
-BigInt BigInt::operator -= (const BigInt& b)
-{
-	impl->sub(b.impl.get(), impl.get());
-	return *this;
-}
+	BigInt BigInt::operator - (const BigInt& b)
+	{
+		BigInt c;
+		impl->sub(b.impl.get(), c.impl.get());
+		return c;
+	}
 
-BigInt BigInt::operator -= (uint32_t d)
-{
-	impl->sub_d(d, impl.get());
-	return *this;
-}
-BigInt BigInt::operator * (const BigInt& b)
-{
-	BigInt c;
-	impl->mul(b.impl.get(), c.impl.get());
-	return c;
-}
-BigInt BigInt::operator * (uint32_t d)
-{
-	BigInt c;
-	impl->mul_d(d, c.impl.get());
-	return c;
-}
+	BigInt BigInt::operator - (uint32_t d)
+	{
+		BigInt c;
+		impl->sub_d(d, c.impl.get());
+		return c;
+	}
 
-BigInt BigInt::operator *= (const BigInt& b)
-{
-	BigInt c;
-	impl->mul(b.impl.get(), impl.get());
-	return *this;
-}
-BigInt BigInt::operator *= (uint32_t d)
-{
-	BigInt c;
-	impl->mul_d(d, impl.get());
-	return *this;
-}
+	BigInt BigInt::operator -= (const BigInt& b)
+	{
+		impl->sub(b.impl.get(), impl.get());
+		return *this;
+	}
 
-BigInt BigInt::operator / (const BigInt& b)
-{
-	BigInt c;
-	impl->div(b.impl.get(), c.impl.get(), nullptr);
-	return c;
-}
-BigInt BigInt::operator / (uint32_t d)
-{
-	BigInt c;
-	impl->div_d(d, c.impl.get(), nullptr);
-	return c;
-}
+	BigInt BigInt::operator -= (uint32_t d)
+	{
+		impl->sub_d(d, impl.get());
+		return *this;
+	}
 
-BigInt BigInt::operator /= (const BigInt& b)
-{
-	BigInt c;
-	impl->div(b.impl.get(), impl.get(), nullptr);
-	return *this;
-}
+	BigInt BigInt::operator * (const BigInt& b)
+	{
+		BigInt c;
+		impl->mul(b.impl.get(), c.impl.get());
+		return c;
+	}
 
-BigInt BigInt::operator /= (uint32_t d)
-{
-	BigInt c;
-	impl->div_d(d, impl.get(), nullptr);
-	return *this;
-}
-BigInt BigInt::operator % (const BigInt& b)
-{
-	BigInt c;
-	impl->div(b.impl.get(), nullptr, c.impl.get());
-	return c;
-}
-BigInt BigInt::operator % (uint32_t d)
-{
-	BigInt c;
-	impl->div_2d(d, nullptr, c.impl.get());
-	return c;
-}
+	BigInt BigInt::operator * (uint32_t d)
+	{
+		BigInt c;
+		impl->mul_d(d, c.impl.get());
+		return c;
+	}
 
-BigInt BigInt::operator %= (const BigInt& b)
-{
-	BigInt c;
-	impl->div(b.impl.get(), nullptr, impl.get());
-	return *this;
-}
-BigInt BigInt::operator %= (uint32_t d)
-{
-	BigInt c;
-	impl->div_2d(d, nullptr, impl.get());
-	return *this;
-}
-void BigInt::div(const BigInt &b, BigInt *q, BigInt *r) const
-{
-	impl->div(b.impl.get(),q->impl.get(), r->impl.get());
-}
+	BigInt BigInt::operator *= (const BigInt& b)
+	{
+		BigInt c;
+		impl->mul(b.impl.get(), impl.get());
+		return *this;
+	}
 
+	BigInt BigInt::operator *= (uint32_t d)
+	{
+		BigInt c;
+		impl->mul_d(d, impl.get());
+		return *this;
+	}
 
-int BigInt::cmp(const BigInt *b) const
-{
-	return impl->cmp(b->impl.get());
-}
+	BigInt BigInt::operator / (const BigInt& b)
+	{
+		BigInt c;
+		impl->div(b.impl.get(), c.impl.get(), nullptr);
+		return c;
+	}
 
-void BigInt::exptmod(const BigInt *b, const BigInt *m, BigInt *c) const
-{
-	impl->exptmod(b->impl.get(), m->impl.get(), c->impl.get());
-}
+	BigInt BigInt::operator / (uint32_t d)
+	{
+		BigInt c;
+		impl->div_d(d, c.impl.get(), nullptr);
+		return c;
+	}
 
-bool BigInt::fermat(uint32_t w) const
-{
-	return impl->fermat(w);
-}
+	BigInt BigInt::operator /= (const BigInt& b)
+	{
+		BigInt c;
+		impl->div(b.impl.get(), impl.get(), nullptr);
+		return *this;
+	}
 
-int BigInt::cmp_d(uint32_t d) const
-{
-	return impl->cmp_d(d);
-}
+	BigInt BigInt::operator /= (uint32_t d)
+	{
+		BigInt c;
+		impl->div_d(d, impl.get(), nullptr);
+		return *this;
+	}
 
-void BigInt::neg(BigInt *b) const
-{
-	impl->neg(b->impl.get());
-}
+	BigInt BigInt::operator % (const BigInt& b)
+	{
+		BigInt c;
+		impl->div(b.impl.get(), nullptr, c.impl.get());
+		return c;
+	}
 
-unsigned int BigInt::trailing_zeros() const
-{
-	return impl->trailing_zeros();
-}
+	BigInt BigInt::operator % (uint32_t d)
+	{
+		BigInt c;
+		impl->div_2d(d, nullptr, c.impl.get());
+		return c;
+	}
 
-void BigInt::sqr(BigInt *b) const
-{
-	impl->sqr(b->impl.get());
-}
+	BigInt BigInt::operator %= (const BigInt& b)
+	{
+		BigInt c;
+		impl->div(b.impl.get(), nullptr, impl.get());
+		return *this;
+	}
 
-void BigInt::sqrmod(const BigInt *m, BigInt *c) const
-{
-	impl->sqrmod(m->impl.get(), c->impl.get());
-}
+	BigInt BigInt::operator %= (uint32_t d)
+	{
+		BigInt c;
+		impl->div_2d(d, nullptr, impl.get());
+		return *this;
+	}
 
-void BigInt::random()
-{
-	impl->random();
-}
-
-bool BigInt::pprime(int nt) const
-{
-	return impl->pprime(nt);
-}
-
-bool BigInt::invmod(const BigInt *m, BigInt *c) const
-{
-	return impl->invmod(m->impl.get(), c->impl.get());
-}
-
-void BigInt::abs(BigInt *b) const
-{
-	impl->abs(b->impl.get());
-}
-
-bool BigInt::is_even() const
-{
-	return impl->iseven() != 0;
-}
-
-bool BigInt::is_odd() const
-{
-	return impl->isodd() != 0;
-}
-
-void BigInt::div_2(BigInt *c) const
-{
-	impl->div_2(c->impl.get());
-}
-
-void BigInt::xgcd(const BigInt *b, BigInt *g, BigInt *x, BigInt *y) const
-{
-	impl->xgcd(b->impl.get(), g->impl.get(), x->impl.get(), y->impl.get());
-}
+	void BigInt::div(const BigInt &b, BigInt *q, BigInt *r) const
+	{
+		impl->div(b.impl.get(), q->impl.get(), r->impl.get());
+	}
 
 
-void BigInt::exch(BigInt *mp2)
-{
-	impl->exch(mp2->impl.get());
-}
+	int BigInt::cmp(const BigInt *b) const
+	{
+		return impl->cmp(b->impl.get());
+	}
 
-bool BigInt::make_prime(unsigned int num_bits)
-{
-	return impl->make_prime(num_bits);
-}
+	void BigInt::exptmod(const BigInt *b, const BigInt *m, BigInt *c) const
+	{
+		impl->exptmod(b->impl.get(), m->impl.get(), c->impl.get());
+	}
 
-int BigInt::unsigned_octet_size() const
-{
-	return impl->unsigned_octet_size();
-}
+	bool BigInt::fermat(uint32_t w) const
+	{
+		return impl->fermat(w);
+	}
 
-void BigInt::to_unsigned_octets(unsigned char *output_str, unsigned int output_length) const
-{
-	impl->to_unsigned_octets(output_str, output_length);
-}
+	int BigInt::cmp_d(uint32_t d) const
+	{
+		return impl->cmp_d(d);
+	}
 
+	void BigInt::neg(BigInt *b) const
+	{
+		impl->neg(b->impl.get());
+	}
 
+	unsigned int BigInt::trailing_zeros() const
+	{
+		return impl->trailing_zeros();
+	}
+
+	void BigInt::sqr(BigInt *b) const
+	{
+		impl->sqr(b->impl.get());
+	}
+
+	void BigInt::sqrmod(const BigInt *m, BigInt *c) const
+	{
+		impl->sqrmod(m->impl.get(), c->impl.get());
+	}
+
+	void BigInt::random()
+	{
+		impl->random();
+	}
+
+	bool BigInt::pprime(int nt) const
+	{
+		return impl->pprime(nt);
+	}
+
+	bool BigInt::invmod(const BigInt *m, BigInt *c) const
+	{
+		return impl->invmod(m->impl.get(), c->impl.get());
+	}
+
+	void BigInt::abs(BigInt *b) const
+	{
+		impl->abs(b->impl.get());
+	}
+
+	bool BigInt::is_even() const
+	{
+		return impl->iseven() != 0;
+	}
+
+	bool BigInt::is_odd() const
+	{
+		return impl->isodd() != 0;
+	}
+
+	void BigInt::div_2(BigInt *c) const
+	{
+		impl->div_2(c->impl.get());
+	}
+
+	void BigInt::xgcd(const BigInt *b, BigInt *g, BigInt *x, BigInt *y) const
+	{
+		impl->xgcd(b->impl.get(), g->impl.get(), x->impl.get(), y->impl.get());
+	}
+
+	void BigInt::exch(BigInt *mp2)
+	{
+		impl->exch(mp2->impl.get());
+	}
+
+	bool BigInt::make_prime(unsigned int num_bits)
+	{
+		return impl->make_prime(num_bits);
+	}
+
+	int BigInt::unsigned_octet_size() const
+	{
+		return impl->unsigned_octet_size();
+	}
+
+	void BigInt::to_unsigned_octets(unsigned char *output_str, unsigned int output_length) const
+	{
+		impl->to_unsigned_octets(output_str, output_length);
+	}
 }

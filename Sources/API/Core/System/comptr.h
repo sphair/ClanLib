@@ -28,59 +28,56 @@
 
 #pragma once
 
-
 namespace clan
 {
-
-template <typename Type>
-/// \brief ComPtr
-class ComPtr
-{
-public:
-	ComPtr() : ptr(0) { }
-	explicit ComPtr(Type *ptr) : ptr(ptr) { }
-	ComPtr(const ComPtr &copy) : ptr(copy.ptr) { if (ptr) ptr->AddRef(); }
-	~ComPtr() { clear(); }
-	ComPtr &operator =(const ComPtr &copy)
+	/// \brief ComPtr
+	template <typename Type>
+	class ComPtr
 	{
-		if (this == &copy)
+	public:
+		ComPtr() : ptr(0) { }
+		explicit ComPtr(Type *ptr) : ptr(ptr) { }
+		ComPtr(const ComPtr &copy) : ptr(copy.ptr) { if (ptr) ptr->AddRef(); }
+		~ComPtr() { clear(); }
+		ComPtr &operator =(const ComPtr &copy)
+		{
+			if (this == &copy)
+				return *this;
+			if (copy.ptr)
+				copy.ptr->AddRef();
+			if (ptr)
+				ptr->Release();
+			ptr = copy.ptr;
 			return *this;
-		if (copy.ptr)
-			copy.ptr->AddRef();
-		if (ptr)
-			ptr->Release();
-		ptr = copy.ptr;
-		return *this;
-	}
+		}
 
-	template<typename That>
-	explicit ComPtr(const ComPtr<That> &that)
-	: ptr(static_cast<Type*>(that.ptr))
-	{
-		if (ptr)
-			ptr->AddRef();
-	}
+		template<typename That>
+		explicit ComPtr(const ComPtr<That> &that)
+			: ptr(static_cast<Type*>(that.ptr))
+		{
+			if (ptr)
+				ptr->AddRef();
+		}
 
-	bool operator ==(const ComPtr &other) const { return ptr == other.ptr; }
-	bool operator !=(const ComPtr &other) const { return ptr != other.ptr; }
-	bool operator <(const ComPtr &other) const { return ptr < other.ptr; }
-	bool operator <=(const ComPtr &other) const { return ptr <= other.ptr; }
-	bool operator >(const ComPtr &other) const { return ptr > other.ptr; }
-	bool operator >=(const ComPtr &other) const { return ptr >= other.ptr; }
+		bool operator ==(const ComPtr &other) const { return ptr == other.ptr; }
+		bool operator !=(const ComPtr &other) const { return ptr != other.ptr; }
+		bool operator <(const ComPtr &other) const { return ptr < other.ptr; }
+		bool operator <=(const ComPtr &other) const { return ptr <= other.ptr; }
+		bool operator >(const ComPtr &other) const { return ptr > other.ptr; }
+		bool operator >=(const ComPtr &other) const { return ptr >= other.ptr; }
 
-	// const does not exist in COM, so we drop the const qualifier on returned objects to avoid needing mutable variables elsewhere
+		// const does not exist in COM, so we drop the const qualifier on returned objects to avoid needing mutable variables elsewhere
 
-	Type * const operator ->() const { return const_cast<Type*>(ptr); }
-	Type *operator ->() { return ptr; }
-	operator Type *() const { return const_cast<Type*>(ptr); }
-	operator bool() const { return ptr != 0; }
+		Type * const operator ->() const { return const_cast<Type*>(ptr); }
+		Type *operator ->() { return ptr; }
+		operator Type *() const { return const_cast<Type*>(ptr); }
+		operator bool() const { return ptr != 0; }
 
-	bool is_null() const { return ptr == 0; }
-	void clear() { if (ptr) ptr->Release(); ptr = 0; }
-	Type *get() const { return const_cast<Type*>(ptr); }
-	Type **output_variable() { clear(); return &ptr; }
+		bool is_null() const { return ptr == 0; }
+		void clear() { if (ptr) ptr->Release(); ptr = 0; }
+		Type *get() const { return const_cast<Type*>(ptr); }
+		Type **output_variable() { clear(); return &ptr; }
 
-	Type *ptr;
-};
-
+		Type *ptr;
+	};
 }

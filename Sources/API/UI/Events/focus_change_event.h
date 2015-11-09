@@ -32,12 +32,14 @@
 
 namespace clan
 {
+	/// Focus change type
 	enum class FocusChangeType
 	{
-		gained,
-		lost
+		gained, /// View received the focus
+		lost    /// View no longer has the focus
 	};
 
+	/// View focus changed event
 	class FocusChangeEvent : public EventUI
 	{
 	public:

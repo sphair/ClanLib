@@ -29,68 +29,42 @@
 
 #pragma once
 
-
 #include "API/Core/IOData/file_system_provider.h"
 #include "API/Core/IOData/directory_scanner.h"
 #include "API/Core/IOData/file.h"
 
 namespace clan
 {
+	class DirectoryListingEntry;
 
-class DirectoryListingEntry;
+	class FileSystemProvider_File : public FileSystemProvider
+	{
+	public:
+		FileSystemProvider_File(const std::string &path);
+		~FileSystemProvider_File();
 
-class FileSystemProvider_File : public FileSystemProvider
-{
-/// \name Construction
-/// \{
+		std::string get_path() const override;
+		std::string get_identifier() const override;
 
-public:
-	FileSystemProvider_File(const std::string &path);
+		/// \brief Open a file
+		/** param: filename = The filename to use
+			param: mode = File::OpenMode modes
+			param: access = File::AccessFlags flags
+			param: share = File::ShareFlags flags
+			param: flags = File::Flags flags
+			\return The IODevice*/
+		IODevice open_file(const std::string &filename,
+			File::OpenMode mode = File::open_existing,
+			unsigned int access = File::access_read | File::access_write,
+			unsigned int share = File::share_all,
+			unsigned int flags = 0) override;
 
-	~FileSystemProvider_File();
+		bool initialize_directory_listing(const std::string &path) override;
 
+		bool next_file(DirectoryListingEntry &entry) override;
 
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	std::string get_path() const override;
-
-	std::string get_identifier() const override;
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	/// \brief Open a file
-	/** param: filename = The filename to use
-	    param: mode = File::OpenMode modes
-	    param: access = File::AccessFlags flags
-	    param: share = File::ShareFlags flags
-	    param: flags = File::Flags flags
-	    \return The IODevice*/
-	IODevice open_file(const std::string &filename,
-		File::OpenMode mode = File::open_existing,
-		unsigned int access = File::access_read | File::access_write,
-		unsigned int share = File::share_all,
-		unsigned int flags = 0) override;
-
-	bool initialize_directory_listing(const std::string &path) override;
-
-	bool next_file(DirectoryListingEntry &entry) override;
-
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	std::string path;
-
-	DirectoryScanner dir_scanner;
-/// \}
-};
-
+	private:
+		std::string path;
+		DirectoryScanner dir_scanner;
+	};
 }

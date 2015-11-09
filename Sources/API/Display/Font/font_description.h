@@ -27,190 +27,168 @@
 **    Harry Storbacka
 */
 
-
 #pragma once
 
 #include <memory>
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Font clanDisplay Font
-/// \{
+	/// \addtogroup clanDisplay_Font clanDisplay Font
+	/// \{
 
-class DisplayWindow;
-class FontDescription_Impl;
+	class DisplayWindow;
+	class FontDescription_Impl;
 
-enum class FontWeight : int
-{
-	thin = 100,
-	extra_light = 200,
-	light = 300,
-	normal = 400,
-	medium = 500,
-	semi_bold = 600,
-	bold = 700,
-	extra_bold = 800,
-	heavy = 900
-};
-
-enum class FontStyle
-{
-	normal,
-	italic,
-	oblique	// Currently not supported by ClanLib
-};
-
-/// \brief Font description class.
-///
-///  This class allows you to setup a more advanced description when creating a font.
-class FontDescription
-{
-/// \name Construction
-/// \{
-
-public:
-	/// \brief Constructs a font description with default values.
-	FontDescription();
-
-	virtual ~FontDescription();
-
-	/// \brief Create null object
-	///
-	/// \return Font Description
-	static FontDescription create_null_object();
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-
-	enum Charset
+	enum class FontWeight : int
 	{
-		charset_default,
-		charset_ansi,
-		charset_baltic,
-		charset_chinesebig5,
-		charset_easteurope,
-		charset_gb2312,
-		charset_greek,
-		charset_hangul,
-		charset_mac,
-		charset_oem,
-		charset_russian,
-		charset_shiftjis,
-		charset_symbol,
-		charset_turkish,
-		charset_vietnamese,
-		charset_johab,
-		charset_arabic,
-		charset_hebrew,
-		charset_thai
+		thin = 100,
+		extra_light = 200,
+		light = 300,
+		normal = 400,
+		medium = 500,
+		semi_bold = 600,
+		bold = 700,
+		extra_bold = 800,
+		heavy = 900
 	};
 
-	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return !impl; }
+	enum class FontStyle
+	{
+		normal,
+		italic,
+		oblique	// Currently not supported by ClanLib
+	};
 
-	/// \brief Throw an exception if this object is invalid.
-	void throw_if_null() const;
-
-	/// \brief Returns the font height
-	float get_height() const;
-
-	/// \brief Returns the distance between each line
-	float get_line_height() const;
-
-	/// \brief Returns the font average width
+	/// \brief Font description class.
 	///
-	/// 0.0f = Use default
-	float get_average_width() const;
+	///  This class allows you to setup a more advanced description when creating a font.
+	class FontDescription
+	{
+	public:
+		/// \brief Constructs a font description with default values.
+		FontDescription();
 
-	/// \brief Returns the font escapement
-	float get_escapement() const;
+		virtual ~FontDescription();
 
-	/// \brief Returns the font orientation
-	float get_orientation() const;
+		/// \brief Create null object
+		///
+		/// \return Font Description
+		static FontDescription create_null_object();
 
-	/// \brief Returns the font weight
-	FontWeight get_weight() const;
+		enum Charset
+		{
+			charset_default,
+			charset_ansi,
+			charset_baltic,
+			charset_chinesebig5,
+			charset_easteurope,
+			charset_gb2312,
+			charset_greek,
+			charset_hangul,
+			charset_mac,
+			charset_oem,
+			charset_russian,
+			charset_shiftjis,
+			charset_symbol,
+			charset_turkish,
+			charset_vietnamese,
+			charset_johab,
+			charset_arabic,
+			charset_hebrew,
+			charset_thai
+		};
 
-	/// \brief Returns the font style
-	FontStyle get_style() const;
+		/// \brief Returns true if this object is invalid.
+		bool is_null() const { return !impl; }
 
-	/// \brief Get the font anti-alias setting (defaults to true)
-	bool get_anti_alias() const;
+		/// \brief Throw an exception if this object is invalid.
+		void throw_if_null() const;
 
-	/// \brief Get the font subpixel rendering setting (defaults to true)
-	bool get_subpixel() const;
+		/// \brief Returns the font height
+		float get_height() const;
 
-	/// \biref Get the font charset
-	Charset get_charset() const;
+		/// \brief Returns the distance between each line
+		float get_line_height() const;
 
-	/// \brief Returns true if the font is identical
-	/// Line_height is excluded.
-	bool operator==(const FontDescription &other) const;
+		/// \brief Returns the font average width
+		///
+		/// 0.0f = Use default
+		float get_average_width() const;
 
-	/// \brief Returns an unique string identifying this font description
-	///
-	/// This is useful for placing font descriptions in a map.
-	/// Line_height is excluded.
-	std::string get_unique_id() const;
+		/// \brief Returns the font escapement
+		float get_escapement() const;
 
-/// \}
-/// \name Operations
-/// \{
+		/// \brief Returns the font orientation
+		float get_orientation() const;
 
-public:
-	/// \brief Copy assignment operator (does not copy the description, use clone() if you want that)
-	FontDescription &operator =(const FontDescription &copy);
+		/// \brief Returns the font weight
+		FontWeight get_weight() const;
 
-	// \brief Copy the entire font description (not just the implementation)
-	FontDescription clone() const;
+		/// \brief Returns the font style
+		FontStyle get_style() const;
 
-	/// \brief Sets the font height
-	void set_height(float value = 20.0f);
+		/// \brief Get the font anti-alias setting (defaults to true)
+		bool get_anti_alias() const;
 
-	/// \brief Sets the font average width
-	///
-	/// 0.0f = Use default
-	void set_average_width(float value = 0.0f);
+		/// \brief Get the font subpixel rendering setting (defaults to true)
+		bool get_subpixel() const;
 
-	/// \brief Sets the font escapement
-	void set_escapement(float value);
+		/// \biref Get the font charset
+		Charset get_charset() const;
 
-	/// \brief Sets the font orientation
-	void set_orientation(float value);
+		/// \brief Returns true if the font is identical
+		/// Line_height is excluded.
+		bool operator==(const FontDescription &other) const;
+
+		/// \brief Returns an unique string identifying this font description
+		///
+		/// This is useful for placing font descriptions in a map.
+		/// Line_height is excluded.
+		std::string get_unique_id() const;
+
+		/// \brief Copy assignment operator (does not copy the description, use clone() if you want that)
+		FontDescription &operator =(const FontDescription &copy);
+
+		// \brief Copy the entire font description (not just the implementation)
+		FontDescription clone() const;
+
+		/// \brief Sets the font height
+		void set_height(float value = 20.0f);
+
+		/// \brief Sets the font average width
+		///
+		/// 0.0f = Use default
+		void set_average_width(float value = 0.0f);
+
+		/// \brief Sets the font escapement
+		void set_escapement(float value);
+
+		/// \brief Sets the font orientation
+		void set_orientation(float value);
 
 		/// \brief Sets the font weight
-	void set_weight(FontWeight value = FontWeight::normal);
+		void set_weight(FontWeight value = FontWeight::normal);
 
-	/// \brief Sets the distance between each line
-	void set_line_height(float height);
+		/// \brief Sets the distance between each line
+		void set_line_height(float height);
 
-	/// \brief Sets the font style
-	void set_style(FontStyle setting = FontStyle::normal);
+		/// \brief Sets the font style
+		void set_style(FontStyle setting = FontStyle::normal);
 
-	/// \brief Sets the font anti-alias setting (defaults to true)
-	void set_anti_alias(bool setting = true);
+		/// \brief Sets the font anti-alias setting (defaults to true)
+		void set_anti_alias(bool setting = true);
 
-	/// \brief Sets the font subpixel rendering setting (defaults to true)
-	void set_subpixel(bool setting = true);
+		/// \brief Sets the font subpixel rendering setting (defaults to true)
+		void set_subpixel(bool setting = true);
 
-	/// \brief Sets the font charset (defaults to charset_default)
-	///
-	/// \param new_charset = The charset. charset_default = Use operating systems default
-	void set_charset(Charset new_charset);
+		/// \brief Sets the font charset (defaults to charset_default)
+		///
+		/// \param new_charset = The charset. charset_default = Use operating systems default
+		void set_charset(Charset new_charset);
 
-/// \}
-/// \name Implementation
-/// \{
+	private:
+		std::shared_ptr<FontDescription_Impl> impl;
+	};
 
-private:
-	std::shared_ptr<FontDescription_Impl> impl;
-/// \}
-};
-
+	/// \}
 }
-
-/// \}
-

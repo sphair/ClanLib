@@ -27,7 +27,6 @@
 **    Mark Page
 */
 
-
 #pragma once
 
 #include "../IOData/file_system.h"
@@ -36,49 +35,33 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_Resources clanCore Resources
-/// \{
+	/// \addtogroup clanCore_Resources clanCore Resources
+	/// \{
 
-class IODevice;
-class FileSystem;
-class FileResourceDocument_Impl;
+	class IODevice;
+	class FileSystem;
+	class FileResourceDocument_Impl;
 
-/// \brief File Resource Document.
-class FileResourceDocument
-{
-/// \name Construction
-/// \{
-public:
-	/// \brief Construct a FileResourceDocument.
-	FileResourceDocument();
+	/// \brief File Resource Document.
+	class FileResourceDocument
+	{
+	public:
+		/// \brief Construct a FileResourceDocument.
+		FileResourceDocument();
 
-	/// \brief Constructs a FileResourceDocument
-	///
-	/// \param fs = File system
-	FileResourceDocument(const FileSystem &fs);
+		/// \brief Constructs a FileResourceDocument
+		///
+		/// \param fs = File system
+		FileResourceDocument(const FileSystem &fs);
 
-	~FileResourceDocument();
+		~FileResourceDocument();
 
-/// \}
-/// \name Attributes
-/// \{
-public:
-	// \brief Get the file system
-	FileSystem get_file_system() const;
-/// \}
-/// \name Operations
-/// \{
-public:
+		// \brief Get the file system
+		FileSystem get_file_system() const;
 
-/// \}
-/// \name Implementation
-/// \{
-private:
-	std::shared_ptr<FileResourceDocument_Impl> impl;
+	private:
+		std::shared_ptr<FileResourceDocument_Impl> impl;
+	};
 
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

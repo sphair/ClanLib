@@ -26,81 +26,81 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include <memory>
 
 namespace clan
 {
-/// \addtogroup clanCore_System clanCore System
-/// \{
+	/// \addtogroup clanCore_System clanCore System
+	/// \{
 
-class UserDataBase
-{
-public:
-	virtual ~UserDataBase() { }
-};
-
-template<typename T>
-class UserData : public UserDataBase
-{
-public:
-	UserData(const std::shared_ptr<T> &data) : data(data) { }
-	std::shared_ptr<T> data;
-};
-
-/// \brief Helper class to store any shared_ptr as user data on an object.
-class UserDataOwner
-{
-public:
-	UserDataOwner()
-	: user_data(nullptr)
+	class UserDataBase
 	{
-	}
-
-	~UserDataOwner()
-	{
-		if (user_data)
-		{
-			user_data->~UserDataBase();
-			user_data = nullptr;
-		}
-	}
+	public:
+		virtual ~UserDataBase() { }
+	};
 
 	template<typename T>
-	void set_data(const std::shared_ptr<T> &data)
+	class UserData : public UserDataBase
 	{
-		if (user_data)
-		{
-			user_data->~UserDataBase();
-			user_data = nullptr;
-		}
+	public:
+		UserData(const std::shared_ptr<T> &data) : data(data) { }
+		std::shared_ptr<T> data;
+	};
 
-		static_assert(sizeof(UserData<T>) <= 32, "userdata_storage is too small!");
-		user_data = new(userdata_storage) UserData<T>(data);
-	}
-  
-	template<typename T>
-	std::shared_ptr<T> get_data()
+	/// \brief Helper class to store any shared_ptr as user data on an object.
+	class UserDataOwner
 	{
-		UserData<T> *d = dynamic_cast<UserData<T> *>(user_data);
-		if (d)
+	public:
+		UserDataOwner()
+			: user_data(nullptr)
 		{
-			return d->data;
 		}
-		else
+
+		~UserDataOwner()
 		{
-			return std::shared_ptr<T>();
+			if (user_data)
+			{
+				user_data->~UserDataBase();
+				user_data = nullptr;
+			}
 		}
-	}
-  
-private:
-	UserDataOwner(const UserDataOwner &that); // do not implement
-	UserDataOwner &operator=(const UserDataOwner &that); // do not implement
 
-	UserDataBase *user_data;
-	char userdata_storage[32];
-};
+		template<typename T>
+		void set_data(const std::shared_ptr<T> &data)
+		{
+			if (user_data)
+			{
+				user_data->~UserDataBase();
+				user_data = nullptr;
+			}
 
+			static_assert(sizeof(UserData<T>) <= 32, "userdata_storage is too small!");
+			user_data = new(userdata_storage)UserData<T>(data);
+		}
+
+		template<typename T>
+		std::shared_ptr<T> get_data()
+		{
+			UserData<T> *d = dynamic_cast<UserData<T> *>(user_data);
+			if (d)
+			{
+				return d->data;
+			}
+			else
+			{
+				return std::shared_ptr<T>();
+			}
+		}
+
+	private:
+		UserDataOwner(const UserDataOwner &that); // do not implement
+		UserDataOwner &operator=(const UserDataOwner &that); // do not implement
+
+		UserDataBase *user_data;
+		char userdata_storage[32];
+	};
+
+	/// \}
 }

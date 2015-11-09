@@ -24,9 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
-
 
 #pragma once
 
@@ -35,60 +33,54 @@
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Image_Providers clanDisplay Image Providers
-/// \{
+	/// \addtogroup clanDisplay_Image_Providers clanDisplay Image Providers
+	/// \{
 
-class FileSystem;
+	class FileSystem;
 
-/// \brief Image provider that can load JPEG (.jpg) files.
-class JPEGProvider
-{
-/// \name Construction
-/// \{
+	/// \brief Image provider that can load JPEG (.jpg) files.
+	class JPEGProvider
+	{
+	public:
+		/// \brief Called to load an image with this provider type.
+		///
+		/// \param filename Name of the file to load.
+		/// \param directory Directory that file name is relative to.
+		static PixelBuffer load(
+			const std::string &filename,
+			const FileSystem &fs,
+			bool srgb = false);
 
-public:
-	/// \brief Called to load an image with this provider type.
-	///
-	/// \param filename Name of the file to load.
-	/// \param directory Directory that file name is relative to.
-	static PixelBuffer load(
-		const std::string &filename,
-		const FileSystem &fs,
-		bool srgb = false);
+		static PixelBuffer load(
+			const std::string &fullname,
+			bool srgb = false);
 
-	static PixelBuffer load(
-		const std::string &fullname,
-		bool srgb = false);
+		static PixelBuffer load(
+			IODevice &file,
+			bool srgb = false);
 
-	static PixelBuffer load(
-		IODevice &file,
-		bool srgb = false);
+		/// \brief Save the given PixelBuffer into a JPEG
+		///
+		/// \param buffer The PixelBuffer to save, format doesn't matter its converted if needed
+		/// \param filename File name of JPEG.
+		/// \param directory Directory that the file name is relative to.
+		/// \param quality The quality level of the JPEG (0-100), 100 being best quality.
+		static void save(
+			PixelBuffer buffer,
+			const std::string &filename,
+			FileSystem &fs,
+			int quality = 85);
 
-	/// \brief Save the given PixelBuffer into a JPEG
-	///
-	/// \param buffer The PixelBuffer to save, format doesn't matter its converted if needed
-	/// \param filename File name of JPEG.
-	/// \param directory Directory that the file name is relative to.
-	/// \param quality The quality level of the JPEG (0-100), 100 being best quality.
-	static void save(
-		PixelBuffer buffer,
-		const std::string &filename,
-		FileSystem &fs,
-		int quality = 85);
+		static void save(
+			PixelBuffer buffer,
+			const std::string &fullname,
+			int quality = 85);
 
-	static void save(
-		PixelBuffer buffer,
-		const std::string &fullname,
-		int quality = 85);
+		static void save(
+			PixelBuffer buffer,
+			IODevice &file,
+			int quality = 85);
+	};
 
-	static void save(
-		PixelBuffer buffer,
-		IODevice &file,
-		int quality = 85);
-
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

@@ -26,7 +26,6 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include <vector>
@@ -35,63 +34,60 @@
 
 namespace clan
 {
-/// \addtogroup clanNetwork_NetGame clanNetwork NetGame
-/// \{
+	/// \addtogroup clanNetwork_NetGame clanNetwork NetGame
+	/// \{
 
-class NetGameConnectionSite;
-class NetGameConnection_Impl;
-class SocketName;
-class TCPConnection;
+	class NetGameConnectionSite;
+	class NetGameConnection_Impl;
+	class SocketName;
+	class TCPConnection;
 
-/// \brief NetGameConnection
-class NetGameConnection
-{
-public:
+	/// \brief NetGameConnection
+	class NetGameConnection
+	{
+	public:
+		/// \brief Constructs a NetGameConnection
+		///
+		/// \param site = Net Game Connection Site
+		/// \param connection = TCPConnection
+		NetGameConnection(NetGameConnectionSite *site, const TCPConnection &connection);
+		NetGameConnection(NetGameConnectionSite *site, const SocketName &socket_name);
 
-	/// \brief Constructs a NetGameConnection
-	///
-	/// \param site = Net Game Connection Site
-	/// \param connection = TCPConnection
-	NetGameConnection(NetGameConnectionSite *site, const TCPConnection &connection);
-	NetGameConnection(NetGameConnectionSite *site, const SocketName &socket_name);
+		~NetGameConnection();
 
-	~NetGameConnection();
+		/// \brief Set data
+		///
+		/// \param name = String Ref
+		/// \param data = void
+		void set_data(const std::string &name, void *data);
 
-	/// \brief Set data
-	///
-	/// \param name = String Ref
-	/// \param data = void
-	void set_data(const std::string &name, void *data);
+		/// \brief Get data
+		///
+		/// \param name = String Ref
+		///
+		/// \return void
+		void *get_data(const std::string &name) const;
 
-	/// \brief Get data
-	///
-	/// \param name = String Ref
-	///
-	/// \return void
-	void *get_data(const std::string &name) const;
+		/// \brief Send event
+		///
+		/// \param game_event = Net Game Event
+		void send_event(const NetGameEvent &game_event);
 
-	/// \brief Send event
-	///
-	/// \param game_event = Net Game Event
-	void send_event(const NetGameEvent &game_event);
+		/// \brief Disconnects a client
+		void disconnect();
 
-	/// \brief Disconnects a client
-	void disconnect();
+		/// \brief Get Remote name
+		///
+		/// \return remote_name
+		SocketName get_remote_name() const;
 
-	/// \brief Get Remote name
-	///
-	/// \return remote_name
-	SocketName get_remote_name() const;
+	private:
+		/// \brief Disallow copy constructors
+		NetGameConnection(NetGameConnection &other) = delete;
+		NetGameConnection &operator =(const NetGameConnection &other) = delete;
 
-private:
-	/// \brief Disallow copy constructors
-	NetGameConnection(NetGameConnection &other);
-	NetGameConnection &operator =(const NetGameConnection &other);
+		NetGameConnection_Impl *impl;
+	};
 
-	NetGameConnection_Impl *impl;
-};
-
+	/// \}
 }
-
-/// \}
-

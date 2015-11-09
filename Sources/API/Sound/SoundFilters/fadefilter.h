@@ -27,62 +27,39 @@
 **    Mark Page
 */
 
-
 #pragma once
 
 #include "../soundfilter.h"
 
 namespace clan
 {
-/// \addtogroup clanSound_Filters clanSound Filters
-/// \{
+	/// \addtogroup clanSound_Filters clanSound Filters
+	/// \{
 
-class FadeFilterProvider;
+	class FadeFilterProvider;
 
-/// \brief Fade Filter Class
-class FadeFilter : public SoundFilter
-{
-/// \name Construction
-/// \{
+	/// \brief Fade Filter Class
+	class FadeFilter : public SoundFilter
+	{
+	public:
+		/// \brief Fade Filter Constructor
+		FadeFilter(float initial_volume);
 
-public:
-	/// \brief Fade Filter Constructor
-	FadeFilter(float initial_volume);
+		/// \brief Fade Filter Destructor
+		virtual ~FadeFilter();
 
-	/// \brief Fade Filter Destructor
-	virtual ~FadeFilter();
+		/// \brief Returns the current volume of the fade filter, from 0.0f (no volume) to 1.0f (full volume).
+		float get_volume() const;
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief Retrieves the provider.
+		FadeFilterProvider *get_provider() const;
 
-public:
-	/// \brief Returns the current volume of the fade filter, from 0.0f (no volume) to 1.0f (full volume).
-	float get_volume() const;
+		/// \brief Sets the volume instant.
+		void set_volume(float new_volume);
 
-/// \}
-/// \name Operations
-/// \{
+		/// \brief Fade to volume, from 0.0f (no volume) to 1.0f (full volume).
+		void fade_to_volume(float new_volume, int duration = 1000);
+	};
 
-public:
-
-	/// \brief Retrieves the provider.
-	FadeFilterProvider *get_provider() const;
-
-	/// \brief Sets the volume instant.
-	void set_volume(float new_volume);
-
-	/// \brief Fade to volume, from 0.0f (no volume) to 1.0f (full volume).
-	void fade_to_volume(float new_volume, int duration = 1000);
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

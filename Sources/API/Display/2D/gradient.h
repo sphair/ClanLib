@@ -27,83 +27,72 @@
 **    Harry Storbacka
 */
 
-
 #pragma once
 
 #include "color.h"
 
 namespace clan
 {
-/// \addtogroup clanDisplay_2D clanDisplay 2D
-/// \{
+	/// \addtogroup clanDisplay_2D clanDisplay 2D
+	/// \{
 
-/// \brief Colorgradient description class.
-class Gradient
-{
-/// \name Construction
-/// \{
-
-public:
-	/// \brief Constructs a color gradient.
-	Gradient()
+	/// \brief Colorgradient description class.
+	class Gradient
 	{
-	}
+	public:
+		/// \brief Constructs a color gradient.
+		Gradient()
+		{
+		}
 
-	/// \brief Constructs a color gradient.
-	///
-	/// \param top_left Top left color component.
-	/// \param top_right Top right color component.
-	/// \param bottom_left Bottom left color component.
-	/// \param bottom_right Bottom right color component.
-	Gradient(const Colorf &top_left, const Colorf &top_right,
-		const Colorf &bottom_left, const Colorf &bottom_right)
-	: top_left(top_left), top_right(top_right), bottom_left(bottom_left),
-	  bottom_right(bottom_right)
-	{
-	}
+		/// \brief Constructs a color gradient.
+		///
+		/// \param top_left Top left color component.
+		/// \param top_right Top right color component.
+		/// \param bottom_left Bottom left color component.
+		/// \param bottom_right Bottom right color component.
+		Gradient(const Colorf &top_left, const Colorf &top_right,
+			const Colorf &bottom_left, const Colorf &bottom_right)
+			: top_left(top_left), top_right(top_right), bottom_left(bottom_left),
+			bottom_right(bottom_right)
+		{
+		}
 
-	/// \brief Constructs a Gradient
-	///
-	/// \param first_color = Colorf
-	/// \param second_color = Colorf
-	Gradient(const Colorf &first_color, const Colorf &second_color)
-	: top_left(first_color), top_right(first_color), bottom_left(second_color),
-	  bottom_right(second_color)
-	{
-	}
+		/// \brief Constructs a Gradient
+		///
+		/// \param first_color = Colorf
+		/// \param second_color = Colorf
+		Gradient(const Colorf &first_color, const Colorf &second_color)
+			: top_left(first_color), top_right(first_color), bottom_left(second_color),
+			bottom_right(second_color)
+		{
+		}
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief Color of top left corner of gradient.
+		Colorf top_left;
 
-public:
-	/// \brief Color of top left corner of gradient.
-	Colorf top_left;
+		/// \brief Color of top right corner of gradient.
+		Colorf top_right;
 
-	/// \brief Color of top right corner of gradient.
-	Colorf top_right;
+		/// \brief Color of bottom left corner of gradient.
+		Colorf bottom_left;
 
-	/// \brief Color of bottom left corner of gradient.
-	Colorf bottom_left;
+		/// \brief Color of bottom right corner of gradient.
+		Colorf bottom_right;
 
-	/// \brief Color of bottom right corner of gradient.
-	Colorf bottom_right;
+		/// \brief Compares gradient to another one.
+		bool operator==(const Gradient &other) const
+		{
+			return top_left == other.top_left && top_right == other.top_right &&
+				bottom_left == other.bottom_left && bottom_right == bottom_right;
+		}
 
-	/// \brief Compares gradient to another one.
-	bool operator==(const Gradient &other) const
-	{
-		return top_left == other.top_left && top_right==other.top_right &&
-		       bottom_left == other.bottom_left && bottom_right == bottom_right;
-	}
+		/// \brief Compares gradient to another one.
+		bool operator!=(const Gradient &other) const
+		{
+			return !(*this == other);
+		}
+	};
 
-	/// \brief Compares gradient to another one.
-	bool operator!=(const Gradient &other) const
-	{
-		return !(*this == other);
-	}
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

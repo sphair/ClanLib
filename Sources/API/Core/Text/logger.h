@@ -26,7 +26,6 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include "string_format.h"
@@ -35,88 +34,82 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_Text clanCore Text
-/// \{
+	/// \addtogroup clanCore_Text clanCore Text
+	/// \{
 
-/// \brief Logger interface.
-class Logger
-{
-/// \name Construction
-/// \{
+	/// \brief Logger interface.
+	class Logger
+	{
+	public:
+		/// \brief Constructs a logger.
+		Logger();
+		virtual ~Logger();
 
-public:
-	/// \brief Constructs a logger.
-	Logger();
+		/// \brief Pointers to currently enabled logger.
+		static std::vector<Logger*> instances;
 
-	virtual ~Logger();
+		/// \brief Logger mutex object.
+		static std::recursive_mutex mutex;
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief Enable logger for logging.
+		void enable();
 
-public:
-	/// \brief Pointers to currently enabled logger.
-	static std::vector<Logger*> instances;
+		/// \brief Disable logging.
+		void disable();
 
-	/// \brief Logger mutex object.
-	static std::recursive_mutex mutex;
+		/// \brief Log text.
+		virtual void log(const std::string &type, const std::string &text) = 0;
 
-/// \}
-/// \name Operations
-/// \{
+	protected:
+		static StringFormat get_log_string(const std::string &type, const std::string &text);
+	};
 
-public:
-	/// \brief Enable logger for logging.
-	void enable();
+	/// \brief Log text to logger.
+	///
+	void log_event(const std::string &type, const std::string &text);
 
-	/// \brief Disable logging.
-	void disable();
+	template <class Arg1>
+	void log_event(const std::string &type, const std::string &format, Arg1 arg1)
+	{
+		StringFormat f(format); f.set_arg(1, arg1); log_event(type, f.get_result());
+	}
 
-	/// \brief Log text.
-	virtual void log(const std::string &type, const std::string &text) = 0;
+	template <class Arg1, class Arg2>
+	void log_event(const std::string &type, const std::string &format, Arg1 arg1, Arg2 arg2)
+	{
+		StringFormat f(format); f.set_arg(1, arg1); f.set_arg(2, arg2); log_event(type, f.get_result());
+	}
 
-/// \}
-/// \name Implementation
-/// \{
+	template <class Arg1, class Arg2, class Arg3>
+	void log_event(const std::string &type, const std::string &format, Arg1 arg1, Arg2 arg2, Arg3 arg3)
+	{
+		StringFormat f(format); f.set_arg(1, arg1); f.set_arg(2, arg2); f.set_arg(3, arg3); log_event(type, f.get_result());
+	}
 
-protected:
-	static StringFormat get_log_string(const std::string &type, const std::string &text);
+	template <class Arg1, class Arg2, class Arg3, class Arg4>
+	void log_event(const std::string &type, const std::string &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4)
+	{
+		StringFormat f(format); f.set_arg(1, arg1); f.set_arg(2, arg2); f.set_arg(3, arg3); f.set_arg(4, arg4); log_event(type, f.get_result());
+	}
 
-/// \}
-};
+	template <class Arg1, class Arg2, class Arg3, class Arg4, class Arg5>
+	void log_event(const std::string &type, const std::string &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5)
+	{
+		StringFormat f(format); f.set_arg(1, arg1); f.set_arg(2, arg2); f.set_arg(3, arg3); f.set_arg(4, arg4); f.set_arg(5, arg5); log_event(type, f.get_result());
+	}
 
-/// \brief Log text to logger.
-///
-void log_event(const std::string &type, const std::string &text);
+	template <class Arg1, class Arg2, class Arg3, class Arg4, class Arg5, class Arg6>
+	void log_event(const std::string &type, const std::string &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5, Arg6 arg6)
+	{
+		StringFormat f(format); f.set_arg(1, arg1); f.set_arg(2, arg2); f.set_arg(3, arg3); f.set_arg(4, arg4); f.set_arg(5, arg5); f.set_arg(6, arg6); log_event(type, f.get_result());
+	}
 
-template <class Arg1>
-void log_event(const std::string &type, const std::string &format, Arg1 arg1)
-{ StringFormat f(format); f.set_arg(1, arg1); log_event(type, f.get_result()); }
+	template <class Arg1, class Arg2, class Arg3, class Arg4, class Arg5, class Arg6, class Arg7>
+	void log_event(const std::string &type, const std::string &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5, Arg6 arg6, Arg7 arg7)
+	{
+		StringFormat f(format); f.set_arg(1, arg1); f.set_arg(2, arg2); f.set_arg(3, arg3); f.set_arg(4, arg4); f.set_arg(5, arg5); f.set_arg(6, arg6); f.set_arg(7, arg7); log_event(type, f.get_result());
+	}
 
-template <class Arg1, class Arg2>
-void log_event(const std::string &type, const std::string &format, Arg1 arg1, Arg2 arg2)
-{ StringFormat f(format); f.set_arg(1, arg1); f.set_arg(2, arg2); log_event(type, f.get_result()); }
-
-template <class Arg1, class Arg2, class Arg3>
-void log_event(const std::string &type, const std::string &format, Arg1 arg1, Arg2 arg2, Arg3 arg3)
-{ StringFormat f(format); f.set_arg(1, arg1); f.set_arg(2, arg2); f.set_arg(3, arg3); log_event(type, f.get_result()); }
-
-template <class Arg1, class Arg2, class Arg3, class Arg4>
-void log_event(const std::string &type, const std::string &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4)
-{ StringFormat f(format); f.set_arg(1, arg1); f.set_arg(2, arg2); f.set_arg(3, arg3); f.set_arg(4, arg4); log_event(type, f.get_result()); }
-
-template <class Arg1, class Arg2, class Arg3, class Arg4, class Arg5>
-void log_event(const std::string &type, const std::string &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5)
-{ StringFormat f(format); f.set_arg(1, arg1); f.set_arg(2, arg2); f.set_arg(3, arg3); f.set_arg(4, arg4); f.set_arg(5, arg5); log_event(type, f.get_result()); }
-
-template <class Arg1, class Arg2, class Arg3, class Arg4, class Arg5, class Arg6>
-void log_event(const std::string &type, const std::string &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5, Arg6 arg6)
-{ StringFormat f(format); f.set_arg(1, arg1); f.set_arg(2, arg2); f.set_arg(3, arg3); f.set_arg(4, arg4); f.set_arg(5, arg5); f.set_arg(6, arg6); log_event(type, f.get_result()); }
-
-template <class Arg1, class Arg2, class Arg3, class Arg4, class Arg5, class Arg6, class Arg7>
-void log_event(const std::string &type, const std::string &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5, Arg6 arg6, Arg7 arg7)
-{ StringFormat f(format); f.set_arg(1, arg1); f.set_arg(2, arg2); f.set_arg(3, arg3); f.set_arg(4, arg4); f.set_arg(5, arg5); f.set_arg(6, arg6); f.set_arg(7, arg7); log_event(type, f.get_result()); }
-
+	/// \}
 }
 
-/// \}

@@ -23,7 +23,6 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
 **    Mark Page
 */
 
@@ -34,63 +33,48 @@
 
 namespace clan
 {
+	AES256_Decrypt::AES256_Decrypt()
+		: impl(std::make_shared<AES256_Decrypt_Impl>())
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// AES256_Decrypt Construction:
+	DataBuffer AES256_Decrypt::get_data() const
+	{
+		return impl->get_data();
+	}
 
-AES256_Decrypt::AES256_Decrypt()
-: impl(std::make_shared<AES256_Decrypt_Impl>())
-{
-}
+	void AES256_Decrypt::reset()
+	{
+		impl->reset();
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// AES256_Decrypt Attributes:
+	void AES256_Decrypt::set_iv(const unsigned char iv[16])
+	{
+		impl->set_iv(iv);
+	}
 
-DataBuffer AES256_Decrypt::get_data() const
-{
-	return impl->get_data();
-}
+	void AES256_Decrypt::set_key(const unsigned char key[32])
+	{
+		impl->set_key(key);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// AES256_Decrypt Operations:
+	void AES256_Decrypt::set_padding(bool value, bool use_pkcs7)
+	{
+		impl->set_padding(value, use_pkcs7);
+	}
 
-void AES256_Decrypt::reset()
-{
-	impl->reset();
-}
+	void AES256_Decrypt::add(const void *data, int size)
+	{
+		impl->add(data, size);
+	}
 
-void AES256_Decrypt::set_iv(const unsigned char iv[16])
-{
-	impl->set_iv(iv);
-}
+	void AES256_Decrypt::add(const DataBuffer &data)
+	{
+		add(data.get_data(), data.get_size());
+	}
 
-void AES256_Decrypt::set_key(const unsigned char key[32])
-{
-	impl->set_key(key);
-}
-
-void AES256_Decrypt::set_padding(bool value, bool use_pkcs7)
-{
-	impl->set_padding(value, use_pkcs7);
-}
-
-
-void AES256_Decrypt::add(const void *data, int size)
-{
-	impl->add(data, size);
-}
-
-void AES256_Decrypt::add(const DataBuffer &data)
-{
-	add(data.get_data(), data.get_size());
-}
-
-bool AES256_Decrypt::calculate()
-{
-	return impl->calculate();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// AES256_Decrypt Implementation:
-
+	bool AES256_Decrypt::calculate()
+	{
+		return impl->calculate();
+	}
 }

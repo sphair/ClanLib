@@ -26,7 +26,6 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include <memory>
@@ -34,61 +33,41 @@
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Window clanDisplay Window
-/// \{
+	/// \addtogroup clanDisplay_Window clanDisplay Window
+	/// \{
 
-class DisplayWindow;
-class CursorProvider;
-class CursorDescription;
-class Point;
-class Cursor_Impl;
+	class DisplayWindow;
+	class CursorProvider;
+	class CursorDescription;
+	class Point;
+	class Cursor_Impl;
 
-/// \brief Mouse cursor class.
-class Cursor
-{
-/// \name Construction
-/// \{
+	/// \brief Mouse cursor class.
+	class Cursor
+	{
+	public:
+		/// \brief Constructs a null instance.
+		Cursor();
 
-public:
-	/// \brief Constructs a null instance.
-	Cursor();
+		/// \brief Constructs a Cursor
+		///
+		/// \param window = Display Window
+		/// \param cursor_description = Sprite Description
+		/// \param hotspot = Point
+		Cursor(const DisplayWindow &window, const CursorDescription &cursor_description);
 
-	/// \brief Constructs a Cursor
-	///
-	/// \param window = Display Window
-	/// \param cursor_description = Sprite Description
-	/// \param hotspot = Point
-	Cursor(const DisplayWindow &window, const CursorDescription &cursor_description);
+		/// \brief Returns true if this object is invalid.
+		bool is_null() const { return !impl; }
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief Throw an exception if this object is invalid.
+		void throw_if_null() const;
 
-public:
-	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return !impl; }
+		/// \brief Returns the cursor provider
+		CursorProvider *get_provider() const;
 
-	/// \brief Throw an exception if this object is invalid.
-	void throw_if_null() const;
+	private:
+		std::shared_ptr<Cursor_Impl> impl;
+	};
 
-	/// \brief Returns the cursor provider
-	CursorProvider *get_provider() const;
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	std::shared_ptr<Cursor_Impl> impl;
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

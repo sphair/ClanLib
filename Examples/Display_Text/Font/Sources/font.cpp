@@ -33,11 +33,11 @@ clan::ApplicationInstance<App> clanapp;
 
 App::App()
 {
-	// We support all display targets, in order listed here
 #ifdef WIN32
-	clan::D3DTarget::enable();
+	clan::D3DTarget::set_current();
+#else
+	clan::OpenGLTarget::set_current();
 #endif
-	clan::OpenGLTarget::enable();
 
 	DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
@@ -46,8 +46,9 @@ App::App()
 
 	window = DisplayWindow(win_desc);
 	slots.connect(window.sig_window_close(), this, &App::on_window_close);
-	slots.connect(window.get_ic().get_keyboard().sig_key_up(), this, &App::on_input_up);
+	slots.connect(window.get_keyboard().sig_key_up(), this, &App::on_input_up);
 
+	clan::XMLResourceFactory::set_display();
 	resources = clan::XMLResourceManager::create(clan::XMLResourceDocument("Resources/resources.xml"));
 
 	canvas = Canvas(window);
@@ -63,12 +64,11 @@ App::App()
 	clan::ResourceManager resources = clan::FileResourceManager::create(doc);
 	ui_thread = clan::UIThread(resources);
 
-	root = std::make_shared<clan::TextureView>(gui_canvas);
+	root = std::make_shared<clan::TextureWindow>(gui_canvas);
 
-	root->set_event_window(window);
-	root->set_cursor_window(window);
+	root->set_window(window);
 
-	root->set_rect(clan::Rect(10, 10, clan::Size(gui_image.get_size())));
+	root->set_viewport(gui_image.get_size());
 
 	int offset_x = 10;
 	int offset_y = 8;
@@ -202,6 +202,8 @@ App::App()
 
 	small_font = clan::Font("Tahoma", 16);
 
+	premultiply_src_blend = BlendState(canvas, BlendStateDescription::blend(true));
+
 	game_time.reset();
 }
 
@@ -233,7 +235,9 @@ void App::render(DisplayWindow &window, GameTime &game_time)
 	canvas.clear(Colorf(0.0f,0.0f,0.2f, 1.0f));
 
 	root->update();
+	canvas.set_blend_state(premultiply_src_blend);
 	gui_image.draw(canvas, 0, 0);
+	canvas.reset_blend_state();
 
 	draw_font_example();
 	draw_font_info();
@@ -241,8 +245,6 @@ void App::render(DisplayWindow &window, GameTime &game_time)
 	last_fps = game_time.get_updates_per_second();
 
 	window.flip(1);
-
-	RunLoop::process();
 }
 
 void App::select_font()

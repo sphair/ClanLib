@@ -23,7 +23,6 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
 **    Mark Page
 */
 
@@ -34,62 +33,48 @@
 
 namespace clan
 {
+	AES128_Encrypt::AES128_Encrypt()
+		: impl(std::make_shared<AES128_Encrypt_Impl>())
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// AES128_Encrypt Construction:
+	DataBuffer AES128_Encrypt::get_data() const
+	{
+		return impl->get_data();
+	}
 
-AES128_Encrypt::AES128_Encrypt()
-: impl(std::make_shared<AES128_Encrypt_Impl>())
-{
-}
+	void AES128_Encrypt::reset()
+	{
+		impl->reset();
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// AES128_Encrypt Attributes:
+	void AES128_Encrypt::set_iv(const unsigned char iv[16])
+	{
+		impl->set_iv(iv);
+	}
 
-DataBuffer AES128_Encrypt::get_data() const
-{
-	return impl->get_data();
-}
+	void AES128_Encrypt::set_key(const unsigned char key[16])
+	{
+		impl->set_key(key);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// AES128_Encrypt Operations:
+	void AES128_Encrypt::set_padding(bool value, bool use_pkcs7, unsigned int num_additional_padded_blocks)
+	{
+		impl->set_padding(value, use_pkcs7, num_additional_padded_blocks);
+	}
 
-void AES128_Encrypt::reset()
-{
-	impl->reset();
-}
+	void AES128_Encrypt::add(const void *data, int size)
+	{
+		impl->add(data, size);
+	}
 
-void AES128_Encrypt::set_iv(const unsigned char iv[16])
-{
-	impl->set_iv(iv);
-}
+	void AES128_Encrypt::add(const DataBuffer &data)
+	{
+		add(data.get_data(), data.get_size());
+	}
 
-void AES128_Encrypt::set_key(const unsigned char key[16])
-{
-	impl->set_key(key);
-}
-
-void AES128_Encrypt::set_padding(bool value, bool use_pkcs7, unsigned int num_additional_padded_blocks)
-{
-	impl->set_padding(value, use_pkcs7, num_additional_padded_blocks);
-}
-
-void AES128_Encrypt::add(const void *data, int size)
-{
-	impl->add(data, size);
-}
-
-void AES128_Encrypt::add(const DataBuffer &data)
-{
-	add(data.get_data(), data.get_size());
-}
-
-void AES128_Encrypt::calculate()
-{
-	impl->calculate();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// AES128_Encrypt Implementation:
-
+	void AES128_Encrypt::calculate()
+	{
+		impl->calculate();
+	}
 }

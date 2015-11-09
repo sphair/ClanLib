@@ -60,6 +60,8 @@ private:
 	clan::Canvas canvas;
 	clan::Image image_grid;
 	clan::Image image_ball;
+	clan::UIThread ui_thread;
+	std::shared_ptr<Options> options;
 
 	bool quit = false;
 	float grid_space;

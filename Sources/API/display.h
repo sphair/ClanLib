@@ -37,7 +37,6 @@
 #pragma managed(push, off)
 #endif
 
-#include "Display/display.h"
 #include "Display/display_target.h"
 #include "Display/screen_info.h"
 #include "Display/Resources/display_cache.h"
@@ -136,7 +135,6 @@
 #include "Display/Window/display_window.h"
 #include "Display/Window/display_window_description.h"
 #include "Display/Window/input_code.h"
-#include "Display/Window/input_context.h"
 #include "Display/Window/input_device.h"
 #include "Display/Window/input_event.h"
 #include "Display/Window/keys.h"

@@ -26,7 +26,6 @@
 **    Harry Storbacka
 */
 
-
 #pragma once
 
 #include <memory>
@@ -34,51 +33,31 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_Math clanCore Math
-/// \{
+	/// \addtogroup clanCore_Math clanCore Math
+	/// \{
 
-class EarClipResult_Impl;
-class EarClipTriangulator_Triangle;
+	class EarClipResult_Impl;
+	class EarClipTriangulator_Triangle;
 
-/// \brief Ear clipping triangulation result structure.
-class EarClipResult
-{
-/// \name Construction
-/// \{
+	/// \brief Ear clipping triangulation result structure.
+	class EarClipResult
+	{
+	public:
+		/// \brief Constructs an ear clipping result structure.
+		EarClipResult(int num_triangles);
 
-public:
-	/// \brief Constructs an ear clipping result structure.
-	EarClipResult(int num_triangles);
+		virtual ~EarClipResult();
 
-	virtual ~EarClipResult();
+		/// \brief Returns the triangles for this result.
+		std::vector<EarClipTriangulator_Triangle> &get_triangles();
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief return a reference to a triangle in the triangulation.
+		/** Memory  is preallocated for all triangles at creation. Use the returned reference to modify the triangles.*/
+		EarClipTriangulator_Triangle &get_triangle(int index);
 
-public:
-	/// \brief Returns the triangles for this result.
-	std::vector<EarClipTriangulator_Triangle> &get_triangles();
+	private:
+		std::shared_ptr<EarClipResult_Impl> impl;
+	};
 
-	/// \brief return a reference to a triangle in the triangulation.
-	/** Memory  is preallocated for all triangles at creation. Use the returned reference to modify the triangles.*/
-	EarClipTriangulator_Triangle &get_triangle(int index);
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	std::shared_ptr<EarClipResult_Impl> impl;
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

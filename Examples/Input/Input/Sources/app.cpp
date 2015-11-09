@@ -33,9 +33,11 @@ clan::ApplicationInstance<App> clanapp;
 
 App::App()
 {
-	// We support all display targets, in order listed here
-	clan::D3DTarget::enable();
-	clan::OpenGLTarget::enable();
+#ifdef WIN32
+	clan::D3DTarget::set_current();
+#else
+	clan::OpenGLTarget::set_current();
+#endif
 
 	// Setup the window
 	DisplayWindowDescription win_desc;
@@ -46,14 +48,16 @@ App::App()
 
 	// Connect the slots that we require
 	sc.connect(window.sig_window_close(), this, &App::on_window_close);
-	sc.connect(window.get_ic().get_keyboard().sig_key_down(), this, &App::on_input_down);
-	sc.connect(window.get_ic().get_mouse().sig_key_down(), this, &App::on_mouse_down);
-	sc.connect(window.get_ic().get_mouse().sig_key_dblclk(), this, &App::on_mouse_down);
+	sc.connect(window.get_keyboard().sig_key_down(), this, &App::on_input_down);
+	sc.connect(window.get_mouse().sig_key_down(), this, &App::on_mouse_down);
+	sc.connect(window.get_mouse().sig_key_dblclk(), this, &App::on_mouse_down);
 
-	max_joysticks = window.get_ic().get_joystick_count();
-	for (int joystick_number=0; joystick_number < max_joysticks; joystick_number++)
+	auto &controllers = window.get_game_controllers();
+	int id = 0;
+	for (auto &elem : controllers)
 	{
-		window.get_ic().get_joystick(joystick_number).sig_key_down().connect([=](const clan::InputEvent &input_event){on_joystick_down(input_event, joystick_number); });
+		sc.connect(elem.sig_key_down(), [=](const clan::InputEvent &input_event) {on_controller_down(input_event, id); });
+		id++;
 	}
 
 	canvas = Canvas(window);
@@ -69,7 +73,7 @@ bool App::update()
 	canvas.fill_rect(Rect(0, 0, canvas.get_width(), canvas.get_height() / 2), Gradient(Colorf(0.2f, 0.2f, 0.8f, 1.0f), Colorf(0.0f, 0.0f, 0.2f, 1.0f)));
 	canvas.fill_rect(Rect(0, canvas.get_height()/2, canvas.get_width(), canvas.get_height()), Gradient(Colorf(0.0f, 0.0f, 0.2f, 1.0f), Colorf(0.2f, 0.2f, 0.8f, 1.0f)));
 
-	font.draw_text(canvas, 8, 20, "Press any key, mouse button or joystick button to fire text. Use mouse to control direction.");
+	font.draw_text(canvas, 8, 20, "Press any key, mouse button or controller button to fire text. Use mouse to control direction.");
 
 	int yoffset = canvas.get_height() - 20;
 	const int y_gap = 20;
@@ -82,19 +86,14 @@ bool App::update()
 	draw_mouse_state(canvas, yoffset);
 	yoffset -= y_gap;
 	
-	// Draw Joysticks Information
-	for (int joystick_number=0; joystick_number < max_joysticks; joystick_number++)
+	// Draw Controllers Information
+	auto &controllers = window.get_game_controllers();
+	int id = 0;
+	for (auto &elem : controllers)
 	{
-		draw_joystick_state(canvas, joystick_number, yoffset);
+		draw_controller_state(canvas, elem, id, yoffset);
 		yoffset -= y_gap;
-	}
-
-	// Draw Tablet Information
-	int max_tablets = window.get_ic().get_tablet_count();
-	for (int tablet_number=0; tablet_number < max_tablets; tablet_number++)
-	{
-		draw_tablet_state(canvas, tablet_number, yoffset);
-		yoffset -= y_gap;
+		id++;
 	}
 
 	draw_text_shooter(canvas);
@@ -170,9 +169,9 @@ void App::on_mouse_down(const InputEvent &key)
 	create_shooter(key, str, false, true, false);
 }
 
-void App::on_joystick_down(const InputEvent &key, int joystick_number)
+void App::on_controller_down(const InputEvent &key, int controller_number)
 {
-	std::string str(string_format("J%1 B%2", joystick_number, key.id));
+	std::string str(string_format("J%1 B%2", controller_number, key.id));
 	create_shooter(key, str, true, true, false);
 }
 void App::on_window_close()
@@ -200,7 +199,7 @@ void App::draw_text_shooter(Canvas &canvas)
 
 void App::draw_keyboard_state(Canvas &canvas, int yoffset)
 {
-	InputDevice &keyboard = window.get_ic().get_keyboard();
+	InputDevice &keyboard = window.get_keyboard();
 
 	std::string text(string_format("Keyboard : %1 : %2 is %3", 
 		keyboard.get_name(),
@@ -212,7 +211,7 @@ void App::draw_keyboard_state(Canvas &canvas, int yoffset)
 
 void App::draw_mouse_state(Canvas &canvas, int yoffset)
 {
-	InputDevice &mouse = window.get_ic().get_mouse();
+	InputDevice &mouse = window.get_mouse();
 
 	std::string text(string_format("Mouse : %1 : ", 
 		mouse.get_name() ));
@@ -233,15 +232,13 @@ void App::draw_mouse_state(Canvas &canvas, int yoffset)
 	font.draw_text(canvas, 8, yoffset, text);
 }
 
-void App::draw_joystick_state(Canvas &canvas, int joystick_number, int yoffset)
+void App::draw_controller_state(Canvas &canvas, InputDevice controller, int controller_number, int yoffset)
 {
-	InputDevice &joystick = window.get_ic().get_joystick(joystick_number);
+	std::string text(string_format("Controller (%1) : %2 : ",
+		controller_number,
+		controller.get_name() ));
 
-	std::string text(string_format("Joystick (%1) : %2 : ",
-		joystick_number,
-		joystick.get_name() ));
-
-	std::vector<int> axis_ids = joystick.get_axis_ids();
+	std::vector<int> axis_ids = controller.get_axis_ids();
 	int num_axis = axis_ids.size();
 	text = text + string_format("%1 Axis (", 
 		num_axis );
@@ -257,52 +254,15 @@ void App::draw_joystick_state(Canvas &canvas, int joystick_number, int yoffset)
 
 		text = text + string_format("%1 %2", 
 			axis_count ? ", " : "",
-			joystick.get_axis(axis_ids[axis_count]) );
+			controller.get_axis(axis_ids[axis_count]) );
 	}
 
-	int num_buttons = joystick.get_button_count();
+	int num_buttons = controller.get_button_count();
 	text = text + string_format(") : %1 Buttons ", num_buttons);
 
 	for (int button_count = 0; button_count < num_buttons; button_count++)
 	{
-		text = text + string_format("%1", joystick.get_keycode(button_count) ? "X" : "-" );
-	}
-
-	font.draw_text(canvas, 8, yoffset, text);
-}
-
-void App::draw_tablet_state(Canvas &canvas, int tablet_number, int yoffset)
-{
-	InputDevice &tablet = window.get_ic().get_tablet(tablet_number);
-
-	std::string text(string_format("Tablet (%1) : %2 : ",
-		tablet_number,
-		tablet.get_name() ));
-
-	int num_axis = tablet.get_axis_ids().size();
-	text = text + string_format("%1 Axis (", 
-		num_axis );
-
-	for (int axis_count = 0; axis_count < num_axis; axis_count++)
-	{
-		// Only display the maximum of 4 axis
-		if (axis_count == 4)
-		{
-			text = text + ", ...";
-			break;
-		}
-
-		text = text + string_format("%1 %2", 
-			axis_count ? ", " : "",
-			tablet.get_axis(axis_count) );
-	}
-
-	int num_buttons = tablet.get_button_count();
-	text = text + string_format(") : %1 Buttons ", num_buttons);
-
-	for (int button_count = 0; button_count < num_buttons; button_count++)
-	{
-		text = text + string_format("%1", tablet.get_keycode(button_count) ? "X" : "-" );
+		text = text + string_format("%1", controller.get_keycode(button_count) ? "X" : "-" );
 	}
 
 	font.draw_text(canvas, 8, yoffset, text);

@@ -26,52 +26,40 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include <memory>
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-class GraphicContext;
-class BlendStateDescription;
-class BlendStateProvider;
+	class GraphicContext;
+	class BlendStateDescription;
+	class BlendStateProvider;
 
-/// \brief Blend state setup.
-class BlendState
-{
-/// \name Construction
-/// \{
-public:
-	/// \brief Constructs a null instance.
-	BlendState();
+	/// \brief Blend state setup.
+	class BlendState
+	{
+	public:
+		/// \brief Constructs a null instance.
+		BlendState();
 
-	/// \brief Constructs a Texture
-	///
-	/// \param context = Graphic context
-	/// \param desc = Blend state description
-	BlendState(GraphicContext &context, const BlendStateDescription &desc);
-/// \}
+		/// \brief Constructs a Texture
+		///
+		/// \param context = Graphic context
+		/// \param desc = Blend state description
+		BlendState(GraphicContext &context, const BlendStateDescription &desc);
 
-/// \name Attributes
-/// \{
-public:
-	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return !provider; }
+		/// \brief Returns true if this object is invalid.
+		bool is_null() const { return !provider; }
 
-	BlendStateProvider *get_provider() const;
-/// \}
+		BlendStateProvider *get_provider() const;
 
-/// \name Implementation
-/// \{
-private:
-	std::shared_ptr<BlendStateProvider> provider;
-/// \}
-};
+	private:
+		std::shared_ptr<BlendStateProvider> provider;
+	};
 
+	/// \}
 }
-
-/// \}

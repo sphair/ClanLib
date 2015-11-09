@@ -46,9 +46,10 @@ private:
 	clan::GameTime game_time;
 	bool quit = false;
 	clan::UIThread ui_thread;
-	std::shared_ptr<clan::TextureView> root;
+	std::shared_ptr<clan::TextureWindow> ui_window;
 	clan::SlotContainer sc;
 	clan::Image gui_image;
 	std::shared_ptr<clan::LabelView> label;
+	clan::BlendState premultiply_src_blend;
 
 };

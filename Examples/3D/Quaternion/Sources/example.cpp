@@ -61,9 +61,11 @@ clan::ApplicationInstance<App> clanapp;
 
 App::App()
 {
-	// We support all display targets, in order listed here
-	clan::D3DTarget::enable();
-	clan::OpenGLTarget::enable();
+#ifdef WIN32
+	clan::D3DTarget::set_current();
+#else
+	clan::OpenGLTarget::set_current();
+#endif
 
 	DisplayWindowDescription desc;
 	desc.set_title("ClanLib Quaternion's Example");
@@ -78,7 +80,7 @@ App::App()
 	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	sc.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 
 	canvas = Canvas(window);
 
@@ -87,9 +89,8 @@ App::App()
 	ui_thread = UIThread(resources);
 
 	options_view = std::make_shared<Options>(canvas);
-
-	options_view->set_event_window(window);
-	options_view->set_cursor_window(window);
+	options_view->set_always_render();
+	options_view->set_window(window);
 
 	// Setup graphic store
 	graphic_store = std::make_shared<GraphicStore>(canvas);
@@ -166,9 +167,8 @@ bool App::update()
 	canvas.reset_rasterizer_state();
 	canvas.reset_depth_stencil_state();
 
-	options_view->set_rect(Rect(8, 8, Size((int)canvas.get_width() - 16, 170)));
+	options_view->set_viewport(Rectf(8.0f, 8.0f, canvas.get_width() - 16.0f, 170.0f));
 	options_view->update();
-	options_view->render(canvas);
 	
 	std::string fps(string_format("%1 fps", framerate_counter.get_framerate()));
 	font.draw_text(canvas, 16-2, canvas.get_height()-16-2, fps, Colorf(0.0f, 0.0f, 0.0f, 1.0f));

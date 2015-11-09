@@ -320,6 +320,14 @@ Workspace Wizard::create_workspace(bool target_android)
 		libs_list_release,
 		libs_list_debug, ignore_list);
 
+	Project clanXML(
+		"XML",
+		"clanXML",
+		"xml.h",
+		libs_list_shared,
+		libs_list_release,
+		libs_list_debug, ignore_list);
+
 
 	// Add projects to workspace:
 	workspace.projects.push_back(clanCore);
@@ -329,6 +337,7 @@ Workspace Wizard::create_workspace(bool target_android)
 	workspace.projects.push_back(clanSound);
 	workspace.projects.push_back(clanGL);
 	workspace.projects.push_back(clanUI);
+	workspace.projects.push_back(clanXML);
 
 	if (!target_android)
 	{

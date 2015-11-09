@@ -26,7 +26,6 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include <string>
@@ -34,28 +33,21 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_ErrorReporting clanCore ErrorReporting
-/// \{
+	/// \addtogroup clanCore_ErrorReporting clanCore ErrorReporting
+	/// \{
 
-class DetectHang_Impl;
+	class DetectHang_Impl;
 
-/// \brief Calls CrashReporter::invoke if the constructing thread does not call RunLoop::process for more than 30 seconds.
-class DetectHang
-{
-/// \name Construction
-/// \{
-public:
-	/// \brief Constructs a hang detector.
-	DetectHang();
-/// \}
+	/// \brief Calls CrashReporter::invoke if the constructing thread does not call RunLoop::process for more than 30 seconds.
+	class DetectHang
+	{
+	public:
+		/// \brief Constructs a hang detector.
+		DetectHang();
 
-/// \name Implementation
-/// \{
-private:
-	std::shared_ptr<DetectHang_Impl> impl;
-/// \}
-};
+	private:
+		std::shared_ptr<DetectHang_Impl> impl;
+	};
 
+	/// \}
 }
-
-/// \}

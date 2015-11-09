@@ -26,63 +26,39 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include "../Render/primitives_array.h"
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-/// \brief Interface for implementing a PrimitivesArray target.
-class PrimitivesArrayProvider
-{
-/// \name Construction
-/// \{
-
-public:
-	virtual ~PrimitivesArrayProvider() { return; }
-
-/// \}
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	class VertexData
+	/// \brief Interface for implementing a PrimitivesArray target.
+	class PrimitivesArrayProvider
 	{
 	public:
-		VertexData(VertexArrayBufferProvider *array_provider, VertexAttributeDataType type, size_t offset, int size, int stride) :
-		  array_provider(array_provider), type(type), offset(offset), size(size), stride(stride) {}
+		virtual ~PrimitivesArrayProvider() { return; }
 
-		VertexData() : array_provider(), type(), offset(), size(), stride() {}
+		class VertexData
+		{
+		public:
+			VertexData(VertexArrayBufferProvider *array_provider, VertexAttributeDataType type, size_t offset, int size, int stride) :
+				array_provider(array_provider), type(type), offset(offset), size(size), stride(stride) {}
 
-		VertexArrayBufferProvider *array_provider;
-		VertexAttributeDataType type;
-		size_t offset;
-		int size;
-		int stride;
+			VertexData() : array_provider(), type(), offset(), size(), stride() {}
+
+			VertexArrayBufferProvider *array_provider;
+			VertexAttributeDataType type;
+			size_t offset;
+			int size;
+			int stride;
+		};
+
+		/// \brief Sets a vertex attribute.
+		virtual void set_attribute(int index, const VertexData &data, bool normalize = false) = 0;
 	};
 
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	/// \brief Sets a vertex attribute.
-	virtual void set_attribute(int index, const VertexData &data, bool normalize = false) = 0;
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

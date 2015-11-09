@@ -35,8 +35,7 @@ clan::ApplicationInstance<App> clanapp;
 
 App::App()
 {
-	// We support all display targets, in order listed here
-	clan::OpenGLTarget::enable();
+	clan::OpenGLTarget::set_current();
 
 	clan::DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
@@ -44,15 +43,20 @@ App::App()
 	// For simplicity this example does not use the depth components
 	//win_desc.set_depth_size(16);
 	win_desc.set_title("Stencil Example");
-	win_desc.set_size(clan::Size( 900, 570 ), false);
+	win_desc.set_size(clan::Size( 1200, 570 ), false);
 
 	window = clan::DisplayWindow(win_desc);
 	sc.connect(window.sig_window_close(), clan::bind_member(this, &App::on_window_close));
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
+	sc.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_input_up));
 	canvas = clan::Canvas(window);
 
-	// Deleted automatically by the GUI
-	//Options *options = new Options(gui, clan::Rect(0, 0, canvas.get_size()));
+	clan::FileResourceDocument doc(clan::FileSystem("../../ThemeAero"));
+	clan::ResourceManager resources = clan::FileResourceManager::create(doc);
+	ui_thread = clan::UIThread(resources);
+
+	options = std::make_shared<Options>(canvas);
+	options->set_always_render();
+	options->set_window(window);
 
 	image_grid = clan::Image(canvas, "../Blend/Resources/grid.png");
 	image_ball = clan::Image(canvas, "../Blend/Resources/ball.png");
@@ -73,12 +77,15 @@ bool App::update()
 {
 	game_time.update();
 	
+	options->set_viewport(canvas.get_size());
+	options->set_background_color(clan::Colorf(0.6f, 0.6f, 0.2f, 1.0f));
+	options->update();
 
-	int num_balls = 9;	// options->num_balls;
+	int num_balls = options->num_balls;
 	if (num_balls > max_balls)
 		num_balls = max_balls;
 
-	//if (options->is_moveballs_set)
+	if (options->is_moveballs_set)
 		move_balls(game_time.get_time_elapsed(), num_balls);
 
 	canvas.clear_stencil(0);
@@ -91,7 +98,7 @@ bool App::update()
 	clan::DepthStencilStateDescription stencil_desc;
 
 	// Draw the circle onto the stencil
-	//if (options->is_circle_set)
+	if (options->is_circle_set)
 	{
 		stencil_desc.enable_stencil_test(true);
 
@@ -112,10 +119,10 @@ bool App::update()
 	}
 
 	stencil_desc.enable_stencil_test(true);
-	//stencil_desc.set_stencil_compare_front(options->compare_function, options->compare_reference, 255);
-	//stencil_desc.set_stencil_compare_back(options->compare_function, options->compare_reference, 255);
-	//stencil_desc.set_stencil_op_front(options->stencil_fail, options->stencil_pass, options->stencil_pass);
-	//stencil_desc.set_stencil_op_back(options->stencil_fail, options->stencil_pass, options->stencil_pass);
+	stencil_desc.set_stencil_compare_front(options->compare_function, options->compare_reference, 255);
+	stencil_desc.set_stencil_compare_back(options->compare_function, options->compare_reference, 255);
+	stencil_desc.set_stencil_op_front(options->stencil_fail, options->stencil_pass, options->stencil_pass);
+	stencil_desc.set_stencil_op_back(options->stencil_fail, options->stencil_pass, options->stencil_pass);
 
 	// Note, depth testing disabled for this example
 	stencil_desc.enable_depth_write(false);

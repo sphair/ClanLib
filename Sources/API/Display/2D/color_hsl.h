@@ -26,71 +26,49 @@
 **    Mark Page
 */
 
-
 #pragma once
-
 
 namespace clan
 {
-/// \addtogroup clanDisplay_2D clanDisplay 2D
-/// \{
+	/// \addtogroup clanDisplay_2D clanDisplay 2D
+	/// \{
 
-class Color;
-class Colorf;
+	class Color;
+	class Colorf;
 
-/// \brief Color HSL description class.
-///
-/// These templates are defined for: int (ColorHSLi), float (ColorHSLf), double (ColorHSLd)
-template<typename Type, typename ColorType>
-class ColorHSLx
-{
-/// \name Construction
-/// \{
-
-public:
-	/// \brief Constructs a color.
+	/// \brief Color HSL description class.
 	///
-	ColorHSLx() : h((Type) 0), s((Type) 0), l((Type) 0), a((Type) 0) {}
-	ColorHSLx(Type h, Type s, Type l, Type a) : h(h), s(s), l(l), a(a) {}
-	ColorHSLx(const ColorHSLx<Type, ColorType> &copy) { h = copy.h; s = copy.s; l = copy.l; a = copy.a;}
-	ColorHSLx(const Color &color);
-	ColorHSLx(const Colorf &color);
+	/// These templates are defined for: int (ColorHSLi), float (ColorHSLf), double (ColorHSLd)
+	template<typename Type, typename ColorType>
+	class ColorHSLx
+	{
+	public:
+		/// \brief Constructs a color.
+		///
+		ColorHSLx() : h((Type)0), s((Type)0), l((Type)0), a((Type)0) {}
+		ColorHSLx(Type h, Type s, Type l, Type a) : h(h), s(s), l(l), a(a) {}
+		ColorHSLx(const ColorHSLx<Type, ColorType> &copy) { h = copy.h; s = copy.s; l = copy.l; a = copy.a; }
+		ColorHSLx(const Color &color);
+		ColorHSLx(const Colorf &color);
 
-/// \}
-/// \name Attributes
-/// \{
-public:
-	Type h,s,l,a;
+		Type h, s, l, a;
 
-/// \}
-/// \name Operations
-/// \{
+		operator ColorType();
 
-public:
+		/// \brief = operator.
+		ColorHSLx<Type, ColorType> &operator = (const ColorHSLx<Type, ColorType>& copy) { h = copy.h; s = copy.s; l = copy.l; a = copy.a; return *this; }
 
-/// \}
-/// \name Operators
-/// \{
-public:
-	operator ColorType();
+		/// \brief == operator.
+		bool operator == (const ColorHSLx<Type, ColorType>& color) const { return ((h == color.h) && (s == color.s) && (l == color.l) && (a == color.a)); }
 
-	/// \brief = operator.
-	ColorHSLx<Type, ColorType> &operator = (const ColorHSLx<Type, ColorType>& copy) { h = copy.h; s = copy.s; l=copy.l; a=copy.a; return *this; }
+		/// \brief != operator.
+		bool operator != (const ColorHSLx<Type, ColorType>& color) const { return ((h != color.h) || (s != color.s) || (l != color.l) || (a != color.a)); }
+	};
 
-	/// \brief == operator.
-	bool operator == (const ColorHSLx<Type, ColorType>& color) const {return ((h == color.h) && (s == color.s) && (l == color.l) && (a == color.a));}
+	typedef ColorHSLx<int, Color> ColorHSLi;
+	typedef ColorHSLx<float, Colorf> ColorHSLf;
+	typedef ColorHSLx<double, Colorf> ColorHSLd;
 
-	/// \brief != operator.
-	bool operator != (const ColorHSLx<Type, ColorType>& color) const {return ((h != color.h) || (s != color.s) || (l != color.l) || (a != color.a));}
-
-/// \}
-};
-
-typedef ColorHSLx<int, Color> ColorHSLi;
-typedef ColorHSLx<float, Colorf> ColorHSLf;
-typedef ColorHSLx<double, Colorf> ColorHSLd;
-
+	/// \}
 }
-
-/// \}
 

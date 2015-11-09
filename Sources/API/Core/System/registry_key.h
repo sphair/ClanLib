@@ -26,7 +26,6 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #if defined(WIN32) || defined(DOXYGEN)
@@ -36,108 +35,67 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_System clanCore System
-/// \{
+	/// \addtogroup clanCore_System clanCore System
+	/// \{
 
-class RegistryKey_Impl;
+	class RegistryKey_Impl;
 
-/// \brief Registry key class.
-/** <p>This class is only available on Windows.<p>
-    !group=Core/System! !header=core.h!*/
-class RegistryKey
-{
-/// \name Construction
-/// \{
-
-public:
-	enum PredefinedKey
+	/// \brief Registry key class.
+	/** <p>This class is only available on Windows.<p>
+		!group=Core/System! !header=core.h!*/
+	class RegistryKey
 	{
-		key_classes_root,
-		key_current_config,
-		key_current_user,
-		key_local_machine,
-		key_users
+	public:
+		enum PredefinedKey
+		{
+			key_classes_root,
+			key_current_config,
+			key_current_user,
+			key_local_machine,
+			key_users
+		};
+
+		enum CreateFlags
+		{
+			create_always = 0,
+			create_new = 1,
+			create_volatile = 2
+		};
+
+		RegistryKey();
+		RegistryKey(PredefinedKey key, const std::string &subkey, unsigned int access_rights = KEY_ALL_ACCESS, unsigned int create_flags = create_always);
+		RegistryKey(HKEY key);
+		~RegistryKey();
+
+		/// \brief Returns true if this object is invalid.
+		bool is_null() const { return !impl; }
+
+		/// \brief Throw an exception if this object is invalid.
+		void throw_if_null() const;
+
+		HKEY get_key() const;
+		std::vector<std::string> get_subkey_names() const;
+		std::vector<std::string> get_value_names() const;
+		int get_value_int(const std::string &name, int default_value = 0) const;
+		DataBuffer get_value_binary(const std::string &name, const DataBuffer &default_value = DataBuffer()) const;
+		std::string get_value_string(const std::string &name, const std::string &default_value = std::string()) const;
+		std::vector<std::string> get_value_multi_string(const std::string &name, const std::vector<std::string> &default_value = std::vector<std::string>()) const;
+
+		RegistryKey open_key(const std::string &subkey, unsigned int access_rights = KEY_ALL_ACCESS);
+		RegistryKey create_key(const std::string &subkey, unsigned int access_rights = KEY_ALL_ACCESS, CreateFlags create_flags = create_always);
+		void delete_key(const std::string &subkey, bool recursive);
+		static void delete_key(PredefinedKey key, const std::string &subkey, bool recursive);
+		void set_value_int(const std::string &name, int value);
+		void set_value_binary(const std::string &name, const DataBuffer &value);
+		void set_value_string(const std::string &name, const std::string &value);
+		//	void set_value_multi_string(const std::string &name, const std::vector<std::string> &value);
+		void delete_value(const std::string &name);
+
+	private:
+		std::shared_ptr<RegistryKey_Impl> impl;
 	};
 
-	enum CreateFlags
-	{
-		create_always    = 0,
-		create_new       = 1,
-		create_volatile  = 2
-	};
-
-	// Construct a null instance
-	RegistryKey();
-
-	RegistryKey(PredefinedKey key, const std::string &subkey, unsigned int access_rights = KEY_ALL_ACCESS, unsigned int create_flags = create_always);
-
-	RegistryKey(HKEY key);
-
-	~RegistryKey();
-
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return !impl; }
-
-	/// \brief Throw an exception if this object is invalid.
-	void throw_if_null() const;
-
-	HKEY get_key() const;
-
-	std::vector<std::string> get_subkey_names() const;
-
-	std::vector<std::string> get_value_names() const;
-
-	int get_value_int(const std::string &name, int default_value = 0) const;
-
-	DataBuffer get_value_binary(const std::string &name, const DataBuffer &default_value = DataBuffer()) const;
-
-	std::string get_value_string(const std::string &name, const std::string &default_value = std::string()) const;
-
-	std::vector<std::string> get_value_multi_string(const std::string &name, const std::vector<std::string> &default_value = std::vector<std::string>()) const;
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	RegistryKey open_key(const std::string &subkey, unsigned int access_rights = KEY_ALL_ACCESS);
-
-	RegistryKey create_key(const std::string &subkey, unsigned int access_rights = KEY_ALL_ACCESS, CreateFlags create_flags = create_always);
-
-	void delete_key(const std::string &subkey, bool recursive);
-
-	static void delete_key(PredefinedKey key, const std::string &subkey, bool recursive);
-
-	void set_value_int(const std::string &name, int value);
-
-	void set_value_binary(const std::string &name, const DataBuffer &value);
-
-	void set_value_string(const std::string &name, const std::string &value);
-
-//	void set_value_multi_string(const std::string &name, const std::vector<std::string> &value);
-
-	void delete_value(const std::string &name);
-
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	std::shared_ptr<RegistryKey_Impl> impl;
-/// \}
-};
-
-
+	/// \}
 }
 
 #endif
-
-/// \}

@@ -31,20 +31,20 @@
 
 Target::Target(RenderTarget new_target) : render_target(new_target)
 {
-	clan::OpenGLWindowDescription opengl_desc;
+	clan::OpenGLContextDescription opengl_desc;
 
 	switch (render_target)
 	{
 	case (legacy_gl) :
+		clan::OpenGLTarget::set_current();
 		opengl_desc.set_version(1, 3, true);
 		clan::OpenGLTarget::set_description(opengl_desc);
-		clan::OpenGLTarget::set_current();
 		break;
 
 	case (opengl) :
+		clan::OpenGLTarget::set_current();
 		opengl_desc.set_version(4, 3, true);
 		clan::OpenGLTarget::set_description(opengl_desc);
-		clan::OpenGLTarget::set_current();
 		break;
 	case (d3d) :
 		clan::D3DTarget::set_current();
@@ -61,7 +61,7 @@ Target::Target(RenderTarget new_target) : render_target(new_target)
 	sc.connect(window.sig_window_close(), clan::bind_member(this, &Target::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &Target::on_input_up));
+	sc.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &Target::on_input_up));
 
 	canvas = clan::Canvas(window);
 
@@ -101,11 +101,10 @@ void Target::run_demo()
 
 	if (clan::OpenGLTarget::is_current())
 	{
-		clan::GraphicContext_GL gc(canvas);
 		int major,minor, version_release;
-		gc.get_opengl_version(major, minor, version_release);
+		clan::OpenGLTarget::get_opengl_version(canvas, major, minor, version_release);
 
-		if (gc.get_shader_language() == clan::shader_fixed_function)
+		if (canvas.get_gc().get_shader_language() == clan::shader_fixed_function)
 		{
 			target_font.draw_text(canvas, font_xpos, font_ypos, clan::string_format("1) OpenGL 1.3 Compatable. Context = %1.%2 (clanGL)", major, minor));
 		}
@@ -142,19 +141,19 @@ void Target::run_demo()
 
 	window.flip(0);
 
-	if (window.get_ic().get_keyboard().get_keycode(clan::keycode_1))
+	if (window.get_keyboard().get_keycode(clan::keycode_1))
 	{
 		render_target = legacy_gl;
 	}
-	if (window.get_ic().get_keyboard().get_keycode(clan::keycode_2))
+	if (window.get_keyboard().get_keycode(clan::keycode_2))
 	{
 		render_target = opengl;
 	}
-	if (window.get_ic().get_keyboard().get_keycode(clan::keycode_3))
+	if (window.get_keyboard().get_keycode(clan::keycode_3))
 	{
 		render_target = d3d;
 	}
-	if (window.get_ic().get_keyboard().get_keycode(clan::keycode_escape))
+	if (window.get_keyboard().get_keycode(clan::keycode_escape))
 	{
 		quit = true;
 	}

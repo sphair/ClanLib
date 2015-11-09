@@ -27,81 +27,67 @@
 **    Harry Storbacka
 */
 
-
 #pragma once
 
 #include "texture.h"
 
 namespace clan
 {
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
+	/// \addtogroup clanDisplay_Display clanDisplay Display
+	/// \{
 
-/// \brief 1D texture object class.
-class Texture1D : public Texture
-{
-/// \name Construction
-/// \{
-public:
-	/// \brief Constructs a null instance.
-	Texture1D();
+	/// \brief 1D texture object class.
+	class Texture1D : public Texture
+	{
+	public:
+		/// \brief Constructs a null instance.
+		Texture1D();
 
-	/// \brief Constructs a texture from an implementation
-	///
-	/// \param impl = The implementation
-	Texture1D(const std::shared_ptr<Texture_Impl> &impl) : Texture(impl) { }
+		/// \brief Constructs a texture from an implementation
+		///
+		/// \param impl = The implementation
+		Texture1D(const std::shared_ptr<Texture_Impl> &impl) : Texture(impl) { }
 
-	/// \brief Constructs a Texture
-	///
-	/// \param context = Graphic Context
-	/// \param size = value
-	/// \param height = value
-	/// \param internal_format = Texture Format
-	/// \param levels = Mipmap levels for the texture. 0 = all levels
-	Texture1D(GraphicContext &context, int size, TextureFormat texture_format = tf_rgba8, int levels = 1);
+		/// \brief Constructs a Texture
+		///
+		/// \param context = Graphic Context
+		/// \param size = value
+		/// \param height = value
+		/// \param internal_format = Texture Format
+		/// \param levels = Mipmap levels for the texture. 0 = all levels
+		Texture1D(GraphicContext &context, int size, TextureFormat texture_format = tf_rgba8, int levels = 1);
 
-	Texture1D(GraphicContext &context, const PixelBuffer &image, bool is_srgb = false);
-	Texture1D(GraphicContext &context, const PixelBuffer &image, int src_x, int width, bool is_srgb = false);
+		Texture1D(GraphicContext &context, const PixelBuffer &image, bool is_srgb = false);
+		Texture1D(GraphicContext &context, const PixelBuffer &image, int src_x, int width, bool is_srgb = false);
 
-/// \}
+		/// \brief Get the texture width.
+		int get_size() const;
 
-/// \name Attributes
-/// \{
-public:
-	/// \brief Get the texture width.
-	int get_size() const;
+		/// \brief Get the texture wrap mode for the s coordinate.
+		TextureWrapMode get_wrap_mode_s() const;
 
-	/// \brief Get the texture wrap mode for the s coordinate.
-	TextureWrapMode get_wrap_mode_s() const;
-/// \}
+		/// \brief Upload image to texture.
+		///
+		/// \param context Graphic context to use for the request
+		/// \param image Image to upload.
+		/// \param level Mipmap level-of-detail number.
+		void set_image(GraphicContext &context, PixelBuffer &image, int level = 0);
 
-/// \name Operations
-/// \{
-public:
-	/// \brief Upload image to texture.
-	///
-	/// \param context Graphic context to use for the request
-	/// \param image Image to upload.
-	/// \param level Mipmap level-of-detail number.
-	void set_image(GraphicContext &context, PixelBuffer &image, int level = 0);
+		/// \brief Upload image to sub texture.
+		///
+		/// \param context Graphic context to use for the request
+		/// \param image Image to upload.
+		/// \param level Mipmap level-of-detail number.
+		void set_subimage(
+			GraphicContext &context,
+			int x,
+			const PixelBuffer &image,
+			const int src_x,
+			const int src_width,
+			int level = 0);
 
-	/// \brief Upload image to sub texture.
-	///
-	/// \param context Graphic context to use for the request
-	/// \param image Image to upload.
-	/// \param level Mipmap level-of-detail number.
-	void set_subimage(
-		GraphicContext &context,
-		int x,
-		const PixelBuffer &image,
-		const int src_x,
-		const int src_width,
-		int level = 0);
+		void set_wrap_mode(TextureWrapMode wrap_s);
+	};
 
-	void set_wrap_mode(TextureWrapMode wrap_s);
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

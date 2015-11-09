@@ -36,113 +36,95 @@
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// File Statics:
-
-std::string File::read_text(const std::string &filename)
-{
-	File file(filename);
-	unsigned int file_size = file.get_size();
-	std::vector<char> text;
-	text.resize(file_size+1);
-	text[file_size] = 0;
-	if (file_size)
-		file.read(&text[0], file_size);
-	file.close();
-	if (file_size)
-		return std::string(&text[0]);
-	else
-		return std::string();
-}
-
-DataBuffer File::read_bytes(const std::string &filename)
-{
-	File file(filename);
-	DataBuffer buffer(file.get_size());
-	file.read(buffer.get_data(), buffer.get_size());
-	file.close();
-	return buffer;
-}
-
-void File::write_text(const std::string &filename, const std::string &text, bool write_bom)
-{
-	File file(filename, create_always, access_write);
-	if (write_bom)
+	std::string File::read_text(const std::string &filename)
 	{
-		unsigned char bom[3] = { 0xef, 0xbb, 0xbf };
-		file.write(bom, 3);
+		File file(filename);
+		unsigned int file_size = file.get_size();
+		std::vector<char> text;
+		text.resize(file_size + 1);
+		text[file_size] = 0;
+		if (file_size)
+			file.read(&text[0], file_size);
+		file.close();
+		if (file_size)
+			return std::string(&text[0]);
+		else
+			return std::string();
 	}
-	file.write(text.data(), text.length());
-	file.close();
-}
 
-void File::write_bytes(const std::string &filename, const DataBuffer &bytes)
-{
-	File file(filename, create_always, access_write);
-	file.write(bytes.get_data(), bytes.get_size());
-	file.close();
-}
+	DataBuffer File::read_bytes(const std::string &filename)
+	{
+		File file(filename);
+		DataBuffer buffer(file.get_size());
+		file.read(buffer.get_data(), buffer.get_size());
+		file.close();
+		return buffer;
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// File Construction:
+	void File::write_text(const std::string &filename, const std::string &text, bool write_bom)
+	{
+		File file(filename, create_always, access_write);
+		if (write_bom)
+		{
+			unsigned char bom[3] = { 0xef, 0xbb, 0xbf };
+			file.write(bom, 3);
+		}
+		file.write(text.data(), text.length());
+		file.close();
+	}
 
-File::File()
-: IODevice(new IODeviceProvider_File())
-{
-}
+	void File::write_bytes(const std::string &filename, const DataBuffer &bytes)
+	{
+		File file(filename, create_always, access_write);
+		file.write(bytes.get_data(), bytes.get_size());
+		file.close();
+	}
 
-File::File(
-	const std::string &filename)
-: IODevice(new IODeviceProvider_File(PathHelp::normalize(filename, PathHelp::path_type_file), open_existing, access_read, share_all, 0))
-{
-}
+	File::File()
+		: IODevice(new IODeviceProvider_File())
+	{
+	}
 
-File::File(
-	const std::string &filename,
-	OpenMode open_mode,
-	unsigned int access,
-	unsigned int share,
-	unsigned int flags)
-: IODevice(new IODeviceProvider_File(PathHelp::normalize(filename, PathHelp::path_type_file), open_mode, access, share, flags))
-{
-}
-File::~File()
-{
-}
+	File::File(
+		const std::string &filename)
+		: IODevice(new IODeviceProvider_File(PathHelp::normalize(filename, PathHelp::path_type_file), open_existing, access_read, share_all, 0))
+	{
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// File Attributes:
+	File::File(
+		const std::string &filename,
+		OpenMode open_mode,
+		unsigned int access,
+		unsigned int share,
+		unsigned int flags)
+		: IODevice(new IODeviceProvider_File(PathHelp::normalize(filename, PathHelp::path_type_file), open_mode, access, share, flags))
+	{
+	}
+	File::~File()
+	{
+	}
 
+	bool File::open(
+		const std::string &filename)
+	{
+		IODeviceProvider_File *provider = dynamic_cast<IODeviceProvider_File*>(impl->provider);
+		return provider->open(PathHelp::normalize(filename, PathHelp::path_type_file), open_existing, access_read, share_all, 0);
+	}
 
-/////////////////////////////////////////////////////////////////////////////
-// File Operations:
+	bool File::open(
+		const std::string &filename,
+		OpenMode open_mode,
+		unsigned int access,
+		unsigned int share,
+		unsigned int flags)
+	{
+		IODeviceProvider_File *provider = dynamic_cast<IODeviceProvider_File*>(impl->provider);
+		return provider->open(PathHelp::normalize(filename, PathHelp::path_type_file), open_mode, access, share, flags);
+	}
 
-bool File::open(
-	const std::string &filename)
-{
-	IODeviceProvider_File *provider = dynamic_cast<IODeviceProvider_File*>(impl->provider);
-	return provider->open(PathHelp::normalize(filename, PathHelp::path_type_file), open_existing, access_read, share_all, 0);
-}
-
-bool File::open(
-	const std::string &filename,
-	OpenMode open_mode,
-	unsigned int access,
-	unsigned int share,
-	unsigned int flags)
-{
-	IODeviceProvider_File *provider = dynamic_cast<IODeviceProvider_File*>(impl->provider);
-	return provider->open(PathHelp::normalize(filename, PathHelp::path_type_file), open_mode, access, share, flags);
-}
-
-void File::close()
-{
-	IODeviceProvider_File *provider = dynamic_cast<IODeviceProvider_File*>(impl->provider);
-	provider->close();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// File Implementation:
-
+	void File::close()
+	{
+		IODeviceProvider_File *provider = dynamic_cast<IODeviceProvider_File*>(impl->provider);
+		provider->close();
+	}
 }

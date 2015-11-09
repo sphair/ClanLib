@@ -54,96 +54,77 @@
 namespace clan
 {
 
-class Secret;
-class Secret;
-class Random;
+	class Secret;
+	class Secret;
+	class Random;
 
-typedef struct
-{
-   BigInt modulus;
-   BigInt public_exponent;
-   BigInt private_exponent;
-   BigInt prime1;
-   BigInt prime2;
-   BigInt exponent1;
-   BigInt exponent2;
-   BigInt coefficient;
-}  RSAPrivateKey;
+	typedef struct
+	{
+		BigInt modulus;
+		BigInt public_exponent;
+		BigInt private_exponent;
+		BigInt prime1;
+		BigInt prime2;
+		BigInt exponent1;
+		BigInt exponent2;
+		BigInt coefficient;
+	}  RSAPrivateKey;
 
-class RSA_Impl
-{
-/// \name Construction
-/// \{
+	class RSA_Impl
+	{
+	public:
+		RSA_Impl();
 
-public:
-	RSA_Impl();
+		static DataBuffer encrypt(int block_type, Random &random, const void *in_public_exponent, unsigned int in_public_exponent_size, const void *in_modulus, unsigned int in_modulus_size, const void *in_data, unsigned int in_data_size);
+		static Secret decrypt(const Secret &in_private_exponent, const void *in_modulus, unsigned int in_modulus_size, const void *in_data, unsigned int in_data_size);
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief Create the keypair
+		void create(Random &random, int key_size_in_bits, int public_exponent_value);
 
-	static DataBuffer encrypt(int block_type, Random &random, const void *in_public_exponent, unsigned int in_public_exponent_size, const void *in_modulus, unsigned int in_modulus_size, const void *in_data, unsigned int in_data_size);
-	static Secret decrypt(const Secret &in_private_exponent, const void *in_modulus, unsigned int in_modulus_size, const void *in_data, unsigned int in_data_size);
+		/// \brief Create a keypair
+		///
+		/// \param random = Random number generator
+		/// \param out_private_exponent = Private exponent (to decrypt with)
+		/// \param out_public_exponent = Public exponent (to encrypt with)
+		/// \param out_modulus = Modulus
+		/// \param key_size_in_bits = key size in bits
+		/// \param public_exponent_value = public exponent value
+		void create_keypair(Random &random, Secret &out_private_exponent, DataBuffer &out_public_exponent, DataBuffer &out_modulus, int key_size_in_bits, int public_exponent_value);
 
-/// \}
-/// \name Operations
-/// \{
+	private:
+		void generate_prime(Random &random, BigInt &prime, int prime_len);
+		bool build_from_primes(BigInt *p, BigInt *q, BigInt *e, BigInt *d, unsigned int key_size_in_bits);
 
-public:
-	/// \brief Create the keypair
-	void create(Random &random, int key_size_in_bits, int public_exponent_value);
+		static void rsaep(BigInt *msg, const BigInt *e, const BigInt *modulus, BigInt *cipher);
+		static void rsadp(BigInt *cipher, const BigInt *d, const BigInt *modulus, BigInt *msg);
 
-	/// \brief Create a keypair
-	///
-	/// \param random = Random number generator
-	/// \param out_private_exponent = Private exponent (to decrypt with)
-	/// \param out_public_exponent = Public exponent (to encrypt with)
-	/// \param out_modulus = Modulus
-	/// \param key_size_in_bits = key size in bits
-	/// \param public_exponent_value = public exponent value
-	void create_keypair(Random &random, Secret &out_private_exponent, DataBuffer &out_public_exponent, DataBuffer &out_modulus, int key_size_in_bits, int public_exponent_value);
+		// PKCS#1 v.1.5 message padding and encoding
+		// msg       - input message
+		// mlen      - length of input message, in bytes
+		// emsg      - output buffer
+		// emlen     - length of output buffer
+		//
+		static void pkcs1v15_encode(int block_type, Random &random, const char *msg, int mlen, char *emsg, int emlen);
 
-/// \}
-/// \name Implementation
-/// \{
+		// PKCS#1 v1.5 padded message decoding
+		// emsg      - encoded message
+		// emlen     - length of encoded message, in bytes
+		static Secret pkcs1v15_decode(const char *emsg, int emlen);
 
-private:
-	void generate_prime(Random &random, BigInt &prime, int prime_len);
-	bool build_from_primes(BigInt *p, BigInt *q, BigInt *e, BigInt *d, unsigned int key_size_in_bits);
+		// Encrypt a message using RSA and PKCS#1 v.1.5 padding
+		// msg       - input message
+		// mlen      - length of input message, in bytes
+		// e         - encryption exponent
+		// modulus   - encryption key modulus
+		static DataBuffer pkcs1v15_encrypt(int block_type, Random &random, const char *msg, int mlen, const BigInt *e, const BigInt *modulus);
 
-	static void rsaep(BigInt *msg, const BigInt *e, const BigInt *modulus, BigInt *cipher);
-	static void rsadp(BigInt *cipher, const BigInt *d, const BigInt *modulus, BigInt *msg);
+		// Decrypt a message using RSA and PKCS#1 v.1.5 padding
+		// msg       - input message (ciphertext)
+		// mlen      - length of input message, in bytes
+		// d         - decryption exponent
+		// modulus   - decryption key modulus
+		static Secret pkcs1v15_decrypt(const char *msg, int mlen, const BigInt *d, const BigInt *modulus);
 
-	// PKCS#1 v.1.5 message padding and encoding
-	// msg       - input message
-	// mlen      - length of input message, in bytes
-	// emsg      - output buffer
-	// emlen     - length of output buffer
-	//
-	static void pkcs1v15_encode(int block_type, Random &random, const char *msg, int mlen, char *emsg, int emlen);
-
-	// PKCS#1 v1.5 padded message decoding
-	// emsg      - encoded message
-	// emlen     - length of encoded message, in bytes
-	static Secret pkcs1v15_decode(const char *emsg, int emlen);
-
-	// Encrypt a message using RSA and PKCS#1 v.1.5 padding
-	// msg       - input message
-	// mlen      - length of input message, in bytes
-	// e         - encryption exponent
-	// modulus   - encryption key modulus
-	static DataBuffer pkcs1v15_encrypt(int block_type, Random &random, const char *msg, int mlen, const BigInt *e, const BigInt *modulus);
-
-	// Decrypt a message using RSA and PKCS#1 v.1.5 padding
-	// msg       - input message (ciphertext)
-	// mlen      - length of input message, in bytes
-	// d         - decryption exponent
-	// modulus   - decryption key modulus
-	static Secret pkcs1v15_decrypt(const char *msg, int mlen, const BigInt *d, const BigInt *modulus);
-
-	RSAPrivateKey rsa_private_key;
-/// \}
-};
-
+		RSAPrivateKey rsa_private_key;
+	};
 }
-

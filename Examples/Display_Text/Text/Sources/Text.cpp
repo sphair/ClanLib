@@ -64,11 +64,11 @@ clan::ApplicationInstance<ExampleText> clanapp;
 
 ExampleText::ExampleText()
 {
-	// We support all display targets, in order listed here
 #ifdef WIN32
-	clan::D3DTarget::enable();
+	clan::D3DTarget::set_current();
+#else
+	clan::OpenGLTarget::set_current();
 #endif
-	clan::OpenGLTarget::enable();
 
 	// Set a videomode
 	clan::DisplayWindowDescription desc;
@@ -81,7 +81,7 @@ ExampleText::ExampleText()
 	sc.connect(window.sig_window_close(), clan::bind_member(this, &ExampleText::on_window_close));
 
 	// Connect a keyboard handler to on_key_up()
-	sc.connect(window.get_ic().get_keyboard().sig_key_up(), clan::bind_member(this, &ExampleText::on_keyboard_up));
+	sc.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &ExampleText::on_keyboard_up));
 
 	canvas = clan::Canvas(window);
 

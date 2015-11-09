@@ -27,16 +27,7 @@ to start creating your applications.</p>
 <p>ClanLib supports that you use the normal platform specific main functions, such as main or
 WinMain, but a more common approach is to use the cross platform application main provided by
 the clanApplication library. We have a few examples here on how simple "Hello World" ClanLib
-applications may look like:</p>
-		
-<ul>
-	<li><a href="/example-console.html">Console "Hello World" example</a></li>
-	<li><a href="/example-display.html">Display "Hello World" example</a></li>
-</ul>
-		
-<p>In general, ClanLib is used by simply constructing the objects you require. The only
-prerequisites is that for each ClanLib sub-library you need to first construct a SetupXX
-object which performs any initializations and deinitializations required for the library.</p>
+applications may look like. We advise looking at Examples/Display/Basic2D found in the SDK package</p>
 		
 <h2>Getting help</h2>
 		

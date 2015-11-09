@@ -27,45 +27,26 @@
 **    Mark Page
 */
 
-
 #pragma once
-
 
 namespace clan
 {
-/// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
-/// \{
+	/// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
+	/// \{
 
-/// \brief Sound Filter Interface
-class SoundFilterProvider
-{
-/// \name Construction
-/// \{
+	/// \brief Sound Filter Interface
+	class SoundFilterProvider
+	{
+	public:
+		virtual ~SoundFilterProvider() { return; }
 
-public:
-	virtual ~SoundFilterProvider() { return; }
+		/// \brief Filter callback.
+		/** <p>All sound data is passed through this function,
+			which modifies the sample data accordingly to the function of the
+			filter.</p>
+			<p>The format of the sample data is always 16 bit stereo. </p>*/
+		virtual void filter(float **sample_data, int num_samples, int channels) = 0;
+	};
 
-/// \}
-/// \name Operations
-/// \{
-
-public:
-
-	/// \brief Filter callback.
-	/** <p>All sound data is passed through this function,
-	    which modifies the sample data accordingly to the function of the
-	    filter.</p>
-	    <p>The format of the sample data is always 16 bit stereo. </p>*/
-	virtual void filter(float **sample_data, int num_samples, int channels)=0;
-
-/// \}
-/// \name Implementation
-/// \{
-
-public:
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

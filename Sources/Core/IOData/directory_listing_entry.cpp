@@ -31,156 +31,124 @@
 
 namespace clan
 {
+	class DirectoryListingEntry_Impl
+	{
+	public:
+		std::string get_filename()
+		{
+			return filename;
+		}
 
-/////////////////////////////////////////////////////////////////////////////
-// DirectoryListingEntry_Impl Class:
+		bool is_directory()
+		{
+			return directory;
+		}
 
-class DirectoryListingEntry_Impl
-{
-//! Construction:
-public:
-	DirectoryListingEntry_Impl()
+		bool is_hidden()
+		{
+			return hidden;
+		}
+
+		bool is_writable()
+		{
+			return writable;
+		}
+
+		bool is_readable()
+		{
+			return readable;
+		}
+
+		void set_filename(const std::string &value)
+		{
+			filename = value;
+		}
+
+		void set_directory(bool value)
+		{
+			directory = value;
+		}
+
+		void set_hidden(bool value)
+		{
+			hidden = value;
+		}
+
+		void set_writable(bool value)
+		{
+			writable = value;
+		}
+
+		void set_readable(bool value)
+		{
+			readable = value;
+		}
+
+	private:
+		std::string filename;
+		bool directory;
+		bool hidden;
+		bool writable;
+		bool readable;
+	};
+
+	DirectoryListingEntry::DirectoryListingEntry()
+		: impl(std::make_shared<DirectoryListingEntry_Impl>())
 	{
 	}
 
-	~DirectoryListingEntry_Impl()
+	DirectoryListingEntry::~DirectoryListingEntry()
 	{
+
 	}
 
-//! Attributes:
-public:
-	std::string get_filename()
+	std::string DirectoryListingEntry::get_filename()
 	{
-		return filename;
+		return impl->get_filename();
 	}
 
-	bool is_directory()
+	bool DirectoryListingEntry::is_directory()
 	{
-		return directory;
+		return impl->is_directory();
 	}
 
-	bool is_hidden()
+	bool DirectoryListingEntry::is_hidden()
 	{
-		return hidden;
+		return impl->is_hidden();
 	}
 
-	bool is_writable()
+	bool DirectoryListingEntry::is_writable()
 	{
-		return writable;
+		return impl->is_writable();
 	}
 
-	bool is_readable()
+	bool DirectoryListingEntry::is_readable()
 	{
-		return readable;
+		return impl->is_readable();
 	}
 
-//! Operations:
-public:
-	void set_filename(const std::string &value)
+	void DirectoryListingEntry::set_filename(const std::string &filename)
 	{
-		filename = value;
+		impl->set_filename(filename);
 	}
 
-	void set_directory(bool value)
+	void DirectoryListingEntry::set_directory(bool value)
 	{
-		directory = value;
+		impl->set_directory(value);
 	}
 
-	void set_hidden(bool value)
+	void DirectoryListingEntry::set_hidden(bool value)
 	{
-		hidden = value;
+		impl->set_hidden(value);
 	}
 
-	void set_writable(bool value)
+	void DirectoryListingEntry::set_writable(bool value)
 	{
-		writable = value;
+		impl->set_writable(value);
 	}
 
-	void set_readable(bool value)
+	void DirectoryListingEntry::set_readable(bool value)
 	{
-		readable = value;
+		impl->set_readable(value);
 	}
-
-
-//! Implementation:
-private:
-	std::string filename;
-	bool directory;
-	bool hidden;
-	bool writable;
-	bool readable;
-};
-
-/////////////////////////////////////////////////////////////////////////////
-// DirectoryListingEntry Construction:
-
-DirectoryListingEntry::DirectoryListingEntry()
-: impl(std::make_shared<DirectoryListingEntry_Impl>())
-{
-}
-
-DirectoryListingEntry::~DirectoryListingEntry()
-{
-	
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// DirectoryListingEntry Attributes:
-
-std::string DirectoryListingEntry::get_filename()
-{
-	return impl->get_filename();
-}
-
-bool DirectoryListingEntry::is_directory()
-{
-	return impl->is_directory();
-}
-
-bool DirectoryListingEntry::is_hidden()
-{
-	return impl->is_hidden();
-}
-
-bool DirectoryListingEntry::is_writable()
-{
-	return impl->is_writable();
-}
-
-bool DirectoryListingEntry::is_readable()
-{
-	return impl->is_readable();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// DirectoryListingEntry Operations:
-
-void DirectoryListingEntry::set_filename(const std::string &filename)
-{
-	impl->set_filename(filename);
-}
-
-void DirectoryListingEntry::set_directory(bool value)
-{
-	impl->set_directory(value);
-}
-
-void DirectoryListingEntry::set_hidden(bool value)
-{
-	impl->set_hidden(value);
-}
-
-void DirectoryListingEntry::set_writable(bool value)
-{
-	impl->set_writable(value);
-}
-
-void DirectoryListingEntry::set_readable(bool value)
-{
-	impl->set_readable(value);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// DirectoryListingEntry Implementation:
-
 }

@@ -26,53 +26,31 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include "logger.h"
 
 namespace clan
 {
-/// \addtogroup clanCore_Text clanCore Text
-/// \{
+	/// \addtogroup clanCore_Text clanCore Text
+	/// \{
 
-class File;
+	class File;
 
-/// \brief File logger.
-class FileLogger : public Logger
-{
-/// \name Construction
-/// \{
+	/// \brief File logger.
+	class FileLogger : public Logger
+	{
+	public:
+		/// \brief Constructs a file logger.
+		FileLogger(const std::string &filename);
+		~FileLogger();
 
-public:
-	/// \brief Constructs a file logger.
-	FileLogger(const std::string &filename);
+		/// \brief Log text to file.
+		void log(const std::string &type, const std::string &text) override;
 
-	~FileLogger();
+	private:
+		File *file;
+	};
 
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	/// \brief Log text to file.
-	void log(const std::string &type, const std::string &text) override;
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	File *file;
-/// \}
-};
-
+	/// \}
 }
-
-/// \}

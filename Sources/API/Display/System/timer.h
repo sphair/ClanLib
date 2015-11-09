@@ -33,47 +33,31 @@
 
 namespace clan
 {
+	class TimerImpl;
 
-class TimerImpl;
+	/// \brief Timer class that invokes a callback on a specified interval
+	class Timer
+	{
+	public:
+		/// \brief Creates a timer object
+		Timer();
 
-/// \brief Timer class that invokes a callback on a specified interval
-class Timer
-{
-/// \name Construction
-/// \{
-public:
-	/// \brief Creates a timer object
-	Timer();
+		/// \brief Returns true if the timer repeats until it is stopped
+		bool is_repeating() const;
 
-	/// \brief Returns true if the timer repeats until it is stopped
-	bool is_repeating() const;
+		/// \brief Returns the current timeout. In milliseconds.
+		unsigned int get_timeout() const;
 
-	/// \brief Returns the current timeout. In milliseconds.
-	unsigned int get_timeout() const;
-/// \}
+		/// \brief Callback invoked every time the timer interval occurs
+		std::function<void()> &func_expired();
 
-/// \name Events
-/// \{
-public:
-	/// \brief Callback invoked every time the timer interval occurs
-	std::function<void()> &func_expired();
-/// \}
+		/// \brief Starts the timer. Timeout in milliseconds.
+		void start(unsigned int timeout, bool repeat = true);
 
-/// \name Operations
-/// \{
-public:
-	/// \brief Starts the timer. Timeout in milliseconds.
-	void start(unsigned int timeout, bool repeat=true);
+		/// \brief Stop the timer.
+		void stop();
 
-	/// \brief Stop the timer.
-	void stop();
-/// \}
-
-/// \name Implementation
-/// \{
-private:
-	std::shared_ptr<TimerImpl> impl;
-/// \}
-};
-
+	private:
+		std::shared_ptr<TimerImpl> impl;
+	};
 }

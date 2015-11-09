@@ -26,47 +26,45 @@
 **    Magnus Norddahl
 */
 
-
 #pragma once
 
 #include "event_value.h"
 
 namespace clan
 {
-/// \addtogroup clanNetwork_NetGame clanNetwork NetGame
-/// \{
+	/// \addtogroup clanNetwork_NetGame clanNetwork NetGame
+	/// \{
 
-/// \brief NetGameEvent
-class NetGameEvent
-{
-public:
-	/// Constructs a NetGameEvent
-	NetGameEvent(const std::string &name, std::vector<NetGameEventValue> arg = {});
+	/// \brief NetGameEvent
+	class NetGameEvent
+	{
+	public:
+		/// Constructs a NetGameEvent
+		NetGameEvent(const std::string &name, std::vector<NetGameEventValue> arg = {});
 
-	/// \return The name of this event.
-	std::string get_name() const { return name; };
+		/// \return The name of this event.
+		std::string get_name() const { return name; };
 
-	/// \return The number of arguments stored in this event.
-	unsigned int get_argument_count() const;
+		/// \return The number of arguments stored in this event.
+		unsigned int get_argument_count() const;
 
-	/// Retrieves an argument in this event.
-	/// \param index Index number of the argument to retrieve.
-	/// \return A NetGameEventValue object containing the argument value.
-	NetGameEventValue get_argument(unsigned int index) const;
+		/// Retrieves an argument in this event.
+		/// \param index Index number of the argument to retrieve.
+		/// \return A NetGameEventValue object containing the argument value.
+		NetGameEventValue get_argument(unsigned int index) const;
 
-	/// Adds an argument into this event.
-	/// \param value The argument to store inside this event.
-	void add_argument(const NetGameEventValue &value);
+		/// Adds an argument into this event.
+		/// \param value The argument to store inside this event.
+		void add_argument(const NetGameEventValue &value);
 
-	/// \return A string representation of this event, including all of its arguments.
-	std::string to_string() const;
+		/// \return A string representation of this event, including all of its arguments.
+		std::string to_string() const;
 
-private:
-	std::string name;
-	std::vector<NetGameEventValue> arguments;
-};
+	private:
+		std::string name;
+		std::vector<NetGameEventValue> arguments;
+	};
 
+	/// \}
 }
-
-/// \}
 

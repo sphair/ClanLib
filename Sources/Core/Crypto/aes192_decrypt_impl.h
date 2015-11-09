@@ -23,7 +23,6 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
 **    Mark Page
 */
 
@@ -35,93 +34,73 @@
 
 namespace clan
 {
+	class AES192_Decrypt_Impl : public AES_Impl
+	{
+	public:
+		AES192_Decrypt_Impl();
 
-class AES192_Decrypt_Impl : public AES_Impl
-{
-/// \name Construction
-/// \{
+		/// \brief Get decrypted data
+		///
+		/// This is the databuffer used internally to store the decrypted data.
+		/// You may call "set_size()" to clear the buffer, inbetween calls to "add()"
+		/// You may call "set_capacity()" to optimise storage requirements before the add() call
+		DataBuffer get_data() const;
 
-public:
-	AES192_Decrypt_Impl();
+		/// \brief Resets the decryption
+		void reset();
 
-/// \}
-/// \name Attributes
-/// \{
+		/// \brief Purge the databuffer
+		///
+		/// See get_data()\n
+		/// reset() calls this function
+		void purge_data();
 
-	/// \brief Get decrypted data
-	///
-	/// This is the databuffer used internally to store the decrypted data.
-	/// You may call "set_size()" to clear the buffer, inbetween calls to "add()"
-	/// You may call "set_capacity()" to optimise storage requirements before the add() call
-	DataBuffer get_data() const;
+		/// \brief Sets the initialisation vector
+		///
+		/// This must be called before the initial add()
+		void set_iv(const unsigned char iv[16]);
 
-/// \}
-/// \name Operations
-/// \{
+		/// \brief Sets the cipher key
+		///
+		/// This must be called before the initial add()
+		void set_key(const unsigned char key[24]);
 
-public:
-	/// \brief Resets the decryption
-	void reset();
+		void set_padding(bool value, bool use_pkcs7);
 
-	/// \brief Purge the databuffer
-	///
-	/// See get_data()\n
-	/// reset() calls this function
-	void purge_data();
+		/// \brief Adds data to be decrypted
+		void add(const void *data, int size);
 
-	/// \brief Sets the initialisation vector
-	///
-	/// This must be called before the initial add()
-	void set_iv(const unsigned char iv[16]);
+		/// \brief Add data to be decrypted
+		///
+		/// \param data = Data Buffer
+		void add(const DataBuffer &data);
 
-	/// \brief Sets the cipher key
-	///
-	/// This must be called before the initial add()
-	void set_key(const unsigned char key[24]);
+		/// \brief Finalize decryption
+		///
+		/// IMPORTANT, to avoid timing attacks, if this function fails, you should still validate the data (via a hash or otherwise), then throw an error
+		///
+		/// \return false = AES Padding value is invalid.
+		bool calculate();
 
-	void set_padding(bool value, bool use_pkcs7);
+	private:
+		void process_chunk();
 
-	/// \brief Adds data to be decrypted
-	void add(const void *data, int size);
+		uint32_t key_expanded[aes192_nb_mult_nr_plus1];
 
-	/// \brief Add data to be decrypted
-	///
-	/// \param data = Data Buffer
-	void add(const DataBuffer &data);
+		unsigned char chunk[aes192_block_size_bytes];
+		uint32_t initialisation_vector_1;
+		uint32_t initialisation_vector_2;
+		uint32_t initialisation_vector_3;
+		uint32_t initialisation_vector_4;
 
-	/// \brief Finalize decryption
-	///
-	/// IMPORTANT, to avoid timing attacks, if this function fails, you should still validate the data (via a hash or otherwise), then throw an error
-	///
-	/// \return false = AES Padding value is invalid.
-	bool calculate();
+		int chunk_filled;
 
-/// \}
-/// \name Implementation
-/// \{
+		bool initialisation_vector_set;
+		bool cipher_key_set;
+		bool calculated;
+		bool padding_enabled;
+		bool padding_pkcs7;
 
-private:
-	void process_chunk();
-
-	uint32_t key_expanded[aes192_nb_mult_nr_plus1];
-
-	unsigned char chunk[aes192_block_size_bytes];
-	uint32_t initialisation_vector_1;
-	uint32_t initialisation_vector_2;
-	uint32_t initialisation_vector_3;
-	uint32_t initialisation_vector_4;
-	
-	int chunk_filled;
-
-	bool initialisation_vector_set;
-	bool cipher_key_set;
-	bool calculated;
-	bool padding_enabled;
-	bool padding_pkcs7;
-
-	DataBuffer databuffer;
-
-/// \}
-};
-
+		DataBuffer databuffer;
+	};
 }

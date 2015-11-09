@@ -28,11 +28,12 @@
 
 #pragma once
 
-/*
-class Options : public clan::GUIComponent
+#include "../../../ThemeAero/Sources/theme.h"
+
+class Options : public clan::TextureWindow
 {
 public:
-	Options(clan::GUIManager &gui, clan::Rect gui_position);
+	Options(clan::Canvas &canvas);
 	virtual ~Options();
 
 	clan::BlendFunc blendfunc[4];	// For src, dest, src_alpha, dest_alpha
@@ -49,6 +50,20 @@ public:
 	bool is_premult_alpha_set;
 
 private:
+	std::shared_ptr<clan::ListBoxView> create_listbox(int xpos, int ypos, const std::string &title);
+
+	void insert_equation(std::shared_ptr<clan::ListBoxView> &listbox);
+	void insert_blend(std::shared_ptr<clan::ListBoxView> &listbox);
+
+	void on_logic_selected();
+	void on_equation_selected(std::shared_ptr<clan::ListBoxView> listbox, int offset);
+	void on_blend_selected(std::shared_ptr<clan::ListBoxView> listbox, int offset);
+	std::shared_ptr<clan::CheckBoxView> create_checkbox(int xpos, int ypos, const std::string &name, bool state);
+	std::shared_ptr<clan::SliderView> create_slider(int xpos, int ypos);
+	void set_value(std::shared_ptr<clan::SliderView> slider, float value, float max_value);
+	float get_value(std::shared_ptr<clan::SliderView> slider);
+	std::shared_ptr<clan::LabelView> create_slider_label(int xpos, int ypos);
+
 	void checkbox_moveballs_changed();
 	void checkbox_blending_changed();
 	void checkbox_premult_alpha_changed();
@@ -62,69 +77,31 @@ private:
 	void slider_blend_green_changed();
 	void slider_blend_blue_changed();
 	void slider_blend_alpha_changed();
-	clan::Label *create_slider_label(clan::Slider *slider);
-	void on_equation_selected(int value, clan::ComboBox *combo);
-	void on_blend_selected(int value, clan::ComboBox *combo);
-	void on_logic_selected(int value, clan::ComboBox *combo);
-	clan::CheckBox *create_checkbox(int xpos, int ypos, const char *name, bool state);
-	void on_render(clan::Canvas &canvas, const clan::Rect &update_rect);
-	clan::Slider *create_slider(int xpos, int ypos);
-	float get_value(clan::Slider *slider);
-	clan::ComboBox *create_equation_combo_box(int xpos, int ypos, clan::PopupMenu &menu, int selected_item);
-	clan::ComboBox *create_logic_combo_box(int xpos, int ypos, clan::PopupMenu &menu, int selected_item);
-	clan::ComboBox *create_blend_combo_box(int xpos, int ypos, clan::PopupMenu &menu, int selected_item);
-	void make_equation_menu(clan::PopupMenu &menu);
-	void make_blend_menu(clan::PopupMenu &menu);
-	void make_logic_menu(clan::PopupMenu &menu);
-	clan::Label *create_combobox_label(clan::ComboBox *combo, const char *text);
 private:
-	clan::Slider *slider_numballs;
-	clan::Slider *slider_primary_red;
-	clan::Slider *slider_primary_green;
-	clan::Slider *slider_primary_blue;
-	clan::Slider *slider_primary_alpha;
-	clan::Slider *slider_blend_red;
-	clan::Slider *slider_blend_green;
-	clan::Slider *slider_blend_blue;
-	clan::Slider *slider_blend_alpha;
-	clan::Label *label_numballs;
-	clan::Label *label_primary_red;
-	clan::Label *label_primary_green;
-	clan::Label *label_primary_blue;
-	clan::Label *label_primary_alpha;
-	clan::Label *label_blend_red;
-	clan::Label *label_blend_green;
-	clan::Label *label_blend_blue;
-	clan::Label *label_blend_alpha;
-	clan::CheckBox *checkbox_moveballs;
-	clan::CheckBox *checkbox_premult_alpha;
-	clan::CheckBox *checkbox_blending;
+	std::shared_ptr<clan::SliderView> slider_numballs;
+	std::shared_ptr<clan::SliderView> slider_primary_red;
+	std::shared_ptr<clan::SliderView> slider_primary_green;
+	std::shared_ptr<clan::SliderView> slider_primary_blue;
+	std::shared_ptr<clan::SliderView> slider_primary_alpha;
+	std::shared_ptr<clan::SliderView> slider_blend_red;
+	std::shared_ptr<clan::SliderView> slider_blend_green;
+	std::shared_ptr<clan::SliderView> slider_blend_blue;
+	std::shared_ptr<clan::SliderView> slider_blend_alpha;
+	std::shared_ptr<clan::LabelView> label_numballs;
+	std::shared_ptr<clan::LabelView> label_primary_red;
+	std::shared_ptr<clan::LabelView> label_primary_green;
+	std::shared_ptr<clan::LabelView> label_primary_blue;
+	std::shared_ptr<clan::LabelView> label_primary_alpha;
+	std::shared_ptr<clan::LabelView> label_blend_red;
+	std::shared_ptr<clan::LabelView> label_blend_green;
+	std::shared_ptr<clan::LabelView> label_blend_blue;
+	std::shared_ptr<clan::LabelView> label_blend_alpha;
+	std::shared_ptr<clan::CheckBoxView> checkbox_moveballs;
+	std::shared_ptr<clan::CheckBoxView> checkbox_premult_alpha;
+	std::shared_ptr<clan::CheckBoxView> checkbox_blending;
 
-	clan::Label *label_src;
-	clan::Label *label_dest;
-	clan::Label *label_src_alpha;
-	clan::Label *label_dest_alpha;
-	clan::Label *label_color;
-	clan::Label *label_alpha;
-	clan::Label *label_logic;
-
-	clan::ComboBox *combo_logic;
-	clan::PopupMenu combo_logic_menu;
-
-	clan::ComboBox *combo_src_blend;
-	clan::ComboBox *combo_dest_blend;
-	clan::ComboBox *combo_src_alpha_blend;
-	clan::ComboBox *combo_dest_alpha_blend;
-	clan::PopupMenu combo_src_blend_menu;
-	clan::PopupMenu combo_dest_blend_menu;
-	clan::PopupMenu combo_src_alpha_blend_menu;
-	clan::PopupMenu combo_dest_alpha_blend_menu;
-
-	clan::ComboBox *combo_color_equation;
-	clan::ComboBox *combo_alpha_equation;
-	clan::PopupMenu combo_color_equation_menu;
-	clan::PopupMenu combo_alpha_equation_menu;
+	std::shared_ptr<clan::ListBoxView> listbox_logic;
 
 };
 
-*/
+

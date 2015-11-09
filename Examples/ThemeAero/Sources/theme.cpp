@@ -164,9 +164,28 @@ std::shared_ptr<clan::RadioButtonView> Theme::create_radiobutton()
 	return radio;
 }
 
-std::shared_ptr<clan::LabelView> Theme::create_label()
+std::shared_ptr<clan::LabelView> Theme::create_label(bool subpixel)
 {
 	auto label = std::make_shared<clan::LabelView>();
-	label->style()->set("font: 16px Tahoma; -clan-font-rendering: anti-alias; color: white");
+	label->style()->set("font: 16px Tahoma; color: white");
+	if (!subpixel)
+		label->style()->set("-clan-font-rendering: anti-alias;");
+	return label;
+}
+
+std::shared_ptr<clan::ListBoxView> Theme::create_listbox()
+{
+	auto listbox = std::make_shared<clan::ListBoxView>();
+	listbox->style()->set("margin: 7px 0; border: 1px solid black; padding: 5px; background: #f0f0f0");
+	return listbox;
+}
+
+std::shared_ptr<clan::LabelView> Theme::create_listbox_label(const std::string &text)
+{
+	auto label = std::make_shared<clan::LabelView>();
+	label->style()->set("font: 13px/17px 'Segoe UI'; color: black; margin: 1px 0; padding: 0 2px");
+	label->style("selected")->set("background: #7777f0; color: white;");
+	label->style("hot")->set("background: #ccccf0; color: black");
+	label->set_text(text);
 	return label;
 }

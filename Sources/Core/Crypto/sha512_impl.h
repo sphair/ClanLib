@@ -23,7 +23,6 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
 **    Mark Page
 */
 
@@ -33,93 +32,61 @@
 
 namespace clan
 {
-
-class SHA512_Impl : private SHA
-{
-/// \name Construction
-/// \{
-
-public:
-	SHA512_Impl(cl_sha_type new_sha_type);
-
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	std::string get_hash(bool uppercase = false) const;
-
-	void get_hash(unsigned char *out_hash) const;
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	void reset();
-	void set_hmac(const void *key_data, int key_size);
-
-	void add(const void *data, int size);
-
-	void calculate();
-
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-
-	inline uint64_t sigma_rr28_rr34_rr39(uint64_t value) const
+	class SHA512_Impl : private SHA
 	{
-		return (rightrotate_uint64(value, 28) ^ rightrotate_uint64(value, 34) ^ rightrotate_uint64(value, 39));
-	}
+	public:
+		SHA512_Impl(cl_sha_type new_sha_type);
 
-	inline uint64_t sigma_rr14_rr18_rr41(uint64_t value) const
-	{
-		return (rightrotate_uint64(value, 14) ^ rightrotate_uint64(value, 18) ^ rightrotate_uint64(value, 41));
-	}
+		std::string get_hash(bool uppercase = false) const;
+		void get_hash(unsigned char *out_hash) const;
 
-	inline uint64_t sigma_rr1_rr8_sr7(uint64_t value) const
-	{
-		return (rightrotate_uint64(value, 1) ^ rightrotate_uint64(value, 8) ^ (value >> 7));
-	}
+		void reset();
+		void set_hmac(const void *key_data, int key_size);
+		void add(const void *data, int size);
+		void calculate();
 
-	inline uint64_t sigma_rr19_rr61_sr6(uint64_t value) const
-	{
-		return (rightrotate_uint64(value, 19) ^ rightrotate_uint64(value, 61) ^ (value >> 6));
-	}
+	private:
+		inline uint64_t sigma_rr28_rr34_rr39(uint64_t value) const
+		{
+			return (rightrotate_uint64(value, 28) ^ rightrotate_uint64(value, 34) ^ rightrotate_uint64(value, 39));
+		}
 
-	inline uint64_t sha_ch(uint64_t x, uint64_t y, uint64_t z) const
-	{
-		return (((x) & ((y) ^ (z))) ^ (z));
-	}
+		inline uint64_t sigma_rr14_rr18_rr41(uint64_t value) const
+		{
+			return (rightrotate_uint64(value, 14) ^ rightrotate_uint64(value, 18) ^ rightrotate_uint64(value, 41));
+		}
 
-	inline uint64_t sha_maj(uint64_t x, uint64_t y, uint64_t z) const
-	{
-		return  (((x) & ((y) | (z))) | ((y) & (z)));
-	}
+		inline uint64_t sigma_rr1_rr8_sr7(uint64_t value) const
+		{
+			return (rightrotate_uint64(value, 1) ^ rightrotate_uint64(value, 8) ^ (value >> 7));
+		}
 
-	void process_chunk();
+		inline uint64_t sigma_rr19_rr61_sr6(uint64_t value) const
+		{
+			return (rightrotate_uint64(value, 19) ^ rightrotate_uint64(value, 61) ^ (value >> 6));
+		}
 
-	uint64_t h0, h1, h2, h3, h4, h5, h6, h7;
+		inline uint64_t sha_ch(uint64_t x, uint64_t y, uint64_t z) const
+		{
+			return (((x)& ((y) ^ (z))) ^ (z));
+		}
 
-	const static int block_size = 128;
+		inline uint64_t sha_maj(uint64_t x, uint64_t y, uint64_t z) const
+		{
+			return  (((x)& ((y) | (z))) | ((y)& (z)));
+		}
 
-	unsigned char chunk[128];
+		void process_chunk();
 
-	int chunk_filled;
+		uint64_t h0, h1, h2, h3, h4, h5, h6, h7;
+		const static int block_size = 128;
+		unsigned char chunk[128];
+		int chunk_filled;
+		ubyte128 length_message;
+		bool calculated;
 
-	ubyte128 length_message;
-
-	bool calculated;
-
-	cl_sha_type sha_type;
-	bool hmac_enabled;
-	unsigned char hmac_key_chunk[block_size];
-/// \}
-};
-
+		cl_sha_type sha_type;
+		bool hmac_enabled;
+		unsigned char hmac_key_chunk[block_size];
+	};
 }
