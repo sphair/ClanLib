@@ -262,11 +262,11 @@ namespace clan
 		if (conv_needed)
 		{
 			src_converted = src.to_format(tf_rgba8); // To do: it should use the internal format here (monkey function missing for this)
+			tf = OpenGL::get_textureformat(src_converted.get_format());
 		}
 		else
 		{
 			src_converted = src;
-			tf = OpenGL::get_textureformat(src_converted.get_format());
 		}
 
 		OpenGL::set_active(gc);
