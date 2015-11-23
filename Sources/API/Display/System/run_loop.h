@@ -61,37 +61,37 @@ namespace clan
 		template<typename T>
 		static std::future<T> main_thread_task(std::function<T()> func)
 		{
-			std::promise<T> promise;
-			main_thread_async([&]()
+			auto promise = std::make_shared<std::promise<T>>();
+			main_thread_async([=]()
 			{
 				try
 				{
-					promise.set_value(func());
+					promise->set_value(func());
 				}
 				catch (...)
 				{
-					promise.set_exception(std::current_exception());
+					promise->set_exception(std::current_exception());
 				}
 			});
-			return promise.get_future();
+			return promise->get_future();
 		}
 
 		static std::future<void> main_thread_task(std::function<void()> func)
 		{
-			std::promise<void> promise;
-			main_thread_async([&]()
+			auto promise = std::make_shared<std::promise<void>>();
+			main_thread_async([=]()
 			{
 				try
 				{
 					func();
-					promise.set_value();
+					promise->set_value();
 				}
 				catch (...)
 				{
-					promise.set_exception(std::current_exception());
+					promise->set_exception(std::current_exception());
 				}
 			});
-			return promise.get_future();
+			return promise->get_future();
 		}
 	};
 }
