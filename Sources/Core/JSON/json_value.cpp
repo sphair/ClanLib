@@ -284,7 +284,6 @@ namespace clan
 			}
 			else if (json[pos] == '}')
 			{
-				pos++;
 				break;
 			}
 			else if (json[pos] == ',')
@@ -297,6 +296,7 @@ namespace clan
 				throw JsonException("Unexpected character in JSON data");
 			}
 		}
+		pos++;
 
 		return result;
 	}
