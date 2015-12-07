@@ -135,7 +135,6 @@ namespace clan
 
 		allow_exceptions();
 
-		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 
 		if (exit_loop)
