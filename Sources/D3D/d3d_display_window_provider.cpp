@@ -56,6 +56,35 @@ namespace clan
 	{
 		if (device)
 			D3DShareList::device_destroyed(device);
+
+		// Workaround for the nvidia driver crashing the process.
+		// Ensures that all queued commands has been executed on the GPU before destroying the device, context and window.
+		if (device && device_context)
+		{
+			device_context->ClearState();
+
+			D3D11_QUERY_DESC query_desc;
+			query_desc.Query = D3D11_QUERY_EVENT;
+			query_desc.MiscFlags = 0;
+
+			ComPtr<ID3D11Query> query;
+			HRESULT result = device->CreateQuery(&query_desc, query.output_variable());
+			if (SUCCEEDED(result))
+				device_context->End(query);
+
+			device_context->Flush();
+
+			if (query)
+			{
+				BOOL data = FALSE;
+				while (true)
+				{
+					result = device_context->GetData(query, &data, sizeof(BOOL), 0);
+					if (result == S_OK || FAILED(result))
+						break;
+				}
+			}
+		}
 	}
 
 	Rect D3DDisplayWindowProvider::get_geometry() const
