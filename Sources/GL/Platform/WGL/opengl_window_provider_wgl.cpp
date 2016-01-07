@@ -258,6 +258,7 @@ namespace clan
 				static const char opengl_version_list[] =
 				{
 					// Clanlib supported version pairs
+					4, 5,
 					4, 4,
 					4, 3,
 					4, 2,

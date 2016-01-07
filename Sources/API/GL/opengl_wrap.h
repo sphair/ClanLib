@@ -679,6 +679,130 @@ namespace clan
 		typedef void (GLFUNC *ptr_glBindImageTextures)(GLuint first, GLsizei count, const GLuint *textures);
 		typedef void (GLFUNC *ptr_glBindVertexBuffers)(GLuint first, GLsizei count, const GLuint *buffers, const GLintptr *offsets, const GLsizei *strides);
 
+		// OpenGL 4.5
+		typedef void (GLFUNC *ptr_glClipControl)(GLenum origin, GLenum depth);
+		typedef void (GLFUNC *ptr_glCreateTransformFeedbacks)(GLsizei n, GLuint *ids);
+		typedef void (GLFUNC *ptr_glTransformFeedbackBufferBase)(GLuint xfb, GLuint index, GLuint buffer);
+		typedef void (GLFUNC *ptr_glTransformFeedbackBufferRange)(GLuint xfb, GLuint index, GLuint buffer, GLintptr offset, GLsizeiptr size);
+		typedef void (GLFUNC *ptr_glGetTransformFeedbackiv)(GLuint xfb, GLenum pname, GLint *param);
+		typedef void (GLFUNC *ptr_glGetTransformFeedbacki_v)(GLuint xfb, GLenum pname, GLuint index, GLint *param);
+		typedef void (GLFUNC *ptr_glGetTransformFeedbacki64_v)(GLuint xfb, GLenum pname, GLuint index, CLint64 *param);
+		typedef void (GLFUNC *ptr_glCreateBuffers)(GLsizei n, GLuint *buffers);
+		typedef void (GLFUNC *ptr_glNamedBufferStorage)(GLuint buffer, GLsizeiptr size, const void *data, GLbitfield flags);
+		typedef void (GLFUNC *ptr_glNamedBufferData)(GLuint buffer, GLsizeiptr size, const void *data, GLenum usage);
+		typedef void (GLFUNC *ptr_glNamedBufferSubData)(GLuint buffer, GLintptr offset, GLsizeiptr size, const void *data);
+		typedef void (GLFUNC *ptr_glCopyNamedBufferSubData)(GLuint readBuffer, GLuint writeBuffer, GLintptr readOffset, GLintptr writeOffset, GLsizeiptr size);
+		typedef void (GLFUNC *ptr_glClearNamedBufferData)(GLuint buffer, GLenum internalformat, GLenum format, GLenum type, const void *data);
+		typedef void (GLFUNC *ptr_glClearNamedBufferSubData)(GLuint buffer, GLenum internalformat, GLintptr offset, GLsizeiptr size, GLenum format, GLenum type, const void *data);
+		typedef void *(GLFUNC *ptr_glMapNamedBuffer)(GLuint buffer, GLenum access);
+		typedef void *(GLFUNC *ptr_glMapNamedBufferRange)(GLuint buffer, GLintptr offset, GLsizeiptr length, GLbitfield access);
+		typedef GLboolean (GLFUNC *ptr_glUnmapNamedBuffer)(GLuint buffer);
+		typedef void (GLFUNC *ptr_glFlushMappedNamedBufferRange)(GLuint buffer, GLintptr offset, GLsizeiptr length);
+		typedef void (GLFUNC *ptr_glGetNamedBufferParameteriv)(GLuint buffer, GLenum pname, GLint *params);
+		typedef void (GLFUNC *ptr_glGetNamedBufferParameteri64v)(GLuint buffer, GLenum pname, CLint64 *params);
+		typedef void (GLFUNC *ptr_glGetNamedBufferPointerv)(GLuint buffer, GLenum pname, void **params);
+		typedef void (GLFUNC *ptr_glGetNamedBufferSubData)(GLuint buffer, GLintptr offset, GLsizeiptr size, void *data);
+		typedef void (GLFUNC *ptr_glCreateFramebuffers)(GLsizei n, GLuint *framebuffers);
+		typedef void (GLFUNC *ptr_glNamedFramebufferRenderbuffer)(GLuint framebuffer, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer);
+		typedef void (GLFUNC *ptr_glNamedFramebufferParameteri)(GLuint framebuffer, GLenum pname, GLint param);
+		typedef void (GLFUNC *ptr_glNamedFramebufferTexture)(GLuint framebuffer, GLenum attachment, GLuint texture, GLint level);
+		typedef void (GLFUNC *ptr_glNamedFramebufferTextureLayer)(GLuint framebuffer, GLenum attachment, GLuint texture, GLint level, GLint layer);
+		typedef void (GLFUNC *ptr_glNamedFramebufferDrawBuffer)(GLuint framebuffer, GLenum buf);
+		typedef void (GLFUNC *ptr_glNamedFramebufferDrawBuffers)(GLuint framebuffer, GLsizei n, const GLenum *bufs);
+		typedef void (GLFUNC *ptr_glNamedFramebufferReadBuffer)(GLuint framebuffer, GLenum src);
+		typedef void (GLFUNC *ptr_glInvalidateNamedFramebufferData)(GLuint framebuffer, GLsizei numAttachments, const GLenum *attachments);
+		typedef void (GLFUNC *ptr_glInvalidateNamedFramebufferSubData)(GLuint framebuffer, GLsizei numAttachments, const GLenum *attachments, GLint x, GLint y, GLsizei width, GLsizei height);
+		typedef void (GLFUNC *ptr_glClearNamedFramebufferiv)(GLuint framebuffer, GLenum buffer, GLint drawbuffer, const GLint *value);
+		typedef void (GLFUNC *ptr_glClearNamedFramebufferuiv)(GLuint framebuffer, GLenum buffer, GLint drawbuffer, const GLuint *value);
+		typedef void (GLFUNC *ptr_glClearNamedFramebufferfv)(GLuint framebuffer, GLenum buffer, GLint drawbuffer, const GLfloat *value);
+		typedef void (GLFUNC *ptr_glClearNamedFramebufferfi)(GLuint framebuffer, GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil);
+		typedef void (GLFUNC *ptr_glBlitNamedFramebuffer)(GLuint readFramebuffer, GLuint drawFramebuffer, GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter);
+		typedef GLenum (GLFUNC *ptr_glCheckNamedFramebufferStatus)(GLuint framebuffer, GLenum target);
+		typedef void (GLFUNC *ptr_glGetNamedFramebufferParameteriv)(GLuint framebuffer, GLenum pname, GLint *param);
+		typedef void (GLFUNC *ptr_glGetNamedFramebufferAttachmentParameteriv)(GLuint framebuffer, GLenum attachment, GLenum pname, GLint *params);
+		typedef void (GLFUNC *ptr_glCreateRenderbuffers)(GLsizei n, GLuint *renderbuffers);
+		typedef void (GLFUNC *ptr_glNamedRenderbufferStorage)(GLuint renderbuffer, GLenum internalformat, GLsizei width, GLsizei height);
+		typedef void (GLFUNC *ptr_glNamedRenderbufferStorageMultisample)(GLuint renderbuffer, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height);
+		typedef void (GLFUNC *ptr_glGetNamedRenderbufferParameteriv)(GLuint renderbuffer, GLenum pname, GLint *params);
+		typedef void (GLFUNC *ptr_glCreateTextures)(GLenum target, GLsizei n, GLuint *textures);
+		typedef void (GLFUNC *ptr_glTextureBuffer)(GLuint texture, GLenum internalformat, GLuint buffer);
+		typedef void (GLFUNC *ptr_glTextureBufferRange)(GLuint texture, GLenum internalformat, GLuint buffer, GLintptr offset, GLsizeiptr size);
+		typedef void (GLFUNC *ptr_glTextureStorage1D)(GLuint texture, GLsizei levels, GLenum internalformat, GLsizei width);
+		typedef void (GLFUNC *ptr_glTextureStorage2D)(GLuint texture, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height);
+		typedef void (GLFUNC *ptr_glTextureStorage3D)(GLuint texture, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
+		typedef void (GLFUNC *ptr_glTextureStorage2DMultisample)(GLuint texture, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height, GLboolean fixedsamplelocations);
+		typedef void (GLFUNC *ptr_glTextureStorage3DMultisample)(GLuint texture, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLboolean fixedsamplelocations);
+		typedef void (GLFUNC *ptr_glTextureSubImage1D)(GLuint texture, GLint level, GLint xoffset, GLsizei width, GLenum format, GLenum type, const void *pixels);
+		typedef void (GLFUNC *ptr_glTextureSubImage2D)(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels);
+		typedef void (GLFUNC *ptr_glTextureSubImage3D)(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const void *pixels);
+		typedef void (GLFUNC *ptr_glCompressedTextureSubImage1D)(GLuint texture, GLint level, GLint xoffset, GLsizei width, GLenum format, GLsizei imageSize, const void *data);
+		typedef void (GLFUNC *ptr_glCompressedTextureSubImage2D)(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *data);
+		typedef void (GLFUNC *ptr_glCompressedTextureSubImage3D)(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void *data);
+		typedef void (GLFUNC *ptr_glCopyTextureSubImage1D)(GLuint texture, GLint level, GLint xoffset, GLint x, GLint y, GLsizei width);
+		typedef void (GLFUNC *ptr_glCopyTextureSubImage2D)(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height);
+		typedef void (GLFUNC *ptr_glCopyTextureSubImage3D)(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height);
+		typedef void (GLFUNC *ptr_glTextureParameterf)(GLuint texture, GLenum pname, GLfloat param);
+		typedef void (GLFUNC *ptr_glTextureParameterfv)(GLuint texture, GLenum pname, const GLfloat *param);
+		typedef void (GLFUNC *ptr_glTextureParameteri)(GLuint texture, GLenum pname, GLint param);
+		typedef void (GLFUNC *ptr_glTextureParameterIiv)(GLuint texture, GLenum pname, const GLint *params);
+		typedef void (GLFUNC *ptr_glTextureParameterIuiv)(GLuint texture, GLenum pname, const GLuint *params);
+		typedef void (GLFUNC *ptr_glTextureParameteriv)(GLuint texture, GLenum pname, const GLint *param);
+		typedef void (GLFUNC *ptr_glGenerateTextureMipmap)(GLuint texture);
+		typedef void (GLFUNC *ptr_glBindTextureUnit)(GLuint unit, GLuint texture);
+		typedef void (GLFUNC *ptr_glGetTextureImage)(GLuint texture, GLint level, GLenum format, GLenum type, GLsizei bufSize, void *pixels);
+		typedef void (GLFUNC *ptr_glGetCompressedTextureImage)(GLuint texture, GLint level, GLsizei bufSize, void *pixels);
+		typedef void (GLFUNC *ptr_glGetTextureLevelParameterfv)(GLuint texture, GLint level, GLenum pname, GLfloat *params);
+		typedef void (GLFUNC *ptr_glGetTextureLevelParameteriv)(GLuint texture, GLint level, GLenum pname, GLint *params);
+		typedef void (GLFUNC *ptr_glGetTextureParameterfv)(GLuint texture, GLenum pname, GLfloat *params);
+		typedef void (GLFUNC *ptr_glGetTextureParameterIiv)(GLuint texture, GLenum pname, GLint *params);
+		typedef void (GLFUNC *ptr_glGetTextureParameterIuiv)(GLuint texture, GLenum pname, GLuint *params);
+		typedef void (GLFUNC *ptr_glGetTextureParameteriv)(GLuint texture, GLenum pname, GLint *params);
+		typedef void (GLFUNC *ptr_glCreateVertexArrays)(GLsizei n, GLuint *arrays);
+		typedef void (GLFUNC *ptr_glDisableVertexArrayAttrib)(GLuint vaobj, GLuint index);
+		typedef void (GLFUNC *ptr_glEnableVertexArrayAttrib)(GLuint vaobj, GLuint index);
+		typedef void (GLFUNC *ptr_glVertexArrayElementBuffer)(GLuint vaobj, GLuint buffer);
+		typedef void (GLFUNC *ptr_glVertexArrayVertexBuffer)(GLuint vaobj, GLuint bindingindex, GLuint buffer, GLintptr offset, GLsizei stride);
+		typedef void (GLFUNC *ptr_glVertexArrayVertexBuffers)(GLuint vaobj, GLuint first, GLsizei count, const GLuint *buffers, const GLintptr *offsets, const GLsizei *strides);
+		typedef void (GLFUNC *ptr_glVertexArrayAttribBinding)(GLuint vaobj, GLuint attribindex, GLuint bindingindex);
+		typedef void (GLFUNC *ptr_glVertexArrayAttribFormat)(GLuint vaobj, GLuint attribindex, GLint size, GLenum type, GLboolean normalized, GLuint relativeoffset);
+		typedef void (GLFUNC *ptr_glVertexArrayAttribIFormat)(GLuint vaobj, GLuint attribindex, GLint size, GLenum type, GLuint relativeoffset);
+		typedef void (GLFUNC *ptr_glVertexArrayAttribLFormat)(GLuint vaobj, GLuint attribindex, GLint size, GLenum type, GLuint relativeoffset);
+		typedef void (GLFUNC *ptr_glVertexArrayBindingDivisor)(GLuint vaobj, GLuint bindingindex, GLuint divisor);
+		typedef void (GLFUNC *ptr_glGetVertexArrayiv)(GLuint vaobj, GLenum pname, GLint *param);
+		typedef void (GLFUNC *ptr_glGetVertexArrayIndexediv)(GLuint vaobj, GLuint index, GLenum pname, GLint *param);
+		typedef void (GLFUNC *ptr_glGetVertexArrayIndexed64iv)(GLuint vaobj, GLuint index, GLenum pname, CLint64 *param);
+		typedef void (GLFUNC *ptr_glCreateSamplers)(GLsizei n, GLuint *samplers);
+		typedef void (GLFUNC *ptr_glCreateProgramPipelines)(GLsizei n, GLuint *pipelines);
+		typedef void (GLFUNC *ptr_glCreateQueries)(GLenum target, GLsizei n, GLuint *ids);
+		typedef void (GLFUNC *ptr_glGetQueryBufferObjecti64v)(GLuint id, GLuint buffer, GLenum pname, GLintptr offset);
+		typedef void (GLFUNC *ptr_glGetQueryBufferObjectiv)(GLuint id, GLuint buffer, GLenum pname, GLintptr offset);
+		typedef void (GLFUNC *ptr_glGetQueryBufferObjectui64v)(GLuint id, GLuint buffer, GLenum pname, GLintptr offset);
+		typedef void (GLFUNC *ptr_glGetQueryBufferObjectuiv)(GLuint id, GLuint buffer, GLenum pname, GLintptr offset);
+		typedef void (GLFUNC *ptr_glMemoryBarrierByRegion)(GLbitfield barriers);
+		typedef void (GLFUNC *ptr_glGetTextureSubImage)(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, GLsizei bufSize, void *pixels);
+		typedef void (GLFUNC *ptr_glGetCompressedTextureSubImage)(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLsizei bufSize, void *pixels);
+		typedef GLenum (GLFUNC *ptr_glGetGraphicsResetStatus)(void);
+		typedef void (GLFUNC *ptr_glGetnCompressedTexImage)(GLenum target, GLint lod, GLsizei bufSize, void *pixels);
+		typedef void (GLFUNC *ptr_glGetnTexImage)(GLenum target, GLint level, GLenum format, GLenum type, GLsizei bufSize, void *pixels);
+		typedef void (GLFUNC *ptr_glGetnUniformdv)(GLuint program, GLint location, GLsizei bufSize, GLdouble *params);
+		typedef void (GLFUNC *ptr_glGetnUniformfv)(GLuint program, GLint location, GLsizei bufSize, GLfloat *params);
+		typedef void (GLFUNC *ptr_glGetnUniformiv)(GLuint program, GLint location, GLsizei bufSize, GLint *params);
+		typedef void (GLFUNC *ptr_glGetnUniformuiv)(GLuint program, GLint location, GLsizei bufSize, GLuint *params);
+		typedef void (GLFUNC *ptr_glReadnPixels)(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLsizei bufSize, void *data);
+		typedef void (GLFUNC *ptr_glGetnMapdv)(GLenum target, GLenum query, GLsizei bufSize, GLdouble *v);
+		typedef void (GLFUNC *ptr_glGetnMapfv)(GLenum target, GLenum query, GLsizei bufSize, GLfloat *v);
+		typedef void (GLFUNC *ptr_glGetnMapiv)(GLenum target, GLenum query, GLsizei bufSize, GLint *v);
+		typedef void (GLFUNC *ptr_glGetnPixelMapfv)(GLenum map, GLsizei bufSize, GLfloat *values);
+		typedef void (GLFUNC *ptr_glGetnPixelMapuiv)(GLenum map, GLsizei bufSize, GLuint *values);
+		typedef void (GLFUNC *ptr_glGetnPixelMapusv)(GLenum map, GLsizei bufSize, GLushort *values);
+		typedef void (GLFUNC *ptr_glGetnPolygonStipple)(GLsizei bufSize, GLubyte *pattern);
+		typedef void (GLFUNC *ptr_glGetnColorTable)(GLenum target, GLenum format, GLenum type, GLsizei bufSize, void *table);
+		typedef void (GLFUNC *ptr_glGetnConvolutionFilter)(GLenum target, GLenum format, GLenum type, GLsizei bufSize, void *image);
+		typedef void (GLFUNC *ptr_glGetnSeparableFilter)(GLenum target, GLenum format, GLenum type, GLsizei rowBufSize, void *row, GLsizei columnBufSize, void *column, void *span);
+		typedef void (GLFUNC *ptr_glGetnHistogram)(GLenum target, GLboolean reset, GLenum format, GLenum type, GLsizei bufSize, void *values);
+		typedef void (GLFUNC *ptr_glGetnMinmax)(GLenum target, GLboolean reset, GLenum format, GLenum type, GLsizei bufSize, void *values);
+		typedef void (GLFUNC *ptr_glTextureBarrier)(void);
+
 		// For Legacy OpenGL (For GL1 target)
 		typedef GLvoid (GLFUNC *ptr_glClientActiveTextureARB)(GLenum);
 	#ifdef WIN32
@@ -1318,6 +1442,130 @@ namespace clan
 		ptr_glBindImageTextures BindImageTextures;
 		ptr_glBindVertexBuffers BindVertexBuffers;
 
+		// OpenGL 4.5
+		ptr_glClipControl ClipControl;
+		ptr_glCreateTransformFeedbacks CreateTransformFeedbacks;
+		ptr_glTransformFeedbackBufferBase TransformFeedbackBufferBase;
+		ptr_glTransformFeedbackBufferRange TransformFeedbackBufferRange;
+		ptr_glGetTransformFeedbackiv GetTransformFeedbackiv;
+		ptr_glGetTransformFeedbacki_v GetTransformFeedbacki_v;
+		ptr_glGetTransformFeedbacki64_v GetTransformFeedbacki64_v;
+		ptr_glCreateBuffers CreateBuffers;
+		ptr_glNamedBufferStorage NamedBufferStorage;
+		ptr_glNamedBufferData NamedBufferData;
+		ptr_glNamedBufferSubData NamedBufferSubData;
+		ptr_glCopyNamedBufferSubData CopyNamedBufferSubData;
+		ptr_glClearNamedBufferData ClearNamedBufferData;
+		ptr_glClearNamedBufferSubData ClearNamedBufferSubData;
+		ptr_glMapNamedBuffer MapNamedBuffer;
+		ptr_glMapNamedBufferRange MapNamedBufferRange;
+		ptr_glUnmapNamedBuffer UnmapNamedBuffer;
+		ptr_glFlushMappedNamedBufferRange FlushMappedNamedBufferRange;
+		ptr_glGetNamedBufferParameteriv GetNamedBufferParameteriv;
+		ptr_glGetNamedBufferParameteri64v GetNamedBufferParameteri64v;
+		ptr_glGetNamedBufferPointerv GetNamedBufferPointerv;
+		ptr_glGetNamedBufferSubData GetNamedBufferSubData;
+		ptr_glCreateFramebuffers CreateFramebuffers;
+		ptr_glNamedFramebufferRenderbuffer NamedFramebufferRenderbuffer;
+		ptr_glNamedFramebufferParameteri NamedFramebufferParameteri;
+		ptr_glNamedFramebufferTexture NamedFramebufferTexture;
+		ptr_glNamedFramebufferTextureLayer NamedFramebufferTextureLayer;
+		ptr_glNamedFramebufferDrawBuffer NamedFramebufferDrawBuffer;
+		ptr_glNamedFramebufferDrawBuffers NamedFramebufferDrawBuffers;
+		ptr_glNamedFramebufferReadBuffer NamedFramebufferReadBuffer;
+		ptr_glInvalidateNamedFramebufferData InvalidateNamedFramebufferData;
+		ptr_glInvalidateNamedFramebufferSubData InvalidateNamedFramebufferSubData;
+		ptr_glClearNamedFramebufferiv ClearNamedFramebufferiv;
+		ptr_glClearNamedFramebufferuiv ClearNamedFramebufferuiv;
+		ptr_glClearNamedFramebufferfv ClearNamedFramebufferfv;
+		ptr_glClearNamedFramebufferfi ClearNamedFramebufferfi;
+		ptr_glBlitNamedFramebuffer BlitNamedFramebuffer;
+		ptr_glCheckNamedFramebufferStatus CheckNamedFramebufferStatus;
+		ptr_glGetNamedFramebufferParameteriv GetNamedFramebufferParameteriv;
+		ptr_glGetNamedFramebufferAttachmentParameteriv GetNamedFramebufferAttachmentParameteriv;
+		ptr_glCreateRenderbuffers CreateRenderbuffers;
+		ptr_glNamedRenderbufferStorage NamedRenderbufferStorage;
+		ptr_glNamedRenderbufferStorageMultisample NamedRenderbufferStorageMultisample;
+		ptr_glGetNamedRenderbufferParameteriv GetNamedRenderbufferParameteriv;
+		ptr_glCreateTextures CreateTextures;
+		ptr_glTextureBuffer TextureBuffer;
+		ptr_glTextureBufferRange TextureBufferRange;
+		ptr_glTextureStorage1D TextureStorage1D;
+		ptr_glTextureStorage2D TextureStorage2D;
+		ptr_glTextureStorage3D TextureStorage3D;
+		ptr_glTextureStorage2DMultisample TextureStorage2DMultisample;
+		ptr_glTextureStorage3DMultisample TextureStorage3DMultisample;
+		ptr_glTextureSubImage1D TextureSubImage1D;
+		ptr_glTextureSubImage2D TextureSubImage2D;
+		ptr_glTextureSubImage3D TextureSubImage3D;
+		ptr_glCompressedTextureSubImage1D CompressedTextureSubImage1D;
+		ptr_glCompressedTextureSubImage2D CompressedTextureSubImage2D;
+		ptr_glCompressedTextureSubImage3D CompressedTextureSubImage3D;
+		ptr_glCopyTextureSubImage1D CopyTextureSubImage1D;
+		ptr_glCopyTextureSubImage2D CopyTextureSubImage2D;
+		ptr_glCopyTextureSubImage3D CopyTextureSubImage3D;
+		ptr_glTextureParameterf TextureParameterf;
+		ptr_glTextureParameterfv TextureParameterfv;
+		ptr_glTextureParameteri TextureParameteri;
+		ptr_glTextureParameterIiv TextureParameterIiv;
+		ptr_glTextureParameterIuiv TextureParameterIuiv;
+		ptr_glTextureParameteriv TextureParameteriv;
+		ptr_glGenerateTextureMipmap GenerateTextureMipmap;
+		ptr_glBindTextureUnit BindTextureUnit;
+		ptr_glGetTextureImage GetTextureImage;
+		ptr_glGetCompressedTextureImage GetCompressedTextureImage;
+		ptr_glGetTextureLevelParameterfv GetTextureLevelParameterfv;
+		ptr_glGetTextureLevelParameteriv GetTextureLevelParameteriv;
+		ptr_glGetTextureParameterfv GetTextureParameterfv;
+		ptr_glGetTextureParameterIiv GetTextureParameterIiv;
+		ptr_glGetTextureParameterIuiv GetTextureParameterIuiv;
+		ptr_glGetTextureParameteriv GetTextureParameteriv;
+		ptr_glCreateVertexArrays CreateVertexArrays;
+		ptr_glDisableVertexArrayAttrib DisableVertexArrayAttrib;
+		ptr_glEnableVertexArrayAttrib EnableVertexArrayAttrib;
+		ptr_glVertexArrayElementBuffer VertexArrayElementBuffer;
+		ptr_glVertexArrayVertexBuffer VertexArrayVertexBuffer;
+		ptr_glVertexArrayVertexBuffers VertexArrayVertexBuffers;
+		ptr_glVertexArrayAttribBinding VertexArrayAttribBinding;
+		ptr_glVertexArrayAttribFormat VertexArrayAttribFormat;
+		ptr_glVertexArrayAttribIFormat VertexArrayAttribIFormat;
+		ptr_glVertexArrayAttribLFormat VertexArrayAttribLFormat;
+		ptr_glVertexArrayBindingDivisor VertexArrayBindingDivisor;
+		ptr_glGetVertexArrayiv GetVertexArrayiv;
+		ptr_glGetVertexArrayIndexediv GetVertexArrayIndexediv;
+		ptr_glGetVertexArrayIndexed64iv GetVertexArrayIndexed64iv;
+		ptr_glCreateSamplers CreateSamplers;
+		ptr_glCreateProgramPipelines CreateProgramPipelines;
+		ptr_glCreateQueries CreateQueries;
+		ptr_glGetQueryBufferObjecti64v GetQueryBufferObjecti64v;
+		ptr_glGetQueryBufferObjectiv GetQueryBufferObjectiv;
+		ptr_glGetQueryBufferObjectui64v GetQueryBufferObjectui64v;
+		ptr_glGetQueryBufferObjectuiv GetQueryBufferObjectuiv;
+		ptr_glMemoryBarrierByRegion MemoryBarrierByRegion;
+		ptr_glGetTextureSubImage GetTextureSubImage;
+		ptr_glGetCompressedTextureSubImage GetCompressedTextureSubImage;
+		ptr_glGetGraphicsResetStatus GetGraphicsResetStatus;
+		ptr_glGetnCompressedTexImage GetnCompressedTexImage;
+		ptr_glGetnTexImage GetnTexImage;
+		ptr_glGetnUniformdv GetnUniformdv;
+		ptr_glGetnUniformfv GetnUniformfv;
+		ptr_glGetnUniformiv GetnUniformiv;
+		ptr_glGetnUniformuiv GetnUniformuiv;
+		ptr_glReadnPixels ReadnPixels;
+		ptr_glGetnMapdv GetnMapdv;
+		ptr_glGetnMapfv GetnMapfv;
+		ptr_glGetnMapiv GetnMapiv;
+		ptr_glGetnPixelMapfv GetnPixelMapfv;
+		ptr_glGetnPixelMapuiv GetnPixelMapuiv;
+		ptr_glGetnPixelMapusv GetnPixelMapusv;
+		ptr_glGetnPolygonStipple GetnPolygonStipple;
+		ptr_glGetnColorTable GetnColorTable;
+		ptr_glGetnConvolutionFilter GetnConvolutionFilter;
+		ptr_glGetnSeparableFilter GetnSeparableFilter;
+		ptr_glGetnHistogram GetnHistogram;
+		ptr_glGetnMinmax GetnMinmax;
+		ptr_glTextureBarrier TextureBarrier;
+
 		// For Legacy OpenGL (For GL1 target)
 		ptr_glClientActiveTextureARB clientActiveTexture;
 	#ifdef WIN32
@@ -1948,15 +2196,139 @@ namespace clan
 	#define glVertexArrayVertexBindingDivisorEXT clan::OpenGL::functions->vertexArrayVertexBindingDivisorEXT
 
 	// OpenGL 4.4
-	#define glBufferStorage clan::OpenGL::functions->BufferStorage;
-	#define glClearTexImage clan::OpenGL::functions->ClearTexImage;
-	#define glClearTexSubImage clan::OpenGL::functions->ClearTexSubImage;
-	#define glBindBuffersBase clan::OpenGL::functions->BindBuffersBase;
-	#define glBindBuffersRange clan::OpenGL::functions->BindBuffersRange;
-	#define glBindTextures clan::OpenGL::functions->BindTextures;
-	#define glBindSamplers clan::OpenGL::functions->BindSamplers;
-	#define glBindImageTextures clan::OpenGL::functions->BindImageTextures;
-	#define glBindVertexBuffers clan::OpenGL::functions->BindVertexBuffers;
+	#define glBufferStorage clan::OpenGL::functions->BufferStorage
+	#define glClearTexImage clan::OpenGL::functions->ClearTexImage
+	#define glClearTexSubImage clan::OpenGL::functions->ClearTexSubImage
+	#define glBindBuffersBase clan::OpenGL::functions->BindBuffersBase
+	#define glBindBuffersRange clan::OpenGL::functions->BindBuffersRange
+	#define glBindTextures clan::OpenGL::functions->BindTextures
+	#define glBindSamplers clan::OpenGL::functions->BindSamplers
+	#define glBindImageTextures clan::OpenGL::functions->BindImageTextures
+	#define glBindVertexBuffers clan::OpenGL::functions->BindVertexBuffers
+
+	// OpenGL 4.5
+	#define glClipControl clan::OpenGL::functions->ClipControl
+	#define glCreateTransformFeedbacks clan::OpenGL::functions->CreateTransformFeedbacks
+	#define glTransformFeedbackBufferBase clan::OpenGL::functions->TransformFeedbackBufferBase
+	#define glTransformFeedbackBufferRange clan::OpenGL::functions->TransformFeedbackBufferRange
+	#define glGetTransformFeedbackiv clan::OpenGL::functions->GetTransformFeedbackiv
+	#define glGetTransformFeedbacki_v clan::OpenGL::functions->GetTransformFeedbacki_v
+	#define glGetTransformFeedbacki64_v clan::OpenGL::functions->GetTransformFeedbacki64_v
+	#define glCreateBuffers clan::OpenGL::functions->CreateBuffers
+	#define glNamedBufferStorage clan::OpenGL::functions->NamedBufferStorage
+	#define glNamedBufferData clan::OpenGL::functions->NamedBufferData
+	#define glNamedBufferSubData clan::OpenGL::functions->NamedBufferSubData
+	#define glCopyNamedBufferSubData clan::OpenGL::functions->CopyNamedBufferSubData
+	#define glClearNamedBufferData clan::OpenGL::functions->ClearNamedBufferData
+	#define glClearNamedBufferSubData clan::OpenGL::functions->ClearNamedBufferSubData
+	#define glMapNamedBuffer clan::OpenGL::functions->MapNamedBuffer
+	#define glMapNamedBufferRange clan::OpenGL::functions->MapNamedBufferRange
+	#define glUnmapNamedBuffer clan::OpenGL::functions->UnmapNamedBuffer
+	#define glFlushMappedNamedBufferRange clan::OpenGL::functions->FlushMappedNamedBufferRange
+	#define glGetNamedBufferParameteriv clan::OpenGL::functions->GetNamedBufferParameteriv
+	#define glGetNamedBufferParameteri64v clan::OpenGL::functions->GetNamedBufferParameteri64v
+	#define glGetNamedBufferPointerv clan::OpenGL::functions->GetNamedBufferPointerv
+	#define glGetNamedBufferSubData clan::OpenGL::functions->GetNamedBufferSubData
+	#define glCreateFramebuffers clan::OpenGL::functions->CreateFramebuffers
+	#define glNamedFramebufferRenderbuffer clan::OpenGL::functions->NamedFramebufferRenderbuffer
+	#define glNamedFramebufferParameteri clan::OpenGL::functions->NamedFramebufferParameteri
+	#define glNamedFramebufferTexture clan::OpenGL::functions->NamedFramebufferTexture
+	#define glNamedFramebufferTextureLayer clan::OpenGL::functions->NamedFramebufferTextureLayer
+	#define glNamedFramebufferDrawBuffer clan::OpenGL::functions->NamedFramebufferDrawBuffer
+	#define glNamedFramebufferDrawBuffers clan::OpenGL::functions->NamedFramebufferDrawBuffers
+	#define glNamedFramebufferReadBuffer clan::OpenGL::functions->NamedFramebufferReadBuffer
+	#define glInvalidateNamedFramebufferData clan::OpenGL::functions->InvalidateNamedFramebufferData
+	#define glInvalidateNamedFramebufferSubData clan::OpenGL::functions->InvalidateNamedFramebufferSubData
+	#define glClearNamedFramebufferiv clan::OpenGL::functions->ClearNamedFramebufferiv
+	#define glClearNamedFramebufferuiv clan::OpenGL::functions->ClearNamedFramebufferuiv
+	#define glClearNamedFramebufferfv clan::OpenGL::functions->ClearNamedFramebufferfv
+	#define glClearNamedFramebufferfi clan::OpenGL::functions->ClearNamedFramebufferfi
+	#define glBlitNamedFramebuffer clan::OpenGL::functions->BlitNamedFramebuffer
+	#define glCheckNamedFramebufferStatus clan::OpenGL::functions->CheckNamedFramebufferStatus
+	#define glGetNamedFramebufferParameteriv clan::OpenGL::functions->GetNamedFramebufferParameteriv
+	#define glGetNamedFramebufferAttachmentParameteriv clan::OpenGL::functions->GetNamedFramebufferAttachmentParameteriv
+	#define glCreateRenderbuffers clan::OpenGL::functions->CreateRenderbuffers
+	#define glNamedRenderbufferStorage clan::OpenGL::functions->NamedRenderbufferStorage
+	#define glNamedRenderbufferStorageMultisample clan::OpenGL::functions->NamedRenderbufferStorageMultisample
+	#define glGetNamedRenderbufferParameteriv clan::OpenGL::functions->GetNamedRenderbufferParameteriv
+	#define glCreateTextures clan::OpenGL::functions->CreateTextures
+	#define glTextureBuffer clan::OpenGL::functions->TextureBuffer
+	#define glTextureBufferRange clan::OpenGL::functions->TextureBufferRange
+	#define glTextureStorage1D clan::OpenGL::functions->TextureStorage1D
+	#define glTextureStorage2D clan::OpenGL::functions->TextureStorage2D
+	#define glTextureStorage3D clan::OpenGL::functions->TextureStorage3D
+	#define glTextureStorage2DMultisample clan::OpenGL::functions->TextureStorage2DMultisample
+	#define glTextureStorage3DMultisample clan::OpenGL::functions->TextureStorage3DMultisample
+	#define glTextureSubImage1D clan::OpenGL::functions->TextureSubImage1D
+	#define glTextureSubImage2D clan::OpenGL::functions->TextureSubImage2D
+	#define glTextureSubImage3D clan::OpenGL::functions->TextureSubImage3D
+	#define glCompressedTextureSubImage1D clan::OpenGL::functions->CompressedTextureSubImage1D
+	#define glCompressedTextureSubImage2D clan::OpenGL::functions->CompressedTextureSubImage2D
+	#define glCompressedTextureSubImage3D clan::OpenGL::functions->CompressedTextureSubImage3D
+	#define glCopyTextureSubImage1D clan::OpenGL::functions->CopyTextureSubImage1D
+	#define glCopyTextureSubImage2D clan::OpenGL::functions->CopyTextureSubImage2D
+	#define glCopyTextureSubImage3D clan::OpenGL::functions->CopyTextureSubImage3D
+	#define glTextureParameterf clan::OpenGL::functions->TextureParameterf
+	#define glTextureParameterfv clan::OpenGL::functions->TextureParameterfv
+	#define glTextureParameteri clan::OpenGL::functions->TextureParameteri
+	#define glTextureParameterIiv clan::OpenGL::functions->TextureParameterIiv
+	#define glTextureParameterIuiv clan::OpenGL::functions->TextureParameterIuiv
+	#define glTextureParameteriv clan::OpenGL::functions->TextureParameteriv
+	#define glGenerateTextureMipmap clan::OpenGL::functions->GenerateTextureMipmap
+	#define glBindTextureUnit clan::OpenGL::functions->BindTextureUnit
+	#define glGetTextureImage clan::OpenGL::functions->GetTextureImage
+	#define glGetCompressedTextureImage clan::OpenGL::functions->GetCompressedTextureImage
+	#define glGetTextureLevelParameterfv clan::OpenGL::functions->GetTextureLevelParameterfv
+	#define glGetTextureLevelParameteriv clan::OpenGL::functions->GetTextureLevelParameteriv
+	#define glGetTextureParameterfv clan::OpenGL::functions->GetTextureParameterfv
+	#define glGetTextureParameterIiv clan::OpenGL::functions->GetTextureParameterIiv
+	#define glGetTextureParameterIuiv clan::OpenGL::functions->GetTextureParameterIuiv
+	#define glGetTextureParameteriv clan::OpenGL::functions->GetTextureParameteriv
+	#define glCreateVertexArrays clan::OpenGL::functions->CreateVertexArrays
+	#define glDisableVertexArrayAttrib clan::OpenGL::functions->DisableVertexArrayAttrib
+	#define glEnableVertexArrayAttrib clan::OpenGL::functions->EnableVertexArrayAttrib
+	#define glVertexArrayElementBuffer clan::OpenGL::functions->VertexArrayElementBuffer
+	#define glVertexArrayVertexBuffer clan::OpenGL::functions->VertexArrayVertexBuffer
+	#define glVertexArrayVertexBuffers clan::OpenGL::functions->VertexArrayVertexBuffers
+	#define glVertexArrayAttribBinding clan::OpenGL::functions->VertexArrayAttribBinding
+	#define glVertexArrayAttribFormat clan::OpenGL::functions->VertexArrayAttribFormat
+	#define glVertexArrayAttribIFormat clan::OpenGL::functions->VertexArrayAttribIFormat
+	#define glVertexArrayAttribLFormat clan::OpenGL::functions->VertexArrayAttribLFormat
+	#define glVertexArrayBindingDivisor clan::OpenGL::functions->VertexArrayBindingDivisor
+	#define glGetVertexArrayiv clan::OpenGL::functions->GetVertexArrayiv
+	#define glGetVertexArrayIndexediv clan::OpenGL::functions->GetVertexArrayIndexediv
+	#define glGetVertexArrayIndexed64iv clan::OpenGL::functions->GetVertexArrayIndexed64iv
+	#define glCreateSamplers clan::OpenGL::functions->CreateSamplers
+	#define glCreateProgramPipelines clan::OpenGL::functions->CreateProgramPipelines
+	#define glCreateQueries clan::OpenGL::functions->CreateQueries
+	#define glGetQueryBufferObjecti64v clan::OpenGL::functions->GetQueryBufferObjecti64v
+	#define glGetQueryBufferObjectiv clan::OpenGL::functions->GetQueryBufferObjectiv
+	#define glGetQueryBufferObjectui64v clan::OpenGL::functions->GetQueryBufferObjectui64v
+	#define glGetQueryBufferObjectuiv clan::OpenGL::functions->GetQueryBufferObjectuiv
+	#define glMemoryBarrierByRegion clan::OpenGL::functions->MemoryBarrierByRegion
+	#define glGetTextureSubImage clan::OpenGL::functions->GetTextureSubImage
+	#define glGetCompressedTextureSubImage clan::OpenGL::functions->GetCompressedTextureSubImage
+	#define glGetGraphicsResetStatus clan::OpenGL::functions->GetGraphicsResetStatus
+	#define glGetnCompressedTexImage clan::OpenGL::functions->GetnCompressedTexImage
+	#define glGetnTexImage clan::OpenGL::functions->GetnTexImage
+	#define glGetnUniformdv clan::OpenGL::functions->GetnUniformdv
+	#define glGetnUniformfv clan::OpenGL::functions->GetnUniformfv
+	#define glGetnUniformiv clan::OpenGL::functions->GetnUniformiv
+	#define glGetnUniformuiv clan::OpenGL::functions->GetnUniformuiv
+	#define glReadnPixels clan::OpenGL::functions->ReadnPixels
+	#define glGetnMapdv clan::OpenGL::functions->GetnMapdv
+	#define glGetnMapfv clan::OpenGL::functions->GetnMapfv
+	#define glGetnMapiv clan::OpenGL::functions->GetnMapiv
+	#define glGetnPixelMapfv clan::OpenGL::functions->GetnPixelMapfv
+	#define glGetnPixelMapuiv clan::OpenGL::functions->GetnPixelMapuiv
+	#define glGetnPixelMapusv clan::OpenGL::functions->GetnPixelMapusv
+	#define glGetnPolygonStipple clan::OpenGL::functions->GetnPolygonStipple
+	#define glGetnColorTable clan::OpenGL::functions->GetnColorTable
+	#define glGetnConvolutionFilter clan::OpenGL::functions->GetnConvolutionFilter
+	#define glGetnSeparableFilter clan::OpenGL::functions->GetnSeparableFilter
+	#define glGetnHistogram clan::OpenGL::functions->GetnHistogram
+	#define glGetnMinmax clan::OpenGL::functions->GetnMinmax
+	#define glTextureBarrier clan::OpenGL::functions->TextureBarrier
 
 	// For Legacy OpenGL (For GL1 target)
 	#define glClientActiveTexture clan::OpenGL::functions->clientActiveTexture
