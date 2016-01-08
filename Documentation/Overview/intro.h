@@ -35,7 +35,6 @@ applications may look like. We advise looking at Examples/Display/Basic2D found 
 a certain topic you can always ask in our forums. These documents might help you as well:</p>
 		
 <ul>
-	<li><a href="/breaking-changes.html">Breaking changes between versions</a></li>
 	<li><a href="/object-types.html">ClanLib class object types overview</a></li>
 	<li><a href="/debugging-msvc.html">Debugging with MSVC</a></li>
 </ul>

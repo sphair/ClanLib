@@ -6,7 +6,6 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{67526D1E-B801-4460-A8D3-F5C604037478}"
 	ProjectSection(SolutionItems) = preProject
 		assimp-linux.html = assimp-linux.html
-		breaking-changes.html = breaking-changes.html
 		build-environment-linux-gcc.html = build-environment-linux-gcc.html
 		build-environment-windows-msvc.html = build-environment-windows-msvc.html
 		compile-clanlib.html = compile-clanlib.html
@@ -21,10 +20,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		index.html = index.html
 		license.html = license.html
 		object-types.html = object-types.html
-		release-notes-2.3.7.html = release-notes-2.3.7.html
-		release-notes-3.0.0.html = release-notes-3.0.0.html
-		release-notes-3.0.1.html = release-notes-3.0.1.html
-		wiki-retired.html = wiki-retired.html
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "js", "js", "{54F34B62-9AD4-453D-8703-F476EEA8111A}"
