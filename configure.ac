@@ -178,7 +178,7 @@ fi
 dnl -------------------------------------
 dnl Check system headers and definitions:
 dnl -------------------------------------
-AC_CHECK_HEADERS(unistd.h fcntl.h sys/times.h sys/types.h sys/stat.h sys/sysctl.h)
+AC_CHECK_HEADERS(unistd.h fcntl.h sys/times.h sys/types.h sys/stat.h sys/sysctl.h execinfo.h)
 AC_CHECK_HEADER(libgen.h)
 
 dnl Check if "extern const char *__progname" is available
