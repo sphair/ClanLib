@@ -44,9 +44,7 @@
 #ifdef HAVE_SOUNDCARD_H
 #include <soundcard.h>
 #endif
-#ifdef __CYGWIN__
 #include <sys/select.h>
-#endif
 
 #define DEFAULT_DSP "/dev/dsp"
 
