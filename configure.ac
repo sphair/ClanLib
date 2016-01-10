@@ -112,11 +112,11 @@ case $target in
 		;;
 esac
 
-dnl Define CL_ARM_PLATFORM if building for an ARM target
+dnl Define ARM_PLATFORM if building for an ARM target
 case $target in
 	arm* )
-		CXXFLAGS="$CXXFLAGS -DCL_ARM_PLATFORM"
-		CFLAGS="$CXXFLAGS -DCL_ARM_PLATFORM"
+		CXXFLAGS="$CXXFLAGS -DARM_PLATFORM"
+		CFLAGS="$CXXFLAGS -DARM_PLATFORM"
 		;;
 esac
 
