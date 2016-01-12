@@ -44,7 +44,6 @@ namespace clan
 	/// \{
 
 	class Sprite_Impl;
-	class CollisionOutline;
 	class Canvas;
 	class ResourceManager;
 	class Font_Impl;

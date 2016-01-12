@@ -56,7 +56,6 @@ namespace clan
 
 		static Rect bounding_box(const std::vector<Pointf> &points);
 
-	private:
 		static void calculate_minimum_enclosing_disc(
 			Circlef &smalldisc,
 			const std::vector<Pointf> &points,
@@ -83,7 +82,6 @@ namespace clan
 			unsigned int j,
 			unsigned int k);
 
-		friend class OutlineMath;
 	};
 
 	/// \}
