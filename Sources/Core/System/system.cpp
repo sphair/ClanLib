@@ -43,7 +43,7 @@
 #include <sys/sysctl.h>
 #endif
 
-#if !defined __APPLE__ && !defined __ANDROID__
+#if defined HAVE_EXECINFO_H
 #include <execinfo.h>
 #endif
 #include <cxxabi.h>
@@ -135,7 +135,7 @@ namespace clan
 			*out_hash = 0;
 		return capturedFrames;
 
-#elif !defined __APPLE__ && !defined __ANDROID__
+#elif defined HAVE_EXECINFO_H
 		// Ensure the output is cleared
 		memset(out_frames, 0, (sizeof(void *)) * max_frames);
 
@@ -195,7 +195,7 @@ namespace clan
 		SymCleanup(GetCurrentProcess());
 		return backtrace_text;
 
-#elif !defined __APPLE__ && !defined __ANDROID__
+#elif defined HAVE_EXECINFO_H
 
 		char **strings;
 		strings = backtrace_symbols(frames, num_frames);

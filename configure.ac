@@ -112,11 +112,11 @@ case $target in
 		;;
 esac
 
-dnl Define CL_ARM_PLATFORM if building for an ARM target
+dnl Define ARM_PLATFORM if building for an ARM target
 case $target in
 	arm* )
-		CXXFLAGS="$CXXFLAGS -DCL_ARM_PLATFORM"
-		CFLAGS="$CXXFLAGS -DCL_ARM_PLATFORM"
+		CXXFLAGS="$CXXFLAGS -DARM_PLATFORM"
+		CFLAGS="$CXXFLAGS -DARM_PLATFORM"
 		;;
 esac
 
@@ -178,7 +178,7 @@ fi
 dnl -------------------------------------
 dnl Check system headers and definitions:
 dnl -------------------------------------
-AC_CHECK_HEADERS(unistd.h fcntl.h sys/times.h sys/types.h sys/stat.h sys/sysctl.h)
+AC_CHECK_HEADERS(unistd.h fcntl.h sys/times.h sys/types.h sys/stat.h sys/sysctl.h execinfo.h)
 AC_CHECK_HEADER(libgen.h)
 
 dnl Check if "extern const char *__progname" is available
