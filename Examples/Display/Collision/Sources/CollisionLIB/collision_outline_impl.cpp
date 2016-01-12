@@ -739,6 +739,7 @@ void CollisionOutline_Impl::calculate_penetration_depth( std::vector< CollidingC
 		CollidingContours &cc = (*it);
 		if(cc.points.size() % 2 != 0)
 		{
+#ifdef LETS_DISABLE_THIS    // BECAUSE_IT_IS_CALLED_AND_I_DO_NOT_KNOW_WHY
 			std::cout << "ERROR: we have an uneven number of collisionpoints: " << cc.points.size() << "\n";
 			for(std::vector<CollisionPoint>::iterator pit = cc.points.begin(); pit != cc.points.end(); ++pit)
 			{
@@ -762,6 +763,7 @@ void CollisionOutline_Impl::calculate_penetration_depth( std::vector< CollidingC
 					<<"contour2_line_end: "<<p1.contour2_line_end <<"\n";
 			}
 			std::cout << "RORRE\n";
+#endif                        
 			continue;
 		}
 		// First calculate one common normal for the whole thing
