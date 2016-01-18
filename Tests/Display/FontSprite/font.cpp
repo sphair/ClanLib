@@ -2,6 +2,8 @@
 #include <ClanLib/application.h>
 #include <ClanLib/display.h>
 #include <ClanLib/gl.h>
+#include <ClanLib/xml.h>
+
 using namespace clan;
 
 class App : public clan::Application
@@ -44,6 +46,7 @@ App::App()
 	canvas = Canvas(window);
 
 	// Load some fonts from the resource file
+	clan::XMLResourceFactory::set_display();
 	ResourceManager resources = clan::XMLResourceManager::create(clan::XMLResourceDocument("font.xml"));
 
 	FontDescription font_desc;
