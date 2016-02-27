@@ -125,8 +125,8 @@ if test "$WIN32" = "yes"; then
 	case $target in
 	*mingw*)
 		extra_CFLAGS_clanApp="-mwindows"
-		extra_LIBS_clanApp="-gdi32 -luser32 -lkernel32 -lmsvcrt"
-		extra_LIBS_clanCore="-lz -lmsvcrt -lshell32 -lshlwapi -limagehlp -lmingwex"
+		extra_LIBS_clanApp="-lgdi32 -luser32 -lkernel32 -lmsvcrt"
+		extra_LIBS_clanCore="-lz -lmsvcrt -lshell32 -lshlwapi -lcomctl32 -lole32 -limagehlp -lmingwex"
 		extra_LIBS_clanDisplay="-lwinmm -lmsvcrt -lmingwex -lddraw -ldinput8 -ldxguid -lmapi32 -lgdi32 -lole32 -lfreetype"
 		extra_LIBS_clanGL="-lopengl32"
 		extra_LIBS_clanSound="-ldsound -ldxguid -lwinmm -lmsvcrt -lmingwex"
