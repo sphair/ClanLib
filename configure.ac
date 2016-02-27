@@ -104,7 +104,7 @@ case $target in
 	*mingw*)
 		X11="no"
 		WIN32="yes"
-		CXXFLAGS="$CXXFLAGS -DWIN32 -DUNICODE"
+		CXXFLAGS="$CXXFLAGS -DWIN32 -D_WIN32_WINNT=0x0600 -DUNICODE"
 		;;
 	*)
 		X11="yes"
