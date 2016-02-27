@@ -142,7 +142,6 @@ Crypto/aes128_encrypt.cpp
 
 if WIN32
 libclan40Core_la_SOURCES += \
-System/Win32/init_win32.cpp \
 System/Win32/service_win32.cpp \
 IOData/Win32/directory_scanner_win32.cpp
 
