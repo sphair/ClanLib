@@ -56,9 +56,11 @@ namespace clan
 		case keycode_right: return Key::right;
 		case keycode_down: return Key::down;
 
+#if !defined(__CYGWIN__) && !defined(__MINGW32__)
 		case keycode_kanji: return Key::kanji;
 		case keycode_convert: return Key::convert;
 		case keycode_nonconvert: return Key::nonconvert;
+#endif
 
 		case keycode_help: return Key::help;
 
