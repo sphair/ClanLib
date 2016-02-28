@@ -34,7 +34,7 @@ clan::ApplicationInstance<Program> clanapp;
 
 Program::Program()
 {
-#ifdef WIN32
+#if defined(WIN32) && !defined(__MINGW32__)
 	clan::D3DTarget::set_current();
 #else
 	clan::OpenGLTarget::set_current();
