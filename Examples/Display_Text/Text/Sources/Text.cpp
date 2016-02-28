@@ -64,7 +64,7 @@ clan::ApplicationInstance<ExampleText> clanapp;
 
 ExampleText::ExampleText()
 {
-#ifdef defined(WIN32) && !defined(__MINGW32__)
+#if defined(WIN32) && !defined(__MINGW32__)
 	clan::D3DTarget::set_current();
 #else
 	clan::OpenGLTarget::set_current();
