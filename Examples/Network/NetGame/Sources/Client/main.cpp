@@ -23,7 +23,13 @@ int main(int, char**)
 	catch (Exception e)
 	{
 #ifdef WIN32
-		MessageBox(0, e.get_message_and_stack_trace().c_str(), TEXT("Unhandled Exception"), MB_OK);	
+#ifdef UNICODE
+		std::string trace = e.get_message_and_stack_trace();
+		std::wstring wtrace(trace.begin(), trace.end());
+		MessageBox(0, wtrace.c_str(), TEXT("Unhandled Exception"), MB_OK);
+#else
+		MessageBox(0, e.get_message_and_stack_trace().c_str(), TEXT("Unhandled Exception"), MB_OK);
+#endif
 #else
 		Console::write_line("Unhandled exception: %1", e.get_message_and_stack_trace());
 #endif
