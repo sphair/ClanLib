@@ -10,6 +10,6 @@ Description: Core library of ClanLib
 Version: @VERSION@
 #Requires: clanSignals-@LT_RELEASE@ = @VERSION@
 Libs:   -L${libdir} -lclan@CLANLIB_RELEASE@Core @extra_LIBS_clanCore@
-Cflags: -I${includedir} @extra_CFLAGS_clanCore@
+Cflags: -I${includedir} @extra_CFLAGS_common@ @extra_CFLAGS_clanCore@
 
 # EOF #

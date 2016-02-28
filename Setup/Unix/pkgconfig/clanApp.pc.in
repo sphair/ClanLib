@@ -9,6 +9,6 @@ Name: clanApp
 Description: portable main() wrapper of ClanLib
 Version: @VERSION@
 Libs:   -L${libdir} -lclan@CLANLIB_RELEASE@App @extra_LIBS_clanApp@
-Cflags: -I${includedir}       @extra_CFLAGS_clanApp@
+Cflags: -I${includedir} @extra_CFLAGS_common@ @extra_CFLAGS_clanApp@
 
 # EOF #
