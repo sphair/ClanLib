@@ -4,7 +4,7 @@ OBJF = \
 	Sources/Client/client.o \
 	Sources/Client/main.o
 
-LIBS=clanCore clanNetwork
+LIBS=clanNetwork clanCore
 
 CXXFLAGS += -I Sources/Client
 

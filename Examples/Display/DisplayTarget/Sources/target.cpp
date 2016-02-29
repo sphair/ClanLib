@@ -46,9 +46,11 @@ Target::Target(RenderTarget new_target) : render_target(new_target)
 		opengl_desc.set_version(4, 3, true);
 		clan::OpenGLTarget::set_description(opengl_desc);
 		break;
+#if defined(WIN32) && !defined(__MINGW32__)
 	case (d3d) :
 		clan::D3DTarget::set_current();
 		break;
+#endif
 	}
 
 	clan::DisplayWindowDescription desc;
@@ -114,10 +116,14 @@ void Target::run_demo()
 		}
 	}
 
+#if defined(WIN32) && !defined(__MINGW32__)
 	if (clan::D3DTarget::is_current())
 			target_font.draw_text(canvas, font_xpos, font_ypos, "3) Direct3D renderer (clanD3D)");
 
 	fps_font.draw_text(canvas, 32, 96, "Press 1,2 or 3 to select targets, or escape to quit.");
+#else
+	fps_font.draw_text(canvas, 32, 96, "Press 1 or 2 to select targets, or escape to quit.");
+#endif
 
 	float max_height = (float) (canvas.get_height() + 20);
 	float half_height = (float) canvas.get_height() / 2.0f;
@@ -149,10 +155,12 @@ void Target::run_demo()
 	{
 		render_target = opengl;
 	}
+#if defined(WIN32) && !defined(__MINGW32__)
 	if (window.get_keyboard().get_keycode(clan::keycode_3))
 	{
 		render_target = d3d;
 	}
+#endif
 	if (window.get_keyboard().get_keycode(clan::keycode_escape))
 	{
 		quit = true;
@@ -199,5 +207,3 @@ void Target::on_window_close()
 {
 	quit = true;
 }
-
-

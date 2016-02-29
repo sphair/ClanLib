@@ -32,7 +32,7 @@
 
 #pragma once
 
-#ifdef WIN32
+#if defined(WIN32) && !defined(__MINGW32__)
 
 #ifdef __cplusplus_cli
 #pragma managed(push, off)

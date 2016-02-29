@@ -33,7 +33,7 @@ clan::ApplicationInstance<Timing> clanapp;
 
 Timing::Timing()
 {
-#ifdef WIN32
+#if defined(WIN32) && !defined(__MINGW32__)
 	clan::D3DTarget::set_current();
 #else
 	clan::OpenGLTarget::set_current();

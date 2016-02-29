@@ -104,7 +104,7 @@ case $target in
 	*mingw*)
 		X11="no"
 		WIN32="yes"
-		CXXFLAGS="$CXXFLAGS -DWIN32 -DUNICODE"
+		CXXFLAGS="$CXXFLAGS -DWIN32 -D_WIN32_WINNT=0x0600 -DUNICODE"
 		;;
 	*)
 		X11="yes"
@@ -122,25 +122,24 @@ esac
 
 dnl Extra flags that are needed to compile (for pkg-config)
 if test "$WIN32" = "yes"; then
+	extra_CFLAGS_clanApp="-mwindows"
+	extra_LIBS_clanGL="-lopengl32"
+	extra_LIBS_clanNetwork="-lws2_32"
 	case $target in
 	*mingw*)
-		extra_CFLAGS_clanApp="-mwindows"
-		extra_LIBS_clanApp="-gdi32 -luser32 -lkernel32 -lmsvcrt"
-		extra_LIBS_clanCore="-lz -lmsvcrt -lshell32 -lshlwapi -limagehlp -lmingwex"
+		extra_CFLAGS_common="-DWIN32 -D_WIN32_WINNT=0x0600 -DUNICODE"
+		extra_LIBS_clanApp="-lgdi32 -luser32 -lkernel32 -lmsvcrt"
+		extra_LIBS_clanCore="-lz -lmsvcrt -lshell32 -lshlwapi -lcomctl32 -lole32 -limagehlp -lmingwex"
 		extra_LIBS_clanDisplay="-lwinmm -lmsvcrt -lmingwex -lddraw -ldinput8 -ldxguid -lmapi32 -lgdi32 -lole32 -lfreetype"
-		extra_LIBS_clanGL="-lopengl32"
-		extra_LIBS_clanSound="-ldsound -ldxguid -lwinmm -lmsvcrt -lmingwex"
-		extra_LIBS_clanNetwork="-lws2_32"
+		extra_LIBS_clanSound="-ldsound -ldxguid -lksguid -luuid -lwinmm -lmsvcrt -lmingwex"
 		;;
 	*)
-	extra_CFLAGS_clanApp="-mwindows"
-	extra_LIBS_clanCore="-lz"
-	extra_LIBS_clanDisplay="-lwinmm -lddraw -ldinput8 -ldxguid -lgdi32 -lole32"
-	extra_LIBS_clanGL="-lopengl32"
-	extra_LIBS_clanSound="-ldsound -ldxguid -lwinmm"
-	extra_LIBS_clanNetwork="-lws2_32"
-	;;
-esac
+		extra_CFLAGS_common="-mno-cygwin -DWIN32"
+		extra_LIBS_clanCore="-lz"
+		extra_LIBS_clanDisplay="-lwinmm -lddraw -ldinput8 -ldxguid -lgdi32 -lole32"
+		extra_LIBS_clanSound="-ldsound -ldxguid -lwinmm"
+		;;
+	esac
 fi
 
 dnl ----------------------------------------
@@ -473,6 +472,7 @@ fi
 dnl -----------------------------------------------------------------------
 dnl Store cflags for Setup/Unix/pkgconfig/clan*.in pkg-config files
 dnl -----------------------------------------------------------------------
+AC_SUBST(extra_CFLAGS_common)
 AC_SUBST(extra_CFLAGS_clanApp)
 AC_SUBST(extra_CFLAGS_clanCore)
 AC_SUBST(extra_CFLAGS_clanDisplay)

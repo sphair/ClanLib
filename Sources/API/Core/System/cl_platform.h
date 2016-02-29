@@ -32,8 +32,7 @@
 #include <cstring>
 #include <cstdint>
 
-#ifdef WIN32
-// GCC automatically sets __SSE2__
+#ifndef __GNUC__ // GCC automatically sets __SSE2__
 #ifndef CL_DISABLE_SSE2
 #define __SSE__
 #define __SSE2__

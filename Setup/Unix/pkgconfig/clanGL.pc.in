@@ -10,6 +10,6 @@ Description: OpenGL display target of ClanLib
 Version: @VERSION@
 Requires: clanDisplay-@LT_RELEASE@ = @VERSION@
 Libs:   -L${libdir} -lclan@CLANLIB_RELEASE@GL @extra_LIBS_clanGL@
-Cflags: -I${includedir} @extra_CFLAGS_clanGL@
+Cflags: -I${includedir} @extra_CFLAGS_common@ @extra_CFLAGS_clanGL@
 
 # EOF #

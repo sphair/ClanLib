@@ -10,6 +10,6 @@ Description: Network support for ClanLib
 Version: @VERSION@
 #Requires: clanSignals-@LT_RELEASE@ = @VERSION@
 Libs:   -L${libdir} -lclan@CLANLIB_RELEASE@Network @extra_LIBS_clanNetwork@
-Cflags: -I${includedir} @extra_CFLAGS_clanNetwork@
+Cflags: -I${includedir} @extra_CFLAGS_common@ @extra_CFLAGS_clanNetwork@
 
 # EOF #

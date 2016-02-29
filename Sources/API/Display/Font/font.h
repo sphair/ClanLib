@@ -184,6 +184,8 @@ namespace clan
 	};
 
 	#ifdef WIN32
+	class FontEngine_Win32; // GCC needs to be explicitly told this is a class
+
 	class FontHandle_Win32 : public FontHandle
 	{
 	public:

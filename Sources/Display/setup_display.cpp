@@ -98,7 +98,7 @@ namespace clan
 	SetupDisplay_Impl::SetupDisplay_Impl()
 	{
 		instance = this;
-#ifdef WIN32
+#if defined(WIN32) && !defined(__MINGW32__) // FIXME: Broken on MinGW (does not link)
 		SetProcessDPIAware();
 #endif
 

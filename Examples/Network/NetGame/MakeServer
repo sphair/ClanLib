@@ -5,7 +5,7 @@ OBJF = \
 	Sources/Server/server_user.o \
 	Sources/Server/main.o
 
-LIBS=clanCore clanNetwork
+LIBS=clanNetwork clanCore
 
 CXXFLAGS += -I Sources/Server
 
