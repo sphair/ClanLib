@@ -78,33 +78,42 @@ namespace clan
 
 	ViewGeometry PositionedLayout::get_geometry(Canvas &canvas, View *view, const Rectf &containing_box)
 	{
+		bool definite_left = !view->style_cascade().computed_value("left").is_keyword("auto");
+		bool definite_right = !view->style_cascade().computed_value("right").is_keyword("auto");
+		bool definite_width = !view->style_cascade().computed_value("width").is_keyword("auto");
+
 		float x = 0.0f;
 		float width = 0.0f;
 
-		if (!view->style_cascade().computed_value("left").is_keyword("auto") && !view->style_cascade().computed_value("right").is_keyword("auto"))
+		if (definite_left && definite_right)
 		{
 			x = view->style_cascade().computed_value("left").number();
 			width = clan::max(containing_box.get_width() - view->style_cascade().computed_value("right").number() - x, 0.0f);
 		}
-		else if (!view->style_cascade().computed_value("left").is_keyword("auto") && !view->style_cascade().computed_value("width").is_keyword("auto"))
+		else if (definite_left && definite_width)
 		{
 			x = view->style_cascade().computed_value("left").number();
 			width = view->style_cascade().computed_value("width").number();
 		}
-		else if (!view->style_cascade().computed_value("right").is_keyword("auto") && !view->style_cascade().computed_value("width").is_keyword("auto"))
+		else if (definite_right && definite_width)
 		{
 			width = view->style_cascade().computed_value("width").number();
 			x = containing_box.get_width() - view->style_cascade().computed_value("right").number() - width;
 		}
-		else if (!view->style_cascade().computed_value("left").is_keyword("auto"))
+		else if (definite_left)
 		{
 			x = view->style_cascade().computed_value("left").number();
 			width = view->preferred_width(canvas);
 		}
-		else if (!view->style_cascade().computed_value("right").is_keyword("auto"))
+		else if (definite_right)
 		{
 			width = view->preferred_width(canvas);
 			x = containing_box.get_width() - view->style_cascade().computed_value("right").number() - width;
+		}
+		else if (definite_width)
+		{
+			x = 0.0f;
+			width = view->style_cascade().computed_value("width").number();
 		}
 		else
 		{
@@ -112,33 +121,42 @@ namespace clan
 			width = view->preferred_width(canvas);
 		}
 
+		bool definite_top = !view->style_cascade().computed_value("top").is_keyword("auto");
+		bool definite_bottom = !view->style_cascade().computed_value("bottom").is_keyword("auto");
+		bool definite_height = !view->style_cascade().computed_value("height").is_keyword("auto");
+
 		float y = 0.0f;
 		float height = 0.0f;
 
-		if (!view->style_cascade().computed_value("top").is_keyword("auto") && !view->style_cascade().computed_value("bottom").is_keyword("auto"))
+		if (definite_top && definite_bottom)
 		{
 			y = view->style_cascade().computed_value("top").number();
 			height = clan::max(containing_box.get_height() - view->style_cascade().computed_value("bottom").number() - y, 0.0f);
 		}
-		else if (!view->style_cascade().computed_value("top").is_keyword("auto") && !view->style_cascade().computed_value("height").is_keyword("auto"))
+		else if (definite_top && definite_height)
 		{
 			y = view->style_cascade().computed_value("top").number();
 			height = view->style_cascade().computed_value("height").number();
 		}
-		else if (!view->style_cascade().computed_value("bottom").is_keyword("auto") && !view->style_cascade().computed_value("height").is_keyword("auto"))
+		else if (definite_bottom && definite_height)
 		{
 			height = view->style_cascade().computed_value("height").number();
 			y = containing_box.get_height() - view->style_cascade().computed_value("bottom").number() - height;
 		}
-		else if (!view->style_cascade().computed_value("top").is_keyword("auto"))
+		else if (definite_top)
 		{
 			y = view->style_cascade().computed_value("top").number();
 			height = view->preferred_height(canvas, width);
 		}
-		else if (!view->style_cascade().computed_value("bottom").is_keyword("auto"))
+		else if (definite_bottom)
 		{
 			height = view->preferred_height(canvas, width);
 			y = containing_box.get_height() - view->style_cascade().computed_value("bottom").number() - height;
+		}
+		else if (definite_height)
+		{
+			y = 0.0f;
+			height = view->style_cascade().computed_value("height").number();
 		}
 		else
 		{
