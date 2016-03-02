@@ -140,21 +140,21 @@ namespace clan
 			impl->set_scalable(height_threshold);
 	}
 
-	GlyphMetrics Font::get_metrics(Canvas &canvas, unsigned int glyph)
+	GlyphMetrics Font::get_metrics(Canvas &canvas, unsigned int glyph) const
 	{
 		if (impl)
 			return impl->get_metrics(canvas, glyph);
 		return GlyphMetrics();
 	}
 
-	GlyphMetrics Font::measure_text(Canvas &canvas, const std::string &string)
+	GlyphMetrics Font::measure_text(Canvas &canvas, const std::string &string) const
 	{
 		if (impl)
 			return impl->measure_text(canvas, string);
 		return GlyphMetrics();
 	}
 
-	size_t Font::clip_from_left(Canvas &canvas, const std::string &text, float width)
+	size_t Font::clip_from_left(Canvas &canvas, const std::string &text, float width) const
 	{
 		float x = 0.0f;
 		UTF8_Reader reader(text.data(), text.length());
@@ -173,7 +173,7 @@ namespace clan
 		return text.size();
 	}
 
-	size_t Font::clip_from_right(Canvas &canvas, const std::string &text, float width)
+	size_t Font::clip_from_right(Canvas &canvas, const std::string &text, float width) const
 	{
 		float x = 0.0f;
 		UTF8_Reader reader(text.data(), text.length());
@@ -205,7 +205,7 @@ namespace clan
 		}
 	}
 
-	std::string Font::get_clipped_text(Canvas &canvas, const Sizef &box_size, const std::string &text, const std::string &ellipsis_text)
+	std::string Font::get_clipped_text(Canvas &canvas, const Sizef &box_size, const std::string &text, const std::string &ellipsis_text) const
 	{
 		std::string out_string;
 		out_string.reserve(text.length());
@@ -273,21 +273,21 @@ namespace clan
 		return out_string;
 	}
 
-	FontMetrics Font::get_font_metrics(Canvas &canvas)
+	FontMetrics Font::get_font_metrics(Canvas &canvas) const
 	{
 		if (impl)
 			return impl->get_font_metrics(canvas);
 		return FontMetrics();
 	}
 
-	int Font::get_character_index(Canvas &canvas, const std::string &text, const Pointf &point)
+	int Font::get_character_index(Canvas &canvas, const std::string &text, const Pointf &point) const
 	{
 		if (impl)
 			return impl->get_character_index(canvas, text, point);
 		return 0;
 	}
 
-	std::vector<Rectf> Font::get_character_indices(Canvas &canvas, const std::string &text)
+	std::vector<Rectf> Font::get_character_indices(Canvas &canvas, const std::string &text) const
 	{
 		if (impl)
 			return impl->get_character_indices(canvas, text);
