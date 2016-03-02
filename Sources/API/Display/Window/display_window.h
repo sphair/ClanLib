@@ -210,6 +210,7 @@ namespace clan
 
 		/// \brief Returns true if this object is invalid.
 		bool is_null() const { return !impl; }
+		explicit operator bool() const { return bool(impl); }
 
 		/// \brief Throw an exception if this object is invalid.
 		void throw_if_null() const;

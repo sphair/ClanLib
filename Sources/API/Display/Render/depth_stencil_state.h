@@ -54,6 +54,7 @@ namespace clan
 
 		/// \brief Returns true if this object is invalid.
 		bool is_null() const { return !provider; }
+		explicit operator bool() const { return bool(provider); }
 
 		DepthStencilStateProvider *get_provider() const;
 

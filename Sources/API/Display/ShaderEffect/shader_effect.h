@@ -54,6 +54,7 @@ namespace clan
 		ShaderEffect(GraphicContext &gc, const ShaderEffectDescription &description);
 
 		bool is_null() const;
+		explicit operator bool() const { return bool(impl); }
 
 		void dispatch(GraphicContext &gc, int x, int y = 1, int z = 1);
 		void draw(GraphicContext &gc);

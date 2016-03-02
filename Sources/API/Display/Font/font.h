@@ -101,6 +101,7 @@ namespace clan
 
 		/// \brief Returns true if this object is invalid.
 		bool is_null() const { return !impl; }
+		explicit operator bool() const { return bool(impl); }
 
 		/// \brief Throw an exception if this object is invalid.
 		void throw_if_null() const;
@@ -135,21 +136,21 @@ namespace clan
 		///
 		/// \param glyph = The glyph to get
 		/// \return The glyph metrics
-		GlyphMetrics get_metrics(Canvas &canvas, unsigned int glyph);
+		GlyphMetrics get_metrics(Canvas &canvas, unsigned int glyph) const;
 
 		/// \brief Measure text size
 		///
 		/// \param string = The text to use
 		/// \return The metrics
-		GlyphMetrics measure_text(Canvas &canvas, const std::string &string);
+		GlyphMetrics measure_text(Canvas &canvas, const std::string &string) const;
 
 		/// \brief Retrieves font metrics description for the selected font.
-		FontMetrics get_font_metrics(Canvas &canvas);
+		FontMetrics get_font_metrics(Canvas &canvas) const;
 
 		/// \brief Retrieves clipped version of the text that will fit into a box
 		///
 		/// \return The string
-		std::string get_clipped_text(Canvas &canvas, const Sizef &box_size, const std::string &text, const std::string &ellipsis_text = "...");
+		std::string get_clipped_text(Canvas &canvas, const Sizef &box_size, const std::string &text, const std::string &ellipsis_text = "...") const;
 
 		/// \brief Get the character index at a specified point
 		///
@@ -157,18 +158,18 @@ namespace clan
 		/// \param text = The string
 		/// \param point = The point
 		/// \return The character index. -1 = Not at specified point
-		int get_character_index(Canvas &canvas, const std::string &text, const Pointf &point);
+		int get_character_index(Canvas &canvas, const std::string &text, const Pointf &point) const;
 
 		/// \brief Get the rectangles of each glyph in a string of text
 		///
 		/// \return A list of Rects for every glyph
-		std::vector<Rectf> get_character_indices(Canvas &canvas, const std::string &text);
+		std::vector<Rectf> get_character_indices(Canvas &canvas, const std::string &text) const;
 
 		// Finds the offset for the last visible character when clipping the head
-		size_t clip_from_left(Canvas &canvas, const std::string &text, float width);
+		size_t clip_from_left(Canvas &canvas, const std::string &text, float width) const;
 
 		// Finds the offset for the first visible character when clipping the tail
-		size_t clip_from_right(Canvas &canvas, const std::string &text, float width);
+		size_t clip_from_right(Canvas &canvas, const std::string &text, float width) const;
 
 		/// \brief Get the font handle interface
 		///
