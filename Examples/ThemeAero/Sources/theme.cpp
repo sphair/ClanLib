@@ -36,7 +36,7 @@ std::shared_ptr<clan::ScrollBarView> Theme::create_scrollbar()
 {
 	auto scrollbar = std::make_shared<clan::ScrollBarView>(false);
 	scrollbar->set_horizontal();
-	scrollbar->style()->set("flex: 0 0 main-size");
+	scrollbar->style()->set("flex: 0 0 auto");
 	scrollbar->style()->set("background: rgb(232, 232, 236)");
 	scrollbar->track()->style()->set("border-image-slice: 4 0 3 0 fill;");
 	scrollbar->track()->style()->set("border-image-width:4px 0px 3px 0px;");
@@ -105,7 +105,7 @@ std::shared_ptr<clan::SliderView> Theme::create_slider()
 	slider->set_horizontal();
 
 	slider->style()->set("flex-direction: row;");
-	slider->track()->style()->set("flex: 1 1 main-size;");
+	slider->track()->style()->set("flex: 1 1 auto;");
 	slider->track()->style()->set("height: 4px;");
 	slider->track()->style()->set("margin: 7px 0px");
 	slider->track()->style()->set("border-image-slice: 1 2 1 1 fill;");
