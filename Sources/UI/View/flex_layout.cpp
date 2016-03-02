@@ -401,7 +401,7 @@ namespace clan
 			else if (item.definite_cross_size)
 				item.flex_base_size = item.view->preferred_height(canvas, item.cross_size);
 			else if (known_container_main_size)
-				item.flex_base_size = item.view->preferred_height(canvas, std::max(container_main_size - item.cross_noncontent_start - item.cross_noncontent_end, 0.0f));
+				item.flex_base_size = item.view->preferred_height(canvas, std::max(container_cross_size - item.cross_noncontent_start - item.cross_noncontent_end, 0.0f));
 			else
 				item.flex_base_size = item.view->preferred_height(canvas, item.view->preferred_width(canvas));
 
