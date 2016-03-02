@@ -44,7 +44,7 @@ namespace clan
 		BrowseFolderDialog(View *owner);
 
 		/// \brief Get the full path of the directory selected.
-		std::string get_selected_path() const;
+		std::string selected_path() const;
 
 		/// \brief Sets the initial directory that is displayed.
 		void set_initial_directory(const std::string &path);

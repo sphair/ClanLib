@@ -48,8 +48,8 @@ namespace clan
 		if (!style.computed_value("border-image-source").is_url())
 			return;
 
-		Image &image = Image::resource(canvas, style.computed_value("border-image-source").text(), UIThread::get_resources());
-		if (!image.is_null())
+		Image image = Image::resource(canvas, style.computed_value("border-image-source").text(), UIThread::get_resources());
+		if (image)
 		{
 			int slice_left = get_left_slice_value(image.get_width());
 			int slice_right = get_right_slice_value(image.get_width());
@@ -66,8 +66,8 @@ namespace clan
 
 			float x[4] = { border_image_area.left, border_image_area.left + grid_left, border_image_area.right - grid_right, border_image_area.right };
 			float y[4] = { border_image_area.top, border_image_area.top + grid_top, border_image_area.bottom - grid_bottom, border_image_area.bottom };
-			int sx[4] = { 0, slice_left, (int) image.get_width() - slice_right, (int)image.get_width() };
-			int sy[4] = { 0, slice_top, (int) image.get_height() - slice_bottom, (int)image.get_height() };
+			int sx[4] = { 0, slice_left, (int)image.get_width() - slice_right, (int)image.get_width() };
+			int sy[4] = { 0, slice_top, (int)image.get_height() - slice_bottom, (int)image.get_height() };
 			
 			StyleGetValue repeat_x = style.computed_value("border-image-repeat-x");
 			StyleGetValue repeat_y = style.computed_value("border-image-repeat-y");
@@ -122,7 +122,7 @@ namespace clan
 		return info;
 	}
 
-	void StyleBorderImageRenderer::draw_area(Image &image, float x, float y, float w, float h, int sx, int sy, int sw, int sh, const StyleGetValue &repeat_x, const StyleGetValue &repeat_y)
+	void StyleBorderImageRenderer::draw_area(const Image &image, float x, float y, float w, float h, int sx, int sy, int sw, int sh, const StyleGetValue &repeat_x, const StyleGetValue &repeat_y)
 	{
 		TileRepeatInfo tile_x = repeat_info(x, w, sw, repeat_x);
 		TileRepeatInfo tile_y = repeat_info(y, h, sh, repeat_y);

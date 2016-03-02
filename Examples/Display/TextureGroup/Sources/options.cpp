@@ -75,7 +75,7 @@ void Options::set_value(std::shared_ptr<clan::SliderView> slider, float value, f
 std::shared_ptr<clan::SliderView> Options::create_slider(int xpos, int ypos)
 {
 	std::shared_ptr<clan::SliderView> component = Theme::create_slider();
-	add_subview(component);
+	add_child(component);
 
 	component->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:auto;", xpos, ypos, 192);
 	component->set_horizontal();
@@ -93,7 +93,7 @@ std::shared_ptr<clan::SliderView> Options::create_slider(int xpos, int ypos)
 std::shared_ptr<clan::LabelView> Options::create_slider_label(int xpos, int ypos)
 {
 	std::shared_ptr<clan::LabelView> component = Theme::create_label(true);
-	add_subview(component);
+	add_child(component);
 	component->style()->set("position: absolute; left:%1px; top:%2px", xpos, ypos);
 	component->set_text("##################");
 	return component;

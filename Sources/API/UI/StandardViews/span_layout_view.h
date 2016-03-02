@@ -48,9 +48,9 @@ namespace clan
 
 		void clear();
 		void add_text(const std::string &text, const std::string &text_class = std::string());
-		void add_subview(const std::shared_ptr<View> &view, float baseline_offset = 0.0f);
+		void add_child(const std::shared_ptr<View> &view, float baseline_offset = 0.0f);
 
-		void layout_subviews(Canvas &canvas) override;
+		void layout_children(Canvas &canvas) override;
 
 	protected:
 		void render_content(Canvas &canvas) override;
@@ -58,8 +58,8 @@ namespace clan
 		float calculate_preferred_height(Canvas &canvas, float width) override;
 		float calculate_first_baseline_offset(Canvas &canvas, float width) override;
 		float calculate_last_baseline_offset(Canvas &canvas, float width) override;
-		void subview_added(const std::shared_ptr<View> &view) override;
-		void subview_removed(const std::shared_ptr<View> &view) override;
+		void child_added(const std::shared_ptr<View> &view) override;
+		void child_removed(const std::shared_ptr<View> &view) override;
 
 	private:
 		std::shared_ptr<SpanLayoutViewImpl> impl;

@@ -47,8 +47,8 @@ public:
 		slider->style()->set("margin: auto 5px auto 0; flex: 1 1");
 		label->style()->set("margin: auto 0; flex: 1 1; font: 13px/1.5 'Segoe UI'");
 
-		add_subview(slider);
-		add_subview(label);
+		add_child(slider);
+		add_child(label);
 	}
 
 	float get_value(float min_value, float max_value)

@@ -29,6 +29,7 @@
 #pragma once
 
 #include <array>
+#include <memory>
 
 namespace clan
 {
@@ -37,6 +38,8 @@ namespace clan
 	class Path;
 	class Colorf;
 	class Pointf;
+	class Rectf;
+	class Sizef;
 	class BrushGradientStop;
 	class StyleCascade;
 	class StyleGetValue;
@@ -59,7 +62,7 @@ namespace clan
 
 		float get_start_x(int index, const Rectf &clip_box, const Rectf &origin_box, const Sizef &image_size);
 		float get_start_y(int index, const Rectf &clip_box, const Rectf &origin_box, const Sizef &image_size);
-		Sizef get_image_size(int index, Image &image, Rectf origin_box);
+		Sizef get_image_size(int index, const Image &image, Rectf origin_box);
 		Rectf get_clip_box(int index);
 		Rectf get_origin_box(int index);
 		StyleGetValue get_layer_clip(int index);

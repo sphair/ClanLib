@@ -37,19 +37,19 @@ namespace clan
 	class ScrollViewContentContainer : public View
 	{
 	public:
-		void layout_subviews(Canvas &canvas) override
+		void layout_children(Canvas &canvas) override
 		{
-			for (auto &view : subviews())
+			for (auto &view : children())
 			{
 				// To do: maybe we need a mode to specify if the X axis is locked or infinite
-				float width = geometry().content_width; //view->get_preferred_width(canvas);
-				float height = view->get_preferred_height(canvas, width);
+				float width = geometry().content_width; //view->preferred_width(canvas);
+				float height = view->preferred_height(canvas, width);
 				ViewGeometry geometry = ViewGeometry::from_content_box(style_cascade(), Rectf(0.0f, 0.0f, width, height));
 				geometry.content_x = 0.0f;
 				geometry.content_y = 0.0f;
 				view->set_geometry(geometry);
 
-				view->layout_subviews(canvas); // Maybe this should be handled in View?
+				view->layout_children(canvas); // Maybe this should be handled in View?
 			}
 		}
 	};
@@ -76,14 +76,14 @@ namespace clan
 		impl->scroll_x->set_horizontal();
 		impl->scroll_y->set_vertical();
 
-		impl->content_container->style()->set("flex: 1 1 main-size");
+		impl->content_container->style()->set("flex: 1 1 auto");
 
 		impl->content_container->set_content_clipped(true);
-		impl->content_container->add_subview(impl->content);
+		impl->content_container->add_child(impl->content);
 
-		add_subview(impl->content_container);
-		add_subview(impl->scroll_x);
-		add_subview(impl->scroll_y);
+		add_child(impl->content_container);
+		add_child(impl->scroll_x);
+		add_child(impl->scroll_y);
 
 		slots.connect(impl->scroll_x->sig_scroll(), [this]() {
 			Pointf pos = content_offset();
@@ -165,7 +165,7 @@ namespace clan
 		impl->content->set_view_transform(Mat4f::translate(-offset.x, -offset.y, 0.0f));
 	}
 	
-	void ScrollView::layout_subviews(Canvas &canvas)
+	void ScrollView::layout_children(Canvas &canvas)
 	{
 		bool x_scroll_needed = false;
 		bool y_scroll_needed = false;
@@ -179,18 +179,18 @@ namespace clan
 		
 		if (impl->overflow_y != ContentOverflow::hidden)
 		{
-			content_height = impl->content_container->get_preferred_height(canvas, width);
+			content_height = impl->content_container->preferred_height(canvas, width);
 			y_scroll_needed = impl->overflow_y == ContentOverflow::scroll || content_height > height;
 			if (y_scroll_needed)
-				y_scroll_width = ViewGeometry::from_content_box(impl->scroll_y->style_cascade(), Rectf(0.0f, 0.0f, impl->scroll_y->get_preferred_width(canvas), 0.0f)).margin_box().get_width();
+				y_scroll_width = ViewGeometry::from_content_box(impl->scroll_y->style_cascade(), Rectf(0.0f, 0.0f, impl->scroll_y->preferred_width(canvas), 0.0f)).margin_box().get_width();
 		}
 		
 		if (impl->overflow_x != ContentOverflow::hidden)
 		{
-			content_width = impl->content_container->get_preferred_width(canvas);
+			content_width = impl->content_container->preferred_width(canvas);
 			x_scroll_needed = impl->overflow_x == ContentOverflow::scroll || content_width > width;
 			if (x_scroll_needed)
-				x_scroll_height = ViewGeometry::from_content_box(impl->scroll_x->style_cascade(), Rectf(0.0f, 0.0f, 0.0f, impl->scroll_x->get_preferred_height(canvas, width))).margin_box().get_height();
+				x_scroll_height = ViewGeometry::from_content_box(impl->scroll_x->style_cascade(), Rectf(0.0f, 0.0f, 0.0f, impl->scroll_x->preferred_height(canvas, width))).margin_box().get_height();
 		}
 		
 		float content_view_width = width - y_scroll_width;
@@ -216,40 +216,34 @@ namespace clan
 		
 		impl->content_container->set_geometry(ViewGeometry::from_margin_box(impl->content_container->style_cascade(), Rectf(0.0f, 0.0f, content_view_width, content_view_height)));
 
-		impl->scroll_x->layout_subviews(canvas);
-		impl->scroll_y->layout_subviews(canvas);
-		impl->content_container->layout_subviews(canvas);
+		impl->scroll_x->layout_children(canvas);
+		impl->scroll_y->layout_children(canvas);
+		impl->content_container->layout_children(canvas);
 	}
 	
 	float ScrollView::calculate_preferred_width(Canvas &canvas)
 	{
-		if (style_cascade().computed_value("width").is_length())
-			return style_cascade().computed_value("width").number();
-		
-		float width = impl->content_container->get_preferred_width(canvas);
+		float width = impl->content_container->preferred_width(canvas);
 		if (impl->overflow_x == ContentOverflow::scroll)
-			width += impl->scroll_x->get_preferred_width(canvas);
+			width += impl->scroll_x->preferred_width(canvas);
 		return width;
 	}
 	
 	float ScrollView::calculate_preferred_height(Canvas &canvas, float width)
 	{
-		if (style_cascade().computed_value("height").is_length())
-			return style_cascade().computed_value("height").number();
-		
-		float height = impl->content_container->get_preferred_height(canvas, width);
+		float height = impl->content_container->preferred_height(canvas, width);
 		if (impl->overflow_y == ContentOverflow::scroll)
-			height += impl->scroll_x->get_preferred_height(canvas, width);
+			height += impl->scroll_x->preferred_height(canvas, width);
 		return height;
 	}
 	
 	float ScrollView::calculate_first_baseline_offset(Canvas &canvas, float width)
 	{
-		return impl->content_container->get_first_baseline_offset(canvas, width);
+		return impl->content_container->first_baseline_offset(canvas, width);
 	}
 	
 	float ScrollView::calculate_last_baseline_offset(Canvas &canvas, float width)
 	{
-		return impl->content_container->get_last_baseline_offset(canvas, width);
+		return impl->content_container->last_baseline_offset(canvas, width);
 	}
 }

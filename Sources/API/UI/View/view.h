@@ -28,6 +28,7 @@
 
 #pragma once
 
+#include "../../Core/Math/mat4.h"
 #include "../../Core/Math/rect.h"
 #include "../../Core/Math/easing.h"
 #include "../../Core/Signals/signal.h"
@@ -57,6 +58,7 @@ namespace clan
 	enum class StandardCursor;
 	class DisplayWindow;
 	class ViewTree;
+	class ViewAction;
 
 	/// View for an area of the user interface
 	class View : public std::enable_shared_from_this<View>
@@ -84,29 +86,43 @@ namespace clan
 		SlotContainer slots;
 
 		/// Parent view node or nullptr if the view is the current root node
-		View *superview() const;
+		View *parent() const;
 
 		/// List of all immediate child views
-		const std::vector<std::shared_ptr<View>> &subviews() const;
+		const std::vector<std::shared_ptr<View>> &children() const;
 
 		/// Add a child view
-		void add_subview(const std::shared_ptr<View> &view);
+		void add_child(const std::shared_ptr<View> &view);
 
 		template<typename T, typename... Types>
-		std::shared_ptr<T> add_subview(Types &&... args)
+		std::shared_ptr<T> add_child(Types &&... args)
 		{
-			auto subview = std::make_shared<T>(std::forward<Types>(args)...);
-			add_subview(subview);
-			return subview;
+			auto child = std::make_shared<T>(std::forward<Types>(args)...);
+			add_child(child);
+			return child;
 		}
 
-		std::shared_ptr<View> add_subview()
+		std::shared_ptr<View> add_child()
 		{
-			return add_subview<View>();
+			return add_child<View>();
 		}
 
 		/// Remove view from parent
-		void remove_from_super();
+		void remove_from_parent();
+
+		/// Add an action recognizer
+		void add_action(const std::shared_ptr<ViewAction> &action);
+
+		template<typename T, typename... Types>
+		std::shared_ptr<T> add_action(Types &&... args)
+		{
+			auto action = std::make_shared<T>(std::forward<Types>(args)...);
+			add_action(action);
+			return action;
+		}
+
+		/// List of all action recognizers
+		const std::vector<std::shared_ptr<ViewAction>> &actions() const;
 
 		/// Test if view is set to hidden
 		bool hidden() const;
@@ -114,7 +130,7 @@ namespace clan
 		/// Hides a view from layout and rendering
 		void set_hidden(bool value = true);
 
-		/// Test if view should participate in static layout calculations (layout_subviews)
+		/// Test if view should participate in static layout calculations (layout_children)
 		bool is_static_position_and_visible() const;
 
 		/// Test if view geometry needs to be recalculated
@@ -128,13 +144,13 @@ namespace clan
 
 		/// Sets the view position and size
 		///
-		/// This function should only be called by layout_subviews.
+		/// This function should only be called by layout_children.
 		void set_geometry(const ViewGeometry &geometry);
 
 		/// Gets the current canvas used to render this view
 		///
 		/// This function may return a null canvas if the view does not have a canvas attached to it yet.
-		Canvas get_canvas() const;
+		Canvas canvas() const;
 
 		/// Signals this view needs to be rendered again
 		void set_needs_render();
@@ -160,19 +176,19 @@ namespace clan
 		void set_content_clipped(bool clipped);
 
 		/// Calculates the preferred width of this view
-		float get_preferred_width(Canvas &canvas);
+		float preferred_width(Canvas &canvas);
 
 		/// Calculates the preferred height of this view
-		float get_preferred_height(Canvas &canvas, float width);
+		float preferred_height(Canvas &canvas, float width);
 
 		/// Calculates the offset to the first baseline
-		float get_first_baseline_offset(Canvas &canvas, float width);
+		float first_baseline_offset(Canvas &canvas, float width);
 
 		/// Calculates the offset to the last baseline
-		float get_last_baseline_offset(Canvas &canvas, float width);
+		float last_baseline_offset(Canvas &canvas, float width);
 
-		/// Sets the view geometry for all subviews of this view
-		virtual void layout_subviews(Canvas &canvas);
+		/// Sets the view geometry for all children of this view
+		virtual void layout_children(Canvas &canvas);
 
 		/// Tree in view hierachy
 		const ViewTree *view_tree() const;
@@ -221,7 +237,7 @@ namespace clan
 		void set_cursor(const CursorDescription &cursor);
 		void set_cursor(StandardCursor type);
 
-		/// Specify that the cursor icon is inherited from the super view
+		/// Specify that the cursor icon is inherited from the parent view
 		void set_inherit_cursor();
 
 		/// Window activated event
@@ -287,6 +303,16 @@ namespace clan
 		/// Dispatch event to signals listening for events
 		static void dispatch_event(View *target, EventUI *e, bool no_propagation = false);
 
+	protected:
+		/// Renders the content of a view
+		virtual void render_content(Canvas &canvas) { }
+
+		/// Child view was added to this view
+		virtual void child_added(const std::shared_ptr<View> &view) { }
+
+		/// Child view was removed from this view
+		virtual void child_removed(const std::shared_ptr<View> &view) { }
+
 		/// Calculates the preferred width of this view
 		virtual float calculate_preferred_width(Canvas &canvas);
 
@@ -299,16 +325,6 @@ namespace clan
 		/// Calculates the offset to the last baseline
 		virtual float calculate_last_baseline_offset(Canvas &canvas, float width);
 
-	protected:
-		/// Renders the content of a view
-		virtual void render_content(Canvas &canvas) { }
-
-		/// Child view was added to this view
-		virtual void subview_added(const std::shared_ptr<View> &view) { }
-
-		/// Child view was removed from this view
-		virtual void subview_removed(const std::shared_ptr<View> &view) { }
-
 	private:
 		View(const View &) = delete;
 		View &operator=(const View &) = delete;
@@ -317,5 +333,6 @@ namespace clan
 
 		friend class ViewTree;
 		friend class ViewImpl;
+		friend class ViewAction;
 	};
 }

@@ -39,6 +39,8 @@
 #include "API/Display/Font/glyph_metrics.h"
 #include "API/Display/Font/font_metrics.h"
 #include "API/Display/Window/display_window.h"
+#include "API/Core/Text/string_help.h"
+#include "API/Core/Text/utf8_reader.h"
 #include "text_field_view_impl.h"
 #include <algorithm>
 #include <cmath>
@@ -391,13 +393,8 @@ namespace clan
 
 	float TextFieldView::calculate_preferred_width(Canvas &canvas)
 	{
-		if (style_cascade().computed_value("width").is_keyword("auto"))
-		{
-			Font font = impl->get_font(canvas);
-			return font.measure_text(canvas, "X").advance.width * impl->preferred_size;
-		}
-		else
-			return style_cascade().computed_value("width").number();
+		Font font = impl->get_font(canvas);
+		return font.measure_text(canvas, "X").advance.width * impl->preferred_size;
 	}
 
 	float TextFieldView::calculate_preferred_height(Canvas &canvas, float width)
@@ -419,15 +416,15 @@ namespace clan
 
 	float TextFieldView::calculate_last_baseline_offset(Canvas &canvas, float width)
 	{
-		return get_first_baseline_offset(canvas, width);
+		return first_baseline_offset(canvas, width);
 	}
 
 	/////////////////////////////////////////////////////////////////////////
 
-	Font &TextFieldViewImpl::get_font(Canvas &canvas)
+	const Font &TextFieldViewImpl::get_font(Canvas &canvas)
 	{
-		if (font.is_null())
-			font = textfield->style_cascade().get_font(canvas);
+		if (!font)
+			font = textfield->style_cascade().font(canvas);
 		return font;
 	}
 
@@ -812,8 +809,8 @@ namespace clan
 			ViewTree *tree = textfield->view_tree();
 			if (tree)
 			{
-				DisplayWindow window = tree->get_display_window();
-				if (!window.is_null())
+				DisplayWindow window = tree->display_window();
+				if (window)
 				{
 					if (selection.length() > 0)
 						window.set_clipboard_text(get_selected_text());
@@ -829,8 +826,8 @@ namespace clan
 		ViewTree *tree = textfield->view_tree();
 		if (tree)
 		{
-			DisplayWindow window = tree->get_display_window();
-			if (!window.is_null())
+			DisplayWindow window = tree->display_window();
+			if (window)
 				add(window.get_clipboard_text());
 		}
 	}

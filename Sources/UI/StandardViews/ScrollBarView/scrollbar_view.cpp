@@ -52,28 +52,28 @@ namespace clan
 		auto spacer1 = std::make_shared<View>();
 		auto spacer2 = std::make_shared<View>();
 
-		add_subview(impl->button_decrement);
-		add_subview(impl->track);
-		add_subview(impl->button_increment);
+		add_child(impl->button_decrement);
+		add_child(impl->track);
+		add_child(impl->button_increment);
 
-		impl->track->add_subview(impl->thumb);
+		impl->track->add_child(impl->thumb);
 
-		impl->thumb->add_subview(spacer1);
-		impl->thumb->add_subview(impl->thumb_grip);
-		impl->thumb->add_subview(spacer2);
+		impl->thumb->add_child(spacer1);
+		impl->thumb->add_child(impl->thumb_grip);
+		impl->thumb->add_child(spacer2);
 
-		impl->button_decrement->style()->set("flex: 0 0 main-size");
-		impl->button_increment->style()->set("flex: 0 0 main-size");
-		impl->track->style()->set("flex: 1 1 main-size");
+		impl->button_decrement->style()->set("flex: 0 0 auto");
+		impl->button_increment->style()->set("flex: 0 0 auto");
+		impl->track->style()->set("flex: 1 1 auto");
 		impl->thumb->style()->set("position: absolute");
-		spacer1->style()->set("flex: 1 1 main-size");
-		spacer2->style()->set("flex: 1 1 main-size");
+		spacer1->style()->set("flex: 1 1 auto");
+		spacer2->style()->set("flex: 1 1 auto");
 
 		impl->button_decrement->style()->set("width: 17px; height: 17px");
 		impl->button_increment->style()->set("width: 17px; height: 17px");
 
-		slots.connect(impl->track->sig_pointer_press(true), impl.get(), &ScrollBarViewImpl::on_pointer_track_press);
-		slots.connect(impl->track->sig_pointer_release(true), impl.get(), &ScrollBarViewImpl::on_pointer_track_release);
+		slots.connect(impl->track->sig_pointer_press(), impl.get(), &ScrollBarViewImpl::on_pointer_track_press);
+		slots.connect(impl->track->sig_pointer_release(), impl.get(), &ScrollBarViewImpl::on_pointer_track_release);
 
 		slots.connect(impl->thumb->sig_pointer_press(), impl.get(), &ScrollBarViewImpl::on_pointer_thumb_press);
 		slots.connect(impl->thumb->sig_pointer_release(), impl.get(), &ScrollBarViewImpl::on_pointer_thumb_release);
@@ -266,9 +266,9 @@ namespace clan
 		impl->update_pos(this, new_pos, impl->min_pos, impl->max_pos);
 	}
 
-	void ScrollBarView::layout_subviews(Canvas &canvas)
+	void ScrollBarView::layout_children(Canvas &canvas)
 	{
-		View::layout_subviews(canvas);
+		View::layout_children(canvas);
 
 		auto track_geometry = impl->track->geometry();
 
@@ -278,14 +278,8 @@ namespace clan
 		}
 		else
 		{
-			double content_size = impl->max_pos - impl->min_pos + impl->page_step;
-			double track_length = vertical() ? track_geometry.content_box().get_height() : track_geometry.content_box().get_width();
-			double thumb_length = impl->page_step / content_size * track_length;
-
-			thumb_length = std::min(std::max(thumb_length, 16.0), track_length);
-
-			double t = (impl->pos - impl->min_pos) / (impl->max_pos - impl->min_pos);
-			double thumb_pos = t * (track_length - thumb_length);
+			double thumb_pos = impl->thumb_pos();
+			double thumb_length = impl->thumb_length();
 
 			if (vertical())
 			{

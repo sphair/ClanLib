@@ -70,7 +70,7 @@ namespace clan
 		LineBreakMode line_break_mode() const;
 		void set_line_break_mode(LineBreakMode value);
 
-		void layout_subviews(Canvas &canvas) override;
+		void layout_children(Canvas &canvas) override;
 
 	protected:
 		void render_content(Canvas &canvas) override;

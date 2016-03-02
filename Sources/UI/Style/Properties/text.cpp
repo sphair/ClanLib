@@ -27,6 +27,7 @@
 */
 
 #include "UI/precomp.h"
+#include "API/Core/Text/string_help.h"
 #include "text.h"
 
 namespace clan
@@ -53,7 +54,7 @@ namespace clan
 	StylePropertyDefault style_default_font_family("font-family", StyleGetValue::from_keyword("array"), true);
 	StylePropertyDefault style_default_font_family_names("font-family-names[0]", StyleGetValue::from_keyword("sans-serif"), true);
 
-	StylePropertyDefault style_default_clan_font_rendering("-clan-font-rendering", StyleGetValue::from_keyword("auto"), true);
+	StylePropertyDefault style_default_uicore_font_rendering("-clan-font-rendering", StyleGetValue::from_keyword("auto"), true);
 
 	ColorPropertyParser style_parser_color;
 	TextAlignPropertyParser style_parser_text_align;
@@ -71,7 +72,7 @@ namespace clan
 	FontVariantPropertyParser style_parser_font_variant;
 	FontWeightPropertyParser style_parser_font_weight;
 
-	ClanFontRenderingPropertyParser style_parser_clan_font_rendering;
+	ClanFontRenderingPropertyParser style_parser_uicore_font_rendering;
 
 	void ColorPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
 	{

@@ -38,7 +38,7 @@ namespace clan
 	{
 	public:
 		ImageSourceCallback(const std::function<Image(Canvas &)> &cb_get_image) : cb_get_image(cb_get_image) { }
-		Image get_image(Canvas &canvas) override { return cb_get_image(canvas); }
+		Image image(Canvas &canvas) override { return cb_get_image(canvas); }
 
 		std::function<Image(Canvas &)> cb_get_image;
 	};
@@ -55,12 +55,12 @@ namespace clan
 			return Image::resource(canvas, resource_name, UIThread::get_resources());
 		});
 	}
+
 	std::shared_ptr<ImageSource> ImageSource::from_image(const Image &image)
 	{
-			return ImageSource::from_callback([=](Canvas &canvas)
-			{
-				return image;
-			});
+		return ImageSource::from_callback([=](Canvas &canvas)
+		{
+			return image;
+		});
 	}
-
 }

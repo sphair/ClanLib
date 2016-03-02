@@ -163,14 +163,14 @@ namespace clan
 		if (scrollbar->horizontal())
 		{
 			mouse_pos = e.pos(track.get()).x;
-			thumb_position = thumb_geometry.left + thumb_geometry.get_width() / 2.0f;
-			timer_target_position = min_pos + mouse_pos * ((max_pos - min_pos)) / (track->geometry().content_box().get_width());
+			thumb_position = thumb_geometry.left + thumb_geometry.get_width() * 0.5f;
+			timer_target_position = min_pos + (mouse_pos + thumb_geometry.get_width() * 0.5f) * thumb_units_per_pixel();
 		}
 		else
 		{
 			mouse_pos = e.pos(track.get()).y;
-			thumb_position = thumb_geometry.top + thumb_geometry.get_height() / 2.0f;
-			timer_target_position = min_pos + mouse_pos * ((max_pos - min_pos)) / (track->geometry().content_box().get_height());
+			thumb_position = thumb_geometry.top + thumb_geometry.get_height() * 0.5f;
+			timer_target_position = min_pos + (mouse_pos + thumb_geometry.get_height() * 0.5f) * thumb_units_per_pixel();
 		}
 
 		if (mouse_pos < thumb_position)
@@ -207,6 +207,8 @@ namespace clan
 		mouse_down_mode = mouse_down_thumb_drag;
 		thumb_move_start_position = pos;
 		mouse_drag_start_pos = e.pos(track.get());
+
+		e.stop_propagation(); // prevent track press reacting to this event
 	}
 
 	void ScrollBarViewImpl::on_pointer_thumb_release(PointerEvent &e)
@@ -216,6 +218,8 @@ namespace clan
 		_state_thumb_pressed = false;
 		update_thumb_state();
 		mouse_down_mode = mouse_down_none;
+
+		e.stop_propagation(); // prevent track release reacting to this event
 	}
 
 	void ScrollBarViewImpl::on_pointer_decrement_press(PointerEvent &e)
@@ -267,8 +271,8 @@ namespace clan
 		if (mouse_down_mode != mouse_down_thumb_drag)
 			return;
 
-		Pointf mouse_pos(e.pos(track.get()));
-		Rectf track_geometry(track->geometry().content_box());
+		Pointf mouse_pos = e.pos(track.get());
+		Rectf track_geometry = track->geometry().content_box();
 
 		double last_position = pos;
 
@@ -281,18 +285,16 @@ namespace clan
 			if (scrollbar->horizontal())
 			{
 				double delta = (mouse_pos.x - mouse_drag_start_pos.x);
-				pos = thumb_move_start_position + delta * ((max_pos - min_pos)) / (track->geometry().content_box().get_width());
+				pos = thumb_move_start_position + delta * thumb_units_per_pixel();
 			}
 			else
 			{
 				double delta = (mouse_pos.y - mouse_drag_start_pos.y);
-				pos = thumb_move_start_position + delta * ((max_pos - min_pos)) / (track->geometry().content_box().get_height());
+				pos = thumb_move_start_position + delta * thumb_units_per_pixel();
 			}
 		}
-		if (pos > max_pos)
-			pos = max_pos;
-		if (pos < min_pos)
-			pos = min_pos;
+
+		pos = std::max(std::min(pos, max_pos), min_pos);
 
 		if (last_position != pos)
 		{
@@ -332,8 +334,7 @@ namespace clan
 			sig_scroll();
 			scrollbar->set_needs_layout();
 		}
-		scroll_timer.start(100, false);
-
+		scroll_timer.start(300, false);
 	}
 
 	void ScrollBarViewImpl::update_pos(ScrollBarView *view, double new_pos, double new_min, double new_max)
@@ -347,5 +348,4 @@ namespace clan
 			view->set_needs_layout();
 		}
 	}
-
 }

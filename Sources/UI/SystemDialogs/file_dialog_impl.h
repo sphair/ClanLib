@@ -29,6 +29,7 @@
 #include "UI/precomp.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/IOData/path_help.h"
+#include "API/Core/System/databuffer.h"
 #include "API/Core/System/system.h"
 #include "API/UI/View/view.h"
 #include "API/UI/TopLevel/view_tree.h"
@@ -132,7 +133,7 @@ namespace clan
 
 			ViewTree *tree = owner->view_tree();
 			if (tree)
-                ofn.hwndOwner = tree->get_display_window().get_handle().hwnd;
+                ofn.hwndOwner = tree->display_window().get_handle().hwnd;
 			else
 				ofn.hwndOwner = 0;
 

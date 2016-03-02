@@ -31,7 +31,7 @@
 
 ColorWheel::ColorWheel()
 {
-	add_subview(overlay);
+	add_child(overlay);
 
 	style()->set("position: absolute; left: 0; top: 0; width:400px; height:400px;");
 

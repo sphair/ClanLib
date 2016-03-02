@@ -37,7 +37,7 @@ namespace clan
 		impl->owner = owner;
 	}
 
-	std::string SaveFileDialog::get_filename() const
+	std::string SaveFileDialog::filename() const
 	{
 		return impl->get_filename();
 	}

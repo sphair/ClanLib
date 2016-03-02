@@ -72,7 +72,7 @@ HelloWorld::HelloWorld()
 	body->style()->set("border-bottom: 5px solid #DD3B2A");
 	body->style()->set("flex-direction: column");
 	body->style()->set("flex: auto");
-	window->root_view()->add_subview(body);
+	window->root_view()->add_child(body);
 
 	// Create a label with some text to have some content
 	label = std::make_shared<LabelView>();
@@ -80,7 +80,7 @@ HelloWorld::HelloWorld()
 	label->style()->set("font: 20px/40px 'Ravie'");
 	label->style()->set("color: #DD3B2A");
 	label->set_text("Hello World!");
-	body->add_subview(label);
+	body->add_child(label);
 
 	// React to clicking
 	label->slots.connect(label->sig_pointer_press(), [&](PointerEvent &e) {
@@ -96,7 +96,7 @@ HelloWorld::HelloWorld()
 	scrollarea->scrollbar_y_view()->track()->style()->set("padding: 0 4px");
 	scrollarea->scrollbar_y_view()->thumb()->style()->set("background: rgb(208,209,215)");
 	scrollarea->content_view()->style()->set("flex-direction: column");
-	body->add_subview(scrollarea);
+	body->add_child(scrollarea);
 
 	// Create a text field for our span layout
 	std::shared_ptr<TextFieldView> edit = std::make_shared<TextFieldView>();
@@ -118,7 +118,7 @@ HelloWorld::HelloWorld()
 	p1->add_text("This is an example of why Sphair should never ever make fun of my ");
 	p1->add_text("BEAUTIFUL", "bold");
 	p1->add_text(" green 13.37deg gradients because he will never know what it is replaced with!");
-	scrollarea->content_view()->add_subview(p1);
+	scrollarea->content_view()->add_child(p1);
 
 	std::shared_ptr<SpanLayoutView> p2 = std::make_shared<SpanLayoutView>();
 	p2->style()->set("margin: 15px 0 5px 0");
@@ -134,9 +134,9 @@ HelloWorld::HelloWorld()
 	p2->add_text(" please consider typing ");
 	p2->add_text("Yes, yes, yes, yes, yes, yes, yes yes, YES!", "italic");
 	p2->add_text(" in the text field: ");
-	p2->add_subview(edit);
+	p2->add_child(edit);
 	p2->add_text(" You know you want to!", "bold");
-	scrollarea->content_view()->add_subview(p2);
+	scrollarea->content_view()->add_child(p2);
 	
 	std::shared_ptr<SpanLayoutView> p3 = std::make_shared<SpanLayoutView>();
 	p3->style()->set("font: 13px/25px 'Segoe UI'");
@@ -145,14 +145,14 @@ HelloWorld::HelloWorld()
 	p3->add_text("Since we both know you typed ");
 	p3->add_text("Yes, yes, yes..", "italic");
 	p3->add_text(" into the text field (who wouldn't!?), here's the amazing gradient:");
-	scrollarea->content_view()->add_subview(p3);
+	scrollarea->content_view()->add_child(p3);
 	
 	std::shared_ptr<View> gradient_box = std::make_shared<View>();
 	gradient_box->style()->set("margin: 15px auto; width: 120px; height: 75px;");
 	gradient_box->style()->set("border: 1px solid #777");
 	gradient_box->style()->set("background: linear-gradient(13.37deg, #f0f0f0, rgb(120,240,120) 50%, #f0f0f0)");
 	gradient_box->style()->set("box-shadow: 7px 7px 7px rgba(0,0,0,0.2)");
-	scrollarea->content_view()->add_subview(gradient_box);
+	scrollarea->content_view()->add_child(gradient_box);
 	
 	auto listbox = std::make_shared<ListBoxView>();
 	listbox->style()->set("flex: none; height: 60px; margin: 7px 0; border: 1px solid black; padding: 5px; background: #f0f0f0");
@@ -168,7 +168,7 @@ HelloWorld::HelloWorld()
 			item->set_text(s);
 			return item;
 		});
-	scrollarea->content_view()->add_subview(listbox);
+	scrollarea->content_view()->add_child(listbox);
 
 	auto scrollbar = Theme::create_scrollbar();
 	//scrollbar->set_disabled();
@@ -176,11 +176,11 @@ HelloWorld::HelloWorld()
 	scrollbar->set_position(0.5);
 	scrollbar->set_page_step(0.1);
 	scrollbar->set_line_step(0.01);
-	scrollarea->content_view()->add_subview(scrollbar);
+	scrollarea->content_view()->add_child(scrollbar);
 
 	auto button = Theme::create_button();
 	button->label()->set_text("This is a button");
-	scrollarea->content_view()->add_subview(button);
+	scrollarea->content_view()->add_child(button);
 
 	std::shared_ptr<clan::SliderView> slider = Theme::create_slider();
 	//slider->set_disabled();
@@ -190,17 +190,17 @@ HelloWorld::HelloWorld()
 	slider->set_lock_to_ticks(false);
 	slider->set_page_step(100);
 	slider->set_position(slider->max_position()/2);
-	scrollarea->content_view()->add_subview(slider);
+	scrollarea->content_view()->add_child(slider);
 
 	auto checkbox = Theme::create_checkbox();
 	//checkbox->set_disabled();
-	scrollarea->content_view()->add_subview(checkbox);
+	scrollarea->content_view()->add_child(checkbox);
 
 	for (int cnt = 0; cnt < 3; cnt++)
 	{
 		auto radio = Theme::create_radiobutton();
 		//radio->set_disabled(true);
-		scrollarea->content_view()->add_subview(radio);
+		scrollarea->content_view()->add_child(radio);
 	}
 
 	// Create a popup window
@@ -218,7 +218,7 @@ HelloWorld::HelloWorld()
 		auto text = Theme::create_label(true);
 		text->style()->set("font: 12px Tahoma; color: black");
 		text->set_text("This is an awesome popup");
-		popup->root_view()->add_subview(text);
+		popup->root_view()->add_child(text);
 
 		std::weak_ptr<WindowController> popup_weak = popup;
 		popup->slots.connect(button->sig_pointer_leave(), [=](PointerEvent &e)
@@ -245,11 +245,11 @@ HelloWorld::HelloWorld()
 		text->style()->set("margin-bottom: 7px");
 		text->style()->set("font: 12px Tahoma; color: black");
 		text->set_text("This a modal dialog");
-		dialog->root_view()->add_subview(text);
+		dialog->root_view()->add_child(text);
 
 		auto ok_button = Theme::create_button();
 		ok_button->label()->set_text("OK");
-		dialog->root_view()->add_subview(ok_button);
+		dialog->root_view()->add_child(ok_button);
 
 		std::weak_ptr<WindowController> dialog_weak = dialog;
 		ok_button->func_clicked() = [=]()

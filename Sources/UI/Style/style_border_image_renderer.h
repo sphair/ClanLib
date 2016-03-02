@@ -28,11 +28,14 @@
 
 #pragma once
 
+#include <memory>
+
 namespace clan
 {
 	class Canvas;
 	class Image;
 	class Colorf;
+	class Rectf;
 	class StyleCascade;
 	class StyleGetValue;
 	class ViewGeometry;
@@ -54,7 +57,7 @@ namespace clan
 		
 		TileRepeatInfo repeat_info(float x, float w, int sw, const StyleGetValue &repeat_x);
 		
-		void draw_area(Image &image, float x, float y, float w, float h, int sx, int sy, int sw, int sh, const StyleGetValue &repeat_x, const StyleGetValue &repeat_y);
+		void draw_area(const Image &image, float x, float y, float w, float h, int sx, int sy, int sw, int sh, const StyleGetValue &repeat_x, const StyleGetValue &repeat_y);
 		Rectf get_border_image_area() const;
 		float get_left_grid(float image_area_width, float auto_width) const;
 		float get_right_grid(float image_area_width, float auto_width) const;

@@ -37,6 +37,7 @@
 #include "API/Display/Font/font.h"
 #include "API/Display/Font/font_metrics.h"
 #include "API/Display/Font/glyph_metrics.h"
+#include "API/Core/Text/string_help.h"
 #include <cmath>
 
 namespace clan
@@ -49,10 +50,10 @@ namespace clan
 		Font font;
 		LineBreakMode _line_break_mode = LineBreakMode::truncating_tail;
 
-		Font &get_font(LabelView *view, Canvas &canvas)
+		const Font &get_font(LabelView *view, Canvas &canvas)
 		{
-			if (font.is_null())
-				font = view->style_cascade().get_font(canvas);
+			if (!font)
+				font = view->style_cascade().font(canvas);
 			return font;
 		}
 	};
@@ -61,10 +62,10 @@ namespace clan
 	{
 	}
 
-	void LabelView::layout_subviews(Canvas &canvas)
+	void LabelView::layout_children(Canvas &canvas)
 	{
-		View::layout_subviews(canvas);
-		impl->font = style_cascade().get_font(canvas);	// Reset the font on new layout
+		View::layout_children(canvas);
+		impl->font = style_cascade().font(canvas);	// Reset the font on new layout
 	}
 
 	std::string LabelView::text() const
@@ -159,24 +160,14 @@ namespace clan
 
 	float LabelView::calculate_preferred_width(Canvas &canvas)
 	{
-		if (style_cascade().computed_value("width").is_keyword("auto"))
-		{
-			Font font = impl->get_font(this, canvas);
-			return font.measure_text(canvas, impl->_text).advance.width + 1.0f;
-		}
-		else
-			return style_cascade().computed_value("width").number();
+		Font font = impl->get_font(this, canvas);
+		return font.measure_text(canvas, impl->_text).advance.width + 1.0f;
 	}
 
 	float LabelView::calculate_preferred_height(Canvas &canvas, float width)
 	{
-		if (style_cascade().computed_value("height").is_keyword("auto"))
-		{
-			Font font = impl->get_font(this, canvas);
-			return font.get_font_metrics(canvas).get_line_height();
-		}
-		else
-			return style_cascade().computed_value("height").number();
+		Font font = impl->get_font(this, canvas);
+		return font.get_font_metrics(canvas).get_line_height();
 	}
 
 	float LabelView::calculate_first_baseline_offset(Canvas &canvas, float width)
@@ -187,6 +178,6 @@ namespace clan
 
 	float LabelView::calculate_last_baseline_offset(Canvas &canvas, float width)
 	{
-		return get_first_baseline_offset(canvas, width);
+		return first_baseline_offset(canvas, width);
 	}
 }

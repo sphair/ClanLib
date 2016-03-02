@@ -34,7 +34,7 @@
 #include "API/UI/Events/activation_change_event.h"
 #include "API/Display/Window/input_event.h"
 #include "API/Display/2D/canvas.h"
-#include "UI/View/positioned_layout.h"
+#include "../../View/positioned_layout.h"
 #include "texture_window_impl.h"
 
 namespace clan
@@ -58,12 +58,12 @@ namespace clan
 		impl->clear_background_enable = enable;
 	}
 
-	Canvas TextureWindow::get_canvas() const
+	Canvas TextureWindow::canvas() const
 	{
 		return impl->canvas;
 	}
 
-	DisplayWindow TextureWindow::get_display_window()
+	DisplayWindow TextureWindow::display_window()
 	{
 		return impl->display_window;
 	}
@@ -102,7 +102,7 @@ namespace clan
 		impl->set_window(window, enable_automatic_events, transform_mouse_matrix);
 	}
 
-	Rectf TextureWindow::get_viewport() const
+	Rectf TextureWindow::viewport() const
 	{
 		return impl->canvas_rect;
 	}

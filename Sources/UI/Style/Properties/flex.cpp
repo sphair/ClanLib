@@ -27,6 +27,7 @@
 */
 
 #include "UI/precomp.h"
+#include "API/Core/Text/string_help.h"
 #include "flex.h"
 
 namespace clan
@@ -37,7 +38,7 @@ namespace clan
 
 	StylePropertyDefault style_default_flex_grow("flex-grow", StyleGetValue::from_number(0.0f), false);
 	StylePropertyDefault style_default_flex_shrink("flex-shrink", StyleGetValue::from_number(1.0f), false);
-	StylePropertyDefault style_default_flex_basis("flex-basis", StyleGetValue::from_keyword("main-size"), false);
+	StylePropertyDefault style_default_flex_basis("flex-basis", StyleGetValue::from_keyword("auto"), false);
 	StylePropertyDefault style_default_flex_direction("flex-direction", StyleGetValue::from_keyword("row"), false);
 	StylePropertyDefault style_default_flex_wrap("flex-wrap", StyleGetValue::from_keyword("nowrap"), false);
 	StylePropertyDefault style_default_order("order", StyleGetValue::from_number(0.0f), false);
@@ -75,7 +76,7 @@ namespace clan
 			{
 				flex_grow = StyleSetValue::from_number(0.0f);
 				flex_shrink = StyleSetValue::from_number(0.0f);
-				flex_basis = StyleSetValue::from_keyword("main-size");
+				flex_basis = StyleSetValue::from_keyword("auto");
 
 				setter->set_value("flex-grow", flex_grow);
 				setter->set_value("flex-shrink", flex_shrink);
@@ -85,7 +86,7 @@ namespace clan
 			{
 				flex_grow = StyleSetValue::from_number(1.0f);
 				flex_shrink = StyleSetValue::from_number(1.0f);
-				flex_basis = StyleSetValue::from_keyword("main-size");
+				flex_basis = StyleSetValue::from_keyword("auto");
 
 				setter->set_value("flex-grow", flex_grow);
 				setter->set_value("flex-shrink", flex_shrink);
@@ -177,8 +178,10 @@ namespace clan
 
 		if (token.type == StyleTokenType::ident)
 		{
-			if (equals(token.value, "main-size"))
-				basis = StyleSetValue::from_keyword("main-size");
+			if (equals(token.value, "auto"))
+				basis = StyleSetValue::from_keyword("auto");
+			else if (equals(token.value, "content"))
+				basis = StyleSetValue::from_keyword("content");
 			else
 				return false;
 		}
@@ -217,8 +220,10 @@ namespace clan
 		StyleToken token = next_token(pos, tokens);
 		if (token.type == StyleTokenType::ident && pos == tokens.size())
 		{
-			if (equals(token.value, "main-size"))
-				flex_basis = StyleSetValue::from_keyword("main-size");
+			if (equals(token.value, "auto"))
+				flex_basis = StyleSetValue::from_keyword("auto");
+			else if (equals(token.value, "content"))
+				flex_basis = StyleSetValue::from_keyword("content");
 			else if (equals(token.value, "inherit"))
 				flex_basis = StyleSetValue::from_keyword("inherit");
 			else
@@ -288,7 +293,6 @@ namespace clan
 		auto &tokens = parser.tokens;
 
 		size_t pos = 0;
-		StyleToken token = next_token(pos, tokens);
 
 		StyleSetValue direction = StyleSetValue::from_keyword("row");
 		StyleSetValue wrap = StyleSetValue::from_keyword("nowrap");

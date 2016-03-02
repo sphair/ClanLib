@@ -98,7 +98,7 @@ Options::~Options()
 std::shared_ptr<clan::ListBoxView> Options::create_listbox(int xpos, int ypos, const std::string &title)
 {
 	auto listbox = Theme::create_listbox();
-	add_subview(listbox);
+	add_child(listbox);
 	listbox->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:%4px;", xpos, ypos, 200, 100);
 	auto label_logic = create_slider_label(xpos, ypos - 30);
 	label_logic->set_text(title);
@@ -115,7 +115,7 @@ float Options::get_value(std::shared_ptr<clan::SliderView> slider)
 std::shared_ptr<clan::SliderView> Options::create_slider(int xpos, int ypos)
 {
 	std::shared_ptr<clan::SliderView> component = Theme::create_slider();
-	add_subview(component);
+	add_child(component);
 
 	component->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:auto;", xpos, ypos, 192);
 	component->set_horizontal();
@@ -132,14 +132,14 @@ std::shared_ptr<clan::SliderView> Options::create_slider(int xpos, int ypos)
 std::shared_ptr<clan::CheckBoxView> Options::create_checkbox(int xpos, int ypos, const std::string &name, bool state)
 {
 	std::shared_ptr<clan::CheckBoxView> checkbox = Theme::create_checkbox();
-	add_subview(checkbox);
+	add_child(checkbox);
 	checkbox->style()->set("position: absolute; left:%1px; top:%2px", xpos, ypos);
 	checkbox->set_check(state);
 
 	auto label = Theme::create_label(true);
 	label->set_text(name);
 	label->style()->set("position: absolute; left:%1px; top:%2px", xpos + 16, ypos - 3);
-	add_subview(label);
+	add_child(label);
 
 	return checkbox;
 }
@@ -222,7 +222,7 @@ void Options::on_equation_passfail(std::shared_ptr<clan::ListBoxView> listbox, b
 std::shared_ptr<clan::LabelView> Options::create_slider_label(int xpos, int ypos)
 {
 	std::shared_ptr<clan::LabelView> component = Theme::create_label(true);
-	add_subview(component);
+	add_child(component);
 	component->style()->set("position: absolute; left:%1px; top:%2px", xpos, ypos);
 	component->set_text("##################");
 	return component;

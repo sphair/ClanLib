@@ -40,28 +40,28 @@ Options::Options(Canvas &canvas) : TextureWindow(canvas)
 	spacer2->style()->set("flex: 1 1");
 	spacer3->style()->set("flex: 1 1");
 
-	add_subview(column1);
-	add_subview(column2);
-	add_subview(column3);
+	add_child(column1);
+	add_child(column2);
+	add_child(column3);
 
-	column1->add_subview(rotation_y_view);
-	column1->add_subview(rotation_x_view);
-	column1->add_subview(rotation_z_view);
-	column1->add_subview(spacer1);
-	column1->add_subview(button_lerp);
+	column1->add_child(rotation_y_view);
+	column1->add_child(rotation_x_view);
+	column1->add_child(rotation_z_view);
+	column1->add_child(spacer1);
+	column1->add_child(button_lerp);
 
-	column2->add_subview(quaternion_w_view);
-	column2->add_subview(quaternion_i_view);
-	column2->add_subview(quaternion_j_view);
-	column2->add_subview(quaternion_k_view);
-	column2->add_subview(spacer2);
-	column2->add_subview(button_slerp);
+	column2->add_child(quaternion_w_view);
+	column2->add_child(quaternion_i_view);
+	column2->add_child(quaternion_j_view);
+	column2->add_child(quaternion_k_view);
+	column2->add_child(spacer2);
+	column2->add_child(button_slerp);
 
-	column3->add_subview(target_y_view);
-	column3->add_subview(target_x_view);
-	column3->add_subview(target_z_view);
-	column3->add_subview(spacer3);
-	column3->add_subview(button_rotate);
+	column3->add_child(target_y_view);
+	column3->add_child(target_x_view);
+	column3->add_child(target_z_view);
+	column3->add_child(spacer3);
+	column3->add_child(button_rotate);
 
 	button_lerp_clicked = false;
 	button_slerp_clicked = false;

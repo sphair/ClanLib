@@ -39,12 +39,12 @@ namespace clan
 		impl->owner = owner;
 	}
 
-	std::string OpenFileDialog::get_filename() const
+	std::string OpenFileDialog::filename() const
 	{
 		return impl->get_filename();
 	}
 
-	std::vector<std::string> OpenFileDialog::get_filenames() const
+	std::vector<std::string> OpenFileDialog::filenames() const
 	{
 		return impl->filenames;
 	}

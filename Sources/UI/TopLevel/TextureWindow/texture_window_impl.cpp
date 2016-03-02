@@ -35,6 +35,8 @@
 #include "API/Display/Render/blend_state_description.h"
 #include "API/Display/Window/input_event.h"
 #include "API/Display/2D/canvas.h"
+#include "API/Display/2D/path.h"
+#include "API/Display/2D/brush.h"
 #include "texture_window_impl.h"
 
 namespace clan
@@ -53,7 +55,7 @@ namespace clan
 		slots = SlotContainer();
 		display_window = window;
 		transform_mouse_matrix = new_transform_mouse_matrix;
-		if (!display_window.is_null() && enable_automatic_events)
+		if (display_window && enable_automatic_events)
 		{
 			slots.connect(display_window.sig_lost_focus(), clan::bind_member(this, &TextureWindow_Impl::on_lost_focus));
 			slots.connect(display_window.sig_got_focus(), clan::bind_member(this, &TextureWindow_Impl::on_got_focus));
@@ -144,7 +146,7 @@ namespace clan
 
 		if (hot_view)
 		{
-			if (!display_window.is_null())
+			if (display_window)
 				hot_view->update_cursor(display_window);
 		}
 
@@ -154,7 +156,7 @@ namespace clan
 	{
 		if (captured_view)
 		{
-			if (!display_window.is_null())
+			if (display_window)
 				display_window.capture_mouse(false);
 			captured_view.reset();
 			capture_down_counter = 0;
@@ -171,7 +173,7 @@ namespace clan
 				captured_view = view_above_cursor;
 				if (captured_view)
 				{
-					if (!display_window.is_null())
+					if (display_window)
 						display_window.capture_mouse(true);
 				}
 			}

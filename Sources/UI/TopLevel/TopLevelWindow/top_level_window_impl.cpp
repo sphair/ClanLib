@@ -38,7 +38,7 @@
 
 namespace clan
 {
-	TopLevelWindow_Impl::TopLevelWindow_Impl(TopLevelWindow *view, const DisplayWindowDescription &desc) : window_view(view), window(desc)
+	TopLevelWindow_Impl::TopLevelWindow_Impl(TopLevelWindow *view, const DisplayWindowDescription &desc) : window_view(view), window(DisplayWindow(desc))
 	{
 		canvas = Canvas(window);
 

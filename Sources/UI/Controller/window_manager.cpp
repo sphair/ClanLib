@@ -29,17 +29,21 @@
 #include "UI/precomp.h"
 #include "API/UI/Controller/window_manager.h"
 #include "API/UI/TopLevel/top_level_window.h"
+#include "API/UI/UIThread/ui_thread.h"
 #include "API/Display/Window/display_window_description.h"
 #include "API/Display/Window/display_window.h"
 #include "API/Display/2D/canvas.h"
 #include "API/Display/System/run_loop.h"
+#include "API/Display/Image/pixel_buffer.h"
+#include "API/Core/IOData/path_help.h"
+#include <map>
 
 namespace clan
 {
 	class WindowManagerImpl
 	{
 	public:
-		bool exit_on_last_close = false;
+		bool exit_on_last_close = true;
 		std::map<WindowController *, std::shared_ptr<WindowController>> windows;
 	};
 
@@ -49,6 +53,10 @@ namespace clan
 	{
 	public:
 		std::string title;
+		Sizef initial_size;
+		bool frame_geometry = true;
+		bool resizable = true;
+		std::vector<std::string> icon_images;
 		std::shared_ptr<View> root_view = std::make_shared<View>();
 
 		WindowManager *manager = nullptr;
@@ -65,7 +73,6 @@ namespace clan
 	WindowManager::~WindowManager()
 	{
 	}
-
 	void WindowManager::set_exit_on_last_close(bool enable)
 	{
 		impl->exit_on_last_close = enable;
@@ -80,26 +87,37 @@ namespace clan
 		desc.set_main_window();
 		desc.set_visible(false);
 		desc.set_title(controller->title());
-		desc.set_allow_resize();
-
+		desc.set_allow_resize(controller->impl->resizable);
 		controller->impl->manager = this;
+
+		if (controller->impl->initial_size != Sizef())
+			desc.set_size(controller->impl->initial_size, !controller->impl->frame_geometry);
+
 		controller->impl->window = std::make_shared<TopLevelWindow>(desc);
 		controller->impl->window->set_root_view(controller->root_view());
 
-		DisplayWindow display_window = controller->impl->window->get_display_window();
-		if (!display_window.is_null())
-			controller->slots.connect(display_window.sig_window_close(), bind_member(controller.get(), &WindowController::dismiss));
+		DisplayWindow display_window = controller->impl->window->display_window();
+		controller->slots.connect(display_window.sig_window_close(), bind_member(controller.get(), &WindowController::dismiss));
 
 		impl->windows[controller.get()] = controller;
 
-		Canvas canvas = controller->root_view()->get_canvas();
-		float width = controller->root_view()->calculate_preferred_width(canvas);
-		float height = controller->root_view()->calculate_preferred_height(canvas, width);
-		Rectf content_box(0.0f, 0.0f, width, height);
-		Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
-		if (!display_window.is_null())
+		if (controller->impl->initial_size == Sizef())
+		{
+			Canvas canvas = controller->root_view()->canvas();
+			float width = controller->root_view()->preferred_width(canvas);
+			float height = controller->root_view()->preferred_height(canvas, width);
+			Rectf content_box(0.0f, 0.0f, width, height);
+			Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
 			display_window.set_size(margin_box.get_width(), margin_box.get_height(), true);
+		}
 
+	/* Clanlib currently doesn't support loading of PixelBuffers via resources, this can be added, and loaded like "auto image = ImageSource::from_resource(layer_image.text())->image(canvas);"
+		if (!controller->impl->icon_images.empty())
+		{
+			display_window.set_large_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), controller->impl->icon_images.front())));
+			display_window.set_small_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), controller->impl->icon_images.back())));
+		}
+	*/
 		controller->impl->window->show(WindowShowType::show);
 	}
 
@@ -114,35 +132,48 @@ namespace clan
 		desc.set_dialog_window();
 		desc.set_visible(false);
 
-		DisplayWindow owner_display_window = owner->view_tree()->get_display_window();
-		if (!owner_display_window.is_null())
+		DisplayWindow owner_display_window = owner->view_tree()->display_window();
+		if (owner_display_window)
 			desc.set_owner_window(owner_display_window);
 		desc.set_title(controller->title());
 		desc.show_minimize_button(false);
 		desc.show_maximize_button(false);
-		desc.set_allow_resize();
+		desc.set_allow_resize(controller->impl->resizable);
+
+		if (controller->impl->initial_size != Sizef())
+			desc.set_size(controller->impl->initial_size, !controller->impl->frame_geometry);
 
 		controller->impl->modal_owner = owner->shared_from_this();
 		controller->impl->manager = this;
 		controller->impl->window = std::make_shared<TopLevelWindow>(desc);
 		controller->impl->window->set_root_view(controller->root_view());
 
-		DisplayWindow controller_display_window = controller->impl->window->get_display_window();
-		if (!controller_display_window.is_null())
+		DisplayWindow controller_display_window = controller->impl->window->display_window();
+		if (controller_display_window)
 			controller->slots.connect(controller_display_window.sig_window_close(), bind_member(controller.get(), &WindowController::dismiss));
 
 		impl->windows[controller.get()] = controller;
 
-		Canvas canvas = controller->root_view()->get_canvas();
-		float width = controller->root_view()->calculate_preferred_width(canvas);
-		float height = controller->root_view()->calculate_preferred_height(canvas, width);
-		Rectf content_box(screen_pos.x - width * 0.5f, screen_pos.y - height * 0.5f, screen_pos.x + width * 0.5f, screen_pos.y + height * 0.5f);
-		Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
-		if (!controller_display_window.is_null())
-			controller_display_window.set_position(margin_box, true);
+		if (controller->impl->initial_size == Sizef())
+		{
+			Canvas canvas = controller->root_view()->canvas();
+			float width = controller->root_view()->preferred_width(canvas);
+			float height = controller->root_view()->preferred_height(canvas, width);
+			Rectf content_box(screen_pos.x - width * 0.5f, screen_pos.y - height * 0.5f, screen_pos.x + width * 0.5f, screen_pos.y + height * 0.5f);
+			Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
+			if (controller_display_window)
+				controller_display_window.set_position(margin_box, true);
+		}
 
+		/* Clanlib currently doesn't support loading of PixelBuffers via resources, this can be added, and loaded like "auto image = ImageSource::from_resource(layer_image.text())->image(canvas);"
+		if (!controller->impl->icon_images.empty())
+		{
+			controller_display_window.set_large_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), controller->impl->icon_images.front())));
+			controller_display_window.set_small_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), controller->impl->icon_images.back())));
+		}
+		*/
 		controller->impl->window->show(WindowShowType::show);
-		if (!owner_display_window.is_null())
+		if (owner_display_window)
 			owner_display_window.set_enabled(false);
 	}
 
@@ -164,24 +195,31 @@ namespace clan
 		desc.show_maximize_button(false);
 
 		controller->impl->manager = this;
+
+		if (controller->impl->initial_size != Sizef())
+			desc.set_size(controller->impl->initial_size, !controller->impl->frame_geometry);
+
 		controller->impl->window = std::make_shared<TopLevelWindow>(desc);
 		controller->impl->window->set_root_view(controller->root_view());
 
-		DisplayWindow owner_display_window = owner->view_tree()->get_display_window();
-		if (!owner_display_window.is_null())
+		DisplayWindow owner_display_window = owner->view_tree()->display_window();
+		if (owner_display_window)
 			controller->slots.connect(owner_display_window.sig_lost_focus(), bind_member(controller.get(), &WindowController::dismiss));
 
 		impl->windows[controller.get()] = controller;
 
-		Canvas canvas = controller->root_view()->get_canvas();
-		float width = controller->root_view()->calculate_preferred_width(canvas);
-		float height = controller->root_view()->calculate_preferred_height(canvas, width);
-		Rectf content_box(screen_pos.x, screen_pos.y, screen_pos.x + width, screen_pos.y + height);
-		Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
+		if (controller->impl->initial_size == Sizef())
+		{
+			Canvas canvas = controller->root_view()->canvas();
+			float width = controller->root_view()->preferred_width(canvas);
+			float height = controller->root_view()->preferred_height(canvas, width);
+			Rectf content_box(screen_pos.x, screen_pos.y, screen_pos.x + width, screen_pos.y + height);
+			Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
 
-		DisplayWindow controller_display_window = controller->impl->window->get_display_window();
-		if (!controller_display_window.is_null())
-			controller_display_window.set_position(margin_box, false);
+			DisplayWindow controller_display_window = controller->impl->window->display_window();
+			if (controller_display_window)
+				controller_display_window.set_position(margin_box, false);
+		}
 
 		controller->impl->window->show(WindowShowType::show_no_activate);
 	}
@@ -216,9 +254,52 @@ namespace clan
 		impl->title = title;
 		if (impl->window)
 		{
-			DisplayWindow display_window = impl->window->get_display_window();
-			if (!display_window.is_null())
+			DisplayWindow display_window = impl->window->display_window();
+			if (display_window)
 				display_window.set_title(title);
+		}
+	}
+
+	void WindowController::set_frame_size(const Sizef &size, bool resizable)
+	{
+		impl->initial_size = size;
+		impl->frame_geometry = true;
+		impl->resizable = resizable;
+		if (impl->window)
+		{
+			DisplayWindow display_window = impl->window->display_window();
+			if (display_window)
+				display_window.set_size(size.width, size.height, false);
+		}
+	}
+
+	void WindowController::set_content_size(const Sizef &size, bool resizable)
+	{
+		impl->initial_size = size;
+		impl->frame_geometry = false;
+		impl->resizable = resizable;
+		if (impl->window)
+		{
+			DisplayWindow display_window = impl->window->display_window();
+			if (display_window)
+				display_window.set_size(size.width, size.height, true);
+		}
+	}
+
+	void WindowController::set_icon(const std::vector<std::string> &icon_images)
+	{
+		impl->icon_images = icon_images;
+		if (impl->window)
+		{
+			DisplayWindow display_window = impl->window->display_window();
+
+			/* Clanlib currently doesn't support loading of PixelBuffers via resources, this can be added, and loaded like "auto image = ImageSource::from_resource(layer_image.text())->image(canvas);"
+			if (display_window && !icon_images.empty())
+			{
+				display_window.set_large_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), icon_images.front())));
+				display_window.set_small_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), icon_images.back())));
+			}
+			*/
 		}
 	}
 
@@ -229,11 +310,11 @@ namespace clan
 			auto modal_owner = impl->modal_owner.lock();
 			if (modal_owner && modal_owner->view_tree())
 			{
-				DisplayWindow display_window = modal_owner->view_tree()->get_display_window();
-				if (!display_window.is_null())
+				DisplayWindow display_window = modal_owner->view_tree()->display_window();
+				if (display_window)
 				{
 					display_window.set_enabled(true);
-					if (impl->window->get_display_window().has_focus())
+					if (impl->window->display_window().has_focus())
 						display_window.show(true); // activate parent to workaround bug in Windows in some situations
 				}
 			}
@@ -241,7 +322,6 @@ namespace clan
 			auto manager = impl->manager;
 
 			// Reset fields before erase because 'this' might be destroyed if 'windows' had the last reference
-			impl->manager = nullptr;
 			impl->window.reset();
 			impl->modal_owner.reset();
 

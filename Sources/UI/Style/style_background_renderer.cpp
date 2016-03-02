@@ -37,6 +37,8 @@
 #include "API/Display/2D/path.h"
 #include "API/Display/2D/brush.h"
 #include "API/UI/Image/image_source.h"
+#include "API/Core/Text/string_help.h"
+#include "API/Core/Math/line.h"
 
 namespace clan
 {
@@ -95,9 +97,9 @@ namespace clan
 		Image image;
 
 		if (layer_image.is_url())
-			image = ImageSource::from_resource(layer_image.text())->get_image(canvas);
+			image = ImageSource::from_resource(layer_image.text())->image(canvas);
 
-		if (!image.is_null())
+		if (image)
 		{
 			Rectf clip_box = get_clip_box(index);
 			Rectf origin_box = get_origin_box(index);
@@ -251,7 +253,7 @@ namespace clan
 			std::string stop_prop_name = prop_name + ".stop[" + StringHelp::int_to_text(stop_index) + "]";
 
 			auto prop_color = style.computed_value(stop_prop_name);
-			auto prop_position = style.computed_value(stop_prop_name + ".position");
+			auto prop_position = style.computed_value(stop_prop_name + ".get_position");
 
 			float position = 0.0f;
 			if (prop_position.is_number())
@@ -379,7 +381,7 @@ namespace clan
 		return y;
 	}
 
-	Sizef StyleBackgroundRenderer::get_image_size(int index, Image &image, Rectf origin_box)
+	Sizef StyleBackgroundRenderer::get_image_size(int index, const Image &image, Rectf origin_box)
 	{
 		Sizef size;
 		StyleGetValue size_x = get_layer_size_x(index);

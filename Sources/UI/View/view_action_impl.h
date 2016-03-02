@@ -26,21 +26,15 @@
 **    Magnus Norddahl
 */
 
-#pragma once
-
-#include "API/UI/View/view.h"
+#include <memory>
 
 namespace clan
 {
-	class Canvas;
+	class View;
 
-	class HBoxLayout
+	class ViewActionImpl
 	{
 	public:
-		static float get_preferred_width(Canvas &canvas, View *view);
-		static float get_preferred_height(Canvas &canvas, View *view, float width);
-		static float get_first_baseline_offset(Canvas &canvas, View *view, float width);
-		static float get_last_baseline_offset(Canvas &canvas, View *view, float width);
-		static void layout_subviews(Canvas &canvas, View *view);
+		View *view = nullptr;
 	};
 }

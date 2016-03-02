@@ -60,9 +60,9 @@ namespace clan
 	{
 		impl->clear();
 
-		std::vector<std::shared_ptr<View>> subviews_copy = subviews();
-		for (auto &view : subviews_copy)
-			view->remove_from_super();
+		std::vector<std::shared_ptr<View>> children_copy = children();
+		for (auto &view : children_copy)
+			view->remove_from_parent();
 	}
 
 	void SpanLayoutView::add_text(const std::string &text, const std::string &text_class)
@@ -72,20 +72,20 @@ namespace clan
 		set_needs_render();
 	}
 
-	void SpanLayoutView::add_subview(const std::shared_ptr<View> &view, float baseline_offset)
+	void SpanLayoutView::add_child(const std::shared_ptr<View> &view, float baseline_offset)
 	{
-		View::add_subview(view);
+		View::add_child(view);
 		impl->set_last_baseline_offset(baseline_offset);
 	}
 
-	void SpanLayoutView::subview_added(const std::shared_ptr<View> &view)
+	void SpanLayoutView::child_added(const std::shared_ptr<View> &view)
 	{
-		impl->add_subview(view);
+		impl->add_child(view);
 	}
 
-	void SpanLayoutView::subview_removed(const std::shared_ptr<View> &view)
+	void SpanLayoutView::child_removed(const std::shared_ptr<View> &view)
 	{
-		impl->remove_subview(view);
+		impl->remove_child(view);
 	}
 
 	void SpanLayoutView::render_content(Canvas &canvas)
@@ -95,33 +95,27 @@ namespace clan
 
 	float SpanLayoutView::calculate_preferred_width(Canvas &canvas)
 	{
-		if (style_cascade().computed_value("width").is_keyword("auto"))
-			return impl->get_preferred_width(canvas);
-		else
-			return style_cascade().computed_value("width").number();
+		return impl->preferred_width(canvas);
 	}
 
 	float SpanLayoutView::calculate_preferred_height(Canvas &canvas, float width)
 	{
-		if (style_cascade().computed_value("height").is_keyword("auto"))
-			return impl->get_preferred_height(canvas, width);
-		else
-			return style_cascade().computed_value("height").number();
+		return impl->preferred_height(canvas, width);
 	}
 
 	float SpanLayoutView::calculate_first_baseline_offset(Canvas &canvas, float width)
 	{
-		return impl->get_first_baseline_offset(canvas, width);
+		return impl->first_baseline_offset(canvas, width);
 	}
 
 	float SpanLayoutView::calculate_last_baseline_offset(Canvas &canvas, float width)
 	{
-		return impl->get_last_baseline_offset(canvas, width);
+		return impl->last_baseline_offset(canvas, width);
 	}
 
-	void SpanLayoutView::layout_subviews(Canvas &canvas)
+	void SpanLayoutView::layout_children(Canvas &canvas)
 	{
-		View::layout_subviews(canvas);
+		View::layout_children(canvas);
 		impl->layout_views(canvas, geometry().content_width);
 	}
 }

@@ -131,11 +131,11 @@ namespace clan
 
 	void RadioButtonView_Impl::release_group_checked()
 	{
-		auto view = radio->superview();
+		auto view = radio->parent();
 		if (view)
 		{
-			std::vector<std::shared_ptr<View>> subviews_copy = view->subviews();
-			for (auto &view : subviews_copy)
+			std::vector<std::shared_ptr<View>> children_copy = view->children();
+			for (auto &view : children_copy)
 			{
 				if (view.get() != radio)
 				{

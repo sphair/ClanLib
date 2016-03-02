@@ -60,8 +60,8 @@ namespace clan
 		void show(WindowShowType type = WindowShowType::show);
 		void hide();
 
-		DisplayWindow get_display_window() override;
-		Canvas get_canvas() const override;
+		DisplayWindow display_window() override;
+		Canvas canvas() const override;
 
 	protected:
 		void set_needs_render() override;

@@ -46,19 +46,19 @@ namespace clan
 		static ViewGeometry from_padding_box(const StyleCascade &style, const Rectf &box);
 		static ViewGeometry from_content_box(const StyleCascade &style, const Rectf &box);
 
-		// \brief Margin box relative to super view
+		// \brief Margin box relative to parent view
 		Rectf margin_box() const;
 
-		// \brief Border box relative to super view
+		// \brief Border box relative to parent view
 		Rectf border_box() const;
 
-		// \brief Padding box relative to super view
+		// \brief Padding box relative to parent view
 		Rectf padding_box() const;
 
-		// \brief Content box relative to super view
+		// \brief Content box relative to parent view
 		Rectf content_box() const;
 
-		// \brief Content offset relative to super view
+		// \brief Content offset relative to parent view
 		Pointf content_pos() const;
 
 		// \brief Content box size
@@ -100,10 +100,10 @@ namespace clan
 		// \brief Bottom padding width
 		float padding_bottom = 0.0f;
 
-		// \brief Content area horizontal offset relative to super view
+		// \brief Content area horizontal offset relative to parent view
 		float content_x = 0.0f;
 
-		// \brief Content area vertical offset relative to super view
+		// \brief Content area vertical offset relative to parent view
 		float content_y = 0.0f;
 
 		// \brief Content area width

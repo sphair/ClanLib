@@ -29,6 +29,7 @@
 #pragma once
 
 #include <memory>
+#include "../../Core/Signals/signal.h"
 
 namespace clan
 {
@@ -53,6 +54,15 @@ namespace clan
 
 		/// Sets the window title
 		void set_title(const std::string &title);
+
+		/// Sets the size of the window
+		void set_frame_size(const Sizef &size, bool resizable = true);
+
+		/// Sets the size of the window
+		void set_content_size(const Sizef &size, bool resizable = true);
+
+		/// Sets the icon used for the window
+		void set_icon(const std::vector<std::string> &icon_images);
 
 		/// Closes the window
 		void dismiss();

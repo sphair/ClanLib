@@ -35,7 +35,7 @@ namespace clan
 	class PositionedLayout
 	{
 	public:
-		static void layout_subviews(Canvas &canvas, View *view);
+		static void layout_children(Canvas &canvas, View *view);
 		static ViewGeometry get_geometry(Canvas &canvas, View *view, const Rectf &containing_box);
 
 	private:

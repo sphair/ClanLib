@@ -46,8 +46,8 @@ namespace clan
 		impl->track = std::make_shared<View>();
 		impl->thumb = std::make_shared<View>();
 
-		add_subview(impl->track);
-		add_subview(impl->thumb);
+		add_child(impl->track);
+		add_child(impl->thumb);
 	
 		slots.connect(sig_pointer_press(), impl.get(), &SliderViewImpl::on_pointer_track_press);
 		slots.connect(sig_pointer_release(), impl.get(), &SliderViewImpl::on_pointer_track_release);
@@ -179,14 +179,14 @@ namespace clan
 		impl->_lock_to_ticks = lock;
 	}
 
-	void SliderView::layout_subviews(Canvas &canvas)
+	void SliderView::layout_children(Canvas &canvas)
 	{
-		View::layout_subviews(canvas);
+		View::layout_children(canvas);
 
 		auto track_geometry = impl->track->geometry();
 
 		float track_length = vertical() ? track_geometry.content_box().get_height() : track_geometry.content_box().get_width();
-		float thumb_length = vertical() ? impl->thumb->get_preferred_height(canvas, track_geometry.content_box().get_width()) : impl->thumb->get_preferred_width(canvas);
+		float thumb_length = vertical() ? impl->thumb->preferred_height(canvas, track_geometry.content_box().get_width()) : impl->thumb->preferred_width(canvas);
 
 		float t = (float) (impl->_position - impl->_min_position) / (float) (impl->_max_position - impl->_min_position);
 		float thumb_pos = t * (track_length - thumb_length);

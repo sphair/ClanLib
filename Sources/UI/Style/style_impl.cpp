@@ -28,6 +28,7 @@
 
 #include "UI/precomp.h"
 #include "API/UI/Style/style.h"
+#include "API/Core/Text/string_help.h"
 #include "style_impl.h"
 
 namespace clan
@@ -102,13 +103,13 @@ namespace clan
 	{
 		for (size_t i = 0; i < value_array.size(); i++)
 		{
-			set_value(name + "[" + StringHelp::int_to_text(i) + "]", value_array[i]);
+			set_value(name + "[" + StringHelp::int_to_text((int)i) + "]", value_array[i]);
 		}
 
 		size_t i = value_array.size();
 		while (true)
 		{
-			auto index_name = name + "[" + StringHelp::int_to_text(i) + "]";
+			auto index_name = name + "[" + StringHelp::int_to_text((int)i) + "]";
 			if (prop_type.find(index_name) == prop_type.end())
 				break;
 			set_value(index_name, StyleSetValue());

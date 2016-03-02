@@ -29,6 +29,7 @@
 
 #pragma once
 
+#include <algorithm>
 
 namespace clan
 {
@@ -73,6 +74,41 @@ namespace clan
 		void on_deactivated(ActivationChangeEvent &e);
 
 		void scroll_timer_expired();
+
+		// Pixel length of the entire scrollbar track
+		double track_length() const
+		{
+			auto track_geometry = track->geometry();
+			return scrollbar->vertical() ? track_geometry.content_box().get_height() : track_geometry.content_box().get_width();
+		}
+
+		// Pixel length of thumb
+		double thumb_length() const
+		{
+			double track = track_length();
+			if (track == 0.0)
+				return 0.0;
+			double content_size = max_pos - min_pos + page_step;
+			double length = page_step / content_size * track;
+			return std::min(std::max(length, 16.0), track);
+		}
+
+		// Pixel position of thumb
+		double thumb_pos() const
+		{
+			if (min_pos == max_pos)
+				return 0.0;
+			double t = (pos - min_pos) / (max_pos - min_pos);
+			return t * (track_length() - thumb_length());
+		}
+
+		// How many units to move per pixel when dragging the thumb
+		double thumb_units_per_pixel() const
+		{
+			double available_units = max_pos - min_pos;
+			double available_pixels = track_length() - thumb_length();
+			return (available_units != 0.0 && available_pixels != 0.0) ? available_units / available_pixels : 0.0;
+		}
 
 		enum MouseDownMode
 		{

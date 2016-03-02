@@ -30,6 +30,7 @@
 
 #include "API/UI/StandardViews/span_layout_view.h"
 #include "API/UI/Style/style.h"
+#include <map>
 
 namespace clan
 {
@@ -66,10 +67,10 @@ namespace clan
 
 		int id = -1;
 
-		Font &get_font(Canvas &canvas)
+		const Font &get_font(Canvas &canvas)
 		{
-			if (font.is_null())
-				font = style_cascade.get_font(canvas);
+			if (!font)
+				font = style_cascade.font(canvas);
 			return font;
 		}
 
@@ -104,17 +105,17 @@ namespace clan
 
 		void clear();
 		void add_text(const std::string &text, const std::shared_ptr<Style> &style, int id = -1);
-		void add_subview(const std::shared_ptr<View> &view, float baseline_offset = 0.0f, int id = -1);
+		void add_child(const std::shared_ptr<View> &view, float baseline_offset = 0.0f, int id = -1);
 		void set_last_baseline_offset(float baseline_offset);
-		void remove_subview(const std::shared_ptr<View> &view);
+		void remove_child(const std::shared_ptr<View> &view);
 
 		void render_content(Canvas &canvas, float width);
 		void layout_views(Canvas &canvas, float width);
 
-		float get_preferred_width(Canvas &canvas);
-		float get_preferred_height(Canvas &canvas, float width);
-		float get_first_baseline_offset(Canvas &canvas, float width);
-		float get_last_baseline_offset(Canvas &canvas, float width);
+		float preferred_width(Canvas &canvas);
+		float preferred_height(Canvas &canvas, float width);
+		float first_baseline_offset(Canvas &canvas, float width);
+		float last_baseline_offset(Canvas &canvas, float width);
 
 		void set_text_alignment(TextAlignment alignment);
 

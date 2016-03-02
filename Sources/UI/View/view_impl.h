@@ -33,9 +33,14 @@
 #include "API/Display/Window/cursor.h"
 #include "API/Display/Window/cursor_description.h"
 #include "../Animation/animation_group.h"
+#include "view_layout.h"
+#include "flex_layout.h"
+#include <map>
 
 namespace clan
 {
+	class ViewLayout;
+
 	class ViewLayoutCache
 	{
 	public:
@@ -65,8 +70,11 @@ namespace clan
 	class ViewImpl
 	{
 	public:
+		ViewLayout *active_layout(View *self);
+
 		void render(View *self, Canvas &canvas, ViewRenderLayer layer);
 		void process_event(View *self, EventUI *e, bool use_capture);
+		void process_action(ViewAction *action, EventUI *e);
 		void update_style_cascade() const;
 
 		unsigned int find_next_tab_index(unsigned int tab_index) const;
@@ -79,8 +87,11 @@ namespace clan
 
 		void inverse_bubble(EventUI *e);
 
-		View *_superview = nullptr;
-		std::vector<std::shared_ptr<View>> _subviews;
+		View *_parent = nullptr;
+		std::vector<std::shared_ptr<View>> _children;
+
+		std::vector<std::shared_ptr<ViewAction>> _actions;
+		ViewAction *_active_action = nullptr;
 
 		unsigned int tab_index = 0;
 		FocusPolicy focus_policy = FocusPolicy::reject;
@@ -135,6 +146,8 @@ namespace clan
 		bool is_cursor_inherited = true;
 
 		ViewLayoutCache layout_cache;
+
+		FlexLayout flex;
 
 	private:
 		unsigned int find_prev_tab_index_helper(unsigned int tab_index) const;

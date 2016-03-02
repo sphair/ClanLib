@@ -81,100 +81,100 @@ App::App()
 	button_class_system->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:auto;", offset_x, offset_y, width);
 	button_class_system->func_clicked() = clan::bind_member(this, &App::on_button_clicked_class_system);
 	button_class_system->label()->set_text("Class: System");
-	root->add_subview(button_class_system);
+	root->add_child(button_class_system);
 	offset_y += gap;
 
 	auto button_class_sprite = Theme::create_button();
 	button_class_sprite->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:auto;", offset_x, offset_y, width);
 	button_class_sprite->func_clicked() = bind_member(this, &App::on_button_clicked_class_sprite);
 	button_class_sprite->label()->set_text("Class: Sprite");
-	root->add_subview(button_class_sprite);
+	root->add_child(button_class_sprite);
 	offset_y += gap;
 
 	button_typeface_tahoma = Theme::create_button();
 	button_typeface_tahoma->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:auto;", offset_x, offset_y, width);
 	button_typeface_tahoma->func_clicked() = bind_member(this, &App::on_button_clicked_typeface_tahoma);
 	button_typeface_tahoma->label()->set_text("Typeface: Tahoma");
-	root->add_subview(button_typeface_tahoma);
+	root->add_child(button_typeface_tahoma);
 	offset_y += gap;
 
 	button_typeface_sans = Theme::create_button();
 	button_typeface_sans->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:auto;", offset_x, offset_y, width);
 	button_typeface_sans->func_clicked() = bind_member(this, &App::on_button_clicked_typeface_sans);
 	button_typeface_sans->label()->set_text("Typeface: Microsoft Sans Serif");
-	root->add_subview(button_typeface_sans);
+	root->add_child(button_typeface_sans);
 	offset_y += gap;
 
 	button_typeface_bitstream = Theme::create_button();
 	button_typeface_bitstream->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:auto;", offset_x, offset_y, width);
 	button_typeface_bitstream->func_clicked() = bind_member(this, &App::on_button_clicked_typeface_bitstream);
 	button_typeface_bitstream->label()->set_text("Typeface: Bitstream Vera Sans");
-	root->add_subview(button_typeface_bitstream);
+	root->add_child(button_typeface_bitstream);
 	offset_y += gap;
 
 	checkbox_italic = Theme::create_checkbox();
 	checkbox_italic->style()->set("position: absolute; left:%1px; top:%2px", offset_x, offset_y);
 	checkbox_italic->func_state_changed() = bind_member(this, &App::on_checkbox_state_italic);
-	root->add_subview(checkbox_italic);
+	root->add_child(checkbox_italic);
 	auto label = Theme::create_label();
 	label->set_text("Italic");
 	label->style()->set("position: absolute; left:%1px; top:%2px", offset_x + 16, offset_y - 3);
-	root->add_subview(label);
+	root->add_child(label);
 
 	checkbox_antialias = Theme::create_checkbox();
 	checkbox_antialias->set_check(true);
 	checkbox_antialias->style()->set("position: absolute; left:%1px; top:%2px", offset_x + 100, offset_y);
 	checkbox_antialias->func_state_changed() = bind_member(this, &App::on_checkbox_state_antialias);
-	root->add_subview(checkbox_antialias);
+	root->add_child(checkbox_antialias);
 	label = Theme::create_label();
 	label->set_text("Anti Alias");
 	label->style()->set("position: absolute; left:%1px; top:%2px", offset_x + 100+ 16, offset_y - 3);
-	root->add_subview(label);
+	root->add_child(label);
 	offset_y += gap;
 
 	checkbox_subpixel = Theme::create_checkbox();
 	checkbox_subpixel->set_check(true);
 	checkbox_subpixel->style()->set("position: absolute; left:%1px; top:%2px", offset_x, offset_y);
 	checkbox_subpixel->func_state_changed() = bind_member(this, &App::on_checkbox_state_subpixel);
-	root->add_subview(checkbox_subpixel);
+	root->add_child(checkbox_subpixel);
 	label = Theme::create_label();
 	label->set_text("SubPixel Rendering");
 	label->style()->set("position: absolute; left:%1px; top:%2px", offset_x + 16, offset_y - 3);
-	root->add_subview(label);
+	root->add_child(label);
 	offset_y += gap;
 
 	auto button_weight_light = Theme::create_button();
 	button_weight_light->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:auto;", offset_x, offset_y, small_width);
 	button_weight_light->func_clicked() = bind_member(this, &App::on_button_clicked_weight_light);
 	button_weight_light->label()->set_text("Light");
-	root->add_subview(button_weight_light);
+	root->add_child(button_weight_light);
 	auto button_weight_normal = Theme::create_button();
 	button_weight_normal->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:auto;", offset_x + small_width + 5, offset_y, small_width);
 	button_weight_normal->func_clicked() = bind_member(this, &App::on_button_clicked_weight_normal);
 	button_weight_normal->label()->set_text("Normal");
-	root->add_subview(button_weight_normal);
+	root->add_child(button_weight_normal);
 	auto button_weight_bold = Theme::create_button();
 	button_weight_bold->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:auto;", offset_x + (small_width + 5) * 2, offset_y, small_width);
 	button_weight_bold->func_clicked() = bind_member(this, &App::on_button_clicked_weight_bold);
 	button_weight_bold->label()->set_text("Bold");
-	root->add_subview(button_weight_bold);
+	root->add_child(button_weight_bold);
 	offset_y += gap;
 
 	auto button_size_16 = Theme::create_button();
 	button_size_16->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:auto;", offset_x, offset_y, small_width);
 	button_size_16->func_clicked() = bind_member(this, &App::on_button_clicked_size_16);
 	button_size_16->label()->set_text("Size 16");
-	root->add_subview(button_size_16);
+	root->add_child(button_size_16);
 	auto button_size_32 = Theme::create_button();
 	button_size_32->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:auto;", offset_x + small_width + 5, offset_y, small_width);
 	button_size_32->func_clicked() = bind_member(this, &App::on_button_clicked_size_32);
 	button_size_32->label()->set_text("Size 32");
-	root->add_subview(button_size_32);
+	root->add_child(button_size_32);
 	auto button_size_64 = Theme::create_button();
 	button_size_64->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:auto;", offset_x + (small_width + 5) * 2, offset_y, small_width);
 	button_size_64->func_clicked() = bind_member(this, &App::on_button_clicked_size_64);
 	button_size_64->label()->set_text("Size 64");
-	root->add_subview(button_size_64);
+	root->add_child(button_size_64);
 	offset_y += gap + 8;
 
 	lineedit_text = std::make_shared<clan::TextFieldView>();
@@ -190,7 +190,7 @@ App::App()
 	font_text = "Ω(The quick brown fox 0123456789)";
 	lineedit_text->set_text(font_text);
 	slots.connect(lineedit_text->sig_selection_changed(), bind_member(this, &App::on_lineedit_changed));
-	root->add_subview(lineedit_text);
+	root->add_child(lineedit_text);
 
 	last_fps = 0.0f;
 	selected_fontclass = font_ttf;

@@ -104,7 +104,7 @@ namespace clan
 
 				ViewTree *tree = owner->view_tree();
 				if (tree)
-					result = open_dialog->Show(tree->get_display_window().get_handle().hwnd);
+					result = open_dialog->Show(tree->display_window().get_handle().hwnd);
 				else
 					result = open_dialog->Show(0);
 
@@ -150,7 +150,7 @@ namespace clan
 
 				ViewTree *tree = owner->view_tree();
 				if (tree)
-					bi.hwndOwner = tree->get_display_window().get_handle().hwnd;
+					bi.hwndOwner = tree->display_window().get_handle().hwnd;
 				else
 					bi.hwndOwner = 0;
 
@@ -241,7 +241,7 @@ namespace clan
 		impl->owner = owner;
 	}
 
-	std::string BrowseFolderDialog::get_selected_path() const
+	std::string BrowseFolderDialog::selected_path() const
 	{
 		return impl->selected_path;
 	}

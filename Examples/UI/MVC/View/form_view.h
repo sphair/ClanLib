@@ -6,8 +6,8 @@ class FormEditView : public clan::RowView
 public:
 	FormEditView(const std::string &text)
 	{
-		label = add_subview<clan::LabelView>();
-		textfield = add_subview<clan::TextFieldView>();
+		label = add_child<clan::LabelView>();
+		textfield = add_child<clan::TextFieldView>();
 
 		label->set_text(text);
 		textfield->set_preferred_size(55);
@@ -43,9 +43,9 @@ class FormView : public clan::ColumnView
 public:
 	FormView()
 	{
-		name = add_subview<FormEditView>("Name");
-		description = add_subview<FormEditView>("Description");
-		add_subview<FormInfoView>();
+		name = add_child<FormEditView>("Name");
+		description = add_child<FormEditView>("Description");
+		add_child<FormInfoView>();
 
 		style()->set("padding: 11px");
 		style()->set("background: rgb(240,240,240)");

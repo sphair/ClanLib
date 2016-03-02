@@ -60,13 +60,13 @@ namespace clan
 	{
 		impl->selected_item = -1;
 		
-		auto views = content_view()->subviews();
+		auto views = content_view()->children();
 		while (!views.empty())
-			views.back()->remove_from_super();
+			views.back()->remove_from_parent();
 		
 		for (auto &item : items)
 		{
-			content_view()->add_subview(item);
+			content_view()->add_child(item);
 			slots.connect(item->sig_pointer_enter(), impl.get(), &ListBoxViewImpl::on_pointer_enter);
 			slots.connect(item->sig_pointer_leave(), impl.get(), &ListBoxViewImpl::on_pointer_leave);
 
@@ -84,18 +84,18 @@ namespace clan
 		if (index == impl->selected_item)
 			return;
 		
-		if (index < -1 || index >= (int) content_view()->subviews().size())
+		if (index < -1 || index >= (int) content_view()->children().size())
 			throw Exception("Listbox index out of bounds");
 
 		if (impl->selected_item != -1)
-			content_view()->subviews().at(impl->selected_item)->set_state("selected", false);
+			content_view()->children().at(impl->selected_item)->set_state("selected", false);
 		
 		if (index != -1)
 		{
 			if (impl->hot_item == index)
 				impl->set_hot_item(-1);
 
-			auto new_selected_item = content_view()->subviews().at(index);
+			auto new_selected_item = content_view()->children().at(index);
 			new_selected_item->set_state("selected", true);
 			
 			// To do: call set_content_offset() if new_selected_item is not within range (maybe add a helper on ScrollView for this?)

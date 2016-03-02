@@ -28,49 +28,17 @@
 
 #pragma once
 
-#include "../View/view.h"
-
 namespace clan
 {
-	enum class ContentOverflow
-	{
-		hidden,
-		scroll,
-		automatic
-	};
-	
-	class ScrollBarView;
-	class ScrollViewImpl;
-	
-	class ScrollView : public View
+	class Canvas;
+
+	class ViewLayout
 	{
 	public:
-		ScrollView();
-		~ScrollView();
-		
-		std::shared_ptr<ScrollBarView> scrollbar_x_view() const;
-		std::shared_ptr<ScrollBarView> scrollbar_y_view() const;
-		
-		std::shared_ptr<View> content_view() const;
-		
-		ContentOverflow overflow_x() const;
-		ContentOverflow overflow_y() const;
-		void set_overflow_x(ContentOverflow value);
-		void set_overflow_y(ContentOverflow value);
-		void set_overflow(ContentOverflow value_x, ContentOverflow value_y);
-		
-		Pointf content_offset() const;
-		void set_content_offset(const Pointf &offset, bool animated = false);
-		
-		void layout_children(Canvas &canvas) override;
-
-	protected:
-		float calculate_preferred_width(Canvas &canvas) override;
-		float calculate_preferred_height(Canvas &canvas, float width) override;
-		float calculate_first_baseline_offset(Canvas &canvas, float width) override;
-		float calculate_last_baseline_offset(Canvas &canvas, float width) override;
-		
-	private:
-		std::unique_ptr<ScrollViewImpl> impl;
+		virtual float preferred_width(Canvas &canvas, View *view) = 0;
+		virtual float preferred_height(Canvas &canvas, View *view, float width) = 0;
+		virtual float first_baseline_offset(Canvas &canvas, View *view, float width) = 0;
+		virtual float last_baseline_offset(Canvas &canvas, View *view, float width) = 0;
+		virtual void layout_children(Canvas &canvas, View *view) = 0;
 	};
 }

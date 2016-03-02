@@ -70,10 +70,10 @@ Options::Options(clan::Canvas &canvas) : clan::TextureWindow(canvas)
 
 	listbox_mapmode->func_selection_changed() = bind_member(this, &Options::on_mapmode_selected);
 	listbox_mapmode->set_selected_item(0);
-	add_subview(listbox_mapmode);
+	add_child(listbox_mapmode);
 
 	label_mapmode = Theme::create_label(true);
-	add_subview(label_mapmode);
+	add_child(label_mapmode);
 	label_mapmode->style()->set("position: absolute; left:%1px; top:%2px", slider_label_xpos, 10);
 	label_mapmode->set_text("Map Mode");
 
@@ -95,7 +95,7 @@ float Options::get_value(std::shared_ptr<clan::SliderView> slider)
 std::shared_ptr<clan::SliderView> Options::create_slider(int xpos, int ypos)
 {
 	std::shared_ptr<clan::SliderView> component = Theme::create_slider();
-	add_subview(component);
+	add_child(component);
 
 	component->style()->set("position: absolute; left:%1px; top:%2px; width:%3px; height:auto;", xpos, ypos, 192);
 	component->set_horizontal();
@@ -113,14 +113,14 @@ std::shared_ptr<clan::SliderView> Options::create_slider(int xpos, int ypos)
 std::shared_ptr<clan::CheckBoxView> Options::create_checkbox(int xpos, int ypos, const std::string &name, bool state)
 {
 	std::shared_ptr<clan::CheckBoxView> checkbox = Theme::create_checkbox();
-	add_subview(checkbox);
+	add_child(checkbox);
 	checkbox->style()->set("position: absolute; left:%1px; top:%2px", xpos, ypos);
 	checkbox->set_check(state);
 
 	auto label = Theme::create_label(true);
 	label->set_text(name);
 	label->style()->set("position: absolute; left:%1px; top:%2px", xpos + 16, ypos - 3);
-	add_subview(label);
+	add_child(label);
 
 	return checkbox;
 }
@@ -145,7 +145,7 @@ void Options::on_mapmode_selected()
 std::shared_ptr<clan::LabelView> Options::create_slider_label(int xpos, int ypos)
 {
 	std::shared_ptr<clan::LabelView> component = Theme::create_label(true);
-	add_subview(component);
+	add_child(component);
 	component->style()->set("position: absolute; left:%1px; top:%2px", xpos, ypos);
 	component->set_text("##################");
 	return component;

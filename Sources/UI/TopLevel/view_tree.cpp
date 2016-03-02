@@ -43,9 +43,9 @@ namespace clan
 		{
 			ActivationChangeEvent change(type);
 			View::dispatch_event(view, &change, true);
-			for (const auto &subview : view->subviews())
+			for (const auto &child : view->children())
 			{
-				dispatch_activation_change(subview.get(), type);
+				dispatch_activation_change(child.get(), type);
 			}
 		}
 
@@ -111,8 +111,8 @@ namespace clan
 
 		if (view->needs_layout())
 		{
-			view->layout_subviews(canvas);
-			PositionedLayout::layout_subviews(canvas, view);
+			view->layout_children(canvas);
+			PositionedLayout::layout_children(canvas, view);
 		}
 		view->impl->needs_layout = false;
 

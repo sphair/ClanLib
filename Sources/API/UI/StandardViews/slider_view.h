@@ -67,7 +67,7 @@ namespace clan
 
 		std::function<void()> &func_value_changed();
 
-		void layout_subviews(Canvas &canvas) override;
+		void layout_children(Canvas &canvas) override;
 
 	private:
 		std::shared_ptr<SliderViewImpl> impl;

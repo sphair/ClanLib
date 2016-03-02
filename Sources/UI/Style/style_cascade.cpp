@@ -33,6 +33,7 @@
 #include "API/UI/UIThread/ui_thread.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/2D/canvas.h"
+#include "API/Core/Text/string_help.h"
 #include "style_background_renderer.h"
 #include "style_border_image_renderer.h"
 #include "style_impl.h"
@@ -183,7 +184,7 @@ namespace clan
 		image_renderer.render();
 	}
 
-	Font StyleCascade::get_font(Canvas &canvas) const
+	Font StyleCascade::font(Canvas &canvas) const
 	{
 		auto font_size = computed_value("font-size");
 		auto line_height = computed_value("line-height");

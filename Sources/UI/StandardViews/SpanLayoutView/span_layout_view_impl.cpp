@@ -33,7 +33,6 @@
 #include "API/Display/2D/brush.h"
 #include "API/Display/Font/glyph_metrics.h"
 #include "API/Display/Font/font_metrics.h"
-#include "API/Display/Render/shared_gc_data.h"
 #include <algorithm>
 
 namespace clan
@@ -65,7 +64,7 @@ namespace clan
 		text += more_text;
 	}
 
-	void SpanLayoutViewImpl::add_subview(const std::shared_ptr<View> &view, float baseline_offset, int id)
+	void SpanLayoutViewImpl::add_child(const std::shared_ptr<View> &view, float baseline_offset, int id)
 	{
 		SpanObject object;
 		object.type = SpanObjectType::view;
@@ -83,7 +82,7 @@ namespace clan
 		objects.back().baseline_offset = baseline_offset;
 	}
 
-	void SpanLayoutViewImpl::remove_subview(const std::shared_ptr<View> &view)
+	void SpanLayoutViewImpl::remove_child(const std::shared_ptr<View> &view)
 	{
 		for (auto it = objects.begin(); it != objects.end(); ++it)
 		{
@@ -130,7 +129,8 @@ namespace clan
 
 					GlyphMetrics advance = object.get_font(canvas).measure_text(canvas, obj_text);
 
-					object.get_font(canvas).draw_text(canvas, x, y + metrics.ascent + object.baseline_offset, obj_text, object.style_cascade.computed_value("color").color());
+					clan::Font font = object.get_font(canvas);
+					font.draw_text(canvas, x, y + metrics.ascent + object.baseline_offset, obj_text, object.style_cascade.computed_value("color").color());
 
 					x += advance.advance.width;
 				}
@@ -186,11 +186,11 @@ namespace clan
 					float obj_x = x;
 					float obj_y = y + metrics.ascent + object.baseline_offset;
 
-					float obj_width = object.view->get_preferred_width(canvas);
-					float obj_height = object.view->get_preferred_height(canvas, obj_width);
-					float obj_baseline_offset = object.view->get_first_baseline_offset(canvas, obj_width);
+					float obj_width = object.view->preferred_width(canvas);
+					float obj_height = object.view->preferred_height(canvas, obj_width);
+					float obj_baseline_offset = object.view->first_baseline_offset(canvas, obj_width);
 
-					if (obj_baseline_offset == 0.0f) // Hmm, do we need get_first_baseline_offset to be able to return that there is no baseline?
+					if (obj_baseline_offset == 0.0f) // Hmm, do we need first_baseline_offset to be able to return that there is no baseline?
 						obj_baseline_offset = obj_height;
 
 					obj_width += object.view->style_cascade().computed_value("margin-left").number();
@@ -226,7 +226,7 @@ namespace clan
 		}
 	}
 
-	float SpanLayoutViewImpl::get_preferred_width(Canvas &canvas)
+	float SpanLayoutViewImpl::preferred_width(Canvas &canvas)
 	{
 		float x = 0.0f;
 		for (SpanObject &object : objects)
@@ -238,13 +238,13 @@ namespace clan
 			}
 			else if (object.type == SpanObjectType::view)
 			{
-				x += object.view->get_preferred_width(canvas);
+				x += object.view->preferred_width(canvas);
 			}
 		}
 		return x;
 	}
 
-	float SpanLayoutViewImpl::get_preferred_height(Canvas &canvas, float width)
+	float SpanLayoutViewImpl::preferred_height(Canvas &canvas, float width)
 	{
 		float y = 0.0f;
 		size_t obj_start = 0;
@@ -260,12 +260,12 @@ namespace clan
 		return y;
 	}
 
-	float SpanLayoutViewImpl::get_first_baseline_offset(Canvas &canvas, float width)
+	float SpanLayoutViewImpl::first_baseline_offset(Canvas &canvas, float width)
 	{
 		return find_line_metrics(canvas, 0, 0, width).ascent;
 	}
 
-	float SpanLayoutViewImpl::get_last_baseline_offset(Canvas &canvas, float width)
+	float SpanLayoutViewImpl::last_baseline_offset(Canvas &canvas, float width)
 	{
 		float y = 0.0f;
 		size_t obj_start = 0;
@@ -345,11 +345,11 @@ namespace clan
 			}
 			else if (object.type == SpanObjectType::view)
 			{
-				float obj_width = object.view->get_preferred_width(canvas);
-				float obj_height = object.view->get_preferred_height(canvas, obj_width);
-				float obj_baseline_offset = object.view->get_first_baseline_offset(canvas, obj_width);
+				float obj_width = object.view->preferred_width(canvas);
+				float obj_height = object.view->preferred_height(canvas, obj_width);
+				float obj_baseline_offset = object.view->first_baseline_offset(canvas, obj_width);
 
-				if (obj_baseline_offset == 0.0f) // Hmm, do we need get_first_baseline_offset to be able to return that there is no baseline?
+				if (obj_baseline_offset == 0.0f) // Hmm, do we need first_baseline_offset to be able to return that there is no baseline?
 					obj_baseline_offset = obj_height;
 
 				obj_width += object.view->style_cascade().computed_value("margin-left").number();

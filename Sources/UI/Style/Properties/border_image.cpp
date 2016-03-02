@@ -27,6 +27,7 @@
 */
 
 #include "UI/precomp.h"
+#include "API/Core/Text/string_help.h"
 #include "border_image.h"
 
 namespace clan

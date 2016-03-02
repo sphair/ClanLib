@@ -32,8 +32,8 @@ libclan40UI_la_SOURCES = \
 ./Events/pointer_event.cpp \
 ./View/view.cpp \
 ./View/view_geometry.cpp \
-./View/vbox_layout.cpp \
-./View/hbox_layout.cpp \
+./View/flex_layout.cpp \
+./View/view_action.cpp \
 ./View/positioned_layout.cpp \
 ./SystemDialogs/open_file_dialog.cpp \
 ./SystemDialogs/folder_browse_dialog.cpp \

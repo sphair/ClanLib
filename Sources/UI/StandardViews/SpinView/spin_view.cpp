@@ -48,8 +48,8 @@ namespace clan
 		impl->button_decrement = std::make_shared<View>();
 		impl->button_increment = std::make_shared<View>();
 
-		add_subview(impl->button_decrement);
-		add_subview(impl->button_increment);
+		add_child(impl->button_decrement);
+		add_child(impl->button_increment);
 
 		slots.connect(impl->button_decrement->sig_pointer_press(), impl.get(), &SpinView_Impl::on_pointer_decrement_press);
 		slots.connect(impl->button_decrement->sig_pointer_release(), impl.get(), &SpinView_Impl::on_pointer_decrement_release);

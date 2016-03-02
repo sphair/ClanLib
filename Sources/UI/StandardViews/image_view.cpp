@@ -48,11 +48,11 @@ namespace clan
 
 		void get_images(Canvas &canvas)
 		{
-			if (canvas_image.is_null() && image)
-				canvas_image = image->get_image(canvas);
+			if (!canvas_image && image)
+				canvas_image = image->image(canvas);
 
-			if (canvas_highlighted_image.is_null() && highlighted_image)
-				canvas_highlighted_image = highlighted_image->get_image(canvas);
+			if (!canvas_highlighted_image && highlighted_image)
+				canvas_highlighted_image = highlighted_image->image(canvas);
 		}
 	};
 
@@ -100,7 +100,7 @@ namespace clan
 	{
 		impl->get_images(canvas);
 
-		if (!impl->canvas_image.is_null() && impl->canvas_image.get_width() != 0.0f && impl->canvas_image.get_height() != 0.0f)
+		if (impl->canvas_image && impl->canvas_image.get_width() != 0.0f && impl->canvas_image.get_height() != 0.0f)
 		{
 			float scale_x = geometry().content_width / impl->canvas_image.get_width();
 			float scale_y = geometry().content_height / impl->canvas_image.get_height();
@@ -117,7 +117,7 @@ namespace clan
 	{
 		impl->get_images(canvas);
 
-		if (!impl->canvas_image.is_null())
+		if (impl->canvas_image)
 			return impl->canvas_image.get_width();
 		else
 			return 0.0f;
@@ -127,19 +127,9 @@ namespace clan
 	{
 		impl->get_images(canvas);
 
-		if (!impl->canvas_image.is_null() && impl->canvas_image.get_width() != 0)
+		if (impl->canvas_image && impl->canvas_image.get_width() != 0)
 			return impl->canvas_image.get_height() * width / impl->canvas_image.get_width();
 		else
 			return 0.0f;
-	}
-
-	float ImageView::calculate_first_baseline_offset(Canvas &canvas, float width)
-	{
-		return get_preferred_height(canvas, width);
-	}
-
-	float ImageView::calculate_last_baseline_offset(Canvas &canvas, float width)
-	{
-		return get_first_baseline_offset(canvas, width);
 	}
 }

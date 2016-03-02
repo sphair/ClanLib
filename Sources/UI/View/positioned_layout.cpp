@@ -32,31 +32,31 @@
 
 namespace clan
 {
-	void PositionedLayout::layout_subviews(Canvas &canvas, View *view)
+	void PositionedLayout::layout_children(Canvas &canvas, View *view)
 	{
-		for (const std::shared_ptr<View> &subview : view->subviews())
+		for (const std::shared_ptr<View> &child : view->children())
 		{
-			if (subview->hidden())
+			if (child->hidden())
 			{
 				continue;
 			}
-			else if (subview->style_cascade().computed_value("position").is_keyword("absolute"))
+			else if (child->style_cascade().computed_value("position").is_keyword("absolute"))
 			{
 				// To do: decide how we determine the containing box used for absolute positioning. For now, use the parent content box.
-				layout_from_containing_box(canvas, subview.get(), view->geometry().content_box());
+				layout_from_containing_box(canvas, child.get(), view->geometry().content_box());
 			}
-			else if (subview->style_cascade().computed_value("position").is_keyword("fixed"))
+			else if (child->style_cascade().computed_value("position").is_keyword("fixed"))
 			{
 				Rectf offset_initial_containing_box;
-				View *current = view->superview();
+				View *current = view->parent();
 				if (current)
 				{
 					Pointf offset(view->geometry().content_x, view->geometry().content_y);
 					while (true)
 					{
 						offset = offset + Pointf(current->geometry().content_x, current->geometry().content_y);
-						View *superview = current->superview();
-						if (!superview)
+						View *parent = current->parent();
+						if (!parent)
 						{
 							offset_initial_containing_box = current->geometry().content_box();
 							offset_initial_containing_box.set_top_left(offset_initial_containing_box.get_top_left() - offset);
@@ -69,10 +69,10 @@ namespace clan
 					offset_initial_containing_box = view->geometry().content_box();
 				}
 
-				layout_from_containing_box(canvas, subview.get(), offset_initial_containing_box);
+				layout_from_containing_box(canvas, child.get(), offset_initial_containing_box);
 			}
 
-			layout_subviews(canvas, subview.get());
+			layout_children(canvas, child.get());
 		}
 	}
 
@@ -99,17 +99,17 @@ namespace clan
 		else if (!view->style_cascade().computed_value("left").is_keyword("auto"))
 		{
 			x = view->style_cascade().computed_value("left").number();
-			width = view->get_preferred_width(canvas);
+			width = view->preferred_width(canvas);
 		}
 		else if (!view->style_cascade().computed_value("right").is_keyword("auto"))
 		{
-			width = view->get_preferred_width(canvas);
+			width = view->preferred_width(canvas);
 			x = containing_box.get_width() - view->style_cascade().computed_value("right").number() - width;
 		}
 		else
 		{
 			x = 0.0f;
-			width = view->get_preferred_width(canvas);
+			width = view->preferred_width(canvas);
 		}
 
 		float y = 0.0f;
@@ -133,17 +133,17 @@ namespace clan
 		else if (!view->style_cascade().computed_value("top").is_keyword("auto"))
 		{
 			y = view->style_cascade().computed_value("top").number();
-			height = view->get_preferred_height(canvas, width);
+			height = view->preferred_height(canvas, width);
 		}
 		else if (!view->style_cascade().computed_value("bottom").is_keyword("auto"))
 		{
-			height = view->get_preferred_height(canvas, width);
+			height = view->preferred_height(canvas, width);
 			y = containing_box.get_height() - view->style_cascade().computed_value("bottom").number() - height;
 		}
 		else
 		{
 			y = 0.0f;
-			height = view->get_preferred_height(canvas, width);
+			height = view->preferred_height(canvas, width);
 		}
 
 		return ViewGeometry::from_content_box(view->style_cascade(), Rectf::xywh(x, y, width, height));
@@ -152,6 +152,6 @@ namespace clan
 	void PositionedLayout::layout_from_containing_box(Canvas &canvas, View *view, const Rectf &containing_box)
 	{
 		view->set_geometry(get_geometry(canvas, view, containing_box));
-		view->layout_subviews(canvas);
+		view->layout_children(canvas);
 	}
 }

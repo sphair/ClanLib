@@ -34,10 +34,10 @@ class ColorWheelRadioRow : public clan::View
 public:
 	ColorWheelRadioRow()
 	{
-		add_subview(radiobutton_HSV);
-		add_subview(label_HSV);
-		add_subview(radiobutton_HSL);
-		add_subview(label_HSL);
+		add_child(radiobutton_HSV);
+		add_child(label_HSV);
+		add_child(radiobutton_HSL);
+		add_child(label_HSL);
 
 		style()->set("margin: 3px 0");
 
@@ -62,8 +62,8 @@ class ColorWheelSliderRow : public clan::View
 public:
 	ColorWheelSliderRow(const std::string &name)
 	{
-		add_subview(slider);
-		add_subview(label);
+		add_child(slider);
+		add_child(label);
 
 		style()->set("margin: 3px 0");
 
@@ -90,11 +90,11 @@ public:
 	{
 		style()->set("position: absolute; left: 0; top: 0; right: 0");
 		style()->set("flex-direction: column");
-		add_subview(radio_row);
-		add_subview(saturation_outer);
-		add_subview(saturation_inner);
-		add_subview(value_outer);
-		add_subview(value_inner);
+		add_child(radio_row);
+		add_child(saturation_outer);
+		add_child(saturation_inner);
+		add_child(value_outer);
+		add_child(value_inner);
 	}
 
 	std::shared_ptr<ColorWheelRadioRow> radio_row = std::make_shared<ColorWheelRadioRow>();

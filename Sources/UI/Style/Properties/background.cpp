@@ -27,6 +27,7 @@
 */
 
 #include "UI/precomp.h"
+#include "API/Core/Text/string_help.h"
 #include "background.h"
 #include "API/UI/Image/image_source.h"
 
@@ -212,7 +213,7 @@ namespace clan
 		for (size_t i = 0; i < bgimages.size(); i++)
 		{
 			auto &img = bgimages[i];
-			std::string prop_name = "background-image[" + StringHelp::int_to_text(i) + "]";
+			std::string prop_name = "background-image[" + StringHelp::int_to_text((int)i) + "]";
 			if (!img.image.is_undefined())
 			{
 				setter->set_value(prop_name, img.image);
@@ -224,13 +225,13 @@ namespace clan
 				setter->set_value(prop_name + ".shape", img.gradient.radial_shape);
 				setter->set_value(prop_name + ".size-x", img.gradient.radial_size_x);
 				setter->set_value(prop_name + ".size-y", img.gradient.radial_size_y);
-				setter->set_value(prop_name + ".position-x", img.gradient.radial_position_x);
-				setter->set_value(prop_name + ".position-y", img.gradient.radial_position_y);
+				setter->set_value(prop_name + ".get_position-x", img.gradient.radial_position_x);
+				setter->set_value(prop_name + ".get_position-y", img.gradient.radial_position_y);
 				for (size_t j = 0; j < img.gradient.stops.size(); j++)
 				{
-					std::string stop_prop_name = prop_name + ".stop[" + StringHelp::int_to_text(j) + "]";
+					std::string stop_prop_name = prop_name + ".stop[" + StringHelp::int_to_text((int)j) + "]";
 					setter->set_value(stop_prop_name, img.gradient.stops[j].color);
-					setter->set_value(stop_prop_name + ".position", img.gradient.stops[j].position);
+					setter->set_value(stop_prop_name + ".get_position", img.gradient.stops[j].position);
 				}
 			}
 			else
@@ -674,6 +675,11 @@ namespace clan
 					background_color = StyleSetValue::from_keyword("inherit");
 					setter->set_value("background-color", background_color);
 				}
+				else if (equals(token.value, "none"))
+				{
+					background_color = StyleSetValue::from_color(Colorf::transparent);
+					setter->set_value("background-color", background_color);
+				}
 			}
 		}
 	}
@@ -728,7 +734,7 @@ namespace clan
 		for (size_t i = 0; i < background_images.size(); i++)
 		{
 			auto &img = background_images[i];
-			std::string prop_name = "background-image[" + StringHelp::int_to_text(i) + "]";
+			std::string prop_name = "background-image[" + StringHelp::int_to_text((int)i) + "]";
 			if (!img.image.is_undefined())
 			{
 				setter->set_value(prop_name, img.image);
@@ -740,13 +746,13 @@ namespace clan
 				setter->set_value(prop_name + ".shape", img.gradient.radial_shape);
 				setter->set_value(prop_name + ".size-x", img.gradient.radial_size_x);
 				setter->set_value(prop_name + ".size-y", img.gradient.radial_size_y);
-				setter->set_value(prop_name + ".position-x", img.gradient.radial_position_x);
-				setter->set_value(prop_name + ".position-y", img.gradient.radial_position_y);
+				setter->set_value(prop_name + ".get_position-x", img.gradient.radial_position_x);
+				setter->set_value(prop_name + ".get_position-y", img.gradient.radial_position_y);
 				for (size_t j = 0; j < img.gradient.stops.size(); j++)
 				{
-					std::string stop_prop_name = prop_name + ".stop[" + StringHelp::int_to_text(j) + "]";
+					std::string stop_prop_name = prop_name + ".stop[" + StringHelp::int_to_text((int)j) + "]";
 					setter->set_value(stop_prop_name, img.gradient.stops[j].color);
-					setter->set_value(stop_prop_name + ".position", img.gradient.stops[j].position);
+					setter->set_value(stop_prop_name + ".get_position", img.gradient.stops[j].position);
 				}
 			}
 			else

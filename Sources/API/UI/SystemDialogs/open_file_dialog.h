@@ -47,10 +47,10 @@ namespace clan
 		/// \brief Get the full path of the file selected.
 		///
 		/// If multiple files are selected, this returns the first file.
-		std::string get_filename() const;
+		std::string filename() const;
 
 		/// \brief Gets an array that contains one file name for each selected file.
-		std::vector<std::string> get_filenames() const;
+		std::vector<std::string> filenames() const;
 
 		/// \brief Sets if multiple files can be selected or not.
 		/// \param multiselect = When true, multiple items can be selected.

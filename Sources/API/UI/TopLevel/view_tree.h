@@ -50,10 +50,10 @@ namespace clan
 		/// Gets the display window used
 		///
 		/// This may return a null DisplayWindow
-		virtual DisplayWindow get_display_window() = 0;
+		virtual DisplayWindow display_window() = 0;
 
 		/// Gets the current canvas used to render
-		virtual Canvas get_canvas() const = 0;
+		virtual Canvas canvas() const = 0;
 
 		/// Retrieves the root of the view tree
 		const std::shared_ptr<View> &root_view() const;
@@ -62,22 +62,22 @@ namespace clan
 		void set_root_view(std::shared_ptr<View> root_view);
 
 		/// Add a child view
-		void add_subview(const std::shared_ptr<View> &view)
+		void add_child(const std::shared_ptr<View> &view)
 		{
-			root_view()->add_subview(view);
+			root_view()->add_child(view);
 		}
 
 		template<typename T, typename... Types>
-		std::shared_ptr<T> add_subview(Types &&... args)
+		std::shared_ptr<T> add_child(Types &&... args)
 		{
-			auto subview = std::make_shared<T>(std::forward<Types>(args)...);
-			add_subview(subview);
-			return subview;
+			auto child = std::make_shared<T>(std::forward<Types>(args)...);
+			add_child(child);
+			return child;
 		}
 
-		std::shared_ptr<View> add_subview()
+		std::shared_ptr<View> add_child()
 		{
-			return add_subview<View>();
+			return add_child<View>();
 		}
 
 	protected:

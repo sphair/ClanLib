@@ -48,7 +48,7 @@ namespace clan
 		void set_viewport(const Rectf &rect);
 
 		/// \brief Returns the position and size within the canvas
-		Rectf get_viewport() const;
+		Rectf viewport() const;
 
 		void set_background_color(const Colorf &background_color = Colorf::transparent);
 		void set_clear_background(bool enable = true);
@@ -78,8 +78,8 @@ namespace clan
 		void on_mouse_up(const clan::InputEvent &);
 		void on_mouse_move(const clan::InputEvent &);
 
-		DisplayWindow get_display_window() override;
-		Canvas get_canvas() const override;
+		DisplayWindow display_window() override;
+		Canvas canvas() const override;
 
 	protected:
 		void set_needs_render() override;

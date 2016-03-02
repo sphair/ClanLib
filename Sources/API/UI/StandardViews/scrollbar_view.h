@@ -73,7 +73,7 @@ namespace clan
 
 		Signal<void()> &sig_scroll();
 
-		void layout_subviews(Canvas &canvas) override;
+		void layout_children(Canvas &canvas) override;
 
 	private:
 		std::shared_ptr<ScrollBarViewImpl> impl;

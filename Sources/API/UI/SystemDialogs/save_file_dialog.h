@@ -45,7 +45,7 @@ namespace clan
 		SaveFileDialog(View *owner);
 
 		/// \brief Get the full path of the file selected.
-		std::string get_filename() const;
+		std::string filename() const;
 
 		/// \brief Sets a string containing the full path of the file selected.
 		void set_filename(const std::string &filename);

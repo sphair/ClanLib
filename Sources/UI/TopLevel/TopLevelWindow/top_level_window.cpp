@@ -35,7 +35,7 @@
 #include "API/Display/Window/display_window_description.h"
 #include "API/Display/Window/input_event.h"
 #include "API/Display/2D/canvas.h"
-#include "UI/View/positioned_layout.h"
+#include "../../View/positioned_layout.h"
 #include "top_level_window_impl.h"
 
 namespace clan
@@ -44,7 +44,7 @@ namespace clan
 	{
 	}
 
-	DisplayWindow TopLevelWindow::get_display_window()
+	DisplayWindow TopLevelWindow::display_window()
 	{
 		return impl->window;
 	}
@@ -93,7 +93,7 @@ namespace clan
 		impl->window.hide();
 	}
 
-	Canvas TopLevelWindow::get_canvas() const
+	Canvas TopLevelWindow::canvas() const
 	{
 		return impl->canvas;
 	}

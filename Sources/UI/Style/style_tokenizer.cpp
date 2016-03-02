@@ -29,6 +29,7 @@
 #include "UI/precomp.h"
 #include "API/UI/Style/style_tokenizer.h"
 #include "API/UI/Style/style_token.h"
+#include "API/Core/Text/string_help.h"
 #include "style_tokenizer_impl.h"
 
 namespace clan

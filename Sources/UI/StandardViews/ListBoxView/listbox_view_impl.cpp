@@ -38,7 +38,7 @@ namespace clan
 {
 	void ListBoxViewImpl::on_key_press(KeyEvent &e)
 	{
-		if (listbox->content_view()->subviews().empty())
+		if (listbox->content_view()->children().empty())
 			return;
 
 		if (e.key() == Key::up)
@@ -49,7 +49,7 @@ namespace clan
 		}
 		else if (e.key() == Key::down)
 		{
-			listbox->set_selected_item(clan::min(selected_item + 1, (int)listbox->content_view()->subviews().size() - 1));
+			listbox->set_selected_item(clan::min(selected_item + 1, (int)listbox->content_view()->children().size() - 1));
 			if (func_selection_changed)
 				func_selection_changed();
 		}
@@ -85,7 +85,7 @@ namespace clan
 	int ListBoxViewImpl::get_selection_index(PointerEvent &e)
 	{
 		int index = 0;
-		for (auto &view : listbox->content_view()->subviews())
+		for (auto &view : listbox->content_view()->children())
 		{
 			if (view->geometry().border_box().contains(e.pos(listbox->content_view())))
 				return index;
@@ -100,15 +100,15 @@ namespace clan
 		if ((index == hot_item) || (index == selected_item))		// Selected item state has priority
 			return;
 
-		if (index < -1 || index >= (int) listbox->content_view()->subviews().size())
+		if (index < -1 || index >= (int) listbox->content_view()->children().size())
 			throw Exception("Listbox index out of bounds");
 
 		if (hot_item != -1)
-			listbox->content_view()->subviews().at(hot_item)->set_state("hot", false);
+			listbox->content_view()->children().at(hot_item)->set_state("hot", false);
 
 		if (index != -1)
 		{
-			auto new_selected_item = listbox->content_view()->subviews().at(index);
+			auto new_selected_item = listbox->content_view()->children().at(index);
 			new_selected_item->set_state("hot", true);
 		}
 

@@ -114,6 +114,6 @@ namespace clan
 		void render_border(Canvas &canvas, const ViewGeometry &geometry) const;
 		
 		/// Font used by this style cascade
-		Font get_font(Canvas &canvas) const;
+		Font font(Canvas &canvas) const;
 	};
 }

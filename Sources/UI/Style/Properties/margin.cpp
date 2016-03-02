@@ -27,6 +27,7 @@
 */
 
 #include "UI/precomp.h"
+#include "API/Core/Text/string_help.h"
 #include "margin.h"
 
 namespace clan

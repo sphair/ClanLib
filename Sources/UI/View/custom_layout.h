@@ -28,17 +28,17 @@
 
 #pragma once
 
-#include "API/UI/View/view.h"
+#include "view_layout.h"
 
 namespace clan
 {
-	class VBoxLayout
+	class CustomLayout : public ViewLayout
 	{
 	public:
-		static float get_preferred_width(Canvas &canvas, View *view);
-		static float get_preferred_height(Canvas &canvas, View *view, float width);
-		static float get_first_baseline_offset(Canvas &canvas, View *view, float width);
-		static float get_last_baseline_offset(Canvas &canvas, View *view, float width);
-		static void layout_subviews(Canvas &canvas, View *view);
+		float preferred_width(Canvas &canvas, View *view) override { return 0.0f; }
+		float preferred_height(Canvas &canvas, View *view, float width) override { return 0.0f; }
+		float first_baseline_offset(Canvas &canvas, View *view, float width) override { return 0.0f; }
+		float last_baseline_offset(Canvas &canvas, View *view, float width) override { return 0.0f; }
+		void layout_children(Canvas &canvas, View *view) override { for (const auto &child : view->children()) child->layout_children(canvas); }
 	};
 }

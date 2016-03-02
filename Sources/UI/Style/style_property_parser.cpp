@@ -30,8 +30,10 @@
 #include "API/UI/Style/style_property_parser.h"
 #include "API/UI/Style/style.h"
 #include "API/UI/Style/style_token.h"
+#include "API/Core/Text/string_help.h"
 #include "style_impl.h"
 #include <unordered_map>
+#include <map>
 
 namespace clan
 {
@@ -1051,7 +1053,7 @@ namespace clan
 
 	void StylePropertyParser::debug_parse_error(const std::string &name, const std::vector<StyleToken> &tokens)
 	{
-		std::string s = string_format("Parse error for %1:", name);
+		/*std::string s = string_format("Parse error for %1:", name);
 		for (size_t i = 0; i < tokens.size(); i++)
 		{
 			switch (tokens[i].type)
@@ -1086,7 +1088,7 @@ namespace clan
 			default: break;
 			}
 		}
-		Console::write_line(s);
+		Console::write_line(s);*/
 	}
 
 	/////////////////////////////////////////////////////////////////////////

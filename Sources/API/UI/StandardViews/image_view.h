@@ -72,8 +72,6 @@ namespace clan
 		void render_content(Canvas &canvas) override;
 		float calculate_preferred_width(Canvas &canvas) override;
 		float calculate_preferred_height(Canvas &canvas, float width) override;
-		float calculate_first_baseline_offset(Canvas &canvas, float width) override;
-		float calculate_last_baseline_offset(Canvas &canvas, float width) override;
 
 	private:
 		std::shared_ptr<ImageViewImpl> impl;

@@ -90,7 +90,7 @@ GUI::GUI()
 	label->set_text("Hello World!");
 	label->set_state("amazing", true);
 	label->set_state("cool", true);
-	ui_window->root_view()->add_subview(label);
+	ui_window->root_view()->add_child(label);
 
 	// React to clicking
 	label->slots.connect(label->sig_pointer_press(), [&](clan::PointerEvent &e) {
@@ -113,23 +113,23 @@ GUI::GUI()
 	span->style()->set("font: 13px/40px 'Segoe UI'");
 	span->add_text("This is the UI core ");
 
-	span->add_subview(edit);
+	span->add_child(edit);
 
 	auto scrollbar = Theme::create_scrollbar();
 	scrollbar->set_range(0.0, 1.0);
 	scrollbar->set_position(0.5);
 	scrollbar->set_page_step(0.1);
 	scrollbar->set_line_step(0.01);
-	ui_window->root_view()->add_subview(scrollbar);
+	ui_window->root_view()->add_child(scrollbar);
 
 	auto button = Theme::create_button();
 	button->label()->set_text("This is a button");
-	ui_window->root_view()->add_subview(button);
+	ui_window->root_view()->add_child(button);
 
 	span->text_style("bold")->set("font: 16px/40px 'Segoe UI'; font-weight: 800");
 	span->add_text(" this is bold,", "bold");
 	span->add_text(" but this isn't bold.");
-	ui_window->root_view()->add_subview(span);
+	ui_window->root_view()->add_child(span);
 
 	premultiply_src_blend = clan::BlendState(canvas, clan::BlendStateDescription::blend(true));
 
