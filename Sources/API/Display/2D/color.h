@@ -577,16 +577,6 @@ namespace clan
 		static Color gray80;
 		static Color gray90;
 
-		/// \brief Find and returns the static color matching a string.
-		///
-		/// \param name Name of color to match, eg. "blue".
-		///
-		/// \return Reference to matching static color, or transparent (rgba(0,0,0,0)) if there was no match.
-		static Color find_color(const std::string &name);
-
-		/// \brief Returns the names of static colors defined.
-		static std::vector<std::string> &get_names();
-
 		/// \brief Set alpha color component, in the range 0-255.
 		void set_alpha(unsigned char value) { a = value; }
 
@@ -720,7 +710,7 @@ namespace clan
 		/// \param hexstr The colors rgba components as a hexadecimal string of the format "#rrggbbaa", where the '#' and "aa" parts are optional.
 		Colorf(const std::string &hexstr)
 		{
-			*this = (Colorf)Color::find_color(hexstr);
+			*this = Colorf::find_color(hexstr);
 		}
 
 		/// \brief Get Red
@@ -781,6 +771,13 @@ namespace clan
 		{
 			return Color(*this);
 		}
+
+		/// \brief Find and returns the static color matching a string.
+		///
+		/// \param name Name of color to match, eg. "blue".
+		///
+		/// \return Reference to matching static color, or transparent (rgba(0,0,0,0)) if there was no match.
+		static Colorf find_color(const std::string &name);
 
 		/// \brief <img src="../../img/colors/aliceblue-chip.png" width=16 height=16 > rgb(240, 248, 255).
 		static Colorf aliceblue;
