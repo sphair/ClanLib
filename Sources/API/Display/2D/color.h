@@ -704,13 +704,10 @@ namespace clan
 
 		/// \brief Constructs a color.
 		///
-		/// Color components are specified in the range 0 to 255.\n
-		/// An alpha value of 0 means complete transparency, while 255 means completely opaque (solid).
-		///
 		/// \param hexstr The colors rgba components as a hexadecimal string of the format "#rrggbbaa", where the '#' and "aa" parts are optional.
 		Colorf(const std::string &hexstr)
 		{
-			*this = Colorf::find_color(hexstr);
+			Colorf::find_color(hexstr, *this);
 		}
 
 		/// \brief Get Red
@@ -776,8 +773,9 @@ namespace clan
 		///
 		/// \param name Name of color to match, eg. "blue".
 		///
-		/// \return Reference to matching static color, or transparent (rgba(0,0,0,0)) if there was no match.
-		static Colorf find_color(const std::string &name);
+		/// \param out_color =  Matching static color, or transparent (rgba(0,0,0,0)) if there was no match.
+		/// \return false = No match found
+		static bool find_color(const std::string &name, Colorf &out_color);
 
 		/// \brief <img src="../../img/colors/aliceblue-chip.png" width=16 height=16 > rgb(240, 248, 255).
 		static Colorf aliceblue;

@@ -262,14 +262,18 @@ namespace clan
 	Color Color::gray80(204, 204, 204);
 	Color Color::gray90(230, 230, 230);
 
-	Colorf Colorf::find_color(const std::string &name)
+	bool Colorf::find_color(const std::string &name, Colorf &out_color)
 	{
 		if (name.empty())
-			return Colorf::transparent;
+		{
+			out_color = Colorf::transparent;
+			return false;
+		}
 
 		if (name[0] == '#')
 		{
-			return Colorf(Color(name));
+			out_color = Colorf(Color(name));
+			return true;
 		}
 
 		static std::map<std::string, Colorf *> color_map;
@@ -435,9 +439,14 @@ namespace clan
 		}
 
 		auto it = color_map.find(StringHelp::text_to_local8(name));
-		if (it != color_map.end()) return *it->second;
+		if (it != color_map.end())
+		{
+			out_color = *it->second;
+			return true;
+		}
 
-		return Colorf::transparent;
+		out_color = Colorf::transparent;
+		return false;
 	}
 
 	Colorf Colorf::aliceblue(40.0f / 255.0f, 248.0f / 255.0f, 255.0f / 255.0f);
