@@ -809,19 +809,10 @@ namespace clan
 				return true;
 			}
 
-			for (int i = 0; colors[i].name != 0; i++)
+			if (Colorf::find_color(StringHelp::text_to_lower(token.value), out_color))
 			{
-				if (equals(token.value, colors[i].name))
-				{
-					out_color = Colorf(
-						(colors[i].color >> 16) / 255.0f,
-						((colors[i].color >> 8) & 0xff) / 255.0f,
-						(colors[i].color & 0xff) / 255.0f,
-						1.0f);
-
-					in_out_pos = pos;
-					return true;
-				}
+				in_out_pos = pos;
+				return true;
 			}
 		}
 		else if (token.type == StyleTokenType::function && equals(token.value, "rgb"))
@@ -1023,28 +1014,6 @@ namespace clan
 
 		return false;
 	}
-
-	StylePropertyParser::ColorType StylePropertyParser::colors[] =
-	{
-		{"maroon", 0x800000},
-		{"red", 0xff0000},
-		{"orange", 0xffa500},
-		{"yellow", 0xffff00},
-		{"olive", 0x808000},
-		{"purple", 0x800080},
-		{"fuchia", 0xff00ff},
-		{"white", 0xffffff},
-		{"lime", 0x00ff00},
-		{"green", 0x008000},
-		{"navy", 0x000080},
-		{"blue", 0x0000ff},
-		{"aqua", 0x00ffff},
-		{"teal", 0x008080},
-		{"black", 0x000000},
-		{"silver", 0xc0c0c0},
-		{"gray", 0x808080},
-		{nullptr, 0}
-	};
 
 	bool StylePropertyParser::equals(const std::string &s1, const std::string &s2)
 	{
