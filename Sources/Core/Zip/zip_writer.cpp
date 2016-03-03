@@ -113,7 +113,7 @@ namespace clan
 		{
 			// -Info-ZIP Unicode Path Extra Field (0x7075)
 			std::string filename_cp437 = StringHelp::text_to_cp437(filename);
-			std::string filename_utf8 = StringHelp::text_to_utf8(filename);
+			std::string filename_utf8 = filename;
 			DataBuffer unicode_path(9 + filename_utf8.length());
 			uint16_t *extra_id = (uint16_t *)(unicode_path.get_data());
 			uint16_t *extra_len = (uint16_t *)(unicode_path.get_data() + 2);

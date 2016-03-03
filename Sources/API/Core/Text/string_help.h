@@ -458,20 +458,6 @@ namespace clan
 		/// \return Temp String16
 		static std::wstring cp437_to_ucs2(const std::string &cp437);
 
-		/// \brief Text to local8
-		///
-		/// \param text = String Ref
-		///
-		/// \return Temp String8
-		static std::string text_to_local8(const std::string &text);
-
-		/// \brief Text to utf8
-		///
-		/// \param text = String Ref
-		///
-		/// \return Temp String8
-		static std::string text_to_utf8(const std::string &text);
-
 		/// \brief Ucs2 to latin1
 		///
 		/// \param ucs2 = String Ref16
@@ -499,13 +485,6 @@ namespace clan
 		///
 		/// \return Temp String8
 		static std::string ucs2_to_utf8(const std::wstring &ucs2);
-
-		/// \brief Local8 to text
-		///
-		/// \param local8 = String Ref8
-		///
-		/// \return Temp String
-		static std::string local8_to_text(const std::string &local8);
 
 		/// \brief Ucs2 to text
 		///

@@ -107,7 +107,7 @@ namespace clan
 			GLsizei length = 0;
 			glGetProgramInfoLog(handle, buffer_size, &length, info_log);
 			if (length < buffer_size - 1)
-				result = StringHelp::local8_to_text(std::string(info_log, length));
+				result = std::string(info_log, length);
 			delete[] info_log;
 			if (length < buffer_size - 1)
 				break;
@@ -120,14 +120,14 @@ namespace clan
 	{
 		throw_if_disposed();
 		OpenGL::set_active();
-		return glGetUniformLocation(handle, StringHelp::text_to_local8(name).c_str());
+		return glGetUniformLocation(handle, name.c_str());
 	}
 
 	int GL3ProgramObjectProvider::get_attribute_location(const std::string &name) const
 	{
 		throw_if_disposed();
 		OpenGL::set_active();
-		return glGetAttribLocation(handle, StringHelp::text_to_local8(name).c_str());
+		return glGetAttribLocation(handle, name.c_str());
 	}
 
 	int GL3ProgramObjectProvider::get_uniform_buffer_size(int block_index) const
@@ -152,7 +152,7 @@ namespace clan
 		if (!glGetUniformBlockIndex)
 			throw Exception("incorrect OpenGL version");
 
-		return glGetUniformBlockIndex(handle, StringHelp::text_to_local8(block_name).c_str());
+		return glGetUniformBlockIndex(handle, block_name.c_str());
 	}
 
 	int GL3ProgramObjectProvider::get_storage_buffer_index(const std::string &name) const
@@ -193,14 +193,14 @@ namespace clan
 	{
 		throw_if_disposed();
 		OpenGL::set_active();
-		glBindAttribLocation(handle, index, StringHelp::text_to_local8(name).c_str());
+		glBindAttribLocation(handle, index, name.c_str());
 	}
 
 	void GL3ProgramObjectProvider::bind_frag_data_location(int color_number, const std::string &name)
 	{
 		throw_if_disposed();
 		OpenGL::set_active();
-		glBindFragDataLocation(handle, color_number, StringHelp::text_to_local8(name).c_str());
+		glBindFragDataLocation(handle, color_number, name.c_str());
 	}
 
 	void GL3ProgramObjectProvider::link()

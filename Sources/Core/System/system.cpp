@@ -181,8 +181,8 @@ namespace clan
 					backtrace_text.push_back(
 						string_format(
 						"%1 (%2, line %3)",
-						StringHelp::local8_to_text(symbol64->Name),
-						StringHelp::local8_to_text(line64.FileName),
+						symbol64->Name,
+						line64.FileName,
 						(int)line64.LineNumber));
 				}
 				else

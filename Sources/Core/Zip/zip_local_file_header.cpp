@@ -88,7 +88,7 @@ namespace clan
 	{
 		std::string str_filename;
 		if (general_purpose_bit_flag & ZIP_USE_UTF8)
-			str_filename = StringHelp::text_to_utf8(filename);
+			str_filename = filename;
 		else
 			str_filename = StringHelp::text_to_cp437(filename);
 

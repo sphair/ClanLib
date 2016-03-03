@@ -87,7 +87,7 @@ namespace clan
 		if (result == FALSE)
 			throw Exception("Unable to delete file");
 #else
-		std::string filename_local8 = StringHelp::text_to_local8(filename);
+		std::string filename_local8 = filename;
 		int result = unlink(filename_local8.c_str());
 		if (result == -1)
 			throw Exception("Unable to delete file");

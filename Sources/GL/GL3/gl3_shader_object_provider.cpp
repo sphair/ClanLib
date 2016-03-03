@@ -61,11 +61,10 @@ namespace clan
 		type = shader_type;
 		handle = glCreateShader(shadertype_to_opengl(type));
 
-		std::string source8 = StringHelp::text_to_local8(source);
 		const GLchar *sources[1];
 		GLint source_lengths[1];
 		source_lengths[0] = source.length();
-		sources[0] = source8.c_str();
+		sources[0] = source.c_str();
 		glShaderSource(handle, 1, sources, source_lengths);
 	}
 
@@ -148,7 +147,7 @@ namespace clan
 			GLsizei length = 0;
 			glGetShaderInfoLog(handle, buffer_size, &length, info_log);
 			if (length < buffer_size - 1)
-				result = StringHelp::local8_to_text(std::string(info_log, length));
+				result = std::string(info_log, length);
 			delete[] info_log;
 			if (length < buffer_size - 1)
 				break;
@@ -168,7 +167,7 @@ namespace clan
 			GLsizei length = 0;
 			glGetShaderSource(handle, buffer_size, &length, shader_source);
 			if (length < buffer_size - 1)
-				result = StringHelp::local8_to_text(std::string(shader_source, length));
+				result = std::string(shader_source, length);
 			delete[] shader_source;
 			if (length < buffer_size - 1)
 				break;

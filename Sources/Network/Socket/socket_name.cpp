@@ -118,10 +118,10 @@ namespace clan
 
 	std::string SocketName::lookup_ipv4() const
 	{
-		in_addr_t ipv4_address = inet_addr(StringHelp::text_to_local8(impl->address).c_str());
+		in_addr_t ipv4_address = inet_addr(impl->address.c_str());
 		if (ipv4_address == INADDR_NONE)
 		{
-			hostent *host = gethostbyname(StringHelp::text_to_local8(impl->address).c_str());
+			hostent *host = gethostbyname(impl->address.c_str());
 			if (host == nullptr)
 				throw Exception("Could not lookup DNS name");
 
@@ -139,7 +139,7 @@ namespace clan
 
 	std::string SocketName::lookup_hostname() const
 	{
-		in_addr_t ipv4_address = inet_addr(StringHelp::text_to_local8(impl->address).c_str());
+		in_addr_t ipv4_address = inet_addr(impl->address.c_str());
 		if (ipv4_address != INADDR_NONE)
 		{
 			in_addr addr;
@@ -149,7 +149,7 @@ namespace clan
 			if (host == nullptr)
 				throw Exception("Could not lookup DNS name");
 
-			return StringHelp::local8_to_text(host->h_name);
+			return host->h_name;
 		}
 
 		return impl->address;
@@ -183,10 +183,10 @@ namespace clan
 		}
 		else
 		{
-			addr.sin_addr.s_addr = inet_addr(StringHelp::text_to_local8(impl->address).c_str());
+			addr.sin_addr.s_addr = inet_addr(impl->address.c_str());
 			if (addr.sin_addr.s_addr == INADDR_NONE)
 			{
-				hostent *host = gethostbyname(StringHelp::text_to_local8(impl->address).c_str());
+				hostent *host = gethostbyname(impl->address.c_str());
 				if (host == nullptr)
 					throw Exception("Could not lookup DNS name");
 

@@ -59,7 +59,7 @@ namespace clan
 		std::string source(size, 0);
 		file.read(&source[0], size);
 
-		ShaderObject shader_object(gc, shader_type, StringHelp::local8_to_text(source));
+		ShaderObject shader_object(gc, shader_type, source);
 
 		if (resource.get_element().get_attribute("compile", "true") == "true")
 			if (!shader_object.compile())

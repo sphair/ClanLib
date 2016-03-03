@@ -108,8 +108,8 @@ namespace clan
 		std::string str_comment;
 		if (general_purpose_bit_flag & ZIP_USE_UTF8)
 		{
-			str_filename = StringHelp::text_to_utf8(filename);
-			str_comment = StringHelp::text_to_utf8(file_comment);
+			str_filename = filename;
+			str_comment = file_comment;
 		}
 		else
 		{

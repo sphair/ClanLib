@@ -50,7 +50,7 @@ namespace clan
 	{
 		std::vector<std::string> args;
 		for (int i = 0; i < argc; i++)
-			args.push_back(StringHelp::local8_to_text(argv[i]));
+			args.push_back(argv[i]);
 
 		if (argc == 2 && args[1] == "-debug")
 		{

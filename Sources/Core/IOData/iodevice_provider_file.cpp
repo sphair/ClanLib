@@ -209,7 +209,7 @@ namespace clan
 		else if (open_mode == File::open_existing_truncate)
 			unix_flags |= O_TRUNC;
 
-		std::string filename_a = StringHelp::text_to_local8(filename);
+		std::string filename_a = filename;
 		handle = ::open(filename_a.c_str(), unix_flags, mode);
 		if (handle == -1)
 			return false;

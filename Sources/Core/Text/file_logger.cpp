@@ -47,7 +47,7 @@ namespace clan
 	void FileLogger::log(const std::string &type, const std::string &text)
 	{
 		StringFormat format = get_log_string(type, text);
-		std::string log_line = StringHelp::text_to_local8(format.get_result());
+		std::string log_line = format.get_result();
 
 		file->seek(0, File::seek_end);
 		file->write(log_line.data(), (int)log_line.length());

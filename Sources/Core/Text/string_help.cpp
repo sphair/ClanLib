@@ -894,16 +894,6 @@ namespace clan
 			return false;
 	}
 
-	std::string StringHelp::text_to_local8(const std::string &text)
-	{
-		return text;
-	}
-
-	std::string StringHelp::text_to_utf8(const std::string &text)
-	{
-		return text;
-	}
-
 	std::string StringHelp::ucs2_to_latin1(const std::wstring &ucs2)
 	{
 		std::string::size_type i, length = ucs2.length();
@@ -986,11 +976,6 @@ namespace clan
 		for (i=0; i<length; i++)
 			ucs2[i] = ((unsigned char) latin9[i] != 0xa4) ? latin9[i] : 0x20ac;
 		return ucs2;
-	}
-
-	std::string StringHelp::local8_to_text(const std::string &local8)
-	{
-		return local8;
 	}
 
 	std::string StringHelp::ucs2_to_text(const std::wstring &ucs2)

@@ -48,7 +48,7 @@ namespace clan
 		if (hexstr[0] == '#')
 			pos++;
 
-		unsigned int color = strtoul(StringHelp::text_to_local8(hexstr.substr(pos)).c_str(), nullptr, 16);
+		unsigned int color = strtoul(hexstr.substr(pos).c_str(), nullptr, 16);
 
 		bool have_alpha = (hexstr.length() - pos) > 6;
 
@@ -438,7 +438,7 @@ namespace clan
 			color_map["gray90"] = &Colorf::gray90;
 		}
 
-		auto it = color_map.find(StringHelp::text_to_local8(name));
+		auto it = color_map.find(name);
 		if (it != color_map.end())
 		{
 			out_color = *it->second;

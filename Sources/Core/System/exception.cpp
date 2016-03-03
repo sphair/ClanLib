@@ -44,7 +44,7 @@ namespace clan
 	const char* Exception::what() const throw()
 	{
 		// Note, buffer is mutable
-		buffer = StringHelp::text_to_local8(message);
+		buffer = message;
 		return buffer.c_str();
 	}
 

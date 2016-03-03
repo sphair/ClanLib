@@ -243,7 +243,7 @@ namespace clan
 		if (result > (buff_size - 1)) result = buff_size - 1;
 		buff[result] = 0;
 
-		key.str = StringHelp::local8_to_text(std::string(buff, result));
+		key.str = std::string(buff, result);
 
 		// Emit message:
 		if (keydown)

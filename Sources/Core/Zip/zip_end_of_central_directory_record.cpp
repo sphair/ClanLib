@@ -66,7 +66,7 @@ namespace clan
 		try
 		{
 			input.read(str, file_comment_length);
-			file_comment = StringHelp::local8_to_text(std::string(str, file_comment_length));
+			file_comment = std::string(str, file_comment_length);
 
 			delete[] str;
 		}

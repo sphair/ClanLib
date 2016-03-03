@@ -56,7 +56,7 @@ namespace clan
 
 		WriteConsole(GetStdHandle(STD_OUTPUT_HANDLE), log_line.data(), log_line.size(), &bytesWritten, 0);
 #else
-		std::string log_line = StringHelp::text_to_local8(format.get_result());
+		std::string log_line = format.get_result();
 		write(1, log_line.data(), log_line.length());
 #endif
 	}

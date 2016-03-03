@@ -379,7 +379,7 @@ namespace clan
 				string_to_id["rmenu"] = keycode_rmenu;
 			}
 
-			return string_to_id[StringHelp::text_to_local8(str)];
+			return string_to_id[str];
 		}
 		else
 			return 0;

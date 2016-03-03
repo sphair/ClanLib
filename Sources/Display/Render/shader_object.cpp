@@ -110,7 +110,7 @@ namespace clan
 		std::string source(size, 0);
 		file.read(&source[0], size);
 
-		return ShaderObject(gc, shader_type, StringHelp::local8_to_text(source));
+		return ShaderObject(gc, shader_type, source);
 	}
 
 	ShaderObject ShaderObject::load(GraphicContext &gc, ShaderType shader_type, const std::string &fullname)

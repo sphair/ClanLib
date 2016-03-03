@@ -56,7 +56,7 @@ namespace clan
 		try
 		{
 			input.read(str, size_of_data);
-			signature_data = StringHelp::local8_to_text(std::string(str, size_of_data));
+			signature_data = std::string(str, size_of_data);
 
 			delete[] str;
 		}
