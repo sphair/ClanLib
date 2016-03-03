@@ -399,13 +399,8 @@ namespace clan
 
 	float TextFieldView::calculate_preferred_height(Canvas &canvas, float width)
 	{
-		if (style_cascade().computed_value("height").is_keyword("auto"))
-		{
-			Font font = impl->get_font(canvas);
-			return font.get_font_metrics(canvas).get_line_height();
-		}
-		else
-			return style_cascade().computed_value("height").number();
+		Font font = impl->get_font(canvas);
+		return font.get_font_metrics(canvas).get_line_height();
 	}
 
 	float TextFieldView::calculate_first_baseline_offset(Canvas &canvas, float width)
