@@ -156,8 +156,7 @@ namespace clan
 		else if (definite_top)
 		{
 			y = computed_top;
-			height = containing_box.get_height() - y;
-			// height = std::max(containing_box.get_height() - y, view->minimum_height(canvas)); // To do: shrink-to-fit from CSS 2.1
+			height = view->preferred_height(canvas, width);
 		}
 		else if (definite_bottom)
 		{
@@ -167,13 +166,14 @@ namespace clan
 		else if (definite_height)
 		{
 			y = 0.0f;
-			height = view->style_cascade().computed_value("height").number();
+			height = computed_height;
 		}
 		else
 		{
 			y = 0.0f;
 			height = view->preferred_height(canvas, width);
 		}
+
 
 		x += containing_box.left;
 		y += containing_box.top;
