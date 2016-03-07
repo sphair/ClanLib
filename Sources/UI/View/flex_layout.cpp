@@ -395,15 +395,33 @@ namespace clan
 			// Flex base size and hypothetical (preferred) main size:
 
 			if (item.view->style_cascade().computed_value("flex-basis").is_length())
+			{
 				item.flex_base_size = item.view->style_cascade().computed_value("flex-basis").number();
+			}
 			else if (item.definite_main_size)
+			{
 				item.flex_base_size = item.main_size;
-			else if (item.definite_cross_size)
-				item.flex_base_size = item.view->preferred_height(canvas, item.cross_size);
-			else if (known_container_main_size)
-				item.flex_base_size = item.view->preferred_height(canvas, std::max(container_cross_size - item.cross_noncontent_start - item.cross_noncontent_end, 0.0f));
+			}
 			else
-				item.flex_base_size = item.view->preferred_height(canvas, item.view->preferred_width(canvas));
+			{
+				float cross_size = 0.0f;
+				if (item.definite_cross_size)
+					cross_size = item.cross_size;
+				else if (known_container_cross_size && (item.cross_auto_margin_start || item.cross_auto_margin_end))
+					cross_size = std::min(item.view->preferred_width(canvas), std::max(container_cross_size - item.cross_noncontent_start - item.cross_noncontent_end, 0.0f));
+				else if (known_container_cross_size)
+					cross_size = std::max(container_cross_size - item.cross_noncontent_start - item.cross_noncontent_end, 0.0f);
+				else
+					cross_size = item.view->preferred_width(canvas);
+
+				if (item.definite_min_cross_size)
+					cross_size = std::max(cross_size, item.min_cross_size);
+
+				if (item.definite_max_cross_size)
+					cross_size = std::min(cross_size, item.max_cross_size);
+
+				item.flex_base_size = item.view->preferred_height(canvas, cross_size);
+			}
 
 			item.flex_preferred_main_size = item.flex_base_size;
 
@@ -655,7 +673,7 @@ namespace clan
 				{
 					if (!item.frozen)
 					{
-						bool freeze = 
+						bool freeze =
 							total_violation == 0.0f ||
 							(total_violation >= 0.0f && item.flex_violation == FlexViolation::max_violation) ||
 							(total_violation <= 0.0f && item.flex_violation == FlexViolation::min_violation);
@@ -683,6 +701,8 @@ namespace clan
 					item.flex_preferred_cross_size = item.cross_size;
 				else if (direction == FlexDirection::row)
 					item.flex_preferred_cross_size = item.view->preferred_height(canvas, item.used_main_size);
+				else if (known_container_cross_size)
+					item.flex_preferred_cross_size = std::min(item.view->preferred_width(canvas/*, item.used_main_size*/), container_cross_size);
 				else
 					item.flex_preferred_cross_size = item.view->preferred_width(canvas/*, item.used_main_size*/);
 
@@ -694,10 +714,10 @@ namespace clan
 				// Maybe by 2037 when W3C actually finished the CSS 3 specifications it will be more clear why this is needed for HTML..
 
 				if (item.definite_min_cross_size)
-				item.flex_preferred_cross_size = std::max(item.flex_preferred_cross_size, item.min_cross_size);
+					item.flex_preferred_cross_size = std::max(item.flex_preferred_cross_size, item.min_cross_size);
 
 				if (item.definite_max_cross_size)
-				item.flex_preferred_cross_size = std::min(item.flex_preferred_cross_size, item.max_cross_size);
+					item.flex_preferred_cross_size = std::min(item.flex_preferred_cross_size, item.max_cross_size);
 			}
 		}
 	}
