@@ -108,8 +108,10 @@ namespace clan
 		else if (definite_left)
 		{
 			x = computed_left;
-			width = containing_box.get_width() - x;
-			// width = std::max(containing_box.get_width() - x, view->minimum_width(canvas)); // To do: shrink-to-fit from CSS 2.1
+			width = view->preferred_width(canvas);
+			// Note: in HTML there's an additional implicit "max-width: calc(100%-left)" rule active here.
+			// We are not emulating this "feature" as it is most likely a bug that got standardized for backwards compatibility.
+			// The user should add an max-width rule themselves if they want such an odd constraint active.
 		}
 		else if (definite_right)
 		{
