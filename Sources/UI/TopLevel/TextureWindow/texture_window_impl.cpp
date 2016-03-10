@@ -73,7 +73,7 @@ namespace clan
 	{
 		if (needs_render || always_render)
 		{
-			canvas.set_cliprect(canvas_rect);
+			ClipRectState cliprect_state(&canvas);
 
 			if (clear_background_enable)
 			{
@@ -85,7 +85,6 @@ namespace clan
 
 			needs_render = false;
 			window_view->render(canvas, canvas_rect);
-			canvas.reset_cliprect();
 		}
 	}
 	

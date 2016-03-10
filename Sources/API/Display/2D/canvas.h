@@ -417,5 +417,42 @@ namespace clan
 		friend class Path;
 	};
 
+	// Helper class to save the transform state for exception safety
+	class TransformState
+	{
+	public:
+		TransformState(Canvas *current_canvas) : canvas(current_canvas), matrix(current_canvas->get_transform()) {}
+		~TransformState() { canvas->set_transform(matrix); }
+		const Mat4f matrix;
+	private:
+		Canvas *canvas;
+	};
+
+	// Helper class to save the clip rect state for exception safety
+	class ClipRectState
+	{
+	public:
+		ClipRectState(Canvas *current_canvas) : canvas(current_canvas), cliprect(current_canvas->get_cliprect()) {}
+		~ClipRectState() { (Rectf(canvas->get_size()) == cliprect) ? canvas->reset_cliprect() : canvas->set_cliprect(cliprect); }
+		const Rectf cliprect;
+	private:
+		Canvas *canvas;
+	};
+
+	// Helper class to control the cliprect stack state for exception safety
+	class ClipRectStack
+	{
+	public:
+		ClipRectStack(Canvas *current_canvas) : canvas(current_canvas) {}
+		~ClipRectStack() { for (; push_count > 0; --push_count) canvas->pop_cliprect(); }
+
+		void push_cliprect(const Rectf &rect) { push_count++; canvas->push_cliprect(rect); }
+		void push_cliprect() { push_count++; canvas->push_cliprect(); }
+		void pop_cliprect() { if (push_count) { --push_count; canvas->pop_cliprect(); } }
+	private:
+		unsigned int push_count = 0;
+		clan::Canvas *canvas;
+	};
+
 	/// \}
 }

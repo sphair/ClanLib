@@ -742,9 +742,12 @@ namespace clan
 		else if (layer == ViewRenderLayer::border)
 			style_cascade.render_border(canvas, _geometry);
 
-		Mat4f old_transform = canvas.get_transform();
 		Pointf translate = _geometry.content_pos();
-		canvas.set_transform(old_transform * Mat4f::translate(translate.x, translate.y, 0) * view_transform);
+
+		TransformState transform_state(&canvas);
+		ClipRectStack cliprect_stack(&canvas);
+
+		canvas.set_transform(transform_state.matrix * Mat4f::translate(translate.x, translate.y, 0) * view_transform);
 
 		bool clipped = content_clipped;
 		if (clipped)
@@ -753,7 +756,7 @@ namespace clan
 			// Note: this code isn't correct for rotated transforms (plus canvas cliprect can only clip AABB)
 			Vec4f tl_point = canvas.get_transform() * Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 			Vec4f br_point = canvas.get_transform() * Vec4f(_geometry.content_width, _geometry.content_height, 0.0f, 1.0f);
-			canvas.push_cliprect(Rectf(std::min(tl_point.x, br_point.x), std::min(tl_point.y, br_point.y), std::max(tl_point.x, br_point.x), std::max(tl_point.y, br_point.y)));
+			cliprect_stack.push_cliprect(Rectf(std::min(tl_point.x, br_point.x), std::min(tl_point.y, br_point.y), std::max(tl_point.x, br_point.x), std::max(tl_point.y, br_point.y)));
 		}
 
 		if (layer == ViewRenderLayer::content)
@@ -773,7 +776,7 @@ namespace clan
 
 			if (self->render_exception_encountered())
 			{
-				canvas.set_transform(old_transform * Mat4f::translate(translate.x, translate.y, 0));
+				canvas.set_transform(transform_state.matrix * Mat4f::translate(translate.x, translate.y, 0));
 				canvas.fill_rect(0.0f, 0.0f, _geometry.content_width, _geometry.content_height, Colorf(1.0f, 0.2f, 0.2f, 0.5f));
 				canvas.draw_line(0.0f, 0.0f, _geometry.content_width, _geometry.content_height, Colorf::black);
 				canvas.draw_line(_geometry.content_width, 0.0f, 0.0f, _geometry.content_height, Colorf::black);
@@ -796,11 +799,6 @@ namespace clan
 				}
 			}
 		}
-
-		if (clipped)
-			canvas.pop_cliprect();
-
-		canvas.set_transform(old_transform);
 	}
 
 	void ViewImpl::update_style_cascade() const
