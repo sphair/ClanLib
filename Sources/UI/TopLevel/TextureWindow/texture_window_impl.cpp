@@ -74,6 +74,7 @@ namespace clan
 		if (needs_render || always_render)
 		{
 			ClipRectState cliprect_state(&canvas);
+			canvas.set_cliprect(canvas_rect);
 
 			if (clear_background_enable)
 			{
