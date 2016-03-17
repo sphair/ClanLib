@@ -60,6 +60,8 @@ namespace clan
 
 		const FontMetrics &get_font_metrics(Canvas &canvas);
 
+		FontDescription get_description() const;
+
 		int get_character_index(Canvas &canvas, const std::string &text, const Pointf &point);
 		std::vector<Rectf> get_character_indices(Canvas &canvas, const std::string &text);
 

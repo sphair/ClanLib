@@ -363,4 +363,10 @@ namespace clan
 		selected_height_threshold = height_threshold;
 		// (Don't need to reset the font engine)
 	}
+
+	FontDescription Font_Impl::get_description() const
+	{
+		return selected_description.clone();
+	}
+
 }

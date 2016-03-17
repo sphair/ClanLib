@@ -304,4 +304,13 @@ namespace clan
 	FontHandle::~FontHandle()
 	{
 	}
+
+	FontDescription Font::get_description() const
+	{
+		if (impl)
+			return impl->get_description();
+
+		return FontDescription();
+	}
+
 }

@@ -171,6 +171,9 @@ namespace clan
 		// Finds the offset for the first visible character when clipping the tail
 		size_t clip_from_right(Canvas &canvas, const std::string &text, float width) const;
 
+		// Get the font description
+		FontDescription get_description() const;
+
 		/// \brief Get the font handle interface
 		///
 		/// For example, use auto handle = dynamic_cast<FontHandle_Win32>(font.get_handle()); if (handle) {...} to obtain a specific interface
