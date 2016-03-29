@@ -96,6 +96,10 @@ public:
 	void test_string_v8();
 	void test_string_v8b();
 
+	void test_normalization1();
+	void test_normalization2();
+
+
 	Utils utils;
 	std::string string;
 	std::string string2;

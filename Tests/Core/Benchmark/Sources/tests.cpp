@@ -77,8 +77,11 @@ void Tests::Init(std::vector<TestInfo> &testlist)
 	testlist.push_back(TestInfo("{string = utils.function();}    : std::string function() {return \"hello world\";}", &Tests::test_return_string_v3));
 	testlist.push_back(TestInfo("{utils.function(string);}    : void function(std::string &out_string) {out_string = string_hello_world;}", &Tests::test_get_string));
 */
-	testlist.push_back(TestInfo("{int_value += utils.function(\"~15chars~\");}    : int function(const std::string &s) {return s.length();}", &Tests::test_string_v8));
-	testlist.push_back(TestInfo("{int_value += utils.function(string_15);}    : int function(const std::string &s) {return s.length();}", &Tests::test_string_v8b));
+//	testlist.push_back(TestInfo("{int_value += utils.function(\"~15chars~\");}    : int function(const std::string &s) {return s.length();}", &Tests::test_string_v8));
+//	testlist.push_back(TestInfo("{int_value += utils.function(string_15);}    : int function(const std::string &s) {return s.length();}", &Tests::test_string_v8b));
+
+	testlist.push_back(TestInfo("{value_rad = fmod(value_rad, clan::PI*2.0f);...}", &Tests::test_normalization1));
+	testlist.push_back(TestInfo("value_rad -= (2.0f * PI) * std::floor...}", &Tests::test_normalization2));
 
 }
 
@@ -107,6 +110,18 @@ void Tests::test_empty()
 void Tests::test_i_plus_plus()
 {
 	int_value++;
+}
+
+void Tests::test_normalization1()
+{
+	float_value = fmod(float_value, clan::PI*2.0f);
+	if (float_value < 0.0f)
+		float_value += clan::PI*2.0f;
+}
+
+void Tests::test_normalization2()
+{
+	float_value -= (2.0f * clan::PI) * std::floor(float_value / (2.0f * clan::PI));
 }
 
 void Tests::test_create_string()
