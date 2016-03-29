@@ -80,9 +80,7 @@ namespace clan
 
 	Angle &Angle::normalize()
 	{
-		value_rad = fmod(value_rad, PI*2.0f);
-		if (value_rad < 0.0f)
-			value_rad += PI*2.0f;
+		value_rad -= (2.0f * PI) * std::floor(value_rad / (2.0f * PI));
 		return *this;
 	}
 
