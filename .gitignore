@@ -71,3 +71,5 @@ Makefile.in
 xcuserdata
 xcshareddata
 *.opensdf
+*.db
+*.opendb

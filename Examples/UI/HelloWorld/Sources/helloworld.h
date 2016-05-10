@@ -36,7 +36,6 @@ public:
 
 	clan::UIThread ui_thread;
 	std::shared_ptr<clan::TopLevelWindow> window;
-	std::shared_ptr<clan::View> root;
 	std::shared_ptr<clan::LabelView> label;
 	clan::WindowManager window_manager;
 	clan::SlotContainer slots;
