@@ -262,6 +262,9 @@ HelloWorld::HelloWorld()
 		window_manager.present_modal(window->root_view().get(), dialog);
 	};
 
+	// Prevent close program when hint or modal windows closes.
+	window_manager.set_exit_on_last_close(false);
+		
 	// Make our window visible
 	window->show();
 }
