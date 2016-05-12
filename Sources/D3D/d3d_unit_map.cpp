@@ -424,8 +424,8 @@ namespace clan
 		{
 			ID3D11UnorderedAccessView *uav = 0;
 			UINT uav_initial_count = 0;
-			if (texture_units[index].shader_index[shadertype_compute] != -1)
-				gc->get_window()->get_device_context()->CSSetUnorderedAccessViews(texture_units[index].shader_index[shadertype_compute], 1, &uav, &uav_initial_count);
+			if (image_units[index].shader_index[shadertype_compute] != -1)
+				gc->get_window()->get_device_context()->CSSetUnorderedAccessViews(image_units[index].shader_index[shadertype_compute], 1, &uav, &uav_initial_count);
 		}
 	}
 
