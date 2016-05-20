@@ -577,6 +577,164 @@ namespace clan
 		static Color gray80;
 		static Color gray90;
 
+		static Color _aliceblue() { return Color(240,248,255); }
+		static Color _antiquewhite() { return Color(250,235,215); }
+		static Color _aqua() { return Color(0,255,255); }
+		static Color _aquamarine() { return Color(127,255,212); }
+		static Color _azure() { return Color(240,255,255); }
+		static Color _beige() { return Color(245,245,220); }
+		static Color _bisque() { return Color(255,228,196); }
+		static Color _black() { return Color(0,0,0); }
+		static Color _blanchedalmond() { return Color(255,235,205); }
+		static Color _blue() { return Color(0,0,255); }
+		static Color _blueviolet() { return Color(138,43,226); }
+		static Color _brown() { return Color(165,42,42); }
+		static Color _burlywood() { return Color(222,184,135); }
+		static Color _cadetblue() { return Color(95,158,160); }
+		static Color _chartreuse() { return Color(127,255,0); }
+		static Color _chocolate() { return Color(210,105,30); }
+		static Color _coral() { return Color(255,127,80); }
+		static Color _cornflowerblue() { return Color(100,149,237); }
+		static Color _cornsilk() { return Color(255,248,220); }
+		static Color _crimson() { return Color(220,20,60); }
+		static Color _cyan() { return Color(0,255,255); }
+		static Color _darkblue() { return Color(0,0,139); }
+		static Color _darkcyan() { return Color(0,139,139); }
+		static Color _darkgoldenrod() { return Color(184,134,11); }
+		static Color _darkgray() { return Color(169,169,169); }
+		static Color _darkgreen() { return Color(0,100,0); }
+		static Color _darkgrey() { return Color(169,169,169); }
+		static Color _darkkhaki() { return Color(189,183,107); }
+		static Color _darkmagenta() { return Color(139,0,139); }
+		static Color _darkolivegreen() { return Color(85,107,47); }
+		static Color _darkorange() { return Color(255,140,0); }
+		static Color _darkorchid() { return Color(153,50,204); }
+		static Color _darkred() { return Color(139,0,0); }
+		static Color _darksalmon() { return Color(233,150,122); }
+		static Color _darkseagreen() { return Color(143,188,143); }
+		static Color _darkslateblue() { return Color(72,61,139); }
+		static Color _darkslategray() { return Color(47,79,79); }
+		static Color _darkslategrey() { return Color(47,79,79); }
+		static Color _darkturquoise() { return Color(0,206,209); }
+		static Color _darkviolet() { return Color(148,0,211); }
+		static Color _deeppink() { return Color(255,20,147); }
+		static Color _deepskyblue() { return Color(0,191,255); }
+		static Color _dimgray() { return Color(105,105,105); }
+		static Color _dimgrey() { return Color(105,105,105); }
+		static Color _dodgerblue() { return Color(30,144,255); }
+		static Color _firebrick() { return Color(178,34,34); }
+		static Color _floralwhite() { return Color(255,250,240); }
+		static Color _forestgreen() { return Color(34,139,34); }
+		static Color _fuchsia() { return Color(255,0,255); }
+		static Color _gainsboro() { return Color(220,220,220); }
+		static Color _ghostwhite() { return Color(248,248,255); }
+		static Color _gold() { return Color(255,215,0); }
+		static Color _goldenrod() { return Color(218,165,32); }
+		static Color _gray() { return Color(128,128,128); }
+		static Color _grey() { return Color(128,128,128); }
+		static Color _green() { return Color(0,128,0); }
+		static Color _greenyellow() { return Color(173,255,47); }
+		static Color _honeydew() { return Color(240,255,240); }
+		static Color _hotpink() { return Color(255,105,180); }
+		static Color _indianred() { return Color(205,92,92); }
+		static Color _indigo() { return Color(75,0,130); }
+		static Color _ivory() { return Color(255,255,240); }
+		static Color _khaki() { return Color(240,230,140); }
+		static Color _lavender() { return Color(230,230,250); }
+		static Color _lavenderblush() { return Color(255,240,245); }
+		static Color _lawngreen() { return Color(124,252,0); }
+		static Color _lemonchiffon() { return Color(255,250,205); }
+		static Color _lightblue() { return Color(173,216,230); }
+		static Color _lightcoral() { return Color(240,128,128); }
+		static Color _lightcyan() { return Color(224,255,255); }
+		static Color _lightgoldenrodyellow() { return Color(250,250,210); }
+		static Color _lightgray() { return Color(211,211,211); }
+		static Color _lightgreen() { return Color(144,238,144); }
+		static Color _lightgrey() { return Color(211,211,211); }
+		static Color _lightpink() { return Color(255,182,193); }
+		static Color _lightsalmon() { return Color(255,160,122); }
+		static Color _lightseagreen() { return Color(32,178,170); }
+		static Color _lightskyblue() { return Color(135,206,250); }
+		static Color _lightslategray() { return Color(119,136,153); }
+		static Color _lightslategrey() { return Color(119,136,153); }
+		static Color _lightsteelblue() { return Color(176,196,222); }
+		static Color _lightyellow() { return Color(255,255,224); }
+		static Color _lime() { return Color(0,255,0); }
+		static Color _limegreen() { return Color(50,205,50); }
+		static Color _linen() { return Color(250,240,230); }
+		static Color _magenta() { return Color(255,0,255); }
+		static Color _maroon() { return Color(128,0,0); }
+		static Color _mediumaquamarine() { return Color(102,205,170); }
+		static Color _mediumblue() { return Color(0,0,205); }
+		static Color _mediumorchid() { return Color(186,85,211); }
+		static Color _mediumpurple() { return Color(147,112,219); }
+		static Color _mediumseagreen() { return Color(60,179,113); }
+		static Color _mediumslateblue() { return Color(123,104,238); }
+		static Color _mediumspringgreen() { return Color(0,250,154); }
+		static Color _mediumturquoise() { return Color(72,209,204); }
+		static Color _mediumvioletred() { return Color(199,21,133); }
+		static Color _midnightblue() { return Color(25,25,112); }
+		static Color _mintcream() { return Color(245,255,250); }
+		static Color _mistyrose() { return Color(255,228,225); }
+		static Color _moccasin() { return Color(255,228,181); }
+		static Color _navajowhite() { return Color(255,222,173); }
+		static Color _navy() { return Color(0,0,128); }
+		static Color _oldlace() { return Color(253,245,230); }
+		static Color _olive() { return Color(128,128,0); }
+		static Color _olivedrab() { return Color(107,142,35); }
+		static Color _orange() { return Color(255,165,0); }
+		static Color _orangered() { return Color(255,69,0); }
+		static Color _orchid() { return Color(218,112,214); }
+		static Color _palegoldenrod() { return Color(238,232,170); }
+		static Color _palegreen() { return Color(152,251,152); }
+		static Color _paleturquoise() { return Color(175,238,238); }
+		static Color _palevioletred() { return Color(219,112,147); }
+		static Color _papayawhip() { return Color(255,239,213); }
+		static Color _peachpuff() { return Color(255,218,185); }
+		static Color _peru() { return Color(205,133,63); }
+		static Color _pink() { return Color(255,192,203); }
+		static Color _plum() { return Color(221,160,221); }
+		static Color _powderblue() { return Color(176,224,230); }
+		static Color _purple() { return Color(128,0,128); }
+		static Color _red() { return Color(255,0,0); }
+		static Color _rosybrown() { return Color(188,143,143); }
+		static Color _royalblue() { return Color(65,105,225); }
+		static Color _saddlebrown() { return Color(139,69,19); }
+		static Color _salmon() { return Color(250,128,114); }
+		static Color _sandybrown() { return Color(244,164,96); }
+		static Color _seagreen() { return Color(46,139,87); }
+		static Color _seashell() { return Color(255,245,238); }
+		static Color _sienna() { return Color(160,82,45); }
+		static Color _silver() { return Color(192,192,192); }
+		static Color _skyblue() { return Color(135,206,235); }
+		static Color _slateblue() { return Color(106,90,205); }
+		static Color _slategray() { return Color(112,128,144); }
+		static Color _slategrey() { return Color(112,128,144); }
+		static Color _snow() { return Color(255,250,250); }
+		static Color _springgreen() { return Color(0,255,127); }
+		static Color _steelblue() { return Color(70,130,180); }
+		static Color _tan() { return Color(210,180,140); }
+		static Color _teal() { return Color(0,128,128); }
+		static Color _thistle() { return Color(216,191,216); }
+		static Color _tomato() { return Color(255,99,71); }
+		static Color _transparent() { return Color(0,0,0,0); }
+		static Color _turquoise() { return Color(64,224,208); }
+		static Color _violet() { return Color(238,130,238); }
+		static Color _wheat() { return Color(245,222,179); }
+		static Color _white() { return Color(255,255,255); }
+		static Color _whitesmoke() { return Color(245,245,245); }
+		static Color _yellow() { return Color(255,255,0); }
+		static Color _yellowgreen() { return Color(154,205,50); }
+		static Color _gray10() { return Color(26,26,26); }
+		static Color _gray20() { return Color(51,51,51); }
+		static Color _gray30() { return Color(77,77,77); }
+		static Color _gray40() { return Color(104,104,104); }
+		static Color _gray50() { return Color(128,128,128); }
+		static Color _gray60() { return Color(153,153,153); }
+		static Color _gray70() { return Color(178,178,178); }
+		static Color _gray80() { return Color(204,204,204); }
+		static Color _gray90() { return Color(230,230,230); }
+
 		/// \brief Set alpha color component, in the range 0-255.
 		void set_alpha(unsigned char value) { a = value; }
 
@@ -1230,6 +1388,164 @@ namespace clan
 		static Colorf gray70;
 		static Colorf gray80;
 		static Colorf gray90;
+
+		static Colorf _aliceblue() { return Colorf(40.0f / 255.0f, 248.0f / 255.0f, 255.0f / 255.0f); }
+		static Colorf _antiquewhite() { return Colorf(250.0f / 255.0f, 235.0f / 255.0f, 215.0f / 255.0f); }
+		static Colorf _aqua() { return Colorf(0.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f); }
+		static Colorf _aquamarine() { return Colorf(127.0f / 255.0f, 255.0f / 255.0f, 212.0f / 255.0f); }
+		static Colorf _azure() { return Colorf(240.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f); }
+		static Colorf _beige() { return Colorf(245.0f / 255.0f, 245.0f / 255.0f, 220.0f / 255.0f); }
+		static Colorf _bisque() { return Colorf(255.0f / 255.0f, 228.0f / 255.0f, 196.0f / 255.0f); }
+		static Colorf _black() { return Colorf(0.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f); }
+		static Colorf _blanchedalmond() { return Colorf(255.0f / 255.0f, 235.0f / 255.0f, 205.0f / 255.0f); }
+		static Colorf _blue() { return Colorf(0.0f / 255.0f, 0.0f / 255.0f, 255.0f / 255.0f); }
+		static Colorf _blueviolet() { return Colorf(138.0f / 255.0f, 43.0f / 255.0f, 226.0f / 255.0f); }
+		static Colorf _brown() { return Colorf(165.0f / 255.0f, 42.0f / 255.0f, 42.0f / 255.0f); }
+		static Colorf _burlywood() { return Colorf(222.0f / 255.0f, 184.0f / 255.0f, 135.0f / 255.0f); }
+		static Colorf _cadetblue() { return Colorf(95.0f / 255.0f, 158.0f / 255.0f, 160.0f / 255.0f); }
+		static Colorf _chartreuse() { return Colorf(127.0f / 255.0f, 255.0f / 255.0f, 0.0f / 255.0f); }
+		static Colorf _chocolate() { return Colorf(210.0f / 255.0f, 105.0f / 255.0f, 30.0f / 255.0f); }
+		static Colorf _coral() { return Colorf(255.0f / 255.0f, 127.0f / 255.0f, 80.0f / 255.0f); }
+		static Colorf _cornflowerblue() { return Colorf(100.0f / 255.0f, 149.0f / 255.0f, 237.0f / 255.0f); }
+		static Colorf _cornsilk() { return Colorf(255.0f / 255.0f, 248.0f / 255.0f, 220.0f / 255.0f); }
+		static Colorf _crimson() { return Colorf(220.0f / 255.0f, 20.0f / 255.0f, 60.0f / 255.0f); }
+		static Colorf _cyan() { return Colorf(0.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f); }
+		static Colorf _darkblue() { return Colorf(0.0f / 255.0f, 0.0f / 255.0f, 139.0f / 255.0f); }
+		static Colorf _darkcyan() { return Colorf(0.0f / 255.0f, 139.0f / 255.0f, 139.0f / 255.0f); }
+		static Colorf _darkgoldenrod() { return Colorf(184.0f / 255.0f, 134.0f / 255.0f, 11.0f / 255.0f); }
+		static Colorf _darkgray() { return Colorf(169.0f / 255.0f, 169.0f / 255.0f, 169.0f / 255.0f); }
+		static Colorf _darkgreen() { return Colorf(0.0f / 255.0f, 100.0f / 255.0f, 0.0f / 255.0f); }
+		static Colorf _darkgrey() { return Colorf(169.0f / 255.0f, 169.0f / 255.0f, 169.0f / 255.0f); }
+		static Colorf _darkkhaki() { return Colorf(189.0f / 255.0f, 183.0f / 255.0f, 107.0f / 255.0f); }
+		static Colorf _darkmagenta() { return Colorf(139.0f / 255.0f, 0.0f / 255.0f, 139.0f / 255.0f); }
+		static Colorf _darkolivegreen() { return Colorf(85.0f / 255.0f, 107.0f / 255.0f, 47.0f / 255.0f); }
+		static Colorf _darkorange() { return Colorf(255.0f / 255.0f, 140.0f / 255.0f, 0.0f / 255.0f); }
+		static Colorf _darkorchid() { return Colorf(153.0f / 255.0f, 50.0f / 255.0f, 204.0f / 255.0f); }
+		static Colorf _darkred() { return Colorf(139.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f); }
+		static Colorf _darksalmon() { return Colorf(233.0f / 255.0f, 150.0f / 255.0f, 122.0f / 255.0f); }
+		static Colorf _darkseagreen() { return Colorf(143.0f / 255.0f, 188.0f / 255.0f, 143.0f / 255.0f); }
+		static Colorf _darkslateblue() { return Colorf(72.0f / 255.0f, 61.0f / 255.0f, 139.0f / 255.0f); }
+		static Colorf _darkslategray() { return Colorf(47.0f / 255.0f, 79.0f / 255.0f, 79.0f / 255.0f); }
+		static Colorf _darkslategrey() { return Colorf(47.0f / 255.0f, 79.0f / 255.0f, 79.0f / 255.0f); }
+		static Colorf _darkturquoise() { return Colorf(0.0f / 255.0f, 206.0f / 255.0f, 209.0f / 255.0f); }
+		static Colorf _darkviolet() { return Colorf(148.0f / 255.0f, 0.0f / 255.0f, 211.0f / 255.0f); }
+		static Colorf _deeppink() { return Colorf(255.0f / 255.0f, 20.0f / 255.0f, 147.0f / 255.0f); }
+		static Colorf _deepskyblue() { return Colorf(0.0f / 255.0f, 191.0f / 255.0f, 255.0f / 255.0f); }
+		static Colorf _dimgray() { return Colorf(105.0f / 255.0f, 105.0f / 255.0f, 105.0f / 255.0f); }
+		static Colorf _dimgrey() { return Colorf(105.0f / 255.0f, 105.0f / 255.0f, 105.0f / 255.0f); }
+		static Colorf _dodgerblue() { return Colorf(30.0f / 255.0f, 144.0f / 255.0f, 255.0f / 255.0f); }
+		static Colorf _firebrick() { return Colorf(178.0f / 255.0f, 34.0f / 255.0f, 34.0f / 255.0f); }
+		static Colorf _floralwhite() { return Colorf(255.0f / 255.0f, 250.0f / 255.0f, 240.0f / 255.0f); }
+		static Colorf _forestgreen() { return Colorf(34.0f / 255.0f, 139.0f / 255.0f, 34.0f / 255.0f); }
+		static Colorf _fuchsia() { return Colorf(255.0f / 255.0f, 0.0f / 255.0f, 255.0f / 255.0f); }
+		static Colorf _gainsboro() { return Colorf(220.0f / 255.0f, 220.0f / 255.0f, 220.0f / 255.0f); }
+		static Colorf _ghostwhite() { return Colorf(248.0f / 255.0f, 248.0f / 255.0f, 255.0f / 255.0f); }
+		static Colorf _gold() { return Colorf(255.0f / 255.0f, 215.0f / 255.0f, 0.0f / 255.0f); }
+		static Colorf _goldenrod() { return Colorf(218.0f / 255.0f, 165.0f / 255.0f, 32.0f / 255.0f); }
+		static Colorf _gray() { return Colorf(128.0f / 255.0f, 128.0f / 255.0f, 128.0f / 255.0f); }
+		static Colorf _grey() { return Colorf(128.0f / 255.0f, 128.0f / 255.0f, 128.0f / 255.0f); }
+		static Colorf _green() { return Colorf(0.0f / 255.0f, 128.0f / 255.0f, 0.0f / 255.0f); }
+		static Colorf _greenyellow() { return Colorf(173.0f / 255.0f, 255.0f / 255.0f, 47.0f / 255.0f); }
+		static Colorf _honeydew() { return Colorf(240.0f / 255.0f, 255.0f / 255.0f, 240.0f / 255.0f); }
+		static Colorf _hotpink() { return Colorf(255.0f / 255.0f, 105.0f / 255.0f, 180.0f / 255.0f); }
+		static Colorf _indianred() { return Colorf(205.0f / 255.0f, 92.0f / 255.0f, 92.0f / 255.0f); }
+		static Colorf _indigo() { return Colorf(75.0f / 255.0f, 0.0f / 255.0f, 130.0f / 255.0f); }
+		static Colorf _ivory() { return Colorf(255.0f / 255.0f, 255.0f / 255.0f, 240.0f / 255.0f); }
+		static Colorf _khaki() { return Colorf(240.0f / 255.0f, 230.0f / 255.0f, 140.0f / 255.0f); }
+		static Colorf _lavender() { return Colorf(230.0f / 255.0f, 230.0f / 255.0f, 250.0f / 255.0f); }
+		static Colorf _lavenderblush() { return Colorf(255.0f / 255.0f, 240.0f / 255.0f, 245.0f / 255.0f); }
+		static Colorf _lawngreen() { return Colorf(124.0f / 255.0f, 252.0f / 255.0f, 0.0f / 255.0f); }
+		static Colorf _lemonchiffon() { return Colorf(255.0f / 255.0f, 250.0f / 255.0f, 205.0f / 255.0f); }
+		static Colorf _lightblue() { return Colorf(173.0f / 255.0f, 216.0f / 255.0f, 230.0f / 255.0f); }
+		static Colorf _lightcoral() { return Colorf(240.0f / 255.0f, 128.0f / 255.0f, 128.0f / 255.0f); }
+		static Colorf _lightcyan() { return Colorf(224.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f); }
+		static Colorf _lightgoldenrodyellow() { return Colorf(250.0f / 255.0f, 250.0f / 255.0f, 210.0f / 255.0f); }
+		static Colorf _lightgray() { return Colorf(211.0f / 255.0f, 211.0f / 255.0f, 211.0f / 255.0f); }
+		static Colorf _lightgreen() { return Colorf(144.0f / 255.0f, 238.0f / 255.0f, 144.0f / 255.0f); }
+		static Colorf _lightgrey() { return Colorf(211.0f / 255.0f, 211.0f / 255.0f, 211.0f / 255.0f); }
+		static Colorf _lightpink() { return Colorf(255.0f / 255.0f, 182.0f / 255.0f, 193.0f / 255.0f); }
+		static Colorf _lightsalmon() { return Colorf(255.0f / 255.0f, 160.0f / 255.0f, 122.0f / 255.0f); }
+		static Colorf _lightseagreen() { return Colorf(32.0f / 255.0f, 178.0f / 255.0f, 170.0f / 255.0f); }
+		static Colorf _lightskyblue() { return Colorf(135.0f / 255.0f, 206.0f / 255.0f, 250.0f / 255.0f); }
+		static Colorf _lightslategray() { return Colorf(119.0f / 255.0f, 136.0f / 255.0f, 153.0f / 255.0f); }
+		static Colorf _lightslategrey() { return Colorf(119.0f / 255.0f, 136.0f / 255.0f, 153.0f / 255.0f); }
+		static Colorf _lightsteelblue() { return Colorf(176.0f / 255.0f, 196.0f / 255.0f, 222.0f / 255.0f); }
+		static Colorf _lightyellow() { return Colorf(255.0f / 255.0f, 255.0f / 255.0f, 224.0f / 255.0f); }
+		static Colorf _lime() { return Colorf(0.0f / 255.0f, 255.0f / 255.0f, 0.0f / 255.0f); }
+		static Colorf _limegreen() { return Colorf(50.0f / 255.0f, 205.0f / 255.0f, 50.0f / 255.0f); }
+		static Colorf _linen() { return Colorf(250.0f / 255.0f, 240.0f / 255.0f, 230.0f / 255.0f); }
+		static Colorf _magenta() { return Colorf(255.0f / 255.0f, 0.0f / 255.0f, 255.0f / 255.0f); }
+		static Colorf _maroon() { return Colorf(128.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f); }
+		static Colorf _mediumaquamarine() { return Colorf(102.0f / 255.0f, 205.0f / 255.0f, 170.0f / 255.0f); }
+		static Colorf _mediumblue() { return Colorf(0.0f / 255.0f, 0.0f / 255.0f, 205.0f / 255.0f); }
+		static Colorf _mediumorchid() { return Colorf(186.0f / 255.0f, 85.0f / 255.0f, 211.0f / 255.0f); }
+		static Colorf _mediumpurple() { return Colorf(147.0f / 255.0f, 112.0f / 255.0f, 219.0f / 255.0f); }
+		static Colorf _mediumseagreen() { return Colorf(60.0f / 255.0f, 179.0f / 255.0f, 113.0f / 255.0f); }
+		static Colorf _mediumslateblue() { return Colorf(123.0f / 255.0f, 104.0f / 255.0f, 238.0f / 255.0f); }
+		static Colorf _mediumspringgreen() { return Colorf(0.0f / 255.0f, 250.0f / 255.0f, 154.0f / 255.0f); }
+		static Colorf _mediumturquoise() { return Colorf(72.0f / 255.0f, 209.0f / 255.0f, 204.0f / 255.0f); }
+		static Colorf _mediumvioletred() { return Colorf(199.0f / 255.0f, 21.0f / 255.0f, 133.0f / 255.0f); }
+		static Colorf _midnightblue() { return Colorf(25.0f / 255.0f, 25.0f / 255.0f, 112.0f / 255.0f); }
+		static Colorf _mintcream() { return Colorf(245.0f / 255.0f, 255.0f / 255.0f, 250.0f / 255.0f); }
+		static Colorf _mistyrose() { return Colorf(255.0f / 255.0f, 228.0f / 255.0f, 225.0f / 255.0f); }
+		static Colorf _moccasin() { return Colorf(255.0f / 255.0f, 228.0f / 255.0f, 181.0f / 255.0f); }
+		static Colorf _navajowhite() { return Colorf(255.0f / 255.0f, 222.0f / 255.0f, 173.0f / 255.0f); }
+		static Colorf _navy() { return Colorf(0.0f / 255.0f, 0.0f / 255.0f, 128.0f / 255.0f); }
+		static Colorf _oldlace() { return Colorf(253.0f / 255.0f, 245.0f / 255.0f, 230.0f / 255.0f); }
+		static Colorf _olive() { return Colorf(128.0f / 255.0f, 128.0f / 255.0f, 0.0f / 255.0f); }
+		static Colorf _olivedrab() { return Colorf(107.0f / 255.0f, 142.0f / 255.0f, 35.0f / 255.0f); }
+		static Colorf _orange() { return Colorf(255.0f / 255.0f, 165.0f / 255.0f, 0.0f / 255.0f); }
+		static Colorf _orangered() { return Colorf(255.0f / 255.0f, 69.0f / 255.0f, 0.0f / 255.0f); }
+		static Colorf _orchid() { return Colorf(218.0f / 255.0f, 112.0f / 255.0f, 214.0f / 255.0f); }
+		static Colorf _palegoldenrod() { return Colorf(238.0f / 255.0f, 232.0f / 255.0f, 170.0f / 255.0f); }
+		static Colorf _palegreen() { return Colorf(152.0f / 255.0f, 251.0f / 255.0f, 152.0f / 255.0f); }
+		static Colorf _paleturquoise() { return Colorf(175.0f / 255.0f, 238.0f / 255.0f, 238.0f / 255.0f); }
+		static Colorf _palevioletred() { return Colorf(219.0f / 255.0f, 112.0f / 255.0f, 147.0f / 255.0f); }
+		static Colorf _papayawhip() { return Colorf(255.0f / 255.0f, 239.0f / 255.0f, 213.0f / 255.0f); }
+		static Colorf _peachpuff() { return Colorf(255.0f / 255.0f, 218.0f / 255.0f, 185.0f / 255.0f); }
+		static Colorf _peru() { return Colorf(205.0f / 255.0f, 133.0f / 255.0f, 63.0f / 255.0f); }
+		static Colorf _pink() { return Colorf(255.0f / 255.0f, 192.0f / 255.0f, 203.0f / 255.0f); }
+		static Colorf _plum() { return Colorf(221.0f / 255.0f, 160.0f / 255.0f, 221.0f / 255.0f); }
+		static Colorf _powderblue() { return Colorf(176.0f / 255.0f, 224.0f / 255.0f, 230.0f / 255.0f); }
+		static Colorf _purple() { return Colorf(128.0f / 255.0f, 0.0f / 255.0f, 128.0f / 255.0f); }
+		static Colorf _red() { return Colorf(255.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f); }
+		static Colorf _rosybrown() { return Colorf(188.0f / 255.0f, 143.0f / 255.0f, 143.0f / 255.0f); }
+		static Colorf _royalblue() { return Colorf(65.0f / 255.0f, 105.0f / 255.0f, 225.0f / 255.0f); }
+		static Colorf _saddlebrown() { return Colorf(139.0f / 255.0f, 69.0f / 255.0f, 19.0f / 255.0f); }
+		static Colorf _salmon() { return Colorf(250.0f / 255.0f, 128.0f / 255.0f, 114.0f / 255.0f); }
+		static Colorf _sandybrown() { return Colorf(244.0f / 255.0f, 164.0f / 255.0f, 96.0f / 255.0f); }
+		static Colorf _seagreen() { return Colorf(46.0f / 255.0f, 139.0f / 255.0f, 87.0f / 255.0f); }
+		static Colorf _seashell() { return Colorf(255.0f / 255.0f, 245.0f / 255.0f, 238.0f / 255.0f); }
+		static Colorf _sienna() { return Colorf(160.0f / 255.0f, 82.0f / 255.0f, 45.0f / 255.0f); }
+		static Colorf _silver() { return Colorf(192.0f / 255.0f, 192.0f / 255.0f, 192.0f / 255.0f); }
+		static Colorf _skyblue() { return Colorf(135.0f / 255.0f, 206.0f / 255.0f, 235.0f / 255.0f); }
+		static Colorf _slateblue() { return Colorf(106.0f / 255.0f, 90.0f / 255.0f, 205.0f / 255.0f); }
+		static Colorf _slategray() { return Colorf(112.0f / 255.0f, 128.0f / 255.0f, 144.0f / 255.0f); }
+		static Colorf _slategrey() { return Colorf(112.0f / 255.0f, 128.0f / 255.0f, 144.0f / 255.0f); }
+		static Colorf _snow() { return Colorf(255.0f / 255.0f, 250.0f / 255.0f, 250.0f / 255.0f); }
+		static Colorf _springgreen() { return Colorf(0.0f / 255.0f, 255.0f / 255.0f, 127.0f / 255.0f); }
+		static Colorf _steelblue() { return Colorf(70.0f / 255.0f, 130.0f / 255.0f, 180.0f / 255.0f); }
+		static Colorf _tan() { return Colorf(210.0f / 255.0f, 180.0f / 255.0f, 140.0f / 255.0f); }
+		static Colorf _teal() { return Colorf(0.0f / 255.0f, 128.0f / 255.0f, 128.0f / 255.0f); }
+		static Colorf _thistle() { return Colorf(216.0f / 255.0f, 191.0f / 255.0f, 216.0f / 255.0f); }
+		static Colorf _tomato() { return Colorf(255.0f / 255.0f, 99.0f / 255.0f, 71.0f / 255.0f); }
+		static Colorf _transparent() { return Colorf(0.0f, 0.0f, 0.0f, 0.0f); }
+		static Colorf _turquoise() { return Colorf(64.0f / 255.0f, 224.0f / 255.0f, 208.0f / 255.0f); }
+		static Colorf _violet() { return Colorf(238.0f / 255.0f, 130.0f / 255.0f, 238.0f / 255.0f); }
+		static Colorf _wheat() { return Colorf(245.0f / 255.0f, 222.0f / 255.0f, 179.0f / 255.0f); }
+		static Colorf _white() { return Colorf(255.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f); }
+		static Colorf _whitesmoke() { return Colorf(245.0f / 255.0f, 245.0f / 255.0f, 245.0f / 255.0f); }
+		static Colorf _yellow() { return Colorf(255.0f / 255.0f, 255.0f / 255.0f, 0.0f / 255.0f); }
+		static Colorf _yellowgreen() { return Colorf(154.0f / 255.0f, 205.0f / 255.0f, 50.0f / 255.0f); }
+		static Colorf _gray10() { return Colorf(0.1f, 0.1f, 0.1f); }
+		static Colorf _gray20() { return Colorf(0.2f, 0.2f, 0.2f); }
+		static Colorf _gray30() { return Colorf(0.3f, 0.3f, 0.3f); }
+		static Colorf _gray40() { return Colorf(0.4f, 0.4f, 0.4f); }
+		static Colorf _gray50() { return Colorf(0.5f, 0.5f, 0.5f); }
+		static Colorf _gray60() { return Colorf(0.6f, 0.6f, 0.6f); }
+		static Colorf _gray70() { return Colorf(0.7f, 0.7f, 0.7f); }
+		static Colorf _gray80() { return Colorf(0.8f, 0.8f, 0.8f); }
+		static Colorf _gray90() { return Colorf(0.9f, 0.9f, 0.9f); }
 	};
 
 	/// \}
