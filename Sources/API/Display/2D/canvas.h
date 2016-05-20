@@ -136,7 +136,7 @@ namespace clan
 		void set_rasterizer_state(const RasterizerState &state);
 
 		/// \brief Set active blend state
-		void set_blend_state(const BlendState &state, const Colorf &blend_color = Colorf::white, unsigned int sample_mask = 0xffffffff);
+		void set_blend_state(const BlendState &state, const Colorf &blend_color = StandardColorf::white(), unsigned int sample_mask = 0xffffffff);
 
 		/// \brief Set active depth stencil state
 		void set_depth_stencil_state(const DepthStencilState &state, int stencil_ref = 0);
@@ -169,7 +169,7 @@ namespace clan
 		void reset_cliprect();
 
 		/// \brief Clears the whole context using the specified color.
-		void clear(const Colorf &color = Colorf::black);
+		void clear(const Colorf &color = StandardColorf::black());
 
 		/// \brief Clear the stencil buffer
 		///
@@ -221,7 +221,7 @@ namespace clan
 		void draw_point(const Pointf &point, const Colorf &color);
 
 		/// \brief Draw a line.
-		void draw_line(float x1, float y1, float x2, float y2, const Colorf &color = Colorf::white);
+		void draw_line(float x1, float y1, float x2, float y2, const Colorf &color = StandardColorf::white());
 
 		/// \brief Line
 		///
@@ -229,26 +229,26 @@ namespace clan
 		/// \param start = Pointf
 		/// \param end = Pointf
 		/// \param color = Colorf
-		void draw_line(const Pointf &start, const Pointf &end, const Colorf &color = Colorf::white);
+		void draw_line(const Pointf &start, const Pointf &end, const Colorf &color = StandardColorf::white());
 
 		/// \brief Line
 		///
 		/// \param gc = Graphic Context
 		/// \param line_segment = The line
 		/// \param color = Colorf
-		void draw_line(const LineSegment2f &line_segment, const Colorf &color = Colorf::white);
+		void draw_line(const LineSegment2f &line_segment, const Colorf &color = StandardColorf::white());
 
 		/// \brief Lines
-		void draw_lines(const Vec2f *positions, int num_vertices, const Colorf &color = Colorf::white);
+		void draw_lines(const Vec2f *positions, int num_vertices, const Colorf &color = StandardColorf::white());
 
 		/// \brief Lines
-		void draw_lines(const Vec2f *line_positions, const Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf &line_color = Colorf::white);
+		void draw_lines(const Vec2f *line_positions, const Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf &line_color = StandardColorf::white());
 
 		/// \brief Line Strip
-		void draw_line_strip(const Vec2f *positions, int num_vertices, const Colorf &color = Colorf::white);
+		void draw_line_strip(const Vec2f *positions, int num_vertices, const Colorf &color = StandardColorf::white());
 
 		/// \brief Draw a box / rectangle.
-		void draw_box(float x1, float y1, float x2, float y2, const Colorf &color = Colorf::white);
+		void draw_box(float x1, float y1, float x2, float y2, const Colorf &color = StandardColorf::white());
 
 		/// \brief Box
 		///
@@ -256,7 +256,7 @@ namespace clan
 		/// \param start = Pointf
 		/// \param end = Pointf
 		/// \param color = Colorf
-		void draw_box(const Pointf &start, const Pointf &end, const Colorf &color = Colorf::white);
+		void draw_box(const Pointf &start, const Pointf &end, const Colorf &color = StandardColorf::white());
 
 		/// \brief Box
 		///
@@ -266,7 +266,7 @@ namespace clan
 		void draw_box(const Rectf &rect, const Colorf &color);
 
 		/// \brief Draw a filled box / rectangle.
-		void fill_rect(float x1, float y1, float x2, float y2, const Colorf &color = Colorf::white);
+		void fill_rect(float x1, float y1, float x2, float y2, const Colorf &color = StandardColorf::white());
 
 		/// \brief Fill
 		///
@@ -274,7 +274,7 @@ namespace clan
 		/// \param start = Pointf
 		/// \param end = Pointf
 		/// \param color = Colorf
-		void fill_rect(const Pointf &start, const Pointf &end, const Colorf &color = Colorf::white);
+		void fill_rect(const Pointf &start, const Pointf &end, const Colorf &color = StandardColorf::white());
 
 		/// \brief Fill
 		///
@@ -309,7 +309,7 @@ namespace clan
 		void fill_rect(const Rectf &rect, const Gradient &gradient);
 
 		/// \brief Draw a circle.
-		void fill_circle(float center_x, float center_y, float radius, const Colorf &color = Colorf::white);
+		void fill_circle(float center_x, float center_y, float radius, const Colorf &color = StandardColorf::white());
 
 		/// \brief Circle
 		///
@@ -317,7 +317,7 @@ namespace clan
 		/// \param center = Pointf
 		/// \param radius = value
 		/// \param color = Colorf
-		void fill_circle(const Pointf &center, float radius, const Colorf &color = Colorf::white);
+		void fill_circle(const Pointf &center, float radius, const Colorf &color = StandardColorf::white());
 
 		/// \brief Gradient circle
 		///
@@ -337,13 +337,13 @@ namespace clan
 		void fill_circle(const Pointf &center, const Pointf &centergradient, float radius, const Gradient &gradient);
 
 		/// \brief Draw a triangle.
-		void fill_triangle(const Pointf &a, const Pointf &b, const Pointf &c, const Colorf &color = Colorf::white);
+		void fill_triangle(const Pointf &a, const Pointf &b, const Pointf &c, const Colorf &color = StandardColorf::white());
 
 		/// \brief Draw a triangle.
-		void fill_triangle(const Trianglef &dest_triangle, const Colorf &color = Colorf::white);
+		void fill_triangle(const Trianglef &dest_triangle, const Colorf &color = StandardColorf::white());
 
 		/// \brief Draw triangles
-		void fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Colorf &color = Colorf::white);
+		void fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Colorf &color = StandardColorf::white());
 
 		/// \brief Draw triangles
 		void fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Gradient &gradient);
@@ -355,34 +355,34 @@ namespace clan
 		void fill_triangles(const std::vector<Vec2f> &triangles, const Colorf *colors);
 
 		/// \brief Draw triangles
-		void fill_triangles(const std::vector<Vec2f> &triangles, const Colorf &color = Colorf::white);
+		void fill_triangles(const std::vector<Vec2f> &triangles, const Colorf &color = StandardColorf::white());
 
 		/// \brief Draw triangles
 		void fill_triangles(const std::vector<Vec2f> &triangles, const Gradient &gradient);
 
 		/// \brief Draw triangles
-		void fill_triangles(const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf &color = Colorf::white);
+		void fill_triangles(const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf &color = StandardColorf::white());
 
 		/// \brief Draw triangles
 		void fill_triangles(const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf *colors);
 
 		/// \brief Draw triangles
-		void fill_triangles(const std::vector<Vec2f> &positions, const std::vector<Vec2f> &texture_positions, const Texture2D &texture, const Colorf &color = Colorf::white);
+		void fill_triangles(const std::vector<Vec2f> &positions, const std::vector<Vec2f> &texture_positions, const Texture2D &texture, const Colorf &color = StandardColorf::white());
 
 		/// \brief Draw triangles
 		void fill_triangles(const std::vector<Vec2f> &positions, const std::vector<Vec2f> &texture_positions, const Texture2D &texture, const std::vector<Colorf> &colors);
 
 		/// \brief Draw triangles
-		void fill_triangles(const std::vector<Vec2f> &positions, const Texture2D &texture, const Colorf &color = Colorf::white);
+		void fill_triangles(const std::vector<Vec2f> &positions, const Texture2D &texture, const Colorf &color = StandardColorf::white());
 
 		/// \brief Draw triangles
-		void fill_triangles(const std::vector<Vec2f> &positions, const Texture2D &texture, const Rect &texture_rect, const Colorf &color = Colorf::white);
+		void fill_triangles(const std::vector<Vec2f> &positions, const Texture2D &texture, const Rect &texture_rect, const Colorf &color = StandardColorf::white());
 
 		/// \brief Draw triangles
-		void fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Texture2D &texture, const Colorf &color = Colorf::white);
+		void fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Texture2D &texture, const Colorf &color = StandardColorf::white());
 
 		/// \brief Draw triangles
-		void fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Texture2D &texture, const Rect &texture_rect, const Colorf &color = Colorf::white);
+		void fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Texture2D &texture, const Rect &texture_rect, const Colorf &color = StandardColorf::white());
 
 		/// \brief Draw triangles
 		void fill_triangles(const std::vector<Vec2f> &positions, const Texture2D &texture, const Gradient &gradient);
@@ -397,7 +397,7 @@ namespace clan
 		void fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Texture2D &texture, const Rect &texture_rect, const Gradient &gradient);
 
 		/// \brief Draw a filled ellipse.
-		void fill_ellipse(const Pointf &center, float radius_x, float radius_y, const Colorf &color = Colorf::white);
+		void fill_ellipse(const Pointf &center, float radius_x, float radius_y, const Colorf &color = StandardColorf::white());
 
 		/// \brief Draw a gradient filled ellipse.
 		void fill_ellipse(const Pointf &center, float radius_x, float radius_y, const Gradient &gradient);

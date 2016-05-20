@@ -38,7 +38,7 @@ namespace clan
 		depth_range.push_back(Sizef(0.0f, 1.0f));		// Always have a minimum of 1 viewport
 		scissor_set = false;
 		program_standard_set = false;
-		blend_color = Colorf::white;
+		blend_color = StandardColorf::white();
 		sample_mask = 0xffffffff;
 		stencil_ref = 0;
 		draw_buffer = buffer_back;

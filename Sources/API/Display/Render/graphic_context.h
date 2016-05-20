@@ -452,7 +452,7 @@ namespace clan
 		void set_rasterizer_state(const RasterizerState &state);
 
 		/// Set active blend state
-		void set_blend_state(const BlendState &state, const Colorf &blend_color = Colorf::white, unsigned int sample_mask = 0xffffffff);
+		void set_blend_state(const BlendState &state, const Colorf &blend_color = StandardColorf::white(), unsigned int sample_mask = 0xffffffff);
 
 		/// Set active depth stencil state
 		void set_depth_stencil_state(const DepthStencilState &state, int stencil_ref = 0);
@@ -638,7 +638,7 @@ namespace clan
 		void dispatch(int x = 1, int y = 1, int z = 1);
 
 		/// Clears the whole context using the specified color.
-		void clear(const Colorf &color = Colorf::black);
+		void clear(const Colorf &color = StandardColorf::black());
 
 		/// Clear the stencil buffer
 		///

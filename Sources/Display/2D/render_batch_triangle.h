@@ -68,7 +68,7 @@ namespace clan
 			int texindex;
 		};
 
-		int set_batcher_active(Canvas &canvas, const Texture2D &texture, bool glyph_program = false, const Colorf &constant_color = Colorf::black);
+		int set_batcher_active(Canvas &canvas, const Texture2D &texture, bool glyph_program = false, const Colorf &constant_color = StandardColorf::black());
 		int set_batcher_active(Canvas &canvas);
 		int set_batcher_active(Canvas &canvas, int num_vertices);
 		void flush(GraphicContext &gc) override;
