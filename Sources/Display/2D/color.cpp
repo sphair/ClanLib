@@ -430,7 +430,7 @@ namespace clan
 	{
 		if (name.empty())
 		{
-			out_color = Colorf::transparent;
+			out_color = transparent();
 			return false;
 		}
 
