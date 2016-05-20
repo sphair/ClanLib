@@ -608,7 +608,7 @@ namespace clan
 			return true;
 		}
 
-		out_color = Colorf::transparent;
+		out_color = transparent();
 		return false;
 	}
 }
