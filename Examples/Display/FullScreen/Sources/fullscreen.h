@@ -38,7 +38,6 @@ public:
 private:
 	void on_input_down(const InputEvent &key);
 	void on_window_close();
-	void create_window();
 
 private:
 	DisplayWindow window;
