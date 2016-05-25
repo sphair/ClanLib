@@ -778,8 +778,8 @@ namespace clan
 			{
 				canvas.set_transform(transform_state.matrix * Mat4f::translate(translate.x, translate.y, 0));
 				canvas.fill_rect(0.0f, 0.0f, _geometry.content_width, _geometry.content_height, Colorf(1.0f, 0.2f, 0.2f, 0.5f));
-				canvas.draw_line(0.0f, 0.0f, _geometry.content_width, _geometry.content_height, Colorf::black);
-				canvas.draw_line(_geometry.content_width, 0.0f, 0.0f, _geometry.content_height, Colorf::black);
+				canvas.draw_line(0.0f, 0.0f, _geometry.content_width, _geometry.content_height, StandardColorf::black());
+				canvas.draw_line(_geometry.content_width, 0.0f, 0.0f, _geometry.content_height, StandardColorf::black());
 			}
 		}
 

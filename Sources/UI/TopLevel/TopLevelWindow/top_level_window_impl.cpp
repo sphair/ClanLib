@@ -74,7 +74,7 @@ namespace clan
 
 	void TopLevelWindow_Impl::on_paint()
 	{
-		canvas.clear(clan::Colorf::transparent);
+		canvas.clear(StandardColorf::transparent());
 		window_view->render(canvas, window.get_viewport());
 		canvas.flush();
 		window.flip();

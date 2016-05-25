@@ -129,8 +129,8 @@ namespace clan
 		/// \param position = Dest position
 		/// \param text = The text to draw
 		/// \param color = The text color
-		void draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color = Colorf::white);
-		void draw_text(Canvas &canvas, float xpos, float ypos, const std::string &text, const Colorf &color = Colorf::white) { draw_text(canvas, Pointf(xpos, ypos), text, color); }
+		void draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color = StandardColorf::white());
+		void draw_text(Canvas &canvas, float xpos, float ypos, const std::string &text, const Colorf &color = StandardColorf::white()) { draw_text(canvas, Pointf(xpos, ypos), text, color); }
 
 		/// \brief Gets the glyph metrics
 		///

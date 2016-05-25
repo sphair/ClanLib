@@ -57,7 +57,7 @@ namespace clan
 		else
 		{
 			set_rasterizer_state(default_rasterizer_state);
-			set_blend_state(default_blend_state, Colorf::white, 0xffffffff);
+			set_blend_state(default_blend_state, StandardColorf::white(), 0xffffffff);
 			set_depth_stencil_state(default_depth_stencil_state, 0);
 		}
 	}

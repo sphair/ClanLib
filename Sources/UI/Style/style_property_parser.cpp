@@ -804,12 +804,12 @@ namespace clan
 		{
 			if (equals(token.value, "transparent"))
 			{
-				out_color = Colorf::transparent;
+				out_color = StandardColorf::transparent();
 				in_out_pos = pos;
 				return true;
 			}
 
-			if (Colorf::find_color(StringHelp::text_to_lower(token.value), out_color))
+			if (StandardColorf::parse(StringHelp::text_to_lower(token.value), out_color))
 			{
 				in_out_pos = pos;
 				return true;

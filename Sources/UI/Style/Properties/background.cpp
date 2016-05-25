@@ -677,7 +677,7 @@ namespace clan
 				}
 				else if (equals(token.value, "none"))
 				{
-					background_color = StyleSetValue::from_color(Colorf::transparent);
+					background_color = StyleSetValue::from_color(StandardColorf::transparent());
 					setter->set_value("background-color", background_color);
 				}
 			}

@@ -99,7 +99,7 @@ namespace clan
 				if (num_lengths < 2)
 					return;
 
-				Colorf c = Colorf::black;
+				Colorf c = StandardColorf::black();
 				if (parse_color(tokens, last_pos, c))
 				{
 					pos = last_pos;

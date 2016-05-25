@@ -58,7 +58,7 @@ namespace clan
 		current_program_provider(0),
 		input_layout_set(false)
 	{
-		//	set_blend_color(Colorf::black);
+		//	set_blend_color(StandardColorf::black());
 		//	set_blend_function(blend_one, blend_zero, blend_one, blend_zero);
 		//	enable_blending(false);
 

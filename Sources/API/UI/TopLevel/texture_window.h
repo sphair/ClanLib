@@ -50,7 +50,7 @@ namespace clan
 		/// \brief Returns the position and size within the canvas
 		Rectf viewport() const;
 
-		void set_background_color(const Colorf &background_color = Colorf::transparent);
+		void set_background_color(const Colorf &background_color = StandardColorf::transparent());
 		void set_clear_background(bool enable = true);
 
 		/// \brief Always redraw the entire gui

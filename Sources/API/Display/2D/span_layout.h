@@ -90,7 +90,7 @@ namespace clan
 		/// \param font = Font
 		/// \param color = Colorf
 		/// \param id = value
-		void add_text(const std::string &text, const Font &font, const Colorf &color = Colorf::white, int id = -1);
+		void add_text(const std::string &text, const Font &font, const Colorf &color = StandardColorf::white(), int id = -1);
 
 		/// \brief Add image
 		///

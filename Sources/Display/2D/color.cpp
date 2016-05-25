@@ -103,170 +103,334 @@ namespace clan
 	{
 	}
 
-	Color Color::aliceblue(240, 248, 255);
-	Color Color::antiquewhite(250, 235, 215);
-	Color Color::aqua(0, 255, 255);
-	Color Color::aquamarine(127, 255, 212);
-	Color Color::azure(240, 255, 255);
-	Color Color::beige(245, 245, 220);
-	Color Color::bisque(255, 228, 196);
-	Color Color::black(0, 0, 0);
-	Color Color::blanchedalmond(255, 235, 205);
-	Color Color::blue(0, 0, 255);
-	Color Color::blueviolet(138, 43, 226);
-	Color Color::brown(165, 42, 42);
-	Color Color::burlywood(222, 184, 135);
-	Color Color::cadetblue(95, 158, 160);
-	Color Color::chartreuse(127, 255, 0);
-	Color Color::chocolate(210, 105, 30);
-	Color Color::coral(255, 127, 80);
-	Color Color::cornflowerblue(100, 149, 237);
-	Color Color::cornsilk(255, 248, 220);
-	Color Color::crimson(220, 20, 60);
-	Color Color::cyan(0, 255, 255);
-	Color Color::darkblue(0, 0, 139);
-	Color Color::darkcyan(0, 139, 139);
-	Color Color::darkgoldenrod(184, 134, 11);
-	Color Color::darkgray(169, 169, 169);
-	Color Color::darkgreen(0, 100, 0);
-	Color Color::darkgrey(169, 169, 169);
-	Color Color::darkkhaki(189, 183, 107);
-	Color Color::darkmagenta(139, 0, 139);
-	Color Color::darkolivegreen(85, 107, 47);
-	Color Color::darkorange(255, 140, 0);
-	Color Color::darkorchid(153, 50, 204);
-	Color Color::darkred(139, 0, 0);
-	Color Color::darksalmon(233, 150, 122);
-	Color Color::darkseagreen(143, 188, 143);
-	Color Color::darkslateblue(72, 61, 139);
-	Color Color::darkslategray(47, 79, 79);
-	Color Color::darkslategrey(47, 79, 79);
-	Color Color::darkturquoise(0, 206, 209);
-	Color Color::darkviolet(148, 0, 211);
-	Color Color::deeppink(255, 20, 147);
-	Color Color::deepskyblue(0, 191, 255);
-	Color Color::dimgray(105, 105, 105);
-	Color Color::dimgrey(105, 105, 105);
-	Color Color::dodgerblue(30, 144, 255);
-	Color Color::firebrick(178, 34, 34);
-	Color Color::floralwhite(255, 250, 240);
-	Color Color::forestgreen(34, 139, 34);
-	Color Color::fuchsia(255, 0, 255);
-	Color Color::gainsboro(220, 220, 220);
-	Color Color::ghostwhite(248, 248, 255);
-	Color Color::gold(255, 215, 0);
-	Color Color::goldenrod(218, 165, 32);
-	Color Color::gray(128, 128, 128);
-	Color Color::grey(128, 128, 128);
-	Color Color::green(0, 128, 0);
-	Color Color::greenyellow(173, 255, 47);
-	Color Color::honeydew(240, 255, 240);
-	Color Color::hotpink(255, 105, 180);
-	Color Color::indianred(205, 92, 92);
-	Color Color::indigo(75, 0, 130);
-	Color Color::ivory(255, 255, 240);
-	Color Color::khaki(240, 230, 140);
-	Color Color::lavender(230, 230, 250);
-	Color Color::lavenderblush(255, 240, 245);
-	Color Color::lawngreen(124, 252, 0);
-	Color Color::lemonchiffon(255, 250, 205);
-	Color Color::lightblue(173, 216, 230);
-	Color Color::lightcoral(240, 128, 128);
-	Color Color::lightcyan(224, 255, 255);
-	Color Color::lightgoldenrodyellow(250, 250, 210);
-	Color Color::lightgray(211, 211, 211);
-	Color Color::lightgreen(144, 238, 144);
-	Color Color::lightgrey(211, 211, 211);
-	Color Color::lightpink(255, 182, 193);
-	Color Color::lightsalmon(255, 160, 122);
-	Color Color::lightseagreen(32, 178, 170);
-	Color Color::lightskyblue(135, 206, 250);
-	Color Color::lightslategray(119, 136, 153);
-	Color Color::lightslategrey(119, 136, 153);
-	Color Color::lightsteelblue(176, 196, 222);
-	Color Color::lightyellow(255, 255, 224);
-	Color Color::lime(0, 255, 0);
-	Color Color::limegreen(50, 205, 50);
-	Color Color::linen(250, 240, 230);
-	Color Color::magenta(255, 0, 255);
-	Color Color::maroon(128, 0, 0);
-	Color Color::mediumaquamarine(102, 205, 170);
-	Color Color::mediumblue(0, 0, 205);
-	Color Color::mediumorchid(186, 85, 211);
-	Color Color::mediumpurple(147, 112, 219);
-	Color Color::mediumseagreen(60, 179, 113);
-	Color Color::mediumslateblue(123, 104, 238);
-	Color Color::mediumspringgreen(0, 250, 154);
-	Color Color::mediumturquoise(72, 209, 204);
-	Color Color::mediumvioletred(199, 21, 133);
-	Color Color::midnightblue(25, 25, 112);
-	Color Color::mintcream(245, 255, 250);
-	Color Color::mistyrose(255, 228, 225);
-	Color Color::moccasin(255, 228, 181);
-	Color Color::navajowhite(255, 222, 173);
-	Color Color::navy(0, 0, 128);
-	Color Color::oldlace(253, 245, 230);
-	Color Color::olive(128, 128, 0);
-	Color Color::olivedrab(107, 142, 35);
-	Color Color::orange(255, 165, 0);
-	Color Color::orangered(255, 69, 0);
-	Color Color::orchid(218, 112, 214);
-	Color Color::palegoldenrod(238, 232, 170);
-	Color Color::palegreen(152, 251, 152);
-	Color Color::paleturquoise(175, 238, 238);
-	Color Color::palevioletred(219, 112, 147);
-	Color Color::papayawhip(255, 239, 213);
-	Color Color::peachpuff(255, 218, 185);
-	Color Color::peru(205, 133, 63);
-	Color Color::pink(255, 192, 203);
-	Color Color::plum(221, 160, 221);
-	Color Color::powderblue(176, 224, 230);
-	Color Color::purple(128, 0, 128);
-	Color Color::red(255, 0, 0);
-	Color Color::rosybrown(188, 143, 143);
-	Color Color::royalblue(65, 105, 225);
-	Color Color::saddlebrown(139, 69, 19);
-	Color Color::salmon(250, 128, 114);
-	Color Color::sandybrown(244, 164, 96);
-	Color Color::seagreen(46, 139, 87);
-	Color Color::seashell(255, 245, 238);
-	Color Color::sienna(160, 82, 45);
-	Color Color::silver(192, 192, 192);
-	Color Color::skyblue(135, 206, 235);
-	Color Color::slateblue(106, 90, 205);
-	Color Color::slategray(112, 128, 144);
-	Color Color::slategrey(112, 128, 144);
-	Color Color::snow(255, 250, 250);
-	Color Color::springgreen(0, 255, 127);
-	Color Color::steelblue(70, 130, 180);
-	Color Color::tan(210, 180, 140);
-	Color Color::teal(0, 128, 128);
-	Color Color::thistle(216, 191, 216);
-	Color Color::tomato(255, 99, 71);
-	Color Color::transparent(0, 0, 0, 0);
-	Color Color::turquoise(64, 224, 208);
-	Color Color::violet(238, 130, 238);
-	Color Color::wheat(245, 222, 179);
-	Color Color::white(255, 255, 255);
-	Color Color::whitesmoke(245, 245, 245);
-	Color Color::yellow(255, 255, 0);
-	Color Color::yellowgreen(154, 205, 50);
+	Color Color::aliceblue(StandardColor::aliceblue());
+	Color Color::antiquewhite(StandardColor::antiquewhite());
+	Color Color::aqua(StandardColor::aqua());
+	Color Color::aquamarine(StandardColor::aquamarine());
+	Color Color::azure(StandardColor::azure());
+	Color Color::beige(StandardColor::beige());
+	Color Color::bisque(StandardColor::bisque());
+	Color Color::black(StandardColor::black());
+	Color Color::blanchedalmond(StandardColor::blanchedalmond());
+	Color Color::blue(StandardColor::blue());
+	Color Color::blueviolet(StandardColor::blueviolet());
+	Color Color::brown(StandardColor::brown());
+	Color Color::burlywood(StandardColor::burlywood());
+	Color Color::cadetblue(StandardColor::cadetblue());
+	Color Color::chartreuse(StandardColor::chartreuse());
+	Color Color::chocolate(StandardColor::chocolate());
+	Color Color::coral(StandardColor::coral());
+	Color Color::cornflowerblue(StandardColor::cornflowerblue());
+	Color Color::cornsilk(StandardColor::cornsilk());
+	Color Color::crimson(StandardColor::crimson());
+	Color Color::cyan(StandardColor::cyan());
+	Color Color::darkblue(StandardColor::darkblue());
+	Color Color::darkcyan(StandardColor::darkcyan());
+	Color Color::darkgoldenrod(StandardColor::darkgoldenrod());
+	Color Color::darkgray(StandardColor::darkgray());
+	Color Color::darkgreen(StandardColor::darkgreen());
+	Color Color::darkgrey(StandardColor::darkgrey());
+	Color Color::darkkhaki(StandardColor::darkkhaki());
+	Color Color::darkmagenta(StandardColor::darkmagenta());
+	Color Color::darkolivegreen(StandardColor::darkolivegreen());
+	Color Color::darkorange(StandardColor::darkorange());
+	Color Color::darkorchid(StandardColor::darkorchid());
+	Color Color::darkred(StandardColor::darkred());
+	Color Color::darksalmon(StandardColor::darksalmon());
+	Color Color::darkseagreen(StandardColor::darkseagreen());
+	Color Color::darkslateblue(StandardColor::darkslateblue());
+	Color Color::darkslategray(StandardColor::darkslategray());
+	Color Color::darkslategrey(StandardColor::darkslategrey());
+	Color Color::darkturquoise(StandardColor::darkturquoise());
+	Color Color::darkviolet(StandardColor::darkviolet());
+	Color Color::deeppink(StandardColor::deeppink());
+	Color Color::deepskyblue(StandardColor::deepskyblue());
+	Color Color::dimgray(StandardColor::dimgray());
+	Color Color::dimgrey(StandardColor::dimgrey());
+	Color Color::dodgerblue(StandardColor::dodgerblue());
+	Color Color::firebrick(StandardColor::firebrick());
+	Color Color::floralwhite(StandardColor::floralwhite());
+	Color Color::forestgreen(StandardColor::forestgreen());
+	Color Color::fuchsia(StandardColor::fuchsia());
+	Color Color::gainsboro(StandardColor::gainsboro());
+	Color Color::ghostwhite(StandardColor::ghostwhite());
+	Color Color::gold(StandardColor::gold());
+	Color Color::goldenrod(StandardColor::goldenrod());
+	Color Color::gray(StandardColor::gray());
+	Color Color::grey(StandardColor::grey());
+	Color Color::green(StandardColor::green());
+	Color Color::greenyellow(StandardColor::greenyellow());
+	Color Color::honeydew(StandardColor::honeydew());
+	Color Color::hotpink(StandardColor::hotpink());
+	Color Color::indianred(StandardColor::indianred());
+	Color Color::indigo(StandardColor::indigo());
+	Color Color::ivory(StandardColor::ivory());
+	Color Color::khaki(StandardColor::khaki());
+	Color Color::lavender(StandardColor::lavender());
+	Color Color::lavenderblush(StandardColor::lavenderblush());
+	Color Color::lawngreen(StandardColor::lawngreen());
+	Color Color::lemonchiffon(StandardColor::lemonchiffon());
+	Color Color::lightblue(StandardColor::lightblue());
+	Color Color::lightcoral(StandardColor::lightcoral());
+	Color Color::lightcyan(StandardColor::lightcyan());
+	Color Color::lightgoldenrodyellow(StandardColor::lightgoldenrodyellow());
+	Color Color::lightgray(StandardColor::lightgray());
+	Color Color::lightgreen(StandardColor::lightgreen());
+	Color Color::lightgrey(StandardColor::lightgrey());
+	Color Color::lightpink(StandardColor::lightpink());
+	Color Color::lightsalmon(StandardColor::lightsalmon());
+	Color Color::lightseagreen(StandardColor::lightseagreen());
+	Color Color::lightskyblue(StandardColor::lightskyblue());
+	Color Color::lightslategray(StandardColor::lightslategray());
+	Color Color::lightslategrey(StandardColor::lightslategrey());
+	Color Color::lightsteelblue(StandardColor::lightsteelblue());
+	Color Color::lightyellow(StandardColor::lightyellow());
+	Color Color::lime(StandardColor::lime());
+	Color Color::limegreen(StandardColor::limegreen());
+	Color Color::linen(StandardColor::linen());
+	Color Color::magenta(StandardColor::magenta());
+	Color Color::maroon(StandardColor::maroon());
+	Color Color::mediumaquamarine(StandardColor::mediumaquamarine());
+	Color Color::mediumblue(StandardColor::mediumblue());
+	Color Color::mediumorchid(StandardColor::mediumorchid());
+	Color Color::mediumpurple(StandardColor::mediumpurple());
+	Color Color::mediumseagreen(StandardColor::mediumseagreen());
+	Color Color::mediumslateblue(StandardColor::mediumslateblue());
+	Color Color::mediumspringgreen(StandardColor::mediumspringgreen());
+	Color Color::mediumturquoise(StandardColor::mediumturquoise());
+	Color Color::mediumvioletred(StandardColor::mediumvioletred());
+	Color Color::midnightblue(StandardColor::midnightblue());
+	Color Color::mintcream(StandardColor::mintcream());
+	Color Color::mistyrose(StandardColor::mistyrose());
+	Color Color::moccasin(StandardColor::moccasin());
+	Color Color::navajowhite(StandardColor::navajowhite());
+	Color Color::navy(StandardColor::navy());
+	Color Color::oldlace(StandardColor::oldlace());
+	Color Color::olive(StandardColor::olive());
+	Color Color::olivedrab(StandardColor::olivedrab());
+	Color Color::orange(StandardColor::orange());
+	Color Color::orangered(StandardColor::orangered());
+	Color Color::orchid(StandardColor::orchid());
+	Color Color::palegoldenrod(StandardColor::palegoldenrod());
+	Color Color::palegreen(StandardColor::palegreen());
+	Color Color::paleturquoise(StandardColor::paleturquoise());
+	Color Color::palevioletred(StandardColor::palevioletred());
+	Color Color::papayawhip(StandardColor::papayawhip());
+	Color Color::peachpuff(StandardColor::peachpuff());
+	Color Color::peru(StandardColor::peru());
+	Color Color::pink(StandardColor::pink());
+	Color Color::plum(StandardColor::plum());
+	Color Color::powderblue(StandardColor::powderblue());
+	Color Color::purple(StandardColor::purple());
+	Color Color::red(StandardColor::red());
+	Color Color::rosybrown(StandardColor::rosybrown());
+	Color Color::royalblue(StandardColor::royalblue());
+	Color Color::saddlebrown(StandardColor::saddlebrown());
+	Color Color::salmon(StandardColor::salmon());
+	Color Color::sandybrown(StandardColor::sandybrown());
+	Color Color::seagreen(StandardColor::seagreen());
+	Color Color::seashell(StandardColor::seashell());
+	Color Color::sienna(StandardColor::sienna());
+	Color Color::silver(StandardColor::silver());
+	Color Color::skyblue(StandardColor::skyblue());
+	Color Color::slateblue(StandardColor::slateblue());
+	Color Color::slategray(StandardColor::slategray());
+	Color Color::slategrey(StandardColor::slategrey());
+	Color Color::snow(StandardColor::snow());
+	Color Color::springgreen(StandardColor::springgreen());
+	Color Color::steelblue(StandardColor::steelblue());
+	Color Color::tan(StandardColor::tan());
+	Color Color::teal(StandardColor::teal());
+	Color Color::thistle(StandardColor::thistle());
+	Color Color::tomato(StandardColor::tomato());
+	Color Color::transparent(StandardColor::transparent());
+	Color Color::turquoise(StandardColor::turquoise());
+	Color Color::violet(StandardColor::violet());
+	Color Color::wheat(StandardColor::wheat());
+	Color Color::white(StandardColor::white());
+	Color Color::whitesmoke(StandardColor::whitesmoke());
+	Color Color::yellow(StandardColor::yellow());
+	Color Color::yellowgreen(StandardColor::yellowgreen());
 
-	Color Color::gray10(26, 26, 26);
-	Color Color::gray20(51, 51, 51);
-	Color Color::gray30(77, 77, 77);
-	Color Color::gray40(104, 104, 104);
-	Color Color::gray50(128, 128, 128);
-	Color Color::gray60(153, 153, 153);
-	Color Color::gray70(178, 178, 178);
-	Color Color::gray80(204, 204, 204);
-	Color Color::gray90(230, 230, 230);
+	Color Color::gray10(StandardColor::gray10());
+	Color Color::gray20(StandardColor::gray20());
+	Color Color::gray30(StandardColor::gray30());
+	Color Color::gray40(StandardColor::gray40());
+	Color Color::gray50(StandardColor::gray50());
+	Color Color::gray60(StandardColor::gray60());
+	Color Color::gray70(StandardColor::gray70());
+	Color Color::gray80(StandardColor::gray80());
+	Color Color::gray90(StandardColor::gray90());
 
 	bool Colorf::find_color(const std::string &name, Colorf &out_color)
 	{
+		return StandardColorf::parse(name, out_color);
+	}
+
+	Colorf Colorf::aliceblue(StandardColorf::aliceblue());
+	Colorf Colorf::antiquewhite(StandardColorf::antiquewhite());
+	Colorf Colorf::aqua(StandardColorf::aqua());
+	Colorf Colorf::aquamarine(StandardColorf::aquamarine());
+	Colorf Colorf::azure(StandardColorf::azure());
+	Colorf Colorf::beige(StandardColorf::beige());
+	Colorf Colorf::bisque(StandardColorf::bisque());
+	Colorf Colorf::black(StandardColorf::black());
+	Colorf Colorf::blanchedalmond(StandardColorf::blanchedalmond());
+	Colorf Colorf::blue(StandardColorf::blue());
+	Colorf Colorf::blueviolet(StandardColorf::blueviolet());
+	Colorf Colorf::brown(StandardColorf::brown());
+	Colorf Colorf::burlywood(StandardColorf::burlywood());
+	Colorf Colorf::cadetblue(StandardColorf::cadetblue());
+	Colorf Colorf::chartreuse(StandardColorf::chartreuse());
+	Colorf Colorf::chocolate(StandardColorf::chocolate());
+	Colorf Colorf::coral(StandardColorf::coral());
+	Colorf Colorf::cornflowerblue(StandardColorf::cornflowerblue());
+	Colorf Colorf::cornsilk(StandardColorf::cornsilk());
+	Colorf Colorf::crimson(StandardColorf::crimson());
+	Colorf Colorf::cyan(StandardColorf::cyan());
+	Colorf Colorf::darkblue(StandardColorf::darkblue());
+	Colorf Colorf::darkcyan(StandardColorf::darkcyan());
+	Colorf Colorf::darkgoldenrod(StandardColorf::darkgoldenrod());
+	Colorf Colorf::darkgray(StandardColorf::darkgray());
+	Colorf Colorf::darkgreen(StandardColorf::darkgreen());
+	Colorf Colorf::darkgrey(StandardColorf::darkgrey());
+	Colorf Colorf::darkkhaki(StandardColorf::darkkhaki());
+	Colorf Colorf::darkmagenta(StandardColorf::darkmagenta());
+	Colorf Colorf::darkolivegreen(StandardColorf::darkolivegreen());
+	Colorf Colorf::darkorange(StandardColorf::darkorange());
+	Colorf Colorf::darkorchid(StandardColorf::darkorchid());
+	Colorf Colorf::darkred(StandardColorf::darkred());
+	Colorf Colorf::darksalmon(StandardColorf::darksalmon());
+	Colorf Colorf::darkseagreen(StandardColorf::darkseagreen());
+	Colorf Colorf::darkslateblue(StandardColorf::darkslateblue());
+	Colorf Colorf::darkslategray(StandardColorf::darkslategray());
+	Colorf Colorf::darkslategrey(StandardColorf::darkslategrey());
+	Colorf Colorf::darkturquoise(StandardColorf::darkturquoise());
+	Colorf Colorf::darkviolet(StandardColorf::darkviolet());
+	Colorf Colorf::deeppink(StandardColorf::deeppink());
+	Colorf Colorf::deepskyblue(StandardColorf::deepskyblue());
+	Colorf Colorf::dimgray(StandardColorf::dimgray());
+	Colorf Colorf::dimgrey(StandardColorf::dimgrey());
+	Colorf Colorf::dodgerblue(StandardColorf::dodgerblue());
+	Colorf Colorf::firebrick(StandardColorf::firebrick());
+	Colorf Colorf::floralwhite(StandardColorf::floralwhite());
+	Colorf Colorf::forestgreen(StandardColorf::forestgreen());
+	Colorf Colorf::fuchsia(StandardColorf::fuchsia());
+	Colorf Colorf::gainsboro(StandardColorf::gainsboro());
+	Colorf Colorf::ghostwhite(StandardColorf::ghostwhite());
+	Colorf Colorf::gold(StandardColorf::gold());
+	Colorf Colorf::goldenrod(StandardColorf::goldenrod());
+	Colorf Colorf::gray(StandardColorf::gray());
+	Colorf Colorf::grey(StandardColorf::grey());
+	Colorf Colorf::green(StandardColorf::green());
+	Colorf Colorf::greenyellow(StandardColorf::greenyellow());
+	Colorf Colorf::honeydew(StandardColorf::honeydew());
+	Colorf Colorf::hotpink(StandardColorf::hotpink());
+	Colorf Colorf::indianred(StandardColorf::indianred());
+	Colorf Colorf::indigo(StandardColorf::indigo());
+	Colorf Colorf::ivory(StandardColorf::ivory());
+	Colorf Colorf::khaki(StandardColorf::khaki());
+	Colorf Colorf::lavender(StandardColorf::lavender());
+	Colorf Colorf::lavenderblush(StandardColorf::lavenderblush());
+	Colorf Colorf::lawngreen(StandardColorf::lawngreen());
+	Colorf Colorf::lemonchiffon(StandardColorf::lemonchiffon());
+	Colorf Colorf::lightblue(StandardColorf::lightblue());
+	Colorf Colorf::lightcoral(StandardColorf::lightcoral());
+	Colorf Colorf::lightcyan(StandardColorf::lightcyan());
+	Colorf Colorf::lightgoldenrodyellow(StandardColorf::lightgoldenrodyellow());
+	Colorf Colorf::lightgray(StandardColorf::lightgray());
+	Colorf Colorf::lightgreen(StandardColorf::lightgreen());
+	Colorf Colorf::lightgrey(StandardColorf::lightgrey());
+	Colorf Colorf::lightpink(StandardColorf::lightpink());
+	Colorf Colorf::lightsalmon(StandardColorf::lightsalmon());
+	Colorf Colorf::lightseagreen(StandardColorf::lightseagreen());
+	Colorf Colorf::lightskyblue(StandardColorf::lightskyblue());
+	Colorf Colorf::lightslategray(StandardColorf::lightslategray());
+	Colorf Colorf::lightslategrey(StandardColorf::lightslategrey());
+	Colorf Colorf::lightsteelblue(StandardColorf::lightsteelblue());
+	Colorf Colorf::lightyellow(StandardColorf::lightyellow());
+	Colorf Colorf::lime(StandardColorf::lime());
+	Colorf Colorf::limegreen(StandardColorf::limegreen());
+	Colorf Colorf::linen(StandardColorf::linen());
+	Colorf Colorf::magenta(StandardColorf::magenta());
+	Colorf Colorf::maroon(StandardColorf::maroon());
+	Colorf Colorf::mediumaquamarine(StandardColorf::mediumaquamarine());
+	Colorf Colorf::mediumblue(StandardColorf::mediumblue());
+	Colorf Colorf::mediumorchid(StandardColorf::mediumorchid());
+	Colorf Colorf::mediumpurple(StandardColorf::mediumpurple());
+	Colorf Colorf::mediumseagreen(StandardColorf::mediumseagreen());
+	Colorf Colorf::mediumslateblue(StandardColorf::mediumslateblue());
+	Colorf Colorf::mediumspringgreen(StandardColorf::mediumspringgreen());
+	Colorf Colorf::mediumturquoise(StandardColorf::mediumturquoise());
+	Colorf Colorf::mediumvioletred(StandardColorf::mediumvioletred());
+	Colorf Colorf::midnightblue(StandardColorf::midnightblue());
+	Colorf Colorf::mintcream(StandardColorf::mintcream());
+	Colorf Colorf::mistyrose(StandardColorf::mistyrose());
+	Colorf Colorf::moccasin(StandardColorf::moccasin());
+	Colorf Colorf::navajowhite(StandardColorf::navajowhite());
+	Colorf Colorf::navy(StandardColorf::navy());
+	Colorf Colorf::oldlace(StandardColorf::oldlace());
+	Colorf Colorf::olive(StandardColorf::olive());
+	Colorf Colorf::olivedrab(StandardColorf::olivedrab());
+	Colorf Colorf::orange(StandardColorf::orange());
+	Colorf Colorf::orangered(StandardColorf::orangered());
+	Colorf Colorf::orchid(StandardColorf::orchid());
+	Colorf Colorf::palegoldenrod(StandardColorf::palegoldenrod());
+	Colorf Colorf::palegreen(StandardColorf::palegreen());
+	Colorf Colorf::paleturquoise(StandardColorf::paleturquoise());
+	Colorf Colorf::palevioletred(StandardColorf::palevioletred());
+	Colorf Colorf::papayawhip(StandardColorf::papayawhip());
+	Colorf Colorf::peachpuff(StandardColorf::peachpuff());
+	Colorf Colorf::peru(StandardColorf::peru());
+	Colorf Colorf::pink(StandardColorf::pink());
+	Colorf Colorf::plum(StandardColorf::plum());
+	Colorf Colorf::powderblue(StandardColorf::powderblue());
+	Colorf Colorf::purple(StandardColorf::purple());
+	Colorf Colorf::red(StandardColorf::red());
+	Colorf Colorf::rosybrown(StandardColorf::rosybrown());
+	Colorf Colorf::royalblue(StandardColorf::royalblue());
+	Colorf Colorf::saddlebrown(StandardColorf::saddlebrown());
+	Colorf Colorf::salmon(StandardColorf::salmon());
+	Colorf Colorf::sandybrown(StandardColorf::sandybrown());
+	Colorf Colorf::seagreen(StandardColorf::seagreen());
+	Colorf Colorf::seashell(StandardColorf::seashell());
+	Colorf Colorf::sienna(StandardColorf::sienna());
+	Colorf Colorf::silver(StandardColorf::silver());
+	Colorf Colorf::skyblue(StandardColorf::skyblue());
+	Colorf Colorf::slateblue(StandardColorf::slateblue());
+	Colorf Colorf::slategray(StandardColorf::slategray());
+	Colorf Colorf::slategrey(StandardColorf::slategrey());
+	Colorf Colorf::snow(StandardColorf::snow());
+	Colorf Colorf::springgreen(StandardColorf::springgreen());
+	Colorf Colorf::steelblue(StandardColorf::steelblue());
+	Colorf Colorf::tan(StandardColorf::tan());
+	Colorf Colorf::teal(StandardColorf::teal());
+	Colorf Colorf::thistle(StandardColorf::thistle());
+	Colorf Colorf::tomato(StandardColorf::tomato());
+	Colorf Colorf::transparent(StandardColorf::transparent());
+	Colorf Colorf::turquoise(StandardColorf::turquoise());
+	Colorf Colorf::violet(StandardColorf::violet());
+	Colorf Colorf::wheat(StandardColorf::wheat());
+	Colorf Colorf::white(StandardColorf::white());
+	Colorf Colorf::whitesmoke(StandardColorf::whitesmoke());
+	Colorf Colorf::yellow(StandardColorf::yellow());
+	Colorf Colorf::yellowgreen(StandardColorf::yellowgreen());
+
+	Colorf Colorf::gray10(StandardColorf::gray10());
+	Colorf Colorf::gray20(StandardColorf::gray20());
+	Colorf Colorf::gray30(StandardColorf::gray30());
+	Colorf Colorf::gray40(StandardColorf::gray40());
+	Colorf Colorf::gray50(StandardColorf::gray50());
+	Colorf Colorf::gray60(StandardColorf::gray60());
+	Colorf Colorf::gray70(StandardColorf::gray70());
+	Colorf Colorf::gray80(StandardColorf::gray80());
+	Colorf Colorf::gray90(StandardColorf::gray90());
+
+	bool StandardColorf::parse(const std::string &name, Colorf &out_color)
+	{
 		if (name.empty())
 		{
-			out_color = Colorf::transparent;
+			out_color = transparent();
 			return false;
 		}
 
@@ -276,335 +440,176 @@ namespace clan
 			return true;
 		}
 
-		static std::map<std::string, Colorf *> color_map;
-		if (color_map.empty())
+		static std::map<std::string, Colorf> color_map =
 		{
-			color_map["aliceblue"] = &Colorf::aliceblue;
-			color_map["antiquewhite"] = &Colorf::antiquewhite;
-			color_map["aqua"] = &Colorf::aqua;
-			color_map["aquamarine"] = &Colorf::aquamarine;
-			color_map["azure"] = &Colorf::azure;
-			color_map["beige"] = &Colorf::beige;
-			color_map["bisque"] = &Colorf::bisque;
-			color_map["black"] = &Colorf::black;
-			color_map["blanchedalmond"] = &Colorf::blanchedalmond;
-			color_map["blue"] = &Colorf::blue;
-			color_map["blueviolet"] = &Colorf::blueviolet;
-			color_map["brown"] = &Colorf::brown;
-			color_map["burlywood"] = &Colorf::burlywood;
-			color_map["cadetblue"] = &Colorf::cadetblue;
-			color_map["chartreuse"] = &Colorf::chartreuse;
-			color_map["chocolate"] = &Colorf::chocolate;
-			color_map["coral"] = &Colorf::coral;
-			color_map["cornflowerblue"] = &Colorf::cornflowerblue;
-			color_map["cornsilk"] = &Colorf::cornsilk;
-			color_map["crimson"] = &Colorf::crimson;
-			color_map["cyan"] = &Colorf::cyan;
-			color_map["darkblue"] = &Colorf::darkblue;
-			color_map["darkcyan"] = &Colorf::darkcyan;
-			color_map["darkgoldenrod"] = &Colorf::darkgoldenrod;
-			color_map["darkgray"] = &Colorf::darkgray;
-			color_map["darkgreen"] = &Colorf::darkgreen;
-			color_map["darkgrey"] = &Colorf::darkgrey;
-			color_map["darkkhaki"] = &Colorf::darkkhaki;
-			color_map["darkmagenta"] = &Colorf::darkmagenta;
-			color_map["darkolivegreen"] = &Colorf::darkolivegreen;
-			color_map["darkorange"] = &Colorf::darkorange;
-			color_map["darkorchid"] = &Colorf::darkorchid;
-			color_map["darkred"] = &Colorf::darkred;
-			color_map["darksalmon"] = &Colorf::darksalmon;
-			color_map["darkseagreen"] = &Colorf::darkseagreen;
-			color_map["darkslateblue"] = &Colorf::darkslateblue;
-			color_map["darkslategray"] = &Colorf::darkslategray;
-			color_map["darkslategrey"] = &Colorf::darkslategrey;
-			color_map["darkturquoise"] = &Colorf::darkturquoise;
-			color_map["darkviolet"] = &Colorf::darkviolet;
-			color_map["deeppink"] = &Colorf::deeppink;
-			color_map["deepskyblue"] = &Colorf::deepskyblue;
-			color_map["dimgray"] = &Colorf::dimgray;
-			color_map["dimgrey"] = &Colorf::dimgrey;
-			color_map["dodgerblue"] = &Colorf::dodgerblue;
-			color_map["firebrick"] = &Colorf::firebrick;
-			color_map["floralwhite"] = &Colorf::floralwhite;
-			color_map["forestgreen"] = &Colorf::forestgreen;
-			color_map["fuchsia"] = &Colorf::fuchsia;
-			color_map["gainsboro"] = &Colorf::gainsboro;
-			color_map["ghostwhite"] = &Colorf::ghostwhite;
-			color_map["gold"] = &Colorf::gold;
-			color_map["goldenrod"] = &Colorf::goldenrod;
-			color_map["gray"] = &Colorf::gray;
-			color_map["grey"] = &Colorf::grey;
-			color_map["green"] = &Colorf::green;
-			color_map["greenyellow"] = &Colorf::greenyellow;
-			color_map["honeydew"] = &Colorf::honeydew;
-			color_map["hotpink"] = &Colorf::hotpink;
-			color_map["indianred"] = &Colorf::indianred;
-			color_map["indigo"] = &Colorf::indigo;
-			color_map["ivory"] = &Colorf::ivory;
-			color_map["khaki"] = &Colorf::khaki;
-			color_map["lavender"] = &Colorf::lavender;
-			color_map["lavenderblush"] = &Colorf::lavenderblush;
-			color_map["lawngreen"] = &Colorf::lawngreen;
-			color_map["lemonchiffon"] = &Colorf::lemonchiffon;
-			color_map["lightblue"] = &Colorf::lightblue;
-			color_map["lightcoral"] = &Colorf::lightcoral;
-			color_map["lightcyan"] = &Colorf::lightcyan;
-			color_map["lightgoldenrodyellow"] = &Colorf::lightgoldenrodyellow;
-			color_map["lightgray"] = &Colorf::lightgray;
-			color_map["lightgreen"] = &Colorf::lightgreen;
-			color_map["lightgrey"] = &Colorf::lightgrey;
-			color_map["lightpink"] = &Colorf::lightpink;
-			color_map["lightsalmon"] = &Colorf::lightsalmon;
-			color_map["lightseagreen"] = &Colorf::lightseagreen;
-			color_map["lightskyblue"] = &Colorf::lightskyblue;
-			color_map["lightslategray"] = &Colorf::lightslategray;
-			color_map["lightslategrey"] = &Colorf::lightslategrey;
-			color_map["lightsteelblue"] = &Colorf::lightsteelblue;
-			color_map["lightyellow"] = &Colorf::lightyellow;
-			color_map["lime"] = &Colorf::lime;
-			color_map["limegreen"] = &Colorf::limegreen;
-			color_map["linen"] = &Colorf::linen;
-			color_map["magenta"] = &Colorf::magenta;
-			color_map["maroon"] = &Colorf::maroon;
-			color_map["mediumaquamarine"] = &Colorf::mediumaquamarine;
-			color_map["mediumblue"] = &Colorf::mediumblue;
-			color_map["mediumorchid"] = &Colorf::mediumorchid;
-			color_map["mediumpurple"] = &Colorf::mediumpurple;
-			color_map["mediumseagreen"] = &Colorf::mediumseagreen;
-			color_map["mediumslateblue"] = &Colorf::mediumslateblue;
-			color_map["mediumspringgreen"] = &Colorf::mediumspringgreen;
-			color_map["mediumturquoise"] = &Colorf::mediumturquoise;
-			color_map["mediumvioletred"] = &Colorf::mediumvioletred;
-			color_map["midnightblue"] = &Colorf::midnightblue;
-			color_map["mintcream"] = &Colorf::mintcream;
-			color_map["mistyrose"] = &Colorf::mistyrose;
-			color_map["moccasin"] = &Colorf::moccasin;
-			color_map["navajowhite"] = &Colorf::navajowhite;
-			color_map["navy"] = &Colorf::navy;
-			color_map["oldlace"] = &Colorf::oldlace;
-			color_map["olive"] = &Colorf::olive;
-			color_map["olivedrab"] = &Colorf::olivedrab;
-			color_map["orange"] = &Colorf::orange;
-			color_map["orangered"] = &Colorf::orangered;
-			color_map["orchid"] = &Colorf::orchid;
-			color_map["palegoldenrod"] = &Colorf::palegoldenrod;
-			color_map["palegreen"] = &Colorf::palegreen;
-			color_map["paleturquoise"] = &Colorf::paleturquoise;
-			color_map["palevioletred"] = &Colorf::palevioletred;
-			color_map["papayawhip"] = &Colorf::papayawhip;
-			color_map["peachpuff"] = &Colorf::peachpuff;
-			color_map["peru"] = &Colorf::peru;
-			color_map["pink"] = &Colorf::pink;
-			color_map["plum"] = &Colorf::plum;
-			color_map["powderblue"] = &Colorf::powderblue;
-			color_map["purple"] = &Colorf::purple;
-			color_map["red"] = &Colorf::red;
-			color_map["rosybrown"] = &Colorf::rosybrown;
-			color_map["royalblue"] = &Colorf::royalblue;
-			color_map["saddlebrown"] = &Colorf::saddlebrown;
-			color_map["salmon"] = &Colorf::salmon;
-			color_map["sandybrown"] = &Colorf::sandybrown;
-			color_map["seagreen"] = &Colorf::seagreen;
-			color_map["seashell"] = &Colorf::seashell;
-			color_map["sienna"] = &Colorf::sienna;
-			color_map["silver"] = &Colorf::silver;
-			color_map["skyblue"] = &Colorf::skyblue;
-			color_map["slateblue"] = &Colorf::slateblue;
-			color_map["slategray"] = &Colorf::slategray;
-			color_map["slategrey"] = &Colorf::slategrey;
-			color_map["snow"] = &Colorf::snow;
-			color_map["springgreen"] = &Colorf::springgreen;
-			color_map["steelblue"] = &Colorf::steelblue;
-			color_map["tan"] = &Colorf::tan;
-			color_map["teal"] = &Colorf::teal;
-			color_map["thistle"] = &Colorf::thistle;
-			color_map["transparent"] = &Colorf::transparent;
-			color_map["tomato"] = &Colorf::tomato;
-			color_map["turquoise"] = &Colorf::turquoise;
-			color_map["violet"] = &Colorf::violet;
-			color_map["wheat"] = &Colorf::wheat;
-			color_map["white"] = &Colorf::white;
-			color_map["whitesmoke"] = &Colorf::whitesmoke;
-			color_map["yellow"] = &Colorf::yellow;
-			color_map["yellowgreen"] = &Colorf::yellowgreen;
-			color_map["gray10"] = &Colorf::gray10;
-			color_map["gray20"] = &Colorf::gray20;
-			color_map["gray30"] = &Colorf::gray30;
-			color_map["gray40"] = &Colorf::gray40;
-			color_map["gray50"] = &Colorf::gray50;
-			color_map["gray60"] = &Colorf::gray60;
-			color_map["gray70"] = &Colorf::gray70;
-			color_map["gray80"] = &Colorf::gray80;
-			color_map["gray90"] = &Colorf::gray90;
-		}
+			{ "aliceblue", aliceblue() },
+			{ "antiquewhite", antiquewhite() },
+			{ "aqua", aqua() },
+			{ "aquamarine", aquamarine() },
+			{ "azure", azure() },
+			{ "beige", beige() },
+			{ "bisque", bisque() },
+			{ "black", black() },
+			{ "blanchedalmond", blanchedalmond() },
+			{ "blue", blue() },
+			{ "blueviolet", blueviolet() },
+			{ "brown", brown() },
+			{ "burlywood", burlywood() },
+			{ "cadetblue", cadetblue() },
+			{ "chartreuse", chartreuse() },
+			{ "chocolate", chocolate() },
+			{ "coral", coral() },
+			{ "cornflowerblue", cornflowerblue() },
+			{ "cornsilk", cornsilk() },
+			{ "crimson", crimson() },
+			{ "cyan", cyan() },
+			{ "darkblue", darkblue() },
+			{ "darkcyan", darkcyan() },
+			{ "darkgoldenrod", darkgoldenrod() },
+			{ "darkgray", darkgray() },
+			{ "darkgreen", darkgreen() },
+			{ "darkgrey", darkgrey() },
+			{ "darkkhaki", darkkhaki() },
+			{ "darkmagenta", darkmagenta() },
+			{ "darkolivegreen", darkolivegreen() },
+			{ "darkorange", darkorange() },
+			{ "darkorchid", darkorchid() },
+			{ "darkred", darkred() },
+			{ "darksalmon", darksalmon() },
+			{ "darkseagreen", darkseagreen() },
+			{ "darkslateblue", darkslateblue() },
+			{ "darkslategray", darkslategray() },
+			{ "darkslategrey", darkslategrey() },
+			{ "darkturquoise", darkturquoise() },
+			{ "darkviolet", darkviolet() },
+			{ "deeppink", deeppink() },
+			{ "deepskyblue", deepskyblue() },
+			{ "dimgray", dimgray() },
+			{ "dimgrey", dimgrey() },
+			{ "dodgerblue", dodgerblue() },
+			{ "firebrick", firebrick() },
+			{ "floralwhite", floralwhite() },
+			{ "forestgreen", forestgreen() },
+			{ "fuchsia", fuchsia() },
+			{ "gainsboro", gainsboro() },
+			{ "ghostwhite", ghostwhite() },
+			{ "gold", gold() },
+			{ "goldenrod", goldenrod() },
+			{ "gray", gray() },
+			{ "grey", grey() },
+			{ "green", green() },
+			{ "greenyellow", greenyellow() },
+			{ "honeydew", honeydew() },
+			{ "hotpink", hotpink() },
+			{ "indianred", indianred() },
+			{ "indigo", indigo() },
+			{ "ivory", ivory() },
+			{ "khaki", khaki() },
+			{ "lavender", lavender() },
+			{ "lavenderblush", lavenderblush() },
+			{ "lawngreen", lawngreen() },
+			{ "lemonchiffon", lemonchiffon() },
+			{ "lightblue", lightblue() },
+			{ "lightcoral", lightcoral() },
+			{ "lightcyan", lightcyan() },
+			{ "lightgoldenrodyellow", lightgoldenrodyellow() },
+			{ "lightgray", lightgray() },
+			{ "lightgreen", lightgreen() },
+			{ "lightgrey", lightgrey() },
+			{ "lightpink", lightpink() },
+			{ "lightsalmon", lightsalmon() },
+			{ "lightseagreen", lightseagreen() },
+			{ "lightskyblue", lightskyblue() },
+			{ "lightslategray", lightslategray() },
+			{ "lightslategrey", lightslategrey() },
+			{ "lightsteelblue", lightsteelblue() },
+			{ "lightyellow", lightyellow() },
+			{ "lime", lime() },
+			{ "limegreen", limegreen() },
+			{ "linen", linen() },
+			{ "magenta", magenta() },
+			{ "maroon", maroon() },
+			{ "mediumaquamarine", mediumaquamarine() },
+			{ "mediumblue", mediumblue() },
+			{ "mediumorchid", mediumorchid() },
+			{ "mediumpurple", mediumpurple() },
+			{ "mediumseagreen", mediumseagreen() },
+			{ "mediumslateblue", mediumslateblue() },
+			{ "mediumspringgreen", mediumspringgreen() },
+			{ "mediumturquoise", mediumturquoise() },
+			{ "mediumvioletred", mediumvioletred() },
+			{ "midnightblue", midnightblue() },
+			{ "mintcream", mintcream() },
+			{ "mistyrose", mistyrose() },
+			{ "moccasin", moccasin() },
+			{ "navajowhite", navajowhite() },
+			{ "navy", navy() },
+			{ "oldlace", oldlace() },
+			{ "olive", olive() },
+			{ "olivedrab", olivedrab() },
+			{ "orange", orange() },
+			{ "orangered", orangered() },
+			{ "orchid", orchid() },
+			{ "palegoldenrod", palegoldenrod() },
+			{ "palegreen", palegreen() },
+			{ "paleturquoise", paleturquoise() },
+			{ "palevioletred", palevioletred() },
+			{ "papayawhip", papayawhip() },
+			{ "peachpuff", peachpuff() },
+			{ "peru", peru() },
+			{ "pink", pink() },
+			{ "plum", plum() },
+			{ "powderblue", powderblue() },
+			{ "purple", purple() },
+			{ "red", red() },
+			{ "rosybrown", rosybrown() },
+			{ "royalblue", royalblue() },
+			{ "saddlebrown", saddlebrown() },
+			{ "salmon", salmon() },
+			{ "sandybrown", sandybrown() },
+			{ "seagreen", seagreen() },
+			{ "seashell", seashell() },
+			{ "sienna", sienna() },
+			{ "silver", silver() },
+			{ "skyblue", skyblue() },
+			{ "slateblue", slateblue() },
+			{ "slategray", slategray() },
+			{ "slategrey", slategrey() },
+			{ "snow", snow() },
+			{ "springgreen", springgreen() },
+			{ "steelblue", steelblue() },
+			{ "tan", tan() },
+			{ "teal", teal() },
+			{ "thistle", thistle() },
+			{ "transparent", transparent() },
+			{ "tomato", tomato() },
+			{ "turquoise", turquoise() },
+			{ "violet", violet() },
+			{ "wheat", wheat() },
+			{ "white", white() },
+			{ "whitesmoke", whitesmoke() },
+			{ "yellow", yellow() },
+			{ "yellowgreen", yellowgreen() },
+			{ "gray10", gray10() },
+			{ "gray20", gray20() },
+			{ "gray30", gray30() },
+			{ "gray40", gray40() },
+			{ "gray50", gray50() },
+			{ "gray60", gray60() },
+			{ "gray70", gray70() },
+			{ "gray80", gray80() },
+			{ "gray90", gray90() }
+		};
 
 		auto it = color_map.find(name);
 		if (it != color_map.end())
 		{
-			out_color = *it->second;
+			out_color = it->second;
 			return true;
 		}
 
-		out_color = Colorf::transparent;
+		out_color = transparent();
 		return false;
 	}
-
-	Colorf Colorf::aliceblue(40.0f / 255.0f, 248.0f / 255.0f, 255.0f / 255.0f);
-	Colorf Colorf::antiquewhite(250.0f / 255.0f, 235.0f / 255.0f, 215.0f / 255.0f);
-	Colorf Colorf::aqua(0.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f);
-	Colorf Colorf::aquamarine(127.0f / 255.0f, 255.0f / 255.0f, 212.0f / 255.0f);
-	Colorf Colorf::azure(240.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f);
-	Colorf Colorf::beige(245.0f / 255.0f, 245.0f / 255.0f, 220.0f / 255.0f);
-	Colorf Colorf::bisque(255.0f / 255.0f, 228.0f / 255.0f, 196.0f / 255.0f);
-	Colorf Colorf::black(0.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f);
-	Colorf Colorf::blanchedalmond(255.0f / 255.0f, 235.0f / 255.0f, 205.0f / 255.0f);
-	Colorf Colorf::blue(0.0f / 255.0f, 0.0f / 255.0f, 255.0f / 255.0f);
-	Colorf Colorf::blueviolet(138.0f / 255.0f, 43.0f / 255.0f, 226.0f / 255.0f);
-	Colorf Colorf::brown(165.0f / 255.0f, 42.0f / 255.0f, 42.0f / 255.0f);
-	Colorf Colorf::burlywood(222.0f / 255.0f, 184.0f / 255.0f, 135.0f / 255.0f);
-	Colorf Colorf::cadetblue(95.0f / 255.0f, 158.0f / 255.0f, 160.0f / 255.0f);
-	Colorf Colorf::chartreuse(127.0f / 255.0f, 255.0f / 255.0f, 0.0f / 255.0f);
-	Colorf Colorf::chocolate(210.0f / 255.0f, 105.0f / 255.0f, 30.0f / 255.0f);
-	Colorf Colorf::coral(255.0f / 255.0f, 127.0f / 255.0f, 80.0f / 255.0f);
-	Colorf Colorf::cornflowerblue(100.0f / 255.0f, 149.0f / 255.0f, 237.0f / 255.0f);
-	Colorf Colorf::cornsilk(255.0f / 255.0f, 248.0f / 255.0f, 220.0f / 255.0f);
-	Colorf Colorf::crimson(220.0f / 255.0f, 20.0f / 255.0f, 60.0f / 255.0f);
-	Colorf Colorf::cyan(0.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f);
-	Colorf Colorf::darkblue(0.0f / 255.0f, 0.0f / 255.0f, 139.0f / 255.0f);
-	Colorf Colorf::darkcyan(0.0f / 255.0f, 139.0f / 255.0f, 139.0f / 255.0f);
-	Colorf Colorf::darkgoldenrod(184.0f / 255.0f, 134.0f / 255.0f, 11.0f / 255.0f);
-	Colorf Colorf::darkgray(169.0f / 255.0f, 169.0f / 255.0f, 169.0f / 255.0f);
-	Colorf Colorf::darkgreen(0.0f / 255.0f, 100.0f / 255.0f, 0.0f / 255.0f);
-	Colorf Colorf::darkgrey(169.0f / 255.0f, 169.0f / 255.0f, 169.0f / 255.0f);
-	Colorf Colorf::darkkhaki(189.0f / 255.0f, 183.0f / 255.0f, 107.0f / 255.0f);
-	Colorf Colorf::darkmagenta(139.0f / 255.0f, 0.0f / 255.0f, 139.0f / 255.0f);
-	Colorf Colorf::darkolivegreen(85.0f / 255.0f, 107.0f / 255.0f, 47.0f / 255.0f);
-	Colorf Colorf::darkorange(255.0f / 255.0f, 140.0f / 255.0f, 0.0f / 255.0f);
-	Colorf Colorf::darkorchid(153.0f / 255.0f, 50.0f / 255.0f, 204.0f / 255.0f);
-	Colorf Colorf::darkred(139.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f);
-	Colorf Colorf::darksalmon(233.0f / 255.0f, 150.0f / 255.0f, 122.0f / 255.0f);
-	Colorf Colorf::darkseagreen(143.0f / 255.0f, 188.0f / 255.0f, 143.0f / 255.0f);
-	Colorf Colorf::darkslateblue(72.0f / 255.0f, 61.0f / 255.0f, 139.0f / 255.0f);
-	Colorf Colorf::darkslategray(47.0f / 255.0f, 79.0f / 255.0f, 79.0f / 255.0f);
-	Colorf Colorf::darkslategrey(47.0f / 255.0f, 79.0f / 255.0f, 79.0f / 255.0f);
-	Colorf Colorf::darkturquoise(0.0f / 255.0f, 206.0f / 255.0f, 209.0f / 255.0f);
-	Colorf Colorf::darkviolet(148.0f / 255.0f, 0.0f / 255.0f, 211.0f / 255.0f);
-	Colorf Colorf::deeppink(255.0f / 255.0f, 20.0f / 255.0f, 147.0f / 255.0f);
-	Colorf Colorf::deepskyblue(0.0f / 255.0f, 191.0f / 255.0f, 255.0f / 255.0f);
-	Colorf Colorf::dimgray(105.0f / 255.0f, 105.0f / 255.0f, 105.0f / 255.0f);
-	Colorf Colorf::dimgrey(105.0f / 255.0f, 105.0f / 255.0f, 105.0f / 255.0f);
-	Colorf Colorf::dodgerblue(30.0f / 255.0f, 144.0f / 255.0f, 255.0f / 255.0f);
-	Colorf Colorf::firebrick(178.0f / 255.0f, 34.0f / 255.0f, 34.0f / 255.0f);
-	Colorf Colorf::floralwhite(255.0f / 255.0f, 250.0f / 255.0f, 240.0f / 255.0f);
-	Colorf Colorf::forestgreen(34.0f / 255.0f, 139.0f / 255.0f, 34.0f / 255.0f);
-	Colorf Colorf::fuchsia(255.0f / 255.0f, 0.0f / 255.0f, 255.0f / 255.0f);
-	Colorf Colorf::gainsboro(220.0f / 255.0f, 220.0f / 255.0f, 220.0f / 255.0f);
-	Colorf Colorf::ghostwhite(248.0f / 255.0f, 248.0f / 255.0f, 255.0f / 255.0f);
-	Colorf Colorf::gold(255.0f / 255.0f, 215.0f / 255.0f, 0.0f / 255.0f);
-	Colorf Colorf::goldenrod(218.0f / 255.0f, 165.0f / 255.0f, 32.0f / 255.0f);
-	Colorf Colorf::gray(128.0f / 255.0f, 128.0f / 255.0f, 128.0f / 255.0f);
-	Colorf Colorf::grey(128.0f / 255.0f, 128.0f / 255.0f, 128.0f / 255.0f);
-	Colorf Colorf::green(0.0f / 255.0f, 128.0f / 255.0f, 0.0f / 255.0f);
-	Colorf Colorf::greenyellow(173.0f / 255.0f, 255.0f / 255.0f, 47.0f / 255.0f);
-	Colorf Colorf::honeydew(240.0f / 255.0f, 255.0f / 255.0f, 240.0f / 255.0f);
-	Colorf Colorf::hotpink(255.0f / 255.0f, 105.0f / 255.0f, 180.0f / 255.0f);
-	Colorf Colorf::indianred(205.0f / 255.0f, 92.0f / 255.0f, 92.0f / 255.0f);
-	Colorf Colorf::indigo(75.0f / 255.0f, 0.0f / 255.0f, 130.0f / 255.0f);
-	Colorf Colorf::ivory(255.0f / 255.0f, 255.0f / 255.0f, 240.0f / 255.0f);
-	Colorf Colorf::khaki(240.0f / 255.0f, 230.0f / 255.0f, 140.0f / 255.0f);
-	Colorf Colorf::lavender(230.0f / 255.0f, 230.0f / 255.0f, 250.0f / 255.0f);
-	Colorf Colorf::lavenderblush(255.0f / 255.0f, 240.0f / 255.0f, 245.0f / 255.0f);
-	Colorf Colorf::lawngreen(124.0f / 255.0f, 252.0f / 255.0f, 0.0f / 255.0f);
-	Colorf Colorf::lemonchiffon(255.0f / 255.0f, 250.0f / 255.0f, 205.0f / 255.0f);
-	Colorf Colorf::lightblue(173.0f / 255.0f, 216.0f / 255.0f, 230.0f / 255.0f);
-	Colorf Colorf::lightcoral(240.0f / 255.0f, 128.0f / 255.0f, 128.0f / 255.0f);
-	Colorf Colorf::lightcyan(224.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f);
-	Colorf Colorf::lightgoldenrodyellow(250.0f / 255.0f, 250.0f / 255.0f, 210.0f / 255.0f);
-	Colorf Colorf::lightgray(211.0f / 255.0f, 211.0f / 255.0f, 211.0f / 255.0f);
-	Colorf Colorf::lightgreen(144.0f / 255.0f, 238.0f / 255.0f, 144.0f / 255.0f);
-	Colorf Colorf::lightgrey(211.0f / 255.0f, 211.0f / 255.0f, 211.0f / 255.0f);
-	Colorf Colorf::lightpink(255.0f / 255.0f, 182.0f / 255.0f, 193.0f / 255.0f);
-	Colorf Colorf::lightsalmon(255.0f / 255.0f, 160.0f / 255.0f, 122.0f / 255.0f);
-	Colorf Colorf::lightseagreen(32.0f / 255.0f, 178.0f / 255.0f, 170.0f / 255.0f);
-	Colorf Colorf::lightskyblue(135.0f / 255.0f, 206.0f / 255.0f, 250.0f / 255.0f);
-	Colorf Colorf::lightslategray(119.0f / 255.0f, 136.0f / 255.0f, 153.0f / 255.0f);
-	Colorf Colorf::lightslategrey(119.0f / 255.0f, 136.0f / 255.0f, 153.0f / 255.0f);
-	Colorf Colorf::lightsteelblue(176.0f / 255.0f, 196.0f / 255.0f, 222.0f / 255.0f);
-	Colorf Colorf::lightyellow(255.0f / 255.0f, 255.0f / 255.0f, 224.0f / 255.0f);
-	Colorf Colorf::lime(0.0f / 255.0f, 255.0f / 255.0f, 0.0f / 255.0f);
-	Colorf Colorf::limegreen(50.0f / 255.0f, 205.0f / 255.0f, 50.0f / 255.0f);
-	Colorf Colorf::linen(250.0f / 255.0f, 240.0f / 255.0f, 230.0f / 255.0f);
-	Colorf Colorf::magenta(255.0f / 255.0f, 0.0f / 255.0f, 255.0f / 255.0f);
-	Colorf Colorf::maroon(128.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f);
-	Colorf Colorf::mediumaquamarine(102.0f / 255.0f, 205.0f / 255.0f, 170.0f / 255.0f);
-	Colorf Colorf::mediumblue(0.0f / 255.0f, 0.0f / 255.0f, 205.0f / 255.0f);
-	Colorf Colorf::mediumorchid(186.0f / 255.0f, 85.0f / 255.0f, 211.0f / 255.0f);
-	Colorf Colorf::mediumpurple(147.0f / 255.0f, 112.0f / 255.0f, 219.0f / 255.0f);
-	Colorf Colorf::mediumseagreen(60.0f / 255.0f, 179.0f / 255.0f, 113.0f / 255.0f);
-	Colorf Colorf::mediumslateblue(123.0f / 255.0f, 104.0f / 255.0f, 238.0f / 255.0f);
-	Colorf Colorf::mediumspringgreen(0.0f / 255.0f, 250.0f / 255.0f, 154.0f / 255.0f);
-	Colorf Colorf::mediumturquoise(72.0f / 255.0f, 209.0f / 255.0f, 204.0f / 255.0f);
-	Colorf Colorf::mediumvioletred(199.0f / 255.0f, 21.0f / 255.0f, 133.0f / 255.0f);
-	Colorf Colorf::midnightblue(25.0f / 255.0f, 25.0f / 255.0f, 112.0f / 255.0f);
-	Colorf Colorf::mintcream(245.0f / 255.0f, 255.0f / 255.0f, 250.0f / 255.0f);
-	Colorf Colorf::mistyrose(255.0f / 255.0f, 228.0f / 255.0f, 225.0f / 255.0f);
-	Colorf Colorf::moccasin(255.0f / 255.0f, 228.0f / 255.0f, 181.0f / 255.0f);
-	Colorf Colorf::navajowhite(255.0f / 255.0f, 222.0f / 255.0f, 173.0f / 255.0f);
-	Colorf Colorf::navy(0.0f / 255.0f, 0.0f / 255.0f, 128.0f / 255.0f);
-	Colorf Colorf::oldlace(253.0f / 255.0f, 245.0f / 255.0f, 230.0f / 255.0f);
-	Colorf Colorf::olive(128.0f / 255.0f, 128.0f / 255.0f, 0.0f / 255.0f);
-	Colorf Colorf::olivedrab(107.0f / 255.0f, 142.0f / 255.0f, 35.0f / 255.0f);
-	Colorf Colorf::orange(255.0f / 255.0f, 165.0f / 255.0f, 0.0f / 255.0f);
-	Colorf Colorf::orangered(255.0f / 255.0f, 69.0f / 255.0f, 0.0f / 255.0f);
-	Colorf Colorf::orchid(218.0f / 255.0f, 112.0f / 255.0f, 214.0f / 255.0f);
-	Colorf Colorf::palegoldenrod(238.0f / 255.0f, 232.0f / 255.0f, 170.0f / 255.0f);
-	Colorf Colorf::palegreen(152.0f / 255.0f, 251.0f / 255.0f, 152.0f / 255.0f);
-	Colorf Colorf::paleturquoise(175.0f / 255.0f, 238.0f / 255.0f, 238.0f / 255.0f);
-	Colorf Colorf::palevioletred(219.0f / 255.0f, 112.0f / 255.0f, 147.0f / 255.0f);
-	Colorf Colorf::papayawhip(255.0f / 255.0f, 239.0f / 255.0f, 213.0f / 255.0f);
-	Colorf Colorf::peachpuff(255.0f / 255.0f, 218.0f / 255.0f, 185.0f / 255.0f);
-	Colorf Colorf::peru(205.0f / 255.0f, 133.0f / 255.0f, 63.0f / 255.0f);
-	Colorf Colorf::pink(255.0f / 255.0f, 192.0f / 255.0f, 203.0f / 255.0f);
-	Colorf Colorf::plum(221.0f / 255.0f, 160.0f / 255.0f, 221.0f / 255.0f);
-	Colorf Colorf::powderblue(176.0f / 255.0f, 224.0f / 255.0f, 230.0f / 255.0f);
-	Colorf Colorf::purple(128.0f / 255.0f, 0.0f / 255.0f, 128.0f / 255.0f);
-	Colorf Colorf::red(255.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f);
-	Colorf Colorf::rosybrown(188.0f / 255.0f, 143.0f / 255.0f, 143.0f / 255.0f);
-	Colorf Colorf::royalblue(65.0f / 255.0f, 105.0f / 255.0f, 225.0f / 255.0f);
-	Colorf Colorf::saddlebrown(139.0f / 255.0f, 69.0f / 255.0f, 19.0f / 255.0f);
-	Colorf Colorf::salmon(250.0f / 255.0f, 128.0f / 255.0f, 114.0f / 255.0f);
-	Colorf Colorf::sandybrown(244.0f / 255.0f, 164.0f / 255.0f, 96.0f / 255.0f);
-	Colorf Colorf::seagreen(46.0f / 255.0f, 139.0f / 255.0f, 87.0f / 255.0f);
-	Colorf Colorf::seashell(255.0f / 255.0f, 245.0f / 255.0f, 238.0f / 255.0f);
-	Colorf Colorf::sienna(160.0f / 255.0f, 82.0f / 255.0f, 45.0f / 255.0f);
-	Colorf Colorf::silver(192.0f / 255.0f, 192.0f / 255.0f, 192.0f / 255.0f);
-	Colorf Colorf::skyblue(135.0f / 255.0f, 206.0f / 255.0f, 235.0f / 255.0f);
-	Colorf Colorf::slateblue(106.0f / 255.0f, 90.0f / 255.0f, 205.0f / 255.0f);
-	Colorf Colorf::slategray(112.0f / 255.0f, 128.0f / 255.0f, 144.0f / 255.0f);
-	Colorf Colorf::slategrey(112.0f / 255.0f, 128.0f / 255.0f, 144.0f / 255.0f);
-	Colorf Colorf::snow(255.0f / 255.0f, 250.0f / 255.0f, 250.0f / 255.0f);
-	Colorf Colorf::springgreen(0.0f / 255.0f, 255.0f / 255.0f, 127.0f / 255.0f);
-	Colorf Colorf::steelblue(70.0f / 255.0f, 130.0f / 255.0f, 180.0f / 255.0f);
-	Colorf Colorf::tan(210.0f / 255.0f, 180.0f / 255.0f, 140.0f / 255.0f);
-	Colorf Colorf::teal(0.0f / 255.0f, 128.0f / 255.0f, 128.0f / 255.0f);
-	Colorf Colorf::thistle(216.0f / 255.0f, 191.0f / 255.0f, 216.0f / 255.0f);
-	Colorf Colorf::tomato(255.0f / 255.0f, 99.0f / 255.0f, 71.0f / 255.0f);
-	Colorf Colorf::transparent(0.0f, 0.0f, 0.0f, 0.0f);
-	Colorf Colorf::turquoise(64.0f / 255.0f, 224.0f / 255.0f, 208.0f / 255.0f);
-	Colorf Colorf::violet(238.0f / 255.0f, 130.0f / 255.0f, 238.0f / 255.0f);
-	Colorf Colorf::wheat(245.0f / 255.0f, 222.0f / 255.0f, 179.0f / 255.0f);
-	Colorf Colorf::white(255.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f);
-	Colorf Colorf::whitesmoke(245.0f / 255.0f, 245.0f / 255.0f, 245.0f / 255.0f);
-	Colorf Colorf::yellow(255.0f / 255.0f, 255.0f / 255.0f, 0.0f / 255.0f);
-	Colorf Colorf::yellowgreen(154.0f / 255.0f, 205.0f / 255.0f, 50.0f / 255.0f);
-
-	Colorf Colorf::gray10(0.1f, 0.1f, 0.1f);
-	Colorf Colorf::gray20(0.2f, 0.2f, 0.2f);
-	Colorf Colorf::gray30(0.3f, 0.3f, 0.3f);
-	Colorf Colorf::gray40(0.4f, 0.4f, 0.4f);
-	Colorf Colorf::gray50(0.5f, 0.5f, 0.5f);
-	Colorf Colorf::gray60(0.6f, 0.6f, 0.6f);
-	Colorf Colorf::gray70(0.7f, 0.7f, 0.7f);
-	Colorf Colorf::gray80(0.8f, 0.8f, 0.8f);
-	Colorf Colorf::gray90(0.9f, 0.9f, 0.9f);
 }
+
