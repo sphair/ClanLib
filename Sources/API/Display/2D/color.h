@@ -124,622 +124,622 @@ namespace clan
 		}
 
 		/// \brief <img src="../../img/colors/aliceblue-chip.png" width=16 height=16 > rgb(240, 248, 255).
-		[[deprecated("Please use StandardColor::aliceblue() instead")]]
+		//[[deprecated("Please use StandardColor::aliceblue() instead")]]
 		static Color aliceblue;
 
 		/// \brief <img src="../../img/colors/antiquewhite-chip.png" width=16 height=16 > rgb(250, 235, 215).
-		[[deprecated("Please use StandardColor::antiquewhite() instead")]]
+		//[[deprecated("Please use StandardColor::antiquewhite() instead")]]
 		static Color antiquewhite;
 
 		/// \brief <img src="../../img/colors/aqua-chip.png" width=16 height=16 > rgb( 0, 255, 255).
-		[[deprecated("Please use StandardColor::aqua() instead")]]
+		//[[deprecated("Please use StandardColor::aqua() instead")]]
 		static Color aqua;
 
 		/// \brief <img src="../../img/colors/aquamarine-chip.png" width=16 height=16 > rgb(127, 255, 212).
-		[[deprecated("Please use StandardColor::aquamarine() instead")]]
+		//[[deprecated("Please use StandardColor::aquamarine() instead")]]
 		static Color aquamarine;
 
 		/// \brief <img src="../../img/colors/azure-chip.png" width=16 height=16 > rgb(240, 255, 255).
-		[[deprecated("Please use StandardColor::azure() instead")]]
+		//[[deprecated("Please use StandardColor::azure() instead")]]
 		static Color azure;
 
 		/// \brief <img src="../../img/colors/beige-chip.png" width=16 height=16 > rgb(245, 245, 220).
-		[[deprecated("Please use StandardColor::beige() instead")]]
+		//[[deprecated("Please use StandardColor::beige() instead")]]
 		static Color beige;
 
 		/// \brief <img src="../../img/colors/bisque-chip.png" width=16 height=16 > rgb(255, 228, 196).
-		[[deprecated("Please use StandardColor::bisque() instead")]]
+		//[[deprecated("Please use StandardColor::bisque() instead")]]
 		static Color bisque;
 
 		/// \brief <img src="../../img/colors/black-chip.png" width=16 height=16 > rgb( 0, 0, 0).
-		[[deprecated("Please use StandardColor::black() instead")]]
+		//[[deprecated("Please use StandardColor::black() instead")]]
 		static Color black;
 
 		/// \brief <img src="../../img/colors/blanchedalmond-chip.png" width=16 height=16 > rgb(255, 235, 205).
-		[[deprecated("Please use StandardColor::blanchedalmond() instead")]]
+		//[[deprecated("Please use StandardColor::blanchedalmond() instead")]]
 		static Color blanchedalmond;
 
 		/// \brief <img src="../../img/colors/blue-chip.png" width=16 height=16 > rgb( 0, 0, 255).
-		[[deprecated("Please use StandardColor::blue() instead")]]
+		//[[deprecated("Please use StandardColor::blue() instead")]]
 		static Color blue;
 
 		/// \brief <img src="../../img/colors/blueviolet-chip.png" width=16 height=16 > rgb(138, 43, 226).
-		[[deprecated("Please use StandardColor::blueviolet() instead")]]
+		//[[deprecated("Please use StandardColor::blueviolet() instead")]]
 		static Color blueviolet;
 
 		/// \brief <img src="../../img/colors/brown-chip.png" width=16 height=16 > rgb(165, 42, 42).
-		[[deprecated("Please use StandardColor::brown() instead")]]
+		//[[deprecated("Please use StandardColor::brown() instead")]]
 		static Color brown;
 
 		/// \brief <img src="../../img/colors/burlywood-chip.png" width=16 height=16 > rgb(222, 184, 135).
-		[[deprecated("Please use StandardColor::burlywood() instead")]]
+		//[[deprecated("Please use StandardColor::burlywood() instead")]]
 		static Color burlywood;
 
 		/// \brief <img src="../../img/colors/cadetblue-chip.png" width=16 height=16 > rgb( 95, 158, 160).
-		[[deprecated("Please use StandardColor::cadetblue() instead")]]
+		//[[deprecated("Please use StandardColor::cadetblue() instead")]]
 		static Color cadetblue;
 
 		/// \brief <img src="../../img/colors/chartreuse-chip.png" width=16 height=16 > rgb(127, 255, 0).
-		[[deprecated("Please use StandardColor::chartreuse() instead")]]
+		//[[deprecated("Please use StandardColor::chartreuse() instead")]]
 		static Color chartreuse;
 
 		/// \brief <img src="../../img/colors/chocolate-chip.png" width=16 height=16 > rgb(210, 105, 30).
-		[[deprecated("Please use StandardColor::chocolate() instead")]]
+		//[[deprecated("Please use StandardColor::chocolate() instead")]]
 		static Color chocolate;
 
 		/// \brief <img src="../../img/colors/coral-chip.png" width=16 height=16 > rgb(255, 127, 80).
-		[[deprecated("Please use StandardColor::coral() instead")]]
+		//[[deprecated("Please use StandardColor::coral() instead")]]
 		static Color coral;
 
 		/// \brief <img src="../../img/colors/cornflowerblue-chip.png" width=16 height=16 > rgb(100, 149, 237).
-		[[deprecated("Please use StandardColor::cornflowerblue() instead")]]
+		//[[deprecated("Please use StandardColor::cornflowerblue() instead")]]
 		static Color cornflowerblue;
 
 		/// \brief <img src="../../img/colors/cornsilk-chip.png" width=16 height=16 > rgb(255, 248, 220).
-		[[deprecated("Please use StandardColor::cornsilk() instead")]]
+		//[[deprecated("Please use StandardColor::cornsilk() instead")]]
 		static Color cornsilk;
 
 		/// \brief <img src="../../img/colors/crimson-chip.png" width=16 height=16 > rgb(220, 20, 60).
-		[[deprecated("Please use StandardColor::crimson() instead")]]
+		//[[deprecated("Please use StandardColor::crimson() instead")]]
 		static Color crimson;
 
 		/// \brief <img src="../../img/colors/cyan-chip.png" width=16 height=16 > rgb( 0, 255, 255).
-		[[deprecated("Please use StandardColor::cyan() instead")]]
+		//[[deprecated("Please use StandardColor::cyan() instead")]]
 		static Color cyan;
 
 		/// \brief <img src="../../img/colors/darkblue-chip.png" width=16 height=16 > rgb( 0, 0, 139).
-		[[deprecated("Please use StandardColor::darkblue() instead")]]
+		//[[deprecated("Please use StandardColor::darkblue() instead")]]
 		static Color darkblue;
 
 		/// \brief <img src="../../img/colors/darkcyan-chip.png" width=16 height=16 > rgb( 0, 139, 139).
-		[[deprecated("Please use StandardColor::darkcyan() instead")]]
+		//[[deprecated("Please use StandardColor::darkcyan() instead")]]
 		static Color darkcyan;
 
 		/// \brief <img src="../../img/colors/darkgoldenrod-chip.png" width=16 height=16 > rgb(184, 134, 11).
-		[[deprecated("Please use StandardColor::darkgoldenrod() instead")]]
+		//[[deprecated("Please use StandardColor::darkgoldenrod() instead")]]
 		static Color darkgoldenrod;
 
 		/// \brief <img src="../../img/colors/darkgray-chip.png" width=16 height=16 > rgb(169, 169, 169).
-		[[deprecated("Please use StandardColor::darkgray() instead")]]
+		//[[deprecated("Please use StandardColor::darkgray() instead")]]
 		static Color darkgray;
 
 		/// \brief <img src="../../img/colors/darkgreen-chip.png" width=16 height=16 > rgb( 0, 100, 0).
-		[[deprecated("Please use StandardColor::darkgreen() instead")]]
+		//[[deprecated("Please use StandardColor::darkgreen() instead")]]
 		static Color darkgreen;
 
 		/// \brief <img src="../../img/colors/darkgrey-chip.png" width=16 height=16 > rgb(169, 169, 169).
-		[[deprecated("Please use StandardColor::darkgrey() instead")]]
+		//[[deprecated("Please use StandardColor::darkgrey() instead")]]
 		static Color darkgrey;
 
 		/// \brief <img src="../../img/colors/darkkhaki-chip.png" width=16 height=16 > rgb(189, 183, 107).
-		[[deprecated("Please use StandardColor::darkkhaki() instead")]]
+		//[[deprecated("Please use StandardColor::darkkhaki() instead")]]
 		static Color darkkhaki;
 
 		/// \brief <img src="../../img/colors/darkmagenta-chip.png" width=16 height=16 > rgb(139, 0, 139).
-		[[deprecated("Please use StandardColor::darkmagenta() instead")]]
+		//[[deprecated("Please use StandardColor::darkmagenta() instead")]]
 		static Color darkmagenta;
 
 		/// \brief <img src="../../img/colors/darkolivegreen-chip.png" width=16 height=16 > rgb( 85, 107, 47).
-		[[deprecated("Please use StandardColor::darkolivegreen() instead")]]
+		//[[deprecated("Please use StandardColor::darkolivegreen() instead")]]
 		static Color darkolivegreen;
 
 		/// \brief <img src="../../img/colors/darkorange-chip.png" width=16 height=16 > rgb(255, 140, 0).
-		[[deprecated("Please use StandardColor::darkorange() instead")]]
+		//[[deprecated("Please use StandardColor::darkorange() instead")]]
 		static Color darkorange;
 
 		/// \brief <img src="../../img/colors/darkorchid-chip.png" width=16 height=16 > rgb(153, 50, 204).
-		[[deprecated("Please use StandardColor::darkorchid() instead")]]
+		//[[deprecated("Please use StandardColor::darkorchid() instead")]]
 		static Color darkorchid;
 
 		/// \brief <img src="../../img/colors/darkred-chip.png" width=16 height=16 > rgb(139, 0, 0).
-		[[deprecated("Please use StandardColor::darkred() instead")]]
+		//[[deprecated("Please use StandardColor::darkred() instead")]]
 		static Color darkred;
 
 		/// \brief <img src="../../img/colors/darksalmon-chip.png" width=16 height=16 > rgb(233, 150, 122).
-		[[deprecated("Please use StandardColor::darksalmon() instead")]]
+		//[[deprecated("Please use StandardColor::darksalmon() instead")]]
 		static Color darksalmon;
 
 		/// \brief <img src="../../img/colors/darkseagreen-chip.png" width=16 height=16 > rgb(143, 188, 143).
-		[[deprecated("Please use StandardColor::darkseagreen() instead")]]
+		//[[deprecated("Please use StandardColor::darkseagreen() instead")]]
 		static Color darkseagreen;
 
 		/// \brief <img src="../../img/colors/darkslateblue-chip.png" width=16 height=16 > rgb( 72, 61, 139).
-		[[deprecated("Please use StandardColor::darkslateblue() instead")]]
+		//[[deprecated("Please use StandardColor::darkslateblue() instead")]]
 		static Color darkslateblue;
 
 		/// \brief <img src="../../img/colors/darkslategray-chip.png" width=16 height=16 > rgb( 47, 79, 79).
-		[[deprecated("Please use StandardColor::darkslategray() instead")]]
+		//[[deprecated("Please use StandardColor::darkslategray() instead")]]
 		static Color darkslategray;
 
 		/// \brief <img src="../../img/colors/darkslategrey-chip.png" width=16 height=16 > rgb( 47, 79, 79).
-		[[deprecated("Please use StandardColor::darkslategrey() instead")]]
+		//[[deprecated("Please use StandardColor::darkslategrey() instead")]]
 		static Color darkslategrey;
 
 		/// \brief <img src="../../img/colors/darkturquoise-chip.png" width=16 height=16 > rgb( 0, 206, 209).
-		[[deprecated("Please use StandardColor::darkturquoise() instead")]]
+		//[[deprecated("Please use StandardColor::darkturquoise() instead")]]
 		static Color darkturquoise;
 
 		/// \brief <img src="../../img/colors/darkviolet-chip.png" width=16 height=16 > rgb(148, 0, 211).
-		[[deprecated("Please use StandardColor::darkviolet() instead")]]
+		//[[deprecated("Please use StandardColor::darkviolet() instead")]]
 		static Color darkviolet;
 
 		/// \brief <img src="../../img/colors/deeppink-chip.png" width=16 height=16 > rgb(255, 20, 147).
-		[[deprecated("Please use StandardColor::deeppink() instead")]]
+		//[[deprecated("Please use StandardColor::deeppink() instead")]]
 		static Color deeppink;
 
 		/// \brief <img src="../../img/colors/deepskyblue-chip.png" width=16 height=16 > rgb( 0, 191, 255).
-		[[deprecated("Please use StandardColor::deepskyblue() instead")]]
+		//[[deprecated("Please use StandardColor::deepskyblue() instead")]]
 		static Color deepskyblue;
 
 		/// \brief <img src="../../img/colors/dimgray-chip.png" width=16 height=16 > rgb(105, 105, 105).
-		[[deprecated("Please use StandardColor::dimgray() instead")]]
+		//[[deprecated("Please use StandardColor::dimgray() instead")]]
 		static Color dimgray;
 
 		/// \brief <img src="../../img/colors/dimgrey-chip.png" width=16 height=16 > rgb(105, 105, 105).
-		[[deprecated("Please use StandardColor::dimgrey() instead")]]
+		//[[deprecated("Please use StandardColor::dimgrey() instead")]]
 		static Color dimgrey;
 
 		/// \brief <img src="../../img/colors/dodgerblue-chip.png" width=16 height=16 > rgb( 30, 144, 255).
-		[[deprecated("Please use StandardColor::dodgerblue() instead")]]
+		//[[deprecated("Please use StandardColor::dodgerblue() instead")]]
 		static Color dodgerblue;
 
 		/// \brief <img src="../../img/colors/firebrick-chip.png" width=16 height=16 > rgb(178, 34, 34).
-		[[deprecated("Please use StandardColor::firebrick() instead")]]
+		//[[deprecated("Please use StandardColor::firebrick() instead")]]
 		static Color firebrick;
 
 		/// \brief <img src="../../img/colors/floralwhite-chip.png" width=16 height=16 > rgb(255, 250, 240).
-		[[deprecated("Please use StandardColor::floralwhite() instead")]]
+		//[[deprecated("Please use StandardColor::floralwhite() instead")]]
 		static Color floralwhite;
 
 		/// \brief <img src="../../img/colors/forestgreen-chip.png" width=16 height=16 > rgb( 34, 139, 34).
-		[[deprecated("Please use StandardColor::forestgreen() instead")]]
+		//[[deprecated("Please use StandardColor::forestgreen() instead")]]
 		static Color forestgreen;
 
 		/// \brief <img src="../../img/colors/fuchsia-chip.png" width=16 height=16 > rgb(255, 0, 255).
-		[[deprecated("Please use StandardColor::fuchsia() instead")]]
+		//[[deprecated("Please use StandardColor::fuchsia() instead")]]
 		static Color fuchsia;
 
 		/// \brief <img src="../../img/colors/gainsboro-chip.png" width=16 height=16 > rgb(220, 220, 220).
-		[[deprecated("Please use StandardColor::gainsboro() instead")]]
+		//[[deprecated("Please use StandardColor::gainsboro() instead")]]
 		static Color gainsboro;
 
 		/// \brief <img src="../../img/colors/ghostwhite-chip.png" width=16 height=16 > rgb(248, 248, 255).
-		[[deprecated("Please use StandardColor::ghostwhite() instead")]]
+		//[[deprecated("Please use StandardColor::ghostwhite() instead")]]
 		static Color ghostwhite;
 
 		/// \brief <img src="../../img/colors/gold-chip.png" width=16 height=16 > rgb(255, 215, 0).
-		[[deprecated("Please use StandardColor::gold() instead")]]
+		//[[deprecated("Please use StandardColor::gold() instead")]]
 		static Color gold;
 
 		/// \brief <img src="../../img/colors/goldenrod-chip.png" width=16 height=16 > rgb(218, 165, 32).
-		[[deprecated("Please use StandardColor::goldenrod() instead")]]
+		//[[deprecated("Please use StandardColor::goldenrod() instead")]]
 		static Color goldenrod;
 
 		/// \brief <img src="../../img/colors/gray-chip.png" width=16 height=16 > rgb(128, 128, 128).
-		[[deprecated("Please use StandardColor::gray() instead")]]
+		//[[deprecated("Please use StandardColor::gray() instead")]]
 		static Color gray;
 
 		/// \brief <img src="../../img/colors/grey-chip.png" width=16 height=16 > rgb(128, 128, 128).
-		[[deprecated("Please use StandardColor::grey() instead")]]
+		//[[deprecated("Please use StandardColor::grey() instead")]]
 		static Color grey;
 
 		/// \brief <img src="../../img/colors/green-chip.png" width=16 height=16 > rgb( 0, 128, 0).
-		[[deprecated("Please use StandardColor::green() instead")]]
+		//[[deprecated("Please use StandardColor::green() instead")]]
 		static Color green;
 
 		/// \brief <img src="../../img/colors/greenyellow-chip.png" width=16 height=16 > rgb(173, 255, 47).
-		[[deprecated("Please use StandardColor::greenyellow() instead")]]
+		//[[deprecated("Please use StandardColor::greenyellow() instead")]]
 		static Color greenyellow;
 
 		/// \brief <img src="../../img/colors/honeydew-chip.png" width=16 height=16 > rgb(240, 255, 240).
-		[[deprecated("Please use StandardColor::honeydew() instead")]]
+		//[[deprecated("Please use StandardColor::honeydew() instead")]]
 		static Color honeydew;
 
 		/// \brief <img src="../../img/colors/hotpink-chip.png" width=16 height=16 > rgb(255, 105, 180).
-		[[deprecated("Please use StandardColor::hotpink() instead")]]
+		//[[deprecated("Please use StandardColor::hotpink() instead")]]
 		static Color hotpink;
 
 		/// \brief <img src="../../img/colors/indianred-chip.png" width=16 height=16 > rgb(205, 92, 92).
-		[[deprecated("Please use StandardColor::indianred() instead")]]
+		//[[deprecated("Please use StandardColor::indianred() instead")]]
 		static Color indianred;
 
 		/// \brief <img src="../../img/colors/indigo-chip.png" width=16 height=16 > rgb( 75, 0, 130).
-		[[deprecated("Please use StandardColor::indigo() instead")]]
+		//[[deprecated("Please use StandardColor::indigo() instead")]]
 		static Color indigo;
 
 		/// \brief <img src="../../img/colors/ivory-chip.png" width=16 height=16 > rgb(255, 255, 240).
-		[[deprecated("Please use StandardColor::ivory() instead")]]
+		//[[deprecated("Please use StandardColor::ivory() instead")]]
 		static Color ivory;
 
 		/// \brief <img src="../../img/colors/khaki-chip.png" width=16 height=16 > rgb(240, 230, 140).
-		[[deprecated("Please use StandardColor::khaki() instead")]]
+		//[[deprecated("Please use StandardColor::khaki() instead")]]
 		static Color khaki;
 
 		/// \brief <img src="../../img/colors/lavender-chip.png" width=16 height=16 > rgb(230, 230, 250).
-		[[deprecated("Please use StandardColor::lavender() instead")]]
+		//[[deprecated("Please use StandardColor::lavender() instead")]]
 		static Color lavender;
 
 		/// \brief <img src="../../img/colors/lavenderblush-chip.png" width=16 height=16 > rgb(255, 240, 245).
-		[[deprecated("Please use StandardColor::lavenderblush() instead")]]
+		//[[deprecated("Please use StandardColor::lavenderblush() instead")]]
 		static Color lavenderblush;
 
 		/// \brief <img src="../../img/colors/lawngreen-chip.png" width=16 height=16 > rgb(124, 252, 0).
-		[[deprecated("Please use StandardColor::lawngreen() instead")]]
+		//[[deprecated("Please use StandardColor::lawngreen() instead")]]
 		static Color lawngreen;
 
 		/// \brief <img src="../../img/colors/lemonchiffon-chip.png" width=16 height=16 > rgb(255, 250, 205).
-		[[deprecated("Please use StandardColor::lemonchiffon() instead")]]
+		//[[deprecated("Please use StandardColor::lemonchiffon() instead")]]
 		static Color lemonchiffon;
 
 		/// \brief <img src="../../img/colors/lightblue-chip.png" width=16 height=16 > rgb(173, 216, 230).
-		[[deprecated("Please use StandardColor::lightblue() instead")]]
+		//[[deprecated("Please use StandardColor::lightblue() instead")]]
 		static Color lightblue;
 
 		/// \brief <img src="../../img/colors/lightcoral-chip.png" width=16 height=16 > rgb(240, 128, 128).
-		[[deprecated("Please use StandardColor::lightcoral() instead")]]
+		//[[deprecated("Please use StandardColor::lightcoral() instead")]]
 		static Color lightcoral;
 
 		/// \brief <img src="../../img/colors/lightcyan-chip.png" width=16 height=16 > rgb(224, 255, 255).
-		[[deprecated("Please use StandardColor::lightcyan() instead")]]
+		//[[deprecated("Please use StandardColor::lightcyan() instead")]]
 		static Color lightcyan;
 
 		/// \brief <img src="../../img/colors/lightgoldenrodyellow-chip.png" width=16 height=16 > rgb(250, 250, 210).
-		[[deprecated("Please use StandardColor::lightgoldenrodyellow() instead")]]
+		//[[deprecated("Please use StandardColor::lightgoldenrodyellow() instead")]]
 		static Color lightgoldenrodyellow;
 
 		/// \brief <img src="../../img/colors/lightgray-chip.png" width=16 height=16 > rgb(211, 211, 211).
-		[[deprecated("Please use StandardColor::lightgray() instead")]]
+		//[[deprecated("Please use StandardColor::lightgray() instead")]]
 		static Color lightgray;
 
 		/// \brief <img src="../../img/colors/lightgreen-chip.png" width=16 height=16 > rgb(144, 238, 144).
-		[[deprecated("Please use StandardColor::lightgreen() instead")]]
+		//[[deprecated("Please use StandardColor::lightgreen() instead")]]
 		static Color lightgreen;
 
 		/// \brief <img src="../../img/colors/lightgrey-chip.png" width=16 height=16 > rgb(211, 211, 211).
-		[[deprecated("Please use StandardColor::lightgrey() instead")]]
+		//[[deprecated("Please use StandardColor::lightgrey() instead")]]
 		static Color lightgrey;
 
 		/// \brief <img src="../../img/colors/lightpink-chip.png" width=16 height=16 > rgb(255, 182, 193).
-		[[deprecated("Please use StandardColor::lightpink() instead")]]
+		//[[deprecated("Please use StandardColor::lightpink() instead")]]
 		static Color lightpink;
 
 		/// \brief <img src="../../img/colors/lightsalmon-chip.png" width=16 height=16 > rgb(255, 160, 122).
-		[[deprecated("Please use StandardColor::lightsalmon() instead")]]
+		//[[deprecated("Please use StandardColor::lightsalmon() instead")]]
 		static Color lightsalmon;
 
 		/// \brief <img src="../../img/colors/lightseagreen-chip.png" width=16 height=16 > rgb( 32, 178, 170).
-		[[deprecated("Please use StandardColor::lightseagreen() instead")]]
+		//[[deprecated("Please use StandardColor::lightseagreen() instead")]]
 		static Color lightseagreen;
 
 		/// \brief <img src="../../img/colors/lightskyblue-chip.png" width=16 height=16 > rgb(135, 206, 250).
-		[[deprecated("Please use StandardColor::lightskyblue() instead")]]
+		//[[deprecated("Please use StandardColor::lightskyblue() instead")]]
 		static Color lightskyblue;
 
 		/// \brief <img src="../../img/colors/lightslategray-chip.png" width=16 height=16 > rgb(119, 136, 153).
-		[[deprecated("Please use StandardColor::lightslategray() instead")]]
+		//[[deprecated("Please use StandardColor::lightslategray() instead")]]
 		static Color lightslategray;
 
 		/// \brief <img src="../../img/colors/lightslategrey-chip.png" width=16 height=16 > rgb(119, 136, 153).
-		[[deprecated("Please use StandardColor::lightslategrey() instead")]]
+		//[[deprecated("Please use StandardColor::lightslategrey() instead")]]
 		static Color lightslategrey;
 
 		/// \brief <img src="../../img/colors/lightsteelblue-chip.png" width=16 height=16 > rgb(176, 196, 222).
-		[[deprecated("Please use StandardColor::lightsteelblue() instead")]]
+		//[[deprecated("Please use StandardColor::lightsteelblue() instead")]]
 		static Color lightsteelblue;
 
 		/// \brief <img src="../../img/colors/lightyellow-chip.png" width=16 height=16 > rgb(255, 255, 224).
-		[[deprecated("Please use StandardColor::lightyellow() instead")]]
+		//[[deprecated("Please use StandardColor::lightyellow() instead")]]
 		static Color lightyellow;
 
 		/// \brief <img src="../../img/colors/lime-chip.png" width=16 height=16 > rgb( 0, 255, 0).
-		[[deprecated("Please use StandardColor::lime() instead")]]
+		//[[deprecated("Please use StandardColor::lime() instead")]]
 		static Color lime;
 
 		/// \brief <img src="../../img/colors/limegreen-chip.png" width=16 height=16 > rgb( 50, 205, 50).
-		[[deprecated("Please use StandardColor::limegreen() instead")]]
+		//[[deprecated("Please use StandardColor::limegreen() instead")]]
 		static Color limegreen;
 
 		/// \brief <img src="../../img/colors/linen-chip.png" width=16 height=16 > rgb(250, 240, 230).
-		[[deprecated("Please use StandardColor::linen() instead")]]
+		//[[deprecated("Please use StandardColor::linen() instead")]]
 		static Color linen;
 
 		/// \brief <img src="../../img/colors/magenta-chip.png" width=16 height=16 > rgb(255, 0, 255).
-		[[deprecated("Please use StandardColor::magenta() instead")]]
+		//[[deprecated("Please use StandardColor::magenta() instead")]]
 		static Color magenta;
 
 		/// \brief <img src="../../img/colors/maroon-chip.png" width=16 height=16 > rgb(128, 0, 0).
-		[[deprecated("Please use StandardColor::maroon() instead")]]
+		//[[deprecated("Please use StandardColor::maroon() instead")]]
 		static Color maroon;
 
 		/// \brief <img src="../../img/colors/mediumaquamarine-chip.png" width=16 height=16 > rgb(102, 205, 170).
-		[[deprecated("Please use StandardColor::mediumaquamarine() instead")]]
+		//[[deprecated("Please use StandardColor::mediumaquamarine() instead")]]
 		static Color mediumaquamarine;
 
 		/// \brief <img src="../../img/colors/mediumblue-chip.png" width=16 height=16 > rgb( 0, 0, 205).
-		[[deprecated("Please use StandardColor::mediumblue() instead")]]
+		//[[deprecated("Please use StandardColor::mediumblue() instead")]]
 		static Color mediumblue;
 
 		/// \brief <img src="../../img/colors/mediumorchid-chip.png" width=16 height=16 > rgb(186, 85, 211).
-		[[deprecated("Please use StandardColor::mediumorchid() instead")]]
+		//[[deprecated("Please use StandardColor::mediumorchid() instead")]]
 		static Color mediumorchid;
 
 		/// \brief <img src="../../img/colors/mediumpurple-chip.png" width=16 height=16 > rgb(147, 112, 219).
-		[[deprecated("Please use StandardColor::mediumpurple() instead")]]
+		//[[deprecated("Please use StandardColor::mediumpurple() instead")]]
 		static Color mediumpurple;
 
 		/// \brief <img src="../../img/colors/mediumseagreen-chip.png" width=16 height=16 > rgb( 60, 179, 113).
-		[[deprecated("Please use StandardColor::mediumseagreen() instead")]]
+		//[[deprecated("Please use StandardColor::mediumseagreen() instead")]]
 		static Color mediumseagreen;
 
 		/// \brief <img src="../../img/colors/mediumslateblue-chip.png" width=16 height=16 > rgb(123, 104, 238).
-		[[deprecated("Please use StandardColor::mediumslateblue() instead")]]
+		//[[deprecated("Please use StandardColor::mediumslateblue() instead")]]
 		static Color mediumslateblue;
 
 		/// \brief <img src="../../img/colors/mediumspringgreen-chip.png" width=16 height=16 > rgb( 0, 250, 154).
-		[[deprecated("Please use StandardColor::mediumspringgreen() instead")]]
+		//[[deprecated("Please use StandardColor::mediumspringgreen() instead")]]
 		static Color mediumspringgreen;
 
 		/// \brief <img src="../../img/colors/mediumturquoise-chip.png" width=16 height=16 > rgb( 72, 209, 204).
-		[[deprecated("Please use StandardColor::mediumturquoise() instead")]]
+		//[[deprecated("Please use StandardColor::mediumturquoise() instead")]]
 		static Color mediumturquoise;
 
 		/// \brief <img src="../../img/colors/mediumvioletred-chip.png" width=16 height=16 > rgb(199, 21, 133).
-		[[deprecated("Please use StandardColor::mediumvioletred() instead")]]
+		//[[deprecated("Please use StandardColor::mediumvioletred() instead")]]
 		static Color mediumvioletred;
 
 		/// \brief <img src="../../img/colors/midnightblue-chip.png" width=16 height=16 > rgb( 25, 25, 112).
-		[[deprecated("Please use StandardColor::midnightblue() instead")]]
+		//[[deprecated("Please use StandardColor::midnightblue() instead")]]
 		static Color midnightblue;
 
 		/// \brief <img src="../../img/colors/mintcream-chip.png" width=16 height=16 > rgb(245, 255, 250).
-		[[deprecated("Please use StandardColor::mintcream() instead")]]
+		//[[deprecated("Please use StandardColor::mintcream() instead")]]
 		static Color mintcream;
 
 		/// \brief <img src="../../img/colors/mistyrose-chip.png" width=16 height=16 > rgb(255, 228, 225).
-		[[deprecated("Please use StandardColor::mistyrose() instead")]]
+		//[[deprecated("Please use StandardColor::mistyrose() instead")]]
 		static Color mistyrose;
 
 		/// \brief <img src="../../img/colors/moccasin-chip.png" width=16 height=16 > rgb(255, 228, 181).
-		[[deprecated("Please use StandardColor::moccasin() instead")]]
+		//[[deprecated("Please use StandardColor::moccasin() instead")]]
 		static Color moccasin;
 
 		/// \brief <img src="../../img/colors/navajowhite-chip.png" width=16 height=16 > rgb(255, 222, 173).
-		[[deprecated("Please use StandardColor::navajowhite() instead")]]
+		//[[deprecated("Please use StandardColor::navajowhite() instead")]]
 		static Color navajowhite;
 
 		/// \brief <img src="../../img/colors/navy-chip.png" width=16 height=16 > rgb( 0, 0, 128).
-		[[deprecated("Please use StandardColor::navy() instead")]]
+		//[[deprecated("Please use StandardColor::navy() instead")]]
 		static Color navy;
 
 		/// \brief <img src="../../img/colors/oldlace-chip.png" width=16 height=16 > rgb(253, 245, 230).
-		[[deprecated("Please use StandardColor::oldlace() instead")]]
+		//[[deprecated("Please use StandardColor::oldlace() instead")]]
 		static Color oldlace;
 
 		/// \brief <img src="../../img/colors/olive-chip.png" width=16 height=16 > rgb(128, 128, 0).
-		[[deprecated("Please use StandardColor::olive() instead")]]
+		//[[deprecated("Please use StandardColor::olive() instead")]]
 		static Color olive;
 
 		/// \brief <img src="../../img/colors/olivedrab-chip.png" width=16 height=16 > rgb(107, 142, 35).
-		[[deprecated("Please use StandardColor::olivedrab() instead")]]
+		//[[deprecated("Please use StandardColor::olivedrab() instead")]]
 		static Color olivedrab;
 
 		/// \brief <img src="../../img/colors/orange-chip.png" width=16 height=16 > rgb(255, 165, 0).
-		[[deprecated("Please use StandardColor::orange() instead")]]
+		//[[deprecated("Please use StandardColor::orange() instead")]]
 		static Color orange;
 
 		/// \brief <img src="../../img/colors/orangered-chip.png" width=16 height=16 > rgb(255, 69, 0).
-		[[deprecated("Please use StandardColor::orangered() instead")]]
+		//[[deprecated("Please use StandardColor::orangered() instead")]]
 		static Color orangered;
 
 		/// \brief <img src="../../img/colors/orchid-chip.png" width=16 height=16 > rgb(218, 112, 214).
-		[[deprecated("Please use StandardColor::orchid() instead")]]
+		//[[deprecated("Please use StandardColor::orchid() instead")]]
 		static Color orchid;
 
 		/// \brief <img src="../../img/colors/palegoldenrod-chip.png" width=16 height=16 > rgb(238, 232, 170).
-		[[deprecated("Please use StandardColor::palegoldenrod() instead")]]
+		//[[deprecated("Please use StandardColor::palegoldenrod() instead")]]
 		static Color palegoldenrod;
 
 		/// \brief <img src="../../img/colors/palegreen-chip.png" width=16 height=16 > rgb(152, 251, 152).
-		[[deprecated("Please use StandardColor::palegreen() instead")]]
+		//[[deprecated("Please use StandardColor::palegreen() instead")]]
 		static Color palegreen;
 
 		/// \brief <img src="../../img/colors/paleturquoise-chip.png" width=16 height=16 > rgb(175, 238, 238).
-		[[deprecated("Please use StandardColor::paleturquoise() instead")]]
+		//[[deprecated("Please use StandardColor::paleturquoise() instead")]]
 		static Color paleturquoise;
 
 		/// \brief <img src="../../img/colors/palevioletred-chip.png" width=16 height=16 > rgb(219, 112, 147).
-		[[deprecated("Please use StandardColor::palevioletred() instead")]]
+		//[[deprecated("Please use StandardColor::palevioletred() instead")]]
 		static Color palevioletred;
 
 		/// \brief <img src="../../img/colors/papayawhip-chip.png" width=16 height=16 > rgb(255, 239, 213).
-		[[deprecated("Please use StandardColor::papayawhip() instead")]]
+		//[[deprecated("Please use StandardColor::papayawhip() instead")]]
 		static Color papayawhip;
 
 		/// \brief <img src="../../img/colors/peachpuff-chip.png" width=16 height=16 > rgb(255, 218, 185).
-		[[deprecated("Please use StandardColor::peachpuff() instead")]]
+		//[[deprecated("Please use StandardColor::peachpuff() instead")]]
 		static Color peachpuff;
 
 		/// \brief <img src="../../img/colors/peru-chip.png" width=16 height=16 > rgb(205, 133, 63).
-		[[deprecated("Please use StandardColor::peru() instead")]]
+		//[[deprecated("Please use StandardColor::peru() instead")]]
 		static Color peru;
 
 		/// \brief <img src="../../img/colors/pink-chip.png" width=16 height=16 > rgb(255, 192, 203).
-		[[deprecated("Please use StandardColor::pink() instead")]]
+		//[[deprecated("Please use StandardColor::pink() instead")]]
 		static Color pink;
 
 		/// \brief <img src="../../img/colors/plum-chip.png" width=16 height=16 > rgb(221, 160, 221).
-		[[deprecated("Please use StandardColor::plum() instead")]]
+		//[[deprecated("Please use StandardColor::plum() instead")]]
 		static Color plum;
 
 		/// \brief <img src="../../img/colors/powderblue-chip.png" width=16 height=16 > rgb(176, 224, 230).
-		[[deprecated("Please use StandardColor::powderblue() instead")]]
+		//[[deprecated("Please use StandardColor::powderblue() instead")]]
 		static Color powderblue;
 
 		/// \brief <img src="../../img/colors/purple-chip.png" width=16 height=16 > rgb(128, 0, 128).
-		[[deprecated("Please use StandardColor::purple() instead")]]
+		//[[deprecated("Please use StandardColor::purple() instead")]]
 		static Color purple;
 
 		/// \brief <img src="../../img/colors/red-chip.png" width=16 height=16 > rgb(255, 0, 0).
-		[[deprecated("Please use StandardColor::red() instead")]]
+		//[[deprecated("Please use StandardColor::red() instead")]]
 		static Color red;
 
 		/// \brief <img src="../../img/colors/rosybrown-chip.png" width=16 height=16 > rgb(188, 143, 143).
-		[[deprecated("Please use StandardColor::rosybrown() instead")]]
+		//[[deprecated("Please use StandardColor::rosybrown() instead")]]
 		static Color rosybrown;
 
 		/// \brief <img src="../../img/colors/royalblue-chip.png" width=16 height=16 > rgb( 65, 105, 225).
-		[[deprecated("Please use StandardColor::royalblue() instead")]]
+		//[[deprecated("Please use StandardColor::royalblue() instead")]]
 		static Color royalblue;
 
 		/// \brief <img src="../../img/colors/saddlebrown-chip.png" width=16 height=16 > rgb(139, 69, 19).
-		[[deprecated("Please use StandardColor::saddlebrown() instead")]]
+		//[[deprecated("Please use StandardColor::saddlebrown() instead")]]
 		static Color saddlebrown;
 
 		/// \brief <img src="../../img/colors/salmon-chip.png" width=16 height=16 > rgb(250, 128, 114).
-		[[deprecated("Please use StandardColor::salmon() instead")]]
+		//[[deprecated("Please use StandardColor::salmon() instead")]]
 		static Color salmon;
 
 		/// \brief <img src="../../img/colors/sandybrown-chip.png" width=16 height=16 > rgb(244, 164, 96).
-		[[deprecated("Please use StandardColor::sandybrown() instead")]]
+		//[[deprecated("Please use StandardColor::sandybrown() instead")]]
 		static Color sandybrown;
 
 		/// \brief <img src="../../img/colors/seagreen-chip.png" width=16 height=16 > rgb( 46, 139, 87).
-		[[deprecated("Please use StandardColor::seagreen() instead")]]
+		//[[deprecated("Please use StandardColor::seagreen() instead")]]
 		static Color seagreen;
 
 		/// \brief <img src="../../img/colors/seashell-chip.png" width=16 height=16 > rgb(255, 245, 238).
-		[[deprecated("Please use StandardColor::seashell() instead")]]
+		//[[deprecated("Please use StandardColor::seashell() instead")]]
 		static Color seashell;
 
 		/// \brief <img src="../../img/colors/sienna-chip.png" width=16 height=16 > rgb(160, 82, 45).
-		[[deprecated("Please use StandardColor::sienna() instead")]]
+		//[[deprecated("Please use StandardColor::sienna() instead")]]
 		static Color sienna;
 
 		/// \brief <img src="../../img/colors/silver-chip.png" width=16 height=16 > rgb(192, 192, 192).
-		[[deprecated("Please use StandardColor::silver() instead")]]
+		//[[deprecated("Please use StandardColor::silver() instead")]]
 		static Color silver;
 
 		/// \brief <img src="../../img/colors/skyblue-chip.png" width=16 height=16 > rgb(135, 206, 235).
-		[[deprecated("Please use StandardColor::skyblue() instead")]]
+		//[[deprecated("Please use StandardColor::skyblue() instead")]]
 		static Color skyblue;
 
 		/// \brief <img src="../../img/colors/slateblue-chip.png" width=16 height=16 > rgb(106, 90, 205).
-		[[deprecated("Please use StandardColor::slateblue() instead")]]
+		//[[deprecated("Please use StandardColor::slateblue() instead")]]
 		static Color slateblue;
 
 		/// \brief <img src="../../img/colors/slategray-chip.png" width=16 height=16 > rgb(112, 128, 144).
-		[[deprecated("Please use StandardColor::slategray() instead")]]
+		//[[deprecated("Please use StandardColor::slategray() instead")]]
 		static Color slategray;
 
 		/// \brief <img src="../../img/colors/slategrey-chip.png" width=16 height=16 > rgb(112, 128, 144).
-		[[deprecated("Please use StandardColor::slategrey() instead")]]
+		//[[deprecated("Please use StandardColor::slategrey() instead")]]
 		static Color slategrey;
 
 		/// \brief <img src="../../img/colors/snow-chip.png" width=16 height=16 > rgb(255, 250, 250).
-		[[deprecated("Please use StandardColor::snow() instead")]]
+		//[[deprecated("Please use StandardColor::snow() instead")]]
 		static Color snow;
 
 		/// \brief <img src="../../img/colors/springgreen-chip.png" width=16 height=16 > rgb( 0, 255, 127).
-		[[deprecated("Please use StandardColor::springgreen() instead")]]
+		//[[deprecated("Please use StandardColor::springgreen() instead")]]
 		static Color springgreen;
 
 		/// \brief <img src="../../img/colors/steelblue-chip.png" width=16 height=16 > rgb( 70, 130, 180).
-		[[deprecated("Please use StandardColor::steelblue() instead")]]
+		//[[deprecated("Please use StandardColor::steelblue() instead")]]
 		static Color steelblue;
 
 		/// \brief <img src="../../img/colors/tan-chip.png" width=16 height=16 > rgb(210, 180, 140).
-		[[deprecated("Please use StandardColor::tan() instead")]]
+		//[[deprecated("Please use StandardColor::tan() instead")]]
 		static Color tan;
 
 		/// \brief <img src="../../img/colors/teal-chip.png" width=16 height=16 > rgb( 0, 128, 128).
-		[[deprecated("Please use StandardColor::teal() instead")]]
+		//[[deprecated("Please use StandardColor::teal() instead")]]
 		static Color teal;
 
 		/// \brief <img src="../../img/colors/thistle-chip.png" width=16 height=16 > rgb(216, 191, 216).
-		[[deprecated("Please use StandardColor::thistle() instead")]]
+		//[[deprecated("Please use StandardColor::thistle() instead")]]
 		static Color thistle;
 
 		/// \brief <img src="../../img/colors/tomato-chip.png" width=16 height=16 > rgb(255, 99, 71).
-		[[deprecated("Please use StandardColor::tomato() instead")]]
+		//[[deprecated("Please use StandardColor::tomato() instead")]]
 		static Color tomato;
 
 		/// \brief <img src="../../img/colors/turquoise-chip.png" width=16 height=16 > rgb( 64, 224, 208).
-		[[deprecated("Please use StandardColor::turquoise() instead")]]
+		//[[deprecated("Please use StandardColor::turquoise() instead")]]
 		static Color turquoise;
 
 		/// \brief <img src="../../img/colors/violet-chip.png" width=16 height=16 > rgb(238, 130, 238).
-		[[deprecated("Please use StandardColor::violet() instead")]]
+		//[[deprecated("Please use StandardColor::violet() instead")]]
 		static Color violet;
 
 		/// \brief <img src="../../img/colors/wheat-chip.png" width=16 height=16 > rgb(245, 222, 179).
-		[[deprecated("Please use StandardColor::wheat() instead")]]
+		//[[deprecated("Please use StandardColor::wheat() instead")]]
 		static Color wheat;
 
 		/// \brief <img src="../../img/colors/white-chip.png" width=16 height=16 > rgb(255, 255, 255).
-		[[deprecated("Please use StandardColor::white() instead")]]
+		//[[deprecated("Please use StandardColor::white() instead")]]
 		static Color white;
 
 		/// \brief <img src="../../img/colors/whitesmoke-chip.png" width=16 height=16 > rgb(245, 245, 245).
-		[[deprecated("Please use StandardColor::whitesmoke() instead")]]
+		//[[deprecated("Please use StandardColor::whitesmoke() instead")]]
 		static Color whitesmoke;
 
 		/// \brief <img src="../../img/colors/yellow-chip.png" width=16 height=16 > rgb(255, 255, 0).
-		[[deprecated("Please use StandardColor::yellow() instead")]]
+		//[[deprecated("Please use StandardColor::yellow() instead")]]
 		static Color yellow;
 
 		/// \brief <img src="../../img/colors/yellowgreen-chip.png" width=16 height=16 > rgb(154, 205, 50).
-		[[deprecated("Please use StandardColor::yellowgreen() instead")]]
+		//[[deprecated("Please use StandardColor::yellowgreen() instead")]]
 		static Color yellowgreen;
 
 		/// \brief rgba(0, 0, 0, 0).
-		[[deprecated("Please use StandardColor::transparent() instead")]]
+		//[[deprecated("Please use StandardColor::transparent() instead")]]
 		static Color transparent;
 
-		[[deprecated("Please use StandardColor::gray10() instead")]]
+		//[[deprecated("Please use StandardColor::gray10() instead")]]
 		static Color gray10;
 
-		[[deprecated("Please use StandardColor::gray20() instead")]]
+		//[[deprecated("Please use StandardColor::gray20() instead")]]
 		static Color gray20;
 
-		[[deprecated("Please use StandardColor::gray30() instead")]]
+		//[[deprecated("Please use StandardColor::gray30() instead")]]
 		static Color gray30;
 
-		[[deprecated("Please use StandardColor::gray40() instead")]]
+		//[[deprecated("Please use StandardColor::gray40() instead")]]
 		static Color gray40;
 
-		[[deprecated("Please use StandardColor::gray50() instead")]]
+		//[[deprecated("Please use StandardColor::gray50() instead")]]
 		static Color gray50;
 
-		[[deprecated("Please use StandardColor::gray60() instead")]]
+		//[[deprecated("Please use StandardColor::gray60() instead")]]
 		static Color gray60;
 
-		[[deprecated("Please use StandardColor::gray70() instead")]]
+		//[[deprecated("Please use StandardColor::gray70() instead")]]
 		static Color gray70;
 
-		[[deprecated("Please use StandardColor::gray80() instead")]]
+		//[[deprecated("Please use StandardColor::gray80() instead")]]
 		static Color gray80;
 
-		[[deprecated("Please use StandardColor::gray90() instead")]]
+		//[[deprecated("Please use StandardColor::gray90() instead")]]
 		static Color gray90;
 
 		/// \brief Set alpha color component, in the range 0-255.
@@ -943,622 +943,622 @@ namespace clan
 		static bool find_color(const std::string &name, Colorf &out_color);
 
 		/// \brief <img src="../../img/colors/aliceblue-chip.png" width=16 height=16 > rgb(240, 248, 255).
-		[[deprecated("Please use StandardColorf::aliceblue() instead")]]
+		//[[deprecated("Please use StandardColorf::aliceblue() instead")]]
 		static Colorf aliceblue;
 
 		/// \brief <img src="../../img/colors/antiquewhite-chip.png" width=16 height=16 > rgb(250, 235, 215).
-		[[deprecated("Please use StandardColorf::antiquewhite() instead")]]
+		//[[deprecated("Please use StandardColorf::antiquewhite() instead")]]
 		static Colorf antiquewhite;
 
 		/// \brief <img src="../../img/colors/aqua-chip.png" width=16 height=16 > rgb( 0, 255, 255).
-		[[deprecated("Please use StandardColorf::aqua() instead")]]
+		//[[deprecated("Please use StandardColorf::aqua() instead")]]
 		static Colorf aqua;
 
 		/// \brief <img src="../../img/colors/aquamarine-chip.png" width=16 height=16 > rgb(127, 255, 212).
-		[[deprecated("Please use StandardColorf::aquamarine() instead")]]
+		//[[deprecated("Please use StandardColorf::aquamarine() instead")]]
 		static Colorf aquamarine;
 
 		/// \brief <img src="../../img/colors/azure-chip.png" width=16 height=16 > rgb(240, 255, 255).
-		[[deprecated("Please use StandardColorf::azure() instead")]]
+		//[[deprecated("Please use StandardColorf::azure() instead")]]
 		static Colorf azure;
 
 		/// \brief <img src="../../img/colors/beige-chip.png" width=16 height=16 > rgb(245, 245, 220).
-		[[deprecated("Please use StandardColorf::beige() instead")]]
+		//[[deprecated("Please use StandardColorf::beige() instead")]]
 		static Colorf beige;
 
 		/// \brief <img src="../../img/colors/bisque-chip.png" width=16 height=16 > rgb(255, 228, 196).
-		[[deprecated("Please use StandardColorf::bisque() instead")]]
+		//[[deprecated("Please use StandardColorf::bisque() instead")]]
 		static Colorf bisque;
 
 		/// \brief <img src="../../img/colors/black-chip.png" width=16 height=16 > rgb( 0, 0, 0).
-		[[deprecated("Please use StandardColorf::black() instead")]]
+		//[[deprecated("Please use StandardColorf::black() instead")]]
 		static Colorf black;
 
 		/// \brief <img src="../../img/colors/blanchedalmond-chip.png" width=16 height=16 > rgb(255, 235, 205).
-		[[deprecated("Please use StandardColorf::blanchedalmond() instead")]]
+		//[[deprecated("Please use StandardColorf::blanchedalmond() instead")]]
 		static Colorf blanchedalmond;
 
 		/// \brief <img src="../../img/colors/blue-chip.png" width=16 height=16 > rgb( 0, 0, 255).
-		[[deprecated("Please use StandardColorf::blue() instead")]]
+		//[[deprecated("Please use StandardColorf::blue() instead")]]
 		static Colorf blue;
 
 		/// \brief <img src="../../img/colors/blueviolet-chip.png" width=16 height=16 > rgb(138, 43, 226).
-		[[deprecated("Please use StandardColorf::blueviolet() instead")]]
+		//[[deprecated("Please use StandardColorf::blueviolet() instead")]]
 		static Colorf blueviolet;
 
 		/// \brief <img src="../../img/colors/brown-chip.png" width=16 height=16 > rgb(165, 42, 42).
-		[[deprecated("Please use StandardColorf::brown() instead")]]
+		//[[deprecated("Please use StandardColorf::brown() instead")]]
 		static Colorf brown;
 
 		/// \brief <img src="../../img/colors/burlywood-chip.png" width=16 height=16 > rgb(222, 184, 135).
-		[[deprecated("Please use StandardColorf::burlywood() instead")]]
+		//[[deprecated("Please use StandardColorf::burlywood() instead")]]
 		static Colorf burlywood;
 
 		/// \brief <img src="../../img/colors/cadetblue-chip.png" width=16 height=16 > rgb( 95, 158, 160).
-		[[deprecated("Please use StandardColorf::cadetblue() instead")]]
+		//[[deprecated("Please use StandardColorf::cadetblue() instead")]]
 		static Colorf cadetblue;
 
 		/// \brief <img src="../../img/colors/chartreuse-chip.png" width=16 height=16 > rgb(127, 255, 0).
-		[[deprecated("Please use StandardColorf::chartreuse() instead")]]
+		//[[deprecated("Please use StandardColorf::chartreuse() instead")]]
 		static Colorf chartreuse;
 
 		/// \brief <img src="../../img/colors/chocolate-chip.png" width=16 height=16 > rgb(210, 105, 30).
-		[[deprecated("Please use StandardColorf::chocolate() instead")]]
+		//[[deprecated("Please use StandardColorf::chocolate() instead")]]
 		static Colorf chocolate;
 
 		/// \brief <img src="../../img/colors/coral-chip.png" width=16 height=16 > rgb(255, 127, 80).
-		[[deprecated("Please use StandardColorf::coral() instead")]]
+		//[[deprecated("Please use StandardColorf::coral() instead")]]
 		static Colorf coral;
 
 		/// \brief <img src="../../img/colors/cornflowerblue-chip.png" width=16 height=16 > rgb(100, 149, 237).
-		[[deprecated("Please use StandardColorf::cornflowerblue() instead")]]
+		//[[deprecated("Please use StandardColorf::cornflowerblue() instead")]]
 		static Colorf cornflowerblue;
 
 		/// \brief <img src="../../img/colors/cornsilk-chip.png" width=16 height=16 > rgb(255, 248, 220).
-		[[deprecated("Please use StandardColorf::cornsilk() instead")]]
+		//[[deprecated("Please use StandardColorf::cornsilk() instead")]]
 		static Colorf cornsilk;
 
 		/// \brief <img src="../../img/colors/crimson-chip.png" width=16 height=16 > rgb(220, 20, 60).
-		[[deprecated("Please use StandardColorf::crimson() instead")]]
+		//[[deprecated("Please use StandardColorf::crimson() instead")]]
 		static Colorf crimson;
 
 		/// \brief <img src="../../img/colors/cyan-chip.png" width=16 height=16 > rgb( 0, 255, 255).
-		[[deprecated("Please use StandardColorf::cyan() instead")]]
+		//[[deprecated("Please use StandardColorf::cyan() instead")]]
 		static Colorf cyan;
 
 		/// \brief <img src="../../img/colors/darkblue-chip.png" width=16 height=16 > rgb( 0, 0, 139).
-		[[deprecated("Please use StandardColorf::darkblue() instead")]]
+		//[[deprecated("Please use StandardColorf::darkblue() instead")]]
 		static Colorf darkblue;
 
 		/// \brief <img src="../../img/colors/darkcyan-chip.png" width=16 height=16 > rgb( 0, 139, 139).
-		[[deprecated("Please use StandardColorf::darkcyan() instead")]]
+		//[[deprecated("Please use StandardColorf::darkcyan() instead")]]
 		static Colorf darkcyan;
 
 		/// \brief <img src="../../img/colors/darkgoldenrod-chip.png" width=16 height=16 > rgb(184, 134, 11).
-		[[deprecated("Please use StandardColorf::darkgoldenrod() instead")]]
+		//[[deprecated("Please use StandardColorf::darkgoldenrod() instead")]]
 		static Colorf darkgoldenrod;
 
 		/// \brief <img src="../../img/colors/darkgray-chip.png" width=16 height=16 > rgb(169, 169, 169).
-		[[deprecated("Please use StandardColorf::darkgray() instead")]]
+		//[[deprecated("Please use StandardColorf::darkgray() instead")]]
 		static Colorf darkgray;
 
 		/// \brief <img src="../../img/colors/darkgreen-chip.png" width=16 height=16 > rgb( 0, 100, 0).
-		[[deprecated("Please use StandardColorf::darkgreen() instead")]]
+		//[[deprecated("Please use StandardColorf::darkgreen() instead")]]
 		static Colorf darkgreen;
 
 		/// \brief <img src="../../img/colors/darkgrey-chip.png" width=16 height=16 > rgb(169, 169, 169).
-		[[deprecated("Please use StandardColorf::darkgrey() instead")]]
+		//[[deprecated("Please use StandardColorf::darkgrey() instead")]]
 		static Colorf darkgrey;
 
 		/// \brief <img src="../../img/colors/darkkhaki-chip.png" width=16 height=16 > rgb(189, 183, 107).
-		[[deprecated("Please use StandardColorf::darkkhaki() instead")]]
+		//[[deprecated("Please use StandardColorf::darkkhaki() instead")]]
 		static Colorf darkkhaki;
 
 		/// \brief <img src="../../img/colors/darkmagenta-chip.png" width=16 height=16 > rgb(139, 0, 139).
-		[[deprecated("Please use StandardColorf::darkmagenta() instead")]]
+		//[[deprecated("Please use StandardColorf::darkmagenta() instead")]]
 		static Colorf darkmagenta;
 
 		/// \brief <img src="../../img/colors/darkolivegreen-chip.png" width=16 height=16 > rgb( 85, 107, 47).
-		[[deprecated("Please use StandardColorf::darkolivegreen() instead")]]
+		//[[deprecated("Please use StandardColorf::darkolivegreen() instead")]]
 		static Colorf darkolivegreen;
 
 		/// \brief <img src="../../img/colors/darkorange-chip.png" width=16 height=16 > rgb(255, 140, 0).
-		[[deprecated("Please use StandardColorf::darkorange() instead")]]
+		//[[deprecated("Please use StandardColorf::darkorange() instead")]]
 		static Colorf darkorange;
 
 		/// \brief <img src="../../img/colors/darkorchid-chip.png" width=16 height=16 > rgb(153, 50, 204).
-		[[deprecated("Please use StandardColorf::darkorchid() instead")]]
+		//[[deprecated("Please use StandardColorf::darkorchid() instead")]]
 		static Colorf darkorchid;
 
 		/// \brief <img src="../../img/colors/darkred-chip.png" width=16 height=16 > rgb(139, 0, 0).
-		[[deprecated("Please use StandardColorf::darkred() instead")]]
+		//[[deprecated("Please use StandardColorf::darkred() instead")]]
 		static Colorf darkred;
 
 		/// \brief <img src="../../img/colors/darksalmon-chip.png" width=16 height=16 > rgb(233, 150, 122).
-		[[deprecated("Please use StandardColorf::darksalmon() instead")]]
+		//[[deprecated("Please use StandardColorf::darksalmon() instead")]]
 		static Colorf darksalmon;
 
 		/// \brief <img src="../../img/colors/darkseagreen-chip.png" width=16 height=16 > rgb(143, 188, 143).
-		[[deprecated("Please use StandardColorf::darkseagreen() instead")]]
+		//[[deprecated("Please use StandardColorf::darkseagreen() instead")]]
 		static Colorf darkseagreen;
 
 		/// \brief <img src="../../img/colors/darkslateblue-chip.png" width=16 height=16 > rgb( 72, 61, 139).
-		[[deprecated("Please use StandardColorf::darkslateblue() instead")]]
+		//[[deprecated("Please use StandardColorf::darkslateblue() instead")]]
 		static Colorf darkslateblue;
 
 		/// \brief <img src="../../img/colors/darkslategray-chip.png" width=16 height=16 > rgb( 47, 79, 79).
-		[[deprecated("Please use StandardColorf::darkslategray() instead")]]
+		//[[deprecated("Please use StandardColorf::darkslategray() instead")]]
 		static Colorf darkslategray;
 
 		/// \brief <img src="../../img/colors/darkslategrey-chip.png" width=16 height=16 > rgb( 47, 79, 79).
-		[[deprecated("Please use StandardColorf::darkslategrey() instead")]]
+		//[[deprecated("Please use StandardColorf::darkslategrey() instead")]]
 		static Colorf darkslategrey;
 
 		/// \brief <img src="../../img/colors/darkturquoise-chip.png" width=16 height=16 > rgb( 0, 206, 209).
-		[[deprecated("Please use StandardColorf::darkturquoise() instead")]]
+		//[[deprecated("Please use StandardColorf::darkturquoise() instead")]]
 		static Colorf darkturquoise;
 
 		/// \brief <img src="../../img/colors/darkviolet-chip.png" width=16 height=16 > rgb(148, 0, 211).
-		[[deprecated("Please use StandardColorf::darkviolet() instead")]]
+		//[[deprecated("Please use StandardColorf::darkviolet() instead")]]
 		static Colorf darkviolet;
 
 		/// \brief <img src="../../img/colors/deeppink-chip.png" width=16 height=16 > rgb(255, 20, 147).
-		[[deprecated("Please use StandardColorf::deeppink() instead")]]
+		//[[deprecated("Please use StandardColorf::deeppink() instead")]]
 		static Colorf deeppink;
 
 		/// \brief <img src="../../img/colors/deepskyblue-chip.png" width=16 height=16 > rgb( 0, 191, 255).
-		[[deprecated("Please use StandardColorf::deepskyblue() instead")]]
+		//[[deprecated("Please use StandardColorf::deepskyblue() instead")]]
 		static Colorf deepskyblue;
 
 		/// \brief <img src="../../img/colors/dimgray-chip.png" width=16 height=16 > rgb(105, 105, 105).
-		[[deprecated("Please use StandardColorf::dimgray() instead")]]
+		//[[deprecated("Please use StandardColorf::dimgray() instead")]]
 		static Colorf dimgray;
 
 		/// \brief <img src="../../img/colors/dimgrey-chip.png" width=16 height=16 > rgb(105, 105, 105).
-		[[deprecated("Please use StandardColorf::dimgrey() instead")]]
+		//[[deprecated("Please use StandardColorf::dimgrey() instead")]]
 		static Colorf dimgrey;
 
 		/// \brief <img src="../../img/colors/dodgerblue-chip.png" width=16 height=16 > rgb( 30, 144, 255).
-		[[deprecated("Please use StandardColorf::dodgerblue() instead")]]
+		//[[deprecated("Please use StandardColorf::dodgerblue() instead")]]
 		static Colorf dodgerblue;
 
 		/// \brief <img src="../../img/colors/firebrick-chip.png" width=16 height=16 > rgb(178, 34, 34).
-		[[deprecated("Please use StandardColorf::firebrick() instead")]]
+		//[[deprecated("Please use StandardColorf::firebrick() instead")]]
 		static Colorf firebrick;
 
 		/// \brief <img src="../../img/colors/floralwhite-chip.png" width=16 height=16 > rgb(255, 250, 240).
-		[[deprecated("Please use StandardColorf::floralwhite() instead")]]
+		//[[deprecated("Please use StandardColorf::floralwhite() instead")]]
 		static Colorf floralwhite;
 
 		/// \brief <img src="../../img/colors/forestgreen-chip.png" width=16 height=16 > rgb( 34, 139, 34).
-		[[deprecated("Please use StandardColorf::forestgreen() instead")]]
+		//[[deprecated("Please use StandardColorf::forestgreen() instead")]]
 		static Colorf forestgreen;
 
 		/// \brief <img src="../../img/colors/fuchsia-chip.png" width=16 height=16 > rgb(255, 0, 255).
-		[[deprecated("Please use StandardColorf::fuchsia() instead")]]
+		//[[deprecated("Please use StandardColorf::fuchsia() instead")]]
 		static Colorf fuchsia;
 
 		/// \brief <img src="../../img/colors/gainsboro-chip.png" width=16 height=16 > rgb(220, 220, 220).
-		[[deprecated("Please use StandardColorf::gainsboro() instead")]]
+		//[[deprecated("Please use StandardColorf::gainsboro() instead")]]
 		static Colorf gainsboro;
 
 		/// \brief <img src="../../img/colors/ghostwhite-chip.png" width=16 height=16 > rgb(248, 248, 255).
-		[[deprecated("Please use StandardColorf::ghostwhite() instead")]]
+		//[[deprecated("Please use StandardColorf::ghostwhite() instead")]]
 		static Colorf ghostwhite;
 
 		/// \brief <img src="../../img/colors/gold-chip.png" width=16 height=16 > rgb(255, 215, 0).
-		[[deprecated("Please use StandardColorf::gold() instead")]]
+		//[[deprecated("Please use StandardColorf::gold() instead")]]
 		static Colorf gold;
 
 		/// \brief <img src="../../img/colors/goldenrod-chip.png" width=16 height=16 > rgb(218, 165, 32).
-		[[deprecated("Please use StandardColorf::goldenrod() instead")]]
+		//[[deprecated("Please use StandardColorf::goldenrod() instead")]]
 		static Colorf goldenrod;
 
 		/// \brief <img src="../../img/colors/gray-chip.png" width=16 height=16 > rgb(128, 128, 128).
-		[[deprecated("Please use StandardColorf::gray() instead")]]
+		//[[deprecated("Please use StandardColorf::gray() instead")]]
 		static Colorf gray;
 
 		/// \brief <img src="../../img/colors/grey-chip.png" width=16 height=16 > rgb(128, 128, 128).
-		[[deprecated("Please use StandardColorf::grey() instead")]]
+		//[[deprecated("Please use StandardColorf::grey() instead")]]
 		static Colorf grey;
 
 		/// \brief <img src="../../img/colors/green-chip.png" width=16 height=16 > rgb( 0, 128, 0).
-		[[deprecated("Please use StandardColorf::green() instead")]]
+		//[[deprecated("Please use StandardColorf::green() instead")]]
 		static Colorf green;
 
 		/// \brief <img src="../../img/colors/greenyellow-chip.png" width=16 height=16 > rgb(173, 255, 47).
-		[[deprecated("Please use StandardColorf::greenyellow() instead")]]
+		//[[deprecated("Please use StandardColorf::greenyellow() instead")]]
 		static Colorf greenyellow;
 
 		/// \brief <img src="../../img/colors/honeydew-chip.png" width=16 height=16 > rgb(240, 255, 240).
-		[[deprecated("Please use StandardColorf::honeydew() instead")]]
+		//[[deprecated("Please use StandardColorf::honeydew() instead")]]
 		static Colorf honeydew;
 
 		/// \brief <img src="../../img/colors/hotpink-chip.png" width=16 height=16 > rgb(255, 105, 180).
-		[[deprecated("Please use StandardColorf::hotpink() instead")]]
+		//[[deprecated("Please use StandardColorf::hotpink() instead")]]
 		static Colorf hotpink;
 
 		/// \brief <img src="../../img/colors/indianred-chip.png" width=16 height=16 > rgb(205, 92, 92).
-		[[deprecated("Please use StandardColorf::indianred() instead")]]
+		//[[deprecated("Please use StandardColorf::indianred() instead")]]
 		static Colorf indianred;
 
 		/// \brief <img src="../../img/colors/indigo-chip.png" width=16 height=16 > rgb( 75, 0, 130).
-		[[deprecated("Please use StandardColorf::indigo() instead")]]
+		//[[deprecated("Please use StandardColorf::indigo() instead")]]
 		static Colorf indigo;
 
 		/// \brief <img src="../../img/colors/ivory-chip.png" width=16 height=16 > rgb(255, 255, 240).
-		[[deprecated("Please use StandardColorf::ivory() instead")]]
+		//[[deprecated("Please use StandardColorf::ivory() instead")]]
 		static Colorf ivory;
 
 		/// \brief <img src="../../img/colors/khaki-chip.png" width=16 height=16 > rgb(240, 230, 140).
-		[[deprecated("Please use StandardColorf::khaki() instead")]]
+		//[[deprecated("Please use StandardColorf::khaki() instead")]]
 		static Colorf khaki;
 
 		/// \brief <img src="../../img/colors/lavender-chip.png" width=16 height=16 > rgb(230, 230, 250).
-		[[deprecated("Please use StandardColorf::lavender() instead")]]
+		//[[deprecated("Please use StandardColorf::lavender() instead")]]
 		static Colorf lavender;
 
 		/// \brief <img src="../../img/colors/lavenderblush-chip.png" width=16 height=16 > rgb(255, 240, 245).
-		[[deprecated("Please use StandardColorf::lavenderblush() instead")]]
+		//[[deprecated("Please use StandardColorf::lavenderblush() instead")]]
 		static Colorf lavenderblush;
 
 		/// \brief <img src="../../img/colors/lawngreen-chip.png" width=16 height=16 > rgb(124, 252, 0).
-		[[deprecated("Please use StandardColorf::lawngreen() instead")]]
+		//[[deprecated("Please use StandardColorf::lawngreen() instead")]]
 		static Colorf lawngreen;
 
 		/// \brief <img src="../../img/colors/lemonchiffon-chip.png" width=16 height=16 > rgb(255, 250, 205).
-		[[deprecated("Please use StandardColorf::lemonchiffon() instead")]]
+		//[[deprecated("Please use StandardColorf::lemonchiffon() instead")]]
 		static Colorf lemonchiffon;
 
 		/// \brief <img src="../../img/colors/lightblue-chip.png" width=16 height=16 > rgb(173, 216, 230).
-		[[deprecated("Please use StandardColorf::lightblue() instead")]]
+		//[[deprecated("Please use StandardColorf::lightblue() instead")]]
 		static Colorf lightblue;
 
 		/// \brief <img src="../../img/colors/lightcoral-chip.png" width=16 height=16 > rgb(240, 128, 128).
-		[[deprecated("Please use StandardColorf::lightcoral() instead")]]
+		//[[deprecated("Please use StandardColorf::lightcoral() instead")]]
 		static Colorf lightcoral;
 
 		/// \brief <img src="../../img/colors/lightcyan-chip.png" width=16 height=16 > rgb(224, 255, 255).
-		[[deprecated("Please use StandardColorf::lightcyan() instead")]]
+		//[[deprecated("Please use StandardColorf::lightcyan() instead")]]
 		static Colorf lightcyan;
 
 		/// \brief <img src="../../img/colors/lightgoldenrodyellow-chip.png" width=16 height=16 > rgb(250, 250, 210).
-		[[deprecated("Please use StandardColorf::lightgoldenrodyellow() instead")]]
+		//[[deprecated("Please use StandardColorf::lightgoldenrodyellow() instead")]]
 		static Colorf lightgoldenrodyellow;
 
 		/// \brief <img src="../../img/colors/lightgray-chip.png" width=16 height=16 > rgb(211, 211, 211).
-		[[deprecated("Please use StandardColorf::lightgray() instead")]]
+		//[[deprecated("Please use StandardColorf::lightgray() instead")]]
 		static Colorf lightgray;
 
 		/// \brief <img src="../../img/colors/lightgreen-chip.png" width=16 height=16 > rgb(144, 238, 144).
-		[[deprecated("Please use StandardColorf::lightgreen() instead")]]
+		//[[deprecated("Please use StandardColorf::lightgreen() instead")]]
 		static Colorf lightgreen;
 
 		/// \brief <img src="../../img/colors/lightgrey-chip.png" width=16 height=16 > rgb(211, 211, 211).
-		[[deprecated("Please use StandardColorf::lightgrey() instead")]]
+		//[[deprecated("Please use StandardColorf::lightgrey() instead")]]
 		static Colorf lightgrey;
 
 		/// \brief <img src="../../img/colors/lightpink-chip.png" width=16 height=16 > rgb(255, 182, 193).
-		[[deprecated("Please use StandardColorf::lightpink() instead")]]
+		//[[deprecated("Please use StandardColorf::lightpink() instead")]]
 		static Colorf lightpink;
 
 		/// \brief <img src="../../img/colors/lightsalmon-chip.png" width=16 height=16 > rgb(255, 160, 122).
-		[[deprecated("Please use StandardColorf::lightsalmon() instead")]]
+		//[[deprecated("Please use StandardColorf::lightsalmon() instead")]]
 		static Colorf lightsalmon;
 
 		/// \brief <img src="../../img/colors/lightseagreen-chip.png" width=16 height=16 > rgb( 32, 178, 170).
-		[[deprecated("Please use StandardColorf::lightseagreen() instead")]]
+		//[[deprecated("Please use StandardColorf::lightseagreen() instead")]]
 		static Colorf lightseagreen;
 
 		/// \brief <img src="../../img/colors/lightskyblue-chip.png" width=16 height=16 > rgb(135, 206, 250).
-		[[deprecated("Please use StandardColorf::lightskyblue() instead")]]
+		//[[deprecated("Please use StandardColorf::lightskyblue() instead")]]
 		static Colorf lightskyblue;
 
 		/// \brief <img src="../../img/colors/lightslategray-chip.png" width=16 height=16 > rgb(119, 136, 153).
-		[[deprecated("Please use StandardColorf::lightslategray() instead")]]
+		//[[deprecated("Please use StandardColorf::lightslategray() instead")]]
 		static Colorf lightslategray;
 
 		/// \brief <img src="../../img/colors/lightslategrey-chip.png" width=16 height=16 > rgb(119, 136, 153).
-		[[deprecated("Please use StandardColorf::lightslategrey() instead")]]
+		//[[deprecated("Please use StandardColorf::lightslategrey() instead")]]
 		static Colorf lightslategrey;
 
 		/// \brief <img src="../../img/colors/lightsteelblue-chip.png" width=16 height=16 > rgb(176, 196, 222).
-		[[deprecated("Please use StandardColorf::lightsteelblue() instead")]]
+		//[[deprecated("Please use StandardColorf::lightsteelblue() instead")]]
 		static Colorf lightsteelblue;
 
 		/// \brief <img src="../../img/colors/lightyellow-chip.png" width=16 height=16 > rgb(255, 255, 224).
-		[[deprecated("Please use StandardColorf::lightyellow() instead")]]
+		//[[deprecated("Please use StandardColorf::lightyellow() instead")]]
 		static Colorf lightyellow;
 
 		/// \brief <img src="../../img/colors/lime-chip.png" width=16 height=16 > rgb( 0, 255, 0).
-		[[deprecated("Please use StandardColorf::lime() instead")]]
+		//[[deprecated("Please use StandardColorf::lime() instead")]]
 		static Colorf lime;
 
 		/// \brief <img src="../../img/colors/limegreen-chip.png" width=16 height=16 > rgb( 50, 205, 50).
-		[[deprecated("Please use StandardColorf::limegreen() instead")]]
+		//[[deprecated("Please use StandardColorf::limegreen() instead")]]
 		static Colorf limegreen;
 
 		/// \brief <img src="../../img/colors/linen-chip.png" width=16 height=16 > rgb(250, 240, 230).
-		[[deprecated("Please use StandardColorf::linen() instead")]]
+		//[[deprecated("Please use StandardColorf::linen() instead")]]
 		static Colorf linen;
 
 		/// \brief <img src="../../img/colors/magenta-chip.png" width=16 height=16 > rgb(255, 0, 255).
-		[[deprecated("Please use StandardColorf::magenta() instead")]]
+		//[[deprecated("Please use StandardColorf::magenta() instead")]]
 		static Colorf magenta;
 
 		/// \brief <img src="../../img/colors/maroon-chip.png" width=16 height=16 > rgb(128, 0, 0).
-		[[deprecated("Please use StandardColorf::maroon() instead")]]
+		//[[deprecated("Please use StandardColorf::maroon() instead")]]
 		static Colorf maroon;
 
 		/// \brief <img src="../../img/colors/mediumaquamarine-chip.png" width=16 height=16 > rgb(102, 205, 170).
-		[[deprecated("Please use StandardColorf::mediumaquamarine() instead")]]
+		//[[deprecated("Please use StandardColorf::mediumaquamarine() instead")]]
 		static Colorf mediumaquamarine;
 
 		/// \brief <img src="../../img/colors/mediumblue-chip.png" width=16 height=16 > rgb( 0, 0, 205).
-		[[deprecated("Please use StandardColorf::mediumblue() instead")]]
+		//[[deprecated("Please use StandardColorf::mediumblue() instead")]]
 		static Colorf mediumblue;
 
 		/// \brief <img src="../../img/colors/mediumorchid-chip.png" width=16 height=16 > rgb(186, 85, 211).
-		[[deprecated("Please use StandardColorf::mediumorchid() instead")]]
+		//[[deprecated("Please use StandardColorf::mediumorchid() instead")]]
 		static Colorf mediumorchid;
 
 		/// \brief <img src="../../img/colors/mediumpurple-chip.png" width=16 height=16 > rgb(147, 112, 219).
-		[[deprecated("Please use StandardColorf::mediumpurple() instead")]]
+		//[[deprecated("Please use StandardColorf::mediumpurple() instead")]]
 		static Colorf mediumpurple;
 
 		/// \brief <img src="../../img/colors/mediumseagreen-chip.png" width=16 height=16 > rgb( 60, 179, 113).
-		[[deprecated("Please use StandardColorf::mediumseagreen() instead")]]
+		//[[deprecated("Please use StandardColorf::mediumseagreen() instead")]]
 		static Colorf mediumseagreen;
 
 		/// \brief <img src="../../img/colors/mediumslateblue-chip.png" width=16 height=16 > rgb(123, 104, 238).
-		[[deprecated("Please use StandardColorf::mediumslateblue() instead")]]
+		//[[deprecated("Please use StandardColorf::mediumslateblue() instead")]]
 		static Colorf mediumslateblue;
 
 		/// \brief <img src="../../img/colors/mediumspringgreen-chip.png" width=16 height=16 > rgb( 0, 250, 154).
-		[[deprecated("Please use StandardColorf::mediumspringgreen() instead")]]
+		//[[deprecated("Please use StandardColorf::mediumspringgreen() instead")]]
 		static Colorf mediumspringgreen;
 
 		/// \brief <img src="../../img/colors/mediumturquoise-chip.png" width=16 height=16 > rgb( 72, 209, 204).
-		[[deprecated("Please use StandardColorf::mediumturquoise() instead")]]
+		//[[deprecated("Please use StandardColorf::mediumturquoise() instead")]]
 		static Colorf mediumturquoise;
 
 		/// \brief <img src="../../img/colors/mediumvioletred-chip.png" width=16 height=16 > rgb(199, 21, 133).
-		[[deprecated("Please use StandardColorf::mediumvioletred() instead")]]
+		//[[deprecated("Please use StandardColorf::mediumvioletred() instead")]]
 		static Colorf mediumvioletred;
 
 		/// \brief <img src="../../img/colors/midnightblue-chip.png" width=16 height=16 > rgb( 25, 25, 112).
-		[[deprecated("Please use StandardColorf::midnightblue() instead")]]
+		//[[deprecated("Please use StandardColorf::midnightblue() instead")]]
 		static Colorf midnightblue;
 
 		/// \brief <img src="../../img/colors/mintcream-chip.png" width=16 height=16 > rgb(245, 255, 250).
-		[[deprecated("Please use StandardColorf::mintcream() instead")]]
+		//[[deprecated("Please use StandardColorf::mintcream() instead")]]
 		static Colorf mintcream;
 
 		/// \brief <img src="../../img/colors/mistyrose-chip.png" width=16 height=16 > rgb(255, 228, 225).
-		[[deprecated("Please use StandardColorf::mistyrose() instead")]]
+		//[[deprecated("Please use StandardColorf::mistyrose() instead")]]
 		static Colorf mistyrose;
 
 		/// \brief <img src="../../img/colors/moccasin-chip.png" width=16 height=16 > rgb(255, 228, 181).
-		[[deprecated("Please use StandardColorf::moccasin() instead")]]
+		//[[deprecated("Please use StandardColorf::moccasin() instead")]]
 		static Colorf moccasin;
 
 		/// \brief <img src="../../img/colors/navajowhite-chip.png" width=16 height=16 > rgb(255, 222, 173).
-		[[deprecated("Please use StandardColorf::navajowhite() instead")]]
+		//[[deprecated("Please use StandardColorf::navajowhite() instead")]]
 		static Colorf navajowhite;
 
 		/// \brief <img src="../../img/colors/navy-chip.png" width=16 height=16 > rgb( 0, 0, 128).
-		[[deprecated("Please use StandardColorf::navy() instead")]]
+		//[[deprecated("Please use StandardColorf::navy() instead")]]
 		static Colorf navy;
 
 		/// \brief <img src="../../img/colors/oldlace-chip.png" width=16 height=16 > rgb(253, 245, 230).
-		[[deprecated("Please use StandardColorf::oldlace() instead")]]
+		//[[deprecated("Please use StandardColorf::oldlace() instead")]]
 		static Colorf oldlace;
 
 		/// \brief <img src="../../img/colors/olive-chip.png" width=16 height=16 > rgb(128, 128, 0).
-		[[deprecated("Please use StandardColorf::olive() instead")]]
+		//[[deprecated("Please use StandardColorf::olive() instead")]]
 		static Colorf olive;
 
 		/// \brief <img src="../../img/colors/olivedrab-chip.png" width=16 height=16 > rgb(107, 142, 35).
-		[[deprecated("Please use StandardColorf::olivedrab() instead")]]
+		//[[deprecated("Please use StandardColorf::olivedrab() instead")]]
 		static Colorf olivedrab;
 
 		/// \brief <img src="../../img/colors/orange-chip.png" width=16 height=16 > rgb(255, 165, 0).
-		[[deprecated("Please use StandardColorf::orange() instead")]]
+		//[[deprecated("Please use StandardColorf::orange() instead")]]
 		static Colorf orange;
 
 		/// \brief <img src="../../img/colors/orangered-chip.png" width=16 height=16 > rgb(255, 69, 0).
-		[[deprecated("Please use StandardColorf::orangered() instead")]]
+		//[[deprecated("Please use StandardColorf::orangered() instead")]]
 		static Colorf orangered;
 
 		/// \brief <img src="../../img/colors/orchid-chip.png" width=16 height=16 > rgb(218, 112, 214).
-		[[deprecated("Please use StandardColorf::orchid() instead")]]
+		//[[deprecated("Please use StandardColorf::orchid() instead")]]
 		static Colorf orchid;
 
 		/// \brief <img src="../../img/colors/palegoldenrod-chip.png" width=16 height=16 > rgb(238, 232, 170).
-		[[deprecated("Please use StandardColorf::palegoldenrod() instead")]]
+		//[[deprecated("Please use StandardColorf::palegoldenrod() instead")]]
 		static Colorf palegoldenrod;
 
 		/// \brief <img src="../../img/colors/palegreen-chip.png" width=16 height=16 > rgb(152, 251, 152).
-		[[deprecated("Please use StandardColorf::palegreen() instead")]]
+		//[[deprecated("Please use StandardColorf::palegreen() instead")]]
 		static Colorf palegreen;
 
 		/// \brief <img src="../../img/colors/paleturquoise-chip.png" width=16 height=16 > rgb(175, 238, 238).
-		[[deprecated("Please use StandardColorf::paleturquoise() instead")]]
+		//[[deprecated("Please use StandardColorf::paleturquoise() instead")]]
 		static Colorf paleturquoise;
 
 		/// \brief <img src="../../img/colors/palevioletred-chip.png" width=16 height=16 > rgb(219, 112, 147).
-		[[deprecated("Please use StandardColorf::palevioletred() instead")]]
+		//[[deprecated("Please use StandardColorf::palevioletred() instead")]]
 		static Colorf palevioletred;
 
 		/// \brief <img src="../../img/colors/papayawhip-chip.png" width=16 height=16 > rgb(255, 239, 213).
-		[[deprecated("Please use StandardColorf::papayawhip() instead")]]
+		//[[deprecated("Please use StandardColorf::papayawhip() instead")]]
 		static Colorf papayawhip;
 
 		/// \brief <img src="../../img/colors/peachpuff-chip.png" width=16 height=16 > rgb(255, 218, 185).
-		[[deprecated("Please use StandardColorf::peachpuff() instead")]]
+		//[[deprecated("Please use StandardColorf::peachpuff() instead")]]
 		static Colorf peachpuff;
 
 		/// \brief <img src="../../img/colors/peru-chip.png" width=16 height=16 > rgb(205, 133, 63).
-		[[deprecated("Please use StandardColorf::peru() instead")]]
+		//[[deprecated("Please use StandardColorf::peru() instead")]]
 		static Colorf peru;
 
 		/// \brief <img src="../../img/colors/pink-chip.png" width=16 height=16 > rgb(255, 192, 203).
-		[[deprecated("Please use StandardColorf::pink() instead")]]
+		//[[deprecated("Please use StandardColorf::pink() instead")]]
 		static Colorf pink;
 
 		/// \brief <img src="../../img/colors/plum-chip.png" width=16 height=16 > rgb(221, 160, 221).
-		[[deprecated("Please use StandardColorf::plum() instead")]]
+		//[[deprecated("Please use StandardColorf::plum() instead")]]
 		static Colorf plum;
 
 		/// \brief <img src="../../img/colors/powderblue-chip.png" width=16 height=16 > rgb(176, 224, 230).
-		[[deprecated("Please use StandardColorf::powderblue() instead")]]
+		//[[deprecated("Please use StandardColorf::powderblue() instead")]]
 		static Colorf powderblue;
 
 		/// \brief <img src="../../img/colors/purple-chip.png" width=16 height=16 > rgb(128, 0, 128).
-		[[deprecated("Please use StandardColorf::purple() instead")]]
+		//[[deprecated("Please use StandardColorf::purple() instead")]]
 		static Colorf purple;
 
 		/// \brief <img src="../../img/colors/red-chip.png" width=16 height=16 > rgb(255, 0, 0).
-		[[deprecated("Please use StandardColorf::red() instead")]]
+		//[[deprecated("Please use StandardColorf::red() instead")]]
 		static Colorf red;
 
 		/// \brief <img src="../../img/colors/rosybrown-chip.png" width=16 height=16 > rgb(188, 143, 143).
-		[[deprecated("Please use StandardColorf::rosybrown() instead")]]
+		//[[deprecated("Please use StandardColorf::rosybrown() instead")]]
 		static Colorf rosybrown;
 
 		/// \brief <img src="../../img/colors/royalblue-chip.png" width=16 height=16 > rgb( 65, 105, 225).
-		[[deprecated("Please use StandardColorf::royalblue() instead")]]
+		//[[deprecated("Please use StandardColorf::royalblue() instead")]]
 		static Colorf royalblue;
 
 		/// \brief <img src="../../img/colors/saddlebrown-chip.png" width=16 height=16 > rgb(139, 69, 19).
-		[[deprecated("Please use StandardColorf::saddlebrown() instead")]]
+		//[[deprecated("Please use StandardColorf::saddlebrown() instead")]]
 		static Colorf saddlebrown;
 
 		/// \brief <img src="../../img/colors/salmon-chip.png" width=16 height=16 > rgb(250, 128, 114).
-		[[deprecated("Please use StandardColorf::salmon() instead")]]
+		//[[deprecated("Please use StandardColorf::salmon() instead")]]
 		static Colorf salmon;
 
 		/// \brief <img src="../../img/colors/sandybrown-chip.png" width=16 height=16 > rgb(244, 164, 96).
-		[[deprecated("Please use StandardColorf::sandybrown() instead")]]
+		//[[deprecated("Please use StandardColorf::sandybrown() instead")]]
 		static Colorf sandybrown;
 
 		/// \brief <img src="../../img/colors/seagreen-chip.png" width=16 height=16 > rgb( 46, 139, 87).
-		[[deprecated("Please use StandardColorf::seagreen() instead")]]
+		//[[deprecated("Please use StandardColorf::seagreen() instead")]]
 		static Colorf seagreen;
 
 		/// \brief <img src="../../img/colors/seashell-chip.png" width=16 height=16 > rgb(255, 245, 238).
-		[[deprecated("Please use StandardColorf::seashell() instead")]]
+		//[[deprecated("Please use StandardColorf::seashell() instead")]]
 		static Colorf seashell;
 
 		/// \brief <img src="../../img/colors/sienna-chip.png" width=16 height=16 > rgb(160, 82, 45).
-		[[deprecated("Please use StandardColorf::sienna() instead")]]
+		//[[deprecated("Please use StandardColorf::sienna() instead")]]
 		static Colorf sienna;
 
 		/// \brief <img src="../../img/colors/silver-chip.png" width=16 height=16 > rgb(192, 192, 192).
-		[[deprecated("Please use StandardColorf::silver() instead")]]
+		//[[deprecated("Please use StandardColorf::silver() instead")]]
 		static Colorf silver;
 
 		/// \brief <img src="../../img/colors/skyblue-chip.png" width=16 height=16 > rgb(135, 206, 235).
-		[[deprecated("Please use StandardColorf::skyblue() instead")]]
+		//[[deprecated("Please use StandardColorf::skyblue() instead")]]
 		static Colorf skyblue;
 
 		/// \brief <img src="../../img/colors/slateblue-chip.png" width=16 height=16 > rgb(106, 90, 205).
-		[[deprecated("Please use StandardColorf::slateblue() instead")]]
+		//[[deprecated("Please use StandardColorf::slateblue() instead")]]
 		static Colorf slateblue;
 
 		/// \brief <img src="../../img/colors/slategray-chip.png" width=16 height=16 > rgb(112, 128, 144).
-		[[deprecated("Please use StandardColorf::slategray() instead")]]
+		//[[deprecated("Please use StandardColorf::slategray() instead")]]
 		static Colorf slategray;
 
 		/// \brief <img src="../../img/colors/slategrey-chip.png" width=16 height=16 > rgb(112, 128, 144).
-		[[deprecated("Please use StandardColorf::slategrey() instead")]]
+		//[[deprecated("Please use StandardColorf::slategrey() instead")]]
 		static Colorf slategrey;
 
 		/// \brief <img src="../../img/colors/snow-chip.png" width=16 height=16 > rgb(255, 250, 250).
-		[[deprecated("Please use StandardColorf::snow() instead")]]
+		//[[deprecated("Please use StandardColorf::snow() instead")]]
 		static Colorf snow;
 
 		/// \brief <img src="../../img/colors/springgreen-chip.png" width=16 height=16 > rgb( 0, 255, 127).
-		[[deprecated("Please use StandardColorf::springgreen() instead")]]
+		//[[deprecated("Please use StandardColorf::springgreen() instead")]]
 		static Colorf springgreen;
 
 		/// \brief <img src="../../img/colors/steelblue-chip.png" width=16 height=16 > rgb( 70, 130, 180).
-		[[deprecated("Please use StandardColorf::steelblue() instead")]]
+		//[[deprecated("Please use StandardColorf::steelblue() instead")]]
 		static Colorf steelblue;
 
 		/// \brief <img src="../../img/colors/tan-chip.png" width=16 height=16 > rgb(210, 180, 140).
-		[[deprecated("Please use StandardColorf::tan() instead")]]
+		//[[deprecated("Please use StandardColorf::tan() instead")]]
 		static Colorf tan;
 
 		/// \brief <img src="../../img/colors/teal-chip.png" width=16 height=16 > rgb( 0, 128, 128).
-		[[deprecated("Please use StandardColorf::teal() instead")]]
+		//[[deprecated("Please use StandardColorf::teal() instead")]]
 		static Colorf teal;
 
 		/// \brief <img src="../../img/colors/thistle-chip.png" width=16 height=16 > rgb(216, 191, 216).
-		[[deprecated("Please use StandardColorf::thistle() instead")]]
+		//[[deprecated("Please use StandardColorf::thistle() instead")]]
 		static Colorf thistle;
 
 		/// \brief <img src="../../img/colors/tomato-chip.png" width=16 height=16 > rgb(255, 99, 71).
-		[[deprecated("Please use StandardColorf::tomato() instead")]]
+		//[[deprecated("Please use StandardColorf::tomato() instead")]]
 		static Colorf tomato;
 
 		/// \brief <img src="../../img/colors/turquoise-chip.png" width=16 height=16 > rgb( 64, 224, 208).
-		[[deprecated("Please use StandardColorf::turquoise() instead")]]
+		//[[deprecated("Please use StandardColorf::turquoise() instead")]]
 		static Colorf turquoise;
 
 		/// \brief <img src="../../img/colors/violet-chip.png" width=16 height=16 > rgb(238, 130, 238).
-		[[deprecated("Please use StandardColorf::violet() instead")]]
+		//[[deprecated("Please use StandardColorf::violet() instead")]]
 		static Colorf violet;
 
 		/// \brief <img src="../../img/colors/wheat-chip.png" width=16 height=16 > rgb(245, 222, 179).
-		[[deprecated("Please use StandardColorf::wheat() instead")]]
+		//[[deprecated("Please use StandardColorf::wheat() instead")]]
 		static Colorf wheat;
 
 		/// \brief <img src="../../img/colors/white-chip.png" width=16 height=16 > rgb(255, 255, 255).
-		[[deprecated("Please use StandardColorf::white() instead")]]
+		//[[deprecated("Please use StandardColorf::white() instead")]]
 		static Colorf white;
 
 		/// \brief <img src="../../img/colors/whitesmoke-chip.png" width=16 height=16 > rgb(245, 245, 245).
-		[[deprecated("Please use StandardColorf::whitesmoke() instead")]]
+		//[[deprecated("Please use StandardColorf::whitesmoke() instead")]]
 		static Colorf whitesmoke;
 
 		/// \brief <img src="../../img/colors/yellow-chip.png" width=16 height=16 > rgb(255, 255, 0).
-		[[deprecated("Please use StandardColorf::yellow() instead")]]
+		//[[deprecated("Please use StandardColorf::yellow() instead")]]
 		static Colorf yellow;
 
 		/// \brief <img src="../../img/colors/yellowgreen-chip.png" width=16 height=16 > rgb(154, 205, 50).
-		[[deprecated("Please use StandardColorf::yellowgreen() instead")]]
+		//[[deprecated("Please use StandardColorf::yellowgreen() instead")]]
 		static Colorf yellowgreen;
 
 		/// \brief rgba(0, 0, 0, 0).
-		[[deprecated("Please use StandardColorf::transparent() instead")]]
+		//[[deprecated("Please use StandardColorf::transparent() instead")]]
 		static Colorf transparent;
 
-		[[deprecated("Please use StandardColorf::gray10() instead")]]
+		//[[deprecated("Please use StandardColorf::gray10() instead")]]
 		static Colorf gray10;
 
-		[[deprecated("Please use StandardColorf::gray20() instead")]]
+		//[[deprecated("Please use StandardColorf::gray20() instead")]]
 		static Colorf gray20;
 
-		[[deprecated("Please use StandardColorf::gray30() instead")]]
+		//[[deprecated("Please use StandardColorf::gray30() instead")]]
 		static Colorf gray30;
 
-		[[deprecated("Please use StandardColorf::gray40() instead")]]
+		//[[deprecated("Please use StandardColorf::gray40() instead")]]
 		static Colorf gray40;
 
-		[[deprecated("Please use StandardColorf::gray50() instead")]]
+		//[[deprecated("Please use StandardColorf::gray50() instead")]]
 		static Colorf gray50;
 
-		[[deprecated("Please use StandardColorf::gray60() instead")]]
+		//[[deprecated("Please use StandardColorf::gray60() instead")]]
 		static Colorf gray60;
 
-		[[deprecated("Please use StandardColorf::gray70() instead")]]
+		//[[deprecated("Please use StandardColorf::gray70() instead")]]
 		static Colorf gray70;
 
-		[[deprecated("Please use StandardColorf::gray80() instead")]]
+		//[[deprecated("Please use StandardColorf::gray80() instead")]]
 		static Colorf gray80;
 
-		[[deprecated("Please use StandardColorf::gray90() instead")]]
+		//[[deprecated("Please use StandardColorf::gray90() instead")]]
 		static Colorf gray90;
 	};
 
