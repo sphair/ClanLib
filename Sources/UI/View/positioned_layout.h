@@ -40,6 +40,6 @@ namespace clan
 
 	private:
 		static void layout_from_containing_box(Canvas &canvas, View *view, const Rectf &containing_box);
-		static float resolve_percentage(StyleGetValue &computed_value, float size);
+		static float resolve_percentage(const StyleGetValue &computed_value, float size);
 	};
 }

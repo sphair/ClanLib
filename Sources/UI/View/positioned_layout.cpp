@@ -186,7 +186,7 @@ namespace clan
 		return ViewGeometry::from_content_box(view->style_cascade(), box);
 	}
 
-	float PositionedLayout::resolve_percentage(StyleGetValue &computed_value, float size)
+	float PositionedLayout::resolve_percentage(const StyleGetValue &computed_value, float size)
 	{
 		if (computed_value.is_percentage())
 			return computed_value.number() * size / 100.0f;
