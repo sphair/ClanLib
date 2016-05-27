@@ -57,6 +57,19 @@ namespace clan
 		{
 			auto border_points = get_border_points();
 
+			if (is_render_border_antialias_fix_required())
+			{
+				float delta = 1.0f;
+				border_points[0] += Pointf(delta, delta);
+				border_points[1] += Pointf(-delta, delta);
+				border_points[2] += Pointf(-delta, delta);
+				border_points[3] += Pointf(-delta, -delta);
+				border_points[4] += Pointf(-delta, -delta);
+				border_points[5] += Pointf(delta, -delta);
+				border_points[6] += Pointf(delta, -delta);
+				border_points[7] += Pointf(delta, delta);
+			}
+
 			// To do: take get_layer_clip(num_layers - 1) into account
 
 			Path background_area = get_border_area_path(border_points);
@@ -313,6 +326,18 @@ namespace clan
 				border_path.fill(canvas, Brush(color));
 			}
 		}
+	}
+
+	bool StyleBackgroundRenderer::is_render_border_antialias_fix_required()
+	{
+		StyleGetValue style_top = style.computed_value("border-top-style");
+		if (style_top.is_keyword("solid"))
+		{
+			Colorf color = style.computed_value("border-top-color").color();
+			if (color.a > 0.5f)
+				return true;
+		}
+		return false;
 	}
 
 	float StyleBackgroundRenderer::get_start_x(int index, const Rectf &clip_box, const Rectf &origin_box, const Sizef &image_size)
