@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Artem Khomenko (add sticky property)
 */
 
 #pragma once
@@ -48,6 +49,11 @@ namespace clan
 		bool disabled() const;
 		void set_disabled();
 		void set_enabled();
+
+		void set_sticky(bool is_sticky); // If true - after first press the button remains pressed and need to press again.
+		bool sticky();
+		bool pressed();
+		void set_pressed(bool is_pressed);
 
 		void move_label_before_image();
 		void move_label_after_image();
