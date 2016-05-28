@@ -7,4 +7,5 @@
 #ifdef WIN32
 #include <ClanLib/d3d.h>
 #endif
+#include <ClanLib/ui.h>
 #include <cmath>
