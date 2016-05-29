@@ -92,7 +92,7 @@ std::shared_ptr<clan::ButtonView> Theme::create_button()
 	button->style("hot")->set("border-image-source:url('Resources/button_hot.png');");
 	button->style("pressed")->set("border-image-source:url('Resources/button_pressed.png');");
 	button->style("disabled")->set("border-image-source:url('Resources/button_disabled.png');");
-	button->label()->style()->set("margin: 5px auto; font: 13px/1.5 'Segoe UI'; padding: 3px 10px; color: rgb(0,0,0);");
+	button->label()->style()->set("font: 13px/1.5 'Segoe UI'; padding: 3px 10px; color: rgb(0,0,0);");
 	button->label()->style("disabled")->set("color: rgb(128,128,128);");
 	button->label()->style("pressed")->set("font-weight: bold;");
 	button->label()->set_text_alignment(TextAlignment::center);
@@ -131,10 +131,8 @@ std::shared_ptr<clan::CheckBoxView> Theme::create_checkbox()
 {
 	auto checkbox = std::make_shared<clan::CheckBoxView>();
 
-	checkbox->style()->set("background-position:center center;");
 	checkbox->style()->set("background-repeat:no-repeat;");
 	checkbox->style()->set("background-attachment:scroll;");
-	checkbox->style()->set("width:13px; height:13px");
 	checkbox->style()->set("background-image:url('Resources/checkbox_unchecked_normal.png');");
 	checkbox->style("unchecked_hot")->set("background-image:url('Resources/checkbox_unchecked_hot.png');");
 	checkbox->style("unchecked_pressed")->set("background-image:url('Resources/checkbox_unchecked_pressed.png');");
@@ -143,6 +141,10 @@ std::shared_ptr<clan::CheckBoxView> Theme::create_checkbox()
 	checkbox->style("checked_hot")->set("background-image:url('Resources/checkbox_checked_hot.png');");
 	checkbox->style("checked_pressed")->set("background-image:url('Resources/checkbox_checked_pressed.png');");
 	checkbox->style("checked_disabled")->set("background-image:url('Resources/checkbox_checked_disabled.png');");
+	checkbox->label()->style()->set("font: 13px 'Segoe UI'; padding: -3px 30px; color: black;");
+	checkbox->label()->style("disabled")->set("color: rgb(128,128,128);");
+	checkbox->label()->style("pressed")->set("font-weight: bold;");
+	checkbox->label()->set_text_alignment(TextAlignment::left);
 	return checkbox;
 }
 

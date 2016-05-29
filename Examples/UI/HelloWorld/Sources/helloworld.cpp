@@ -194,6 +194,8 @@ HelloWorld::HelloWorld()
 
 	auto checkbox = Theme::create_checkbox();
 	//checkbox->set_disabled();
+	checkbox->style()->set("margin: 12px");
+	checkbox->label()->set_text("Checkbox");
 	scrollarea->content_view()->add_child(checkbox);
 
 	for (int cnt = 0; cnt < 3; cnt++)

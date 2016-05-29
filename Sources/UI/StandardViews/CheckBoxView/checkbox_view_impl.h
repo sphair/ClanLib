@@ -26,6 +26,7 @@
 **    Harry Storbacka
 **    Magnus Norddahl
 **    Mark Page
+**    Artem Khomenko (add label property)
 */
 
 #pragma once
@@ -47,6 +48,8 @@ namespace clan
 
 		bool _checked_state = false;
 		std::function<void()> _func_state_changed;
+
+		std::shared_ptr<LabelView> label;
 	};
 }
 

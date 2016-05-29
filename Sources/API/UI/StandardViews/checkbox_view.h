@@ -26,11 +26,13 @@
 **    Magnus Norddahl
 **    Harry Storbacka
 **    Mark Page
+**    Artem Khomenko (add label property)
 */
 
 #pragma once
 
 #include "../View/view.h"
+#include "label_view.h"
 
 namespace clan
 {
@@ -41,6 +43,8 @@ namespace clan
 	public:
 
 		CheckBoxView();
+
+		std::shared_ptr<LabelView> label();
 
 		bool disabled() const;
 		void set_disabled();

@@ -26,6 +26,7 @@
 **    Harry Storbacka
 **    Magnus Norddahl
 **    Mark Page
+**    Artem Khomenko (add label property)
 */
 
 #include "UI/precomp.h"
@@ -44,11 +45,16 @@ namespace clan
 	{
 		impl->checkbox = this;
 
+		impl->label = std::make_shared<LabelView>();
+		add_child(impl->label);
+
 		slots.connect(sig_pointer_press(), impl.get(), &CheckBoxView_Impl::on_pointer_press);
 		slots.connect(sig_pointer_release(), impl.get(), &CheckBoxView_Impl::on_pointer_release);
 
 		slots.connect(sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_hot = true;  impl->update_state(); });
 		slots.connect(sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_hot = false;  impl->update_state(); });
+		slots.connect(impl->label->sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_hot = true;  impl->update_state(); });
+		slots.connect(impl->label->sig_pointer_leave(), [&](PointerEvent &e) {impl->_state_hot = false;  impl->update_state(); });
 	}
 
 	void CheckBoxView::set_disabled()
@@ -85,6 +91,11 @@ namespace clan
 			impl->_checked_state = checked_state;
 			impl->update_state();
 		}
+	}
+
+	std::shared_ptr<LabelView> CheckBoxView::label()
+	{
+		return impl->label;
 	}
 
 	std::function<void()> &CheckBoxView::func_state_changed()
