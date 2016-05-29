@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 **    Mark Page
+**    Artem Khomenko (add sticky property)
 */
 
 #include "UI/precomp.h"
@@ -70,14 +71,28 @@ namespace clan
 
 	void ButtonViewImpl::on_pointer_release(PointerEvent &e)
 	{
-		_state_pressed = false;
 		if (_state_disabled)
 			return;
-		update_state();
-		if (_func_clicked)
-		{
-			if (button->geometry().border_box().contains(e.pos(button) + button->geometry().content_box().get_top_left()))	// Only allow click when mouse released over component
+
+		// If mouse released over component
+		if (button->geometry().border_box().contains(e.pos(button) + button->geometry().content_box().get_top_left())) {
+			if (_sticky) {
+				_state_pressed = _state_pressed_previous;
+				_state_pressed_previous = !_state_pressed_previous;
+			}
+			else
+				_state_pressed = false;
+
+			// User event handler need to get right state.
+			update_state();
+
+			if (_func_clicked)
 				_func_clicked();
+		}
+		else {
+			_state_hot = false;
+			_state_pressed = _sticky ? !_state_pressed_previous : false;
+			update_state();
 		}
 	}
 

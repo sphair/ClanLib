@@ -65,6 +65,10 @@ HelloWorld::HelloWorld()
 	window->root_view()->style()->set("background: #efefef");
 	window->root_view()->style()->set("flex-direction: column");
 
+	// Main window icons
+	window->display_window().set_small_icon(clan::PixelBuffer("Resources/app_icon_16x16.png", doc.get_file_system()));
+	window->display_window().set_large_icon(clan::PixelBuffer("Resources/app_icon_32x32.png", doc.get_file_system()));
+
 	auto body = std::make_shared<View>();
 	body->style()->set("background: white");
 	body->style()->set("padding: 11px");
@@ -194,6 +198,8 @@ HelloWorld::HelloWorld()
 
 	auto checkbox = Theme::create_checkbox();
 	//checkbox->set_disabled();
+	checkbox->style()->set("margin: 12px");
+	checkbox->label()->set_text("Checkbox");
 	scrollarea->content_view()->add_child(checkbox);
 
 	for (int cnt = 0; cnt < 3; cnt++)

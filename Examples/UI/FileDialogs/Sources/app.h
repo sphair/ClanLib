@@ -37,7 +37,17 @@ public:
 
 	clan::UIThread ui_thread;
 	std::shared_ptr<clan::TopLevelWindow> window;
-	std::shared_ptr<clan::LabelView> label;
 	clan::WindowManager window_manager;
-	clan::SlotContainer slots;
+
+private:
+	std::shared_ptr<clan::LabelView> label1;
+	std::shared_ptr<clan::LabelView> label2;
+	std::shared_ptr<clan::LabelView> label3;
+	std::shared_ptr<clan::LabelView> label4;
+	std::shared_ptr<clan::ButtonView> button4;
+
+	void on_button1_down();
+	void on_button2_down();
+	void on_button3_down();	
+	void on_button4_down();
 };

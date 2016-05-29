@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 **    Mark Page
+**    Artem Khomenko (add sticky property)
 */
 
 #include "UI/precomp.h"
@@ -118,4 +119,30 @@ namespace clan
 		add_child(impl->image_view);
 		add_child(impl->label);
 	}
+
+	void ButtonView::set_sticky(bool is_sticky)
+	{
+		impl->_sticky = is_sticky;
+	}
+
+	bool ButtonView::sticky()
+	{
+		return impl->_sticky;
+	}
+
+	bool ButtonView::pressed()
+	{
+		return impl->_state_pressed;
+	}
+
+	void ButtonView::set_pressed(bool is_pressed)
+	{
+		if (impl->_state_pressed != is_pressed)
+		{
+			impl->_state_pressed = is_pressed;
+			impl->_state_pressed_previous = !is_pressed;
+			impl->update_state();
+		}
+	}
 }
+

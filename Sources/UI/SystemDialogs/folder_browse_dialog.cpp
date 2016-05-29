@@ -77,12 +77,10 @@ namespace clan
 				// Set the options on the dialog.
 				DWORD dwFlags;
 
-				// Before setting, always get the options first in order not to override existing options.
+				// Before setting, always get the options first in order not to override existing options about hidden and so on.
 				result = open_dialog->GetOptions(&dwFlags);
 
-				// Remove FOS_PATHMUSTEXIST - it hangs my russian windows 8.1 when last saved current dir is symbolic link to downloads with russian locale.
-				// Moreover, according to MSDN, FOS_PATHMUSTEXIST is a default value. For debug email to _mag12@yahoo.com Artem Khomenko
-				result = open_dialog->SetOptions(dwFlags | FOS_PICKFOLDERS | FOS_FORCEFILESYSTEM);
+				result = open_dialog->SetOptions(dwFlags | FOS_PICKFOLDERS | FOS_FORCEFILESYSTEM | FOS_PATHMUSTEXIST);
 				throw_if_failed(result, "IFileOpenDialog.SetOptions((FOS_PICKFOLDERS) failed");
 
 				if (initial_directory16.length() > 0)

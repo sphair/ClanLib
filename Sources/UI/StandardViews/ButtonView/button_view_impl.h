@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 **    Mark Page
+**    Artem Khomenko (add sticky property)
 */
 #pragma once
 
@@ -41,10 +42,14 @@ namespace clan
 		bool _state_disabled = false;
 		bool _state_hot = false;
 		bool _state_pressed = false;
+		
+		bool _sticky = false;	// If true - after first press the button remains pressed and need to press again.
 
 		std::function<void()> _func_clicked;
 
 		std::shared_ptr<LabelView> label;
 		std::shared_ptr<ImageView> image_view;
+	
+		bool _state_pressed_previous = true;
 	};
 }

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HSVSprite", "Examples\Display_Shaders\HSVSprite\HSVSprite-vc2015.vcxproj", "{77173D24-4CBD-4925-9307-D75442CAD4AD}"
 EndProject
@@ -94,6 +94,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TextureGroup", "Examples\Display\TextureGroup\TextureGroup-vc2015.vcxproj", "{7C8336A9-8BE4-473B-A17C-0171BAFE05B1}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MVC-vs2015", "Examples\UI\MVC\MVC-vs2015.vcxproj", "{BF425384-4612-4D8B-BAEE-7A154B599B7A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FileDialogs", "Examples\UI\FileDialogs\FileDialogs-vc2015.vcxproj", "{10B1D248-0663-4ADE-A24B-6723F4A9E0BD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -379,6 +381,14 @@ Global
 		{BF425384-4612-4D8B-BAEE-7A154B599B7A}.Release|Win32.ActiveCfg = Release|Win32
 		{BF425384-4612-4D8B-BAEE-7A154B599B7A}.Release|Win32.Build.0 = Release|Win32
 		{BF425384-4612-4D8B-BAEE-7A154B599B7A}.Release|x64.ActiveCfg = Release|Win32
+		{10B1D248-0663-4ADE-A24B-6723F4A9E0BD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{10B1D248-0663-4ADE-A24B-6723F4A9E0BD}.Debug|Win32.Build.0 = Debug|Win32
+		{10B1D248-0663-4ADE-A24B-6723F4A9E0BD}.Debug|x64.ActiveCfg = Debug|x64
+		{10B1D248-0663-4ADE-A24B-6723F4A9E0BD}.Debug|x64.Build.0 = Debug|x64
+		{10B1D248-0663-4ADE-A24B-6723F4A9E0BD}.Release|Win32.ActiveCfg = Release|Win32
+		{10B1D248-0663-4ADE-A24B-6723F4A9E0BD}.Release|Win32.Build.0 = Release|Win32
+		{10B1D248-0663-4ADE-A24B-6723F4A9E0BD}.Release|x64.ActiveCfg = Release|x64
+		{10B1D248-0663-4ADE-A24B-6723F4A9E0BD}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
