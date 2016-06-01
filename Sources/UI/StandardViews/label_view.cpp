@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Artem Khomenko (modified set_text())
 */
 
 #include "UI/precomp.h"
@@ -73,11 +74,47 @@ namespace clan
 		return impl->_text;
 	}
 
-	void LabelView::set_text(const std::string &value)
+	void LabelView::set_text(const std::string &value, bool force_no_layout)
 	{
 		impl->_text = value;
-		set_needs_layout();
-	}
+		
+		if (force_no_layout) {
+			
+			// For convenience and optimization get refs
+			const clan::ViewGeometry &geom = geometry();
+			clan::Canvas &canv = canvas();
+
+			// Find background color
+			Colorf backColor = Colorf::transparent;
+			View *ptr = this;
+			while (ptr) {
+				const StyleGetValue value = ptr->style_cascade().cascade_value("background-color");
+				if (!value.is_undefined()) {
+					backColor = value.color();
+					break;
+				}
+				ptr = ptr->parent();
+			}
+			
+			// Clear backgroud
+			canv.fill_rect(geom.content_box(), backColor);
+
+			// Prepare the canvas for render_content()
+			clan::Pointf translate = geom.content_pos();
+			clan::TransformState transform_state(&canv);
+			clan::ClipRectStack cliprect_stack(&canv);
+			canv.set_transform(transform_state.matrix * clan::Mat4f::translate(translate.x, translate.y, 0) * view_transform());
+
+			// Draw the new text.
+			render_content(canv);
+
+			// Restore the canvas.
+			canv.set_transform(clan::Mat4f::identity());
+		}
+		else
+			// Default behaviour
+			set_needs_layout();
+		}
 
 	TextAlignment LabelView::text_alignment() const
 	{
