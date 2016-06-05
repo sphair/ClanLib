@@ -98,7 +98,7 @@ namespace clan
 
 	void SpinView_Impl::on_pointer_decrement_press(PointerEvent &e)
 	{
-		if (_state_disabled)
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
 		_state_decrement_pressed = true;
 		update_decrement_state();
@@ -108,7 +108,7 @@ namespace clan
 
 	void SpinView_Impl::on_pointer_decrement_release(PointerEvent &e)
 	{
-		if (_state_disabled)
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
 		_state_decrement_pressed = false;
 		update_decrement_state();
@@ -118,7 +118,7 @@ namespace clan
 
 	void SpinView_Impl::on_pointer_increment_press(PointerEvent &e)
 	{
-		if (_state_disabled)
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
 		_state_increment_pressed = true;
 		update_increment_state();
@@ -128,7 +128,7 @@ namespace clan
 
 	void SpinView_Impl::on_pointer_increment_release(PointerEvent &e)
 	{
-		if (_state_disabled)
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
 		_state_increment_pressed = false;
 		update_increment_state();
