@@ -63,7 +63,7 @@ namespace clan
 
 	void ButtonViewImpl::on_pointer_press(PointerEvent &e)
 	{
-		if (_state_disabled)
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
 		_state_pressed = true;
 		update_state();
@@ -71,7 +71,7 @@ namespace clan
 
 	void ButtonViewImpl::on_pointer_release(PointerEvent &e)
 	{
-		if (_state_disabled)
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
 
 		// If mouse released over component

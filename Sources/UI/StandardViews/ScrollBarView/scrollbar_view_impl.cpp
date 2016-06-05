@@ -155,7 +155,7 @@ namespace clan
 
 	void ScrollBarViewImpl::on_pointer_track_press(PointerEvent &e)
 	{
-		if (_state_disabled)
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
 		float mouse_pos;
 		Rectf thumb_geometry(thumb->geometry().content_box());
@@ -190,7 +190,7 @@ namespace clan
 
 	void ScrollBarViewImpl::on_pointer_track_release(PointerEvent &e)
 	{
-		if (_state_disabled)
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
 		mouse_down_mode = mouse_down_none;
 		scroll_timer.stop();
@@ -199,7 +199,7 @@ namespace clan
 
 	void ScrollBarViewImpl::on_pointer_thumb_press(PointerEvent &e)
 	{
-		if (_state_disabled)
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
 		_state_thumb_pressed = true;
 		update_thumb_state();
@@ -213,7 +213,7 @@ namespace clan
 
 	void ScrollBarViewImpl::on_pointer_thumb_release(PointerEvent &e)
 	{
-		if (_state_disabled)
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
 		_state_thumb_pressed = false;
 		update_thumb_state();
@@ -224,7 +224,7 @@ namespace clan
 
 	void ScrollBarViewImpl::on_pointer_decrement_press(PointerEvent &e)
 	{
-		if (_state_disabled)
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
 		_state_decrement_pressed = true;
 		update_decrement_state();
@@ -235,7 +235,7 @@ namespace clan
 
 	void ScrollBarViewImpl::on_pointer_decrement_release(PointerEvent &e)
 	{
-		if (_state_disabled)
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
 		_state_decrement_pressed = false;
 		update_decrement_state();
@@ -245,7 +245,7 @@ namespace clan
 
 	void ScrollBarViewImpl::on_pointer_increment_press(PointerEvent &e)
 	{
-		if (_state_disabled)
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
 		_state_increment_pressed = true;
 		update_increment_state();
@@ -256,7 +256,7 @@ namespace clan
 
 	void ScrollBarViewImpl::on_pointer_increment_release(PointerEvent &e)
 	{
-		if (_state_disabled)
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
 		_state_increment_pressed = false;
 		update_increment_state();

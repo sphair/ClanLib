@@ -103,7 +103,7 @@ namespace clan
 
 	void RadioButtonView_Impl::on_pointer_press(PointerEvent &e)
 	{
-		if (_state_disabled)
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
 		_state_pressed = true;
 		update_state();
@@ -111,10 +111,10 @@ namespace clan
 
 	void RadioButtonView_Impl::on_pointer_release(PointerEvent &e)
 	{
-		_state_pressed = false;
-		if (_state_disabled)
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
 
+		_state_pressed = false;
 		if (!_state_selected)
 		{
 			if (radio->geometry().border_box().contains(e.pos(radio) + radio->geometry().content_box().get_top_left()))	// Only allow click when mouse released over component

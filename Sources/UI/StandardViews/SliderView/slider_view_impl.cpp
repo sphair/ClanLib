@@ -103,7 +103,7 @@ namespace clan
 
 	void SliderViewImpl::on_pointer_track_press(PointerEvent &e)
 	{
-		if (_state_disabled)
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
 		if (e.target() == thumb)	// Thumb control handled elsewhere
 			return;
@@ -140,7 +140,7 @@ namespace clan
 
 	void SliderViewImpl::on_pointer_track_release(PointerEvent &e)
 	{
-		if (_state_disabled)
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
 		mouse_down_mode = mouse_down_none;
 		scroll_timer.stop();
@@ -148,7 +148,7 @@ namespace clan
 
 	void SliderViewImpl::on_pointer_thumb_press(PointerEvent &e)
 	{
-		if (_state_disabled)
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
 
 		_state_pressed = true;
@@ -160,9 +160,9 @@ namespace clan
 
 	void SliderViewImpl::on_pointer_thumb_release(PointerEvent &e)
 	{
-		_state_pressed = false;
-		if (_state_disabled)
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
+		_state_pressed = false;
 		update_state();
 		mouse_down_mode = mouse_down_none;
 		scroll_timer.stop();
