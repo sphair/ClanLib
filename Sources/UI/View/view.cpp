@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Artem Khomenko (Direct redraw changed state of View, without redraw the entire window).
 */
 
 #include "UI/precomp.h"
@@ -102,7 +103,6 @@ namespace clan
 		{
 			impl->states[name] = ViewImpl::StyleState(false, value);
 			impl->update_style_cascade();
-			set_needs_layout();
 		}
 	}
 	void View::set_state_cascade(const std::string &name, bool value)
@@ -111,12 +111,11 @@ namespace clan
 		{
 			impl->states[name] = ViewImpl::StyleState(false, value);
 			impl->update_style_cascade();
-			set_needs_layout();
-			impl->set_state_cascade_siblings(name, value);
+			impl->set_state_cascade_children(name, value);
 		}
 	}
 
-	void ViewImpl::set_state_cascade_siblings(const std::string &name, bool value)
+	void ViewImpl::set_state_cascade_children(const std::string &name, bool value)
 	{
 		for (std::shared_ptr<View> &view : _children)
 		{
@@ -125,8 +124,7 @@ namespace clan
 			{
 				impl->states[name] = ViewImpl::StyleState(true, value);
 				impl->update_style_cascade();
-				view->set_needs_layout();
-				impl->set_state_cascade_siblings(name, value);
+				impl->set_state_cascade_children(name, value);
 			}
 		}
 	}
@@ -720,6 +718,62 @@ namespace clan
 		e->_phase = EventUIPhase::none;
 	}
 
+	void View::draw_without_layout()
+	{
+		// Position and sizes of the View.
+		const ViewGeometry &geom = geometry();
+
+		// If isn't initialized yet then there is nothing to draw.
+		if (!canvas() || geom.content_width <= 0.0f || geom.content_height <= 0.0f)
+			return;
+
+		// Ask the parent for redraw and then it redraws us.
+		View *prnt = parent();
+		Canvas &canv = canvas();
+
+		// The Top Left point of content box without margin, border, padding relative to the root view
+		Pointf translate = to_root_pos(Pointf(-geom.margin_left - geom.border_left - geom.padding_left, -geom.margin_top - geom.border_top - geom.padding_top));
+
+		// Outer box relative to the root view.
+		Rectf box = Rectf(translate.x, translate.y, geom.margin_box().get_size());
+
+		// Exclude all from drawing except itself for speedup.
+		ClipRectStack cliprect_stack(&canv);
+		cliprect_stack.push_cliprect(box);
+
+		// Our outher box now is the content box of the parent. We need to prepare canvas so that its coordinate 0, 0 was the top left corner of parent's parent.
+		// If parent doesn't exists, then 0, 0.
+		translate = prnt->parent() ? prnt->parent()->to_root_pos(Pointf()) : Pointf();
+
+		// Shift the coordinate system of the canvas, considering other transform states for View (need to test).
+		TransformState transform_state(&canv);
+		canv.set_transform(transform_state.matrix * Mat4f::translate(translate.x, translate.y, 0) * view_transform());
+
+		// Render.
+		if (prnt) {
+			prnt->impl->render(prnt, canv, ViewRenderLayer::background);
+			prnt->impl->render(prnt, canv, ViewRenderLayer::border);
+			prnt->impl->render(prnt, canv, ViewRenderLayer::content);
+		}
+		else {
+			impl->render(this, canv, ViewRenderLayer::background);
+			impl->render(this, canv, ViewRenderLayer::border);
+			impl->render(this, canv, ViewRenderLayer::content);
+		}
+	}
+
+	void View::render_border(Canvas &canvas)
+	{
+		// Renders the border of a view
+		impl->style_cascade.render_border(canvas, impl->_geometry);
+	}
+
+	void View::render_background(Canvas &canvas)
+	{
+		// Renders the background of a view
+		impl->style_cascade.render_background(canvas, impl->_geometry);
+	}
+
 	/////////////////////////////////////////////////////////////////////////
 
 	ViewLayout *ViewImpl::active_layout(View *self)
@@ -738,9 +792,9 @@ namespace clan
 	void ViewImpl::render(View *self, Canvas &canvas, ViewRenderLayer layer)
 	{
 		if (layer == ViewRenderLayer::background)
-			style_cascade.render_background(canvas, _geometry);
+			self->render_background(canvas);
 		else if (layer == ViewRenderLayer::border)
-			style_cascade.render_border(canvas, _geometry);
+			self->render_border(canvas);
 
 		Pointf translate = _geometry.content_pos();
 

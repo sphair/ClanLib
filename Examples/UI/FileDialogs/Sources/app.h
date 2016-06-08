@@ -34,6 +34,7 @@ class App : public clan::Application
 {
 public:
 	App();
+	bool update() override;
 
 	clan::UIThread ui_thread;
 	std::shared_ptr<clan::TopLevelWindow> window;

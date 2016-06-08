@@ -31,34 +31,24 @@
 #include "UI/precomp.h"
 #include "API/UI/StandardViews/button_view.h"
 #include "API/UI/StandardViews/image_view.h"
-#include "button_view_impl.h"
 #include "API/UI/Events/pointer_event.h"
+#include "button_view_impl.h"
 
 namespace clan
 {
 
 	void ButtonViewImpl::update_state()
 	{
-		bool target_hot = false;
-		bool target_disabled = false;
-		bool target_pressed = false;
+		// Update CSS.
+		button->set_state_cascade("hot", _state_hot);
+		button->set_state_cascade("pressed", _state_pressed);
+		button->set_state_cascade("disabled", _state_disabled);
+		
+		// Update the font in accordance with the state.
+		label->reset_font();
 
-		if (_state_disabled)
-		{
-			target_disabled = true;
-		}
-		else if (_state_pressed)
-		{
-			target_pressed = true;
-		}
-		else if (_state_hot)
-		{
-			target_hot = true;
-		}
-
-		button->set_state_cascade("hot", target_hot);
-		button->set_state_cascade("pressed", target_pressed);
-		button->set_state_cascade("disabled", target_disabled);
+		// Fast draw the button.
+		button->draw_without_layout();
 	}
 
 	void ButtonViewImpl::on_pointer_press(PointerEvent &e)

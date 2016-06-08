@@ -35,8 +35,11 @@ clan::ApplicationInstance<GUI> clanapp;
 
 GUI::GUI()
 {
-	//clan::D3DTarget::set_current();
+#if defined(WIN32) && !defined(__MINGW32__)
+	clan::D3DTarget::set_current();
+#else
 	clan::OpenGLTarget::set_current();
+#endif
 
 	// Set the window
 	clan::DisplayWindowDescription desc;
@@ -60,7 +63,6 @@ GUI::GUI()
 	gui_image = clan::Image(gui_texture, gui_texture.get_size());
 	clan::FrameBuffer gui_framebuffer = clan::FrameBuffer(canvas);
 	gui_framebuffer.attach_color(0, gui_texture);
-	//gui_canvas = clan::Canvas(canvas);//, gui_framebuffer);
 	gui_canvas = clan::Canvas(canvas, gui_framebuffer);
 
 	// Mark this thread as the UI thread
@@ -142,7 +144,6 @@ bool GUI::update()
 
 	canvas.clear(clan::Colorf(0.3f,0.7f,0.2f));
 
-	//ui_window->view_controller()->view->set_needs_layout();
 	//ui_window->set_always_render();
 	ui_window->update();
 	gui_canvas.flush();

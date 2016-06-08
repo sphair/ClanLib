@@ -26,13 +26,14 @@
 **    Harry Storbacka
 **    Magnus Norddahl
 **    Mark Page
-**    Artem Khomenko (add label property)
+**    Artem Khomenko (add label property and render_background())
 */
 
 #include "UI/precomp.h"
 #include "API/UI/StandardViews/checkbox_view.h"
 #include "API/UI/Style/style_property_parser.h"
 #include "API/Display/2D/path.h"
+#include "API/Display/2D/canvas.h"
 #include "API/Display/System/timer.h"
 #include "API/Display/2D/brush.h"
 #include "API/UI/Events/pointer_event.h"
@@ -101,6 +102,30 @@ namespace clan
 	std::function<void()> &CheckBoxView::func_state_changed()
 	{
 		return impl->_func_state_changed;
+	}
+
+	void CheckBoxView::render_background(Canvas &canvas)
+	{
+		// If someone wants to make a transparent background under the label, he needs to call parent.
+		// But now simple fill background.
+
+		// Find background color
+		Colorf backColor = Colorf::transparent;
+		View *ptr = this;
+		while (ptr) {
+			const StyleGetValue value = ptr->style_cascade().cascade_value("background-color");
+			if (!value.is_undefined()) {
+				backColor = value.color();
+				break;
+			}
+			ptr = ptr->parent();
+		}
+
+		// Clear backgroud
+		canvas.fill_rect(geometry().content_box(), backColor);
+
+		// Call the predecessor.
+		View::render_background(canvas);
 	}
 
 }

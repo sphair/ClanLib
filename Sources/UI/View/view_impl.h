@@ -83,7 +83,7 @@ namespace clan
 		View *find_next_with_tab_index(unsigned int tab_index, const ViewImpl *search_from = nullptr, bool also_search_ancestors = true) const;
 		View *find_prev_with_tab_index(unsigned int tab_index, const ViewImpl *search_from = nullptr, bool also_search_ancestors = true) const;
 
-		void set_state_cascade_siblings(const std::string &name, bool value);
+		void set_state_cascade_children(const std::string &name, bool value);
 
 		void inverse_bubble(EventUI *e);
 

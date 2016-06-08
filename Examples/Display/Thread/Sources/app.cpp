@@ -106,7 +106,13 @@ bool App::update()
 
 	canvas.clear();
 			
-	// If the pixel buffer was uploaded on the last frame, double buffer it
+	// If the pixel buffer was uploaded on the last frame, double buffer it.
+	// We use buffering texture to avoid the awaiting of GPU at the following situation: 
+	// 1. When we call texture->set_subimage() we tell the GPU driver to upload the pixelbuffer.
+	// 2. If internally the GPU is already using the texture (to draw the current frame), 
+	//		the videodriver has 2 options: wait, or defer copying (copy memory to a transfer buffer).
+	//		This wastes CPU cycles.
+	// PS It is possible that the latest graphics cards and drivers no longer have this performance issue.
 	if (texture_write_active)
 	{
 		texture_write_active = false;

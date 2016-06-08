@@ -47,15 +47,19 @@ App::App()
 	clan::OpenGLTarget::set_current();
 #endif
 
-	clan::Application::use_timeout_timing(std::numeric_limits<int>::max());	// The update() loop is not required for this application
-
 	// Create a window:
 	DisplayWindowDescription desc;
 	desc.set_title("UICore: Hello World");
 	desc.set_allow_resize(true);
 	window = std::make_shared<TopLevelWindow>(desc);
-	const std::shared_ptr<View> &root_view = window->root_view();
-	root_view->slots.connect(window->root_view()->sig_close(), [&](CloseEvent &e) { RunLoop::exit(); });
+	auto pRootView = window->root_view();
+	pRootView->slots.connect(window->root_view()->sig_close(), [&](CloseEvent &e) { RunLoop::exit(); });
+	pRootView->slots.connect(pRootView->sig_key_press(), [&](clan::KeyEvent &e)
+	{ if (e.key() == clan::Key::escape) RunLoop::exit(); }
+	);
+
+	// Need for receive a keyboard events.
+	pRootView->set_focus();
 
 	// Create a source for our resources
 	FileResourceDocument doc(FileSystem("../../ThemeAero"));
@@ -65,9 +69,9 @@ App::App()
 	ui_thread = UIThread(resources);
 
 	// Style the root view to use rounded corners and a bit of drop shadow
-	root_view->style()->set("padding: 11px");
-	root_view->style()->set("background: #efefef");
-	root_view->style()->set("flex-direction: column");
+	pRootView->style()->set("padding: 11px");
+	pRootView->style()->set("background: #efefef");
+	pRootView->style()->set("flex-direction: column");
 
 	// First (top) panel with button and text
 	//
@@ -76,14 +80,14 @@ App::App()
 	panel1->style()->set("padding: 11px");
 	panel1->style()->set("flex-direction: row");
 	panel1->style()->set("flex: auto");
-	root_view->add_child(panel1);
+	pRootView->add_child(panel1);
 
 	auto button1 = Theme::create_button();
 	button1->style()->set("height: 40px");
 	button1->style()->set("width: 120px");
 	button1->label()->set_text("Folder browse");
 	button1->style()->set("flex: none");
-	button1->image_view()->set_image(clan::Image(root_view->canvas(), "./document_open.png"));
+	button1->image_view()->set_image(clan::Image(pRootView->canvas(), "./document_open.png"));
 	button1->func_clicked() = clan::bind_member(this, &App::on_button1_down);
 	panel1->add_child(button1);
 
@@ -100,7 +104,7 @@ App::App()
 	panel2->style()->set("padding: 11px");
 	panel2->style()->set("flex-direction: row");
 	panel2->style()->set("flex: auto");
-	root_view->add_child(panel2);
+	pRootView->add_child(panel2);
 
 	auto button2 = Theme::create_button();
 	button2->style()->set("height: 40px");
@@ -123,7 +127,7 @@ App::App()
 	panel3->style()->set("padding: 11px");
 	panel3->style()->set("flex-direction: row");
 	panel3->style()->set("flex: auto");
-	root_view->add_child(panel3);
+	pRootView->add_child(panel3);
 
 	auto button3 = Theme::create_button();
 	button3->style()->set("height: 40px");
@@ -146,7 +150,7 @@ App::App()
 	panel4->style()->set("padding: 11px");
 	panel4->style()->set("flex-direction: row");
 	panel4->style()->set("flex: auto");
-	root_view->add_child(panel4);
+	pRootView->add_child(panel4);
 
 	button4 = Theme::create_button();
 	button4->style()->set("height: 40px");
@@ -187,4 +191,14 @@ void App::on_button3_down()
 void App::on_button4_down()
 {
 	label4->set_text(button4->pressed() ? "Sticky button is pressed" : "Sticky button is unpressed");
+}
+
+bool App::update()
+{
+	// This needs only if nothing is drawn. Otherwise, use display_window().flip().
+	window->display_window().request_repaint();
+
+	//window->display_window().flip();
+
+	return true;
 }
