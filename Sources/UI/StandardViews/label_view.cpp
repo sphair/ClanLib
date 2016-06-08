@@ -49,6 +49,7 @@ namespace clan
 		std::string _text;
 		TextAlignment text_alignment = TextAlignment::left;
 		Font font;
+		Colorf font_color = Colorf::white;
 		LineBreakMode _line_break_mode = LineBreakMode::truncating_tail;
 
 		const Font &get_font(LabelView *view, Canvas &canvas)
@@ -66,7 +67,9 @@ namespace clan
 	void LabelView::layout_children(Canvas &canvas)
 	{
 		View::layout_children(canvas);
-		impl->font = style_cascade().font(canvas);	// Reset the font on new layout
+
+		// Reset the font on new layout.
+		reset_font();
 	}
 
 	std::string LabelView::text() const
@@ -78,43 +81,12 @@ namespace clan
 	{
 		impl->_text = value;
 		
-		if (force_no_layout) {
-			
-			// For convenience and optimization get refs
-			const clan::ViewGeometry &geom = geometry();
-			clan::Canvas &canv = canvas();
-
-			// Find background color
-			Colorf backColor = Colorf::transparent;
-			View *ptr = this;
-			while (ptr) {
-				const StyleGetValue value = ptr->style_cascade().cascade_value("background-color");
-				if (!value.is_undefined()) {
-					backColor = value.color();
-					break;
-				}
-				ptr = ptr->parent();
-			}
-			
-			// Clear backgroud
-			canv.fill_rect(geom.content_box(), backColor);
-
-			// Prepare the canvas for render_content()
-			clan::Pointf translate = geom.content_pos();
-			clan::TransformState transform_state(&canv);
-			clan::ClipRectStack cliprect_stack(&canv);
-			canv.set_transform(transform_state.matrix * clan::Mat4f::translate(translate.x, translate.y, 0) * view_transform());
-
-			// Draw the new text.
-			render_content(canv);
-
-			// Restore the canvas.
-			canv.set_transform(clan::Mat4f::identity());
-		}
+		if (force_no_layout) 
+			draw_without_layout();
 		else
-			// Default behaviour
+			// Can change size and then invalidate whole window.
 			set_needs_layout();
-		}
+	}
 
 	TextAlignment LabelView::text_alignment() const
 	{
@@ -179,19 +151,17 @@ namespace clan
 				return; // Still no room.  Draw nothing!
 		}
 
-		Colorf color = style_cascade().computed_value("color").color();
-
 		if (impl->text_alignment == TextAlignment::left)
 		{
-			font.draw_text(canvas, Pointf(0.0f, baseline), clipped_text, color);
+			font.draw_text(canvas, Pointf(0.0f, baseline), clipped_text, impl->font_color);
 		}
 		else if (impl->text_alignment == TextAlignment::right)
 		{
-			font.draw_text(canvas, Pointf(geometry().content_width - advance.advance.width, baseline), clipped_text, color);
+			font.draw_text(canvas, Pointf(geometry().content_width - advance.advance.width, baseline), clipped_text, impl->font_color);
 		}
 		else if (impl->text_alignment == TextAlignment::center)
 		{
-			font.draw_text(canvas, Pointf(std::round((geometry().content_width - advance.advance.width) * 0.5f), baseline), clipped_text, color);
+			font.draw_text(canvas, Pointf(std::round((geometry().content_width - advance.advance.width) * 0.5f), baseline), clipped_text, impl->font_color);
 		}
 	}
 
@@ -217,4 +187,12 @@ namespace clan
 	{
 		return first_baseline_offset(canvas, width);
 	}
+
+	void LabelView::reset_font()
+	{
+		/// Reset the font.
+		impl->font = style_cascade().font(Canvas());	// Canvas actually is not needed in this case, use stub.
+		impl->font_color = style_cascade().computed_value("color").color();
+	}
+
 }

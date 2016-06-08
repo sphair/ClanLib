@@ -9,11 +9,11 @@ clan::ApplicationInstance<Program> clanapp;
 
 Program::Program()
 {
-	// We support all display targets, in order listed here
 	clan::OpenGLTarget::set_current();
 
 	window = DisplayWindow("Hello ShaderEffect", 1024, 1024, false, true);
 	sc.connect(window.sig_window_close(), [&](){exit = true; });
+	sc.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &Program::on_input_up));
 
 	gc = window.get_gc();
 
@@ -60,4 +60,12 @@ bool Program::update()
 }
 
 
+// A key was pressed
+void Program::on_input_up(const clan::InputEvent &key)
+{
+	if (key.id == clan::keycode_escape)
+	{
+		exit = true;
+	}
+}
 

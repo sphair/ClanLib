@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Artem Khomenko (Direct redraw changed state of View, without redraw the entire window).
 */
 
 #pragma once
@@ -79,7 +80,7 @@ namespace clan
 		/// Set or clear style state
 		void set_state(const std::string &name, bool value);
 
-		/// Sets the state for this view and all siblings recursively, until a manually set state of the same name is found
+		/// Sets the state for this view and all children recursively, until a manually set state of the same name is found
 		void set_state_cascade(const std::string &name, bool value);
 
 		/// Slot container helping with automatic disconnection of connected slots when the view is destroyed
@@ -303,9 +304,18 @@ namespace clan
 		/// Dispatch event to signals listening for events
 		static void dispatch_event(View *target, EventUI *e, bool no_propagation = false);
 
+		/// Render view and its children directly, without re-layout.
+		void draw_without_layout();
+
 	protected:
 		/// Renders the content of a view
 		virtual void render_content(Canvas &canvas) { }
+
+		/// Renders the border of a view
+		virtual void render_border(Canvas &canvas);
+
+		/// Renders the background of a view
+		virtual void render_background(Canvas &canvas);
 
 		/// Child view was added to this view
 		virtual void child_added(const std::shared_ptr<View> &view) { }

@@ -80,6 +80,9 @@ namespace clan
 
 		void layout_children(Canvas &canvas) override;
 
+		/// Update the font in according to style.
+		void reset_font();
+
 	protected:
 		void render_content(Canvas &canvas) override;
 		float calculate_preferred_width(Canvas &canvas) override;

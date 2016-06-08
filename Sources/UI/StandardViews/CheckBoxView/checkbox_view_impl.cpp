@@ -99,6 +99,9 @@ namespace clan
 		checkbox->set_state_cascade("unchecked_hot", target_unchecked_hot);
 		checkbox->set_state_cascade("unchecked_pressed", target_unchecked_pressed);
 		checkbox->set_state_cascade("unchecked_disabled", target_unchecked_disabled);
+
+		// Fast draw the checkbox.
+		checkbox->draw_without_layout();
 	}
 
 	void CheckBoxView_Impl::on_pointer_press(PointerEvent &e)

@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 **    Mark Page
+**    Artem Khomenko
 */
 
 #include "precomp.h"
@@ -37,10 +38,11 @@ clan::ApplicationInstance<HelloWorld> clanapp;
 
 HelloWorld::HelloWorld()
 {
-	clan::Application::use_timeout_timing(std::numeric_limits<int>::max());	// The update() loop is not required for this application
-
-	//clan::D3DTarget::set_current();
+#if defined(WIN32) && !defined(__MINGW32__)
+	clan::D3DTarget::set_current();
+#else
 	clan::OpenGLTarget::set_current();
+#endif
 
 	// Create a source for our resources
 	FileResourceDocument doc(FileSystem("../../ThemeAero"));
@@ -56,9 +58,15 @@ HelloWorld::HelloWorld()
 	desc.set_size(Sizef(640, 600), false);
 	window = std::make_shared<TopLevelWindow>(desc);
 
-	// Exit run loop when close is clicked.
-	// We have to store the return Slot because if it is destroyed the lambda function is disconnected from the signal.
-	slots.connect(window->root_view()->sig_close(), [&](CloseEvent &e) { RunLoop::exit(); });
+	// Exit run loop when close is clicked or ESC pressed.
+	auto pRootView = window->root_view();
+	pRootView->slots.connect(pRootView->sig_close(), [&](CloseEvent &e) { RunLoop::exit(); });
+	pRootView->slots.connect(pRootView->sig_key_press(), [&](clan::KeyEvent &e) 
+		{ if (e.key() == clan::Key::escape) RunLoop::exit(); }
+	);
+
+	// Need for receive a keyboard events.
+	pRootView->set_focus();
 
 	// Style the root view to use rounded corners and a bit of drop shadow
 	window->root_view()->style()->set("padding: 11px");
@@ -210,7 +218,7 @@ HelloWorld::HelloWorld()
 	}
 
 	// Create a popup window
-	slots.connect(button->sig_pointer_enter(), [=](PointerEvent &e)
+	pRootView->slots.connect(button->sig_pointer_enter(), [=](PointerEvent &e)
 	{
 		auto popup = std::make_shared<WindowController>();
 		popup->root_view()->style()->set("flex-direction: column");
@@ -270,7 +278,17 @@ HelloWorld::HelloWorld()
 
 	// Prevent close program when hint or modal windows closes.
 	window_manager.set_exit_on_last_close(false);
-		
+	
 	// Make our window visible
 	window->show();
+}
+
+bool HelloWorld::update()
+{
+	// This needs only if nothing is drawn. Otherwise, use display_window().flip().
+	window->display_window().request_repaint();
+
+	//window->display_window().flip();
+
+	return true;
 }
