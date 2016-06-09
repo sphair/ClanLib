@@ -99,6 +99,10 @@ namespace clan
 		checkbox->set_state_cascade("unchecked_hot", target_unchecked_hot);
 		checkbox->set_state_cascade("unchecked_pressed", target_unchecked_pressed);
 		checkbox->set_state_cascade("unchecked_disabled", target_unchecked_disabled);
+		label->set_state_cascade("disabled", _state_disabled);
+
+		// Update the font in accordance with the state.
+		label->reset_font();
 
 		// Fast draw the checkbox.
 		checkbox->draw_without_layout();
