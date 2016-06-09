@@ -358,7 +358,7 @@ namespace clan
 		else
 		{
 			y = origin_box.top;
-			StyleGetValue pos_y = get_layer_position_x(index);
+			StyleGetValue pos_y = get_layer_position_y(index);
 			if (pos_y.is_keyword("top"))
 				y = origin_box.top;
 			else if (pos_y.is_keyword("center"))
