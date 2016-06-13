@@ -39,11 +39,34 @@ namespace clan
 
 	void ButtonViewImpl::update_state()
 	{
+		bool target_unpressed_hot = false;
+		bool target_disabled = false;
+		bool target_pressed = false;
+		bool target_pressed_hot = false;
+
+		if (_state_disabled)
+		{
+			target_disabled = true;
+		}
+		else if (_state_pressed)
+		{
+			// Pressed button may be hot and not hot.
+			if (_state_hot)
+				target_pressed_hot = true;
+			else
+				target_pressed = true;
+		}
+		else if (_state_hot)
+		{
+			target_unpressed_hot = true;
+		}
+
 		// Update CSS.
-		button->set_state_cascade("hot", _state_hot);
-		button->set_state_cascade("pressed", _state_pressed);
-		button->set_state_cascade("disabled", _state_disabled);
-		
+		button->set_state_cascade("hot", target_unpressed_hot);
+		button->set_state_cascade("pressed", target_pressed);
+		button->set_state_cascade("disabled", target_disabled);
+		button->set_state_cascade("pressed_hot", target_pressed_hot);
+
 		// Update the font in accordance with the state.
 		label->reset_font();
 
