@@ -298,8 +298,11 @@ namespace clan
 
 		if (last_position != pos)
 		{
+			// Notify the user.
 			sig_scroll();
-			scrollbar->set_needs_layout();
+
+			// Fast redraw without layout.
+			scrollbar->redraw_without_layout();
 		}
 	}
 
@@ -331,8 +334,11 @@ namespace clan
 
 		if (last_position != pos)
 		{
+			// Notify the user.
 			sig_scroll();
-			scrollbar->set_needs_layout();
+
+			// Fast redraw without layout.
+			scrollbar->redraw_without_layout();
 		}
 		scroll_timer.start(300, false);
 	}
@@ -345,7 +351,9 @@ namespace clan
 			min_pos = new_min;
 			max_pos = new_max;
 			pos = new_pos;
-			view->set_needs_layout();
+
+			// Fast redraw without layout.
+			view->redraw_without_layout();
 		}
 	}
 }

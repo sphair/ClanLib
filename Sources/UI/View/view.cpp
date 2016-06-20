@@ -750,16 +750,10 @@ namespace clan
 		canv.set_transform(transform_state.matrix * Mat4f::translate(translate.x, translate.y, 0) * view_transform());
 
 		// Render.
-		if (prnt) {
-			prnt->impl->render(prnt, canv, ViewRenderLayer::background);
-			prnt->impl->render(prnt, canv, ViewRenderLayer::border);
-			prnt->impl->render(prnt, canv, ViewRenderLayer::content);
-		}
-		else {
-			impl->render(this, canv, ViewRenderLayer::background);
-			impl->render(this, canv, ViewRenderLayer::border);
-			impl->render(this, canv, ViewRenderLayer::content);
-		}
+		if (prnt)
+			prnt->impl->render(prnt, canv);
+		else
+			impl->render(this, canv);
 	}
 
 	void View::render_border(Canvas &canvas)
@@ -789,13 +783,15 @@ namespace clan
 		}
 	}
 
-	void ViewImpl::render(View *self, Canvas &canvas, ViewRenderLayer layer)
+	void ViewImpl::render(View *self, Canvas &canvas)
 	{
-		if (layer == ViewRenderLayer::background)
-			self->render_background(canvas);
-		else if (layer == ViewRenderLayer::border)
-			self->render_border(canvas);
+		// Draw the background.
+		self->render_background(canvas);
 
+		// Draw the border.
+		self->render_border(canvas);
+
+		// Prepare to draw the content.
 		Pointf translate = _geometry.content_pos();
 
 		TransformState transform_state(&canvas);
@@ -813,30 +809,29 @@ namespace clan
 			cliprect_stack.push_cliprect(Rectf(std::min(tl_point.x, br_point.x), std::min(tl_point.y, br_point.y), std::max(tl_point.x, br_point.x), std::max(tl_point.y, br_point.y)));
 		}
 
-		if (layer == ViewRenderLayer::content)
+		if (!self->render_exception_encountered())
 		{
-			if (!self->render_exception_encountered())
+			bool success = UIThread::try_catch([&]
 			{
-				bool success = UIThread::try_catch([&]
-				{
-					self->render_content(canvas);
-				});
+				// Draw the content.
+				self->render_content(canvas);
+			});
 
-				if (!success)
-				{
-					exception_encountered = true;
-				}
-			}
-
-			if (self->render_exception_encountered())
+			if (!success)
 			{
-				canvas.set_transform(transform_state.matrix * Mat4f::translate(translate.x, translate.y, 0));
-				canvas.fill_rect(0.0f, 0.0f, _geometry.content_width, _geometry.content_height, Colorf(1.0f, 0.2f, 0.2f, 0.5f));
-				canvas.draw_line(0.0f, 0.0f, _geometry.content_width, _geometry.content_height, StandardColorf::black());
-				canvas.draw_line(_geometry.content_width, 0.0f, 0.0f, _geometry.content_height, StandardColorf::black());
+				exception_encountered = true;
 			}
 		}
 
+		if (self->render_exception_encountered())
+		{
+			canvas.set_transform(transform_state.matrix * Mat4f::translate(translate.x, translate.y, 0));
+			canvas.fill_rect(0.0f, 0.0f, _geometry.content_width, _geometry.content_height, Colorf(1.0f, 0.2f, 0.2f, 0.5f));
+			canvas.draw_line(0.0f, 0.0f, _geometry.content_width, _geometry.content_height, StandardColorf::black());
+			canvas.draw_line(_geometry.content_width, 0.0f, 0.0f, _geometry.content_height, StandardColorf::black());
+		}
+
+		// Prepare to render children.
 		Rectf clip_box = canvas.get_cliprect();
 		for (std::shared_ptr<View> &view : _children)
 		{
@@ -849,7 +844,7 @@ namespace clan
 				Rectf transformed_border_box(std::min(tl_point.x, br_point.x), std::min(tl_point.y, br_point.y), std::max(tl_point.x, br_point.x), std::max(tl_point.y, br_point.y));
 				if (clip_box.is_overlapped(transformed_border_box))
 				{
-					view->impl->render(view.get(), canvas, layer);
+					view->impl->render(view.get(), canvas);
 				}
 			}
 		}

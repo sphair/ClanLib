@@ -53,6 +53,10 @@ std::shared_ptr<clan::ScrollBarView> Theme::create_scrollbar()
 	scrollbar->thumb()->style("hot")->set("border-image-source:url('Resources/scrollbar_hori_thumb_hot.png');");
 	scrollbar->thumb()->style("pressed")->set("border-image-source:url('Resources/scrollbar_hori_thumb_pressed.png');");
 	scrollbar->thumb()->style("disabled")->set("border-image-source:url('Resources/scrollbar_hori_thumb_disabled.png');");
+	
+	// Prevent to make hot when parent (the track) is hot.
+	scrollbar->thumb()->set_state_cascade("hot", true);
+	scrollbar->thumb()->set_state_cascade("hot", false);
 
 	scrollbar->thumb_grip()->style()->set("background-position:center center;");
 	scrollbar->thumb_grip()->style()->set("background-repeat:no-repeat;");
