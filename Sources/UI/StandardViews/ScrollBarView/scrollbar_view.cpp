@@ -269,7 +269,12 @@ namespace clan
 	void ScrollBarView::layout_children(Canvas &canvas)
 	{
 		View::layout_children(canvas);
+		update_style_pos();
+	}
 
+	void ScrollBarView::update_style_pos()
+	{
+		// Update the CSS properties.
 		auto track_geometry = impl->track->geometry();
 
 		if (impl->min_pos == impl->max_pos || impl->page_step == 0.0)
@@ -287,9 +292,23 @@ namespace clan
 			}
 			else
 			{
-				impl->thumb->style()->set("left: %1px; top: 0; width: %2px; height: %3px", (float)thumb_pos, (float)thumb_length, track_geometry.content_height );
+				impl->thumb->style()->set("left: %1px; top: 0; width: %2px; height: %3px", (float)thumb_pos, (float)thumb_length, track_geometry.content_height);
 			}
 		}
+	}
+
+	void ScrollBarView::redraw_without_layout()
+	{
+		// Fast redraw without layout.
+
+		// Update CSS.
+		update_style_pos();
+
+		// Update geometry for track from CSS.
+		set_geometry(ViewGeometry(style_cascade()));
+
+		// Draw.
+		draw_without_layout();
 	}
 
 	Signal<void()> &ScrollBarView::sig_scroll()

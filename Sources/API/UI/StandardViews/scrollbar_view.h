@@ -75,7 +75,13 @@ namespace clan
 
 		void layout_children(Canvas &canvas) override;
 
+		/// Fast redraw without layout.
+		void redraw_without_layout();
+
 	private:
 		std::shared_ptr<ScrollBarViewImpl> impl;
+
+		// Without inherited View::layout_children()
+		void update_style_pos();
 	};
 }
