@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Artem Khomenko
 */
 
 #pragma once
@@ -63,6 +64,14 @@ namespace clan
 		void set_content_offset(const Pointf &offset, bool animated = false);
 		
 		void layout_children(Canvas &canvas) override;
+
+		// Enable or disable.
+		bool disabled() const;
+		void set_disabled();
+		void set_enabled();
+
+		/// Process mouse wheel events. When Shift pressed, scrolls horizontally, otherwise vertically.
+		void on_pointer_press(PointerEvent &e);
 
 	protected:
 		float calculate_preferred_width(Canvas &canvas) override;
