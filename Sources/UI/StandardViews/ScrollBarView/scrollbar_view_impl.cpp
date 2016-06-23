@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 **    Mark Page
+**    Artem Khomenko
 */
 
 #include "UI/precomp.h"
@@ -39,6 +40,10 @@
 
 namespace clan
 {
+	// Delays for timer
+	const int cLongDelay = 300;
+	const int cShortDelay = 30;
+
 	ScrollBarButtonView::ScrollBarButtonView(bool render_button_arrows) : _render_button_arrows(render_button_arrows)
 	{
 	}
@@ -164,13 +169,13 @@ namespace clan
 		{
 			mouse_pos = e.pos(track.get()).x;
 			thumb_position = thumb_geometry.left + thumb_geometry.get_width() * 0.5f;
-			timer_target_position = min_pos + (mouse_pos + thumb_geometry.get_width() * 0.5f) * thumb_units_per_pixel();
+			timer_target_position = min_pos + mouse_pos * thumb_units_per_pixel();
 		}
 		else
 		{
 			mouse_pos = e.pos(track.get()).y;
 			thumb_position = thumb_geometry.top + thumb_geometry.get_height() * 0.5f;
-			timer_target_position = min_pos + (mouse_pos + thumb_geometry.get_height() * 0.5f) * thumb_units_per_pixel();
+			timer_target_position = min_pos + mouse_pos * thumb_units_per_pixel();
 		}
 
 		if (mouse_pos < thumb_position)
@@ -184,8 +189,9 @@ namespace clan
 			timer_step_size = page_step;
 		}
 
+		// For scroll timer - between first and second there is need a big delay, then small.
+		isFirstTimerExpired = true;
 		scroll_timer_expired();
-
 	}
 
 	void ScrollBarViewImpl::on_pointer_track_release(PointerEvent &e)
@@ -195,6 +201,17 @@ namespace clan
 		mouse_down_mode = mouse_down_none;
 		scroll_timer.stop();
 
+		// Mouse position relative to track.
+		Pointf mouse_pos = e.pos(scrollbar->track());
+
+		// Thumb position relative to track.
+		Rectf thumb_geometry(thumb->geometry().content_box());
+
+		// Check and set hot state.
+		if (thumb_geometry.contains(mouse_pos)) {
+			scrollbar->thumb()->set_state_cascade("hot", true);
+			scrollbar->redraw_without_layout();
+		}
 	}
 
 	void ScrollBarViewImpl::on_pointer_thumb_press(PointerEvent &e)
@@ -230,6 +247,9 @@ namespace clan
 		update_decrement_state();
 		mouse_down_mode = mouse_down_button_decr;
 		timer_step_size = -line_step;
+
+		// For scroll timer - between first and second there is need a big delay, then small.
+		isFirstTimerExpired = true;
 		scroll_timer_expired();
 	}
 
@@ -251,6 +271,9 @@ namespace clan
 		update_increment_state();
 		mouse_down_mode = mouse_down_button_incr;
 		timer_step_size = line_step;
+
+		// For scroll timer - between first and second there is need a big delay, then small.
+		isFirstTimerExpired = true;
 		scroll_timer_expired();
 	}
 
@@ -304,6 +327,7 @@ namespace clan
 			// Fast redraw without layout.
 			scrollbar->redraw_without_layout();
 		}
+		e.stop_propagation(); // prevent track press reacting to this event
 	}
 
 	void ScrollBarViewImpl::scroll_timer_expired()
@@ -315,17 +339,6 @@ namespace clan
 
 		double last_position = pos;
 		pos += timer_step_size;
-
-		if (mouse_down_mode == mouse_down_track_decr)
-		{
-			if (pos < timer_target_position)
-				pos = timer_target_position;
-		}
-		if (mouse_down_mode == mouse_down_track_incr)
-		{
-			if (pos > timer_target_position)
-				pos = timer_target_position;
-		}
 
 		if (pos > max_pos)
 			pos = max_pos;
@@ -340,7 +353,17 @@ namespace clan
 			// Fast redraw without layout.
 			scrollbar->redraw_without_layout();
 		}
-		scroll_timer.start(300, false);
+
+		// Run timer again only if the goal is not reached.
+		if (mouse_down_mode == mouse_down_track_decr && pos > timer_target_position
+			|| mouse_down_mode == mouse_down_track_incr && pos + page_step < timer_target_position
+			|| mouse_down_mode == mouse_down_button_decr && pos > min_pos
+			|| mouse_down_mode == mouse_down_button_incr && pos < max_pos
+			)
+			scroll_timer.start(isFirstTimerExpired ? cLongDelay : cShortDelay, false);
+
+		// Switch to a short delay.
+		isFirstTimerExpired = false;
 	}
 
 	void ScrollBarViewImpl::update_pos(ScrollBarView *view, double new_pos, double new_min, double new_max)

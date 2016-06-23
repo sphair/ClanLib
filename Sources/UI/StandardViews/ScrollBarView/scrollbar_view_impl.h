@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 **    Mark Page
+**    Artem Khomenko
 */
 
 #pragma once
@@ -86,9 +87,9 @@ namespace clan
 		double thumb_length() const
 		{
 			double track = track_length();
-			if (track == 0.0)
-				return 0.0;
 			double content_size = max_pos - min_pos + page_step;
+			if (content_size * track == 0.0)
+				return 0.0;
 			double length = page_step / content_size * track;
 			return std::min(std::max(length, 16.0), track);
 		}
@@ -107,7 +108,7 @@ namespace clan
 		{
 			double available_units = max_pos - min_pos;
 			double available_pixels = track_length() - thumb_length();
-			return (available_units != 0.0 && available_pixels != 0.0) ? available_units / available_pixels : 0.0;
+			return available_pixels != 0.0 ? available_units / available_pixels : 0.0;
 		}
 
 		enum MouseDownMode
@@ -156,6 +157,10 @@ namespace clan
 		void set_standard_state(View *view, bool state_disabled, bool state_hot, bool state_pressed);
 
 		void update_pos(ScrollBarView *view, double new_pos, double new_min, double new_max);
+
+	private:
+		// For scroll timer - between first and second need a big delay, then the small one.
+		bool isFirstTimerExpired = true;
 	};
 
 }

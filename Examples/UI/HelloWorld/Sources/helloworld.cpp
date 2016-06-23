@@ -100,14 +100,10 @@ HelloWorld::HelloWorld()
 	});
 
 	auto scrollarea = std::make_shared<ScrollView>();
-	scrollarea->style()->set("margin: 5px 0; border: 1px solid black; padding: 5px 5px;");
-	scrollarea->scrollbar_x_view()->style()->set("background: rgb(232,232,236); margin-top: 5px");
-	scrollarea->scrollbar_x_view()->track()->style()->set("padding: 0 4px");
-	scrollarea->scrollbar_x_view()->thumb()->style()->set("background: rgb(208,209,215)");
-	scrollarea->scrollbar_y_view()->style()->set("background: rgb(232,232,236); margin-left: 5px");
-	scrollarea->scrollbar_y_view()->track()->style()->set("padding: 0 4px");
-	scrollarea->scrollbar_y_view()->thumb()->style()->set("background: rgb(208,209,215)");
-	scrollarea->content_view()->style()->set("flex-direction: column");
+	scrollarea->style()->set("margin: 5px 0; border: 1px solid black; padding: 5px 0px 5px 5px;");
+	scrollarea->content_view()->style()->set("flex-direction: column;");
+	Theme::initialize_scrollbar(scrollarea->scrollbar_y_view(), false);
+	scrollarea->scrollbar_y_view()->style()->set("padding: 0 0 0 3px; background: white;");
 	body->add_child(scrollarea);
 
 	// Create a text field for our span layout

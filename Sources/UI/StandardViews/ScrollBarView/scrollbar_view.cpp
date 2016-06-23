@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 **    Mark Page
+**    Artem Khomenko
 */
 
 #include "UI/precomp.h"
@@ -39,6 +40,8 @@
 
 namespace clan
 {
+	// Minimum size of the thumb, needed for show the grip.
+	float cMinThumbSizeForShowGrip = 30.0f;
 
 	ScrollBarView::ScrollBarView(bool render_button_arrows) : impl(std::make_shared<ScrollBarViewImpl>())
 	{
@@ -73,14 +76,18 @@ namespace clan
 		impl->button_increment->style()->set("width: 17px; height: 17px");
 
 		slots.connect(impl->track->sig_pointer_press(), impl.get(), &ScrollBarViewImpl::on_pointer_track_press);
+		slots.connect(impl->track->sig_pointer_double_click(), impl.get(), &ScrollBarViewImpl::on_pointer_track_press);
 		slots.connect(impl->track->sig_pointer_release(), impl.get(), &ScrollBarViewImpl::on_pointer_track_release);
 
 		slots.connect(impl->thumb->sig_pointer_press(), impl.get(), &ScrollBarViewImpl::on_pointer_thumb_press);
+		slots.connect(impl->thumb->sig_pointer_double_click(), impl.get(), &ScrollBarViewImpl::on_pointer_thumb_press);
 		slots.connect(impl->thumb->sig_pointer_release(), impl.get(), &ScrollBarViewImpl::on_pointer_thumb_release);
 
 		slots.connect(impl->button_decrement->sig_pointer_press(), impl.get(), &ScrollBarViewImpl::on_pointer_decrement_press);
+		slots.connect(impl->button_decrement->sig_pointer_double_click(), impl.get(), &ScrollBarViewImpl::on_pointer_decrement_press);
 		slots.connect(impl->button_decrement->sig_pointer_release(), impl.get(), &ScrollBarViewImpl::on_pointer_decrement_release);
 		slots.connect(impl->button_increment->sig_pointer_press(), impl.get(), &ScrollBarViewImpl::on_pointer_increment_press);
+		slots.connect(impl->button_increment->sig_pointer_double_click(), impl.get(), &ScrollBarViewImpl::on_pointer_increment_press);
 		slots.connect(impl->button_increment->sig_pointer_release(), impl.get(), &ScrollBarViewImpl::on_pointer_increment_release);
 
 		slots.connect(impl->thumb->sig_pointer_move(), impl.get(), &ScrollBarViewImpl::on_pointer_move);
@@ -221,9 +228,9 @@ namespace clan
 
 			impl->mouse_down_mode = ScrollBarViewImpl::mouse_down_none;
 			impl->scroll_timer.stop();
-
 		}
 	}
+
 	void ScrollBarView::set_enabled()
 	{
 		if (impl->_state_disabled)
@@ -287,13 +294,12 @@ namespace clan
 			double thumb_length = impl->thumb_length();
 
 			if (vertical())
-			{
 				impl->thumb->style()->set("left: 0; top: %1px; width: %2px; height: %3px", (float)thumb_pos, track_geometry.content_width, (float)thumb_length);
-			}
 			else
-			{
 				impl->thumb->style()->set("left: %1px; top: 0; width: %2px; height: %3px", (float)thumb_pos, (float)thumb_length, track_geometry.content_height);
-			}
+
+			// Grip is visible only if there enough space.
+			impl->thumb_grip->set_hidden(thumb_length < cMinThumbSizeForShowGrip);
 		}
 	}
 
@@ -301,14 +307,17 @@ namespace clan
 	{
 		// Fast redraw without layout.
 
-		// Update CSS.
+		// Update CSS of thumb.
 		update_style_pos();
 
-		// Update geometry for track from CSS.
-		set_geometry(ViewGeometry(style_cascade()));
+		// Current box for thumb relative to track.
+		Rectf box = impl->track->geometry().content_box();
 
-		// Draw.
-		draw_without_layout();
+		// Update geometry from CSS.
+		impl->thumb->set_geometry(ViewGeometry::from_margin_box(impl->thumb->style_cascade(), box));
+
+		// Draw the track and it will be draw the its parent.
+		impl->track->draw_without_layout();
 	}
 
 	Signal<void()> &ScrollBarView::sig_scroll()
