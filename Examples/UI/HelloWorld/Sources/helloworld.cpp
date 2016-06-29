@@ -101,7 +101,7 @@ HelloWorld::HelloWorld()
 
 	auto scrollarea = std::make_shared<ScrollView>();
 	scrollarea->style()->set("margin: 5px 0; border: 1px solid black; padding: 5px 0px 5px 5px;");
-	scrollarea->content_view()->style()->set("flex-direction: column;");
+	scrollarea->content_view()->style()->set("flex-direction: column; background: white;");
 	Theme::initialize_scrollbar(scrollarea->scrollbar_y_view(), false);
 	scrollarea->scrollbar_y_view()->style()->set("padding: 0 0 0 3px; background: white;");
 	body->add_child(scrollarea);
@@ -162,18 +162,13 @@ HelloWorld::HelloWorld()
 	gradient_box->style()->set("box-shadow: 7px 7px 7px rgba(0,0,0,0.2)");
 	scrollarea->content_view()->add_child(gradient_box);
 	
-	auto listbox = std::make_shared<ListBoxView>();
+	auto listbox = Theme::create_listbox();
 	listbox->style()->set("flex: none; height: 60px; margin: 7px 0; border: 1px solid black; padding: 5px; background: #f0f0f0");
 	listbox->set_items<std::string>(
 		{ "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "More items", "Even more items!!", "No more items!!!!!" },
 		[](const std::string &s) -> std::shared_ptr<View>
 		{
-			auto item = std::make_shared<LabelView>();
-			item->style()->set("font: 13px/17px 'Segoe UI'; color: black; margin: 1px 0; padding: 0 2px");
-			item->style("selected")->set("background: #7777f0; color: white");
-			item->style("hot")->set("background: #ccccf0; color: black");
-
-			item->set_text(s);
+			auto item = Theme::create_listbox_label(s);
 			return item;
 		});
 	scrollarea->content_view()->add_child(listbox);
@@ -206,6 +201,7 @@ HelloWorld::HelloWorld()
 	checkbox->label()->set_text("Checkbox");
 	scrollarea->content_view()->add_child(checkbox);
 
+	// Hint - parent of the radiobutton must have an opaque background due to sub-pixel rendering effect.
 	for (int cnt = 0; cnt < 3; cnt++)
 	{
 		auto radio = Theme::create_radiobutton();
@@ -281,10 +277,7 @@ HelloWorld::HelloWorld()
 
 bool HelloWorld::update()
 {
-	// This needs only if nothing is drawn. Otherwise, use display_window().flip().
-	window->display_window().request_repaint();
-
-	//window->display_window().flip();
+	window->display_window().flip();
 
 	return true;
 }

@@ -25,11 +25,13 @@
 **
 **    Magnus Norddahl
 **    Mark Page
+**    Artem Khomenko
 */
 
 #include "UI/precomp.h"
 #include "API/UI/StandardViews/listbox_view.h"
 #include "API/UI/StandardViews/label_view.h"
+#include "API/UI/StandardViews/scrollbar_view.h"
 #include "listbox_view_impl.h"
 
 namespace clan
@@ -69,9 +71,7 @@ namespace clan
 			content_view()->add_child(item);
 			slots.connect(item->sig_pointer_enter(), impl.get(), &ListBoxViewImpl::on_pointer_enter);
 			slots.connect(item->sig_pointer_leave(), impl.get(), &ListBoxViewImpl::on_pointer_leave);
-
 		}
-
 	}
 	
 	int ListBoxView::selected_item() const
@@ -98,9 +98,52 @@ namespace clan
 			auto new_selected_item = content_view()->children().at(index);
 			new_selected_item->set_state("selected", true);
 			
-			// To do: call set_content_offset() if new_selected_item is not within range (maybe add a helper on ScrollView for this?)
+			// Scroll to selected in layout_children(), when geometry will be defined.
+			needScrollToSelected = true;
 		}
 		
 		impl->selected_item = index;
 	}
+
+	void ListBoxView::layout_children(Canvas &canvas)
+	{
+		// Call parent.
+		ScrollView::layout_children(canvas);
+
+		// Content of the ListBoxView.
+		auto items(content_view()->children());
+
+		// Scroll to selected item if it needs.
+		if (needScrollToSelected) {
+
+			// Geometry of the selected item.
+			const Rectf boxOfSelected = items.at(impl->selected_item)->geometry().margin_box();
+
+
+			// Scroll position.
+			double scrollPos = scrollbar_y_view()->position();
+
+			// If the selected item above the visible area, scroll up to selected.
+			if (boxOfSelected.top < scrollPos)
+				scrollbar_y_view()->set_position(boxOfSelected.top);
+			else {
+				// If the lower part of selected item below the visible area, scroll down.
+				if (boxOfSelected.bottom > scrollPos + geometry().content_height)
+					scrollbar_y_view()->set_position(boxOfSelected.bottom - geometry().content_height);
+			}
+
+			// Clear the flag.
+			needScrollToSelected = false;
+
+			// Call parent again to update the scrolled positions.
+			ScrollView::layout_children(canvas);
+		}
+
+		// Set line_step size equal to the height of first item.
+		if (!items.empty()) {
+			float height = items.front()->geometry().margin_box().get_height();
+			scrollbar_y_view()->set_line_step(height);
+		}
+	}
+
 }

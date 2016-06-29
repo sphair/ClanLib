@@ -50,9 +50,11 @@ namespace clan
 		add_child(impl->thumb);
 	
 		slots.connect(sig_pointer_press(), impl.get(), &SliderViewImpl::on_pointer_track_press);
+		slots.connect(sig_pointer_double_click(), impl.get(), &SliderViewImpl::on_pointer_track_press);
 		slots.connect(sig_pointer_release(), impl.get(), &SliderViewImpl::on_pointer_track_release);
 
 		slots.connect(impl->thumb->sig_pointer_press(), impl.get(), &SliderViewImpl::on_pointer_thumb_press);
+		slots.connect(impl->thumb->sig_pointer_double_click(), impl.get(), &SliderViewImpl::on_pointer_thumb_press);
 		slots.connect(impl->thumb->sig_pointer_release(), impl.get(), &SliderViewImpl::on_pointer_thumb_release);
 
 		slots.connect(impl->thumb->sig_pointer_enter(), [&](PointerEvent &e) {impl->_state_hot = true;  impl->update_state(); });
@@ -148,8 +150,8 @@ namespace clan
 		int new_max = value;
 		int new_pos = std::max(std::min(value, new_max), new_min);
 		impl->update_pos(this, new_pos, new_min, new_max);
-
 	}
+
 	void SliderView::set_position(int value)
 	{
 		int new_pos = std::max(std::min(value, impl->_max_position), impl->_min_position);
@@ -160,7 +162,7 @@ namespace clan
 	{
 		int new_min = value;
 		int new_max = std::max(impl->_max_position, value);
-		int new_pos = std::max(std::min(value, new_max), new_min);
+		int new_pos = std::max(std::min(impl->_position, new_max), new_min);
 		impl->update_pos(this, new_pos, new_min, new_max);
 	}
 
@@ -174,6 +176,7 @@ namespace clan
 		impl->_page_step = page_step;
 		set_needs_layout();
 	}
+
 	void SliderView::set_lock_to_ticks(bool lock)
 	{
 		impl->_lock_to_ticks = lock;
@@ -183,13 +186,8 @@ namespace clan
 	{
 		View::layout_children(canvas);
 
-		auto track_geometry = impl->track->geometry();
-
-		float track_length = vertical() ? track_geometry.content_box().get_height() : track_geometry.content_box().get_width();
-		float thumb_length = vertical() ? impl->thumb->preferred_height(canvas, track_geometry.content_box().get_width()) : impl->thumb->preferred_width(canvas);
-
-		float t = (float) (impl->_position - impl->_min_position) / (float) (impl->_max_position - impl->_min_position);
-		float thumb_pos = t * (track_length - thumb_length);
+		// Thumb position in screen pixels.
+		float thumb_pos = (float)impl->thumb_pos();
 
 		if (vertical())
 		{

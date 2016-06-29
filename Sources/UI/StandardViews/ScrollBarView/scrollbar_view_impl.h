@@ -132,6 +132,7 @@ namespace clan
 		double max_pos = 100.0;
 		double pos = 0.0;
 		double line_step = 1.0;
+		bool _lock_to_line = false;
 		double page_step = 25.0;
 		double timer_step_size = 0.0;
 		double timer_target_position = 0.0;

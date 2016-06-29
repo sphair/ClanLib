@@ -234,6 +234,8 @@ std::shared_ptr<clan::ListBoxView> Theme::create_listbox()
 {
 	auto listbox = std::make_shared<clan::ListBoxView>();
 	listbox->style()->set("margin: 7px 0; border: 1px solid black; padding: 5px; background: #f0f0f0");
+	initialize_scrollbar(listbox->scrollbar_x_view(), true);
+	initialize_scrollbar(listbox->scrollbar_y_view(), false);
 	return listbox;
 }
 
