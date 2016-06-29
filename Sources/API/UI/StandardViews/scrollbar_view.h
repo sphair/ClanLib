@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Artem Khomenko
 */
 
 #pragma once
@@ -62,6 +63,9 @@ namespace clan
 		void set_line_step(double value);
 		void set_page_step(double value);
 
+		/// When true the position can be only in integer amount of line_step.
+		void set_lock_to_line(bool lock);
+
 		double min_position() const;
 		double max_position() const;
 		double position() const;
@@ -75,13 +79,7 @@ namespace clan
 
 		void layout_children(Canvas &canvas) override;
 
-		/// Fast redraw without layout.
-		void redraw_without_layout();
-
 	private:
 		std::shared_ptr<ScrollBarViewImpl> impl;
-
-		// Without inherited View::layout_children()
-		void update_style_pos();
 	};
 }

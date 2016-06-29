@@ -99,6 +99,9 @@ namespace clan
 		radio->set_state_cascade("unchecked_hot", target_unchecked_hot);
 		radio->set_state_cascade("unchecked_pressed", target_unchecked_pressed);
 		radio->set_state_cascade("unchecked_disabled", target_unchecked_disabled);
+
+		// Draw changes.
+		radio->draw_without_layout();
 	}
 
 	void RadioButtonView_Impl::on_pointer_press(PointerEvent &e)

@@ -223,6 +223,16 @@ namespace clan
 			return *this;
 		}
 
+		/// \brief Sets the bottom-right point of the rectangle.
+		///
+		/// \return reference to this object
+		Rectx<Type> &set_bottom_right(const Vec2<Type>& p)
+		{
+			right = p.x;
+			bottom = p.y;
+			return *this;
+		}
+
 		/// \brief Sets the width of the rectangle.
 		///
 		/// \return reference to this object

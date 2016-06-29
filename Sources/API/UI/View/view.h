@@ -295,8 +295,8 @@ namespace clan
 		/// Map from screen to local content coordinates
 		Pointf from_screen_pos(const Pointf &pos);
 
-		/// Map from local content to root content coordinates
-		Pointf to_root_pos(const Pointf &pos);
+		/// Map from local content to root content or margin (plus content, padding, border and margin) coordinates.
+		Pointf to_root_pos(const Pointf &pos, bool relative_to_margin = false);
 
 		/// Map from root content to local content coordinates
 		Pointf from_root_pos(const Pointf &pos);

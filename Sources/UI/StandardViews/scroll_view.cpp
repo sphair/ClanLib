@@ -80,6 +80,8 @@ namespace clan
 		impl->scroll_y->set_hidden();
 		impl->scroll_x->set_horizontal();
 		impl->scroll_y->set_vertical();
+		impl->scroll_x->set_lock_to_line(true);
+		impl->scroll_y->set_lock_to_line(true);
 
 		impl->content_container->style()->set("flex: 1 1 auto");
 
@@ -207,13 +209,16 @@ namespace clan
 		
 		if (x_scroll_needed)
 		{
-			impl->scroll_x->set_max_position(std::max(content_width - content_view_width, 0.0f));
+			// Max position is that does not fit on the view.
+			impl->scroll_x->set_max_position(round(std::max(content_width - content_view_width, 0.0f)));
+
+			// Page size is equal size of the view.
 			impl->scroll_x->set_page_step(content_view_width);
 		}
 		
 		if (y_scroll_needed)
 		{
-			impl->scroll_y->set_max_position(std::max(content_height - content_view_height, 0.0f));
+			impl->scroll_y->set_max_position(round(std::max(content_height - content_view_height, 0.0f)));
 			impl->scroll_y->set_page_step(content_view_height);
 		}
 		

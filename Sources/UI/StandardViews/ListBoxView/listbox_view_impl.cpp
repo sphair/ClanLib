@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 **    Mark Page
+**    Artem Khomenko
 */
 
 #include "UI/precomp.h"
@@ -95,12 +96,12 @@ namespace clan
 			index++;
 		}
 		return -1;
-
 	}
 
 	void ListBoxViewImpl::set_hot_item(int index)
 	{
-		if ((index == hot_item) || (index == selected_item))		// Selected item state has priority
+		// Selected item state has priority.
+		if (index == hot_item || index == selected_item && index != -1)
 			return;
 
 		if (index < -1 || index >= (int) listbox->content_view()->children().size())
@@ -116,6 +117,12 @@ namespace clan
 		}
 
 		hot_item = index;
+
+		// Draw changes - try to call for child to render its parent, i.e. slider.
+		if (index != -1)
+			listbox->children().front()->draw_without_layout();
+		else
+			listbox->draw_without_layout();
 	}
 
 	void ListBoxViewImpl::on_pointer_enter(PointerEvent &e)

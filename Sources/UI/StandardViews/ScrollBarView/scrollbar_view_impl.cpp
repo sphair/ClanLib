@@ -37,6 +37,9 @@
 #include "API/UI/Events/pointer_event.h"
 #include "scrollbar_view_impl.h"
 #include <algorithm>
+#include "API/UI/TopLevel/view_tree.h"
+#include "API/Display/Window/display_window.h"
+#include "API/Display/Window/input_event.h"
 
 namespace clan
 {
@@ -136,6 +139,7 @@ namespace clan
 		view->set_state_cascade("hot", target_hot);
 		view->set_state_cascade("pressed", target_pressed);
 		view->set_state_cascade("disabled", target_disabled);
+		view->draw_without_layout();
 	}
 
 	void ScrollBarViewImpl::on_focus_gained(FocusChangeEvent &e)
@@ -163,18 +167,18 @@ namespace clan
 		if (_state_disabled || e.button() != PointerButton::left)
 			return;
 		float mouse_pos;
-		Rectf thumb_geometry(thumb->geometry().content_box());
+		const ViewGeometry &thumb_geometry(thumb->geometry());
 		float thumb_position;
 		if (scrollbar->horizontal())
 		{
 			mouse_pos = e.pos(track.get()).x;
-			thumb_position = thumb_geometry.left + thumb_geometry.get_width() * 0.5f;
+			thumb_position = thumb_geometry.content_x + thumb_geometry.content_width * 0.5f;
 			timer_target_position = min_pos + mouse_pos * thumb_units_per_pixel();
 		}
 		else
 		{
 			mouse_pos = e.pos(track.get()).y;
-			thumb_position = thumb_geometry.top + thumb_geometry.get_height() * 0.5f;
+			thumb_position = thumb_geometry.content_y + thumb_geometry.content_height * 0.5f;
 			timer_target_position = min_pos + mouse_pos * thumb_units_per_pixel();
 		}
 
@@ -201,16 +205,33 @@ namespace clan
 		mouse_down_mode = mouse_down_none;
 		scroll_timer.stop();
 
-		// Mouse position relative to track.
-		Pointf mouse_pos = e.pos(scrollbar->track());
+		// Check and set hot state by long and winding road - need to reach TopLevelWindow_Impl::dispatch_hot_event().
+		auto tree = scrollbar->view_tree();
+		DisplayWindow *pDispWindow = &tree->display_window();
+		if (pDispWindow) {
+			InputDevice *pInputDevice = &pDispWindow->get_mouse();
+			if (pInputDevice) {
 
-		// Thumb position relative to track.
-		Rectf thumb_geometry(thumb->geometry().content_box());
+				// Root view.
+				auto rootView = tree->root_view();
 
-		// Check and set hot state.
-		if (thumb_geometry.contains(mouse_pos)) {
-			scrollbar->thumb()->set_state_cascade("hot", true);
-			scrollbar->redraw_without_layout();
+				// Mouse position relative to root.
+				Pointf mouse_pos = e.pos(rootView);
+
+				// Change relative to screen.
+				mouse_pos = rootView->to_screen_pos(mouse_pos);
+
+				// Change relative to client.
+				mouse_pos = pDispWindow->screen_to_client(mouse_pos);
+
+				// Prepare event to be emitted:
+				InputEvent moveEvent;
+				moveEvent.type = InputEvent::pointer_moved;
+				moveEvent.mouse_pos = mouse_pos;
+
+				// Send message.
+				pInputDevice->sig_pointer_move()(moveEvent);
+			}
 		}
 	}
 
@@ -294,27 +315,24 @@ namespace clan
 		if (mouse_down_mode != mouse_down_thumb_drag)
 			return;
 
-		Pointf mouse_pos = e.pos(track.get());
-		Rectf track_geometry = track->geometry().content_box();
+		Pointf mouse_pos(e.pos(track.get()));
+		const ViewGeometry &track_geometry(track->geometry());
 
 		double last_position = pos;
 
-		if (mouse_pos.x < -100 || mouse_pos.x > track_geometry.get_width() + 100 || mouse_pos.y < -100 || mouse_pos.y > track_geometry.get_height() + 100)
+		if (mouse_pos.x < -100 || mouse_pos.x > track_geometry.content_width + 100 || mouse_pos.y < -100 || mouse_pos.y > track_geometry.content_height + 100)
 		{
+			// If the mouse strayed very far away, back to the starting position the thumb.
 			pos = thumb_move_start_position;
 		}
 		else
 		{
-			if (scrollbar->horizontal())
-			{
-				double delta = (mouse_pos.x - mouse_drag_start_pos.x);
-				pos = thumb_move_start_position + delta * thumb_units_per_pixel();
-			}
-			else
-			{
-				double delta = (mouse_pos.y - mouse_drag_start_pos.y);
-				pos = thumb_move_start_position + delta * thumb_units_per_pixel();
-			}
+			double delta = scrollbar->horizontal() ? mouse_pos.x - mouse_drag_start_pos.x : mouse_pos.y - mouse_drag_start_pos.y;
+			pos = thumb_move_start_position + delta * thumb_units_per_pixel();
+
+			// Set position to near integer in line_step if needs.
+			if (_lock_to_line)
+				pos = roundf(pos / line_step) * line_step;
 		}
 
 		pos = std::max(std::min(pos, max_pos), min_pos);
@@ -324,8 +342,8 @@ namespace clan
 			// Notify the user.
 			sig_scroll();
 
-			// Fast redraw without layout.
-			scrollbar->redraw_without_layout();
+			// Update the view.
+			scrollbar->set_needs_layout();
 		}
 		e.stop_propagation(); // prevent track press reacting to this event
 	}
@@ -340,18 +358,18 @@ namespace clan
 		double last_position = pos;
 		pos += timer_step_size;
 
-		if (pos > max_pos)
-			pos = max_pos;
 		if (pos < min_pos)
 			pos = min_pos;
+		else if (pos > max_pos)
+			pos = max_pos;
 
 		if (last_position != pos)
 		{
 			// Notify the user.
 			sig_scroll();
 
-			// Fast redraw without layout.
-			scrollbar->redraw_without_layout();
+			// Update the view.
+			scrollbar->set_needs_layout();
 		}
 
 		// Run timer again only if the goal is not reached.
@@ -375,8 +393,12 @@ namespace clan
 			max_pos = new_max;
 			pos = new_pos;
 
-			// Fast redraw without layout.
-			view->redraw_without_layout();
+			// Set position to near integer in line_step if needs.
+			if (_lock_to_line)
+				pos = roundf(pos / line_step) * line_step;
+
+			// Update the view.
+			scrollbar->set_needs_layout();
 		}
 	}
 }

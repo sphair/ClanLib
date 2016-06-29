@@ -584,12 +584,15 @@ namespace clan
 		return from_root_pos(root_content_pos);
 	}
 
-	Pointf View::to_root_pos(const Pointf &pos)
+	Pointf View::to_root_pos(const Pointf &pos, bool relative_to_margin)
 	{
 		if (parent())
-			return parent()->to_root_pos(geometry().content_box().get_top_left() + Vec2f(view_transform() * Vec4f(pos, 0.0f, 1.0f)));
+			return parent()->to_root_pos(geometry().content_box().get_top_left() + Vec2f(view_transform() * Vec4f(pos, 0.0f, 1.0f)), relative_to_margin);
 		else
-			return pos;
+			if (relative_to_margin)
+				return Pointf(geometry().content_box().get_top_left() + Vec2f(view_transform() * Vec4f(pos, 0.0f, 1.0f)));
+			else
+				return pos;
 	}
 
 	Pointf View::from_root_pos(const Pointf &pos)
@@ -599,6 +602,7 @@ namespace clan
 		else
 			return pos;
 	}
+
 
 	Signal<void(ActivationChangeEvent &)> &View::sig_activated(bool use_capture)
 	{
@@ -731,19 +735,40 @@ namespace clan
 		View *prnt = parent();
 		Canvas &canv = canvas();
 
-		// The Top Left point of content box without margin, border, padding relative to the root view
-		Pointf translate = to_root_pos(Pointf(-geom.margin_left - geom.border_left - geom.padding_left, -geom.margin_top - geom.border_top - geom.padding_top));
+		// Drawing area - start from our margin_box.
+		Rectf clipBox(geom.margin_box());
+		View *pCurView = prnt;
 
-		// Outer box relative to the root view.
-		Rectf box = Rectf(translate.x, translate.y, geom.margin_box().get_size());
+		// Translate the clipBox into root coordinates with possible clipping by parent.
+		while (pCurView) {
+
+			// The content box of the current view.
+			Rectf curContentBox = pCurView->geometry().content_box();
+
+			// Transformation matrix.
+			const Mat4f &transformMatrix = pCurView->view_transform();
+
+			// Transform clipBox according to view.
+			clipBox.set_top_left(Vec2f(transformMatrix * Vec4f(clipBox.get_top_left(), 0.0f, 1.0f)));
+			clipBox.set_bottom_right(Vec2f(transformMatrix * Vec4f(clipBox.get_bottom_right(), 0.0f, 1.0f)));
+
+			// Translate to content box.
+			clipBox.translate(curContentBox.get_top_left());
+
+			// Clip by content box.
+			clipBox.clip(curContentBox);
+
+			// Next step.
+			pCurView = pCurView->parent();
+		}
 
 		// Exclude all from drawing except itself for speedup.
 		ClipRectStack cliprect_stack(&canv);
-		cliprect_stack.push_cliprect(box);
+		cliprect_stack.push_cliprect(clipBox);
 
 		// Our outher box now is the content box of the parent. We need to prepare canvas so that its coordinate 0, 0 was the top left corner of parent's parent.
 		// If parent doesn't exists, then 0, 0.
-		translate = prnt->parent() ? prnt->parent()->to_root_pos(Pointf()) : Pointf();
+		Pointf translate = prnt->parent() ? prnt->parent()->to_root_pos(Pointf(), true) : Pointf();
 
 		// Shift the coordinate system of the canvas, considering other transform states for View (need to test).
 		TransformState transform_state(&canv);

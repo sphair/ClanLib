@@ -276,11 +276,7 @@ namespace clan
 	void ScrollBarView::layout_children(Canvas &canvas)
 	{
 		View::layout_children(canvas);
-		update_style_pos();
-	}
 
-	void ScrollBarView::update_style_pos()
-	{
 		// Update the CSS properties.
 		auto track_geometry = impl->track->geometry();
 
@@ -303,26 +299,14 @@ namespace clan
 		}
 	}
 
-	void ScrollBarView::redraw_without_layout()
-	{
-		// Fast redraw without layout.
-
-		// Update CSS of thumb.
-		update_style_pos();
-
-		// Current box for thumb relative to track.
-		Rectf box = impl->track->geometry().content_box();
-
-		// Update geometry from CSS.
-		impl->thumb->set_geometry(ViewGeometry::from_margin_box(impl->thumb->style_cascade(), box));
-
-		// Draw the track and it will be draw the its parent.
-		impl->track->draw_without_layout();
-	}
-
 	Signal<void()> &ScrollBarView::sig_scroll()
 	{
 		return impl->sig_scroll;
+	}
+
+	void ScrollBarView::set_lock_to_line(bool lock)
+	{
+		impl->_lock_to_line = lock;
 	}
 
 }
