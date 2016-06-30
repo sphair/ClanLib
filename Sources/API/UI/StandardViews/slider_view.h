@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 **    Mark Page
+**    Artem Khomenko
 */
 
 #pragma once
@@ -63,6 +64,8 @@ namespace clan
 
 		void set_tick_count(int tick_count);
 		void set_page_step(int page_step);
+
+		/// When true the position can be only in integer amount of tick_count.
 		void set_lock_to_ticks(bool lock);
 
 		std::function<void()> &func_value_changed();

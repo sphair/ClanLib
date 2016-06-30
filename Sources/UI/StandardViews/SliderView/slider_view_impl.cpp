@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 **    Mark Page
+**    Artem Khomenko
 */
 
 #include "UI/precomp.h"
@@ -35,10 +36,17 @@
 #include "API/Display/2D/brush.h"
 #include "API/UI/Events/pointer_event.h"
 #include <algorithm>
+#include "API/UI/TopLevel/view_tree.h"
+#include "API/Display/Window/display_window.h"
+#include "API/Display/Window/input_event.h"
 #include "slider_view_impl.h"
 
 namespace clan
 {
+	// Delays for timer
+	const int cLongDelay = 300;
+	const int cShortDelay = 30;
+
 	void SliderViewImpl::update_state()
 	{
 		bool target_hot = false;
@@ -61,6 +69,9 @@ namespace clan
 		slider->set_state_cascade("hot", target_hot);
 		slider->set_state_cascade("pressed", target_pressed);
 		slider->set_state_cascade("disabled", target_disabled);
+
+		// Draw changes.
+		slider->draw_without_layout();
 	}
 
 	void SliderViewImpl::update_pos(SliderView *view, int new_pos, int new_min, int new_max)
@@ -71,6 +82,8 @@ namespace clan
 			_min_position = new_min;
 			_max_position = new_max;
 			_position = new_pos;
+
+			// Update the view.
 			view->set_needs_layout();
 		}
 	}
@@ -89,7 +102,6 @@ namespace clan
 
 	void SliderViewImpl::on_activated(ActivationChangeEvent &e)
 	{
-
 	}
 
 	void SliderViewImpl::on_deactivated(ActivationChangeEvent &e)
@@ -103,25 +115,23 @@ namespace clan
 
 	void SliderViewImpl::on_pointer_track_press(PointerEvent &e)
 	{
-		if (_state_disabled)
-			return;
-		if (e.target() == thumb)	// Thumb control handled elsewhere
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
 
 		float mouse_pos;
-		Rectf thumb_geometry(thumb->geometry().content_box());
+		const ViewGeometry &thumb_geometry(thumb->geometry());
 		float thumb_position;
 		if (slider->horizontal())
 		{
 			mouse_pos = e.pos(track.get()).x;
-			thumb_position = thumb_geometry.left + thumb_geometry.get_width() / 2.0f;
-			timer_target_position = _min_position + mouse_pos * ((_max_position - _min_position)) / (track->geometry().content_box().get_width());
+			thumb_position = thumb_geometry.content_x + thumb_geometry.content_width * 0.5f;
+			timer_target_position = _min_position + mouse_pos * thumb_units_per_pixel();
 		}
 		else
 		{
 			mouse_pos = e.pos(track.get()).y;
-			thumb_position = thumb_geometry.top + thumb_geometry.get_height() / 2.0f;
-			timer_target_position = _min_position + mouse_pos * ((_max_position - _min_position)) / (track->geometry().content_box().get_height());
+			thumb_position = thumb_geometry.content_y + thumb_geometry.content_height * 0.5f;
+			timer_target_position = _min_position + mouse_pos * thumb_units_per_pixel();
 		}
 
 		if (mouse_pos < thumb_position)
@@ -135,20 +145,57 @@ namespace clan
 			timer_step_size = _page_step;
 		}
 
+		// For scroll timer - between first and second there is need a big delay, then small.
+		isFirstTimerExpired = true;
 		scroll_timer_expired();
 	}
 
 	void SliderViewImpl::on_pointer_track_release(PointerEvent &e)
 	{
-		if (_state_disabled)
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
 		mouse_down_mode = mouse_down_none;
 		scroll_timer.stop();
+
+		// Mouse position relative to track.
+		Pointf mouse_pos = e.pos(slider->track());
+
+		// Thumb position relative to track.
+		Rectf thumb_geometry(thumb->geometry().content_box());
+
+		// Check and set hot state by long and winding road - need to reach TopLevelWindow_Impl::dispatch_hot_event().
+		auto tree = slider->view_tree();
+		DisplayWindow *pDispWindow = &tree->display_window();
+		if (pDispWindow) {
+			InputDevice *pInputDevice = &pDispWindow->get_mouse();
+			if (pInputDevice) {
+
+				// Root view.
+				auto rootView = tree->root_view();
+
+				// Mouse position relative to root.
+				Pointf mouse_pos = e.pos(rootView);
+
+				// Change relative to screen.
+				mouse_pos = rootView->to_screen_pos(mouse_pos);
+
+				// Change relative to client.
+				mouse_pos = pDispWindow->screen_to_client(mouse_pos);
+
+				// Prepare event to be emitted:
+				InputEvent moveEvent;
+				moveEvent.type = InputEvent::pointer_moved;
+				moveEvent.mouse_pos = mouse_pos;
+
+				// Send message.
+				pInputDevice->sig_pointer_move()(moveEvent);
+			}
+		}
 	}
 
 	void SliderViewImpl::on_pointer_thumb_press(PointerEvent &e)
 	{
-		if (_state_disabled)
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
 
 		_state_pressed = true;
@@ -156,64 +203,58 @@ namespace clan
 		mouse_down_mode = mouse_down_thumb_drag;
 		thumb_move_start_position = _position;
 		mouse_drag_start_pos = e.pos(track.get());
+
+		e.stop_propagation(); // prevent track press reacting to this event
 	}
 
 	void SliderViewImpl::on_pointer_thumb_release(PointerEvent &e)
 	{
-		_state_pressed = false;
-		if (_state_disabled)
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
+		_state_pressed = false;
 		update_state();
 		mouse_down_mode = mouse_down_none;
-		scroll_timer.stop();
+
+		e.stop_propagation(); // prevent track press reacting to this event
 	}
 
 	void SliderViewImpl::on_pointer_move(PointerEvent &e)
 	{
-		if (_state_disabled)
+		if (_state_disabled || mouse_down_mode != mouse_down_thumb_drag)
 			return;
-		if (mouse_down_mode != mouse_down_thumb_drag)
-		{
-			return;
-		}
 
 		Pointf mouse_pos(e.pos(track.get()));
-		Rectf track_geometry(track->geometry().content_box());
+		const ViewGeometry &track_geometry(track->geometry());
 
 		int last_position = _position;
 
-		if (mouse_pos.x < -100 || mouse_pos.x > track_geometry.get_width() + 100 || mouse_pos.y < -100 || mouse_pos.y > track_geometry.get_height() + 100)
+		if (mouse_pos.x < -100 || mouse_pos.x > track_geometry.content_width + 100 || mouse_pos.y < -100 || mouse_pos.y > track_geometry.content_height + 100)
 		{
+			// If the mouse strayed very far away, back to the starting position the thumb.
 			_position = thumb_move_start_position;
 		}
 		else
 		{
-			if (slider->horizontal())
-			{
-				int delta = (mouse_pos.x - mouse_drag_start_pos.x);
-				_position = thumb_move_start_position + (delta * (_max_position - _min_position)) / (track->geometry().content_box().get_width());
-			}
-			else
-			{
-				int delta = (mouse_pos.y - mouse_drag_start_pos.y);
-				_position = thumb_move_start_position + (delta * (_max_position - _min_position)) / (track->geometry().content_box().get_height());
-			}
+			int delta = slider->horizontal() ? mouse_pos.x - mouse_drag_start_pos.x : mouse_pos.y - mouse_drag_start_pos.y;
+			_position = thumb_move_start_position + delta * thumb_units_per_pixel();
 		}
+
+		// Set position to near integer in _lock_to_ticks if needs.
+		if (_lock_to_ticks)
+			_position = (int)roundf((float)_position / _tick_count) * _tick_count;
+
 		if (_position > _max_position)
 			_position = _max_position;
-		if (_position < _min_position)
+		else if (_position < _min_position)
 			_position = _min_position;
-
-		if (_lock_to_ticks)
-		{
-			int remainder = (_position - _min_position) % _tick_count;
-			_position = _position - remainder;
-		}
 
 		if (last_position != _position)
 		{
+			// Notify the user.
 			if (_func_value_changed)
 				_func_value_changed();
+
+			// Update the view.
 			slider->set_needs_layout();
 		}
 	}
@@ -228,30 +269,29 @@ namespace clan
 		int last_position = _position;
 		_position += timer_step_size;
 
-		if (mouse_down_mode == mouse_down_track_decr)
-		{
-			if (_position < timer_target_position)
-				_position = timer_target_position;
-		}
-		if (mouse_down_mode == mouse_down_track_incr)
-		{
-			if (_position > timer_target_position)
-				_position = timer_target_position;
-		}
-
-		if (_position > _max_position)
-			_position = _max_position;
 		if (_position < _min_position)
 			_position = _min_position;
+		else if (_position > _max_position)
+			_position = _max_position;
 
 		if (last_position != _position)
 		{
+			// Notify the user.
 			if (_func_value_changed)
 				_func_value_changed();
+
+			// Update the view.
 			slider->set_needs_layout();
 		}
-		scroll_timer.start(100, false);
 
+		// Run timer again only if the goal is not reached.
+		if (mouse_down_mode == mouse_down_track_decr && _position > timer_target_position
+			|| mouse_down_mode == mouse_down_track_incr && _position + _page_step < timer_target_position
+			)
+			scroll_timer.start(isFirstTimerExpired ? cLongDelay : cShortDelay, false);
+
+		// Switch to a short delay.
+		isFirstTimerExpired = false;
 	}
 
 }

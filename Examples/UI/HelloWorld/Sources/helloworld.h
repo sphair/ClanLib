@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 **    Mark Page
+**    Artem Khomenko
 */
 
 #pragma once
@@ -33,10 +34,10 @@ class HelloWorld : public clan::Application
 {
 public:
 	HelloWorld();
+	bool update() override;
 
 	clan::UIThread ui_thread;
 	std::shared_ptr<clan::TopLevelWindow> window;
 	std::shared_ptr<clan::LabelView> label;
 	clan::WindowManager window_manager;
-	clan::SlotContainer slots;
 };

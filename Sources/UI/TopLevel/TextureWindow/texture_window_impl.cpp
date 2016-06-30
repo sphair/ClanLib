@@ -150,6 +150,8 @@ namespace clan
 				hot_view->update_cursor(display_window);
 		}
 
+		// Status changes are made fast redraw controls and we need to show it.
+		needs_render = true;
 	}
 
 	void TextureWindow_Impl::release_capture()

@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Artem Khomenko
 */
 
 #include "UI/precomp.h"
@@ -34,6 +35,9 @@
 
 namespace clan
 {
+	// The quantity of line_steps to scroll when mouse wheel event is occurred.
+	double cNumStepsOnMouseWheel = 3.0;
+
 	class ScrollViewContentContainer : public View
 	{
 	public:
@@ -65,6 +69,7 @@ namespace clan
 		ContentOverflow overflow_x = ContentOverflow::hidden;
 		ContentOverflow overflow_y = ContentOverflow::automatic;
 		Pointf content_offset;
+		bool _state_disabled = false;
 	};
 
 	ScrollView::ScrollView() : impl(new ScrollViewImpl())
@@ -75,6 +80,8 @@ namespace clan
 		impl->scroll_y->set_hidden();
 		impl->scroll_x->set_horizontal();
 		impl->scroll_y->set_vertical();
+		impl->scroll_x->set_lock_to_line(true);
+		impl->scroll_y->set_lock_to_line(true);
 
 		impl->content_container->style()->set("flex: 1 1 auto");
 
@@ -96,6 +103,9 @@ namespace clan
 			pos.y = (float)impl->scroll_y->position();
 			set_content_offset(pos);
 		});
+
+		// Support the weel of mouse.
+		slots.connect(sig_pointer_press(), this, &ScrollView::on_pointer_press);
 	}
 
 	ScrollView::~ScrollView()
@@ -193,18 +203,22 @@ namespace clan
 				x_scroll_height = ViewGeometry::from_content_box(impl->scroll_x->style_cascade(), Rectf(0.0f, 0.0f, 0.0f, impl->scroll_x->preferred_height(canvas, width))).margin_box().get_height();
 		}
 		
+		// Exclude from the content_box of the space occupied by scrollbars.
 		float content_view_width = width - y_scroll_width;
 		float content_view_height = height - x_scroll_height;
 		
 		if (x_scroll_needed)
 		{
-			impl->scroll_x->set_max_position(std::max(content_width - content_view_width, 0.0f));
+			// Max position is that does not fit on the view.
+			impl->scroll_x->set_max_position(round(std::max(content_width - content_view_width, 0.0f)));
+
+			// Page size is equal size of the view.
 			impl->scroll_x->set_page_step(content_view_width);
 		}
 		
 		if (y_scroll_needed)
 		{
-			impl->scroll_y->set_max_position(std::max(content_height - content_view_height, 0.0f));
+			impl->scroll_y->set_max_position(round(std::max(content_height - content_view_height, 0.0f)));
 			impl->scroll_y->set_page_step(content_view_height);
 		}
 		
@@ -216,9 +230,13 @@ namespace clan
 		
 		impl->content_container->set_geometry(ViewGeometry::from_margin_box(impl->content_container->style_cascade(), Rectf(0.0f, 0.0f, content_view_width, content_view_height)));
 
+		// Update scroll_bar's thumb pos.
 		impl->scroll_x->layout_children(canvas);
 		impl->scroll_y->layout_children(canvas);
 		impl->content_container->layout_children(canvas);
+
+		// The position can be changed when user has increased size of view (scrolled to top left), update it.
+		set_content_offset(Pointf(impl->scroll_x->position(), impl->scroll_y->position()));
 	}
 	
 	float ScrollView::calculate_preferred_width(Canvas &canvas)
@@ -245,5 +263,70 @@ namespace clan
 	float ScrollView::calculate_last_baseline_offset(Canvas &canvas, float width)
 	{
 		return impl->content_container->last_baseline_offset(canvas, width);
+	}
+
+	void ScrollView::on_pointer_press(PointerEvent &e)
+	{
+		// Process mouse wheel events. When Shift pressed, scrolls horizontally, otherwise vertically.
+
+		if (impl->_state_disabled || e.type() != PointerEventType::press)
+			return;
+
+		switch (e.button())
+		{
+			case PointerButton::wheel_down:	{
+				// Appropriate scroll_bar.
+				auto scroll_bar = e.shift_down() ? impl->scroll_x : impl->scroll_y;
+
+				// Scroll down only if scroll_bar is available.
+				if (!scroll_bar->hidden()) {
+
+					// Previous position.
+					double old_pos = scroll_bar->position();
+
+					// Scroll down.
+					scroll_bar->set_position(old_pos + cNumStepsOnMouseWheel * scroll_bar->line_step());
+
+					// If position changed, stop propagation this event to parent, if not - give a chance to underlying views.
+					if (old_pos != scroll_bar->position())
+						e.stop_propagation();
+				}
+				break;
+			} case PointerButton::wheel_up: {
+				auto scroll_bar = e.shift_down() ? impl->scroll_x : impl->scroll_y;
+				if (!scroll_bar->hidden()) {
+					double old_pos = scroll_bar->position();
+					scroll_bar->set_position(scroll_bar->position() - cNumStepsOnMouseWheel * scroll_bar->line_step());
+					if (old_pos != scroll_bar->position())
+						e.stop_propagation();
+				}
+				break;
+			}
+		}
+	}
+
+	bool ScrollView::disabled() const
+	{
+		return impl->_state_disabled;
+	}
+
+	void ScrollView::set_disabled()
+	{
+		if (!impl->_state_disabled)
+		{
+			impl->_state_disabled = true;
+			impl->scroll_x->set_disabled();
+			impl->scroll_y->set_disabled();
+		}
+	}
+
+	void ScrollView::set_enabled()
+	{
+		if (impl->_state_disabled)
+		{
+			impl->_state_disabled = false;
+			impl->scroll_x->set_enabled();
+			impl->scroll_y->set_enabled();
+		}
 	}
 }

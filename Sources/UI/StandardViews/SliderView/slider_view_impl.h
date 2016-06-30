@@ -48,6 +48,36 @@ namespace clan
 
 		void scroll_timer_expired();
 
+		// Pixel length of the entire scrollbar track
+		int track_length() const
+		{
+			auto track_geometry = track->geometry();
+			return slider->vertical() ? track_geometry.content_box().get_height() : track_geometry.content_box().get_width();
+		}
+
+		// Pixel length of thumb
+		double thumb_length() const
+		{
+			return _vertical ? thumb->geometry().content_height : thumb->geometry().content_width;
+		}
+
+		// Pixel position of thumb
+		int thumb_pos() const
+		{
+			if (_min_position == _max_position)
+				return 0;
+			double t = (_position - _min_position) / double(_max_position - _min_position);
+			return int(round(t * (track_length() - thumb_length())));
+		}
+
+		// How many units to move per pixel when dragging the thumb
+		double thumb_units_per_pixel() const
+		{
+			double available_units = _max_position - _min_position;
+			double available_pixels = track_length() - thumb_length();
+			return available_pixels != 0.0 ? available_units / available_pixels : 0.0;
+		}
+
 		enum MouseDownMode
 		{
 			mouse_down_none,
@@ -83,6 +113,9 @@ namespace clan
 		void update_pos(SliderView *view, int new_pos, int new_min, int new_max);
 		void update_state();
 
+	private:
+		// For scroll timer - between first and second need a big delay, then the small one.
+		bool isFirstTimerExpired = true;
 	};
 
 }

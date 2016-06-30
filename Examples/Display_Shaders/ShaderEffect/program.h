@@ -20,6 +20,8 @@ public:
 		int xparticle_count;
 	};
 
+	void on_input_up(const clan::InputEvent &key);
+
 	clan::DisplayWindow window;
 	clan::SlotContainer sc;
 	clan::GraphicContext gc;

@@ -26,11 +26,13 @@
 **    Magnus Norddahl
 **    Harry Storbacka
 **    Mark Page
+**    Artem Khomenko (add label property and render_background())
 */
 
 #pragma once
 
 #include "../View/view.h"
+#include "label_view.h"
 
 namespace clan
 {
@@ -41,6 +43,8 @@ namespace clan
 	public:
 
 		CheckBoxView();
+
+		std::shared_ptr<LabelView> label();
 
 		bool disabled() const;
 		void set_disabled();
@@ -58,6 +62,11 @@ namespace clan
 
 		/// \brief Func state changed
 		std::function<void()> &func_state_changed();
+
+	protected:
+
+		/// Override - need to clear background under label due to Subpixel font rendering.
+		void render_background(Canvas &canvas) override;
 
 	private:
 		std::shared_ptr<CheckBoxView_Impl> impl;

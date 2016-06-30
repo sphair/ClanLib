@@ -99,11 +99,18 @@ namespace clan
 		checkbox->set_state_cascade("unchecked_hot", target_unchecked_hot);
 		checkbox->set_state_cascade("unchecked_pressed", target_unchecked_pressed);
 		checkbox->set_state_cascade("unchecked_disabled", target_unchecked_disabled);
+		label->set_state_cascade("disabled", _state_disabled);
+
+		// Update the font in accordance with the state.
+		label->reset_font();
+
+		// Fast draw the checkbox.
+		checkbox->draw_without_layout();
 	}
 
 	void CheckBoxView_Impl::on_pointer_press(PointerEvent &e)
 	{
-		if (_state_disabled)
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
 		_state_pressed = true;
 		update_state();
@@ -111,9 +118,10 @@ namespace clan
 
 	void CheckBoxView_Impl::on_pointer_release(PointerEvent &e)
 	{
-		_state_pressed = false;
-		if (_state_disabled)
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
+
+		_state_pressed = false;
 		if (checkbox->geometry().border_box().contains(e.pos(checkbox) + checkbox->geometry().content_box().get_top_left()))	// Only allow click when mouse released over component
 		{
 			_checked_state = !_checked_state;

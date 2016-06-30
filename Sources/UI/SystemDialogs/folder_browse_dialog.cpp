@@ -74,7 +74,13 @@ namespace clan
 				result = open_dialog->SetTitle(title16.c_str());
 				throw_if_failed(result, "IFileOpenDialog.SetTitle failed");
 
-				result = open_dialog->SetOptions(FOS_PICKFOLDERS | FOS_FORCEFILESYSTEM | FOS_PATHMUSTEXIST);
+				// Set the options on the dialog.
+				DWORD dwFlags;
+
+				// Before setting, always get the options first in order not to override existing options about hidden and so on.
+				result = open_dialog->GetOptions(&dwFlags);
+
+				result = open_dialog->SetOptions(dwFlags | FOS_PICKFOLDERS | FOS_FORCEFILESYSTEM | FOS_PATHMUSTEXIST);
 				throw_if_failed(result, "IFileOpenDialog.SetOptions((FOS_PICKFOLDERS) failed");
 
 				if (initial_directory16.length() > 0)

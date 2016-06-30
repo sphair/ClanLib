@@ -116,9 +116,7 @@ namespace clan
 		}
 		view->impl->needs_layout = false;
 
-		view->impl->render(view, canvas, ViewRenderLayer::background);
-		view->impl->render(view, canvas, ViewRenderLayer::border);
-		view->impl->render(view, canvas, ViewRenderLayer::content);
+		view->impl->render(view, canvas);
 	}
 
 	void ViewTree::dispatch_activation_change(ActivationChangeType type)

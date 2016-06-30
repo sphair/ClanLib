@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Artem Khomenko (modified set_text())
 */
 
 #include "UI/precomp.h"
@@ -48,6 +49,7 @@ namespace clan
 		std::string _text;
 		TextAlignment text_alignment = TextAlignment::left;
 		Font font;
+		Colorf font_color = Colorf::white;
 		LineBreakMode _line_break_mode = LineBreakMode::truncating_tail;
 
 		const Font &get_font(LabelView *view, Canvas &canvas)
@@ -65,7 +67,9 @@ namespace clan
 	void LabelView::layout_children(Canvas &canvas)
 	{
 		View::layout_children(canvas);
-		impl->font = style_cascade().font(canvas);	// Reset the font on new layout
+
+		// Reset the font on new layout.
+		reset_font();
 	}
 
 	std::string LabelView::text() const
@@ -73,10 +77,15 @@ namespace clan
 		return impl->_text;
 	}
 
-	void LabelView::set_text(const std::string &value)
+	void LabelView::set_text(const std::string &value, bool force_no_layout)
 	{
 		impl->_text = value;
-		set_needs_layout();
+		
+		if (force_no_layout) 
+			draw_without_layout();
+		else
+			// Can change size and then invalidate whole window.
+			set_needs_layout();
 	}
 
 	TextAlignment LabelView::text_alignment() const
@@ -142,19 +151,17 @@ namespace clan
 				return; // Still no room.  Draw nothing!
 		}
 
-		Colorf color = style_cascade().computed_value("color").color();
-
 		if (impl->text_alignment == TextAlignment::left)
 		{
-			font.draw_text(canvas, Pointf(0.0f, baseline), clipped_text, color);
+			font.draw_text(canvas, Pointf(0.0f, baseline), clipped_text, impl->font_color);
 		}
 		else if (impl->text_alignment == TextAlignment::right)
 		{
-			font.draw_text(canvas, Pointf(geometry().content_width - advance.advance.width, baseline), clipped_text, color);
+			font.draw_text(canvas, Pointf(geometry().content_width - advance.advance.width, baseline), clipped_text, impl->font_color);
 		}
 		else if (impl->text_alignment == TextAlignment::center)
 		{
-			font.draw_text(canvas, Pointf(std::round((geometry().content_width - advance.advance.width) * 0.5f), baseline), clipped_text, color);
+			font.draw_text(canvas, Pointf(std::round((geometry().content_width - advance.advance.width) * 0.5f), baseline), clipped_text, impl->font_color);
 		}
 	}
 
@@ -180,4 +187,12 @@ namespace clan
 	{
 		return first_baseline_offset(canvas, width);
 	}
+
+	void LabelView::reset_font()
+	{
+		/// Reset the font.
+		impl->font = style_cascade().font(Canvas());	// Canvas actually is not needed in this case, use stub.
+		impl->font_color = style_cascade().computed_value("color").color();
+	}
+
 }

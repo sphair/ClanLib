@@ -25,22 +25,24 @@
 **
 **    Magnus Norddahl
 **    Mark Page
+**    Artem Khomenko (add sticky property)
 */
 
 #include "UI/precomp.h"
 #include "API/UI/StandardViews/button_view.h"
 #include "API/UI/StandardViews/image_view.h"
-#include "button_view_impl.h"
 #include "API/UI/Events/pointer_event.h"
+#include "button_view_impl.h"
 
 namespace clan
 {
 
 	void ButtonViewImpl::update_state()
 	{
-		bool target_hot = false;
+		bool target_unpressed_hot = false;
 		bool target_disabled = false;
 		bool target_pressed = false;
+		bool target_pressed_hot = false;
 
 		if (_state_disabled)
 		{
@@ -48,21 +50,33 @@ namespace clan
 		}
 		else if (_state_pressed)
 		{
-			target_pressed = true;
+			// Pressed button may be hot and not hot.
+			if (_state_hot)
+				target_pressed_hot = true;
+			else
+				target_pressed = true;
 		}
 		else if (_state_hot)
 		{
-			target_hot = true;
+			target_unpressed_hot = true;
 		}
 
-		button->set_state_cascade("hot", target_hot);
+		// Update CSS.
+		button->set_state_cascade("hot", target_unpressed_hot);
 		button->set_state_cascade("pressed", target_pressed);
 		button->set_state_cascade("disabled", target_disabled);
+		button->set_state_cascade("pressed_hot", target_pressed_hot);
+
+		// Update the font in accordance with the state.
+		label->reset_font();
+
+		// Fast draw the button.
+		button->draw_without_layout();
 	}
 
 	void ButtonViewImpl::on_pointer_press(PointerEvent &e)
 	{
-		if (_state_disabled)
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
 		_state_pressed = true;
 		update_state();
@@ -70,14 +84,28 @@ namespace clan
 
 	void ButtonViewImpl::on_pointer_release(PointerEvent &e)
 	{
-		_state_pressed = false;
-		if (_state_disabled)
+		if (_state_disabled || e.button() != PointerButton::left)
 			return;
-		update_state();
-		if (_func_clicked)
-		{
-			if (button->geometry().border_box().contains(e.pos(button) + button->geometry().content_box().get_top_left()))	// Only allow click when mouse released over component
+
+		// If mouse released over component
+		if (button->geometry().border_box().contains(e.pos(button) + button->geometry().content_box().get_top_left())) {
+			if (_sticky) {
+				_state_pressed = _state_pressed_previous;
+				_state_pressed_previous = !_state_pressed_previous;
+			}
+			else
+				_state_pressed = false;
+
+			// User event handler need to get right state.
+			update_state();
+
+			if (_func_clicked)
 				_func_clicked();
+		}
+		else {
+			_state_hot = false;
+			_state_pressed = _sticky ? !_state_pressed_previous : false;
+			update_state();
 		}
 	}
 

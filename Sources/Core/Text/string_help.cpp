@@ -282,10 +282,7 @@ namespace clan
 
 	std::string StringHelp::float_to_text(float value, int num_decimal_places, bool remove_zeros)
 	{
-		if (remove_zeros)
-			return remove_trailing_zeros(float_to_local8(value, num_decimal_places));
-		else
-			return float_to_local8(value, num_decimal_places);
+		return float_to_local8(value, num_decimal_places, remove_zeros);
 	}
 
 	std::string StringHelp::float_to_local8(float value, int num_decimals, bool remove_zeros)

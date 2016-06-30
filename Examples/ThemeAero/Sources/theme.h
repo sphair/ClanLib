@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 **    Mark Page
+**    Artem Khomenko
 */
 
 #pragma once
@@ -32,7 +33,9 @@
 class Theme
 {
 public:
-	static std::shared_ptr<clan::ScrollBarView> create_scrollbar();
+	static std::shared_ptr<clan::ScrollBarView> create_scrollbar(bool isHorizontal = true);
+	static void initialize_scrollbar(std::shared_ptr<clan::ScrollBarView> &scrollbar, bool isHorizontal);
+
 	static std::shared_ptr<clan::ButtonView> create_button();
 	static std::shared_ptr<clan::SliderView> create_slider();
 	static std::shared_ptr<clan::CheckBoxView> create_checkbox();

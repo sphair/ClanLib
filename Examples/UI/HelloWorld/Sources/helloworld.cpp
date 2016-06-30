@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 **    Mark Page
+**    Artem Khomenko
 */
 
 #include "precomp.h"
@@ -37,10 +38,11 @@ clan::ApplicationInstance<HelloWorld> clanapp;
 
 HelloWorld::HelloWorld()
 {
-	clan::Application::use_timeout_timing(std::numeric_limits<int>::max());	// The update() loop is not required for this application
-
-	//clan::D3DTarget::set_current();
+#if defined(WIN32) && !defined(__MINGW32__)
+	clan::D3DTarget::set_current();
+#else
 	clan::OpenGLTarget::set_current();
+#endif
 
 	// Create a source for our resources
 	FileResourceDocument doc(FileSystem("../../ThemeAero"));
@@ -56,14 +58,24 @@ HelloWorld::HelloWorld()
 	desc.set_size(Sizef(640, 600), false);
 	window = std::make_shared<TopLevelWindow>(desc);
 
-	// Exit run loop when close is clicked.
-	// We have to store the return Slot because if it is destroyed the lambda function is disconnected from the signal.
-	slots.connect(window->root_view()->sig_close(), [&](CloseEvent &e) { RunLoop::exit(); });
+	// Exit run loop when close is clicked or ESC pressed.
+	auto pRootView = window->root_view();
+	pRootView->slots.connect(pRootView->sig_close(), [&](CloseEvent &e) { RunLoop::exit(); });
+	pRootView->slots.connect(pRootView->sig_key_press(), [&](clan::KeyEvent &e) 
+		{ if (e.key() == clan::Key::escape) RunLoop::exit(); }
+	);
+
+	// Need for receive a keyboard events.
+	pRootView->set_focus();
 
 	// Style the root view to use rounded corners and a bit of drop shadow
 	window->root_view()->style()->set("padding: 11px");
 	window->root_view()->style()->set("background: #efefef");
 	window->root_view()->style()->set("flex-direction: column");
+
+	// Main window icons
+	window->display_window().set_small_icon(clan::PixelBuffer("Resources/app_icon_16x16.png", doc.get_file_system()));
+	window->display_window().set_large_icon(clan::PixelBuffer("Resources/app_icon_32x32.png", doc.get_file_system()));
 
 	auto body = std::make_shared<View>();
 	body->style()->set("background: white");
@@ -88,14 +100,10 @@ HelloWorld::HelloWorld()
 	});
 
 	auto scrollarea = std::make_shared<ScrollView>();
-	scrollarea->style()->set("margin: 5px 0; border: 1px solid black; padding: 5px 5px;");
-	scrollarea->scrollbar_x_view()->style()->set("background: rgb(232,232,236); margin-top: 5px");
-	scrollarea->scrollbar_x_view()->track()->style()->set("padding: 0 4px");
-	scrollarea->scrollbar_x_view()->thumb()->style()->set("background: rgb(208,209,215)");
-	scrollarea->scrollbar_y_view()->style()->set("background: rgb(232,232,236); margin-left: 5px");
-	scrollarea->scrollbar_y_view()->track()->style()->set("padding: 0 4px");
-	scrollarea->scrollbar_y_view()->thumb()->style()->set("background: rgb(208,209,215)");
-	scrollarea->content_view()->style()->set("flex-direction: column");
+	scrollarea->style()->set("margin: 5px 0; border: 1px solid black; padding: 5px 0px 5px 5px;");
+	scrollarea->content_view()->style()->set("flex-direction: column; background: white;");
+	Theme::initialize_scrollbar(scrollarea->scrollbar_y_view(), false);
+	scrollarea->scrollbar_y_view()->style()->set("padding: 0 0 0 3px; background: white;");
 	body->add_child(scrollarea);
 
 	// Create a text field for our span layout
@@ -154,18 +162,13 @@ HelloWorld::HelloWorld()
 	gradient_box->style()->set("box-shadow: 7px 7px 7px rgba(0,0,0,0.2)");
 	scrollarea->content_view()->add_child(gradient_box);
 	
-	auto listbox = std::make_shared<ListBoxView>();
+	auto listbox = Theme::create_listbox();
 	listbox->style()->set("flex: none; height: 60px; margin: 7px 0; border: 1px solid black; padding: 5px; background: #f0f0f0");
 	listbox->set_items<std::string>(
 		{ "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "More items", "Even more items!!", "No more items!!!!!" },
 		[](const std::string &s) -> std::shared_ptr<View>
 		{
-			auto item = std::make_shared<LabelView>();
-			item->style()->set("font: 13px/17px 'Segoe UI'; color: black; margin: 1px 0; padding: 0 2px");
-			item->style("selected")->set("background: #7777f0; color: white");
-			item->style("hot")->set("background: #ccccf0; color: black");
-
-			item->set_text(s);
+			auto item = Theme::create_listbox_label(s);
 			return item;
 		});
 	scrollarea->content_view()->add_child(listbox);
@@ -194,8 +197,11 @@ HelloWorld::HelloWorld()
 
 	auto checkbox = Theme::create_checkbox();
 	//checkbox->set_disabled();
+	checkbox->style()->set("margin: 12px");
+	checkbox->label()->set_text("Checkbox");
 	scrollarea->content_view()->add_child(checkbox);
 
+	// Hint - parent of the radiobutton must have an opaque background due to sub-pixel rendering effect.
 	for (int cnt = 0; cnt < 3; cnt++)
 	{
 		auto radio = Theme::create_radiobutton();
@@ -204,7 +210,7 @@ HelloWorld::HelloWorld()
 	}
 
 	// Create a popup window
-	slots.connect(button->sig_pointer_enter(), [=](PointerEvent &e)
+	pRootView->slots.connect(button->sig_pointer_enter(), [=](PointerEvent &e)
 	{
 		auto popup = std::make_shared<WindowController>();
 		popup->root_view()->style()->set("flex-direction: column");
@@ -264,7 +270,14 @@ HelloWorld::HelloWorld()
 
 	// Prevent close program when hint or modal windows closes.
 	window_manager.set_exit_on_last_close(false);
-		
+	
 	// Make our window visible
 	window->show();
+}
+
+bool HelloWorld::update()
+{
+	window->display_window().flip();
+
+	return true;
 }

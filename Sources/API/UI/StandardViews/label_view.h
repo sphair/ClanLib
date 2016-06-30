@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Artem Khomenko (modified set_text())
 */
 
 #pragma once
@@ -62,7 +63,14 @@ namespace clan
 		LabelView();
 
 		std::string text() const;
-		void set_text(const std::string &value);
+		
+		/// \brief Set text for display to the user
+		///
+		/// \param value = Text
+		/// \param force_no_layout = when false or omitted, after setting the text occurs recalculate sizes 
+		/// and positions of elements, what means complete repaint the entire window. When true - simply drawing
+		/// the new text. Also make sure that the style property "background color" is set for this or its parents.
+		void set_text(const std::string &value, bool force_no_layout = false);
 
 		TextAlignment text_alignment() const;
 		void set_text_alignment(TextAlignment alignment);
@@ -71,6 +79,9 @@ namespace clan
 		void set_line_break_mode(LineBreakMode value);
 
 		void layout_children(Canvas &canvas) override;
+
+		/// Update the font in according to style.
+		void reset_font();
 
 	protected:
 		void render_content(Canvas &canvas) override;

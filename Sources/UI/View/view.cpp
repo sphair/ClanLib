@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Artem Khomenko (Direct redraw changed state of View, without redraw the entire window).
 */
 
 #include "UI/precomp.h"
@@ -102,7 +103,6 @@ namespace clan
 		{
 			impl->states[name] = ViewImpl::StyleState(false, value);
 			impl->update_style_cascade();
-			set_needs_layout();
 		}
 	}
 	void View::set_state_cascade(const std::string &name, bool value)
@@ -111,12 +111,11 @@ namespace clan
 		{
 			impl->states[name] = ViewImpl::StyleState(false, value);
 			impl->update_style_cascade();
-			set_needs_layout();
-			impl->set_state_cascade_siblings(name, value);
+			impl->set_state_cascade_children(name, value);
 		}
 	}
 
-	void ViewImpl::set_state_cascade_siblings(const std::string &name, bool value)
+	void ViewImpl::set_state_cascade_children(const std::string &name, bool value)
 	{
 		for (std::shared_ptr<View> &view : _children)
 		{
@@ -125,8 +124,7 @@ namespace clan
 			{
 				impl->states[name] = ViewImpl::StyleState(true, value);
 				impl->update_style_cascade();
-				view->set_needs_layout();
-				impl->set_state_cascade_siblings(name, value);
+				impl->set_state_cascade_children(name, value);
 			}
 		}
 	}
@@ -586,12 +584,15 @@ namespace clan
 		return from_root_pos(root_content_pos);
 	}
 
-	Pointf View::to_root_pos(const Pointf &pos)
+	Pointf View::to_root_pos(const Pointf &pos, bool relative_to_margin)
 	{
 		if (parent())
-			return parent()->to_root_pos(geometry().content_box().get_top_left() + Vec2f(view_transform() * Vec4f(pos, 0.0f, 1.0f)));
+			return parent()->to_root_pos(geometry().content_box().get_top_left() + Vec2f(view_transform() * Vec4f(pos, 0.0f, 1.0f)), relative_to_margin);
 		else
-			return pos;
+			if (relative_to_margin)
+				return Pointf(geometry().content_box().get_top_left() + Vec2f(view_transform() * Vec4f(pos, 0.0f, 1.0f)));
+			else
+				return pos;
 	}
 
 	Pointf View::from_root_pos(const Pointf &pos)
@@ -601,6 +602,7 @@ namespace clan
 		else
 			return pos;
 	}
+
 
 	Signal<void(ActivationChangeEvent &)> &View::sig_activated(bool use_capture)
 	{
@@ -720,6 +722,77 @@ namespace clan
 		e->_phase = EventUIPhase::none;
 	}
 
+	void View::draw_without_layout()
+	{
+		// Position and sizes of the View.
+		const ViewGeometry &geom = geometry();
+
+		// If isn't initialized yet then there is nothing to draw.
+		if (!canvas() || geom.content_width <= 0.0f || geom.content_height <= 0.0f)
+			return;
+
+		// Ask the parent for redraw and then it redraws us.
+		View *prnt = parent();
+		Canvas &canv = canvas();
+
+		// Drawing area - start from our margin_box.
+		Rectf clipBox(geom.margin_box());
+		View *pCurView = prnt;
+
+		// Translate the clipBox into root coordinates with possible clipping by parent.
+		while (pCurView) {
+
+			// The content box of the current view.
+			Rectf curContentBox = pCurView->geometry().content_box();
+
+			// Transformation matrix.
+			const Mat4f &transformMatrix = pCurView->view_transform();
+
+			// Transform clipBox according to view.
+			clipBox.set_top_left(Vec2f(transformMatrix * Vec4f(clipBox.get_top_left(), 0.0f, 1.0f)));
+			clipBox.set_bottom_right(Vec2f(transformMatrix * Vec4f(clipBox.get_bottom_right(), 0.0f, 1.0f)));
+
+			// Translate to content box.
+			clipBox.translate(curContentBox.get_top_left());
+
+			// Clip by content box.
+			clipBox.clip(curContentBox);
+
+			// Next step.
+			pCurView = pCurView->parent();
+		}
+
+		// Exclude all from drawing except itself for speedup.
+		ClipRectStack cliprect_stack(&canv);
+		cliprect_stack.push_cliprect(clipBox);
+
+		// Our outher box now is the content box of the parent. We need to prepare canvas so that its coordinate 0, 0 was the top left corner of parent's parent.
+		// If parent doesn't exists, then 0, 0.
+		Pointf translate = prnt->parent() ? prnt->parent()->to_root_pos(Pointf(), true) : Pointf();
+
+		// Shift the coordinate system of the canvas, considering other transform states for View (need to test).
+		TransformState transform_state(&canv);
+		canv.set_transform(transform_state.matrix * Mat4f::translate(translate.x, translate.y, 0) * view_transform());
+
+		// Render.
+		if (prnt)
+			prnt->impl->render(prnt, canv);
+		else
+			impl->render(this, canv);
+	}
+
+	void View::render_border(Canvas &canvas)
+	{
+		// Renders the border of a view
+		impl->style_cascade.render_border(canvas, impl->_geometry);
+	}
+
+	void View::render_background(Canvas &canvas)
+	{
+		// Renders the background of a view
+		impl->style_cascade.render_background(canvas, impl->_geometry);
+	}
+
 	/////////////////////////////////////////////////////////////////////////
 
 	ViewLayout *ViewImpl::active_layout(View *self)
@@ -735,13 +808,15 @@ namespace clan
 		}
 	}
 
-	void ViewImpl::render(View *self, Canvas &canvas, ViewRenderLayer layer)
+	void ViewImpl::render(View *self, Canvas &canvas)
 	{
-		if (layer == ViewRenderLayer::background)
-			style_cascade.render_background(canvas, _geometry);
-		else if (layer == ViewRenderLayer::border)
-			style_cascade.render_border(canvas, _geometry);
+		// Draw the background.
+		self->render_background(canvas);
 
+		// Draw the border.
+		self->render_border(canvas);
+
+		// Prepare to draw the content.
 		Pointf translate = _geometry.content_pos();
 
 		TransformState transform_state(&canvas);
@@ -759,30 +834,29 @@ namespace clan
 			cliprect_stack.push_cliprect(Rectf(std::min(tl_point.x, br_point.x), std::min(tl_point.y, br_point.y), std::max(tl_point.x, br_point.x), std::max(tl_point.y, br_point.y)));
 		}
 
-		if (layer == ViewRenderLayer::content)
+		if (!self->render_exception_encountered())
 		{
-			if (!self->render_exception_encountered())
+			bool success = UIThread::try_catch([&]
 			{
-				bool success = UIThread::try_catch([&]
-				{
-					self->render_content(canvas);
-				});
+				// Draw the content.
+				self->render_content(canvas);
+			});
 
-				if (!success)
-				{
-					exception_encountered = true;
-				}
-			}
-
-			if (self->render_exception_encountered())
+			if (!success)
 			{
-				canvas.set_transform(transform_state.matrix * Mat4f::translate(translate.x, translate.y, 0));
-				canvas.fill_rect(0.0f, 0.0f, _geometry.content_width, _geometry.content_height, Colorf(1.0f, 0.2f, 0.2f, 0.5f));
-				canvas.draw_line(0.0f, 0.0f, _geometry.content_width, _geometry.content_height, StandardColorf::black());
-				canvas.draw_line(_geometry.content_width, 0.0f, 0.0f, _geometry.content_height, StandardColorf::black());
+				exception_encountered = true;
 			}
 		}
 
+		if (self->render_exception_encountered())
+		{
+			canvas.set_transform(transform_state.matrix * Mat4f::translate(translate.x, translate.y, 0));
+			canvas.fill_rect(0.0f, 0.0f, _geometry.content_width, _geometry.content_height, Colorf(1.0f, 0.2f, 0.2f, 0.5f));
+			canvas.draw_line(0.0f, 0.0f, _geometry.content_width, _geometry.content_height, StandardColorf::black());
+			canvas.draw_line(_geometry.content_width, 0.0f, 0.0f, _geometry.content_height, StandardColorf::black());
+		}
+
+		// Prepare to render children.
 		Rectf clip_box = canvas.get_cliprect();
 		for (std::shared_ptr<View> &view : _children)
 		{
@@ -795,7 +869,7 @@ namespace clan
 				Rectf transformed_border_box(std::min(tl_point.x, br_point.x), std::min(tl_point.y, br_point.y), std::max(tl_point.x, br_point.x), std::max(tl_point.y, br_point.y));
 				if (clip_box.is_overlapped(transformed_border_box))
 				{
-					view->impl->render(view.get(), canvas, layer);
+					view->impl->render(view.get(), canvas);
 				}
 			}
 		}

@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Artem Khomenko
 */
 
 #pragma once
@@ -60,7 +61,12 @@ namespace clan
 
 		std::function<void()> &func_selection_changed();
 
+		void layout_children(Canvas &canvas) override;
+
 	private:
 		std::unique_ptr<ListBoxViewImpl> impl;
+
+		// Sets in set_selected_item() for scroll to selected in layout_children().
+		bool needScrollToSelected = false;
 	};
 }
