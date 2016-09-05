@@ -129,31 +129,31 @@ namespace clan
 				float x = get_start_x(index, clip_box, origin_box, image_size);
 				while (true)
 				{
-					Rectf image_source(0.0f, 0.0f, image_size);
+					Rectf image_source(0.0f, 0.0f, image.get_size());
 					Rectf image_dest(x, y, image_size);
 
 					if (image_dest.left < clip_box.left)
 					{
 						float delta = clip_box.left - image_dest.left;
-						image_source.left += delta;
+						image_source.left += delta * image.get_width() / image_size.width;
 						image_dest.left += delta;
 					}
 					if (image_dest.right > clip_box.right)
 					{
 						float delta = clip_box.right - image_dest.right;
-						image_source.right += delta;
+						image_source.right += delta * image.get_width() / image_size.width;
 						image_dest.right += delta;
 					}
 					if (image_dest.top < clip_box.top)
 					{
 						float delta = clip_box.top - image_dest.top;
-						image_source.top += delta;
+						image_source.top += delta * image.get_height() / image_size.height;
 						image_dest.top += delta;
 					}
 					if (image_dest.bottom > clip_box.bottom)
 					{
 						float delta = clip_box.bottom - image_dest.bottom;
-						image_source.bottom += delta;
+						image_source.bottom += delta * image.get_height() / image_size.height;
 						image_dest.bottom += delta;
 					}
 
@@ -395,7 +395,7 @@ namespace clan
 		if (repeat_x.is_keyword("repeat") || repeat_x.is_keyword("space"))
 		{
 			if (x > clip_box.left)
-				x = clip_box.left - std::fmod(image_size.width - (clip_box.left + x), image_size.width);
+				x = clip_box.left - std::fmod(image_size.width - (x - clip_box.left), image_size.width);
 		}
 
 		return x;
@@ -428,7 +428,7 @@ namespace clan
 		if (repeat_y.is_keyword("repeat") || repeat_y.is_keyword("space"))
 		{
 			if (y > clip_box.top)
-				y = clip_box.top - std::fmod(image_size.height - (clip_box.top + y), image_size.height);
+				y = clip_box.top - std::fmod(image_size.height - (y - clip_box.top), image_size.height);
 		}
 
 		return y;
