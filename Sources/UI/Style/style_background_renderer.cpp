@@ -59,7 +59,7 @@ namespace clan
 
 			if (is_render_border_antialias_fix_required())
 			{
-				float delta = 1.0f;
+				float delta = 0.5f;
 				border_points[0] += Pointf(delta, delta);
 				border_points[1] += Pointf(-delta, delta);
 				border_points[2] += Pointf(-delta, delta);
