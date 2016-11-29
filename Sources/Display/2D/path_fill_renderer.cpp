@@ -36,6 +36,7 @@
 
 #if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 #include <xmmintrin.h>
+#include <emmintrin.h>
 #endif
 
 using namespace clan::PathConstants;
