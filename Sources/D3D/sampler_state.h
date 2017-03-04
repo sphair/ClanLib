@@ -82,7 +82,7 @@ private:
 
 	struct D3D11SamplerDescLess
 	{
-		bool operator()(const D3D11_SAMPLER_DESC &a, const D3D11_SAMPLER_DESC &b)
+		bool operator()(const D3D11_SAMPLER_DESC &a, const D3D11_SAMPLER_DESC &b) const
 		{
 			return memcmp(&a, &b, sizeof(D3D11_SAMPLER_DESC)) < 0;
 		}
