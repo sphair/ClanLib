@@ -57,6 +57,19 @@ namespace clan
 		{
 			auto border_points = get_border_points();
 
+			if (is_render_border_antialias_fix_required())
+			{
+				float delta = 0.5f;
+				border_points[0] += Pointf(delta, delta);
+				border_points[1] += Pointf(-delta, delta);
+				border_points[2] += Pointf(-delta, delta);
+				border_points[3] += Pointf(-delta, -delta);
+				border_points[4] += Pointf(-delta, -delta);
+				border_points[5] += Pointf(delta, -delta);
+				border_points[6] += Pointf(delta, -delta);
+				border_points[7] += Pointf(delta, delta);
+			}
+
 			// To do: take get_layer_clip(num_layers - 1) into account
 
 			Path background_area = get_border_area_path(border_points);
@@ -116,7 +129,35 @@ namespace clan
 				float x = get_start_x(index, clip_box, origin_box, image_size);
 				while (true)
 				{
-					image.draw(canvas, Rectf(x, y, x + image_size.width, y + image_size.height));
+					Rectf image_source(0.0f, 0.0f, image.get_size());
+					Rectf image_dest(x, y, image_size);
+
+					if (image_dest.left < clip_box.left)
+					{
+						float delta = clip_box.left - image_dest.left;
+						image_source.left += delta * image.get_width() / image_size.width;
+						image_dest.left += delta;
+					}
+					if (image_dest.right > clip_box.right)
+					{
+						float delta = clip_box.right - image_dest.right;
+						image_source.right += delta * image.get_width() / image_size.width;
+						image_dest.right += delta;
+					}
+					if (image_dest.top < clip_box.top)
+					{
+						float delta = clip_box.top - image_dest.top;
+						image_source.top += delta * image.get_height() / image_size.height;
+						image_dest.top += delta;
+					}
+					if (image_dest.bottom > clip_box.bottom)
+					{
+						float delta = clip_box.bottom - image_dest.bottom;
+						image_source.bottom += delta * image.get_height() / image_size.height;
+						image_dest.bottom += delta;
+					}
+
+					image.draw(canvas, image_source, image_dest);
 
 					if (repeat_x.is_keyword("no-repeat"))
 					{
@@ -315,6 +356,18 @@ namespace clan
 		}
 	}
 
+	bool StyleBackgroundRenderer::is_render_border_antialias_fix_required()
+	{
+		StyleGetValue style_top = style.computed_value("border-top-style");
+		if (style_top.is_keyword("solid"))
+		{
+			Colorf color = style.computed_value("border-top-color").color();
+			if (color.a > 0.5f)
+				return true;
+		}
+		return false;
+	}
+
 	float StyleBackgroundRenderer::get_start_x(int index, const Rectf &clip_box, const Rectf &origin_box, const Sizef &image_size)
 	{
 		float x;
@@ -342,7 +395,7 @@ namespace clan
 		if (repeat_x.is_keyword("repeat") || repeat_x.is_keyword("space"))
 		{
 			if (x > clip_box.left)
-				x = clip_box.left - std::fmod(image_size.width - clip_box.left + x, image_size.width);
+				x = clip_box.left - std::fmod(image_size.width - (x - clip_box.left), image_size.width);
 		}
 
 		return x;
@@ -375,7 +428,7 @@ namespace clan
 		if (repeat_y.is_keyword("repeat") || repeat_y.is_keyword("space"))
 		{
 			if (y > clip_box.top)
-				y = clip_box.top - std::fmod(image_size.height - clip_box.top + y, image_size.height);
+				y = clip_box.top - std::fmod(image_size.height - (y - clip_box.top), image_size.height);
 		}
 
 		return y;

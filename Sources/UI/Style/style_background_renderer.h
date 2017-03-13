@@ -60,6 +60,8 @@ namespace clan
 		void render_background_repeating_linear_gradient(int index);
 		void render_background_repeating_radial_gradient(int index);
 
+		bool is_render_border_antialias_fix_required();
+
 		float get_start_x(int index, const Rectf &clip_box, const Rectf &origin_box, const Sizef &image_size);
 		float get_start_y(int index, const Rectf &clip_box, const Rectf &origin_box, const Sizef &image_size);
 		Sizef get_image_size(int index, const Image &image, Rectf origin_box);

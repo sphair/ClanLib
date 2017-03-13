@@ -1,3 +1,3 @@
 Documentation
 -------------
-You can view the official documentation by using doxygen to build it. On Linux, type 'make docs' after running configure. On Windows, point doxygen to clanlib.doxygen in the Documentation folder.
+You can view the official documentation by using doxygen to build it. On Linux, type 'make html' after running configure and 'make install-html' to install it. On Windows, point doxygen to clanlib.doxygen in the Documentation folder.

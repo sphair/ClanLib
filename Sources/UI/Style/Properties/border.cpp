@@ -865,20 +865,36 @@ namespace clan
 			}
 		}
 
-		for (int i = num_x_values; i < 4; i++)
+		if (num_x_values == 3)
 		{
-			radius_x[i] = radius_x[i - 1];
-			radius_y[i] = radius_y[i - 1];
+			radius_x[3] = radius_x[1];
+			radius_y[3] = radius_y[1];
+		}
+		else if (num_x_values == 2)
+		{
+			radius_x[3] = radius_x[1];
+			radius_y[3] = radius_y[1];
+			radius_x[2] = radius_x[0];
+			radius_y[2] = radius_y[0];
+		}
+		else if (num_x_values == 1)
+		{
+			radius_x[3] = radius_x[0];
+			radius_y[3] = radius_y[0];
+			radius_x[2] = radius_x[0];
+			radius_y[2] = radius_y[0];
+			radius_x[1] = radius_x[0];
+			radius_y[1] = radius_y[0];
 		}
 
-		setter->set_value("border-top-right-radius-x", radius_x[0]);
-		setter->set_value("border-top-right-radius-y", radius_y[0]);
-		setter->set_value("border-bottom-left-radius-x", radius_x[1]);
-		setter->set_value("border-bottom-left-radius-y", radius_y[1]);
+		setter->set_value("border-top-left-radius-x", radius_x[0]);
+		setter->set_value("border-top-left-radius-y", radius_y[0]);
+		setter->set_value("border-top-right-radius-x", radius_x[1]);
+		setter->set_value("border-top-right-radius-y", radius_y[1]);
 		setter->set_value("border-bottom-right-radius-x", radius_x[2]);
 		setter->set_value("border-bottom-right-radius-y", radius_y[2]);
-		setter->set_value("border-top-left-radius-x", radius_x[3]);
-		setter->set_value("border-top-left-radius-y", radius_y[3]);
+		setter->set_value("border-bottom-left-radius-x", radius_x[3]);
+		setter->set_value("border-bottom-left-radius-y", radius_y[3]);
 	}
 
 	void BorderRadiusCornerPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)

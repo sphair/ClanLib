@@ -65,11 +65,11 @@ namespace clan
 	{
 		std::vector<HANDLE> handles;
 		handles.reserve(count + 1);
-		handles.push_back(impl->notify_handle);
 		for (int i = 0; i < count; i++)
 		{
 			handles.push_back(events[i]->get_socket_handle()->wait_handle);
 		}
+		handles.push_back(impl->notify_handle);
 
 		DWORD result = WaitForMultipleObjects(handles.size(), &handles[0], FALSE, timeout > 0 ? timeout : INFINITE);
 		if (result == WAIT_TIMEOUT)
@@ -77,12 +77,11 @@ namespace clan
 		else if (result < WAIT_OBJECT_0 || result > WAIT_OBJECT_0 + count)
 			throw Exception("WaitForMultipleObjects failed");
 
-		for (int i = 0; i < count; i++)
-		{
-			events[i]->get_socket_handle()->reset_wait_handle();
-		}
-
-		ResetEvent(impl->notify_handle);
+		int event_index = result - WAIT_OBJECT_0;
+		if (event_index < count)
+			events[event_index]->get_socket_handle()->reset_wait_handle();
+		else
+			ResetEvent(impl->notify_handle);
 
 		return true;
 	}

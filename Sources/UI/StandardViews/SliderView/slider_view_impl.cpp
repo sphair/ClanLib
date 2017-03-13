@@ -165,9 +165,9 @@ namespace clan
 
 		// Check and set hot state by long and winding road - need to reach TopLevelWindow_Impl::dispatch_hot_event().
 		auto tree = slider->view_tree();
-		DisplayWindow *pDispWindow = &tree->display_window();
+		DisplayWindow pDispWindow = tree->display_window();
 		if (pDispWindow) {
-			InputDevice *pInputDevice = &pDispWindow->get_mouse();
+			InputDevice &pInputDevice = pDispWindow.get_mouse();
 			if (pInputDevice) {
 
 				// Root view.
@@ -180,7 +180,7 @@ namespace clan
 				mouse_pos = rootView->to_screen_pos(mouse_pos);
 
 				// Change relative to client.
-				mouse_pos = pDispWindow->screen_to_client(mouse_pos);
+				mouse_pos = pDispWindow.screen_to_client(mouse_pos);
 
 				// Prepare event to be emitted:
 				InputEvent moveEvent;
@@ -188,7 +188,7 @@ namespace clan
 				moveEvent.mouse_pos = mouse_pos;
 
 				// Send message.
-				pInputDevice->sig_pointer_move()(moveEvent);
+				pInputDevice.sig_pointer_move()(moveEvent);
 			}
 		}
 	}
