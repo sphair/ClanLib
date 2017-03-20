@@ -733,7 +733,7 @@ namespace clan
 
 		// Ask the parent for redraw and then it redraws us.
 		View *prnt = parent();
-		Canvas canv; // empty canvas
+		Canvas canv = canvas();
 
 		// Drawing area - start from our margin_box.
 		Rectf clipBox(geom.margin_box());
