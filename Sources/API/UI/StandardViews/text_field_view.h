@@ -97,7 +97,11 @@ namespace clan
 		Signal<void()> &sig_selection_changed();
 		Signal<void()> &sig_enter_pressed();
 
+		/// Update yourself with draw_without_layout() and with delay to prevent too frequent calls.
+		void needs_render_delayed();
+
 	protected:
+
 		void render_content(Canvas &canvas) override;
 		float calculate_preferred_width(Canvas &canvas) override;
 		float calculate_preferred_height(Canvas &canvas, float width) override;

@@ -73,6 +73,15 @@ namespace clan
 			else
 				impl->move(1, false, false);
 		};
+
+		impl->render_timer.func_expired() = [&]()
+		{
+			impl->is_delayed = false;
+			if (impl->is_need_render_after_timeout) {
+				impl->is_need_render_after_timeout = false;
+				needs_render_delayed();
+			}
+		};
 	}
 
 	TextFieldView::~TextFieldView()
@@ -89,7 +98,7 @@ namespace clan
 		if (impl->preferred_size != num_characters)
 		{
 			impl->preferred_size = num_characters;
-			set_needs_layout();
+			needs_render_delayed();
 		}
 	}
 
@@ -114,7 +123,7 @@ namespace clan
 		impl->undo_buffer.clear();
 		impl->redo_buffer.clear();
 
-		set_needs_render();
+		needs_render_delayed();
 	}
 
 	std::string TextFieldView::placeholder() const
@@ -125,7 +134,7 @@ namespace clan
 	void TextFieldView::set_placeholder(const std::string &value)
 	{
 		impl->placeholder = value;
-		set_needs_render();
+		needs_render_delayed();
 	}
 
 	TextAlignment TextFieldView::text_alignment() const
@@ -138,7 +147,7 @@ namespace clan
 		if (impl->alignment != alignment)
 		{
 			impl->alignment = alignment;
-			set_needs_render();
+			needs_render_delayed();
 		}
 	}
 
@@ -152,7 +161,7 @@ namespace clan
 		if (impl->readonly != value)
 		{
 			impl->readonly = value;
-			set_needs_render();
+			needs_render_delayed();
 		}
 	}
 
@@ -196,7 +205,7 @@ namespace clan
 		if (impl->password_mode != value)
 		{
 			impl->password_mode = value;
-			set_needs_render();
+			needs_render_delayed();
 		}
 	}
 
@@ -210,7 +219,7 @@ namespace clan
 		if (impl->max_length != length)
 		{
 			impl->max_length = length;
-			set_needs_render();
+			needs_render_delayed();
 		}
 	}
 
@@ -236,7 +245,7 @@ namespace clan
 		if (length == 0) start = 0;
 		impl->selection.set(start, length);
 		impl->cursor_pos = start + length;
-		set_needs_render();
+		needs_render_delayed();
 	}
 
 	void TextFieldView::clear_selection()
@@ -268,7 +277,7 @@ namespace clan
 	void TextFieldView::set_cursor_pos(int pos)
 	{
 		impl->cursor_pos = pos;
-		set_needs_render();
+		needs_render_delayed();
 	}
 
 	void TextFieldView::set_cursor_drawing_enabled(bool value)
@@ -414,6 +423,19 @@ namespace clan
 		return first_baseline_offset(canvas, width);
 	}
 
+	void TextFieldView::needs_render_delayed()
+	{
+		// If delay already in progress, only set a flag. Otherwise draw and start timer.
+		if (impl->is_delayed)
+			impl->is_need_render_after_timeout = true;
+		else
+		{
+			draw_without_layout();
+			impl->is_delayed = true;
+			impl->render_timer.start(30, false);
+		}
+	}
+
 	/////////////////////////////////////////////////////////////////////////
 
 	const Font &TextFieldViewImpl::get_font(Canvas &canvas)
@@ -428,26 +450,26 @@ namespace clan
 		blink_timer.func_expired() = [&]()
 		{
 			cursor_blink_visible = !cursor_blink_visible;
-			textfield->set_needs_render();
+			textfield->needs_render_delayed();
 		};
 		blink_timer.start(500, true);
 
 		cursor_blink_visible = true;
-		textfield->set_needs_render();
+		textfield->needs_render_delayed();
 	}
 
 	void TextFieldViewImpl::stop_blink()
 	{
 		blink_timer.stop();
 		cursor_blink_visible = false;
-		textfield->set_needs_render();
+		textfield->needs_render_delayed();
 	}
 
 	void TextFieldViewImpl::on_focus_gained(FocusChangeEvent &e)
 	{
 		start_blink();
 		cursor_blink_visible = true;
-		textfield->set_needs_render();
+		textfield->needs_render_delayed();
 		ignore_mouse_events = true;
 		if (select_all_on_focus_gain) select_all();
 	}
@@ -614,7 +636,7 @@ namespace clan
 			cursor_pos = get_character_index(e.pos(textfield).x);
 			selection.set_tail(cursor_pos);
 			textfield->set_focus();
-			textfield->set_needs_render();
+			textfield->needs_render_delayed();
 		}
 	}
 
@@ -700,7 +722,7 @@ namespace clan
 
 		cursor_pos = pos;
 		needs_new_undo_step = true;
-		textfield->set_needs_render();
+		textfield->needs_render_delayed();
 	}
 
 	void TextFieldViewImpl::home(bool shift)
@@ -720,7 +742,7 @@ namespace clan
 		}
 
 		cursor_pos = 0;
-		textfield->set_needs_render();
+		textfield->needs_render_delayed();
 	}
 
 	void TextFieldViewImpl::end(bool shift)
@@ -740,7 +762,7 @@ namespace clan
 		}
 
 		cursor_pos = text.size();
-		textfield->set_needs_render();
+		textfield->needs_render_delayed();
 	}
 
 	void TextFieldViewImpl::backspace()
@@ -761,7 +783,7 @@ namespace clan
 			text.erase(text.begin() + new_cursor_pos, text.begin() + cursor_pos);
 			cursor_pos = new_cursor_pos;
 
-			textfield->set_needs_render();
+			textfield->needs_render_delayed();
 		}
 	}
 
@@ -775,7 +797,7 @@ namespace clan
 			text.erase(text.begin() + selection.start(), text.begin() + selection.end());
 			selection.reset();
 
-			textfield->set_needs_render();
+			textfield->needs_render_delayed();
 		}
 		else if (cursor_pos < text.length())
 		{
@@ -785,7 +807,7 @@ namespace clan
 			utf8_reader.set_position(cursor_pos);
 			text.erase(text.begin() + cursor_pos, text.begin() + cursor_pos + utf8_reader.get_char_length());
 
-			textfield->set_needs_render();
+			textfield->needs_render_delayed();
 		}
 	}
 
@@ -845,7 +867,7 @@ namespace clan
 
 		undo_buffer.pop_back();
 
-		textfield->set_needs_render();
+		textfield->needs_render_delayed();
 	}
 
 	void TextFieldViewImpl::redo()
@@ -866,7 +888,7 @@ namespace clan
 
 		redo_buffer.pop_back();
 
-		textfield->set_needs_render();
+		textfield->needs_render_delayed();
 	}
 
 	void TextFieldViewImpl::save_undo()
@@ -934,7 +956,7 @@ namespace clan
 		text = text.substr(0, cursor_pos) + new_text + text.substr(cursor_pos);
 		cursor_pos += new_text.size();
 
-		textfield->set_needs_render();
+		textfield->needs_render_delayed();
 	}
 
 	std::string TextFieldViewImpl::get_text_before_selection() const
