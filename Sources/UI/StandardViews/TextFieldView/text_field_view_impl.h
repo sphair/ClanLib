@@ -154,6 +154,15 @@ namespace clan
 		bool ignore_mouse_events = false;
 		bool mouse_selecting = false;
 
+		/// Timer for render delay
+		Timer render_timer;
+
+		/// Set to true in needs_render_delayed() and set false in delay_func().
+		bool is_delayed = false;
+
+		/// Set to true in needs_render_delayed() if is_delayed not yet false.
+		bool is_need_render_after_timeout = false;
+
 		struct UndoInfo
 		{
 			std::string text;
