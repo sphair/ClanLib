@@ -62,7 +62,7 @@ namespace clan
 	{
 		impl->selected_item = -1;
 		
-		auto views = content_view()->children();
+		auto &views = content_view()->children();
 		while (!views.empty())
 			views.back()->remove_from_parent();
 		
