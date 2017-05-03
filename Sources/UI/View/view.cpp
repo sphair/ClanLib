@@ -863,7 +863,7 @@ namespace clan
 			if (!view->hidden())
 			{
 				// Note: this code isn't correct for rotated transforms (plus canvas cliprect can only clip AABB)
-				Rect border_box = view->geometry().border_box();
+				Rectf border_box = view->geometry().border_box();
 				Vec4f tl_point = canvas.get_transform() * Vec4f(border_box.left, border_box.top, 0.0f, 1.0f);
 				Vec4f br_point = canvas.get_transform() * Vec4f(border_box.right, border_box.bottom, 0.0f, 1.0f);
 				Rectf transformed_border_box(std::min(tl_point.x, br_point.x), std::min(tl_point.y, br_point.y), std::max(tl_point.x, br_point.x), std::max(tl_point.y, br_point.y));
