@@ -293,6 +293,7 @@ echo "Checking for ClanLib Modules to build..."
 echo "========================================"
 
 CLANLIB_ARG_ENABLE(docs,          auto, [Build Clanlib API documentation], [whether we should try to build API documentation])
+CLANLIB_ARG_ENABLE(clanApp,       auto, [Build clanApp module],            [whether we should try to build clanApp])
 CLANLIB_ARG_ENABLE(clanDisplay,   auto, [Build clanDisplay module],        [whether we should try to build clanDisplay])
 CLANLIB_ARG_ENABLE(clanGL,        auto, [Build clanGL module],             [whether we should try to build clanGL])
 CLANLIB_ARG_ENABLE(clanSound,     auto, [Build clanSound module],          [whether we should try to build clanSound])
@@ -463,8 +464,13 @@ if test "$enable_clanUI" != "no"; then
 	echo ""
 fi
 
-if test "$enable_clanCML" != "no"; then
+if test "$enable_clanXML" != "no"; then
 	enable_clanXML=yes
+	echo ""
+fi
+
+if test "$enable_clanApp" != "no"; then
+	enable_clanApp=yes
 	echo ""
 fi
 
@@ -505,17 +511,20 @@ dnl Set the include path
 CXXFLAGS="$CXXFLAGS -I\$(top_srcdir)/Sources"
 
 dnl Modules which will be build
-ClanLib_Modules="App"
-ClanLib_pkgconfig="clanApp.pc"
+ClanLib_Modules=""
+ClanLib_pkgconfig=""
 
 dnl API header files for the Modules which will be installed
-ClanLib_API_Modules="$ClanLib_API_Modules \$(clanApp_includes)"
+ClanLib_API_Modules=""
 
 dnl Default examples which will be build
 dnl (Currently Disabled)
 ClanLib_Examples=""
 CLANLIB_ENABLE_MODULES(Core)
 
+if test "$enable_clanApp" = "yes"; then
+	CLANLIB_ENABLE_MODULES(App)
+fi
 if test "$enable_clanDisplay" = "yes"; then
 	CLANLIB_ENABLE_MODULES(Display)
 fi
@@ -644,13 +653,11 @@ AC_SUBST(ClanLib_API_Modules)
 AC_SUBST(ClanLib_Examples)
 
 AC_CONFIG_FILES([
-		Setup/Unix/pkgconfig/clanApp.pc
 		Setup/Unix/pkgconfig/Makefile
 		Makefile
 		Examples/Makefile
 		Examples/Makefile.conf
 		Sources/API/Makefile
-		Sources/App/Makefile
 		Sources/Makefile
 		])
 
@@ -681,17 +688,6 @@ dnl echo "                    LDFLAGS = $LDFLAGS"
 echo ""
 echo "The following modules will be built:"
 echo ""
-gl_options=""
-if test "$enable_clanGL" != "no"; then
-	if test "$have_xrender" != "no"; then
-		gl_options="$display_options (XRender Enabled)"
-	else
-		gl_options="$display_options (XRender Disabled)"
-	fi
-fi
-
-echo "                     clanGL = $enable_clanGL$gl_options"
-echo "                    clanApp = yes"
 
 core_options=""
 if test "$use_sse2" != "no"; then
@@ -704,7 +700,14 @@ if test "$gcc_cv_have_tls" != "yes"; then
 	core_options="$core_options * Warning Thread Local Storage is Disabled *"
 fi
 
-echo "                   clanCore = yes$core_options"
+gl_options=""
+if test "$enable_clanGL" != "no"; then
+	if test "$have_xrender" != "no"; then
+		gl_options="$display_options (XRender Enabled)"
+	else
+		gl_options="$display_options (XRender Disabled)"
+	fi
+fi
 
 sound_options=""
 if test "$enable_clanSound" != "no"; then
@@ -714,11 +717,6 @@ if test "$enable_clanSound" != "no"; then
 		sound_options="$sound_options (ALSA Disabled)"
 	fi
 fi
-
-echo "                  clanSound = $enable_clanSound$sound_options"
-echo "                clanNetwork = $enable_clanNetwork"
-echo "                     clanUI = $enable_clanUI"
-echo "                    clanXML = $enable_clanXML"
 
 display_options=""
 if test "$enable_clanDisplay" != "no"; then
@@ -735,7 +733,14 @@ if test "$enable_clanDisplay" != "no"; then
 	fi
 fi
 
+echo "                   clanCore = yes$core_options"
+echo "                    clanApp = $enable_clanApp"
 echo "                clanDisplay = $enable_clanDisplay$display_options"
+echo "                     clanGL = $enable_clanGL$gl_options"
+echo "                  clanSound = $enable_clanSound$sound_options"
+echo "                clanNetwork = $enable_clanNetwork"
+echo "                     clanUI = $enable_clanUI"
+echo "                    clanXML = $enable_clanXML"
 echo ""
 
 if test "$enable_docs" == "no"; then
