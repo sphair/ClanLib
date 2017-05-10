@@ -1,5 +1,10 @@
 
 #pragma once
+
+#include <string.h>
+#include <stdlib.h>
+#include <time.h>
+
 namespace clan
 {
 
