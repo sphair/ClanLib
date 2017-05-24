@@ -182,6 +182,18 @@ namespace clan
 		/// Calculates the preferred height of this view
 		float preferred_height(Canvas &canvas, float width);
 
+		/// The content width used for percentages or other definite calculations
+		float definite_width();
+
+		/// The content height used for percentages or other definite calculations
+		float definite_height();
+
+		/// Test if the view has a definite width
+		bool is_width_definite();
+
+		/// Test if the view has a definite height
+		bool is_height_definite();
+
 		/// Calculates the offset to the first baseline
 		float first_baseline_offset(Canvas &canvas, float width);
 
@@ -334,6 +346,12 @@ namespace clan
 
 		/// Calculates the offset to the last baseline
 		virtual float calculate_last_baseline_offset(Canvas &canvas, float width);
+
+		/// The content width used for percentages or other definite calculations
+		virtual float calculate_definite_width(bool &out_is_definite);
+
+		/// The content height used for percentages or other definite calculations
+		virtual float calculate_definite_height(bool &out_is_definite);
 
 	private:
 		View(const View &) = delete;

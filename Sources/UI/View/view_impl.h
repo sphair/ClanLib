@@ -50,6 +50,14 @@ namespace clan
 		std::map<float, float> first_baseline_offset;
 		std::map<float, float> last_baseline_offset;
 
+		bool definite_width_calculated = false;
+		bool is_width_definite = false;
+		float definite_width = 0.0f;
+
+		bool definite_height_calculated = false;
+		bool is_height_definite = false;
+		float definite_height = 0.0f;
+
 		void clear()
 		{
 			preferred_width_calculated = false;
@@ -57,6 +65,12 @@ namespace clan
 			preferred_height.clear();
 			first_baseline_offset.clear();
 			last_baseline_offset.clear();
+			definite_width_calculated = false;
+			is_width_definite = false;
+			definite_width = 0.0f;
+			definite_height_calculated = false;
+			is_height_definite = false;
+			definite_height = 0.0f;
 		}
 	};
 

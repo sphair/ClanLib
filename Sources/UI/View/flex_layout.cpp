@@ -179,17 +179,17 @@ namespace clan
 
 			// Definite sizes:
 
-			item.definite_main_size = item_style.computed_value("width").is_length();
-			item.definite_cross_size = item_style.computed_value("height").is_length();
+			item.definite_main_size = child->is_width_definite();
+			item.definite_cross_size = child->is_height_definite();
 			item.definite_min_main_size = item_style.computed_value("min-width").is_length();
 			item.definite_max_main_size = item_style.computed_value("max-width").is_length();
 			item.definite_min_cross_size = item_style.computed_value("min-height").is_length();
 			item.definite_max_cross_size = item_style.computed_value("max-height").is_length();
 
 			if (item.definite_main_size)
-				item.main_size = item_style.computed_value("width").number();
+				item.main_size = child->definite_width();
 			if (item.definite_cross_size)
-				item.cross_size = item_style.computed_value("height").number();
+				item.cross_size = child->definite_height();
 			if (item.definite_min_main_size)
 				item.min_main_size = item_style.computed_value("min-width").number();
 			if (item.definite_max_main_size)
@@ -318,17 +318,17 @@ namespace clan
 
 			// Definite sizes:
 
-			item.definite_main_size = item_style.computed_value("height").is_length();
-			item.definite_cross_size = item_style.computed_value("width").is_length();
+			item.definite_main_size = child->is_height_definite();
+			item.definite_cross_size = child->is_width_definite();
 			item.definite_min_main_size = item_style.computed_value("min-height").is_length();
 			item.definite_max_main_size = item_style.computed_value("max-height").is_length();
 			item.definite_min_cross_size = item_style.computed_value("min-width").is_length();
 			item.definite_max_cross_size = item_style.computed_value("max-width").is_length();
 
 			if (item.definite_main_size)
-				item.main_size = item_style.computed_value("height").number();
+				item.main_size = child->definite_height();
 			if (item.definite_cross_size)
-				item.cross_size = item_style.computed_value("width").number();
+				item.cross_size = child->definite_width();
 			if (item.definite_min_main_size)
 				item.min_main_size = item_style.computed_value("min-height").number();
 			if (item.definite_max_main_size)

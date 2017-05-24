@@ -296,6 +296,50 @@ namespace clan
 		}
 	}
 
+	float View::definite_width()
+	{
+		if (!impl->layout_cache.definite_width_calculated)
+		{
+			impl->layout_cache.is_width_definite = false;
+			impl->layout_cache.definite_width = calculate_definite_width(impl->layout_cache.is_width_definite);
+			impl->layout_cache.definite_width_calculated = true;
+		}
+		return impl->layout_cache.definite_width;
+	}
+
+	float View::definite_height()
+	{
+		if (!impl->layout_cache.definite_height_calculated)
+		{
+			impl->layout_cache.is_height_definite = false;
+			impl->layout_cache.definite_height = calculate_definite_height(impl->layout_cache.is_height_definite);
+			impl->layout_cache.definite_height_calculated = true;
+		}
+		return impl->layout_cache.definite_height;
+	}
+
+	bool View::is_width_definite()
+	{
+		if (!impl->layout_cache.definite_width_calculated)
+		{
+			impl->layout_cache.is_width_definite = false;
+			impl->layout_cache.definite_width = calculate_definite_width(impl->layout_cache.is_width_definite);
+			impl->layout_cache.definite_width_calculated = true;
+		}
+		return impl->layout_cache.is_width_definite;
+	}
+
+	bool View::is_height_definite()
+	{
+		if (!impl->layout_cache.definite_height_calculated)
+		{
+			impl->layout_cache.is_height_definite = false;
+			impl->layout_cache.definite_height = calculate_definite_height(impl->layout_cache.is_height_definite);
+			impl->layout_cache.definite_height_calculated = true;
+		}
+		return impl->layout_cache.is_height_definite;
+	}
+
 	float View::preferred_width(Canvas &canvas)
 	{
 		if (!impl->layout_cache.preferred_width_calculated)
@@ -362,6 +406,46 @@ namespace clan
 	void View::layout_children(Canvas &canvas)
 	{
 		return impl->active_layout(this)->layout_children(canvas, this);
+	}
+
+	float View::calculate_definite_width(bool &is_definite)
+	{
+		auto css_width = style_cascade().computed_value("width");
+		if (css_width.is_length())
+		{
+			is_definite = true;
+			return css_width.number();
+		}
+		else if (css_width.is_percentage() && parent() && parent()->is_width_definite())
+		{
+			is_definite = true;
+			return css_width.number() * parent()->definite_width() / 100.0f;
+		}
+		else
+		{
+			is_definite = false;
+			return 0.0f;
+		}
+	}
+
+	float View::calculate_definite_height(bool &is_definite)
+	{
+		auto css_height = style_cascade().computed_value("height");
+		if (css_height.is_length())
+		{
+			is_definite = true;
+			return css_height.number();
+		}
+		else if (css_height.is_percentage() && parent() && parent()->is_height_definite())
+		{
+			is_definite = true;
+			return css_height.number() * parent()->definite_height() / 100.0f;
+		}
+		else
+		{
+			is_definite = false;
+			return 0.0f;
+		}
 	}
 
 	ViewTree *View::view_tree()
