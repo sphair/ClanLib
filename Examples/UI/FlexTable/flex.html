@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style> 
+div.OUTER_VIEW {
+    border: 20px solid blue;
+    padding: 15px;
+    margin: 0px;
+    background-color: black;
+    width: 1000px;
+    height: 500px;
+}
+
+div.COLUMN_FLEX_VIEW {
+    border: 8px solid yellow;
+    padding: 15px;
+    margin: 0px;
+	
+	display:flex;
+	align-items:flex-start;
+	flex-direction:column;
+	height:400px;
+	
+    background-color: #666666;
+}
+
+div.ROW_FLEX_VIEW {
+    border: 8px solid red;
+    padding: 15px;
+    margin: 0px;
+
+	width:100%;
+	box-sizing: border-box;
+	
+	display:flex;
+	align-items:flex-start;
+	
+    background-color: #444444;
+}
+
+div.ROW_VIEW1 {
+	flex: 0 0 400px;
+	color: white;
+	height:60px;
+	font-size:20px;
+	border: 8px solid white;
+	background: black;
+}
+div.ROW_VIEW2 {
+	flex: 1 0 auto;
+	color: white;
+	height:60px;
+	font-size:20px;
+	border: 8px solid white;
+	background: black;
+}
+div.ROW_VIEW3 {
+	flex: 0 0 200px;
+	color: white;
+	height:60px;
+	font-size:20px;
+	border: 8px solid white;
+	background: black;
+}
+
+</style>
+</head>
+<body bgcolor="#002b60">
+
+<div class="OUTER_VIEW">
+
+<div class="COLUMN_FLEX_VIEW">
+
+<div class="ROW_FLEX_VIEW">
+
+<div class="ROW_VIEW1">Row One</div>
+<div class="ROW_VIEW2">Row Two</div>
+<div class="ROW_VIEW3">Row Three</div>
+
+</div>
+
+<div class="ROW_FLEX_VIEW">
+
+<div class="ROW_VIEW1">Row Four</div>
+<div class="ROW_VIEW2">Row Five</div>
+<div class="ROW_VIEW3">Row Six</div>
+
+</div>
+
+</div>
+</div>
+
+</body>
+</html>
