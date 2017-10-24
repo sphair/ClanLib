@@ -49,7 +49,7 @@ namespace clan
 		std::string _text;
 		TextAlignment text_alignment = TextAlignment::left;
 		Font font;
-		Colorf font_color = Colorf::white;
+		Colorf font_color = StandardColorf::white();
 		LineBreakMode _line_break_mode = LineBreakMode::truncating_tail;
 
 		const Font &get_font(LabelView *view, Canvas &canvas)

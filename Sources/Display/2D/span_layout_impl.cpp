@@ -35,7 +35,7 @@ namespace clan
 {
 	SpanLayout_Impl::SpanLayout_Impl()
 		: cursor_visible(false), cursor_pos(0), cursor_overwrite_mode(false), cursor_color(StandardColorf::black()),
-		sel_start(0), sel_end(0), sel_foreground(StandardColorf::white()), sel_background(Colorf::darkslateblue),
+		sel_start(0), sel_end(0), sel_foreground(StandardColorf::white()), sel_background(StandardColorf::darkslateblue()),
 		alignment(span_left), is_ellipsis_draw(false)
 	{
 	}
