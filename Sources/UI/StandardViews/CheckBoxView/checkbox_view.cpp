@@ -110,7 +110,7 @@ namespace clan
 		// But now simple fill background.
 
 		// Find background color
-		Colorf backColor = Colorf::transparent;
+		Colorf backColor = StandardColorf::transparent();
 		View *ptr = this;
 		while (ptr) {
 			const StyleGetValue value = ptr->style_cascade().cascade_value("background-color");
@@ -121,7 +121,7 @@ namespace clan
 			ptr = ptr->parent();
 		}
 
-		// Clear backgroud
+		// Clear background
 		canvas.fill_rect(geometry().content_box(), backColor);
 
 		// Call the predecessor.
