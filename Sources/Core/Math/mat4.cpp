@@ -492,6 +492,10 @@ namespace clan
 
 		Vec4<Type> fv = Vec4<Type>(f[0], f[1], f[2], 0);
 		Vec4<Type> s = Vec4<Type>::cross3(fv, Vec4<Type>(up[0], up[1], up[2], 0));
+		Type length_s = sqrt(s.x * s.x + s.y * s.y + s.z * s.z);
+		s.x /= length_s;
+		s.y /= length_s;
+		s.z /= length_s;
 		Vec4<Type> u = Vec4<Type>::cross3(s, fv);
 
 		Mat4<Type> m = null();
@@ -530,6 +534,10 @@ namespace clan
 
 		Vec4f fv = Vec4f(f[0], f[1], f[2], 0);
 		Vec4f s = Vec4f::cross3(fv, Vec4f(up[0], up[1], up[2], 0));
+		float length_s = sqrt(s.x * s.x + s.y * s.y + s.z * s.z);
+		s.x /= length_s;
+		s.y /= length_s;
+		s.z /= length_s;
 		Vec4f u = Vec4f::cross3(s, fv);
 
 		Mat4f m = null();
