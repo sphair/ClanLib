@@ -346,7 +346,7 @@ namespace clan
 			}
 			else if (texture_type == GL_TEXTURE_CUBE_MAP)
 			{
-				glTexSubImage2D(OpenGL::to_cube_target(slice), level, x, y, src_rect.get_width(), src_rect.get_height(), tf.pixel_datatype, tf.pixel_datatype, data);
+				glTexSubImage2D(OpenGL::to_cube_target(slice), level, x, y, src_rect.get_width(), src_rect.get_height(), tf.pixel_format, tf.pixel_datatype, data);
 			}
 			else if (texture_type == GL_TEXTURE_CUBE_MAP_ARRAY)
 			{
