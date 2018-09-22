@@ -223,10 +223,10 @@ namespace clan
 
 	void AES_Impl::create_tables()
 	{
-		int power[256];
-		int logarithm[256];
+		size_t power[256];
+		size_t logarithm[256];
 
-		int cnt, x;
+		size_t cnt, x;
 
 		// Calculate power and logarithm helper tables over GF(2^8)
 		for (cnt = 0, x = 1; cnt < 256; cnt++)

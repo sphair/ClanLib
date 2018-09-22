@@ -99,22 +99,12 @@ namespace clan
 		return impl->allocated_size;
 	}
 
-	char &DataBuffer::operator[](int i)
+	char &DataBuffer::operator[](size_t i)
 	{
 		return impl->data[i];
 	}
 
-	const char &DataBuffer::operator[](int i) const
-	{
-		return impl->data[i];
-	}
-
-	char &DataBuffer::operator[](unsigned int i)
-	{
-		return impl->data[i];
-	}
-
-	const char &DataBuffer::operator[](unsigned int i) const
+	const char &DataBuffer::operator[](size_t i) const
 	{
 		return impl->data[i];
 	}

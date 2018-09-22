@@ -45,6 +45,7 @@ namespace clan
 		DataBuffer();
 		DataBuffer(unsigned int size);
 		DataBuffer(const void *data, unsigned int size);
+		DataBuffer(const DataBuffer &data) { impl = data.impl; }
 		DataBuffer(const DataBuffer &data, unsigned int pos, unsigned int size);
 		~DataBuffer();
 
@@ -66,10 +67,8 @@ namespace clan
 		unsigned int get_capacity() const;
 
 		/// \brief Returns a char in the buffer.
-		char &operator[](int i);
-		const char &operator[](int i) const;
-		char &operator[](unsigned int i);
-		const char &operator[](unsigned int i) const;
+		char &operator[](size_t i);
+		const char &operator[](size_t i) const;
 
 		/// \brief Returns true if the buffer is 0 in size.
 		bool is_null() const;

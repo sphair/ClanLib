@@ -57,9 +57,9 @@ namespace clan
 	void AES192_Decrypt_Impl::set_iv(const unsigned char iv[16])
 	{
 		initialisation_vector_1 = get_word(iv);
-		initialisation_vector_2 = get_word(iv + 4);
-		initialisation_vector_3 = get_word(iv + 8);
-		initialisation_vector_4 = get_word(iv + 12);
+		initialisation_vector_2 = get_word(iv + 4 * sizeof(unsigned char));
+		initialisation_vector_3 = get_word(iv + 8 * sizeof(unsigned char));
+		initialisation_vector_4 = get_word(iv + 12 * sizeof(unsigned char));
 
 		initialisation_vector_set = true;
 	}
