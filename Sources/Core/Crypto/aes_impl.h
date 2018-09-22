@@ -37,25 +37,25 @@ namespace clan
 
 		static void create_tables();
 
-		static const int aes128_key_length_nk = 4;
-		static const int aes128_block_size_nb = 4;
-		static const int aes128_num_rounds_nr = 10;
-		static const int aes192_key_length_nk = 6;
-		static const int aes192_block_size_nb = 4;
-		static const int aes192_num_rounds_nr = 12;
-		static const int aes256_key_length_nk = 8;
-		static const int aes256_block_size_nb = 4;
-		static const int aes256_num_rounds_nr = 14;
+		static const int aes128_key_length_nk = 4 * sizeof(unsigned char);
+		static const int aes128_block_size_nb = 4 * sizeof(unsigned char);
+		static const int aes128_num_rounds_nr = 10 * sizeof(unsigned char);
+		static const int aes192_key_length_nk = 6 * sizeof(unsigned char);
+		static const int aes192_block_size_nb = 4 * sizeof(unsigned char);
+		static const int aes192_num_rounds_nr = 12 * sizeof(unsigned char);
+		static const int aes256_key_length_nk = 8 * sizeof(unsigned char);
+		static const int aes256_block_size_nb = 4 * sizeof(unsigned char);
+		static const int aes256_num_rounds_nr = 14 * sizeof(unsigned char);
 
-		static const int aes128_key_length_bytes = aes128_key_length_nk * 4;
+		static const int aes128_key_length_bytes = aes128_key_length_nk * 4 * sizeof(unsigned char);
 		static const int aes128_nb_mult_nr_plus1 = aes128_block_size_nb * (aes128_num_rounds_nr + 1);
-		static const int aes128_block_size_bytes = aes128_block_size_nb * 4;
-		static const int aes192_key_length_bytes = aes192_key_length_nk * 4;
+		static const int aes128_block_size_bytes = aes128_block_size_nb * 4 * sizeof(unsigned char);
+		static const int aes192_key_length_bytes = aes192_key_length_nk * 4 * sizeof(unsigned char);
 		static const int aes192_nb_mult_nr_plus1 = aes192_block_size_nb * (aes192_num_rounds_nr + 1);
-		static const int aes192_block_size_bytes = aes192_block_size_nb * 4;
-		static const int aes256_key_length_bytes = aes256_key_length_nk * 4;
+		static const int aes192_block_size_bytes = aes192_block_size_nb * 4 * sizeof(unsigned char);
+		static const int aes256_key_length_bytes = aes256_key_length_nk * 4 * sizeof(unsigned char);
 		static const int aes256_nb_mult_nr_plus1 = aes256_block_size_nb * (aes256_num_rounds_nr + 1);
-		static const int aes256_block_size_bytes = aes256_block_size_nb * 4;
+		static const int aes256_block_size_bytes = aes256_block_size_nb * 4 * sizeof(unsigned char);
 
 		static uint32_t sbox_substitution_values[256];
 		static uint32_t sbox_inverse_substitution_values[256];
@@ -95,7 +95,7 @@ namespace clan
 			return ((value << 1) ^ ((value & 0x80) ? 0x1B : 0x00));
 		}
 
-		static inline int mul_value(int x, int y, const int *power, const int *logarithm)
+		static inline size_t mul_value(size_t x, size_t y, const size_t *power, const size_t *logarithm)
 		{
 			if (x && y)
 			{

@@ -88,10 +88,10 @@ namespace clan
 		uint32_t key_expanded[aes128_nb_mult_nr_plus1];
 
 		unsigned char chunk[aes128_block_size_bytes];
-		uint32_t initialisation_vector_1;
-		uint32_t initialisation_vector_2;
-		uint32_t initialisation_vector_3;
-		uint32_t initialisation_vector_4;
+		uint32_t initialisation_vector_1 = 0;
+		uint32_t initialisation_vector_2 = 0;
+		uint32_t initialisation_vector_3 = 0;
+		uint32_t initialisation_vector_4 = 0;
 
 		int chunk_filled;
 

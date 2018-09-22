@@ -347,21 +347,23 @@ namespace clan
 	template<typename Type>
 	Vec4<Type> operator * (const Vec4<Type>& v, const Mat4<Type>& matrix)
 	{
+		const size_t sz = sizeof(Type);
 		return Vec4<Type>(
-			matrix[0 * 4 + 0] * v.x + matrix[0 * 4 + 1] * v.y + matrix[0 * 4 + 2] * v.z + matrix[0 * 4 + 3] * v.w,
-			matrix[1 * 4 + 0] * v.x + matrix[1 * 4 + 1] * v.y + matrix[1 * 4 + 2] * v.z + matrix[1 * 4 + 3] * v.w,
-			matrix[2 * 4 + 0] * v.x + matrix[2 * 4 + 1] * v.y + matrix[2 * 4 + 2] * v.z + matrix[2 * 4 + 3] * v.w,
-			matrix[3 * 4 + 0] * v.x + matrix[3 * 4 + 1] * v.y + matrix[3 * 4 + 2] * v.z + matrix[3 * 4 + 3] * v.w);
+			matrix[0 * sz + 0] * v.x + matrix[0 * sz + 1] * v.y + matrix[0 * sz + 2] * v.z + matrix[0 * sz + 3] * v.w,
+			matrix[1 * sz + 0] * v.x + matrix[1 * sz + 1] * v.y + matrix[1 * sz + 2] * v.z + matrix[1 * sz + 3] * v.w,
+			matrix[2 * sz + 0] * v.x + matrix[2 * sz + 1] * v.y + matrix[2 * sz + 2] * v.z + matrix[2 * sz + 3] * v.w,
+			matrix[3 * sz + 0] * v.x + matrix[3 * sz + 1] * v.y + matrix[3 * sz + 2] * v.z + matrix[3 * sz + 3] * v.w);
 	}
 
 	template<typename Type>
 	Vec4<Type> operator * (const Mat4<Type>& matrix, const Vec4<Type>& v)
 	{
+		const size_t sz = sizeof(Type);
 		return Vec4<Type>(
-			matrix[0 * 4 + 0] * v.x + matrix[1 * 4 + 0] * v.y + matrix[2 * 4 + 0] * v.z + matrix[3 * 4 + 0] * v.w,
-			matrix[0 * 4 + 1] * v.x + matrix[1 * 4 + 1] * v.y + matrix[2 * 4 + 1] * v.z + matrix[3 * 4 + 1] * v.w,
-			matrix[0 * 4 + 2] * v.x + matrix[1 * 4 + 2] * v.y + matrix[2 * 4 + 2] * v.z + matrix[3 * 4 + 2] * v.w,
-			matrix[0 * 4 + 3] * v.x + matrix[1 * 4 + 3] * v.y + matrix[2 * 4 + 3] * v.z + matrix[3 * 4 + 3] * v.w);
+			matrix[0 * sz + 0] * v.x + matrix[1 * sz + 0] * v.y + matrix[2 * sz + 0] * v.z + matrix[3 * sz + 0] * v.w,
+			matrix[0 * sz + 1] * v.x + matrix[1 * sz + 1] * v.y + matrix[2 * sz + 1] * v.z + matrix[3 * sz + 1] * v.w,
+			matrix[0 * sz + 2] * v.x + matrix[1 * sz + 2] * v.y + matrix[2 * sz + 2] * v.z + matrix[3 * sz + 2] * v.w,
+			matrix[0 * sz + 3] * v.x + matrix[1 * sz + 3] * v.y + matrix[2 * sz + 3] * v.z + matrix[3 * sz + 3] * v.w);
 	}
 
 	template<typename Type>
