@@ -43,12 +43,12 @@ namespace clan
 	{
 	}
 
-	int IODeviceProvider_Memory::get_size() const
+	size_t IODeviceProvider_Memory::get_size() const
 	{
 		return data.get_size();
 	}
 
-	int IODeviceProvider_Memory::get_position() const
+	size_t IODeviceProvider_Memory::get_position() const
 	{
 		validate_position();
 		return position;
@@ -64,10 +64,10 @@ namespace clan
 		return data;
 	}
 
-	int IODeviceProvider_Memory::send(const void *send_data, int len, bool send_all)
+	size_t IODeviceProvider_Memory::send(const void *send_data, size_t len, bool send_all)
 	{
 		validate_position();
-		int size_needed = position + len;
+		size_t size_needed = position + len;
 		if (size_needed > data.get_size())
 		{
 			if (size_needed > data.get_capacity())	// Capacity exceeded
@@ -83,10 +83,10 @@ namespace clan
 		return len;
 	}
 
-	int IODeviceProvider_Memory::receive(void *recv_data, int len, bool receive_all)
+	size_t IODeviceProvider_Memory::receive(void *recv_data, size_t len, bool receive_all)
 	{
 		validate_position();
-		int data_available = data.get_size() - position;
+		size_t data_available = data.get_size() - position;
 		if (len > data_available)
 			len = data_available;
 		memcpy(recv_data, data.get_data() + position, len);
@@ -94,10 +94,10 @@ namespace clan
 		return len;
 	}
 
-	int IODeviceProvider_Memory::peek(void *recv_data, int len)
+	size_t IODeviceProvider_Memory::peek(void *recv_data, size_t len)
 	{
 		validate_position();
-		int data_available = data.get_size() - position;
+		size_t data_available = data.get_size() - position;
 		if (len > data_available)
 			len = data_available;
 		memcpy(recv_data, data.get_data() + position, len);
@@ -107,7 +107,7 @@ namespace clan
 	bool IODeviceProvider_Memory::seek(int requested_position, IODevice::SeekMode mode)
 	{
 		validate_position();
-		int new_position = position;
+		int new_position = int(position);
 		switch (mode)
 		{
 		case IODevice::seek_set:
@@ -117,15 +117,15 @@ namespace clan
 			new_position += requested_position;
 			break;
 		case IODevice::seek_end:
-			new_position = data.get_size() + requested_position;
+			new_position = int(data.get_size()) + requested_position;
 			break;
 		default:
 			return false;
 		}
 
-		if (new_position >= 0 && new_position <= data.get_size())
+		if (new_position >= 0 && new_position <= int(data.get_size()))
 		{
-			position = new_position;
+			position = size_t(new_position);
 			return true;
 		}
 		else
@@ -141,9 +141,7 @@ namespace clan
 
 	void IODeviceProvider_Memory::validate_position() const
 	{
-		if (position < 0)
-			position = 0;
-		else if (position > data.get_size())
+		if (position > data.get_size())
 			position = data.get_size();
 	}
 }

@@ -55,16 +55,16 @@ namespace clan
 	}
 
 	IODeviceProvider_File::IODeviceProvider_File(
-		const std::string &filename,
-		File::OpenMode open_mode,
-		unsigned int access,
-		unsigned int share,
-		unsigned int flags)
+		const std::string &a_filename,
+		File::OpenMode a_open_mode,
+		unsigned int a_access,
+		unsigned int a_share,
+		unsigned int a_flags)
 		: handle(invalid_handle), peeked_data(0)
 	{
-		bool result = open(filename, open_mode, access, share, flags);
+		bool result = open(a_filename, a_open_mode, a_access, a_share, a_flags);
 		if (result == false)
-			throw Exception(string_format("IODeviceProvider_File::IODeviceProvider_File(): Unable to open file '%1'", filename));
+			throw Exception(string_format("IODeviceProvider_File::IODeviceProvider_File(): Unable to open file '%1'", a_filename));
 	}
 
 	IODeviceProvider_File::~IODeviceProvider_File()
@@ -72,7 +72,7 @@ namespace clan
 		close();
 	}
 
-	int IODeviceProvider_File::get_size() const
+	size_t IODeviceProvider_File::get_size() const
 	{
 #ifdef WIN32
 		if (handle == invalid_handle)
@@ -82,7 +82,7 @@ namespace clan
 		if (size == INVALID_FILE_SIZE)
 			throw Exception("IODeviceProvider_File::get_size(): Unable to get file size");
 
-		return size;
+		return size_t(size);
 #else
 		if (handle == invalid_handle)
 			throw Exception("IODeviceProvider_File::get_size(): Unable to get file size, no file open");
@@ -96,11 +96,11 @@ namespace clan
 		if (size == (off_t) -1)
 			throw Exception("IODeviceProvider_File::get_size(): Unable to get file size");
 
-		return (int) size;
+		return (size_t) size;
 #endif
 	}
 
-	int IODeviceProvider_File::get_position() const
+	size_t IODeviceProvider_File::get_position() const
 	{
 #ifdef WIN32
 		if (handle == invalid_handle)
@@ -110,7 +110,7 @@ namespace clan
 		if (pos == INVALID_SET_FILE_POINTER)
 			throw Exception("IODeviceProvider_File::get_position(): Unable to get file position pointer");
 
-		return (int)pos;
+		return (size_t)pos;
 #else
 		if (handle == invalid_handle)
 			throw Exception("Unable to get file position pointer, no file open");
@@ -119,26 +119,26 @@ namespace clan
 		if (pos == (off_t) -1)
 			throw Exception("Unable to get file position pointer");
 
-		return pos;
+		return (size_t)pos;
 #endif
 	}
 
 	bool IODeviceProvider_File::open(
-		const std::string &filename,
-		File::OpenMode open_mode,
-		unsigned int access,
-		unsigned int share,
-		unsigned int flags)
+		const std::string &a_filename,
+		File::OpenMode a_open_mode,
+		unsigned int a_access,
+		unsigned int a_share,
+		unsigned int a_flags)
 	{
 		if (handle != invalid_handle)
 			close();
 
 		// save parameters for duplicate()
-		this->filename = filename;
-		this->open_mode = open_mode;
-		this->access = access;
-		this->share = share;
-		this->flags = flags;
+		filename = a_filename;
+		open_mode = a_open_mode;
+		access = a_access;
+		share = a_share;
+		flags = a_flags;
 
 #ifdef WIN32
 		DWORD win32_desired_access = 0;
@@ -230,13 +230,13 @@ namespace clan
 		handle = invalid_handle;
 	}
 
-	int IODeviceProvider_File::read(void *buffer, int size, bool read_all)
+	size_t IODeviceProvider_File::read(void *buffer, size_t size, bool read_all)
 	{
 		if (size == 0)
 			return 0;
 		if (peeked_data.get_size() > 0)
 		{
-			int peek_amount = min(size, peeked_data.get_size());
+			size_t peek_amount = min(size, peeked_data.get_size());
 			memcpy(buffer, peeked_data.get_data(), peek_amount);
 			memmove(peeked_data.get_data(), peeked_data.get_data() + peek_amount, peeked_data.get_size() - peek_amount);
 			peeked_data.set_size(peeked_data.get_size() - peek_amount);
@@ -247,35 +247,35 @@ namespace clan
 		return lowlevel_read(buffer, size, read_all);
 	}
 
-	int IODeviceProvider_File::write(const void *buffer, int size, bool write_all)
+	size_t IODeviceProvider_File::write(const void *buffer, size_t size, bool write_all)
 	{
 		if (handle == invalid_handle)
 			throw Exception("IODeviceProvider_File::write(): Unable to write to file, no file open");
 
 #ifdef WIN32
 		DWORD written = 0;
-		BOOL result = WriteFile(handle, buffer, size, &written, 0);
-		if (result == TRUE)
-			return written;
+		BOOL result = WriteFile(handle, buffer, DWORD(size), &written, 0);
+		if (result != FALSE)
+			return size_t(written);
 		else
 			throw Exception("IODeviceProvider_File::write(): WriteFile failed");
 #else
-		int result = ::write(handle, buffer, size);
+		size_t result = ::write(handle, buffer, size);
 		return result;
 #endif
 	}
 
-	int IODeviceProvider_File::send(const void *data, int len, bool send_all)
+	size_t IODeviceProvider_File::send(const void *data, size_t len, bool send_all)
 	{
 		return write(data, len, send_all);
 	}
 
-	int IODeviceProvider_File::receive(void *data, int len, bool receive_all)
+	size_t IODeviceProvider_File::receive(void *data, size_t len, bool receive_all)
 	{
 		return read(data, len, receive_all);
 	}
 
-	int IODeviceProvider_File::peek(void *data, int len)
+	size_t IODeviceProvider_File::peek(void *data, size_t len)
 	{
 		if (peeked_data.get_size() >= len)
 		{
@@ -284,11 +284,11 @@ namespace clan
 		}
 		else
 		{
-			int old_size = peeked_data.get_size();
+			size_t old_size = peeked_data.get_size();
 			try
 			{
 				peeked_data.set_size(len);
-				int bytes_read = lowlevel_read(peeked_data.get_data() + old_size, len - old_size, false);
+				size_t bytes_read = lowlevel_read(peeked_data.get_data() + old_size, len - old_size, false);
 				peeked_data.set_size(old_size + bytes_read);
 				memcpy(data, peeked_data.get_data(), peeked_data.get_size());
 				return peeked_data.get_size();
@@ -339,20 +339,20 @@ namespace clan
 		return new IODeviceProvider_File(filename, open_mode, access, share, flags);
 	}
 
-	int IODeviceProvider_File::lowlevel_read(void *buffer, int size, bool read_all)
+	size_t IODeviceProvider_File::lowlevel_read(void *buffer, size_t size, bool read_all)
 	{
 		if (handle == invalid_handle)
 			throw Exception("IODeviceProvider_File::lowlevel_read(): Unable to read from file, no file open");
 
 #ifdef WIN32
 		DWORD bytes_read = 0;
-		BOOL result = ReadFile(handle, buffer, size, &bytes_read, 0);
-		if (result == TRUE)
-			return bytes_read;
+		BOOL result = ReadFile(handle, buffer, DWORD(size), &bytes_read, 0);
+		if (result != FALSE)
+			return size_t(bytes_read);
 		else
 			throw Exception("IODeviceProvider_File::lowlevel_read(): ReadFile failed");
 #else
-		int result = ::read(handle, buffer, size);
+		size_t result = ::read(handle, buffer, size);
 		return result;
 #endif
 	}

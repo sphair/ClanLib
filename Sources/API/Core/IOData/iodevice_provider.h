@@ -42,21 +42,21 @@ namespace clan
 		virtual ~IODeviceProvider() { return; }
 
 		/// \brief Returns the size of data stream.
-		/** <p>Returns -1 if the size is unknown.</p>*/
-		virtual int get_size() const { return -1; }
+		/** <p>Returns SIZE_MAX if the size is unknown.</p>*/
+		virtual size_t get_size() const { return size_t(SIZE_MAX); }
 
 		/// \brief Returns the position in the data stream.
-		/** <p>Returns -1 if the position is unknown.</p>*/
-		virtual int get_position() const { return -1; }
+		/** <p>Returns SIZE_MAX if the position is unknown.</p>*/
+		virtual size_t get_position() const { return size_t(SIZE_MAX); }
 
 		/// \brief Send data to device.
-		virtual int send(const void *data, int len, bool send_all = true) = 0;
+		virtual size_t send(const void *data, size_t len, bool send_all = true) = 0;
 
 		/// \brief Receive data from device.
-		virtual int receive(void *data, int len, bool receive_all = true) = 0;
+		virtual size_t receive(void *data, size_t size_t, bool receive_all = true) = 0;
 
 		/// \brief Peek data from device.
-		virtual int peek(void *data, int len) = 0;
+		virtual size_t peek(void *data, size_t size_t) = 0;
 
 		/// \brief Returns a new provider to the same resource.
 		virtual IODeviceProvider *duplicate() = 0;
