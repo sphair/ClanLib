@@ -48,28 +48,28 @@ namespace clan
 		deinit();
 	}
 
-	int ZipIODevice_FileEntry::get_size() const
+	size_t ZipIODevice_FileEntry::get_size() const
 	{
-		return file_header.uncompressed_size;
+		return size_t(file_header.uncompressed_size);
 	}
 
-	int ZipIODevice_FileEntry::get_position() const
+	size_t ZipIODevice_FileEntry::get_position() const
 	{
-		return (int)pos;
+		return size_t(pos);
 	}
 
-	int ZipIODevice_FileEntry::send(const void *data, int len, bool send_all)
+	size_t ZipIODevice_FileEntry::send(const void *data, size_t len, bool send_all)
 	{
 		throw Exception("Read-only device.");
 	}
 
-	int ZipIODevice_FileEntry::receive(void *buffer, int size, bool receive_all)
+	size_t ZipIODevice_FileEntry::receive(void *buffer, size_t size, bool receive_all)
 	{
 		if (size == 0)
 			return 0;
 		if (peeked_data.get_size() > 0)
 		{
-			int peek_amount = min(size, peeked_data.get_size());
+			size_t peek_amount = min(size, peeked_data.get_size());
 			memcpy(buffer, peeked_data.get_data(), peek_amount);
 			memmove(peeked_data.get_data(), peeked_data.get_data() + peek_amount, peeked_data.get_size() - peek_amount);
 			peeked_data.set_size(peeked_data.get_size() - peek_amount);
@@ -80,7 +80,7 @@ namespace clan
 		return lowlevel_read(buffer, size, receive_all);
 	}
 
-	int ZipIODevice_FileEntry::peek(void *data, int len)
+	size_t ZipIODevice_FileEntry::peek(void *data, size_t len)
 	{
 		if (peeked_data.get_size() >= len)
 		{
@@ -89,11 +89,11 @@ namespace clan
 		}
 		else
 		{
-			int old_size = peeked_data.get_size();
+			size_t old_size = peeked_data.get_size();
 			try
 			{
 				peeked_data.set_size(len);
-				int bytes_read = lowlevel_read(peeked_data.get_data() + old_size, len - old_size, false);
+				size_t bytes_read = lowlevel_read(peeked_data.get_data() + old_size, len - old_size, false);
 				peeked_data.set_size(old_size + bytes_read);
 				memcpy(data, peeked_data.get_data(), peeked_data.get_size());
 				return peeked_data.get_size();
@@ -141,7 +141,7 @@ namespace clan
 			char buffer[1024];
 			while (absolute_pos > pos)
 			{
-				int received = receive(buffer, int(min(absolute_pos - pos, (int64_t)1024)), true);
+				size_t received = receive(buffer, size_t(min(absolute_pos - pos, (int64_t)1024)), true);
 				if (received == 0) break;
 			}
 			break;
@@ -244,13 +244,13 @@ namespace clan
 		}
 	}
 
-	int ZipIODevice_FileEntry::lowlevel_read(void *data, int size, bool read_all)
+	size_t ZipIODevice_FileEntry::lowlevel_read(void *data, size_t size, bool read_all)
 	{
 		switch (file_header.compression_method)
 		{
 		case zip_compress_store: // no compression
 		{
-			int received = iodevice.receive(data, int(min((int64_t)size, file_header.uncompressed_size - pos)), read_all);
+			size_t received = iodevice.receive(data, size_t(min((int64_t)size, file_header.uncompressed_size - pos)), read_all);
 			pos += received;
 			return received;
 		}
@@ -258,7 +258,7 @@ namespace clan
 
 		case zip_compress_deflate:
 			zs.next_out = (unsigned char *)data;
-			zs.avail_out = size;
+			zs.avail_out = unsigned int(size);
 			// Continue feeding zlib data until we get our data:
 			while (zs.avail_out > 0)
 			{
@@ -266,16 +266,16 @@ namespace clan
 				if (zs.avail_in == 0 && compressed_pos < file_header.compressed_size)
 				{
 					// Read some compressed data:
-					int received_input = 0;
+					size_t received_input = 0;
 					while (received_input < 16 * 1024)
 					{
-						received_input += iodevice.receive(zbuffer, int(min((int64_t)16 * 1024, file_header.compressed_size - compressed_pos)), true);
+						received_input += iodevice.receive(zbuffer, size_t(min((int64_t)16 * 1024, file_header.compressed_size - compressed_pos)), true);
 						if (compressed_pos + received_input == file_header.compressed_size) break;
 					}
 					compressed_pos += received_input;
 
 					zs.next_in = (unsigned char *)zbuffer;
-					zs.avail_in = received_input;
+					zs.avail_in = unsigned int(received_input);
 				}
 
 				// Decompress data:
@@ -288,8 +288,8 @@ namespace clan
 				if (result == MZ_BUF_ERROR) throw Exception("Not enough data in buffer when Z_FINISH was used");
 				if (result != MZ_OK) throw Exception("Zlib inflate failed while decompressing zip file!");
 			}
-			pos += size - zs.avail_out;
-			return size - zs.avail_out;
+			pos += size - size_t(zs.avail_out);
+			return size - size_t(zs.avail_out);
 
 		case zip_compress_shrunk:
 		case zip_compress_expand_factor_1:

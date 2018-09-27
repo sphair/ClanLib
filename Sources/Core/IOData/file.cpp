@@ -39,7 +39,7 @@ namespace clan
 	std::string File::read_text(const std::string &filename)
 	{
 		File file(filename);
-		unsigned int file_size = file.get_size();
+		size_t file_size = file.get_size();
 		std::vector<char> text;
 		text.resize(file_size + 1);
 		text[file_size] = 0;

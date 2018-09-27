@@ -55,14 +55,14 @@ namespace clan
 			throw Exception("IODevice is null");
 	}
 
-	int IODevice::get_size() const
+	size_t IODevice::get_size() const
 	{
 		if (impl)
 			return impl->provider->get_size();
 		return -1;
 	}
 
-	int IODevice::get_position() const
+	size_t IODevice::get_position() const
 	{
 		if (impl)
 			return impl->provider->get_position();
@@ -86,21 +86,21 @@ namespace clan
 		return impl->provider;
 	}
 
-	int IODevice::send(const void *data, int len, bool send_all)
+	size_t IODevice::send(const void *data, size_t len, bool send_all)
 	{
 		if (impl)
 			return impl->provider->send(data, len, send_all);
 		return -1;
 	}
 
-	int IODevice::receive(void *data, int len, bool receive_all)
+	size_t IODevice::receive(void *data, size_t len, bool receive_all)
 	{
 		if (impl)
 			return impl->provider->receive(data, len, receive_all);
 		return -1;
 	}
 
-	int IODevice::peek(void *data, int len)
+	size_t IODevice::peek(void *data, size_t len)
 	{
 		if (impl)
 			return impl->provider->peek(data, len);
@@ -114,12 +114,12 @@ namespace clan
 		return false;
 	}
 
-	int IODevice::read(void *data, int len, bool receive_all)
+	size_t IODevice::read(void *data, size_t len, bool receive_all)
 	{
 		return receive(data, len, receive_all);
 	}
 
-	int IODevice::write(const void *data, int len, bool send_all)
+	size_t IODevice::write(const void *data, size_t len, bool send_all)
 	{
 		return send(data, len, send_all);
 	}
@@ -249,8 +249,8 @@ namespace clan
 
 	void IODevice::write_string_a(const std::string &str)
 	{
-		int size = str.length();
-		write_int32(size);
+		size_t size = str.length();
+		write_int32(int32_t(size));
 		write(str.data(), size);
 	}
 
@@ -406,7 +406,7 @@ namespace clan
 
 	std::string IODevice::read_string_a()
 	{
-		int size = read_int32();
+		size_t size = size_t(read_int32());
 
 		auto str = new char[size];
 		try
@@ -432,13 +432,13 @@ namespace clan
 
 	std::string IODevice::read_string_text(const char *skip_initial_chars, const char *read_until_chars, bool allow_eof)
 	{
-		const int buffer_size = 64;
+		const size_t buffer_size = 64;
 		char buffer[buffer_size];
-		int read_size;
-		int size = 0;
+		size_t read_size;
+		size_t size = 0;
 		bool find_flag = true;
 		bool null_found = false;
-		int current_position = get_position();
+		size_t current_position = get_position();
 
 		// Skip initial unwanted chars
 		if (skip_initial_chars)
@@ -448,7 +448,7 @@ namespace clan
 				read_size = receive(buffer, buffer_size, true);
 
 				char *dptr = buffer;
-				for (int cnt = 0; cnt < read_size; cnt++, dptr++)	// Search the buffer
+				for (size_t cnt = 0; cnt != read_size; ++cnt, dptr++)	// Search the buffer
 				{
 					char letter = *dptr;
 					bool match_flag = false;
@@ -478,7 +478,7 @@ namespace clan
 				}
 			}
 
-			seek(current_position, seek_set);	// Set new position
+			seek(int(current_position), seek_set);	// Set new position
 		}
 
 		find_flag = true;
@@ -488,7 +488,7 @@ namespace clan
 		{
 			read_size = receive(buffer, buffer_size, true);
 			char *dptr = buffer;
-			for (int cnt = 0; cnt < read_size; cnt++, dptr++)
+			for (size_t cnt = 0; cnt != read_size; ++cnt, dptr++)
 			{
 				char letter = *dptr;
 				// Treat NUL as a special terminating character
@@ -528,7 +528,7 @@ namespace clan
 				break;
 			}
 		}
-		seek(current_position, seek_set);
+		seek(int(current_position), seek_set);
 
 		// Read the string, now that we know its length
 

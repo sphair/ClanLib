@@ -39,15 +39,15 @@ namespace clan
 		IODeviceProvider_Memory();
 		IODeviceProvider_Memory(DataBuffer &data);
 
-		virtual int get_size() const override;
-		virtual int get_position() const override;
+		virtual size_t get_size() const override;
+		virtual size_t get_position() const override;
 
 		const DataBuffer &get_data() const;
 		DataBuffer &get_data();
 
-		virtual int send(const void *data, int len, bool send_all = true) override;
-		virtual int receive(void *data, int len, bool receive_all = true) override;
-		virtual int peek(void *data, int len) override;
+		virtual size_t send(const void *data, size_t len, bool send_all = true) override;
+		virtual size_t receive(void *data, size_t len, bool receive_all = true) override;
+		virtual size_t peek(void *data, size_t len) override;
 		virtual bool seek(int position, IODevice::SeekMode mode) override;
 		IODeviceProvider *duplicate() override;
 
@@ -55,6 +55,6 @@ namespace clan
 		void validate_position() const;
 
 		DataBuffer data;
-		mutable int position;
+		mutable size_t position;
 	};
 }

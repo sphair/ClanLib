@@ -79,14 +79,14 @@ namespace clan
 		void throw_if_null() const;
 
 		/// \brief Returns the size of data stream.
-		/** <p>Returns -1 if the size is unknown.</p>
-			\return The size (-1 if size is unknown)*/
-		int get_size() const;
+		/** <p>Returns SIZE_MAX if the size is unknown.</p>
+			\return The size (SIZE_MAX if size is unknown)*/
+		size_t get_size() const;
 
 		/// \brief Returns the position in the data stream.
-		/** <p>Returns -1 if the position is unknown.</p>
-			\return The size (-1 if position is unknown)*/
-		int get_position() const;
+		/** <p>Returns SIZE_MAX if the position is unknown.</p>
+			\return The size (SIZE_MAX if position is unknown)*/
+		size_t get_position() const;
 
 		/// \brief Returns true if the input source is in little endian mode.
 		/** \return true if little endian*/
@@ -104,7 +104,7 @@ namespace clan
 			\param len Length to send
 			\param send_all true to send all the data. false = send part of the data, if it would block
 			\return size of data sent*/
-		int send(const void *data, int len, bool send_all = true);
+		size_t send(const void *data, size_t len, bool send_all = true);
 
 		/// \brief Receive data from device.
 		///
@@ -113,14 +113,14 @@ namespace clan
 		/// \param receive_all true to receive all the data. false = receive part of the data, if it would block
 		///
 		/// \return size of data received
-		int receive(void *data, int len, bool receive_all = true);
+		size_t receive(void *data, size_t len, bool receive_all = true);
 
 		/// \brief Peek data from device (data is left in the buffer).
 		///
 		/// \param data Data to receive
 		/// \param len Maximum length of data to receive
 		/// \return size of data received.
-		int peek(void *data, int len);
+		size_t peek(void *data, size_t len);
 
 		/// \brief Seek in data stream.
 		///
@@ -136,7 +136,7 @@ namespace clan
 		/// \param receive_all true to receive all the data. false = receive part of the data, if it would block
 		///
 		/// \return size of data received
-		int read(void *data, int len, bool receive_all = true);
+		size_t read(void *data, size_t len, bool receive_all = true);
 
 		/// \brief Alias for send(data, len, send_all)
 		///
@@ -145,7 +145,7 @@ namespace clan
 		/// \param send_all true to send all the data. false = send part of the data, if it would block
 		///
 		/// \return size of data sent
-		int write(const void *data, int len, bool send_all = true);
+		size_t write(const void *data, size_t len, bool send_all = true);
 
 		/// \brief Changes input data endianess to the local systems mode.
 		void set_system_mode();

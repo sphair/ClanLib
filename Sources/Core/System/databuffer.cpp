@@ -46,8 +46,8 @@ namespace clan
 
 	public:
 		char *data;
-		unsigned int size;
-		unsigned int allocated_size;
+		size_t size;
+		size_t allocated_size;
 	};
 
 	DataBuffer::DataBuffer()
@@ -55,20 +55,26 @@ namespace clan
 	{
 	}
 
-	DataBuffer::DataBuffer(unsigned int new_size)
+	DataBuffer::DataBuffer(size_t new_size)
 		: impl(std::make_shared<DataBuffer_Impl>())
 	{
 		set_size(new_size);
 	}
 
-	DataBuffer::DataBuffer(const void *new_data, unsigned int new_size)
+	DataBuffer::DataBuffer(const DataBuffer &copy)
+		: impl(copy.impl)
+	{
+		// Explicitly declared constructor like operator =
+	}
+
+	DataBuffer::DataBuffer(const void *new_data, size_t new_size)
 		: impl(std::make_shared<DataBuffer_Impl>())
 	{
 		set_size(new_size);
 		memcpy(impl->data, new_data, new_size);
 	}
 
-	DataBuffer::DataBuffer(const DataBuffer &new_data, unsigned int pos, unsigned int size)
+	DataBuffer::DataBuffer(const DataBuffer &new_data, size_t pos, size_t size)
 		: impl(std::make_shared<DataBuffer_Impl>())
 	{
 		set_size(size);
@@ -99,22 +105,12 @@ namespace clan
 		return impl->allocated_size;
 	}
 
-	char &DataBuffer::operator[](int i)
+	char &DataBuffer::operator[](size_t i)
 	{
 		return impl->data[i];
 	}
 
-	const char &DataBuffer::operator[](int i) const
-	{
-		return impl->data[i];
-	}
-
-	char &DataBuffer::operator[](unsigned int i)
-	{
-		return impl->data[i];
-	}
-
-	const char &DataBuffer::operator[](unsigned int i) const
+	const char &DataBuffer::operator[](size_t i) const
 	{
 		return impl->data[i];
 	}
@@ -125,7 +121,7 @@ namespace clan
 		return *this;
 	}
 
-	void DataBuffer::set_size(unsigned int new_size)
+	void DataBuffer::set_size(size_t new_size)
 	{
 		if (new_size > impl->allocated_size)
 		{
@@ -143,7 +139,7 @@ namespace clan
 		}
 	}
 
-	void DataBuffer::set_capacity(unsigned int new_capacity)
+	void DataBuffer::set_capacity(size_t new_capacity)
 	{
 		if (new_capacity > impl->allocated_size)
 		{

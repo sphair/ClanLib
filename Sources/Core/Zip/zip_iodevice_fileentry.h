@@ -43,12 +43,12 @@ namespace clan
 		ZipIODevice_FileEntry(IODevice iodevice, const ZipFileEntry &entry);
 		~ZipIODevice_FileEntry();
 
-		virtual int get_size() const override;
-		virtual int get_position() const override;
+		virtual size_t get_size() const override;
+		virtual size_t get_position() const override;
 
-		virtual int send(const void *data, int len, bool send_all) override;
-		virtual int receive(void *data, int len, bool receive_all) override;
-		virtual int peek(void *data, int len) override;
+		virtual size_t send(const void *data, size_t len, bool send_all) override;
+		virtual size_t receive(void *data, size_t len, bool receive_all) override;
+		virtual size_t peek(void *data, size_t len) override;
 
 		virtual bool seek(int position, IODevice::SeekMode mode) override;
 
@@ -57,7 +57,7 @@ namespace clan
 	private:
 		void init();
 		void deinit();
-		int lowlevel_read(void *buffer, int size, bool read_all);
+		size_t lowlevel_read(void *buffer, size_t size, bool read_all);
 
 		IODevice iodevice;
 		ZipFileEntry file_entry;
