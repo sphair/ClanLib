@@ -28,11 +28,11 @@
 
 #include "UI/precomp.h"
 #include "API/UI/Controller/window_manager.h"
-#include "API/UI/TopLevel/top_level_window.h"
 #include "API/UI/UIThread/ui_thread.h"
 #include "API/Display/Window/display_window_description.h"
 #include "API/Display/Window/display_window.h"
 #include "API/Display/2D/canvas.h"
+#include "API/Display/2D/image.h"
 #include "API/Display/System/run_loop.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Core/IOData/path_help.h"
@@ -78,7 +78,7 @@ namespace clan
 		impl->exit_on_last_close = enable;
 	}
 
-	void WindowManager::present_main(const std::shared_ptr<WindowController> &controller)
+	void WindowManager::present_main(const std::shared_ptr<WindowController> &controller, WindowShowType show_type)
 	{
 		if (controller->impl->manager)
 			return;
@@ -118,7 +118,7 @@ namespace clan
 			display_window.set_small_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), controller->impl->icon_images.back())));
 		}
 	*/
-		controller->impl->window->show(WindowShowType::show);
+		controller->impl->window->show(show_type);
 	}
 
 	void WindowManager::present_modal(View *owner, const std::shared_ptr<WindowController> &controller)
@@ -293,13 +293,12 @@ namespace clan
 		{
 			DisplayWindow display_window = impl->window->display_window();
 
-			/* Clanlib currently doesn't support loading of PixelBuffers via resources, this can be added, and loaded like "auto image = ImageSource::from_resource(layer_image.text())->image(canvas);"
 			if (display_window && !icon_images.empty())
 			{
-				display_window.set_large_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), icon_images.front())));
-				display_window.set_small_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), icon_images.back())));
+				display_window.set_large_icon(PixelBuffer(icon_images.front()));
+				display_window.set_large_icon(PixelBuffer(icon_images.back()));
 			}
-			*/
+			
 		}
 	}
 
