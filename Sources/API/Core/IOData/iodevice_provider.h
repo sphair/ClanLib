@@ -53,10 +53,10 @@ namespace clan
 		virtual size_t send(const void *data, size_t len, bool send_all = true) = 0;
 
 		/// \brief Receive data from device.
-		virtual size_t receive(void *data, size_t size_t, bool receive_all = true) = 0;
+		virtual size_t receive(void *data, size_t len, bool receive_all = true) = 0;
 
 		/// \brief Peek data from device.
-		virtual size_t peek(void *data, size_t size_t) = 0;
+		virtual size_t peek(void *data, size_t len) = 0;
 
 		/// \brief Returns a new provider to the same resource.
 		virtual IODeviceProvider *duplicate() = 0;
