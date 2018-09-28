@@ -95,12 +95,12 @@ namespace clan
 		return impl->data;
 	}
 
-	unsigned int DataBuffer::get_size() const
+	size_t DataBuffer::get_size() const
 	{
 		return impl->size;
 	}
 
-	unsigned int DataBuffer::get_capacity() const
+	size_t DataBuffer::get_capacity() const
 	{
 		return impl->allocated_size;
 	}
