@@ -111,13 +111,13 @@ namespace clan
 			display_window.set_size(margin_box.get_width(), margin_box.get_height(), true);
 		}
 
-	/* Clanlib currently doesn't support loading of PixelBuffers via resources, this can be added, and loaded like "auto image = ImageSource::from_resource(layer_image.text())->image(canvas);"
-		if (!controller->impl->icon_images.empty())
+		auto icon_images = controller->impl->icon_images;
+		if (!icon_images.empty())
 		{
-			display_window.set_large_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), controller->impl->icon_images.front())));
-			display_window.set_small_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), controller->impl->icon_images.back())));
+			display_window.set_large_icon(PixelBuffer(icon_images.front()));
+			display_window.set_large_icon(PixelBuffer(icon_images.back()));
 		}
-	*/
+	
 		controller->impl->window->show(show_type);
 	}
 
