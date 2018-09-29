@@ -165,13 +165,13 @@ namespace clan
 				controller_display_window.set_position(margin_box, true);
 		}
 
-		/* Clanlib currently doesn't support loading of PixelBuffers via resources, this can be added, and loaded like "auto image = ImageSource::from_resource(layer_image.text())->image(canvas);"
-		if (!controller->impl->icon_images.empty())
+		auto icon_images = controller->impl->icon_images;
+		if (!icon_images.empty())
 		{
-			controller_display_window.set_large_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), controller->impl->icon_images.front())));
-			controller_display_window.set_small_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), controller->impl->icon_images.back())));
+			controller_display_window.set_large_icon(PixelBuffer(icon_images.front()));
+			controller_display_window.set_large_icon(PixelBuffer(icon_images.back()));
 		}
-		*/
+
 		controller->impl->window->show(WindowShowType::show);
 		if (owner_display_window)
 			owner_display_window.set_enabled(false);
@@ -285,6 +285,17 @@ namespace clan
 				display_window.set_size(size.width, size.height, true);
 		}
 	}
+
+	void WindowController::set_resizable(bool resizable)
+	{
+		impl->resizable = resizable;
+	}
+
+	bool WindowController::resizable()
+	{
+		return impl->resizable;
+	}
+
 
 	void WindowController::set_icon(const std::vector<std::string> &icon_images)
 	{
