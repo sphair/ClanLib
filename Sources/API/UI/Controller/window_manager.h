@@ -30,6 +30,7 @@
 
 #include <memory>
 #include "../../Core/Math/point.h"
+#include "../../UI/TopLevel/top_level_window.h"
 #include "window_controller.h"
 
 namespace clan
@@ -48,7 +49,7 @@ namespace clan
 		void set_exit_on_last_close(bool enable = true);
 
 		/// Shows a main window
-		void present_main(const std::shared_ptr<WindowController> &controller);
+		void present_main(const std::shared_ptr<WindowController> &controller, WindowShowType show_type = WindowShowType::show);
 
 		template<typename T, typename... Types>
 		std::shared_ptr<T> present_main(Types &&... args)
