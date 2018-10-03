@@ -112,4 +112,9 @@ namespace clan
 	{
 		return impl->window.screen_to_client(Pointf(pos));
 	}
+
+	void TopLevelWindow::immediate_update()
+	{
+		impl->immediate_update();
+	}
 }

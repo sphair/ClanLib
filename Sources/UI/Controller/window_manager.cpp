@@ -370,4 +370,9 @@ namespace clan
 				RunLoop::exit();
 		}
 	}
+
+	void WindowController::immediate_update()
+	{
+		impl->window->immediate_update();
+	}
 }
