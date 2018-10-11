@@ -49,7 +49,7 @@ namespace clan
 		void set_exit_on_last_close(bool enable = true);
 
 		/// Shows a main window
-		void present_main(const std::shared_ptr<WindowController> &controller, WindowShowType show_type = WindowShowType::show);
+		void present_main(const std::shared_ptr<WindowController> &controller, DisplayWindowDescription* desc = nullptr, WindowShowType show_type = WindowShowType::show);
 
 		template<typename T, typename... Types>
 		std::shared_ptr<T> present_main(Types &&... args)
@@ -60,7 +60,7 @@ namespace clan
 		}
 
 		/// Shows a modal dialog
-		void present_modal(View *owner, const std::shared_ptr<WindowController> &controller);
+		void present_modal(View *owner, const std::shared_ptr<WindowController> &controller, DisplayWindowDescription* desc = nullptr);
 
 		template<typename T, typename... Types>
 		std::shared_ptr<T> present_modal(View *owner, Types &&... args)
@@ -71,7 +71,7 @@ namespace clan
 		}
 
 		/// Shows a popup window
-		void present_popup(View *owner, const Pointf &pos, const std::shared_ptr<WindowController> &controller);
+		void present_popup(View *owner, const Pointf &pos, const std::shared_ptr<WindowController> &controller, DisplayWindowDescription* desc = nullptr);
 
 		template<typename T, typename... Types>
 		std::shared_ptr<T> present_popup(View *owner, const Pointf &pos, Types &&... args)
@@ -80,6 +80,9 @@ namespace clan
 			present_popup(owner, controller);
 			return controller;
 		}
+
+		/// Translates a call to all top-level windows.
+		void flip(int interval = -1);
 
 	private:
 		WindowManager(const WindowManager &) = delete;

@@ -78,151 +78,177 @@ namespace clan
 		impl->exit_on_last_close = enable;
 	}
 
-	void WindowManager::present_main(const std::shared_ptr<WindowController> &controller, WindowShowType show_type)
+	void WindowManager::present_main(const std::shared_ptr<WindowController> &controller, DisplayWindowDescription* desc, WindowShowType show_type)
 	{
-		if (controller->impl->manager)
+		auto& controller_impl = controller->impl;
+		if (controller_impl->manager)
 			return;
 
-		DisplayWindowDescription desc;
-		desc.set_main_window();
-		desc.set_visible(false);
-		desc.set_title(controller->title());
-		desc.set_allow_resize(controller->impl->resizable);
-		controller->impl->manager = this;
+		DisplayWindowDescription simple_desc;
+		if (!desc) {
+			simple_desc.set_main_window();
+			simple_desc.set_visible(false);
+			simple_desc.set_title(controller->title());
+			simple_desc.set_allow_resize(controller_impl->resizable);
 
-		if (controller->impl->initial_size != Sizef())
-			desc.set_size(controller->impl->initial_size, !controller->impl->frame_geometry);
+			if (controller_impl->initial_size != Sizef())
+				simple_desc.set_size(controller_impl->initial_size, !controller_impl->frame_geometry);
 
-		controller->impl->window = std::make_shared<TopLevelWindow>(desc);
-		controller->impl->window->set_root_view(controller->root_view());
+			desc = &simple_desc;
+		}
 
-		DisplayWindow display_window = controller->impl->window->display_window();
+		controller_impl->manager = this;
+		controller_impl->window = std::make_shared<TopLevelWindow>(*desc);
+		auto& root_view = controller->root_view();
+		controller_impl->window->set_root_view(root_view);
+
+		DisplayWindow display_window = controller_impl->window->display_window();
 		controller->slots.connect(display_window.sig_window_close(), bind_member(controller.get(), &WindowController::dismiss));
 
 		impl->windows[controller.get()] = controller;
 
-		if (controller->impl->initial_size == Sizef())
+		if (controller_impl->initial_size == Sizef())
 		{
-			Canvas canvas = controller->root_view()->canvas();
-			float width = controller->root_view()->preferred_width(canvas);
-			float height = controller->root_view()->preferred_height(canvas, width);
+			Canvas canvas = root_view->canvas();
+			float width = root_view->preferred_width(canvas);
+			float height = root_view->preferred_height(canvas, width);
 			Rectf content_box(0.0f, 0.0f, width, height);
-			Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
+			Rectf margin_box = ViewGeometry::from_content_box(root_view->style_cascade(), content_box).margin_box();
 			display_window.set_size(margin_box.get_width(), margin_box.get_height(), true);
 		}
 
-		auto icon_images = controller->impl->icon_images;
+		auto icon_images = controller_impl->icon_images;
 		if (!icon_images.empty())
 		{
 			display_window.set_large_icon(PixelBuffer(icon_images.front()));
 			display_window.set_large_icon(PixelBuffer(icon_images.back()));
 		}
 	
-		controller->impl->window->show(show_type);
+		controller_impl->window->show(show_type);
 	}
 
-	void WindowManager::present_modal(View *owner, const std::shared_ptr<WindowController> &controller)
+	void WindowManager::present_modal(View *owner, const std::shared_ptr<WindowController> &controller, DisplayWindowDescription* desc)
 	{
-		if (controller->impl->manager)
+		auto& controller_impl = controller->impl;
+		if (controller_impl->manager)
 			return;
 
 		Pointf screen_pos = owner->to_screen_pos(owner->geometry().content_box().get_center());
 
-		DisplayWindowDescription desc;
-		desc.set_dialog_window();
-		desc.set_visible(false);
-
+		DisplayWindowDescription simple_desc;
 		DisplayWindow owner_display_window = owner->view_tree()->display_window();
-		if (owner_display_window)
-			desc.set_owner_window(owner_display_window);
-		desc.set_title(controller->title());
-		desc.show_minimize_button(false);
-		desc.show_maximize_button(false);
-		desc.set_allow_resize(controller->impl->resizable);
+		if (!desc) {
+			simple_desc.set_dialog_window();
+			simple_desc.set_visible(false);
+			simple_desc.set_title(controller->title());
+			simple_desc.show_minimize_button(false);
+			simple_desc.show_maximize_button(false);
+			simple_desc.set_allow_resize(controller_impl->resizable);
 
-		if (controller->impl->initial_size != Sizef())
-			desc.set_size(controller->impl->initial_size, !controller->impl->frame_geometry);
+			if (owner_display_window)
+				simple_desc.set_owner_window(owner_display_window);
 
-		controller->impl->modal_owner = owner->shared_from_this();
-		controller->impl->manager = this;
-		controller->impl->window = std::make_shared<TopLevelWindow>(desc);
-		controller->impl->window->set_root_view(controller->root_view());
+			if (controller_impl->initial_size != Sizef())
+				simple_desc.set_size(controller_impl->initial_size, !controller_impl->frame_geometry);
 
-		DisplayWindow controller_display_window = controller->impl->window->display_window();
-		if (controller_display_window)
-			controller->slots.connect(controller_display_window.sig_window_close(), bind_member(controller.get(), &WindowController::dismiss));
+			desc = &simple_desc;
+		}
+
+		controller_impl->modal_owner = owner->shared_from_this();
+		controller_impl->manager = this;
+		controller_impl->window = std::make_shared<TopLevelWindow>(*desc);
+		auto& root_view = controller->root_view();
+		controller_impl->window->set_root_view(root_view);
+
+		DisplayWindow& controller_display_window = controller_impl->window->display_window();
+		controller->slots.connect(controller_display_window.sig_window_close(), bind_member(controller.get(), &WindowController::dismiss));
 
 		impl->windows[controller.get()] = controller;
 
-		if (controller->impl->initial_size == Sizef())
+		if (controller_impl->initial_size == Sizef())
 		{
-			Canvas canvas = controller->root_view()->canvas();
-			float width = controller->root_view()->preferred_width(canvas);
-			float height = controller->root_view()->preferred_height(canvas, width);
+			Canvas canvas = root_view->canvas();
+			float width = root_view->preferred_width(canvas);
+			float height = root_view->preferred_height(canvas, width);
 			Rectf content_box(screen_pos.x - width * 0.5f, screen_pos.y - height * 0.5f, screen_pos.x + width * 0.5f, screen_pos.y + height * 0.5f);
-			Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
-			if (controller_display_window)
-				controller_display_window.set_position(margin_box, true);
+			Rectf margin_box = ViewGeometry::from_content_box(root_view->style_cascade(), content_box).margin_box();
+			controller_display_window.set_position(margin_box, true);
 		}
 
-		/* Clanlib currently doesn't support loading of PixelBuffers via resources, this can be added, and loaded like "auto image = ImageSource::from_resource(layer_image.text())->image(canvas);"
-		if (!controller->impl->icon_images.empty())
+		auto icon_images = controller_impl->icon_images;
+		if (!icon_images.empty())
 		{
-			controller_display_window.set_large_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), controller->impl->icon_images.front())));
-			controller_display_window.set_small_icon(ImageFile::load(PathHelp::combine(UIThread::resource_path(), controller->impl->icon_images.back())));
+			controller_display_window.set_large_icon(PixelBuffer(icon_images.front()));
+			controller_display_window.set_large_icon(PixelBuffer(icon_images.back()));
 		}
-		*/
-		controller->impl->window->show(WindowShowType::show);
+
+		controller_impl->window->show(WindowShowType::show);
 		if (owner_display_window)
 			owner_display_window.set_enabled(false);
 	}
 
-	void WindowManager::present_popup(View *owner, const Pointf &pos, const std::shared_ptr<WindowController> &controller)
+	void WindowManager::present_popup(View *owner, const Pointf &pos, const std::shared_ptr<WindowController> &controller, DisplayWindowDescription* desc)
 	{
-		if (controller->impl->manager)
+		auto& controller_impl = controller->impl;
+		if (controller_impl->manager)
 			return;
 
 		Pointf screen_pos = owner->to_screen_pos(pos);
 
-		DisplayWindowDescription desc;
-		desc.set_popup_window();
-		desc.set_visible(false);
-		desc.set_topmost(true);
-		desc.set_no_activate(true);
-		desc.show_caption(false);
-		desc.show_sysmenu(false);
-		desc.show_minimize_button(false);
-		desc.show_maximize_button(false);
-
-		controller->impl->manager = this;
-
-		if (controller->impl->initial_size != Sizef())
-			desc.set_size(controller->impl->initial_size, !controller->impl->frame_geometry);
-
-		controller->impl->window = std::make_shared<TopLevelWindow>(desc);
-		controller->impl->window->set_root_view(controller->root_view());
-
+		DisplayWindowDescription simple_desc;
 		DisplayWindow owner_display_window = owner->view_tree()->display_window();
+		if (!desc) {
+			simple_desc.set_popup_window();
+			simple_desc.set_visible(false);
+			simple_desc.set_topmost(true);
+			simple_desc.set_no_activate(true);
+			simple_desc.show_caption(false);
+			simple_desc.show_sysmenu(false);
+			simple_desc.show_minimize_button(false);
+			simple_desc.show_maximize_button(false);
+
+			if (owner_display_window)
+				simple_desc.set_owner_window(owner_display_window);
+
+			if (controller_impl->initial_size != Sizef())
+				simple_desc.set_size(controller_impl->initial_size, !controller_impl->frame_geometry);
+
+			desc = &simple_desc;
+		}
+
+		controller_impl->manager = this;
+		controller_impl->window = std::make_shared<TopLevelWindow>(*desc);
+		auto& root_view = controller->root_view();
+		controller_impl->window->set_root_view(root_view);
+
 		if (owner_display_window)
 			controller->slots.connect(owner_display_window.sig_lost_focus(), bind_member(controller.get(), &WindowController::dismiss));
 
 		impl->windows[controller.get()] = controller;
 
-		if (controller->impl->initial_size == Sizef())
+		if (controller_impl->initial_size == Sizef())
 		{
-			Canvas canvas = controller->root_view()->canvas();
-			float width = controller->root_view()->preferred_width(canvas);
-			float height = controller->root_view()->preferred_height(canvas, width);
+			Canvas canvas = root_view->canvas();
+			float width = root_view->preferred_width(canvas);
+			float height = root_view->preferred_height(canvas, width);
 			Rectf content_box(screen_pos.x, screen_pos.y, screen_pos.x + width, screen_pos.y + height);
-			Rectf margin_box = ViewGeometry::from_content_box(controller->root_view()->style_cascade(), content_box).margin_box();
+			Rectf margin_box = ViewGeometry::from_content_box(root_view->style_cascade(), content_box).margin_box();
 
-			DisplayWindow controller_display_window = controller->impl->window->display_window();
-			if (controller_display_window)
-				controller_display_window.set_position(margin_box, false);
+			DisplayWindow& controller_display_window = controller_impl->window->display_window();
+			controller_display_window.set_position(margin_box, false);
 		}
 
-		controller->impl->window->show(WindowShowType::show_no_activate);
+		controller_impl->window->show(WindowShowType::show_no_activate);
 	}
+
+	/// Translates a call to all top-level windows.
+	void WindowManager::flip(int interval) {
+		for (auto& map_item : impl->windows) {
+			auto& top_level_window = map_item.first->impl->window;
+			top_level_window->display_window().flip(interval);
+		}
+	}
+
 
 	/////////////////////////////////////////////////////////////////////////
 
@@ -285,6 +311,17 @@ namespace clan
 				display_window.set_size(size.width, size.height, true);
 		}
 	}
+
+	void WindowController::set_resizable(bool resizable)
+	{
+		impl->resizable = resizable;
+	}
+
+	bool WindowController::resizable()
+	{
+		return impl->resizable;
+	}
+
 
 	void WindowController::set_icon(const std::vector<std::string> &icon_images)
 	{

@@ -61,6 +61,12 @@ namespace clan
 		/// Sets the size of the window
 		void set_content_size(const Sizef &size, bool resizable = true);
 
+		/// Sets the ability for the user to resize the window.
+		void set_resizable(bool resizable);
+
+		/// Gets the ability for the user to resize the window.
+		bool resizable();
+
 		/// Sets the icon used for the window
 		void set_icon(const std::vector<std::string> &icon_images);
 

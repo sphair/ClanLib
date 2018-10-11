@@ -30,6 +30,15 @@
 
 #pragma once
 
+class MainWindow : public clan::WindowController
+{
+public:
+	MainWindow(std::shared_ptr<clan::WindowManager>& window_manager);
+
+private:
+	std::shared_ptr<clan::LabelView> label;
+};
+
 class HelloWorld : public clan::Application
 {
 public:
@@ -37,7 +46,5 @@ public:
 	bool update() override;
 
 	clan::UIThread ui_thread;
-	std::shared_ptr<clan::TopLevelWindow> window;
-	std::shared_ptr<clan::LabelView> label;
-	clan::WindowManager window_manager;
+	std::shared_ptr<clan::WindowManager> window_manager;
 };
