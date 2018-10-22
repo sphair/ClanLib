@@ -73,6 +73,9 @@ namespace clan
 		/// Closes the window
 		void dismiss();
 
+		/// Immediately redraws the window.
+		void immediate_update();
+
 		/// Slot container helping with automatic disconnection of connected slots when the controller is destroyed
 		SlotContainer slots;
 

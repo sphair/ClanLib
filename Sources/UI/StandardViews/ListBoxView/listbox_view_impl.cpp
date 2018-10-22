@@ -44,13 +44,13 @@ namespace clan
 
 		if (e.key() == Key::up)
 		{
-			listbox->set_selected_item(clan::max(selected_item - 1, 0));
+			set_selected_item(clan::max(selected_item - 1, 0));
 			if (func_selection_changed)
 				func_selection_changed();
 		}
 		else if (e.key() == Key::down)
 		{
-			listbox->set_selected_item(clan::min(selected_item + 1, (int)listbox->content_view()->children().size() - 1));
+			set_selected_item(clan::min(selected_item + 1, (int)listbox->content_view()->children().size() - 1));
 			if (func_selection_changed)
 				func_selection_changed();
 		}
@@ -64,7 +64,7 @@ namespace clan
 		last_selected_item = selected_item;
 
 		int index = get_selection_index(e);
-		listbox->set_selected_item(index);
+		set_selected_item(index);
 	}
 
 	void ListBoxViewImpl::on_pointer_release(PointerEvent &e)
@@ -82,7 +82,7 @@ namespace clan
 		}
 		else
 		{
-			listbox->set_selected_item(last_selected_item);
+			set_selected_item(last_selected_item);
 		}
 	}
 
@@ -118,14 +118,17 @@ namespace clan
 
 		hot_item = index;
 
-		// Draw changes - try to call for child to render its parent, i.e. slider.
-		if (index != -1)
-			listbox->children().front()->draw_without_layout();
-		else
-			listbox->draw_without_layout();
+		// Drawing changes.
+		listbox->children().front()->draw_without_layout();
 	}
 
-	void ListBoxViewImpl::on_pointer_enter(PointerEvent &e)
+	void ListBoxViewImpl::set_selected_item(int index)
+	{
+		listbox->set_selected_item(index);
+		listbox->set_needs_layout();
+	}
+
+		void ListBoxViewImpl::on_pointer_enter(PointerEvent &e)
 	{
 		set_hot_item(get_selection_index(e));
 	}

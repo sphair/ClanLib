@@ -50,6 +50,9 @@ namespace clan
 
 		std::shared_ptr<View> hot_view;
 
+		/// Immediately redraws the window.
+		void immediate_update() { on_paint(); }
+
 	private:
 		Pointf to_root_pos(const Pointf &client_pos) const;
 

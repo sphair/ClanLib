@@ -63,6 +63,9 @@ namespace clan
 		DisplayWindow display_window() override;
 		Canvas canvas() const override;
 
+		/// Immediately redraws the window.
+		void immediate_update();
+
 	protected:
 		void set_needs_render() override;
 

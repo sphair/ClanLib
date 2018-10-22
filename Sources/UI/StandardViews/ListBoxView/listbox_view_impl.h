@@ -40,6 +40,7 @@ namespace clan
 		void on_pointer_leave(PointerEvent &e);
 
 		void set_hot_item(int index);
+		void set_selected_item(int index);
 
 		ListBoxView *listbox = nullptr;
 		int selected_item = -1;
