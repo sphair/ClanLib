@@ -258,7 +258,7 @@ namespace clan
 
 		case zip_compress_deflate:
 			zs.next_out = (unsigned char *)data;
-			zs.avail_out = unsigned int(size);
+			zs.avail_out = (unsigned int)size;
 			// Continue feeding zlib data until we get our data:
 			while (zs.avail_out > 0)
 			{
@@ -275,7 +275,7 @@ namespace clan
 					compressed_pos += received_input;
 
 					zs.next_in = (unsigned char *)zbuffer;
-					zs.avail_in = unsigned int(received_input);
+					zs.avail_in = (unsigned int)received_input;
 				}
 
 				// Decompress data:
