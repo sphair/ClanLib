@@ -160,7 +160,7 @@ namespace clan
 		auto& root_view = controller->root_view();
 		controller_impl->window->set_root_view(root_view);
 
-		DisplayWindow& controller_display_window = controller_impl->window->display_window();
+		DisplayWindow controller_display_window = controller_impl->window->display_window();
 		controller->slots.connect(controller_display_window.sig_window_close(), bind_member(controller.get(), &WindowController::dismiss));
 
 		impl->windows[controller.get()] = controller;
@@ -234,7 +234,7 @@ namespace clan
 			Rectf content_box(screen_pos.x, screen_pos.y, screen_pos.x + width, screen_pos.y + height);
 			Rectf margin_box = ViewGeometry::from_content_box(root_view->style_cascade(), content_box).margin_box();
 
-			DisplayWindow& controller_display_window = controller_impl->window->display_window();
+			DisplayWindow controller_display_window = controller_impl->window->display_window();
 			controller_display_window.set_position(margin_box, false);
 		}
 
