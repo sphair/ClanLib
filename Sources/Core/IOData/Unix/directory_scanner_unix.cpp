@@ -45,10 +45,9 @@ DirectoryScanner_Unix::DirectoryScanner_Unix ()
 {
 }
 
-bool DirectoryScanner_Unix::scan (const std::string& arg_path_name)
+bool DirectoryScanner_Unix::doscan (const std::string& arg_path_name)
 {
 	path_name   = arg_path_name;
-	use_pattern = false;
 
 	if (path_name.empty ())
 	  path_name = ".";
@@ -63,24 +62,18 @@ bool DirectoryScanner_Unix::scan (const std::string& arg_path_name)
 		return true;
 }
 
+bool DirectoryScanner_Unix::scan (const std::string& arg_path_name)
+{
+	use_pattern = false;
+	return doscan(arg_path_name);
+}
+
 bool DirectoryScanner_Unix::scan (const std::string& arg_path_name, 
 				     const std::string& arg_file_pattern)
 {
-	path_name    = arg_path_name;
 	file_pattern = arg_file_pattern;
 	use_pattern  = true;
-
-	if (path_name.empty ())
-	  path_name = ".";
-
-	if(dir_temp)
-		closedir(dir_temp);
-
-	dir_temp = opendir(path_name.c_str());
-	if (dir_temp == nullptr)
-		return false;
-	else
-		return true;
+	return doscan(arg_path_name);
 }
 
 DirectoryScanner_Unix::~DirectoryScanner_Unix()
