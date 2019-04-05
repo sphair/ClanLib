@@ -102,6 +102,8 @@ private:
 	std::string path_name;
 
 	std::string file_pattern;
+
+	bool doscan (const std::string& pathname);
 /// \}
 };
 
