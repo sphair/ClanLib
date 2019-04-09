@@ -550,9 +550,11 @@ namespace clan
 				result = info_queue->GetMessage(i, message, &length);
 				if (FAILED(result))
 					continue;
-
-				std::string text(message->pDescription, message->DescriptionByteLength);
-				log_event("d3d", "%4 (id=%1, category=%2, severity=%3)", message->ID, message->Category, message->Severity, text);
+				if (message)
+				{
+					std::string text(message->pDescription, message->DescriptionByteLength);
+					log_event("d3d", "%4 (id=%1, category=%2, severity=%3)", message->ID, message->Category, message->Severity, text);
+				}
 			}
 			info_queue->ClearStoredMessages();
 		}
