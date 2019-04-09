@@ -1162,7 +1162,7 @@ namespace clan
 
 	PixelBuffer Win32Window::create_bitmap_data(const PixelBuffer &image, const Rect &rect)
 	{
-		if (rect.left < 0 || rect.top < 0 || rect.right > image.get_width(), rect.bottom > image.get_height())
+		if (rect.left < 0 || rect.top < 0 || rect.right > image.get_width() || rect.bottom > image.get_height())
 			throw Exception("Rectangle passed to Win32Window::create_bitmap_data() out of bounds");
 
 		// Convert pixel buffer to DIB compatible format:
@@ -1276,8 +1276,9 @@ namespace clan
 		UINT png_format = 0;
 		while (format)
 		{
-			WCHAR szFormatName[80];
-			int retLen = GetClipboardFormatName(format, szFormatName, sizeof(szFormatName));
+			const int format_name_size = 80;
+			WCHAR szFormatName[format_name_size];
+			int retLen = GetClipboardFormatName(format, szFormatName, format_name_size);
 
 			if (std::wstring(L"image/png") == szFormatName ||
 				std::wstring(L"PNG") == szFormatName)
@@ -1313,10 +1314,13 @@ namespace clan
 				size_t size = GlobalSize(handle);
 
 				PixelBuffer image;
-				if (data->bV5Compression == BI_RGB)
-					image = get_argb8888_from_rgb_dib(data, size);
-				else if (data->bV5Compression == BI_BITFIELDS)
-					image = get_argb8888_from_bitfields_dib(data, size);
+				if (data)
+				{
+					if (data->bV5Compression == BI_RGB)
+						image = get_argb8888_from_rgb_dib(data, size);
+					else if (data->bV5Compression == BI_BITFIELDS)
+						image = get_argb8888_from_bitfields_dib(data, size);
+				}
 
 				GlobalUnlock(handle);
 				CloseClipboard();
@@ -1348,6 +1352,9 @@ namespace clan
 
 		void *bits2 = 0;
 		HBITMAP bitmap = CreateDIBSection(hdc, (BITMAPINFO*)bitmapInfo, DIB_RGB_COLORS, &bits2, 0, 0);
+		if (!bitmap)
+			throw Exception("CreateDIBSection failed");
+
 		memcpy(bits2, bitmapBits, bitmapBitsSize);
 
 		BITMAPV5HEADER rgbBitmapInfo;
@@ -1408,6 +1415,8 @@ namespace clan
 
 		void *bits2 = 0;
 		HBITMAP bitmap = CreateDIBSection(hdc, (BITMAPINFO*)bitmapInfo, DIB_RGB_COLORS, &bits2, 0, 0);
+		if (!bitmap)
+			throw Exception("CreateDIBSection failed");
 		memcpy(bits2, bitmapBits, bitmapBitsSize);
 
 		BITMAPV5HEADER rgbBitmapInfo;
