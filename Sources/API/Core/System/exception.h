@@ -45,7 +45,7 @@ namespace clan
 		Exception(const std::string &message);
 
 		/// \brief Destructs an exception object
-		virtual ~Exception() throw() {}
+		virtual ~Exception() noexcept {}
 
 		/// \brief Description of exception.
 		std::string message;

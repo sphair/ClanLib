@@ -41,7 +41,7 @@ namespace clan
 		XPathException(const std::string &message) : Exception(message) {};
 		XPathException(const std::string &message, const std::string &expression);
 		XPathException(const std::string &message, const std::string &expression, const XPathToken &cur_token);
-		~XPathException() throw() {}
+		~XPathException() noexcept {}
 
 		std::string get_message() const;
 
