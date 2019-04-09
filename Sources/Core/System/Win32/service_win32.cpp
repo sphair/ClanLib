@@ -220,7 +220,8 @@ namespace clan
 	int Service_Win32::run_install()
 	{
 		WCHAR exe_filename[MAX_PATH];
-		BOOL result = GetModuleFileName(0, exe_filename, 1024);
+		BOOL result = GetModuleFileName(0, exe_filename, MAX_PATH);
+		exe_filename[MAX_PATH - 1] = 0;
 		if (result == FALSE)
 		{
 			Console::write_line("Could not install service. Unable to retrieve executable path.");
