@@ -157,7 +157,8 @@ namespace clan
 	void CrashReporter_Impl::load_dbg_help()
 	{
 		module_dbghlp = LoadLibrary(L"dbghelp.dll");
-		func_MiniDumpWriteDump = reinterpret_cast<MiniDumpWriteDumpPointer>(GetProcAddress(module_dbghlp, "MiniDumpWriteDump"));
+		if (module_dbghlp)
+			func_MiniDumpWriteDump = reinterpret_cast<MiniDumpWriteDumpPointer>(GetProcAddress(module_dbghlp, "MiniDumpWriteDump"));
 	}
 
 	void CrashReporter_Impl::hook_thread()
@@ -197,7 +198,8 @@ namespace clan
 		// Create dump in separate thread:
 		DWORD threadId;
 		HANDLE hThread = CreateThread(0, 0, &CrashReporter_Impl::create_dump_main, &dump_params, 0, &threadId);
-		WaitForSingleObject(hThread, INFINITE);
+		if (hThread)
+			WaitForSingleObject(hThread, INFINITE);
 		TerminateProcess(GetCurrentProcess(), 255);
 	}
 
@@ -216,7 +218,8 @@ namespace clan
 		// Create minidump in seperate thread:
 		DWORD threadId;
 		HANDLE hThread = CreateThread(0, 0, &CrashReporter_Impl::create_dump_main, &dump_params, 0, &threadId);
-		WaitForSingleObject(hThread, INFINITE);
+		if (hThread)
+			WaitForSingleObject(hThread, INFINITE);
 		TerminateProcess(GetCurrentProcess(), 255);
 		return EXCEPTION_EXECUTE_HANDLER;
 	}
