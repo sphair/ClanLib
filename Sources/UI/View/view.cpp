@@ -664,7 +664,10 @@ namespace clan
 	{
 		ViewTree *tree = view_tree();
 		Pointf root_pos = tree ? tree->screen_to_client_pos(pos) : pos;
-		Pointf root_content_pos = root_pos - tree->root_view()->geometry().content_box().get_top_left();
+		Pointf root_content_pos = root_pos;
+		if (tree)
+			root_content_pos -= tree->root_view()->geometry().content_box().get_top_left();
+
 		return from_root_pos(root_content_pos);
 	}
 
@@ -852,7 +855,7 @@ namespace clan
 
 		// Our outher box now is the content box of the parent. We need to prepare canvas so that its coordinate 0, 0 was the top left corner of parent's parent.
 		// If parent doesn't exists, then 0, 0.
-		Pointf translate = prnt->parent() ? prnt->parent()->to_root_pos(Pointf(), true) : Pointf();
+		Pointf translate = prnt && prnt->parent() ? prnt->parent()->to_root_pos(Pointf(), true) : Pointf();
 
 		// Shift the coordinate system of the canvas, considering other transform states for View (need to test).
 		TransformState transform_state(&canv);
@@ -1046,9 +1049,6 @@ namespace clan
 			case KeyEventType::release: action->key_release(*key); break;
 			}
 		}
-
-		if (e->propagation_stopped())
-			return;
 	}
 
 	void ViewImpl::process_event(View *self, EventUI *e, bool use_capture)
