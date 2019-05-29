@@ -119,9 +119,9 @@ namespace clan
 	Image::Image(Canvas &canvas, const PixelBuffer &pb, const Rect &rect)
 		: impl(std::make_shared<Image_Impl>())
 	{
-		impl->texture = Texture2D(canvas, pb.get_width(), pb.get_height(), pb.get_format());
+		impl->texture = Texture2D(canvas, rect.get_width(), rect.get_height(), pb.get_format());
 		impl->texture.set_subimage(canvas, 0, 0, pb, rect);
-		impl->texture_rect = Rect(0, 0, pb.get_width(), pb.get_height());
+		impl->texture_rect = Rect(0, 0, rect.get_width(), rect.get_height());
 	}
 
 	Image::Image(Texture2D texture, const Rect &rect)
