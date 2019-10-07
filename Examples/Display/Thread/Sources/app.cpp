@@ -175,7 +175,7 @@ bool App::update()
 
 		thread_worker_event.notify_all();
 	}
-	pixelbuffer_write->unlock();
+	lock.unlock();
 
 	// Draw rotating mandelbrot
 	canvas.set_transform(clan::Mat4f::translate(canvas.get_width()/2, canvas.get_height()/2, 0.0f) * clan::Mat4f::rotate(clan::Angle(angle, clan::angle_degrees), 0.0f, 0.0f, 1.0f));

@@ -74,7 +74,7 @@ private:
 	std::condition_variable thread_worker_event;
 
 	// Worker thead variables
-	float scale;
+	float scale = 4.0f;
 	unsigned char *dest_pixels = nullptr;	// Used by the worker thread to contain where to write the pixels to
 
 	FramerateCounter framerate_counter;
