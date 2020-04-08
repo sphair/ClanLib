@@ -15,7 +15,7 @@ vec4 GaussianBlur()
 	vec4 c = vec4(0.0);
 	for (int i = 0 ; i < 15; i++)
 	{
-		c += texture2D(SourceTexture, (TexCoord + Sample[i].xy)) * Sample[i].z;
+		c += texture(SourceTexture, (TexCoord + Sample[i].xy)) * Sample[i].z;
 	}
 
 	return c;

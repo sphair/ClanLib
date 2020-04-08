@@ -1,3 +1,4 @@
+#version 150
 
 uniform sampler2D Texture0;
 varying float HueOffset;

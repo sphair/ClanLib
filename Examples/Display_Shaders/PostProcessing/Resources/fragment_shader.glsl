@@ -24,7 +24,7 @@ vec4 noise()
     x = (mod(x, 13.0) * mod(x, 123.0));
     float dx = mod(x, 0.0015) * Amount;
     float dy = mod(x, 0.0005) * Amount;
-    vec4 c = texture2D(Texture, (TexCoord + vec2(dx, dy)));
+    vec4 c = texture(Texture, (TexCoord + vec2(dx, dy)));
     return c;
 }
 
@@ -39,5 +39,5 @@ vec4 grey(in vec4 fragment)
 void main() 
 {
 	cl_FragColor = grey(scanlines(noise()));
-//	cl_FragColor = grey(scanlines(texture2D(Texture, TexCoord)));
+//	cl_FragColor = grey(scanlines(texture(Texture, TexCoord)));
 }

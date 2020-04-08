@@ -1,9 +1,10 @@
+#version 150
 
-attribute vec4 Position;
-attribute float HueOffset0;
-attribute vec2 TexCoord0;
-varying float HueOffset;
-varying vec2 TexCoord;
+in vec4 Position;
+in float HueOffset0;
+in vec2 TexCoord0;
+out float HueOffset;
+out vec2 TexCoord;
 
 void main(void)
 {
