@@ -29,7 +29,7 @@ void main()
 		vec2 diffUV = normalize(uv - center);
 		texture_coord = uv + (diffUV * diffTime);
 
-		cl_FragColor = texture2D(Texture0, texture_coord);
+		cl_FragColor = texture(Texture0, texture_coord);
 
 		cl_FragColor.r += powDiff * glow;
 		cl_FragColor.g += powDiff * glow;
@@ -37,6 +37,6 @@ void main()
 
 	}
 	else
-		cl_FragColor = texture2D(Texture0, texture_coord);
+		cl_FragColor = texture(Texture0, texture_coord);
 
 }

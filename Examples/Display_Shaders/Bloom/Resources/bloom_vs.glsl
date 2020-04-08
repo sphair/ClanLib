@@ -1,8 +1,10 @@
-attribute vec4 Position;
-attribute vec2 TexCoord0;
+#version 150
+
+in vec4 Position;
+in vec2 TexCoord0;
 uniform mat4 cl_ModelViewProjectionMatrix;
 
-varying vec2 TexCoord;
+out vec2 TexCoord;
 
 void main(void) 
 { 

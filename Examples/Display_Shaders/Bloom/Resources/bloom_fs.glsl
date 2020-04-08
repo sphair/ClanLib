@@ -1,3 +1,5 @@
+#version 150
+
 uniform sampler2D BaseTexture;
 uniform float BaseIntensity;
 uniform float BaseSaturation;
@@ -5,7 +7,8 @@ uniform float BaseSaturation;
 uniform sampler2D BloomTexture;
 uniform float BloomIntensity;
 uniform float BloomSaturation;
-varying vec2 TexCoord;
+out vec2 TexCoord;
+out vec4 fragColor;
 
 vec4 AdjustSaturation(in vec4 color, in float saturation)
 {
@@ -17,10 +20,10 @@ vec4 AdjustSaturation(in vec4 color, in float saturation)
 
 vec4 BloomCombine()
 {
-    vec4 bloom = texture2D(BloomTexture, TexCoord);
+    vec4 bloom = texture(BloomTexture, TexCoord);
     bloom = (AdjustSaturation(bloom, BloomSaturation) * BloomIntensity);
 
-    vec4 base = texture2D(BaseTexture, TexCoord);
+    vec4 base = texture(BaseTexture, TexCoord);
     base = (AdjustSaturation(base, BaseSaturation) * BaseIntensity);
     
     base *= (1.0 - clamp(bloom, 0.0, 1.0));
@@ -30,5 +33,5 @@ vec4 BloomCombine()
 
 void main() 
 {
-    gl_FragColor = BloomCombine();
+    fragColor = BloomCombine();
 }

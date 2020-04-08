@@ -24,9 +24,9 @@ void main ()
 		vec2 uv;
 		uv.x = 0.4*sin(elapsedTime*50.0);
 		uv.y = 0.4*cos(elapsedTime*50.0);
-		float m = texture2D(maskTex, TexCoord).r;
-		vec3 n = texture2D(noiseTex, (TexCoord*3.5) + uv).rgb;
-		vec3 c = texture2D(sceneBuffer, TexCoord + (n.xy*0.005)).rgb;
+		float m = texture(maskTex, TexCoord).r;
+		vec3 n = texture(noiseTex, (TexCoord*3.5) + uv).rgb;
+		vec3 c = texture(sceneBuffer, TexCoord + (n.xy*0.005)).rgb;
 
 		float lum = dot(vec3(0.30, 0.59, 0.11), c);
 
@@ -38,7 +38,7 @@ void main ()
 	}
 	else
 	{
-		finalColor = texture2D(sceneBuffer,
+		finalColor = texture(sceneBuffer,
 		TexCoord);
 	}
 
