@@ -35,15 +35,12 @@ namespace clan
 	ConsoleWindow::ConsoleWindow(
 		const std::string &title,
 		int width,
-		int height)
-		: impl(nullptr)
+		int height) : impl(std::make_shared<ConsoleWindow_Impl>(title, width, height))
 	{
-		impl = new ConsoleWindow_Impl(title, width, height);
 	}
 
 	ConsoleWindow::~ConsoleWindow()
 	{
-		delete impl;
 	}
 
 	void ConsoleWindow::wait_for_key()

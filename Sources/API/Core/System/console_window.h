@@ -66,7 +66,7 @@ namespace clan
 		void display_close_message();
 
 	private:
-		ConsoleWindow_Impl *impl;
+		std::shared_ptr< ConsoleWindow_Impl > impl;
 	};
 
 	/// \}
