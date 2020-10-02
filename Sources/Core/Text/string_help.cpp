@@ -132,7 +132,11 @@ namespace clan
 			return wcscmp(a.c_str(), b.c_str());
 	#else
 		if (case_insensitive)
+	#ifdef __sun
+			return std::wcscasecmp(a.c_str(), b.c_str());
+	#else
 			return wcscasecmp(a.c_str(), b.c_str());
+	#endif
 		else
 			return wcscmp(a.c_str(), b.c_str());
 	#endif
