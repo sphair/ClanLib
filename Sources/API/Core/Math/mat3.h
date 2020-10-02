@@ -62,8 +62,8 @@ namespace clan
 		/// \brief Constructs a 3x3 matrix (zero'ed)
 		Mat3()
 		{
-			for (auto & elem : matrix)
-				elem = 0;
+			for (int i = 0; i < 9; i++)
+				matrix[i] = 0;
 		}
 
 		/// \brief Constructs a 3x3 matrix (copied)

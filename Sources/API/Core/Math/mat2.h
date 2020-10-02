@@ -61,8 +61,8 @@ namespace clan
 		/// \brief Constructs a 2x2 matrix (zero'ed)
 		Mat2()
 		{
-			for (auto & elem : matrix)
-				elem = 0;
+			for (int i = 0; i < 4; i++)
+				matrix[i] = 0;
 		}
 		/// \brief Constructs a 2x2 matrix (copied)
 		Mat2(const Mat2<Type> &copy)
