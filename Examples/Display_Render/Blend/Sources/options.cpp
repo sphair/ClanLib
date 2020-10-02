@@ -39,7 +39,7 @@ Options::Options(clan::Canvas &canvas) : clan::TextureWindow(canvas)
 	blendfunc[3] = clan::BlendFunc::one_minus_src_alpha;
 	blendequation[0] = clan::BlendEquation::add;
 	blendequation[1] = clan::BlendEquation::add;
-	logic_operation = clan::LogicOp::set;
+	logic_operation = clan::LogicOp::_set;
 	logic_operation_enabled = false;
 
 	primary_color = clan::Colorf::white;
@@ -260,52 +260,52 @@ void Options::on_logic_selected()
 	switch (value)
 	{
 		case 1:
-			logic_operation = clan::LogicOp::clear;
+			logic_operation = clan::LogicOp::_clear;
 			break;
 		case 2:
-			logic_operation = clan::LogicOp::and;
+			logic_operation = clan::LogicOp::_and;
 			break;
 		case 3:
-			logic_operation = clan::LogicOp::and_reverse;
+			logic_operation = clan::LogicOp::_and_reverse;
 			break;
 		case 4:
-			logic_operation = clan::LogicOp::copy;
+			logic_operation = clan::LogicOp::_copy;
 			break;
 		case 5:
-			logic_operation = clan::LogicOp::and_inverted;
+			logic_operation = clan::LogicOp::_and_inverted;
 			break;
 		case 6:
-			logic_operation = clan::LogicOp::noop;
+			logic_operation = clan::LogicOp::_noop;
 			break;
 		case 7:
-			logic_operation = clan::LogicOp::xor;
+			logic_operation = clan::LogicOp::_xor;
 			break;
 		case 8:
-			logic_operation = clan::LogicOp::or;
+			logic_operation = clan::LogicOp::_or;
 			break;
 		case 9:
-			logic_operation = clan::LogicOp::nor;
+			logic_operation = clan::LogicOp::_nor;
 			break;
 		case 10:
-			logic_operation = clan::LogicOp::equiv;
+			logic_operation = clan::LogicOp::_equiv;
 			break;
 		case 11:
-			logic_operation = clan::LogicOp::invert;
+			logic_operation = clan::LogicOp::_invert;
 			break;
 		case 12:
-			logic_operation = clan::LogicOp::or_reverse;
+			logic_operation = clan::LogicOp::_or_reverse;
 			break;
 		case 13:
-			logic_operation = clan::LogicOp::copy_inverted;
+			logic_operation = clan::LogicOp::_copy_inverted;
 			break;
 		case 14:
-			logic_operation = clan::LogicOp::or_inverted;
+			logic_operation = clan::LogicOp::_or_inverted;
 			break;
 		case 15:
-			logic_operation = clan::LogicOp::nand;
+			logic_operation = clan::LogicOp::_nand;
 			break;
 		case 16:
-			logic_operation = clan::LogicOp::set;
+			logic_operation = clan::LogicOp::_set;
 			break;
 	}
 }

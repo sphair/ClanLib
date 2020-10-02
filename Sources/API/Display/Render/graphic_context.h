@@ -131,22 +131,22 @@ namespace clan
 	/// Logic Op
 	enum class LogicOp
 	{
-		clear,
-		and,
-		and_reverse,
-		copy,
-		and_inverted,
-		noop,
-		xor,
-		or,
-		nor,
-		equiv,
-		invert,
-		or_reverse,
-		copy_inverted,
-		or_inverted,
-		nand,
-		set
+		_clear,
+		_and,
+		_and_reverse,
+		_copy,
+		_and_inverted,
+		_noop,
+		_xor,
+		_or,
+		_nor,
+		_equiv,
+		_invert,
+		_or_reverse,
+		_copy_inverted,
+		_or_inverted,
+		_nand,
+		_set
 	};
 
 	/// Blending functions.

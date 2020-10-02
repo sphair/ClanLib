@@ -340,67 +340,67 @@ std::string App::get_logic_operation(clan::LogicOp logic_operation, const std::s
 
 	switch (logic_operation)
 	{
-		case clan::LogicOp::clear:
+		case clan::LogicOp::_clear:
 			text = "0";
 			break;
 
-		case clan::LogicOp::and:
+		case clan::LogicOp::_and:
 			text = source_fragment + " & " + dest_fragment;
 			break;
 
-		case clan::LogicOp::and_reverse:
+		case clan::LogicOp::_and_reverse:
 			text = source_fragment + " & ( ! " + dest_fragment + ")";
 			break;
 
-		case clan::LogicOp::copy:
+		case clan::LogicOp::_copy:
 			text = source_fragment;
 			break;
 
-		case clan::LogicOp::and_inverted:
+		case clan::LogicOp::_and_inverted:
 			text = "( ! " + source_fragment + " ) & " + dest_fragment;
 			break;
 
-		case clan::LogicOp::noop:
+		case clan::LogicOp::_noop:
 			text = dest_fragment;
 			break;
 
-		case clan::LogicOp::xor:
+		case clan::LogicOp::_xor:
 			text = source_fragment + " ^ " + dest_fragment;
 			break;
 
-		case clan::LogicOp::or:
+		case clan::LogicOp::_or:
 			text = source_fragment + " | " + dest_fragment;
 			break;
 
-		case clan::LogicOp::nor:
+		case clan::LogicOp::_nor:
 			text = "! (" + source_fragment + " | " + dest_fragment + ")";
 			break;
 
-		case clan::LogicOp::equiv:
+		case clan::LogicOp::_equiv:
 			text = "! (" + source_fragment + " ^ " + dest_fragment + ")";
 			break;
 
-		case clan::LogicOp::invert:
+		case clan::LogicOp::_invert:
 			text = "! " + dest_fragment;
 			break;
 
-		case clan::LogicOp::or_reverse:
+		case clan::LogicOp::_or_reverse:
 			text = source_fragment + " | ( ! " + dest_fragment + " )";
 			break;
 
-		case clan::LogicOp::copy_inverted:
+		case clan::LogicOp::_copy_inverted:
 			text = "! " + source_fragment;
 			break;
 
-		case clan::LogicOp::or_inverted:
+		case clan::LogicOp::_or_inverted:
 			text = "( ! " + source_fragment + ") | " + dest_fragment;
 			break;
 
-		case clan::LogicOp::nand:
+		case clan::LogicOp::_nand:
 			text = "! ( " + source_fragment + " & " + dest_fragment + ")";
 			break;
 
-		case clan::LogicOp::set:
+		case clan::LogicOp::_set:
 			text = "1";
 			break;
 

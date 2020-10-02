@@ -1482,22 +1482,22 @@ namespace clan
 		GLenum gl_op = 0;
 		switch (op)
 		{
-			case LogicOp::clear: gl_op = GL_CLEAR; break;  
-			case LogicOp::and: gl_op = GL_AND; break;
-			case LogicOp::and_reverse: gl_op = GL_AND_REVERSE; break;
-			case LogicOp::copy: gl_op = GL_COPY; break;
-			case LogicOp::and_inverted: gl_op = GL_AND_INVERTED; break;
-			case LogicOp::noop: gl_op = GL_NOOP; break;
-			case LogicOp::xor: gl_op = GL_XOR; break;
-			case LogicOp::or: gl_op = GL_OR; break;
-			case LogicOp::nor: gl_op = GL_NOR; break;
-			case LogicOp::equiv: gl_op = GL_EQUIV; break;
-			case LogicOp::invert: gl_op = GL_INVERT; break;
-			case LogicOp::or_reverse: gl_op = GL_OR_REVERSE; break;
-			case LogicOp::copy_inverted: gl_op = GL_COPY_INVERTED; break;
-			case LogicOp::or_inverted: gl_op = GL_OR_INVERTED; break;
-			case LogicOp::nand: gl_op = GL_NAND; break;
-			case LogicOp::set: gl_op = GL_SET; break;
+			case LogicOp::_clear: gl_op = GL_CLEAR; break;  
+			case LogicOp::_and: gl_op = GL_AND; break;
+			case LogicOp::_and_reverse: gl_op = GL_AND_REVERSE; break;
+			case LogicOp::_copy: gl_op = GL_COPY; break;
+			case LogicOp::_and_inverted: gl_op = GL_AND_INVERTED; break;
+			case LogicOp::_noop: gl_op = GL_NOOP; break;
+			case LogicOp::_xor: gl_op = GL_XOR; break;
+			case LogicOp::_or: gl_op = GL_OR; break;
+			case LogicOp::_nor: gl_op = GL_NOR; break;
+			case LogicOp::_equiv: gl_op = GL_EQUIV; break;
+			case LogicOp::_invert: gl_op = GL_INVERT; break;
+			case LogicOp::_or_reverse: gl_op = GL_OR_REVERSE; break;
+			case LogicOp::_copy_inverted: gl_op = GL_COPY_INVERTED; break;
+			case LogicOp::_or_inverted: gl_op = GL_OR_INVERTED; break;
+			case LogicOp::_nand: gl_op = GL_NAND; break;
+			case LogicOp::_set: gl_op = GL_SET; break;
 			default: break;
 		}
 		return gl_op;

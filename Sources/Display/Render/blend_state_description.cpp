@@ -36,7 +36,7 @@ namespace clan
 	public:
 		BlendStateDescription_Impl()
 			: enable_blending(true), equation_color(), equation_alpha(), func_src(), func_dest(), func_src_alpha(), func_dest_alpha(), write_red(true), write_green(true), write_blue(true), write_alpha(true),
-			logic_op_enabled(false), logic_op(LogicOp::copy)
+			logic_op_enabled(false), logic_op(LogicOp::_copy)
 		{
 			func_src = BlendFunc::src_alpha;
 			func_dest = BlendFunc::one_minus_src_alpha;
