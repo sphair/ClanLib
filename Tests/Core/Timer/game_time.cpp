@@ -29,65 +29,48 @@
 
 #include "test.h"
 
-int main(int argc, char** argv)
+void TestApp::test_game_time(void)
 {
-	TestApp program;
-	program.main();
-}
+	Console::write_line(" Header: game_time.h");
+	Console::write_line("  Class: GameTime");
 
-int TestApp::main()
-{
-	// Create a console window for text-output if not available
-	ConsoleWindow console("Console");
+	Console::write_line("   Function: various");
 
-	try
+
+	GameTime game_time;
+	uint64_t current_time_ms = 0;
+	uint64_t current_time_micro = 0;
+	int total_ms = 0;
+	uint64_t total_micro = 0;
+
+	do
 	{
+		game_time.update();
 
-		Console::write_line("ClanLib Test Suite:");
-		Console::write_line("-------------------");
-#ifdef WIN32
-		Console::write_line("Target: WIN32");
-#else
-		Console::write_line("Target: LINUX");
-#endif
-		Console::write_line("Directory: API/Core stuff");
+		clan::System::sleep(10);
 
-		test_game_time();
-		//FIXME test_timer();
+		total_ms += game_time.get_time_elapsed_ms();
+		total_micro += game_time.get_time_elapsed_microseconds();
 
-		Console::write_line("All Tests Complete");
-		console.display_close_message();
+		current_time_ms = game_time.get_current_time_ms();
+		current_time_micro = game_time.get_current_time_microseconds();
+
+	} while (current_time_ms < 10000);
+
+	int diff_micro = total_micro - current_time_micro;
+	if (diff_micro)
+	{
+		Console::write_line(string_format("microseconds: Expected 0, got %1", diff_micro));
+		fail();
 	}
 
-	catch(Exception error)
+	int diff_ms = total_ms - current_time_ms;
+	if (diff_ms)
 	{
-		Console::write_line("Exception caught:");
-		Console::write_line(error.message);
-
-/*
-		// Display the stack trace (if available)
-		std::vector<std::string> stacktrace = error.get_stack_trace();
-		int size = stacktrace.size();
-		if (size > 0)
-		{
-			Console::write_line("Stack Trace:");
-			for (int cnt=0; cnt < size; cnt++)
-			{
-				Console::write_line(stacktrace[cnt]);
-			}
-		}
-*/	
-		console.display_close_message();
-		return -1;
+		Console::write_line(string_format("ms: Expected 0, got %1", diff_ms));
+		fail();
 	}
 
-	return 0;
+
+
 }
-
-void TestApp::fail(void)
-{
-	throw Exception("Failed Test");
-}
-
-
-

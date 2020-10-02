@@ -131,6 +131,7 @@
   <ItemGroup>
     <ClCompile Include="test.cpp" />
     <ClCompile Include="timer.cpp" />
+	<ClCompile Include="game_time.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test.h" />

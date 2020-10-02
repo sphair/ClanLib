@@ -38,6 +38,7 @@ public:
 	int main();
 private:
 	void test_timer(void);
+	void test_game_time();
 	void fail(void);
 	void funx_timer_1();
 	void funx_timer_2();

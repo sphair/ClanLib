@@ -49,6 +49,11 @@ namespace clan
 		return impl->time_elapsed_ms;
 	}
 
+	uint64_t GameTime::get_time_elapsed_microseconds() const
+	{
+		return impl->time_elapsed_microseconds;
+	}
+
 	int GameTime::get_ticks_elapsed() const
 	{
 		return impl->ticks_elapsed;
@@ -87,7 +92,7 @@ namespace clan
 
 	uint64_t GameTime::get_current_time_ms() const
 	{
-		return (impl->current_time - impl->start_time) / 1000;
+		return (impl->current_time_ms - impl->start_time_ms);
 	}
 
 	void GameTime::update()
@@ -98,18 +103,21 @@ namespace clan
 	void GameTime_Impl::update()
 	{
 		uint64_t last_time = current_time;
+		uint64_t last_time_ms = current_time_ms;
 
 		current_time = System::get_microseconds();
 
 		if (current_time < last_time)		// Old cpu's may report time travelling on early multicore processors (iirc)
 			last_time = current_time;
 
+		current_time_ms = current_time / 1000ULL;
+
 		uint64_t ticks_per_microsecond = 1000000 / ticks_per_second;
 		uint64_t current_tick = (current_time - start_time) / ticks_per_microsecond;
 
 		ticks_elapsed = current_tick - last_tick;
-		time_elapsed_ms = (int)((time_elapsed_ms_microsecond_adjustment + current_time - last_time) / 1000);
-		time_elapsed_ms_microsecond_adjustment = (current_time - last_time) % 1000;
+		time_elapsed_microseconds = current_time - last_time;
+		time_elapsed_ms = static_cast<int>(current_time_ms - last_time_ms);
 		time_elapsed = (float)((current_time - last_time) / (double)1000000);
 		tick_interpolation_time = (float)(((current_time - start_time) % ticks_per_microsecond) / (double)ticks_per_microsecond);
 
@@ -163,12 +171,13 @@ namespace clan
 	{
 		start_time = System::get_microseconds();
 		current_time = start_time;
+		start_time_ms = current_time_ms = start_time / 1000ULL;
 		last_tick = 0;
 		time_elapsed = 0.0f;
 		ticks_elapsed = 0;
 		tick_interpolation_time = 0.0f;
 		time_elapsed_ms = 0;
-		time_elapsed_ms_microsecond_adjustment = 0;
+		time_elapsed_microseconds = 0;
 		num_updates_in_2_seconds = 0;
 		update_frame_start_time = current_time;
 		current_fps = 0;

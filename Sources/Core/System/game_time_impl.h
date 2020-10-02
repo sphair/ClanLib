@@ -46,13 +46,15 @@ namespace clan
 		int min_update_time_ms = 0;
 
 		uint64_t start_time = 0;
+		uint64_t start_time_ms = 0;
 		uint64_t current_time = 0;
+		uint64_t current_time_ms = 0;
 
 		uint64_t last_tick = 0;
 
 		float time_elapsed = 0.0f;
 		int time_elapsed_ms = 0;
-		int time_elapsed_ms_microsecond_adjustment = 0;		// Amount of Microseconds lost due to time_elapsed_ms rounding (to add on for next time)
+		uint64_t time_elapsed_microseconds = 0;
 
 		int ticks_elapsed = 0;
 		float tick_interpolation_time = 0.0f;

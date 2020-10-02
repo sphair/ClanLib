@@ -54,6 +54,9 @@ namespace clan
 		/// \brief Returns the time elapsed in seconds since last update in milliseconds
 		int get_time_elapsed_ms() const;
 
+		/// \brief Returns the time elapsed in seconds since last update in microseconds
+		uint64_t get_time_elapsed_microseconds() const;
+
 		/// \brief Returns the number of ticks that elapsed since last update.
 		int get_ticks_elapsed() const;
 
