@@ -48,9 +48,9 @@
 #define IDC_CHECK_INCLUDE_INTRINSICS    1028
 #define IDC_CHECK_DEBUG_OPTIMIZE        1029
 #define IDC_CHECK_WHOLE_PROGRAM_OPTIMIZE 1030
-#define IDC_RADIO_VC120                 1034
-#define IDC_RADIO_VC140                 1035
-#define IDC_RADIO_VC140_ANDROID		    1036
+#define IDC_RADIO_VC140                 1034
+#define IDC_RADIO_VC160                 1035
+#define IDC_RADIO_VC160_ANDROID		    1036
 
 // Next default values for new objects
 // 

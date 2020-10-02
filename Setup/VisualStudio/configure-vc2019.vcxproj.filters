@@ -5,7 +5,7 @@
       <UniqueIdentifier>{67e6ccf9-4ac9-45eb-8fb1-aa017b6226ed}</UniqueIdentifier>
     </Filter>
     <Filter Include="Win32\Page">
-      <UniqueIdentifier>{a884b178-e5de-4db6-a033-49ca0e6408dc}</UniqueIdentifier>
+      <UniqueIdentifier>{cd540bab-1654-4bab-a9ad-eabf2719cac2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -19,9 +19,6 @@
       <Filter>Win32</Filter>
     </ClCompile>
     <ClCompile Include="Win32\workspace_generator_msvc8.cpp">
-      <Filter>Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="Win32\project.cpp">
       <Filter>Win32</Filter>
     </ClCompile>
     <ClCompile Include="Win32\Page\page_finished.cpp">
@@ -39,6 +36,9 @@
     <ClCompile Include="Win32\Page\page_welcome.cpp">
       <Filter>Win32\Page</Filter>
     </ClCompile>
+    <ClCompile Include="Win32\project.cpp">
+      <Filter>Win32</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Win32\precomp.h">
@@ -51,12 +51,6 @@
       <Filter>Win32</Filter>
     </ClInclude>
     <ClInclude Include="Win32\workspace_generator_msvc8.h">
-      <Filter>Win32</Filter>
-    </ClInclude>
-    <ClInclude Include="Win32\project.h">
-      <Filter>Win32</Filter>
-    </ClInclude>
-    <ClInclude Include="Win32\workspace.h">
       <Filter>Win32</Filter>
     </ClInclude>
     <ClInclude Include="Win32\Page\page_finished.h">
@@ -73,6 +67,12 @@
     </ClInclude>
     <ClInclude Include="Win32\Page\page_welcome.h">
       <Filter>Win32\Page</Filter>
+    </ClInclude>
+    <ClInclude Include="Win32\project.h">
+      <Filter>Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="Win32\workspace.h">
+      <Filter>Win32</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
