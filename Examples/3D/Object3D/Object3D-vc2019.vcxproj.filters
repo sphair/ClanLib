@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{27b2c615-fba9-416d-9a2b-7094b6281a20}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Sources\example.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\precomp.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\shader.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\graphic_store.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\model.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\scene.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\scene_object.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\shader_texture.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sources\example.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\precomp.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\shader.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\graphic_store.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\model.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\scene.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\scene_object.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\shader_texture.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.txt" />
+  </ItemGroup>
+</Project>

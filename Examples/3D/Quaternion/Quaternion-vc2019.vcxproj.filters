@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{aaaa0278-de80-430b-bc9f-11cedb0db384}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Theme">
+      <UniqueIdentifier>{e36e9196-1aee-4e97-aa55-05adfff0744b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Sources\example.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\graphic_store.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\model.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\options.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\precomp.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\scene.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\scene_object.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\shader_color.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThemeAero\Sources\theme.cpp">
+      <Filter>Sources\Theme</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sources\example.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\framerate_counter.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\graphic_store.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\model.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\options.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\precomp.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\scene.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\scene_object.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\shader_color.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThemeAero\Sources\theme.h">
+      <Filter>Sources\Theme</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.txt" />
+  </ItemGroup>
+</Project>
