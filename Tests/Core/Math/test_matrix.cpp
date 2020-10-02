@@ -104,7 +104,7 @@ void TestApp::test_matrix_mat4()
 	Console::write_line("   Function: inverse()");
 	{
 
-		Mat4f test_src = Mat4f::rotate((Angle(30, angle_degrees)), 1.0, 0.0, 0.0, true);
+		Mat4f test_src = Mat4f::rotate((Angle(30, AngleUnit::degrees)), 1.0, 0.0, 0.0, true);
 		Mat4f test_inv;
 		Mat4f test_dest;
 		Mat4f test_ident = Mat4f::identity();
@@ -229,12 +229,12 @@ void TestApp::test_matrix_mat4()
 	Console::write_line("   Function: rotate (using euler angles)");
 	{
 		Mat4f mv = Mat4f::identity();
-		mv = mv * Mat4f::rotate(Angle(30.0f, angle_degrees), 0.0f, 0.0f, 1.0f, false);
-		mv = mv * Mat4f::rotate(Angle(10.0f, angle_degrees), 1.0f, 0.0f, 0.0f, false);
-		mv = mv * Mat4f::rotate(Angle(20.0f, angle_degrees), 0.0f, 1.0f, 0.0f, false);
+		mv = mv * Mat4f::rotate(Angle(30.0f, AngleUnit::degrees), 0.0f, 0.0f, 1.0f, false);
+		mv = mv * Mat4f::rotate(Angle(10.0f, AngleUnit::degrees), 1.0f, 0.0f, 0.0f, false);
+		mv = mv * Mat4f::rotate(Angle(20.0f, AngleUnit::degrees), 0.0f, 1.0f, 0.0f, false);
 
 		Mat4f test_matrix;
-		test_matrix = Mat4f::rotate(Angle(10.0f, angle_degrees), Angle(20.0f, angle_degrees), Angle(30.0f, angle_degrees), order_YXZ);
+		test_matrix = Mat4f::rotate(Angle(10.0f, AngleUnit::degrees), Angle(20.0f, AngleUnit::degrees), Angle(30.0f, AngleUnit::degrees), EulerOrder::YXZ);
 		if (!test_matrix.is_equal(mv, 0.00001f))
 			fail();
 
@@ -242,12 +242,12 @@ void TestApp::test_matrix_mat4()
 
 	Console::write_line("   Function: rotate (using euler angles) and get_euler");
 	{
-		test_rotate_and_get_euler(order_XYZ);
-		test_rotate_and_get_euler(order_XZY);
-		test_rotate_and_get_euler(order_YZX);
-		test_rotate_and_get_euler(order_YXZ);
-		test_rotate_and_get_euler(order_ZXY);
-		test_rotate_and_get_euler(order_ZYX);
+		test_rotate_and_get_euler(EulerOrder::XYZ);
+		test_rotate_and_get_euler(EulerOrder::XZY);
+		test_rotate_and_get_euler(EulerOrder::YZX);
+		test_rotate_and_get_euler(EulerOrder::YXZ);
+		test_rotate_and_get_euler(EulerOrder::ZXY);
+		test_rotate_and_get_euler(EulerOrder::ZYX);
 	}
 
 	Console::write_line("   Function: transpose() (float)");
@@ -289,9 +289,9 @@ void TestApp::test_rotate_and_get_euler(clan::EulerOrder order)
 		{
 			for (int az = 0; az < 360; az += 10)
 			{
-				Angle angle_x(ax, angle_degrees);
-				Angle angle_y(ay, angle_degrees);
-				Angle angle_z(az, angle_degrees);
+				Angle angle_x(ax, AngleUnit::degrees);
+				Angle angle_y(ay, AngleUnit::degrees);
+				Angle angle_z(az, AngleUnit::degrees);
 
 				Mat4f test_matrix;
 				test_matrix = Mat4f::rotate(angle_x, angle_y, angle_z, order);
@@ -299,7 +299,7 @@ void TestApp::test_rotate_and_get_euler(clan::EulerOrder order)
 				Vec3f angles = test_matrix.get_euler(order);
 
 				Mat4f test_matrix2;
-				test_matrix2 = Mat4f::rotate(Angle(angles.x, angle_radians), Angle(angles.y, angle_radians), Angle(angles.z, angle_radians), order);
+				test_matrix2 = Mat4f::rotate(Angle(angles.x, AngleUnit::radians), Angle(angles.y, AngleUnit::radians), Angle(angles.z, AngleUnit::radians), order);
 
 				// Note, since euler angles can have alternative forms, we compare by recreating as a rotation matrix
 				if (!test_matrix.is_equal(test_matrix2, 0.00001f))

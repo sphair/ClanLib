@@ -113,7 +113,7 @@ namespace
       L_Blend()
       {
 			enable_blending(true);
-			set_blend_function(clan::blend_src_alpha, clan::blend_one, clan::blend_src_alpha, clan::blend_one);
+			set_blend_function(clan::BlendFunc::src_alpha, clan::BlendFunc::one, clan::BlendFunc::src_alpha, clan::BlendFunc::one);
       }
 
 	/// \brief Enable/Disable blending
@@ -158,7 +158,7 @@ namespace
       L_BlendMinusAlpha()
       {
 			enable_blending(true);
-			set_blend_function(clan::blend_src_alpha, clan::blend_one_minus_src_alpha, clan::blend_src_alpha, clan::blend_one_minus_src_alpha);
+			set_blend_function(clan::BlendFunc::src_alpha, clan::BlendFunc::one_minus_src_alpha, clan::BlendFunc::src_alpha, clan::BlendFunc::one_minus_src_alpha);
       }
    };
 

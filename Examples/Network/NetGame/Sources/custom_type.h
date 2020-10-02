@@ -21,7 +21,7 @@ public:
 
 	operator NetGameEventValue() const 
 	{ 
-		NetGameEventValue value(NetGameEventValue::complex);
+		NetGameEventValue value(NetGameEventValue::Type::complex);
 		value.add_member(x);
 		value.add_member(y);
 		value.add_member(z);

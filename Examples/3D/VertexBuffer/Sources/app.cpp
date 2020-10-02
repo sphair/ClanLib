@@ -59,15 +59,15 @@ App::App()
 	// Prepare the display
 	RasterizerStateDescription rasterizer_state_desc;
 	rasterizer_state_desc.set_culled(true);
-	rasterizer_state_desc.set_face_cull_mode(cull_back);
-	rasterizer_state_desc.set_front_face(face_clockwise);
+	rasterizer_state_desc.set_face_cull_mode(CullMode::back);
+	rasterizer_state_desc.set_front_face(FaceSide::clockwise);
 	raster_state = RasterizerState(canvas, rasterizer_state_desc);
 
 	DepthStencilStateDescription depth_state_desc;
 	depth_state_desc.enable_depth_write(true);
 	depth_state_desc.enable_depth_test(true);
 	depth_state_desc.enable_stencil_test(false);
-	depth_state_desc.set_depth_compare_function(compare_lequal);
+	depth_state_desc.set_depth_compare_function(CompareFunction::lequal);
 	depth_write_enabled = DepthStencilState(canvas, depth_state_desc);
 
 	std::vector<Vec3f> object_positions;
@@ -109,7 +109,7 @@ bool App::update()
 	std::string info = string_format("%1 vertices", num_vertex);
 	fps_font.draw_text(canvas, 30, 30, info);
 
-	Mat4f perspective_matrix = Mat4f::perspective(45.0f, ((float) canvas.get_width()) / ((float) canvas.get_height()), 0.1f, 10000.0f, handed_left, canvas.get_gc().get_clip_z_range() );
+	Mat4f perspective_matrix = Mat4f::perspective(45.0f, ((float) canvas.get_width()) / ((float) canvas.get_height()), 0.1f, 10000.0f, Handedness::left, canvas.get_gc().get_clip_z_range() );
 
 	angle += game_time.get_time_elapsed() * 50.0f;
 	if (angle >= 360.0f)
@@ -117,17 +117,17 @@ bool App::update()
 
 	Mat4f modelview_matrix = Mat4f::identity();
 	modelview_matrix = modelview_matrix.translate(0.0f, 0.0f, 800.0f);
-	modelview_matrix = modelview_matrix * Mat4f::rotate(Angle(angle*2.0f, angle_degrees), 0.0f, 1.0f, 0.0f, false);
-	modelview_matrix = modelview_matrix * Mat4f::rotate(Angle(angle, angle_degrees), 1.0f, 0.0f, 0.0f, false);
+	modelview_matrix = modelview_matrix * Mat4f::rotate(Angle(angle*2.0f, AngleUnit::degrees), 0.0f, 1.0f, 0.0f, false);
+	modelview_matrix = modelview_matrix * Mat4f::rotate(Angle(angle, AngleUnit::degrees), 1.0f, 0.0f, 0.0f, false);
 
 	canvas.set_depth_stencil_state(depth_write_enabled);
 	canvas.set_rasterizer_state(raster_state);
 
 	PrimitivesArray prim_array(canvas);
 
-	prim_array.set_attributes(0, vb_positions, 3, type_float, 0);
-	prim_array.set_attributes(1, vb_normals, 3, type_float, 0);
-	prim_array.set_attributes(2, vb_material_ambient, 4, type_float, 0);
+	prim_array.set_attributes(0, vb_positions, 3, VertexAttributeDataType::type_float, 0);
+	prim_array.set_attributes(1, vb_normals, 3, VertexAttributeDataType::type_float, 0);
+	prim_array.set_attributes(2, vb_material_ambient, 4, VertexAttributeDataType::type_float, 0);
 
 	Mat4f matrix_modelview_projection = perspective_matrix *  modelview_matrix;
 	Mat3f normal_matrix = Mat3f(modelview_matrix);
@@ -136,7 +136,7 @@ bool App::update()
 
 	shader.Use(canvas, modelview_matrix, matrix_modelview_projection, Mat4f(normal_matrix));
 
-	canvas.get_gc().draw_primitives(type_triangles, num_vertex, prim_array);
+	canvas.get_gc().draw_primitives(PrimitivesType::triangles, num_vertex, prim_array);
 	canvas.get_gc().reset_program_object();
 	canvas.reset_rasterizer_state();
 	canvas.reset_depth_stencil_state();

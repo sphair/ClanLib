@@ -65,7 +65,7 @@ private:
 	std::shared_ptr<clan::SliderView> slider_numballs;
 	std::shared_ptr<clan::LabelView> label_numballs;
 
-	std::shared_ptr<clan::SliderView> slider_compare_reference;
+	std::shared_ptr<clan::SliderView> slider_compare_functionreference;
 	std::shared_ptr<clan::LabelView> label_compare_reference;
 
 	std::shared_ptr<clan::CheckBoxView> checkbox_moveballs;

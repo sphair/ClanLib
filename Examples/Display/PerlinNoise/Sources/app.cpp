@@ -162,7 +162,7 @@ bool App::update()
 		if (last_is_normals_set)
 			pbuff = convert_to_normalmap(pbuff);
 
-		pbuff = pbuff.to_format(clan::tf_rgba8);	// Required for clanD3D
+		pbuff = pbuff.to_format(clan::TextureFormat::rgba8);	// Required for clanD3D
 		noise_image = clan::Image(canvas, pbuff, pbuff.get_size());
 
 	}
@@ -193,12 +193,12 @@ void App::on_window_close()
 
 clan::PixelBuffer App::convert_to_normalmap(clan::PixelBuffer &input)
 {
-	if (input.get_format() != clan::tf_rgb8)
+	if (input.get_format() != clan::TextureFormat::rgb8)
 		return input;
 	int width = input.get_width();
 	int height = input.get_height();
 
-	clan::PixelBuffer output(width, height, clan::tf_rgb8);
+	clan::PixelBuffer output(width, height, clan::TextureFormat::rgb8);
 
 	int in_pitch = input.get_pitch();
 	int out_pitch = output.get_pitch();

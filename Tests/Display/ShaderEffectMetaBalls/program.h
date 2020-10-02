@@ -30,8 +30,5 @@ public:
 	UniformVector<Uniforms> uniformVector;
 	Uniforms uniforms;
 
-}
-
-
-
+};
 

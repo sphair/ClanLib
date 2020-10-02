@@ -87,12 +87,12 @@ void ParticleObject::Draw(GraphicContext &gc, GraphicStore *gs, const Mat4f &mod
 
 	PrimitivesArray prim_array(gc);
 
-	prim_array.set_attributes(0, object_positions_vbo, 3, type_float, 0);
-	prim_array.set_attributes(1, object_colours_vbo, 4, type_float, 0);
+	prim_array.set_attributes(0, object_positions_vbo, 3, VertexAttributeDataType::type_float, 0);
+	prim_array.set_attributes(1, object_colours_vbo, 4, VertexAttributeDataType::type_float, 0);
 
 	gs->shader_color_geometry.Use(gc, matrix_modelview_projection);
 
 	gc.set_texture(0, gs->texture_ball);
-	gc.draw_primitives(type_points, num_points, prim_array);
+	gc.draw_primitives(PrimitivesType::points, num_points, prim_array);
 	gc.reset_texture(0);
 }

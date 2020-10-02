@@ -35,7 +35,7 @@ void TestApp::test_quaternion_f()
 	Console::write_line("  Class: Quaternionf");
 
 	{
-		Quaternionf q(0.0f, 0.0f, 0.0f, angle_degrees, order_XYZ);
+		Quaternionf q(0.0f, 0.0f, 0.0f, AngleUnit::degrees, EulerOrder::XYZ);
 		check_float(q.i, 0.0f);
 		check_float(q.j, 0.0f);
 		check_float(q.k, 0.0f);
@@ -46,12 +46,12 @@ void TestApp::test_quaternion_f()
 
 	Console::write_line("   Function: set and to_matrix");
 	{
-		test_quaternion_euler(order_XYZ);
-		test_quaternion_euler(order_XZY);
-		test_quaternion_euler(order_YZX);
-		test_quaternion_euler(order_YXZ);
-		test_quaternion_euler(order_ZXY);
-		test_quaternion_euler(order_ZYX);
+		test_quaternion_euler(EulerOrder::XYZ);
+		test_quaternion_euler(EulerOrder::XZY);
+		test_quaternion_euler(EulerOrder::YZX);
+		test_quaternion_euler(EulerOrder::YXZ);
+		test_quaternion_euler(EulerOrder::ZXY);
+		test_quaternion_euler(EulerOrder::ZYX);
 
 	}
 }
@@ -65,13 +65,13 @@ void TestApp::test_quaternion_euler(clan::EulerOrder order)
 			for (int az = 0; az < 360; az += 10)
 			{
 				Quaternionf q;
-				q.set(ax, ay, az, angle_degrees, order);
+				q.set(ax, ay, az, AngleUnit::degrees, order);
 				clan::Mat4f test_matrix = q.to_matrix();
 
 				Vec3f angles = test_matrix.get_euler(order);
 
 				Mat4f test_matrix2;
-				test_matrix2 = Mat4f::rotate(Angle(angles.x, angle_radians), Angle(angles.y, angle_radians), Angle(angles.z, angle_radians), order);
+				test_matrix2 = Mat4f::rotate(Angle(angles.x, AngleUnit::radians), Angle(angles.y, AngleUnit::radians), Angle(angles.z, AngleUnit::radians), order);
 
 				// Note, since euler angles can have alternative forms, we compare by recreating as a rotation matrix
 				if (!test_matrix.is_equal(test_matrix2, 0.00001f))
@@ -88,7 +88,7 @@ void TestApp::test_quaternion_d()
 	Console::write_line("  Class: Quaterniond");
 
 	{
-		Quaterniond q(0.0, 0.0, 0.0, angle_degrees, order_XYZ);
+		Quaterniond q(0.0, 0.0, 0.0, AngleUnit::degrees, EulerOrder::XYZ);
 		check_double(q.i, 0.0);
 		check_double(q.j, 0.0);
 		check_double(q.k, 0.0);

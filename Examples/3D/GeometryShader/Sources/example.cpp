@@ -63,15 +63,15 @@ App::App()
 
 	RasterizerStateDescription rasterizer_state_desc;
 	rasterizer_state_desc.set_culled(false);
-	rasterizer_state_desc.set_face_cull_mode(cull_back);
-	rasterizer_state_desc.set_front_face(face_clockwise);
+	rasterizer_state_desc.set_face_cull_mode(CullMode::back);
+	rasterizer_state_desc.set_front_face(FaceSide::clockwise);
 	raster_state = RasterizerState(canvas, rasterizer_state_desc);
 
 	DepthStencilStateDescription depth_state_desc;
 	depth_state_desc.enable_depth_write(true);
 	depth_state_desc.enable_depth_test(true);
 	depth_state_desc.enable_stencil_test(false);
-	depth_state_desc.set_depth_compare_function(compare_lequal);
+	depth_state_desc.set_depth_compare_function(CompareFunction::lequal);
 
 	depth_write_enabled = DepthStencilState(canvas, depth_state_desc);
 
@@ -170,19 +170,19 @@ void App::create_scene(GraphicContext &gc)
 {
 	camera = new SceneObject(scene, scene.base);
 	camera->position = Vec3f(0.0f, 50.0f, -20.0f);
-	camera->rotation_y = Angle(0.0f, angle_degrees);
+	camera->rotation_y = Angle(0.0f, AngleUnit::degrees);
 
 	object_particles = new ParticleObject(gc, scene, scene.base);
 	object_particles->position = Vec3f(-110.0f, 54.0f, -5.0f);
-	object_particles->rotation_y = Angle(0.0f, angle_degrees);
-	object_particles->rotation_x = Angle(0.0f, angle_degrees);
-	object_particles->rotation_z = Angle(0.0f, angle_degrees);
+	object_particles->rotation_y = Angle(0.0f, AngleUnit::degrees);
+	object_particles->rotation_x = Angle(0.0f, AngleUnit::degrees);
+	object_particles->rotation_z = Angle(0.0f, AngleUnit::degrees);
 	object_particles->scale = Vec3f(1.0f, 1.0f, 1.0f);
 }
 
 void App::calculate_matricies(GraphicContext &gc)
 {
-	scene.gs->camera_projection = Mat4f::perspective(45.0f, ((float) gc.get_width()) / ((float) gc.get_height()), 0.1f, 1000.0f, handed_left, clip_negative_positive_w);
+	scene.gs->camera_projection = Mat4f::perspective(45.0f, ((float) gc.get_width()) / ((float) gc.get_height()), 0.1f, 1000.0f, Handedness::left, ClipZRange::negative_positive_w);
 
 	scene.gs->camera_modelview = Mat4f::identity();
 	camera->GetWorldMatrix(scene.gs->camera_modelview);
@@ -209,7 +209,7 @@ void App::control_camera()
 
 	camera->position = Vec3f(xpos, 100.0f, zpos);
 
-	camera->rotation_x = Angle(20.0f, angle_degrees);
-	camera->rotation_y = Angle(-(camera_angle+90.0f), angle_degrees);
+	camera->rotation_x = Angle(20.0f, AngleUnit::degrees);
+	camera->rotation_y = Angle(-(camera_angle+90.0f), AngleUnit::degrees);
 
 }

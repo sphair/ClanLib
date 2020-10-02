@@ -77,7 +77,7 @@ ExampleCanvas::ExampleCanvas()
 
 	BlendStateDescription blend_desc;
 	blend_desc.enable_blending(true);
-	blend_desc.set_blend_function( blend_zero, blend_one_minus_src_alpha, blend_zero, blend_one_minus_src_alpha );
+	blend_desc.set_blend_function( BlendFunc::zero, BlendFunc::one_minus_src_alpha, BlendFunc::zero, BlendFunc::one_minus_src_alpha );
 	BlendState blend_state(canvas_framebuffer.get_gc(), blend_desc);
 	canvas_framebuffer.get_gc().set_blend_state(blend_state);
 

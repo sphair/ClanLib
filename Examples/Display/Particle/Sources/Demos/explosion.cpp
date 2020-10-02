@@ -34,10 +34,10 @@ DemoExplosion::DemoExplosion(clan::DisplayWindow &window) : window(window)
 
 	// create surface to be used for particle and set the alignment
 	surface = clan::Sprite(canvas,"Resources/explosion.png");
-	surface.set_alignment(clan::origin_center);
+	surface.set_alignment(clan::Origin::center);
 
 	pointer_sur = clan::Sprite(canvas, "Resources/pointer.png");
-	pointer_sur.set_alignment(clan::origin_center);
+	pointer_sur.set_alignment(clan::Origin::center);
 
 	motion_ctrl.set_1d_acceleration(-0.0004);
 

@@ -38,7 +38,7 @@
 Options::Options(clan::Canvas &canvas) : clan::TextureWindow(canvas)
 {
 	is_normals_set = false;
-	sized_format = clan::tf_rgb8;
+	sized_format = clan::TextureFormat::rgb8;
 	dimension = perlin_2d;
 	amplitude = 1.0;
 	width = 256;
@@ -54,7 +54,7 @@ Options::Options(clan::Canvas &canvas) : clan::TextureWindow(canvas)
 
 	std::shared_ptr<clan::ListBoxView> listbox;
 	listbox = create_listbox(450, 30, "Pixel Format");
-	listbox->set_items<std::string>( { "tf_rgb8", "tf_rgba8", "tf_r8", "tf_r32f" }, Theme::create_listbox_label);
+	listbox->set_items<std::string>( { "TextureFormat::rgb8", "TextureFormat::rgba8", "tf_r8", "tf_r32f" }, Theme::create_listbox_label);
 	listbox->func_selection_changed() = [=](){on_format_selected(listbox); };
 	listbox->set_selected_item(0);
 
@@ -215,16 +215,16 @@ void Options::on_format_selected(std::shared_ptr<clan::ListBoxView> listbox)
 	switch (value)
 	{
 		case 0:
-			sized_format = clan::tf_rgb8;
+			sized_format = clan::TextureFormat::rgb8;
 			break;
 		case 1:
-			sized_format = clan::tf_rgba8;
+			sized_format = clan::TextureFormat::rgba8;
 			break;
 		case 2:
-			sized_format = clan::tf_r8;
+			sized_format = clan::TextureFormat::r8;
 			break;
 		case 3:
-			sized_format = clan::tf_r32f;
+			sized_format = clan::TextureFormat::r32f;
 			break;
 	}
 }

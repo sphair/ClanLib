@@ -52,7 +52,7 @@ private:
 	clan::UIThread ui_thread;
 	std::shared_ptr<Options> options;
 
-	clan::TextureFormat last_sized_format = clan::tf_rgb8;
+	clan::TextureFormat last_sized_format = clan::TextureFormat::rgb8;
 	float last_amplitude = 1.0f;
 	int last_width = 256;
 	int last_height = 256;

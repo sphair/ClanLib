@@ -31,10 +31,10 @@ DemoUserCollision::DemoUserCollision(clan::DisplayWindow &window) : window(windo
 
 	// create surface to be used for particle and set the alignment
 	particle_1_sur = clan::Sprite(canvas, "Resources/sketch.png");
-	particle_1_sur.set_alignment(clan::origin_center);
+	particle_1_sur.set_alignment(clan::Origin::center);
 
 	particle_2_sur = clan::Sprite(canvas, "Resources/explosion.png");
-	particle_2_sur.set_alignment(clan::origin_center);
+	particle_2_sur.set_alignment(clan::Origin::center);
 
 	/* If L_INFINITE_LIFE is used, the system will not remove
 	the particle automatically. */
@@ -76,11 +76,11 @@ DemoUserCollision::DemoUserCollision(clan::DisplayWindow &window) : window(windo
 
 	circle_pos.set( 320, 100 );
 	circle_surface = clan::Image(canvas, "Resources/circle.png");
-	circle_surface.set_alignment(clan::origin_center);
+	circle_surface.set_alignment(clan::Origin::center);
 
 	cflight_surface = clan::Image(canvas, "Resources/cflight.png");
 	cflight_surface.set_color( clan::Color(255,255,255,220) );
-	cflight_surface.set_alignment(clan::origin_center);
+	cflight_surface.set_alignment(clan::Origin::center);
 
 	font = clan::Font("Arial", 16 );
 	last_time = clan::System::get_time();

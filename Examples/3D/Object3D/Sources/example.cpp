@@ -89,15 +89,15 @@ App::App()
 	// Prepare the display
 	RasterizerStateDescription rasterizer_state_desc;
 	rasterizer_state_desc.set_culled(true);
-	rasterizer_state_desc.set_face_cull_mode(cull_back);
-	rasterizer_state_desc.set_front_face(face_clockwise);
+	rasterizer_state_desc.set_face_cull_mode(CullMode::back);
+	rasterizer_state_desc.set_front_face(FaceSide::clockwise);
 	raster_state = RasterizerState(canvas, rasterizer_state_desc);
 
 	DepthStencilStateDescription depth_state_desc;
 	depth_state_desc.enable_depth_write(true);
 	depth_state_desc.enable_depth_test(true);
 	depth_state_desc.enable_stencil_test(false);
-	depth_state_desc.set_depth_compare_function(compare_lequal);
+	depth_state_desc.set_depth_compare_function(CompareFunction::lequal);
 	depth_write_enabled = DepthStencilState(canvas, depth_state_desc);
 	
   	create_scene(canvas);
@@ -161,12 +161,12 @@ void App::create_scene(GraphicContext &gc)
 
 	camera = new SceneObject(scene, scene.base);
 	camera->position = Vec3f(0.0f, 1.0f, 0.0f);
-	camera->rotation_x = Angle(30.0f, angle_degrees);
+	camera->rotation_x = Angle(30.0f, AngleUnit::degrees);
 
 	light_distant = new SceneObject(scene, scene.base);
 	light_distant->position = Vec3f(0.0f, 32.0f, 20.0f);
-	light_distant->rotation_y = Angle(45.0f, angle_degrees);
-	light_distant->rotation_x = Angle(35.0f, angle_degrees);
+	light_distant->rotation_y = Angle(45.0f, AngleUnit::degrees);
+	light_distant->rotation_x = Angle(35.0f, AngleUnit::degrees);
 
 	scene_teapot = new SceneObject(scene, scene.base);
 	scene_teapot->model = model_teapot;
@@ -227,10 +227,10 @@ void App::update_light(GraphicContext &gc)
 
 void App::calculate_matricies(GraphicContext &gc)
 {
-	scene.gs->camera_projection = Mat4f::perspective(45.0f, ((float) gc.get_width()) / ((float) gc.get_height()), 0.1f, 1000.0f, handed_left, gc.get_clip_z_range());
+	scene.gs->camera_projection = Mat4f::perspective(45.0f, ((float) gc.get_width()) / ((float) gc.get_height()), 0.1f, 1000.0f, Handedness::left, gc.get_clip_z_range());
 
 	float ortho_size = 60.0f / 2.0f;
-	scene.gs->light_projection = Mat4f::ortho(-ortho_size, ortho_size, -ortho_size, ortho_size, 0.1f, 1000.0f, handed_left, gc.get_clip_z_range());
+	scene.gs->light_projection = Mat4f::ortho(-ortho_size, ortho_size, -ortho_size, ortho_size, 0.1f, 1000.0f, Handedness::left, gc.get_clip_z_range());
 
 	scene.gs->camera_modelview = Mat4f::identity();
 	camera->GetWorldMatrix(scene.gs->camera_modelview);

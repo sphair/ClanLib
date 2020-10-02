@@ -29,7 +29,7 @@ DemoCMotion::DemoCMotion(clan::DisplayWindow &window) : window(window), fontColo
 
 	// create surface to be used for particle and set the alignment
 	surface = clan::Sprite(canvas,"Resources/sketch.png");
-	surface.set_alignment(clan::origin_center);
+	surface.set_alignment(clan::Origin::center);
 	font = clan::Font("Arial", 16);
 
 	motion_ctrl.set_speed_limit(0.65f);

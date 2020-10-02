@@ -218,14 +218,14 @@ Shader::Shader(GraphicContext &gc)
 {
 	ShaderLanguage shader_language = gc.get_shader_language();
 	
-	ShaderObject vertex_shader(gc, shadertype_vertex, shader_language==shader_glsl ? vertex_glsl : vertex_hlsl);
+	ShaderObject vertex_shader(gc, ShaderType::vertex, shader_language==ShaderLanguage::glsl ? vertex_glsl : vertex_hlsl);
 	if(!vertex_shader.compile())
 	{
 		std::string log = vertex_shader.get_info_log();
 		throw Exception(string_format("Unable to compile vertex shader object: %1", log));
 	}
 
-	ShaderObject fragment_shader(gc, shadertype_fragment, shader_language==shader_glsl ? fragment_glsl : fragment_hlsl);
+	ShaderObject fragment_shader(gc, ShaderType::fragment, shader_language==ShaderLanguage::glsl ? fragment_glsl : fragment_hlsl);
 	if(!fragment_shader.compile())
 	{
 		std::string log = fragment_shader.get_info_log();

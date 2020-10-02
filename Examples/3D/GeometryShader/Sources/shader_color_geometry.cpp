@@ -109,13 +109,13 @@ char ShaderColorGeometry::fragment[] =
 
 ShaderColorGeometry::ShaderColorGeometry(GraphicContext &gc)
 {
-	ShaderObject vertex_shader(gc, shadertype_vertex, vertex);
+	ShaderObject vertex_shader(gc, ShaderType::vertex, vertex);
 	if(!vertex_shader.compile())
 	{
 		throw Exception(string_format("Unable to compile vertex shader object: %1", vertex_shader.get_info_log()));
 	}
 
-	ShaderObject geometry_shader(gc, shadertype_geometry, geometry);
+	ShaderObject geometry_shader(gc, ShaderType::geometry, geometry);
 	if(!geometry_shader.compile())
 	{
 		throw Exception(string_format("Unable to compile geometry shader object: %1", geometry_shader.get_info_log()));
@@ -124,7 +124,7 @@ ShaderColorGeometry::ShaderColorGeometry(GraphicContext &gc)
 	if (!glProgramParameteri)
 		throw Exception("Geomtry shader is not available");
 
-	ShaderObject fragment_shader(gc, shadertype_fragment, fragment);
+	ShaderObject fragment_shader(gc, ShaderType::fragment, fragment);
 	if(!fragment_shader.compile())
 	{
 		throw Exception(string_format("Unable to compile fragment shader object: %1", fragment_shader.get_info_log()));

@@ -954,27 +954,27 @@ void TestApp::test_vector2(void)
 		Vec2i hotspot(1,3);
 
 		test_a = Vec2i(4,5);
-		test_a.rotate(hotspot, Angle(0, angle_degrees));
+		test_a.rotate(hotspot, Angle(0, AngleUnit::degrees));
 		if (test_a != Vec2i(4, 5))  fail();
 
 		test_a = Vec2i(4,5);
-		test_a.rotate(hotspot, Angle(90, angle_degrees));
+		test_a.rotate(hotspot, Angle(90, AngleUnit::degrees));
 		if (test_a != Vec2i(-1, 6))  fail();
 
 		test_a = Vec2i(4,5);
-		test_a.rotate(hotspot, Angle(180, angle_degrees));
+		test_a.rotate(hotspot, Angle(180, AngleUnit::degrees));
 		if (test_a != Vec2i(-2, 1))  fail();
 
 		test_a = Vec2i(4,5);
-		test_a.rotate(hotspot, Angle(270, angle_degrees));
+		test_a.rotate(hotspot, Angle(270, AngleUnit::degrees));
 		if (test_a != Vec2i(3, 0))  fail();
 
 		test_a = Vec2i(4,5);
-		test_a.rotate(hotspot, Angle(360, angle_degrees));
+		test_a.rotate(hotspot, Angle(360, AngleUnit::degrees));
 		if (test_a != Vec2i(4, 5))  fail();
 
 		test_a = Vec2i(4,5);
-		test_a.rotate(Vec2i(0,0), Angle(180, angle_degrees));
+		test_a.rotate(Vec2i(0,0), Angle(180, AngleUnit::degrees));
 		if (test_a != Vec2i(-4, -5))  fail();
 
 	}

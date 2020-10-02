@@ -34,7 +34,7 @@ HSVSpriteBatch::HSVSpriteBatch(GraphicContext &gc)
 {
 	for (int index=0; index < num_vertex_buffers; index++)
 	{
-		gpu_vertices[index] = VertexArrayVector<SpriteVertex>(gc, max_vertices, usage_stream_draw);
+		gpu_vertices[index] = VertexArrayVector<SpriteVertex>(gc, max_vertices, BufferUsage::stream_draw);
 		prim_array[index] = PrimitivesArray(gc);
 		prim_array[index].set_attributes(0, gpu_vertices[index], cl_offsetof(SpriteVertex, position));
 		prim_array[index].set_attributes(1, gpu_vertices[index], cl_offsetof(SpriteVertex, hue_offset));
@@ -97,7 +97,7 @@ void HSVSpriteBatch::flush(GraphicContext &gc)
 		gpu_vertices[current_vertex_buffer].upload_data(gc, 0, vertices, fill_position);
 
 		gc.set_texture(0, current_texture);
-		gc.draw_primitives(type_triangles, fill_position, prim_array[current_vertex_buffer]);
+		gc.draw_primitives(PrimitivesType::triangles, fill_position, prim_array[current_vertex_buffer]);
 		gc.reset_program_object();
 		gc.reset_texture(0);
 

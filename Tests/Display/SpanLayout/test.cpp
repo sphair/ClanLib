@@ -84,22 +84,22 @@ public:
 		std::string type;
 		switch(result.type)
 		{
-			case SpanLayout::HitTestResult::no_objects_available:
+			case SpanLayout::HitTestResult::Type::no_objects_available:
 				type = "no_objects_available";
 				break;
-			case SpanLayout::HitTestResult::outside_top:
+			case SpanLayout::HitTestResult::Type::outside_top:
 				type = "outside_top";
 				break;
-			case SpanLayout::HitTestResult::outside_left:
+			case SpanLayout::HitTestResult::Type::outside_left:
 				type = "outside_left";
 				break;
-			case SpanLayout::HitTestResult::outside_right:
+			case SpanLayout::HitTestResult::Type::outside_right:
 				type = "outside_right";
 				break;
-			case SpanLayout::HitTestResult::outside_bottom:
+			case SpanLayout::HitTestResult::Type::outside_bottom:
 				type = "outside_bottom";
 				break;
-			case SpanLayout::HitTestResult::inside:
+			case SpanLayout::HitTestResult::Type::inside:
 				type = "inside";
 				break;
 		}

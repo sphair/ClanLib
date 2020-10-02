@@ -36,12 +36,12 @@ void TestApp::test_angle()
 
 	Console::write_line("   Function: Angle(float value, AngleUnit unit)");
 	{
-		Angle angle(45.0f, angle_degrees);
+		Angle angle(45.0f, AngleUnit::degrees);
 		float f_angle = angle.to_degrees();
 		if ( (f_angle < 44.9f) || (f_angle > 45.1f) )
 			fail();
 
-		Angle angle2(PI/4.0f, angle_radians);
+		Angle angle2(PI/4.0f, AngleUnit::radians);
 		float f_angle2 = angle2.to_radians();
 		if ( (f_angle2 < (PI/4.0f - 0.001f)) || (f_angle2 > (PI/4.0f + 0.001f) ) )
 			fail();
@@ -52,7 +52,7 @@ void TestApp::test_angle()
 	{
 		for (float turns = -16.0f; turns < 16.0f; turns += 1.0f)
 		{
-			Angle angle(45.0f + turns * 360.0f, angle_degrees);
+			Angle angle(45.0f + turns * 360.0f, AngleUnit::degrees);
 			angle.normalize();
 			float f_angle = angle.to_degrees();
 			if ( (f_angle < 44.9f) || (f_angle > 45.1f) )

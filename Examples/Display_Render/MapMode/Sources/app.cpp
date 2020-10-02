@@ -88,7 +88,7 @@ bool App::update()
 	const float grid_xpos = 10.0f;
 	const float grid_ypos = 10.0f;
 
-	if (options->current_mapmode == clan::map_user_projection)
+	if (options->current_mapmode == clan::MapMode::_user_projection)
 	{
 		float grid_width = (float)image_grid.get_width();
 		float grid_height = (float)image_grid.get_height();
@@ -106,7 +106,7 @@ bool App::update()
 
 	canvas.set_transform(clan::Mat4f::identity());
 	canvas.set_projection(clan::Mat4f::identity());
-	canvas.set_map_mode(clan::map_2d_upper_left);
+	canvas.set_map_mode(clan::MapMode::_2d_upper_left);
 
 	canvas.set_viewport(canvas.get_size());
 
@@ -206,7 +206,7 @@ void App::set_user_projection(clan::Canvas &canvas, clan::Sizef &area_size, Opti
 	aspect = ( area_size.width * lens_aspect) / area_size.height;
 
 	fov = (fov * 180.0f) / clan::PI;
-	clan::Mat4f projection_matrix = clan::Mat4f::perspective( fov, aspect, lens_near, lens_far, clan::handed_left, clan::clip_negative_positive_w);
+	clan::Mat4f projection_matrix = clan::Mat4f::perspective( fov, aspect, lens_near, lens_far, clan::Handedness::left, clan::ClipZRange::negative_positive_w);
 
 	float ratio = 1.0f / canvas.get_gc().get_pixel_ratio();
 	clan::Mat4f pixel_scaling_matrix = clan::Mat4f::scale(ratio, ratio, 1.0f);
@@ -216,7 +216,7 @@ void App::set_user_projection(clan::Canvas &canvas, clan::Sizef &area_size, Opti
 	clan::Mat4f modelview_matrix = clan::Mat4f::identity();
 
 	modelview_matrix.translate_self(-1.0f, 1.0, lens_zoom);
-	modelview_matrix = modelview_matrix * clan::Mat4f::rotate(clan::Angle((float) -options->grid_angle, clan::angle_degrees), 1.0f, 0.0f, 0.0f, false);
+	modelview_matrix = modelview_matrix * clan::Mat4f::rotate(clan::Angle((float) -options->grid_angle, clan::AngleUnit::degrees), 1.0f, 0.0f, 0.0f, false);
 	modelview_matrix.scale_self(2.0f / area_size.width, -2.0f / area_size.height, 1.0f);
 
 	canvas.set_transform(modelview_matrix);

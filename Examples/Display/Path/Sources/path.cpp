@@ -92,7 +92,7 @@ bool PathApp::update()
 
 	angle += game_time.get_time_elapsed() * 32.0f;
 	if (angle >= 360.0f) angle = -360.0f;
-	clan::Mat4f rotation = clan::Mat4f::translate(128.0f, 128.0f, 0.0f) * clan::Mat4f::rotate(clan::Angle(angle, clan::angle_degrees), 0.0f, 0.0f, 1.0f) * clan::Mat4f::translate(-128.0f, -128.0f, 0.0f);
+	clan::Mat4f rotation = clan::Mat4f::translate(128.0f, 128.0f, 0.0f) * clan::Mat4f::rotate(clan::Angle(angle, clan::AngleUnit::degrees), 0.0f, 0.0f, 1.0f) * clan::Mat4f::translate(-128.0f, -128.0f, 0.0f);
 
 	canvas.clear(clan::Colorf(0.2f, 0.2f, 0.5f));
 

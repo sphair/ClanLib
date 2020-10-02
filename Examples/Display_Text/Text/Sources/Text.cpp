@@ -95,9 +95,9 @@ ExampleText::ExampleText()
 
 	clan::Texture2D texture_text(canvas, text_window_size, text_window_size);
 	texture_text.set_pixel_ratio(1.0f);
-	texture_text.set_wrap_mode(clan::wrap_repeat, clan::wrap_repeat);
-	texture_text.set_min_filter(clan::filter_linear);
-	texture_text.set_mag_filter(clan::filter_linear);
+	texture_text.set_wrap_mode(clan::TextureWrapMode::repeat, clan::TextureWrapMode::repeat);
+	texture_text.set_min_filter(clan::TextureFilter::linear);
+	texture_text.set_mag_filter(clan::TextureFilter::linear);
 
 	// Create the framebuffer, and attach the texture text into its color buffer
 	clan::FrameBuffer fb_text;
@@ -156,7 +156,7 @@ bool ExampleText::update()
 {
 	game_time.update();
 
-	canvas.set_map_mode(clan::map_2d_upper_left);
+	canvas.set_map_mode(clan::MapMode::_2d_upper_left);
 
 	// Draw a nice blue gradient in the background
 	canvas.fill_rect(window.get_viewport(), clan::Gradient(clan::Colorf::lightblue, clan::Colorf::lightblue, clan::Colorf::darkblue, clan::Colorf::darkblue));
@@ -169,7 +169,7 @@ bool ExampleText::update()
 		angle -= 360.0f;
 
 	// Draw the text
-	draw_text(canvas, clan::Angle(angle, clan::angle_degrees));
+	draw_text(canvas, clan::Angle(angle, clan::AngleUnit::degrees));
 
 	last_fps = game_time.get_updates_per_second();
 	// Flip the display, showing on the screen what we have drawn

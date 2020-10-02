@@ -253,48 +253,48 @@ std::string App::get_blendfunc(clan::BlendFunc blendfunc, const std::string &fra
 
 	switch (blendfunc)
 	{
-		case clan::blend_zero:
+		case clan::BlendFunc::zero:
 			break;
-		case clan::blend_one:
+		case clan::BlendFunc::one:
 			text = fragment_colour + " ";
 			break;
-		case clan::blend_dest_color:
+		case clan::BlendFunc::dest_color:
 			text = dest_colour + " * " + fragment_colour + " ";
 			break;
-		case clan::blend_src_color:
+		case clan::BlendFunc::src_color:
 			text = source_colour + " * " + fragment_colour + " ";
 			break;
-		case clan::blend_one_minus_dest_color:
+		case clan::BlendFunc::one_minus_dest_color:
 			text = "(1 - " + dest_colour + ") * " + fragment_colour + " ";
 			break;
-		case clan::blend_one_minus_src_color:
+		case clan::BlendFunc::one_minus_src_color:
 			text = "(1 - " + source_colour + ") * " + fragment_colour + " ";
 			break;
-		case clan::blend_src_alpha:
+		case clan::BlendFunc::src_alpha:
 			text = source_alpha + " * " + fragment_colour + " ";
 			break;
-		case clan::blend_one_minus_src_alpha:
+		case clan::BlendFunc::one_minus_src_alpha:
 			text = "(1 - " + source_alpha + ") * " + fragment_colour + " ";
 			break;
-		case clan::blend_dest_alpha:
+		case clan::BlendFunc::dest_alpha:
 			text = dest_alpha + " * " + fragment_colour + " ";
 			break;
-		case clan::blend_one_minus_dest_alpha:
+		case clan::BlendFunc::one_minus_dest_alpha:
 			text = "(1 - " + dest_alpha + ") * " + fragment_colour + " ";
 			break;
-		case clan::blend_src_alpha_saturate:
+		case clan::BlendFunc::src_alpha_saturate:
 			text = "min(" + source_alpha + ", 1 - " + dest_alpha + ") * " + fragment_colour + " ";
 			break;
-		case clan::blend_constant_color:
+		case clan::BlendFunc::constant_color:
 			text = constant_colour + " * " + fragment_colour + " ";
 			break;
-		case clan::blend_one_minus_constant_color:
+		case clan::BlendFunc::one_minus_constant_color:
 			text = "(1 - " + constant_colour + ") * " + fragment_colour + " ";
 			break;
-		case clan::blend_constant_alpha:
+		case clan::BlendFunc::constant_alpha:
 			text = constant_alpha + " * " + fragment_colour + " ";
 			break;
-		case clan::blend_one_minus_constant_alpha:
+		case clan::BlendFunc::one_minus_constant_alpha:
 			text = "(1 - " + constant_alpha + ") * " + fragment_colour + " ";
 			break;
 		default:
@@ -308,23 +308,23 @@ std::string App::get_blendequation(clan::BlendEquation equation, const std::stri
 	std::string text;
 	switch (equation)
 	{
-		case clan::equation_add:
+		case clan::BlendEquation::add:
 			text = source + "+ " + dest;
 			break;
 
-		case clan::equation_subtract:
+		case clan::BlendEquation::subtract:
 			text = source + "- " + dest;
 			break;
 
-		case clan::equation_reverse_subtract:
+		case clan::BlendEquation::reverse_subtract:
 			text = dest + "- " + source;
 			break;
 
-		case clan::equation_min:
+		case clan::BlendEquation::min:
 			text = "min(" + source_fragment + ", " + dest_fragment + ")";
 			break;
 
-		case clan::equation_max:
+		case clan::BlendEquation::max:
 			text = "max(" + source_fragment + ", " + dest_fragment + ")";
 			break;
 		default:
@@ -340,67 +340,67 @@ std::string App::get_logic_operation(clan::LogicOp logic_operation, const std::s
 
 	switch (logic_operation)
 	{
-		case clan::logic_clear:
+		case clan::LogicOp::clear:
 			text = "0";
 			break;
 
-		case clan::logic_and:
+		case clan::LogicOp::and:
 			text = source_fragment + " & " + dest_fragment;
 			break;
 
-		case clan::logic_and_reverse:
+		case clan::LogicOp::and_reverse:
 			text = source_fragment + " & ( ! " + dest_fragment + ")";
 			break;
 
-		case clan::logic_copy:
+		case clan::LogicOp::copy:
 			text = source_fragment;
 			break;
 
-		case clan::logic_and_inverted:
+		case clan::LogicOp::and_inverted:
 			text = "( ! " + source_fragment + " ) & " + dest_fragment;
 			break;
 
-		case clan::logic_noop:
+		case clan::LogicOp::noop:
 			text = dest_fragment;
 			break;
 
-		case clan::logic_xor:
+		case clan::LogicOp::xor:
 			text = source_fragment + " ^ " + dest_fragment;
 			break;
 
-		case clan::logic_or:
+		case clan::LogicOp::or:
 			text = source_fragment + " | " + dest_fragment;
 			break;
 
-		case clan::logic_nor:
+		case clan::LogicOp::nor:
 			text = "! (" + source_fragment + " | " + dest_fragment + ")";
 			break;
 
-		case clan::logic_equiv:
+		case clan::LogicOp::equiv:
 			text = "! (" + source_fragment + " ^ " + dest_fragment + ")";
 			break;
 
-		case clan::logic_invert:
+		case clan::LogicOp::invert:
 			text = "! " + dest_fragment;
 			break;
 
-		case clan::logic_or_reverse:
+		case clan::LogicOp::or_reverse:
 			text = source_fragment + " | ( ! " + dest_fragment + " )";
 			break;
 
-		case clan::logic_copy_inverted:
+		case clan::LogicOp::copy_inverted:
 			text = "! " + source_fragment;
 			break;
 
-		case clan::logic_or_inverted:
+		case clan::LogicOp::or_inverted:
 			text = "( ! " + source_fragment + ") | " + dest_fragment;
 			break;
 
-		case clan::logic_nand:
+		case clan::LogicOp::nand:
 			text = "! ( " + source_fragment + " & " + dest_fragment + ")";
 			break;
 
-		case clan::logic_set:
+		case clan::LogicOp::set:
 			text = "1";
 			break;
 

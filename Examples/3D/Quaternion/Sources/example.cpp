@@ -98,15 +98,15 @@ App::App()
 
 	RasterizerStateDescription rasterizer_state_desc;
 	rasterizer_state_desc.set_culled(true);
-	rasterizer_state_desc.set_face_cull_mode(cull_back);
-	rasterizer_state_desc.set_front_face(face_clockwise);
+	rasterizer_state_desc.set_face_cull_mode(CullMode::back);
+	rasterizer_state_desc.set_front_face(FaceSide::clockwise);
 	raster_state = RasterizerState(canvas, rasterizer_state_desc);
 
 	DepthStencilStateDescription depth_state_desc;
 	depth_state_desc.enable_depth_write(true);
 	depth_state_desc.enable_depth_test(true);
 	depth_state_desc.enable_stencil_test(false);
-	depth_state_desc.set_depth_compare_function(compare_lequal);
+	depth_state_desc.set_depth_compare_function(CompareFunction::lequal);
 	depth_write_enabled = DepthStencilState(canvas, depth_state_desc);
 
 	create_scene(canvas);
@@ -224,12 +224,12 @@ void App::create_scene(GraphicContext &gc)
 
 	camera = new SceneObject(scene, scene.base);
 	camera->position = Vec3f(0.0f, 18.0f, -25.0f);
-	camera->rotation_x = Angle(30.0f, angle_degrees);
+	camera->rotation_x = Angle(30.0f, AngleUnit::degrees);
 
 	light_distant = new SceneObject(scene, scene.base);
 	light_distant->position = Vec3f(0.0f, 32.0f, 20.0f);
-	light_distant->rotation_y = Angle(45.0f, angle_degrees);
-	light_distant->rotation_x = Angle(35.0f, angle_degrees);
+	light_distant->rotation_y = Angle(45.0f, AngleUnit::degrees);
+	light_distant->rotation_x = Angle(35.0f, AngleUnit::degrees);
 
 	// Set left euler angle teapot
 	SceneObject *ring;
@@ -242,19 +242,19 @@ void App::create_scene(GraphicContext &gc)
 	rotation_euler_a = new SceneObject(scene, scene.base);
 	rotation_euler_a->position = teapot_euler->position;
 	ring = new SceneObject(scene, rotation_euler_a);
-	ring->rotation_y = Angle(-90.0f, angle_degrees);
+	ring->rotation_y = Angle(-90.0f, AngleUnit::degrees);
 	ring->model = model_ring_a;
 
 	rotation_euler_b = new SceneObject(scene, rotation_euler_a);
 	ring = new SceneObject(scene, rotation_euler_b);
 	ring->model = model_ring_b;
-	ring->rotation_x = Angle(90.0f, angle_degrees);
+	ring->rotation_x = Angle(90.0f, AngleUnit::degrees);
 
 	rotation_euler_c = new SceneObject(scene, rotation_euler_b);
 	ring = new SceneObject(scene, rotation_euler_c);
 	ring->model = model_ring_c;
-	ring->rotation_x = Angle(180.0f, angle_degrees);
-	ring->rotation_z = Angle(90.0f, angle_degrees);
+	ring->rotation_x = Angle(180.0f, AngleUnit::degrees);
+	ring->rotation_z = Angle(90.0f, AngleUnit::degrees);
 
 	// Set right target angle teapot
 	teapot_target = new SceneObject(scene, scene.base);
@@ -265,19 +265,19 @@ void App::create_scene(GraphicContext &gc)
 	rotation_target_a = new SceneObject(scene, scene.base);
 	rotation_target_a->position = teapot_target->position;
 	ring = new SceneObject(scene, rotation_target_a);
-	ring->rotation_y = Angle(-90.0f, angle_degrees);
+	ring->rotation_y = Angle(-90.0f, AngleUnit::degrees);
 	ring->model = model_ring_a;
 
 	rotation_target_b = new SceneObject(scene, rotation_target_a);
 	ring = new SceneObject(scene, rotation_target_b);
 	ring->model = model_ring_b;
-	ring->rotation_x = Angle(90.0f, angle_degrees);
+	ring->rotation_x = Angle(90.0f, AngleUnit::degrees);
 
 	rotation_target_c = new SceneObject(scene, rotation_target_b);
 	ring = new SceneObject(scene, rotation_target_c);
 	ring->model = model_ring_c;
-	ring->rotation_x = Angle(180.0f, angle_degrees);
-	ring->rotation_z = Angle(90.0f, angle_degrees);
+	ring->rotation_x = Angle(180.0f, AngleUnit::degrees);
+	ring->rotation_z = Angle(90.0f, AngleUnit::degrees);
 
 	// Set ring colours
 
@@ -328,10 +328,10 @@ void App::update_light(GraphicContext &gc)
 
 void App::calculate_matricies(GraphicContext &gc)
 {
-	scene.gs->camera_projection = Mat4f::perspective(45.0f, ((float) gc.get_width()) / ((float) gc.get_height()), 0.1f, 1000.0f, handed_left, clip_negative_positive_w);
+	scene.gs->camera_projection = Mat4f::perspective(45.0f, ((float) gc.get_width()) / ((float) gc.get_height()), 0.1f, 1000.0f, Handedness::left, ClipZRange::negative_positive_w);
 
 	float ortho_size = 60.0f / 2.0f;
-	scene.gs->light_projection = Mat4f::ortho(-ortho_size, ortho_size, -ortho_size, ortho_size, 0.1f, 1000.0f, handed_left, clip_negative_positive_w);
+	scene.gs->light_projection = Mat4f::ortho(-ortho_size, ortho_size, -ortho_size, ortho_size, 0.1f, 1000.0f, Handedness::left, ClipZRange::negative_positive_w);
 
 	scene.gs->camera_modelview = Mat4f::identity();
 	camera->GetWorldMatrix(scene.gs->camera_modelview);
@@ -359,12 +359,12 @@ void App::control_target(Options *options)
 
 		time_made_active = current_time;
 		initial_quaternion = options->quaternion;
-		final_quaternion = Quaternionf(options->target_x, options->target_y, options->target_z, order_YXZ);
+		final_quaternion = Quaternionf(options->target_x, options->target_y, options->target_z, EulerOrder::YXZ);
 	}
 
 	if (options->button_rotate_clicked)
 	{
-		Quaternionf quat = Quaternionf::multiply(Quaternionf(options->target_x, options->target_y, options->target_z, order_YXZ), options->quaternion);
+		Quaternionf quat = Quaternionf::multiply(Quaternionf(options->target_x, options->target_y, options->target_z, EulerOrder::YXZ), options->quaternion);
 		options->set_new_quaternion(quat);
 		options->button_rotate_clicked = false;
 	}

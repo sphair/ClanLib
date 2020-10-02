@@ -641,7 +641,7 @@ void L_Particle::draw(clan::Canvas &canvas, int x_shift, int y_shift)
 {
 
 	surface->set_scale(current_size,current_size);
-	surface->set_angle(clan::Angle(current_radian, clan::angle_radians));
+	surface->set_angle(clan::Angle(current_radian, clan::AngleUnit::radians));
 	surface->set_color( clan::Color(current_color.r,current_color.g,current_color.b,current_color.a) );
 	surface->draw(canvas, x_pos+x_shift, y_pos+y_shift);
 }

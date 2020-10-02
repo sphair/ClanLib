@@ -228,14 +228,14 @@ void Model_Impl::Draw(GraphicContext &gc, GraphicStore *gs, const Mat4f &modelvi
 
 	PrimitivesArray prim_array(gc);
 	
-	prim_array.set_attributes(0, vbo_positions, 3, type_float, 0);
-	prim_array.set_attributes(1, vbo_normals, 3, type_float, 0);
+	prim_array.set_attributes(0, vbo_positions, 3, VertexAttributeDataType::type_float, 0);
+	prim_array.set_attributes(1, vbo_normals, 3, VertexAttributeDataType::type_float, 0);
 
 	bool use_texcoords = !vbo_texcoords.is_null();
 	if (use_texcoords)
 	{
 		gc.set_texture(0, gs->tux);
-		prim_array.set_attributes(2, vbo_texcoords, 2, type_float, 0);
+		prim_array.set_attributes(2, vbo_texcoords, 2, VertexAttributeDataType::type_float, 0);
 		gs->shader_texture.SetMaterial(material_shininess, material_emission, material_ambient, material_specular);
 		gs->shader_texture.Use(gc, modelview_matrix, matrix_modelview_projection, Mat4f(normal_matrix));
 
@@ -245,6 +245,6 @@ void Model_Impl::Draw(GraphicContext &gc, GraphicStore *gs, const Mat4f &modelvi
 		gs->shader.SetMaterial(material_shininess, material_emission, material_ambient, material_specular);
 		gs->shader.Use(gc, modelview_matrix, matrix_modelview_projection, Mat4f(normal_matrix));
 	}
-	gc.draw_primitives(type_triangles, vbo_size, prim_array);
+	gc.draw_primitives(PrimitivesType::triangles, vbo_size, prim_array);
 	gc.reset_texture(0);
 }

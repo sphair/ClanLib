@@ -102,10 +102,10 @@ bool App::update()
 	{
 		stencil_desc.enable_stencil_test(true);
 
-		stencil_desc.set_stencil_compare_front(clan::compare_always, 255, 255);
-		stencil_desc.set_stencil_compare_back(clan::compare_always, 255, 255);
-		stencil_desc.set_stencil_op_front(clan::stencil_incr_wrap, clan::stencil_incr_wrap, clan::stencil_incr_wrap);
-		stencil_desc.set_stencil_op_back(clan::stencil_incr_wrap, clan::stencil_incr_wrap, clan::stencil_incr_wrap);
+		stencil_desc.set_stencil_compare_front(clan::CompareFunction::always, 255, 255);
+		stencil_desc.set_stencil_compare_back(clan::CompareFunction::always, 255, 255);
+		stencil_desc.set_stencil_op_front(clan::StencilOp::incr_wrap, clan::StencilOp::incr_wrap, clan::StencilOp::incr_wrap);
+		stencil_desc.set_stencil_op_back(clan::StencilOp::incr_wrap, clan::StencilOp::incr_wrap, clan::StencilOp::incr_wrap);
 		stencil_desc.enable_depth_write(false);
 		stencil_desc.enable_depth_test(false);
 
@@ -267,7 +267,7 @@ clan::Image App::get_stencil(clan::Canvas &canvas, clan::Rect rect)
 	}
 
 	glReadPixels(rect.left, canvas.get_height()- rect.bottom, rect_width, rect_height, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE, &buffer[0]);
-	clan::PixelBuffer pbuf(rect_width, rect_height, clan::tf_rgba8);
+	clan::PixelBuffer pbuf(rect_width, rect_height, clan::TextureFormat::rgba8);
 	unsigned int *pdata = (unsigned int *) pbuf.get_data();
 	unsigned char *rdata = &buffer[0];
 	for (int ycnt=0; ycnt < rect_height; ycnt++)

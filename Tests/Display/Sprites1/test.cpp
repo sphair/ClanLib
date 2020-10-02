@@ -56,7 +56,7 @@ public:
 				testsprite1.set_scale(1.0, 1.0);
 
 			// Rotate
-			testsprite1.set_angle(Angle(45.0, angle_degrees));
+			testsprite1.set_angle(Angle(45.0, AngleUnit::degrees));
 			testsprite1.draw(canvas, 256 + 56, 91);
 			testsprite1.draw(	
 				canvas, 
@@ -65,10 +65,10 @@ public:
 			testsprite1.draw(
 				canvas, 
 				Rectf(256 + 56, 91 + 512, 256 + 56 + testsprite1.get_width(), 91 + 512 + testsprite1.get_height()));
-			testsprite1.set_angle(Angle(0.0f, angle_degrees));
+			testsprite1.set_angle(Angle(0.0f, AngleUnit::degrees));
 
 			// Scale / Rotate - default hotspot
-			testsprite1.set_angle(Angle(45.0f, angle_degrees));
+			testsprite1.set_angle(Angle(45.0f, AngleUnit::degrees));
 			testsprite1.set_scale(2.0, 2.0);
 			testsprite1.draw(canvas, 384 + 56, 91);
 			testsprite1.draw(	
@@ -78,12 +78,12 @@ public:
 			testsprite1.draw(
 				canvas, 
 				Rectf(384 + 56, 91 + 512, 384 + 56 + testsprite1.get_width() * 2, 91 + 512 + testsprite1.get_height() * 2));
-			testsprite1.set_angle(Angle(0.0f, angle_degrees));
+			testsprite1.set_angle(Angle(0.0f, AngleUnit::degrees));
 			testsprite1.set_scale(1.0, 1.0);
 
 			// Scale / Rotate - hotspot(0, 0)
-			testsprite1.set_rotation_hotspot(origin_top_left, 0, 0);
-			testsprite1.set_angle(Angle(45.0f, angle_degrees));
+			testsprite1.set_rotation_hotspot(Origin::top_left, 0, 0);
+			testsprite1.set_angle(Angle(45.0f, AngleUnit::degrees));
 			testsprite1.set_scale(2.0, 2.0);
 			testsprite1.draw(canvas, 512 + 56, 91);
 			testsprite1.draw(	
@@ -93,14 +93,14 @@ public:
 			testsprite1.draw(
 				canvas, 
 				Rectf(512 + 56, 91 + 512, 512 + 56 + testsprite1.get_width() * 2, 91 + 512 + testsprite1.get_height() * 2));
-			testsprite1.set_angle(Angle(0.0f, angle_degrees));
+			testsprite1.set_angle(Angle(0.0f, AngleUnit::degrees));
 			testsprite1.set_scale(1.0, 1.0);
-			testsprite1.set_rotation_hotspot(origin_center, 0, 0);
+			testsprite1.set_rotation_hotspot(Origin::center, 0, 0);
 
 			// Blend - TODO
 
 			// Alignment - TODO
-			testsprite1.set_alignment(origin_bottom_right, 0, 0);
+			testsprite1.set_alignment(Origin::bottom_right, 0, 0);
 			testsprite1.draw(canvas, 768 + 56, 91);
 			testsprite1.draw(
 				canvas, 
@@ -110,7 +110,7 @@ public:
 				canvas, 
 				Rectf(768 + 56, 91 + 512, 768 + 56 + testsprite1.get_width(), 91 + 512 + testsprite1.get_height()));
 			testsprite1.set_color(Color::white);
-			testsprite1.set_alignment(origin_top_left, 0, 0);
+			testsprite1.set_alignment(Origin::top_left, 0, 0);
 
 			// Color
 			testsprite1.set_color(Color::yellow);

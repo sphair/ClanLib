@@ -108,14 +108,14 @@ public:
 		small_font.draw_text(canvas, 450, 490, "(Circle denotes the draw origin)");
 		const int offset = 96;
 
-		image_texture.set_alignment(origin_top_left, 8, 8);
+		image_texture.set_alignment(Origin::top_left, 8, 8);
 		image_texture.draw(canvas, 450+offset, 500+offset);
-		image_texture.set_alignment(origin_top_right, -8, 8);
+		image_texture.set_alignment(Origin::top_right, -8, 8);
 		image_texture.draw(canvas, 450+offset, 500+offset);
 
-		image_texture.set_alignment(origin_bottom_left, 8, -8);
+		image_texture.set_alignment(Origin::bottom_left, 8, -8);
 		image_texture.draw(canvas, 450+offset, 500+offset);
-		image_texture.set_alignment(origin_bottom_right, -8, -8);
+		image_texture.set_alignment(Origin::bottom_right, -8, -8);
 		image_texture.draw(canvas, 450+offset, 500+offset);
 
 		canvas.fill_circle(450+offset, 500+offset, 4, Colorf(1.0f, 1.0f, 1.0f, 0.9f));
@@ -124,14 +124,14 @@ public:
 		small_font.draw_text(canvas, 700, 475, "(top center, right center, bottom center, left center)");
 		small_font.draw_text(canvas, 700, 490, "(Circle denotes the draw origin)");
 				
-		image_texture.set_alignment(origin_top_center, 0, 8);
+		image_texture.set_alignment(Origin::top_center, 0, 8);
 		image_texture.draw(canvas, 700+offset, 500+offset);
-		image_texture.set_alignment(origin_bottom_center, 0, -8);
+		image_texture.set_alignment(Origin::bottom_center, 0, -8);
 		image_texture.draw(canvas, 700+offset, 500+offset);
 
-		image_texture.set_alignment(origin_center_left, 8, 0);
+		image_texture.set_alignment(Origin::center_left, 8, 0);
 		image_texture.draw(canvas, 700+offset, 500+offset);
-		image_texture.set_alignment(origin_center_right, -8, 0);
+		image_texture.set_alignment(Origin::center_right, -8, 0);
 		image_texture.draw(canvas, 700+offset, 500+offset);
 
 		canvas.fill_circle(700+offset, 500+offset, 4, Colorf(1.0f, 1.0f, 1.0f, 0.9f));
@@ -142,23 +142,23 @@ public:
 
 		const int center_image_offset = 64;
 
-		image_texture.set_alignment(origin_center, 0, 0);
+		image_texture.set_alignment(Origin::center, 0, 0);
 		image_texture.draw(canvas, 700+offset, 200+offset);
 
-		image_texture.set_alignment(origin_center, 0, center_image_offset);
+		image_texture.set_alignment(Origin::center, 0, center_image_offset);
 		image_texture.draw(canvas, 700+offset, 200+offset);
-		image_texture.set_alignment(origin_center, 0, -center_image_offset);
+		image_texture.set_alignment(Origin::center, 0, -center_image_offset);
 		image_texture.draw(canvas, 700+offset, 200+offset);
 
-		image_texture.set_alignment(origin_center, center_image_offset, 0);
+		image_texture.set_alignment(Origin::center, center_image_offset, 0);
 		image_texture.draw(canvas, 700+offset, 200+offset);
-		image_texture.set_alignment(origin_center, -center_image_offset, 0);
+		image_texture.set_alignment(Origin::center, -center_image_offset, 0);
 		image_texture.draw(canvas, 700+offset, 200+offset);
 
 		canvas.fill_circle(700+offset, 200+offset, 4, Colorf(1.0f, 1.0f, 1.0f, 0.9f));
 
 		// Restore alignment
-		image_texture.set_alignment(origin_top_left, 0, 0);
+		image_texture.set_alignment(Origin::top_left, 0, 0);
 
 		dump_fps();
 

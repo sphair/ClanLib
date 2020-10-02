@@ -28,7 +28,7 @@ DemoShooting::DemoShooting(clan::DisplayWindow &window) : window(window)
 
 	// create surface to be used for particle and set the alignment
 	surface = clan::Sprite(canvas,"Resources/star.png");
-	surface.set_alignment(clan::origin_center);
+	surface.set_alignment(clan::Origin::center);
 
 	motion_ctrl.set_1d_acceleration(-0.0003);
 

@@ -93,7 +93,7 @@ bool SvgViewer::update()
 	clan::Pointf position(324.90716f, 255.00942f);
 	position *= 0.5f;
 
-	clan::Mat4f rotation = clan::Mat4f::translate(canvas.get_width()/2.0f, canvas.get_height()/2.0f, 0.0f) * clan::Mat4f::rotate(clan::Angle(angle, clan::angle_degrees), 0.0f, 0.0f, 1.0f) * clan::Mat4f::translate(-canvas.get_width()/2.0f, -canvas.get_height()/2.0f, 0.0f);
+	clan::Mat4f rotation = clan::Mat4f::translate(canvas.get_width()/2.0f, canvas.get_height()/2.0f, 0.0f) * clan::Mat4f::rotate(clan::Angle(angle, clan::AngleUnit::degrees), 0.0f, 0.0f, 1.0f) * clan::Mat4f::translate(-canvas.get_width()/2.0f, -canvas.get_height()/2.0f, 0.0f);
 	canvas.set_transform(rotation * clan::Mat4f::translate(-position.x, -position.y, 0.0f) * clan::Mat4f::scale(new_scale, new_scale, new_scale));
 	svg.render(canvas);
 	canvas.set_transform(clan::Mat4f::identity());

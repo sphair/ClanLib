@@ -96,9 +96,9 @@ void TestApp::test_iodevice(void)
 	if (mem.get_position() != 0) fail();
 	if (!mem.seek(123)) fail();
 	if (mem.get_position() != 123) fail();
-	if (!mem.seek(7, IODevice::seek_cur)) fail();
+	if (!mem.seek(7, IODevice::SeekMode::cur)) fail();
 	if (mem.get_position() != 130) fail();
-	if (!mem.seek(-7, IODevice::seek_end)) fail();
+	if (!mem.seek(-7, IODevice::SeekMode::end)) fail();
 	if (mem.get_position() != buffer_size-7) fail();
 
 	if (!mem.seek(0)) fail();

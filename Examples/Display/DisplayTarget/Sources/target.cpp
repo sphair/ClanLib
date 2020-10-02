@@ -106,7 +106,7 @@ void Target::run_demo()
 		int major,minor, version_release;
 		clan::OpenGLTarget::get_opengl_version(canvas, major, minor, version_release);
 
-		if (canvas.get_gc().get_shader_language() == clan::shader_fixed_function)
+		if (canvas.get_gc().get_shader_language() == clan::ShaderLanguage::fixed_function)
 		{
 			target_font.draw_text(canvas, font_xpos, font_ypos, clan::string_format("1) OpenGL 1.3 Compatable. Context = %1.%2 (clanGL)", major, minor));
 		}

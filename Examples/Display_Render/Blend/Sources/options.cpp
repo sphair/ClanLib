@@ -33,13 +33,13 @@
 Options::Options(clan::Canvas &canvas) : clan::TextureWindow(canvas)
 {
 	// If you change these, you also need to change the default selected combobox item
-	blendfunc[0] = clan::blend_src_alpha;
-	blendfunc[1] = clan::blend_one_minus_src_alpha;
-	blendfunc[2] = clan::blend_src_alpha;
-	blendfunc[3] = clan::blend_one_minus_src_alpha;
-	blendequation[0] = clan::equation_add;
-	blendequation[1] = clan::equation_add;
-	logic_operation = clan::logic_set;
+	blendfunc[0] = clan::BlendFunc::src_alpha;
+	blendfunc[1] = clan::BlendFunc::one_minus_src_alpha;
+	blendfunc[2] = clan::BlendFunc::src_alpha;
+	blendfunc[3] = clan::BlendFunc::one_minus_src_alpha;
+	blendequation[0] = clan::BlendEquation::add;
+	blendequation[1] = clan::BlendEquation::add;
+	logic_operation = clan::LogicOp::set;
 	logic_operation_enabled = false;
 
 	primary_color = clan::Colorf::white;
@@ -235,19 +235,19 @@ void Options::on_equation_selected(std::shared_ptr<clan::ListBoxView> listbox, i
 	switch (value)
 	{
 		case 0:
-			blendequation[offset] = clan::equation_add;
+			blendequation[offset] = clan::BlendEquation::add;
 			break;
 		case 1:
-			blendequation[offset] = clan::equation_subtract;
+			blendequation[offset] = clan::BlendEquation::subtract;
 			break;
 		case 2:
-			blendequation[offset] = clan::equation_reverse_subtract;
+			blendequation[offset] = clan::BlendEquation::reverse_subtract;
 			break;
 		case 3:
-			blendequation[offset] = clan::equation_min;
+			blendequation[offset] = clan::BlendEquation::min;
 			break;
 		case 4:
-			blendequation[offset] = clan::equation_max;
+			blendequation[offset] = clan::BlendEquation::max;
 			break;
 	}
 }
@@ -260,52 +260,52 @@ void Options::on_logic_selected()
 	switch (value)
 	{
 		case 1:
-			logic_operation = clan::logic_clear;
+			logic_operation = clan::LogicOp::clear;
 			break;
 		case 2:
-			logic_operation = clan::logic_and;
+			logic_operation = clan::LogicOp::and;
 			break;
 		case 3:
-			logic_operation = clan::logic_and_reverse;
+			logic_operation = clan::LogicOp::and_reverse;
 			break;
 		case 4:
-			logic_operation = clan::logic_copy;
+			logic_operation = clan::LogicOp::copy;
 			break;
 		case 5:
-			logic_operation = clan::logic_and_inverted;
+			logic_operation = clan::LogicOp::and_inverted;
 			break;
 		case 6:
-			logic_operation = clan::logic_noop;
+			logic_operation = clan::LogicOp::noop;
 			break;
 		case 7:
-			logic_operation = clan::logic_xor;
+			logic_operation = clan::LogicOp::xor;
 			break;
 		case 8:
-			logic_operation = clan::logic_or;
+			logic_operation = clan::LogicOp::or;
 			break;
 		case 9:
-			logic_operation = clan::logic_nor;
+			logic_operation = clan::LogicOp::nor;
 			break;
 		case 10:
-			logic_operation = clan::logic_equiv;
+			logic_operation = clan::LogicOp::equiv;
 			break;
 		case 11:
-			logic_operation = clan::logic_invert;
+			logic_operation = clan::LogicOp::invert;
 			break;
 		case 12:
-			logic_operation = clan::logic_or_reverse;
+			logic_operation = clan::LogicOp::or_reverse;
 			break;
 		case 13:
-			logic_operation = clan::logic_copy_inverted;
+			logic_operation = clan::LogicOp::copy_inverted;
 			break;
 		case 14:
-			logic_operation = clan::logic_or_inverted;
+			logic_operation = clan::LogicOp::or_inverted;
 			break;
 		case 15:
-			logic_operation = clan::logic_nand;
+			logic_operation = clan::LogicOp::nand;
 			break;
 		case 16:
-			logic_operation = clan::logic_set;
+			logic_operation = clan::LogicOp::set;
 			break;
 	}
 }
@@ -317,49 +317,49 @@ void Options::on_blend_selected(std::shared_ptr<clan::ListBoxView> listbox, int 
 	switch (value)
 	{
 		case 0:
-			blendfunc[offset] = clan::blend_zero;
+			blendfunc[offset] = clan::BlendFunc::zero;
 			break;
 		case 1:
-			blendfunc[offset] = clan::blend_one;
+			blendfunc[offset] = clan::BlendFunc::one;
 			break;
 		case 2:
-			blendfunc[offset] = clan::blend_dest_color;
+			blendfunc[offset] = clan::BlendFunc::dest_color;
 			break;
 		case 3:
-			blendfunc[offset] = clan::blend_src_color;
+			blendfunc[offset] = clan::BlendFunc::src_color;
 			break;
 		case 4:
-			blendfunc[offset] = clan::blend_one_minus_dest_color;
+			blendfunc[offset] = clan::BlendFunc::one_minus_dest_color;
 			break;
 		case 5:
-			blendfunc[offset] = clan::blend_one_minus_src_color;
+			blendfunc[offset] = clan::BlendFunc::one_minus_src_color;
 			break;
 		case 6:
-			blendfunc[offset] = clan::blend_src_alpha;
+			blendfunc[offset] = clan::BlendFunc::src_alpha;
 			break;
 		case 7:
-			blendfunc[offset] = clan::blend_one_minus_src_alpha;
+			blendfunc[offset] = clan::BlendFunc::one_minus_src_alpha;
 			break;
 		case 8:
-			blendfunc[offset] = clan::blend_dest_alpha;
+			blendfunc[offset] = clan::BlendFunc::dest_alpha;
 			break;
 		case 9:
-			blendfunc[offset] = clan::blend_one_minus_dest_alpha;
+			blendfunc[offset] = clan::BlendFunc::one_minus_dest_alpha;
 			break;
 		case 10:
-			blendfunc[offset] = clan::blend_src_alpha_saturate;
+			blendfunc[offset] = clan::BlendFunc::src_alpha_saturate;
 			break;
 		case 11:
-			blendfunc[offset] = clan::blend_constant_color;
+			blendfunc[offset] = clan::BlendFunc::constant_color;
 			break;
 		case 12:
-			blendfunc[offset] = clan::blend_one_minus_constant_color;
+			blendfunc[offset] = clan::BlendFunc::one_minus_constant_color;
 			break;
 		case 13:
-			blendfunc[offset] = clan::blend_constant_alpha;
+			blendfunc[offset] = clan::BlendFunc::constant_alpha;
 			break;
 		case 14:
-			blendfunc[offset] = clan::blend_one_minus_constant_alpha;
+			blendfunc[offset] = clan::BlendFunc::one_minus_constant_alpha;
 	}
 }
 

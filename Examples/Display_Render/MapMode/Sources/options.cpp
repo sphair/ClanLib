@@ -33,7 +33,7 @@
 Options::Options(clan::Canvas &canvas) : clan::TextureWindow(canvas)
 {
 	// Note, when changing these, remember to change the popup menu defaults
-	current_mapmode = clan::map_2d_upper_left;
+	current_mapmode = clan::MapMode::_2d_upper_left;
 	num_balls = 3;
 	grid_angle = 0;
 	is_moveballs_set = true;
@@ -131,13 +131,13 @@ void Options::on_mapmode_selected()
 	switch (value)
 	{
 		case 0:
-			current_mapmode = clan::map_2d_upper_left;
+			current_mapmode = clan::MapMode::_2d_upper_left;
 			break;
 		case 1:
-			current_mapmode = clan::map_2d_lower_left;
+			current_mapmode = clan::MapMode::_2d_lower_left;
 			break;
 		case 2:
-			current_mapmode = clan::map_user_projection;
+			current_mapmode = clan::MapMode::_user_projection;
 			break;
 	}
 }

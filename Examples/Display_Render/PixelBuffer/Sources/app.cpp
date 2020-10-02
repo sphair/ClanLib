@@ -58,7 +58,7 @@ App::App()
 
 	for (int cnt=0; cnt < num_textures; cnt++)
 	{
-		textures[cnt] = clan::Texture2D(canvas, tux.get_width(), tux.get_height(), clan::tf_rgba8);
+		textures[cnt] = clan::Texture2D(canvas, tux.get_width(), tux.get_height(), clan::TextureFormat::rgba8);
 	}
 
 	font = clan::Font("Tahoma", 24);
@@ -133,7 +133,7 @@ void App::on_window_close()
 
 void App::upload_pixel_buffer(clan::Canvas &canvas, clan::PixelBuffer &pbuff_source, clan::PixelBuffer &pbuff_dest)
 {
-	pbuff_source.lock(canvas, clan::access_read_only);
+	pbuff_source.lock(canvas, clan::BufferAccess::read_only);
 	pbuff_dest.upload_data(canvas, clan::Rect(0,0, pbuff_source.get_size()), pbuff_source.get_data());
 	pbuff_source.unlock();
 }
@@ -162,8 +162,8 @@ void App::draw_texture(clan::Canvas &canvas, clan::Texture2D &texture, int xpos,
 void App::read_write_pixel_buffer(clan::Canvas &canvas, clan::PixelBuffer &pbuff)
 {
 	uint64_t time_now = clan::System::get_time();
-	pbuff.lock(canvas, clan::access_read_write);
-	if (pbuff.get_format() != clan::tf_rgba8)
+	pbuff.lock(canvas, clan::BufferAccess::read_write);
+	if (pbuff.get_format() != clan::TextureFormat::rgba8)
 		throw clan::Exception("Expected the format to be RGBA8");
 	unsigned char *dptr = (unsigned char *) pbuff.get_data();
 

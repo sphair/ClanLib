@@ -28,7 +28,7 @@ DemoMSmall::DemoMSmall(clan::DisplayWindow &window) : window(window)
 
 	// create surface to be used for particle and set the alignment
 	surface = clan::Sprite(canvas, "Resources/small.png");
-	surface.set_alignment(clan::origin_center);
+	surface.set_alignment(clan::Origin::center);
 
 	motion_ctrl.set_speed_limit(0.1); // set max speed of particle
 	motion_ctrl.set_1d_acceleration(-0.0003); // set deceleration

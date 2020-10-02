@@ -89,8 +89,8 @@ TestApp::TestApp()
 								from_clipboard.get_height(),
 								from_clipboard.get_format());
 		texture_image.set_image(canvas,from_clipboard);
-		texture_image.set_min_filter(filter_linear);
-		texture_image.set_mag_filter(filter_linear);
+		texture_image.set_min_filter(TextureFilter::linear);
+		texture_image.set_mag_filter(TextureFilter::linear);
 
 		image = Image(texture_image,texture_image.get_size());
 	}

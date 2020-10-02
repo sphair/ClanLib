@@ -27,7 +27,7 @@ DemoCircle::DemoCircle(clan::DisplayWindow &window) : window(window)
 
 	// create surface to be used for particle and set the alignment
 	surface = clan::Sprite(canvas, "Resources/light16p.png");
-	surface.set_alignment(clan::origin_center);
+	surface.set_alignment(clan::Origin::center);
 
 	// create a sample of particle with life of 2000
 	particle = clan::make_unique<L_Particle>(&surface, 2000);

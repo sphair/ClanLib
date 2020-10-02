@@ -57,8 +57,8 @@ App::App()
 	texture_buffers[1] = clan::Texture2D(canvas, texture_size, texture_size);
 
 	// Create the initial pixelbuffers
-	pixel_buffers[0] = clan::PixelBuffer(texture_size, texture_size, clan::tf_rgba8);
-	pixel_buffers[1] = clan::PixelBuffer(texture_size, texture_size, clan::tf_rgba8);
+	pixel_buffers[0] = clan::PixelBuffer(texture_size, texture_size, clan::TextureFormat::rgba8);
+	pixel_buffers[1] = clan::PixelBuffer(texture_size, texture_size, clan::TextureFormat::rgba8);
 
 	// Initially clear the textures, so they are filled with a "Calculating..." message
 	clan::FrameBuffer framebuffer(canvas);
@@ -161,7 +161,7 @@ bool App::update()
 			pixelbuffer_completed = &pixel_buffers[1];
 		}
 
-		pixelbuffer_write->lock(canvas, clan::access_write_only);
+		pixelbuffer_write->lock(canvas, clan::BufferAccess::write_only);
 		dest_pixels = (unsigned char *) pixelbuffer_write->get_data();
 		thread_start_flag = true;
 		thread_complete_flag = false;
@@ -178,7 +178,7 @@ bool App::update()
 	lock.unlock();
 
 	// Draw rotating mandelbrot
-	canvas.set_transform(clan::Mat4f::translate(canvas.get_width()/2, canvas.get_height()/2, 0.0f) * clan::Mat4f::rotate(clan::Angle(angle, clan::angle_degrees), 0.0f, 0.0f, 1.0f));
+	canvas.set_transform(clan::Mat4f::translate(canvas.get_width()/2, canvas.get_height()/2, 0.0f) * clan::Mat4f::rotate(clan::Angle(angle, clan::AngleUnit::degrees), 0.0f, 0.0f, 1.0f));
 	clan::Image image(*texture_completed, clan::Size(texture_size, texture_size));
 	image.draw( canvas, -texture_size/2, -texture_size/2 );
 

@@ -46,16 +46,16 @@ App::App()
 
 	// Create offscreen texture
 	texture_offscreen1 = clan::Texture2D(canvas, canvas.get_width(), canvas.get_height());
-	texture_offscreen1.set_min_filter(clan::filter_nearest);
-	texture_offscreen1.set_mag_filter(clan::filter_nearest);
+	texture_offscreen1.set_min_filter(clan::TextureFilter::nearest);
+	texture_offscreen1.set_mag_filter(clan::TextureFilter::nearest);
 
 	texture_offscreen2 = clan::Texture2D(canvas, canvas.get_width(), canvas.get_height());
-	texture_offscreen2.set_min_filter(clan::filter_nearest);
-	texture_offscreen2.set_mag_filter(clan::filter_nearest);
+	texture_offscreen2.set_min_filter(clan::TextureFilter::nearest);
+	texture_offscreen2.set_mag_filter(clan::TextureFilter::nearest);
 
 	texture_offscreen3 = clan::Texture2D(canvas, canvas.get_width(), canvas.get_height());
-	texture_offscreen3.set_min_filter(clan::filter_nearest);
-	texture_offscreen3.set_mag_filter(clan::filter_nearest);
+	texture_offscreen3.set_min_filter(clan::TextureFilter::nearest);
+	texture_offscreen3.set_mag_filter(clan::TextureFilter::nearest);
 
 	// Create offscreen framebuffer
 	clan::FrameBuffer framebuffer_offscreen1(canvas);
@@ -314,7 +314,7 @@ void App::draw_texture(clan::GraphicContext &gc, const clan::Rectf &rect, const 
 	gpu_positions.upload_data(gc, 0, positions, 6);
 	gpu_tex1_coords.upload_data(gc, 0, tex1_coords, 6);
 
-	gc.draw_primitives(clan::type_triangles, 6, gpu_primitives_array);
+	gc.draw_primitives(clan::PrimitivesType::triangles, 6, gpu_primitives_array);
 }
 
 

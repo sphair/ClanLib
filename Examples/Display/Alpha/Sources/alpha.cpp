@@ -122,7 +122,7 @@ clan::Image Alpha::create_block(clan::Canvas &canvas, const clan::Colorf &colour
 
 	clan::Color colour_int(colour);
 
-	clan::PixelBuffer pbuff(size, size, clan::tf_rgba8);
+	clan::PixelBuffer pbuff(size, size, clan::TextureFormat::rgba8);
 	uint8_t *pixels = pbuff.get_data_uint8();
 	int pitch = pbuff.get_pitch();
 	for (int ypos = 0; ypos < size; ypos++)
@@ -168,8 +168,8 @@ void Alpha::draw_section(clan::Canvas &canvas, clan::Font &font, int yoffset, co
 	clan::Rectf rect(outer_xoffset + outer_area_size / 2, (yoffset + outer_area_size / 2), clan::Sizef(64,64));
 	if (rect.is_inside(canvas.get_size()))
 	{
-		clan::PixelBuffer pbuff = canvas.get_pixeldata(rect, clan::tf_rgba8);
-		pbuff.lock(canvas, clan::access_read_only);
+		clan::PixelBuffer pbuff = canvas.get_pixeldata(rect, clan::TextureFormat::rgba8);
+		pbuff.lock(canvas, clan::BufferAccess::read_only);
 
 		//clan::ImageProviderFactory::save(pbuff, "test.png");
 

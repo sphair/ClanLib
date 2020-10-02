@@ -114,13 +114,13 @@ bool Example::update()
 	// Draw the text for window 1
 	// To keep the example simple, the scroll text is drawn 3 times
 	int font_yoffset = (int)(font_metrics.get_ascent() - font_metrics.get_internal_leading()) / 2;
-	canvas_1.set_transform(clan::Mat4f::translate((float)canvas_1.get_width() / 2.0f, (float)canvas_1.get_height() / 2.0f, 0.0f) * clan::Mat4f::rotate(clan::Angle(angle, clan::angle_radians), 0.0f, 0.0f, 1.0f, false));
+	canvas_1.set_transform(clan::Mat4f::translate((float)canvas_1.get_width() / 2.0f, (float)canvas_1.get_height() / 2.0f, 0.0f) * clan::Mat4f::rotate(clan::Angle(angle, clan::AngleUnit::radians), 0.0f, 0.0f, 1.0f, false));
 	font.draw_text(canvas_1, -font_xoffset, font_yoffset, example_text, clan::Colorf::white);
 	font.draw_text(canvas_1, text_size.width - font_xoffset, font_yoffset, example_text,clan:: Colorf::white);
 	font.draw_text(canvas_1, -text_size.width - font_xoffset, font_yoffset, example_text, clan::Colorf::white);
 
 	// Draw the text for window 2
-	canvas_2.set_transform(clan::Mat4f::translate((float)canvas_1.get_width() / 2.0f, (float)canvas_1.get_height() / 2.0f, 0.0f) * clan::Mat4f::rotate(clan::Angle(angle, clan::angle_radians), 0.0f, 0.0f, 1.0f, false));
+	canvas_2.set_transform(clan::Mat4f::translate((float)canvas_1.get_width() / 2.0f, (float)canvas_1.get_height() / 2.0f, 0.0f) * clan::Mat4f::rotate(clan::Angle(angle, clan::AngleUnit::radians), 0.0f, 0.0f, 1.0f, false));
 	font.draw_text(canvas_2, -font_xoffset - canvas_1.get_width(), font_yoffset, example_text, clan::Colorf::white);
 	font.draw_text(canvas_2, -font_xoffset + text_size.width-canvas_1.get_width(), font_yoffset, example_text, clan::Colorf::white);
 	font.draw_text(canvas_2, -font_xoffset - text_size.width-canvas_1.get_width(), font_yoffset, example_text, clan::Colorf::white);

@@ -101,13 +101,13 @@ App::App()
 
 	setup_particles();
 
-	clan::ShaderObject vertex_shader(canvas, clan::shadertype_vertex, text_shader_vertex);
+	clan::ShaderObject vertex_shader(canvas, clan::ShaderType::vertex, text_shader_vertex);
 	if(!vertex_shader.compile())
 	{
 		throw clan::Exception(clan::string_format("Unable to compile vertex shader object: %1", vertex_shader.get_info_log()));
 	}
 
-	clan::ShaderObject fragment_shader(canvas, clan::shadertype_fragment, text_shader_fragment);
+	clan::ShaderObject fragment_shader(canvas, clan::ShaderType::fragment, text_shader_fragment);
 	if(!fragment_shader.compile())
 	{
 		throw clan::Exception(clan::string_format("Unable to compile fragment shader object: %1", fragment_shader.get_info_log()));
@@ -126,7 +126,7 @@ App::App()
 
 	clan::BlendStateDescription blend_state_desc;
 	blend_state_desc.enable_blending(true);
-	blend_state_desc.set_blend_function(clan::blend_src_alpha, clan::blend_one, clan::blend_src_alpha, clan::blend_one);
+	blend_state_desc.set_blend_function(clan::BlendFunc::src_alpha, clan::BlendFunc::one, clan::BlendFunc::src_alpha, clan::BlendFunc::one);
 	blend_state = clan::BlendState(canvas, blend_state_desc);
 
 	game_time.reset();
@@ -183,7 +183,7 @@ bool App::update()
 
 		clan::RasterizerStateDescription raster_state_desc;
 		raster_state_desc.set_point_size(options->point_size);
-		raster_state_desc.set_point_sprite_origin(clan::origin_upper_left);
+		raster_state_desc.set_point_sprite_origin(clan::PointSpriteOrigin::upper_left);
 		clan::RasterizerState raster_state(canvas, raster_state_desc);
 		canvas.set_rasterizer_state(raster_state);
 
@@ -202,7 +202,7 @@ bool App::update()
 
 		gc.set_texture(0, texture_particle);
 		gc.set_program_object(program_object);
-		gc.draw_primitives(clan::type_points, num_particles, primarray);
+		gc.draw_primitives(clan::PrimitivesType::points, num_particles, primarray);
 		gc.reset_program_object();
 		gc.reset_texture(0);
 

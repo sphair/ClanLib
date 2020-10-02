@@ -84,7 +84,7 @@ App::App()
 
 	for (int frame_cnt=0; frame_cnt < 6; frame_cnt++)
 	{
-		PixelBuffer frame(size.width, size.height, tf_rgba8);
+		PixelBuffer frame(size.width, size.height, TextureFormat::rgba8);
 
 		frame.set_subimage(pacman,Point(0,0),Rect((frame_cnt * 28) + 4, 4, size));
 

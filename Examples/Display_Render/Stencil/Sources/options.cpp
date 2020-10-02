@@ -33,9 +33,9 @@
 Options::Options(clan::Canvas &canvas) : clan::TextureWindow(canvas)
 {
 	// Note, when changing these, remember to change the popup menu defaults
-	compare_function = clan::compare_greater;
-	stencil_pass = clan::stencil_keep;
-	stencil_fail = clan::stencil_incr;
+	compare_function = clan::CompareFunction::greater;
+	stencil_pass = clan::StencilOp::keep;
+	stencil_fail = clan::StencilOp::incr;
 
 	num_balls = 9;
 	is_moveballs_set = true;
@@ -53,10 +53,10 @@ Options::Options(clan::Canvas &canvas) : clan::TextureWindow(canvas)
 	label_numballs = create_slider_label(slider_label_xpos, slider_ypos);
 	slider_ypos += slider_gap;
 
-	slider_compare_reference = create_slider(slider_xpos, slider_ypos);
-	slider_compare_reference->set_max_position(16);
-	slider_compare_reference->set_position(compare_reference);
-	slider_compare_reference->func_value_changed() = bind_member(this, &Options::slider_compare_reference_changed);
+	slider_compare_functionreference = create_slider(slider_xpos, slider_ypos);
+	slider_compare_functionreference->set_max_position(16);
+	slider_compare_functionreference->set_position(compare_reference);
+	slider_compare_functionreference->func_value_changed() = bind_member(this, &Options::slider_compare_reference_changed);
 	label_compare_reference = create_slider_label(slider_label_xpos, slider_ypos);
 	slider_ypos += slider_gap;
 
@@ -150,28 +150,28 @@ void Options::on_equation_compare(std::shared_ptr<clan::ListBoxView> listbox)
 	switch (value)
 	{
 		case 0:
-			compare_function = clan::compare_lequal;
+			compare_function = clan::CompareFunction::lequal;
 			break;
 		case 1:
-			compare_function = clan::compare_gequal;
+			compare_function = clan::CompareFunction::gequal;
 			break;
 		case 2:
-			compare_function = clan::compare_less;
+			compare_function = clan::CompareFunction::less;
 			break;
 		case 3:
-			compare_function = clan::compare_greater;
+			compare_function = clan::CompareFunction::greater;
 			break;
 		case 4:
-			compare_function = clan::compare_equal;
+			compare_function = clan::CompareFunction::equal;
 			break;
 		case 5:
-			compare_function = clan::compare_notequal;
+			compare_function = clan::CompareFunction::notequal;
 			break;
 		case 6:
-			compare_function = clan::compare_always;
+			compare_function = clan::CompareFunction::always;
 			break;
 		case 7:
-			compare_function = clan::compare_never;
+			compare_function = clan::CompareFunction::never;
 			break;
 	}
 }
@@ -183,28 +183,28 @@ void Options::on_equation_passfail(std::shared_ptr<clan::ListBoxView> listbox, b
 	switch (value)
 	{
 		case 0:
-			selected = clan::stencil_keep;
+			selected = clan::StencilOp::keep;
 			break;
 		case 1:
-			selected = clan::stencil_zero;
+			selected = clan::StencilOp::zero;
 			break;
 		case 2:
-			selected = clan::stencil_replace;
+			selected = clan::StencilOp::replace;
 			break;
 		case 3:
-			selected = clan::stencil_incr;
+			selected = clan::StencilOp::incr;
 			break;
 		case 4:
-			selected = clan::stencil_decr;
+			selected = clan::StencilOp::decr;
 			break;
 		case 5:
-			selected = clan::stencil_invert;
+			selected = clan::StencilOp::invert;
 			break;
 		case 6:
-			selected = clan::stencil_incr_wrap;
+			selected = clan::StencilOp::incr_wrap;
 			break;
 		case 7:
-			selected = clan::stencil_decr_wrap;
+			selected = clan::StencilOp::decr_wrap;
 			break;
 		default:
 			throw clan::Exception("ERROR");
@@ -237,7 +237,7 @@ void Options::slider_numballs_changed()
 
 void Options::slider_compare_reference_changed()
 {
-	compare_reference = slider_compare_reference->position();
+	compare_reference = slider_compare_functionreference->position();
 	std::string text(clan::string_format("Stencil Reference : %1", compare_reference));
 	label_compare_reference->set_text(text);
 }
