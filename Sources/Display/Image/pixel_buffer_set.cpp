@@ -59,7 +59,7 @@ namespace clan
 	}
 
 	PixelBufferSet::PixelBufferSet(const PixelBuffer &image)
-		: impl(std::make_shared<PixelBufferSet_Impl>(texture_2d, image.get_format(), image.get_width(), image.get_height(), 1))
+		: impl(std::make_shared<PixelBufferSet_Impl>(TextureDimensions::_2d, image.get_format(), image.get_width(), image.get_height(), 1))
 	{
 		set_image(0, 0, image);
 	}

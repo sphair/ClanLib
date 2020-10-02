@@ -102,7 +102,7 @@ namespace clan
 
 		int retrieved = block_end - block_start;
 
-		if (source.impl->format == sf_16bit_signed)
+		if (source.impl->format == SoundFormat::sf_16bit_signed)
 		{
 			if (source.impl->num_channels == 2)
 			{

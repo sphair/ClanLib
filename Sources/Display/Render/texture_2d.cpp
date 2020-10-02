@@ -57,7 +57,7 @@ namespace clan
 
 		GraphicContextProvider *gc_provider = context.get_provider();
 
-		impl->provider = gc_provider->alloc_texture(texture_2d);
+		impl->provider = gc_provider->alloc_texture(TextureDimensions::_2d);
 		impl->provider->create(width, height, 1, 1, texture_format, levels);
 		impl->width = width;
 		impl->height = height;
@@ -75,7 +75,7 @@ namespace clan
 
 		GraphicContextProvider *gc_provider = context.get_provider();
 
-		impl->provider = gc_provider->alloc_texture(texture_2d);
+		impl->provider = gc_provider->alloc_texture(TextureDimensions::_2d);
 		impl->provider->create(size.width, size.height, 1, 1, texture_format, levels);
 		impl->width = size.width;
 		impl->height = size.height;
@@ -96,7 +96,7 @@ namespace clan
 		PixelBuffer pb = ImageProviderFactory::load(filename, fs, std::string());
 		pb = import_desc.process(pb);
 
-		*this = Texture2D(context, pb.get_width(), pb.get_height(), import_desc.is_srgb() ? tf_srgb8_alpha8 : tf_rgba8);
+		*this = Texture2D(context, pb.get_width(), pb.get_height(), import_desc.is_srgb() ? TextureFormat::srgb8_alpha8 : TextureFormat::rgba8);
 
 		set_pixel_ratio(pb.get_pixel_ratio());
 		set_subimage(context, Point(0, 0), pb, Rect(pb.get_size()), 0);
@@ -108,7 +108,7 @@ namespace clan
 	{
 		PixelBuffer pb = ImageProviderFactory::load(file, image_type);
 		pb = import_desc.process(pb);
-		*this = Texture2D(context, pb.get_width(), pb.get_height(), import_desc.is_srgb() ? tf_srgb8_alpha8 : tf_rgba8);
+		*this = Texture2D(context, pb.get_width(), pb.get_height(), import_desc.is_srgb() ? TextureFormat::srgb8_alpha8 : TextureFormat::rgba8);
 
 		set_pixel_ratio(pb.get_pixel_ratio());
 		set_subimage(context, Point(0, 0), pb, Rect(pb.get_size()), 0);
@@ -123,7 +123,7 @@ namespace clan
 
 	Texture2D::Texture2D(GraphicContext &context, const PixelBuffer &image, const Rect &src_rect, bool is_srgb)
 	{
-		*this = Texture2D(context, src_rect.get_width(), src_rect.get_height(), is_srgb ? tf_srgb8_alpha8 : tf_rgba8);
+		*this = Texture2D(context, src_rect.get_width(), src_rect.get_height(), is_srgb ? TextureFormat::srgb8_alpha8 : TextureFormat::rgba8);
 
 		set_pixel_ratio(image.get_pixel_ratio());
 		set_subimage(context, Point(0, 0), image, src_rect, 0);
@@ -143,7 +143,7 @@ namespace clan
 
 	PixelBuffer Texture2D::get_pixeldata(GraphicContext &gc, int level) const
 	{
-		return impl->provider->get_pixeldata(gc, tf_rgba8, level);
+		return impl->provider->get_pixeldata(gc, TextureFormat::rgba8, level);
 	}
 
 	PixelBuffer Texture2D::get_pixeldata(GraphicContext &gc, TextureFormat texture_format, int level) const

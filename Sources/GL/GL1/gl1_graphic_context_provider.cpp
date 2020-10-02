@@ -677,7 +677,7 @@ namespace clan
 			// Multiple textures possible
 			switch (primitives_array_texindex.type)
 			{
-			case type_int:
+			case VertexAttributeDataType::type_int:
 			{
 				int stride_float;
 				if (primitives_array_texindex.stride)
@@ -889,8 +889,8 @@ namespace clan
 
 		if (!render_window->is_double_buffered())	// Silently fix incorrect render buffers
 		{
-			if (buffer == buffer_back)
-				buffer = buffer_front;
+			if (buffer == DrawBuffer::back)
+				buffer = DrawBuffer::front;
 		}
 
 		glDrawBuffer(OpenGL::to_enum(buffer));

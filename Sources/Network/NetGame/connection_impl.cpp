@@ -100,7 +100,7 @@ namespace clan
 	{
 		std::unique_lock<std::mutex> mutex_lock(mutex);
 		Message message;
-		message.type = Message::type_message;
+		message.type = Message::Type::type_message;
 		message.event = game_event;
 		send_queue.push_back(message);
 		mutex_lock.unlock();
@@ -111,7 +111,7 @@ namespace clan
 	{
 		std::unique_lock<std::mutex> mutex_lock(mutex);
 		Message message;
-		message.type = Message::type_disconnect;
+		message.type = Message::Type::type_disconnect;
 		send_queue.push_back(message);
 		mutex_lock.unlock();
 		worker_event.notify();
@@ -189,7 +189,7 @@ namespace clan
 			if (!is_connected)
 				connection = TCPConnection(socket_name);
 			is_connected = true;
-			site->add_network_event(NetGameNetworkEvent(base, NetGameNetworkEvent::client_connected));
+			site->add_network_event(NetGameNetworkEvent(base, NetGameNetworkEvent::Type::client_connected));
 
 			int bytes_received = 0;
 			int bytes_sent = 0;
@@ -213,11 +213,11 @@ namespace clan
 				worker_event.wait(lock, 1, events);
 			}
 
-			site->add_network_event(NetGameNetworkEvent(base, NetGameNetworkEvent::client_disconnected));
+			site->add_network_event(NetGameNetworkEvent(base, NetGameNetworkEvent::Type::client_disconnected));
 		}
 		catch (const Exception& e)
 		{
-			site->add_network_event(NetGameNetworkEvent(base, NetGameNetworkEvent::client_disconnected, NetGameEvent(e.message)));
+			site->add_network_event(NetGameNetworkEvent(base, NetGameNetworkEvent::Type::client_disconnected, NetGameEvent(e.message)));
 		}
 	}
 
@@ -252,7 +252,7 @@ namespace clan
 		mutex_lock.unlock();
 		for (auto & elem : new_send_queue)
 		{
-			if (elem.type == Message::type_message)
+			if (elem.type == Message::Type::type_message)
 			{
 				DataBuffer packet = NetGameNetworkData::send_data(elem.event);
 
@@ -260,7 +260,7 @@ namespace clan
 				buffer.set_size(pos + packet.get_size());
 				memcpy(buffer.get_data() + pos, packet.get_data(), packet.get_size());
 			}
-			else if (elem.type == Message::type_disconnect)
+			else if (elem.type == Message::Type::type_disconnect)
 			{
 				return true;
 			}

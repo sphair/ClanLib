@@ -50,16 +50,16 @@ namespace clan
 	{
 	public:
 		/// \brief Seeking modes.
-		enum SeekMode
+		enum class SeekMode
 		{
 			/// \brief Set to a specific value from the start
-			seek_set,
+			set,
 
 			/// \brief Set relative to the current position
-			seek_cur,
+			cur,
 
 			/// \brief Set to a specific value from the end (use negative position)
-			seek_end
+			end
 		};
 
 		/// \brief Constructs a null instance
@@ -127,7 +127,7 @@ namespace clan
 		/// \param position Position to use (usage depends on the seek mode)
 		/// \param mode Seek mode
 		/// \return false = Failed
-		bool seek(int position, SeekMode mode = seek_set);
+		bool seek(int position, SeekMode mode = SeekMode::set);
 
 		/// \brief Alias for receive(data, len, receive_all)
 		///

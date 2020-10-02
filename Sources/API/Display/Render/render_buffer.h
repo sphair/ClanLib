@@ -55,7 +55,7 @@ namespace clan
 		/// \param width = value
 		/// \param height = value
 		/// \param internal_format = Texture Format
-		RenderBuffer(GraphicContext &context, int width, int height, TextureFormat texture_format = tf_rgba8, int multisample_samples = 0);
+		RenderBuffer(GraphicContext &context, int width, int height, TextureFormat texture_format = TextureFormat::rgba8, int multisample_samples = 0);
 
 		/// \brief Returns true if this object is invalid.
 		bool is_null() const { return !impl; }

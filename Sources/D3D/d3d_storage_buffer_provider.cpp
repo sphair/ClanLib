@@ -220,13 +220,13 @@ namespace clan
 	{
 		switch (access)
 		{
-		case access_read_only:
+		case BufferAccess::read_only:
 			return D3D11_MAP_READ;
-		case access_write_only:
+		case BufferAccess::write_only:
 			return D3D11_MAP_WRITE;
-		case access_write_discard:
+		case BufferAccess::write_discard:
 			return D3D11_MAP_WRITE_DISCARD;
-		case access_read_write:
+		case BufferAccess::read_write:
 			return D3D11_MAP_READ_WRITE;
 		}
 		throw Exception("Unsupported access type");

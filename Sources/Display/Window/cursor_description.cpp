@@ -127,7 +127,7 @@ namespace clan
 		int xpos, int ypos,
 		float trans_limit)
 	{
-		PixelBuffer alpha_buffer = pixelbuffer.to_format(tf_rgba8);
+		PixelBuffer alpha_buffer = pixelbuffer.to_format(TextureFormat::rgba8);
 
 		int begin = 0;
 		bool prev_trans = true;
@@ -210,7 +210,7 @@ namespace clan
 		int xpos, int ypos,
 		float trans_limit)
 	{
-		PixelBuffer alpha_buffer = pixelbuffer.to_format(tf_rgba8);
+		PixelBuffer alpha_buffer = pixelbuffer.to_format(TextureFormat::rgba8);
 
 		int width = alpha_buffer.get_width();
 		int height = alpha_buffer.get_height();

@@ -201,7 +201,7 @@ namespace clan
 		header.bV5BlueMask = 0x0000ff00;
 		header.bV5AlphaMask = 0x000000ff;
 		header.bV5SizeImage = bitmap_size.height * 4;
-		PixelBuffer pixelbuffer(bitmap_size.width, bitmap_size.height, tf_bgra8);
+		PixelBuffer pixelbuffer(bitmap_size.width, bitmap_size.height, TextureFormat::bgra8);
 		int scanlines = GetDIBits(screen_dc, bitmap, 0, bitmap_size.height, pixelbuffer.get_data(), (LPBITMAPINFO)&header, DIB_RGB_COLORS);
 		unsigned char *p = (unsigned char *)pixelbuffer.get_data();
 		for (int i = 0; i < bitmap_size.width*bitmap_size.height; i++)
@@ -241,7 +241,7 @@ namespace clan
 		matrix.eM22.value = 1;
 		if (try_load_glyph_bitmap(glyph, GGO_GRAY8_BITMAP, matrix, glyph_bitmap, glyph_metrics))
 		{
-			PixelBuffer pixelbuffer(glyph_metrics.gmBlackBoxX, glyph_metrics.gmBlackBoxY, tf_rgba8);
+			PixelBuffer pixelbuffer(glyph_metrics.gmBlackBoxX, glyph_metrics.gmBlackBoxY, TextureFormat::rgba8);
 
 			DWORD s_pitch = (glyph_metrics.gmBlackBoxX + 3) / 4 * 4;
 			unsigned char *s = (unsigned char *)glyph_bitmap.get_data();
@@ -289,7 +289,7 @@ namespace clan
 		matrix.eM22.value = 1;
 		if (try_load_glyph_bitmap(glyph, GGO_BITMAP, matrix, glyph_bitmap, glyph_metrics))
 		{
-			PixelBuffer pixelbuffer(glyph_metrics.gmBlackBoxX, glyph_metrics.gmBlackBoxY, tf_rgba8);
+			PixelBuffer pixelbuffer(glyph_metrics.gmBlackBoxX, glyph_metrics.gmBlackBoxY, TextureFormat::rgba8);
 
 			DWORD s_pitch = (glyph_metrics.gmBlackBoxX + 31) / 32 * 4;
 			unsigned char *s = (unsigned char *)glyph_bitmap.get_data();

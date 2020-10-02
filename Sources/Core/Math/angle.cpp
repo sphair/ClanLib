@@ -38,7 +38,7 @@ namespace clan
 
 	Angle::Angle(float value, AngleUnit unit)
 	{
-		if (unit == angle_radians)
+		if (unit == AngleUnit::radians)
 		{
 			value_rad = value;
 		}
@@ -50,12 +50,12 @@ namespace clan
 
 	Angle Angle::from_radians(float value)
 	{
-		return Angle(value, angle_radians);
+		return Angle(value, AngleUnit::radians);
 	}
 
 	Angle Angle::from_degrees(float value)
 	{
-		return Angle(value, angle_degrees);
+		return Angle(value, AngleUnit::degrees);
 	}
 
 	float Angle::to_degrees() const
@@ -114,32 +114,32 @@ namespace clan
 
 	Angle Angle::operator+(const Angle &angle) const
 	{
-		return Angle(value_rad + angle.value_rad, angle_radians);
+		return Angle(value_rad + angle.value_rad, AngleUnit::radians);
 	}
 
 	Angle Angle::operator-(const Angle &angle) const
 	{
-		return Angle(value_rad - angle.value_rad, angle_radians);
+		return Angle(value_rad - angle.value_rad, AngleUnit::radians);
 	}
 
 	Angle Angle::operator*(const Angle &angle) const
 	{
-		return Angle(value_rad * angle.value_rad, angle_radians);
+		return Angle(value_rad * angle.value_rad, AngleUnit::radians);
 	}
 
 	Angle Angle::operator*(float value) const
 	{
-		return Angle(value_rad * value, angle_radians);
+		return Angle(value_rad * value, AngleUnit::radians);
 	}
 
 	Angle Angle::operator/(const Angle &angle) const
 	{
-		return Angle(value_rad / angle.value_rad, angle_radians);
+		return Angle(value_rad / angle.value_rad, AngleUnit::radians);
 	}
 
 	Angle Angle::operator/(float value) const
 	{
-		return Angle(value_rad / value, angle_radians);
+		return Angle(value_rad / value, AngleUnit::radians);
 	}
 
 	bool Angle::operator<(const Angle &angle) const

@@ -54,7 +54,7 @@ namespace clan
 		/// \param gc = Graphic Context
 		/// \param size = size - use ProgramObject::get_uniform_buffer_size() to calcuate this
 		/// \param usage = Buffer Usage
-		UniformBuffer(GraphicContext &gc, int block_size, BufferUsage usage = usage_dynamic_draw);
+		UniformBuffer(GraphicContext &gc, int block_size, BufferUsage usage = BufferUsage::dynamic_draw);
 
 		/// \brief Constructs a VertexArrayBuffer
 		///
@@ -62,14 +62,14 @@ namespace clan
 		/// \param data = void
 		/// \param size = value
 		/// \param usage = Buffer Usage
-		UniformBuffer(GraphicContext &gc, const void *data, int size, BufferUsage usage = usage_dynamic_draw);
+		UniformBuffer(GraphicContext &gc, const void *data, int size, BufferUsage usage = BufferUsage::dynamic_draw);
 
 		/// \brief Constructs a ProgramUniformBlock - convenience function
 		///
 		/// \param gc = Graphic Context
 		/// \param num_blocks = Number of blocks to allocate
 		/// \param usage = Buffer Usage
-		UniformBuffer(GraphicContext &gc, ProgramObject &program, const std::string &name, int num_blocks = 1, BufferUsage usage = usage_dynamic_draw);
+		UniformBuffer(GraphicContext &gc, ProgramObject &program, const std::string &name, int num_blocks = 1, BufferUsage usage = BufferUsage::dynamic_draw);
 
 		/// \brief Returns true if this object is invalid.
 		bool is_null() const { return !impl; }

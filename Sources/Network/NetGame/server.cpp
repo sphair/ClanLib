@@ -151,13 +151,13 @@ namespace clan
 		{
 			switch (new_event.type)
 			{
-			case NetGameNetworkEvent::client_connected:
+			case NetGameNetworkEvent::Type::client_connected:
 				sig_game_client_connected(new_event.connection);
 				break;
-			case NetGameNetworkEvent::event_received:
+			case NetGameNetworkEvent::Type::event_received:
 				sig_game_event_received(new_event.connection, new_event.game_event);
 				break;
-			case NetGameNetworkEvent::client_disconnected:
+			case NetGameNetworkEvent::Type::client_disconnected:
 			{
 				std::string reason = new_event.game_event.get_name();
 				sig_game_client_disconnected(new_event.connection, reason);

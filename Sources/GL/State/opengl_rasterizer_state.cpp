@@ -62,20 +62,20 @@ namespace clan
 			desc.get_enable_line_antialiasing() ? glEnable(GL_LINE_SMOOTH) : glDisable(GL_LINE_SMOOTH);
 			switch (desc.get_face_cull_mode())
 			{
-			case cull_front:
+			case CullMode::front:
 				glCullFace(GL_FRONT);
 				break;
-			case cull_back:
+			case CullMode::back:
 				glCullFace(GL_BACK);
 				break;
-			case cull_front_and_back:
+			case CullMode::front_and_back:
 				glCullFace(GL_FRONT_AND_BACK);
 				break;
 			}
 			if (glPolygonMode)
 				glPolygonMode(GL_FRONT_AND_BACK, OpenGL::to_enum(desc.get_face_fill_mode()));
 
-			desc.get_front_face() == face_counter_clockwise ? glFrontFace(GL_CCW) : glFrontFace(GL_CW);
+			desc.get_front_face() == FaceSide::counter_clockwise ? glFrontFace(GL_CCW) : glFrontFace(GL_CW);
 
 			// Note, enabled in GraphicContextProvider::set_scissor()
 			if (!desc.get_enable_scissor())
@@ -91,10 +91,10 @@ namespace clan
 			{
 				switch (desc.get_point_sprite_origin())
 				{
-				case origin_upper_left:
+				case PointSpriteOrigin::upper_left:
 					glPointParameterf(GL_POINT_SPRITE_COORD_ORIGIN, GL_UPPER_LEFT);
 					break;
-				case origin_lower_left:
+				case PointSpriteOrigin::lower_left:
 					glPointParameterf(GL_POINT_SPRITE_COORD_ORIGIN, GL_LOWER_LEFT);
 					break;
 				}

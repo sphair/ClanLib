@@ -48,7 +48,7 @@ namespace clan
 		data_locked = false;
 		texture_format = new_format;
 		size = new_size;
-		if (direction == data_from_gpu)
+		if (direction == PixelBufferDirection::data_from_gpu)
 		{
 			selected_binding = GL_PIXEL_PACK_BUFFER_BINDING;
 			selected_target = GL_PIXEL_PACK_BUFFER;

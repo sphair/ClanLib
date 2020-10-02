@@ -70,7 +70,7 @@ namespace clan
 		/// \param sized_format = Texture Format
 		/// \param data = data to copy from (May be NULL)
 		/// \param usage = Buffer Usage
-		TransferTexture(GraphicContext &gc, int width, int height, PixelBufferDirection direction = data_to_gpu, TextureFormat texture_format = tf_rgba8, const void *data = nullptr, BufferUsage usage = usage_stream_draw);
+		TransferTexture(GraphicContext &gc, int width, int height, PixelBufferDirection direction = PixelBufferDirection::data_to_gpu, TextureFormat texture_format = TextureFormat::rgba8, const void *data = nullptr, BufferUsage usage = BufferUsage::stream_draw);
 
 		/// \brief Constructs a GPU Transfer Buffer from an existing pixelbuffer
 		///
@@ -78,7 +78,7 @@ namespace clan
 		/// \param pbuff = The pixelbuffer to copy from
 		/// \param direction = prefered direction that you will use tranferring the pixel buffer data
 		/// \param usage = Buffer Usage
-		TransferTexture(GraphicContext &gc, const PixelBuffer &pbuff, PixelBufferDirection direction = data_to_gpu, BufferUsage usage = usage_stream_draw);
+		TransferTexture(GraphicContext &gc, const PixelBuffer &pbuff, PixelBufferDirection direction = PixelBufferDirection::data_to_gpu, BufferUsage usage = BufferUsage::stream_draw);
 
 		~TransferTexture();
 	};

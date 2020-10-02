@@ -509,35 +509,35 @@ namespace clan
 		if (glsl_version_major > 1)
 			use_glsl_150 = true;
 
-		ShaderObject vertex_color_only_shader(provider, shadertype_vertex, use_glsl_150 ? cl_glsl15_vertex_color_only : cl_glsl_vertex_color_only);
+		ShaderObject vertex_color_only_shader(provider, ShaderType::vertex, use_glsl_150 ? cl_glsl15_vertex_color_only : cl_glsl_vertex_color_only);
 		if (!vertex_color_only_shader.compile())
 			throw Exception("Unable to compile the standard shader program: 'vertex color only' Error:" + vertex_color_only_shader.get_info_log());
 
-		ShaderObject fragment_color_only_shader(provider, shadertype_fragment, use_glsl_150 ? cl_glsl15_fragment_color_only : cl_glsl_fragment_color_only);
+		ShaderObject fragment_color_only_shader(provider, ShaderType::fragment, use_glsl_150 ? cl_glsl15_fragment_color_only : cl_glsl_fragment_color_only);
 		if (!fragment_color_only_shader.compile())
 			throw Exception("Unable to compile the standard shader program: 'fragment color only' Error:" + fragment_color_only_shader.get_info_log());
 
-		ShaderObject vertex_single_texture_shader(provider, shadertype_vertex, use_glsl_150 ? cl_glsl15_vertex_single_texture : cl_glsl_vertex_single_texture);
+		ShaderObject vertex_single_texture_shader(provider, ShaderType::vertex, use_glsl_150 ? cl_glsl15_vertex_single_texture : cl_glsl_vertex_single_texture);
 		if (!vertex_single_texture_shader.compile())
 			throw Exception("Unable to compile the standard shader program: 'vertex single texture' Error:" + vertex_single_texture_shader.get_info_log());
 
-		ShaderObject fragment_single_texture_shader(provider, shadertype_fragment, use_glsl_150 ? cl_glsl15_fragment_single_texture : cl_glsl_fragment_single_texture);
+		ShaderObject fragment_single_texture_shader(provider, ShaderType::fragment, use_glsl_150 ? cl_glsl15_fragment_single_texture : cl_glsl_fragment_single_texture);
 		if (!fragment_single_texture_shader.compile())
 			throw Exception("Unable to compile the standard shader program: 'fragment single texture' Error:" + fragment_single_texture_shader.get_info_log());
 
-		ShaderObject vertex_sprite_shader(provider, shadertype_vertex, use_glsl_150 ? cl_glsl15_vertex_sprite : cl_glsl_vertex_sprite);
+		ShaderObject vertex_sprite_shader(provider, ShaderType::vertex, use_glsl_150 ? cl_glsl15_vertex_sprite : cl_glsl_vertex_sprite);
 		if (!vertex_sprite_shader.compile())
 			throw Exception("Unable to compile the standard shader program: 'vertex sprite' Error:" + vertex_sprite_shader.get_info_log());
 
-		ShaderObject fragment_sprite_shader(provider, shadertype_fragment, use_glsl_150 ? cl_glsl15_fragment_sprite : cl_glsl_fragment_sprite);
+		ShaderObject fragment_sprite_shader(provider, ShaderType::fragment, use_glsl_150 ? cl_glsl15_fragment_sprite : cl_glsl_fragment_sprite);
 		if (!fragment_sprite_shader.compile())
 			throw Exception("Unable to compile the standard shader program: 'fragment sprite' Error:" + fragment_sprite_shader.get_info_log());
 
-		ShaderObject vertex_path_shader(provider, shadertype_vertex, use_glsl_150 ? cl_glsl15_vertex_path : cl_glsl_vertex_path);
+		ShaderObject vertex_path_shader(provider, ShaderType::vertex, use_glsl_150 ? cl_glsl15_vertex_path : cl_glsl_vertex_path);
 		if (!vertex_path_shader.compile())
 			throw Exception("Unable to compile the standard shader program: 'vertex path' Error:" + vertex_path_shader.get_info_log());
 
-		ShaderObject fragment_path_shader(provider, shadertype_fragment, use_glsl_150 ? cl_glsl15_fragment_path : cl_glsl_fragment_path);
+		ShaderObject fragment_path_shader(provider, ShaderType::fragment, use_glsl_150 ? cl_glsl15_fragment_path : cl_glsl_fragment_path);
 		if (!fragment_path_shader.compile())
 			throw Exception("Unable to compile the standard shader program: 'fragment path' Error:" + fragment_path_shader.get_info_log());
 
@@ -628,10 +628,10 @@ namespace clan
 	{
 		switch (standard_program)
 		{
-		case program_color_only: return impl->color_only_program;
-		case program_single_texture: return impl->single_texture_program;
-		case program_sprite: return impl->sprite_program;
-		case program_path: return impl->path_program;
+		case StandardProgram::color_only: return impl->color_only_program;
+		case StandardProgram::single_texture: return impl->single_texture_program;
+		case StandardProgram::sprite: return impl->sprite_program;
+		case StandardProgram::path: return impl->path_program;
 		}
 		throw Exception("Unsupported standard program");
 	}

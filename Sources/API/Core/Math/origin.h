@@ -35,17 +35,17 @@ namespace clan
 	/// \{
 
 	/// \brief Alignment origins.
-	enum Origin
+	enum class Origin
 	{
-		origin_top_left,
-		origin_top_center,
-		origin_top_right,
-		origin_center_left,
-		origin_center,
-		origin_center_right,
-		origin_bottom_left,
-		origin_bottom_center,
-		origin_bottom_right
+		top_left,
+		top_center,
+		top_right,
+		center_left,
+		center,
+		center_right,
+		bottom_left,
+		bottom_center,
+		bottom_right
 	};
 
 	/// \}

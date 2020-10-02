@@ -36,13 +36,13 @@ namespace clan
 	template<typename Type>
 	Angle Vec3<Type>::angle(const Vec3<Type>& v) const
 	{
-		return Angle(acosf(float(dot(v) / (length()*v.length()))), angle_radians);
+		return Angle(acosf(float(dot(v) / (length()*v.length()))), AngleUnit::radians);
 	}
 
 	template<typename Type>
 	Angle Vec3<Type>::angle_normed(const Vec3<Type>& v) const
 	{
-		return Angle(acosf(float(dot(v))), angle_radians);
+		return Angle(acosf(float(dot(v))), AngleUnit::radians);
 	}
 
 	template<typename Type>

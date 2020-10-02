@@ -80,9 +80,9 @@ namespace clan
 		IODevice &file,
 		int quality)
 	{
-		if (buffer.get_format() != tf_rgb8)
+		if (buffer.get_format() != TextureFormat::rgb8)
 		{
-			PixelBuffer newbuf(buffer.get_width(), buffer.get_height(), tf_rgb8);
+			PixelBuffer newbuf(buffer.get_width(), buffer.get_height(), TextureFormat::rgb8);
 			newbuf.set_image(buffer);
 			buffer = newbuf;
 		}

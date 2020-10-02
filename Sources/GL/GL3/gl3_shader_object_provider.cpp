@@ -186,17 +186,17 @@ namespace clan
 	{
 		switch (type)
 		{
-		case shadertype_vertex:
+		case ShaderType::vertex:
 			return GL_VERTEX_SHADER;
-		case shadertype_geometry:
+		case ShaderType::geometry:
 			return GL_GEOMETRY_SHADER;
-		case shadertype_fragment:
+		case ShaderType::fragment:
 			return GL_FRAGMENT_SHADER;
-		case shadertype_tess_evaluation:
+		case ShaderType::tess_evaluation:
 			return GL_TESS_EVALUATION_SHADER;
-		case shadertype_tess_control:
+		case ShaderType::tess_control:
 			return GL_TESS_CONTROL_SHADER;
-		case shadertype_compute:
+		case ShaderType::compute:
 			return GL_COMPUTE_SHADER;
 		default:
 			throw Exception(string_format("GL3ShaderObjectProvider: Unknown shader type: %1", (int)type));

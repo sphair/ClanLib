@@ -46,15 +46,15 @@ namespace clan
 	class ShaderObjectProvider;
 
 	/// \brief Shader Type
-	enum ShaderType
+	enum class ShaderType
 	{
-		shadertype_vertex,
-		shadertype_geometry,
-		shadertype_fragment,
-		shadertype_tess_evaluation,
-		shadertype_tess_control,
-		shadertype_compute,
-		shadertype_num_types
+		vertex,
+		geometry,
+		fragment,
+		tess_evaluation,
+		tess_control,
+		compute,
+		num_types
 	};
 
 	/// \brief Shader Object

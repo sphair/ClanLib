@@ -69,7 +69,7 @@ namespace clan
 	{
 		Colorf color(0.0f, 0.0f, 0.0f, 0.0f);
 
-		if (provider->get_format() == tf_rgba8)
+		if (provider->get_format() == TextureFormat::rgba8)
 		{
 			const uint8_t* buf = static_cast<const uint8_t*>(provider->get_data());
 			const uint8_t *pos = &buf[y * provider->get_pitch() + x * get_bytes_per_pixel()];
@@ -94,15 +94,15 @@ namespace clan
 	{
 		switch (texture_format)
 		{
-		case tf_compressed_rgb_s3tc_dxt1:
-		case tf_compressed_rgba_s3tc_dxt1:
-		case tf_compressed_rgba_s3tc_dxt3:
-		case tf_compressed_srgb_s3tc_dxt1:
-		case tf_compressed_srgb_alpha_s3tc_dxt1:
-		case tf_compressed_srgb_alpha_s3tc_dxt3:
+		case TextureFormat::compressed_rgb_s3tc_dxt1:
+		case TextureFormat::compressed_rgba_s3tc_dxt1:
+		case TextureFormat::compressed_rgba_s3tc_dxt3:
+		case TextureFormat::compressed_srgb_s3tc_dxt1:
+		case TextureFormat::compressed_srgb_alpha_s3tc_dxt1:
+		case TextureFormat::compressed_srgb_alpha_s3tc_dxt3:
 			return 8;
-		case tf_compressed_rgba_s3tc_dxt5:
-		case tf_compressed_srgb_alpha_s3tc_dxt5:
+		case TextureFormat::compressed_rgba_s3tc_dxt5:
+		case TextureFormat::compressed_srgb_alpha_s3tc_dxt5:
 			return 16;
 		default:
 			throw Exception("cannot obtain block count for this TextureFormat");
@@ -113,14 +113,14 @@ namespace clan
 	{
 		switch (texture_format)
 		{
-		case tf_compressed_rgb_s3tc_dxt1:
-		case tf_compressed_rgba_s3tc_dxt1:
-		case tf_compressed_rgba_s3tc_dxt3:
-		case tf_compressed_srgb_s3tc_dxt1:
-		case tf_compressed_srgb_alpha_s3tc_dxt1:
-		case tf_compressed_srgb_alpha_s3tc_dxt3:
-		case tf_compressed_rgba_s3tc_dxt5:
-		case tf_compressed_srgb_alpha_s3tc_dxt5:
+		case TextureFormat::compressed_rgb_s3tc_dxt1:
+		case TextureFormat::compressed_rgba_s3tc_dxt1:
+		case TextureFormat::compressed_rgba_s3tc_dxt3:
+		case TextureFormat::compressed_srgb_s3tc_dxt1:
+		case TextureFormat::compressed_srgb_alpha_s3tc_dxt1:
+		case TextureFormat::compressed_srgb_alpha_s3tc_dxt3:
+		case TextureFormat::compressed_rgba_s3tc_dxt5:
+		case TextureFormat::compressed_srgb_alpha_s3tc_dxt5:
 			return true;
 		default:
 			return false;
@@ -144,76 +144,76 @@ namespace clan
 		unsigned int count;
 		switch (texture_format)
 		{
-		case tf_r8: count = 8;	break; //RED 8
-		case tf_r8_snorm: count = 8; break; //RED, s8
-		case tf_r16: count = 16; break; //RED, 16
-		case tf_r16_snorm: count = 16; break; //RED, s16
-		case tf_rg8: count = 8 + 8; break; //RG, 8, 8
-		case tf_rg8_snorm: count = 8 + 8; break; //RG, s8, s8
-		case tf_rg16: count = 16 + 16; break; //RG, 16, 16
-		case tf_rg16_snorm: count = 16 + 16; break; //RG, s16, s16
-		case tf_r3_g3_b2: count = 3 + 3 + 2; break; //RGB, 3, 3, 2
-		case tf_rgb4: count = 4 + 4 + 4; break; //RGB, 4, 4, 4
-		case tf_rgb5: count = 5 + 5 + 5; break; //RGB, 5, 5, 5
-		case tf_rgb8: count = 8 + 8 + 8; break; //RGB, 8, 8, 8
-		case tf_bgr8: count = 8 + 8 + 8; break; //BGR, 8, 8, 8
-		case tf_rgb8_snorm: count = 8 + 8 + 8; break; //RGB, s8, s8, s8
-		case tf_rgb10: count = 10 + 10 + 10; break; //RGB, 10, 10, 10
-		case tf_rgb12: count = 12 + 12 + 12; break; //RGB, 12, 12, 12
-		case tf_rgb16: count = 16 + 16 + 16; break; //RGB, 16, 16, 16
-		case tf_rgb16_snorm: count = 16 + 16 + 16; break; //RGB, s16, s16, s16
-		case tf_rgba2: count = 2 + 2 + 2 + 2; break; //RGBA, 2, 2, 2, 2
-		case tf_rgba4: count = 4 + 4 + 4 + 4; break; //RGBA, 4, 4, 4, 4
-		case tf_rgb5_a1: count = 5 + 5 + 5 + 1; break; //RGBA, 5, 5, 5, 1
-		case tf_rgba8: count = 8 + 8 + 8 + 8; break; //RGBA, 8, 8, 8, 8
-		case tf_rgba8_snorm: count = 8 + 8 + 8 + 8; break; //RGBA, s8, s8, s8, s8
-		case tf_bgra8: count = 8 + 8 + 8 + 8; break; //BGRA, 8, 8, 8, 8
-		case tf_rgb10_a2: count = 10 + 10 + 10 + 2; break; //RGBA, 10, 10, 10, 2
-		case tf_rgba12: count = 12 + 12 + 12 + 12; break; //RGBA, 12, 12, 12, 12
-		case tf_rgba16: count = 16 + 16 + 16 + 16; break; //RGBA, 16, 16, 16, 16
-		case tf_rgba16_snorm: count = 16 + 16 + 16 + 16; break; //RGBA, s16, s16, s16, s16
-		case tf_srgb8: count = 8 + 8 + 8; break; //RGB, 8, 8, 8
-		case tf_srgb8_alpha8: count = 8 + 8 + 8 + 8; break; //RGBA, 8, 8, 8, 8
-		case tf_r16f: count = 16; break; //RED, f16
-		case tf_rg16f: count = 16 + 16; break; //RG, f16, f16
-		case tf_rgb16f: count = 16 + 16 + 16; break; //RGB, f16, f16, f16
-		case tf_rgba16f: count = 16 + 16 + 16 + 16; break; //RGBA, f16, f16, f16, f16
-		case tf_r32f: count = 32; break; //RED, f32
-		case tf_rg32f: count = 32 + 32; break; //RG, f32, f32
-		case tf_rgb32f: count = 32 + 32 + 32; break; //RGB, f32, f32, f32
-		case tf_rgba32f: count = 32 + 32 + 32 + 32; break; //RGBA, f32, f32, f32, f32
-		case tf_r11f_g11f_b10f: count = 11 + 11 + 10; break; //RGB, f11, f11, f10
-		case tf_rgb9_e5: count = 9 + 9 + 9 + 5; break; //RGB, 9, 9, 9, 5
-		case tf_r8i: count = 8; break; //RED, i8
-		case tf_r8ui: count = 8; break; //RED, ui8
-		case tf_r16i: count = 16; break; //RED, i16
-		case tf_r16ui: count = 16; break; //RED, ui16
-		case tf_r32i: count = 32; break; //RED, i32
-		case tf_r32ui: count = 32; break; //RED, ui32
-		case tf_rg8i: count = 8 + 8; break; //RG, i8, i8
-		case tf_rg8ui: count = 8 + 8; break; //RG, ui8, ui8
-		case tf_rg16i: count = 16 + 16; break; //RG, i16, i16
-		case tf_rg16ui: count = 16 + 16; break; //RG, ui16, ui16
-		case tf_rg32i: count = 32 + 32; break; //RG, i32, i32
-		case tf_rg32ui: count = 32 + 32; break; //RG, ui32, ui32
-		case tf_rgb8i: count = 8 + 8 + 8; break; //RGB, i8, i8, i8
-		case tf_rgb8ui: count = 8 + 8 + 8; break; //RGB, ui8, ui8, ui8
-		case tf_rgb16i: count = 16 + 16 + 16; break; //RGB, i16, i16, i16
-		case tf_rgb16ui: count = 16 + 16 + 16; break; //RGB, ui16, ui16, ui16
-		case tf_rgb32i: count = 32 + 32 + 32; break; //RGB, i32, i32, i32
-		case tf_rgb32ui: count = 32 + 32 + 32; break; //RGB, ui32, ui32, ui32
-		case tf_rgba8i: count = 8 + 8 + 8 + 8; break; //RGBA, i8, i8, i8, i8
-		case tf_rgba8ui: count = 8 + 8 + 8 + 8; break; //RGBA, ui8, ui8, ui8, ui8
-		case tf_rgba16i: count = 16 + 16 + 16 + 16; break; //RGBA, i16, i16, i16, i16
-		case tf_rgba16ui: count = 16 + 16 + 16 + 16; break; //RGBA, ui16, ui16, ui16, ui16
-		case tf_rgba32i: count = 32 + 32 + 32 + 32; break; //RGBA, i32, i32, i32, i32
-		case tf_rgba32ui: count = 32 + 32 + 32 + 32; break; //RGBA, ui32, ui32, ui32, ui32
-		case tf_depth_component16: count = 16; break; //DEPTH_COMPONENT, 16
-		case tf_depth_component24: count = 24; break; //DEPTH_COMPONENT, 24
-		case tf_depth_component32: count = 32; break; //DEPTH_COMPONENT, 32
-		case tf_depth_component32f: count = 32; break; //DEPTH_COMPONENT, f32
-		case tf_depth24_stencil8: count = 24 + 8; break; //DEPTH_STENCIL, 24, 8
-		case tf_depth32f_stencil8: count = 32 + 8; break; //DEPTH_STENCIL, f32, 8
+		case TextureFormat::r8: count = 8;	break; //RED 8
+		case TextureFormat::r8_snorm: count = 8; break; //RED, s8
+		case TextureFormat::r16: count = 16; break; //RED, 16
+		case TextureFormat::r16_snorm: count = 16; break; //RED, s16
+		case TextureFormat::rg8: count = 8 + 8; break; //RG, 8, 8
+		case TextureFormat::rg8_snorm: count = 8 + 8; break; //RG, s8, s8
+		case TextureFormat::rg16: count = 16 + 16; break; //RG, 16, 16
+		case TextureFormat::rg16_snorm: count = 16 + 16; break; //RG, s16, s16
+		case TextureFormat::r3_g3_b2: count = 3 + 3 + 2; break; //RGB, 3, 3, 2
+		case TextureFormat::rgb4: count = 4 + 4 + 4; break; //RGB, 4, 4, 4
+		case TextureFormat::rgb5: count = 5 + 5 + 5; break; //RGB, 5, 5, 5
+		case TextureFormat::rgb8: count = 8 + 8 + 8; break; //RGB, 8, 8, 8
+		case TextureFormat::bgr8: count = 8 + 8 + 8; break; //BGR, 8, 8, 8
+		case TextureFormat::rgb8_snorm: count = 8 + 8 + 8; break; //RGB, s8, s8, s8
+		case TextureFormat::rgb10: count = 10 + 10 + 10; break; //RGB, 10, 10, 10
+		case TextureFormat::rgb12: count = 12 + 12 + 12; break; //RGB, 12, 12, 12
+		case TextureFormat::rgb16: count = 16 + 16 + 16; break; //RGB, 16, 16, 16
+		case TextureFormat::rgb16_snorm: count = 16 + 16 + 16; break; //RGB, s16, s16, s16
+		case TextureFormat::rgba2: count = 2 + 2 + 2 + 2; break; //RGBA, 2, 2, 2, 2
+		case TextureFormat::rgba4: count = 4 + 4 + 4 + 4; break; //RGBA, 4, 4, 4, 4
+		case TextureFormat::rgb5_a1: count = 5 + 5 + 5 + 1; break; //RGBA, 5, 5, 5, 1
+		case TextureFormat::rgba8: count = 8 + 8 + 8 + 8; break; //RGBA, 8, 8, 8, 8
+		case TextureFormat::rgba8_snorm: count = 8 + 8 + 8 + 8; break; //RGBA, s8, s8, s8, s8
+		case TextureFormat::bgra8: count = 8 + 8 + 8 + 8; break; //BGRA, 8, 8, 8, 8
+		case TextureFormat::rgb10_a2: count = 10 + 10 + 10 + 2; break; //RGBA, 10, 10, 10, 2
+		case TextureFormat::rgba12: count = 12 + 12 + 12 + 12; break; //RGBA, 12, 12, 12, 12
+		case TextureFormat::rgba16: count = 16 + 16 + 16 + 16; break; //RGBA, 16, 16, 16, 16
+		case TextureFormat::rgba16_snorm: count = 16 + 16 + 16 + 16; break; //RGBA, s16, s16, s16, s16
+		case TextureFormat::srgb8: count = 8 + 8 + 8; break; //RGB, 8, 8, 8
+		case TextureFormat::srgb8_alpha8: count = 8 + 8 + 8 + 8; break; //RGBA, 8, 8, 8, 8
+		case TextureFormat::r16f: count = 16; break; //RED, f16
+		case TextureFormat::rg16f: count = 16 + 16; break; //RG, f16, f16
+		case TextureFormat::rgb16f: count = 16 + 16 + 16; break; //RGB, f16, f16, f16
+		case TextureFormat::rgba16f: count = 16 + 16 + 16 + 16; break; //RGBA, f16, f16, f16, f16
+		case TextureFormat::r32f: count = 32; break; //RED, f32
+		case TextureFormat::rg32f: count = 32 + 32; break; //RG, f32, f32
+		case TextureFormat::rgb32f: count = 32 + 32 + 32; break; //RGB, f32, f32, f32
+		case TextureFormat::rgba32f: count = 32 + 32 + 32 + 32; break; //RGBA, f32, f32, f32, f32
+		case TextureFormat::r11f_g11f_b10f: count = 11 + 11 + 10; break; //RGB, f11, f11, f10
+		case TextureFormat::rgb9_e5: count = 9 + 9 + 9 + 5; break; //RGB, 9, 9, 9, 5
+		case TextureFormat::r8i: count = 8; break; //RED, i8
+		case TextureFormat::r8ui: count = 8; break; //RED, ui8
+		case TextureFormat::r16i: count = 16; break; //RED, i16
+		case TextureFormat::r16ui: count = 16; break; //RED, ui16
+		case TextureFormat::r32i: count = 32; break; //RED, i32
+		case TextureFormat::r32ui: count = 32; break; //RED, ui32
+		case TextureFormat::rg8i: count = 8 + 8; break; //RG, i8, i8
+		case TextureFormat::rg8ui: count = 8 + 8; break; //RG, ui8, ui8
+		case TextureFormat::rg16i: count = 16 + 16; break; //RG, i16, i16
+		case TextureFormat::rg16ui: count = 16 + 16; break; //RG, ui16, ui16
+		case TextureFormat::rg32i: count = 32 + 32; break; //RG, i32, i32
+		case TextureFormat::rg32ui: count = 32 + 32; break; //RG, ui32, ui32
+		case TextureFormat::rgb8i: count = 8 + 8 + 8; break; //RGB, i8, i8, i8
+		case TextureFormat::rgb8ui: count = 8 + 8 + 8; break; //RGB, ui8, ui8, ui8
+		case TextureFormat::rgb16i: count = 16 + 16 + 16; break; //RGB, i16, i16, i16
+		case TextureFormat::rgb16ui: count = 16 + 16 + 16; break; //RGB, ui16, ui16, ui16
+		case TextureFormat::rgb32i: count = 32 + 32 + 32; break; //RGB, i32, i32, i32
+		case TextureFormat::rgb32ui: count = 32 + 32 + 32; break; //RGB, ui32, ui32, ui32
+		case TextureFormat::rgba8i: count = 8 + 8 + 8 + 8; break; //RGBA, i8, i8, i8, i8
+		case TextureFormat::rgba8ui: count = 8 + 8 + 8 + 8; break; //RGBA, ui8, ui8, ui8, ui8
+		case TextureFormat::rgba16i: count = 16 + 16 + 16 + 16; break; //RGBA, i16, i16, i16, i16
+		case TextureFormat::rgba16ui: count = 16 + 16 + 16 + 16; break; //RGBA, ui16, ui16, ui16, ui16
+		case TextureFormat::rgba32i: count = 32 + 32 + 32 + 32; break; //RGBA, i32, i32, i32, i32
+		case TextureFormat::rgba32ui: count = 32 + 32 + 32 + 32; break; //RGBA, ui32, ui32, ui32, ui32
+		case TextureFormat::depth_component16: count = 16; break; //DEPTH_COMPONENT, 16
+		case TextureFormat::depth_component24: count = 24; break; //DEPTH_COMPONENT, 24
+		case TextureFormat::depth_component32: count = 32; break; //DEPTH_COMPONENT, 32
+		case TextureFormat::depth_component32f: count = 32; break; //DEPTH_COMPONENT, f32
+		case TextureFormat::depth24_stencil8: count = 24 + 8; break; //DEPTH_STENCIL, 24, 8
+		case TextureFormat::depth32f_stencil8: count = 32 + 8; break; //DEPTH_STENCIL, f32, 8
 		default:
 			throw Exception("cannot obtain pixel count for this TextureFormat");
 		}

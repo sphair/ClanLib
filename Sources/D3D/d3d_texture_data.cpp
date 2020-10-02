@@ -134,17 +134,17 @@ namespace clan
 
 		switch (texture_dimensions)
 		{
-		case texture_1d:
-		case texture_1d_array:
+		case TextureDimensions::_1d:
+		case TextureDimensions::_1d_array:
 			texture_type = DeviceTextureType::ID3D11Texture1D;
 			break;
-		case texture_2d:
-		case texture_2d_array:
-		case texture_cube:
-		case texture_cube_array:
+		case TextureDimensions::_2d:
+		case TextureDimensions::_2d_array:
+		case TextureDimensions::_cube:
+		case TextureDimensions::_cube_array:
 			texture_type = DeviceTextureType::ID3D11Texture2D;
 			break;
-		case texture_3d:
+		case TextureDimensions::_3d:
 			texture_type = DeviceTextureType::ID3D11Texture3D;
 			break;
 		default:

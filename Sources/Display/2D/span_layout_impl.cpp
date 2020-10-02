@@ -35,7 +35,7 @@ namespace clan
 {
 	SpanLayout_Impl::SpanLayout_Impl()
 		: cursor_visible(false), cursor_pos(0), cursor_overwrite_mode(false), cursor_color(StandardColorf::black()),
-		sel_start(0), sel_end(0), sel_foreground(StandardColorf::white()), sel_background(StandardColorf::darkslateblue()),
+		sel_start(0), sel_end(0), sel_foreground(StandardColorf::white()), sel_background(Colorf::darkslateblue),
 		alignment(span_left), is_ellipsis_draw(false)
 	{
 	}
@@ -210,7 +210,7 @@ namespace clan
 
 		if (lines.empty())
 		{
-			result.type = SpanLayout::HitTestResult::no_objects_available;
+			result.type = SpanLayout::HitTestResult::Type::no_objects_available;
 			return result;
 		}
 
@@ -220,7 +220,7 @@ namespace clan
 		// Check if we are outside to the top
 		if (pos.y < y)
 		{
-			result.type = SpanLayout::HitTestResult::outside_top;
+			result.type = SpanLayout::HitTestResult::Type::outside_top;
 			result.object_id = lines[0].segments[0].id;
 			result.offset = 0;
 			return result;
@@ -240,7 +240,7 @@ namespace clan
 					// Check if we are outside to the left
 					if (segment_index == 0 && pos.x < x)
 					{
-						result.type = SpanLayout::HitTestResult::outside_left;
+						result.type = SpanLayout::HitTestResult::Type::outside_left;
 						result.object_id = segment.id;
 						result.offset = segment.start;
 						return result;
@@ -253,7 +253,7 @@ namespace clan
 						Pointf hit_point(pos.x - x - segment.x_position, 0);
 						int offset = segment.start + segment.font.get_character_index(canvas, segment_text, hit_point);
 
-						result.type = SpanLayout::HitTestResult::inside;
+						result.type = SpanLayout::HitTestResult::Type::inside;
 						result.object_id = segment.id;
 						result.offset = offset;
 						return result;
@@ -262,7 +262,7 @@ namespace clan
 					// Check if we are outside to the right
 					if (segment_index == line.segments.size() - 1 && pos.x > x + segment.x_position + segment.width)
 					{
-						result.type = SpanLayout::HitTestResult::outside_right;
+						result.type = SpanLayout::HitTestResult::Type::outside_right;
 						result.object_id = segment.id;
 						result.offset = segment.end;
 						return result;
@@ -277,7 +277,7 @@ namespace clan
 		const Line &last_line = lines[lines.size() - 1];
 		const LineSegment &last_segment = last_line.segments[last_line.segments.size() - 1];
 
-		result.type = SpanLayout::HitTestResult::outside_bottom;
+		result.type = SpanLayout::HitTestResult::Type::outside_bottom;
 		result.object_id = last_segment.id;
 		result.offset = last_segment.end;
 		return result;

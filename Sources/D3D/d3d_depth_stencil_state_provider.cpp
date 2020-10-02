@@ -73,14 +73,14 @@ namespace clan
 	{
 		switch (stencil_op)
 		{
-		case stencil_keep: return D3D11_STENCIL_OP_KEEP;
-		case stencil_zero: return D3D11_STENCIL_OP_ZERO;
-		case stencil_replace: return D3D11_STENCIL_OP_REPLACE;
-		case stencil_incr: return D3D11_STENCIL_OP_INCR_SAT;
-		case stencil_decr: return D3D11_STENCIL_OP_DECR_SAT;
-		case stencil_invert: return D3D11_STENCIL_OP_INVERT;
-		case stencil_incr_wrap: return D3D11_STENCIL_OP_INCR;
-		case stencil_decr_wrap: return D3D11_STENCIL_OP_DECR;
+		case StencilOp::keep: return D3D11_STENCIL_OP_KEEP;
+		case StencilOp::zero: return D3D11_STENCIL_OP_ZERO;
+		case StencilOp::replace: return D3D11_STENCIL_OP_REPLACE;
+		case StencilOp::incr: return D3D11_STENCIL_OP_INCR_SAT;
+		case StencilOp::decr: return D3D11_STENCIL_OP_DECR_SAT;
+		case StencilOp::invert: return D3D11_STENCIL_OP_INVERT;
+		case StencilOp::incr_wrap: return D3D11_STENCIL_OP_INCR;
+		case StencilOp::decr_wrap: return D3D11_STENCIL_OP_DECR;
 		}
 		throw Exception("Unsupported stencil operation");
 	}
@@ -89,14 +89,14 @@ namespace clan
 	{
 		switch (func)
 		{
-		case compare_lequal: return D3D11_COMPARISON_LESS_EQUAL;
-		case compare_gequal: return D3D11_COMPARISON_GREATER_EQUAL;
-		case compare_less: return D3D11_COMPARISON_LESS;
-		case compare_greater: return D3D11_COMPARISON_GREATER;
-		case compare_equal: return D3D11_COMPARISON_EQUAL;
-		case compare_notequal: return D3D11_COMPARISON_NOT_EQUAL;
-		case compare_always: return D3D11_COMPARISON_ALWAYS;
-		case compare_never: return D3D11_COMPARISON_NEVER;
+		case CompareFunction::lequal: return D3D11_COMPARISON_LESS_EQUAL;
+		case CompareFunction::gequal: return D3D11_COMPARISON_GREATER_EQUAL;
+		case CompareFunction::less: return D3D11_COMPARISON_LESS;
+		case CompareFunction::greater: return D3D11_COMPARISON_GREATER;
+		case CompareFunction::equal: return D3D11_COMPARISON_EQUAL;
+		case CompareFunction::notequal: return D3D11_COMPARISON_NOT_EQUAL;
+		case CompareFunction::always: return D3D11_COMPARISON_ALWAYS;
+		case CompareFunction::never: return D3D11_COMPARISON_NEVER;
 		}
 		throw Exception("Unsupported compare function");
 	}

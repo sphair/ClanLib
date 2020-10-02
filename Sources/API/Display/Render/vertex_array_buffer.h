@@ -53,7 +53,7 @@ namespace clan
 		/// \param gc = Graphic Context
 		/// \param size = value
 		/// \param usage = Buffer Usage
-		VertexArrayBuffer(GraphicContext &gc, int size, BufferUsage usage = usage_static_draw);
+		VertexArrayBuffer(GraphicContext &gc, int size, BufferUsage usage = BufferUsage::static_draw);
 
 		/// \brief Constructs a VertexArrayBuffer
 		///
@@ -61,7 +61,7 @@ namespace clan
 		/// \param data = void
 		/// \param size = value
 		/// \param usage = Buffer Usage
-		VertexArrayBuffer(GraphicContext &gc, const void *data, int size, BufferUsage usage = usage_static_draw);
+		VertexArrayBuffer(GraphicContext &gc, const void *data, int size, BufferUsage usage = BufferUsage::static_draw);
 
 		virtual ~VertexArrayBuffer();
 

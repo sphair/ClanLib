@@ -36,7 +36,7 @@ namespace clan
 	/// \addtogroup clanDisplay_Display clanDisplay Display
 	/// \{
 
-	enum TextureFormat;
+	enum class TextureFormat;
 
 	/// \brief Interface for implementing a RenderBuffer target.
 	class RenderBufferProvider

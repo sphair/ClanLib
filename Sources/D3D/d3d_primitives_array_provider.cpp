@@ -61,19 +61,19 @@ namespace clan
 				{
 					switch (attributes_data[i].type)
 					{
-					case type_unsigned_byte:
-					case type_byte:
+					case VertexAttributeDataType::type_unsigned_byte:
+					case VertexAttributeDataType::type_byte:
 						stride = 1 * attributes_data[i].size;
 						break;
 
-					case type_unsigned_short:
-					case type_short:
+					case VertexAttributeDataType::type_unsigned_short:
+					case VertexAttributeDataType::type_short:
 						stride = 2 * attributes_data[i].size;
 						break;
 
-					case type_unsigned_int:
-					case type_int:
-					case type_float:
+					case VertexAttributeDataType::type_unsigned_int:
+					case VertexAttributeDataType::type_int:
+					case VertexAttributeDataType::type_float:
 						stride = 4 * attributes_data[i].size;
 						break;
 					}
@@ -134,7 +134,7 @@ namespace clan
 
 	ComPtr<ID3D11InputLayout> D3DPrimitivesArrayProvider::create_input_layout(D3DProgramObjectProvider *program)
 	{
-		DataBuffer shader_bytecode = program->get_shader_bytecode(shadertype_vertex);
+		DataBuffer shader_bytecode = program->get_shader_bytecode(ShaderType::vertex);
 
 		std::vector<D3D11_INPUT_ELEMENT_DESC> elements;
 		for (std::map<int, D3DProgramObjectProvider::AttributeBinding>::iterator it = program->attribute_bindings.begin(); it != program->attribute_bindings.end(); ++it)
@@ -167,19 +167,19 @@ namespace clan
 		case 1:
 			switch (data.type)
 			{
-			case type_unsigned_byte:
+			case VertexAttributeDataType::type_unsigned_byte:
 				return normalize ? DXGI_FORMAT_R8_UNORM : DXGI_FORMAT_R8_UINT;
-			case type_unsigned_short:
+			case VertexAttributeDataType::type_unsigned_short:
 				return normalize ? DXGI_FORMAT_R16_UNORM : DXGI_FORMAT_R16_UINT;
-			case type_unsigned_int:
+			case VertexAttributeDataType::type_unsigned_int:
 				return /*normalize ? DXGI_FORMAT_R32_UNORM :*/ DXGI_FORMAT_R32_UINT;
-			case type_byte:
+			case VertexAttributeDataType::type_byte:
 				return normalize ? DXGI_FORMAT_R8_SNORM : DXGI_FORMAT_R8_SINT;
-			case type_short:
+			case VertexAttributeDataType::type_short:
 				return normalize ? DXGI_FORMAT_R16_SNORM : DXGI_FORMAT_R16_SINT;
-			case type_int:
+			case VertexAttributeDataType::type_int:
 				return /*normalize ? DXGI_FORMAT_R32_SNORM :*/ DXGI_FORMAT_R32_SINT;
-			case type_float:
+			case VertexAttributeDataType::type_float:
 				return DXGI_FORMAT_R32_FLOAT;
 			default:
 				return DXGI_FORMAT_R32_TYPELESS;	// DXGI_FORMAT_R16_TYPELESS, DXGI_FORMAT_R8_TYPELESS
@@ -189,19 +189,19 @@ namespace clan
 		case 2:
 			switch (data.type)
 			{
-			case type_unsigned_byte:
+			case VertexAttributeDataType::type_unsigned_byte:
 				return normalize ? DXGI_FORMAT_R8G8_UNORM : DXGI_FORMAT_R8G8_UINT;
-			case type_unsigned_short:
+			case VertexAttributeDataType::type_unsigned_short:
 				return normalize ? DXGI_FORMAT_R16G16_UNORM : DXGI_FORMAT_R16G16_UINT;
-			case type_unsigned_int:
+			case VertexAttributeDataType::type_unsigned_int:
 				return /*normalize ? DXGI_FORMAT_R32G32_UNORM :*/ DXGI_FORMAT_R32G32_UINT;
-			case type_byte:
+			case VertexAttributeDataType::type_byte:
 				return normalize ? DXGI_FORMAT_R8G8_SNORM : DXGI_FORMAT_R8G8_SINT;
-			case type_short:
+			case VertexAttributeDataType::type_short:
 				return normalize ? DXGI_FORMAT_R16G16_SNORM : DXGI_FORMAT_R16G16_SINT;
-			case type_int:
+			case VertexAttributeDataType::type_int:
 				return DXGI_FORMAT_R32G32_SINT;
-			case type_float:
+			case VertexAttributeDataType::type_float:
 				return DXGI_FORMAT_R32G32_FLOAT;
 			default:
 				return DXGI_FORMAT_R32G32_TYPELESS;	// DXGI_FORMAT_R16G16_TYPELESS, DXGI_FORMAT_R8G8_TYPELESS
@@ -210,19 +210,19 @@ namespace clan
 		case 3:
 			switch (data.type)
 			{
-			case type_unsigned_byte:
+			case VertexAttributeDataType::type_unsigned_byte:
 				break;
-			case type_unsigned_short:
+			case VertexAttributeDataType::type_unsigned_short:
 				break;
-			case type_unsigned_int:
+			case VertexAttributeDataType::type_unsigned_int:
 				return /*normalize ? DXGI_FORMAT_R32G32B32_UNORM :*/ DXGI_FORMAT_R32G32B32_UINT;
-			case type_byte:
+			case VertexAttributeDataType::type_byte:
 				break;
-			case type_short:
+			case VertexAttributeDataType::type_short:
 				break;
-			case type_int:
+			case VertexAttributeDataType::type_int:
 				return /*normalize ? DXGI_FORMAT_R32G32B32_SNORM :*/ DXGI_FORMAT_R32G32B32_SINT;
-			case type_float:
+			case VertexAttributeDataType::type_float:
 				return DXGI_FORMAT_R32G32B32_FLOAT;
 			default:
 				return DXGI_FORMAT_R32G32B32_TYPELESS;	// DXGI_FORMAT_R8G8B8A8_TYPELESS
@@ -231,19 +231,19 @@ namespace clan
 		case 4:
 			switch (data.type)
 			{
-			case type_unsigned_byte:
+			case VertexAttributeDataType::type_unsigned_byte:
 				return normalize ? DXGI_FORMAT_R8G8B8A8_UNORM : DXGI_FORMAT_R8G8B8A8_UINT;
-			case type_unsigned_short:
+			case VertexAttributeDataType::type_unsigned_short:
 				return normalize ? DXGI_FORMAT_R16G16B16A16_UNORM : DXGI_FORMAT_R16G16B16A16_UINT;
-			case type_unsigned_int:
+			case VertexAttributeDataType::type_unsigned_int:
 				return /*normalize ? DXGI_FORMAT_R32G32B32A32_UNORM :*/ DXGI_FORMAT_R32G32B32A32_UINT;
-			case type_byte:
+			case VertexAttributeDataType::type_byte:
 				return normalize ? DXGI_FORMAT_R8G8B8A8_SNORM : DXGI_FORMAT_R8G8B8A8_SINT;
-			case type_short:
+			case VertexAttributeDataType::type_short:
 				return normalize ? DXGI_FORMAT_R16G16B16A16_SNORM : DXGI_FORMAT_R16G16B16A16_SINT;
-			case type_int:
+			case VertexAttributeDataType::type_int:
 				return /*normalize ? DXGI_FORMAT_R32G32B32A32_SNORM :*/ DXGI_FORMAT_R32G32B32A32_SINT;
-			case type_float:
+			case VertexAttributeDataType::type_float:
 				return DXGI_FORMAT_R32G32B32A32_FLOAT;
 			default:
 				return DXGI_FORMAT_R32G32B32A32_TYPELESS;	// DXGI_FORMAT_R16G16B16A16_TYPELESS

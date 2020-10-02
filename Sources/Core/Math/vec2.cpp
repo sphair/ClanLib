@@ -36,7 +36,7 @@ namespace clan
 	template<typename Type>
 	Angle Vec2<Type>::angle(const Vec2<Type>& v) const
 	{
-		return Angle((float)acosf(float(dot(v) / (length()*v.length()))), angle_radians);
+		return Angle((float)acosf(float(dot(v) / (length()*v.length()))), AngleUnit::radians);
 	}
 
 	template<>
@@ -50,13 +50,13 @@ namespace clan
 		float dot_v = this_x * v_x + this_y * v_y;
 		float this_length = sqrt(this_x * this_x + this_y * this_y);
 		float v_length = sqrt(v_x * v_x + v_y * v_y);
-		return Angle(acosf(dot_v / (this_length * v_length)), angle_radians);
+		return Angle(acosf(dot_v / (this_length * v_length)), AngleUnit::radians);
 	}
 
 	template<typename Type>
 	Angle Vec2<Type>::angle_normed(const Vec2<Type>& v) const
 	{
-		return Angle((float)acosf(float(dot(v))), angle_radians);
+		return Angle((float)acosf(float(dot(v))), AngleUnit::radians);
 	}
 
 	template<>
@@ -68,13 +68,13 @@ namespace clan
 		float v_y = (float)v.y;
 
 		float dot_v = this_x * v_x + this_y * v_y;
-		return Angle(acosf(dot_v), angle_radians);
+		return Angle(acosf(dot_v), AngleUnit::radians);
 	}
 
 	template<typename Type>
 	Angle Vec2<Type>::angle_line(const Vec2<Type>& v) const
 	{
-		return Angle(atan2f(v.y - y, v.x - x), angle_radians);
+		return Angle(atan2f(v.y - y, v.x - x), AngleUnit::radians);
 	}
 
 	template<>
@@ -85,7 +85,7 @@ namespace clan
 		float v_x = (float)v.x;
 		float v_y = (float)v.y;
 
-		return Angle(atan2f(v_y - this_y, v_x - this_x), angle_radians);
+		return Angle(atan2f(v_y - this_y, v_x - this_x), AngleUnit::radians);
 	}
 
 	template<typename Type>
@@ -186,32 +186,32 @@ namespace clan
 	{
 		switch (origin)
 		{
-		case origin_top_left:
+		case Origin::top_left:
 		default:
 			return Pointx<Type>(0, 0);
 			break;
-		case origin_top_center:
+		case Origin::top_center:
 			return Pointx<Type>(size.width / 2, 0);
 			break;
-		case origin_top_right:
+		case Origin::top_right:
 			return Pointx<Type>(size.width, 0);
 			break;
-		case origin_center_left:
+		case Origin::center_left:
 			return Pointx<Type>(0, size.height / 2);
 			break;
-		case origin_center:
+		case Origin::center:
 			return Pointx<Type>(size.width / 2, size.height / 2);
 			break;
-		case origin_center_right:
+		case Origin::center_right:
 			return Pointx<Type>(size.width, size.height / 2);
 			break;
-		case origin_bottom_left:
+		case Origin::bottom_left:
 			return Pointx<Type>(0, size.height);
 			break;
-		case origin_bottom_center:
+		case Origin::bottom_center:
 			return Pointx<Type>(size.width / 2, size.height);
 			break;
-		case origin_bottom_right:
+		case Origin::bottom_right:
 			return Pointx<Type>(size.width, size.height);
 			break;
 		}

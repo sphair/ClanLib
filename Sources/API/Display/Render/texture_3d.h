@@ -56,7 +56,7 @@ namespace clan
 		/// \param depth = value
 		/// \param internal_format = Texture Format
 		/// \param levels = Mipmap levels for the texture. 0 = all levels
-		Texture3D(GraphicContext &context, int width, int height, int depth, TextureFormat texture_format = tf_rgba8, int levels = 1);
+		Texture3D(GraphicContext &context, int width, int height, int depth, TextureFormat texture_format = TextureFormat::rgba8, int levels = 1);
 
 		/// \brief Constructs a Texture
 		///
@@ -64,7 +64,7 @@ namespace clan
 		/// \param size = Size
 		/// \param internal_format = Texture Format
 		/// \param levels = Mipmap levels for the texture. 0 = all levels
-		Texture3D(GraphicContext &context, const Vec3i &size, TextureFormat texture_format = tf_rgba8, int levels = 1);
+		Texture3D(GraphicContext &context, const Vec3i &size, TextureFormat texture_format = TextureFormat::rgba8, int levels = 1);
 
 		/// \brief Get the texture width.
 		int get_width() const;

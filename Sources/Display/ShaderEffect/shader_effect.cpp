@@ -73,7 +73,7 @@ namespace clan
 		PrimitivesArray prim_array;
 
 		ElementArrayBuffer elements;
-		VertexAttributeDataType elements_type = type_float;
+		VertexAttributeDataType elements_type = VertexAttributeDataType::type_float;
 
 		std::map<int, Resource<UniformBuffer> > uniform_bindings;
 
@@ -196,14 +196,14 @@ namespace clan
 		{
 			gc.set_primitives_elements(impl->elements);
 			gc.set_primitives_array(impl->prim_array);
-			gc.draw_primitives_elements(type_triangles, impl->num_vertices, impl->elements_type);
+			gc.draw_primitives_elements(PrimitivesType::triangles, impl->num_vertices, impl->elements_type);
 			gc.reset_primitives_array();
 			gc.reset_primitives_elements();
 		}
 		else
 		{
 			gc.set_primitives_array(impl->prim_array);
-			gc.draw_primitives_array(type_triangles, 0, impl->num_vertices);
+			gc.draw_primitives_array(PrimitivesType::triangles, 0, impl->num_vertices);
 			gc.reset_primitives_array();
 		}
 
@@ -246,18 +246,18 @@ namespace clan
 
 	std::string ShaderEffect_Impl::add_defines(GraphicContext &gc, const std::string * const code, const ShaderEffectDescription_Impl *description)
 	{
-		if (code[gc.get_shader_language()].empty())
+		if (code[static_cast<int>(gc.get_shader_language())].empty())
 			return std::string();
 
 		std::string prefix;
-		if (gc.get_shader_language() == shader_glsl && description->glsl_version != 0)
+		if (gc.get_shader_language() == ShaderLanguage::glsl && description->glsl_version != 0)
 			prefix += string_format("#version %1\r\n", description->glsl_version);
 
 		for (const auto & elem : description->defines)
 			prefix += string_format("#define %1 %2\r\n", elem.first, elem.second);
 		prefix += "#line 0\r\n";
 
-		return prefix + code[gc.get_shader_language()];
+		return prefix + code[static_cast<int>(gc.get_shader_language())];
 	}
 
 	void ShaderEffect_Impl::create_shaders(GraphicContext &gc, const ShaderEffectDescription_Impl *description)
@@ -268,7 +268,7 @@ namespace clan
 
 		if (!vertex_shader_code.empty())
 		{
-			ShaderObject vertex_shader(gc, shadertype_vertex, vertex_shader_code);
+			ShaderObject vertex_shader(gc, ShaderType::vertex, vertex_shader_code);
 			if (!vertex_shader.compile())
 				throw Exception(string_format("Unable to compile vertex shader: %1", vertex_shader.get_info_log()));
 			program.attach(vertex_shader);
@@ -276,7 +276,7 @@ namespace clan
 
 		if (!fragment_shader_code.empty())
 		{
-			ShaderObject fragment_shader(gc, shadertype_fragment, fragment_shader_code);
+			ShaderObject fragment_shader(gc, ShaderType::fragment, fragment_shader_code);
 			if (!fragment_shader.compile())
 				throw Exception(string_format("Unable to compile fragment shader: %1", fragment_shader.get_info_log()));
 			program.attach(fragment_shader);
@@ -284,7 +284,7 @@ namespace clan
 
 		if (!compute_shader_code.empty())
 		{
-			ShaderObject compute_shader(gc, shadertype_compute, compute_shader_code);
+			ShaderObject compute_shader(gc, ShaderType::compute, compute_shader_code);
 			if (!compute_shader.compile())
 				throw Exception(string_format("Unable to compile compute shader: %1", compute_shader.get_info_log()));
 			program.attach(compute_shader);

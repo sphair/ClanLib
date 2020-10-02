@@ -79,7 +79,7 @@ namespace clan
 	template<typename Type>
 	Angle Vec4<Type>::angle3(const Vec4<Type>& v) const
 	{
-		return Angle(acosf(float(dot3(v) / (length3()*v.length3()))), angle_radians);
+		return Angle(acosf(float(dot3(v) / (length3()*v.length3()))), AngleUnit::radians);
 	}
 
 	// For floats

@@ -124,100 +124,100 @@ namespace clan
 	{
 		switch (get_format())
 		{
-		case tf_rgba8:
-		case tf_bgra8:
-		case tf_rgba2:
-		case tf_rgba4:
-		case tf_rgb5_a1:
-		case tf_rgba8_snorm:
-		case tf_rgb10_a2:
-		case tf_rgba12:
-		case tf_rgba16:
-		case tf_rgba16_snorm:
-		case tf_srgb8_alpha8:
-		case tf_rgba32f:
-		case tf_rgba8i:
-		case tf_rgba8ui:
-		case tf_rgba16i:
-		case tf_rgba16ui:
-		case tf_rgba32i:
-		case tf_rgba32ui:
-		case tf_compressed_rgba:
-		case tf_compressed_srgb_alpha:
-		case tf_compressed_rgba_s3tc_dxt1:
-		case tf_compressed_rgba_s3tc_dxt3:
-		case tf_compressed_rgba_s3tc_dxt5:
-		case tf_compressed_srgb_alpha_s3tc_dxt1:
-		case tf_compressed_srgb_alpha_s3tc_dxt3:
-		case tf_compressed_srgb_alpha_s3tc_dxt5:
+		case TextureFormat::rgba8:
+		case TextureFormat::bgra8:
+		case TextureFormat::rgba2:
+		case TextureFormat::rgba4:
+		case TextureFormat::rgb5_a1:
+		case TextureFormat::rgba8_snorm:
+		case TextureFormat::rgb10_a2:
+		case TextureFormat::rgba12:
+		case TextureFormat::rgba16:
+		case TextureFormat::rgba16_snorm:
+		case TextureFormat::srgb8_alpha8:
+		case TextureFormat::rgba32f:
+		case TextureFormat::rgba8i:
+		case TextureFormat::rgba8ui:
+		case TextureFormat::rgba16i:
+		case TextureFormat::rgba16ui:
+		case TextureFormat::rgba32i:
+		case TextureFormat::rgba32ui:
+		case TextureFormat::compressed_rgba:
+		case TextureFormat::compressed_srgb_alpha:
+		case TextureFormat::compressed_rgba_s3tc_dxt1:
+		case TextureFormat::compressed_rgba_s3tc_dxt3:
+		case TextureFormat::compressed_rgba_s3tc_dxt5:
+		case TextureFormat::compressed_srgb_alpha_s3tc_dxt1:
+		case TextureFormat::compressed_srgb_alpha_s3tc_dxt3:
+		case TextureFormat::compressed_srgb_alpha_s3tc_dxt5:
 			return true;
 
-		case tf_rgb8:
-		case tf_bgr8:
-		case tf_stencil_index1:
-		case tf_stencil_index4:
-		case tf_stencil_index8:
-		case tf_stencil_index16:
-		case tf_r8:
-		case tf_r8_snorm:
-		case tf_r16:
-		case tf_r16_snorm:
-		case tf_rg8:
-		case tf_rg8_snorm:
-		case tf_rg16:
-		case tf_rg16_snorm:
-		case tf_r3_g3_b2:
-		case tf_rgb4:
-		case tf_rgb5:
-		case tf_rgb8_snorm:
-		case tf_rgb10:
-		case tf_rgb12:
-		case tf_rgb16:
-		case tf_rgb16_snorm:
-		case tf_srgb8:
-		case tf_r16f:
-		case tf_rg16f:
-		case tf_rgb16f:
-		case tf_rgba16f:
-		case tf_r32f:
-		case tf_rg32f:
-		case tf_rgb32f:
-		case tf_r11f_g11f_b10f:
-		case tf_rgb9_e5:
-		case tf_r8i:
-		case tf_r8ui:
-		case tf_r16i:
-		case tf_r16ui:
-		case tf_r32i:
-		case tf_r32ui:
-		case tf_rg8i:
-		case tf_rg8ui:
-		case tf_rg16i:
-		case tf_rg16ui:
-		case tf_rg32i:
-		case tf_rg32ui:
-		case tf_rgb8i:
-		case tf_rgb8ui:
-		case tf_rgb16i:
-		case tf_rgb16ui:
-		case tf_rgb32i:
-		case tf_rgb32ui:
-		case tf_depth_component16:
-		case tf_depth_component24:
-		case tf_depth_component32:
-		case tf_depth_component32f:
-		case tf_depth24_stencil8:
-		case tf_depth32f_stencil8:
-		case tf_compressed_red:
-		case tf_compressed_rg:
-		case tf_compressed_rgb:
-		case tf_compressed_srgb:
-		case tf_compressed_red_rgtc1:
-		case tf_compressed_signed_red_rgtc1:
-		case tf_compressed_rg_rgtc2:
-		case tf_compressed_signed_rg_rgtc2:
-		case tf_compressed_rgb_s3tc_dxt1:
-		case tf_compressed_srgb_s3tc_dxt1:
+		case TextureFormat::rgb8:
+		case TextureFormat::bgr8:
+		case TextureFormat::stencil_index1:
+		case TextureFormat::stencil_index4:
+		case TextureFormat::stencil_index8:
+		case TextureFormat::stencil_index16:
+		case TextureFormat::r8:
+		case TextureFormat::r8_snorm:
+		case TextureFormat::r16:
+		case TextureFormat::r16_snorm:
+		case TextureFormat::rg8:
+		case TextureFormat::rg8_snorm:
+		case TextureFormat::rg16:
+		case TextureFormat::rg16_snorm:
+		case TextureFormat::r3_g3_b2:
+		case TextureFormat::rgb4:
+		case TextureFormat::rgb5:
+		case TextureFormat::rgb8_snorm:
+		case TextureFormat::rgb10:
+		case TextureFormat::rgb12:
+		case TextureFormat::rgb16:
+		case TextureFormat::rgb16_snorm:
+		case TextureFormat::srgb8:
+		case TextureFormat::r16f:
+		case TextureFormat::rg16f:
+		case TextureFormat::rgb16f:
+		case TextureFormat::rgba16f:
+		case TextureFormat::r32f:
+		case TextureFormat::rg32f:
+		case TextureFormat::rgb32f:
+		case TextureFormat::r11f_g11f_b10f:
+		case TextureFormat::rgb9_e5:
+		case TextureFormat::r8i:
+		case TextureFormat::r8ui:
+		case TextureFormat::r16i:
+		case TextureFormat::r16ui:
+		case TextureFormat::r32i:
+		case TextureFormat::r32ui:
+		case TextureFormat::rg8i:
+		case TextureFormat::rg8ui:
+		case TextureFormat::rg16i:
+		case TextureFormat::rg16ui:
+		case TextureFormat::rg32i:
+		case TextureFormat::rg32ui:
+		case TextureFormat::rgb8i:
+		case TextureFormat::rgb8ui:
+		case TextureFormat::rgb16i:
+		case TextureFormat::rgb16ui:
+		case TextureFormat::rgb32i:
+		case TextureFormat::rgb32ui:
+		case TextureFormat::depth_component16:
+		case TextureFormat::depth_component24:
+		case TextureFormat::depth_component32:
+		case TextureFormat::depth_component32f:
+		case TextureFormat::depth24_stencil8:
+		case TextureFormat::depth32f_stencil8:
+		case TextureFormat::compressed_red:
+		case TextureFormat::compressed_rg:
+		case TextureFormat::compressed_rgb:
+		case TextureFormat::compressed_srgb:
+		case TextureFormat::compressed_red_rgtc1:
+		case TextureFormat::compressed_signed_red_rgtc1:
+		case TextureFormat::compressed_rg_rgtc2:
+		case TextureFormat::compressed_signed_rg_rgtc2:
+		case TextureFormat::compressed_rgb_s3tc_dxt1:
+		case TextureFormat::compressed_srgb_s3tc_dxt1:
 			return false;
 
 		default:
@@ -367,8 +367,8 @@ namespace clan
 		if (is_gpu())
 		{
 			PixelBuffer cpu_buffer(get_width(), get_height(), get_format());
-			PixelBufferLockAny data_cpu(gc, cpu_buffer, access_read_only);
-			PixelBufferLockAny data_gpu(gc, *this, access_read_only);
+			PixelBufferLockAny data_cpu(gc, cpu_buffer, BufferAccess::read_only);
+			PixelBufferLockAny data_gpu(gc, *this, BufferAccess::read_only);
 			int bytes_per_row = get_bytes_per_pixel() * get_width();
 			int height = get_height();
 			for (int y = 0; y < height; y++)
@@ -439,7 +439,7 @@ namespace clan
 	{
 		if (has_transparency())
 		{
-			if (get_format() == tf_rgba8 || get_format() == tf_srgb8_alpha8)
+			if (get_format() == TextureFormat::rgba8 || get_format() == TextureFormat::srgb8_alpha8)
 			{
 				int w = get_width();
 				int h = get_height();
@@ -463,7 +463,7 @@ namespace clan
 					}
 				}
 			}
-			else if (get_format() == tf_bgra8)
+			else if (get_format() == TextureFormat::bgra8)
 			{
 				int w = get_width();
 				int h = get_height();
@@ -487,7 +487,7 @@ namespace clan
 					}
 				}
 			}
-			else if (get_format() == tf_rgba16)
+			else if (get_format() == TextureFormat::rgba16)
 			{
 				int w = get_width();
 				int h = get_height();
@@ -513,7 +513,7 @@ namespace clan
 					}
 				}
 			}
-			else if (get_format() == tf_rgba16f)
+			else if (get_format() == TextureFormat::rgba16f)
 			{
 				int w = get_width();
 				int h = get_height();
@@ -539,7 +539,7 @@ namespace clan
 					}
 				}
 			}
-			else if (get_format() == tf_rgba32f)
+			else if (get_format() == TextureFormat::rgba32f)
 			{
 				int w = get_width();
 				int h = get_height();
@@ -574,7 +574,7 @@ namespace clan
 
 	void PixelBuffer::premultiply_gamma(float gamma)
 	{
-		if (get_format() == tf_rgba8 || get_format() == tf_srgb8_alpha8 || get_format() == tf_bgra8)
+		if (get_format() == TextureFormat::rgba8 || get_format() == TextureFormat::srgb8_alpha8 || get_format() == TextureFormat::bgra8)
 		{
 			PixelBufferLock4ub lock(*this);
 			for (int y = 0; y < lock.get_height(); y++)
@@ -592,7 +592,7 @@ namespace clan
 				}
 			}
 		}
-		else if (get_format() == tf_rgba16)
+		else if (get_format() == TextureFormat::rgba16)
 		{
 			PixelBufferLock4us lock(*this);
 			for (int y = 0; y < lock.get_height(); y++)
@@ -610,7 +610,7 @@ namespace clan
 				}
 			}
 		}
-		else if (get_format() == tf_rgba16f)
+		else if (get_format() == TextureFormat::rgba16f)
 		{
 			PixelBufferLock4hf lock(*this);
 			for (int y = 0; y < lock.get_height(); y++)
@@ -626,7 +626,7 @@ namespace clan
 				}
 			}
 		}
-		else if (get_format() == tf_rgba32f)
+		else if (get_format() == TextureFormat::rgba32f)
 		{
 			PixelBufferLock4f lock(*this);
 			for (int y = 0; y < lock.get_height(); y++)

@@ -97,7 +97,7 @@ namespace clan
 	{
 		if (position > 0)
 		{
-			gc.set_program_object(program_single_texture);
+			gc.set_program_object(StandardProgram::single_texture);
 
 			int gpu_index;
 			VertexArrayVector<LineTextureVertex> gpu_vertices(batch_buffer->get_vertex_buffer(gc, gpu_index));
@@ -115,7 +115,7 @@ namespace clan
 
 			gc.set_texture(0, current_texture);
 
-			gc.draw_primitives(type_lines, position, prim_array[gpu_index]);
+			gc.draw_primitives(PrimitivesType::lines, position, prim_array[gpu_index]);
 
 			gc.reset_program_object();
 

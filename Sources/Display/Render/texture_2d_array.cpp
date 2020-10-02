@@ -48,7 +48,7 @@ namespace clan
 			throw Exception("An attempt was made to create a Texture with an invalid size");
 
 		GraphicContextProvider *gc_provider = context.get_provider();
-		impl->provider = gc_provider->alloc_texture(texture_2d_array);
+		impl->provider = gc_provider->alloc_texture(TextureDimensions::_2d_array);
 		impl->provider->create(width, height, 1, array_size, texture_format, levels);
 		impl->width = width;
 		impl->height = height;
@@ -64,7 +64,7 @@ namespace clan
 			throw Exception("An attempt was made to create a Texture with an invalid size");
 
 		GraphicContextProvider *gc_provider = context.get_provider();
-		impl->provider = gc_provider->alloc_texture(texture_2d_array);
+		impl->provider = gc_provider->alloc_texture(TextureDimensions::_2d_array);
 		impl->provider->create(size.width, size.height, 1, array_size, texture_format, levels);
 		impl->width = size.width;
 		impl->height = size.height;
@@ -130,7 +130,7 @@ namespace clan
 		view.impl->width = impl->width;
 		view.impl->height = impl->height;
 		view.impl->array_size = impl->array_size;
-		view.impl->provider = impl->provider->create_view(texture_2d, texture_format, min_level, num_levels, array_index, 1);
+		view.impl->provider = impl->provider->create_view(TextureDimensions::_2d, texture_format, min_level, num_levels, array_index, 1);
 		return view.to_texture_2d();
 	}
 

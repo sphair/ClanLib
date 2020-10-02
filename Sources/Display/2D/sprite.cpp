@@ -368,7 +368,7 @@ namespace clan
 		else
 			degrees = fmod(degrees, 360.0f) + 360.0f;
 
-		impl->angle = Angle(degrees, angle_degrees);
+		impl->angle = Angle(degrees, AngleUnit::degrees);
 	}
 
 	void Sprite::set_angle_pitch(Angle angle)
@@ -380,7 +380,7 @@ namespace clan
 		else
 			degrees = fmod(degrees, 360.0f) + 360.0f;
 
-		impl->angle_pitch = Angle(degrees, angle_degrees);
+		impl->angle_pitch = Angle(degrees, AngleUnit::degrees);
 	}
 
 	void Sprite::set_angle_yaw(Angle angle)
@@ -392,7 +392,7 @@ namespace clan
 		else
 			degrees = fmod(degrees, 360.0f) + 360.0f;
 
-		impl->angle_yaw = Angle(degrees, angle_degrees);
+		impl->angle_yaw = Angle(degrees, AngleUnit::degrees);
 
 		impl->angle_yaw = angle;
 	}
@@ -407,7 +407,7 @@ namespace clan
 		else
 			degrees = fmod(degrees, 360.0f) + 360.0f;
 
-		impl->angle = Angle(degrees, angle_degrees);
+		impl->angle = Angle(degrees, AngleUnit::degrees);
 	}
 
 	void Sprite::rotate_pitch(Angle angle)
@@ -420,7 +420,7 @@ namespace clan
 		else
 			degrees = fmod(degrees, 360.0f) + 360.0f;
 
-		impl->angle_pitch = Angle(degrees, angle_degrees);
+		impl->angle_pitch = Angle(degrees, AngleUnit::degrees);
 	}
 
 	void Sprite::rotate_yaw(Angle angle)
@@ -433,7 +433,7 @@ namespace clan
 		else
 			degrees = fmod(degrees, 360.0f) + 360.0f;
 
-		impl->angle_yaw = Angle(degrees, angle_degrees);
+		impl->angle_yaw = Angle(degrees, AngleUnit::degrees);
 	}
 
 	void Sprite::set_base_angle(Angle angle)
@@ -445,7 +445,7 @@ namespace clan
 		else
 			degrees = fmod(degrees, 360.0f) + 360.0f;
 
-		impl->base_angle = Angle(degrees, angle_degrees);
+		impl->base_angle = Angle(degrees, AngleUnit::degrees);
 	}
 
 	void Sprite::set_scale(float x, float y)
@@ -471,8 +471,8 @@ namespace clan
 		std::vector<Sprite_Impl::SpriteFrame>::size_type size = impl->frames.size();
 		for (unsigned int cnt = 0; cnt < size; cnt++)
 		{
-			impl->frames[cnt].texture.set_mag_filter(linear_filter ? filter_linear : filter_nearest);
-			impl->frames[cnt].texture.set_min_filter(linear_filter ? filter_linear : filter_nearest);
+			impl->frames[cnt].texture.set_mag_filter(linear_filter ? TextureFilter::linear : TextureFilter::nearest);
+			impl->frames[cnt].texture.set_min_filter(linear_filter ? TextureFilter::linear : TextureFilter::nearest);
 		}
 	}
 

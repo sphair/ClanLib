@@ -46,7 +46,7 @@ namespace clan
 	PathFillRenderer::PathFillRenderer(GraphicContext &gc, RenderBatchBuffer *batch_buffer) : batch_buffer(batch_buffer)
 	{
 		BlendStateDescription blend_desc;
-		blend_desc.set_blend_function(blend_one, blend_one_minus_src_alpha, blend_one, blend_one_minus_src_alpha);
+		blend_desc.set_blend_function(BlendFunc::one, BlendFunc::one_minus_src_alpha, BlendFunc::one, BlendFunc::one_minus_src_alpha);
 		blend_state = BlendState(gc, blend_desc);
 	}
 
@@ -219,10 +219,10 @@ namespace clan
 		instance_texture.set_subimage(gc, 0, 0, instance_buffer, Rect(Point(0, 0), Size(instance_buffer_width, (instances.get_position() + instance_buffer_width - 1) / instance_buffer_width)));
 
 		gc.set_blend_state(blend_state);
-		gc.set_program_object(program_path);
+		gc.set_program_object(StandardProgram::path);
 
 		ProgramObject obj = gc.get_program_object();
-		obj.set_uniform1f("ypos_scale", image_yaxis == y_axis_top_down ? 1.0f : -1.0f);
+		obj.set_uniform1f("ypos_scale", image_yaxis == TextureImageYAxis::y_top_down ? 1.0f : -1.0f);
 
 		gc.set_texture(0, mask_texture);
 		gc.set_texture(1, instance_texture);
@@ -231,7 +231,7 @@ namespace clan
 
 		if (!current_texture.is_null())
 			gc.set_texture(2, current_texture);
-		gc.draw_primitives(type_triangles, vertices.get_position(), prim_array[gpu_index]);
+		gc.draw_primitives(PrimitivesType::triangles, vertices.get_position(), prim_array[gpu_index]);
 		if (!current_texture.is_null())
 		{
 			gc.reset_texture(2);
@@ -262,8 +262,8 @@ namespace clan
 			instance_texture = batch_buffer->get_texture_rgba32f(gc);
 			instance_buffer = batch_buffer->get_transfer_rgba32f(gc);
 
-			mask_buffer.lock(gc, access_write_discard);
-			instance_buffer.lock(gc, access_write_discard);
+			mask_buffer.lock(gc, BufferAccess::write_discard);
+			instance_buffer.lock(gc, BufferAccess::write_discard);
 
 			instances.reset(gc, instance_buffer.get_data<Vec4f>(), instance_buffer_width * instance_buffer_height);
 			vertices.reset((Vec4i *)batch_buffer->buffer, max_vertices);

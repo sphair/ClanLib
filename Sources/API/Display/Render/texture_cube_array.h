@@ -55,7 +55,7 @@ namespace clan
 		/// \param height = value
 		/// \param internal_format = Texture Format
 		/// \param levels = Mipmap levels for the texture. 0 = all levels
-		TextureCubeArray(GraphicContext &context, int width, int height, int array_size, TextureFormat texture_format = tf_rgba8, int levels = 1);
+		TextureCubeArray(GraphicContext &context, int width, int height, int array_size, TextureFormat texture_format = TextureFormat::rgba8, int levels = 1);
 
 		/// \brief Constructs a Texture
 		///
@@ -63,7 +63,7 @@ namespace clan
 		/// \param size = Size
 		/// \param internal_format = Texture Format
 		/// \param levels = Mipmap levels for the texture. 0 = all levels
-		TextureCubeArray(GraphicContext &context, const Size &size, int array_size, TextureFormat texture_format = tf_rgba8, int levels = 1);
+		TextureCubeArray(GraphicContext &context, const Size &size, int array_size, TextureFormat texture_format = TextureFormat::rgba8, int levels = 1);
 
 		/// \brief Get the texture width.
 		int get_width() const;

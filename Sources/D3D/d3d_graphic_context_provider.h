@@ -72,9 +72,9 @@ namespace clan
 
 		StandardPrograms standard_programs;
 
-		ClipZRange get_clip_z_range() const { return clip_zero_positive_w; }
-		TextureImageYAxis get_texture_image_y_axis() const { return y_axis_top_down; }
-		ShaderLanguage get_shader_language() const { return shader_hlsl; }
+		ClipZRange get_clip_z_range() const { return ClipZRange::zero_positive_w; }
+		TextureImageYAxis get_texture_image_y_axis() const { return TextureImageYAxis::y_top_down; }
+		ShaderLanguage get_shader_language() const { return ShaderLanguage::hlsl; }
 		int get_major_version() const;
 		int get_minor_version() const;
 		bool has_compute_shader_support() const;
@@ -160,7 +160,7 @@ namespace clan
 		D3D11_RECT scissor_rects[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT];
 		bool input_layout_set;
 		D3DUnitMap unit_map;
-		bool shader_bound[shadertype_num_types];
+		bool shader_bound[ShaderType::num_types];
 
 		Signal<void(const Size &)> window_resized_signal;
 

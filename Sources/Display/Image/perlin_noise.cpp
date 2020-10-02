@@ -199,7 +199,7 @@ namespace clan
 		PixelBuffer create_noise1d(float start_x, float end_x);
 
 	public:
-		TextureFormat texture_format = tf_rgb8;
+		TextureFormat texture_format = TextureFormat::rgb8;
 		float amplitude = 1.0f;
 		int width = 256;
 		int height = 256;
@@ -673,28 +673,28 @@ namespace clan
 	{
 		setup();
 
-		if (texture_format == tf_rgba8)
+		if (texture_format == TextureFormat::rgba8)
 		{
 			PixelBuffer pbuff(width, height, texture_format);
 			PerlinNoise_PixelWriter_RGBA8 writer(pbuff);
 			create_noise2d(writer, start_x, end_x, start_y, end_y);
 			return pbuff;
 		}
-		if (texture_format == tf_rgb8)
+		if (texture_format == TextureFormat::rgb8)
 		{
 			PixelBuffer pbuff(width, height, texture_format);
 			PerlinNoise_PixelWriter_RGB8 writer(pbuff);
 			create_noise2d(writer, start_x, end_x, start_y, end_y);
 			return pbuff;
 		}
-		if (texture_format == tf_r8)
+		if (texture_format == TextureFormat::r8)
 		{
 			PixelBuffer pbuff(width, height, texture_format);
 			PerlinNoise_PixelWriter_R8 writer(pbuff);
 			create_noise2d(writer, start_x, end_x, start_y, end_y);
 			return pbuff;
 		}
-		if (texture_format == tf_r32f)
+		if (texture_format == TextureFormat::r32f)
 		{
 			PixelBuffer pbuff(width, height, texture_format);
 			PerlinNoise_PixelWriter_R32f writer(pbuff);
@@ -740,28 +740,28 @@ namespace clan
 	{
 		setup();
 
-		if (texture_format == tf_rgba8)
+		if (texture_format == TextureFormat::rgba8)
 		{
 			PixelBuffer pbuff(width, height, texture_format);
 			PerlinNoise_PixelWriter_RGBA8 writer(pbuff);
 			create_noise1d(writer, start_x, end_x);
 			return pbuff;
 		}
-		if (texture_format == tf_rgb8)
+		if (texture_format == TextureFormat::rgb8)
 		{
 			PixelBuffer pbuff(width, height, texture_format);
 			PerlinNoise_PixelWriter_RGB8 writer(pbuff);
 			create_noise1d(writer, start_x, end_x);
 			return pbuff;
 		}
-		if (texture_format == tf_r8)
+		if (texture_format == TextureFormat::r8)
 		{
 			PixelBuffer pbuff(width, height, texture_format);
 			PerlinNoise_PixelWriter_R8 writer(pbuff);
 			create_noise1d(writer, start_x, end_x);
 			return pbuff;
 		}
-		if (texture_format == tf_r32f)
+		if (texture_format == TextureFormat::r32f)
 		{
 			PixelBuffer pbuff(width, height, texture_format);
 			PerlinNoise_PixelWriter_R32f writer(pbuff);
@@ -803,28 +803,28 @@ namespace clan
 	{
 		setup();
 
-		if (texture_format == tf_rgba8)
+		if (texture_format == TextureFormat::rgba8)
 		{
 			PixelBuffer pbuff(width, height, texture_format);
 			PerlinNoise_PixelWriter_RGBA8 writer(pbuff);
 			create_noise3d(writer, start_x, end_x, start_y, end_y, z_position);
 			return pbuff;
 		}
-		if (texture_format == tf_rgb8)
+		if (texture_format == TextureFormat::rgb8)
 		{
 			PixelBuffer pbuff(width, height, texture_format);
 			PerlinNoise_PixelWriter_RGB8 writer(pbuff);
 			create_noise3d(writer, start_x, end_x, start_y, end_y, z_position);
 			return pbuff;
 		}
-		if (texture_format == tf_r8)
+		if (texture_format == TextureFormat::r8)
 		{
 			PixelBuffer pbuff(width, height, texture_format);
 			PerlinNoise_PixelWriter_R8 writer(pbuff);
 			create_noise3d(writer, start_x, end_x, start_y, end_y, z_position);
 			return pbuff;
 		}
-		if (texture_format == tf_r32f)
+		if (texture_format == TextureFormat::r32f)
 		{
 			PixelBuffer pbuff(width, height, texture_format);
 			PerlinNoise_PixelWriter_R32f writer(pbuff);
@@ -872,28 +872,28 @@ namespace clan
 	{
 		setup();
 
-		if (texture_format == tf_rgba8)
+		if (texture_format == TextureFormat::rgba8)
 		{
 			PixelBuffer pbuff(width, height, texture_format);
 			PerlinNoise_PixelWriter_RGBA8 writer(pbuff);
 			create_noise4d(writer, start_x, end_x, start_y, end_y, z_position, w_position);
 			return pbuff;
 		}
-		if (texture_format == tf_rgb8)
+		if (texture_format == TextureFormat::rgb8)
 		{
 			PixelBuffer pbuff(width, height, texture_format);
 			PerlinNoise_PixelWriter_RGB8 writer(pbuff);
 			create_noise4d(writer, start_x, end_x, start_y, end_y, z_position, w_position);
 			return pbuff;
 		}
-		if (texture_format == tf_r8)
+		if (texture_format == TextureFormat::r8)
 		{
 			PixelBuffer pbuff(width, height, texture_format);
 			PerlinNoise_PixelWriter_R8 writer(pbuff);
 			create_noise4d(writer, start_x, end_x, start_y, end_y, z_position, w_position);
 			return pbuff;
 		}
-		if (texture_format == tf_r32f)
+		if (texture_format == TextureFormat::r32f)
 		{
 			PixelBuffer pbuff(width, height, texture_format);
 			PerlinNoise_PixelWriter_R32f writer(pbuff);

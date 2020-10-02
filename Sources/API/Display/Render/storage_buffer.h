@@ -54,7 +54,7 @@ namespace clan
 		/// \param gc = Graphic Context
 		/// \param size = size - use ProgramObject::get_storage_buffer_size() to calcuate this
 		/// \param usage = Buffer Usage
-		StorageBuffer(GraphicContext &gc, int size, int stride, BufferUsage usage = usage_dynamic_draw);
+		StorageBuffer(GraphicContext &gc, int size, int stride, BufferUsage usage = BufferUsage::dynamic_draw);
 
 		/// \brief Constructs a buffer
 		///
@@ -62,7 +62,7 @@ namespace clan
 		/// \param data = void
 		/// \param size = value
 		/// \param usage = Buffer Usage
-		StorageBuffer(GraphicContext &gc, const void *data, int size, int stride, BufferUsage usage = usage_dynamic_draw);
+		StorageBuffer(GraphicContext &gc, const void *data, int size, int stride, BufferUsage usage = BufferUsage::dynamic_draw);
 
 		/// \brief Returns true if this object is invalid.
 		bool is_null() const { return !impl; }

@@ -43,24 +43,24 @@ namespace clan
 		{
 			switch (program->uniforms[i].type)
 			{
-			case D3DUniform::type_sampler:
+			case D3DUniform::Type::sampler:
 				if (sampler_units.size() < program->uniforms[i].value + 1)
 					sampler_units.resize(program->uniforms[i].value + 1);
-				for (int j = 0; j < shadertype_num_types; j++)
+				for (int j = 0; j < static_cast<int>(ShaderType::num_types); j++)
 					sampler_units[program->uniforms[i].value].shader_index[j] = program->uniforms[i].shader_index[j];
 				bind_sampler(gc, program->uniforms[i].value);
 				break;
-			case D3DUniform::type_texture:
+			case D3DUniform::Type::texture:
 				if (texture_units.size() < program->uniforms[i].value + 1)
 					texture_units.resize(program->uniforms[i].value + 1);
-				for (int j = 0; j < shadertype_num_types; j++)
+				for (int j = 0; j < static_cast<int>(ShaderType::num_types); j++)
 					texture_units[program->uniforms[i].value].shader_index[j] = program->uniforms[i].shader_index[j];
 				bind_texture(gc, program->uniforms[i].value);
 				break;
-			case D3DUniform::type_image:
+			case D3DUniform::Type::image:
 				if (image_units.size() < program->uniforms[i].value + 1)
 					image_units.resize(program->uniforms[i].value + 1);
-				for (int j = 0; j < shadertype_num_types; j++)
+				for (int j = 0; j < static_cast<int>(ShaderType::num_types); j++)
 					image_units[program->uniforms[i].value].shader_index[j] = program->uniforms[i].shader_index[j];
 				bind_image(gc, program->uniforms[i].value);
 				break;
@@ -71,7 +71,7 @@ namespace clan
 		{
 			if (uniform_units.size() < program->uniform_blocks[i].value + 1)
 				uniform_units.resize(program->uniform_blocks[i].value + 1);
-			for (int j = 0; j < shadertype_num_types; j++)
+			for (int j = 0; j < static_cast<int>(ShaderType::num_types); j++)
 				uniform_units[program->uniform_blocks[i].value].shader_index[j] = program->uniform_blocks[i].shader_index[j];
 			bind_uniform_buffer(gc, program->uniform_blocks[i].value);
 		}
@@ -80,7 +80,7 @@ namespace clan
 		{
 			if (storage_units.size() < program->storage_blocks[i].value + 1)
 				storage_units.resize(program->storage_blocks[i].value + 1);
-			for (int j = 0; j < shadertype_num_types; j++)
+			for (int j = 0; j < static_cast<int>(ShaderType::num_types); j++)
 			{
 				storage_units[program->storage_blocks[i].value].shader_srv_index[j] = program->storage_blocks[i].shader_srv_index[j];
 				storage_units[program->storage_blocks[i].value].shader_uav_index[j] = program->storage_blocks[i].shader_uav_index[j];
@@ -95,19 +95,19 @@ namespace clan
 		{
 			switch (program->uniforms[i].type)
 			{
-			case D3DUniform::type_sampler:
+			case D3DUniform::Type::sampler:
 				unbind_sampler(gc, program->uniforms[i].value);
-				for (int j = 0; j < shadertype_num_types; j++)
+				for (int j = 0; j < static_cast<int>(ShaderType::num_types); j++)
 					sampler_units[program->uniforms[i].value].shader_index[j] = -1;
 				break;
-			case D3DUniform::type_texture:
+			case D3DUniform::Type::texture:
 				unbind_texture(gc, program->uniforms[i].value);
-				for (int j = 0; j < shadertype_num_types; j++)
+				for (int j = 0; j < static_cast<int>(ShaderType::num_types); j++)
 					texture_units[program->uniforms[i].value].shader_index[j] = -1;
 				break;
-			case D3DUniform::type_image:
+			case D3DUniform::Type::image:
 				unbind_image(gc, program->uniforms[i].value);
-				for (int j = 0; j < shadertype_num_types; j++)
+				for (int j = 0; j < static_cast<int>(ShaderType::num_types); j++)
 					image_units[program->uniforms[i].value].shader_index[j] = -1;
 				break;
 			}
@@ -116,14 +116,14 @@ namespace clan
 		for (size_t i = 0; i < program->uniform_blocks.size(); i++)
 		{
 			unbind_uniform_buffer(gc, program->uniform_blocks[i].value);
-			for (int j = 0; j < shadertype_num_types; j++)
+			for (int j = 0; j < static_cast<int>(ShaderType::num_types); j++)
 				uniform_units[program->uniform_blocks[i].value].shader_index[j] = -1;
 		}
 
 		for (size_t i = 0; i < program->storage_blocks.size(); i++)
 		{
 			unbind_storage_buffer(gc, program->storage_blocks[i].value);
-			for (int j = 0; j < shadertype_num_types; j++)
+			for (int j = 0; j < static_cast<int>(ShaderType::num_types); j++)
 			{
 				storage_units[program->storage_blocks[i].value].shader_srv_index[j] = -1;
 				storage_units[program->storage_blocks[i].value].shader_uav_index[j] = -1;
@@ -177,7 +177,7 @@ namespace clan
 	{
 		if (sampler_units.size() > index)
 		{
-			for (int j = 0; j < shadertype_num_types; j++)
+			for (int j = 0; j < static_cast<int>(ShaderType::num_types); j++)
 			{
 				if (sampler_units[index].shader_index[j] != -1)
 				{
@@ -186,22 +186,22 @@ namespace clan
 						sampler_state = static_cast<D3DTextureProvider*>(sampler_units[index].object.get_provider())->get_sampler_state(gc->get_window()->get_device());
 					switch (j)
 					{
-					case shadertype_vertex:
+					case ShaderType::vertex:
 						gc->get_window()->get_device_context()->VSSetSamplers(sampler_units[index].shader_index[j], 1, &sampler_state);
 						break;
-					case shadertype_tess_control:
+					case ShaderType::tess_control:
 						gc->get_window()->get_device_context()->HSSetSamplers(sampler_units[index].shader_index[j], 1, &sampler_state);
 						break;
-					case shadertype_tess_evaluation:
+					case ShaderType::tess_evaluation:
 						gc->get_window()->get_device_context()->DSSetSamplers(sampler_units[index].shader_index[j], 1, &sampler_state);
 						break;
-					case shadertype_geometry:
+					case ShaderType::geometry:
 						gc->get_window()->get_device_context()->GSSetSamplers(sampler_units[index].shader_index[j], 1, &sampler_state);
 						break;
-					case shadertype_fragment:
+					case ShaderType::fragment:
 						gc->get_window()->get_device_context()->PSSetSamplers(sampler_units[index].shader_index[j], 1, &sampler_state);
 						break;
-					case shadertype_compute:
+					case ShaderType::compute:
 						gc->get_window()->get_device_context()->CSSetSamplers(sampler_units[index].shader_index[j], 1, &sampler_state);
 						break;
 					}
@@ -214,7 +214,7 @@ namespace clan
 	{
 		if (texture_units.size() > index)
 		{
-			for (int j = 0; j < shadertype_num_types; j++)
+			for (int j = 0; j < static_cast<int>(ShaderType::num_types); j++)
 			{
 				if (texture_units[index].shader_index[j] != -1)
 				{
@@ -223,22 +223,22 @@ namespace clan
 						srv = static_cast<D3DTextureProvider*>(texture_units[index].object.get_provider())->get_srv(gc->get_window()->get_device());
 					switch (j)
 					{
-					case shadertype_vertex:
+					case ShaderType::vertex:
 						gc->get_window()->get_device_context()->VSSetShaderResources(texture_units[index].shader_index[j], 1, &srv);
 						break;
-					case shadertype_tess_control:
+					case ShaderType::tess_control:
 						gc->get_window()->get_device_context()->HSSetShaderResources(texture_units[index].shader_index[j], 1, &srv);
 						break;
-					case shadertype_tess_evaluation:
+					case ShaderType::tess_evaluation:
 						gc->get_window()->get_device_context()->DSSetShaderResources(texture_units[index].shader_index[j], 1, &srv);
 						break;
-					case shadertype_geometry:
+					case ShaderType::geometry:
 						gc->get_window()->get_device_context()->GSSetShaderResources(texture_units[index].shader_index[j], 1, &srv);
 						break;
-					case shadertype_fragment:
+					case ShaderType::fragment:
 						gc->get_window()->get_device_context()->PSSetShaderResources(texture_units[index].shader_index[j], 1, &srv);
 						break;
-					case shadertype_compute:
+					case ShaderType::compute:
 						gc->get_window()->get_device_context()->CSSetShaderResources(texture_units[index].shader_index[j], 1, &srv);
 						break;
 					}
@@ -252,13 +252,13 @@ namespace clan
 		if (image_units.size() > index)
 		{
 			// Seems Direct3D only supports UAVs in compute shaders?
-			if (image_units[index].shader_index[shadertype_compute] != -1)
+			if (image_units[index].shader_index[static_cast<int>(ShaderType::compute)] != -1)
 			{
 				ID3D11UnorderedAccessView *uav = 0;
 				UINT uav_initial_count_value = 0;
 				if (!image_units[index].object.is_null())
 					uav = static_cast<D3DTextureProvider*>(image_units[index].object.get_provider())->get_uav(gc->get_window()->get_device());
-				gc->get_window()->get_device_context()->CSSetUnorderedAccessViews(image_units[index].shader_index[shadertype_compute], 1, &uav, &uav_initial_count_value);
+				gc->get_window()->get_device_context()->CSSetUnorderedAccessViews(image_units[index].shader_index[static_cast<int>(ShaderType::compute)], 1, &uav, &uav_initial_count_value);
 			}
 		}
 	}
@@ -267,7 +267,7 @@ namespace clan
 	{
 		if (uniform_units.size() > index)
 		{
-			for (int j = 0; j < shadertype_num_types; j++)
+			for (int j = 0; j < static_cast<int>(ShaderType::num_types); j++)
 			{
 				if (uniform_units[index].shader_index[j] != -1)
 				{
@@ -276,22 +276,22 @@ namespace clan
 						d3d_buffer = static_cast<D3DUniformBufferProvider*>(uniform_units[index].object.get_provider())->get_buffer(gc->get_window()->get_device());
 					switch (j)
 					{
-					case shadertype_vertex:
+					case ShaderType::vertex:
 						gc->get_window()->get_device_context()->VSSetConstantBuffers(uniform_units[index].shader_index[j], 1, &d3d_buffer);
 						break;
-					case shadertype_tess_control:
+					case ShaderType::tess_control:
 						gc->get_window()->get_device_context()->HSSetConstantBuffers(uniform_units[index].shader_index[j], 1, &d3d_buffer);
 						break;
-					case shadertype_tess_evaluation:
+					case ShaderType::tess_evaluation:
 						gc->get_window()->get_device_context()->DSSetConstantBuffers(uniform_units[index].shader_index[j], 1, &d3d_buffer);
 						break;
-					case shadertype_geometry:
+					case ShaderType::geometry:
 						gc->get_window()->get_device_context()->GSSetConstantBuffers(uniform_units[index].shader_index[j], 1, &d3d_buffer);
 						break;
-					case shadertype_fragment:
+					case ShaderType::fragment:
 						gc->get_window()->get_device_context()->PSSetConstantBuffers(uniform_units[index].shader_index[j], 1, &d3d_buffer);
 						break;
-					case shadertype_compute:
+					case ShaderType::compute:
 						gc->get_window()->get_device_context()->CSSetConstantBuffers(uniform_units[index].shader_index[j], 1, &d3d_buffer);
 						break;
 					}
@@ -304,7 +304,7 @@ namespace clan
 	{
 		if (storage_units.size() > index)
 		{
-			for (int j = 0; j < shadertype_num_types; j++)
+			for (int j = 0; j < static_cast<int>(ShaderType::num_types); j++)
 			{
 				if (storage_units[index].shader_srv_index[j] != -1)
 				{
@@ -313,35 +313,35 @@ namespace clan
 						srv = static_cast<D3DStorageBufferProvider*>(storage_units[index].object.get_provider())->get_srv(gc->get_window()->get_device());
 					switch (j)
 					{
-					case shadertype_vertex:
+					case ShaderType::vertex:
 						gc->get_window()->get_device_context()->VSSetShaderResources(storage_units[index].shader_srv_index[j], 1, &srv);
 						break;
-					case shadertype_tess_control:
+					case ShaderType::tess_control:
 						gc->get_window()->get_device_context()->HSSetShaderResources(storage_units[index].shader_srv_index[j], 1, &srv);
 						break;
-					case shadertype_tess_evaluation:
+					case ShaderType::tess_evaluation:
 						gc->get_window()->get_device_context()->DSSetShaderResources(storage_units[index].shader_srv_index[j], 1, &srv);
 						break;
-					case shadertype_geometry:
+					case ShaderType::geometry:
 						gc->get_window()->get_device_context()->GSSetShaderResources(storage_units[index].shader_srv_index[j], 1, &srv);
 						break;
-					case shadertype_fragment:
+					case ShaderType::fragment:
 						gc->get_window()->get_device_context()->PSSetShaderResources(storage_units[index].shader_srv_index[j], 1, &srv);
 						break;
-					case shadertype_compute:
+					case ShaderType::compute:
 						gc->get_window()->get_device_context()->CSSetShaderResources(storage_units[index].shader_srv_index[j], 1, &srv);
 						break;
 					}
 				}
 			}
 
-			if (storage_units[index].shader_uav_index[shadertype_compute] != -1)
+			if (storage_units[index].shader_uav_index[static_cast<int>(ShaderType::compute)] != -1)
 			{
 				ID3D11UnorderedAccessView *uav = 0;
 				UINT uav_initial_count = 0;
 				if (!storage_units[index].object.is_null())
 					uav = static_cast<D3DStorageBufferProvider*>(storage_units[index].object.get_provider())->get_uav(gc->get_window()->get_device());
-				gc->get_window()->get_device_context()->CSSetUnorderedAccessViews(storage_units[index].shader_uav_index[shadertype_compute], 1, &uav, &uav_initial_count);
+				gc->get_window()->get_device_context()->CSSetUnorderedAccessViews(storage_units[index].shader_uav_index[static_cast<int>(ShaderType::compute)], 1, &uav, &uav_initial_count);
 			}
 		}
 	}
@@ -350,7 +350,7 @@ namespace clan
 	{
 		if (sampler_units.size() > index)
 		{
-			for (int j = 0; j < shadertype_num_types; j++)
+			for (int j = 0; j < static_cast<int>(ShaderType::num_types); j++)
 			{
 				if (sampler_units[index].shader_index[j] != -1)
 				{
@@ -358,22 +358,22 @@ namespace clan
 
 					switch (j)
 					{
-					case shadertype_vertex:
+					case ShaderType::vertex:
 						gc->get_window()->get_device_context()->VSSetSamplers(sampler_units[index].shader_index[j], 1, &sampler_state);
 						break;
-					case shadertype_tess_control:
+					case ShaderType::tess_control:
 						gc->get_window()->get_device_context()->HSSetSamplers(sampler_units[index].shader_index[j], 1, &sampler_state);
 						break;
-					case shadertype_tess_evaluation:
+					case ShaderType::tess_evaluation:
 						gc->get_window()->get_device_context()->DSSetSamplers(sampler_units[index].shader_index[j], 1, &sampler_state);
 						break;
-					case shadertype_geometry:
+					case ShaderType::geometry:
 						gc->get_window()->get_device_context()->GSSetSamplers(sampler_units[index].shader_index[j], 1, &sampler_state);
 						break;
-					case shadertype_fragment:
+					case ShaderType::fragment:
 						gc->get_window()->get_device_context()->PSSetSamplers(sampler_units[index].shader_index[j], 1, &sampler_state);
 						break;
-					case shadertype_compute:
+					case ShaderType::compute:
 						gc->get_window()->get_device_context()->CSSetSamplers(sampler_units[index].shader_index[j], 1, &sampler_state);
 						break;
 					}
@@ -386,7 +386,7 @@ namespace clan
 	{
 		if (texture_units.size() > index)
 		{
-			for (int j = 0; j < shadertype_num_types; j++)
+			for (int j = 0; j < static_cast<int>(ShaderType::num_types); j++)
 			{
 				if (texture_units[index].shader_index[j] != -1)
 				{
@@ -394,22 +394,22 @@ namespace clan
 
 					switch (j)
 					{
-					case shadertype_vertex:
+					case ShaderType::vertex:
 						gc->get_window()->get_device_context()->VSSetShaderResources(texture_units[index].shader_index[j], 1, &srv);
 						break;
-					case shadertype_tess_control:
+					case ShaderType::tess_control:
 						gc->get_window()->get_device_context()->HSSetShaderResources(texture_units[index].shader_index[j], 1, &srv);
 						break;
-					case shadertype_tess_evaluation:
+					case ShaderType::tess_evaluation:
 						gc->get_window()->get_device_context()->DSSetShaderResources(texture_units[index].shader_index[j], 1, &srv);
 						break;
-					case shadertype_geometry:
+					case ShaderType::geometry:
 						gc->get_window()->get_device_context()->GSSetShaderResources(texture_units[index].shader_index[j], 1, &srv);
 						break;
-					case shadertype_fragment:
+					case ShaderType::fragment:
 						gc->get_window()->get_device_context()->PSSetShaderResources(texture_units[index].shader_index[j], 1, &srv);
 						break;
-					case shadertype_compute:
+					case ShaderType::compute:
 						gc->get_window()->get_device_context()->CSSetShaderResources(texture_units[index].shader_index[j], 1, &srv);
 						break;
 					}
@@ -424,8 +424,8 @@ namespace clan
 		{
 			ID3D11UnorderedAccessView *uav = 0;
 			UINT uav_initial_count = 0;
-			if (image_units[index].shader_index[shadertype_compute] != -1)
-				gc->get_window()->get_device_context()->CSSetUnorderedAccessViews(image_units[index].shader_index[shadertype_compute], 1, &uav, &uav_initial_count);
+			if (texture_units[index].shader_index[static_cast<int>(ShaderType::compute)] != -1)
+				gc->get_window()->get_device_context()->CSSetUnorderedAccessViews(texture_units[index].shader_index[static_cast<int>(ShaderType::compute)], 1, &uav, &uav_initial_count);
 		}
 	}
 
@@ -433,29 +433,29 @@ namespace clan
 	{
 		if (uniform_units.size() > index)
 		{
-			for (int j = 0; j < shadertype_num_types; j++)
+			for (int j = 0; j < static_cast<int>(ShaderType::num_types); j++)
 			{
 				if (uniform_units[index].shader_index[j] != -1)
 				{
 					ID3D11Buffer *d3d_buffer = 0;
 					switch (j)
 					{
-					case shadertype_vertex:
+					case ShaderType::vertex:
 						gc->get_window()->get_device_context()->VSSetConstantBuffers(uniform_units[index].shader_index[j], 1, &d3d_buffer);
 						break;
-					case shadertype_tess_control:
+					case ShaderType::tess_control:
 						gc->get_window()->get_device_context()->HSSetConstantBuffers(uniform_units[index].shader_index[j], 1, &d3d_buffer);
 						break;
-					case shadertype_tess_evaluation:
+					case ShaderType::tess_evaluation:
 						gc->get_window()->get_device_context()->DSSetConstantBuffers(uniform_units[index].shader_index[j], 1, &d3d_buffer);
 						break;
-					case shadertype_geometry:
+					case ShaderType::geometry:
 						gc->get_window()->get_device_context()->GSSetConstantBuffers(uniform_units[index].shader_index[j], 1, &d3d_buffer);
 						break;
-					case shadertype_fragment:
+					case ShaderType::fragment:
 						gc->get_window()->get_device_context()->PSSetConstantBuffers(uniform_units[index].shader_index[j], 1, &d3d_buffer);
 						break;
-					case shadertype_compute:
+					case ShaderType::compute:
 						gc->get_window()->get_device_context()->CSSetConstantBuffers(uniform_units[index].shader_index[j], 1, &d3d_buffer);
 						break;
 					}
@@ -468,40 +468,40 @@ namespace clan
 	{
 		if (storage_units.size() > index)
 		{
-			for (int j = 0; j < shadertype_num_types; j++)
+			for (int j = 0; j < static_cast<int>(ShaderType::num_types); j++)
 			{
 				if (storage_units[index].shader_srv_index[j] != -1)
 				{
 					ID3D11ShaderResourceView *srv = 0;
 					switch (j)
 					{
-					case shadertype_vertex:
+					case ShaderType::vertex:
 						gc->get_window()->get_device_context()->VSSetShaderResources(storage_units[index].shader_srv_index[j], 1, &srv);
 						break;
-					case shadertype_tess_control:
+					case ShaderType::tess_control:
 						gc->get_window()->get_device_context()->HSSetShaderResources(storage_units[index].shader_srv_index[j], 1, &srv);
 						break;
-					case shadertype_tess_evaluation:
+					case ShaderType::tess_evaluation:
 						gc->get_window()->get_device_context()->DSSetShaderResources(storage_units[index].shader_srv_index[j], 1, &srv);
 						break;
-					case shadertype_geometry:
+					case ShaderType::geometry:
 						gc->get_window()->get_device_context()->GSSetShaderResources(storage_units[index].shader_srv_index[j], 1, &srv);
 						break;
-					case shadertype_fragment:
+					case ShaderType::fragment:
 						gc->get_window()->get_device_context()->PSSetShaderResources(storage_units[index].shader_srv_index[j], 1, &srv);
 						break;
-					case shadertype_compute:
+					case ShaderType::compute:
 						gc->get_window()->get_device_context()->CSSetShaderResources(storage_units[index].shader_srv_index[j], 1, &srv);
 						break;
 					}
 				}
 			}
 
-			if (storage_units[index].shader_uav_index[shadertype_compute] != -1)
+			if (storage_units[index].shader_uav_index[static_cast<int>(ShaderType::compute)] != -1)
 			{
 				ID3D11UnorderedAccessView *uav = 0;
 				UINT uav_initial_count = 0;
-				gc->get_window()->get_device_context()->CSSetUnorderedAccessViews(storage_units[index].shader_uav_index[shadertype_compute], 1, &uav, &uav_initial_count);
+				gc->get_window()->get_device_context()->CSSetUnorderedAccessViews(storage_units[index].shader_uav_index[static_cast<int>(ShaderType::compute)], 1, &uav, &uav_initial_count);
 			}
 		}
 	}

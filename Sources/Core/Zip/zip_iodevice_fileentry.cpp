@@ -111,15 +111,15 @@ namespace clan
 		int64_t absolute_pos = 0;
 		switch (mode)
 		{
-		case IODevice::seek_set:
+		case IODevice::SeekMode::set:
 			absolute_pos = seek_pos;
 			break;
 
-		case IODevice::seek_cur:
+		case IODevice::SeekMode::cur:
 			absolute_pos = pos + seek_pos;
 			break;
 
-		case IODevice::seek_end:
+		case IODevice::SeekMode::end:
 			absolute_pos = file_header.uncompressed_size + seek_pos;
 			break;
 		}
@@ -127,7 +127,7 @@ namespace clan
 		switch (file_header.compression_method)
 		{
 		case zip_compress_store: // no compression
-			iodevice.seek(int(absolute_pos - pos), IODevice::seek_cur);
+			iodevice.seek(int(absolute_pos - pos), IODevice::SeekMode::cur);
 			break;
 
 		case zip_compress_deflate:
@@ -169,7 +169,7 @@ namespace clan
 
 	void ZipIODevice_FileEntry::init()
 	{
-		iodevice.seek(file_entry.impl->record.relative_offset_of_local_header, IODevice::seek_set);
+		iodevice.seek(file_entry.impl->record.relative_offset_of_local_header, IODevice::SeekMode::set);
 		file_header.load(iodevice);
 
 		//This fix allows OS X created .zips to be opened - SAR

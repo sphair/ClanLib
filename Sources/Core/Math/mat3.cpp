@@ -157,17 +157,17 @@ namespace clan
 
 		switch (order)
 		{
-		case order_XYZ:
+		case EulerOrder::XYZ:
 			return rotation_matrix_z * rotation_matrix_y * rotation_matrix_x;
-		case order_XZY:
+		case EulerOrder::XZY:
 			return rotation_matrix_y * rotation_matrix_z * rotation_matrix_x;
-		case order_YZX:
+		case EulerOrder::YZX:
 			return rotation_matrix_x * rotation_matrix_z * rotation_matrix_y;
-		case order_YXZ:
+		case EulerOrder::YXZ:
 			return rotation_matrix_z * rotation_matrix_x * rotation_matrix_y;
-		case order_ZXY:
+		case EulerOrder::ZXY:
 			return rotation_matrix_y * rotation_matrix_x * rotation_matrix_z;
-		case order_ZYX:
+		case EulerOrder::ZYX:
 			return rotation_matrix_x * rotation_matrix_y * rotation_matrix_z;
 		default:
 			throw Exception("Unknown euler order");

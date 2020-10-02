@@ -147,23 +147,23 @@ namespace clan
 				Origin origin;
 
 				if (hotspot == "center")
-					origin = origin_center;
+					origin = Origin::center;
 				else if (hotspot == "top_center")
-					origin = origin_top_center;
+					origin = Origin::top_center;
 				else if (hotspot == "top_right")
-					origin = origin_top_right;
+					origin = Origin::top_right;
 				else if (hotspot == "center_left")
-					origin = origin_center_left;
+					origin = Origin::center_left;
 				else if (hotspot == "center_right")
-					origin = origin_center_right;
+					origin = Origin::center_right;
 				else if (hotspot == "bottom_left")
-					origin = origin_bottom_left;
+					origin = Origin::bottom_left;
 				else if (hotspot == "bottom_center")
-					origin = origin_bottom_center;
+					origin = Origin::bottom_center;
 				else if (hotspot == "bottom_right")
-					origin = origin_bottom_right;
+					origin = Origin::bottom_right;
 				else
-					origin = origin_top_left;
+					origin = Origin::top_left;
 
 				int xoffset = StringHelp::text_to_int(cur_element.get_attribute("x", "0"));
 				int yoffset = StringHelp::text_to_int(cur_element.get_attribute("y", "0"));

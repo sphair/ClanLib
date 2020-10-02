@@ -50,9 +50,9 @@ namespace clan
 		// Convert pixel buffer if in an unsupported format
 		PixelBuffer work_buffer;
 		PixelBuffer work_pb = pb;
-		if (work_pb.get_format() != tf_rgba8)
+		if (work_pb.get_format() != TextureFormat::rgba8)
 		{
-			work_buffer = pb.to_format(tf_rgba8);
+			work_buffer = pb.to_format(TextureFormat::rgba8);
 			work_pb = work_buffer;
 		}
 

@@ -34,7 +34,7 @@
 namespace clan
 {
 	SamplerState::SamplerState(const ComPtr<ID3D11Device> &device)
-		: device(device), max_anisotropy(0.0f), compare_mode(comparemode_none), min_filter(filter_linear_mipmap_linear), mag_filter(filter_linear)
+		: device(device), max_anisotropy(0.0f), compare_mode(TextureCompareMode::none), min_filter(TextureFilter::linear_mipmap_linear), mag_filter(TextureFilter::linear)
 	{
 		sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 		sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -51,9 +51,9 @@ namespace clan
 		sampler_desc.BorderColor[3] = 0.0f;
 
 		// Modify state to same defaults used by OpenGL target:
-		set_min_filter(filter_linear);
-		set_mag_filter(filter_linear);
-		set_wrap_mode(wrap_clamp_to_edge, wrap_clamp_to_edge, wrap_clamp_to_edge);
+		set_min_filter(TextureFilter::linear);
+		set_mag_filter(TextureFilter::linear);
+		set_wrap_mode(TextureWrapMode::clamp_to_edge, TextureWrapMode::clamp_to_edge, TextureWrapMode::clamp_to_edge);
 	}
 
 	SamplerState::~SamplerState()
@@ -209,13 +209,13 @@ namespace clan
 		switch (min_filter)
 		{
 		default:
-		case filter_nearest:
-		case filter_linear:
+		case TextureFilter::nearest:
+		case TextureFilter::linear:
 			return false;
-		case filter_nearest_mipmap_nearest:
-		case filter_nearest_mipmap_linear:
-		case filter_linear_mipmap_nearest:
-		case filter_linear_mipmap_linear:
+		case TextureFilter::nearest_mipmap_nearest:
+		case TextureFilter::nearest_mipmap_linear:
+		case TextureFilter::linear_mipmap_nearest:
+		case TextureFilter::linear_mipmap_linear:
 			return true;
 		}
 	}
@@ -223,7 +223,7 @@ namespace clan
 	D3D11_FILTER SamplerState::to_d3d_filter(TextureFilter min_filter, TextureFilter mag_filter, TextureCompareMode compare_mode, float max_anisotropy)
 	{
 		if (max_anisotropy != 0.0f)
-			return compare_mode == comparemode_compare_r_to_texture ? D3D11_FILTER_COMPARISON_ANISOTROPIC : D3D11_FILTER_ANISOTROPIC;
+			return compare_mode == TextureCompareMode::compare_r_to_texture ? D3D11_FILTER_COMPARISON_ANISOTROPIC : D3D11_FILTER_ANISOTROPIC;
 
 		// 0 = nearest min, nearest mag, nearest level
 		// 0x01 = linear level
@@ -235,18 +235,18 @@ namespace clan
 
 		switch (min_filter)
 		{
-		case filter_nearest: break;
-		case filter_linear: filter = 0x10; break;
-		case filter_nearest_mipmap_nearest: break;
-		case filter_nearest_mipmap_linear: filter = 0x01; break;
-		case filter_linear_mipmap_nearest: filter = 0x10; break;
-		case filter_linear_mipmap_linear: filter = 0x11; break;
+		case TextureFilter::nearest: break;
+		case TextureFilter::linear: filter = 0x10; break;
+		case TextureFilter::nearest_mipmap_nearest: break;
+		case TextureFilter::nearest_mipmap_linear: filter = 0x01; break;
+		case TextureFilter::linear_mipmap_nearest: filter = 0x10; break;
+		case TextureFilter::linear_mipmap_linear: filter = 0x11; break;
 		}
 
-		if (mag_filter == filter_linear)
+		if (mag_filter == TextureFilter::linear)
 			filter |= 0x04;
 
-		if (compare_mode == comparemode_compare_r_to_texture)
+		if (compare_mode == TextureCompareMode::compare_r_to_texture)
 			filter |= 0x80;
 
 		return (D3D11_FILTER)filter;
@@ -256,9 +256,9 @@ namespace clan
 	{
 		switch (wrap)
 		{
-		case wrap_clamp_to_edge: return D3D11_TEXTURE_ADDRESS_CLAMP;
-		case wrap_repeat: return D3D11_TEXTURE_ADDRESS_WRAP;
-		case wrap_mirrored_repeat: return D3D11_TEXTURE_ADDRESS_MIRROR;
+		case TextureWrapMode::clamp_to_edge: return D3D11_TEXTURE_ADDRESS_CLAMP;
+		case TextureWrapMode::repeat: return D3D11_TEXTURE_ADDRESS_WRAP;
+		case TextureWrapMode::mirrored_repeat: return D3D11_TEXTURE_ADDRESS_MIRROR;
 		}
 		throw Exception("Unsupported wrap mode");
 	}
@@ -267,14 +267,14 @@ namespace clan
 	{
 		switch (func)
 		{
-		case compare_lequal: return D3D11_COMPARISON_LESS_EQUAL;
-		case compare_gequal: return D3D11_COMPARISON_GREATER_EQUAL;
-		case compare_less: return D3D11_COMPARISON_LESS;
-		case compare_greater: return D3D11_COMPARISON_GREATER;
-		case compare_equal: return D3D11_COMPARISON_EQUAL;
-		case compare_notequal: return D3D11_COMPARISON_NOT_EQUAL;
-		case compare_always: return D3D11_COMPARISON_ALWAYS;
-		case compare_never: return D3D11_COMPARISON_NEVER;
+		case CompareFunction::lequal: return D3D11_COMPARISON_LESS_EQUAL;
+		case CompareFunction::gequal: return D3D11_COMPARISON_GREATER_EQUAL;
+		case CompareFunction::less: return D3D11_COMPARISON_LESS;
+		case CompareFunction::greater: return D3D11_COMPARISON_GREATER;
+		case CompareFunction::equal: return D3D11_COMPARISON_EQUAL;
+		case CompareFunction::notequal: return D3D11_COMPARISON_NOT_EQUAL;
+		case CompareFunction::always: return D3D11_COMPARISON_ALWAYS;
+		case CompareFunction::never: return D3D11_COMPARISON_NEVER;
 		}
 		throw Exception("Unsupported compare function");
 	}

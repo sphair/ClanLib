@@ -49,15 +49,15 @@ namespace clan
 			lod_bias(0),
 			base_level(0),
 			max_level(0),
-			wrap_mode_s(wrap_clamp_to_edge),
-			wrap_mode_t(wrap_clamp_to_edge),
-			wrap_mode_r(wrap_clamp_to_edge),
-			min_filter(filter_linear),
-			mag_filter(filter_linear),
+			wrap_mode_s(TextureWrapMode::clamp_to_edge),
+			wrap_mode_t(TextureWrapMode::clamp_to_edge),
+			wrap_mode_r(TextureWrapMode::clamp_to_edge),
+			min_filter(TextureFilter::linear),
+			mag_filter(TextureFilter::linear),
 			max_anisotropy(1.0f),
 			resident(0),
-			compare_mode(comparemode_none),
-			compare_function(compare_lequal)
+			compare_mode(TextureCompareMode::none),
+			compare_function(CompareFunction::lequal)
 		{
 		}
 

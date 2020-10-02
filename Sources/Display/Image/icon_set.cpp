@@ -177,7 +177,7 @@ namespace clan
 	{
 		// Convert pixel buffer to DIB compatible format:
 
-		PixelBuffer bmp_image = image.to_format(tf_bgra8);
+		PixelBuffer bmp_image = image.to_format(TextureFormat::bgra8);
 
 		// Note that the APIs use pre-multiplied alpha, which means that the red,
 		// green and blue channel values in the bitmap must be pre-multiplied with

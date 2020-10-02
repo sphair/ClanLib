@@ -34,7 +34,7 @@ namespace clan
 	/// \{
 
 	/// \brief Sound Format Enums
-	enum SoundFormat
+	enum class SoundFormat
 	{
 		sf_8bit_unsigned,
 		sf_16bit_signed

@@ -41,7 +41,7 @@ namespace clan
 		blend_color = StandardColorf::white();
 		sample_mask = 0xffffffff;
 		stencil_ref = 0;
-		draw_buffer = buffer_back;
+		draw_buffer = DrawBuffer::back;
 	}
 
 	void GraphicContext_State::copy_state(const GraphicContext_State *other)

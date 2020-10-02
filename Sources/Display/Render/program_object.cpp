@@ -85,10 +85,10 @@ namespace clan
 	{
 		ProgramObject program_object(gc);
 
-		ShaderObject vertex_shader = ShaderObject::load_and_compile(gc, shadertype_vertex, vertex_filename, fs);
+		ShaderObject vertex_shader = ShaderObject::load_and_compile(gc, ShaderType::vertex, vertex_filename, fs);
 		program_object.attach(vertex_shader);
 
-		ShaderObject fragment_shader = ShaderObject::load_and_compile(gc, shadertype_fragment, fragment_filename, fs);
+		ShaderObject fragment_shader = ShaderObject::load_and_compile(gc, ShaderType::fragment, fragment_filename, fs);
 		program_object.attach(fragment_shader);
 
 		return program_object;
@@ -98,13 +98,13 @@ namespace clan
 	{
 		ProgramObject program_object(gc);
 
-		ShaderObject vertex_shader = ShaderObject::load_and_compile(gc, shadertype_vertex, vertex_filename, fs);
+		ShaderObject vertex_shader = ShaderObject::load_and_compile(gc, ShaderType::vertex, vertex_filename, fs);
 		program_object.attach(vertex_shader);
 
-		ShaderObject geometry_shader = ShaderObject::load_and_compile(gc, shadertype_geometry, geometry_filename, fs);
+		ShaderObject geometry_shader = ShaderObject::load_and_compile(gc, ShaderType::geometry, geometry_filename, fs);
 		program_object.attach(geometry_shader);
 
-		ShaderObject fragment_shader = ShaderObject::load_and_compile(gc, shadertype_fragment, fragment_filename, fs);
+		ShaderObject fragment_shader = ShaderObject::load_and_compile(gc, ShaderType::fragment, fragment_filename, fs);
 		program_object.attach(fragment_shader);
 
 		return program_object;
@@ -121,10 +121,10 @@ namespace clan
 
 		ProgramObject program_object(gc);
 
-		ShaderObject vertex_shader = ShaderObject::load_and_compile(gc, shadertype_vertex, filename_vertex, vfs_vertex);
+		ShaderObject vertex_shader = ShaderObject::load_and_compile(gc, ShaderType::vertex, filename_vertex, vfs_vertex);
 		program_object.attach(vertex_shader);
 
-		ShaderObject fragment_shader = ShaderObject::load_and_compile(gc, shadertype_fragment, filename_fragment, vfs_fragment);
+		ShaderObject fragment_shader = ShaderObject::load_and_compile(gc, ShaderType::fragment, filename_fragment, vfs_fragment);
 		program_object.attach(fragment_shader);
 
 		return program_object;
@@ -144,13 +144,13 @@ namespace clan
 
 		ProgramObject program_object(gc);
 
-		ShaderObject vertex_shader = ShaderObject::load_and_compile(gc, shadertype_vertex, filename_vertex, vfs_vertex);
+		ShaderObject vertex_shader = ShaderObject::load_and_compile(gc, ShaderType::vertex, filename_vertex, vfs_vertex);
 		program_object.attach(vertex_shader);
 
-		ShaderObject geometry_shader = ShaderObject::load_and_compile(gc, shadertype_geometry, filename_geometry, vfs_geometry);
+		ShaderObject geometry_shader = ShaderObject::load_and_compile(gc, ShaderType::geometry, filename_geometry, vfs_geometry);
 		program_object.attach(geometry_shader);
 
-		ShaderObject fragment_shader = ShaderObject::load_and_compile(gc, shadertype_fragment, filename_fragment, vfs_fragment);
+		ShaderObject fragment_shader = ShaderObject::load_and_compile(gc, ShaderType::fragment, filename_fragment, vfs_fragment);
 		program_object.attach(fragment_shader);
 
 		return program_object;
@@ -160,10 +160,10 @@ namespace clan
 	{
 		ProgramObject program_object(gc);
 
-		ShaderObject vertex_shader = ShaderObject::load_and_compile(gc, shadertype_vertex, vertex_file);
+		ShaderObject vertex_shader = ShaderObject::load_and_compile(gc, ShaderType::vertex, vertex_file);
 		program_object.attach(vertex_shader);
 
-		ShaderObject fragment_shader = ShaderObject::load_and_compile(gc, shadertype_fragment, fragment_file);
+		ShaderObject fragment_shader = ShaderObject::load_and_compile(gc, ShaderType::fragment, fragment_file);
 		program_object.attach(fragment_shader);
 
 		return program_object;
@@ -173,13 +173,13 @@ namespace clan
 	{
 		ProgramObject program_object(gc);
 
-		ShaderObject vertex_shader = ShaderObject::load_and_compile(gc, shadertype_vertex, vertex_file);
+		ShaderObject vertex_shader = ShaderObject::load_and_compile(gc, ShaderType::vertex, vertex_file);
 		program_object.attach(vertex_shader);
 
-		ShaderObject geometry_shader = ShaderObject::load_and_compile(gc, shadertype_geometry, geometry_file);
+		ShaderObject geometry_shader = ShaderObject::load_and_compile(gc, ShaderType::geometry, geometry_file);
 		program_object.attach(geometry_shader);
 
-		ShaderObject fragment_shader = ShaderObject::load_and_compile(gc, shadertype_fragment, fragment_file);
+		ShaderObject fragment_shader = ShaderObject::load_and_compile(gc, ShaderType::fragment, fragment_file);
 		program_object.attach(fragment_shader);
 
 		return program_object;

@@ -45,4 +45,5 @@
 #endif
 
 #include <cstring>
+#include <memory>
 

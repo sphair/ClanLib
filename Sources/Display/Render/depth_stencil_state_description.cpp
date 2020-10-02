@@ -43,14 +43,14 @@ namespace clan
 			fail_back(), pass_depth_fail_back(), pass_depth_pass_back(),
 			enable_depth_test(), enable_depth_write(), depth_func()
 		{
-			pass_depth_pass_front = stencil_incr;
-			pass_depth_fail_front = stencil_keep;
-			fail_front = stencil_keep;
-			pass_depth_pass_back = stencil_keep;
-			pass_depth_fail_back = stencil_keep;
-			fail_back = stencil_keep;
-			stencil_front_func = compare_lequal;
-			stencil_back_func = compare_lequal;
+			pass_depth_pass_front = StencilOp::incr;
+			pass_depth_fail_front = StencilOp::keep;
+			fail_front = StencilOp::keep;
+			pass_depth_pass_back = StencilOp::keep;
+			pass_depth_fail_back = StencilOp::keep;
+			fail_back = StencilOp::keep;
+			stencil_front_func = CompareFunction::lequal;
+			stencil_back_func = CompareFunction::lequal;
 			enable_stencil_test = false;
 			stencil_front_ref = 0;
 			stencil_back_ref = 0;
@@ -58,7 +58,7 @@ namespace clan
 			stencil_back_write_mask = 255;
 			stencil_front_mask = 255;
 			stencil_back_mask = 255;
-			depth_func = compare_lequal;
+			depth_func = CompareFunction::lequal;
 			enable_depth_write = true;
 			enable_depth_test = false;
 		}

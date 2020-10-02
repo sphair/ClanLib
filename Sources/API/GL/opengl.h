@@ -45,7 +45,7 @@ namespace clan
 	class GL1GraphicContextProvider;
 	class GL3GraphicContextProvider;
 
-	enum TextureFormat;
+	enum class TextureFormat;
 
 	/// \brief Extension procedure address typedef for OpenGL.
 	typedef void (ProcAddress)();

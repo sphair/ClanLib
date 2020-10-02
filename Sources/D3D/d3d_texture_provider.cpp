@@ -102,13 +102,13 @@ namespace clan
 					data_handles.get_texture_1d()->GetDesc(&texture_desc);
 
 					srv_desc.Format = texture_desc.Format;
-					if (data->texture_dimensions == texture_1d)
+					if (data->texture_dimensions == TextureDimensions::_1d)
 					{
 						srv_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE1D;
 						srv_desc.Texture1D.MipLevels = -1;
 						srv_desc.Texture1D.MostDetailedMip = 0;
 					}
-					else if (data->texture_dimensions == texture_1d_array)
+					else if (data->texture_dimensions == TextureDimensions::_1d_array)
 					{
 						srv_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE1DARRAY;
 						srv_desc.Texture1DArray.FirstArraySlice = 0;
@@ -130,13 +130,13 @@ namespace clan
 					data_handles.get_texture_2d()->GetDesc(&texture_desc);
 
 					srv_desc.Format = texture_desc.Format;
-					if (data->texture_dimensions == texture_2d)
+					if (data->texture_dimensions == TextureDimensions::_2d)
 					{
 						srv_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 						srv_desc.Texture2D.MipLevels = -1;
 						srv_desc.Texture2D.MostDetailedMip = 0;
 					}
-					else if (data->texture_dimensions == texture_2d_array)
+					else if (data->texture_dimensions == TextureDimensions::_2d_array)
 					{
 						srv_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
 						srv_desc.Texture2DArray.FirstArraySlice = 0;
@@ -150,13 +150,13 @@ namespace clan
 							srv_desc.Texture2DArray.ArraySize = 1;
 						}
 					}
-					else if (data->texture_dimensions == texture_cube)
+					else if (data->texture_dimensions == TextureDimensions::_cube)
 					{
 						srv_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
 						srv_desc.TextureCube.MipLevels = -1;
 						srv_desc.TextureCube.MostDetailedMip = 0;
 					}
-					else if (data->texture_dimensions == texture_cube_array)
+					else if (data->texture_dimensions == TextureDimensions::_cube_array)
 					{
 						srv_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBEARRAY;
 						srv_desc.TextureCubeArray.First2DArrayFace = 0;
@@ -192,13 +192,13 @@ namespace clan
 					data_handles.get_texture_1d()->GetDesc(&texture_desc);
 
 					srv_desc.Format = texture_desc.Format;
-					if (data->texture_dimensions == texture_1d)
+					if (data->texture_dimensions == TextureDimensions::_1d)
 					{
 						srv_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE1D;
 						srv_desc.Texture1D.MipLevels = 1;
 						srv_desc.Texture1D.MostDetailedMip = 0;
 					}
-					else if (data->texture_dimensions == texture_1d_array)
+					else if (data->texture_dimensions == TextureDimensions::_1d_array)
 					{
 						srv_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE1DARRAY;
 						srv_desc.Texture1DArray.FirstArraySlice = 0;
@@ -219,13 +219,13 @@ namespace clan
 					data_handles.get_texture_2d()->GetDesc(&texture_desc);
 
 					srv_desc.Format = texture_desc.Format;
-					if (data->texture_dimensions == texture_2d)
+					if (data->texture_dimensions == TextureDimensions::_2d)
 					{
 						srv_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 						srv_desc.Texture2D.MipLevels = 1;
 						srv_desc.Texture2D.MostDetailedMip = 0;
 					}
-					else if (data->texture_dimensions == texture_2d_array)
+					else if (data->texture_dimensions == TextureDimensions::_2d_array)
 					{
 						srv_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
 						srv_desc.Texture2DArray.FirstArraySlice = 0;
@@ -239,13 +239,13 @@ namespace clan
 							srv_desc.Texture2DArray.ArraySize = 1;
 						}
 					}
-					else if (data->texture_dimensions == texture_cube)
+					else if (data->texture_dimensions == TextureDimensions::_cube)
 					{
 						srv_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
 						srv_desc.TextureCube.MipLevels = 1;
 						srv_desc.TextureCube.MostDetailedMip = 0;
 					}
-					else if (data->texture_dimensions == texture_cube_array)
+					else if (data->texture_dimensions == TextureDimensions::_cube_array)
 					{
 						srv_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBEARRAY;
 						srv_desc.TextureCubeArray.First2DArrayFace = 0;
@@ -286,12 +286,12 @@ namespace clan
 				data_handles.get_texture_1d()->GetDesc(&texture_desc);
 
 				uav_desc.Format = texture_desc.Format;
-				if (data->texture_dimensions == texture_1d)
+				if (data->texture_dimensions == TextureDimensions::_1d)
 				{
 					uav_desc.ViewDimension = D3D11_UAV_DIMENSION_TEXTURE1D;
 					uav_desc.Texture1D.MipSlice = 0;
 				}
-				else if (data->texture_dimensions == texture_1d_array)
+				else if (data->texture_dimensions == TextureDimensions::_1d_array)
 				{
 					uav_desc.ViewDimension = D3D11_UAV_DIMENSION_TEXTURE1DARRAY;
 					uav_desc.Texture1DArray.FirstArraySlice = 0;
@@ -312,12 +312,12 @@ namespace clan
 				data_handles.get_texture_2d()->GetDesc(&texture_desc);
 
 				uav_desc.Format = texture_desc.Format;
-				if (data->texture_dimensions == texture_2d)
+				if (data->texture_dimensions == TextureDimensions::_2d)
 				{
 					uav_desc.ViewDimension = D3D11_UAV_DIMENSION_TEXTURE2D;
 					uav_desc.Texture2D.MipSlice = 0;
 				}
-				else if (data->texture_dimensions == texture_2d_array)
+				else if (data->texture_dimensions == TextureDimensions::_2d_array)
 				{
 					uav_desc.ViewDimension = D3D11_UAV_DIMENSION_TEXTURE2DARRAY;
 					uav_desc.Texture2DArray.FirstArraySlice = 0;
@@ -359,12 +359,12 @@ namespace clan
 			data_handles.get_texture_1d()->GetDesc(&texture_desc);
 
 			rtv_desc.Format = texture_desc.Format;
-			if (data->texture_dimensions == texture_1d)
+			if (data->texture_dimensions == TextureDimensions::_1d)
 			{
 				rtv_desc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE1D;
 				rtv_desc.Texture1D.MipSlice = level;
 			}
-			else if (data->texture_dimensions == texture_1d_array)
+			else if (data->texture_dimensions == TextureDimensions::_1d_array)
 			{
 				rtv_desc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE1DARRAY;
 				if (slice == -1)
@@ -393,12 +393,12 @@ namespace clan
 			data_handles.get_texture_2d()->GetDesc(&texture_desc);
 
 			rtv_desc.Format = texture_desc.Format;
-			if (data->texture_dimensions == texture_2d)
+			if (data->texture_dimensions == TextureDimensions::_2d)
 			{
 				rtv_desc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 				rtv_desc.Texture2D.MipSlice = level;
 			}
-			else if (data->texture_dimensions == texture_2d_array)
+			else if (data->texture_dimensions == TextureDimensions::_2d_array)
 			{
 				rtv_desc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
 				if (slice == -1)
@@ -448,12 +448,12 @@ namespace clan
 			data_handles.get_texture_1d()->GetDesc(&texture_desc);
 
 			dsv_desc.Format = texture_desc.Format;
-			if (data->texture_dimensions == texture_1d)
+			if (data->texture_dimensions == TextureDimensions::_1d)
 			{
 				dsv_desc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE1D;
 				dsv_desc.Texture1D.MipSlice = level;
 			}
-			else if (data->texture_dimensions == texture_1d_array)
+			else if (data->texture_dimensions == TextureDimensions::_1d_array)
 			{
 				dsv_desc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE1DARRAY;
 				if (slice == -1)
@@ -475,12 +475,12 @@ namespace clan
 			data_handles.get_texture_2d()->GetDesc(&texture_desc);
 
 			dsv_desc.Format = texture_desc.Format;
-			if (data->texture_dimensions == texture_2d)
+			if (data->texture_dimensions == TextureDimensions::_2d)
 			{
 				dsv_desc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 				dsv_desc.Texture2D.MipSlice = level;
 			}
-			else if (data->texture_dimensions == texture_2d_array)
+			else if (data->texture_dimensions == TextureDimensions::_2d_array)
 			{
 				dsv_desc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DARRAY;
 				if (slice == -1)
@@ -524,15 +524,15 @@ namespace clan
 
 	void D3DTextureProvider::create(int width, int height, int depth, int array_size, TextureFormat texture_format, int levels)
 	{
-		if (data->texture_dimensions == texture_1d || data->texture_dimensions == texture_1d_array)
+		if (data->texture_dimensions == TextureDimensions::_1d || data->texture_dimensions == TextureDimensions::_1d_array)
 		{
 			create_1d(width, height, depth, array_size, texture_format, levels);
 		}
-		else if (data->texture_dimensions == texture_2d || data->texture_dimensions == texture_2d_array || data->texture_dimensions == texture_cube || data->texture_dimensions == texture_cube_array)
+		else if (data->texture_dimensions == TextureDimensions::_2d || data->texture_dimensions == TextureDimensions::_2d_array || data->texture_dimensions == TextureDimensions::_cube || data->texture_dimensions == TextureDimensions::_cube_array)
 		{
 			create_2d(width, height, depth, array_size, texture_format, levels);
 		}
-		else if (data->texture_dimensions == texture_3d)
+		else if (data->texture_dimensions == TextureDimensions::_3d)
 		{
 			create_3d(width, height, depth, array_size, texture_format, levels);
 		}
@@ -594,12 +594,12 @@ namespace clan
 		texture_desc.CPUAccessFlags = 0;
 		texture_desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED;
 
-		if (data->texture_dimensions == texture_cube)
+		if (data->texture_dimensions == TextureDimensions::_cube)
 		{
 			texture_desc.ArraySize = 6;
 			texture_desc.MiscFlags |= D3D11_RESOURCE_MISC_TEXTURECUBE;
 		}
-		else if (data->texture_dimensions == texture_cube_array)
+		else if (data->texture_dimensions == TextureDimensions::_cube_array)
 		{
 			texture_desc.ArraySize = 6 * array_size;
 			texture_desc.MiscFlags |= D3D11_RESOURCE_MISC_TEXTURECUBE;
@@ -720,7 +720,7 @@ namespace clan
 			format = texture_desc.Format;
 		}
 
-		TransferTexture pixels(gc, width, height, data_from_gpu, from_d3d_format(format));
+		TransferTexture pixels(gc, width, height, PixelBufferDirection::data_from_gpu, from_d3d_format(format));
 		D3DPixelBufferProvider *pb_provider = static_cast<D3DPixelBufferProvider *>(pixels.get_provider());
 		D3D11_BOX box;
 		box.left = 0;
@@ -970,16 +970,16 @@ namespace clan
 	{
 		switch (format)
 		{
-		case tf_depth_component16:
-		case tf_depth_component24:
-		case tf_depth_component32:
-		case tf_depth_component32f:
-		case tf_depth24_stencil8:
-		case tf_depth32f_stencil8:
-		case tf_stencil_index1:
-		case tf_stencil_index4:
-		case tf_stencil_index8:
-		case tf_stencil_index16:
+		case TextureFormat::depth_component16:
+		case TextureFormat::depth_component24:
+		case TextureFormat::depth_component32:
+		case TextureFormat::depth_component32f:
+		case TextureFormat::depth24_stencil8:
+		case TextureFormat::depth32f_stencil8:
+		case TextureFormat::stencil_index1:
+		case TextureFormat::stencil_index4:
+		case TextureFormat::stencil_index8:
+		case TextureFormat::stencil_index16:
 			return true;
 		}
 		return false;
@@ -989,98 +989,98 @@ namespace clan
 	{
 		switch (format)
 		{
-		case tf_rgba8: return DXGI_FORMAT_R8G8B8A8_UNORM;
-		case tf_rgb8: break;
-		case tf_bgra8: return DXGI_FORMAT_B8G8R8A8_UNORM;
-		case tf_bgr8: break;
-		case tf_stencil_index1: return DXGI_FORMAT_R1_UNORM;
-		case tf_stencil_index4: break;
-		case tf_stencil_index8: return DXGI_FORMAT_R8_SINT;
-		case tf_stencil_index16: return DXGI_FORMAT_R16_SINT;
-		case tf_r8: return DXGI_FORMAT_R8_UNORM;
-		case tf_r8_snorm: return DXGI_FORMAT_R8_SNORM;
-		case tf_r16: return DXGI_FORMAT_R16_UNORM;
-		case tf_r16_snorm: return DXGI_FORMAT_R16_SNORM;
-		case tf_rg8: return DXGI_FORMAT_R8G8_UNORM;
-		case tf_rg8_snorm: return DXGI_FORMAT_R8G8_SNORM;
-		case tf_rg16: return DXGI_FORMAT_R16G16_UNORM;
-		case tf_rg16_snorm: return DXGI_FORMAT_R16G16_SNORM;
-		case tf_r3_g3_b2: break;
-		case tf_rgb4: break;
-		case tf_rgb5: break;
-		case tf_rgb8_snorm: break;
-		case tf_rgb10: break;
-		case tf_rgb12: break;
-		case tf_rgb16: break;
-		case tf_rgb16_snorm: break;
-		case tf_rgba2: break;
-		case tf_rgba4: break;
-		case tf_rgb5_a1: break;
-		case tf_rgba8_snorm: break;
-		case tf_rgb10_a2: return DXGI_FORMAT_R10G10B10A2_UNORM;
-		case tf_rgba12: break;
-		case tf_rgba16: return DXGI_FORMAT_R16G16B16A16_UNORM;
-		case tf_rgba16_snorm: return DXGI_FORMAT_R16G16B16A16_SNORM;
-		case tf_srgb8: break;
-		case tf_srgb8_alpha8: return DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-		case tf_r16f: return DXGI_FORMAT_R16_FLOAT;
-		case tf_rg16f: return DXGI_FORMAT_R16G16_FLOAT;
-		case tf_rgb16f: break;
-		case tf_rgba16f: return DXGI_FORMAT_R16G16B16A16_FLOAT;
-		case tf_r32f: return DXGI_FORMAT_R32_FLOAT;
-		case tf_rg32f: return DXGI_FORMAT_R32G32_FLOAT;
-		case tf_rgb32f: return DXGI_FORMAT_R32G32B32_FLOAT;
-		case tf_rgba32f: return DXGI_FORMAT_R32G32B32A32_FLOAT;
-		case tf_r11f_g11f_b10f: return DXGI_FORMAT_R11G11B10_FLOAT;
-		case tf_rgb9_e5: return DXGI_FORMAT_R9G9B9E5_SHAREDEXP;
-		case tf_r8i: return DXGI_FORMAT_R8_SINT;
-		case tf_r8ui: return DXGI_FORMAT_R8_UINT;
-		case tf_r16i: return DXGI_FORMAT_R16_SINT;
-		case tf_r16ui: return DXGI_FORMAT_R16_UINT;
-		case tf_r32i: return DXGI_FORMAT_R32_SINT;
-		case tf_r32ui: return DXGI_FORMAT_R8_UINT;
-		case tf_rg8i: return DXGI_FORMAT_R8G8_SINT;
-		case tf_rg8ui: return DXGI_FORMAT_R8G8_UINT;
-		case tf_rg16i: return DXGI_FORMAT_R16G16_SINT;
-		case tf_rg16ui: return DXGI_FORMAT_R16G16_UINT;
-		case tf_rg32i: return DXGI_FORMAT_R32G32_SINT;
-		case tf_rg32ui: return DXGI_FORMAT_R32G32_UINT;
-		case tf_rgb8i: break;
-		case tf_rgb8ui: break;
-		case tf_rgb16i: break;
-		case tf_rgb16ui: break;
-		case tf_rgb32i: return DXGI_FORMAT_R32G32B32_SINT;
-		case tf_rgb32ui: return DXGI_FORMAT_R32G32B32_UINT;
-		case tf_rgba8i: return DXGI_FORMAT_R8G8B8A8_SINT;
-		case tf_rgba8ui: return DXGI_FORMAT_R8G8B8A8_UINT;
-		case tf_rgba16i: return DXGI_FORMAT_R16G16B16A16_SINT;
-		case tf_rgba16ui: return DXGI_FORMAT_R16G16B16A16_UINT;
-		case tf_rgba32i: return DXGI_FORMAT_R32G32B32A32_SINT;
-		case tf_rgba32ui: return DXGI_FORMAT_R32G32B32A32_UINT;
-		case tf_depth_component16: return DXGI_FORMAT_D16_UNORM;
-		case tf_depth_component24: return DXGI_FORMAT_D24_UNORM_S8_UINT;
-		case tf_depth_component32: return DXGI_FORMAT_D32_FLOAT;
-		case tf_depth_component32f: return DXGI_FORMAT_D32_FLOAT;
-		case tf_depth24_stencil8: return DXGI_FORMAT_D24_UNORM_S8_UINT;
-		case tf_depth32f_stencil8: return DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
-		case tf_compressed_red: break;
-		case tf_compressed_rg: break;
-		case tf_compressed_rgb: break;
-		case tf_compressed_rgba: break;
-		case tf_compressed_srgb: break;
-		case tf_compressed_srgb_alpha: break;
-		case tf_compressed_red_rgtc1: break;
-		case tf_compressed_signed_red_rgtc1: break;
-		case tf_compressed_rg_rgtc2: break;
-		case tf_compressed_signed_rg_rgtc2: break;
-		case tf_compressed_rgb_s3tc_dxt1: return DXGI_FORMAT_BC1_UNORM;
-		case tf_compressed_rgba_s3tc_dxt1: return DXGI_FORMAT_BC1_UNORM;
-		case tf_compressed_rgba_s3tc_dxt3: return DXGI_FORMAT_BC2_UNORM;
-		case tf_compressed_rgba_s3tc_dxt5: return DXGI_FORMAT_BC3_UNORM;
-		case tf_compressed_srgb_s3tc_dxt1: return DXGI_FORMAT_BC1_UNORM_SRGB;
-		case tf_compressed_srgb_alpha_s3tc_dxt1: return DXGI_FORMAT_BC1_UNORM_SRGB;
-		case tf_compressed_srgb_alpha_s3tc_dxt3: return DXGI_FORMAT_BC2_UNORM_SRGB;
-		case tf_compressed_srgb_alpha_s3tc_dxt5: return DXGI_FORMAT_BC3_UNORM_SRGB;
+		case TextureFormat::rgba8: return DXGI_FORMAT_R8G8B8A8_UNORM;
+		case TextureFormat::rgb8: break;
+		case TextureFormat::bgra8: return DXGI_FORMAT_B8G8R8A8_UNORM;
+		case TextureFormat::bgr8: break;
+		case TextureFormat::stencil_index1: return DXGI_FORMAT_R1_UNORM;
+		case TextureFormat::stencil_index4: break;
+		case TextureFormat::stencil_index8: return DXGI_FORMAT_R8_SINT;
+		case TextureFormat::stencil_index16: return DXGI_FORMAT_R16_SINT;
+		case TextureFormat::r8: return DXGI_FORMAT_R8_UNORM;
+		case TextureFormat::r8_snorm: return DXGI_FORMAT_R8_SNORM;
+		case TextureFormat::r16: return DXGI_FORMAT_R16_UNORM;
+		case TextureFormat::r16_snorm: return DXGI_FORMAT_R16_SNORM;
+		case TextureFormat::rg8: return DXGI_FORMAT_R8G8_UNORM;
+		case TextureFormat::rg8_snorm: return DXGI_FORMAT_R8G8_SNORM;
+		case TextureFormat::rg16: return DXGI_FORMAT_R16G16_UNORM;
+		case TextureFormat::rg16_snorm: return DXGI_FORMAT_R16G16_SNORM;
+		case TextureFormat::r3_g3_b2: break;
+		case TextureFormat::rgb4: break;
+		case TextureFormat::rgb5: break;
+		case TextureFormat::rgb8_snorm: break;
+		case TextureFormat::rgb10: break;
+		case TextureFormat::rgb12: break;
+		case TextureFormat::rgb16: break;
+		case TextureFormat::rgb16_snorm: break;
+		case TextureFormat::rgba2: break;
+		case TextureFormat::rgba4: break;
+		case TextureFormat::rgb5_a1: break;
+		case TextureFormat::rgba8_snorm: break;
+		case TextureFormat::rgb10_a2: return DXGI_FORMAT_R10G10B10A2_UNORM;
+		case TextureFormat::rgba12: break;
+		case TextureFormat::rgba16: return DXGI_FORMAT_R16G16B16A16_UNORM;
+		case TextureFormat::rgba16_snorm: return DXGI_FORMAT_R16G16B16A16_SNORM;
+		case TextureFormat::srgb8: break;
+		case TextureFormat::srgb8_alpha8: return DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		case TextureFormat::r16f: return DXGI_FORMAT_R16_FLOAT;
+		case TextureFormat::rg16f: return DXGI_FORMAT_R16G16_FLOAT;
+		case TextureFormat::rgb16f: break;
+		case TextureFormat::rgba16f: return DXGI_FORMAT_R16G16B16A16_FLOAT;
+		case TextureFormat::r32f: return DXGI_FORMAT_R32_FLOAT;
+		case TextureFormat::rg32f: return DXGI_FORMAT_R32G32_FLOAT;
+		case TextureFormat::rgb32f: return DXGI_FORMAT_R32G32B32_FLOAT;
+		case TextureFormat::rgba32f: return DXGI_FORMAT_R32G32B32A32_FLOAT;
+		case TextureFormat::r11f_g11f_b10f: return DXGI_FORMAT_R11G11B10_FLOAT;
+		case TextureFormat::rgb9_e5: return DXGI_FORMAT_R9G9B9E5_SHAREDEXP;
+		case TextureFormat::r8i: return DXGI_FORMAT_R8_SINT;
+		case TextureFormat::r8ui: return DXGI_FORMAT_R8_UINT;
+		case TextureFormat::r16i: return DXGI_FORMAT_R16_SINT;
+		case TextureFormat::r16ui: return DXGI_FORMAT_R16_UINT;
+		case TextureFormat::r32i: return DXGI_FORMAT_R32_SINT;
+		case TextureFormat::r32ui: return DXGI_FORMAT_R8_UINT;
+		case TextureFormat::rg8i: return DXGI_FORMAT_R8G8_SINT;
+		case TextureFormat::rg8ui: return DXGI_FORMAT_R8G8_UINT;
+		case TextureFormat::rg16i: return DXGI_FORMAT_R16G16_SINT;
+		case TextureFormat::rg16ui: return DXGI_FORMAT_R16G16_UINT;
+		case TextureFormat::rg32i: return DXGI_FORMAT_R32G32_SINT;
+		case TextureFormat::rg32ui: return DXGI_FORMAT_R32G32_UINT;
+		case TextureFormat::rgb8i: break;
+		case TextureFormat::rgb8ui: break;
+		case TextureFormat::rgb16i: break;
+		case TextureFormat::rgb16ui: break;
+		case TextureFormat::rgb32i: return DXGI_FORMAT_R32G32B32_SINT;
+		case TextureFormat::rgb32ui: return DXGI_FORMAT_R32G32B32_UINT;
+		case TextureFormat::rgba8i: return DXGI_FORMAT_R8G8B8A8_SINT;
+		case TextureFormat::rgba8ui: return DXGI_FORMAT_R8G8B8A8_UINT;
+		case TextureFormat::rgba16i: return DXGI_FORMAT_R16G16B16A16_SINT;
+		case TextureFormat::rgba16ui: return DXGI_FORMAT_R16G16B16A16_UINT;
+		case TextureFormat::rgba32i: return DXGI_FORMAT_R32G32B32A32_SINT;
+		case TextureFormat::rgba32ui: return DXGI_FORMAT_R32G32B32A32_UINT;
+		case TextureFormat::depth_component16: return DXGI_FORMAT_D16_UNORM;
+		case TextureFormat::depth_component24: return DXGI_FORMAT_D24_UNORM_S8_UINT;
+		case TextureFormat::depth_component32: return DXGI_FORMAT_D32_FLOAT;
+		case TextureFormat::depth_component32f: return DXGI_FORMAT_D32_FLOAT;
+		case TextureFormat::depth24_stencil8: return DXGI_FORMAT_D24_UNORM_S8_UINT;
+		case TextureFormat::depth32f_stencil8: return DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
+		case TextureFormat::compressed_red: break;
+		case TextureFormat::compressed_rg: break;
+		case TextureFormat::compressed_rgb: break;
+		case TextureFormat::compressed_rgba: break;
+		case TextureFormat::compressed_srgb: break;
+		case TextureFormat::compressed_srgb_alpha: break;
+		case TextureFormat::compressed_red_rgtc1: break;
+		case TextureFormat::compressed_signed_red_rgtc1: break;
+		case TextureFormat::compressed_rg_rgtc2: break;
+		case TextureFormat::compressed_signed_rg_rgtc2: break;
+		case TextureFormat::compressed_rgb_s3tc_dxt1: return DXGI_FORMAT_BC1_UNORM;
+		case TextureFormat::compressed_rgba_s3tc_dxt1: return DXGI_FORMAT_BC1_UNORM;
+		case TextureFormat::compressed_rgba_s3tc_dxt3: return DXGI_FORMAT_BC2_UNORM;
+		case TextureFormat::compressed_rgba_s3tc_dxt5: return DXGI_FORMAT_BC3_UNORM;
+		case TextureFormat::compressed_srgb_s3tc_dxt1: return DXGI_FORMAT_BC1_UNORM_SRGB;
+		case TextureFormat::compressed_srgb_alpha_s3tc_dxt1: return DXGI_FORMAT_BC1_UNORM_SRGB;
+		case TextureFormat::compressed_srgb_alpha_s3tc_dxt3: return DXGI_FORMAT_BC2_UNORM_SRGB;
+		case TextureFormat::compressed_srgb_alpha_s3tc_dxt5: return DXGI_FORMAT_BC3_UNORM_SRGB;
 		}
 		throw Exception("Unsupported format");
 	}
@@ -1091,83 +1091,83 @@ namespace clan
 		{
 		case DXGI_FORMAT_UNKNOWN: break;
 		case DXGI_FORMAT_R32G32B32A32_TYPELESS: break;
-		case DXGI_FORMAT_R32G32B32A32_FLOAT: return tf_rgba32f;
-		case DXGI_FORMAT_R32G32B32A32_UINT: return tf_rgba32ui;
-		case DXGI_FORMAT_R32G32B32A32_SINT: return tf_rgba32i;
+		case DXGI_FORMAT_R32G32B32A32_FLOAT: return TextureFormat::rgba32f;
+		case DXGI_FORMAT_R32G32B32A32_UINT: return TextureFormat::rgba32ui;
+		case DXGI_FORMAT_R32G32B32A32_SINT: return TextureFormat::rgba32i;
 		case DXGI_FORMAT_R32G32B32_TYPELESS: break;
-		case DXGI_FORMAT_R32G32B32_FLOAT: return tf_rgb32f;
-		case DXGI_FORMAT_R32G32B32_UINT: return tf_rgb32ui;
-		case DXGI_FORMAT_R32G32B32_SINT: return tf_rgb32i;
+		case DXGI_FORMAT_R32G32B32_FLOAT: return TextureFormat::rgb32f;
+		case DXGI_FORMAT_R32G32B32_UINT: return TextureFormat::rgb32ui;
+		case DXGI_FORMAT_R32G32B32_SINT: return TextureFormat::rgb32i;
 		case DXGI_FORMAT_R16G16B16A16_TYPELESS: break;
-		case DXGI_FORMAT_R16G16B16A16_FLOAT: return tf_rgba16f;
-		case DXGI_FORMAT_R16G16B16A16_UNORM: return tf_rgba16;
-		case DXGI_FORMAT_R16G16B16A16_UINT: return tf_rgba16ui;
-		case DXGI_FORMAT_R16G16B16A16_SNORM: return tf_rgba16_snorm;
-		case DXGI_FORMAT_R16G16B16A16_SINT: return tf_rgba16i;
+		case DXGI_FORMAT_R16G16B16A16_FLOAT: return TextureFormat::rgba16f;
+		case DXGI_FORMAT_R16G16B16A16_UNORM: return TextureFormat::rgba16;
+		case DXGI_FORMAT_R16G16B16A16_UINT: return TextureFormat::rgba16ui;
+		case DXGI_FORMAT_R16G16B16A16_SNORM: return TextureFormat::rgba16_snorm;
+		case DXGI_FORMAT_R16G16B16A16_SINT: return TextureFormat::rgba16i;
 		case DXGI_FORMAT_R32G32_TYPELESS: break;
-		case DXGI_FORMAT_R32G32_FLOAT: return tf_rg32f;
-		case DXGI_FORMAT_R32G32_UINT: return tf_rg32ui;
-		case DXGI_FORMAT_R32G32_SINT: return tf_rg32i;
+		case DXGI_FORMAT_R32G32_FLOAT: return TextureFormat::rg32f;
+		case DXGI_FORMAT_R32G32_UINT: return TextureFormat::rg32ui;
+		case DXGI_FORMAT_R32G32_SINT: return TextureFormat::rg32i;
 		case DXGI_FORMAT_R32G8X24_TYPELESS: break;
-		case DXGI_FORMAT_D32_FLOAT_S8X24_UINT: return tf_depth32f_stencil8;
+		case DXGI_FORMAT_D32_FLOAT_S8X24_UINT: return TextureFormat::depth32f_stencil8;
 		case DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS: break;
 		case DXGI_FORMAT_X32_TYPELESS_G8X24_UINT: break;
 		case DXGI_FORMAT_R10G10B10A2_TYPELESS: break;
-		case DXGI_FORMAT_R10G10B10A2_UNORM: return tf_rgb10_a2;
+		case DXGI_FORMAT_R10G10B10A2_UNORM: return TextureFormat::rgb10_a2;
 		case DXGI_FORMAT_R10G10B10A2_UINT: break;
 		case DXGI_FORMAT_R11G11B10_FLOAT: break;
 		case DXGI_FORMAT_R8G8B8A8_TYPELESS: break;
-		case DXGI_FORMAT_R8G8B8A8_UNORM: return tf_rgba8;
-		case DXGI_FORMAT_R8G8B8A8_UNORM_SRGB: return tf_srgb8_alpha8;
-		case DXGI_FORMAT_R8G8B8A8_UINT: return tf_rgba8ui;
-		case DXGI_FORMAT_R8G8B8A8_SNORM: return tf_rgba8_snorm;
-		case DXGI_FORMAT_R8G8B8A8_SINT: return tf_rgba8i;
+		case DXGI_FORMAT_R8G8B8A8_UNORM: return TextureFormat::rgba8;
+		case DXGI_FORMAT_R8G8B8A8_UNORM_SRGB: return TextureFormat::srgb8_alpha8;
+		case DXGI_FORMAT_R8G8B8A8_UINT: return TextureFormat::rgba8ui;
+		case DXGI_FORMAT_R8G8B8A8_SNORM: return TextureFormat::rgba8_snorm;
+		case DXGI_FORMAT_R8G8B8A8_SINT: return TextureFormat::rgba8i;
 		case DXGI_FORMAT_R16G16_TYPELESS: break;
-		case DXGI_FORMAT_R16G16_FLOAT: return tf_rg16f;
-		case DXGI_FORMAT_R16G16_UNORM: return tf_rg16;
-		case DXGI_FORMAT_R16G16_UINT: return tf_rg16ui;
-		case DXGI_FORMAT_R16G16_SNORM: return tf_rg16_snorm;
-		case DXGI_FORMAT_R16G16_SINT: return tf_rg16i;
+		case DXGI_FORMAT_R16G16_FLOAT: return TextureFormat::rg16f;
+		case DXGI_FORMAT_R16G16_UNORM: return TextureFormat::rg16;
+		case DXGI_FORMAT_R16G16_UINT: return TextureFormat::rg16ui;
+		case DXGI_FORMAT_R16G16_SNORM: return TextureFormat::rg16_snorm;
+		case DXGI_FORMAT_R16G16_SINT: return TextureFormat::rg16i;
 		case DXGI_FORMAT_R32_TYPELESS: break;
-		case DXGI_FORMAT_D32_FLOAT: return tf_depth_component32f;
-		case DXGI_FORMAT_R32_FLOAT: return tf_r32f;
-		case DXGI_FORMAT_R32_UINT: return tf_r32ui;
-		case DXGI_FORMAT_R32_SINT: return tf_r32i;
+		case DXGI_FORMAT_D32_FLOAT: return TextureFormat::depth_component32f;
+		case DXGI_FORMAT_R32_FLOAT: return TextureFormat::r32f;
+		case DXGI_FORMAT_R32_UINT: return TextureFormat::r32ui;
+		case DXGI_FORMAT_R32_SINT: return TextureFormat::r32i;
 		case DXGI_FORMAT_R24G8_TYPELESS: break;
-		case DXGI_FORMAT_D24_UNORM_S8_UINT: return tf_depth24_stencil8;
+		case DXGI_FORMAT_D24_UNORM_S8_UINT: return TextureFormat::depth24_stencil8;
 		case DXGI_FORMAT_R24_UNORM_X8_TYPELESS: break;
 		case DXGI_FORMAT_X24_TYPELESS_G8_UINT: break;
 		case DXGI_FORMAT_R8G8_TYPELESS: break;
-		case DXGI_FORMAT_R8G8_UNORM: return tf_rg8;
-		case DXGI_FORMAT_R8G8_UINT: return tf_rg8ui;
-		case DXGI_FORMAT_R8G8_SNORM: return tf_rg8_snorm;
-		case DXGI_FORMAT_R8G8_SINT: return tf_rg8i;
+		case DXGI_FORMAT_R8G8_UNORM: return TextureFormat::rg8;
+		case DXGI_FORMAT_R8G8_UINT: return TextureFormat::rg8ui;
+		case DXGI_FORMAT_R8G8_SNORM: return TextureFormat::rg8_snorm;
+		case DXGI_FORMAT_R8G8_SINT: return TextureFormat::rg8i;
 		case DXGI_FORMAT_R16_TYPELESS: break;
-		case DXGI_FORMAT_R16_FLOAT: return tf_r16f;
+		case DXGI_FORMAT_R16_FLOAT: return TextureFormat::r16f;
 		case DXGI_FORMAT_D16_UNORM: break;
-		case DXGI_FORMAT_R16_UNORM: return tf_r16;
-		case DXGI_FORMAT_R16_UINT: return tf_r16ui;
-		case DXGI_FORMAT_R16_SNORM: return tf_r16_snorm;
-		case DXGI_FORMAT_R16_SINT: return tf_r16i;
+		case DXGI_FORMAT_R16_UNORM: return TextureFormat::r16;
+		case DXGI_FORMAT_R16_UINT: return TextureFormat::r16ui;
+		case DXGI_FORMAT_R16_SNORM: return TextureFormat::r16_snorm;
+		case DXGI_FORMAT_R16_SINT: return TextureFormat::r16i;
 		case DXGI_FORMAT_R8_TYPELESS: break;
-		case DXGI_FORMAT_R8_UNORM: return tf_r8;
-		case DXGI_FORMAT_R8_UINT: return tf_r8ui;
-		case DXGI_FORMAT_R8_SNORM: return tf_r8_snorm;
-		case DXGI_FORMAT_R8_SINT: return tf_r8i;
+		case DXGI_FORMAT_R8_UNORM: return TextureFormat::r8;
+		case DXGI_FORMAT_R8_UINT: return TextureFormat::r8ui;
+		case DXGI_FORMAT_R8_SNORM: return TextureFormat::r8_snorm;
+		case DXGI_FORMAT_R8_SINT: return TextureFormat::r8i;
 		case DXGI_FORMAT_A8_UNORM: break;
 		case DXGI_FORMAT_R1_UNORM: break;
-		case DXGI_FORMAT_R9G9B9E5_SHAREDEXP: return tf_rgb9_e5;
+		case DXGI_FORMAT_R9G9B9E5_SHAREDEXP: return TextureFormat::rgb9_e5;
 		case DXGI_FORMAT_R8G8_B8G8_UNORM: break;
 		case DXGI_FORMAT_G8R8_G8B8_UNORM: break;
 		case DXGI_FORMAT_BC1_TYPELESS: break;
-		case DXGI_FORMAT_BC1_UNORM: return tf_compressed_rgb_s3tc_dxt1;
-		case DXGI_FORMAT_BC1_UNORM_SRGB: return tf_compressed_srgb_s3tc_dxt1;
+		case DXGI_FORMAT_BC1_UNORM: return TextureFormat::compressed_rgb_s3tc_dxt1;
+		case DXGI_FORMAT_BC1_UNORM_SRGB: return TextureFormat::compressed_srgb_s3tc_dxt1;
 		case DXGI_FORMAT_BC2_TYPELESS: break;
-		case DXGI_FORMAT_BC2_UNORM: return tf_compressed_rgba_s3tc_dxt3;
-		case DXGI_FORMAT_BC2_UNORM_SRGB: return tf_compressed_srgb_alpha_s3tc_dxt3;
+		case DXGI_FORMAT_BC2_UNORM: return TextureFormat::compressed_rgba_s3tc_dxt3;
+		case DXGI_FORMAT_BC2_UNORM_SRGB: return TextureFormat::compressed_srgb_alpha_s3tc_dxt3;
 		case DXGI_FORMAT_BC3_TYPELESS: break;
-		case DXGI_FORMAT_BC3_UNORM: return tf_compressed_rgba_s3tc_dxt5;
-		case DXGI_FORMAT_BC3_UNORM_SRGB: return tf_compressed_srgb_alpha_s3tc_dxt5;
+		case DXGI_FORMAT_BC3_UNORM: return TextureFormat::compressed_rgba_s3tc_dxt5;
+		case DXGI_FORMAT_BC3_UNORM_SRGB: return TextureFormat::compressed_srgb_alpha_s3tc_dxt5;
 		case DXGI_FORMAT_BC4_TYPELESS: break;
 		case DXGI_FORMAT_BC4_UNORM: break;
 		case DXGI_FORMAT_BC4_SNORM: break;
@@ -1176,7 +1176,7 @@ namespace clan
 		case DXGI_FORMAT_BC5_SNORM: break;
 		case DXGI_FORMAT_B5G6R5_UNORM: break;
 		case DXGI_FORMAT_B5G5R5A1_UNORM: break;
-		case DXGI_FORMAT_B8G8R8A8_UNORM: return tf_bgra8;
+		case DXGI_FORMAT_B8G8R8A8_UNORM: return TextureFormat::bgra8;
 		case DXGI_FORMAT_B8G8R8X8_UNORM: break;
 		case DXGI_FORMAT_R10G10B10_XR_BIAS_A2_UNORM: break;
 		case DXGI_FORMAT_B8G8R8A8_TYPELESS: break;

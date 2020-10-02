@@ -54,7 +54,7 @@ namespace clan
 		glBindBuffer(GL_ARRAY_BUFFER, static_cast<GL3VertexArrayBufferProvider *>(attribute.array_provider)->get_handle());
 		glEnableVertexAttribArray(attrib_index);
 
-		if (attribute.type == type_float)
+		if (attribute.type == VertexAttributeDataType::type_float)
 		{
 			glVertexAttribPointer(attrib_index, attribute.size, OpenGL::to_enum(attribute.type),
 				normalize ? GL_TRUE : GL_FALSE, attribute.stride, (GLvoid *)attribute.offset);

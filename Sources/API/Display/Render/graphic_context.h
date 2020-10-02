@@ -65,190 +65,190 @@ namespace clan
 	class DepthStencilState;
 
 	/// Polygon culling modes.
-	enum CullMode
+	enum class CullMode
 	{
-		cull_front,
-		cull_back,
-		cull_front_and_back
+		front,
+		back,
+		front_and_back
 	};
 
 	/// Polygon filling modes.
-	enum FillMode
+	enum class FillMode
 	{
-		fill_point,
-		fill_line,
-		fill_polygon
+		point,
+		line,
+		polygon
 	};
 
 	/// Front face modes.
-	enum FaceSide
+	enum class FaceSide
 	{
-		face_clockwise,
-		face_counter_clockwise
+		clockwise,
+		counter_clockwise
 	};
 
 	/// Compare functions.
-	enum CompareFunction
+	enum class CompareFunction
 	{
-		compare_lequal,
-		compare_gequal,
-		compare_less,
-		compare_greater,
-		compare_equal,
-		compare_notequal,
-		compare_always,
-		compare_never
+		lequal,
+		gequal,
+		less,
+		greater,
+		equal,
+		notequal,
+		always,
+		never
 	};
 
 	/// Stencil operations
-	enum StencilOp
+	enum class StencilOp
 	{
-		stencil_keep,
-		stencil_zero,
-		stencil_replace,
-		stencil_incr,
-		stencil_decr,
-		stencil_invert,
-		stencil_incr_wrap,
-		stencil_decr_wrap
+		keep,
+		zero,
+		replace,
+		incr,
+		decr,
+		invert,
+		incr_wrap,
+		decr_wrap
 	};
 
 	/// Drawing buffers.
-	enum DrawBuffer
+	enum class DrawBuffer
 	{
-		buffer_none,
-		buffer_front_left,
-		buffer_front_right,
-		buffer_back_left,
-		buffer_back_right,
-		buffer_front,
-		buffer_back,
-		buffer_left,
-		buffer_right,
-		buffer_front_and_back
+		none,
+		front_left,
+		front_right,
+		back_left,
+		back_right,
+		front,
+		back,
+		left,
+		right,
+		front_and_back
 	};
 
 	/// Logic Op
-	enum LogicOp
+	enum class LogicOp
 	{
-		logic_clear,
-		logic_and,
-		logic_and_reverse,
-		logic_copy,
-		logic_and_inverted,
-		logic_noop,
-		logic_xor,
-		logic_or,
-		logic_nor,
-		logic_equiv,
-		logic_invert,
-		logic_or_reverse,
-		logic_copy_inverted,
-		logic_or_inverted,
-		logic_nand,
-		logic_set
+		clear,
+		and,
+		and_reverse,
+		copy,
+		and_inverted,
+		noop,
+		xor,
+		or,
+		nor,
+		equiv,
+		invert,
+		or_reverse,
+		copy_inverted,
+		or_inverted,
+		nand,
+		set
 	};
 
 	/// Blending functions.
-	enum BlendFunc
+	enum class BlendFunc
 	{
 		/// source or destination (0, 0, 0, 0)
-		blend_zero,
+		zero,
 
 		/// source or destination (1, 1, 1, 1)
-		blend_one,
+		one,
 
 		/// source (Rd, Gd, Bd, Ad)
-		blend_dest_color,
+		dest_color,
 
 		/// destination (Rs, Gs, Bs, As)
-		blend_src_color,
+		src_color,
 
 		/// source (1, 1, 1, 1) - (Rd, Gd, Bd, Ad)
-		blend_one_minus_dest_color,
+		one_minus_dest_color,
 
 		/// destination (1, 1, 1, 1) - (Rs, Gs, Bs, As)
-		blend_one_minus_src_color,
+		one_minus_src_color,
 
 		/// source or destination (As, As, As, As)
-		blend_src_alpha,
+		src_alpha,
 
 		/// source or destination (1, 1, 1, 1) - (As, As, As, As)
-		blend_one_minus_src_alpha,
+		one_minus_src_alpha,
 
 		/// source or destination (Ad, Ad, Ad, Ad)
-		blend_dest_alpha,
+		dest_alpha,
 
 		/// source or destination (1, 1, 1, 1) - (Ad, Ad, Ad, Ad)
-		blend_one_minus_dest_alpha,
+		one_minus_dest_alpha,
 
 		/// source (f, f, f, 1) - f = min(As, 1 - Ad)
-		blend_src_alpha_saturate,
+		src_alpha_saturate,
 
 		/// source or destination (Rc, Gc, Bc, Ac)
-		blend_constant_color,
+		constant_color,
 
 		/// source or destination (1, 1, 1, 1) - (Rc, Gc, Bc, Ac)
-		blend_one_minus_constant_color,
+		one_minus_constant_color,
 
 		/// source or destination (Ac, Ac, Ac, Ac)
-		blend_constant_alpha,
+		constant_alpha,
 
 		/// source or destination (1, 1, 1, 1) - (Ac, Ac, Ac, Ac)
-		blend_one_minus_constant_alpha
+		one_minus_constant_alpha
 	};
 
 	/// Blending equations.
-	enum BlendEquation
+	enum class BlendEquation
 	{
-		equation_add,
-		equation_subtract,
-		equation_reverse_subtract,
-		equation_min,
-		equation_max
+		add,
+		subtract,
+		reverse_subtract,
+		min,
+		max
 	};
 
 	/// Point Sprite Origin
-	enum PointSpriteOrigin
+	enum class PointSpriteOrigin
 	{
-		origin_upper_left,
-		origin_lower_left
+		upper_left,
+		lower_left
 	};
 
 	/// Primitive types.
-	enum PrimitivesType
+	enum class PrimitivesType
 	{
-		type_points,
-		type_line_strip,
-		type_line_loop,
-		type_lines,
-		type_triangle_strip,
-		type_triangle_fan,
-		type_triangles
+		points,
+		line_strip,
+		line_loop,
+		lines,
+		triangle_strip,
+		triangle_fan,
+		triangles
 	};
 
 	/// Y axis direction for viewports, clipping rects, textures and render targets
-	enum TextureImageYAxis
+	enum class TextureImageYAxis
 	{
-		y_axis_bottom_up,  //!< OpenGL, origin is lower left with Y going upwards
-		y_axis_top_down    //!< Direct3D, origin is upper left with Y going downwards
+		y_bottom_up,  //!< OpenGL, origin is lower left with Y going upwards
+		y_top_down    //!< Direct3D, origin is upper left with Y going downwards
 	};
 
 	/// Standard Program
-	enum StandardProgram
+	enum class StandardProgram
 	{
-		program_color_only,
-		program_single_texture,
-		program_sprite,
-		program_path
+		color_only,
+		single_texture,
+		sprite,
+		path
 	};
 
 	/// Shader language used
-	enum ShaderLanguage
+	enum class ShaderLanguage
 	{
-		shader_glsl,
-		shader_hlsl,
-		shader_fixed_function,
+		glsl,
+		hlsl,
+		fixed_function,
 		num_shader_languages
 	};
 
@@ -373,10 +373,10 @@ namespace clan
 		GraphicContext clone() const;
 
 		/// Return the content of the read buffer into a pixel buffer.
-		PixelBuffer get_pixeldata(const Rect& rect, TextureFormat texture_format = tf_rgba8, bool clamp = true);
+		PixelBuffer get_pixeldata(const Rect& rect, TextureFormat texture_format = TextureFormat::rgba8, bool clamp = true);
 
 		/// Return the content of the read buffer into a pixel buffer.
-		PixelBuffer get_pixeldata(TextureFormat texture_format = tf_rgba8, bool clamp = true);
+		PixelBuffer get_pixeldata(TextureFormat texture_format = TextureFormat::rgba8, bool clamp = true);
 
 		/** Returns `true` if this frame buffer object is owned by this graphic
 		 *  context.
@@ -555,7 +555,7 @@ namespace clan
 		/// \param offset = void
 		void draw_primitives_elements(PrimitivesType type, int count, ElementArrayVector<unsigned int> &element_array, size_t offset = 0)
 		{
-			draw_primitives_elements(type, count, (ElementArrayBuffer&)element_array, type_unsigned_int, offset * sizeof(unsigned int));
+			draw_primitives_elements(type, count, (ElementArrayBuffer&)element_array, VertexAttributeDataType::type_unsigned_int, offset * sizeof(unsigned int));
 		}
 
 		/// Draw primitives elements
@@ -567,7 +567,7 @@ namespace clan
 		/// \param offset = void
 		void draw_primitives_elements(PrimitivesType type, int count, ElementArrayVector<unsigned short> &element_array, size_t offset = 0)
 		{
-			draw_primitives_elements(type, count, (ElementArrayBuffer&)element_array, type_unsigned_short, offset * sizeof(unsigned short));
+			draw_primitives_elements(type, count, (ElementArrayBuffer&)element_array, VertexAttributeDataType::type_unsigned_short, offset * sizeof(unsigned short));
 		}
 
 		/// Draw primitives elements
@@ -579,7 +579,7 @@ namespace clan
 		/// \param offset = void
 		void draw_primitives_elements(PrimitivesType type, int count, ElementArrayVector<unsigned char> &element_array, size_t offset = 0)
 		{
-			draw_primitives_elements(type, count, (ElementArrayBuffer&)element_array, type_unsigned_byte, offset * sizeof(unsigned char));
+			draw_primitives_elements(type, count, (ElementArrayBuffer&)element_array, VertexAttributeDataType::type_unsigned_byte, offset * sizeof(unsigned char));
 		}
 
 		/// Draw primitives elements instanced
@@ -602,7 +602,7 @@ namespace clan
 		/// \param instance_count = number of instances drawn
 		void draw_primitives_elements_instanced(PrimitivesType type, int count, ElementArrayVector<unsigned int> &element_array, size_t offset, int instance_count)
 		{
-			draw_primitives_elements_instanced(type, count, (ElementArrayBuffer&)element_array, type_unsigned_int, offset * sizeof(unsigned int), instance_count);
+			draw_primitives_elements_instanced(type, count, (ElementArrayBuffer&)element_array, VertexAttributeDataType::type_unsigned_int, offset * sizeof(unsigned int), instance_count);
 		}
 
 		/// Draw primitives elements instanced
@@ -615,7 +615,7 @@ namespace clan
 		/// \param instance_count = number of instances drawn
 		void draw_primitives_elements_instanced(PrimitivesType type, int count, ElementArrayVector<unsigned short> &element_array, size_t offset, int instance_count)
 		{
-			draw_primitives_elements_instanced(type, count, (ElementArrayBuffer&)element_array, type_unsigned_short, offset * sizeof(unsigned short), instance_count);
+			draw_primitives_elements_instanced(type, count, (ElementArrayBuffer&)element_array, VertexAttributeDataType::type_unsigned_short, offset * sizeof(unsigned short), instance_count);
 		}
 
 		/// Draw primitives elements instanced
@@ -628,7 +628,7 @@ namespace clan
 		/// \param instance_count = number of instances drawn
 		void draw_primitives_elements_instanced(PrimitivesType type, int count, ElementArrayVector<unsigned char> &element_array, size_t offset, int instance_count)
 		{
-			draw_primitives_elements_instanced(type, count, (ElementArrayBuffer&)element_array, type_unsigned_byte, offset * sizeof(unsigned char), instance_count);
+			draw_primitives_elements_instanced(type, count, (ElementArrayBuffer&)element_array, VertexAttributeDataType::type_unsigned_byte, offset * sizeof(unsigned char), instance_count);
 		}
 
 		/// Reset the primitives arrays.

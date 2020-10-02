@@ -94,7 +94,7 @@ namespace clan
 		switch (type)
 		{
 		case 1: // null
-			return NetGameEventValue(NetGameEventValue::null);
+			return NetGameEventValue(NetGameEventValue::Type::null);
 		case 2: // uint
 		{
 			if (pos + 4 > length)
@@ -137,7 +137,7 @@ namespace clan
 		}
 		case 8: // complex
 		{
-			NetGameEventValue value(NetGameEventValue::complex);
+			NetGameEventValue value(NetGameEventValue::Type::complex);
 			while (true)
 			{
 				if (pos >= length)
@@ -214,25 +214,25 @@ namespace clan
 	{
 		switch (value.get_type())
 		{
-		case NetGameEventValue::null:
+		case NetGameEventValue::Type::null:
 			*d = 1;
 			return 1;
-		case NetGameEventValue::uinteger:
+		case NetGameEventValue::Type::uinteger:
 			*d = 2;
 			*reinterpret_cast<unsigned int*>(d + 1) = value.get_uinteger();
 			return 5;
-		case NetGameEventValue::integer:
+		case NetGameEventValue::Type::integer:
 			*d = 3;
 			*reinterpret_cast<int*>(d + 1) = value.get_integer();
 			return 5;
-		case NetGameEventValue::number:
+		case NetGameEventValue::Type::number:
 			*d = 4;
 			*reinterpret_cast<float*>(d + 1) = value.get_number();
 			return 5;
-		case NetGameEventValue::boolean:
+		case NetGameEventValue::Type::boolean:
 			*d = value.get_boolean() ? 6 : 5;
 			return 1;
-		case NetGameEventValue::string:
+		case NetGameEventValue::Type::string:
 		{
 			std::string s = value.get_string();
 			*d = 7;
@@ -240,7 +240,7 @@ namespace clan
 			memcpy(d + 3, s.data(), s.length());
 			return 3 + s.length();
 		}
-		case NetGameEventValue::complex:
+		case NetGameEventValue::Type::complex:
 		{
 			d[0] = 8;
 			unsigned l = 1;
@@ -250,15 +250,15 @@ namespace clan
 			l++;
 			return l;
 		}
-		case NetGameEventValue::ucharacter:
+		case NetGameEventValue::Type::ucharacter:
 			*d = 9;
 			*reinterpret_cast<unsigned char*>(d + 1) = value.get_ucharacter();
 			return 2;
-		case NetGameEventValue::character:
+		case NetGameEventValue::Type::character:
 			*d = 10;
 			*reinterpret_cast<char*>(d + 1) = value.get_character();
 			return 2;
-		case NetGameEventValue::binary:
+		case NetGameEventValue::Type::binary:
 		{
 			DataBuffer s = value.get_binary();
 			*d = 11;
@@ -275,21 +275,21 @@ namespace clan
 	{
 		switch (value.get_type())
 		{
-		case NetGameEventValue::null:
-		case NetGameEventValue::boolean:
+		case NetGameEventValue::Type::null:
+		case NetGameEventValue::Type::boolean:
 			return 1;
-		case NetGameEventValue::character:
-		case NetGameEventValue::ucharacter:
+		case NetGameEventValue::Type::character:
+		case NetGameEventValue::Type::ucharacter:
 			return 2;
-		case NetGameEventValue::uinteger:
-		case NetGameEventValue::integer:
-		case NetGameEventValue::number:
+		case NetGameEventValue::Type::uinteger:
+		case NetGameEventValue::Type::integer:
+		case NetGameEventValue::Type::number:
 			return 5;
-		case NetGameEventValue::string:
+		case NetGameEventValue::Type::string:
 			return 1 + 2 + value.get_string().length();
-		case NetGameEventValue::binary:
+		case NetGameEventValue::Type::binary:
 			return 1 + 2 + value.get_binary().get_size();
-		case NetGameEventValue::complex:
+		case NetGameEventValue::Type::complex:
 		{
 			unsigned l = 2;
 			for (unsigned int i = 0; i < value.get_member_count(); i++)

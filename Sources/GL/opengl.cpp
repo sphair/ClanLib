@@ -164,105 +164,105 @@ namespace clan
 		switch (format)
 		{
 	#ifdef __IOS__
-			case tf_rgb8: tf.internal_format = GL_RGB8; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
-			case tf_rgb8ui: tf.internal_format = GL_RGB8UI; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
-			case tf_rgba8i: tf.internal_format = GL_RGBA8I; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_BYTE; break;
-			case tf_rgba8ui: tf.internal_format = GL_RGBA8UI; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
+			case TextureFormat::rgb8: tf.internal_format = GL_RGB8; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
+			case TextureFormat::rgb8ui: tf.internal_format = GL_RGB8UI; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
+			case TextureFormat::rgba8i: tf.internal_format = GL_RGBA8I; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_BYTE; break;
+			case TextureFormat::rgba8ui: tf.internal_format = GL_RGBA8UI; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
 
 	#else
 
-			case tf_stencil_index1: tf.internal_format = GL_STENCIL_INDEX1; tf.pixel_format = GL_STENCIL_INDEX; tf.pixel_datatype = fixme; break;
-			case tf_stencil_index4: tf.internal_format = GL_STENCIL_INDEX4; tf.pixel_format = GL_STENCIL_INDEX; tf.pixel_datatype = fixme; break;
-			case tf_stencil_index8: tf.internal_format = GL_STENCIL_INDEX8; tf.pixel_format = GL_STENCIL_INDEX; tf.pixel_datatype = fixme; break;
-			case tf_stencil_index16: tf.internal_format = GL_STENCIL_INDEX16; tf.pixel_format = GL_STENCIL_INDEX; tf.pixel_datatype = fixme; break;
-			case tf_r8: tf.internal_format = GL_R8; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
-			case tf_r8_snorm: tf.internal_format = GL_R8_SNORM; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_BYTE; break;
-			case tf_r16: tf.internal_format = GL_R16; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_UNSIGNED_SHORT; break;
-			case tf_r16_snorm: tf.internal_format = GL_R16_SNORM; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_SHORT; break;
-			case tf_rg8: tf.internal_format = GL_RG8; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
-			case tf_rg8_snorm: tf.internal_format = GL_RG8_SNORM; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_BYTE; break;
-			case tf_rg16: tf.internal_format = GL_RG16; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_UNSIGNED_SHORT; break;
-			case tf_rg16_snorm: tf.internal_format = GL_RG16_SNORM; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_SHORT; break;
-			case tf_r3_g3_b2: tf.internal_format = GL_R3_G3_B2; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_UNSIGNED_BYTE_3_3_2; break;
-			case tf_rgb4: tf.internal_format = GL_RGB4; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_SHORT_4_4_4_4; break;
-			case tf_rgb5: tf.internal_format = GL_RGB5; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_SHORT_5_5_5_1; break;
-			case tf_rgb8: tf.internal_format = GL_RGB8; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
-			case tf_rgb8_snorm: tf.internal_format = GL_RGB8_SNORM; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_BYTE; break;
-			case tf_rgb10: tf.internal_format = GL_RGB10; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_INT_10_10_10_2; break;
-			case tf_rgb12: tf.internal_format = GL_RGB12; tf.pixel_format = GL_RGB; tf.pixel_datatype = fixme; break;
-			case tf_rgb16: tf.internal_format = GL_RGB16; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_UNSIGNED_SHORT; break;
-			case tf_rgb16_snorm: tf.internal_format = GL_RGB16_SNORM; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_SHORT; break;
-			case tf_rgba2: tf.internal_format = GL_RGBA2; tf.pixel_format = GL_RGBA; tf.pixel_datatype = fixme; break;
-			case tf_rgba4: tf.internal_format = GL_RGBA4; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_SHORT_4_4_4_4; break;
-			case tf_rgb5_a1: tf.internal_format = GL_RGB5_A1; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_SHORT_5_5_5_1; break;
-			case tf_rgba8: tf.internal_format = GL_RGBA8; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
-			case tf_rgba8_snorm: tf.internal_format = GL_RGBA8_SNORM; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_BYTE; break;
-			case tf_bgra8: tf.internal_format = GL_RGBA8; tf.pixel_format = GL_BGRA; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
-			case tf_bgr8: tf.internal_format = GL_RGB8; tf.pixel_format = GL_BGR; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
-			case tf_rgb10_a2: tf.internal_format = GL_RGB10_A2; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_INT_10_10_10_2; break;
-			case tf_rgba12: tf.internal_format = GL_RGBA12; tf.pixel_format = GL_RGBA; tf.pixel_datatype = fixme; break;
-			case tf_rgba16: tf.internal_format = GL_RGBA16; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_SHORT; break;
-			case tf_rgba16_snorm: tf.internal_format = GL_RGBA16_SNORM; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_SHORT; break;
-			case tf_srgb8: tf.internal_format = GL_SRGB8; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
-			case tf_srgb8_alpha8: tf.internal_format = GL_SRGB8_ALPHA8; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
-			case tf_r16f: tf.internal_format = GL_R16F; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_HALF_FLOAT; break;
-			case tf_rg16f: tf.internal_format = GL_RG16F; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_HALF_FLOAT; break;
-			case tf_rgb16f: tf.internal_format = GL_RGB16F; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_HALF_FLOAT; break;
-			case tf_rgba16f: tf.internal_format = GL_RGBA16F; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_HALF_FLOAT; break;
-			case tf_r32f: tf.internal_format = GL_R32F; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_FLOAT; break;
-			case tf_rg32f: tf.internal_format = GL_RG32F; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_FLOAT; break;
-			case tf_rgb32f: tf.internal_format = GL_RGB32F; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_FLOAT; break;
-			case tf_rgba32f: tf.internal_format = GL_RGBA32F; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_FLOAT; break;
-			case tf_r11f_g11f_b10f: tf.internal_format = GL_R11F_G11F_B10F; tf.pixel_format = GL_RGB; tf.pixel_datatype = fixme; break;
-			case tf_rgb9_e5: tf.internal_format = GL_RGB9_E5; tf.pixel_format = GL_RGB; tf.pixel_datatype = fixme; break;
-			case tf_r8i: tf.internal_format = GL_R8I; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_BYTE; break;
-			case tf_r8ui: tf.internal_format = GL_R8UI; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
-			case tf_r16i: tf.internal_format = GL_R16I; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_SHORT; break;
-			case tf_r16ui: tf.internal_format = GL_R16UI; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_UNSIGNED_SHORT; break;
-			case tf_r32i: tf.internal_format = GL_R32I; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_INT; break;
-			case tf_r32ui: tf.internal_format = GL_R32UI; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_UNSIGNED_INT; break;
-			case tf_rg8i: tf.internal_format = GL_RG8I; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_BYTE; break;
-			case tf_rg8ui: tf.internal_format = GL_RG8UI; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
-			case tf_rg16i: tf.internal_format = GL_RG16I; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_BYTE; break;
-			case tf_rg16ui: tf.internal_format = GL_RG16UI; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_UNSIGNED_SHORT; break;
-			case tf_rg32i: tf.internal_format = GL_RG32I; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_INT; break;
-			case tf_rg32ui: tf.internal_format = GL_RG32UI; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_UNSIGNED_INT; break;
-			case tf_rgb8i: tf.internal_format = GL_RGB8I; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_BYTE; break;
-			case tf_rgb8ui: tf.internal_format = GL_RGB8UI; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
-			case tf_rgb16i: tf.internal_format = GL_RGB16I; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_SHORT; break;
-			case tf_rgb16ui: tf.internal_format = GL_RGB16UI; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_UNSIGNED_SHORT; break;
-			case tf_rgb32i: tf.internal_format = GL_RGB32I; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_INT; break;
-			case tf_rgb32ui: tf.internal_format = GL_RGB32UI; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_UNSIGNED_INT; break;
-			case tf_rgba8i: tf.internal_format = GL_RGBA8I; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_BYTE; break;
-			case tf_rgba8ui: tf.internal_format = GL_RGBA8UI; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
-			case tf_rgba16i: tf.internal_format = GL_RGBA16I; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_SHORT; break;
-			case tf_rgba16ui: tf.internal_format = GL_RGBA16UI; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_SHORT; break;
-			case tf_rgba32i: tf.internal_format = GL_RGBA32I; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_INT; break;
-			case tf_rgba32ui: tf.internal_format = GL_RGBA32UI; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_INT; break;
-			case tf_depth_component16: tf.internal_format = GL_DEPTH_COMPONENT16; tf.pixel_format = GL_DEPTH_COMPONENT; tf.pixel_datatype = fixme; break;
-			case tf_depth_component24: tf.internal_format = GL_DEPTH_COMPONENT24; tf.pixel_format = GL_DEPTH_COMPONENT; tf.pixel_datatype = fixme; break;
-			case tf_depth_component32: tf.internal_format = GL_DEPTH_COMPONENT32; tf.pixel_format = GL_DEPTH_COMPONENT; tf.pixel_datatype = fixme; break;
-			case tf_depth_component32f: tf.internal_format = GL_DEPTH_COMPONENT32F; tf.pixel_format = GL_DEPTH_COMPONENT; tf.pixel_datatype = fixme; break;
-			case tf_depth24_stencil8: tf.internal_format = GL_DEPTH24_STENCIL8; tf.pixel_format = GL_DEPTH_STENCIL; tf.pixel_datatype = fixme; break;
-			case tf_depth32f_stencil8: tf.internal_format = GL_DEPTH32F_STENCIL8; tf.pixel_format = GL_DEPTH_STENCIL; tf.pixel_datatype = fixme; break;
-			case tf_compressed_red: tf.internal_format = GL_COMPRESSED_RED; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_COMPRESSED_RED; break;
-			case tf_compressed_rg: tf.internal_format = GL_COMPRESSED_RG; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_COMPRESSED_RG; break;
-			case tf_compressed_rgb: tf.internal_format = GL_COMPRESSED_RGB; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_COMPRESSED_RGB; break;
-			case tf_compressed_rgba: tf.internal_format = GL_COMPRESSED_RGBA; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_COMPRESSED_RGBA; break;
-			case tf_compressed_srgb: tf.internal_format = GL_COMPRESSED_SRGB; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_COMPRESSED_SRGB; break;
-			case tf_compressed_srgb_alpha: tf.internal_format = GL_COMPRESSED_SRGB_ALPHA; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_COMPRESSED_SRGB_ALPHA; break;
-			case tf_compressed_red_rgtc1: tf.internal_format = GL_COMPRESSED_RED_RGTC1; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_COMPRESSED_RED_RGTC1; break;
-			case tf_compressed_signed_red_rgtc1: tf.internal_format = GL_COMPRESSED_SIGNED_RED_RGTC1; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_COMPRESSED_SIGNED_RED_RGTC1; break;
-			case tf_compressed_rg_rgtc2: tf.internal_format = GL_COMPRESSED_RG_RGTC2; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_COMPRESSED_RG_RGTC2; break;
-			case tf_compressed_signed_rg_rgtc2: tf.internal_format = GL_COMPRESSED_SIGNED_RG_RGTC2; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_COMPRESSED_SIGNED_RG_RGTC2; break;
-			case tf_compressed_rgb_s3tc_dxt1: tf.internal_format = GL_COMPRESSED_RGB_S3TC_DXT1_EXT; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_COMPRESSED_RGB_S3TC_DXT1_EXT; break;
-			case tf_compressed_rgba_s3tc_dxt1: tf.internal_format = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT; break;
-			case tf_compressed_rgba_s3tc_dxt3: tf.internal_format = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT; break;
-			case tf_compressed_rgba_s3tc_dxt5: tf.internal_format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT; break;
-			case tf_compressed_srgb_s3tc_dxt1: tf.internal_format = GL_COMPRESSED_SRGB_S3TC_DXT1_EXT; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_COMPRESSED_SRGB_S3TC_DXT1_EXT; break;
-			case tf_compressed_srgb_alpha_s3tc_dxt1: tf.internal_format = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT; break;
-			case tf_compressed_srgb_alpha_s3tc_dxt3: tf.internal_format = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT; break;
-			case tf_compressed_srgb_alpha_s3tc_dxt5: tf.internal_format = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT; break;
+			case TextureFormat::stencil_index1: tf.internal_format = GL_STENCIL_INDEX1; tf.pixel_format = GL_STENCIL_INDEX; tf.pixel_datatype = fixme; break;
+			case TextureFormat::stencil_index4: tf.internal_format = GL_STENCIL_INDEX4; tf.pixel_format = GL_STENCIL_INDEX; tf.pixel_datatype = fixme; break;
+			case TextureFormat::stencil_index8: tf.internal_format = GL_STENCIL_INDEX8; tf.pixel_format = GL_STENCIL_INDEX; tf.pixel_datatype = fixme; break;
+			case TextureFormat::stencil_index16: tf.internal_format = GL_STENCIL_INDEX16; tf.pixel_format = GL_STENCIL_INDEX; tf.pixel_datatype = fixme; break;
+			case TextureFormat::r8: tf.internal_format = GL_R8; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
+			case TextureFormat::r8_snorm: tf.internal_format = GL_R8_SNORM; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_BYTE; break;
+			case TextureFormat::r16: tf.internal_format = GL_R16; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_UNSIGNED_SHORT; break;
+			case TextureFormat::r16_snorm: tf.internal_format = GL_R16_SNORM; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_SHORT; break;
+			case TextureFormat::rg8: tf.internal_format = GL_RG8; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
+			case TextureFormat::rg8_snorm: tf.internal_format = GL_RG8_SNORM; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_BYTE; break;
+			case TextureFormat::rg16: tf.internal_format = GL_RG16; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_UNSIGNED_SHORT; break;
+			case TextureFormat::rg16_snorm: tf.internal_format = GL_RG16_SNORM; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_SHORT; break;
+			case TextureFormat::r3_g3_b2: tf.internal_format = GL_R3_G3_B2; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_UNSIGNED_BYTE_3_3_2; break;
+			case TextureFormat::rgb4: tf.internal_format = GL_RGB4; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_SHORT_4_4_4_4; break;
+			case TextureFormat::rgb5: tf.internal_format = GL_RGB5; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_SHORT_5_5_5_1; break;
+			case TextureFormat::rgb8: tf.internal_format = GL_RGB8; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
+			case TextureFormat::rgb8_snorm: tf.internal_format = GL_RGB8_SNORM; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_BYTE; break;
+			case TextureFormat::rgb10: tf.internal_format = GL_RGB10; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_INT_10_10_10_2; break;
+			case TextureFormat::rgb12: tf.internal_format = GL_RGB12; tf.pixel_format = GL_RGB; tf.pixel_datatype = fixme; break;
+			case TextureFormat::rgb16: tf.internal_format = GL_RGB16; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_UNSIGNED_SHORT; break;
+			case TextureFormat::rgb16_snorm: tf.internal_format = GL_RGB16_SNORM; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_SHORT; break;
+			case TextureFormat::rgba2: tf.internal_format = GL_RGBA2; tf.pixel_format = GL_RGBA; tf.pixel_datatype = fixme; break;
+			case TextureFormat::rgba4: tf.internal_format = GL_RGBA4; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_SHORT_4_4_4_4; break;
+			case TextureFormat::rgb5_a1: tf.internal_format = GL_RGB5_A1; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_SHORT_5_5_5_1; break;
+			case TextureFormat::rgba8: tf.internal_format = GL_RGBA8; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
+			case TextureFormat::rgba8_snorm: tf.internal_format = GL_RGBA8_SNORM; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_BYTE; break;
+			case TextureFormat::bgra8: tf.internal_format = GL_RGBA8; tf.pixel_format = GL_BGRA; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
+			case TextureFormat::bgr8: tf.internal_format = GL_RGB8; tf.pixel_format = GL_BGR; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
+			case TextureFormat::rgb10_a2: tf.internal_format = GL_RGB10_A2; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_INT_10_10_10_2; break;
+			case TextureFormat::rgba12: tf.internal_format = GL_RGBA12; tf.pixel_format = GL_RGBA; tf.pixel_datatype = fixme; break;
+			case TextureFormat::rgba16: tf.internal_format = GL_RGBA16; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_SHORT; break;
+			case TextureFormat::rgba16_snorm: tf.internal_format = GL_RGBA16_SNORM; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_SHORT; break;
+			case TextureFormat::srgb8: tf.internal_format = GL_SRGB8; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
+			case TextureFormat::srgb8_alpha8: tf.internal_format = GL_SRGB8_ALPHA8; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
+			case TextureFormat::r16f: tf.internal_format = GL_R16F; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_HALF_FLOAT; break;
+			case TextureFormat::rg16f: tf.internal_format = GL_RG16F; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_HALF_FLOAT; break;
+			case TextureFormat::rgb16f: tf.internal_format = GL_RGB16F; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_HALF_FLOAT; break;
+			case TextureFormat::rgba16f: tf.internal_format = GL_RGBA16F; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_HALF_FLOAT; break;
+			case TextureFormat::r32f: tf.internal_format = GL_R32F; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_FLOAT; break;
+			case TextureFormat::rg32f: tf.internal_format = GL_RG32F; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_FLOAT; break;
+			case TextureFormat::rgb32f: tf.internal_format = GL_RGB32F; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_FLOAT; break;
+			case TextureFormat::rgba32f: tf.internal_format = GL_RGBA32F; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_FLOAT; break;
+			case TextureFormat::r11f_g11f_b10f: tf.internal_format = GL_R11F_G11F_B10F; tf.pixel_format = GL_RGB; tf.pixel_datatype = fixme; break;
+			case TextureFormat::rgb9_e5: tf.internal_format = GL_RGB9_E5; tf.pixel_format = GL_RGB; tf.pixel_datatype = fixme; break;
+			case TextureFormat::r8i: tf.internal_format = GL_R8I; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_BYTE; break;
+			case TextureFormat::r8ui: tf.internal_format = GL_R8UI; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
+			case TextureFormat::r16i: tf.internal_format = GL_R16I; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_SHORT; break;
+			case TextureFormat::r16ui: tf.internal_format = GL_R16UI; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_UNSIGNED_SHORT; break;
+			case TextureFormat::r32i: tf.internal_format = GL_R32I; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_INT; break;
+			case TextureFormat::r32ui: tf.internal_format = GL_R32UI; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_UNSIGNED_INT; break;
+			case TextureFormat::rg8i: tf.internal_format = GL_RG8I; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_BYTE; break;
+			case TextureFormat::rg8ui: tf.internal_format = GL_RG8UI; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
+			case TextureFormat::rg16i: tf.internal_format = GL_RG16I; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_BYTE; break;
+			case TextureFormat::rg16ui: tf.internal_format = GL_RG16UI; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_UNSIGNED_SHORT; break;
+			case TextureFormat::rg32i: tf.internal_format = GL_RG32I; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_INT; break;
+			case TextureFormat::rg32ui: tf.internal_format = GL_RG32UI; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_UNSIGNED_INT; break;
+			case TextureFormat::rgb8i: tf.internal_format = GL_RGB8I; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_BYTE; break;
+			case TextureFormat::rgb8ui: tf.internal_format = GL_RGB8UI; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
+			case TextureFormat::rgb16i: tf.internal_format = GL_RGB16I; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_SHORT; break;
+			case TextureFormat::rgb16ui: tf.internal_format = GL_RGB16UI; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_UNSIGNED_SHORT; break;
+			case TextureFormat::rgb32i: tf.internal_format = GL_RGB32I; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_INT; break;
+			case TextureFormat::rgb32ui: tf.internal_format = GL_RGB32UI; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_UNSIGNED_INT; break;
+			case TextureFormat::rgba8i: tf.internal_format = GL_RGBA8I; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_BYTE; break;
+			case TextureFormat::rgba8ui: tf.internal_format = GL_RGBA8UI; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
+			case TextureFormat::rgba16i: tf.internal_format = GL_RGBA16I; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_SHORT; break;
+			case TextureFormat::rgba16ui: tf.internal_format = GL_RGBA16UI; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_SHORT; break;
+			case TextureFormat::rgba32i: tf.internal_format = GL_RGBA32I; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_INT; break;
+			case TextureFormat::rgba32ui: tf.internal_format = GL_RGBA32UI; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_INT; break;
+			case TextureFormat::depth_component16: tf.internal_format = GL_DEPTH_COMPONENT16; tf.pixel_format = GL_DEPTH_COMPONENT; tf.pixel_datatype = fixme; break;
+			case TextureFormat::depth_component24: tf.internal_format = GL_DEPTH_COMPONENT24; tf.pixel_format = GL_DEPTH_COMPONENT; tf.pixel_datatype = fixme; break;
+			case TextureFormat::depth_component32: tf.internal_format = GL_DEPTH_COMPONENT32; tf.pixel_format = GL_DEPTH_COMPONENT; tf.pixel_datatype = fixme; break;
+			case TextureFormat::depth_component32f: tf.internal_format = GL_DEPTH_COMPONENT32F; tf.pixel_format = GL_DEPTH_COMPONENT; tf.pixel_datatype = fixme; break;
+			case TextureFormat::depth24_stencil8: tf.internal_format = GL_DEPTH24_STENCIL8; tf.pixel_format = GL_DEPTH_STENCIL; tf.pixel_datatype = fixme; break;
+			case TextureFormat::depth32f_stencil8: tf.internal_format = GL_DEPTH32F_STENCIL8; tf.pixel_format = GL_DEPTH_STENCIL; tf.pixel_datatype = fixme; break;
+			case TextureFormat::compressed_red: tf.internal_format = GL_COMPRESSED_RED; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_COMPRESSED_RED; break;
+			case TextureFormat::compressed_rg: tf.internal_format = GL_COMPRESSED_RG; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_COMPRESSED_RG; break;
+			case TextureFormat::compressed_rgb: tf.internal_format = GL_COMPRESSED_RGB; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_COMPRESSED_RGB; break;
+			case TextureFormat::compressed_rgba: tf.internal_format = GL_COMPRESSED_RGBA; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_COMPRESSED_RGBA; break;
+			case TextureFormat::compressed_srgb: tf.internal_format = GL_COMPRESSED_SRGB; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_COMPRESSED_SRGB; break;
+			case TextureFormat::compressed_srgb_alpha: tf.internal_format = GL_COMPRESSED_SRGB_ALPHA; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_COMPRESSED_SRGB_ALPHA; break;
+			case TextureFormat::compressed_red_rgtc1: tf.internal_format = GL_COMPRESSED_RED_RGTC1; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_COMPRESSED_RED_RGTC1; break;
+			case TextureFormat::compressed_signed_red_rgtc1: tf.internal_format = GL_COMPRESSED_SIGNED_RED_RGTC1; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_COMPRESSED_SIGNED_RED_RGTC1; break;
+			case TextureFormat::compressed_rg_rgtc2: tf.internal_format = GL_COMPRESSED_RG_RGTC2; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_COMPRESSED_RG_RGTC2; break;
+			case TextureFormat::compressed_signed_rg_rgtc2: tf.internal_format = GL_COMPRESSED_SIGNED_RG_RGTC2; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_COMPRESSED_SIGNED_RG_RGTC2; break;
+			case TextureFormat::compressed_rgb_s3tc_dxt1: tf.internal_format = GL_COMPRESSED_RGB_S3TC_DXT1_EXT; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_COMPRESSED_RGB_S3TC_DXT1_EXT; break;
+			case TextureFormat::compressed_rgba_s3tc_dxt1: tf.internal_format = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT; break;
+			case TextureFormat::compressed_rgba_s3tc_dxt3: tf.internal_format = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT; break;
+			case TextureFormat::compressed_rgba_s3tc_dxt5: tf.internal_format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT; break;
+			case TextureFormat::compressed_srgb_s3tc_dxt1: tf.internal_format = GL_COMPRESSED_SRGB_S3TC_DXT1_EXT; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_COMPRESSED_SRGB_S3TC_DXT1_EXT; break;
+			case TextureFormat::compressed_srgb_alpha_s3tc_dxt1: tf.internal_format = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT; break;
+			case TextureFormat::compressed_srgb_alpha_s3tc_dxt3: tf.internal_format = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT; break;
+			case TextureFormat::compressed_srgb_alpha_s3tc_dxt5: tf.internal_format = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT; break;
 	#endif
 			default:
 				tf.valid = false;
@@ -1334,16 +1334,16 @@ namespace clan
 	{
 		switch(buffer)
 		{
-		case buffer_back: return GL_BACK;
-		case buffer_back_left: return GL_BACK_LEFT;
-		case buffer_back_right: return GL_BACK_RIGHT;
-		case buffer_front: return GL_FRONT;
-		case buffer_front_and_back: return GL_FRONT_AND_BACK;
-		case buffer_front_left: return GL_FRONT_LEFT;
-		case buffer_front_right: return GL_FRONT_RIGHT;
-		case buffer_left: return GL_LEFT;
-		case buffer_none: return GL_NONE;
-		case buffer_right: return GL_RIGHT;
+		case DrawBuffer::back: return GL_BACK;
+		case DrawBuffer::back_left: return GL_BACK_LEFT;
+		case DrawBuffer::back_right: return GL_BACK_RIGHT;
+		case DrawBuffer::front: return GL_FRONT;
+		case DrawBuffer::front_and_back: return GL_FRONT_AND_BACK;
+		case DrawBuffer::front_left: return GL_FRONT_LEFT;
+		case DrawBuffer::front_right: return GL_FRONT_RIGHT;
+		case DrawBuffer::left: return GL_LEFT;
+		case DrawBuffer::none: return GL_NONE;
+		case DrawBuffer::right: return GL_RIGHT;
 		default: return GL_BACK;
 		}
 	}
@@ -1352,14 +1352,14 @@ namespace clan
 	{
 		switch( func )
 		{
-		case compare_never: return GL_NEVER;
-		case compare_less: return GL_LESS;
-		case compare_lequal: return GL_LEQUAL; 
-		case compare_greater: return GL_GREATER; 
-		case compare_gequal: return GL_GEQUAL; 
-		case compare_equal: return GL_EQUAL; 
-		case compare_notequal: return GL_NOTEQUAL; 
-		case compare_always: return GL_ALWAYS; 
+		case CompareFunction::never: return GL_NEVER;
+		case CompareFunction::less: return GL_LESS;
+		case CompareFunction::lequal: return GL_LEQUAL; 
+		case CompareFunction::greater: return GL_GREATER; 
+		case CompareFunction::gequal: return GL_GEQUAL; 
+		case CompareFunction::equal: return GL_EQUAL; 
+		case CompareFunction::notequal: return GL_NOTEQUAL; 
+		case CompareFunction::always: return GL_ALWAYS; 
 		default: return GL_LEQUAL;
 		}
 	}
@@ -1368,14 +1368,14 @@ namespace clan
 	{
 		switch( op )
 		{
-		case stencil_decr: return GL_DECR;
-		case stencil_decr_wrap: return GL_DECR_WRAP;
-		case stencil_incr: return GL_INCR;
-		case stencil_incr_wrap: return GL_INCR_WRAP;
-		case stencil_invert: return GL_INVERT;
-		case stencil_keep: return GL_KEEP;
-		case stencil_replace: return GL_REPLACE;
-		case stencil_zero: return GL_ZERO;	
+		case StencilOp::decr: return GL_DECR;
+		case StencilOp::decr_wrap: return GL_DECR_WRAP;
+		case StencilOp::incr: return GL_INCR;
+		case StencilOp::incr_wrap: return GL_INCR_WRAP;
+		case StencilOp::invert: return GL_INVERT;
+		case StencilOp::keep: return GL_KEEP;
+		case StencilOp::replace: return GL_REPLACE;
+		case StencilOp::zero: return GL_ZERO;	
 		default: return GL_KEEP;
 		}
 	}
@@ -1384,9 +1384,9 @@ namespace clan
 	{
 		switch( mode )
 		{
-		case cull_front: return GL_FRONT;
-		case cull_back: return GL_BACK;
-		case cull_front_and_back: return GL_FRONT_AND_BACK;
+		case CullMode::front: return GL_FRONT;
+		case CullMode::back: return GL_BACK;
+		case CullMode::front_and_back: return GL_FRONT_AND_BACK;
 		default: return GL_BACK;
 		}
 	}
@@ -1395,9 +1395,9 @@ namespace clan
 	{
 		switch( mode )
 		{
-		case fill_point: return GL_POINT;
-		case fill_line: return GL_LINE;
-		case fill_polygon: return GL_FILL;
+		case FillMode::point: return GL_POINT;
+		case FillMode::line: return GL_LINE;
+		case FillMode::polygon: return GL_FILL;
 		default: return GL_FILL;
 		}
 	}
@@ -1406,21 +1406,21 @@ namespace clan
 	{
 		switch( func )
 		{
-		case blend_zero: return GL_ZERO;
-		case blend_one: return GL_ONE;
-		case blend_dest_color: return GL_DST_COLOR;
-		case blend_src_color: return GL_SRC_COLOR;
-		case blend_one_minus_dest_color: return GL_ONE_MINUS_DST_COLOR;
-		case blend_one_minus_src_color: return GL_ONE_MINUS_SRC_COLOR;
-		case blend_src_alpha: return GL_SRC_ALPHA;
-		case blend_one_minus_src_alpha: return GL_ONE_MINUS_SRC_ALPHA;
-		case blend_dest_alpha: return GL_DST_ALPHA;
-		case blend_one_minus_dest_alpha: return GL_ONE_MINUS_DST_ALPHA;
-		case blend_src_alpha_saturate: return GL_SRC_ALPHA_SATURATE;
-		case blend_constant_color: return GL_CONSTANT_COLOR;
-		case blend_one_minus_constant_color: return GL_ONE_MINUS_CONSTANT_COLOR;
-		case blend_constant_alpha: return GL_CONSTANT_ALPHA;
-		case blend_one_minus_constant_alpha: return GL_ONE_MINUS_CONSTANT_ALPHA;
+		case BlendFunc::zero: return GL_ZERO;
+		case BlendFunc::one: return GL_ONE;
+		case BlendFunc::dest_color: return GL_DST_COLOR;
+		case BlendFunc::src_color: return GL_SRC_COLOR;
+		case BlendFunc::one_minus_dest_color: return GL_ONE_MINUS_DST_COLOR;
+		case BlendFunc::one_minus_src_color: return GL_ONE_MINUS_SRC_COLOR;
+		case BlendFunc::src_alpha: return GL_SRC_ALPHA;
+		case BlendFunc::one_minus_src_alpha: return GL_ONE_MINUS_SRC_ALPHA;
+		case BlendFunc::dest_alpha: return GL_DST_ALPHA;
+		case BlendFunc::one_minus_dest_alpha: return GL_ONE_MINUS_DST_ALPHA;
+		case BlendFunc::src_alpha_saturate: return GL_SRC_ALPHA_SATURATE;
+		case BlendFunc::constant_color: return GL_CONSTANT_COLOR;
+		case BlendFunc::one_minus_constant_color: return GL_ONE_MINUS_CONSTANT_COLOR;
+		case BlendFunc::constant_alpha: return GL_CONSTANT_ALPHA;
+		case BlendFunc::one_minus_constant_alpha: return GL_ONE_MINUS_CONSTANT_ALPHA;
 		default: return GL_BLEND_SRC;
 		}
 	}
@@ -1429,11 +1429,11 @@ namespace clan
 	{
 		switch( eq )
 		{
-		case equation_add: return GL_FUNC_ADD;
-		case equation_subtract: return GL_FUNC_SUBTRACT;
-		case equation_reverse_subtract: return GL_FUNC_REVERSE_SUBTRACT;
-		case equation_min: return GL_MIN;
-		case equation_max: return GL_MAX;
+		case BlendEquation::add: return GL_FUNC_ADD;
+		case BlendEquation::subtract: return GL_FUNC_SUBTRACT;
+		case BlendEquation::reverse_subtract: return GL_FUNC_REVERSE_SUBTRACT;
+		case BlendEquation::min: return GL_MIN;
+		case BlendEquation::max: return GL_MAX;
 		default: return GL_FUNC_ADD;
 		}
 	}
@@ -1442,19 +1442,19 @@ namespace clan
 	{
 		switch(value)
 		{
-		case type_unsigned_byte:
+		case VertexAttributeDataType::type_unsigned_byte:
 			return GL_UNSIGNED_BYTE;
-		case type_unsigned_short:
+		case VertexAttributeDataType::type_unsigned_short:
 			return GL_UNSIGNED_SHORT;
-		case type_unsigned_int:
+		case VertexAttributeDataType::type_unsigned_int:
 			return GL_UNSIGNED_INT;
-		case type_byte:
+		case VertexAttributeDataType::type_byte:
 			return GL_BYTE;
-		case type_short:
+		case VertexAttributeDataType::type_short:
 			return GL_SHORT;
-		case type_int:
+		case VertexAttributeDataType::type_int:
 			return GL_INT;
-		case type_float:
+		case VertexAttributeDataType::type_float:
 			return GL_FLOAT;
 		default:
 			return 0;
@@ -1466,13 +1466,13 @@ namespace clan
 		GLenum gl_mode = 0;
 		switch (value)
 		{
-		case type_points: gl_mode = GL_POINTS; break;
-		case type_line_strip: gl_mode = GL_LINE_STRIP; break;
-		case type_line_loop: gl_mode = GL_LINE_LOOP; break;
-		case type_lines: gl_mode = GL_LINES; break;
-		case type_triangle_strip: gl_mode = GL_TRIANGLE_STRIP; break;
-		case type_triangle_fan: gl_mode = GL_TRIANGLE_FAN; break;
-		case type_triangles: gl_mode = GL_TRIANGLES; break;
+		case PrimitivesType::points: gl_mode = GL_POINTS; break;
+		case PrimitivesType::line_strip: gl_mode = GL_LINE_STRIP; break;
+		case PrimitivesType::line_loop: gl_mode = GL_LINE_LOOP; break;
+		case PrimitivesType::lines: gl_mode = GL_LINES; break;
+		case PrimitivesType::triangle_strip: gl_mode = GL_TRIANGLE_STRIP; break;
+		case PrimitivesType::triangle_fan: gl_mode = GL_TRIANGLE_FAN; break;
+		case PrimitivesType::triangles: gl_mode = GL_TRIANGLES; break;
 		}
 		return gl_mode;
 	}
@@ -1482,22 +1482,22 @@ namespace clan
 		GLenum gl_op = 0;
 		switch (op)
 		{
-			case logic_clear: gl_op = GL_CLEAR; break;  
-			case logic_and: gl_op = GL_AND; break;
-			case logic_and_reverse: gl_op = GL_AND_REVERSE; break;
-			case logic_copy: gl_op = GL_COPY; break;
-			case logic_and_inverted: gl_op = GL_AND_INVERTED; break;
-			case logic_noop: gl_op = GL_NOOP; break;
-			case logic_xor: gl_op = GL_XOR; break;
-			case logic_or: gl_op = GL_OR; break;
-			case logic_nor: gl_op = GL_NOR; break;
-			case logic_equiv: gl_op = GL_EQUIV; break;
-			case logic_invert: gl_op = GL_INVERT; break;
-			case logic_or_reverse: gl_op = GL_OR_REVERSE; break;
-			case logic_copy_inverted: gl_op = GL_COPY_INVERTED; break;
-			case logic_or_inverted: gl_op = GL_OR_INVERTED; break;
-			case logic_nand: gl_op = GL_NAND; break;
-			case logic_set: gl_op = GL_SET; break;
+			case LogicOp::clear: gl_op = GL_CLEAR; break;  
+			case LogicOp::and: gl_op = GL_AND; break;
+			case LogicOp::and_reverse: gl_op = GL_AND_REVERSE; break;
+			case LogicOp::copy: gl_op = GL_COPY; break;
+			case LogicOp::and_inverted: gl_op = GL_AND_INVERTED; break;
+			case LogicOp::noop: gl_op = GL_NOOP; break;
+			case LogicOp::xor: gl_op = GL_XOR; break;
+			case LogicOp::or: gl_op = GL_OR; break;
+			case LogicOp::nor: gl_op = GL_NOR; break;
+			case LogicOp::equiv: gl_op = GL_EQUIV; break;
+			case LogicOp::invert: gl_op = GL_INVERT; break;
+			case LogicOp::or_reverse: gl_op = GL_OR_REVERSE; break;
+			case LogicOp::copy_inverted: gl_op = GL_COPY_INVERTED; break;
+			case LogicOp::or_inverted: gl_op = GL_OR_INVERTED; break;
+			case LogicOp::nand: gl_op = GL_NAND; break;
+			case LogicOp::set: gl_op = GL_SET; break;
 			default: break;
 		}
 		return gl_op;
@@ -1507,12 +1507,12 @@ namespace clan
 	{
 		switch(filter)
 		{
-		case filter_nearest: return GL_NEAREST;
-		case filter_linear: return GL_LINEAR;
-		case filter_nearest_mipmap_nearest: return GL_NEAREST_MIPMAP_NEAREST;
-		case filter_nearest_mipmap_linear: return GL_NEAREST_MIPMAP_LINEAR;
-		case filter_linear_mipmap_nearest: return GL_LINEAR_MIPMAP_NEAREST;
-		case filter_linear_mipmap_linear: return GL_LINEAR_MIPMAP_LINEAR;
+		case TextureFilter::nearest: return GL_NEAREST;
+		case TextureFilter::linear: return GL_LINEAR;
+		case TextureFilter::nearest_mipmap_nearest: return GL_NEAREST_MIPMAP_NEAREST;
+		case TextureFilter::nearest_mipmap_linear: return GL_NEAREST_MIPMAP_LINEAR;
+		case TextureFilter::linear_mipmap_nearest: return GL_LINEAR_MIPMAP_NEAREST;
+		case TextureFilter::linear_mipmap_linear: return GL_LINEAR_MIPMAP_LINEAR;
 		default: return GL_NEAREST;
 		}
 	}
@@ -1521,9 +1521,9 @@ namespace clan
 	{
  		switch(mode)
 		{
-		case wrap_clamp_to_edge: return GL_CLAMP_TO_EDGE;
-		case wrap_repeat: return GL_REPEAT;
-		case wrap_mirrored_repeat: return GL_MIRRORED_REPEAT;
+		case TextureWrapMode::clamp_to_edge: return GL_CLAMP_TO_EDGE;
+		case TextureWrapMode::repeat: return GL_REPEAT;
+		case TextureWrapMode::mirrored_repeat: return GL_MIRRORED_REPEAT;
 		default: return GL_CLAMP_TO_EDGE;
 		}
 	}
@@ -1532,8 +1532,8 @@ namespace clan
 	{
  		switch(mode)
 		{
-		case comparemode_none: return GL_NONE;
-		case comparemode_compare_r_to_texture: return GL_COMPARE_REF_TO_TEXTURE;		
+		case TextureCompareMode::none: return GL_NONE;
+		case TextureCompareMode::compare_r_to_texture: return GL_COMPARE_REF_TO_TEXTURE;		
 		default: return GL_NONE;
 		}
 	}
@@ -1557,23 +1557,23 @@ namespace clan
 	{
 		switch (usage)
 		{
-		case usage_stream_draw:
+		case BufferUsage::stream_draw:
 			return GL_STREAM_DRAW;
-		case usage_stream_read:
+		case BufferUsage::stream_read:
 			return GL_STREAM_READ;
-		case usage_stream_copy:
+		case BufferUsage::stream_copy:
 			return GL_STREAM_COPY;
-		case usage_static_draw:
+		case BufferUsage::static_draw:
 			return GL_STATIC_DRAW;
-		case usage_static_read:
+		case BufferUsage::static_read:
 			return GL_STATIC_READ;
-		case usage_static_copy:
+		case BufferUsage::static_copy:
 			return GL_STATIC_COPY;
-		case usage_dynamic_draw:
+		case BufferUsage::dynamic_draw:
 			return GL_DYNAMIC_DRAW;
-		case usage_dynamic_read:
+		case BufferUsage::dynamic_read:
 			return GL_DYNAMIC_READ;
-		case usage_dynamic_copy:
+		case BufferUsage::dynamic_copy:
 			return GL_DYNAMIC_COPY;
 		default:
 			return GL_STATIC_DRAW;
@@ -1584,12 +1584,12 @@ namespace clan
 	{
 		switch (access)
 		{
-		case access_read_only:
+		case BufferAccess::read_only:
 			return GL_READ_ONLY;
-		case access_write_only:
-		case access_write_discard:
+		case BufferAccess::write_only:
+		case BufferAccess::write_discard:
 			return GL_WRITE_ONLY;
-		case access_read_write:
+		case BufferAccess::read_write:
 			return GL_READ_WRITE;
 		default:
 			return GL_READ_WRITE;

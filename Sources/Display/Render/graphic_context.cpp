@@ -482,7 +482,7 @@ namespace clan
 
 	void GraphicContext::set_viewport(const Rectf &viewport)
 	{
-		if (get_texture_image_y_axis() == y_axis_top_down)
+		if (get_texture_image_y_axis() == TextureImageYAxis::y_top_down)
 		{
 			impl->set_viewport(-1, viewport);
 		}
@@ -495,7 +495,7 @@ namespace clan
 
 	void  GraphicContext::set_viewport(int index, const Rectf &viewport)
 	{
-		if (get_texture_image_y_axis() == y_axis_top_down)
+		if (get_texture_image_y_axis() == TextureImageYAxis::y_top_down)
 		{
 			impl->set_viewport(index, viewport);
 		}

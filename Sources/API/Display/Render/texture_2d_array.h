@@ -59,7 +59,7 @@ namespace clan
 		 *  \param levels     Number of mipmap levels for the new texture. Setting
 		 *                    this to `0` enables all levels.
 		 */
-		Texture2DArray(GraphicContext &context, int width, int height, int array_size, TextureFormat texture_format = tf_rgba8, int levels = 1);
+		Texture2DArray(GraphicContext &context, int width, int height, int array_size, TextureFormat texture_format = TextureFormat::rgba8, int levels = 1);
 
 		/** Constructs a new Texture object.
 		 *  \param context    Graphic context to construct the texture on.
@@ -69,7 +69,7 @@ namespace clan
 		 *  \param levels     Number of mipmap levels for the new texture. Setting
 		 *                    this to `0` enables all levels.
 		 */
-		Texture2DArray(GraphicContext &context, const Size &size, int array_size, TextureFormat texture_format = tf_rgba8, int levels = 1);
+		Texture2DArray(GraphicContext &context, const Size &size, int array_size, TextureFormat texture_format = TextureFormat::rgba8, int levels = 1);
 
 		/// Retrieves the actual width of the texture in the display.
 		int get_width() const;

@@ -120,32 +120,32 @@ namespace clan
 		{
 			switch (origin)
 			{
-			case origin_top_left:
+			case Origin::top_left:
 			default:
 				return Pointf(-hotspot_x, -hotspot_y);
 				break;
-			case origin_top_center:
+			case Origin::top_center:
 				return Pointf(size_width / 2 - hotspot_x, -hotspot_y);
 				break;
-			case origin_top_right:
+			case Origin::top_right:
 				return Pointf(size_width - hotspot_x, -hotspot_y);
 				break;
-			case origin_center_left:
+			case Origin::center_left:
 				return Pointf(-hotspot_x, size_height / 2 - hotspot_y);
 				break;
-			case origin_center:
+			case Origin::center:
 				return Pointf(size_width / 2 - hotspot_x, size_height / 2 - hotspot_y);
 				break;
-			case origin_center_right:
+			case Origin::center_right:
 				return Pointf(size_width - hotspot_x, size_height / 2 - hotspot_y);
 				break;
-			case origin_bottom_left:
+			case Origin::bottom_left:
 				return Pointf(-hotspot_x, size_height - hotspot_y);
 				break;
-			case origin_bottom_center:
+			case Origin::bottom_center:
 				return Pointf(size_width / 2 - hotspot_x, size_height - hotspot_y);
 				break;
-			case origin_bottom_right:
+			case Origin::bottom_right:
 				return Pointf(size_width - hotspot_x, size_height - hotspot_y);
 				break;
 			}

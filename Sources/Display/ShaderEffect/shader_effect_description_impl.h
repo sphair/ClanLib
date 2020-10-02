@@ -46,9 +46,9 @@ namespace clan
 
 		std::map<std::string, std::string> defines;
 
-		std::string vertex_shader_code[num_shader_languages];
-		std::string fragment_shader_code[num_shader_languages];
-		std::string compute_shader_code[num_shader_languages];
+		std::string vertex_shader_code[static_cast<int>(ShaderLanguage::num_shader_languages)];
+		std::string fragment_shader_code[static_cast<int>(ShaderLanguage::num_shader_languages)];
+		std::string compute_shader_code[static_cast<int>(ShaderLanguage::num_shader_languages)];
 
 		RasterizerStateDescription rasterizer_state;
 		BlendStateDescription blend_state;

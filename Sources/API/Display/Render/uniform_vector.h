@@ -52,7 +52,7 @@ namespace clan
 		/// \param gc = Graphic Context
 		/// \param size = value
 		/// \param usage = Buffer Usage
-		UniformVector(GraphicContext &gc, int size, BufferUsage usage = usage_static_draw)
+		UniformVector(GraphicContext &gc, int size, BufferUsage usage = BufferUsage::static_draw)
 			: UniformBuffer(gc, size * sizeof(Type), usage)
 		{
 		}
@@ -63,12 +63,12 @@ namespace clan
 		/// \param data = void
 		/// \param size = value
 		/// \param usage = Buffer Usage
-		UniformVector(GraphicContext &gc, Type *data, int size, BufferUsage usage = usage_static_draw)
+		UniformVector(GraphicContext &gc, Type *data, int size, BufferUsage usage = BufferUsage::static_draw)
 			: UniformBuffer(gc, data, size * sizeof(Type), usage)
 		{
 		}
 
-		UniformVector(GraphicContext &gc, const std::vector<Type> &data, BufferUsage usage = usage_static_draw)
+		UniformVector(GraphicContext &gc, const std::vector<Type> &data, BufferUsage usage = BufferUsage::static_draw)
 			: UniformBuffer(gc, data.empty() ? (Type*)0 : &data[0], data.size() * sizeof(Type), usage)
 		{
 		}

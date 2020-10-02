@@ -55,7 +55,7 @@ namespace clan
 		/// \param height = value
 		/// \param internal_format = Texture Format
 		/// \param levels = Mipmap levels for the texture. 0 = all levels
-		Texture1DArray(GraphicContext &context, int size, int array_size, TextureFormat texture_format = tf_rgba8, int levels = 1);
+		Texture1DArray(GraphicContext &context, int size, int array_size, TextureFormat texture_format = TextureFormat::rgba8, int levels = 1);
 
 		/// \brief Get the texture width.
 		int get_size() const;

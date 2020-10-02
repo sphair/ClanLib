@@ -39,7 +39,7 @@ namespace clan
 	{
 		for (auto & elem : vertex_buffers)
 		{
-			elem = VertexArrayBuffer(gc, vertex_buffer_size, usage_stream_draw);
+			elem = VertexArrayBuffer(gc, vertex_buffer_size, BufferUsage::stream_draw);
 		}
 	}
 
@@ -62,9 +62,9 @@ namespace clan
 
 		if (textures_rgba32f[current_rgba32f_texture].is_null())
 		{
-			textures_rgba32f[current_rgba32f_texture] = Texture2D(gc, rgba32f_width, rgba32f_height, tf_rgba32f);
-			textures_rgba32f[current_rgba32f_texture].set_min_filter(filter_nearest);
-			textures_rgba32f[current_rgba32f_texture].set_mag_filter(filter_nearest);
+			textures_rgba32f[current_rgba32f_texture] = Texture2D(gc, rgba32f_width, rgba32f_height, TextureFormat::rgba32f);
+			textures_rgba32f[current_rgba32f_texture].set_min_filter(TextureFilter::nearest);
+			textures_rgba32f[current_rgba32f_texture].set_mag_filter(TextureFilter::nearest);
 
 		}
 
@@ -79,9 +79,9 @@ namespace clan
 
 		if (textures_r8[current_r8_texture].is_null())
 		{
-			textures_r8[current_r8_texture] = Texture2D(gc, r8_size, r8_size, tf_r8);
-			textures_r8[current_r8_texture].set_min_filter(filter_nearest);
-			textures_r8[current_r8_texture].set_mag_filter(filter_nearest);
+			textures_r8[current_r8_texture] = Texture2D(gc, r8_size, r8_size, TextureFormat::r8);
+			textures_r8[current_r8_texture].set_min_filter(TextureFilter::nearest);
+			textures_r8[current_r8_texture].set_mag_filter(TextureFilter::nearest);
 		}
 		return textures_r8[current_r8_texture];
 	}
@@ -93,7 +93,7 @@ namespace clan
 			current_rgba32f_transfer = 0;
 
 		if (transfers_rgba32f[current_rgba32f_transfer].is_null())
-			transfers_rgba32f[current_rgba32f_transfer] = TransferTexture(gc, rgba32f_width, rgba32f_height, data_to_gpu, tf_rgba32f);
+			transfers_rgba32f[current_rgba32f_transfer] = TransferTexture(gc, rgba32f_width, rgba32f_height, PixelBufferDirection::data_to_gpu, TextureFormat::rgba32f);
 
 		return transfers_rgba32f[current_rgba32f_transfer];
 	}
@@ -106,7 +106,7 @@ namespace clan
 
 		if (transfers_r8[current_r8_transfer].is_null())
 		{
-			transfers_r8[current_r8_transfer] = TransferTexture(gc, r8_size, r8_size, data_to_gpu, tf_r8);
+			transfers_r8[current_r8_transfer] = TransferTexture(gc, r8_size, r8_size, PixelBufferDirection::data_to_gpu, TextureFormat::r8);
 		}
 		out_index = current_r8_transfer;
 

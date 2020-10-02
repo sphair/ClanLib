@@ -102,7 +102,7 @@ namespace clan
 
 		int count_color_attachments = 0;
 		GLuint handle = 0;
-		FrameBufferBindTarget bind_target = framebuffer_draw;
+		FrameBufferBindTarget bind_target = FrameBufferBindTarget::draw;
 
 		GL3GraphicContextProvider *gc_provider;
 	};

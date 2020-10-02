@@ -35,26 +35,26 @@ namespace clan
 	/// \{
 
 	/// \brief Array Buffer usage enum
-	enum BufferUsage
+	enum class BufferUsage
 	{
-		usage_stream_draw,
-		usage_stream_read,
-		usage_stream_copy,
-		usage_static_draw,
-		usage_static_read,
-		usage_static_copy,
-		usage_dynamic_draw,
-		usage_dynamic_read,
-		usage_dynamic_copy
+		stream_draw,
+		stream_read,
+		stream_copy,
+		static_draw,
+		static_read,
+		static_copy,
+		dynamic_draw,
+		dynamic_read,
+		dynamic_copy
 	};
 
 	/// \brief Array Buffer access enum
-	enum BufferAccess
+	enum class BufferAccess
 	{
-		access_read_only,
-		access_write_only,
-		access_read_write,
-		access_write_discard // TBD; requires usage usage_stream_draw on object
+		read_only,
+		write_only,
+		read_write,
+		write_discard // TBD; requires usage stream_draw on object
 	};
 
 	/// \}

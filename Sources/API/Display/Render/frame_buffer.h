@@ -50,21 +50,21 @@ namespace clan
 	class FrameBuffer_Impl;
 
 	/// \brief Texture Subtype
-	enum TextureSubtype
+	enum class TextureSubtype
 	{
-		subtype_cube_map_positive_x,
-		subtype_cube_map_negative_x,
-		subtype_cube_map_positive_y,
-		subtype_cube_map_negative_y,
-		subtype_cube_map_positive_z,
-		subtype_cube_map_negative_z
+		cube_map_positive_x,
+		cube_map_negative_x,
+		cube_map_positive_y,
+		cube_map_negative_y,
+		cube_map_positive_z,
+		cube_map_negative_z
 	};
 
 	/// \brief Framebuffer bind target.
-	enum FrameBufferBindTarget
+	enum class FrameBufferBindTarget
 	{
-		framebuffer_draw,
-		framebuffer_read
+		draw,
+		read
 	};
 
 	/// \brief Frame-buffer object class.

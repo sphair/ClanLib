@@ -65,9 +65,9 @@ namespace clan
 
 		struct HitTestResult
 		{
-			HitTestResult() : object_id(-1), offset(0) {}
+			HitTestResult() : object_id(-1), offset(0), type(Type::no_objects_available){}
 
-			enum Type
+			enum class Type
 			{
 				no_objects_available,
 				outside_top,

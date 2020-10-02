@@ -51,21 +51,21 @@ namespace clan
 		SharedGCData::add_disposable(this);
 		switch (texture_dimensions)
 		{
-		case texture_1d:
+		case TextureDimensions::_1d:
 	#ifdef __ANDROID__
 			throw Exception("GL_TEXTURE_1D is not supported");
 	#else
 			texture_type = GL_TEXTURE_1D;
 	#endif
 			break;
-		case texture_2d:
+		case TextureDimensions::_2d:
 		default:
 			texture_type = GL_TEXTURE_2D;
 			break;
-		case texture_3d:
+		case TextureDimensions::_3d:
 			texture_type = GL_TEXTURE_3D;
 			break;
-		case texture_cube:
+		case TextureDimensions::_cube:
 	#ifdef __ANDROID__
 			throw Exception("GL_TEXTURE_CUBE_MAP is not supported");
 	#else
@@ -200,7 +200,7 @@ namespace clan
 			// Clear the whole texture if it is npot
 			if (!power_of_two_texture)
 			{
-				PixelBuffer image = PixelBuffer(pot_width, pot_height, tf_rgba8);
+				PixelBuffer image = PixelBuffer(pot_width, pot_height, TextureFormat::rgba8);
 				void *data = image.get_data();
 				memset(data, 0, pot_width * pot_height * 4);
 
@@ -281,7 +281,7 @@ namespace clan
 		}
 		else
 		{
-			PixelBuffer buffer(pot_width, pot_height, tf_rgba8);
+			PixelBuffer buffer(pot_width, pot_height, TextureFormat::rgba8);
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	#ifndef __ANDROID__
 			glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer.get_pitch() / buffer.get_bytes_per_pixel());
@@ -340,7 +340,7 @@ namespace clan
 
 			PixelBuffer buffer(
 				src_rect.get_width(), src_rect.get_height(),
-				needs_alpha ? tf_rgba8 : tf_rgb8);
+				needs_alpha ? TextureFormat::rgba8 : TextureFormat::rgb8);
 	
 			buffer.set_subimage(image, Point(0, 0), src_rect);
 
@@ -567,7 +567,7 @@ namespace clan
 
 	void GL1TextureProvider::transform_coordinate(const PrimitivesArrayProvider::VertexData &attribute, std::vector<float> &transformed_data, int vertex_offset, int num_vertices, int total_vertices)
 	{
-		if (attribute.type != type_float)
+		if (attribute.type != VertexAttributeDataType::type_float)
 		{
 			throw Exception("Implement me: Texture coord npot transformation (not float) (GL1 target)");
 		}
@@ -712,7 +712,7 @@ namespace clan
 
 			PixelBuffer buffer(
 				image.get_width(), image.get_height(),
-				needs_alpha ? tf_rgba8 : tf_rgb8);
+				needs_alpha ? TextureFormat::rgba8 : TextureFormat::rgb8);
 	
 			buffer.set_image(image);
 
@@ -814,7 +814,7 @@ namespace clan
 
 			PixelBuffer buffer(
 				image.get_width(), image.get_height(),
-				needs_alpha ? tf_rgba8 : tf_rgb8);
+				needs_alpha ? TextureFormat::rgba8 : TextureFormat::rgb8);
 	
 			buffer.set_image(image);
 
@@ -957,103 +957,103 @@ namespace clan
 		// sized internal format
 
 			// TODO: Should this really be here?
-			case tf_stencil_index1: gl_internal_format = GL_STENCIL_INDEX1; gl_pixel_format = GL_STENCIL_INDEX; break;
-			case tf_stencil_index4: gl_internal_format = GL_STENCIL_INDEX4; gl_pixel_format = GL_STENCIL_INDEX; break;
-			case tf_stencil_index8: gl_internal_format = GL_STENCIL_INDEX8; gl_pixel_format = GL_STENCIL_INDEX; break;
-			case tf_stencil_index16: gl_internal_format = GL_STENCIL_INDEX16; gl_pixel_format = GL_STENCIL_INDEX; break;
+			case TextureFormat::stencil_index1: gl_internal_format = GL_STENCIL_INDEX1; gl_pixel_format = GL_STENCIL_INDEX; break;
+			case TextureFormat::stencil_index4: gl_internal_format = GL_STENCIL_INDEX4; gl_pixel_format = GL_STENCIL_INDEX; break;
+			case TextureFormat::stencil_index8: gl_internal_format = GL_STENCIL_INDEX8; gl_pixel_format = GL_STENCIL_INDEX; break;
+			case TextureFormat::stencil_index16: gl_internal_format = GL_STENCIL_INDEX16; gl_pixel_format = GL_STENCIL_INDEX; break;
 
-			//case tf_r8: gl_internal_format = GL_R8; gl_pixel_format = GL_RED; break;
-			//case tf_r8_snorm: gl_internal_format = GL_R8_SNORM; gl_pixel_format = GL_RED; break;
-			//case tf_r16: gl_internal_format = GL_R16; gl_pixel_format = GL_RED; break;
-			//case tf_r16_snorm: gl_internal_format = GL_R16_SNORM; gl_pixel_format = GL_RED; break;
-			//case tf_rg8: gl_internal_format = GL_RG8; gl_pixel_format = GL_RG; break;
-			//case tf_rg8_snorm: gl_internal_format = GL_RG8_SNORM; gl_pixel_format = GL_RG; break;
-			//case tf_rg16: gl_internal_format = GL_RG16; gl_pixel_format = GL_RG; break;
-			//case tf_rg16_snorm: gl_internal_format = GL_RG16_SNORM; gl_pixel_format = GL_RG; break;
-			case tf_r3_g3_b2: gl_internal_format = GL_R3_G3_B2; gl_pixel_format = GL_RGB; break;
-			case tf_rgb4: gl_internal_format = GL_RGB4; gl_pixel_format = GL_RGB; break;
-			case tf_rgb5: gl_internal_format = GL_RGB5; gl_pixel_format = GL_RGB; break;
-			case tf_rgb8: gl_internal_format = GL_RGB8; gl_pixel_format = GL_RGB; break;
-			case tf_rgb10: gl_internal_format = GL_RGB10; gl_pixel_format = GL_RGB; break;
-			case tf_rgb12: gl_internal_format = GL_RGB12; gl_pixel_format = GL_RGB; break;
-			case tf_rgb16: gl_internal_format = GL_RGB16; gl_pixel_format = GL_RGB; break;
-			//case tf_rgb16_snorm: gl_internal_format = GL_RGB16_SNORM; gl_pixel_format = GL_RGB; break;
-			case tf_rgba2: gl_internal_format = GL_RGBA2; gl_pixel_format = GL_RGBA; break;
-			case tf_rgba4: gl_internal_format = GL_RGBA4; gl_pixel_format = GL_RGBA; break;
-			case tf_rgb5_a1: gl_internal_format = GL_RGB5_A1; gl_pixel_format = GL_RGBA; break;
-			case tf_rgba8: gl_internal_format = GL_RGBA8; gl_pixel_format = GL_RGBA; break;
-			case tf_bgra8: gl_internal_format = GL_RGBA8; gl_pixel_format = GL_BGRA; break;
-			case tf_bgr8: gl_internal_format = GL_RGB8; gl_pixel_format = GL_BGR; break;
-			//case tf_rgba8_snorm: gl_internal_format = GL_RGBA8_SNORM; gl_pixel_format = GL_RGBA; break;
-			case tf_rgb10_a2: gl_internal_format = GL_RGB10_A2; gl_pixel_format = GL_RGBA; break;
-			case tf_rgba12: gl_internal_format = GL_RGBA12; gl_pixel_format = GL_RGBA; break;
-			case tf_rgba16: gl_internal_format = GL_RGBA16; gl_pixel_format = GL_RGBA; break;
-			//case tf_rgba16_snorm: gl_internal_format = GL_RGBA16_SNORM; gl_pixel_format = GL_RGBA; break;
-			//case tf_srgb8: gl_internal_format = GL_SRGB8; gl_pixel_format = GL_RGB; break;
-			//case tf_srgb8_alpha8: gl_internal_format = GL_SRGB8_ALPHA8; gl_pixel_format = GL_RGBA; break;
-			//case tf_r16f: gl_internal_format = GL_R16F; gl_pixel_format = GL_RED; break;
-			//case tf_rg16f: gl_internal_format = GL_RG16F; gl_pixel_format = GL_RG; break;
-			//case tf_rgb16f: gl_internal_format = GL_RGB16F; gl_pixel_format = GL_RGB; break;
-			//case tf_rgba16f: gl_internal_format = GL_RGBA16F; gl_pixel_format = GL_RGBA; break;
-			//case tf_r32f: gl_internal_format = GL_R32F; gl_pixel_format = GL_RED; break;
-			//case tf_rg32f: gl_internal_format = GL_RG32F; gl_pixel_format = GL_RG; break;
-			//case tf_rgb32f: gl_internal_format = GL_RGB32F; gl_pixel_format = GL_RGB; break;
-			//case tf_rgba32f: gl_internal_format = GL_RGBA32F; gl_pixel_format = GL_RGBA; break;
-			//case tf_r11f_g11f_b10f: gl_internal_format = GL_R11F_G11F_B10F; gl_pixel_format = GL_RGB; break;
-			//case tf_rgb9_e5: gl_internal_format = GL_RGB9_E5; gl_pixel_format = GL_RGB; break;
-			//case tf_r8i: gl_internal_format = GL_R8I; gl_pixel_format = GL_RED; break;
-			//case tf_r8ui: gl_internal_format = GL_R8UI; gl_pixel_format = GL_RED; break;
-			//case tf_r16i: gl_internal_format = GL_R16I; gl_pixel_format = GL_RED; break;
-			//case tf_r16ui: gl_internal_format = GL_R16UI; gl_pixel_format = GL_RED; break;
-			//case tf_r32i: gl_internal_format = GL_R32I; gl_pixel_format = GL_RED; break;
-			//case tf_r32ui: gl_internal_format = GL_R32UI; gl_pixel_format = GL_RED; break;
-			//case tf_rg8i: gl_internal_format = GL_RG8I; gl_pixel_format = GL_RG; break;
-			//case tf_rg8ui: gl_internal_format = GL_RG8UI; gl_pixel_format = GL_RG; break;
-			//case tf_rg16i: gl_internal_format = GL_RG16I; gl_pixel_format = GL_RG; break;
-			//case tf_rg16ui: gl_internal_format = GL_RG16UI; gl_pixel_format = GL_RG; break;
-			//case tf_rg32i: gl_internal_format = GL_RG32I; gl_pixel_format = GL_RG; break;
-			//case tf_rg32ui: gl_internal_format = GL_RG32UI; gl_pixel_format = GL_RG; break;
-			//case tf_rgb8i: gl_internal_format = GL_RGB8I; gl_pixel_format = GL_RGB; break;
-			//case tf_rgb8ui: gl_internal_format = GL_RGB8UI; gl_pixel_format = GL_RGB; break;
-			//case tf_rgb16i: gl_internal_format = GL_RGB16I; gl_pixel_format = GL_RGB; break;
-			//case tf_rgb16ui: gl_internal_format = GL_RGB16UI; gl_pixel_format = GL_RGB; break;
-			//case tf_rgb32i: gl_internal_format = GL_RGB32I; gl_pixel_format = GL_RGB; break;
-			//case tf_rgb32ui: gl_internal_format = GL_RGB32UI; gl_pixel_format = GL_RGB; break;
-			//case tf_rgba8i: gl_internal_format = GL_RGBA8I; gl_pixel_format = GL_RGBA; break;
-			//case tf_rgba8ui: gl_internal_format = GL_RGBA8UI; gl_pixel_format = GL_RGBA; break;
-			//case tf_rgba16i: gl_internal_format = GL_RGBA16I; gl_pixel_format = GL_RGBA; break;
-			//case tf_rgba16ui: gl_internal_format = GL_RGBA16UI; gl_pixel_format = GL_RGBA; break;
-			//case tf_rgba32i: gl_internal_format = GL_RGBA32I; gl_pixel_format = GL_RGBA; break;
-			//case tf_rgba32ui: gl_internal_format = GL_RGBA32UI; gl_pixel_format = GL_RGBA; break;
-			case tf_depth_component16: gl_internal_format = GL_DEPTH_COMPONENT16; gl_pixel_format = GL_DEPTH_COMPONENT; break;
-			case tf_depth_component24: gl_internal_format = GL_DEPTH_COMPONENT24; gl_pixel_format = GL_DEPTH_COMPONENT; break;
-			case tf_depth_component32: gl_internal_format = GL_DEPTH_COMPONENT32; gl_pixel_format = GL_DEPTH_COMPONENT; break;
-			//case tf_depth_component32f: gl_internal_format = GL_DEPTH_COMPONENT32F; gl_pixel_format = GL_DEPTH_COMPONENT; break;
-			//case tf_depth24_stencil8: gl_internal_format = GL_DEPTH24_STENCIL8; gl_pixel_format = GL_DEPTH_STENCIL; break;
-			//case tf_depth32f_stencil8: gl_internal_format = GL_DEPTH32F_STENCIL8; gl_pixel_format = GL_DEPTH_STENCIL; break;
+			//case TextureFormat::r8: gl_internal_format = GL_R8; gl_pixel_format = GL_RED; break;
+			//case TextureFormat::r8_snorm: gl_internal_format = GL_R8_SNORM; gl_pixel_format = GL_RED; break;
+			//case TextureFormat::r16: gl_internal_format = GL_R16; gl_pixel_format = GL_RED; break;
+			//case TextureFormat::r16_snorm: gl_internal_format = GL_R16_SNORM; gl_pixel_format = GL_RED; break;
+			//case TextureFormat::rg8: gl_internal_format = GL_RG8; gl_pixel_format = GL_RG; break;
+			//case TextureFormat::rg8_snorm: gl_internal_format = GL_RG8_SNORM; gl_pixel_format = GL_RG; break;
+			//case TextureFormat::rg16: gl_internal_format = GL_RG16; gl_pixel_format = GL_RG; break;
+			//case TextureFormat::rg16_snorm: gl_internal_format = GL_RG16_SNORM; gl_pixel_format = GL_RG; break;
+			case TextureFormat::r3_g3_b2: gl_internal_format = GL_R3_G3_B2; gl_pixel_format = GL_RGB; break;
+			case TextureFormat::rgb4: gl_internal_format = GL_RGB4; gl_pixel_format = GL_RGB; break;
+			case TextureFormat::rgb5: gl_internal_format = GL_RGB5; gl_pixel_format = GL_RGB; break;
+			case TextureFormat::rgb8: gl_internal_format = GL_RGB8; gl_pixel_format = GL_RGB; break;
+			case TextureFormat::rgb10: gl_internal_format = GL_RGB10; gl_pixel_format = GL_RGB; break;
+			case TextureFormat::rgb12: gl_internal_format = GL_RGB12; gl_pixel_format = GL_RGB; break;
+			case TextureFormat::rgb16: gl_internal_format = GL_RGB16; gl_pixel_format = GL_RGB; break;
+			//case TextureFormat::rgb16_snorm: gl_internal_format = GL_RGB16_SNORM; gl_pixel_format = GL_RGB; break;
+			case TextureFormat::rgba2: gl_internal_format = GL_RGBA2; gl_pixel_format = GL_RGBA; break;
+			case TextureFormat::rgba4: gl_internal_format = GL_RGBA4; gl_pixel_format = GL_RGBA; break;
+			case TextureFormat::rgb5_a1: gl_internal_format = GL_RGB5_A1; gl_pixel_format = GL_RGBA; break;
+			case TextureFormat::rgba8: gl_internal_format = GL_RGBA8; gl_pixel_format = GL_RGBA; break;
+			case TextureFormat::bgra8: gl_internal_format = GL_RGBA8; gl_pixel_format = GL_BGRA; break;
+			case TextureFormat::bgr8: gl_internal_format = GL_RGB8; gl_pixel_format = GL_BGR; break;
+			//case TextureFormat::rgba8_snorm: gl_internal_format = GL_RGBA8_SNORM; gl_pixel_format = GL_RGBA; break;
+			case TextureFormat::rgb10_a2: gl_internal_format = GL_RGB10_A2; gl_pixel_format = GL_RGBA; break;
+			case TextureFormat::rgba12: gl_internal_format = GL_RGBA12; gl_pixel_format = GL_RGBA; break;
+			case TextureFormat::rgba16: gl_internal_format = GL_RGBA16; gl_pixel_format = GL_RGBA; break;
+			//case TextureFormat::rgba16_snorm: gl_internal_format = GL_RGBA16_SNORM; gl_pixel_format = GL_RGBA; break;
+			//case TextureFormat::srgb8: gl_internal_format = GL_SRGB8; gl_pixel_format = GL_RGB; break;
+			//case TextureFormat::srgb8_alpha8: gl_internal_format = GL_SRGB8_ALPHA8; gl_pixel_format = GL_RGBA; break;
+			//case TextureFormat::r16f: gl_internal_format = GL_R16F; gl_pixel_format = GL_RED; break;
+			//case TextureFormat::rg16f: gl_internal_format = GL_RG16F; gl_pixel_format = GL_RG; break;
+			//case TextureFormat::rgb16f: gl_internal_format = GL_RGB16F; gl_pixel_format = GL_RGB; break;
+			//case TextureFormat::rgba16f: gl_internal_format = GL_RGBA16F; gl_pixel_format = GL_RGBA; break;
+			//case TextureFormat::r32f: gl_internal_format = GL_R32F; gl_pixel_format = GL_RED; break;
+			//case TextureFormat::rg32f: gl_internal_format = GL_RG32F; gl_pixel_format = GL_RG; break;
+			//case TextureFormat::rgb32f: gl_internal_format = GL_RGB32F; gl_pixel_format = GL_RGB; break;
+			//case TextureFormat::rgba32f: gl_internal_format = GL_RGBA32F; gl_pixel_format = GL_RGBA; break;
+			//case TextureFormat::r11f_g11f_b10f: gl_internal_format = GL_R11F_G11F_B10F; gl_pixel_format = GL_RGB; break;
+			//case TextureFormat::rgb9_e5: gl_internal_format = GL_RGB9_E5; gl_pixel_format = GL_RGB; break;
+			//case TextureFormat::r8i: gl_internal_format = GL_R8I; gl_pixel_format = GL_RED; break;
+			//case TextureFormat::r8ui: gl_internal_format = GL_R8UI; gl_pixel_format = GL_RED; break;
+			//case TextureFormat::r16i: gl_internal_format = GL_R16I; gl_pixel_format = GL_RED; break;
+			//case TextureFormat::r16ui: gl_internal_format = GL_R16UI; gl_pixel_format = GL_RED; break;
+			//case TextureFormat::r32i: gl_internal_format = GL_R32I; gl_pixel_format = GL_RED; break;
+			//case TextureFormat::r32ui: gl_internal_format = GL_R32UI; gl_pixel_format = GL_RED; break;
+			//case TextureFormat::rg8i: gl_internal_format = GL_RG8I; gl_pixel_format = GL_RG; break;
+			//case TextureFormat::rg8ui: gl_internal_format = GL_RG8UI; gl_pixel_format = GL_RG; break;
+			//case TextureFormat::rg16i: gl_internal_format = GL_RG16I; gl_pixel_format = GL_RG; break;
+			//case TextureFormat::rg16ui: gl_internal_format = GL_RG16UI; gl_pixel_format = GL_RG; break;
+			//case TextureFormat::rg32i: gl_internal_format = GL_RG32I; gl_pixel_format = GL_RG; break;
+			//case TextureFormat::rg32ui: gl_internal_format = GL_RG32UI; gl_pixel_format = GL_RG; break;
+			//case TextureFormat::rgb8i: gl_internal_format = GL_RGB8I; gl_pixel_format = GL_RGB; break;
+			//case TextureFormat::rgb8ui: gl_internal_format = GL_RGB8UI; gl_pixel_format = GL_RGB; break;
+			//case TextureFormat::rgb16i: gl_internal_format = GL_RGB16I; gl_pixel_format = GL_RGB; break;
+			//case TextureFormat::rgb16ui: gl_internal_format = GL_RGB16UI; gl_pixel_format = GL_RGB; break;
+			//case TextureFormat::rgb32i: gl_internal_format = GL_RGB32I; gl_pixel_format = GL_RGB; break;
+			//case TextureFormat::rgb32ui: gl_internal_format = GL_RGB32UI; gl_pixel_format = GL_RGB; break;
+			//case TextureFormat::rgba8i: gl_internal_format = GL_RGBA8I; gl_pixel_format = GL_RGBA; break;
+			//case TextureFormat::rgba8ui: gl_internal_format = GL_RGBA8UI; gl_pixel_format = GL_RGBA; break;
+			//case TextureFormat::rgba16i: gl_internal_format = GL_RGBA16I; gl_pixel_format = GL_RGBA; break;
+			//case TextureFormat::rgba16ui: gl_internal_format = GL_RGBA16UI; gl_pixel_format = GL_RGBA; break;
+			//case TextureFormat::rgba32i: gl_internal_format = GL_RGBA32I; gl_pixel_format = GL_RGBA; break;
+			//case TextureFormat::rgba32ui: gl_internal_format = GL_RGBA32UI; gl_pixel_format = GL_RGBA; break;
+			case TextureFormat::depth_component16: gl_internal_format = GL_DEPTH_COMPONENT16; gl_pixel_format = GL_DEPTH_COMPONENT; break;
+			case TextureFormat::depth_component24: gl_internal_format = GL_DEPTH_COMPONENT24; gl_pixel_format = GL_DEPTH_COMPONENT; break;
+			case TextureFormat::depth_component32: gl_internal_format = GL_DEPTH_COMPONENT32; gl_pixel_format = GL_DEPTH_COMPONENT; break;
+			//case TextureFormat::depth_component32f: gl_internal_format = GL_DEPTH_COMPONENT32F; gl_pixel_format = GL_DEPTH_COMPONENT; break;
+			//case TextureFormat::depth24_stencil8: gl_internal_format = GL_DEPTH24_STENCIL8; gl_pixel_format = GL_DEPTH_STENCIL; break;
+			//case TextureFormat::depth32f_stencil8: gl_internal_format = GL_DEPTH32F_STENCIL8; gl_pixel_format = GL_DEPTH_STENCIL; break;
 
-			//case tf_compressed_red: gl_internal_format = GL_COMPRESSED_RED; gl_pixel_format = GL_RED; break;
-			//case tf_compressed_rg: gl_internal_format = GL_COMPRESSED_RG; gl_pixel_format = GL_RG; break;
-			case tf_compressed_rgb: gl_internal_format = GL_COMPRESSED_RGB; gl_pixel_format = GL_RGB; break;
-			case tf_compressed_rgba: gl_internal_format = GL_COMPRESSED_RGBA; gl_pixel_format = GL_RGBA; break;
-			//case tf_compressed_srgb: gl_internal_format = GL_COMPRESSED_SRGB; gl_pixel_format = GL_RGB; break;
-			//case tf_compressed_srgb_alpha: gl_internal_format = GL_COMPRESSED_SRGB_ALPHA; gl_pixel_format = GL_RGBA; break;
-			//case tf_compressed_red_rgtc1: gl_internal_format = GL_COMPRESSED_RED_RGTC1; gl_pixel_format = GL_RED; break;
-			//case tf_compressed_signed_red_rgtc1: gl_internal_format = GL_COMPRESSED_SIGNED_RED_RGTC1; gl_pixel_format = GL_RED; break;
-			//case tf_compressed_rg_rgtc2: gl_internal_format = GL_COMPRESSED_RG_RGTC2; gl_pixel_format = GL_RG; break;
-			//case tf_compressed_signed_rg_rgtc2: gl_internal_format = GL_COMPRESSED_SIGNED_RG_RGTC2; gl_pixel_format = GL_RG; break;
+			//case TextureFormat::compressed_red: gl_internal_format = GL_COMPRESSED_RED; gl_pixel_format = GL_RED; break;
+			//case TextureFormat::compressed_rg: gl_internal_format = GL_COMPRESSED_RG; gl_pixel_format = GL_RG; break;
+			case TextureFormat::compressed_rgb: gl_internal_format = GL_COMPRESSED_RGB; gl_pixel_format = GL_RGB; break;
+			case TextureFormat::compressed_rgba: gl_internal_format = GL_COMPRESSED_RGBA; gl_pixel_format = GL_RGBA; break;
+			//case TextureFormat::compressed_srgb: gl_internal_format = GL_COMPRESSED_SRGB; gl_pixel_format = GL_RGB; break;
+			//case TextureFormat::compressed_srgb_alpha: gl_internal_format = GL_COMPRESSED_SRGB_ALPHA; gl_pixel_format = GL_RGBA; break;
+			//case TextureFormat::compressed_red_rgtc1: gl_internal_format = GL_COMPRESSED_RED_RGTC1; gl_pixel_format = GL_RED; break;
+			//case TextureFormat::compressed_signed_red_rgtc1: gl_internal_format = GL_COMPRESSED_SIGNED_RED_RGTC1; gl_pixel_format = GL_RED; break;
+			//case TextureFormat::compressed_rg_rgtc2: gl_internal_format = GL_COMPRESSED_RG_RGTC2; gl_pixel_format = GL_RG; break;
+			//case TextureFormat::compressed_signed_rg_rgtc2: gl_internal_format = GL_COMPRESSED_SIGNED_RG_RGTC2; gl_pixel_format = GL_RG; break;
 
-			case tf_compressed_rgb_s3tc_dxt1: gl_internal_format = GL_COMPRESSED_RGB_S3TC_DXT1_EXT; gl_pixel_format = GL_RGB; break;
-			case tf_compressed_rgba_s3tc_dxt1: gl_internal_format = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT; gl_pixel_format = GL_RGBA; break;
-			case tf_compressed_rgba_s3tc_dxt3: gl_internal_format = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT; gl_pixel_format = GL_RGBA; break;
-			case tf_compressed_rgba_s3tc_dxt5: gl_internal_format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT; gl_pixel_format = GL_RGBA; break;
-			//case tf_compressed_srgb_s3tc_dxt1: gl_internal_format = GL_COMPRESSED_SRGB_S3TC_DXT1_EXT; gl_pixel_format = GL_RGB; break;
-			//case tf_compressed_srgb_alpha_s3tc_dxt1: gl_internal_format = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT; gl_pixel_format = GL_RGBA; break;
-			//case tf_compressed_srgb_alpha_s3tc_dxt3: gl_internal_format = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT; gl_pixel_format = GL_RGBA; break;
-			//case tf_compressed_srgb_alpha_s3tc_dxt5: gl_internal_format = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT; gl_pixel_format = GL_RGBA; break;
+			case TextureFormat::compressed_rgb_s3tc_dxt1: gl_internal_format = GL_COMPRESSED_RGB_S3TC_DXT1_EXT; gl_pixel_format = GL_RGB; break;
+			case TextureFormat::compressed_rgba_s3tc_dxt1: gl_internal_format = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT; gl_pixel_format = GL_RGBA; break;
+			case TextureFormat::compressed_rgba_s3tc_dxt3: gl_internal_format = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT; gl_pixel_format = GL_RGBA; break;
+			case TextureFormat::compressed_rgba_s3tc_dxt5: gl_internal_format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT; gl_pixel_format = GL_RGBA; break;
+			//case TextureFormat::compressed_srgb_s3tc_dxt1: gl_internal_format = GL_COMPRESSED_SRGB_S3TC_DXT1_EXT; gl_pixel_format = GL_RGB; break;
+			//case TextureFormat::compressed_srgb_alpha_s3tc_dxt1: gl_internal_format = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT; gl_pixel_format = GL_RGBA; break;
+			//case TextureFormat::compressed_srgb_alpha_s3tc_dxt3: gl_internal_format = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT; gl_pixel_format = GL_RGBA; break;
+			//case TextureFormat::compressed_srgb_alpha_s3tc_dxt5: gl_internal_format = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT; gl_pixel_format = GL_RGBA; break;
 
 			default:
-				throw Exception(string_format("Unsupported TextureFormat (%1)", format));
+				throw Exception(string_format("Unsupported TextureFormat (%1)", static_cast<int>(format)));
 		}
 	}
 
@@ -1067,138 +1067,138 @@ namespace clan
 
 		switch (texture_format)
 		{
-			case tf_rgba8:
+			case TextureFormat::rgba8:
 			{
 				valid = true;
 				type = GL_UNSIGNED_BYTE;
 				format = GL_RGBA;
 				break;
 			}
-			case tf_rgb8:
+			case TextureFormat::rgb8:
 			{
 				valid = true;
 				type = GL_UNSIGNED_BYTE;
 				format = GL_RGB;
 				break;
 			}
-			case tf_bgr8: 
+			case TextureFormat::bgr8: 
 			{
 				valid = true;
 				type = GL_UNSIGNED_BYTE;
 				format = GL_BGR;
 				break;
 			}
-			case tf_bgra8: 
+			case TextureFormat::bgra8: 
 			{
 				valid = true;
 				type = GL_UNSIGNED_BYTE;
 				format = GL_BGRA;
 				break;
 			}
-			case tf_stencil_index1: break;
-			case tf_stencil_index4: break;
-			case tf_stencil_index8: break;
-			case tf_stencil_index16: break;
-			case tf_r8:
+			case TextureFormat::stencil_index1: break;
+			case TextureFormat::stencil_index4: break;
+			case TextureFormat::stencil_index8: break;
+			case TextureFormat::stencil_index16: break;
+			case TextureFormat::r8:
 			{
 				valid = true;
 				type = GL_UNSIGNED_BYTE;
 				format = GL_RED;
 				break;
 			}
-			case tf_r8_snorm:
+			case TextureFormat::r8_snorm:
 			{
 				valid = true;
 				type = GL_BYTE;
 				format = GL_RED;
 				break;
 			}
-			case tf_r16:
+			case TextureFormat::r16:
 			{
 				valid = true;
 				type = GL_UNSIGNED_SHORT;
 				format = GL_RED;
 				break;
 			}
-			case tf_r16_snorm:
+			case TextureFormat::r16_snorm:
 			{
 				valid = true;
 				type = GL_SHORT;
 				format = GL_RED;
 				break;
 			}
-			case tf_rg8: break;
-			case tf_rg8_snorm: break;
-			case tf_rg16: break;
-			case tf_rg16_snorm: break;
-			case tf_r3_g3_b2:
+			case TextureFormat::rg8: break;
+			case TextureFormat::rg8_snorm: break;
+			case TextureFormat::rg16: break;
+			case TextureFormat::rg16_snorm: break;
+			case TextureFormat::r3_g3_b2:
 			{
 				valid = true;
 				type = GL_UNSIGNED_BYTE_3_3_2;
 				format = GL_RGB;
 				break;
 			}
-			case tf_rgb4: break;
-			case tf_rgb5: break;
-			case tf_rgb8_snorm:
+			case TextureFormat::rgb4: break;
+			case TextureFormat::rgb5: break;
+			case TextureFormat::rgb8_snorm:
 			{
 				valid = true;
 				type = GL_BYTE;
 				format = GL_RGB;
 				break;
 			}
-			case tf_rgb10: break;
-			case tf_rgb12: break;
-			case tf_rgb16: break;
-			case tf_rgb16_snorm: break;
-			case tf_rgba2: break;
-			case tf_rgba4:
+			case TextureFormat::rgb10: break;
+			case TextureFormat::rgb12: break;
+			case TextureFormat::rgb16: break;
+			case TextureFormat::rgb16_snorm: break;
+			case TextureFormat::rgba2: break;
+			case TextureFormat::rgba4:
 			{
 				valid = true;
 				type = GL_UNSIGNED_SHORT_4_4_4_4;
 				format = GL_RGBA;
 				break;
 			}
-			case tf_rgb5_a1:
+			case TextureFormat::rgb5_a1:
 			{
 				valid = true;
 				type = GL_UNSIGNED_SHORT_5_5_5_1;
 				format = GL_RGBA;
 				break;
 			}
-			case tf_rgba8_snorm: break;
-			case tf_rgb10_a2: break;
-			case tf_rgba12: break;
-			case tf_rgba16: break;
-			case tf_rgba16_snorm: break;
-			case tf_srgb8:
+			case TextureFormat::rgba8_snorm: break;
+			case TextureFormat::rgb10_a2: break;
+			case TextureFormat::rgba12: break;
+			case TextureFormat::rgba16: break;
+			case TextureFormat::rgba16_snorm: break;
+			case TextureFormat::srgb8:
 			{
 				valid = true;
 				type = GL_UNSIGNED_BYTE;
 				format = GL_RGB;
 				break;
 			}
-			case tf_srgb8_alpha8:
+			case TextureFormat::srgb8_alpha8:
 			{
 				valid = true;
 				type = GL_UNSIGNED_BYTE;
 				format = GL_RGBA;
 				break;
 			}
-			case tf_r16f: break;
-			case tf_rg16f: break;
-			case tf_rgb16f: break;
-			case tf_rgba16f: break;
+			case TextureFormat::r16f: break;
+			case TextureFormat::rg16f: break;
+			case TextureFormat::rgb16f: break;
+			case TextureFormat::rgba16f: break;
 
-			case tf_r32f:
+			case TextureFormat::r32f:
 			{
 				valid = true;
 				type = GL_FLOAT;
 				format = GL_RED;
 				break;
 			}
-			case tf_rg32f: break;
-			case tf_rgb32f:
+			case TextureFormat::rg32f: break;
+			case TextureFormat::rgb32f:
 			{
 				valid = true;
 				type = GL_FLOAT;
@@ -1206,7 +1206,7 @@ namespace clan
 				break;
 			}
 		
-			case tf_rgba32f:
+			case TextureFormat::rgba32f:
 			{
 				valid = true;
 				type = GL_FLOAT;
@@ -1214,117 +1214,117 @@ namespace clan
 				break;
 			}
 		
-			case tf_r11f_g11f_b10f: break;
-			case tf_rgb9_e5: break;
-			case tf_r8i:
+			case TextureFormat::r11f_g11f_b10f: break;
+			case TextureFormat::rgb9_e5: break;
+			case TextureFormat::r8i:
 			{
 				valid = true;
 				type = GL_BYTE;
 				format = GL_RED;
 				break;
 			}
-			case tf_r8ui:
+			case TextureFormat::r8ui:
 			{
 				valid = true;
 				type = GL_UNSIGNED_BYTE;
 				format = GL_RED;
 				break;
 			}
-			case tf_r16i:
+			case TextureFormat::r16i:
 			{
 				valid = true;
 				type = GL_SHORT;
 				format = GL_RED;
 				break;
 			}
-			case tf_r16ui:
+			case TextureFormat::r16ui:
 			{
 				valid = true;
 				type = GL_UNSIGNED_SHORT;
 				format = GL_RED;
 				break;
 			}
-			case tf_r32i:
+			case TextureFormat::r32i:
 			{
 				valid = true;
 				type = GL_INT;
 				format = GL_RED;
 				break;
 			}
-			case tf_r32ui:
+			case TextureFormat::r32ui:
 			{
 				valid = true;
 				type = GL_UNSIGNED_INT;
 				format = GL_RED;
 				break;
 			}
-			case tf_rg8i: break;
-			case tf_rg8ui: break;
-			case tf_rg16i: break;
-			case tf_rg16ui: break;
-			case tf_rg32i: break;
-			case tf_rg32ui: break;
-			case tf_rgb8i:
+			case TextureFormat::rg8i: break;
+			case TextureFormat::rg8ui: break;
+			case TextureFormat::rg16i: break;
+			case TextureFormat::rg16ui: break;
+			case TextureFormat::rg32i: break;
+			case TextureFormat::rg32ui: break;
+			case TextureFormat::rgb8i:
 			{
 				valid = true;
 				type = GL_BYTE;
 				format = GL_RGB;
 				break;
 			}
-			case tf_rgb8ui:
+			case TextureFormat::rgb8ui:
 			{
 				valid = true;
 				type = GL_UNSIGNED_BYTE;
 				format = GL_RGB;
 				break;
 			}
-			case tf_rgb16i: break;
-			case tf_rgb16ui: break;
-			case tf_rgb32i: break;
-			case tf_rgb32ui: break;
-			case tf_rgba8i:
+			case TextureFormat::rgb16i: break;
+			case TextureFormat::rgb16ui: break;
+			case TextureFormat::rgb32i: break;
+			case TextureFormat::rgb32ui: break;
+			case TextureFormat::rgba8i:
 			{
 				valid = true;
 				type = GL_BYTE;
 				format = GL_RGBA;
 				break;
 			}
-			case tf_rgba8ui:
+			case TextureFormat::rgba8ui:
 			{
 				valid = true;
 				type = GL_UNSIGNED_BYTE;
 				format = GL_RGBA;
 				break;
 			}
-			case tf_rgba16i: break;
-			case tf_rgba16ui: break;
-			case tf_rgba32i: break;
-			case tf_rgba32ui: break;
-			case tf_depth_component16: break;
-			case tf_depth_component24: break;
-			case tf_depth_component32: break;
-			case tf_depth_component32f: break;
-			case tf_depth24_stencil8: break;
-			case tf_depth32f_stencil8: break;
-			case tf_compressed_red: break;
-			case tf_compressed_rg: break;
-			case tf_compressed_rgb: break;
-			case tf_compressed_rgba: break;
-			case tf_compressed_srgb: break;
-			case tf_compressed_srgb_alpha: break;
-			case tf_compressed_red_rgtc1: break;
-			case tf_compressed_signed_red_rgtc1: break;
-			case tf_compressed_rg_rgtc2: break;
-			case tf_compressed_signed_rg_rgtc2: break;
+			case TextureFormat::rgba16i: break;
+			case TextureFormat::rgba16ui: break;
+			case TextureFormat::rgba32i: break;
+			case TextureFormat::rgba32ui: break;
+			case TextureFormat::depth_component16: break;
+			case TextureFormat::depth_component24: break;
+			case TextureFormat::depth_component32: break;
+			case TextureFormat::depth_component32f: break;
+			case TextureFormat::depth24_stencil8: break;
+			case TextureFormat::depth32f_stencil8: break;
+			case TextureFormat::compressed_red: break;
+			case TextureFormat::compressed_rg: break;
+			case TextureFormat::compressed_rgb: break;
+			case TextureFormat::compressed_rgba: break;
+			case TextureFormat::compressed_srgb: break;
+			case TextureFormat::compressed_srgb_alpha: break;
+			case TextureFormat::compressed_red_rgtc1: break;
+			case TextureFormat::compressed_signed_red_rgtc1: break;
+			case TextureFormat::compressed_rg_rgtc2: break;
+			case TextureFormat::compressed_signed_rg_rgtc2: break;
 
-			case tf_compressed_rgb_s3tc_dxt1: break;
-			case tf_compressed_rgba_s3tc_dxt1: break;
-			case tf_compressed_rgba_s3tc_dxt3: break;
-			case tf_compressed_rgba_s3tc_dxt5: break;
-			case tf_compressed_srgb_s3tc_dxt1: break;
-			case tf_compressed_srgb_alpha_s3tc_dxt1: break;
-			case tf_compressed_srgb_alpha_s3tc_dxt3: break;
-			case tf_compressed_srgb_alpha_s3tc_dxt5: break;
+			case TextureFormat::compressed_rgb_s3tc_dxt1: break;
+			case TextureFormat::compressed_rgba_s3tc_dxt1: break;
+			case TextureFormat::compressed_rgba_s3tc_dxt3: break;
+			case TextureFormat::compressed_rgba_s3tc_dxt5: break;
+			case TextureFormat::compressed_srgb_s3tc_dxt1: break;
+			case TextureFormat::compressed_srgb_alpha_s3tc_dxt1: break;
+			case TextureFormat::compressed_srgb_alpha_s3tc_dxt3: break;
+			case TextureFormat::compressed_srgb_alpha_s3tc_dxt5: break;
 		}
 
 		return valid;

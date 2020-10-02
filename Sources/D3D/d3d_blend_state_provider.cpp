@@ -83,11 +83,11 @@ namespace clan
 	{
 		switch (op)
 		{
-		case equation_add: return D3D11_BLEND_OP_ADD;
-		case equation_subtract: return D3D11_BLEND_OP_SUBTRACT;
-		case equation_reverse_subtract: return D3D11_BLEND_OP_REV_SUBTRACT;
-		case equation_min: return D3D11_BLEND_OP_MIN;
-		case equation_max: return D3D11_BLEND_OP_MAX;
+		case BlendEquation::add: return D3D11_BLEND_OP_ADD;
+		case BlendEquation::subtract: return D3D11_BLEND_OP_SUBTRACT;
+		case BlendEquation::reverse_subtract: return D3D11_BLEND_OP_REV_SUBTRACT;
+		case BlendEquation::min: return D3D11_BLEND_OP_MIN;
+		case BlendEquation::max: return D3D11_BLEND_OP_MAX;
 		}
 		throw Exception("Unsupported blend op");
 	}
@@ -96,21 +96,21 @@ namespace clan
 	{
 		switch (func)
 		{
-		case blend_zero: return D3D11_BLEND_ZERO;
-		case blend_one: return D3D11_BLEND_ONE;
-		case blend_dest_color: return D3D11_BLEND_DEST_COLOR;
-		case blend_src_color: return D3D11_BLEND_SRC_COLOR;
-		case blend_one_minus_dest_color: return D3D11_BLEND_INV_DEST_COLOR;
-		case blend_one_minus_src_color: return D3D11_BLEND_INV_SRC_COLOR;
-		case blend_src_alpha: return D3D11_BLEND_SRC_ALPHA;
-		case blend_one_minus_src_alpha: return D3D11_BLEND_INV_SRC_ALPHA;
-		case blend_dest_alpha: return D3D11_BLEND_DEST_ALPHA;
-		case blend_one_minus_dest_alpha: return D3D11_BLEND_INV_DEST_ALPHA;
-		case blend_src_alpha_saturate: return D3D11_BLEND_SRC_ALPHA_SAT;
-		case blend_constant_color: return D3D11_BLEND_BLEND_FACTOR;
-		case blend_one_minus_constant_color: return D3D11_BLEND_INV_BLEND_FACTOR;
-		case blend_constant_alpha: break;
-		case blend_one_minus_constant_alpha: break;
+		case BlendFunc::zero: return D3D11_BLEND_ZERO;
+		case BlendFunc::one: return D3D11_BLEND_ONE;
+		case BlendFunc::dest_color: return D3D11_BLEND_DEST_COLOR;
+		case BlendFunc::src_color: return D3D11_BLEND_SRC_COLOR;
+		case BlendFunc::one_minus_dest_color: return D3D11_BLEND_INV_DEST_COLOR;
+		case BlendFunc::one_minus_src_color: return D3D11_BLEND_INV_SRC_COLOR;
+		case BlendFunc::src_alpha: return D3D11_BLEND_SRC_ALPHA;
+		case BlendFunc::one_minus_src_alpha: return D3D11_BLEND_INV_SRC_ALPHA;
+		case BlendFunc::dest_alpha: return D3D11_BLEND_DEST_ALPHA;
+		case BlendFunc::one_minus_dest_alpha: return D3D11_BLEND_INV_DEST_ALPHA;
+		case BlendFunc::src_alpha_saturate: return D3D11_BLEND_SRC_ALPHA_SAT;
+		case BlendFunc::constant_color: return D3D11_BLEND_BLEND_FACTOR;
+		case BlendFunc::one_minus_constant_color: return D3D11_BLEND_INV_BLEND_FACTOR;
+		case BlendFunc::constant_alpha: break;
+		case BlendFunc::one_minus_constant_alpha: break;
 		}
 		throw Exception("Unsupported blend func");
 	}

@@ -63,7 +63,7 @@ namespace clan
 
 	FrameBufferBindTarget GL1FrameBufferProvider::get_bind_target() const
 	{
-		return framebuffer_draw;
+		return FrameBufferBindTarget::draw;
 	}
 
 	void GL1FrameBufferProvider::attach_color(int attachment_index, const RenderBuffer &render_buffer){}
@@ -210,7 +210,7 @@ namespace clan
 		glViewport(0, 0, surface_size.width, surface_size.height);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glMultMatrixf(Mat4f::ortho_2d(0.0f, (float)surface_size.width, 0.0f, (float)surface_size.height, handed_right, clip_negative_positive_w));
+		glMultMatrixf(Mat4f::ortho_2d(0.0f, (float)surface_size.width, 0.0f, (float)surface_size.height, Handedness::right, ClipZRange::negative_positive_w));
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
@@ -303,7 +303,7 @@ namespace clan
 			glViewport(0, 0, surface_size.width, surface_size.height);
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
-			glMultMatrixf(Mat4f::ortho_2d(0.0f, (float)surface_size.width, 0.0f, (float)surface_size.height, handed_right, clip_negative_positive_w));
+			glMultMatrixf(Mat4f::ortho_2d(0.0f, (float)surface_size.width, 0.0f, (float)surface_size.height, Handedness::right, ClipZRange::negative_positive_w));
 			glMatrixMode(GL_MODELVIEW);
 			glLoadIdentity();
 

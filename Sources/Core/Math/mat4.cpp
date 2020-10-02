@@ -150,9 +150,9 @@ namespace clan
 		frustum_matrix.matrix[2 + 2 * 4] = (Type)c;
 		frustum_matrix.matrix[2 + 3 * 4] = (Type)d;
 		frustum_matrix.matrix[3 + 2 * 4] = (Type)-1;
-		if (handedness == handed_left)
+		if (handedness == Handedness::left)
 			frustum_matrix = frustum_matrix * Mat4<Type>::scale(1.0f, 1.0f, -1.0f);
-		if (clip_z == clip_zero_positive_w)
+		if (clip_z == ClipZRange::zero_positive_w)
 		{
 			Mat4<Type> scale_translate = identity();
 			scale_translate[2 + 2 * 4] = (Type)0.5;
@@ -179,9 +179,9 @@ namespace clan
 		projection_matrix.matrix[2 + 2 * 4] = (Type)((z_far + z_near) / (z_near - z_far));
 		projection_matrix.matrix[2 + 3 * 4] = (Type)((2 * z_far * z_near) / (z_near - z_far));
 		projection_matrix.matrix[3 + 2 * 4] = (Type)-1;
-		if (handedness == handed_left)
+		if (handedness == Handedness::left)
 			projection_matrix = projection_matrix * Mat4<Type>::scale(1.0f, 1.0f, -1.0f);
-		if (clip_z == clip_zero_positive_w)
+		if (clip_z == ClipZRange::zero_positive_w)
 		{
 			Mat4<Type> scale_translate = identity();
 			scale_translate[2 + 2 * 4] = (Type)0.5;
@@ -209,9 +209,9 @@ namespace clan
 		projection_matrix.matrix[2 + 2 * 4] = ((z_far + z_near) / (z_near - z_far));
 		projection_matrix.matrix[2 + 3 * 4] = ((2.0f * z_far * z_near) / (z_near - z_far));
 		projection_matrix.matrix[3 + 2 * 4] = -1.0f;
-		if (handedness == handed_left)
+		if (handedness == Handedness::left)
 			projection_matrix = projection_matrix * Mat4f::scale(1.0f, 1.0f, -1.0f);
-		if (clip_z == clip_zero_positive_w)
+		if (clip_z == ClipZRange::zero_positive_w)
 		{
 			Mat4f scale_translate = identity();
 			scale_translate[2 + 2 * 4] = 0.5f;
@@ -235,9 +235,9 @@ namespace clan
 		ortho_matrix.matrix[1 + 3 * 4] = (Type)ty;
 		ortho_matrix.matrix[2 + 3 * 4] = (Type)tz;
 		ortho_matrix.matrix[3 + 3 * 4] = (Type)1;
-		if (handedness == handed_left)
+		if (handedness == Handedness::left)
 			ortho_matrix = ortho_matrix * Mat4<Type>::scale(1.0f, 1.0f, -1.0f);
-		if (clip_z == clip_zero_positive_w)
+		if (clip_z == ClipZRange::zero_positive_w)
 		{
 			Mat4<Type> scale_translate = identity();
 			scale_translate[2 + 2 * 4] = (Type)0.5;
@@ -311,17 +311,17 @@ namespace clan
 		// Obtain the correct xyz rotation position from the original rotation order
 		switch (order)
 		{
-		case order_XYZ:
+		case EulerOrder::XYZ:
 			pos_i = 2; pos_j = 1; pos_k = 0; break;
-		case order_XZY:
+		case EulerOrder::XZY:
 			pos_i = 1; pos_j = 2; pos_k = 0; break;
-		case order_YZX:
+		case EulerOrder::YZX:
 			pos_i = 0; pos_j = 2; pos_k = 1; break;
-		case order_YXZ:
+		case EulerOrder::YXZ:
 			pos_i = 2; pos_j = 0; pos_k = 1; break;
-		case order_ZXY:
+		case EulerOrder::ZXY:
 			pos_i = 1; pos_j = 0; pos_k = 2; break;
-		case order_ZYX:
+		case EulerOrder::ZYX:
 			pos_i = 0; pos_j = 1; pos_k = 2; break;
 		default:
 			throw Exception("Unknown euler order");
@@ -345,22 +345,22 @@ namespace clan
 		// Swap the xyz value to the specified euler angle
 		switch (order)
 		{
-		case order_XYZ:
+		case EulerOrder::XYZ:
 			angles = Vec3<Type>(angles.z, angles.y, angles.x);
 			break;
-		case order_XZY:
+		case EulerOrder::XZY:
 			angles = Vec3<Type>(-angles.z, -angles.x, -angles.y);
 			break;
-		case order_YZX:
+		case EulerOrder::YZX:
 			angles = Vec3<Type>(angles.x, angles.z, angles.y);
 			break;
-		case order_YXZ:
+		case EulerOrder::YXZ:
 			angles = Vec3<Type>(-angles.y, -angles.z, -angles.x);
 			break;
-		case order_ZXY:
+		case EulerOrder::ZXY:
 			angles = Vec3<Type>(angles.y, angles.x, angles.z);
 			break;
-		case order_ZYX:
+		case EulerOrder::ZYX:
 			angles = Vec3<Type>(-angles.x, -angles.y, -angles.z);
 			break;
 		}

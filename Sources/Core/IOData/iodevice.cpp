@@ -478,7 +478,7 @@ namespace clan
 				}
 			}
 
-			seek(int(current_position), seek_set);	// Set new position
+			seek(int(current_position), SeekMode::set);	// Set new position
 		}
 
 		find_flag = true;
@@ -528,7 +528,7 @@ namespace clan
 				break;
 			}
 		}
-		seek(int(current_position), seek_set);
+		seek(int(current_position), SeekMode::set);
 
 		// Read the string, now that we know its length
 

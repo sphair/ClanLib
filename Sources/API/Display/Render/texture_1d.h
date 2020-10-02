@@ -55,7 +55,7 @@ namespace clan
 		/// \param height = value
 		/// \param internal_format = Texture Format
 		/// \param levels = Mipmap levels for the texture. 0 = all levels
-		Texture1D(GraphicContext &context, int size, TextureFormat texture_format = tf_rgba8, int levels = 1);
+		Texture1D(GraphicContext &context, int size, TextureFormat texture_format = TextureFormat::rgba8, int levels = 1);
 
 		Texture1D(GraphicContext &context, const PixelBuffer &image, bool is_srgb = false);
 		Texture1D(GraphicContext &context, const PixelBuffer &image, int src_x, int width, bool is_srgb = false);

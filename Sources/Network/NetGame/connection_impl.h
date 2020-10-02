@@ -71,8 +71,8 @@ namespace clan
 		std::mutex mutex;
 		struct Message
 		{
-			Message() : type(type_message), event(std::string()) { }
-			enum Type
+			Message() : type(Type::type_message), event(std::string()) { }
+			enum class Type
 			{
 				type_message,
 				type_disconnect

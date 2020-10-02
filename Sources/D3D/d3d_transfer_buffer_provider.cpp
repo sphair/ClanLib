@@ -59,7 +59,7 @@ namespace clan
 		desc.MiscFlags = 0; // To do: Debug layer refuses to create a buffer with D3D11_RESOURCE_MISC_SHARED specified. This breaks get_handles().
 		desc.StructureByteStride = 0;
 
-		if (usage == usage_stream_draw) // To do: find a buffer usage API that works well for both Direct3D and OpenGL
+		if (usage == BufferUsage::stream_draw) // To do: find a buffer usage API that works well for both Direct3D and OpenGL
 		{
 			desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 			desc.Usage = D3D11_USAGE_DYNAMIC;
@@ -88,7 +88,7 @@ namespace clan
 		desc.MiscFlags = 0; // To do: Debug layer refuses to create a buffer with D3D11_RESOURCE_MISC_SHARED specified. This breaks get_handles().
 		desc.StructureByteStride = 0;
 
-		if (usage == usage_stream_draw) // To do: find a buffer usage API that works well for both Direct3D and OpenGL
+		if (usage == BufferUsage::stream_draw) // To do: find a buffer usage API that works well for both Direct3D and OpenGL
 		{
 			desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 			desc.Usage = D3D11_USAGE_DYNAMIC;
@@ -143,7 +143,7 @@ namespace clan
 		if (input_size < 0 || offset + input_size > desc.ByteWidth)
 			throw Exception("Out of bounds!");
 
-		lock(gc, access_write_only);	// Should this be access_write_discard - And force offset ==0 and input_size = desc.ByteWidth
+		lock(gc, BufferAccess::write_only);	// Should this be BufferAccess::write_discard - And force offset ==0 and input_size = desc.ByteWidth
 		memcpy(static_cast<char*>(get_data()) + offset, input, input_size);
 		unlock();
 
@@ -188,13 +188,13 @@ namespace clan
 	{
 		switch (access)
 		{
-		case access_read_only:
+		case BufferAccess::read_only:
 			return D3D11_MAP_READ;
-		case access_write_only:
+		case BufferAccess::write_only:
 			return D3D11_MAP_WRITE;
-		case access_write_discard:
+		case BufferAccess::write_discard:
 			return D3D11_MAP_WRITE_DISCARD;
-		case access_read_write:
+		case BufferAccess::read_write:
 			return D3D11_MAP_READ_WRITE;
 		}
 		throw Exception("Unsupported access type");

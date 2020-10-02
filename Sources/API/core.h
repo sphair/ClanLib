@@ -34,8 +34,8 @@
 #pragma once
 
 #define CLANLIB_VERSION(x,y,z)	( (x << 16) | (y << 8) | (z) )
-#define CLANLIB_CURRENT_VERSION	CLANLIB_VERSION(4,0,1)
-#define CLANLIB_VERSION_STRING "4.0.1"
+#define CLANLIB_CURRENT_VERSION	CLANLIB_VERSION(4,1,0)
+#define CLANLIB_VERSION_STRING "4.1.0"
 
 #ifdef _MSC_VER
 #pragma warning( disable : 4786)

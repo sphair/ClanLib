@@ -112,7 +112,7 @@ namespace clan
 	{
 		if (position > 0)
 		{
-			gc.set_program_object(program_color_only);
+			gc.set_program_object(StandardProgram::color_only);
 
 			int gpu_index;
 			VertexArrayVector<LineVertex> gpu_vertices(batch_buffer->get_vertex_buffer(gc, gpu_index));
@@ -126,7 +126,7 @@ namespace clan
 
 			gpu_vertices.upload_data(gc, 0, vertices, position);
 
-			gc.draw_primitives(type_lines, position, prim_array[gpu_index]);
+			gc.draw_primitives(PrimitivesType::lines, position, prim_array[gpu_index]);
 
 			gc.reset_program_object();
 

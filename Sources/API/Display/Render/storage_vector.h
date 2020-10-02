@@ -52,7 +52,7 @@ namespace clan
 		/// \param gc = Graphic Context
 		/// \param size = value
 		/// \param usage = Buffer Usage
-		StorageVector(GraphicContext &gc, int size, BufferUsage usage = usage_static_draw)
+		StorageVector(GraphicContext &gc, int size, BufferUsage usage = BufferUsage::static_draw)
 			: StorageBuffer(gc, size * sizeof(Type), sizeof(Type), usage)
 		{
 		}
@@ -63,12 +63,12 @@ namespace clan
 		/// \param data = void
 		/// \param size = value
 		/// \param usage = Buffer Usage
-		StorageVector(GraphicContext &gc, Type *data, int size, BufferUsage usage = usage_static_draw)
+		StorageVector(GraphicContext &gc, Type *data, int size, BufferUsage usage = BufferUsage::static_draw)
 			: StorageBuffer(gc, data, size * sizeof(Type), sizeof(Type), usage)
 		{
 		}
 
-		StorageVector(GraphicContext &gc, const std::vector<Type> &data, BufferUsage usage = usage_static_draw)
+		StorageVector(GraphicContext &gc, const std::vector<Type> &data, BufferUsage usage = BufferUsage::static_draw)
 			: StorageBuffer(gc, data.empty() ? (Type*)0 : &data[0], data.size() * sizeof(Type), sizeof(Type), usage)
 		{
 		}

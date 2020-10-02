@@ -44,17 +44,17 @@
 namespace clan
 {
 	Sprite_Impl::Sprite_Impl() :
-		angle(Angle(0.0f, angle_radians)),
-		angle_pitch(Angle(0.0f, angle_radians)),
-		angle_yaw(Angle(0.0f, angle_radians)),
-		base_angle(Angle(0.0f, angle_radians)),
+		angle(Angle(0.0f, AngleUnit::radians)),
+		angle_pitch(Angle(0.0f, AngleUnit::radians)),
+		angle_yaw(Angle(0.0f, AngleUnit::radians)),
+		base_angle(Angle(0.0f, AngleUnit::radians)),
 		scale(1.0f, 1.0f),
 		color(1.0f, 1.0f, 1.0f, 1.0f),
 		linear_filter(true),
 		translation_hotspot(0, 0),
 		rotation_hotspot(0, 0),
-		translation_origin(origin_top_left),
-		rotation_origin(origin_center),
+		translation_origin(Origin::top_left),
+		rotation_origin(Origin::center),
 		current_frame(0),
 		delta_frame(1),
 		update_time_ms(0),
@@ -172,7 +172,7 @@ namespace clan
 		// (cached for speed reasons)
 		static float vect_rotate_x[2] = { 1.0f, 0.0f };
 		static float vect_rotate_y[2] = { 0.0f, 1.0f };
-		static Angle last_angle(0, angle_radians);
+		static Angle last_angle(0, AngleUnit::radians);
 
 		Angle target_rotate_angle = angle - base_angle;
 		if (last_angle != target_rotate_angle)
@@ -336,7 +336,7 @@ namespace clan
 		int xpos, int ypos,
 		float trans_limit)
 	{
-		PixelBuffer alpha_buffer = texture.get_pixeldata(canvas, tf_rgba8).to_cpu(canvas);
+		PixelBuffer alpha_buffer = texture.get_pixeldata(canvas, TextureFormat::rgba8).to_cpu(canvas);
 
 		int begin = 0;
 		bool prev_trans = true;
@@ -416,7 +416,7 @@ namespace clan
 		int xpos, int ypos,
 		float trans_limit)
 	{
-		PixelBuffer alpha_buffer = texture.get_pixeldata(canvas, tf_rgba8).to_cpu(canvas);
+		PixelBuffer alpha_buffer = texture.get_pixeldata(canvas, TextureFormat::rgba8).to_cpu(canvas);
 
 		int width = alpha_buffer.get_width();
 		int height = alpha_buffer.get_height();

@@ -42,9 +42,9 @@ namespace clan
 	{
 		// This writer only supports RGBA format
 		if (src_image.get_bytes_per_pixel() < 8)
-			image = src_image.to_format(tf_rgba8);
+			image = src_image.to_format(TextureFormat::rgba8);
 		else
-			image = src_image.to_format(tf_rgba16);
+			image = src_image.to_format(TextureFormat::rgba16);
 	}
 	
 	void PNGWriter::save()

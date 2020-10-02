@@ -49,7 +49,7 @@ namespace clan
 		StringFormat format = get_log_string(type, text);
 		std::string log_line = format.get_result();
 
-		file->seek(0, File::seek_end);
+		file->seek(0, File::SeekMode::end);
 		file->write(log_line.data(), (int)log_line.length());
 	}
 }

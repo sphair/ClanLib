@@ -44,32 +44,32 @@ namespace clan
 	class D3DUniform
 	{
 	public:
-		enum Type { type_sampler, type_texture, type_image };
+		enum class Type { sampler, texture, image };
 
-		D3DUniform() : type(type_sampler), value(0) { for (int i = 0; i < shadertype_num_types; i++) shader_index[i] = -1; }
-		D3DUniform(Type type) : type(type), value(0) { for (int i = 0; i < shadertype_num_types; i++) shader_index[i] = -1; }
+		D3DUniform() : type(Type::sampler), value(0) { for (int i = 0; i < static_cast<int>(ShaderType::num_types); i++) shader_index[i] = -1; }
+		D3DUniform(Type type) : type(type), value(0) { for (int i = 0; i < static_cast<int>(ShaderType::num_types); i++) shader_index[i] = -1; }
 
 		Type type;
-		int shader_index[shadertype_num_types];
+		int shader_index[static_cast<int>(ShaderType::num_types)];
 		int value;
 	};
 
 	class D3DUniformBlock
 	{
 	public:
-		D3DUniformBlock() : value(0) { for (int i = 0; i < shadertype_num_types; i++) shader_index[i] = -1; }
+		D3DUniformBlock() : value(0) { for (int i = 0; i < static_cast<int>(ShaderType::num_types); i++) shader_index[i] = -1; }
 
-		int shader_index[shadertype_num_types];
+		int shader_index[static_cast<int>(ShaderType::num_types)];
 		int value;
 	};
 
 	class D3DStorageBlock
 	{
 	public:
-		D3DStorageBlock() : value(0) { for (int i = 0; i < shadertype_num_types; i++) { shader_srv_index[i] = -1; shader_uav_index[i] = -1; } }
+		D3DStorageBlock() : value(0) { for (int i = 0; i < static_cast<int>(ShaderType::num_types); i++) { shader_srv_index[i] = -1; shader_uav_index[i] = -1; } }
 
-		int shader_uav_index[shadertype_num_types];
-		int shader_srv_index[shadertype_num_types];
+		int shader_uav_index[static_cast<int>(ShaderType::num_types)];
+		int shader_srv_index[static_cast<int>(ShaderType::num_types)];
 		int value;
 	};
 
@@ -135,6 +135,6 @@ namespace clan
 	private:
 		ComPtr<ID3D11Device> device;
 		ComPtr<ID3D11DeviceContext> device_context;
-		ShaderObject shaders[shadertype_num_types];
+		ShaderObject shaders[static_cast<int>(ShaderType::num_types)];
 	};
 }

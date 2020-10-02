@@ -39,7 +39,7 @@ namespace clan
 	class NetGameEventValue
 	{
 	public:
-		enum Type
+		enum class Type
 		{
 			null,
 			integer,

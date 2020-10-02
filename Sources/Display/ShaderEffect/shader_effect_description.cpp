@@ -50,17 +50,17 @@ namespace clan
 
 	void ShaderEffectDescription::set_vertex_shader(std::string code, ShaderLanguage language)
 	{
-		impl->vertex_shader_code[language] = code;
+		impl->vertex_shader_code[static_cast<int>(language)] = code;
 	}
 
 	void ShaderEffectDescription::set_fragment_shader(std::string code, ShaderLanguage language)
 	{
-		impl->fragment_shader_code[language] = code;
+		impl->fragment_shader_code[static_cast<int>(language)] = code;
 	}
 
 	void ShaderEffectDescription::set_compute_shader(std::string code, ShaderLanguage language)
 	{
-		impl->compute_shader_code[language] = code;
+		impl->compute_shader_code[static_cast<int>(language)] = code;
 	}
 
 	RasterizerStateDescription &ShaderEffectDescription::rasterizer()

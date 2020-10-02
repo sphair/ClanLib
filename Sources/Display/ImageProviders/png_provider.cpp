@@ -85,12 +85,12 @@ namespace clan
 	{
 		PNGWriter::save(iodev, buffer);
 		/*
-		if (buffer.get_format() != tf_rgba8)
+		if (buffer.get_format() != TextureFormat::rgba8)
 		{
 			PixelBuffer newbuf(
 			buffer.get_width(),
 			buffer.get_height(),
-			tf_rgba8);
+			TextureFormat::rgba8);
 			newbuf.set_image(buffer);
 			buffer = newbuf;
 		}

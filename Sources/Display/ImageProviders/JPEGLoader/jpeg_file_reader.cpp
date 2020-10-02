@@ -53,7 +53,7 @@ namespace clan
 	void JPEGFileReader::skip_unknown()
 	{
 		uint16_t size = iodevice.read_uint16();
-		if (!iodevice.seek(size - 2, IODevice::seek_cur))
+		if (!iodevice.seek(size - 2, IODevice::SeekMode::cur))
 			throw Exception("Invalid JPEG file");
 	}
 
@@ -62,7 +62,7 @@ namespace clan
 		uint16_t size = iodevice.read_uint16();
 		if (size < 7)
 		{
-			if (!iodevice.seek(size - 2, IODevice::seek_cur))
+			if (!iodevice.seek(size - 2, IODevice::SeekMode::cur))
 				throw Exception("Invalid JPEG file");
 			return false;
 		}
@@ -71,7 +71,7 @@ namespace clan
 		iodevice.read(magic, 5);
 		bool is_jfif = (memcmp(magic, "JFIF", 5) == 0);
 
-		if (!iodevice.seek(size - 7, IODevice::seek_cur))
+		if (!iodevice.seek(size - 7, IODevice::SeekMode::cur))
 			throw Exception("Invalid JPEG file");
 
 		return is_jfif;
@@ -94,7 +94,7 @@ namespace clan
 		uint16_t size = iodevice.read_uint16();
 		if (size != 2 + 5 + 2 + 2 + 2 + 1)
 		{
-			if (!iodevice.seek(size - 2, IODevice::seek_cur))
+			if (!iodevice.seek(size - 2, IODevice::SeekMode::cur))
 				throw Exception("Invalid JPEG file");
 			return false;
 		}
@@ -104,7 +104,7 @@ namespace clan
 		bool is_app14_adobe = (memcmp(magic, "Adobe", 5) == 0);
 		if (!is_app14_adobe)
 		{
-			if (!iodevice.seek(size - 7, IODevice::seek_cur))
+			if (!iodevice.seek(size - 7, IODevice::SeekMode::cur))
 				throw Exception("Invalid JPEG file");
 			return false;
 		}

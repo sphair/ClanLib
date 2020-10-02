@@ -51,7 +51,7 @@ namespace clan
 		/// \param gc = Graphic Context
 		/// \param size = value
 		/// \param usage = Buffer Usage
-		TransferVector(GraphicContext &gc, int size, BufferUsage usage = usage_dynamic_copy)
+		TransferVector(GraphicContext &gc, int size, BufferUsage usage = BufferUsage::dynamic_copy)
 			: TransferBuffer(gc, size * sizeof(Type), usage)
 		{
 		}
@@ -62,12 +62,12 @@ namespace clan
 		/// \param data = void
 		/// \param size = value
 		/// \param usage = Buffer Usage
-		TransferVector(GraphicContext &gc, Type *data, int size, BufferUsage usage = usage_dynamic_copy)
+		TransferVector(GraphicContext &gc, Type *data, int size, BufferUsage usage = BufferUsage::dynamic_copy)
 			: TransferBuffer(gc, data, size * sizeof(Type), usage)
 		{
 		}
 
-		TransferVector(GraphicContext &gc, const std::vector<Type> &data, BufferUsage usage = usage_dynamic_copy)
+		TransferVector(GraphicContext &gc, const std::vector<Type> &data, BufferUsage usage = BufferUsage::dynamic_copy)
 			: TransferBuffer(gc, data.empty() ? (Type*)0 : &data[0], data.size() * sizeof(Type), usage)
 		{
 		}

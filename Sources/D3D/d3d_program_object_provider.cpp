@@ -113,8 +113,8 @@ namespace clan
 
 	D3DShaderObjectProvider *D3DProgramObjectProvider::get_shader_provider(ShaderType shader_type)
 	{
-		if (!shaders[shader_type].is_null())
-			return static_cast<D3DShaderObjectProvider*>(shaders[shader_type].get_provider());
+		if (!shaders[static_cast<int>(shader_type)].is_null())
+			return static_cast<D3DShaderObjectProvider*>(shaders[static_cast<int>(shader_type)].get_provider());
 		else
 			return 0;
 	}
@@ -122,13 +122,13 @@ namespace clan
 	void D3DProgramObjectProvider::attach(const ShaderObject &obj)
 	{
 		D3DShaderObjectProvider *shader_provider = static_cast<D3DShaderObjectProvider*>(obj.get_provider());
-		shaders[shader_provider->get_shader_type()] = obj;
+		shaders[static_cast<int>(shader_provider->get_shader_type())] = obj;
 	}
 
 	void D3DProgramObjectProvider::detach(const ShaderObject &obj)
 	{
 		D3DShaderObjectProvider *shader_provider = static_cast<D3DShaderObjectProvider*>(obj.get_provider());
-		shaders[shader_provider->get_shader_type()] = ShaderObject();
+		shaders[static_cast<int>(shader_provider->get_shader_type())] = ShaderObject();
 	}
 
 	void D3DProgramObjectProvider::bind_attribute_location(int index, const std::string &name)
@@ -157,7 +157,7 @@ namespace clan
 
 	void D3DProgramObjectProvider::link()
 	{
-		for (int j = 0; j < shadertype_num_types; j++)
+		for (int j = 0; j < static_cast<int>(ShaderType::num_types); j++)
 		{
 			if (!shaders[j].is_null())
 			{
@@ -170,7 +170,7 @@ namespace clan
 					if (it2 == uniform_names.end())
 					{
 						uniform_names[it->first] = uniforms.size();
-						uniforms.push_back(D3DUniform(D3DUniform::type_sampler));
+						uniforms.push_back(D3DUniform(D3DUniform::Type::sampler));
 					}
 					uniforms[uniform_names[it->first]].shader_index[j] = it->second;
 				}
@@ -181,7 +181,7 @@ namespace clan
 					if (it2 == uniform_names.end())
 					{
 						uniform_names[it->first] = uniforms.size();
-						uniforms.push_back(D3DUniform(D3DUniform::type_texture));
+						uniforms.push_back(D3DUniform(D3DUniform::Type::texture));
 					}
 					uniforms[uniform_names[it->first]].shader_index[j] = it->second;
 				}
@@ -192,7 +192,7 @@ namespace clan
 					if (it2 == uniform_names.end())
 					{
 						uniform_names[it->first] = uniforms.size();
-						uniforms.push_back(D3DUniform(D3DUniform::type_image));
+						uniforms.push_back(D3DUniform(D3DUniform::Type::image));
 					}
 					uniforms[uniform_names[it->first]].shader_index[j] = it->second;
 				}

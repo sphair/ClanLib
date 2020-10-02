@@ -38,7 +38,7 @@ namespace clan
 
 	class GraphicContext;
 	class Canvas;
-	enum TextureImageYAxis;
+	enum class TextureImageYAxis;
 
 	/// \brief Render batching abstraction
 	class RenderBatcher

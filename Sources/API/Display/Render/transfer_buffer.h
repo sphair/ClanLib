@@ -52,7 +52,7 @@ namespace clan
 		/// \param gc = Graphic Context
 		/// \param size = value
 		/// \param usage = Buffer Usage
-		TransferBuffer(GraphicContext &gc, int size, BufferUsage usage = usage_dynamic_copy);
+		TransferBuffer(GraphicContext &gc, int size, BufferUsage usage = BufferUsage::dynamic_copy);
 
 		/// \brief Constructs a transfer buffer
 		///
@@ -60,7 +60,7 @@ namespace clan
 		/// \param data = void
 		/// \param size = value
 		/// \param usage = Buffer Usage
-		TransferBuffer(GraphicContext &gc, const void *data, int size, BufferUsage usage = usage_dynamic_copy);
+		TransferBuffer(GraphicContext &gc, const void *data, int size, BufferUsage usage = BufferUsage::dynamic_copy);
 
 		virtual ~TransferBuffer();
 

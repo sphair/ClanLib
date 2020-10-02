@@ -53,7 +53,7 @@ namespace clan
 			scale_y(1.0f),
 			translation_hotspot(0, 0),
 			translated_hotspot(0, 0),
-			translation_origin(origin_top_left) {};
+			translation_origin(Origin::top_left) {};
 		~Image_Impl() {};
 
 		void calc_hotspot();
@@ -75,32 +75,32 @@ namespace clan
 	{
 		switch (translation_origin)
 		{
-		case origin_top_left:
+		case Origin::top_left:
 		default:
 			translated_hotspot = Pointf(translation_hotspot.x, translation_hotspot.y);
 			break;
-		case origin_top_center:
+		case Origin::top_center:
 			translated_hotspot = Pointf(translation_hotspot.x - texture_rect.get_width() * scale_x * 0.5f, translation_hotspot.y);
 			break;
-		case origin_top_right:
+		case Origin::top_right:
 			translated_hotspot = Pointf(translation_hotspot.x - texture_rect.get_width() * scale_x, translation_hotspot.y);
 			break;
-		case origin_center_left:
+		case Origin::center_left:
 			translated_hotspot = Pointf(translation_hotspot.x, translation_hotspot.y - texture_rect.get_height() * scale_y * 0.5f);
 			break;
-		case origin_center:
+		case Origin::center:
 			translated_hotspot = Pointf(translation_hotspot.x - texture_rect.get_width() * scale_x * 0.5f, translation_hotspot.y - texture_rect.get_height() * scale_y * 0.5f);
 			break;
-		case origin_center_right:
+		case Origin::center_right:
 			translated_hotspot = Pointf(translation_hotspot.x - texture_rect.get_width() * scale_x, translation_hotspot.y - texture_rect.get_height() * scale_y * 0.5f);
 			break;
-		case origin_bottom_left:
+		case Origin::bottom_left:
 			translated_hotspot = Pointf(translation_hotspot.x, translation_hotspot.y - texture_rect.get_height() * scale_y);
 			break;
-		case origin_bottom_center:
+		case Origin::bottom_center:
 			translated_hotspot = Pointf(translation_hotspot.x - texture_rect.get_width() * scale_x * 0.5f, translation_hotspot.y - texture_rect.get_height() * scale_y);
 			break;
-		case origin_bottom_right:
+		case Origin::bottom_right:
 			translated_hotspot = Pointf(translation_hotspot.x - texture_rect.get_width() * scale_x, translation_hotspot.y - texture_rect.get_height() * scale_y);
 			break;
 		}
@@ -325,8 +325,8 @@ namespace clan
 
 	void Image::set_linear_filter(bool linear_filter)
 	{
-		impl->texture.set_mag_filter(linear_filter ? filter_linear : filter_nearest);
-		impl->texture.set_min_filter(linear_filter ? filter_linear : filter_nearest);
+		impl->texture.set_mag_filter(linear_filter ? TextureFilter::linear : TextureFilter::nearest);
+		impl->texture.set_min_filter(linear_filter ? TextureFilter::linear : TextureFilter::nearest);
 	}
 
 	void Image::set_subimage(

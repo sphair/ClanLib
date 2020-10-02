@@ -46,9 +46,9 @@ namespace clan
 
 		ShaderType shader_type;
 		if (type == "fragment-shader")
-			shader_type = shadertype_fragment;
+			shader_type = ShaderType::fragment;
 		else if (type == "vertex-shader")
-			shader_type = shadertype_vertex;
+			shader_type = ShaderType::vertex;
 		else
 			throw Exception("ShaderObject: Unknown shader type: " + type);
 

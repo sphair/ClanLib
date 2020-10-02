@@ -36,7 +36,7 @@
 
 namespace clan
 {
-	Canvas_Impl::Canvas_Impl() : canvas_map_mode(map_user_projection)
+	Canvas_Impl::Canvas_Impl() : canvas_map_mode(MapMode::_user_projection)
 	{
 	}
 
@@ -77,18 +77,18 @@ namespace clan
 
 		if (gc.get_write_frame_buffer().is_null())	// No framebuffer attached to canvas
 		{
-			canvas_y_axis = y_axis_top_down;
+			canvas_y_axis = TextureImageYAxis::y_top_down;
 			sc.connect(gc.get_provider()->sig_window_resized(), bind_member(this, &Canvas_Impl::on_window_resized));
 		}
 		else
 		{
-			if (gc.get_texture_image_y_axis() == y_axis_bottom_up)
+			if (gc.get_texture_image_y_axis() == TextureImageYAxis::y_bottom_up)
 			{
-				canvas_y_axis = y_axis_bottom_up;
+				canvas_y_axis = TextureImageYAxis::y_bottom_up;
 			}
 			else
 			{
-				canvas_y_axis = y_axis_top_down;
+				canvas_y_axis = TextureImageYAxis::y_top_down;
 			}
 		}
 
@@ -128,17 +128,17 @@ namespace clan
 		Mat4f matrix;
 		Mat4f pixel_scaling_matrix = Mat4f::scale(gc.get_pixel_ratio(), gc.get_pixel_ratio(), 1.0f);
 
-		MapMode mode = (canvas_y_axis == y_axis_bottom_up) ? get_top_down_map_mode() : canvas_map_mode;
+		MapMode mode = (canvas_y_axis == TextureImageYAxis::y_bottom_up) ? get_top_down_map_mode() : canvas_map_mode;
 		switch (mode)
 		{
 		default:
-		case map_2d_upper_left:
-			matrix = Mat4f::ortho_2d(viewport_rect.left, viewport_rect.right, viewport_rect.bottom, viewport_rect.top, handed_right, gc_clip_z_range) * pixel_scaling_matrix;
+		case MapMode::_2d_upper_left:
+			matrix = Mat4f::ortho_2d(viewport_rect.left, viewport_rect.right, viewport_rect.bottom, viewport_rect.top, Handedness::right, gc_clip_z_range) * pixel_scaling_matrix;
 			break;
-		case map_2d_lower_left:
-			matrix = Mat4f::ortho_2d(viewport_rect.left, viewport_rect.right, viewport_rect.top, viewport_rect.bottom, handed_right, gc_clip_z_range) * pixel_scaling_matrix;
+		case MapMode::_2d_lower_left:
+			matrix = Mat4f::ortho_2d(viewport_rect.left, viewport_rect.right, viewport_rect.top, viewport_rect.bottom, Handedness::right, gc_clip_z_range) * pixel_scaling_matrix;
 			break;
-		case map_user_projection:
+		case MapMode::_user_projection:
 			matrix = pixel_scaling_matrix * user_projection;
 			break;
 		}
@@ -155,9 +155,9 @@ namespace clan
 		switch (canvas_map_mode)
 		{
 		default:
-		case map_2d_upper_left: return map_2d_lower_left;
-		case map_2d_lower_left: return map_2d_upper_left;
-		case map_user_projection: return map_user_projection;
+		case MapMode::_2d_upper_left: return MapMode::_2d_lower_left;
+		case MapMode::_2d_lower_left: return MapMode::_2d_upper_left;
+		case MapMode::_user_projection: return MapMode::_user_projection;
 		}
 	}
 
@@ -240,7 +240,7 @@ namespace clan
 			static_cast<int>(std::round(rect.bottom * gc.get_pixel_ratio()))
 		};
 
-		gc.set_scissor(recti, canvas_y_axis ? y_axis_top_down : y_axis_bottom_up);
+		gc.set_scissor(recti, canvas_y_axis);
 	}
 
 	void Canvas_Impl::set_cliprect(const Rectf &rect)

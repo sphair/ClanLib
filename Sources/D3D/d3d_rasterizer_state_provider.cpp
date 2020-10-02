@@ -35,7 +35,7 @@ namespace clan
 	D3DRasterizerStateProvider::D3DRasterizerStateProvider(const ComPtr<ID3D11Device> &device, const RasterizerStateDescription &desc)
 	{
 		D3D11_RASTERIZER_DESC d3d_desc;
-		d3d_desc.FrontCounterClockwise = (desc.get_front_face() == face_counter_clockwise) ? TRUE : FALSE;
+		d3d_desc.FrontCounterClockwise = (desc.get_front_face() == FaceSide::counter_clockwise) ? TRUE : FALSE;
 		d3d_desc.DepthBias = 0;
 		d3d_desc.SlopeScaledDepthBias = 0.0f;
 		d3d_desc.DepthBiasClamp = 0.0f;
@@ -47,9 +47,9 @@ namespace clan
 		{
 			switch (desc.get_face_cull_mode())
 			{
-			case cull_front: d3d_desc.CullMode = D3D11_CULL_FRONT; break;
-			case cull_back: d3d_desc.CullMode = D3D11_CULL_BACK; break;
-			case cull_front_and_back: d3d_desc.CullMode = D3D11_CULL_NONE; break;
+			case CullMode::front: d3d_desc.CullMode = D3D11_CULL_FRONT; break;
+			case CullMode::back: d3d_desc.CullMode = D3D11_CULL_BACK; break;
+			case CullMode::front_and_back: d3d_desc.CullMode = D3D11_CULL_NONE; break;
 			}
 		}
 		else
@@ -59,9 +59,9 @@ namespace clan
 
 		switch (desc.get_face_fill_mode())
 		{
-		case fill_point: throw Exception("Point fill mode not supported by D3D target");
-		case fill_line: d3d_desc.FillMode = D3D11_FILL_WIREFRAME; break;
-		case fill_polygon: d3d_desc.FillMode = D3D11_FILL_SOLID; break;
+		case FillMode::point: throw Exception("Point fill mode not supported by D3D target");
+		case FillMode::line: d3d_desc.FillMode = D3D11_FILL_WIREFRAME; break;
+		case FillMode::polygon: d3d_desc.FillMode = D3D11_FILL_SOLID; break;
 		}
 
 		HRESULT result = device->CreateRasterizerState(&d3d_desc, state.output_variable());

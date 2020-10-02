@@ -72,7 +72,7 @@ namespace clan
 
 	void GL1UniformBufferProvider::copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
 	{
-		buffer.lock(gc, access_read_only);
+		buffer.lock(gc, BufferAccess::read_only);
 		memcpy(this->data + dest_pos, (char *)buffer.get_data() + src_pos, size);
 		buffer.unlock();
 	}

@@ -309,7 +309,7 @@ namespace clan
 		int size_file = input.get_size();
 
 		char buffer[32 * 1024];
-		if (size_file > 32 * 1024) input.seek(-32 * 1024, IODevice::seek_end);
+		if (size_file > 32 * 1024) input.seek(-32 * 1024, IODevice::SeekMode::end);
 		int size_buffer = input.read(buffer, 32 * 1024);
 
 		int end_record_pos = -1;
@@ -333,7 +333,7 @@ namespace clan
 		// Load end of central directory record:
 
 		ZipEndOfCentralDirectoryRecord end_of_directory;
-		input.seek(end_record_pos, IODevice::seek_set);
+		input.seek(end_record_pos, IODevice::SeekMode::set);
 		end_of_directory.load(input);
 
 		// Look for zip64 central directory locator:
@@ -343,15 +343,15 @@ namespace clan
 		Zip64EndOfCentralDirectoryRecord zip64_end_of_directory;
 
 		int end64_locator = end_record_pos - 20;
-		input.seek(end64_locator, IODevice::seek_set);
+		input.seek(end64_locator, IODevice::SeekMode::set);
 		if (input.read_uint32() == 0x07064b50)
 		{
 			// Load zip64 structures:
 
-			input.seek(end64_locator, IODevice::seek_set);
+			input.seek(end64_locator, IODevice::SeekMode::set);
 			zip64_locator.load(input);
 
-			input.seek(int(end64_locator + zip64_locator.relative_offset_of_zip64_end_of_central_directory), IODevice::seek_set);
+			input.seek(int(end64_locator + zip64_locator.relative_offset_of_zip64_end_of_central_directory), IODevice::SeekMode::set);
 			zip64_end_of_directory.load(input);
 
 			zip64 = true;
@@ -359,8 +359,8 @@ namespace clan
 
 		// Load central directory records:
 
-		if (zip64) input.seek(int(zip64_end_of_directory.offset_to_start_of_central_directory), IODevice::seek_set);
-		else input.seek(int(end_of_directory.offset_to_start_of_central_directory), IODevice::seek_set);
+		if (zip64) input.seek(int(zip64_end_of_directory.offset_to_start_of_central_directory), IODevice::SeekMode::set);
+		else input.seek(int(end_of_directory.offset_to_start_of_central_directory), IODevice::SeekMode::set);
 
 		int64_t num_entries = end_of_directory.number_of_entries_in_central_directory;
 		if (zip64) num_entries = zip64_end_of_directory.number_of_entries_in_central_directory;

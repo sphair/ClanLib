@@ -56,7 +56,7 @@ namespace clan
 		 *  \param levels   Number of mipmap levels for the new texture. Setting
 		 *                  this to `0` enables all levels.
 		 */
-		Texture2D(GraphicContext &context, int width, int height, TextureFormat format = tf_rgba8, int levels = 1);
+		Texture2D(GraphicContext &context, int width, int height, TextureFormat format = TextureFormat::rgba8, int levels = 1);
 
 		/** Constructs a new Texture object.
 		 *  \param context  Graphic context to construct the texture on.
@@ -65,7 +65,7 @@ namespace clan
 		 *  \param levels   Number of mipmap levels for the new texture. Setting
 		 *                  this to `0` enables all levels.
 		 */
-		Texture2D(GraphicContext &context, const Size &size, TextureFormat texture_format = tf_rgba8, int levels = 1);
+		Texture2D(GraphicContext &context, const Size &size, TextureFormat texture_format = TextureFormat::rgba8, int levels = 1);
 
 		Texture2D(GraphicContext &context, const std::string &fullname, const ImageImportDescription &import_desc = {});
 		Texture2D(GraphicContext &context, const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc = {});
@@ -158,7 +158,7 @@ namespace clan
 		void copy_image_from(
 			GraphicContext &context,
 			int level,
-			TextureFormat texture_format = tf_rgba8);
+			TextureFormat texture_format = TextureFormat::rgba8);
 
 		void copy_image_from(
 			GraphicContext &context,
@@ -167,13 +167,13 @@ namespace clan
 			int width,
 			int height,
 			int level = 0,
-			TextureFormat texture_format = tf_rgba8);
+			TextureFormat texture_format = TextureFormat::rgba8);
 
 		void copy_image_from(
 			GraphicContext &context,
 			const Rect &pos,
 			int level = 0,
-			TextureFormat texture_format = tf_rgba8);
+			TextureFormat texture_format = TextureFormat::rgba8);
 
 		/// Copy sub image data from a graphic context.
 		void copy_subimage_from(

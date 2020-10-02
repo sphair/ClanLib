@@ -310,9 +310,9 @@ namespace clan
 		DWORD moveMethod = FILE_BEGIN;
 		switch (seek_mode)
 		{
-		case IODevice::seek_set: moveMethod = FILE_BEGIN; break;
-		case IODevice::seek_cur: moveMethod = FILE_CURRENT; break;
-		case IODevice::seek_end: moveMethod = FILE_END; break;
+		case IODevice::SeekMode::set: moveMethod = FILE_BEGIN; break;
+		case IODevice::SeekMode::cur: moveMethod = FILE_CURRENT; break;
+		case IODevice::SeekMode::end: moveMethod = FILE_END; break;
 		}
 
 		DWORD new_pos = SetFilePointer(handle, position, 0, moveMethod);

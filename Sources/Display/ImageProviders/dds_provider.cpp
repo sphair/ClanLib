@@ -153,8 +153,8 @@ namespace clan
 		if ((header_flags & DDS_HEADER_FLAGS_TEXTURE) != DDS_HEADER_FLAGS_TEXTURE)
 			throw Exception("Unsupported DDS header flags combination");
 
-		TextureDimensions texture_dimensions = texture_2d;
-		TextureFormat texture_format = tf_rgba8;
+		TextureDimensions texture_dimensions = TextureDimensions::_2d;
+		TextureFormat texture_format = TextureFormat::rgba8;
 		int texture_width = width;
 		int texture_height = height;
 		int texture_slices = 1;
@@ -172,17 +172,17 @@ namespace clan
 			case DDS_D3D11_RESOURCE_DIMENSION_BUFFER:
 				throw Exception("Unsupported DDS resource dimension");
 			case DDS_D3D11_RESOURCE_DIMENSION_TEXTURE1D:
-				texture_dimensions = dx10_array_size == 1 ? texture_1d : texture_1d_array;
+				texture_dimensions = dx10_array_size == 1 ? TextureDimensions::_1d : TextureDimensions::_1d_array;
 				texture_slices = dx10_array_size;
 				break;
 			case DDS_D3D11_RESOURCE_DIMENSION_TEXTURE2D:
-				texture_dimensions = dx10_array_size == 2 ? texture_2d : texture_2d_array;
+				texture_dimensions = dx10_array_size == 2 ? TextureDimensions::_2d : TextureDimensions::_2d_array;
 				texture_slices = dx10_array_size;
 				if (dx10_misc_flag & DDS_D3D11_RESOURCE_MISC_TEXTURECUBE)
-					texture_dimensions = texture_cube;
+					texture_dimensions = TextureDimensions::_cube;
 				break;
 			case DDS_D3D11_RESOURCE_DIMENSION_TEXTURE3D:
-				texture_dimensions = texture_3d;
+				texture_dimensions = TextureDimensions::_3d;
 				texture_slices = dx10_array_size;
 				break;
 			}
@@ -194,17 +194,17 @@ namespace clan
 		{
 			if ((surface_flags & DDS_SURFACE_FLAGS_CUBEMAP) == DDS_SURFACE_FLAGS_CUBEMAP && (cubemap_flags & DDS_CUBEMAP_ALLFACES) == DDS_CUBEMAP_ALLFACES)
 			{
-				texture_dimensions = texture_cube;
+				texture_dimensions = TextureDimensions::_cube;
 				texture_slices = 6;
 			}
 			else if ((header_flags & DDS_HEADER_FLAGS_VOLUME) == DDS_HEADER_FLAGS_VOLUME)
 			{
-				texture_dimensions = texture_3d;
+				texture_dimensions = TextureDimensions::_3d;
 				texture_slices = depth;
 			}
 			else
 			{
-				texture_dimensions = texture_2d;
+				texture_dimensions = TextureDimensions::_2d;
 				texture_slices = 1;
 			}
 
@@ -213,30 +213,30 @@ namespace clan
 				if (format_rgb_bit_count == 32)
 				{
 					if (isbitmask(0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000))
-						texture_format = tf_bgra8;
+						texture_format = TextureFormat::bgra8;
 					else if (isbitmask(0x00ff0000, 0x0000ff00, 0x000000ff, 0x00000000))
-						texture_format = tf_bgra8; // To do: this is actually bgrx8 (alpha component unused)
+						texture_format = TextureFormat::bgra8; // To do: this is actually bgrx8 (alpha component unused)
 					else if (isbitmask(0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000))
-						texture_format = tf_rgba8;
+						texture_format = TextureFormat::rgba8;
 					else if (isbitmask(0x000000ff, 0x0000ff00, 0x00ff0000, 0x00000000))
-						texture_format = tf_rgba8; // To do: this is actually rgbx8 (alpha component unused)
+						texture_format = TextureFormat::rgba8; // To do: this is actually rgbx8 (alpha component unused)
 					//else if (isbitmask(0x3ff00000, 0x000ffc00, 0x000003ff, 0xc0000000))
-					//	texture_format = tf_bgr10_a2;
+					//	texture_format = TextureFormat::bgr10_a2;
 					else if (isbitmask(0x000003ff, 0x000ffc00, 0x3ff00000, 0xc0000000))
-						texture_format = tf_rgb10_a2;
+						texture_format = TextureFormat::rgb10_a2;
 					else if (isbitmask(0x0000ffff, 0xffff0000, 0x00000000, 0x00000000))
-						texture_format = tf_rg16;
+						texture_format = TextureFormat::rg16;
 					else if (isbitmask(0xffffffff, 0x00000000, 0x00000000, 0x00000000))
-						texture_format = tf_r32f;
+						texture_format = TextureFormat::r32f;
 					else
 						throw Exception("Unsupported pixel format used by DDS file");
 				}
 				else if (format_rgb_bit_count == 24)
 				{
 					if (isbitmask(0x00ff0000, 0x0000ff00, 0x000000ff, 0x00000000))
-						texture_format = tf_bgr8;
+						texture_format = TextureFormat::bgr8;
 					else if (isbitmask(0x000000ff, 0x0000ff00, 0x00ff0000, 0x00000000))
-						texture_format = tf_rgb8;
+						texture_format = TextureFormat::rgb8;
 					else
 						throw Exception("Unsupported pixel format used by DDS file");
 				}
@@ -256,39 +256,39 @@ namespace clan
 			else if (format_flags & DDS_FOURCC)
 			{
 				if (format_fourcc == fourccvalue('D', 'X', 'T', '1'))
-					texture_format = tf_compressed_rgb_s3tc_dxt1; // is this tf_compressed_rgba_s3tc_dxt1?
+					texture_format = TextureFormat::compressed_rgb_s3tc_dxt1; // is this TextureFormat::compressed_rgba_s3tc_dxt1?
 				else if (format_fourcc == fourccvalue('D', 'X', 'T', '3'))
-					texture_format = tf_compressed_rgba_s3tc_dxt3;
+					texture_format = TextureFormat::compressed_rgba_s3tc_dxt3;
 				else if (format_fourcc == fourccvalue('D', 'X', 'T', '5'))
-					texture_format = tf_compressed_rgba_s3tc_dxt5;
+					texture_format = TextureFormat::compressed_rgba_s3tc_dxt5;
 				//else if (format_fourcc == fourccvalue('R', 'G', 'B', 'G'))
-				//	texture_format = tf_rgbg8;
+				//	texture_format = TextureFormat::rgbg8;
 				//else if (format_fourcc == fourccvalue('G', 'R', 'B', 'G'))
 				//	texture_format = cl_grgb8;
 				else if (format_fourcc == DDS_D3DFMT_A16B16G16R16)
-					texture_format = tf_rgba16;
+					texture_format = TextureFormat::rgba16;
 				else if (format_fourcc == DDS_D3DFMT_Q16W16V16U16)
-					texture_format = tf_rgba16_snorm;
+					texture_format = TextureFormat::rgba16_snorm;
 				else if (format_fourcc == DDS_D3DFMT_R16F)
-					texture_format = tf_r16f;
+					texture_format = TextureFormat::r16f;
 				else if (format_fourcc == DDS_D3DFMT_G16R16F)
-					texture_format = tf_rg16f;
+					texture_format = TextureFormat::rg16f;
 				else if (format_fourcc == DDS_D3DFMT_A16B16G16R16F)
-					texture_format = tf_rgba16f;
+					texture_format = TextureFormat::rgba16f;
 				else if (format_fourcc == DDS_D3DFMT_R32F)
-					texture_format = tf_r32f;
+					texture_format = TextureFormat::r32f;
 				else if (format_fourcc == DDS_D3DFMT_G32R32F)
-					texture_format = tf_rg32f;
+					texture_format = TextureFormat::rg32f;
 				else if (format_fourcc == DDS_D3DFMT_A32B32G32R32F)
-					texture_format = tf_rgba32f;
+					texture_format = TextureFormat::rgba32f;
 				else
 					throw Exception("Unsupported pixel format used by DDS file");
 			}
 		}
 
 		TextureFormat original_format = texture_format;
-		if (texture_format == tf_bgra8 || texture_format == tf_rgb8 || texture_format == tf_bgr8)
-			texture_format = tf_rgba8;
+		if (texture_format == TextureFormat::bgra8 || texture_format == TextureFormat::rgb8 || texture_format == TextureFormat::bgr8)
+			texture_format = TextureFormat::rgba8;
 
 		PixelBufferSet set(texture_dimensions, texture_format, texture_width, texture_height, texture_slices);
 

@@ -37,14 +37,14 @@ namespace clan
 	/// \{
 
 	/// \brief Texture cube directions
-	enum TextureCubeDirection
+	enum class TextureCubeDirection
 	{
-		cl_cube_positive_x,
-		cl_cube_negative_x,
-		cl_cube_positive_y,
-		cl_cube_negative_y,
-		cl_cube_positive_z,
-		cl_cube_negative_z
+		positive_x,
+		negative_x,
+		positive_y,
+		negative_y,
+		positive_z,
+		negative_z
 	};
 
 	/// \brief 2D texture cube object class.
@@ -66,7 +66,7 @@ namespace clan
 		/// \param height = value
 		/// \param internal_format = Texture Format
 		/// \param levels = Mipmap levels for the texture. 0 = all levels
-		TextureCube(GraphicContext &context, int width, int height, TextureFormat texture_format = tf_rgba8, int levels = 1);
+		TextureCube(GraphicContext &context, int width, int height, TextureFormat texture_format = TextureFormat::rgba8, int levels = 1);
 
 		/// \brief Constructs a Texture
 		///
@@ -74,7 +74,7 @@ namespace clan
 		/// \param size = Size
 		/// \param internal_format = Texture Format
 		/// \param levels = Mipmap levels for the texture. 0 = all levels
-		TextureCube(GraphicContext &context, const Size &size, TextureFormat texture_format = tf_rgba8, int levels = 1);
+		TextureCube(GraphicContext &context, const Size &size, TextureFormat texture_format = TextureFormat::rgba8, int levels = 1);
 
 		/// \brief Get the texture width.
 		int get_width() const;

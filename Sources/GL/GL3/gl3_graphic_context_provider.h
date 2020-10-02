@@ -91,9 +91,9 @@ namespace clan
 
 		ProgramObject get_program_object(StandardProgram standard_program) const override;
 
-		ClipZRange get_clip_z_range() const override { return clip_negative_positive_w; }
-		TextureImageYAxis get_texture_image_y_axis() const override { return y_axis_bottom_up; }
-		ShaderLanguage get_shader_language() const override { return shader_glsl; }
+		ClipZRange get_clip_z_range() const override { return ClipZRange::negative_positive_w; }
+		TextureImageYAxis get_texture_image_y_axis() const override { return TextureImageYAxis::y_bottom_up; }
+		ShaderLanguage get_shader_language() const override { return ShaderLanguage::glsl; }
 		int get_major_version() const override { int major = 0, minor = 0; get_opengl_version(major, minor); return major; }
 		int get_minor_version() const override { int major = 0, minor = 0; get_opengl_version(major, minor); return minor; }
 		bool has_compute_shader_support() const override { return false; }

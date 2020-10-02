@@ -70,7 +70,7 @@ namespace clan
 		texture_desc.CPUAccessFlags = to_d3d_cpu_access(direction);
 		texture_desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED;
 
-		if ((usage == usage_stream_draw) && (direction == data_to_gpu)) // To do: find a buffer usage API that works well for both Direct3D and OpenGL
+		if ((usage == BufferUsage::stream_draw) && (direction == PixelBufferDirection::data_to_gpu)) // To do: find a buffer usage API that works well for both Direct3D and OpenGL
 		{
 			texture_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 			texture_desc.Usage = D3D11_USAGE_DYNAMIC;
@@ -187,13 +187,13 @@ namespace clan
 	{
 		switch (access)
 		{
-		case access_read_only:
+		case BufferAccess::read_only:
 			return D3D11_MAP_READ;
-		case access_write_only:
+		case BufferAccess::write_only:
 			return D3D11_MAP_WRITE;
-		case access_write_discard:
+		case BufferAccess::write_discard:
 			return D3D11_MAP_WRITE_DISCARD;
-		case access_read_write:
+		case BufferAccess::read_write:
 			return D3D11_MAP_READ_WRITE;
 		}
 		throw Exception("Unsupported access type");
@@ -203,9 +203,9 @@ namespace clan
 	{
 		switch (direction)
 		{
-		case data_to_gpu:
+		case PixelBufferDirection::data_to_gpu:
 			return D3D11_CPU_ACCESS_WRITE;
-		case data_from_gpu:
+		case PixelBufferDirection::data_from_gpu:
 			return D3D11_CPU_ACCESS_READ;
 		}
 		throw Exception("Unsupported pixel buffer direction");

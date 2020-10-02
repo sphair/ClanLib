@@ -217,7 +217,7 @@ namespace clan
 
 		void initialise_buffers(Canvas &canvas);
 
-		TextureImageYAxis image_yaxis = y_axis_top_down;
+		TextureImageYAxis image_yaxis = TextureImageYAxis::y_top_down;
 
 		struct Extent
 		{

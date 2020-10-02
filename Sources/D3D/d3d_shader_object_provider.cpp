@@ -207,7 +207,7 @@ namespace clan
 	{
 		switch (type)
 		{
-		case shadertype_vertex:
+		case ShaderType::vertex:
 		{
 			ID3D11VertexShader *shader_obj = 0;
 			HRESULT result = device->CreateVertexShader(bytecode.get_data(), bytecode.get_size(), 0, &shader_obj);
@@ -215,7 +215,7 @@ namespace clan
 			shader = ComPtr<ID3D11DeviceChild>(shader_obj);
 		}
 		break;
-		case shadertype_tess_evaluation:
+		case ShaderType::tess_evaluation:
 		{
 			ID3D11DomainShader *shader_obj = 0;
 			HRESULT result = device->CreateDomainShader(bytecode.get_data(), bytecode.get_size(), 0, &shader_obj);
@@ -223,7 +223,7 @@ namespace clan
 			shader = ComPtr<ID3D11DeviceChild>(shader_obj);
 		}
 		break;
-		case shadertype_tess_control:
+		case ShaderType::tess_control:
 		{
 			ID3D11HullShader *shader_obj = 0;
 			HRESULT result = device->CreateHullShader(bytecode.get_data(), bytecode.get_size(), 0, &shader_obj);
@@ -231,7 +231,7 @@ namespace clan
 			shader = ComPtr<ID3D11DeviceChild>(shader_obj);
 		}
 		break;
-		case shadertype_geometry:
+		case ShaderType::geometry:
 		{
 			ID3D11GeometryShader *shader_obj = 0;
 			HRESULT result = device->CreateGeometryShader(bytecode.get_data(), bytecode.get_size(), 0, &shader_obj);
@@ -239,7 +239,7 @@ namespace clan
 			shader = ComPtr<ID3D11DeviceChild>(shader_obj);
 		}
 		break;
-		case shadertype_fragment:
+		case ShaderType::fragment:
 		{
 			ID3D11PixelShader *shader_obj = 0;
 			HRESULT result = device->CreatePixelShader(bytecode.get_data(), bytecode.get_size(), 0, &shader_obj);
@@ -247,7 +247,7 @@ namespace clan
 			shader = ComPtr<ID3D11DeviceChild>(shader_obj);
 		}
 		break;
-		case shadertype_compute:
+		case ShaderType::compute:
 		{
 			ID3D11ComputeShader *shader_obj = 0;
 			HRESULT result = device->CreateComputeShader(bytecode.get_data(), bytecode.get_size(), 0, &shader_obj);
@@ -351,17 +351,17 @@ namespace clan
 
 		switch (type)
 		{
-		case shadertype_vertex:
+		case ShaderType::vertex:
 			return string_format("vs_%1_%2", major, minor);
-		case shadertype_tess_control:
+		case ShaderType::tess_control:
 			return string_format("hs_%1_%2", major, minor);
-		case shadertype_tess_evaluation:
+		case ShaderType::tess_evaluation:
 			return string_format("ds_%1_%2", major, minor);
-		case shadertype_geometry:
+		case ShaderType::geometry:
 			return string_format("gs_%1_%2", major, minor);
-		case shadertype_fragment:
+		case ShaderType::fragment:
 			return string_format("ps_%1_%2", major, minor);
-		case shadertype_compute:
+		case ShaderType::compute:
 			return string_format("cs_%1_%2", major, minor);
 		default:
 			throw Exception("Unknown shader type");

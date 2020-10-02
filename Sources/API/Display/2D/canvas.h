@@ -60,11 +60,11 @@ namespace clan
 	class Brush;
 
 	/// \brief Mapping modes.
-	enum MapMode
+	enum class MapMode
 	{
-		map_2d_upper_left,
-		map_2d_lower_left,
-		map_user_projection
+		_2d_upper_left,
+		_2d_lower_left,
+		_user_projection
 	};
 
 	/// \brief 2D Graphics Canvas
@@ -123,10 +123,10 @@ namespace clan
 		Rectf get_cliprect() const;
 
 		/// \brief Return the content of the read buffer into a pixel buffer.
-		PixelBuffer get_pixeldata(const Rect& rect, TextureFormat texture_format = tf_rgba8, bool clamp = true);
+		PixelBuffer get_pixeldata(const Rect& rect, TextureFormat texture_format = TextureFormat::rgba8, bool clamp = true);
 
 		/// \brief Return the content of the read buffer into a pixel buffer.
-		PixelBuffer get_pixeldata(TextureFormat texture_format = tf_rgba8, bool clamp = true);
+		PixelBuffer get_pixeldata(TextureFormat texture_format = TextureFormat::rgba8, bool clamp = true);
 
 		/// Retrieves the display pixel ratio of the context.
 		/// \seealso Resolution Independence

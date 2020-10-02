@@ -61,41 +61,41 @@ namespace clan
 	class XMLResourceDocument;
 
 	/// \brief Texture coordinate wrapping modes.
-	enum TextureWrapMode
+	enum class TextureWrapMode
 	{
-		wrap_clamp_to_edge,
-		wrap_repeat,
-		wrap_mirrored_repeat
+		clamp_to_edge,
+		repeat,
+		mirrored_repeat
 	};
 
 	/// \brief Texture filters.
-	enum TextureFilter
+	enum class TextureFilter
 	{
-		filter_nearest,
-		filter_linear,
-		filter_nearest_mipmap_nearest,
-		filter_nearest_mipmap_linear,
-		filter_linear_mipmap_nearest,
-		filter_linear_mipmap_linear
+		nearest,
+		linear,
+		nearest_mipmap_nearest,
+		nearest_mipmap_linear,
+		linear_mipmap_nearest,
+		linear_mipmap_linear
 	};
 
 	/// \brief Texture compare modes.
-	enum TextureCompareMode
+	enum class TextureCompareMode
 	{
-		comparemode_none,
-		comparemode_compare_r_to_texture
+		none,
+		compare_r_to_texture
 	};
 
 	/// \brief Texture dimensions.
-	enum TextureDimensions
+	enum class TextureDimensions
 	{
-		texture_1d,
-		texture_1d_array,
-		texture_2d,
-		texture_2d_array,
-		texture_3d,
-		texture_cube,
-		texture_cube_array
+		_1d,
+		_1d_array,
+		_2d,
+		_2d_array,
+		_3d,
+		_cube,
+		_cube_array
 	};
 
 	/// \brief Texture object class.

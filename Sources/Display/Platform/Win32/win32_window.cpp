@@ -1167,7 +1167,7 @@ namespace clan
 
 		// Convert pixel buffer to DIB compatible format:
 		int pitch = 4;
-		PixelBuffer bmp_image(rect.get_width(), rect.get_height(), tf_bgra8);
+		PixelBuffer bmp_image(rect.get_width(), rect.get_height(), TextureFormat::bgra8);
 
 		bmp_image.set_subimage(image, Point(0, 0), rect);
 		bmp_image.flip_vertical(); // flip_vertical() ensures the pixels are stored upside-down as expected by the BMP format
@@ -1384,7 +1384,7 @@ namespace clan
 		}
 
 
-		PixelBuffer pixelbuffer(rgbBitmapInfo.bV5Width, abs(rgbBitmapInfo.bV5Height), tf_bgra8, bitmap_data.get_data());
+		PixelBuffer pixelbuffer(rgbBitmapInfo.bV5Width, abs(rgbBitmapInfo.bV5Height), TextureFormat::bgra8, bitmap_data.get_data());
 
 		ReleaseDC(0, hdc);
 
@@ -1449,7 +1449,7 @@ namespace clan
 		}
 
 
-		PixelBuffer pixelbuffer(rgbBitmapInfo.bV5Width, abs(rgbBitmapInfo.bV5Height), tf_bgra8, bitmap_data.get_data());
+		PixelBuffer pixelbuffer(rgbBitmapInfo.bV5Width, abs(rgbBitmapInfo.bV5Height), TextureFormat::bgra8, bitmap_data.get_data());
 
 		ReleaseDC(0, hdc);
 

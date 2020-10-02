@@ -51,7 +51,7 @@ namespace clan
 
 	Texture::Texture(GraphicContext &gc, PixelBufferSet pixelbuffer_set)
 	{
-		if (pixelbuffer_set.get_dimensions() == texture_1d)
+		if (pixelbuffer_set.get_dimensions() == TextureDimensions::_1d)
 		{
 			Texture1D texture(gc, pixelbuffer_set.get_width(), pixelbuffer_set.get_format(), pixelbuffer_set.get_max_level() + 1);
 			for (int level = 0; level <= pixelbuffer_set.get_max_level(); level++)
@@ -61,7 +61,7 @@ namespace clan
 			}
 			*this = texture;
 		}
-		else if (pixelbuffer_set.get_dimensions() == texture_1d_array)
+		else if (pixelbuffer_set.get_dimensions() == TextureDimensions::_1d_array)
 		{
 			Texture1DArray texture(gc, pixelbuffer_set.get_width(), pixelbuffer_set.get_slice_count(), pixelbuffer_set.get_format(), pixelbuffer_set.get_max_level() + 1);
 			for (int slice = 0; slice < pixelbuffer_set.get_slice_count(); slice++)
@@ -74,7 +74,7 @@ namespace clan
 			}
 			*this = texture;
 		}
-		else if (pixelbuffer_set.get_dimensions() == texture_2d)
+		else if (pixelbuffer_set.get_dimensions() == TextureDimensions::_2d)
 		{
 			Texture2D texture(gc, pixelbuffer_set.get_width(), pixelbuffer_set.get_height(), pixelbuffer_set.get_format(), pixelbuffer_set.get_max_level() + 1);
 			for (int level = 0; level <= pixelbuffer_set.get_max_level(); level++)
@@ -84,7 +84,7 @@ namespace clan
 			}
 			*this = texture;
 		}
-		else if (pixelbuffer_set.get_dimensions() == texture_2d_array)
+		else if (pixelbuffer_set.get_dimensions() == TextureDimensions::_2d_array)
 		{
 			Texture2DArray texture(gc, pixelbuffer_set.get_width(), pixelbuffer_set.get_height(), pixelbuffer_set.get_slice_count(), pixelbuffer_set.get_format(), pixelbuffer_set.get_max_level() + 1);
 			for (int slice = 0; slice < pixelbuffer_set.get_slice_count(); slice++)
@@ -97,7 +97,7 @@ namespace clan
 			}
 			*this = texture;
 		}
-		else if (pixelbuffer_set.get_dimensions() == texture_3d)
+		else if (pixelbuffer_set.get_dimensions() == TextureDimensions::_3d)
 		{
 			Texture3D texture(gc, pixelbuffer_set.get_width(), pixelbuffer_set.get_height(), pixelbuffer_set.get_slice_count(), pixelbuffer_set.get_format(), pixelbuffer_set.get_max_level() + 1);
 			for (int slice = 0; slice < pixelbuffer_set.get_slice_count(); slice++)
@@ -110,7 +110,7 @@ namespace clan
 			}
 			*this = texture;
 		}
-		else if (pixelbuffer_set.get_dimensions() == texture_cube)
+		else if (pixelbuffer_set.get_dimensions() == TextureDimensions::_cube)
 		{
 			TextureCube texture(gc, pixelbuffer_set.get_width(), pixelbuffer_set.get_height(), pixelbuffer_set.get_format(), pixelbuffer_set.get_max_level() + 1);
 			for (int slice = 0; slice < pixelbuffer_set.get_slice_count(); slice++)
@@ -123,7 +123,7 @@ namespace clan
 			}
 			*this = texture;
 		}
-		else if (pixelbuffer_set.get_dimensions() == texture_cube_array)
+		else if (pixelbuffer_set.get_dimensions() == TextureDimensions::_cube_array)
 		{
 			TextureCubeArray texture(gc, pixelbuffer_set.get_width(), pixelbuffer_set.get_height(), pixelbuffer_set.get_slice_count(), pixelbuffer_set.get_format(), pixelbuffer_set.get_max_level() + 1);
 			for (int slice = 0; slice < pixelbuffer_set.get_slice_count(); slice++)

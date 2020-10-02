@@ -195,7 +195,7 @@ namespace clan
 
 	void TargaLoader::decode_image()
 	{
-		image = PixelBuffer(image_width, image_height, srgb ? tf_srgb8_alpha8 : tf_rgba8);
+		image = PixelBuffer(image_width, image_height, srgb ? TextureFormat::srgb8_alpha8 : TextureFormat::rgba8);
 
 		// single color-map index for Pseudo-Color
 		// Attribute, Red, Green and Blue ordered data for True-Color

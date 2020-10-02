@@ -98,7 +98,7 @@ namespace clan
 			if (Vec3<Type>::dot(axis, axis) < Type(1e-6)) // colinear
 				axis = Vec3<Type>::cross(Vec3<Type>(Type(0), Type(1), Type(0)), v0);
 			axis.normalize();
-			return axis_angle(Angle(180.0f, angle_degrees), axis);
+			return axis_angle(Angle(180.0f, AngleUnit::degrees), axis);
 		}
 		else
 		{
@@ -144,7 +144,7 @@ namespace clan
 	template<typename Type>
 	void Quaternionx<Type>::set(const Angle &euler_x, const Angle &euler_y, const Angle &euler_z, EulerOrder order)
 	{
-		set(euler_x.to_radians(), euler_y.to_radians(), euler_z.to_radians(), angle_radians, order);
+		set(euler_x.to_radians(), euler_y.to_radians(), euler_z.to_radians(), AngleUnit::radians, order);
 	}
 
 	template<typename Type>
@@ -156,22 +156,22 @@ namespace clan
 
 		switch (order)
 		{
-		case order_XYZ:
+		case EulerOrder::XYZ:
 			*this = Quaternionx<Type>::multiply(Quaternionx<Type>::multiply(q_x, q_y), q_z);
 			break;
-		case order_XZY:
+		case EulerOrder::XZY:
 			*this = Quaternionx<Type>::multiply(Quaternionx<Type>::multiply(q_x, q_z), q_y);
 			break;
-		case order_YZX:
+		case EulerOrder::YZX:
 			*this = Quaternionx<Type>::multiply(Quaternionx<Type>::multiply(q_y, q_z), q_x);
 			break;
-		case order_YXZ:
+		case EulerOrder::YXZ:
 			*this = Quaternionx<Type>::multiply(Quaternionx<Type>::multiply(q_y, q_x), q_z);
 			break;
-		case order_ZXY:
+		case EulerOrder::ZXY:
 			*this = Quaternionx<Type>::multiply(Quaternionx<Type>::multiply(q_z, q_x), q_y);
 			break;
-		case order_ZYX:
+		case EulerOrder::ZYX:
 			*this = Quaternionx<Type>::multiply(Quaternionx<Type>::multiply(q_z, q_y), q_x);
 			break;
 		default:

@@ -41,16 +41,16 @@ namespace clan
 	/// \addtogroup clanCore_Math clanCore Math
 	/// \{
 
-	enum Handedness
+	enum class Handedness
 	{
-		handed_left,
-		handed_right
+		left,
+		right
 	};
 
-	enum ClipZRange
+	enum class ClipZRange
 	{
-		clip_negative_positive_w, // OpenGL, -wclip <= zclip <= wclip
-		clip_zero_positive_w      // Direct3D, 0 <= zclip <= wclip
+		negative_positive_w, // OpenGL, -wclip <= zclip <= wclip
+		zero_positive_w      // Direct3D, 0 <= zclip <= wclip
 	};
 
 	template<typename Type>

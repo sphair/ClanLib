@@ -76,22 +76,22 @@ namespace clan
 	{
 		switch (texture_dimensions)
 		{
-		case texture_1d:
+		case TextureDimensions::_1d:
 			texture_type = GL_TEXTURE_1D;
 			break;
-		case texture_1d_array:
+		case TextureDimensions::_1d_array:
 			texture_type = GL_TEXTURE_1D_ARRAY;
 			break;
-		case texture_2d:
+		case TextureDimensions::_2d:
 			texture_type = GL_TEXTURE_2D;
 			break;
-		case texture_2d_array:
+		case TextureDimensions::_2d_array:
 			texture_type = GL_TEXTURE_2D_ARRAY;
 			break;
-		case texture_3d:
+		case TextureDimensions::_3d:
 			texture_type = GL_TEXTURE_3D;
 			break;
-		case texture_cube:
+		case TextureDimensions::_cube:
 			texture_type = GL_TEXTURE_CUBE_MAP;
 			break;
 		default:
@@ -239,7 +239,7 @@ namespace clan
 		}
 		else
 		{
-			PixelBuffer buffer(width, height, tf_bgra8);
+			PixelBuffer buffer(width, height, TextureFormat::bgra8);
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 			glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer.get_pitch() / buffer.get_bytes_per_pixel());
 			glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
@@ -261,7 +261,7 @@ namespace clan
 		PixelBuffer src_converted;
 		if (conv_needed)
 		{
-			src_converted = src.to_format(tf_rgba8); // To do: it should use the internal format here (monkey function missing for this)
+			src_converted = src.to_format(TextureFormat::rgba8); // To do: it should use the internal format here (monkey function missing for this)
 			tf = OpenGL::get_textureformat(src_converted.get_format());
 		}
 		else
@@ -346,7 +346,7 @@ namespace clan
 			}
 			else if (texture_type == GL_TEXTURE_CUBE_MAP)
 			{
-				glTexSubImage2D(OpenGL::to_cube_target(slice), level, x, y, src_rect.get_width(), src_rect.get_height(), tf.pixel_format, tf.pixel_datatype, data);
+				glTexSubImage2D(OpenGL::to_cube_target(slice), level, x, y, src_rect.get_width(), src_rect.get_height(), tf.pixel_datatype, tf.pixel_datatype, data);
 			}
 			else if (texture_type == GL_TEXTURE_CUBE_MAP_ARRAY)
 			{
@@ -491,8 +491,8 @@ namespace clan
 		TextureStateTracker state_tracker(texture_type, handle);
 
 		// Validation (see opengl spec)
-		if (!((filter == filter_nearest) || (filter == filter_linear)))
-			throw Exception("filter_nearest, filter_linear are only valid options for the mag filter");
+		if (!((filter == TextureFilter::nearest) || (filter == TextureFilter::linear)))
+			throw Exception("TextureFilter::nearest, TextureFilter::linear are only valid options for the mag filter");
 
 		glTexParameteri(texture_type, GL_TEXTURE_MAG_FILTER, OpenGL::to_enum(filter));
 	}

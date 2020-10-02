@@ -550,6 +550,7 @@ namespace clan
 				result = info_queue->GetMessage(i, message, &length);
 				if (FAILED(result))
 					continue;
+
 				if (message)
 				{
 					std::string text(message->pDescription, message->DescriptionByteLength);

@@ -54,7 +54,7 @@ namespace clan
 	class PixelConverter;
 
 	/// \brief Pixel buffer prefered direction
-	enum PixelBufferDirection
+	enum class PixelBufferDirection
 	{
 		/// \brief Use of the pixel buffer is to send data to the gpu
 		data_to_gpu,

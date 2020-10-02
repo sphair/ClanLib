@@ -31,7 +31,7 @@
 
 #include "pixel_converter_impl.h"
 #include <xmmintrin.h>
-#include <emmintrin.h>  
+#include <emmintrin.h>
 
 namespace clan
 {

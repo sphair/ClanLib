@@ -130,12 +130,12 @@ namespace clan
 
 		/// \brief Set the format of the output pixelbuffer
 		///
-		/// If this function is not used, the format defaults to tf_rgb8\n
+		/// If this function is not used, the format defaults to TextureFormat::rgb8\n
 		/// These following formats are supported:\n
-		///		tf_rgba8, tf_rgb8, tf_r8, tf_r32f
+		///		TextureFormat::rgba8, TextureFormat::rgb8, TextureFormat::r8, tf_r32f
 		///
 		/// \param format = The specified format
-		void set_format(TextureFormat texture_format = tf_rgb8);
+		void set_format(TextureFormat texture_format = TextureFormat::rgb8);
 
 		/// \brief Set the amplitude of the perlin noise
 		///

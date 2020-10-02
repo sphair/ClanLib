@@ -355,7 +355,7 @@ namespace clan
 		: bind_target(target), last_bound(0), handle_and_bound_equal(false)
 	{
 		OpenGL::set_active(gc_provider);
-		if (bind_target == framebuffer_draw)
+		if (bind_target == FrameBufferBindTarget::draw)
 		{
 			glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &last_bound);
 			if (last_bound == handle)
@@ -385,7 +385,7 @@ namespace clan
 	{
 		if (!handle_and_bound_equal)
 		{
-			if (bind_target == framebuffer_draw)
+			if (bind_target == FrameBufferBindTarget::draw)
 				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, last_bound);
 			else
 				glBindFramebuffer(GL_READ_FRAMEBUFFER, last_bound);
@@ -448,7 +448,7 @@ namespace clan
 		FrameBufferStateTracker tracker_draw(bind_target, handle, gc_provider);
 
 		GLenum target = GL_DRAW_FRAMEBUFFER;
-		if (bind_target == framebuffer_read)
+		if (bind_target == FrameBufferBindTarget::read)
 			target = GL_READ_FRAMEBUFFER;
 
 		GLuint render_buffer_handle = gl_render_buffer->get_handle();
@@ -486,7 +486,7 @@ namespace clan
 		GLuint texture_handle = gl_texture_provider->get_handle();
 
 		GLenum target = GL_DRAW_FRAMEBUFFER;
-		if (bind_target == framebuffer_read)
+		if (bind_target == FrameBufferBindTarget::read)
 			target = GL_READ_FRAMEBUFFER;
 
 		if (!texture_target)
@@ -516,7 +516,7 @@ namespace clan
 		int internal_attachment_offset = decode_internal_attachment_offset(opengl_attachment);
 
 		GLenum target = GL_DRAW_FRAMEBUFFER;
-		if (bind_target == framebuffer_read)
+		if (bind_target == FrameBufferBindTarget::read)
 			target = GL_READ_FRAMEBUFFER;
 
 		if (!attached_renderbuffers[internal_attachment_offset].is_null())
@@ -556,22 +556,22 @@ namespace clan
 		GLuint texture_target;
 		switch (subtype)
 		{
-		case subtype_cube_map_positive_x:
+		case TextureSubtype::cube_map_positive_x:
 			texture_target = GL_TEXTURE_CUBE_MAP_POSITIVE_X;
 			break;
-		case subtype_cube_map_negative_x:
+		case TextureSubtype::cube_map_negative_x:
 			texture_target = GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
 			break;
-		case subtype_cube_map_positive_y:
+		case TextureSubtype::cube_map_positive_y:
 			texture_target = GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
 			break;
-		case subtype_cube_map_negative_y:
+		case TextureSubtype::cube_map_negative_y:
 			texture_target = GL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
 			break;
-		case subtype_cube_map_positive_z:
+		case TextureSubtype::cube_map_positive_z:
 			texture_target = GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
 			break;
-		case subtype_cube_map_negative_z:
+		case TextureSubtype::cube_map_negative_z:
 			texture_target = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
 			break;
 		default:

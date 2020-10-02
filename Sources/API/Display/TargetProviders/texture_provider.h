@@ -37,10 +37,10 @@ namespace clan
 	/// \addtogroup clanDisplay_Display clanDisplay Display
 	/// \{
 
-	enum TextureWrapMode;
-	enum TextureFilter;
-	enum TextureCompareMode;
-	enum CompareFunction;
+	enum class TextureWrapMode;
+	enum class TextureFilter;
+	enum class TextureCompareMode;
+	enum class CompareFunction;
 	class PixelBuffer;
 	class PixelFormat;
 	class GraphicContextProvider;

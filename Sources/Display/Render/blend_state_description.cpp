@@ -36,14 +36,14 @@ namespace clan
 	public:
 		BlendStateDescription_Impl()
 			: enable_blending(true), equation_color(), equation_alpha(), func_src(), func_dest(), func_src_alpha(), func_dest_alpha(), write_red(true), write_green(true), write_blue(true), write_alpha(true),
-			logic_op_enabled(false), logic_op(logic_copy)
+			logic_op_enabled(false), logic_op(LogicOp::copy)
 		{
-			func_src = blend_src_alpha;
-			func_dest = blend_one_minus_src_alpha;
-			func_src_alpha = blend_one;
-			func_dest_alpha = blend_one_minus_src_alpha;
-			equation_color = equation_add;
-			equation_alpha = equation_add;
+			func_src = BlendFunc::src_alpha;
+			func_dest = BlendFunc::one_minus_src_alpha;
+			func_src_alpha = BlendFunc::one;
+			func_dest_alpha = BlendFunc::one_minus_src_alpha;
+			equation_color = BlendEquation::add;
+			equation_alpha = BlendEquation::add;
 		}
 
 		bool operator==(const BlendStateDescription_Impl &other) const
@@ -125,23 +125,23 @@ namespace clan
 		BlendStateDescription desc;
 		if (src_premultiplied)
 		{
-			desc.impl->func_src = blend_one;
+			desc.impl->func_src = BlendFunc::one;
 		}
 		else
 		{
-			desc.impl->func_src = blend_src_alpha;
+			desc.impl->func_src = BlendFunc::src_alpha;
 		}
 
-		desc.impl->func_dest = blend_one_minus_src_alpha;
+		desc.impl->func_dest = BlendFunc::one_minus_src_alpha;
 		if (dest_premultiplied)
 		{
-			desc.impl->func_src_alpha = blend_one;
+			desc.impl->func_src_alpha = BlendFunc::one;
 		}
 		else
 		{
-			desc.impl->func_src_alpha = blend_src_alpha;
+			desc.impl->func_src_alpha = BlendFunc::src_alpha;
 		}
-		desc.impl->func_dest_alpha = blend_one_minus_src_alpha;
+		desc.impl->func_dest_alpha = BlendFunc::one_minus_src_alpha;
 
 		return desc;
 

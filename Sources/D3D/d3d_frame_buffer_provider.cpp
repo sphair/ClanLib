@@ -38,7 +38,7 @@
 namespace clan
 {
 	D3DFrameBufferProvider::D3DFrameBufferProvider(const ComPtr<ID3D11Device> &device)
-		: device(device), bind_target(framebuffer_draw)
+		: device(device), bind_target(FrameBufferBindTarget::draw)
 	{
 	}
 

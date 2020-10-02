@@ -33,58 +33,58 @@
 namespace clan
 {
 	NetGameEventValue::NetGameEventValue()
-		: type(null), value_int(0)
+		: type(Type::null), value_int(0)
 	{
 	}
 
 	NetGameEventValue::NetGameEventValue(int value)
-		: type(integer), value_int(value)
+		: type(Type::integer), value_int(value)
 	{
 	}
 
 	NetGameEventValue::NetGameEventValue(unsigned int value)
-		: type(uinteger), value_uint(value)
+		: type(Type::uinteger), value_uint(value)
 	{
 	}
 
 	NetGameEventValue::NetGameEventValue(char value)
-		: type(character), value_char(value)
+		: type(Type::character), value_char(value)
 	{
 	}
 
 	NetGameEventValue::NetGameEventValue(unsigned char value)
-		: type(ucharacter), value_uchar(value)
+		: type(Type::ucharacter), value_uchar(value)
 	{
 	}
 
 	NetGameEventValue::NetGameEventValue(float value)
-		: type(number), value_float(value)
+		: type(Type::number), value_float(value)
 	{
 	}
 
-	NetGameEventValue::NetGameEventValue(const std::string &value)
-		: type(string), value_string(value)
+	NetGameEventValue::NetGameEventValue(const std::string& value)
+		: type(Type::string), value_string(value)
 	{
 	}
 
-	NetGameEventValue::NetGameEventValue(const char *value)
-		: type(string), value_string(value)
+	NetGameEventValue::NetGameEventValue(const char* value)
+		: type(Type::string), value_string(value)
 	{
 	}
 
-	NetGameEventValue::NetGameEventValue(const wchar_t *value)
-		: type(string)
+	NetGameEventValue::NetGameEventValue(const wchar_t* value)
+		: type(Type::string)
 	{
 		value_string = StringHelp::ucs2_to_utf8(value);
 	}
 
 	NetGameEventValue::NetGameEventValue(bool value)
-		: type(boolean), value_bool(value)
+		: type(Type::boolean), value_bool(value)
 	{
 	}
 
-	NetGameEventValue::NetGameEventValue(const DataBuffer &value)
-		: type(binary), value_binary(value)
+	NetGameEventValue::NetGameEventValue(const DataBuffer& value)
+		: type(Type::binary), value_binary(value)
 	{
 	}
 
@@ -100,52 +100,52 @@ namespace clan
 
 	bool NetGameEventValue::is_null() const
 	{
-		return type == null;
+		return type == Type::null;
 	}
 
 	bool NetGameEventValue::is_uinteger() const
 	{
-		return type == uinteger;
+		return type == Type::uinteger;
 	}
 
 	bool NetGameEventValue::is_integer() const
 	{
-		return type == integer;
+		return type == Type::integer;
 	}
 
 	bool NetGameEventValue::is_ucharacter() const
 	{
-		return type == ucharacter;
+		return type == Type::ucharacter;
 	}
 
 	bool NetGameEventValue::is_character() const
 	{
-		return type == character;
+		return type == Type::character;
 	}
 
 	bool NetGameEventValue::is_number() const
 	{
-		return type == number;
+		return type == Type::number;
 	}
 
 	bool NetGameEventValue::is_string() const
 	{
-		return type == string;
+		return type == Type::string;
 	}
 
 	bool NetGameEventValue::is_boolean() const
 	{
-		return type == boolean;
+		return type == Type::boolean;
 	}
 
 	bool NetGameEventValue::is_binary() const
 	{
-		return type == binary;
+		return type == Type::binary;
 	}
 
 	bool NetGameEventValue::is_complex() const
 	{
-		return type == complex;
+		return type == Type::complex;
 	}
 
 	unsigned int NetGameEventValue::get_member_count() const
@@ -154,19 +154,19 @@ namespace clan
 		return value_complex.size();
 	}
 
-	const NetGameEventValue &NetGameEventValue::get_member(unsigned int index) const
+	const NetGameEventValue& NetGameEventValue::get_member(unsigned int index) const
 	{
 		throw_if_not_complex();
 		return value_complex.at(index);
 	}
 
-	void NetGameEventValue::add_member(const NetGameEventValue &value)
+	void NetGameEventValue::add_member(const NetGameEventValue& value)
 	{
 		throw_if_not_complex();
 		value_complex.push_back(value);
 	}
 
-	void NetGameEventValue::set_member(unsigned int index, const NetGameEventValue &value)
+	void NetGameEventValue::set_member(unsigned int index, const NetGameEventValue& value)
 	{
 		throw_if_not_complex();
 		value_complex.at(index) = value;
@@ -174,7 +174,7 @@ namespace clan
 
 	void NetGameEventValue::throw_if_not_complex() const
 	{
-		if (type != complex)
+		if (type != Type::complex)
 			throw Exception("NetGameEventValue is not a complex type");
 	}
 
@@ -242,27 +242,27 @@ namespace clan
 			throw Exception("NetGameEventValue is not a binary");
 	}
 
-	std::string NetGameEventValue::to_string(const NetGameEventValue &v)
+	std::string NetGameEventValue::to_string(const NetGameEventValue& v)
 	{
 		switch (v.get_type())
 		{
-		case NetGameEventValue::null:
+		case NetGameEventValue::Type::null:
 			return "null";
-		case NetGameEventValue::integer:
+		case NetGameEventValue::Type::integer:
 			return StringHelp::int_to_text(v.get_integer());
-		case NetGameEventValue::uinteger:
+		case NetGameEventValue::Type::uinteger:
 			return StringHelp::uint_to_text(v.get_uinteger());
-		case NetGameEventValue::character:
+		case NetGameEventValue::Type::character:
 			return StringHelp::int_to_text(static_cast<int>(v.get_character()));
-		case NetGameEventValue::ucharacter:
+		case NetGameEventValue::Type::ucharacter:
 			return StringHelp::uint_to_text(static_cast<unsigned int>(v.get_ucharacter()));
-		case NetGameEventValue::string:
+		case NetGameEventValue::Type::string:
 			return "\"" + v.get_string() + "\"";
-		case NetGameEventValue::boolean:
+		case NetGameEventValue::Type::boolean:
 			return v.get_boolean() ? "true" : "false";
-		case NetGameEventValue::number:
+		case NetGameEventValue::Type::number:
 			return StringHelp::float_to_text(v.get_number());
-		case NetGameEventValue::complex:
+		case NetGameEventValue::Type::complex:
 		{
 			std::string str;
 			str += "[";
@@ -276,7 +276,7 @@ namespace clan
 			return str;
 		}
 		default:
-			return "??" + StringHelp::int_to_text(v.get_type());
+			return "??" + StringHelp::int_to_text(static_cast<int>(v.get_type()));
 		}
 	}
 }

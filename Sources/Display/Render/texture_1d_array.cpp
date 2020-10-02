@@ -49,7 +49,7 @@ namespace clan
 
 		GraphicContextProvider *gc_provider = context.get_provider();
 
-		impl->provider = gc_provider->alloc_texture(texture_1d_array);
+		impl->provider = gc_provider->alloc_texture(TextureDimensions::_1d_array);
 		impl->provider->create(size, 1, 1, array_size, texture_format, levels);
 		impl->width = size;
 		impl->array_size = array_size;

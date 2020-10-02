@@ -107,9 +107,9 @@ namespace clan
 		uint16_t bits_per_sample = source.read_uint16();
 
 		if (bits_per_sample == 16)
-			format = sf_16bit_signed;
+			format = SoundFormat::sf_16bit_signed;
 		else if (bits_per_sample == 8)
-			format = sf_8bit_unsigned;
+			format = SoundFormat::sf_8bit_unsigned;
 		else
 			throw Exception("Unsupported wave sample format");
 

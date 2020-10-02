@@ -37,7 +37,7 @@ namespace clan
 	class NetGameNetworkEvent
 	{
 	public:
-		enum Type
+		enum class Type
 		{
 			client_connected,
 			event_received,
@@ -55,7 +55,7 @@ namespace clan
 		}
 
 		NetGameNetworkEvent(NetGameConnection *connection, const NetGameEvent &game_event)
-			: connection(connection), type(event_received), game_event(game_event)
+			: connection(connection), type(Type::event_received), game_event(game_event)
 		{
 		}
 

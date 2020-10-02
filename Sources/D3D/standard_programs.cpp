@@ -117,21 +117,21 @@ namespace clan
 	{
 		switch (standard_program)
 		{
-		case program_color_only: return impl->color_only_program;
-		case program_single_texture: return impl->single_texture_program;
-		case program_sprite: return impl->sprite_program;
-		case program_path: return impl->path_program;
+		case StandardProgram::color_only: return impl->color_only_program;
+		case StandardProgram::single_texture: return impl->single_texture_program;
+		case StandardProgram::sprite: return impl->sprite_program;
+		case StandardProgram::path: return impl->path_program;
 		}
 		throw Exception("Unsupported standard program");
 	}
 
 	ProgramObject StandardPrograms::compile(GraphicContext &gc, const void *vertex_code, int vertex_code_size, const void *fragment_code, int fragment_code_size)
 	{
-		ShaderObject vertex_shader(gc, shadertype_vertex, vertex_code, vertex_code_size);
+		ShaderObject vertex_shader(gc, ShaderType::vertex, vertex_code, vertex_code_size);
 		if (!vertex_shader.compile())
 			throw Exception(string_format("Unable to compile standard vertex shader: %1", vertex_shader.get_info_log()));
 
-		ShaderObject fragment_shader(gc, shadertype_fragment, fragment_code, fragment_code_size);
+		ShaderObject fragment_shader(gc, ShaderType::fragment, fragment_code, fragment_code_size);
 		if (!fragment_shader.compile())
 			throw Exception(string_format("Unable to compile standard fragment shader: %1", fragment_shader.get_info_log()));
 

@@ -110,13 +110,13 @@ namespace clan
 		int new_position = int(position);
 		switch (mode)
 		{
-		case IODevice::seek_set:
+		case IODevice::SeekMode::set:
 			new_position = requested_position;
 			break;
-		case IODevice::seek_cur:
+		case IODevice::SeekMode::cur:
 			new_position += requested_position;
 			break;
-		case IODevice::seek_end:
+		case IODevice::SeekMode::end:
 			new_position = int(data.get_size()) + requested_position;
 			break;
 		default:

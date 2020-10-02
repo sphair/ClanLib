@@ -502,7 +502,7 @@ namespace clan
 					glReadBuffer(GL_FRONT);
 				}
 
-				PixelBuffer pixelbuffer(width, height, tf_bgra8);
+				PixelBuffer pixelbuffer(width, height, TextureFormat::bgra8);
 				glPixelStorei(GL_PACK_ALIGNMENT, 1);
 				glPixelStorei(GL_PACK_ROW_LENGTH, pixelbuffer.get_pitch() / pixelbuffer.get_bytes_per_pixel());
 				glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
@@ -530,7 +530,7 @@ namespace clan
 				glViewport(0, 0, width, height);
 				glMatrixMode(GL_PROJECTION);
 				glLoadIdentity();
-				glMultMatrixf(Mat4f::ortho_2d(0.0f, (float)width, 0.0f, (float)height, handed_right, clip_negative_positive_w));
+				glMultMatrixf(Mat4f::ortho_2d(0.0f, (float)width, 0.0f, (float)height, Handedness::right, ClipZRange::negative_positive_w));
 				glMatrixMode(GL_MODELVIEW);
 				glLoadIdentity();
 
@@ -541,7 +541,7 @@ namespace clan
 				glRasterPos2i(0, 0);
 				glPixelZoom(1.0f, 1.0f);
 
-				PixelBuffer pixelbuffer(width, height, tf_rgba8);
+				PixelBuffer pixelbuffer(width, height, TextureFormat::rgba8);
 				glPixelStorei(GL_PACK_ALIGNMENT, 1);
 				glPixelStorei(GL_PACK_ROW_LENGTH, pixelbuffer.get_pitch() / pixelbuffer.get_bytes_per_pixel());
 				glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
@@ -583,7 +583,7 @@ namespace clan
 
 				glReadBuffer(GL_FRONT);
 
-				PixelBuffer pixelbuffer(width, height, tf_r8);
+				PixelBuffer pixelbuffer(width, height, TextureFormat::r8);
 				glPixelStorei(GL_PACK_ALIGNMENT, 1);
 				glPixelStorei(GL_PACK_ROW_LENGTH, pixelbuffer.get_pitch() / pixelbuffer.get_bytes_per_pixel());
 				glPixelStorei(GL_PACK_SKIP_PIXELS, 0);

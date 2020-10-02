@@ -52,13 +52,13 @@ namespace clan
 	Canvas::Canvas(DisplayWindow &window) : impl(std::make_shared<Canvas_Impl>())
 	{
 		impl->init(window);
-		set_map_mode(map_2d_upper_left);
+		set_map_mode(MapMode::_2d_upper_left);
 	}
 
 	Canvas::Canvas(Canvas &canvas, FrameBuffer &framebuffer) : impl(std::make_shared<Canvas_Impl>())
 	{
 		impl->init(canvas.impl.get(), framebuffer);
-		set_map_mode(map_2d_upper_left);
+		set_map_mode(MapMode::_2d_upper_left);
 	}
 
 	Canvas::~Canvas()
@@ -70,7 +70,7 @@ namespace clan
 		Canvas copy_canvas;
 		copy_canvas.impl = std::shared_ptr<Canvas_Impl>(new Canvas_Impl);
 		copy_canvas.impl->init(impl.get());
-		copy_canvas.set_map_mode(map_2d_upper_left);
+		copy_canvas.set_map_mode(MapMode::_2d_upper_left);
 		return copy_canvas;
 	}
 

@@ -57,7 +57,7 @@ namespace clan
 		/// \param gc = Graphic Context
 		/// \param size = value
 		/// \param usage = Buffer Usage
-		VertexArrayVector(GraphicContext &gc, int size, BufferUsage usage = usage_static_draw)
+		VertexArrayVector(GraphicContext &gc, int size, BufferUsage usage = BufferUsage::static_draw)
 			: VertexArrayBuffer(gc, size * sizeof(Type), usage)
 		{
 		}
@@ -68,12 +68,12 @@ namespace clan
 		/// \param data = void
 		/// \param size = value
 		/// \param usage = Buffer Usage
-		VertexArrayVector(GraphicContext &gc, Type *data, int size, BufferUsage usage = usage_static_draw)
+		VertexArrayVector(GraphicContext &gc, Type *data, int size, BufferUsage usage = BufferUsage::static_draw)
 			: VertexArrayBuffer(gc, data, size * sizeof(Type), usage)
 		{
 		}
 
-		VertexArrayVector(GraphicContext &gc, const std::vector<Type> &data, BufferUsage usage = usage_static_draw)
+		VertexArrayVector(GraphicContext &gc, const std::vector<Type> &data, BufferUsage usage = BufferUsage::static_draw)
 			: VertexArrayBuffer(gc, data.empty() ? (Type*)0 : &data[0], data.size() * sizeof(Type), usage)
 		{
 		}

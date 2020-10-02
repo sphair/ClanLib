@@ -49,7 +49,7 @@ namespace clan
 
 		GraphicContextProvider *gc_provider = context.get_provider();
 
-		impl->provider = gc_provider->alloc_texture(texture_1d);
+		impl->provider = gc_provider->alloc_texture(TextureDimensions::_1d);
 		impl->provider->create(size, 1, 1, 1, texture_format, levels);
 		impl->width = size;
 
@@ -92,7 +92,7 @@ namespace clan
 
 	Texture1D::Texture1D(GraphicContext &context, const PixelBuffer &image, int src_x, int width, bool is_srgb)
 	{
-		*this = Texture1D(context, width, is_srgb ? tf_srgb8_alpha8 : tf_rgba8);
+		*this = Texture1D(context, width, is_srgb ? TextureFormat::srgb8_alpha8 : TextureFormat::rgba8);
 
 		set_subimage(context, 0, image, src_x, width, 0);
 		impl->provider->set_wrap_mode(impl->wrap_mode_s);

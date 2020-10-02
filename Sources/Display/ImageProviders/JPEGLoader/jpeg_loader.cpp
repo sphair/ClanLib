@@ -43,7 +43,7 @@ namespace clan
 
 		int image_width = loader.start_of_frame.width;
 		int image_height = loader.start_of_frame.height;
-		PixelBuffer image(image_width, image_height, srgb ? tf_srgb8_alpha8 : tf_rgba8);
+		PixelBuffer image(image_width, image_height, srgb ? TextureFormat::srgb8_alpha8 : TextureFormat::rgba8);
 		unsigned int *image_pixels = reinterpret_cast<unsigned int *>(image.get_data());
 
 		const unsigned int *block_pixels = rgb_decoder.get_pixels();

@@ -159,183 +159,183 @@ namespace clan
 	{
 		switch (format)
 		{
-		case tf_bgra8:
+		case TextureFormat::bgra8:
 #if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 			if (sse2)
 				return std::unique_ptr<PixelReader>(new PixelReaderSSE2_bgra8());
 			else
 #endif
 				return std::unique_ptr<PixelReader>(new PixelReader_bgra8());
-		case tf_bgr8:
+		case TextureFormat::bgr8:
 			return std::unique_ptr<PixelReader>(new PixelReader_bgr8());
-		case tf_stencil_index1:
-		case tf_stencil_index4:
-		case tf_stencil_index8:
-		case tf_stencil_index16:
+		case TextureFormat::stencil_index1:
+		case TextureFormat::stencil_index4:
+		case TextureFormat::stencil_index8:
+		case TextureFormat::stencil_index16:
 			break;
 
-		case tf_r8:
+		case TextureFormat::r8:
 			return std::unique_ptr<PixelReader>(new PixelReader_1norm<unsigned char>());
-		case tf_r8_snorm:
+		case TextureFormat::r8_snorm:
 			return std::unique_ptr<PixelReader>(new PixelReader_1norm<char>());
-		case tf_r16:
+		case TextureFormat::r16:
 			return std::unique_ptr<PixelReader>(new PixelReader_1norm<unsigned short>());
-		case tf_r16_snorm:
+		case TextureFormat::r16_snorm:
 			return std::unique_ptr<PixelReader>(new PixelReader_1norm<short>());
-		case tf_rg8:
+		case TextureFormat::rg8:
 			return std::unique_ptr<PixelReader>(new PixelReader_2norm<unsigned char>());
-		case tf_rg8_snorm:
+		case TextureFormat::rg8_snorm:
 			return std::unique_ptr<PixelReader>(new PixelReader_2norm<char>());
-		case tf_rg16:
+		case TextureFormat::rg16:
 			return std::unique_ptr<PixelReader>(new PixelReader_2norm<unsigned short>());
-		case tf_rg16_snorm:
+		case TextureFormat::rg16_snorm:
 			return std::unique_ptr<PixelReader>(new PixelReader_2norm<short>());
 
-		case tf_r3_g3_b2:
+		case TextureFormat::r3_g3_b2:
 			return std::unique_ptr<PixelReader>(new PixelReader_r3_g3_b2());
-		case tf_rgb4:
+		case TextureFormat::rgb4:
 			return std::unique_ptr<PixelReader>(new PixelReader_rgb4());
-		case tf_rgb5:
+		case TextureFormat::rgb5:
 			return std::unique_ptr<PixelReader>(new PixelReader_rgb5());
-		case tf_rgb8:
+		case TextureFormat::rgb8:
 			return std::unique_ptr<PixelReader>(new PixelReader_3norm<unsigned char>());
-		case tf_rgb8_snorm:
+		case TextureFormat::rgb8_snorm:
 			return std::unique_ptr<PixelReader>(new PixelReader_3norm<char>());
-		case tf_rgb10:
+		case TextureFormat::rgb10:
 			return std::unique_ptr<PixelReader>(new PixelReader_rgb10());
-		case tf_rgb12:
+		case TextureFormat::rgb12:
 			break;
-		case tf_rgb16:
+		case TextureFormat::rgb16:
 			return std::unique_ptr<PixelReader>(new PixelReader_3norm<unsigned short>());
-		case tf_rgb16_snorm:
+		case TextureFormat::rgb16_snorm:
 			return std::unique_ptr<PixelReader>(new PixelReader_3norm<short>());
-		case tf_rgba2:
+		case TextureFormat::rgba2:
 			break;
-		case tf_rgba4:
+		case TextureFormat::rgba4:
 			return std::unique_ptr<PixelReader>(new PixelReader_rgba4());
-		case tf_rgb5_a1:
+		case TextureFormat::rgb5_a1:
 			return std::unique_ptr<PixelReader>(new PixelReader_rgb5_a1());
-		case tf_rgba8:
+		case TextureFormat::rgba8:
 #if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 			if (sse2)
 				return std::unique_ptr<PixelReader>(new PixelReaderSSE2_rgba8());
 			else
 #endif
 				return std::unique_ptr<PixelReader>(new PixelReader_4norm<unsigned char>());
-		case tf_rgba8_snorm:
+		case TextureFormat::rgba8_snorm:
 			return std::unique_ptr<PixelReader>(new PixelReader_4norm<char>());
-		case tf_rgb10_a2:
+		case TextureFormat::rgb10_a2:
 			return std::unique_ptr<PixelReader>(new PixelReader_rgb10_a2());
-		case tf_rgba12:
+		case TextureFormat::rgba12:
 			break;
-		case tf_rgba16:
+		case TextureFormat::rgba16:
 #if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 			if (sse2)
 				return std::unique_ptr<PixelReader>(new PixelReaderSSE2_rgba16());
 			else
 #endif
 				return std::unique_ptr<PixelReader>(new PixelReader_4norm<unsigned short>());
-		case tf_rgba16_snorm:
+		case TextureFormat::rgba16_snorm:
 			return std::unique_ptr<PixelReader>(new PixelReader_4norm<short>());
-		case tf_srgb8:
+		case TextureFormat::srgb8:
 			return std::unique_ptr<PixelReader>(new PixelReader_3norm<unsigned char>()); // TBD: should we add a 2.2 gamma filter?
-		case tf_srgb8_alpha8:
+		case TextureFormat::srgb8_alpha8:
 #if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 			if (sse2)
 				return std::unique_ptr<PixelReader>(new PixelReaderSSE2_rgba8());
 			else
 #endif
 				return std::unique_ptr<PixelReader>(new PixelReader_4norm<char>()); // TBD: should we add a 2.2 gamma filter?
-		case tf_r16f:
+		case TextureFormat::r16f:
 			return std::unique_ptr<PixelReader>(new PixelReader_1hf());
-		case tf_rg16f:
+		case TextureFormat::rg16f:
 			return std::unique_ptr<PixelReader>(new PixelReader_2hf());
-		case tf_rgb16f:
+		case TextureFormat::rgb16f:
 			return std::unique_ptr<PixelReader>(new PixelReader_3hf());
-		case tf_rgba16f:
+		case TextureFormat::rgba16f:
 			return std::unique_ptr<PixelReader>(new PixelReader_4hf());
-		case tf_r32f:
+		case TextureFormat::r32f:
 			return std::unique_ptr<PixelReader>(new PixelReader_1cast<float>());
-		case tf_rg32f:
+		case TextureFormat::rg32f:
 			return std::unique_ptr<PixelReader>(new PixelReader_2cast<float>());
-		case tf_rgb32f:
+		case TextureFormat::rgb32f:
 			return std::unique_ptr<PixelReader>(new PixelReader_3cast<float>());
-		case tf_rgba32f:
+		case TextureFormat::rgba32f:
 			return std::unique_ptr<PixelReader>(new PixelReader_4cast<float>());
-		case tf_r11f_g11f_b10f:
-		case tf_rgb9_e5:
-		case tf_r8i:
+		case TextureFormat::r11f_g11f_b10f:
+		case TextureFormat::rgb9_e5:
+		case TextureFormat::r8i:
 			return std::unique_ptr<PixelReader>(new PixelReader_1cast<char>());
-		case tf_r8ui:
+		case TextureFormat::r8ui:
 			return std::unique_ptr<PixelReader>(new PixelReader_1cast<unsigned char>());
-		case tf_r16i:
+		case TextureFormat::r16i:
 			return std::unique_ptr<PixelReader>(new PixelReader_1cast<short>());
-		case tf_r16ui:
+		case TextureFormat::r16ui:
 			return std::unique_ptr<PixelReader>(new PixelReader_1cast<unsigned short>());
-		case tf_r32i:
+		case TextureFormat::r32i:
 			return std::unique_ptr<PixelReader>(new PixelReader_1cast<int>());
-		case tf_r32ui:
+		case TextureFormat::r32ui:
 			return std::unique_ptr<PixelReader>(new PixelReader_1cast<unsigned int>());
-		case tf_rg8i:
+		case TextureFormat::rg8i:
 			return std::unique_ptr<PixelReader>(new PixelReader_2cast<char>());
-		case tf_rg8ui:
+		case TextureFormat::rg8ui:
 			return std::unique_ptr<PixelReader>(new PixelReader_2cast<unsigned char>());
-		case tf_rg16i:
+		case TextureFormat::rg16i:
 			return std::unique_ptr<PixelReader>(new PixelReader_2cast<short>());
-		case tf_rg16ui:
+		case TextureFormat::rg16ui:
 			return std::unique_ptr<PixelReader>(new PixelReader_2cast<unsigned short>());
-		case tf_rg32i:
+		case TextureFormat::rg32i:
 			return std::unique_ptr<PixelReader>(new PixelReader_2cast<int>());
-		case tf_rg32ui:
+		case TextureFormat::rg32ui:
 			return std::unique_ptr<PixelReader>(new PixelReader_2cast<unsigned int>());
-		case tf_rgb8i:
+		case TextureFormat::rgb8i:
 			return std::unique_ptr<PixelReader>(new PixelReader_3cast<char>());
-		case tf_rgb8ui:
+		case TextureFormat::rgb8ui:
 			return std::unique_ptr<PixelReader>(new PixelReader_3cast<unsigned char>());
-		case tf_rgb16i:
+		case TextureFormat::rgb16i:
 			return std::unique_ptr<PixelReader>(new PixelReader_3cast<short>());
-		case tf_rgb16ui:
+		case TextureFormat::rgb16ui:
 			return std::unique_ptr<PixelReader>(new PixelReader_3cast<unsigned short>());
-		case tf_rgb32i:
+		case TextureFormat::rgb32i:
 			return std::unique_ptr<PixelReader>(new PixelReader_3cast<int>());
-		case tf_rgb32ui:
+		case TextureFormat::rgb32ui:
 			return std::unique_ptr<PixelReader>(new PixelReader_3cast<unsigned int>());
-		case tf_rgba8i:
+		case TextureFormat::rgba8i:
 			return std::unique_ptr<PixelReader>(new PixelReader_4cast<char>());
-		case tf_rgba8ui:
+		case TextureFormat::rgba8ui:
 			return std::unique_ptr<PixelReader>(new PixelReader_4cast<unsigned char>());
-		case tf_rgba16i:
+		case TextureFormat::rgba16i:
 			return std::unique_ptr<PixelReader>(new PixelReader_4cast<short>());
-		case tf_rgba16ui:
+		case TextureFormat::rgba16ui:
 			return std::unique_ptr<PixelReader>(new PixelReader_4cast<unsigned short>());
-		case tf_rgba32i:
+		case TextureFormat::rgba32i:
 			return std::unique_ptr<PixelReader>(new PixelReader_4cast<int>());
-		case tf_rgba32ui:
+		case TextureFormat::rgba32ui:
 			return std::unique_ptr<PixelReader>(new PixelReader_4cast<unsigned int>());
-		case tf_depth_component16:
-		case tf_depth_component24:
-		case tf_depth_component32:
-		case tf_depth_component32f:
-		case tf_depth24_stencil8:
-		case tf_depth32f_stencil8:
-		case tf_compressed_red:
-		case tf_compressed_rg:
-		case tf_compressed_rgb:
-		case tf_compressed_rgba:
-		case tf_compressed_srgb:
-		case tf_compressed_srgb_alpha:
-		case tf_compressed_red_rgtc1:
-		case tf_compressed_signed_red_rgtc1:
-		case tf_compressed_rg_rgtc2:
-		case tf_compressed_signed_rg_rgtc2:
-		case tf_compressed_rgb_s3tc_dxt1:
-		case tf_compressed_rgba_s3tc_dxt1:
-		case tf_compressed_rgba_s3tc_dxt3:
-		case tf_compressed_rgba_s3tc_dxt5:
-		case tf_compressed_srgb_s3tc_dxt1:
-		case tf_compressed_srgb_alpha_s3tc_dxt1:
-		case tf_compressed_srgb_alpha_s3tc_dxt3:
-		case tf_compressed_srgb_alpha_s3tc_dxt5:
+		case TextureFormat::depth_component16:
+		case TextureFormat::depth_component24:
+		case TextureFormat::depth_component32:
+		case TextureFormat::depth_component32f:
+		case TextureFormat::depth24_stencil8:
+		case TextureFormat::depth32f_stencil8:
+		case TextureFormat::compressed_red:
+		case TextureFormat::compressed_rg:
+		case TextureFormat::compressed_rgb:
+		case TextureFormat::compressed_rgba:
+		case TextureFormat::compressed_srgb:
+		case TextureFormat::compressed_srgb_alpha:
+		case TextureFormat::compressed_red_rgtc1:
+		case TextureFormat::compressed_signed_red_rgtc1:
+		case TextureFormat::compressed_rg_rgtc2:
+		case TextureFormat::compressed_signed_rg_rgtc2:
+		case TextureFormat::compressed_rgb_s3tc_dxt1:
+		case TextureFormat::compressed_rgba_s3tc_dxt1:
+		case TextureFormat::compressed_rgba_s3tc_dxt3:
+		case TextureFormat::compressed_rgba_s3tc_dxt5:
+		case TextureFormat::compressed_srgb_s3tc_dxt1:
+		case TextureFormat::compressed_srgb_alpha_s3tc_dxt1:
+		case TextureFormat::compressed_srgb_alpha_s3tc_dxt3:
+		case TextureFormat::compressed_srgb_alpha_s3tc_dxt5:
 		default:
 			break;
 		};
@@ -346,76 +346,76 @@ namespace clan
 	{
 		switch (format)
 		{
-		case tf_bgra8:
+		case TextureFormat::bgra8:
 #if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 			if (sse2)
 				return std::unique_ptr<PixelWriter>(new PixelWriterSSE2_bgra8());
 			else
 #endif
 				return std::unique_ptr<PixelWriter>(new PixelWriter_bgra8());
-		case tf_bgr8:
+		case TextureFormat::bgr8:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_bgr8());
-		case tf_stencil_index1:
-		case tf_stencil_index4:
-		case tf_stencil_index8:
-		case tf_stencil_index16:
+		case TextureFormat::stencil_index1:
+		case TextureFormat::stencil_index4:
+		case TextureFormat::stencil_index8:
+		case TextureFormat::stencil_index16:
 			break;
 
-		case tf_r8:
+		case TextureFormat::r8:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_1norm<unsigned char>());
-		case tf_r8_snorm:
+		case TextureFormat::r8_snorm:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_1norm<char>());
-		case tf_r16:
+		case TextureFormat::r16:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_1norm<unsigned short>());
-		case tf_r16_snorm:
+		case TextureFormat::r16_snorm:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_1norm<short>());
-		case tf_rg8:
+		case TextureFormat::rg8:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_2norm<unsigned char>());
-		case tf_rg8_snorm:
+		case TextureFormat::rg8_snorm:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_2norm<char>());
-		case tf_rg16:
+		case TextureFormat::rg16:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_2norm<unsigned short>());
-		case tf_rg16_snorm:
+		case TextureFormat::rg16_snorm:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_2norm<short>());
 
-		case tf_r3_g3_b2:
+		case TextureFormat::r3_g3_b2:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_r3_g3_b2());
-		case tf_rgb4:
+		case TextureFormat::rgb4:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_rgb4());
-		case tf_rgb5:
+		case TextureFormat::rgb5:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_rgb5());
-		case tf_rgb8:
+		case TextureFormat::rgb8:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_3norm<unsigned char>());
-		case tf_rgb8_snorm:
+		case TextureFormat::rgb8_snorm:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_3norm<char>());
-		case tf_rgb10:
+		case TextureFormat::rgb10:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_rgb10());
-		case tf_rgb12:
+		case TextureFormat::rgb12:
 			break;
-		case tf_rgb16:
+		case TextureFormat::rgb16:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_3norm<unsigned short>());
-		case tf_rgb16_snorm:
+		case TextureFormat::rgb16_snorm:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_3norm<short>());
-		case tf_rgba2:
+		case TextureFormat::rgba2:
 			break;
-		case tf_rgba4:
+		case TextureFormat::rgba4:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_rgba4());
-		case tf_rgb5_a1:
+		case TextureFormat::rgb5_a1:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_rgb5_a1());
-		case tf_rgba8:
+		case TextureFormat::rgba8:
 #if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 			if (sse2)
 				return std::unique_ptr<PixelWriter>(new PixelWriterSSE2_rgba8());
 			else
 #endif
 				return std::unique_ptr<PixelWriter>(new PixelWriter_4norm<unsigned char>());
-		case tf_rgba8_snorm:
+		case TextureFormat::rgba8_snorm:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_4norm<char>());
-		case tf_rgb10_a2:
+		case TextureFormat::rgb10_a2:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_rgb10_a2());
-		case tf_rgba12:
+		case TextureFormat::rgba12:
 			break;
-		case tf_rgba16:
+		case TextureFormat::rgba16:
 #if defined(__SSE4_1__)
 			if (sse4)
 				return std::unique_ptr<PixelWriter>(new PixelWriterSSE4_rgba16());
@@ -424,107 +424,107 @@ namespace clan
 #else
 			return std::unique_ptr<PixelWriter>(new PixelWriter_4norm<unsigned short>());
 #endif
-		case tf_rgba16_snorm:
+		case TextureFormat::rgba16_snorm:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_4norm<short>());
-		case tf_srgb8:
+		case TextureFormat::srgb8:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_3norm<unsigned char>()); // TBD: should we add a 2.2 gamma filter?
-		case tf_srgb8_alpha8:
+		case TextureFormat::srgb8_alpha8:
 #if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 			if (sse2)
 				return std::unique_ptr<PixelWriter>(new PixelWriterSSE2_rgba8());
 			else
 #endif
 				return std::unique_ptr<PixelWriter>(new PixelWriter_4norm<char>()); // TBD: should we add a 2.2 gamma filter?
-		case tf_r16f:
+		case TextureFormat::r16f:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_1hf());
-		case tf_rg16f:
+		case TextureFormat::rg16f:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_2hf());
-		case tf_rgb16f:
+		case TextureFormat::rgb16f:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_3hf());
-		case tf_rgba16f:
+		case TextureFormat::rgba16f:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_4hf());
-		case tf_r32f:
+		case TextureFormat::r32f:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_1cast<float>());
-		case tf_rg32f:
+		case TextureFormat::rg32f:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_2cast<float>());
-		case tf_rgb32f:
+		case TextureFormat::rgb32f:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_3cast<float>());
-		case tf_rgba32f:
+		case TextureFormat::rgba32f:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_4cast<float>());
-		case tf_r11f_g11f_b10f:
-		case tf_rgb9_e5:
-		case tf_r8i:
+		case TextureFormat::r11f_g11f_b10f:
+		case TextureFormat::rgb9_e5:
+		case TextureFormat::r8i:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_1cast<char>());
-		case tf_r8ui:
+		case TextureFormat::r8ui:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_1cast<unsigned char>());
-		case tf_r16i:
+		case TextureFormat::r16i:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_1cast<short>());
-		case tf_r16ui:
+		case TextureFormat::r16ui:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_1cast<unsigned short>());
-		case tf_r32i:
+		case TextureFormat::r32i:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_1cast<int>());
-		case tf_r32ui:
+		case TextureFormat::r32ui:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_1cast<unsigned int>());
-		case tf_rg8i:
+		case TextureFormat::rg8i:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_2cast<char>());
-		case tf_rg8ui:
+		case TextureFormat::rg8ui:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_2cast<unsigned char>());
-		case tf_rg16i:
+		case TextureFormat::rg16i:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_2cast<short>());
-		case tf_rg16ui:
+		case TextureFormat::rg16ui:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_2cast<unsigned short>());
-		case tf_rg32i:
+		case TextureFormat::rg32i:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_2cast<int>());
-		case tf_rg32ui:
+		case TextureFormat::rg32ui:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_2cast<unsigned int>());
-		case tf_rgb8i:
+		case TextureFormat::rgb8i:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_3cast<char>());
-		case tf_rgb8ui:
+		case TextureFormat::rgb8ui:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_3cast<unsigned char>());
-		case tf_rgb16i:
+		case TextureFormat::rgb16i:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_3cast<short>());
-		case tf_rgb16ui:
+		case TextureFormat::rgb16ui:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_3cast<unsigned short>());
-		case tf_rgb32i:
+		case TextureFormat::rgb32i:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_3cast<int>());
-		case tf_rgb32ui:
+		case TextureFormat::rgb32ui:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_3cast<unsigned int>());
-		case tf_rgba8i:
+		case TextureFormat::rgba8i:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_4cast<char>());
-		case tf_rgba8ui:
+		case TextureFormat::rgba8ui:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_4cast<unsigned char>());
-		case tf_rgba16i:
+		case TextureFormat::rgba16i:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_4cast<short>());
-		case tf_rgba16ui:
+		case TextureFormat::rgba16ui:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_4cast<unsigned short>());
-		case tf_rgba32i:
+		case TextureFormat::rgba32i:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_4cast<int>());
-		case tf_rgba32ui:
+		case TextureFormat::rgba32ui:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_4cast<unsigned int>());
-		case tf_depth_component16:
-		case tf_depth_component24:
-		case tf_depth_component32:
-		case tf_depth_component32f:
-		case tf_depth24_stencil8:
-		case tf_depth32f_stencil8:
-		case tf_compressed_red:
-		case tf_compressed_rg:
-		case tf_compressed_rgb:
-		case tf_compressed_rgba:
-		case tf_compressed_srgb:
-		case tf_compressed_srgb_alpha:
-		case tf_compressed_red_rgtc1:
-		case tf_compressed_signed_red_rgtc1:
-		case tf_compressed_rg_rgtc2:
-		case tf_compressed_signed_rg_rgtc2:
-		case tf_compressed_rgb_s3tc_dxt1:
-		case tf_compressed_rgba_s3tc_dxt1:
-		case tf_compressed_rgba_s3tc_dxt3:
-		case tf_compressed_rgba_s3tc_dxt5:
-		case tf_compressed_srgb_s3tc_dxt1:
-		case tf_compressed_srgb_alpha_s3tc_dxt1:
-		case tf_compressed_srgb_alpha_s3tc_dxt3:
-		case tf_compressed_srgb_alpha_s3tc_dxt5:
+		case TextureFormat::depth_component16:
+		case TextureFormat::depth_component24:
+		case TextureFormat::depth_component32:
+		case TextureFormat::depth_component32f:
+		case TextureFormat::depth24_stencil8:
+		case TextureFormat::depth32f_stencil8:
+		case TextureFormat::compressed_red:
+		case TextureFormat::compressed_rg:
+		case TextureFormat::compressed_rgb:
+		case TextureFormat::compressed_rgba:
+		case TextureFormat::compressed_srgb:
+		case TextureFormat::compressed_srgb_alpha:
+		case TextureFormat::compressed_red_rgtc1:
+		case TextureFormat::compressed_signed_red_rgtc1:
+		case TextureFormat::compressed_rg_rgtc2:
+		case TextureFormat::compressed_signed_rg_rgtc2:
+		case TextureFormat::compressed_rgb_s3tc_dxt1:
+		case TextureFormat::compressed_rgba_s3tc_dxt1:
+		case TextureFormat::compressed_rgba_s3tc_dxt3:
+		case TextureFormat::compressed_rgba_s3tc_dxt5:
+		case TextureFormat::compressed_srgb_s3tc_dxt1:
+		case TextureFormat::compressed_srgb_alpha_s3tc_dxt1:
+		case TextureFormat::compressed_srgb_alpha_s3tc_dxt3:
+		case TextureFormat::compressed_srgb_alpha_s3tc_dxt5:
 		default:
 			break;
 		};

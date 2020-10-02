@@ -84,7 +84,7 @@ namespace clan
 			scissor_rects[i].bottom = 0;
 		}
 
-		for (int i = 0; i < shadertype_num_types; i++)
+		for (int i = 0; i < static_cast<int>(ShaderType::num_types); i++)
 			shader_bound[i] = false;
 
 		set_default_dsv();
@@ -166,7 +166,7 @@ namespace clan
 	{
 		// To do: fetch format from window->get_back_buffer()->GetDesc(&desc)
 		// To do: window->get_back_buffer() is only correct when no frame buffer is bound
-		TransferTexture pixels(const_cast<D3DDisplayWindowProvider*>(window)->get_gc(), rect.get_width(), rect.get_height(), data_from_gpu, texture_format);
+		TransferTexture pixels(const_cast<D3DDisplayWindowProvider*>(window)->get_gc(), rect.get_width(), rect.get_height(), PixelBufferDirection::data_from_gpu, texture_format);
 		D3DPixelBufferProvider *pb_provider = static_cast<D3DPixelBufferProvider *>(pixels.get_provider());
 		D3D11_BOX box;
 		box.left = rect.left;
@@ -336,19 +336,19 @@ namespace clan
 
 		clear_input_layout();
 
-		for (int j = 0; j < shadertype_num_types; j++)
+		for (int j = 0; j < static_cast<int>(ShaderType::num_types); j++)
 		{
 			D3DShaderObjectProvider *shader_provider = current_program_provider->get_shader_provider((ShaderType)j);
 			if (shader_provider)
 			{
 				switch (j)
 				{
-				case shadertype_vertex: window->get_device_context()->VSSetShader(shader_provider->get_vertex(), 0, 0); break;
-				case shadertype_tess_control: window->get_device_context()->HSSetShader(shader_provider->get_hull(), 0, 0); break;
-				case shadertype_tess_evaluation: window->get_device_context()->DSSetShader(shader_provider->get_domain(), 0, 0); break;
-				case shadertype_geometry: window->get_device_context()->GSSetShader(shader_provider->get_geometry(), 0, 0); break;
-				case shadertype_fragment: window->get_device_context()->PSSetShader(shader_provider->get_pixel(), 0, 0); break;
-				case shadertype_compute: window->get_device_context()->CSSetShader(shader_provider->get_compute(), 0, 0); break;
+				case ShaderType::vertex: window->get_device_context()->VSSetShader(shader_provider->get_vertex(), 0, 0); break;
+				case ShaderType::tess_control: window->get_device_context()->HSSetShader(shader_provider->get_hull(), 0, 0); break;
+				case ShaderType::tess_evaluation: window->get_device_context()->DSSetShader(shader_provider->get_domain(), 0, 0); break;
+				case ShaderType::geometry: window->get_device_context()->GSSetShader(shader_provider->get_geometry(), 0, 0); break;
+				case ShaderType::fragment: window->get_device_context()->PSSetShader(shader_provider->get_pixel(), 0, 0); break;
+				case ShaderType::compute: window->get_device_context()->CSSetShader(shader_provider->get_compute(), 0, 0); break;
 				}
 				shader_bound[j] = true;
 			}
@@ -356,12 +356,12 @@ namespace clan
 			{
 				switch (j)
 				{
-				case shadertype_vertex: window->get_device_context()->VSSetShader(0, 0, 0); break;
-				case shadertype_tess_control: window->get_device_context()->HSSetShader(0, 0, 0); break;
-				case shadertype_tess_evaluation: window->get_device_context()->DSSetShader(0, 0, 0); break;
-				case shadertype_geometry: window->get_device_context()->GSSetShader(0, 0, 0); break;
-				case shadertype_fragment: window->get_device_context()->PSSetShader(0, 0, 0); break;
-				case shadertype_compute: window->get_device_context()->CSSetShader(0, 0, 0); break;
+				case ShaderType::vertex: window->get_device_context()->VSSetShader(0, 0, 0); break;
+				case ShaderType::tess_control: window->get_device_context()->HSSetShader(0, 0, 0); break;
+				case ShaderType::tess_evaluation: window->get_device_context()->DSSetShader(0, 0, 0); break;
+				case ShaderType::geometry: window->get_device_context()->GSSetShader(0, 0, 0); break;
+				case ShaderType::fragment: window->get_device_context()->PSSetShader(0, 0, 0); break;
+				case ShaderType::compute: window->get_device_context()->CSSetShader(0, 0, 0); break;
 				}
 				shader_bound[j] = false;
 			}
@@ -376,18 +376,18 @@ namespace clan
 		{
 			unit_map.unbind_program(this, current_program_provider);
 			current_program_provider = 0;
-			for (int j = 0; j < shadertype_num_types; j++)
+			for (int j = 0; j < static_cast<int>(ShaderType::num_types); j++)
 			{
 				if (shader_bound[j])
 				{
 					switch (j)
 					{
-					case shadertype_vertex: window->get_device_context()->VSSetShader(0, 0, 0); break;
-					case shadertype_tess_control: window->get_device_context()->HSSetShader(0, 0, 0); break;
-					case shadertype_tess_evaluation: window->get_device_context()->DSSetShader(0, 0, 0); break;
-					case shadertype_geometry: window->get_device_context()->GSSetShader(0, 0, 0); break;
-					case shadertype_fragment: window->get_device_context()->PSSetShader(0, 0, 0); break;
-					case shadertype_compute: window->get_device_context()->CSSetShader(0, 0, 0); break;
+					case ShaderType::vertex: window->get_device_context()->VSSetShader(0, 0, 0); break;
+					case ShaderType::tess_control: window->get_device_context()->HSSetShader(0, 0, 0); break;
+					case ShaderType::tess_evaluation: window->get_device_context()->DSSetShader(0, 0, 0); break;
+					case ShaderType::geometry: window->get_device_context()->GSSetShader(0, 0, 0); break;
+					case ShaderType::fragment: window->get_device_context()->PSSetShader(0, 0, 0); break;
+					case ShaderType::compute: window->get_device_context()->CSSetShader(0, 0, 0); break;
 					}
 					shader_bound[j] = false;
 				}
@@ -761,13 +761,13 @@ namespace clan
 	{
 		switch (type)
 		{
-		case type_points: return D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;
-		case type_line_strip: return D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP;
-		case type_line_loop: break;
-		case type_lines: return D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
-		case type_triangle_strip: return D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
-		case type_triangle_fan: break;
-		case type_triangles: return D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		case PrimitivesType::points: return D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;
+		case PrimitivesType::line_strip: return D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP;
+		case PrimitivesType::line_loop: break;
+		case PrimitivesType::lines: return D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
+		case PrimitivesType::triangle_strip: return D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+		case PrimitivesType::triangle_fan: break;
+		case PrimitivesType::triangles: return D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 		}
 		throw Exception("Unsupported primitives type");
 	}
@@ -776,13 +776,13 @@ namespace clan
 	{
 		switch (indices_type)
 		{
-		case type_unsigned_byte: return DXGI_FORMAT_R8_UINT;
-		case type_unsigned_short: return DXGI_FORMAT_R16_UINT;
-		case type_unsigned_int: return DXGI_FORMAT_R32_UINT;
-		case type_byte: return DXGI_FORMAT_R8_SINT;
-		case type_short: return DXGI_FORMAT_R16_SINT;
-		case type_int: return DXGI_FORMAT_R32_SINT;
-		case type_float: return DXGI_FORMAT_R32_FLOAT;
+		case VertexAttributeDataType::type_unsigned_byte: return DXGI_FORMAT_R8_UINT;
+		case VertexAttributeDataType::type_unsigned_short: return DXGI_FORMAT_R16_UINT;
+		case VertexAttributeDataType::type_unsigned_int: return DXGI_FORMAT_R32_UINT;
+		case VertexAttributeDataType::type_byte: return DXGI_FORMAT_R8_SINT;
+		case VertexAttributeDataType::type_short: return DXGI_FORMAT_R16_SINT;
+		case VertexAttributeDataType::type_int: return DXGI_FORMAT_R32_SINT;
+		case VertexAttributeDataType::type_float: return DXGI_FORMAT_R32_FLOAT;
 		}
 		throw Exception("Unsupported index type");
 	}
@@ -792,19 +792,19 @@ namespace clan
 		int index_data_bytesize = 4;
 		switch (indices_type)
 		{
-		case type_unsigned_byte:
-		case type_byte:
+		case VertexAttributeDataType::type_unsigned_byte:
+		case VertexAttributeDataType::type_byte:
 			index_data_bytesize = 1;
 			break;
 
-		case type_unsigned_short:
-		case type_short:
+		case VertexAttributeDataType::type_unsigned_short:
+		case VertexAttributeDataType::type_short:
 			index_data_bytesize = 2;
 			break;
 
-		case type_unsigned_int:
-		case type_int:
-		case type_float:
+		case VertexAttributeDataType::type_unsigned_int:
+		case VertexAttributeDataType::type_int:
+		case VertexAttributeDataType::type_float:
 			index_data_bytesize = 4;
 			break;
 		}
@@ -817,11 +817,11 @@ namespace clan
 	{
 		if (default_depth != 0 && !default_depth_render_buffer)
 		{
-			TextureFormat texture_format = tf_depth_component32;
+			TextureFormat texture_format = TextureFormat::depth_component32;
 			if (default_depth <= 16)
-				texture_format = tf_depth_component32;
+				texture_format = TextureFormat::depth_component32;
 			else  if (default_depth <= 24)
-				texture_format = tf_depth_component24;
+				texture_format = TextureFormat::depth_component24;
 
 			Size viewport_size = get_display_window_size();
 

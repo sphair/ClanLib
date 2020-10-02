@@ -44,14 +44,14 @@ namespace clan
 			pen_point_size(1.0f),
 			pen_point_fade_treshold_size(1.0f),
 			pen_vertex_shader_point_sizes(false),
-			pen_point_sprite_origin(origin_upper_left)
+			pen_point_sprite_origin(PointSpriteOrigin::upper_left)
 
 		{
 			line_antialiasing = false;
 			culled = false;
-			face_cull_mode = cull_back;
-			face_fill_mode = fill_polygon;
-			front_face = face_counter_clockwise;
+			face_cull_mode = CullMode::back;
+			face_fill_mode = FillMode::polygon;
+			front_face = FaceSide::counter_clockwise;
 			enable_scissor = true;
 		}
 

@@ -315,7 +315,7 @@ namespace clan
 	{
 		if (position > 0)
 		{
-			gc.set_program_object(program_sprite);
+			gc.set_program_object(StandardProgram::sprite);
 
 			int gpu_index;
 			VertexArrayVector<SpriteVertex> gpu_vertices(batch_buffer->get_vertex_buffer(gc, gpu_index));
@@ -331,7 +331,7 @@ namespace clan
 				if (glyph_blend.is_null())
 				{
 					BlendStateDescription blend_desc;
-					blend_desc.set_blend_function(blend_constant_color, blend_one_minus_src_color, blend_zero, blend_one);
+					blend_desc.set_blend_function(BlendFunc::constant_color, BlendFunc::one_minus_src_color, BlendFunc::zero, BlendFunc::one);
 					glyph_blend = BlendState(gc, blend_desc);
 				}
 			}
@@ -344,12 +344,12 @@ namespace clan
 			if (use_glyph_program)
 			{
 				gc.set_blend_state(glyph_blend, constant_color);
-				gc.draw_primitives(type_triangles, position, prim_array[gpu_index]);
+				gc.draw_primitives(PrimitivesType::triangles, position, prim_array[gpu_index]);
 				gc.reset_blend_state();
 			}
 			else
 			{
-				gc.draw_primitives(type_triangles, position, prim_array[gpu_index]);
+				gc.draw_primitives(PrimitivesType::triangles, position, prim_array[gpu_index]);
 			}
 
 			for (int i = 0; i < num_current_textures; i++)

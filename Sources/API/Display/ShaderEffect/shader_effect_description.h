@@ -59,9 +59,9 @@ namespace clan
 
 		void set_define(std::string name, std::string value = "1");
 
-		void set_vertex_shader(std::string code, ShaderLanguage language = shader_glsl);
-		void set_fragment_shader(std::string code, ShaderLanguage language = shader_glsl);
-		void set_compute_shader(std::string code, ShaderLanguage language = shader_glsl);
+		void set_vertex_shader(std::string code, ShaderLanguage language = ShaderLanguage::glsl);
+		void set_fragment_shader(std::string code, ShaderLanguage language = ShaderLanguage::glsl);
+		void set_compute_shader(std::string code, ShaderLanguage language = ShaderLanguage::glsl);
 
 		RasterizerStateDescription &rasterizer();
 		BlendStateDescription &blend();
@@ -88,182 +88,182 @@ namespace clan
 
 		void set_attribute(std::string name, VertexArrayVector<unsigned char> &buffer, int size, bool normalize = false)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, size, type_unsigned_byte, 0, 0, normalize);
+			set_attribute(name, (VertexArrayBuffer&)buffer, size, VertexAttributeDataType::type_unsigned_byte, 0, 0, normalize);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<char> &buffer, int size, bool normalize = false)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, size, type_byte, 0, 0, normalize);
+			set_attribute(name, (VertexArrayBuffer&)buffer, size, VertexAttributeDataType::type_byte, 0, 0, normalize);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<unsigned short> &buffer, int size, bool normalize = false)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, size, type_unsigned_short, 0, 0, normalize);
+			set_attribute(name, (VertexArrayBuffer&)buffer, size, VertexAttributeDataType::type_unsigned_short, 0, 0, normalize);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<short> &buffer, int size, bool normalize = false)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, size, type_short, 0, 0, normalize);
+			set_attribute(name, (VertexArrayBuffer&)buffer, size, VertexAttributeDataType::type_short, 0, 0, normalize);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<unsigned int> &buffer, int size, bool normalize = false)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, size, type_unsigned_int, 0, 0, normalize);
+			set_attribute(name, (VertexArrayBuffer&)buffer, size, VertexAttributeDataType::type_unsigned_int, 0, 0, normalize);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<int> &buffer, int size, bool normalize = false)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, size, type_int, 0, 0, normalize);
+			set_attribute(name, (VertexArrayBuffer&)buffer, size, VertexAttributeDataType::type_int, 0, 0, normalize);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<float> &buffer, int size, bool normalize = false)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, size, type_float, 0, 0, normalize);
+			set_attribute(name, (VertexArrayBuffer&)buffer, size, VertexAttributeDataType::type_float, 0, 0, normalize);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<unsigned char> &buffer, bool normalize = false)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, 1, type_unsigned_byte, 0, sizeof(unsigned char), normalize);
+			set_attribute(name, (VertexArrayBuffer&)buffer, 1, VertexAttributeDataType::type_unsigned_byte, 0, sizeof(unsigned char), normalize);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<signed char> &buffer, bool normalize = false)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, 1, type_byte, 0, sizeof(signed char), normalize);
+			set_attribute(name, (VertexArrayBuffer&)buffer, 1, VertexAttributeDataType::type_byte, 0, sizeof(signed char), normalize);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<unsigned short> &buffer, bool normalize = false)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, 1, type_unsigned_short, 0, sizeof(unsigned short), normalize);
+			set_attribute(name, (VertexArrayBuffer&)buffer, 1, VertexAttributeDataType::type_unsigned_short, 0, sizeof(unsigned short), normalize);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<signed short> &buffer, bool normalize = false)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, 1, type_short, 0, sizeof(signed short), normalize);
+			set_attribute(name, (VertexArrayBuffer&)buffer, 1, VertexAttributeDataType::type_short, 0, sizeof(signed short), normalize);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<unsigned int> &buffer, bool normalize = false)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, 1, type_unsigned_int, 0, sizeof(unsigned int), normalize);
+			set_attribute(name, (VertexArrayBuffer&)buffer, 1, VertexAttributeDataType::type_unsigned_int, 0, sizeof(unsigned int), normalize);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<signed int> &buffer, bool normalize = false)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, 1, type_int, 0, sizeof(signed int), normalize);
+			set_attribute(name, (VertexArrayBuffer&)buffer, 1, VertexAttributeDataType::type_int, 0, sizeof(signed int), normalize);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<float> &buffer)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, 1, type_float, 0, sizeof(float), false);
+			set_attribute(name, (VertexArrayBuffer&)buffer, 1, VertexAttributeDataType::type_float, 0, sizeof(float), false);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<Vec2ub> &buffer, bool normalize = false)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, 2, type_unsigned_byte, 0, sizeof(Vec2ub), normalize);
+			set_attribute(name, (VertexArrayBuffer&)buffer, 2, VertexAttributeDataType::type_unsigned_byte, 0, sizeof(Vec2ub), normalize);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<Vec2b> &buffer, bool normalize = false)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, 2, type_byte, 0, sizeof(Vec2b), normalize);
+			set_attribute(name, (VertexArrayBuffer&)buffer, 2, VertexAttributeDataType::type_byte, 0, sizeof(Vec2b), normalize);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<Vec2us> &buffer, bool normalize = false)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, 2, type_unsigned_short, 0, sizeof(Vec2us), normalize);
+			set_attribute(name, (VertexArrayBuffer&)buffer, 2, VertexAttributeDataType::type_unsigned_short, 0, sizeof(Vec2us), normalize);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<Vec2s> &buffer, bool normalize = false)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, 2, type_short, 0, sizeof(Vec2s), normalize);
+			set_attribute(name, (VertexArrayBuffer&)buffer, 2, VertexAttributeDataType::type_short, 0, sizeof(Vec2s), normalize);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<Vec2ui> &buffer, bool normalize = false)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, 2, type_unsigned_int, 0, sizeof(Vec2ui), normalize);
+			set_attribute(name, (VertexArrayBuffer&)buffer, 2, VertexAttributeDataType::type_unsigned_int, 0, sizeof(Vec2ui), normalize);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<Vec2i> &buffer, bool normalize = false)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, 2, type_int, 0, sizeof(Vec2i), normalize);
+			set_attribute(name, (VertexArrayBuffer&)buffer, 2, VertexAttributeDataType::type_int, 0, sizeof(Vec2i), normalize);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<Vec2f> &buffer)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, 2, type_float, 0, sizeof(Vec2f), false);
+			set_attribute(name, (VertexArrayBuffer&)buffer, 2, VertexAttributeDataType::type_float, 0, sizeof(Vec2f), false);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<Vec3ub> &buffer, bool normalize = false)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, 3, type_unsigned_byte, 0, sizeof(Vec3ub), normalize);
+			set_attribute(name, (VertexArrayBuffer&)buffer, 3, VertexAttributeDataType::type_unsigned_byte, 0, sizeof(Vec3ub), normalize);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<Vec3b> &buffer, bool normalize = false)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, 3, type_byte, 0, sizeof(Vec3b), normalize);
+			set_attribute(name, (VertexArrayBuffer&)buffer, 3, VertexAttributeDataType::type_byte, 0, sizeof(Vec3b), normalize);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<Vec3us> &buffer, bool normalize = false)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, 3, type_unsigned_short, 0, sizeof(Vec3us), normalize);
+			set_attribute(name, (VertexArrayBuffer&)buffer, 3, VertexAttributeDataType::type_unsigned_short, 0, sizeof(Vec3us), normalize);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<Vec3s> &buffer, bool normalize = false)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, 3, type_short, 0, sizeof(Vec3s), normalize);
+			set_attribute(name, (VertexArrayBuffer&)buffer, 3, VertexAttributeDataType::type_short, 0, sizeof(Vec3s), normalize);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<Vec3ui> &buffer, bool normalize = false)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, 3, type_unsigned_int, 0, sizeof(Vec3ui), normalize);
+			set_attribute(name, (VertexArrayBuffer&)buffer, 3, VertexAttributeDataType::type_unsigned_int, 0, sizeof(Vec3ui), normalize);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<Vec3i> &buffer, bool normalize = false)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, 3, type_int, 0, sizeof(Vec3i), normalize);
+			set_attribute(name, (VertexArrayBuffer&)buffer, 3, VertexAttributeDataType::type_int, 0, sizeof(Vec3i), normalize);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<Vec3f> &buffer)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, 3, type_float, 0, sizeof(Vec3f), false);
+			set_attribute(name, (VertexArrayBuffer&)buffer, 3, VertexAttributeDataType::type_float, 0, sizeof(Vec3f), false);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<Vec4ub> &buffer, bool normalize = false)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, 4, type_unsigned_byte, 0, sizeof(Vec4ub), normalize);
+			set_attribute(name, (VertexArrayBuffer&)buffer, 4, VertexAttributeDataType::type_unsigned_byte, 0, sizeof(Vec4ub), normalize);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<Vec4b> &buffer, bool normalize = false)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, 4, type_byte, 0, sizeof(Vec4b), normalize);
+			set_attribute(name, (VertexArrayBuffer&)buffer, 4, VertexAttributeDataType::type_byte, 0, sizeof(Vec4b), normalize);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<Vec4us> &buffer, bool normalize = false)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, 4, type_unsigned_short, 0, sizeof(Vec4us), normalize);
+			set_attribute(name, (VertexArrayBuffer&)buffer, 4, VertexAttributeDataType::type_unsigned_short, 0, sizeof(Vec4us), normalize);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<Vec4s> &buffer, bool normalize = false)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, 4, type_short, 0, sizeof(Vec4s), normalize);
+			set_attribute(name, (VertexArrayBuffer&)buffer, 4, VertexAttributeDataType::type_short, 0, sizeof(Vec4s), normalize);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<Vec4ui> &buffer, bool normalize = false)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, 4, type_unsigned_int, 0, sizeof(Vec4ui), normalize);
+			set_attribute(name, (VertexArrayBuffer&)buffer, 4, VertexAttributeDataType::type_unsigned_int, 0, sizeof(Vec4ui), normalize);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<Vec4i> &buffer, bool normalize = false)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, 4, type_int, 0, sizeof(Vec4i), normalize);
+			set_attribute(name, (VertexArrayBuffer&)buffer, 4, VertexAttributeDataType::type_int, 0, sizeof(Vec4i), normalize);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<Vec4f> &buffer)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, 4, type_float, 0, sizeof(Vec4f), false);
+			set_attribute(name, (VertexArrayBuffer&)buffer, 4, VertexAttributeDataType::type_float, 0, sizeof(Vec4f), false);
 		}
 
 		void set_attribute(std::string name, VertexArrayVector<Colorf> &buffer)
 		{
-			set_attribute(name, (VertexArrayBuffer&)buffer, 4, type_float, 0, sizeof(Colorf), false);
+			set_attribute(name, (VertexArrayBuffer&)buffer, 4, VertexAttributeDataType::type_float, 0, sizeof(Colorf), false);
 		}
 
 		void set_attribute_screen_quad(std::string name);
@@ -273,17 +273,17 @@ namespace clan
 
 		void set_elements(ElementArrayVector<unsigned int> &element_array)
 		{
-			set_elements(element_array, type_unsigned_int);
+			set_elements(element_array, VertexAttributeDataType::type_unsigned_int);
 		}
 
 		void set_elements(ElementArrayVector<unsigned short> &element_array)
 		{
-			set_elements(element_array, type_unsigned_short);
+			set_elements(element_array, VertexAttributeDataType::type_unsigned_short);
 		}
 
 		void set_elements(ElementArrayVector<unsigned char> &element_array)
 		{
-			set_elements(element_array, type_unsigned_byte);
+			set_elements(element_array, VertexAttributeDataType::type_unsigned_byte);
 		}
 
 		void set_draw_count(int count);

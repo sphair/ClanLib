@@ -38,21 +38,21 @@ namespace clan
 	class Angle_Impl;
 
 	/// \brief Angle unit
-	enum AngleUnit
+	enum class AngleUnit
 	{
-		angle_degrees,
-		angle_radians
+		degrees,
+		radians
 	};
 
 	/// \brief Euler angle rotation order
-	enum EulerOrder
+	enum class EulerOrder
 	{
-		order_XYZ,
-		order_XZY,
-		order_YZX,
-		order_YXZ,
-		order_ZXY,
-		order_ZYX
+		XYZ,
+		XZY,
+		YZX,
+		YXZ,
+		ZXY,
+		ZYX
 	};
 
 	/// \brief Angle class.

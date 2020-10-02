@@ -819,8 +819,8 @@ namespace clan
 
 		if (!render_window->is_double_buffered())	// Silently fix incorrect render buffers
 		{
-			if (buffer == buffer_back)
-				buffer = buffer_front;
+			if (buffer == DrawBuffer::back)
+				buffer = DrawBuffer::front;
 		}
 
 		if (glDrawBuffer)
