@@ -65,7 +65,7 @@ namespace clan
 	class FontFamily_Impl
 	{
 	public:
-		FontFamily_Impl(const std::string &family_name);
+		FontFamily_Impl(const std::string &family_name, const TextureGroup &new_texture_group);
 		~FontFamily_Impl();
 
 		const std::string &get_family_name() const { return family_name; }

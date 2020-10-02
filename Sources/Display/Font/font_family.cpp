@@ -45,7 +45,7 @@ namespace clan
 	{
 	}
 
-	FontFamily::FontFamily(const std::string &family_name) : impl(std::make_shared<FontFamily_Impl>(family_name))
+	FontFamily::FontFamily(const std::string &family_name, const TextureGroup &new_texture_group) : impl(std::make_shared<FontFamily_Impl>(family_name, new_texture_group))
 	{
 	}
 
