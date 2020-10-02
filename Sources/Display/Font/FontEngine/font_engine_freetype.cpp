@@ -285,7 +285,7 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph_standard(int glyph, bool ant
 	int src_height = slot->bitmap.rows;
 	int src_pitch = slot->bitmap.pitch;
 
-	PixelBuffer pixelbuffer(src_width, src_height, tf_rgba8);
+	PixelBuffer pixelbuffer(src_width, src_height, TextureFormat::rgba8);
 	font_buffer.buffer = pixelbuffer;
 	font_buffer.buffer_rect = pixelbuffer.get_size();
 	font_buffer.empty_buffer = false;
@@ -398,7 +398,7 @@ FontPixelBuffer FontEngine_Freetype::get_font_glyph_subpixel(int glyph)
 
 	// Convert the bitmap
 
-	PixelBuffer pixelbuffer(src_width/3, src_height, tf_rgba8);
+	PixelBuffer pixelbuffer(src_width/3, src_height, TextureFormat::rgba8);
 	font_buffer.buffer = pixelbuffer;
 	font_buffer.buffer_rect = pixelbuffer.get_size();
 	font_buffer.empty_buffer = false;

@@ -915,7 +915,7 @@ bool OpenGLWindowProvider::on_clicked(XButtonEvent &event)
 
 	Rect rect = Rect(event.x,event.y, Size(1,1));
 
-	PixelBuffer pixelbuffer(rect.get_width(), rect.get_height(), tf_rgba8);
+	PixelBuffer pixelbuffer(rect.get_width(), rect.get_height(), TextureFormat::rgba8);
 	glReadPixels(
 		rect.left, height - rect.bottom,
 		rect.right - rect.left, rect.bottom - rect.top,

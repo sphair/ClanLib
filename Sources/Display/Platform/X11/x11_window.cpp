@@ -1363,7 +1363,7 @@ namespace clan
 		data[1] = image.get_height();
 
 		// icon data is expected as ARGB
-		PixelBuffer transformed_image = image.to_format(tf_bgra8);
+		PixelBuffer transformed_image = image.to_format(TextureFormat::bgra8);
 
 		// on 64bit systems, the destination buffer is 64 bit per pixel
 		// thus, we have to copy each pixel individually (no memcpy)

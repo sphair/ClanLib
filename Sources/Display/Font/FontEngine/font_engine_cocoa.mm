@@ -184,7 +184,7 @@ namespace clan
 		
 		// Render glyph into bitmap:
         
-		PixelBuffer pixelbuffer(glyph_width, glyph_height, tf_bgra8);
+		PixelBuffer pixelbuffer(glyph_width, glyph_height, TextureFormat::bgra8);
 		unsigned char *p = (unsigned char *)pixelbuffer.get_data();
 		int len = pixelbuffer.get_width()*pixelbuffer.get_height();
 		for (int i = 0; i < len*4; i++)
