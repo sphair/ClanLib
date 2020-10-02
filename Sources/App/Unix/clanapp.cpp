@@ -33,7 +33,7 @@
 #include "API/Core/System/console_window.h"
 #include "API/Core/Text/console.h"
 #include "API/Core/Text/console_logger.h"
-#include "API/display.h"
+#include "API/Display/System/run_loop.h"
 
 namespace clan
 {

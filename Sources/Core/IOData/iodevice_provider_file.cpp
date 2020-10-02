@@ -319,11 +319,11 @@ namespace clan
 		return (new_pos != INVALID_FILE_SIZE);
 #else
 		int mode = SEEK_SET;
-		if (seek_mode == File::seek_set)
+		if (seek_mode == File::SeekMode::set)
 			mode = SEEK_SET;
-		else if (seek_mode == File::seek_cur)
+		else if (seek_mode == File::SeekMode::cur)
 			mode = SEEK_CUR;
-		else if (seek_mode == File::seek_end)
+		else if (seek_mode == File::SeekMode::end)
 			mode = SEEK_END;
 
 		off_t new_pos = lseek(handle, position, mode);
