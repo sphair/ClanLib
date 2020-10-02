@@ -232,18 +232,17 @@ void WorkspaceGenerator_MSVC8::write_project(const Workspace &workspace, const P
 	std::string precomp_header;
 	bool has_precomp = false;
 	{
-		std::list<std::string>::const_iterator it;
-		for (it = project.files.begin(); it != project.files.end(); ++it)
+		for (auto it = project.files.begin(); it != project.files.end(); ++it)
 		{
-			if ((*it).find("precomp.h") != std::string::npos)
+			if ((!(*it).exclude_from_build) && (*it).name.find("precomp.h") != std::string::npos)
 			{
 				has_precomp = true;
-				precomp_header = *it;
+				precomp_header = it->name;
 				std::string::size_type pos = precomp_header.find_last_of("/\\");
 				if (pos == std::string::npos)
 					precomp_header = project.name + "/" + precomp_header;
 				else
-					precomp_header = project.name + "/" + precomp_header.substr(pos+1);
+					precomp_header = project.name + "/" + precomp_header.substr(pos + 1);
 				break;
 			}
 		}
@@ -594,32 +593,13 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_android_config(const std::
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\AndroidLocalIncludes.props");
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\AndroidRuntime.props");
 
-	//FIXME: if (!is_enable_intrinsics)
-	{
-		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\DisableIntrinsics.props");
-	}
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\DisableIntrinsics.props");
 
 	std::string output_file = "clan$(ProjectName)-static";
 	if (config.runtime_type == runtime_static_debug || config.runtime_type == runtime_dll_debug)
 	{
 		output_file += "-debug";
 		shared.config->android_debug_libraries = "true";
-
-
-		//if (is_debug_optimize)
-		//{
-		//	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\DebugBuildOptimized.props");
-		//}
-		//else
-		//{
-		//	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\DebugBuild.props");
-		//}
-
-	}
-	else
-	{
-		//shared.config->inherited_property_sheets_vs100.push_back("Sheets\\ReleaseBuild.props");
-
 	}
 
 	shared.config->target_name_vs100 = output_file;
@@ -828,10 +808,9 @@ void WorkspaceGenerator_MSVC8::generate_source_files(MSVC8_Project &vcproj, cons
 	std::list<std::string> cur_path;
 	std::vector<MSVC8_Filter *> filters;
 
-	std::list<std::string>::const_iterator itFiles;
-	for (itFiles = project.files.begin(); itFiles != project.files.end(); itFiles++)
+	for (auto itFiles = project.files.begin(); itFiles != project.files.end(); itFiles++)
 	{
-		std::string file = *itFiles;
+		std::string file = itFiles->name;
 
 		// cut off path to files:
 		if (file.length() > chop_length && file.substr(0, chop_length) == chop_str)
@@ -875,8 +854,7 @@ void WorkspaceGenerator_MSVC8::generate_source_files(MSVC8_Project &vcproj, cons
 
 		cur_path = new_path;
 
-		MSVC8_File *vcfile = new MSVC8_File;
-		vcfile->relative_path = "..\\" + chop_str + file;
+		MSVC8_File* vcfile = new MSVC8_File(itFiles->exclude_from_build, "..\\" + chop_str + file);
 
 		if (filters.empty())
 			vcproj.files.push_back(vcfile);
@@ -1314,13 +1292,6 @@ void MSVC8_Filter::write_filter_files_vs100(OutputWriter &output, int indent, co
 /////////////////////////////////////////////////////////////////////////////
 // MSVC8_File class:
 
-MSVC8_File::MSVC8_File()
-{
-}
-
-MSVC8_File::~MSVC8_File()
-{
-}
 
 void MSVC8_File::write_filter_name_vs100(OutputWriter &output, int indent, const std::string &parent) const
 {
@@ -1328,75 +1299,81 @@ void MSVC8_File::write_filter_name_vs100(OutputWriter &output, int indent, const
 
 void MSVC8_File::write_vs100(OutputWriter &output, int indent, const std::vector<MSVC8_Configuration *> &configurations) const
 {
-	if ( (relative_path.substr(relative_path.size()-2) == ".h") || (relative_path.substr(relative_path.size()-2) == ".H") )
+	bool disable_precomp = false;
+	bool create_precomp = false;
+	std::string cl_name;
+
+	if ((relative_path.substr(relative_path.size() - 2) == ".h") || (relative_path.substr(relative_path.size() - 2) == ".H"))
 	{
-	   	output.write_line(indent, "<ClInclude Include=\"" + relative_path + "\" />");
+		cl_name = "ClInclude";
 	}
 	else
 	{
-		if (relative_path.substr(relative_path.size()-11) == "precomp.cpp")
+		cl_name = "ClCompile";
+	}
+
+	if (relative_path.substr(relative_path.size() - 11) == "precomp.cpp")
+	{
+		create_precomp = true;
+	}
+	else if (relative_path.substr(relative_path.size() - 14) == "init_guids.cpp")
+	{
+		disable_precomp = true;
+	}
+	else if (relative_path.substr(relative_path.size() - 2) == ".c")
+	{
+		disable_precomp = true;
+	}
+
+	if (create_precomp == false && disable_precomp == false && exclude_from_build == false)
+	{
+		// Single line xml
+		output.write_line(indent, "<" + cl_name + " Include=\"" + relative_path + "\"/>");
+	}
+	else
+	{
+		output.write_line(indent, "<" + cl_name + " Include=\"" + relative_path + "\">");
+
+		if (create_precomp)
 		{
-		   	output.write_line(indent, "<ClCompile Include=\"" + relative_path + "\">");
-
-			std::vector<std::string>::size_type index;
-
-			for (index = 0; index < configurations.size(); index++)
+			for (unsigned int index = 0; index < configurations.size(); index++)
 			{
-	  			output.write_line(indent, "  <PrecompiledHeader Condition=\"'$(Configuration)|$(Platform)'=='" + configurations[index]->name + "'\">Create</PrecompiledHeader>");
+				output.write_line(indent, "  <PrecompiledHeader Condition=\"'$(Configuration)|$(Platform)'=='" + configurations[index]->name + "'\">Create</PrecompiledHeader>");
 				if (configurations[index]->is_this_android)			// TODO: Is this correct?
 					output.write_line(indent, "    <CompileAs>CompileAsCpp</CompileAs>");
 			}
-
-
-		   	output.write_line(indent, "</ClCompile>");
 		}
-		// Todo, Fix, hack hack hack - instead of this, 
-		// we should keep a list somewhere of special files that should not have precompilation turned on!
-		else if (relative_path.substr(relative_path.size()-14) == "init_guids.cpp")
+		if (disable_precomp)
 		{
-		   	output.write_line(indent, "<ClCompile Include=\"" + relative_path + "\">");
-
-			std::vector<std::string>::size_type index;
-
-			for (index = 0; index < configurations.size(); index++)
+			for (unsigned int index = 0; index < configurations.size(); index++)
 			{
-	  			output.write_line(indent, "  <PrecompiledHeader Condition=\"'$(Configuration)|$(Platform)'=='" + configurations[index]->name + "'\">NotUsing</PrecompiledHeader>");
+				output.write_line(indent, "  <PrecompiledHeader Condition=\"'$(Configuration)|$(Platform)'=='" + configurations[index]->name + "'\">NotUsing</PrecompiledHeader>");
 			}
-
-		   	output.write_line(indent, "</ClCompile>");
 		}
-		else if (relative_path.substr(relative_path.size()-2) == ".c")
+
+		if (exclude_from_build)
 		{
-		   	output.write_line(indent, "<ClCompile Include=\"" + relative_path + "\">");
-
-			std::vector<std::string>::size_type index;
-
-			for (index = 0; index < configurations.size(); index++)
+			for (unsigned int index = 0; index < configurations.size(); index++)
 			{
-	  			output.write_line(indent, "  <PrecompiledHeader Condition=\"'$(Configuration)|$(Platform)'=='" + configurations[index]->name + "'\">");
-	  			output.write_line(indent, "  </PrecompiledHeader>");
+				output.write_line(indent, "  <ExcludedFromBuild Condition=\"'$(Configuration)|$(Platform)'=='" + configurations[index]->name + "'\">true</ExcludedFromBuild>");
 			}
+		}
 
-		   	output.write_line(indent, "</ClCompile>");
-		}
-		else
-		{
-		   	output.write_line(indent, "<ClCompile Include=\"" + relative_path + "\" />");
-		}
+		output.write_line(indent, "</" + cl_name + ">");
 	}
 }
 
-void MSVC8_File::write_filter_files_vs100(OutputWriter &output, int indent, const std::string &parent) const
+void MSVC8_File::write_filter_files_vs100(OutputWriter& output, int indent, const std::string& parent) const
 {
-	if (relative_path.substr(relative_path.size()-2) == ".h")
+	if (relative_path.substr(relative_path.size() - 2) == ".h")
 	{
-	   	output.write_line(indent, "<ClInclude Include=\"" + relative_path + "\" >");
+		output.write_line(indent, "<ClInclude Include=\"" + relative_path + "\" >");
 		output.write_line(indent, "<Filter>" + parent + "</Filter>");
-	   	output.write_line(indent, "</ClInclude>");
+		output.write_line(indent, "</ClInclude>");
 	}
 	else
 	{
-	   	output.write_line(indent, "<ClCompile Include=\"" + relative_path + "\" >");
+		output.write_line(indent, "<ClCompile Include=\"" + relative_path + "\" >");
 		output.write_line(indent, "<Filter>" + parent + "</Filter>");
 		output.write_line(indent, "</ClCompile>");
 	}

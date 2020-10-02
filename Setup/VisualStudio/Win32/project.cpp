@@ -50,7 +50,8 @@ Project::Project(
 	const std::list<std::string> &libs_list_shared,
 	const std::list<std::string> &libs_list_release,
 	const std::list<std::string> &libs_list_debug,
-	const std::list<std::string> &ignore_list)
+	const std::list<std::string> &ignore_list,
+	const std::list<std::string>& exclude_list)
 :
 	name(name),
 	libname(libname),
@@ -61,10 +62,10 @@ Project::Project(
 {
 	std::string lib_main_header;
 	lib_main_header = std::string("Sources\\API\\") + headername;
- 	files.push_back(lib_main_header);
+ 	files.push_back(ProjectFiles(false, lib_main_header));
 
-	generate_dir(std::string("Sources\\API\\")+name, ignore_list);
-	generate_dir(std::string("Sources\\")+name, ignore_list);
+	generate_dir(std::string("Sources\\API\\")+name, ignore_list, exclude_list);
+	generate_dir(std::string("Sources\\")+name, ignore_list, exclude_list);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -78,7 +79,8 @@ Project::Project(
 
 void Project::generate_dir(
 	const std::string &dir,
-	const std::list<std::string> &ignore_list)
+	const std::list<std::string> &ignore_list,
+	const std::list<std::string>& exclude_list, bool force_exclude_all)
 {
 	std::string path = dir;
 	if (path[path.length()-1] != '\\') path += '\\';
@@ -90,27 +92,33 @@ void Project::generate_dir(
 	do
 	{
 		bool skip = false;
+		bool exclude = force_exclude_all;
 
 		if (strncmp(data.cFileName, ".#", 2) == 0) continue; // don't add CVS revision backups.
 		if (strchr(data.cFileName, '~') != NULL) continue;  //Don't get those emacs/bcc backup files
 
-		std::list<std::string>::const_iterator it;
-		for (it = ignore_list.begin(); it != ignore_list.end(); it++)
+		for (auto it = ignore_list.begin(); it != ignore_list.end(); it++)
 		{
 			if (_stricmp(data.cFileName, it->c_str()) == 0)
-			skip = true;
+				skip = true;
 		}
 
 		if (skip)
-    		continue;
+			continue;
+
+		for (auto it = exclude_list.begin(); it != exclude_list.end(); it++)
+		{
+			if (_stricmp(data.cFileName, it->c_str()) == 0)
+				exclude = true;
+		}
 
 		if ((data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == FILE_ATTRIBUTE_DIRECTORY)
 		{
-			generate_dir(path + data.cFileName, ignore_list);
+			generate_dir(path + data.cFileName, ignore_list, exclude_list, exclude);
 		}
 		else
 		{
-			files.push_back(path + data.cFileName);
+			files.push_back(ProjectFiles(exclude, path + data.cFileName));
 		}
 
 	} while (FindNextFileA(handle, &data));

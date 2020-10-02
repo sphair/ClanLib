@@ -232,37 +232,40 @@ Workspace Wizard::create_workspace(bool target_android)
 	std::list<std::string> libs_list_debug;
 
 	std::list<std::string> ignore_list;
+	std::list<std::string> exclude_list;
 	ignore_list.push_back(".");
 	ignore_list.push_back("..");
 
 	if (target_android)
 	{
-		ignore_list.push_back("Win32");
-		ignore_list.push_back("WGL");
-		ignore_list.push_back("setupnetwork_win32.cpp");
-		ignore_list.push_back("font_engine_win32.h");
-		ignore_list.push_back("font_engine_win32.cpp");
+		exclude_list.push_back("Win32");
+		exclude_list.push_back("WGL");
+		exclude_list.push_back("D3D");
+		exclude_list.push_back("setupnetwork_win32.cpp");
+		exclude_list.push_back("font_engine_win32.h");
+		exclude_list.push_back("font_engine_win32.cpp");
 	}
 	else
 	{
-		ignore_list.push_back("Unix");
-		ignore_list.push_back("Android");
-		ignore_list.push_back("setupnetwork_unix.cpp");
-		ignore_list.push_back("font_engine_freetype.h");
-		ignore_list.push_back("font_engine_freetype.cpp");
+		exclude_list.push_back("Unix");
+		exclude_list.push_back("Android");
+		exclude_list.push_back("setupnetwork_unix.cpp");
+		exclude_list.push_back("font_engine_freetype.h");
+		exclude_list.push_back("font_engine_freetype.cpp");
 	}
 
-	ignore_list.push_back("X11");
+	exclude_list.push_back("X11");
 	ignore_list.push_back("Makefile.am");
-	ignore_list.push_back("GLX");
-	ignore_list.push_back("MacOS");
-	ignore_list.push_back("MacOSX");
-	ignore_list.push_back("Linux");
-	ignore_list.push_back("OSX");
-	ignore_list.push_back("Cocoa");
-	ignore_list.push_back("AGL");
-	ignore_list.push_back("font_engine_cocoa.h");
-	ignore_list.push_back("font_engine_cocoa.mm");
+	exclude_list.push_back("GLX");
+	exclude_list.push_back("MacOS");
+	exclude_list.push_back("MacOSX");
+	exclude_list.push_back("Linux");
+	exclude_list.push_back("OSX");
+	exclude_list.push_back("Cocoa");
+	exclude_list.push_back("AGL");
+	exclude_list.push_back("font_engine_cocoa.h");
+	exclude_list.push_back("font_engine_cocoa.mm");
+
 
 	Project clanCore(
 		"Core",
@@ -270,7 +273,7 @@ Workspace Wizard::create_workspace(bool target_android)
 		"core.h",
 		libs_list_shared,
 		libs_list_release,
-		libs_list_debug, ignore_list);
+		libs_list_debug, ignore_list, exclude_list);
 
 	Project clanApp(
 		"App",
@@ -278,7 +281,7 @@ Workspace Wizard::create_workspace(bool target_android)
 		"application.h",
 		libs_list_shared,
 		libs_list_release,
-		libs_list_debug, ignore_list);
+		libs_list_debug, ignore_list, exclude_list);
 
 	Project clanNetwork(
 		"Network",
@@ -286,7 +289,7 @@ Workspace Wizard::create_workspace(bool target_android)
 		"network.h",
 		libs_list_shared,
 		libs_list_release,
-		libs_list_debug, ignore_list);
+		libs_list_debug, ignore_list, exclude_list);
 
 	Project clanDisplay(
 		"Display",
@@ -294,7 +297,7 @@ Workspace Wizard::create_workspace(bool target_android)
 		"display.h",
 		libs_list_shared,
 		libs_list_release,
-		libs_list_debug, ignore_list);
+		libs_list_debug, ignore_list, exclude_list);
 
 	Project clanSound(
 		"Sound",
@@ -302,7 +305,7 @@ Workspace Wizard::create_workspace(bool target_android)
 		"sound.h",
 		libs_list_shared,
 		libs_list_release,
-		libs_list_debug, ignore_list);
+		libs_list_debug, ignore_list, exclude_list);
 
 	Project clanGL(
 		"GL",
@@ -310,7 +313,7 @@ Workspace Wizard::create_workspace(bool target_android)
 		"gl.h",
 		libs_list_shared,
 		libs_list_release,
-		libs_list_debug, ignore_list);
+		libs_list_debug, ignore_list, exclude_list);
 
 	Project clanUI(
 		"UI",
@@ -318,7 +321,7 @@ Workspace Wizard::create_workspace(bool target_android)
 		"ui.h",
 		libs_list_shared,
 		libs_list_release,
-		libs_list_debug, ignore_list);
+		libs_list_debug, ignore_list, exclude_list);
 
 	Project clanXML(
 		"XML",
@@ -326,7 +329,7 @@ Workspace Wizard::create_workspace(bool target_android)
 		"xml.h",
 		libs_list_shared,
 		libs_list_release,
-		libs_list_debug, ignore_list);
+		libs_list_debug, ignore_list, exclude_list);
 
 
 	// Add projects to workspace:
@@ -347,7 +350,7 @@ Workspace Wizard::create_workspace(bool target_android)
 			"d3d.h",
 			libs_list_shared,
 			libs_list_release,
-			libs_list_debug, ignore_list);
+			libs_list_debug, ignore_list, exclude_list);
 
 		workspace.projects.push_back(clanD3D);
 	}

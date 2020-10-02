@@ -227,9 +227,9 @@ public:
 class MSVC8_File : public MSVC8_FileItem
 {
 public:
-	MSVC8_File();
-	~MSVC8_File();
+	MSVC8_File(bool is_exclude_from_build, const std::string& name) : exclude_from_build(is_exclude_from_build), relative_path(name) {}
 
+	bool exclude_from_build;
 	std::string relative_path;
 
 	void write_vs100(OutputWriter &output, int indent, const std::vector<MSVC8_Configuration *> &configurations) const;

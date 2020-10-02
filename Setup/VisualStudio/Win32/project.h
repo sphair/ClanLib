@@ -34,6 +34,14 @@
 #include <string>
 #include <list>
 
+class ProjectFiles
+{
+public:
+	ProjectFiles(bool is_exclude_from_build, const std::string& filename) : exclude_from_build(is_exclude_from_build), name(filename) {}
+	bool exclude_from_build;
+	std::string name;
+};
+
 class Project
 // Generic description of a clanlib project.
 {
@@ -49,7 +57,8 @@ public:
 		const std::list<std::string> &libs_list_shared,
 		const std::list<std::string> &libs_list_release,
 		const std::list<std::string> &libs_list_debug,
-		const std::list<std::string> &ignore_list);
+		const std::list<std::string> &ignore_list,
+		const std::list<std::string>& exclude_list);
 	// Construct a project by searching automatically for the files in the Sources subdir.
 
 // Attributes:
@@ -72,17 +81,8 @@ public:
 	std::list<std::string> libs_debug;
 	// Libraries to link with in debug target.
 
-	std::list<std::string> files;
+	std::list<ProjectFiles> files;
 	// Files used by project.
-
-	std::list<std::string> file_paths;
-	// Files and path
-
-	std::list<std::string> paths;
-	// Unique Paths used
-
-	std::list<std::string> dependencies;
-	// Other projects that this project depends on.
 
 // Operations:
 public:
@@ -91,7 +91,9 @@ public:
 private:
 	void generate_dir(
 		const std::string &dir,
-		const std::list<std::string> &ignore_list);
+		const std::list<std::string> &ignore_list,
+		const std::list<std::string>& exclude_list, bool force_exclude_all = false);
+
 	// Scan directory for files and add them to file list.
 };
 
