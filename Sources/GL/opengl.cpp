@@ -171,38 +171,17 @@ namespace clan
 
 	#else
 
-			case TextureFormat::stencil_index1: tf.internal_format = GL_STENCIL_INDEX1; tf.pixel_format = GL_STENCIL_INDEX; tf.pixel_datatype = fixme; break;
-			case TextureFormat::stencil_index4: tf.internal_format = GL_STENCIL_INDEX4; tf.pixel_format = GL_STENCIL_INDEX; tf.pixel_datatype = fixme; break;
 			case TextureFormat::stencil_index8: tf.internal_format = GL_STENCIL_INDEX8; tf.pixel_format = GL_STENCIL_INDEX; tf.pixel_datatype = fixme; break;
-			case TextureFormat::stencil_index16: tf.internal_format = GL_STENCIL_INDEX16; tf.pixel_format = GL_STENCIL_INDEX; tf.pixel_datatype = fixme; break;
 			case TextureFormat::r8: tf.internal_format = GL_R8; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
 			case TextureFormat::r8_snorm: tf.internal_format = GL_R8_SNORM; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_BYTE; break;
-			case TextureFormat::r16: tf.internal_format = GL_R16; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_UNSIGNED_SHORT; break;
-			case TextureFormat::r16_snorm: tf.internal_format = GL_R16_SNORM; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_SHORT; break;
 			case TextureFormat::rg8: tf.internal_format = GL_RG8; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
 			case TextureFormat::rg8_snorm: tf.internal_format = GL_RG8_SNORM; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_BYTE; break;
-			case TextureFormat::rg16: tf.internal_format = GL_RG16; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_UNSIGNED_SHORT; break;
-			case TextureFormat::rg16_snorm: tf.internal_format = GL_RG16_SNORM; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_SHORT; break;
-			case TextureFormat::r3_g3_b2: tf.internal_format = GL_R3_G3_B2; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_UNSIGNED_BYTE_3_3_2; break;
-			case TextureFormat::rgb4: tf.internal_format = GL_RGB4; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_SHORT_4_4_4_4; break;
-			case TextureFormat::rgb5: tf.internal_format = GL_RGB5; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_SHORT_5_5_5_1; break;
 			case TextureFormat::rgb8: tf.internal_format = GL_RGB8; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
 			case TextureFormat::rgb8_snorm: tf.internal_format = GL_RGB8_SNORM; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_BYTE; break;
-			case TextureFormat::rgb10: tf.internal_format = GL_RGB10; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_INT_10_10_10_2; break;
-			case TextureFormat::rgb12: tf.internal_format = GL_RGB12; tf.pixel_format = GL_RGB; tf.pixel_datatype = fixme; break;
-			case TextureFormat::rgb16: tf.internal_format = GL_RGB16; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_UNSIGNED_SHORT; break;
-			case TextureFormat::rgb16_snorm: tf.internal_format = GL_RGB16_SNORM; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_SHORT; break;
-			case TextureFormat::rgba2: tf.internal_format = GL_RGBA2; tf.pixel_format = GL_RGBA; tf.pixel_datatype = fixme; break;
 			case TextureFormat::rgba4: tf.internal_format = GL_RGBA4; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_SHORT_4_4_4_4; break;
 			case TextureFormat::rgb5_a1: tf.internal_format = GL_RGB5_A1; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_SHORT_5_5_5_1; break;
 			case TextureFormat::rgba8: tf.internal_format = GL_RGBA8; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
 			case TextureFormat::rgba8_snorm: tf.internal_format = GL_RGBA8_SNORM; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_BYTE; break;
-			case TextureFormat::bgra8: tf.internal_format = GL_RGBA8; tf.pixel_format = GL_BGRA; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
-			case TextureFormat::bgr8: tf.internal_format = GL_RGB8; tf.pixel_format = GL_BGR; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
-			case TextureFormat::rgb10_a2: tf.internal_format = GL_RGB10_A2; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_INT_10_10_10_2; break;
-			case TextureFormat::rgba12: tf.internal_format = GL_RGBA12; tf.pixel_format = GL_RGBA; tf.pixel_datatype = fixme; break;
-			case TextureFormat::rgba16: tf.internal_format = GL_RGBA16; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_SHORT; break;
-			case TextureFormat::rgba16_snorm: tf.internal_format = GL_RGBA16_SNORM; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_SHORT; break;
 			case TextureFormat::srgb8: tf.internal_format = GL_SRGB8; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
 			case TextureFormat::srgb8_alpha8: tf.internal_format = GL_SRGB8_ALPHA8; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
 			case TextureFormat::r16f: tf.internal_format = GL_R16F; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_HALF_FLOAT; break;
@@ -241,10 +220,33 @@ namespace clan
 			case TextureFormat::rgba32ui: tf.internal_format = GL_RGBA32UI; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_INT; break;
 			case TextureFormat::depth_component16: tf.internal_format = GL_DEPTH_COMPONENT16; tf.pixel_format = GL_DEPTH_COMPONENT; tf.pixel_datatype = fixme; break;
 			case TextureFormat::depth_component24: tf.internal_format = GL_DEPTH_COMPONENT24; tf.pixel_format = GL_DEPTH_COMPONENT; tf.pixel_datatype = fixme; break;
-			case TextureFormat::depth_component32: tf.internal_format = GL_DEPTH_COMPONENT32; tf.pixel_format = GL_DEPTH_COMPONENT; tf.pixel_datatype = fixme; break;
 			case TextureFormat::depth_component32f: tf.internal_format = GL_DEPTH_COMPONENT32F; tf.pixel_format = GL_DEPTH_COMPONENT; tf.pixel_datatype = fixme; break;
 			case TextureFormat::depth24_stencil8: tf.internal_format = GL_DEPTH24_STENCIL8; tf.pixel_format = GL_DEPTH_STENCIL; tf.pixel_datatype = fixme; break;
 			case TextureFormat::depth32f_stencil8: tf.internal_format = GL_DEPTH32F_STENCIL8; tf.pixel_format = GL_DEPTH_STENCIL; tf.pixel_datatype = fixme; break;
+
+#ifndef CLANLIB_OPENGL_ES3
+			case TextureFormat::rgb4: tf.internal_format = GL_RGB4; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_SHORT_4_4_4_4; break;
+			case TextureFormat::rgb5: tf.internal_format = GL_RGB5; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_SHORT_5_5_5_1; break;
+			case TextureFormat::rgb12: tf.internal_format = GL_RGB12; tf.pixel_format = GL_RGB; tf.pixel_datatype = fixme; break;
+			case TextureFormat::rgb16: tf.internal_format = GL_RGB16; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_UNSIGNED_SHORT; break;
+			case TextureFormat::rgba2: tf.internal_format = GL_RGBA2; tf.pixel_format = GL_RGBA; tf.pixel_datatype = fixme; break;
+			case TextureFormat::rgba12: tf.internal_format = GL_RGBA12; tf.pixel_format = GL_RGBA; tf.pixel_datatype = fixme; break;
+			case TextureFormat::rgba16: tf.internal_format = GL_RGBA16; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_SHORT; break;
+			case TextureFormat::stencil_index1: tf.internal_format = GL_STENCIL_INDEX1; tf.pixel_format = GL_STENCIL_INDEX; tf.pixel_datatype = fixme; break;
+			case TextureFormat::stencil_index4: tf.internal_format = GL_STENCIL_INDEX4; tf.pixel_format = GL_STENCIL_INDEX; tf.pixel_datatype = fixme; break;
+			case TextureFormat::stencil_index16: tf.internal_format = GL_STENCIL_INDEX16; tf.pixel_format = GL_STENCIL_INDEX; tf.pixel_datatype = fixme; break;
+			case TextureFormat::r16: tf.internal_format = GL_R16; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_UNSIGNED_SHORT; break;
+			case TextureFormat::r16_snorm: tf.internal_format = GL_R16_SNORM; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_SHORT; break;
+			case TextureFormat::rg16: tf.internal_format = GL_RG16; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_UNSIGNED_SHORT; break;
+			case TextureFormat::rg16_snorm: tf.internal_format = GL_RG16_SNORM; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_SHORT; break;
+			case TextureFormat::r3_g3_b2: tf.internal_format = GL_R3_G3_B2; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_UNSIGNED_BYTE_3_3_2; break;
+			case TextureFormat::rgb10_a2: tf.internal_format = GL_RGB10_A2; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_INT_10_10_10_2; break;
+			case TextureFormat::rgb10: tf.internal_format = GL_RGB10; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_INT_10_10_10_2; break;
+			case TextureFormat::rgb16_snorm: tf.internal_format = GL_RGB16_SNORM; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_SHORT; break;
+			case TextureFormat::bgra8: tf.internal_format = GL_RGBA8; tf.pixel_format = GL_BGRA; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
+			case TextureFormat::bgr8: tf.internal_format = GL_RGB8; tf.pixel_format = GL_BGR; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
+			case TextureFormat::rgba16_snorm: tf.internal_format = GL_RGBA16_SNORM; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_SHORT; break;
+			case TextureFormat::depth_component32: tf.internal_format = GL_DEPTH_COMPONENT32; tf.pixel_format = GL_DEPTH_COMPONENT; tf.pixel_datatype = fixme; break;
 			case TextureFormat::compressed_red: tf.internal_format = GL_COMPRESSED_RED; tf.pixel_format = GL_RED; tf.pixel_datatype = GL_COMPRESSED_RED; break;
 			case TextureFormat::compressed_rg: tf.internal_format = GL_COMPRESSED_RG; tf.pixel_format = GL_RG; tf.pixel_datatype = GL_COMPRESSED_RG; break;
 			case TextureFormat::compressed_rgb: tf.internal_format = GL_COMPRESSED_RGB; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_COMPRESSED_RGB; break;
@@ -263,7 +265,9 @@ namespace clan
 			case TextureFormat::compressed_srgb_alpha_s3tc_dxt1: tf.internal_format = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT; break;
 			case TextureFormat::compressed_srgb_alpha_s3tc_dxt3: tf.internal_format = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT; break;
 			case TextureFormat::compressed_srgb_alpha_s3tc_dxt5: tf.internal_format = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT; break;
+
 	#endif
+#endif
 			default:
 				tf.valid = false;
 				tf.internal_format = 0;
@@ -406,6 +410,368 @@ namespace clan
 	{
 		auto functions = new GLFunctions;
 		memset(functions, 0, sizeof(GLFunctions));
+#ifdef CLANLIB_OPENGL_ES3
+
+		functions->activeTexture = (GLFunctions::ptr_glActiveTexture) cl_get_proc_address_extension("glActiveTexture");
+		functions->attachShader = (GLFunctions::ptr_glAttachShader) cl_get_proc_address_extension("glAttachShader");
+		functions->bindAttribLocation = (GLFunctions::ptr_glBindAttribLocation) cl_get_proc_address_extension("glBindAttribLocation");
+		functions->bindBuffer = (GLFunctions::ptr_glBindBuffer) cl_get_proc_address_extension("glBindBuffer");
+		functions->bindFramebuffer = (GLFunctions::ptr_glBindFramebuffer) cl_get_proc_address_extension("glBindFramebuffer");
+		functions->bindRenderbuffer = (GLFunctions::ptr_glBindRenderbuffer) cl_get_proc_address_extension("glBindRenderbuffer");
+		functions->bindTexture = (GLFunctions::ptr_glBindTexture) cl_get_proc_address_extension("glBindTexture");
+		functions->blendColor = (GLFunctions::ptr_glBlendColor) cl_get_proc_address_extension("glBlendColor");
+		functions->blendEquation = (GLFunctions::ptr_glBlendEquation) cl_get_proc_address_extension("glBlendEquation");
+		functions->blendEquationSeparate = (GLFunctions::ptr_glBlendEquationSeparate) cl_get_proc_address_extension("glBlendEquationSeparate");
+		functions->blendFunc = (GLFunctions::ptr_glBlendFunc) cl_get_proc_address_extension("glBlendFunc");
+		functions->blendFuncSeparate = (GLFunctions::ptr_glBlendFuncSeparate) cl_get_proc_address_extension("glBlendFuncSeparate");
+		functions->bufferData = (GLFunctions::ptr_glBufferData) cl_get_proc_address_extension("glBufferData");
+		functions->bufferSubData = (GLFunctions::ptr_glBufferSubData) cl_get_proc_address_extension("glBufferSubData");
+		functions->checkFramebufferStatus = (GLFunctions::ptr_glCheckFramebufferStatus) cl_get_proc_address_extension("glCheckFramebufferStatus");
+		functions->clear = (GLFunctions::ptr_glClear) cl_get_proc_address_extension("glClear");
+		functions->clearColor = (GLFunctions::ptr_glClearColor) cl_get_proc_address_extension("glClearColor");
+		functions->clearDepthf = (GLFunctions::ptr_glClearDepthf) cl_get_proc_address_extension("glClearDepthf");
+		functions->clearStencil = (GLFunctions::ptr_glClearStencil) cl_get_proc_address_extension("glClearStencil");
+		functions->colorMask = (GLFunctions::ptr_glColorMask) cl_get_proc_address_extension("glColorMask");
+		functions->compileShader = (GLFunctions::ptr_glCompileShader) cl_get_proc_address_extension("glCompileShader");
+		functions->compressedTexImage2D = (GLFunctions::ptr_glCompressedTexImage2D) cl_get_proc_address_extension("glCompressedTexImage2D");
+		functions->compressedTexSubImage2D = (GLFunctions::ptr_glCompressedTexSubImage2D) cl_get_proc_address_extension("glCompressedTexSubImage2D");
+		functions->copyTexImage2D = (GLFunctions::ptr_glCopyTexImage2D) cl_get_proc_address_extension("glCopyTexImage2D");
+		functions->copyTexSubImage2D = (GLFunctions::ptr_glCopyTexSubImage2D) cl_get_proc_address_extension("glCopyTexSubImage2D");
+		functions->createProgram = (GLFunctions::ptr_glCreateProgram) cl_get_proc_address_extension("glCreateProgram");
+		functions->createShader = (GLFunctions::ptr_glCreateShader) cl_get_proc_address_extension("glCreateShader");
+		functions->cullFace = (GLFunctions::ptr_glCullFace) cl_get_proc_address_extension("glCullFace");
+		functions->deleteBuffers = (GLFunctions::ptr_glDeleteBuffers) cl_get_proc_address_extension("glDeleteBuffers");
+		functions->deleteFramebuffers = (GLFunctions::ptr_glDeleteFramebuffers) cl_get_proc_address_extension("glDeleteFramebuffers");
+		functions->deleteProgram = (GLFunctions::ptr_glDeleteProgram) cl_get_proc_address_extension("glDeleteProgram");
+		functions->deleteRenderbuffers = (GLFunctions::ptr_glDeleteRenderbuffers) cl_get_proc_address_extension("glDeleteRenderbuffers");
+		functions->deleteShader = (GLFunctions::ptr_glDeleteShader) cl_get_proc_address_extension("glDeleteShader");
+		functions->deleteTextures = (GLFunctions::ptr_glDeleteTextures) cl_get_proc_address_extension("glDeleteTextures");
+		functions->depthFunc = (GLFunctions::ptr_glDepthFunc) cl_get_proc_address_extension("glDepthFunc");
+		functions->depthMask = (GLFunctions::ptr_glDepthMask) cl_get_proc_address_extension("glDepthMask");
+		functions->depthRangef = (GLFunctions::ptr_glDepthRangef) cl_get_proc_address_extension("glDepthRangef");
+		functions->detachShader = (GLFunctions::ptr_glDetachShader) cl_get_proc_address_extension("glDetachShader");
+		functions->disable = (GLFunctions::ptr_glDisable) cl_get_proc_address_extension("glDisable");
+		functions->disableVertexAttribArray = (GLFunctions::ptr_glDisableVertexAttribArray) cl_get_proc_address_extension("glDisableVertexAttribArray");
+		functions->drawArrays = (GLFunctions::ptr_glDrawArrays) cl_get_proc_address_extension("glDrawArrays");
+		functions->drawElements = (GLFunctions::ptr_glDrawElements) cl_get_proc_address_extension("glDrawElements");
+		functions->enable = (GLFunctions::ptr_glEnable) cl_get_proc_address_extension("glEnable");
+		functions->enableVertexAttribArray = (GLFunctions::ptr_glEnableVertexAttribArray) cl_get_proc_address_extension("glEnableVertexAttribArray");
+		functions->finish = (GLFunctions::ptr_glFinish) cl_get_proc_address_extension("glFinish");
+		functions->flush = (GLFunctions::ptr_glFlush) cl_get_proc_address_extension("glFlush");
+		functions->framebufferRenderbuffer = (GLFunctions::ptr_glFramebufferRenderbuffer) cl_get_proc_address_extension("glFramebufferRenderbuffer");
+		functions->framebufferTexture2D = (GLFunctions::ptr_glFramebufferTexture2D) cl_get_proc_address_extension("glFramebufferTexture2D");
+		functions->frontFace = (GLFunctions::ptr_glFrontFace) cl_get_proc_address_extension("glFrontFace");
+		functions->genBuffers = (GLFunctions::ptr_glGenBuffers) cl_get_proc_address_extension("glGenBuffers");
+		functions->generateMipmap = (GLFunctions::ptr_glGenerateMipmap) cl_get_proc_address_extension("glGenerateMipmap");
+		functions->genFramebuffers = (GLFunctions::ptr_glGenFramebuffers) cl_get_proc_address_extension("glGenFramebuffers");
+		functions->genRenderbuffers = (GLFunctions::ptr_glGenRenderbuffers) cl_get_proc_address_extension("glGenRenderbuffers");
+		functions->genTextures = (GLFunctions::ptr_glGenTextures) cl_get_proc_address_extension("glGenTextures");
+		functions->getActiveAttrib = (GLFunctions::ptr_glGetActiveAttrib) cl_get_proc_address_extension("glGetActiveAttrib");
+		functions->getActiveUniform = (GLFunctions::ptr_glGetActiveUniform) cl_get_proc_address_extension("glGetActiveUniform");
+		functions->getAttachedShaders = (GLFunctions::ptr_glGetAttachedShaders) cl_get_proc_address_extension("glGetAttachedShaders");
+		functions->getAttribLocation = (GLFunctions::ptr_glGetAttribLocation) cl_get_proc_address_extension("glGetAttribLocation");
+		functions->getBooleanv = (GLFunctions::ptr_glGetBooleanv) cl_get_proc_address_extension("glGetBooleanv");
+		functions->getBufferParameteriv = (GLFunctions::ptr_glGetBufferParameteriv) cl_get_proc_address_extension("glGetBufferParameteriv");
+		functions->getError = (GLFunctions::ptr_glGetError) cl_get_proc_address_extension("glGetError");
+		functions->getFloatv = (GLFunctions::ptr_glGetFloatv) cl_get_proc_address_extension("glGetFloatv");
+		functions->getFramebufferAttachmentParameteriv = (GLFunctions::ptr_glGetFramebufferAttachmentParameteriv) cl_get_proc_address_extension("glGetFramebufferAttachmentParameteriv");
+		functions->getIntegerv = (GLFunctions::ptr_glGetIntegerv) cl_get_proc_address_extension("glGetIntegerv");
+		functions->getProgramiv = (GLFunctions::ptr_glGetProgramiv) cl_get_proc_address_extension("glGetProgramiv");
+		functions->getProgramInfoLog = (GLFunctions::ptr_glGetProgramInfoLog) cl_get_proc_address_extension("glGetProgramInfoLog");
+		functions->getRenderbufferParameteriv = (GLFunctions::ptr_glGetRenderbufferParameteriv) cl_get_proc_address_extension("glGetRenderbufferParameteriv");
+		functions->getShaderiv = (GLFunctions::ptr_glGetShaderiv) cl_get_proc_address_extension("glGetShaderiv");
+		functions->getShaderInfoLog = (GLFunctions::ptr_glGetShaderInfoLog) cl_get_proc_address_extension("glGetShaderInfoLog");
+		functions->getShaderPrecisionFormat = (GLFunctions::ptr_glGetShaderPrecisionFormat) cl_get_proc_address_extension("glGetShaderPrecisionFormat");
+		functions->getShaderSource = (GLFunctions::ptr_glGetShaderSource) cl_get_proc_address_extension("glGetShaderSource");
+		functions->getString = (GLFunctions::ptr_glGetString) cl_get_proc_address_extension("glGetString");
+		functions->getTexParameterfv = (GLFunctions::ptr_glGetTexParameterfv) cl_get_proc_address_extension("glGetTexParameterfv");
+		functions->getTexParameteriv = (GLFunctions::ptr_glGetTexParameteriv) cl_get_proc_address_extension("glGetTexParameteriv");
+		functions->getUniformfv = (GLFunctions::ptr_glGetUniformfv) cl_get_proc_address_extension("glGetUniformfv");
+		functions->getUniformiv = (GLFunctions::ptr_glGetUniformiv) cl_get_proc_address_extension("glGetUniformiv");
+		functions->getUniformLocation = (GLFunctions::ptr_glGetUniformLocation) cl_get_proc_address_extension("glGetUniformLocation");
+		functions->getVertexAttribfv = (GLFunctions::ptr_glGetVertexAttribfv) cl_get_proc_address_extension("glGetVertexAttribfv");
+		functions->getVertexAttribiv = (GLFunctions::ptr_glGetVertexAttribiv) cl_get_proc_address_extension("glGetVertexAttribiv");
+		functions->getVertexAttribPointerv = (GLFunctions::ptr_glGetVertexAttribPointerv) cl_get_proc_address_extension("glGetVertexAttribPointerv");
+		functions->hint = (GLFunctions::ptr_glHint) cl_get_proc_address_extension("glHint");
+		functions->isBuffer = (GLFunctions::ptr_glIsBuffer) cl_get_proc_address_extension("glIsBuffer");
+		functions->isEnabled = (GLFunctions::ptr_glIsEnabled) cl_get_proc_address_extension("glIsEnabled");
+		functions->isFramebuffer = (GLFunctions::ptr_glIsFramebuffer) cl_get_proc_address_extension("glIsFramebuffer");
+		functions->isProgram = (GLFunctions::ptr_glIsProgram) cl_get_proc_address_extension("glIsProgram");
+		functions->isRenderbuffer = (GLFunctions::ptr_glIsRenderbuffer) cl_get_proc_address_extension("glIsRenderbuffer");
+		functions->isShader = (GLFunctions::ptr_glIsShader) cl_get_proc_address_extension("glIsShader");
+		functions->isTexture = (GLFunctions::ptr_glIsTexture) cl_get_proc_address_extension("glIsTexture");
+		functions->lineWidth = (GLFunctions::ptr_glLineWidth) cl_get_proc_address_extension("glLineWidth");
+		functions->linkProgram = (GLFunctions::ptr_glLinkProgram) cl_get_proc_address_extension("glLinkProgram");
+		functions->pixelStorei = (GLFunctions::ptr_glPixelStorei) cl_get_proc_address_extension("glPixelStorei");
+		functions->polygonOffset = (GLFunctions::ptr_glPolygonOffset) cl_get_proc_address_extension("glPolygonOffset");
+		functions->readPixels = (GLFunctions::ptr_glReadPixels) cl_get_proc_address_extension("glReadPixels");
+		functions->releaseShaderCompiler = (GLFunctions::ptr_glReleaseShaderCompiler) cl_get_proc_address_extension("glReleaseShaderCompiler");
+		functions->renderbufferStorage = (GLFunctions::ptr_glRenderbufferStorage) cl_get_proc_address_extension("glRenderbufferStorage");
+		functions->sampleCoverage = (GLFunctions::ptr_glSampleCoverage) cl_get_proc_address_extension("glSampleCoverage");
+		functions->scissor = (GLFunctions::ptr_glScissor) cl_get_proc_address_extension("glScissor");
+		functions->shaderBinary = (GLFunctions::ptr_glShaderBinary) cl_get_proc_address_extension("glShaderBinary");
+		functions->shaderSource = (GLFunctions::ptr_glShaderSource) cl_get_proc_address_extension("glShaderSource");
+		functions->stencilFunc = (GLFunctions::ptr_glStencilFunc) cl_get_proc_address_extension("glStencilFunc");
+		functions->stencilFuncSeparate = (GLFunctions::ptr_glStencilFuncSeparate) cl_get_proc_address_extension("glStencilFuncSeparate");
+		functions->stencilMask = (GLFunctions::ptr_glStencilMask) cl_get_proc_address_extension("glStencilMask");
+		functions->stencilMaskSeparate = (GLFunctions::ptr_glStencilMaskSeparate) cl_get_proc_address_extension("glStencilMaskSeparate");
+		functions->stencilOp = (GLFunctions::ptr_glStencilOp) cl_get_proc_address_extension("glStencilOp");
+		functions->stencilOpSeparate = (GLFunctions::ptr_glStencilOpSeparate) cl_get_proc_address_extension("glStencilOpSeparate");
+		functions->texImage2D = (GLFunctions::ptr_glTexImage2D) cl_get_proc_address_extension("glTexImage2D");
+		functions->texParameterf = (GLFunctions::ptr_glTexParameterf) cl_get_proc_address_extension("glTexParameterf");
+		functions->texParameterfv = (GLFunctions::ptr_glTexParameterfv) cl_get_proc_address_extension("glTexParameterfv");
+		functions->texParameteri = (GLFunctions::ptr_glTexParameteri) cl_get_proc_address_extension("glTexParameteri");
+		functions->texParameteriv = (GLFunctions::ptr_glTexParameteriv) cl_get_proc_address_extension("glTexParameteriv");
+		functions->texSubImage2D = (GLFunctions::ptr_glTexSubImage2D) cl_get_proc_address_extension("glTexSubImage2D");
+		functions->uniform1f = (GLFunctions::ptr_glUniform1f) cl_get_proc_address_extension("glUniform1f");
+		functions->uniform1fv = (GLFunctions::ptr_glUniform1fv) cl_get_proc_address_extension("glUniform1fv");
+		functions->uniform1i = (GLFunctions::ptr_glUniform1i) cl_get_proc_address_extension("glUniform1i");
+		functions->uniform1iv = (GLFunctions::ptr_glUniform1iv) cl_get_proc_address_extension("glUniform1iv");
+		functions->uniform2f = (GLFunctions::ptr_glUniform2f) cl_get_proc_address_extension("glUniform2f");
+		functions->uniform2fv = (GLFunctions::ptr_glUniform2fv) cl_get_proc_address_extension("glUniform2fv");
+		functions->uniform2i = (GLFunctions::ptr_glUniform2i) cl_get_proc_address_extension("glUniform2i");
+		functions->uniform2iv = (GLFunctions::ptr_glUniform2iv) cl_get_proc_address_extension("glUniform2iv");
+		functions->uniform3f = (GLFunctions::ptr_glUniform3f) cl_get_proc_address_extension("glUniform3f");
+		functions->uniform3fv = (GLFunctions::ptr_glUniform3fv) cl_get_proc_address_extension("glUniform3fv");
+		functions->uniform3i = (GLFunctions::ptr_glUniform3i) cl_get_proc_address_extension("glUniform3i");
+		functions->uniform3iv = (GLFunctions::ptr_glUniform3iv) cl_get_proc_address_extension("glUniform3iv");
+		functions->uniform4f = (GLFunctions::ptr_glUniform4f) cl_get_proc_address_extension("glUniform4f");
+		functions->uniform4fv = (GLFunctions::ptr_glUniform4fv) cl_get_proc_address_extension("glUniform4fv");
+		functions->uniform4i = (GLFunctions::ptr_glUniform4i) cl_get_proc_address_extension("glUniform4i");
+		functions->uniform4iv = (GLFunctions::ptr_glUniform4iv) cl_get_proc_address_extension("glUniform4iv");
+		functions->uniformMatrix2fv = (GLFunctions::ptr_glUniformMatrix2fv) cl_get_proc_address_extension("glUniformMatrix2fv");
+		functions->uniformMatrix3fv = (GLFunctions::ptr_glUniformMatrix3fv) cl_get_proc_address_extension("glUniformMatrix3fv");
+		functions->uniformMatrix4fv = (GLFunctions::ptr_glUniformMatrix4fv) cl_get_proc_address_extension("glUniformMatrix4fv");
+		functions->useProgram = (GLFunctions::ptr_glUseProgram) cl_get_proc_address_extension("glUseProgram");
+		functions->validateProgram = (GLFunctions::ptr_glValidateProgram) cl_get_proc_address_extension("glValidateProgram");
+		functions->vertexAttrib1f = (GLFunctions::ptr_glVertexAttrib1f) cl_get_proc_address_extension("glVertexAttrib1f");
+		functions->vertexAttrib1fv = (GLFunctions::ptr_glVertexAttrib1fv) cl_get_proc_address_extension("glVertexAttrib1fv");
+		functions->vertexAttrib2f = (GLFunctions::ptr_glVertexAttrib2f) cl_get_proc_address_extension("glVertexAttrib2f");
+		functions->vertexAttrib2fv = (GLFunctions::ptr_glVertexAttrib2fv) cl_get_proc_address_extension("glVertexAttrib2fv");
+		functions->vertexAttrib3f = (GLFunctions::ptr_glVertexAttrib3f) cl_get_proc_address_extension("glVertexAttrib3f");
+		functions->vertexAttrib3fv = (GLFunctions::ptr_glVertexAttrib3fv) cl_get_proc_address_extension("glVertexAttrib3fv");
+		functions->vertexAttrib4f = (GLFunctions::ptr_glVertexAttrib4f) cl_get_proc_address_extension("glVertexAttrib4f");
+		functions->vertexAttrib4fv = (GLFunctions::ptr_glVertexAttrib4fv) cl_get_proc_address_extension("glVertexAttrib4fv");
+		functions->vertexAttribPointer = (GLFunctions::ptr_glVertexAttribPointer) cl_get_proc_address_extension("glVertexAttribPointer");
+		functions->viewport = (GLFunctions::ptr_glViewport) cl_get_proc_address_extension("glViewport");
+		functions->readBuffer = (GLFunctions::ptr_glReadBuffer) cl_get_proc_address_extension("glReadBuffer");
+		functions->drawRangeElements = (GLFunctions::ptr_glDrawRangeElements) cl_get_proc_address_extension("glDrawRangeElements");
+		functions->texImage3D = (GLFunctions::ptr_glTexImage3D) cl_get_proc_address_extension("glTexImage3D");
+		functions->texSubImage3D = (GLFunctions::ptr_glTexSubImage3D) cl_get_proc_address_extension("glTexSubImage3D");
+		functions->copyTexSubImage3D = (GLFunctions::ptr_glCopyTexSubImage3D) cl_get_proc_address_extension("glCopyTexSubImage3D");
+		functions->compressedTexImage3D = (GLFunctions::ptr_glCompressedTexImage3D) cl_get_proc_address_extension("glCompressedTexImage3D");
+		functions->compressedTexSubImage3D = (GLFunctions::ptr_glCompressedTexSubImage3D) cl_get_proc_address_extension("glCompressedTexSubImage3D");
+		functions->genQueries = (GLFunctions::ptr_glGenQueries) cl_get_proc_address_extension("glGenQueries");
+		functions->deleteQueries = (GLFunctions::ptr_glDeleteQueries) cl_get_proc_address_extension("glDeleteQueries");
+		functions->isQuery = (GLFunctions::ptr_glIsQuery) cl_get_proc_address_extension("glIsQuery");
+		functions->beginQuery = (GLFunctions::ptr_glBeginQuery) cl_get_proc_address_extension("glBeginQuery");
+		functions->endQuery = (GLFunctions::ptr_glEndQuery) cl_get_proc_address_extension("glEndQuery");
+		functions->getQueryiv = (GLFunctions::ptr_glGetQueryiv) cl_get_proc_address_extension("glGetQueryiv");
+		functions->getQueryObjectuiv = (GLFunctions::ptr_glGetQueryObjectuiv) cl_get_proc_address_extension("glGetQueryObjectuiv");
+		functions->unmapBuffer = (GLFunctions::ptr_glUnmapBuffer) cl_get_proc_address_extension("glUnmapBuffer");
+		functions->getBufferPointerv = (GLFunctions::ptr_glGetBufferPointerv) cl_get_proc_address_extension("glGetBufferPointerv");
+		functions->drawBuffers = (GLFunctions::ptr_glDrawBuffers) cl_get_proc_address_extension("glDrawBuffers");
+		functions->uniformMatrix2x3fv = (GLFunctions::ptr_glUniformMatrix2x3fv) cl_get_proc_address_extension("glUniformMatrix2x3fv");
+		functions->uniformMatrix3x2fv = (GLFunctions::ptr_glUniformMatrix3x2fv) cl_get_proc_address_extension("glUniformMatrix3x2fv");
+		functions->uniformMatrix2x4fv = (GLFunctions::ptr_glUniformMatrix2x4fv) cl_get_proc_address_extension("glUniformMatrix2x4fv");
+		functions->uniformMatrix4x2fv = (GLFunctions::ptr_glUniformMatrix4x2fv) cl_get_proc_address_extension("glUniformMatrix4x2fv");
+		functions->uniformMatrix3x4fv = (GLFunctions::ptr_glUniformMatrix3x4fv) cl_get_proc_address_extension("glUniformMatrix3x4fv");
+		functions->uniformMatrix4x3fv = (GLFunctions::ptr_glUniformMatrix4x3fv) cl_get_proc_address_extension("glUniformMatrix4x3fv");
+		functions->blitFramebuffer = (GLFunctions::ptr_glBlitFramebuffer) cl_get_proc_address_extension("glBlitFramebuffer");
+		functions->renderbufferStorageMultisample = (GLFunctions::ptr_glRenderbufferStorageMultisample) cl_get_proc_address_extension("glRenderbufferStorageMultisample");
+		functions->framebufferTextureLayer = (GLFunctions::ptr_glFramebufferTextureLayer) cl_get_proc_address_extension("glFramebufferTextureLayer");
+		functions->mapBufferRange = (GLFunctions::ptr_glMapBufferRange) cl_get_proc_address_extension("glMapBufferRange");
+		functions->flushMappedBufferRange = (GLFunctions::ptr_glFlushMappedBufferRange) cl_get_proc_address_extension("glFlushMappedBufferRange");
+		functions->bindVertexArray = (GLFunctions::ptr_glBindVertexArray) cl_get_proc_address_extension("glBindVertexArray");
+		functions->deleteVertexArrays = (GLFunctions::ptr_glDeleteVertexArrays) cl_get_proc_address_extension("glDeleteVertexArrays");
+		functions->genVertexArrays = (GLFunctions::ptr_glGenVertexArrays) cl_get_proc_address_extension("glGenVertexArrays");
+		functions->isVertexArray = (GLFunctions::ptr_glIsVertexArray) cl_get_proc_address_extension("glIsVertexArray");
+		functions->getIntegeri_v = (GLFunctions::ptr_glGetIntegeri_v) cl_get_proc_address_extension("glGetIntegeri_v");
+		functions->beginTransformFeedback = (GLFunctions::ptr_glBeginTransformFeedback) cl_get_proc_address_extension("glBeginTransformFeedback");
+		functions->endTransformFeedback = (GLFunctions::ptr_glEndTransformFeedback) cl_get_proc_address_extension("glEndTransformFeedback");
+		functions->bindBufferRange = (GLFunctions::ptr_glBindBufferRange) cl_get_proc_address_extension("glBindBufferRange");
+		functions->bindBufferBase = (GLFunctions::ptr_glBindBufferBase) cl_get_proc_address_extension("glBindBufferBase");
+		functions->transformFeedbackVaryings = (GLFunctions::ptr_glTransformFeedbackVaryings) cl_get_proc_address_extension("glTransformFeedbackVaryings");
+		functions->getTransformFeedbackVarying = (GLFunctions::ptr_glGetTransformFeedbackVarying) cl_get_proc_address_extension("glGetTransformFeedbackVarying");
+		functions->vertexAttribIPointer = (GLFunctions::ptr_glVertexAttribIPointer) cl_get_proc_address_extension("glVertexAttribIPointer");
+		functions->getVertexAttribIiv = (GLFunctions::ptr_glGetVertexAttribIiv) cl_get_proc_address_extension("glGetVertexAttribIiv");
+		functions->getVertexAttribIuiv = (GLFunctions::ptr_glGetVertexAttribIuiv) cl_get_proc_address_extension("glGetVertexAttribIuiv");
+		functions->vertexAttribI4i = (GLFunctions::ptr_glVertexAttribI4i) cl_get_proc_address_extension("glVertexAttribI4i");
+		functions->vertexAttribI4ui = (GLFunctions::ptr_glVertexAttribI4ui) cl_get_proc_address_extension("glVertexAttribI4ui");
+		functions->vertexAttribI4iv = (GLFunctions::ptr_glVertexAttribI4iv) cl_get_proc_address_extension("glVertexAttribI4iv");
+		functions->vertexAttribI4uiv = (GLFunctions::ptr_glVertexAttribI4uiv) cl_get_proc_address_extension("glVertexAttribI4uiv");
+		functions->getUniformuiv = (GLFunctions::ptr_glGetUniformuiv) cl_get_proc_address_extension("glGetUniformuiv");
+		functions->getFragDataLocation = (GLFunctions::ptr_glGetFragDataLocation) cl_get_proc_address_extension("glGetFragDataLocation");
+		functions->uniform1ui = (GLFunctions::ptr_glUniform1ui) cl_get_proc_address_extension("glUniform1ui");
+		functions->uniform2ui = (GLFunctions::ptr_glUniform2ui) cl_get_proc_address_extension("glUniform2ui");
+		functions->uniform3ui = (GLFunctions::ptr_glUniform3ui) cl_get_proc_address_extension("glUniform3ui");
+		functions->uniform4ui = (GLFunctions::ptr_glUniform4ui) cl_get_proc_address_extension("glUniform4ui");
+		functions->uniform1uiv = (GLFunctions::ptr_glUniform1uiv) cl_get_proc_address_extension("glUniform1uiv");
+		functions->uniform2uiv = (GLFunctions::ptr_glUniform2uiv) cl_get_proc_address_extension("glUniform2uiv");
+		functions->uniform3uiv = (GLFunctions::ptr_glUniform3uiv) cl_get_proc_address_extension("glUniform3uiv");
+		functions->uniform4uiv = (GLFunctions::ptr_glUniform4uiv) cl_get_proc_address_extension("glUniform4uiv");
+		functions->clearBufferiv = (GLFunctions::ptr_glClearBufferiv) cl_get_proc_address_extension("glClearBufferiv");
+		functions->clearBufferuiv = (GLFunctions::ptr_glClearBufferuiv) cl_get_proc_address_extension("glClearBufferuiv");
+		functions->clearBufferfv = (GLFunctions::ptr_glClearBufferfv) cl_get_proc_address_extension("glClearBufferfv");
+		functions->clearBufferfi = (GLFunctions::ptr_glClearBufferfi) cl_get_proc_address_extension("glClearBufferfi");
+		functions->getStringi = (GLFunctions::ptr_glGetStringi) cl_get_proc_address_extension("glGetStringi");
+		functions->copyBufferSubData = (GLFunctions::ptr_glCopyBufferSubData) cl_get_proc_address_extension("glCopyBufferSubData");
+		functions->getUniformIndices = (GLFunctions::ptr_glGetUniformIndices) cl_get_proc_address_extension("glGetUniformIndices");
+		functions->getActiveUniformsiv = (GLFunctions::ptr_glGetActiveUniformsiv) cl_get_proc_address_extension("glGetActiveUniformsiv");
+		functions->getUniformBlockIndex = (GLFunctions::ptr_glGetUniformBlockIndex) cl_get_proc_address_extension("glGetUniformBlockIndex");
+		functions->getActiveUniformBlockiv = (GLFunctions::ptr_glGetActiveUniformBlockiv) cl_get_proc_address_extension("glGetActiveUniformBlockiv");
+		functions->getActiveUniformBlockName = (GLFunctions::ptr_glGetActiveUniformBlockName) cl_get_proc_address_extension("glGetActiveUniformBlockName");
+		functions->uniformBlockBinding = (GLFunctions::ptr_glUniformBlockBinding) cl_get_proc_address_extension("glUniformBlockBinding");
+		functions->drawArraysInstanced = (GLFunctions::ptr_glDrawArraysInstanced) cl_get_proc_address_extension("glDrawArraysInstanced");
+		functions->drawElementsInstanced = (GLFunctions::ptr_glDrawElementsInstanced) cl_get_proc_address_extension("glDrawElementsInstanced");
+		functions->fenceSync = (GLFunctions::ptr_glFenceSync) cl_get_proc_address_extension("glFenceSync");
+		functions->isSync = (GLFunctions::ptr_glIsSync) cl_get_proc_address_extension("glIsSync");
+		functions->deleteSync = (GLFunctions::ptr_glDeleteSync) cl_get_proc_address_extension("glDeleteSync");
+		functions->clientWaitSync = (GLFunctions::ptr_glClientWaitSync) cl_get_proc_address_extension("glClientWaitSync");
+		functions->waitSync = (GLFunctions::ptr_glWaitSync) cl_get_proc_address_extension("glWaitSync");
+		functions->getInteger64v = (GLFunctions::ptr_glGetInteger64v) cl_get_proc_address_extension("glGetInteger64v");
+		functions->getSynciv = (GLFunctions::ptr_glGetSynciv) cl_get_proc_address_extension("glGetSynciv");
+		functions->getInteger64i_v = (GLFunctions::ptr_glGetInteger64i_v) cl_get_proc_address_extension("glGetInteger64i_v");
+		functions->getBufferParameteri64v = (GLFunctions::ptr_glGetBufferParameteri64v) cl_get_proc_address_extension("glGetBufferParameteri64v");
+		functions->genSamplers = (GLFunctions::ptr_glGenSamplers) cl_get_proc_address_extension("glGenSamplers");
+		functions->deleteSamplers = (GLFunctions::ptr_glDeleteSamplers) cl_get_proc_address_extension("glDeleteSamplers");
+		functions->isSampler = (GLFunctions::ptr_glIsSampler) cl_get_proc_address_extension("glIsSampler");
+		functions->bindSampler = (GLFunctions::ptr_glBindSampler) cl_get_proc_address_extension("glBindSampler");
+		functions->samplerParameteri = (GLFunctions::ptr_glSamplerParameteri) cl_get_proc_address_extension("glSamplerParameteri");
+		functions->samplerParameteriv = (GLFunctions::ptr_glSamplerParameteriv) cl_get_proc_address_extension("glSamplerParameteriv");
+		functions->samplerParameterf = (GLFunctions::ptr_glSamplerParameterf) cl_get_proc_address_extension("glSamplerParameterf");
+		functions->samplerParameterfv = (GLFunctions::ptr_glSamplerParameterfv) cl_get_proc_address_extension("glSamplerParameterfv");
+		functions->getSamplerParameteriv = (GLFunctions::ptr_glGetSamplerParameteriv) cl_get_proc_address_extension("glGetSamplerParameteriv");
+		functions->getSamplerParameterfv = (GLFunctions::ptr_glGetSamplerParameterfv) cl_get_proc_address_extension("glGetSamplerParameterfv");
+		functions->vertexAttribDivisor = (GLFunctions::ptr_glVertexAttribDivisor) cl_get_proc_address_extension("glVertexAttribDivisor");
+		functions->bindTransformFeedback = (GLFunctions::ptr_glBindTransformFeedback) cl_get_proc_address_extension("glBindTransformFeedback");
+		functions->deleteTransformFeedbacks = (GLFunctions::ptr_glDeleteTransformFeedbacks) cl_get_proc_address_extension("glDeleteTransformFeedbacks");
+		functions->genTransformFeedbacks = (GLFunctions::ptr_glGenTransformFeedbacks) cl_get_proc_address_extension("glGenTransformFeedbacks");
+		functions->isTransformFeedback = (GLFunctions::ptr_glIsTransformFeedback) cl_get_proc_address_extension("glIsTransformFeedback");
+		functions->pauseTransformFeedback = (GLFunctions::ptr_glPauseTransformFeedback) cl_get_proc_address_extension("glPauseTransformFeedback");
+		functions->resumeTransformFeedback = (GLFunctions::ptr_glResumeTransformFeedback) cl_get_proc_address_extension("glResumeTransformFeedback");
+		functions->getProgramBinary = (GLFunctions::ptr_glGetProgramBinary) cl_get_proc_address_extension("glGetProgramBinary");
+		functions->programBinary = (GLFunctions::ptr_glProgramBinary) cl_get_proc_address_extension("glProgramBinary");
+		functions->programParameteri = (GLFunctions::ptr_glProgramParameteri) cl_get_proc_address_extension("glProgramParameteri");
+		functions->invalidateFramebuffer = (GLFunctions::ptr_glInvalidateFramebuffer) cl_get_proc_address_extension("glInvalidateFramebuffer");
+		functions->invalidateSubFramebuffer = (GLFunctions::ptr_glInvalidateSubFramebuffer) cl_get_proc_address_extension("glInvalidateSubFramebuffer");
+		functions->texStorage2D = (GLFunctions::ptr_glTexStorage2D) cl_get_proc_address_extension("glTexStorage2D");
+		functions->texStorage3D = (GLFunctions::ptr_glTexStorage3D) cl_get_proc_address_extension("glTexStorage3D");
+		functions->getInternalformativ = (GLFunctions::ptr_glGetInternalformativ) cl_get_proc_address_extension("glGetInternalformativ");
+		functions->dispatchCompute = (GLFunctions::ptr_glDispatchCompute) cl_get_proc_address_extension("glDispatchCompute");
+		functions->dispatchComputeIndirect = (GLFunctions::ptr_glDispatchComputeIndirect) cl_get_proc_address_extension("glDispatchComputeIndirect");
+		functions->drawArraysIndirect = (GLFunctions::ptr_glDrawArraysIndirect) cl_get_proc_address_extension("glDrawArraysIndirect");
+		functions->drawElementsIndirect = (GLFunctions::ptr_glDrawElementsIndirect) cl_get_proc_address_extension("glDrawElementsIndirect");
+		functions->framebufferParameteri = (GLFunctions::ptr_glFramebufferParameteri) cl_get_proc_address_extension("glFramebufferParameteri");
+		functions->getFramebufferParameteriv = (GLFunctions::ptr_glGetFramebufferParameteriv) cl_get_proc_address_extension("glGetFramebufferParameteriv");
+		functions->getProgramInterfaceiv = (GLFunctions::ptr_glGetProgramInterfaceiv) cl_get_proc_address_extension("glGetProgramInterfaceiv");
+		functions->getProgramResourceIndex = (GLFunctions::ptr_glGetProgramResourceIndex) cl_get_proc_address_extension("glGetProgramResourceIndex");
+		functions->getProgramResourceName = (GLFunctions::ptr_glGetProgramResourceName) cl_get_proc_address_extension("glGetProgramResourceName");
+		functions->getProgramResourceiv = (GLFunctions::ptr_glGetProgramResourceiv) cl_get_proc_address_extension("glGetProgramResourceiv");
+		functions->getProgramResourceLocation = (GLFunctions::ptr_glGetProgramResourceLocation) cl_get_proc_address_extension("glGetProgramResourceLocation");
+		functions->useProgramStages = (GLFunctions::ptr_glUseProgramStages) cl_get_proc_address_extension("glUseProgramStages");
+		functions->activeShaderProgram = (GLFunctions::ptr_glActiveShaderProgram) cl_get_proc_address_extension("glActiveShaderProgram");
+		functions->createShaderProgramv = (GLFunctions::ptr_glCreateShaderProgramv) cl_get_proc_address_extension("glCreateShaderProgramv");
+		functions->bindProgramPipeline = (GLFunctions::ptr_glBindProgramPipeline) cl_get_proc_address_extension("glBindProgramPipeline");
+		functions->deleteProgramPipelines = (GLFunctions::ptr_glDeleteProgramPipelines) cl_get_proc_address_extension("glDeleteProgramPipelines");
+		functions->genProgramPipelines = (GLFunctions::ptr_glGenProgramPipelines) cl_get_proc_address_extension("glGenProgramPipelines");
+		functions->isProgramPipeline = (GLFunctions::ptr_glIsProgramPipeline) cl_get_proc_address_extension("glIsProgramPipeline");
+		functions->getProgramPipelineiv = (GLFunctions::ptr_glGetProgramPipelineiv) cl_get_proc_address_extension("glGetProgramPipelineiv");
+		functions->programUniform1i = (GLFunctions::ptr_glProgramUniform1i) cl_get_proc_address_extension("glProgramUniform1i");
+		functions->programUniform2i = (GLFunctions::ptr_glProgramUniform2i) cl_get_proc_address_extension("glProgramUniform2i");
+		functions->programUniform3i = (GLFunctions::ptr_glProgramUniform3i) cl_get_proc_address_extension("glProgramUniform3i");
+		functions->programUniform4i = (GLFunctions::ptr_glProgramUniform4i) cl_get_proc_address_extension("glProgramUniform4i");
+		functions->programUniform1ui = (GLFunctions::ptr_glProgramUniform1ui) cl_get_proc_address_extension("glProgramUniform1ui");
+		functions->programUniform2ui = (GLFunctions::ptr_glProgramUniform2ui) cl_get_proc_address_extension("glProgramUniform2ui");
+		functions->programUniform3ui = (GLFunctions::ptr_glProgramUniform3ui) cl_get_proc_address_extension("glProgramUniform3ui");
+		functions->programUniform4ui = (GLFunctions::ptr_glProgramUniform4ui) cl_get_proc_address_extension("glProgramUniform4ui");
+		functions->programUniform1f = (GLFunctions::ptr_glProgramUniform1f) cl_get_proc_address_extension("glProgramUniform1f");
+		functions->programUniform2f = (GLFunctions::ptr_glProgramUniform2f) cl_get_proc_address_extension("glProgramUniform2f");
+		functions->programUniform3f = (GLFunctions::ptr_glProgramUniform3f) cl_get_proc_address_extension("glProgramUniform3f");
+		functions->programUniform4f = (GLFunctions::ptr_glProgramUniform4f) cl_get_proc_address_extension("glProgramUniform4f");
+		functions->programUniform1iv = (GLFunctions::ptr_glProgramUniform1iv) cl_get_proc_address_extension("glProgramUniform1iv");
+		functions->programUniform2iv = (GLFunctions::ptr_glProgramUniform2iv) cl_get_proc_address_extension("glProgramUniform2iv");
+		functions->programUniform3iv = (GLFunctions::ptr_glProgramUniform3iv) cl_get_proc_address_extension("glProgramUniform3iv");
+		functions->programUniform4iv = (GLFunctions::ptr_glProgramUniform4iv) cl_get_proc_address_extension("glProgramUniform4iv");
+		functions->programUniform1uiv = (GLFunctions::ptr_glProgramUniform1uiv) cl_get_proc_address_extension("glProgramUniform1uiv");
+		functions->programUniform2uiv = (GLFunctions::ptr_glProgramUniform2uiv) cl_get_proc_address_extension("glProgramUniform2uiv");
+		functions->programUniform3uiv = (GLFunctions::ptr_glProgramUniform3uiv) cl_get_proc_address_extension("glProgramUniform3uiv");
+		functions->programUniform4uiv = (GLFunctions::ptr_glProgramUniform4uiv) cl_get_proc_address_extension("glProgramUniform4uiv");
+		functions->programUniform1fv = (GLFunctions::ptr_glProgramUniform1fv) cl_get_proc_address_extension("glProgramUniform1fv");
+		functions->programUniform2fv = (GLFunctions::ptr_glProgramUniform2fv) cl_get_proc_address_extension("glProgramUniform2fv");
+		functions->programUniform3fv = (GLFunctions::ptr_glProgramUniform3fv) cl_get_proc_address_extension("glProgramUniform3fv");
+		functions->programUniform4fv = (GLFunctions::ptr_glProgramUniform4fv) cl_get_proc_address_extension("glProgramUniform4fv");
+		functions->programUniformMatrix2fv = (GLFunctions::ptr_glProgramUniformMatrix2fv) cl_get_proc_address_extension("glProgramUniformMatrix2fv");
+		functions->programUniformMatrix3fv = (GLFunctions::ptr_glProgramUniformMatrix3fv) cl_get_proc_address_extension("glProgramUniformMatrix3fv");
+		functions->programUniformMatrix4fv = (GLFunctions::ptr_glProgramUniformMatrix4fv) cl_get_proc_address_extension("glProgramUniformMatrix4fv");
+		functions->programUniformMatrix2x3fv = (GLFunctions::ptr_glProgramUniformMatrix2x3fv) cl_get_proc_address_extension("glProgramUniformMatrix2x3fv");
+		functions->programUniformMatrix3x2fv = (GLFunctions::ptr_glProgramUniformMatrix3x2fv) cl_get_proc_address_extension("glProgramUniformMatrix3x2fv");
+		functions->programUniformMatrix2x4fv = (GLFunctions::ptr_glProgramUniformMatrix2x4fv) cl_get_proc_address_extension("glProgramUniformMatrix2x4fv");
+		functions->programUniformMatrix4x2fv = (GLFunctions::ptr_glProgramUniformMatrix4x2fv) cl_get_proc_address_extension("glProgramUniformMatrix4x2fv");
+		functions->programUniformMatrix3x4fv = (GLFunctions::ptr_glProgramUniformMatrix3x4fv) cl_get_proc_address_extension("glProgramUniformMatrix3x4fv");
+		functions->programUniformMatrix4x3fv = (GLFunctions::ptr_glProgramUniformMatrix4x3fv) cl_get_proc_address_extension("glProgramUniformMatrix4x3fv");
+		functions->validateProgramPipeline = (GLFunctions::ptr_glValidateProgramPipeline) cl_get_proc_address_extension("glValidateProgramPipeline");
+		functions->getProgramPipelineInfoLog = (GLFunctions::ptr_glGetProgramPipelineInfoLog) cl_get_proc_address_extension("glGetProgramPipelineInfoLog");
+		functions->bindImageTexture = (GLFunctions::ptr_glBindImageTexture) cl_get_proc_address_extension("glBindImageTexture");
+		functions->getBooleani_v = (GLFunctions::ptr_glGetBooleani_v) cl_get_proc_address_extension("glGetBooleani_v");
+		functions->memoryBarrier = (GLFunctions::ptr_glMemoryBarrier) cl_get_proc_address_extension("glMemoryBarrier");
+		functions->memoryBarrierByRegion = (GLFunctions::ptr_glMemoryBarrierByRegion) cl_get_proc_address_extension("glMemoryBarrierByRegion");
+		functions->texStorage2DMultisample = (GLFunctions::ptr_glTexStorage2DMultisample) cl_get_proc_address_extension("glTexStorage2DMultisample");
+		functions->getMultisamplefv = (GLFunctions::ptr_glGetMultisamplefv) cl_get_proc_address_extension("glGetMultisamplefv");
+		functions->sampleMaski = (GLFunctions::ptr_glSampleMaski) cl_get_proc_address_extension("glSampleMaski");
+		functions->getTexLevelParameteriv = (GLFunctions::ptr_glGetTexLevelParameteriv) cl_get_proc_address_extension("glGetTexLevelParameteriv");
+		functions->getTexLevelParameterfv = (GLFunctions::ptr_glGetTexLevelParameterfv) cl_get_proc_address_extension("glGetTexLevelParameterfv");
+		functions->bindVertexBuffer = (GLFunctions::ptr_glBindVertexBuffer) cl_get_proc_address_extension("glBindVertexBuffer");
+		functions->vertexAttribFormat = (GLFunctions::ptr_glVertexAttribFormat) cl_get_proc_address_extension("glVertexAttribFormat");
+		functions->vertexAttribIFormat = (GLFunctions::ptr_glVertexAttribIFormat) cl_get_proc_address_extension("glVertexAttribIFormat");
+		functions->vertexAttribBinding = (GLFunctions::ptr_glVertexAttribBinding) cl_get_proc_address_extension("glVertexAttribBinding");
+		functions->vertexBindingDivisor = (GLFunctions::ptr_glVertexBindingDivisor) cl_get_proc_address_extension("glVertexBindingDivisor");
+		functions->blendBarrier = (GLFunctions::ptr_glBlendBarrier) cl_get_proc_address_extension("glBlendBarrier");
+		functions->copyImageSubData = (GLFunctions::ptr_glCopyImageSubData) cl_get_proc_address_extension("glCopyImageSubData");
+		functions->debugMessageControl = (GLFunctions::ptr_glDebugMessageControl) cl_get_proc_address_extension("glDebugMessageControl");
+		functions->debugMessageInsert = (GLFunctions::ptr_glDebugMessageInsert) cl_get_proc_address_extension("glDebugMessageInsert");
+		functions->debugMessageCallback = (GLFunctions::ptr_glDebugMessageCallback) cl_get_proc_address_extension("glDebugMessageCallback");
+		functions->getDebugMessageLog = (GLFunctions::ptr_glGetDebugMessageLog) cl_get_proc_address_extension("glGetDebugMessageLog");
+		functions->pushDebugGroup = (GLFunctions::ptr_glPushDebugGroup) cl_get_proc_address_extension("glPushDebugGroup");
+		functions->popDebugGroup = (GLFunctions::ptr_glPopDebugGroup) cl_get_proc_address_extension("glPopDebugGroup");
+		functions->objectLabel = (GLFunctions::ptr_glObjectLabel) cl_get_proc_address_extension("glObjectLabel");
+		functions->getObjectLabel = (GLFunctions::ptr_glGetObjectLabel) cl_get_proc_address_extension("glGetObjectLabel");
+		functions->objectPtrLabel = (GLFunctions::ptr_glObjectPtrLabel) cl_get_proc_address_extension("glObjectPtrLabel");
+		functions->getObjectPtrLabel = (GLFunctions::ptr_glGetObjectPtrLabel) cl_get_proc_address_extension("glGetObjectPtrLabel");
+		functions->getPointerv = (GLFunctions::ptr_glGetPointerv) cl_get_proc_address_extension("glGetPointerv");
+		functions->enablei = (GLFunctions::ptr_glEnablei) cl_get_proc_address_extension("glEnablei");
+		functions->disablei = (GLFunctions::ptr_glDisablei) cl_get_proc_address_extension("glDisablei");
+		functions->blendEquationi = (GLFunctions::ptr_glBlendEquationi) cl_get_proc_address_extension("glBlendEquationi");
+		functions->blendEquationSeparatei = (GLFunctions::ptr_glBlendEquationSeparatei) cl_get_proc_address_extension("glBlendEquationSeparatei");
+		functions->blendFunci = (GLFunctions::ptr_glBlendFunci) cl_get_proc_address_extension("glBlendFunci");
+		functions->blendFuncSeparatei = (GLFunctions::ptr_glBlendFuncSeparatei) cl_get_proc_address_extension("glBlendFuncSeparatei");
+		functions->colorMaski = (GLFunctions::ptr_glColorMaski) cl_get_proc_address_extension("glColorMaski");
+		functions->isEnabledi = (GLFunctions::ptr_glIsEnabledi) cl_get_proc_address_extension("glIsEnabledi");
+		functions->drawElementsBaseVertex = (GLFunctions::ptr_glDrawElementsBaseVertex) cl_get_proc_address_extension("glDrawElementsBaseVertex");
+		functions->drawRangeElementsBaseVertex = (GLFunctions::ptr_glDrawRangeElementsBaseVertex) cl_get_proc_address_extension("glDrawRangeElementsBaseVertex");
+		functions->drawElementsInstancedBaseVertex = (GLFunctions::ptr_glDrawElementsInstancedBaseVertex) cl_get_proc_address_extension("glDrawElementsInstancedBaseVertex");
+		functions->framebufferTexture = (GLFunctions::ptr_glFramebufferTexture) cl_get_proc_address_extension("glFramebufferTexture");
+		functions->primitiveBoundingBox = (GLFunctions::ptr_glPrimitiveBoundingBox) cl_get_proc_address_extension("glPrimitiveBoundingBox");
+		functions->getGraphicsResetStatus = (GLFunctions::ptr_glGetGraphicsResetStatus) cl_get_proc_address_extension("glGetGraphicsResetStatus");
+		functions->readnPixels = (GLFunctions::ptr_glReadnPixels) cl_get_proc_address_extension("glReadnPixels");
+		functions->getnUniformfv = (GLFunctions::ptr_glGetnUniformfv) cl_get_proc_address_extension("glGetnUniformfv");
+		functions->getnUniformiv = (GLFunctions::ptr_glGetnUniformiv) cl_get_proc_address_extension("glGetnUniformiv");
+		functions->getnUniformuiv = (GLFunctions::ptr_glGetnUniformuiv) cl_get_proc_address_extension("glGetnUniformuiv");
+		functions->minSampleShading = (GLFunctions::ptr_glMinSampleShading) cl_get_proc_address_extension("glMinSampleShading");
+		functions->patchParameteri = (GLFunctions::ptr_glPatchParameteri) cl_get_proc_address_extension("glPatchParameteri");
+		functions->texParameterIiv = (GLFunctions::ptr_glTexParameterIiv) cl_get_proc_address_extension("glTexParameterIiv");
+		functions->texParameterIuiv = (GLFunctions::ptr_glTexParameterIuiv) cl_get_proc_address_extension("glTexParameterIuiv");
+		functions->getTexParameterIiv = (GLFunctions::ptr_glGetTexParameterIiv) cl_get_proc_address_extension("glGetTexParameterIiv");
+		functions->getTexParameterIuiv = (GLFunctions::ptr_glGetTexParameterIuiv) cl_get_proc_address_extension("glGetTexParameterIuiv");
+		functions->samplerParameterIiv = (GLFunctions::ptr_glSamplerParameterIiv) cl_get_proc_address_extension("glSamplerParameterIiv");
+		functions->samplerParameterIuiv = (GLFunctions::ptr_glSamplerParameterIuiv) cl_get_proc_address_extension("glSamplerParameterIuiv");
+		functions->getSamplerParameterIiv = (GLFunctions::ptr_glGetSamplerParameterIiv) cl_get_proc_address_extension("glGetSamplerParameterIiv");
+		functions->getSamplerParameterIuiv = (GLFunctions::ptr_glGetSamplerParameterIuiv) cl_get_proc_address_extension("glGetSamplerParameterIuiv");
+		functions->texBuffer = (GLFunctions::ptr_glTexBuffer) cl_get_proc_address_extension("glTexBuffer");
+		functions->texBufferRange = (GLFunctions::ptr_glTexBufferRange) cl_get_proc_address_extension("glTexBufferRange");
+		functions->texStorage3DMultisample = (GLFunctions::ptr_glTexStorage3DMultisample) cl_get_proc_address_extension("glTexStorage3DMultisample");
+#else
+
 
 		functions->cullFace = (GLFunctions::ptr_glCullFace) cl_get_proc_address_extension("glCullFace");
 		functions->frontFace = (GLFunctions::ptr_glFrontFace) cl_get_proc_address_extension("glFrontFace");
@@ -1159,6 +1525,8 @@ namespace clan
 		functions->GetnMinmax = (GLFunctions::ptr_glGetnMinmax) cl_get_proc_address_extension("glGetnMinmax");
 		functions->TextureBarrier = (GLFunctions::ptr_glTextureBarrier) cl_get_proc_address_extension("glTextureBarrier");
 
+#endif
+
 	#ifdef WIN32	// Only win32 static links opengl
 
 		// We require the real address of static links, so undef these...
@@ -1229,21 +1597,15 @@ namespace clan
 		if (!functions->blendFunc) functions->blendFunc = (GLFunctions::ptr_glBlendFunc) &glBlendFunc;
 		if (!functions->clear) functions->clear = (GLFunctions::ptr_glClear) &glClear;
 		if (!functions->clearColor) functions->clearColor = (GLFunctions::ptr_glClearColor) &glClearColor;
-		if (!functions->clearDepth) functions->clearDepth = (GLFunctions::ptr_glClearDepth) &glClearDepth;
 		if (!functions->clearStencil) functions->clearStencil = (GLFunctions::ptr_glClearStencil) &glClearStencil;
 		if (!functions->colorMask) functions->colorMask = (GLFunctions::ptr_glColorMask) &glColorMask;
-		if (!functions->copyTexImage1D) functions->copyTexImage1D = (GLFunctions::ptr_glCopyTexImage1D) &glCopyTexImage1D;
-		if (!functions->copyTexImage2D) functions->copyTexImage2D = (GLFunctions::ptr_glCopyTexImage2D) &glCopyTexImage2D;
-		if (!functions->copyTexSubImage1D) functions->copyTexSubImage1D = (GLFunctions::ptr_glCopyTexSubImage1D) &glCopyTexSubImage1D;
 		if (!functions->copyTexSubImage2D) functions->copyTexSubImage2D = (GLFunctions::ptr_glCopyTexSubImage2D) &glCopyTexSubImage2D;
 		if (!functions->cullFace) functions->cullFace = (GLFunctions::ptr_glCullFace) &glCullFace;
 		if (!functions->deleteTextures) functions->deleteTextures = (GLFunctions::ptr_glDeleteTextures) &glDeleteTextures;
 		if (!functions->depthFunc) functions->depthFunc = (GLFunctions::ptr_glDepthFunc) &glDepthFunc;
 		if (!functions->depthMask) functions->depthMask = (GLFunctions::ptr_glDepthMask) &glDepthMask;
-		if (!functions->depthRange) functions->depthRange = (GLFunctions::ptr_glDepthRange) &glDepthRange;
 		if (!functions->disable) functions->disable = (GLFunctions::ptr_glDisable) &glDisable;
 		if (!functions->drawArrays) functions->drawArrays = (GLFunctions::ptr_glDrawArrays) &glDrawArrays;
-		if (!functions->drawBuffer) functions->drawBuffer = (GLFunctions::ptr_glDrawBuffer) &glDrawBuffer;
 		if (!functions->drawElements) functions->drawElements = (GLFunctions::ptr_glDrawElements) &glDrawElements;
 		if (!functions->enable) functions->enable = (GLFunctions::ptr_glEnable) &glEnable;
 		if (!functions->finish) functions->finish = (GLFunctions::ptr_glFinish) &glFinish;
@@ -1251,13 +1613,11 @@ namespace clan
 		if (!functions->frontFace) functions->frontFace = (GLFunctions::ptr_glFrontFace) &glFrontFace;
 		if (!functions->genTextures) functions->genTextures = (GLFunctions::ptr_glGenTextures) &glGenTextures;
 		if (!functions->getBooleanv) functions->getBooleanv = (GLFunctions::ptr_glGetBooleanv) &glGetBooleanv;
-		if (!functions->getDoublev) functions->getDoublev = (GLFunctions::ptr_glGetDoublev) &glGetDoublev;
 		if (!functions->getError) functions->getError = (GLFunctions::ptr_glGetError) &glGetError;
 		if (!functions->getFloatv) functions->getFloatv = (GLFunctions::ptr_glGetFloatv) &glGetFloatv;
 		if (!functions->getIntegerv) functions->getIntegerv = (GLFunctions::ptr_glGetIntegerv) &glGetIntegerv;
 		if (!functions->getPointerv) functions->getPointerv = (GLFunctions::ptr_glGetPointerv) &glGetPointerv;
 		if (!functions->getString) functions->getString = (GLFunctions::ptr_glGetString) &glGetString;
-		if (!functions->getTexImage) functions->getTexImage = (GLFunctions::ptr_glGetTexImage) &glGetTexImage;
 		if (!functions->getTexLevelParameterfv) functions->getTexLevelParameterfv = (GLFunctions::ptr_glGetTexLevelParameterfv) &glGetTexLevelParameterfv;
 		if (!functions->getTexLevelParameteriv) functions->getTexLevelParameteriv = (GLFunctions::ptr_glGetTexLevelParameteriv) &glGetTexLevelParameteriv;
 		if (!functions->getTexParameterfv) functions->getTexParameterfv = (GLFunctions::ptr_glGetTexParameterfv) &glGetTexParameterfv;
@@ -1266,11 +1626,6 @@ namespace clan
 		if (!functions->isEnabled) functions->isEnabled = (GLFunctions::ptr_glIsEnabled) &glIsEnabled;
 		if (!functions->isTexture) functions->isTexture = (GLFunctions::ptr_glIsTexture) &glIsTexture;
 		if (!functions->lineWidth) functions->lineWidth = (GLFunctions::ptr_glLineWidth) &glLineWidth;
-		if (!functions->logicOp) functions->logicOp = (GLFunctions::ptr_glLogicOp) &glLogicOp;
-		if (!functions->pixelStoref) functions->pixelStoref = (GLFunctions::ptr_glPixelStoref) &glPixelStoref;
-		if (!functions->pixelStorei) functions->pixelStorei = (GLFunctions::ptr_glPixelStorei) &glPixelStorei;
-		if (!functions->pointSize) functions->pointSize = (GLFunctions::ptr_glPointSize) &glPointSize;
-		if (!functions->polygonMode) functions->polygonMode = (GLFunctions::ptr_glPolygonMode) &glPolygonMode;
 		if (!functions->polygonOffset) functions->polygonOffset = (GLFunctions::ptr_glPolygonOffset) &glPolygonOffset;
 		if (!functions->readBuffer) functions->readBuffer = (GLFunctions::ptr_glReadBuffer) &glReadBuffer;
 		if (!functions->readPixels) functions->readPixels = (GLFunctions::ptr_glReadPixels) &glReadPixels;
@@ -1278,15 +1633,31 @@ namespace clan
 		if (!functions->stencilFunc) functions->stencilFunc = (GLFunctions::ptr_glStencilFunc) &glStencilFunc;
 		if (!functions->stencilMask) functions->stencilMask = (GLFunctions::ptr_glStencilMask) &glStencilMask;
 		if (!functions->stencilOp) functions->stencilOp = (GLFunctions::ptr_glStencilOp) &glStencilOp;
-		if (!functions->texImage1D) functions->texImage1D = (GLFunctions::ptr_glTexImage1D) &glTexImage1D;
-		if (!functions->texImage2D) functions->texImage2D = (GLFunctions::ptr_glTexImage2D) &glTexImage2D;
+	if (!functions->texImage2D) functions->texImage2D = (GLFunctions::ptr_glTexImage2D) &glTexImage2D;
 		if (!functions->texParameterf) functions->texParameterf = (GLFunctions::ptr_glTexParameterf) &glTexParameterf;
 		if (!functions->texParameterfv) functions->texParameterfv = (GLFunctions::ptr_glTexParameterfv) &glTexParameterfv;
 		if (!functions->texParameteri) functions->texParameteri = (GLFunctions::ptr_glTexParameteri) &glTexParameteri;
 		if (!functions->texParameteriv) functions->texParameteriv = (GLFunctions::ptr_glTexParameteriv) &glTexParameteriv;
-		if (!functions->texSubImage1D) functions->texSubImage1D = (GLFunctions::ptr_glTexSubImage1D) &glTexSubImage1D;
 		if (!functions->texSubImage2D) functions->texSubImage2D = (GLFunctions::ptr_glTexSubImage2D) &glTexSubImage2D;
 		if (!functions->viewport) functions->viewport = (GLFunctions::ptr_glViewport) &glViewport;
+
+#ifndef CLANLIB_OPENGL_ES3
+		if (!functions->clearDepth) functions->clearDepth = (GLFunctions::ptr_glClearDepth) &glClearDepth;
+		if (!functions->copyTexImage1D) functions->copyTexImage1D = (GLFunctions::ptr_glCopyTexImage1D) &glCopyTexImage1D;
+		if (!functions->copyTexImage2D) functions->copyTexImage2D = (GLFunctions::ptr_glCopyTexImage2D) &glCopyTexImage2D;
+		if (!functions->copyTexSubImage1D) functions->copyTexSubImage1D = (GLFunctions::ptr_glCopyTexSubImage1D) &glCopyTexSubImage1D;
+		if (!functions->depthRange) functions->depthRange = (GLFunctions::ptr_glDepthRange) &glDepthRange;
+		if (!functions->drawBuffer) functions->drawBuffer = (GLFunctions::ptr_glDrawBuffer) &glDrawBuffer;
+		if (!functions->getDoublev) functions->getDoublev = (GLFunctions::ptr_glGetDoublev) &glGetDoublev;
+		if (!functions->getTexImage) functions->getTexImage = (GLFunctions::ptr_glGetTexImage) &glGetTexImage;
+		if (!functions->logicOp) functions->logicOp = (GLFunctions::ptr_glLogicOp) &glLogicOp;
+		if (!functions->pixelStoref) functions->pixelStoref = (GLFunctions::ptr_glPixelStoref) &glPixelStoref;
+		if (!functions->pixelStorei) functions->pixelStorei = (GLFunctions::ptr_glPixelStorei) &glPixelStorei;
+		if (!functions->pointSize) functions->pointSize = (GLFunctions::ptr_glPointSize) &glPointSize;
+		if (!functions->polygonMode) functions->polygonMode = (GLFunctions::ptr_glPolygonMode) &glPolygonMode;
+		if (!functions->texImage1D) functions->texImage1D = (GLFunctions::ptr_glTexImage1D) &glTexImage1D;
+		if (!functions->texSubImage1D) functions->texSubImage1D = (GLFunctions::ptr_glTexSubImage1D) &glTexSubImage1D;
+#endif
 
 	#endif
 
@@ -1319,7 +1690,9 @@ namespace clan
 
 
 		// For Legacy OpenGL (For GL1 target)
+#ifndef CLANLIB_OPENGL_ES3
 		functions->clientActiveTexture = (GLFunctions::ptr_glClientActiveTextureARB) cl_get_proc_address_extension("glClientActiveTextureARB");
+#endif
 	#ifdef WIN32
 		functions->wglCreatePbufferARB = (GLFunctions::ptr_wglCreatePbufferARB) cl_get_proc_address_extension("wglCreatePbufferARB");
 		functions->wglGetPbufferDCARB = (GLFunctions::ptr_wglGetPbufferDCARB) cl_get_proc_address_extension("wglGetPbufferDCARB");
@@ -1327,6 +1700,7 @@ namespace clan
 		functions->wglDestroyPbufferARB = (GLFunctions::ptr_wglDestroyPbufferARB) cl_get_proc_address_extension("wglDestroyPbufferARB");
 		functions->wglQueryPbufferARB = (GLFunctions::ptr_wglQueryPbufferARB) cl_get_proc_address_extension("wglQueryPbufferARB");
 	#endif
+
 		return functions;
 	}
 
@@ -1335,16 +1709,18 @@ namespace clan
 		switch(buffer)
 		{
 		case DrawBuffer::back: return GL_BACK;
-		case DrawBuffer::back_left: return GL_BACK_LEFT;
-		case DrawBuffer::back_right: return GL_BACK_RIGHT;
 		case DrawBuffer::front: return GL_FRONT;
 		case DrawBuffer::front_and_back: return GL_FRONT_AND_BACK;
+		case DrawBuffer::none: return GL_NONE;
+#ifndef CLANLIB_OPENGL_ES3
+		case DrawBuffer::back_left: return GL_BACK_LEFT;
+		case DrawBuffer::back_right: return GL_BACK_RIGHT;
 		case DrawBuffer::front_left: return GL_FRONT_LEFT;
 		case DrawBuffer::front_right: return GL_FRONT_RIGHT;
 		case DrawBuffer::left: return GL_LEFT;
-		case DrawBuffer::none: return GL_NONE;
 		case DrawBuffer::right: return GL_RIGHT;
-		default: return GL_BACK;
+#endif
+		default: throw clan::Exception("Unsupported DrawBuffer");
 		}
 	}
 
@@ -1393,6 +1769,7 @@ namespace clan
 
 	GLenum OpenGL::to_enum(FillMode mode)
 	{
+#ifndef CLANLIB_OPENGL_ES3
 		switch( mode )
 		{
 		case FillMode::point: return GL_POINT;
@@ -1400,6 +1777,9 @@ namespace clan
 		case FillMode::polygon: return GL_FILL;
 		default: return GL_FILL;
 		}
+#else
+		throw clan::Exception("OpenGL FillMode ES3 not supported");
+#endif
 	}
 
 	GLenum OpenGL::to_enum(BlendFunc func)
@@ -1421,7 +1801,7 @@ namespace clan
 		case BlendFunc::one_minus_constant_color: return GL_ONE_MINUS_CONSTANT_COLOR;
 		case BlendFunc::constant_alpha: return GL_CONSTANT_ALPHA;
 		case BlendFunc::one_minus_constant_alpha: return GL_ONE_MINUS_CONSTANT_ALPHA;
-		default: return GL_BLEND_SRC;
+		default: throw clan::Exception("Invalid BlendFunc");
 		}
 	}
 
@@ -1479,6 +1859,7 @@ namespace clan
 
 	GLenum OpenGL::to_enum(enum LogicOp op)
 	{
+#ifndef CLANLIB_OPENGL_ES3
 		GLenum gl_op = 0;
 		switch (op)
 		{
@@ -1501,6 +1882,9 @@ namespace clan
 			default: break;
 		}
 		return gl_op;
+#else
+		throw clan::Exception("OpenGL Logic Op not supported in ES3");
+#endif
 	}
 
 	GLenum OpenGL::to_enum(TextureFilter filter)

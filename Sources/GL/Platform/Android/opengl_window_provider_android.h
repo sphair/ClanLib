@@ -144,7 +144,6 @@ namespace clan
 		void get_opengl_version(int &version_major, int &version_minor);
 
 		GraphicContext gc;
-		bool using_gl3 = false;
 		bool double_buffered = false;
 		int swap_interval = 0;
 

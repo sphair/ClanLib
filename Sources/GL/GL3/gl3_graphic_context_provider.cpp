@@ -449,9 +449,10 @@ namespace clan
 		{
 			render_window->is_double_buffered() ? glReadBuffer(GL_BACK) : glReadBuffer(GL_FRONT);
 		}
+#ifndef CLANLIB_OPENGL_ES3
 		if (glClampColor)
 			glClampColor(GL_CLAMP_READ_COLOR, clamp ? GL_TRUE : GL_FALSE);
-
+#endif
 		Size display_size = get_display_window_size();
 
 		glPixelStorei(GL_PACK_ALIGNMENT, 1);
@@ -578,6 +579,7 @@ namespace clan
 
 		// To do: move this to OpenGLWindowProvider abstraction (some targets doesn't have a default frame buffer)
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+#ifndef CLANLIB_OPENGL_ES3
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 
 		if (render_window->is_double_buffered())
@@ -590,7 +592,7 @@ namespace clan
 			glDrawBuffer(GL_FRONT);
 			glReadBuffer(GL_FRONT);
 		}
-
+#endif
 		framebuffer_bound = false;
 
 	}
@@ -761,10 +763,14 @@ namespace clan
 	void GL3GraphicContextProvider::clear_depth(float value)
 	{
 		OpenGL::set_active(this);
+#ifndef CLANLIB_OPENGL_ES3
 		if (glClearDepth)
 			glClearDepth(value);
 		else
+#endif
+		{
 			glClearDepthf(value);
+		}
 		glClear(GL_DEPTH_BUFFER_BIT);
 	}
 
@@ -785,6 +791,7 @@ namespace clan
 
 	void GL3GraphicContextProvider::set_viewport(int index, const Rectf &viewport)
 	{
+#ifndef CLANLIB_OPENGL_ES3
 		if (glViewportIndexedf)
 		{
 			OpenGL::set_active(this);
@@ -799,18 +806,26 @@ namespace clan
 			if (index == 0)
 				set_viewport(viewport);
 		}
+#else
+		if (index == 0)
+			set_viewport(viewport);
+#endif
 	}
 
 	void GL3GraphicContextProvider::set_depth_range(float n, float f)
 	{
 		OpenGL::set_active(this);
+#ifndef CLANLIB_OPENGL_ES3
 		glDepthRange((double)n, (double)f); // glDepthRangef is from the OpenGL 4.1 extension ARB_ES2_Compatibility.
+#endif
 	}
 
 	void GL3GraphicContextProvider::set_depth_range(int viewport, float n, float f)
 	{
 		OpenGL::set_active(this);
+#ifndef CLANLIB_OPENGL_ES3
 		glDepthRangeIndexed(viewport, (float)n, (float)f);
+#endif
 	}
 
 	void GL3GraphicContextProvider::set_draw_buffer(DrawBuffer buffer)
@@ -823,8 +838,10 @@ namespace clan
 				buffer = DrawBuffer::front;
 		}
 
+#ifndef CLANLIB_OPENGL_ES3
 		if (glDrawBuffer)
 			glDrawBuffer(OpenGL::to_enum(buffer));
+#endif
 
 	}
 

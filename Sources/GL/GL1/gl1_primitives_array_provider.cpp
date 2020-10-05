@@ -27,6 +27,9 @@
 */
 
 #include "GL/precomp.h"
+#include "API/GL/opengl_defines.h"
+#ifndef CLANLIB_OPENGL_ES3
+
 #include "gl1_primitives_array_provider.h"
 
 namespace clan
@@ -52,3 +55,4 @@ namespace clan
 		attribute_set[index] = true;
 	}
 }
+#endif

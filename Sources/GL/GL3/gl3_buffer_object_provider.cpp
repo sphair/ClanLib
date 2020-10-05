@@ -62,12 +62,13 @@ namespace clan
 		}
 	}
 
-	void GL3BufferObjectProvider::create(const void *data, int size, BufferUsage usage, GLenum new_binding, GLenum new_target)
+	void GL3BufferObjectProvider::create(const void *data, int new_size, BufferUsage usage, GLenum new_binding, GLenum new_target)
 	{
 		throw_if_disposed();
 
 		binding = new_binding;
 		target = new_target;
+		buffer_size = new_size;
 
 		OpenGL::set_active();
 
@@ -75,7 +76,7 @@ namespace clan
 		if (binding)
 			glGetIntegerv(binding, &last_buffer);
 		glBindBuffer(target, handle);
-		glBufferData(target, size, data, OpenGL::to_enum(usage));
+		glBufferData(target, buffer_size, data, OpenGL::to_enum(usage));
 		glBindBuffer(target, last_buffer);
 	}
 
@@ -95,7 +96,12 @@ namespace clan
 		if (binding)
 			glGetIntegerv(binding, &last_buffer);
 		glBindBuffer(target, handle);
-		data_ptr = (void *)glMapBuffer(target, OpenGL::to_enum(access));
+
+#ifdef CLANLIB_OPENGL_ES3
+		data_ptr = (void*)glMapBufferRange(target, 0, buffer_size, OpenGL::to_enum(access));
+#else
+		data_ptr = (void*)glMapBuffer(target, OpenGL::to_enum(access));
+#endif
 		glBindBuffer(target, last_buffer);
 	}
 

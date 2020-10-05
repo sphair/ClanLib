@@ -318,6 +318,7 @@ namespace clan
 	{
 		glBindFramebuffer(write_only ? GL_FRAMEBUFFER : GL_READ_FRAMEBUFFER, handle);
 
+#ifndef CLANLIB_OPENGL_ES3
 		if (count_color_attachments)
 		{
 			glDrawBuffer(GL_COLOR_ATTACHMENT0);
@@ -328,6 +329,7 @@ namespace clan
 			glDrawBuffer(GL_NONE);
 			glReadBuffer(GL_NONE);
 		}
+#endif
 	}
 
 	std::string GL3FrameBufferProvider::get_error_message(int error_code)
@@ -340,10 +342,12 @@ namespace clan
 			return "FRAMEBUFFER_INCOMPLETE_ATTACHMENT";
 		case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
 			return "FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT";
+#ifndef CLANLIB_OPENGL_ES3
 		case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
 			return "FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER";
 		case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
 			return "FRAMEBUFFER_INCOMPLETE_READ_BUFFER";
+#endif
 		case GL_FRAMEBUFFER_UNSUPPORTED:
 			return "FRAMEBUFFER_UNSUPPORTED";
 		default:
@@ -492,19 +496,27 @@ namespace clan
 		if (!texture_target)
 			texture_target = texture_type;
 
-		if (texture_type == GL_TEXTURE_1D)
-		{
-			glFramebufferTexture1D(target, opengl_attachment, texture_target, texture_handle, level);
-		}
-		else if (texture_type == GL_TEXTURE_2D)
+
+
+		if (texture_type == GL_TEXTURE_2D)
 		{
 			glFramebufferTexture2D(target, opengl_attachment, texture_target, texture_handle, level);
+		}
+#ifndef CLANLIB_OPENGL_ES3
+		else if (texture_type == GL_TEXTURE_1D)
+		{
+			glFramebufferTexture1D(target, opengl_attachment, texture_target, texture_handle, level);
 		}
 		else if (texture_type == GL_TEXTURE_3D)
 		{
 			glFramebufferTexture3D(target, opengl_attachment, texture_target, texture_handle, level, zoffset);
 		}
-		else if (texture_type == GL_TEXTURE_2D_ARRAY || texture_type == GL_TEXTURE_1D_ARRAY)
+#endif
+		else if (texture_type == GL_TEXTURE_2D_ARRAY
+#ifndef CLANLIB_OPENGL_ES3
+			|| texture_type == GL_TEXTURE_1D_ARRAY
+#endif
+			)
 		{
 			glFramebufferTextureLayer(target, opengl_attachment, texture_handle, level, zoffset);
 		}
@@ -530,19 +542,26 @@ namespace clan
 			GL3TextureProvider *gl_texture_provider = dynamic_cast<GL3TextureProvider*>(attached_textures[internal_attachment_offset].get_provider());
 			GLuint texture_type = gl_texture_provider->get_texture_type();
 
-			if (texture_type == GL_TEXTURE_1D)
-			{
-				glFramebufferTexture1D(target, opengl_attachment, texture_type, 0, 0);
-			}
-			else if (texture_type == GL_TEXTURE_2D)
+			if (texture_type == GL_TEXTURE_2D)
 			{
 				glFramebufferTexture2D(target, opengl_attachment, texture_type, 0, 0);
+			}
+
+#ifndef CLANLIB_OPENGL_ES3
+			else if (texture_type == GL_TEXTURE_1D)
+			{
+				glFramebufferTexture1D(target, opengl_attachment, texture_type, 0, 0);
 			}
 			else if (texture_type == GL_TEXTURE_3D)
 			{
 				glFramebufferTexture3D(target, opengl_attachment, texture_type, 0, 0, 0);
 			}
-			else if (texture_type == GL_TEXTURE_2D_ARRAY || texture_type == GL_TEXTURE_1D_ARRAY)
+#endif
+			else if (texture_type == GL_TEXTURE_2D_ARRAY
+#ifndef CLANLIB_OPENGL_ES3
+				|| 	texture_type == GL_TEXTURE_1D_ARRAY
+#endif
+				)
 			{
 				glFramebufferTextureLayer(target, opengl_attachment, 0, 0, 0);
 			}

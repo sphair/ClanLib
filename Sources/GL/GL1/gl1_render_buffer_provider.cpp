@@ -28,6 +28,9 @@
 */
 
 #include "GL/precomp.h"
+#include "API/GL/opengl_defines.h"
+#ifndef CLANLIB_OPENGL_ES3
+
 #include "API/Display/TargetProviders/render_buffer_provider.h"
 #include "API/GL/opengl_wrap.h"
 #include "API/GL/opengl.h"
@@ -53,3 +56,4 @@ namespace clan
 	{
 	}
 }
+#endif

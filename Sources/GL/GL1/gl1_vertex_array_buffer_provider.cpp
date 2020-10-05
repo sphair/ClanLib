@@ -27,6 +27,9 @@
 */
 
 #include "GL/precomp.h"
+#include "API/GL/opengl_defines.h"
+#ifndef CLANLIB_OPENGL_ES3
+
 #include "gl1_vertex_array_buffer_provider.h"
 #include "API/Display/Render/transfer_buffer.h"
 
@@ -81,3 +84,4 @@ namespace clan
 		buffer.upload_data(gc, dest_pos, this->data + src_pos, size);
 	}
 }
+#endif

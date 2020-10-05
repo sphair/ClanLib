@@ -29,6 +29,9 @@
 */
 
 #include "GL/precomp.h"
+#include "API/GL/opengl_defines.h"
+#ifndef CLANLIB_OPENGL_ES3
+
 #include "gl1_program_object_provider.h"
 #include "API/Display/Render/shader_object.h"
 #include "API/GL/opengl_wrap.h"
@@ -192,3 +195,4 @@ namespace clan
 	{
 	}
 }
+#endif

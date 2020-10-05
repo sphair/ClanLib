@@ -59,7 +59,9 @@ namespace clan
 			changed_desc = false;
 
 			desc.get_culled() ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
+#ifndef CLANLIB_OPENGL_ES3
 			desc.get_enable_line_antialiasing() ? glEnable(GL_LINE_SMOOTH) : glDisable(GL_LINE_SMOOTH);
+#endif
 			switch (desc.get_face_cull_mode())
 			{
 			case CullMode::front:
@@ -72,21 +74,22 @@ namespace clan
 				glCullFace(GL_FRONT_AND_BACK);
 				break;
 			}
+#ifndef CLANLIB_OPENGL_ES3
 			if (glPolygonMode)
 				glPolygonMode(GL_FRONT_AND_BACK, OpenGL::to_enum(desc.get_face_fill_mode()));
-
+#endif
 			desc.get_front_face() == FaceSide::counter_clockwise ? glFrontFace(GL_CCW) : glFrontFace(GL_CW);
 
 			// Note, enabled in GraphicContextProvider::set_scissor()
 			if (!desc.get_enable_scissor())
 				glDisable(GL_SCISSOR_TEST);
 
+#ifndef CLANLIB_OPENGL_ES3
 			if (glPointSize)
 				glPointSize((GLfloat)desc.get_point_size());
 			if (glPointParameterf)
 				glPointParameterf(GL_POINT_FADE_THRESHOLD_SIZE, (GLfloat)desc.get_point_fade_treshold_size());
 			desc.is_point_size() ? glEnable(GL_VERTEX_PROGRAM_POINT_SIZE) : glDisable(GL_VERTEX_PROGRAM_POINT_SIZE);
-
 			if (glPointParameterf)
 			{
 				switch (desc.get_point_sprite_origin())
@@ -99,7 +102,7 @@ namespace clan
 					break;
 				}
 			}
-#ifndef __ANDROID__
+
 			desc.get_antialiased() ? glEnable(GL_POLYGON_SMOOTH) : glDisable(GL_POLYGON_SMOOTH);
 			desc.get_offset_point() ? glEnable(GL_POLYGON_OFFSET_POINT) : glDisable(GL_POLYGON_OFFSET_POINT);
 			desc.get_offset_line() ? glEnable(GL_POLYGON_OFFSET_LINE) : glDisable(GL_POLYGON_OFFSET_LINE);

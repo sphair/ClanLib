@@ -28,6 +28,9 @@
 */
 
 #include "GL/precomp.h"
+#include "API/GL/opengl_defines.h"
+#ifndef CLANLIB_OPENGL_ES3
+
 #include "gl1_transfer_buffer_provider.h"
 
 namespace clan
@@ -69,3 +72,4 @@ namespace clan
 		memcpy(this->data + offset, data, size);
 	}
 }
+#endif

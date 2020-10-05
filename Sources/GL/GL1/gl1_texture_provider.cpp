@@ -28,6 +28,9 @@
 */
 
 #include "GL/precomp.h"
+#include "API/GL/opengl_defines.h"
+#ifndef CLANLIB_OPENGL_ES3
+
 #include "gl1_texture_provider.h"
 #include "gl1_graphic_context_provider.h"
 #include "API/Display/Image/pixel_buffer.h"
@@ -1335,3 +1338,4 @@ namespace clan
 		return to_opengl_pixelformat(pbuffer.get_format(), format, type);
 	}
 }
+#endif

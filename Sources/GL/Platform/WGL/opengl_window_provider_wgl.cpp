@@ -73,9 +73,11 @@ namespace clan
 				}
 				else
 				{
+#ifndef CLANLIB_OPENGL_ES3
 					GL1GraphicContextProvider *gl_provider = dynamic_cast<GL1GraphicContextProvider*>(gc.get_provider());
 					if (gl_provider)
 						gl_provider->dispose();
+#endif
 				}
 			}
 
@@ -338,8 +340,13 @@ namespace clan
 			}
 			else
 			{
+
 				using_gl3 = false;
+#ifndef CLANLIB_OPENGL_ES3
 				gc = GraphicContext(new GL1GraphicContextProvider(this));
+#else
+				throw clan::Exception("GL1 target is not supported for the OpenGL ES3 target");
+#endif
 			}
 		}
 
@@ -383,9 +390,11 @@ namespace clan
 		}
 		else
 		{
+#ifndef CLANLIB_OPENGL_ES3
 			GL1GraphicContextProvider *gl_provider = dynamic_cast<GL1GraphicContextProvider*>(gc.get_provider());
 			if (gl_provider)
 				gl_provider->on_window_resized();
+#endif
 		}
 
 	}
@@ -489,8 +498,10 @@ namespace clan
 	{
 		OpenGL::set_active(get_gc());
 		glFlush();
+
 		if (shadow_window)
 		{
+#ifndef CLANLIB_OPENGL_ES3
 			int width = get_viewport().get_width();
 			int height = get_viewport().get_height();
 
@@ -501,7 +512,6 @@ namespace clan
 					glDrawBuffer(GL_BACK);
 					glReadBuffer(GL_FRONT);
 				}
-
 				PixelBuffer pixelbuffer(width, height, TextureFormat::bgra8);
 				glPixelStorei(GL_PACK_ALIGNMENT, 1);
 				glPixelStorei(GL_PACK_ROW_LENGTH, pixelbuffer.get_pitch() / pixelbuffer.get_bytes_per_pixel());
@@ -564,6 +574,9 @@ namespace clan
 				glLoadMatrixf(old_matrix_modelview);
 				glMatrixMode(old_matrix_mode);
 			}
+#else
+			throw clan::Exception("shadow window not supported for OpenGL ES3");
+#endif
 		}
 		else
 		{
@@ -656,9 +669,11 @@ namespace clan
 
 			if (!rwp)
 			{
+#ifndef CLANLIB_OPENGL_ES3
 				GL1GraphicContextProvider *gl1_provider = dynamic_cast<GL1GraphicContextProvider*>(gc_providers);
 				if (gl1_provider)
 					rwp = &gl1_provider->get_render_window();
+#endif
 			}
 
 			if (rwp)

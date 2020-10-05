@@ -117,11 +117,12 @@ namespace clan
 				}
 			}
 
+#ifndef CLANLIB_OPENGL_ES3
 			desc.is_logic_op_enabled() ? glEnable(GL_COLOR_LOGIC_OP) : glDisable(GL_COLOR_LOGIC_OP);
 
 			if (glLogicOp)
 				glLogicOp(OpenGL::to_enum(desc.get_logic_op()));
-
+#endif
 		}
 
 		if (changed_blend_color)

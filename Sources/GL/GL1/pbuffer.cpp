@@ -27,6 +27,8 @@
 */
 
 #include "GL/precomp.h"
+#include "API/GL/opengl_defines.h"
+#ifndef CLANLIB_OPENGL_ES3
 
 #ifdef WIN32
 #include "../Platform/WGL/pbuffer_impl.h"
@@ -78,3 +80,4 @@ namespace clan
 			throw Exception("is null");
 	}
 }
+#endif

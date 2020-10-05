@@ -61,17 +61,23 @@ namespace clan
 	bool GL3OcclusionQueryProvider::is_result_ready() const
 	{
 		OpenGL::set_active(gc_provider);
-		int available;
-		glGetQueryObjectiv(handle, GL_QUERY_RESULT_AVAILABLE, &available);
+		GLuint available;
+		glGetQueryObjectuiv(handle, GL_QUERY_RESULT_AVAILABLE, &available);
 		return (available != 0);
 	}
 
 	GLint GL3OcclusionQueryProvider::get_result() const
 	{
 		OpenGL::set_active(gc_provider);
+#ifdef CLANLIB_OPENGL_ES3
+		GLuint result;
+		glGetQueryObjectuiv(handle, GL_QUERY_RESULT, &result);
+		return static_cast<GLint>(result);	// FIXME - Hack!
+#else
 		GLint result;
 		glGetQueryObjectiv(handle, GL_QUERY_RESULT, &result);
 		return result;
+#endif
 	}
 
 	void GL3OcclusionQueryProvider::create()
@@ -90,12 +96,21 @@ namespace clan
 	void GL3OcclusionQueryProvider::begin()
 	{
 		OpenGL::set_active(gc_provider);
+
+#ifdef CLANLIB_OPENGL_ES3
+		throw clan::Exception("GL3OcclusionQueryProvider::begin() not supported");
+#else
 		glBeginQuery(GL_SAMPLES_PASSED, handle);
+#endif
 	}
 
 	void GL3OcclusionQueryProvider::end()
 	{
 		OpenGL::set_active(gc_provider);
+#ifdef CLANLIB_OPENGL_ES3
+		throw clan::Exception("GL3OcclusionQueryProvider::end() not supported");
+#else
 		glEndQuery(GL_SAMPLES_PASSED);
+#endif
 	}
 }

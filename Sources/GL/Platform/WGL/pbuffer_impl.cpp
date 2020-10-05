@@ -27,6 +27,9 @@
 */
 
 #include "GL/precomp.h"
+#include "API/GL/opengl_defines.h"
+#ifndef CLANLIB_OPENGL_ES3
+
 #include "API/GL/opengl_wrap.h"
 #include "API/GL/opengl.h"
 #include "pbuffer_impl.h"
@@ -142,3 +145,4 @@ namespace clan
 		gc_provider->get_opengl_version(version_major, version_minor, version_release);
 	}
 }
+#endif

@@ -30,6 +30,9 @@
 */
 
 #include "GL/precomp.h"
+#include "API/GL/opengl_defines.h"
+#ifndef CLANLIB_OPENGL_ES3
+
 #include "gl1_graphic_context_provider.h"
 #include "gl1_texture_provider.h"
 #include "gl1_program_object_provider.h"
@@ -1003,3 +1006,4 @@ namespace clan
 		}
 	}
 }
+#endif

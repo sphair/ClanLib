@@ -29,6 +29,9 @@
 */
 
 #include "GL/precomp.h"
+#include "API/GL/opengl_defines.h"
+#ifndef CLANLIB_OPENGL_ES3
+
 #include "API/Display/Render/render_buffer.h"
 #include "API/Display/TargetProviders/render_buffer_provider.h"
 #include "API/Core/Text/string_format.h"
@@ -365,3 +368,4 @@ namespace clan
 	}
 
 }
+#endif

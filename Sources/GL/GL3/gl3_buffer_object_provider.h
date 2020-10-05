@@ -45,7 +45,7 @@ namespace clan
 	public:
 		GL3BufferObjectProvider();
 		~GL3BufferObjectProvider();
-		void create(const void *data, int size, BufferUsage usage, GLenum new_binding, GLenum new_target);
+		void create(const void *data, int new_size, BufferUsage usage, GLenum new_binding, GLenum new_target);
 
 		void *get_data();
 
@@ -67,6 +67,8 @@ namespace clan
 		GLuint handle;
 		GLenum binding;
 		GLenum target;
+
+		int buffer_size = 0;
 
 		void *data_ptr;
 		GraphicContext lock_gc;

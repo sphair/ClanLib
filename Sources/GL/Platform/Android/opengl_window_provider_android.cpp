@@ -42,9 +42,10 @@
 #include "../../opengl_context_description_impl.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "../../GL3/gl3_graphic_context_provider.h"
-#include "../../GL1/gl1_graphic_context_provider.h"
 #include "API/Display/Window/input_device.h"
 #include "API/Display/Window/input_event.h"
+
+#include <android/native_window.h>
 
 namespace clan
 {
@@ -61,20 +62,10 @@ namespace clan
 	{
 		if (!gc.is_null())
 		{
-			if (using_gl3)
-			{
-				GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider*>(gc.get_provider());
-				if (gl_provider)
-					gl_provider->dispose();
-			}
-			else
-			{
-				GL1GraphicContextProvider *gl_provider = dynamic_cast<GL1GraphicContextProvider*>(gc.get_provider());
-				if (gl_provider)
-					gl_provider->dispose();
-			}
+			GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider*>(gc.get_provider());
+			if (gl_provider)
+				gl_provider->dispose();
 		}
-
 
 		if (display != EGL_NO_DISPLAY)
 		{
@@ -109,8 +100,10 @@ namespace clan
 			EGLint w, h;
 			eglQuerySurface(display, surface, EGL_WIDTH, &w);
 			eglQuerySurface(display, surface, EGL_HEIGHT, &h);
+
 			return Rect(0, 0, w, h);
 		}
+
 		return Rect();
 	}
 
@@ -121,7 +114,7 @@ namespace clan
 
 	float OpenGLWindowProvider::get_pixel_ratio() const
 	{
-		return 0.0f;
+		return 1.0f;
 	}
 
 	bool OpenGLWindowProvider::is_fullscreen() const
@@ -229,6 +222,9 @@ namespace clan
 			EGL_BLUE_SIZE, 8,
 			EGL_GREEN_SIZE, 8,
 			EGL_RED_SIZE, 8,
+            EGL_BUFFER_SIZE, 16,
+            EGL_RENDERABLE_TYPE,
+            EGL_OPENGL_ES2_BIT,
 			EGL_NONE
 		};
 		EGLint format;
@@ -259,7 +255,12 @@ namespace clan
 		if (surface == EGL_NO_SURFACE)
 			throw Exception("eglCreateWindowSurface failed");
 
-		context = eglCreateContext(display, config, NULL, NULL);
+        EGLint ctxattr[] = {
+                EGL_CONTEXT_CLIENT_VERSION, 2,
+                EGL_NONE
+        };
+
+		context = eglCreateContext(display, config, EGL_NO_CONTEXT, ctxattr);
 		if (context == EGL_NO_CONTEXT)
 			throw Exception("eglCreateWindowSurface failed");
 
@@ -299,13 +300,11 @@ namespace clan
 
 		if (use_gl3)
 		{
-			using_gl3 = true;
 			gc = GraphicContext(new GL3GraphicContextProvider(this));
 		}
 		else
 		{
-			using_gl3 = false;
-			gc = GraphicContext(new GL1GraphicContextProvider(this));
+			throw Exception("clanGL1 not supported");
 		}
 		swap_interval = desc.get_swap_interval();
 		if (swap_interval != -1)
@@ -456,18 +455,9 @@ namespace clan
 	void OpenGLWindowProvider::get_opengl_version(int &version_major, int &version_minor)
 	{
 		make_current();
-#undef glGetString
-		std::string version = (char*)::glGetString(GL_VERSION);
 
-		version_major = 0;
-		version_minor = 0;
-
-		std::vector<std::string> split_version = StringHelp::split_text(version, ".");
-		if (split_version.size() > 0)
-			version_major = StringHelp::text_to_int(split_version[0]);
-		if (split_version.size() > 1)
-			version_minor = StringHelp::text_to_int(split_version[1]);
-
+		version_major = 3;  //FIXME
+		version_minor = 2;  //FIXME
 	}
 
 }

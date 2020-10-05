@@ -60,6 +60,11 @@ namespace clan
 	GL3TextureProvider::GL3TextureProvider(GL3TextureProvider *orig_texture, TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
 		: width(0), height(0), depth(0), handle(0), texture_type(0)
 	{
+
+#ifdef CLANLIB_OPENGL_ES3
+		throw clan::Exception("TextureView not supported");
+#else
+
 		create_initial(texture_dimensions);
 
 		TextureFormat_GL tf = OpenGL::get_textureformat(texture_format);
@@ -70,18 +75,21 @@ namespace clan
 			throw Exception("glTextureView required OpenGL 4.3");
 
 		glTextureView(handle, texture_type, orig_texture->handle, tf.internal_format, min_level, num_levels, min_layer, num_layers);
+#endif
 	}
 
 	void GL3TextureProvider::create_initial(TextureDimensions texture_dimensions)
 	{
 		switch (texture_dimensions)
 		{
+#ifndef CLANLIB_OPENGL_ES3
 		case TextureDimensions::_1d:
 			texture_type = GL_TEXTURE_1D;
 			break;
 		case TextureDimensions::_1d_array:
 			texture_type = GL_TEXTURE_1D_ARRAY;
 			break;
+#endif
 		case TextureDimensions::_2d:
 			texture_type = GL_TEXTURE_2D;
 			break;
@@ -106,10 +114,16 @@ namespace clan
 		glTexParameteri(texture_type, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(texture_type, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(texture_type, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+#ifndef CLANLIB_OPENGL_ES3
 		if (texture_type != GL_TEXTURE_1D)
 			glTexParameteri(texture_type, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		if (texture_type == GL_TEXTURE_3D)
 			glTexParameteri(texture_type, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+#else
+		glTexParameteri(texture_type, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		if (texture_type == GL_TEXTURE_3D)
+			glTexParameteri(texture_type, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+#endif
 	}
 
 	GL3TextureProvider::~GL3TextureProvider()
@@ -170,15 +184,7 @@ namespace clan
 			int mip_width = max(width >> level, 1);
 			int mip_height = max(height >> level, 1);
 
-			if (texture_type == GL_TEXTURE_1D)
-			{
-				glTexImage1D(GL_TEXTURE_1D, level, tf.internal_format, mip_width, 0, tf.pixel_format, tf.pixel_datatype, nullptr);
-			}
-			else if (texture_type == GL_TEXTURE_1D_ARRAY)
-			{
-				glTexImage2D(GL_TEXTURE_1D_ARRAY, level, tf.internal_format, mip_width, array_size, 0, tf.pixel_format, tf.pixel_datatype, nullptr);
-			}
-			else if (texture_type == GL_TEXTURE_2D)
+			if (texture_type == GL_TEXTURE_2D)
 			{
 				if (PixelBuffer::is_compressed(texture_format))
 				{
@@ -194,6 +200,16 @@ namespace clan
 			{
 				glTexImage3D(GL_TEXTURE_2D_ARRAY, level, tf.internal_format, mip_width, mip_height, array_size, 0, tf.pixel_format, tf.pixel_datatype, nullptr);
 			}
+
+#ifndef CLANLIB_OPENGL_ES3
+			else if (texture_type == GL_TEXTURE_1D)
+			{
+				glTexImage1D(GL_TEXTURE_1D, level, tf.internal_format, mip_width, 0, tf.pixel_format, tf.pixel_datatype, nullptr);
+			}
+			else if (texture_type == GL_TEXTURE_1D_ARRAY)
+			{
+				glTexImage2D(GL_TEXTURE_1D_ARRAY, level, tf.internal_format, mip_width, array_size, 0, tf.pixel_format, tf.pixel_datatype, nullptr);
+			}
 			else if (texture_type == GL_TEXTURE_2D_MULTISAMPLE)
 			{
 				glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, tf.internal_format, mip_width, mip_height, fixed_sample_locations);
@@ -202,6 +218,7 @@ namespace clan
 			{
 				glTexImage3DMultisample(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, samples, tf.internal_format, mip_width, mip_height, array_size, fixed_sample_locations);
 			}
+#endif
 			else if (texture_type == GL_TEXTURE_CUBE_MAP)
 			{
 				for (int i = 0; i < 6; i++)
@@ -223,7 +240,7 @@ namespace clan
 	PixelBuffer GL3TextureProvider::get_pixeldata(GraphicContext &gc, TextureFormat texture_format, int level) const
 	{
 		throw_if_disposed();
-
+#ifndef CLANLIB_OPENGL_ES3
 		TextureStateTracker state_tracker(texture_type, handle);
 
 		TextureFormat_GL tf = OpenGL::get_textureformat(texture_format);
@@ -247,6 +264,9 @@ namespace clan
 			glGetTexImage(texture_type, level, GL_RGBA, GL_UNSIGNED_BYTE, buffer.get_data());
 			return buffer.to_format(texture_format);
 		}
+#else
+		throw clan::Exception("GL3TextureProvider::get_pixeldata not supported with OpenGL ES3");
+#endif
 	}
 
 	void GL3TextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, int level, const PixelBuffer &src, const Rect &src_rect)
@@ -294,7 +314,12 @@ namespace clan
 
 			unsigned data_size = src.get_data_size();
 
-			if (texture_type == GL_TEXTURE_1D)
+			if (texture_type == GL_TEXTURE_2D || texture_type == GL_TEXTURE_2D_MULTISAMPLE)
+			{
+				glCompressedTexSubImage2D(texture_type, level, x, y, src_rect.get_width(), src_rect.get_height(), tf.pixel_datatype, data_size, data);
+			}
+#ifndef CLANLIB_OPENGL_ES3
+			else if (texture_type == GL_TEXTURE_1D)
 			{
 				glCompressedTexSubImage1D(texture_type, level, x, src_rect.get_width(), tf.pixel_datatype, data_size, data);
 			}
@@ -302,10 +327,7 @@ namespace clan
 			{
 				glCompressedTexSubImage2D(texture_type, level, x, slice, src_rect.get_width(), 1, tf.pixel_datatype, data_size, data);
 			}
-			else if (texture_type == GL_TEXTURE_2D || texture_type == GL_TEXTURE_2D_MULTISAMPLE)
-			{
-				glCompressedTexSubImage2D(texture_type, level, x, y, src_rect.get_width(), src_rect.get_height(), tf.pixel_datatype, data_size, data);
-			}
+#endif
 			else if (texture_type == GL_TEXTURE_2D_ARRAY || texture_type == GL_TEXTURE_2D_MULTISAMPLE_ARRAY || texture_type == GL_TEXTURE_3D)
 			{
 				glCompressedTexSubImage3D(texture_type, level, x, y, slice, src_rect.get_width(), src_rect.get_height(), 1, tf.pixel_datatype, data_size, data);
@@ -328,7 +350,12 @@ namespace clan
 			glPixelStorei(GL_UNPACK_SKIP_PIXELS, src_rect.left);
 			glPixelStorei(GL_UNPACK_SKIP_ROWS, src_rect.top);
 
-			if (texture_type == GL_TEXTURE_1D)
+			if (texture_type == GL_TEXTURE_2D || texture_type == GL_TEXTURE_2D_MULTISAMPLE)
+			{
+				glTexSubImage2D(texture_type, level, x, y, src_rect.get_width(), src_rect.get_height(), tf.pixel_format, tf.pixel_datatype, data);
+			}
+#ifndef CLANLIB_OPENGL_ES3
+			else if (texture_type == GL_TEXTURE_1D)
 			{
 				glTexSubImage1D(texture_type, level, x, src_rect.get_width(), tf.pixel_format, tf.pixel_datatype, data);
 			}
@@ -336,10 +363,7 @@ namespace clan
 			{
 				glTexSubImage2D(texture_type, level, x, slice, src_rect.get_width(), 1, tf.pixel_format, tf.pixel_datatype, data);
 			}
-			else if (texture_type == GL_TEXTURE_2D || texture_type == GL_TEXTURE_2D_MULTISAMPLE)
-			{
-				glTexSubImage2D(texture_type, level, x, y, src_rect.get_width(), src_rect.get_height(), tf.pixel_format, tf.pixel_datatype, data);
-			}
+#endif
 			else if (texture_type == GL_TEXTURE_2D_ARRAY || texture_type == GL_TEXTURE_2D_MULTISAMPLE_ARRAY || texture_type == GL_TEXTURE_3D)
 			{
 				glTexSubImage3D(texture_type, level, x, y, slice, src_rect.get_width(), src_rect.get_height(), 1, tf.pixel_format, tf.pixel_datatype, data);
@@ -429,7 +453,9 @@ namespace clan
 	{
 		throw_if_disposed();
 		TextureStateTracker state_tracker(texture_type, handle);
+#ifndef CLANLIB_OPENGL_ES3
 		glTexParameterf(texture_type, GL_TEXTURE_LOD_BIAS, (GLfloat)lod_bias);
+#endif
 	}
 
 	void GL3TextureProvider::set_base_level(int base_level)
@@ -454,10 +480,16 @@ namespace clan
 		throw_if_disposed();
 		TextureStateTracker state_tracker(texture_type, handle);
 		glTexParameteri(texture_type, GL_TEXTURE_WRAP_S, OpenGL::to_enum(wrap_s));
+#ifndef CLANLIB_OPENGL_ES3
 		if (texture_type != GL_TEXTURE_1D)
 			glTexParameteri(texture_type, GL_TEXTURE_WRAP_T, OpenGL::to_enum(wrap_t));
 		if (texture_type != GL_TEXTURE_1D && texture_type != GL_TEXTURE_2D)
 			glTexParameteri(texture_type, GL_TEXTURE_WRAP_R, OpenGL::to_enum(wrap_r));
+#else
+		glTexParameteri(texture_type, GL_TEXTURE_WRAP_T, OpenGL::to_enum(wrap_t));
+		if (texture_type != GL_TEXTURE_2D)
+			glTexParameteri(texture_type, GL_TEXTURE_WRAP_R, OpenGL::to_enum(wrap_r));
+#endif
 	}
 
 	void GL3TextureProvider::set_wrap_mode(
@@ -501,7 +533,9 @@ namespace clan
 	{
 		throw_if_disposed();
 		TextureStateTracker state_tracker(texture_type, handle);
+#ifndef CLANLIB_OPENGL_ES3
 		glTexParameterf(texture_type, GL_TEXTURE_MAX_ANISOTROPY_EXT, v);
+#endif
 	}
 
 	void GL3TextureProvider::set_texture_compare(TextureCompareMode mode, CompareFunction func)
@@ -526,6 +560,7 @@ namespace clan
 
 		switch (target)
 		{
+#ifndef CLANLIB_OPENGL_ES3
 		case GL_TEXTURE_1D:
 			glGetIntegerv(GL_TEXTURE_BINDING_1D, (GLint *)&previous_handle);
 			glBindTexture(GL_TEXTURE_1D, handle);
@@ -534,6 +569,7 @@ namespace clan
 			glGetIntegerv(GL_TEXTURE_BINDING_1D_ARRAY, (GLint *)&previous_handle);
 			glBindTexture(GL_TEXTURE_1D_ARRAY, handle);
 			break;
+#endif
 		case GL_TEXTURE_2D:
 			glGetIntegerv(GL_TEXTURE_BINDING_2D, (GLint *)&previous_handle);
 			glBindTexture(GL_TEXTURE_2D, handle);
@@ -571,12 +607,14 @@ namespace clan
 	{
 		switch (target)
 		{
+#ifndef CLANLIB_OPENGL_ES3
 		case GL_TEXTURE_1D:
 			glBindTexture(GL_TEXTURE_1D, previous_handle);
 			break;
 		case GL_TEXTURE_1D_ARRAY:
 			glBindTexture(GL_TEXTURE_1D_ARRAY, previous_handle);
 			break;
+#endif
 		case GL_TEXTURE_2D:
 			glBindTexture(GL_TEXTURE_2D, previous_handle);
 			break;

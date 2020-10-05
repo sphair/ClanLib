@@ -200,7 +200,12 @@ namespace clan
 	{
 		throw_if_disposed();
 		OpenGL::set_active();
+
+#ifdef CLANLIB_OPENGL_ES3
+		throw clan::Exception("bind_frag_data_location not supported for OpenGL ES3");
+#else
 		glBindFragDataLocation(handle, color_number, name.c_str());
+#endif
 	}
 
 	void GL3ProgramObjectProvider::link()
@@ -348,7 +353,12 @@ namespace clan
 		throw_if_disposed();
 		if (buffer_index == -1)
 			return;
+
+#ifdef CLANLIB_OPENGL_ES3
+		throw clan::Exception("set_storage_buffer_index not supported for OpenGL ES3");
+#else
 		glShaderStorageBlockBinding(handle, buffer_index, bind_unit_index);
+#endif
 	}
 
 	/////////////////////////////////////////////////////////////////////////////
