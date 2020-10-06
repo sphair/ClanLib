@@ -99,6 +99,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FileDialogs", "Examples\UI\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FlexTable", "Examples\UI\FlexTable\FlexTable-vc2019.vcxproj", "{F4EF3E39-3146-44A7-9A86-ADA7A9A8A4A6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Collision", "Examples\Display\Collision\Collision-vc2019.vcxproj", "{85733360-9C4D-4040-8DC7-42D19611A2BD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -397,6 +399,12 @@ Global
 		{F4EF3E39-3146-44A7-9A86-ADA7A9A8A4A6}.Release|Win32.ActiveCfg = Release|Win32
 		{F4EF3E39-3146-44A7-9A86-ADA7A9A8A4A6}.Release|Win32.Build.0 = Release|Win32
 		{F4EF3E39-3146-44A7-9A86-ADA7A9A8A4A6}.Release|x64.ActiveCfg = Release|Win32
+		{85733360-9C4D-4040-8DC7-42D19611A2BD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{85733360-9C4D-4040-8DC7-42D19611A2BD}.Debug|Win32.Build.0 = Debug|Win32
+		{85733360-9C4D-4040-8DC7-42D19611A2BD}.Debug|x64.ActiveCfg = Debug|Win32
+		{85733360-9C4D-4040-8DC7-42D19611A2BD}.Release|Win32.ActiveCfg = Release|Win32
+		{85733360-9C4D-4040-8DC7-42D19611A2BD}.Release|Win32.Build.0 = Release|Win32
+		{85733360-9C4D-4040-8DC7-42D19611A2BD}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
