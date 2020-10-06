@@ -38,7 +38,11 @@
 namespace clan
 {
 	const std::string::value_type *cl_glsl15_vertex_color_only =
+#ifndef CLANLIB_OPENGL_ES3
 		"#version 150\n"
+#else
+		"#version 300 es\n"
+#endif
 		"in vec4 Position, Color0; "
 		"out vec4 Color; "
 		"void main() { gl_Position = Position; Color = Color0; }";
@@ -50,7 +54,12 @@ namespace clan
 		"void main() { gl_Position = Position; Color = Color0; }";
 
 	const std::string::value_type *cl_glsl15_fragment_color_only =
+#ifndef CLANLIB_OPENGL_ES3
 		"#version 150\n"
+#else
+		"#version 300 es\n"
+		"precision mediump float;"
+#endif
 		"in vec4 Color; "
 		"out vec4 cl_FragColor;"
 		"void main() { cl_FragColor = Color; }";
@@ -61,7 +70,11 @@ namespace clan
 		"void main() { gl_FragColor = Color; }";
 
 	const std::string::value_type *cl_glsl15_vertex_single_texture =
+#ifndef CLANLIB_OPENGL_ES3
 		"#version 150\n"
+#else
+		"#version 300 es\n"
+#endif
 		"in vec4 Position, Color0; "
 		"in vec2 TexCoord0; "
 		"out vec4 Color; "
@@ -77,7 +90,12 @@ namespace clan
 		"void main() { gl_Position = Position; Color = Color0; TexCoord = TexCoord0; }";
 
 	const std::string::value_type *cl_glsl15_fragment_single_texture =
+#ifndef CLANLIB_OPENGL_ES3
 		"#version 150\n"
+#else
+		"#version 300 es\n"
+		"precision mediump float;"
+#endif
 		"uniform sampler2D Texture0; "
 		"in vec4 Color; "
 		"in vec2 TexCoord; "
@@ -92,7 +110,11 @@ namespace clan
 		"void main() { gl_FragColor = Color*texture(Texture0, TexCoord); }";
 
 	const std::string::value_type *cl_glsl15_vertex_sprite =
+#ifndef CLANLIB_OPENGL_ES3
 		"#version 150\n"
+#else
+		"#version 300 es\n"
+#endif
 		"in vec4 Position, Color0; "
 		"in vec2 TexCoord0; "
 		"in int TexIndex0; "
@@ -112,7 +134,12 @@ namespace clan
 		"void main() { gl_Position = Position; Color = Color0; TexCoord = TexCoord0; TexIndex = TexIndex0; }";
 
 	const std::string::value_type *cl_glsl15_fragment_sprite =
+#ifndef CLANLIB_OPENGL_ES3
 		"#version 150\n"
+#else
+		"#version 300 es\n"
+		"precision mediump float;"
+#endif
 		"uniform sampler2D Texture0; "
 		"uniform sampler2D Texture1; "
 		"uniform sampler2D Texture2; "
@@ -206,7 +233,11 @@ namespace clan
 
 
 	const std::string::value_type *cl_glsl_vertex_path =
-		"#version 130\n"
+#ifndef CLANLIB_OPENGL_ES3
+		"#version 150\n"
+#else
+		"#version 300 es\n"
+#endif
 		"	in ivec4 Vertex;\n"
 		"	flat out vec4 brush_data1;\n"
 		"	flat out vec4 brush_data2;\n"
@@ -340,143 +371,170 @@ namespace clan
 		"	}\n"
 		"}\n";
 
-	const std::string::value_type *cl_glsl15_vertex_path = R"shaderend(
-			#version 150
-			in ivec4 Vertex;
-			flat out vec4 brush_data1;
-			flat out vec4 brush_data2;
-			out vec4 vary_data;
-			out vec2 mask_position;
-			uniform sampler2D instance_data;
-			uniform float ypos_scale;
-			flat out ivec2 instance_offset;
+		const std::string::value_type* cl_glsl15_vertex_path =
+#ifndef CLANLIB_OPENGL_ES3
+			"#version 150\n"
+#else
+			"#version 300 es\n"
+			"precision mediump float;"
+#endif
+			"			in ivec4 Vertex;\n"
+			"			flat out vec4 brush_data1;\n"
+			"			flat out vec4 brush_data2;\n"
+			"			out vec4 vary_data;\n"
+			"			out vec2 mask_position;\n"
+			"			uniform sampler2D instance_data;\n"
+			"			uniform float ypos_scale;\n"
+			"			flat out ivec2 instance_offset;\n"
+			"\n"
+			"			void main()\n"
+			"			{\n"
+			"				const int mask_block_size = 16;\n"
+			"				const int mask_width = 1024;\n"
+			"				const int instance_width = 512;\n"
+			"\n"
+			"				vec4 canvas_data = texelFetch(instance_data, ivec2(0, 0), 0);\n"
+			"				ivec2 size = ivec2( (Vertex.z % 2), (Vertex.z / 2) );\n"
+#ifndef CLANLIB_OPENGL_ES3
+			"				gl_Position = vec4(((Vertex.x+size.x * mask_block_size)*2.0 / canvas_data.x) - 1.0, ypos_scale * (((Vertex.y+size.y * mask_block_size)*-2.0 / canvas_data.y) + 1.0), 0.0, 1.0);\n"
+#else
+			"				float xval = float(Vertex.x + size.x * mask_block_size);\n"
+			"				float yval = float(Vertex.y + size.y * mask_block_size);\n"
+			"				gl_Position = vec4(((xval) * 2.0 / canvas_data.x) - 1.0, ypos_scale * (((yval) * -2.0 / canvas_data.y) + 1.0), 0.0, 1.0);\n"
+#endif
+			"				int mask_offset = Vertex.w % 65536;\n"
+			"\n"
+			"				int y_offset = (mask_offset*mask_block_size) / mask_width;\n"
+			"				mask_position = vec2(mask_offset * mask_block_size - y_offset * mask_width, y_offset * mask_block_size);\n"
+#ifndef CLANLIB_OPENGL_ES3
+			"				mask_position += size * mask_block_size;\n"
+			"				mask_position /= mask_width;\n"
+#else
+			"				mask_position += float(size * mask_block_size);\n"
+			"				mask_position /= float(mask_width);\n"
+#endif
+			"				int instance_block = Vertex.w / 65536;\n"
+			"\n"
+			"				y_offset = instance_block / instance_width;\n"
+			"				instance_offset = ivec2(instance_block - y_offset *instance_width, y_offset);\n"
+			"\n"
+			"				brush_data1 = texelFetch(instance_data, instance_offset, 0);\n"
+			"				brush_data2 = texelFetch(instance_data, ivec2(instance_offset.x + 1, instance_offset.y), 0);\n"
+			"				vec4 brush_data3 = texelFetch(instance_data, ivec2(instance_offset.x + 2, instance_offset.y), 0);\n"
+			"\n"
+			"				// Calculate for linear and radial gradient\n"
+#ifndef CLANLIB_OPENGL_ES3
+			"				vary_data.x = Vertex.x + size.x * mask_block_size - brush_data3.x;\n"
+			"				vary_data.y = Vertex.y + size.y * mask_block_size - brush_data3.y;\n"
+#else
+			"				vary_data.x = float(Vertex.x + size.x * mask_block_size) - brush_data3.x;\n"
+			"				vary_data.y = float(Vertex.y + size.y * mask_block_size) - brush_data3.y;\n"
+#endif
+			"\n"
+			"				// Calculate for texture coords\n"
+#ifndef CLANLIB_OPENGL_ES3
+			"				vary_data.z = (Vertex.x+size.x * mask_block_size);\n"
+			"				vary_data.w = (Vertex.y+size.y * mask_block_size);\n"
+#else
+			"				vary_data.z = float(Vertex.x+size.x * mask_block_size);\n"
+			"				vary_data.w = float(Vertex.y+size.y * mask_block_size);\n"
+#endif
+			"\n"
+			"				mat4 inv_transform = mat4(\n"
+			"						texelFetch(instance_data, ivec2(instance_offset.x + 2, instance_offset.y), 0), \n"
+			"						texelFetch(instance_data, ivec2(instance_offset.x + 3, instance_offset.y), 0),\n"
+			"						texelFetch(instance_data, ivec2(instance_offset.x + 4, instance_offset.y), 0),\n"
+			"						texelFetch(instance_data, ivec2(instance_offset.x + 5, instance_offset.y), 0));\n"
+			"				vary_data.zw = (vec4(vary_data.zw, 0, 1) * transpose(inv_transform)).xy;\n"
+			"\n"
+			"				vary_data.z = (vary_data.z + brush_data1.x) / brush_data2.x;\n"
+			"				vary_data.w = (vary_data.w + brush_data1.y) / brush_data2.y;\n"
+			"			}\n";
 
-			void main()
-			{
-				const int mask_block_size = 16;
-				const int mask_width = 1024;
-				const int instance_width = 512;
-
-				vec4 canvas_data = texelFetch(instance_data, ivec2(0, 0), 0);
-				ivec2 size = ivec2( (Vertex.z % 2), (Vertex.z / 2) );
-				gl_Position = vec4(((Vertex.x+size.x * mask_block_size)*2.0 / canvas_data.x) - 1.0, ypos_scale * (((Vertex.y+size.y * mask_block_size)*-2.0 / canvas_data.y) + 1.0), 0.0, 1.0);
-				int mask_offset = Vertex.w % 65536;
-
-				int y_offset = (mask_offset*mask_block_size) / mask_width;
-				mask_position = vec2(mask_offset * mask_block_size - y_offset * mask_width, y_offset * mask_block_size);
-				mask_position += size * mask_block_size;
-				mask_position /= mask_width;
-				int instance_block = Vertex.w / 65536;
-
-				y_offset = instance_block / instance_width;
-				instance_offset = ivec2(instance_block - y_offset *instance_width, y_offset);
-
-				brush_data1 = texelFetch(instance_data, instance_offset, 0);
-				brush_data2 = texelFetch(instance_data, ivec2(instance_offset.x + 1, instance_offset.y), 0);
-				vec4 brush_data3 = texelFetch(instance_data, ivec2(instance_offset.x + 2, instance_offset.y), 0);
-
-				// Calculate for linear and radial gradient
-				vary_data.x = Vertex.x + size.x * mask_block_size - brush_data3.x;
-				vary_data.y = Vertex.y + size.y * mask_block_size - brush_data3.y;
-
-				// Calculate for texture coords
-				vary_data.z = (Vertex.x+size.x * mask_block_size);
-				vary_data.w = (Vertex.y+size.y * mask_block_size);
-
-				mat4 inv_transform = mat4(
-						texelFetch(instance_data, ivec2(instance_offset.x + 2, instance_offset.y), 0), 
-						texelFetch(instance_data, ivec2(instance_offset.x + 3, instance_offset.y), 0),
-						texelFetch(instance_data, ivec2(instance_offset.x + 4, instance_offset.y), 0),
-						texelFetch(instance_data, ivec2(instance_offset.x + 5, instance_offset.y), 0));
-				vary_data.zw = (vec4(vary_data.zw, 0, 1) * transpose(inv_transform)).xy;
-
-				vary_data.z = (vary_data.z + brush_data1.x) / brush_data2.x;
-				vary_data.w = (vary_data.w + brush_data1.y) / brush_data2.y;
-			}
-		)shaderend";
-
-	const std::string::value_type *cl_glsl15_fragment_path = R"shaderend(
-	#version 150
-
-	in vec2 mask_position;
-	flat in vec4 brush_data1;
-	flat in vec4 brush_data2;
-	in vec4 vary_data;
-	out vec4 cl_FragColor;
-	flat in ivec2 instance_offset;
-
-	uniform sampler2D instance_data;
-	uniform sampler2D image_texture;
-	uniform sampler2D mask_texture;
-
-	vec4 mask(vec4 color)
-	{
-		return color * texture(mask_texture, mask_position).r;
-	}
-
-	void solid_fill()
-	{
-		vec4 fill_color = brush_data2;
-		cl_FragColor = mask(fill_color);
-	}
-
-	vec4 gradient_color(int stop_start, int stop_end, float t)
-	{
-		vec4 color = texelFetch(instance_data, ivec2(instance_offset.x + stop_start, instance_offset.y), 0);
-		float last_stop_pos = texelFetch(instance_data, ivec2(instance_offset.x + stop_start + 1, instance_offset.y), 0).x;
-		for (int i = stop_start; i < stop_end; i+=2)
-		{
-			vec4 stop_color = texelFetch(instance_data, ivec2(instance_offset.x + i, instance_offset.y), 0);
-			float stop_pos = texelFetch(instance_data, ivec2(instance_offset.x + i + 1, instance_offset.y), 0).x;
-			float tt = clamp((t - last_stop_pos)/(stop_pos - last_stop_pos), 0.0, 1.0);
-			color = mix(color, stop_color, tt);
-			last_stop_pos = stop_pos;
-		}
-		return color;
-	}
-
-	void linear_gradient_fill()
-	{
-		vec2 grad_start = vary_data.xy;
-		vec2 grad_dir = brush_data1.zw;
-		float rcp_grad_length = brush_data2.x;
-		int stop_start = int(brush_data2.y);
-		int stop_end = int(brush_data2.z);
-
-		float t = dot(grad_start, grad_dir) * rcp_grad_length;
-		cl_FragColor = mask(gradient_color(stop_start, stop_end, t));
-	}
-
-	void radial_gradient_fill()
-	{
-		vec2 grad_center = vary_data.xy;
-		float rcp_grad_length = brush_data2.x;
-		int stop_start = int(brush_data2.y);
-		int stop_end = int(brush_data2.z);
-
-		float t = length(grad_center) * rcp_grad_length;
-		cl_FragColor = mask(gradient_color(stop_start, stop_end, t));
-	}
-
-	void image_fill()
-	{
-		vec2 uv = vary_data.zw;
-		cl_FragColor = mask(texture(image_texture, uv));
-	}
-
-	void main()
-	{
-		switch (int(brush_data1.x))
-		{
-		default:
-		case 0: solid_fill(); break;
-		case 1: linear_gradient_fill(); break;
-		case 2: radial_gradient_fill(); break;
-		case 3: image_fill(); break;
-		}
-	}
-		)shaderend";
-
+			const std::string::value_type* cl_glsl15_fragment_path =
+#ifndef CLANLIB_OPENGL_ES3
+				"#version 150\n"
+#else
+				"#version 300 es\n"
+				"precision mediump float;"
+#endif
+				"	in vec2 mask_position;\n"
+				"	flat in vec4 brush_data1;\n"
+				"	flat in vec4 brush_data2;\n"
+				"	in vec4 vary_data;\n"
+				"	out vec4 cl_FragColor;\n"
+				"	flat in ivec2 instance_offset;\n"
+				"\n"
+				"	uniform sampler2D instance_data;\n"
+				"	uniform sampler2D image_texture;\n"
+				"	uniform sampler2D mask_texture;\n"
+				"\n"
+				"	vec4 mask(vec4 color)\n"
+				"	{\n"
+				"		return color * texture(mask_texture, mask_position).r;\n"
+				"	}\n"
+				"\n"
+				"	void solid_fill()\n"
+				"	{\n"
+				"		vec4 fill_color = brush_data2;\n"
+				"		cl_FragColor = mask(fill_color);\n"
+				"	}\n"
+				"\n"
+				"	vec4 gradient_color(int stop_start, int stop_end, float t)\n"
+				"	{\n"
+				"		vec4 color = texelFetch(instance_data, ivec2(instance_offset.x + stop_start, instance_offset.y), 0);\n"
+				"		float last_stop_pos = texelFetch(instance_data, ivec2(instance_offset.x + stop_start + 1, instance_offset.y), 0).x;\n"
+				"		for (int i = stop_start; i < stop_end; i+=2)\n"
+				"		{\n"
+				"			vec4 stop_color = texelFetch(instance_data, ivec2(instance_offset.x + i, instance_offset.y), 0);\n"
+				"			float stop_pos = texelFetch(instance_data, ivec2(instance_offset.x + i + 1, instance_offset.y), 0).x;\n"
+				"			float tt = clamp((t - last_stop_pos)/(stop_pos - last_stop_pos), 0.0, 1.0);\n"
+				"			color = mix(color, stop_color, tt);\n"
+				"			last_stop_pos = stop_pos;\n"
+				"		}\n"
+				"		return color;\n"
+				"	}\n"
+				"\n"
+				"	void linear_gradient_fill()\n"
+				"	{\n"
+				"		vec2 grad_start = vary_data.xy;\n"
+				"		vec2 grad_dir = brush_data1.zw;\n"
+				"		float rcp_grad_length = brush_data2.x;\n"
+				"		int stop_start = int(brush_data2.y);\n"
+				"		int stop_end = int(brush_data2.z);\n"
+				"\n"
+				"		float t = dot(grad_start, grad_dir) * rcp_grad_length;\n"
+				"		cl_FragColor = mask(gradient_color(stop_start, stop_end, t));\n"
+				"	}\n"
+				"\n"
+				"	void radial_gradient_fill()\n"
+				"	{\n"
+				"		vec2 grad_center = vary_data.xy;\n"
+				"		float rcp_grad_length = brush_data2.x;\n"
+				"		int stop_start = int(brush_data2.y);\n"
+				"		int stop_end = int(brush_data2.z);\n"
+				"\n"
+				"		float t = length(grad_center) * rcp_grad_length;\n"
+				"		cl_FragColor = mask(gradient_color(stop_start, stop_end, t));\n"
+				"	}\n"
+				"\n"
+				"	void image_fill()\n"
+				"	{\n"
+				"		vec2 uv = vary_data.zw;\n"
+				"		cl_FragColor = mask(texture(image_texture, uv));\n"
+				"	}\n"
+				"\n"
+				"	void main()\n"
+				"	{\n"
+				"		switch (int(brush_data1.x))\n"
+				"		{\n"
+				"		default:\n"
+				"		case 0: solid_fill(); break;\n"
+				"		case 1: linear_gradient_fill(); break;\n"
+				"		case 2: radial_gradient_fill(); break;\n"
+				"		case 3: image_fill(); break;\n"
+				"		}\n"
+				"	}\n";
 
 	class GL3StandardPrograms_Impl
 	{
@@ -547,9 +605,10 @@ namespace clan
 		color_only_program.bind_attribute_location(0, "Position");
 		color_only_program.bind_attribute_location(1, "Color0");
 
+#ifndef CLANLIB_OPENGL_ES3
 		if (use_glsl_150)
 			color_only_program.bind_frag_data_location(0, "cl_FragColor");
-
+#endif
 		if (!color_only_program.link())
 			throw Exception("Unable to link the standard shader program: 'color only' Error:" + color_only_program.get_info_log());
 
@@ -560,8 +619,10 @@ namespace clan
 		single_texture_program.bind_attribute_location(1, "Color0");
 		single_texture_program.bind_attribute_location(2, "TexCoord0");
 
+#ifndef CLANLIB_OPENGL_ES3
 		if (use_glsl_150)
 			single_texture_program.bind_frag_data_location(0, "cl_FragColor");
+#endif
 
 		if (!single_texture_program.link())
 			throw Exception("Unable to link the standard shader program: 'single texture' Error:" + single_texture_program.get_info_log());
@@ -575,8 +636,10 @@ namespace clan
 		sprite_program.bind_attribute_location(2, "TexCoord0");
 		sprite_program.bind_attribute_location(3, "TexIndex0");
 
+#ifndef CLANLIB_OPENGL_ES3
 		if (use_glsl_150)
 			sprite_program.bind_frag_data_location(0, "cl_FragColor");
+#endif
 
 		if (!sprite_program.link())
 			throw Exception("Unable to link the standard shader program: 'sprite' Error:" + sprite_program.get_info_log());
@@ -603,8 +666,10 @@ namespace clan
 		path_program.attach(fragment_path_shader);
 		path_program.bind_attribute_location(0, "Vertex");
 
+#ifndef CLANLIB_OPENGL_ES3
 		if (use_glsl_150)
 			path_program.bind_frag_data_location(0, "cl_FragColor");
+#endif
 
 		if (!path_program.link())
 			throw Exception("Unable to link the standard shader program: 'path' Error:" + path_program.get_info_log());

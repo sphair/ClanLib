@@ -188,6 +188,8 @@ namespace clan
 
 			std::string version = (char*)glGetString(GL_VERSION);
 
+#ifndef CLANLIB_OPENGL_ES3
+
 			opengl_version_major = 0;
 			opengl_version_minor = 0;
 
@@ -196,6 +198,12 @@ namespace clan
 				opengl_version_major = StringHelp::text_to_int(split_version[0]);
 			if (split_version.size() > 1)
 				opengl_version_minor = StringHelp::text_to_int(split_version[1]);
+
+#else
+			opengl_version_major = 3;	//FIXME
+			opengl_version_minor = 2;	//FIXME
+#endif
+
 #endif
 		}
 

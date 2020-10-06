@@ -1633,18 +1633,19 @@ namespace clan
 		if (!functions->stencilFunc) functions->stencilFunc = (GLFunctions::ptr_glStencilFunc) &glStencilFunc;
 		if (!functions->stencilMask) functions->stencilMask = (GLFunctions::ptr_glStencilMask) &glStencilMask;
 		if (!functions->stencilOp) functions->stencilOp = (GLFunctions::ptr_glStencilOp) &glStencilOp;
-	if (!functions->texImage2D) functions->texImage2D = (GLFunctions::ptr_glTexImage2D) &glTexImage2D;
+		if (!functions->texImage2D) functions->texImage2D = (GLFunctions::ptr_glTexImage2D) &glTexImage2D;
 		if (!functions->texParameterf) functions->texParameterf = (GLFunctions::ptr_glTexParameterf) &glTexParameterf;
 		if (!functions->texParameterfv) functions->texParameterfv = (GLFunctions::ptr_glTexParameterfv) &glTexParameterfv;
 		if (!functions->texParameteri) functions->texParameteri = (GLFunctions::ptr_glTexParameteri) &glTexParameteri;
 		if (!functions->texParameteriv) functions->texParameteriv = (GLFunctions::ptr_glTexParameteriv) &glTexParameteriv;
 		if (!functions->texSubImage2D) functions->texSubImage2D = (GLFunctions::ptr_glTexSubImage2D) &glTexSubImage2D;
 		if (!functions->viewport) functions->viewport = (GLFunctions::ptr_glViewport) &glViewport;
+		if (!functions->pixelStorei) functions->pixelStorei = (GLFunctions::ptr_glPixelStorei) &glPixelStorei;
+		if (!functions->copyTexImage2D) functions->copyTexImage2D = (GLFunctions::ptr_glCopyTexImage2D) & glCopyTexImage2D;
 
 #ifndef CLANLIB_OPENGL_ES3
 		if (!functions->clearDepth) functions->clearDepth = (GLFunctions::ptr_glClearDepth) &glClearDepth;
 		if (!functions->copyTexImage1D) functions->copyTexImage1D = (GLFunctions::ptr_glCopyTexImage1D) &glCopyTexImage1D;
-		if (!functions->copyTexImage2D) functions->copyTexImage2D = (GLFunctions::ptr_glCopyTexImage2D) &glCopyTexImage2D;
 		if (!functions->copyTexSubImage1D) functions->copyTexSubImage1D = (GLFunctions::ptr_glCopyTexSubImage1D) &glCopyTexSubImage1D;
 		if (!functions->depthRange) functions->depthRange = (GLFunctions::ptr_glDepthRange) &glDepthRange;
 		if (!functions->drawBuffer) functions->drawBuffer = (GLFunctions::ptr_glDrawBuffer) &glDrawBuffer;
@@ -1652,7 +1653,6 @@ namespace clan
 		if (!functions->getTexImage) functions->getTexImage = (GLFunctions::ptr_glGetTexImage) &glGetTexImage;
 		if (!functions->logicOp) functions->logicOp = (GLFunctions::ptr_glLogicOp) &glLogicOp;
 		if (!functions->pixelStoref) functions->pixelStoref = (GLFunctions::ptr_glPixelStoref) &glPixelStoref;
-		if (!functions->pixelStorei) functions->pixelStorei = (GLFunctions::ptr_glPixelStorei) &glPixelStorei;
 		if (!functions->pointSize) functions->pointSize = (GLFunctions::ptr_glPointSize) &glPointSize;
 		if (!functions->polygonMode) functions->polygonMode = (GLFunctions::ptr_glPolygonMode) &glPolygonMode;
 		if (!functions->texImage1D) functions->texImage1D = (GLFunctions::ptr_glTexImage1D) &glTexImage1D;

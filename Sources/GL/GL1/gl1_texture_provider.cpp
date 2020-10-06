@@ -55,11 +55,7 @@ namespace clan
 		switch (texture_dimensions)
 		{
 		case TextureDimensions::_1d:
-	#ifdef __ANDROID__
-			throw Exception("GL_TEXTURE_1D is not supported");
-	#else
 			texture_type = GL_TEXTURE_1D;
-	#endif
 			break;
 		case TextureDimensions::_2d:
 		default:
@@ -69,11 +65,7 @@ namespace clan
 			texture_type = GL_TEXTURE_3D;
 			break;
 		case TextureDimensions::_cube:
-	#ifdef __ANDROID__
-			throw Exception("GL_TEXTURE_CUBE_MAP is not supported");
-	#else
 			texture_type = GL_TEXTURE_CUBE_MAP;
-	#endif
 			break;
 		}
 
@@ -84,9 +76,7 @@ namespace clan
 		glTexParameteri(texture_type, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(texture_type, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(texture_type, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	#ifndef __ANDROID__
 		if (texture_type != GL_TEXTURE_1D)
-	#endif
 		{
 			glTexParameteri(texture_type, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		}
@@ -149,7 +139,6 @@ namespace clan
 		depth = new_depth;
 		GL1TextureStateTracker state_tracker(texture_type, handle);
 
-	#ifndef __ANDROID__
 		if (texture_type == GL_TEXTURE_1D)
 		{
 			pot_width = get_next_power_of_two(new_width);
@@ -173,7 +162,6 @@ namespace clan
 				GL_UNSIGNED_BYTE,		// type (it really doesn't matter since nothing is uploaded)
 				nullptr);						// texels (0 to avoid uploading)
 		}
-	#endif
 		if (texture_type == GL_TEXTURE_2D)
 		{
 			pot_width = get_next_power_of_two(new_width);
@@ -213,11 +201,9 @@ namespace clan
 
 				glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 				const int bytesPerPixel = image.get_bytes_per_pixel();
-	#ifndef __ANDROID__
 				glPixelStorei(GL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
 				glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 				glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
-	#endif
 				glTexImage2D(
 					GL_TEXTURE_2D,		// target
 					0,					// level
@@ -274,11 +260,9 @@ namespace clan
 		{
 			PixelBuffer buffer(pot_width, pot_height, texture_format);
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	#ifndef __ANDROID__
 			glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer.get_pitch() / buffer.get_bytes_per_pixel());
 			glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 			glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
-	#endif
 			glGetTexImage(texture_type, level, gl_format, gl_type, buffer.get_data());
 			return buffer.copy(Rect(0,0, width, height));
 		}
@@ -286,11 +270,9 @@ namespace clan
 		{
 			PixelBuffer buffer(pot_width, pot_height, TextureFormat::rgba8);
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	#ifndef __ANDROID__
 			glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer.get_pitch() / buffer.get_bytes_per_pixel());
 			glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 			glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
-	#endif
 			glGetTexImage(texture_type, level, GL_RGBA, GL_UNSIGNED_BYTE, buffer.get_data());
 			return buffer.copy(Rect(0,0, width, height)).to_format(texture_format);
 		}
@@ -329,12 +311,9 @@ namespace clan
 			// change alignment
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 			const int bytesPerPixel = image.get_bytes_per_pixel();
-	#ifndef __ANDROID__
 			glPixelStorei(GL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
 			glPixelStorei(GL_UNPACK_SKIP_PIXELS, src_rect.left);
 			glPixelStorei(GL_UNPACK_SKIP_ROWS, src_rect.top);
-	#endif
-
 		}
 		// conversion needed
 		else
@@ -355,11 +334,9 @@ namespace clan
 			// change alignment
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 			const int bytesPerPixel = buffer.get_bytes_per_pixel();
-	#ifndef __ANDROID__
 			glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer.get_pitch() / bytesPerPixel);
 			glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 			glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
-	#endif
 
 			type = GL_UNSIGNED_BYTE;
 			image = buffer;
@@ -422,10 +399,8 @@ namespace clan
 			}
 		}
 		// Restore these unpack values to the default
-	#ifndef __ANDROID__
 		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
-	#endif
 	}
 
 	void GL1TextureProvider::copy_image_from(
@@ -683,11 +658,9 @@ namespace clan
 			// change alignment
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 			const int bytesPerPixel = image.get_bytes_per_pixel();
-	#ifndef __ANDROID__
 			glPixelStorei(GL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
 			glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 			glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
-	#endif
 			char *data = (char *) image.get_data();
 			int image_width = image.get_width();
 			int image_height = image.get_height();
@@ -726,11 +699,9 @@ namespace clan
 			// change alignment
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 			const int bytesPerPixel = buffer.get_bytes_per_pixel();
-	#ifndef __ANDROID__
 			glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer.get_pitch() / bytesPerPixel);
 			glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 			glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
-	#endif
 			// upload
 			glTexImage2D(
 				target,                   // target
@@ -788,11 +759,9 @@ namespace clan
 			// change alignment
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 			const int bytesPerPixel = image.get_bytes_per_pixel();
-	#ifndef __ANDROID__
 			glPixelStorei(GL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
 			glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 			glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
-	#endif
 
 			char *data = (char *) image.get_data();
 			int image_width = image.get_width();
@@ -828,11 +797,9 @@ namespace clan
 			// change alignment
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 			const int bytesPerPixel = buffer.get_bytes_per_pixel();
-	#ifndef __ANDROID__
 			glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer.get_pitch() / bytesPerPixel);
 			glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 			glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
-	#endif
 			int image_width = image.get_width();
 			int image_height = image.get_height() / image_depth;
 
@@ -858,20 +825,15 @@ namespace clan
 	{
 		OpenGL::set_active();
 
-	#ifndef __ANDROID__
 		last_is_enabled_texture1d = glIsEnabled(GL_TEXTURE_1D);
-	#endif
 		last_is_enabled_texture2d = glIsEnabled(GL_TEXTURE_2D);
 		last_is_enabled_texture3d = glIsEnabled(GL_TEXTURE_3D);
 
-	#ifndef __ANDROID__
 		last_is_enabled_texture_cube_map = glIsEnabled(GL_TEXTURE_CUBE_MAP);
 		glGetIntegerv(GL_TEXTURE_BINDING_1D, (GLint *) &last_bound_texture1d);
-	#endif
 		glGetIntegerv(GL_TEXTURE_BINDING_2D, (GLint *) &last_bound_texture2d);
 		glGetIntegerv(GL_TEXTURE_BINDING_3D, (GLint *) &last_bound_texture3d);
 
-	#ifndef __ANDROID__
 		glGetIntegerv(GL_TEXTURE_BINDING_CUBE_MAP, (GLint *) &last_bound_texture_cube_map);
 
 		if (texture_type == GL_TEXTURE_1D)
@@ -882,34 +844,24 @@ namespace clan
 			glEnable(GL_TEXTURE_1D);
 			glBindTexture(GL_TEXTURE_1D, handle);
 		}
-	#endif
 		if (texture_type == GL_TEXTURE_2D)
 		{
-	#ifndef __ANDROID__
 			glDisable(GL_TEXTURE_1D);
-	#endif
 			glDisable(GL_TEXTURE_3D);
-	#ifndef __ANDROID__
 			glDisable(GL_TEXTURE_CUBE_MAP);
-	#endif
 			glEnable(GL_TEXTURE_2D);
 			glBindTexture(GL_TEXTURE_2D, handle);
 		}
 
 		if (texture_type == GL_TEXTURE_3D)
 		{
-	#ifndef __ANDROID__
 			glDisable(GL_TEXTURE_1D);
-	#endif
 			glDisable(GL_TEXTURE_2D);
-	#ifndef __ANDROID__
 			glDisable(GL_TEXTURE_CUBE_MAP);
-	#endif
 			glEnable(GL_TEXTURE_3D);
 			glBindTexture(GL_TEXTURE_3D, handle);
 		}
 
-	#ifndef __ANDROID__
 		if (texture_type == GL_TEXTURE_CUBE_MAP)
 		{
 			glDisable(GL_TEXTURE_1D);
@@ -918,27 +870,20 @@ namespace clan
 			glEnable(GL_TEXTURE_CUBE_MAP);
 			glBindTexture(GL_TEXTURE_CUBE_MAP, handle);
 		}
-	#endif
 	}
 
 	GL1TextureStateTracker::~GL1TextureStateTracker()
 	{
-	#ifndef __ANDROID__
 		if (last_is_enabled_texture1d) glEnable(GL_TEXTURE_1D); else glDisable(GL_TEXTURE_1D);
-	#endif
 		if (last_is_enabled_texture2d) glEnable(GL_TEXTURE_2D); else glDisable(GL_TEXTURE_2D);
 		if (last_is_enabled_texture3d) glEnable(GL_TEXTURE_3D); else glDisable(GL_TEXTURE_3D);
 
-	#ifndef __ANDROID__
 		if (last_is_enabled_texture_cube_map) glEnable(GL_TEXTURE_CUBE_MAP); else glDisable(GL_TEXTURE_CUBE_MAP);
 
 		if (last_is_enabled_texture1d) glBindTexture(GL_TEXTURE_1D, last_bound_texture1d);
-	#endif
 		if (last_is_enabled_texture2d) glBindTexture(GL_TEXTURE_2D, last_bound_texture2d);
 		if (last_is_enabled_texture3d) glBindTexture(GL_TEXTURE_3D, last_bound_texture3d);
-	#ifndef __ANDROID__
 		if (last_is_enabled_texture_cube_map) glBindTexture(GL_TEXTURE_CUBE_MAP, last_bound_texture_cube_map);
-	#endif
 	}
 
 	int GL1TextureProvider::get_next_power_of_two(int value)

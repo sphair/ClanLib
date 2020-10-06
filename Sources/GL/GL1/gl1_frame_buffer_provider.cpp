@@ -313,9 +313,7 @@ namespace clan
 			if (glActiveTexture != nullptr)
 				glActiveTexture(GL_TEXTURE0);
 
-#ifndef __ANDROID__
 			glPixelZoom(1.0f, 1.0f);
-#endif
 
 			// Copy pbuffer to texture:
 			glEnable(GL_TEXTURE_2D);
