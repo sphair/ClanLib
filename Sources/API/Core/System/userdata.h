@@ -95,11 +95,11 @@ namespace clan
 		}
 
 	private:
-		UserDataOwner(const UserDataOwner &that); // do not implement
-		UserDataOwner &operator=(const UserDataOwner &that); // do not implement
+		UserDataOwner(const UserDataOwner &that) = delete; // do not implement
+		UserDataOwner &operator=(const UserDataOwner &that) = delete; // do not implement
 
 		UserDataBase *user_data;
-		char userdata_storage[32];
+		char userdata_storage[32] = { 0 };
 	};
 
 	/// \}
