@@ -97,12 +97,12 @@ namespace clan
 			throw Exception("Expected WAVE header!");
 
 		uint32_t subchunk_pos = source.get_position();
-		uint32_t subchunk1_size = find_subchunk("fmt ", source, subchunk_pos, chunk_size);
+		//uint32_t subchunk1_size = find_subchunk("fmt ", source, subchunk_pos, chunk_size);
 
-		uint16_t audio_format = source.read_uint16();
+		//uint16_t audio_format = source.read_uint16();
 		num_channels = source.read_uint16();
 		frequency = source.read_uint32();
-		uint32_t byte_rate = source.read_uint32();
+		//uint32_t byte_rate = source.read_uint32();
 		uint16_t block_align = source.read_uint16();
 		uint16_t bits_per_sample = source.read_uint16();
 

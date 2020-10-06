@@ -141,10 +141,10 @@ INT_PTR CALLBACK PageTarget::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 
 			switch (self->target_version)
 			{
-			case 1200:
+			case 1400:
 				CheckRadioButton(hWnd, IDC_RADIO_VC140, IDC_RADIO_VC140, IDC_RADIO_VC140);
 				break;
-			case 1400:
+			case 1600:
 				if (self->target_android)
 				{
 					CheckRadioButton(hWnd, IDC_RADIO_VC160_ANDROID, IDC_RADIO_VC160_ANDROID, IDC_RADIO_VC160_ANDROID);

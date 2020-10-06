@@ -52,8 +52,8 @@ namespace clan
 			scale_x(1.0f),
 			scale_y(1.0f),
 			translation_hotspot(0, 0),
-			translated_hotspot(0, 0),
-			translation_origin(Origin::top_left) {};
+			translation_origin(Origin::top_left),
+			translated_hotspot(0, 0){};
 		~Image_Impl() {};
 
 		void calc_hotspot();

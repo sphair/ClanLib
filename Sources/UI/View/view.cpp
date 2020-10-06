@@ -1004,8 +1004,8 @@ namespace clan
 			return;
 
 		ActivationChangeEvent *activation_change = dynamic_cast<ActivationChangeEvent*>(e);
-		CloseEvent *close = dynamic_cast<CloseEvent*>(e);
-		ResizeEvent *resize = dynamic_cast<ResizeEvent*>(e);
+		//CloseEvent *close = dynamic_cast<CloseEvent*>(e);
+		//ResizeEvent *resize = dynamic_cast<ResizeEvent*>(e);
 		FocusChangeEvent *focus_change = dynamic_cast<FocusChangeEvent*>(e);
 		PointerEvent *pointer = dynamic_cast<PointerEvent*>(e);
 		KeyEvent *key = dynamic_cast<KeyEvent*>(e);

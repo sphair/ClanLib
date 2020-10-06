@@ -373,6 +373,7 @@ namespace clan
 		}
 
 		// Run timer again only if the goal is not reached.
+		//TODO FIX - warning: '&&' within '||'[-Wlogical - op - parentheses]
 		if (mouse_down_mode == mouse_down_track_decr && pos > timer_target_position
 			|| mouse_down_mode == mouse_down_track_incr && pos + page_step < timer_target_position
 			|| mouse_down_mode == mouse_down_button_decr && pos > min_pos

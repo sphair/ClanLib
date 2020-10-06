@@ -1055,8 +1055,10 @@ void MSVC8_Project::write(OutputWriter &output, int indent) const
 	if (target_android)
 	{
 		output.write_line(indent, "		<Keyword>Android</Keyword>");
+		output.write_line(indent, "		<MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>");
 		output.write_line(indent, "		<ApplicationType>Android</ApplicationType>");
-		output.write_line(indent, "		<ApplicationTypeRevision>1.0</ApplicationTypeRevision>");
+		output.write_line(indent, "		<ApplicationTypeRevision>3.0</ApplicationTypeRevision>");
+
 	}
 
   	output.write_line(indent, "  </PropertyGroup>");
@@ -1071,8 +1073,8 @@ void MSVC8_Project::write(OutputWriter &output, int indent) const
 		if (target_android)
 		{
 			output.write_line(indent, "    <PlatformToolset>Clang_5_0</PlatformToolset>");
-			output.write_line(indent, "    <AndroidAPILevel>android-21</AndroidAPILevel>");
-			output.write_line(indent, "    <UseOfStl>gnustl_static</UseOfStl>");		// TODO: Optional dynamic (like -mtdll on windows)
+			output.write_line(indent, "    <AndroidAPILevel>android-24</AndroidAPILevel>");
+			output.write_line(indent, "    <UseOfStl>c++_static</UseOfStl>");		// TODO: Optional dynamic (like -mtdll on windows)
 			if (!configurations[index]->android_debug_libraries.empty())
 			{
 				output.write_line(indent, "    <UseDebugLibraries>" + configurations[index]->android_debug_libraries + "</UseDebugLibraries>");

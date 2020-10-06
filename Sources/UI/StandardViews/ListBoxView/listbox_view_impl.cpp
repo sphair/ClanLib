@@ -101,7 +101,7 @@ namespace clan
 	void ListBoxViewImpl::set_hot_item(int index)
 	{
 		// Selected item state has priority.
-		if (index == hot_item || index == selected_item && index != -1)
+		if (index == hot_item || index == selected_item && index != -1)		// TODO: Fix - warning: '&&' within '||'[-Wlogical - op - parentheses]
 			return;
 
 		if (index < -1 || index >= (int) listbox->content_view()->children().size())

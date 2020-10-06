@@ -421,7 +421,7 @@ namespace clan
 	class TransformState
 	{
 	public:
-		TransformState(Canvas *current_canvas) : canvas(current_canvas), matrix(current_canvas->get_transform()) {}
+		TransformState(Canvas *current_canvas) : matrix(current_canvas->get_transform()), canvas(current_canvas) {}
 		~TransformState() { canvas->set_transform(matrix); }
 		const Mat4f matrix;
 	private:
@@ -432,7 +432,7 @@ namespace clan
 	class ClipRectState
 	{
 	public:
-		ClipRectState(Canvas *current_canvas) : canvas(current_canvas), cliprect(current_canvas->get_cliprect()) {}
+		ClipRectState(Canvas *current_canvas) : cliprect(current_canvas->get_cliprect()), canvas(current_canvas) {}
 		~ClipRectState() { (Rectf(canvas->get_size()) == cliprect) ? canvas->reset_cliprect() : canvas->set_cliprect(cliprect); }
 		const Rectf cliprect;
 	private:

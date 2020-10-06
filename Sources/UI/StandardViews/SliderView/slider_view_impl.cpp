@@ -158,10 +158,10 @@ namespace clan
 		scroll_timer.stop();
 
 		// Mouse position relative to track.
-		Pointf mouse_pos = e.pos(slider->track());
+		//Pointf mouse_pos = e.pos(slider->track());
 
 		// Thumb position relative to track.
-		Rectf thumb_geometry(thumb->geometry().content_box());
+		//Rectf thumb_geometry(thumb->geometry().content_box());
 
 		// Check and set hot state by long and winding road - need to reach TopLevelWindow_Impl::dispatch_hot_event().
 		auto tree = slider->view_tree();
@@ -285,6 +285,7 @@ namespace clan
 		}
 
 		// Run timer again only if the goal is not reached.
+		// TODO FIX  warning: '&&' within '||'[-Wlogical - op - parentheses]
 		if (mouse_down_mode == mouse_down_track_decr && _position > timer_target_position
 			|| mouse_down_mode == mouse_down_track_incr && _position + _page_step < timer_target_position
 			)

@@ -325,14 +325,15 @@ namespace clan
 
 	PathMaskBuffer::PathMaskBuffer()
 	{
-#ifdef __SSE2__
+#if defined __SSE2__ && ! defined CL_DISABLE_SSE2
+
 		mask_row_block_data = (unsigned char*)System::aligned_alloc(mask_texture_size * mask_block_size);
 #endif
 	}
 
 	PathMaskBuffer::~PathMaskBuffer()
 	{
-#ifdef __SSE2__
+#if defined __SSE2__ && ! defined CL_DISABLE_SSE2
 		System::aligned_free(mask_row_block_data);
 #endif
 	}
@@ -354,7 +355,7 @@ namespace clan
 
 	void PathMaskBuffer::flush_block()
 	{
-#ifdef __SSE2__
+#if defined __SSE2__ && ! defined CL_DISABLE_SSE2
 		int block_x = (next_block * mask_block_size) % mask_texture_size;
 		if (block_x != 0)
 		{
@@ -380,7 +381,7 @@ namespace clan
 		}
 	}
 
-#ifdef __SSE2__
+#if defined __SSE2__ && ! defined CL_DISABLE_SSE2
 	bool PathMaskBuffer::fill_block(int xpos)
 	{
 		if (is_full_block(xpos))
