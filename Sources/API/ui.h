@@ -64,7 +64,6 @@
 #include "UI/StandardViews/listbox_view.h"
 #include "UI/StandardViews/layout_views.h"
 #include "UI/Image/image_source.h"
-#include "UI/Style/property_hash.h"
 #include "UI/Style/style.h"
 #include "UI/Style/style_cascade.h"
 #include "UI/Style/style_dimension.h"
